@@ -67,7 +67,8 @@ HEADS = ROOT / "dev" / "pod" / "heads.toml"
 #:
 #: `parked_max` joined them on 2026-08-19, owner's ruling, raised from a hardcoded 3 to 7.
 #: It was a bare literal in TWO places in `pod.py`, rule (d)'s test and the status line, so
-#: the number the owner read and the number the program obeyed could drift apart.
+#: the number the owner read and the number the program obeyed could drift apart. Lowered
+#: to 5 on 2026-08-23 (`dev/pod/heads.toml`); the live value is read here, never retyped.
 LIMIT_KEYS = ("tick_seconds", "exclusive_max_load1", "agda_deadline_s",
               "worker_deadline_s", "attempt_max", "parked_max")
 
@@ -224,7 +225,21 @@ def load_heads(path=None, cache=True) -> dict:
     # per-slot heap caps at or under `max_heap_sum_gb`. The check is arithmetic and the
     # file states both terms, so a future edit that widens a tier is caught at load and
     # not on the machine that runs out of memory.
+    #
+    # TWO SUMS, and an opus-5 review found this checked only the first. EACH TIER
+    # ALONE, at every one of its own slots full, must fit the cap on its own -- that is
+    # the loop below. BUT A TIER FILLING EVERY SLOT NEVER HAS TO FIT ALONGSIDE ANOTHER
+    # TIER doing the same: `launcher.py`'s `agda_heap_sum_over()` refuses a dispatch
+    # the moment the RUNNING total plus one more holder would cross the cap, so the
+    # only cross-tier state ever actually reached is ONE holder from each tier at
+    # once (`dev/pod/heads.toml [tiers.shared]`'s own comment names this as the design
+    # target), never every slot of every tier simultaneously. Checking the FULL
+    # cross-product here would refuse configs the runtime dispatcher already keeps
+    # safe -- WIDE's own two slots at 2 GB alongside HEAVY's own one slot at 4 GB is
+    # a real, load-bearing config this file must accept, and 2*2 + 1*4 = 8 is already
+    # above a 6 GB cap. One holder per tier is the sum that must fit.
     cap = tiers["shared"]["max_heap_sum_gb"]
+    one_each = 0
     for name in ("wide", "heavy"):
         gb = _heap_gb(tiers[name]["heap"])
         if gb is None:
@@ -232,6 +247,12 @@ def load_heads(path=None, cache=True) -> dict:
         if gb * tiers[name]["slots"] > cap:
             _refuse(f"[tiers.{name}] asks {tiers[name]['slots']} slots at {gb} GB, which "
                     f"is above [tiers.shared].max_heap_sum_gb of {cap}")
+        one_each += gb
+    if one_each > cap:
+        _refuse(f"one holder from EACH tier at once already budgets {one_each} GB, "
+                f"which is above [tiers.shared].max_heap_sum_gb of {cap}. This is the "
+                f"mixed worst case the runtime dispatcher actually reaches "
+                f"(`launcher.py`'s `agda_heap_sum_over()`), not the per-tier one above")
 
     # `heads` MAPS A SLOT TO A LIST, ALWAYS, and never to a single row. One shape for
     # both spellings is what stops a reader branching on the type it happened to get; the

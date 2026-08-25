@@ -33,10 +33,16 @@ THE SIX RULES THAT COST THE MOST IF THEY ARE DROPPED
   THE POD HAS NO SESSION, so before A13 nothing started it. MEASURED 2026-08-17: it was
   not running. `pod run` starts it, `watchdog_tick()` confirms it every tick, and
   `admits()` refuses every Agda task while it is down. A14 restores the two tiers with it,
-  tightened by the owner's ruling of 2026-08-23: WIDE and HEAVY each admit ONE concurrent
-  Agda writer at `-M4g` (was four at `-M8g` and two at `-M12g`), the mixed worst-case heap
-  sum stays at or under 4 GB (was 32 GB), and the third/fourth-slot clause is dead code
-  under one slot.
+  tightened by the owner's ruling of 2026-08-23 (two rulings the same day): WIDE admits
+  TWO concurrent Agda writers at `-M2g` each and HEAVY admits ONE at `-M4g` (was four at
+  `-M8g` and two at `-M12g`; briefly one of each at a flat `-M4g`). WIDE's second slot
+  raced `admits()`'s own census against `launcher.py`'s and was reverted for one hour
+  the same day before the PROPER fix landed and restored it: `admits()` now also asks
+  `agda_registry_slots()`, the same registry count `launcher.py` itself checks, so the
+  two gates cannot disagree (`agda_slots()` and `agda_registry_slots()` have the
+  measurement). The mixed worst-case heap sum stays at or under 6 GB (was 32 GB, then
+  briefly 4 GB), and the third-slot clause is dead code under WIDE's ceiling of two and
+  HEAVY's of one.
 - **AN IDLE SLOT IS CURED, NOT REPORTED (A11).** Rule (g) dispatches the mathematician
   with the standing brief `agents/tasks/POD-REFILL/POD-REFILL.md` when a slot is free and
   the queue holds no dispatchable entry. The program decides only that somebody must be
@@ -61,6 +67,11 @@ Usage:
                       with CODEs it takes only those. A CODE that is not parked
                       is reported and skipped, never silently dropped
     --once            do the above and exit, without entering the loop
+  pod.py unshelve CODE --why "..."
+                      return ONE SHELVED task to PARKED. It never goes straight to
+                      READY: a shelved task re-enters the loop through the same park
+                      every other task is judged from. `--why` is required, and the
+                      whole reversal is one operator's act. A30
   pod.py status       print the state file as a table. It writes nothing
   pod.py stop         write `.pod-state/STOPPED`, wait for every RUNNING worker, then
                       commit the tracked table and log
@@ -234,6 +245,32 @@ SCREEN_REL = Path("dev") / "pod" / "screen.toml"
 BACKLOG_REL = Path("dev") / "pod" / "maintainer-backlog.md"
 STOP_REQUEST_REL = Path("dev") / "pod" / "stop-request.toml"
 STOP_REQUEST = ROOT / STOP_REQUEST_REL
+#: A MATHEMATICIAN DECLARING THAT ONE TASK IS SETTLED, ruled by the owner 2026-08-24 (A30).
+#:
+#: **IT IS THE SAME CHANNEL AS THE DECLARED STOP AND IT IS SCOPED THE SAME WAY.** Only the
+#: mathematician writes it, for the same reason only the mathematician may call a halt:
+#: 「is this obligation delivered somewhere else」is a mathematical judgement and AD3 gives
+#: every one of those to that slot. The owner may always write one by hand.
+#:
+#: **THE MEASURED CASE, 2026-08-23.** `dev/pod/transitions/2026-08.jsonl` seq 3666 and
+#: 3675, 2.5 minutes apart, both `"why": "5 parked"`. Two of the five, `[LJ-1.541]` and
+#: `[LJ-1.572]`, were settled by the resident mathematician's own evidenced judgement and
+#: had NO legal state that is not PARKED, so they held two of five stop slots for ever;
+#: two more were `quota:` parks that re-opened on their own clock minutes later. A
+#: routine vendor window stopped the loop twice because it landed on top of two permanent
+#: parks. This file gives the settled pair a state, and A30's other half stops counting
+#: the vendor window.
+#:
+#: It is READ ONCE, exactly as the stop request is: rule (a3) retires it whether it is
+#: honoured or refused, so a stale file cannot shelve tomorrow's task.
+SHELVE_REQUEST_REL = Path("dev") / "pod" / "shelve-request.toml"
+SHELVE_REQUEST = ROOT / SHELVE_REQUEST_REL
+#: Where an honoured request goes: `dev/pod/shelf/<CODE>.toml.shelved`, one file per
+#: shelved task. It is NOT a rename in place, because `shelve-request.toml.shelved` would
+#: be overwritten by the next shelve and the evidence for the first would be gone. The
+#: directory is created at the first shelve, exactly as `dev/pod/proposals/` is: this
+#: repository has no `.gitkeep` convention and git tracks no empty directory.
+SHELF_REL = Path("dev") / "pod" / "shelf"
 TABLE = ROOT / "dev" / "pod" / "table.toml"
 CORPUS = ROOT / "dev" / "pod" / "replay-corpus.jsonl"
 PROPOSALS = ROOT / "dev" / "pod" / "proposals"
@@ -333,9 +370,13 @@ MATH_BRIEF = ROOT / "agents" / "tasks" / "POD-MATH" / "POD-MATH.md"
 #: appears: `_refill_min_hours()` reads `[limits].refill_min_hours` first.
 REFILL_MIN_HOURS = 1.0
 
-#: A14's two tiers, C-12's own, tightened by the owner's ruling of 2026-08-23: WIDE and
-#: HEAVY each admit ONE concurrent Agda writer at `-M4g` (was four at `-M8g` and two at
-#: `-M12g`), and `dev/pod/heads.toml` `[tiers]` holds both numbers.
+#: A14's two tiers, C-12's own, tightened by the owner's ruling of 2026-08-23 (two
+#: rulings the same day): WIDE admits TWO concurrent Agda writers at `-M2g` each,
+#: HEAVY admits ONE at `-M4g` (was four at `-M8g` and two at `-M12g`). WIDE's second
+#: slot raced `admits()`'s process census against `launcher.py`'s registry one; the
+#: proper fix (`agda_registry_slots()`) closed the race the same day and WIDE's
+#: second slot stands. `dev/pod/heads.toml` `[tiers]` holds the live
+#: numbers.
 #:
 #: THE VOCABULARY HAS ONE HOME AND IT IS `facts.TASK_TIERS`, because `run_agda()` turns
 #: the name into a caliber: a second spelling here would be a second memory cap.
@@ -343,12 +384,19 @@ TIERS = tuple(facts_mod.TASK_TIERS)
 WIDE = facts_mod.DEFAULT_TIER
 HEAVY = next((x for x in TIERS if x != WIDE), WIDE)
 
-#: Six states. The legal set. Nothing else is legal (section 5.2).
-READY, RUNNING, RETURNED, CHECKING, DONE, PARKED = (
-    "READY", "RUNNING", "RETURNED", "CHECKING", "DONE", "PARKED")
-STATES = (READY, RUNNING, RETURNED, CHECKING, DONE, PARKED)
+#: Seven states. The legal set. Nothing else is legal (section 5.2).
+#:
+#: **`SHELVED` IS THE SEVENTH, amendment A30, owner's ruling 2026-08-24.** A park says
+#: "this task is waiting for something". A shelve says "the mathematician has ruled that
+#: nothing is owed here, and re-dispatching it would buy nothing". Both are true records
+#: and neither is DONE, which AD13/R4 reserve for a MEASURED close. The two are separate
+#: STATES and not two park reasons, because rule (a2)'s own invariant is「a park is never
+#: terminal」and a reason whose branch is「never un-park」would make that sentence false.
+READY, RUNNING, RETURNED, CHECKING, DONE, PARKED, SHELVED = (
+    "READY", "RUNNING", "RETURNED", "CHECKING", "DONE", "PARKED", "SHELVED")
+STATES = (READY, RUNNING, RETURNED, CHECKING, DONE, PARKED, SHELVED)
 
-#: The FOURTEEN legal transitions, as (from, to). `NONE` is the creation edge of rule (a1).
+#: The SIXTEEN legal transitions, as (from, to). `NONE` is the creation edge of rule (a1).
 NONE = None
 TRANSITIONS_LEGAL = {
     (NONE, READY),          # 1  a queue entry, rule (a1)
@@ -373,6 +421,16 @@ TRANSITIONS_LEGAL = {
     # CHECKING close that a live return uses. Owner 2026-08-20: do not re-dispatch a
     # head to land files the last worker already wrote.
     (PARKED, CHECKING),     # 14 re-accept after a meter or table repair
+    # **15 and 16. THE SHELF, amendment A30, owner's ruling 2026-08-24.** They are the
+    # ONLY two edges SHELVED has, and the absences are the design. `(SHELVED, DONE)` is
+    # absent for AD13/R4: nothing reaches DONE without a measurement, and a shelve
+    # measures nothing. `(CHECKING, SHELVED)` is absent because a shelve is a
+    # mathematician's declaration and never a row's action (AD11/R1: "this obligation is
+    # delivered by ANOTHER task" is not a fact `matches()` can read off this task's own
+    # acceptance record). A shelved task that should later close un-shelves to PARKED
+    # first and closes through the same CHECKING every other close uses.
+    (PARKED, SHELVED),      # 15 the declared shelve, rule (a3)
+    (SHELVED, PARKED),      # 16 `pod unshelve`, an operator's act
 }
 
 #: The park reasons of section 5.5. Each NAMES its cause and rule (a2) branches on
@@ -473,9 +531,17 @@ CARRIED = ("pid", "proc_start", "brief", "agda", "sandbox", "model", "log", "fin
 #: failed onto it, and `launch()` reads it back to skip that model on the retry it
 #: triggers. All three are copied ONCE, at creation or at the park that adds them, exactly
 #: as `exclusive` is.
+#:
+#: **A30 ADDS THREE MORE, and all three belong to the SHELVED state.** `shelved_at`
+#: mirrors `parked_at` so the digest's elapsed clock stops for a shelved task;
+#: `shelve_ref` names the retired request file, which is the durable evidence on disk;
+#: `shelve_reopen` is the one named condition that would justify un-shelving, and it is
+#: REQUIRED at entry, because a shelve with no reopen condition is a drop and the
+#: Boundary discards nothing.
 ADDED = ("status", "role", "effort", "exclusive", "attempt", "predecessor", "run",
          "record", "obl_before", "row", "park_reason", "parked_at", "head_slot",
-         "scope_narrow", "unbound_before", "tier", "avoid_models")
+         "scope_narrow", "unbound_before", "tier", "avoid_models",
+         "shelved_at", "shelve_ref", "shelve_reopen")
 
 FIELDS = CARRIED + ADDED
 
@@ -503,10 +569,14 @@ class Task:
         if self.reported is None:
             self.reported = False
         if self.tier not in TIERS:
-            # A14. An ABSENT declaration is WIDE, because `-A64m -I0 -M4g` is the caliber
-            # `run_agda()` really sets, so WIDE is the true worst case and not an
-            # optimistic one. A declaration that is PRESENT and unreadable is a different
-            # case and `task_tier()` takes the conservative tier there.
+            # A14. An ABSENT declaration is WIDE, because `-A64m -I0 -M2g` is the caliber
+            # `run_agda()` really sets by default, so WIDE is what the acceptance runner
+            # actually applies and not an optimistic guess. A declaration that is PRESENT
+            # and unreadable is a different case and `task_tier()` takes HEAVY there,
+            # the tier with the LARGER per-process cap (owner's ruling 2026-08-23,
+            # second same-day ruling: HEAVY's `-M4g` now exceeds WIDE's `-M2g`, so
+            # "conservative" for an unreadable declaration means the bigger cap, not
+            # the smaller one).
             self.tier = WIDE
 
     def to_dict(self):
@@ -750,7 +820,7 @@ def replay_log(st, root=None):
     ever depends on the half the fold cannot restore.
 
     EVERY FIELD IS CHECKED BEFORE IT IS FOLDED, and a field of the wrong type is ABSENT.
-    A line whose `to` is not one of the six states moves no task, because `cmd_status()`
+    A line whose `to` is not one of the seven states moves no task, because `cmd_status()`
     formats `status` and `route()` compares it; a `facts` object that is not a complete
     six-fact record is dropped, because `matches()` INDEXES the six keys and a partial one
     raised `KeyError` inside rule (a2). A tracked file that any agent may edit is exactly
@@ -785,6 +855,18 @@ def replay_log(st, root=None):
             # `dev/pod/table.toml` was written 33 minutes later, which is rule (a2)'s whole
             # retry condition, and the task was still PARKED 24 hours on.
             t.park_reason = line["reason"]
+        if to == SHELVED:
+            # **THE SAME SHAPE THE PARK REASON WAS LOST IN, and it is not reintroduced.**
+            # `emit()` writes the three shelve fields onto the task and into the line
+            # under their own keys, so the fold reads them by name. Without this a folded
+            # state carries a SHELVED task with no reopen condition and no evidence path,
+            # which is exactly the drop A30 exists to forbid.
+            if isinstance(line.get("shelve_ref"), str):
+                t.shelve_ref = line["shelve_ref"]
+            if isinstance(line.get("reopen"), str):
+                t.shelve_reopen = line["reopen"]
+            if t.shelved_at is None:
+                t.shelved_at = _epoch(line.get("ts"))
         if "attempt" in line:
             t.attempt = _int(line["attempt"], t.attempt or 0)
         if t.tier not in TIERS:
@@ -888,7 +970,7 @@ def _absorb_disk(st, root=None, keep=None):
 
 
 def emit_event(st, event, root=None, **fields):
-    """One log line that is NOT a task transition, and there are exactly SIX kinds.
+    """One log line that is NOT a task transition, and there are exactly SEVEN kinds.
 
     Section 6.7's `batch` line, which `harvest_batch()` writes and hands to the next batch
     as input; section 7.4 Part 1b's `retrieval` line, which carries the miss signal;
@@ -899,10 +981,13 @@ def emit_event(st, event, root=None, **fields):
     silent; and the `reap` line of 2026-08-22, which records every Agda process
     `reap_orphan_agda()` killed and every tick on which its census went BLIND, because a
     program that kills a process on this machine without saying so is worse than one that
-    leaves it running. An honoured declaration is a real transition and takes the
-    `STOPPED` line. None of the six moves a task, so none may claim one of the twelve
-    transitions; writing them through `emit()` would need a thirteenth edge that means
-    nothing.
+    leaves it running; and the `shelve_request` line of 2026-08-24 (A30), which records a
+    mathematician's DECLARED shelve that rule (a3) REFUSED, for exactly the reason the
+    `stop_request` line exists: a declaration the program ignored in silence leaves its
+    author believing it took effect. An honoured declaration is a real transition and
+    takes the `STOPPED` line, or, for a shelve, transition 15. None of the seven moves a
+    task, so none may claim one of the sixteen transitions; writing them through `emit()`
+    would need a seventeenth edge that means nothing.
     """
     root = ROOT if root is None else Path(root)
     line = {"ts": _now_iso(), "task": "", "event": event}
@@ -1013,6 +1098,15 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
                 # ever. MEASURED 2026-08-19 on LJ-1.390 at seq 47 and seq 64.
                 if fields.get("reason") == "no-change":
                     t.record = None
+            if to == SHELVED:
+                # **IT CLEARS NOTHING.** `t.record`, `t.row` and `t.park_reason` are the
+                # shelved task's whole prior park record, and keeping them is what makes
+                # this state non-destructive: `pod unshelve` restores a PARKED task that
+                # knows everything it knew before, so nothing has to be re-derived by a
+                # person reading a log.
+                t.shelved_at = time.time()
+                t.shelve_ref = fields.get("shelve_ref", t.shelve_ref)
+                t.shelve_reopen = fields.get("reopen", t.shelve_reopen)
             if rec is not None:
                 t.record = rec
             if "row" in line:
@@ -1233,10 +1327,22 @@ def make_worktree(code, root=None):
     return wt
 
 
-def salvage_worktree(t, root=None):
+def salvage_worktree(t, root=None, home_only=False):
     """Copy a task's declared scope AND its task home back from its worktree.
 
     Returns [] or the refusals.
+
+    `home_only` restricts the copy to paths under `agents/tasks/<CODE>/` and skips
+    `## SCOPE (write)` entirely. **A PARK IS NOT A CLOSE, and copying a `src/` edit out
+    of an UNVALIDATED attempt has a cost the DONE path does not.** The DONE call commits
+    immediately after (`_accept_one()`), so nothing it copies is ever left dirty in the
+    main tree. The `attempt_max` park call added 2026-08-23 has no commit to follow it:
+    an owner's-review-caught defect found that a bare call would leave a salvaged `src/`
+    file dirty and uncommitted, and `maintainer_scope_ok()` (R15) does not exempt `src/`
+    the way it exempts `agents/tasks/`, so the NEXT maintainer batch refuses `scope` on a
+    path the maintainer never touched. `agents/tasks/` IS exempt (`stamp_pod_marker()`
+    proves the program made the home), so a task-home-only copy cannot trigger that
+    deadlock. Pass `home_only=True` from any call site that does not commit right after.
 
     **THE SCOPE STOPS BEING AN HONOUR SYSTEM FOR EVERYTHING OUTSIDE THE TASK HOME.**
     A write to `src/` or another guarded path that the brief did not name never
@@ -1281,8 +1387,11 @@ def salvage_worktree(t, root=None):
     if rc != 0:
         return [f"the worktree has no base commit: {' '.join(base.split())[:160]}"]
     base = base.strip()
+    home = f"agents/tasks/{agents_tree.normalise(t.code)}/"
     bad, moved = [], []
     for rel in salvage_copy_paths(t, wt, root):
+        if home_only and not rel.startswith(home):
+            continue                          # `## SCOPE (write)`, not this call's job
         wsrc, mdst = wt / rel, root / rel
         if not wsrc.is_file():
             continue                           # the worker wrote nothing there
@@ -1310,7 +1419,6 @@ def salvage_worktree(t, root=None):
         rc_b, _ = _git(["cat-file", "-e", f"{base}:{rel}"], root)
         rc_d, _ = _git(["diff", "--quiet", base, "--", rel], root)
         if rc_b == 0 and rc_d != 0:
-            home = f"agents/tasks/{agents_tree.normalise(t.code)}/"
             # **TASK-HOME WORKING-TREE DIRT IS THIS TASK'S OWN LEFTOVER.** MEASURED
             # 2026-08-20 on LJ-1.388: the report sat dirty in main from the
             # pre-isolation run, the isolated return matched
@@ -1961,8 +2069,9 @@ def tier_heap_gb(tier):
     """The `-M` cap of one tier, in whole gigabytes, or None when it cannot be read.
 
     THE PARSER HAS ONE HOME. `heads.py` reads the caliber string for its own load-time
-    check of A14's 4 GB sum (owner's ruling 2026-08-23; was 32 GB), and this calls that
-    parser rather than writing a second one:
+    check of A14's 6 GB sum (owner's ruling 2026-08-23, second same-day ruling; was
+    32 GB, then briefly 4 GB), and this calls that parser rather than writing a second
+    one:
     two readers of one field drift, and the field is a memory cap.
     """
     try:
@@ -1975,22 +2084,39 @@ def tier_heap_gb(tier):
 def agda_slots(tier=WIDE):
     """A14's slot count for one tier, cut to the floor when free memory is low or unread.
 
-    OWNER'S RULING 2026-08-23 SUPERSEDES C-12's TWO-TIER FIGURES: under any
-    circumstances, only ONE Agda writer, at a 4 GB cap. Both `[tiers.wide]` and
-    `[tiers.heavy]` now carry `slots = 1` and `heap = "-A64m -I0 -M4g"`, and the mixed
-    worst-case heap sum stays at or under 4 GB, which `heads.py` checks at load and
-    `heap_sum_ok()` checks per admission. `free_memory_pct_for_extra` (C-12's 25 percent)
-    still gates a THIRD slot, but with `slots = 1` the floor below (`min(slots, 2)`)
-    already equals `slots` itself, so the low-memory branch and the ordinary branch now
-    return the same number: there is no third or fourth slot left to hold back.
+    OWNER'S RULING 2026-08-23 SUPERSEDES C-12's TWO-TIER FIGURES, TWICE THE SAME DAY,
+    WITH A RACE FOUND AND FIXED IN BETWEEN. The first ruling flattened both tiers to
+    one writer at a 4 GB cap; the second gave WIDE a smaller 2 GB cap AND raised it to
+    two writers. The two-writer half raced for one hour before the proper fix landed:
+    MEASURED, it stopped the loop at `parked_max` within minutes, because `admits()`
+    here gated on `agda_pileup()` ALONE (a `ps`-based census of Agda processes running
+    THIS INSTANT) while `launcher.py`'s own dispatch check gates on `agda_holders()`
+    (the registry's count of agents CURRENTLY ASSIGNED a slot, whether or not one is
+    inside an `agda` invocation right now) -- an agent spends most of its session not
+    running `agda`, so the two counts disagreed, `admits()` waved a dispatch through
+    that `launcher.py` then refused, and `_rule_f()` read that refusal as a park.
+    `admits()` now ALSO asks `agda_registry_slots()`, which reads the SAME registry
+    census `launcher.py` reads, so the two counts cannot disagree any more; WIDE's
+    second slot was restored the same day once this landed. `[tiers.wide]` carries
+    `slots = 2` and `heap = "-A64m -I0 -M2g"`; `[tiers.heavy]` carries `slots = 1` and
+    `heap = "-A64m -I0 -M4g"`, unchanged throughout. The mixed worst-case heap sum (one
+    HEAVY plus one WIDE at once, the largest live mix the slot ceilings admit) stays at
+    or under 6 GB, which `heads.py` checks at load and `heap_sum_ok()` checks per
+    admission. `free_memory_pct_for_extra` (C-12's 25 percent) still gates a THIRD
+    slot, but the floor below (`min(slots, 2)`) never drops below either tier's own
+    `slots`, so the low-memory branch and the ordinary branch return the same number
+    for either tier: there is no third slot left to hold back, on WIDE or on HEAVY.
 
     THE TIER SURFACE IS THIN AND THAT IS DISCLOSED. No `[row.when]` key names a tier, so
     a task declares one in the `agda_tier:` line of its brief's `## HEAD` block, which
     `task_tier()` reads and no pre-flight check enforces. A brief that names none is WIDE.
-    A HEAVY declaration still buys the registry record's own `heavy` label for the heap
-    sum, but both tiers now dispatch the SAME caliber, `-A64m -I0 -M4g` (A15's WIDE
-    caliber for the program's own acceptance run is unaffected by which tier a task
-    declares).
+    A HEAVY declaration buys the registry record's own `heavy` label for the heap sum,
+    the worker's own live pane a bigger `-M4g` cap than WIDE's `-M2g`, AND the same
+    `-M4g` for `accept.py:run_acceptance()`'s own measurement: `tier = getattr(t,
+    "tier", None) or DEFAULT_TIER` reads the task's OWN tier there too, defaulting to
+    WIDE only when the task carries none. The two calibers can differ again now that
+    the day's second ruling split them apart, which is why A14 rules the record must
+    carry `tier` beside `caliber`: two measurements are compared only inside one tier.
 
     THE DANGLING HALF, AND IT IS A DOCUMENTATION GAP RATHER THAN A CODE ONE. No brief
     template and no slot instruction file names `agda_tier:` today: `grep -rn agda_tier
@@ -2016,16 +2142,23 @@ def agda_slots(tier=WIDE):
 
 
 def heap_sum_ok(st, t, tier):
-    """A14's mixed worst case: the sum of the running heap caps stays at or under 4 GB
-    (owner's ruling 2026-08-23; was 32 GB).
+    """A14's mixed worst case: the sum of the running heap caps stays at or under 6 GB
+    (owner's ruling 2026-08-23, second same-day ruling; was 32 GB, then briefly 4 GB).
 
     ONE TIER'S OWN ARITHMETIC IS NOT ENOUGH, and that is why this exists beside
-    `agda_slots()`. One WIDE writer is 4 GB and one HEAVY writer is also 4 GB, so each
-    tier alone holds; one of each at once is 8 GB, which no per-tier count refuses (both
-    tiers now cap at ONE, so this is the ONLY combination the sum needs to catch). C-12
-    measured the cost of getting this wrong on 2026-08-02, at the OLD, wider caps: four
-    unguarded parallel writers OOM-crashed a 64 GB machine and took four in-flight tasks
-    down.
+    `agda_slots()`. Two WIDE writers together are 4 GB, so WIDE alone holds under its
+    own two-slot ceiling; HEAVY alone is 4 GB under its own one-slot ceiling; but one
+    of each AT ONCE is 6 GB, which no per-tier count refuses on its own, because each
+    tier's ceiling only ever counts HOLDERS OF ITS OWN TIER (WIDE's ceiling of 2 admits
+    a writer even while HEAVY already holds its one slot, and the reverse). The 6 GB
+    bound is sized for that one-of-each mix, which the slot ceilings make the worst
+    reachable one -- two HEAVY, or three writers of any mix, are unreachable under
+    either tier's own count, and `admits()`'s `agda_registry_slots()` limb is what
+    makes "under either tier's own count" a claim BOTH censuses agree on (MEASURED,
+    2026-08-23: for one hour it was not, and `agda_slots()`'s own docstring has the
+    race and the fix). C-12 measured the cost of getting this wrong on 2026-08-02, at
+    the OLD, wider caps: four unguarded parallel writers OOM-crashed a 64 GB machine
+    and took four in-flight tasks down.
 
     IT COUNTS THE POD'S OWN WRITERS, which is what it can attribute a tier to. The census
     of `agda_pileup()` counts every Agda process on the machine and `admits()` refuses on
@@ -2092,6 +2225,61 @@ def agda_pileup():
     if not isinstance(per_parent, dict) or _int(total) is None:
         return 0, {}, "agda_pileup returned an unreadable census; it is BLIND"
     return _int(total), per_parent, warning
+
+
+def agda_registry_slots(tier):
+    """How many LIVE holders the DISPATCH REGISTRY counts for one tier, or None if BLIND.
+
+    OWNER'S RULING 2026-08-23, PROPER FIX AFTER AN EMERGENCY REVERT THE SAME DAY.
+    `agda_pileup()` above answers "how many `agda` OS processes are running THIS
+    INSTANT", a `ps` census. That is NOT the same question as "how many slots does
+    this tier have OUT, right now", because a dispatched agent holds its slot for its
+    whole session and spends most of it reading, writing and thinking, not inside an
+    `agda` invocation. MEASURED live, the gap that broke WIDE's two-slot ceiling: two
+    dispatched WIDE agents, `agda_pileup()` read `(0, {}, None)` while the registry
+    (`scripts/pod/launcher.py`'s `agda_holders()`) held both. `admits()` used to ask
+    only the process census, so it waved a third dispatch through that
+    `launcher.py`'s OWN internal slot check then refused, which `_rule_f()` read as a
+    park -- five of them in a row emptied `parked_max` and stopped the loop.
+
+    THIS FUNCTION ASKS THE SAME QUESTION `launcher.py` ASKS ITSELF, so `admits()` can
+    refuse BEFORE a dispatch attempt that would only be refused again downstream. IT
+    CALLS `launcher.py`'s OWN `agda_holders_in_tier()` RATHER THAN RE-FILTERING HERE,
+    the second same-day fix: a hand-written copy of the same filter drifted from it
+    once already (this file counted a tier's own holders; `launcher.py`'s dispatch
+    check counted ACROSS both tiers against the one tier asked about; an opus-5 review
+    reproduced the disagreement live), and calling the one shared implementation is
+    the only way two censuses cannot diverge a third time. `agda_holders_in_tier()`
+    is already filtered to `rec_alive()` entries (`running()` in `scripts/pod/
+    launcher.py`), so a crashed agent's stale registry row does not count forever, and
+    an untagged pre-A14 record counts as the DEFAULT tier, never as zero, matching
+    `agda_heap_sum_over()`'s own rule for the same reason.
+
+    BLIND MEANS REFUSE, exactly as `agda_pileup()`'s own docstring rules: a launcher
+    that cannot be loaded, a registry that cannot be read (`launcher.load()` raises
+    `SystemExit` by design on a corrupt file, FM6, and that must never propagate
+    through `admits()` and kill the whole loop), or a function this version of the
+    launcher does not carry (`getattr`, never a bare attribute access, for the same
+    hot-restart reason `agda_orphans()` documents) all answer None here, and `admits()`
+    treats None as a refusal, never as an empty tier.
+    """
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    load_fn = getattr(mod, "load", None)
+    holders_fn = getattr(mod, "agda_holders_in_tier", None)
+    if not callable(load_fn) or not callable(holders_fn):
+        return None
+    try:
+        reg = load_fn()
+        holders = holders_fn(reg, tier)
+    except SystemExit:                        # FM6: a corrupt registry.json REFUSES loudly
+        return None                          # elsewhere; here it is BLIND, like agda_pileup()
+    except Exception:                        # noqa: BLE001. A census that RAISES is blind
+        return None
+    if not isinstance(holders, dict):
+        return None
+    return len(holders)
 
 
 #: The reaper's memo, the shape `_WATCHDOG` uses: ONE line per BLIND reason, not one a
@@ -2237,13 +2425,29 @@ def admits(st, t, agda=None):
     EXCLUSIVE IS NOT ONLY ABOUT SLOTS. A `machine: exclusive` task gets the machine alone
     and stays READY while the load average sits above `exclusive_max_load1`.
 
-    A13 AND A14 ADD THREE LIMBS TO THE AGDA HALF, and all three are C-12's, tightened by
-    the owner's ruling of 2026-08-23. The watchdog must be UP, because it is the 6 GB
-    per-process backstop (was 14 GB) and the 8 percent free floor and nothing else
-    provides them. The slot ceiling is the TIER's, one for WIDE and one for HEAVY (was
-    four and two), and the third-slot clause is dead code under one slot. And the mixed
-    worst-case heap sum stays at or under 4 GB (was 32 GB), which no per-tier count
-    catches.
+    A13 AND A14 ADD FOUR LIMBS TO THE AGDA HALF NOW, and all are C-12's, tightened by
+    the owner's ruling of 2026-08-23, twice the same day, with a race found and fixed
+    in between (`agda_slots()` and `agda_registry_slots()` have the measurement). The
+    watchdog must be UP, because it is the 6 GB per-process backstop (was 14 GB) and
+    the 8 percent free floor and nothing else provides them. The slot ceiling is the
+    TIER's and it is now checked TWICE, by two INDEPENDENT censuses that must BOTH
+    agree: `agda_pileup()`'s `ps`-based count of Agda processes running this instant,
+    and `agda_registry_slots()`'s count of the dispatch registry's own live holders,
+    which `scripts/pod/launcher.py`'s OWN internal slot check reads too. The process
+    census alone let a dispatch through that the registry check downstream refused
+    (five of those in a row emptied `parked_max` and stopped the loop, for the one
+    hour WIDE carried two slots without the registry check); the registry census
+    closes it, and WIDE's two slots stand. **A SECOND, NARROWER RACE SURVIVED THAT
+    FIX**, found by an opus-5 review the same day and closed the same day: the
+    registry check on EACH side used to filter holders by tier differently, so a live
+    holder of ONE tier could refuse (or fail to refuse) a dispatch to the OTHER tier.
+    `agda_holders_in_tier()` (`scripts/pod/launcher.py`) is now the one implementation
+    both `agda_registry_slots()` and `launcher.py`'s own dispatch check call, so a
+    third divergence has nothing left to drift from. WIDE admits two writers and
+    HEAVY admits one (was four and two under C-12), and the third-slot clause is dead
+    code under WIDE's ceiling of two and HEAVY's of one. And the mixed worst-case heap
+    sum stays at or under 6 GB (was 32 GB, then briefly 4 GB), which no per-tier count
+    catches on its own.
 
     **THE PILE-UP LIMB REFUSES EVERY TASK AND NOT ONLY AN AGDA ONE**, because it runs
     above the `if not t.agda` early-out. That is deliberate: C-12's hazard is the machine
@@ -2272,7 +2476,14 @@ def admits(st, t, agda=None):
         return False                          # A13. The backstop is down
     tier = tier_of(t)
     if total >= agda_slots(tier):
-        return False                          # A14. The tier's own ceiling
+        return False                          # A14. The tier's own ceiling, BY PROCESS CENSUS
+    held = agda_registry_slots(tier)
+    if held is None:
+        return False                          # BLIND, same direction as agda_pileup()'s own
+    if held >= agda_slots(tier):
+        return False                          # A14, PROPER FIX 2026-08-23: the SAME ceiling,
+                                              # by REGISTRY CENSUS. `agda_registry_slots()`'s
+                                              # own docstring has the race this closes.
     return heap_sum_ok(st, t, tier)           # A14. The mixed worst case
 
 
@@ -2669,14 +2880,20 @@ def _tee(buf):
 
 
 def _omlx_excluded(cfgs, root=None):
-    """`cfgs`, with every `pi_provider == "omlx"` config dropped while `make check` runs.
+    """`cfgs`, with every `pi_provider == "omlx"` config dropped when the lock is held
+    AND system memory is short.
 
-    OWNER'S RULING 2026-08-23, the reverse of `scripts/gate/check-omlx-quiet.py`: the
-    whole-tree typecheck and qwen's local inference must never run at the same time.
-    That script refuses `make check` while `omlx-server` is live; this is the OTHER
-    direction, refusing to DISPATCH qwen while `make check`'s own `typecheck` target
-    holds `MAKE_CHECK_LOCK` (the Makefile creates it with `trap ... EXIT INT TERM`
-    around the Agda call, so a Ctrl-C or a failed typecheck still clears it).
+    OWNER'S RULING 2026-08-23, RELAXED 2026-08-24, the reverse of `scripts/gate/
+    check-omlx-quiet.py`: the whole-tree typecheck and qwen's local inference no
+    longer must never run at the same time, only never run BOTH under a tight memory
+    floor. That script refuses `make check` while `omlx-server` is live and memory is
+    short; this is the OTHER direction, refusing to DISPATCH qwen while `make check`'s
+    own `typecheck` target holds `MAKE_CHECK_LOCK` (the Makefile creates it with
+    `trap ... EXIT INT TERM` around the Agda call, so a Ctrl-C or a failed typecheck
+    still clears it) AND `free_memory_pct()` reads at or under `free_memory_pct_for_
+    extra`, the SAME floor `check-omlx-quiet.py`'s own docstring measures against
+    (64 GB box, qwen's watchdog-bounded 24 GB worst case, make check's 16 GB cap, 84%
+    free measured live with qwen already serving a real dispatch).
 
     IT NEVER RAISES AND NEVER BLOCKS ON THE LOCK ITSELF. Existence is a stat, not a
     hold; a torn read of a file mid-`touch` cannot happen from a plain `Path.is_file()`.
@@ -2686,6 +2903,14 @@ def _omlx_excluded(cfgs, root=None):
     [legal.pi_provider]`); if a future model shares that provider, this excludes it too,
     which is correct: the provider is what carries the local footprint, not the model
     name.
+
+    **AN UNREADABLE LOCK IS A COURTESY NO-OP, EXACTLY AS BEFORE**: this guard is not
+    C-12's own backstop, so refusing to dispatch on an unreadable path would be
+    inventing a refusal. **AN UNREADABLE `free_memory_pct()` IS THE OTHER DIRECTION**,
+    once the lock is confirmed held: the lock being held means `make check` is
+    DEFINITELY running, so a blind memory sensor there falls back to the pre-relax
+    behaviour (exclude), FM12's ordinary shape, rather than dispatching qwen blind
+    into a confirmed-running typecheck.
     """
     root = ROOT if root is None else Path(root)
     lock = root / ".pod-state" / "make-check.lock"
@@ -2695,6 +2920,16 @@ def _omlx_excluded(cfgs, root=None):
         return cfgs                            # unreadable: never guess a refusal here
     if not held:
         return cfgs
+    try:
+        cfg = heads_mod.load_heads()
+        need = cfg["tiers"]["shared"]["free_memory_pct_for_extra"]
+    except (heads_mod.HeadsError, KeyError, TypeError):
+        need = None
+    if not isinstance(need, (int, float)):
+        return tuple(c for c in cfgs if c.get("pi_provider") != "omlx")
+    pct = free_memory_pct()
+    if pct is not None and pct > need:
+        return cfgs                            # measured room: the relaxation's point
     return tuple(c for c in cfgs if c.get("pi_provider") != "omlx")
 
 
@@ -3073,7 +3308,7 @@ def retry_refused_commits(st, root=None):
             pass
 
 
-def notify_owner(why, root=None):
+def notify_owner(why, root=None, title="POD 已停止"):
     """The stop push, AD20. The loop has exactly TWO stops and both push immediately.
 
     Rule (d), when the parked count reaches `parked_max`, and `apply()`, when a
@@ -3081,11 +3316,16 @@ def notify_owner(why, root=None):
     reads both secrets from the environment and it EXISTS since 2026-08-18; the
     `is_file()` guard stays, because a missing channel must never stop the loop from
     stopping. The sentence that called it day 7's future work outlived the file by a day.
+
+    **`title` EXISTS BECAUSE A THIRD CALLER IS NOT A STOP** (A30, 2026-08-24). Rule (a3)
+    pushes once when a task leaves the loop's attention for good, and sending that under
+    the title「POD 已停止」would tell the owner the loop halted when it did not. The
+    default is unchanged, so both stops read exactly as they always did.
     """
     root = ROOT if root is None else Path(root)
     if not BARK.is_file():
         return False
-    env = dict(os.environ, BARK_TITLE="POD 已停止", BARK_GROUP="Bedrock POD",
+    env = dict(os.environ, BARK_TITLE=str(title), BARK_GROUP="Bedrock POD",
                BARK_BODY=str(why)[:140])
     try:
         subprocess.run(["sh", str(BARK)], cwd=root, env=env, timeout=60,
@@ -3372,7 +3612,8 @@ def maintainer_scope_ok(root=None, proposal=None):
 #: `<name>.toml.<verdict>`, which is the PROGRAM's own write and never the model's,
 #: so R15 excludes all of them exactly as it excluded `.admitted` alone before.
 RETIRED_SUFFIXES = ("admitted", "parse", "scope", "empty", "refused", "reject",
-                    "stopped")   # the declared stop of 2026-08-18
+                    "stopped",   # the declared stop of 2026-08-18
+                    "shelved")   # the declared shelve of 2026-08-24, A30
 
 
 def retire_proposal(path, verdict, root):
@@ -3614,14 +3855,43 @@ def write_batch_brief(st, root=None):
         "## THE PARKED TASKS, from the transition log",
     ]
     for t in parked:
-        f = (t.record or {}).get("facts") or {}
+        rec = t.record or {}
+        f = rec.get("facts") or {}
         reason = t.park_reason or park_reason_of(t.code, root) or ""
         loud = (" LOUDEST INPUT: this row matched again and again and never changed the"
                 " facts." if reason.startswith("attempt_max:") else "")
+        # **THE MEASUREMENT THIS LINE MISSED, owner's-review finding, 2026-08-23.**
+        # `changed_files_own` (`accept.py`'s `run_acceptance()`) lives outside `facts`,
+        # on purpose (it is not a `[row.when]` key), which meant it never reached the ONE
+        # document the maintainer reads to judge a park. [LJ-1.582]'s second arm read
+        # "46 changed files" here with none of them its own, and only a manual mtime
+        # check found that out.
+        own = rec.get("changed_files_own")
+        ch = f.get("changed_files") or []
+        if own is None:
+            own_note = ""
+        elif not own and ch:
+            own_note = " (INHERITED: none of them are this attempt's own)"
+        else:
+            own_note = f" ({len(own)} of them this attempt's own)"
         body.append(f"- {t.code}: reason `{reason}`, exit_code "
                     f"{f.get('exit_code')}, error_class {f.get('error_class')}, "
                     f"obligations_delta {f.get('obligations_delta')}, "
-                    f"{len(f.get('changed_files') or [])} changed files.{loud}")
+                    f"{len(ch)} changed files{own_note}.{loud}")
+    # **THE SHELF IS NAMED AND NOTHING ON IT IS RE-ASKED, A30.** `st.of(PARKED)` above
+    # excludes a shelved task by construction, so without this line a settled task simply
+    # vanishes from the one document the maintainer reads and there is no way to tell
+    # that from a task that closed. MEASURED before the state existed: 31 of the 121
+    # briefs under `agents/tasks/POD-BATCH/` named `[LJ-1.541]` under `## THE PARKED
+    # TASKS`, every one of them with the `LOUDEST INPUT` marker, and every one of them
+    # asking for a row that no row could supply. This section is CODES ONLY and its size
+    # does not grow with the count: re-stating the facts is the thing it exists to stop.
+    shelved = st.of(SHELVED)
+    if shelved:
+        body += ["", "## THE SHELVED TASKS: no action, no row", "",
+                 f"- {', '.join(t.code for t in shelved)}. Ruled settled by the "
+                 f"mathematician; see `dev/pod/shelf/`. They hold no `parked_max` slot "
+                 f"and they are not asking you for anything."]
     body += batch_lists(root)
     # THE BACKLOG TRAVELS WITH EVERY BATCH. Without this the file is a note nobody opens:
     # the maintainer reads the brief it was handed and nothing else.
@@ -3880,18 +4150,19 @@ def write_digest(st, root=None):
 
 
 def prune_logs(days=30, st=None, root=None):
-    """Section 4.0's retention: 30 days after the task reaches DONE or PARKED.
+    """Section 4.0's retention: 30 days after the task reaches DONE, PARKED or SHELVED.
 
     THE COMPARABLE HOLDS 931 MB OVER 1,017 FILES, which is why a retention exists at all.
     A log whose task is still live is NEVER pruned, whatever its age, because the file is
-    the only transcript of a running worker.
+    the only transcript of a running worker. A SHELVED task is as closed as a parked one
+    (A30), so it joined the set the day the state was built.
     """
     root = ROOT if root is None else Path(root)
     d = root / ".pod-state" / "logs"
     if not d.is_dir():
         return 0
     closed = {c for c, t in (st.tasks if st else {}).items()
-              if t.status in (DONE, PARKED)}
+              if t.status in (DONE, PARKED, SHELVED)}
     cut, n = time.time() - days * 86400, 0
     for f in sorted(d.iterdir()):
         if not f.is_file():
@@ -3921,10 +4192,26 @@ def apply(action, t, rec, row_id, st, root=None):
     r = "row:" + str(row_id)                   # the park reason, section 5.5
     row = _row_of(row_id, root)
     if action == "park":
-        emit(st, t, CHECKING, PARKED, rec=rec, row=row_id, reason=r, root=root)
+        # THIS PARK ALSO SALVAGES, same reasoning as the `attempt_max` branch above
+        # (owner's ruling 2026-08-23) and MEASURED on `[LJ-1.626]`, 2026-08-24: a plain
+        # `park` row reopens no more reliably than `attempt_max` does (B2 keeps both from
+        # reopening on an unrelated table write), so a worker's task-home artifacts sat
+        # unreachable in `.pod-state/worktrees/` with nothing ever copying them out. The
+        # mathematician flagged the gap directly: salvage ran at the `attempt_max` branch
+        # and the escalate/plain-park paths, and only the first was ever measured to
+        # matter, on the wrong assumption that a worktree is never abandoned outright.
+        # `home_only=True` for the same reason it is not optional at `attempt_max`: a
+        # plain park has no commit to follow it, and a salvaged `## SCOPE (write)` path
+        # (typically under `src/`) would sit dirty with no committer, reproducing backlog
+        # item 9's deadlock through a path the `agents/tasks/` exemption does not cover.
+        bad = salvage_worktree(t, root, home_only=True) if WORKTREE_ISOLATION else []
+        emit(st, t, CHECKING, PARKED, rec=rec, row=row_id, reason=r, root=root,
+             detail=(bad[:8] or None))
     elif action == "park_and_split":
         queue_append(split_entry(t, rec))      # a REQUEST entry, section 5.2
-        emit(st, t, CHECKING, PARKED, rec=rec, row=row_id, reason=r, root=root)
+        bad = salvage_worktree(t, root, home_only=True) if WORKTREE_ISOLATION else []
+        emit(st, t, CHECKING, PARKED, rec=rec, row=row_id, reason=r, root=root,
+             detail=(bad[:8] or None))
     elif action == "redispatch":
         t.attempt = _int(t.attempt, 0) + 1
         emit(st, t, CHECKING, READY, rec=rec, row=row_id, root=root)
@@ -4012,6 +4299,10 @@ def pod_tick(st=None, root=None):
     retry_refused_commits(st, root)
     _rule_a1(st, root)
     _rule_a2(st, root)
+    # **(a3) RUNS AFTER (a2) AND BEFORE EVERYTHING ELSE.** (a2) is the automatic un-park,
+    # so a task a table edit would legitimately reopen this tick gets that chance before
+    # any declaration can shelve it. A30.
+    _rule_a3(st, root)
     _rule_b(st, root)
     if _rule_c(st, root) is STOP:
         return STOP
@@ -4021,8 +4312,10 @@ def pod_tick(st=None, root=None):
     # resident mathematician. The maintainer writes the rows a parked task is waiting
     # for. Stopping at `parked_max` without telling the repairman
     # is backwards, and the owner's ruling of 2026-08-19 says so in numbers: the
-    # maintainer is fed at three parks and the loop halts at seven so the repairman gets
-    # four parks of warning.
+    # maintainer is fed at three parks. `parked_max` was 7 at that ruling and is now 5
+    # (owner's ruling 2026-08-23, `dev/pod/heads.toml`, never a literal here): the
+    # runway between feed and halt is smaller than it was, not zero, and the live number
+    # is `heads_mod.limits()["parked_max"]`, never this comment.
     #
     # **THE WARNING WAS VOID WHENEVER THE COUNT JUMPED, and it jumped on the first tick
     # after the grok handover: six parked to NINE in one tick, because rule (c) accepted
@@ -4144,8 +4437,30 @@ def _rule_a2(st, root):
         row_id, _act = _route(t.record, root)  # the WHOLE record, B3
         if row_id is None:
             continue
-        if reason == "attempt_max:" + str(row_id):
-            continue                           # B2: the guilty row did not change
+        # B2: THE GUILTY ROW DID NOT CHANGE, AND THIS MUST CATCH BOTH SPELLINGS OF
+        # "GUILTY". `emit_park()` (`:4067`) writes `reason = "row:" + row_id` for a
+        # PLAIN `park` action (and `park_and_split`), never `"attempt_max:" + row_id` --
+        # that spelling is only reached after an `escalate` row is matched, retried, and
+        # FINALLY exhausts `attempt_max`. The `attempt_max:`-only check below MEASURABLY
+        # missed the `row:` case: `[LJ-1.603]` parked on `task-lj-1-603-heap-wall-park`
+        # (the very fix maintainer-backlog item 26 asked for, `action = "park"` instead
+        # of a looping `escalate`) with `reason = "row:task-lj-1-603-heap-wall-park"`,
+        # and the FIRST unrelated table.toml write after that park -- any `expire_rows()`
+        # firing on ANY OTHER task's row, or any batch that lands ONE row for something
+        # else -- would have re-routed the SAME record to the SAME row and reopened it to
+        # READY anyway, because `"row:task-lj-1-603-heap-wall-park" != "attempt_max:
+        # task-lj-1-603-heap-wall-park"`. That is a second dispatch into the SAME heap
+        # wall for no reason at all: table.toml's mtime moved, and nothing else did.
+        if reason in ("attempt_max:" + str(row_id), "row:" + str(row_id)):
+            continue
+        # `_act` IS DISCARDED ON PURPOSE, and THIS IS WHY A NEW ROW CANNOT ROUTE A TASK
+        # AROUND ANOTHER DISPATCH. `t.row`, set below, is read only for the status table
+        # and the closing commit message (`:1033`, `:3129`, `:3171`, `:5868`) -- never by
+        # rule (f), which dispatches a READY task exactly as it would any other. Even a
+        # brand-new row whose action is `done` still costs one more full attempt before
+        # `_accept_one()` can see and apply it. Measured 2026-08-24 on `[LJ-1.541]` and
+        # `[LJ-1.572]`: both were candidates for an administrative close via a fresh row,
+        # and this is the reason that path does not exist.
         emit(st, t, PARKED, READY, row=row_id, root=root)
 
 
@@ -4353,6 +4668,166 @@ def _has_fallback_head(slot, model, root):
     return len(cfgs) > 1 and any(c["model"] == model for c in cfgs)
 
 
+# ---------------------------------------------------------------- rule (a3) SHELVE, A30
+
+
+def read_shelve_request(root=None, st=None):
+    """The declared shelve, or a reason it was refused, or None when there is no file.
+
+    Returns a dict carrying `task`, `claim`, `reason`, `evidence`, `reopen` and `by` when
+    the request is well formed, and the string `"refused: ..."` when a file exists but
+    does not carry what a shelve needs.
+
+    **IT IS `read_stop_request()`'s SHAPE AND IT HAS TWO REFUSALS THAT ONE DOES NOT.**
+    A shelve is the same kind of declaration as a halt: a model writes a file and the
+    program obeys it, so the Boundary's own sentence governs both.「Evidence is
+    `file:line`. A report that cannot be checked can only be believed.」
+
+    **`reopen` IS REQUIRED, and requiring it is the whole difference between a shelve and
+    a drop.** A shelve says "nothing is owed here TODAY, and here is the thing that would
+    change that". With no named condition it says only "forget this", and the Boundary
+    discards nothing.
+
+    **THE TASK MUST BE PARKED RIGHT NOW, and the refusal names the state it found.** A
+    shelve of a RUNNING task would abandon a live worker; a shelve of an already SHELVED
+    task is a second declaration about a settled thing. Rule (a2) runs FIRST on every
+    tick, so a task a table edit legitimately re-opened this tick is READY by the time
+    this reads it, and the refusal says so instead of shelving it silently.
+
+    **A REFUSAL IS NOT SILENCE**, exactly as rule (d)'s is: rule (a3) retires the file to
+    `.toml.refused` and logs a `shelve_request` event, because a declaration the program
+    ignored without saying so leaves the mathematician believing it took effect.
+    """
+    root = ROOT if root is None else Path(root)
+    p = root / SHELVE_REQUEST_REL
+    if not p.is_file():
+        return None
+    try:
+        data = tomllib.loads(p.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as e:
+        return f"refused: the file does not parse ({type(e).__name__})"
+    block = data.get("shelve")
+    if not isinstance(block, dict):
+        return "refused: there is no [shelve] table"
+    task = str(block.get("task") or "").strip()
+    claim = str(block.get("claim") or "").strip()
+    reason = str(block.get("reason") or "").strip()
+    reopen = str(block.get("reopen") or "").strip()
+    by = str(block.get("by") or "").strip()
+    ev = block.get("evidence")
+    if not task:
+        return "refused: [shelve].task is missing, so no task is named"
+    if not claim:
+        return ("refused: [shelve].claim is missing, so the record cannot say WHAT was "
+                "settled")
+    if not reason:
+        return "refused: [shelve].reason is missing"
+    if not by:
+        return "refused: [shelve].by is missing, so the declaration has no author"
+    if not reopen:
+        return ("refused: [shelve].reopen is missing, and a shelve with no reopen "
+                "condition is a drop")
+    if not isinstance(ev, list) or not ev:
+        return "refused: [shelve].evidence is missing or is not a list"
+    ev = [str(x) for x in ev]
+    if not any(re.search(r"\S+:\d+", x) for x in ev):
+        return ("refused: not one [shelve].evidence entry carries a `file:line`, and a "
+                "shelve that cannot be checked can only be believed")
+    if st is not None:
+        t = st.tasks.get(task)
+        if t is None:
+            return (f"refused: {task} is not a task this loop knows, and only a PARKED "
+                    f"task can be shelved")
+        if t.status != PARKED:
+            return (f"refused: {task} is {t.status} and not PARKED, so it cannot be "
+                    f"shelved"
+                    + (". Use `pod unshelve` to bring it back to PARKED first"
+                       if t.status == SHELVED else ""))
+    return {"task": task, "claim": claim, "reason": reason, "evidence": ev,
+            "reopen": reopen, "by": by}
+
+
+def _rule_a3(st, root):
+    """(a3) SHELVE. A30, owner's ruling 2026-08-24, and it is a DECLARATION.
+
+    **IT RUNS AFTER RULE (a2) AND THE ORDER IS THE DESIGN.** Rule (a2) is the automatic
+    un-park, so a task a table edit would legitimately reopen on THIS tick gets that
+    chance first. Only what survives (a2) is a shelve candidate, and a request naming a
+    task (a2) has just moved to READY refuses LOUDLY rather than shelving live work.
+
+    **NOTHING AUTOMATIC REACHES THIS STATE AND NOTHING AUTOMATIC LEAVES IT.** There is no
+    clock and no row that shelves: a timer would convert a judgement into an elapsed
+    time and would shelve a task that is merely WAITING for a follow-up (`[LJ-1.599]`)
+    rather than one that is SETTLED. Leaving is `pod unshelve`, an operator's act. Rule
+    (a2) and `cmd_resume --retry` both iterate `st.of(PARKED)`, so both skip a SHELVED
+    task by construction and neither needed a line of new code.
+    """
+    root = ROOT if root is None else Path(root)
+    req = read_shelve_request(root, st)
+    if req is None:
+        return
+    if isinstance(req, str):                   # a malformed declaration. Refuse it LOUDLY
+        emit_event(st, "shelve_request", root=root, result="refused", why=req)
+        retire_proposal(root / SHELVE_REQUEST_REL, "refused", root)
+        return
+    t = st.tasks[req["task"]]
+    # **THE SALVAGE IS `home_only=True` AND IT IS NOT OPTIONAL**, the same call and the
+    # same argument rule (c)'s `attempt_max` park already makes. A shelve has no commit
+    # after it, so a `## SCOPE (write)` path outside `agents/tasks/` would sit dirty in
+    # the main tree with no committer, and `maintainer_scope_ok()` (R15) does not exempt
+    # `src/`: the NEXT maintainer batch would refuse `scope` on a path the maintainer
+    # never touched. `agents/tasks/` IS exempt, so a task-home-only copy cannot do that.
+    #
+    # **THE WORKTREE IS KEPT.** A parked task keeps its tree because that tree is the
+    # scene, and removing one is a DELETION that needs the owner's own direction, never
+    # an assumption. The shelve line records the tree's base commit instead, so a reader
+    # can confirm the evidence was kept rather than trust that it was.
+    bad = salvage_worktree(t, root, home_only=True) if WORKTREE_ISOLATION else []
+    ref = _shelve_ref(t.code, root)
+    emit(st, t, PARKED, SHELVED, root=root,
+         claim=req["claim"], shelve_reason=req["reason"],
+         shelve_evidence=req["evidence"], reopen=req["reopen"], by=req["by"],
+         shelve_ref=str(ref.relative_to(root)) if ref else None,
+         worktree_base=_worktree_base(t.code, root),
+         detail=(bad[:8] or None),
+         why=f"shelved:{req['claim']}")
+    notify_owner(f"shelved:{t.code}. {req['claim']} Reopen: {req['reopen']}",
+                 root, title="POD 已封存一个任务")
+
+
+def _shelve_ref(code, root):
+    """Move the honoured request to `dev/pod/shelf/<CODE>.toml.shelved`. The evidence.
+
+    IT NEVER RAISES, exactly as `retire_proposal()` never does: a rename that fails costs
+    one evidence file and never a transition that is already durable in the log.
+    """
+    root = ROOT if root is None else Path(root)
+    src = root / SHELVE_REQUEST_REL
+    dst = root / SHELF_REL / f"{code}.toml.shelved"
+    try:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        src.rename(dst)
+        return dst
+    except OSError:
+        return None
+
+
+def _worktree_base(code, root):
+    """The shelved task's worktree HEAD, or None. One cheap read, never a judgement."""
+    if not WORKTREE_ISOLATION:
+        return None
+    root = ROOT if root is None else Path(root)
+    wt = worktree_of(code, root)
+    if not wt.is_dir():
+        return None
+    try:
+        out = subprocess.run(["git", "rev-parse", "HEAD"], cwd=wt, timeout=30,
+                             capture_output=True, text=True)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return (out.stdout or "").strip() or None
+
+
 def _rule_b(st, root):
     """(b) OBSERVE. A worker is dead when its pid is dead, or when it ran too long.
 
@@ -4554,8 +5029,33 @@ def _rule_c(st, root):
             # and `stop_loop` do not loop, so capping them would only mean one thing: a
             # row whose action the maintainer CHANGED to `stop_loop` after four accepts
             # would park under the cap and the loop would not stop, which A3 forbids.
+            #
+            # **THIS PARK ALSO SALVAGES, owner's ruling 2026-08-23.** `attempt_max` is
+            # the one park `_rule_a2()` never reopens on its own (B2 above: "the guilty
+            # row did not change"), so whatever the worker built stays reachable only
+            # inside `.pod-state/worktrees/<code>/` until a person acts on it, and
+            # nothing else ever copies it out. MEASURED, `dev/pod/maintainer-
+            # backlog.md` item 28: [LJ-1.541]'s five-attempt bisection (`BisA.agda` ..
+            # `BisG.agda`) parked exactly this way, and the MAIN tree's `agents/tasks/
+            # LJ-1-541/runs/` read empty, because `salvage_worktree()` ran only on a
+            # DONE close. The same copy runs here now. A collision is reported and
+            # never blocks the park: the row is the reason for parking either way, and
+            # `salvage_worktree()` never merges, so it cannot make one worse.
+            # **`home_only=True`, and it is not optional here.** An owner's-review
+            # finding, same date: this park has no commit to follow it, unlike the DONE
+            # path, so a `## SCOPE (write)` path outside `agents/tasks/` (measured at 138
+            # of 495 briefs, mostly `src/`) would sit dirty in the main tree with no
+            # committer. `maintainer_scope_ok()` (R15) does not exempt `src/`, so the
+            # NEXT maintainer batch would refuse `scope` on a path the maintainer never
+            # touched, reproducing backlog item 9's deadlock through a path the
+            # `agents/tasks/` exemption does not cover. Restricting to the task home
+            # avoids it: that prefix IS exempt, and it is also the whole of what item 28
+            # measured missing (a bisection under `agents/tasks/LJ-1-541/runs/`, never a
+            # `src/` edit).
+            bad = salvage_worktree(t, root, home_only=True) if WORKTREE_ISOLATION else []
             emit(st, t, CHECKING, PARKED, rec=rec, row=row_id,
-                 reason="attempt_max:" + str(row_id), root=root)
+                 reason="attempt_max:" + str(row_id), root=root,
+                 detail=(bad[:8] or None))
         elif action == "accept":
             t.attempt = _int(t.attempt, 0) + 1
             emit(st, t, CHECKING, READY, rec=rec, row=row_id, root=root)
@@ -4631,12 +5131,70 @@ def read_stop_request(root=None):
     return claim, reason, ev
 
 
+def stop_counted(st, root=None):
+    """The PARKED tasks that count toward AD14's stop and AD15's maintainer feed.
+
+    **TWO CLASSES OF PARK ARE OUTSIDE BOTH TRIGGERS, and A30 is why.** Owner's ruling,
+    2026-08-24.
+
+    1. **A `quota:` PARK NO LONGER COUNTS. THIS REVERSES THE RULING OF 2026-08-19**, which
+       is recorded in amendment A25 (`dev/memos/LJ-4-pod-program-design.md`) and said the
+       opposite: a vendor's five-hour window counted, on the reasoning that the loop
+       cannot do the project's work while its heads are refused, so a stop that pages the
+       owner is the truer report. **What that ruling could not see is what a quota park
+       does NEXT.** It is the ONE park that re-opens on a clock with no person at all
+       (`_rule_a2()`), so it is self-healing by construction, and counting it means a
+       routine vendor hiccup can spend the stop budget that AD14 reserves for walls the
+       program built itself. MEASURED 2026-08-23: `dev/pod/transitions/2026-08.jsonl` seq
+       3666 and 3675, two full loop stops 2.5 minutes apart, both `"why": "5 parked"`.
+       Two of the five, `[LJ-1.609]` and `[LJ-1.611]`, were `quota:` parks that re-opened
+       on their own minutes later and are DONE today. The vendor window did not stop the
+       loop by itself: it stopped it by landing on top of two permanently settled parks.
+       A25's own text is kept and marked superseded on this point; the rest of A25, which
+       is that the stop NAMES the vendor and the reset time, is untouched.
+    2. **A SHELVED TASK NEVER COUNTED, and it needs no filter here.** SHELVED is a
+       different STATE, so `st.of(PARKED)` excludes it by construction. That is the
+       second reason A30 built a state rather than a fourteenth park reason: this
+       codebase has twice been burned by a trigger that reads a QUALIFIED count
+       (`park_since_last_batch()`'s level-not-edge defect, and `park_stop()`'s recited
+       literal), and a state does the filtering for free.
+
+    **THE FILTER IS A FILTER AND NOT A DELETION.** Every excluded task is still PARKED,
+    still in `pod status`, still in the digest and still in the maintainer's batch brief.
+    What changes is only which parks spend AD14's budget.
+
+    IT READS THE LOG ONLY WHEN THE FOLD LOST THE REASON, exactly as `_rule_a2()` does: a
+    park folded before the 2026-08-19 fold repair carries `park_reason = None` and the
+    line is the only place its name survives.
+    """
+    out = []
+    for t in st.of(PARKED):
+        reason = t.park_reason if isinstance(t.park_reason, str) else ""
+        if not reason:
+            reason = park_reason_of(t.code, root) or ""
+        if reason.startswith("quota:"):
+            continue
+        out.append(t)
+    return out
+
+
 def _rule_d(st, root):
-    """(d) STOP. AD14, at three parked tasks.
+    """(d) STOP. AD14, at `parked_max` parked tasks (originally 3, then 7, now 5 --
+    read `dev/pod/heads.toml [limits].parked_max` for the live number, never a literal
+    here: the sentence this function EMITS already does that, `:4864` below, and a
+    docstring that names the old number is the exact drift its own comment at `:4861`
+    warns against).
 
     THE STOP STOPS DISPATCHING AND NEVER TOUCHES A RUNNING WORKER, so the PARKED count can
-    pass 3 after the stop, because the already-running workers keep landing. That is the
-    honest count and gap M7 states it as a ruling.
+    pass `parked_max` after the stop, because the already-running workers keep landing.
+    That is the honest count and gap M7 states it as a ruling.
+
+    **IT COUNTS `stop_counted()` AND NEVER `st.count(PARKED)`, amendment A30, owner's
+    ruling 2026-08-24.** A `quota:` park is self-healing on a clock and no longer spends
+    AD14's budget, which REVERSES the ruling of 2026-08-19 recorded in A25; a SHELVED
+    task is a different state and was never in this count. `parked_max` itself is
+    unchanged: A30 refines WHAT is counted, never the number. Read `stop_counted()` for
+    the measured case behind both halves.
     """
     # THE DECLARED STOP COMES FIRST AND CARRIES ITS OWN REASON. Owner's ruling of
     # 2026-08-18: a mathematician may call a halt, and that call is a DIFFERENT STATE
@@ -4659,14 +5217,17 @@ def _rule_d(st, root):
         notify_owner(f"{why}. {reason} Evidence: {'; '.join(ev[:4])}", root)
         retire_proposal(root / STOP_REQUEST_REL, "stopped", root)
         return STOP
-    if st.count(PARKED) < _limits()["parked_max"]:
+    counted = stop_counted(st, root)
+    if len(counted) < _limits()["parked_max"]:
         return CONTINUE
     if STOPPED_FILE.exists():
         return STOP                            # already stopped: one line, not one a tick
     # THE SENTENCE COUNTS, it does not recite a literal. Both strings said「3 parked」
     # whatever the limit was, so raising it to 7 on 2026-08-19 would have told the owner
-    # a number the program had stopped obeying.
-    why = f"{st.count(PARKED)} parked"
+    # a number the program had stopped obeying. **AND IT COUNTS WHAT STOPPED THE LOOP**
+    # (A30): a `quota:` park no longer spends the budget, so naming the raw PARKED total
+    # here would page the owner with a number rule (d) did not act on.
+    why = f"{len(counted)} parked"
     emit(st, "", NONE, LOOP_STOPPED, why=why, root=root)
     STOPPED_FILE.parent.mkdir(parents=True, exist_ok=True)
     STOPPED_FILE.touch()
@@ -4691,14 +5252,23 @@ def _rule_e(st, root):
     # **THE 3 IS AD15's OWN NUMBER AND IT IS NO LONGER AD14's.** They were one number
     # until `parked_max` moved to 7 on 2026-08-19 and rule (d) followed it while this line
     # did not. The owner ruled the result correct and told the design to record it: the
-    # maintainer is fed at the THIRD park and the loop halts at the seventh, so the role
-    # that repairs the loop gets four parks of warning before a person is paged. A trigger
-    # that tracked `parked_max` would arrive at the same moment as the stop it exists to
-    # prevent. It stays a literal and not a `[limits]` key, because `[limits]` is the
-    # owner's under AD26; the invariant is that it never exceeds `parked_max`, and
-    # `scripts/tests/test_pod_loop.py` asserts that.
+    # maintainer is fed at the THIRD park and the loop halts at `parked_max`, so the role
+    # that repairs the loop gets some warning before a person is paged -- `parked_max`
+    # WAS 7 AT THAT RULING (four parks of runway) AND IS NOW 5 (owner's ruling
+    # 2026-08-23, `dev/pod/heads.toml`), so the runway is two parks and BATCH_PARKED did
+    # not move with it: read `parked_max` itself for the live number rather than trust a
+    # count here. A trigger that tracked `parked_max` would arrive at the same moment as
+    # the stop it exists to prevent. It stays a literal and not a `[limits]` key, because
+    # `[limits]` is the owner's under AD26; the invariant is that it never exceeds
+    # `parked_max`, and `scripts/tests/test_pod_loop.py` asserts that.
+    # **IT COUNTS `stop_counted()` FOR THE SAME REASON RULE (d) DOES**, amendment A30,
+    # owner's ruling 2026-08-24. AD15's trigger is the WARNING for AD14's stop, so the
+    # two must count the same set or the warning fires for a park the stop will never
+    # act on: a maintainer told to write a row for a `quota:` park has nothing to write,
+    # because a vendor's five-hour window is not a table row. A SHELVED task is a
+    # different state and was never in this count.
     if not started and (hours_since_last_batch(root) >= 12
-                        or (st.count(PARKED) >= BATCH_PARKED
+                        or (len(stop_counted(st, root)) >= BATCH_PARKED
                             and park_since_last_batch(root))):
         prompt_maintainer(st, root)            # it is resident, so this FEEDS, not spawns
         write_digest(st, root)
@@ -4763,7 +5333,6 @@ def _rule_f(st, root):
             b, role = review_brief(t, slot, root), slot
         else:
             b, role = t.brief, head_slot_of(t.brief, root)
-        t.head_slot = None                     # R11. The head is resolved once, here
         if role == "mathematician" and mathematician_busy(st, root):
             continue                           # one resident turn at a time
         try:
@@ -4793,6 +5362,17 @@ def _rule_f(st, root):
             emit(st, t, READY, PARKED, reason="launch", root=root,
                  why=LAUNCH_REFUSAL or None)
             continue
+        # R11. THE HEAD IS RESOLVED ONCE, HERE -- ON SUCCESS, NOT ON ATTEMPT. MEASURED
+        # 2026-08-23: this used to run before `launch()`, so a `t.head_slot` an
+        # escalate action had just set was spent the moment a dispatch was TRIED, not
+        # when one actually happened. A "launch" refusal (the slot race the same day
+        # measured, `agda_slots()`'s docstring has it) or the `mathematician_busy()`
+        # skip above both `continue` past this point without dispatching anything, and
+        # the row's routing decision was gone: the next attempt fell through to
+        # `head_slot_of(t.brief, root)`, the task's OWN base role, silently skipping
+        # the critic review the row asked for. Clearing only on a REAL dispatch keeps
+        # `t.head_slot` alive for the retry that actually uses it.
+        t.head_slot = None
         emit(st, t, READY, RUNNING, pid=pid, brief=t.brief, dispatched_brief=b,
              role=role, obl_before=t.obl_before, root=root)   # K6. brief is the TASK's
     return CONTINUE
@@ -5205,6 +5785,63 @@ def notify_closes(seq_before, root=None):
             "restart. Answer NOTHING TO REPAIR when that is the answer.")
     except Exception:                          # noqa: BLE001. A prompt is never load-bearing
         return None
+    notify_mathematician_of_judgement_parks(closes, root)
+    return what
+
+
+def notify_mathematician_of_judgement_parks(closes, root=None):
+    """Prompt the resident mathematician the same tick a park needs its OWN judgement.
+
+    Owner's ruling, 2026-08-24: MEASURED that day, three genuine judgement parks
+    (`[LJ-1.599]`, `[LJ-1.615]`, `[LJ-1.616]`) sat 3 to 8 hours before the owner asked the
+    maintainer to chase them by hand -- the program told the maintainer at once (this
+    file's own `notify_closes()`, above) and then waited for a person to relay it. This
+    closes that second hop: the mathematician now hears about its OWN park in the same
+    tick the maintainer does, instead of only through a POD-BATCH the maintainer writes
+    later or a nudge the owner has to ask for.
+
+    **ONLY TWO OF THE THIRTEEN `PARK_REASONS` NAME A JUDGEMENT, and this is why the
+    other eleven are excluded rather than a list of two being risky.** `attempt_max:` is
+    a row that matched again and again and never changed the facts (B2); `row:` is a
+    plain `park`/`park_and_split` action row, most often a heap wall (maintainer-backlog
+    item 26). Both ask the same question a table row cannot answer: is the obligation
+    delivered elsewhere, proven futile, or genuinely still open (A30's own two shelve
+    situations are exactly this question). The other eleven reopen on their own
+    (`fallback:`, `quota:`, `admission`, `launch`, `preflight:` once its cause clears) or
+    are the MAINTAINER's own read of the program (`orphan:`, `salvage:`, `no-match`,
+    `r4`, `no-change`, `stop_loop:` is a loop stop and never reaches here as a `to ==
+    PARKED` close) -- paging the mathematician for those would be exactly the noise this
+    function exists to avoid adding.
+
+    IT NEVER PAGES TWICE FOR ONE PARK. `notify_closes()` calls this ONCE per tick with
+    the SAME `closes` list it already built, so a park that reopens and re-parks on a
+    LATER tick pages again then, correctly, because that is a new judgement to make.
+    """
+    parks = [l for l in closes
+             if l.get("to") == PARKED
+             and str(l.get("reason") or "").startswith(("attempt_max:", "row:"))]
+    if not parks:
+        return None
+    mod = facts_mod.launcher()
+    if mod is None:
+        return None
+    what = "; ".join(
+        f"{l.get('task')} row {l.get('row')} reason {l.get('reason')}"
+        for l in parks)
+    try:
+        mod.herdr_prompt(
+            mod.herdr_name(MATH_TASK),
+            "POD-PARK. " + what + ". Each of these asks a judgement no table row can "
+            "answer (AD1/AD3): is the obligation delivered elsewhere, proven futile, or "
+            "genuinely still open? Read `agents/tasks/<CODE>/runs/accept-*.out` for the "
+            "facts and, if a task's worktree is salvaged, "
+            "`.pod-state/worktrees/<CODE>/agents/tasks/<CODE>/`. Send the maintainer your "
+            "judgement and, if it applies, a shelve request (`dev/pod/instructions/"
+            "mathematician_adversarial.md`'s or `mathematician.md`'s own clause has the "
+            "two situations) or a continuation queue entry. No action needed if this is "
+            "already something you are working from elsewhere.")
+    except Exception:                          # noqa: BLE001. A prompt is never load-bearing
+        return None
     return what
 
 
@@ -5273,7 +5910,15 @@ def side_dispatches(st, root=None):
 
 #: What a REFILL is allowed to write, section 6.7 and its own standing brief. A path
 #: outside this, and outside a live task's home, is what item 10 exists to surface.
-REFILL_SCOPE_OK = ("dev/pod/queue.toml", "dev/pod/stop-request.toml")
+#: **`shelve-request.toml` JOINED THIS SET ON 2026-08-24 (A30) FOR THE REASON
+#: `stop-request.toml` IS IN IT.** Both are the mathematician's own declaration channel,
+#: both are scoped to that slot, and a refill that writes one is doing the job it was
+#: dispatched for. `maintainer_scope_ok()` (R15) is deliberately NOT changed: the
+#: maintainer may write nothing but its proposal, so a maintainer batch that writes a
+#: shelve request still refuses on `scope`, which is what makes「only the mathematician
+#: may shelve」a mechanism rather than an honour system.
+REFILL_SCOPE_OK = ("dev/pod/queue.toml", "dev/pod/stop-request.toml",
+                   "dev/pod/shelve-request.toml")
 
 #: Paths the refill is never assigned. A dirty-set delta that names them is someone
 #: else. They are NOT in `PROGRAM_WRITES_PREFIX`: R15 must still refuse a maintainer
@@ -5602,7 +6247,9 @@ def cmd_resume(argv):
     # (a2) skips it for ever, and the five `no-match` parks hold records written before
     # A23 that `sys-obligations-satisfied` cannot reach. **Measured on the live state: all
     # seven route to NO MATCH or carry no record, so a plain resume un-parks none of them
-    # and rule (d) stops the loop again on the first tick, because 7 IS `parked_max`.**
+    # and rule (d) stops the loop again on the first tick, because `parked_max` was 7 at
+    # the time (owner's ruling 2026-08-19; it is 5 as of 2026-08-23, `dev/pod/heads.toml`,
+    # never a literal here) and this incident parked exactly that many.**
     # **`--retry` TAKES CODES, because the seven parked tasks did not all want the same
     # thing.** MEASURED 2026-08-19: three met the coder vendor's quota and never ran at
     # all, so a re-run is the only honest answer; the other four had already delivered and
@@ -5616,14 +6263,53 @@ def cmd_resume(argv):
     # day, so a typo says so instead of looking like a no-op resume.
     parked = {t.code for t in st.of(PARKED)}
     for code in named:
-        if code not in parked:
-            print(f"pod resume: {code} is not PARKED, so --retry skips it. "
-                  f"Parked now: {', '.join(sorted(parked)) or 'none'}", file=sys.stderr)
+        if code in parked:
+            continue
+        # **A SHELVED CODE GETS ITS OWN SENTENCE AND THE COMMAND THAT MOVES IT**, A30. A
+        # generic「not PARKED」would read as a typo for a task that is exactly where the
+        # mathematician put it, and `--retry` must never un-shelve: rule (a3) exists so
+        # that a settled task stops being re-asked, and a blanket `--retry` that swept it
+        # back into the loop would undo the whole state on the first vendor outage.
+        t = st.tasks.get(code)
+        if t is not None and t.status == SHELVED:
+            print(f"pod resume: {code} is SHELVED, not PARKED, so --retry skips it. "
+                  f"`pod unshelve {code} --why \"...\"` returns it to PARKED first.",
+                  file=sys.stderr)
+            continue
+        print(f"pod resume: {code} is not PARKED, so --retry skips it. "
+              f"Parked now: {', '.join(sorted(parked)) or 'none'}", file=sys.stderr)
     for t in list(st.of(PARKED)):
         if retry and (not named or t.code in named):
+            # **THE ATTEMPT COUNT RESETS HERE, and it did not until an owner's-review
+            # finding, 2026-08-23.** This docstring already claimed AD16 dispatches a
+            # resumed task "as a FRESH instance"; the code did not carry `t.attempt`
+            # out. MEASURED on [LJ-1.541]/[LJ-1.547]/[LJ-1.572]: `attempt` stayed 5, 5
+            # and 3 across the park, and `_rule_f()`'s `slot = t.head_slot or
+            # ("mathematician_adversarial" if attempt > 1 and not reviewed(t, root)
+            # else None)` (AD27) fired on the stale count, so the very brief the
+            # mathematician had just rewritten for a `coder` close would never have
+            # been read: `review_brief()` builds its OWN text from `t.record`, the
+            # OLD timeout, and ignores `t.brief` entirely. `same_row_runs()` reads the
+            # transition LOG and not this field, so resetting it cannot let a row
+            # evade `attempt_max` a second time; only AD27's escalate-on-retry
+            # condition and the dispatch queue's priority order read `t.attempt`.
+            t.attempt = 0
+            # **THE TIER RE-DERIVES HERE TOO, same shape as `t.attempt` above and the
+            # same 2026-08-23 finding: AD16 calls this a FRESH instance, and `t.tier`
+            # is otherwise "copied ONCE" at CREATE (`task_tier()`'s own comment,
+            # `_rule_a1()` line 4329) and never again.** MEASURED 2026-08-24: four
+            # tasks parked `heap_wall` at WIDE on a whole-tree conjunct that needs
+            # HEAVY's cap on the bare tree alone (owner's ruling, "方案B": route a
+            # wired-master landing to `agda_tier: heavy`). The mathematician's fix is
+            # to edit the SAME brief in place; without this line, `--retry` would
+            # re-ready it at the SAME stale WIDE tier and reproduce the exact wall
+            # the edit was meant to cure. `task_tier()` costs one file read and is
+            # already used at CREATE for the identical purpose.
+            t.tier = task_tier(t.brief, ROOT)
             emit(st, t, PARKED, READY, root=ROOT,
                  why="resume --retry: the owner cleared the cause for this park")
         elif str(t.park_reason or "").startswith("stop_loop:"):
+            t.attempt = 0                      # same fix, same reason, the other branch
             emit(st, t, PARKED, READY, root=ROOT,
                  why="resume: the owner cleared the stop")
     _rule_a2(st, ROOT)
@@ -5642,6 +6328,60 @@ def cmd_resume(argv):
     return cmd_run(argv)
 
 
+def cmd_unshelve(argv):
+    """`pod unshelve CODE --why "..."`. The ONE way out of SHELVED. A30.
+
+    **IT GOES TO PARKED AND NEVER TO READY, and that is the whole safety of it.** A
+    straight READY would re-dispatch the task into whatever made it park in the first
+    place -- an 1800 second timeout, a heap wall -- with no new information, which is the
+    exact waste rule (a3) exists to stop. Un-shelving costs a PARKED slot again, and that
+    is the honest price of asking for the loop's attention back.
+
+    **`--why` IS REQUIRED, at a lighter bar than the request file.** A person is at a
+    terminal, so a `file:line` is not demanded; a sentence is, because the log line is
+    the only record that this reversal had a reason at all.
+
+    **THE ATTEMPT COUNT RESETS**, exactly as `cmd_resume --retry` resets it: the task
+    re-enters the loop as a FRESH instance (AD16), and a stale `attempt` would send
+    AD27's escalate-on-retry test down a path chosen by a count from before the shelve.
+    """
+    named = [a for a in argv if not a.startswith("-")]
+    why = ""
+    if "--why" in argv:
+        i = argv.index("--why")
+        if i + 1 < len(argv):
+            why = str(argv[i + 1]).strip()
+            named = [a for a in named if a != argv[i + 1]]
+    if len(named) != 1:
+        print('pod unshelve: name exactly ONE code. '
+              'Usage: pod unshelve CODE --why "..."', file=sys.stderr)
+        return 1
+    code = named[0]
+    if not why:
+        print(f"pod unshelve: REFUSED. {code} needs --why, because the log line is the "
+              f"only record that this reversal had a reason.", file=sys.stderr)
+        return 1
+    st = load_state()
+    replay_log(st)
+    t = st.tasks.get(code)
+    if t is None:
+        print(f"pod unshelve: REFUSED. {code} is not a task this loop knows. "
+              f"Shelved now: "
+              f"{', '.join(x.code for x in st.of(SHELVED)) or 'none'}", file=sys.stderr)
+        return 1
+    if t.status != SHELVED:
+        print(f"pod unshelve: REFUSED. {code} is {t.status} and not SHELVED, so there "
+              f"is nothing to un-shelve. Shelved now: "
+              f"{', '.join(x.code for x in st.of(SHELVED)) or 'none'}", file=sys.stderr)
+        return 1
+    t.attempt = 0
+    emit(st, t, SHELVED, PARKED, root=ROOT, why=f"unshelve: {why}",
+         reason=t.park_reason or "no-match")
+    print(f"pod unshelve: {code} is PARKED again. It costs a `parked_max` slot from now "
+          f"on, and rule (a2) judges it exactly as it judges any other park.")
+    return 0
+
+
 def cmd_status(argv):
     """Print the state file as a table. IT WRITES NOTHING."""
     st = load_state()
@@ -5650,7 +6390,12 @@ def cmd_status(argv):
           f"stopped {st.stopped or 'no'}, "
           f"draining {'yes' if DRAIN_FILE.exists() else 'no'}, "
           f"table {'present' if TABLE.is_file() else 'ABSENT'}, "
-          f"parked {st.count(PARKED)}/{_limits()['parked_max']}")
+          # **THE STOP BUDGET IS WHAT THE OPERATOR NEEDS AND IT IS NO LONGER THE PARKED
+          # TOTAL** (A30). `stop_counted()` is the number rule (d) acts on; the raw total
+          # and the shelf are both printed beside it, so nothing is hidden and no reader
+          # has to derive one from the other.
+          f"parked {len(stop_counted(st))}/{_limits()['parked_max']}"
+          f" (of {st.count(PARKED)} parked), shelved {st.count(SHELVED)}")
     if not st.tasks:
         print("  no task. `dev/pod/queue.toml` is the only producer of one.")
         return 0
@@ -5968,7 +6713,8 @@ def cmd_maintainer(argv):
 
 
 COMMANDS = {"run": cmd_run, "tick": cmd_tick, "resume": cmd_resume,
-            "status": cmd_status, "stop": cmd_stop, "maintainer": cmd_maintainer}
+            "status": cmd_status, "stop": cmd_stop, "maintainer": cmd_maintainer,
+            "unshelve": cmd_unshelve}          # A30, 2026-08-24
 
 
 def main(argv):

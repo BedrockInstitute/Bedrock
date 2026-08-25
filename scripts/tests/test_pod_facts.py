@@ -45,6 +45,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import tomllib
 import types
 import unittest
@@ -185,20 +186,22 @@ class Calibers(unittest.TestCase):
         """The loader owns the numbers; this module is a reader. Drift fails HERE.
 
         OWNER'S RULING 2026-08-23 made the two tiers carry the SAME slot count (1)
-        and the SAME caliber (-M4g): under any circumstances, only one Agda writer.
-        The two names survive because a brief may still declare either, but they are
-        no longer required to differ, so the old `assertNotEqual` is retired."""
+        and the SAME caliber (-M4g) for a few hours; a SECOND ruling the same day cut
+        WIDE's caliber to -M2g (and briefly its slot count to 2, reverted the same
+        hour -- `pod.py:agda_slots()` has the measurement), so the two calibers differ
+        once more and `assertNotEqual` is restored."""
         tiers = self.heads()["tiers"]
         self.assertEqual(facts.CAP_WIDE, tiers["wide"]["heap"])
         self.assertEqual(facts.CAP_HEAVY, tiers["heavy"]["heap"])
-        self.assertEqual(facts.CAP_WIDE, facts.CAP_HEAVY,
-                         "owner's ruling 2026-08-23: one Agda writer, one caliber")
+        self.assertNotEqual(facts.CAP_WIDE, facts.CAP_HEAVY,
+                            "owner's ruling 2026-08-23, second same-day ruling: "
+                            "WIDE and HEAVY carry different calibers again")
 
     def test_the_acceptance_caliber_is_the_workers_and_the_tree_caliber_is_not(self):
         """A15. A per-task run uses the tier caliber; a whole-tree make check uses -M16g."""
         self.assertEqual(facts.CAP, facts.CAP_WIDE)
         self.assertEqual(accept.DEFAULT_TIER, "wide")
-        self.assertIn("-M4g", facts.CAP)
+        self.assertIn("-M2g", facts.CAP)
         self.assertIn("-M16g", facts.CAP_TREE)
         self.assertNotIn(facts.CAP_TREE, facts.CALIBER.values().__class__.__name__)
         self.assertNotIn("tree", facts.TASK_TIERS,
@@ -912,6 +915,71 @@ class ChangedFiles(Patching):
                          "four own writes must not")
 
 
+class OwnChangedFiles(Patching):
+    """Provenance for [LJ-1.582], owner's ruling 2026-08-23. NEVER a `[row.when]` key.
+
+    Fact 4 is cumulative across attempts (`ChangedFiles` above). This measures which of
+    fact 4's files THIS dispatch actually wrote, by mtime against `t.started`, so a
+    dispatch that dies before writing a byte cannot be read as having reproduced what an
+    earlier attempt already left behind.
+    """
+
+    def test_no_started_answers_none_and_never_a_guess(self):
+        self.assertIsNone(facts.own_changed_files(["a.txt"], None))
+
+    def test_an_unparsable_started_answers_none(self):
+        self.assertIsNone(facts.own_changed_files(["a.txt"], "not-a-timestamp"))
+
+    def test_a_file_older_than_the_dispatch_is_inherited_and_excluded(self):
+        d = self.tmp()
+        (d / "old.txt").write_text("x", encoding="utf-8")
+        past = time.time() - 3600
+        os.utime(d / "old.txt", (past, past))
+        started = time.strftime("%Y-%m-%d %H:%M:%S")
+        self.assertEqual(facts.own_changed_files(["old.txt"], started, d), [])
+
+    def test_a_file_written_during_the_dispatch_is_this_attempts_own(self):
+        d = self.tmp()
+        started = time.strftime("%Y-%m-%d %H:%M:%S")
+        (d / "new.txt").write_text("x", encoding="utf-8")
+        self.assertEqual(facts.own_changed_files(["new.txt"], started, d), ["new.txt"])
+
+    def test_a_deleted_file_counts_as_own_and_is_not_an_error(self):
+        """Owner's-review finding, 2026-08-23: a deletion has no mtime to test, so
+        treating it as inherited was a false INHERITED for a dispatch whose whole
+        contribution was removing a file. The choice between a false INHERITED and a
+        false own is settled toward own, since the function exists to stop the first
+        kind of claim."""
+        d = self.tmp()
+        started = time.strftime("%Y-%m-%d %H:%M:%S")
+        self.assertEqual(facts.own_changed_files(["gone.txt"], started, d), ["gone.txt"])
+
+    def test_a_mix_partitions_by_mtime_and_order_is_preserved(self):
+        d = self.tmp()
+        past = time.time() - 3600
+        (d / "old.txt").write_text("x", encoding="utf-8")
+        os.utime(d / "old.txt", (past, past))
+        started = time.strftime("%Y-%m-%d %H:%M:%S")
+        (d / "new.txt").write_text("y", encoding="utf-8")
+        self.assertEqual(
+            facts.own_changed_files(["old.txt", "new.txt"], started, d), ["new.txt"])
+
+    def test_lj_1_582_the_scene_that_measured_this(self):
+        """The second arm's 46 files, all inherited from the first. `own` must be empty
+        even though fact 4 (`ch`) is not, which is exactly the case R7 does not catch:
+        `ch` is non-empty, so acceptance proceeds, and only mtime tells the two apart."""
+        d = self.tmp()
+        past = time.time() - 7200
+        names = ["Probe582.agda", "runs/S3.agda", "lj-1.582-report.md"]
+        (d / "runs").mkdir()
+        for n in names:
+            (d / n).write_text("x", encoding="utf-8")
+            os.utime(d / n, (past, past))
+        started = time.strftime("%Y-%m-%d %H:%M:%S")   # the second arm's own dispatch
+        self.assertEqual(facts.own_changed_files(names, started, d), [],
+                         "every file predates the attempt; none of it is this attempt's")
+
+
 class Fact7(Patching):
     """Amendment A10. `lines` is the in-fence line count of the task's own write scope."""
 
@@ -1029,6 +1097,30 @@ class AcceptanceRecord(Patching):
         self.assertEqual(rec["caliber"], facts.CAP_HEAVY,
                          "A14: a HEAVY task measures under -M12g, and the record says so")
         self.assertEqual(rec["changed_files_foreign"], ["dev/PLAN.md"])
+
+    def test_changed_files_own_is_none_when_the_task_carries_no_started(self):
+        """The CLI's `_Task` stub carries no `started`; provenance the program cannot
+        measure is provenance it does not claim, never a guessed empty list."""
+        self.stub(targets=["src/Everything.lagda.md"])
+        rec = accept.run_acceptance(accept._Task("LJ-1.999"))
+        self.assertIsNone(rec["changed_files_own"])
+
+    def test_changed_files_own_excludes_a_file_that_predates_this_dispatch(self):
+        """[LJ-1.582], owner's ruling 2026-08-23: `changed_files_own` distinguishes what
+        THIS dispatch wrote from what fact 4 inherited from an earlier attempt, wired
+        end to end through `run_acceptance()`."""
+        self.stub(targets=["src/Everything.lagda.md"])
+        d = self.tmp()
+        (d / "src" / "L").mkdir(parents=True)
+        target = d / "src" / "L" / "Foo.lagda.md"
+        target.write_text("x", encoding="utf-8")
+        past = time.time() - 3600
+        os.utime(target, (past, past))
+        t = accept._Task("LJ-1.999")
+        t.started = time.strftime("%Y-%m-%d %H:%M:%S")
+        rec = accept.run_acceptance(t, d)
+        self.assertEqual(rec["changed_files_own"], [],
+                         "the only in-scope file predates this dispatch; it is inherited")
 
     def test_a_failed_conjunct_names_its_own_class_and_takes_exit_1(self):
         self.stub(targets=["src/Everything.lagda.md"])

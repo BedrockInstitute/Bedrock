@@ -102,11 +102,13 @@ SURVEY_QUOTES = ["scripts/pod/check-survey-quotes.py"]
 #: for the whole `worker_deadline_s`, and none of the seven starts Agda.
 GATE_DEADLINE_S = 600
 
-#: A15. A PER-TASK acceptance run uses the WIDE tier's caliber, `-A64m -I0 -M4g` (owner's
-#: ruling 2026-08-23; was `-M8g`), which is the worker's own, so an acceptance measurement
-#: compares directly with the run record beside it. A HEAVY task passes `tier="heavy"` and
-#: `run_agda()` gives it the same `-M4g` now (was `-M12g`). The whole-tree caliber,
-#: `facts.CAP_TREE`, belongs to a `make check` and never to this file.
+#: A15. A PER-TASK acceptance run defaults to the WIDE tier's caliber, `-A64m -I0 -M2g`
+#: (owner's ruling 2026-08-23, second same-day ruling; was `-M8g`, then briefly `-M4g`
+#: for a few hours), which is the worker's own default too, so an acceptance measurement
+#: compares directly with the run record beside it. A HEAVY task passes `tier="heavy"`
+#: and `run_agda()` gives it `-M4g` instead (was `-M12g`, unchanged by the second
+#: ruling). The whole-tree caliber, `facts.CAP_TREE`, belongs to a `make check` and
+#: never to this file.
 DEFAULT_TIER = facts_mod.DEFAULT_TIER
 
 
@@ -370,6 +372,11 @@ def _write_run_record(t, rec, root=None):
             f"# tier {rec.get('tier')}",
             f"# agda slots during {rec['concurrency']}",
             f"# load before {os.getloadavg()}",
+            # THIS RUN FILE's OWN start, not the dispatch's. `own_line` below compares
+            # against `t.started` (the DISPATCH's start, `getattr(t, "started", None)`
+            # in `run_acceptance()`), a different moment this acceptance run may follow
+            # by minutes or hours. Two timestamps named `started` four lines apart, an
+            # owner's-review finding, 2026-08-23: read each against its own paragraph.
             f"# started {time.strftime('%Y-%m-%d %H:%M:%S')}",
         ]
         for n_, ok in sorted((rec.get("conjuncts") or {}).items()):
@@ -377,8 +384,17 @@ def _write_run_record(t, rec, root=None):
         for run in rec.get("runs_all") or ():
             lines.append(f"# run {run['target']} rc {run['rc']} "
                          f"seconds {run['seconds']}")
+        own = rec.get("changed_files_own")
+        if own is None:
+            own_line = "# changed files own ? (started not recorded)"
+        elif not own and f["changed_files"]:
+            own_line = (f"# changed files own 0 of {len(f['changed_files'])} "
+                        "(INHERITED: this attempt touched none of them)")
+        else:
+            own_line = f"# changed files own {len(own)} of {len(f['changed_files'])}"
         lines += [
             f"# changed files {len(f['changed_files'])}",
+            own_line,
             f"# in-fence lines {f.get('lines')}",
             f"# obligations delta {f['obligations_delta']}",
             f"# wall seconds {f['seconds']}",
@@ -438,6 +454,13 @@ def run_acceptance(t, root=None, tier=None):
                   file=sys.stderr)
     if not ch:
         return None                            # R7, section 4.3.2 case 3. No record.
+    # PROVENANCE, NOT A CONJUNCT. `own` is None when `t.started` cannot say (the CLI's
+    # `_Task` stub carries no `started`), else the subset of `ch` this dispatch itself
+    # wrote. Recorded so a reader never has to redo the mtime archaeology `[LJ-1.582]`
+    # took (owner's ruling 2026-08-23): it is measured and shown, never routed on, because
+    # R1 closes `[row.when]` to the six facts of AD11 plus `lines` and `obligations_open`,
+    # and adding a seventh matchable key is an amendment this maintainer does not make.
+    own = facts_mod.own_changed_files(ch, getattr(t, "started", None), root)
     c5 = spec_surface(root)                    # cheapest, and A3 puts it first
     # **THE DETAIL IS CAPTURED ONLY ON FAILURE, and the signature above is unchanged on
     # purpose**: `scripts/tests/test_pod_facts.py:919` patches `spec_surface` with a
@@ -465,6 +488,7 @@ def run_acceptance(t, root=None, tier=None):
            "agda_vacuous": r1.get("vacuous", False), "unbound_vacuous": uvac,
            "changed_files_foreign": foreign,   # outside the scope, 4.3.1. Digest counts it
            "changed_files_refused": refused_agda,   # A21: a mathematician's Agda, dropped
+           "changed_files_own": own,           # provenance for [LJ-1.582]. NOT matchable
            "spec_surface_detail": c5_detail,   # provenance for the stop. NOT matchable
            "runs_all": r1["runs_all"],         # every other Agda wall, provenance
            "conjuncts": dict(held),            # provenance. R4 reads it. NOT matchable

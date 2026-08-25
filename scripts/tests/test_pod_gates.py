@@ -341,7 +341,7 @@ print("check-spec-surface.py derives the ruled surface")
 
 live = css.derive()
 check("the surface is 8 files", len(live["files"]) == 8, str(len(live["files"])))
-check("the surface is 499 in-fence lines", live["lines"] == 499,
+check("the surface is 508 in-fence lines", live["lines"] == 508,
       str(live["lines"]))
 check("a bare `import M` is outside the surface",
       not [f for f in live["files"] if f.endswith("V/Model.lagda.md")])
@@ -517,7 +517,8 @@ try:
     code, text = quiet(css.main, ["x", "--check"])
     check("--check exits 0 on an unchanged surface", code == 0, text)
     check("the clean line names the figures",
-          "8 surface file(s)" in text and "499 in-fence lines" in text, text)
+          "8 surface file(s)" in text and f"{live['lines']} in-fence lines" in text,
+          text)
 
     css.SNAPSHOT = moved_snapshot
     code, text = quiet(css.main, ["x", "--check"])

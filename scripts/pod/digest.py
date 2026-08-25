@@ -122,7 +122,9 @@ def park_stop() -> int:
     owner raised `parked_max` to 7 on 2026-08-19, rule (d) followed it, and this file
     kept printing「停放计数 N/3。到 3 个停放，整个循环停止。」every day. It is the same
     defect `_rule_d()` was repaired for the same morning, in the same words: a report may
-    count, and it may not recite a limit the program has stopped obeying.
+    count, and it may not recite a limit the program has stopped obeying. `parked_max` was
+    lowered again, to 5, on 2026-08-23 (`dev/pod/heads.toml`); this function's own read
+    is why that change needed no matching edit here.
 
     It falls back to 3 only when the limits cannot be read at all, which is the value
     every version of this file used before today, and it is the conservative direction:
@@ -150,10 +152,14 @@ PARK_UNLISTED = "unlisted"
 #: Section 7.4 Part 1b's adopt trigger, printed as text and never evaluated here.
 RETRIEVAL_TRIGGER = "两周内缺失率高于 20% 且缺失多数为零重叠"
 
-#: The six states of section 5.2. The design names three of them in Chinese at
-#: `dev/memos/LJ-4-pod-program-design.md:2907-2911`; the other three are rendered here.
+#: The seven states of section 5.2. The design names three of them in Chinese at
+#: `dev/memos/LJ-4-pod-program-design.md:2907-2911`; the others are rendered here.
+#: `SHELVED` joined them on 2026-08-24 with amendment A30. `test_pod_digest.py` checks
+#: this table against `pod.STATES` by set equality, so a state added with no Chinese name
+#: reddens the suite instead of printing its English name into the owner's report.
 STATE_ZH = {"READY": "就绪", "RUNNING": "运行中", "RETURNED": "已返回",
-            "CHECKING": "验收中", "DONE": "完成", "PARKED": "停放"}
+            "CHECKING": "验收中", "DONE": "完成", "PARKED": "停放",
+            "SHELVED": "封存"}
 
 #: The park reasons whose cure is a brief repair, so section 四 names the author. AD3
 #: gives the brief to the mathematician and section 6.7 makes the maintainer ASK.
@@ -219,6 +225,10 @@ FIELD_SOURCES = {
     "retrieval_undetermined": ("scripts/pod/retrieve.py", 394, "overlap"),
     # 四、阻塞与待裁决
     "blocked_parked": ("scripts/pod/pod.py", 198, "PARK_REASONS"),
+    # A30, 2026-08-24. The count of a state and not of a reason, so its source is the
+    # state tuple that declares SHELVED and never `PARK_REASONS`: a shelve writes no park
+    # reason at all, which is the whole point of building a state instead of a fourteenth.
+    "shelved_total": ("scripts/pod/pod.py", 397, "STATES = ("),
     "queue_requests": ("scripts/pod/pod.py", 752, "def split_entry"),
     "owner_rulings": ("dev/memos/LJ-4-pod-program-design.md", 3423, "An owner ruling"),
     # THE ONE FIELD WHOSE SOURCE IS THIS FILE. A refused row is produced by the digest's
@@ -923,8 +933,11 @@ def task_rows(lines: list[dict], window: list[dict], state, now: float,
         last = mine[-1]
         launched = [r for r in mine if r.get("to") == "RUNNING"]
         t0 = pod_mod._epoch(launched[-1].get("ts")) if launched else None
+        # A SHELVED TASK'S CLOCK STOPS, exactly as a parked one's does (A30). Without it
+        # the elapsed column on a settled task counts up for ever and reads as a task
+        # that has been running since the day it was shelved.
         t1 = (pod_mod._epoch(last.get("ts"))
-              if last.get("to") in ("DONE", "PARKED") else now)
+              if last.get("to") in ("DONE", "PARKED", "SHELVED") else now)
         model = next((r.get("model") for r in reversed(mine) if r.get("model")), None)
         effort = next((r.get("effort") for r in reversed(mine) if r.get("effort")), None)
         attempt = next((r.get("attempt") for r in reversed(mine)
@@ -1127,6 +1140,7 @@ def build(root: Path | None = None, hours: float = WINDOW_HOURS,
         "retrieval_undetermined": undetermined,
         "blocked_parked": parked_now(lines, state),
         "parked_total": state.count("PARKED"),
+        "shelved_total": state.count("SHELVED"),
         "queue_requests": queue_requests(root),
         "owner_rulings": owner_rulings(root),
         "refused_rows": refused,
@@ -1246,6 +1260,9 @@ def render(data: dict) -> str:
     stop = park_stop()
     out.append(f"  停放计数 {data['parked_total']}/{stop}。"
                f"到 {stop} 个停放，整个循环停止。")
+    # 封存数单列一行。没有这一行，读者会把一个低停放计数读成「什么都没有搁置」，
+    # 而被搁置的任务恰恰是不再占用停放槽位的那一类（A30，2026-08-24）。
+    out.append(f"  封存 {data['shelved_total']} 个（已裁定，不再占用停放槽位）。")
     for req in data["queue_requests"]:
         out += _wrap(f"[{req['code']}] 队列请求，无简报路径，原因 {req['reason']}。")
     for gap in data["owner_rulings"]:

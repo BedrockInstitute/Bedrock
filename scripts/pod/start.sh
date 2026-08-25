@@ -138,7 +138,33 @@ printf 'pod start: keeper pane %s\n' "$PANE"
 herdr pane run "$PANE" sh scripts/pod/keeper.sh >/dev/null 2>&1 \
     || die "herdr could not start the keeper in $PANE."
 
+# 4. THE OMLX WATCHDOG, started detached and NOT in a pane. Unlike the keeper, it has no
+#    scrollback the owner reads: it logs to `_build/tools/omlx-watchdog.log`, exactly the
+#    way `scripts/ops/agda-watchdog.sh` does, and its own pidfile guard
+#    (`_build/tools/omlx-watchdog.pid`) already refuses a second copy, so this step is
+#    idempotent and a repeat run of `start.sh` neither starts a duplicate nor errors on
+#    finding one. A FAILURE HERE NEVER STOPS THE POD: the omlx watchdog's absence costs at
+#    most a qwen dispatch or two falling through to glm-5.3/grok (A29 already routes that),
+#    never a machine-wide hazard the way the agda watchdog's absence would, so `start.sh`
+#    only reports and moves on.
+OMLX_WD="$ROOT/scripts/ops/omlx-watchdog.sh"
+OMLX_PID="$ROOT/_build/tools/omlx-watchdog.pid"
+if [ -x "$OMLX_WD" ]; then
+    live=""
+    [ -f "$OMLX_PID" ] && other=$(cat "$OMLX_PID" 2>/dev/null) && [ -n "$other" ] \
+        && kill -0 "$other" 2>/dev/null && live="$other"
+    if [ -n "$live" ]; then
+        printf 'pod start: omlx watchdog already running, pid %s\n' "$live"
+    else
+        nohup "$OMLX_WD" >/dev/null 2>&1 &
+        printf 'pod start: omlx watchdog started, pid %s\n' "$!"
+    fi
+else
+    printf 'pod start: no omlx watchdog at %s, skipping\n' "$OMLX_WD"
+fi
+
 printf 'pod start: up. The keeper owns %s and restarts the loop on a crash.\n' "$PANE"
 printf 'pod start: the maintainer starts on the next tick, from dev/pod/heads.toml.\n'
 printf '  herdr pane read %s        # what the loop is doing\n' "$PANE"
 printf '  herdr agent list                 # the heads, once they start\n'
+printf '  tail -f _build/tools/omlx-watchdog.log   # what the omlx watchdog is doing\n'

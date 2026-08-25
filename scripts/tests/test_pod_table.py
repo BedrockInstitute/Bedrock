@@ -1517,13 +1517,88 @@ class Preflight(TreeCase):
                                     slots=SLOTS)
         self.assertEqual(quiet.getvalue(), "")
 
+    def test_p23_is_silent_when_the_brief_touches_neither_src_nor_heavy(self):
+        """BRIEF_386's own scope is `agents/tasks/` only and it names no tier, so P23
+        never triggers and the fixture keeps passing every check."""
+        self.assertEqual(self.run_preflight(), [])
+
+    def test_p23_triggers_on_a_src_path_in_scope_and_refuses_with_no_section(self):
+        text = BRIEF_386.replace(
+            "- agents/tasks/LJ-1-386/lj-1.386-report.md",
+            "- agents/tasks/LJ-1-386/lj-1.386-report.md\n- src/L/Cardinal.lagda.md")
+        d = self.run_preflight(text)
+        self.assertIn("P23 no `## MEASURED TODAY` section, and this brief touches "
+                      "src/ or declares agda_tier: heavy", d)
+
+    def test_p23_triggers_on_agda_tier_heavy_even_with_no_src_path(self):
+        """The SCOPE half is the OTHER trigger, so a brief can reach P23 by declaring
+        the tier alone, with no `src/` path in `## SCOPE (write)` at all."""
+        text = BRIEF_386.replace("machine: shared", "machine: shared\nagda_tier: heavy")
+        d = self.run_preflight(text)
+        self.assertTrue(any(x.startswith("P23 no `## MEASURED TODAY`") for x in d))
+
+    def test_p23_refuses_a_line_that_does_not_parse(self):
+        text = BRIEF_386.replace("machine: shared", "machine: shared\nagda_tier: heavy")
+        text = text.replace(
+            "## THE REASONING",
+            "## MEASURED TODAY\n\n- dependents: not-a-parseable-line\n\n"
+            "## THE REASONING")
+        d = self.run_preflight(text)
+        self.assertTrue(any("does not parse" in x for x in d))
+
+    def test_p23_refuses_one_mandatory_kind_present_without_the_other(self):
+        """Both greps are mandatory, `dev/pod/instructions/mathematician.md`'s own
+        clause: P23 will not accept a section that names only one kind."""
+        text = BRIEF_386.replace("machine: shared", "machine: shared\nagda_tier: heavy")
+        text = text.replace(
+            "## THE REASONING",
+            "## MEASURED TODAY\n\n- dependents: L.Nothing => 0\n\n## THE REASONING")
+        d = self.run_preflight(text)
+        self.assertIn("P23 `## MEASURED TODAY` carries no supply line, and both are "
+                      "mandatory", d)
+
+    def test_dependent_count_and_supply_count_mirror_grep(self):
+        """Proved directly against a crafted tree, the same numbers P23's own
+        recomputation reads below."""
+        self.brief()
+        (self.tmp / "src" / "L" / "Other.lagda.md").write_text(
+            "import L.Cardinal\nkeyS keyS\n")
+        self.assertEqual(preflight_mod.dependent_count("L.Cardinal", self.tmp), 1)
+        self.assertEqual(preflight_mod.dependent_count("L.Nowhere", self.tmp), 0)
+        # ONE LINE COUNTS ONCE, even with two occurrences on it: `grep -c` counts
+        # matching LINES and not matches, and this mirrors that and not `grep -o`.
+        self.assertEqual(preflight_mod.supply_count("keyS", self.tmp), 1)
+        self.assertEqual(preflight_mod.supply_count("no-such-token", self.tmp), 0)
+
+    def test_p23_refuses_a_wrong_claimed_number_and_passes_the_true_one(self):
+        text = BRIEF_386.replace("machine: shared", "machine: shared\nagda_tier: heavy")
+        brief = self.brief(text)
+        (self.tmp / "src" / "L" / "Other.lagda.md").write_text(
+            "import L.Cardinal\nkeyS keyS\n")
+        wrong = text.replace(
+            "## THE REASONING",
+            "## MEASURED TODAY\n\n- dependents: L.Cardinal => 2\n"
+            "- supply: keyS => 1\n\n## THE REASONING")
+        brief.write_text(wrong, encoding="utf-8")
+        d = preflight_mod.preflight(brief, root=self.tmp, show=False, closure=True,
+                                    slots=SLOTS)
+        self.assertTrue(any("claimed 2, measured 1 just now" in x for x in d))
+        right = text.replace(
+            "## THE REASONING",
+            "## MEASURED TODAY\n\n- dependents: L.Cardinal => 1\n"
+            "- supply: keyS => 1\n\n## THE REASONING")
+        brief.write_text(right, encoding="utf-8")
+        e = preflight_mod.preflight(brief, root=self.tmp, show=False, closure=True,
+                                    slots=SLOTS)
+        self.assertEqual([x for x in e if x.startswith("P23")], [])
+
     def test_the_first_refusal_names_the_check_rule_f_parks_with(self):
         """Rule (f) reads `d[0].split()[0]` and writes `reason: "preflight:P4"`."""
         d = self.run_preflight(BRIEF_386.replace("  heap_wall = true",
                                                  "  reviewer_said = true"))
         self.assertEqual(d[0].split()[0], "P4")
 
-    def test_every_check_id_the_preflight_can_emit_is_one_of_the_twenty_two(self):
+    def test_every_check_id_the_preflight_can_emit_is_one_of_the_twenty_three(self):
         """A CHECK WITH NO TEST IS A CHECK NOBODY PROVED, and the old form of this test
         could not fail: it asked whether the substring `P1` sits in a file that also
         writes `P11`, and the docstring above it supplied `P22` by itself.
@@ -1533,7 +1608,7 @@ class Preflight(TreeCase):
         second reads the ids THIS file names at a word boundary, so `P11` no longer
         answers for `P1`.
         """
-        want = {f"P{n}" for n in range(1, 23)}
+        want = {f"P{n}" for n in range(1, 24)}
         emitted = set(re.findall(
             r'"(P\d+) ', (ROOT / "scripts" / "pod" / "preflight.py").read_text(
                 encoding="utf-8")))

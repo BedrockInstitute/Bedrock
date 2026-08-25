@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The pre-flight of AD21: twenty-two checks over a brief, before the program spawns it.
+"""The pre-flight of AD21: twenty-three checks over a brief, before the program spawns it.
 
 WHY THIS FILE EXISTS, and the measurement is the project's own.
 `agents/tasks/LJ-1-211/lj-1.211-report.md:21` reads: `The brief caused 8 of the 10. The
@@ -8,7 +8,7 @@ repository has measured, and a worker cannot refuse one it has already been give
 check below is a predicate over the brief text and the filesystem: NO CHECK RUNS AGDA, NO
 CHECK CALLS A MODEL, and no check touches the network.
 
-FOUR CHECKS EXIST BECAUSE A SPECIFIC FAILURE HAPPENED, and they are the ones to read first:
+FIVE CHECKS EXIST BECAUSE A SPECIFIC FAILURE HAPPENED, and they are the ones to read first:
 
 - **P18, DD25's mechanised half.** A brief that can finish must also be attackable.
   `dev/ORCHESTRATION.md:108-112` records `[LJ-0.4]` refusing four blocks on measurement,
@@ -24,6 +24,12 @@ FOUR CHECKS EXIST BECAUSE A SPECIFIC FAILURE HAPPENED, and they are the ones to 
   without the second limb no brief could express a refusal.
 - **P16, so a task is not blamed for its predecessor.** It tells the program whether the
   tree was already open BEFORE this task ran.
+- **P23, because ARCHIVE and LITERATURE both point away from the present.** ARCHIVE looks
+  backward at retired work and LITERATURE looks outward at the field; neither one names
+  the tree's CURRENT shape. `[LJ-1.628]` heap-walled HEAVY on a ten-line landing with a
+  truthful `ARCHIVE USED: NO HIT`, because the archive genuinely had nothing about a
+  dependent count. P23 RE-RUNS the measurement the brief claims rather than checking a
+  section exists, so a truthful heading can no longer stand in for a real number.
 
 THE ONE CHECK THAT CANNOT REFUSE IS P22, and it exists so a per-directory `README.md` has
 a named reader and a named occasion. Twenty of them live in the tree and no live document
@@ -105,6 +111,14 @@ PATH_TOKEN = re.compile(
 BASIS = re.compile(r"([\w./-]+\.(?:lagda\.md|agda|md|toml|py|sh|yml|jsonl))"
                    r":(\d+)(?:-(\d+))?")
 GLOB_CHARS = "*?["
+#: A `## MEASURED TODAY` line, P23: `- dependents: L.Choice.Faithful => 2`. Bulleted,
+#: the same convention `## PREMISES` and `## OBLIGATION NAMES` already use, so `units()`
+#: reads each line as its own entry instead of joining it onto its neighbour. The KIND is
+#: one of the two fixed forms and never free text, so nothing here ever becomes a shell
+#: command: the brief supplies the argument and the claimed count, and P23 recomputes
+#: both itself.
+MEASURED_LINE = re.compile(
+    r"^[ \t]*-[ \t]*(dependents|supply)[ \t]*:[ \t]*(\S+)[ \t]*=>[ \t]*(\d+)[ \t]*$")
 
 
 # ---------------------------------------------------------------- brief reading
@@ -315,6 +329,62 @@ def p22_readmes(text: str, root=None) -> list[str]:
         if cand.is_file() and rel not in out:
             out.append(rel)
     return out
+
+
+# ---------------------------------------------------------------- P23's two fixed forms
+
+
+def _src_files(root):
+    root = ROOT if root is None else Path(root)
+    src = root / "src"
+    if not src.is_dir():
+        return
+    for p in src.rglob("*"):
+        if p.is_file():
+            yield p
+
+
+def dependent_count(module: str, root=None) -> int:
+    """Files under `src/` (never `archive/src/`) whose text names `import <module>`.
+
+    Mirrors `grep -rl "import <module>" src/ | wc -l` in pure Python. P23's fixed forms
+    never shell out and never eval a brief's text: the brief supplies only `module`, a
+    dotted name, and this function does the counting itself.
+
+    MEASURED 2026-08-25: `L.Constructible` has 71 and heap-walled HEAVY warm at a
+    landing that added ten lines and zero new imports; `L.StageCardinal` has 2 and
+    landed inside a fifth of WIDE's cap. Import-edge count, what `[LJ-1.625]` sited
+    four rows by, predicted neither.
+    """
+    needle = f"import {module}"
+    n = 0
+    for p in _src_files(root):
+        try:
+            text = p.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        if needle in text:
+            n += 1
+    return n
+
+
+def supply_count(token: str, root=None) -> int:
+    """Matching lines for `token`, summed across every file under `src/`.
+
+    Mirrors `grep -rc <token> src/`, summed to one number. The companion to
+    `dependent_count()`: it asks whether the tree already supplies the object a brief
+    is about to fund the construction of, before it funds it. `[LJ-1.560]`'s obligation
+    turned out to be an instantiation of something already present; this is the check
+    that would have found it before the dispatch, not after.
+    """
+    n = 0
+    for p in _src_files(root):
+        try:
+            text = p.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        n += sum(1 for line in text.split("\n") if token in line)
+    return n
 
 
 # ---------------------------------------------------------------- the pre-flight
@@ -574,6 +644,41 @@ def preflight(brief, root=None, show=True, closure=None, slots=None):
     if show:
         for rel in p22_readmes(text, root):
             print(f"P22 read {rel}")
+
+    # P23. `## MEASURED TODAY` re-verifies a claimed dependent count or supply count
+    # against the CURRENT tree, when the brief touches `src/` or declares HEAVY. Owner's
+    # ruling 2026-08-25. It RE-RUNS the measurement rather than checking a section
+    # exists: P15 is satisfied by a heading and truthful text ("ARCHIVE USED: NO HIT"),
+    # because ARCHIVE and LITERATURE point backward and outward and neither one names
+    # the tree's CURRENT shape. `dev/pod/instructions/mathematician.md`'s own clause
+    # already binds the two greps; this makes paying them checkable rather than only
+    # asked for. MEASURED cost of not having it: five landing attempts against one cap
+    # a single direct measurement of `src/Everything.lagda.md` exposed (`[LJ-1.628]`).
+    if any(p.startswith("src/") for p in scope_paths(text)) \
+            or (head_field(text, "agda_tier") or "").strip().lower() == "heavy":
+        measured = section(text, "MEASURED TODAY")
+        if measured is None or not measured.strip():
+            d.append("P23 no `## MEASURED TODAY` section, and this brief touches "
+                      "src/ or declares agda_tier: heavy")
+        else:
+            seen_kinds = set()
+            for u in units(measured):
+                m = MEASURED_LINE.match(u)
+                if m is None:
+                    d.append("P23 a `## MEASURED TODAY` line does not parse as "
+                             f"`- <dependents|supply>: <arg> => <number>`: {u!r}")
+                    continue
+                kind, arg, claimed = m.group(1), m.group(2), int(m.group(3))
+                seen_kinds.add(kind)
+                actual = (dependent_count(arg, root) if kind == "dependents"
+                          else supply_count(arg, root))
+                if actual != claimed:
+                    d.append(f"P23 {kind} {arg!r} claimed {claimed}, measured "
+                             f"{actual} just now")
+            for kind in ("dependents", "supply"):
+                if kind not in seen_kinds:
+                    d.append(f"P23 `## MEASURED TODAY` carries no {kind} line, and "
+                             "both are mandatory")
     return d
 
 
@@ -587,7 +692,7 @@ def main(argv):
         for line in d:
             print(line)
         if not d:
-            print(f"{argv[1]}: 22 checks, no refusal")
+            print(f"{argv[1]}: 23 checks, no refusal")
     return 1 if d else 0
 
 

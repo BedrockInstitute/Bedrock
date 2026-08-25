@@ -75,7 +75,10 @@ SAFE = re.compile(r"^\{-#\s+OPTIONS\b[^#]*--safe", re.M)
 # own caliber without an edit here. The numbers are `dev/pod/heads.toml [tiers.*] heap`,
 # which is their ONE owner (`scripts/pod/heads.py`); this module is a READER, and
 # `test_pod_facts.py` fails when the two drift apart.
-CAP_WIDE = "-A64m -I0 -M4g"      # OWNER'S RULING 2026-08-23: one Agda writer, 4 GB
+CAP_WIDE = "-A64m -I0 -M2g"      # OWNER'S RULING 2026-08-23 (second): two writers, 2 GB
+                                 # each (raced launcher.py's own slot check for one
+                                 # hour before the proper fix -- pod.py's agda_slots()
+                                 # and agda_registry_slots() have the measurement)
 CAP_HEAVY = "-A64m -I0 -M4g"     # OWNER'S RULING 2026-08-23: one Agda writer, 4 GB
 CAP_TREE = "-A64m -I0 -M16g"     # A15: a WHOLE-TREE `make check`, C-12's orchestrator
                                  # caliber, because that run holds the machine alone. No
@@ -182,8 +185,9 @@ def caliber_of(tier):
     """The heap caliber of ONE tier, or a refusal. A15, and no literal at a call site.
 
     An unknown tier is a REFUSAL and never a fallback to the WIDE caliber: a HEAVY task
-    silently run at `-M4g` (owner's ruling 2026-08-23; was `-M8g`) records a number that
-    reads as comparable and is not.
+    silently run at WIDE's `-M2g` (owner's ruling 2026-08-23, second same-day ruling; the
+    two tiers were briefly equal at `-M4g` between the day's two rulings) records a
+    number that reads as comparable and is not.
     """
     try:
         return CALIBER[tier]
@@ -201,10 +205,11 @@ def run_agda(target, root, deadline_s, slots, include=(), tier=DEFAULT_TIER):
     `include: src agents/tasks` and the POD runs with `cwd` at the repository root.
 
     `tier` picks the caliber, A14 and A15. The default is WIDE, which is the per-task
-    acceptance caliber; a HEAVY task passes `tier="heavy"` and gets the same `-M4g` now
-    (owner's ruling 2026-08-23; was `-M12g`) with no edit here. The record carries BOTH
-    `caliber` and `tier`, because A14 rules that two measurements are compared only
-    inside one tier.
+    acceptance caliber, `-M2g`; a HEAVY task passes `tier="heavy"` and gets `-M4g`
+    (owner's ruling 2026-08-23, second same-day ruling; was `-M12g` before the day's
+    first ruling flattened both tiers to `-M4g`, then this one split them apart again)
+    with no edit here. The record carries BOTH `caliber` and `tier`, because A14 rules
+    that two measurements are compared only inside one tier.
 
     `slots` is the Agda process count DURING this run, counting this run's own process.
     It is recorded and never interpreted here: `matches()` refuses a seconds key against a
@@ -405,6 +410,57 @@ def program_task_write(p, code):
 def changed_files(t):
     """Fact 4 for one live task object, as section 5.4 calls it."""
     return changed_files_scoped(t.code, getattr(t, "brief", None))
+
+
+def own_changed_files(ch, started, root=None):
+    """The subset of fact 4 THIS ATTEMPT touched, or None when `started` cannot say.
+
+    Fact 4 is CUMULATIVE by design (`changed_files_scoped()` above): a park keeps the
+    worktree, and the next dispatch's snapshot is the union with whatever an earlier
+    attempt left. A dispatch that starts, dies before writing a byte, and is re-accepted
+    through the "pid dead" path (`_reaccept_scene()`, `scripts/pod/pod.py`) still reports
+    every file the PRIOR attempt wrote as if it were this attempt's own return.
+
+    MEASURED 2026-08-23, [LJ-1.582]'s second arm: oMLX's own prefill memory guard
+    rejected it (`prefill_memory_exceeded`, `.pod-state/logs/LJ-1.582-20260823-161852-
+    final.md:393`) 71 minutes after dispatch (`dev/pod/transitions/2026-08.jsonl:3414`),
+    before it had touched a single file. `accept-2.out` still reported the first arm's 46
+    files, byte-identical to `accept-1.out`, as though a second, independent worker had
+    reproduced the wall. It had not: every one of those 46 files carried an mtime from
+    BEFORE the second arm's own dispatch.
+
+    `started` is `t.started`, `"%Y-%m-%d %H:%M:%S"` local, the field and the format
+    `Task.elapsed()` in `scripts/pod/pod.py` already reads. A path whose mtime is at or
+    after it was written during THIS dispatch; a path whose mtime is strictly before it
+    predates this dispatch, whether from an earlier attempt or from before the task ever
+    ran. Missing or unparsable `started` answers None: provenance the program cannot
+    measure is provenance it does not claim, never a guessed True or False.
+    """
+    if not started:
+        return None
+    try:
+        t0 = time.mktime(time.strptime(started, "%Y-%m-%d %H:%M:%S"))
+    except (ValueError, TypeError):
+        return None
+    root = ROOT if root is None else Path(root)
+    own = []
+    for p in ch:
+        try:
+            mtime = (root / p).stat().st_mtime
+        except OSError:
+            # A DELETION HAS NO MTIME, and an owner's-review finding, 2026-08-23, is why
+            # this counts as own rather than being skipped. `_status_paths()` reports a
+            # git ` D ` entry the same as any other change, so a dispatch whose whole
+            # contribution was removing a file used to read `changed_files_own` as empty
+            # and print INHERITED for work this attempt genuinely did. There is no mtime
+            # to test here either way, so the choice is between a false INHERITED and a
+            # false own; the function exists to stop the first kind of claim, not license
+            # the second, so a path this attempt cannot prove predates it counts as own.
+            own.append(p)
+            continue
+        if mtime >= t0:
+            own.append(p)
+    return own
 
 
 def imported_by_everything(root=None):

@@ -343,14 +343,22 @@ def herdr_name(task: str) -> str:
 # (A14), and refuses every Agda task while the watchdog is down. A14 says the
 # pinned two "halved throughput without saying so", and it names the two tiers:
 # WIDE was four concurrent at -M8g, HEAVY was two at -M12g -- the owner's ruling
-# of 2026-08-23 has since tightened both to ONE writer at -M4g each (see the
-# tier comments beside `dev/pod/heads.toml [tiers]` for the current numbers).
+# of 2026-08-23 tightened both to ONE writer at -M4g each, then a SECOND ruling
+# the same day cut WIDE's cap to -M2g and raised it to two writers. That raise
+# raced pod.py's own process census against this file's registry check for one
+# hour and stopped the loop at `parked_max` before `admits()` grew a matching
+# registry check of its own (`agda_slots()` and `agda_registry_slots()` in
+# pod.py have the measurement) and the raise was restored. WIDE admits two
+# writers at -M2g today, HEAVY admits one at -M4g (see the tier comments
+# beside `dev/pod/heads.toml [tiers]` for the current numbers).
 #
 # THE CALIBER WAS ALSO WRONG, and R13 is the rule. `-M8g` sets a heap cap and NO
 # allocation area, so every number measured under it is incomparable with a
 # number measured under R13's caliber. A15 splits the program's own two runs:
-# a per-task acceptance run uses `-A64m -I0 -M4g` now (owner's ruling
-# 2026-08-23; was `-M8g`), the worker's caliber, and a whole-tree `make check`
+# a per-task acceptance run uses the TASK'S OWN declared tier caliber, the
+# worker's caliber (`-A64m -I0 -M2g` WIDE or `-M4g` HEAVY, owner's ruling
+# 2026-08-23, second same-day ruling; both were a flat `-M4g` for a few
+# hours, and `-M8g` before that), and a whole-tree `make check`
 # still uses `-A64m -I0 -M16g`, C-12's orchestrator caliber, unchanged because
 # that run holds the machine alone. Neither of those is this constant:
 # THIS is the caliber handed to a dispatched WORKER's pane, and it is the WIDE
@@ -372,12 +380,17 @@ def herdr_name(task: str) -> str:
 # reader. The literals below are the floor and they are used ONLY when
 # that loader cannot be reached, which `HEADS_ERROR` reports on every launch
 # path rather than passing in silence. OWNER'S RULING 2026-08-23 replaced C-12's
-# four-WIDE/two-HEAVY floor with a single 4 GB writer: a broken config file should
-# fall back to the STRICTEST live policy, not a looser historical one.
+# four-WIDE/two-HEAVY floor with a single 4 GB writer, then a second ruling the
+# same day split WIDE and HEAVY apart again: a broken config file should still
+# fall back to the STRICTEST live policy, not a looser historical one, and with
+# two DIFFERENT live caps now (2 GB WIDE, 4 GB HEAVY) the maintainer's own
+# reading of "strictest" is the SMALLER cap and ONE slot for both tiers here,
+# never the two-slot WIDE ceiling the live config carries -- this floor is
+# reversible and disclosed as the maintainer's choice, not the owner's number.
 _C12_FLOOR_TIERS = {
-    "wide": {"slots": 1, "heap": "-A64m -I0 -M4g"},
-    "heavy": {"slots": 1, "heap": "-A64m -I0 -M4g"},
-    "shared": {"max_heap_sum_gb": 4},
+    "wide": {"slots": 1, "heap": "-A64m -I0 -M2g"},
+    "heavy": {"slots": 1, "heap": "-A64m -I0 -M2g"},
+    "shared": {"max_heap_sum_gb": 2},
 }
 #: The claude CLI's own five `--effort` values, MEASURED 2026-08-17 by [LJ-4-0].
 #: They are `legal.efforts` in `dev/pod/heads.toml`, and the literal here is the
@@ -631,15 +644,44 @@ def agda_holders(reg: dict) -> dict:
     return {t: d for t, d in running(reg).items() if d.get("agda")}
 
 
+def agda_holders_in_tier(reg: dict, tier: str) -> dict:
+    """Agda holders in ONE tier's own pool, an untagged record counting as the default.
+
+    OWNER'S RULING 2026-08-23, SECOND PROPER FIX THE SAME DAY. `agda_holders()` answers
+    across BOTH tiers, which is right for the mixed heap sum below but was WRONG for a
+    per-tier SLOT ceiling: WIDE's two slots and HEAVY's one are separate pools, and a
+    check that counts one pool against the other's ceiling (or the total against
+    either) can refuse a fitting dispatch or admit an overfull one. An opus-5 review
+    reproduced it live against the real registry and real modules: one WIDE holder
+    present, a HEAVY dispatch asked; `pod.py`'s per-tier `agda_registry_slots("heavy")`
+    correctly read 0 and admitted, while this file's dispatch check (BEFORE this fix)
+    counted the WIDE holder against HEAVY's one-slot ceiling and refused. `admits()`
+    said yes, this file said no, which is the exact race the first 2026-08-23 fix
+    closed for the WITHIN-tier case and left open for the CROSS-tier one.
+
+    THIS IS NOW THE ONE PLACE A TIER'S OWN POOL IS COUNTED. The dispatch check below
+    and `pod.py`'s `agda_registry_slots()` both call it, so the two censuses cannot
+    diverge again by construction: there is only one implementation left to diverge
+    from.
+    """
+    return {t: d for t, d in agda_holders(reg).items()
+            if (d.get("tier") or AGDA_TIER_DEFAULT) == tier}
+
+
 def agda_heap_sum_over(reg: dict, tier: str) -> str:
     """A14's mixed worst case: the message when one more holder breaks the cap.
 
-    It returns "" when the dispatch fits. WHY IT IS NOT A SLOT COUNT: since the owner's
-    ruling of 2026-08-23 (one writer per tier, `-M4g` each, was four WIDE at `-M8g` and
-    two HEAVY at `-M12g`), one HEAVY holder and one WIDE holder together already sit
-    inside BOTH per-tier ceilings while reaching 8 GB of worst-case heap. A14 caps the sum
-    at `tiers.shared.max_heap_sum_gb`, 4 GB (was 32 GB), and only the registry knows what
-    tier each live holder took, because `launch()` writes it there.
+    It returns "" when the dispatch fits. WHY IT IS NOT A SLOT COUNT: WIDE admits two
+    writers at `-M2g` each, HEAVY admits one at `-M4g` (owner's ruling 2026-08-23,
+    second same-day ruling; was four WIDE at `-M8g` and two HEAVY at `-M12g`, then
+    briefly one writer per tier at a flat `-M4g`; WIDE's second slot raced this file's
+    own registry check against `admits()`'s process-only census for one hour before
+    `admits()` grew a matching registry check, `agda_registry_slots()` in pod.py), and
+    one HEAVY holder and one WIDE holder together already sit inside BOTH per-tier
+    ceilings while reaching 6 GB of worst-case heap. A14 caps the sum at
+    `tiers.shared.max_heap_sum_gb`, 6 GB (was 32 GB, then briefly 4 GB), and only the
+    registry knows what tier each live holder took, because `launch()` writes it
+    there.
 
     A record written before A14 carries no tier. It counts as the DEFAULT tier
     rather than as zero: an unread field must never make the sum look smaller.
@@ -1430,20 +1472,32 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
         prior = reg.get("dispatches", {}).get(task)
         if prior and not rec_alive(prior):
             reg.setdefault("history", []).append(prior)
-        # A14, AND THE SLOT COUNT IS NOW THE TIER'S. WIDE admits four, HEAVY two.
-        if agda and len(agda_holders(reg)) >= agda_slots(tier):
-            held = ", ".join(agda_holders(reg))
+        # A14, AND THE SLOT COUNT IS THE TIER'S. WIDE admits two, HEAVY one (owner's
+        # ruling 2026-08-23; was four and two under C-12). THIS IS THE CHECK A RACE
+        # WAS MEASURED AGAINST, TWICE, the same day. FIRST: `agda_holders(reg)` counts
+        # DISPATCHED agents the registry still lists as holding a slot, which was not
+        # the same census `admits()` in pod.py used (`agda_pileup()` alone, a
+        # `ps`-based count of Agda processes running this instant); `admits()` now
+        # ALSO reads the registry (`pod.py:agda_registry_slots()`). SECOND: this check
+        # used to count Agda holders across BOTH tiers against the ONE tier being
+        # asked about, so a live WIDE holder could refuse a HEAVY dispatch (or vice
+        # versa) that `pod.py`'s per-tier count had already admitted. `agda_holders_in_
+        # tier()` above is now the ONE place either side counts a tier's own pool.
+        if agda and len(agda_holders_in_tier(reg, tier)) >= agda_slots(tier):
+            held = ", ".join(agda_holders_in_tier(reg, tier))
             print(f"dispatch: the {agda_slots(tier)} Agda slots of the {tier} tier "
                   f"are held by {held}. "
                   f"Use `{CLI} queue {task} {brief}` instead of waiting by hand",
                   file=sys.stderr)
             return 1
         # AND THE SLOT COUNT ALONE IS NOT A14. A14 also caps the MIXED worst case
-        # at 4 GB (owner's ruling 2026-08-23; was 32 GB), and a slot count cannot
-        # see it: one HEAVY holder at -M4g plus one WIDE at -M4g is two processes
-        # inside every per-tier ceiling (both cap at one) and 8 GB of worst-case
-        # heap. `pod.py:agda_slots()` counts slots in ONE tier and never reads
-        # another tier's holders, so this file is the only place the sum can be
+        # at 6 GB (owner's ruling 2026-08-23, second same-day ruling; was 32 GB,
+        # then briefly 4 GB), and a slot count cannot see it: one HEAVY holder at
+        # -M4g plus one WIDE holder at -M2g is two processes, each inside its own
+        # per-tier ceiling (WIDE's admits a second writer even while HEAVY holds
+        # its own one slot), and 6 GB of worst-case heap. `pod.py:agda_slots()`
+        # counts slots in ONE tier and never reads another tier's holders, so
+        # this file is the only place the sum can be
         # taken: the registry is where every live holder's tier is written.
         if agda and (over := agda_heap_sum_over(reg, tier)):
             print(f"dispatch: REFUSED. {over}", file=sys.stderr)
@@ -2141,8 +2195,12 @@ def cmd_queue(a) -> int:
         # A14: the ceiling is the TIER's, and the heap sum is checked with it,
         # because a queue that waits on the slot count alone launches into a
         # mixed-tier overshoot and dies on `launch()`'s own refusal.
+        # `agda_holders_in_tier()`, NOT `agda_holders()`: the bare global count let
+        # a live holder of the OTHER tier both wake a queued waiter too early and
+        # hold one asleep past a free slot, the same cross-tier race an opus-5
+        # review found in `dispatch()`'s own check the same day (:1486 above).
         f"        free = ((not {a.agda!r}) or "
-        f"(len(D.agda_holders(reg)) < D.agda_slots({a.tier!r}) "
+        f"(len(D.agda_holders_in_tier(reg, {a.tier!r})) < D.agda_slots({a.tier!r}) "
         f"and not D.agda_heap_sum_over(reg, {a.tier!r})))\n"
         f"    clash = D.territory_in_flight(D.Path({str(brief)!r}), {a.task!r})\n"
         f"    if free and not clash: break\n"
@@ -2483,11 +2541,16 @@ def cmd_status(a) -> int:
     holders = agda_holders(reg)
     # A14: THE CENSUS PRINTS THE HEAP SUM, not only the count. Two holders can
     # sit inside every slot ceiling and still budget 24 GB, and the count alone
-    # hides that. Each holder is named with the tier it took.
+    # hides that. Each holder is named with the tier it took. The SLOT count
+    # printed below is the DEFAULT tier's OWN pool (`agda_holders_in_tier()`),
+    # not every live holder: `holders` above stayed global because the heap sum
+    # and the per-holder listing are BOTH meant to cross tiers, and only the
+    # slot count is not.
+    tier_holders = agda_holders_in_tier(reg, AGDA_TIER_DEFAULT)
     heap_now = sum(agda_heap_gb(d.get("tier") or AGDA_TIER_DEFAULT)
                    for d in holders.values())
-    print(f"Agda slots: {len(holders)}/{agda_slots(AGDA_TIER_DEFAULT)} held in the "
-          f"{AGDA_TIER_DEFAULT} tier, {heap_now}/{AGDA_MAX_HEAP_SUM_GB} GB of "
+    print(f"Agda slots: {len(tier_holders)}/{agda_slots(AGDA_TIER_DEFAULT)} held in "
+          f"the {AGDA_TIER_DEFAULT} tier, {heap_now}/{AGDA_MAX_HEAP_SUM_GB} GB of "
           f"worst-case heap budgeted" +
           (" by " + ", ".join(f"{t} ({d.get('tier') or AGDA_TIER_DEFAULT})"
                               for t, d in sorted(holders.items())) if holders else ""))
@@ -2579,9 +2642,10 @@ def cmd_status(a) -> int:
                   f"owns more than one.")
             for ppid, n in sorted(piled.items(), key=lambda kv: -kv[1]):
                 print(f"   ppid {ppid} owns {n} agda processes")
-            print("   C-12 is ONE agda process per agent. Each carries the -M4g cap "
-                  "(owner's ruling 2026-08-23; was -M8g), so N of")
-            print("   them is N x 4 GB of worst-case allocation on one machine. An agent that")
+            print("   C-12 is ONE agda process per agent. Each carries its tier's cap, "
+                  "-M2g (WIDE) or -M4g (HEAVY)")
+            print("   (owner's ruling 2026-08-23, second same-day ruling; was -M8g), so N of")
+            print("   them is up to N x 4 GB of worst-case allocation on one machine. An agent that")
             print("   retries a walling typecheck without killing the previous one produces")
             print("   exactly this. Kill the extras, then decide whether to stop the agent.")
         elif total_agda:
@@ -3125,10 +3189,14 @@ def main() -> int:
         # record carries it so two measurements are compared only within a tier.
         sp.add_argument("--tier", choices=agda_tiers(), default=AGDA_TIER_DEFAULT,
                         help="the Agda concurrency tier of dev/pod/heads.toml. "
-                             "owner's ruling 2026-08-23: wide admits one writer at "
-                             "-A64m -I0 -M4g; heavy admits one too (was four at -M8g "
-                             "and two at -M12g). The mixed worst-case heap sum is "
-                             "held at or under 4 GB whichever is used (was 32 GB)")
+                             "owner's ruling 2026-08-23: wide admits two writers at "
+                             "-A64m -I0 -M2g each; heavy admits one at -A64m -I0 "
+                             "-M4g (was four at -M8g and two at -M12g; wide's second "
+                             "slot raced pod.py's own admission check for one hour "
+                             "before the fix, see pod.py:agda_registry_slots()). "
+                             "The mixed worst-case heap sum (one of each at once) "
+                             "is held at or under "
+                             "6 GB (was 32 GB)")
         # POD EDIT 4 of 6, part 2 of 2 (design section 6.2). `argparse` validates
         # a SUPPLIED value against `choices`, so `--harness herdr-claude` was
         # refused before any other edit could run. This edit BLOCKS the other

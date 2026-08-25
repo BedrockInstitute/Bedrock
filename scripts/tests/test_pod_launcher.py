@@ -650,26 +650,30 @@ def main() -> int:
 
     # ------------------------------------------------------------------ R1
     print("R1: one GHCRTS caliber PER TIER, and neither is the old -M8g "
-          "(OWNER'S RULING 2026-08-23: one Agda writer, 4 GB, under any "
-          "circumstances -- the two tiers now share one caliber and one slot)")
+          "(OWNER'S RULING 2026-08-23, second same-day ruling: WIDE is 2 GB, "
+          "HEAVY is 4 GB, one writer each -- WIDE briefly rose to two writers "
+          "and was reverted the same hour, agda_slots() in pod.py has why)")
     check("the WIDE caliber is R13's, with the allocation area the old literal "
-          "dropped", mod.agda_heap("wide"), "-A64m -I0 -M4g")
+          "dropped", mod.agda_heap("wide"), "-A64m -I0 -M2g")
     check("the HEAVY caliber raises only the cap", mod.agda_heap("heavy"),
           "-A64m -I0 -M4g")
-    check("no caliber is the bare -M4g the review found",
-          [t for t in mod.agda_tiers() if mod.agda_heap(t) == "-M4g"], [])
+    check("no caliber is the bare -M4g or -M2g the review found",
+          [t for t in mod.agda_tiers() if mod.agda_heap(t) in ("-M4g", "-M2g")], [])
     check("the caliber is READ from heads.toml and is not a second literal",
           [mod.agda_heap(t) for t in ("wide", "heavy")],
           [heads["tiers"]["wide"]["heap"], heads["tiers"]["heavy"]["heap"]])
-    check("owner's ruling 2026-08-23: WIDE admits only ONE concurrent Agda writer",
-          mod.agda_slots("wide"), 1)
-    check("owner's ruling 2026-08-23: HEAVY admits only ONE too", mod.agda_slots("heavy"), 1)
+    check("owner's ruling 2026-08-23, second same-day ruling: WIDE admits TWO "
+          "concurrent Agda writers", mod.agda_slots("wide"), 2)
+    check("owner's ruling 2026-08-23: HEAVY admits only ONE", mod.agda_slots("heavy"), 1)
     check("the loader was reachable, so no fallback literal is in play",
           mod.HEADS_ERROR, "")
-    # THE MIXED SUM IS THE HALF A SLOT COUNT CANNOT SEE. Under the owner's 2026-08-23
-    # ruling the shared cap (4 GB) equals ONE holder's own caliber, so a single live
-    # holder of EITHER tier already saturates it -- there is no scenario left where a
-    # second concurrent holder, of any tier, has room.
+    # THE MIXED SUM IS THE HALF A SLOT COUNT CANNOT SEE. Owner's ruling 2026-08-23,
+    # second same-day ruling: the shared cap is 6 GB, sized for the worst combo the
+    # slot ceilings (one WIDE, one HEAVY) can actually reach -- one of each at once,
+    # 2 + 4 = 6, which FITS exactly. Nothing the slot ceilings can reach any longer
+    # exceeds the sum on its own; the function still catches a registry that names
+    # MORE holders than the ceilings would ever really admit (a stale or hand-built
+    # record), which is what the second-HEAVY-comer case below tests.
     def reg_of(*tiers):
         return {"dispatches": {f"t{i}": {"agda": True, "tier": t, "pid": i}
                                for i, t in enumerate(tiers)}}
@@ -677,24 +681,42 @@ def main() -> int:
     saved_running = mod.running
     try:
         mod.running = lambda reg: reg["dispatches"]
-        check("zero holders leave room for the first: 0 + 4 <= 4",
+        check("zero holders leave room for the first: 0 + 2 <= 6",
               mod.agda_heap_sum_over(reg_of(), "wide"), "")
-        check_true("one WIDE holder already saturates the cap: a second breaks it",
-                   mod.agda_heap_sum_over(reg_of("wide"), "wide"))
-        check_true("one HEAVY holder saturates it too, for a WIDE second comer",
-                   mod.agda_heap_sum_over(reg_of("heavy"), "wide"))
-        check_true("and for a second HEAVY comer as well",
+        check("one WIDE holder still leaves room for a second: 2 + 2 <= 6",
+              mod.agda_heap_sum_over(reg_of("wide"), "wide"), "")
+        check("one HEAVY holder still leaves room for a WIDE comer: 4 + 2 <= 6",
+              mod.agda_heap_sum_over(reg_of("heavy"), "wide"), "")
+        check_true("but a second HEAVY comer breaks it: 4 + 4 > 6",
                    mod.agda_heap_sum_over(reg_of("heavy"), "heavy"))
         # THE KEY NAME MUST MATCH `reg_of`'s OWN ("t0"), not a third literal ("old"):
-        # under the owner's 2026-08-23 4 GB cap a single holder now SATURATES the
-        # budget, so the refusal message is no longer empty and it embeds the
-        # dispatch's own key. A differently-named untagged record would make this
-        # assertion compare two distinct strings for a reason that has nothing to
-        # do with what the check states.
+        # an untagged record counts as the default tier (WIDE), never as zero, so it
+        # must read exactly like an explicitly-tagged WIDE holder in every case,
+        # including this one where neither refuses.
         check("a record written before A14 carries no tier and counts as the "
               "default tier, never as zero",
               mod.agda_heap_sum_over({"dispatches": {"t0": {"agda": True}}}, "wide"),
               mod.agda_heap_sum_over(reg_of("wide"), "wide"))
+        # THE CROSS-TIER RACE an opus-5 review reproduced live, 2026-08-23: the
+        # dispatch check, the queue-waiter's generated wait condition and
+        # `pod.py`'s `agda_registry_slots()` each used to filter the registry by
+        # tier differently, so a live holder of ONE tier could bind the OTHER
+        # tier's admission decision. `agda_holders_in_tier()` is now the ONE
+        # function all three read.
+        check("a WIDE holder never counts against HEAVY's own ceiling",
+              len(mod.agda_holders_in_tier(reg_of("wide"), "heavy")), 0)
+        check("a HEAVY holder never counts against WIDE's own ceiling",
+              len(mod.agda_holders_in_tier(reg_of("heavy"), "wide")), 0)
+        check("each tier counts only its own holders out of a mixed registry",
+              (len(mod.agda_holders_in_tier(reg_of("wide", "wide", "heavy"), "wide")),
+               len(mod.agda_holders_in_tier(reg_of("wide", "wide", "heavy"), "heavy"))),
+              (2, 1))
+        check_true("the bare global census WOULD have refused a HEAVY dispatch "
+                   "behind one live WIDE holder -- HEAVY's own ceiling is one, "
+                   "and the global count already reads one -- which is exactly "
+                   "the refusal `pod.py`'s per-tier count (correctly zero) did "
+                   "not share, and the race this fix closes",
+                   len(mod.agda_holders(reg_of("wide"))) >= mod.agda_slots("heavy"))
     finally:
         mod.running = saved_running
 
@@ -714,8 +736,8 @@ def main() -> int:
     check("and never reaches the shell unquoted, which is the injection",
           f"--effort {inject}" in driver, False)
     check("the caliber holds two spaces and is also ONE quoted word",
-          "--env 'GHCRTS=-A64m -I0 -M4g'" in driver, True)
-    check("an unquoted caliber would have handed -I0 and -M4g to pane split "
+          "--env 'GHCRTS=-A64m -I0 -M2g'" in driver, True)
+    check("an unquoted caliber would have handed -I0 and -M2g to pane split "
           "as two more arguments", "--env GHCRTS=-A64m -I0" in driver, False)
     # MEASURED 2026-08-20: a never-started refill kept the herdr name and the
     # next two hourly refills refused `agent_name_taken`.
@@ -727,7 +749,8 @@ def main() -> int:
         mod, tmp, task="ZZ-2-2", brief=brief, agda=True, sandbox="workspace-write",
         model="claude-opus-5", effort="max", tier="heavy")
     check("a HEAVY dispatch gets the HEAVY caliber on its pane", rc, 0)
-    check_true("and it is the -M4g one (owner's ruling 2026-08-23: both tiers share it)",
+    check_true("and it is the -M4g one, bigger than WIDE's -M2g (owner's ruling "
+               "2026-08-23, second same-day ruling)",
                "--env 'GHCRTS=-A64m -I0 -M4g'" in (cmd or ["", "", ""])[2])
 
     # ------------------------------------------------------------------ R3
@@ -757,6 +780,11 @@ def main() -> int:
           "tier='heavy'" in waiter, True)
     check("it waits on the TIER's slot count, not on one global number",
           "D.agda_slots('heavy')" in waiter, True)
+    check("and on that tier's OWN pool of holders, not the registry's bare "
+          "global census -- the cross-tier race an opus-5 review found live",
+          "D.agda_holders_in_tier(reg, 'heavy')" in waiter, True)
+    check("and never the bare census that raced against it",
+          "D.agda_holders(reg) <" in waiter, False)
     check("and on the mixed heap sum, which a slot count cannot see",
           "D.agda_heap_sum_over(reg, 'heavy')" in waiter, True)
     # AND IT IS EXECUTED, because an import error is exactly what the review
@@ -772,6 +800,7 @@ def main() -> int:
     # circuited: with a real Agda agent live it would otherwise sleep for ever.
     stub = ("import launcher as D\n"
             "D.agda_holders = lambda reg: {}\n"
+            "D.agda_holders_in_tier = lambda reg, tier: {}\n"
             "D.agda_heap_sum_over = lambda reg, tier: ''\n"
             "D.territory_in_flight = lambda brief, task: None\n"
             "D.launch = lambda *a, **k: print('LAUNCH effort=%r tier=%r harness=%r'\n"
@@ -1016,17 +1045,22 @@ def main() -> int:
     # **QWEN IS BACK, OWNER'S RULING 2026-08-23**, ending the 2026-08-22 maintenance
     # drop. `claude-opus-5` left `coder` the same day (moved to `coder_adversarial`'s
     # second head instead); `glm-5.3` is qwen's own fallback now.
-    check("the coder array is qwen capped at one, glm-5.3 uncapped behind it",
+    # **EVERY `glm-5.3` AND `grok-4.6` ROW GOT `max_concurrency = 1`, OWNER'S RULING
+    # 2026-08-24**, the same cap qwen's row already carried. `coder` is now capped at
+    # one on BOTH heads.
+    check("the coder array caps both heads at one, qwen and glm-5.3 alike",
           sorted(str(r.get("max_concurrency")) for r in heads["heads"]["coder"]),
-          ["1", "None"])
-    # **THE CAP IS NOT WHAT MAKES A SLOT RETRYABLE, A29.** Both critic arrays are
-    # entirely uncapped and both still fall back, because the trigger is that the slot
-    # has a second head at all. This check is the one that would have failed under
-    # A27's capacity gate.
-    for _critic in ("mathematician_adversarial", "coder_adversarial"):
-        check(f"{_critic} carries two heads and caps neither",
-              [r.get("max_concurrency") for r in heads["heads"][_critic]],
-              [None, None])
+          ["1", "1"])
+    # **THE CAP IS NOT WHAT MAKES A SLOT RETRYABLE, A29.** Even a fully-capped critic
+    # array still falls back, because the trigger is that the slot has a second head at
+    # all, and A29 fires on a `no-change` return regardless of any cap. This check is
+    # the one that would have failed under A27's capacity gate.
+    check("mathematician_adversarial caps both heads (grok-4.6, glm-5.3), 2026-08-24",
+          [r.get("max_concurrency") for r in heads["heads"]["mathematician_adversarial"]],
+          [1, 1])
+    check("coder_adversarial caps grok-4.6 and leaves claude-opus-5 uncapped",
+          [r.get("max_concurrency") for r in heads["heads"]["coder_adversarial"]],
+          [1, None])
     _rows = [(slot, r) for slot, v in heads["heads"].items()
              for r in (v if isinstance(v, list) else [v])]
     # Eight again, now that qwen is back in `coder` (see the check above).
@@ -1126,19 +1160,22 @@ def main() -> int:
            "parked_max", "tick_seconds", "worker_deadline_s"])
     check_true("the Agda deadline clears the widest measured acceptance run, "
                "300.81 s at [LJ-4-0] gap B3", limits["agda_deadline_s"] > 300.81)
-    check("owner's ruling 2026-08-23: WIDE admits only ONE concurrent Agda writer",
-          heads["tiers"]["wide"]["slots"], 1)
-    check("owner's ruling 2026-08-23: HEAVY admits only ONE too",
+    check("owner's ruling 2026-08-23, second same-day ruling: WIDE admits TWO "
+          "concurrent Agda writers (raced admits()'s process census against "
+          "this registry check for one hour before the fix; "
+          "agda_registry_slots() in pod.py has the measurement)",
+          heads["tiers"]["wide"]["slots"], 2)
+    check("owner's ruling 2026-08-23: HEAVY admits only ONE",
           heads["tiers"]["heavy"]["slots"], 1)
-    check("the WIDE caliber is the owner's 2026-08-23 4 GB ruling",
-          heads["tiers"]["wide"]["heap"], "-A64m -I0 -M4g")
-    check("the HEAVY caliber carries the same cap now",
+    check("the WIDE caliber is the owner's 2026-08-23 second-ruling 2 GB cut",
+          heads["tiers"]["wide"]["heap"], "-A64m -I0 -M2g")
+    check("the HEAVY caliber keeps the original 4 GB cap",
           heads["tiers"]["heavy"]["heap"], "-A64m -I0 -M4g")
-    check("the mixed worst case is held at or under 4 GB",
-          heads["tiers"]["shared"]["max_heap_sum_gb"], 4)
+    check("the mixed worst case is held at or under 6 GB",
+          heads["tiers"]["shared"]["max_heap_sum_gb"], 6)
     check("slots three and four need system free memory above 25 percent",
           heads["tiers"]["shared"]["free_memory_pct_for_extra"], 25)
-    check("the per-process backstop follows the owner's 4 GB cap",
+    check("the per-process backstop follows HEAVY's 4 GB cap, the larger tier",
           heads["tiers"]["shared"]["per_process_backstop_gb"], 6)
     check("and C-12's system free floor with it",
           heads["tiers"]["shared"]["system_free_floor_pct"], 8)
@@ -1146,20 +1183,27 @@ def main() -> int:
     # once the four numbers above are pinned. It read as a safety property and
     # asserted a tautology. The three below are the property A14 actually states,
     # and each one fails on a different bad edit of this file. OWNER'S RULING
-    # 2026-08-23 collapsed both tiers to one slot at 4 GB, so a FULL tier is now
-    # exactly one holder, and two tiers full together (8 GB) still exceed the
-    # 4 GB shared cap -- the property survives the new numbers unchanged.
+    # 2026-08-23 (second same-day ruling) gave WIDE a smaller 2 GB cap and TWO
+    # slots, and kept HEAVY at 4 GB, one slot, so the worst combo either tier's
+    # OWN slot ceiling can reach is one HEAVY plus one WIDE at once -- 4 + 2 = 6,
+    # which FITS the 6 GB cap exactly rather than exceeding it (`max_heap_sum_gb`
+    # was sized to match this combo, not to refuse it; two WIDE at once, 4 GB,
+    # also fits, with room to spare). The property this file demonstrates
+    # therefore needs a combo the slot ceilings alone would never actually reach
+    # in practice (two HEAVY at once), which `heap_sum_ok()` in pod.py still
+    # must refuse on the arithmetic and not on any per-tier count.
     cap = heads["tiers"]["shared"]["max_heap_sum_gb"]
-    wide_gb, heavy_gb = 4, 4
-    check("a FULL wide tier fits the cap exactly, which is why one is the "
-          "number: 1 x 4 = 4",
+    wide_gb, heavy_gb = 2, 4
+    check("a FULL wide tier fits the cap with room to spare: 2 x 2 = 4",
           heads["tiers"]["wide"]["slots"] * wide_gb <= cap, True)
     check("a FULL heavy tier fits under it too: 1 x 4 = 4",
           heads["tiers"]["heavy"]["slots"] * heavy_gb <= cap, True)
-    check("and the two tiers full TOGETHER do not fit, which is why admits() "
-          "must do arithmetic and not count slots",
-          heads["tiers"]["wide"]["slots"] * wide_gb
-          + heads["tiers"]["heavy"]["slots"] * heavy_gb > cap, True)
+    check("one of each AT ONCE fits EXACTLY, which is what the cap is sized for: "
+          "1 x 2 + 1 x 4 = 6",
+          1 * wide_gb + 1 * heavy_gb <= cap, True)
+    check("but two HEAVY together do not fit, which is why admits() must do "
+          "arithmetic and not count slots: 2 x 4 = 8 > 6",
+          2 * heavy_gb > cap, True)
     check("the tier calibers state the gigabyte figures this arithmetic uses",
           (f"-M{wide_gb}g" in heads["tiers"]["wide"]["heap"],
            f"-M{heavy_gb}g" in heads["tiers"]["heavy"]["heap"]), (True, True))

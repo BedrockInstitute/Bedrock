@@ -402,6 +402,15 @@ class Sources(unittest.TestCase):
         for key in digest.FIELD_SOURCES:
             self.assertIn(key, data, f"`{key}` names a source and reports nothing")
 
+    def test_every_state_of_the_program_has_a_chinese_name(self):
+        """SET EQUALITY, in both directions, and it is the shape this file already
+        prefers. `STATE_ZH` renders the state column of section 二, and a state the table
+        does not name prints its English name into the owner's report. `SHELVED` was
+        added to `pod.STATES` on 2026-08-24 (A30) and this is what would have caught it
+        going unnamed. The other direction catches a Chinese name kept alive for a state
+        the program no longer has."""
+        self.assertEqual(set(digest.STATE_ZH), set(pod.STATES))
+
     def test_every_chinese_gap_label_names_a_real_row(self):
         """`GAP_ZH` renders a gap of section 11. An ID that left the memo must not keep
         a Chinese phrase alive, so the parser and the table are checked against each

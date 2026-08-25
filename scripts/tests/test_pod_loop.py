@@ -344,8 +344,11 @@ class LoopCase(unittest.TestCase):
         self.patch(pod, "launch", fake_launch)
         self.patch(pod, "rec_alive", lambda t: True)
         self.patch(pod, "admits", lambda st, t, agda=None: True)
+        # `**kw` SINCE A30: `notify_owner` takes a `title`, because rule (a3)'s push is
+        # not a stop and must not carry the stop's title. A stub that pins the old
+        # signature reads a new keyword as `TypeError` inside the rule under test.
         self.patch(pod, "notify_owner",
-                   lambda why, root=None: self.calls["notify"].append(why))
+                   lambda why, root=None, **kw: self.calls["notify"].append(why))
         self.patch(pod, "write_digest",
                    lambda st, root=None: self.calls.__setitem__(
                        "digest", self.calls["digest"] + 1))
@@ -746,6 +749,146 @@ class RuleA2(LoopCase):
         self.assertIsNotNone(pod.notify_closes(seq_before, self.tmp))
         self.assertTrue(any("PARKED" in p for p in prompts), prompts)
 
+    def _mod_naming_targets(self, sent):
+        """A `herdr_name`/`herdr_prompt` stub that tells MAINT_TASK and MATH_TASK
+        apart, the way `mod.herdr_name()` really does. `sent` collects (name, text)."""
+        class _Mod:
+            @staticmethod
+            def herdr_name(t):
+                return "pod-batch" if t == pod.MAINT_TASK else "pod-math"
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                sent.append((name, text))
+                return True
+        return _Mod
+
+    def test_a_row_park_ALSO_pages_the_mathematician(self):
+        """Owner's ruling 2026-08-24: a judgement park pages the mathematician the SAME
+        tick, not only the maintainer."""
+        sent = []
+        self.patch(facts_mod, "launcher", lambda: self._mod_naming_targets(sent))
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.RETURNED, record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.RETURNED, pod.CHECKING, root=self.tmp)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec,
+                 reason="row:task-lj-1-599-heap-wall-park", root=self.tmp)
+        pod.notify_closes(seq_before, self.tmp)
+        names = [n for n, _ in sent]
+        self.assertEqual(names, ["pod-batch", "pod-math"])
+        math_text = sent[1][1]
+        self.assertIn("POD-PARK", math_text)
+        self.assertIn(CODE, math_text)
+        self.assertIn("row:task-lj-1-599-heap-wall-park", math_text)
+
+    def test_an_attempt_max_park_ALSO_pages_the_mathematician(self):
+        sent = []
+        self.patch(facts_mod, "launcher", lambda: self._mod_naming_targets(sent))
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.RETURNED, record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.RETURNED, pod.CHECKING, root=self.tmp)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec,
+                 reason="attempt_max:sys-lint-accept", row="sys-lint-accept",
+                 root=self.tmp)
+        pod.notify_closes(seq_before, self.tmp)
+        names = [n for n, _ in sent]
+        self.assertEqual(names, ["pod-batch", "pod-math"])
+        self.assertIn("attempt_max:sys-lint-accept", sent[1][1])
+
+    def test_the_ELEVEN_self_resolving_park_reasons_never_page_the_mathematician(self):
+        """Only `attempt_max:` and `row:` name a judgement (B2, item 26). The other
+        eleven reopen on their own or are the maintainer's own read of the program, and
+        paging the mathematician for those is exactly the noise this design avoids."""
+        for reason in ("no-match", "no-change", "preflight:P1", "r4", "admission",
+                       "launch", "stop_loop:x", "salvage:LJ-1.599", "quota:2026-01-01",
+                       "orphan:1234", "fallback:glm-5.3"):
+            with self.subTest(reason=reason):
+                sent = []
+                self.patch(facts_mod, "launcher", lambda: self._mod_naming_targets(sent))
+                st = pod.State()
+                rec = record()
+                t = pod.Task(CODE, status=pod.RETURNED, record=rec)
+                st.tasks[CODE] = t
+                seq_before = st.seq
+                pod.emit(st, t, pod.RETURNED, pod.CHECKING, root=self.tmp)
+                pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason=reason,
+                         root=self.tmp)
+                pod.notify_closes(seq_before, self.tmp)
+                names = [n for n, _ in sent]
+                self.assertEqual(names, ["pod-batch"], reason)
+
+    def test_a_DONE_close_never_pages_the_mathematician(self):
+        """The maintainer's own POD-REVIEW covers a close either way; the mathematician
+        page is for a PARK that names a judgement, never for a success."""
+        sent = []
+        self.patch(facts_mod, "launcher", lambda: self._mod_naming_targets(sent))
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.RETURNED, record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.RETURNED, pod.CHECKING, root=self.tmp)
+        pod.emit(st, t, pod.CHECKING, pod.DONE, rec=rec, row="sys-go", root=self.tmp)
+        pod.notify_closes(seq_before, self.tmp)
+        names = [n for n, _ in sent]
+        self.assertEqual(names, ["pod-batch"])
+
+    def test_a_reaccept_park_that_is_not_a_worker_return_does_not_page_either(self):
+        """The re-accept exclusion (LJ-1.422, 2026-08-20) already keeps this out of
+        `closes`, so the mathematician page inherits the same guard for free."""
+        sent = []
+        self.patch(facts_mod, "launcher", lambda: self._mod_naming_targets(sent))
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.PARKED, park_reason="row:sys-heap-wall", record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.PARKED, pod.CHECKING, rec=rec, reason="row:sys-heap-wall",
+                 root=self.tmp, why="reaccept: the scene is still there, no worker")
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="row:sys-heap-wall",
+                 root=self.tmp)
+        pod.notify_closes(seq_before, self.tmp)
+        self.assertEqual(sent, [])
+
+    def test_a_reaccept_park_that_IS_a_worker_return_does_page(self):
+        """B2's own guard is on the REASON string, not on the row id, so a genuine new
+        judgement park still pages even when its row happens to match `sys-heap-wall`."""
+        sent = []
+        self.patch(facts_mod, "launcher", lambda: self._mod_naming_targets(sent))
+        st = pod.State()
+        rec = record()
+        t = pod.Task(CODE, status=pod.RETURNED, record=rec)
+        st.tasks[CODE] = t
+        seq_before = st.seq
+        pod.emit(st, t, pod.RETURNED, pod.CHECKING, root=self.tmp)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="row:sys-heap-wall",
+                 root=self.tmp)
+        pod.notify_closes(seq_before, self.tmp)
+        names = [n for n, _ in sent]
+        self.assertEqual(names, ["pod-batch", "pod-math"])
+
+    def test_a_prompt_that_raises_is_never_load_bearing(self):
+        """The mathematician page must not be able to stop the tick, the same guarantee
+        the maintainer's own POD-REVIEW page already has."""
+        class _Raising:
+            @staticmethod
+            def herdr_name(t):
+                return "pod-math"
+
+            @staticmethod
+            def herdr_prompt(name, text):
+                raise RuntimeError("herdr is down")
+        self.patch(facts_mod, "launcher", lambda: _Raising)
+        closes = [{"task": CODE, "to": pod.PARKED, "row": "sys-heap-wall",
+                  "reason": "row:sys-heap-wall"}]
+        self.assertIsNone(pod.notify_mathematician_of_judgement_parks(closes, self.tmp))
+
     def test_a_reaccept_close_does_not_launch(self):
         """Full tick: PARKED → CHECKING → DONE, and launch() is never called."""
         rec = record(exit_code=0, delta=-2)
@@ -783,6 +926,22 @@ class RuleA2(LoopCase):
         pod._rule_a2(st, self.tmp)
         self.assertEqual(t.status, pod.READY)
         self.assertEqual(t.row, "sys-new")
+
+    def test_a_PLAIN_park_row_ALSO_stays_while_the_guilty_row_still_wins(self):
+        """B2's other spelling. `emit_park()` (:4067) writes `reason = "row:" + row_id`
+        for a plain `park` action, never `attempt_max:` -- that prefix is reached only
+        after an `escalate` row exhausts `attempt_max`. Measured on `[LJ-1.603]`,
+        2026-08-24: it parked on `task-lj-1-603-heap-wall-park` (`action = "park"`,
+        maintainer-backlog item 26's own fix) with reason `row:task-lj-1-603-
+        heap-wall-park`, and the guard below used to check only the `attempt_max:`
+        spelling, so the FIRST unrelated table.toml write (any expire_rows() on any
+        OTHER task, any other batch's row) would have reopened it into the SAME
+        heap wall for no reason at all."""
+        self.write_table([sys_row("sys-guilty", action="park",
+                                  when={"exit_code": 0})])
+        st, t = self.parked("row:sys-guilty", rec=record(), parked_at=0.0)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
 
 
 # ---------------------------------------------------------------- rule (b) OBSERVE
@@ -1189,6 +1348,55 @@ class RuleC(LoopCase):
         self.assertEqual(t.status, pod.PARKED)
         self.assertEqual(t.park_reason, "attempt_max:sys-accept")
 
+    def test_attempt_max_park_salvages_the_worktree_first(self):
+        """Owner's ruling 2026-08-23, `dev/pod/maintainer-backlog.md` item 28.
+        `attempt_max` is the one park `_rule_a2()` never reopens on its own, so
+        whatever the worker built must reach the main tree HERE or never."""
+        self.write_table([sys_row("sys-accept", action="accept",
+                                  when={"exit_code": 0})])
+        self.set_acceptance(record())
+        st, t = self.returned(attempt=1)
+        seen = []
+        self.patch(pod, "salvage_worktree",
+                   lambda task, root=None, home_only=False: (
+                       seen.append((task.code, home_only, task.status)), [])[1])
+        limit = heads_mod.limits()["attempt_max"]
+        for _ in range(limit):
+            t.status = pod.RETURNED
+            pod._rule_c(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(t.park_reason, "attempt_max:sys-accept")
+        self.assertEqual(seen, [(CODE, True, pod.CHECKING)],
+                         "salvage must run exactly once, restricted to the task home, "
+                         "and BEFORE the emit() that parks (task.status is still "
+                         "CHECKING, not yet PARKED, at call time)")
+        self.assertIsNone(self.lines()[-1].get("detail"),
+                          "no collision means no detail, not an empty list")
+
+    def test_a_salvage_collision_at_attempt_max_is_reported_and_still_parks(self):
+        """A collision must not re-route the park: the row is the reason for parking
+        either way, and `salvage_worktree()` never merges, so it cannot conflict."""
+        self.write_table([sys_row("sys-accept", action="accept",
+                                  when={"exit_code": 0})])
+        self.set_acceptance(record())
+        st, t = self.returned(attempt=1)
+        seen_home_only = []
+        self.patch(pod, "salvage_worktree",
+                   lambda task, root=None, home_only=False: (
+                       seen_home_only.append(home_only),
+                       ["src/L/Clash.lagda.md: collided"])[1])
+        limit = heads_mod.limits()["attempt_max"]
+        for _ in range(limit):
+            t.status = pod.RETURNED
+            pod._rule_c(st, self.tmp)
+        self.assertEqual(seen_home_only, [True],
+                         "the attempt_max call must restrict to the task home, so a "
+                         "`## SCOPE (write)` collision outside it can never happen here")
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(t.park_reason, "attempt_max:sys-accept")
+        self.assertEqual(self.lines()[-1]["detail"],
+                         ["src/L/Clash.lagda.md: collided"])
+
     def test_the_cap_covers_the_four_LOOPING_actions_and_never_a_stop_loop(self):
         """A3 makes a `stop_loop` row undefeatable, and the cap must not defeat it.
 
@@ -1540,6 +1748,426 @@ class DeclaredStop(LoopCase):
         self.assertIs(pod._rule_d(st, self.tmp), pod.STOP, "the parked stop broke")
 
 
+class Shelve(LoopCase):
+    """Rule (a3): a mathematician declaring ONE task settled. A30, owner 2026-08-24.
+
+    **WHAT IT COSTS TO NOT HAVE THIS STATE, MEASURED.** `dev/pod/transitions/
+    2026-08.jsonl` seq 3666 and 3675, 2.5 minutes apart, both `"why": "5 parked"`. Two of
+    the five parked tasks were settled by the mathematician's own evidenced judgement
+    ("the obligation is delivered by another task") and had NO legal state that is not
+    PARKED, so they held two of five stop slots permanently. 31 of the 121 briefs under
+    `agents/tasks/POD-BATCH/` had asked the maintainer for a row for one of them.
+
+    **IT IS A STATE AND NOT A PARK REASON.** Rule (a2)'s own stated invariant is「a park
+    is never terminal」, and a reason whose branch is「never un-park」makes that false. A
+    STATE keeps AD16 exactly true, gets its legality enforced by `emit()` for free, and
+    is excluded from `st.of(PARKED)` by construction so that neither `cmd_resume --retry`
+    nor rule (a2) can sweep a settled task back into the loop.
+    """
+
+    def _write(self, text):
+        d = self.tmp / "dev" / "pod"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "shelve-request.toml").write_text(text, encoding="utf-8")
+        return d / "shelve-request.toml"
+
+    GOOD = ('[shelve]\ntask = "LJ-1.386"\n'
+            'claim = "settled: the obligation is delivered by LJ-1.559"\n'
+            'reason = "domAt-at-carve closed the same obligation under another name."\n'
+            'evidence = ["dev/pod/transitions/2026-08.jsonl:2996",\n'
+            '            "agents/tasks/LJ-1-559/lj-1.559-report.md:41"]\n'
+            'reopen = "a restructuring that makes the 1800 s frame moot"\n'
+            'by = "pod-math"\n')
+
+    def parked(self, reason="attempt_max:sys-x"):
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md",
+                                      status=pod.PARKED, park_reason=reason,
+                                      record=record(), parked_at=0.0, attempt=4)
+        return st, t
+
+    def test_a_well_formed_request_moves_a_PARKED_task_to_SHELVED(self):
+        self._write(self.GOOD)
+        st, t = self.parked()
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(t.status, pod.SHELVED)
+        line = self.lines()[-1]
+        self.assertEqual((line["from"], line["to"]), ("PARKED", "SHELVED"))
+        self.assertIn("LJ-1.559", line["claim"])
+        self.assertIn("domAt", line["shelve_reason"])
+        self.assertIn("2026-08.jsonl:2996", " ".join(line["shelve_evidence"]))
+        self.assertIn("restructuring", line["reopen"])
+        self.assertEqual(line["by"], "pod-math")
+
+    def test_the_task_keeps_its_whole_park_record_so_the_shelve_is_reversible(self):
+        """It clears nothing. `pod unshelve` must restore a PARKED task that knows
+        everything it knew before, or the reversal costs a person a log archaeology."""
+        self._write(self.GOOD)
+        st, t = self.parked()
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(t.park_reason, "attempt_max:sys-x")
+        self.assertIsNotNone(t.record)
+        self.assertIsNotNone(t.shelved_at)
+        self.assertIn("restructuring", t.shelve_reopen)
+
+    def test_the_honoured_request_is_kept_as_evidence_under_the_shelf(self):
+        p = self._write(self.GOOD)
+        st, t = self.parked()
+        pod._rule_a3(st, self.tmp)
+        self.assertFalse(p.is_file(), "the honoured request was not retired")
+        kept = self.tmp / "dev" / "pod" / "shelf" / f"{CODE}.toml.shelved"
+        self.assertTrue(kept.is_file(), "the declaration is the evidence and it is gone")
+        self.assertEqual(t.shelve_ref, f"dev/pod/shelf/{CODE}.toml.shelved")
+        # R15 must keep excluding it, exactly as it excludes a retired proposal.
+        self.assertIn("shelved", pod.RETIRED_SUFFIXES)
+
+    def test_the_request_is_read_ONCE_so_a_stale_file_shelves_nothing_twice(self):
+        self._write(self.GOOD)
+        st, t = self.parked()
+        pod._rule_a3(st, self.tmp)
+        before = len(self.lines())
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(len(self.lines()), before, "a retired request shelved again")
+
+    def test_a_shelve_with_NO_CHECKABLE_EVIDENCE_is_refused_and_never_silent(self):
+        """The same Boundary sentence the declared stop obeys: a claim that cannot be
+        checked can only be believed. And a refusal nobody records is worse than no
+        refusal, because the mathematician believes the task left the loop."""
+        base = ('[shelve]\ntask = "LJ-1.386"\nclaim = "c"\nreason = "r"\n'
+                'reopen = "x"\nby = "pod-math"\n')
+        for bad, what in (
+            (base + 'evidence = ["it works"]\n', "no file:line"),
+            (base + 'evidence = []\n', "an empty evidence list"),
+            (base, "no evidence key"),
+            ('[shelve]\ntask = "LJ-1.386"\nreason = "r"\nreopen = "x"\n'
+             'by = "pod-math"\nevidence = ["a.md:1"]\n', "no claim"),
+            ('[shelve]\ntask = "LJ-1.386"\nclaim = "c"\nreopen = "x"\n'
+             'by = "pod-math"\nevidence = ["a.md:1"]\n', "no reason"),
+            ('[shelve]\nclaim = "c"\nreason = "r"\nreopen = "x"\nby = "pod-math"\n'
+             'evidence = ["a.md:1"]\n', "no task"),
+            ('[shelve]\ntask = "LJ-1.386"\nclaim = "c"\nreason = "r"\nreopen = "x"\n'
+             'evidence = ["a.md:1"]\n', "no author"),
+            ('not toml at all\n', "unparseable"),
+            ('[stop]\nclaim = "c"\n', "no [shelve] table"),
+        ):
+            with self.subTest(what=what):
+                p = self._write(bad)
+                st, t = self.parked()
+                pod._rule_a3(st, self.tmp)
+                self.assertEqual(t.status, pod.PARKED,
+                                 f"an unevidenced shelve ({what}) took a task out")
+                self.assertFalse(p.is_file())
+                self.assertTrue(p.with_suffix(".toml.refused").is_file(),
+                                f"the refusal of ({what}) left no trace")
+                log = (self.tmp / "dev" / "pod" / "transitions").glob("*.jsonl")
+                text = "".join(f.read_text() for f in log)
+                self.assertIn("shelve_request", text, "the refusal was silent")
+                p.with_suffix(".toml.refused").unlink()
+
+    def test_a_shelve_with_no_REOPEN_condition_is_refused_because_it_is_a_drop(self):
+        """The field that makes the state honest. A shelve says「nothing is owed here
+        today, and HERE is what would change that」. With no named condition it says
+        「forget this」, and the Boundary discards nothing."""
+        p = self._write(self.GOOD.replace(
+            'reopen = "a restructuring that makes the 1800 s frame moot"\n', ""))
+        st, t = self.parked()
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertTrue(p.with_suffix(".toml.refused").is_file())
+        why = [x for x in self.lines() if x.get("event") == "shelve_request"][-1]["why"]
+        self.assertIn("drop", why, "the refusal did not say what was missing")
+
+    def test_a_task_that_is_not_PARKED_is_refused_BY_NAME(self):
+        for status in (pod.READY, pod.RUNNING, pod.RETURNED, pod.CHECKING,
+                       pod.DONE, pod.SHELVED):
+            with self.subTest(status=status):
+                p = self._write(self.GOOD)
+                st = pod.State()
+                st.tasks[CODE] = t = pod.Task(CODE, status=status)
+                pod._rule_a3(st, self.tmp)
+                self.assertEqual(t.status, status, "a shelve moved a task it must not")
+                why = [x for x in self.lines()
+                       if x.get("event") == "shelve_request"][-1]["why"]
+                self.assertIn(CODE, why)
+                self.assertIn(status, why, "the refusal did not name the state it found")
+                p.with_suffix(".toml.refused").unlink()
+
+    def test_an_UNKNOWN_code_is_refused_and_never_creates_a_task(self):
+        p = self._write(self.GOOD.replace("LJ-1.386", "LJ-9.999"))
+        st = pod.State()
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(st.tasks, {}, "a shelve request created a task")
+        self.assertTrue(p.with_suffix(".toml.refused").is_file())
+
+    def test_an_ALREADY_SHELVED_code_is_pointed_at_unshelve_and_not_shelved_again(self):
+        self._write(self.GOOD)
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.SHELVED)
+        pod._rule_a3(st, self.tmp)
+        why = [x for x in self.lines() if x.get("event") == "shelve_request"][-1]["why"]
+        self.assertIn("unshelve", why)
+
+    def test_rule_a2_gets_FIRST_REFUSAL_on_the_tick(self):
+        """The ordering is the design. A table edit that would legitimately reopen the
+        named task wins this tick, and the shelve then refuses because the task is no
+        longer PARKED. A shelve must never take work rule (a2) has just revived."""
+        self._write(self.GOOD)
+        st, t = self.parked(reason="admission")
+        self.write_table([sys_row()])          # a table newer than `parked_at`
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.READY, "the fixture did not exercise rule (a2)")
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(t.status, pod.READY, "the shelve took a task (a2) had revived")
+        why = [x for x in self.lines() if x.get("event") == "shelve_request"][-1]["why"]
+        self.assertIn("READY", why)
+
+    def test_the_whole_tick_shelves_and_the_stop_budget_comes_back(self):
+        """End to end, and the fixture CAN fail: with no request file nothing shelves and
+        the same state stops the loop."""
+        st = pod.State()
+        limit = pod._limits()["parked_max"]
+        for i in range(limit):
+            code = f"LJ-1.{700 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED, parked_at=0.0,
+                                      park_reason="attempt_max:sys-x", record=record())
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
+        (self.tmp / ".pod-state" / "STOPPED").unlink()
+        self._write(self.GOOD.replace("LJ-1.386", "LJ-1.700"))
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
+        self.assertEqual(st.tasks["LJ-1.700"].status, pod.SHELVED)
+        self.assertEqual(st.count(pod.PARKED), limit - 1)
+
+    def test_the_owner_is_pushed_ONCE_because_a_task_left_the_loop_for_good(self):
+        self._write(self.GOOD)
+        st, t = self.parked()
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(len(self.calls["notify"]), 1)
+        self.assertIn(CODE, self.calls["notify"][0])
+        self.assertIn("Reopen", self.calls["notify"][0])
+
+    def test_the_push_does_NOT_carry_the_stop_s_title_because_nothing_stopped(self):
+        """The channel is shared and the title is not. `notify_owner`'s default title is
+        「POD 已停止」, and sending a shelve under it would tell the owner the loop halted
+        when it did not."""
+        pushes = []
+        self.patch(pod, "notify_owner",
+                   lambda why, root=None, **kw: pushes.append(kw.get("title")))
+        self._write(self.GOOD)
+        st, t = self.parked()
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(len(pushes), 1)
+        self.assertIsNotNone(pushes[0], "the shelve push carried the stop's title")
+        self.assertNotIn("停止", pushes[0])
+
+    def test_the_batch_brief_names_the_shelf_and_re_asks_NOTHING(self):
+        """31 of 121 briefs asked the maintainer for a row for `[LJ-1.541]`, every one
+        with the `LOUDEST INPUT` marker. This section is CODES ONLY, and its size does
+        not grow with the count."""
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.SHELVED,
+                                  park_reason="attempt_max:sys-x", record=record())
+        brief = pod.write_batch_brief(st, self.tmp)
+        text = brief.read_text(encoding="utf-8")
+        self.assertIn("## THE SHELVED TASKS", text)
+        self.assertIn(CODE, text)
+        self.assertNotIn("LOUDEST INPUT", text,
+                         "a shelved task was re-asked as a parked one")
+
+    def test_a_shelved_task_is_not_in_the_batch_brief_s_PARKED_section(self):
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.SHELVED, record=record())
+        text = pod.write_batch_brief(st, self.tmp).read_text(encoding="utf-8")
+        head = text.split("## THE SHELVED TASKS")[0]
+        self.assertNotIn(CODE, head.split("## THE PARKED TASKS")[-1])
+
+    def test_prune_logs_treats_a_shelved_task_as_closed(self):
+        d = self.tmp / ".pod-state" / "logs"
+        f = d / f"{CODE}-1.log"
+        f.write_text("x")
+        os.utime(f, (1000, 1000))
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.SHELVED)
+        self.assertEqual(pod.prune_logs(30, st, self.tmp), 1)
+
+    def test_rule_a2_NEVER_touches_a_shelved_task(self):
+        """Both automatic un-park paths iterate `st.of(PARKED)`, so a different state
+        excludes a shelved task with no new code. This pins that it stays true."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.SHELVED, parked_at=0.0,
+                                      park_reason="admission",
+                                      brief=f"agents/tasks/{DIR}/{CODE}.md")
+        self.write_table([sys_row()])          # newer than `parked_at`: (a2)'s trigger
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.SHELVED)
+        # And the fixture can fail: the same task PARKED does move.
+        t.status = pod.PARKED
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+
+    def test_only_the_MATHEMATICIAN_may_write_the_request_and_it_is_a_MECHANISM(self):
+        """The declared stop is scoped this way and the shelve inherits it exactly. The
+        refill (the mathematician's own dispatch) may write the file; the maintainer may
+        not, because R15 admits nothing but its one proposal. Without the asymmetry
+        「only the mathematician may shelve」would be an honour system."""
+        self.assertIn("dev/pod/shelve-request.toml", pod.REFILL_SCOPE_OK)
+        self.assertIn("dev/pod/stop-request.toml", pod.REFILL_SCOPE_OK)
+        self.patch(facts_mod, "_status_paths",
+                   lambda root=None: ["dev/pod/shelve-request.toml"])
+        ok, bad = pod.maintainer_scope_ok(self.tmp, proposal="dev/pod/proposals/x.toml")
+        self.assertFalse(ok, "a maintainer batch was allowed to shelve a task")
+        self.assertEqual(bad, ["dev/pod/shelve-request.toml"])
+
+    def test_resume_retry_never_un_shelves(self):
+        (self.tmp / ".pod-state" / "STOPPED").touch()
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.SHELVED, park_reason="no-match")
+        pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            self.assertEqual(pod.cmd_resume(["--retry", "--once"]), 0)
+        self.assertEqual(pod.load_state().tasks[CODE].status, pod.SHELVED)
+
+    def test_resume_retry_on_a_NAMED_shelved_code_says_so_and_points_at_unshelve(self):
+        (self.tmp / ".pod-state" / "STOPPED").touch()
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.SHELVED, park_reason="no-match")
+        pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            pod.cmd_resume(["--retry", CODE, "--once"])
+        self.assertIn("SHELVED", err.getvalue())
+        self.assertIn("unshelve", err.getvalue())
+
+
+class ShelveWorktree(unittest.TestCase):
+    """The shelve salvages HOME ONLY and it KEEPS the worktree.
+
+    **`home_only=True` IS NOT OPTIONAL**, the same finding rule (c)'s `attempt_max` park
+    already carries: a shelve has no commit after it, so a `## SCOPE (write)` path
+    outside `agents/tasks/` would sit dirty in the main tree with no committer, and R15
+    does not exempt `src/`. The NEXT maintainer batch would then refuse `scope` on a path
+    the maintainer never touched.
+
+    **THE TREE IS KEPT.** A parked task keeps its tree because that tree is the scene,
+    and removing one is a DELETION that needs the owner's own direction.
+    """
+
+    def setUp(self):
+        self.dir = tempfile.TemporaryDirectory()
+        self.tmp = Path(self.dir.name)
+        self.addCleanup(self.dir.cleanup)
+        (self.tmp / "dev" / "pod" / "transitions").mkdir(parents=True)
+        (self.tmp / ".pod-state").mkdir(parents=True)
+        self.swaps = []
+        for mod, k, v in ((pod, "ROOT", self.tmp),
+                          (pod, "POD_STATE", self.tmp / ".pod-state"),
+                          (pod, "STATE_FILE", self.tmp / ".pod-state" / "state.json"),
+                          (pod, "LOCKFILE", self.tmp / ".pod-state" / "pod.lock"),
+                          (pod, "BARK", self.tmp / "no-bark.sh")):
+            old = getattr(mod, k)
+            setattr(mod, k, v)
+            self.addCleanup(setattr, mod, k, old)
+        self.calls = []
+        old = pod.salvage_worktree
+        pod.salvage_worktree = lambda t, root=None, **kw: (
+            self.calls.append(kw) or [])
+        self.addCleanup(setattr, pod, "salvage_worktree", old)
+        old_wt = pod.worktree_of
+        pod.worktree_of = lambda code, root=None: self.tmp / ".pod-state" / "gone"
+        self.addCleanup(setattr, pod, "worktree_of", old_wt)
+
+    def test_the_shelve_salvages_home_only_and_drops_no_worktree(self):
+        (self.tmp / "dev" / "pod" / "shelve-request.toml").write_text(
+            Shelve.GOOD, encoding="utf-8")
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.PARKED,
+                                  park_reason="attempt_max:sys-x")
+        pod._rule_a3(st, self.tmp)
+        self.assertEqual(self.calls, [{"home_only": True}])
+        src = (ROOT / "scripts" / "pod" / "pod.py").read_text(encoding="utf-8")
+        body = src.split("def _rule_a3(", 1)[1].split("\ndef ", 1)[0]
+        self.assertNotIn("drop_worktree", body,
+                         "a shelve deleted the scene it exists to keep")
+
+
+class Unshelve(LoopCase):
+    """`pod unshelve CODE --why "..."`. The one way out, and it is an operator's act."""
+
+    def shelved(self, code=CODE):
+        st = pod.State()
+        st.tasks[code] = pod.Task(code, status=pod.SHELVED, attempt=5,
+                                  park_reason="attempt_max:sys-x",
+                                  shelve_reopen="a restructuring")
+        pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+        return st
+
+    def run_cmd(self, argv):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            rc = pod.cmd_unshelve(argv)
+        return rc, out.getvalue() + err.getvalue()
+
+    def test_it_returns_the_task_to_PARKED_and_NEVER_to_READY(self):
+        """A straight READY would re-dispatch the task into whatever made it park, with
+        no new information: the 1800 s frame, the heap wall. That is the exact waste this
+        whole state exists to stop. Un-shelving costs a PARKED slot, which is the honest
+        price of asking for the loop's attention back."""
+        self.shelved()
+        rc, _ = self.run_cmd([CODE, "--why", "the restructuring landed"])
+        self.assertEqual(rc, 0)
+        t = pod.load_state().tasks[CODE]
+        self.assertEqual(t.status, pod.PARKED)
+        line = self.lines()[-1]
+        self.assertEqual((line["from"], line["to"]), ("SHELVED", "PARKED"))
+        self.assertIn("the restructuring landed", line["why"])
+
+    def test_the_attempt_count_resets_so_ad27_does_not_route_on_a_stale_number(self):
+        self.shelved()
+        self.run_cmd([CODE, "--why", "x"])
+        self.assertEqual(pod.load_state().tasks[CODE].attempt, 0)
+
+    def test_it_is_refused_with_NO_why(self):
+        self.shelved()
+        rc, text = self.run_cmd([CODE])
+        self.assertEqual(rc, 1)
+        self.assertIn("--why", text)
+        self.assertEqual(pod.load_state().tasks[CODE].status, pod.SHELVED)
+
+    def test_a_code_that_is_not_SHELVED_is_refused_and_its_STATE_is_named(self):
+        for status in (pod.PARKED, pod.READY, pod.RUNNING, pod.DONE):
+            with self.subTest(status=status):
+                st = pod.State()
+                st.tasks[CODE] = pod.Task(CODE, status=status)
+                pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+                rc, text = self.run_cmd([CODE, "--why", "x"])
+                self.assertEqual(rc, 1)
+                self.assertIn(CODE, text)
+                self.assertIn(status, text)
+
+    def test_an_unknown_code_is_refused_and_never_silently_dropped(self):
+        self.shelved()
+        rc, text = self.run_cmd(["LJ-9.999", "--why", "x"])
+        self.assertEqual(rc, 1)
+        self.assertIn("LJ-9.999", text)
+
+    def test_it_takes_exactly_one_code(self):
+        self.shelved()
+        for argv in ([], [CODE, "LJ-1.999", "--why", "x"]):
+            with self.subTest(argv=argv):
+                rc, text = self.run_cmd(argv)
+                self.assertEqual(rc, 1)
+                self.assertIn("ONE", text)
+
+    def test_the_restored_park_keeps_the_reason_it_was_shelved_from(self):
+        """Rule (a2) must judge it exactly as it judged it before, so the reason has to
+        come back with it. An `attempt_max:` park that returned as `no-match` would be
+        re-accepted by (a2) on the next table edit, which is a dispatch nobody asked for.
+        """
+        self.shelved()
+        self.run_cmd([CODE, "--why", "x"])
+        self.assertEqual(pod.load_state().tasks[CODE].park_reason, "attempt_max:sys-x")
+
+
 class StateSalvage(unittest.TestCase):
     """A state file that something outside this program renamed away.
 
@@ -1782,6 +2410,44 @@ class RuleE(LoopCase):
         self.assertLess(pod.hours_since_last_batch(self.tmp), 1,
                         "the prompt did not stamp the clock; rule (e) will re-fire "
                         "on the very next tick and flood the resident maintainer")
+
+    def test_the_batch_brief_shows_which_changed_files_are_this_attempts_own(self):
+        """Owner's-review finding, 2026-08-23: `changed_files_own` (`accept.py`) lived
+        outside `facts`, on purpose, and that meant it never reached the ONE document
+        the maintainer reads to judge a park. [LJ-1.582]'s second arm read "46 changed
+        files" here with none of them its own, and only a manual mtime check caught it.
+        `write_batch_brief()` must now say so directly."""
+        st = pod.State()
+        rec = {"facts": {"exit_code": 251, "error_class": "heap_wall",
+                         "obligations_delta": 0,
+                         "changed_files": ["a.agda", "b.agda"]},
+               "changed_files_own": []}
+        t = pod.Task("LJ-1.999", status=pod.CHECKING, record=rec)
+        st.tasks["LJ-1.999"] = t
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="row:x", root=self.tmp)
+        brief = pod.write_batch_brief(st, self.tmp)
+        self.assertIsNotNone(brief)
+        text = brief.read_text(encoding="utf-8")
+        self.assertIn(
+            "LJ-1.999: reason `row:x`, exit_code 251, error_class heap_wall, "
+            "obligations_delta 0, 2 changed files "
+            "(INHERITED: none of them are this attempt's own).",
+            text)
+
+    def test_the_batch_brief_says_nothing_extra_when_provenance_is_unmeasured(self):
+        """`changed_files_own is None` means `t.started` could not say, never a guess:
+        the line must not claim INHERITED for a park it cannot measure that on."""
+        st = pod.State()
+        rec = {"facts": {"exit_code": 251, "error_class": "heap_wall",
+                         "obligations_delta": 0, "changed_files": ["a.agda"]},
+               "changed_files_own": None}
+        t = pod.Task("LJ-1.998", status=pod.CHECKING, record=rec)
+        st.tasks["LJ-1.998"] = t
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=rec, reason="row:x", root=self.tmp)
+        brief = pod.write_batch_brief(st, self.tmp)
+        text = brief.read_text(encoding="utf-8")
+        self.assertIn("LJ-1.998: reason `row:x`, exit_code 251, error_class heap_wall, "
+                      "obligations_delta 0, 1 changed files.", text)
 
     def test_the_first_batch_fires_because_no_batch_line_exists_yet(self):
         st = pod.State()
@@ -2372,6 +3038,28 @@ class RuleF(LoopCase):
         pod._rule_f(st, self.tmp)
         self.assertIsNone(t.head_slot)
 
+    def test_a_launch_refusal_leaves_the_head_slot_for_the_retry(self):
+        """Owner's-review finding, 2026-08-23: R11 used to clear `t.head_slot`
+        BEFORE calling `launch()`, so a refusal (the same-day slot race that
+        parked [LJ-1.582]/[LJ-1.596]/[LJ-1.597] is one real cause) lost the row's
+        escalate decision for good. The very next attempt fell through to
+        `head_slot_of(t.brief, root)`, the task's own base role, silently
+        skipping the critic review the row asked for. The head must survive a
+        failed attempt and clear only when a dispatch actually happens."""
+        st, t = self.ready(attempt=2, head_slot="coder_adversarial")
+        self.patch(pod, "launch", lambda t, brief, role, root=None, st=None: None)
+        pod._rule_f(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(t.park_reason, "launch")
+        self.assertEqual(t.head_slot, "coder_adversarial",
+                         "a launch refusal must not spend the row's routing decision")
+
+    def test_a_successful_launch_still_clears_the_head_slot(self):
+        st, t = self.ready(attempt=2, head_slot="coder_adversarial")
+        pod._rule_f(st, self.tmp)
+        self.assertEqual(t.status, pod.RUNNING)
+        self.assertIsNone(t.head_slot)
+
     def test_ready_tasks_go_out_in_attempt_then_code_order(self):
         st = pod.State()
         for code, attempt in (("LJ-1.700", 3), ("LJ-1.386", 1), ("LJ-1.100", 1)):
@@ -2447,6 +3135,64 @@ class Emit(LoopCase):
         t.status = pod.PARKED
         with self.assertRaises(pod.PodError):
             pod.emit(st, t, pod.PARKED, pod.DONE, root=self.tmp)
+
+    def test_NOTHING_reaches_DONE_without_a_measurement_from_either_state(self):
+        """AD13 and R4, read from the two states that carry work nobody measured.
+        `(PARKED, DONE)` was already illegal; `(SHELVED, DONE)` is illegal for the same
+        reason and it is pinned here beside it, because A30's whole safety is that a
+        shelve asserts NOTHING about the mathematics. A shelved task that should later
+        close un-shelves to PARKED and closes through the same CHECKING every other task
+        uses."""
+        for frm in (pod.PARKED, pod.SHELVED):
+            with self.subTest(frm=frm):
+                st = pod.State()
+                st.tasks[CODE] = t = pod.Task(CODE, status=frm)
+                with self.assertRaises(pod.PodError):
+                    pod.emit(st, t, frm, pod.DONE, root=self.tmp)
+
+    def test_the_shelf_has_exactly_two_edges_and_READY_is_not_one_of_them(self):
+        """`(SHELVED, READY)` would send a settled task straight back to a dispatch, with
+        no new information and no PARKED slot spent. The price of asking for the loop's
+        attention again is a park."""
+        edges = {(f, t) for (f, t) in pod.TRANSITIONS_LEGAL
+                 if pod.SHELVED in (f, t)}
+        self.assertEqual(edges, {(pod.PARKED, pod.SHELVED),
+                                 (pod.SHELVED, pod.PARKED)})
+
+    def test_every_state_is_reachable_and_leavable(self):
+        """CONTAINMENT AND NOT A COUNT, the same argument the park-reason test makes
+        below: a count is a snapshot of a list the program is designed to grow. What must
+        hold is that no state is wired in with no way in or no way out, which is exactly
+        how a seventh state gets added and then silently strands a task."""
+        froms = {f for f, _ in pod.TRANSITIONS_LEGAL if f is not None}
+        tos = {t for _, t in pod.TRANSITIONS_LEGAL}
+        for s in pod.STATES:
+            self.assertIn(s, tos, f"{s} is a state nothing can reach")
+            if s != pod.DONE:                  # DONE is terminal by design (AD13)
+                self.assertIn(s, froms, f"{s} is a state nothing can leave")
+
+    def test_the_fold_restores_the_shelve_fields_from_a_SHELVED_line(self):
+        """The park reason was lost in exactly this shape and repaired on 2026-08-19:
+        `emit()` wrote the field under one key and the fold read another. A folded state
+        with no reopen condition is the drop A30 exists to forbid."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.PARKED)
+        pod.emit(st, t, pod.PARKED, pod.SHELVED, root=self.tmp,
+                 reopen="a restructuring", by="pod-math",
+                 shelve_ref=f"dev/pod/shelf/{CODE}.toml.shelved")
+        fresh = pod.replay_log(pod.State(), self.tmp)
+        got = fresh.tasks[CODE]
+        self.assertEqual(got.status, pod.SHELVED)
+        self.assertEqual(got.shelve_reopen, "a restructuring")
+        self.assertEqual(got.shelve_ref, f"dev/pod/shelf/{CODE}.toml.shelved")
+        self.assertIsNotNone(got.shelved_at)
+
+    def test_the_program_still_writes_NO_park_reason_for_a_shelve(self):
+        """A30 adds a STATE and deliberately adds no fourteenth park reason. If it ever
+        did, `PARK_CLASSES` in the digest would split and rule (a2) would carry a branch
+        that never un-parks, which is the sentence that state exists to keep true."""
+        self.assertNotIn("shelved", pod.PARK_REASONS)
+        self.assertNotIn("shelved:", pod.PARK_REASONS)
 
     def test_every_park_line_carries_a_row_key_and_a_reason(self):
         """5.5: on a PARK the program writes exactly ONE line, with `"row": null`."""
@@ -2655,6 +3401,11 @@ class Admits(LoopCase):
         self.patch(pod, "admits", REAL_ADMITS)          # the real one, from import
         self.patch(pod, "watchdog_alive", lambda: True)
         self.patch(pod, "agda_pileup", lambda: (0, {}, None))
+        # THE REGISTRY CENSUS DEFAULTS TO EMPTY, exactly like the process census above,
+        # so every EXISTING test in this class keeps testing the limb it already names
+        # and the NEW registry limb (owner's ruling 2026-08-23, proper fix) does not
+        # silently gate any of them. `RegistrySlots` below tests this limb on its own.
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 0)
         self.patch(pod, "free_memory_pct", lambda: 90.0)
         # THE LOAD AVERAGE IS THE MACHINE'S, and `os.getloadavg()` reads whatever else is
         # running. Two of the tests below admit an EXCLUSIVE task, which refuses above
@@ -2720,18 +3471,46 @@ class Admits(LoopCase):
         self.assertFalse(pod.admits(self.st, self.t))
 
     def test_the_total_at_the_WIDE_ceiling_REFUSES_and_one_below_it_ADMITS(self):
-        """THE NUMBER IS WRITTEN OUT, and it is the owner's 2026-08-23 one (was A14's
-        four). Reading the ceiling back out of `agda_slots()` made the pair
-        `total >= slots` true for any value the function returned, including a broken
-        zero, so the test held whatever the tier said."""
-        self.patch(pod, "agda_pileup", lambda: (1, {900: 1}, None))
+        """THE NUMBER IS WRITTEN OUT, and it is the owner's 2026-08-23 second-ruling
+        one, TWO (was A14's four, then briefly one between the day's two rulings).
+        Reading the ceiling back out of `agda_slots()` made the pair `total >= slots`
+        true for any value the function returned, including a broken zero, so the
+        test holds whatever the tier said."""
+        self.patch(pod, "agda_pileup", lambda: (2, {900: 1, 901: 1}, None))
         self.assertFalse(pod.admits(self.st, self.t))
-        self.patch(pod, "agda_pileup", lambda: (0, {}, None))
+        self.patch(pod, "agda_pileup", lambda: (1, {900: 1}, None))
         self.assertTrue(pod.admits(self.st, self.t))
 
     def test_a_non_agda_task_is_admitted_at_the_ceiling(self):
         self.patch(pod, "agda_pileup", lambda: (4, {900: 1, 901: 1, 902: 1, 903: 1},
                                                 None))
+        self.t.agda = False
+        self.assertTrue(pod.admits(self.st, self.t))
+
+    def test_THE_RACE_ITSELF_a_quiet_process_census_does_not_hide_a_full_registry(self):
+        """Owner's-review finding, 2026-08-23, PROPER FIX. `agda_pileup()` is `ps`-based
+        and reads LOW for a dispatched agent that has not started its own `agda`
+        invocation this instant, which is most of a session. MEASURED live: two
+        dispatched WIDE agents, `agda_pileup()` read `(0, {}, None)` while the
+        registry held both. This is that exact shape: the process census alone would
+        admit; the registry census must refuse on its own."""
+        self.patch(pod, "agda_pileup", lambda: (0, {}, None))       # quiet by ps
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 2)  # full by registry
+        self.assertFalse(pod.admits(self.st, self.t))
+
+    def test_the_registry_census_at_the_ceiling_REFUSES_and_one_below_ADMITS(self):
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 2)
+        self.assertFalse(pod.admits(self.st, self.t))
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 1)
+        self.assertTrue(pod.admits(self.st, self.t))
+
+    def test_a_blind_registry_census_REFUSES_same_as_a_blind_process_one(self):
+        """BLIND MEANS REFUSE for either census; neither may guess an empty tier."""
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: None)
+        self.assertFalse(pod.admits(self.st, self.t))
+
+    def test_the_registry_limb_does_not_refuse_a_non_agda_task(self):
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 2)  # AT the ceiling
         self.t.agda = False
         self.assertTrue(pod.admits(self.st, self.t))
 
@@ -2762,20 +3541,21 @@ class Admits(LoopCase):
         self.assertFalse(pod.admits(self.st, self.t))
 
     def test_a14_fills_slots_three_and_four_only_above_the_free_memory_floor(self):
-        """OWNER'S RULING 2026-08-23: slots = 1 now, so `floor = min(1, 2)` already
-        equals `slots` itself -- there is no third or fourth slot left to hold back,
-        and low free memory can no longer cut the count below 1."""
-        self.assertEqual(pod.agda_slots(), 1)
+        """OWNER'S RULING 2026-08-23, second same-day ruling: WIDE's `slots = 2` now,
+        so `floor = min(2, 2)` already equals `slots` itself -- there is no third or
+        fourth slot left to hold back, and low free memory can no longer cut the
+        count below 2."""
+        self.assertEqual(pod.agda_slots(), 2)
         self.patch(pod, "free_memory_pct", lambda: 5.0)
-        self.assertEqual(pod.agda_slots(), 1)
+        self.assertEqual(pod.agda_slots(), 2)
 
     def test_an_unreadable_memory_sensor_drops_to_the_two_slot_floor(self):
         """NONE IS NOT ZERO AND IT IS NOT A HUNDRED. An unreadable sensor must refuse.
 
-        OWNER'S RULING 2026-08-23: the floor an unreadable sensor drops to is now 1,
-        the same as `slots` itself, since `min(1, 2) == 1`."""
+        OWNER'S RULING 2026-08-23, second same-day ruling: the floor an unreadable
+        sensor drops to is 2, the same as `slots` itself, since `min(2, 2) == 2`."""
         self.patch(pod, "free_memory_pct", lambda: None)
-        self.assertEqual(pod.agda_slots(), 1)
+        self.assertEqual(pod.agda_slots(), 2)
 
     def test_rule_c_passes_agda_True_whatever_the_brief_says(self):
         """The acceptance runner starts Agda for every case except case 4, and the
@@ -2793,6 +3573,109 @@ class Admits(LoopCase):
                                   brief=f"agents/tasks/{DIR}/{CODE}.md")
         pod._rule_c(st, self.tmp)
         self.assertEqual(seen, [True])         # the task says False and rule (c) says True
+
+
+class RegistrySlots(LoopCase):
+    """`agda_registry_slots()`, owner's ruling 2026-08-23, proper fix, TWICE the same
+    day. It calls `launcher.py`'s own `agda_holders_in_tier()` rather than re-filtering
+    the registry itself, so `admits()` and `launcher.py`'s own dispatch check share ONE
+    tier-filter and cannot count a tier's holders differently. See `LauncherModule.
+    AgdaHoldersInTier` in `test_pod_launcher.py` for a test of that shared function
+    against the real module."""
+
+    def test_a_missing_launcher_is_BLIND(self):
+        self.patch(facts_mod, "launcher", lambda: None)
+        self.assertIsNone(pod.agda_registry_slots(pod.WIDE))
+
+    def test_a_launcher_missing_load_or_agda_holders_is_BLIND(self):
+        class _NoLoad:
+            @staticmethod
+            def agda_holders_in_tier(reg, tier):
+                return {}
+        self.patch(facts_mod, "launcher", lambda: _NoLoad)
+        self.assertIsNone(pod.agda_registry_slots(pod.WIDE))
+
+        class _NoHolders:
+            @staticmethod
+            def load():
+                return {"dispatches": {}}
+        self.patch(facts_mod, "launcher", lambda: _NoHolders)
+        self.assertIsNone(pod.agda_registry_slots(pod.WIDE))
+
+    def test_a_corrupt_registry_is_BLIND_and_never_kills_the_loop(self):
+        """`launcher.load()` raises `SystemExit` BY DESIGN on a corrupt registry.json
+        (FM6), so admission would take the whole loop down with it if this let that
+        propagate. It must not: BLIND here, exactly like a raised `agda_pileup()`."""
+        class _Corrupt:
+            @staticmethod
+            def load():
+                raise SystemExit("dispatch: REFUSING. registry.json is corrupt")
+
+            @staticmethod
+            def agda_holders_in_tier(reg, tier):
+                return {}
+        self.patch(facts_mod, "launcher", lambda: _Corrupt)
+        self.assertIsNone(pod.agda_registry_slots(pod.WIDE))
+
+    def test_a_census_that_RAISES_is_BLIND(self):
+        class _Broken:
+            @staticmethod
+            def load():
+                raise OSError("registry.json vanished mid-read")
+
+            @staticmethod
+            def agda_holders_in_tier(reg, tier):
+                return {}
+        self.patch(facts_mod, "launcher", lambda: _Broken)
+        self.assertIsNone(pod.agda_registry_slots(pod.WIDE))
+
+    def test_a_non_dict_result_is_BLIND(self):
+        """`agda_holders_in_tier()` is called INSIDE the try, so a shape it cannot
+        trust (a version-skewed launcher returning something odd under a hot restart)
+        is caught by the same guard as a raise, and never reaches the bare `len()`."""
+        class _Odd:
+            @staticmethod
+            def load():
+                return {"dispatches": {}}
+
+            @staticmethod
+            def agda_holders_in_tier(reg, tier):
+                return "not a dict"
+        self.patch(facts_mod, "launcher", lambda: _Odd)
+        self.assertIsNone(pod.agda_registry_slots(pod.WIDE))
+
+    def _mod(self, holders):
+        class _Mod:
+            AGDA_TIER_DEFAULT = "wide"
+
+            @staticmethod
+            def load():
+                return {"dispatches": holders}
+
+            @staticmethod
+            def agda_holders_in_tier(reg, tier):
+                default = _Mod.AGDA_TIER_DEFAULT
+                return {t: d for t, d in reg["dispatches"].items()
+                        if (d.get("tier") or default) == tier}
+        return _Mod
+
+    def test_it_counts_only_the_named_tier(self):
+        self.patch(facts_mod, "launcher", lambda: self._mod({
+            "a": {"tier": "wide"}, "b": {"tier": "wide"}, "c": {"tier": "heavy"}}))
+        self.assertEqual(pod.agda_registry_slots("wide"), 2)
+        self.assertEqual(pod.agda_registry_slots("heavy"), 1)
+
+    def test_an_untagged_holder_counts_as_the_default_tier_never_as_zero(self):
+        """A record written before A14 carries no tier. It counts as the DEFAULT tier
+        rather than as invisible, matching `agda_heap_sum_over()`'s own rule -- an
+        unread field must never make the count look smaller than it is."""
+        self.patch(facts_mod, "launcher", lambda: self._mod({"a": {}}))
+        self.assertEqual(pod.agda_registry_slots("wide"), 1)
+        self.assertEqual(pod.agda_registry_slots("heavy"), 0)
+
+    def test_zero_holders_is_zero_and_not_none(self):
+        self.patch(facts_mod, "launcher", lambda: self._mod({}))
+        self.assertEqual(pod.agda_registry_slots("wide"), 0)
 
 
 # ------------------------------------------------- gap M2, the orphaned Agda reaper
@@ -3153,6 +4036,7 @@ class Tiers(LoopCase):
         self.patch(pod, "admits", REAL_ADMITS)
         self.patch(pod, "watchdog_alive", lambda: True)
         self.patch(pod, "agda_pileup", lambda: (0, {}, None))
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 0)
         self.patch(pod, "free_memory_pct", lambda: 90.0)
         self.st = pod.State()
 
@@ -3193,19 +4077,22 @@ class Tiers(LoopCase):
         self.assertEqual(self.lines()[-1]["tier"], pod.HEAVY)
 
     def test_the_WIDE_tier_admits_four_and_the_HEAVY_tier_admits_two(self):
-        """OWNER'S RULING 2026-08-23: both are now one. The two names survive so a
-        brief may still declare either, but `admits()`'s GLOBAL total is checked
-        against the SAME ceiling either way."""
-        self.assertEqual(pod.agda_slots(pod.WIDE), 1)
+        """OWNER'S RULING 2026-08-23, second same-day ruling: WIDE is two, HEAVY is
+        one (was four and two under C-12, then briefly one and one between the day's
+        two rulings). The two names survive so a brief may still declare either, and
+        `admits()` now checks BOTH a process census and a registry census against
+        each dispatch's OWN tier ceiling."""
+        self.assertEqual(pod.agda_slots(pod.WIDE), 2)
         self.assertEqual(pod.agda_slots(pod.HEAVY), 1)
 
     def test_the_third_slot_opens_only_above_the_free_memory_floor(self):
         """C-12's own 25 percent, and `[tiers.shared]` holds the number.
 
-        OWNER'S RULING 2026-08-23: `agda_slots()` no longer varies with free memory
-        (`floor = min(1, 2) == slots` already), so there is no THIRD slot left to gate
-        on this floor at all -- both branches now refuse identically, at total >= 1."""
-        self.patch(pod, "agda_pileup", lambda: (1, {900: 1}, None))
+        OWNER'S RULING 2026-08-23, second same-day ruling: `agda_slots()` no longer
+        varies with free memory for WIDE (`floor = min(2, 2) == slots` already), so
+        there is no THIRD slot left to gate on this floor at all -- both branches
+        now refuse identically, at total >= 2."""
+        self.patch(pod, "agda_pileup", lambda: (2, {900: 1, 901: 1}, None))
         t = pod.Task("X", agda=True, tier=pod.WIDE)
         self.assertFalse(pod.admits(self.st, t))
         self.patch(pod, "free_memory_pct", lambda: 24.0)
@@ -3563,14 +4450,30 @@ class Heads(LoopCase):
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.head("archaeologist", self.tmp / "dev" / "pod" / "heads.toml")
 
-    def test_the_mixed_worst_case_heap_sum_is_checked_at_load(self):
-        """A14 holds the sum at or under `max_heap_sum_gb`. A future edit that widens a
-        tier is caught here and not on the machine that runs out of memory. OWNER'S
-        RULING 2026-08-23 made ONE writer at 4 GB the whole budget, so widening to two
-        (2 x 4 = 8 GB) already breaks it."""
+    def test_a_tier_widened_past_the_sum_cap_ALONE_is_checked_at_load(self):
+        """A14 holds each tier's OWN full pool at or under `max_heap_sum_gb`. A future
+        edit that widens a tier past the cap by itself is caught here and not on the
+        machine that runs out of memory. OWNER'S RULING 2026-08-23 (second, same day)
+        left HEAVY at one writer, 4 GB; widening it to two (2 x 4 = 8 GB) already
+        breaks the 6 GB cap on HEAVY alone, with no WIDE holder in the picture."""
         self.edit("slots = 1                     # OWNER'S RULING 2026-08-23: one Agda "
                   "writer, no more",
                   "slots = 2                     # widened past the sum cap for this test")
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+
+    def test_the_MIXED_worst_case_one_holder_per_tier_is_ALSO_checked_at_load(self):
+        """A per-tier check alone is not the mixed worst case: an opus-5 review found
+        that neither tier alone crossing the cap says nothing about ONE HOLDER FROM
+        EACH AT ONCE, which is the combination `launcher.py`'s `agda_heap_sum_over()`
+        actually reaches at runtime (`dev/pod/heads.toml [tiers.shared]`'s own comment
+        names it as the design target). WIDE alone is 2 GB, well under any cap here;
+        HEAVY alone is 4 GB, also under; but WIDE plus HEAVY together is 6 GB, and a
+        cap of 5 must refuse that even though neither tier alone would trip it."""
+        self.edit("max_heap_sum_gb = 6           # OWNER'S RULING 2026-08-23 (second): "
+                  "the worst live mix is",
+                  "max_heap_sum_gb = 5           # narrowed below one-of-each for this "
+                  "test")
         with self.assertRaises(heads_mod.HeadsError):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
@@ -3652,9 +4555,13 @@ class Heads(LoopCase):
         self.assertEqual(got["harness"], "herdr-pi")
 
     def test_a_capped_model_AT_its_cap_is_skipped_for_the_next_eligible_one(self):
-        cfgs = self.cfgs()
-        counts = [c["max_concurrency"] or 0 for c in cfgs]
-        got = pod.pick_head_config(cfgs, counts)
+        """A synthetic fixture, not `self.cfgs()`: OWNER'S RULING 2026-08-24 capped
+        BOTH of `coder`'s live heads at one, so the real file no longer has an
+        uncapped model behind a full one for this test to fall through to. C-45: a
+        fixture that cannot exercise the branch is not a fixture."""
+        cfgs = [{"model": "a", "max_concurrency": 1},
+                {"model": "b", "max_concurrency": None}]
+        got = pod.pick_head_config(cfgs, [1, 0])
         self.assertIsNotNone(got)
         self.assertIsNone(got["max_concurrency"], "a full cap was spent anyway")
 
@@ -3724,11 +4631,13 @@ class Heads(LoopCase):
 
     #: THE CODER'S SECOND CONFIG, VERBATIM, and the edits below aim at THIS row rather
     #: than at any other array element. OWNER'S RULING 2026-08-23 made it `glm-5.3`
-    #: (qwen's own fallback); `mathematician_adversarial` also carries a `glm-5.3` row,
-    #: but with DIFFERENT padding, so a `str.replace` naming this exact literal still
-    #: cannot land on the wrong slot.
+    #: (qwen's own fallback); OWNER'S RULING 2026-08-24 added `max_concurrency = 1`,
+    #: the same cap every `glm-5.3`/`grok-4.6` row in the file now carries.
+    #: `mathematician_adversarial` also carries a `glm-5.3` row, but with DIFFERENT
+    #: padding, so a `str.replace` naming this exact literal still cannot land on the
+    #: wrong slot.
     CODER_2ND = ('  { model = "glm-5.3",              effort = "",'
-                 ' harness = "herdr-pi", sandbox = "acceptEdits" },')
+                 ' harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },')
 
     def test_an_array_element_that_is_not_a_table_is_REFUSED(self):
         """An array of STRINGS parses as TOML and names no harness, so the refusal has to
@@ -4259,8 +5168,9 @@ class Refuses(LoopCase):
 class Commands(LoopCase):
     """`pod.py` is the program and nothing else runs it."""
 
-    #: The five section 5.0 names. `maintainer` joined them on 2026-08-19.
-    RULED = ("resume", "run", "status", "stop", "tick")
+    #: The five section 5.0 names. `maintainer` joined them on 2026-08-19 and
+    #: `unshelve` on 2026-08-24 (A30).
+    RULED = ("resume", "run", "status", "stop", "tick", "unshelve")
 
     def test_every_ruled_subcommand_is_still_there(self):
         """**THIS PINNED THE WHOLE SET BY EQUALITY AND WENT RED FOR AN ADDITION.** It is
@@ -4329,6 +5239,30 @@ class Commands(LoopCase):
         got = pod.load_state().tasks
         self.assertEqual({c: got[c].status for c in ("LJ-1.801", "LJ-1.802")},
                          {"LJ-1.801": pod.READY, "LJ-1.802": pod.READY})
+
+    def test_retry_resets_the_attempt_count_so_ad27_does_not_reroute_a_rewritten_brief(self):
+        """Owner's-review finding, 2026-08-23. MEASURED on [LJ-1.541]/[LJ-1.547]/
+        [LJ-1.572]: each parked `attempt_max` at `attempt` 5, 5 or 3. The mathematician
+        rewrote their briefs for a `coder` close ("import the delivered term, do not
+        re-prove it"). A plain `resume --retry` left `attempt` unchanged, and
+        `_rule_f()`'s AD27 test (`t.head_slot or ("mathematician_adversarial" if
+        attempt > 1 and not reviewed(t, root) else None)`) fired on the stale count,
+        which would have dispatched `review_brief()` — text built from `t.record`, the
+        OLD timeout — and never touched `t.brief` at all. AD16 already claims a
+        resumed task dispatches "as a FRESH instance"; this pins that the attempt
+        count is part of what fresh means."""
+        (self.tmp / ".pod-state" / "STOPPED").touch()
+        st = pod.State()
+        st.tasks["LJ-1.541"] = pod.Task("LJ-1.541", status=pod.PARKED,
+                                        park_reason="attempt_max:sys-timeout-escalate",
+                                        attempt=5, parked_at=0.0)
+        pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+        self.assertEqual(pod.cmd_resume(["--retry", "LJ-1.541", "--once"]), 0)
+        t = pod.load_state().tasks["LJ-1.541"]
+        self.assertEqual(t.status, pod.READY)
+        self.assertEqual(t.attempt, 0,
+                         "a stale attempt count is exactly what fires AD27's "
+                         "escalate-to-critic test and skips the rewritten brief")
 
     def test_tick_returns_1_when_the_loop_stopped(self):
         st = pod.State()
@@ -5329,13 +6263,16 @@ class FallbackPark(LoopCase):
         p.touch()
         return p
 
-    def test_omlx_excluded_drops_only_the_omlx_provider_config(self):
+    def test_omlx_excluded_drops_only_the_omlx_provider_config_when_memory_is_short(self):
         """The provider carries the local footprint, not the model name: this filters
-        on `pi_provider`, so it would ALSO catch a future non-qwen model on `omlx`."""
+        on `pi_provider`, so it would ALSO catch a future non-qwen model on `omlx`.
+        RELAXED 2026-08-24: the lock alone no longer excludes; memory must ALSO be
+        short (`free_memory_pct_for_extra`'s own floor, patched here to 10%)."""
         cfgs = ({"model": "Qwen3.8-27B-oQ4e-mtp", "pi_provider": "omlx"},
                {"model": "glm-5.3", "pi_provider": "zai"},
                {"model": "grok-4.6"})                    # no pi_provider at all
         self.make_check_lock()
+        self.patch(pod, "free_memory_pct", lambda: 10.0)
         out = pod._omlx_excluded(cfgs, self.tmp)
         self.assertEqual([c["model"] for c in out], ["glm-5.3", "grok-4.6"])
 
@@ -5351,10 +6288,31 @@ class FallbackPark(LoopCase):
         self.assertEqual(pod._omlx_excluded(cfgs, self.tmp / "nowhere" / "at" / "all"),
                          cfgs)
 
-    def test_LIVE_launch_drops_qwen_from_coder_while_the_lock_is_held(self):
+    def test_omlx_excluded_is_a_no_op_when_memory_has_room(self):
+        """OWNER'S RULING 2026-08-24, the whole point of the relaxation: the lock held
+        alone is no longer enough. MEASURED that day, 84% free with qwen already
+        serving a real dispatch -- comfortably over the 25% floor patched here."""
+        cfgs = ({"model": "Qwen3.8-27B-oQ4e-mtp", "pi_provider": "omlx"},
+               {"model": "glm-5.3", "pi_provider": "zai"})
+        self.make_check_lock()
+        self.patch(pod, "free_memory_pct", lambda: 84.0)
+        self.assertEqual(pod._omlx_excluded(cfgs, self.tmp), cfgs)
+
+    def test_omlx_excluded_falls_back_to_excluding_when_memory_is_unreadable(self):
+        """The lock being HELD means `make check` is confirmed running; a blind memory
+        sensor there is FM12's ordinary shape (never guess a clearance), the opposite
+        of the courtesy no-op an unreadable LOCK gets above."""
+        cfgs = ({"model": "Qwen3.8-27B-oQ4e-mtp", "pi_provider": "omlx"},
+               {"model": "glm-5.3", "pi_provider": "zai"})
+        self.make_check_lock()
+        self.patch(pod, "free_memory_pct", lambda: None)
+        out = pod._omlx_excluded(cfgs, self.tmp)
+        self.assertEqual([c["model"] for c in out], ["glm-5.3"])
+
+    def test_LIVE_launch_drops_qwen_from_coder_while_the_lock_is_held_and_memory_is_short(self):
         """END TO END, through the real `coder` slot of the copied, live heads.toml
         (`LoopCase.build_tree()`), which carries qwen since the owner's ruling of
-        2026-08-23."""
+        2026-08-23, RELAXED 2026-08-24 to also require a short memory reading."""
         seen = {}
 
         def spy(cfgs, counts):
@@ -5362,6 +6320,7 @@ class FallbackPark(LoopCase):
             return None
 
         self.patch(pod, "pick_head_config", spy)
+        self.patch(pod, "free_memory_pct", lambda: 10.0)
         self.make_check_lock()
         self.real_launch(pod.Task(CODE), role="coder")
         self.assertEqual([c["model"] for c in seen["cfgs"]], ["glm-5.3"])
@@ -5376,6 +6335,22 @@ class FallbackPark(LoopCase):
         self.patch(pod, "pick_head_config", spy)
         lock = self.make_check_lock()
         lock.unlink()
+        self.real_launch(pod.Task(CODE), role="coder")
+        self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
+                         sorted(["Qwen3.8-27B-oQ4e-mtp", "glm-5.3"]))
+
+    def test_LIVE_launch_sees_qwen_again_when_the_lock_is_held_but_memory_has_room(self):
+        """The lock alone is no longer sufficient, end to end through the real
+        `coder` slot: owner's ruling 2026-08-24."""
+        seen = {}
+
+        def spy(cfgs, counts):
+            seen["cfgs"] = list(cfgs)
+            return None
+
+        self.patch(pod, "pick_head_config", spy)
+        self.patch(pod, "free_memory_pct", lambda: 84.0)
+        self.make_check_lock()
         self.real_launch(pod.Task(CODE), role="coder")
         self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
                          sorted(["Qwen3.8-27B-oQ4e-mtp", "glm-5.3"]))
@@ -5419,17 +6394,129 @@ class TwoThresholds(LoopCase):
         self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
         self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
 
-    def test_a_quota_park_COUNTS_toward_the_stop(self):
-        """Owner's ruling, 2026-08-19, against the maintainer's recommendation. The loop
-        cannot do the project's work while its heads are refused, so a stop that pages the
-        owner is a truer report of that than a loop that keeps ticking."""
+    def test_a_quota_park_NO_LONGER_COUNTS_toward_the_stop(self):
+        """**THIS TEST WAS ITS OWN OPPOSITE UNTIL 2026-08-24, AND THE REVERSAL IS THE
+        OWNER'S.** A30. The 2026-08-19 ruling (A25) said a `quota:` park counts, against
+        the maintainer's recommendation, on the reasoning that the loop cannot do the
+        project's work while its heads are refused. What that ruling could not see is
+        what a quota park does NEXT: it is the ONE park that re-opens on a clock with no
+        person at all, so counting it lets a self-healing vendor window spend the stop
+        budget AD14 reserves for walls the program built itself.
+
+        MEASURED 2026-08-23, `dev/pod/transitions/2026-08.jsonl` seq 3666 and 3675: two
+        loop stops 2.5 minutes apart, both `"why": "5 parked"`, and two of the five were
+        `quota:` parks that re-opened by themselves minutes later.
+        """
+        st = pod.State()
+        for i in range(pod._limits()["parked_max"] + 2):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED,
+                                      park_reason="quota:2026-08-19T20:19:47")
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+        self.assertEqual(self.calls["notify"], [])
+
+    def test_a_quota_park_does_not_hold_the_maintainer_feed_open_either(self):
+        """The feed is the WARNING for the stop, so the two must count one set. A
+        maintainer told to write a row for a `quota:` park has nothing to write: a
+        vendor's five-hour window is not a table row."""
+        st = pod.State()
+        for i in range(pod.BATCH_PARKED + 2):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED, record=record(),
+                                      park_reason="quota:2026-08-19T20:19:47",
+                                      parked_at=0.0)
+        # The 12 hour clock is the OTHER trigger and it would fire on an empty log, so
+        # the feed is closed first and the park edge is opened after it. Only the count
+        # is left to decide.
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
+        pod.emit(st, st.tasks["LJ-1.900"], pod.CHECKING, pod.PARKED,
+                 reason="quota:2026-08-19T20:19:47", rec=record(), root=self.tmp)
+        self.assertTrue(pod.park_since_last_batch(self.tmp),
+                        "the fixture did not open the park edge it is testing")
+        pod._rule_e(st, self.tmp)
+        self.assertEqual(self.calls["maintainer"], 0,
+                         "a vendor window fed the maintainer a batch it cannot answer")
+
+    def test_ONE_ordinary_park_beside_the_quota_parks_still_counts_as_one(self):
+        """The filter is a FILTER and not a switch: the ordinary parks are still counted
+        exactly as they were, and only the quota ones are subtracted."""
         st = pod.State()
         for i in range(pod._limits()["parked_max"]):
             code = f"LJ-1.{900 + i}"
             st.tasks[code] = pod.Task(code, status=pod.PARKED,
                                       park_reason="quota:2026-08-19T20:19:47")
-        self.assertIs(pod._rule_d(st, self.tmp), pod.STOP)
-        self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
+        st.tasks["LJ-1.999"] = pod.Task("LJ-1.999", status=pod.PARKED,
+                                        park_reason="no-match")
+        self.assertEqual([t.code for t in pod.stop_counted(st, self.tmp)], ["LJ-1.999"])
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+
+    def test_a_quota_park_the_FOLD_lost_the_reason_for_is_still_read_from_the_log(self):
+        """A park folded before the 2026-08-19 fold repair carries `park_reason = None`,
+        and the log line is the only place its name survives. `_rule_a2()` already reads
+        it there; the counter must read it the same way, or a stale state file re-arms
+        the very stop this ruling removed."""
+        st = pod.State()
+        for i in range(pod._limits()["parked_max"]):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = t = pod.Task(code, status=pod.CHECKING)
+            pod.emit(st, t, pod.CHECKING, pod.PARKED, rec=record(),
+                     reason="quota:2026-08-19T20:19:47", root=self.tmp)
+            t.park_reason = None               # the fold that lost it
+        self.assertEqual(pod.stop_counted(st, self.tmp), [])
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+
+    def test_a_SHELVED_task_does_not_count_toward_the_stop(self):
+        """It needs no filter: SHELVED is a different STATE, so `st.of(PARKED)` excludes
+        it by construction. That is the second reason A30 built a state rather than a
+        fourteenth park reason."""
+        st = pod.State()
+        limit = pod._limits()["parked_max"]
+        for i in range(limit):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.SHELVED, park_reason="no-match")
+        for i in range(limit - 1):
+            code = f"LJ-1.{800 + i}"
+            st.tasks[code] = pod.Task(code, status=pod.PARKED, park_reason="no-match")
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+
+    def test_a_SHELVED_task_does_not_hold_the_maintainer_feed_open(self):
+        """THE FIXTURE CAN FAIL, which is C-45: the same tasks, still PARKED, DO feed the
+        maintainer. Only the shelve changes the answer."""
+        st = pod.State()
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
+        for i in range(pod.BATCH_PARKED + 2):
+            code = f"LJ-1.{900 + i}"
+            st.tasks[code] = t = pod.Task(code, status=pod.CHECKING, parked_at=0.0)
+            pod.emit(st, t, pod.CHECKING, pod.PARKED, reason="no-match",
+                     rec=record(), root=self.tmp)
+        pod._rule_e(st, self.tmp)
+        self.assertEqual(self.calls["maintainer"], 1,
+                         "the fixture did not produce the feed it is about to suppress")
+        pod.emit_event(st, "batch", result="prompted", root=self.tmp)
+        for t in list(st.of(pod.PARKED)):
+            pod.emit(st, t, pod.PARKED, pod.SHELVED, root=self.tmp,
+                     reopen="a restructuring", by="pod-math")
+        pod._rule_e(st, self.tmp)
+        self.assertEqual(self.calls["maintainer"], 1,
+                         "a shelved task fed the maintainer a batch it cannot answer")
+
+    def test_shelving_one_task_does_not_cancel_an_OWED_feed_for_another(self):
+        """`park_since_last_batch()` compares the newest `to: PARKED` against the newest
+        FEED. A shelve appends a `to: SHELVED` line and deletes nothing, so a park that
+        happened and was never reported stays owed. That is correct, not a bug."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.CHECKING)
+        pod.emit(st, t, pod.CHECKING, pod.PARKED, reason="no-match", rec=record(),
+                 root=self.tmp)
+        st.tasks["LJ-1.999"] = other = pod.Task("LJ-1.999", status=pod.PARKED,
+                                                park_reason="attempt_max:sys-x")
+        self.assertTrue(pod.park_since_last_batch(self.tmp))
+        pod.emit(st, other, pod.PARKED, pod.SHELVED, root=self.tmp,
+                 reopen="a restructuring", by="pod-math")
+        self.assertTrue(pod.park_since_last_batch(self.tmp),
+                        "a shelve swallowed another task's owed feed")
 
 
 class CommitOnClose(unittest.TestCase):
@@ -6039,6 +7126,42 @@ class SalvageWorktree(unittest.TestCase):
             (self.tmp / "agents" / "tasks" / "LJ-1-399" / "lj-1.399-report.md")
             .read_text(),
             "report\n")
+
+    def test_home_only_skips_a_src_write_that_the_scope_names(self):
+        """Owner's-review finding, 2026-08-23: the `attempt_max` park has no commit
+        to follow it, so a `## SCOPE (write)` path outside the task home would sit
+        dirty in main with no committer and no `maintainer_scope_ok()` exemption.
+        `home_only=True` is the guard; this proves it actually excludes such a path
+        while still copying the task home, against a REAL worktree and a REAL git
+        diff, not a stubbed one."""
+        brief = self.tmp / "agents" / "tasks" / "LJ-1-399" / "LJ-1.399.md"
+        brief.write_text(
+            "## SCOPE (write)\n"
+            "- agents/tasks/LJ-1-399/Probe399.agda\n"
+            "- agents/tasks/LJ-1-399/lj-1.399-report.md\n"
+            "- src/guarded.agda\n")
+        subprocess.run(["git", "add", "-A"], cwd=self.tmp, capture_output=True)
+        subprocess.run(["git", "commit", "-qm", "brief now claims src/guarded.agda"],
+                       cwd=self.tmp, capture_output=True)
+        (self.whome / "LJ-1.399.md").write_text(brief.read_text())
+        (self.whome / "lj-1.399-report.md").write_text("report\n")
+        (self.wt / "src" / "guarded.agda").write_text("-- worker guarded\n")
+
+        bad = pod.salvage_worktree(self.t, self.tmp, home_only=True)
+        self.assertEqual(bad, [])
+        self.assertEqual((self.tmp / "src" / "guarded.agda").read_text(),
+                         "-- main guarded\n",
+                         "home_only=True must never touch a path outside agents/tasks/")
+        self.assertEqual(
+            (self.tmp / "agents" / "tasks" / "LJ-1-399" / "lj-1.399-report.md")
+            .read_text(), "report\n",
+            "home_only=True must still copy the task home")
+
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertEqual(bad, [])
+        self.assertEqual((self.tmp / "src" / "guarded.agda").read_text(),
+                         "-- worker guarded\n",
+                         "the default (home_only=False) is unchanged: SCOPE still copies")
 
 
 if __name__ == "__main__":
