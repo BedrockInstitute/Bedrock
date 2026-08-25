@@ -139,6 +139,26 @@ lines are the only field record that the backstop has ever fired; they are
 quoted in `agents/tasks/LJ-1-132/lj-1.132-report.md` so the evidence survives a clean."""
 
 [[entries]]
+glob = "tools/omlx-watchdog.log"
+class = "runtime"
+note = """
+The decision log of `scripts/ops/omlx-watchdog.sh`, born 2026-08-24. One line per restart
+of `oMLX.app`, per reading that refused one, and per post-restart verification. It is the
+ONLY record that the restart ever fired, so a report quotes a load-bearing line out of it
+rather than promoting the file."""
+
+[[entries]]
+glob = "tools/omlx-watchdog.clock"
+class = "runtime"
+note = """
+One epoch, and nothing else: the newest COMPLETED oMLX restart, or the watchdog's own first
+start while it has never restarted. It is the origin of the time backstop, which
+`qwen_active_hours()` measures from `dev/pod/transitions/`.
+DELETING IT IS SAFE IN ONE DIRECTION ONLY, and that is the safe one. A lost clock DELAYS
+the next backstop restart and can never advance one, and the 24 GB footprint trigger does
+not read it at all, so `make clean` cannot make the watchdog dangerous."""
+
+[[entries]]
 glob = "site/**"
 class = "exhaust"
 note = "Reproduced by `make site`."

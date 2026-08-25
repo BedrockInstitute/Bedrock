@@ -19,8 +19,8 @@ same topic can span a gate and a build step (`weave-i18n.py --check` is in `make
 | `scripts/gate/` | runs inside `make check` or a git hook; a red one stops a commit | `check-fences.py`, `check-glossary.py`, `check-omlx-quiet.py`, `check-probes.py`, `check-rule-ids.py`, `lint-agda.py`, `lint-prose.py` |
 | `scripts/measure/` | costs seconds to minutes, runs Agda, or reports a number; never a gate | `check-ratio.py`, `check-timing.py`, `check-unbound-hyp.py`, `deletion-test.py`, `dispatch-usage.py`, `ledger.py`, `obligations.py` |
 | `scripts/site/` | the publishing pipeline and the deploy | `extract-types.py`, `gen-depmap.py`, `i18n_markers.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `depmap-template.html` |
-| `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh` |
-| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `pane-slot.py`, `start.sh`, `table.py`, `wait-and-start.sh`, `witness.py` |
+| `scripts/ops/` | machine safety | `agda-watchdog.sh`, `bark-push.sh`, `omlx-watchdog.sh` |
+| `scripts/pod/` | the POD program of goal LJ-4: it runs the route and it is not a gate | `accept.py`, `check-closure.py`, `check-spec-surface.py`, `check-survey-quotes.py`, `digest.py`, `equalise-panes.py`, `facts.py`, `heads.py`, `keeper.sh`, `launcher.py`, `pi_stream.py`, `pod.py`, `preflight.py`, `replay.py`, `retrieve.py`, `rules.py`, `pane-slot.py`, `start.sh`, `superheavy-check.py`, `table.py`, `wait-and-start.sh`, `witness.py` |
 
 Unchanged in place: this `README.md`, `scripts/tests/`, `scripts/git-hooks/`.
 
@@ -136,20 +136,24 @@ python3 scripts/gate/check-glossary.py --check --staged # only staged files (use
 
 ### `check-omlx-quiet.py`
 
-Refuses `make check`'s whole-tree typecheck (`-M16g`) while qwen's local inference server,
-`omlx-server`, is live (owner's ruling 2026-08-23). Qwen is the one `herdr-pi` model this
-repository dispatches through a local server rather than a remote API
-([dev/pod/heads.toml](../dev/pod/heads.toml) `[legal.pi_provider]`); every other `herdr-pi`
-model is a remote call and carries no local footprint. The check is on process EXISTENCE, not a
-CPU threshold: same as `check-ratio.py`'s `agda_blocker()`, which it copies the pattern from,
-because a measured idle-vs-busy baseline for `omlx-server` does not exist. `make check` wires
-this in front of `typecheck`, which also holds `.pod-state/make-check.lock` for the run; the
-OTHER direction of the same ruling lives in `scripts/pod/pod.py`'s `_omlx_excluded()`, which
-refuses to DISPATCH qwen while that lock exists.
+Refuses `make check`'s whole-tree typecheck (`-M16g`) only when qwen's local inference
+server, `omlx-server`, is live AND system free memory is short (owner's ruling 2026-08-23,
+relaxed 2026-08-24). Qwen is the one `herdr-pi` model this repository dispatches through a
+local server rather than a remote API ([dev/pod/heads.toml](../dev/pod/heads.toml)
+`[legal.pi_provider]`); every other `herdr-pi` model is a remote call and carries no local
+footprint. Process existence is read the same way `check-ratio.py`'s `agda_blocker()` reads
+it (pgrep, falling back to `ps`), but existence ALONE no longer refuses: it also reads
+`memory_pressure -Q` and refuses only at or under `free_memory_pct_for_extra` (25%), the
+same floor `dev/pod/heads.toml [tiers.shared]` already uses to gate a third or fourth Agda
+slot -- a measured baseline (64 GB box, qwen's watchdog-bounded 24 GB worst case, the
+typecheck's 16 GB cap) that did not exist when the original, existence-only rule was written.
+`make check` wires this in front of `typecheck`, which also holds `.pod-state/make-check.lock`
+for the run; the OTHER direction of the same ruling lives in `scripts/pod/pod.py`'s
+`_omlx_excluded()`, which refuses to DISPATCH qwen while that lock exists AND memory is short.
 
 ```sh
-python3 scripts/gate/check-omlx-quiet.py --check                # exit 1 if omlx-server is live
-python3 scripts/gate/check-omlx-quiet.py --check --assume-quiet # proceed if neither pgrep nor ps can see
+python3 scripts/gate/check-omlx-quiet.py --check                # exit 1 if omlx-server is live and memory is short
+python3 scripts/gate/check-omlx-quiet.py --check --assume-quiet # proceed if a sensor is unreadable (never bypasses a measured refusal)
 ```
 
 ### `check-probes.py`
@@ -647,6 +651,21 @@ unguarded parallel writers crashed the 64 GB box; the primary guard is the
 `GHCRTS` heap cap, this is the backstop). It finds the repository root by
 walking up to `.git`, never by counting directories, so its log always lands
 in the true `_build/tools/` whatever directory it runs from.
+
+### `omlx-watchdog.sh`
+
+Restarts `oMLX.app` before its memory drift takes qwen's usable context below what one POD
+task needs (born 2026-08-24 after seven of thirteen qwen dispatches died on a hard HTTP 400
+in one fourteen hour window, each losing the whole session's work). It restarts when the
+IDLE footprint of `omlx-server` reaches 24 GB, or after 3.5 hours of active qwen dispatch
+since the last restart, and never while a `pi` agent is working. **Nothing starts it: the
+owner does.** `dev/pod/README.md`, under "The oMLX watchdog", carries the whole operating
+picture and the reason `pod.py` does not gate on it.
+
+```sh
+scripts/ops/omlx-watchdog.sh --once --dry-run   # one pass, restarting nothing
+scripts/ops/omlx-watchdog.sh                    # the loop
+```
 
 ### `bark-push.sh`
 

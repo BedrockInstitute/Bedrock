@@ -55,6 +55,12 @@ held**, which is the one step of a maintainer swap that is silent when it is ski
 `--no-resume` to start the keeper against a STOPPED loop, which exits 3 at once and is
 only what you want when you mean to inspect rather than to run.
 
+**IT ALSO STARTS THE OMLX WATCHDOG, owner's ruling 2026-08-24, and this step never blocks
+the rest.** `scripts/ops/omlx-watchdog.sh` runs detached, not in a pane, and its own pidfile
+guard makes a repeat `start.sh` a no-op on this step rather than a duplicate. Unlike the
+keeper, its absence is never fatal to a start: read "The oMLX watchdog" below for what it
+does and why `start.sh` only reports on it rather than refusing when it is missing.
+
 ## Switching the maintainer head
 
     .venv/bin/python scripts/pod/pod.py maintainer                     # show it and the presets
@@ -86,7 +92,7 @@ will receive no further batches.
 
 ## Stopping the whole pod, and swapping the resident maintainer
 
-**FOUR THINGS RUN AND STOPPING THE LOOP STOPS ONE OF THEM.** A full stop is:
+**FIVE THINGS CAN RUN AND STOPPING THE LOOP STOPS ONE OF THEM.** A full stop is:
 
 | what | how to find it | how to stop it |
 |---|---|---|
@@ -94,6 +100,7 @@ will receive no further batches.
 | the keeper | `ps aux \| grep keeper.sh` | it exits with the loop; kill it if it waits |
 | the loop | `ps aux \| grep 'pod.py run'` | `pod.py stop`, or kill the runner |
 | the agda watchdog | `ps aux \| grep agda-watchdog` | `kill <pid>`. Rule (f) then REFUSES every Agda task until it is back |
+| the oMLX watchdog, when you started one | `ps aux \| grep omlx-watchdog` | `kill <pid>`. NOTHING refuses a qwen dispatch after that; the drift comes back and the 400s with it |
 
 `.pod-state/STOPPED` stays where it is. It is what makes rule (f) refuse a dispatch on the
 next start, and clearing it is `pod.py resume`, which is the owner's call.
@@ -136,6 +143,130 @@ the outgoing Claude session. The order is therefore:
 4. `pod.py resume` and start the keeper. `ensure_maintainer()` starts the new head on the
    next tick and hands it the batch brief, which is `cat`ed behind `AGENTS.md` and
    `dev/pod/instructions/maintainer.md`.
+
+## The oMLX watchdog
+
+    scripts/ops/omlx-watchdog.sh --once --dry-run   # one pass. It decides and restarts nothing
+    scripts/ops/omlx-watchdog.sh                    # the loop
+    _build/tools/omlx-watchdog.log                  # every decision it took, and why
+
+**IT IS NOT RUNNING UNTIL YOU START IT, and no part of the program starts it.** That is
+the one way it differs from the agda watchdog, which `pod run` starts and confirms every
+tick. The reason is below.
+
+**WHAT IT CURES.** `omlx-server` does not return its MLX buffer pools to the OS, so its
+idle memory footprint rises with uptime, and that footprint is subtracted from the 56 GB
+`iogpu.wired_limit_mb` cap before qwen gets any context at all:
+
+    usable context ceiling = (56 GB - idle footprint) / 218,372 bytes per token
+
+MEASURED overnight on 2026-08-23: the footprint drifted 12.4 GB in fourteen hours and the
+ceiling fell from 176K tokens to 100K. Seven of thirteen qwen dispatches in that window
+died on a hard HTTP 400 (`stopReason: error`, `usage.totalTokens: 0`), each losing the
+whole session's work with no retry from `pi`. Those are the
+`fallback:Qwen3.8-27B-oQ4e-mtp` parks in `dev/pod/transitions/2026-08.jsonl`. One restart
+of the app on 2026-08-24 11:20 took the footprint from 41.41 GiB to 16.25 GiB in under
+thirty seconds.
+
+**WHEN IT RESTARTS.** Two triggers, and the first is the one that fires.
+
+| trigger | value | where the value comes from |
+|---|---|---|
+| idle footprint | at or above 24 GB | a context that settles near 146,000 tokens costs 31.88 GB, so the baseline must stay under 56 - 31.88 |
+| time backstop | 3.5 hours of ACTIVE qwen dispatch since the last restart | the same 2026-08-23 window, RE-MEASURED from the transition log: 6.84 active hours for 12.4 GB, so 1.81 GB per active hour, and 6.55 GB of margin is 3.6 hours |
+
+Active hours are read from `dev/pod/transitions/`, by summing the RUNNING to RETURNED spans
+whose model is qwen. Wall clock since the last restart was the simpler proxy and it is
+rejected: idle uptime does not move the footprint, so a wall clock fires after a quiet
+night that cost nothing.
+
+**IT NEVER RESTARTS UNDER A LIVE AGENT.** A restart mid-run gives that agent a
+`Connection error` and the run is a total loss, which is worse than the drift. The gate is
+herdr's own `agent_status`, asked twice with thirty seconds between, and it also requires
+the oMLX server log to have been silent for ninety seconds. **Every unreadable answer
+counts as BUSY.** `pgrep -f "pi --mode json"` cannot see a `pi` agent at all, because it
+runs inside a herdr pane.
+
+**IT RESTARTS THE APP AND NEVER THE SERVER ALONE.** MEASURED 2026-08-24 11:16: a `kill -9`
+of `omlx-server` was not answered by the parent for five minutes and `open -a oMLX` did
+nothing, because the app was already running; the service was down about seven minutes.
+`killall oMLX` is the only kill in the script and it cannot match `omlx-server`.
+
+**`pod.py` DOES NOT GATE ON IT, and that is a decision.** Rule (f) refuses every Agda task
+while `scripts/ops/agda-watchdog.sh` is down (A13) because that absence is a MACHINE
+hazard: one runaway Agda takes the whole box and every agent on it. This watchdog's
+absence is not that. It costs at most the one dispatch that hits the wall, the loss is
+already routed (the park falls the task through to glm-5.3), and the record is already
+visible in the transition log and the digest. A refusal built on `pgrep omlx-watchdog`
+would instead send EVERY qwen dispatch to the fallback for as long as nobody had started a
+shell script, which is a routing change wearing a safety check's clothes. `_omlx_excluded()`
+is not a precedent for it either: that one fires on a lock a live `make check` holds and
+then releases, and a watchdog nobody started clears itself never.
+
+**WHAT WOULD CHANGE THE CALL**, stated so the next reader does not have to re-derive it: a
+qwen 400 that costs more than the one task, or a park rate that stays high with the
+watchdog running.
+
+**ONE SETTING IS COUPLED TO IT AND LIVES OUTSIDE THIS REPOSITORY.** `contextWindow` for
+qwen in `~/.pi/agent/models.json` is 150,000, which leaves 6.67 GB of drift tolerance;
+135,000 leaves 9.94 GB. **Without periodic restarts in place, 150,000 is the wrong
+setting.** The watchdog reads the live value at start and writes it to its log, and it says
+so loudly when the value is above 150,000, because the 24 GB trigger is derived for 150,000
+and is too loose above it. It never writes that file, and it never writes
+`~/.omlx/model_settings.json` or `iogpu.wired_limit_mb` either.
+
+## The SUPERHEAVY cap, and it is not a task tier
+
+    .venv/bin/python scripts/pod/superheavy-check.py src/Everything.lagda.md
+
+**A MANUAL TOOL FOR THE RESIDENT MAINTAINER, OWNER'S RULING 2026-08-25, and nothing
+else ever calls it.** WIDE (2 GB) and HEAVY (4 GB) are the two tiers a brief's
+`agda_tier:` line may declare (`scripts/pod/facts.py TASK_TIERS`) and the dispatch
+loop admits automatically. `dev/pod/heads.toml [tiers.superheavy]` (8 GB) is
+deliberately absent from `TASK_TIERS`, from `heads.py`'s tier validation, and from
+`[tiers.shared]`'s heap-sum budget, so no brief and no automatic dispatch can ever
+reach it.
+
+**WHY IT EXISTS.** MEASURED 2026-08-25 on `[LJ-1.628]`: an owner-approved, 10-line,
+no-new-imports addition to `src/L/Constructible.lagda.md` still heap-walled the
+whole tree at HEAVY's `-M4g`, 166.5 s and 4.38 GiB, on a WARM interface cache. Not
+every landing that clears the owner's spec-surface approval also clears HEAVY's
+cap, and this is how the maintainer checks which before spending a dispatch on it.
+
+**THE GATE IS EXISTENCE AND NEVER A MEMORY FLOOR**, unlike `check-omlx-quiet.py`'s
+2026-08-24 relaxation to a percentage floor: that gate protects a routine, frequent
+`make check` run. This is a rare, hand-invoked, 8 GB commitment, and the owner's
+ruling is narrower on purpose: no qwen (`omlx-server`) running at all, checked the
+same way `check-omlx-quiet.py`'s `_omlx_live()` checks it, with no `--assume-quiet`
+escape when the sensor itself is unreadable.
+
+## The shelf, and putting a task back on the table
+
+    .venv/bin/python scripts/pod/pod.py unshelve LJ-1.541 --why "the restructuring landed"
+
+**A SHELVED TASK IS ONE THE MATHEMATICIAN HAS RULED SETTLED.** Owner's ruling,
+2026-08-24 (A30). Its obligation is delivered by another task, so another attempt buys
+nothing, and DONE would be a false record because nothing measured it. It keeps its
+worktree, its park record and its whole history; it stops holding a `parked_max` slot;
+and the maintainer's batch brief names it as a code and asks for nothing.
+
+**ONLY THE MATHEMATICIAN DECLARES ONE**, by writing `dev/pod/shelve-request.toml`, and
+the request is refused unless it carries a `file:line` and a `reopen` condition. The
+honoured declaration is kept at `dev/pod/shelf/<CODE>.toml.shelved`, which is the record
+of who ruled what and on what evidence. `pod.py status` prints the shelved count beside
+the parked one.
+
+**UN-SHELVING IS YOURS AND IT GOES TO PARKED, NEVER TO READY.** A straight READY would
+re-dispatch the task into whatever made it park, with no new information. Coming back
+through PARKED costs a `parked_max` slot again, which is the honest price of asking for
+the loop's attention. `--why` is required: the log line is the only record that the
+reversal had a reason. `pod.py resume --retry` never un-shelves, and says so when you
+name a shelved code.
+
+**A `quota:` PARK NO LONGER STOPS THE LOOP**, ruled the same day and part of the same
+amendment. A vendor's five-hour window re-opens on its own clock, so it no longer counts
+toward `parked_max` and no longer feeds the maintainer. It is still a park, still in
+`pod.py status` and still in the digest.
 
 ## `pod.py` is a program and not an agent
 

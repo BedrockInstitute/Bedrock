@@ -48,7 +48,7 @@ not restate it.** No live rulebook section replaces `dev/ORCHESTRATION.md` secti
 POD cutover of 2026-08-18 archived that file to `archive/dev/ORCHESTRATION.md`, and the
 design memo is the only place that states the form today.
 
-**`scripts/pod/preflight.py` is the gate on the form.** It runs 22 checks over a brief
+**`scripts/pod/preflight.py` is the gate on the form.** It runs 23 checks over a brief
 before the program spawns it, and it refuses a brief that carries no `## ARCHIVE`, no
 `## LITERATURE`, no `## PREMISES` or no `## LAWS` section. The program writes the archive
 and literature blocks itself, through `scripts/pod/retrieve.py`. `dev/pod/queue.toml` is
