@@ -1,0 +1,31 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T12:45:43Z
+Checking LJ-1-629.Probe629 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-629/agents/tasks/LJ-1-629/Probe629.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-629/agents/tasks/LJ-1-629/Probe629.agda:176.5-15: error: [NoParseForLHS]
+Could not parse the left-hand side ... | lt s
+Problematic expression: (lt s)
+Operators used in the grammar:
+  None
+when scope checking the left-hand side ... | lt s in the definition
+of inf-case
+        2.64 real         2.43 user         0.19 sys
+           754270208  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48092  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 571  involuntary context switches
+         32453370952  instructions retired
+         11200603782  cycles elapsed
+           696419408  peak memory footprint
+EXIT=42
+ended 2026-08-25T12:45:45Z

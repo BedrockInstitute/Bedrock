@@ -1,0 +1,38 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T12:42:59Z
+Checking LJ-1-629.Probe629 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-629/agents/tasks/LJ-1-629/Probe629.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-629/agents/tasks/LJ-1-629/Probe629.agda:57.3-52: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  ω-mem→numeral
+when scope checking the declaration
+  open
+    .#L.Ordinal.SquareLaw-3768365438323982320 {ℓ} lem
+      using (Init; sq; via-col-square; ω-mem→numeral)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-629/agents/tasks/LJ-1-629/Probe629.agda:200.38-50: error: [UnequalTerms]
+(δ₁ : W3.SL.S) →
+⟨ fst δ₁ Cubical.HITs.CumulativeHierarchy.Base.∈ fst δ ⟩ →
+∥ Σ-syntax W3.SL.S (λ F → InjCode F δ δ₁) ∥₁ → Empty.⊥
+!=< Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression fst (snd sc) has type S
+        2.77 real         2.53 user         0.22 sys
+           768606208  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48963  page reclaims
+                  12  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 110  voluntary context switches
+                 509  involuntary context switches
+         33498683032  instructions retired
+         11539273464  cycles elapsed
+           709002320  peak memory footprint
+EXIT=42
+ended 2026-08-25T12:43:02Z
