@@ -29,7 +29,7 @@ deletion_test = importlib.util.module_from_spec(spec)
 assert spec.loader is not None
 spec.loader.exec_module(deletion_test)
 
-AC_TOTAL_RE = re.compile(r"ac-total ([0-9,]+)")
+AC_TOTAL_RE = re.compile(r"ac-total(?: \(projection\))? ([0-9,]+)")
 CAP_HEADROOM_RE = re.compile(r"cap ([0-9,]+) \| headroom ([+-][0-9,]+)")
 PROG = "deletion-test.py"
 
