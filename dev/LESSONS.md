@@ -2137,16 +2137,24 @@ level cured it with no other change (the p1 report, surprises 1).
 **Rule:** Every agda invocation runs under a GHC heap cap (`GHCRTS=-M<n>g`)
 so a runaway typecheck dies with a clean "Heap exhausted" exit instead of
 OOM-killing the machine; the orchestrator's audits run at `-M16g` and `make`
-exports a default. **OWNER-TIGHTENED 2026-08-23: under any circumstances,
-only ONE Agda writer, at a 4 GB cap.** This supersedes the owner-widened
-2026-08-02 figures (WIDE four at `-M8g`, HEAVY two at `-M12g`, kept below as
-the measured incident and its original cure): both tiers now carry
-`slots = 1` and `heap = "-A64m -I0 -M4g"` (`dev/pod/heads.toml [tiers.*]`),
-the mixed worst-case heap sum stays at or under 4 GB, and the third/fourth-
-slot clause (system free memory above 25%) is dead code under one slot. A
-watchdog (`scripts/ops/agda-watchdog.sh`, restart it each session) backstops
-at 6 GB per process (2 GB above the cap, the same margin the original 14 GB
-kept above HEAVY's 12 GB) and an 8% system-free floor, unchanged. A
+exports a default. **OWNER-RULED 2026-08-23, SECOND RULING THE SAME DAY:
+WIDE and HEAVY split apart again, WIDE smaller and concurrent.** The first
+ruling that date flattened both tiers to one writer at a 4 GB cap (kept
+below as the measured incident and its original cure, and as the figure a
+2026-08-23 test literal still pins for HEAVY alone); the second gives WIDE
+`slots = 2` at `heap = "-A64m -I0 -M2g"` and leaves HEAVY at `slots = 1`,
+`heap = "-A64m -I0 -M4g"` (`dev/pod/heads.toml [tiers.*]`). WIDE's second
+slot raced `pod.py`'s process census against the registry's own for one
+hour before the proper fix (`pod.py:agda_registry_slots()`), and a second,
+narrower cross-tier race in that same fix (one tier's live holder binding
+the OTHER tier's admission decision, across three sites: `admits()`, the
+queue-waiter and `cmd_status`) was found by an opus-5 review and closed the
+same day by `launcher.py:agda_holders_in_tier()`, the one implementation all
+three now call. The mixed worst-case heap sum stays at or under 6 GB (one
+WIDE plus one HEAVY at once), and the third/fourth-slot clause (system free
+memory above 25%) is dead code under WIDE's ceiling of two and HEAVY's of
+one. A watchdog (`scripts/ops/agda-watchdog.sh`, restart it each session)
+backstops at 6 GB per process and an 8% system-free floor, unchanged. A
 heap-exhausted exit is a WALL event: apply the P-i playbook, never simply
 rerun.
 
@@ -4869,4 +4877,68 @@ channel. The gate is a read on a new master that matches both `sucV *( *sucV`
 and an iterate; no checker is funded and the file-level proxy's price is at
 `agents/tasks/LJ-1-309/lj-1.309-report.md:344-368`.
 
-Related: [[R-40]], [[R-35]], [[C-50]], [[P-t]], [[P-l]], [[C-52]].
+Related: [[R-40]], [[R-35]], [[C-50]], [[P-t]], [[P-l]], [[C-52]], [[R-42]].
+
+### R-42. A carve output compared across two spellings costs by the unfolding, not the size: bound the bridge to one definition with syntactically-equal arguments
+
+**Rule:** A term of type `S` a `hasSeparationL` carve produced may be compared
+with another spelling of itself only if the two spellings differ by unfolding
+ONE definition whose arguments are then syntactically identical. A comparison
+needing more than one unfolding, or leaving arguments that are not already
+syntactically equal after that one unfolding, was not measured to finish
+within a coder's own working cap (never run to the full acceptance deadline).
+
+**The measurement**, `[LJ-1.541]`: `runs/BisC.agda` and `runs/BisE.agda`
+differ in exactly one line, and `diff` confirms it
+(`agents/tasks/LJ-1-541/lj-1.541-report.md:141-142`), both building the same
+separation equation over the same set:
+
+    G = P529.Carve.G a oa                  -- BisC, killed at 155.02 s
+    G = fst (P529.rank-graph Q a bnd)      -- BisE, exit 0 at 1.74 s
+
+Nine arms were measured; seven were killed and none is a heap wall. Every
+kill is the coder's own working cap at 100 percent CPU: the largest resident
+set `/usr/bin/time` measured over the seven it could read is nowhere near the
+`-M8g` caliber, and `runs/BisG.agda` has no figure at all, because it was
+killed with its shell before `/usr/bin/time` could print
+(`agents/tasks/LJ-1-541/lj-1.541-report.md:155-160`). `runs/BisD.agda`
+sharpens the bound rather than leaving it a guess: there `Q` and `bnd` are
+already taken FROM `P529.Carve` itself, so only the module projection
+separates the two bodies, and it STILL does not finish, at 337.30 s
+(`agents/tasks/LJ-1-541/lj-1.541-report.md:149`). One unfolding is not
+enough once the arguments also need forcing equal by a further step.
+
+**`[LJ-1.524]` had already measured that two spellings of a carve do not
+finish and proposed ONE NAME FOR THE CARVE as the cure**
+(`agents/tasks/LJ-1-524/lj-1.524-report.md:228`). `[LJ-1.541]`'s finding is
+that this cure does not carry across files, and it measures where the cure
+stops: naming does not help once the comparison also needs an unfolding
+beyond the one this law admits.
+
+**Independently re-measured at a second site, not cited by analogy**
+(the Boundary: a measured cure does not transfer by analogy). `[LJ-1.547]`
+re-ran the same one-line bisection on its own obligation and the law held:
+
+    G = fst (P529.rank-graph Q a bnd)     -- BisBody, exit 0 at 1.85 s
+    G = P529.Carve.G a oa                 -- BisName, killed at 301 s
+
+(`agents/tasks/LJ-1-547/lj-1.547-report.md:254-262`). The obligation's own
+type there already named `G` in the spelling its proof produces, `Asm.G a oa`
+(`agents/tasks/LJ-1-547/lj-1.547-report.md:268`), so `injcode-assembled`
+needed no conversion at all and cost nothing.
+
+**When it bites:** any obligation comparing a `hasSeparationL` carve's output
+against a differently-spelled construction of the same set: a module
+projection against a direct application, in both measured instances. Write
+the obligation's type in the spelling the carve's OWN definition already
+produces. **This is R-41's cure one family down**: R-41 bounds the bridge
+between two spellings of a level or a stage; this bounds it between two
+spellings of a carve's set, with the same disease and a sharper, one-unfolding
+criterion measured directly rather than inferred from the level case.
+
+**Evidence:** `agents/tasks/LJ-1-541/lj-1.541-report.md` §`## THE WALL`;
+`agents/tasks/LJ-1-547/lj-1.547-report.md` §`## THE WALL, RE-MEASURED HERE`;
+`agents/tasks/LJ-1-524/lj-1.524-report.md`, the prior "one name" measurement
+this law narrows.
+
+Related: [[R-41]].
