@@ -31,12 +31,12 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Twenty-nine amendments, A1 to A29. Twenty-eight are the owner's, and one, A6, is the
+**Thirty amendments, A1 to A30. Twenty-nine are the owner's, and one, A6, is the
 orchestrator's and follows from A4.** **The count in this paragraph said 23 until
 2026-08-21, when the list held 26**, and a per-date breakdown stood beside it that nobody
 had recounted either. Both were carried forward rather than measured. The count is now
 the one thing stated here, and the check is the list itself: the entries below run A1 to
-A29 with no gap and no repeat, so the count IS the highest number. **A SECOND WAY TO
+A30 with no gap and no repeat, so the count IS the highest number. **A SECOND WAY TO
 BREAK IT WAS MEASURED ON 2026-08-21 AND CLOSED THE SAME DAY**: two pieces of shipped
 behaviour carried the suffixed names `A27a` and `A27b` in code comments and had no entry
 here at all, so the list ran to A27 with no gap while the program obeyed two rules the
@@ -336,6 +336,21 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   stop now NAMES the vendor and the reset time, and that the tasks re-open by themselves
   when the window ends.
 
+  > **THAT PARAGRAPH IS SUPERSEDED BY A30, owner's ruling 2026-08-24, and only that
+  > paragraph.** A `quota:` park no longer counts toward `parked_max`, and it no longer
+  > holds AD15's maintainer feed open either. The text above is kept because the
+  > maintainer's overruled case is now the case the owner accepted, and a ruling that
+  > erases what it reversed cannot be re-examined either. **What the 2026-08-19 ruling
+  > could not see is what a quota park does NEXT**: it is the ONE park that re-opens on a
+  > clock with no person at all, so counting it lets a self-healing vendor window spend
+  > the stop budget AD14 reserves for walls the program built itself. MEASURED
+  > 2026-08-23, `dev/pod/transitions/2026-08.jsonl` seq 3666 and 3675: two loop stops 2.5
+  > minutes apart, both `"why": "5 parked"`, and two of the five (`[LJ-1.609]`,
+  > `[LJ-1.611]`) were `quota:` parks that re-opened by themselves minutes later and are
+  > DONE today. **Every other sentence of A25 stands**: the reader, the reset clock, the
+  > `quota:` reason itself, and rule (a2)'s clock branch are all untouched, and the stop
+  > still NAMES the vendor when one happens. See A30.
+
   `scripts/pod/pod.py`, `vendor_refusal()` and `quota_open()`. Rule (c) names it and rule
   (a2) re-opens it.
 
@@ -515,6 +530,105 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   `dev/pod/heads.toml`, and `scripts/pod/pod.py` (`PARK_REASONS`, `_has_fallback_head()`,
   rule (c)'s `_accept_one()`, rule (a2), `launch()`).
 
+- **A30. A SETTLED TASK GETS A STATE, AND A VENDOR WINDOW STOPS SPENDING THE STOP
+  BUDGET, ruled 2026-08-24.** Two rulings in one entry, because they are one incident and
+  the second is the owner's addition to the design that produced the first.
+
+  **THE MEASURED INCIDENT.** `dev/pod/transitions/2026-08.jsonl` seq 3666 and 3675,
+  2026-08-23T23:40:58Z and T23:43:30Z, 2.5 minutes apart, both `"why": "5 parked"`. The
+  five parked tasks were `[LJ-1.541]`, `[LJ-1.572]`, `[LJ-1.603]`, `[LJ-1.609]` and
+  `[LJ-1.611]`. **Two of the five were permanently settled and had no state to be settled
+  in.** The resident mathematician had ruled, with evidence, that `[LJ-1.541]`'s and
+  `[LJ-1.572]`'s obligations are delivered by other tasks; retrying either buys nothing
+  and costs another 1800 second frame, and marking either DONE would be a false record
+  that AD13 and R4 forbid. Their only legal state was PARKED, so they held two of five
+  stop slots for as long as the project lasts. **Two more were self-healing.**
+  `[LJ-1.609]` and `[LJ-1.611]` were `quota:` parks that re-opened on their own clock
+  minutes later and are DONE today. **The two defects compound**: a routine vendor window
+  was enough to tip the loop into a full stop only because it landed on top of two
+  permanent parks. The re-asking is measurable too: 31 of the 121 briefs under
+  `agents/tasks/POD-BATCH/` name `[LJ-1.541]` under `## THE PARKED TASKS`, the earliest
+  `20260822-212601.md`, every one of them carrying the `LOUDEST INPUT` marker and asking
+  the maintainer for a row that no row can supply.
+
+  **PART ONE: `SHELVED` IS THE SEVENTH STATE.** It is kept, indexed and findable, off the
+  reading table; it asserts neither success nor failure; it names reversibility without
+  promising it. `drop` loses the record, which the Boundary forbids; `archive` collides
+  with this repository's `archive/` tree and with `agents/tasks/archive/`;
+  `pending` and `suspend` both promise a resumption this state does not offer.
+
+  **IT IS A STATE AND NOT A FOURTEENTH PARK REASON, on four grounds.** (1) Rule (a2)'s
+  own stated invariant is「AD16, and it is automatic. A park is never terminal.」A reason
+  whose branch is「never un-park」makes that sentence false; a separate state leaves it
+  exactly true, because AD16 speaks about parks and SHELVED is not one. (2) Rule (d)
+  would have to filter a count instead of a state doing it for free, and this programme
+  has already been burned twice by a trigger reading a qualified count
+  (`park_since_last_batch()`'s level-not-edge defect, `park_stop()`'s recited literal).
+  (3) `emit()` enforces the legal-transition table for free with a state, and nothing
+  enforces a reason-string convention. (4) The requirement is REVERSIBLE BUT NEVER
+  AUTOMATICALLY, and `cmd_resume --retry` iterates `st.of(PARKED)`: a park reason would
+  be swept back into the loop by the next global retry, while a different state is
+  excluded by construction.
+
+  **ENTRY IS GATED EXACTLY LIKE THE DECLARED STOP OF A19.** One
+  `dev/pod/shelve-request.toml`, one `[shelve]` table, ONE task, and every field required:
+  `task`, `claim`, `reason`, `evidence` carrying at least one `file:line`, `reopen`, and
+  `by`. **`reopen` is what separates a shelve from a drop**: a shelve says that nothing
+  is owed here today AND names the thing that would change that, and with no named
+  condition it says only "forget this". **Only the mathematician writes one**, by the
+  same reasoning that gives only the mathematician a halt: whether an obligation is
+  delivered somewhere else is a mathematical judgement, and AD3 gives every one of those
+  to that slot. **THE CRITERION WIDENED THE SAME DAY A30 LANDED.** The landing named one
+  situation, delivery elsewhere; within hours `[LJ-1.572]` reached the maintainer as a
+  real case the criterion did not cover -- no task delivered its obligation, but
+  `[LJ-1.607]`'s own proof established that `[LJ-1.572]`'s route to it cannot succeed as
+  a term. Owner's ruling, same date: PROVEN FUTILE is a second, independent qualifying
+  situation, not a stretch of the first. `dev/pod/instructions/mathematician.md`'s shelve
+  clause carries both, with `[LJ-1.541]` and `[LJ-1.572]` as the one worked example each.
+  The owner may always write one by hand. A malformed request is REFUSED,
+  logged as
+  a `shelve_request` event and retired to `.toml.refused`, because a declaration the
+  program ignores in silence leaves its author believing it took effect.
+
+  **RULE (a3) RUNS AFTER RULE (a2), AND THE ORDER IS THE DESIGN.** (a2) is the automatic
+  un-park, so a task a table edit would legitimately reopen on this tick gets that chance
+  first; only what survives (a2) is a shelve candidate, and a request naming a task (a2)
+  has just moved to READY refuses loudly rather than taking live work. The rule salvages
+  `home_only=True` (no commit follows a shelve, so a `## SCOPE (write)` path outside
+  `agents/tasks/` would sit dirty with no committer and R15 would refuse the next
+  maintainer batch), KEEPS the worktree and records its base commit, emits transition 15,
+  moves the request to `dev/pod/shelf/<CODE>.toml.shelved` as durable evidence, and
+  pushes the owner once.
+
+  **NOTHING AUTOMATIC REACHES THE STATE AND NOTHING AUTOMATIC LEAVES IT.** There is no
+  timed auto-shelve: a clock would convert a judgement into an elapsed time and would
+  shelve a task that is merely WAITING for a follow-up rather than one that is SETTLED.
+  There is no `action` value that shelves from a matched row, for the AD11/R1 reason
+  above. Leaving is `pod unshelve CODE --why "..."`, which goes to PARKED and never to
+  READY, and resets `attempt` so AD27 does not route on a stale count.
+
+  **PART TWO: A `quota:` PARK NO LONGER COUNTS, AND THIS REVERSES A25's LAST PARAGRAPH.**
+  Owner's direct ruling the same day, and it is an addition to the design that produced
+  part one rather than a consequence of it. `stop_counted()` in `scripts/pod/pod.py` is
+  the one filter and both triggers read it: rule (d)'s stop and rule (e)'s `BATCH_PARKED`
+  feed, which must count one set or the warning fires for a park the stop will never act
+  on. A25's own text is kept and marked superseded on that one paragraph; every other
+  sentence of A25 stands.
+
+  **WHAT THIS CHANGES AND WHAT IT DOES NOT.** AD13 and R4 are untouched: nothing reaches
+  DONE without a measurement, and `(SHELVED, DONE)` is not a legal transition. AD16 is
+  untouched: a PARK is still never terminal, and SHELVED is not a park. AD14's
+  `parked_max` NUMBER is untouched and stays the owner's under AD26: A30 refines what is
+  counted and never the limit. AD15's `BATCH_PARKED` is untouched for the same reason,
+  and the invariant `BATCH_PARKED <= parked_max` still holds.
+
+  `scripts/pod/pod.py` (`STATES`, `TRANSITIONS_LEGAL`, `ADDED`, `read_shelve_request()`,
+  `_rule_a3()`, `stop_counted()`, `cmd_unshelve()`, rule (d), rule (e), `emit()`,
+  `replay_log()`, `write_batch_brief()`, `prune_logs()`, `cmd_status()`, `cmd_resume()`),
+  `scripts/pod/digest.py` (`STATE_ZH`, `task_rows()`, the blocked section), and
+  `scripts/tests/test_pod_loop.py` (`Shelve`, `ShelveWorktree`, `Unshelve`, and the
+  inverted quota test in `TwoThresholds`).
+
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the
   measured answer was: nothing. **No part of this program counts finished work.**
@@ -646,7 +760,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 | AD# | The decision | In | AD# | The decision | In |
 |---|---|---|---|---|---|
 | AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked. **A17 REPLACES THE SPAWN WITH A PROMPT: the trigger FEEDS a resident session.** **The 3 is AD15's OWN number and is no longer AD14's**, section 6.7 | 6.7, 8.1 |
-| AD2 | A maintainer model writes new table rows. It does not run the loop. **A17 ADDS: it is RESIDENT, one long-lived session, and it owns the loop's health** | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance | 5.5, 5.1 |
+| AD2 | A maintainer model writes new table rows. It does not run the loop. **A17 ADDS: it is RESIDENT, one long-lived session, and it owns the loop's health** | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance. **A30 LEAVES IT EXACTLY TRUE: a PARK is still never terminal, and SHELVED is not a park** | 5.5, 5.1 |
 | AD3 | All judgement belongs to the mathematician. **A21 ADDS THE HALF THIS ROW NEVER CARRIED: judgement is ALL it does. It writes no Agda, deliverable or probe, and the brief and the report are its channel to the coder** | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
 | AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[LJ-4.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
 | AD5 | The goal is unchanged: both trophies | 1 | AD19 | The table is tracked. Runtime state is not. Every transition logs | 5.3 |
@@ -658,7 +772,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 | AD11 | A branch may match only six facts. Facts 1, 2 and 3 are amended by A5 and A1 | 4.3, 4.7 | AD25 | coder: sonnet 5 high; adversarial: opus 5 high | 6.1 |
 | AD12 | The unit of work is one deliverable proof obligation | 6.3, 5.2 | AD26 | Heads live in a config file. A change binds new tasks only | 6.1 |
 | AD13 | DONE: `agda --safe` exit 0, unresolved obligations did not increase. A5 gives it a runner; R4 reads the row's `outcome`. See gap M10 | 5.4, 7.2 | AD27 | Adversarial review fires two ways | 6.6 |
-| AD14 | On no match, PARK. At 3 parked, the loop stops | 5.5 |  |  |  |
+| AD14 | On no match, PARK. At 3 parked, the loop stops. **A30 REFINES WHAT IS COUNTED AND NOT THE NUMBER: a `quota:` park no longer counts, and a SHELVED task is a different state** | 5.5 |  |  |  |
 
 ## 3. The rule set, ONE list
 
@@ -1740,6 +1854,7 @@ rule: one home per rule. The order and the reasons are here; the body is at
 | 0 | `watchdog_tick()` | Confirm the backstop FIRST, before any rule consults `admits()` | A13 | `:2894` |
 | 1 | **(a1) CREATE** | `dev/pod/queue.toml` is the ONLY producer of a task. An entry with no `brief` is a REQUEST and never a task. It also expires the rows of an archived code | AD3, 4.6, A14 | `_rule_a1` |
 | 2 | **(a2) UNPARK** | A park is never terminal. Each of the thirteen park reasons of 5.5 has its own un-park test | AD16 | `_rule_a2` |
+| 2b | **(a3) SHELVE** | One `dev/pod/shelve-request.toml`, one PARKED task, the mathematician's declaration. It runs AFTER (a2), so a table edit that would legitimately reopen the named task wins that tick and the shelve refuses | A30 | `_rule_a3` |
 | 3 | **(b) OBSERVE** | A worker is dead when its pid is dead, or when it ran past `worker_deadline_s` | AD17 | `_rule_b` |
 | 4 | **(c) ACCEPT** | ONE task at a time. Run the acceptance, route the WHOLE record, and take the action | AD13, A5, A24 | `_rule_c` |
 | 5 | **(e) MAINTAINER** | Harvest, prune, and FEED the resident maintainer on the batch clock or on a NEW park. **It runs BEFORE the stop** | AD15, A17, A20 | `_rule_e` |
@@ -1888,7 +2003,9 @@ routes on; `parked_at` is the clock rule (a2) compares with the table mtime;
    "scope_narrow": null}}}
 ```
 
-**Six states. Twelve transitions. Nothing else is legal.**
+**Seven states. Sixteen transitions. Nothing else is legal.** `SHELVED` is the
+seventh and transitions 15 and 16 are its only two edges, amendment A30, owner's
+ruling 2026-08-24.
 
 | # | Transition | Trigger |
 |---:|---|---|
@@ -1904,6 +2021,19 @@ routes on; `parked_at` is the clock rule (a2) compares with the table mtime;
 | 9 | `PARKED -> READY` | The table changed: `route()` now matches, or an admission retry is due, rule (a2) |
 | 10 | `PARKED -> READY` | The brief was repaired and the pre-flight now passes, rule (a2) |
 | 11 | `CHECKING -> PARKED` | The matched action is `stop_loop`. `apply()` parks the task, then stops the loop in the same tick |
+| 13 | `RUNNING -> PARKED` | The pid is LIVE and its `proc_start` does not match the dispatch record: `orphan:<pid>`, 5.5 |
+| 14 | `PARKED -> CHECKING` | Re-accept the scene after a meter or table repair. No worker is dispatched |
+| 15 | `PARKED -> SHELVED` | A mathematician's declared shelve, rule (a3). A30 |
+| 16 | `SHELVED -> PARKED` | `pod unshelve CODE --why "..."`, an operator's act. A30 |
+
+**`(SHELVED, DONE)`, `(SHELVED, READY)` AND `(CHECKING, SHELVED)` ARE ABSENT, AND
+EACH ABSENCE IS THE DESIGN.** `(SHELVED, DONE)` would let a task close with no
+measurement, which AD13 and R4 forbid from every state. `(SHELVED, READY)` would
+re-dispatch a settled task into whatever made it park, with no new information and
+no `parked_max` slot spent: un-shelving costs a park, which is the honest price of
+asking for the loop's attention again. `(CHECKING, SHELVED)` would make a shelve a
+row's action, and「this obligation is delivered by ANOTHER task」is not a fact
+`matches()` can read off this task's own acceptance record (AD11, R1).
 
 An `escalate` action moves the task to READY with `attempt` raised, so transition
 6 covers it and rule (f) then sends the review dispatch of section 6.6. One more

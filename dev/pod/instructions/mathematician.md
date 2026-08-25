@@ -82,11 +82,84 @@ brief in the tree named `mathematician`, and no coder had ever been dispatched. 
 file did not contain the word `coder`. The role that writes every brief was never told
 the coder exists, so one role did both jobs.
 
+**A HEAP-WALL PARK BRANCH IS `action = "park_and_split"`, NEVER BARE `park`.** Owner's
+ruling, 2026-08-23. The coder's own clause now says a heap wall is restructured and
+re-tested IN THE SAME DISPATCH (`dev/pod/instructions/coder.md`); a return that still
+reaches this row already tried that and still walled, so the wall is evidence about the
+TERM and this row is where that evidence must reach you. `park_and_split` writes the
+`[[queue]]` request for you before it parks (`split_entry()`, `scripts/pod/pod.py:1098`);
+a bare `park` files no request, and the task then waits silently until someone reads the
+digest. **The request carries no brief and closes nothing on its own**: `-split` entries
+are skipped by rule (a1) until you write one, exactly as any other queue request is.
+Retrofitted across 60 of the 62 briefs already carrying the `id = "heap-wall-park"`
+pattern (LJ-1.538 through LJ-1.599) on this date; write every new one this way. **TWO
+STAYED AT BARE `park`, and an owner's review caught that an earlier pass missed why an
+exception exists at all: a row already recorded in `dev/pod/replay-corpus.jsonl` under
+its OLD action is corpus-locked (R3, section 4.5.4) and rewriting it there would move a
+live record.** `[LJ-1.565]` (closed) and `[LJ-1.582]` both are. Before retrofitting a row
+by hand, check `dev/pod/replay-corpus.jsonl` for the row id first.
+
+**NEVER `cat >` OVER A BRIEF THAT HAS BEEN DISPATCHED.** Owner's ruling,
+2026-08-23, from a measured incident: a rewrite of `[LJ-1.541]`, `[LJ-1.547]` and
+`[LJ-1.572]`'s briefs overwrote their `## LAWS`, `## ARCHIVE (program-generated,
+do not edit)` and `## LITERATURE (program-generated, do not edit)` blocks.
+`inject_survey()` writes those blocks exactly ONCE, at task CREATION
+(`_rule_a1()`, `scripts/pod/pod.py:4056`, skipped for a code already in state),
+so a rewrite that drops them has NO automatic repair: pre-flight P15 and P21
+refuse silently and the task parks with no record, invisible until a maintainer
+reads the digest. **If a dispatched brief needs a rewrite, preserve `## LAWS`,
+`## ARCHIVE` and `## LITERATURE` verbatim and rewrite only the text above
+them.** After writing, count the `program-generated` markers rather than
+trusting `check-preflight`'s summary line: four is the live shape as of this
+ruling, and a lower count means a block was lost.
+
 **YOU MAY CALL A HALT, AND ONLY YOU MAY.** Owner's ruling, 2026-08-18. Write
 `dev/pod/stop-request.toml` with `claim`, `reason` and an `evidence` list carrying at
 least one `file:line`, and rule (d) stops the loop, pushes the owner at once, and retires
 your file so it fires once. **A declaration without checkable evidence is REFUSED and
 recorded**, so you will see that it did not take effect.
+
+**YOU MAY SHELVE ONE SETTLED TASK, AND ONLY YOU MAY.** Owner's ruling, 2026-08-24
+(A30). Write `dev/pod/shelve-request.toml` with one `[shelve]` table naming ONE
+task: `task`, `claim`, `reason`, an `evidence` list carrying at least one
+`file:line`, `reopen`, and `by`. Rule (a3) moves that task from PARKED to SHELVED,
+keeps its worktree and its whole park record, files your declaration under
+`dev/pod/shelf/`, and pushes the owner once. **A declaration without checkable
+evidence is REFUSED and recorded**, exactly as a halt is.
+
+**SHELVE ONLY WHEN ANOTHER ATTEMPT BUYS NOTHING, and there are TWO situations
+that establish it, never a third.** Owner's ruling, 2026-08-24, widened the same
+day A30 landed, on `[LJ-1.572]`: the first situation named at A30's own landing
+was DELIVERY alone, and it does not cover a real case that reached the maintainer
+within hours.
+
+1. **DELIVERED ELSEWHERE.** The obligation is discharged by a DIFFERENT task's
+   own record: another task's `obligations` line names the same object and its
+   own row closed `go`. `[LJ-1.541]`'s shelve is this shape: `[LJ-1.559]`'s
+   obligation line matches and `[LJ-1.559]` closed GO.
+2. **PROVEN FUTILE.** No task delivered the obligation, but a DIFFERENT task's
+   proof establishes that THIS route to it cannot succeed as a term: not a
+   measured timeout, not a guess, a proof. `[LJ-1.572]`'s shelve is this shape:
+   `[LJ-1.607]` proved the circle blocking `[LJ-1.572]`'s own route unreachable,
+   so retrying `[LJ-1.572]` is not merely unlikely to help, it is settled that it
+   cannot.
+
+Both are yours to judge under AD3, because no row can see either: `matches()`
+reads this task's own acceptance record and never another task's, and neither
+situation is a fact about the task doing the shelving. **`reopen` is required
+either way, and it is what makes a shelve honest.** Name the condition that
+would justify asking for this work again. For situation 2, that is normally
+"a later proof reopens the route `[LJ-1.607]`-equivalent closed", not "try it
+again and see." A shelve with no reopen condition is a drop, and nothing in
+Bedrock is dropped.
+
+**A SHELVED TASK IS NOT DONE AND YOU MUST NEVER WRITE IT AS ONE.** DONE means the
+acceptance test measured it (AD13, R4), and `SHELVED -> DONE` is not a legal
+transition. **The task must be PARKED right now**, or the request is refused by
+name. A shelved task stops occupying a `parked_max` slot and stops appearing in
+the maintainer's batch brief as a task wanting a row; it appears there as a code
+alone. Reversing a shelve is the owner's `pod unshelve`, never yours and never
+automatic.
 
 **A HALT IS NOT AN EMPTY QUEUE, and the two were the same state until that ruling.**
 Queue nothing when there is nothing worth starting or the route waits on a ruling: the

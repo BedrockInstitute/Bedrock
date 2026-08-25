@@ -42,10 +42,11 @@ that channel is the centre of this design.
   the brief guessed.
 
 **NEVER SET `GHCRTS` YOURSELF.** The program sets the caliber on your pane, one caliber
-per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M4g` for both wide and heavy (owner's
-ruling 2026-08-23; was `-M8g` wide and `-M12g` heavy). **Start one Agda process and no
-more.** A number you measure under any other caliber is not comparable, and you must
-never report it as a price.
+per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M2g` for wide, `-A64m -I0 -M4g` for
+heavy (owner's ruling 2026-08-23, second same-day ruling; was `-M8g` wide and `-M12g`
+heavy, then briefly `-M4g` for both between the day's two rulings). **Start one Agda
+process and no more.** A number you measure under any other caliber is not comparable,
+and you must never report it as a price.
 
 **A HEAP WALL IS A SIGNAL TO RESTRUCTURE IN THE SAME DISPATCH, NOT A STOP TO REPORT,
 owner's ruling 2026-08-23.** Split the term, factor out what does not need to be held at
@@ -56,6 +57,18 @@ yet evidence about the term, only about the first shape you wrote. **Rerunning t
 code hoping for a different result is still forbidden**; restructuring the code and
 testing the new shape is not that. This clause left `AGENTS.md` on 2026-08-19,
 because only the slots that run Agda are bound by it.
+
+**ON A HEAVY OBJECT, MEASURE THE FLOOR BEFORE YOU PROVE, AND TRIM THE IMPORTS FIRST.**
+Owner's ruling, 2026-08-23, from a pattern the mathematician measured. `[LJ-1.541]` and
+`[LJ-1.547]` each timed out four times at 1800 s apiece on the same obligation, and the
+term was not the problem: the ELABORATION FRAME was, because every partial pulled in
+facts none of its own rows used. Re-dispatched narrower, at the SAME obligation name,
+both landed cold: `[LJ-1.559]` (`domAt-at-carve`) closed at a 4.12 s floor, `[LJ-1.566]`
+(`injcode-assembled`) at 1.67 s. Before you attempt the real proof of a heavy object,
+first run it with a HOLE standing in for the hard part, to price the floor the frame
+itself costs; then trim the file's imports to the facts your own rows actually use. A
+term that cannot carry even its own floor under caliber is a term whose FRAME is the
+problem, and that is cheaper to find before four 1800-second timeouts than after.
 
 **MEASURED 2026-08-19: this slot had NO reachable path.** Every `head_slot` in
 `dev/pod/table.toml` named `mathematician_adversarial` or `coder_adversarial`, every

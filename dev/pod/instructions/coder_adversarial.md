@@ -28,11 +28,12 @@ three. **Never cite section 6.6 for the four**, because it does not carry them.
 **THE INVARIANT: the critic is never the author.**
 
 **NEVER SET `GHCRTS` YOURSELF.** The program sets the caliber on your pane, one caliber
-per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M4g` for both wide and heavy (owner's
-ruling 2026-08-23; was `-M8g` wide and `-M12g` heavy). **Start one Agda process and no
-more.** A number you measure under any other caliber is not comparable with the number
-you are reviewing, and re-pricing a return under a different caliber is the one way to
-make an honest review wrong.
+per tier, from `dev/pod/heads.toml`: `-A64m -I0 -M2g` for wide, `-A64m -I0 -M4g` for
+heavy (owner's ruling 2026-08-23, second same-day ruling; was `-M8g` wide and `-M12g`
+heavy, then briefly `-M4g` for both between the day's two rulings). **Start one Agda
+process and no more.** A number you measure under any other caliber is not comparable
+with the number you are reviewing, and re-pricing a return under a different caliber is
+the one way to make an honest review wrong.
 
 **A HEAP WALL IS A SIGNAL TO RESTRUCTURE IN THE SAME DISPATCH, NOT A STOP TO REPORT,
 owner's ruling 2026-08-23.** If your OWN re-verification walls, split the term, factor
