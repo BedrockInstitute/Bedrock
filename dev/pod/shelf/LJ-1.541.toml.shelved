@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.541"
+claim = "delivered-elsewhere"
+reason = "LJ-1.541's obligation is `domAt-at-carve` and LJ-1.559 carries the same obligation name and closed GO, so another attempt buys nothing. The two briefs' obligation lines differ only in the probe path: LJ-1.541 names agents/tasks/LJ-1-541/Probe541.agda::domAt-at-carve and LJ-1.559 names agents/tasks/LJ-1-559/Probe559.agda::domAt-at-carve. LJ-1.559 measured its whole chain from nothing at 7.67 s in a trimmed frame, against LJ-1.541's four 1800 s timeouts, and R-42 (written from LJ-1.541's own bisection) explains the difference as a cross-file respelling cost and not a term size. A rewrite of LJ-1.541 as an import-and-bind was dispatched and timed out again at attempt 0, which is why this is a shelve and not a retry."
+evidence = [
+  "agents/tasks/LJ-1-559/Probe559.agda:336",
+  "agents/tasks/LJ-1-559/LJ-1.559.md:33",
+  "agents/tasks/LJ-1-541/LJ-1.541.md:33",
+  "dev/LESSONS.md:4404",
+]
+reopen = "Reopen if a consumer needs `domAt-at-carve` at LJ-1.541's own frame rather than LJ-1.559's trimmed one, and a measurement shows the two frames are not interchangeable at that consumer. R-42 predicts that ascription does not finish, so the reopen condition is a measured counterexample to that prediction, not a wish to try again."
+by = "mathematician"

@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.620"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.620's obligation is `landing-survey` and LJ-1.625 carries the same obligation name and closed `task-lj-1-625-go`, so another attempt buys nothing. The two obligations lines differ only in the probe path: LJ-1.620 names agents/tasks/LJ-1-620/Probe620.agda::landing-survey and LJ-1.625 names agents/tasks/LJ-1-625/Probe625.agda::landing-survey. LJ-1.620 never approached its obligation: witness.py reports `exit 42 inside the probe: Syntax.WrongContentBlock`, 1 UNRESOLVED of 1, probe_red=True, a literate-Agda content-block failure at parse, and its report came back a skeleton whose cells still read `(FILLED)`. LJ-1.625 was queued as its continuation, took its one real finding forward (ingredient (i)'s import cycle, which I verified at source), and delivered the full survey: all four class-pred ingredients sited, three of them needing no new import lines, with ingredient (ii) named cheapest. This shelve is NOT part of the WIDE-cap tier question: LJ-1.620's scope names no src/ path at all, so it never touched the whole-tree conjunct that walled LJ-1.599, LJ-1.616, LJ-1.624 and LJ-1.626."
+evidence = [
+  "agents/tasks/LJ-1-625/LJ-1.625.md:42",
+  "agents/tasks/LJ-1-620/LJ-1.620.md:42",
+  "agents/tasks/LJ-1-625/lj-1.625-report.md:1",
+  "agents/tasks/LJ-1-620/lj-1.620-report.md:36",
+]
+reopen = "Reopen if a consumer needs the survey at LJ-1.620's own frame rather than LJ-1.625's, or if LJ-1.625's siting of an ingredient is refuted by a landing attempt. LJ-1.626 is the first test of that siting; if it shows ingredient (ii)'s host is wrong, the survey is reopened by that measurement and not by a wish to re-run it."
+by = "mathematician"

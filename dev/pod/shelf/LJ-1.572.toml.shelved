@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.572"
+claim = "proven-futile"
+reason = "Situation 2, on the owner's ruling of 2026-08-24 that widened A30 the day it landed. No task delivered LJ-1.572's obligation: `b9-g-is-definable` appears in exactly one file in the tree, its own Probe572.agda. What settles it is a different task's PROOF. LJ-1.572 itself measured, by refl at every hop, that stage-card-upper is `∈-induction step`, that step's body is limit-step, that limit-step counts through `Bound α oα infα (sq α α∈suc infα)`, and that `sq` is a bare module parameter carrying injectivity and nothing else: no formula, no isL, no stage, no grade. LJ-1.607 then proved the blocking circle AS A TERM: `the-circle` shows the untruncation composed with the held supply is `SqParam α₀` itself, so the untruncation is not a way around the square law but the square law under another type, and the one route that could detach it reduces to a bridge the tree's generators cannot build. Retrying LJ-1.572 is therefore not unlikely to help; it is settled that it cannot succeed by this route. LJ-1.572's own report states the limit exactly and I keep it: this is evidence about the tree, not a truth statement about set theory, and a definable `sq` would make the obligation true."
+evidence = [
+  "agents/tasks/LJ-1-572/LJ-1.572.md:42",
+  "agents/tasks/LJ-1-572/review-of-b9-g-definable.md:116",
+  "agents/tasks/LJ-1-607/lj-1.607-report.md:173",
+  "src/L/StageCardinal.lagda.md:17",
+]
+reopen = "Reopen if a later proof reopens the route LJ-1.607 closed: specifically, if the untruncation of the band's data payload is delivered without being `SqParam α₀` under another type, or if `sq` is given a formula so that `Def` at B9's `g` becomes reachable. LJ-1.617 and LJ-1.618 are testing whether the bill ever demands the band grain at all; if either shows the site grain suffices and a pairing lands there, that is the reopen condition met. Not 'try it again and see'."
+by = "mathematician"

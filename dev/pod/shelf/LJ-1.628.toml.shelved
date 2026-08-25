@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.628"
+claim = "delivered-elsewhere"
+reason = "Situation 1, with one honest difference from the clause's worked example that I state rather than paper over. LJ-1.628's obligation is `src/L/Constructible.lagda.md::class-pred-i`, and that exact term is IN THE MAIN TREE at src/L/Constructible.lagda.md:314-317, committed as 3fb69c02. So another attempt buys nothing. THE DIFFERENCE: A30's situation 1 names discharge by a DIFFERENT TASK'S OWN RECORD, another task's obligations line closing go. Here the discharge is by a COMMIT. The maintainer copied LJ-1.628's own worktree content, byte-identical to what its coder had verified, into the main tree under explicit owner authorization, because the content heap-walled HEAVY even warm (166.5 s, 4.38 GiB) and needed a maintainer-only 8 GB run to pass (exit 0, 192.31 s). The content is the task's own; only the route into the tree was not the task's row. I judge that delivery in the only sense that matters for `another attempt buys nothing`, and I flag the shape rather than ask for the clause to be widened. The redispatch after the loop resumed heap-walled again at HEAVY, which is the predicted outcome and not new information: L.Constructible carries 71 dependents by `grep -rl \"import L.Constructible\" src/`, against 2 for the host that landed inside a fifth of WIDE's cap."
+evidence = [
+  "src/L/Constructible.lagda.md:314",
+  "agents/tasks/LJ-1-628/LJ-1.628.md:42",
+  "agents/tasks/LJ-1-625/lj-1.625-report.md:1",
+  "src/L/StageCardinal.lagda.md:271",
+]
+reopen = "Reopen if the landed row at src/L/Constructible.lagda.md:314 is reverted or renamed, or if a consumer needs ingredient (i) at a frame the landed row does not serve. Note that a reopen would inherit the cost that caused this park: at 71 dependents the host walls HEAVY, so any reopened attempt needs the tier question answered first and is not a matter of re-running it."
+by = "mathematician"
