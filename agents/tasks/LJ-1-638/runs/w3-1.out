@@ -1,0 +1,27 @@
+wallcap=120s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T16:59:06Z
+Checking LJ-1-638.runs.C3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-638/agents/tasks/LJ-1-638/runs/C3.agda).
+ Checking LJ-1-629.Probe629 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-638/agents/tasks/LJ-1-629/Probe629.agda).
+  Checking L.BoundedSubset (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-638/src/L/BoundedSubset.lagda.md).
+  Checking LJ-1-629.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-638/agents/tasks/LJ-1-629/runs/W3.agda).
+       24.95 real        24.15 user         0.54 sys
+          2284683264  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              138608  page reclaims
+                2902  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 692  voluntary context switches
+                5231  involuntary context switches
+        325771310574  instructions retired
+         98555308877  cycles elapsed
+          2224195720  peak memory footprint
+EXIT=0
+ended 2026-08-25T16:59:31Z
