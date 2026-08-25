@@ -3317,11 +3317,14 @@ author and not only a checker.
 
 **The derivation reproduces the ruled figures exactly.** The surface is
 `src/Landmarks.lagda.md` plus one file per `open import` in its fences. A bare
-`import M` is excluded. Verified today at `src/Landmarks.lagda.md:21-29`, with
-in-fence lines: `Landmarks` 19 (root), `Base/Prelude` 28, `Base/Impredicativity`
-14, `Base/Classical` 59, `Base/Choice` 84, `V/Hierarchy` 44, `FOL/ZFModel` 89 and
-`L/Constructible` 162. That is **499 lines over 8 files**, which reproduces the
-ruled figures to the line. `V/Model` (285, `:28`) and `L/Model` (35, `:29`) are
+`import M` is excluded. Verified 2026-08-19 at `src/Landmarks.lagda.md:21-29`,
+with in-fence lines: `Landmarks` 19 (root), `Base/Prelude` 28,
+`Base/Impredicativity` 14, `Base/Classical` 59, `Base/Choice` 84, `V/Hierarchy`
+44, `FOL/ZFModel` 89 and `L/Constructible` 162, for 499 lines over 8 files.
+**RE-VERIFIED 2026-08-25 after `[LJ-1.628]`'s owner-approved `class-pred-i`**
+(`3fb69c02`): `L/Constructible` grew to 171, the other seven files unchanged,
+for **508 lines over the same 8 files**, which is what the derivation reproduces
+today. `V/Model` (285, `:28`) and `L/Model` (35, `:29`) are
 bare imports and are excluded; one audit counted all 9 and reported 819 lines as
 a mismatch. The two bare imports hold the PROOFS, and `src/Landmarks.lagda.md:77`
 reads `L⊨ZFC = L.Model.L⊨ZFC`, so a signature change there fails to typecheck.
