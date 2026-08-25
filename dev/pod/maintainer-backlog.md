@@ -182,6 +182,43 @@ mathematician's.**
 **NOT FIXED HERE.** Documented for the owner's ruling on which of the three,
 or another shape, `verification_target()` should take.
 
+**SECOND SITE, MEASURED ON `[LJ-1.643]`, 2026-08-26. DIAGNOSED BY pod-math,
+VERIFIED HERE.** Not a heap wall this time, a floor-measurement diagnostic:
+`agents/tasks/LJ-1-643/runs/accept-1.out`'s `runs_all` is `[{"rc": 0, "target":
+".../Probe643.agda"}, {"rc": 42, "target": ".../runs/Floor.agda"}]`. The
+deliverable typechecked clean; `runs/Floor.agda`, the coder's own floor
+measurement with standing interaction holes, is what conjunct 1 stopped on.
+`obligations_delta -1`, `obligations_open 0`: the census term `amb-card-supply`
+(`agents/tasks/LJ-1-643/Probe643.agda:126`) was genuinely delivered.
+
+**ONE LAYER DEEPER THAN LJ-1.636's SIGHTING, and this part IS a routing
+question.** `dev/pod/table.toml`'s `task-lj-1-643-go` row (`[row.when] exit_code
+= 0, obligations_delta_max = -1, heap_wall = false`) matched on every term
+except `exit_code`, which conjunct 1's target contamination set to `42` instead
+of `0`. A genuinely delivered obligation therefore fell through to
+`task-lj-1-643-no-go-attacked` (`exit_code = 42`), which dispatched a critic to
+attack a NO-GO nobody stated. Four attempts and a separate `sys-lint-accept`
+loop later (item 35, the SAME task), the task parked at `attempt_max`, never
+having had a chance to close on its own delivered result.
+`dev/pod/replay-corpus.jsonl` already routed FIVE records for this task,
+`provenance: "live"` throughout: `c-4118` on `task-lj-1-643-no-go-attacked`
+itself (attempt 1, the exact misroute), and `c-4123`/`c-4128`/`c-4133`/`c-4138`
+on `sys-lint-accept` (attempts 2 through the `attempt_max` park). Same R3/AD10
+lock as `LJ-1.636`: a normal batch proposal cannot reroute any of these five
+records, whatever the fix.
+
+**pod-math NAMES THE TASK-SCOPED TEMPLATE AS THEIR OWN PART** (`task-lj-1-643-go`
+requiring `exit_code = 0` rather than reading `obligations_delta`/
+`obligations_open` alone) **and declines to guess at the fix**, calling both the
+go-row template and the conjunct-1 scope change (item 33 above) "rule-home
+questions." Agreed: neither is a mechanical row transcription (AD2) and both
+change behaviour for every future task, not just this one. `[LJ-1.644]` is
+queued (`dev/pod/queue.toml:6162`) carrying the mathematical result forward
+regardless of how `[LJ-1.643]` itself is resolved. **NOT FIXED HERE. NOT
+RESUMED HERE**: a PARKED-at-`attempt_max` task does not reopen on its own, and
+reopening one is the owner's word every time, not a maintainer judgement call,
+however clean the evidence.
+
 **NOT MINE, FOUND BY A DISPATCHED AGENT, VERIFIED HERE.** `ROOT =
 Path("/Users/alsg/Agentic/Bedrock")` is a literal, not a `Path(__file__)`
 derivation. `test_pod_launcher.py` reads `mod.STATE`/`mod.LOGS` off that
