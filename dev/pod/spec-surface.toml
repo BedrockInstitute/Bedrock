@@ -5,8 +5,8 @@
 
 derived_from = "src/Landmarks.lagda.md"
 derivation = "src/Landmarks.lagda.md plus one file per `open import` in its fences; a bare `import M` is excluded"
-generated = "2026-08-23"
-lines = 499  # provenance only; it is never compared
+generated = "2026-08-25"
+lines = 508  # provenance only; it is never compared
 files = [
   "src/Landmarks.lagda.md",
   "src/Base/Prelude.lagda.md",
@@ -1163,6 +1163,12 @@ file = "src/L/Constructible.lagda.md"
 name = "𝒟ₒ-inv"
 text = "𝒟ₒ-inv : (A x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩ → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁"
 sha = "588ea08425032a1d875f640aeb63abd14e5f0ac6014c28436ad17d6c204cff1a"
+
+[[declaration]]
+file = "src/L/Constructible.lagda.md"
+name = "class-pred-i"
+text = "class-pred-i : Σ[ D ∈ ((δ : S) → Formula ⟪ Lset δ ⟫ 1 → S) ] ((δ : S) (y : S) → ⟨ y ∈ˢ 𝒟ₒ (Lset δ) ⟩ → ∥ Σ[ φ₀ ∈ Formula ⟪ Lset δ ⟫ 1 ] (D δ φ₀ ≡ y) ∥₁)"
+sha = "55146c15cc761037a6a3b71676fdf4699fb2f59dc08b622a5f03b1297a34a910"
 
 [[declaration]]
 file = "src/L/Constructible.lagda.md"
