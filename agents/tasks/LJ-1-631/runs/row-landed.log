@@ -1,0 +1,19 @@
+Checking L.Choice.Faithful (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-631/src/L/Choice/Faithful.lagda.md).
+        3.85 real         3.58 user         0.19 sys
+           596410368  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37887  page reclaims
+                 256  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 235  voluntary context switches
+                 924  involuntary context switches
+         47220966468  instructions retired
+         14697825160  cycles elapsed
+           536036312  peak memory footprint
