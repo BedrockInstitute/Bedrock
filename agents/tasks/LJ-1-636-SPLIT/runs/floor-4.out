@@ -1,0 +1,24 @@
+wallcap=900s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T18:02:00Z
+Checking LJ-1-636-SPLIT.runs.Floor (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-636-SPLIT/agents/tasks/LJ-1-636-SPLIT/runs/Floor.agda).
+        7.48 real         7.12 user         0.33 sys
+          1652539392  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              102847  page reclaims
+                  81  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                2203  involuntary context switches
+         87361694074  instructions retired
+         29871029026  cycles elapsed
+          1593657024  peak memory footprint
+EXIT=0
+ended 2026-08-25T18:02:08Z
