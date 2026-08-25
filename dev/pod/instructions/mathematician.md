@@ -46,6 +46,33 @@ task.
 **A brief that names no file and no statement gives the coder nothing to answer with,
 and its report then tells you nothing.** That is the one way to break this channel.
 
+**TWO GREPS BEFORE ANY BRIEF THAT TOUCHES `src/` OR ORDERS HEAVY AGDA. BOTH ARE
+FREE AND BOTH ARE MANDATORY.** Owner's ruling, 2026-08-25, on a measured cost.
+
+1. **THE HOST'S DEPENDENT COUNT.** `grep -rl "import <host>" src/ | wc -l`, for
+   whatever chapter the term would live in. It predicts the landing's caliber and
+   the import-edge count does not. **Measured:** `L.Constructible` at 71
+   dependents heap-walled HEAVY warm at 4.38 GiB and needed a manual 8 GB run;
+   `L.StageCardinal` at 2 landed inside a fifth of WIDE's cap. `[LJ-1.625]` had
+   sited four rows by IMPORT EDGES ADDED, all zero or one token, and that number
+   predicted nothing. **Put the count in the brief and set `agda_tier` from it.**
+2. **THE TARGET'S EXISTING SUPPLY.** Grep the tree for the object before funding
+   its construction. **Measured:** `[LJ-1.560]`'s obligation turned out to be an
+   INSTANTIATION of something already in `src/`; `via-col-square` PROVES the
+   square law at the initial ordinals while four dispatches went at it as though
+   the tree only assumed it; and `archive/dev/LJ-dispatch-index.md:212` records a
+   cure whose code does not survive anywhere, so a recorded claim is not a term.
+
+**WHAT THESE TWO COST AND WHAT THEY SAVE.** They cost two `grep` invocations.
+Not paying them cost this campaign five landing attempts against one cap that a
+single direct measurement of `src/Everything.lagda.md` exposed, and three tasks
+burning four 1800 s timeouts each on obligations that a trimmed frame finished
+in 7.67 s and 9.66 s. **Every dispatch and every probe line is real spend; these
+two greps are the cheapest thing you can buy and you buy them first.**
+
+**Never conclude a count from a command containing `head`.** Write the number you
+measured into the brief, so the coder can refute it.
+
 **THINK SEVERAL MOVES AHEAD. ONE DISPATCH OF YOURS CARRIES FOUR OR FIVE CODER TASKS.**
 Owner's ruling, 2026-08-19. Plan a line of attack the way an opening is planned: see
 where move four lands before you play move one, then write the whole sequence.
