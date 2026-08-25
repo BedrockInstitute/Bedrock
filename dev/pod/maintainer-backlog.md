@@ -19,6 +19,38 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 31. Three `PROGRAM_WRITES_PREFIX` paths were exempted from `scope` on the assumption something commits them. Nothing did. FIXED 2026-08-25, GAP OPEN
+
+**LANDED, `7c0bf58b`. FOUND WHILE REVIEWING A POD-REFILL, NOT WHILE LOOKING FOR
+IT.** `dev/pod/queue.toml`, `dev/pod/replay-corpus.jsonl` and
+`dev/pod/transitions/2026-08.jsonl` were all last committed 2026-08-19 (`212cfe2`
+/ `34a8780`). The corpus was 19 of 865 lines committed (846 missing, 98 percent);
+the transition log 157 of 4037 (3880 missing, 96 percent). **Six days of the
+entire LJ-1 campaign's replay record and dispatch history, at risk on one
+machine with no cloud backup** (pCloud sync stopped 2026-08-19 and stays off,
+per the owner's own ruling). All three parse cleanly (0 malformed JSONL lines,
+valid TOML), so nothing was torn; it was simply never landed.
+
+**WHY THE SCOPE CHECK NEVER CAUGHT IT.** `PROGRAM_WRITES_PREFIX`
+(`scripts/pod/pod.py:169-188`) exempts these paths from
+`maintainer_scope_ok()` on the premise that SOMETHING ELSE commits them,
+matching the pattern item 29 already names for the wider tree. Checked the
+other four members of the same list: `dev/pod/table.toml` IS committed
+correctly (`admit_rows()` calls `git_commit()` directly, last commit today),
+`agents/tasks/POD-BATCH/` and `archive/dev/direction/` are now clean (landed
+in today's earlier catch-up, `447f125b`/`33a526b6`). **So the gap was exactly
+these three, and nothing in `scripts/pod/` ever calls `git_commit()` on any of
+them.**
+
+**NOT REPAIRED IN CODE.** Whether the right cure is a periodic auto-commit
+inside the loop (and at what cadence, given `transitions/` grows every state
+change) or a standing maintainer habit (grep this trio's `git log -1` dates
+at the start of a session) is a design question for the owner, not mine to
+decide unilaterally. **The next occurrence of this gap will look identical:
+check `git log -1 -- dev/pod/queue.toml dev/pod/replay-corpus.jsonl
+dev/pod/transitions/*.jsonl` periodically rather than assuming
+`PROGRAM_WRITES_PREFIX` means committed.**
+
 ### 30. A real NO-GO landing with no companion artifact matches neither task-scoped NO-GO branch. PARKED NOW on LJ-1.630, MEASURED 2026-08-25
 
 **NOT A PROGRAM DEFECT: the routing mechanism worked correctly.** `_hits()`/`_route()`
