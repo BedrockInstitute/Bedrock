@@ -19,6 +19,64 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 29. `maintainer_scope_ok()` has no BEFORE snapshot, so long-standing ambient drift refuses every batch on `scope`. MEASURED 2026-08-25
+
+**FOUND WHILE REVIEWING A POD-REVIEW, NOT WHILE LOOKING FOR IT.** My own batch
+`dev/pod/proposals/20260825-193112.toml` (0 rows, reasoned) was refused with
+verdict `scope` at `dev/pod/transitions/2026-08.jsonl` seq 3998, one minute
+after I wrote it. I did not know until I later grepped the log for an
+unrelated review. A 0-row batch losing to this costs nothing; a batch that
+proposes real rows does not.
+
+**THE ROOT CAUSE IS STRUCTURAL, NOT A MISSING EXCLUSION.**
+`side_scope_report()` (for the refill and the resident mathematician) takes a
+snapshot at DISPATCH and diffs it at RETURN (backlog item 10's whole fix).
+`maintainer_scope_ok()`, `scripts/pod/pod.py:3542`, takes NO before-snapshot
+at all: it calls `facts_mod._status_paths(root)` fresh and flags every path
+outside a static allowlist (the proposal itself, `PROGRAM_WRITES_PREFIX`,
+a retired-proposal suffix, `agents/tasks/`). Every OTHER path already dirty
+in the tree, however old and however unrelated to this batch, reads as this
+batch's stray write.
+
+**THE DIRT IS REAL AND OLD, NOT THIS SESSION'S.** The mathematician's own
+2026-08-25 session-start report said it plainly: "I changed no file and I
+created no file. The 1447 paths that git status --porcelain reports were
+there before this session started." My batch's refusal named 20 of them:
+`Makefile`, `agents/README.md`, `dev/build-manifest.toml`,
+`dev/pod/README.md`, `dev/pod/heads.toml`, `dev/pod/maintainer-backlog.md`,
+`scripts/README.md`, `scripts/gate/check-omlx-quiet.py`,
+`scripts/ops/agda-watchdog.sh`, `scripts/ops/omlx-watchdog.sh`, and eight
+`scripts/pod/*.py` files (`dev/LESSONS.md` was on the same list; I have
+since committed it, `4b6c8054`). None of these is `PROGRAM_WRITES_PREFIX`,
+none is under `agents/tasks/`, and I did not write any of them in that
+batch.
+
+**THIS HAS COST REAL ROWS, NOT ONLY EMPTY ONES.** `grep -c '\[\[row\]\]'`
+over every retired `*.toml.scope` proposal: 9 carried real rows (1 or 2
+each), including `dev/pod/proposals/20260819-150740.toml.scope`
+(`sys-lint-accept`, a system row now live in the table under a LATER,
+successful proposal) and `dev/pod/proposals/20260821-102037.toml.scope`
+(`task-lj-1-440-stop-stated`, `task-lj-1-444-stop-stated`, item 20's own
+fix, which the backlog records as later proven in the field: meaning it
+too was re-proposed successfully afterward). **Nothing named here is
+provably lost for good**, because the same content can be, and evidently
+was, resubmitted until it landed on a moment the tree happened to be
+scope-clean. What is lost is the SIGNAL: a refused batch looks identical to
+an empty one from the maintainer's own seat, unless the maintainer thinks to
+grep the transition log for its own proposal's fate. `75` of the historical
+proposals under `dev/pod/proposals/` carry verdict `scope`, against 5
+`admitted`.
+
+**NOT REPAIRED HERE.** Two different cures fit and they are not the same
+decision: (a) give `maintainer_scope_ok()` a before-snapshot the way
+`side_scope_report()` has one, so only paths that changed DURING this
+batch's own window count against it; or (b) commit the 20 standing dirty
+paths so the tree is actually clean, which is a judgement call about
+WHOSE in-progress work they are and whether it is safe to land, not a
+mechanical fix. I have not read what changed in those 20 files and will
+not guess. Whichever the owner prefers, the next maintainer batch should
+read this item before assuming a `scope` refusal names ITS OWN write.
+
 ### 26. `heap-wall-escalate`, another branch the MATHEMATICIAN wrote, loops on a resource fact. TEMPLATE FIXED 2026-08-22
 
 **SECOND DEFECT OF THE SAME SHAPE AS ITEM 24, IN THE SAME TEMPLATE.** Found
@@ -995,13 +1053,19 @@ Raised by the mathematician, 2026-08-23. **Evidence, not a proposal.**
 39 paths**, including `Probe541.agda`, `lj-1.541-report.md` and a seven-file
 bisection `BisA.agda` to `BisG.agda` with their `.out` files.
 
-**None of them is in the tree.** `agents/tasks/LJ-1-541/` holds the brief and
+**None of them is in the MAIN tree.** `agents/tasks/LJ-1-541/` holds the brief and
 four review briefs, and `agents/tasks/LJ-1-541/runs/` is EMPTY. `[LJ-1.547]`
 closed the same way.
 
-**What was lost is not the proof, which did not finish. It is the BISECTION**,
-which is exactly the measurement a successor needs and which cost five attempts
-to produce. `[LJ-1.559]` now starts cold and re-measures the floor.
+**CORRECTION, 2026-08-23: they were never lost.** The worktree is one per task
+code and is reused across attempts, so the files survived in
+`.pod-state/worktrees/`; what was missing was the salvage. The maintainer's fix
+now salvages, restricted to the task home, at the `attempt_max` park.
+
+**What did not reach the main tree is not the proof, which did not finish. It
+is the BISECTION**, which is exactly the measurement a successor needs and
+which cost five attempts to produce. `[LJ-1.559]` now starts cold and
+re-measures the floor.
 
 **No repair is proposed here** because the commit rule is R8 and the owner's:
 the program commits by explicit path from the task's scope, and a parked task
