@@ -46,6 +46,63 @@ task.
 **A brief that names no file and no statement gives the coder nothing to answer with,
 and its report then tells you nothing.** That is the one way to break this channel.
 
+**A BRIEF IS A MATHS PROBLEM, AND THE DIFFICULTY IS NEVER IN THE LENGTH OF THE
+STATEMENT.** Owner's ruling, 2026-08-25. **Keep the difficulty. Make the
+statement PRECISE, and precise is SHORT.** A long brief is not a hard problem.
+It is a badly stated one.
+
+**MEASURED over the 245 briefs of this campaign, on the date of this ruling.**
+The median brief is 14,069 B. The program writes a mean 6,165 B of that
+(`## LAWS`, `## ARCHIVE`, `## LITERATURE`, `## YOUR ROLE`), so about 7,900 B is
+mine. Of my share the largest section is `## THE REASONING`, mean 2,007 B,
+against `## THE OBLIGATION` at mean 1,315 B. **The argument for the problem was
+half again the size of the problem.** That is the defect this clause closes.
+
+**A BRIEF SAYS THREE THINGS AND IT SAYS NOTHING ELSE.**
+
+1. **THE TYPE TO BE BUILT.** Written out in Agda, with its binders. Never
+   described in prose when it can be written.
+2. **THE FACTS IT MAY USE**, each at `file:line`, with the line quoted when the
+   line is what carries the fact.
+3. **WHAT COUNTS AS DONE**: the obligation name, the scope, the branches.
+
+A sentence that is none of the three is cut. **`## THE REASONING` is one
+paragraph and it answers ONE question: why this obligation and not its
+neighbour.** It never argues that the task matters, never recites what earlier
+tasks found, and never persuades. **A coder who has to be persuaded has been
+given the wrong problem.**
+
+**THE CEILINGS ARE MINE AND NO GATE READS THEM.** The program has no token
+accounting: `grep -rn 'tokens' scripts/pod/*.py` hits only `retrieve.py`'s
+text-scoring and unrelated comments. Enforcement is that I write the arithmetic
+into the brief, where the coder can refute it.
+
+- **The prose I write, excluding `## BRANCHES`: 4,000 B.** `## BRANCHES` is a
+  table the program parses, and it is exempt.
+- **`## THE REASONING`: 800 B.**
+- **`context_budget:`, the NAMED READING: 60k tokens**, at 4 B per token, which
+  is an approximation and is marked as one wherever it is written. Named reading
+  is the preamble, the brief, every `src/` master referenced with no line
+  anchor, and every predecessor report or probe the brief names. MEASURED across
+  the same 245 briefs: median 36k, p90 68k, and **FOUR above 130k before the
+  agent wrote one line**, each of them a single bare reference to
+  `src/L/Condensation.lagda.md` (405,464 B, about 101k tokens).
+
+**TWO RULES CARRY THAT BUDGET.**
+
+- **Never reference a `src/` master over 40 kB without `:start-end`.** Give the
+  line range and the term name. 275 of the 2,098 `src/` references in this
+  campaign's briefs are bare, and 37 briefs carry a bare reference to a master
+  over 40 kB.
+- **Name at most THREE predecessor tasks, each at a report SECTION or a line
+  range, never at a directory.** The median brief named 4 and the widest named
+  8. Of the 42 briefs over 60k, the predecessor chain is the driver in 34 and a
+  bare master in 8.
+
+**A BUDGET OVER THE CEILING MEANS THE OBLIGATION IS MORE THAN ONE OBLIGATION:
+split it.** Never shrink the citation list to fit, because that buys the number
+by making the problem less precise, which is the opposite of this clause.
+
 **TWO GREPS BEFORE ANY BRIEF THAT TOUCHES `src/` OR ORDERS HEAVY AGDA. BOTH ARE
 FREE AND BOTH ARE MANDATORY.** Owner's ruling, 2026-08-25, on a measured cost.
 
