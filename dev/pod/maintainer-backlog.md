@@ -19,6 +19,58 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 34. `split_entry()` appended a lowercase suffix; `agents_tree.normalise()` uppercases the whole code. FIXED 2026-08-26
+
+**MEASURED WHILE REVIEWING `[LJ-1.636-split]` -> DONE, NOT WHILE LOOKING FOR
+IT.** `split_entry()` (`scripts/pod/pod.py:1192`, before this fix) built the
+split-descendant's code as `t.code + "-split"`, lowercase. `agents_tree.normalise()`
+(`scripts/agents_tree.py:86-88`) uppercases the WHOLE code to build a task's home
+directory, and that function is the ONE thing every home-directory computation in
+`scripts/pod/pod.py` and `scripts/pod/facts.py` goes through: `worktree_of()`, the
+`home` prefix in `changed_files_scoped()` (fact 4) and `verification_target()`
+(conjunct 1's targets), the salvage paths in `apply()`. For a code with no lowercase
+letters this is a no-op; `-split` is the first suffix ever appended that has one.
+
+**MEASURED, NOT HYPOTHETICAL.** `agents/tasks/LJ-1-636-split/runs/accept-1.out`:
+every path in `changed_files` and every target in `runs_all` reads
+`agents/tasks/LJ-1-636-SPLIT/...`, uppercase throughout, while the mathematician's
+own brief (`agents/tasks/LJ-1-636-split/LJ-1.636-split.md:23-27`, `## SCOPE
+(write)`) and the files actually landed in the main tree
+(`agents/tasks/LJ-1-636-split/`, confirmed by `ls`) are lowercase. The task still
+graded correctly (`exit 0`, `obligations_delta -1`, a real Agda run against
+`ProbeSplit.agda`) only because this machine's filesystem (macOS/APFS) folds case
+for a path lookup, so the mismatched string still resolved to the right file.
+
+**WHAT IT WOULD COST ON A CASE-SENSITIVE FILESYSTEM.** `verification_target()`'s
+`probes` filter (`scripts/pod/facts.py:520-524`) matches on `p.startswith(home)`; a
+`home` that never matches any actual path returns an empty target list, which is
+conjunct 1 going VACUOUS (case 4: no Agda process starts, the record passes as
+though nothing needed checking) on a task nobody actually typechecked. Or fact 4
+(`changed_files_scoped()`) comes back with nothing in scope, which R7 reads as
+`no-change` and parks a task that delivered real work. Neither is hypothetical
+severity: this is exactly the failure class `run_acceptance()`'s own docstring
+names as the reason R7 exists (a half-record with a guessed exit code licenses a
+row no evidence supports).
+
+**FIXED: `split_entry()` now appends `-SPLIT`, uppercase**, so
+`normalise(code)` is a no-op on its own output and the home directory the program
+computes matches the one everything else (the brief, the landed files) already
+uses. Narrow fix, on purpose: `agents_tree.normalise()` itself is untouched,
+because it is load-bearing everywhere else and every existing code is already
+all-uppercase by convention, so widening the fix there would touch far more than
+the one place that actually introduced lowercase letters. Verified: all 9
+pod-relevant suites green after the change (`test_pod_loop`, `test_pod_digest`,
+`test_pod_launcher` 268 checks, `test_pod_facts`, `test_pod_gates`, `test_pod_table`,
+`test_pod_keeper`, `test_territory`, `test_omlx_quiet`); the fixture tests that use
+a literal `"...-split"` string (`test_pod_loop.py:490,4261`,
+`test_pod_digest.py:159`) construct a synthetic queue entry directly and never call
+`split_entry()`, so they were unaffected and needed no edit.
+
+**NOT RETROACTIVE, AND THAT IS CORRECT.** `[LJ-1.636-split]` itself keeps its
+lowercase code: it already closed DONE, its corpus record is frozen, and renaming a
+closed task's code now would be pure churn with no correctness gain. Only future
+`park_and_split` descendants get the fixed casing.
+
 ### 33. Conjunct 1 verifies a coder's own heap-wall EVIDENCE, so obeying two live rules at once guarantees a park. DIAGNOSED BY pod-math, VERIFIED HERE, MEASURED on LJ-1.636, 2026-08-26
 
 **TWO RULES, EACH CORRECT ALONE, COLLIDE.** `dev/pod/instructions/coder.md:51-58`

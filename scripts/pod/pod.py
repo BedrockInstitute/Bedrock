@@ -1194,9 +1194,23 @@ def split_entry(t, rec):
 
     An entry with no `brief` is never a task: rule (a1) skips it and the digest prints it
     until the mathematician adds the brief path. The program never writes a brief (AD3).
+
+    **THE SUFFIX IS `-SPLIT`, UPPERCASE, AND THAT IS NOT COSMETIC.**
+    `agents_tree.normalise()` (`scripts/agents_tree.py:86-88`) uppercases the WHOLE code
+    to build a task's home directory, and every home-directory computation in this file
+    (`worktree_of()`, `home` in `changed_files_scoped()`/`verification_target()`,
+    `apply()`'s salvage paths) goes through it. A lowercase suffix here produces a code
+    whose normalised home (`LJ-1-636-SPLIT`) does not match the lowercase path the
+    mathematician's own brief and the landed files actually use (`LJ-1-636-split`).
+    MEASURED on `[LJ-1.636-split]`, 2026-08-26: `accept-1.out`'s `changed_files` and
+    `runs_all` targets are the UPPERCASE form throughout, silently correct only because
+    this machine's filesystem folds case for a lookup. On a case-sensitive filesystem the
+    same mismatch would make `verification_target()`'s `probes` filter match nothing,
+    which is conjunct 1 going VACUOUS on a task that was never actually typechecked, or
+    make fact 4 empty, which R7 reads as `no-change`. Backlog item 34.
     """
     f = (rec or {}).get("facts", {})
-    return {"code": t.code + "-split", "split_of": t.code,
+    return {"code": t.code + "-SPLIT", "split_of": t.code,
             "reason": f"park_and_split: error_class {f.get('error_class')}, "
                       f"{len(f.get('changed_files') or [])} changed files",
             "added": datetime.date.today(), "added_by": "maintainer"}
