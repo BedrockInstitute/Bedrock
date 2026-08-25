@@ -428,22 +428,21 @@ system_free_floor_pct = 8     # C-12's floor, unchanged -- unrelated to the per-
 # an array, the first head is spent first and the rest are what A29 retries on.
 #
 # DD25 SURVIVES AS A SET INVARIANT: NO model of an author slot is a model of its
-# critic. Three slots carry a choice now, so the check is pairwise over sets and
-# `scripts/tests/test_pod_launcher.py` AND `scripts/tests/test_pod_loop.py` run it
-# on the three author/critic pairs. OWNER'S RULING 2026-08-23 WAIVED ONE PAIR:
-# `coder` and `mathematician_adversarial` now both carry `glm-5.3` (qwen's own
-# fallback moved there the same day glm-5.3 left `mathematician_adversarial`'s
-# sibling `coder_adversarial`), so that ONE pair's check is an explicit, dated
-# exception in both test files rather than a silent hole. The other two pairs
-# still hold with no exception: `mathematician` {claude-opus-5} meets neither
-# `mathematician_adversarial` {grok-4.6, glm-5.3} nor is `coder`
-# {Qwen3.8-27B-oQ4e-mtp, glm-5.3} met by `coder_adversarial` {grok-4.6,
-# claude-opus-5}.
-# **`claude-opus-5` IS IN TWO SLOTS AND THAT IS STILL NOT A COLLISION**, though
-# which two slots changed the same ruling: it is the whole of `mathematician`
-# (author) and `coder_adversarial`'s own second head (critic OF CODER, never of
-# mathematician). The invariant forbids an author reviewing its own work; this
-# model reviews a DIFFERENT author's.
+# critic. Checked over the TWO author/critic PAIRS this file has,
+# (mathematician, mathematician_adversarial) and (coder, coder_adversarial),
+# never over a slot count: three slots below carry an array of models, which
+# is a different fact (A29's retry needs somewhere to go) and not a pair count.
+#
+# **THIS PARAGRAPH USED TO NAME A WAIVED PAIR AND A SPECIFIC ASSIGNMENT, AND
+# BOTH WENT STALE THE SAME DAY THEY WERE WRITTEN, CORRECTED 2026-08-25.** A
+# waiver recorded WHICH model sat in WHICH slot, so the very next re-pointing
+# ruling made it wrong; `coder`'s own comment below has today's assignment and
+# is the one to read for current state. **`scripts/tests/test_pod_launcher.py`
+# and `scripts/tests/test_pod_loop.py` now derive the pair check, the model
+# caps and the resident-slot check from THIS FILE'S OWN LIVE CONTENT** (a
+# `heads_text_rows()`/`render_row()` mechanism replaces every literal that
+# named a model), so a future re-pointing needs no edit to either test file as
+# long as the five slot names, the two pairs and the schema stay the same.
 mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
 # **TWO HEADS SINCE 2026-08-21, REORDERED 2026-08-22: `grok-4.6` first and
 # `glm-5.3` behind it.** Both carry `max_concurrency = 1`, owner's ruling

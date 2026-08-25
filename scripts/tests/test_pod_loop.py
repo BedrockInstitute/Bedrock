@@ -49,6 +49,7 @@ import sys
 import tempfile
 import textwrap
 import time
+import tomllib
 import types
 import pathlib
 import unittest
@@ -274,6 +275,13 @@ class LoopCase(unittest.TestCase):
                 "## SCOPE (write)\nreport\n\n## ARCHIVE\nnone\n\n"
                 "## LITERATURE\nnone\n")
         (tmp / ".pod-state" / "logs").mkdir(parents=True, exist_ok=True)
+
+    def heads_path(self):
+        """The fixture's OWN copy of `dev/pod/heads.toml`, which `build_tree()` takes
+        from the live file. Every expectation about heads in this suite is read back
+        from here, so an owner ruling that re-points a slot needs no edit in this file.
+        """
+        return self.tmp / "dev" / "pod" / "heads.toml"
 
     def use_tree(self):
         tmp = self.tmp
@@ -4389,8 +4397,111 @@ class RuleG(LoopCase):
 # ---------------------------------------------------------------- the heads loader
 
 
+#: The two AUTHOR/CRITIC pairs DD25 binds, and DD25 binds nothing else. A pair is a
+#: RELATIONSHIP between two slots, so it outlives every ruling that re-points a slot at
+#: another model. `scripts/tests/test_pod_launcher.py` runs the same invariant over the
+#: same pairs from the other side of the loader.
+AUTHOR_CRITIC = (("mathematician", "mathematician_adversarial"),
+                 ("coder", "coder_adversarial"))
+
+#: The two slots the program resolves through `heads_mod.head(<slot>)` with NO model
+#: named: `ensure_maintainer()` at `scripts/pod/pod.py:3986` and `ensure_mathematician()`
+#: at `:4115`. `head()` REFUSES a slot that carries a choice, so ONE config on each of
+#: these two is a property of the PROGRAM and not of any ruling.
+RESIDENT_SLOTS = ("maintainer", "mathematician")
+
+#: A model string no vendor will ever ship, used as the bait in every refusal below. A
+#: real-looking name is one owner ruling away from becoming legal and silently defusing
+#: the test it serves, so each user reads `legal.models` back to prove it is still bait.
+ILLEGAL_MODEL = "zz-no-such-model"
+
+
+def heads_text_rows(text: str, slot: str) -> list[tuple[int, int]]:
+    """The `(start, end)` span of every `{ ... }` config of one `[heads]` slot.
+
+    **THE ROW IS FOUND IN THE FILE AND NEVER COPIED OUT OF IT.** A test that holds one
+    row as a literal, padding and model name included, stops testing the day the owner
+    re-points that slot: the `str.replace` matches nothing and the refusal it meant to
+    prove is never exercised. `Heads.edit()` turns that into a failure rather than a
+    silent pass, which is the right direction and still one hand edit per ruling. This
+    removes the occasion for either.
+
+    It reads TEXT rather than the parsed table because the refusals under test are the
+    LOADER's, and several of them need bytes `tomllib` would never round-trip: an array
+    element that is not a table, a field spelled wrong, a cap that is a float.
+
+    It scans only from the slot's own `=` to the end of its value, so a comment or
+    another slot cannot be hit. Inside a `{ ... }` it tracks double-quoted strings; at
+    depth zero a `#` runs to the end of the line, which is where this file's comments
+    between array elements live.
+    """
+    head = re.search(r"^\[heads\]\s*$", text, re.M)
+    if head is None:
+        raise AssertionError("dev/pod/heads.toml carries no [heads] header")
+    lo = head.end()
+    nxt = re.search(r"^\[", text[lo:], re.M)
+    hi = lo + nxt.start() if nxt else len(text)
+    at = re.search(rf"^{re.escape(slot)}[ \t]*=[ \t]*", text[lo:hi], re.M)
+    if at is None:
+        raise AssertionError(f"[heads] carries no `{slot}` assignment")
+    i = lo + at.end()
+    array = text[i] == "["
+    if array:
+        i += 1
+    spans: list[tuple[int, int]] = []
+    depth, start = 0, None
+    while i < hi:
+        ch = text[i]
+        if depth == 0 and ch == "#":
+            i = text.index("\n", i) + 1
+            continue
+        if depth > 0 and ch == '"':
+            i = text.index('"', i + 1) + 1
+            continue
+        if ch == "{":
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                spans.append((start, i + 1))
+                if not array:
+                    break
+        elif ch == "]" and depth == 0 and array:
+            break
+        i += 1
+    if not spans:
+        raise AssertionError(f"[heads].{slot} holds no `{{ ... }}` config")
+    return spans
+
+
+def render_row(cfg: dict, **over) -> str:
+    """One inline table built from a LIVE config, with `over` written in verbatim.
+
+    The four `SLOT_KEYS` are quoted for you and `max_concurrency` is carried when the
+    config has one. An `over` value is raw TOML text, so `max_concurrency="1.5"` writes
+    a float and `model='"x"'` writes a string; `None` DROPS the field, which is how the
+    missing-field refusals are built. `pi_provider` is derived by the loader and is
+    never written back.
+    """
+    fields = {k: f'"{cfg[k]}"' for k in heads_mod.SLOT_KEYS if k in cfg}
+    if cfg.get("max_concurrency") is not None:
+        fields["max_concurrency"] = str(cfg["max_concurrency"])
+    fields.update(over)
+    body = ", ".join(f"{k} = {v}" for k, v in fields.items() if v is not None)
+    return "{ " + body + " }"
+
+
 class Heads(LoopCase):
-    """AD26 and section 6.1. NO FIELD HAS A SILENT DEFAULT."""
+    """AD26 and section 6.1. NO FIELD HAS A SILENT DEFAULT.
+
+    **NO TEST IN THIS CLASS NAMES A SLOT AND A MODEL TOGETHER.** Every expected value is
+    read back from the fixture's own copy of `dev/pod/heads.toml`, so an owner ruling
+    that re-points a slot is one edit to that file and none here. What the class still
+    pins is the SCHEMA (the five slot names, the two spellings, the required fields), the
+    two DD25 pairs, and the two resident slots the program resolves through `head()`.
+    """
 
     def edit(self, old, new):
         """One edit to the fixture's `heads.toml`, and IT MUST LAND.
@@ -4398,13 +4509,98 @@ class Heads(LoopCase):
         A `str.replace` that matches nothing is silent, so a re-worded comment in the real
         file would leave every refusal test below editing NOTHING and passing on a clean
         file. The assertion is the fixture's own C-45 guard.
+
+        **PREFER `replace_row()` FOR ANYTHING INSIDE `[heads]`.** This one still takes a
+        literal, so it is for the parts of the file no ruling moves: a limit key, a tier
+        number, a `[legal]` entry.
         """
-        p = self.tmp / "dev" / "pod" / "heads.toml"
+        p = self.heads_path()
         before = p.read_text()
         after = before.replace(old, new)
         self.assertNotEqual(before, after, f"the fixture edit matched nothing: {old!r}")
         p.write_text(after)
         heads_mod._CACHE.clear()
+
+    def reset_heads(self):
+        """Put the fixture back to the live file, between the arms of a subTest.
+
+        The arms used to undo each other with a second `str.replace`, which only works
+        while the mutation is exactly reversible. Copying the file back is the same
+        `build_tree()` does and it cannot leave a half-undone edit behind.
+        """
+        shutil.copy(ROOT / "dev" / "pod" / "heads.toml", self.heads_path())
+        heads_mod._CACHE.clear()
+
+    def raw(self):
+        """The fixture parsed as plain TOML, so both slot spellings stay visible."""
+        return tomllib.loads(self.heads_path().read_text())
+
+    def rows(self, slot):
+        """Every config of one slot as the RAW file writes it, without the loader's
+        derived `pi_provider`, which `render_row()` must never write back."""
+        v = self.raw()["heads"][slot]
+        return v if isinstance(v, list) else [v]
+
+    def replace_row(self, slot, index, new):
+        """Replace ONE `{ ... }` config of one slot, LOCATED in the file and not copied.
+
+        The span comes from `heads_text_rows()`, so the edit lands on the row asked for
+        whatever that row now says, and an absent slot or index is a failure rather than
+        a `str.replace` that quietly matched nothing.
+        """
+        p = self.heads_path()
+        text = p.read_text()
+        spans = heads_text_rows(text, slot)
+        self.assertGreater(len(spans), index,
+                           f"[heads].{slot} carries no config {index + 1}")
+        lo, hi = spans[index]
+        p.write_text(text[:lo] + new + text[hi:])
+        heads_mod._CACHE.clear()
+
+    def set_key(self, table, key, value):
+        """Rewrite ONE scalar key of one table, and leave its comment where it is.
+
+        The limit and tier tests used to `str.replace` the WHOLE LINE, the owner's dated
+        comment included, so re-wording a comment would have left the mutation matching
+        nothing and the refusal never exercised. The key is found under its own table
+        header, so `[tiers.wide].slots` and `[tiers.heavy].slots` cannot be confused.
+        """
+        p = self.heads_path()
+        text = p.read_text()
+        head = re.search(rf"^\[{re.escape(table)}\]\s*$", text, re.M)
+        self.assertIsNotNone(head, f"the file carries no [{table}] header")
+        lo = head.end()
+        nxt = re.search(r"^\[", text[lo:], re.M)
+        hi = lo + nxt.start() if nxt else len(text)
+        at = re.search(rf"^({re.escape(key)}[ \t]*=[ \t]*)([^\s#]+)", text[lo:hi], re.M)
+        self.assertIsNotNone(at, f"[{table}] carries no `{key}`")
+        p.write_text(text[:lo + at.start(2)] + str(value) + text[lo + at.end(2):])
+        heads_mod._CACHE.clear()
+
+    def array_slot(self):
+        """One slot the file spells as an ARRAY, for the tests that need array bytes."""
+        for slot, v in sorted(self.raw()["heads"].items()):
+            if isinstance(v, list):
+                return slot
+        self.skipTest("no slot is spelled as an array in the live file today")
+
+    def capped_row(self):
+        """`(slot, index, config)` of one row carrying a `max_concurrency`.
+
+        The cap tests need a row that HAS a cap. Which row that is is the owner's, so it
+        is looked up rather than named; a file with no capped row at all skips instead of
+        editing a literal that is no longer there.
+        """
+        for slot, v in sorted(self.raw()["heads"].items()):
+            for i, row in enumerate(v if isinstance(v, list) else [v]):
+                if row.get("max_concurrency") is not None:
+                    return slot, i, row
+        self.skipTest("no row in the live file carries a max_concurrency today")
+
+    def illegal_model(self):
+        """`ILLEGAL_MODEL`, checked against the file's own list before it is used."""
+        self.assertNotIn(ILLEGAL_MODEL, self.raw()["legal"]["models"])
+        return ILLEGAL_MODEL
 
     def test_the_five_ruled_slots_load_and_every_head_is_INTERNALLY_consistent(self):
         """AD24 and AD25 name four heads and AD2 needs a fifth. A loader that merely
@@ -4412,11 +4608,16 @@ class Heads(LoopCase):
 
         **THIS PINNED A12's MODEL AND WENT RED FOR AN OWNER RULING.** A12 set the
         maintainer to `claude-opus-5` at effort `high`; A26 moved the slot to grok on
-        2026-08-19; the owner moved it back to opus at `xhigh` on 2026-08-20. A model
-        name is the owner's under AD26 and moves whenever they say so, so what this
-        asserts now is what the LOADER guarantees: five slots, every field inside its
-        legal set, and every head reachable."""
-        cfg = heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml")
+        2026-08-19; the owner moved it back to opus at `xhigh` on 2026-08-20, then to
+        `claude-sonnet-5` on 2026-08-21. A model name is the owner's under AD26 and moves
+        whenever they say so, so what this asserts now is what the LOADER guarantees:
+        five slots, every field inside its legal set, and every head reachable.
+
+        **THE MAINTAINER PIN IS GONE AND WHAT REPLACED IT IS THE PROGRAM'S OWN NEED.**
+        `ensure_maintainer()` calls `head("maintainer")` with no model named, which
+        `head()` refuses for a slot that carries a choice, so ONE config is the property
+        that must hold. The model and the effort inside that config are the owner's."""
+        cfg = heads_mod.load_heads(self.heads_path())
         self.assertEqual(sorted(cfg["heads"]),
                          ["coder", "coder_adversarial", "maintainer",
                           "mathematician", "mathematician_adversarial"])
@@ -4429,53 +4630,73 @@ class Heads(LoopCase):
                 self.assertIn(row["model"], cfg["legal"]["models"], slot)
                 self.assertIn(row["effort"], cfg["legal"]["efforts"], slot)
                 self.assertTrue(row["harness"], slot)
-        maint = heads_mod.head("maintainer", self.tmp / "dev" / "pod" / "heads.toml")
-        self.assertEqual(maint["effort"], "xhigh")
-        self.assertEqual(maint["model"], "claude-sonnet-5")
+        for slot in RESIDENT_SLOTS:
+            got = heads_mod.head(slot, self.heads_path())
+            self.assertEqual(len(cfg["heads"][slot]), 1, slot)
+            self.assertIn(got["model"], cfg["legal"]["models"], slot)
+            self.assertIn(got["effort"], cfg["legal"]["efforts"], slot)
         for k in heads_mod.LIMIT_KEYS:
             self.assertGreater(cfg["limits"][k], 0, k)
 
     def test_a_model_outside_legal_models_is_REFUSED(self):
-        self.edit('mathematician             = { model = "claude-opus-5"',
-                  'mathematician             = { model = "claude-haiku-5"')
+        """The single-table path. It used to doctor `mathematician`'s row by its exact
+        bytes, model name and column padding included, so the mutation was one hand edit
+        behind every ruling that touched that slot."""
+        slot = RESIDENT_SLOTS[0]
+        self.replace_row(slot, 0,
+                         render_row(self.rows(slot)[0],
+                                    model=f'"{self.illegal_model()}"'))
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+            heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_a_missing_limit_is_REFUSED_and_never_defaulted(self):
         self.edit("attempt_max = 4", "attempts_max = 4")
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+            heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_an_unknown_slot_is_REFUSED_rather_than_defaulted(self):
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.head("archaeologist", self.tmp / "dev" / "pod" / "heads.toml")
+            heads_mod.head("archaeologist", self.heads_path())
 
     def test_a_tier_widened_past_the_sum_cap_ALONE_is_checked_at_load(self):
         """A14 holds each tier's OWN full pool at or under `max_heap_sum_gb`. A future
         edit that widens a tier past the cap by itself is caught here and not on the
-        machine that runs out of memory. OWNER'S RULING 2026-08-23 (second, same day)
-        left HEAVY at one writer, 4 GB; widening it to two (2 x 4 = 8 GB) already
-        breaks the 6 GB cap on HEAVY alone, with no WIDE holder in the picture."""
-        self.edit("slots = 1                     # OWNER'S RULING 2026-08-23: one Agda "
-                  "writer, no more",
-                  "slots = 2                     # widened past the sum cap for this test")
-        with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+        machine that runs out of memory.
+
+        **THE SLOT COUNT IS COMPUTED FROM THE FILE'S OWN CAP AND CALIBER.** It was a
+        literal `2`, which is one more than the HEAVY tier held on the day it was
+        written, and it was spliced in by matching the owner's dated comment word for
+        word. Both are the owner's to move, so both are read back here instead."""
+        cfg = self.raw()["tiers"]
+        gb = heads_mod._heap_gb(cfg["heavy"]["heap"])
+        # THE FIRST COUNT THAT CANNOT FIT, whatever the caliber and the cap now say.
+        self.set_key("tiers.heavy", "slots",
+                     cfg["shared"]["max_heap_sum_gb"] // gb + 1)
+        with self.assertRaises(heads_mod.HeadsError) as raised:
+            heads_mod.load_heads(self.heads_path(), cache=False)
+        self.assertIn("[tiers.heavy] asks", str(raised.exception))
 
     def test_the_MIXED_worst_case_one_holder_per_tier_is_ALSO_checked_at_load(self):
         """A per-tier check alone is not the mixed worst case: an opus-5 review found
         that neither tier alone crossing the cap says nothing about ONE HOLDER FROM
         EACH AT ONCE, which is the combination `launcher.py`'s `agda_heap_sum_over()`
         actually reaches at runtime (`dev/pod/heads.toml [tiers.shared]`'s own comment
-        names it as the design target). WIDE alone is 2 GB, well under any cap here;
-        HEAVY alone is 4 GB, also under; but WIDE plus HEAVY together is 6 GB, and a
-        cap of 5 must refuse that even though neither tier alone would trip it."""
-        self.edit("max_heap_sum_gb = 6           # OWNER'S RULING 2026-08-23 (second): "
-                  "the worst live mix is",
-                  "max_heap_sum_gb = 5           # narrowed below one-of-each for this "
-                  "test")
-        with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+        names it as the design target).
+
+        **THE NARROWED CAP IS ONE BELOW ONE-OF-EACH AND IS COMPUTED, NOT TYPED.** The
+        assertion on the refusal's own words is what proves the MIXED arm fired: a cap
+        that also broke a single tier would refuse for the other reason and this test
+        would read as green while proving nothing."""
+        cfg = self.raw()["tiers"]
+        one_each = sum(heads_mod._heap_gb(cfg[t]["heap"]) for t in ("wide", "heavy"))
+        for tier in ("wide", "heavy"):
+            if cfg[tier]["slots"] * heads_mod._heap_gb(cfg[tier]["heap"]) > one_each - 1:
+                self.skipTest(f"one below one-of-each already breaks {tier} alone, so "
+                              f"the mixed arm cannot be isolated on this file")
+        self.set_key("tiers.shared", "max_heap_sum_gb", one_each - 1)
+        with self.assertRaises(heads_mod.HeadsError) as raised:
+            heads_mod.load_heads(self.heads_path(), cache=False)
+        self.assertIn("one holder from EACH tier", str(raised.exception))
 
     def test_the_critic_is_never_the_same_model_as_the_author(self):
         """DD25's invariant survives mechanically, by construction of `[heads]`.
@@ -4484,16 +4705,22 @@ class Heads(LoopCase):
         carry two models, and the invariant is that NO model of the author is a model of
         the critic: one shared string is one review a model gives its own work.
 
-        **OWNER'S RULING 2026-08-25 REMOVED THE ONE WAIVED PAIR.** `coder` traded its
-        `glm-5.3` fallback for `claude-opus-5` (swapped with `coder_adversarial`'s own
-        second head, which took `glm-5.3` in return), so `coder` no longer shares
-        anything with `mathematician_adversarial`. Both pairs now hold with no
-        exception, so the loop below covers everything; nothing is asserted on its own
-        any more.
+        **THE WAIVER IS GONE AND NO EXCEPTION REPLACES IT.** This loop carried a dated
+        carve-out for one pair while `coder` and `mathematician_adversarial` both held
+        `glm-5.3`; the swap of 2026-08-25 ended that, and the carve-out went with it. A
+        waiver is a fact about one ruling and it does not belong in the invariant: if
+        the owner ever puts an author into its OWN critic's set again, this must go red
+        and say so, and if two DIFFERENT critics share a head it must stay silent, which
+        DD25 permits and this test therefore never mentions.
+
+        **THE PAIRS ARE THE ONLY THING NAMED HERE.** A pair is a relationship between
+        two slots, so it survives every ruling that re-points either one.
         """
-        p = self.tmp / "dev" / "pod" / "heads.toml"
-        for author, critic in (("mathematician", "mathematician_adversarial"),
-                               ("coder", "coder_adversarial")):
+        p = self.heads_path()
+        carried = set(self.raw()["heads"])
+        for author, critic in AUTHOR_CRITIC:
+            self.assertLessEqual({author, critic}, carried,
+                                 "the pair table names a slot the file does not carry")
             a = {r["model"] for r in heads_mod.configs(author, p)}
             c = {r["model"] for r in heads_mod.configs(critic, p)}
             self.assertEqual(a & c, set(), f"{critic} shares a model with {author}")
@@ -4502,54 +4729,85 @@ class Heads(LoopCase):
 
     def cfgs(self):
         """Every config of the live `coder` slot, through the loader the program uses."""
-        return heads_mod.configs("coder", self.tmp / "dev" / "pod" / "heads.toml")
+        return heads_mod.configs("coder", self.heads_path())
+
+    def choice_slot(self):
+        """One slot the live file gives a CHOICE, or a skip. A29's retry, `head()`'s
+        refusal and the capped-first policy all need a slot with more than one head, and
+        which slot that is is the owner's: it was one under A27, none for a day in
+        August when qwen went out for maintenance, and three after A29."""
+        for slot in sorted(self.raw()["heads"]):
+            if len(self.rows(slot)) > 1:
+                return slot
+        self.skipTest("no slot in the live file carries a choice today")
 
     def test_the_single_table_spelling_still_loads_and_still_means_one_head(self):
-        """**BACKWARD COMPATIBILITY IS THE POINT OF THE SUPERSET.** Four slots were not
-        touched by A27 and must load byte-for-byte as they did, so this asserts the SHAPE
-        of the return and not only that the file parses.
+        """**BACKWARD COMPATIBILITY IS THE POINT OF THE SUPERSET.** A slot untouched by
+        A27 must load exactly as it did, so this asserts the SHAPE of the return and not
+        only that the file parses.
 
-        **TWO OF THOSE FOUR CARRY A CHOICE SINCE A29**: the owner ruled both critics onto
-        a second head on 2026-08-21. The superset claim is unchanged and the slots that
-        can still witness it are the two below.
+        **THE WITNESSES ARE THE TWO RESIDENT SLOTS AND THAT IS NOT A ROSTER.**
+        `ensure_maintainer()` and `ensure_mathematician()` both call `head(<slot>)` with
+        no model named, which `head()` refuses for a slot that carries a choice, so these
+        two must stay single-headed for the program to run at all.
         """
-        p = self.tmp / "dev" / "pod" / "heads.toml"
-        for slot in ("mathematician", "maintainer"):
+        p = self.heads_path()
+        for slot in RESIDENT_SLOTS:
             rows = heads_mod.configs(slot, p)
             self.assertEqual(len(rows), 1, slot)
             self.assertIsNone(rows[0]["max_concurrency"], slot)
-            # `head()` WITHOUT A MODEL IS THE OLD CALL and it still answers for these four.
+            # `head()` WITHOUT A MODEL IS THE OLD CALL and it still answers for these two.
             self.assertEqual(heads_mod.head(slot, p)["model"], rows[0]["model"])
+        # AND THE SINGLE-TABLE SPELLING ITSELF IS STILL EXERCISED. An array of one means
+        # what a single table means, so the superset claim needs a real table in the file.
+        self.assertTrue([s for s, v in self.raw()["heads"].items()
+                         if isinstance(v, dict)],
+                        "no slot is spelled as a single inline table any more")
 
-    @unittest.skip("owner 2026-08-22: qwen is out of [heads].coder for maintenance, "
-                    "so coder is a one-config array and no longer 'carries a choice'. "
-                    "Un-skip when qwen's line is restored.")
     def test_head_refuses_a_slot_that_carries_a_choice_and_answers_a_named_model(self):
-        """A default head is a model nobody ruled, so `head("coder")` REFUSES rather than
-        returning the first entry and calling it the default."""
-        p = self.tmp / "dev" / "pod" / "heads.toml"
+        """A default head is a model nobody ruled, so `head(<slot>)` REFUSES rather than
+        returning the first entry and calling it the default.
+
+        **THE SKIP THAT GUARDED THIS WAS A HAND-WRITTEN DATE.** It read `owner
+        2026-08-22: qwen is out of [heads].coder for maintenance`, so the coverage came
+        back only when somebody remembered to delete the decorator; qwen returned on
+        2026-08-23 and it did not. The precondition is read from the file now, and the
+        probe model is any legal string the slot does not carry rather than one named
+        here, which was already wrong once when the owner moved `claude-opus-5` into the
+        very slot the probe used it against."""
+        p = self.heads_path()
+        slot = self.choice_slot()
+        rows = heads_mod.configs(slot, p)
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.head("coder", p)
-        for row in self.cfgs():
-            self.assertEqual(heads_mod.head("coder", p, row["model"])["model"],
+            heads_mod.head(slot, p)
+        for row in rows:
+            self.assertEqual(heads_mod.head(slot, p, row["model"])["model"],
                              row["model"])
         # A LEGAL MODEL THIS SLOT DOES NOT CARRY IS STILL A REFUSAL, which is the case
         # that separates "the loader knows the string" from "this slot may run it".
-        # It used to name `claude-opus-5`; the owner made that the coder's own second
-        # head on 2026-08-21, so the probe moved to a model no coder config names.
-        self.assertNotIn("glm-5.3", {r["model"] for r in self.cfgs()})
+        carried = {r["model"] for r in rows}
+        spare = [m for m in self.raw()["legal"]["models"] if m not in carried]
+        self.assertTrue(spare, "legal.models holds nothing this slot does not carry")
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.head("coder", p, "glm-5.3")
+            heads_mod.head(slot, p, spare[0])
 
-    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
-                    "for maintenance, coder carries no capped head to pick first. "
-                    "Un-skip when qwen's line is restored.")
     def test_a_capped_model_with_headroom_is_chosen_before_the_uncapped_one(self):
-        """THE POLICY IS CAPPED FIRST. An idle pod sends the coder to the LOCAL head."""
-        cfgs = self.cfgs()
+        """THE POLICY IS CAPPED FIRST. An idle pod spends the scarce head first.
+
+        **IT ASSERTS THE POLICY AND NOT THE HEAD THE POLICY PICKED.** This read
+        `got["harness"] == "herdr-pi"`, which was a fact about which vendor held the
+        capped row that week, and it sat behind a hand-written skip for three days after
+        the row it named came back."""
+        slot, _, _ = self.capped_row()
+        cfgs = heads_mod.configs(slot, self.heads_path())
         got = pod.pick_head_config(cfgs, [0] * len(cfgs))
-        self.assertEqual(got["max_concurrency"], 1)
-        self.assertEqual(got["harness"], "herdr-pi")
+        self.assertIsNotNone(got)
+        self.assertIsNotNone(got["max_concurrency"],
+                             "an uncapped head was spent while a capped one was idle")
+        # THE TIE-BREAK IS THE FILE'S OWN ORDER, so it is the FIRST capped row and not
+        # merely some capped row.
+        first = next(c for c in cfgs if c["max_concurrency"] is not None)
+        self.assertEqual(got["model"], first["model"])
 
     def test_a_capped_model_AT_its_cap_is_skipped_for_the_next_eligible_one(self):
         """A synthetic fixture, not `self.cfgs()`: OWNER'S RULING 2026-08-24 capped
@@ -4621,77 +4879,102 @@ class Heads(LoopCase):
 
     # ---------------------------------------------------- A27, the loader's refusals
 
-    def test_an_empty_array_of_configs_is_REFUSED(self):
-        self.edit('coder                     = [', 'coder = []\nunused = [')
-        with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+    # **EVERY MUTATION BELOW LOCATES ITS ROW AND NONE OF THEM COPIES ONE.** A class
+    # constant held `coder`'s second config verbatim, padding and model name included,
+    # so each of the four rulings that touched that row between 2026-08-21 and
+    # 2026-08-25 was also a hand edit here. `replace_row()` finds the row by slot and
+    # index whatever it now says, and `render_row()` builds the replacement out of the
+    # LIVE config, so the only thing these tests still assert is the loader's refusal.
 
-    #: THE CODER'S SECOND CONFIG, VERBATIM, and the edits below aim at THIS row rather
-    #: than at any other array element. OWNER'S RULING 2026-08-25 swapped it with
-    #: `coder_adversarial`'s own second head: `claude-opus-5` is here now, uncapped,
-    #: at `xhigh`. `[maintainer_presets].claude` also names `claude-opus-5`, but with
-    #: DIFFERENT padding and no leading array indent, so a `str.replace` naming this
-    #: exact literal still cannot land on the wrong row.
-    CODER_2ND = ('  { model = "claude-opus-5",        effort = "xhigh",'
-                 ' harness = "herdr-claude", sandbox = "acceptEdits" },')
+    def test_an_empty_array_of_configs_is_REFUSED(self):
+        """An array spelling with nothing in it. It is not the same refusal as a missing
+        slot: the key is present and the loader must still refuse rather than treat an
+        empty choice as no choice."""
+        slot = self.array_slot()
+        text = self.heads_path().read_text()
+        at = re.search(rf"^{re.escape(slot)}[ \t]*=[ \t]*\[", text, re.M)
+        self.assertIsNotNone(at, f"[heads].{slot} is not spelled as an array")
+        self.heads_path().write_text(f"{text[:at.start()]}{slot} = []\nunused = ["
+                               f"{text[at.end():]}")
+        heads_mod._CACHE.clear()
+        with self.assertRaises(heads_mod.HeadsError):
+            heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_an_array_element_that_is_not_a_table_is_REFUSED(self):
         """An array of STRINGS parses as TOML and names no harness, so the refusal has to
         be the loader's and cannot be the parser's."""
-        self.edit(self.CODER_2ND, '  "glm-5.3",')
+        slot = self.array_slot()
+        self.replace_row(slot, 0, '"a-bare-string"')
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+            heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_a_config_missing_a_required_field_is_REFUSED(self):
-        self.edit(self.CODER_2ND, '  { model = "glm-5.3", effort = "" },')
-        with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+        """Each of the four in turn, because `_require()` walks a tuple and a loop that
+        dropped one key would still pass a test that only ever dropped another."""
+        slot = self.array_slot()
+        for key in heads_mod.SLOT_KEYS:
+            with self.subTest(missing=key):
+                self.reset_heads()
+                self.replace_row(slot, 0,
+                                 render_row(self.rows(slot)[0], **{key: None}))
+                with self.assertRaises(heads_mod.HeadsError):
+                    heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_a_config_carrying_an_unknown_field_is_REFUSED(self):
-        self.edit("max_concurrency = 1 }", "max_concurrancy = 1 }")
+        """A MISSPELT FIELD IS A REFUSAL AND NEVER A SILENT EXTRA. `max_concurrancy`
+        would otherwise load as an uncapped head that the owner had meant to cap."""
+        slot, index, row = self.capped_row()
+        self.replace_row(slot, index,
+                         render_row(row, max_concurrency=None, max_concurrancy="1"))
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+            heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_a_cap_that_is_not_a_positive_integer_is_REFUSED(self):
         """A ZERO IS NOT `unlimited`: it is a head no task can ever reach. A BOOLEAN is an
         `int` in Python, so `true` would otherwise load as a cap of one."""
+        slot, index, row = self.capped_row()
         for bad in ("0", "-1", '"1"', "1.5", "true"):
             with self.subTest(cap=bad):
-                self.edit("max_concurrency = 1 }", f"max_concurrency = {bad} }}")
+                self.reset_heads()
+                self.replace_row(slot, index, render_row(row, max_concurrency=bad))
                 with self.assertRaises(heads_mod.HeadsError):
-                    heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml",
-                                         cache=False)
-                self.edit(f"max_concurrency = {bad} }}", "max_concurrency = 1 }")
+                    heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_one_slot_naming_one_model_twice_is_REFUSED(self):
         """The dispatcher counts a live head by its SLOT and its MODEL, so two configs on
         one model are two caps it cannot tell apart."""
-        self.edit(self.CODER_2ND,
-                  '  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "",'
-                  ' harness = "herdr-pi", sandbox = "acceptEdits" },')
+        slot = self.choice_slot()
+        rows = self.rows(slot)
+        self.replace_row(slot, 1, render_row(rows[0]))
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+            heads_mod.load_heads(self.heads_path(), cache=False)
 
     def test_a_model_outside_legal_models_is_REFUSED_inside_an_array_too(self):
         """The single-table path had this check and the array path is a second entry to
         the same rule, so it is checked at both."""
-        self.edit(self.CODER_2ND,
-                  '  { model = "claude-haiku-5", effort = "",'
-                  ' harness = "herdr-pi", sandbox = "acceptEdits" },')
+        slot = self.array_slot()
+        self.replace_row(slot, 0,
+                         render_row(self.rows(slot)[0],
+                                    model=f'"{self.illegal_model()}"'))
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
+            heads_mod.load_heads(self.heads_path(), cache=False)
 
-    @unittest.skip("owner 2026-08-22: this edit targets qwen's coder entry to prove the "
-                    "refusal applies per-config; qwen's line is out of [heads].coder "
-                    "for maintenance, so `configs(\"coder\")` no longer reads it. "
-                    "Un-skip when qwen's line is restored.")
     def test_a_herdr_pi_config_with_no_provider_entry_is_REFUSED(self):
         """`legal.pi_provider` had zero consumers until 2026-08-18 and both `glm-5.3`
-        heads dispatched on `deepseek`. The refusal applies per CONFIG, not per slot."""
-        self.edit('"Qwen3.8-27B-oQ4e-mtp" = "omlx"', '"unused-key" = "omlx"')
+        heads dispatched on `deepseek`. The refusal applies per CONFIG, not per slot.
+
+        **THE SKIP THAT GUARDED THIS WAS A HAND-WRITTEN DATE** naming qwen's row, and
+        the row came back on 2026-08-23 while the decorator stayed. The pi head is looked
+        up now, and its provider key with it."""
+        for slot in sorted(self.raw()["heads"]):
+            pi = [r for r in self.rows(slot) if r["harness"] == "herdr-pi"]
+            if pi:
+                break
+        else:
+            self.skipTest("no slot in the live file runs on herdr-pi today")
+        self.edit(f'"{pi[0]["model"]}" = ', '"unused-key" = ')
         with self.assertRaises(heads_mod.HeadsError):
-            heads_mod.configs("coder", self.tmp / "dev" / "pod" / "heads.toml",
-                              cache=False)
+            heads_mod.configs(slot, self.heads_path(), cache=False)
 
 
 # ---------------------------------------------------------------- the acceptance runner
@@ -5243,8 +5526,8 @@ class Commands(LoopCase):
         re-prove it"). A plain `resume --retry` left `attempt` unchanged, and
         `_rule_f()`'s AD27 test (`t.head_slot or ("mathematician_adversarial" if
         attempt > 1 and not reviewed(t, root) else None)`) fired on the stale count,
-        which would have dispatched `review_brief()` — text built from `t.record`, the
-        OLD timeout — and never touched `t.brief` at all. AD16 already claims a
+        which would have dispatched `review_brief()` (text built from `t.record`, the
+        OLD timeout) and never touched `t.brief` at all. AD16 already claims a
         resumed task dispatches "as a FRESH instance"; this pins that the attempt
         count is part of what fresh means."""
         (self.tmp / ".pod-state" / "STOPPED").touch()
@@ -5745,11 +6028,6 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                                          "direction.md"],
                                  f"a {role} worker was launched with {names}")
 
-    @unittest.skip("owner 2026-08-22: grok-4.6 now sits first in both critic arrays "
-                    "and claude-opus-5 is coder's only entry, so an idle pod's default "
-                    "pick is herdr-claude or herdr-grok on every slot and no pi head is "
-                    "ever the default choice. Un-skip when a slot's first-choice head "
-                    "is herdr-pi again.")
     def test_a_pi_head_gets_its_own_providers_and_never_a_default(self):
         """**IT ASKS `pick_head_config()` WHICH MODEL RAN, and does not assume one.**
 
@@ -5758,22 +6036,31 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
         zero, so the config this test expects is the one the policy picks from an idle
         machine. Reading `[heads].<role>["harness"]` here would raise on a list and, worse,
         would pin a model the dispatcher may not have chosen.
+
+        **THE SKIP THAT GUARDED IT WAS A HAND-WRITTEN ROSTER OF WHICH VENDOR SAT FIRST
+        IN WHICH ARRAY.** It said no pi head could be an idle pod's default pick, which
+        stopped being true when qwen came back to `coder` on 2026-08-23, and the
+        decorator stayed. The precondition is read from the file now: if today's file
+        really sends no slot to a pi head, this skips itself and says so.
         """
         table = heads_mod.load_heads()["legal"]["pi_provider"]
-        seen = {}
+        picks = {}
         for role in sorted(heads_mod.load_heads()["heads"]):
+            cfgs = heads_mod.configs(role)
+            row = pod.pick_head_config(cfgs, pod.head_live_counts(None, role, cfgs))
+            self.assertIsNotNone(row, f"{role} has no eligible head on an idle pod")
+            picks[role] = row
+        if not any(r["harness"] == "herdr-pi" for r in picks.values()):
+            self.skipTest("no slot's first-choice head runs on herdr-pi today, so the "
+                          "provider lookup has nothing to exercise")
+        for role, row in picks.items():
             with self.subTest(role=role):
-                cfgs = heads_mod.configs(role)
-                row = pod.pick_head_config(cfgs, pod.head_live_counts(None, role, cfgs))
-                self.assertIsNotNone(row, f"{role} has no eligible head on an idle pod")
                 got = self._capture(role).get("provider")
                 if row["harness"] != "herdr-pi":
                     self.assertIsNone(got, f"{role} is not a pi head")
                     continue
                 self.assertEqual(got, table[row["model"]],
                                  f"{role} runs {row['model']} and was sent to {got}")
-                seen[row["model"]] = got
-        self.assertTrue(seen, "no pi head was dispatched, so the provider lookup was not exercised")
 
     # ------------------------------------------------------------------ A27 end to end
 
@@ -5786,60 +6073,74 @@ class PreambleAndProviderReachTheWorker(unittest.TestCase):
                                       status=status or pod.RUNNING)
         return st
 
-    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
-                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
-                    "max_concurrency set. Un-skip when qwen's line is restored.")
+    #: The slot these four drive. A27's end to end needs a slot with a CAPPED head and,
+    #: for the spill, an UNCAPPED one behind it; which slot that is, and which model
+    #: sits in either row, is the owner's. **FOUR HAND-WRITTEN SKIPS STOOD HERE**, each
+    #: naming qwen and the day it left `[heads].coder` for maintenance. It came back on
+    #: 2026-08-23 and the decorators did not, so this whole section was dead for two
+    #: days. `_a27_slot()` reads the precondition from the file instead.
+    A27_SLOT = "coder"
+
+    def _a27_slot(self, spill=False):
+        """`(capped, uncapped_or_None)` of `A27_SLOT`, or a skip that says why.
+
+        It also turns `_omlx_excluded()` OFF for the call. That guard is the owner's
+        ruling of 2026-08-23 and it has its own tests in `FallbackPark`; leaving it live
+        here would make each of these four pass or fail on whether a `make check` on
+        THIS machine happened to hold its lock while the suite ran.
+        """
+        cfgs = heads_mod.configs(self.A27_SLOT)
+        cap = [c for c in cfgs if c["max_concurrency"] is not None]
+        free = [c for c in cfgs if c["max_concurrency"] is None]
+        if not cap:
+            self.skipTest(f"[heads].{self.A27_SLOT} carries no capped head today")
+        if spill and not free:
+            self.skipTest(f"[heads].{self.A27_SLOT} carries no uncapped head to spill "
+                          f"onto today")
+        real = pod._omlx_excluded
+        pod._omlx_excluded = lambda cfgs, root=None: cfgs
+        self.addCleanup(setattr, pod, "_omlx_excluded", real)
+        return cap[0], (free[0] if free else None)
+
     def test_an_idle_coder_slot_dispatches_on_the_CAPPED_head(self):
         """The whole of A27 through the real `launch()`: the policy picks, the launcher
         gets that model with that provider, and the TASK records what ran (AD26)."""
-        got = self._capture("coder", pod.State())
-        cap = [c for c in heads_mod.configs("coder")
-               if c["max_concurrency"] is not None][0]
+        cap, _ = self._a27_slot()
+        got = self._capture(self.A27_SLOT, pod.State())
         self.assertEqual(got["_task"].model, cap["model"])
         self.assertEqual(got["_task"].harness, cap["harness"])
         # THE PROVIDER IS THE KEYWORD THE PANE REALLY GETS, and the model reaches the
-        # launcher POSITIONALLY, so `_task.model` above is the readable end of it.
-        self.assertEqual(got["provider"], cap["pi_provider"])
+        # launcher POSITIONALLY, so `_task.model` above is the readable end of it. A head
+        # that is not a pi head carries no provider and must be sent none.
+        self.assertEqual(got["provider"], cap.get("pi_provider"))
         self.assertEqual(got["effort"], cap["effort"])
 
-    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
-                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
-                    "max_concurrency set. Un-skip when qwen's line is restored.")
     def test_a_second_task_spills_to_the_UNCAPPED_head_while_the_first_is_live(self):
         """**THIS IS THE CASE THE FEATURE EXISTS FOR** and no unit test of the policy
         alone can reach it: the count comes from `st.tasks`, which rule (f) mutates as it
         dispatches, so the second dispatch of one tick must already see the first."""
-        cap = [c for c in heads_mod.configs("coder")
-               if c["max_concurrency"] is not None][0]
-        free = [c for c in heads_mod.configs("coder")
-                if c["max_concurrency"] is None][0]
-        st = self._live("coder", cap["model"], cap["max_concurrency"])
-        got = self._capture("coder", st)
+        cap, free = self._a27_slot(spill=True)
+        st = self._live(self.A27_SLOT, cap["model"], cap["max_concurrency"])
+        got = self._capture(self.A27_SLOT, st)
         self.assertEqual(got["_task"].model, free["model"])
         self.assertEqual(got["_task"].harness, free["harness"])
-        self.assertIsNone(got["provider"], "a non-pi head was sent a provider")
+        self.assertEqual(got["provider"], free.get("pi_provider"))
         self.assertEqual(got["effort"], free["effort"])
 
-    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
-                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
-                    "max_concurrency set. Un-skip when qwen's line is restored.")
     def test_a_task_that_is_DONE_frees_the_capped_head_again(self):
         """A closed task holds no head. Counting one would shrink a cap nothing uses."""
-        cap = [c for c in heads_mod.configs("coder")
-               if c["max_concurrency"] is not None][0]
-        st = self._live("coder", cap["model"], cap["max_concurrency"], pod.DONE)
-        self.assertEqual(self._capture("coder", st)["_task"].model, cap["model"])
+        cap, _ = self._a27_slot()
+        st = self._live(self.A27_SLOT, cap["model"], cap["max_concurrency"], pod.DONE)
+        self.assertEqual(self._capture(self.A27_SLOT, st)["_task"].model, cap["model"])
 
-    @unittest.skip("owner 2026-08-22: qwen was coder's one capped config; with it out "
-                    "for maintenance, heads_mod.configs(\"coder\") has no entry with "
-                    "max_concurrency set. Un-skip when qwen's line is restored.")
     def test_a_live_task_on_ANOTHER_slot_does_not_spend_the_coder_cap(self):
         """The pair is the slot AND the model, so one model shared by two slots would
         otherwise have one cap between them."""
-        cap = [c for c in heads_mod.configs("coder")
-               if c["max_concurrency"] is not None][0]
-        st = self._live("coder_adversarial", cap["model"], cap["max_concurrency"])
-        self.assertEqual(self._capture("coder", st)["_task"].model, cap["model"])
+        cap, _ = self._a27_slot()
+        other = next(s for s in sorted(heads_mod.load_heads()["heads"])
+                     if s != self.A27_SLOT)
+        st = self._live(other, cap["model"], cap["max_concurrency"])
+        self.assertEqual(self._capture(self.A27_SLOT, st)["_task"].model, cap["model"])
 
     def test_every_head_full_REFUSES_the_dispatch_and_names_the_caps(self):
         """`launch()` returns None and leaves words in `LAUNCH_REFUSAL`, which rule (f)
@@ -6033,7 +6334,30 @@ class FallbackPark(LoopCase):
     `test_a_MEASURED_return_never_falls_back...` is the one that would catch it.
     """
 
-    def returned(self, role="coder_adversarial", model="glm-5.3", avoid=None):
+    #: The two slots these tests drive: one that carries a CHOICE, so A29's retry has
+    #: somewhere to go, and one that carries a single head, so the contrast case parks
+    #: `no-change`. Both are ROLES, not models. **THE MODELS ARE READ BACK, NEVER
+    #: NAMED**: this class held `glm-5.3` and `grok-4.6` as defaults and as arguments in
+    #: eight places, and the swap of 2026-08-25 moved both between slots.
+    CRITIC, AUTHOR = "coder_adversarial", "mathematician"
+
+    def critic_models(self):
+        """The critic slot's models in the FILE'S OWN ORDER, which is what A29 walks."""
+        cfgs = heads_mod.configs(self.CRITIC)
+        if len(cfgs) < 2:
+            self.skipTest(f"[heads].{self.CRITIC} carries no choice today, so A29 has "
+                          f"nothing to retry onto")
+        return [c["model"] for c in cfgs]
+
+    def author_model(self):
+        """The one-head slot's model, for the contrast that parks `no-change`."""
+        cfgs = heads_mod.configs(self.AUTHOR)
+        self.assertEqual(len(cfgs), 1, self.AUTHOR)
+        return cfgs[0]["model"]
+
+    def returned(self, role=None, model=None, avoid=None):
+        role = self.CRITIC if role is None else role
+        model = self.critic_models()[0] if model is None else model
         st = pod.State()
         t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.RETURNED,
                      attempt=1, obl_before=2, role=role, model=model,
@@ -6096,38 +6420,48 @@ class FallbackPark(LoopCase):
     # ------------------------------------------------- the trigger, on the LIVE file
 
     def test_the_LIVE_file_gives_every_dispatched_slot_a_fallback_but_the_author(self):
-        """**THE OWNER'S RULING OF 2026-08-21, READ BACK FROM THE FILE THAT BINDS.**
-        Both critics carry a choice; `mathematician` is one head and parks `no-change`
-        exactly as it always did.
+        """**THE TRIGGER IS ARITHMETIC AND THIS READS IT OFF THE FILE THAT BINDS.**
+        A29 retries when the slot has somewhere else to send the task, so every model of
+        a slot that carries a choice must answer TRUE and every model of a one-head slot
+        must answer FALSE. That is the whole rule, and it holds however the owner
+        re-points a slot.
 
-        **`coder` AND `coder_adversarial` SWAPPED SECOND HEADS, OWNER'S RULING
-        2026-08-25.** `claude-opus-5` moved from `coder_adversarial` to `coder`;
-        `glm-5.3` moved the other way, so `coder_adversarial` now carries the
-        same pair as `mathematician_adversarial`."""
-        for slot, model in (("mathematician_adversarial", "glm-5.3"),
-                            ("mathematician_adversarial", "grok-4.6"),
-                            ("coder_adversarial", "glm-5.3"),
-                            ("coder_adversarial", "grok-4.6"),
-                            ("coder", "Qwen3.8-27B-oQ4e-mtp"),
-                            ("coder", "claude-opus-5")):
-            with self.subTest(slot=slot, model=model):
-                self.assertTrue(pod._has_fallback_head(slot, model, self.tmp))
-        self.assertFalse(
-            pod._has_fallback_head("mathematician", "claude-opus-5", self.tmp))
+        **THIS USED TO BE A TYPED ROSTER OF SIX `(slot, model)` PAIRS**, so every ruling
+        that moved a model between slots went red on a file the mechanism read
+        correctly. The roster is derived now, and it still fails on the defect it was
+        written for: a slot of one head whose model is wrongly given a retry.
+        """
+        cfg = heads_mod.load_heads(self.heads_path())["heads"]
+        self.assertTrue(any(len(v) > 1 for v in cfg.values()),
+                        "no slot carries a choice, so nothing exercises the TRUE arm")
+        self.assertTrue(any(len(v) == 1 for v in cfg.values()),
+                        "no slot carries one head, so nothing exercises the FALSE arm")
+        for slot, rows in sorted(cfg.items()):
+            for row in rows:
+                with self.subTest(slot=slot, model=row["model"]):
+                    self.assertEqual(
+                        pod._has_fallback_head(slot, row["model"], self.tmp),
+                        len(rows) > 1)
+        # A MODEL THE SLOT DOES NOT CARRY IS FALSE WHATEVER THE SLOT'S SHAPE, because
+        # the pair is the slot AND the model. A task whose recorded model has since left
+        # the file must not be retried as though the file still ruled it.
+        for slot in sorted(cfg):
+            self.assertFalse(pod._has_fallback_head(slot, ILLEGAL_MODEL, self.tmp))
 
     # ------------------------------------------------------------------ rule (c)
 
     def test_an_R7_return_on_a_slot_with_a_choice_parks_fallback_and_names_the_model(self):
+        first = self.critic_models()[0]
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="grok-4.6")
+        st, t = self.returned(model=first)
         pod._rule_c(st, self.tmp)
         self.assertEqual(t.status, pod.PARKED)
-        self.assertEqual(t.park_reason, "fallback:grok-4.6")
-        self.assertEqual(list(t.avoid_models), ["grok-4.6"])
+        self.assertEqual(t.park_reason, f"fallback:{first}")
+        self.assertEqual(list(t.avoid_models), [first])
 
     def test_an_R7_return_on_a_ONE_head_slot_is_the_plain_no_change_it_always_was(self):
         self.set_acceptance(None)
-        st, t = self.returned(role="mathematician", model="claude-opus-5")
+        st, t = self.returned(role=self.AUTHOR, model=self.author_model())
         pod._rule_c(st, self.tmp)
         self.assertEqual(t.park_reason, "no-change")
         self.assertFalse(t.avoid_models)
@@ -6139,7 +6473,7 @@ class FallbackPark(LoopCase):
          / f"{CODE}-20260819-164127-final.md").write_text(
             QuotaPark.WRAPPED, encoding="utf-8")
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="grok-4.6")
+        st, t = self.returned()
         pod._rule_c(st, self.tmp)
         self.assertTrue(t.park_reason.startswith("quota:"), t.park_reason)
         self.assertFalse(t.avoid_models)
@@ -6149,30 +6483,30 @@ class FallbackPark(LoopCase):
         content. It carries a record, so R7 never fires, so nothing is excluded and no
         head is spent twice on a question that was already answered."""
         self.set_acceptance(record(exit_code=42, error_class="unsolved_meta", delta=0))
-        st, t = self.returned(role="coder_adversarial", model="grok-4.6")
+        st, t = self.returned()
         pod._rule_c(st, self.tmp)
-        self.assertNotEqual(t.park_reason, "fallback:grok-4.6")
+        self.assertNotEqual(t.park_reason, f"fallback:{t.model}")
         self.assertFalse(t.avoid_models)
 
     def test_the_SAME_model_is_never_excluded_twice(self):
         """A task already carrying its model on the avoid list has nothing new to learn
         from a second identical return, so it takes the plain `no-change` and waits."""
+        first = self.critic_models()[0]
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="grok-4.6",
-                              avoid=["grok-4.6"])
+        st, t = self.returned(model=first, avoid=[first])
         pod._rule_c(st, self.tmp)
         self.assertEqual(t.park_reason, "no-change")
-        self.assertEqual(list(t.avoid_models), ["grok-4.6"])
+        self.assertEqual(list(t.avoid_models), [first])
 
     def test_a_SECOND_failure_adds_the_other_model_which_is_why_it_terminates(self):
         """The exclusion is MONOTONIC. Once both heads are on the list `launch()` has no
         candidate left and rule (f) parks `launch`, never a third fallback."""
+        first, second = self.critic_models()[:2]
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="glm-5.3",
-                              avoid=["grok-4.6"])
+        st, t = self.returned(model=second, avoid=[first])
         pod._rule_c(st, self.tmp)
-        self.assertEqual(t.park_reason, "fallback:glm-5.3")
-        self.assertEqual(sorted(t.avoid_models), ["glm-5.3", "grok-4.6"])
+        self.assertEqual(t.park_reason, f"fallback:{second}")
+        self.assertEqual(sorted(t.avoid_models), sorted([first, second]))
 
     def test_fallback_is_a_park_reason_the_program_admits_and_capacity_is_gone(self):
         """ONE NAME, ONE MECHANISM. A second redundant reason string would divide the
@@ -6209,16 +6543,22 @@ class FallbackPark(LoopCase):
     #: THE REAL `launch()`, because `LoopCase` replaces it with a recorder that never
     #: reads `avoid_models` at all. A test of the exclusion against that stub would pass
     #: on a `launch()` that had lost the feature entirely.
-    def real_launch(self, t, role="coder_adversarial"):
+    def real_launch(self, t, role=None):
         class FakeLauncher:
             HARNESS = ""
         self.patch(facts_mod, "launcher", lambda: FakeLauncher)
-        return REAL_LAUNCH(t, f"agents/tasks/{DIR}/{CODE}.md", role, self.tmp,
+        return REAL_LAUNCH(t, f"agents/tasks/{DIR}/{CODE}.md",
+                           self.CRITIC if role is None else role, self.tmp,
                            pod.State())
 
-    def test_launch_drops_every_avoided_model_from_the_candidate_list(self):
-        """`launch()` is the ONE reader of `avoid_models`, so the retry cannot repeat the
-        head that just failed."""
+    def candidates(self, task, role=None):
+        """The config list `launch()` really handed the policy, through a spy.
+
+        `pick_head_config()` refuses, so nothing is dispatched and the list is the whole
+        measurement. **THE EXPECTED LIST IS ALWAYS BUILT FROM THE FIXTURE'S OWN FILE**
+        below, never typed: these three tests named `glm-5.3` and `grok-4.6` in five
+        places and went red for the swap of 2026-08-25.
+        """
         seen = {}
 
         def spy(cfgs, counts):
@@ -6226,30 +6566,27 @@ class FallbackPark(LoopCase):
             return None                        # refuse, so nothing is really dispatched
 
         self.patch(pod, "pick_head_config", spy)
-        self.real_launch(pod.Task(CODE, avoid_models=["grok-4.6"]))
-        self.assertEqual([c["model"] for c in seen["cfgs"]], ["glm-5.3"])
+        self.real_launch(task, role=role)
+        return [c["model"] for c in seen.get("cfgs", ())]
+
+    def test_launch_drops_every_avoided_model_from_the_candidate_list(self):
+        """`launch()` is the ONE reader of `avoid_models`, so the retry cannot repeat the
+        head that just failed."""
+        first, *rest = self.critic_models()
+        self.assertEqual(self.candidates(pod.Task(CODE, avoid_models=[first])), rest)
 
     def test_launch_with_no_avoid_list_sees_every_config_the_slot_carries(self):
         """The contrast: this is every OTHER task in the program, and the filter above
         must be a no-op for it."""
-        seen = {}
-
-        def spy(cfgs, counts):
-            seen["cfgs"] = list(cfgs)
-            return None
-
-        self.patch(pod, "pick_head_config", spy)
-        self.real_launch(pod.Task(CODE))
-        self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
-                         ["glm-5.3", "grok-4.6"])
+        self.assertEqual(self.candidates(pod.Task(CODE)), self.critic_models())
 
     def test_excluding_EVERY_model_is_the_ordinary_launch_refusal_and_not_a_loop(self):
         """It is not special-cased: `pick_head_config()` on an empty tuple returns None
         exactly as it does when every config is at its cap, and rule (f) parks `launch`."""
-        t = pod.Task(CODE, avoid_models=["glm-5.3", "grok-4.6"])
+        t = pod.Task(CODE, avoid_models=self.critic_models())
         self.assertIsNone(self.real_launch(t))
         # AND IT SAYS SO. A park that names no cap costs the maintainer a pane read.
-        self.assertIn("coder_adversarial", pod.LAUNCH_REFUSAL or "")
+        self.assertIn(self.CRITIC, pod.LAUNCH_REFUSAL or "")
 
     # -------------------------------------- owner's ruling 2026-08-23, the omlx lock
 
@@ -6305,51 +6642,45 @@ class FallbackPark(LoopCase):
         out = pod._omlx_excluded(cfgs, self.tmp)
         self.assertEqual([c["model"] for c in out], ["glm-5.3"])
 
+    def local_slot(self):
+        """`(slot, every model, the locally served model)` for the three LIVE tests.
+
+        **THE LOCAL HEAD IS FOUND BY ITS PROVIDER AND NEVER BY ITS NAME**, which is the
+        same discrimination `_omlx_excluded()` itself makes: the provider carries the
+        local footprint, so a future model on `omlx` is this test's subject too. These
+        three named `Qwen3.8-27B-oQ4e-mtp` and `claude-opus-5` in five places and went
+        red for the swap of 2026-08-25, which moved neither of them.
+        """
+        for slot in sorted(heads_mod.load_heads(self.heads_path())["heads"]):
+            cfgs = heads_mod.configs(slot, self.heads_path())
+            local = [c["model"] for c in cfgs if c.get("pi_provider") == "omlx"]
+            if local and len(cfgs) > 1:
+                return slot, [c["model"] for c in cfgs], local[0]
+        self.skipTest("no slot carries a locally served head beside another one today")
+
     def test_LIVE_launch_drops_qwen_from_coder_while_the_lock_is_held_and_memory_is_short(self):
-        """END TO END, through the real `coder` slot of the copied, live heads.toml
-        (`LoopCase.build_tree()`), which carries qwen since the owner's ruling of
-        2026-08-23, RELAXED 2026-08-24 to also require a short memory reading."""
-        seen = {}
-
-        def spy(cfgs, counts):
-            seen["cfgs"] = list(cfgs)
-            return None
-
-        self.patch(pod, "pick_head_config", spy)
+        """END TO END, through a real slot of the copied, live heads.toml
+        (`LoopCase.build_tree()`). RELAXED 2026-08-24 to also require a short memory
+        reading, so the lock alone no longer excludes."""
+        slot, models, local = self.local_slot()
         self.patch(pod, "free_memory_pct", lambda: 10.0)
         self.make_check_lock()
-        self.real_launch(pod.Task(CODE), role="coder")
-        self.assertEqual([c["model"] for c in seen["cfgs"]], ["claude-opus-5"])
+        self.assertEqual(self.candidates(pod.Task(CODE), role=slot),
+                         [m for m in models if m != local])
 
     def test_LIVE_launch_sees_qwen_again_once_the_lock_clears(self):
-        seen = {}
-
-        def spy(cfgs, counts):
-            seen["cfgs"] = list(cfgs)
-            return None
-
-        self.patch(pod, "pick_head_config", spy)
+        slot, models, _ = self.local_slot()
         lock = self.make_check_lock()
         lock.unlink()
-        self.real_launch(pod.Task(CODE), role="coder")
-        self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
-                         sorted(["Qwen3.8-27B-oQ4e-mtp", "claude-opus-5"]))
+        self.assertEqual(self.candidates(pod.Task(CODE), role=slot), models)
 
     def test_LIVE_launch_sees_qwen_again_when_the_lock_is_held_but_memory_has_room(self):
-        """The lock alone is no longer sufficient, end to end through the real
-        `coder` slot: owner's ruling 2026-08-24."""
-        seen = {}
-
-        def spy(cfgs, counts):
-            seen["cfgs"] = list(cfgs)
-            return None
-
-        self.patch(pod, "pick_head_config", spy)
+        """The lock alone is no longer sufficient, end to end through a real slot:
+        owner's ruling 2026-08-24."""
+        slot, models, _ = self.local_slot()
         self.patch(pod, "free_memory_pct", lambda: 84.0)
         self.make_check_lock()
-        self.real_launch(pod.Task(CODE), role="coder")
-        self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
-                         sorted(["Qwen3.8-27B-oQ4e-mtp", "claude-opus-5"]))
+        self.assertEqual(self.candidates(pod.Task(CODE), role=slot), models)
 
 
 class TwoThresholds(LoopCase):
@@ -6702,27 +7033,55 @@ class MaintainerPreset(LoopCase):
     """
 
     def heads(self):
-        return self.tmp / "dev" / "pod" / "heads.toml"
+        return self.heads_path()
 
     def row(self):
-        import tomllib
         return tomllib.loads(self.heads().read_text(encoding="utf-8"))["heads"]["maintainer"]
 
+    def presets(self):
+        """The fixture's own `[maintainer_presets]`, which is what `--use` copies from.
+
+        **WHAT A PRESET SAYS IS THE OWNER'S AND IS READ BACK, NEVER TYPED.** These tests
+        pinned `("claude-opus-5", "herdr-claude")` and `("grok-4.6", "herdr-grok")`,
+        which is the same class of hand-maintained fact as a `[heads]` row.
+        """
+        got = tomllib.loads(self.heads().read_text(encoding="utf-8"))
+        return got.get("maintainer_presets", {})
+
+    def a_preset(self):
+        """One preset name whose row DIFFERS from the live maintainer row.
+
+        A preset that already matches the row would make every switch test below
+        vacuous: the assertion would hold on a `write_maintainer_row()` that did
+        nothing at all. C-45, and it is why the name is chosen rather than typed.
+        """
+        row = self.row()
+        for name, r in sorted(self.presets().items()):
+            if any(r[k] != row.get(k) for k in heads_mod.SLOT_KEYS):
+                return name
+        self.skipTest("every preset already matches the live maintainer row, so a "
+                      "switch could not be told from a no-op")
+
     def test_the_live_file_offers_both_heads_the_owner_named(self):
+        """The preset NAMES are the command's own vocabulary, so they are pinned; what
+        each one carries is the owner's and is only checked for completeness."""
         got = pod.maintainer_presets(ROOT)
         self.assertIn("claude", got)
         self.assertIn("grok", got)
         for name, r in got.items():
-            for k in ("model", "effort", "harness", "sandbox"):
+            for k in heads_mod.SLOT_KEYS:
                 self.assertIn(k, r, f"preset {name} carries no {k}")
 
     def test_a_preset_moves_all_four_fields_together(self):
-        pod.write_maintainer_row("claude", self.tmp)
-        self.assertEqual((self.row()["model"], self.row()["harness"]),
-                         ("claude-opus-5", "herdr-claude"))
-        pod.write_maintainer_row("grok", self.tmp)
-        self.assertEqual((self.row()["model"], self.row()["harness"]),
-                         ("grok-4.6", "herdr-grok"))
+        """**ALL FOUR, AND THE POINT IS THAT NONE IS LEFT BEHIND.** A row carrying
+        `harness = "herdr-grok"` with a claude model loads, dispatches and fails inside
+        the pane, which is the failure class the read-back guard cannot catch."""
+        for name, want in sorted(self.presets().items()):
+            with self.subTest(preset=name):
+                pod.write_maintainer_row(name, self.tmp)
+                got = self.row()
+                self.assertEqual({k: got.get(k) for k in heads_mod.SLOT_KEYS},
+                                 {k: want[k] for k in heads_mod.SLOT_KEYS})
 
     def test_an_unknown_preset_is_REFUSED_and_the_file_is_untouched(self):
         before = self.heads().read_text(encoding="utf-8")
@@ -6735,7 +7094,7 @@ class MaintainerPreset(LoopCase):
         check is the REAL loader and not a second opinion about what it accepts."""
         h = self.heads()
         h.write_text(h.read_text(encoding="utf-8") + '\n[maintainer_presets]\n'
-                     'bogus = { model = "claude-haiku-5", effort = "high", '
+                     f'bogus = {{ model = "{ILLEGAL_MODEL}", effort = "high", '
                      'harness = "herdr-claude", sandbox = "acceptEdits" }\n',
                      encoding="utf-8")
         before = h.read_text(encoding="utf-8")
@@ -6749,7 +7108,7 @@ class MaintainerPreset(LoopCase):
         measurement, which is the whole value of that file."""
         marker = "THE READ-BACK REFUSAL"
         self.assertIn(marker, self.heads().read_text(encoding="utf-8"))
-        pod.write_maintainer_row("claude", self.tmp)
+        pod.write_maintainer_row(self.a_preset(), self.tmp)
         self.assertIn(marker, self.heads().read_text(encoding="utf-8"))
 
     def test_a_MAINTAINER_KEY_IN_ANOTHER_TABLE_cannot_be_rewritten_instead(self):
@@ -6761,15 +7120,19 @@ class MaintainerPreset(LoopCase):
         # A SECOND `[maintainer_presets]` would be duplicate TOML and refuse for the
         # wrong reason. The attack is only that a `maintainer = {...}` LINE sits earlier
         # in the file, so any table before `[heads]` reproduces it.
+        # **THE DECOY IS THE LIVE ROW ITSELF**, so a rewrite that lands on the decoy
+        # leaves the real row untouched and the assertion below sees the OLD model. It
+        # used to be a typed row that happened to name the preset's own model, which is
+        # a coincidence the test's meaning must not rest on.
         h = self.heads()
-        early = ('[an_earlier_table]\n'
-                 'maintainer = { model = "claude-opus-5", effort = "xhigh", '
-                 'harness = "herdr-claude", sandbox = "acceptEdits" }\n\n[heads]\n')
+        name = self.a_preset()
+        early = (f'[an_earlier_table]\nmaintainer = {render_row(self.row())}\n\n'
+                 f'[heads]\n')
         h.write_text(re.sub(r"^\[heads\]\s*$", early.rstrip("\n"),
                             h.read_text(encoding="utf-8"), count=1, flags=re.M),
                      encoding="utf-8")
-        pod.write_maintainer_row("claude", self.tmp)
-        self.assertEqual(self.row()["model"], "claude-opus-5",
+        pod.write_maintainer_row(name, self.tmp)
+        self.assertEqual(self.row()["model"], self.presets()[name]["model"],
                          "the switch rewrote a key in another table and said it worked")
 
     def test_a_write_that_DID_NOT_TAKE_is_refused_and_rolled_back(self):
@@ -6780,12 +7143,13 @@ class MaintainerPreset(LoopCase):
         # the first prose occurrence and leaves the real table standing, which is a
         # fixture that tests nothing.
         h = self.heads()
+        name = self.a_preset()
         h.write_text(re.sub(r"^\[heads\]\s*$", "[heads_disabled]",
                             h.read_text(encoding="utf-8"), count=1, flags=re.M),
                      encoding="utf-8")
         before = h.read_text(encoding="utf-8")
         with self.assertRaises(pod.PodError):
-            pod.write_maintainer_row("claude", self.tmp)
+            pod.write_maintainer_row(name, self.tmp)
         self.assertEqual(h.read_text(encoding="utf-8"), before)
 
     def stub_launcher(self, prompts):
@@ -6839,25 +7203,26 @@ class MaintainerPreset(LoopCase):
                       "the outgoing session was never told it is retired")
 
     def test_a_switch_leaves_the_OTHER_four_slots_alone(self):
-        import tomllib
+        """EVERY other slot, derived: the four are named nowhere, so a sixth slot would
+        be covered the day the owner adds one."""
         before = tomllib.loads(self.heads().read_text(encoding="utf-8"))["heads"]
-        pod.write_maintainer_row("claude", self.tmp)
+        pod.write_maintainer_row(self.a_preset(), self.tmp)
         after = tomllib.loads(self.heads().read_text(encoding="utf-8"))["heads"]
-        for slot in ("mathematician", "mathematician_adversarial",
-                     "coder", "coder_adversarial"):
+        for slot in sorted(set(before) - {"maintainer"}):
             self.assertEqual(before[slot], after[slot], slot)
 
     def test_a_TRAILING_COMMENT_on_the_row_is_matched_and_kept(self):
         """`--use` said the row was not in [heads] when a `# note` sat after the brace.
         That refuse is safe and the message is a lie. Found 2026-08-19."""
         h = self.heads()
+        name = self.a_preset()
         h.write_text(re.sub(
             r"^(maintainer\s*=\s*\{[^}]*\})\s*$",
             r"\1  # the current head",
             h.read_text(encoding="utf-8"), count=1, flags=re.M), encoding="utf-8")
-        pod.write_maintainer_row("claude", self.tmp)
+        pod.write_maintainer_row(name, self.tmp)
         text = h.read_text(encoding="utf-8")
-        self.assertEqual(self.row()["model"], "claude-opus-5")
+        self.assertEqual(self.row()["model"], self.presets()[name]["model"])
         self.assertIn("# the current head", text,
                       "the rewrite dropped the comment it had just matched")
 
@@ -6873,9 +7238,10 @@ class MaintainerPreset(LoopCase):
                              "the live file changed before the loader ran")
             return real(path, cache=False)
 
+        name = self.a_preset()
         self.patch(heads_mod, "load_heads", wrapped)
-        pod.write_maintainer_row("claude", self.tmp)
-        self.assertEqual(self.row()["model"], "claude-opus-5")
+        pod.write_maintainer_row(name, self.tmp)
+        self.assertEqual(self.row()["model"], self.presets()[name]["model"])
         self.assertFalse(live.with_name(live.name + ".tmp").exists(),
                          "the sibling .tmp was left behind after a clean replace")
 

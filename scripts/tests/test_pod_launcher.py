@@ -368,6 +368,35 @@ def cli(*args, **kw):
 #: and appends nothing else.
 NO_EFFORT_HARNESSES = ("herdr",)
 
+#: The two AUTHOR/CRITIC pairs DD25 binds, and DD25 binds nothing else. A pair is a
+#: RELATIONSHIP between two slots, so it survives every ruling that re-points a slot at
+#: another model; only a new role would move it. **NOTHING ELSE IN THIS FILE MAY NAME A
+#: SLOT AND A MODEL TOGETHER**: the checks that did went red for four correct rulings
+#: between 2026-08-21 and 2026-08-25 without a single invariant being broken.
+AUTHOR_CRITIC = (("mathematician", "mathematician_adversarial"),
+                 ("coder", "coder_adversarial"))
+
+#: The two slots the program resolves through `heads_mod.head(<slot>)` with NO model
+#: named: `ensure_maintainer()` at `scripts/pod/pod.py:3986` and
+#: `ensure_mathematician()` at `:4115`. `head()` REFUSES a slot that carries a choice
+#: (`scripts/pod/heads.py:343-347`), so ONE config on each of these two is a property of
+#: the PROGRAM. It is the one thing about these slots that a ruling may not move.
+RESIDENT_SLOTS = ("maintainer", "mathematician")
+
+#: The models the owner's ruling of 2026-08-24 caps at one, wherever their row sits:
+#: `dev/pod/heads.toml:448-456` and `:487-491` state it as a policy over these two model
+#: strings and not as a fact about any slot. It is a MODEL list on purpose, so moving a
+#: model from one slot to another leaves it true. `dev/pod/heads.toml` records that the
+#: policy was made and not why; the local head's own cap is a different argument and is
+#: derived from `[legal.pi_provider]` at its check.
+CAPPED_MODELS = ("glm-5.3", "grok-4.6")
+
+#: THE BAIT FOR A REFUSAL, and it is deliberately a string no vendor will ever ship.
+#: A mutation that reaches for a real-looking name (`claude-haiku-5` was the one used
+#: here) is one owner ruling away from becoming legal and silently defusing the test it
+#: serves. The check beside its use reads `legal.models` back to prove it is still bait.
+ILLEGAL_MODEL = "zz-no-such-model"
+
 
 def _harness_choices(mod):
     """The `--harness` choices argparse actually offers, read from the built parser.
@@ -1022,48 +1051,66 @@ def main() -> int:
           "measured that it passes the client and fails at the API with a 404",
           [m for m in heads["legal"]["models"] if m[-1].isdigit() and len(m) > 16],
           [])
-    # **A12 IS SUPERSEDED, owner's ruling 2026-08-21.** The live row is the
-    # owner's under AD26. This pin tracks the current maintainer head.
-    check("the maintainer is sonnet 5 at xhigh, owner's ruling 2026-08-21",
-          (heads["heads"]["maintainer"]["model"],
-           heads["heads"]["maintainer"]["effort"],
-           heads["heads"]["maintainer"]["harness"]),
-          ("claude-sonnet-5", "xhigh", "herdr-claude"))
+    # **THE TWO RESIDENT SLOTS CARRY EXACTLY ONE CONFIG, AND THAT IS A PROGRAM
+    # INVARIANT AND NOT ONE RULING'S FACT.** `ensure_maintainer()` at
+    # `scripts/pod/pod.py:3986` and `ensure_mathematician()` at `:4115` both call
+    # `heads_mod.head(<slot>)` with NO model named, and `head()` REFUSES a slot that
+    # carries a choice (`scripts/pod/heads.py:343-347`) rather than returning the first
+    # entry as a default. A second head on either slot breaks the resident path,
+    # whichever model it names.
+    # **THE MODEL, THE EFFORT AND THE HARNESS OF A SLOT ARE PINNED NOWHERE BELOW.**
+    # All three are the owner's under AD26 and move whenever the owner says so. This
+    # check used to read `("claude-sonnet-5", "xhigh", "herdr-claude")` and went red for
+    # a correct ruling; the `_rows` loop further down binds every field to the file's
+    # OWN legal sets instead, which is the property that does not move.
+    for _slot in RESIDENT_SLOTS:
+        _v = heads["heads"][_slot]
+        check(f"the resident slot {_slot} carries exactly one config, which is what "
+              f"head() with no model named needs",
+              len(_v if isinstance(_v, list) else [_v]), 1)
     # **A SLOT IS ONE INLINE TABLE OR AN ARRAY OF THEM SINCE A27**, owner's ruling
     # 2026-08-21, and the checks below bind EVERY config of EVERY slot. This reads the
     # RAW TOML, so it sees both spellings; `scripts/pod/heads.py` is what normalises them
     # to a list, and that normalisation is `test_pod_loop.py`'s to prove.
-    # **THREE SLOTS CARRY A CHOICE SINCE A29**, and it was one under A27. The owner
-    # ruled `mathematician_adversarial` and `coder_adversarial` onto a second head so
-    # that A29's retry has somewhere to go for a critic, not only for the coder.
-    check("the three slots that carry a choice are spelled as arrays of tables",
-          sorted(s for s, v in heads["heads"].items() if isinstance(v, list)),
-          ["coder", "coder_adversarial", "mathematician_adversarial"])
-    check("the two single-head slots keep the inline-table spelling A27 preserved",
-          sorted(s for s, v in heads["heads"].items() if isinstance(v, dict)),
-          ["maintainer", "mathematician"])
-    # **SECOND HEADS OF `coder` AND `coder_adversarial` SWAPPED, OWNER'S RULING
-    # 2026-08-25.** `claude-opus-5` (uncapped) is now `coder`'s second head;
-    # `glm-5.3` (capped) is now `coder_adversarial`'s. `coder` is capped on
-    # qwen alone now, not on both heads: the prior check pinned a fact that was
-    # true only while `coder`'s second head was `glm-5.3`.
-    check("the coder array caps qwen but leaves claude-opus-5 uncapped",
-          [r.get("max_concurrency") for r in heads["heads"]["coder"]],
-          [1, None])
-    # **THE CAP IS NOT WHAT MAKES A SLOT RETRYABLE, A29.** Even a fully-capped critic
-    # array still falls back, because the trigger is that the slot has a second head at
-    # all, and A29 fires on a `no-change` return regardless of any cap. This check is
-    # the one that would have failed under A27's capacity gate.
-    check("mathematician_adversarial caps both heads (grok-4.6, glm-5.3), 2026-08-24",
-          [r.get("max_concurrency") for r in heads["heads"]["mathematician_adversarial"]],
-          [1, 1])
-    check("coder_adversarial now caps both heads (grok-4.6, glm-5.3), 2026-08-25",
-          [r.get("max_concurrency") for r in heads["heads"]["coder_adversarial"]],
-          [1, 1])
+    # **THE SPELLING IS CHECKED AS A RULE AND NEVER AS A ROSTER.** These two named which
+    # slots were arrays and which were tables, so every ruling that gave a slot a second
+    # head, or took one away, went red on a file that was perfectly well formed.
+    check("every slot is one inline table or a NON-EMPTY array of tables",
+          sorted(s for s, v in heads["heads"].items()
+                 if not (isinstance(v, dict)
+                         or (isinstance(v, list) and v
+                             and all(isinstance(r, dict) for r in v)))),
+          [])
+    # BOTH SPELLINGS STAY EXERCISED, which is the whole claim of A27's superset: the
+    # array did not retire the single table. Neither check names the slot that holds it.
+    check_true("the single-table spelling is still in the file",
+               any(isinstance(v, dict) for v in heads["heads"].values()))
+    check_true("and the array spelling is too",
+               any(isinstance(v, list) for v in heads["heads"].values()))
     _rows = [(slot, r) for slot, v in heads["heads"].items()
              for r in (v if isinstance(v, list) else [v])]
-    # Eight again, now that qwen is back in `coder` (see the check above).
-    check("the file carries eight configs across the five slots", len(_rows), 8)
+    # **THE CAP IS A POLICY OVER MODELS AND NOT A FACT ABOUT A SLOT.** OWNER'S RULING
+    # 2026-08-24, `dev/pod/heads.toml:448-456` and `:487-491`: the cap qwen's row
+    # already carried now sits on EVERY `glm-5.3` and `grok-4.6` row in the file,
+    # wherever that row sits. Three checks here used to read `[1, None]` and `[1, 1]`
+    # per slot, which pinned WHICH model held WHICH array index, so the swap of two
+    # second heads on 2026-08-25 went red on all three with no invariant broken.
+    check("every glm-5.3 and grok-4.6 row is capped at one, owner's ruling 2026-08-24",
+          sorted(f"{s} on {r['model']}" for s, r in _rows
+                 if r["model"] in CAPPED_MODELS and r.get("max_concurrency") != 1),
+          [])
+    # **THE LOCAL SERVER IS ONE PROCESS**, so a head it serves is capped whatever the
+    # model behind it is called: `omlx-server` serves one 27B model, and a second
+    # concurrent task would contend for the same weights and the same memory. DERIVED
+    # FROM `[legal.pi_provider]`, so a future model on that provider is covered too,
+    # which is the direction `_omlx_excluded()` already takes at
+    # `scripts/pod/pod.py:2882`.
+    _local = sorted(m for m, p in heads["legal"]["pi_provider"].items() if p == "omlx")
+    check_true("the file still names a locally served model", _local)
+    check("every locally served head is capped at one: one server, one generation",
+          sorted(f"{s} on {r['model']}" for s, r in _rows
+                 if r["model"] in _local and r.get("max_concurrency") != 1),
+          [])
     for slot, row in _rows:
         # THE LABEL NAMES THE MODEL AND NOT ONLY THE SLOT, because one slot now produces
         # several rows and two identical labels cannot be told apart in a failure list.
@@ -1116,34 +1163,20 @@ def main() -> int:
         v = heads["heads"][slot]
         return {r["model"] for r in (v if isinstance(v, list) else [v])}
 
-    # **THE WAIVED PAIR IS GONE, OWNER'S RULING 2026-08-25.** `coder` traded its
-    # `glm-5.3` fallback for `claude-opus-5` (swapped with `coder_adversarial`'s
-    # own second head), so `coder` no longer shares anything with
-    # `mathematician_adversarial` and the 2026-08-23 disclosed exception this
-    # loop used to carve out no longer applies. Both pairs now hold with no
-    # exception.
-    for _a, _c in (("mathematician", "mathematician_adversarial"),
-                   ("coder", "coder_adversarial")):
+    # **NO WAIVER, NO EXCEPTION AND NO ROSTER.** This loop carried a dated carve-out for
+    # one pair while `coder` and `mathematician_adversarial` shared `glm-5.3`, and two
+    # further checks that recorded WHICH model sat in which slot and WHICH two critics
+    # happened to match. Both were facts of one ruling, and DD25 is not about either:
+    # it forbids an author reviewing its OWN work and says nothing about two DIFFERENT
+    # critics sharing a head, nor about a model that authors in two slots. What is left
+    # is the pair table below, which is the relationship and not the assignment, so a
+    # ruling that re-points any slot leaves this test standing and a ruling that puts an
+    # author into its own critic's set still fails it.
+    check("the DD25 pair table names only slots the file carries",
+          sorted({s for pair in AUTHOR_CRITIC for s in pair} - set(heads["heads"])), [])
+    for _a, _c in AUTHOR_CRITIC:
         check(f"the critic {_c} shares no model with the author {_a}",
               sorted(_models(_a) & _models(_c)), [])
-    # **`claude-opus-5` IS NOW IN TWO AUTHOR SLOTS AND NO CRITIC SLOT.** It
-    # authors both `mathematician` and `coder`; neither's own critic
-    # (`mathematician_adversarial`, `coder_adversarial`) carries it, so it
-    # never reviews its own output in either direction. This replaces the
-    # prior check, which recorded the OPPOSITE shape (one author slot, one
-    # different author's critic slot) that held before this ruling.
-    check("claude-opus-5 is in two AUTHOR slots and in neither critic slot",
-          sorted(s for s in ("mathematician", "coder", "mathematician_adversarial",
-                             "coder_adversarial")
-                 if "claude-opus-5" in _models(s)),
-          ["coder", "mathematician"])
-    # **THE TWO CRITICS NOW CARRY THE IDENTICAL PAIR, OWNER'S RULING
-    # 2026-08-25.** `coder_adversarial` took `glm-5.3` in the same swap that
-    # gave `mathematician_adversarial`'s `{grok-4.6, glm-5.3}` an exact match.
-    # DD25 permits this: it pairs an author with ITS OWN critic and says
-    # nothing about two different critics sharing heads.
-    check("the two critic slots now carry the same pair, 2026-08-25",
-          _models("mathematician_adversarial") == _models("coder_adversarial"), True)
 
     limits = heads["limits"]
     # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a
@@ -1225,12 +1258,30 @@ def main() -> int:
     # tier numbers rest on this, so the wiring is checked here even though the
     # loader belongs to another module.
     if mod.HEADS_MOD is not None:
+        # **THE LOADER AND THE RAW TOML MUST SEE THE SAME FILE**, which replaces a check
+        # that counted `8` configs and had to be re-counted by hand after every ruling
+        # that added or removed a head. This one fails on a real defect instead: a
+        # normalisation that dropped, duplicated or invented a config for any slot.
+        _loaded = mod.HEADS_MOD.load_heads(path=HEADS, cache=False)["heads"]
+        check("the loader normalises every slot to a list holding exactly the configs "
+              "the raw TOML carries",
+              {s: len(v) for s, v in sorted(_loaded.items())},
+              {s: len(v if isinstance(v, list) else [v])
+               for s, v in sorted(heads["heads"].items())})
         doctored = tmp / "bad-heads.toml"
         good = HEADS.read_text(encoding="utf-8")
+        # **IT DOCTORS BY PATTERN AND NOT BY LITERAL**, for the reason spelled out under
+        # the effort mutation below. This copied one row's exact bytes, padding and
+        # model name included, so the owner's ruling of 2026-08-25 was one more hand
+        # edit here; the pattern below lands on whatever the first `[heads]` row says.
+        # A MUTATION THAT MISSES IS NOT SILENT: the loader then accepts a valid file and
+        # this check reports `accepted`, which is a FAIL and reads as the loader's.
         doctored.write_text(
-            good.replace('mathematician             = { model = "claude-opus-5"',
-                         'mathematician             = { model = "claude-haiku-5"'),
+            re.sub(r'model = "[^"]*"', f'model = "{ILLEGAL_MODEL}"', good, count=1),
             encoding="utf-8")
+        check(f"{ILLEGAL_MODEL} is a string no ruling can make legal, so the mutation "
+              f"above cannot be defused by an edit to legal.models",
+              ILLEGAL_MODEL in heads["legal"]["models"], False)
         try:
             mod.HEADS_MOD.load_heads(path=doctored, cache=False)
             got = "accepted"
