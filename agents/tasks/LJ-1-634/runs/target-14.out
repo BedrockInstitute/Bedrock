@@ -1,0 +1,29 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-25T16:35:22Z
+Checking L.BoundedSubset (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md:1751.17-27: error: [UnequalTerms]
+Σ (A → C) (λ f → (x y : A) → f x ≡ f y → x ≡ y) !=<
+B ↪ C → A → A ↪ C
+when checking that the expression test-a g h has type
+B ↪ C → A → A ↪ C
+       12.17 real        11.88 user         0.25 sys
+          1096220672  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               68797  page reclaims
+                 175  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                2322  involuntary context switches
+        178245427470  instructions retired
+         48799674347  cycles elapsed
+          1035273536  peak memory footprint
+EXIT=42
+ended 2026-08-25T16:35:34Z

@@ -1,0 +1,6 @@
+Checking L.BoundedSubset (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md:1745.3-18: error: [NotInScope]
+Not in scope:
+  BoundedSubsetAt
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md:1745.3-18
+when scope checking BoundedSubsetAt

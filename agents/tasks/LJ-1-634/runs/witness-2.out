@@ -1,0 +1,5 @@
+# witness target-second (round 3)
+Tue 25 Aug 2026 16:40:55 UTC
+pass      exit=0        6.11s  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md::class-pred-iv
+witness: 0 UNRESOLVED of 1, 6.11 s, probe_red=False
+EXIT=0

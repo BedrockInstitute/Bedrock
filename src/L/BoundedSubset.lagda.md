@@ -22,10 +22,10 @@ open import FOL.Manipulation.Parameters using ( countFo; padRight; lookup-map )
 import FOL.Count
 import FOL.Absoluteness
 import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-irrefl )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; 𝒟ₒ; Lset-out; Lset-mono
-        ; layer-trans; Lset-layer )
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; Lset→isL; 𝒟ₒ; Lset-out
+        ; Lset-mono; layer-trans; Lset-layer )
 open import L.Condensation {ℓ} lem using
   ( DefBodyB; Δ₀-DefBodyB
   ; module GraphB
@@ -47,7 +47,7 @@ open import Cubical.Functions.Embedding using ( Embedding-into-isSet→isSet )
 open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪; extensionality )
@@ -875,10 +875,10 @@ module LevelHood0
 open import V.Smallness {ℓ} using ( separateFromSmall; module Δ₀Small )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
 open import V.Model {ℓ} using ( self∈sucV )
-open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡; rank-Lset )
+open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡; rank-Lset; ord∈Lset-suc )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Rank {ℓ} using ( rank-fix )
-open import L.Axioms.Basic {ℓ} using ( Lset-suc )
+open import L.Axioms.Basic {ℓ} using ( Lset-suc; LsetS )
 import L.StageCardinal
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet; _∪_; ⁅_,_⁆; ⁅_⁆s; union-ax; pairing-ax
@@ -1401,6 +1401,122 @@ module Devlin55
                      → (⟨ γ ∈ˢ ω ⟩ → Empty.⊥) → ⟪ Lset γ ⟫ ↪ ⟪ γ ⟫
     stage-card-upper = Up.stage-card-upper
 
+    -- ingredient (iv) of `class-pred` ([LJ-1.608], sited by [LJ-1.625]):
+    -- the branch's graph at a strictly infinite member stage, both
+    -- directions, from the member stage's own graph.  `Sx` here is the
+    -- constructible carrier (the restriction of the V-structure to `isL`);
+    -- the stages are bare `V` elements, and `SC` is instantiated at the
+    -- module's own `α`.
+    module RGraph where
+
+      -- the constructible carrier: the restriction of the V-structure to `isL`
+      Sx : Type (ℓ-suc ℓ)
+      Sx = CS.S
+
+      open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+      isL-ord : (β : V ℓ) → IsOrd β → ⟨ isL β ⟩
+      isL-ord β oβ = Lset→isL (sucV β) (suc-ord oβ) β (ord∈Lset-suc β oβ)
+
+      up : (b : Sx) → ⟪ fst b ⟫ → Sx
+      up b m = ⟪ fst b ⟫↪ m , isL-trans (member (fst b) m) (snd b)
+
+      ixOf : (b x : Sx) → ⟨ fst x ∈ fst b ⟩ → ⟪ fst b ⟫
+      ixOf b x k = fiber (fst b) {x = fst x} k .fst
+
+      comp-fst : {A B C : Type ℓ} (g : A ↪ B) (h : B ↪ C) (j : A)
+        → fst (SC.Upper.comp-inj g h) j ≡ fst h (fst g j)
+      comp-fst (f , _) (g , _) j = refl
+
+      module At (β : V ℓ) (oβ : IsOrd β) (β∈suc : ⟨ β ∈ˢ sucV α ⟩)
+               (infβ : ⟨ β ∈ˢ ω ⟩ → Empty.⊥)
+               (IH : (δ : V ℓ) → ⟨ δ ∈ˢ β ⟩ → SC.Upper.P δ)
+               (m : ⟪ β ⟫) (ω∈δ : ⟨ ω ∈ˢ (⟪ β ⟫↪ m) ⟩) where
+
+        δ : V ℓ
+        δ = ⟪ β ⟫↪ m
+
+        δ∈β : ⟨ δ ∈ˢ β ⟩
+        δ∈β = member β m
+
+        oδ : IsOrd δ
+        oδ = mem-ord {A = β} oβ δ δ∈β
+
+        δ∈suc : ⟨ δ ∈ˢ sucV α ⟩
+        δ∈suc = suc-ord ordα .fst {x = β} {y = δ} δ∈β β∈suc
+
+        infδ : ⟨ δ ∈ˢ ω ⟩ → Empty.⊥
+        infδ h = ∈-irrefl ω (ω-ord .fst ω∈δ h)
+
+        IHδ : ⟪ Lset δ ⟫ ↪ ⟪ δ ⟫
+        IHδ = IH δ δ∈β oδ δ∈suc infδ
+
+        br : ⟪ Lset δ ⟫ ↪ ⟪ β ⟫
+        br = SC.Upper.comp-inj IHδ (SC.Upper.Emb.emb β oβ δ δ∈β)
+
+        δL : Sx
+        δL = LsetS δ oδ
+
+        βO : Sx
+        βO = β , isL-ord β oβ
+
+        δO : Sx
+        δO = δ , isL-ord δ oδ
+
+        val : (x : Sx) (k : ⟨ fst x ∈ fst δL ⟩) → Sx
+        val x k = up βO (fst br (ixOf δL x k))
+
+        valδ : (x : Sx) (k : ⟨ fst x ∈ fst δL ⟩) → Sx
+        valδ x k = up δO (fst IHδ (ixOf δL x k))
+
+        IHGraph : Type (ℓ-suc ℓ)
+        IHGraph = Σ[ ψ ∈ Formula Sx 2 ]
+          ( ((x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
+             → fst y ≡ fst (valδ x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩)
+          × ((x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩ → (k : ⟨ fst x ∈ fst δL ⟩)
+             → fst y ≡ fst (valδ x k)) )
+
+        RecGraph∞ : Type (ℓ-suc ℓ)
+        RecGraph∞ = IHGraph →
+          Σ[ ψ ∈ Formula Sx 2 ]
+            ( ((x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
+               → fst y ≡ fst (val x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩)
+            × ((x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩ → (k : ⟨ fst x ∈ fst δL ⟩)
+               → fst y ≡ fst (val x k)) )
+
+        the-graph : RecGraph∞
+        the-graph G = ψ , (defines-side , only-side)
+          where
+          ψ : Formula Sx 2
+          ψ = fst G
+          val-eq : (x : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
+            → fst (val x k) ≡ fst (valδ x k)
+          val-eq x k =
+            cong (⟪ β ⟫↪)
+              ( comp-fst IHδ (SC.Upper.Emb.emb β oβ δ δ∈β) (ixOf δL x k) )
+            ∙ fiber β {x = ⟪ δ ⟫↪ (fst IHδ (ixOf δL x k))}
+                ( oβ .fst (member δ (fst IHδ (ixOf δL x k))) δ∈β ) .snd
+          IHd : (x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
+            → fst y ≡ fst (valδ x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
+          IHd = fst (snd G)
+          IHo : (x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
+            → (k : ⟨ fst x ∈ fst δL ⟩) → fst y ≡ fst (valδ x k)
+          IHo = snd (snd G)
+          defines-side : (x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
+            → fst y ≡ fst (val x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
+          defines-side x y k e = IHd x y k (e ∙ val-eq x k)
+          only-side : (x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
+            → (k : ⟨ fst x ∈ fst δL ⟩) → fst y ≡ fst (val x k)
+          only-side x y sat k = IHo x y sat k ∙ sym (val-eq x k)
+
+      class-pred-iv : (β : V ℓ) (oβ : IsOrd β) (β∈suc : ⟨ β ∈ˢ sucV α ⟩)
+        (infβ : ⟨ β ∈ˢ ω ⟩ → Empty.⊥)
+        (IH : (δ : V ℓ) → ⟨ δ ∈ˢ β ⟩ → SC.Upper.P δ)
+        (m : ⟪ β ⟫) (ω∈δ : ⟨ ω ∈ˢ (⟪ β ⟫↪ m) ⟩)
+          → At.RecGraph∞ β oβ β∈suc infβ IH m ω∈δ
+      class-pred-iv β oβ β∈suc infβ IH m ω∈δ =
+        At.the-graph β oβ β∈suc infβ IH m ω∈δ
+
     module UK = UnionKit α lam x ordα ordλ α∈λ x⊆Lα x∈Lλ α∉ω
     module HS = HullStage lam ordλ succλ UK.X UK.X⊆Lλ UK.∅∈λ
     module HE = HullExt lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
@@ -1620,6 +1736,21 @@ module Devlin55
 
       theorem : ⟨ x ∈ˢ Lset κ ⟩
       theorem = x∈Lκ
+
+-- [LJ-1.634]: the obligation `class-pred-iv` is metered at the module top
+-- level, and the row at the site it lands in, `Devlin55.BoundedSubsetAt`
+-- `RGraph`, is the implementation. The alias carries the site's telescope;
+-- the name below is the one the meter and the assembler read. The alias is
+-- required: a path into the parameterized submodule in term position is not
+-- a term, while the dotted reference through the alias is.
+module BSA634 (κ : S) (ordκ : IsOrd κ) (cardκ : IsCardinal κ) (κ∉ω : ⟨ κ ∈ˢ ω ⟩ → Empty.⊥)
+             (α : S) (ordα : IsOrd α) (α∈κ : ⟨ α ∈ˢ κ ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+             (sq : (δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥)
+                 → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
+                     ((x y : ⟪ δ ⟫ × ⟪ δ ⟫) → f x ≡ f y → x ≡ y))
+  = Devlin55.BoundedSubsetAt κ ordκ cardκ κ∉ω α ordα α∈κ α∉ω sq
+
+class-pred-iv = BSA634.RGraph.class-pred-iv
 
 -- =====================================================================
 

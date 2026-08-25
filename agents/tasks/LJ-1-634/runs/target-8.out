@@ -1,0 +1,30 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-25T16:19:01Z
+Checking L.BoundedSubset (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md:1751.18-33: error: [NotInScope]
+Not in scope:
+  Devlin55.RGraph
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md:1751.18-33
+    (did you mean 'Devlin55.BoundedSubsetAt.RGraph.At.IHGraph'?)
+when scope checking Devlin55.RGraph
+        2.97 real         2.44 user         0.24 sys
+           568131584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32541  page reclaims
+                4209  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 578  voluntary context switches
+                2171  involuntary context switches
+         33135436236  instructions retired
+         10895902526  cycles elapsed
+           509674432  peak memory footprint
+EXIT=42
+ended 2026-08-25T16:19:04Z

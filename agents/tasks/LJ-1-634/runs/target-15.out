@@ -1,0 +1,24 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-25T16:36:19Z
+Checking L.BoundedSubset (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md).
+       20.15 real        19.66 user         0.46 sys
+          3063758848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              189015  page reclaims
+                  45  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   4  voluntary context switches
+                3599  involuntary context switches
+        299293855612  instructions retired
+         81464970557  cycles elapsed
+          3003648688  peak memory footprint
+EXIT=0
+ended 2026-08-25T16:36:40Z
