@@ -1,0 +1,25 @@
+# arm accept-2
+# task LJ-1.624
+# brief agents/tasks/LJ-1-624/LJ-1.624.md
+# flags (none)
+# GHCRTS -A64m -I0 -M4g
+# tier heavy
+# agda slots during 1
+# load before (3.98876953125, 4.10791015625, 4.09130859375)
+# started 2026-08-25 00:44:08
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 FAILED
+# run src/Everything.lagda.md rc 0 seconds 15.69
+# changed files 16
+# changed files own 8 of 16
+# in-fence lines 498
+# obligations delta 0
+# wall seconds 15.69
+# error class lint
+# exit 1
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M4g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-624/Probe624.agda", "agents/tasks/LJ-1-624/lj-1.624-report.md", "agents/tasks/LJ-1-624/runs/attempt-1-report.md", "agents/tasks/LJ-1-624/runs/floor624.out", "agents/tasks/LJ-1-624/runs/import-check624.out", "agents/tasks/LJ-1-624/runs/typecheck-chapter624-cold.out", "agents/tasks/LJ-1-624/runs/typecheck-chapter624.out", "src/L/CardinalAbove.lagda.md"], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": false}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-624/Probe624.agda", "agents/tasks/LJ-1-624/lj-1.624-report.md", "agents/tasks/LJ-1-624/review-of-CardAboveL-landing.md", "agents/tasks/LJ-1-624/runs/ImportCheck624.agda", "agents/tasks/LJ-1-624/runs/attempt-1-report.md", "agents/tasks/LJ-1-624/runs/floor.out", "agents/tasks/LJ-1-624/runs/floor624.out", "agents/tasks/LJ-1-624/runs/import-check.out", "agents/tasks/LJ-1-624/runs/import-check624.out", "agents/tasks/LJ-1-624/runs/run.sh", "agents/tasks/LJ-1-624/runs/typecheck-chapter.out", "agents/tasks/LJ-1-624/runs/typecheck-chapter624-cold.out", "agents/tasks/LJ-1-624/runs/typecheck-chapter624.out", "agents/tasks/LJ-1-624/runs/typecheck-everything.out", "src/Everything.lagda.md", "src/L/CardinalAbove.lagda.md"], "error_class": "lint", "exit_code": 1, "heap_wall": false, "lines": 498, "obligations_delta": 0, "obligations_open": 0, "seconds": 15.69}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 15.69, "target": "src/Everything.lagda.md"}], "spec_surface_detail": "", "task": "LJ-1.624", "tier": "heavy", "unbound_vacuous": false, "witness_seconds": 2.6}

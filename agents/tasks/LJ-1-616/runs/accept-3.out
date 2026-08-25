@@ -1,0 +1,25 @@
+# arm accept-3
+# task LJ-1.616
+# brief agents/tasks/LJ-1-616/LJ-1.616.md
+# flags (none)
+# GHCRTS -A64m -I0 -M4g
+# tier heavy
+# agda slots during 1
+# load before (3.56298828125, 4.46923828125, 4.55810546875)
+# started 2026-08-25 01:25:23
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run src/Everything.lagda.md rc 0 seconds 2.96
+# changed files 27
+# changed files own 1 of 27
+# in-fence lines 498
+# obligations delta 0
+# wall seconds 2.96
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M4g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-616/review-of-LJ-1-616-1.md"], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-616/lj-1.616-report.md", "agents/tasks/LJ-1-616/review-of-CardAboveL-landing.md", "agents/tasks/LJ-1-616/review-of-LJ-1-616-1.md", "agents/tasks/LJ-1-616/runs/gate-closure.log", "agents/tasks/LJ-1-616/runs/gate-fences.log", "agents/tasks/LJ-1-616/runs/gate-glossary.log", "agents/tasks/LJ-1-616/runs/gate-ledger.log", "agents/tasks/LJ-1-616/runs/gate-lint-agda.log", "agents/tasks/LJ-1-616/runs/gate-lint.log", "agents/tasks/LJ-1-616/runs/gate-markers.log", "agents/tasks/LJ-1-616/runs/gate-probes.log", "agents/tasks/LJ-1-616/runs/gate-reuse.log", "agents/tasks/LJ-1-616/runs/gate-ruleids.log", "agents/tasks/LJ-1-616/runs/gate-specsurface.log", "agents/tasks/LJ-1-616/runs/make-check-non-agda-waiver.log", "agents/tasks/LJ-1-616/runs/make-check-non-agda.log", "agents/tasks/LJ-1-616/runs/make-check-owner-waiver-attempt.log", "agents/tasks/LJ-1-616/runs/make-check-typecheck-owner-waiver.log", "agents/tasks/LJ-1-616/runs/make-check-typecheck-waiver-confirm.log", "agents/tasks/LJ-1-616/runs/make-check.log", "agents/tasks/LJ-1-616/runs/make-check.time", "agents/tasks/LJ-1-616/runs/make-venv.log", "agents/tasks/LJ-1-616/runs/typecheck-chapter-1.log", "agents/tasks/LJ-1-616/runs/typecheck-chapter-1.time", "agents/tasks/LJ-1-616/runs/typecheck-module-alone.log", "src/Everything.lagda.md", "src/L/CardinalAbove.lagda.md"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 498, "obligations_delta": 0, "obligations_open": 0, "seconds": 2.96}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 2.96, "target": "src/Everything.lagda.md"}], "spec_surface_detail": "", "task": "LJ-1.616", "tier": "heavy", "unbound_vacuous": false, "witness_seconds": 2.47}

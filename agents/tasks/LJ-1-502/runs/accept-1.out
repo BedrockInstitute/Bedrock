@@ -1,0 +1,24 @@
+# arm accept-1
+# task LJ-1.502
+# brief agents/tasks/LJ-1-502/LJ-1.502.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 4
+# load before (3.1845703125, 4.3388671875, 4.6513671875)
+# started 2026-08-22 05:29:06
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-502/Probe502.agda rc 0 seconds 2.47
+# changed files 32
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 2.47
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 4, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-502/Probe502.agda", "agents/tasks/LJ-1-502/lj-1.502-report.md", "agents/tasks/LJ-1-502/runs/final-0.out", "agents/tasks/LJ-1-502/runs/final-0.time", "agents/tasks/LJ-1-502/runs/final-1.out", "agents/tasks/LJ-1-502/runs/final-1.time", "agents/tasks/LJ-1-502/runs/final-2.out", "agents/tasks/LJ-1-502/runs/final-2.time", "agents/tasks/LJ-1-502/runs/final-3.out", "agents/tasks/LJ-1-502/runs/final-3.time", "agents/tasks/LJ-1-502/runs/full-0.out", "agents/tasks/LJ-1-502/runs/full-0.time", "agents/tasks/LJ-1-502/runs/full-1.out", "agents/tasks/LJ-1-502/runs/full-1.time", "agents/tasks/LJ-1-502/runs/full-final.out", "agents/tasks/LJ-1-502/runs/full-final.time", "agents/tasks/LJ-1-502/runs/full-r0.out", "agents/tasks/LJ-1-502/runs/full-r0.time", "agents/tasks/LJ-1-502/runs/full-r1.out", "agents/tasks/LJ-1-502/runs/full-r1.time", "agents/tasks/LJ-1-502/runs/full-r2.out", "agents/tasks/LJ-1-502/runs/full-r2.time", "agents/tasks/LJ-1-502/runs/w3-0.out", "agents/tasks/LJ-1-502/runs/w3-0.time", "agents/tasks/LJ-1-502/runs/w3-1.out", "agents/tasks/LJ-1-502/runs/w3-1.time", "agents/tasks/LJ-1-502/runs/w3-r0.out", "agents/tasks/LJ-1-502/runs/w3-r0.time", "agents/tasks/LJ-1-502/runs/w3-r1.out", "agents/tasks/LJ-1-502/runs/w3-r1.time", "agents/tasks/LJ-1-502/runs/w3-r2.out", "agents/tasks/LJ-1-502/runs/w3-r2.time"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 2.47}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 2.47, "target": "agents/tasks/LJ-1-502/Probe502.agda"}], "spec_surface_detail": "", "task": "LJ-1.502", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.51}

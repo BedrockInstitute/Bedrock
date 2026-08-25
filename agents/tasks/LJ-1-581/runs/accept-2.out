@@ -1,0 +1,23 @@
+# arm accept-2
+# task LJ-1.581
+# brief agents/tasks/LJ-1-581/LJ-1.581.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 2
+# load before (3.283203125, 3.7236328125, 3.7685546875)
+# started 2026-08-23 12:59:47
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 28
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": ["agents/tasks/LJ-1-581/Probe581.agda", "agents/tasks/LJ-1-581/runs/Bisect.agda", "agents/tasks/LJ-1-581/runs/ImportPrice.agda", "agents/tasks/LJ-1-581/runs/S45.agda", "agents/tasks/LJ-1-581/runs/W3.agda"], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-581/lj-1.581-report.md", "agents/tasks/LJ-1-581/review-of-LJ-1-581-1.md", "agents/tasks/LJ-1-581/review-of-pairs-into-kappa.md", "agents/tasks/LJ-1-581/runs/bisect-1.out", "agents/tasks/LJ-1-581/runs/bisect-2.out", "agents/tasks/LJ-1-581/runs/bisect-3.out", "agents/tasks/LJ-1-581/runs/bisect-4.out", "agents/tasks/LJ-1-581/runs/confirm.out", "agents/tasks/LJ-1-581/runs/final-1.out", "agents/tasks/LJ-1-581/runs/final-2.out", "agents/tasks/LJ-1-581/runs/final-3.out", "agents/tasks/LJ-1-581/runs/price-1.out", "agents/tasks/LJ-1-581/runs/price-2.out", "agents/tasks/LJ-1-581/runs/price-3.out", "agents/tasks/LJ-1-581/runs/price-4.out", "agents/tasks/LJ-1-581/runs/s3-1.out", "agents/tasks/LJ-1-581/runs/s3-2.out", "agents/tasks/LJ-1-581/runs/s3-3.out", "agents/tasks/LJ-1-581/runs/s45-1.out", "agents/tasks/LJ-1-581/runs/s45-2.out", "agents/tasks/LJ-1-581/runs/s6-1.out", "agents/tasks/LJ-1-581/runs/s6-2.out", "agents/tasks/LJ-1-581/runs/s6-3.out", "agents/tasks/LJ-1-581/runs/s6-4.out", "agents/tasks/LJ-1-581/runs/w3-1.out", "agents/tasks/LJ-1-581/runs/w3-2.out", "agents/tasks/LJ-1-581/runs/witness-1.out", "agents/tasks/LJ-1-581/runs/witness-2.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.581", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.76}

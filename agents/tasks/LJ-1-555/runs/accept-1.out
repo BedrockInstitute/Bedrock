@@ -1,0 +1,23 @@
+# arm accept-1
+# task LJ-1.555
+# brief agents/tasks/LJ-1-555/LJ-1.555.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 0
+# load before (2.04638671875, 2.19189453125, 2.232421875)
+# started 2026-08-23 05:08:20
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 11
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": ["src/Everything.lagda.md", "src/L/CardinalAbove.lagda.md"], "changed_files_refused": [], "concurrency": 0, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-555/lj-1.555-report.md", "agents/tasks/LJ-1-555/review-of-CardAboveL-landing.md", "agents/tasks/LJ-1-555/runs/make-check-after-steady.log", "agents/tasks/LJ-1-555/runs/make-check-after-steady2.log", "agents/tasks/LJ-1-555/runs/make-check-after.log", "agents/tasks/LJ-1-555/runs/make-check-before-steady.log", "agents/tasks/LJ-1-555/runs/make-check-before.log", "agents/tasks/LJ-1-555/runs/make-check-final.log", "agents/tasks/LJ-1-555/runs/make-venv.log", "agents/tasks/LJ-1-555/runs/typecheck-chapter-1.log", "agents/tasks/LJ-1-555/runs/typecheck-chapter-2.log"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.555", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 0.91}

@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.626
+# brief agents/tasks/LJ-1-626/LJ-1.626.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 1
+# load before (4.2587890625, 4.13623046875, 4.40625)
+# started 2026-08-24 19:13:18
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run src/Everything.lagda.md rc 251 seconds 20.35
+# changed files 9
+# changed files own 9 of 9
+# in-fence lines 491
+# obligations delta -1
+# wall seconds 20.35
+# error class heap_wall
+# exit 251
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-626/Probe626.agda", "agents/tasks/LJ-1-626/lj-1.626-report.md", "agents/tasks/LJ-1-626/runs/floor-load.out", "agents/tasks/LJ-1-626/runs/floor-reelab.out", "agents/tasks/LJ-1-626/runs/probe626.out", "agents/tasks/LJ-1-626/runs/run.sh", "agents/tasks/LJ-1-626/runs/with-row-prename.out", "agents/tasks/LJ-1-626/runs/with-row.out", "src/L/StageCardinal.lagda.md"], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-626/Probe626.agda", "agents/tasks/LJ-1-626/lj-1.626-report.md", "agents/tasks/LJ-1-626/runs/floor-load.out", "agents/tasks/LJ-1-626/runs/floor-reelab.out", "agents/tasks/LJ-1-626/runs/probe626.out", "agents/tasks/LJ-1-626/runs/run.sh", "agents/tasks/LJ-1-626/runs/with-row-prename.out", "agents/tasks/LJ-1-626/runs/with-row.out", "src/L/StageCardinal.lagda.md"], "error_class": "heap_wall", "exit_code": 251, "heap_wall": true, "lines": 491, "obligations_delta": -1, "obligations_open": 0, "seconds": 20.35}, "obligations_probe_red": false, "runs_all": [{"rc": 251, "seconds": 20.35, "target": "src/Everything.lagda.md"}], "spec_surface_detail": "", "task": "LJ-1.626", "tier": "wide", "unbound_vacuous": false, "witness_seconds": 0.98}

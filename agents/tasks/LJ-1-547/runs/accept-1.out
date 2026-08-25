@@ -1,0 +1,26 @@
+# arm accept-1
+# task LJ-1.547
+# brief agents/tasks/LJ-1-547/LJ-1.547.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 1
+# load before (3.29345703125, 3.22265625, 3.34130859375)
+# started 2026-08-22 22:42:31
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-547/Probe547.agda rc 0 seconds 1.81
+# run agents/tasks/LJ-1-547/runs/BisBody.agda rc 0 seconds 1.67
+# run agents/tasks/LJ-1-547/runs/BisName.agda rc None seconds 1800.02
+# changed files 18
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 1800.02
+# error class timeout
+# exit None
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-547/Probe547.agda", "agents/tasks/LJ-1-547/lj-1.547-report.md", "agents/tasks/LJ-1-547/runs/BisBody.agda", "agents/tasks/LJ-1-547/runs/BisName.agda", "agents/tasks/LJ-1-547/runs/Pin.agda", "agents/tasks/LJ-1-547/runs/W3.agda", "agents/tasks/LJ-1-547/runs/bisbody.out", "agents/tasks/LJ-1-547/runs/bisname.out", "agents/tasks/LJ-1-547/runs/full-1.out", "agents/tasks/LJ-1-547/runs/full-2.out", "agents/tasks/LJ-1-547/runs/full-3.out", "agents/tasks/LJ-1-547/runs/full-allcold.out", "agents/tasks/LJ-1-547/runs/pin-1.out", "agents/tasks/LJ-1-547/runs/pin-final.out", "agents/tasks/LJ-1-547/runs/stage-a.out", "agents/tasks/LJ-1-547/runs/w3-1.out", "agents/tasks/LJ-1-547/runs/w3-2.out", "agents/tasks/LJ-1-547/runs/w3-3.out"], "error_class": "timeout", "exit_code": null, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 1800.02}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 1.81, "target": "agents/tasks/LJ-1-547/Probe547.agda"}, {"rc": 0, "seconds": 1.67, "target": "agents/tasks/LJ-1-547/runs/BisBody.agda"}, {"rc": null, "seconds": 1800.02, "target": "agents/tasks/LJ-1-547/runs/BisName.agda"}], "spec_surface_detail": "", "task": "LJ-1.547", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.99}

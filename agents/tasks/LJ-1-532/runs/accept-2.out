@@ -1,0 +1,23 @@
+# arm accept-2
+# task LJ-1.532
+# brief agents/tasks/LJ-1-532/LJ-1.532.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 1
+# load before (4.109375, 4.47021484375, 4.34765625)
+# started 2026-08-22 18:28:46
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 39
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": ["agents/tasks/LJ-1-532/Probe532.agda", "agents/tasks/LJ-1-532/runs/Control532.agda", "agents/tasks/LJ-1-532/runs/Section12.agda", "agents/tasks/LJ-1-532/runs/W3.agda"], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-532/lj-1.532-report.md", "agents/tasks/LJ-1-532/review-of-LJ-1-532-1.md", "agents/tasks/LJ-1-532/review-of-approx-in-K.md", "agents/tasks/LJ-1-532/runs/ctl-t1.out", "agents/tasks/LJ-1-532/runs/ctl-t1.time", "agents/tasks/LJ-1-532/runs/ctl-t2.out", "agents/tasks/LJ-1-532/runs/ctl-t2.time", "agents/tasks/LJ-1-532/runs/ctl-t3.out", "agents/tasks/LJ-1-532/runs/ctl-t3.time", "agents/tasks/LJ-1-532/runs/final.out", "agents/tasks/LJ-1-532/runs/final.time", "agents/tasks/LJ-1-532/runs/full-0.out", "agents/tasks/LJ-1-532/runs/full-1.out", "agents/tasks/LJ-1-532/runs/full-2.out", "agents/tasks/LJ-1-532/runs/full-3.out", "agents/tasks/LJ-1-532/runs/full-t1.out", "agents/tasks/LJ-1-532/runs/full-t1.time", "agents/tasks/LJ-1-532/runs/full-t2.out", "agents/tasks/LJ-1-532/runs/full-t2.time", "agents/tasks/LJ-1-532/runs/full-t3.out", "agents/tasks/LJ-1-532/runs/full-t3.time", "agents/tasks/LJ-1-532/runs/s12-final.out", "agents/tasks/LJ-1-532/runs/s12-t1.out", "agents/tasks/LJ-1-532/runs/s12-t1.time", "agents/tasks/LJ-1-532/runs/s12-t2.out", "agents/tasks/LJ-1-532/runs/s12-t2.time", "agents/tasks/LJ-1-532/runs/s12-t3.out", "agents/tasks/LJ-1-532/runs/s12-t3.time", "agents/tasks/LJ-1-532/runs/w3-0.out", "agents/tasks/LJ-1-532/runs/w3-1.out", "agents/tasks/LJ-1-532/runs/w3-2.out", "agents/tasks/LJ-1-532/runs/w3-final.out", "agents/tasks/LJ-1-532/runs/w3-final.time", "agents/tasks/LJ-1-532/runs/w3-t1.out", "agents/tasks/LJ-1-532/runs/w3-t1.time", "agents/tasks/LJ-1-532/runs/w3-t2.out", "agents/tasks/LJ-1-532/runs/w3-t2.time", "agents/tasks/LJ-1-532/runs/w3-t3.out", "agents/tasks/LJ-1-532/runs/w3-t3.time"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.532", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.38}

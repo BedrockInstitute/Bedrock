@@ -1,0 +1,32 @@
+Checking LJ-1-572.Probe572 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-572/Probe572.agda).
+ Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/src/L/StageBound.lagda.md).
+   Checking L.Absorption (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/src/L/Absorption.lagda.md).
+  Checking L.SquareLawClosed (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/src/L/SquareLawClosed.lagda.md).
+ Checking LJ-1-561.Probe561 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-561/Probe561.agda).
+  Checking LJ-1-549.Probe549 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-549/Probe549.agda).
+   Checking L.CodedShift (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/src/L/CodedShift.lagda.md).
+   Checking LJ-1-546.Probe546 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-546/Probe546.agda).
+  Checking LJ-1-552.Probe552 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-552/Probe552.agda).
+  Checking LJ-1-554.Probe554 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-554/Probe554.agda).
+  Checking LJ-1-557.Probe557 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-557/Probe557.agda).
+ Checking LJ-1-568.Probe568 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-568/Probe568.agda).
+  Checking LJ-1-560.Probe560 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-572/agents/tasks/LJ-1-560/Probe560.agda).
+      530.07 real       528.35 user         1.77 sys
+          2624307200  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              161916  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 434  voluntary context switches
+               70809  involuntary context switches
+       7092498598586  instructions retired
+       2136293427691  cycles elapsed
+          2564360568  peak memory footprint
+agda exit=0

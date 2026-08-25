@@ -1,0 +1,24 @@
+# arm accept-1
+# task LJ-1.553
+# brief agents/tasks/LJ-1-553/LJ-1.553.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 3
+# load before (2.837890625, 2.71484375, 2.5888671875)
+# started 2026-08-23 02:02:30
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-553/Probe553.agda rc 0 seconds 2.28
+# changed files 43
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 2.28
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 3, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-553/Probe553.agda", "agents/tasks/LJ-1-553/lj-1.553-report.md", "agents/tasks/LJ-1-553/runs/Probe553.delivered.agda.txt", "agents/tasks/LJ-1-553/runs/Probe553.obligation-only.agda.txt", "agents/tasks/LJ-1-553/runs/Probe553.rerun551-obl.agda.txt", "agents/tasks/LJ-1-553/runs/Probe553.w3-only.agda.txt", "agents/tasks/LJ-1-553/runs/check-fences.out", "agents/tasks/LJ-1-553/runs/check-probes.out", "agents/tasks/LJ-1-553/runs/check-rule-ids.out", "agents/tasks/LJ-1-553/runs/final.out", "agents/tasks/LJ-1-553/runs/final.time", "agents/tasks/LJ-1-553/runs/full-0.out", "agents/tasks/LJ-1-553/runs/full-0.time", "agents/tasks/LJ-1-553/runs/full-1.out", "agents/tasks/LJ-1-553/runs/full-1.time", "agents/tasks/LJ-1-553/runs/full-2.out", "agents/tasks/LJ-1-553/runs/full-2.time", "agents/tasks/LJ-1-553/runs/lint-agda.out", "agents/tasks/LJ-1-553/runs/lint-prose.out", "agents/tasks/LJ-1-553/runs/obl-0.out", "agents/tasks/LJ-1-553/runs/obl-0.time", "agents/tasks/LJ-1-553/runs/obl-1.out", "agents/tasks/LJ-1-553/runs/obl-1.time", "agents/tasks/LJ-1-553/runs/obl-2.out", "agents/tasks/LJ-1-553/runs/obl-2.time", "agents/tasks/LJ-1-553/runs/rerun551-obl-0.out", "agents/tasks/LJ-1-553/runs/rerun551-obl-0.time", "agents/tasks/LJ-1-553/runs/rerun551-obl-1.out", "agents/tasks/LJ-1-553/runs/rerun551-obl-1.time", "agents/tasks/LJ-1-553/runs/rerun551-obl-2.out", "agents/tasks/LJ-1-553/runs/rerun551-obl-2.time", "agents/tasks/LJ-1-553/runs/try-0.out", "agents/tasks/LJ-1-553/runs/try-0.time", "agents/tasks/LJ-1-553/runs/try-1.out", "agents/tasks/LJ-1-553/runs/try-1.time", "agents/tasks/LJ-1-553/runs/w3-0.out", "agents/tasks/LJ-1-553/runs/w3-0.time", "agents/tasks/LJ-1-553/runs/w3-1.out", "agents/tasks/LJ-1-553/runs/w3-1.time", "agents/tasks/LJ-1-553/runs/w3-2.out", "agents/tasks/LJ-1-553/runs/w3-2.time", "agents/tasks/LJ-1-553/runs/witness-0.out", "agents/tasks/LJ-1-553/runs/witness-0.time"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 2.28}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 2.28, "target": "agents/tasks/LJ-1-553/Probe553.agda"}], "spec_surface_detail": "", "task": "LJ-1.553", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.29}

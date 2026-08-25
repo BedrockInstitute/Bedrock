@@ -153,7 +153,6 @@ head_slot = "coder_adversarial"
 
   [branch.when]
   exit_code = 1
-  obligations_delta_max = -1
   changed_files_none = ["agents/tasks/LJ-1-497/review-of-LJ-*-*.md"]
 
 [[branch]]

@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.599
+# brief agents/tasks/LJ-1-599/LJ-1.599.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 1
+# load before (3.9365234375, 3.91064453125, 4.12744140625)
+# started 2026-08-24 08:02:50
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run src/Everything.lagda.md rc 251 seconds 18.79
+# changed files 18
+# changed files own 18 of 18
+# in-fence lines 498
+# obligations delta -1
+# wall seconds 18.79
+# error class heap_wall
+# exit 251
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-599/lj-1.599-report.md", "agents/tasks/LJ-1-599/runs/gate-closure.log", "agents/tasks/LJ-1-599/runs/gate-fences.log", "agents/tasks/LJ-1-599/runs/gate-glossary.log", "agents/tasks/LJ-1-599/runs/gate-ledger.log", "agents/tasks/LJ-1-599/runs/gate-lint.log", "agents/tasks/LJ-1-599/runs/gate-markers.log", "agents/tasks/LJ-1-599/runs/gate-probes.log", "agents/tasks/LJ-1-599/runs/gate-reuse.log", "agents/tasks/LJ-1-599/runs/gate-ruleids.log", "agents/tasks/LJ-1-599/runs/gate-specsurface.log", "agents/tasks/LJ-1-599/runs/gate-venv-check.log", "agents/tasks/LJ-1-599/runs/make-check-before.log", "agents/tasks/LJ-1-599/runs/make-venv.log", "agents/tasks/LJ-1-599/runs/typecheck-chapter-1.log", "agents/tasks/LJ-1-599/runs/typecheck-chapter-2.log", "src/Everything.lagda.md", "src/L/CardinalAbove.lagda.md"], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-599/lj-1.599-report.md", "agents/tasks/LJ-1-599/runs/gate-closure.log", "agents/tasks/LJ-1-599/runs/gate-fences.log", "agents/tasks/LJ-1-599/runs/gate-glossary.log", "agents/tasks/LJ-1-599/runs/gate-ledger.log", "agents/tasks/LJ-1-599/runs/gate-lint.log", "agents/tasks/LJ-1-599/runs/gate-markers.log", "agents/tasks/LJ-1-599/runs/gate-probes.log", "agents/tasks/LJ-1-599/runs/gate-reuse.log", "agents/tasks/LJ-1-599/runs/gate-ruleids.log", "agents/tasks/LJ-1-599/runs/gate-specsurface.log", "agents/tasks/LJ-1-599/runs/gate-venv-check.log", "agents/tasks/LJ-1-599/runs/make-check-before.log", "agents/tasks/LJ-1-599/runs/make-venv.log", "agents/tasks/LJ-1-599/runs/typecheck-chapter-1.log", "agents/tasks/LJ-1-599/runs/typecheck-chapter-2.log", "src/Everything.lagda.md", "src/L/CardinalAbove.lagda.md"], "error_class": "heap_wall", "exit_code": 251, "heap_wall": true, "lines": 498, "obligations_delta": -1, "obligations_open": 0, "seconds": 18.79}, "obligations_probe_red": false, "runs_all": [{"rc": 251, "seconds": 18.79, "target": "src/Everything.lagda.md"}], "spec_surface_detail": "", "task": "LJ-1.599", "tier": "wide", "unbound_vacuous": false, "witness_seconds": 2.81}

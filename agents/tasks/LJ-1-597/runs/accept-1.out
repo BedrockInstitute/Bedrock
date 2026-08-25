@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.597
+# brief agents/tasks/LJ-1-597/LJ-1.597.md
+# flags (none)
+# GHCRTS -A64m -I0 -M4g
+# tier wide
+# agda slots during 1
+# load before (44.5185546875, 47.0986328125, 45.98095703125)
+# started 2026-08-23 19:52:52
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 FAILED
+# run agents/tasks/LJ-1-597/Probe597.agda rc 42 seconds 111.02
+# changed files 8
+# changed files own 8 of 8
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 111.02
+# error class unsolved_meta
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M4g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-597/Probe597.agda", "agents/tasks/LJ-1-597/lj-1.597-report.md", "agents/tasks/LJ-1-597/runs/W3.agda", "agents/tasks/LJ-1-597/runs/final-1.out", "agents/tasks/LJ-1-597/runs/final-2.out", "agents/tasks/LJ-1-597/runs/final-3.out", "agents/tasks/LJ-1-597/runs/final-4.out", "agents/tasks/LJ-1-597/runs/w3-1.out"], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": false}, "error_names_all": ["UnsolvedInteractionMetas"], "facts": {"changed_files": ["agents/tasks/LJ-1-597/Probe597.agda", "agents/tasks/LJ-1-597/lj-1.597-report.md", "agents/tasks/LJ-1-597/runs/W3.agda", "agents/tasks/LJ-1-597/runs/final-1.out", "agents/tasks/LJ-1-597/runs/final-2.out", "agents/tasks/LJ-1-597/runs/final-3.out", "agents/tasks/LJ-1-597/runs/final-4.out", "agents/tasks/LJ-1-597/runs/w3-1.out"], "error_class": "unsolved_meta", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 111.02}, "obligations_probe_red": true, "runs_all": [{"rc": 42, "seconds": 111.02, "target": "agents/tasks/LJ-1-597/Probe597.agda"}], "spec_surface_detail": "", "task": "LJ-1.597", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 111.84}

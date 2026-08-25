@@ -1,0 +1,24 @@
+# arm accept-34
+# task LJ-1.443
+# brief agents/tasks/LJ-1-443/LJ-1.443.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 2
+# load before (4.11669921875, 4.09375, 4.5625)
+# started 2026-08-21 14:30:56
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-443/Probe443.agda rc 0 seconds 2.1
+# changed files 7
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 2.1
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-443/Probe443.agda", "agents/tasks/LJ-1-443/lj-1.443-report.md", "agents/tasks/LJ-1-443/review-of-bounded-modulo-collect.md", "agents/tasks/LJ-1-443/runs/w3-1.out", "agents/tasks/LJ-1-443/runs/w3-recheck-1.out", "agents/tasks/LJ-1-443/runs/w3-recheck-2.out", "agents/tasks/LJ-1-443/runs/w3-recheck-3.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 2.1}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 2.1, "target": "agents/tasks/LJ-1-443/Probe443.agda"}], "spec_surface_detail": "", "task": "LJ-1.443", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 0.0}

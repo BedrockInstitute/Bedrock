@@ -1,0 +1,4 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T12:18:02Z
+Checking LJ-1-541.runs.BisG (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-541/agents/tasks/LJ-1-541/runs/BisG.agda).
+EXIT=137 killed with the shell at about 180 s; /usr/bin/time never printed, so no exact figure exists; NOT a heap wall

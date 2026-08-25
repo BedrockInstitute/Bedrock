@@ -1,0 +1,24 @@
+# arm accept-1
+# task LJ-1.394
+# brief agents/tasks/LJ-1-394/LJ-1.394.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 4
+# load before (9.0458984375, 12.958984375, 12.1435546875)
+# started 2026-08-19 15:41:48
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 FAILED
+# run agents/tasks/LJ-1-394/Probe394.agda rc 42 seconds 1.75
+# changed files 8
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 1.75
+# error class unsolved_meta
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": ["agents/tasks/LJ-1-390/lj-1.390-report.md", "agents/tasks/LJ-1-391/LJ-1.391.md", "agents/tasks/LJ-1-391/Probe391.agda", "agents/tasks/LJ-1-391/lj-1.391-report.md", "agents/tasks/LJ-1-392/LJ-1.392.md", "agents/tasks/LJ-1-392/Probe392.agda", "agents/tasks/LJ-1-392/lj-1.392-report.md", "agents/tasks/LJ-1-393/Floor393.agda", "agents/tasks/LJ-1-393/LJ-1.393.md", "agents/tasks/LJ-1-393/Probe393.agda", "agents/tasks/LJ-1-393/lj-1.393-report.md", "agents/tasks/LJ-1-395/LJ-1.395.md", "agents/tasks/POD-BATCH/20260819-150502.md", "agents/tasks/POD-BATCH/20260819-150534.md", "agents/tasks/POD-BATCH/20260819-150606.md", "agents/tasks/POD-BATCH/20260819-150637.md", "agents/tasks/POD-BATCH/20260819-150709.md", "agents/tasks/POD-BATCH/20260819-150740.md", "agents/tasks/POD-BATCH/20260819-153320.md", "agents/tasks/POD-BATCH/20260819-154024.md", "dev/pod/proposals/20260819-150740.toml.scope", "dev/pod/proposals/20260819-153320.toml.scope", "dev/pod/queue.toml", "dev/pod/replay-corpus.jsonl", "dev/pod/transitions/2026-08.jsonl"], "concurrency": 4, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": false}, "error_names_all": ["UnsolvedInteractionMetas"], "facts": {"changed_files": ["agents/tasks/LJ-1-394/Probe394.agda", "agents/tasks/LJ-1-394/lj-1.394-report.md", "agents/tasks/LJ-1-394/runs/floor.out", "agents/tasks/LJ-1-394/runs/full-with-hole.out", "agents/tasks/LJ-1-394/runs/stage-a.out", "agents/tasks/LJ-1-394/runs/stage-b.out", "agents/tasks/LJ-1-394/runs/stage-c.out", "agents/tasks/LJ-1-394/runs/standing.out"], "error_class": "unsolved_meta", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": 0, "seconds": 1.75}, "obligations_probe_red": true, "runs_all": [{"rc": 42, "seconds": 1.75, "target": "agents/tasks/LJ-1-394/Probe394.agda"}], "spec_surface_detail": "", "task": "LJ-1.394", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 5.24}

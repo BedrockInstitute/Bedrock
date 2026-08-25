@@ -156,7 +156,6 @@ head_slot = "coder_adversarial"
 
   [branch.when]
   exit_code = 1
-  obligations_delta_max = -1
   changed_files_none = ["agents/tasks/LJ-1-505/review-of-LJ-*-*.md"]
 
 [[branch]]
@@ -192,29 +191,6 @@ head_slot = "mathematician_adversarial"
   [branch.when]
   exit_code = 42
   changed_files_any = ["agents/tasks/LJ-1-505/review-of-*.md"]
-
-[[branch]]
-# ADDED 2026-08-22 BY THE MATHEMATICIAN, on the maintainer's request in
-# dev/pod/queue.toml. MEASURED at runs/accept-9.out: exit 0, error_class null,
-# obligations_delta 0, obligations_open 1, 18 changed files that are the
-# coder's own census scripts, and NO review-of-*.md. Every other branch of this
-# brief misses, and so does sys-obligations-satisfied, which needs
-# obligations_open_max = 0. THE JUDGEMENT: an open obligation with no stated
-# verdict is neither a GO nor a stop, and it is what the adversarial slot exists
-# to adjudicate. The critic reads the census and rules whether the frame
-# question was answered.
-# THE EXCLUSION IS DELIBERATE: the critic's own return writes
-# review-of-LJ-1-505-<k>.md, which matches review-of-*.md, so this row cannot
-# re-match its own escalation and attempt_max cannot park the task on it.
-id = "no-verdict"
-priority = 13
-action = "escalate"
-head_slot = "mathematician_adversarial"
-
-  [branch.when]
-  exit_code = 0
-  obligations_delta_min = 0
-  changed_files_none = ["agents/tasks/LJ-1-505/review-of-*.md"]
 
 [[branch]]
 id = "heap-wall-escalate"

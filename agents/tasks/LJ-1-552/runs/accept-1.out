@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.552
+# brief agents/tasks/LJ-1-552/LJ-1.552.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 3
+# load before (2.89599609375, 2.72265625, 2.5908203125)
+# started 2026-08-23 02:02:21
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-552/Probe552.agda rc 0 seconds 2.55
+# run agents/tasks/LJ-1-552/runs/W3.agda rc 0 seconds 2.47
+# changed files 20
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 2.47
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 3, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-552/Probe552.agda", "agents/tasks/LJ-1-552/lj-1.552-report.md", "agents/tasks/LJ-1-552/review-of-succ-assignment.md", "agents/tasks/LJ-1-552/runs/W3.agda", "agents/tasks/LJ-1-552/runs/baseline-549.out", "agents/tasks/LJ-1-552/runs/confirm.out", "agents/tasks/LJ-1-552/runs/final-1.out", "agents/tasks/LJ-1-552/runs/final-2.out", "agents/tasks/LJ-1-552/runs/final-3.out", "agents/tasks/LJ-1-552/runs/full-with-549.out", "agents/tasks/LJ-1-552/runs/red-1.out", "agents/tasks/LJ-1-552/runs/red-2.out", "agents/tasks/LJ-1-552/runs/w3-1.out", "agents/tasks/LJ-1-552/runs/w3-2.out", "agents/tasks/LJ-1-552/runs/w3-3.out", "agents/tasks/LJ-1-552/runs/w3-red-1.out", "agents/tasks/LJ-1-552/runs/w3-red-2.out", "agents/tasks/LJ-1-552/runs/w3-red-3.out", "agents/tasks/LJ-1-552/runs/witness-1.out", "agents/tasks/LJ-1-552/runs/witness-2.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 2.47}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 2.55, "target": "agents/tasks/LJ-1-552/Probe552.agda"}, {"rc": 0, "seconds": 2.47, "target": "agents/tasks/LJ-1-552/runs/W3.agda"}], "spec_surface_detail": "", "task": "LJ-1.552", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.61}

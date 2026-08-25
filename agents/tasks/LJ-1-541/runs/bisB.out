@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M8g]
+started 2026-08-22T12:03:30Z
+Checking LJ-1-541.runs.BisB (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-541/agents/tasks/LJ-1-541/runs/BisB.agda).
+EXIT=137 killed by my own cap at 1:23 elapsed, RSS 685312 KB; NOT a heap wall
+time: command terminated abnormally
+       82.78 real        82.39 user         0.39 sys
+           701759488  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44569  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+               11141  involuntary context switches
+       1131787455084  instructions retired
+        335479517913  cycles elapsed
+           642679840  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+EXIT=137 killed by my own cap at 1:23 elapsed, RSS 685312 KB; NOT a heap wall

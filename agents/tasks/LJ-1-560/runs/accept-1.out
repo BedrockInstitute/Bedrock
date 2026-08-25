@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.560
+# brief agents/tasks/LJ-1-560/LJ-1.560.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 4
+# load before (2.48828125, 2.41650390625, 2.587890625)
+# started 2026-08-23 06:03:57
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-560/Probe560.agda rc 0 seconds 0.87
+# run agents/tasks/LJ-1-560/runs/Red.agda rc 42 seconds 0.77
+# changed files 14
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 0.77
+# error class other
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 4, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": ["UnequalTerms"], "facts": {"changed_files": ["agents/tasks/LJ-1-560/Probe560.agda", "agents/tasks/LJ-1-560/lj-1.560-report.md", "agents/tasks/LJ-1-560/runs/Red.agda", "agents/tasks/LJ-1-560/runs/T1.agda", "agents/tasks/LJ-1-560/runs/W3.agda", "agents/tasks/LJ-1-560/runs/confirm.out", "agents/tasks/LJ-1-560/runs/final-1.out", "agents/tasks/LJ-1-560/runs/final-2.out", "agents/tasks/LJ-1-560/runs/final-3.out", "agents/tasks/LJ-1-560/runs/red-1.out", "agents/tasks/LJ-1-560/runs/t1-1.out", "agents/tasks/LJ-1-560/runs/w3-1.out", "agents/tasks/LJ-1-560/runs/w3-2.out", "agents/tasks/LJ-1-560/runs/w3-3.out"], "error_class": "other", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 0.77}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 0.87, "target": "agents/tasks/LJ-1-560/Probe560.agda"}, {"rc": 42, "seconds": 0.77, "target": "agents/tasks/LJ-1-560/runs/Red.agda"}], "spec_surface_detail": "", "task": "LJ-1.560", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 0.89}

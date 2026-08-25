@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.588
+# brief agents/tasks/LJ-1-588/LJ-1.588.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 3
+# load before (4.0166015625, 3.9873046875, 3.64306640625)
+# started 2026-08-23 13:34:53
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-588/Probe588.agda rc 0 seconds 3.87
+# run agents/tasks/LJ-1-588/runs/W3.agda rc 0 seconds 3.09
+# changed files 16
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 3.09
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 3, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-588/Probe588.agda", "agents/tasks/LJ-1-588/lj-1.588-report.md", "agents/tasks/LJ-1-588/runs/W3.agda", "agents/tasks/LJ-1-588/runs/final-1.out", "agents/tasks/LJ-1-588/runs/final-2.out", "agents/tasks/LJ-1-588/runs/final-3.out", "agents/tasks/LJ-1-588/runs/run.sh", "agents/tasks/LJ-1-588/runs/stage-1.out", "agents/tasks/LJ-1-588/runs/stage-2.out", "agents/tasks/LJ-1-588/runs/stage-2b.out", "agents/tasks/LJ-1-588/runs/stage-2c.out", "agents/tasks/LJ-1-588/runs/stage-2d.out", "agents/tasks/LJ-1-588/runs/stage-3.out", "agents/tasks/LJ-1-588/runs/w3-1.out", "agents/tasks/LJ-1-588/runs/w3-2.out", "agents/tasks/LJ-1-588/runs/w3-3.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 3.09}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 3.87, "target": "agents/tasks/LJ-1-588/Probe588.agda"}, {"rc": 0, "seconds": 3.09, "target": "agents/tasks/LJ-1-588/runs/W3.agda"}], "spec_surface_detail": "", "task": "LJ-1.588", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 12.82}

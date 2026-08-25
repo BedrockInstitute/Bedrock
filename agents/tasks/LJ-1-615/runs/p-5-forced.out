@@ -1,0 +1,29 @@
+GHCRTS=-A64m -I0 -M2g
+CAP=300s (perl alarm)
+START 2026-08-24T02:51:02Z
+NOTE final forced recheck of the delivered file after a comment-only citation fix; interface deleted first
+Checking LJ-1-615.Probe615 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-615/agents/tasks/LJ-1-615/Probe615.agda).
+        8.79 real         8.20 user         0.25 sys
+           581648384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               33004  page reclaims
+                4241  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 479  voluntary context switches
+                4183  involuntary context switches
+        118193288380  instructions retired
+         34620348443  cycles elapsed
+           522306496  peak memory footprint
+
+real	0m8.798s
+user	0m8.207s
+sys	0m0.263s
+EXIT=0
+END 2026-08-24T02:51:11Z

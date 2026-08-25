@@ -1,0 +1,24 @@
+# arm accept-2
+# task LJ-1.611
+# brief agents/tasks/LJ-1-611/LJ-1.611.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 1
+# load before (3.9130859375, 5.8857421875, 11.10791015625)
+# started 2026-08-24 09:46:27
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 9
+# changed files own 1 of 9
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-611/review-of-LJ-1-611-1.md"], "changed_files_refused": ["agents/tasks/LJ-1-611/Probe611.agda", "agents/tasks/LJ-1-611/runs/W3.agda"], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-611/lj-1.611-report.md", "agents/tasks/LJ-1-611/review-of-LJ-1-611-1.md", "agents/tasks/LJ-1-611/review-of-graph-ambient.md", "agents/tasks/LJ-1-611/runs/p-1.out", "agents/tasks/LJ-1-611/runs/p-2.out", "agents/tasks/LJ-1-611/runs/p-3.out", "agents/tasks/LJ-1-611/runs/p-4-forced.out", "agents/tasks/LJ-1-611/runs/w3-1.out", "agents/tasks/LJ-1-611/runs/w3-2.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.611", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.38}

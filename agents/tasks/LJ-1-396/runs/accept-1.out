@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.396
+# brief agents/tasks/LJ-1-396/LJ-1.396.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 4
+# load before (5.33349609375, 5.51220703125, 5.57470703125)
+# started 2026-08-20 09:27:35
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 FAILED
+# run agents/tasks/LJ-1-396/Floor396.agda rc 0 seconds 0.07
+# run agents/tasks/LJ-1-396/Probe396.agda rc 42 seconds 1.75
+# changed files 8
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 1.75
+# error class unsolved_meta
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 4, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": false}, "error_names_all": ["UnsolvedInteractionMetas"], "facts": {"changed_files": ["agents/tasks/LJ-1-396/Floor396.agda", "agents/tasks/LJ-1-396/Probe396.agda", "agents/tasks/LJ-1-396/lj-1.396-report.md", "agents/tasks/LJ-1-396/review-of-kappa-is-limit.md", "agents/tasks/LJ-1-396/runs/floor.out", "agents/tasks/LJ-1-396/runs/full-1-2-3.out", "agents/tasks/LJ-1-396/runs/nohole-green.out", "agents/tasks/LJ-1-396/runs/witness.out"], "error_class": "unsolved_meta", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 2, "seconds": 1.75}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 0.07, "target": "agents/tasks/LJ-1-396/Floor396.agda"}, {"rc": 42, "seconds": 1.75, "target": "agents/tasks/LJ-1-396/Probe396.agda"}], "spec_surface_detail": "", "task": "LJ-1.396", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 0.0}

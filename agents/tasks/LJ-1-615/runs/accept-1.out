@@ -1,0 +1,26 @@
+# arm accept-1
+# task LJ-1.615
+# brief agents/tasks/LJ-1-615/LJ-1.615.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (5.1494140625, 5.1884765625, 5.74560546875)
+# started 2026-08-24 10:56:58
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 FAILED
+# run agents/tasks/LJ-1-615/Probe615.agda rc 0 seconds 1.9
+# run agents/tasks/LJ-1-615/runs/FLOOR.agda rc 42 seconds 1.42
+# changed files 15
+# changed files own 15 of 15
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 1.42
+# error class unsolved_meta
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-615/Probe615.agda", "agents/tasks/LJ-1-615/lj-1.615-report.md", "agents/tasks/LJ-1-615/review-of-value-is-L.md", "agents/tasks/LJ-1-615/runs/FLOOR.agda", "agents/tasks/LJ-1-615/runs/W3.agda", "agents/tasks/LJ-1-615/runs/floor-1.out", "agents/tasks/LJ-1-615/runs/floor-2.out", "agents/tasks/LJ-1-615/runs/p-1.out", "agents/tasks/LJ-1-615/runs/p-2-forced.out", "agents/tasks/LJ-1-615/runs/p-3.out", "agents/tasks/LJ-1-615/runs/p-4-forced.out", "agents/tasks/LJ-1-615/runs/p-5-forced.out", "agents/tasks/LJ-1-615/runs/w3-1.out", "agents/tasks/LJ-1-615/runs/w3-2.out", "agents/tasks/LJ-1-615/runs/w3-3.out"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": false}, "error_names_all": ["UnsolvedInteractionMetas"], "facts": {"changed_files": ["agents/tasks/LJ-1-615/Probe615.agda", "agents/tasks/LJ-1-615/lj-1.615-report.md", "agents/tasks/LJ-1-615/review-of-value-is-L.md", "agents/tasks/LJ-1-615/runs/FLOOR.agda", "agents/tasks/LJ-1-615/runs/W3.agda", "agents/tasks/LJ-1-615/runs/floor-1.out", "agents/tasks/LJ-1-615/runs/floor-2.out", "agents/tasks/LJ-1-615/runs/p-1.out", "agents/tasks/LJ-1-615/runs/p-2-forced.out", "agents/tasks/LJ-1-615/runs/p-3.out", "agents/tasks/LJ-1-615/runs/p-4-forced.out", "agents/tasks/LJ-1-615/runs/p-5-forced.out", "agents/tasks/LJ-1-615/runs/w3-1.out", "agents/tasks/LJ-1-615/runs/w3-2.out", "agents/tasks/LJ-1-615/runs/w3-3.out"], "error_class": "unsolved_meta", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 1.42}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 1.9, "target": "agents/tasks/LJ-1-615/Probe615.agda"}, {"rc": 42, "seconds": 1.42, "target": "agents/tasks/LJ-1-615/runs/FLOOR.agda"}], "spec_surface_detail": "", "task": "LJ-1.615", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.39}

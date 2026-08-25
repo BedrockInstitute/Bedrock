@@ -1,0 +1,23 @@
+# arm accept-2
+# task LJ-1.388
+# brief agents/tasks/LJ-1-388/LJ-1.388.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 0
+# load before (3.9384765625, 4.18359375, 6.806640625)
+# started 2026-08-20 11:05:53
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 FAILED
+# changed files 1
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class lint
+# exit 1
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 0, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": false}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-388/lj-1.388-report.md"], "error_class": "lint", "exit_code": 1, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 0, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.388", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.63}

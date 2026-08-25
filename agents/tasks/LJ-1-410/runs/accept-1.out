@@ -1,0 +1,24 @@
+# arm accept-1
+# task LJ-1.410
+# brief agents/tasks/LJ-1-410/LJ-1.410.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 1
+# load before (6.80908203125, 7.23876953125, 9.30615234375)
+# started 2026-08-20 14:53:44
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-410/Probe410.agda rc 0 seconds 1.99
+# changed files 2
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 1.99
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-410/Probe410.agda", "agents/tasks/LJ-1-410/lj-1.410-report.md"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 1.99}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 1.99, "target": "agents/tasks/LJ-1-410/Probe410.agda"}], "spec_surface_detail": "", "task": "LJ-1.410", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.72}

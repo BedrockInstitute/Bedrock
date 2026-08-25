@@ -1,0 +1,29 @@
+# arm accept-3
+# task LJ-1.582
+# brief agents/tasks/LJ-1-582/LJ-1.582.md
+# flags (none)
+# GHCRTS -A64m -I0 -M4g
+# tier wide
+# agda slots during 1
+# load before (19.7783203125, 43.9208984375, 49.37109375)
+# started 2026-08-23 20:53:06
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-582/Probe582.agda rc 0 seconds 3.73
+# run agents/tasks/LJ-1-582/runs/S2.agda rc 0 seconds 2.41
+# run agents/tasks/LJ-1-582/runs/S5.agda rc 0 seconds 2.31
+# run agents/tasks/LJ-1-582/runs/S7.agda rc 0 seconds 2.32
+# run agents/tasks/LJ-1-582/runs/W3.agda rc 0 seconds 2.32
+# changed files 55
+# changed files own 13 of 55
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 2.32
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M4g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-582/Probe582.agda", "agents/tasks/LJ-1-582/lj-1.582-report.md", "agents/tasks/LJ-1-582/review-of-defines-level.md", "agents/tasks/LJ-1-582/runs/S7.agda", "agents/tasks/LJ-1-582/runs/final-5.out", "agents/tasks/LJ-1-582/runs/final-6.out", "agents/tasks/LJ-1-582/runs/s2-2.out", "agents/tasks/LJ-1-582/runs/s4-2.out", "agents/tasks/LJ-1-582/runs/s5-2.out", "agents/tasks/LJ-1-582/runs/s6-2.out", "agents/tasks/LJ-1-582/runs/s7-2.out", "agents/tasks/LJ-1-582/runs/s8-2.out", "agents/tasks/LJ-1-582/runs/w3-2.out"], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-582/Probe582.agda", "agents/tasks/LJ-1-582/lj-1.582-report.md", "agents/tasks/LJ-1-582/review-of-defines-level.md", "agents/tasks/LJ-1-582/runs/S2.agda", "agents/tasks/LJ-1-582/runs/S3.agda.txt", "agents/tasks/LJ-1-582/runs/S4.agda.txt", "agents/tasks/LJ-1-582/runs/S5.agda", "agents/tasks/LJ-1-582/runs/S6.agda.txt", "agents/tasks/LJ-1-582/runs/S7.agda", "agents/tasks/LJ-1-582/runs/S8.agda.txt", "agents/tasks/LJ-1-582/runs/W3.agda", "agents/tasks/LJ-1-582/runs/final-1.out", "agents/tasks/LJ-1-582/runs/final-2.out", "agents/tasks/LJ-1-582/runs/final-3.out", "agents/tasks/LJ-1-582/runs/final-4.out", "agents/tasks/LJ-1-582/runs/final-5.out", "agents/tasks/LJ-1-582/runs/final-6.out", "agents/tasks/LJ-1-582/runs/full-probe.txt", "agents/tasks/LJ-1-582/runs/p-1.out", "agents/tasks/LJ-1-582/runs/p-10.out", "agents/tasks/LJ-1-582/runs/p-11.out", "agents/tasks/LJ-1-582/runs/p-11b.out", "agents/tasks/LJ-1-582/runs/p-12.out", "agents/tasks/LJ-1-582/runs/p-13.out", "agents/tasks/LJ-1-582/runs/p-14.out", "agents/tasks/LJ-1-582/runs/p-15.out", "agents/tasks/LJ-1-582/runs/p-16.out", "agents/tasks/LJ-1-582/runs/p-17.out", "agents/tasks/LJ-1-582/runs/p-18.out", "agents/tasks/LJ-1-582/runs/p-19.out", "agents/tasks/LJ-1-582/runs/p-2.out", "agents/tasks/LJ-1-582/runs/p-3.out", "agents/tasks/LJ-1-582/runs/p-4.out", "agents/tasks/LJ-1-582/runs/p-5.out", "agents/tasks/LJ-1-582/runs/p-6.out", "agents/tasks/LJ-1-582/runs/p-7.out", "agents/tasks/LJ-1-582/runs/p-8.out", "agents/tasks/LJ-1-582/runs/p-9.out", "agents/tasks/LJ-1-582/runs/run.sh", "agents/tasks/LJ-1-582/runs/s2-1.out", "agents/tasks/LJ-1-582/runs/s2-2.out", "agents/tasks/LJ-1-582/runs/s3-1.out", "agents/tasks/LJ-1-582/runs/s4-1.out", "agents/tasks/LJ-1-582/runs/s4-2.out", "agents/tasks/LJ-1-582/runs/s5-1.out", "agents/tasks/LJ-1-582/runs/s5-2.out", "agents/tasks/LJ-1-582/runs/s6-1.out", "agents/tasks/LJ-1-582/runs/s6-2.out", "agents/tasks/LJ-1-582/runs/s7-1.out", "agents/tasks/LJ-1-582/runs/s7-2.out", "agents/tasks/LJ-1-582/runs/s8-1.out", "agents/tasks/LJ-1-582/runs/s8-2.out", "agents/tasks/LJ-1-582/runs/w3-1.out", "agents/tasks/LJ-1-582/runs/w3-2.out", "agents/tasks/LJ-1-582/runs/witness-1.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 2.32}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 3.73, "target": "agents/tasks/LJ-1-582/Probe582.agda"}, {"rc": 0, "seconds": 2.41, "target": "agents/tasks/LJ-1-582/runs/S2.agda"}, {"rc": 0, "seconds": 2.31, "target": "agents/tasks/LJ-1-582/runs/S5.agda"}, {"rc": 0, "seconds": 2.32, "target": "agents/tasks/LJ-1-582/runs/S7.agda"}, {"rc": 0, "seconds": 2.32, "target": "agents/tasks/LJ-1-582/runs/W3.agda"}], "spec_surface_detail": "", "task": "LJ-1.582", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 3.16}

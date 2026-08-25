@@ -1,0 +1,29 @@
+GHCRTS=-A64m -I0 -M2g
+CAP=120s (perl alarm)
+START 2026-08-24T02:42:03Z
+NOTE the recovered type (ambient reading, ambient carrier); w3-1/w3-2 measured the first, WRONG recovery
+Checking LJ-1-615.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-615/agents/tasks/LJ-1-615/runs/W3.agda).
+        1.81 real         1.29 user         0.22 sys
+           384532480  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20990  page reclaims
+                4225  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 648  voluntary context switches
+                2125  involuntary context switches
+         16631756764  instructions retired
+          6020185224  cycles elapsed
+           325337904  peak memory footprint
+
+real	0m1.832s
+user	0m1.293s
+sys	0m0.229s
+EXIT=0
+END 2026-08-24T02:42:05Z

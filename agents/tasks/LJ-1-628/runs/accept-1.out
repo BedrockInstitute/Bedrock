@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.628
+# brief agents/tasks/LJ-1-628/LJ-1.628.md
+# flags (none)
+# GHCRTS -A64m -I0 -M4g
+# tier heavy
+# agda slots during 1
+# load before (2.6806640625, 3.7333984375, 4.24462890625)
+# started 2026-08-25 05:12:57
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 FAILED
+# conjunct 6 FAILED
+# run src/Everything.lagda.md rc 251 seconds 111.1
+# changed files 8
+# changed files own 8 of 8
+# in-fence lines 171
+# obligations delta -1
+# wall seconds 111.1
+# error class spec_surface
+# exit 1
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M4g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-628/lj-1.628-report.md", "agents/tasks/LJ-1-628/runs/cold-cone.out", "agents/tasks/LJ-1-628/runs/heavy-1-floor.out", "agents/tasks/LJ-1-628/runs/heavy-2-with-row.out", "agents/tasks/LJ-1-628/runs/heavy-3-warm.out", "agents/tasks/LJ-1-628/runs/heavy-4-everything.out", "agents/tasks/LJ-1-628/runs/run.sh", "src/L/Constructible.lagda.md"], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": false, "6": false}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-628/lj-1.628-report.md", "agents/tasks/LJ-1-628/runs/cold-cone.out", "agents/tasks/LJ-1-628/runs/heavy-1-floor.out", "agents/tasks/LJ-1-628/runs/heavy-2-with-row.out", "agents/tasks/LJ-1-628/runs/heavy-3-warm.out", "agents/tasks/LJ-1-628/runs/heavy-4-everything.out", "agents/tasks/LJ-1-628/runs/run.sh", "src/L/Constructible.lagda.md"], "error_class": "spec_surface", "exit_code": 1, "heap_wall": true, "lines": 171, "obligations_delta": -1, "obligations_open": 0, "seconds": 111.1}, "obligations_probe_red": false, "runs_all": [{"rc": 251, "seconds": 111.1, "target": "src/Everything.lagda.md"}], "spec_surface_detail": "check-spec-surface: FAIL. The trophy spec surface moved and no approval names it: declaration added: src/L/Constructible.lagda.md :: class-pred-i A change inside the surface changes what the trophy asserts while the tree stays green. Show the owner the diff, get the ruling, run `--write`, and commit with `Spec-surface-approved: YYYY-MM-DD (name)`.", "task": "LJ-1.628", "tier": "heavy", "unbound_vacuous": false, "witness_seconds": 0.73}

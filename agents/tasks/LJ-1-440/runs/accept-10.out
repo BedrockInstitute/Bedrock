@@ -1,0 +1,23 @@
+# arm accept-10
+# task LJ-1.440
+# brief agents/tasks/LJ-1-440/LJ-1.440.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 4
+# load before (29.01416015625, 20.26513671875, 12.021484375)
+# started 2026-08-21 09:51:21
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 2
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 4, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-440/lj-1.440-report.md", "agents/tasks/LJ-1-440/review-of-sq-trunc-closed.md"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.440", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 0.0}

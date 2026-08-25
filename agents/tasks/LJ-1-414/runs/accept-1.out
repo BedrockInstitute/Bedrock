@@ -1,0 +1,24 @@
+# arm accept-1
+# task LJ-1.414
+# brief agents/tasks/LJ-1-414/LJ-1.414.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 1
+# load before (12.0224609375, 10.25, 7.265625)
+# started 2026-08-20 16:11:46
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-414/Probe414.agda rc 42 seconds 1.53
+# changed files 5
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 1.53
+# error class unsolved_meta
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 1, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": ["UnsolvedInteractionMetas"], "facts": {"changed_files": ["agents/tasks/LJ-1-414/Probe414.agda", "agents/tasks/LJ-1-414/lj-1.414-report.md", "agents/tasks/LJ-1-414/review-of-amb-to-coded.md", "agents/tasks/LJ-1-414/runs/amb-to-coded-hole.out", "agents/tasks/LJ-1-414/runs/code-from-graph.out"], "error_class": "unsolved_meta", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 1.53}, "obligations_probe_red": true, "runs_all": [{"rc": 42, "seconds": 1.53, "target": "agents/tasks/LJ-1-414/Probe414.agda"}], "spec_surface_detail": "", "task": "LJ-1.414", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.64}

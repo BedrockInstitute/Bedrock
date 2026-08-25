@@ -1,0 +1,8 @@
+# arm full-1
+# task LJ-1.395
+# brief agents/tasks/LJ-1-395/LJ-1.395.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+Checking LJ-1-395.Probe395 (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-395/Probe395.agda).
+        1.94 real         1.64 user         0.19 sys
+exit=0

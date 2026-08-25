@@ -1,0 +1,29 @@
+wallcap=600s (perl alarm) — includes restored to the cure's original context
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-23T22:29:35Z
+Checking LJ-1-607.runs.P136Check (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-607/agents/tasks/LJ-1-607/runs/P136Check.agda).
+
+———— All done; warnings encountered ————————————————————————
+
+warning: -W[no]WarningProblem
+Unknown warning flag: UnsupportedIndexedMappedPattern. See --help=warning.
+        1.17 real         0.99 user         0.14 sys
+           348717056  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               23339  page reclaims
+                  10  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  25  voluntary context switches
+                 280  involuntary context switches
+         14935017939  instructions retired
+          4951353692  cycles elapsed
+           289391384  peak memory footprint
+EXIT=0
+ended 2026-08-23T22:29:36Z

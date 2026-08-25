@@ -1,0 +1,24 @@
+# arm accept-25
+# task LJ-1.470
+# brief agents/tasks/LJ-1-470/LJ-1.470.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 4
+# load before (5.81103515625, 4.56005859375, 4.59423828125)
+# started 2026-08-21 19:25:28
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run src/Everything.lagda.md rc 0 seconds 4.77
+# changed files 25
+# in-fence lines 39
+# obligations delta 0
+# wall seconds 4.77
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 4, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-470/lj-1.470-report.md", "agents/tasks/LJ-1-470/review-of-LJ-1-470-1.md", "agents/tasks/LJ-1-470/runs/full-1.exit", "agents/tasks/LJ-1-470/runs/full-1.out", "agents/tasks/LJ-1-470/runs/full-1.time", "agents/tasks/LJ-1-470/runs/full-recheck-1.exit", "agents/tasks/LJ-1-470/runs/full-recheck-1.out", "agents/tasks/LJ-1-470/runs/full-recheck-1.time", "agents/tasks/LJ-1-470/runs/full-recheck-2.exit", "agents/tasks/LJ-1-470/runs/full-recheck-2.out", "agents/tasks/LJ-1-470/runs/full-recheck-2.time", "agents/tasks/LJ-1-470/runs/full-recheck-3.exit", "agents/tasks/LJ-1-470/runs/full-recheck-3.out", "agents/tasks/LJ-1-470/runs/full-recheck-3.time", "agents/tasks/LJ-1-470/runs/make-check-after.out", "agents/tasks/LJ-1-470/runs/make-check-before.out", "agents/tasks/LJ-1-470/runs/unbound-after.out", "agents/tasks/LJ-1-470/runs/unbound-before.out", "agents/tasks/LJ-1-470/runs/unbound-codedshift.out", "agents/tasks/LJ-1-470/runs/witness.exit", "agents/tasks/LJ-1-470/runs/witness.out", "agents/tasks/LJ-1-470/runs/witness.time", "dev/ledger.toml", "src/Everything.lagda.md", "src/L/CodedShift.lagda.md"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 39, "obligations_delta": 0, "obligations_open": 0, "seconds": 4.77}, "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 4.77, "target": "src/Everything.lagda.md"}], "spec_surface_detail": "", "task": "LJ-1.470", "tier": "wide", "unbound_vacuous": false, "witness_seconds": 2.04}

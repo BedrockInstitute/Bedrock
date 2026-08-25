@@ -1,0 +1,23 @@
+# arm accept-2
+# task LJ-1.504
+# brief agents/tasks/LJ-1-504/LJ-1.504.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 3
+# load before (3.34521484375, 4.05322265625, 4.291015625)
+# started 2026-08-22 05:45:16
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 24
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": ["agents/tasks/LJ-1-504/Probe504.agda"], "concurrency": 3, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-504/lj-1.504-report.md", "agents/tasks/LJ-1-504/review-of-LJ-1-504-1.md", "agents/tasks/LJ-1-504/review-of-someEnv-reaches.md", "agents/tasks/LJ-1-504/runs/Probe504.w3-only.agda.txt", "agents/tasks/LJ-1-504/runs/attempt-0.out", "agents/tasks/LJ-1-504/runs/final.out", "agents/tasks/LJ-1-504/runs/full-0.out", "agents/tasks/LJ-1-504/runs/full-0.time", "agents/tasks/LJ-1-504/runs/full-1.out", "agents/tasks/LJ-1-504/runs/full-1.time", "agents/tasks/LJ-1-504/runs/full-2.out", "agents/tasks/LJ-1-504/runs/full-2.time", "agents/tasks/LJ-1-504/runs/full-3.out", "agents/tasks/LJ-1-504/runs/full-3.time", "agents/tasks/LJ-1-504/runs/w3-0.out", "agents/tasks/LJ-1-504/runs/w3-0.time", "agents/tasks/LJ-1-504/runs/w3-1.out", "agents/tasks/LJ-1-504/runs/w3-1.time", "agents/tasks/LJ-1-504/runs/w3-2.out", "agents/tasks/LJ-1-504/runs/w3-2.time", "agents/tasks/LJ-1-504/runs/w3-3.out", "agents/tasks/LJ-1-504/runs/w3-3.time", "agents/tasks/LJ-1-504/runs/w3-control.out", "agents/tasks/LJ-1-504/runs/witness-1.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.504", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 3.14}

@@ -1,0 +1,23 @@
+# arm accept-3
+# task LJ-1.435
+# brief agents/tasks/LJ-1-435/LJ-1.435.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 3
+# load before (7.68310546875, 6.42236328125, 5.3115234375)
+# started 2026-08-20 22:09:11
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 31
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": ["agents/tasks/LJ-1-435/Probe435.agda"], "concurrency": 3, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-435/lj-1.435-report.md", "agents/tasks/LJ-1-435/review-of-LJ-1-435-1.md", "agents/tasks/LJ-1-435/review-of-limit-step-trunc.md", "agents/tasks/LJ-1-435/runs/full-1.out", "agents/tasks/LJ-1-435/runs/full-1.time", "agents/tasks/LJ-1-435/runs/full-2.out", "agents/tasks/LJ-1-435/runs/full-2.time", "agents/tasks/LJ-1-435/runs/full-3.out", "agents/tasks/LJ-1-435/runs/full-3.time", "agents/tasks/LJ-1-435/runs/full-4.out", "agents/tasks/LJ-1-435/runs/full-4.time", "agents/tasks/LJ-1-435/runs/full-5.out", "agents/tasks/LJ-1-435/runs/full-5.time", "agents/tasks/LJ-1-435/runs/full-6.out", "agents/tasks/LJ-1-435/runs/full-6.time", "agents/tasks/LJ-1-435/runs/full-recheck-1.out", "agents/tasks/LJ-1-435/runs/full-recheck-1.time", "agents/tasks/LJ-1-435/runs/full-recheck-2.out", "agents/tasks/LJ-1-435/runs/full-recheck-2.time", "agents/tasks/LJ-1-435/runs/full-recheck-3.out", "agents/tasks/LJ-1-435/runs/full-recheck-3.time", "agents/tasks/LJ-1-435/runs/w3-1.out", "agents/tasks/LJ-1-435/runs/w3-1.time", "agents/tasks/LJ-1-435/runs/w3-2.out", "agents/tasks/LJ-1-435/runs/w3-2.time", "agents/tasks/LJ-1-435/runs/w3-recheck-1.out", "agents/tasks/LJ-1-435/runs/w3-recheck-1.time", "agents/tasks/LJ-1-435/runs/w3-recheck-2.out", "agents/tasks/LJ-1-435/runs/w3-recheck-2.time", "agents/tasks/LJ-1-435/runs/w3-recheck-3.out", "agents/tasks/LJ-1-435/runs/w3-recheck-3.time"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": true, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.435", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 6.49}

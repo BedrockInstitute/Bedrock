@@ -1,0 +1,24 @@
+# arm accept-2
+# task LJ-1.627
+# brief agents/tasks/LJ-1-627/LJ-1.627.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 1
+# load before (3.0751953125, 3.93017578125, 4.25390625)
+# started 2026-08-25 12:18:01
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 12
+# changed files own 1 of 12
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-627/review-of-LJ-1-627-1.md"], "changed_files_refused": ["agents/tasks/LJ-1-627/Probe627.agda", "agents/tasks/LJ-1-627/runs/Floor.agda", "agents/tasks/LJ-1-627/runs/W3.agda"], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-627/lj-1.627-report.md", "agents/tasks/LJ-1-627/review-of-LJ-1-627-1.md", "agents/tasks/LJ-1-627/review-of-codes-at-kappaL.md", "agents/tasks/LJ-1-627/runs/final-1.out", "agents/tasks/LJ-1-627/runs/final-2.out", "agents/tasks/LJ-1-627/runs/final-3.out", "agents/tasks/LJ-1-627/runs/final-4.out", "agents/tasks/LJ-1-627/runs/final-5.out", "agents/tasks/LJ-1-627/runs/floor-1.out", "agents/tasks/LJ-1-627/runs/run.sh", "agents/tasks/LJ-1-627/runs/w3-1.out", "agents/tasks/LJ-1-627/runs/w3-2.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.627", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.45}

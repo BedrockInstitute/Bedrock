@@ -1,0 +1,24 @@
+# arm accept-1
+# task LJ-1.441
+# brief agents/tasks/LJ-1-441/LJ-1.441.md
+# flags (none)
+# GHCRTS -A64m -I0 -M8g
+# tier wide
+# agda slots during 2
+# load before (4.14599609375, 4.8603515625, 4.89111328125)
+# started 2026-08-21 09:34:50
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-441/Probe441.agda rc 42 seconds 1.55
+# changed files 12
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 1.55
+# error class unsolved_meta
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M8g", "changed_files_foreign": [], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": ["UnsolvedInteractionMetas"], "facts": {"changed_files": ["agents/tasks/LJ-1-441/Probe441.agda", "agents/tasks/LJ-1-441/lj-1.441-report.md", "agents/tasks/LJ-1-441/review-of-amb-to-coded-at-least.md", "agents/tasks/LJ-1-441/runs/full-1.out", "agents/tasks/LJ-1-441/runs/full-recheck-1.out", "agents/tasks/LJ-1-441/runs/full-recheck-2.out", "agents/tasks/LJ-1-441/runs/full-recheck-3.out", "agents/tasks/LJ-1-441/runs/w3-1.out", "agents/tasks/LJ-1-441/runs/w3-2.out", "agents/tasks/LJ-1-441/runs/w3-3.out", "agents/tasks/LJ-1-441/runs/w3-first.out", "agents/tasks/LJ-1-441/runs/witness-1.out"], "error_class": "unsolved_meta", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 1.55}, "obligations_probe_red": true, "runs_all": [{"rc": 42, "seconds": 1.55, "target": "agents/tasks/LJ-1-441/Probe441.agda"}], "spec_surface_detail": "", "task": "LJ-1.441", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.67}
