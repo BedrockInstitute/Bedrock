@@ -1,0 +1,28 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T14:53:36Z
+Checking LJ-1-633.Probe633 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-633/agents/tasks/LJ-1-633/Probe633.agda).
+  Checking V.CantorBernstein (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-633/src/V/CantorBernstein.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-633/agents/tasks/LJ-1-633/Probe633.agda:66.23-27: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-633/agents/tasks/LJ-1-633/Probe633.agda:66.23-27
+        2.84 real         1.60 user         0.31 sys
+           446644224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24906  page reclaims
+                4419  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 860  voluntary context switches
+                2889  involuntary context switches
+         21238847275  instructions retired
+          7421053656  cycles elapsed
+           385925984  peak memory footprint
+EXIT=42
+ended 2026-08-25T14:53:39Z

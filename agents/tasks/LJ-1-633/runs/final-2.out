@@ -1,0 +1,42 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T14:54:50Z
+Checking LJ-1-633.Probe633 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-633/agents/tasks/LJ-1-633/Probe633.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-633/agents/tasks/LJ-1-633/Probe633.agda:79.5-9: error: [MissingDefinitions]
+The following names are declared but not accompanied by a
+definition: finj
+when scope checking the declaration
+  hit (F , sv , dm , ij , ran)
+    = finite-excl-ω (fst δ) (mem-ord {A = ω} ω-ord (fst δ) δ∈ω) δ∈ω
+      (λ x → f x , f x) (λ x y e → finj x y (cong fst e))
+    where
+      f : ⟪ ω ⟫ → ⟪ fst δ ⟫
+      f , finj = readL ωʟ δ (F , sv , dm , ij , ran)
+      finj : (x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-633/agents/tasks/LJ-1-633/Probe633.agda:78.5-13: error: [NoParseForLHS]
+Could not parse the left-hand side f , finj
+Operators used in the grammar:
+  , (infixr operator, level 4) [_,_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/Agda/Builtin/Sigma.agda:8.15-18)]
+when scope checking the left-hand side f , finj in the definition
+of f
+        1.55 real         1.38 user         0.15 sys
+           417660928  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27532  page reclaims
+                  23  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 304  involuntary context switches
+         18317589517  instructions retired
+          6121158716  cycles elapsed
+           359416648  peak memory footprint
+EXIT=42
+ended 2026-08-25T14:54:52Z
