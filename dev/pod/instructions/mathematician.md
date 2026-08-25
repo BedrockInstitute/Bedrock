@@ -103,6 +103,18 @@ into the brief, where the coder can refute it.
 split it.** Never shrink the citation list to fit, because that buys the number
 by making the problem less precise, which is the opposite of this clause.
 
+**A WRAPPED PREMISE LINE MUST NOT OPEN WITH `-`, `*`, `+`, A DIGIT-DOT OR `#`,
+NOT EVEN AS `**bold**`.** `units()` (`scripts/pod/preflight.py:138-153`) splits
+`## PREMISES` on `re.match(r"\s*([-*+]|\d+\.|#)", ln)` (`:147`), so a
+continuation line opening with `**` matches the bare `*` branch and reads as a
+NEW premise with no basis: P17 refuses the whole brief. MEASURED 2026-08-26:
+`[LJ-1.636]`'s own premise 3 wrapped this way and parked at `preflight:P17`
+one second after admission (`dev/pod/transitions/2026-08.jsonl`, READY
+16:55:08Z, PARKED 16:55:09Z). The park self-healed once the line was rejoined
+(rule (a2) re-checks a `preflight:` park every tick), so the cost was one
+skipped tick and not a dispatch, but a wider fold costs a real one. Join the
+continuation to its head, or open it with a plain word.
+
 **TWO GREPS BEFORE ANY BRIEF THAT TOUCHES `src/` OR ORDERS HEAVY AGDA. BOTH ARE
 FREE AND BOTH ARE MANDATORY.** Owner's ruling, 2026-08-25, on a measured cost.
 
