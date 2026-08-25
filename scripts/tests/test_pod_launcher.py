@@ -1042,15 +1042,14 @@ def main() -> int:
     check("the two single-head slots keep the inline-table spelling A27 preserved",
           sorted(s for s, v in heads["heads"].items() if isinstance(v, dict)),
           ["maintainer", "mathematician"])
-    # **QWEN IS BACK, OWNER'S RULING 2026-08-23**, ending the 2026-08-22 maintenance
-    # drop. `claude-opus-5` left `coder` the same day (moved to `coder_adversarial`'s
-    # second head instead); `glm-5.3` is qwen's own fallback now.
-    # **EVERY `glm-5.3` AND `grok-4.6` ROW GOT `max_concurrency = 1`, OWNER'S RULING
-    # 2026-08-24**, the same cap qwen's row already carried. `coder` is now capped at
-    # one on BOTH heads.
-    check("the coder array caps both heads at one, qwen and glm-5.3 alike",
-          sorted(str(r.get("max_concurrency")) for r in heads["heads"]["coder"]),
-          ["1", "1"])
+    # **SECOND HEADS OF `coder` AND `coder_adversarial` SWAPPED, OWNER'S RULING
+    # 2026-08-25.** `claude-opus-5` (uncapped) is now `coder`'s second head;
+    # `glm-5.3` (capped) is now `coder_adversarial`'s. `coder` is capped on
+    # qwen alone now, not on both heads: the prior check pinned a fact that was
+    # true only while `coder`'s second head was `glm-5.3`.
+    check("the coder array caps qwen but leaves claude-opus-5 uncapped",
+          [r.get("max_concurrency") for r in heads["heads"]["coder"]],
+          [1, None])
     # **THE CAP IS NOT WHAT MAKES A SLOT RETRYABLE, A29.** Even a fully-capped critic
     # array still falls back, because the trigger is that the slot has a second head at
     # all, and A29 fires on a `no-change` return regardless of any cap. This check is
@@ -1058,9 +1057,9 @@ def main() -> int:
     check("mathematician_adversarial caps both heads (grok-4.6, glm-5.3), 2026-08-24",
           [r.get("max_concurrency") for r in heads["heads"]["mathematician_adversarial"]],
           [1, 1])
-    check("coder_adversarial caps grok-4.6 and leaves claude-opus-5 uncapped",
+    check("coder_adversarial now caps both heads (grok-4.6, glm-5.3), 2026-08-25",
           [r.get("max_concurrency") for r in heads["heads"]["coder_adversarial"]],
-          [1, None])
+          [1, 1])
     _rows = [(slot, r) for slot, v in heads["heads"].items()
              for r in (v if isinstance(v, list) else [v])]
     # Eight again, now that qwen is back in `coder` (see the check above).
@@ -1117,39 +1116,34 @@ def main() -> int:
         v = heads["heads"][slot]
         return {r["model"] for r in (v if isinstance(v, list) else [v])}
 
-    # **OWNER'S RULING 2026-08-23 WAIVED ONE PAIR.** Qwen's return moved `glm-5.3`
-    # into BOTH `coder` (its own fallback) and `mathematician_adversarial` (already
-    # there, unchanged) at once, and the owner chose to keep `mathematician_adversarial`
-    # as-is rather than give coder a different fallback. This is a real, disclosed
-    # exception: a coder stop/no-go branch CAN route to `mathematician_adversarial`,
-    # so `glm-5.3` can in principle review its own coder output. The other two pairs
-    # still hold with no exception.
+    # **THE WAIVED PAIR IS GONE, OWNER'S RULING 2026-08-25.** `coder` traded its
+    # `glm-5.3` fallback for `claude-opus-5` (swapped with `coder_adversarial`'s
+    # own second head), so `coder` no longer shares anything with
+    # `mathematician_adversarial` and the 2026-08-23 disclosed exception this
+    # loop used to carve out no longer applies. Both pairs now hold with no
+    # exception.
     for _a, _c in (("mathematician", "mathematician_adversarial"),
                    ("coder", "coder_adversarial")):
         check(f"the critic {_c} shares no model with the author {_a}",
               sorted(_models(_a) & _models(_c)), [])
-    check("coder and mathematician_adversarial share glm-5.3, owner's ruling "
-          "2026-08-23's disclosed exception",
-          sorted(_models("coder") & _models("mathematician_adversarial")), ["glm-5.3"])
-    # **TWO AUTHOR SLOTS SHARING A VENDOR IS NOT THE DEFECT DD25 NAMES, and it is
-    # asserted rather than left to be re-argued.** `claude-opus-5` is the whole of
-    # `mathematician` and `coder_adversarial`'s second head since 2026-08-23 (moved
-    # there from `coder` the same ruling that brought qwen back). It reviews CODER's
-    # work, never mathematician's own, so no model reviews its own work; the loop
-    # above is the check that matters and this one records why its complement is
-    # silent.
-    check("claude-opus-5 is in an AUTHOR slot and a DIFFERENT author's critic slot",
+    # **`claude-opus-5` IS NOW IN TWO AUTHOR SLOTS AND NO CRITIC SLOT.** It
+    # authors both `mathematician` and `coder`; neither's own critic
+    # (`mathematician_adversarial`, `coder_adversarial`) carries it, so it
+    # never reviews its own output in either direction. This replaces the
+    # prior check, which recorded the OPPOSITE shape (one author slot, one
+    # different author's critic slot) that held before this ruling.
+    check("claude-opus-5 is in two AUTHOR slots and in neither critic slot",
           sorted(s for s in ("mathematician", "coder", "mathematician_adversarial",
                              "coder_adversarial")
                  if "claude-opus-5" in _models(s)),
-          ["coder_adversarial", "mathematician"])
-    # **THE TWO CRITICS NO LONGER SHARE THEIR HEADS, owner's ruling 2026-08-23**:
-    # `mathematician_adversarial` kept `glm-5.3`, `coder_adversarial` took
-    # `claude-opus-5` instead. DD25 never required them to match; A27/A29 only
-    # PERMITTED it, since DD25 pairs an author with ITS critic and says nothing
-    # about two critics.
-    check("the two critic slots no longer carry the same pair",
-          _models("mathematician_adversarial") == _models("coder_adversarial"), False)
+          ["coder", "mathematician"])
+    # **THE TWO CRITICS NOW CARRY THE IDENTICAL PAIR, OWNER'S RULING
+    # 2026-08-25.** `coder_adversarial` took `glm-5.3` in the same swap that
+    # gave `mathematician_adversarial`'s `{grok-4.6, glm-5.3}` an exact match.
+    # DD25 permits this: it pairs an author with ITS OWN critic and says
+    # nothing about two different critics sharing heads.
+    check("the two critic slots now carry the same pair, 2026-08-25",
+          _models("mathematician_adversarial") == _models("coder_adversarial"), True)
 
     limits = heads["limits"]
     # `parked_max` joined on 2026-08-19, owner's ruling: rule (d)'s threshold moved from a

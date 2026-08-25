@@ -491,25 +491,27 @@ mathematician_adversarial = [
 # it.
 coder                     = [
   { model = "Qwen3.8-27B-oQ4e-mtp", effort = "medium", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "glm-5.3",              effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "claude-opus-5",        effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
 ]
-# **SECOND HEAD MOVED FROM `glm-5.3` TO `claude-opus-5`, OWNER'S RULING
-# 2026-08-23**, the same day qwen returned to `coder` and took `glm-5.3` as ITS OWN
-# fallback. The two critics no longer carry the same pair, and that is deliberate:
-# `test_the_critic_is_never_the_same_model_as_the_author` in both
-# `scripts/tests/test_pod_launcher.py` and `scripts/tests/test_pod_loop.py` waives
-# ONLY the (coder, mathematician_adversarial) pair now, dated the same ruling --
-# `coder` and `mathematician_adversarial` both carry `glm-5.3`, and a coder
-# stop/no-go branch can route to `mathematician_adversarial`. `claude-opus-5` here
-# never reviews its OWN work: it authors `mathematician` and critiques `coder`,
-# two different authors.
-# `grok-4.6` HERE ALSO CARRIES `max_concurrency = 1`, owner's ruling 2026-08-24,
-# the same cap as every other `glm-5.3`/`grok-4.6` row in this file (see
-# `mathematician_adversarial`'s own comment). `claude-opus-5` is neither model
-# and stays uncapped.
+# **SECOND HEADS OF `coder` AND `coder_adversarial` SWAPPED, OWNER'S RULING
+# 2026-08-25.** `claude-opus-5` moves here (uncapped, `xhigh`) from
+# `coder_adversarial`'s own second head; `glm-5.3` moves the other way, into
+# `coder_adversarial`, capped at `max_concurrency = 1` like every other
+# `glm-5.3`/`grok-4.6` row. **THE PARAGRAPH THIS REPLACED (2026-08-23) is
+# history and not the live arrangement**: it described `coder`'s second head
+# as `glm-5.3` and named a disclosed DD25 exception with
+# `mathematician_adversarial` for sharing that model. That exception is GONE:
+# `coder` no longer carries `glm-5.3` at all, so `coder`'s set and
+# `mathematician_adversarial`'s set are disjoint with no waiver needed.
+# **`coder_adversarial` AND `mathematician_adversarial` NOW CARRY THE
+# IDENTICAL PAIR**, `{grok-4.6, glm-5.3}`. DD25 permits this: it forbids an
+# author reviewing its OWN work, and says nothing about two DIFFERENT
+# critics sharing heads. `claude-opus-5` now sits in two AUTHOR slots,
+# `mathematician` and `coder`, and in neither critic slot, so it never
+# reviews its own output either.
 coder_adversarial         = [
-  { model = "grok-4.6", effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "claude-opus-5", effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
+  { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "glm-5.3",  effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits", max_concurrency = 1 },
 ]
 # **THE MAINTAINER MOVED TO `claude-sonnet-5` at effort `xhigh`, owner's ruling
 # 2026-08-21.** It was `claude-opus-5` at `xhigh` from 2026-08-20. The slot is

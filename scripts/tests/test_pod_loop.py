@@ -4484,11 +4484,12 @@ class Heads(LoopCase):
         carry two models, and the invariant is that NO model of the author is a model of
         the critic: one shared string is one review a model gives its own work.
 
-        **OWNER'S RULING 2026-08-23 WAIVED ONE PAIR.** Qwen's return gave `coder` the
-        fallback `glm-5.3`, which `mathematician_adversarial` already carried and kept.
-        A coder stop/no-go branch CAN route to `mathematician_adversarial`, so this is a
-        real, disclosed exception and not a silent hole: it is asserted on its own,
-        below, rather than folded into the loop that still holds the other two pairs.
+        **OWNER'S RULING 2026-08-25 REMOVED THE ONE WAIVED PAIR.** `coder` traded its
+        `glm-5.3` fallback for `claude-opus-5` (swapped with `coder_adversarial`'s own
+        second head, which took `glm-5.3` in return), so `coder` no longer shares
+        anything with `mathematician_adversarial`. Both pairs now hold with no
+        exception, so the loop below covers everything; nothing is asserted on its own
+        any more.
         """
         p = self.tmp / "dev" / "pod" / "heads.toml"
         for author, critic in (("mathematician", "mathematician_adversarial"),
@@ -4496,10 +4497,6 @@ class Heads(LoopCase):
             a = {r["model"] for r in heads_mod.configs(author, p)}
             c = {r["model"] for r in heads_mod.configs(critic, p)}
             self.assertEqual(a & c, set(), f"{critic} shares a model with {author}")
-        coder = {r["model"] for r in heads_mod.configs("coder", p)}
-        math_adv = {r["model"] for r in heads_mod.configs("mathematician_adversarial", p)}
-        self.assertEqual(coder & math_adv, {"glm-5.3"},
-                         "owner's ruling 2026-08-23's disclosed exception")
 
     # ---------------------------------------------------- A27, the multi-model slot
 
@@ -4630,14 +4627,13 @@ class Heads(LoopCase):
             heads_mod.load_heads(self.tmp / "dev" / "pod" / "heads.toml", cache=False)
 
     #: THE CODER'S SECOND CONFIG, VERBATIM, and the edits below aim at THIS row rather
-    #: than at any other array element. OWNER'S RULING 2026-08-23 made it `glm-5.3`
-    #: (qwen's own fallback); OWNER'S RULING 2026-08-24 added `max_concurrency = 1`,
-    #: the same cap every `glm-5.3`/`grok-4.6` row in the file now carries.
-    #: `mathematician_adversarial` also carries a `glm-5.3` row, but with DIFFERENT
-    #: padding, so a `str.replace` naming this exact literal still cannot land on the
-    #: wrong slot.
-    CODER_2ND = ('  { model = "glm-5.3",              effort = "",'
-                 ' harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },')
+    #: than at any other array element. OWNER'S RULING 2026-08-25 swapped it with
+    #: `coder_adversarial`'s own second head: `claude-opus-5` is here now, uncapped,
+    #: at `xhigh`. `[maintainer_presets].claude` also names `claude-opus-5`, but with
+    #: DIFFERENT padding and no leading array indent, so a `str.replace` naming this
+    #: exact literal still cannot land on the wrong row.
+    CODER_2ND = ('  { model = "claude-opus-5",        effort = "xhigh",'
+                 ' harness = "herdr-claude", sandbox = "acceptEdits" },')
 
     def test_an_array_element_that_is_not_a_table_is_REFUSED(self):
         """An array of STRINGS parses as TOML and names no harness, so the refusal has to
@@ -6104,16 +6100,16 @@ class FallbackPark(LoopCase):
         Both critics carry a choice; `mathematician` is one head and parks `no-change`
         exactly as it always did.
 
-        **`coder` REJOINED THE LIST 2026-08-23**, qwen's return from the 2026-08-22
-        maintenance drop giving it a second head (`glm-5.3`) again -- the same ruling
-        that moved `claude-opus-5` from `coder` to `coder_adversarial`'s own second
-        head, replacing `glm-5.3` there."""
+        **`coder` AND `coder_adversarial` SWAPPED SECOND HEADS, OWNER'S RULING
+        2026-08-25.** `claude-opus-5` moved from `coder_adversarial` to `coder`;
+        `glm-5.3` moved the other way, so `coder_adversarial` now carries the
+        same pair as `mathematician_adversarial`."""
         for slot, model in (("mathematician_adversarial", "glm-5.3"),
                             ("mathematician_adversarial", "grok-4.6"),
-                            ("coder_adversarial", "claude-opus-5"),
+                            ("coder_adversarial", "glm-5.3"),
                             ("coder_adversarial", "grok-4.6"),
                             ("coder", "Qwen3.8-27B-oQ4e-mtp"),
-                            ("coder", "glm-5.3")):
+                            ("coder", "claude-opus-5")):
             with self.subTest(slot=slot, model=model):
                 self.assertTrue(pod._has_fallback_head(slot, model, self.tmp))
         self.assertFalse(
@@ -6172,11 +6168,11 @@ class FallbackPark(LoopCase):
         """The exclusion is MONOTONIC. Once both heads are on the list `launch()` has no
         candidate left and rule (f) parks `launch`, never a third fallback."""
         self.set_acceptance(None)
-        st, t = self.returned(role="coder_adversarial", model="claude-opus-5",
+        st, t = self.returned(role="coder_adversarial", model="glm-5.3",
                               avoid=["grok-4.6"])
         pod._rule_c(st, self.tmp)
-        self.assertEqual(t.park_reason, "fallback:claude-opus-5")
-        self.assertEqual(sorted(t.avoid_models), ["claude-opus-5", "grok-4.6"])
+        self.assertEqual(t.park_reason, "fallback:glm-5.3")
+        self.assertEqual(sorted(t.avoid_models), ["glm-5.3", "grok-4.6"])
 
     def test_fallback_is_a_park_reason_the_program_admits_and_capacity_is_gone(self):
         """ONE NAME, ONE MECHANISM. A second redundant reason string would divide the
@@ -6231,7 +6227,7 @@ class FallbackPark(LoopCase):
 
         self.patch(pod, "pick_head_config", spy)
         self.real_launch(pod.Task(CODE, avoid_models=["grok-4.6"]))
-        self.assertEqual([c["model"] for c in seen["cfgs"]], ["claude-opus-5"])
+        self.assertEqual([c["model"] for c in seen["cfgs"]], ["glm-5.3"])
 
     def test_launch_with_no_avoid_list_sees_every_config_the_slot_carries(self):
         """The contrast: this is every OTHER task in the program, and the filter above
@@ -6245,12 +6241,12 @@ class FallbackPark(LoopCase):
         self.patch(pod, "pick_head_config", spy)
         self.real_launch(pod.Task(CODE))
         self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
-                         ["claude-opus-5", "grok-4.6"])
+                         ["glm-5.3", "grok-4.6"])
 
     def test_excluding_EVERY_model_is_the_ordinary_launch_refusal_and_not_a_loop(self):
         """It is not special-cased: `pick_head_config()` on an empty tuple returns None
         exactly as it does when every config is at its cap, and rule (f) parks `launch`."""
-        t = pod.Task(CODE, avoid_models=["claude-opus-5", "grok-4.6"])
+        t = pod.Task(CODE, avoid_models=["glm-5.3", "grok-4.6"])
         self.assertIsNone(self.real_launch(t))
         # AND IT SAYS SO. A park that names no cap costs the maintainer a pane read.
         self.assertIn("coder_adversarial", pod.LAUNCH_REFUSAL or "")
@@ -6323,7 +6319,7 @@ class FallbackPark(LoopCase):
         self.patch(pod, "free_memory_pct", lambda: 10.0)
         self.make_check_lock()
         self.real_launch(pod.Task(CODE), role="coder")
-        self.assertEqual([c["model"] for c in seen["cfgs"]], ["glm-5.3"])
+        self.assertEqual([c["model"] for c in seen["cfgs"]], ["claude-opus-5"])
 
     def test_LIVE_launch_sees_qwen_again_once_the_lock_clears(self):
         seen = {}
@@ -6337,7 +6333,7 @@ class FallbackPark(LoopCase):
         lock.unlink()
         self.real_launch(pod.Task(CODE), role="coder")
         self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
-                         sorted(["Qwen3.8-27B-oQ4e-mtp", "glm-5.3"]))
+                         sorted(["Qwen3.8-27B-oQ4e-mtp", "claude-opus-5"]))
 
     def test_LIVE_launch_sees_qwen_again_when_the_lock_is_held_but_memory_has_room(self):
         """The lock alone is no longer sufficient, end to end through the real
@@ -6353,7 +6349,7 @@ class FallbackPark(LoopCase):
         self.make_check_lock()
         self.real_launch(pod.Task(CODE), role="coder")
         self.assertEqual(sorted(c["model"] for c in seen["cfgs"]),
-                         sorted(["Qwen3.8-27B-oQ4e-mtp", "glm-5.3"]))
+                         sorted(["Qwen3.8-27B-oQ4e-mtp", "claude-opus-5"]))
 
 
 class TwoThresholds(LoopCase):
