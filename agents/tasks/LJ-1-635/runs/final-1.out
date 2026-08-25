@@ -1,0 +1,33 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T14:30:47Z
+Checking LJ-1-635.Probe635 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-635/agents/tasks/LJ-1-635/Probe635.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-635/agents/tasks/LJ-1-635/Probe635.agda:100.57-61: error: [UnequalTerms]
+(Cubical.HITs.CumulativeHierarchy.Base.V.sett
+ (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+  InfinitySet.ωStructure)
+ (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+  InfinitySet.ωStructure))
+!= (fst κ) of type (Cubical.HITs.CumulativeHierarchy.Base.V ℓ)
+when checking that the expression at-ω has type
+Concl zf (fst κ , _u.snd_70)
+        1.81 real         1.60 user         0.18 sys
+           406568960  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               26836  page reclaims
+                  42  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 589  involuntary context switches
+         17935053707  instructions retired
+          7030158300  cycles elapsed
+           346850120  peak memory footprint
+EXIT=42
+ended 2026-08-25T14:30:49Z
