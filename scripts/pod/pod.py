@@ -2641,6 +2641,29 @@ def review_brief(t, slot, root=None):
             "A review that skips this and only re-asks the three questions below, "
             "unchanged, is not.",
         ]
+    # **A LINT REJECTION NAMES ITS OWN CHECK, same reasoning as `timeout_note` above.**
+    # `sys-lint-accept` (dev/pod/table.toml) redispatches on `error_class: "lint"` with
+    # the generic three-question brief alone, and until `precommit_detail()` (backlog
+    # item 35, 2026-08-26) that brief carried NO WORD of which of conjunct 6's seven
+    # checks failed or why. MEASURED on `[LJ-1.643]`: attempts 2 and 3 both hit
+    # `sys-lint-accept` with byte-identical facts, because the redispatched critic was
+    # told only `error_class: "lint"` and re-wrote the same incomplete review each time,
+    # never learning it was `check-survey-quotes` that failed, nor which files it never
+    # cited. Without this note the loop runs to `attempt_max` on a defect the brief never
+    # named.
+    lint_note = []
+    detail = (rec.get("lint_detail") or "").strip()
+    if (rec.get("facts") or {}).get("error_class") == "lint" and detail:
+        lint_note = [
+            "",
+            "## WHY THIS ESCALATED: THE PRECEDING RETURN FAILED A LINT CHECK",
+            "The predecessor's return did not pass every pre-commit check "
+            "(`error_class` is `lint`). One check failed and its own output follows; "
+            "fix THIS, and re-run the pre-commit checks yourself before you return:",
+            f"> {detail}",
+            "A review that skips this and only re-asks the three questions below, "
+            "unchanged, risks the SAME rejection.",
+        ]
     body = [
         f"# {t.code}: adversarial review of {pred}",
         "",
@@ -2670,6 +2693,7 @@ def review_brief(t, slot, root=None):
         "task (row sys-critic-upheld-no-go). Put `verdict: upheld` in HEAD when you",
         "agree, or `verdict: overturned` when you do not.",
         *timeout_note,
+        *lint_note,
         "",
         # THE HEADING NO LONGER SAYS 「all of it is tracked」, because the accept arm
         # below is not: `git status --untracked-files=all` lists

@@ -236,6 +236,34 @@ def precommit_set(code=None, root=None):
     return True
 
 
+def precommit_detail(code=None, root=None):
+    """Which ONE member of `precommit_set()` failed, and its output, truncated.
+
+    **CONJUNCT 6 IS SEVEN CHECKS WIDE AND THE RECORD NAMED NONE OF THEM.** Conjunct 5
+    got `spec_surface_detail` at backlog item 6 (2026-08-19) for exactly this reason:
+    `error_class: "lint"` alone cannot distinguish a stray glossary term from a
+    misplaced fence from an unanswered survey citation, so a redispatched worker gets
+    told to fix an error it cannot identify, and a human reviewing the record later has
+    to manually re-run all seven checks against a worktree that may have already moved
+    past the failing state. MEASURED on `[LJ-1.643]`, 2026-08-26: two consecutive
+    critic dispatches hit `sys-lint-accept` with byte-identical facts, and by the time
+    a maintainer went looking, every one of the seven checks passed clean again, the
+    worktree having moved on. The SAME re-run-on-failure pattern `spec_surface_detail`
+    uses, one call site only, called ONLY when `precommit_set()` already returned
+    False, so the cost is one process on the rare (already red) path and nothing on
+    the common (green) one.
+    """
+    for name, argv in PRECOMMIT_SET:
+        rc, out = _run(argv, root)
+        if rc != 0:
+            return f"{name}: " + " ".join(out.split())[:600]
+    if code:
+        rc, out = _run(SURVEY_QUOTES + [code], root)
+        if rc != 0:
+            return "survey-quotes: " + " ".join(out.split())[:600]
+    return ""
+
+
 # ---------------------------------------------------------------- fact 7, amendment A10
 
 
@@ -479,6 +507,11 @@ def run_acceptance(t, root=None, tier=None):
     c3 = closure(root)
     c4, uvac = unbound_new(ch, getattr(t, "unbound_before", None), root)
     c6 = precommit_set(t.code, root)
+    # SAME PATTERN AS c5_detail, SAME REASON: captured only on the rare red path, so the
+    # green path pays nothing. `precommit_detail()` re-runs the seven members in order
+    # and returns the first that fails, named, so a reader is not left with `error_class:
+    # "lint"` and seven candidates. Backlog item 35, measured on `[LJ-1.643]`.
+    c6_detail = "" if c6 else precommit_detail(t.code, root)
     held = [(5, c5), (1, r1["rc"] == 0), (2, d3 <= 0), (3, c3), (4, c4), (6, c6)]
     bad = next((n for n, ok in held if not ok), None)     # order 5, 1, 2, 3, 4, 6
     rec = {"task": t.code, "concurrency": r1["concurrency"],
@@ -490,6 +523,7 @@ def run_acceptance(t, root=None, tier=None):
            "changed_files_refused": refused_agda,   # A21: a mathematician's Agda, dropped
            "changed_files_own": own,           # provenance for [LJ-1.582]. NOT matchable
            "spec_surface_detail": c5_detail,   # provenance for the stop. NOT matchable
+           "lint_detail": c6_detail,           # which of the 7 conjunct-6 checks. NOT matchable
            "runs_all": r1["runs_all"],         # every other Agda wall, provenance
            "conjuncts": dict(held),            # provenance. R4 reads it. NOT matchable
            "facts": {"exit_code": 0 if bad is None else

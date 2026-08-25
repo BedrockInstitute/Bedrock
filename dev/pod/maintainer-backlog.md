@@ -71,6 +71,59 @@ lowercase code: it already closed DONE, its corpus record is frozen, and renamin
 closed task's code now would be pure churn with no correctness gain. Only future
 `park_and_split` descendants get the fixed casing.
 
+### 35. Conjunct 6 is seven checks wide, the record named none of them, and the redispatch brief repeated the same rejection blind. FIXED 2026-08-26
+
+**MEASURED ON `[LJ-1.643]`.** Three consecutive `mathematician_adversarial`
+attempts (2, 3 and 4) hit `sys-lint-accept` with matching `error_class: "lint"`,
+`exit_code: 1`. By the time this was first investigated,
+`.pod-state/worktrees/LJ-1-643/` had moved past whatever failed during attempt
+2's measurement, so all 7 `precommit_set()` members (`scripts/pod/accept.py:223-
+236`, before this fix) passed clean when re-run by hand: the boolean that
+conjunct 6 returns discards which member failed, and neither a redispatched
+worker nor a reviewing maintainer can name the actual defect once the worktree
+has moved on.
+
+**PART ONE, the record.** Conjunct 5 already solved this at item 6, 2026-08-19,
+with `spec_surface_detail`: re-run the failed checker a second time, on the
+failure path only, to capture text. `precommit_detail()` (`scripts/pod/
+accept.py`, new function, immediately after `precommit_set()`) replicates the
+same pattern for conjunct 6's seven members (6 named checks plus `check-survey-
+quotes.py <code>`), returning the first failing member's name and truncated
+output. Wired into `run_acceptance()` as `c6_detail`, called only when
+`precommit_set()` already returned False, and stored on the record as
+`lint_detail`. Cost: one extra process on the rare red path, nothing on the
+common green path.
+
+**PART TWO, the brief, and this is the part that actually stops the loop.**
+`lint_detail` alone reaches only a human reading `state.json` or the
+transitions log; `review_brief()` (`scripts/pod/pod.py:2580`) is what the
+REDISPATCHED critic actually reads, and it already had exactly this shape of
+fix for a different `error_class`: the `timeout_note` block (owner's
+instruction 2026-08-22) names the timed-out check instead of leaving the
+critic three generic questions and no lead. `sys-lint-accept`'s `action =
+"accept"` had no equivalent: a lint-rejected redispatch got the same three
+questions every time, with `error_class: "lint"` and nothing else. **Attempt
+4's own pre-dispatch record, captured live after Part One landed and before
+this half did, named the actual defect**: `check-survey-quotes` failing on
+seven specific unanswered literature paths
+(`archive/dev/DD-archived.md`, `archive/dev/JOURNAL.md`, four `dev/
+literature/*.md` files). The critic was not looping on a program mechanism
+defect: it was repeating the SAME missed citations attempt after attempt with
+no diagnostic ever telling it which files were missing. A new `lint_note`
+block, same shape as `timeout_note`, fires when `rec["facts"]["error_class"]
+== "lint"` and `rec["lint_detail"]` is non-empty, and quotes the failing
+check's own output into the brief.
+
+**Verified against `test_pod_loop.py`'s `Acceptance.stub()` helper**, which
+patches `precommit_set` but not `precommit_detail`: the one test that exercises
+`c6=False` (`test_each_runner_conjunct_names_its_own_class`) calls the real,
+unpatched `precommit_detail()` against a fixture temp tree with no `scripts/`
+subtree at all, so every one of the 7 subprocess launches fails fast via
+`_run()`'s own `(OSError, subprocess.TimeoutExpired)` handler and returns a
+harmless "could not run" detail string; the test asserts only `error_class`/
+`exit_code`, not `lint_detail` content, so it passed unmodified. All 9
+pod-relevant suites green after both halves of the change.
+
 ### 33. Conjunct 1 verifies a coder's own heap-wall EVIDENCE, so obeying two live rules at once guarantees a park. DIAGNOSED BY pod-math, VERIFIED HERE, MEASURED on LJ-1.636, 2026-08-26
 
 **TWO RULES, EACH CORRECT ALONE, COLLIDE.** `dev/pod/instructions/coder.md:51-58`
