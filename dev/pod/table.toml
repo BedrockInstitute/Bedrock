@@ -26840,3 +26840,111 @@ expired = false
 
   [row.when]
   exit_code = 42
+
+[[row]]
+id = "task-lj-1-636-split-go"
+scope = "task:LJ-1.636-split"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-26
+added_by = "mathematician"
+reason = "branch `go` of LJ-1.636-split, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-636-split-stop-stated"
+scope = "task:LJ-1.636-split"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-26
+added_by = "mathematician"
+reason = "branch `stop-stated` of LJ-1.636-split, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-636-split/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-636-split/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-636-split-accept-failed"
+scope = "task:LJ-1.636-split"
+priority = 14
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-26
+added_by = "mathematician"
+reason = "branch `accept-failed` of LJ-1.636-split, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 1
+  obligations_delta_max = -1
+  changed_files_none = ["agents/tasks/LJ-1-636-split/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-636-split-no-go-attacked"
+scope = "task:LJ-1.636-split"
+priority = 15
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-26
+added_by = "mathematician"
+reason = "branch `no-go-attacked` of LJ-1.636-split, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  error_class_in = ["unsolved_meta", "universe_level", "other"]
+  changed_files_any = ["agents/tasks/LJ-1-636-split/ProbeSplit.agda"]
+  changed_files_none = ["agents/tasks/LJ-1-636-split/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-636-split-no-go-stated"
+scope = "task:LJ-1.636-split"
+priority = 20
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-26
+added_by = "mathematician"
+reason = "branch `no-go-stated` of LJ-1.636-split, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  changed_files_any = ["agents/tasks/LJ-1-636-split/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-636-split-heap-wall-park"
+scope = "task:LJ-1.636-split"
+priority = 30
+action = "park_and_split"
+added = 2026-08-26
+added_by = "mathematician"
+reason = "PARK, NOT ESCALATE. A heap wall is a resource fact and no critic can"
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "task-lj-1-636-split-no-go-bare"
+scope = "task:LJ-1.636-split"
+priority = 40
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-26
+added_by = "mathematician"
+reason = "CLOSES BACKLOG ITEM 30, MEASURED ON LJ-1.630 2026-08-25. A REAL failed"
+expired = false
+
+  [row.when]
+  exit_code = 42
