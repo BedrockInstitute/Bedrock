@@ -1,0 +1,44 @@
+# Second resubmit of 20260821-102037. First resubmit (102037b) was REFUSED,
+# not scope: `reason` fields were 360/373 characters against a 200 cap
+# (scripts/pod/table.py:177, REASON_MAX). Trimmed below; full evidence stays
+# in dev/pod/queue.toml's LJ-1.440 entry and this session's prior proposals
+# (20260821-102037.toml.scope, 20260821-102037b.toml.refused).
+
+[[row]]
+id = "task-lj-1-440-stop-stated"
+scope = "task:LJ-1.440"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "D-10 stop, exit 0, matches no exit_code 42 branch. Same shape as task-lj-1-448-stop-stated. changed_files_none added: without it, that row looped on the critic's own return (transitions:957,961)."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-440/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-440/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-444-stop-stated"
+scope = "task:LJ-1.444"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "D-10 stop, worktree predates LJ-1.442's GO landing in main. Unlike LJ-1.443, premise is now true, so escalation resolves it. changed_files_none added, same reason as LJ-1.440's row."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-444/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-444/review-of-LJ-*-*.md"]
+
+[batch]
+ts = "20260821-102037c"
+rows_proposed = 2
+reason = "Same two rows as 102037/102037b, reasons trimmed under the 200-char cap (scripts/pod/table.py:177) that refused 102037b."

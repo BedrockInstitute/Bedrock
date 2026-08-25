@@ -1,0 +1,75 @@
+# Owner 2026-08-20: close the four critic parks. 428 discharged LJ-1.422
+# (queue.toml:1333-1347). The refill of 20260820-202416 named LJ-1.425,
+# LJ-1.426 and LJ-1.427 as critic-parked no-match (queue.toml:1256-1278)
+# and queued LJ-1.429 to LJ-1.432 instead of rewriting them. Those four
+# returned. The critic file plus exit 0 is the match; A23 misses on
+# obligations_open 1; no-go-stated wants exit 42.
+
+[[row]]
+id = "task-lj-1-422-critic-settled"
+scope = "task:LJ-1.422"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. 428 discharged: the attack became two dispatches (424 GO, 426 NO-GO) and both returned. The critic file is present, exit 0, obligation still open."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  changed_files_any = ["agents/tasks/LJ-1-422/review-of-LJ-1-422-1.md"]
+
+[[row]]
+id = "task-lj-1-425-critic-settled"
+scope = "task:LJ-1.425"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. Refill 20260820-202416 named this critic-parked no-match and moved the campaign to 429-432, which returned."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  changed_files_any = ["agents/tasks/LJ-1-425/review-of-LJ-1-425-1.md"]
+
+[[row]]
+id = "task-lj-1-426-critic-settled"
+scope = "task:LJ-1.426"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. Refill 20260820-202416: the critic AGREES (queue.toml:1269-1270). 428 used that agreement to discharge 422."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  changed_files_any = ["agents/tasks/LJ-1-426/review-of-LJ-1-426-1.md"]
+
+[[row]]
+id = "task-lj-1-427-critic-settled"
+scope = "task:LJ-1.427"
+priority = 25
+action = "done"
+outcome = "no-go"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "Owner 2026-08-20: close the critic park. Refill 20260820-202416 named this critic-parked no-match and moved the campaign to 429-432, which returned."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  changed_files_any = ["agents/tasks/LJ-1-427/review-of-LJ-1-427-1.md"]
+
+[batch]
+ts = "20260820-close-critics"
+rows_proposed = 4
+reason = "Owner close of four critic parks. 428 discharged 422. Refill 202416 named 425/426/427 critic-parked and ran 429-432. Each row keys exit 0 plus that task's critic file."
