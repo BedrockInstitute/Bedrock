@@ -50,20 +50,21 @@ venv:
 venv-check:
 	@test -x $(PY) || { echo "No virtualenv at $(VENV)/. Run: make venv"; exit 1; }
 
-# OWNER'S RULING 2026-08-23: the whole-tree typecheck and qwen's LOCAL inference
-# server (omlx-server) must never run at the same time. Every other herdr-pi model
+# OWNER'S RULING 2026-08-23, RELAXED 2026-08-24: the whole-tree typecheck and qwen's
+# LOCAL inference server (omlx-server) no longer must never run at the same time,
+# only never run both under a tight system memory floor. Every other herdr-pi model
 # is a remote API call and carries no local footprint; qwen alone runs through a
 # local server this machine also has to feed the typecheck's own -M16g. See
-# scripts/gate/check-omlx-quiet.py for the measured process name and why this
-# refuses on existence rather than a guessed load threshold.
+# scripts/gate/check-omlx-quiet.py for the measured process name, the measured
+# memory baseline behind the relaxation, and the free-memory floor this now reads.
 omlxquiet:
 	$(PY) scripts/gate/check-omlx-quiet.py --check
 
 # THE OTHER HALF OF THE SAME RULING: qwen's own dispatch (scripts/pod/pod.py) refuses
-# to pick qwen while THIS lock exists, mirroring omlxquiet above in the opposite
-# direction. `trap ... EXIT INT TERM` removes the lock even if Agda is interrupted or
-# fails, and both the touch and the trap sit on the SAME recipe line so they share one
-# subshell (Make gives every recipe line its own).
+# to pick qwen while THIS lock exists AND system memory is short, mirroring omlxquiet
+# above in the opposite direction. `trap ... EXIT INT TERM` removes the lock even if
+# Agda is interrupted or fails, and both the touch and the trap sit on the SAME recipe
+# line so they share one subshell (Make gives every recipe line its own).
 typecheck: omlxquiet
 	@mkdir -p $(dir $(MAKE_CHECK_LOCK))
 	@trap 'rm -f $(MAKE_CHECK_LOCK)' EXIT INT TERM; touch $(MAKE_CHECK_LOCK); $(AGDA) $(EVERYTHING)

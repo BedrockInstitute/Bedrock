@@ -271,7 +271,14 @@ worker_deadline_s = 43200     # a worker that runs longer is killed, section 5.1
 # LJ-1.512 was still genuinely `working` on the local qwen head past the 5-hour
 # mark, approaching the old 6-hour cap.
 attempt_max = 4               # consecutive retries on ONE row, then PARK. B2
-parked_max = 12               # this many PARKED tasks stop the loop, rule (d)
+# LOWERED FROM 12 TO 5, owner's ruling 2026-08-23: every park must be seen and
+# judged by a follow-up agent, never buried or wasted, and a lower ceiling
+# stops the loop for maintainer attention sooner rather than letting parks
+# accumulate. Same day salvage on `attempt_max` parks landed (`scripts/pod/
+# pod.py`'s LOOPING-cap branch) so a stop here costs less: whatever a parked
+# task built is already reachable in the main tree, not stranded in its
+# worktree.
+parked_max = 5                # this many PARKED tasks stop the loop, rule (d)
 
 # THE 1800 s AGDA DEADLINE CLEARS THE MEASURED WORST CASE BY 5.9 TIMES.
 # MEASURED 2026-08-17, [LJ-4-0] gap B3: the widest acceptance class, `d5-base`
@@ -286,30 +293,74 @@ parked_max = 12               # this many PARKED tasks stop the loop, rule (d)
 # `dev/memos/LJ-4-pod-program-design.md:1701-1704` and `:102-112`. It names NO KEY
 # for them. The key names below are this file's, and a reader of `admits()`
 # needs them to match.
-# OWNER'S RULING 2026-08-23: under any circumstances, only ONE Agda writer, at a 4 GB
-# cap. Both tiers now carry the same slot count and the same caliber; WIDE and HEAVY stay
-# two names because a brief may still declare either, but `admits()`'s GLOBAL total
-# (`scripts/pod/launcher.py:agda_pileup()`) is checked against this SAME ceiling either
-# way, so the two tiers can never together exceed one live Agda process. This supersedes
-# C-12's four-WIDE/two-HEAVY figures (dev/LESSONS.md).
+# OWNER'S RULING 2026-08-23 (SECOND, SAME DAY): WIDE and HEAVY split apart again. The
+# FIRST ruling this date flattened both to one writer at 4 GB; this one gives WIDE a
+# smaller 2 GB cap and two concurrent writers, and leaves HEAVY at one writer, 4 GB.
+#
+# **`slots = 2` FOR WIDE WAS TRIED, RACED, REVERTED FOR ONE HOUR, THEN PROPERLY FIXED
+# AND RESTORED THE SAME DAY, OWNER'S ORDER.** MEASURED: the first attempt stopped the
+# loop at `parked_max` within minutes, every park `reason: "launch"`. `admits()`
+# (`scripts/pod/pod.py`) gated on `agda_pileup()` alone, a `ps`-based census of AGDA
+# PROCESSES ACTUALLY RUNNING this instant; `launcher.py`'s own dispatch check gates on
+# `agda_holders()`, the DISPATCH REGISTRY's count of agents CURRENTLY ASSIGNED an Agda
+# slot, whether or not that agent happens to be inside an `agda` invocation right now.
+# An agent spends most of its session reading and writing, not running `agda`, so
+# `agda_pileup()` reads far LOWER than `agda_holders()` almost always -- confirmed
+# live: two dispatched WIDE agents, `agda_pileup()` read `(0, {}, None)` while the
+# registry held both. At `slots = 1` the two gates agreed by construction (either sees
+# "the one slot is taken" the moment ANY task is dispatched); at `slots = 2` they could
+# disagree, `admits()` would wave a THIRD dispatch through, and `launcher.py` would
+# immediately refuse it, which `_rule_f()` read as a KEPT refusal and parked. THE FIX:
+# `admits()` now also asks `agda_registry_slots()` (`scripts/pod/pod.py`), which reads
+# the SAME registry census `launcher.py` itself uses, so the two gates cannot disagree
+# any more -- `admits()`'s own docstring and `agda_registry_slots()`'s have the rest.
+# A SECOND RACE, narrower, survived that fix and was found and closed the same day by
+# an opus-5 review: each side filtered the registry's holders by tier differently, so
+# a live holder of ONE tier could wrongly bind the OTHER tier's admission decision.
+# `agda_holders_in_tier()` (`scripts/pod/launcher.py`) is now the ONE implementation
+# both sides call.
 [tiers.wide]
-slots = 1                     # OWNER'S RULING 2026-08-23: one Agda writer, no more
-heap = "-A64m -I0 -M4g"       # OWNER'S RULING 2026-08-23: 4 GB cap
+slots = 2                     # OWNER'S RULING 2026-08-23 (second, restored after the
+                               # admits()/launcher() race above was fixed): two writers
+heap = "-A64m -I0 -M2g"       # OWNER'S RULING 2026-08-23 (second): 2 GB cap each
 
 [tiers.heavy]
 slots = 1                     # OWNER'S RULING 2026-08-23: one Agda writer, no more
-heap = "-A64m -I0 -M4g"       # OWNER'S RULING 2026-08-23: 4 GB cap
+heap = "-A64m -I0 -M4g"       # OWNER'S RULING 2026-08-23: 4 GB cap, unchanged
+
+# **NOT A TASK TIER, OWNER'S RULING 2026-08-25.** `dev/pod/facts.py TASK_TIERS =
+# ("wide", "heavy")` names the two tiers a brief's `agda_tier:` line may declare, and
+# it is UNCHANGED: this entry is invisible to it, to `task_tier()`, to `admits()` and
+# to the heap-sum budget above (`heads.py`'s validation and its `[tiers.shared]`
+# arithmetic both name `wide`/`heavy` by string, never a wildcard over `[tiers]`), so
+# no brief can ever reach it and it carries no `slots`. It exists for exactly one
+# caller: `scripts/pod/superheavy-check.py`, run BY HAND by the resident maintainer,
+# never by the dispatch loop. MEASURED 2026-08-25 on `[LJ-1.628]`: an owner-approved,
+# 10-line, no-new-imports addition to `src/L/Constructible.lagda.md` (`class-pred-i`)
+# still heap-walled the whole tree at HEAVY's `-M4g`, 166.5 s, 4.38 GiB WARM -- not a
+# stale-interface artefact, a real cost from a foundational file's own fan-out. THE
+# GATE IS EXISTENCE AND NEVER A MEMORY FLOOR, unlike `check-omlx-quiet.py`'s
+# 2026-08-24 relaxation: that gate protects a routine, frequent `make check` run;
+# this is a rare, hand-invoked, 8 GB commitment, and the owner's ruling here is no
+# qwen running at all, full stop.
+[tiers.superheavy]
+heap = "-A64m -I0 -M8g"       # OWNER'S RULING 2026-08-25: 8 GB cap, manual use only
 
 [tiers.shared]
-max_heap_sum_gb = 4           # OWNER'S RULING 2026-08-23: one process, so the worst-case
-                               # sum is the single cap itself
-free_memory_pct_for_extra = 25  # dead under slots=1 (a third slot is never opened), left
-                               # in place rather than removed
+max_heap_sum_gb = 6           # OWNER'S RULING 2026-08-23 (second): the worst live mix is
+                               # one HEAVY (4 GB) plus one WIDE (2 GB) at once; two WIDE
+                               # (4 GB) sits under it with room to spare, and the slot
+                               # ceilings above make two HEAVY, or three writers of any
+                               # mix, unreachable, so this bar never needs to catch them.
+free_memory_pct_for_extra = 25  # dead under a slot ceiling of 2 or less (a third slot is
+                               # never opened), left in place rather than removed
 per_process_backstop_gb = 6   # OWNER'S RULING 2026-08-23: the maintainer's own choice,
                                # not the owner's number. Follows C-12's own derivation
                                # (14 GB was ~2 GB above HEAVY's 12 GB cap); 6 GB is 2 GB
-                               # above the new 4 GB cap. Reversible; say so if it should
-                               # be tighter or looser.
+                               # above HEAVY's 4 GB cap, the larger of the two tiers'
+                               # per-process caps after the second ruling split them
+                               # apart. Reversible; say so if it should be tighter or
+                               # looser.
 system_free_floor_pct = 8     # C-12's floor, unchanged -- unrelated to the per-process cap
 
 # A RECORD CARRIES ITS TIER. Compare two measurements only inside one tier.
@@ -395,14 +446,17 @@ system_free_floor_pct = 8     # C-12's floor, unchanged -- unrelated to the per-
 # model reviews a DIFFERENT author's.
 mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
 # **TWO HEADS SINCE 2026-08-21, REORDERED 2026-08-22: `grok-4.6` first and
-# `glm-5.3` behind it, owner's ruling.** Neither is capped: both are ordinary
-# cloud vendors and neither is a scarce local resource, so `pick_head_config()`
-# takes the first every time and the second is reached only through A29's
-# retry. `grok-4.6` carries `"high"`, which is the effort it carried in the
-# `coder` array before an earlier ruling moved it here.
+# `glm-5.3` behind it.** Both carry `max_concurrency = 1`, owner's ruling
+# 2026-08-24: the same cap `coder`'s `Qwen3.8-27B-oQ4e-mtp` row already carried
+# is now on every `glm-5.3` and `grok-4.6` row in this file. Unlike Qwen's
+# cap, this is NOT a one-process-on-this-laptop argument (both are ordinary
+# cloud vendors); it is a policy choice and this file states only that it was
+# made, not why. `pick_head_config()` takes the first head with headroom under
+# its cap, so `grok-4.6` is still spent first, and the second is reached
+# through A29's retry exactly as before capping either.
 mathematician_adversarial = [
-  { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" },
-  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits" },
+  { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "glm-5.3", effort = "",     harness = "herdr-pi",   sandbox = "acceptEdits", max_concurrency = 1 },
 ]
 # THE LOCAL HEAD IS WRITTEN FIRST because it is the head the owner wants spent
 # first. That order is the tie-break between two CAPPED heads with headroom, and
@@ -410,13 +464,17 @@ mathematician_adversarial = [
 # **ITS `max_concurrency = 1` IS THE MACHINE AND NOT A PREFERENCE**: `omlx-server`
 # is one process on this laptop serving one 27B model, and a second concurrent
 # task would contend with the first for the same weights and the same memory.
-# **ITS `effort` WENT TO `"high"` (A28) AND BACK TO `""` THE SAME DAY, owner's
-# ruling 2026-08-21/22.** `""` omits `--thinking` entirely and runs at `pi`'s own
-# default, MEASURED as `medium` in the status line before A28 ever set a value
-# here. The revert is deliberate: track whatever `pi` itself defaults to, not a
-# value this file pins. Both `glm-5.3` rows keep `""` for the same reason they
-# always did (never asked to carry a value, not because the harness cannot take
-# one).
+# **ITS `effort` IS `"medium"`, owner's ruling 2026-08-25.** History: `""` (pi's
+# own default, MEASURED as `medium` in the status line) -> `"high"` (A28,
+# 2026-08-21) -> `""` the next day (2026-08-21/22, tracking pi's own default
+# rather than a value this file pins) -> `"high"` again (2026-08-24) -> `"medium"`
+# now, a fourth-day reversal after `[LJ-1.630]`'s own reasoning ran long at
+# `"high"` with no landing to show for it (owner's own words: the chain of
+# thought "出大问题了"). `"medium"` is not a return to `""`: this file now pins
+# the value pi's own default already measured, rather than leaving it to drift
+# with pi's own defaults if those ever change. Both `glm-5.3` rows keep `""` for
+# the same reason they always did (never asked to carry a value, not because the
+# harness cannot take one).
 # **THE SECOND HEAD MOVED FROM `grok-4.6` TO `claude-opus-5` ON 2026-08-21, AND
 # THEN TO `glm-5.3` ON 2026-08-23** -- the middle name is history and not the
 # current overflow head. Whichever model sits here is the overflow head AND the
@@ -424,12 +482,16 @@ mathematician_adversarial = [
 # on real work (`LJ-1.478`, `LJ-1.479`) before either mechanism existed.
 # OWNER'S RULING 2026-08-23: qwen is back from the 2026-08-22 maintenance drop, and
 # claude-opus-5 leaves this slot for coder_adversarial's own second head below --
-# glm-5.3 is qwen's fallback now, not claude-opus-5. `max_concurrency = 1` is the
-# machine and not a preference (see mathematician_adversarial's own comment above
-# it): `omlx-server` is one process on this laptop serving one 27B model.
+# glm-5.3 is qwen's fallback now, not claude-opus-5. Qwen's `max_concurrency = 1`
+# is the machine and not a preference: `omlx-server` is one process on this laptop
+# serving one 27B model. **`glm-5.3`'s OWN `max_concurrency = 1` is a DIFFERENT
+# reason, owner's ruling 2026-08-24**: the same cap now sits on every `glm-5.3`
+# and `grok-4.6` row in this file (see `mathematician_adversarial`'s own comment
+# above), a policy choice this file records without a machine-level cause behind
+# it.
 coder                     = [
-  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "glm-5.3",              effort = "", harness = "herdr-pi", sandbox = "acceptEdits" },
+  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "medium", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "glm-5.3",              effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
 ]
 # **SECOND HEAD MOVED FROM `glm-5.3` TO `claude-opus-5`, OWNER'S RULING
 # 2026-08-23**, the same day qwen returned to `coder` and took `glm-5.3` as ITS OWN
@@ -441,8 +503,12 @@ coder                     = [
 # stop/no-go branch can route to `mathematician_adversarial`. `claude-opus-5` here
 # never reviews its OWN work: it authors `mathematician` and critiques `coder`,
 # two different authors.
+# `grok-4.6` HERE ALSO CARRIES `max_concurrency = 1`, owner's ruling 2026-08-24,
+# the same cap as every other `glm-5.3`/`grok-4.6` row in this file (see
+# `mathematician_adversarial`'s own comment). `claude-opus-5` is neither model
+# and stays uncapped.
 coder_adversarial         = [
-  { model = "grok-4.6", effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits" },
+  { model = "grok-4.6", effort = "high",  harness = "herdr-grok",   sandbox = "acceptEdits", max_concurrency = 1 },
   { model = "claude-opus-5", effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
 ]
 # **THE MAINTAINER MOVED TO `claude-sonnet-5` at effort `xhigh`, owner's ruling
