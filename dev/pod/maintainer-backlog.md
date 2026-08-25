@@ -19,7 +19,63 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
-### 32. `scripts/pod/launcher.py:70` hardcodes the absolute repo path, so its own test suite cannot run from a git worktree. FOUND 2026-08-25
+### 33. Conjunct 1 verifies a coder's own heap-wall EVIDENCE, so obeying two live rules at once guarantees a park. DIAGNOSED BY pod-math, VERIFIED HERE, MEASURED on LJ-1.636, 2026-08-26
+
+**TWO RULES, EACH CORRECT ALONE, COLLIDE.** `dev/pod/instructions/coder.md:51-58`
+requires a heap wall be restructured and RE-TESTED IN THE SAME DISPATCH, and
+says a wall never routed around "is not yet evidence about the term, only
+about the first shape you wrote", so the bisection arm that reproduces the
+wall MUST be left on disk as proof the coder tried. Clause W3 requires a probe
+be tracked and never deleted. `verification_target()`
+(`scripts/pod/facts.py:489-524`) case 2 makes EVERY `.agda` file under the
+task's own home a conjunct-1 target when no `src/` master changed, `runs/`
+included, in path order. **So a task that obeys both rules and correctly
+leaves the walling arm as its own required evidence CANNOT pass acceptance,
+however clean its actual deliverable is.**
+
+**MEASURED, not asserted.** `LJ-1.636`'s own record
+(`agents/tasks/LJ-1-636/runs/accept-1.out`): `runs_all` is
+`[{"rc": 0, "target": ".../Probe636.agda"}, {"rc": 251, "target":
+".../runs/Bisect1.agda"}]` — the actual deliverable, `Probe636.agda`,
+typechecked clean at `rc 0`; `runs/Bisect1.agda`, a bisection arm left as
+required evidence, is what walled, and conjunct 1 stopped there (path-sorted
+"P" before "r", so it never even reached `Bisect2.agda` through `BisectF.agda`).
+`obligations_delta -1`, `obligations_open 0`, `obligations_probe_red false`:
+the independent obligation counter (not conjunct 1's own exit code) confirms
+the census term `sq-demand` (`agents/tasks/LJ-1-636/Probe636.agda:422-428`)
+was delivered, green, no hole, no postulate. The task parked correctly on
+`task-lj-1-636-heap-wall-park` (backlog item 26's own fix; the ROUTING is not
+the bug here, the TARGET SELECTION is).
+
+**THE CORPUS ALREADY LOCKED THIS ONE RECORD.** `dev/pod/replay-corpus.jsonl`
+carries it as `c-4082`, `provenance: "live"`, `row:
+"task-lj-1-636-heap-wall-park"`. A batch proposal that reroutes THIS record to
+`done`/`go` would be R3-refused (AD10): a row that has already routed a live
+corpus record cannot be fixed through a normal batch proposal, whatever the
+fix (measured before, on the LJ-1.448/449/450/451/459 shape, 2026-08-21). I am
+not requesting the owner-authorised
+bypass for this one record: pod-math's own `park_and_split` already queued
+`LJ-1.636-split` carrying the delivered result forward through a brief that
+opens no corpus record yet, so the substantive result lands cleanly through a
+fresh task rather than through a bypass on this one.
+
+**THREE CANDIDATE CURES, NAMED BY pod-math, NONE CHOSEN HERE: this changes what
+conjunct 1 verifies and is the owner's design call, not mine or the
+mathematician's.**
+1. Exclude `runs/` from `verification_target()`'s case 2 entirely. Blunt: a
+   coder that mistakenly leaves its REAL deliverable under `runs/` instead of
+   the task home would go unchecked.
+2. A naming convention that marks an arm as evidence-only (a `Bisect*.agda`
+   pattern, or a directory), and `verification_target()` excludes it by name.
+   Surgical, but needs the convention written into `coder.md` and held to by
+   every future coder dispatch.
+3. Record a walling arm as a `.out` plus a quoted excerpt, and delete the
+   `.agda`. Conflicts with W3's own "never delete" on its face; whether W3
+   was ever meant to cover a SUPERSEDED bisection arm (as opposed to the
+   final probe) is itself unsettled and would need its own ruling.
+
+**NOT FIXED HERE.** Documented for the owner's ruling on which of the three,
+or another shape, `verification_target()` should take.
 
 **NOT MINE, FOUND BY A DISPATCHED AGENT, VERIFIED HERE.** `ROOT =
 Path("/Users/alsg/Agentic/Bedrock")` is a literal, not a `Path(__file__)`
