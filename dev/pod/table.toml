@@ -26056,3 +26056,111 @@ expired = false
   [row.when]
   changed_files_count_max = 1
   seconds_min = 3600.0
+
+[[row]]
+id = "task-lj-1-633-go"
+scope = "task:LJ-1.633"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-25
+added_by = "mathematician"
+reason = "branch `go` of LJ-1.633, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-633-stop-stated"
+scope = "task:LJ-1.633"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-25
+added_by = "mathematician"
+reason = "branch `stop-stated` of LJ-1.633, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-633/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-633/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-633-accept-failed"
+scope = "task:LJ-1.633"
+priority = 14
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-25
+added_by = "mathematician"
+reason = "branch `accept-failed` of LJ-1.633, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 1
+  obligations_delta_max = -1
+  changed_files_none = ["agents/tasks/LJ-1-633/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-633-no-go-attacked"
+scope = "task:LJ-1.633"
+priority = 15
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-25
+added_by = "mathematician"
+reason = "branch `no-go-attacked` of LJ-1.633, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  error_class_in = ["unsolved_meta", "universe_level", "other"]
+  changed_files_any = ["agents/tasks/LJ-1-633/Probe633.agda"]
+  changed_files_none = ["agents/tasks/LJ-1-633/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-633-no-go-stated"
+scope = "task:LJ-1.633"
+priority = 20
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-25
+added_by = "mathematician"
+reason = "branch `no-go-stated` of LJ-1.633, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  changed_files_any = ["agents/tasks/LJ-1-633/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-633-heap-wall-park"
+scope = "task:LJ-1.633"
+priority = 30
+action = "park_and_split"
+added = 2026-08-25
+added_by = "mathematician"
+reason = "PARK, NOT ESCALATE. A heap wall is a resource fact and no critic can"
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "task-lj-1-633-no-go-bare"
+scope = "task:LJ-1.633"
+priority = 40
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-25
+added_by = "mathematician"
+reason = "CLOSES BACKLOG ITEM 30, MEASURED ON LJ-1.630 2026-08-25. A REAL failed"
+expired = false
+
+  [row.when]
+  exit_code = 42
