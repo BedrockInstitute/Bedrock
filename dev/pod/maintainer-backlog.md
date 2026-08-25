@@ -19,6 +19,44 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 30. A real NO-GO landing with no companion artifact matches neither task-scoped NO-GO branch. PARKED NOW on LJ-1.630, MEASURED 2026-08-25
+
+**NOT A PROGRAM DEFECT: the routing mechanism worked correctly.** `_hits()`/`_route()`
+correctly found no match, because neither of LJ-1.630's own task-scoped NO-GO branches
+covers this exact shape. This is a template gap in what the mathematician wrote into the
+brief, the same class as items 20/23/24/25, at a new site.
+
+**THE FACTS**, from `.pod-state/worktrees/LJ-1-630/agents/tasks/LJ-1-630/runs/accept-1.out`
+and `dev/pod/transitions/2026-08.jsonl:4017`. A genuine Agda type error, not a heap wall
+and not a D-10 stop: conjunct 1 (the whole-tree typecheck) FAILED with `UnequalTerms`,
+conjunct 6 FAILED too, conjuncts 2-5 held. `exit_code 42`, `error_class "other"`,
+`obligations_delta 0`, `changed_files` names `src/L/BoundedSubset.lagda.md` (the coder's
+own landing target, actually edited) plus five ad-hoc `runs/*.out` files
+(`floor-1.out`, `heavy-1-floor.out`, `heavy-2-with-row.out`, `heavy-2b-with-row.out`,
+`heavy-2c-with-row.out`). **No `Probe630.agda` and no `review-of-*.md` anywhere in the
+list.**
+
+**WHY NEITHER TASK-SCOPED ROW MATCHES**, `dev/pod/table.toml:25779` and `:25796`:
+`task-lj-1-630-no-go-attacked` needs `exit_code = 42` AND
+`changed_files_any = ["agents/tasks/LJ-1-630/Probe630.agda"]`; `task-lj-1-630-no-go-stated`
+needs `exit_code = 42` AND `changed_files_any = ["agents/tasks/LJ-1-630/review-of-*.md"]`.
+The coder produced neither companion file: it edited the landing target directly and left
+its trial output under ad-hoc names, which is a real return (a failed proof, not silence),
+just not the shape either template anticipated. The one system row carrying
+`error_class = "other"` (`sys-sigkill-escalate`, `dev/pod/table.toml:97`) also needs
+`exit_code = -9`, so it does not reach this either.
+
+**WHAT `pod-math` MAY WANT TO DECIDE, NOT MINE TO WRITE.** A third task-scoped branch
+covering `exit_code = 42` with NEITHER companion file present, presumably `escalate` to
+`mathematician_adversarial` (the same action items 20/25 already established for "a real
+return with no stated verdict"), OR a brief-side fix so every NO-GO attempt is instructed
+to leave the expected artifact. Whichever shape, this is AD3's call and a proposal needs
+the replay-verified batch path, not a row I write here.
+
+**PARKED, WAITING.** `no-match` is not one of rule (a2)'s auto-reopening reasons, so
+LJ-1.630 stays PARKED until a corrective row is admitted (a batch proposal) or the owner
+runs `--retry`.
+
 ### 29. `maintainer_scope_ok()` has no BEFORE snapshot, so long-standing ambient drift refuses every batch on `scope`. MEASURED 2026-08-25
 
 **THE DRIFT NAMED BELOW IS NOW CLEARED, OWNER-AUTHORISED 2026-08-25.** Six
