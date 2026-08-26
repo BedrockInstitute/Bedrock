@@ -1,0 +1,2 @@
+missing   exit=42       2.89s  agents/tasks/LJ-1-646/Probe646.agda::lset-code-ord  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-646/.pod-state/witness/Witness-LJ-1-646-71bcb53d.agda:31)
+witness: 1 UNRESOLVED of 1, 2.89 s, probe_red=False
