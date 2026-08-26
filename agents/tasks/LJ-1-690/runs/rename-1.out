@@ -1,0 +1,24 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T23:00:29Z
+Checking LJ-1-690.runs.RENAME3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-690/agents/tasks/LJ-1-690/runs/RENAME3.agda).
+        6.33 real         6.16 user         0.14 sys
+           388497408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               25765  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 115  voluntary context switches
+                1374  involuntary context switches
+         91396048582  instructions retired
+         27002470835  cycles elapsed
+           329302856  peak memory footprint
+EXIT=0
+ended 2026-08-26T23:00:35Z

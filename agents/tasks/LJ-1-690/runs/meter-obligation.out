@@ -1,0 +1,6 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T23:02:34Z
+pass      exit=0        1.71s  agents/tasks/LJ-1-690/Probe690.agda::same-as-graph-forward
+witness: 0 UNRESOLVED of 1, 1.71 s, probe_red=False
+EXIT=0
+ended 2026-08-26T23:02:36Z
