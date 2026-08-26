@@ -19,7 +19,7 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
-### 37. `check-survey-quotes.py` checks the ORIGINAL author's report, always, so an escalated critic can never satisfy it. DIAGNOSED HERE, THIRD SIGHTING NAMED BY pod-math, MEASURED on LJ-1.643 and LJ-1.685, 2026-08-26/27
+### 37. `check-survey-quotes.py` checks the ORIGINAL author's report, always, so an escalated critic can never satisfy it. DIAGNOSED HERE, ROUTING RULED BY pod-math, MEASURED on LJ-1.643 and LJ-1.685, 2026-08-26/27
 
 **pod-math NAMED THE SYMPTOM ON THREE SIGHTINGS** (`[LJ-1.636]`'s conjunct-1
 variant, `[LJ-1.643]`, `[LJ-1.685]`): a delivered obligation parks at
@@ -89,7 +89,29 @@ cases). Both records are R3/AD10 corpus-locked (`[LJ-1.685]`: `c-4537`,
 `c-4547`, four `c-455*`/`c-456*` rows, all `provenance: "live"`), so no batch
 proposal can move either regardless of which of the three cures is chosen.
 
-### 36. `heads.toml` changes went silently inert for the resident process's whole lifetime. FIXED 2026-08-26
+**pod-math RULED CURE 3, UNDER AD3, 2026-08-27, AFTER VERIFYING `report_of()`
+AT SOURCE THEMSELVES.** Traced the chain to their own row:
+`task-lj-1-685-accept-failed` (`added_by = "mathematician"`) named
+`head_slot = "coder_adversarial"` for an `error_class: "lint"` failure, and
+that ONE routing decision is what made the park terminal, since `report_of()`
+then guarantees a critic's return can never be read. **The ruling is a
+category error, not only a mechanism gap**: DD25 sends a negative
+MATHEMATICAL return to a critic; a survey-duty failure is a RECORDS defect in
+the author's own report, which a critic cannot repair. A new template row,
+`lint-back-to-author` (`agents/tasks/POD-MATH/branch-template.md`), routes
+`exit_code = 1, error_class_in = ["lint"]` to `head_slot = "coder"` at
+priority 13, ahead of `accept-failed`'s 14, so a lint failure never leaves the
+report `report_of()` actually judges. **VERIFIED HERE**: `error_class_in` is a
+live matcher key (`scripts/pod/table.py:149`, matched in `matches()`) and
+`coder` is one of `head_slots()`'s five names. **Binds pod-math's OWN future
+task-scoped rows only, from the next brief onward**: `[LJ-1.681]` through
+`[LJ-1.690]` keep the old template and are not retrofitted, an explicit,
+stated choice ("three tasks parked this way and not one of them lost its
+mathematics, so the cost of a retrofit exceeds the cost of the parks").
+**Cures 1 and 2 above remain open**: pod-math's fix protects only rows THEY
+write; `check-survey-quotes.py`'s own file selection (cure 1) would also
+protect any task-scoped row anyone else writes with the same shape, and is
+named here as the defence-in-depth question for the owner, not chosen.
 
 **FOUND BY THE OWNER, NOT BY REVIEW.** They asked why `[LJ-1.662]`'s `coder` dispatch
 still used `claude-opus-5` after a same-day ruling moved `coder` to `{Qwen, grok-4.6}`.
