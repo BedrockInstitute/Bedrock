@@ -1,0 +1,4 @@
+pass      exit=0        3.14s  agents/tasks/LJ-1-686/Probe686.agda::slide-embed-eq  (grouped run, exit 0)
+pass      exit=0        3.14s  agents/tasks/LJ-1-686/Probe686.agda::At.slide-embed-eq  (grouped run, exit 0)
+pass      exit=0        3.14s  agents/tasks/LJ-1-686/Probe686.agda::lemma  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 3, 3.14 s, probe_red=False
