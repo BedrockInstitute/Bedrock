@@ -1,0 +1,36 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.650]  RED BY CONSTRUCTION.  The obligation, attempted the only
+-- way the keystone can be applied at all: at the code `CodedCover` is
+-- given.  Agda names the two types side by side.  Renamed
+-- runs/NO-KEYSTONE-DIRECT.agda.txt after the run; runs/nokey-1.out.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-650.runs.NoKeystone650 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+
+import LJ-1-650.Probe650 {ℓ} lem as P
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+module SV = hPropStructure 𝒮ᵥ
+open SV using ( _∈ˢ_ )
+
+module Red (lam : SV.S) (ordλ : IsOrd lam)
+           (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+           (X : SV.S)
+           (X⊆Lλ : (z : SV.S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+           (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module Q = P.Coded lam ordλ succλ X X⊆Lλ ∅∈λ
+
+  coded-cover-from-keystone : Q.LsetCodeOrd → Q.CodedCover
+  coded-cover-from-keystone ko c = ko c

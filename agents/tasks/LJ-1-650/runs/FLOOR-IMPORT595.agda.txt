@@ -1,0 +1,41 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.650] FLOOR.  What the ELABORATION FRAME costs before any proof
+-- of this task's own.  It names [LJ-1.595]'s `CodedCover` through the
+-- import and states nothing else.  Coder clause, owner 2026-08-23:
+-- price the frame before the term.
+--
+-- ONE Agda process, caliber from the pane, never set here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-650.runs.Floor650 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+
+-- THE PREDECESSOR, BY THE TYPE IT DELIVERED (coder clause, owner
+-- 2026-08-20).  [LJ-1.595]'s report is a GO on its own W3
+-- (agents/tasks/LJ-1-595/lj-1.595-report.md:183).
+import LJ-1-595.Probe595 {ℓ} lem as P595
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+module SV = hPropStructure 𝒮ᵥ
+open SV using ( _∈ˢ_ )
+
+module Frame (lam : SV.S) (ordλ : IsOrd lam)
+             (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+             (X : SV.S)
+             (X⊆Lλ : (z : SV.S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+             (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module P = P595.CoverAt lam ordλ succλ X X⊆Lλ ∅∈λ
+
+  CodedCover : Type (ℓ-suc ℓ)
+  CodedCover = P.CodedCover

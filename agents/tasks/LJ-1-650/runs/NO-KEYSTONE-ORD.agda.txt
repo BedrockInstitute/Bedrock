@@ -1,0 +1,50 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.650]  RED BY CONSTRUCTION, SECOND SLICE.  The keystone applied
+-- where it CAN be applied, at an ordinal-valued code, and its output
+-- offered to the row `CodedCover` wants.  The caller's own `IsOrd` is
+-- plugged into the ordinality slot, and Agda names the fact that slot
+-- really demands.  Renamed runs/NO-KEYSTONE-ORD.agda.txt after the
+-- run; runs/nokey-2.out.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-650.runs.NoKeystoneOrd650 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open import Cubical.Data.Sigma using ( _×_ )
+open InfinitySet {ℓ} using ( sucV )
+
+import LJ-1-650.Probe650 {ℓ} lem as P
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+module SV = hPropStructure 𝒮ᵥ
+open SV using ( _∈ˢ_ )
+
+module Red (lam : SV.S) (ordλ : IsOrd lam)
+           (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+           (X : SV.S)
+           (X⊆Lλ : (z : SV.S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+           (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module Q = P.Coded lam ordλ succλ X X⊆Lλ ∅∈λ
+
+  cover-row-from-keystone :
+      Q.LsetCodeOrd
+    → (c : Q.T.Code) → (oc : IsOrd (fst (Q.T.val c)))
+    → Σ[ d ∈ Q.T.Code ]
+        ( IsOrd (fst (Q.T.val d))
+        × ⟨ fst (Q.T.val c) ∈ˢ Lset (fst (Q.T.val d)) ⟩ )
+  cover-row-from-keystone ko c oc = fst (ko c oc) , (od , cov)
+    where
+    od : IsOrd (fst (Q.T.val (fst (ko c oc))))
+    od = subst IsOrd (sym (snd (ko c oc))) oc
+    cov : ⟨ fst (Q.T.val c) ∈ˢ Lset (fst (Q.T.val (fst (ko c oc)))) ⟩
+    cov = subst (λ w → ⟨ fst (Q.T.val c) ∈ˢ Lset w ⟩)
+            (sym (snd (ko c oc))) (snd (Q.T.val c))

@@ -1,0 +1,2 @@
+missing   exit=42       3.59s  agents/tasks/LJ-1-650/Probe650.agda::coded-cover-from-keystone  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-650/.pod-state/witness/Witness-POD-f6f5a56f.agda:33)
+witness: 1 UNRESOLVED of 1, 3.59 s, probe_red=False
