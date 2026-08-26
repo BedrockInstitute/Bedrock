@@ -219,6 +219,48 @@ check("an empty scope writes NO HIT",
       "NO HIT" in retr.candidate_block("ARCHIVE", "x", ["archive/nope"], 3))
 
 # ---------------------------------------------------------------------------
+# 1b. THE STANDING SET, and the search budget it frees.
+# MEASURED 2026-08-26 over 263 dispatches carrying both an injected block and a
+# return: the ten pinned records took a mean 83.7 per cent of the ten CANDIDATE
+# slots, leaving a MEDIAN OF 2 candidates that varied with the task, and 23
+# briefs with none at all. Pinning them and dropping them from the index moved
+# mean recall over the gold 82.6 -> 87.4 and over the non-pinned part of the
+# gold 43.8 -> 56.0.
+_stand = retr.standing_block()
+check("the STANDING block carries the do-not-edit heading",
+      _stand.startswith("## STANDING (program-generated, do not edit)"))
+check("it writes one STANDING line per pinned record and no CANDIDATE",
+      len([ln for ln in _stand.splitlines() if ln.startswith("- STANDING ")])
+      == len(retr.STANDING) and "- CANDIDATE " not in _stand)
+# THE BLOCK MUST NOT POSE THE DUTY, and this is the assertion that keeps it so.
+# `check-survey-quotes.py` builds `wants` from `section_of(brief, "ARCHIVE")`
+# and its SECTION table matches only ARCHIVE and LITERATURE, so a STANDING block
+# is invisible to conjunct 6. If this block ever grew the duty sentence, every
+# dispatch would owe ten more answers.
+check("the STANDING block poses no duty and names no USED heading",
+      "USED" not in _stand and "conjunct" not in _stand)
+check("STANDING lines are OFFERED, so a pinned path is never a miss",
+      retr.OFFERED_LINE.findall(_stand) == retr.STANDING,
+      str(retr.OFFERED_LINE.findall(_stand)))
+_sblocks = retr.injected_blocks(_stand)
+check("the producer reads the STANDING block back out of a brief",
+      [b[0] for b in _sblocks] == ["STANDING"], str(_sblocks))
+check("a STANDING block ran no search, so it contributes no scope",
+      _sblocks[0][1] == [], str(_sblocks[0][1]))
+
+# `exclude` DROPS FROM THE INDEX, so the freed slots go to the next files down.
+_all = [p for p, _ in retr.retrieve(retr.goal_text(EPISODES[0][1]), SRC_SCOPE, 3)]
+_less = [p for p, _ in retr.retrieve(retr.goal_text(EPISODES[0][1]), SRC_SCOPE, 3,
+                                     exclude=[_all[0]])]
+check("an excluded path leaves the ranking",
+      _all[0] not in _less, f"{_all} -> {_less}")
+check("excluding one still fills the budget from what is left",
+      len(_less) == len(_all) and _less[0] == _all[1], f"{_all} -> {_less}")
+check("exclude defaults to None, which is the 2026-08-17 behaviour above",
+      [p for p, _ in retr.retrieve(retr.goal_text(EPISODES[0][1]), SRC_SCOPE, 3,
+                                   exclude=None)] == _all)
+
+# ---------------------------------------------------------------------------
 # 2. THE MISS SIGNAL of Part 1b, and the PRODUCER that builds it.
 print("retrieve.py measures its own retrieval")
 

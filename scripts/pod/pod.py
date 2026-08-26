@@ -1810,7 +1810,13 @@ def inject_survey(brief, root=None):
         # program-generated marker is the handwritten skip LJ-1.417 measured.
         need_archive = not _generated_heading(text, "ARCHIVE")
         need_lit = not _generated_heading(text, "LITERATURE")
-        if need_archive or need_lit:
+        # The pinned records. They run no search, so they need no query and they
+        # carry no duty: `check-survey-quotes.py` reads ARCHIVE and LITERATURE
+        # only. MEASURED 2026-08-26 over 263 dispatches: these ten took a mean
+        # 83.7 per cent of the ten CANDIDATE slots, leaving a median of 2 that
+        # varied with the task, and 23 briefs with none at all.
+        need_standing = not _generated_heading(text, "STANDING")
+        if need_archive or need_lit or need_standing:
             try:
                 import retrieve as retrieve_mod         # deferred: it builds an index
             except ImportError:
@@ -1819,16 +1825,26 @@ def inject_survey(brief, root=None):
                 obligations = witness_mod.obligations_of(p)
                 query = retrieve_mod.build_query(scope, obligations,
                                                  retrieve_mod.goal_text(str(p)))
+                if need_standing:
+                    text = _put_section(
+                        text, "STANDING", retrieve_mod.standing_block())
+                # `exclude=STANDING` drops the pinned records FROM THE INDEX, so
+                # the five slots rank what is left. MEASURED 2026-08-26 by
+                # offline replay of the same 263 dispatches: mean recall over
+                # the gold 82.6 -> 87.4, and over the non-pinned part of the
+                # gold, the part that varies with the task, 43.8 -> 56.0.
                 if need_archive:
                     text = _put_section(
                         text, "ARCHIVE",
                         retrieve_mod.candidate_block(
-                            "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE))
+                            "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE,
+                            exclude=retrieve_mod.STANDING))
                 if need_lit:
                     text = _put_section(
                         text, "LITERATURE",
                         retrieve_mod.candidate_block(
-                            "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE))
+                            "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE,
+                            exclude=retrieve_mod.STANDING))
 
         if text == original:
             return False
@@ -2750,10 +2766,16 @@ def review_brief(t, slot, root=None):
         import retrieve as retrieve_mod
         query = retrieve_mod.build_query([outfile], [], f"review of {pred}")
         with open(out, "a", encoding="utf-8") as fh:
+            # Same order and same exclusion as the brief backfill above: the
+            # pinned records first and unsearched, then the two searches
+            # spending their whole budget on what is not pinned.
+            fh.write(retrieve_mod.standing_block() + "\n")
             fh.write(retrieve_mod.candidate_block(
-                "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE) + "\n")
+                "ARCHIVE", query, retrieve_mod.ARCHIVE_SCOPE,
+                exclude=retrieve_mod.STANDING) + "\n")
             fh.write(retrieve_mod.candidate_block(
-                "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE) + "\n")
+                "LITERATURE", query, retrieve_mod.LITERATURE_SCOPE,
+                exclude=retrieve_mod.STANDING) + "\n")
     except ImportError:
         with open(out, "a", encoding="utf-8") as fh:
             fh.write("## ARCHIVE (program-generated, do not edit)\n\nNO HIT\n\n")

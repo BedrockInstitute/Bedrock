@@ -168,6 +168,49 @@ ARCHIVE_SCOPE = [
 #: The literature corpus of section 7.4, for `## LITERATURE`.
 LITERATURE_SCOPE = ["dev/literature"]
 
+#: THE STANDING SET, and the search budget it frees.
+#: MEASURED 2026-08-26 by an offline replay of 263 dispatches that carry both an
+#: injected block and a return, 2,984 gold citations, gold being every path a
+#: return names under `## ARCHIVE USED` or `## LITERATURE USED`. The replay is
+#: `scratchpad/reteval/{eval,replay}.py`; it reuses `dispatch_signal()` and
+#: `used_paths()` so its reading of the record is this file's own.
+#:
+#: THESE TEN ARE CITED BY ALMOST EVERY RETURN AND BM25 SPENDS ALMOST THE WHOLE
+#: BUDGET REDISCOVERING THEM. Citation rate over the 263: 99.2, 98.9, 98.1,
+#: 98.1, 90.9, 89.4, 83.3, 82.1, 57.8, 38.4 per cent, in the order below. The
+#: ten together are 73.7 per cent of all gold citations, and a ranker that
+#: returned them unconditionally and searched nothing scored 74.6 per cent mean
+#: recall against a production baseline of 82.6.
+#: THE COST IS MEASURED, NOT FEARED: of ten CANDIDATE lines a brief carries, a
+#: mean 83.7 per cent are these ten, leaving a MEDIAN OF 2 task-specific
+#: candidates, and 23 of the 263 briefs (8.7 per cent) carried NONE.
+#: Pinning them and removing them from the index puts all five search slots on
+#: the tail: mean recall 82.6 -> 87.4, and recall over the non-standing part of
+#: the gold 43.8 -> 56.0.
+#:
+#: WHY A CONSTANT AND NOT A LEARNED LIST. A list derived from citation history
+#: reinforces itself: a document pinned because it was cited stays cited because
+#: it is pinned. This list is a measurement of one window, it is reviewable in
+#: one screen, and it is meant to be re-measured rather than to drift.
+#:
+#: IT CREATES NO NEW DUTY, and that is why the block is `## STANDING` and not a
+#: third heading of the other two. `check-survey-quotes.py` builds `wants` from
+#: `section_of(brief, "ARCHIVE")` and its `SECTION` table matches only ARCHIVE
+#: and LITERATURE, so a STANDING block is invisible to conjunct 6. The author
+#: still answers exactly the five CANDIDATE lines it answered before.
+STANDING = [
+    "archive/dev/JOURNAL-archived.md",
+    "dev/literature/truncation-and-selection.md",
+    "dev/literature/devlin-II5.md",
+    "dev/literature/digest.md",
+    "archive/dev/LJ-dispatch-index.md",
+    "archive/dev/JOURNAL.md",
+    "dev/literature/terms-2026-08.md",
+    "dev/ARCHIVE.md",
+    "dev/literature/geology.md",
+    "archive/dev/DECISIONS-archived.md",
+]
+
 #: The tokenizer, lifted verbatim from
 #: `dev/measurements/pod-retrieval-scoping-2026-08-17.py:25-49`. A word starts
 #: with a letter, a number stands alone, and a CJK character is one token.
@@ -201,10 +244,23 @@ USED_PATH = re.compile(
 #: The program-generated block of a brief, and the two lines the producer of
 #: Part 1b reads back out of it. `candidate_block()` writes both, so the brief
 #: is the record of what the program offered and no second state file exists.
+#: STANDING JOINS THIS PATTERN SO THE MISS SIGNAL STAYS HONEST. `miss_signal()`
+#: calls a used path a miss when the injection did not offer it. A pinned path
+#: IS offered, so counting it as a miss would report a failure the program did
+#: not have, and 73.7 per cent of gold citations are pinned paths. With STANDING
+#: matched here the miss set is the TAIL and nothing else, which is the first
+#: time this signal measures retrieval rather than citation volume: MEASURED
+#: 2026-08-26, the miss count of the old signal correlates 0.636 with how many
+#: paths a return cites, so the more thorough the return the worse the old
+#: signal read.
 INJECTED_BLOCK = re.compile(
-    r"^##\s+(ARCHIVE|LITERATURE)\s+\(program-generated[^)\n]*\)\s*$(.*?)(?=^##\s|\Z)",
+    r"^##\s+(ARCHIVE|LITERATURE|STANDING)\s+\(program-generated[^)\n]*\)\s*$"
+    r"(.*?)(?=^##\s|\Z)",
     re.S | re.M)
-OFFERED_LINE = re.compile(r"^-\s+CANDIDATE\s+(\S+)", re.M)
+#: STANDING lines are OFFERED and are not CANDIDATEs. The distinction is the
+#: whole design: `OFFERED_LINE` feeds the miss signal, and the word CANDIDATE is
+#: what `_duty()` tells the author to answer and what conjunct 6 checks.
+OFFERED_LINE = re.compile(r"^-\s+(?:CANDIDATE|STANDING)\s+(\S+)", re.M)
 SCOPE_LINE = re.compile(r"^Corpus search over ([^:\n]+):", re.M)
 
 
@@ -298,7 +354,8 @@ class Index:
         return sum(1 for w in set(qterms) if w in have and self.df[w] < limit)
 
 
-def retrieve(query: str, scope: list[str], k: int) -> list[tuple[str, float]]:
+def retrieve(query: str, scope: list[str], k: int,
+             exclude: list[str] | None = None) -> list[tuple[str, float]]:
     """The seam of Part 1a. Rank the scope against the query, best first.
 
     Returns `(repository-relative path, score)` pairs, highest score first, at
@@ -309,8 +366,17 @@ def retrieve(query: str, scope: list[str], k: int) -> list[tuple[str, float]]:
     scores every file of the scope, so the top `k` of the raw ranking always
     holds `k` paths, even when the query shares no token with any of them. The
     result is then `NO HIT`, which section 7.4 rules a first-class result.
+
+    `exclude` DROPS PATHS FROM THE INDEX, not from the result, so the ranking is
+    the ranking of what is left and the freed slots go to the next files down.
+    It DEFAULTS TO NONE AND THAT IS TODAY'S BEHAVIOUR: the scoping figures of
+    2026-08-17 that `test_pod_gates.py` reproduces run through this same call
+    with no exclusion, so they are untouched by the standing set.
     """
     paths = corpus(scope)
+    if exclude:
+        drop = set(exclude)
+        paths = [p for p in paths if p not in drop]
     if not paths or k <= 0:
         return []
     index = Index(paths)
@@ -362,7 +428,7 @@ def build_query(modules: list[str], obligations: list[str], goal: str) -> str:
 
 
 def candidate_block(heading: str, query: str, scope: list[str],
-                    k: int = 5) -> str:
+                    k: int = 5, exclude: list[str] | None = None) -> str:
     """The program-generated block a brief carries, `## ARCHIVE` or the other.
 
     It writes the `k` paths as CANDIDATE lines and it never says that a file
@@ -370,7 +436,7 @@ def candidate_block(heading: str, query: str, scope: list[str],
     first-class result: it removes the whole class of "declined by ritual",
     because the program declined it and not the author.
     """
-    hits = retrieve(query, scope, k)
+    hits = retrieve(query, scope, k, exclude)
     out = [f"## {heading} (program-generated, do not edit)", ""]
     if not hits:
         out.append(f"Corpus search over {', '.join(scope)}: NO HIT")
@@ -380,6 +446,34 @@ def candidate_block(heading: str, query: str, scope: list[str],
     for path, score in hits:
         out.append(f"- CANDIDATE {path}  (score {score:.3f})")
     out += ["", _duty(heading)]
+    return "\n".join(out) + "\n"
+
+
+def standing_block(paths: list[str] | None = None) -> str:
+    """The `## STANDING` block: the pinned records, named and not searched.
+
+    IT CARRIES NO DUTY LINE AND THAT IS THE POINT. `_duty()` tells the author to
+    answer every CANDIDATE, and `check-survey-quotes.py` builds that duty from
+    `section_of(brief, "ARCHIVE")`, whose `SECTION` table matches only ARCHIVE
+    and LITERATURE. A STANDING block is therefore invisible to conjunct 6: the
+    author answers the same five CANDIDATE lines it answered before this block
+    existed, and these ten are there to be opened, not to be accounted for.
+
+    WHY NAME THEM AT ALL WHEN THEY ARE NOT ANSWERED. Because they are opened.
+    MEASURED 2026-08-26 over 301 Bedrock sessions and 20,321 tool calls, by the
+    file name appearing in a tool call's arguments: `devlin-II5.md` in 66.1 per
+    cent of sessions, `JOURNAL.md` 43.5, `digest.md` 42.5, `JOURNAL-archived.md`
+    37.9, `ARCHIVE.md` 35.5, `geology.md` 35.5, `truncation-and-selection.md`
+    29.6, `LJ-dispatch-index.md` 28.6, `DECISIONS-archived.md` 26.6,
+    `terms-2026-08.md` 15.3. That is a lower bound: a `cat dev/literature/*.md`
+    names no file. These are working documents and the block hands over the path.
+    """
+    out = ["## STANDING (program-generated, do not edit)", "",
+           "The records every dispatch may need. They are NOT candidates, they "
+           "are not the answer to any search, and no return has to account for "
+           "them. The search below spends its whole budget on what is not here.",
+           ""]
+    out += [f"- STANDING {p}" for p in (paths if paths is not None else STANDING)]
     return "\n".join(out) + "\n"
 
 
@@ -469,9 +563,17 @@ def injected_blocks(brief_text: str) -> list[tuple[str, list[str], list[str]]]:
     for m in INJECTED_BLOCK.finditer(brief_text):
         heading, body = m.group(1), m.group(2)
         found = SCOPE_LINE.search(body)
-        scope = ([s.strip() for s in found.group(1).split(",") if s.strip()]
-                 if found else
-                 (ARCHIVE_SCOPE if heading == "ARCHIVE" else LITERATURE_SCOPE))
+        # A STANDING block RAN NO SEARCH, so it contributes no scope. Falling
+        # back to a standing scope here would put a corpus in the record that
+        # nothing ranked, and `dispatch_signal()` unions these into the scope it
+        # reports.
+        if heading == "STANDING":
+            scope: list[str] = []
+        else:
+            scope = ([s.strip() for s in found.group(1).split(",") if s.strip()]
+                     if found else
+                     (ARCHIVE_SCOPE if heading == "ARCHIVE"
+                      else LITERATURE_SCOPE))
         out.append((heading, scope, OFFERED_LINE.findall(body)))
     return out
 

@@ -5846,12 +5846,16 @@ class InjectSurveyReplacesHandwritten(LoopCase):
         fake = types.SimpleNamespace(
             ARCHIVE_SCOPE=["archive/src"],
             LITERATURE_SCOPE=["dev/literature"],
+            STANDING=["archive/dev/fixture-standing.md"],
             build_query=lambda *a, **k: "q",
             goal_text=lambda p: "g",
-            candidate_block=lambda heading, query, scope, k=5: (
+            candidate_block=lambda heading, query, scope, k=5, exclude=None: (
                 f"## {heading} (program-generated, do not edit)\n\n"
                 f"Corpus search over {', '.join(scope)}: NO HIT\n\n"
                 "**ANSWER THIS BLOCK**\n"),
+            standing_block=lambda paths=None: (
+                "## STANDING (program-generated, do not edit)\n\n"
+                "- STANDING archive/dev/fixture-standing.md\n"),
         )
         prev = sys.modules.get("retrieve")
         sys.modules["retrieve"] = fake
