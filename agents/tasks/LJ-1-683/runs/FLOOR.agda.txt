@@ -1,0 +1,60 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.683]  FLOOR SLICE.  The obligation STATED, with a HOLE standing
+-- in for the term, in the smallest import set that holds it.
+--
+-- This slice prices what the FRAME costs before any proof is attempted,
+-- as the standing coder clause orders.  The statement names Lset, 𝒟ₒ,
+-- Formula, DefOf.defSet, Describes, membership in a stage, and
+-- NOTHING ELSE.  Bound, Hull, CloseSyntax, StageArith, LEM, sucV and a
+-- Formula Code 1 are not in this file.
+--
+-- RED BY DESIGN (one interaction hole).  Nothing is postulated.
+-- Nothing lands in src/.
+--
+-- DELIVERED WITH A `.txt` SUFFIX, ON PURPOSE.  Every `.agda` under a
+-- task's own directory is a verification target of the acceptance run
+-- (scripts/pod/facts.py:489, `verification_target`), so a red slice
+-- left as `.agda` would fail conjunct 1.  [LJ-1.636] and [LJ-1.643]
+-- each lost real attempts to exactly that.  [LJ-1.677] recorded the
+-- same rule (agents/tasks/LJ-1-677/runs/FLOOR.agda.txt:14-19).
+--
+-- TO REPRODUCE:
+--   cp agents/tasks/LJ-1-683/runs/FLOOR.agda.txt \
+--      agents/tasks/LJ-1-683/runs/Floor683.agda
+--   agents/tasks/LJ-1-683/runs/run.sh \
+--      agents/tasks/LJ-1-683/runs/Floor683.agda floor-1 600
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+
+open import Base.Prelude
+open import Base.Truth
+
+module LJ-1-683.runs.Floor683 {ℓ : Level} where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Constructible {ℓ} using ( Lset; 𝒟ₒ )
+
+open import Cubical.Data.Sigma using ( Σ-syntax )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- Describes is [LJ-1.169]'s type, copied from
+-- agents/tasks/LJ-1-169/ProbeLJ1169A.agda:80-82.
+Describes : S → S → Type (ℓ-suc ℓ)
+Describes σ y =
+  ∥ Σ[ ψ ∈ Formula ⟪ Lset σ ⟫ 1 ] (DefOf.defSet (Lset σ) ψ ≡ 𝒟ₒ y) ∥₁
+
+-- THE OBLIGATION the brief names: Describes at a generic member of
+-- the stage, not at one named pair.  P-l: Lset is opaque upstream, so
+-- the type treats the stage as an atom.  The type names no sucV.
+describes-generic : (σ y : S) → ⟨ y ∈ˢ Lset σ ⟩ → Describes σ y
+describes-generic = ?

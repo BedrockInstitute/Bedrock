@@ -1,0 +1,45 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T19:30:32Z
+Checking LJ-1-683.Probe683 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-683/agents/tasks/LJ-1-683/Probe683.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-683/agents/tasks/LJ-1-683/Probe683.agda:106.10-107.54: error: [UnequalTerms]
+(λ { (Cubical.HITs.CumulativeHierarchy.Properties.dmp mp _) → mp })
+(Cubical.HITs.CumulativeHierarchy.Base.elimProp
+ Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+ (λ X ix rec →
+    Cubical.HITs.CumulativeHierarchy.Properties.dmp
+    (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X ix)
+    (Cubical.HITs.SetQuotients.Properties.elimProp
+     (λ z₁ →
+        Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+        (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X ix .fst
+         .snd .fst z₁))
+     rec))
+ (Lset σ))
+.fst .snd .fst m'
+!= z of type Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression
+sat (DefC.ι m')
+(subst (λ w → ⟨ w ∈ˢ ⟪ Lset σ ⟫↪ m ⟩) (sym q')
+ (∈∈ₛ {a = z} {b = ⟪ Lset σ ⟫↪ m} .snd z∈ₛ))
+has type ⟨ z ∈ˢ ⟪ Lset σ ⟫↪ mᵧ ⟩
+        1.30 real         0.84 user         0.18 sys
+           275316736  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14509  page reclaims
+                4365  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 349  voluntary context switches
+                2114  involuntary context switches
+          9950277121  instructions retired
+          4134552393  cycles elapsed
+           215663336  peak memory footprint
+EXIT=42
+ended 2026-08-26T19:30:33Z

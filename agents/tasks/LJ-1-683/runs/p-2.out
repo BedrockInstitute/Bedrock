@@ -1,0 +1,34 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T19:32:11Z
+Checking LJ-1-683.Probe683 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-683/agents/tasks/LJ-1-683/Probe683.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-683/agents/tasks/LJ-1-683/Probe683.agda:113.22-29: error: [NotInScope]
+Not in scope:
+  DefC.∈ˢ
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-683/agents/tasks/LJ-1-683/Probe683.agda:113.22-29
+    (did you mean
+       'FOL.ZFStructure.ZFStructure._∈ˢ_' or
+       'FOL.ZFStructure.hPropStructure._∈ˢ_' or
+       'hPropStructure._∈ˢ_' or
+       '_∈ˢ_'?)
+when scope checking DefC.∈ˢ
+        1.24 real         0.79 user         0.17 sys
+           272613376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14449  page reclaims
+                4260  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 508  voluntary context switches
+                2096  involuntary context switches
+          9570668132  instructions retired
+          3902781394  cycles elapsed
+           214614760  peak memory footprint
+EXIT=42
+ended 2026-08-26T19:32:12Z

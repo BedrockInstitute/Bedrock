@@ -1,0 +1,2 @@
+missing   exit=42       0.89s  agents/tasks/LJ-1-683/Probe683.agda::describes-generic  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-683/.pod-state/witness/Witness-LJ-1-683-4843c05a.agda:44)
+witness: 1 UNRESOLVED of 1, 0.89 s, probe_red=False
