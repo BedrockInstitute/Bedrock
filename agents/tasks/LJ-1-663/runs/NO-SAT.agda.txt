@@ -1,0 +1,40 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.663]  The satisfaction half of Complete, attempted the only
+-- way Section 2 allows: hand the packed equality through to _⊨c_.
+-- It cannot typecheck.  This file is run as .agda and then renamed
+-- .agda.txt, the mechanism [LJ-1.650] used.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-663.runs.NO-SAT {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+
+import LJ-1-663.Probe663
+module P663 = LJ-1-663.Probe663 {ℓ} lem
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+module SV = hPropStructure 𝒮ᵥ
+open SV using ( _∈ˢ_ )
+
+module Bad (lam : SV.S) (ordλ : IsOrd lam)
+           (succλ : (d : SV.S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+           (X : SV.S)
+           (X⊆Lλ : (z : SV.S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+           (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module L = P663.Level663 lam ordλ succλ X X⊆Lλ ∅∈λ
+
+  -- THE ATTEMPT.  Hand the packed equality, which Section 2 DID build,
+  -- to SatAtPacked at [LJ-1.651]'s delivered formula.  Agda refuses:
+  -- the equality is not the satisfaction.
+  sat-by-packing : L.SatAtPacked L.delivered
+  sat-by-packing γ oγ = L.packed-fst γ oγ
