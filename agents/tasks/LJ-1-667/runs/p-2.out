@@ -1,0 +1,25 @@
+Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-667/agents/tasks/LJ-1-667/Probe667.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-667/agents/tasks/LJ-1-667/Probe667.agda:145.5-146.56: error: [UnequalSorts]
+Type (ℓ-suc ℓ) != Type (ℓ-suc (ℓ-suc ℓ))
+when checking that the expression
+Σ-syntax (F.A.SM → F.HS.H.T.Code)
+λ f → (q : F.A.SM) → fst (F.HS.H.T.val (f q)) ≡ fst q
+has type Type (ℓ-suc (ℓ-suc ℓ))
+        7.91 real         7.28 user         0.33 sys
+           908886016  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               53673  page reclaims
+                3555  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 588  voluntary context switches
+                3902  involuntary context switches
+         98212811006  instructions retired
+         30232824116  cycles elapsed
+           849593520  peak memory footprint

@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T14:01:21Z
+Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-667/agents/tasks/LJ-1-667/runs/W3.agda).
+        2.90 real         2.31 user         0.27 sys
+           516341760  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29444  page reclaims
+                4359  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 511  voluntary context switches
+                3365  involuntary context switches
+         25927453687  instructions retired
+         10160533957  cycles elapsed
+           457491368  peak memory footprint
+EXIT=0
+ended 2026-08-26T14:01:24Z
