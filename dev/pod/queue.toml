@@ -6783,3 +6783,71 @@ code = "LJ-1.685"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-685/LJ-1.685.md"
+
+# ===========================================================================
+# THE NINTH OPENING, 2026-08-27. TWO MORE GO, AND ONE PARK THAT IS A DELIVERED
+# OBLIGATION FOR THE THIRD TIME.
+#
+# [LJ-1.682] GO: `convert-at-matrix` spends [LJ-1.680]'s generic unpack at
+#   `pin₃ (embed matrix₃)` AND NEVER FORMS the leftover equation. It then says
+#   plainly that this is NOT the hull `Convert`, and names what a hull consumer
+#   still carries. 686 measures that equation's floor, 689 takes it as a
+#   hypothesis and walks the hull road, so neither waits on the other.
+# [LJ-1.684] GO: `adequacy-bnd` is `Lset-defines` composed DOWN with 681's bridge
+#   as a hypothesis. AND IT LEFT A RECIPE FOR THE BRIDGE ITSELF: take DOWN at one
+#   environment, do NOT inhabit ApproxInK, the corrected membership is `HierInK`
+#   (Probe532.agda:274-277), the inner frames are [LJ-1.162]'s approx-up/step-up
+#   and their reverses plus powK, and UP is already `Graph.up`. [LJ-1.681] was
+#   RUNNING without any of that, so I sent it to its pane. 688 funds `HierInK`
+#   separately so the bridge does not have to carry it.
+# [LJ-1.683] NO-GO on the closed term, GO on the generic formula AND on the
+#   consumer. What it owes is one supplier. 687.
+#
+# [LJ-1.685] PARKED WITH ITS OBLIGATION DELIVERED, AND THIS IS THE THIRD TIME.
+# Attempt 0: obligations_delta -1, obligations_open 0, and the term is in the
+# tree at Probe685.agda:71-77. Then one SIGKILL and FOUR sys-lint-accept
+# iterations to attempt_max, every one with obligations_open 0. The lint is the
+# SURVEY DUTY on the CRITIC's return, and the task home holds eight review files:
+# four critic rounds, no state change. [LJ-1.643] parked identically on 08-25 and
+# [LJ-1.636] on the conjunct-1 variant. I HAVE FILED NO SHELVE: the obligation is
+# delivered here, not elsewhere. 690 CITES that delivered term forward rather
+# than re-queueing it, and takes the forward direction instead.
+#
+# THE FIVE MOVES:
+#   686  the leftover equation, FLOOR FIRST. Two reports told me to measure it
+#        and neither formed it. The floor is the deliverable even without a proof.
+#   687  the supplier `describes-generic` still owes
+#   688  `HierInK`, the corrected membership 684 named for the bridge
+#   689  the hull `Convert`, taking 686's equation as a hypothesis
+#   690  the FORWARD direction of SameAsGraph, now that 685 delivered the reverse
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.686"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-686/LJ-1.686.md"
+
+[[task]]
+code = "LJ-1.687"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-687/LJ-1.687.md"
+
+[[task]]
+code = "LJ-1.688"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-688/LJ-1.688.md"
+
+[[task]]
+code = "LJ-1.689"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-689/LJ-1.689.md"
+
+[[task]]
+code = "LJ-1.690"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-690/LJ-1.690.md"
