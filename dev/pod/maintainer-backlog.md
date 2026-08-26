@@ -19,6 +19,31 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 36. `heads.toml` changes went silently inert for the resident process's whole lifetime. FIXED 2026-08-26
+
+**FOUND BY THE OWNER, NOT BY REVIEW.** They asked why `[LJ-1.662]`'s `coder` dispatch
+still used `claude-opus-5` after a same-day ruling moved `coder` to `{Qwen, grok-4.6}`.
+`load_heads()` (`scripts/pod/heads.py:119`, before this fix) cached its parse in a
+module-level dict keyed on the file PATH ALONE, never invalidated except by a process
+restart. `dev/pod/README.md:115-118` documents "edit the row, and the next dispatch
+uses it," with no reload step, and both production callers of `configs()`/`head()`
+(`scripts/pod/pod.py:3037`, `:4725`) take the `cache=True` default. **MEASURED, NOT
+HYPOTHETICAL.** Commit `5823bb84` landed at 2026-08-26T08:21:03Z; five real dispatches
+over the next three hours (`[LJ-1.656]`'s fallback retry, `[LJ-1.657]` through
+`[LJ-1.660]`, `[LJ-1.662]`) all carried `heads_sha256: "cd49070c"`, the PRIOR file's
+digest, and `[LJ-1.662]`'s `coder` dispatch resolved `claude-opus-5`, a model the new
+array no longer holds at all.
+
+**FIXED**: the cache now keys on `(path, mtime)` instead of `path` alone, so any edit
+that changes the file's mtime invalidates the stale entry on the next read, at the
+cost of one `stat()` per call. `switch_maintainer_preset()` already called
+`heads_mod._CACHE.clear()` after its own writes (`pod.py:6631`), which is why the
+PROGRAM's own preset-switch path never showed this; the gap was any edit made outside
+that one path, which is every maintainer-session ruling landed by hand. Verified: all
+9 pod-relevant suites green. `touch .pod-state/reload` cleared the live staleness
+immediately as a stopgap before this landed; the fix means the next `heads.toml` edit
+needs no such step.
+
 ### 34. `split_entry()` appended a lowercase suffix; `agents_tree.normalise()` uppercases the whole code. FIXED 2026-08-26
 
 **MEASURED WHILE REVIEWING `[LJ-1.636-split]` -> DONE, NOT WHILE LOOKING FOR
