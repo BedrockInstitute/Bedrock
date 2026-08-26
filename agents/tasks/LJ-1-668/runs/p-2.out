@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T14:24:57Z
+Checking LJ-1-668.Probe668 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-668/agents/tasks/LJ-1-668/Probe668.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-668/agents/tasks/LJ-1-668/Probe668.agda:143.8-32: error: [UnequalTerms]
+Lset (sucV δ) != 𝒟ₒ (Lset δ) of type
+Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression lset∈limit (sucV δ) suc∈ has type
+⟨ 𝒟ₒ (Lset δ) ∈ˢ Lset lam ⟩
+        2.14 real         1.08 user         0.25 sys
+           332267520  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18082  page reclaims
+                4256  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 493  voluntary context switches
+                3652  involuntary context switches
+         12720417264  instructions retired
+          5155966415  cycles elapsed
+           272450352  peak memory footprint
+EXIT=42
+ended 2026-08-26T14:24:59Z

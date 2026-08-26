@@ -1,0 +1,2 @@
+missing   exit=42       1.14s  agents/tasks/LJ-1-668/Probe668.agda::powiter-status  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-668/.pod-state/witness/Witness-LJ-1-668-e5704228.agda:47)
+witness: 1 UNRESOLVED of 1, 1.14 s, probe_red=False
