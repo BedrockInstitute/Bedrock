@@ -32586,7 +32586,8 @@ outcome = "go"
 added = 2026-08-27
 added_by = "mathematician"
 reason = "branch `go` of LJ-1.689, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 0
@@ -32602,7 +32603,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-27
 added_by = "mathematician"
 reason = "branch `stop-stated` of LJ-1.689, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 0
@@ -32619,7 +32621,8 @@ head_slot = "coder_adversarial"
 added = 2026-08-27
 added_by = "mathematician"
 reason = "branch `accept-failed` of LJ-1.689, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 1
@@ -32635,7 +32638,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-27
 added_by = "mathematician"
 reason = "branch `no-go-attacked` of LJ-1.689, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 42
@@ -32652,7 +32656,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-27
 added_by = "mathematician"
 reason = "branch `no-go-stated` of LJ-1.689, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 42
@@ -32666,7 +32671,8 @@ action = "park_and_split"
 added = 2026-08-27
 added_by = "mathematician"
 reason = "PARK, NOT ESCALATE. A heap wall is a resource fact and no critic can"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   heap_wall = true
@@ -32680,7 +32686,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-27
 added_by = "mathematician"
 reason = "CLOSES BACKLOG ITEM 30, MEASURED ON LJ-1.630 2026-08-25. A REAL failed"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 42
