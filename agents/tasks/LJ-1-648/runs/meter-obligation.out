@@ -1,0 +1,2 @@
+missing   exit=42       3.34s  agents/tasks/LJ-1-648/Probe648.agda::commute-from-keystone  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-648/.pod-state/witness/Witness-LJ-1-648-e6487bfd.agda:29)
+witness: 1 UNRESOLVED of 1, 3.34 s, probe_red=False
