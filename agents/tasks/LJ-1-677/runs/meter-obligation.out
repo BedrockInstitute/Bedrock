@@ -1,0 +1,2 @@
+pass      exit=0        1.51s  agents/tasks/LJ-1-677/Probe677.agda::describes-nonstage
+witness: 0 UNRESOLVED of 1, 1.51 s, probe_red=False

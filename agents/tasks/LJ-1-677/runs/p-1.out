@@ -1,0 +1,30 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T17:58:24Z
+Checking LJ-1-677.Probe677 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-677/agents/tasks/LJ-1-677/Probe677.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-677/agents/tasks/LJ-1-677/Probe677.agda:117.23-24: error: [NotInScope]
+Not in scope:
+  ⊎
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-677/agents/tasks/LJ-1-677/Probe677.agda:117.23-24
+    (did you mean 'Cubical.Data.Sum._⊎_'?)
+when scope checking ⊎
+        1.27 real         0.82 user         0.15 sys
+           284180480  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15153  page reclaims
+                4264  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 528  voluntary context switches
+                1886  involuntary context switches
+         10558522513  instructions retired
+          3945530386  cycles elapsed
+           226165504  peak memory footprint
+EXIT=42
+ended 2026-08-26T17:58:25Z

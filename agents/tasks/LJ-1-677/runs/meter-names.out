@@ -1,0 +1,5 @@
+pass      exit=0        1.63s  agents/tasks/LJ-1-677/Probe677.agda::describes-nonstage  (grouped run, exit 0)
+pass      exit=0        1.63s  agents/tasks/LJ-1-677/Probe677.agda::describes-sgl  (grouped run, exit 0)
+pass      exit=0        1.63s  agents/tasks/LJ-1-677/Probe677.agda::dee-singleton  (grouped run, exit 0)
+pass      exit=0        1.63s  agents/tasks/LJ-1-677/Probe677.agda::Describes  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 4, 1.63 s, probe_red=False
