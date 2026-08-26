@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T07:34:10Z
+Checking LJ-1-660.Holes660 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Holes660.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Holes660.agda:53.35-65.62: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Holes660.agda:53.35-40
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Holes660.agda:59.61-66
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Holes660.agda:65.57-62
+        4.12 real         3.49 user         0.29 sys
+           882622464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51678  page reclaims
+                4256  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 470  voluntary context switches
+                2442  involuntary context switches
+         41615090696  instructions retired
+         15103632279  cycles elapsed
+           823379120  peak memory footprint
+EXIT=42
+ended 2026-08-26T07:34:15Z

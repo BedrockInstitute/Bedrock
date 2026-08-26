@@ -1,0 +1,2 @@
+missing   exit=42       7.12s  agents/tasks/LJ-1-660/Probe660.agda::step2-unconditioned  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/.pod-state/witness/Witness-LJ-1-660-fee48cdb.agda:46)
+witness: 1 UNRESOLVED of 1, 7.12 s, probe_red=False

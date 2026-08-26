@@ -1,0 +1,97 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T07:36:32Z
+Checking LJ-1-660.Probe660 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Probe660.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Probe660.agda:152.20-29: error: [NotInScope]
+Not in scope:
+  A647.Code
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-660/agents/tasks/LJ-1-660/Probe660.agda:152.20-29
+    (did you mean
+       '.#L.BoundedSubset-1035388034163022393.AtHullInstance.DR.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.AtHullInstance.DR.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.DR54.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.DR54.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.HE.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.HE.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.HED.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.HED.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.HS.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.BSA634.HS.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.DR54.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.DR54.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.HE.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.HE.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.HED.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.HED.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.HS.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.Devlin55.BoundedSubsetAt.HS.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.DownReflect.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.DownReflect.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.HullElemDown.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.HullElemDown.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.HullExt.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.HullExt.H.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.HullStage.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-1035388034163022393.HullStage.H.T.Code' or
+       '.#L.Hull-2040617203224205824.AtStage.Hull.T.Code' or
+       '.#L.Hull-2040617203224205824.TermAlgebra.Code' or
+       'A647.ASt.Hull.T.Code' or
+       'A647.H.T.Code' or
+       'A649.ASt.Hull.T.Code' or
+       'A649.H.T.Code' or
+       'A654.ASt.Hull.T.Code' or
+       'A654.H.T.Code' or
+       'A654.HE.ASt.Hull.T.Code' or
+       'A654.HE.H.T.Code' or
+       'A654.P649.ASt.Hull.T.Code' or
+       'A654.P649.H.T.Code' or
+       'AtStage.Hull.T.Code' or
+       'HullStage.ASt.Hull.T.Code' or
+       'HullStage.H.T.Code' or
+       'LJ-1-647.Probe647.HullStage.ASt.Hull.T.Code' or
+       'LJ-1-647.Probe647.HullStage.H.T.Code' or
+       'LJ-1-649.Probe649.HullStage.ASt.Hull.T.Code' or
+       'LJ-1-649.Probe649.HullStage.H.T.Code' or
+       'LJ-1-654.Probe654.HullStage.ASt.Hull.T.Code' or
+       'LJ-1-654.Probe654.HullStage.H.T.Code' or
+       'LJ-1-654.Probe654.HullStage.HE.ASt.Hull.T.Code' or
+       'LJ-1-654.Probe654.HullStage.HE.H.T.Code' or
+       'LJ-1-654.Probe654.HullStage.P649.ASt.Hull.T.Code' or
+       'LJ-1-654.Probe654.HullStage.P649.H.T.Code' or
+       'LJ-1-654.Probe654.Pred.HullStage.ASt.Hull.T.Code' or
+       'LJ-1-654.Probe654.Pred.HullStage.H.T.Code' or
+       'P647.HullStage.ASt.Hull.T.Code' or
+       'P647.HullStage.H.T.Code' or
+       'P649.HullStage.ASt.Hull.T.Code' or
+       'P649.HullStage.H.T.Code' or
+       'P654.HullStage.ASt.Hull.T.Code' or
+       'P654.HullStage.H.T.Code' or
+       'P654.HullStage.HE.ASt.Hull.T.Code' or
+       'P654.HullStage.HE.H.T.Code' or
+       'P654.HullStage.P649.ASt.Hull.T.Code' or
+       'P654.HullStage.P649.H.T.Code' or
+       'P654.Pred.HullStage.ASt.Hull.T.Code' or
+       'P654.Pred.HullStage.H.T.Code' or
+       'Site.ASt.Hull.T.Code' or
+       'Site.H.T.Code'?)
+when scope checking A647.Code
+        3.30 real         2.69 user         0.30 sys
+           681869312  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39424  page reclaims
+                4258  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 572  voluntary context switches
+                2553  involuntary context switches
+         29318937608  instructions retired
+         11883321297  cycles elapsed
+           624034848  peak memory footprint
+EXIT=42
+ended 2026-08-26T07:36:35Z
