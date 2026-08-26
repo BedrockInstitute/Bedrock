@@ -1,0 +1,100 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.649]  FLOOR SLICE.  The obligation STATED, with a HOLE standing
+-- in for the term, in the smallest import set that holds it.
+--
+-- This slice prices what the FRAME costs before any proof is attempted,
+-- as the standing coder clause orders.  It also fixes the trim: the
+-- telescope is [LJ-1.462]'s HullStage (Probe462.agda:78-88) WITH
+-- `module C = Collapse M` kept, because the conclusion names `C.πX`,
+-- and MINUS every import that only `feed` used (L.Coding.Sequence,
+-- FOL.Syntax, FOL.Manipulation.Parameters, L.Constructible.𝒮ʟ,
+-- Cubical.Data.Nat, Cubical.Data.Vec).  The assembly names none of them.
+--
+-- RED BY DESIGN (one interaction hole).  Nothing is postulated.
+-- Nothing lands in src/.
+--
+-- DELIVERED WITH A `.txt` SUFFIX, ON PURPOSE.  Every `.agda` under a
+-- task's own directory is a verification target of the acceptance run
+-- (scripts/pod/facts.py:489, `verification_target`), so a red slice
+-- left as `.agda` would fail conjunct 1 and would report this task's
+-- landed obligation as a NO-GO.  The brief says so in its own words.
+--
+-- TO REPRODUCE:
+--   cp agents/tasks/LJ-1-649/runs/FLOOR.agda.txt \
+--      agents/tasks/LJ-1-649/runs/Floor649.agda
+--   agents/tasks/LJ-1-649/runs/run.sh \
+--      agents/tasks/LJ-1-649/runs/Floor649.agda floor-1 600
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-649.runs.Floor649 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import L.Hull {ℓ} lem using ( module AtStage )
+open import V.Collapse {ℓ} using ( module Collapse )
+
+open import Cubical.Data.Sigma using ( Σ-syntax; _×_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- Telescope as [LJ-1.462]'s HullStage, Probe462.agda:78-88, which is
+-- itself src/L/BoundedSubset.lagda.md:903-914.  Nothing below
+-- `module Condense` (:916) is copied.
+module HullStage (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module ASt = AtStage lam ordλ
+  module H = ASt.Hull X X⊆L ∅∈λ
+
+  M : S
+  M = H.T.Hull
+
+  module C = Collapse M
+
+  open H.T using ( Code; val )
+
+  -- The three hypotheses, verbatim from [LJ-1.462]:
+  --   HullClosedLset  Probe462.agda:136-138
+  --   lset-code       Probe462.agda:105-107
+  --   πCommuteLset    Probe462.agda:140-142
+
+  HullClosedLset : Type (ℓ-suc ℓ)
+  HullClosedLset = (y : S) → ⟨ y ∈ˢ M ⟩ → ⟨ Lset y ∈ˢ M ⟩
+
+  LsetCode : Type (ℓ-suc ℓ)
+  LsetCode =
+    (c : Code) → Σ[ d ∈ Code ] (fst (val d) ≡ Lset (fst (val c)))
+
+  PiCommuteLset : Type (ℓ-suc ℓ)
+  PiCommuteLset =
+    (y : S) → ⟨ y ∈ˢ M ⟩ → C.π (Lset y) ≡ Lset (C.π y)
+
+  -- Step 1, the one that is already inhabited: Probe462.agda:130-134.
+  Step1 : Type (ℓ-suc ℓ)
+  Step1 = (z : S) → ⟨ z ∈ˢ C.πX ⟩
+        → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ z)) ∥₁
+
+  step1 : Step1
+  step1 = C.πX-member
+
+  -- THE OBLIGATION, holed.  The conclusion is `levelIn` verbatim from
+  -- src/L/BoundedSubset.lagda.md:917.
+  levelin-from-steps : HullClosedLset → LsetCode → PiCommuteLset
+                     → (δ : S) → IsOrd δ → ⟨ δ ∈ˢ C.πX ⟩ → ⟨ Lset δ ∈ˢ C.πX ⟩
+  levelin-from-steps = ?

@@ -1,0 +1,11 @@
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::levelin-from-steps  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.step1  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.pix-closed-op  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.levelin-from-steps  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.levelin-from-two  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.levelin-is-a-weakening  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.levelin-477-sketch  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.levelin-from-647  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.levelin-from-647-ord-commute  (grouped run, exit 0)
+pass      exit=0        5.47s  agents/tasks/LJ-1-649/Probe649.agda::HullStage.no-fifth-if-keystone-is-plain  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 10, 5.47 s, probe_red=False

@@ -1,0 +1,76 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.649]  THE FIFTH FACT, EXHIBITED.  The assembly from the step 2
+-- that [LJ-1.647] ACTUALLY DELIVERED (`IsOrd y` on the hull side), with
+-- NO `PiReflectsOrd` in the telescope and a HOLE where the missing fact
+-- is demanded.  Agda prints the goal, and the goal IS the fifth fact.
+--
+-- RED BY DESIGN (one interaction hole).  Nothing is postulated.
+-- Nothing lands in src/.  DELIVERED WITH A `.txt` SUFFIX ON PURPOSE:
+-- every `.agda` under a task home is a verification target of the
+-- acceptance run, so a red slice left as `.agda` would fail conjunct 1.
+--
+-- TO REPRODUCE:
+--   cp agents/tasks/LJ-1-649/runs/NO-FIFTH.agda.txt \
+--      agents/tasks/LJ-1-649/runs/NoFifth649.agda
+--   agents/tasks/LJ-1-649/runs/run.sh \
+--      agents/tasks/LJ-1-649/runs/NoFifth649.agda no-fifth-1 600
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-649.runs.NoFifthOdelta649 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import L.Hull {ℓ} lem using ( module AtStage )
+open import V.Collapse {ℓ} using ( module Collapse )
+
+open import Cubical.Data.Sigma using ( Σ-syntax; _×_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+module HullStage (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module ASt = AtStage lam ordλ
+  module H = ASt.Hull X X⊆L ∅∈λ
+
+  M : S
+  M = H.T.Hull
+
+  module C = Collapse M
+
+  -- [LJ-1.647]'s DELIVERED step 2, Probe647.agda:169-171.
+  HullClosedLsetOrd : Type (ℓ-suc ℓ)
+  HullClosedLsetOrd = (y : S) → ⟨ y ∈ˢ M ⟩ → IsOrd y → ⟨ Lset y ∈ˢ M ⟩
+
+  PiCommuteLset : Type (ℓ-suc ℓ)
+  PiCommuteLset =
+    (y : S) → ⟨ y ∈ˢ M ⟩ → C.π (Lset y) ≡ Lset (C.π y)
+
+  -- The SAME assembly as Probe649.agda's `levelin-477-sketch`, with
+  -- 647's step 2 in place of 462's.  Everything closes EXCEPT the hole.
+  levelin-no-fifth-odelta : HullClosedLsetOrd → PiCommuteLset
+                   → (δ : S) → IsOrd δ → ⟨ δ ∈ˢ C.πX ⟩ → ⟨ Lset δ ∈ˢ C.πX ⟩
+  levelin-no-fifth-odelta hcl pcl δ oδ δ∈πX =
+    PT.rec (snd (Lset δ ∈ˢ C.πX)) go (C.πX-member δ δ∈πX)
+    where
+    go : Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ δ)) → ⟨ Lset δ ∈ˢ C.πX ⟩
+    go (y , y∈M , e) =
+      subst (λ z → ⟨ Lset z ∈ˢ C.πX ⟩) e
+        (subst (λ w → ⟨ w ∈ˢ C.πX ⟩) (pcl y y∈M)
+          (C.πX-intro (Lset y) (hcl y y∈M oδ)))

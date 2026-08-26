@@ -1,0 +1,2 @@
+pass      exit=0        2.59s  agents/tasks/LJ-1-649/Probe649.agda::levelin-from-steps
+witness: 0 UNRESOLVED of 1, 2.59 s, probe_red=False
