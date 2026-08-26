@@ -1,0 +1,5 @@
+Checking LJ-1-658.Probe658 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-658/agents/tasks/LJ-1-658/Probe658.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-658/agents/tasks/LJ-1-658/Probe658.agda:262.7-13: error: [UnequalLevel]
+ℓ-zero != (ℓ-suc ℓ)
+when checking that the expression amb-πX has type
+⟨ map (λ r → fst r) δ AbsL.⊨ᵛ embed φ₀ ⟩
