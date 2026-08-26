@@ -1,0 +1,48 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-662.runs.PIN {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.Syntax using ( Formula; var; ∃̇_; ∃̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; δ-∃∈ )
+open import FOL.Manipulation.Renaming using ( renameFo )
+open import FOL.Manipulation.Parameters using ( countFo )
+open import FOL.Manipulation.Relabelling using ( embed )
+import FOL.Count
+open import L.BoundedSubset {ℓ} lem using ( module LevelHood0; module CS )
+
+module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S
+
+-- u ∷ v ∷ γ ∷ K ∷ []  (source, src/L/BoundedSubset.lagda.md:68-72)
+-- u ∷ K ∷ v ∷ γ ∷ []  (target, under ∃̇ K then ∃̇∈ K u)
+ρ : Fin 4 → Fin 4
+ρ zero = zero
+ρ (suc zero) = suc (suc zero)
+ρ (suc (suc zero)) = suc (suc (suc zero))
+ρ (suc (suc (suc zero))) = suc zero
+
+module Pinned
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fin 5)
+  (M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 : Fin 7) where
+
+  module LH0 = LevelHood0 N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1
+                          M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1
+
+  -- The chapter's matrix, re-slotted to the pair the Hood predicates
+  -- read: value first, ordinal index second, with the bound K and the
+  -- unused slot both closed off.
+  hood2 : Formula CS.S 2
+  hood2 = ∃̇ (∃̇∈ (var zero) (renameFo ρ LH0.matrix))
+
+  count-hood2 : countFo hood2 ≡ 0
+  count-hood2 = refl
+
+  φ₀ : Formula (⊥* {ℓ-suc ℓ}) 2
+  φ₀ = Cnt.erase hood2 count-hood2
+
+  -- The erasure is faithful: embedding it back is the formula itself.
+  φ₀-inv : embed φ₀ ≡ hood2
+  φ₀-inv = Cnt.erase-inv hood2 count-hood2

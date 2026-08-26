@@ -1,0 +1,2 @@
+missing   exit=42       4.32s  agents/tasks/LJ-1-662/Probe662.agda::hoodexists-at-levelhood0  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-662/.pod-state/witness/Witness-POD-8d460717.agda:39)
+witness: 1 UNRESOLVED of 1, 4.32 s, probe_red=False

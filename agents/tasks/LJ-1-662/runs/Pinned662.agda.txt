@@ -1,0 +1,86 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.662] THE PINNED FORMULA, IN ITS OWN MODULE.
+--
+-- SPLIT OFF FROM `Probe662.agda` BECAUSE THE JOINED FILE WALLED.  With
+-- Part 1 inline, `Probe662.agda` exhausts the wide caliber's 2 GB
+-- (runs/p-4.out, exit 251, `Heap exhausted`, 2,317,811,712 bytes).  The
+-- two costs are independent: normalising `countFo` over the chapter's
+-- whole bounded code-set description, and elaborating the composition.
+-- Held apart they are 0.9 GB and 1.6 GB; held together they are neither.
+-- Coder clause, owner 2026-08-23: a heap wall is restructured in the
+-- same dispatch and the new shape is tested under the same cap.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-662.runs.Pinned662 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.Syntax using ( Formula; var; ⊤̇; ∃̇_; ∃̇∈ )
+open import FOL.Manipulation.Renaming using ( renameFo )
+open import FOL.Manipulation.Parameters using ( countFo )
+open import FOL.Manipulation.Relabelling using ( embed )
+import FOL.Count
+open import L.BoundedSubset {ℓ} lem using ( module LevelHood0; module CS )
+
+module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S
+
+-- =====================================================================
+-- PART 1.  THE PINNED FORMULA.
+--
+--   The chapter states the matrix at the environment u ∷ v ∷ γ ∷ K ∷ []
+--   (src/L/BoundedSubset.lagda.md:68-72): slot zero unused, v the
+--   value, γ the ordinal index, K the one bound.  `HoodExistsP` reads
+--   the pair v ∷ γ ∷ [] and nothing else
+--   (agents/tasks/LJ-1-653/Probe653.agda:283-287), so the bound and the
+--   unused slot are closed off: K existentially, the unused slot by the
+--   chapter's own bounded existential over K.
+-- =====================================================================
+
+-- u ∷ v ∷ γ ∷ K ∷ []  (the chapter's order)
+-- u ∷ K ∷ v ∷ γ ∷ []  (the order under ∃̇ K then ∃̇∈ K u)
+ρ : Fin 4 → Fin 4
+ρ zero = zero
+ρ (suc zero) = suc (suc zero)
+ρ (suc (suc zero)) = suc (suc (suc zero))
+ρ (suc (suc (suc zero))) = suc zero
+
+module Pinned
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fin 5)
+  (M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 : Fin 7) where
+
+  module LH0 = LevelHood0 N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1
+                          M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1
+
+  -- SEALED, AND THE SEAL IS MEASURED (P-l, dev/LESSONS.md:2367).  Left
+  -- transparent, naming `φ₀` in a downstream TYPE unfolds the chapter's
+  -- whole bounded code-set description inside the elaborator and the
+  -- wide caliber's 2 GB is exhausted: runs/no-seal-1.out, exit 251,
+  -- `Heap exhausted`.  Sealed, the same file closes at 1.6 GB.  The
+  -- four facts below are the official readings and no consumer needs
+  -- `unfolding` to use them.
+  opaque
+    hood2 : Formula CS.S 2
+    hood2 = ∃̇ (∃̇∈ (var zero) (renameFo ρ LH0.matrix))
+
+    -- MEASURED, AND IT IS THE FINDING OF PART 1.  The chapter's matrix
+    -- carries NO constant, so the erase to the parameter-free alphabet
+    -- is a `refl` away.  [LJ-1.657] measured the SAME crossing DEAD for
+    -- [LJ-1.650]'s LevelFormula, whose formula is typed at `Code`
+    -- (agents/tasks/LJ-1-657/Probe657.agda:83-84).  The chapter's own
+    -- shape is not typed at `Code` and the gap does not arise.
+    count-hood2 : countFo hood2 ≡ 0
+    count-hood2 = refl
+
+    φ₀ : Formula (⊥* {ℓ-suc ℓ}) 2
+    φ₀ = Cnt.erase hood2 count-hood2
+
+    -- The erasure is faithful: embedding it back is the chapter's own
+    -- formula, unchanged.
+    φ₀-inv : embed φ₀ ≡ hood2
+    φ₀-inv = Cnt.erase-inv hood2 count-hood2
+

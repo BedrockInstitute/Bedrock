@@ -1,0 +1,39 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T11:36:45Z
+Checking LJ-1-662.runs.JOIN (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-662/agents/tasks/LJ-1-662/runs/JOIN.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-662/agents/tasks/LJ-1-662/runs/JOIN.agda:44.3-58: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝓟ₒ
+  𝓟ₒ-intro (did you mean '𝒟ₒ-intro'?)
+when scope checking the declaration
+  open
+    .#L.Constructible-8063361935739486020 {ℓ}
+      using (IsOrd; Lset; 𝓟ₒ; 𝓟ₒ-intro; Lset-in; Lset-mono)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-662/agents/tasks/LJ-1-662/runs/JOIN.agda:277.28-30: error: [NotInScope]
+Not in scope:
+  𝒟ₒ
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-662/agents/tasks/LJ-1-662/runs/JOIN.agda:277.28-30
+    (did you mean '.#L.Constructible-8063361935739486020.𝒟ₒ'?)
+when scope checking 𝒟ₒ
+        3.40 real         2.83 user         0.27 sys
+           641138688  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               36930  page reclaims
+                4266  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 578  voluntary context switches
+                2268  involuntary context switches
+         32207273643  instructions retired
+         12317065535  cycles elapsed
+           583107568  peak memory footprint
+EXIT=42
+ended 2026-08-26T11:36:48Z

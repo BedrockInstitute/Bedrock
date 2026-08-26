@@ -1,0 +1,35 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.662] FLOOR.  What the ELABORATION FRAME costs before any term
+-- of this task's own.  Coder clause, owner 2026-08-23.
+--
+--   The three predecessors enter BY IMPORT, which is the honest way to
+--   take a predecessor's type (coder clause, owner 2026-08-20):
+--   [LJ-1.653] (the Hood pair), [LJ-1.654] (PiReflectsOrd, BUILT), and
+--   [LJ-1.657] (the existential route to the pinned pair).
+--
+-- ONE Agda process, caliber from the pane, never set here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-662.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.Syntax using ( Formula; var; _≐_; ∃̇_; ∃̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀ )
+open import FOL.Manipulation.Renaming using ( renameFo )
+open import FOL.Manipulation.Parameters using ( countFo )
+open import FOL.Manipulation.Relabelling using ( embed )
+import FOL.Count
+open import L.BoundedSubset {ℓ} lem using ( module LevelHood0; module CS )
+
+import LJ-1-653.Probe653
+import LJ-1-654.Probe654
+import LJ-1-657.Probe657
+
+module P653 = LJ-1-653.Probe653 {ℓ} lem
+module P654 = LJ-1-654.Probe654 {ℓ} lem
+module P657 = LJ-1-657.Probe657 {ℓ} lem
+
+module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S

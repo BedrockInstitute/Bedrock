@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T11:35:41Z
+Checking LJ-1-662.runs.Bridge662 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-662/agents/tasks/LJ-1-662/runs/Bridge662.agda).
+        8.21 real         7.54 user         0.35 sys
+          1233534976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               73075  page reclaims
+                4279  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 637  voluntary context switches
+                2968  involuntary context switches
+        100102986715  instructions retired
+         31225697658  cycles elapsed
+          1174046136  peak memory footprint
+EXIT=0
+ended 2026-08-26T11:35:49Z
