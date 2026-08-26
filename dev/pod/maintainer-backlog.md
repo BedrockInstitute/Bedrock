@@ -149,6 +149,20 @@ harmless "could not run" detail string; the test asserts only `error_class`/
 `exit_code`, not `lint_detail` content, so it passed unmodified. All 9
 pod-relevant suites green after both halves of the change.
 
+**PART THREE, the truncation, MEASURED ON `[LJ-1.685]`, 2026-08-26.**
+`precommit_detail()`'s original 600-character cap fits one localised lint
+error from the six named `PRECOMMIT_SET` members, but `check-survey-quotes`
+reports an ENUMERATION, one line per unanswered CANDIDATE path, and the
+enumeration is the fix a redispatched worker needs. Ten unanswered paths on
+this task produced output the 600-character cap cut to eight lines, dropping
+the last two paths and the compliance instruction below them. Did not cause
+this specific attempt's own failure (the worker reconstructed the full ten
+from the check itself), but a worker trusting the injected `lint_note` alone
+has no such fallback. `survey-quotes` now gets its own 2000-character cap in
+`precommit_detail()`, comfortably above the worst case this table produces
+today (ten lines plus the instruction paragraph, measured under 1200
+characters); the six `PRECOMMIT_SET` members keep 600. All 9 suites green.
+
 ### 33. Conjunct 1 verifies a coder's own heap-wall EVIDENCE, so obeying two live rules at once guarantees a park. DIAGNOSED BY pod-math, VERIFIED HERE, MEASURED on LJ-1.636, 2026-08-26
 
 **TWO RULES, EACH CORRECT ALONE, COLLIDE.** `dev/pod/instructions/coder.md:51-58`
