@@ -137,7 +137,11 @@ for arg in "$@"; do
 	esac
 done
 
-log() { echo "$(date '+%F %T') $*" >> "$LOG" }
+# `mkdir -p` ON EVERY LINE, not once at start. The directory is `_build/tools/`, which
+# `make clean` removes, and a detached watchdog has nowhere to send the failure: the
+# append would fail silently on every call and the loop would keep taking kill decisions
+# with NO RECORD OF HAVING TAKEN THEM. The cost is one stat on an existing directory.
+log() { mkdir -p "${LOG:h}" 2>/dev/null; echo "$(date '+%F %T') $*" >> "$LOG" }
 
 # ONE LINE PER CHANGE OF REASON, NEVER ONE A TICK. `watchdog_tick()` in
 # scripts/pod/pod.py learned this in numbers: at a 30 s tick a per-tick line is 2,880 lines
@@ -148,7 +152,18 @@ skip() {
 }
 
 #: The epoch of the newest restart ATTEMPT, cured or not. `COOLDOWN_S` reads it.
+#: SEEDED FROM `$CLOCK`, which `restart_omlx` writes on every cure, because a plain 0
+#: means a FRESH PROCESS HAS NO COOLDOWN AT ALL. The revive branch takes kill decisions
+#: on its first pass and skips `pi_busy()`, so restarting the watchdog while
+#: `omlx-server` is legitimately away (a model switch, a server restart from the oMLX UI)
+#: would make deploying this script its own trigger. A stale clock only ever makes the
+#: first window more conservative, which is the safe direction.
 LAST_ATTEMPT=0
+if [ -r "$CLOCK" ]; then
+	_seed="$(cat "$CLOCK" 2>/dev/null)"
+	case "$_seed" in (<->) LAST_ATTEMPT="$_seed" ;; esac
+	unset _seed
+fi
 
 # ---------------------------------------------------------------- the readings
 
@@ -390,24 +405,44 @@ pass_once() {
 	# names the menu bar app alone. Asking `pi_busy()` here would hand the outage the
 	# length of the longest CLOUD run on the machine, which is the failure being fixed.
 	if [ -z "$(server_pid)" ]; then
+		# THE PID IS NOT THE EVIDENCE, THE ENDPOINT IS. `server_pid()` is
+		# `pgrep -x "$SERVER" 2>/dev/null`, so a `pgrep` that could not fork, or a
+		# renamed binary after an oMLX update, is INDISTINGUISHABLE from an absent
+		# process. Everywhere else in this file an unreadable answer counts as BUSY
+		# (trap 2); this branch is the one place where an unreadable answer would
+		# otherwise AUTHORISE a kill, and it skips `pi_busy()` besides. On a machine
+		# held at a 56 GB wired limit with a 27B model resident, a fork failure is not
+		# hypothetical. So the branch does not act on the pid alone: a 200 from the
+		# endpoint proves the service is alive and the pid read was simply wrong.
+		if [ "$(curl -s -o /dev/null -w '%{http_code}' -m 5 "$ENDPOINT/v1/models" 2>/dev/null)" = "200" ]; then
+			skip "no $SERVER pid, but $ENDPOINT answers 200; treating the pid read as unreliable"
+			return 0
+		fi
+		# The cooldown reason is a CONSTANT string. `skip()` dedups on exact equality
+		# (see its comment: ONE LINE PER CHANGE OF REASON, NEVER ONE A TICK), so
+		# interpolating the elapsed seconds here would defeat it and write one line per
+		# tick forever in the permanent case (app uninstalled, `open -a` failing).
 		since_try=$(( $(date +%s) - LAST_ATTEMPT ))
 		if [ "$LAST_ATTEMPT" -ne 0 ] && [ "$since_try" -lt "$COOLDOWN_S" ]; then
-			skip "no $SERVER process, but the last attempt was ${since_try}s ago and the cooldown is ${COOLDOWN_S}s"
+			skip "no $SERVER process and no answer from $ENDPOINT, but inside the ${COOLDOWN_S}s cooldown"
 			return 0
 		fi
 		# THE SECOND ASK, for the same reason the trigger path has one. A service still
 		# coming up has no pid yet either, and killing the app mid-launch is the only way
 		# this branch can do harm. `open -a` reaches a 200 in about 5 s, MEASURED
-		# 2026-08-26 across four restarts, so RECHECK_S is a wide margin.
-		log "REVIVE candidate: no $SERVER process; re-checking in ${RECHECK_S}s"
+		# 2026-08-26 across four restarts, so RECHECK_S is a wide margin. The endpoint is
+		# asked again too: a UI-initiated server restart or a model switch can hold the
+		# pid away for longer than it holds the socket away.
+		log "REVIVE candidate: no $SERVER process and no answer from $ENDPOINT; re-checking in ${RECHECK_S}s"
 		sleep $RECHECK_S
-		if [ -n "$(server_pid)" ]; then
-			log "REVIVE stood down: $SERVER appeared inside the ${RECHECK_S}s recheck"
+		if [ -n "$(server_pid)" ] || \
+		   [ "$(curl -s -o /dev/null -w '%{http_code}' -m 5 "$ENDPOINT/v1/models" 2>/dev/null)" = "200" ]; then
+			log "REVIVE stood down: $SERVER came back inside the ${RECHECK_S}s recheck"
 			LAST_SKIP=""
 			return 0
 		fi
 		LAST_SKIP=""
-		restart_omlx "no $SERVER process; reviving a dead service" && verify_after
+		restart_omlx "no $SERVER process and no answer from $ENDPOINT; reviving a dead service" && verify_after
 		return 0
 	fi
 
