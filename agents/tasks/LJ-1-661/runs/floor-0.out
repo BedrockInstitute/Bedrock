@@ -1,0 +1,13 @@
+Checking LJ-1-661.Probe661 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Probe661.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Probe661.agda:49.23-43: warning: -W[no]ModuleDoesntExport
+The module FOL.Count doesn't export the following:
+  module Cnt
+when scope checking the declaration
+  open import FOL.Count using (module Cnt)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Probe661.agda:83.6-15: error: [NotInScope]
+Not in scope:
+  Cnt.erase
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Probe661.agda:83.6-15
+    (did you mean 'FOL.Count.Count.erase'?)
+when scope checking Cnt.erase
