@@ -5961,3 +5961,299 @@ code = "LJ-1.635"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-635/LJ-1.635.md"
+
+# ---------------------------------------------------------------------------
+# REFILL 2026-08-26, after 633, 634 and 635 all closed GO.
+#
+# GREP 2 STOPPED ME REBUILDING SOMETHING THE TREE ALREADY HAS, AND THAT IS THE
+# WHOLE REASON THIS REFILL LOOKS DIFFERENT FROM WHAT I INTENDED. I had planned a
+# task to build the square law at ω out of `pair` (src/FOL/Count.lagda.md:29) and
+# `numeralω` (src/L/StageCardinal.lagda.md:442). Then I grepped for the OBJECT
+# rather than its ingredients: `squareω : sq ω` is at src/L/InjChain.lagda.md:184,
+# UNTRUNCATED and green, built as `pairω , pairω-inj`. The untruncated square law
+# at ω has been in the tree the whole time.
+#
+# SO THE QUESTION IS NOT "CAN WE GET sq AT ω". It is WHERE THE PARAMETER IS
+# ACTUALLY CONSUMED. `sq` at src/L/StageCardinal.lagda.md:17-20 is an untruncated
+# Σ demanded at every δ in `sucV α₀` outside ω, and its own clause ADMITS δ ≡ ω.
+# 636 measures the two application sites I found (StageCardinal:293,
+# BoundedSubset:1526) and says whether either is forced to ω. If both are, premise
+# 2 of that brief discharges the parameter and 93 of 238 reports on untruncation
+# were spent beside the point. If neither is, 636 names the deltas that remain.
+#
+# 637 AND 638 DO NOT WAIT ON 636 AND DO NOT WAIT ON EACH OTHER. 637 assembles the
+# four landed class-pred ingredients with (iii) as the only hypothesis, which
+# prices the debt as one written type; nobody has read the table this week's four
+# landings built. 638 takes [LJ-1.635]'s split and reduces its above-ω half to
+# conjunct 4 alone, using [LJ-1.629]'s two green rows.
+#
+# ONE REPORT DEFECT I AM NOT CARRYING FORWARD. [LJ-1.633]'s report says at line 5
+# that "`via-col-square` can serve the bill's site". The mathematics is the
+# opposite: with `IsCardinalL ωʟ` discharged, `target-false` gives
+# `SiteIsInit → ⊥`, so the site is NOT initial and `via-col-square` CANNOT serve
+# it. The same report states it correctly at :98-99. No brief here cites line 5.
+
+[[task]]
+code = "LJ-1.636"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-636/LJ-1.636.md"
+
+[[task]]
+code = "LJ-1.637"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-637/LJ-1.637.md"
+
+[[task]]
+code = "LJ-1.638"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-638/LJ-1.638.md"
+
+# [LJ-1.639] RECORDS THE RESIDUE. Not an attack on it.
+#
+# I traced the truncation to its source this refill: `κ-injL`
+# (src/L/SquareLawClosed.lagda.md:82) is truncated because `leastOf` takes an
+# hProp-valued predicate and an injection is not one, so `InjP γ = ∥ Inj γ ∥₁`
+# (src/L/Cardinal.lagda.md:66). [LJ-1.618]'s `Inj-extract` is that type's
+# untruncation, letter for letter. NO TERM TIES THEM and the identification lives
+# only in prose.
+#
+# I DID NOT QUEUE AN ATTACK ON IT. `κ-inj = fst (snd least)` spends only the
+# MEMBERSHIP half of `IsLeast`; the minimality half `κ-min` is unspent, and
+# `least-gives-inj` has supply 0, so a "use minimality" task would be novel. It
+# would also be work I predict fails: minimality is about the ordinal γ, not about
+# which injection sits at γ, and [LJ-1.607] already proved the untruncation
+# reduces to `SqParam α₀`. Queueing it would be inventing work to fill a slot.
+#
+# ARCHIVE, AND A RECORDED CLAIM THAT IS NOT A TERM. archive/dev/LJ-dispatch-index.md:385
+# records [LJ-1.330], "A canonical sq at non-initial alpha, CANONICAL, 25 LINES".
+# I grepped src/ for it: NOTHING survives. Only the "untruncated shift" it names as
+# input survives, at src/L/Absorption.lagda.md:108. That is the second instance of
+# the shape my slot file warns about at :212, and it is why 639 exists.
+
+[[task]]
+code = "LJ-1.639"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-639/LJ-1.639.md"
+
+# THE SPLIT IS NOT A SPLIT, AND I SAY SO RATHER THAN PRETEND. [LJ-1.636]'s
+# OBLIGATION IS DELIVERED: Probe636.agda rc 0 at 3.32 s, obligations_delta -1,
+# obligations_open 0, probe_red false (agents/tasks/LJ-1-636/runs/accept-1.out).
+# The heap wall is on runs/Bisect1.agda, a bisection ARM the coder kept as
+# evidence, and conjunct 1 typechecks changed .agda files under runs/ too. So
+# there is no oversized term to split. I give this entry the question [LJ-1.636]
+# ITSELF opened: at ambient ω the sq parameter is delivered whole by param-at-ω,
+# and nobody has ever instantiated the chain there.
+
+[[task]]
+code = "LJ-1.636-split"
+split_of = "LJ-1.636"
+reason = "park_and_split: error_class heap_wall, 42 changed files"
+added = 2026-08-26
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-636-split/LJ-1.636-split.md"
+
+
+# [LJ-1.640] TAKES [LJ-1.638]'s FIND, AND CARRIES A WARNING I OWE IT.
+# 638's C-42 sweep found conjunct 4 has a second route already green in src/:
+# clause4-at-kappa pays it from MINIMALITY, not from ambient IsCardinal plus
+# BandBelow. I predicted last refill that a minimality route would fail. I was
+# WRONG and src/ had been using minimality all along.
+#
+# THE WARNING. That route wants κ-min-atL, which refutes an AMBIENT injection,
+# while the bill supplies IsCardinalL, which refutes a CODED one. readL runs
+# coded-to-ambient ONLY (src/L/CantorBernstein.lagda.md:33). The missing
+# direction is [LJ-1.533]'s "Code buys ambient. Ambient buys nothing", the
+# crossing [LJ-1.615] was shelved on. So 640 does NOT ask for that bridge. It
+# asks the one question that avoids it: is the bill's site the SELECTED least
+# cardinal, where minimality holds by construction?
+
+[[task]]
+code = "LJ-1.640"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-640/LJ-1.640.md"
+
+# ---------------------------------------------------------------------------
+# REFILL 2026-08-26 second. THE CAMPAIGN'S REAL BLOCKER WAS NEVER THE SQUARE LAW.
+#
+# [LJ-1.636-split] instantiated the chain at ambient ω, where [LJ-1.636] showed
+# the sq parameter is delivered whole by param-at-ω. Of BoundedSubsetAt's
+# seventeen parameters, FOUR go and THIRTEEN survive, and `levelIn` and `cover`
+# survive UNTOUCHED: the square law never reaches the hull, because UnionKit and
+# HullStage take no sq parameter at all. archive/dev/LJ-dispatch-index.md:195
+# recorded [LJ-1.119] as "the stop is levelIn and cover". THAT STOP DOES NOT MOVE
+# AT ω. The campaign spent 93 of 238 reports on untruncation, beside it.
+#
+# THE GOOD NEWS IS THAT THIS CAMPAIGN ALREADY SHRANK THAT WALL. LJ-1.121 priced
+# the level-hood certificate at 2.8k to 3.3k lines and unbuilt. [LJ-1.578] cut it
+# to ONE OBJECT with THREE CLAUSES, with certificate-gives-cohyps green
+# (Probe578.agda:547-549) and 176 measured lines above it. All three clauses were
+# attempted (598, 595, 602) and all three closed NO-GO with green probes and
+# NAMED residues. That is a wall with a door in it, not a wall.
+#
+# 641 AND 642 TAKE TWO OF THE THREE CLAUSES. 641 is clause (iii), reduced by
+# [LJ-1.602] to one commute, whose only named obstruction ([LJ-1.477]'s
+# non-ordinal collapse) is EXCLUDED by the clause's own ordinal hypothesis.
+# 642 is clause (i), whose blocker was a QUESTION and not a construction, and I
+# answer it below. CLAUSE (ii) IS NOT QUEUED: [LJ-1.595] measured its residue
+# leads back to the level formula read at the stage, which is clause (i)'s
+# subject, so it waits for 642 rather than racing it (backlog item 27).
+#
+# MY RULING, WHICH [LJ-1.598] ASKED FOR BY NAME. Clause (i) is RESTATED at the
+# ordinal index `IsOrd (fst (T.val c))`, and `PreimageOrd` is NOT funded.
+# graph-gives-level already carries that hypothesis and is green
+# (agents/tasks/LJ-1-598/Probe598.agda:220-222), so the restatement matches a
+# term that exists. The alternative funds a supplier for a case [LJ-1.598]
+# measured as giving a NON-level with no reading repair. It also makes all three
+# clauses live at ordinal indices, which is the shape clause (iii) already has.
+#
+# 643 IS THE OTHER WALL, AND IT IS INDEPENDENT. [LJ-1.640] closed the above-ω
+# half's question NEGATIVELY and usefully: least-cardinal site and AMBIENT
+# cardinal are the same condition, neither direction spends IsCardinalL, so the
+# half owes exactly `IsCardinal (fst κ)` at the bill's site. Before anyone funds
+# that, 643 counts what the tree already supplies. Its premise 4 forbids the
+# ambient-from-coded bridge by name, because that is [LJ-1.615]'s shelve.
+
+[[task]]
+code = "LJ-1.641"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-641/LJ-1.641.md"
+
+[[task]]
+code = "LJ-1.642"
+head_slot = "coder"
+machine = "exclusive"
+brief = "agents/tasks/LJ-1-642/LJ-1.642.md"
+
+[[task]]
+code = "LJ-1.643"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-643/LJ-1.643.md"
+
+# [LJ-1.644] CONTINUES [LJ-1.643], WHOSE OBLIGATION WAS DELIVERED AND WHOSE PARK
+# WAS TWO MECHANISM FAILURES, NEITHER MATHEMATICAL. See my note to the maintainer.
+#
+# WHAT 643 DELIVERED. Three producers of ambient IsCardinal, ALL in
+# src/L/CardinalAbove.lagda.md, the master the CardAboveL chain fought five tasks
+# to land (528, 555, 599, 616, 624). That chain is now the tree's ONLY source of
+# ambient cardinality, which is a late vindication of an expensive week.
+#
+# AND IT NAMED THE JOIN DEFECT IN TWO LINES. BoundedSubsetAt takes
+# `(cardκ : IsCardinal κ)`, the AMBIENT predicate (src/L/BoundedSubset.lagda.md:1386).
+# GCHStatement gives `IsCardinalL κ`, the CODED one (src/L/GCH.lagda.md:62).
+# THE BILL CANNOT FEED ITS OWN CHAPTER. Every one of the three producers makes
+# IsCardinal only at a site IT chose, never at a site handed in.
+#
+# 644 ASKS THE ONE QUESTION THAT AVOIDS THE UNPAYABLE CROSSING: is the bill's κ
+# reachable as a chosen site? Its premise 6 forbids `IsCardinalL κ → IsCardinal κ`
+# by name, because that is [LJ-1.533]'s measured direction and [LJ-1.615]'s shelve.
+# A NO-GO here is a stop worth having: it would say the bill must be RESTATED,
+# which is my call and not the coder's, and the coder hands me the evidence.
+
+[[task]]
+code = "LJ-1.644"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-644/LJ-1.644.md"
+
+# [LJ-1.645] THE DEMAND SIDE, WHICH NOBODY HAS ASKED ABOUT.
+# 640, 643 and 644 all attacked the SUPPLY of ambient cardinality and 644
+# refuted the last route (a loop, and false at limit cardinals). 645 asks the
+# other question: does the CONSUMER need it? `grep -n cardκ src/L/BoundedSubset.lagda.md`
+# returns five lines, of which TWO are uses (:1713, :1717), both in `β∈κ`, both
+# refuting a NAMED composite injection. Five tasks landed CardinalAbove to supply
+# this predicate; no task has asked whether the chapter needs the ambient form.
+
+[[task]]
+code = "LJ-1.645"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-645/LJ-1.645.md"
+
+# ===========================================================================
+# THE OPENING, 2026-08-26. FIVE MOVES, ALL DISPATCHABLE NOW, ONE KEYSTONE.
+#
+# I HAVE BEEN PLAYING ONE MOVE AT A TIME AND THAT WAS WRONG. This is the line
+# of attack, planned to move four before move one is played.
+#
+# WHAT I FOUND. [LJ-1.636-split] measured that the bill's blocker at EVERY
+# ambient is levelIn/cover, the level-hood certificate, not the square law.
+# [LJ-1.578] cut that certificate to ONE object, THREE clauses. Tracing all three
+# clauses plus levelIn's own four steps, they CONVERGE on a single unbuilt term:
+#
+#   lset-code : (c : Code) → Σ[ d ∈ Code ] (fst (val d) ≡ Lset (fst (val c)))
+#   "name Lset in the hull's language"     agents/tasks/LJ-1-462/Probe462.agda:109
+#
+# IT PRODUCES, MEASURED AND NOT GUESSED:
+#   - all THREE gaps of clause (iii)          [LJ-1.641], its report at :156
+#   - step 2 and step 4 of levelIn            [LJ-1.462], Probe462.agda:136
+#   - clause (ii)'s CodedCover residue        [LJ-1.595], its report at :171
+#
+# AND IT WAS NEVER BUILT FOR A REASON THAT IS PURE TIMING. [LJ-1.462] named TWO
+# obstacles: feed needs `Vec Code (countFo LsetGraph)`, and the equality needs
+# `Lset-only`. [LJ-1.474] DELIVERED the first, TWELVE TASKS LATER, and wrote "now
+# with the extra Vec filled" (Probe474.agda:124-128). Nobody went back. The second
+# obstacle is `Lset-only` (src/L/Hierarchy.lagda.md:334) wanting IsOrd on the
+# argument slot, which [LJ-1.462] said "does not arise on Code" -- but EVERY
+# consumer has it: levelIn takes IsOrd δ, clause (iii) takes IsOrd (HS.C.π δ).
+# So the keystone is buildable AT AN ORDINAL CODE, and that is 646.
+#
+# THE FIVE MOVES, AND WHY NONE WAITS ON ANOTHER:
+#   646  THE KEYSTONE. lset-code-ord, from 474's feed and Lset-only.
+#   647  step 2, HullClosedLset          <- takes 646 AS A HYPOTHESIS
+#   648  clause (iii)'s Commute          <- takes 646 AS A HYPOTHESIS
+#   649  levelIn assembled from 4 steps  <- takes steps 2,3,4 AS HYPOTHESES
+#   650  clause (ii)'s CodedCover        <- takes 646 AS A HYPOTHESIS
+# Four consumers take the keystone as a hypothesis, so backlog item 27 does not
+# bite: nothing reads a RUNNING sibling's output. If 646 lands, four compositions
+# are immediate and already written. If 646 fails, the four still return the
+# reductions, which is the map either way.
+#
+# 649 IS THE CHEAP ONE AND MAY BE THE MOST VALUABLE. [LJ-1.462] decomposed
+# levelIn into four steps and NOBODY HAS EVER COMPOSED THEM: it closed NO-GO at
+# step 3 and says step 4 "was not reached". A decomposition nobody has composed is
+# a plan, not a proof. If a fifth step exists, four hundred dispatches have not
+# found it and I want it named this week.
+#
+# WHAT THIS LINE DOES NOT TOUCH: the ambient-cardinality join, which is [LJ-1.645],
+# already queued, and which is on the ABOVE-ω path only. The certificate is on
+# BOTH paths, which is why it gets five moves and that gets one.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.646"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-646/LJ-1.646.md"
+
+[[task]]
+code = "LJ-1.647"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-647/LJ-1.647.md"
+
+[[task]]
+code = "LJ-1.648"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-648/LJ-1.648.md"
+
+[[task]]
+code = "LJ-1.649"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-649/LJ-1.649.md"
+
+[[task]]
+code = "LJ-1.650"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-650/LJ-1.650.md"
