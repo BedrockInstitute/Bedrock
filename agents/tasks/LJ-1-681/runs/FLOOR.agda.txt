@@ -1,0 +1,41 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.681] FLOOR.  The import frame of the graph bridge, and the two
+-- shape-level formulas named by the obligation.  .agda.txt because it
+-- carries holes where the clause transports will stand.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-681.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇_; ∃̇∈; ∀̇_; ∀̇∈ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Coding {ℓ} using ( pr )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ )
+open import L.Coding.Model {ℓ}
+open import L.Coding.Powerset {ℓ} lem using ( DefAt )
+open import L.Coding.Sequence {ℓ} lem
+  using ( LsetGraphAt; module StepAt )
+open import L.Condensation {ℓ} lem
+  using ( StepB; ApproxB; GraphB; extAtB; extAt→extAtB; extAtB→extAt
+        ; domB; module DomainAgree )
+
+open import Cubical.Data.Vec using ( lookup; _∷_ )
+open import Cubical.Data.Nat using ( _+_ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+module _ {n : ℕ} (w b K : Fin n) (γ : S ^ n) where
+  unbounded : Formula S n
+  unbounded = LsetGraphAt w b
+
+  bounded : (ψs : Formula S (8 + n)) (ψa : Formula S (10 + n)) → Formula S n
+  bounded ψs ψa = GraphB.graphBndAt {n} ψs ψa w b K
