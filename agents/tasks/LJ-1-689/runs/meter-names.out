@@ -1,0 +1,7 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T22:46:59Z
+pass      exit=0        0.70s  agents/tasks/LJ-1-689/Probe689.agda::hull-convert  (grouped run, exit 0)
+pass      exit=0        0.70s  agents/tasks/LJ-1-689/Probe689.agda::Convert.inBound  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 2, 0.70 s, probe_red=False
+EXIT=0
+ended 2026-08-26T22:47:00Z

@@ -1,0 +1,60 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.689] FLOOR.  The hull Convert STATED at hull-closed's
+-- hypothesis form mapFo val (inBound ca cp), with [LJ-1.686]'s
+-- equation as a HYPOTHESIS and a HOLE standing in for the term.
+-- Generic carrier, generic alphabet, generic 3-slot Δ₀ formula.
+-- Imports Probe680 for pin₃ / Unpack.  No Probe667, no Probe673,
+-- no Probe686: the equation is a hypothesis and is not formed.
+-- RED BY DESIGN.  Delivered as `.agda.txt` because every `.agda`
+-- under the task home is a verification target
+-- (scripts/pod/facts.py:489).
+--
+--     mv agents/tasks/LJ-1-689/runs/FLOOR.agda.txt \
+--        agents/tasks/LJ-1-689/runs/FLOOR.agda
+--     agents/tasks/LJ-1-689/runs/run.sh \
+--       agents/tasks/LJ-1-689/runs/FLOOR.agda floor-1
+--     mv agents/tasks/LJ-1-689/runs/FLOOR.agda \
+--        agents/tasks/LJ-1-689/runs/FLOOR.agda.txt
+
+open import Base.Prelude
+open import Base.Truth
+
+module LJ-1-689.runs.FLOOR {ℓ : Level} where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.LevyHierarchy using ( Δ₀ )
+open import FOL.Manipulation.Relabelling using ( embed; mapFo )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Collapse {ℓ} using ( isTrans )
+open import Cubical.Data.Vec using ( _∷_; [] )
+import LJ-1-680.Probe680 {ℓ} as P680
+
+open hPropStructure 𝒮ᵥ
+open P680 using ( pin₃; _⊨ₚ_ )
+
+-- inBound at a generic formula is pin₃ (mapFo slide φ), which is
+-- Probe673.agda:83-87 at a generic alphabet.
+
+module Convert (U : S) (Utr : isTrans U) where
+  open P680.Unpack U Utr
+
+  inBound : {ℓc : Level} {K : Type ℓc}
+          → Formula (⊥* {ℓ-suc ℓ}) 3
+          → (⊥* {ℓ-suc ℓ} → K) → K → K → Formula K 1
+  inBound φ slide ca cp = pin₃ (mapFo slide φ) ca cp
+
+  hull-convert :
+      {ℓc : Level} {K : Type ℓc}
+      {φ : Formula (⊥* {ℓ-suc ℓ}) 3}
+    → Δ₀ φ
+    → (slide : ⊥* {ℓ-suc ℓ} → K)
+    → (val : K → Ab.SM)
+    → (eq : mapFo val (mapFo slide φ) ≡ embed φ)
+    → (ca cp : K) (a : Ab.SM)
+    → ⟨ (a ∷ []) Ab.⊨ᵐ (mapFo val (inBound φ slide ca cp)) ⟩
+    → ⟨ (fst (val ca) ∷ fst (val cp) ∷ fst a ∷ []) ⊨ₚ φ ⟩
+  hull-convert = {!!}
+
+hull-convert = Convert.hull-convert
