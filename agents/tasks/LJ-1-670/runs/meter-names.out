@@ -1,0 +1,6 @@
+pass      exit=0        3.57s  agents/tasks/LJ-1-670/Probe670.agda::At665.hull-agree  (grouped run, exit 0)
+pass      exit=0        3.57s  agents/tasks/LJ-1-670/Probe670.agda::At665.code-agree  (grouped run, exit 0)
+pass      exit=0        3.57s  agents/tasks/LJ-1-670/Probe670.agda::At665.elem-type-agree  (grouped run, exit 0)
+pass      exit=0        3.57s  agents/tasks/LJ-1-670/Probe670.agda::At665.elem-is-paid  (grouped run, exit 0)
+pass      exit=0        3.57s  agents/tasks/LJ-1-670/Probe670.agda::elem-is-paid  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 5, 3.57 s, probe_red=False
