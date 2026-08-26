@@ -6574,3 +6574,76 @@ code = "LJ-1.670"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-670/LJ-1.670.md"
+
+# ===========================================================================
+# THE SIXTH OPENING, 2026-08-26. FOUR NO-GOs, ONE GO, AND I AM STATING THE
+# TREND RATHER THAN BURYING IT.
+#
+# MEASURED OVER 656-670: ELEVEN NO-GO, THREE GO, and `src/` has not moved since
+# [LJ-1.634]. The three GOs were [LJ-1.658] (a 15-line fact), [LJ-1.665] (a
+# stock-take) and [LJ-1.670] (a stale-blocker check). NO CONSTRUCTION LANDED IN
+# THAT WINDOW. The machine is producing MAP, not TERMS, and the owner should read
+# that in my return rather than infer it from row counts.
+#
+# WHY I AM STILL QUEUEING AND NOT STOPPING. Every one of the eleven NO-GOs named
+# its successor as a TYPE, and this round four of them converge:
+#   [LJ-1.663]: the obligation is `SatAtPacked`, NOT `level-laws`, and the
+#     MEMBERSHIP HALF IS ALREADY BUILT AND GREEN. Its `complete-from-sat` proves
+#     the truncated existence is NOT a witness search: v IS `packed γ oγ`, so the
+#     truncation is over the SATISFACTION. That reframing is worth the round on
+#     its own. 671.
+#   [LJ-1.667]: two items, `SameAsGraph` at [LJ-1.520]'s Matrix (named there and
+#     left uninhabited, supply 0 today) and `LsetGrounded` at matrix₃ whose
+#     consumer is already green. 672 and 673.
+#   [LJ-1.668]: the binding debt under PowIter is `Describes`, named by
+#     [LJ-1.169] and never funded. src/L/Coding/Bound.lagda.md:147 says in the
+#     tree's own words that nothing proves powIter and TWO chapters assume it
+#     under other names. 674 prices its TRUTH first.
+#
+# [LJ-1.670] GO DELETED AN OBJECT FROM THE DEBT. [LJ-1.665]'s `Elementary` slot
+# fills from [LJ-1.655]'s WithCode.elem; the frames share one HullStage telescope
+# and the types agree by refl. FOURTH TIME the stale-blocker check has paid.
+#
+# 675 IS THE ANTI-DUPLICATION TASK AND IT AUDITS MY OWN QUEUE. Four reports now
+# name the chapter's residue at three different arities, and I have funded two of
+# them (669 running, 671 here). [LJ-1.665] warned in those words that funding one
+# object as several pays twice. 675 measures whether one lemma serves every
+# consumer BEFORE the campaign pays a third time.
+#
+# A PROCESS FAILURE OF MINE, THIRD INSTANCE, NOW CURED BY AVOIDANCE. units() in
+# preflight splits on `\s*(\d+\.)`, so a wrapped premise line beginning with a
+# DECIMAL starts a new unit. It caught me in 669 and again in 675. I have removed
+# the decimal from the premise rather than reflow the line, because reflowing is
+# fragile and removal is not. NEVER PUT A NUMBER AT THE START OF A WRAPPED
+# PREMISE LINE.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.671"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-671/LJ-1.671.md"
+
+[[task]]
+code = "LJ-1.672"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-672/LJ-1.672.md"
+
+[[task]]
+code = "LJ-1.673"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-673/LJ-1.673.md"
+
+[[task]]
+code = "LJ-1.674"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-674/LJ-1.674.md"
+
+[[task]]
+code = "LJ-1.675"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-675/LJ-1.675.md"
