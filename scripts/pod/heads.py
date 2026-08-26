@@ -103,7 +103,7 @@ class HeadsError(Exception):
     """
 
 
-_CACHE: dict[str, dict] = {}
+_CACHE: dict[str, tuple[int, dict]] = {}
 
 
 def _refuse(msg: str):
@@ -122,11 +122,27 @@ def load_heads(path=None, cache=True) -> dict:
     The return carries `version`, `legal`, `limits`, `heads`, `tiers` and `sha256`. The
     digest is over the RAW BYTES, so the transition log records the exact file that
     resolved a head; AD26 needs the file that ran and not the file that stands today.
+
+    **THE CACHE KEYS ON `(path, mtime)`, NEVER ON `path` ALONE.** MEASURED 2026-08-26: a
+    plain path-keyed cache returned a heads.toml ruling landed and committed 3 hours
+    earlier as though it had never happened, because `dev/pod/README.md:115-118`
+    documents "edit the row, and the next dispatch uses it" with no reload step, and
+    every production caller of `configs()`/`head()` takes the `cache=True` default. Five
+    real dispatches (`[LJ-1.656]`'s retry, `[LJ-1.657]` through `[LJ-1.660]`, `[LJ-1.662]`)
+    ran on the stale config before this was caught. An `mtime` check costs one `stat()`,
+    far cheaper than the reparse it guards, and a process that never touches the file
+    again pays that one `stat()` per call and nothing else.
     """
     p = HEADS if path is None else Path(path)
     key = str(p)
-    if cache and key in _CACHE:
-        return _CACHE[key]
+    try:
+        mtime = p.stat().st_mtime_ns
+    except OSError:
+        mtime = None
+    if cache and mtime is not None:
+        cached = _CACHE.get(key)
+        if cached is not None and cached[0] == mtime:
+            return cached[1]
     try:
         raw = p.read_bytes()
     except OSError as e:
@@ -262,8 +278,8 @@ def load_heads(path=None, cache=True) -> dict:
            "heads": slots,
            "tiers": {k: dict(v) for k, v in tiers.items()},
            "sha256": hashlib.sha256(raw).hexdigest()}
-    if cache:
-        _CACHE[key] = out
+    if cache and mtime is not None:
+        _CACHE[key] = (mtime, out)
     return out
 
 
