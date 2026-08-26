@@ -6335,3 +6335,81 @@ code = "LJ-1.655"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-655/LJ-1.655.md"
+
+# ===========================================================================
+# THE THIRD OPENING, 2026-08-26. FOUR OF FIVE CAME BACK GO AND THE ROAD MOVED.
+#
+# 651 GO (the corrected keystone: a Σ₀ matrix over the code alphabet CAN say
+# Lset, and the grade wall does NOT recur in that shape), 653 GO, 654 GO, 655 GO;
+# 650 NO-GO, and its NO-GO is the most valuable of the six.
+#
+# THREE RESULTS RE-PLAN THE CAMPAIGN, AND TWO OF THEM CORRECT ME.
+#
+# 1. [LJ-1.653]: STEP 4 IS TRUE AT ORDINALS AND IS NOT AN INDEPENDENT
+#    OBSTRUCTION. `levelin-from-hood-pf` (Probe653.agda:290) delivers LevelIn
+#    from HoodExistsP + HoodSoundP, and THAT CHAIN CONTAINS NO STEP 2 AND NO
+#    STEP 4. So [LJ-1.462]'s four-step decomposition is not the only road.
+#    [LJ-1.649] called step 4 "the campaign's real stop"; 653 corrects that in
+#    the cheaper direction. It also names the ONE fact that closes step 4 and
+#    levelIn together: is C.πX ⊆ L? That is 658.
+#
+# 2. [LJ-1.650]: THE QUEUE HAD THE DEPENDENCY BACKWARDS, AND THAT IS MINE.
+#    `lset-code-ord` is a SEMANTIC consequence of the level formula while the
+#    consumers need the SYNTAX. The true keystone is `LevelFormula`
+#    (Probe650.agda:322-328), Devlin's own object
+#    (dev/literature/devlin-II5.md:214-217), one formula in TWO variables with
+#    soundness and completeness. Its consumer is ALREADY PROVED:
+#    `coded-cover-from-level : LevelFormula → CodedCover` (Probe650.agda:385).
+#    AND IT IS THE SAME ARITY [LJ-1.653]'s route wants. 656 builds it, 657
+#    connects it, 659 asks whether [LJ-1.651]'s delivered half still buys it.
+#
+# 3. [LJ-1.654]: PiReflectsOrd IS TRUE AND BUILT, so the ordinal conditioning
+#    that [LJ-1.649] measured as a fifth debt at FOUR sites is dischargeable
+#    downstream. 660 is that composition. NOTE [LJ-1.653]'s note 3 says
+#    PiReflectsOrd is "still unbuilt": 653 returned BEFORE 654 did, and 660's
+#    premise 4 marks that stale so no successor inherits it.
+#
+# [LJ-1.655] GO: elementarity ARRIVES at the collapse, costs one pair, and the
+# chapter already pays it. That makes 652's shared hypothesis free; 652 is still
+# running and I have not disturbed it.
+#
+# THE FIVE MOVES, none waiting on another:
+#   656  LevelFormula, the true keystone, Devlin's object
+#   657  levelIn from it        <- takes LevelFormula AS A HYPOTHESIS
+#   658  C.πX ⊆ L, [LJ-1.653]'s one fact, and HALF OF IT IS ALREADY IN src/
+#        at src/L/BoundedSubset.lagda.md:997 (πX⊆Lβ, proved, with its converse
+#        at :1012). The risk there is SCOPE, not mathematics, so its premise 4
+#        tells the coder to expect [LJ-1.655]'s transport shape.
+#   659  does [LJ-1.651]'s one-variable formula buy the two-variable one
+#   660  step 2 without its ordinal slot, from [LJ-1.654]'s delivered fact
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.656"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-656/LJ-1.656.md"
+
+[[task]]
+code = "LJ-1.657"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-657/LJ-1.657.md"
+
+[[task]]
+code = "LJ-1.658"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-658/LJ-1.658.md"
+
+[[task]]
+code = "LJ-1.659"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-659/LJ-1.659.md"
+
+[[task]]
+code = "LJ-1.660"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-660/LJ-1.660.md"
