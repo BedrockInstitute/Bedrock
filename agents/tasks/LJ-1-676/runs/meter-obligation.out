@@ -1,0 +1,3 @@
+pass      exit=0        3.00s  agents/tasks/LJ-1-676/Probe676.agda::kernel-sat
+witness: 0 UNRESOLVED of 1, 3.00 s, probe_red=False
+EXIT=0

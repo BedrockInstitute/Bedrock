@@ -1,0 +1,33 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T17:41:58Z
+Checking LJ-1-676.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-676/agents/tasks/LJ-1-676/runs/FLOOR.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-676/agents/tasks/LJ-1-676/runs/FLOOR.agda:57.17-20: error: [NotInScope]
+Not in scope:
+  Pin
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-676/agents/tasks/LJ-1-676/runs/FLOOR.agda:57.17-20
+    (did you mean
+       'Base.Prelude.Fin' or
+       'Cubical.Data.Nat.min' or
+       'Fin'?)
+when scope checking Pin
+        3.17 real         2.56 user         0.27 sys
+           692305920  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40063  page reclaims
+                4255  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 727  voluntary context switches
+                2488  involuntary context switches
+         28614440442  instructions retired
+         11360679375  cycles elapsed
+           634520608  peak memory footprint
+EXIT=42
+ended 2026-08-26T17:42:01Z

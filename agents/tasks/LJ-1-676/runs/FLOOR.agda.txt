@@ -1,0 +1,61 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.676] FLOOR.  The import frame of the kernel at generic n, and
+-- a hole where kernel-sat will stand.  .agda.txt because a hole cannot
+-- typecheck.  src/ only.  No predecessor probe.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-676.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.LevyHierarchy using ( Δ₀; Σ₁; σ-Δ₀ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.BoundedSubset {ℓ} lem using ( module LevelHood )
+
+open import Cubical.Data.Vec using ( map )
+open import Cubical.Data.Nat using ( _+_ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+
+module CS = hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL using ( _^_ )
+
+-- The chapter's kernel at GENERIC n, all Fin slots as parameters.
+-- src/L/BoundedSubset.lagda.md:74-111.  Sealed (P-l): a transparent
+-- matrix in a satisfaction TYPE unfolds GraphB
+-- (agents/tasks/LJ-1-662/Probe662.agda:101-108).
+module Pin {n : ℕ}
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fin (5 + n))
+  (M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 : Fin (7 + n)) where
+
+  module LH = LevelHood {n} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1
+                          M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1
+
+  opaque
+    matrix : Formula CS.S (4 + n)
+    matrix = LH.levelHoodB
+
+    Δ₀-matrix : Δ₀ matrix
+    Δ₀-matrix = LH.Δ₀-levelHoodB
+
+    Σ₁-matrix : Σ₁ matrix
+    Σ₁-matrix = σ-Δ₀ Δ₀-matrix
+
+-- THE OBLIGATION, as a hole.  The hard part is the body.
+kernel-sat : {n : ℕ}
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fin (5 + n))
+  (M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 : Fin (7 + n))
+  (δ : AbsL.SM ^ (4 + n))
+  → ⟨ δ AbsL.⊨ᵐ Pin {n} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1
+                       M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 .matrix ⟩
+  → ⟨ map fst δ AbsL.⊨ᵛ Pin {n} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1
+                                M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 .matrix ⟩
+kernel-sat = {!!}
