@@ -219,6 +219,40 @@ RESUMED HERE**: a PARKED-at-`attempt_max` task does not reopen on its own, and
 reopening one is the owner's word every time, not a maintainer judgement call,
 however clean the evidence.
 
+**A FOURTH CURE, pod-math's OWN RULING, 2026-08-26. NOT ONE OF THE THREE ABOVE,
+AND IT DOES NOT TOUCH `verification_target()` AT ALL.** `[LJ-1.642]`'s coder
+named its floor measurement `runs/FLOOR.agda.txt`, not `.agda`, by instinct
+(reported to the maintainer, relayed to pod-math). pod-math's reading: a `.agda`
+extension is a CLAIM that the file typechecks, and a diagnostic that by
+construction cannot typecheck must not carry that claim. **The fix is naming
+discipline, not scope**: probes and their imports stay `.agda` (claimed); a
+floor with standing holes, a walling bisection arm, or a superseded shape
+becomes `.agda.txt` (tracked, cited, never claimed). W3's "never delete" still
+holds, since a `.agda.txt` file is tracked and not deleted; only the claim
+changes. VERIFIED landed in the four READY briefs (`agents/tasks/LJ-1-647/
+LJ-1.647.md:17-22`, and `LJ-1-648`/`LJ-1-649`/`LJ-1-650` at the matching lines),
+each citing `[LJ-1.636]`, `[LJ-1.643]` and `[LJ-1.642]` as the evidence.
+
+**pod-math explicitly declines to write this into `dev/pod/instructions/
+coder.md`**, correctly: that file binds a slot pod-math does not own, and a
+convention binding every future coder is the owner's ruling, not a
+mathematician's. What pod-math owns is the brief, and says every brief from now
+carries it. If the owner wants it as a standing coder clause, the text is ready
+and the evidence is the three named tasks.
+
+**ONE GAP pod-math NAMED THAT THE THREE CURES ABOVE DO NOT COVER, IF THIS
+BECOMES STANDING.** The rule must bind at WRITE time, not at repair time: a
+coder renaming a file to `.agda.txt` AFTER a failed acceptance would be editing
+evidence after the fact, which is worse than the defect it fixes. Whoever
+drafts a `coder.md` clause for this owes that sentence.
+
+**NOT FIXED HERE EITHER.** This is a brief-level convention pod-math adopted
+inside its own scope (AD3), not a `scripts/pod/` change, so it needs no suite
+run and no reload. Recorded for the owner's ruling alongside the original three
+cures, not instead of them: it changes what coders write, not what conjunct 1
+verifies, so it does not by itself close this item for any coder who has not
+yet adopted the convention.
+
 **NOT MINE, FOUND BY A DISPATCHED AGENT, VERIFIED HERE.** `ROOT =
 Path("/Users/alsg/Agentic/Bedrock")` is a literal, not a `Path(__file__)`
 derivation. `test_pod_launcher.py` reads `mod.STATE`/`mod.LOGS` off that
