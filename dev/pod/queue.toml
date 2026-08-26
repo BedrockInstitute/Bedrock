@@ -6851,3 +6851,75 @@ code = "LJ-1.690"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-690/LJ-1.690.md"
+
+# ===========================================================================
+# THE TENTH OPENING, 2026-08-27. THE BRIDGE LANDED, AND THE FIRST FIVE BRIEFS
+# CARRYING MY LINT RULING.
+#
+# [LJ-1.681] GO. `bnd-vs-unbnd` is built: UNBOUNDED to BOUNDED, same environment,
+#   same witness, K the bound. That was the convergence [LJ-1.676] and [LJ-1.678]
+#   each named independently. Its own one sentence: "the frame transport is
+#   delivered and free; the code-set leaf rows are the priced cost, and they
+#   stand as hypotheses." Those three facts are 691.
+#   I SENT [LJ-1.684]'s RECIPE TO ITS PANE MID-FLIGHT (HierInK not ApproxInK,
+#   Graph.up already delivered, the 162 inner frames), telling it my measurement
+#   loses to its own if they conflict. Its report names those nine times.
+# [LJ-1.686] GO. The leftover equation is PROVED and it was not expensive:
+#   `mapFo-comp` plus uniqueness of maps out of `⊥*`, at generic val and slide.
+#   Two reports had told me to measure its floor before proving it; the floor
+#   turned out to be the proof.
+# [LJ-1.689] GO. `hull-convert` starts from `hull-closed`'s own hypothesis form
+#   with that equation as a hypothesis. 686 AND 689 LANDED IN THE SAME ROUND, so
+#   the hull road is open and 692 is the instantiation neither was asked to run.
+# [LJ-1.687] GO. `describes-supplier` at the generic PAIR family, spending
+#   [LJ-1.683]'s consumer rather than a second copy.
+# [LJ-1.688] NO-GO, and it named `HierInK`'s real residue: stage placement,
+#   `HierBelow` / `StageHigh` (Probe536.agda:186-187), door `𝒟ₒ-intro`. 693.
+#
+# 694 IS A QUESTION I SHOULD HAVE ASKED THREE DISPATCHES AGO. Four `Describes`
+# families are now paid: the stage case, the first non-stage pair, the generic
+# singleton and the generic pair. `PowIter` is `Describes` over a FINITE iterate.
+# NOBODY HAS ASKED WHETHER THE PAID FAMILIES SUFFICE. If they do, the fully
+# generic term the campaign has been chasing since [LJ-1.683] is not owed.
+#
+# THESE FIVE ARE THE FIRST BRIEFS CARRYING `lint-back-to-author`. Ruling of
+# 2026-08-27, mine under AD3, recorded with its evidence at
+# agents/tasks/POD-MATH/branch-template.md: a lint failure is a RECORDS defect in
+# the author's own report and must never escalate to a critic. The chain that
+# forced it starts with my own row on [LJ-1.685] (transitions 20:37:21Z,
+# task-lj-1-685-accept-failed, head_slot coder_adversarial), after which
+# check-survey-quotes' report_of() can never see the return again by design
+# (its docstring, scripts/pod/check-survey-quotes.py:426-437). A row is admitted
+# at task creation, so this binds from 691 forward and NOT retroactively; I filed
+# no retrofit because three tasks parked that way and none lost its mathematics.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.691"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-691/LJ-1.691.md"
+
+[[task]]
+code = "LJ-1.692"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-692/LJ-1.692.md"
+
+[[task]]
+code = "LJ-1.693"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-693/LJ-1.693.md"
+
+[[task]]
+code = "LJ-1.694"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-694/LJ-1.694.md"
+
+[[task]]
+code = "LJ-1.695"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-695/LJ-1.695.md"
