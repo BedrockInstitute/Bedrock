@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T18:50:02Z
+Checking LJ-1-680.Probe680 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-680/agents/tasks/LJ-1-680/Probe680.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-680/agents/tasks/LJ-1-680/Probe680.agda:105.16-107.33: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-680/agents/tasks/LJ-1-680/Probe680.agda:105.16-26
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-680/agents/tasks/LJ-1-680/Probe680.agda:107.23-33
+        0.71 real         0.61 user         0.08 sys
+           260915200  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               17665  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 133  involuntary context switches
+          9325846738  instructions retired
+          3057914541  cycles elapsed
+           200999656  peak memory footprint
+EXIT=42
+ended 2026-08-26T18:50:03Z

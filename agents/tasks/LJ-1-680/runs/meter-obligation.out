@@ -1,0 +1,2 @@
+pass      exit=0        0.73s  agents/tasks/LJ-1-680/Probe680.agda::convert-generic
+witness: 0 UNRESOLVED of 1, 0.73 s, probe_red=False
