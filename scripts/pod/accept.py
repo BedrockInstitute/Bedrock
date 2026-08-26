@@ -252,6 +252,18 @@ def precommit_detail(code=None, root=None):
     uses, one call site only, called ONLY when `precommit_set()` already returned
     False, so the cost is one process on the rare (already red) path and nothing on
     the common (green) one.
+
+    **`survey-quotes` GETS ITS OWN, WIDER CAP.** The six `PRECOMMIT_SET` checks each
+    report one localised defect, so 600 characters covers the useful part. Survey-quotes
+    reports an ENUMERATION, one line per unanswered path, and the enumeration IS the fix:
+    a worker that never sees a path was never told to answer it. MEASURED on `[LJ-1.685]`,
+    2026-08-26: ten CANDIDATE paths went unanswered and the 600-character cap kept only
+    eight of the ten lines, cutting the enumeration and the compliance instruction below
+    it. The worker in that case reconstructed the missing two from the check itself
+    rather than from this field, so the truncation did not cause that failure, but a
+    worker that trusts the injected note alone has no such fallback. 2,000 characters
+    holds the worst case this table can produce today (ten unanswered CANDIDATE lines
+    plus the instruction paragraph, MEASURED under 1,200) with a wide margin.
     """
     for name, argv in PRECOMMIT_SET:
         rc, out = _run(argv, root)
@@ -260,7 +272,7 @@ def precommit_detail(code=None, root=None):
     if code:
         rc, out = _run(SURVEY_QUOTES + [code], root)
         if rc != 0:
-            return "survey-quotes: " + " ".join(out.split())[:600]
+            return "survey-quotes: " + " ".join(out.split())[:2000]
     return ""
 
 
