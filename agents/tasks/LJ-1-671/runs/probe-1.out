@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-26T18:28:46Z
+Checking LJ-1-671.Probe671 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/Probe671.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/Probe671.agda:43.31-34: error: [GeneralizeNotSupportedHere]
+Generalizable variable LJ-1-671.Probe671.lam is not supported here
+when scope checking lam
+        2.64 real         2.37 user         0.19 sys
+           624050176  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40044  page reclaims
+                 108  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 307  voluntary context switches
+                 527  involuntary context switches
+         28485215663  instructions retired
+         10200180734  cycles elapsed
+           566330352  peak memory footprint
+EXIT=42
+ended 2026-08-26T18:28:48Z

@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-26T18:31:13Z
+Checking LJ-1-671.runs.ATK-1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/runs/ATK-1.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/runs/ATK-1.agda:82.26-34: error: [NotInScope]
+Not in scope:
+  failWith
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/runs/ATK-1.agda:82.26-34
+when scope checking failWith
+        2.56 real         2.34 user         0.19 sys
+           691273728  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44249  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 492  involuntary context switches
+         29048313708  instructions retired
+         10057694036  cycles elapsed
+           633455648  peak memory footprint
+EXIT=42
+ended 2026-08-26T18:31:16Z

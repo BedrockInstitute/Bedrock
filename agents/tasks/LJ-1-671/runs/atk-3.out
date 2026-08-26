@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1200s (perl alarm)
+started 2026-08-26T16:51:48Z
+Checking LJ-1-671.runs.ATK-1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/runs/ATK-1.agda).
+time: command terminated abnormally
+     1200.04 real      1197.37 user         2.63 sys
+           946241536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               59796  page reclaims
+                  17  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 312  voluntary context switches
+              160628  involuntary context switches
+      18952440643250  instructions retired
+       5094735513412  cycles elapsed
+           887342256  peak memory footprint
+EXIT=142
+ended 2026-08-26T17:11:48Z

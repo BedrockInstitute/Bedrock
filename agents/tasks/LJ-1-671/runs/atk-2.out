@@ -1,0 +1,46 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1200s (perl alarm)
+started 2026-08-26T16:39:39Z
+Checking LJ-1-671.runs.ATK-1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/runs/ATK-1.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-671/agents/tasks/LJ-1-671/runs/ATK-1.agda:71.32-36: error: [UnequalTerms]
+(_x_53 ≡ _x_53) !=<
+∥
+Σ (FOL.ZFStructure.ZFStructure.S L663.P.ASt.AbsL.𝒮M)
+(λ x →
+   ⟨
+   (x ∷ K ∷ γ ∷ packed γ oγ ∷ []) L663.T.AtCode.⊨
+   FOL.Manipulation.Relabelling.mapFo L663.P.slide
+   (FOL.Manipulation.Renaming.renameFo
+    (FOL.Manipulation.Renaming.liftρ
+     (FOL.Manipulation.Renaming.liftρ L663.P.swap))
+    (FOL.Manipulation.Renaming.renameFo
+     (FOL.Manipulation.Renaming.liftρ L663.P.rot) L663.P.LH0.matrix))
+   ⟩)
+∥₁
+when checking that the expression satK has type
+⟨
+(K ∷ γ ∷ packed γ oγ ∷ []) L663.T.AtCode.⊨
+FOL.Manipulation.Relabelling.mapFo L663.P.slide
+(FOL.Manipulation.Renaming.renameFo
+ (FOL.Manipulation.Renaming.liftρ L663.P.swap) L663.P.step2)
+⟩
+        2.58 real         2.39 user         0.17 sys
+           692928512  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44340  page reclaims
+                  16  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 532  involuntary context switches
+         31740898628  instructions retired
+         10358320962  cycles elapsed
+           633439240  peak memory footprint
+EXIT=42
+ended 2026-08-26T16:39:42Z
