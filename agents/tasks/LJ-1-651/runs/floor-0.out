@@ -1,0 +1,10 @@
+Checking LJ-1-651.Probe651Floor (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-651/agents/tasks/LJ-1-651/Probe651Floor.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-651/agents/tasks/LJ-1-651/Probe651Floor.agda:72.3-152.6: error: [MissingDefinitions]
+The following names are declared but not accompanied by a
+definition: count-matrix, count-twoSlot, inF, lset-formula,
+Σ₁-step1
+when scope checking the declaration
+  module HullStage (lam : S) (ordλ : IsOrd lam)
+                   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩) (X : S)
+                   (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+                   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
