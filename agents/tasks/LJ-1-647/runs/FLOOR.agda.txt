@@ -1,0 +1,80 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.647]  FLOOR SLICE.  The obligation STATED, with a HOLE standing
+-- in for the term, in the smallest import set that holds it.
+--
+-- This slice prices what the FRAME costs before any proof is attempted,
+-- as the standing coder clause orders.  It also fixes the trim: the
+-- telescope is [LJ-1.462]'s HullStage (Probe462.agda:78-88) MINUS
+-- `module C = Collapse M` and MINUS every import that only `feed` used
+-- (L.Coding.Sequence, FOL.Syntax, FOL.Manipulation.Parameters,
+-- L.Constructible.𝒮ʟ, Cubical.Data.Nat, Cubical.Data.Vec).  Step 2's
+-- statement names none of them.
+--
+-- RED BY DESIGN (one interaction hole).  Nothing is postulated.
+-- Nothing lands in src/.
+--
+-- DELIVERED WITH A `.txt` SUFFIX, ON PURPOSE.  Every `.agda` under a
+-- task's own directory is a verification target of the acceptance run
+-- (scripts/pod/facts.py:489, `verification_target`), so a red slice
+-- left as `.agda` would fail conjunct 1 and would report this task's
+-- landed obligation as a NO-GO.  [LJ-1.636] and [LJ-1.643] each lost
+-- real attempts to exactly that.
+--
+-- TO REPRODUCE:
+--   cp agents/tasks/LJ-1-647/runs/FLOOR.agda.txt \
+--      agents/tasks/LJ-1-647/runs/Floor647.agda
+--   agents/tasks/LJ-1-647/runs/run.sh \
+--      agents/tasks/LJ-1-647/runs/Floor647.agda floor-1 600
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-647.runs.Floor647 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import L.Hull {ℓ} lem using ( module AtStage )
+
+open import Cubical.Data.Sigma using ( Σ-syntax )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- Telescope as [LJ-1.462]'s HullStage, Probe462.agda:78-88.  `succλ` is
+-- unused by this obligation and is KEPT, because the consumer site
+-- (levelIn, inside BoundedSubset's Condense) carries it and [LJ-1.649]
+-- must be able to lift this term verbatim.
+module HullStage (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module ASt = AtStage lam ordλ
+  module H = ASt.Hull X X⊆L ∅∈λ
+
+  M : S
+  M = H.T.Hull
+
+  open H.T using ( Code; val )
+
+  -- [LJ-1.646]'s obligation, taken here as a HYPOTHESIS and never built.
+  -- The type is [LJ-1.462]'s own D-10 correction, Probe462.agda:119-122.
+  LsetCodeOrd : Type (ℓ-suc ℓ)
+  LsetCodeOrd =
+    (c : Code) → IsOrd (fst (val c))
+    → Σ[ d ∈ Code ] (fst (val d) ≡ Lset (fst (val c)))
+
+  -- Step 2 of [LJ-1.462]'s four, Probe462.agda:136, plus the `IsOrd y`
+  -- the brief adds because levelIn's own argument carries it.
+  hull-closed-lset : LsetCodeOrd
+                   → (y : S) → ⟨ y ∈ˢ M ⟩ → IsOrd y → ⟨ Lset y ∈ˢ M ⟩
+  hull-closed-lset = ?

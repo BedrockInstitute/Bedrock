@@ -1,0 +1,2 @@
+probe-red exit=-9       1.59s  agents/tasks/LJ-1-647/Probe647.agda::hull-closed-lset  (exit -9)
+witness: 1 UNRESOLVED of 1, 1.59 s, probe_red=True
