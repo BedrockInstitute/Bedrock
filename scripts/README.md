@@ -658,9 +658,11 @@ Restarts `oMLX.app` before its memory drift takes qwen's usable context below wh
 task needs (born 2026-08-24 after seven of thirteen qwen dispatches died on a hard HTTP 400
 in one fourteen hour window, each losing the whole session's work). It restarts when the
 IDLE footprint of `omlx-server` reaches 24 GB, or after 3.5 hours of active qwen dispatch
-since the last restart, and never while a `pi` agent is working. **Nothing starts it: the
-owner does.** `dev/pod/README.md`, under "The oMLX watchdog", carries the whole operating
-picture and the reason `pod.py` does not gate on it.
+since the last restart, and never while a `pi` agent is working, unless `omlx-server` itself
+is gone: that one case (REVIVE, added 2026-08-26) restarts on sight, because a dead service
+has nothing running against it to lose. **Nothing starts it: the owner does.**
+`dev/pod/README.md`, under "The oMLX watchdog", carries the whole operating picture and the
+reason `pod.py` does not gate on it.
 
 ```sh
 scripts/ops/omlx-watchdog.sh --once --dry-run   # one pass, restarting nothing

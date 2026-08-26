@@ -187,6 +187,19 @@ the oMLX server log to have been silent for ninety seconds. **Every unreadable a
 counts as BUSY.** `pgrep -f "pi --mode json"` cannot see a `pi` agent at all, because it
 runs inside a herdr pane.
 
+**REVIVE IS CARVED OUT OF THE LIVE-AGENT RULE, and it is the only thing that is.** A missing
+`omlx-server` pid used to read as "nothing to restart" and the pass did nothing. MEASURED
+2026-08-26: the server went down at 08:41:49 and stayed down 63 minutes; `[LJ-1.644]` was
+mid-run and `[LJ-1.642]` was dispatched into the hole, and both spent the whole run on
+`Connection error` and parked `fallback:Qwen3.8-27B-oQ4e-mtp`. Owner's fix, same day: a
+missing pid now restarts the app on sight, without asking `pi_busy()`. The reason it does
+not need to ask is the reason the live-agent rule exists in the first place: that rule
+protects a RUNNING agent's work from a restart it did not cause. With no `omlx-server` at
+all, nothing can be running against it, on qwen or on any other model routed through it, so
+the loss the rule prevents has already happened before the pass even starts. A short
+cooldown and a `RECHECK_S` pause before the kill still apply, so a service caught mid-launch
+is not killed by mistake.
+
 **IT RESTARTS THE APP AND NEVER THE SERVER ALONE.** MEASURED 2026-08-24 11:16: a `kill -9`
 of `omlx-server` was not answered by the parent for five minutes and `open -a oMLX` did
 nothing, because the app was already running; the service was down about seven minutes.
