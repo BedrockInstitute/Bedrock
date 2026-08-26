@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-26T06:38:08Z
+Checking LJ-1-657.runs.NoAlphabet (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-657/agents/tasks/LJ-1-657/runs/NoAlphabet.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-657/agents/tasks/LJ-1-657/runs/NoAlphabet.agda:55.27-33: error: [UnequalLevel]
+ℓ-zero != ℓ-suc ℓ
+when checking that the expression fst lf has type Formula ⊥* 2
+        3.13 real         2.91 user         0.20 sys
+           754221056  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48017  page reclaims
+                  80  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 582  involuntary context switches
+         31872340490  instructions retired
+         12368315200  cycles elapsed
+           695387216  peak memory footprint
+EXIT=42
+ended 2026-08-26T06:38:11Z

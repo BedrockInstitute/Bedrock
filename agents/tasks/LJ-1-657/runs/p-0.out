@@ -1,0 +1,85 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-26T06:23:21Z
+Checking LJ-1-657.Probe657 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-657/agents/tasks/LJ-1-657/Probe657.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-657/agents/tasks/LJ-1-657/Probe657.agda:72.20-27: error: [NotInScope]
+Not in scope:
+  Lv.Code
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-657/agents/tasks/LJ-1-657/Probe657.agda:72.20-27
+    (did you mean
+       '.#L.BoundedSubset-7733333794545313828.AtHullInstance.DR.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.AtHullInstance.DR.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.DR54.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.DR54.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.HE.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.HE.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.HED.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.HED.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.HS.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.BSA634.HS.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.DR54.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.DR54.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.HE.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.HE.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.HED.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.HED.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.HS.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.Devlin55.BoundedSubsetAt.HS.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.DownReflect.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.DownReflect.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.HullElemDown.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.HullElemDown.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.HullExt.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.HullExt.H.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.HullStage.ASt.Hull.T.Code' or
+       '.#L.BoundedSubset-7733333794545313828.HullStage.H.T.Code' or
+       '.#L.Hull-4841057801765817109.AtStage.Hull.T.Code' or
+       '.#L.Hull-4841057801765817109.TermAlgebra.Code' or
+       'AtStage.Hull.T.Code' or
+       'Cubical.Data.Vec.VecPath.code' or
+       'DR.ASt.Hull.T.Code' or
+       'DR.H.T.Code' or
+       'DownReflect.ASt.Hull.T.Code' or
+       'DownReflect.H.T.Code' or
+       'Hd.ASt.Hull.T.Code' or
+       'Hd.H.T.Code' or
+       'Hd.HE.ASt.Hull.T.Code' or
+       'Hd.HE.H.T.Code' or
+       'LJ-1-650.Probe650.Coded.HS.ASt.Hull.T.Code' or
+       'LJ-1-650.Probe650.Coded.HS.H.T.Code' or
+       'LJ-1-650.Probe650.Coded.T.Code' or
+       'LJ-1-653.Probe653.HullStage.ASt.Hull.T.Code' or
+       'LJ-1-653.Probe653.HullStage.H.T.Code' or
+       'LJ-1-653.Probe653.HullStage.HE.ASt.Hull.T.Code' or
+       'LJ-1-653.Probe653.HullStage.HE.H.T.Code' or
+       'Lv.HS.ASt.Hull.T.Code' or
+       'Lv.HS.H.T.Code' or
+       'Lv.T.Code' or
+       'P650.Coded.HS.ASt.Hull.T.Code' or
+       'P650.Coded.HS.H.T.Code' or
+       'P650.Coded.T.Code' or
+       'P653.HullStage.ASt.Hull.T.Code' or
+       'P653.HullStage.H.T.Code' or
+       'P653.HullStage.HE.ASt.Hull.T.Code' or
+       'P653.HullStage.HE.H.T.Code'?)
+when scope checking Lv.Code
+        3.45 real         2.83 user         0.29 sys
+           741572608  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               43075  page reclaims
+                4251  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 743  voluntary context switches
+                2869  involuntary context switches
+         29728994195  instructions retired
+         12547001690  cycles elapsed
+           683803680  peak memory footprint
+EXIT=42
+ended 2026-08-26T06:23:25Z

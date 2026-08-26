@@ -1,0 +1,53 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.657]  THE BRIEF'S OBLIGATION, ATTEMPTED THE ONLY WAY IT CAN BE
+--             WRITTEN, SO THAT AGDA AND NOT THIS AGENT SAYS WHAT IS
+--             WRONG WITH IT.
+--
+--   The brief orders `levelin-from-level-formula` from [LJ-1.650]'s
+--   `LevelFormula` to [LJ-1.653]'s `HoodExistsP` and `HoodSoundP`
+--   "at the formula it carries".  The formula it carries is
+--   `fst lf : Formula Code 2` (Probe650.agda:324).  The two pinned
+--   predicates take `Formula (⊥* {ℓ-suc ℓ}) 2` (Probe653.agda:283, :235).
+--
+--   THIS FILE IS RED BY CONSTRUCTION.  It is kept as `.agda.txt` so
+--   acceptance conjunct 1 does not run it.
+--
+-- ONE Agda process, caliber from the pane, never set here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-657.runs.NoPinned {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+
+open import Cubical.Data.Sigma using ( _×_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet using ( sucV )
+
+import LJ-1-650.Probe650
+import LJ-1-653.Probe653
+
+module P650 = LJ-1-650.Probe650 {ℓ} lem
+module P653 = LJ-1-653.Probe653 {ℓ} lem
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+module Try (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module Lv = P650.Coded lam ordλ succλ X X⊆L ∅∈λ
+  module Hd = P653.HullStage lam ordλ succλ X X⊆L ∅∈λ
+
+  levelin-from-level-formula :
+      (lf : Lv.LevelFormula)
+    → Hd.HoodExistsP (fst lf) × Hd.HoodSoundP (fst lf)
+  levelin-from-level-formula lf = lf
