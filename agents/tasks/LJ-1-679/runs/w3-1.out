@@ -1,0 +1,44 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T18:26:45Z
+Checking LJ-1-679.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-679/runs/W3.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-679/runs/W3.agda:26.32-50: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  numeralL
+when scope checking the declaration
+  open .#L.Coding.Model-17646544500329540026 {ℓ} using (numeralL)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-679/runs/W3.agda:36.57-58: error: [AmbiguousName]
+Ambiguous name ⊥. It could refer to any one of
+  Empty.⊥ bound at
+    /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Empty/Base.agda:9.6-7
+  LJ-1-679.runs.W3.⊥ bound at
+    /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/src/Base/Truth.lagda.md:53.7-8
+⊥ is in scope as
+  * a data type Cubical.Data.Empty.Base.⊥ brought into scope by
+    - the opening of Empty at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-679/runs/W3.agda:30.35-40
+    - the opening of Cubical.Data.Empty.Base at
+    - its definition at /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Empty/Base.agda:9.6-7
+  * a record field LJ-1-679.runs.W3._.⊥ brought into scope by
+    - the application of TruthAlgebra at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-679/runs/W3.agda:32.6-18
+    - its definition at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/src/Base/Truth.lagda.md:53.7-8
+when scope checking ⊥
+        1.58 real         1.08 user         0.19 sys
+           310722560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               16538  page reclaims
+                4179  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 576  voluntary context switches
+                2248  involuntary context switches
+         12072025516  instructions retired
+          5125314319  cycles elapsed
+           252429056  peak memory footprint
+EXIT=42
+ended 2026-08-26T18:26:46Z

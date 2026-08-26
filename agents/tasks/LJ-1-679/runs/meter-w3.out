@@ -1,0 +1,3 @@
+pass      exit=0        1.54s  agents/tasks/LJ-1-679/runs/W3.agda::kvalue-escapes  (grouped run, exit 0)
+pass      exit=0        1.54s  agents/tasks/LJ-1-679/runs/W3.agda::Tags.tags-in-stage  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 2, 1.54 s, probe_red=False

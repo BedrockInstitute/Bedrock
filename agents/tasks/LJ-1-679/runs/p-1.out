@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T18:32:01Z
+Checking LJ-1-679.Probe679 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-679/Probe679.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-679/Probe679.agda:45.1-12: error: [ClashingDefinition]
+Multiple definitions of SameAsGraph. Previous definition at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/agents/tasks/LJ-1-520/Probe520.agda:192.1-12
+when scope checking the declaration
+  SameAsGraph : ∀ {n : ℕ} (w b : Fin n) γ → Type (ℓ-suc ℓ)
+        3.19 real         2.95 user         0.21 sys
+           789839872  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49946  page reclaims
+                   5  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   3  voluntary context switches
+                1108  involuntary context switches
+         31316391891  instructions retired
+         12844703725  cycles elapsed
+           732103784  peak memory footprint
+EXIT=42
+ended 2026-08-26T18:32:04Z

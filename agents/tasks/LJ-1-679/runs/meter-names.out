@@ -1,0 +1,10 @@
+pass      exit=0        4.33s  agents/tasks/LJ-1-679/Probe679.agda::kvalue-escapes
+pass      exit=0        4.18s  agents/tasks/LJ-1-679/Probe679.agda::SameAsGraph
+pass      exit=0        4.20s  agents/tasks/LJ-1-679/Probe679.agda::SameHyp
+pass      exit=0        4.08s  agents/tasks/LJ-1-679/Probe679.agda::At.Completeness
+pass      exit=0        4.26s  agents/tasks/LJ-1-679/Probe679.agda::At.HierInStage
+pass      exit=0        4.07s  agents/tasks/LJ-1-679/Probe679.agda::At.CompletenessFrom
+pass      exit=0        4.33s  agents/tasks/LJ-1-679/Probe679.agda::At.BoundInStage
+pass      exit=0        4.09s  agents/tasks/LJ-1-679/Probe679.agda::At.bound-from-stage
+pass      exit=0        4.88s  agents/tasks/LJ-1-679/Probe679.agda::At.inBound
+witness: 0 UNRESOLVED of 9, 40.18 s, probe_red=False
