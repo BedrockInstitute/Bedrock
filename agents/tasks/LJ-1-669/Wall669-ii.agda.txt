@@ -1,0 +1,50 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.669] WALL (ii).  The chapter's `Σ₁-matrix` ascribed to `σ₁-up`
+-- at a dummy image.  Expected RED: the certificate lives at `CS.S`,
+-- the image carrier is `Σ[ x ∈ S ] ⟨ x ∈ˢ ∅ ⟩`.  Named `.agda.txt`.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-669.Wall669-ii {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.LevyHierarchy using ( Δ₀; Σ₁; σ-Δ₀ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; ∅-trans )
+open import L.BoundedSubset {ℓ} lem using ( module LevelHood0 )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
+
+open import Cubical.Data.Vec using ( map )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+module CS = hPropStructure 𝒮ʟ
+
+module LH0 = LevelHood0
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+
+opaque
+  matrix : Formula CS.S 4
+  matrix = LH0.matrix
+
+  Δ₀-matrix : Δ₀ matrix
+  Δ₀-matrix = LH0.Δ₀-matrix
+
+  Σ₁-matrix : Σ₁ matrix
+  Σ₁-matrix = σ-Δ₀ Δ₀-matrix
+
+module Abs∅ = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ ∅) ∅-trans
+open Abs∅ using ( _^_ )
+
+wall-image :
+  (δ : Abs∅.SM ^ 4)
+  → ⟨ δ Abs∅.⊨ᵐ matrix ⟩
+  → ⟨ map fst δ Abs∅.⊨ᵛ matrix ⟩
+wall-image = Abs∅.σ₁-up Σ₁-matrix

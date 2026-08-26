@@ -1,0 +1,33 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1500s (perl alarm)
+started 2026-08-26T14:41:56Z
+Checking LJ-1-669.Wall669 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-669/agents/tasks/LJ-1-669/Wall669.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-669/agents/tasks/LJ-1-669/Wall669.agda:57.16-36: error: [UnequalTerms]
+Cubical.HITs.CumulativeHierarchy.Base.V ℓ != Σ S (λ x → x ∈ᶜ isL)
+of type Type (ℓ-suc ℓ)
+when checking that the inferred type of an application
+  (δ : AbsL.SM ^ 4) →
+  ⟨ δ AbsL.⊨ᵐ matrix ⟩ → ⟨ map (λ r → fst r) δ AbsL.⊨ᵛ matrix ⟩
+matches the expected type
+  (δ : AbsL.SM ^ 4) →
+  ⟨ map (λ r → fst r) δ AbsL.⊨ᵛ matrix ⟩ → ⟨ δ AbsL.⊨ᵐ matrix ⟩
+        2.96 real         2.73 user         0.21 sys
+           704692224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45026  page reclaims
+                  47  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                1088  involuntary context switches
+         28303310496  instructions retired
+         11861067617  cycles elapsed
+           645039136  peak memory footprint
+EXIT=42
+ended 2026-08-26T14:41:59Z

@@ -1,0 +1,68 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.669] WALL.  Two ascriptions that the green probe's PART 3
+-- names, expected RED.  Named `.agda.txt` so conjunct 1 does not run
+-- it.  The harness copies it to a temp `.agda` for the wall run and
+-- removes the copy.
+--
+-- Wall (i): `σ₁-up` ascribed to the reverse (ambient to inner).
+-- Wall (ii): the chapter's `Σ₁-matrix` ascribed to `σ₁-up` at a
+--            dummy image, a different constant domain.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-669.Wall669 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.LevyHierarchy using ( Δ₀; Σ₁; σ-Δ₀ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; ∅-trans )
+open import L.BoundedSubset {ℓ} lem using ( module LevelHood0 )
+open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
+
+open import Cubical.Data.Vec using ( map )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+module CS = hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL using ( _^_ )
+
+module LH0 = LevelHood0
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+  zero zero zero zero zero zero zero zero zero zero zero zero zero zero
+
+opaque
+  matrix : Formula CS.S 4
+  matrix = LH0.matrix
+
+  Δ₀-matrix : Δ₀ matrix
+  Δ₀-matrix = LH0.Δ₀-matrix
+
+  Σ₁-matrix : Σ₁ matrix
+  Σ₁-matrix = σ-Δ₀ Δ₀-matrix
+
+-- Wall (i).  Expected: the term `σ₁-up Σ₁-matrix` has type
+-- inner → ambient, not ambient → inner.
+wall-reverse :
+  (δ : AbsL.SM ^ 4)
+  → ⟨ map fst δ AbsL.⊨ᵛ matrix ⟩
+  → ⟨ δ AbsL.⊨ᵐ matrix ⟩
+wall-reverse = AbsL.σ₁-up Σ₁-matrix
+
+-- Wall (ii).  A dummy transitive image (the empty set).  Expected:
+-- `Σ₁-matrix` is a certificate at `CS.S`, not at `Abs∅.SM`.
+-- `∅-trans` is delivered (src/L/Constructible.lagda.md:89).
+module Abs∅ = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ ∅) ∅-trans
+
+wall-image :
+  (δ : Abs∅.SM ^ 4)
+  → ⟨ δ Abs∅.⊨ᵐ matrix ⟩
+  → ⟨ map fst δ Abs∅.⊨ᵛ matrix ⟩
+wall-image = Abs∅.σ₁-up Σ₁-matrix
