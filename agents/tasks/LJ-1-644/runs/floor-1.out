@@ -1,0 +1,31 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T00:49:22Z
+Checking LJ-1-644.Probe644 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-644/agents/tasks/LJ-1-644/Probe644.agda).
+   Checking V.CantorBernstein (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-644/src/V/CantorBernstein.lagda.md).
+ Checking L.CardinalAbove (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-644/src/L/CardinalAbove.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-644/agents/tasks/LJ-1-644/Probe644.agda:65.18-77.34: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-644/agents/tasks/LJ-1-644/Probe644.agda:65.18-22
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-644/agents/tasks/LJ-1-644/Probe644.agda:68.19-23
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-644/agents/tasks/LJ-1-644/Probe644.agda:77.30-34
+        4.13 real         3.83 user         0.22 sys
+           715669504  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45551  page reclaims
+                 193  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 334  voluntary context switches
+                 736  involuntary context switches
+         55794867428  instructions retired
+         17373387650  cycles elapsed
+           654754848  peak memory footprint
+EXIT=42
+ended 2026-08-26T00:49:26Z
