@@ -19,6 +19,76 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 37. `check-survey-quotes.py` checks the ORIGINAL author's report, always, so an escalated critic can never satisfy it. DIAGNOSED HERE, THIRD SIGHTING NAMED BY pod-math, MEASURED on LJ-1.643 and LJ-1.685, 2026-08-26/27
+
+**pod-math NAMED THE SYMPTOM ON THREE SIGHTINGS** (`[LJ-1.636]`'s conjunct-1
+variant, `[LJ-1.643]`, `[LJ-1.685]`): a delivered obligation parks at
+`attempt_max:sys-lint-accept` after several identical critic redispatches, and
+called it "a critic's return carries the survey duty, and four identical
+failures produce four identical returns... nothing in the escalation tells the
+critic what it omitted." **That diagnosis is half right and the fix for that
+half already landed (item 35, PART TWO, the `lint_note` block).** MEASURED on
+`[LJ-1.685]`: attempt 5's brief (`review-LJ-1-685-4.md`) carried the full,
+untruncated ten-path list (item 35 PART THREE also landed by then); its own
+return, `review-of-LJ-1-685-4.md`, individually names and answers every one of
+the ten under `## ARCHIVE USED`/`## LITERATURE USED`. **It parked anyway.**
+
+**THE ACTUAL MECHANISM, ONE LEVEL DEEPER.** `report_of()`
+(`scripts/pod/check-survey-quotes.py:426-437`) resolves to the file matching
+`<task-name>-report.md` FIRST, always, and its own docstring says why: "A
+review companion is another dispatch's return and is not judged here." Every
+accept run for a task calls `check-survey-quotes.py <code>` with the CODE
+ALONE (`SURVEY_QUOTES + [code]`, `precommit_set()`/`precommit_detail()`,
+`scripts/pod/accept.py`), never `--report`, so `report_of()` ALWAYS returns
+the ORIGINAL author's report and `brief_of()` ALWAYS returns the ORIGINAL
+brief. **This pair is fixed at the task's first dispatch and never moves.**
+Once a lint failure escalates to a critic, `check-survey-quotes.py <code>`
+checks the SAME static (brief, report) pair on every subsequent accept run,
+regardless of what the critic writes in `review-of-*.md`: that file is never
+read by this check, by construction, so no critic return of any quality can
+ever change conjunct 6's verdict once the ORIGINAL report is the thing that
+failed it.
+
+**MEASURED, NOT INFERRED, on both sightings.** `[LJ-1.685]`'s
+`lj-1.685-report.md` and `[LJ-1.643]`'s `lj-1.643-report.md` each address a
+DIFFERENT candidate list than the one named in later `lint_detail` output
+(`retrieve.py`'s retrieval is query-dependent per dispatch, so the critic's
+OWN `review-LJ-1-*-N.md` brief carries its own, different candidates) --
+`lj-1.643-report.md:205-230` cleanly answers `JOURNAL-archived.md`,
+`LJ-dispatch-index.md`, `dev/ARCHIVE.md` and five literature citations, none
+of which is what any `sys-lint-accept` iteration ever complained about. The
+BYTE-IDENTICAL facts across consecutive `sys-lint-accept` hits that backlog
+items 23/24/35 already measured are not a caching artifact and not a worktree
+timing gap: they are this check reading the identical static pair every time,
+because nothing else could have changed it.
+
+**NOT FIXED HERE.** Three candidate directions, none chosen:
+1. `check-survey-quotes.py` could prefer the MOST RECENT `review-of-*.md`
+   over the original report once one exists, paired with the LATEST
+   `review-*.md` brief's own injected candidates. Reverses the explicit
+   docstring design ("a review companion... is not judged here") and needs
+   the owner's or section 7.4's author's word that the reversal is intended.
+2. `sys-lint-accept`'s escalation could stop routing a survey-quotes failure
+   to a critic at all, and redispatch the ORIGINAL author instead, since only
+   the original author's report is what this check can ever see. Changes
+   `action = "accept"`'s meaning for this `error_class` specifically.
+3. Task-scoped `*-accept-failed` rows (mathematician-authored, per
+   `added_by = "mathematician"`) could stop naming a critic `head_slot` for a
+   lint-class failure, since AD3 already gives judgement on WHICH obligation
+   an escalation targets to the mathematician, and this is exactly the shape
+   pod-math is already best placed to judge.
+
+**COST, MEASURED.** `[LJ-1.643]`: four `sys-lint-accept` attempts to
+`attempt_max`. `[LJ-1.685]`: one `sys-sigkill-escalate` plus four
+`sys-lint-accept` attempts to `attempt_max`, eight review files
+(`review-LJ-1-685-1` through `-4`, `review-of-LJ-1-685-1` through `-4`)
+produced, none of which the gate could ever have accepted. Both tasks'
+mathematics was delivered before the first `sys-lint-accept` hit
+(`obligations_delta -1`/`obligations_open 0` from attempt 0 onward in both
+cases). Both records are R3/AD10 corpus-locked (`[LJ-1.685]`: `c-4537`,
+`c-4547`, four `c-455*`/`c-456*` rows, all `provenance: "live"`), so no batch
+proposal can move either regardless of which of the three cures is chosen.
+
 ### 36. `heads.toml` changes went silently inert for the resident process's whole lifetime. FIXED 2026-08-26
 
 **FOUND BY THE OWNER, NOT BY REVIEW.** They asked why `[LJ-1.662]`'s `coder` dispatch
