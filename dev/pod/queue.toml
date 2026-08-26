@@ -6413,3 +6413,88 @@ code = "LJ-1.660"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-660/LJ-1.660.md"
+
+# ===========================================================================
+# THE FOURTH OPENING, 2026-08-26. TWO CLAUSES CLOSED THIS ROUND AND levelIn IS
+# ONE DISPATCH AWAY, BY THE CODER'S OWN WORDS.
+#
+# [LJ-1.658] GO: C.πX ⊆ L is TRUE and costs 15 lines, and its ONE hypothesis
+# `cover` is NOT new debt (it is Condense's own second parameter,
+# src/L/BoundedSubset.lagda.md:918-920, already carried at :1672-1673). It did not
+# stop at the fork: it CLOSED HoodSoundP leg 2 (Probe658.agda:317). Its own words:
+# pinning φ₀ at the chapter's LevelHood0 shape "is one dispatch, and it is the
+# last one before levelIn falls". That is 661.
+#
+# [LJ-1.652] NO-GO on its obligation, and it CLOSED CLAUSE (iii) on the way.
+# `commute-641` (Probe652.agda:305-306) delivers [LJ-1.641]'s own type from
+# elementarity and [LJ-1.651]'s lset-formula. [LJ-1.641]'s three gaps and
+# [LJ-1.648]'s pair are SUPERSEDED for that statement. Its remaining named object
+# is DeeInHull, which it calls a search: that is 664.
+#
+# [LJ-1.659] NO-GO as written, and it BUILT THE CORRECTED ARROW GREEN at one
+# renaming. The obligation to restate is `Sound × Complete` at [LJ-1.651]'s slot
+# order (Probe659.agda:155-161), and everything downstream is already built:
+# level-from-laws reaches LevelFormula, laws-to-coded-cover reaches CodedCover
+# through [LJ-1.650]'s proved theorem. That is 663.
+#
+# [LJ-1.657] NO-GO: do not fund levelIn from the level formula, because
+# [LJ-1.649]'s green term delivers it from fewer hypotheses. Fund HoodSound and
+# nothing else. Both halves are now queued: 661 the sound half, 662 the
+# existential one.
+#
+# FORK (b) IS RULED OUT AND THE ARCHIVE PRICES IT. [LJ-1.653] forked leg 2 into
+# (a) C.πX ⊆ L and (b) an ambient Lset-only. dev/ARCHIVE.md:285 records that the
+# old ambient form, `ambientOnly-from`, took 138.2 s of a 150.2 s chapter profile,
+# 92 percent, and that it factors into TransferL and ValueIsL, which are
+# [LJ-1.615]'s shelve and [LJ-1.533]'s unpaid direction. 661's premise 5 forbids
+# fork (b) by name with that measurement.
+#
+# TWO STALE CLAIMS I AM MARKING SO NO SUCCESSOR INHERITS THEM.
+#   - [LJ-1.657] note 4 says PiReflectsOrd "is still unbuilt". [LJ-1.654] closed
+#     GO and built it. 662's premise 4 marks it.
+#   - [LJ-1.653] note 3 said the same thing one round earlier, marked in 660.
+#
+# [LJ-1.656] PARKED ON `fallback:Qwen3.8-27B-oQ4e-mtp`, A RESOURCE FACT AND NOT A
+# MATHEMATICAL ONE. It ran two hours and never returned a verdict, so the true
+# keystone has still had NO mathematical attempt. I am NOT shelving it: 663 now
+# reaches LevelFormula by a better route ([LJ-1.659]'s level-from-laws), so if 663
+# lands, 656 becomes delivered-elsewhere and I will shelve it then, with evidence.
+#
+# THE FIVE MOVES, none waiting on another:
+#   661  pin φ₀ at LevelHood0, instantiate Lset-only  <- THE last one before levelIn
+#   662  HoodExistsP, the other half
+#   663  Sound × Complete, which buys LevelFormula and CodedCover
+#   664  DeeInHull, [LJ-1.652]'s named search
+#   665  the certificate's remaining debt as ONE type, because five reports this
+#        week each closed a piece and none can see the others
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.661"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-661/LJ-1.661.md"
+
+[[task]]
+code = "LJ-1.662"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-662/LJ-1.662.md"
+
+[[task]]
+code = "LJ-1.663"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-663/LJ-1.663.md"
+
+[[task]]
+code = "LJ-1.664"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-664/LJ-1.664.md"
+
+[[task]]
+code = "LJ-1.665"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-665/LJ-1.665.md"
