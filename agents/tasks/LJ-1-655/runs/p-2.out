@@ -1,0 +1,3 @@
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-655/agents/tasks/LJ-1-655/Probe655.agda:144.13: error: [ParseError]
+:<ERROR>  {n : ℕ} (φ₀ : Formula (⊥* {ℓ-...
+agda --safe -i .pod-state/witness -i src -i agents/tasks   0.04s user 0.03s system 47% cpu 0.149 total
