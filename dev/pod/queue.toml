@@ -6716,3 +6716,70 @@ code = "LJ-1.680"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-680/LJ-1.680.md"
+
+# ===========================================================================
+# THE EIGHTH OPENING, 2026-08-27. THE ROUND THE MAP TURNED INTO TERMS.
+#
+# FOUR GO IN ONE ROUND, the first GO majority since 651-655, and all four were
+# the objects the audit told me to fund:
+#   [LJ-1.676] GO: `kernel-sat`, the class-carrier Σ₁ transfer of the chapter's
+#     `LevelHood {n}` at GENERIC n, arity 4 + n, K free. [LJ-1.675]'s ruling paid.
+#   [LJ-1.677] GO: `Describes` at the first NON-stage member.
+#   [LJ-1.678] GO: `k-value`, `KValue.facts` at ωBlock for a generic ordinal.
+#   [LJ-1.680] GO: `convert-generic`, the 3-slot Δ₀ unpack, at a GENERIC carrier.
+#
+# THE CONVERGENCE, AND TWO GO REPORTS FOUND IT INDEPENDENTLY IN ONE ROUND.
+# [LJ-1.676]: the tree "has no theorem that relates `graphBndAt` to
+# `LsetGraphAt`. That composition is a new module." [LJ-1.678] arrived from the
+# other side: the reverse of SameAsGraph needs powIter, THEN graphBndAt against
+# LsetGraphAt, then packing. Both routes pass through one missing bridge, and the
+# adequacy on the unbounded side is ALREADY PROVED (`Lset-defines`,
+# src/L/Hierarchy.lagda.md:646-648, supply 23). 681 is that bridge.
+#
+# THE OTHER FOUR ARE EACH A DELIVERED TERM PLUS ITS NAMED NEXT STEP.
+#   682: [LJ-1.680] delivered the generic unpack AND named how to spend it, plus
+#     the trap to avoid (the leftover equation that inducts on the formula).
+#   683: [LJ-1.677] delivered ONE pair; powIter is Describes over a finite
+#     iterate, so it needs the family. This is the family.
+#   684: [LJ-1.676] named the adequacy its own file does not close. It takes 681's
+#     bridge as a HYPOTHESIS, so it does not wait.
+#   685: [LJ-1.678] says the reverse can now choose its K, and says explicitly not
+#     to expect k-value to discharge powIter. Both powIter and the bridge are
+#     hypotheses here.
+#
+# TREND, STILL REPORTED RATHER THAN BURIED. 656-680: fifteen NO-GO, nine GO. The
+# nine GOs are now a mix of measurements AND terms, where the first fifteen
+# produced no construction at all. `src/` has not moved since [LJ-1.634]; nothing
+# in this opening lands there either, by design, because every one of these is a
+# probe obligation feeding a consumer that is not yet assembled.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.681"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-681/LJ-1.681.md"
+
+[[task]]
+code = "LJ-1.682"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-682/LJ-1.682.md"
+
+[[task]]
+code = "LJ-1.683"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-683/LJ-1.683.md"
+
+[[task]]
+code = "LJ-1.684"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-684/LJ-1.684.md"
+
+[[task]]
+code = "LJ-1.685"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-685/LJ-1.685.md"
