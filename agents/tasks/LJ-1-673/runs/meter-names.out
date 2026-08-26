@@ -1,0 +1,10 @@
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::count-matrix₃  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.inBound  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.BoundInStage  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.bound-from-stage  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.Completeness  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.Convert  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.WitnessedAt  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.AmbientAt  (grouped run, exit 0)
+pass      exit=0        3.89s  agents/tasks/LJ-1-673/Probe673.agda::At.matrix₃-Code  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 9, 3.89 s, probe_red=False

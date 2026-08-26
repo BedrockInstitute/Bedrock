@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T16:00:27Z
+Checking LJ-1-673.Probe673 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-673/agents/tasks/LJ-1-673/Probe673.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-673/agents/tasks/LJ-1-673/Probe673.agda:113.3-17: error: [ClashingDefinition]
+Multiple definitions of LsetGroundedAt. Previous definition at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-673/agents/tasks/LJ-1-667/Probe667.agda:154.1-15
+when scope checking the declaration
+  LsetGroundedAt : (w : P652.Witnessed Lset) → Type (ℓ-suc ℓ)
+        4.46 real         3.06 user         0.52 sys
+           531906560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               59322  page reclaims
+                4168  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 766  voluntary context switches
+                5428  involuntary context switches
+         31368177866  instructions retired
+         14229488609  cycles elapsed
+           558990296  peak memory footprint
+EXIT=42
+ended 2026-08-26T16:00:31Z
