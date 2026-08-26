@@ -1,0 +1,24 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T18:13:34Z
+Checking LJ-1-678.Probe678 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-678/agents/tasks/LJ-1-678/Probe678.agda).
+        2.14 real         1.95 user         0.17 sys
+           546652160  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               35409  page reclaims
+                  18  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 633  involuntary context switches
+         21698924704  instructions retired
+          8558357490  cycles elapsed
+           487932864  peak memory footprint
+EXIT=0
+ended 2026-08-26T18:13:36Z
