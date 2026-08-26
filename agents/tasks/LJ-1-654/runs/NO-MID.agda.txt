@@ -1,0 +1,229 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.654]  RED SLICE 2 of 3:  ONE PASS OF `lift-to-hull` IS NOT
+-- ENOUGH, AND THE SECOND PASS BUYS EXACTLY ONE MEMBERSHIP.
+--
+-- This is the delivered `trans-reflect` with the `φ-mid` pass DELETED.
+-- `φ-deep` lands the LOWER endpoint `v'` in the hull, and it names an
+-- intermediate set `t` with `v' ∈ t ∈ y`, but `t` is the witness of an
+-- object-language `∃` evaluated in the STAGE, so `t` is a stage member
+-- and not a hull member.
+--
+-- IT LEAVES EXACTLY ONE HOLE, at `⟨ fst t ∈ˢ M ⟩`.  Everything else
+-- closes.  That one hole is what the second pass at `φ-mid` pays for,
+-- and it is why this task costs two extractions per transitivity
+-- failure and not one.
+--
+-- RED BY DESIGN (one interaction hole).  `.txt`, never `.agda`.
+--
+-- TO REPRODUCE:
+--   cp agents/tasks/LJ-1-654/runs/NO-MID.agda.txt \
+--      agents/tasks/LJ-1-654/runs/NoMid654.agda
+--   agents/tasks/LJ-1-654/runs/run.sh \
+--      agents/tasks/LJ-1-654/runs/NoMid654.agda no-mid-1 600
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-654.runs.NoMid654 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using
+  ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
+open import FOL.Manipulation.Relabelling using ( mapFo )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; isTransV; Lset )
+open import L.Hull {ℓ} lem using ( module AtStage )
+open import L.BoundedSubset {ℓ} lem using ( module HullExt )
+open import V.Collapse {ℓ} using ( module Collapse; isExt )
+
+open import Cubical.Data.Sigma using ( Σ-syntax; _×_ )
+import Cubical.Data.Empty as Empty
+import Cubical.Data.Sum as Sum
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁; ∥_∥₁ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+module HullStage (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module ASt = AtStage lam ordλ
+  module H = ASt.Hull X X⊆L ∅∈λ
+
+  M : S
+  M = H.T.Hull
+
+  module C = Collapse M
+
+  module HE = HullExt lam ordλ X X⊆L ∅∈λ
+
+  hullExt : isExt M
+  hullExt = HE.hullExt
+
+  module IE = C.InjExt hullExt
+
+  open H.T using ( Code; val )
+
+  SL : Type (ℓ-suc ℓ)
+  SL = ASt.SL
+
+  Sat : ASt.SL → Formula Code 1 → Type (ℓ-suc ℓ)
+  Sat a φ = ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo val φ) ⟩
+
+  -- ===================================================================
+  -- THE ONE PIECE OF MATHEMATICS, WRITTEN ONCE AND GENERIC IN THE
+  -- FORMULA (W2/DD4).  The hull is closed under definable witnesses, so
+  -- a global witness of any one-variable formula over the hull's codes
+  -- can be replaced by a hull member satisfying the same formula.  It
+  -- is `H.hull-closed` with the truncation introduced, and it is used
+  -- three times below.
+  -- ===================================================================
+
+  lift-to-hull : (φ : Formula Code 1) (a : ASt.SL) → Sat a φ
+               → ∥ Σ[ b ∈ ASt.SL ] (⟨ fst b ∈ˢ M ⟩ × Sat b φ) ∥₁
+  lift-to-hull φ a sat = H.hull-closed φ ∣ a , sat ∣₁
+
+  -- ===================================================================
+  -- THE THREE FORMULAS.  Each has ONE free variable, `var zero`, which
+  -- is the slot the hull fills.
+  -- ===================================================================
+
+  -- "w sits one level too deep in c":  ∃t (w ∈ t ∧ t ∈ c) ∧ ¬ (w ∈ c)
+  φ-deep : Code → Formula Code 1
+  φ-deep c = (∃̇ ((var (suc zero) ∈̇ var zero) ∧̇ (var zero ∈̇ con c)))
+           ∧̇ (¬̇ (var zero ∈̇ con c))
+
+  -- "w is a non-transitive member of c":
+  --   ∃u ∃v ((v ∈ u ∧ u ∈ w) ∧ ¬ (v ∈ w)) ∧ w ∈ c
+  φ-bad : Code → Formula Code 1
+  φ-bad c = (∃̇ (∃̇ (((var zero ∈̇ var (suc zero))
+                   ∧̇ (var (suc zero) ∈̇ var (suc (suc zero))))
+                  ∧̇ (¬̇ (var zero ∈̇ var (suc (suc zero)))))))
+          ∧̇ (var zero ∈̇ con c)
+
+  -- ===================================================================
+  -- STEP 1.  THE COLLAPSE REFLECTS TRANSITIVITY AT A HULL MEMBER.
+  -- ===================================================================
+
+  trans-reflect : (y : S) → ⟨ y ∈ˢ M ⟩ → isTransV (C.π y) → isTransV y
+  trans-reflect y y∈M tπy {u} {v} v∈u u∈y =
+    Sum.rec (λ h → h) (λ nh → Empty.rec (bad nh)) (lem (v ∈ˢ y))
+    where
+    y∈L : ⟨ y ∈ˢ Lset lam ⟩
+    y∈L = H.Hull⊆L y y∈M
+    u∈L : ⟨ u ∈ˢ Lset lam ⟩
+    u∈L = ASt.Ltr u∈y y∈L
+    v∈L : ⟨ v ∈ˢ Lset lam ⟩
+    v∈L = ASt.Ltr v∈u u∈L
+
+    bad : (⟨ v ∈ˢ y ⟩ → Empty.⊥) → Empty.⊥
+    bad nh = PT.rec Empty.isProp⊥ withCode (H.hull-member y y∈M)
+      where
+      withCode : Σ[ c ∈ Code ] (fst (val c) ≡ y) → Empty.⊥
+      withCode (c , ec) =
+        PT.rec Empty.isProp⊥ deep (lift-to-hull (φ-deep c) (v , v∈L) sat)
+        where
+        sat : Sat (v , v∈L) (φ-deep c)
+        sat = ∣ (u , u∈L) , (v∈u , subst (λ w → ⟨ u ∈ˢ w ⟩) (sym ec) u∈y) ∣₁
+            , λ h → nh (subst (λ w → ⟨ v ∈ˢ w ⟩) ec h)
+
+        -- the hull member one level too deep, and its code
+        deep : Σ[ b ∈ ASt.SL ] (⟨ fst b ∈ˢ M ⟩ × Sat b (φ-deep c))
+             → Empty.⊥
+        deep (b , b∈M , (ex , nb)) =
+          PT.rec Empty.isProp⊥ withCodeD (H.hull-member (fst b) b∈M)
+          where
+          v' : S
+          v' = fst b
+          nv' : ⟨ v' ∈ˢ y ⟩ → Empty.⊥
+          nv' h = nb (subst (λ w → ⟨ v' ∈ˢ w ⟩) (sym ec) h)
+
+          withCodeD : Σ[ d ∈ Code ] (fst (val d) ≡ v') → Empty.⊥
+          withCodeD (d , ed) = PT.rec Empty.isProp⊥ mid ex
+            where
+            -- lift the witness t of the outer ∃ to a hull member
+            mid : Σ[ t ∈ ASt.SL ]
+                    (⟨ v' ∈ˢ fst t ⟩ × ⟨ fst t ∈ˢ fst (val c) ⟩)
+                → Empty.⊥
+            mid (t , v'∈t , t∈c) = nv' v'∈y
+              where
+              u' : S
+              u' = fst t
+              u'∈y : ⟨ u' ∈ˢ y ⟩
+              u'∈y = subst (λ w → ⟨ u' ∈ˢ w ⟩) ec t∈c
+              πv'∈πu' : ⟨ C.π v' ∈ˢ C.π u' ⟩
+              πv'∈πu' = C.π∈-fwd u' v' v'∈t b∈M
+              πu'∈πy : ⟨ C.π u' ∈ˢ C.π y ⟩
+              πu'∈πy = C.π∈-fwd y u' u'∈y {! fst t ∈ M !}
+              v'∈y : ⟨ v' ∈ˢ y ⟩
+              v'∈y = IE.π∈-bwd y v' y∈M b∈M (tπy πv'∈πu' πu'∈πy)
+
+  -- ===================================================================
+  -- STEP 2.  EVERY MEMBER OF A HULL MEMBER IS TRANSITIVE.
+  -- ===================================================================
+
+  mem-trans : (y : S) → ⟨ y ∈ˢ M ⟩ → IsOrd (C.π y)
+            → (x : S) → ⟨ x ∈ˢ y ⟩ → isTransV x
+  mem-trans y y∈M oπy x x∈y {u} {v} v∈u u∈x =
+    Sum.rec (λ h → h) (λ nh → Empty.rec (bad nh)) (lem (v ∈ˢ x))
+    where
+    y∈L : ⟨ y ∈ˢ Lset lam ⟩
+    y∈L = H.Hull⊆L y y∈M
+    x∈L : ⟨ x ∈ˢ Lset lam ⟩
+    x∈L = ASt.Ltr x∈y y∈L
+    u∈L : ⟨ u ∈ˢ Lset lam ⟩
+    u∈L = ASt.Ltr u∈x x∈L
+    v∈L : ⟨ v ∈ˢ Lset lam ⟩
+    v∈L = ASt.Ltr v∈u u∈L
+
+    bad : (⟨ v ∈ˢ x ⟩ → Empty.⊥) → Empty.⊥
+    bad nh = PT.rec Empty.isProp⊥ withCode (H.hull-member y y∈M)
+      where
+      withCode : Σ[ c ∈ Code ] (fst (val c) ≡ y) → Empty.⊥
+      withCode (c , ec) =
+        PT.rec Empty.isProp⊥ got (lift-to-hull (φ-bad c) (x , x∈L) sat)
+        where
+        sat : Sat (x , x∈L) (φ-bad c)
+        sat = ∣ (u , u∈L) , ∣ (v , v∈L) , ((v∈u , u∈x) , nh) ∣₁ ∣₁
+            , subst (λ w → ⟨ x ∈ˢ w ⟩) (sym ec) x∈y
+
+        got : Σ[ b ∈ ASt.SL ] (⟨ fst b ∈ˢ M ⟩ × Sat b (φ-bad c))
+            → Empty.⊥
+        got (b , b∈M , (ex , b∈c)) = PT.rec Empty.isProp⊥ outer ex
+          where
+          x' : S
+          x' = fst b
+          x'∈y : ⟨ x' ∈ˢ y ⟩
+          x'∈y = subst (λ w → ⟨ x' ∈ˢ w ⟩) ec b∈c
+          tx' : isTransV x'
+          tx' = trans-reflect x' b∈M
+                  (oπy .snd (C.π x') (C.π∈-fwd y x' x'∈y b∈M))
+
+          outer : Σ[ p ∈ ASt.SL ]
+                    ∥ Σ[ r ∈ ASt.SL ]
+                        ((⟨ fst r ∈ˢ fst p ⟩ × ⟨ fst p ∈ˢ x' ⟩)
+                         × (⟨ fst r ∈ˢ x' ⟩ → Empty.⊥)) ∥₁
+                → Empty.⊥
+          outer (p , inn) = PT.rec Empty.isProp⊥ inner inn
+            where
+            inner : Σ[ r ∈ ASt.SL ]
+                      ((⟨ fst r ∈ˢ fst p ⟩ × ⟨ fst p ∈ˢ x' ⟩)
+                       × (⟨ fst r ∈ˢ x' ⟩ → Empty.⊥))
+                  → Empty.⊥
+            inner (r , ((r∈p , p∈x') , nr)) = nr (tx' r∈p p∈x')
+
+  -- ===================================================================
+  -- THE OBLIGATION.
+  -- ===================================================================
+
+  PiReflectsOrd : (y : S) → ⟨ y ∈ˢ M ⟩ → IsOrd (C.π y) → IsOrd y
+  PiReflectsOrd y y∈M oπy =
+    trans-reflect y y∈M (oπy .fst) , mem-trans y y∈M oπy

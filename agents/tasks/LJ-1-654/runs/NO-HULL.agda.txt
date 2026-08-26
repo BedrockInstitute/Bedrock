@@ -1,0 +1,67 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.654]  RED SLICE 1 of 3:  THE COLLAPSE ALONE DOES NOT DO IT.
+--
+-- This is `trans-reflect` written the obvious way: cross to the range
+-- with `π∈-fwd`, use the range's transitivity, come back with
+-- `π∈-bwd`.  No hull extraction anywhere.
+--
+-- IT LEAVES THREE HOLES, AND EVERY ONE OF THEM IS A HULL MEMBERSHIP
+-- FOR A SET THAT HAS NO REASON TO BE A HULL MEMBER.  `u` is a member
+-- of the hull member `y` and `v` is a member of `u`; the hull is NOT
+-- transitive, so neither is in `M`.  That is the whole reason
+-- [LJ-1.654] costs two passes of `lift-to-hull` instead of none, and
+-- it is the measurement behind [LJ-1.649] section 4.1's caution
+-- ("`π∈-bwd` needs BOTH endpoints inside `M`",
+-- agents/tasks/LJ-1-649/lj-1.649-report.md:241-244).
+--
+-- RED BY DESIGN (three interaction holes).  `.txt`, never `.agda`.
+--
+-- TO REPRODUCE:
+--   cp agents/tasks/LJ-1-654/runs/NO-HULL.agda.txt \
+--      agents/tasks/LJ-1-654/runs/NoHull654.agda
+--   agents/tasks/LJ-1-654/runs/run.sh \
+--      agents/tasks/LJ-1-654/runs/NoHull654.agda no-hull-1 600
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-654.runs.NoHull654 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; isTransV; Lset )
+open import L.Hull {ℓ} lem using ( module AtStage )
+open import L.BoundedSubset {ℓ} lem using ( module HullExt )
+open import V.Collapse {ℓ} using ( module Collapse; isExt )
+
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+module HullStage (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module ASt = AtStage lam ordλ
+  module H = ASt.Hull X X⊆L ∅∈λ
+
+  M : S
+  M = H.T.Hull
+
+  module C = Collapse M
+  module HE = HullExt lam ordλ X X⊆L ∅∈λ
+  module IE = C.InjExt HE.hullExt
+
+  -- THE OBVIOUS ROUTE.  Everything closes except the three memberships.
+  trans-reflect-no-hull : (y : S) → ⟨ y ∈ˢ M ⟩ → isTransV (C.π y)
+                        → isTransV y
+  trans-reflect-no-hull y y∈M tπy {u} {v} v∈u u∈y =
+    IE.π∈-bwd y v y∈M {! v ∈ M !}
+      (tπy (C.π∈-fwd u v v∈u {! v ∈ M !})
+           (C.π∈-fwd y u u∈y {! u ∈ M !}))
