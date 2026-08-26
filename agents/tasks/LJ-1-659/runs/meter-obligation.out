@@ -1,0 +1,2 @@
+missing   exit=42       2.97s  agents/tasks/LJ-1-659/Probe659.agda::lset-formula-to-level  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-659/.pod-state/witness/Witness-POD-92124dbe.agda:44)
+witness: 1 UNRESOLVED of 1, 2.97 s, probe_red=False
