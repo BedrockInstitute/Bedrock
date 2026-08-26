@@ -1,0 +1,3 @@
+pass      exit=0        2.27s  agents/tasks/LJ-1-664/Probe664.agda::census-DefAt  (grouped run, exit 0)
+pass      exit=0        2.27s  agents/tasks/LJ-1-664/Probe664.agda::defAt-bound  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 2, 2.27 s, probe_red=False

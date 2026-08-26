@@ -1,0 +1,65 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.664]  FLOOR SLICE.  The obligation STATED, with a HOLE standing
+-- in for the term, in the smallest import set that holds it.
+--
+-- This slice prices what the FRAME costs before any proof is attempted,
+-- as the standing coder clause orders.  The statement names Code, val,
+-- Lset, IsOrd, 𝒟ₒ and hull membership, and NOTHING ELSE.  Collapse,
+-- Formula, mapFo and CloseSyntax are not in this file.
+--
+-- RED BY DESIGN (one interaction hole).  Nothing is postulated.
+-- Nothing lands in src/.
+--
+-- DELIVERED WITH A `.txt` SUFFIX, ON PURPOSE.  Every `.agda` under a
+-- task's own directory is a verification target of the acceptance run
+-- (scripts/pod/facts.py:489, `verification_target`), so a red slice
+-- left as `.agda` would fail conjunct 1 and would report this task's
+-- landed obligation as a NO-GO.  [LJ-1.636] and [LJ-1.643] each lost
+-- real attempts to exactly that.
+--
+-- TO REPRODUCE:
+--   cp agents/tasks/LJ-1-664/runs/FLOOR.agda.txt \
+--      agents/tasks/LJ-1-664/runs/Floor664.agda
+--   agents/tasks/LJ-1-664/runs/run.sh \
+--      agents/tasks/LJ-1-664/runs/Floor664.agda floor-1 600
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-664.runs.Floor664 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; 𝒟ₒ )
+open import L.Hull {ℓ} lem using ( module AtStage )
+
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- Telescope as [LJ-1.462]'s HullStage, Probe462.agda:78-88, minus
+-- `module C = Collapse M`, which DeeInHull does not name.  Same cut
+-- [LJ-1.647] took (Probe647.agda:62-72).
+module HullStage (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module ASt = AtStage lam ordλ
+  module H = ASt.Hull X X⊆L ∅∈λ
+
+  M : S
+  M = H.T.Hull
+
+  -- THE OBLIGATION, the type [LJ-1.652] printed
+  -- (Probe652.agda:280-281, runs/residue-1.out:4).
+  DeeInHull : (y : S) → ⟨ y ∈ˢ M ⟩ → ⟨ 𝒟ₒ y ∈ˢ M ⟩
+  DeeInHull = ?

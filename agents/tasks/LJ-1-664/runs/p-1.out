@@ -1,0 +1,47 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T12:39:07Z
+Checking LJ-1-664.Probe664 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-664/agents/tasks/LJ-1-664/Probe664.agda).
+ Checking LJ-1-647.Probe647 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-664/agents/tasks/LJ-1-647/Probe647.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-664/agents/tasks/LJ-1-664/Probe664.agda:82.11-47: warning: -W[no]ModuleDoesntExport
+The module HS doesn't export the following:
+  Code
+  val
+when scope checking the declaration
+  open HS using (Code; val; hull-closed-op∥)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-664/agents/tasks/LJ-1-664/Probe664.agda:88.44-48: error: [NotInScope]
+Not in scope:
+  Code
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-664/agents/tasks/LJ-1-664/Probe664.agda:88.44-48
+    (did you mean
+       '.#L.Hull-3004288610742031311.AtStage.Hull.T.Code' or
+       '.#L.Hull-3004288610742031311.TermAlgebra.Code' or
+       '.#LJ-1-647.Probe647-16610559875093737267.HullStage.ASt.Hull.T.Code' or
+       '.#LJ-1-647.Probe647-16610559875093737267.HullStage.H.T.Code' or
+       'AtStage.Hull.T.Code' or
+       'HS.ASt.Hull.T.Code' or
+       'HS.H.T.Code' or
+       'HullStage.ASt.Hull.T.Code' or
+       'HullStage.H.T.Code'?)
+when scope checking Code
+        2.28 real         2.08 user         0.18 sys
+           507002880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32930  page reclaims
+                  77  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   3  voluntary context switches
+                 502  involuntary context switches
+         24093281819  instructions retired
+          8980838694  cycles elapsed
+           446776208  peak memory footprint
+EXIT=42
+ended 2026-08-26T12:39:10Z
