@@ -1,0 +1,33 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T22:17:26Z
+Checking LJ-1-687.Probe687 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-687/agents/tasks/LJ-1-687/Probe687.agda).
+ Checking LJ-1-683.Probe683 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-687/agents/tasks/LJ-1-683/Probe683.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-687/agents/tasks/LJ-1-687/Probe687.agda:137.17-23: error: [NotInScope]
+Not in scope:
+  subst₂
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-687/agents/tasks/LJ-1-687/Probe687.agda:137.17-23
+    (did you mean
+       'Base.Prelude.subst' or
+       'subst'?)
+when scope checking subst₂
+        1.16 real         1.00 user         0.11 sys
+           288948224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19552  page reclaims
+                 146  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  43  voluntary context switches
+                 490  involuntary context switches
+         11578320023  instructions retired
+          4558618953  cycles elapsed
+           228770560  peak memory footprint
+EXIT=42
+ended 2026-08-26T22:17:27Z

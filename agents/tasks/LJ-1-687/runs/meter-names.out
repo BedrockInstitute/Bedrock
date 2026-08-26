@@ -1,0 +1,6 @@
+pass      exit=0        0.91s  agents/tasks/LJ-1-687/Probe687.agda::describes-supplier  (grouped run, exit 0)
+pass      exit=0        0.91s  agents/tasks/LJ-1-687/Probe687.agda::pair-spd  (grouped run, exit 0)
+pass      exit=0        0.91s  agents/tasks/LJ-1-687/Probe687.agda::pair-dee⊆  (grouped run, exit 0)
+pass      exit=0        0.91s  agents/tasks/LJ-1-687/Probe687.agda::classify  (grouped run, exit 0)
+pass      exit=0        0.91s  agents/tasks/LJ-1-687/Probe687.agda::eq∈dee  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 5, 0.91 s, probe_red=False

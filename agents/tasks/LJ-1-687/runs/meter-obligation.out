@@ -1,0 +1,2 @@
+pass      exit=0        1.33s  agents/tasks/LJ-1-687/Probe687.agda::describes-supplier
+witness: 0 UNRESOLVED of 1, 1.33 s, probe_red=False
