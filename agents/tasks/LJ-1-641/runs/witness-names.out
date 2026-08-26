@@ -1,0 +1,5 @@
+pass      exit=0        3.45s  agents/tasks/LJ-1-641/Probe641.agda::Frame.commute-from-gaps  (grouped run, exit 0)
+pass      exit=0        3.45s  agents/tasks/LJ-1-641/Probe641.agda::Frame.residue-suffices  (grouped run, exit 0)
+pass      exit=0        3.45s  agents/tasks/LJ-1-641/Probe641.agda::Frame.commute-no-ord-from-gaps  (grouped run, exit 0)
+pass      exit=0        3.45s  agents/tasks/LJ-1-641/Probe641.agda::Frame.π-member'  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 4, 3.45 s, probe_red=False
