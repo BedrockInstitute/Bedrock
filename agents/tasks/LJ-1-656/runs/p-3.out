@@ -1,0 +1,130 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T08:45:02Z
+Checking LJ-1-656.Probe656 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-656/agents/tasks/LJ-1-656/Probe656.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-656/agents/tasks/LJ-1-656/Probe656.agda:139.72-73: error: [NotInScope]
+Not in scope:
+  ^
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-656/agents/tasks/LJ-1-656/Probe656.agda:139.72-73
+    (did you mean
+       '.#L.BoundedSubset-17767360819800789395.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Amb.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AtHullInstance.CIso.I.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AtHullInstance.CIso.I.SemPM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AtHullInstance.DR.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AtHullInstance.DR.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AtHullInstance.DR.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AtHullInstance.DR.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.AtHullInstance.DR.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.DR54.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.DR54.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.DR54.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.DR54.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.DR54.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HE.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HE.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HE.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HE.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HED.A.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HED.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HED.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HED.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HED.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HED.CseL.Sem._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HED.CseM.Sem._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HS.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HS.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HS.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.BSA634.HS.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.CloseSem.Sem._^_' or
+       '.#L.BoundedSubset-17767360819800789395.CollapseIso.I.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.CollapseIso.I.SemPM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.DR54.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.DR54.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.DR54.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.DR54.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.DR54.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HE.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HE.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HE.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HE.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HED.A.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HED.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HED.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HED.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HED.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HED.CseL.Sem._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HED.CseM.Sem._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HS.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HS.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HS.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.Devlin55.BoundedSubsetAt.HS.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.DownReflect.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.DownReflect.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.DownReflect.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.DownReflect.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.DownReflect.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullElemDown.A.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullElemDown.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullElemDown.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullElemDown.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullElemDown.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullElemDown.CseL.Sem._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullElemDown.CseM.Sem._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullExt.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullExt.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullExt.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullExt.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullStage.ASt.AbsL.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullStage.ASt.AbsL.SemV._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullStage.ASt.AbsL._^_' or
+       '.#L.BoundedSubset-17767360819800789395.HullStage.ASt.AtM.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.IsoInv.SemM._^_' or
+       '.#L.BoundedSubset-17767360819800789395.IsoInv.SemPM._^_' or
+       '.#L.Coding.Model-11046608540015920983.AbsL.SemM._^_' or
+       '.#L.Coding.Model-11046608540015920983.AbsL.SemV._^_' or
+       '.#L.Coding.Model-11046608540015920983.AbsL._^_' or
+       '.#L.Condensation-9629883003585653396.AbsL.SemM._^_' or
+       '.#L.Condensation-9629883003585653396.AbsL.SemV._^_' or
+       '.#L.Condensation-9629883003585653396.AbsL._^_' or
+       '.#L.Definability-5320738302199684128.DefOf.Refine.Abs.SemM._^_' or
+       '.#L.Definability-5320738302199684128.DefOf.Refine.Abs.SemV._^_' or
+       '.#L.Definability-5320738302199684128.DefOf.Refine.Abs._^_' or
+       '.#L.Definability-5320738302199684128.DefOf.SemanticsM._^_' or
+       'AbsLC.SemM._^_' or
+       'AbsLC.SemV._^_' or
+       'AbsLC._^_' or
+       'DefOf.Refine.Abs.SemM._^_' or
+       'DefOf.Refine.Abs.SemV._^_' or
+       'DefOf.Refine.Abs._^_' or
+       'DefOf.SemanticsM._^_' or
+       'FOL.Absoluteness.Single.SemM._^_' or
+       'FOL.Absoluteness.Single.SemV._^_' or
+       'FOL.Absoluteness.Single._^_' or
+       'HullStage.ASt.AbsL.SemM._^_' or
+       'HullStage.ASt.AbsL.SemV._^_' or
+       'HullStage.ASt.AbsL._^_' or
+       'HullStage.ASt.AtM.SemM._^_'?)
+when scope checking ^
+        6.16 real         2.78 user         0.34 sys
+           582287360  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               33906  page reclaims
+                4195  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 585  voluntary context switches
+                5833  involuntary context switches
+         28364962534  instructions retired
+         12144033373  cycles elapsed
+           525452272  peak memory footprint
+EXIT=42
+ended 2026-08-26T08:45:08Z

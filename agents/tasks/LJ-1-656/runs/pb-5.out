@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+free=29% at start, waited 2 polls of 30 s
+started 2026-08-26T09:45:27Z
+Checking LJ-1-656.Probe656B (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-656/agents/tasks/LJ-1-656/Probe656B.agda).
+        4.43 real         3.82 user         0.30 sys
+           858898432  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49850  page reclaims
+                4325  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 578  voluntary context switches
+                3186  involuntary context switches
+         47556648948  instructions retired
+         16228152125  cycles elapsed
+           798459032  peak memory footprint
+EXIT=0
+ended 2026-08-26T09:45:32Z

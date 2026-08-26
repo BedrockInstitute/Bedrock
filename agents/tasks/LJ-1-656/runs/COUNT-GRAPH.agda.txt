@@ -1,0 +1,36 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.656] MEASUREMENT 1.  THIS FILE CANNOT TYPECHECK AND THAT IS THE
+-- MEASUREMENT.  Its run is runs/floor-1.out, EXIT=42, 5.04 s at
+-- 775,405,568 bytes.
+--
+-- THE QUESTION.  Does the delivered, UNBOUNDED graph formula
+-- `LsetGraphAt` carry a constant?  If it does not, it erases to a
+-- parameter-free formula, embeds into ANY alphabet, `Code` included,
+-- and `LevelFormula`'s `Formula Code 2` costs nothing beyond a rename.
+--
+-- THE ANSWER IS THAT IT DOES.  Agda's own words in runs/floor-1.out:
+-- the count reduces to thirty-five explicit `suc`s and then STICKS on
+-- unreduced `countFo` subterms, one of them
+-- `countFo (L.Coding.Model.extAt (suc zero) (∃̇ (∃̇ (∃̇ StepBody ...))))`,
+-- and the printed formula tree names `L.Coding.Graph.satGraphAt` and
+-- `L.Coding.Powerset.DefinesAt` inside it.  So
+-- `countFo (LsetGraphAt zero (suc zero))` is at least 35 and is not a
+-- closed numeral.
+--
+-- THE CONSEQUENCE.  The erase route is SHUT for the machine graph, and
+-- the only route to `Formula Code 2` is the SLOT machinery, which is
+-- [LJ-1.651]'s shape and the brief's premise 5.  This file is why the
+-- probe takes that shape and not the shorter one.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-656.runs.COUNT-GRAPH {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.Manipulation.Parameters using ( countFo )
+open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
+
+count-graph : countFo (LsetGraphAt {2} zero (suc zero)) ≡ 0
+count-graph = refl

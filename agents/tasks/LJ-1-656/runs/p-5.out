@@ -1,0 +1,30 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T08:50:49Z
+Checking LJ-1-656.Probe656 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-656/agents/tasks/LJ-1-656/Probe656.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-656/agents/tasks/LJ-1-656/Probe656.agda:150.47-55: error: [UnequalTerms]
+ℕ → Type _ℓ''_110 should be a sort, but it isn't
+when checking that the inferred type of an application
+  ℕ → Type _ℓ''_110
+matches the expected type
+  _109
+       14.47 real        13.41 user         0.41 sys
+           584351744  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45097  page reclaims
+                4396  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 763  voluntary context switches
+                7704  involuntary context switches
+        160232795800  instructions retired
+         54281227921  cycles elapsed
+           649184288  peak memory footprint
+EXIT=42
+ended 2026-08-26T08:51:03Z
