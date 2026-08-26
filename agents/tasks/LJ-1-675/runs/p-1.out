@@ -1,0 +1,39 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T16:50:42Z
+Checking LJ-1-675.Probe675 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-675/agents/tasks/LJ-1-675/Probe675.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-675/agents/tasks/LJ-1-675/Probe675.agda:145.17-18: error: [AmbiguousName]
+Ambiguous name ⊥. It could refer to any one of
+  Cubical.Data.Empty.⊥ bound at
+    /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Empty/Base.agda:9.6-7
+  LJ-1-675.Probe675.⊥ bound at
+    /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-675/src/Base/Truth.lagda.md:53.7-8
+⊥ is in scope as
+  * a data type Cubical.Data.Empty.Base.⊥ brought into scope by
+    - the opening of Cubical.Data.Empty at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-675/agents/tasks/LJ-1-675/Probe675.agda:46.13-31
+    - the opening of Cubical.Data.Empty.Base at
+    - its definition at /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Empty/Base.agda:9.6-7
+  * a record field LJ-1-675.Probe675._.⊥ brought into scope by
+    - the application of TruthAlgebra at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-675/agents/tasks/LJ-1-675/Probe675.agda:50.6-18
+    - its definition at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-675/src/Base/Truth.lagda.md:53.7-8
+when scope checking ⊥
+        2.55 real         2.34 user         0.17 sys
+           563527680  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               36427  page reclaims
+                  30  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 123  voluntary context switches
+                 427  involuntary context switches
+         27527141043  instructions retired
+         10105007442  cycles elapsed
+           505480128  peak memory footprint
+EXIT=42
+ended 2026-08-26T16:50:45Z

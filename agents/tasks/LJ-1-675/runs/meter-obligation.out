@@ -1,0 +1,3 @@
+pass      exit=0        2.59s  agents/tasks/LJ-1-675/Probe675.agda::residue-arity
+witness: 0 UNRESOLVED of 1, 2.59 s, probe_red=False
+EXIT=0
