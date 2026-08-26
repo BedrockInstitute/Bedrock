@@ -1,0 +1,3 @@
+pass      exit=0        3.14s  agents/tasks/LJ-1-682/Probe682.agda::convert-at-matrix  (grouped run, exit 0)
+pass      exit=0        3.14s  agents/tasks/LJ-1-682/Probe682.agda::Spend.convert-at-matrix  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 2, 3.14 s, probe_red=False

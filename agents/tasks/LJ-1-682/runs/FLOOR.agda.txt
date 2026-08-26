@@ -1,0 +1,45 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.682] FLOOR.  The restated Convert STATED at
+-- pin₃ (embed matrix₃), with a HOLE standing in for the term.
+-- Imports the two delivered modules the obligation names:
+-- Probe680 for convert-generic / pin₃, Probe667 for matrix₃.
+-- RED BY DESIGN.  Delivered as `.agda.txt` because every `.agda`
+-- under the task home is a verification target
+-- (scripts/pod/facts.py:489).
+--
+--     mv agents/tasks/LJ-1-682/runs/FLOOR.agda.txt \
+--        agents/tasks/LJ-1-682/runs/FLOOR.agda
+--     agents/tasks/LJ-1-682/runs/run.sh \
+--       agents/tasks/LJ-1-682/runs/FLOOR.agda floor-1
+--     mv agents/tasks/LJ-1-682/runs/FLOOR.agda \
+--        agents/tasks/LJ-1-682/runs/FLOOR.agda.txt
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-682.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Manipulation.Relabelling using ( embed )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Collapse {ℓ} using ( isTrans )
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import LJ-1-680.Probe680 {ℓ} as P680
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+open hPropStructure 𝒮ᵥ
+open P680 using ( pin₃; _⊨ₚ_ )
+open P667 using ( matrix₃ )
+
+module Spend (U : S) (Utr : isTrans U) where
+  open P680.Unpack U Utr
+
+  convert-at-matrix :
+      (ca cp a : Ab.SM)
+    → ⟨ (a ∷ []) Ab.⊨ᵐ (pin₃ (embed matrix₃) ca cp) ⟩
+    → ⟨ (fst ca ∷ fst cp ∷ fst a ∷ []) ⊨ₚ matrix₃ ⟩
+  convert-at-matrix = {!!}
+
+convert-at-matrix = Spend.convert-at-matrix

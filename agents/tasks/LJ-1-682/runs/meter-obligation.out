@@ -1,0 +1,2 @@
+pass      exit=0        3.25s  agents/tasks/LJ-1-682/Probe682.agda::convert-at-matrix
+witness: 0 UNRESOLVED of 1, 3.25 s, probe_red=False
