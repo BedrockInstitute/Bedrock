@@ -1,0 +1,48 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-26T12:59:11Z
+Checking LJ-1-665.Probe665 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/Probe665.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/Probe665.agda:36.30-54: warning: -W[no]ModuleDoesntExport
+The module Cubical.Data.Fin doesn't export the following:
+  zero (did you mean 'fzero'?)
+  suc (did you mean 'fsuc'?)
+when scope checking the declaration
+  open import Cubical.Data.Fin using (Fin; zero; suc)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/Probe665.agda:84.10-13: error: [AmbiguousName]
+Ambiguous name Fin. It could refer to any one of
+  Cubical.Data.Fin.Fin bound at
+    /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Fin/Base.agda:25.1-4
+  Base.Prelude.Fin bound at
+    /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/FinData/Base.agda:16.6-9
+Fin is in scope as
+  * a defined name Cubical.Data.Fin.Base.Fin brought into scope by
+    - the opening of Cubical.Data.Fin at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/Probe665.agda:36.13-29
+    - the opening of Cubical.Data.Fin.Base at
+    - its definition at /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Fin/Base.agda:25.1-4
+  * a data type Cubical.Data.FinData.Base.Fin brought into scope by
+    - the opening of Base.Prelude at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/Probe665.agda:19.13-25
+    - the opening of Cubical.Data.FinData at
+    - the opening of Cubical.Data.FinData.Base at
+    - its definition at /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/FinData/Base.agda:16.6-9
+when scope checking Fin
+        3.48 real         2.85 user         0.30 sys
+           647544832  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               37309  page reclaims
+                4277  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 885  voluntary context switches
+                2298  involuntary context switches
+         32551563961  instructions retired
+         12507094809  cycles elapsed
+           589382664  peak memory footprint
+EXIT=42
+ended 2026-08-26T12:59:15Z

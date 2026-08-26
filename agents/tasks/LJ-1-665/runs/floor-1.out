@@ -1,0 +1,31 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-26T12:57:29Z
+Checking LJ-1-665.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/runs/FLOOR.agda).
+ Checking LJ-1-642.Probe642 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-642/Probe642.agda).
+ Checking LJ-1-650.Probe650 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-650/Probe650.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-641/Probe641.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/runs/FLOOR.agda:52.25-29: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-665/agents/tasks/LJ-1-665/runs/FLOOR.agda:52.25-29
+        7.83 real         7.51 user         0.29 sys
+          1017659392  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               64074  page reclaims
+                 100  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  11  voluntary context switches
+                1623  involuntary context switches
+         94206876380  instructions retired
+         30819032472  cycles elapsed
+           956892408  peak memory footprint
+EXIT=42
+ended 2026-08-26T12:57:36Z
