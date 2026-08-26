@@ -6257,3 +6257,81 @@ code = "LJ-1.650"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-650/LJ-1.650.md"
+
+# ===========================================================================
+# THE SECOND OPENING, 2026-08-26. The first one's keystone was the WRONG HALF
+# of the right object, three reports said so independently, and this corrects it.
+#
+# WHAT THE SIX RETURNED. 647 GO, 649 GO, 642 GO; 645, 646, 648 NO-GO with the
+# critic upholding each. Every one of the six earned something.
+#
+# MY ERROR, NAMED. [LJ-1.646]'s premise 2 said obstacle one "is already cleared",
+# citing [LJ-1.474]'s lset-codes. HALF TRUE: 474 filled the TYPE and NOT the
+# MEANING, and 474 wrote that down itself at lj-1.474-report.md:253
+# ("It does not prove fst (val (ck (tagOf s))) ≡ fst s"). I read 474's headline
+# and not its own caveat.
+#
+# AND I ASKED FOR THE WRONG OBJECT. [LJ-1.648]: a brief asking only for
+# `Σ[ d ∈ Code ] (fst (val d) ≡ Lset (fst (val c)))` "throws the ingredient away
+# and keeps the half this task measures to be insufficient for every one of
+# clause (iii)'s three gaps". [LJ-1.642] says the same from clause (i)'s side:
+# what is owed is "a FORMULA over the hull's codes". [LJ-1.646] says it from the
+# route's side: go Σ₀ with parameters in SLOTS, because `wit` at `absFo LsetGraph`
+# is grade-walled by arithmetic (2,287 unbounded ∃̇, 2,159 unbounded ∀̇).
+# THREE INDEPENDENT REPORTS, ONE CORRECTION. 651 is the corrected keystone.
+#
+# THE SECOND CONVERGENCE, AND IT IS THE SAME SHAPE AS THE FIRST. [LJ-1.477]
+# (levelIn's step 4) and [LJ-1.489] (clause (iii)'s DefFwd+DefBwd, which
+# [LJ-1.648] proved are ONE statement) are BOTH "an obstruction of the
+# computation-law route". 489's verdict names the missing ingredient in its own
+# words: "The two sides cannot agree without elementarity". THE TREE HAS
+# ELEMENTARITY, PROVED, TWENTY LINES FROM THE SITE: `elem : A.Elementary` at
+# src/L/BoundedSubset.lagda.md:759, from TV-thm, with elem-down beside it.
+# NEITHER TASK USED IT. 652, 653 and 655 are that.
+#
+# THE FIVE MOVES, none waiting on another:
+#   651  THE CORRECTED KEYSTONE: the Lset graph as a FORMULA, Σ₀, slots.
+#   652  piCommuteD from elementarity      <- both inputs AS HYPOTHESES
+#   653  step 4's TRUTH at ordinals (D-10) <- elementarity AS A HYPOTHESIS
+#   654  PiReflectsOrd, [LJ-1.649]'s fifth fact, owed at FOUR sites
+#   655  is the chapter's own `elem` reachable at the collapse site
+# 655 answers for 652 and 653 whether their shared hypothesis is free, so it is
+# worth its own dispatch rather than a guess inside either.
+#
+# WHAT [LJ-1.649] CHANGED, and it is the best return of the six. levelIn now
+# reduces to exactly TWO objects, not four: step 2 (closed to the keystone by
+# [LJ-1.647]) and step 4. It also MEASURED that the ordinal conditioning costs a
+# fifth fact, PiReflectsOrd, at four sites, and said so in Agda's words rather
+# than in prose. That is 654, and its NO-GO would make the un-ordinal keystone
+# mandatory rather than preferable.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.651"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-651/LJ-1.651.md"
+
+[[task]]
+code = "LJ-1.652"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-652/LJ-1.652.md"
+
+[[task]]
+code = "LJ-1.653"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-653/LJ-1.653.md"
+
+[[task]]
+code = "LJ-1.654"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-654/LJ-1.654.md"
+
+[[task]]
+code = "LJ-1.655"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-655/LJ-1.655.md"
