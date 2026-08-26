@@ -1,6 +1,6 @@
 #!/bin/zsh
 # omlx-watchdog: restarts oMLX.app before its memory drift takes qwen's usable context
-# below what one POD task needs.
+# below what one POD task needs, and brings the app back when `omlx-server` is gone.
 # Born 2026-08-24 after seven of thirteen qwen dispatches died on a hard HTTP 400 inside
 # one fourteen hour window. A 400 of that class carries `stopReason: error` and
 # `usage.totalTokens: 0`: the WHOLE session's work is lost and `pi` does not retry. Those
@@ -27,9 +27,14 @@
 #      `omlx-server` was NOT answered by the parent for five minutes, and `open -a oMLX`
 #      did nothing because the app was already running. The service was down about seven
 #      minutes. `killall oMLX` is the only kill in this file.
-#   2. It never restarts while a `pi` agent is working. That gives the agent a
-#      `Connection error` and the run is a total loss. `pi_busy()` is the gate and every
-#      unreadable answer counts as BUSY.
+#      A DEAD SERVICE IS THE ONE CASE THAT STILL NEEDS `killall`, because the parent does
+#      not respawn the child: the revive branch in `pass_once()` calls the same restart.
+#   2. It never restarts A LIVE SERVICE while a `pi` agent is working. That gives the agent
+#      a `Connection error` and the run is a total loss. `pi_busy()` is the gate and every
+#      unreadable answer counts as BUSY. THE REVIVE BRANCH IS CARVED OUT of this rule and
+#      it is the only thing that is: with no `omlx-server` there is nothing a `pi` agent
+#      can be using, so the loss this rule prevents has already happened. See the branch
+#      for the whole argument.
 #   3. It never writes `~/.omlx/model_settings.json`. It reads three fields to confirm
 #      they did not move. Re-enabling `dflash_ssd_cache` is pure write amplification
 #      (measured `l2_hits=0 / l2_misses=513` over one night, root cause is the
@@ -370,7 +375,42 @@ print('config unchanged (dflash_enabled=True, dflash_ssd_cache=False, L1=13 GiB)
 # machine ends the pass with no readings at all, and because the footprint is only a
 # baseline while nothing generates.
 pass_once() {
-	local busy fp origin hours why=""
+	local busy fp origin hours since_try why=""
+
+	# REVIVE, AND IT IS THE ONE PATH THAT DOES NOT ASK `pi_busy()`.
+	# MEASURED 2026-08-26: `omlx-server` went down at 08:41:49 and stayed down 63 minutes.
+	# `LJ-1.644` was mid-run and `LJ-1.642` was dispatched into the hole; both spent their
+	# whole run on `Connection error` and both parked `fallback:Qwen3.8-27B-oQ4e-mtp`.
+	# This function watched the outage and wrote `no omlx-server process, so there is
+	# nothing to restart`, which is true of a RESTART and wrong about the machine: a dead
+	# service is the plainest thing a watchdog exists for.
+	# WHY TRAP 2 DOES NOT BIND HERE. With no `omlx-server` there is nothing a `pi` agent
+	# can be using. One on qwen is already taking `Connection error`, so the loss the trap
+	# prevents has already happened; one on a cloud model never sees `killall oMLX`, which
+	# names the menu bar app alone. Asking `pi_busy()` here would hand the outage the
+	# length of the longest CLOUD run on the machine, which is the failure being fixed.
+	if [ -z "$(server_pid)" ]; then
+		since_try=$(( $(date +%s) - LAST_ATTEMPT ))
+		if [ "$LAST_ATTEMPT" -ne 0 ] && [ "$since_try" -lt "$COOLDOWN_S" ]; then
+			skip "no $SERVER process, but the last attempt was ${since_try}s ago and the cooldown is ${COOLDOWN_S}s"
+			return 0
+		fi
+		# THE SECOND ASK, for the same reason the trigger path has one. A service still
+		# coming up has no pid yet either, and killing the app mid-launch is the only way
+		# this branch can do harm. `open -a` reaches a 200 in about 5 s, MEASURED
+		# 2026-08-26 across four restarts, so RECHECK_S is a wide margin.
+		log "REVIVE candidate: no $SERVER process; re-checking in ${RECHECK_S}s"
+		sleep $RECHECK_S
+		if [ -n "$(server_pid)" ]; then
+			log "REVIVE stood down: $SERVER appeared inside the ${RECHECK_S}s recheck"
+			LAST_SKIP=""
+			return 0
+		fi
+		LAST_SKIP=""
+		restart_omlx "no $SERVER process; reviving a dead service" && verify_after
+		return 0
+	fi
+
 	busy="$(pi_busy)"
 	if [ "$busy" != "0" ]; then
 		skip "a pi agent is working, or herdr could not be read"
@@ -382,7 +422,11 @@ pass_once() {
 	fi
 	fp="$(footprint_gb)"
 	if [ -z "$fp" ]; then
-		skip "no $SERVER process, so there is nothing to restart"
+		# The missing-pid case left this branch when revive took it. What is left is a pid
+		# that exists and a reading that did not come back, which is the app's own
+		# interpreter failing. NO READING IS NEVER A TRIGGER: an unreadable footprint must
+		# not be read as a small one, or as a large one.
+		skip "the $SERVER footprint could not be read"
 		return 0
 	fi
 	origin="$(clock_origin)"
@@ -398,7 +442,7 @@ pass_once() {
 		skip "idle at ${fp} GiB after ${hours}h active qwen; under both triggers"
 		return 0
 	fi
-	local since_try=$(( $(date +%s) - LAST_ATTEMPT ))
+	since_try=$(( $(date +%s) - LAST_ATTEMPT ))
 	if [ "$LAST_ATTEMPT" -ne 0 ] && [ "$since_try" -lt "$COOLDOWN_S" ]; then
 		skip "$why, but the last attempt was ${since_try}s ago and the cooldown is ${COOLDOWN_S}s"
 		return 0
