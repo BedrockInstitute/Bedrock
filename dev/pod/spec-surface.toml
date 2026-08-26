@@ -1252,7 +1252,7 @@ sha = "048adb2d6d974e42308e080195a874f19113e7d82f80a05d6324653f7719fba2"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician.md"
-sha = "908d604ff109faf9271c737b478664e24094b7ab0020e587664ef482b7577d3e"
+sha = "6935098a6baebb9f49353b19a0309446ab1339343bb5b1cd6f088b372ebbd63e"
 
 [[guarded]]
 path = "dev/pod/instructions/mathematician_adversarial.md"
