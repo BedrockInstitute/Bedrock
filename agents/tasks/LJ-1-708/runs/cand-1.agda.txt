@@ -1,0 +1,71 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.708] CANDIDATE 1.  The honest maximal assembly of
+-- below-direct WITHOUT the door: fire the only stage-membership
+-- producer the licensed triple contains, `Lset-mono`, aimed at
+-- [LJ-1.697]'s Below, and leave the residuals as metas.
+--
+--   LICENSED TOOLS ONLY:
+--     ord∈Lset→∈   down-mover: an ordinal in Lset lam lies below lam
+--                  (src/L/Ordinal/Stages.lagda.md:265-268).
+--     Lset-mono    up-extender: needs x already in SOME stage Lset β
+--                  (src/L/Constructible.lagda.md:365-366).
+--     succλ        climbs INSIDE lam only: conclusions are plain
+--                  memberships ⟨ _ ∈ˢ lam ⟩, never stage ones.
+--   Lset-in is NOT licensed: its premise ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩ has no
+--   door-free producer among the three (𝒟ₒ-intro IS the door,
+--   src/L/Constructible.lagda.md:301-304).
+--
+-- RED BY DESIGN; `.agda.txt` because every `.agda` under this task
+-- home is a verification target.
+--
+--     mv agents/tasks/LJ-1-708/runs/cand-1.agda.txt \
+--        agents/tasks/LJ-1-708/runs/cand-1.agda
+--     agents/tasks/LJ-1-708/runs/run.sh \
+--       agents/tasks/LJ-1-708/runs/cand-1.agda cand-1
+--     mv agents/tasks/LJ-1-708/runs/cand-1.agda \
+--        agents/tasks/LJ-1-708/runs/cand-1.agda.txt
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-708.runs.Cand-1 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; Lset; Lset-mono )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
+open import L.Hierarchy {ℓ} lem using ( hierL )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+import LJ-1-652.Probe652 {ℓ} lem as P652
+import LJ-1-697.runs.W3 {ℓ} lem as W3
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+module CS = hPropStructure 𝒮ʟ
+
+module At (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open W3.At lam ordλ succλ public
+    using ( climb; ordinal-in )
+
+  -- Verbatim agents/tasks/LJ-1-697/Probe697.agda:72-74.
+  Below : (δ : CS.S) (oδ : IsOrd (fst δ)) → Type (ℓ-suc ℓ)
+  Below δ oδ =
+    ⟨ fst (hierL (fst δ) (δ .snd) oδ) ∈ˢ Lset (W3.step 3 (fst δ)) ⟩
+
+  -- THE ATTEMPT.  The only rule that CONCLUDES a stage membership is
+  -- Lset-mono.  Fired with α = step 3 (fst δ), it leaves exactly two
+  -- residuals: an index-membership ⟨ β ∈ˢ step 3 (fst δ) ⟩ and a base
+  -- membership ⟨ fst (hierL ...) ∈ˢ Lset β ⟩.  Both undersupplied by
+  -- the triple; Agda records them as unsolved interaction metas.
+  below-direct : (δ : CS.S) (oδ : IsOrd (fst δ)) → Below δ oδ
+  below-direct δ oδ =
+    Lset-mono {α = W3.step 3 (fst δ)} {β = _} _ _

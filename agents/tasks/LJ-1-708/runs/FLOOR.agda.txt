@@ -1,0 +1,52 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.708] FLOOR.  The obligation STATED, with a HOLE standing in
+-- for the term.  Imports are the delivered probe's import set.
+-- RED BY DESIGN.  Delivered as `.agda.txt` because every `.agda`
+-- under the task home is a verification target
+-- (agents/tasks/LJ-1-708/LJ-1.708.md, conjunct 1).
+--
+--     mv agents/tasks/LJ-1-708/runs/FLOOR.agda.txt \
+--        agents/tasks/LJ-1-708/runs/FLOOR.agda
+--     agents/tasks/LJ-1-708/runs/run.sh \
+--       agents/tasks/LJ-1-708/runs/FLOOR.agda floor-N
+--     mv agents/tasks/LJ-1-708/runs/FLOOR.agda \
+--        agents/tasks/LJ-1-708/runs/FLOOR.agda.txt
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-708.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; Lset; Lset-mono )
+open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
+open import L.Hierarchy {ℓ} lem using ( hierL )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+import LJ-1-652.Probe652 {ℓ} lem as P652
+import LJ-1-697.runs.W3 {ℓ} lem as W3
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+module CS = hPropStructure 𝒮ʟ
+
+module At (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open W3.At lam ordλ succλ public
+    using ( climb; ordinal-in )
+
+  -- Verbatim agents/tasks/LJ-1-697/Probe697.agda:72-74.
+  Below : (δ : CS.S) (oδ : IsOrd (fst δ)) → Type (ℓ-suc ℓ)
+  Below δ oδ =
+    ⟨ fst (hierL (fst δ) (δ .snd) oδ) ∈ˢ Lset (W3.step 3 (fst δ)) ⟩
+
+  below-direct : (δ : CS.S) (oδ : IsOrd (fst δ)) → Below δ oδ
+  below-direct δ oδ = {! THE TERM, PRICED BY THIS FLOOR !}

@@ -1,0 +1,34 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T06:25:13Z
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-708/agents/tasks/LJ-1-708/runs/cand-1.agda:33.8-27: error: [ModuleNameDoesntMatchFileName]
+The name `LJ-1-708.runs.cand1` of the top level module does not
+match the file name. A such named module should be defined in one
+of the following files:
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/LJ-1-708/runs/cand1.agda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/LJ-1-708/runs/cand1.lagda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-708/src/LJ-1-708/runs/cand1.agda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-708/src/LJ-1-708/runs/cand1.lagda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-708/agents/tasks/LJ-1-708/runs/cand1.agda
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-708/agents/tasks/LJ-1-708/runs/cand1.lagda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/LJ-1-708/runs/cand1.agda
+  /opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/LJ-1-708/runs/cand1.lagda
+        0.08 real         0.03 user         0.01 sys
+           114409472  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8650  page reclaims
+                  80  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  13  voluntary context switches
+                  98  involuntary context switches
+           767060677  instructions retired
+           224121299  cycles elapsed
+            87753352  peak memory footprint
+EXIT=42
+ended 2026-08-27T06:25:13Z
