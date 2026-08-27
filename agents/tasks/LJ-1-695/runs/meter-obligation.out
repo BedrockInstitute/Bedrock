@@ -1,0 +1,2 @@
+pass      exit=0        2.26s  agents/tasks/LJ-1-695/Probe695.agda::bnd-to-unbnd
+witness: 0 UNRESOLVED of 1, 2.26 s, probe_red=False

@@ -1,0 +1,78 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.695] FLOOR.  The obligation STATED, with a HOLE standing in
+-- for the term.  RED BY DESIGN.  Delivered as `.agda.txt` after the
+-- run because every `.agda` under the task home is a verification
+-- target (scripts/pod/facts.py:489).
+--
+--     sh agents/tasks/LJ-1-695/runs/run.sh \
+--        agents/tasks/LJ-1-695/runs/floor-1.out 300 \
+--        agents/tasks/LJ-1-695/runs/FLOOR.agda
+--     mv agents/tasks/LJ-1-695/runs/FLOOR.agda \
+--        agents/tasks/LJ-1-695/runs/FLOOR.agda.txt
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-695.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∧̇_; ∃̇_; ∃̇∈ )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
+open import L.Coding.Model {ℓ} using ( appAt; domAt )
+open import L.Coding.Sequence {ℓ} lem using
+  ( LsetGraphAt; StepAt; StepBody; ApproxAt )
+open import L.Condensation {ℓ} lem using
+  ( module StepB; module ApproxB; module GraphB
+  ; extAtB→extAt; domB )
+
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.Data.Vec using ( lookup; _∷_ )
+open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.HITs.PropositionalTruncation as PT
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+
+module _ {n : ℕ} (w b K : Fin n) (γ : S ^ n)
+  (ψs : Formula S (8 + n)) (ψa : Formula S (10 + n)) where
+
+  module SB  = StepB {1 + n} ψs (suc w) (suc b) zero (suc K)
+  module AB  = ApproxB {1 + n} ψa zero (suc b) (suc K)
+  module SBA = AB.S
+  module GB  = GraphB {n} ψs ψa w b K
+
+  bnd-to-unbnd :
+    (domBack : (f₀ : S)
+             → ⟨ (f₀ ∷ γ) ⊨ domB zero (suc b) (suc K) ⟩
+             → ⟨ (f₀ ∷ γ) ⊨ domAt zero (suc b) ⟩)
+    → (stepBwd : (f₀ z : S)
+               → ⟨ (z ∷ f₀ ∷ γ) ⊨ ∃̇ (∃̇ (∃̇ (StepBody (suc b) zero))) ⟩
+               → ⟨ (z ∷ f₀ ∷ γ) ⊨ SB.witB ⟩)
+      (stepFwd : (f₀ z : S)
+               → ⟨ (z ∷ f₀ ∷ γ) ⊨ SB.witB ⟩
+               → ⟨ (z ∷ f₀ ∷ γ) ⊨ ∃̇ (∃̇ (∃̇ (StepBody (suc b) zero))) ⟩)
+    → (apxStepBwd : (z' z c f₀ : S)
+                  → ⟨ (z' ∷ z ∷ c ∷ f₀ ∷ γ) ⊨ ∃̇ (∃̇ (∃̇ (StepBody (suc zero) (suc (suc zero))))) ⟩
+                  → ⟨ (z' ∷ z ∷ c ∷ f₀ ∷ γ) ⊨ SBA.witB ⟩)
+      (apxStepFwd : (z' z c f₀ : S)
+                  → ⟨ (z' ∷ z ∷ c ∷ f₀ ∷ γ) ⊨ SBA.witB ⟩
+                  → ⟨ (z' ∷ z ∷ c ∷ f₀ ∷ γ) ⊨ ∃̇ (∃̇ (∃̇ (StepBody (suc zero) (suc (suc zero))))) ⟩)
+    → (stepK : (f₀ z : S)
+             → ⟨ (z ∷ f₀ ∷ γ) ⊨ ∃̇ (∃̇ (∃̇ (StepBody (suc b) zero))) ⟩
+             → ⟨ fst z ∈ fst (lookup K γ) ⟩)
+    → (apxStepK : (z' z c f₀ : S)
+                → ⟨ (z' ∷ z ∷ c ∷ f₀ ∷ γ) ⊨ ∃̇ (∃̇ (∃̇ (StepBody (suc zero) (suc (suc zero))))) ⟩
+                → ⟨ fst z' ∈ fst (lookup K γ) ⟩)
+    → (entryK : (c z f₀ : S)
+              → ⟨ (z ∷ c ∷ f₀ ∷ γ) ⊨ appAt (suc (suc zero)) (suc zero) zero ⟩
+              → ⟨ fst c ∈ fst (lookup K γ) ⟩ × ⟨ fst z ∈ fst (lookup K γ) ⟩)
+    → (hB : ⟨ γ ⊨ GB.graphBndAt ⟩)
+    → ⟨ γ ⊨ LsetGraphAt w b ⟩
+  bnd-to-unbnd = {!!}
