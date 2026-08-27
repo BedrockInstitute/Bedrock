@@ -1,0 +1,32 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T04:47:27Z
+Checking LJ-1-705.Probe705 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda:94.17-21: error: [UnequalTerms]
+Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+(Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+ (sucV σ₁) (sucV σ₂))
+x
+!= g x of type V ℓ
+when checking that the expression refl has type
+⁅ sucV σ₁ , sucV σ₂ ⁆ ≡ sett (Lift Bool) g
+        1.49 real         0.98 user         0.19 sys
+           282050560  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14895  page reclaims
+                4398  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 542  voluntary context switches
+                2239  involuntary context switches
+         10806145549  instructions retired
+          4682296065  cycles elapsed
+           221954792  peak memory footprint
+EXIT=42
+ended 2026-08-27T04:47:28Z

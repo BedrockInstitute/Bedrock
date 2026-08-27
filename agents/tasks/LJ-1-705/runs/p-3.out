@@ -1,0 +1,36 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T04:25:21Z
+Checking LJ-1-705.Probe705 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda:121.15-19: error: [NotInScope]
+Not in scope:
+  Unit
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda:121.15-19
+    (did you mean
+       '.#L.Coding.Shape-10908864375072080374.UnWit' or
+       'Cubical.Data.Nat.Unit' or
+       'Cubical.Data.Nat.Unit*' or
+       'Cubical.Data.Unit.Unit' or
+       'Cubical.Data.Unit.Unit*' or
+       'Cubical.Data.Unit.ΠUnit'?)
+when scope checking Unit
+        2.35 real         2.11 user         0.18 sys
+           604307456  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38762  page reclaims
+                 184  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 118  voluntary context switches
+                 969  involuntary context switches
+         22249160503  instructions retired
+          9132430113  cycles elapsed
+           546391000  peak memory footprint
+EXIT=42
+ended 2026-08-27T04:25:23Z

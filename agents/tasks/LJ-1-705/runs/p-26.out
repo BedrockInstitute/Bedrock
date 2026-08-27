@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T04:50:56Z
+Checking LJ-1-705.Probe705 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda:93.12-16: error: [UnequalTerms]
+f x != L.Ordinal.f σ₁ σ₂ o₁ o₂ x of type V ℓ
+when checking that the expression refl has type
+bound2 σ₁ σ₂ o₁ o₂ .fst ≡ β
+        1.32 real         0.84 user         0.16 sys
+           281853952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14983  page reclaims
+                4282  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 366  voluntary context switches
+                2870  involuntary context switches
+         10797766918  instructions retired
+          4010431406  cycles elapsed
+           221938408  peak memory footprint
+EXIT=42
+ended 2026-08-27T04:50:57Z

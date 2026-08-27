@@ -1,0 +1,86 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T04:45:49Z
+Checking LJ-1-705.Probe705 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/agents/tasks/LJ-1-705/Probe705.agda:107.58-61: error: [UnequalTerms]
+(Σ
+ ⟨
+ Cubical.Functions.Logic.∀[∶]-syntax
+ (λ a →
+    Cubical.Functions.Logic.∃[∶]-syntax
+    (λ x₁ →
+       Cubical.HITs.CumulativeHierarchy.Base.elim
+       (Cubical.HITs.CumulativeHierarchy.Base.pElim
+        Cubical.HITs.CumulativeHierarchy.Properties.eliminator)
+       (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+        (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+         Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+         L.Ordinal.f σ₁ σ₂ o₁ o₂ x₂ ,
+         Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+         L.Ordinal.f σ₁ σ₂ o₁ o₂ x₂ ⁆s
+         ⁆)
+        a)
+       (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+        (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+         Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+         L.Ordinal.f σ₁ σ₂ o₁ o₂ x₃ ,
+         Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+         L.Ordinal.f σ₁ σ₂ o₁ o₂ x₃ ⁆s
+         ⁆)
+        x₁)))
+ ⟩
+ (λ _ →
+    ⟨
+    Cubical.Functions.Logic.∀[∶]-syntax
+    (λ b →
+       Cubical.Functions.Logic.∃[∶]-syntax
+       (λ a →
+          Cubical.HITs.CumulativeHierarchy.Base.elim
+          (Cubical.HITs.CumulativeHierarchy.Base.pElim
+           Cubical.HITs.CumulativeHierarchy.Properties.eliminator)
+          (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+           (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+            Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+            L.Ordinal.f σ₁ σ₂ o₁ o₂ x₂ ,
+            Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+            L.Ordinal.f σ₁ σ₂ o₁ o₂ x₂ ⁆s
+            ⁆)
+           a)
+          (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+           (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+            Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+            L.Ordinal.f σ₁ σ₂ o₁ o₂ x₃ ,
+            Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+            L.Ordinal.f σ₁ σ₂ o₁ o₂ x₃ ⁆s
+            ⁆)
+           b)))
+    ⟩))
+!=
+(fst
+ (Cubical.HITs.CumulativeHierarchy.Base.elim
+  (Cubical.HITs.CumulativeHierarchy.Base.pElim
+   Cubical.HITs.CumulativeHierarchy.Properties.eliminator)
+  (g x₂) (g x₃)))
+of type (Type ℓ)
+when checking that the expression x∈β has type
+⟨ x ∈ₛ ⋃ sett (Lift Bool) g ⟩
+        2.08 real         0.99 user         0.42 sys
+           221216768  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               29962  page reclaims
+                4440  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 393  voluntary context switches
+               10798  involuntary context switches
+         11371268280  instructions retired
+          5536347659  cycles elapsed
+           220660480  peak memory footprint
+EXIT=42
+ended 2026-08-27T04:45:51Z

@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T04:54:21Z
+missing   exit=42       2.64s  agents/tasks/LJ-1-705/Probe705.agda::bound-in-alpha  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-705/.pod-state/witness/Witness-POD-6f5caa65.agda:40)
+witness: 1 UNRESOLVED of 1, 2.64 s, probe_red=False
+        2.73 real         2.11 user         0.29 sys
+           603013120  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39916  page reclaims
+                4413  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 800  voluntary context switches
+                2679  involuntary context switches
+           572390065  instructions retired
+           240158550  cycles elapsed
+            20070832  peak memory footprint
+EXIT=1
+ended 2026-08-27T04:54:24Z
