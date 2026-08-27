@@ -1,0 +1,48 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T05:42:06Z
+Checking LJ-1-706.Probe706 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-706/agents/tasks/LJ-1-706/Probe706.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-706/agents/tasks/LJ-1-706/Probe706.agda:82.6-84.51: error: [UnequalTerms]
+L.Axioms.Separation.AtStage.carve lem
+(P698.Carved.σ (fst δ) oδ (δ .snd))
+(P698.Carved.oσ (fst δ) oδ (δ .snd))
+(FOL.Manipulation.Bounding.Relabel.liftFo (λ r → fst r)
+ Cubical.HITs.CumulativeHierarchy.Properties.⟪
+ Lset (P698.Carved.σ (fst δ) oδ (δ .snd)) ⟫↪
+ (L.Axioms.Separation.AtStage.Below lem
+  (P698.Carved.σ (fst δ) oδ (δ .snd))
+  (P698.Carved.oσ (fst δ) oδ (δ .snd)))
+ (λ c p →
+    Cubical.HITs.CumulativeHierarchy.Properties.∈-asFiber p .fst)
+ (λ c p →
+    Cubical.HITs.CumulativeHierarchy.Properties.∈-asFiber p .snd)
+ (P698.Carved.φᵣ (fst δ) oδ (δ .snd))
+ (P698.Carved.hφ (fst δ) oδ (δ .snd)))
+!= fst (L.Hierarchy.hierAt lem (fst δ) (δ .snd) oδ .fst) of type
+Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression
+Lset-in (step 3 (fst δ)) (fst (P698.bound-of (fst δ) oδ (δ .snd)))
+(P698.Carved.carved (fst δ) oδ (δ .snd)) bδ
+(P698.Carved.carved∈𝒟ₒ (fst δ) oδ (δ .snd))
+has type
+⟨ fst (hierL (fst δ) (δ .snd) oδ) ∈ˢ Lset (step 3 (fst δ)) ⟩
+        3.63 real         2.18 user         0.68 sys
+           399261696  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               65691  page reclaims
+                4358  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 698  voluntary context switches
+               15317  involuntary context switches
+         22781461999  instructions retired
+         11185041461  cycles elapsed
+           552682456  peak memory footprint
+EXIT=42
+ended 2026-08-27T05:42:10Z
