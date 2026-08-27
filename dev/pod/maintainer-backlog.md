@@ -19,6 +19,171 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 41. A memory-walled WITNESS sub-run reads exactly like an unsolved obligation, with nothing in the record to tell them apart. MEASURED on LJ-1.702, 2026-08-27
+
+**LJ-1.702 (item 37/38's repair for LJ-1.643) parked `no-match`: `exit_code 0,
+error_class None, obligations_delta 0, obligations_open 1`.** The report says
+`**GO.**`, `Probe702.agda` has no hole and no postulate, and its own final run
+(`runs/final-1.out`) is `EXIT=0`. Every appearance is of a clean, delivered
+term that the obligations meter still calls unresolved.
+
+**RE-MEASURED DIRECTLY, NOT TAKEN ON THE RECORD'S WORD.** I ran the EXACT
+witness compile `witness_delta()` runs -- same file
+(`.pod-state/witness/Witness-LJ-1-702-3caeb332.agda`), same include paths
+(`--include-path=.pod-state/witness --include-path=src
+--include-path=agents/tasks`), same worktree -- by hand: `EXIT=0`, clean, no
+error. The obligation IS resolved. The dispatch-time record is wrong about
+that one fact.
+
+**THE CAUSE, established by timestamp, not inference from the code alone.**
+`_build/tools/agda-watchdog.log`: `2026-08-27 11:15:56 KILLED agda
+pid=69541 (free 5% < 8%)`. LJ-1.702's transition to CHECKING landed at
+`2026-08-27T03:15:49Z` (11:15:49 local) -- seven seconds before that kill.
+`measure()` (`scripts/pod/witness.py:432`) counts ANY non-PASS row as
+unresolved, with no distinct value for "the witness process was itself
+SIGKILLed mid-check" versus "the term does not typecheck". A killed witness
+run is indistinguishable, in the record, from a genuinely unsolved one.
+
+**THIS IS A NARROWER, MORE DANGEROUS VERSION OF `sys-sigkill-escalate`
+(added 2026-08-23, item covering LJ-1.700 the same day).** That row exists
+because a SIGKILLed MAIN typecheck surfaces as `exit_code -9,
+error_class other` at the top level, and the routing table can catch it. A
+SIGKILLed WITNESS sub-run does not propagate its signal anywhere the top-level
+`facts` can see: conjuncts 1/3/4/5/6 all measure the MAIN run, which held
+cleanly here, so the record reads `exit_code 0, error_class None` -- the same
+shape a genuinely-incomplete task also produces. **No row can safely close
+this shape mechanically**: matching `obligations_delta 0` alongside `exit_code
+0` would also match a task that truly delivered nothing, so a row here is not
+proposed as part of this batch. Confirmed with `dev/pod/table.toml`'s existing
+`sys-sigkill-escalate` (`priority 94`) does not and should not fire on this
+record.
+
+**NOT FIXED HERE.** A cure would need `measure()`/`witness_delta()` to
+surface a KILLED witness distinctly from an UNRESOLVED one (a new value beside
+`PASS`/`PROBE_RED`/`NO_FILE`), so a future record can name the difference
+instead of leaving a reader to cross-reference the watchdog log by hand, as
+this entry did. Left open for the owner; the recommended near-term action is
+a plain resume of LJ-1.702 (the owner's word required per standing rule), not
+a table row.
+
+### 40. A brief's cross-task-home write grant cannot be serviced inside worktree isolation, so the write lands outside every check that closes a task. FOUND HERE, MEASURED on LJ-1.701, 2026-08-27
+
+**LJ-1.701 (the repair for item 37/38, LJ-1.636) closed `done`/`go` cleanly, and
+its OWN close is correct.** What is not correct is the SIDE EFFECT its brief
+also asked for: renaming the seventeen scratch `.agda` files under
+`agents/tasks/LJ-1-636/runs/` to `.agda.txt`, which is the repair item 38's
+successor briefs (LJ-1.702, LJ-1.703) also carry, on the SAME pattern, for
+LJ-1.643 and LJ-1.685.
+
+**THE MECHANISM, TRACED END TO END.** `make_worktree()` isolates a task to
+`.pod-state/worktrees/<CODE>/` via `git worktree add --detach HEAD`, and
+`seed_worktree_inputs()` seeds only THAT task's own home
+(`agents/tasks/<CODE>/`) into it. Neither seeds a DIFFERENT task's home, even
+one the brief's own `## SCOPE (write)` names. `write_paths()`
+(`scripts/pod/launcher.py:2294`) also cannot carry the grant: its regex
+matches only `src/`, `dev/`, `scripts/`, `_build/` prefixes, so
+`agents/tasks/LJ-1-636/runs/` never enters `granted` either. The coder,
+to honor a scope the isolation has no way to hand it, wrote directly to paths
+OUTSIDE its own worktree -- confirmed at `lj-1.701-report.md:73-81`: "I renamed
+every `.agda` file under `agents/tasks/LJ-1-636/runs/` ... and a second
+untracked copy sits in the main tree. I renamed in both" (LJ-1.636's OWN still-
+live worktree, `.pod-state/worktrees/LJ-1-636/`, AND the main tree). `git
+status --porcelain agents/tasks/LJ-1-636/runs/` (run from the main tree, verified
+directly) returns `?? agents/tasks/LJ-1-636/runs/`.
+
+**THE CONSEQUENCE: THE WRITE IS INVISIBLE TO EVERY GATE THAT WOULD NORMALLY SEE
+IT, not merely `changed_files_foreign` as predicted.** `changed_files_scoped()`
+(`scripts/pod/facts.py:364`) takes its status snapshot scoped to the WORKING
+task's own worktree; a file written to the main tree's absolute path never
+appears in that snapshot at all, so it lands in neither `mine` nor `foreign`.
+Verified directly: LJ-1.701's `runs/accept-1.out` records
+`"changed_files_foreign": []`, and its `changed_files_own` names only
+LJ-1.701's own six files. `_close_commit_paths()` (`scripts/pod/pod.py:3216`)
+reads from that same `changed_files` list, so `commit_task()` never staged the
+rename either: `git log -- agents/tasks/LJ-1-636/runs/Bisect1.agda.txt` returns
+nothing. **No conjunct verified it, no scope check saw it, and no commit
+tracked it** -- it exists only because it is true on disk, the same exposure
+item 38 already named, now reached through a second, previously unknown door.
+
+**NOT FIXED HERE.** A repair would need either `write_paths()` to admit a
+cross-task-home grant (and something to seed it into the worktree, or route the
+diff through the main tree for that grant specifically), or the brief
+convention to stop asking for a cross-task-home write at all. Either is a
+design change to isolation or scope semantics, not a mechanical patch, and
+LJ-1.702/LJ-1.703 are queued on the identical pattern for LJ-1.643/LJ-1.685 --
+expect the same gap there. Left open for the owner.
+
+**SECOND SIGHTING, WORSE SHAPE: THE GAP PRODUCED A FALSE CLAIM IN A CLOSED
+REPORT, MEASURED on LJ-1.703, 2026-08-27.** LJ-1.703 (the repair for
+LJ-1.685, closed `done`/`go` cleanly on its OWN scope -- this finding does
+not touch that close) had the identical brief-authorized cross-task-home
+grant LJ-1.701 had, this time to retire one stray file:
+`agents/tasks/LJ-1-685/runs/RENAME3.agda` (a `.agda.txt` twin already existed).
+`lj-1.703-report.md:178` states plainly: "**Retirement.**
+`agents/tasks/LJ-1-685/runs/RENAME3.agda` is gone." **It is not.** Verified
+directly in THREE places: the main tree
+(`ls agents/tasks/LJ-1-685/runs/RENAME3.agda` succeeds), and LJ-1.685's own
+still-live worktree (`.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-685/runs/RENAME3.agda`
+also present). LJ-1.703's OWN worktree never held a copy of
+`agents/tasks/LJ-1-685/` at all (`ls
+.pod-state/worktrees/LJ-1-703/agents/tasks/LJ-1-685/` -- no such directory),
+unlike LJ-1.701's coder, who reached the main tree by an absolute path and
+said so. This coder's attempt at the SAME kind of reach evidently did not land
+anywhere, and nothing told it so: no conjunct reads a cross-task-home path, so
+a failed (or merely unattempted) write there is exactly as invisible as a
+successful one. **The gap does not just hide a legitimate write. It lets a
+closed report assert something false about the tree, with no mechanism able
+to catch it.** No content is at risk (a scratch diagnostic file, not the
+deliverable), but this raises item 40's severity from an audit gap to a
+report-accuracy gap. Not fixed here, for the same reason: it is the same
+design question. Left open for the owner.
+
+### 39. `_write_run_record()` calls a run file "the only surviving evidence of what was measured", but `BASIS` can never cite one as a premise. SURFACED BY pod-math, VERIFIED HERE, MEASURED writing LJ-1.701/702/703, 2026-08-27
+
+**pod-math HIT THIS WRITING THE THREE REPAIR BRIEFS FOR ITEM 37/38.** `BASIS`
+(`scripts/pod/preflight.py:111`) matches only
+`\.(?:lagda\.md|agda|md|toml|py|sh|yml|jsonl)` before the `:line`: `.out` is
+absent from that list, verified by reading the pattern directly. `_write_run_record()`'s
+own docstring (`scripts/pod/accept.py:390`) calls
+`agents/tasks/<CODE>/runs/accept-<n>.out` "the only surviving evidence of what
+was measured", since nothing re-typechecks a closed task's probes. P17
+(`scripts/pod/preflight.py:588-604`) then refuses any premise whose basis is
+that same `.out` file: pod-math reports five premises refused this way while
+drafting the three briefs, repointed instead at the matching lines in
+`dev/pod/replay-corpus.jsonl` (`:877`, `:883`, `:952`, the three locked
+records), which P17 accepts (`.jsonl` is in `BASIS`) and which is the more
+durable citation of the two regardless.
+
+**NOT FIXED HERE.** The workaround (cite the corpus record, not the run file)
+is not blocked and is what LJ-1.701/702/703 do, so nothing stalls. Left open
+only as a question of whether `BASIS` should admit `.out` directly, or whether
+every brief citing a park should be told to prefer the corpus record from the
+start.
+
+### 38. A PARKED task's home is never committed and never tracked, so it stands unprotected against `git clean`. SURFACED BY pod-math, VERIFIED HERE, MEASURED on LJ-1.636/643/685, 2026-08-27
+
+**pod-math FLAGGED THIS WHILE WRITING THE THREE REPAIR BRIEFS (LJ-1.701/702/703)
+FOR ITEM 37'S THREE SIGHTINGS.** `commit_task()` (`scripts/pod/pod.py`, backlog
+item 9's own comment at the call site) commits a task's home only at its `done`
+close. A task PARKED short of `done`, however green its term, however many runs
+it recorded, has a home that git has never seen.
+
+**VERIFIED, NOT JUST RELAYED.** `git ls-files agents/tasks/LJ-1-636
+agents/tasks/LJ-1-643 agents/tasks/LJ-1-685` returns nothing for any of the
+three: every file under all three homes is untracked. `find ... -type f | wc -l`
+counts 156 files; `cat`ting all of them counts 10,532 lines, 920 KB combined.
+(pod-math's own message estimated "about 45,000 lines" for the same three homes;
+that figure does not match this measurement and is not carried forward here:
+this entry states only what was independently counted.) A `git clean -fdx`, or
+any equivalent that does not know to except `agents/tasks/`, would erase three
+green terms and their full run evidence with no record anywhere that they ever
+existed.
+
+**NOT FIXED HERE.** This is a structural gap in when `commit_task()` runs, not a
+single park's defect, and the fix (commit a task's home on PARK too, or some
+other checkpoint) is a design change to when the program commits, R8 territory,
+the owner's call on cadence, not a mechanical patch. Left open for the owner.
+
 ### 37. `check-survey-quotes.py` checks the ORIGINAL author's report, always, so an escalated critic can never satisfy it. DIAGNOSED HERE, ROUTING RULED BY pod-math, MEASURED on LJ-1.643 and LJ-1.685, 2026-08-26/27
 
 **pod-math NAMED THE SYMPTOM ON THREE SIGHTINGS** (`[LJ-1.636]`'s conjunct-1
