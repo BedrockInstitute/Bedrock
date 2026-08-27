@@ -83,6 +83,14 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
           # ran `claude -p` twice per Claude string; no equivalent ran for these two, so
           # the first dispatch on either is also its verification.
           "glm-5.3", "deepseek-v4-pro",
+          # THE FLASH VARIANT, ruled by the owner 2026-08-27: swap every live `glm-5.3`
+          # head for this one. Same provider (`zai`), 320B-A18B MoE, 1,048,576 context,
+          # MIT license, and the owner's own reason is quota: the Coding Plan tiers all
+          # carry it and its quota is three times `glm-5.3`'s. VERIFIED, not taken from
+          # a peer's report alone: `pi --list-models` lists `zai glm-5.3-flash` on this
+          # machine, and a live call (`pi -p --provider zai --model glm-5.3-flash -nt
+          # "Reply with exactly: FLASH-OK"`) returned exactly that string.
+          "glm-5.3-flash",
           # THE GROK HEAD, ruled by the owner 2026-08-19. It runs on the `grok` CLI
           # through `harness = "herdr-grok"`, needs NO provider, and takes the same three
           # flags Claude takes.
@@ -143,6 +151,7 @@ models = ["claude-opus-5", "claude-fable-5", "claude-sonnet-5",
 # THE PROVIDER PER NON-CLAUDE MODEL. `herdr-pi` passes it as `--provider`.
 [legal.pi_provider]
 "glm-5.3" = "zai"
+"glm-5.3-flash" = "zai"
 "deepseek-v4-pro" = "deepseek"
 # LOCAL, AND THE PROVIDER IS NOT THE MODEL'S FAMILY NAME HERE EITHER: the family is
 # Qwen and the provider is `omlx`, the server that serves it. MEASURED 2026-08-21 from
@@ -458,7 +467,13 @@ mathematician             = { model = "claude-opus-5",   effort = "max",   harne
 # accept the risk as stated rather than route around it. `max_concurrency = 1`
 # is the same policy cap every `glm-5.3`/`grok-4.6` row in this file carries
 # (owner's ruling 2026-08-24). Everything above this paragraph is history.
-mathematician_adversarial = { model = "glm-5.3", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 }
+# **`glm-5.3` -> `glm-5.3-flash`, OWNER'S RULING 2026-08-27, SAME DAY AS THIS SLOT'S
+# OWN DROP TO ONE HEAD.** Quota, not capability: the flash variant carries three times
+# glm-5.3's quota on the same `zai` provider. The self-review risk this paragraph
+# above already named and the owner already accepted is UNCHANGED by this swap: it
+# was never about which `glm-5.3*` string sat here, only that this slot's one head
+# is also `coder`'s overflow head.
+mathematician_adversarial = { model = "glm-5.3-flash", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 }
 # THE LOCAL HEAD IS WRITTEN FIRST because it is the head the owner wants spent
 # first. That order is the tie-break between two CAPPED heads with headroom, and
 # there is one capped head here; since A29 it is ALSO the order the retry walks.
@@ -492,8 +507,10 @@ mathematician_adversarial = { model = "glm-5.3", effort = "", harness = "herdr-p
 # it.
 coder                     = [
   { model = "Qwen3.8-27B-oQ4e-mtp", effort = "medium", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "glm-5.3",              effort = "",       harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "glm-5.3-flash",        effort = "",       harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
 ]
+# **`glm-5.3` -> `glm-5.3-flash` HERE TOO, SAME RULING, SAME DAY.** Quota is the
+# reason, not a capability change: three times the quota on the same `zai` provider.
 # **`grok-4.6` LEFT THIS SLOT FOR `coder_adversarial`, OWNER'S RULING
 # 2026-08-27.** `glm-5.3` takes its place as the overflow head, moved here
 # from `mathematician_adversarial` above, which is now dropped to `glm-5.3`
