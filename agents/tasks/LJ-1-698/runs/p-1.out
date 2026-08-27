@@ -1,0 +1,43 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T01:48:15Z
+Checking LJ-1-698.Probe698 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-698/agents/tasks/LJ-1-698/Probe698.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-698/agents/tasks/LJ-1-698/Probe698.agda:26.25-45: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  ∅
+  ∅-empty
+when scope checking the declaration
+  open .#V.Model-905728432327158691 {ℓ} using (∅; ∅-empty)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-698/agents/tasks/LJ-1-698/Probe698.agda:99.6-7: error: [NotInScope]
+Not in scope:
+  ∅
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-698/agents/tasks/LJ-1-698/Probe698.agda:99.6-7
+    (did you mean
+       '.#L.Axioms.Basic-15942814556282097799.ModelL.isZFCModel.∅' or
+       '.#L.Axioms.Basic-15942814556282097799.ModelL.isZFModel.∅' or
+       '.#L.Hierarchy-7811811177772363346.ModelL.isZFCModel.∅' or
+       '.#L.Hierarchy-7811811177772363346.ModelL.isZFModel.∅' or
+       '.#V.Model-905728432327158691.Model.isZFCModel.∅' or
+       '.#V.Model-905728432327158691.Model.isZFModel.∅'?)
+when scope checking ∅
+        2.31 real         1.71 user         0.23 sys
+           608534528  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34943  page reclaims
+                4277  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 715  voluntary context switches
+                2244  involuntary context switches
+         21804373224  instructions retired
+          7741011014  cycles elapsed
+           550552536  peak memory footprint
+EXIT=42
+ended 2026-08-27T01:48:17Z

@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T01:48:42Z
+Checking LJ-1-698.Probe698 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-698/agents/tasks/LJ-1-698/Probe698.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-698/agents/tasks/LJ-1-698/Probe698.agda:100.28-30: error: [NotInScope]
+Not in scope:
+  tt
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-698/agents/tasks/LJ-1-698/Probe698.agda:100.28-30
+when scope checking tt
+        1.71 real         1.55 user         0.15 sys
+           608419840  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39190  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 348  involuntary context switches
+         21356905003  instructions retired
+          7089912858  cycles elapsed
+           550536128  peak memory footprint
+EXIT=42
+ended 2026-08-27T01:48:44Z
