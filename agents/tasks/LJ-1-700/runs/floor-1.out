@@ -1,0 +1,32 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T02:11:16Z
+Checking LJ-1-700.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-700/runs/FLOOR.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-679.Probe679 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-679/Probe679.agda).
+  Checking LJ-1-673.Probe673 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-673/Probe673.agda).
+   Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-667/Probe667.agda).
+    Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-667/runs/W3.agda).
+     Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-700/agents/tasks/LJ-1-520/Probe520.agda).
+time: command terminated abnormally
+       84.27 real        79.04 user         3.15 sys
+          1588887552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              440294  page reclaims
+                6923  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                1797  voluntary context switches
+               57763  involuntary context switches
+        922238576835  instructions retired
+        325715033760  cycles elapsed
+          1694664456  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-27T02:12:40Z
