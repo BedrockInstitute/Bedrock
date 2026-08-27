@@ -444,29 +444,21 @@ system_free_floor_pct = 8     # C-12's floor, unchanged -- unrelated to the per-
 # named a model), so a future re-pointing needs no edit to either test file as
 # long as the five slot names, the two pairs and the schema stay the same.
 mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
-# **`grok-4.6` LEFT THIS SLOT, OWNER'S RULING 2026-08-26.** `glm-5.3` moves to
-# the FRONT (it was second, behind `grok-4.6`, since 2026-08-22). `grok-4.6`
-# moves the other way, into `coder`'s second head: it now authors Agda instead
-# of critiquing it, and it sits in neither critic slot any more.
-# **THE SECOND HEAD WAS `claude-opus-5` FOR ONE DRAFT OF THIS RULING AND NEVER
-# LANDED THAT WAY.** `test_pod_launcher.py`'s DD25 pair check caught it before
-# commit: `mathematician` is `claude-opus-5` too, and the check forbids a critic
-# sharing a model with its OWN paired author, full stop, regardless of what
-# specific work either dispatch reviews. `claude-fable-5` at `high`, owner's own
-# words, takes the seat instead. It is untried in this file: not
-# `mathematician`'s model, not either `coder` head (`Qwen3.8-27B-oQ4e-mtp`,
-# `grok-4.6`), so it carries no self-review risk even under the STRICTER
-# reading the pair-check does not formally enforce (a model that authors as
-# `coder` also sitting in `mathematician_adversarial` would pass the check
-# today but could still review its own return on a task where it held both
-# slots). `glm-5.3`'s `max_concurrency = 1` is the same policy cap every
-# `glm-5.3`/`grok-4.6` row in this file carries (owner's ruling 2026-08-24).
-# Everything above this paragraph, about `grok-4.6`'s ordering and cap here,
-# is history.
-mathematician_adversarial = [
-  { model = "glm-5.3",        effort = "",     harness = "herdr-pi",     sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "claude-fable-5", effort = "high", harness = "herdr-claude", sandbox = "acceptEdits" },
-]
+# **DROPPED TO A SINGLE HEAD, `glm-5.3` ALONE, OWNER'S RULING 2026-08-27.**
+# `claude-fable-5` leaves this slot; A29 has nowhere left to retry to here, the
+# same shape every other single-head slot in this file already has.
+# **THIS RE-OPENS THE SELF-REVIEW GAP THE PRIOR PARAGRAPH NAMED AND THE OWNER
+# HAS NOW ACCEPTED, KNOWINGLY, THE SAME DAY.** `glm-5.3` is ALSO `coder`'s
+# second head below, and DD25's formal check does not see this: it tests only
+# the two named pairs, (coder, coder_adversarial) and (mathematician,
+# mathematician_adversarial), never a cross-slot overlap. A `coder` task
+# dispatched to `glm-5.3` that later escalates here (AD27, the ordinary
+# `stop-stated`/NO-GO review path this campaign uses constantly) puts `glm-5.3`
+# in front of its own prior return. Asked directly; the owner's answer was to
+# accept the risk as stated rather than route around it. `max_concurrency = 1`
+# is the same policy cap every `glm-5.3`/`grok-4.6` row in this file carries
+# (owner's ruling 2026-08-24). Everything above this paragraph is history.
+mathematician_adversarial = { model = "glm-5.3", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 }
 # THE LOCAL HEAD IS WRITTEN FIRST because it is the head the owner wants spent
 # first. That order is the tie-break between two CAPPED heads with headroom, and
 # there is one capped head here; since A29 it is ALSO the order the retry walks.
@@ -499,27 +491,32 @@ mathematician_adversarial = [
 # above), a policy choice this file records without a machine-level cause behind
 # it.
 coder                     = [
-  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "medium", harness = "herdr-pi",   sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "grok-4.6",             effort = "high",   harness = "herdr-grok", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "medium", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
+  { model = "glm-5.3",              effort = "",       harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
 ]
-# **`claude-opus-5` LEFT THIS SLOT FOR BOTH CRITIC SLOTS, OWNER'S RULING
-# 2026-08-26.** `grok-4.6` takes its place as the second head, moved here from
-# `coder_adversarial` (and `mathematician_adversarial` above carries the same
-# move). Qwen's first-head position and `max_concurrency = 1` are unchanged;
-# `grok-4.6` keeps its own established `effort = "high"` and its policy cap
-# (owner's ruling 2026-08-24, every `glm-5.3`/`grok-4.6` row in this file).
-# **`coder_adversarial` AND `mathematician_adversarial` NOW CARRY THE IDENTICAL
-# PAIR AGAIN**, `{glm-5.3, claude-opus-5}` this time instead of `{grok-4.6,
-# glm-5.3}`. DD25 still permits it for the same reason it did before: it
-# forbids an author reviewing its own work, not two different critics sharing
-# heads. `grok-4.6` now authors only through `coder`, and sits in neither
-# critic slot, so it is never asked to judge its own return. Everything above
-# this paragraph, about `claude-opus-5` and `glm-5.3` swapping into this slot
-# and `coder_adversarial`, is history.
-coder_adversarial         = [
-  { model = "glm-5.3",       effort = "",     harness = "herdr-pi",     sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "claude-opus-5", effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" },
-]
+# **`grok-4.6` LEFT THIS SLOT FOR `coder_adversarial`, OWNER'S RULING
+# 2026-08-27.** `glm-5.3` takes its place as the overflow head, moved here
+# from `mathematician_adversarial` above, which is now dropped to `glm-5.3`
+# alone (see that slot's own comment for the self-review risk this creates and
+# the owner's explicit acceptance of it). Qwen's first-head position,
+# `effort = "medium"` and `max_concurrency = 1` are unchanged. `glm-5.3` keeps
+# its established `effort = ""` and its policy cap (owner's ruling 2026-08-24,
+# every `glm-5.3`/`grok-4.6` row in this file). Everything above this
+# paragraph, about `grok-4.6`'s history in this slot, stands as written before.
+#
+# **DROPPED TO A SINGLE HEAD, `grok-4.6` ALONE, OWNER'S RULING 2026-08-27.**
+# `glm-5.3` and `claude-opus-5` both leave this slot; `glm-5.3` moves to
+# `coder`'s second head above, `claude-opus-5` sits in no head at all today.
+# `grok-4.6` keeps the `effort = "high"` this file has always given it.
+# `max_concurrency = 1` is unchanged from every prior `grok-4.6` row in this
+# file: the policy cap (owner's ruling 2026-08-24) sits on EVERY `glm-5.3` and
+# `grok-4.6` row wherever it appears, a fact about the MODEL and not the slot
+# (`test_pod_launcher.py`'s own check reads it the same way). `grok-4.6` now
+# authors only through `coder`'s second head, and this slot never reviews a
+# `grok-4.6`-authored return with `grok-4.6` itself: DD25's own pair check,
+# (coder, coder_adversarial), still holds here. Everything above this
+# paragraph, about `glm-5.3` and `claude-opus-5` in this slot, is history.
+coder_adversarial         = { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits", max_concurrency = 1 }
 # **THE MAINTAINER MOVED TO `claude-sonnet-5` at effort `xhigh`, owner's ruling
 # 2026-08-21.** It was `claude-opus-5` at `xhigh` from 2026-08-20. The slot is
 # resident, so the change is not a re-dispatch: the old session is retired, and
