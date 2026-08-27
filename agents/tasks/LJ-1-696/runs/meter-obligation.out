@@ -1,0 +1,2 @@
+pass      exit=0        1.18s  agents/tasks/LJ-1-696/Probe696.agda::describes-at-n3
+witness: 0 UNRESOLVED of 1, 1.18 s, probe_red=False
