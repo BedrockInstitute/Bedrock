@@ -1,0 +1,49 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.709] FLOOR.  The assembly of same-as-graph-both with its BODY
+-- under a hole.  This is the obligation type of Probe709.agda against
+-- the SAME imports, so the measured price here is the floor the frame
+-- costs (owner's ruling 2026-08-23: measure the floor before you
+-- prove).  NOT checked by the acceptance sweep: the file stays named
+-- .agda.txt, is copied to FLOOR.agda only for its one run, and the
+-- copy is removed after.  One unsolved meta is expected: the hole.
+--
+-- The reverse is IMPORTED from LJ-1-703.Probe703, the tracked commit
+-- ([LJ-1.703]), never restated by hand.  Lands nothing in src/.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-709.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import Cubical.Data.Vec using ( lookup )
+open import Cubical.Data.Nat using ( _+_ )
+
+import LJ-1-520.Probe520 {ℓ} lem as P520
+import LJ-1-690.Probe690 {ℓ} lem as P690
+import LJ-1-703.Probe703 {ℓ} lem as P703
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+
+module Pin {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+  module FPin = P690.Pin {n} w b γ
+  module RPin = P703.Pin {n} w b γ
+
+  same-as-graph-both :
+    P690.PowIterHyp →
+    IsOrd (fst (lookup b γ)) →
+    FPin.Bridge →
+    RPin.Bridge →
+    P520.SameAsGraph w b γ
+  same-as-graph-both = {!!}

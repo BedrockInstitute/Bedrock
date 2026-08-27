@@ -1,0 +1,30 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T06:43:12Z
+Checking LJ-1-709.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-709/agents/tasks/LJ-1-709/runs/FLOOR.agda).
+ Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-709/agents/tasks/LJ-1-520/Probe520.agda).
+ Checking LJ-1-690.Probe690 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-709/agents/tasks/LJ-1-690/Probe690.agda).
+  Checking LJ-1-690.runs.DROP (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-709/agents/tasks/LJ-1-690/runs/DROP.agda).
+   Checking LJ-1-690.runs.RENAME3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-709/agents/tasks/LJ-1-690/runs/RENAME3.agda).
+time: command terminated abnormally
+       10.56 real         9.64 user         0.42 sys
+           659554304  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48788  page reclaims
+                4428  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 736  voluntary context switches
+                8346  involuntary context switches
+        109529654014  instructions retired
+         39241677731  cycles elapsed
+           629589024  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-27T06:43:22Z
