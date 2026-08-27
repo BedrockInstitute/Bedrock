@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T13:42:21Z
+        0.84 real         0.72 user         0.10 sys
+           275103744  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18882  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  67  voluntary context switches
+                 192  involuntary context switches
+         10156756718  instructions retired
+          3327824580  cycles elapsed
+           218006248  peak memory footprint
+EXIT=0
+ended 2026-08-27T13:42:22Z

@@ -10,7 +10,11 @@ obligation: agents/tasks/LJ-1-710/Probe710.agda::the-obligation
 verdict: **NO-GO on the obligation; GREEN frame and GREEN merge at an own-name
 presentation delivered beside it.** `review-of-bound2-in-limit.md` states the
 stop with `file:line`. The probe typechecks clean under the pane caliber:
-`runs/final.out`, EXIT=0, 1.43 s, 280,788,992 bytes.
+`runs/final.out`, EXIT=0 (on disk 2026-08-27 it reads `1.50 real`,
+280887296 bytes; the harness rewrote it after the report named an
+earlier pair of decimals). This dispatch re-ran the same delivered
+file green under the pane caliber: `runs/t-recap.out`, EXIT=0,
+0.84 s warm, 275103744 bytes.
 
 ## 1. WHAT THE DISPATCH BUILT
 
@@ -38,7 +42,7 @@ One file, `agents/tasks/LJ-1-710/Probe710.agda`, four sections:
 | t-e1 | can the union-closure clause be INSTANCED against `fst (bound2 …)` through elaboration unification alone? | NO-GO, `[UnequalTerms]` `L.Ordinal.f σ₁ σ₂ o₁ o₂ x != mf x` | runs/t-e1.out:5-9 |
 | t-paths2 | is bound2's where-bound family referenceable by qualified name? | NO-GO, `[NotInScope]` for `L.Ordinal.bound2.f` | runs/t-paths2.out:5-8 |
 | t-selflambda | is a locally defined clause function convertible to its own written case lambda at a variable? | NO-GO, same wall on MY OWN symbol | runs/t-selflambda.out:5-6 |
-| final | does the delivered probe check clean in place? | GO, EXIT=0, 1.43 s, 280 MB | runs/final.out |
+| final | does the delivered probe check clean in place? | GO, EXIT=0 (2026-08-27 rerun: EXIT=0, runs/t-recap.out) | runs/final.out |
 
 The intermediate diagnostics `t-floor … t-spelling` record the harness bring-up
 and the discovery that `_∈ˢ_` memberships over quantified families need the
@@ -92,7 +96,8 @@ Per the Boundary this stop is a deliverable:
 | trimmed-frame floor (type only, cold) | 1.37 s, 278 MB, EXIT=0 (runs/t-small.out) |
 | elaboration-unification wall | 1.48 s, 277 MB, EXIT=42 (runs/t-e1.out) |
 | self-lambda conversion wall | 1.45 s, 283 MB, EXIT=42 (runs/t-selflambda.out) |
-| delivered probe | 1.43 s, 280,788,992 bytes, EXIT=0 (runs/final.out) |
+| delivered probe, write time | EXIT=0 (runs/final.out; the harness rewrote that out after this report first saved, so the original write-time decimals live only in the review chain record) |
+| delivered probe, 2026-08-27 rerun, warm | 0.84 s, 275103744 bytes, EXIT=0 (runs/t-recap.out) |
 | brief estimate | 60 to 150 lines |
 | probe code lines | see file; single `.agda`, comments included |
 | in-fence lines | 0 (raw `.agda`, ratio bar cannot fire) |
@@ -119,5 +124,17 @@ process per run throughout.
 - `dev/literature/devlin-errata.md:1` `# Devlin errata: documented error classes (do-not-repeat checklist)`. Declined: not used. No classical text claim enters the deliverable beyond the D-10 note already sourced above.
 - `dev/literature/BIBLIOGRAPHY.md:1` `# Bibliography for the rud route`. Declined: not used. Slot roles and Devlin II.5 cover every external citation this return makes.
 
-(Primary sources were not consulted: the disagreement this dispatch adjudicated
-was between Agda's converter and a source-tree name, not between texts.)
+- `dev/literature/primary-sources.md:23-24` "Extraction note: the Dev chapters
+  are OCR scans (ABBYY), so math glyphs are degraded; the two load-bearing
+  pages, Dev 236 (Basis Lemma list) and Dev 251 (J-recursion), were re-OCR'd
+  with tesseract and cross-checked." Read 2026-08-27 as an amendment, sent back
+  for the survey answer missing above; the source was not opened at write
+  time. D-10 meaning is unchanged: the classical truth side rests on scans whose
+  load-bearing pages were re-extracted and cross-checked, so the obstruction
+  measured here stays a naming fact, not a truth fact.
+
+Amendment scope, 2026-08-27, third dispatch: the LITERATURE bullet above,
+cured author-side under the program's standing instruction that the citation
+belongs in this file, and the stale decimals at the HEAD verdict, the ladder
+table and the price table, each now citing what resolves today. No verdict,
+claim or measurement above changed meaning.
