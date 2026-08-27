@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T00:03:27Z
+Checking LJ-1-694.runs.Floor694 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-694/agents/tasks/LJ-1-694/runs/Floor694.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-694/agents/tasks/LJ-1-694/runs/Floor694.agda:63.25-26: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-694/agents/tasks/LJ-1-694/runs/Floor694.agda:63.25-26
+        1.54 real         0.82 user         0.20 sys
+           267681792  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14070  page reclaims
+                4330  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 636  voluntary context switches
+                2776  involuntary context switches
+          9672091008  instructions retired
+          4080652793  cycles elapsed
+           208339688  peak memory footprint
+EXIT=42
+ended 2026-08-27T00:03:28Z

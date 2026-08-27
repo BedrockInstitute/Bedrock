@@ -1,0 +1,6 @@
+pass      exit=0        1.04s  agents/tasks/LJ-1-694/Probe694.agda::iterate-from-families  (grouped run, exit 0)
+pass      exit=0        1.04s  agents/tasks/LJ-1-694/Probe694.agda::not-sgl  (grouped run, exit 0)
+pass      exit=0        1.04s  agents/tasks/LJ-1-694/Probe694.agda::not-pair  (grouped run, exit 0)
+pass      exit=0        1.04s  agents/tasks/LJ-1-694/Probe694.agda::n3  (grouped run, exit 0)
+pass      exit=0        1.04s  agents/tasks/LJ-1-694/Probe694.agda::n3-ord  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 5, 1.04 s, probe_red=False

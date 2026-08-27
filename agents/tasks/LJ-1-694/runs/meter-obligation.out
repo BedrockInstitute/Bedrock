@@ -1,0 +1,2 @@
+pass      exit=0        1.03s  agents/tasks/LJ-1-694/Probe694.agda::iterate-from-families
+witness: 0 UNRESOLVED of 1, 1.03 s, probe_red=False
