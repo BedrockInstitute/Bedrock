@@ -1,0 +1,29 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T21:14:28Z
+Checking LJ-1-643.runs.T11 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/agents/tasks/LJ-1-643/runs/T11.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/agents/tasks/LJ-1-643/runs/T11.agda:11.8-9: error: [NotInScope]
+Not in scope:
+  ∅
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/agents/tasks/LJ-1-643/runs/T11.agda:11.8-9
+when scope checking ∅
+        0.66 real         0.57 user         0.08 sys
+           257835008  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               17773  page reclaims
+                  27  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 127  involuntary context switches
+          8455152820  instructions retired
+          2664941474  cycles elapsed
+           199951080  peak memory footprint
+EXIT=42
+ended 2026-08-25T21:14:29Z

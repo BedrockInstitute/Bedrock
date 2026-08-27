@@ -1,0 +1,30 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T21:01:36Z
+Checking LJ-1-643.runs.T2 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/agents/tasks/LJ-1-643/runs/T2.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/agents/tasks/LJ-1-643/runs/T2.agda:9.10-12: error: [ShadowedModule]
+Duplicate definition of module SV. Previous definition of module SV
+at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/src/L/CardinalAbove.lagda.md:57.8-10
+when scope checking the declaration
+  module SV = hPropStructure 𝒮ᵥ
+        2.68 real         2.45 user         0.21 sys
+           740507648  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47241  page reclaims
+                  15  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 573  involuntary context switches
+         31930367277  instructions retired
+         10666626246  cycles elapsed
+           682837048  peak memory footprint
+EXIT=42
+ended 2026-08-25T21:01:38Z

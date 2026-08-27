@@ -1,0 +1,31 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T21:09:23Z
+Checking LJ-1-643.runs.T4 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/agents/tasks/LJ-1-643/runs/T4.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-643/agents/tasks/LJ-1-643/runs/T4.agda:32.21-29: error: [UnequalTerms]
+(NoInjOrd →
+ (a : S) →
+ IsOrd a →
+ ∥ Σ-syntax S (λ θ → IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩) ∥₁)
+should be a sort, but it isn't
+when checking that the expression row3type has type _65
+        3.03 real         2.43 user         0.27 sys
+           592166912  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               33945  page reclaims
+                4262  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 692  voluntary context switches
+                2226  involuntary context switches
+         32135366163  instructions retired
+         11065952569  cycles elapsed
+           532743128  peak memory footprint
+EXIT=42
+ended 2026-08-25T21:09:26Z
