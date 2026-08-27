@@ -1,0 +1,24 @@
+wallcap=900s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T17:21:55Z
+Checking LJ-1-636.runs.Warm2 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-636/agents/tasks/LJ-1-636/runs/Warm2.agda).
+        3.21 real         2.94 user         0.24 sys
+           735019008  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               46917  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 129  voluntary context switches
+                1003  involuntary context switches
+         31389505328  instructions retired
+         12797053353  cycles elapsed
+           676758560  peak memory footprint
+EXIT=0
+ended 2026-08-25T17:21:58Z

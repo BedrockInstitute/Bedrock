@@ -1,0 +1,12 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.636] interface warm-up, step 2.  `L.CardinalAbove` alone, in its
+-- own process.  runs/final-1.out walled the 2g cap while carrying this
+-- chapter's rebuild ON TOP of L.BoundedSubset's and V.CantorBernstein's.
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-636.runs.Warm2 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import L.CardinalAbove {ℓ} lem using ( cardAboveAt )

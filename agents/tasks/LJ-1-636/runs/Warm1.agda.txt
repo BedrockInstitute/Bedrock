@@ -1,0 +1,14 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.636] interface warm-up, step 1.  `L.BoundedSubset`'s interface
+-- is OLDER than its own dependency `L.StageCardinal`'s, so Agda rebuilds
+-- it inside any probe that imports it.  Rebuilding it in its OWN process
+-- keeps the probe's process from carrying three chapters at once, which
+-- is what walled the heap at runs/final-1.out.
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-636.runs.Warm1 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import L.BoundedSubset {ℓ} lem using ( IsCardinal )

@@ -1,0 +1,254 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.636]  AT WHICH DELTA IS THE `sq` PARAMETER ACTUALLY APPLIED?
+--
+-- THE OBLIGATION.  `sq-demand`: for EACH application of
+-- `L.StageCardinal`'s `sq` parameter in `src/`, a term naming the delta
+-- it is applied at, and whether that delta is forced to be `ω`, forced
+-- to be strictly above `ω`, or ranges over both.
+--
+-- THIS FILE CARRIES NO HOLE AND NO POSTULATE, so every line of it is a
+-- measurement and not a claim.  Nothing lands in `src/`.  This MEASURES
+-- A DEMAND; IT BUILDS NO SQUARE LAW.  The `sq` of every term below is a
+-- HYPOTHESIS, never an inhabitant.
+--
+-- THE CENSUS IS TWO SITES.  Re-derived, not taken from the brief:
+--
+--   grep -rn '\bsq\b' src/ --include='*.lagda.md'
+--
+-- gives, in the three files of the chain, exactly these occurrences of
+-- the parameter (`sq` in `src/FOL/Count.lagda.md` and
+-- `src/L/Hierarchy.lagda.md:508` are unrelated names, and the `sq` of
+-- `src/L/Ordinal/SquareLaw.lagda.md:685` is the square-law PREDICATE,
+-- not this parameter):
+--
+--   BINDERS      src/L/StageCardinal.lagda.md:17     the parameter
+--                src/L/BoundedSubset.lagda.md:1388   re-bound
+--                src/L/BoundedSubset.lagda.md:1748   re-bound (BSA634)
+--                src/L/StageBound.lagda.md:67        re-bound (SqFam)
+--   FORWARDINGS  src/L/BoundedSubset.lagda.md:1397   handed to the module
+--                src/L/BoundedSubset.lagda.md:1751   handed on
+--                src/L/StageBound.lagda.md:75, :115  handed on
+--   APPLICATIONS src/L/StageCardinal.lagda.md:293    SITE A, below
+--                src/L/BoundedSubset.lagda.md:1526   SITE B, below
+--
+-- A forwarding is not an application: it applies no argument to `sq`.
+-- The count of APPLICATIONS is TWO, and the brief's premise 3 stands.
+--
+-- CALIBER.  The program set GHCRTS on this pane.  I did not set it.
+-- One Agda process at a time.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-636.runs.Bisect1 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
+open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import L.Ordinal {ℓ} using ( ω-ord; suc-ord )
+import L.StageCardinal
+
+open import Cubical.Data.Sigma using ( Σ-syntax; _×_; _,_ )
+import Cubical.Data.Empty as Empty
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet using ( ω; sucV )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- =====================================================================
+-- SECTION 0.  THE PARAMETER, COPIED FROM ITS BINDER.
+-- =====================================================================
+
+-- The value the parameter delivers at one delta.  This is the tail of
+-- src/L/StageCardinal.lagda.md:18-20, verbatim up to binder names.
+Sq : S → Type ℓ
+Sq δ = Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
+         ((u v : ⟪ δ ⟫ × ⟪ δ ⟫) → f u ≡ f v → u ≡ v)
+
+-- The parameter itself: src/L/StageCardinal.lagda.md:17-20.
+-- Its own clause EXCLUDES `δ ∈ ω` and ADMITS `δ ≡ ω`, so the domain of
+-- the parameter is already both-sided.  The question this file settles
+-- is not what the DOMAIN admits, but at which deltas the two CALL SITES
+-- reach into it.
+SqParam : S → Type (ℓ-suc ℓ)
+SqParam α₀ = (δ : S) → ⟨ δ ∈ˢ sucV α₀ ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥) → Sq δ
+
+-- The injection shape, definitionally src/L/StageCardinal.lagda.md:221.
+Inj : Type ℓ → Type ℓ → Type ℓ
+Inj A B = Σ[ f ∈ (A → B) ] ((x y : A) → f x ≡ f y → x ≡ y)
+
+-- =====================================================================
+-- SECTION 1.  WHAT A CENSUS ROW IS.
+-- =====================================================================
+
+-- A site's hypotheses on its own delta, as a family over the ambient
+-- `α₀` at which `L.StageCardinal` is instantiated.
+Hyp : Type (ℓ-suc (ℓ-suc ℓ))
+Hyp = S → S → Type (ℓ-suc ℓ)
+
+data Verdict : Type where
+  only-ω           : Verdict
+  strictly-above-ω : Verdict
+  ranges-over-both : Verdict
+
+Forces-ω : Hyp → Type (ℓ-suc ℓ)
+Forces-ω H = (α₀ δ : S) → H α₀ δ → δ ≡ ω
+
+Forces-above : Hyp → Type (ℓ-suc ℓ)
+Forces-above H = (α₀ δ : S) → H α₀ δ → ⟨ ω ∈ˢ δ ⟩
+
+Admits-ω : Hyp → Type (ℓ-suc ℓ)
+Admits-ω H = Σ[ α₀ ∈ S ] (IsOrd α₀ × H α₀ ω)
+
+Admits-above : Hyp → Type (ℓ-suc ℓ)
+Admits-above H = Σ[ α₀ ∈ S ] Σ[ δ ∈ S ] (IsOrd α₀ × H α₀ δ × ⟨ ω ∈ˢ δ ⟩)
+
+-- THE VERDICT IS NOT A TAG: its evidence type is computed from it, so a
+-- row cannot carry a verdict it has not paid for.  `ranges-over-both`
+-- costs two witnesses AND the refutation of the other two verdicts.
+Evidence : Hyp → Verdict → Type (ℓ-suc ℓ)
+Evidence H only-ω           = Forces-ω H
+Evidence H strictly-above-ω = Forces-above H
+Evidence H ranges-over-both =
+  Admits-ω H × Admits-above H
+  × ((Forces-ω H → Empty.⊥) × (Forces-above H → Empty.⊥))
+
+record Site : Type (ℓ-suc (ℓ-suc ℓ)) where
+  constructor row
+  field
+    -- The hypotheses the site imposes on the delta it applies `sq` at.
+    hyps     : Hyp
+    -- THE TERM THAT NAMES THE DELTA: the site's own application,
+    -- rebuilt from those hypotheses and nothing else.
+    applies  : (α₀ : S) → IsOrd α₀ → (sq : SqParam α₀)
+             → (δ : S) → hyps α₀ δ → Sq δ
+    verdict  : Verdict
+    evidence : Evidence hyps verdict
+
+-- The two refutations, once, for every row that claims both sides.
+no-force-ω : (H : Hyp) → Admits-above H → Forces-ω H → Empty.⊥
+no-force-ω H (α₀ , δ , _ , h , ω∈δ) f =
+  ∈-irrefl ω (subst (λ z → ⟨ ω ∈ˢ z ⟩) (f α₀ δ h) ω∈δ)
+
+no-force-above : (H : Hyp) → Admits-ω H → Forces-above H → Empty.⊥
+no-force-above H (α₀ , _ , h) f = ∈-irrefl ω (f α₀ ω h)
+
+-- =====================================================================
+-- SECTION 2.  THE TWO ORDINALS THE WITNESSES USE.
+-- =====================================================================
+
+ω∉ω : ⟨ ω ∈ˢ ω ⟩ → Empty.⊥
+ω∉ω = ∈-irrefl ω
+
+sucVω-ord : IsOrd (sucV ω)
+sucVω-ord = suc-ord ω-ord
+
+ω∈sucVω : ⟨ ω ∈ˢ sucV ω ⟩
+ω∈sucVω = self∈sucV ω
+
+-- `sucV ω ∉ ω`: the shape of src/L/StageCardinal.lagda.md:606.
+sucVω∉ω : ⟨ sucV ω ∈ˢ ω ⟩ → Empty.⊥
+sucVω∉ω h = ∈-irrefl ω (ω-ord .fst ω∈sucVω h)
+
+ω∈sucVsucVω : ⟨ ω ∈ˢ sucV (sucV ω) ⟩
+ω∈sucVsucVω = ∈sucV-inl {A = sucV ω} {x = ω} ω∈sucVω
+
+-- =====================================================================
+-- SECTION 3.  SITE A.  src/L/StageCardinal.lagda.md:293
+--
+--   module LimitStep (α : S) (α∈suc : ⟨ α ∈ˢ sucV α₀ ⟩) (oα : IsOrd α)
+--                    (infα : ⟨ α ∈ˢ ω ⟩ → Empty.⊥) ... where
+--     module B = Bound α oα infα (sq α α∈suc infα)
+--
+-- THE DELTA IS `LimitStep`'s OWN `α`, and the three hypotheses the
+-- application reads are exactly `α∈suc`, `oα` and `infα`.  `LimitStep`
+-- is reached through `limit-step` (:405-413), `Upper.step` (:614) and
+-- `Upper.stage-card-upper = ∈-induction step` (:619), whose telescope IS
+-- `H-A`.  So the site is not reached at ONE delta: the ∈-induction
+-- reaches it at EVERY member of `H-A`.
+-- =====================================================================
+
+H-A : Hyp
+H-A α₀ δ = IsOrd δ × ⟨ δ ∈ˢ sucV α₀ ⟩ × (⟨ δ ∈ˢ ω ⟩ → Empty.⊥)
+
+applies-A : (α₀ : S) → IsOrd α₀ → (sq : SqParam α₀)
+          → (δ : S) → H-A α₀ δ → Sq δ
+applies-A α₀ oα₀ sq δ (oδ , δ∈suc , infδ) = sq δ δ∈suc infδ
+
+-- THE REACH, MEASURED AND NOT ARGUED.  `stage-card-upper` accepts every
+-- member of `H-A` and no more, so `H-A` is the site's reachable set.
+module AtFrame (α₀ : S) (oα₀ : IsOrd α₀) (sq : SqParam α₀) where
+
+  module SC = L.StageCardinal {ℓ} lem α₀ oα₀ sq
+
+  reach-A : (δ : S) → H-A α₀ δ → Inj ⟪ Lset δ ⟫ ⟪ δ ⟫
+  reach-A δ (oδ , δ∈suc , infδ) = SC.Upper.stage-card-upper δ oδ δ∈suc infδ
+
+  -- SITE B's application, rebuilt at this frame.  See section 4.
+  applies-B-here : (α₀∉ω : ⟨ α₀ ∈ˢ ω ⟩ → Empty.⊥) → Sq α₀
+  applies-B-here α₀∉ω = sq α₀ (self∈sucV α₀) α₀∉ω
+
+-- BOTH WITNESSES LIVE AT ONE AMBIENT `α₀ = sucV ω`, so the site is
+-- reached at `ω` AND strictly above `ω` in a SINGLE instantiation of
+-- the chapter.  This is stronger than two separate frames.
+A-admits-ω : Admits-ω H-A
+A-admits-ω = sucV ω , sucVω-ord , (ω-ord , ω∈sucVsucVω , ω∉ω)
+
+A-admits-above : Admits-above H-A
+A-admits-above =
+  sucV ω , sucV ω
+  , sucVω-ord
+  , (sucVω-ord , self∈sucV (sucV ω) , sucVω∉ω)
+  , ω∈sucVω
+
+site-A : Site
+site-A = row H-A applies-A ranges-over-both
+  ( A-admits-ω , A-admits-above
+  , no-force-ω H-A A-admits-above , no-force-above H-A A-admits-ω )
+
+-- =====================================================================
+-- SECTION 4.  SITE B.  src/L/BoundedSubset.lagda.md:1526
+--
+--   module SC = L.StageCardinal {ℓ} lem α ordα sq          (:1397)
+--   ...
+--   module B = SC.Bound α ordα α∉ω (sq α (self∈sucV α) α∉ω) (:1526)
+--
+-- THE DELTA IS THE AMBIENT `α₀` ITSELF: `SC` is instantiated at the
+-- enclosing module's own `α` (:1397), so `α₀ ≡ α`, and the application
+-- is at `δ = α₀`, the TOP of the parameter's domain `sucV α₀`.
+--
+-- MEASURED: the application reads only `α∉ω`.  It does not read `ordα`,
+-- `κ`, `ordκ`, `cardκ`, `κ∉ω` or `α∈κ`.  `H-B` below is therefore the
+-- site's own hypothesis set, and section 5 measures the ENCLOSING
+-- telescope separately so that dropping the cardinal side costs nothing.
+-- =====================================================================
+
+H-B : Hyp
+H-B α₀ δ = (δ ≡ α₀) × (⟨ α₀ ∈ˢ ω ⟩ → Empty.⊥)
+
+applies-B : (α₀ : S) → IsOrd α₀ → (sq : SqParam α₀)
+          → (δ : S) → H-B α₀ δ → Sq δ
+applies-B α₀ oα₀ sq δ (e , α₀∉ω) =
+  subst Sq (sym e) (sq α₀ (self∈sucV α₀) α₀∉ω)
+
+B-admits-ω : Admits-ω H-B
+B-admits-ω = ω , ω-ord , (refl , ω∉ω)
+
+B-admits-above : Admits-above H-B
+B-admits-above = sucV ω , sucV ω , sucVω-ord , (refl , sucVω∉ω) , ω∈sucVω
+
+site-B : Site
+site-B = row H-B applies-B ranges-over-both
+  ( B-admits-ω , B-admits-above
+  , no-force-ω H-B B-admits-above , no-force-above H-B B-admits-ω )
+
+-- BISECT 1: sections 0 to 4 only.  Section 5 (the cardinal side) and
+-- the two imports it alone needs are cut.
+demand-1 : Site × Site
+demand-1 = site-A , site-B

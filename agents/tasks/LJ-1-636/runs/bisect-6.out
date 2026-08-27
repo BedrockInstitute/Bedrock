@@ -1,0 +1,24 @@
+wallcap=900s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-25T17:26:09Z
+Checking LJ-1-636.runs.Bisect6 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-636/agents/tasks/LJ-1-636/runs/Bisect6.agda).
+        1.11 real         0.97 user         0.11 sys
+           308707328  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20861  page reclaims
+                  46  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 265  involuntary context switches
+         11896493226  instructions retired
+          4343664922  cycles elapsed
+           249365248  peak memory footprint
+EXIT=0
+ended 2026-08-25T17:26:11Z
