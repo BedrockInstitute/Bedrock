@@ -1,0 +1,33 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T02:51:14Z
+Checking LJ-1-699.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-699/runs/FLOOR.agda).
+ Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-520/Probe520.agda).
+ Checking LJ-1-690.Probe690 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-690/Probe690.agda).
+  Checking LJ-1-690.runs.DROP (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-690/runs/DROP.agda).
+   Checking LJ-1-690.runs.RENAME3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-690/runs/RENAME3.agda).
+  Checking LJ-1-690.runs.UNPACK (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-690/runs/UNPACK.agda).
+  Checking LJ-1-690.runs.UNPACKAT (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-690/runs/UNPACKAT.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-699/runs/FLOOR.agda:75.26-30: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-699/agents/tasks/LJ-1-699/runs/FLOOR.agda:75.26-30
+       55.81 real        54.91 user         0.49 sys
+           827883520  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48145  page reclaims
+                4459  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 685  voluntary context switches
+               14453  involuntary context switches
+        721058611980  instructions retired
+        220571416397  cycles elapsed
+           767034472  peak memory footprint
+EXIT=42
+ended 2026-08-27T02:52:10Z
