@@ -1,0 +1,30 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T19:58:28Z
+Checking LJ-1-685.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-685/runs/FLOOR.agda).
+ Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-520/Probe520.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-685/runs/FLOOR.agda:45.38-39: error: [UnequalTerms]
+(Σ (FOL.ZFStructure.ZFStructure.S 𝒮ᵥ) (λ x → x ∈ᶜ isL)) !=<
+(Cubical.HITs.CumulativeHierarchy.Base.V ℓ)
+when checking that the expression δ has type
+FOL.ZFStructure.ZFStructure.S 𝒮ᵥ
+        2.89 real         2.31 user         0.26 sys
+           600211456  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34257  page reclaims
+                4436  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 514  voluntary context switches
+                2738  involuntary context switches
+         25447609484  instructions retired
+         10427495092  cycles elapsed
+           539395032  peak memory footprint
+EXIT=42
+ended 2026-08-26T19:58:30Z

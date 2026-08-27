@@ -1,0 +1,18 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.685] Does renameFo commute with satGraphAt after unfolding?
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-685.runs.RENAME2 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.Syntax using ( Formula )
+open import FOL.Manipulation.Renaming using ( renameFo )
+open import L.Coding.Graph {ℓ} lem using ( satGraphAt )
+
+opaque
+  unfolding satGraphAt
+  rename-sat : {n m : ℕ} (ρ : Fin n → Fin m) (B x y : Fin n)
+             → renameFo ρ (satGraphAt B x y) ≡ satGraphAt (ρ B) (ρ x) (ρ y)
+  rename-sat ρ B x y = refl

@@ -1,0 +1,26 @@
+wallcap=90s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T20:30:49Z
+Checking LJ-1-685.runs.PACKAT (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-685/runs/PACKAT.agda).
+time: command terminated abnormally
+       90.04 real        89.50 user         0.38 sys
+          1364361216  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               83786  page reclaims
+                1553  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 513  voluntary context switches
+               12859  involuntary context switches
+       1191296081942  instructions retired
+        361371888587  cycles elapsed
+          1305953792  peak memory footprint
+agents/tasks/LJ-1-685/runs/run.sh: line 19: 39154 Alarm clock: 14         /usr/bin/time -l perl -e 'alarm shift; exec @ARGV' "$cap" agda "$file"
+EXIT=142
+ended 2026-08-26T20:32:19Z

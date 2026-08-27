@@ -1,0 +1,6 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T20:06:04Z
+Checking LJ-1-685.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-685/runs/W3.agda).
+ Checking LJ-1-672.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-672/runs/W3.agda).
+ Checking LJ-1-678.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-678/runs/W3.agda).

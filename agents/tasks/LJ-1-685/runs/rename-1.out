@@ -1,0 +1,46 @@
+wallcap=180s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T20:00:29Z
+Checking LJ-1-685.runs.RENAME (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-685/runs/RENAME.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-685/agents/tasks/LJ-1-685/runs/RENAME.agda:17.22-26: error: [UnequalTerms]
+renameFo
+(FOL.Manipulation.Renaming.liftρ
+ (FOL.Manipulation.Renaming.liftρ
+  (FOL.Manipulation.Renaming.liftρ
+   (FOL.Manipulation.Renaming.liftρ
+    (FOL.Manipulation.Renaming.liftρ
+     (FOL.Manipulation.Renaming.liftρ
+      (FOL.Manipulation.Renaming.liftρ
+       (FOL.Manipulation.Renaming.liftρ
+        (FOL.Manipulation.Renaming.liftρ
+         (FOL.Manipulation.Renaming.liftρ ρ))))))))))
+(L.Coding.Graph.satGraphAt lem
+ (L.Coding.Powerset.sh3 lem (suc zero)) (suc zero) zero)
+!=
+L.Coding.Graph.satGraphAt lem
+(L.Coding.Powerset.sh3 lem (suc zero)) (suc zero) zero
+of type
+Formula (FOL.ZFStructure.ZFStructure.S L.Constructible.𝒮ʟ)
+(suc (suc (suc (suc (suc (suc (suc (suc (suc (suc m))))))))))
+when checking that the expression refl has type
+renameFo ρ (LsetGraphAt w b) ≡ LsetGraphAt (ρ w) (ρ b)
+        2.08 real         1.71 user         0.19 sys
+           386023424  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               24064  page reclaims
+                1559  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 473  voluntary context switches
+                1474  involuntary context switches
+         18202640633  instructions retired
+          7629732304  cycles elapsed
+           326927152  peak memory footprint
+EXIT=42
+ended 2026-08-26T20:00:31Z
