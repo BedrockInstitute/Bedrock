@@ -1,0 +1,6 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T06:03:13Z
+pass      exit=0        2.65s  agents/tasks/LJ-1-707/Probe707.agda::through-door-closed
+witness: 0 UNRESOLVED of 1, 2.65 s, probe_red=False
+EXIT=0
+ended 2026-08-27T06:03:15Z
