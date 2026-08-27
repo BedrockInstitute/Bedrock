@@ -31,12 +31,12 @@ architecture decisions of section 2. `DD<n>` names a repository ruling in
 `D<n>` in an older Bedrock document belongs to a third series, archived on
 2026-08-09, and never to this one.
 
-**Thirty amendments, A1 to A30. Twenty-nine are the owner's, and one, A6, is the
+**Thirty-one amendments, A1 to A31. Thirty are the owner's, and one, A6, is the
 orchestrator's and follows from A4.** **The count in this paragraph said 23 until
 2026-08-21, when the list held 26**, and a per-date breakdown stood beside it that nobody
 had recounted either. Both were carried forward rather than measured. The count is now
 the one thing stated here, and the check is the list itself: the entries below run A1 to
-A30 with no gap and no repeat, so the count IS the highest number. **A SECOND WAY TO
+A31 with no gap and no repeat, so the count IS the highest number. **A SECOND WAY TO
 BREAK IT WAS MEASURED ON 2026-08-21 AND CLOSED THE SAME DAY**: two pieces of shipped
 behaviour carried the suffixed names `A27a` and `A27b` in code comments and had no entry
 here at all, so the list ran to A27 with no gap while the program obeyed two rules the
@@ -629,6 +629,86 @@ carry the authorship half, so DD0 is SUPERSEDED IN PART (7.1).
   `scripts/tests/test_pod_loop.py` (`Shelve`, `ShelveWorktree`, `Unshelve`, and the
   inverted quota test in `TwoThresholds`).
 
+- **A31. A LOCAL INFRASTRUCTURE FAILURE IS NOT A PARK UNDER AD16, ruled 2026-08-27.**
+  Owner's exact words, in answer to the resident maintainer's question about a peer
+  session's ("pi") design handoff：「对，是对A16的修正，或者说对park定义的修正。本地omlx
+  服务器的出错不算park」. AD16 says a parked task resumes by automatic re-dispatch of a
+  fresh instance; this amendment carves out one class of failure that never reaches that
+  rule at all.
+
+  **THE MEASURED SHAPE, from `pi`'s own investigation, independently re-verified rather
+  than taken on its word.** `omlx` (the local model server) stopping cleanly mid-dispatch
+  produces a pi session whose LAST message is `role: assistant, provider: omlx,
+  stopReason: error, errorMessage: "Connection error."` -- confirmed directly against
+  real sessions under `~/.pi/agent/sessions/`, including the two `pi` named as evidence,
+  `[LJ-1.642]` and `[LJ-1.644]` (2026-08-26). **THIS SHAPE IS NARROW ON PURPOSE, and a
+  real counter-example in the SAME corpus is why.** `[LJ-1.605]` and `[LJ-1.611]`
+  (2026-08-23) both carry `provider: omlx, stopReason: error` with a DIFFERENT
+  `errorMessage`: `"400: {\"message\":\"oMLX prefill memory guard rejected this
+  prompt...\"}"`. That is the server correctly refusing an oversized prompt, not the
+  server being down; resuming the same session against the same guard would fail again
+  at once. Only the literal string `Connection error.` names the carve-out; every other
+  `omlx` failure, guard rejections included, stays A29's `fallback:` territory unchanged.
+
+  **WHAT "NOT A PARK" MEANS, MECHANICALLY, and it follows A30's own precedent rather than
+  inventing a new one.** A30 kept `quota:` inside the PARKED state (not a new STATE)
+  specifically because it is the one park that reopens on its own, unconditionally, with
+  nothing for a person to act on -- and then had `stop_counted()` exclude it from AD14's
+  budget so a self-healing vendor window cannot spend a stop it will never need. This
+  amendment gives a local infra failure the SAME shape: `reason = "infra:<budget>"`
+  reopens unconditionally, like `fallback:`, once `omlx` answers its health endpoint
+  again (never on a bare process check: `pgrep` can read empty under memory pressure with
+  the service still alive, the exact hazard `scripts/ops/omlx-watchdog.sh`'s REVIVE branch
+  already guards). **THIS PROGRAM NEVER RESTARTS `omlx` ITSELF, ONLY POLLS THE SAME
+  ENDPOINT THAT WATCHDOG PROBES.** The watchdog is already a running, autonomous loop with
+  its own REVIVE branch; a second restarter racing it (`killall` from two places inside
+  the same window) is a worse hazard than waiting, and the owner's own script is not this
+  amendment's to touch. A park under `infra:` waits on the SAME `curl .../v1/models`
+  answering 200 and lets the watchdog's own tick do the reviving. `stop_counted()`
+  excludes `infra:` from AD14's budget
+  exactly as it already excludes `quota:`. **NOT A NEW STATE**, because unlike SHELVED
+  this requirement IS reversible automatically, which is A30's ground (4) for keeping
+  `quota:` a park reason and not a state.
+
+  **THE RESUME ITSELF IS NOT AD16's FRESH INSTANCE.** A `herdr-pi` resume normally fails
+  outright (`launcher.py`'s own comment: "a herdr resume of a DEAD agent fails at `agent
+  prompt` with agent_not_found ... the work must be re-dispatched"), because the pane
+  closes on the run's own clean exit even when that exit carried an error. This
+  amendment opens a NEW pane (the old one is gone) but starts `pi` with `--session
+  <path>` naming the SAME session file, so the model resumes the SAME conversation
+  instead of AD16's fresh brief. The path is scraped from herdr's own `cli:agent:start`
+  event (`agent_session.value` where `agent_session.source == "herdr:pi"`), because
+  `SESSION_RE` (`scripts/pod/launcher.py`) matches only pi_stream's re-emitted `session
+  id:` line, which herdr-pi never prints -- MEASURED against every `.pod-state/logs/*.log`
+  this session holds: 0 of 721 match `SESSION_RE`, and 199 of 199 `herdr-pi` logs carry a
+  scrapeable `agent_session.value` instead.
+
+  **THE BUDGET IS ONE RESUME PER OCCURRENCE, AND IT RESETS ON PROGRESS, owner's exact
+  terms.** A resume that produces at least one new assistant message before any
+  subsequent failure counts as progress and resets the budget to 1; a resume whose
+  session ends again with no new assistant message between the resume and the next
+  failure is charged against the budget. Exhausting the budget falls through to A29's
+  existing `fallback:` model-switch path unchanged -- that path is the safety net this
+  amendment sits in front of, never a replacement for it. **Cross-model and cross-harness
+  resume were CONSIDERED AND EXCLUDED, not merely unbuilt**: `omlx`'s reasoning blocks
+  serialize as `reasoning_content`, and `anthropic-messages.js` treats that field as a
+  genuine Anthropic thinking-block signature and re-emits it verbatim, which a different
+  vendor's endpoint has no reason to accept. This amendment resumes the SAME model on the
+  SAME session file, never a substitute.
+
+  **ONE ASSUMPTION THIS AMENDMENT COULD NOT VERIFY**, left open rather than guessed:
+  whether pi's own `prompt()` path (used here, since a resume carries a NEW nudge prompt
+  and not a bare continuation) tolerates a session whose last message already ended in
+  `stopReason: error`, or refuses it the way `agent.js`'s `continue()` path is documented
+  to require the last message be `user` or `tool-result`. Untested against a live infra
+  failure as of this ruling.
+
+  `dev/pod/heads.toml` is untouched: this amendment changes what counts as a park and how
+  one specific park reopens, never which model a slot carries. `scripts/pod/launcher.py`
+  (`herdr_pi_session_path()`, `launch()`'s `pi_session_path` parameter) and
+  `scripts/pod/pod.py` (`is_omlx_connection_failure()`, `ensure_omlx_healthy()`,
+  `_infra_resume_reason()`, `stop_counted()`, `_rule_a2()`, `_accept_one()`).
+
 - **A19. A MATHEMATICIAN MAY CALL A HALT, AND A HALT IS NOT AN EMPTY QUEUE, ruled
   2026-08-18.** The owner asked what happens when the milestone is reached, and the
   measured answer was: nothing. **No part of this program counts finished work.**
@@ -760,7 +840,7 @@ model IDs, unresolved at gap B4. Day 1 and day 2 settle both.
 | AD# | The decision | In | AD# | The decision | In |
 |---|---|---|---|---|---|
 | AD1 | The POD is a program, not a model. It makes no judgement | 1, 5.1 | AD15 | The maintainer runs in batches, every 12 hours or at 3 parked. **A17 REPLACES THE SPAWN WITH A PROMPT: the trigger FEEDS a resident session.** **The 3 is AD15's OWN number and is no longer AD14's**, section 6.7 | 6.7, 8.1 |
-| AD2 | A maintainer model writes new table rows. It does not run the loop. **A17 ADDS: it is RESIDENT, one long-lived session, and it owns the loop's health** | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance. **A30 LEAVES IT EXACTLY TRUE: a PARK is still never terminal, and SHELVED is not a park** | 5.5, 5.1 |
+| AD2 | A maintainer model writes new table rows. It does not run the loop. **A17 ADDS: it is RESIDENT, one long-lived session, and it owns the loop's health** | 6.1, 6.7 | AD16 | A parked task resumes by automatic re-dispatch of a fresh instance. **A30 LEAVES IT EXACTLY TRUE: a PARK is still never terminal, and SHELVED is not a park. A31 CARVES OUT LOCAL INFRASTRUCTURE FAILURE: `omlx` going unreachable is not a park at all, and resumes the SAME session once the endpoint answers again, bounded to one resume per occurrence** | 5.5, 5.1 |
 | AD3 | All judgement belongs to the mathematician. **A21 ADDS THE HALF THIS ROW NEVER CARRIED: judgement is ALL it does. It writes no Agda, deliverable or probe, and the brief and the report are its channel to the coder** | 6.4, 7.4 | AD17 | Concurrency is dynamic. A timed task gets the machine alone | 5.6 |
 | AD4 | **A8 REPLACES THE FIRST HALF: `AGENTS.md` SURVIVES, rewritten in place.** `dev/ORCHESTRATION.md` becomes void AT `[LJ-4.7]` and is LIVE until it. **A7 replaces the second half: the DD series is SET ASIDE, not void, and every DD row takes a disposition.** Artifacts are kept | 1, 3.1, 7.1 | AD18 | The launcher is the existing `dispatch.py`, extended and tracked | 6.2, 9.1 |
 | AD5 | The goal is unchanged: both trophies | 1 | AD19 | The table is tracked. Runtime state is not. Every transition logs | 5.3 |

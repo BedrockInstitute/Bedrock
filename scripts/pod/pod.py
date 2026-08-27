@@ -106,6 +106,8 @@ import subprocess
 import sys
 import time
 import tomllib
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 # LJ-1.291 and LJ-1.295: the root is found by walking up to the repository marker, never
@@ -462,9 +464,14 @@ TRANSITIONS_LEGAL = {
 #: was the one capped head in the file. The owner then ruled the same retry for two
 #: UNCAPPED critic slots, so the gate is now the plain arithmetic that made the retry
 #: possible at all: the slot has somewhere else to go. A29 states it.
+#: **`infra:` IS THE FOURTEENTH, owner's ruling 2026-08-27 (A31).** A local infrastructure
+#: failure (`omlx` unreachable) is not a park under AD16 at all; it carries the shape of
+#: one only because the state machine has no path from CHECKING back to READY that skips
+#: PARKED, and it reopens unconditionally on `omlx` answering health again, same as
+#: `fallback:` reopens unconditionally on the exclusion it already wrote.
 PARK_REASONS = ("no-match", "no-change", "preflight:", "attempt_max:", "r4",
                 "admission", "launch", "row:", "stop_loop:", "salvage:", "quota:",
-                "orphan:", "fallback:")
+                "orphan:", "fallback:", "infra:")
 
 #: AD15's parked trigger, and it is AD15's OWN number rather than AD14's `parked_max`.
 #: Owner's ruling, 2026-08-19, recorded at section 6.7: the maintainer is fed at the third
@@ -538,10 +545,17 @@ CARRIED = ("pid", "proc_start", "brief", "agda", "sandbox", "model", "log", "fin
 #: `shelve_reopen` is the one named condition that would justify un-shelving, and it is
 #: REQUIRED at entry, because a shelve with no reopen condition is a drop and the
 #: Boundary discards nothing.
+#:
+#: **A31 ADDS TWO MORE, and both belong to an `infra:` park.** `infra_session` is the pi
+#: session path an `infra:` resume must reuse, carried because the log this task started
+#: with is stale by the time `_rule_a2()` unparks it. `infra_budget` is the resume count
+#: left before A31 falls through to A29's `fallback:`, one per occurrence and reset to one
+#: on progress.
 ADDED = ("status", "role", "effort", "exclusive", "attempt", "predecessor", "run",
          "record", "obl_before", "row", "park_reason", "parked_at", "head_slot",
          "scope_narrow", "unbound_before", "tier", "avoid_models",
-         "shelved_at", "shelve_ref", "shelve_reopen")
+         "shelved_at", "shelve_ref", "shelve_reopen",
+         "infra_session", "infra_budget")
 
 FIELDS = CARRIED + ADDED
 
@@ -3055,6 +3069,13 @@ def launch(t, brief, role, root=None, st=None):
     if head is None:
         LAUNCH_REFUSAL = head_full_refusal(role, cfgs, counts)[:400]
         return None
+    # A31 GUARD. A resumed session names ONE model; if this pick lands on a DIFFERENT
+    # one (a concurrency cap moved it, or the slot's own config changed), the session
+    # must not follow it there -- resuming means the SAME model on the SAME session,
+    # never a substitute, exactly what this amendment excludes cross-model resume for.
+    if getattr(t, "infra_session", None) and (head["model"] != t.model
+                                               or head["harness"] != "herdr-pi"):
+        t.infra_session = None
     t.role, t.model, t.effort = role, head["model"], head["effort"]
     t.harness, t.sandbox = head["harness"], head["sandbox"]
     path = Path(brief) if Path(brief).is_absolute() else root / brief
@@ -3079,13 +3100,21 @@ def launch(t, brief, role, root=None, st=None):
                           else MATH_TASK.lower().replace(".", "-"))
         wd = None if resident else (
             make_worktree(t.code, root) if WORKTREE_ISOLATION else None)
+        # A31. CONSUMED ONCE AND THEN CLEARED. `t.infra_session` rides PARKED -> READY
+        # from `_infra_reason()` so this one dispatch can pass it on; if it survived past
+        # this call, the NEXT dispatch of this same task (for an unrelated later failure)
+        # would keep resuming a session that failure has nothing to do with.
+        pi_session_path = getattr(t, "infra_session", None) or None
+        if pi_session_path:
+            t.infra_session = None
         with contextlib.redirect_stderr(buf):
             rc = mod.launch(t.code, path, False if resident else bool(t.agda),
                             head["sandbox"], head["model"],
                             effort=head["effort"], tier=tier_of(t),
                             preamble=preamble_for(role, root),
                             provider=head.get("pi_provider"), workdir=wd,
-                            resident=resident, agent_name=agent_name)
+                            resident=resident, agent_name=agent_name,
+                            pi_session_path=pi_session_path)
     except SystemExit:
         _tee(buf)
         return None                            # the launcher REFUSED on a corrupt registry
@@ -4423,9 +4452,13 @@ def _rule_a1(st, root):
 def _rule_a2(st, root):
     """(a2) UNPARK. AD16, and it is automatic. A park is never terminal.
 
-    Each of the twelve park reasons has its own un-park test, and the branch is what makes
-    a pre-flight park recoverable: a task refused BEFORE dispatch has no record, so
+    Each of the fourteen park reasons has its own un-park test, and the branch is what
+    makes a pre-flight park recoverable: a task refused BEFORE dispatch has no record, so
     `route()` cannot un-park it, and this re-runs `preflight()` instead.
+
+    **THE COUNT WAS STALE AT "TWELVE" BEFORE A31**, uncorrected since `fallback:` became
+    the thirteenth (A29, 2026-08-21); `infra:` is the fourteenth (A31, 2026-08-27), and
+    this fixes both misses in one edit rather than compounding a second one.
     """
     try:
         mtime = TABLE.stat().st_mtime
@@ -4460,6 +4493,16 @@ def _rule_a2(st, root):
         if reason in ("admission", "launch"):
             if (t.parked_at or 0) < mtime:
                 emit(st, t, PARKED, READY, root=root)      # retry, section 4.1
+            continue
+        if reason.startswith("infra:"):
+            # A31. WAITS ON `omlx` ANSWERING ITS OWN HEALTH ENDPOINT AGAIN, never on a
+            # clock and never on a table edit: the failure is a dead local service and
+            # nothing in this project's files can fix that, only the service coming back
+            # can. `omlx_endpoint_healthy()` only polls; the running `omlx-watchdog.sh` is
+            # what actually revives it. `t.infra_session` and `t.infra_budget` ride along
+            # to READY unchanged, so rule (f)'s dispatch can still find them.
+            if omlx_endpoint_healthy():
+                emit(st, t, PARKED, READY, root=root)
             continue
         if reason.startswith("fallback:"):
             # **THE ONE PARK THAT REOPENS AT ONCE, UNCONDITIONALLY.** No clock, no table
@@ -4703,6 +4746,164 @@ def _no_change_reason(t, root):
     """`quota:<reset>` when a vendor refused this head, else `no-change`."""
     reset = vendor_refusal(t.code, root)
     return f"quota:{reset}" if reset else "no-change"
+
+
+# ---------------------------------------------------------------- A31: local infra, not a park
+
+
+#: `scripts/ops/omlx-watchdog.sh`'s own health probe, read fresh and not re-derived.
+OMLX_ENDPOINT = "http://127.0.0.1:8010"
+
+
+def omlx_endpoint_healthy(timeout=5):
+    """True when `omlx` answers its own health probe. NEVER RESTARTS ANYTHING. A31.
+
+    THE SAME PROBE `scripts/ops/omlx-watchdog.sh` USES (`curl .../v1/models`), and this
+    is deliberately the ONLY thing this function does. The watchdog is already a running,
+    autonomous loop with its own REVIVE branch (that file, `pass_once()`); a second
+    restarter here would race it, and two `killall oMLX` calls inside one window is a
+    worse hazard than waiting one more watchdog tick. This polls; it never kills, never
+    opens the app, and owns none of the watchdog's own cooldown or recheck logic.
+    """
+    try:
+        with urllib.request.urlopen(f"{OMLX_ENDPOINT}/v1/models", timeout=timeout) as resp:
+            return resp.status == 200
+    except (urllib.error.URLError, OSError, ValueError):
+        return False
+
+
+def _pi_session_path_of(t, root=None):
+    """The pi session file this task's own log names, scraped via herdr's events. A31.
+
+    LAZY-LOADS `launcher.py` THE SAME WAY `facts_mod.launcher()` ALREADY DOES for
+    `agda_holders_in_tier()`, so a half-moved launcher answers "" here and never crashes
+    the tick that asks. `getattr` twice, on the module and on the function, for the same
+    reason: this version of the launcher may not carry `herdr_pi_session_path` yet.
+    """
+    log = getattr(t, "log", None)
+    if not log:
+        return ""
+    p = Path(log)
+    root = ROOT if root is None else Path(root)
+    if not p.is_absolute():
+        p = root / log
+    try:
+        text = p.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return ""
+    mod = facts_mod.launcher()
+    scraper = getattr(mod, "herdr_pi_session_path", None)
+    if not callable(scraper):
+        return ""
+    try:
+        return scraper(text) or ""
+    except Exception:                              # a scrape must never crash the tick
+        return ""
+
+
+def _session_assistant_messages(session_path):
+    """Every `role: assistant` message of a pi session, in file order. [] on any refusal.
+
+    ONE BAD LINE SKIPS ONE LINE, never the file, the same direction `measure()`'s own
+    obligation-row reader takes: a session is append-only and a single malformed line
+    (a partial write caught mid-flush) must not blind every reader to the lines around it.
+    """
+    try:
+        text = Path(session_path).read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return []
+    out = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rec = json.loads(line)
+        except ValueError:
+            continue
+        msg = rec.get("message") if isinstance(rec, dict) else None
+        if isinstance(msg, dict) and msg.get("role") == "assistant":
+            out.append(msg)
+    return out
+
+
+def is_omlx_connection_failure(session_path):
+    """True when a pi session's LAST assistant message is omlx's dead-service signature.
+
+    A31. THE STRING IS EXACT AND NARROW ON PURPOSE. `errorMessage == "Connection error."`
+    (with the period) is the ONLY shape this reads as infrastructure down. MEASURED
+    2026-08-27 against real sessions under `~/.pi/agent/sessions/`, including the two `pi`
+    named as its own evidence, `[LJ-1.642]` and `[LJ-1.644]` (2026-08-26). **NARROW ON
+    PURPOSE, and a real counter-example in the SAME corpus is why.** `[LJ-1.605]` and
+    `[LJ-1.611]` (2026-08-23) both carry `provider: omlx, stopReason: error` with a
+    DIFFERENT `errorMessage`: `400: {"message":"oMLX prefill memory guard rejected this
+    prompt..."}`. That is the server correctly refusing an oversized prompt, not the
+    server being down, and resuming that session unchanged would fail again at once. Only
+    the connection-error shape gets A31's treatment; every other `omlx` failure, guard
+    rejections included, stays A29's `fallback:` territory unchanged.
+    """
+    if not session_path:
+        return False
+    msgs = _session_assistant_messages(session_path)
+    if not msgs:
+        return False
+    last = msgs[-1]
+    return (last.get("provider") == "omlx"
+            and last.get("stopReason") == "error"
+            and last.get("errorMessage") == "Connection error.")
+
+
+def _infra_made_progress(session_path):
+    """True unless the session's own tail is TWO connection failures with nothing between.
+
+    A31. **"IMMEDIATE FAILURE" IS THE OWNER'S OWN TERM, made checkable without a timer**:
+    a resume that produced no new assistant message before failing again the same way. A
+    session with FEWER than two assistant messages, or whose SECOND-TO-LAST is anything
+    other than the same dead-service signature (a real answer, a tool call, or simply
+    ABSENT because this is the first failure this task has ever seen), reads as progress:
+    something happened between the resume and this failure, or there was no prior resume
+    to compare against. Only two in a row, back to back, with nothing recorded between
+    them, is the owner's "no progress" case.
+    """
+    msgs = _session_assistant_messages(session_path)
+    if len(msgs) < 2:
+        return True
+    prev = msgs[-2]
+    immediate_repeat = (prev.get("provider") == "omlx"
+                        and prev.get("stopReason") == "error"
+                        and prev.get("errorMessage") == "Connection error.")
+    return not immediate_repeat
+
+
+def _infra_reason(t, root):
+    """`infra:<budget>` when this park is `omlx` going unreachable, else None. A31.
+
+    **NOT A29's TERRITORY.** This is read BEFORE `_accept_one()` considers `fallback:`,
+    because a dead LOCAL service is not the model's fault and switching models buys
+    nothing: the next model on this same dead endpoint fails the identical way. Owner's
+    ruling, 2026-08-27: a local infrastructure failure is not a park under AD16 at all.
+
+    **THE BUDGET IS ONE RESUME PER OCCURRENCE, AND IT RESETS ON PROGRESS**, owner's exact
+    terms. `t.infra_session` carries the path across the park/unpark round trip (re-
+    scraping the log after `_rule_a2()` has moved the task past CHECKING would read it
+    stale), and `_infra_made_progress()` decides whether the LAST attempt earns a fresh
+    budget of 1 or spends down the one it had. Falling to 0 falls through to A29's
+    `fallback:` unchanged: that path is the safety net this sits in front of, never a
+    replacement for it.
+    """
+    session = _pi_session_path_of(t, root)
+    if not session or not is_omlx_connection_failure(session):
+        return None
+    prior_budget = getattr(t, "infra_budget", None)
+    if not isinstance(prior_budget, int) or prior_budget < 1 or _infra_made_progress(session):
+        budget = 1
+    else:
+        budget = prior_budget - 1
+    if budget < 1:
+        return None                        # exhausted: fall through to fallback:/no-change
+    t.infra_session = session
+    t.infra_budget = budget
+    return f"infra:{budget}"
 
 
 def _has_fallback_head(slot, model, root):
@@ -4997,6 +5198,15 @@ def _rule_c(st, root):
             # return on exactly this line. `_no_change_reason()` keeps `no-change` for
             # every case it cannot prove otherwise.
             reason = _no_change_reason(t, root)
+            # A31. A LOCAL INFRASTRUCTURE FAILURE IS NOT A PARK AT ALL, and it is checked
+            # BEFORE A29's fallback below: a dead LOCAL service is not the model's fault,
+            # and switching models buys nothing against the same dead endpoint. Owner's
+            # ruling, 2026-08-27. `_infra_reason()` returns None on anything that is not
+            # `omlx`'s own connection-failure signature, so every other `no-change` and
+            # every `quota:` keeps its ordinary route.
+            infra = _infra_reason(t, root)
+            if infra is not None:
+                reason = infra
             # A29. A PLAIN `no-change` ON A SLOT THAT CARRIES ANOTHER HEAD GETS ONE
             # AUTOMATIC RETRY, WITH THE FAILED MODEL EXCLUDED, BEFORE IT WAITS FOR A
             # PERSON. Owner's ruling 2026-08-21: 「前者失败则换后者重试」.
@@ -5232,7 +5442,11 @@ def stop_counted(st, root=None):
         reason = t.park_reason if isinstance(t.park_reason, str) else ""
         if not reason:
             reason = park_reason_of(t.code, root) or ""
-        if reason.startswith("quota:"):
+        if reason.startswith("quota:") or reason.startswith("infra:"):
+            # A31 EXTENDS THIS THE SAME WAY A30 ADDED `quota:`: a local infrastructure
+            # failure is not a park under AD16 at all, owner's ruling 2026-08-27, so it
+            # spends none of AD14's budget either. It reopens on `omlx` answering health
+            # again, the same unconditional shape `quota:` and `fallback:` already have.
             continue
         out.append(t)
     return out

@@ -461,9 +461,14 @@ def main() -> int:
     if branch is not None:
         code = compile(ast.Module(body=[branch], type_ignores=[]), "<builder>", "exec")
 
-        def run(kind, provider=None, effort="max"):
+        def run(kind, provider=None, effort="max", pi_session_path=None):
+            # `pi_session_path` DEFAULTS TO None, matching `launch()`'s own default. A31
+            # added a fourth reference (the `if pi_session_path:` limb inside the pi/
+            # default branch) to the extracted node, so the isolated exec needs it seeded
+            # exactly as `provider` already is, or every call here raises `NameError`.
             ns = {"kind": kind, "model": "claude-opus-5", "effort": effort,
-                  "PI_PROVIDER": "deepseek", "provider": provider}
+                  "PI_PROVIDER": "deepseek", "provider": provider,
+                  "pi_session_path": pi_session_path}
             exec(code, ns)
             return ns["model_args"]
 
@@ -499,6 +504,45 @@ def main() -> int:
         check("a pi kind with an empty effort omits --thinking, exactly as before",
               run("pi", effort=""),
               ["--", "--provider", "deepseek", "--model", "claude-opus-5"])
+        # A31. A herdr-pi RESUME OF A DEAD PANE OPENS A NEW ONE AND HANDS PI THE OLD
+        # SESSION FILE. `pi_session_path` must reach `model_args` as `--session <path>`,
+        # appended AFTER `--thinking` when both are given, and must add nothing when
+        # absent, matching every other optional flag in this branch.
+        check("pi_session_path appends --session to the pi kind's model_args",
+              run("pi", pi_session_path="/tmp/x/session.jsonl"),
+              ["--", "--provider", "deepseek", "--model", "claude-opus-5",
+               "--thinking", "max", "--session", "/tmp/x/session.jsonl"])
+        check("with no pi_session_path, model_args carries no --session",
+              "--session" in run("pi"), False)
+
+    print("edit 2b: A31's herdr-pi session scraper reads herdr's OWN events")
+    # MEASURED 2026-08-27 against real dispatch logs this repository holds: 0 of 721
+    # `.pod-state/logs/*.log` match SESSION_RE (it looks for pi_stream's `session id:`
+    # line, which herdr-pi never prints), and 199 of 199 logs naming a `pi` agent under
+    # herdr instead carry the shape below in a `cli:agent:start`/`prompt`/`wait` event.
+    REAL_EVENT = ('{"id":"cli:agent:start","result":{"agent":{"agent_session":'
+                  '{"agent":"pi","kind":"path","source":"herdr:pi",'
+                  '"value":"/Users/x/.pi/agent/sessions/s/2026-08-27T00-00-00Z_a.jsonl"'
+                  '}}}}')
+    check("the scraper reads the path out of a real herdr:pi event",
+          mod.herdr_pi_session_path(REAL_EVENT),
+          "/Users/x/.pi/agent/sessions/s/2026-08-27T00-00-00Z_a.jsonl")
+    check("a driver's own echo lines around the JSON do not confuse it",
+          mod.herdr_pi_session_path("HERDR pane=w7:p1\n" + REAL_EVENT
+                                    + "\nHERDR done pane=w7:p1 closed\n"),
+          "/Users/x/.pi/agent/sessions/s/2026-08-27T00-00-00Z_a.jsonl")
+    check("a herdr:claude session (kind: id, not path) is never mistaken for one",
+          mod.herdr_pi_session_path(
+              '{"id":"cli:agent:prompt","result":{"agent":{"agent_session":'
+              '{"agent":"claude","kind":"id","source":"herdr:claude",'
+              '"value":"e4e1d2b6-27ea-40ef-a6fe-ee873b92918d"}}}}'),
+          "")
+    check("a log with no agent_session at all returns the empty string",
+          mod.herdr_pi_session_path("HERDR pane=w7:p1\nnothing here\n"), "")
+    check("malformed JSON on one line is skipped, not raised, and a later good line "
+          "is still found",
+          mod.herdr_pi_session_path('{"id": "broken"\n' + REAL_EVENT),
+          "/Users/x/.pi/agent/sessions/s/2026-08-27T00-00-00Z_a.jsonl")
 
     print("edit 3: the effort reaches the argv, the record and both callers")
     params = inspect.signature(mod.launch).parameters

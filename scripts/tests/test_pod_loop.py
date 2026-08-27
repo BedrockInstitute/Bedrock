@@ -77,6 +77,7 @@ witness_mod = _load("witness", "scripts/pod/witness.py")
 heads_mod = _load("heads", "scripts/pod/heads.py")
 accept_mod = _load("accept", "scripts/pod/accept.py")
 pod = _load("pod", "scripts/pod/pod.py")
+launcher_mod = _load("pod_launcher_for_tests", "scripts/pod/launcher.py")
 
 #: THE UNPATCHED FUNCTION, captured at import. `LoopCase.setUp` replaces
 #: `pod.ensure_maintainer` with a counter, so a test that reaches for
@@ -6685,6 +6686,171 @@ class FallbackPark(LoopCase):
         self.patch(pod, "free_memory_pct", lambda: 84.0)
         self.make_check_lock()
         self.assertEqual(self.candidates(pod.Task(CODE), role=slot), models)
+
+
+class InfraResume(LoopCase):
+    """A31. A LOCAL `omlx` CONNECTION FAILURE IS NOT A PARK UNDER AD16, owner's ruling
+    2026-08-27, in answer to a resident maintainer's question about a peer session's
+    design handoff for exactly this shape.
+
+    THE CLASSIFIER SHAPE IS MEASURED, NOT ASSUMED. `errorMessage == "Connection error."`
+    (with the period) is the ONLY string this reads as the server being down, confirmed
+    against real sessions under `~/.pi/agent/sessions/` including the two named as
+    evidence, `[LJ-1.642]` and `[LJ-1.644]` (2026-08-26). A DIFFERENT real `omlx` failure
+    in the SAME corpus, `[LJ-1.605]`/`[LJ-1.611]` (2026-08-23)'s prefill memory guard
+    rejection, is why the string is exact and not a substring or a provider check alone:
+    that failure means the server is UP and correctly refusing an oversized prompt, and
+    must stay A29's `fallback:` territory.
+    """
+
+    def setUp(self):
+        super().setUp()
+        # `use_tree()` SWAPS `facts_mod.ROOT` TO THE FIXTURE TREE, which carries no
+        # `scripts/pod/launcher.py` of its own, so `facts_mod.launcher()` (the accessor
+        # `_pi_session_path_of()` reads) returns None for the rest of this test unless
+        # patched back to a real launcher module, exactly as the `_Stub` tests elsewhere
+        # in this file already do for the SAME reason.
+        self.patch(pod.facts_mod, "launcher", lambda: launcher_mod)
+
+    def session_text(self, messages):
+        """One pi session file's content: one JSON line per assistant message given."""
+        return "\n".join(json.dumps({"type": "message", "message": m}) for m in messages)
+
+    def write_session(self, messages):
+        p = self.tmp / "session.jsonl"
+        p.write_text(self.session_text(messages), encoding="utf-8")
+        return str(p)
+
+    def write_log(self, session_path):
+        """A herdr dispatch LOG naming `session_path`, the shape `_pi_session_path_of()`
+        actually scrapes. `is_omlx_connection_failure()` and `_infra_made_progress()`
+        read the SESSION file directly and are tested against it above; `_infra_reason()`
+        goes through a task's own LOG, one layer further out, which is what this builds.
+        """
+        event = json.dumps({"id": "cli:agent:start", "result": {"agent": {
+            "agent_session": {"agent": "pi", "kind": "path", "source": "herdr:pi",
+                              "value": session_path}}}})
+        p = self.tmp / "dispatch.log"
+        p.write_text(f"HERDR pane=w7:p1\n{event}\n", encoding="utf-8")
+        return str(p)
+
+    CONN_ERROR = {"role": "assistant", "provider": "omlx", "model": "Qwen3.8-27B-oQ4e-mtp",
+                  "stopReason": "error", "errorMessage": "Connection error."}
+    #: MEASURED on `[LJ-1.605]`/`[LJ-1.611]`, 2026-08-23: the server answering a real
+    #: refusal, never the carve-out.
+    GUARD_REJECTED = {"role": "assistant", "provider": "omlx",
+                      "model": "Qwen3.8-27B-oQ4e-mtp", "stopReason": "error",
+                      "errorMessage": '400: {"message":"oMLX prefill memory guard '
+                                      'rejected this prompt..."}'}
+    REAL_ANSWER = {"role": "assistant", "provider": "omlx",
+                   "model": "Qwen3.8-27B-oQ4e-mtp", "stopReason": "end_turn",
+                   "content": [{"type": "text", "text": "working on it"}]}
+
+    # ------------------------------------------------- is_omlx_connection_failure
+
+    def test_the_exact_connection_error_shape_is_recognised(self):
+        path = self.write_session([self.REAL_ANSWER, self.CONN_ERROR])
+        self.assertTrue(pod.is_omlx_connection_failure(path))
+
+    def test_a_memory_guard_rejection_is_NOT_the_carve_out(self):
+        """THE COUNTER-EXAMPLE THAT MAKES THE STRING EXACT. A guard rejection means the
+        server is alive and correctly refusing; resuming it unchanged would fail again
+        at once, so A29's ordinary fallback is the right answer for this shape."""
+        path = self.write_session([self.GUARD_REJECTED])
+        self.assertFalse(pod.is_omlx_connection_failure(path))
+
+    def test_a_clean_answer_is_not_a_failure(self):
+        path = self.write_session([self.REAL_ANSWER])
+        self.assertFalse(pod.is_omlx_connection_failure(path))
+
+    def test_only_the_LAST_message_is_read(self):
+        """An earlier connection error the run then recovered from must not park a task
+        that went on to answer normally."""
+        path = self.write_session([self.CONN_ERROR, self.REAL_ANSWER])
+        self.assertFalse(pod.is_omlx_connection_failure(path))
+
+    def test_an_empty_or_unreadable_path_is_false_and_never_raises(self):
+        self.assertFalse(pod.is_omlx_connection_failure(""))
+        self.assertFalse(pod.is_omlx_connection_failure(str(self.tmp / "absent.jsonl")))
+
+    # ------------------------------------------------- _infra_made_progress / budget
+
+    def test_a_first_ever_failure_counts_as_progress_so_the_budget_starts_at_one(self):
+        path = self.write_session([self.CONN_ERROR])
+        self.assertTrue(pod._infra_made_progress(path))
+
+    def test_two_connection_errors_back_to_back_is_the_immediate_failure(self):
+        """THE OWNER'S OWN TERM, MADE CHECKABLE: a resume that produced no new assistant
+        message before failing again the same way."""
+        path = self.write_session([self.CONN_ERROR, self.CONN_ERROR])
+        self.assertFalse(pod._infra_made_progress(path))
+
+    def test_a_real_answer_between_two_failures_is_progress(self):
+        path = self.write_session([self.CONN_ERROR, self.REAL_ANSWER, self.CONN_ERROR])
+        self.assertTrue(pod._infra_made_progress(path))
+
+    def test_infra_reason_gives_budget_one_on_a_fresh_failure(self):
+        session = self.write_session([self.CONN_ERROR])
+        t = pod.Task(CODE, log=self.write_log(session))
+        self.assertEqual(pod._infra_reason(t, self.tmp), "infra:1")
+        self.assertEqual(t.infra_session, session)
+
+    def test_infra_reason_exhausts_after_one_immediate_repeat_and_falls_through(self):
+        """THE BUDGET IS ONE RESUME PER OCCURRENCE, owner's exact terms. A second,
+        back-to-back failure with the budget already spent returns None, which is
+        `_accept_one()`'s own signal to fall through to A29's `fallback:` unchanged."""
+        session = self.write_session([self.CONN_ERROR, self.CONN_ERROR])
+        t = pod.Task(CODE, log=self.write_log(session), infra_budget=1,
+                     infra_session=session)
+        self.assertIsNone(pod._infra_reason(t, self.tmp))
+
+    def test_infra_reason_resets_to_one_when_the_prior_resume_made_progress(self):
+        session = self.write_session([self.CONN_ERROR, self.REAL_ANSWER, self.CONN_ERROR])
+        t = pod.Task(CODE, log=self.write_log(session), infra_budget=0,
+                     infra_session=session)
+        self.assertEqual(pod._infra_reason(t, self.tmp), "infra:1")
+
+    def test_a_non_omlx_no_change_park_is_untouched(self):
+        """A plain vendor `no-change` (no pi session at all, or a session that never
+        shows the shape) must reach A29 exactly as it always did."""
+        t = pod.Task(CODE, log="")
+        self.assertIsNone(pod._infra_reason(t, self.tmp))
+
+    # ------------------------------------------------- stop_counted() exemption
+
+    def test_an_infra_park_spends_none_of_AD14s_stop_budget(self):
+        """A30's OWN PRECEDENT, EXTENDED. `quota:` was excluded for the same reason: the
+        one park that reopens on its own, unconditionally, with nothing for a person to
+        act on. `infra:` is A31's version of that same shape."""
+        st = pod.State()
+        t = pod.Task(CODE, status=pod.PARKED, park_reason="infra:1", parked_at=0.0)
+        st.tasks[CODE] = t
+        self.assertEqual(pod.stop_counted(st, self.tmp), [])
+
+    # ------------------------------------------------- omlx_endpoint_healthy: polls only
+
+    def test_omlx_endpoint_healthy_is_true_on_a_200_and_never_restarts_anything(self):
+        calls = []
+
+        class _Resp:
+            status = 200
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        self.patch(pod.urllib.request, "urlopen",
+                   lambda url, timeout=None: calls.append(url) or _Resp())
+        self.assertTrue(pod.omlx_endpoint_healthy())
+        self.assertEqual(calls, [f"{pod.OMLX_ENDPOINT}/v1/models"])
+
+    def test_omlx_endpoint_healthy_is_false_and_quiet_on_any_connection_failure(self):
+        def raiser(url, timeout=None):
+            raise pod.urllib.error.URLError("connection refused")
+        self.patch(pod.urllib.request, "urlopen", raiser)
+        self.assertFalse(pod.omlx_endpoint_healthy())
 
 
 class TwoThresholds(LoopCase):

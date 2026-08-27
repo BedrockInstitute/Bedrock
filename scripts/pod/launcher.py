@@ -482,6 +482,57 @@ AGDA_SLOTS = agda_slots(AGDA_TIER_DEFAULT)
 SESSION_RE = re.compile(r"session id:(?:\x1b\[[0-9;]*m)?\s*([0-9a-f-]{8,})")
 
 
+def herdr_pi_session_path(log_text: str) -> str:
+    """The pi session file's path, scraped from herdr's own events. "" if absent.
+
+    **`SESSION_RE` NEVER MATCHES A `herdr-pi` LOG, and A31 needed the path anyway.**
+    `SESSION_RE` looks for `session id:`, which pi_stream.py re-emits for the DIRECT `pi`
+    harness; `herdr-pi` goes through the herdr branch above and never calls pi_stream, so
+    it never prints that line. MEASURED 2026-08-27 against every `.pod-state/logs/*.log`
+    this session holds: 0 of 721 match `SESSION_RE`; 199 of 199 logs naming a `pi` agent
+    under herdr carry the shape below instead.
+
+    THE PATH IS ALREADY IN THE LOG, herdr's own doing. Every `cli:agent:*` event for a
+    `herdr-pi` agent carries `result.agent.agent_session`, and for that harness it reads
+    `{"agent": "pi", "kind": "path", "source": "herdr:pi", "value": "<the .jsonl path>"}`
+    (verified against real `cli:agent:start` events, e.g. `.pod-state/logs/LJ-1.391-
+    20260819-152121.log`). `cli:agent:start`, `cli:agent:prompt` and `cli:agent:wait` all
+    carry it; this reads whichever line comes first, since they agree.
+
+    ONE JSON OBJECT PER LINE, AND MOST LINES ARE NOT ONE. A herdr log interleaves the
+    driver's own `echo` output with herdr's JSON events, so this tries `json.loads` per
+    line and skips whatever fails rather than assuming the file is JSONL end to end.
+    """
+    for line in log_text.splitlines():
+        line = line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            event = json.loads(line)
+        except (ValueError, TypeError):
+            continue
+
+        def _find(obj):
+            if isinstance(obj, dict):
+                if obj.get("source") == "herdr:pi" and obj.get("kind") == "path":
+                    return obj.get("value")
+                for v in obj.values():
+                    found = _find(v)
+                    if found:
+                        return found
+            elif isinstance(obj, list):
+                for v in obj:
+                    found = _find(v)
+                    if found:
+                        return found
+            return None
+
+        path = _find(event)
+        if path:
+            return path
+    return ""
+
+
 # --------------------------------------------------------------------------- state
 
 
@@ -1359,7 +1410,8 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
            preamble: "list[Path] | None" = None,
            provider: str | None = None, resident: bool = False,
            workdir: "Path | None" = None,
-           agent_name: str | None = None) -> int:
+           agent_name: str | None = None,
+           pi_session_path: str | None = None) -> int:
     # POD EDIT 3 of 6, part 1 of 3 (design section 6.2). `effort` is the claude
     # CLI's `--effort` value and edit 2 puts it on the argv. It defaults to the
     # empty string so every existing caller keeps working; the POD passes
@@ -1584,6 +1636,17 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 model_args = ["--", "--provider", provider or PI_PROVIDER, "--model", model]
                 if effort:
                     model_args += ["--thinking", effort]
+                if pi_session_path:
+                    # A31. A `herdr-pi` RESUME OF A DEAD PANE CANNOT REUSE `resume_id`
+                    # (below): the pane that name would target already closed on the
+                    # earlier run's own clean exit, and `herdr agent prompt` on a name no
+                    # pane holds fails `agent_not_found`. This opens a NEW pane instead
+                    # (the branch below still reads `resume_id`, which stays unset here,
+                    # so the FRESH-DISPATCH driver runs, not the resume driver) and hands
+                    # `pi` the OLD session file directly, the same flag the bare `pi`
+                    # harness already uses for its own `resume_id` path a few branches
+                    # down. `pi --help`, 2026-08-13: `--session <path|id>` accepts either.
+                    model_args += ["--session", pi_session_path]
             # **THE WORKER'S CWD, and it is the TASK'S OWN CHECKOUT when it has one.**
             # `workdir` is the isolated worktree the POD builds for a task; it defaults to
             # the repository root, so every existing caller and every non-POD dispatch is
@@ -1591,7 +1654,7 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
             # agent's writes to another, measured three times on 2026-08-19.
             WD = str(workdir) if workdir else str(ROOT)
             prompt_text = (note or "Resume where you left off, then write your report.") \
-                          if resume_id else brief.read_text(encoding="utf-8")
+                          if (resume_id or pi_session_path) else brief.read_text(encoding="utf-8")
             driver = (
                 "set -uo pipefail\n"
                 f"herdr agent get {hname} >/dev/null 2>&1 || "
@@ -1758,7 +1821,18 @@ def launch(task: str, brief: Path, agda: bool, sandbox: str, model: str,
                 # mentions of a slot file in this program were all comments, so every
                 # worker was launched with its brief ALONE. It received neither the
                 # shared Boundary nor one clause of its own role.
-                f"herdr agent prompt {hname} \"$(cat {_cat_list(preamble, brief)})\"\n"
+                #
+                # A31's `--session` RESUME SENDS THE SHORT NUDGE, NEVER THE FULL BRIEF
+                # AGAIN. This branch is the FRESH-DISPATCH driver (`resume_id` is unset
+                # even here, because the pane itself is new), so without this it would
+                # `cat` the brief on top of a session `--session` already resumed with
+                # its own full context, restating the assignment as a second turn. The
+                # bare `pi` harness's own `resume_id` path a few branches down sends the
+                # same short nudge for the same reason.
+                + (f"herdr agent prompt {hname} {shlex.quote(prompt_text)}\n"
+                   if pi_session_path else
+                   f"herdr agent prompt {hname} \"$(cat {_cat_list(preamble, brief)})\"\n")
+                +
                 # NEVER-STARTED-WORKING MUST FREE THE NAME. MEASURED 2026-08-20 on
                 # POD-REFILL-20260820-110248: `wait --until working` timed out, the
                 # pane was kept for forensics WITH the herdr name still bound, and
