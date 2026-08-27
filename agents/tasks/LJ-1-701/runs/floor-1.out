@@ -1,0 +1,24 @@
+wallcap=300s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T02:41:27Z
+Checking LJ-1-701.runs.Floor (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-701/agents/tasks/LJ-1-701/runs/Floor.agda).
+        1.91 real         1.47 user         0.21 sys
+           375963648  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22308  page reclaims
+                2701  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 696  voluntary context switches
+                1393  involuntary context switches
+         17144005056  instructions retired
+          6674365401  cycles elapsed
+           316703536  peak memory footprint
+EXIT=0
+ended 2026-08-27T02:41:29Z

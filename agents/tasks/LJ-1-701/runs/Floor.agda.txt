@@ -1,0 +1,37 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.701]  FLOOR.  Is `squareω` in scope here as cheaply as it was
+-- in [LJ-1.636]?  This file imports `squareω` and names it at the
+-- parameter's value type AT ω.  It does not collapse, and it does not
+-- build `param-at-omega`.  Its price is the floor the standing clause
+-- orders me to measure before I attempt the real term.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-701.runs.Floor {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.InjChain {ℓ} lem using ( squareω )
+
+open import Cubical.Data.Sigma using ( Σ-syntax; _×_ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet using ( ω )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- The `sq` parameter's value type, copied from its binder
+-- (src/L/StageCardinal.lagda.md:18-20).
+Sq : S → Type ℓ
+Sq δ = Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
+         ((u v : ⟪ δ ⟫ × ⟪ δ ⟫) → f u ≡ f v → u ≡ v)
+
+-- W3.  `squareω` inhabits the parameter's value type AT ω, on the nose.
+-- Same inhabitant, same type as agents/tasks/LJ-1-636/Probe636.agda:100-101.
+delivered-at-ω : Sq ω
+delivered-at-ω = squareω
