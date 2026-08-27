@@ -1,0 +1,58 @@
+# Maintainer batch 20260826-073157. NO ROWS, NO QUEUE ENTRIES.
+#
+# TWO PARKED TASKS, NEITHER TAKES A NEW ROW.
+#
+# LJ-1.636: parked on `row:task-lj-1-636-heap-wall-park` (exit_code 251,
+# error_class heap_wall, obligations_delta -1). This IS the intended routing
+# (backlog item 26's fix): a heap wall parks and splits by design, and
+# `park_and_split` already queued `LJ-1.636-split`, which closed DONE
+# (`task-lj-1-636-split-go`) and carried the delivered result forward. The
+# defect here (item 33: conjunct 1 typechecks a bisection arm under `runs/`
+# alongside the deliverable) is a `verification_target()` scope question, not
+# a row a maintainer batch can write: any candidate cure changes what conjunct
+# 1 verifies for every future task, and the record is R3/AD10-locked
+# (`dev/pod/replay-corpus.jsonl` c-4082, `provenance: "live"`, already routed
+# through `task-lj-1-636-heap-wall-park`) besides. Documented, not proposed.
+#
+# LJ-1.643: parked `attempt_max:sys-lint-accept` (exit_code 1, error_class
+# lint). Investigated this session together with pod-math and independently
+# verified against agents/tasks/LJ-1-643/runs/accept-1.out,
+# dev/pod/table.toml and dev/pod/replay-corpus.jsonl: attempt 1 delivered its
+# obligation (obligations_delta -1, obligations_open 0, Probe643.agda rc 0),
+# but conjunct 1 also typechecked `runs/Floor.agda`, a floor-measurement
+# diagnostic with standing interaction holes (rc 42), so `exit_code` never
+# matched `task-lj-1-643-go` and the task fell through to
+# `task-lj-1-643-no-go-attacked`. From there a genuine, separate lint-detail
+# defect (backlog item 35, fixed this session in scripts/pod/accept.py and
+# scripts/pod/pod.py) burned three more attempts before parking at
+# `attempt_max`. Five live corpus records already route through this shape
+# (c-4118, c-4123, c-4128, c-4133, c-4138): same R3/AD10 lock as LJ-1.636, so
+# no batch proposal can move any of them regardless of the fix chosen. The
+# go-row template (exit_code = 0 vs. reading obligations_delta/obligations_open
+# alone) and the conjunct-1 scope question are both rule-home questions
+# pod-math declined to guess at and I am not guessing at either.
+# `[LJ-1.644]` is already queued carrying the mathematical result forward.
+# Documented at backlog item 33 (second site), not proposed.
+#
+# THE SHELVED TASKS (LJ-1.541, LJ-1.572, LJ-1.603, LJ-1.615, LJ-1.620, LJ-1.628,
+# LJ-1.630, LJ-1.632) ask for nothing per the brief's own header; the
+# NO-MATCH RECORDS for LJ-1.630 in the 12-hour window are residue from before
+# it was shelved and need no row now that it holds via dev/pod/shelf/.
+#
+# THE SHADOWING LIST NAMES NO DEFECT. `sys-dd24-ratio-bar` and `sys-heap-wall`
+# are system rows; a matching task-scoped row (heap-wall-park or similar)
+# outranks each of them by AD8 rule 2 (task before system), same shape as the
+# prior batch. `task-lj-1-643-no-go-bare` (priority 40, `exit_code = 42` only)
+# lost once to `task-lj-1-643-no-go-attacked` (priority 15, the narrower,
+# fully-specified branch) on the SAME LJ-1.643 attempt-1 record above:
+# ascending-priority ordering (section 4.4 rule 3) picking the more specific
+# row is by design, not a shadowing defect.
+#
+# THE EXPIRY FALLOUT LIST (section 4.6) is the standing whole-corpus replay
+# with expiry lifted, unchanged in shape from prior batches: not a new event
+# in this window and not actionable by a row.
+
+[batch]
+ts = "20260826-073157"
+rows_proposed = 0
+reason = "Two parked tasks, both already correctly routed to their intended park/attempt_max outcome; the underlying conjunct-1 scope defect (item 33, now measured at two sites) and LJ-1.643's go-row template are both rule-home design questions, and both tasks' records are R3/AD10 corpus-locked besides, so no batch proposal can act on them regardless. Eight shelved tasks and the no-match residue for one of them ask for nothing. The three shadowing losses are AD8 rule-2 task-before-system outranking and one ascending-priority pick among two task-scoped LJ-1.643 rows, not defects. No row and no queue entry needed."

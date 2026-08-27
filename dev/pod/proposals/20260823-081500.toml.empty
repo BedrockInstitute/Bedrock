@@ -1,0 +1,23 @@
+# No table rows proposed for this snapshot's 3 parked tasks.
+# LJ-1.541: already covered by a [[queue]] REQUEST filed 2026-08-23 (dev/pod/queue.toml,
+#   code = "LJ-1.541", "REQUEST, no brief"). Still awaiting the mathematician's judgement
+#   at time of this batch -- no fresh table row exists to propose here, and inventing a
+#   deadline/split decision is not mine to make.
+# LJ-1.547: NOW hit the identical wall (attempt_max:sys-timeout-escalate, three
+#   consecutive 1800 s timeouts, same Bis*.agda bisimulation-check family as LJ-1.541).
+#   Filing a second [[queue]] REQUEST below so the mathematician can judge both together
+#   rather than one at a time.
+# LJ-1.565: this is a mathematician-designed FIX for exactly the LJ-1.534/536 pattern --
+#   its own brief row (task-lj-1-565-heap-wall-park, dev/pod/table.toml:18357) reads
+#   "PARK, NOT ESCALATE. MEASURED on LJ-1.534, 2026-08-22" and uses action = "park"
+#   directly on heap_wall, instead of escalating into an attempt_max dead-end. Verified
+#   against dev/pod/transitions/2026-08.jsonl: exactly ONE PARKED transition in 8 hours,
+#   no PARKED/READY cycling -- the park is stable, matching "no-change"/"orphan" style
+#   parks that correctly wait for a person rather than looping. No program action needed;
+#   this is the mathematician's own decision to make next, not a routing defect.
+
+[[queue]]
+code = "LJ-1.547"
+reason = "REQUEST, no brief: LJ-1.547 exhausted attempt_max on sys-timeout-escalate, the same way LJ-1.541 did (dev/pod/transitions/2026-08.jsonl, task LJ-1.547) -- three consecutive 1800 s timeouts under coder_adversarial, the underlying fact never changing. Same brief family as LJ-1.541 (Bis*.agda bisimulation checks). A [[queue]] REQUEST for LJ-1.541 is already filed and unanswered; this is the same deadline/term-size judgement call, now for a second task in the family, so the mathematician may want to judge them together rather than one at a time."
+added = 2026-08-23
+added_by = "maintainer"

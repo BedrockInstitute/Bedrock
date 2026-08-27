@@ -1,0 +1,18 @@
+# Maintainer batch 20260825-105053. NO ROWS, NO QUEUE ENTRIES.
+#
+# Zero parked tasks. LJ-1.628 reopened to READY moments before this batch fired
+# (`resume: the owner cleared the stop`, seq 3967): the owner approved and I
+# committed the class-pred-i spec-surface move (`3fb69c02`) plus a separate,
+# unrelated backlog of five drifted guarded instruction/memo files from earlier
+# this session (`b19825c7`). The mathematician has the full picture and will
+# handle LJ-1.628's own bookkeeping once it returns.
+#
+# LJ-1.541, LJ-1.572, LJ-1.603, LJ-1.615, LJ-1.620: still correctly SHELVED.
+#
+# The shadowing list names only historical row-priority contests inside the
+# window (LJ-1.628's own prior attempts), not a new event.
+
+[batch]
+ts = "20260825-105053"
+rows_proposed = 0
+reason = "Zero parked tasks. LJ-1.628 just reopened to READY (owner-approved spec-surface commit landed, plus a separate backlog of five drifted guarded files from earlier this session, also committed). Five tasks remain correctly SHELVED. No row and no queue entry needed."

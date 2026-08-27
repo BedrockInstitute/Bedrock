@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.705
+# brief agents/tasks/LJ-1-705/LJ-1.705.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (4.09716796875, 4.62451171875, 5.3642578125)
+# started 2026-08-27 12:57:14
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-705/Probe705.agda rc 0 seconds 2.61
+# changed files 33
+# changed files own 33 of 33
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 2.61
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-705/Probe705.agda", "agents/tasks/LJ-1-705/lj-1.705-report.md", "agents/tasks/LJ-1-705/review-of-bound-in-alpha.md", "agents/tasks/LJ-1-705/runs/floor-1.out", "agents/tasks/LJ-1-705/runs/meter-obligation.out", "agents/tasks/LJ-1-705/runs/p-10.out", "agents/tasks/LJ-1-705/runs/p-11.out", "agents/tasks/LJ-1-705/runs/p-12.out", "agents/tasks/LJ-1-705/runs/p-13.out", "agents/tasks/LJ-1-705/runs/p-14.out", "agents/tasks/LJ-1-705/runs/p-15.out", "agents/tasks/LJ-1-705/runs/p-16.out", "agents/tasks/LJ-1-705/runs/p-17.out", "agents/tasks/LJ-1-705/runs/p-18.out", "agents/tasks/LJ-1-705/runs/p-19.out", "agents/tasks/LJ-1-705/runs/p-2.out", "agents/tasks/LJ-1-705/runs/p-20.out", "agents/tasks/LJ-1-705/runs/p-21.out", "agents/tasks/LJ-1-705/runs/p-22.out", "agents/tasks/LJ-1-705/runs/p-23.out", "agents/tasks/LJ-1-705/runs/p-24.out", "agents/tasks/LJ-1-705/runs/p-25.out", "agents/tasks/LJ-1-705/runs/p-26.out", "agents/tasks/LJ-1-705/runs/p-27.out", "agents/tasks/LJ-1-705/runs/p-3.out", "agents/tasks/LJ-1-705/runs/p-4.out", "agents/tasks/LJ-1-705/runs/p-5.out", "agents/tasks/LJ-1-705/runs/p-6.out", "agents/tasks/LJ-1-705/runs/p-7.out", "agents/tasks/LJ-1-705/runs/p-8.out", "agents/tasks/LJ-1-705/runs/p-9.out", "agents/tasks/LJ-1-705/runs/p-final.out", "agents/tasks/LJ-1-705/runs/run.sh"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-705/Probe705.agda", "agents/tasks/LJ-1-705/lj-1.705-report.md", "agents/tasks/LJ-1-705/review-of-bound-in-alpha.md", "agents/tasks/LJ-1-705/runs/floor-1.out", "agents/tasks/LJ-1-705/runs/meter-obligation.out", "agents/tasks/LJ-1-705/runs/p-10.out", "agents/tasks/LJ-1-705/runs/p-11.out", "agents/tasks/LJ-1-705/runs/p-12.out", "agents/tasks/LJ-1-705/runs/p-13.out", "agents/tasks/LJ-1-705/runs/p-14.out", "agents/tasks/LJ-1-705/runs/p-15.out", "agents/tasks/LJ-1-705/runs/p-16.out", "agents/tasks/LJ-1-705/runs/p-17.out", "agents/tasks/LJ-1-705/runs/p-18.out", "agents/tasks/LJ-1-705/runs/p-19.out", "agents/tasks/LJ-1-705/runs/p-2.out", "agents/tasks/LJ-1-705/runs/p-20.out", "agents/tasks/LJ-1-705/runs/p-21.out", "agents/tasks/LJ-1-705/runs/p-22.out", "agents/tasks/LJ-1-705/runs/p-23.out", "agents/tasks/LJ-1-705/runs/p-24.out", "agents/tasks/LJ-1-705/runs/p-25.out", "agents/tasks/LJ-1-705/runs/p-26.out", "agents/tasks/LJ-1-705/runs/p-27.out", "agents/tasks/LJ-1-705/runs/p-3.out", "agents/tasks/LJ-1-705/runs/p-4.out", "agents/tasks/LJ-1-705/runs/p-5.out", "agents/tasks/LJ-1-705/runs/p-6.out", "agents/tasks/LJ-1-705/runs/p-7.out", "agents/tasks/LJ-1-705/runs/p-8.out", "agents/tasks/LJ-1-705/runs/p-9.out", "agents/tasks/LJ-1-705/runs/p-final.out", "agents/tasks/LJ-1-705/runs/run.sh"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 2.61}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 2.61, "target": "agents/tasks/LJ-1-705/Probe705.agda"}], "spec_surface_detail": "", "task": "LJ-1.705", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.33}

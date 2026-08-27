@@ -1,0 +1,19 @@
+# No table rows proposed. Every task named as parked in this snapshot has since been
+# resolved by the maintainer through direct action (documented in dev/pod/table.toml and
+# dev/pod/transitions/2026-08.jsonl), not through a batch-proposal row:
+# LJ-1.498: a stale R7 avoid_models exclusion (dating to 2026-08-21, before qwen removal
+#   left claude-opus-5 as the sole coder config) was cleared directly, owner-authorized.
+# LJ-1.505: a leftover direct-edit table row duplicated the mathematician's own brief
+#   branch id `task-lj-1-505-no-verdict`, breaking table load on every admission attempt;
+#   the leftover copy was deleted.
+# LJ-1.534, LJ-1.536: their task-level `*-heap-wall-escalate` rows (AD8: always ahead of
+#   the system row) had exhausted attempt_max with no change to the heap_wall fact; marked
+#   `expired = true` so the existing `sys-heap-wall` row (park_and_split) now governs,
+#   owner-authorized. No split decision was made here -- that is mathematical judgement.
+# LJ-1.541, LJ-1.547: acceptance runs killed by `scripts/ops/agda-watchdog.sh`'s memory
+#   backstop (SIGKILL, exit_code -9) fell through to no-match; a new system row
+#   `sys-sigkill-escalate` (owner-authorized) now routes this shape to coder_adversarial,
+#   the same treatment `sys-timeout-escalate` gives a program-measurement failure.
+# LJ-1.552, LJ-1.553: transient worker `pid dead` events from the same memory-pressure
+#   window, parked `no-change`; retried to READY directly, owner-authorized.
+# `pod status` now reads parked 0/12. Nothing here needs a new row.

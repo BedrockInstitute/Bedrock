@@ -1,0 +1,20 @@
+# Maintainer batch 20260821-110422. NO ROWS.
+#
+# LJ-1.443: unchanged, still the stale-worktree D-10 gate (see
+# 20260821-105525.toml's note). Needs a fresh --retry, owner's call.
+#
+# LJ-1.448, LJ-1.449: unchanged from 20260821-105525.toml. Both permanently
+# attempt_max-parked, both already carry live replay-corpus records for
+# task-lj-1-<code>-stop-stated that block any row fix via R3. Owner decision
+# needed on how to close them.
+#
+# LJ-1.451: NEW attempt_max park, same shape, predicted in this session's
+# POD-REVIEW before it happened. Live corpus already carries this row for
+# LJ-1.451 (matched on attempts 1-3), so the same R3 block applies; not
+# reverified line-by-line since the mechanism is identical to 448/449. Owner
+# decision needed, same as the other two.
+
+[batch]
+ts = "20260821-110422"
+rows_proposed = 0
+reason = "Same four parked tasks' situation as 20260821-105525, plus LJ-1.451 joining 448/449 in a permanent attempt_max park via the same mechanism. No row can fix any of the three stuck tasks (R3 blocks it); LJ-1.443 needs a fresh --retry. All four need the owner, not a table write."

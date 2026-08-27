@@ -1125,23 +1125,48 @@ def main() -> int:
                          or (isinstance(v, list) and v
                              and all(isinstance(r, dict) for r in v)))),
           [])
-    # BOTH SPELLINGS STAY EXERCISED, which is the whole claim of A27's superset: the
-    # array did not retire the single table. Neither check names the slot that holds it.
+    # BOTH SPELLINGS ARE LEGAL, which is the whole claim of A27's superset: the array
+    # did not retire the single table. **NEITHER IS REQUIRED LIVE, owner's ruling
+    # 2026-08-27: "this config changes constantly," so a check that fails whenever
+    # today's file happens to use only one spelling is the wrong shape.** Each is
+    # checked true ONLY when the live file happens to carry it; an absent spelling is
+    # a note, never a failure. `_syn` proves the array spelling itself still parses,
+    # independent of the live file's current shape, so the code path stays covered
+    # even on a day every slot is single-headed.
     check_true("the single-table spelling is still in the file",
                any(isinstance(v, dict) for v in heads["heads"].values()))
-    check_true("and the array spelling is too",
-               any(isinstance(v, list) for v in heads["heads"].values()))
+    if any(isinstance(v, list) for v in heads["heads"].values()):
+        check_true("and the array spelling is too", True)
+    else:
+        print("  note the live file carries no array-spelled slot today; "
+              "the array spelling itself is still checked below via a synthetic row")
+    _syn = tomllib.loads('x = [{ model = "a" }, { model = "b" }]')
+    check_true("the array spelling parses as a non-empty list of tables regardless "
+               "of what the live file carries today",
+               isinstance(_syn["x"], list) and len(_syn["x"]) == 2
+               and all(isinstance(r, dict) for r in _syn["x"]))
     _rows = [(slot, r) for slot, v in heads["heads"].items()
              for r in (v if isinstance(v, list) else [v])]
-    # **THE CAP IS A POLICY OVER MODELS AND NOT A FACT ABOUT A SLOT.** OWNER'S RULING
-    # 2026-08-24, `dev/pod/heads.toml:448-456` and `:487-491`: the cap qwen's row
-    # already carried now sits on EVERY `glm-5.3` and `grok-4.6` row in the file,
-    # wherever that row sits. Three checks here used to read `[1, None]` and `[1, 1]`
-    # per slot, which pinned WHICH model held WHICH array index, so the swap of two
-    # second heads on 2026-08-25 went red on all three with no invariant broken.
-    check("every glm-5.3 and grok-4.6 row is capped at one, owner's ruling 2026-08-24",
+    # **THE CAP IS A POLICY OVER MODELS AND NOT A FACT ABOUT A SLOT -- EXCEPT FOR A
+    # RESIDENT ONE.** OWNER'S RULING 2026-08-24: the cap qwen's row already carried
+    # sits on EVERY `glm-5.3` and `grok-4.6` row, wherever that row sits. **OWNER'S
+    # RULING 2026-08-27 SHARPENS THIS**: a RESIDENT slot (`RESIDENT_SLOTS`) has
+    # exactly one live instance by construction, so the cap this rule polices is
+    # already satisfied by residency and `max_concurrency` on such a row is a
+    # category error, not a missing policy -- `test_pod_loop.py`'s
+    # `test_the_single_table_spelling_still_loads_and_still_means_one_head` asserts
+    # the OPPOSITE of this rule for exactly those two slots, and that assertion wins.
+    check("every glm-5.3 and grok-4.6 row on a DISPATCHED slot is capped at one, "
+          "owner's ruling 2026-08-24",
           sorted(f"{s} on {r['model']}" for s, r in _rows
-                 if r["model"] in CAPPED_MODELS and r.get("max_concurrency") != 1),
+                 if s not in RESIDENT_SLOTS
+                 and r["model"] in CAPPED_MODELS and r.get("max_concurrency") != 1),
+          [])
+    check("no RESIDENT slot on glm-5.3 or grok-4.6 carries max_concurrency, "
+          "owner's ruling 2026-08-27: residency already caps it to one",
+          sorted(f"{s} on {r['model']}" for s, r in _rows
+                 if s in RESIDENT_SLOTS
+                 and r["model"] in CAPPED_MODELS and r.get("max_concurrency") is not None),
           [])
     # **THE LOCAL SERVER IS ONE PROCESS**, so a head it serves is capped whatever the
     # model behind it is called: `omlx-server` serves one 27B model, and a second

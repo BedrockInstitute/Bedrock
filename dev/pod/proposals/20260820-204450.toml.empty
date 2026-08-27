@@ -1,0 +1,28 @@
+# Maintainer batch 20260820-204450. NO ROWS. No [[queue]] repeats.
+
+# Parks: 386 no-change seq 436; 390 no-change seq 433;
+# 422 no-match seq 648 accept-16; 425 no-match seq 651 accept-9;
+# 426 no-match seq 655 accept-9; 427 no-match seq 659 accept-7.
+
+# LJ-1.386 and LJ-1.390 have no record. A21 REQUESTS already sit in
+# queue.toml:1239-1251. queue_append does not dedupe. Not repeated.
+
+# Critic returns: exit 0, obligations_open 1. A23 misses
+# (table.toml:775-777). no-go-stated needs exit 42. The critic file
+# is an attack. No done row.
+
+# LJ-1.428 is discharged (queue.toml:1333-1347). Not re-queued.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. no-change, no record. A21. REQUEST already queued.
+# 2. LJ-1.390. no-change, no record. A21. REQUEST already queued.
+# 3. LJ-1.422. no-match. accept-16: exit 0, open 1. No done row.
+# 4. LJ-1.425. no-match. accept-9: exit 0, open 1. No done row.
+# 5. LJ-1.426. no-match. accept-9: exit 0, open 1. No done row.
+# 6. LJ-1.427. no-match. accept-7: exit 0, open 1. No done row.
+# 7. Expiry fallout. NO ROW. A23 working.
+
+[batch]
+ts = "20260820-204450"
+rows_proposed = 0
+reason = "No table row. LJ-1.386 and LJ-1.390 stay no-change with no record; A21 REQUESTS already in queue.toml:1239-1251. LJ-1.422 accept-16, LJ-1.425 accept-9, LJ-1.426 accept-9 and LJ-1.427 accept-7 still have exit 0 and obligations_open 1; A23 misses; each critic file is an attack. LJ-1.428 is discharged at queue.toml:1333-1347; not repeated."

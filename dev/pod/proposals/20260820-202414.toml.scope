@@ -1,0 +1,24 @@
+# Maintainer batch 20260820-202414. NO ROWS. No [[queue]] repeats.
+#
+# Parks unchanged in substance. Reload of the refill-floor repair restamped
+# reaccept: 422 accept-9 seq 526, 425 accept-3 seq 531, 426 accept-3 seq 535.
+# Same facts: exit 0, obligations_open 1, Probe discarded. 427 still accept-2
+# seq 521. 386/390 still no-change.
+#
+# Refill dispatched seq 528 12:24:46Z. The floor no longer held after 192930
+# queued work. 386/390 A21 and 428 already sit in queue.toml:1239-1257.
+# Not repeated. 425-427 critic parks are attacks; owner named 422 only.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. no-change, no record. A21. a2 skips. REQUEST already queued.
+# 2. LJ-1.390. no-change, no record. A21. a2 skips. REQUEST already queued.
+# 3. LJ-1.422. no-match. accept-9: exit 0, open 1. 428 already queued.
+# 4. LJ-1.425. no-match. accept-3: exit 0, open 1. Critic attack. No done row.
+# 5. LJ-1.426. no-match. accept-3: exit 0, open 1. Critic attack. No done row.
+# 6. LJ-1.427. no-match. accept-2: exit 0, open 1. Critic attack. No done row.
+# 7. Expiry fallout. NO ROW. A23 working.
+
+[batch]
+ts = "20260820-202414"
+rows_proposed = 0
+reason = "No table row. LJ-1.386 and LJ-1.390 stay no-change. LJ-1.422 accept-9, LJ-1.425 accept-3, LJ-1.426 accept-3 and LJ-1.427 accept-2 all have obligations_open 1; A23 misses; each critic file is an attack. 386/390/428 REQUESTS already in queue.toml; refill dispatched seq 528."

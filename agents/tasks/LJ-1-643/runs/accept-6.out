@@ -1,0 +1,25 @@
+# arm accept-6
+# task LJ-1.643
+# brief agents/tasks/LJ-1-643/LJ-1.643.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (8.04443359375, 6.99072265625, 6.349609375)
+# started 2026-08-27 13:18:21
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-643/Probe643.agda rc 0 seconds 7.33
+# changed files 51
+# changed files own 3 of 51
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 7.33
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-643/lj-1.643-report.md", "agents/tasks/LJ-1-643/runs/final-4.out", "agents/tasks/LJ-1-643/runs/witness-1.out"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-643/Probe643.agda", "agents/tasks/LJ-1-643/lj-1.643-report.md", "agents/tasks/LJ-1-643/review-of-LJ-1-643-1.md", "agents/tasks/LJ-1-643/review-of-LJ-1-643-2.md", "agents/tasks/LJ-1-643/review-of-LJ-1-643-3.md", "agents/tasks/LJ-1-643/runs/Floor.agda.txt", "agents/tasks/LJ-1-643/runs/T1.agda.txt", "agents/tasks/LJ-1-643/runs/T10.agda.txt", "agents/tasks/LJ-1-643/runs/T11.agda.txt", "agents/tasks/LJ-1-643/runs/T12.agda.txt", "agents/tasks/LJ-1-643/runs/T2.agda.txt", "agents/tasks/LJ-1-643/runs/T3.agda.txt", "agents/tasks/LJ-1-643/runs/T4.agda.txt", "agents/tasks/LJ-1-643/runs/T5.agda.txt", "agents/tasks/LJ-1-643/runs/T6.agda.txt", "agents/tasks/LJ-1-643/runs/T7.agda.txt", "agents/tasks/LJ-1-643/runs/T8.agda.txt", "agents/tasks/LJ-1-643/runs/T9.agda.txt", "agents/tasks/LJ-1-643/runs/final-1.out", "agents/tasks/LJ-1-643/runs/final-2.out", "agents/tasks/LJ-1-643/runs/final-3.out", "agents/tasks/LJ-1-643/runs/final-4.out", "agents/tasks/LJ-1-643/runs/floor-10.out", "agents/tasks/LJ-1-643/runs/floor-11.out", "agents/tasks/LJ-1-643/runs/floor-2.out", "agents/tasks/LJ-1-643/runs/floor-3.out", "agents/tasks/LJ-1-643/runs/floor-4.out", "agents/tasks/LJ-1-643/runs/floor-5.out", "agents/tasks/LJ-1-643/runs/floor-6.out", "agents/tasks/LJ-1-643/runs/floor-7.out", "agents/tasks/LJ-1-643/runs/floor-8.out", "agents/tasks/LJ-1-643/runs/floor-9.out", "agents/tasks/LJ-1-643/runs/run.sh", "agents/tasks/LJ-1-643/runs/t1-1.out", "agents/tasks/LJ-1-643/runs/t1-2.out", "agents/tasks/LJ-1-643/runs/t10-1.out", "agents/tasks/LJ-1-643/runs/t11-1.out", "agents/tasks/LJ-1-643/runs/t11-2.out", "agents/tasks/LJ-1-643/runs/t12-1.out", "agents/tasks/LJ-1-643/runs/t2-1.out", "agents/tasks/LJ-1-643/runs/t2-2.out", "agents/tasks/LJ-1-643/runs/t2-3.out", "agents/tasks/LJ-1-643/runs/t2-4.out", "agents/tasks/LJ-1-643/runs/t3-1.out", "agents/tasks/LJ-1-643/runs/t4-1.out", "agents/tasks/LJ-1-643/runs/t5-1.out", "agents/tasks/LJ-1-643/runs/t6-1.out", "agents/tasks/LJ-1-643/runs/t7-1.out", "agents/tasks/LJ-1-643/runs/t8-1.out", "agents/tasks/LJ-1-643/runs/t9-1.out", "agents/tasks/LJ-1-643/runs/witness-1.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 0, "seconds": 7.33}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 7.33, "target": "agents/tasks/LJ-1-643/Probe643.agda"}], "spec_surface_detail": "", "task": "LJ-1.643", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 3.95}

@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.630"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.630's obligation is `src/L/BoundedSubset.lagda.md::class-pred-iv` and LJ-1.634 carries the SAME obligation string, byte for byte, and closed `task-lj-1-634-go`. The term is in the main tree at src/L/BoundedSubset.lagda.md:1512-1517, metered at the module top at :1753, committed as edab9f64. So another attempt buys nothing. LJ-1.630 was not wasted and I record what it bought: its worktree carried the whole landing, with imports widened and the module written, and its acceptance passed conjuncts 2, 3, 4 and 5; only conjunct 1 failed, on ONE binder, where it wrote `(IH : (δ : Sx) → ...)` with `Sx = CS.S`, a second restriction of an already constructible carrier, against LJ-1.608's own `(δ : V ℓ)`. LJ-1.634's brief named that binder as its premise 3 and the landing then went through. The park itself was a routing gap, not a mathematical failure: a real failed landing carries a named Agda error and NEITHER companion file, so neither task-scoped NO-GO row matched, which is maintainer-backlog item 30. That gap is now closed by the `no-go-bare` branch row carried in every brief I have written since."
+evidence = [
+  "src/L/BoundedSubset.lagda.md:1512",
+  "agents/tasks/LJ-1-634/LJ-1.634.md:21",
+  "agents/tasks/LJ-1-630/LJ-1.630.md:18",
+  "dev/pod/maintainer-backlog.md:31",
+]
+reopen = "Reopen if the row at src/L/BoundedSubset.lagda.md:1512-1517 is reverted or renamed, or if a consumer needs ingredient (iv) at LJ-1.630's own frame rather than LJ-1.634's. Note that the two frames differ in exactly one binder, so a reopen means a measurement showed `Sx` is the right carrier there after all, and not a wish to re-run the landing."
+by = "mathematician"

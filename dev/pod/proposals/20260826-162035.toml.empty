@@ -1,0 +1,33 @@
+# Maintainer batch 20260826-162035. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.636 and LJ-1.643: unchanged from every prior batch this session
+# (20260826-073157, 084256, 084350, 140502). Both R3/AD10 corpus-locked; both
+# the conjunct-1 scope defect and LJ-1.643's go-row template are rule-home
+# design questions, not a maintainer row. See backlog item 33.
+#
+# LJ-1.656: parked `fallback:Qwen3.8-27B-oQ4e-mtp` (exit_code None, 0 changed
+# files, after a ~2h10m run). Same AD29 mechanism verified repeatedly this
+# session (LJ-1.644, LJ-1.642): `_rule_a2()` reopens a `fallback:` park at
+# once, unconditionally, once `avoid_models` excludes the failed head. Also
+# worth noting: `heads.toml` changed this session (commit 5823bb84) after this
+# task's own dispatch, so its NEXT attempt runs under the new model lineup
+# (coder's second head is now grok-4.6, not claude-opus-5) once it reopens.
+# No row needed either way.
+#
+# THE SHELVED TASKS ask for nothing per the brief's own header.
+#
+# THE NO-MATCH RECORDS window is empty.
+#
+# THE SHADOWING LIST NAMES NO DEFECT. `task-lj-1-643-no-go-bare` (priority 40,
+# bare `exit_code = 42`) loses to `task-lj-1-643-no-go-attacked` (priority 15,
+# more specific) on the same LJ-1.643 record analysed in the first batch this
+# session: ascending-priority ordering picking the more specific row, by
+# design.
+#
+# THE EXPIRY FALLOUT LIST is the standing whole-corpus replay with expiry
+# lifted: not actionable by a row.
+
+[batch]
+ts = "20260826-162035"
+rows_proposed = 0
+reason = "Three parked tasks. LJ-1.636/LJ-1.643 unchanged, both R3-locked, awaiting an owner design ruling. LJ-1.656's fallback park is AD29 working as designed and will reopen on its own; its next attempt also picks up today's heads.toml change. The one shadowing loss is the same ascending-priority pick already analysed this session, not a defect. No row and no queue entry needed."

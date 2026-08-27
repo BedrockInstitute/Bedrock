@@ -1,0 +1,66 @@
+# Maintainer batch 20260824-005804. NO ROWS. TWO [[queue]] REQUESTS.
+#
+# LJ-1.541 and LJ-1.572: `attempt_max:sys-timeout-escalate`, both timeout,
+# both obligations_delta 0. THE LOUDEST INPUT NAMED IN THE BRIEF IS RIGHT: this
+# row matched again and again and never changed the facts, and the reason is
+# that `sys-timeout-escalate` is already doing its job correctly. It is a
+# SYSTEM row that fires when an Agda run does not return inside
+# `agda_deadline_s` (1800 s); nothing about its `[row.when]` can be tuned to
+# make a computation that does not finish in 1800 s finish in 1800 s. No row
+# change reaches this. What is missing is the mathematician's judgement on
+# the PROOF itself, which AD3 reserves to that role. Filed as [[queue]]
+# requests below, not as rows.
+#
+# LJ-1.541's own history rules out resource contention as the cause, so the
+# request is not "give it more slots or more heap": `agents/tasks/LJ-1-541/
+# runs/accept-1.out` through `accept-10.out` (2026-08-22T21:26Z through
+# 2026-08-23T23:17Z, spanning BOTH today's tier changes and the config before
+# them) show `runs/BisB.agda` hitting `rc None`, `error class timeout` at
+# 1800.01-1800.02 s in EIGHT of ten attempts, under `agda slots during` values
+# of 1, 2, 3, 4 AND 5 -- every concurrency level this campaign has run at, with
+# the same wall-clock result every time. (The other two, accept-4 and
+# accept-5, read `rc -9`, `error class other`, at 1156.08 s and 0.82 s: a
+# SIGKILL from something outside the acceptance harness, not a second timeout
+# shape, and not evidence against the pattern above.) LJ-1.572's
+# `runs/Frame.agda` shows the identical shape: `accept-1.out` through
+# `accept-5.out` (2026-08-23T09:29Z through T23:57Z) hit 1800.01-1800.21 s in
+# ALL FIVE attempts, under `agda slots during` 3, 4, 4, 4 and 2, caliber
+# `-M8g` for the first four and `-M2g` (today's tier split) for the fifth. Same
+# deadline, same result, across a caliber change and a concurrency range of
+# 2-4. Neither task's timeout moved when the machine's contention did, which
+# is the evidence a program-level (contention, heap cap) cause would have to
+# leave and does not.
+#
+# LJ-1.598: reason `fallback:Qwen3.8-27B-oQ4e-mtp`. NO ROW AND NO QUEUE ENTRY
+# NEEDED; this already worked as designed. `_accept_one()` (`scripts/pod/
+# pod.py:4607-4630`) reached the R7 "vendor measured nothing" branch --
+# `runs/` is empty and every transition on this task carries `run: null`, so
+# the assigned model never actually ran the task -- and under A29 (owner's
+# ruling 2026-08-21) a plain `no-change` on a multi-model slot gets one
+# automatic retry with the failed model excluded: `reason` became
+# `fallback:Qwen3.8-27B-oQ4e-mtp` and `t.avoid_models` picked it up. The
+# `reason.startswith("fallback:")` limb (`pod.py:4259-4268`) then reopens a
+# park like this UNCONDITIONALLY, no clock and no table edit needed, which is
+# exactly what the transition log shows: PARKED at 16:58:03Z, READY again at
+# 16:58:38Z, 35 seconds later. `pod status` now shows it RUNNING under a
+# different model. The mechanism this row's own reason is naming did its job;
+# there is nothing left to fix or route.
+
+[batch]
+ts = "20260824-005804"
+rows_proposed = 0
+reason = "No table row for either timeout park: sys-timeout-escalate already fires correctly, and the deterministic 1800s result across concurrency 1-5 and two heap calibers (LJ-1.541: 8/10 attempts; LJ-1.572: 5/5 attempts) rules out a resource-contention cause a row could address. Two [[queue]] requests filed for the mathematician's judgement on the proofs themselves (AD3). LJ-1.598's fallback park needs neither a row nor a queue entry: A29's unconditional fallback reopen (pod.py:4259-4268) already resolved it in 35 seconds, and it is RUNNING again under a different model as this batch is written."
+
+[[queue]]
+code = "LJ-1.541"
+reason = "runs/BisB.agda has not returned inside agda_deadline_s (1800 s) in EIGHT of its last ten acceptance attempts (agents/tasks/LJ-1-541/runs/accept-1.out through accept-10.out, 2026-08-22T21:26Z to 2026-08-23T23:17Z), at agda slots during values of 1, 2, 3, 4 and 5 -- the full concurrency range this campaign has run at -- and at both this week's heap calibers. The wall-clock result (1800.01-1800.02 s) does not move with contention, so this is not a program-side resource question; it reads as the term itself not elaborating inside the deadline. AD3 gives the judgement on what to do about the proof -- restructure BisB into smaller lemmas, try a different witness, or something else -- to the mathematician. The two non-timeout attempts (accept-4: rc -9 at 1156.08s; accept-5: rc -9 at 0.82s, error class other) are SIGKILLs from outside the harness (one lands inside this maintainer's own emergency process kill during today's WIDE-slots incident) and are not a second failure shape to account for."
+added = 2026-08-24
+added_by = "maintainer"
+failed_check = "attempt_max:sys-timeout-escalate: runs/BisB.agda times out at 1800s regardless of concurrency (measured at slots 1-5) or heap caliber"
+
+[[queue]]
+code = "LJ-1.572"
+reason = "runs/Frame.agda has not returned inside agda_deadline_s (1800 s) in ALL FIVE of its acceptance attempts (agents/tasks/LJ-1-572/runs/accept-1.out through accept-5.out, 2026-08-23T09:29Z to T23:57Z), at agda slots during 3, 4, 4, 4 and 2, under caliber -M8g for the first four attempts and -M2g (this week's tier split) for the fifth. The wall-clock result is 1800.01-1800.21 s every time, unmoved by either the concurrency range (2-4) or the caliber change, which rules out contention or the heap cap as the cause. The task's own runs/contention-1.out (an earlier attempt's live ps snapshot) already shows the coder investigated machine contention as a candidate cause; the acceptance history above settles it against that reading. AD3 gives the judgement on the proof itself -- Frame.agda's own construction -- to the mathematician."
+added = 2026-08-24
+added_by = "maintainer"
+failed_check = "attempt_max:sys-timeout-escalate: runs/Frame.agda times out at 1800s in 5/5 attempts across two calibers and a 2-4 concurrency range"

@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.632"
+claim = "delivered-elsewhere"
+reason = "Situation 1, the clean shape. LJ-1.632's obligation is `src/L/Choice/Faithful.lagda.md::class-pred-v` and LJ-1.631 carries the SAME obligation string, byte for byte, and closed `task-lj-1-631-go`. The term is in the main tree at src/L/Choice/Faithful.lagda.md:962-963, committed as 4ee5c75b, and it is the term LJ-1.631's brief stated: `class-pred-v δ oδ = keyS (LsetS δ oδ)`. So another attempt buys nothing. LJ-1.632 was written as a GUARDED successor, not a duplicate: its own brief says it checks LJ-1.631's outcome first and stops if (v) is already landed, which is the outcome that happened. It never ran that check because it parked twice at pre-flight P23, `supply 'keyS' claimed 55, measured 56 just now`; the count moved because LJ-1.631's landing ADDED a keyS occurrence, so the predecessor that discharged the obligation is the same event that made this brief's own claim stale. Repairing 55 to 56 would admit a task whose first act is to stop."
+evidence = [
+  "src/L/Choice/Faithful.lagda.md:962",
+  "agents/tasks/LJ-1-631/LJ-1.631.md:29",
+  "agents/tasks/LJ-1-632/LJ-1.632.md:17",
+  "dev/pod/queue.toml:5884",
+]
+reopen = "Reopen if the row at src/L/Choice/Faithful.lagda.md:962-963 is reverted or renamed, or if a consumer of the class-pred table needs ingredient (v) at a frame that row does not serve. Note that LJ-1.632's own guard makes a reopen cheap: the brief already stops when (v) is present, so reopening costs a pre-flight and not a dispatch. Not 'try it again and see'."
+by = "mathematician"

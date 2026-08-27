@@ -1,0 +1,43 @@
+# Maintainer resubmit, same content as 20260821-102037.toml (retired
+# `.scope`: the guarded instruction files and the ledger.py item-19 fix were
+# still dirty at that tick). Both are committed now (0b97ad0, 91aa77b), so
+# resubmitting unchanged.
+
+[[row]]
+id = "task-lj-1-440-stop-stated"
+scope = "task:LJ-1.440"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "D-10 stop, exits 0, matches no exit_code 42 branch. Same shape as dev/pod/table.toml:4896-4909 (task-lj-1-448-stop-stated) and confirmed by the mathematician's own backlog item 20. changed_files_none added: LJ-1.448's identical row (without this exclusion) re-matched the critic's own return and re-escalated itself (dev/pod/transitions/2026-08.jsonl:957,961)."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-440/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-440/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-444-stop-stated"
+scope = "task:LJ-1.444"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "Same shape: D-10 stop, worktree forked before LJ-1.442 (its premise) landed GO in the main tree (.pod-state/worktrees/LJ-1-444/agents/tasks/LJ-1-444/lj-1.444-report.md:26-30). Unlike LJ-1.443, the premise is now true in the main tree, so escalation lets a critic actually resolve it rather than uphold a stale stop. changed_files_none added for the same reason as task-lj-1-440-stop-stated."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-444/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-444/review-of-LJ-*-*.md"]
+
+[batch]
+ts = "20260821-102037b"
+rows_proposed = 2
+reason = "Resubmit of 20260821-102037 (retired scope), unchanged, now that the guarded-file and ledger.py blockers are committed (0b97ad0, 91aa77b)."

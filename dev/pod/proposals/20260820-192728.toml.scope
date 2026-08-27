@@ -1,0 +1,49 @@
+# Maintainer batch 20260820-192728. NO ROWS.
+#
+# Three codes named. No row releases them. AD1: a row that would close an
+# empty return, or that would close an open obligation as done, is not written.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. reason `no-change`. record None. 0 changed files.
+#
+# Re-accept on the main tree wiped fact 4 (seq 234). Rule (a2) skips a park
+# with `t.record is None`. A same-code `[[queue]]` is skipped because the
+# code is already a task.
+#
+# ---------------------------------------------------------------------------
+# 2. LJ-1.390. reason `no-change`. record None. 0 changed files.
+#    THIS is the new park. Seq 433, after owner `--retry` (seq 423 READY,
+#    seq 427 RUNNING).
+#
+# `run_acceptance` returned None (`scripts/pod/accept.py:430-431`). R7.
+# Isolation ON. Fresh worktree at HEAD. `git status` under
+# `agents/tasks/LJ-1-390/` in that tree is empty. No retrieval line.
+# The brief is `head_slot: mathematician` and its obligation is Agda in
+# `Probe390.agda` (`agents/tasks/LJ-1-390/LJ-1.390.md:4-9`). A21 forbids
+# that. Accept would discard mathematician Agda from fact 4 and park
+# `no-change` if they had written it. They wrote nothing. Same park.
+#
+# A `[[queue]]` to repair that brief is skipped: the code is already a
+# task. A `done` row cannot be written: there is no record.
+#
+# ---------------------------------------------------------------------------
+# 3. LJ-1.422. reason `no-match`. Unchanged from batch 191936.
+#
+# MEASURED at `.pod-state/worktrees/LJ-1-422/agents/tasks/LJ-1-422/runs/accept-2.out`.
+# Critic return. exit 0. `obligations_open` 1. `go` needs delta -1.
+# `no-go-stated` needs exit 42. `sys-obligations-satisfied` needs
+# `obligations_open_max = 0`. A23 misses. The critic file records defects
+# in the NO-GO (`review-of-LJ-1-422-1.md:48-50`), so `action = done`
+# would close an attack. That choice is judgement.
+#
+# ---------------------------------------------------------------------------
+# 4. Expiry fallout. NO ROW.
+#
+# Closed-task rows dying with their tasks, section 4.6. Green closes fall
+# to `sys-obligations-satisfied`. That is A23. No-go closes fall to NO
+# MATCH because their keys were task-scoped.
+
+[batch]
+ts = "20260820-192728"
+rows_proposed = 0
+reason = "LJ-1.386 and LJ-1.390 are no-change parks with no record, so a2 skips them. LJ-1.390's retry wrote nothing: the brief names mathematician and Agda, A21 forbids that, R7 parked. A same-code queue request is skipped. LJ-1.422 has obligations_open 1, so sys-obligations-satisfied correctly misses; the critic file is an attack, so choosing done is judgement. Expiry fallout onto sys-obligations-satisfied is A23 working."

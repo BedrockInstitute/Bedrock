@@ -1,0 +1,23 @@
+# Maintainer batch 20260820-195437. NO ROWS. No [[queue]] repeats.
+#
+# Parks unchanged. LJ-1.386 no-change seq 436; LJ-1.390 no-change seq 433;
+# LJ-1.422 no-match seq 478 accept-7: exit 0, obligations_open 1, Probe
+# discarded (A21). A23 sys-obligations-satisfied misses on open 1.
+# no-go-stated needs exit 42. The critic file is an attack. No done row.
+#
+# The three REQUESTS from 195228.toml landed in queue.toml:1239-1257 at
+# harvest seq 480 (result scope, append-before-R15). Digest already prints
+# 386/390 as brief-repair. Repeating would duplicate; queue_append does
+# not dedupe.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. no-change, no record. A21. a2 skips. REQUEST already queued.
+# 2. LJ-1.390. no-change, no record. A21. a2 skips. REQUEST already queued.
+# 3. LJ-1.422. no-match. accept-7: exit 0, obligations_open 1. A23 misses.
+#    Critic file is an attack. No done row. 428 REQUEST already queued.
+# 4. Expiry fallout. NO ROW. A23 working.
+
+[batch]
+ts = "20260820-195437"
+rows_proposed = 0
+reason = "No table row. LJ-1.386 and LJ-1.390 stay no-change with no record. LJ-1.422 accept-7 still has obligations_open 1; A23 misses; the critic file is an attack. The three [[queue]] requests from 195228 already sit in queue.toml:1239-1257; not repeated."

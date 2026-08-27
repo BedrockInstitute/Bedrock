@@ -1,0 +1,47 @@
+# Maintainer batch 20260821-165018. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.459: salvage:LJ-1.459. The R3-bypass row from the prior round
+# (task-lj-1-459-obligations-satisfied) matched cleanly (exit_code 0,
+# obligations_open 0, obligations_delta 0), but its worktree is stale
+# relative to main: src/L/StageBound.lagda.md AND dev/ledger.toml both
+# changed in the main tree since this task forked
+# (dev/pod/transitions/2026-08.jsonl seq 1529). `salvage:` is
+# reaccept-eligible (scripts/pod/pod.py:3703) and self-resolves once the
+# shared files stop moving under it. No row possible or needed.
+#
+# LJ-1.470: salvage:LJ-1.470. Same shape, same cause: dev/ledger.toml kept
+# moving under its stale worktree while four concurrent coder tasks landed
+# (dev/pod/transitions/2026-08.jsonl seq 1493). Also reaccept-eligible,
+# also self-resolving. No row possible or needed.
+#
+# LJ-1.478: no-change, 0 changed files, no facts recorded at all
+# (exit_code/error_class/obligations_delta all None in this brief's own
+# summary). This is NOT a row-shaped problem: `run_acceptance()` returned
+# None (R7, scripts/pod/pod.py:4103-4108) because the worker wrote nothing
+# to route. Read the transcript
+# (.pod-state/logs/LJ-1.478-20260821-161643-final.md:387-394): this was the
+# FIRST real dispatch of the new omlx/Qwen3.8-27B-oQ4e-mtp coder head
+# (amendment A27, landed this session), and it aborted mid-write when
+# oMLX's own process hit its memory ceiling (usage 50.1 GB against a 48.0 GB
+# dynamic ceiling on a 64 GB machine, `sysctl hw.memsize`). The program
+# measured this correctly and parked honestly rather than mismeasuring a
+# vendor failure as a result. `no-change` is deliberately NOT in the
+# reaccept-eligible set (no-match/r4/salvage: only,
+# scripts/pod/pod.py:3703), so this one park stays PARKED until a human
+# retries it (`pod resume --retry LJ-1.478`) or the owner decides whether to
+# raise the local server's ceiling first. That decision is the owner's, not
+# a row I can write: I have already reported the finding directly, updated
+# `dev/pod/heads.toml`'s comment on the new vendor to record the real
+# measurement in place of the old "not yet verified" placeholder, and I am
+# not retrying it myself inside this batch, whose scope is the proposals
+# file alone and forbids running the loop.
+#
+# Backlog items 15, 16, 17 (rule (e)'s stop-tick write/commit/spawn,
+# deadline-kills-driver, exclusive-task-blocks-stop) remain open and none
+# of the three parked tasks touches any of them. Item 21's half 1 (machine:
+# exclusive for src/-writing briefs) is adopted and unchanged this batch.
+
+[batch]
+ts = "20260821-165018"
+rows_proposed = 0
+reason = "All three parks are self-resolving or owner-decision cases, not row-shaped. LJ-1.459/470 are salvage parks on stale worktrees colliding with concurrent landings and will reaccept automatically. LJ-1.478 is R7's correct handling of a vendor failure (the new local omlx/Qwen3.8-27B-oQ4e-mtp coder head, amendment A27, hit its own 48 GB memory ceiling on its first real dispatch) -- no record exists to route, so no row is possible; the retry-or-raise-the-ceiling decision is the owner's and was reported directly rather than guessed."

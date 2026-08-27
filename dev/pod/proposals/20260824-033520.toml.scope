@@ -1,0 +1,30 @@
+# Maintainer batch 20260824-033520. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541 and LJ-1.572: same two `attempt_max:sys-timeout-escalate` parks named in
+# the last batch (20260824-005804), unchanged. Already handled outside this
+# proposal channel: `[[queue]]` requests were filed for both in that batch
+# (queue_append landed them; see dev/pod/queue.toml), the resident mathematician
+# read them and initially asked whether the program had an administrative close;
+# I checked (no such command exists in pod.py, and even a fresh row cannot skip
+# the next real dispatch -- `_rule_a2()`'s attempt_max reopen sets a task READY,
+# never DONE directly, `t.row` is read only for display/commit messages) and
+# reported that back. The mathematician then WITHDREW the close request on its
+# own: marking either DONE would be a false record (neither task's own run
+# succeeded; their obligations were delivered by other tasks, LJ-1.559 and
+# LJ-1.572's own salvaged review file), which is exactly the certainty
+# AGENTS.md's evidence rule forbids writing. Current ruling, from the
+# mathematician directly: leave both parked, no state write, no row, no retry.
+# Nothing for this batch to propose.
+#
+# LJ-1.600: reason `fallback:Qwen3.8-27B-oQ4e-mtp`, same shape as LJ-1.598 in the
+# last batch. NO ROW AND NO QUEUE ENTRY NEEDED. Confirmed live while writing this
+# proposal: `pod status` showed it PARKED at the moment this batch brief was
+# generated (19:35:20Z, exactly this brief's own timestamp), and it read READY
+# one tick later (tick_seconds = 30, dev/pod/heads.toml:262) with no action taken
+# by anyone. A29's unconditional fallback reopen (pod.py:4259-4268, now also
+# commented at :4290-4297) did its job again.
+
+[batch]
+ts = "20260824-033520"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the three. LJ-1.541/572 are the same attempt_max:sys-timeout-escalate parks handled in 20260824-005804 and by direct correspondence with the resident mathematician, who withdrew the earlier close request: marking either DONE would misstate what happened, since neither succeeded on its own run. Current ruling is leave both parked, no further action. LJ-1.600's fallback park is the same self-resolving A29 shape as LJ-1.598: confirmed PARKED at this brief's own timestamp, READY one tick_seconds later, unattended."

@@ -1,0 +1,26 @@
+# Maintainer batch 20260824-080307. NO ROWS, NO QUEUE ENTRIES.
+#
+# THE LOOP IS BACK UP. `pod.py resume --once` ran automatically once the shared
+# quota window (2026-08-24T08:01:50+08:00) passed: "5 parked, 3 still parked, 2
+# ready" -- LJ-1.609 and LJ-1.611 both cleared, keeper.sh restarted in its pane,
+# ticking confirmed (seq advancing, a real `src/Everything.lagda.md` acceptance
+# check ran and finished normally in the interval). LJ-1.609 and LJ-1.611 are
+# not in this batch's parked list, confirming they landed cleanly after
+# reopening.
+#
+# LJ-1.541, LJ-1.572: unchanged, settled. Leave parked.
+#
+# LJ-1.603: unchanged. Still confirms the _rule_a2() B2 fix holds.
+#
+# LJ-1.599: reason `row:task-lj-1-599-heap-wall-park`, a SECOND heap-wall park,
+# same corrected template as 603 (`action = "park"`). NO ROW, NO QUEUE ENTRY --
+# same reasoning as 603, and the B2 fix protects it the same way against a
+# spurious reopen on an unrelated table.toml write. THE SHADOWING LIST now
+# shows TWO rows losing to task-scoped heap-wall-park rows this window
+# (`sys-heap-wall`: 2, `sys-coder-adversarial-on-heap-wall`: 1) -- still AD8
+# working as designed, not a defect; noted only because the count moved.
+
+[batch]
+ts = "20260824-080307"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the four. The loop resumed automatically once the shared quota window passed; LJ-1.609/611 both cleared and are no longer parked. LJ-1.541/572/603 unchanged, settled or self-consistent as before. LJ-1.599 is a second instance of the corrected heap-wall-park template, protected by the same B2 fix as 603."

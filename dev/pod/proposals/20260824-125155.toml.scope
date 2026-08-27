@@ -1,0 +1,26 @@
+# Maintainer batch 20260824-125155. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541, LJ-1.572, LJ-1.603: correctly SHELVED, no action.
+#
+# LJ-1.599: unchanged, waiting on its own known follow-up (LJ-1.608 delivers it;
+# the mathematician has this already). Nothing new.
+#
+# LJ-1.615: unchanged since 20260824-123453, a [[queue]] request already filed
+# that batch (attempt_max:sys-lint-accept, same shape as LJ-1.500/512). Not
+# repeating it here.
+#
+# LJ-1.616: reason `row:task-lj-1-616-heap-wall-park`, `action = "park"` (plain,
+# not `park_and_split`), obligations_delta -1 -- SAME SHAPE AS [LJ-1.603] BEFORE
+# ITS SPLIT WAS FOUND MISSING: a real obligation delta but no follow-up request
+# anywhere in dev/pod/queue.toml (grep for "LJ-1.616-split" or "LJ-1-616-split"
+# returns nothing), and after the B2 fix this will never reopen on its own. NOT
+# filed as a [[queue]] request here, on the same reasoning as 603 before it: what
+# LJ-1.616 needs next (a continuation brief, or a shelve if the -1 delta already
+# closes it) is the mathematician's judgement, not the maintainer's to guess at.
+# Flagged directly to the mathematician instead of through this channel, matching
+# how 603's identical gap was surfaced.
+
+[batch]
+ts = "20260824-125155"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the three. LJ-1.599 unchanged. LJ-1.615's queue request already filed in 20260824-123453, not repeated. LJ-1.616 is a second instance of the LJ-1.603 shape (plain park, obligations_delta -1, no split entry anywhere) -- flagged directly to the mathematician rather than through a queue entry, since what it needs next is a judgement call, not a program fact."

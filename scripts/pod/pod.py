@@ -2683,7 +2683,29 @@ def review_brief(t, slot, root=None):
     # named.
     lint_note = []
     detail = (rec.get("lint_detail") or "").strip()
-    if (rec.get("facts") or {}).get("error_class") == "lint" and detail:
+    is_lint = (rec.get("facts") or {}).get("error_class") == "lint" and detail
+    # **A CODER SELF-REPAIR NEEDS THE ORIGINAL REPORT, NOT ONLY `outfile`, when the
+    # failing check is `check-survey-quotes`.** pod-math's `lint-back-to-author` row
+    # template (`added_by = "mathematician"`, 2026-08-27, backlog item 37) routes a
+    # lint failure to `head_slot = "coder"` SPECIFICALLY so the ORIGINAL AUTHOR can
+    # fix the file `check-survey-quotes.py`'s `report_of()` actually reads
+    # (`:427-439`: the task-named `*-report.md`, else `REPORT.md`, else the sole
+    # `agents_tree.is_report()` match) -- `review-of-*.md` is a "review companion"
+    # and that function never reads it, by its own docstring. Without this, the
+    # template above still told the coder "write `outfile` and nothing else",
+    # which forbids touching the one file conjunct 6 checks. MEASURED live on
+    # `[LJ-1.710]`: three consecutive `task-lj-1-710-lint-back-to-author` hits, byte-
+    # identical `lint_detail` each time, because the brief never named the report.
+    report_path = None
+    if slot == "coder" and is_lint:
+        try:
+            cands = [p for p in sorted(d.glob("*.md"))
+                     if agents_tree.is_report(p) and not p.name.startswith("review-")]
+            if cands:
+                report_path = str(cands[0].relative_to(root))
+        except (OSError, ValueError):
+            report_path = None
+    if is_lint:
         lint_note = [
             "",
             "## WHY THIS ESCALATED: THE PRECEDING RETURN FAILED A LINT CHECK",
@@ -2694,6 +2716,17 @@ def review_brief(t, slot, root=None):
             "A review that skips this and only re-asks the three questions below, "
             "unchanged, risks the SAME rejection.",
         ]
+        if report_path:
+            lint_note += [
+                "",
+                "**IF THE FAILING CHECK IS `check-survey-quotes`, THE CITATION BELONGS "
+                f"IN `{report_path}`, NOT IN `{outfile}`.** `report_of()` "
+                "(`scripts/pod/check-survey-quotes.py:427-439`) reads the ORIGINAL "
+                f"report, never a `review-of-*.md` companion. `{report_path}` is "
+                "under this task's own home, so editing it is in scope by "
+                "construction (`changed_files_scoped()`, `scripts/pod/facts.py:345`) "
+                "whatever `## SCOPE (write)` below names.",
+            ]
     body = [
         f"# {t.code}: adversarial review of {pred}",
         "",
@@ -2703,6 +2736,7 @@ def review_brief(t, slot, root=None):
         "",
         "## SCOPE (write)",
         f"- {outfile}",
+        *([f"- {report_path}"] if report_path else []),
         # **THE JOURNAL LEFT THIS SCOPE ON 2026-08-19, and the reason is a measurement.**
         # Every generated review brief claimed `dev/JOURNAL.md`, so `territory_in_flight()`
         # made ANY TWO ESCALATIONS MUTUALLY EXCLUSIVE. With A22 running four or five coder
@@ -2718,7 +2752,9 @@ def review_brief(t, slot, root=None):
         # consolidation step and never a per-review write.
         "",
         "## THE OBLIGATION",
-        f"Attack the return of {pred}. Write {outfile} and nothing else.",
+        (f"Attack the return of {pred}. Write {outfile}"
+         + (f" and, if the fix belongs there, {report_path}. Write nothing else."
+            if report_path else " and nothing else.")),
         "If you UPHELD the predecessor's NO-GO, that file plus exit 0 closes the",
         "task (row sys-critic-upheld-no-go). Put `verdict: upheld` in HEAD when you",
         "agree, or `verdict: overturned` when you do not.",

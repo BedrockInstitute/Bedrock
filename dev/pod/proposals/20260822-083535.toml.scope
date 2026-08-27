@@ -1,0 +1,45 @@
+# Maintainer batch 20260822-083535. NO ROWS. No new [[queue]] entries.
+#
+# WHY THE PREVIOUS BATCH (20260822-080126) NEVER LANDED. It was refused on
+# `scope` (dev/pod/transitions/2026-08.jsonl, 2026-08-22T00:07:07Z), naming
+# dev/pod/maintainer-backlog.md, scripts/pod/check-survey-quotes.py and
+# scripts/tests/test_pod_gates.py as dirty paths outside this batch's one
+# declared write. The two scripts were my own in-flight fix, since committed
+# (a2c261a4). maintainer-backlog.md had been dirty since 2026-08-21T14:50Z --
+# pod-math wrote items 22 and 23 straight into it and nobody commits that
+# file: it is outside the maintainer's own SCOPE line and the program never
+# writes it either. Owner-authorised 2026-08-22: committed as-is (f5b73fb6),
+# unblocking R15 for this and every batch after it. The queue entry this
+# batch's predecessor filed for LJ-1.505 DID land regardless (queue_append()
+# runs before the scope gate) -- confirmed present in dev/pod/queue.toml,
+# code = "LJ-1.505", added = 2026-08-22. Not repeated below.
+#
+# LJ-1.497: reason `attempt_max:task-lj-1-497-accept-failed`. NO ROW NEEDED,
+# ALREADY RESOLVED OUTSIDE THIS MECHANISM. The row that kept matching was
+# correct every time: the coder's report was the brief's own unfilled
+# template (every section read literally "FILLED"), so conjunct 6 failed
+# identically on each of three re-dispatches and attempt_max parked it
+# exactly as designed ("the cap parks it naming the row that kept matching,
+# because that is a design error in the ROW and not in the task", pod.py).
+# There is no table-row fix for a coder that never wrote real content.
+# Owner-authorised hard reset 2026-08-22: worktree dropped (nothing in it
+# was worth keeping), avoid_models set to exclude Qwen3.8-27B-oQ4e-mtp, task
+# is RUNNING again under claude-opus-5 as this batch is written
+# (.pod-state/state.json: status RUNNING, model claude-opus-5, role coder).
+#
+# LJ-1.498: reason `launch`, unchanged from the prior batch's diagnosis and
+# now with more detail. Every `launch` park since 2026-08-21T23:33Z reads the
+# same why: "every model of [heads].coder is at its own max_concurrency
+# ... It re-opens when one closes" (dev/pod/transitions/2026-08.jsonl, seq
+# 2118, 2127, 2136, 2168). This IS the self-reopening class (`reason in
+# ("admission", "launch")`, pod.py:3808-3809): four cycles logged in the last
+# 65 minutes, each PARKED -> READY -> PARKED again the moment it re-tries
+# into a full WIDE tier (four concurrent Agda writers already running:
+# LJ-1.497, LJ-1.510, LJ-1.511 and others across this window). NO ROW IS
+# POSSIBLE OR NEEDED; this is ordinary capacity contention, not a routing
+# defect, and it will dispatch on its own once a slot frees.
+
+[batch]
+ts = "20260822-083535"
+rows_proposed = 0
+reason = "No table row. LJ-1.497 (attempt_max) is already resolved by an owner-authorised hard reset, no longer parked, RUNNING under claude-opus-5. LJ-1.498 (launch) is ordinary WIDE-tier capacity contention, self-reopening every cycle (four in the last 65 minutes), no row possible. LJ-1.505 (no-match) is unchanged; its [[queue]] brief-repair request from the prior (scope-refused) batch already reached dev/pod/queue.toml before that refusal, so it is not re-filed. Separately: dev/pod/maintainer-backlog.md, which had blocked every maintainer batch since 2026-08-21T14:50Z on scope, is committed (f5b73fb6) as of this batch."

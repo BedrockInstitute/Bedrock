@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.709
+# brief agents/tasks/LJ-1-709/LJ-1.709.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (5.6826171875, 6.27880859375, 6.92041015625)
+# started 2026-08-27 14:55:17
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-709/Probe709.agda rc 0 seconds 3.81
+# changed files 11
+# changed files own 11 of 11
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 3.81
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-709/Probe709.agda", "agents/tasks/LJ-1-709/lj-1.709-report.md", "agents/tasks/LJ-1-709/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-709/runs/diag-1.out", "agents/tasks/LJ-1-709/runs/floor-1.out", "agents/tasks/LJ-1-709/runs/floor-2.out", "agents/tasks/LJ-1-709/runs/floor-3.out", "agents/tasks/LJ-1-709/runs/floor-4.out", "agents/tasks/LJ-1-709/runs/p-1.out", "agents/tasks/LJ-1-709/runs/run-diag.sh", "agents/tasks/LJ-1-709/runs/run.sh"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-709/Probe709.agda", "agents/tasks/LJ-1-709/lj-1.709-report.md", "agents/tasks/LJ-1-709/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-709/runs/diag-1.out", "agents/tasks/LJ-1-709/runs/floor-1.out", "agents/tasks/LJ-1-709/runs/floor-2.out", "agents/tasks/LJ-1-709/runs/floor-3.out", "agents/tasks/LJ-1-709/runs/floor-4.out", "agents/tasks/LJ-1-709/runs/p-1.out", "agents/tasks/LJ-1-709/runs/run-diag.sh", "agents/tasks/LJ-1-709/runs/run.sh"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 3.81}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 3.81, "target": "agents/tasks/LJ-1-709/Probe709.agda"}], "spec_surface_detail": "", "task": "LJ-1.709", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.51}

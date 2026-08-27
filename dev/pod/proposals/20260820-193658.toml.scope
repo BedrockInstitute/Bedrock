@@ -1,0 +1,46 @@
+# Maintainer batch 20260820-193658. NO ROWS.
+#
+# Three codes named. No row releases them. Same parks as 193527.
+# LJ-1.422 was re-accepted a second time (seq 453-455) after LJ-1.391 expired.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. reason `no-change`. record None. 0 changed files.
+#
+# Re-accept on the main tree wiped fact 4 (seq 234). Rule (a2) skips a park
+# with `t.record is None`. A same-code `[[queue]]` is skipped because the
+# code is already a task.
+#
+# ---------------------------------------------------------------------------
+# 2. LJ-1.390. reason `no-change`. record None. 0 changed files.
+#
+# Seq 433, after owner `--retry`. R7: `run_acceptance` returned None.
+# The brief is `head_slot: mathematician` with an Agda obligation
+# (`LJ-1.390.md:4-9`). A21 forbids that. They wrote nothing. A same-code
+# `[[queue]]` is skipped.
+#
+# ---------------------------------------------------------------------------
+# 3. LJ-1.422. reason `no-match`. Second re-accept, not a new return.
+#
+# Seq 453 PARKED to CHECKING after LJ-1.391's expire wrote the table
+# (`reaccept: the scene is still there, no worker`). Seq 455 CHECKING to
+# PARKED `no-match`.
+# MEASURED at `.pod-state/worktrees/LJ-1-422/agents/tasks/LJ-1-422/runs/accept-4.out`.
+# Same facts as accept-2 and accept-3: exit 0, `obligations_open` 1, delta 0,
+# Probe discarded (A21), 6 files including `review-of-LJ-1-422-1.md`.
+#
+# `go` needs delta -1. `no-go-stated` needs exit 42.
+# `sys-obligations-satisfied` needs `obligations_open_max = 0`. A23 misses.
+# The critic file is an attack (`review-of-LJ-1-422-1.md:48-50`). A `done`
+# row would close that attack. AD1 forbids it.
+#
+# ---------------------------------------------------------------------------
+# 4. Expiry fallout. NO ROW.
+#
+# Closed-task rows dying with their tasks, section 4.6. LJ-1.391's
+# `no-go-attacked` and `no-go-stated` now fall to NO MATCH. Green closes
+# fall to `sys-obligations-satisfied`. That is A23.
+
+[batch]
+ts = "20260820-193658"
+rows_proposed = 0
+reason = "LJ-1.386 and LJ-1.390 are no-change parks with no record, so a2 skips them. LJ-1.422 was re-accepted again and still has obligations_open 1; sys-obligations-satisfied correctly misses; the critic file is an attack, so choosing done is judgement. Expiry fallout onto sys-obligations-satisfied is A23 working."

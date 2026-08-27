@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T08:30:25Z
+Checking D13 (/private/tmp/wk710/D13.agda).
+/private/tmp/wk710/D13.agda:27.6-24: error: [NotInScope]
+Not in scope:
+  L.Ordinal.bound2.f at /private/tmp/wk710/D13.agda:27.6-24
+when scope checking L.Ordinal.bound2.f
+        1.49 real         0.89 user         0.25 sys
+           247562240  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27011  page reclaims
+                  85  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 227  voluntary context switches
+                3102  involuntary context switches
+         10270503542  instructions retired
+          4454433944  cycles elapsed
+           218809064  peak memory footprint
+EXIT=42
+ended 2026-08-27T08:30:27Z

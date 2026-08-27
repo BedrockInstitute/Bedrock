@@ -1,0 +1,39 @@
+# Maintainer batch 20260827-164315. NO ROWS, NO QUEUE ENTRIES.
+#
+# THE PARKED TASKS: LJ-1.711, LJ-1.712, LJ-1.713, LJ-1.714. All four parked
+# `reason: "launch"` at 2026-08-27T08:41:5[5-6]Z, `dev/pod/transitions/2026-08.jsonl`
+# seq 4807-4810, each with the SAME `why`: "every model of [heads].coder is at its
+# own max_concurrency (Qwen3.8-27B-oQ4e-mtp 1/1, glm-5.3-flash 1/1), so this task
+# has no head this tick." Every fact the row schema keys on is None (exit_code,
+# error_class, obligations_delta) and `changed_files` is empty: none of the four
+# ever entered RUNNING, so `launch()` (scripts/pod/pod.py:5633) refused before any
+# work happened. No `[row.when]` clause can match a record with no facts, and no
+# row should be written to try.
+#
+# THIS PARK REASON SELF-HEALS. `_rule_a2()` (scripts/pod/pod.py:4452) treats
+# `reason in ("admission", "launch")` as retryable the moment
+# `dev/pod/table.toml`'s mtime passes the task's `parked_at`
+# (scripts/pod/pod.py:4493-4496), and `expire_rows()` (scripts/pod/pod.py:4447)
+# touches `table.toml` on every task's `DONE` close. The next coder-slot task to
+# finish (both live coder heads are capacity-capped at 1, so LJ-1.706's and
+# LJ-1.710's still-running attempts are the two candidates) both frees a head AND
+# bumps `table.toml`'s mtime in the same event, which is exactly what PARKED
+# LJ-1.711-714 are waiting on. No owner action and no table edit is needed.
+#
+# THE SHELVED TASKS ask for nothing per the brief's own header.
+#
+# THE NO-MATCH RECORDS window names one record (LJ-1.702, cited twice) already
+# reviewed and resolved this session via the `_reaccept_due()` self-heal path
+# (POD-REVIEW on LJ-1.702, backlog item 41); nothing left to act on there.
+#
+# THE SHADOWING LIST names `sys-lint-accept` losing once in the window, the same
+# AD8 rule-2 task-scoped-outranks-system shape seen in every prior batch this
+# session. Not a defect.
+#
+# THE EXPIRY FALLOUT LIST is the standing whole-corpus replay with expiry
+# lifted: historical, not actionable by a row.
+
+[batch]
+ts = "20260827-164315"
+rows_proposed = 0
+reason = "Four parked tasks (LJ-1.711-714), all reason:launch, capacity-only: every coder model is at its own max_concurrency=1 cap. No facts exist to key a row on (exit_code, error_class, obligations_delta all None), so no row can or should be written. This reason class self-heals via _rule_a2()'s admission/launch branch once table.toml's mtime advances, which happens automatically on the next task's DONE-triggered expire_rows() call. No owner action needed."

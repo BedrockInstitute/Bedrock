@@ -1,0 +1,46 @@
+# Maintainer batch 20260827-122402. ONE ROW, the same fact-8 correction for
+# LJ-1.685 that 20260827-122203 just landed for LJ-1.636/643.
+#
+# task-lj-1-685-go (dev/pod/table.toml:32142, added_by mathematician,
+# added 2026-08-27) keys on obligations_delta_max=-1, the same defect: on any
+# fresh dispatch, Probe685.agda's obligation is already resolved on disk
+# (confirmed this session: [LJ-1.703] reconstructed the report, and the
+# ORIGINAL accept-1 record for LJ-1.685 already shows conjuncts 1-5 held, only
+# conjunct 6 red). A fresh dispatch's obl_before would read 0 against the
+# already-green probe, giving delta 0, not -1 (amendment A23's named defect,
+# scripts/pod/witness.py:510-520). obligations_open_max=0 is the correct key,
+# same as the two rows just landed for LJ-1.636/643.
+#
+# Verified directly: agents/tasks/LJ-1-685's own original locked record
+# (c-4537, dev/pod/replay-corpus.jsonl) carries conjuncts {"1": true, ...,
+# "6": false} -- conjunct 1 held even with the leftover runs/RENAME3.agda
+# present, so no rename is needed here (unlike LJ-1.636/643); the only fix
+# needed was the survey answers [LJ-1.703] already supplied, and
+# check-survey-quotes.py LJ-1-685 now prints clean (pod-math's own
+# measurement, relayed and consistent with the conjunct map above).
+#
+# Does not conflict with R3/AD10: the locked record's exit_code is 1
+# (lint), and this row requires exit_code=0, so it cannot match the existing
+# record. It waits for a fresh dispatch, which the owner has now authorized
+# alongside LJ-1.636/643 ("发起resume", this session).
+
+[[row]]
+id = "task-lj-1-685-go-fact8"
+scope = "task:LJ-1.685"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "Same fact-8 fix as task-lj-1-636/643-go-fact8: Probe685.agda already green, delta_max=-1 misses. obligations_open_max=0, A23. Conjunct 1 held originally; conjunct 6 fixed by LJ-1.703."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_open_max = 0
+  heap_wall = false
+
+[batch]
+ts = "20260827-122402"
+rows_proposed = 1
+reason = "Same fact-8 correction just landed for LJ-1.636/643 (20260827-122203), applied to LJ-1.685: the existing task-lj-1-685-go row (added 2026-08-27 by mathematician) keys on obligations_delta_max=-1, which will miss on a fresh dispatch since Probe685.agda is already green. obligations_open_max=0 is correct. Cannot match the existing locked record (exit_code 1), so no R3 conflict. Filed ahead of the owner's authorized resume of all three tasks."

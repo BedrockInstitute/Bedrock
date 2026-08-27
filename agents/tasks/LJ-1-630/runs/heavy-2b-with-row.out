@@ -1,0 +1,27 @@
+wallcap=1800s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-25T13:45:32Z
+Checking L.BoundedSubset (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-630/src/L/BoundedSubset.lagda.md).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-630/src/L/BoundedSubset.lagda.md:1414.12-16: error: [UnequalSorts]
+Type (ℓ-suc ℓ) != Type ℓ
+when checking that the expression CS.S has type Type ℓ
+        9.41 real         8.74 user         0.33 sys
+           812040192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47164  page reclaims
+                4470  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 713  voluntary context switches
+                4417  involuntary context switches
+        118671192861  instructions retired
+         35173580693  cycles elapsed
+           750978152  peak memory footprint
+EXIT=42
+ended 2026-08-25T13:45:42Z

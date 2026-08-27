@@ -1,0 +1,43 @@
+# Maintainer batch 20260822-091108. NO ROWS.
+#
+# THE R3 BYPASS, OWNER-AUTHORISED 2026-08-22, LANDED ACROSS THIS RUN'S FOUR
+# BATCHES (090310, 090710, 090836, this one). dev/pod/maintainer-backlog.md
+# item 24 (pod-math, committed 45fea87b): the `accept-failed` branch every
+# brief carried since [LJ-1.492] matched `exit_code = 1` with NO
+# `obligations_delta` key, so it escalated a return that delivered NOTHING
+# exactly like one that failed acceptance on real work. Measured on
+# [LJ-1.497]: two critic dispatches reviewed a return that did not exist on
+# disk (worktree held only the brief and two critic briefs -- no probe, no
+# report, no runs/, no accept record) before attempt_max parked it. pod-math
+# fixed its own template going forward (obligations_delta_max = -1 added)
+# but could not touch the already-admitted rows: "a row that has already
+# routed live corpus records is not fixable by an ordinary batch proposal."
+#
+# FOUR TASKS WERE STILL LIVE ENOUGH TO RE-MATCH THIS ROW: LJ-1.497, LJ-1.498,
+# LJ-1.505, LJ-1.512 (the other ~38 briefs carrying the same original text
+# are all on DONE tasks, which can never re-enter CHECKING, so they are
+# untouched). Fixed directly in dev/pod/table.toml first (all 4 admitted
+# rows, task-lj-1-{497,498,505,512}-accept-failed, obligations_delta_max =
+# -1 added to [row.when]). THAT ALONE WAS NOT DURABLE FOR LJ-1.498: it was
+# cycling PARKED(launch) -> READY every few minutes, and each cycle's
+# re-admission read the row fresh from ITS BRIEF (still unfixed), clobbering
+# the table edit -- confirmed by the program's own auto-commits
+# (bef0c61c "pod: admit LJ-1.498", b77e0c92 "pod: admit LJ-1.512") landing
+# mid-repair and reverting exactly the row I had just fixed. The durable fix
+# is the SAME one-line correction added to all 4 briefs themselves
+# (agents/tasks/LJ-1-{497,498,505,512}/*.md), so any future re-admission
+# reads the corrected text. Committed: dev/pod/table.toml direct edits, plus
+# the 4 brief edits (7d8d96de).
+#
+# THIS BATCH'S OWN LJ-1.497 (admission) AND LJ-1.498 (launch) PARK REASONS
+# ARE THE ORDINARY SELF-REOPENING CLASS (`reason in ("admission", "launch")`,
+# pod.py:3808-3809), not a new defect; they were mid-cycle when this batch's
+# snapshot was taken, during the repair above. NO ROW IS NEEDED OR POSSIBLE
+# for either. LJ-1.505 is unchanged from the prior batches: its [[queue]]
+# brief-repair request already stands (dev/pod/queue.toml, code =
+# "LJ-1.505", added 2026-08-22) and is not repeated.
+
+[batch]
+ts = "20260822-091108"
+rows_proposed = 0
+reason = "No table row. This batch closes the R3-bypass repair for item 24 (accept-failed template missing obligations_delta_max, dev/pod/maintainer-backlog.md, committed 45fea87b): fixed in dev/pod/table.toml's 4 live admitted rows and, once that proved non-durable against LJ-1.498's own re-admission cycle, in the 4 briefs themselves (task-lj-1-{497,498,505,512}-accept-failed / LJ-1-{497,498,505,512}). LJ-1.497 (admission) and LJ-1.498 (launch) in this batch's own snapshot are ordinary self-reopening parks mid-cycle during that repair, not a new defect. LJ-1.505's queue request already stands, not repeated."

@@ -1,0 +1,6 @@
+# No table rows proposed. This snapshot's parked-task situation was fully resolved
+# by direct maintainer action (documented in dev/pod/table.toml history and
+# dev/pod/transitions/2026-08.jsonl), not a batch-proposal row. The original response
+# to this batch was refused with result "scope" because the tree carried an unrelated
+# non-exempt dirty file at the time (scripts/tests/test_pod_table.py, since committed).
+# Re-submitted after the tree went scope-clean, for a clean retirement record.

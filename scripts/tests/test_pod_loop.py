@@ -6437,10 +6437,21 @@ class FallbackPark(LoopCase):
         written for: a slot of one head whose model is wrongly given a retry.
         """
         cfg = heads_mod.load_heads(self.heads_path())["heads"]
-        self.assertTrue(any(len(v) > 1 for v in cfg.values()),
-                        "no slot carries a choice, so nothing exercises the TRUE arm")
-        self.assertTrue(any(len(v) == 1 for v in cfg.values()),
-                        "no slot carries one head, so nothing exercises the FALSE arm")
+        # **NEITHER SHAPE IS REQUIRED LIVE, owner's ruling 2026-08-27: "this config
+        # changes constantly," so a check that fails whenever today's file happens to
+        # give every slot one head (or, in principle, a choice) is the wrong shape.**
+        # The TRUE arm is independently and unconditionally covered above by
+        # `test_the_trigger_is_a_slot_with_a_CHOICE_and_not_a_capped_model` and
+        # `test_a_capped_model_still_triggers_it_so_A27s_own_case_did_not_regress` on
+        # synthetic heads, so this method's own job -- proving the LIVE file's rows
+        # answer correctly, whatever their shape -- does not need the live file to
+        # ALSO supply that coverage.
+        if not any(len(v) > 1 for v in cfg.values()):
+            print("  note every live slot carries one head today; the TRUE arm is "
+                  "still covered by this class's synthetic-heads tests above")
+        if not any(len(v) == 1 for v in cfg.values()):
+            print("  note every live slot carries a choice today; the FALSE arm is "
+                  "still covered by this class's synthetic-heads tests above")
         for slot, rows in sorted(cfg.items()):
             for row in rows:
                 with self.subTest(slot=slot, model=row["model"]):

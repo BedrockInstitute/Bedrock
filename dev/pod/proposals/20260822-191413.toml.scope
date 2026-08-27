@@ -1,0 +1,25 @@
+# Maintainer batch 20260822-191413. NO ROWS.
+#
+# LJ-1.498: reason `launch`. Unchanged: ordinary WIDE-tier capacity contention,
+# self-reopens on its own (pod.py:3808-3809). No row possible or needed.
+#
+# LJ-1.505: reason `admission`. The no-match loop this reason used to signal is
+# already resolved by task-lj-1-505-no-verdict (owner R3 bypass, item 25,
+# landed and matched). This `admission` is the row's own self-reopening cycle
+# toward its critic dispatch, not a fresh stall.
+#
+# LJ-1.534: reason `attempt_max:task-lj-1-534-heap-wall-escalate`. Four
+# attempts (coder then three critic re-reviews) all hit the identical heap
+# wall at ~107 s each, on the WIDE tier's -M8g caliber. attempt_max parked it
+# correctly: a critic reviewing the same computation cannot raise a memory
+# ceiling. dev/pod/heads.toml's HEAVY tier (-M12g, two concurrent Agda
+# writers instead of four) is the one concrete lever the config offers for
+# this shape, but retrying LJ-1.534 under a different tier is a brief-level
+# choice (which tier a task dispatches under is stated in its own brief) and
+# whether the extra headroom is worth the lower WIDE-tier concurrency is a
+# judgement for the mathematician, not a table row.
+
+[batch]
+ts = "20260822-191413"
+rows_proposed = 0
+reason = "No table row. LJ-1.498 (launch) and LJ-1.505 (admission) are both self-resolving cycles, already diagnosed in prior batches. LJ-1.534 (attempt_max, heap_wall) correctly parked after four identical memory-ceiling hits on WIDE (-M8g); no row can raise a memory ceiling. HEAVY tier (-M12g) is a brief-level retry choice for the mathematician, not a maintainer proposal."

@@ -1,0 +1,66 @@
+# Maintainer batch 20260820-191936. NO ROWS.
+#
+# Five codes named. No row releases them. AD1: a row that would close an
+# open obligation as done, or that would treat a critic attack as a close,
+# is not written.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. reason `no-change`. record None. 0 changed files.
+#
+# Re-accept on the main tree wiped fact 4 (seq 234). Rule (a2) skips a park
+# with `t.record is None`. The stored accept-2.out has no `obligations_open`
+# (`agents/tasks/LJ-1-386/runs/accept-2.out` JSON). A same-code `[[queue]]`
+# is skipped because the code is already a task.
+#
+# ---------------------------------------------------------------------------
+# 2. LJ-1.390, LJ-1.391, LJ-1.395. reason `no-match`.
+#
+# Stored records predate fact 8: `obligations_open` is absent.
+#   LJ-1.390: agents/tasks/LJ-1-390/runs/accept-2.out, exit 0, delta 0, 1 file.
+#   LJ-1.391: agents/tasks/LJ-1-391/runs/accept-3.out, exit 0, delta 0, 2 files.
+#   LJ-1.395: agents/tasks/LJ-1-395/runs/accept-3.out, exit 0, delta 0, 17 files.
+# `sys-obligations-satisfied` therefore cannot reach them
+# (`scripts/pod/table.py` `matches()`, A23). Their `go` rows key
+# `obligations_delta_max = -1` and miss. A task-scoped `done` row keyed only
+# on exit 0 and delta 0 would also close a return that achieved nothing,
+# which is the case A23 was added to refuse.
+#
+# They have no worktree. Isolation therefore does not re-accept
+# (`reaccept: no isolated scene`). A matching `done` row would pass replay,
+# then (a2) would move PARKED to CHECKING and park again for no scene.
+#
+# ---------------------------------------------------------------------------
+# 3. LJ-1.422. reason `no-match`. THIS is the new park.
+#
+# MEASURED at `.pod-state/worktrees/LJ-1-422/agents/tasks/LJ-1-422/runs/accept-2.out`.
+# Critic return, attempt 1. Conjuncts 1-6 held. exit 0. error_class None.
+# heap_wall false. delta 0. `obligations_open` 1. `agda_vacuous` true.
+# Probe422.agda discarded from fact 4 (A21). changed_files 6, including
+# `review-of-LJ-1-422-1.md` and `review-of-kappa-arrow-data.md`.
+# Worktree is present.
+#
+# Existing rows miss:
+#   `task-lj-1-422-go` needs `obligations_delta_max = -1`.
+#   `task-lj-1-422-no-go-stated` needs exit 42.
+#   `sys-obligations-satisfied` needs `obligations_open_max = 0`.
+# A23 is doing its job: the obligation is still open.
+#
+# A `done` row with `obligations_open_min = 1` would close every green 422
+# return that left the name unresolved, including a no-op. A `done` row
+# keyed on `review-of-LJ-1-422-1.md` would choose an action the brief's
+# branch table does not name. The critic file records defects in the
+# NO-GO (`review-of-LJ-1-422-1.md:48-50`), so `action = done` would close
+# an attack. That choice is judgement. AD1 forbids it.
+#
+# ---------------------------------------------------------------------------
+# 4. Expiry fallout. NO ROW.
+#
+# Closed-task rows dying with their tasks, section 4.6. Green closes fall
+# to `sys-obligations-satisfied`. That is A23. No-go closes fall to NO
+# MATCH because their keys were task-scoped. Neither is a gap a new row
+# should fill.
+
+[batch]
+ts = "20260820-191936"
+rows_proposed = 0
+reason = "LJ-1.386 is a no-change park with no record, so a2 skips it. LJ-1.390, 391 and 395 still predate fact 8; a done row without obligations_open would close both a finished return and an idle one. LJ-1.422 has obligations_open 1, so sys-obligations-satisfied correctly misses; a done row would close an open obligation, and the critic file is an attack, so choosing done is judgement. Expiry fallout onto sys-obligations-satisfied is A23 working."

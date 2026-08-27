@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T08:30:17Z
+Checking D13 (/private/tmp/wk710/D13.agda).
+/private/tmp/wk710/D13.agda:26.6-7: error: [NotInScope]
+Not in scope:
+  V at /private/tmp/wk710/D13.agda:26.6-7
+    (did you mean 'Cubical.HITs.CumulativeHierarchy.Base.V'?)
+when scope checking V
+        1.29 real         0.83 user         0.21 sys
+           276709376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               16348  page reclaims
+                2605  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 359  voluntary context switches
+                1954  involuntary context switches
+         10419476863  instructions retired
+          4107664324  cycles elapsed
+           218825448  peak memory footprint
+EXIT=42
+ended 2026-08-27T08:30:18Z

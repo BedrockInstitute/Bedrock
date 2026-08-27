@@ -1,0 +1,55 @@
+# Maintainer batch 20260822-080126. NO ROWS. One [[queue]] REQUEST.
+#
+# LJ-1.498: reason `launch`, exit_code None, 0 changed files. NO ROW POSSIBLE AND
+# NONE NEEDED. `launch` is a dispatch-level failure (rec is None), never an
+# acceptance-record shape, so no table row can address it. It self-reopens
+# unconditionally on the next table write: scripts/pod/pod.py:3808-3809,
+# `reason in ("admission", "launch")` fires `PARKED -> READY` once
+# `t.parked_at < mtime`. Admitting this batch's own queue entry bumps
+# dev/pod/table.toml's mtime (harvest_batch -> write_table), which reopens it on
+# the very next tick even though this batch proposes no row.
+#
+# LJ-1.505: reason `no-match`. Nine accept records sit in the worktree
+# (.pod-state/worktrees/LJ-1-505/agents/tasks/LJ-1-505/runs/accept-1.out through
+# accept-9.out); the latest (accept-9.out) reads exit_code 0, error_class null,
+# obligations_delta 0, obligations_open 1, and its 18 changed_files are the
+# coder's own diagnostic run (runs/census.py, runs/census-slots345.py,
+# runs/ProbeW3.agda) with no review-of-*.md anywhere -- no critic has run.
+# Checked every branch in LJ-1.505.md against this record and NONE fits:
+#   - go (:141-148): needs obligations_delta_max = -1; this record is 0.
+#   - accept-failed (:152-159): needs exit_code = 1; this record is 0.
+#   - stop-stated (:162-171): needs changed_files_any review-of-*.md; none
+#     exists, because no critic has been dispatched.
+#   - no-go-attacked (:174-183) and no-go-stated (:186-193): both need
+#     exit_code = 42; this record is 0.
+#   - ran-long-and-changed-little (:205-211): needs changed_files_count_max = 1;
+#     this record touched 18.
+# dev/pod/table.toml's sys-obligations-satisfied (:774-787) also misses: it needs
+# obligations_open_max = 0 and this record's obligations_open is 1.
+#
+# SAME SHAPE AS [LJ-1.422] ON 2026-08-20. That task read exit_code 0,
+# obligations_open 1 with no branch fit, and looped PARKED -> CHECKING ->
+# PARKED (reason no-match) 26 times over 2.5 hours (dev/pod/transitions/
+# 2026-08.jsonl, 2026-08-20T10:47Z through T13:17Z) until a NEW task-scoped
+# branch, `task-lj-1-422-critic-settled`, was added to ITS OWN brief and it
+# closed DONE at T13:17:01Z. AD3 gives that edit to the mathematician; the
+# maintainer never edits a brief (this batch's own SCOPE line says the same).
+# Filing the same class of [[queue]] request LJ-1.422 needed, so the next
+# refill or a direct owner instruction can reach it.
+#
+# NO SYSTEM ROW IS PROPOSED FOR THE GENERAL SHAPE EITHER. Guessing that "a
+# clean, indecisive coder return" should escalate to a critic, park quietly, or
+# wait for another round is a judgement about what LJ-1.505's own obligation is
+# waiting on -- AD1 reserves that to the mathematician, not the maintainer.
+
+[batch]
+ts = "20260822-080126"
+rows_proposed = 0
+reason = "No table row. LJ-1.498 (launch) self-reopens on any table write and needs none. LJ-1.505 (no-match) matches no branch in LJ-1.505.md and no system row in dev/pod/table.toml; obligations_open is 1, not 0, so sys-obligations-satisfied misses too. One [[queue]] REQUEST filed for LJ-1.505's brief repair, the same class LJ-1.422's 2026-08-20 no-match loop needed."
+
+[[queue]]
+code = "LJ-1.505"
+reason = "NO BRANCH FITS A CLEAN, INDECISIVE RETURN. The worktree's latest accept record (.pod-state/worktrees/LJ-1-505/agents/tasks/LJ-1-505/runs/accept-9.out) reads exit_code 0, error_class null, obligations_delta 0, obligations_open 1, and 18 changed_files that are the coder's own diagnostic measurement (runs/census.py, runs/census-slots345.py) with no review-of-*.md -- no verdict of go, no-go or stop, and no critic has run. LJ-1.505.md's own branches all miss: go (:141-148) needs obligations_delta_max = -1, accept-failed (:152-159) needs exit_code = 1, stop-stated (:162-171) and both no-go branches (:174-193) need either a review-of-*.md file or exit_code = 42, and ran-long-and-changed-little (:205-211) needs changed_files_count_max = 1 against 18. dev/pod/table.toml's sys-obligations-satisfied (:774-787) needs obligations_open_max = 0 against an open count of 1, so it misses too. SAME SHAPE AS [LJ-1.422] on 2026-08-20: that task looped no-match 26 times (dev/pod/transitions/2026-08.jsonl, T10:47Z to T13:17Z) until a task-scoped branch, task-lj-1-422-critic-settled, was added to ITS OWN brief. The maintainer never edits a brief (AD3); this needs the mathematician's judgement on what verdict LJ-1.505's obligation is actually waiting on."
+added = 2026-08-22
+added_by = "maintainer"
+failed_check = "no-match: no branch in LJ-1.505.md or dev/pod/table.toml fits exit_code=0, obligations_delta=0, obligations_open=1, no review-of-*.md"

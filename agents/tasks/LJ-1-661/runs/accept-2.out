@@ -1,0 +1,24 @@
+# arm accept-2
+# task LJ-1.661
+# brief agents/tasks/LJ-1-661/LJ-1.661.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 1
+# load before (4.306640625, 4.4990234375, 4.6806640625)
+# started 2026-08-26 21:21:55
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 20
+# changed files own 1 of 20
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-661/review-of-LJ-1-661-1.md"], "changed_files_refused": ["agents/tasks/LJ-1-661/Probe661.agda"], "concurrency": 1, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-661/Wall661.agda.txt", "agents/tasks/LJ-1-661/lj-1.661-report.md", "agents/tasks/LJ-1-661/review-of-LJ-1-661-1.md", "agents/tasks/LJ-1-661/review-of-hoodsound-at-levelhood0.md", "agents/tasks/LJ-1-661/runs/floor-0.out", "agents/tasks/LJ-1-661/runs/floor-0.rc", "agents/tasks/LJ-1-661/runs/floor-0.time", "agents/tasks/LJ-1-661/runs/floor-1.out", "agents/tasks/LJ-1-661/runs/floor-1.rc", "agents/tasks/LJ-1-661/runs/floor-1.time", "agents/tasks/LJ-1-661/runs/floor-2.err", "agents/tasks/LJ-1-661/runs/floor-2.out", "agents/tasks/LJ-1-661/runs/floor-2.rc", "agents/tasks/LJ-1-661/runs/floor-2.time", "agents/tasks/LJ-1-661/runs/log.md", "agents/tasks/LJ-1-661/runs/run661.sh", "agents/tasks/LJ-1-661/runs/wall.err", "agents/tasks/LJ-1-661/runs/wall.out", "agents/tasks/LJ-1-661/runs/wall.rc", "agents/tasks/LJ-1-661/runs/wall.time"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.661", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.3}

@@ -1,0 +1,21 @@
+# Maintainer batch 20260824-162554. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541, LJ-1.572, LJ-1.603, LJ-1.615: correctly SHELVED, no action.
+#
+# LJ-1.599, LJ-1.616: unchanged, waiting on LJ-1.624's outcome (per the
+# mathematician's own ruling: same obligation as each other, currently being
+# re-attempted under a fresh code; both become situation-1 shelves in the same
+# hour if 624 lands). Nothing new to propose.
+#
+# LJ-1.620: reason `attempt_max:sys-lint-accept`, the same shape as LJ-1.615
+# before it (now shelved). NOT filed as a fresh [[queue]] request this time --
+# the new same-tick mathematician page (owner's ruling 2026-08-24,
+# `notify_mathematician_of_judgement_parks()`) already reached the mathematician
+# automatically the moment this park landed; its pane shows it actively reading
+# LJ-1.620's worktree and witness.py as this batch is written. No need to
+# duplicate that through this channel.
+
+[batch]
+ts = "20260824-162554"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the three. LJ-1.541/572/603/615 correctly SHELVED. LJ-1.599/616 unchanged, waiting on LJ-1.624. LJ-1.620's attempt_max:sys-lint-accept park already auto-paged the mathematician via the new same-tick notification landed this session; observed it actively investigating as this batch was written, so no queue entry duplicates the ask."

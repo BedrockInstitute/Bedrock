@@ -1,0 +1,24 @@
+# Maintainer batch 20260825-193112. NO ROWS, NO QUEUE ENTRIES.
+#
+# Zero parked tasks (brief header). No-match records: NONE in the 12-hour
+# window. Six tasks (LJ-1.541, LJ-1.572, LJ-1.603, LJ-1.615, LJ-1.620,
+# LJ-1.628) remain correctly SHELVED per dev/pod/shelf/*.toml.shelved and ask
+# for nothing.
+#
+# THE SHADOWING LIST NAMES NO DEFECT. `sys-coder-adversarial-on-heap-wall`
+# and `sys-heap-wall` each lost once in the window. grep on dev/pod/table.toml
+# shows every recent heap-wall park routed through a TASK-SCOPED
+# `task-lj-1-<N>-heap-wall-park` row (e.g. LJ-1.616, LJ-1.624, LJ-1.626,
+# LJ-1.628 in dev/pod/transitions/2026-08.jsonl) -- backlog item 26's fix,
+# `action = "park"`, now in every brief since 2026-08-22. A task row
+# outranking its generic system counterpart is AD8's own rule (section 4.4,
+# rule 2: task before system), not a shadowing defect. No row needed.
+#
+# THE EXPIRY FALLOUT LIST (section 4.6) is the standing whole-corpus replay
+# with expiry lifted, unchanged in shape from prior batches: not a new event
+# in this window and not actionable by a row.
+
+[batch]
+ts = "20260825-193112"
+rows_proposed = 0
+reason = "Zero parked tasks, zero no-match records in the window, six tasks correctly shelved. The two shadowing losses are task-scoped heap-wall-park rows correctly outranking their generic system rows (AD8 rule 2), not a defect. No row and no queue entry needed."

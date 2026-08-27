@@ -1,0 +1,47 @@
+# Maintainer batch 20260824-191319. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541, LJ-1.572, LJ-1.603, LJ-1.615: correctly SHELVED, no action.
+#
+# LJ-1.599, LJ-1.616, LJ-1.624: unchanged, same CardAboveL chain, same
+# reasoning as the last two batches, and part of the tier-capacity finding
+# below.
+#
+# LJ-1.626 CHANGES THE READING OF THE OTHER HEAP-WALL PARKS. Investigated as
+# a POD-REVIEW (row:task-lj-1-626-heap-wall-park): the mathematician reported
+# the landing itself is GREEN (src/L/StageCardinal.lagda.md, one token
+# widened, one 8-line row, typechecks at 21.9% of cap in its own report) and
+# asked for a salvage, since a plain `park` never copies a worktree out (a
+# real program gap, now fixed in scripts/pod/pod.py's `apply()`: `park` and
+# `park_and_split` both home-only-salvage, mirroring the `attempt_max`
+# branch). Salvaged LJ-1.626's task home; `src/` was correctly left untouched
+# (home_only, no commit follows a park).
+#
+# BUT THE SALVAGE DOES NOT CLOSE IT. Re-measured `src/Everything.lagda.md`
+# directly against HEAD, with the two genuinely stale interfaces cleared
+# first (dev/LESSONS.md P-p): -A64m -I0 -M2g (WIDE, the tier every one of
+# these tasks ran at) heap-walls, exit 251, 1.88 GB, in 12.93 s -- with ZERO
+# of their own changes applied. The SAME check at -A64m -I0 -M4g (HEAVY)
+# passes clean, exit 0, 2.62 GB, 14.52 s.
+#
+# THE HONEST SCOPE IS FOUR TASKS, NOT FIVE. LJ-1.599, LJ-1.616 and LJ-1.624
+# all name `src/Everything.lagda.md` in their own `## SCOPE (write)`, and
+# LJ-1.626 touches a wired master, so `verification_target()` forces the
+# same whole-tree conjunct for all four. LJ-1.620 does NOT belong in this
+# case: its own SCOPE names no `src/` path at all (probe-only), its park
+# reason is `attempt_max:sys-lint-accept` with `heap_wall: false` (a
+# literate-Agda parse failure the mathematician confirmed, "(FILLED)" cells
+# still in the probe), and it already has a green continuation, LJ-1.625.
+# The mathematician caught this after I first folded all five together; the
+# correction is theirs and it is right -- folding 620 in would have
+# overstated the tier case to the owner.
+#
+# NOT A ROW FIX. Raising WIDE's cap, or routing this campaign's wired-master
+# landings through HEAVY, changes `dev/pod/heads.toml [tiers]`, which is
+# owner-ruled territory (`[tiers.shared] max_heap_sum_gb` is sized against
+# the CURRENT WIDE/HEAVY pair and would need re-deriving against a new one).
+# Reported to the owner directly; not proposed here.
+
+[batch]
+ts = "20260824-191319"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the five. LJ-1.541/572/603/615 correctly SHELVED. LJ-1.599/616/624 unchanged, part of the tier-capacity finding below. LJ-1.626: salvaged its task home after fixing a real program gap (plain `park` never salvaged; now it does, home_only, mirroring attempt_max). LJ-1.620 does NOT belong in the heap-wall case: no src/ path in its own scope, heap_wall false, a lint/parse failure with a green continuation already queued (LJ-1.625) -- the mathematician caught my initial over-broad framing and the correction stands. For the other four: a fresh, non-stale rebuild of src/Everything.lagda.md against HEAD alone (none of their changes applied) heap-walls at WIDE's -M2g (1.88 GB) and passes clean at HEAVY's -M4g (2.62 GB). All four are hitting a capacity ceiling the main tree has already crossed, not their own content's cost. Raising WIDE's cap or moving wired-master landings to HEAVY is an owner-ruled tier decision, reported directly, not proposed as a row."

@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T08:25:14Z
+Checking D9 (/private/tmp/wk710/D9.agda).
+        1.37 real         0.89 user         0.20 sys
+           278364160  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14817  page reclaims
+                4237  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 411  voluntary context switches
+                2013  involuntary context switches
+         10619823766  instructions retired
+          4322285342  cycles elapsed
+           219103976  peak memory footprint
+EXIT=0
+ended 2026-08-27T08:25:16Z

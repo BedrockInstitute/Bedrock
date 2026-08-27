@@ -1,0 +1,43 @@
+# Maintainer batch 20260820-111908. NO ROWS.
+#
+# Five parked tasks. No row releases them.
+#
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. reason `no-change`. No facts, 0 changed files.
+#
+# Re-accept on the main tree (no worktree) returned empty fact 4. R7 wiped the
+# record (seq 234). Rule (a2) skips a park with `t.record is None`
+# (`scripts/pod/pod.py:3222-3223`). A same-code `[[queue]]` is skipped because
+# the code is already a task. `resume --retry` is the owner's.
+#
+# ---------------------------------------------------------------------------
+# 2. LJ-1.388. reason `salvage:LJ-1.388`. exit 0, delta 0, open 0, 1 file.
+#
+# The record already matched `sys-obligations-satisfied` (seq 270, row named,
+# `agents/tasks/LJ-1-388/runs/accept-3.out`: conjuncts 1-6 held). Salvage then
+# refused: `lj-1.388-report.md changed in the main tree since this task forked`.
+# Main still carries a dirty pre-isolation report; the worktree report differs.
+# A row cannot resolve a copy collision. AD1 keeps the program out of that
+# merge. Parks keep the worktree. The next close retries salvage on the same
+# scene; it does not need a new match.
+#
+# ---------------------------------------------------------------------------
+# 3. LJ-1.390, LJ-1.391, LJ-1.395. reason `no-match`.
+#
+# Stored records predate fact 8, so `sys-obligations-satisfied` cannot reach
+# them (`scripts/pod/table.py:563-566`). They have no worktree. Re-accept
+# therefore does not run (isolation: conjunct 5 on the main tree stopped the
+# loop on LJ-1.388). A task-scoped `done` row would pass replay and then rule
+# (a2) would re-dispatch a worker.
+#
+# ---------------------------------------------------------------------------
+# 4. Expiry fallout. NO ROW.
+#
+# Closed-task rows dying with their tasks, section 4.6. Green closes fall to
+# `sys-obligations-satisfied`. That is A23. No-go closes fall to NO MATCH
+# because their keys were task-scoped. Neither is a gap a new row should fill.
+
+[batch]
+ts = "20260820-111908"
+rows_proposed = 0
+reason = "LJ-1.386 is a no-change park with no record, so a2 skips it. LJ-1.388 already matched sys-obligations-satisfied; salvage refused a copy collision a row cannot merge. LJ-1.390, 391 and 395 still predate fact 8, have no worktree, and a done row would re-dispatch. Expiry fallout onto sys-obligations-satisfied is A23 working."

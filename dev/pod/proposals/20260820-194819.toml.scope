@@ -1,0 +1,46 @@
+# Maintainer batch 20260820-194819. NO ROWS. Three [[queue]] requests.
+#
+# Same three parks as 193658. LJ-1.422 was re-accepted a third time
+# (seq 467-469, accept-5). Owner authorised the queue requests on 2026-08-20.
+# Batch 194053 carried them and harvest retired it `scope` (seq 458) because
+# `scripts/pod/*.py` were already dirty; `queue_append` never ran. LJ-1.424
+# was then taken by the refill as a coder device task, so the 422 ruling
+# REQUEST is now LJ-1.428.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. reason `no-change`. record None.
+# 2. LJ-1.390. reason `no-change`. record None.
+# Both: A21. Briefs name mathematician and Agda. R7. a2 skips. Same-code
+# [[queue]] does not create a second task; it is a REQUEST the refill reads.
+# After the brief is repaired, the owner must `resume --retry` again.
+#
+# 3. LJ-1.422. reason `no-match`. accept-5 same facts as accept-4:
+# exit 0, obligations_open 1. A23 misses. Critic file is an attack.
+# No done row. The ruling is LJ-1.428.
+#
+# 4. Expiry fallout. NO ROW. A23 working.
+
+[[queue]]
+code = "LJ-1.386"
+failed_check = "A21"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "BRIEF REPAIR. Brief written before A21. head_slot: mathematician (LJ-1.386.md:4) and Agda inhabit in Probe386.agda (LJ-1.386.md:10-17). A21: the mathematician writes no Agda. Owner --retry seq 426-436 wrote nothing; R7 parked no-change. Repair: drop the Agda obligation, or set head_slot: coder. Do not overwrite the delivered report. Then the owner must resume --retry again."
+
+[[queue]]
+code = "LJ-1.390"
+failed_check = "A21"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "BRIEF REPAIR. Brief written before A21. head_slot: mathematician (LJ-1.390.md:4) and two Agda terms in Probe390.agda (LJ-1.390.md:8-22). A21: the mathematician writes no Agda. Owner --retry seq 427-433 wrote nothing; R7 parked no-change. Repair: drop the Agda obligation, or set head_slot: coder. Do not overwrite the delivered report. Then the owner must resume --retry again."
+
+[[queue]]
+code = "LJ-1.428"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "REQUEST, no brief. Owner 2026-08-20: read LJ-1.422's critic return and RULE. Critic brief: agents/tasks/LJ-1-422/review-LJ-1-422-1.md (seq 416). Critic output: .pod-state/worktrees/LJ-1-422/agents/tasks/LJ-1-422/review-of-LJ-1-422-1.md (MAIN does not hold it). Accept-5 (seq 469): exit 0, obligations_open 1, Probe discarded (A21), parked no-match. If the review STANDS, rewrite LJ-1.422 so the coder can act on the attack. If it DOES NOT STAND, name the close that leaves no-match. Do not invent a table row that closes an attack as done. LJ-1.424 was taken by the refill of 20260820-192930 as a device task."
+
+[batch]
+ts = "20260820-194819"
+rows_proposed = 0
+reason = "No table row. LJ-1.386 and LJ-1.390 stay no-change with no record. LJ-1.422 accept-5 still has obligations_open 1; A23 misses; the critic file is an attack. Three [[queue]] requests: A21 brief repair for 386 and 390, and LJ-1.428 for a ruling on 422. 194053 never reached the queue because harvest skipped append on a scope refuse."

@@ -1,0 +1,22 @@
+# Maintainer batch 20260824-171403. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541, LJ-1.572, LJ-1.603, LJ-1.615: correctly SHELVED, no action.
+#
+# LJ-1.599, LJ-1.616: unchanged, still waiting on LJ-1.624's outcome (same
+# obligation, superseded not settled, per the mathematician's own ruling).
+#
+# LJ-1.620: unchanged since the last batch. Already fully handled -- the new
+# same-tick mathematician page reached pod-math automatically the moment this
+# park landed, it read the actual facts (probe fails to parse, report is a
+# placeholder skeleton), judged the obligation genuinely open, and queued
+# LJ-1.625 as the continuation, which has since closed GO. LJ-1.620's own park
+# record stands as the honest history of that attempt; nothing further to
+# propose against it here.
+#
+# LJ-1.623: reason `fallback:Qwen3.8-27B-oQ4e-mtp`, the same self-resolving A29
+# shape seen repeatedly today. No row, no queue entry.
+
+[batch]
+ts = "20260824-171403"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the four. LJ-1.541/572/603/615 correctly SHELVED. LJ-1.599/616 unchanged, waiting on LJ-1.624. LJ-1.620 already fully handled by the mathematician via the new automatic same-tick page (queued LJ-1.625, which closed GO); its own park record stands unchanged as history. LJ-1.623's fallback park is self-resolving, needs one tick."

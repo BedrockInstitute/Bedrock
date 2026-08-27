@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.666
+# brief agents/tasks/LJ-1-666/LJ-1.666.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (9.1572265625, 6.56396484375, 6.11083984375)
+# started 2026-08-26 22:49:36
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-666/Probe666.agda rc 0 seconds 0.82
+# changed files 6
+# changed files own 6 of 6
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.82
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-666/Probe666.agda", "agents/tasks/LJ-1-666/lj-1.666-report.md", "agents/tasks/LJ-1-666/review-of-sat-at-level.md", "agents/tasks/LJ-1-666/runs/meter-obligation.out", "agents/tasks/LJ-1-666/runs/probe-2.out", "agents/tasks/LJ-1-666/runs/probe-recheck-1.out"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-666/Probe666.agda", "agents/tasks/LJ-1-666/lj-1.666-report.md", "agents/tasks/LJ-1-666/review-of-sat-at-level.md", "agents/tasks/LJ-1-666/runs/meter-obligation.out", "agents/tasks/LJ-1-666/runs/probe-2.out", "agents/tasks/LJ-1-666/runs/probe-recheck-1.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.82}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 0.82, "target": "agents/tasks/LJ-1-666/Probe666.agda"}], "spec_surface_detail": "", "task": "LJ-1.666", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 0.57}

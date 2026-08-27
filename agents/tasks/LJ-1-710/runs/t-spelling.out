@@ -1,0 +1,31 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T08:23:46Z
+Checking D7 (/private/tmp/wk710/D7.agda).
+/private/tmp/wk710/D7.agda:25.14-31: error: [UnequalTerms]
+Cubical.HITs.CumulativeHierarchy.Base.V _ℓ_12 !=<
+Σ (Type _ℓ_9) _S_11
+when checking that the inferred type of an application
+  Cubical.HITs.CumulativeHierarchy.Base.V _ℓ_12
+matches the expected type
+  Σ (Type _ℓ_9) _S_11
+        0.88 real         0.75 user         0.11 sys
+           267517952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18349  page reclaims
+                  43  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  30  voluntary context switches
+                 237  involuntary context switches
+          9317371410  instructions retired
+          3432633241  cycles elapsed
+           208356072  peak memory footprint
+EXIT=42
+ended 2026-08-27T08:23:47Z

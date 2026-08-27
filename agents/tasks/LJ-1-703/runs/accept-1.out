@@ -1,0 +1,31 @@
+# arm accept-1
+# task LJ-1.703
+# brief agents/tasks/LJ-1-703/LJ-1.703.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (8.37109375, 8.1181640625, 8.56884765625)
+# started 2026-08-27 11:36:07
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-703/Probe703.agda rc 0 seconds 2.37
+# run agents/tasks/LJ-1-703/runs/LIFT.agda rc 0 seconds 1.39
+# run agents/tasks/LJ-1-703/runs/PACK.agda rc 0 seconds 0.79
+# run agents/tasks/LJ-1-703/runs/PACKAT.agda rc 0 seconds 1.83
+# run agents/tasks/LJ-1-703/runs/PINS.agda rc 0 seconds 1.81
+# run agents/tasks/LJ-1-703/runs/RENAME3.agda rc 0 seconds 1.35
+# run agents/tasks/LJ-1-703/runs/TRANS.agda rc 0 seconds 1.81
+# changed files 20
+# changed files own 20 of 20
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 1.81
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": ["agents/tasks/LJ-1-685/LJ-1.685.md", "agents/tasks/LJ-1-685/Probe685.agda", "agents/tasks/LJ-1-685/lj-1.685-report.md", "agents/tasks/LJ-1-685/review-of-LJ-1-685-1.md", "agents/tasks/LJ-1-685/review-of-LJ-1-685-2.md", "agents/tasks/LJ-1-685/review-of-LJ-1-685-3.md", "agents/tasks/LJ-1-685/review-of-LJ-1-685-4.md", "agents/tasks/LJ-1-685/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-685/runs/LIFT.agda", "agents/tasks/LJ-1-685/runs/PACK.agda", "agents/tasks/LJ-1-685/runs/PACKAT.agda", "agents/tasks/LJ-1-685/runs/PINS.agda", "agents/tasks/LJ-1-685/runs/RENAME.agda.txt", "agents/tasks/LJ-1-685/runs/RENAME2.agda.txt", "agents/tasks/LJ-1-685/runs/RENAME3.agda.txt", "agents/tasks/LJ-1-685/runs/TRANS.agda", "agents/tasks/LJ-1-685/runs/W3.agda", "agents/tasks/LJ-1-685/runs/floor-1.out", "agents/tasks/LJ-1-685/runs/floor-2.out", "agents/tasks/LJ-1-685/runs/lift-1.out", "agents/tasks/LJ-1-685/runs/p-1.out", "agents/tasks/LJ-1-685/runs/p-2.out", "agents/tasks/LJ-1-685/runs/p-3.out", "agents/tasks/LJ-1-685/runs/pack-1.out", "agents/tasks/LJ-1-685/runs/pack-2.out", "agents/tasks/LJ-1-685/runs/packat-1.out", "agents/tasks/LJ-1-685/runs/packat-2.out", "agents/tasks/LJ-1-685/runs/packat-3.out", "agents/tasks/LJ-1-685/runs/packat-4.out", "agents/tasks/LJ-1-685/runs/packat-5.out", "agents/tasks/LJ-1-685/runs/pins-1.out", "agents/tasks/LJ-1-685/runs/rename-1.out", "agents/tasks/LJ-1-685/runs/rename-2.out", "agents/tasks/LJ-1-685/runs/rename-2b.out", "agents/tasks/LJ-1-685/runs/rename-3.out", "agents/tasks/LJ-1-685/runs/run.sh", "agents/tasks/LJ-1-685/runs/trans-1.out", "agents/tasks/LJ-1-685/runs/w3-1.out", "agents/tasks/LJ-1-685/runs/w3-2.out", "agents/tasks/LJ-1-685/runs/w3-3.out"], "changed_files_own": ["agents/tasks/LJ-1-703/Probe703.agda", "agents/tasks/LJ-1-703/lj-1.703-report.md", "agents/tasks/LJ-1-703/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-703/runs/LIFT.agda", "agents/tasks/LJ-1-703/runs/PACK.agda", "agents/tasks/LJ-1-703/runs/PACKAT.agda", "agents/tasks/LJ-1-703/runs/PINS.agda", "agents/tasks/LJ-1-703/runs/RENAME3.agda", "agents/tasks/LJ-1-703/runs/TRANS.agda", "agents/tasks/LJ-1-703/runs/floor-1.out", "agents/tasks/LJ-1-703/runs/lift-1.out", "agents/tasks/LJ-1-703/runs/meter-obligation.out", "agents/tasks/LJ-1-703/runs/p-1.out", "agents/tasks/LJ-1-703/runs/p-2.out", "agents/tasks/LJ-1-703/runs/pack-1.out", "agents/tasks/LJ-1-703/runs/packat-1.out", "agents/tasks/LJ-1-703/runs/pins-1.out", "agents/tasks/LJ-1-703/runs/rename3-1.out", "agents/tasks/LJ-1-703/runs/run.sh", "agents/tasks/LJ-1-703/runs/trans-1.out"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-703/Probe703.agda", "agents/tasks/LJ-1-703/lj-1.703-report.md", "agents/tasks/LJ-1-703/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-703/runs/LIFT.agda", "agents/tasks/LJ-1-703/runs/PACK.agda", "agents/tasks/LJ-1-703/runs/PACKAT.agda", "agents/tasks/LJ-1-703/runs/PINS.agda", "agents/tasks/LJ-1-703/runs/RENAME3.agda", "agents/tasks/LJ-1-703/runs/TRANS.agda", "agents/tasks/LJ-1-703/runs/floor-1.out", "agents/tasks/LJ-1-703/runs/lift-1.out", "agents/tasks/LJ-1-703/runs/meter-obligation.out", "agents/tasks/LJ-1-703/runs/p-1.out", "agents/tasks/LJ-1-703/runs/p-2.out", "agents/tasks/LJ-1-703/runs/pack-1.out", "agents/tasks/LJ-1-703/runs/packat-1.out", "agents/tasks/LJ-1-703/runs/pins-1.out", "agents/tasks/LJ-1-703/runs/rename3-1.out", "agents/tasks/LJ-1-703/runs/run.sh", "agents/tasks/LJ-1-703/runs/trans-1.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 1.81}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 2.37, "target": "agents/tasks/LJ-1-703/Probe703.agda"}, {"rc": 0, "seconds": 1.39, "target": "agents/tasks/LJ-1-703/runs/LIFT.agda"}, {"rc": 0, "seconds": 0.79, "target": "agents/tasks/LJ-1-703/runs/PACK.agda"}, {"rc": 0, "seconds": 1.83, "target": "agents/tasks/LJ-1-703/runs/PACKAT.agda"}, {"rc": 0, "seconds": 1.81, "target": "agents/tasks/LJ-1-703/runs/PINS.agda"}, {"rc": 0, "seconds": 1.35, "target": "agents/tasks/LJ-1-703/runs/RENAME3.agda"}, {"rc": 0, "seconds": 1.81, "target": "agents/tasks/LJ-1-703/runs/TRANS.agda"}], "spec_surface_detail": "", "task": "LJ-1.703", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 1.99}

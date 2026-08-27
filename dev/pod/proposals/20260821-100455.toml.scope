@@ -1,0 +1,42 @@
+# Maintainer batch 20260821-100455. Same two rows as 20260821-095723 and
+# 20260821-100057 (both retired `.scope`, still pending the owner's
+# Spec-surface-approved trailer on dev/pod/instructions/mathematician.md and
+# mathematician_adversarial.md). LJ-1.444 has left the parked set since the
+# last batch. LJ-1.449 stays a launch park, no facts, no row.
+
+[[row]]
+id = "task-lj-1-440-stop-stated"
+scope = "task:LJ-1.440"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "Same shape as dev/pod/table.toml:4896-4909 (task-lj-1-448-stop-stated), the mathematician's fix for the D-10-stop-exits-0 defect this maintainer flagged in dev/pod/queue.toml (code = LJ-1.440). A D-10 stop runs no Agda, so it exits 0 and matches no exit_code 42 branch."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-440/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-443-stop-stated"
+scope = "task:LJ-1.443"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "Same shape as dev/pod/table.toml:4896-4909 (task-lj-1-448-stop-stated) and as task-lj-1-440-stop-stated above: a D-10 stop (agents/tasks/LJ-1-443/LJ-1.443.md:27-34) runs no Agda, so it exits 0 and matches no exit_code 42 branch. Report: .pod-state/worktrees/LJ-1-443/agents/tasks/LJ-1-443/lj-1.443-report.md:8-24."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-443/review-of-*.md"]
+
+[batch]
+ts = "20260821-100455"
+rows_proposed = 2
+reason = "Third resubmit of the same two rows (see 20260821-095723 and -100057), blocked only by the pending guarded-file trailer, not by replay. LJ-1.449 is a launch park with no facts."

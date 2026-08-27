@@ -452,7 +452,19 @@ system_free_floor_pct = 8     # C-12's floor, unchanged -- unrelated to the per-
 # `heads_text_rows()`/`render_row()` mechanism replaces every literal that
 # named a model), so a future re-pointing needs no edit to either test file as
 # long as the five slot names, the two pairs and the schema stay the same.
-mathematician             = { model = "claude-opus-5",   effort = "max",   harness = "herdr-claude", sandbox = "acceptEdits" }
+# **MOVED TO `grok-4.6` AT EFFORT `high`, OWNER'S RULING 2026-08-27.** `claude-opus-5`
+# leaves this slot. The slot is resident, so this is not a re-dispatch: the current
+# session keeps the herdr name `pod-batch`'s sibling `pod-math` until it gives it up,
+# and the next `ensure_maintainer()`-equivalent for this slot starts the new head.
+# The effort below matches the one existing `grok-4.6` precedent in this file
+# (`coder_adversarial`, below); the owner did not name an effort and this file has no
+# other `grok-4.6` value to draw from. `harness = "herdr-grok"` matches every other
+# `grok-4.6` row. **NO `max_concurrency` HERE, UNLIKE EVERY OTHER `grok-4.6`/`glm-5.3`
+# ROW.** `test_pod_loop.py`'s `test_the_single_table_spelling_still_loads_and_still_
+# means_one_head` asserts it `None` for both RESIDENT slots: a resident slot has
+# exactly one live instance by construction, so a per-task concurrency cap is a
+# category mismatch, not a policy choice. Caught by that test, not assumed.
+mathematician             = { model = "grok-4.6", effort = "high", harness = "herdr-grok", sandbox = "acceptEdits" }
 # **DROPPED TO A SINGLE HEAD, `glm-5.3` ALONE, OWNER'S RULING 2026-08-27.**
 # `claude-fable-5` leaves this slot; A29 has nowhere left to retry to here, the
 # same shape every other single-head slot in this file already has.
@@ -505,21 +517,22 @@ mathematician_adversarial = { model = "glm-5.3-flash", effort = "", harness = "h
 # and `grok-4.6` row in this file (see `mathematician_adversarial`'s own comment
 # above), a policy choice this file records without a machine-level cause behind
 # it.
-coder                     = [
-  { model = "Qwen3.8-27B-oQ4e-mtp", effort = "medium", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
-  { model = "glm-5.3-flash",        effort = "",       harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 },
-]
-# **`glm-5.3` -> `glm-5.3-flash` HERE TOO, SAME RULING, SAME DAY.** Quota is the
-# reason, not a capability change: three times the quota on the same `zai` provider.
-# **`grok-4.6` LEFT THIS SLOT FOR `coder_adversarial`, OWNER'S RULING
-# 2026-08-27.** `glm-5.3` takes its place as the overflow head, moved here
-# from `mathematician_adversarial` above, which is now dropped to `glm-5.3`
-# alone (see that slot's own comment for the self-review risk this creates and
-# the owner's explicit acceptance of it). Qwen's first-head position,
-# `effort = "medium"` and `max_concurrency = 1` are unchanged. `glm-5.3` keeps
-# its established `effort = ""` and its policy cap (owner's ruling 2026-08-24,
-# every `glm-5.3`/`grok-4.6` row in this file). Everything above this
-# paragraph, about `grok-4.6`'s history in this slot, stands as written before.
+# **DROPPED TO A SINGLE HEAD, `glm-5.3-flash` ALONE, OWNER'S RULING 2026-08-27
+# (SECOND RULING SAME DAY).** `Qwen3.8-27B-oQ4e-mtp` leaves this slot entirely --
+# the local, free, quota-unlimited head is GONE, confirmed explicitly with the owner
+# before this edit (asked directly rather than assumed from the instruction's
+# silence on Qwen). Every coder dispatch now spends `zai` quota; there is no local
+# fallback left in this slot. `effort = ""` and `max_concurrency = 1` match every
+# other `glm-5.3-flash` row in this file.
+# **THIS SHARPENS THE CROSS-SLOT SELF-REVIEW RISK THE MATHEMATICIAN_ADVERSARIAL ROW
+# BELOW ALREADY NAMES AND THE OWNER ALREADY ACCEPTED.** `glm-5.3-flash` was
+# previously this slot's OVERFLOW head (spent only when Qwen was busy); it is now
+# the slot's ONLY head, so every ordinary `stop-stated`/NO-GO escalation to
+# `mathematician_adversarial` now has a 100 percent chance of reviewing its own
+# prior return, not an occasional one. The owner's acceptance of the risk shape was
+# not conditioned on the overflow fraction, but the fraction changed and is
+# recorded here for the next reader.
+coder                     = { model = "glm-5.3-flash", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 }
 #
 # **DROPPED TO A SINGLE HEAD, `grok-4.6` ALONE, OWNER'S RULING 2026-08-27.**
 # `glm-5.3` and `claude-opus-5` both leave this slot; `glm-5.3` moves to
@@ -538,7 +551,16 @@ coder_adversarial         = { model = "grok-4.6", effort = "high", harness = "he
 # 2026-08-21.** It was `claude-opus-5` at `xhigh` from 2026-08-20. The slot is
 # resident, so the change is not a re-dispatch: the old session is retired, and
 # the next `ensure_maintainer()` starts the new head.
-maintainer                = { model = "claude-sonnet-5", effort = "xhigh", harness = "herdr-claude", sandbox = "acceptEdits" }
+# **MOVED TO `glm-5.3-flash`, OWNER'S RULING 2026-08-27, WRITTEN BY THE CURRENT
+# `claude-sonnet-5` HOLDER OF THIS SLOT.** AD26 again: this session keeps the
+# herdr name `pod-batch` and runs unchanged until it gives that name up; the row
+# below binds only the NEXT session this slot starts. `effort = ""` and
+# `harness = "herdr-pi"` match every other `glm-5.3-flash` row in this file.
+# **NO `max_concurrency` HERE, UNLIKE EVERY OTHER `glm-5.3`/`grok-4.6` ROW** --
+# see `mathematician`'s own comment above for why: a resident slot has exactly
+# one live instance by construction, and `test_pod_loop.py` asserts this `None`
+# for both resident slots.
+maintainer                = { model = "glm-5.3-flash", effort = "", harness = "herdr-pi", sandbox = "acceptEdits" }
 # THE MAINTAINER PRESETS, and `pod.py maintainer --use <name>` copies one into the row
 # above. **THE ROW IS STILL THE ONE HOME**: this table is a set of rows the owner has
 # already approved, and nothing reads it except that command.

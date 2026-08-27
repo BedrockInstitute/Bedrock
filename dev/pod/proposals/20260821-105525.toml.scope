@@ -1,0 +1,28 @@
+# Maintainer batch 20260821-105525. NO ROWS.
+#
+# LJ-1.443, no-match, 7 changed files. Same shape as every prior park: its
+# D-10 gate reads LJ-1.440's report, which was genuinely absent from every
+# commit until LJ-1.440 closed DONE moments ago (dev/pod/transitions/
+# 2026-08.jsonl:1050, sys-critic-upheld-no-go, ts 02:53:50Z) and its report
+# copied into the main tree at that close. This reaccept is still the SAME
+# stale worktree (HEAD d81bfee, before that close), not a fresh dispatch, so
+# it could not have seen it. No row: this needs a fresh --retry, which is the
+# owner's call, not a table fix, and worth asking now since LJ-1.443's report
+# would finally read something real.
+#
+# LJ-1.448, LJ-1.449: both now attempt_max-parked on task-lj-1-<code>-
+# stop-stated, permanently, for the reason already reported (backlog item 20's
+# addendum, and this session's POD-REVIEWs): the row's missing
+# changed_files_none let the critic's own return re-match and re-escalate.
+# Checked before writing this batch: both already carry LIVE replay-corpus
+# records for that exact row (LJ-1.448: c-957, c-983, c-1013; LJ-1.449:
+# c-986, c-999, c-1026, c-1059), so ANY new row that would route those
+# records differently is an R3 REJECT by construction -- verified directly
+# for LJ-1.448 (dev/pod/proposals/20260821-103435.toml.reject). No row
+# attempted for either; both need the owner's decision on how to close them,
+# since the table mechanism structurally cannot.
+
+[batch]
+ts = "20260821-105525"
+rows_proposed = 0
+reason = "LJ-1.443 needs a fresh --retry (owner's call) now that LJ-1.440's report is actually in the main tree, not a row. LJ-1.448 and LJ-1.449 are both permanently attempt_max-parked with live corpus records blocking any row fix via R3; both need the owner's direct decision, not a table write."

@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.677
+# brief agents/tasks/LJ-1-677/LJ-1.677.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (4.9794921875, 5.779296875, 5.3916015625)
+# started 2026-08-27 02:04:11
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-677/Probe677.agda rc 0 seconds 1.18
+# changed files 13
+# changed files own 13 of 13
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 1.18
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-677/Probe677.agda", "agents/tasks/LJ-1-677/lj-1.677-report.md", "agents/tasks/LJ-1-677/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-677/runs/floor-1.out", "agents/tasks/LJ-1-677/runs/meter-names.out", "agents/tasks/LJ-1-677/runs/meter-obligation.out", "agents/tasks/LJ-1-677/runs/p-1.out", "agents/tasks/LJ-1-677/runs/p-2.out", "agents/tasks/LJ-1-677/runs/p-final.out", "agents/tasks/LJ-1-677/runs/recheck-1.out", "agents/tasks/LJ-1-677/runs/recheck-2.out", "agents/tasks/LJ-1-677/runs/recheck-3.out", "agents/tasks/LJ-1-677/runs/run.sh"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-677/Probe677.agda", "agents/tasks/LJ-1-677/lj-1.677-report.md", "agents/tasks/LJ-1-677/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-677/runs/floor-1.out", "agents/tasks/LJ-1-677/runs/meter-names.out", "agents/tasks/LJ-1-677/runs/meter-obligation.out", "agents/tasks/LJ-1-677/runs/p-1.out", "agents/tasks/LJ-1-677/runs/p-2.out", "agents/tasks/LJ-1-677/runs/p-final.out", "agents/tasks/LJ-1-677/runs/recheck-1.out", "agents/tasks/LJ-1-677/runs/recheck-2.out", "agents/tasks/LJ-1-677/runs/recheck-3.out", "agents/tasks/LJ-1-677/runs/run.sh"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 1.18}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 1.18, "target": "agents/tasks/LJ-1-677/Probe677.agda"}], "spec_surface_detail": "", "task": "LJ-1.677", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 0.92}

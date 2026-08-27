@@ -1,0 +1,17 @@
+# Maintainer batch 20260824-071004. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541 and LJ-1.572: unchanged, settled since 20260824-005804 and by direct
+# correspondence with the resident mathematician. Leave both parked.
+#
+# LJ-1.603: unchanged since 20260824-051848/060729, still parked on the same
+# `task-lj-1-603-heap-wall-park` reason, across further table.toml writes. The
+# `_rule_a2()` B2 fix continues to hold.
+#
+# LJ-1.609: reason `fallback:Qwen3.8-27B-oQ4e-mtp`, the fifth instance of the same
+# self-resolving A29 shape this session. No row, no queue entry; one tick clears
+# it.
+
+[batch]
+ts = "20260824-071004"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the four. LJ-1.541/572 settled with the mathematician, leave parked. LJ-1.603 unchanged, confirming the _rule_a2() B2 fix continues to hold. LJ-1.609's fallback park is the fifth instance of the same self-resolving A29 shape; needs one tick, not a row."

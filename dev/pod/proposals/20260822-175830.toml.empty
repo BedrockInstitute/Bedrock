@@ -1,0 +1,28 @@
+# Maintainer batch 20260822-175830. NO ROWS. All three already addressed.
+#
+# LJ-1.498: reason `launch`. Unchanged diagnosis from every prior batch: ordinary
+# WIDE-tier capacity contention, self-reopens on its own (pod.py:3808-3809). No
+# row possible or needed.
+#
+# LJ-1.505: reason `admission` in this snapshot, but the underlying no-match loop
+# is ALREADY RESOLVED. `task-lj-1-505-no-verdict` (owner R3 bypass, item 25) is
+# landed in dev/pod/table.toml and matched immediately once written -- confirmed
+# by dev/pod/transitions/2026-08.jsonl showing LJ-1.505 -> READY row
+# task-lj-1-505-no-verdict shortly after. This snapshot's `admission` reason is
+# the row's own self-reopening cycle toward its critic dispatch, not a fresh
+# stall.
+#
+# LJ-1.512: reason `attempt_max:sys-lint-accept`. Diagnosed and owner-authorised
+# hard reset already executed: the original coder report (written under qwen)
+# never answered the survey duty's injected paths, that report is frozen, and
+# no critic dispatch (glm-5.3 attempt 2, grok-4.6 attempts 3-4, all of them
+# reviewing the SAME frozen report) could ever satisfy conjunct 6 by editing a
+# report neither is allowed to touch -- grok's own attempt 2 transcript names
+# this exactly: "A critic cannot edit a frozen report." Worktree dropped,
+# attempt reset to 0, task is READY for a fresh coder dispatch (to
+# claude-opus-5, qwen being out for maintenance) as of this batch.
+
+[batch]
+ts = "20260822-175830"
+rows_proposed = 0
+reason = "No table row. LJ-1.498 (launch) is ordinary self-reopening capacity contention. LJ-1.505 (admission) already resolved via the owner-authorised task-lj-1-505-no-verdict row (item 25), landed and matched. LJ-1.512 (attempt_max:sys-lint-accept) already resolved via an owner-authorised hard reset: the frozen original coder report never answered the survey duty and no critic could fix that by reviewing it; worktree dropped, task READY for a fresh coder dispatch."

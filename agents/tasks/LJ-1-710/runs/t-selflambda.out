@@ -1,0 +1,35 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T08:35:49Z
+Checking Final (/private/tmp/wk710/Final.agda).
+/private/tmp/wk710/Final.agda:116.3-41: error: [UnequalTerms]
+mf x != (λ { (lift true) → sucV σ₁ ; (lift false) → sucV σ₂ }) x of
+type Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression
+unionCl (Lift {ℓ-zero} {ℓ} Bool) mf mm has type
+⟨
+⋃
+sett (Lift Bool)
+(λ { (lift true) → sucV σ₁ ; (lift false) → sucV σ₂ })
+∈ₛ α
+⟩
+        1.45 real         0.94 user         0.22 sys
+           282804224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15059  page reclaims
+                4267  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 357  voluntary context switches
+                2288  involuntary context switches
+         10843816072  instructions retired
+          4624968751  cycles elapsed
+           223052544  peak memory footprint
+EXIT=42
+ended 2026-08-27T08:35:50Z

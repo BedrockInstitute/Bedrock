@@ -6923,3 +6923,364 @@ code = "LJ-1.695"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-695/LJ-1.695.md"
+
+# ===========================================================================
+# THE ELEVENTH OPENING, 2026-08-27. FOUR MORE DELIVERED TERMS, AND ONE REPORT
+# ANSWERED A QUESTION THAT DELETES A LINE OF WORK.
+#
+# [LJ-1.694] GO, AND IT IS THE ANSWER I SHOULD HAVE ASKED FOR THREE DISPATCHES
+#   AGO. The four paid `Describes` families do NOT serve the finite iterate, and
+#   it names the first shape they miss AS A TERM: the three-element ordinal
+#   `n3 = sucV (sucV (sucV ∅))` (Probe694.agda:174-181). It delivered two generic
+#   killers unasked, `not-sgl` and `not-pair`, and it did NOT refute PowIter: the
+#   ordinal lands in the next stage, so the iterate does not lose it by rank.
+#   696 pays that family. Its brief says a generalisation is a FINDING and the
+#   obligation is `n3` alone, so it cannot become a disjunction like [LJ-1.640]'s.
+# [LJ-1.690] GO: `same-as-graph-forward`, the first conjunct, at the k-value
+#   telescope with powIter and UP as hypotheses. WITH [LJ-1.685]'s reverse, BOTH
+#   DIRECTIONS OF AN EQUIVALENCE OPEN SINCE [LJ-1.520] ARE NOW BUILT, in two task
+#   homes, and no term holds them together. 699 writes the union.
+# [LJ-1.695] GO: `bnd-to-unbnd`, the bridge's other direction, `Graph.up` at
+#   [LJ-1.681]'s carrier. Both bridge directions now exist, and 690 and 695 BOTH
+#   report the two are not symmetric: reverse spends DOWN, forward spends UP, and
+#   the site facts differ. That asymmetry is what 699 measures.
+# [LJ-1.692] closed obligations-satisfied: the hull unpack is instantiated at
+#   matrix₃ with Δ₀-matrix₃, Probe673.slide and Probe673.val.
+#
+# THE CORRECTION THAT MATTERS MOST THIS ROUND, from [LJ-1.679]'s NO-GO:
+# **KValue's `K = Lset λ` ESCAPES THE STAGE** (`kvalue-escapes`, green). So
+# [LJ-1.678]'s `k-value` serves the SameAsGraph reverse and does NOT serve
+# `Completeness`. TWO CONSUMERS, TWO DIFFERENT Ks, and I would have funded the
+# wrong one. 697 funds `HierInStage`, the K that stays inside `Lset lam`, and 700
+# states `CompletenessFrom : SameHyp → HierInStage → Completeness`, which
+# [LJ-1.679] already wrote, with both inputs as hypotheses so it does not wait.
+#
+# `Completeness` / `BoundInStage` at matrix₃ has now been named by [LJ-1.673],
+# [LJ-1.679] and [LJ-1.692]. Three namings, one object, and 697 plus 700 are the
+# two halves of it rather than a fourth attempt at the whole.
+#
+# 698 takes [LJ-1.693]'s remaining target, `ThroughDoor`, the last step of the
+# 𝒟ₒ-intro route to `HierInK`, whose far consumer `adequacy-bnd` is already green.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.696"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-696/LJ-1.696.md"
+
+[[task]]
+code = "LJ-1.697"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-697/LJ-1.697.md"
+
+[[task]]
+code = "LJ-1.698"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-698/LJ-1.698.md"
+
+[[task]]
+code = "LJ-1.699"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-699/LJ-1.699.md"
+
+[[task]]
+code = "LJ-1.700"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-700/LJ-1.700.md"
+
+# ===========================================================================
+# THE TWELFTH OPENING, 2026-08-27: THREE PARKS, AND THE WORK INSIDE THEM
+#
+# NOT MATHEMATICS. These three free work that is already delivered and that is
+# NOT IN GIT. `git ls-files agents/tasks/LJ-1-636` returns nothing, and so do
+# LJ-1-643 and LJ-1-685. `commit_task()` commits only at a `done` close
+# (scripts/pod/pod.py:3644), so a park keeps its deliverable in the working tree
+# and nowhere else. Three green terms and about 45,000 lines of run evidence sit
+# outside version control today.
+#
+# THE OWNER APPROVED THIS ROUTE through the maintainer on 2026-08-27, after I
+# refused to close any of the three by a direct table.toml row. That refusal
+# stands and this is its alternative: repair the RECORD instead of judging a bad
+# one. R4 (`scripts/pod/accept.py:381`) needs conjuncts 1 to 6 for a `go` close
+# and 5 and 6 for a `no-go`, so LJ-1.643 and LJ-1.685 could close NEITHER way
+# while conjunct 6 was red, whatever row anybody wrote.
+#
+# WHAT EACH PARK ACTUALLY FAILED ON, and none of it is the mathematics:
+# [LJ-1.636] conjunct 1 only, from `runs/Bisect1.agda` rc 251, a bisection file
+#   built to find a heap wall. Its conjunct 6 already HOLDS.
+# [LJ-1.643] conjunct 1 from `runs/Floor.agda` rc 42, a floor file that carries
+#   holes by construction, plus conjunct 6: seven of the ten paths its brief
+#   injected are never named, and its LITERATURE section declines five of them by
+#   CITATION KEY where the gate reads PATHS.
+# [LJ-1.685] conjunct 6 only. Its term is green, `[LJ-1.690]` consumed it, and
+#   its report is an unfilled skeleton whose verdict line still reads IN PROGRESS.
+#
+# TWO DEFECTS BEHIND ALL OF IT, both cheap and neither the agent's mathematics:
+# a scratch `.agda` under a task home is typechecked by conjunct 1 even when it
+# was BUILT to fail, and `check-survey-quotes.py` wants the path and not the key.
+# The `.agda.txt` naming clause is in every brief I write from LJ-1.696 on.
+#
+# P14 FORCED A REAL OBLIGATION ON EACH. A brief with no `<probe>::<name>` is
+# refused (scripts/pod/preflight.py:559), so each repair also RE-DERIVES the
+# parked task's headline fact in its own probe: `SqParam ω` from `squareω`, the
+# truncated producer `Row3`, and the `SameAsGraph` reverse. That is the second
+# half of the point. A re-derived term lands in a home that CAN close, so the
+# fact survives even if the park never reopens.
+#
+# 703 CARRIES A LINE I WILL NOT SOFTEN. LJ-1.685's return must be finished by an
+# agent that did not run it, so the brief forbids inventing a finding, requires a
+# `file:line` in the probe or a run file for every added claim, and requires the
+# added sections to name LJ-1.703 and the date as their author. That is the
+# difference between a repair and a forged return.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.701"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-701/LJ-1.701.md"
+
+[[task]]
+code = "LJ-1.702"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-702/LJ-1.702.md"
+
+[[task]]
+code = "LJ-1.703"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-703/LJ-1.703.md"
+
+# ===========================================================================
+# THE THIRTEENTH OPENING, 2026-08-27: ONE KEYSTONE, ATTACKED TWO WAYS
+#
+# THE CONVERGENCE, AND IT IS THE CLEANEST THIS CAMPAIGN HAS FOUND.
+# [LJ-1.536] reduced the classical fact to `HierBelow` and STOPPED at the door of
+# `𝒟ₒ-intro`, naming that door's two hypotheses: the formula is Δ₀, and every
+# constant is a member of the stage (`review-of-StageHigh.md:23-32`).
+# [LJ-1.698] PAID BOTH. `recordedΔ₀` (`Probe698.agda:87`) is the Δ₀ relativization
+# and `bound-of` (`:97`) is `mkBoundedFo`, total. The door OPENED:
+# `Carved.carved-door` (`:128`) is `Door (Lset σ) carved`.
+# **THE ONLY THING LEFT IS THAT `carved` IS NOT IDENTIFIED WITH `hierL γ`.**
+#
+# AND THE WHOLE CHAIN ABOVE IT IS ALREADY ASSEMBLED AND GREEN:
+#   Below  ->  HierInStage  ->  Completeness
+# `from-below` (`Probe697.agda:81`) is green. `CompletenessFrom`
+# (`Probe679.agda:94`) is green. [LJ-1.697]'s `Below` (`:72`) is [LJ-1.536]'s
+# `HierBelow` (`Probe536.agda:186`) at a different carrier. ONE equation feeds
+# TWO assembled chains: `ThroughDoor` and `Below`.
+#
+# 704 is the keystone. 708 attacks the SAME keystone by a different route, with
+# no door at all: [LJ-1.697] corrected which out-lemma the frame spends
+# (`ord∈Lset→∈` is stronger than `Lset-out` for an ordinal,
+# `src/L/Ordinal/Stages.lagda.md:265`), and the critic that refuted the
+# three-lemma attempt refuted it with the WEAK lemma. C-42: a refutation measures
+# the site it names.
+# 705 is the keystone's sibling, [LJ-1.698]'s second named miss, independent of 704.
+# 706 and 707 are CONSUMERS DISPATCHED BESIDE the keystones as hypotheses, so
+# nothing waits and a third input, if there is one, is found now and not later.
+#
+# THE FRAME IS PRICED. [LJ-1.697] ran the floor at 144.56 s and 1.75 GB, which is
+# 82 percent of the wide cap, and it does NOT wall (`lj-1.697-report.md:126`).
+#
+# WHAT I DID NOT QUEUE, AND WHY.
+# `SameHyp` is [LJ-1.699]'s, RUNNING. `Completeness` from its two inputs is
+# [LJ-1.700]'s, RUNNING. `describes-triple` is DELIVERED by [LJ-1.696]
+# (`Probe696.agda:373`) and must not be re-dispatched. A four-element `Describes`
+# is REFUTED IN ADVANCE by [LJ-1.696]: the classifier lists the eight subsets of a
+# three-element set and equals `𝒟ₒ y` nowhere else, so the same route cannot pay
+# it and funding it would be funding a known dead end.
+#
+# THE ROUND THAT PRODUCED THIS: [LJ-1.696] GO on `describes-at-n3` plus an unasked
+# GO on the generic pair formula. [LJ-1.697] and [LJ-1.698] both closed
+# `sys-critic-upheld-no-go`, and BOTH stops are worth more than the terms would
+# have been: 697 delivered `from-below` and ten other green names and corrected the
+# out-lemma; 698 opened [LJ-1.536]'s door and named its two misses exactly.
+# All three repair tasks closed GO and their work is IN GIT.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.704"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-704/LJ-1.704.md"
+
+[[task]]
+code = "LJ-1.705"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-705/LJ-1.705.md"
+
+[[task]]
+code = "LJ-1.706"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-706/LJ-1.706.md"
+
+[[task]]
+code = "LJ-1.707"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-707/LJ-1.707.md"
+
+[[task]]
+code = "LJ-1.708"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-708/LJ-1.708.md"
+
+# ===========================================================================
+# ONE CORRECTION, 2026-08-27, appended to the thirteenth opening.
+#
+# [LJ-1.699] closed NO-GO ON AN ADDRESS, NOT ON A PROOF. It wrote the union type
+# and supplied the forward conjunct, and it could not reach the reverse: that term
+# sat in the sibling worktree of a PARKED task, which is not on a dispatch's
+# include path (`lj-1.699-report.md:22`).
+#
+# **THE SUPPLY EXISTS NOW, AT A DIFFERENT ADDRESS.** [LJ-1.703] re-derived
+# `same-as-graph-reverse` and closed GO, so it is a TRACKED file's term at
+# `agents/tasks/LJ-1-703/Probe703.agda:90`. A tracked file is in every worktree the
+# program creates; an untracked one under a parked task is not
+# (`scripts/pod/pod.py:3644`: the program commits only at a `done` close).
+#
+# 709 is 699 with the supply repointed and nothing else changed. This is the
+# repair task earning its keep a second time: the re-derivation P14 forced on
+# [LJ-1.703] is exactly what makes 709 possible.
+#
+# MY ERROR, RECORDED. [LJ-1.699]'s brief pointed at [LJ-1.685]'s probe for supply.
+# A parked task's work is untracked, so no later dispatch can import it. From here,
+# a brief that takes supply from another task's probe names a TRACKED address or it
+# names no address at all.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.709"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-709/LJ-1.709.md"
+
+# ===========================================================================
+# THE FOURTEENTH OPENING, 2026-08-27: THE KEYSTONE MOVED, AND A COder HANDED
+# ME THE NEW ONE AS A TERM
+#
+# **MY THIRTEENTH-OPENING DIAGNOSIS WAS HALF WRONG AND [LJ-1.706] CORRECTED IT.**
+# I named `carved ≡ hierL γ` the keystone for BOTH routes. It is the keystone for
+# `ThroughDoor` ([LJ-1.707] GO: the two misses are the whole distance). It is NOT
+# the gap for `Below`. [LJ-1.706]: "the identification is not the gap. The gap is
+# ONE row, `Bound-in-tower`, the placement of `mkBoundedFo`'s bounding stage under
+# the tower" (`lj-1.706-report.md:10`).
+#
+# AND THE SAME UNCONTROLLED STAGE IS WHAT STOPPED [LJ-1.705]. Two NO-GOs, one
+# cause: `mkBoundedFo`'s stage is a `bound2`-tree nobody has bounded.
+# [LJ-1.705] reduced its whole stop to ONE named unpaid lemma, `bound2-in-limit`
+# (`lj-1.705-report.md:42`), and MEASURED that it walled because of the [LJ-1.698]
+# import cone and not because of the mathematics. 710 is that lemma in a frame
+# trimmed to `src/L/Ordinal.lagda.md`, with the cone forbidden by the brief.
+#
+# THREE THINGS THE ROUND DELIVERED THAT ARE NOT TERMS BUT ARE WORTH MORE:
+# [LJ-1.705] proved the constants are already controlled (`stage(γ)` and
+#   `stage(Lset γ)` at or below `sucV γ`, `:36`), so ONLY the merge is open.
+# [LJ-1.706] wrote the CORRECTED TARGET down rather than only refusing: the carve
+#   re-bounded at `step 2 γ`, where the door lands exactly at `Below`'s stage.
+#   That is 712.
+# [LJ-1.706]'s `below-from-place` (placement + identification -> Below) is GREEN
+#   (`Probe706.agda:78`), so the distance from [LJ-1.704] to `Below` is MEASURED.
+#
+# 714 EXISTS TO REFUTE 712 CHEAPLY IF IT IS WRONG. [LJ-1.706] said the base
+# formula has "AT LEAST three" nested relativized binders. **`AT LEAST` IS NOT A
+# MEASUREMENT**, and the whole re-bounding arithmetic rests on that number. 714
+# states the exact count as an equality a typechecker can refuse.
+#
+# THE CHAIN, WITH TODAY'S GREEN ARROWS MARKED:
+#   Bound-in-tower + Identified --below-from-place(GREEN)--> Below
+#   Below --from-below(GREEN)--> HierInStage
+#   SameHyp(PAID, [LJ-1.709]) + HierInStage --CompletenessFrom(GREEN)--> Completeness
+# 713 writes that composition once, both inputs hypothesised, so no assembly work
+# is left on the day they land and a frame mismatch is found now instead.
+#
+# WHAT I DID NOT QUEUE. An `src/` collection pass: `dev/pod/direction.md` schedules
+# it AFTER LJ-1 completes, owner 2026-08-20, and I follow the direction. I told the
+# owner today that the campaign's number does not move until GCH-downstream code
+# lands in `src/`; both are true at once and the direction wins.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.710"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-710/LJ-1.710.md"
+
+[[task]]
+code = "LJ-1.711"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-711/LJ-1.711.md"
+
+[[task]]
+code = "LJ-1.712"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-712/LJ-1.712.md"
+
+[[task]]
+code = "LJ-1.713"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-713/LJ-1.713.md"
+
+[[task]]
+code = "LJ-1.714"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-714/LJ-1.714.md"
+
+# ===========================================================================
+# LJ-1.715, 2026-08-27: THE FIRST `src/` LANDING THIS CAMPAIGN HAS A MEASURED
+# REASON TO MAKE.
+#
+# [LJ-1.710] parked `attempt_max:task-lj-1-710-lint-back-to-author` with a
+# STATED NO-GO on `bound2-in-limit`, and that NO-GO is the best this campaign has
+# produced. It proved every mathematical ingredient is in hand (its Section 3
+# closes the full merge for a family written out loud), and then measured the
+# obstruction THREE ways:
+#   the checker unifies the families and refuses them at the variable position;
+#   `bound2`'s where-bound family prints as `L.Ordinal.f σ₁ σ₂ o₁ o₂` and the
+#     symbol is `[NotInScope]`, so `eqImage` against it cannot even be STATED;
+#   a clause function is not convertible to its own case lambda at a variable
+#     position without splitting on the index first.
+# D-10 applied: **NOT shown false.** The obstruction is a NAMING obstruction of
+# the source tree, not a Tarskian or cardinality obstruction of the statement.
+#
+# AND IT NAMED THE CURE, src side, in two options. 715 takes the SECOND: prove
+# the membership lemma directly in `src/L/Ordinal.lagda.md`, ADDITIVELY. The
+# first option would rebuild `bound2` and its seven call sites across two
+# masters; the second transcribes a proof body that is already green.
+#
+# THE TWO MANDATORY GREPS, RUN TODAY: `L.Ordinal` has FORTY dependents, which is
+# why this is `heavy` and why the lemma must be additive. `bound2-in-limit` has
+# supply 0; `bound2` itself has supply 23. P23 recomputes all three.
+#
+# WHAT THIS UNBLOCKS: [LJ-1.705] and [LJ-1.711] both stop on the same
+# uncontrolled `bound2`-tree stage. This is the lemma that controls it.
+#
+# MY OWN ROW COST FOUR ARMS AND I OWN IT. `lint-back-to-author` (priority 13,
+# my ruling of 2026-08-27) sent [LJ-1.710] back to the coder four times, and all
+# four arms are IDENTICAL: conjuncts 1 to 5 held, conjunct 6 failed on ONE
+# unnamed survey path, `dev/literature/primary-sources.md`. The row is right in
+# principle and it retried something the coder never saw the detail of. **Every
+# brief I write from here orders the coder to run
+# `check-survey-quotes.py <CODE>` and paste the output before returning**, and
+# 715 carries that clause. One line, four arms saved.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.715"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-715/LJ-1.715.md"

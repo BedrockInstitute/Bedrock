@@ -1,0 +1,27 @@
+# Maintainer batch 20260824-073945. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541, LJ-1.572, LJ-1.603: all unchanged since the last several batches.
+# 541/572 settled with the mathematician (leave parked). 603 confirms the
+# _rule_a2() B2 fix (20260824-051848) continues to hold across further
+# table.toml writes.
+#
+# LJ-1.609: reason changed from `fallback:Qwen3.8-27B-oQ4e-mtp` (the last batch)
+# to `quota:2026-08-24T08:01:50+08:00`. This is progress, not a new problem:
+# Qwen was excluded after its own failure, a different model was tried, and
+# THAT model hit a real vendor rate limit. `quota:` parks are the one kind that
+# reopens on a clock (pod.py's a2 rule), no row or queue entry applies or is
+# needed.
+#
+# FLAGGED, NOT FOR THIS PROPOSAL: `parked 4/5` as this batch is written. Three
+# of the four are long-lived/intentional (541, 572 by the mathematician's
+# ruling; 603 by the corrected heap-wall template) and the fourth (609) will
+# not clear until its quota window passes, which the timestamp names as roughly
+# 20-plus minutes out from this batch. A single unrelated park anywhere in that
+# window would reach `parked_max` (5) and stop the loop. Nothing to propose
+# here -- none of the four is a row's business -- but worth the owner's
+# attention if the count does not fall back on its own.
+
+[batch]
+ts = "20260824-073945"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the four. LJ-1.541/572/603 unchanged and already settled. LJ-1.609 moved from a fallback park to a quota park (a different, also-failing model this time, rate-limited rather than silent), which reopens on its own clock. Flagged separately: parked is 4/5 with the fourth not expected to clear for roughly 20 minutes, leaving no margin before parked_max if anything else parks meanwhile."

@@ -1,0 +1,83 @@
+# Maintainer batch 20260827-120631. TWO ROWS, correcting/adding the fact-8 close
+# for LJ-1.636 and LJ-1.643.
+#
+# pod-math's correction (relayed this session): my earlier proposal
+# (20260827-111603, landed as task-lj-1-636-go) keys on `obligations_delta_max
+# = -1`. That key will MISS on any future fresh dispatch of LJ-1.636, because
+# `witness_unresolved()` (scripts/pod/pod.py:5622, called from rule (f) at
+# dispatch) recomputes `obl_before` fresh against whatever the probe file
+# holds AT THAT MOMENT. `Probe636.agda` is already green on disk right now
+# (confirmed this session), so a fresh dispatch reads `obl_before = 0`, exits
+# at `unresolved = 0`, and the delta is 0, not -1 -- exactly amendment A23's
+# named defect (scripts/pod/witness.py:510-520): "unresolved 0 before and 0
+# after gives delta 0... a re-run, a review and a mathematician's return could
+# each be complete and unable to close." Fact 8 (`obligations_open`) is the
+# correct key for this shape, added by A23 for precisely this case
+# (scripts/pod/table.py:97-103, the `obligations_open_max` key at :167-168,
+# matched at :592-594). Verified directly: both locked records (c-4082 for
+# LJ-1.636, c-4118 for LJ-1.643, dev/pod/replay-corpus.jsonl) already carry
+# the `obligations_open` field, so A23's guard against pre-amendment records
+# (table.py:135-139) does not refuse either row.
+#
+# LJ-1.636: the row below (priority 9, ahead of the existing priority-10
+# task-lj-1-636-go) is the corrected close. The existing task-lj-1-636-go row
+# is left in place rather than edited (this program has no observed mechanism
+# for editing an admitted row by id, only adding); it is harmless, since a
+# lower-priority row that never matches costs nothing, and the new row at
+# priority 9 is checked first.
+#
+# LJ-1.643: no prior row existed for this scope (my 20260827-111603 batch
+# explicitly did not propose one, per R4/conjunct 6 being red on the ORIGINAL
+# locked record). pod-math now confirms conjunct 6 is independently clean
+# (check-survey-quotes.py LJ-1-643, run fresh, "clean") and conjunct 1 is
+# clean after this session's rename of all thirteen scratch files under
+# agents/tasks/LJ-1-643/runs/ to .agda.txt (verified: MD5 of Floor.agda.txt
+# unchanged at d5636f6118dca3f93b63fbe52b871a7c, and agents/tasks/LJ-1-643/
+# now holds exactly one .agda file, Probe643.agda). pod-math: "My 'no row
+# closes it' never stood against this... a row keyed exit_code=0 cannot match
+# a record whose exit code is 42, so this proposed row never judges the OLD
+# locked record at all. It waits for a fresh arm."
+#
+# Neither row conflicts with R3/AD10: both `[row.when]` blocks require
+# `exit_code = 0`, and the locked records for both tasks carry `exit_code 251`
+# (LJ-1.636) and `exit_code 42` (LJ-1.643) respectively, so neither can match
+# an existing locked record. Both wait for a fresh dispatch that has not
+# happened and needs the owner's separate, explicit authorization to trigger
+# (standing rule this session).
+
+[[row]]
+id = "task-lj-1-636-go-fact8"
+scope = "task:LJ-1.636"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "Corrects task-lj-1-636-go (priority 10, this table), which keys on obligations_delta_max=-1 and will miss on any future fresh dispatch: Probe636.agda is already green on disk, so a fresh dispatch's obl_before reads 0 and the delta is 0, not -1 (amendment A23's named defect, scripts/pod/witness.py:510-520). obligations_open_max=0 is fact 8, added by A23 for exactly this shape (scripts/pod/table.py:97-103). pod-math's diagnosis, relayed and independently verified: witness_unresolved() (scripts/pod/pod.py:5622) recomputes obl_before fresh at every dispatch. Priority 9 so this row is checked ahead of the now-superseded priority-10 row, which is left in place rather than edited."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_open_max = 0
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-643-go"
+scope = "task:LJ-1.643"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "pod-math's ruling: the repair pattern applies to LJ-1.643 exactly as to LJ-1.636. Conjunct 6 verified clean (check-survey-quotes.py LJ-1-643, run fresh, prints clean). Conjunct 1 verified clean after this session's rename of all thirteen scratch files under agents/tasks/LJ-1-643/runs/ (Floor, T1-T12) from .agda to .agda.txt, content unchanged (Floor.agda.txt MD5 d5636f6118dca3f93b63fbe52b871a7c, matching the pre-rename file exactly); agents/tasks/LJ-1-643/ now holds exactly one .agda file, Probe643.agda. Keyed on obligations_open_max=0 rather than obligations_delta_max, per pod-math's fact-8 correction (see task-lj-1-636-go-fact8's reason in this same batch): Probe643.agda is already green, so a fresh dispatch's delta would read 0, not -1. Does not conflict with R3/AD10: the locked record c-4118 has exit_code=42, which this row's exit_code=0 requirement cannot match."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_open_max = 0
+  heap_wall = false
+
+[batch]
+ts = "20260827-120631"
+rows_proposed = 2
+reason = "Corrects the earlier LJ-1.636 go row's key (obligations_delta_max=-1 would miss on a fresh dispatch since the probe is already green; obligations_open_max=0, fact 8 / amendment A23, is correct) and adds the equivalent row for LJ-1.643, now that this session's rename of its thirteen scratch files (Floor, T1-T12, .agda to .agda.txt, content unchanged, MD5-verified) and pod-math's confirmation that conjunct 6 (check-survey-quotes.py) is independently clean make it eligible for the same close. Both rows require exit_code=0 and so cannot match either task's currently locked record (LJ-1.636 exit_code 251, LJ-1.643 exit_code 42); both wait for a fresh dispatch, which needs the owner's separate explicit authorization per this session's standing resume/retry rule."

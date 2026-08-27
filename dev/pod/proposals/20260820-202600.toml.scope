@@ -1,0 +1,23 @@
+# Maintainer batch 20260820-202600. NO ROWS. No [[queue]] repeats.
+#
+# Parks unchanged in substance. 422 accept-10 seq 539; 425 accept-4 seq 543;
+# 426 accept-4 seq 548; 427 accept-3 seq 552. Same facts: exit 0,
+# obligations_open 1. 386/390 still no-change.
+#
+# 202522 harvested `scope` seq 553: uncommitted scripts/pod/pod.py (the
+# refill-floor repair) is still dirty. REQUESTS already in queue.toml:1239-1257.
+# Not repeated. Refill live seq 528.
+
+# ---------------------------------------------------------------------------
+# 1. LJ-1.386. no-change, no record. A21. a2 skips. REQUEST already queued.
+# 2. LJ-1.390. no-change, no record. A21. a2 skips. REQUEST already queued.
+# 3. LJ-1.422. no-match. accept-10: exit 0, open 1. 428 already queued.
+# 4. LJ-1.425. no-match. accept-4: exit 0, open 1. Critic attack. No done row.
+# 5. LJ-1.426. no-match. accept-4: exit 0, open 1. Critic attack. No done row.
+# 6. LJ-1.427. no-match. accept-3: exit 0, open 1. Critic attack. No done row.
+# 7. Expiry fallout. NO ROW. A23 working.
+
+[batch]
+ts = "20260820-202600"
+rows_proposed = 0
+reason = "No table row. LJ-1.386 and LJ-1.390 stay no-change. LJ-1.422 accept-10, LJ-1.425 accept-4, LJ-1.426 accept-4 and LJ-1.427 accept-3 all have obligations_open 1; A23 misses; each critic file is an attack. 386/390/428 REQUESTS already in queue.toml; refill live seq 528."

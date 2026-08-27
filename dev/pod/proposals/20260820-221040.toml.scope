@@ -1,0 +1,38 @@
+# Maintainer batch 20260820-221040.
+
+# 1. LJ-1.386 salvage:LJ-1.386. Already DONE, row sys-obligations-satisfied.
+#    The park was a salvage collision on the brief, not a missing row.
+#    NO ROW.
+# 2. LJ-1.390 salvage:LJ-1.390. Already DONE, row sys-obligations-satisfied.
+#    Same salvage collision. NO ROW.
+# 3. LJ-1.436 no-match. Already DONE, row sys-critic-upheld-no-go.
+#    NO ROW.
+# 4. LJ-1.440 no-match. accept-1: exit 0, obligations_open 1, delta 0,
+#    files lj-1.440-report.md and review-of-sq-trunc-closed.md.
+#    agda_vacuous true, conjuncts 1-6 held. go wants delta -1. A23 wants
+#    open 0. no-go-stated wants exit 42. F9: a stated NO-GO is the critic's
+#    input. Row below keys that file, not review-of-LJ-*-*.md, so a later
+#    critic return still hits sys-critic-upheld-no-go.
+# 5. Expiry fallout. A23 and sys-critic-upheld-no-go working. NO ROW.
+
+[[row]]
+id = "task-lj-1-440-no-go-stated-vacuous"
+scope = "task:LJ-1.440"
+priority = 22
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-20
+added_by = "maintainer"
+reason = "accept-1: exit 0, open 1, review-of-sq-trunc-closed.md. no-go-stated wants exit 42. F9: a stated NO-GO is the critic's input."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  obligations_open_min = 1
+  changed_files_any = ["agents/tasks/LJ-1-440/review-of-sq-trunc-closed.md"]
+
+[batch]
+ts = "20260820-221040"
+rows_proposed = 1
+reason = "One row for LJ-1.440 stated NO-GO at exit 0. LJ-1.386 and LJ-1.390 already DONE on sys-obligations-satisfied. LJ-1.436 already DONE on sys-critic-upheld-no-go."

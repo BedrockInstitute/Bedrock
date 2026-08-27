@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.700
+# brief agents/tasks/LJ-1-700/LJ-1.700.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (7.25732421875, 6.693359375, 6.46240234375)
+# started 2026-08-27 10:33:33
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-700/Probe700.agda rc -9 seconds 4.82
+# changed files 12
+# changed files own 12 of 12
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 4.82
+# error class other
+# exit -9
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-700/Probe700.agda", "agents/tasks/LJ-1-700/lj-1.700-report.md", "agents/tasks/LJ-1-700/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-700/runs/floor-1.out", "agents/tasks/LJ-1-700/runs/floor-2.out", "agents/tasks/LJ-1-700/runs/floor-3.out", "agents/tasks/LJ-1-700/runs/floor-4.out", "agents/tasks/LJ-1-700/runs/p-1.out", "agents/tasks/LJ-1-700/runs/p-2.out", "agents/tasks/LJ-1-700/runs/p-3.out", "agents/tasks/LJ-1-700/runs/p-4.out", "agents/tasks/LJ-1-700/runs/run.sh"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-700/Probe700.agda", "agents/tasks/LJ-1-700/lj-1.700-report.md", "agents/tasks/LJ-1-700/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-700/runs/floor-1.out", "agents/tasks/LJ-1-700/runs/floor-2.out", "agents/tasks/LJ-1-700/runs/floor-3.out", "agents/tasks/LJ-1-700/runs/floor-4.out", "agents/tasks/LJ-1-700/runs/p-1.out", "agents/tasks/LJ-1-700/runs/p-2.out", "agents/tasks/LJ-1-700/runs/p-3.out", "agents/tasks/LJ-1-700/runs/p-4.out", "agents/tasks/LJ-1-700/runs/run.sh"], "error_class": "other", "exit_code": -9, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 4.82}, "lint_detail": "", "obligations_probe_red": true, "runs_all": [{"rc": -9, "seconds": 4.82, "target": "agents/tasks/LJ-1-700/Probe700.agda"}], "spec_surface_detail": "", "task": "LJ-1.700", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 40.63}

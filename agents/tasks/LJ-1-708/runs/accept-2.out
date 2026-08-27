@@ -1,0 +1,25 @@
+# arm accept-2
+# task LJ-1.708
+# brief agents/tasks/LJ-1-708/LJ-1.708.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (5.0546875, 7.48095703125, 10.52734375)
+# started 2026-08-27 15:52:10
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-708/Probe708.agda rc 0 seconds 4.07
+# changed files 18
+# changed files own 2 of 18
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 4.07
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-708/lj-1.708-report.md", "agents/tasks/LJ-1-708/review-of-LJ-1-708-1.md"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-708/Probe708.agda", "agents/tasks/LJ-1-708/lj-1.708-report.md", "agents/tasks/LJ-1-708/review-of-LJ-1-708-1.md", "agents/tasks/LJ-1-708/review-of-below-direct.md", "agents/tasks/LJ-1-708/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-708/runs/cand-1.agda.txt", "agents/tasks/LJ-1-708/runs/cand-1.out", "agents/tasks/LJ-1-708/runs/cand-2.out", "agents/tasks/LJ-1-708/runs/final-1.out", "agents/tasks/LJ-1-708/runs/floor-1.out", "agents/tasks/LJ-1-708/runs/floor-2.out", "agents/tasks/LJ-1-708/runs/meter-obligation.out", "agents/tasks/LJ-1-708/runs/p-1.out", "agents/tasks/LJ-1-708/runs/p-2.out", "agents/tasks/LJ-1-708/runs/recheck-1.out", "agents/tasks/LJ-1-708/runs/recheck-2.out", "agents/tasks/LJ-1-708/runs/recheck-3.out", "agents/tasks/LJ-1-708/runs/run.sh"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 4.07}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 4.07, "target": "agents/tasks/LJ-1-708/Probe708.agda"}], "spec_surface_detail": "", "task": "LJ-1.708", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 2.97}

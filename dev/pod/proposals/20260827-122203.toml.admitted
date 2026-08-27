@@ -1,0 +1,80 @@
+# Maintainer batch 20260827-122203. REFILE of 20260827-121736, refused
+# (dev/pod/proposals/20260827-121736.toml.refused): "row `task-lj-1-636-go-fact8`:
+# `reason` is 682 characters, over the 200 cap" (scripts/pod/table.py:177,357).
+# Content identical except both rows' `reason` fields are shortened under the
+# cap; the full citation trail is unchanged and stands in this comment block
+# and in the prior refiles (20260827-120631, 20260827-111603) for the record.
+#
+# pod-math's correction (relayed this session): the LIVE task-lj-1-636-go and
+# task-lj-1-643-go rows (dev/pod/table.toml:26751, :27319, both added_by
+# mathematician, 2026-08-26) key on `obligations_delta_max = -1`. That key will
+# MISS on any future fresh dispatch of either task, because `witness_unresolved()`
+# (scripts/pod/pod.py:5622, called from rule (f) at dispatch) recomputes
+# `obl_before` fresh against whatever the probe file holds AT THAT MOMENT.
+# `Probe636.agda` and `Probe643.agda` are already green on disk right now, so a
+# fresh dispatch reads `obl_before = 0`, exits at `unresolved = 0`, and the
+# delta is 0, not -1: exactly amendment A23's named defect
+# (scripts/pod/witness.py:510-520). Fact 8 (`obligations_open`) is the correct
+# key, added by A23 for precisely this case (scripts/pod/table.py:97-103, the
+# `obligations_open_max` key at :167-168, matched at :592-594). Verified
+# directly: both locked records (c-4082 for LJ-1.636, c-4118 for LJ-1.643,
+# dev/pod/replay-corpus.jsonl) already carry the `obligations_open` field, so
+# A23's guard against pre-amendment records (table.py:135-139) does not refuse
+# either row.
+#
+# LJ-1.636: priority 9, ahead of the existing priority-10 task-lj-1-636-go
+# (left in place; this program has no observed mechanism for editing an
+# admitted row by id, only adding, and a row that never matches costs nothing).
+#
+# LJ-1.643: same shape. Conjunct 6 verified clean (check-survey-quotes.py
+# LJ-1-643, run fresh, "clean") and conjunct 1 verified clean after this
+# session's rename of all thirteen scratch files under
+# agents/tasks/LJ-1-643/runs/ (Floor, T1-T12) from .agda to .agda.txt, content
+# unchanged (Floor.agda.txt MD5 d5636f6118dca3f93b63fbe52b871a7c, matching the
+# pre-rename file exactly); agents/tasks/LJ-1-643/ now holds exactly one .agda
+# file, Probe643.agda.
+#
+# Neither row conflicts with R3/AD10: both `[row.when]` blocks require
+# `exit_code = 0`, and the locked records for both tasks carry `exit_code 251`
+# (LJ-1.636) and `exit_code 42` (LJ-1.643) respectively, so neither can match
+# an existing locked record. The owner has now authorized a resume of both
+# tasks plus LJ-1.685 ("发起resume", this session); this batch is filed first
+# so the resume's fresh accept run has a row to land on rather than parking
+# `no-match` again on the same defect these rows correct.
+
+[[row]]
+id = "task-lj-1-636-go-fact8"
+scope = "task:LJ-1.636"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "Corrects task-lj-1-636-go: delta_max=-1 misses, Probe636.agda already green (obl_before=0). Fact 8 (obligations_open_max), A23, table.py:97-103. Priority 9, ahead of the superseded row."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_open_max = 0
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-643-go-fact8"
+scope = "task:LJ-1.643"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "Same fix as task-lj-1-636-go-fact8: Probe643.agda already green, delta_max=-1 misses. obligations_open_max=0 (fact 8, A23). Conjunct 1/6 verified clean this session."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_open_max = 0
+  heap_wall = false
+
+[batch]
+ts = "20260827-122203"
+rows_proposed = 2
+reason = "Second refile (first refused on the row reason field's 200-char cap, not on the rows' content). Corrects the LIVE LJ-1.636/LJ-1.643 go rows' key: obligations_delta_max=-1 would miss on a fresh dispatch since both probes are already green; obligations_open_max=0 (fact 8, amendment A23) is correct. Filed ahead of the owner's just-authorized resume of LJ-1.636/643/685, so the resume's fresh accept run has a row to land on."

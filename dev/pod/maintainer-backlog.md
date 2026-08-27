@@ -278,6 +278,40 @@ write; `check-survey-quotes.py`'s own file selection (cure 1) would also
 protect any task-scoped row anyone else writes with the same shape, and is
 named here as the defence-in-depth question for the owner, not chosen.
 
+**CURE 3 WAS ONLY HALF-WIRED. FOUND AND FIXED HERE, 2026-08-27.** Routing a
+lint failure to `head_slot = "coder"` only helps if the coder is TOLD it may
+touch `report_of()`'s file. `review_brief()` (`scripts/pod/pod.py:2610`, the
+generator BOTH the `lint-back-to-author` row and every adversarial-critic
+escalation share) still said "Write `review-of-<PRED>.md` and nothing else"
+for every slot, coder included. **MEASURED LIVE on `[LJ-1.710]`**: three
+consecutive `task-lj-1-710-lint-back-to-author` hits, byte-identical
+`lint_detail` each time ("the return never names
+`dev/literature/primary-sources.md`"), because the wrapper never named
+`lj-1.710-report.md`, the file the check actually reads, and forbade touching
+it. One attempt from `attempt_max`. **THE SAME SHAPE WAS LIVE ON `[LJ-1.704]`
+AT THE SAME TIME**, the campaign's own keystone task (four-hour-plus run,
+`review-of-carved-is-hier.md`): attempt 0 failed `check-survey-quotes` with
+"no-heading: the return carries no ARCHIVE USED section," attempt 1 dispatched
+09:34:08Z still carrying the old, unfixed wrapper.
+
+**THE FIX.** `review_brief()` now resolves the report path the same way
+`report_of()` does (`agents_tree.is_report()`, excluding `review-*.md`), and
+when `slot == "coder"` on a lint escalation: adds it to `## SCOPE (write)`,
+drops "and nothing else" from THE OBLIGATION in favour of naming both files,
+and adds an explicit note under `## WHY THIS ESCALATED` citing
+`changed_files_scoped()` (`scripts/pod/facts.py:345`) for why the write is
+authorized regardless of the generic scope line. **Scoped narrowly to
+`slot == "coder"`**: a `mathematician_adversarial` critic still gets the old,
+unchanged wrapper, since letting a CRITIC rewrite the ORIGINAL AUTHOR's report
+is the larger, owner-gated question cures 1/2 already flag, not a mechanical
+completion of an already-ruled decision. Verified against `[LJ-1.710]`'s own
+worktree: the regenerated wrapper correctly names `lj-1.710-report.md`.
+9 pod-relevant suites green (`test_pod_loop.py`: 485 tests, `OK (skipped=9)`;
+`test_pod_launcher.py`: `PASS: 0 failing check(s), 261 ran`).
+`[LJ-1.710]`'s and `[LJ-1.704]`'s IN-FLIGHT attempts were dispatched before
+this landed and still carry the old wrapper; the fix applies from their NEXT
+escalation onward, if either needs one.
+
 **FOUND BY THE OWNER, NOT BY REVIEW.** They asked why `[LJ-1.662]`'s `coder` dispatch
 still used `claude-opus-5` after a same-day ruling moved `coder` to `{Qwen, grok-4.6}`.
 `load_heads()` (`scripts/pod/heads.py:119`, before this fix) cached its parse in a

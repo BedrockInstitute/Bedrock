@@ -1,0 +1,20 @@
+# Maintainer batch 20260824-060729. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.541 and LJ-1.572: unchanged, settled across every batch since
+# 20260824-005804 and by direct correspondence with the resident mathematician.
+# Leave both parked, no action.
+#
+# LJ-1.603: unchanged since 20260824-051848, still parked on
+# `task-lj-1-603-heap-wall-park` with the SAME reason string. This confirms the
+# `_rule_a2()` B2 fix landed that batch (pod.py, the `"row:" + row_id` spelling):
+# table.toml has been written at least once since (this batch's own predecessors
+# alone touch it via expire_rows), and LJ-1.603 did not spuriously reopen.
+#
+# LJ-1.607: reason `fallback:Qwen3.8-27B-oQ4e-mtp`, the fourth instance of the
+# same self-resolving A29 shape this session (LJ-1.598, 600, 603). No row, no
+# queue entry; one tick clears it.
+
+[batch]
+ts = "20260824-060729"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the four. LJ-1.541/572 settled with the mathematician. LJ-1.603 confirms the prior batch's _rule_a2() B2 fix holds: same park, same reason, no spurious reopen across at least one intervening table.toml write. LJ-1.607's fallback park is the fourth instance of the same self-resolving A29 shape; needs one tick, not a row."

@@ -1,0 +1,34 @@
+# Maintainer batch 20260824-103500. NO ROWS, NO QUEUE ENTRIES.
+#
+# THE LOOP STOPPED A THIRD TIME TODAY: `dev/pod/transitions/2026-08.jsonl` seq
+# 3740, `{"to": "STOPPED", "why": "5 parked"}`, 2026-08-24T02:35:02Z. This time
+# the five were LJ-1.541, LJ-1.572, LJ-1.599, LJ-1.603 (all four already stable/
+# settled) plus LJ-1.614's fallback park. Resumed (`resume --once`: "5 parked, 4
+# still parked, 2 ready") and keeper.sh restarted in its pane; ticking confirmed.
+#
+# THE OWNER RULED ON THIS DIRECTLY WHILE THIS BATCH WAS BEING WRITTEN. Per
+# opus-5's design proposal from the earlier review round (a new `SHELVED` state
+# for tasks a considered, evidence-backed judgement has settled -- not counting
+# toward `parked_max` -- plus reversing the 2026-08-19 ruling that `quota:`
+# parks count toward the stop), the owner said: adopt the design, open the
+# exemption, and abolish the quota-counts-toward-stop ruling. A second opus-5
+# is implementing it now, in the background, directly in `scripts/pod/pod.py`
+# and `scripts/pod/digest.py` (a live `pod status` run already shows a new
+# `shelved 0` field, confirming the state exists in the tree as this batch is
+# written; the implementation is not yet reviewed or landed as complete).
+#
+# LJ-1.541, LJ-1.572, LJ-1.599, LJ-1.603: unchanged, no row or queue entry.
+# Once the SHELVED implementation lands and is verified, 541/572 are the
+# design's own motivating case for a mathematician-authored shelve request;
+# 599 already has its `park_and_split` follow-up; 603 still wants one (see
+# 20260824-080307 and earlier -- this proposal does not repeat that finding
+# again, it is pod-math's to act on, not a row).
+#
+# LJ-1.614: reason `fallback:Qwen3.8-27B-oQ4e-mtp`, the same self-resolving A29
+# shape seen many times today. No row, no queue entry; already reopened by the
+# resume above.
+
+[batch]
+ts = "20260824-103500"
+rows_proposed = 0
+reason = "No table row and no queue entry for any of the five. The loop stopped a third time on parked_max (5 parked: 541/572/599/603, all stable, plus 614's fallback); resumed and restarted, confirmed ticking. The structural fix (SHELVED state, owner-ruled and now being implemented by a second opus-5 in the background) is in progress but not yet landed or reviewed, so this batch still finds nothing to propose against the current table."

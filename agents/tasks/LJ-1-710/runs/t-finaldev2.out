@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-27T08:35:04Z
+Checking Final (/private/tmp/wk710/Final.agda).
+/private/tmp/wk710/Final.agda:135.45-50: error: [NotInScope]
+Not in scope:
+  mfOwn at /private/tmp/wk710/Final.agda:135.45-50
+when scope checking mfOwn
+        1.40 real         0.88 user         0.23 sys
+           281083904  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               14964  page reclaims
+                4258  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 490  voluntary context switches
+                2176  involuntary context switches
+         10712583329  instructions retired
+          4348928418  cycles elapsed
+           223052544  peak memory footprint
+EXIT=42
+ended 2026-08-27T08:35:05Z

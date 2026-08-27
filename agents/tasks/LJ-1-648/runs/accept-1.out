@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.648
+# brief agents/tasks/LJ-1-648/LJ-1.648.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (6.01513671875, 5.728515625, 5.8046875)
+# started 2026-08-26 11:07:16
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-648/Probe648.agda rc 0 seconds 3.32
+# changed files 14
+# changed files own 14 of 14
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 3.32
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-648/Probe648.agda", "agents/tasks/LJ-1-648/lj-1.648-report.md", "agents/tasks/LJ-1-648/review-of-commute-from-keystone.md", "agents/tasks/LJ-1-648/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-648/runs/floor-1.out", "agents/tasks/LJ-1-648/runs/meter-names.out", "agents/tasks/LJ-1-648/runs/meter-obligation.out", "agents/tasks/LJ-1-648/runs/p-1.out", "agents/tasks/LJ-1-648/runs/p-2.out", "agents/tasks/LJ-1-648/runs/p-3.out", "agents/tasks/LJ-1-648/runs/p-4.out", "agents/tasks/LJ-1-648/runs/p-5.out", "agents/tasks/LJ-1-648/runs/p-final.out", "agents/tasks/LJ-1-648/runs/run.sh"], "changed_files_refused": [], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-648/Probe648.agda", "agents/tasks/LJ-1-648/lj-1.648-report.md", "agents/tasks/LJ-1-648/review-of-commute-from-keystone.md", "agents/tasks/LJ-1-648/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-648/runs/floor-1.out", "agents/tasks/LJ-1-648/runs/meter-names.out", "agents/tasks/LJ-1-648/runs/meter-obligation.out", "agents/tasks/LJ-1-648/runs/p-1.out", "agents/tasks/LJ-1-648/runs/p-2.out", "agents/tasks/LJ-1-648/runs/p-3.out", "agents/tasks/LJ-1-648/runs/p-4.out", "agents/tasks/LJ-1-648/runs/p-5.out", "agents/tasks/LJ-1-648/runs/p-final.out", "agents/tasks/LJ-1-648/runs/run.sh"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 3.32}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 3.32, "target": "agents/tasks/LJ-1-648/Probe648.agda"}], "spec_surface_detail": "", "task": "LJ-1.648", "tier": "wide", "unbound_vacuous": true, "witness_seconds": 3.17}

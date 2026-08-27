@@ -1,0 +1,71 @@
+# Maintainer batch 20260821-095723. Two rows, no [[queue]].
+#
+# The mathematician answered the standing brief-repair request (dev/pod/queue.toml,
+# code = "LJ-1.440") on LJ-1.448: dev/pod/table.toml:4896-4909, row
+# `task-lj-1-448-stop-stated`, admitted 2026-08-21, `reason` = "A D-10 STOP RUNS
+# NO AGDA, SO IT EXITS 0 AND MATCHES NO exit_code 42 BRANCH." Same words as this
+# maintainer's own queue request. `exit_code = 0`, `obligations_delta_min = 0`,
+# `changed_files_any = [".../review-of-*.md"]`, `action = "escalate"`,
+# `head_slot = "mathematician_adversarial"`. dev/pod/transitions/2026-08.jsonl:915
+# confirms it fired and routed correctly (READY, dispatched at :919 with
+# review-LJ-1-448-1.md).
+#
+# LJ-1.440 and LJ-1.443's parked records are the SAME shape by construction (both
+# are the D-10-stop premise-report-missing pattern this maintainer named in the
+# standing queue request, which already cites both briefs by file:line). This is
+# a routing convention for a RETURN SHAPE (a D-10 stop that ran no Agda), not a
+# mathematical claim about either task's content: it sends the return to a critic,
+# it does not close anything. Writing the two task rows below is turning that
+# measured routing decision into rows for the two records it already matches,
+# scope="task:<CODE>" so neither can shadow the other or any other row.
+#
+# 1. LJ-1.440. exit_code 0, obligations_delta 0, changed_files include
+#    agents/tasks/LJ-1-440/review-of-sq-trunc-closed.md (matches the glob).
+#    Row below.
+#
+# 2. LJ-1.443. exit_code 0, obligations_delta 0, changed_files include
+#    agents/tasks/LJ-1-443/review-of-bounded-modulo-collect.md (matches the
+#    glob). Row below.
+#
+# 3. LJ-1.444, launch. Self-clearing (scripts/pod/pod.py:3689). No row.
+#
+# 4. LJ-1.449, launch, NEW. Same shape: refused because LJ-1.445 is live and
+#    holds dev/ledger.toml, src/Everything.lagda.md
+#    (dev/pod/transitions/2026-08.jsonl:918). No facts, no row, self-clearing.
+
+[[row]]
+id = "task-lj-1-440-stop-stated"
+scope = "task:LJ-1.440"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "Same shape as dev/pod/table.toml:4896-4909 (task-lj-1-448-stop-stated), the mathematician's fix for the D-10-stop-exits-0 defect this maintainer flagged in dev/pod/queue.toml (code = LJ-1.440). A D-10 stop runs no Agda, so it exits 0 and matches no exit_code 42 branch; nine identical reaccepts (dev/pod/transitions/2026-08.jsonl) confirm the shape is stable."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-440/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-443-stop-stated"
+scope = "task:LJ-1.443"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-21
+added_by = "maintainer"
+reason = "Same shape as dev/pod/table.toml:4896-4909 (task-lj-1-448-stop-stated) and as task-lj-1-440-stop-stated above: a D-10 stop (agents/tasks/LJ-1-443/LJ-1.443.md:27-34) runs no Agda, so it exits 0 and matches no exit_code 42 branch. Report: .pod-state/worktrees/LJ-1-443/agents/tasks/LJ-1-443/lj-1.443-report.md:8-24."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-443/review-of-*.md"]
+
+[batch]
+ts = "20260821-095723"
+rows_proposed = 2
+reason = "The mathematician's routing fix for the D-10-stop-exits-0 shape (row task-lj-1-448-stop-stated) applies unchanged to LJ-1.440 and LJ-1.443, whose parked records are that same shape. Two task-scoped rows, transcribed rather than invented: the action (escalate to mathematician_adversarial) is measured from the mathematician's own resolution, not decided here. LJ-1.444 and LJ-1.449 are launch parks with no facts; no row."

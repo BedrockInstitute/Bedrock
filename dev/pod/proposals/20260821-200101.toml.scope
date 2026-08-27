@@ -1,0 +1,15 @@
+# Maintainer batch 20260821-200101. NO ROWS, NO QUEUE ENTRIES.
+#
+# LJ-1.459, LJ-1.470: unchanged shape, both salvage:<code>, both
+# reaccept-eligible, both self-resolving. No row possible or needed.
+#
+# LJ-1.488: capacity:Qwen3.8-27B-oQ4e-mtp. Second live firing of A27a
+# (dev/pod/pod.py, commit 65b5f04) after LJ-1.481's full cycle already
+# confirmed the mechanism end to end this session. Same shape: R7 parked
+# it capacity:<model>, and it will self-reopen onto the excluded-model
+# retry with no table edit and no human. No row possible or needed.
+
+[batch]
+ts = "20260821-200101"
+rows_proposed = 0
+reason = "LJ-1.459/470 unchanged self-resolving salvage parks. LJ-1.488 is A27a's capacity: mechanism firing again, same confirmed shape as LJ-1.481 earlier this session; self-resolving, no row needed."
