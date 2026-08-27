@@ -26756,7 +26756,8 @@ outcome = "go"
 added = 2026-08-26
 added_by = "mathematician"
 reason = "branch `go` of LJ-1.636, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 0
@@ -26772,7 +26773,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-26
 added_by = "mathematician"
 reason = "branch `stop-stated` of LJ-1.636, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 0
@@ -26789,7 +26791,8 @@ head_slot = "coder_adversarial"
 added = 2026-08-26
 added_by = "mathematician"
 reason = "branch `accept-failed` of LJ-1.636, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 1
@@ -26805,7 +26808,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-26
 added_by = "mathematician"
 reason = "branch `no-go-attacked` of LJ-1.636, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 42
@@ -26822,7 +26826,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-26
 added_by = "mathematician"
 reason = "branch `no-go-stated` of LJ-1.636, admitted from the brief"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 42
@@ -26836,7 +26841,8 @@ action = "park_and_split"
 added = 2026-08-26
 added_by = "mathematician"
 reason = "PARK, NOT ESCALATE. A heap wall is a resource fact and no critic can"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   heap_wall = true
@@ -26850,7 +26856,8 @@ head_slot = "mathematician_adversarial"
 added = 2026-08-26
 added_by = "mathematician"
 reason = "CLOSES BACKLOG ITEM 30, MEASURED ON LJ-1.630 2026-08-25. A REAL failed"
-expired = false
+expired = true
+expired_at = 2026-08-27
 
   [row.when]
   exit_code = 42
@@ -35261,3 +35268,52 @@ expired = false
 
   [row.when]
   exit_code = 42
+
+[[row]]
+id = "task-lj-1-636-go-fact8"
+scope = "task:LJ-1.636"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "Corrects task-lj-1-636-go: delta_max=-1 misses, Probe636.agda already green (obl_before=0). Fact 8 (obligations_open_max), A23, table.py:97-103. Priority 9, ahead of the superseded row."
+expired = true
+expired_at = 2026-08-27
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  obligations_open_max = 0
+
+[[row]]
+id = "task-lj-1-643-go-fact8"
+scope = "task:LJ-1.643"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "Same fix as task-lj-1-636-go-fact8: Probe643.agda already green, delta_max=-1 misses. obligations_open_max=0 (fact 8, A23). Conjunct 1/6 verified clean this session."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  obligations_open_max = 0
+
+[[row]]
+id = "task-lj-1-685-go-fact8"
+scope = "task:LJ-1.685"
+priority = 9
+action = "done"
+outcome = "go"
+added = 2026-08-27
+added_by = "maintainer"
+reason = "Same fact-8 fix as task-lj-1-636/643-go-fact8: Probe685.agda already green, delta_max=-1 misses. obligations_open_max=0, A23. Conjunct 1 held originally; conjunct 6 fixed by LJ-1.703."
+expired = false
+
+  [row.when]
+  exit_code = 0
+  heap_wall = false
+  obligations_open_max = 0
