@@ -1,0 +1,71 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.703] FLOOR.  The obligation STATED, with a HOLE standing in
+-- for the term.  Reverse of SameAsGraph at k-value, with powIter and
+-- the [LJ-1.681] bridge as HYPOTHESES.  RED BY DESIGN.  Delivered as
+-- `.agda.txt` because every `.agda` under the task home is a
+-- verification target (scripts/pod/facts.py:489).
+--
+--     mv agents/tasks/LJ-1-703/runs/FLOOR.agda.txt \
+--        agents/tasks/LJ-1-703/runs/FLOOR.agda
+--     sh agents/tasks/LJ-1-703/runs/run.sh \
+--        agents/tasks/LJ-1-703/runs/floor-1.out 300 \
+--        agents/tasks/LJ-1-703/runs/FLOOR.agda
+--     mv agents/tasks/LJ-1-703/runs/FLOOR.agda \
+--        agents/tasks/LJ-1-703/runs/FLOOR.agda.txt
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-703.runs.FLOOR {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+import FOL.Absoluteness
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset; IsOrd; 𝒟ₒ )
+open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
+open import L.Ordinal.StageArith {ℓ} lem using ( sucIter )
+open import Cubical.Data.Vec using ( lookup )
+open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+
+import LJ-1-520.Probe520 {ℓ} lem as P520
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ʟ
+module HV = hPropStructure 𝒮ᵥ
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+
+-- Bound.PowIter's hypothesis (src/L/Coding/Bound.lagda.md:147-152).
+PowIterHyp : Type (ℓ-suc ℓ)
+PowIterHyp = (δ y : V ℓ) → ⟨ y HV.∈ˢ Lset δ ⟩
+           → ∥ Σ[ k ∈ ℕ ] ⟨ 𝒟ₒ y HV.∈ˢ Lset (sucIter k δ) ⟩ ∥₁
+
+module Pin {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+  module Sl = P520.Slots w b
+  module Mx = Sl.Mx
+  private
+    M : ℕ
+    M = 13 + n
+    sh13 : Fin n → Fin M
+    sh13 i = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (i)))))))))))))
+
+  Bridge : Type (ℓ-suc ℓ)
+  Bridge = (δ : S ^ M)
+         → ⟨ δ ⊨ LsetGraphAt (sh13 w) (sh13 b) ⟩
+         → ⟨ δ ⊨ Mx.G.graphBndAt ⟩
+
+  same-as-graph-reverse-at :
+    PowIterHyp →
+    IsOrd (fst (lookup b γ)) →
+    Bridge →
+    ⟨ γ ⊨ LsetGraphAt w b ⟩ →
+    ⟨ γ ⊨ fst (P520.levelFo-Σ₁ w b) ⟩
+  same-as-graph-reverse-at = {!!}
+
+same-as-graph-reverse = Pin.same-as-graph-reverse-at

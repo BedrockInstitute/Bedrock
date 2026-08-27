@@ -1,0 +1,2 @@
+pass      exit=0        2.00s  agents/tasks/LJ-1-703/Probe703.agda::same-as-graph-reverse
+witness: 0 UNRESOLVED of 1, 2.00 s, probe_red=False
