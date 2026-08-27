@@ -1,0 +1,6 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-26T23:30:37Z
+pass      exit=0        6.06s  agents/tasks/LJ-1-692/Probe692.agda::hull-convert-at-matrix
+witness: 0 UNRESOLVED of 1, 6.06 s, probe_red=False
+EXIT=0
+ended 2026-08-26T23:30:43Z
