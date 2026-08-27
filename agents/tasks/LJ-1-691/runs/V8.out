@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+Checking LJ-1-691.V8 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V8.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V8.agda:11.11-12: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V8.agda:11.11-12
+        0.94 real         0.64 user         0.14 sys
+           258310144  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               15923  page reclaims
+                1907  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 373  voluntary context switches
+                1467  involuntary context switches
+          8420036081  instructions retired
+          3102101069  cycles elapsed
+           199131880  peak memory footprint
+EXIT=42

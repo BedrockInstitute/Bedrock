@@ -1,0 +1,34 @@
+GHCRTS=[-A64m -I0 -M2g]
+Checking LJ-1-691.V9 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V9.agda).
+error: [UnsolvedConstraints]
+Failed to solve the following constraints:
+  ℓ-suc _ℓ_5 = ℓ-suc _ℓ_10 (blocked on any(_ℓ_5, _ℓ_10))
+  _ℓ_5 = _ℓ_10 (blocked on any(_ℓ_5, _ℓ_10))
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V9.agda:12.15-15.20: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V9.agda:12.15-16
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V9.agda:15.10-20
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V9.agda:13.11-16: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V9.agda:13.11-16
+        0.84 real         0.64 user         0.11 sys
+           258424832  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               17752  page reclaims
+                  84  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 380  voluntary context switches
+                 731  involuntary context switches
+          8365517979  instructions retired
+          3007095990  cycles elapsed
+           198951656  peak memory footprint
+EXIT=42

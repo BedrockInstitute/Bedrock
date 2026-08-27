@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T00:42:19Z
+Checking LJ-1-691.T6 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/T6.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/T6.agda:19.10-15: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/T6.agda:19.10-15
+        0.84 real         0.72 user         0.09 sys
+           289783808  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19742  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 173  involuntary context switches
+         10251684997  instructions retired
+          3329360671  cycles elapsed
+           230359808  peak memory footprint
+EXIT=42

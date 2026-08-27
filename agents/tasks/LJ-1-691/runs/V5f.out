@@ -1,0 +1,21 @@
+GHCRTS=[-A64m -I0 -M2g]
+Checking LJ-1-691.V5f (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-691/agents/tasks/LJ-1-691/V5f.agda).
+        2.48 real         1.87 user         0.28 sys
+           599506944  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34260  page reclaims
+                4395  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 680  voluntary context switches
+                2387  involuntary context switches
+         23217344848  instructions retired
+          8508533882  cycles elapsed
+           539329496  peak memory footprint
+EXIT=0
