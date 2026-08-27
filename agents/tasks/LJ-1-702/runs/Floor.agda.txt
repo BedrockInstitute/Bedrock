@@ -1,0 +1,36 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.702]  FLOOR of truncated-producer.  The body is a hole.
+-- Measured before the inhabitant landed, per the 2026-08-23 ruling.
+-- This file is renamed to Floor.agda.txt after the run: conjunct 1
+-- typechecks every .agda under the task home, and a floor carries holes
+-- by construction.
+--
+-- CALIBER.  The program set GHCRTS on this pane.  I did not set it.
+-- One Agda process at a time.  Nothing lands in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-702.runs.Floor
+  {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd )
+open import L.BoundedSubset {ℓ} lem using ( IsCardinal )
+open import L.CardinalAbove {ℓ} lem using ( NoInjOrd )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+
+module SV = hPropStructure 𝒮ᵥ
+open SV using ( S; _∈ˢ_ )
+
+-- THE TYPE, FROM [LJ-1.643]'s Row3 (Probe643.agda:118-122), without the
+-- module-parameter projection that row 1 needed.  No `module Sep`.
+truncated-producer : NoInjOrd
+  → (a : S) → IsOrd a
+  → ∥ Σ[ θ ∈ S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩) ∥₁
+truncated-producer = {!!}
