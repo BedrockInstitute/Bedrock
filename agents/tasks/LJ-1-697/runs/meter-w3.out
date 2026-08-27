@@ -1,0 +1,9 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T01:26:04Z
+pass      exit=0        1.00s  agents/tasks/LJ-1-697/runs/W3.agda::Lset∈suc  (grouped run, exit 0)
+pass      exit=0        1.00s  agents/tasks/LJ-1-697/runs/W3.agda::At.climb  (grouped run, exit 0)
+pass      exit=0        1.00s  agents/tasks/LJ-1-697/runs/W3.agda::At.ordinal-in  (grouped run, exit 0)
+pass      exit=0        1.00s  agents/tasks/LJ-1-697/runs/W3.agda::At.lset-in-stage  (grouped run, exit 0)
+witness: 0 UNRESOLVED of 4, 1.00 s, probe_red=False
+EXIT=0
+ended 2026-08-27T01:26:05Z

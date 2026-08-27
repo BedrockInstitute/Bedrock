@@ -1,0 +1,6 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T01:25:34Z
+missing   exit=42       3.04s  agents/tasks/LJ-1-697/Probe697.agda::hier-in-stage  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-697/.pod-state/witness/Witness-POD-1d145386.agda:27)
+witness: 1 UNRESOLVED of 1, 3.04 s, probe_red=False
+EXIT=1
+ended 2026-08-27T01:25:37Z

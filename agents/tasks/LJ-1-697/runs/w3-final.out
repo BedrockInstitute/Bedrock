@@ -1,0 +1,22 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T01:25:20Z
+        1.07 real         0.94 user         0.12 sys
+           284590080  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               19110  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 442  involuntary context switches
+         10498501156  instructions retired
+          4293370204  cycles elapsed
+           227459840  peak memory footprint
+EXIT=0
+ended 2026-08-27T01:25:21Z
