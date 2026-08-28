@@ -1,0 +1,21 @@
+GHCRTS=[-A64m -I0 -M2g]
+CMD: /usr/bin/time -l agda agents/tasks/LJ-1-727-SPLIT/Probe727Split.agda  (p-2: warm recheck, cone + file cached)
+        3.70 real         3.29 user         0.28 sys
+           700940288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44467  page reclaims
+                  73  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 676  voluntary context switches
+                2705  involuntary context switches
+         32960489588  instructions retired
+         13969672248  cycles elapsed
+           643990560  peak memory footprint
+EXIT=0
