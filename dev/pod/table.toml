@@ -37004,3 +37004,126 @@ expired = false
 
   [row.when]
   exit_code = 42
+
+[[row]]
+id = "task-lj-1-721-go"
+scope = "task:LJ-1.721"
+priority = 10
+action = "done"
+outcome = "go"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `go` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_max = -1
+  heap_wall = false
+
+[[row]]
+id = "task-lj-1-721-stop-stated"
+scope = "task:LJ-1.721"
+priority = 12
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `stop-stated` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 0
+  obligations_delta_min = 0
+  changed_files_any = ["agents/tasks/LJ-1-721/review-of-*.md"]
+  changed_files_none = ["agents/tasks/LJ-1-721/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-721-lint-back-to-author"
+scope = "task:LJ-1.721"
+priority = 13
+action = "escalate"
+head_slot = "coder"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `lint-back-to-author` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 1
+  error_class_in = ["lint"]
+
+[[row]]
+id = "task-lj-1-721-accept-failed"
+scope = "task:LJ-1.721"
+priority = 14
+action = "escalate"
+head_slot = "coder_adversarial"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `accept-failed` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 1
+  obligations_delta_max = -1
+  changed_files_none = ["agents/tasks/LJ-1-721/review-of-LJ-*-*.md"]
+
+[[row]]
+id = "task-lj-1-721-no-go-attacked"
+scope = "task:LJ-1.721"
+priority = 15
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `no-go-attacked` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  error_class_in = ["unsolved_meta", "universe_level", "other"]
+  changed_files_any = ["agents/tasks/LJ-1-721/Probe721.agda"]
+  changed_files_none = ["agents/tasks/LJ-1-721/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-721-no-go-stated"
+scope = "task:LJ-1.721"
+priority = 20
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `no-go-stated` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
+  changed_files_any = ["agents/tasks/LJ-1-721/review-of-*.md"]
+
+[[row]]
+id = "task-lj-1-721-heap-wall-park"
+scope = "task:LJ-1.721"
+priority = 30
+action = "park_and_split"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `heap-wall-park` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  heap_wall = true
+
+[[row]]
+id = "task-lj-1-721-no-go-bare"
+scope = "task:LJ-1.721"
+priority = 40
+action = "escalate"
+head_slot = "mathematician_adversarial"
+added = 2026-08-28
+added_by = "mathematician"
+reason = "branch `no-go-bare` of LJ-1.721, admitted from the brief"
+expired = false
+
+  [row.when]
+  exit_code = 42
