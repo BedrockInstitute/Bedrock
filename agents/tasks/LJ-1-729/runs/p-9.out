@@ -1,0 +1,50 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T17:18:30Z
+Checking LJ-1-729.Probe729 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-729/agents/tasks/LJ-1-729/Probe729.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-729/agents/tasks/LJ-1-729/Probe729.agda:132.3-136.31: error: [UnequalTerms]
+V.sett
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+  sucIter (ja + jb) σ ,
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+  sucIter (ja + jb) σ ⁆s
+  ⁆))
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+  sucIter (ja + jb) σ ,
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅
+  sucIter (ja + jb) σ ⁆s
+  ⁆))
+!= sucIter (ja + jb) σ of type V ℓ
+when checking that the expression
+pr∈Lset-suc (sucIter (suc (ja + jb)) σ) x y
+(subst (λ W → ⟨ x ∈ˢᵥ Lset W ⟩)
+ (cong (λ W → sucIter W σ) (plus-suc ja jb))
+ (iter-sum σ ja jb x hx))
+(subst (λ W → ⟨ y ∈ˢᵥ Lset W ⟩)
+ (cong (λ W → sucIter W σ) (+-comm jb (suc ja)))
+ (iter-sum σ jb ja y hy))
+has type ⟨ pr x y ∈ˢᵥ Lset (sucIter (suc (suc (ja + jb))) σ) ⟩
+        2.30 real         1.77 user         0.20 sys
+           345800704  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18918  page reclaims
+                4288  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 489  voluntary context switches
+                3091  involuntary context switches
+         22493824456  instructions retired
+          7798610704  cycles elapsed
+           285819648  peak memory footprint
+EXIT=42
+ended 2026-08-28T17:18:32Z
