@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T20:07:10Z
+Checking LJ-1-736.Probe736 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda:124.25-26: error: [UnequalTerms]
+(fst (pr (# 0) (fst v) ∈ fst x)) !=<
+(Σ (FOL.ZFStructure.ZFStructure.S 𝒮ᵥ) (λ x₁ → x₁ ∈ᶜ isL))
+when checking that the expression w has type S
+        1.23 real         1.10 user         0.13 sys
+           337379328  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22684  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 272  involuntary context switches
+         13429644863  instructions retired
+          4452300903  cycles elapsed
+           277578520  peak memory footprint
+EXIT=42
+ended 2026-08-28T20:07:11Z

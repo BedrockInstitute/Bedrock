@@ -1,0 +1,273 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T19:58:06Z
+Checking LJ-1-736.Probe736 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda:105.46-50: error: [UnequalTerms]
+(Σ S (λ w → ⟨ pr (# 0) (fst w) ∈ fst x ⟩ × ⟨ fst w ∈ fst c ⟩)) !=<
+∥
+Σ-syntax S (λ w → ⟨ pr (# 0) (fst w) ∈ fst x ⟩ × ⟨ fst w ∈ fst c ⟩)
+∥₁
+of type (Type (ℓ-suc ℓ))
+when checking that the expression pick has type
+Σ
+(Σ (V ℓ)
+ (λ x₁ →
+    ∥
+    Σ (V ℓ)
+    (λ x₂ →
+       Σ
+       (Σ
+        ({x = x₃ : V ℓ} {y : V ℓ} →
+         fst (y ∈ x₃) → fst (x₃ ∈ x₂) → fst (y ∈ x₂))
+        (λ _ →
+           (x₃ : V ℓ) →
+           fst (x₃ ∈ x₂) →
+           {x = x₄ : V ℓ} {y : V ℓ} →
+           fst (y ∈ x₄) → fst (x₄ ∈ x₃) → fst (y ∈ x₃)))
+       (λ _ → fst (x₁ ∈ Lset x₂)))
+    ∥₁))
+(λ v →
+   Σ
+   (Σ (V ℓ)
+    (λ x₁ →
+       ∥
+       Σ (V ℓ)
+       (λ x₂ →
+          Σ
+          (Σ
+           ({x = x₃ : V ℓ} {y : V ℓ} →
+            fst (y ∈ x₃) → fst (x₃ ∈ x₂) → fst (y ∈ x₂))
+           (λ _ →
+              (x₃ : V ℓ) →
+              fst (x₃ ∈ x₂) →
+              {x = x₄ : V ℓ} {y : V ℓ} →
+              fst (y ∈ x₄) → fst (x₄ ∈ x₃) → fst (y ∈ x₃)))
+          (λ _ → fst (x₁ ∈ Lset x₂)))
+       ∥₁))
+   (λ w →
+      Σ
+      ∥
+      Σ
+      (Σ (V ℓ)
+       (λ x₁ →
+          ∥
+          Σ (V ℓ)
+          (λ x₂ →
+             Σ
+             (Σ
+              ({x = x₃ : V ℓ} {y : V ℓ} →
+               fst (y ∈ x₃) → fst (x₃ ∈ x₂) → fst (y ∈ x₂))
+              (λ _ →
+                 (x₃ : V ℓ) →
+                 fst (x₃ ∈ x₂) →
+                 {x = x₄ : V ℓ} {y : V ℓ} →
+                 fst (y ∈ x₄) → fst (x₄ ∈ x₃) → fst (y ∈ x₃)))
+             (λ _ → fst (x₁ ∈ Lset x₂)))
+          ∥₁))
+      (λ x₁ →
+         Σ
+         (fst x₁ ≡
+          V.sett (Lift Cubical.Data.Empty.Base.⊥)
+          (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+           Cubical.HITs.CumulativeHierarchy.Constructions.EmptySet.EmptyStructure))
+         (λ _ →
+            ∥
+            Σ
+            (Σ (V ℓ)
+             (λ x₂ →
+                ∥
+                Σ (V ℓ)
+                (λ x₃ →
+                   Σ
+                   (Σ
+                    ({x = x₄ : V ℓ} {y : V ℓ} →
+                     fst (y ∈ x₄) → fst (x₄ ∈ x₃) → fst (y ∈ x₃))
+                    (λ _ →
+                       (x₄ : V ℓ) →
+                       fst (x₄ ∈ x₃) →
+                       {x = x₅ : V ℓ} {y : V ℓ} →
+                       fst (y ∈ x₅) → fst (x₅ ∈ x₄) → fst (y ∈ x₄)))
+                   (λ _ → fst (x₂ ∈ Lset x₃)))
+                ∥₁))
+            (λ x₂ →
+               Σ (fst (fst x₂ ∈ fst x))
+               (λ _ →
+                  Σ
+                  ∥
+                  Σ
+                  (Σ (V ℓ)
+                   (λ x₃ →
+                      ∥
+                      Σ (V ℓ)
+                      (λ x₄ →
+                         Σ
+                         (Σ
+                          ({x = x₅ : V ℓ} {y : V ℓ} →
+                           fst (y ∈ x₅) → fst (x₅ ∈ x₄) → fst (y ∈ x₄))
+                          (λ _ →
+                             (x₅ : V ℓ) →
+                             fst (x₅ ∈ x₄) →
+                             {x = x₆ : V ℓ} {y : V ℓ} →
+                             fst (y ∈ x₆) → fst (x₆ ∈ x₅) → fst (y ∈ x₅)))
+                         (λ _ → fst (x₃ ∈ Lset x₄)))
+                      ∥₁))
+                  (λ x₃ →
+                     Σ (fst (fst x₃ ∈ fst x₂))
+                     (λ _ →
+                        Σ (fst (fst x₁ ∈ fst x₃))
+                        (λ _ →
+                           (x₄
+                            : Σ (V ℓ)
+                              (λ x₅ →
+                                 ∥
+                                 Σ (V ℓ)
+                                 (λ x₆ →
+                                    Σ
+                                    (Σ
+                                     ({x = x₇ : V ℓ} {y : V ℓ} →
+                                      fst (y ∈ x₇) → fst (x₇ ∈ x₆) → fst (y ∈ x₆))
+                                     (λ _ →
+                                        (x₇ : V ℓ) →
+                                        fst (x₇ ∈ x₆) →
+                                        {x = x₈ : V ℓ} {y : V ℓ} →
+                                        fst (y ∈ x₈) → fst (x₈ ∈ x₇) → fst (y ∈ x₇)))
+                                    (λ _ → fst (x₅ ∈ Lset x₆)))
+                                 ∥₁)) →
+                           fst (fst x₄ ∈ fst x₃) → fst x₄ ≡ fst x₁)))
+                  ∥₁
+                  (λ _ →
+                     Σ
+                     ∥
+                     Σ
+                     (Σ (V ℓ)
+                      (λ x₃ →
+                         ∥
+                         Σ (V ℓ)
+                         (λ x₄ →
+                            Σ
+                            (Σ
+                             ({x = x₅ : V ℓ} {y : V ℓ} →
+                              fst (y ∈ x₅) → fst (x₅ ∈ x₄) → fst (y ∈ x₄))
+                             (λ _ →
+                                (x₅ : V ℓ) →
+                                fst (x₅ ∈ x₄) →
+                                {x = x₆ : V ℓ} {y : V ℓ} →
+                                fst (y ∈ x₆) → fst (x₆ ∈ x₅) → fst (y ∈ x₅)))
+                            (λ _ → fst (x₃ ∈ Lset x₄)))
+                         ∥₁))
+                     (λ x₃ →
+                        Σ (fst (fst x₃ ∈ fst x₂))
+                        (λ _ →
+                           Σ (fst (fst x₁ ∈ fst x₃))
+                           (λ _ →
+                              Σ (fst (fst v ∈ fst x₃))
+                              (λ _ →
+                                 (x₄
+                                  : Σ (V ℓ)
+                                    (λ x₅ →
+                                       ∥
+                                       Σ (V ℓ)
+                                       (λ x₆ →
+                                          Σ
+                                          (Σ
+                                           ({x = x₇ : V ℓ} {y : V ℓ} →
+                                            fst (y ∈ x₇) → fst (x₇ ∈ x₆) → fst (y ∈ x₆))
+                                           (λ _ →
+                                              (x₇ : V ℓ) →
+                                              fst (x₇ ∈ x₆) →
+                                              {x = x₈ : V ℓ} {y : V ℓ} →
+                                              fst (y ∈ x₈) → fst (x₈ ∈ x₇) → fst (y ∈ x₇)))
+                                          (λ _ → fst (x₅ ∈ Lset x₆)))
+                                       ∥₁)) →
+                                 fst (fst x₄ ∈ fst x₃) →
+                                 ∥ (fst x₄ ≡ fst x₁) Cubical.Data.Sum.Base.⊎ (fst x₄ ≡ fst v) ∥₁))))
+                     ∥₁
+                     (λ _ →
+                        (x₃
+                         : Σ (V ℓ)
+                           (λ x₄ →
+                              ∥
+                              Σ (V ℓ)
+                              (λ x₅ →
+                                 Σ
+                                 (Σ
+                                  ({x = x₆ : V ℓ} {y : V ℓ} →
+                                   fst (y ∈ x₆) → fst (x₆ ∈ x₅) → fst (y ∈ x₅))
+                                  (λ _ →
+                                     (x₆ : V ℓ) →
+                                     fst (x₆ ∈ x₅) →
+                                     {x = x₇ : V ℓ} {y : V ℓ} →
+                                     fst (y ∈ x₇) → fst (x₇ ∈ x₆) → fst (y ∈ x₆)))
+                                 (λ _ → fst (x₄ ∈ Lset x₅)))
+                              ∥₁)) →
+                        fst (fst x₃ ∈ fst x₂) →
+                        ∥
+                        Σ (fst (fst x₁ ∈ fst x₃))
+                        (λ _ →
+                           (x₄
+                            : Σ (V ℓ)
+                              (λ x₅ →
+                                 ∥
+                                 Σ (V ℓ)
+                                 (λ x₆ →
+                                    Σ
+                                    (Σ
+                                     ({x = x₇ : V ℓ} {y : V ℓ} →
+                                      fst (y ∈ x₇) → fst (x₇ ∈ x₆) → fst (y ∈ x₆))
+                                     (λ _ →
+                                        (x₇ : V ℓ) →
+                                        fst (x₇ ∈ x₆) →
+                                        {x = x₈ : V ℓ} {y : V ℓ} →
+                                        fst (y ∈ x₈) → fst (x₈ ∈ x₇) → fst (y ∈ x₇)))
+                                    (λ _ → fst (x₅ ∈ Lset x₆)))
+                                 ∥₁)) →
+                           fst (fst x₄ ∈ fst x₃) → fst x₄ ≡ fst x₁)
+                        Cubical.Data.Sum.Base.⊎
+                        Σ (fst (fst x₁ ∈ fst x₃))
+                        (λ _ →
+                           Σ (fst (fst v ∈ fst x₃))
+                           (λ _ →
+                              (x₄
+                               : Σ (V ℓ)
+                                 (λ x₅ →
+                                    ∥
+                                    Σ (V ℓ)
+                                    (λ x₆ →
+                                       Σ
+                                       (Σ
+                                        ({x = x₇ : V ℓ} {y : V ℓ} →
+                                         fst (y ∈ x₇) → fst (x₇ ∈ x₆) → fst (y ∈ x₆))
+                                        (λ _ →
+                                           (x₇ : V ℓ) →
+                                           fst (x₇ ∈ x₆) →
+                                           {x = x₈ : V ℓ} {y : V ℓ} →
+                                           fst (y ∈ x₈) → fst (x₈ ∈ x₇) → fst (y ∈ x₇)))
+                                       (λ _ → fst (x₅ ∈ Lset x₆)))
+                                    ∥₁)) →
+                              fst (fst x₄ ∈ fst x₃) →
+                              ∥ (fst x₄ ≡ fst x₁) Cubical.Data.Sum.Base.⊎ (fst x₄ ≡ fst v) ∥₁))
+                        ∥₁))))
+            ∥₁))
+      ∥₁
+      (λ _ → Σ (fst w ≡ fst c) (λ _ → fst (fst v ∈ fst w))))) →
+∥ Goal ∥₁
+        1.27 real         1.13 user         0.13 sys
+           332300288  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22373  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 270  involuntary context switches
+         13814344964  instructions retired
+          4533368464  cycles elapsed
+           272384816  peak memory footprint
+EXIT=42
+ended 2026-08-28T19:58:07Z

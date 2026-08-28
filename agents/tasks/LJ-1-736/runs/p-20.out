@@ -1,0 +1,30 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T20:04:02Z
+Checking LJ-1-736.Probe736 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda:111.34-38: error: [NotInScope]
+Not in scope:
+  tmIs
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda:111.34-38
+    (did you mean '.#L.Coding.Sat-13847882887260476127.tmIs'?)
+when scope checking tmIs
+        1.21 real         1.07 user         0.13 sys
+           335577088  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22574  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 210  involuntary context switches
+         13050396023  instructions retired
+          4254582759  cycles elapsed
+           277578520  peak memory footprint
+EXIT=42
+ended 2026-08-28T20:04:03Z

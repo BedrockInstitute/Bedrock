@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T20:00:30Z
+Checking LJ-1-736.Probe736 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/Probe736.agda:109.21-33: error: [SplitError.NotADatatype]
+Cannot split on argument of non-datatype ⟨ fst v ∈ fst c ⟩
+when checking that the pattern p₁ , p₂ , r has type
+⟨ fst v ∈ fst c ⟩
+        1.22 real         1.08 user         0.13 sys
+           333086720  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22421  page reclaims
+                   9  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 214  involuntary context switches
+         13214385499  instructions retired
+          4335171798  cycles elapsed
+           273400600  peak memory footprint
+EXIT=42
+ended 2026-08-28T20:00:31Z

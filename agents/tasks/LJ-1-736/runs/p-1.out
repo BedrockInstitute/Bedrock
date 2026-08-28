@@ -1,0 +1,41 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T19:49:00Z
+Checking LJ-1-736.runs.Frame736 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/runs/Frame736.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/runs/Frame736.agda:49.34-67: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  _⊨_
+when scope checking the declaration
+  open
+    .#L.Coding.Sat-8461340709753402632 {ℓ} lem
+      using (Sat; cond; _⊨_; Sat-mem)
+
+———— All done; warnings encountered ————————————————————————
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/runs/Frame736.agda:49.34-67: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  _⊨_
+when scope checking the declaration
+  open
+    .#L.Coding.Sat-8461340709753402632 {ℓ} lem
+      using (Sat; cond; _⊨_; Sat-mem)
+        1.25 real         1.08 user         0.14 sys
+           340443136  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22868  page reclaims
+                  11  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  81  voluntary context switches
+                 221  involuntary context switches
+         13340948441  instructions retired
+          4441309907  cycles elapsed
+           281051952  peak memory footprint
+EXIT=0
+ended 2026-08-28T19:49:01Z

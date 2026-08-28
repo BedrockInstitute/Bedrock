@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 300s (perl alarm)
+started 2026-08-28T20:10:35Z
+Checking LJ-1-736.runs.T1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/runs/T1.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/runs/T1.agda:40.44-42.37: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/runs/T1.agda:40.44-48
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-736/agents/tasks/LJ-1-736/runs/T1.agda:42.33-37
+        1.23 real         1.09 user         0.13 sys
+           344211456  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               23103  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  28  voluntary context switches
+                 209  involuntary context switches
+         13238147928  instructions retired
+          4313643297  cycles elapsed
+           284918552  peak memory footprint
+EXIT=42
+ended 2026-08-28T20:10:36Z
