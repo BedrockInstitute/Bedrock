@@ -1,0 +1,12 @@
+check-survey-quotes: LJ-1-723 FAILS the survey duty:
+  no-heading: the return carries no ARCHIVE USED section
+  unanswered: the return never names archive/dev/DD-archived.md
+  unanswered: the return never names archive/dev/ORCHESTRATION.md
+  unanswered: the return never names archive/dev/PLAN-archived.md
+  unanswered: the return never names archive/dev/STATUS-archived.md
+  unanswered: the return never names archive/dev/TASKS-archived.md
+  no-lit-heading: the brief cites dev/literature/ and the return carries no LITERATURE USED section
+
+A return names every path the program injected, and quotes one line read per
+file: the quote must occur AT the cited line in the cited file. A written
+decline is compliance.

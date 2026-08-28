@@ -1,0 +1,48 @@
+Checking LJ-1-723.Probe723 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-723/Probe723.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-679.Probe679 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-679/Probe679.agda).
+  Checking LJ-1-673.Probe673 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-673/Probe673.agda).
+   Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-667/Probe667.agda).
+    Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-667/runs/W3.agda).
+     Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-520/Probe520.agda).
+  Checking LJ-1-679.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-679/runs/W3.agda).
+ Checking LJ-1-690.Probe690 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-690/Probe690.agda).
+  Checking LJ-1-690.runs.DROP (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-690/runs/DROP.agda).
+   Checking LJ-1-690.runs.RENAME3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-690/runs/RENAME3.agda).
+  Checking LJ-1-690.runs.UNPACK (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-690/runs/UNPACK.agda).
+  Checking LJ-1-690.runs.UNPACKAT (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-690/runs/UNPACKAT.agda).
+ Checking LJ-1-697.Probe697 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-697/Probe697.agda).
+  Checking LJ-1-697.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-697/runs/W3.agda).
+ Checking LJ-1-706.Probe706 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-706/Probe706.agda).
+  Checking LJ-1-693.Probe693 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-693/Probe693.agda).
+  Checking LJ-1-698.Probe698 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-698/Probe698.agda).
+ Checking LJ-1-709.Probe709 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-709/Probe709.agda).
+  Checking LJ-1-703.Probe703 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-703/Probe703.agda).
+   Checking LJ-1-703.runs.LIFT (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-703/runs/LIFT.agda).
+    Checking LJ-1-703.runs.RENAME3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-703/runs/RENAME3.agda).
+   Checking LJ-1-703.runs.PINS (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-703/runs/PINS.agda).
+    Checking LJ-1-672.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-672/runs/W3.agda).
+   Checking LJ-1-703.runs.TRANS (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-703/runs/TRANS.agda).
+    Checking LJ-1-678.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-678/runs/W3.agda).
+   Checking LJ-1-703.runs.PACKAT (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-703/runs/PACKAT.agda).
+    Checking LJ-1-703.runs.PACK (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-723/agents/tasks/LJ-1-703/runs/PACK.agda).
+      344.24 real       341.78 user         2.20 sys
+          1609367552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               99902  page reclaims
+                  85  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                1016  voluntary context switches
+               74153  involuntary context switches
+       4354552559079  instructions retired
+       1372271779782  cycles elapsed
+          1548863144  peak memory footprint
+EXIT=0
