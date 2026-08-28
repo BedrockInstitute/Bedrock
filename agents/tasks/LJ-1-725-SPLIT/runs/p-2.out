@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T15:45:56Z
+Checking LJ-1-725-SPLIT.Probe725Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725-SPLIT/agents/tasks/LJ-1-725-SPLIT/Probe725Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725-SPLIT/agents/tasks/LJ-1-725-SPLIT/Probe725Split.agda:77.24-48: error: [UnequalTerms]
+Lset δ != 𝒟ₒ (Lset δ) of type V ℓ
+when checking that the expression 𝒟ₒ∋⊆ (Lset δ) x x∈𝒟 a a∈ has type
+⟨ (𝒮ᵥ FOL.ZFStructure.ZFStructure.∈ˢ a) (𝒟ₒ (Lset δ)) ⟩
+        1.75 real         1.23 user         0.20 sys
+           373882880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               20669  page reclaims
+                4249  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 476  voluntary context switches
+                2710  involuntary context switches
+         16373183749  instructions retired
+          5705277149  cycles elapsed
+           314590024  peak memory footprint
+EXIT=42
+ended 2026-08-28T15:45:58Z
