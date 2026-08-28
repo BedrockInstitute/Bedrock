@@ -1,0 +1,5 @@
+Checking LJ-1-735.Floor735 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Floor735.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Floor735.agda:33.6-20: error: [NoSuchModule]
+No module hPropStructure in scope
+when scope checking the declaration
+  open hPropStructure 𝒮ᵥ using () renaming (_∈ˢ_ to _∈ˢᵥ_)

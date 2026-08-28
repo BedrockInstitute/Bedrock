@@ -1,0 +1,4 @@
+Checking LJ-1-735.Probe735 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Probe735.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Probe735.agda:113.57-60: error: [UnequalTerms]
+(fst (ω ∈ δ)) !=< (_x_154 ≡ _y_155)
+when checking that the expression ω≡δ has type _x_154 ≡ _y_155

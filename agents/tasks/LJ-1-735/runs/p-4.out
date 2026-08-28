@@ -1,0 +1,13 @@
+Checking LJ-1-735.Probe735 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Probe735.agda).
+error: [UnsolvedConstraints]
+Failed to solve the following constraints:
+  fst (δ ∈ γ) =< fst (δ ∈ _A_49) (blocked on _A_49)
+  fst (x ∈ _A_49) =< fst (x ∈ γ) (blocked on _A_49)
+  fst (y ∈ _A_49) = fst (y ∈ γ) (blocked on _A_49)
+  fst (x ∈ _A_49) = fst (x ∈ γ) (blocked on _A_49)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Probe735.agda:79.10-26: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Probe735.agda:79.10-17
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Probe735.agda:79.18-20
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-735/agents/tasks/LJ-1-735/Probe735.agda:79.23-26
