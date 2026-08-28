@@ -1,0 +1,7 @@
+Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:235.22-69: error: [UnequalTerms]
+Σ _A_751 _B_752 !=< Vec DA.SM (suc n)
+when checking that the inferred type of an application
+  Σ _A_751 _B_752
+matches the expected type
+  Vec DA.SM (suc n)

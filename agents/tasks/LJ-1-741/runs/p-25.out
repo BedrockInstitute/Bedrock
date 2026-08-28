@@ -1,0 +1,15 @@
+Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:244.17-79: error: [UnequalTerms]
+fst xm !=
+fst
+(FOL.Semantics.At.⟦ hPropAlgebra (ℓ-suc ℓ) ⟧
+ (𝒮ᵥ FOL.ZFStructure.↾ DS.M) ⟪ Lset σ ⟫ DS.ι (tmSuc t)
+ ((fst xm , Atr (snd xm) a∈σ) ∷ repV δ))
+of type V ℓ
+when checking that the expression
+subst (λ W → ⟨ fst xm ∈ W ⟩) (sym (tm-fst1 t (repack xm) δ)) g has
+type
+⟨
+(⟪ Lset σ ⟫ DS.SemanticsM.At.⊨ DS.ι) (repack xm ∷ repV δ)
+(tmSuc t ∈̇ var zero)
+⟩

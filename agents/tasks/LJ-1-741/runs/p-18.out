@@ -1,0 +1,5 @@
+Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:197.34-35: error: [UnequalTerms]
+u != t of type (Term ⟪ a ⟫ n)
+when checking that the expression h has type
+⟨ fst (DA.⟦ t ⟧ᵐ δ) ∈ fst (DA.SemanticsM.At.⟦ ⟪ a ⟫ ⟧ DA.ι t δ) ⟩
