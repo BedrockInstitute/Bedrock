@@ -1,0 +1,44 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 5400s (perl alarm)
+started 2026-08-28T18:11:28Z
+Checking LJ-1-731.Probe731 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-731/agents/tasks/LJ-1-731/Probe731.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-731/agents/tasks/LJ-1-731/Probe731.agda:47.3-68: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  Lset-suc (did you mean 'Lset-out'?)
+when scope checking the declaration
+  open
+    .#L.Constructible-2244390770490335276 {ℓ}
+      using (𝒮ʟ; isL; IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-intro; Lset-suc; Lset-mono)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-731/agents/tasks/LJ-1-731/Probe731.agda:68.46-55: error: [NotInScope]
+Not in scope:
+  isL-trans
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-731/agents/tasks/LJ-1-731/Probe731.agda:68.46-55
+    (did you mean
+       '.#L.Constructible-2244390770490335276.isL-trans' or
+       '.#L.Constructible-2244390770490335276.isTransV' or
+       '.#L.Constructible-2244390770490335276.∅-trans' or
+       '.#L.Constructible-2244390770490335276.∪-trans' or
+       '.#L.Constructible-2244390770490335276.⋃-trans' or
+       '.#L.Constructible-2244390770490335276.𝒟-trans'?)
+when scope checking isL-trans
+        1.42 real         1.01 user         0.17 sys
+           350273536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               21103  page reclaims
+                2377  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 564  voluntary context switches
+                2159  involuntary context switches
+         13389289549  instructions retired
+          4636540484  cycles elapsed
+           292258584  peak memory footprint
+EXIT=42
+ended 2026-08-28T18:11:30Z
