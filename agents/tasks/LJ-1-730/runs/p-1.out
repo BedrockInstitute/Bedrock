@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T17:21:56Z
+Checking LJ-1-730.Probe730 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda:119.15-33: error: [NoParseForApplication]
+Could not parse the application ⟨ fst A ∈ Lset γ ⟩
+Operators used in the grammar:
+  ⟨_⟩ (closed operator) [⟨_⟩ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Foundations/Structure.agda:43.1-4)]
+when scope checking ⟨ fst A ∈ Lset γ ⟩
+        1.62 real         1.09 user         0.20 sys
+           330416128  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               18092  page reclaims
+                4173  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 598  voluntary context switches
+                2618  involuntary context switches
+         13446391646  instructions retired
+          5126255148  cycles elapsed
+           272368432  peak memory footprint
+EXIT=42
+ended 2026-08-28T17:21:57Z

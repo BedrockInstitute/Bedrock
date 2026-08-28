@@ -1,0 +1,36 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T17:28:05Z
+Checking LJ-1-730.Probe730 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda:189.52-55: error: [UnequalTerms]
+(fst (x ∈ y)) !=<
+PT.∥
+Σ-syntax
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ InfinitySet.ωStructure)
+(λ i →
+   Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+   InfinitySet.ωStructure i
+   ≡ x)
+∥₁
+when checking that the expression x∈y has type ⟨ x ∈ˢᵥ ω ⟩
+        1.34 real         1.10 user         0.14 sys
+           334659584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22337  page reclaims
+                 187  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 420  voluntary context switches
+                 690  involuntary context switches
+         13990854011  instructions retired
+          4961445648  cycles elapsed
+           274711320  peak memory footprint
+EXIT=42
+ended 2026-08-28T17:28:06Z

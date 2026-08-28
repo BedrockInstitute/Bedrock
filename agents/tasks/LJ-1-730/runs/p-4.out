@@ -1,0 +1,42 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T17:25:31Z
+Checking LJ-1-730.Probe730 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda:149.21-22: error: [UnequalTerms]
+(Fin 1 → ⟪ fst A ⟫) !=<
+((λ { (Cubical.HITs.CumulativeHierarchy.Properties.dmp mp _) → mp
+    })
+ (Cubical.HITs.CumulativeHierarchy.Base.elimProp
+  Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+  (λ X ix rec →
+     Cubical.HITs.CumulativeHierarchy.Properties.dmp
+     (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X ix)
+     (Cubical.HITs.SetQuotients.Properties.elimProp
+      (λ z →
+         Cubical.HITs.CumulativeHierarchy.Properties.isPropDeepMonicPresentation
+         (Cubical.HITs.CumulativeHierarchy.Properties.sett-repr X ix .fst
+          .snd .fst z))
+      rec))
+  (Lset (sucV ω)))
+ .fst .fst)
+when checking that the expression g has type ⟪ fst A ⟫
+        1.30 real         1.09 user         0.14 sys
+           334462976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22362  page reclaims
+                 152  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 302  voluntary context switches
+                 441  involuntary context switches
+         13648477177  instructions retired
+          4865372293  cycles elapsed
+           274694936  peak memory footprint
+EXIT=42
+ended 2026-08-28T17:25:32Z

@@ -1,0 +1,33 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T17:29:41Z
+Checking LJ-1-730.Probe730 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-730/agents/tasks/LJ-1-730/Probe730.agda:204.14-77: error: [UnequalTerms]
+sett (Lift (Fin 1))
+(λ li →
+   pr (# toℕ (lower li))
+   (fst (L.Coding.EnvSet.ix lem A (g (lower li)))))
+!= fst (envSet A 1) of type V ℓ
+when checking that the expression
+descend (rank (fst (envS A g))) (rank (fst (envSet A 1))) r4 r5 has
+type ⟨ rank (fst (envSet A 1)) ∈ˢᵥ sucV ω ⟩
+        1.28 real         1.11 user         0.13 sys
+           334643200  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               22468  page reclaims
+                  56  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 156  voluntary context switches
+                 310  involuntary context switches
+         14044605694  instructions retired
+          4904694778  cycles elapsed
+           274678552  peak memory footprint
+EXIT=42
+ended 2026-08-28T17:29:42Z
