@@ -1,0 +1,17 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.746-SPLIT-SPLIT] runs/ScopePT-PTonly.  THE SCOPE INSTRUMENT,
+-- variant 1, kept because it cannot typecheck by design: PT imported
+-- ALONE, and StepKilledGen asked for.  MEASURED: runs/scope-pt.out:4,
+-- NotInScope at 11.5-18.  Variant 2 (runs/ScopePT.agda) adds the
+-- direct Amb7 import and is green (runs/scope-pt2.out:22).
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-746-SPLIT-SPLIT.runs.ScopePT {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import LJ-1-746-SPLIT-SPLIT.runs.PT {ℓ} lem
+
+t : Type (ℓ-suc ℓ)
+t = StepKilledGen

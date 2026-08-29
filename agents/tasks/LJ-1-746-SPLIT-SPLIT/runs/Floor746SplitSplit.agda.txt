@@ -1,0 +1,24 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.746-SPLIT-SPLIT] runs/Floor.  THE FLOOR INSTRUMENT, not a
+-- deliverable: the probe's exact imports and signature with a HOLE
+-- for the body, pricing what the frame itself costs (the coder law:
+-- measure the floor before you prove).  It cannot typecheck by
+-- design, so it is named .agda.txt and never .agda.
+--
+-- MEASURED: runs/PT does not re-export Amb7's StepKilledGen into a
+-- consumer's scope (runs/scope-pt.out, NotInScope), so the probe
+-- imports Amb7 directly beside PT, the spelling PT2 used
+-- (746-SPLIT runs/PT2.agda.txt:26-27).  Measured sufficient at
+-- runs/scope-pt2.out, rc 0 in 3.12 s.
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-746-SPLIT-SPLIT.runs.Floor746SplitSplit {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import LJ-1-746-SPLIT-SPLIT.runs.Amb7 {ℓ} lem
+open import LJ-1-746-SPLIT-SPLIT.runs.PT {ℓ} lem
+
+graph-mirror : StepKilledGen → ApproxSlot × StepSlot
+graph-mirror gen = ?
