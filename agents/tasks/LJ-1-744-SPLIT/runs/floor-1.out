@@ -1,0 +1,12 @@
+Checking LJ-1-744-SPLIT.runs.Floor744Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-744-SPLIT/runs/Floor744Split.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-732.runs.Num (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-732/runs/Num.agda).
+ Checking LJ-1-732.runs.Amb1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-732/runs/Amb1.agda).
+  Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-667/Probe667.agda).
+   Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-667/runs/W3.agda).
+    Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-520/Probe520.agda).
+ Checking LJ-1-732.runs.Amb7a (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-744-SPLIT/agents/tasks/LJ-1-732/runs/Amb7a.agda).
+real 21.32
+user 20.65
+sys 0.49
