@@ -1,0 +1,2 @@
+probe-red exit=-9       0.82s  agents/tasks/LJ-1-739-SPLIT/Probe739Split.agda::asConst-in-carrier  (exit -9)
+witness: 1 UNRESOLVED of 1, 0.82 s, probe_red=True

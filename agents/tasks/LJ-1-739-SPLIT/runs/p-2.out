@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-29T00:06:17Z
+Checking LJ-1-739-SPLIT.Frame739Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-739-SPLIT/agents/tasks/LJ-1-739-SPLIT/Frame739Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-739-SPLIT/agents/tasks/LJ-1-739-SPLIT/Frame739Split.agda:33.30-40.45: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-739-SPLIT/agents/tasks/LJ-1-739-SPLIT/Frame739Split.agda:33.30-41
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-739-SPLIT/agents/tasks/LJ-1-739-SPLIT/Frame739Split.agda:40.34-45
+        1.21 real         1.05 user         0.13 sys
+           348454912  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               23360  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  80  voluntary context switches
+                 224  involuntary context switches
+         13323404903  instructions retired
+          4410164014  cycles elapsed
+           289145624  peak memory footprint
+EXIT=42
+ended 2026-08-29T00:06:18Z

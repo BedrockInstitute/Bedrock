@@ -1,0 +1,40 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.739-SPLIT] FLOOR FRAME, named .agda.txt from birth: this file
+-- carries interaction holes ON PURPOSE (the heavy-object rule: price
+-- the frame before the proof), so it must never be read as `.agda` --
+-- the acceptance harness typechecks every changed `.agda` under the
+-- task dir (scripts/pod/facts.py:521-523) and a hole-bearing `.agda`
+-- would fail conjunct 1 (the 739 dispatch paid that lesson,
+-- lj-1.739-report.md section 2).  Bytes: Probe739Split.agda with the
+-- two proof bodies replaced by holes.  Expected: exit 42, the two
+-- holes the only unsolved interaction metas.
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-739-SPLIT.Frame739Split {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁; squash₁ )
+
+open import L.Constructible {ℓ}
+  using ( 𝒮ʟ; IsOrd; Lset; Lset-mono; Lset-out; 𝒟ₒ; 𝒟ₒ∋⊆ )
+open import L.Definability {ℓ} using ( module DefOf )
+open import L.Coding.Bridge {ℓ} lem using ( asConst )
+
+open hPropStructure 𝒮ʟ using ( S )
+
+Lset-trans-set : (γ a x : V ℓ)
+               → ⟨ a ∈ x ⟩ → ⟨ x ∈ Lset γ ⟩ → ⟨ a ∈ Lset γ ⟩
+Lset-trans-set γ a x a∈ x∈ = {! frame !}
+
+asConst-in-carrier :
+    (γ : V ℓ) (oγ : IsOrd γ)
+    (A : S) → ⟨ fst A ∈ Lset γ ⟩
+  → (m : ⟪ fst A ⟫)
+  → ⟨ fst (asConst A m) ∈ Lset γ ⟩
+asConst-in-carrier γ oγ A hA m = {! frame !}
