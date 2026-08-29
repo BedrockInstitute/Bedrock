@@ -1,0 +1,165 @@
+Checking LJ-1-745.runs.Floor745 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/Floor745.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/Floor745.agda:43.16-17: error: [NotInScope]
+Not in scope:
+  ^
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/Floor745.agda:43.16-17
+    (did you mean
+       '.#L.Coding.Model-8606791333386531071.AbsL.SemM._^_' or
+       '.#L.Coding.Model-8606791333386531071.AbsL.SemV._^_' or
+       '.#L.Coding.Model-8606791333386531071.AbsL._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.A.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.ASt.AbsL.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.ASt.AbsL.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.ASt.AbsL._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.ASt.AtM.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.AtTrans.Ab.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.AtTrans.Ab.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.AtTrans.Ab._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.CIso.I.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.CIso.I.SemPM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.TL.Ab.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.TL.Ab.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.TL.Ab._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.Tπ.Ab.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.Tπ.Ab.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Carry.Tπ.Ab._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.F641.HS.ASt.AbsL.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.F641.HS.ASt.AbsL.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.F641.HS.ASt.AbsL._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.F641.HS.ASt.AtM.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HE.ASt.AbsL.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HE.ASt.AbsL.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HE.ASt.AbsL._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HE.ASt.AtM.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HS.ASt.AbsL.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HS.ASt.AbsL.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HS.ASt.AbsL._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.HS.ASt.AtM.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.CIso.I.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.CIso.I.SemPM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.TL.Ab.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.TL.Ab.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.TL.Ab._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.Tπ.Ab.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.Tπ.Ab.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Instances.O.Cy.Tπ.Ab._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.CIso.I.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.CIso.I.SemPM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.TL.Ab.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.TL.Ab.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.TL.Ab._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.Tπ.Ab.SemM._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.Tπ.Ab.SemV._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.Frame652.Op.Cy.Tπ.Ab._^_' or
+       '.#LJ-1-652.Probe652-11084963032178476292.SemVᵃ._^_' or
+       '.#LJ-1-732.runs.Amb1-17379612038400807211.SemV._^_' or
+       'Frame652.A.SemM._^_' or
+       'Frame652.ASt.AbsL.SemM._^_' or
+       'Frame652.ASt.AbsL.SemV._^_' or
+       'Frame652.ASt.AbsL._^_' or
+       'Frame652.ASt.AtM.SemM._^_' or
+       'Frame652.AtTrans.Ab.SemM._^_' or
+       'Frame652.AtTrans.Ab.SemV._^_' or
+       'Frame652.AtTrans.Ab._^_' or
+       'Frame652.Carry.CIso.I.SemM._^_' or
+       'Frame652.Carry.CIso.I.SemPM._^_' or
+       'Frame652.Carry.TL.Ab.SemM._^_' or
+       'Frame652.Carry.TL.Ab.SemV._^_' or
+       'Frame652.Carry.TL.Ab._^_' or
+       'Frame652.Carry.Tπ.Ab.SemM._^_' or
+       'Frame652.Carry.Tπ.Ab.SemV._^_' or
+       'Frame652.Carry.Tπ.Ab._^_' or
+       'Frame652.F641.HS.ASt.AbsL.SemM._^_' or
+       'Frame652.F641.HS.ASt.AbsL.SemV._^_' or
+       'Frame652.F641.HS.ASt.AbsL._^_' or
+       'Frame652.F641.HS.ASt.AtM.SemM._^_' or
+       'Frame652.HE.ASt.AbsL.SemM._^_' or
+       'Frame652.HE.ASt.AbsL.SemV._^_' or
+       'Frame652.HE.ASt.AbsL._^_' or
+       'Frame652.HE.ASt.AtM.SemM._^_' or
+       'Frame652.HS.ASt.AbsL.SemM._^_' or
+       'Frame652.HS.ASt.AbsL.SemV._^_' or
+       'Frame652.HS.ASt.AbsL._^_' or
+       'Frame652.HS.ASt.AtM.SemM._^_' or
+       'Frame652.Instances.O.Cy.CIso.I.SemM._^_' or
+       'Frame652.Instances.O.Cy.CIso.I.SemPM._^_' or
+       'Frame652.Instances.O.Cy.TL.Ab.SemM._^_' or
+       'Frame652.Instances.O.Cy.TL.Ab.SemV._^_' or
+       'Frame652.Instances.O.Cy.TL.Ab._^_' or
+       'Frame652.Instances.O.Cy.Tπ.Ab.SemM._^_' or
+       'Frame652.Instances.O.Cy.Tπ.Ab.SemV._^_' or
+       'Frame652.Instances.O.Cy.Tπ.Ab._^_' or
+       'Frame652.Op.Cy.CIso.I.SemM._^_' or
+       'Frame652.Op.Cy.CIso.I.SemPM._^_' or
+       'Frame652.Op.Cy.TL.Ab.SemM._^_' or
+       'Frame652.Op.Cy.TL.Ab.SemV._^_' or
+       'Frame652.Op.Cy.TL.Ab._^_' or
+       'Frame652.Op.Cy.Tπ.Ab.SemM._^_' or
+       'Frame652.Op.Cy.Tπ.Ab.SemV._^_' or
+       'Frame652.Op.Cy.Tπ.Ab._^_' or
+       'P652.Frame652.A.SemM._^_' or
+       'P652.Frame652.ASt.AbsL.SemM._^_' or
+       'P652.Frame652.ASt.AbsL.SemV._^_' or
+       'P652.Frame652.ASt.AbsL._^_' or
+       'P652.Frame652.ASt.AtM.SemM._^_' or
+       'P652.Frame652.AtTrans.Ab.SemM._^_' or
+       'P652.Frame652.AtTrans.Ab.SemV._^_' or
+       'P652.Frame652.AtTrans.Ab._^_' or
+       'P652.Frame652.Carry.CIso.I.SemM._^_' or
+       'P652.Frame652.Carry.CIso.I.SemPM._^_' or
+       'P652.Frame652.Carry.TL.Ab.SemM._^_' or
+       'P652.Frame652.Carry.TL.Ab.SemV._^_' or
+       'P652.Frame652.Carry.TL.Ab._^_' or
+       'P652.Frame652.Carry.Tπ.Ab.SemM._^_' or
+       'P652.Frame652.Carry.Tπ.Ab.SemV._^_' or
+       'P652.Frame652.Carry.Tπ.Ab._^_' or
+       'P652.Frame652.F641.HS.ASt.AbsL.SemM._^_' or
+       'P652.Frame652.F641.HS.ASt.AbsL.SemV._^_' or
+       'P652.Frame652.F641.HS.ASt.AbsL._^_' or
+       'P652.Frame652.F641.HS.ASt.AtM.SemM._^_' or
+       'P652.Frame652.HE.ASt.AbsL.SemM._^_' or
+       'P652.Frame652.HE.ASt.AbsL.SemV._^_' or
+       'P652.Frame652.HE.ASt.AbsL._^_' or
+       'P652.Frame652.HE.ASt.AtM.SemM._^_' or
+       'P652.Frame652.HS.ASt.AbsL.SemM._^_' or
+       'P652.Frame652.HS.ASt.AbsL.SemV._^_' or
+       'P652.Frame652.HS.ASt.AbsL._^_' or
+       'P652.Frame652.HS.ASt.AtM.SemM._^_' or
+       'P652.Frame652.Instances.O.Cy.CIso.I.SemM._^_' or
+       'P652.Frame652.Instances.O.Cy.CIso.I.SemPM._^_' or
+       'P652.Frame652.Instances.O.Cy.TL.Ab.SemM._^_' or
+       'P652.Frame652.Instances.O.Cy.TL.Ab.SemV._^_' or
+       'P652.Frame652.Instances.O.Cy.TL.Ab._^_' or
+       'P652.Frame652.Instances.O.Cy.Tπ.Ab.SemM._^_' or
+       'P652.Frame652.Instances.O.Cy.Tπ.Ab.SemV._^_' or
+       'P652.Frame652.Instances.O.Cy.Tπ.Ab._^_' or
+       'P652.Frame652.Op.Cy.CIso.I.SemM._^_' or
+       'P652.Frame652.Op.Cy.CIso.I.SemPM._^_' or
+       'P652.Frame652.Op.Cy.TL.Ab.SemM._^_' or
+       'P652.Frame652.Op.Cy.TL.Ab.SemV._^_' or
+       'P652.Frame652.Op.Cy.TL.Ab._^_' or
+       'P652.Frame652.Op.Cy.Tπ.Ab.SemM._^_' or
+       'P652.Frame652.Op.Cy.Tπ.Ab.SemV._^_' or
+       'P652.Frame652.Op.Cy.Tπ.Ab._^_' or
+       'P652.SemVᵃ._^_' or
+       'SemV._^_' or
+       'SemVᵃ._^_'?)
+when scope checking ^
+       13.12 real         2.95 user         0.29 sys
+           653475840  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41640  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 160  voluntary context switches
+                5367  involuntary context switches
+         31387120798  instructions retired
+         12368642457  cycles elapsed
+           595772424  peak memory footprint

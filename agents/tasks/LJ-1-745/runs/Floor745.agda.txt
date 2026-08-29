@@ -1,0 +1,48 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Classical using ( LEM )
+
+module LJ-1-745.runs.Floor745 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula )
+open import FOL.Manipulation.Parameters using ( countFo )
+open import L.Coding.Model {ℓ} using ( appAt )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import Cubical.Data.Vec using ( Vec; _∷_ )
+import Cubical.Data.Empty as Empty
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-732.runs.Num {ℓ} lem
+open import LJ-1-732.runs.Amb1 {ℓ} lem
+
+open hPropStructure 𝒮ᵥ
+
+-- [LJ-1.745] FLOOR.  The frame of Probe745 with a hole standing in for
+-- the instance call, pricing the import cone and step-killed's own
+-- signature alone (coder law, owner ruling 2026-08-23).  Renamed to
+-- .agda.txt after its run: a file that cannot typecheck never rests at
+-- a .agda path.
+
+AppC : Formula CS.S 18
+AppC = appAt (suc (suc zero)) (suc zero) zero
+
+countAppC : countFo AppC ≡ 0
+countAppC = refl
+
+App : Formula (⊥* {ℓ-suc ℓ}) 18
+App = CntS.erase AppC countAppC
+
+step-killed :
+    ( (u v : S)
+      → (γ : Vec S 15)
+      → ⟨ u ∈ˢ n 12 ⟩
+      → ⟨ v ∈ˢ n 12 ⟩
+      → ⟨ (v ∷ u ∷ n 0 ∷ γ) P652.⊨ₚ App ⟩
+      → Empty.⊥ )
+    → (u v : S)
+    → ⟨ u ∈ˢ n 12 ⟩
+    → ⟨ v ∈ˢ n 12 ⟩
+    → ⟨ (v ∷ u ∷ n 0 ∷ γ15) P652.⊨ₚ App ⟩
+    → ⟨ (v ∷ u ∷ n 0 ∷ γ15) P652.⊨ₚ CntS.erase Mx.G.A.S.stepBndAt countAS ⟩
+step-killed gen u v u∈ v∈ ant = {! frame-only floor: the body stands out !}

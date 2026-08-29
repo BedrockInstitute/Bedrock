@@ -1,0 +1,25 @@
+Checking LJ-1-745.runs.W745check (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/W745check.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/W745check.agda:3.37-42: error: [NotInScope]
+Not in scope:
+  Level
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/W745check.agda:3.37-42
+    (did you mean 'Agda.Primitive.Level'?)
+when scope checking Level
+        0.11 real         0.03 user         0.02 sys
+           116064256  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8775  page reclaims
+                  68  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 105  involuntary context switches
+           760679385  instructions retired
+           240581768  cycles elapsed
+            87753352  peak memory footprint

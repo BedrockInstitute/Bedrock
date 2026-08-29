@@ -1,0 +1,22 @@
+Checking LJ-1-745.runs.Floor745 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/Floor745.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/Floor745.agda:48.33-76: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-745/agents/tasks/LJ-1-745/runs/Floor745.agda:48.33-76
+       11.18 real         3.53 user         0.28 sys
+           676020224  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               43016  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 157  voluntary context switches
+                4055  involuntary context switches
+         38880628530  instructions retired
+         14564023893  cycles elapsed
+           616760328  peak memory footprint
