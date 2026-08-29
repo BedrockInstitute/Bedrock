@@ -1,0 +1,4 @@
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-750/agents/tasks/LJ-1-750/Probe750.agda:57.8: error: [ParseError]
+:<ERROR>  ℕ) (a : S)
+    → ⟨ fst a ∈ˢ L...
+rc=42
