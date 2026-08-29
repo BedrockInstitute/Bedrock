@@ -1,0 +1,18 @@
+Checking LJ-1-747.Probe747 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-747/agents/tasks/LJ-1-747/Probe747.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-747/agents/tasks/LJ-1-747/Probe747.agda:97.25-26: error: [NotInScope]
+Not in scope:
+  ω
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-747/agents/tasks/LJ-1-747/Probe747.agda:97.25-26
+    (did you mean
+       '.#L.Axioms.Numerals-11566837921261737569.ModelL.isZFCModel.ω' or
+       '.#L.Axioms.Numerals-11566837921261737569.ModelL.isZFModel.ω' or
+       '.#V.Model-1407748519222864071.Model.isZFCModel.ω' or
+       '.#V.Model-1407748519222864071.Model.isZFModel.ω' or
+       'Base.Classical.Canonical.Ω' or
+       'Base.Truth.TruthAlgebra.Ω' or
+       'Cubical.HITs.CumulativeHierarchy.Constructions.InfinitySet.ω' or
+       'Cubical.HITs.CumulativeHierarchy.Constructions.ω' or
+       'InfinitySet.ω' or
+       'TruthAlgebra.Ω' or
+       'Ω'?)
+when scope checking ω
