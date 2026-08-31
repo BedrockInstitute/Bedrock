@@ -1,0 +1,174 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-31T13:28:49Z
+Checking LJ-1-764.runs.Floor764 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-764/agents/tasks/LJ-1-764/runs/Floor764.agda).
+error: [UnsolvedConstraints]
+Failed to solve the following constraints:
+  Has PTS rule: (Cubical.HITs.CumulativeHierarchy.Base.V ℓ , piSort
+                                                             (Type (ℓ-suc ℓ))
+                                                             (λ ordλ →
+                                                                piSort (Type (ℓ-suc ℓ))
+                                                                (λ succλ →
+                                                                   piSort (Type (ℓ-suc ℓ))
+                                                                   (λ X →
+                                                                      piSort (Type (ℓ-suc ℓ))
+                                                                      (λ X⊆Lλ →
+                                                                         piSort (Type (ℓ-suc ℓ))
+                                                                         (λ ∅∈λ →
+                                                                            piSort
+                                                                            (Type (ℓ-suc (ℓ-suc ℓ)))
+                                                                            (λ elem →
+                                                                               _30 (lem = lem)
+                                                                               (lam = lam)
+                                                                               (ordλ = ordλ)
+                                                                               (succλ = succλ)
+                                                                               (X = X) (X⊆Lλ = X⊆Lλ)
+                                                                               (∅∈λ = ∅∈λ)
+                                                                               (elem = elem))))))))
+    (blocked on _30)
+  Has PTS rule: (Σ (L.Constructible.isTransV lam)
+                 (λ _ →
+                    (x : S) → ⟨ x ∈ˢ lam ⟩ → L.Constructible.isTransV x) , piSort
+                                                                           (Type (ℓ-suc ℓ))
+                                                                           (λ succλ →
+                                                                              piSort
+                                                                              (Type (ℓ-suc ℓ))
+                                                                              (λ X →
+                                                                                 piSort
+                                                                                 (Type (ℓ-suc ℓ))
+                                                                                 (λ X⊆Lλ →
+                                                                                    piSort
+                                                                                    (Type (ℓ-suc ℓ))
+                                                                                    (λ ∅∈λ →
+                                                                                       piSort
+                                                                                       (Type
+                                                                                        (ℓ-suc
+                                                                                         (ℓ-suc ℓ)))
+                                                                                       (λ elem →
+                                                                                          _30
+                                                                                          (lem =
+                                                                                           lem)
+                                                                                          (lam =
+                                                                                           lam)
+                                                                                          (ordλ =
+                                                                                           ordλ)
+                                                                                          (succλ =
+                                                                                           succλ)
+                                                                                          (X = X)
+                                                                                          (X⊆Lλ =
+                                                                                           X⊆Lλ)
+                                                                                          (∅∈λ =
+                                                                                           ∅∈λ)
+                                                                                          (elem =
+                                                                                           elem)))))))
+    (blocked on _30)
+  Has PTS rule: ((d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩ , piSort
+                                                              (Type (ℓ-suc ℓ))
+                                                              (λ X →
+                                                                 piSort (Type (ℓ-suc ℓ))
+                                                                 (λ X⊆Lλ →
+                                                                    piSort (Type (ℓ-suc ℓ))
+                                                                    (λ ∅∈λ →
+                                                                       piSort
+                                                                       (Type (ℓ-suc (ℓ-suc ℓ)))
+                                                                       (λ elem →
+                                                                          _30 (lem = lem)
+                                                                          (lam = lam) (ordλ = ordλ)
+                                                                          (succλ = succλ) (X = X)
+                                                                          (X⊆Lλ = X⊆Lλ) (∅∈λ = ∅∈λ)
+                                                                          (elem = elem))))))
+    (blocked on _30)
+  Has PTS rule: (Cubical.HITs.CumulativeHierarchy.Base.V ℓ , piSort
+                                                             (Type (ℓ-suc ℓ))
+                                                             (λ X⊆Lλ →
+                                                                piSort (Type (ℓ-suc ℓ))
+                                                                (λ ∅∈λ →
+                                                                   piSort (Type (ℓ-suc (ℓ-suc ℓ)))
+                                                                   (λ elem →
+                                                                      _30 (lem = lem) (lam = lam)
+                                                                      (ordλ = ordλ) (succλ = succλ)
+                                                                      (X = X) (X⊆Lλ = X⊆Lλ)
+                                                                      (∅∈λ = ∅∈λ) (elem = elem)))))
+    (blocked on _30)
+  Has PTS rule: ((z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩ , piSort
+                                                            (Type (ℓ-suc ℓ))
+                                                            (λ ∅∈λ →
+                                                               piSort (Type (ℓ-suc (ℓ-suc ℓ)))
+                                                               (λ elem →
+                                                                  _30 (lem = lem) (lam = lam)
+                                                                  (ordλ = ordλ) (succλ = succλ)
+                                                                  (X = X) (X⊆Lλ = X⊆Lλ) (∅∈λ = ∅∈λ)
+                                                                  (elem = elem))))
+    (blocked on _30)
+  Has PTS rule: (fst
+                 (∅ Cubical.HITs.CumulativeHierarchy.Base.∈ lam) , piSort
+                                                                   (Type (ℓ-suc (ℓ-suc ℓ)))
+                                                                   (λ elem →
+                                                                      _30 (lem = lem) (lam = lam)
+                                                                      (ordλ = ordλ) (succλ = succλ)
+                                                                      (X = X) (X⊆Lλ = X⊆Lλ)
+                                                                      (∅∈λ = ∅∈λ) (elem = elem)))
+    (blocked on _30)
+  Has PTS rule: ((n : ℕ)
+                 (φ
+                  : FOL.Syntax.Formula
+                    (L.Hull.AtStage.AtM.SM lem lam ordλ
+                     (Frame652.F641.HS.M lam ordλ succλ X X⊆Lλ ∅∈λ)
+                     (L.Hull.AtStage.Hull.Hull⊆L lem lam ordλ X X⊆Lλ ∅∈λ))
+                    n)
+                 (δ
+                  : L.Hull.AtStage.AtM.SM lem lam ordλ
+                    (Frame652.F641.HS.M lam ordλ succλ X X⊆Lλ ∅∈λ)
+                    (L.Hull.AtStage.Hull.Hull⊆L lem lam ordλ X X⊆Lλ ∅∈λ)
+                    SemVᵃ.^ n) →
+                 (lem Frame652.A.SemM.At.⊨ lam) ordλ succλ X X⊆Lλ
+                 (L.Hull.AtStage.AtM.SM lem lam ordλ
+                  (Frame652.F641.HS.M lam ordλ succλ X X⊆Lλ ∅∈λ)
+                  (L.Hull.AtStage.Hull.Hull⊆L lem lam ordλ X X⊆Lλ ∅∈λ))
+                 id δ φ
+                 ≡
+                 (hPropAlgebra (ℓ-suc ℓ) FOL.Semantics.At.⊨
+                  FOL.Absoluteness.Single.𝒮M 𝒮ᵥ (λ x → x ∈ˢ Lset lam)
+                  (L.Hull.AtStage.Ltr lem lam ordλ))
+                 (FOL.Absoluteness.Single.SM 𝒮ᵥ (λ x → x ∈ˢ Lset lam)
+                  (L.Hull.AtStage.Ltr lem lam ordλ))
+                 id
+                 (Cubical.Data.Vec.Base.map
+                  (L.Hull.AtStage.AtM.inL lem lam ordλ
+                   (Frame652.F641.HS.M lam ordλ succλ X X⊆Lλ ∅∈λ)
+                   (L.Hull.AtStage.Hull.Hull⊆L lem lam ordλ X X⊆Lλ ∅∈λ))
+                  δ)
+                 (FOL.Manipulation.Relabelling.mapFo
+                  (L.Hull.AtStage.AtM.inL lem lam ordλ
+                   (Frame652.F641.HS.M lam ordλ succλ X X⊆Lλ ∅∈λ)
+                   (L.Hull.AtStage.Hull.Hull⊆L lem lam ordλ X X⊆Lλ ∅∈λ))
+                  φ) , _30 (lem = lem) (lam = lam) (ordλ = ordλ) (succλ = succλ)
+                       (X = X) (X⊆Lλ = X⊆Lλ) (∅∈λ = ∅∈λ) (elem = elem))
+    (blocked on _30)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-764/agents/tasks/LJ-1-764/runs/Floor764.agda:47.3-8: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-764/agents/tasks/LJ-1-764/runs/Floor764.agda:47.3-8
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-764/agents/tasks/LJ-1-764/runs/Floor764.agda:47.11-22: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-764/agents/tasks/LJ-1-764/runs/Floor764.agda:47.11-22
+       10.47 real        10.13 user         0.32 sys
+          1838989312  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              114280  page reclaims
+                  24  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                   2  voluntary context switches
+                1537  involuntary context switches
+            15433092  instructions retired
+             5917066  cycles elapsed
+             1179960  peak memory footprint
+EXIT=42
+ended 2026-08-31T13:28:59Z
