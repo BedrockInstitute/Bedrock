@@ -51,6 +51,7 @@ open import L.GCH.Level {ℓ} lem using
   ; arNumAt; envTowerAt; towerAt; memAt; allAt; twelveAt; module Close
   ; i0; i1; i2; i3; sh1; sh2; sh3; sh4; sh5 )
 open import L.GCH.LevelRows {ℓ} lem using ( module Chain )
+open import L.GCH.Rows {ℓ} lem using ( module Site )
 open import L.Coding.Environment {ℓ} using ( env; cons )
 
 open import Cubical.Data.Vec using ( _∷_; []; lookup )
@@ -58,6 +59,7 @@ open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.Data.Empty as Empty
+open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -1105,9 +1107,12 @@ level-complete-of dc γ ad p op p∈ = Complete4.Finish.complete dc γ ad p op p
 -- `DefV.body` at (T ∷ C ∷ γ) with C the code set and T the
 -- satisfaction graph of the carrier Lset c.  Each row is one named
 -- type; `defAt-of` assembles them.  Three rows are discharged here
--- (arities are numerals, T is total on C, the environment tower); the
--- other six are the hypotheses `DefComplete` reduces to
--- (`defComplete-of-rows`).
+-- (arities are numerals, T is total on C, the environment tower);
+-- the other six come from src/L/GCH/Rows.lagda.md `Site` (the code
+-- set is closed, shaped and closed under the code-forming operations,
+-- the two polarities of the definable powerset, and the twelve
+-- satisfaction rows of the uniform table), with the ties this module
+-- supplies from adequacy.  `defComplete` assembles the nine.
 -- =====================================================================
 
 module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
@@ -1258,8 +1263,8 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     entry n Ek p = PT.map (λ { (k , eq) → k , pr-inj eq })
       (EnvTower.tower-out A (down Ês (pr (fst n) (fst Ek)) p) p)
 
-  tower : Tower
-  tower = ∣ Ês , ( ÊK , ( cl1 , ( cl2 , cl3 ))) ∣₁
+  towerHolds : ⟨ E3 ⊨ towerAt i0 (sh3 O) (sh3 w) (sh3 K) ⟩
+  towerHolds = cl1 , ( cl2 , cl3 )
     where
     cl1 : (n : CS.S) → ⟨ fst n ∈ fst (lookup (sh3 O) E3) ⟩
         → ⟨ (n ∷ E3) ⊨ ∃̇∈ (var (sh1 (sh3 K)))
@@ -1338,41 +1343,60 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                         (λ i → ⟪ fst A ⟫↪ (g i)) eg))
                  (cong env (funExt (λ { zero → fib .snd ; (suc i) → refl })))
 
--- THE REDUCTION.  Six rows are the hypotheses; the other three are
--- the module's own.
-RowHyps : Type (ℓ-suc ℓ)
-RowHyps =
-  ∀ {m} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
-    (γ : CS.S ^ m)
-  → (lam : V ℓ) (ad : Adequate lam)
-  → (Kq : fst (lookup K γ) ≡ Lset lam)
-  → (Oq : fst (lookup O γ) ≡ ω)
-  → (tags : Tags N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ)
-  → (c : V ℓ) (oc : IsOrd c) (c∈λ : ⟨ c ∈ lam ⟩)
-  → (wq : fst (lookup w γ) ≡ Lset c)
-  → (dq : fst (lookup d γ) ≡ 𝒟ₒ (Lset c))
-  → let module R = Rows d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ
-                        lam ad Kq Oq tags c oc c∈λ wq dq
-    in R.Closed × R.Shaped × R.CloseR × R.Twelve × R.Mem × R.All
+  tower : Tower
+  tower = ∣ Ês , ( ÊK , towerHolds ) ∣₁
 
-defComplete-of-rows : RowHyps → DefComplete
-defComplete-of-rows hyp d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ
-                    lam ad Kq Oq tags c oc c∈λ wq dq =
-  R.defAt-of (R.body-of h1 h2 R.arNum h4 R.dom R.tower h7 h8 h9)
-  where
-  module R = Rows d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ
-                  lam ad Kq Oq tags c oc c∈λ wq dq
-  hs = hyp d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ lam ad Kq Oq tags c oc c∈λ wq dq
-  h1 = hs .fst
-  h2 = hs .snd .fst
-  h4 = hs .snd .snd .fst
-  h7 = hs .snd .snd .snd .fst
-  h8 = hs .snd .snd .snd .snd .fst
-  h9 = hs .snd .snd .snd .snd .snd
+  -- ROWS 1, 2, 4, 8 AND 9, from src/L/GCH/Rows.lagda.md `Site`: the
+  -- closure facts of K as `KC` packages them, the tags, the carrier
+  -- and the definable powerset at their slots, and the three
+  -- witnesses in K.
+  private
+    kcγ : KC Kv (fst (lookup O γ))
+    kcγ = subst2 KC (sym Kq) (sym Oq) Cl.kc
 
--- THE THEOREM, under the six row hypotheses.
-level-complete-of-rows : RowHyps
-                       → (γ : V ℓ) → Adequate γ → (p : V ℓ) → IsOrd p → ⟨ p ∈ γ ⟩
-                       → ⟨ (Lset p ∷ p ∷ Lset γ ∷ []) ⊨ₚ levelFo ⟩
-level-complete-of-rows hyp = level-complete-of (defComplete-of-rows hyp)
+    wK : InK (fst (lookup w γ))
+    wK = toK (fst (lookup w γ))
+           (subst (λ u → ⟨ u ∈ Lset lam ⟩) (sym wq) (Cl.Lset∈K c c∈λ))
+
+  module RR = Site d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ A Ts
+                (SatMap.valOf A) (SatMap.valOf≡ A) (SatMap.pairs-in A) (SatMap.pairs-out A)
+                kcγ tags wq dq wK CK TK
+
+  closed : Closed
+  closed = RR.closed
+
+  shaped : Shaped
+  shaped = RR.shaped
+
+  closeR : CloseR
+  closeR = RR.closeR
+
+  mem : Mem
+  mem = RR.mem
+
+  all : All
+  all = RR.all
+
+  -- ROW 7, from the same site, with the tower read as the environment
+  -- ties.
+  module Tw12 = RR.Twelve Ês ÊK towerHolds
+
+  twelve : Twelve
+  twelve = Tw12.twelve
+
+  -- THE ROW, ASSEMBLED.
+  defAt : ⟨ γ ⊨ DV.defAt ⟩
+  defAt = defAt-of (body-of closed shaped arNum closeR dom tower twelve mem all)
+
+-- THE DEFINABLE-POWERSET ROW HOLDS at every adequate stage: the one
+-- hypothesis of Section 6, discharged.
+defComplete : DefComplete
+defComplete d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ lam ad Kq Oq tags c oc c∈λ wq dq =
+  Rows.defAt d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ lam ad Kq Oq tags c oc c∈λ wq dq
+
+-- THE THEOREM.  At an adequate stage γ and any ordinal p ∈ γ, the
+-- level description holds at (Lset p, p, Lset γ).
+level-complete : (γ : V ℓ) → Adequate γ → (p : V ℓ) → IsOrd p → ⟨ p ∈ γ ⟩
+               → ⟨ (Lset p ∷ p ∷ Lset γ ∷ []) ⊨ₚ levelFo ⟩
+level-complete = level-complete-of defComplete
 ```
