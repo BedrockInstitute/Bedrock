@@ -7284,3 +7284,1727 @@ code = "LJ-1.715"
 head_slot = "coder"
 machine = "shared"
 brief = "agents/tasks/LJ-1-715/LJ-1.715.md"
+
+# ===========================================================================
+# THE FIFTEENTH OPENING, 2026-08-27: COMPLETENESSFROM WAS NEVER A TERM
+#
+# THE STALE PREMISE. The fourteenth opening treated CompletenessFrom as GREEN
+# (Probe679.agda:94). That line is a TYPE. [LJ-1.700] closed
+# sys-critic-upheld-no-go: completeness-from-hier is not defined
+# (review-of-LJ-1-700-1.md:167-175). SameHyp is paid ([LJ-1.709]). HierInStage
+# is still the 711-715 line. Completeness itself is not assembled.
+#
+# THE CONVERGENCE. BoundInStage spends an ambient matrix₃ reading at a stage
+# member (Probe673.agda:108-109). [LJ-1.700] measured that SameHyp and
+# HierInStage do not supply it. Lset-defines supplies LsetGraphAt at hierL
+# (Hierarchy.lagda.md:646-653), with the table as graph-table's extra argument,
+# not as a slot. matrix₃ is isOrd-at-p ∧ φ₃ with a witness slot
+# (Probe667.agda:72-73). SameAsGraph is now paid (Probe709.agda:67).
+# EraseTransfer.σL-up moves 𝒮ʟ UP to V (Condensation.lagda.md:307-308), which
+# is Completeness's direction. That reading is 716.
+#
+# [LJ-1.652]'s atL already equates AbsL sat of embed φ with ⊨ₚ φ at SL
+# (Probe652.agda:161-164). So once the ambient reading exists at stage
+# members, Completeness is a wrap of inBound's existentials and pins. That
+# is 717, [LJ-1.700] with the missing input named.
+#
+# THE CRITIC'S UNTESTED CURE, AS ITS OWN TERM. 700's floor of the TYPE was
+# green at 136.38 s and 1.35 GB. The three packing lemmas with a `_`
+# codomain died above 2.3 GB. The cure named and not run: explicit types,
+# one lemma per run (review-of-LJ-1-700-1.md:138-144). That is 720.
+#
+# THE CONSUMER, AND THE OTHER DIRECTION. 718 is LsetGrounded from Completeness
+# as a hypothesis, with IsOrd δ on the conclusion, which the critic of
+# [LJ-1.673] required (review-of-LJ-1-673-1.md:157-165). Convert is paid
+# (Probe692.agda:63-66). 719 is 5.2(a) at SL, not at V: Lset-only plus
+# SameAsGraph at stage members, where Bridge 1 of [LJ-1.667] does not bite.
+#
+# DEPENDENCY ORDER, BECAUSE THIS FILE HOLDS NO DEPENDENCY KEY.
+#   LJ-1.716  independent. THE KEYSTONE.
+#   LJ-1.720  independent. The packing 700 walled on.
+#   LJ-1.717  assumes 716 and 720 as HYPOTHESES. Runs on a NO-GO of either.
+#   LJ-1.719  independent. Soundness at SL. 718 takes it as a hypothesis.
+#   LJ-1.718  assumes Completeness and soundness as hypotheses.
+# NO ENTRY IS WITHDRAWN BY ANOTHER'S FAILURE except 717: if 716's report
+# names AmbientAt FALSE, 717 is mine to rewrite. 700's NO-GO is on
+# completeness-from-hier, not on packing or AmbientAt.
+#
+# NOTHING IS WITHDRAWN. 711-715 pay HierInStage / bound2, which 717 still
+# takes as a hypothesis. 704 remains the identification for the door route.
+# [LJ-1.389], [LJ-1.405], [LJ-1.415] stay requests. [LJ-2.0] to [LJ-3.9]
+# are untouched. The direction's SRC collection still waits on LJ-1.
+#
+# ARCHIVE: READ, NO HIT on AmbientAt, CompletenessFrom, or grounded-from-complete
+# in archive/dev/TASKS-archived.md, archive/dev/JOURNAL-archived.md,
+# archive/dev/DECISIONS-archived.md, archive/dev/LJ-dispatch-index.md, or
+# archive/src/2026-08-09-rud-route/. HIT, not used: LJ-dispatch-index.md:382,
+# [LJ-1.327] against the coded square law, which this opening does not reopen.
+#
+# LITERATURE: 716 and 719 ARE 5.2(a)/(b). Digested at
+# dev/literature/devlin-II5.md:98-99 and
+# dev/literature/level-formula-slot-roles.md:26-27. W8 binds those two.
+# 717, 718, 720 are assemblies over delivered types, so W8 does not bind them.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.716"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-716/LJ-1.716.md"
+
+[[task]]
+code = "LJ-1.720"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-720/LJ-1.720.md"
+
+[[task]]
+code = "LJ-1.717"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-717/LJ-1.717.md"
+
+[[task]]
+code = "LJ-1.719"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-719/LJ-1.719.md"
+
+[[task]]
+code = "LJ-1.718"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-718/LJ-1.718.md"
+
+[[task]]
+code = "LJ-1.715-SPLIT"
+split_of = "LJ-1.715"
+reason = "park_and_split: error_class heap_wall, 12 changed files. The lemma is in the 715 worktree and not in live src/. Everything walled at accept, concurrency 2. Transcribe, do not re-invent."
+added = 2026-08-27
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-715-SPLIT/LJ-1.715-SPLIT.md"
+
+[[task]]
+code = "LJ-1.715-SPLIT-SPLIT"
+split_of = "LJ-1.715-SPLIT"
+reason = "park_and_split: error_class heap_wall, 8 changed files. Do not transcribe into L.Ordinal again. Everything with those 33 lines dies at L.Condensation at one process; without them it closes. Land the lemma in a new sibling module."
+added = 2026-08-28
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-715-SPLIT-SPLIT/LJ-1.715-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# OWNER-ORDERED FIVE-CASE RULING, 2026-08-28. Loop STOPPED at 5 parked.
+# 721 carries 720's packing to a name the meter reads.
+# 722 carries 717's Completeness term at heavy.
+# 723 carries 713's below-closed-via, CompletenessFrom as hypothesis.
+# LJ-1.715 is shelved (proven-futile for the L.Ordinal.lagda.md landing).
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.721"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-721/LJ-1.721.md"
+
+[[task]]
+code = "LJ-1.722"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-722/LJ-1.722.md"
+
+[[task]]
+code = "LJ-1.723"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-723/LJ-1.723.md"
+
+[[task]]
+code = "LJ-1.715-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.715-SPLIT-SPLIT"
+reason = "park_and_split: error_class heap_wall, 12 changed files"
+added = 2026-08-28
+added_by = "maintainer"
+
+# ===========================================================================
+# REFILL 2026-08-28. Queue was empty of dispatchable work.
+# 716 NO-GO: ambient-at-hier is false at δ₀. 721 GO: pack-stage.
+# 718 NO-GO: hypothesised Convert application walls.
+# 724 table-sat. 725 carved-is-hier from that hyp. 726 numeral-slot reading.
+# 727 CompletenessFrom from packing, not from 716's type.
+# 728 GroundedFromComplete against 692's constructed Convert.
+# No brief for LJ-1.715-SPLIT-SPLIT-SPLIT (fourth landing forbidden).
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.724"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-724/LJ-1.724.md"
+
+[[task]]
+code = "LJ-1.725"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-725/LJ-1.725.md"
+
+[[task]]
+code = "LJ-1.726"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-726/LJ-1.726.md"
+
+[[task]]
+code = "LJ-1.727"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-727/LJ-1.727.md"
+
+[[task]]
+code = "LJ-1.728"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-728/LJ-1.728.md"
+
+[[task]]
+code = "LJ-1.727-SPLIT"
+split_of = "LJ-1.727"
+reason = "park_and_split: error_class None, 6 changed files. 727 delivered level-at-pair and left completeness-from-pack absent. Transcribe the supply name. Do not inhabit completeness-from-pack."
+added = 2026-08-28
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-727-SPLIT/LJ-1.727-SPLIT.md"
+
+[[task]]
+code = "LJ-1.728-SPLIT"
+split_of = "LJ-1.728"
+reason = "park_and_split: error_class None, 22 changed files. 728 wrote grounded-from-complete and walled at wide with Convert hole-shielded. Same term at heavy. Do not hypothesise Convert."
+added = 2026-08-28
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-728-SPLIT/LJ-1.728-SPLIT.md"
+
+[[task]]
+code = "LJ-1.724-SPLIT"
+split_of = "LJ-1.724"
+reason = "park_and_split: error_class None, 4 changed files. 724 measured unscoped table-sat false at successor top-entries. Same Carved frame with omega <= gamma and x+2 < gamma. Do not inhabit the unscoped type."
+added = 2026-08-28
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-724-SPLIT/LJ-1.724-SPLIT.md"
+
+[[task]]
+code = "LJ-1.725-SPLIT"
+split_of = "LJ-1.725"
+reason = "park_and_split: error_class None, 17 changed files. 725 assembled carved-is-hier-from table-sat and stage-read. stage-read is the miss. Do not inhabit carved-is-hier or table-sat."
+added = 2026-08-28
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-725-SPLIT/LJ-1.725-SPLIT.md"
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT"
+split_of = "LJ-1.728-SPLIT"
+reason = "park_and_split: error_class None, 8 changed files. 728-SPLIT transcribed grounded-from-complete and stopped on watchdog swap. Swap is now below 8192 MB. Floor first. Run at heavy. Do not hypothesise Convert."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-728-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# REFILL 2026-08-29. Queue was empty of dispatchable work. 724-SPLIT and 726
+# RUNNING; not assumed. 725-SPLIT meter GO, report STOP (F1: the report).
+# 727-SPLIT GO on level-at-pair. 728-SPLIT PARKED: watchdog swap, not heap.
+#
+# 729 keyS-in-carrier-stage. Independent. The DefAt membrane 725-SPLIT named.
+# 730 envSet-in-carrier-stage. Independent. Same membrane, the Sat domain.
+# 731 Sat-in-carrier-stage. May take 730 as a hypothesis. Does not wait on it.
+# 732 bound-in-stage-at-empty. Independent. 727's D-10 probe.
+# 733 defat-fill-in-bound. Takes 729, 730, 731 as HYPOTHESES. Runs on a NO-GO
+# of any of them.
+#
+# DEPENDENCY ORDER, BECAUSE THIS FILE HOLDS NO DEPENDENCY KEY.
+#   LJ-1.729  independent.
+#   LJ-1.730  independent.
+#   LJ-1.731  independent. May take 730 as a hypothesis.
+#   LJ-1.732  independent. Completeness track.
+#   LJ-1.733  assumes the three stage-bound TYPES. Runs if any is NO-GO.
+# NO ENTRY IS WITHDRAWN BY ANOTHER'S FAILURE except 733: if a 729/730/731
+# report names the bound FALSE at omega <= gamma, 733 is mine to rewrite.
+#
+# NOTHING IS WITHDRAWN. 724-SPLIT and 726 stay RUNNING. 715-SPLIT-SPLIT-SPLIT
+# stays empty (fourth landing forbidden). 728-SPLIT-SPLIT stays empty
+# (watchdog swap; same term at heavy is not a new measurement).
+# [LJ-1.389], [LJ-1.405], [LJ-1.415] stay requests. [LJ-2.0] to [LJ-3.9]
+# are untouched. The direction's SRC collection still waits on LJ-1.
+#
+# ARCHIVE: READ. HIT, not used: archive/src/2026-08-09-rud-route/L/Coding/CodeSet.lagda.md:314
+# (retired keyS, live CodeSet already holds it); archive/dev/JOURNAL-archived.md:3718
+# (smallDom owed, live Recursion.lagda.md:133 already holds it).
+# NO HIT on keyS-in-carrier-stage, envSet-in-carrier-stage, Sat-in-carrier-stage,
+# bound-in-stage-at-empty, defat-fill-in-bound in TASKS-archived.md,
+# DECISIONS-archived.md, or LJ-dispatch-index.md.
+#
+# LITERATURE: 732 IS 5.2(b) at the empty instance. Digested at
+# dev/literature/devlin-II5.md:98-99. W8 binds that one.
+# 729, 730, 731, 733 are stage bounds and an assembly over delivered types.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.729"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-729/LJ-1.729.md"
+
+[[task]]
+code = "LJ-1.730"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-730/LJ-1.730.md"
+
+[[task]]
+code = "LJ-1.731"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-731/LJ-1.731.md"
+
+[[task]]
+code = "LJ-1.732"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-732/LJ-1.732.md"
+
+[[task]]
+code = "LJ-1.733"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-733/LJ-1.733.md"
+
+# ===========================================================================
+# REFILL 2026-08-29 (second). Queue empty of dispatchable work.
+# F1: 729 meter GO, report NO-GO on omega-in-gamma, GO on keyS-in-carrier-lim
+# under closedomega. 730 meter GO, report NO-GO, type FALSE at omega+2.
+# 733 meter GO, report NO-GO, envSet hyp closes bottom. 724-SPLIT critic
+# upheld NO-GO at x+2; x+6 is not safe. 726 critic upheld: ambient-at-Lomega
+# FALSE at delta := omega. 731 and 732 RUNNING, not assumed.
+#
+# RULED SCOPE: closedomega (StageArith.lagda.md:81). Successor-height guesses
+# and omega-in-gamma alone are closed.
+#
+# 734 keyS-in-carrier-lim. Transcribe 729's inhabited term. Independent.
+# 735 envSet-in-carrier-lim. Independent. 730's corrected target.
+# 736 Sat-in-carrier-lim. Independent. May take 735 as a hypothesis.
+# 737 table-sat under closedomega. Independent. Door route.
+# 738 defat-fill-in-bound-lim. Takes 729's lim type plus 735 and 736 TYPES.
+#     Runs if 735 or 736 is NO-GO. Does not take 730's false type.
+#
+# NOTHING IS WITHDRAWN. 731 and 732 stay RUNNING. 715-SPLIT-SPLIT-SPLIT
+# stays empty. 728-SPLIT-SPLIT stays empty (swap still 8758 MB).
+# [LJ-2.0] to [LJ-3.9] untouched. SRC collection waits on LJ-1.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.734"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-734/LJ-1.734.md"
+
+[[task]]
+code = "LJ-1.735"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-735/LJ-1.735.md"
+
+[[task]]
+code = "LJ-1.736"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-736/LJ-1.736.md"
+
+[[task]]
+code = "LJ-1.737"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-737/LJ-1.737.md"
+
+[[task]]
+code = "LJ-1.738"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-738/LJ-1.738.md"
+
+# ===========================================================================
+# REFILL 2026-08-29 (third). Queue empty of dispatchable work.
+# F1: 734 GO keyS-in-carrier-lim. 735 GO envSet-in-carrier-lim.
+# 736 meter GO, report NO-GO: Sat over Formula S n FALSE at closedomega.
+# 731 meter GO, report NO-GO: same alphabet defect at omega-in-gamma.
+# 738 meter GO, report NO-GO: Sat hyp FALSE, vacuous fill forbidden.
+# 732 and 737 RUNNING, not assumed.
+#
+# RULED SAT SCOPE: carrier-bounded alphabet, 736 review option 1.
+# Formula over ⟪fst A⟫, relabelled by asConst. Not Formula S n.
+#
+# 739 asConst-in-carrier. Independent. Constant height.
+# 740 Sat-at-asConst. May take 739 as a hypothesis. The keystone.
+# 741 defSet-in-carrier-lim. Independent. The z fill pins.
+# 742 defat-fill-asConst. 734 and 735 as reports, 740 as a TYPE.
+# 743 Lset-trans-set. 721-style from 725-SPLIT. Independent.
+#
+# NOTHING IS WITHDRAWN. 732 and 737 stay RUNNING.
+# 715-SPLIT-SPLIT-SPLIT and 728-SPLIT-SPLIT stay empty (swap 8758 MB).
+# No src landing. No Sat-in-carrier-lim retry. No ambient-at-Lomega retry.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.739"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-739/LJ-1.739.md"
+
+[[task]]
+code = "LJ-1.740"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-740/LJ-1.740.md"
+
+[[task]]
+code = "LJ-1.741"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-741/LJ-1.741.md"
+
+[[task]]
+code = "LJ-1.742"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-742/LJ-1.742.md"
+
+[[task]]
+code = "LJ-1.743"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-743/LJ-1.743.md"
+
+[[task]]
+code = "LJ-1.737-SPLIT"
+split_of = "LJ-1.737"
+reason = "park_and_split: error_class None, 4 changed files. 737 delivered pair-in-Lγω and left table-sat absent. Transcribe the supply name. Do not inhabit table-sat."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-737-SPLIT/LJ-1.737-SPLIT.md"
+
+[[task]]
+code = "LJ-1.739-SPLIT"
+split_of = "LJ-1.739"
+reason = "park_and_split: error_class None, 2 changed files. 739 inhabited asConst-in-carrier. First accept lost GO to a hole-bearing Frame739.agda. Transcribe the supply. Do not ship a hole-bearing .agda."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-739-SPLIT/LJ-1.739-SPLIT.md"
+
+[[task]]
+code = "LJ-1.740-SPLIT"
+split_of = "LJ-1.740"
+reason = "park_and_split: error_class None, 128 changed files. 740 delivered the placement core and left Sat-at-asConst absent. Transcribe the green prefix. Complete Bd, the climb, and the merge. Do not re-fund place."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-740-SPLIT/LJ-1.740-SPLIT.md"
+
+[[task]]
+code = "LJ-1.742-SPLIT"
+split_of = "LJ-1.742"
+reason = "park_and_split: error_class None, 4 changed files. 742 delivered the prefix and left remaining-goal as a hole. Transcribe the prefix. Fill the walks. All-arity Sat-at-asConst stands. Do not fund a staged-Sat induction."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-742-SPLIT/LJ-1.742-SPLIT.md"
+
+# ===========================================================================
+# REFILL 2026-08-29 (fourth). Queue empty of dispatchable work.
+# F1: 741 GO defSet-in-carrier-lim. 743 GO Lset-trans-set.
+# 737-SPLIT GO pair-in-Lγω. 739-SPLIT GO asConst-in-carrier.
+# 732 program-closed sys-critic-upheld-no-go; the critic file OVERTURNED
+# the window stop and named Gen732 (review-of-LJ-1-732-1.md:11, :161-176).
+# 740-SPLIT and 742-SPLIT RUNNING, not assumed.
+#
+# 744 step-killed-gen. Independent. The critic's W2 restructure.
+# 745 step-killed as instance call. Takes 744 as a TYPE. Runs if 744 is NO-GO.
+# 746 bound-in-stage-at-empty. Takes 744 as a TYPE. If 744 names Gen732
+#     walls, 746 is mine to rewrite.
+# 747 numeralL-in-carrier-lim. Independent. 737 debt (i) numeral leaf.
+# 748 pr-in-Lset-lim. Independent. BoundOver pairing at closedω.
+#     Not pair-in-Lγω.
+#
+# NOTHING IS WITHDRAWN. 740-SPLIT and 742-SPLIT stay RUNNING.
+# 715-SPLIT-SPLIT-SPLIT stays empty. 728-SPLIT-SPLIT stays empty
+# (swap 8734.88 MB). No src landing. No Sat-in-carrier-lim retry.
+# No table-sat until the two 737 debts have placement legs.
+# No stage-read. No ambient-at-Lomega retry.
+# [LJ-2.0] to [LJ-3.9] untouched. SRC collection waits on LJ-1.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.744"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-744/LJ-1.744.md"
+
+[[task]]
+code = "LJ-1.745"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-745/LJ-1.745.md"
+
+[[task]]
+code = "LJ-1.746"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-746/LJ-1.746.md"
+
+[[task]]
+code = "LJ-1.747"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-747/LJ-1.747.md"
+
+[[task]]
+code = "LJ-1.748"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-748/LJ-1.748.md"
+
+[[task]]
+code = "LJ-1.742-SPLIT-SPLIT"
+split_of = "LJ-1.742-SPLIT"
+reason = "park_and_split: error_class None, 119 changed files. 742-SPLIT wrote the bounded walks and left remaining-goal with two holes. Transcribe the prefix. Fill satGraphAt and DefinesAt. Repair the Section 13 frontier. Do not re-fund Desc."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-742-SPLIT-SPLIT/LJ-1.742-SPLIT-SPLIT.md"
+
+[[task]]
+code = "LJ-1.746-SPLIT"
+split_of = "LJ-1.746"
+reason = "park_and_split: error_class None, 35 changed files. 746 delivered green Amb7 and EraseIrr. Amb4 walls on count-split spelling. Close Amb4 by candidate 1: one shared split-spelling of the row types. Do not rebuild approx-part."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-746-SPLIT/LJ-1.746-SPLIT.md"
+
+[[task]]
+code = "LJ-1.746-SPLIT-SPLIT"
+split_of = "LJ-1.746-SPLIT"
+reason = "park_and_split: error_class None, 47 changed files. 746-SPLIT delivered green PT spelling. GraphAt assembly is fatal even at identical spelling. Package approx-split and step-split as graph-mirror. Do not inhabit GraphAt. Do not inhabit bound-in-stage-at-empty."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-746-SPLIT-SPLIT/LJ-1.746-SPLIT-SPLIT.md"
+
+[[task]]
+code = "LJ-1.744-SPLIT"
+split_of = "LJ-1.744"
+reason = "park_and_split: error_class None, 6 changed files. 744 inhabited step-killed-gen. First accept lost GO to a watchdog SIGKILL. Transcribe the supply. Do not inhabit bound-in-stage-at-empty."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-744-SPLIT/LJ-1.744-SPLIT.md"
+
+# ===========================================================================
+# REFILL 2026-08-29 (fifth). Queue empty of dispatchable work.
+# F1: 747 GO numeralL-in-carrier-lim. 748 GO pr-in-Lset-lim.
+# 744-SPLIT GO step-killed-gen. 746-SPLIT-SPLIT GO graph-mirror.
+# 745 GO step-killed. GraphAt assembly at wide is closed (746-SPLIT).
+# 740-SPLIT and 742-SPLIT-SPLIT RUNNING, not assumed.
+#
+# 749 prʟ-in-Lset-lim. 748 as a report. Independent of 747.
+# 750 prʟ-numeral-in-Lset-lim. 747 as a report, 749 as a TYPE.
+# 751 sucIter-in-γ. Independent. Restores the iterate 737-SPLIT trimmed.
+# 752 block∈Lγ. Takes 751 as a TYPE.
+# 753 bound-in-stage-from-mirror. graph-mirror as a report. Never GraphAt.
+#     If 753 names AT.read as required, 753 is mine to rewrite.
+#
+# NOTHING IS WITHDRAWN. 740-SPLIT and 742-SPLIT-SPLIT stay RUNNING.
+# 715-SPLIT-SPLIT-SPLIT stays empty. 728-SPLIT-SPLIT stays empty.
+# No src landing. No Sat-in-carrier-lim retry. No GraphAt retry.
+# No table-sat. No stage-read. No ambient-at-Lomega retry.
+# [LJ-2.0] to [LJ-3.9] untouched. SRC collection waits on LJ-1.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.749"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-749/LJ-1.749.md"
+
+[[task]]
+code = "LJ-1.750"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-750/LJ-1.750.md"
+
+[[task]]
+code = "LJ-1.751"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-751/LJ-1.751.md"
+
+[[task]]
+code = "LJ-1.752"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-752/LJ-1.752.md"
+
+[[task]]
+code = "LJ-1.753"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-753/LJ-1.753.md"
+
+# ===========================================================================
+# REFILL 2026-08-29 (sixth). Queue empty of dispatchable work.
+# F1: 749 GO prʟ-in-Lset-lim. 750 GO prʟ-numeral-in-Lset-lim.
+# 751 GO sucIter-in-γ. 752 GO block∈Lγ.
+# 753 RUNNING, not assumed. 740-SPLIT PARKED on launch capacity.
+# 742-SPLIT-SPLIT RUNNING, not assumed.
+#
+# 754 tagAtL-bounded-at-γ. 747 as a report. First occurs-in leaf.
+# 755 keyArityAtL-bounded-at-γ. 754 as a TYPE. Unfold, no CodeSet import.
+# 756 tagPairAtL-bounded-at-γ. 754 as a TYPE. Independent of 755.
+# 757 tagAtL-mkBounded-in-γ. Independent of 754. If NO-GO, mkBoundedFo
+#     stays unbounded at tag atoms.
+# 758 prʟ-two-numerals-in-Lset-lim. 750 as a report, 747 as a report.
+#
+# NOTHING IS WITHDRAWN. 753, 740-SPLIT, 742-SPLIT-SPLIT stay live.
+# 715-SPLIT-SPLIT-SPLIT stays empty. 728-SPLIT-SPLIT stays empty.
+# No src landing. No Sat-in-carrier-lim retry. No GraphAt retry.
+# No table-sat. No stage-read. No ambient-at-Lomega retry.
+# [LJ-2.0] to [LJ-3.9] untouched. SRC collection waits on LJ-1.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.754"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-754/LJ-1.754.md"
+
+[[task]]
+code = "LJ-1.755"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-755/LJ-1.755.md"
+
+[[task]]
+code = "LJ-1.756"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-756/LJ-1.756.md"
+
+[[task]]
+code = "LJ-1.757"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-757/LJ-1.757.md"
+
+[[task]]
+code = "LJ-1.758"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-758/LJ-1.758.md"
+
+[[task]]
+code = "LJ-1.753-SPLIT"
+split_of = "LJ-1.753"
+reason = "park_and_split: error_class None, 74 changed files. 753 wrote bound-in-stage-from-mirror and grounded at the domB-annotation. Transcribe the term. Apply erase-cong at that site. Do not inhabit GraphAt. Do not call AT.read."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-753-SPLIT/LJ-1.753-SPLIT.md"
+
+[[task]]
+code = "LJ-1.742-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.742-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 10 changed files. 742-SPLIT-SPLIT repaired Section 13 and left the clause families unfilled. Transcribe the prefix. Fill 17C, 17D, 17E. Do not re-fund Ambient. Do not inhabit Sat-in-carrier-lim."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-742-SPLIT-SPLIT-SPLIT/LJ-1.742-SPLIT-SPLIT-SPLIT.md"
+
+[[task]]
+code = "LJ-1.753-SPLIT-SPLIT"
+split_of = "LJ-1.753-SPLIT"
+reason = "park_and_split: error_class None, 41 changed files. 753-SPLIT inhabited bound-in-stage-from-mirror inside module At. The meter asked for the bare name. Transcribe the file. Keep module At. Name At.bound-in-stage-from-mirror. Do not rewrite the body. Do not retry erase-cong. Do not inhabit GraphAt."
+added = 2026-08-29
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-753-SPLIT-SPLIT/LJ-1.753-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# REFILL 2026-08-30. Queue empty of dispatchable work. Coder slot free.
+# F1: 754 GO tagAtL-bounded-at-γ and prAtL-triv (Probe754.agda:69, :81).
+# 755-758 already queued, launch-parked, not assumed.
+# 742-SPLIT-SPLIT-SPLIT with the critic, not assumed.
+# 728-SPLIT-SPLIT parked no-change, not assumed.
+# 753-SPLIT-SPLIT filled, not assumed.
+#
+# 759 appAt-bounded-at-γ. 754 as a report. Independent of 755-758.
+# 760 sucAtL-bounded-at-γ. Independent. Var-only lift, 754 finding.
+# 761 inDomAt-bounded-at-γ. 759 as a TYPE. Runs if 759 is NO-GO.
+# 762 tmValAt-bounded-at-γ. 754 as a report, 759 as a TYPE.
+# 763 svAt-bounded-at-γ. 759 as a TYPE. envOverAt's first factor.
+#
+# NOTHING IS WITHDRAWN. 755-758, 753-SPLIT-SPLIT, 740-SPLIT stay live.
+# 715-SPLIT-SPLIT-SPLIT stays empty. No src landing. No Sat-in-carrier-lim
+# retry. No GraphAt retry. No table-sat. No stage-read.
+# No ambient-at-Lomega retry. [LJ-2.0] to [LJ-3.9] untouched.
+# SRC collection waits on LJ-1.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.759"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-759/LJ-1.759.md"
+
+[[task]]
+code = "LJ-1.760"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-760/LJ-1.760.md"
+
+[[task]]
+code = "LJ-1.761"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-761/LJ-1.761.md"
+
+[[task]]
+code = "LJ-1.762"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-762/LJ-1.762.md"
+
+[[task]]
+code = "LJ-1.763"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-763/LJ-1.763.md"
+
+# ===========================================================================
+# OWNER 2026-08-28, relayed 2026-08-29. Swap threshold for 728-SPLIT-SPLIT
+# approved: start when swap < 8192 MB. 728-SPLIT-SPLIT died pid-dead with
+# zero files. This is the heavy measurement of the transcribed term.
+#
+# 728-SPLIT-SPLIT-SPLIT grounded-from-complete at heavy. 728-SPLIT as a
+# report. Same term as 728-SPLIT-SPLIT. Do not hypothesise Convert.
+#
+# THIS TICK also shelves LJ-1.728. Staged next: 728-SPLIT, 740, 742,
+# 742-SPLIT, 753, 753-SPLIT. Already on the shelf: 724, 725, 727,
+# 715-SPLIT-SPLIT. No 764-768. No GraphAt retry. No src landing.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# POD-PARK 728-SPLIT-SPLIT-SPLIT, attempt_max:pid-dead. Scene kept.
+# Critic 2 overturned the environment STOP. W3 is a heap wall at -M4g.
+# Next run is B8 (codomain ascribed). Do not hypothesise Convert.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 6 changed files. SSSS NO-GO: B8 heap-walls. Transcribe B4. Do not ascribe the codomain. Do not retry Convert."
+added = 2026-08-31
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.728-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 20 changed files"
+added = 2026-08-31
+added_by = "maintainer"
+
+# ===========================================================================
+# REFILL 2026-08-31. Six-split herdr name is 38 characters, cap 32, launch
+# died rc 1. Same B4 obligation under a legal code. Do not ascribe.
+# Do not retry Convert. 755-763 stay. No GraphAt. No src landing.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.764"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-764/LJ-1.764.md"
+
+# ===========================================================================
+# REFILL 2026-09-02. 6-SPLIT GO conv0 (seq 6015). 764 GO conv0 (accept-1
+# delta -1). Next is grounded-from-complete through that export.
+# Do not ascribe Convert. 755-763 stay. No GraphAt. No src landing.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.765"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-765/LJ-1.765.md"
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 1 changed files"
+added = 2026-09-02
+added_by = "maintainer"
+
+[[task]]
+code = "LJ-1.765-SPLIT"
+split_of = "LJ-1.765"
+reason = "park_and_split: error_class None, 24 changed files. 765 NO-GO: amb alone heap-walls. Conversion already at (Lset δ, δ). Do not retry amb."
+added = 2026-09-02
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-765-SPLIT/LJ-1.765-SPLIT.md"
+
+# ===========================================================================
+# REFILL 2026-09-02. 765 heap-wall NO-GO: amb alone. Next is conv-at-Lδ,
+# then grounded-from-complete through that export. 766 assumes 765-SPLIT
+# GO. 755-763 stay. No amb retry. No ascribed Convert. No src landing.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.766"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-766/LJ-1.766.md"
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 1 changed files"
+added = 2026-09-02
+added_by = "maintainer"
+
+# ===========================================================================
+# PARK 2026-09-02. 765-SPLIT NO-GO: conv-at-Lδ uninhabited (report :10).
+# Not A30: own report, not a different task. Continuation is T1:
+# grounded-from-complete at code coordinates, conv0+hullClosed, no amb.
+# 766 READY was the pinned-Sigma consumer; rewritten to the same T1.
+# 755-763 stay. No amb retry. No ascribed Convert. No src landing.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.765-SPLIT-SPLIT"
+split_of = "LJ-1.765-SPLIT"
+reason = "park_and_split: error_class None, 6 changed files. 765-SPLIT NO-GO: conv-at-Lδ uninhabited. T1: GFC at code coords, no amb."
+added = 2026-09-02
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-765-SPLIT-SPLIT/LJ-1.765-SPLIT-SPLIT.md"
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 1 changed files"
+added = 2026-09-02
+added_by = "maintainer"
+
+[[task]]
+code = "LJ-1.766-SPLIT"
+split_of = "LJ-1.766"
+reason = "park_and_split: error_class None, 1 changed files"
+added = 2026-09-02
+added_by = "maintainer"
+
+[[task]]
+code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 1 changed files"
+added = 2026-09-03
+added_by = "maintainer"
+
+# ===========================================================================
+# REFILL 2026-09-03. T1 (765-SPLIT-SPLIT) pid-dead then no-change. Worktree
+# bisection: B1 type green, B2 conv0 green, floor with mkWit heap-walls.
+# mkWit spelling the Convert-codomain is B8. Next is packing without that
+# ascription. Do not fill 766-SPLIT. Do not retry amb. 755-763 stay.
+# No ascribed Convert. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.767"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-767/LJ-1.767.md"
+
+# ===========================================================================
+# PARK 2026-09-03. 767 NO-GO: membership slot walls. D7 greens with conv0
+# real and that slot holed. Continuation drops ⟨ z ∈ˢ HS.M ⟩ from the Sigma.
+# Do not restore mkWit ascription. Do not retry amb. No src landing.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.767-SPLIT"
+split_of = "LJ-1.767"
+reason = "park_and_split: error_class None, 33 changed files. 767 NO-GO: hull-membership in the tuple walls. Drop that slot. D7 green."
+added = 2026-09-03
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-767-SPLIT/LJ-1.767-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-03. 767-SPLIT NO-GO: first factor plus any further real
+# component walls. S5 greens with one real packed slot. Continuation packs
+# only the reading. Do not restore a second factor. Do not retry amb.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.767-SPLIT-SPLIT"
+split_of = "LJ-1.767-SPLIT"
+reason = "park_and_split: error_class None, 31 changed files. 767-SPLIT NO-GO: first-factor law. Pack only the reading. S5 green."
+added = 2026-09-03
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-767-SPLIT-SPLIT/LJ-1.767-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# REFILL 2026-09-03. 767-SPLIT-SPLIT GO: reading-only GFC at 210.63 s.
+# Next is LsetGrounded from that reading, no second packed factor under
+# the GFC recs, no amb. Do not restore mkWit ascription. 755-763 stay.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.768"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-768/LJ-1.768.md"
+
+[[task]]
+code = "LJ-1.768-SPLIT"
+split_of = "LJ-1.768"
+reason = "park_and_split: error_class None, 30 changed files"
+added = 2026-09-03
+added_by = "maintainer"
+
+# ===========================================================================
+# REFILL 2026-09-03. 768 SHELVED proven-futile: pinned LsetGrounded closed.
+# Do not fill 768-SPLIT with that Sigma. Next is Commute from the
+# reading-only GFC, telescope memberships, no packed pair, no amb.
+# 755-763 stay. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769/LJ-1.769.md"
+
+# ===========================================================================
+# PARK 2026-09-03. 769 NO-GO: Cy.push of matrix₃ walls when the module
+# still applies to fst (val _). Floor green. Split4 still had that call.
+# Continuation isolates the push at bound variables, no call site.
+# Do not assemble commute-from-reading in this file. Do not fill 768-SPLIT.
+# 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT"
+split_of = "LJ-1.769"
+reason = "park_and_split: error_class None, 3 changed files. 769 NO-GO: Cy.push of matrix₃ walls at fst (val _). Isolate the push at bound variables."
+added = 2026-09-03
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT/LJ-1.769-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-03. 769-SPLIT UNSETTLED: watchdog swap-spiral SIGKILL,
+# not RTS 251. Floor green 8.34 s. Conversion alone 4.48 GB / 1626 s
+# with no close. Push alone unmeasured. Continuation is RawOnly:
+# Cy.push at the carry's own codomain, no conversion, gate on swap
+# used below 8192 MB. Do not assemble commute-from-reading. Do not
+# fill 768-SPLIT. 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT"
+reason = "park_and_split: error_class None, 9 changed files. 769-SPLIT UNSETTLED: watchdog kill, wall unproven. RawOnly: push at carry codomain, no conversion."
+added = 2026-09-03
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-03. 769-SPLIT-SPLIT GATE STOP: swap used 9779 MB, no
+# Agda. Term transcribed. Continuation is the same push-raw-at-vars
+# on a settled box, from this task's parked files. Canary then
+# obligation. Do not assemble commute-from-reading. Do not fill
+# 768-SPLIT. 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-SPLIT-SPLIT GATE STOP: swap 9779 MB, no Agda. Same term on a settled box."
+added = 2026-09-03
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-SSS GATE STOP: swap used 9771 MB, no Agda.
+# Third consecutive gate. Term transcribed here. Continuation is the
+# same push-raw-at-vars on a settled box. Canary then obligation.
+# Do not assemble commute-from-reading. Do not fill 768-SPLIT.
+# 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-SSS GATE STOP: swap 9771 MB, no Agda. Same term on a settled box."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-SSSS GATE STOP: swap used 9756 MB, no Agda.
+# Fourth consecutive gate. Worktree lacked untracked predecessor
+# files. Continuation reads Probe769SSS and Frame769SSS from the
+# MAIN checkout, transcribes even on a gate stop. Same term.
+# Do not assemble commute-from-reading. Do not fill 768-SPLIT.
+# 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 1 changed files. 769-SSSS GATE STOP: swap 9756 MB. Worktree missed untracked sources. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-5-SPLIT GATE STOP: swap used 9756 MB, no Agda.
+# Fifth consecutive gate. Probe and frame ARE transcribed in the
+# 5-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay.
+# No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-5-SPLIT GATE STOP: swap 9756 MB. Instruments now in 5-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-6-SPLIT GATE STOP: swap used 9756 then 9748 MB,
+# no Agda. Sixth consecutive gate. Probe and frame transcribed in
+# the 6-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay.
+# No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-6-SPLIT GATE STOP: swap 9756 MB. Instruments in 6-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-7-SPLIT GATE STOP: swap used 9740 MB, no Agda.
+# Seventh consecutive gate. Band drifting down 8-16 MB per stop,
+# still 1.5 GB above the line. Probe and frame transcribed in the
+# 7-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay.
+# No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-7-SPLIT GATE STOP: swap 9740 MB. Instruments in 7-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-8-SPLIT GATE STOP: swap used 9740 MB, flat, no
+# Agda. Eighth consecutive gate. Drift stalled. Probe and frame
+# transcribed in the 8-SPLIT dir. Continuation reads those from the
+# MAIN checkout. Same term. Transcribe even on a gate stop. Do not
+# assemble commute-from-reading. Do not fill 768-SPLIT. 755-763 stay.
+# No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-8-SPLIT GATE STOP: swap 9740 MB, flat. Instruments in 8-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-9-SPLIT GATE STOP: swap used 9740 MB, flat, no
+# Agda. Ninth consecutive gate. Last three stops same figure. Probe
+# and frame transcribed in the 9-SPLIT dir. Continuation reads those
+# from the MAIN checkout. Same term. Transcribe even on a gate stop.
+# Do not assemble commute-from-reading. Do not fill 768-SPLIT.
+# 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-9-SPLIT GATE STOP: swap 9740 MB, flat. Instruments in 9-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-10-SPLIT GATE STOP: swap used 9732.19 MB start,
+# 9724.19 MB close, no Agda. Tenth consecutive gate. Drift resumed
+# 8 MB/stop; band 1532 MB above 8192. Probe and frame transcribed in
+# the 10-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-10-SPLIT GATE STOP: swap 9732.19 MB start, 9724.19 MB close. Instruments in 10-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-11-SPLIT GATE STOP: swap used 9716.19 MB, flat,
+# no Agda. Eleventh consecutive gate. Drift ~8 MB/stop; band 1524 MB
+# above 8192. Probe and frame transcribed in the 11-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-11-SPLIT GATE STOP: swap 9716.19 MB, flat. Instruments in 11-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-12-SPLIT GATE STOP: swap used 9716.19 MB, flat
+# three readings, no Agda. Twelfth consecutive gate. Drift stopped.
+# Band 1524 MB above 8192. Probe and frame transcribed in the
+# 12-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-12-SPLIT GATE STOP: swap 9716.19 MB, flat. Instruments in 12-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-13-SPLIT GATE STOP: swap 9716.19 MB start,
+# 9708.19 MB close, no Agda. Thirteenth consecutive gate. 8 MB move;
+# band 1516 MB above 8192. Probe and frame transcribed in the
+# 13-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-13-SPLIT GATE STOP: swap 9708.19 MB. Instruments in 13-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-14-SPLIT GATE STOP: swap 9708.19 MB three
+# readings, flat, no Agda. Fourteenth consecutive gate. Band 1516 MB
+# above 8192. Probe and frame transcribed in the 14-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-14-SPLIT GATE STOP: swap 9708.19 MB, flat. Instruments in 14-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-15-SPLIT GATE STOP: swap 9708.19 MB start,
+# 9700.19 MB close, no Agda. Fifteenth consecutive gate. 8 MB move;
+# band 1508 MB above 8192. Probe and frame transcribed in the
+# 15-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-15-SPLIT GATE STOP: swap 9700.19 MB. Instruments in 15-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-16-SPLIT GATE STOP: swap 9700.19 MB three
+# readings, flat, no Agda. Sixteenth consecutive gate. Band 1508 MB
+# above 8192. Probe and frame transcribed in the 16-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-16-SPLIT GATE STOP: swap 9700.19 MB, flat. Instruments in 16-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-17-SPLIT GATE STOP: swap 9700.19 MB three
+# readings, flat, no Agda. Seventeenth consecutive gate. Band 1508 MB
+# above 8192. Probe and frame transcribed in the 17-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-17-SPLIT GATE STOP: swap 9700.19 MB, flat. Instruments in 17-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-18-SPLIT GATE STOP: swap 9700.19 MB three
+# readings, flat, no Agda. Eighteenth consecutive gate. Band 1508 MB
+# above 8192. Probe and frame transcribed in the 18-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-18-SPLIT GATE STOP: swap 9700.19 MB, flat. Instruments in 18-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-19-SPLIT GATE STOP: swap 9700.19 MB four
+# readings, flat, no Agda. Nineteenth consecutive gate. Band 1508 MB
+# above 8192. Probe and frame transcribed in the 19-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-19-SPLIT GATE STOP: swap 9700.19 MB, flat. Instruments in 19-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-20-SPLIT GATE STOP: swap 9700.19 MB four
+# readings, flat, no Agda. Twentieth consecutive gate. Band 1508 MB
+# above 8192. Probe and frame transcribed in the 20-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-20-SPLIT GATE STOP: swap 9700.19 MB, flat. Instruments in 20-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-21-SPLIT GATE STOP: swap 9700.19 MB four
+# readings, flat, no Agda. Twenty-first consecutive gate. Band 1508 MB
+# above 8192. Probe and frame transcribed in the 21-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-21-SPLIT GATE STOP: swap 9700.19 MB, flat. Instruments in 21-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-22-SPLIT GATE STOP: swap 9692.19 MB start,
+# 9684.19 MB close, first drop below 9700.19. Twenty-second consecutive
+# gate. Band 1492 MB above 8192. Probe and frame transcribed in the
+# 22-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-22-SPLIT GATE STOP: swap 9684.19 MB. Instruments in 22-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-23-SPLIT GATE STOP: swap 9684.19 MB four
+# readings, flat, no Agda. Twenty-third consecutive gate. 22nd's 8 MB
+# drain did not continue. Band 1492 MB above 8192. Probe and frame
+# transcribed in the 23-SPLIT dir. Continuation reads those from the
+# MAIN checkout. Same term. Transcribe even on a gate stop. Do not
+# assemble commute-from-reading. Do not fill 768-SPLIT. 755-763 stay.
+# No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-23-SPLIT GATE STOP: swap 9684.19 MB, flat. Instruments in 23-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-24-SPLIT GATE STOP: swap 9684.19 MB four
+# readings, flat, no Agda. Twenty-fourth consecutive gate. Third stop
+# at 9684.19. Band 1492 MB above 8192. Probe and frame transcribed in
+# the 24-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. 755-763 stay. No amb.
+# No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-24-SPLIT GATE STOP: swap 9684.19 MB, flat. Instruments in 24-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# ===========================================================================
+# PARK 2026-09-04. 769-25-SPLIT GATE STOP: swap 9668.19 MB start,
+# 9660.19 MB later, no Agda. Twenty-fifth consecutive gate. Flat
+# 9684.19 band broke. Band 1468 MB above 8192. Probe and frame
+# transcribed in the 25-SPLIT dir. Continuation reads those from the
+# MAIN checkout. Same term. Transcribe even on a gate stop. Do not
+# assemble commute-from-reading. Do not fill 768-SPLIT. 755-763 stay.
+# No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-25-SPLIT GATE STOP: swap 9660.19 MB. Instruments in 25-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 9660.19 band held flat across the 26-SPLIT window. Band 1468.19 MB
+# above 8192. Probe and frame transcribed in the 26-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble commute-from-reading.
+# Do not fill 768-SPLIT. 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-26-SPLIT GATE STOP: swap 9660.19 MB. Instruments in 26-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 27-SPLIT GATE STOP: swap 9652.19 MB start, 9644.19 MB later, 8 MB
+# drop then hold. Band 1452.19 MB above 8192. Probe and frame
+# transcribed in the 27-SPLIT dir. Continuation reads those from the
+# MAIN checkout. Same term. Transcribe even on a gate stop. Do not
+# assemble commute-from-reading. Do not fill 768-SPLIT. 755-763 stay.
+# No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-27-SPLIT GATE STOP: swap 9644.19 MB. Instruments in 27-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 28-SPLIT GATE STOP: swap 9644.19 MB start (two readings), 9636.19 MB
+# later (two readings), 8 MB drop between pairs. Band 1444.19 MB above
+# 8192. Probe and frame transcribed in the 28-SPLIT dir. Continuation
+# reads those from the MAIN checkout. Same term. Transcribe even on a
+# gate stop. Do not assemble commute-from-reading. Do not fill 768-SPLIT.
+# 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-28-SPLIT GATE STOP: swap 9636.19 MB. Instruments in 28-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 29-SPLIT GATE STOP: swap 9636.19 MB all four readings, byte-flat,
+# same as 28-SPLIT close. Band 1444.19 MB above 8192. Drain stalled.
+# Probe and frame transcribed in the 29-SPLIT dir. Continuation reads
+# those from the MAIN checkout. Same term. Transcribe even on a gate
+# stop. Do not assemble commute-from-reading. Do not fill 768-SPLIT.
+# 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-29-SPLIT GATE STOP: swap 9636.19 MB, flat. Instruments in 29-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 30-SPLIT GATE STOP: swap 9636.19 MB all four readings, byte-flat,
+# same as 29-SPLIT. Band 1444.19 MB above 8192. Drain stalled two
+# dispatches. Probe and frame transcribed in the 30-SPLIT dir.
+# Continuation reads those from the MAIN checkout. Same term.
+# Transcribe even on a gate stop. Do not assemble commute-from-reading.
+# Do not fill 768-SPLIT. 755-763 stay. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-30-SPLIT GATE STOP: swap 9636.19 MB, flat. Instruments in 30-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 31-SPLIT PARKED no-change: coder wrote nothing (task dir holds the
+# brief only). A29 cannot retry: coder is a single head
+# (glm-5.3-flash). Isolate still open. Sources remain the 30-SPLIT
+# probe and frame. Same term. Transcribe even on a gate stop. Do not
+# assemble commute-from-reading. Do not fill 768-SPLIT. No amb. No
+# src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "31-SPLIT PARKED no-change, wrote nothing. A29 single head. Same isolate push-raw-at-vars. Instruments still in 30-SPLIT dir."
+added = 2026-09-04
+added_by = "mathematician"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 32-SPLIT GATE STOP: swap 32781.06 MB start, 32127.69 MB later.
+# Total swap grew to 33792. Rise of 23144.87 MB vs 30-SPLIT's 9636.19.
+# Band 24589 MB above 8192. Probe and frame transcribed in the
+# 32-SPLIT dir. Continuation reads those from the MAIN checkout.
+# Same term. Transcribe even on a gate stop. Do not assemble
+# commute-from-reading. Do not fill 768-SPLIT. No amb. No src
+# landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. 769-32-SPLIT GATE STOP: swap 32781.06 MB. Instruments in 32-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 33-SPLIT PARKED no-change: coder wrote nothing (task dir holds the
+# brief only). A29 cannot retry: coder is a single head
+# (glm-5.3-flash). Isolate still open. Sources remain the 32-SPLIT
+# probe and frame. Same term. Transcribe even on a gate stop. Do not
+# assemble commute-from-reading. Do not fill 768-SPLIT. No amb. No
+# src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "33-SPLIT PARKED no-change, wrote nothing. A29 single head. Same isolate push-raw-at-vars. Instruments still in 32-SPLIT dir."
+added = 2026-09-04
+added_by = "mathematician"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# MAINTAINER RELAY 2026-09-04. 34-SPLIT PARKED R7 no-change (seq 6497,
+# pid 35806, ~4.5 min, 0 files). 33-SPLIT same shape. Last measured
+# generation is 32-SPLIT: GATE STOP, swap 32781.06 MB. 728 shelve does
+# not apply: push-raw-at-vars supply 0, no GO. Queue S35. Sources still
+# 32-SPLIT dir. Transcribe even on a gate stop. Do not fill 768-SPLIT.
+# No commute-from-reading. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "34-SPLIT PARKED no-change R7, wrote nothing. A29 single head. Last measured GATE is 32-SPLIT swap 32781.06 MB. Same isolate. Instruments in 32-SPLIT dir."
+added = 2026-09-04
+added_by = "mathematician"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 31-SPLIT retry GATE STOP seq 6515: swap 30460.75 MB. Instruments in
+# the 31-SPLIT dir (Probe769S31 + Frame769S31). The auto-split below
+# is a CODE COLLISION with the already-filled 32-SPLIT at this file
+# :8844 (same 32-token code, brief already present, 32-SPLIT already
+# PARKED seq 6478 GATE 32781.06 MB). Do not fill this request. The
+# live isolate moved on: 34-SPLIT retry PARKED seq 6529 GATE
+# 30228.75 MB; 35-SPLIT RUNNING seq 6531. Rule (a1) skips an
+# entry with no brief. Do not mint 36 while 35 is in flight.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. COLLISION with filled 32-SPLIT at :8844. Do not fill. Live isolate is 35 RUNNING."
+added = 2026-09-04
+added_by = "maintainer"
+
+# 33-SPLIT retry GATE STOP seq 6522: swap 30348.75 MB. Instruments in
+# the 33-SPLIT dir (Probe769S33 + Frame769S33). The auto-split below
+# is a CODE COLLISION with the already-filled 34-SPLIT at this file
+# :8881 (same 34-token code, brief already present). 34-SPLIT retry
+# PARKED seq 6529 GATE 30228.75 MB. Do not fill this request.
+# 35-SPLIT is RUNNING seq 6531. Rule (a1) skips an entry with no
+# brief. Do not mint 36 while 35 is in flight.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. COLLISION with filled 34-SPLIT at :8881. Do not fill. Live isolate is 35 RUNNING."
+added = 2026-09-04
+added_by = "maintainer"
+
+# 34-SPLIT retry GATE STOP seq 6529: swap 30228.75 MB. Instruments in
+# the 34-SPLIT dir (Probe769S34 + Frame769S34). The auto-split below
+# is a CODE COLLISION with the already-filled 35-SPLIT at this file
+# :8899 (same 35-token code, brief already present, 35-SPLIT RUNNING
+# seq 6531 from the path-ceiling retry). Do not fill this request.
+# 35-SPLIT retry PARKED seq 6537 GATE 30140.75 MB, report only.
+# 36-SPLIT is the filled continuation (34-SPLIT instruments).
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 5 changed files. COLLISION with filled 35-SPLIT at :8899. Do not fill. Continuation is 36-SPLIT."
+added = 2026-09-04
+added_by = "maintainer"
+
+# 35-SPLIT retry GATE STOP seq 6537: swap 30140.75 MB. Report only,
+# no probe, no frame. Coder looked in its own worktree and missed the
+# main-checkout sources. Continuation reads 34-SPLIT instruments
+# (Probe769S34 + Frame769S34) from the MAIN checkout. Transcribe even
+# on a gate stop. Same term. Do not fill 768-SPLIT. No amb. No src
+# landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 1 changed files. 769-35-SPLIT GATE STOP: swap 30140.75 MB, report only. Instruments still in 34-SPLIT dir. Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 36-SPLIT GATE STOP seq 6551: swap 30076.75 MB. Attempt 0 wrote
+# Probe769S36.agda + Frame769S36.agda and ran Agda 16s, rc -9
+# (accept-1.out). Attempt 1 report is gate-only. Continuation reads
+# those 36-SPLIT instruments from the MAIN checkout. Transcribe even
+# on a gate stop. Same term. Do not fill 768-SPLIT. No amb. No src
+# landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "park_and_split: error_class None, 1 changed files. 769-36-SPLIT GATE STOP: swap 30076.75 MB. Instruments in 36-SPLIT dir (Probe769S36.agda). Read them from the main checkout."
+added = 2026-09-04
+added_by = "maintainer"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
+
+# 37-SPLIT PARKED no-match seq 6560: GATE STOP swap 30052.75 MB, report
+# only, no probe. transfer-park did not fire: the branch report path
+# still had 36 SPLIT tokens. No auto-split. Continuation is 38-SPLIT.
+# Sources remain 36-SPLIT Probe769S36.agda / Frame769S36.agda in the
+# MAIN checkout. Transcribe even on a gate stop. Same term. Do not
+# fill 768-SPLIT. No amb. No src landing. No GraphAt.
+# ===========================================================================
+
+[[task]]
+code = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+split_of = "LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+reason = "37-SPLIT PARKED no-match, GATE STOP swap 30052.75 MB, report only. Branch report path was 36 tokens. Same isolate. Instruments in 36-SPLIT dir."
+added = 2026-09-04
+added_by = "mathematician"
+head_slot = "coder"
+machine = "shared"
+brief = "agents/tasks/LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md"
