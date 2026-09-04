@@ -407,6 +407,7 @@ import L.GCH.Pairing
 import L.GCH.LevelRows
 import L.GCH.Level
 import L.GCH.TableIn
+import L.GCH.SuccIntoPower
 import L.GCH.Sound
 import L.Choice.Transversal
 ```
