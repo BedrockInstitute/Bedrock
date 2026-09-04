@@ -403,6 +403,7 @@ import L.GCH.Definable
 import L.GCH.BelowSucc
 import L.GCH.OrderType
 import L.GCH.CardOf
+import L.GCH.Pairing
 import L.GCH.Sound
 import L.Choice.Transversal
 ```
