@@ -395,6 +395,9 @@ import L.Coding.EnvSupply
 import L.BoundedSubset
 import L.StageBound
 import L.CardinalAbove
+import L.GCH.Stages
+import L.GCH.Placement
+import L.GCH.Assembly
 import L.Choice.Transversal
 ```
 
