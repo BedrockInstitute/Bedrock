@@ -412,6 +412,7 @@ import L.GCH.SuccIntoPower
 import L.GCH.Complete
 import L.GCH.Sequences
 import L.GCH.Condense
+import L.GCH.StageCount
 import L.GCH.Sound
 import L.Choice.Transversal
 ```
