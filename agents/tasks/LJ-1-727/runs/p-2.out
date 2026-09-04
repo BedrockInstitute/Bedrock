@@ -1,0 +1,7 @@
+GHCRTS=[-A64m -I0 -M2g]
+CMD: agda agents/tasks/LJ-1-727/Probe727.agda  (p-2: warm recheck)
+
+real	0m3.221s
+user	0m2.823s
+sys	0m0.230s
+EXIT=0

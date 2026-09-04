@@ -1,0 +1,74 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T14:31:32Z
+Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:136.21-66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  _⊨_
+when scope checking the declaration
+  open AtStage σ oσ using (imageIn; imageOut; ⊨-transport; _⊨_)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:162.59-60: error: [NotInScope]
+Not in scope:
+  ⊨
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:162.59-60
+    (did you mean
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.Mse._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.SemM.At._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.SemV.At._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.V._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.SemanticsM.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AbsL.Mse._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AbsL.SemM.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AbsL.SemV.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AbsL.V._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.DefC.Refine.Abs.Mse._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.DefC.Refine.Abs.SemM.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.DefC.Refine.Abs.SemV.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.DefC.Refine.Abs.V._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.DefC.SemanticsM.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.RefC.Abs.Mse._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.RefC.Abs.SemM.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.RefC.Abs.SemV.At._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.AtStage.RefC.Abs.V._⊨_' or
+       '.#L.Axioms.Separation-17130666481281408291.SemV.At._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.Mse._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.SemM.At._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.SemV.At._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.V._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.SemanticsM.At._⊨_' or
+       'AtStage.DefC.Refine.Abs.Mse._⊨_' or
+       'AtStage.DefC.Refine.Abs.SemM.At._⊨_' or
+       'AtStage.DefC.Refine.Abs.SemV.At._⊨_' or
+       'AtStage.DefC.Refine.Abs.V._⊨_' or
+       'AtStage.DefC.SemanticsM.At._⊨_' or
+       'AtStage.RefC.Abs.Mse._⊨_' or
+       'AtStage.RefC.Abs.SemM.At._⊨_' or
+       'AtStage.RefC.Abs.SemV.At._⊨_' or
+       'AtStage.RefC.Abs.V._⊨_' or
+       'DefOf.Refine.Abs.Mse._⊨_' or
+       'DefOf.Refine.Abs.SemM.At._⊨_' or
+       'DefOf.Refine.Abs.SemV.At._⊨_' or
+       'DefOf.Refine.Abs.V._⊨_' or
+       'DefOf.SemanticsM.At._⊨_'?)
+when scope checking ⊨
+        2.28 real         1.95 user         0.23 sys
+           604405760  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38906  page reclaims
+                  82  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 510  voluntary context switches
+                1388  involuntary context switches
+         21750195815  instructions retired
+          8707146448  cycles elapsed
+           546440152  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:31:34Z

@@ -1,0 +1,2 @@
+missing   exit=42       2.25s  agents/tasks/LJ-1-704/Probe704.agda::carved-is-hier  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-704/.pod-state/witness/Witness-POD-4494c78a.agda:31)
+witness: 1 UNRESOLVED of 1, 2.25 s, probe_red=False

@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-28T04:47:56Z
+Checking LJ-1-722.runs.B2-bridgebare (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-722/agents/tasks/LJ-1-722/runs/B2-bridgebare.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 4294967296 bytes (4096 MB).
+agda: Use `+RTS -M<size>' to increase it.
+      790.94 real       786.61 user         4.27 sys
+          5027233792  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              308592  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+               97977  involuntary context switches
+      11216695665963  instructions retired
+       3273478448339  cycles elapsed
+          4970418232  peak memory footprint
+EXIT=251
+ended 2026-08-28T05:01:07Z

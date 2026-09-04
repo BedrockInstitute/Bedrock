@@ -1,0 +1,11 @@
+[shelve]
+task = "LJ-1.753-SPLIT"
+claim = "delivered-elsewhere"
+reason = "Situation 1, owner 2026-08-28: the transfer is complete. LJ-1.753-SPLIT inhabited bound-in-stage-from-mirror inside module At. The meter asked for the bare name, so the row did not close GO. LJ-1.753-SPLIT-SPLIT's obligation line names At.bound-in-stage-from-mirror. Retrying 753-SPLIT is the meter-name miss 753-SPLIT-SPLIT already takes."
+evidence = [
+  "agents/tasks/LJ-1-753-SPLIT/lj-1.753-SPLIT-report.md:8",
+  "agents/tasks/LJ-1-753-SPLIT/LJ-1.753-SPLIT.md:28",
+  "agents/tasks/LJ-1-753-SPLIT-SPLIT/LJ-1.753-SPLIT-SPLIT.md:28",
+]
+reopen = "Reopen if a consumer needs the bare name bound-in-stage-from-mirror at 753-SPLIT's top level, and the 753-SPLIT-SPLIT brief is gone. Not retry the At inhabitant 753-SPLIT already built."
+by = "mathematician"

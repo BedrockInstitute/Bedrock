@@ -1,0 +1,27 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:31:25Z
+Checking LJ-1-716.runs.G3b (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3b.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 2147483648 bytes (2048 MB).
+agda: Use `+RTS -M<size>' to increase it.
+      312.30 real       311.45 user         0.99 sys
+          2668281856  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              164950  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+               22433  involuntary context switches
+       4173279649810  instructions retired
+       1275139393131  cycles elapsed
+          2609908112  peak memory footprint
+EXIT=251
+ended 2026-08-27T15:36:37Z

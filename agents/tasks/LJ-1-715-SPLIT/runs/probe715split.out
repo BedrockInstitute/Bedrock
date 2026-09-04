@@ -1,0 +1,11 @@
+# probe715split
+# task LJ-1.715-SPLIT
+# GHCRTS -A64m -I0 -M4g
+# tier heavy
+Checking LJ-1-715-SPLIT.Probe715Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/agents/tasks/LJ-1-715-SPLIT/Probe715Split.agda).
+ Checking L.Ordinal (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/src/L/Ordinal.lagda.md).
+
+real	0m1.040s
+user	0m0.907s
+sys	0m0.103s
+EXIT=0

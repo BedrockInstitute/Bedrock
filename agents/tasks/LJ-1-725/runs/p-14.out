@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-28T13:48:26Z
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:199.64: error: [ParseError]
+)<ERROR>  ∣₁
+      where
+      pairEq :...
+        0.07 real         0.03 user         0.02 sys
+           107118592  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8534  page reclaims
+                 103  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   8  voluntary context switches
+                  75  involuntary context switches
+           741884996  instructions retired
+           229205469  cycles elapsed
+            86426224  peak memory footprint
+EXIT=42
+ended 2026-08-28T13:48:26Z

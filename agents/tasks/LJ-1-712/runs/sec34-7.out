@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T14:08:01Z
+Checking LJ-1-712.Probe712 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda:187.11-37: error: [UnequalTerms]
+Type (ℓ-suc ℓ) !=<
+Σ (Type (ℓ-suc ℓ)) (Cubical.Foundations.HLevels.isOfHLevel 1)
+when checking that the expression ⟨ (# 11) ∈ Lset (step 2 ∅) ⟩ has
+type Ω
+        9.83 real         9.65 user         0.17 sys
+           786776064  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               50112  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 989  involuntary context switches
+        137755472370  instructions retired
+         42099665078  cycles elapsed
+           726844520  peak memory footprint
+EXIT=42
+ended 2026-08-27T14:08:11Z

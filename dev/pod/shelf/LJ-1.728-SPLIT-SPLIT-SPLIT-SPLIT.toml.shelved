@@ -1,0 +1,14 @@
+[shelve]
+task = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT"
+claim = "delivered-elsewhere"
+reason = "Situation 1, owner 2026-08-28 transfer-shell. LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT briefed conv0 as the codomain-ascribed B8 convert. It did not close GO: heap wall at -M4g, floor green. LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT's obligation line names conv0, un-ascribed B4, and closed GO. LJ-1.764 names the same object and also closed GO. Retrying SSSS is a fifth B8 run. The live convert is the un-ascribed export. Do not fill another 6-SPLIT."
+evidence = [
+  "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT.md:26",
+  "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT-SPLIT/lj-1.728-SPLIT-SPLIT-SPLIT-SPLIT-report.md:9",
+  "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.md:23",
+  "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT/lj-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-report.md:9",
+  "agents/tasks/LJ-1-764/LJ-1.764.md:23",
+  "agents/tasks/LJ-1-764/lj-1.764-report.md:4",
+]
+reopen = "Reopen if a consumer needs the codomain-ascribed B8 convert at SSSS's own path, and the 6-SPLIT/764 un-ascribed conv0 is gone. Not retry B8."
+by = "mathematician"

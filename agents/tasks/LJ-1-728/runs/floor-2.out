@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T11:46:30Z
+Checking LJ-1-728.runs.FLOOR728 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-728/runs/FLOOR728.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-728/runs/FLOOR728.agda:141.23-37: error: [UnequalTerms]
+fst (HS.H.T.val cp) != δ of type
+Cubical.HITs.CumulativeHierarchy.Base.V ℓ
+when checking that the expression cong Lset cp≡δ has type
+Lset δ ≡ _z_161
+       12.79 real        12.18 user         0.44 sys
+          1050558464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               65875  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 739  voluntary context switches
+                9370  involuntary context switches
+        152925994248  instructions retired
+         47772162921  cycles elapsed
+           991216912  peak memory footprint
+EXIT=42
+ended 2026-08-28T11:46:43Z

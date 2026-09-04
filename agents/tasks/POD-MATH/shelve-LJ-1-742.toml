@@ -1,0 +1,11 @@
+[shelve]
+task = "LJ-1.742"
+claim = "delivered-elsewhere"
+reason = "Situation 1, owner 2026-08-28: the transfer is complete. LJ-1.742 briefed defat-fill-asConst and stated the type. It did not close GO. LJ-1.742-SPLIT's obligation line names that same object. Retrying 742 is the prefix 742-SPLIT already takes. The meter is not GO."
+evidence = [
+  "agents/tasks/LJ-1-742/lj-1.742-report.md:14",
+  "agents/tasks/LJ-1-742/LJ-1.742.md:33",
+  "agents/tasks/LJ-1-742-SPLIT/LJ-1.742-SPLIT.md:35",
+]
+reopen = "Reopen if a consumer needs defat-fill-asConst at 742's own path, and the 742-SPLIT line is gone. Not retry the prefix 742 already wrote."
+by = "mathematician"

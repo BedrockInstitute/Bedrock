@@ -1,0 +1,47 @@
+5c5
+< module LJ-1-765.Probe765 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+---
+> module LJ-1-765-SPLIT-SPLIT.Probe765SplitSplit {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+16,17c16,17
+< import LJ-1-765.runs.Frame765 {ℓ} lem as Frame
+< import LJ-1-765.runs.HullHalf765 {ℓ} lem as HullHalf
+---
+> import LJ-1-765-SPLIT-SPLIT.runs.Frame765 {ℓ} lem as Frame
+> import LJ-1-765-SPLIT-SPLIT.runs.HullHalf765 {ℓ} lem as HullHalf
+38,39c38,44
+<     → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ HS.M ⟩ × ⟨ Lset δ ∈ˢ HS.M ⟩
+<                   × ⟨ (Lset δ ∷ δ ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩) ∥₁
+---
+>     → ∥ Σ[ ca ∈ Code ] Σ[ cp ∈ Code ] Σ[ z ∈ S ]
+>          (⟨ z ∈ˢ HS.M ⟩
+>           × ⟨ Lset δ ∈ˢ HS.M ⟩
+>           × fst (val ca) ≡ Lset δ
+>           × fst (val cp) ≡ δ
+>           × ⟨ (fst (val ca) ∷ fst (val cp) ∷ z ∷ [])
+>               P652.⊨ₚ P667.matrix₃ ⟩) ∥₁
+44,52d48
+<   amb : (δ : S) (ca cp : Code)
+<       → fst (val ca) ≡ Lset δ → fst (val cp) ≡ δ
+<       → (a : F.HS.ASt.SL)
+<       → ⟨ (fst (val ca) ∷ fst (val cp) ∷ fst a ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+<       → ⟨ (Lset δ ∷ δ ∷ fst a ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+<   amb δ ca cp ca≡Lδ cp≡δ a h =
+<     subst (λ u → ⟨ (u ∷ δ ∷ fst a ∷ []) P652.⊨ₚ P667.matrix₃ ⟩) ca≡Lδ
+<       (subst (λ u → ⟨ (fst (val ca) ∷ u ∷ fst a ∷ []) P652.⊨ₚ P667.matrix₃ ⟩)
+<              cp≡δ h)
+58,59c54,60
+<         → Σ[ z ∈ S ] (⟨ z ∈ˢ HS.M ⟩ × ⟨ Lset δ ∈ˢ HS.M ⟩
+<                      × ⟨ (Lset δ ∷ δ ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩)
+---
+>         → Σ[ ca' ∈ Code ] Σ[ cp' ∈ Code ] Σ[ z ∈ S ]
+>              (⟨ z ∈ˢ HS.M ⟩
+>               × ⟨ Lset δ ∈ˢ HS.M ⟩
+>               × fst (val ca') ≡ Lset δ
+>               × fst (val cp') ≡ δ
+>               × ⟨ (fst (val ca') ∷ fst (val cp') ∷ z ∷ [])
+>                   P652.⊨ₚ P667.matrix₃ ⟩)
+61c62
+<     fst a , a∈H , Lδ∈M , amb δ ca cp ca≡Lδ cp≡δ a (conv0 ca cp a sat)
+---
+>     ca , cp , fst a , a∈H , Lδ∈M , ca≡Lδ , cp≡δ , conv0 ca cp a sat
+gfc stripped-diff rc=1

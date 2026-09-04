@@ -1,0 +1,42 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.715] NEGATIVE CONTROL, kept as .agda.txt because it cannot
+-- typecheck by design.  The union clause stated BARE:
+-- the union symbol is infixr 9 and the structure membership is infix 20,
+-- so in prefix position the union takes the whole membership as its
+-- argument and the clause dies with [UnequalTerms]
+-- (V (level) !=< Sigma (Type (level)) (membership domain)).
+-- The parenthesized spelling typechecks: Diag715c.agda, green control.
+-- This is the measured parse fact behind the parentheses in
+-- src/L/Ordinal.lagda.md's IsLimit and in Probe715.agda.
+-- Evidence run: runs/diag-bare-union.out.
+
+open import Base.Prelude
+open import Base.Truth
+
+module LJ-1-715.Diag715 {ℓ : Level} where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import L.Constructible {ℓ}
+  using ( isTransV; isPropIsTransV; IsOrd; isPropIsOrd )
+open import Cubical.Data.Bool using ( Bool; true; false )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( _∈ₛ_; ∈∈ₛ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; ∅-empty; ⋃_; union-ax; module InfinitySet )
+open InfinitySet using ( sucV )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- the union clause stated bare: the failing shape
+
+IsLimitA : S → Type (ℓ-suc ℓ)
+IsLimitA α =
+    IsOrd α
+  × ((x : S) → ⟨ x ∈ˢ α ⟩ → ⟨ sucV x ∈ˢ α ⟩)
+  × ((X : Type ℓ) (f : X → S)
+      → ((i : X) → ⟨ f i ∈ˢ α ⟩)
+      → ⟨ ⋃ (sett X f) ∈ˢ α ⟩)

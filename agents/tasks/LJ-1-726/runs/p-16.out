@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T11:47:44Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:147.14-55: error: [UnequalTerms]
+Type (ℓ-suc ℓ) !=<
+Σ (Type (ℓ-suc ℓ)) (Cubical.Foundations.HLevels.isOfHLevel 1)
+when checking that the expression
+lookup q γ ≡ pr (lookup u γ) (lookup v γ) has type
+Σ (Type (ℓ-suc ℓ)) (Cubical.Foundations.HLevels.isOfHLevel 1)
+      126.27 real       125.38 user         0.74 sys
+          1533968384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               95381  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 660  voluntary context switches
+               28172  involuntary context switches
+       1485398758939  instructions retired
+        496891573446  cycles elapsed
+          1474856544  peak memory footprint
+EXIT=42
+ended 2026-08-28T11:49:50Z

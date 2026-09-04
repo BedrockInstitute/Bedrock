@@ -1,0 +1,34 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:42:30Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:721.15-723.42: error: [NoParseForApplication]
+Could not parse the application
+∣ x ,
+(hxB , ∣ e′ , ((consAt-route δ (x , hxB) e′ z hzg hc) , (hc , hr))
+ ∣₁)
+Operators used in the grammar:
+  , (infixr operator, level 4) [_,_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/Agda/Builtin/Sigma.agda:8.15-18)]
+when scope checking
+∣ x ,
+(hxB , ∣ e′ , ((consAt-route δ (x , hxB) e′ z hzg hc) , (hc , hr))
+ ∣₁)
+        1.98 real         1.78 user         0.18 sys
+           429195264  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27950  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 321  involuntary context switches
+         21440121722  instructions retired
+          7080108952  cycles elapsed
+           370967392  peak memory footprint
+EXIT=42

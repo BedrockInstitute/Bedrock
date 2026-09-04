@@ -1,0 +1,9 @@
+Checking LJ-1-753.runs.Floor753 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda:14.10-11: error: [NotInScope]
+Not in scope:
+  S
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda:14.10-11
+when scope checking S
+real 0.76
+user 0.58
+sys 0.10

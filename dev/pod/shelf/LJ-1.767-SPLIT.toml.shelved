@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.767-SPLIT"
+claim = "delivered-elsewhere"
+reason = "Situation 1, owner 2026-08-28: the transfer is complete. LJ-1.767-SPLIT briefed grounded-from-complete. It did not close GO: first-factor wall. LJ-1.767-SPLIT-SPLIT's obligation line names that same object and closed GO: reading-only pack, 210.63 s. Retrying 767-SPLIT is the packing 767-SPLIT-SPLIT already delivered."
+evidence = [
+  "agents/tasks/LJ-1-767-SPLIT/lj-1.767-SPLIT-report.md:4",
+  "agents/tasks/LJ-1-767-SPLIT/LJ-1.767-SPLIT.md:31",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/LJ-1.767-SPLIT-SPLIT.md:28",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/lj-1.767-SPLIT-SPLIT-report.md:5",
+]
+reopen = "Reopen if a consumer needs grounded-from-complete with a further packed factor at 767-SPLIT's own path, and the 767-SPLIT-SPLIT term is gone. Not retry the first-factor packing 767-SPLIT already measured."
+by = "mathematician"

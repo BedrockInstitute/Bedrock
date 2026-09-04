@@ -1,0 +1,59 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:14:53Z
+Checking LJ-1-716.Probe716 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda).
+error: [UnsolvedConstraints]
+Failed to solve the following constraints:
+  ∥
+  Σ S
+  (λ x →
+     ⟨
+     x ∈ˢ
+     AtP.⟦
+     FOL.Count.Count.eraseTm CS.S (var (LJ-1-667.runs.W3.lastFin lem))
+     (FOL.Count.Count.plus-zero-l CS.S
+      (FOL.Count.Count.plus-zero-r CS.S
+       (LJ-1-667.runs.W3.count-three lem)))
+     ⟧
+     (x₁ ∷ Lset ∅ ∷ ∅ ∷ fst (hierL ∅ ∅∈L ∅-ord) ∷ [])
+     ⊓
+     ((x ∷ x₁ ∷ Lset ∅ ∷ ∅ ∷ fst (hierL ∅ ∅∈L ∅-ord) ∷ []) AtP.⊨
+      FOL.Count.Count.erase CS.S (LJ-1-667.runs.W3.s5 lem)
+      (FOL.Count.Count.plus-zero-r CS.S
+       (FOL.Count.Count.plus-zero-r CS.S
+        (LJ-1-667.runs.W3.count-three lem))))
+     ⟩)
+  ∥₁
+    =< fst
+       ((x₁ ∷ Lset ∅ ∷ ∅ ∷ fst (hierL ∅ ∅∈L ∅-ord) ∷ []) AtP.⊨ _ψ_145)
+    : Type (ℓ-suc ℓ)
+    (blocked on _ψ_145)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:113.24-70: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:113.24-25
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:113.64-70
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:124.24-125.81: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:124.24-125.81
+        3.27 real         3.06 user         0.18 sys
+           697630720  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44660  page reclaims
+                  18  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 394  involuntary context switches
+         43978889486  instructions retired
+         13928274945  cycles elapsed
+           637633568  peak memory footprint
+EXIT=42
+ended 2026-08-27T15:14:56Z

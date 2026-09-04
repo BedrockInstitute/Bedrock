@@ -1,0 +1,112 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT] THE
+-- OBLIGATION INSTRUMENT.  This file is
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S34 (that
+-- task's parked obligation, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S30 (that
+-- task's parked obligation, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S15 (that
+-- task's parked obligation, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S14 (that
+-- task's parked obligation, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S13 (that
+-- task's parked obligation, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S12 (that
+-- task's parked obligation, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S11 (that
+-- task's parked obligation, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S10, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S8, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S7, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S6, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S5, itself
+-- LJ-1-769-SPLIT-SPLIT-SPLIT.Probe769SSS, itself
+-- LJ-1-769-SPLIT-SPLIT.Probe769SS, itself
+-- LJ-1-769-SPLIT.runs.RawOnly769Split, the push alone in a process
+-- of its own) transcribed into this task as the brief's obligation:
+-- Cy.push of Delta0-matrix3 at the carry's own literal codomain.
+-- No conversion, no HullHalf, no spelled pi, no inhabited
+-- push-matrix3-at-vars beyond this term, no inhabited
+-- commute-from-reading, no copied Carry, no amb, no conv0.  The
+-- comment header above the first `open import` line is rewritten for
+-- this task (provenance chain and this dispatch's gate reading) and
+-- is not part of the diff claim.  From the first `open import` line
+-- down, measured with diff at delivery, exactly two lines differ from
+-- the source: the module line (this task's top level) and the Frame
+-- import line (this task's vendored frame
+-- runs/Frame769S36.agda).  The term's name is already the brief's
+-- push-raw-at-vars in the source, so no name line differs.
+--
+--   UNVERIFIED HERE.  This dispatch's gate reading is recorded in
+-- lj-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-report.md
+-- beside this file: swap used 30100.75 MB at the dispatch's first
+-- command against the 8192 MB line, so no Agda ran in this dispatch.
+-- The brief ordered the transcription even so.
+-- The predecessor's report is committed where this dispatch reads
+-- (the 35-token task directory) and records its own stop at
+-- 30140.75 MB; this dispatch claims no consecutive-stop count
+-- beyond its own stop.
+-- Promotion protocol (the predecessor's, retargeted, with the gate
+-- first): read sysctl vm.swapusage and proceed only while swap used
+-- is below 8192 MB; this file rests at the brief's name already, run
+-- it in place (ONE Agda process, caliber from the pane, never set in
+-- the file, 1800 s cap; runs/run-obligation.sh does exactly this),
+-- and on EXIT=0 the name is earned; on any other exit demote it to
+-- Probe769S36.agda.txt so no unverified .agda is trusted.
+--
+--   NO HOLE, NO POSTULATE.  Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.Probe769S36 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+-- qualified imports only: this file carries its own module Build,
+-- and a plain import of a module holding a Build of its own shadows
+-- it (measured: ShadowedModule, SSS runs/hull-1.out).
+import LJ-1-769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT.runs.Frame769S36 {ℓ} lem as Frame
+
+open import Cubical.Data.Vec using ( map; _∷_; [] )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( module F; module HS )
+
+  -- THE GENERIC CARRY, opened once at this frame (W2), as in the
+  -- obligation file.
+  module Cy = F.Carry elem
+
+  -- STEP 1, THE PUSH AT ITS OWN LITERAL CODOMAIN.  No conversion is
+  -- owed here: the declared type is the carry's codomain with the
+  -- vector substituted, and the check unfolds the carry's body only.
+  -- (the membership hypotheses are NAMED binders here: the spelled
+  -- codomain mentions the pair entries, and an unnamed arrow binds
+  -- nothing)
+  push-raw-at-vars :
+    (x₁ x₂ x₃ : S)
+    (m₁ : ⟨ x₁ ∈ˢ HS.M ⟩) (m₂ : ⟨ x₂ ∈ˢ HS.M ⟩) (m₃ : ⟨ x₃ ∈ˢ HS.M ⟩)
+    → ⟨ (x₁ ∷ x₂ ∷ x₃ ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+    → ⟨ map fst (map Cy.CIso.I.g
+                  ((x₁ , m₁) ∷ (x₂ , m₂) ∷ (x₃ , m₃) ∷ []))
+         P652.⊨ₚ P667.matrix₃ ⟩
+  push-raw-at-vars x₁ x₂ x₃ m₁ m₂ m₃ rd =
+    Cy.push P667.Δ₀-matrix₃ ((x₁ , m₁) ∷ (x₂ , m₂) ∷ (x₃ , m₃) ∷ []) rd
+

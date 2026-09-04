@@ -1,0 +1,38 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:25:12Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:504.12-505.27: error: [UnequalTerms]
+fst m′ != # toℕ i of type V ℓ
+when checking that the expression
+subst ⟨_⟩ (appAt-adequate (suc e) zero (suc v) (m′ ∷ γ))
+(hp .snd .snd)
+has type
+⟨
+pr
+(fst
+ (FOL.Semantics.At.⟦ hPropAlgebra (ℓ-suc ℓ) ⟧
+  (𝒮ᵥ FOL.ZFStructure.↾ isL) AbsL.SM id (con (numS (toℕ i)))
+  (m′ ∷ γ)))
+(fst (lookup v γ))
+∈ fst (lookup e γ)
+⟩
+        3.91 real         3.71 user         0.19 sys
+           555761664  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               35676  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 578  involuntary context switches
+         47841416984  instructions retired
+         14019435596  cycles elapsed
+           494945216  peak memory footprint
+EXIT=42

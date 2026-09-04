@@ -1,0 +1,4 @@
+Checking LJ-1-737.Probe737 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-737/agents/tasks/LJ-1-737/Probe737.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-737/agents/tasks/LJ-1-737/Probe737.agda:110.33-34: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-737/agents/tasks/LJ-1-737/Probe737.agda:110.33-34

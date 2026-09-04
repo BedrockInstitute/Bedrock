@@ -1108,7 +1108,13 @@ class AcceptanceRecord(Patching):
     def test_changed_files_own_excludes_a_file_that_predates_this_dispatch(self):
         """[LJ-1.582], owner's ruling 2026-08-23: `changed_files_own` distinguishes what
         THIS dispatch wrote from what fact 4 inherited from an earlier attempt, wired
-        end to end through `run_acceptance()`."""
+        end to end through `run_acceptance()`. **SECOND INSTANCE, seq 4904, 2026-08-27
+        evening: a retried instance whose worker died pid-dead was accepted over the
+        reused scene's four-hours-older critic returns and closed DONE
+        `sys-critic-upheld-no-go` with `obligations_open = 1`.** The cure is now at the
+        record boundary: when the owned slice is measurable and EMPTY, there is no
+        record at all (R7), which is the honest shape of a worker that wrote nothing
+        this dispatch over a scene somebody else left dirty."""
         self.stub(targets=["src/Everything.lagda.md"])
         d = self.tmp()
         (d / "src" / "L").mkdir(parents=True)
@@ -1119,8 +1125,60 @@ class AcceptanceRecord(Patching):
         t = accept._Task("LJ-1.999")
         t.started = time.strftime("%Y-%m-%d %H:%M:%S")
         rec = accept.run_acceptance(t, d)
-        self.assertEqual(rec["changed_files_own"], [],
-                         "the only in-scope file predates this dispatch; it is inherited")
+        self.assertIsNone(rec,
+             "inherited-only evidence produces no record: routing never sees it")
+
+    def test_an_author_instance_cannot_mint_a_verdict_artifact(self):
+        """seq 4973, 2026-08-28 03:04: an escalated coder wrote `review-of-<X>.md`
+        during its lint fix pass, the sys-critic-upheld-no-go glob read it as "a
+        critic has spoken", and the task closed DONE with no critic ever
+        dispatched. The A21 penalty now applies to its sibling: a non-adversarial
+        instance's verdict-named writes are dropped from fact 4 and kept on disk."""
+        self.stub()
+        d = self.tmp()
+        home = d / "agents" / "tasks" / "LJ-1-999"
+        home.mkdir(parents=True, exist_ok=True)
+        verdict = home / "review-of-LJ-1-999-1.md"
+        verdict.write_text("upheld\n", encoding="utf-8")
+        report = home / "lj-1.999-report.md"
+        report.write_text("fixed\n", encoding="utf-8")
+        self.patch(accept.facts_mod, "changed_files_scoped",
+                   lambda code, brief, root=None:
+                   (["agents/tasks/LJ-1-999/review-of-LJ-1-999-1.md",
+                     "agents/tasks/LJ-1-999/lj-1.999-report.md"], []))
+        t = accept._Task("LJ-1.999")
+        t.started = time.strftime("%Y-%m-%d %H:%M:%S")
+        t.role = "coder"
+        rec = accept.run_acceptance(t, d)
+        self.assertEqual(rec["facts"]["changed_files"],
+                         ["agents/tasks/LJ-1-999/lj-1.999-report.md"])
+        self.assertEqual(rec["verdict_files_refused"],
+                         ["agents/tasks/LJ-1-999/review-of-LJ-1-999-1.md"])
+        self.assertTrue(verdict.exists(), "kept on disk as scene evidence")
+
+    def test_a_verdict_slot_still_mints_its_own_artifact(self):
+        """The kind boundary holds: an adversarial instance's review-of write is real
+        verdict evidence and stays in fact 4 where the upheld-no-go row reads it."""
+        self.stub()
+        d = self.tmp()
+        home = d / "agents" / "tasks" / "LJ-1-999"
+        home.mkdir(parents=True, exist_ok=True)
+        verdict = home / "review-of-LJ-1-999-1.md"
+        verdict.write_text("upheld\n", encoding="utf-8")
+        report = home / "lj-1.999-report.md"
+        report.write_text("fixed\n", encoding="utf-8")
+        self.patch(accept.facts_mod, "changed_files_scoped",
+                   lambda code, brief, root=None:
+                   (["agents/tasks/LJ-1-999/review-of-LJ-1-999-1.md",
+                     "agents/tasks/LJ-1-999/lj-1.999-report.md"], []))
+        t = accept._Task("LJ-1.999")
+        t.started = time.strftime("%Y-%m-%d %H:%M:%S")
+        t.role = "mathematician_adversarial"
+        rec = accept.run_acceptance(t, d)
+        self.assertEqual(rec["facts"]["changed_files"],
+                         ["agents/tasks/LJ-1-999/review-of-LJ-1-999-1.md",
+                          "agents/tasks/LJ-1-999/lj-1.999-report.md"])
+        self.assertEqual(rec["verdict_files_refused"], [])
 
     def test_a_failed_conjunct_names_its_own_class_and_takes_exit_1(self):
         self.stub(targets=["src/Everything.lagda.md"])

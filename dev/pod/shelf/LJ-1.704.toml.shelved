@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.704"
+claim = "proven-futile"
+reason = "Situation 2. No task closed GO on carved-is-hier. What settles THIS route (carved-is-hier via table-sat as stated, with no extra height) is a different task: LJ-1.724 measured that table-sat is false as stated. At a successor ordinal the A-bounded recording has no approximation inside Lset gamma, so pr x (Lset x) is not in carved. The minimal counterexample is gamma = 2, x = 1. 704 named table-sat as the missing fact and called it model-true. Retrying 704 is that fact again. The no-junk half of 704's model argument is untouched. The continuation is table-sat at omega <= gamma and x+2 < gamma, queued as LJ-1.724-SPLIT, not a 704 retry."
+evidence = [
+  "agents/tasks/LJ-1-724/lj-1.724-report.md:3",
+  "agents/tasks/LJ-1-724/lj-1.724-report.md:26",
+  "agents/tasks/LJ-1-724/Probe724.agda:75",
+  ".pod-state/worktrees/LJ-1-704/agents/tasks/LJ-1-704/lj-1.704-report.md:26",
+  "src/L/Axioms/Basic.lagda.md:196",
+]
+reopen = "Reopen if LJ-1.724-SPLIT inhabits table-sat at omega <= gamma and sucV (sucV x) in gamma, and a later brief inhabits carved-is-hier from that term. Not retry table-sat as stated."
+by = "mathematician"

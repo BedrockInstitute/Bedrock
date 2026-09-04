@@ -1,0 +1,44 @@
+# Maintainer batch 20260904-120540. NO ROWS, NO QUEUE ENTRIES.
+#
+# Forty-seven parks examined. Two movements since batch 20260904-113328.
+#
+# MOVEMENT ONE: the rotation spent both glm lanes on the re-dispatched
+# shells: LJ-1.769-SPLIT^32 and LJ-1.769-SPLIT^33 each ran ~16 minutes on
+# their capped worktrees, returned pid-dead with the acceptance measuring
+# exit 0 (probes clean), and each parked through its OWN transfer-park row
+# (seq 6515 and 6522). Both were the first full delivery cycles since the
+# `_worktree_name` fix -- pi started, worked, and closed honestly. The
+# designed path, end to end.
+#
+# MOVEMENT TWO: LJ-1.769-SPLIT^16 and LJ-1.769-SPLIT^17 rejoined the list
+# (both re-parked through their own transfer-park rows after their turns on
+# the lanes). PARKED 45 -> 46 as the rotation parks faster than pod-math's
+# shelving consumes. The AD3 owner holds the whole-line judgement flagged
+# since 005530.
+#
+# PER-TASK VERDICTS (carried from 113328, restated for this file's record).
+#
+# LJ-1.765-SPLIT and the 769-line shells (transfer-park, exit 0 on every
+# measured delivery, 6/37/33 and 5-file terms, own): each shell's own brief
+# parks it with the census deferred to a successor or continuation. The 765
+# line is fully shelved at its head. The shelving judgement is the
+# mathematician's AD3 call, now exercised on fifteen shells of these
+# families. Rows from me would double-track that process. No row.
+#
+# The R7/no-change parks (LJ-1.740-SPLIT, LJ-1.742-SPLIT-SPLIT-SPLIT,
+# LJ-1.753-SPLIT-SPLIT, LJ-1.765-SPLIT-SPLIT): unmeasurable or empty
+# returns whose six facts name no verdict. The program auto-continues the
+# pid-dead shape at acceptance (R7 fix, this morning) and the lanes are
+# spending the budgets. A verdict from me would be invented, not measured.
+# No row.
+#
+# LJ-1.755 ... LJ-1.763 (nine tasks, no-change, 0 files): new-family queue
+# tasks whose first instances produced nothing; the mathematician owns their
+# verdicts. No row.
+#
+# THE SHADOWING LIST is empty this window.
+#
+# THE EXPIRY FALLOUT lists re-falls of long-closed LJ-1.39x-1.42x records to
+# system rows and NO MATCH. Those tasks are DONE; expiry re-routes records,
+# it does not reopen tasks. A proposal row keyed to a DONE task would move
+# live records and breach R3. No row.

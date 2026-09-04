@@ -1,0 +1,19 @@
+{-# OPTIONS --cubical --safe #-}
+module LJ-1-753.runs.ParseTest where
+open import Agda.Primitive using (Level)
+open import Cubical.Data.Sigma using (Σ; _×_; _,_)
+open import Cubical.Foundations.Prelude using (ℓ-suc)
+open import Cubical.HITs.PropositionalTruncation using (∥_∥₁)
+variable
+  ℓ : Level
+A B C D : Type (ℓ-suc ℓ)
+A = Level.Level
+B = Level.Level
+C = Level.Level
+D = Level.Level
+f : (u : A) → B →
+    ( ( ant :
+        ( ∥ A ∥₁ )
+      → C ) )
+  × ( C → ( ∥ A ∥₁ ) )
+f u hu = ( λ ant → hu ) , ( λ h → h )

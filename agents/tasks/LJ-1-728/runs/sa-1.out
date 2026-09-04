@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T12:05:13Z
+Checking LJ-1-728.runs.SA728 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-728/runs/SA728.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 2147483648 bytes (2048 MB).
+agda: Use `+RTS -M<size>' to increase it.
+      347.79 real       344.21 user         3.25 sys
+          2505408512  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              171262  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 439  voluntary context switches
+               89871  involuntary context switches
+       4007433952083  instructions retired
+       1382461745186  cycles elapsed
+          2450524560  peak memory footprint
+EXIT=251
+ended 2026-08-28T12:11:00Z

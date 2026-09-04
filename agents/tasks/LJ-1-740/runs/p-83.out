@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T23:25:39Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:155.6-48: error: [UnequalTerms]
+nsuc j != j + 1 of type ℕ
+when checking that the expression
+plus-suc j nzero ∙ cong nsuc (plus-zero j) has type j + 1 ≡ j + 1
+        2.18 real         1.99 user         0.18 sys
+           421953536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27509  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 346  involuntary context switches
+         24306678424  instructions retired
+          7818353709  cycles elapsed
+           361530208  peak memory footprint
+EXIT=42

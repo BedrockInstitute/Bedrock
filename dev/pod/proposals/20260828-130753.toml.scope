@@ -1,0 +1,40 @@
+# Maintainer batch 20260828-130753. NO ROWS, NO QUEUE ENTRIES.
+#
+# Five parks. The 13:07 stop (seq 5089, "5 parked") is rule (d) on five genuine
+# verdict shapes, one of them NEW: the item-42 gap has now propagated into a
+# CURE task (instance four below).
+#
+# LJ-1.713: its successor LJ-1.723 closed GO at 04:02 (the owed transcription
+# delivered). Per pod-math's staged pattern (715: "shelve on the next request
+# once the successor fires"), this shell is shelve-able as superseded-delivered.
+# pod-math's move (AD3), not a row.
+#
+# LJ-1.720: its successor LJ-1.721 closed GO at 12:01 (the top-level export
+# closed the meter, LJ-1.709 precedent). Same: shelve-able as
+# superseded-delivered. pod-math's move.
+#
+# LJ-1.717 + LJ-1.722: THE PAIR NEEDS A RULING, AND 722 IS ITEM 42 INSTANCE
+# FOUR. 722 was queued AS the cure for 717's transfer ("717's report is a
+# transfer: the term is written, the bridge walls every shape at 2 GB, asked
+# for -M4g"), and it inherited the same missing branch: heavy run, 62 minutes,
+# pid dead at return, acceptance exit 0, delta 0, open 1, own 10 = scene 10
+# (Probe722.agda.txt per the naming discipline, lj-1.722-report.md, no
+# review-of). A transfer cannot close its own census, so it no-matches like its
+# predecessor. The transfer deliverable is IN 722's WORKTREE (scene kept on
+# park); a shelve would salvage the task home and keep the tree with its base
+# recorded (_rule_a3), so nothing is lost by shelving the pair -- but whether
+# "transfer delivered in worktree, census open" counts as settled is AD3.
+# Also recorded: shelved/parked homes stay uncommitted in git (item 38), so the
+# term survives as files and as worktree_base, not as git history, until
+# something lands it.
+#
+# LJ-1.715-SPLIT-SPLIT: unchanged -- delivered third generation, walled; the
+# superheavy cap question is answered and blocked (backlog item 43b: the 8g
+# tier and the 6g watchdog backstop contradict; two measured kills at
+# L.Condensation, 59 s and 70 s). Owner ruling wanted: backstop pair up,
+# superheavy pinned to 6g, or accept the measured futility (which the 715
+# shelve already claims).
+#
+# SHELVED list now includes LJ-1.715 and LJ-1.715-SPLIT (pod-math's staged
+# plan, executed 02:39-04:01 by the owner's resume). NO-MATCH window lists the
+# 717/720 re-accepts, each triggered once per table edit, by design.

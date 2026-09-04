@@ -1,0 +1,36 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T14:32:54Z
+Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:94.30-32: error: [UnequalTerms]
+(Σ
+ (FOL.Manipulation.Bounding.BoundedTm
+  (L.Axioms.Separation.Below′ lem σ) (FOL.Syntax.con (γ , hγ)))
+ (λ _ →
+    FOL.Manipulation.Bounding.BoundedFo
+    (L.Axioms.Separation.Below′ lem σ)
+    (FOL.Manipulation.Relativize.relativize (L.Axioms.Basic.LsetS γ oγ)
+     (L.Coding.Sequence.RecShape.PairGraphAt lem
+      (L.Coding.Sequence.StepAt lem) (suc zero) zero))))
+!=< (fst (γ ∈ Lset σ))
+when checking that the expression hφ has type ⟨ γ ∈ˢ Lset σ ⟩
+        3.47 real         2.82 user         0.30 sys
+           605749248  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34818  page reclaims
+                4253  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 510  voluntary context switches
+                4959  involuntary context switches
+         34587855001  instructions retired
+         12624001119  cycles elapsed
+           546374616  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:32:57Z

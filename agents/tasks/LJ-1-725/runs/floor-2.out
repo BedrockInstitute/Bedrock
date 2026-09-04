@@ -1,0 +1,42 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T09:53:03Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:133.20-138.70: error: [NoParseForApplication]
+Could not parse the application
+⟨ fst u ∈ γ ⟩ × Σ[ z ∈ S ]
+(⟨ fst z ∈ Lset γ ⟩ ×
+ (w ≡ pr (fst u) (fst z) × Σ[ W ∈ S ]
+  ((fst W ≡ w) × ⟨ (z ∷ u ∷ W ∷ []) ⊨ relativize (LsetS γ oγ)
+   (LsetGraphAt zero (suc zero)) ⟩)))
+Operators used in the grammar:
+  ×      (infixr operator, level 5) [_×_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Sigma/Base.agda:22.1-4)]              
+  ∈      (infix operator, level 5)  [_∈_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/HITs/CumulativeHierarchy/Base.agda:31.1-4)]
+  Σ[_∈_] (prefix notation, level 2) [Σ-syntax (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Core/Primitives.agda:205.1-9)]        
+  ⟨_⟩    (closed operator)          [⟨_⟩ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Foundations/Structure.agda:43.1-4)]        
+when scope checking
+⟨ fst u ∈ γ ⟩ × Σ[ z ∈ S ]
+(⟨ fst z ∈ Lset γ ⟩ ×
+ (w ≡ pr (fst u) (fst z) × Σ[ W ∈ S ]
+  ((fst W ≡ w) × ⟨ (z ∷ u ∷ W ∷ []) ⊨ relativize (LsetS γ oγ)
+   (LsetGraphAt zero (suc zero)) ⟩)))
+        2.09 real         1.58 user         0.21 sys
+           603373568  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34745  page reclaims
+                4179  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 511  voluntary context switches
+                2068  involuntary context switches
+         21667501446  instructions retired
+          7493468862  cycles elapsed
+           545309656  peak memory footprint
+EXIT=42
+ended 2026-08-28T09:53:05Z

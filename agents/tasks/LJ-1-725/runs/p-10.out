@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T10:03:08Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:138.17-35: error: [UnequalTerms]
+V ℓ !=< Type _ℓ_146
+when checking that the expression pr (fst u) (fst z) has type
+Type _ℓ_146
+        2.53 real         1.91 user         0.26 sys
+           616759296  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               35451  page reclaims
+                4290  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 705  voluntary context switches
+                3149  involuntary context switches
+         22751550052  instructions retired
+          8708795484  cycles elapsed
+           556876784  peak memory footprint
+EXIT=42
+ended 2026-08-28T10:03:10Z

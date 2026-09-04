@@ -1,0 +1,36 @@
+Checking LJ-1-753-SPLIT.Probe753Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:274.7-10: error: [NotInScope]
+Not in scope:
+  ∀̇∈
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:274.7-10
+    (did you mean
+       'FOL.Syntax.Formula.∀̇_' or
+       'FOL.Syntax.Formula.∀̇∈' or
+       'FOL.Syntax.Formula.∃̇∈' or
+       'FOL.Syntax.∀̇_' or
+       'FOL.Syntax.∀̇∈' or
+       'FOL.Syntax.∃̇∈' or
+       'Formula.∀̇_' or
+       'Formula.∀̇∈' or
+       'Formula.∃̇∈' or
+       '∃̇∈'?)
+when scope checking ∀̇∈
+        3.34 real         2.99 user         0.23 sys
+           649478144  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41328  page reclaims
+                  71  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 608  voluntary context switches
+                 681  involuntary context switches
+         37809386113  instructions retired
+         12686545896  cycles elapsed
+           591545352  peak memory footprint
+rc=42

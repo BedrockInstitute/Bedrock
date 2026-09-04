@@ -1,0 +1,26 @@
+Checking LJ-1-753-SPLIT.Probe753Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:71.8-12: error: [ShadowedModule]
+Duplicate definition of module IrrC. Previous definition of module
+IrrC at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-746-SPLIT-SPLIT/runs/PT.agda:39.8-12
+when scope checking the declaration
+  module IrrC = Irr CS.S
+        2.96 real         2.73 user         0.22 sys
+           643825664  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               41051  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 478  involuntary context switches
+         33336782245  instructions retired
+         11618913310  cycles elapsed
+           586073072  peak memory footprint
+rc=42

@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-09-02T19:36:14Z
+Checking LJ-1-767-SPLIT.runs.D7MemHoledSplit (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-767-SPLIT/agents/tasks/LJ-1-767-SPLIT/runs/D7MemHoledSplit.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-767-SPLIT/agents/tasks/LJ-1-767-SPLIT/runs/D7MemHoledSplit.agda:112.36-44: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-767-SPLIT/agents/tasks/LJ-1-767-SPLIT/runs/D7MemHoledSplit.agda:112.36-44
+      214.45 real       213.74 user         0.70 sys
+          1876279296  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              116577  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                   2  voluntary context switches
+               29138  involuntary context switches
+            15370451  instructions retired
+             6023548  cycles elapsed
+             1179960  peak memory footprint
+EXIT=42
+ended 2026-09-02T19:39:48Z

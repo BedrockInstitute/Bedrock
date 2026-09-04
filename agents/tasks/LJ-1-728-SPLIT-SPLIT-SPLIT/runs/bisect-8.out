@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M4g]
+cap 1800s (perl alarm)
+started 2026-08-31T07:47:40Z
+Checking LJ-1-728-SPLIT-SPLIT-SPLIT.runs.Bisect8SSS (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT-SPLIT-SPLIT/agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/runs/Bisect8SSS.agda).
+time: command terminated abnormally
+      223.82 real       215.89 user         3.97 sys
+          3365683200  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              564907  page reclaims
+                4285  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 800  voluntary context switches
+              148453  involuntary context switches
+       2354805778180  instructions retired
+        861741802799  cycles elapsed
+          3580038264  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-31T07:51:24Z

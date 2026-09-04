@@ -1,0 +1,11 @@
+Checking LJ-1-753.Probe753 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda:108.9-110.60: error: [UnequalTerms]
+∥ ⟨ x ∈ˢ a ⟩ ⊎ (x ≡ a) ∥₁ !=<
+⟨ x ∈ˢ sucV a ⟩ → ∥ ⟨ x ∈ˢ a ⟩ ⊎ (x ≡ a) ∥₁
+when checking that the inferred type of an application
+  ∥ ⟨ x ∈ˢ a ⟩ ⊎ (x ≡ a) ∥₁
+matches the expected type
+  ⟨ x ∈ˢ sucV a ⟩ → ∥ ⟨ x ∈ˢ a ⟩ ⊎ (x ≡ a) ∥₁
+real 5.97
+user 5.68
+sys 0.27

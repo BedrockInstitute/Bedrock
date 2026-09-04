@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.722"
+claim = "proven-futile"
+reason = "Situation 2. No task closed GO on completeness-from-ambient. Accept was exit 0, delta 0, open 1, probe named .agda.txt, author review-of refused. What settles THIS route (the same amb-to-atL shape at heavy) is a different task: LJ-1.717 isolated the bare bridge as sufficient for a wall and measured that splits do not reclaim (stage8 198.20 s, 2.55 GB; every shape with the bridge walls). 722 confirmed the same fragment at -M4g. Retrying 722 is 717's shape at 4 GB. LJ-1.716 proved ambient-at-hier false at empty. LJ-1.727's packing did not close BoundInStage. A third generation of this shape is not queued. The worktree keeps the term as Probe722.agda.txt."
+evidence = [
+  ".pod-state/worktrees/LJ-1-717/agents/tasks/LJ-1-717/lj-1.717-report.md:72",
+  ".pod-state/worktrees/LJ-1-717/agents/tasks/LJ-1-717/lj-1.717-report.md:79",
+  ".pod-state/worktrees/LJ-1-722/agents/tasks/LJ-1-722/lj-1.722-report.md:36",
+  ".pod-state/worktrees/LJ-1-722/agents/tasks/LJ-1-722/runs/accept-1.out:19",
+  "agents/tasks/LJ-1-722/LJ-1.722.md:24",
+]
+reopen = "Reopen if a later brief inhabits CompletenessFrom by a route that is not the amb-to-atL bridge and not ambient-at-hier. LJ-1.727-SPLIT carries the packing supply, not this shape. Not retry the amb-to-atL bridge at heavy."
+by = "mathematician"

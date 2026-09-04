@@ -1,0 +1,69 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.769-SPLIT] RESTRUCTURE INSTRUMENT, STEP 1 ALONE.  The
+-- obligation's combined check reached the -M4g ceiling in 874.63 s
+-- and was SIGKILLed under the box's swap pressure before the RTS
+-- could speak (runs/probe769split.out); the combined restructure
+-- runs/Raw769Split.agda was OS-killed at 20.66 s and 1.42 GB, with
+-- the frame green before and after (runs/canary-frame.out), so that
+-- kill is environment, not a price.  This file isolates STEP 1, the
+-- push at its own literal codomain, in a process of its own: no
+-- conversion, no HullHalf, no composite.  Its row localizes the
+-- obligation's wall inside the carry body.
+--
+--   NO HOLE, NO POSTULATE.  One Agda process per run, caliber from
+-- the pane, never set here.  Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-769-SPLIT.runs.RawOnly769Split {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+-- qualified imports only: this file carries its own module Build,
+-- and a plain import of a module holding a Build of its own shadows
+-- it (measured: ShadowedModule, SSS runs/hull-1.out).
+import LJ-1-769-SPLIT.runs.Frame769Split {ℓ} lem as Frame
+
+open import Cubical.Data.Vec using ( map; _∷_; [] )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( module F; module HS )
+
+  -- THE GENERIC CARRY, opened once at this frame (W2), as in the
+  -- obligation file.
+  module Cy = F.Carry elem
+
+  -- STEP 1, THE PUSH AT ITS OWN LITERAL CODOMAIN.  No conversion is
+  -- owed here: the declared type is the carry's codomain with the
+  -- vector substituted, and the check unfolds the carry's body only.
+  -- (the membership hypotheses are NAMED binders here: the spelled
+  -- codomain mentions the pair entries, and an unnamed arrow binds
+  -- nothing)
+  raw :
+    (x₁ x₂ x₃ : S)
+    (m₁ : ⟨ x₁ ∈ˢ HS.M ⟩) (m₂ : ⟨ x₂ ∈ˢ HS.M ⟩) (m₃ : ⟨ x₃ ∈ˢ HS.M ⟩)
+    → ⟨ (x₁ ∷ x₂ ∷ x₃ ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+    → ⟨ map fst (map Cy.CIso.I.g
+                  ((x₁ , m₁) ∷ (x₂ , m₂) ∷ (x₃ , m₃) ∷ []))
+         P652.⊨ₚ P667.matrix₃ ⟩
+  raw x₁ x₂ x₃ m₁ m₂ m₃ rd =
+    Cy.push P667.Δ₀-matrix₃ ((x₁ , m₁) ∷ (x₂ , m₂) ∷ (x₃ , m₃) ∷ []) rd
+

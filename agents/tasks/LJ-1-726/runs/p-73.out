@@ -1,0 +1,53 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T14:59:21Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:161.39-42: error: [NotInScope]
+Not in scope:
+  fwd
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:161.39-42
+    (did you mean
+       '.#L.Condensation-8415434983009033911.AtomLeaf.bwd' or
+       '.#L.Condensation-8415434983009033911.AtomLeaf.fwd' or
+       '.#L.Condensation-8415434983009033911.ClauseAgree.E.Leaf.bwd' or
+       '.#L.Condensation-8415434983009033911.ClauseAgree.E.Leaf.fwd' or
+       '.#L.Condensation-8415434983009033911.DefinesAgree.bwd' or
+       '.#L.Condensation-8415434983009033911.DefinesAgree.fwd' or
+       '.#L.Condensation-8415434983009033911.EnvOneAgree.bwd' or
+       '.#L.Condensation-8415434983009033911.EnvOneAgree.fwd' or
+       '.#L.Condensation-8415434983009033911.ExistAgree.Leaf.bwd' or
+       '.#L.Condensation-8415434983009033911.ExistAgree.Leaf.fwd' or
+       '.#L.Condensation-8415434983009033911.LeafAgree.DA.bwd' or
+       '.#L.Condensation-8415434983009033911.LeafAgree.DA.fwd' or
+       '.#LJ-1-652.Probe652-5594186741909499640.Frame652.F641.Bwd' or
+       '.#LJ-1-652.Probe652-5594186741909499640.Frame652.F641.Fwd' or
+       '.#LJ-1-667.Probe667-11296204578936081931.ElemReach.F.F641.Bwd' or
+       '.#LJ-1-667.Probe667-11296204578936081931.ElemReach.F.F641.Fwd' or
+       'ElemReach.F.F641.Bwd' or
+       'ElemReach.F.F641.Fwd' or
+       'Frame652.F641.Bwd' or
+       'Frame652.F641.Fwd' or
+       'P652.Frame652.F641.Bwd' or
+       'P652.Frame652.F641.Fwd' or
+       'P667.ElemReach.F.F641.Bwd' or
+       'P667.ElemReach.F.F641.Fwd'?)
+when scope checking fwd
+        2.93 real         2.69 user         0.21 sys
+           745701376  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47198  page reclaims
+                  74  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 100  voluntary context switches
+                 540  involuntary context switches
+         32997061723  instructions retired
+         11433829956  cycles elapsed
+           687883320  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:59:24Z

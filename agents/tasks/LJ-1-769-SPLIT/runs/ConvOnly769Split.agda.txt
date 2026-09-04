@@ -1,0 +1,70 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.769-SPLIT] RESTRUCTURE INSTRUMENT, STEP 2 ALONE.  The
+-- obligation's combined check reached the -M4g ceiling in 874.63 s
+-- and was SIGKILLed under the box's swap pressure before the RTS
+-- could speak (runs/probe769split.out); the combined restructure
+-- runs/Raw769Split.agda was OS-killed at 20.66 s and 1.42 GB, with
+-- the frame green before and after (runs/canary-frame.out), so that
+-- kill is environment, not a price.  This file isolates STEP 2, the
+-- single conversion from the carry's raw codomain to the
+-- π-coordinates, in a process of its own: no push, no HullHalf, no
+-- composite.  Its row localizes the obligation's wall inside the
+-- conversion.
+--
+--   NO HOLE, NO POSTULATE.  One Agda process per run, caliber from
+-- the pane, never set here.  Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-769-SPLIT.runs.ConvOnly769Split {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+-- qualified imports only: this file carries its own module Build,
+-- and a plain import of a module holding a Build of its own shadows
+-- it (measured: ShadowedModule, SSS runs/hull-1.out).
+import LJ-1-769-SPLIT.runs.Frame769Split {ℓ} lem as Frame
+
+open import Cubical.Data.Vec using ( map; _∷_; [] )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( module F; module HS )
+
+  -- THE GENERIC CARRY, opened once at this frame (W2), as in the
+  -- obligation file.
+  module Cy = F.Carry elem
+
+  -- STEP 2, THE CONVERSION ALONE.  h is a variable, so the check of
+  -- conv h = h is exactly one defeq run between the raw codomain and
+  -- the goal: the π-compute reduction on the three entries, no carry
+  -- body anywhere.  The membership hypotheses are NAMED binders (the
+  -- spelled domain mentions the pair entries, and an unnamed arrow
+  -- binds nothing).
+  conv :
+    (x₁ x₂ x₃ : S)
+    (m₁ : ⟨ x₁ ∈ˢ HS.M ⟩) (m₂ : ⟨ x₂ ∈ˢ HS.M ⟩) (m₃ : ⟨ x₃ ∈ˢ HS.M ⟩)
+    → ⟨ map fst (map Cy.CIso.I.g
+                  ((x₁ , m₁) ∷ (x₂ , m₂) ∷ (x₃ , m₃) ∷ []))
+         P652.⊨ₚ P667.matrix₃ ⟩
+    → ⟨ (HS.C.π x₁ ∷ HS.C.π x₂ ∷ HS.C.π x₃ ∷ [])
+         P652.⊨ₚ P667.matrix₃ ⟩
+  conv x₁ x₂ x₃ m₁ m₂ m₃ h = h
+

@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.724
+# brief agents/tasks/LJ-1-724/LJ-1.724.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 1
+# load before (3.07177734375, 5.00244140625, 6.38232421875)
+# started 2026-08-28 18:37:44
+# conjunct 1 FAILED
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 FAILED
+# run agents/tasks/LJ-1-724/Probe724.agda rc 42 seconds 0.72
+# changed files 1
+# changed files own 1 of 1
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.72
+# error class other
+# exit 42
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-724/Probe724.agda"], "changed_files_refused": [], "changed_files_scene": ["agents/tasks/LJ-1-724/Probe724.agda"], "concurrency": 1, "conjuncts": {"1": false, "2": true, "3": true, "4": true, "5": true, "6": false}, "error_names_all": ["ParseError"], "facts": {"changed_files": ["agents/tasks/LJ-1-724/Probe724.agda"], "error_class": "other", "exit_code": 42, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.72}, "lint_detail": "survey-quotes: check-survey-quotes: LJ-1-724 has no report", "obligations_probe_red": true, "runs_all": [{"rc": 42, "seconds": 0.72, "target": "agents/tasks/LJ-1-724/Probe724.agda"}], "spec_surface_detail": "", "task": "LJ-1.724", "tier": "wide", "unbound_vacuous": true, "verdict_files_refused": [], "witness_seconds": 0.8}

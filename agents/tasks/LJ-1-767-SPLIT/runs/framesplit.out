@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-09-02T19:31:33Z
+Checking LJ-1-767-SPLIT.runs.FrameSplit (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-767-SPLIT/agents/tasks/LJ-1-767-SPLIT/runs/FrameSplit.agda).
+       12.28 real        11.96 user         0.29 sys
+          1756266496  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              109252  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                   1  voluntary context switches
+                2078  involuntary context switches
+            15333732  instructions retired
+             6034079  cycles elapsed
+             1179960  peak memory footprint
+EXIT=0
+ended 2026-09-02T19:31:45Z

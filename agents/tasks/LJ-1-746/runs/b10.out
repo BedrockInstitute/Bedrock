@@ -1,0 +1,6 @@
+Checking LJ-1-746.runs.B10 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746/agents/tasks/LJ-1-746/runs/B10.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746/agents/tasks/LJ-1-746/runs/B10.agda:60.32-68.39: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746/agents/tasks/LJ-1-746/runs/B10.agda:60.32-39
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746/agents/tasks/LJ-1-746/runs/B10.agda:68.32-39
+       48.99 real        48.40 user         0.46 sys

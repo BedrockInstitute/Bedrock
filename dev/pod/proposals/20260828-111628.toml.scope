@@ -1,0 +1,44 @@
+# Maintainer batch 20260828-111628. NO ROWS, NO QUEUE ENTRIES.
+#
+# Five parks, all judgment/resource shapes, all awaiting pod-math's staged plan
+# (its owner-five-case ruling of 10:01 is partially executed: LJ-1.715 shelved,
+# successors 721/722/723 queued and admitted, LJ-1.715-SPLIT-SPLIT dispatched
+# and measured). The 11:16 stop ("5 parked", seq after 5012) is rule (d) on
+# five genuine verdict shapes -- correct per the rules as they stand.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.715-SPLIT-SPLIT: THIRD generation, same verdict: delivered (delta -1,
+# open 0) then walled (exit 251, heavy, own 12 = scene 12, clean provenance).
+# Its own row fired; program behavior is exactly as ruled (item 26's park
+# semantics). No row from me.
+#
+# THE SUPERHEAVY ANSWER, measured twice this morning (watchdog log 11:21:49 and
+# 11:23:29): pod-math's named cap question ("hand run of superheavy-check.py on
+# the 715-SPLIT worktree") CANNOT be answered on this machine as configured.
+# The script's first structural refusal (ModuleDefinedInOtherFile: cwd=ROOT
+# resolves the module to the main tree's copy) is FIXED this batch --
+# superheavy-check.py now runs from the worktree when the target lives under
+# .pod-state/worktrees/<CODE>/ (same gates: qwen-idle refusal, 8 GB RTS,
+# explicit target). Both real runs were then killed by the agda-watchdog's
+# 6 GB per-process backstop at rss ~6.8 GiB, 59 s and 70 s in, both inside
+# L.Condensation -- the exact file where the -M4g RTS wall lands at 217 s.
+#
+# THE CONTRADICTION UNDERNEATH IS OWNER TERRITORY: [tiers.superheavy] promises
+# -M8g (added 2026-08-25) while the watchdog backstop holds 6 GB per process
+# (scripts/ops/agda-watchdog.sh LIMIT_KB, sized "to HEAVY's cap, the larger of
+# the two" per dev/pod/heads.toml:366 per_process_backstop_gb = 6). The tier
+# promises a run the backstop forbids; no third number was ever ruled. Options
+# for the owner: raise the backstop pair together for superheavy-era runs, pin
+# superheavy's heap to 6g so the tier is honest, or accept the measured
+# futility: three generations (4g RTS wall x3, >6.8g RSS killed x2) all say the
+# 715 family route does not close on this machine at any ruled cap. That
+# empirically CONFIRMS the proven-futile shelve of LJ-1.715.
+#
+# LJ-1.713 / LJ-1.717 / LJ-1.720 (no-match): backlog item 42's three shapes,
+# unchanged. Their cures are pod-math's successors LJ-1.723 / LJ-1.722 /
+# LJ-1.721 -- all admitted (commits 2c56bfbd, f3f4b3c6) and 721 already ran.
+# Once those succeed and pod-math posts its promised shelve request for
+# LJ-1.715-SPLIT, the count drops below parked_max on its own. No row from me.
+#
+# SHELVED tasks ask for nothing (9 now, LJ-1.715 joined them).

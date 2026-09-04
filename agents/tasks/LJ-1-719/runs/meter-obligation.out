@@ -1,0 +1,2 @@
+missing   exit=42       2.93s  agents/tasks/LJ-1-719/Probe719.agda::soundness-at-SL  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/.pod-state/witness/Witness-POD-b4c32a3f.agda:45)
+witness: 1 UNRESOLVED of 1, 2.93 s, probe_red=False

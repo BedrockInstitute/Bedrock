@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T14:30:32Z
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:398.14: error: [ParseError]
+}<ERROR> )
+          {! THE ONE PARKED ...
+        0.06 real         0.03 user         0.01 sys
+           107085824  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8292  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                  52  involuntary context switches
+           699092298  instructions retired
+           207855845  cycles elapsed
+            86442608  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:30:32Z

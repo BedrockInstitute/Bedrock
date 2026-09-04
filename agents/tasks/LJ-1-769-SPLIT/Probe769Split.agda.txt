@@ -1,0 +1,93 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.769-SPLIT] PROBE.  THE OBLIGATION: push-matrix3-at-vars, the
+-- brief's type verbatim: Cy.push of P667.matrix₃ at BOUND VARIABLE
+-- entries, with no call site in the file.  Dropped against the source
+-- instrument (LJ-1-769.runs.Split4-769, its core): the assembly
+-- commute-from-reading, the codeOf and hullClosed pipeline, conv0,
+-- ord-at-p, and every application of the helper to fst (val _).
+-- Kept: the qualified Frame import, the module Build telescope, the
+-- generic carry opened once at this frame, and the vector of
+-- variable entries.  The probe answers the brief's W3: whether the
+-- push walls at variables in this frame at -M4g, or prices like
+-- Probe652's whole file (4.96 s, LJ-1-769 runs/warm-p652.out).
+--
+--   THE VENDORED INTERFACE.  Frame769Split and HullHalf769Split are
+--   LJ-1-769's two green instruments transcribed (diff-measured: one
+--   and two differing lines below the new headers).  HullHalf is
+--   imported by the probe not for the helper's own rows but because
+--   the next brief, on GO, assembles commute-from-reading from this
+--   abstract helper plus hullClosed: this task lands the whole
+--   vendored interface green, so that brief imports this task's
+--   interfaces directly.
+--
+--   THE FLOOR ran first (coder law, owner ruling 2026-08-23):
+--   runs/Floor769Split.agda.txt is this file with the term a designed
+--   hole, and it priced the frame at 8.34 s, 977 MB, EXIT 42 by
+--   design, its only diagnostic the hole at Floor769Split.agda:93.47
+--   (runs/floor769split.out).  NO HOLE, NO POSTULATE in this file.
+--   One Agda process per run, caliber from the pane, never set here.
+--   Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-769-SPLIT.Probe769Split {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+-- qualified imports only: this file carries its own module Build,
+-- and a plain import of a module holding a Build of its own shadows
+-- it (measured: ShadowedModule, SSS runs/hull-1.out).
+import LJ-1-769-SPLIT.runs.Frame769Split {ℓ} lem as Frame
+import LJ-1-769-SPLIT.runs.HullHalf769Split {ℓ} lem as HullHalf
+
+open import Cubical.Data.Vec using ( _∷_; [] )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  -- selective open: the helper reads HS.M and HS.C.π through the
+  -- frame's HS, and the carry through the frame's F.
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( module F; module HS )
+
+  -- THE GENERIC CARRY, opened once at this frame (W2: Probe652's
+  -- Carry is the one push; nothing is copied).  Carry is reached
+  -- through the frame's own F alias, the applied Frame652 (the
+  -- unapplied spelling P652.Frame652.Carry does not elaborate:
+  -- measured, LJ-1-769 runs/floor769.out, the module parameters must
+  -- be applied first).
+  module Cy = F.Carry elem
+
+  -- THE OBLIGATION'S TYPE, the brief's type verbatim.
+  push-matrix3-at-vars :
+    (x₁ x₂ x₃ : S)
+    → ⟨ x₁ ∈ˢ HS.M ⟩ → ⟨ x₂ ∈ˢ HS.M ⟩ → ⟨ x₃ ∈ˢ HS.M ⟩
+    → ⟨ (x₁ ∷ x₂ ∷ x₃ ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+    → ⟨ (HS.C.π x₁ ∷ HS.C.π x₂ ∷ HS.C.π x₃ ∷ [])
+         P652.⊨ₚ P667.matrix₃ ⟩
+
+  -- THE TERM, the brief's body verbatim: the carry alone at variable
+  -- entries.  The hypothesis type is Cy.push's own domain shape
+  -- (map fst of the vector is x₁ ∷ x₂ ∷ x₃ ∷ []), and the goal is its
+  -- codomain at the collapse's coordinates.
+  push-matrix3-at-vars x₁ x₂ x₃ m₁ m₂ m₃ rd =
+    Cy.push P667.Δ₀-matrix₃ ((x₁ , m₁) ∷ (x₂ , m₂) ∷ (x₃ , m₃) ∷ []) rd
+
+-- THE OBLIGATION'S NAME, exported at the file's top level
+-- (Probe692.agda:68's pattern).
+push-matrix3-at-vars = Build.push-matrix3-at-vars

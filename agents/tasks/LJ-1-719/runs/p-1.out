@@ -1,0 +1,30 @@
+Checking LJ-1-719.Probe719 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-667/runs/W3.agda).
+  Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-520/Probe520.agda).
+ Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-667/Probe667.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda:63.8-9: error: [ShadowedModule]
+Duplicate definition of module B. Previous definition of module B
+at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-667/runs/W3.agda:23.8-9
+when scope checking the declaration
+  module B = Bnd {ℓ} lem
+       15.73 real        15.41 user         0.26 sys
+          1755070464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              108875  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 213  voluntary context switches
+                1402  involuntary context switches
+        244939552541  instructions retired
+         65947473338  cycles elapsed
+          1694648048  peak memory footprint

@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M4g]
+cap 1800s (perl alarm)
+started 2026-08-31T12:09:51Z
+Checking LJ-1-728-SPLIT-SPLIT-SPLIT.runs.Amb2Only728SSS (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT-SPLIT-SPLIT/agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/runs/Amb2Only728SSS.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 4294967296 bytes (4096 MB).
+agda: Use `+RTS -M<size>' to increase it.
+     1725.96 real      1720.16 user         5.02 sys
+          5509431296  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              338285  page reclaims
+                  80  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 600  voluntary context switches
+              269263  involuntary context switches
+      22785714561585  instructions retired
+       7081972291511  cycles elapsed
+          5452960160  peak memory footprint
+EXIT=251
+ended 2026-08-31T12:38:37Z

@@ -1,0 +1,24 @@
+Checking LJ-1-719.Probe719 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda:133.17-22: error: [NotInScope]
+Not in scope:
+  proj₂
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda:133.17-22
+when scope checking proj₂
+        2.97 real         2.75 user         0.21 sys
+           855932928  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               53996  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 391  involuntary context switches
+         32673339583  instructions retired
+         11673086616  cycles elapsed
+           798213272  peak memory footprint

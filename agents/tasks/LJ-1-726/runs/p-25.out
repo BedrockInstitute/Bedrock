@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T12:14:56Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:267.19-25: error: [ConstructorPatternInWrongDatatype]
+_,_ is not a constructor of the datatype ∥_∥₁
+when checking that the pattern _ , t₁ has type
+⟨ (x₁ ∷ a ∷ p ∷ z ∷ []) AtF.⊨ s4 ⟩
+      144.47 real       142.09 user         1.82 sys
+          1424785408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              135114  page reclaims
+                  75  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 763  voluntary context switches
+               71466  involuntary context switches
+       1526533375432  instructions retired
+        562731536212  cycles elapsed
+          1521043064  peak memory footprint
+EXIT=42
+ended 2026-08-28T12:17:20Z

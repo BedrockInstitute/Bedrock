@@ -1,0 +1,13 @@
+Checking LJ-1-715.Diag715 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715/agents/tasks/LJ-1-715/Diag715.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715/agents/tasks/LJ-1-715/Diag715.agda:42.11-28: error: [UnequalTerms]
+Cubical.HITs.CumulativeHierarchy.Base.V _ℓ_30 !=<
+Σ (Type _ℓ_27) _S_29
+when checking that the inferred type of an application
+  Cubical.HITs.CumulativeHierarchy.Base.V _ℓ_30
+matches the expected type
+  Σ (Type _ℓ_27) _S_29
+
+real	0m0.765s
+user	0m0.646s
+sys	0m0.101s
+EXIT=42

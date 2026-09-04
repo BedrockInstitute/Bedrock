@@ -589,6 +589,169 @@ class RuleA2(LoopCase):
         pod._rule_a2(st, self.tmp)
         self.assertEqual(t.status, pod.PARKED)
 
+    # ------------------------------------------------------------------
+    # THE CAPACITY LAUNCH PROMISE, 2026-08-27. `head_full_refusal()` tells a
+    # saturated-slot park "It re-opens when one closes", and `_rule_a2()` now keeps
+    # that word through `capacity_head_free()`. Measured live: transitions seq
+    # 4807-4810 parked four tasks capacity-full at 08:41Z, every head was idle by
+    # 09:45Z, no table write came, and rule (d) stopped on a count those four parks
+    # frozen in place had built. These three pin the new reader and its limits.
+
+    def _capacity_parked(self, capacity):
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.PARKED,
+                     park_reason="launch", parked_at=time.time() + 60, attempt=1,
+                     launch_capacity=capacity)
+        st.tasks[CODE] = t
+        return st, t
+
+    def test_a_capacity_launch_park_reopens_when_a_head_of_its_slot_is_free(self):
+        """The promised reopen: free head now beats no newer table write."""
+        st, t = self._capacity_parked(True)
+        self.patch(pod, "capacity_head_free", lambda task, state, root=None: True)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+        self.assertFalse(t.launch_capacity)      # consumed, so a fresh refusal reparks fresh
+
+    def test_a_capacity_launch_park_stays_parked_while_every_head_is_at_its_cap(self):
+        """No head free is no promise kept: it waits for a close or a table edit."""
+        st, t = self._capacity_parked(True)
+        self.patch(pod, "capacity_head_free", lambda *a, **k: False)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    def test_an_unmarked_launch_park_keeps_the_table_edit_rule_alone(self):
+        """A brief defect or a dead endpoint parks with launch too: only the CAPACITY
+        mark earns the head-aware reopen, whatever a helper might answer."""
+        st, t = self._capacity_parked(False)
+        self.patch(pod, "capacity_head_free", lambda *a, **k: True)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    # ------------------------------------------------- transfer-park shells (a2)
+
+    def _transfer_shelled(self, shell_parked_at, split_parked_at):
+        """A transfer-park shell plus its DONE split, with the two clocks set."""
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md", status=pod.PARKED,
+                     park_reason="row:task-x-transfer-park",
+                     parked_at=shell_parked_at, attempt=0)
+        st.tasks[CODE] = t
+        sp = pod.Task(CODE + "-SPLIT", brief=f"agents/tasks/{DIR}/{CODE}.md",
+                      status=pod.DONE, parked_at=split_parked_at)
+        st.tasks[sp.code] = sp
+        return st, t
+
+    def test_a_transfer_park_shell_reopens_once_its_split_has_closed(self):
+        """The shell parked BEFORE its split closed has not yet had a post-GO
+        finalize chance: rule (a2) reopens it for one fresh instance."""
+        st, t = self._transfer_shelled(100.0, 200.0)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+
+    def test_a_transfer_park_shell_does_not_reopen_twice_on_one_split_go(self):
+        """MEASURED 2026-09-02 20:45-23:23: LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT cycled
+        reopen -> dispatch -> pid-dead(exit 0) -> re-park THREE times (seq
+        6018/6025, 6048/6060, 6055/6060) -- every cycle a fresh glm dispatch on a
+        task whose successor had already closed GO. A shell that re-parked AFTER
+        the split's own park has spent its one post-GO chance; reopening again
+        would loop for as long as seats free up. Only pod-math's shelving or a
+        table edit may move it now."""
+        st, t = self._transfer_shelled(300.0, 200.0)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    def test_a_transfer_park_shell_waits_while_its_split_is_still_open(self):
+        """No split DONE, no reopen: the census stays with the successor."""
+        st, t = self._transfer_shelled(100.0, 200.0)
+        st.tasks[CODE + "-SPLIT"].status = pod.RUNNING
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+
+    def test_the_worktree_name_is_capped_and_stays_distinct(self):
+        """MEASURED 2026-09-04 10:16: generation 32 of the 769 line derived a
+        pi SESSION directory from its 70-char worktree cwd that crossed the
+        255-byte filename ceiling (`ENAMETOOLONG` on mkdir); generations 31 to
+        34 died before running a line. `_worktree_name` must cap, stay
+        deterministic, and keep neighbouring chain codes distinct."""
+        long_code = "LJ-1.769" + "-SPLIT" * 32
+        n = pod._worktree_name(long_code)
+        self.assertLessEqual(len(n), 100)
+        self.assertEqual(n, pod._worktree_name(long_code))
+        self.assertEqual(pod._worktree_name("LJ-1.769"), "LJ-1-769")
+        neighbour = pod._worktree_name("LJ-1.769" + "-SPLIT" * 31)
+        self.assertNotEqual(n, neighbour)
+        self.assertLessEqual(len(neighbour), 100)
+
+    def test_the_park_records_whether_the_refusal_was_capacity(self):
+        """The mark describes THIS park and overwrites anything older."""
+        st = pod.State()
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md")   # READY
+        st.tasks[CODE] = t
+        pod.emit(st, t, pod.READY, pod.PARKED, reason="launch", root=self.tmp,
+                 why="full", launch_capacity=True)
+        self.assertTrue(t.launch_capacity)
+        t2 = pod.Task(f"{CODE}B", brief=f"agents/tasks/{DIR}/{CODE}.md")
+        st.tasks[t2.code] = t2
+        t2.launch_capacity = True                 # stale from an earlier instance
+        pod.emit(st, t2, pod.READY, pod.PARKED, reason="launch", root=self.tmp,
+                 why="fact 3 unmeasurable")       # no kwarg: not capacity-shaped
+        self.assertFalse(t2.launch_capacity)
+
+    def test_a_legacy_launch_park_is_classified_from_its_own_recorded_refusal(self):
+        """Migration, seq 4850: parks older than the mark carry None and speak through
+        the refusal text already in their log line. Free head plus capacity text = the
+        promise kept without any table edit."""
+        w = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md")
+        pod.emit(pod.State(), w, pod.READY, pod.PARKED, reason="launch", root=self.tmp,
+                 why=pod.HEAD_REFUSAL_PREFIX + "heads].coder is at its own "
+                 "max_concurrency (m1 1/1), so this task has no head this tick.")
+        self.patch(pod.heads_mod, "configs",
+                   lambda slot, path=None, cache=True:
+                   ({"model": "m1", "max_concurrency": 1},))
+        st, t = self._capacity_parked(None)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.READY)
+
+    def test_a_legacy_launcher_refusal_park_stays_parked_even_with_free_heads(self):
+        """The kind boundary holds for old parks too: a why that is not the capacity
+        sentence never earns the head-aware reopen."""
+        w = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md")
+        pod.emit(pod.State(), w, pod.READY, pod.PARKED, reason="launch", root=self.tmp,
+                 why="dispatch: REFUSED. a live territory holder holds the target")
+        self.patch(pod.heads_mod, "configs",
+                   lambda slot, path=None, cache=True:
+                   ({"model": "m1", "max_concurrency": 1},))
+        st, t = self._capacity_parked(None)
+        pod._rule_a2(st, self.tmp)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertFalse(t.launch_capacity)      # classified False and cached
+
+    def test_capacity_head_free_replays_the_dispatch_decision_itself(self):
+        """Same accessor, same selection policy, same census as `launch()`.
+
+        One capped model with a free seat answers True; the same model full answers
+        False; an unknown slot cannot answer True by accident.
+        """
+        cfg = ({"model": "m1", "max_concurrency": 1},)
+        self.patch(pod.heads_mod, "configs",
+                   lambda slot, path=None, cache=True:
+                   (_ for _ in ()).throw(pod.heads_mod.HeadsError("no [heads].x"))
+                   if slot == "x" else cfg)
+        brief = self.tmp / "agents" / "tasks" / DIR / f"{CODE}.md"
+        brief.write_text(BRIEF)
+        t = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md")
+        live = pod.Task("LJ-1.LIVE", brief=t.brief, status=pod.RUNNING,
+                        role="coder", model="m1")
+        st_empty, st_full = pod.State(), pod.State()
+        st_full.tasks[live.code] = live
+        self.assertTrue(pod.capacity_head_free(t, st_empty))
+        self.assertFalse(pod.capacity_head_free(t, st_full))
+        bad = pod.Task(CODE, brief=f"agents/tasks/{DIR}/{CODE}.md",
+                       park_reason="launch")
+        self.patch(pod, "head_slot_of", lambda b, root=None: "x")
+        self.assertFalse(pod.capacity_head_free(bad, st_empty))
+
     def test_a_no_change_park_carries_no_record_so_route_can_never_unpark_it(self):
         """5.5: it waits for the maintainer batch's queue request, and nothing else."""
         self.write_table([sys_row(when={"exit_code": 0})])
@@ -1094,18 +1257,27 @@ class MaintainerIsFedBeforeTheStop(LoopCase):
                                       record=record(), parked_at=0.0)
         return st
 
-    def test_the_maintainer_is_ENSURED_on_the_very_tick_that_stops(self):
-        st = self.parked(pod._limits()["parked_max"])
-        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
+    def test_the_maintainer_is_fed_on_a_tick_at_the_parked_limit(self):
+        """At the parked limit, the episode opens (no latch) and rule (e) still
+        runs on the same tick, feeding the maintainer."""
+        st = pod.State()
+        for i in range(pod._limits()["parked_max"]):
+            c = f"LJ-1.{900 + i}"
+            st.tasks[c] = pod.Task(c, status=pod.PARKED, park_reason="no-match",
+                                   record=record(), parked_at=0.0)
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
         self.assertGreaterEqual(self.calls["ensure"], 1,
-                                "the loop stopped without starting the maintainer")
-
-    def test_the_stop_still_happens(self):
-        """The repair must not cost the stop. AD14 is unchanged."""
-        st = self.parked(pod._limits()["parked_max"])
-        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
-        self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
-
+                                "the episode tick did not feed the maintainer")
+    def test_the_episode_never_latches_on_parked_count_alone(self):
+        """Owner's directive 2026-08-28: the episode holds the count
+        without latching; only an explicit stop can latch."""
+        st = pod.State()
+        for i in range(pod._limits()["parked_max"]):
+            c = f"LJ-1.{900 + i}"
+            st.tasks[c] = pod.Task(c, status=pod.PARKED, park_reason="no-match",
+                                   record=record(), parked_at=0.0)
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
     def test_rule_e_runs_before_rule_d_in_the_tick(self):
         """Read the order out of the source, so a future edit that moves one back is
         caught by name rather than by a symptom nobody connects to it."""
@@ -1579,37 +1751,158 @@ class RuleD(LoopCase):
 
     def test_one_below_the_limit_does_not_stop_the_loop(self):
         st = self.park(pod.State(), self.LIMIT - 1)
+        (self.tmp / ".pod-state" / "park-episode.json").write_text("{}")
         self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
         self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+        self.assertFalse((self.tmp / ".pod-state" / "park-episode.json").exists(),
+                         "below the limit, a stale episode is cleared")
 
-    def test_the_limit_stops_the_loop_and_pushes_to_the_owner(self):
+    def test_the_limit_opens_an_auto_recovery_episode_and_pages_once(self):
+        """Owner's directive 2026-08-28: 「以后都不要让我resume，请改成可以自动恢复」.
+        Reaching the limit opens an episode: page once (not a question), prompt the
+        resident mathematician, keep the loop alive."""
         st = self.park(pod.State(), self.LIMIT)
-        self.assertIs(pod._rule_d(st, self.tmp), pod.STOP)
-        self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
-        # THE SENTENCE COUNTS THE PARKS, it does not recite the limit.
-        self.assertEqual(self.calls["notify"], [f"{self.LIMIT} parked"])
-        line = self.lines()[-1]
-        self.assertEqual((line["task"], line["to"], line["why"]),
-                         ("", "STOPPED", f"{self.LIMIT} parked"))
+        prompted = []
+        self.patch(pod, "prompt_mathematician_parks",
+                   lambda counted, st_, root=None:
+                   prompted.append([t.code for t in counted]) or True)
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+        ep = json.loads((self.tmp / ".pod-state" / "park-episode.json").read_text())
+        self.assertEqual(ep["codes"], sorted(t.code for t in st.of(pod.PARKED)))
+        self.assertEqual(ep["windows"], 0)
+        self.assertIn("AUTO-RECOVERING", self.calls["notify"][0])
+        self.assertEqual(len(prompted), 1)
 
-    def test_the_stop_writes_ONE_loop_line_and_not_one_a_tick(self):
+    def test_two_ticks_inside_the_window_page_once_and_never_latch(self):
         st = self.park(pod.State(), self.LIMIT)
-        pod._rule_d(st, self.tmp)
-        pod._rule_d(st, self.tmp)
-        stops = [x for x in self.lines() if x["to"] == "STOPPED"]
-        self.assertEqual(len(stops), 1)
+        self.patch(pod, "prompt_mathematician_parks",
+                   lambda counted, st_, root=None: True)
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        self.assertEqual(len(self.calls["notify"]), 1)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
 
-    def test_the_park_counter_reaching_the_limit_stops_the_WHOLE_tick(self):
+    def test_the_park_counter_reaching_the_limit_opens_the_WHOLE_episode(self):
         """The end-to-end path: `parked_max` returns that match nothing park, and the last
-        stops the loop. The fixture CAN fail: with a matching row nothing parks."""
+        opens the auto-recovery episode. The fixture CAN fail: with a matching row
+        nothing parks."""
         self.set_acceptance(record())
         st = pod.State()
         for i in range(self.LIMIT):
             code = f"LJ-1.{500 + i}"
             st.tasks[code] = pod.Task(code, status=pod.RETURNED,
                                       brief=f"agents/tasks/{DIR}/{CODE}.md")
-        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
         self.assertEqual(st.count(pod.PARKED), self.LIMIT)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+        self.assertTrue((self.tmp / ".pod-state" / "park-episode.json").is_file())
+
+    def test_two_zero_progress_windows_prompt_twice_and_never_latch(self):
+        """Owner's directive 2026-08-28: 「以后都不要让我resume」. Two zero-progress
+        windows re-prompt pod-math twice but NEVER latch the loop."""
+        codes = sorted(f"LJ-1.{400 + i}" for i in range(self.LIMIT))
+        st = self.park(pod.State(), self.LIMIT)
+        past = time.time() - 61 * 60
+        (self.tmp / ".pod-state" / "park-episode.json").write_text(json.dumps(
+            {"codes": codes, "done": 0, "started": past, "windows": 99}))
+        prompted = []
+        self.patch(pod, "prompt_mathematician_parks",
+                   lambda counted, st_, root=None: prompted.append(1) or True)
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+        (self.tmp / ".pod-state" / "park-episode.json").write_text(json.dumps(
+            {"codes": codes, "done": 0, "started": past, "windows": 1}))
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)   # never latches
+
+    def test_progress_resets_the_window_and_the_ask(self):
+        """Progress is the point: a changed counted set or DONE count resets the
+        window and the windows counter, so a draining episode never latches."""
+        codes_old = sorted(f"LJ-1.{400 + i}" for i in range(self.LIMIT))
+        st = self.park(pod.State(), self.LIMIT)
+        past = time.time() - 61 * 60
+        (self.tmp / ".pod-state" / "park-episode.json").write_text(json.dumps(
+            {"codes": codes_old, "done": 99, "started": past, "windows": 1}))
+        prompted = []
+        self.patch(pod, "prompt_mathematician_parks",
+                   lambda counted, st_, root=None: prompted.append(1) or True)
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
+        ep = json.loads((self.tmp / ".pod-state" / "park-episode.json").read_text())
+        self.assertEqual(ep["windows"], 0)
+        self.assertEqual(ep["done"], 0)          # progress: DONE count changed
+        self.assertEqual(prompted, [])
+
+    def test_a_pid_dead_failed_return_auto_continues_the_same_scene(self):
+        """Owner's directive 2026-08-28: 「724/725 应该原样resume」. A pid-dead
+        worker's failed probe is an unfinished draft, not a stated verdict: the
+        attempt is counted, the SAME brief re-queues on the SAME kept worktree,
+        and the verdict rows never see the record."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.RUNNING, attempt=0,
+                                      brief=f"agents/tasks/{DIR}/{CODE}.md",
+                                      pid_dead=True)
+        self.set_acceptance(record(exit_code=42, error_class="other"))
+        self.patch(pod, "rec_alive", lambda t_: False)
+        self.patch(pod, "pid_exists", lambda pid: False)
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
+        self.assertEqual(t.status, pod.READY)
+        self.assertEqual(t.attempt, 1, "the attempt is counted")
+        self.assertFalse(t.pid_dead, "consumed: the next live return routes normally")
+        # AND THE SAME TICK RE-DISPATCHES: rule (f) runs after the re-queue, so the
+        # continuation is immediate -- 「原样resume」 without a person.
+        self.assertEqual(self.calls["launch"],
+                         [(CODE, f"agents/tasks/{DIR}/{CODE}.md", "coder", 1)])
+
+    def test_a_pid_dead_return_at_attempt_max_parks_and_keeps_the_scene(self):
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.RUNNING,
+                                      attempt=pod._limits()["attempt_max"] - 1,
+                                      brief=f"agents/tasks/{DIR}/{CODE}.md",
+                                      pid_dead=True)
+        self.set_acceptance(record(exit_code=42, error_class="other"))
+        self.patch(pod, "rec_alive", lambda t_: False)
+        self.patch(pod, "pid_exists", lambda pid: False)
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(t.park_reason, "attempt_max:pid-dead")
+
+    def test_a_pid_dead_RETURN_with_exit_0_routes_normally(self):
+        """A worker that died AFTER finishing routes exactly as a live return: the
+        record goes through the table (here: nothing matches, so the honest
+        no-match park), proving the bypass is for failed probes only."""
+        st = pod.State()
+        st.tasks[CODE] = t = pod.Task(CODE, status=pod.RUNNING, attempt=0,
+                                      brief=f"agents/tasks/{DIR}/{CODE}.md",
+                                      pid_dead=True)
+        self.set_acceptance(record())
+        self.patch(pod, "rec_alive", lambda t_: False)
+        self.patch(pod, "pid_exists", lambda pid: False)
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
+        self.assertEqual(t.status, pod.PARKED)
+        self.assertEqual(t.park_reason, "no-match")
+
+    def test_a_legacy_digit_latch_auto_recovers_at_startup(self):
+        """The 14:08 latch of tonight was legacy format; the directive says it
+        auto-recovers at the next start instead of waiting for a resume."""
+        st = pod.State()
+        st.stopped = "2026-08-28T06:08:37Z"
+        (self.tmp / ".pod-state" / "STOPPED").touch()
+        fake = [{"to": "STOPPED", "ts": "2026-08-28T06:08:37Z", "why": "5 parked"}]
+        self.patch(pod, "log_lines", lambda root=None: fake)
+        self.assertTrue(pod._auto_recover_legacy_park_latch(st, self.tmp))
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
+        self.assertIsNone(st.stopped)
+
+    def test_a_declared_or_new_format_latch_never_auto_recovers(self):
+        """The kind boundary: declared stops and the post-directive real-wall latch
+        stay latched; only the legacy digit format auto-recovers."""
+        st = pod.State()
+        st.stopped = "2026-08-28T07:00:00Z"
+        (self.tmp / ".pod-state" / "STOPPED").touch()
+        fake = [{"to": "STOPPED", "ts": "2026-08-28T07:00:00Z",
+                 "why": "declared:halt the campaign"}]
+        self.patch(pod, "log_lines", lambda root=None: fake)
+        self.assertFalse(pod._auto_recover_legacy_park_latch(st, self.tmp))
         self.assertTrue((self.tmp / ".pod-state" / "STOPPED").exists())
 
     def test_the_same_three_returns_park_NOTHING_when_a_row_matches(self):
@@ -1749,12 +2042,18 @@ class DeclaredStop(LoopCase):
                 self.assertIn("stop_request", text, "the refusal was silent")
                 p.with_suffix(".toml.refused").unlink()
 
-    def test_NO_request_leaves_rule_d_exactly_as_it_was(self):
+    def test_NO_request_opens_the_episode_instead_of_stopping(self):
+        """Owner's directive 2026-08-28: the parked_max count auto-recovers. The
+        DECLARED stop (a request, tested above) still latches immediately."""
         st = pod.State()
         self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE)
         for i in range(pod._limits()["parked_max"]):     # the limit, never a literal
             st.tasks[f"LJ-1.{i}"] = pod.Task(f"LJ-1.{i}", status=pod.PARKED)
-        self.assertIs(pod._rule_d(st, self.tmp), pod.STOP, "the parked stop broke")
+        self.patch(pod, "prompt_mathematician_parks",
+                   lambda counted, st_, root=None: True)
+        self.assertIs(pod._rule_d(st, self.tmp), pod.CONTINUE,
+                      "no request: the auto-recovery episode opens, no latch")
+        self.assertTrue((self.tmp / ".pod-state" / "park-episode.json").is_file())
 
 
 class Shelve(LoopCase):
@@ -1939,12 +2238,15 @@ class Shelve(LoopCase):
             code = f"LJ-1.{700 + i}"
             st.tasks[code] = pod.Task(code, status=pod.PARKED, parked_at=0.0,
                                       park_reason="attempt_max:sys-x", record=record())
-        self.assertIs(pod.pod_tick(st, self.tmp), pod.STOP)
-        (self.tmp / ".pod-state" / "STOPPED").unlink()
+        self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE,
+                      "the limit opens the auto-recovery episode, no latch")
+        self.assertTrue((self.tmp / ".pod-state" / "park-episode.json").is_file())
         self._write(self.GOOD.replace("LJ-1.386", "LJ-1.700"))
         self.assertIs(pod.pod_tick(st, self.tmp), pod.CONTINUE)
         self.assertEqual(st.tasks["LJ-1.700"].status, pod.SHELVED)
         self.assertEqual(st.count(pod.PARKED), limit - 1)
+        self.assertFalse((self.tmp / ".pod-state" / "park-episode.json").exists(),
+                         "below the limit, the episode is cleared")
 
     def test_the_owner_is_pushed_ONCE_because_a_task_left_the_loop_for_good(self):
         self._write(self.GOOD)
@@ -3260,6 +3562,26 @@ class Emit(LoopCase):
         self.assertEqual(self.lines()[-1]["heads_sha256"],
                          heads_mod.sha256(self.tmp / "dev" / "pod" / "heads.toml")[:8])
 
+    def test_the_heads_digest_memo_follows_an_edit_of_the_file_itself(self):
+        """seq 4895 lesson, 2026-08-27 evening: `configs()` re-reads through an
+        mtime-keyed cache while this digest memoized once per process, so a loop that
+        crossed an owner edit dispatched on the NEW caps and stamped the OLD digest.
+        The memo must age on the same key the config cache uses."""
+        hp = self.tmp / "dev" / "pod" / "heads.toml"
+        before = pod._heads_sha()
+        self.assertIsNotNone(before)
+        import re as _re
+        text = _re.sub(r"max_concurrency = \d+", "max_concurrency = 99", hp.read_text(), count=1)
+        self.assertNotEqual(text, hp.read_text())     # the live fixture really has a cap
+        hp.write_text(text)
+        stamp = time.time() + 10
+        os.utime(hp, ns=(int(stamp * 1e9), int(stamp * 1e9)))   # mtime moves, guaranteed
+        after = pod._heads_sha()
+        self.assertIsNotNone(after)
+        self.assertNotEqual(after, before)
+        self.assertEqual(after,
+                         heads_mod.sha256(self.tmp / "dev" / "pod" / "heads.toml")[:8])
+
     def test_the_corpus_append_is_idempotent_after_a_crash(self):
         """`seq` makes the id unique, so a re-run of the same line adds nothing."""
         st = pod.State()
@@ -3485,9 +3807,9 @@ class Admits(LoopCase):
         Reading the ceiling back out of `agda_slots()` made the pair `total >= slots`
         true for any value the function returned, including a broken zero, so the
         test holds whatever the tier said."""
-        self.patch(pod, "agda_pileup", lambda: (2, {900: 1, 901: 1}, None))
+        self.patch(pod, "agda_pileup", lambda: (3, {900: 1, 901: 1, 902: 1}, None))
         self.assertFalse(pod.admits(self.st, self.t))
-        self.patch(pod, "agda_pileup", lambda: (1, {900: 1}, None))
+        self.patch(pod, "agda_pileup", lambda: (2, {900: 1, 901: 1}, None))
         self.assertTrue(pod.admits(self.st, self.t))
 
     def test_a_non_agda_task_is_admitted_at_the_ceiling(self):
@@ -3504,13 +3826,13 @@ class Admits(LoopCase):
         registry held both. This is that exact shape: the process census alone would
         admit; the registry census must refuse on its own."""
         self.patch(pod, "agda_pileup", lambda: (0, {}, None))       # quiet by ps
-        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 2)  # full by registry
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 3)  # full by registry
         self.assertFalse(pod.admits(self.st, self.t))
 
     def test_the_registry_census_at_the_ceiling_REFUSES_and_one_below_ADMITS(self):
-        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 2)
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 3)
         self.assertFalse(pod.admits(self.st, self.t))
-        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 1)
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 2)
         self.assertTrue(pod.admits(self.st, self.t))
 
     def test_a_blind_registry_census_REFUSES_same_as_a_blind_process_one(self):
@@ -3550,11 +3872,10 @@ class Admits(LoopCase):
         self.assertFalse(pod.admits(self.st, self.t))
 
     def test_a14_fills_slots_three_and_four_only_above_the_free_memory_floor(self):
-        """OWNER'S RULING 2026-08-23, second same-day ruling: WIDE's `slots = 2` now,
-        so `floor = min(2, 2)` already equals `slots` itself -- there is no third or
-        fourth slot left to hold back, and low free memory can no longer cut the
-        count below 2."""
-        self.assertEqual(pod.agda_slots(), 2)
+        """OWNER'S DIRECTIVE 2026-08-28 evening: WIDE's `slots = 3`, so the C-12
+        floor (`min(slots, 2)`) is a real cut again: free memory above 25 percent
+        returns all three writers; at or under it, the floor holds two."""
+        self.assertEqual(pod.agda_slots(), 3)
         self.patch(pod, "free_memory_pct", lambda: 5.0)
         self.assertEqual(pod.agda_slots(), 2)
 
@@ -3890,7 +4211,7 @@ class AgdaOrphansWrapper(LoopCase):
 
 WATCHDOG_SH = """\
 #!/bin/zsh
-LIMIT_KB=$((6*1024*1024))    # 6 GB per-process backstop, owner's ruling 2026-08-23
+LIMIT_KB=$((9*1024*1024))    # 9 GB per-process backstop, owner's ruling 2026-08-28 (option a, item 43b)
 FREE_MIN=8                   # system free-percentage floor
 while true; do sleep 20; done
 """
@@ -4001,21 +4322,21 @@ class Watchdog(LoopCase):
         self.assertEqual(len(self.watchdog_lines()), 2)
 
     def test_the_backstop_note_is_silent_when_the_two_homes_AGREE(self):
-        """The owner's 2026-08-23 6 GB per-process cap and C-12's 8 percent free floor
-        are written twice: in the script and in `[tiers.shared]`. The fixture's copies
-        agree."""
+        """The owner's 2026-08-28 9 GB per-process cap (option a, item 43b) and C-12's
+        8 percent free floor are written twice: in the script and in
+        `[tiers.shared]`. The fixture's copies agree."""
         self.assertIsNone(pod.watchdog_backstop_note())
 
     def test_the_backstop_note_NAMES_a_disagreement_between_the_two_homes(self):
         """Two homes for one number drift silently, and this number is a memory cap."""
         p = self.tmp / "scripts" / "ops" / "agda-watchdog.sh"
-        p.write_text(WATCHDOG_SH.replace("6*1024*1024", "10*1024*1024")
+        p.write_text(WATCHDOG_SH.replace("9*1024*1024", "10*1024*1024")
                      .replace("FREE_MIN=8", "FREE_MIN=3"))
         # THE WHOLE PHRASE, and not the digit alone: `assertIn("3", note)` holds on any
         # note that carries a 3 anywhere, including the one that names the RIGHT number.
         note = pod.watchdog_backstop_note()
         self.assertIn("the script says 10 GB per process and "
-                      "[tiers.shared].per_process_backstop_gb says 6", note)
+                      "[tiers.shared].per_process_backstop_gb says 9", note)
         self.assertIn("the script says 3 percent system free and "
                       "[tiers.shared].system_free_floor_pct says 8", note)
 
@@ -4086,26 +4407,29 @@ class Tiers(LoopCase):
         self.assertEqual(self.lines()[-1]["tier"], pod.HEAVY)
 
     def test_the_WIDE_tier_admits_four_and_the_HEAVY_tier_admits_two(self):
-        """OWNER'S RULING 2026-08-23, second same-day ruling: WIDE is two, HEAVY is
-        one (was four and two under C-12, then briefly one and one between the day's
-        two rulings). The two names survive so a brief may still declare either, and
-        `admits()` now checks BOTH a process census and a registry census against
-        each dispatch's OWN tier ceiling."""
-        self.assertEqual(pod.agda_slots(pod.WIDE), 2)
+        """OWNER'S DIRECTIVE 2026-08-28 evening: WIDE is three (was two under the
+        2026-08-23 ruling, and four under C-12 before that). HEAVY stays one. The
+        two names survive so a brief may still declare either, and `admits()` now
+        checks BOTH a process census and a registry census against each dispatch's
+        OWN tier ceiling."""
+        self.assertEqual(pod.agda_slots(pod.WIDE), 3)
         self.assertEqual(pod.agda_slots(pod.HEAVY), 1)
 
     def test_the_third_slot_opens_only_above_the_free_memory_floor(self):
         """C-12's own 25 percent, and `[tiers.shared]` holds the number.
 
-        OWNER'S RULING 2026-08-23, second same-day ruling: `agda_slots()` no longer
-        varies with free memory for WIDE (`floor = min(2, 2) == slots` already), so
-        there is no THIRD slot left to gate on this floor at all -- both branches
-        now refuse identically, at total >= 2."""
+        LIVE AGAIN since 2026-08-28 (`[tiers.wide].slots = 3`): two WIDE holders sit
+        under the ceiling, so the THIRD slot opens only when free memory is above
+        the 25 percent floor; at or under it, `agda_slots()` cuts back to two and
+        both censuses refuse the third writer."""
         self.patch(pod, "agda_pileup", lambda: (2, {900: 1, 901: 1}, None))
+        self.patch(pod, "agda_registry_slots", lambda tier=pod.WIDE: 2)
         t = pod.Task("X", agda=True, tier=pod.WIDE)
-        self.assertFalse(pod.admits(self.st, t))
+        self.assertTrue(pod.admits(self.st, t),
+                        "two holders under a three-slot ceiling admit")
         self.patch(pod, "free_memory_pct", lambda: 24.0)
-        self.assertFalse(pod.admits(self.st, t))
+        self.assertFalse(pod.admits(self.st, t),
+                         "at 24 percent free the floor cuts WIDE back to two")
 
     def test_a_HEAVY_task_is_refused_at_TWO_where_a_WIDE_task_is_admitted(self):
         """The tier changes the ceiling and nothing else does. OWNER'S RULING
@@ -5544,13 +5868,25 @@ class Commands(LoopCase):
                          "a stale attempt count is exactly what fires AD27's "
                          "escalate-to-critic test and skips the rewritten brief")
 
-    def test_tick_returns_1_when_the_loop_stopped(self):
+    def test_tick_opens_the_episode_at_the_limit_and_returns_0(self):
         st = pod.State()
         for i in range(pod._limits()["parked_max"]):     # the limit, never a literal
             st.tasks[f"X{i}"] = pod.Task(f"X{i}", status=pod.PARKED,
                                          park_reason="no-match")
         pod.save_state(st, self.tmp / ".pod-state" / "state.json")
-        self.assertEqual(pod.cmd_tick([]), 1)
+        self.assertEqual(pod.cmd_tick([]), 0)
+        self.assertTrue((self.tmp / ".pod-state" / "park-episode.json").is_file())
+
+    def test_tick_returns_0_even_at_the_limit_because_the_episode_holds(self):
+        """Owner's directive 2026-08-28: 「以后都不要让我resume」. At the limit,
+        the episode opens (no latch) and cmd_tick returns 0, not 1."""
+        st = pod.State()
+        codes = [f"X{i}" for i in range(pod._limits()["parked_max"])]
+        for i, c in enumerate(codes):
+            st.tasks[c] = pod.Task(c, status=pod.PARKED, park_reason="no-match")
+        pod.save_state(st, self.tmp / ".pod-state" / "state.json")
+        self.assertEqual(pod.cmd_tick([]), 0)
+        self.assertFalse((self.tmp / ".pod-state" / "STOPPED").exists())
 
     def test_stop_writes_the_flag_and_commits_by_explicit_path(self):
         """R8 commits by EXPLICIT PATH and the program NEVER pushes: one push is one CI
@@ -6838,6 +7174,68 @@ class InfraResume(LoopCase):
         st.tasks[CODE] = t
         self.assertEqual(pod.stop_counted(st, self.tmp), [])
 
+    def test_a_CAPACITY_launch_park_spends_none_of_AD14s_stop_budget(self):
+        """THE THIRD SITE OF THE SAME A30 PRINCIPLE, 2026-08-27. A marked capacity park
+        reopens when a head of its own slot frees (`_rule_a2()` plus
+        `capacity_head_free()`), nothing for a person to act on. Counting them stopped
+        this loop twice in one day on parks that were already healing: seq 4839 and
+        seq 4870, both majority-capacity counts."""
+        st = pod.State()
+        st.tasks["LJ-1.980"] = pod.Task("LJ-1.980", status=pod.PARKED,
+                                        park_reason="launch", launch_capacity=True)
+        st.tasks["LJ-1.981"] = pod.Task("LJ-1.981", status=pod.PARKED,
+                                        park_reason="attempt_max:x")
+        self.assertEqual([t.code for t in pod.stop_counted(st, self.tmp)],
+                         ["LJ-1.981"])
+
+    def test_an_UNMARKED_launch_park_still_counts_until_it_classifies(self):
+        """The filter is a FILTER and not a switch. A launch park with no mark and no
+        recorded capacity refusal (an empty log stands in for one here) keeps its place
+        in AD14's budget; only the classifier's True removes it."""
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.PARKED, park_reason="launch")
+        codes = [t.code for t in pod.stop_counted(st, self.tmp)]
+        self.assertIn(CODE, codes)
+        self.assertFalse(pod.launch_park_is_capacity(st.tasks[CODE], self.tmp))
+
+    def test_an_EXITED_IMMEDIATELY_launch_park_classifies_capacity_despite_a_False_mark(self):
+        """MEASURED 2026-08-31 21:14, seq 5999. `herdr_name` had no 32-character
+        ceiling, so LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT's agent never started
+        (`invalid_agent_name`), the launch exited immediately, and the park was
+        written with `launch_capacity: false` because the mark predated the cause.
+        The park is the LAUNCHER's defect, not the task's verdict: it joins the
+        capacity class (reopenable, uncounted), and a False field must not fence
+        the classifier off from the park's own log line."""
+        root = self.tmp
+        tdir = root / "dev" / "pod" / "transitions"
+        tdir.mkdir(parents=True, exist_ok=True)
+        line = {"seq": 5999, "task": CODE, "from": "READY", "to": pod.PARKED,
+                "reason": "launch", "launch_capacity": False,
+                "why": "dispatch: " + CODE + " EXITED IMMEDIATELY (rc 1).",
+                "ts": "2026-08-31T13:14:57Z"}
+        with open(tdir / "2026-08.jsonl", "a") as fh:
+            fh.write(json.dumps(line) + "\n")
+        st = pod.State()
+        st.tasks[CODE] = pod.Task(CODE, status=pod.PARKED, park_reason="launch",
+                                  launch_capacity=False)
+        self.assertTrue(pod.launch_park_is_capacity(st.tasks[CODE], root))
+        self.assertEqual([t.code for t in pod.stop_counted(st, root)], [])
+
+    def test_herdr_name_fits_the_32_character_ceiling_and_stays_distinct(self):
+        """The SAME measurement, name side. A 38-character derived name is the
+        defect; the truncation-plus-digest form must fit, stay deterministic, and
+        keep neighbouring chain codes from colliding."""
+        import launcher
+        long_code = "LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT"
+        n = launcher.herdr_name(long_code)
+        self.assertLessEqual(len(n), 32)
+        self.assertEqual(n, launcher.herdr_name(long_code))
+        short = launcher.herdr_name("LJ-1.123")
+        self.assertEqual(short, "lj-1-123")
+        neighbour = launcher.herdr_name("LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT")
+        self.assertNotEqual(n, neighbour)
+        self.assertLessEqual(len(neighbour), 32)
+
     # ------------------------------------------------- omlx_endpoint_healthy: polls only
 
     def test_omlx_endpoint_healthy_is_true_on_a_200_and_never_restarts_anything(self):
@@ -7599,6 +7997,24 @@ class SalvageWorktree(unittest.TestCase):
         self.assertEqual((dest / "review-of-omega-pair-code.md").read_text(), "NO-GO\n")
         self.assertEqual((dest / "lj-1.399-report.md").read_text(), "report\n")
         self.assertEqual((dest / "Probe399.agda").read_text(), "-- new probe\n")
+
+    def test_a_salvaged_copy_carries_the_source_mtime_not_now(self):
+        """seq 4953, 2026-08-28 02:47: the plain write stamped SALVAGE time onto every
+        copied path, `own_changed_files()` (mtime >= this dispatch's start) then read a
+        prior-instance `review-of-*.md` as THIS attempt's work, and a ghost
+        `sys-critic-upheld-no-go` closed DONE on a verdict nobody wrote in that
+        instance. The scene is the evidence locker: a copy arrives with the scene's
+        own clock."""
+        target = self.whome / "review-of-omega-pair-code.md"
+        target.write_text("NO-GO\n")
+        past = time.time() - 3600
+        os.utime(target, (past, past))
+        bad = pod.salvage_worktree(self.t, self.tmp)
+        self.assertEqual(bad, [])
+        dest = (self.tmp / "agents" / "tasks" / "LJ-1-399"
+                / "review-of-omega-pair-code.md")
+        self.assertLess(dest.stat().st_mtime, time.time() - 1800,
+                        "the copy must not carry the salvage moment as its mtime")
 
     def test_a_src_write_outside_scope_is_not_copied(self):
         """The honour system still holds outside the task home."""

@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.746-SPLIT"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.746-SPLIT briefed bound-in-stage-at-empty and did not inhabit it: GraphAt assembly is fatal. What 746-SPLIT produced is approx-split and step-split. LJ-1.746-SPLIT-SPLIT's obligation line names graph-mirror, the pair of those two functions, and closed GO: accept conjuncts held, delta -1, open 0, row task-lj-1-746-split-split-go, status DONE. Retrying 746-SPLIT is either the GraphAt assembly 746-SPLIT already measured dies, or the packaging 746-SPLIT-SPLIT already closed."
+evidence = [
+  "agents/tasks/LJ-1-746-SPLIT-SPLIT/runs/accept-1.out:24",
+  "agents/tasks/LJ-1-746-SPLIT-SPLIT/LJ-1.746-SPLIT-SPLIT.md:24",
+  "agents/tasks/LJ-1-746-SPLIT-SPLIT/Probe746SplitSplit.agda:28",
+  "agents/tasks/LJ-1-746-SPLIT/runs/PT.agda:72",
+  "agents/tasks/LJ-1-746-SPLIT/LJ-1.746-SPLIT.md:29",
+]
+reopen = "Reopen if a consumer needs bound-in-stage-at-empty at 746-SPLIT's own path, with GraphAt inhabited, and a later proof supplies that inhabitant. Not retry the graph-mirror packaging 746-SPLIT-SPLIT already closed."
+by = "mathematician"

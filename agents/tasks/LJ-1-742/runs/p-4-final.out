@@ -1,0 +1,40 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T23:10:28Z
+Checking LJ-1-742.Probe742 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda:99.3-100.66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝒟ₒ-intro
+  union-spec
+when scope checking the declaration
+  open
+    .#L.Axioms.Basic-17774674555833355489 {ℓ}
+      using (LsetS; Lset-suc; pr∈Lset-suc; sgl∈Lset-suc; pair∈Lset-suc;
+             𝒟ₒ→isL; uniqueL; 𝒟ₒ-intro; union-spec; module UnionOf)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda:294.23-40: error: [UnequalTerms]
+_A_466 Cubical.Data.Sum.⊎ _B_467 !=< ∥ _A_461 ∥₁
+when checking that the inferred type of an application
+  _A_466 Cubical.Data.Sum.⊎ _B_467
+matches the expected type
+  ∥ _A_461 ∥₁
+        2.76 real         2.54 user         0.21 sys
+           699875328  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44788  page reclaims
+                  29  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   2  voluntary context switches
+                 504  involuntary context switches
+         29969428057  instructions retired
+          9863625107  cycles elapsed
+           639779872  peak memory footprint
+EXIT=42
+ended 2026-08-28T23:10:31Z

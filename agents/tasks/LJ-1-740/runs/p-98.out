@@ -1,0 +1,4 @@
+GHCRTS=[-A64m -I0 -M2g]
+direct run after 4min wait
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+EXIT=137

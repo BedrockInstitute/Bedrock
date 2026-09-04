@@ -1,0 +1,46 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 240s (perl alarm)
+started 2026-08-28T23:23:06Z
+Checking LJ-1-742.Probe742 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda:99.3-100.66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝒟ₒ-intro
+  union-spec
+when scope checking the declaration
+  open
+    .#L.Axioms.Basic-17774674555833355489 {ℓ}
+      using (LsetS; Lset-suc; pr∈Lset-suc; sgl∈Lset-suc; pair∈Lset-suc;
+             𝒟ₒ→isL; uniqueL; 𝒟ₒ-intro; union-spec; module UnionOf)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda:443.54-81: error: [UnequalTerms]
+V.sett
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  ⁅ fst x , fst y ⁆))
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  ⁅ fst x , fst y ⁆))
+!= fst (L.Axioms.Numerals.unionʟ (L.Axioms.Numerals.pairʟ x y)) of
+type V ℓ
+when checking that the expression cup∈γ (fst x) (fst y) hx hy has
+type ⟨ fst (cupʟ x y) ∈ˢᵥ Lset γ ⟩
+        3.65 real         3.41 user         0.21 sys
+           726401024  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               46427  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 613  involuntary context switches
+         41004457985  instructions retired
+         13398290166  cycles elapsed
+           666010680  peak memory footprint
+EXIT=42
+ended 2026-08-28T23:23:09Z

@@ -1,0 +1,30 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-29T05:36:42Z
+Checking LJ-1-746-SPLIT.runs.FloorB1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-746-SPLIT/runs/FloorB1.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-746-SPLIT/runs/FloorB1.agda:71.7-11: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-746-SPLIT/runs/FloorB1.agda:71.7-11
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-746-SPLIT/runs/FloorB1.agda:91.45-65: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-746-SPLIT/runs/FloorB1.agda:91.45-65
+       31.95 real        31.31 user         0.47 sys
+          1347256320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              111290  page reclaims
+                  76  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 844  voluntary context switches
+                9158  involuntary context switches
+        409562635747  instructions retired
+        124914035949  cycles elapsed
+          1442301536  peak memory footprint
+EXIT=42
+ended 2026-08-29T05:37:14Z

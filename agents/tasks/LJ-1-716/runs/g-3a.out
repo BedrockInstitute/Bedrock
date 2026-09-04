@@ -1,0 +1,36 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:31:04Z
+Checking LJ-1-716.runs.G3a (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3a.agda).
+error: [UnsolvedConstraints]
+Unsolved constraints
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3a.agda:112.3-78: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3a.agda:112.3-9
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3a.agda:112.25-78
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3a.agda:113.5-125.81: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3a.agda:113.5-15
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/runs/G3a.agda:124.24-125.81
+        3.62 real         3.31 user         0.20 sys
+           849526784  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               53942  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 569  voluntary context switches
+                 406  involuntary context switches
+         44239450933  instructions retired
+         14377494449  cycles elapsed
+           789791872  peak memory footprint
+EXIT=42
+ended 2026-08-27T15:31:07Z

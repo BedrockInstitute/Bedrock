@@ -1,0 +1,34 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T12:06:33Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:262.8-10: error: [UnequalTerms]
+∥
+Σ S
+(λ x →
+   ⟨
+   x ∈ˢ AtF.⟦ var lastFin ⟧ (x₁ ∷ a ∷ p ∷ z ∷ []) ⊓
+   ((x ∷ x₁ ∷ a ∷ p ∷ z ∷ []) AtF.⊨ s5)
+   ⟩)
+∥₁
+!=< Σ _A_418 _B_419
+when checking that the expression t₁ has type Σ _A_418 _B_419
+      127.02 real       125.75 user         1.17 sys
+          1539637248  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               95727  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 125  voluntary context switches
+               30760  involuntary context switches
+       1497676441260  instructions retired
+        506156915613  cycles elapsed
+          1480115832  peak memory footprint
+EXIT=42
+ended 2026-08-28T12:08:40Z

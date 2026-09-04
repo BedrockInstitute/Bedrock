@@ -1,0 +1,30 @@
+Checking LJ-1-726.runs.exp (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/runs/exp.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/runs/exp.agda:17.3-11: error: [SafeFlagPostulate]
+Cannot postulate Aₓ with safe flag
+when scope checking the declaration
+  Aₓ : Set
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/runs/exp.agda:18.46-47: error: [NotInScope]
+Not in scope:
+  ^
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/runs/exp.agda:18.46-47
+when scope checking ^
+        6.36 real         0.63 user         0.18 sys
+           251658240  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               12967  page reclaims
+                4153  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 279  voluntary context switches
+                2656  involuntary context switches
+          7868265473  instructions retired
+          3086663750  cycles elapsed
+           193659624  peak memory footprint
+EXIT=42

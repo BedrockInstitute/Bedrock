@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.743
+# brief agents/tasks/LJ-1-743/LJ-1.743.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 3
+# load before (4.8818359375, 4.39208984375, 4.25439453125)
+# started 2026-08-29 06:38:16
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-743/Probe743.agda rc 0 seconds 0.86
+# changed files 5
+# changed files own 5 of 5
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 0.86
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-743/Probe743.agda", "agents/tasks/LJ-1-743/lj-1.743-report.md", "agents/tasks/LJ-1-743/runs/f-1-floor.out", "agents/tasks/LJ-1-743/runs/p-2-verdict.out", "agents/tasks/LJ-1-743/runs/run.sh"], "changed_files_refused": [], "changed_files_scene": ["agents/tasks/LJ-1-743/Probe743.agda", "agents/tasks/LJ-1-743/lj-1.743-report.md", "agents/tasks/LJ-1-743/runs/f-1-floor.out", "agents/tasks/LJ-1-743/runs/p-2-verdict.out", "agents/tasks/LJ-1-743/runs/run.sh"], "concurrency": 3, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-743/Probe743.agda", "agents/tasks/LJ-1-743/lj-1.743-report.md", "agents/tasks/LJ-1-743/runs/f-1-floor.out", "agents/tasks/LJ-1-743/runs/p-2-verdict.out", "agents/tasks/LJ-1-743/runs/run.sh"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 0.86}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 0.86, "target": "agents/tasks/LJ-1-743/Probe743.agda"}], "spec_surface_detail": "", "task": "LJ-1.743", "tier": "wide", "unbound_vacuous": true, "verdict_files_refused": [], "witness_seconds": 0.89}

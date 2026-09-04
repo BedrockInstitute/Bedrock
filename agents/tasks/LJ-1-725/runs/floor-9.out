@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T10:01:57Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:107.18-25: error: [UnequalTerms]
+V ℓ != Σ (Type _ℓ'_90) _S_95 of type Type (ℓ-suc ℓ)
+when checking that the expression sym peq has type _x_91 ≡ _y_92
+        2.23 real         1.94 user         0.21 sys
+           616660992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39640  page reclaims
+                  95  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 502  voluntary context switches
+                 806  involuntary context switches
+         22510436773  instructions retired
+          8464574236  cycles elapsed
+           556860400  peak memory footprint
+EXIT=42
+ended 2026-08-28T10:01:59Z

@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T23:47:55Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:168.1-169.32: error: [CoverageIssue]
+Incomplete pattern matching for sub≤bin. Missing cases:
+  sub≤bin d sa (nsuc sb) ≤r
+when checking the definition of sub≤bin
+        4.12 real         3.91 user         0.19 sys
+           609353728  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38947  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 740  involuntary context switches
+         52385355765  instructions retired
+         15493317722  cycles elapsed
+           548537280  peak memory footprint
+EXIT=42

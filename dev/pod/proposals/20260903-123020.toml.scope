@@ -1,0 +1,42 @@
+# Maintainer batch 20260903-123020. NO ROWS, NO QUEUE ENTRIES.
+#
+# Fourteen parks examined. Two movements since batch 20260903-083751.
+#
+# MOVEMENT ONE: LJ-1.728-SPLIT-SPLIT left the park list -- shelved
+# `delivered-elsewhere` (seq 6153). The 728 family is now fully consumed:
+# every shell of the four-generation chain is either DONE or on the shelf.
+#
+# MOVEMENT TWO: LJ-1.769 ran twice and completed. att=0 returned pid-dead
+# with a FAILED probe and auto-continued as-is (seq 6156-6159, owner
+# directive 2026-08-28); att=1 delivered and returned pid-dead with exit 0
+# (seq 6162; the acceptance arm is clean), 37 changed files (3 own this
+# attempt on top of the kept scene's prior work), and its own brief's
+# transfer-park branch parked it (seq 6165). The auto-continue spent one
+# attempt to finish real work, and the park is the brief's own branch. The
+# designed path, end to end.
+#
+# PER-TASK VERDICTS (carried from 083751, restated for this file's record).
+#
+# LJ-1.765-SPLIT / LJ-1.769 (transfer-park, exit 0, 6/37 files, own): each
+# shell's own brief parks it with the census deferred onward. The 765 line
+# is fully shelved at its head; 769's delivery is fresh. The shelving
+# judgement is the mathematician's AD3 call, now exercised on fourteen
+# shells of these families. Rows from me would double-track that process.
+# No row.
+#
+# LJ-1.740-SPLIT / LJ-1.742-SPLIT-SPLIT-SPLIT / LJ-1.753-SPLIT-SPLIT
+# (no-change, 0 files): capacity and queue parks whose instances returned
+# without touching the tree. The six facts name no verdict
+# (obligations_delta None, error_class None). A verdict from me would be
+# invented, not measured. No row.
+#
+# LJ-1.755 ... LJ-1.763 (nine tasks, no-change, 0 files): new-family queue
+# tasks whose first instances produced nothing; the mathematician owns their
+# verdicts. No row.
+#
+# THE SHADOWING LIST is empty this window.
+#
+# THE EXPIRY FALLOUT lists re-falls of long-closed LJ-1.39x-1.42x records to
+# system rows and NO MATCH. Those tasks are DONE; expiry re-routes records,
+# it does not reopen tasks. A proposal row keyed to a DONE task would move
+# live records and breach R3. No row.

@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T14:48:19Z
+Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
+time: command terminated abnormally
+       13.90 real        12.96 user         0.35 sys
+          1188413440  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               70397  page reclaims
+                4233  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 693  voluntary context switches
+               10880  involuntary context switches
+        163166550271  instructions retired
+         53282653737  cycles elapsed
+          1129694600  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-28T14:48:33Z

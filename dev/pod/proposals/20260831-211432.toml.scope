@@ -1,0 +1,46 @@
+# Maintainer batch 20260831-211432. NO ROWS, NO QUEUE ENTRIES.
+#
+# Sixteen parks examined. Two movements since batch 20260831-180253.
+#
+# MOVEMENT ONE: LJ-1.753 and LJ-1.753-SPLIT left the park list -- the
+# mathematician's staged shelving consumed both (now on the shelf list above,
+# `delivered-elsewhere` family, dev/pod/shelf/). SHELVED 29 -> 31. The
+# consumption path works; no action from me.
+#
+# MOVEMENT TWO: LJ-1.728-SPLIT-SPLIT-SPLIT is back on the list, transformed.
+# At 180253 it was PARKED attempt_max:pid-dead; the mathematician's row
+# `task-lj-1-728-split-split-split-lint-back-to-author` (seq 5979) re-queued
+# it, the author run COMPLETED (exit 0, 43 changed files, 20 own -- the
+# survey-quotes gate that killed four instances is satisfied), and its own
+# transfer-park row parked it (seq 5994 family). The brief-repair loop closed:
+# request filed (171110), row ruled (5979), work delivered (exit 0), park
+# by the brief's own branch. Census defers to the SSSSS chain. No row.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.728-SPLIT-SPLIT-SPLIT / LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT
+# / LJ-1.742-SPLIT-SPLIT (transfer-park, exit 0, 43/7/10 files, own):
+# each shell's own brief carries the transfer-park branch; delivery is
+# recorded and each census defers to its queued successor (SSSSS holds
+# split_of in dev/pod/queue.toml). The mathematician's staged shelving
+# consumes exactly this shape (753 pair tonight). Rows from me would
+# double-track a live AD3 process. No row.
+#
+# LJ-1.728-SPLIT-SPLIT / LJ-1.740-SPLIT / LJ-1.742-SPLIT-SPLIT-SPLIT
+# / LJ-1.753-SPLIT-SPLIT (no-change, 0 files): capacity and queue parks whose
+# instances returned without touching the tree. The six facts name no verdict
+# (obligations_delta None, error_class None). A verdict from me would be
+# invented, not measured. No row.
+#
+# LJ-1.755 ... LJ-1.763 (nine tasks, no-change, 0 files): new-family queue
+# tasks whose first instances produced nothing; the mathematician owns their
+# verdicts. No row.
+#
+# THE SHADOWING LIST notes row `sys-lint-accept` lost 1 time in the window;
+# that is 728-SPLIT-SPLIT-SPLIT's earlier lint park routing to its task row
+# first (section 4.4). The ordering worked as designed.
+#
+# THE EXPIRY FALLOUT lists re-falls of long-closed LJ-1.39x-1.42x records to
+# system rows and NO MATCH. Those tasks are DONE; expiry re-routes records,
+# it does not reopen tasks. A proposal row keyed to a DONE task would move
+# live records and breach R3. No row.

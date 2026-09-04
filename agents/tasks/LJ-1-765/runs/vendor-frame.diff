@@ -1,0 +1,49 @@
+--- Frame728SSS.agda	2026-08-31 15:54:53
++++ /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-765/agents/tasks/LJ-1-765/runs/Frame765.agda	2026-09-02 21:14:23
+@@ -1,34 +1,29 @@
+ {-# OPTIONS --cubical --safe --guardedness #-}
+ 
+--- [LJ-1.728-SPLIT-SPLIT-SPLIT] PROBE, FILE F OF 4 (the frame).  The
+--- transcribed floor heap-walled at -M4g twice (runs/floor-1.out,
+--- runs/floor-2.out), so the brief's heap-wall cure applies: split
+--- hull-closed from the ambient-slot assembly.  This file carries the
+--- SHARED FRAME and the cheap floor half: the repaired telescope, the
+--- named interface types, the obligation's type, and codeOf.  The
+--- hull half is runs/HullHalf728SSS.agda; the ambient half is
+--- runs/AmbHalf728SSS.agda; the composition is Probe728SSS.agda.
++-- [LJ-1.765] VENDORED INTERFACE, THE FRAME.  This file is
++-- LJ-1-728-SPLIT-SPLIT-SPLIT/runs/Frame728SSS.agda transcribed into
++-- this worktree (which carries no LJ-1-728-SPLIT* directory), with
++-- the module renamed to this task's namespace and this header
++-- rewritten.  Every import and every declaration below the module
++-- line is byte-identical to the original (runs/vendor-frame.diff):
++-- the repaired telescope, the named interface types, the
++-- obligation's type, and codeOf, exactly as the split measured them
++-- green at -M4g (SSS runs/frame-1.out 15.08 s RSS 2.06 GB,
++-- runs/frame-2.out 14.41 s; re-measured here at this dispatch).
+ --
+---   WHAT IS MINE   the module name and this header.  Every
+---                  declaration below is [LJ-1.728-SPLIT]'s
+---                  transcription byte for byte, moved here once; the
+---                  three opens carry `public` so the two halves and
+---                  the composition read them from this file's
+---                  interface instead of restating them.  Nothing is
+---                  stated twice in the four-file set (W2).
+ --   THE TYPE       Completeness is [LJ-1.718]'s repaired statement
+ --                  taken as a HYPOTHESIS, never inhabited;
+ --                  hull-convert-at-matrix is [LJ-1.692]'s CONSTRUCTED
+ --                  term, opened plainly, never hypothesised.
+---   MEASURED       green at -M4g (runs/frame-1.out, 15.08 s, RSS 2.06 GB).
+ --   NO HOLE, NO POSTULATE.  One Agda process per run, caliber from
+ -- the pane, never set here.  Lands nothing in src/.
+ 
++
+ open import Base.Prelude
+ open import Base.Truth
+ open import Base.Classical using ( LEM )
+ 
+-module LJ-1-728-SPLIT-SPLIT-SPLIT.runs.Frame728SSS {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
++module LJ-1-765.runs.Frame765 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+ 
+ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+ open import L.Constructible {ℓ} using ( IsOrd; Lset )

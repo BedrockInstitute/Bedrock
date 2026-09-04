@@ -1,0 +1,27 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:13:22Z
+Checking LJ-1-716.Probe716 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:100.13-20: error: [ConstructorPatternInWrongDatatype]
+_,_ is not a constructor of the datatype ∥_∥₁
+when checking that the pattern c∈∅ , _ has type ⟨ fst c ∈ ∅ ⟩
+        3.58 real         3.35 user         0.21 sys
+           832520192  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               52899  page reclaims
+                  11  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 457  involuntary context switches
+         41716265403  instructions retired
+         14128677661  cycles elapsed
+           772998272  peak memory footprint
+EXIT=42
+ended 2026-08-27T15:13:26Z

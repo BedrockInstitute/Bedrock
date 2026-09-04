@@ -54,6 +54,7 @@ import argparse
 import contextlib
 import datetime as _dt
 import errno
+import hashlib
 import fcntl
 import json
 import os
@@ -326,8 +327,21 @@ def herdr_name(task: str) -> str:
     """Map a task code to a legal herdr agent name, reversibly enough to join.
 
     `LJ-1.123` -> `lj-1-123`. Uppercase and dots are the only characters our task
-    codes carry that herdr refuses."""
-    return task.lower().replace(".", "-")
+    codes carry that herdr refuses. MEASURED 2026-08-31 21:14: herdr also caps
+    the name at 32 characters, and `LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT`
+    maps to 38 -- every `agent start` failed with `invalid_agent_name`
+    (.pod-state/logs/LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-20260831-211436.log),
+    the launch exited immediately, and the task parked a launch park that no
+    capacity check reopens (seq 5999). So a long code is truncated to fit and a
+    digest suffix keeps distinct codes distinct. Every reader derives the name
+    through this one function, so join still matches without the name being
+    reversible by eye.
+    """
+    name = task.lower().replace(".", "-")
+    if len(name) <= 32:
+        return name
+    suffix = "-" + hashlib.sha256(name.encode()).hexdigest()[:6]
+    return name[: 32 - len(suffix)] + suffix
 
 # THE AGDA CEILING, AND AMENDMENT A14 RESTORED C-12's TWO TIERS ON 2026-08-17.
 #

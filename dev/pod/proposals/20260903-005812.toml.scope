@@ -1,0 +1,45 @@
+# Maintainer batch 20260903-005812. NO ROWS, NO QUEUE ENTRIES.
+#
+# Eighteen parks examined. One movement since batch 20260903-000001:
+# LJ-1.765-SPLIT-SPLIT joined the list. Its history is measured end to end:
+# att=0 ran ~13 min and returned pid-dead with a FAILED probe (exit != 0),
+# so rule (a2)'s neighbour -- the pid-dead auto-continue at the acceptance --
+# re-queued it as-is on the kept scene (seq 6086, att 0 -> 1, owner
+# directive 2026-08-28). The att=1 instance lived 34 seconds (seq 6087 ->
+# 6088) and the acceptance runner could not measure the return at all
+# (R7, `rec is None`), so it parked `no-change` (seq 6090). No critic was
+# escalated, the attempt budget stands at 1 of 4, and the 34-second death
+# pattern points at vendor/head instability, not at the program. The
+# obligation it splits from is already being closed on the mathematician's
+# side (LJ-1.766 shelved `proven-futile` at seq 6073; LJ-1.728-...-SPLIT-
+# SPLIT-SPLIT-SPLIT shelved `delivered-elsewhere` at seq 6082). No row.
+#
+# PER-TASK VERDICTS (carried from 000001, restated for this file's record).
+#
+# LJ-1.728-SPLIT-SPLIT-SPLIT / LJ-1.742-SPLIT-SPLIT / LJ-1.765
+# / LJ-1.765-SPLIT (transfer-park, exit 0, 43/10/25/6 files, own): each
+# shell's own brief parks it with the census deferred onward. The 728
+# chain's fourth generation closed GO at seq 6015; the 765 line delivered
+# and its continuation LJ-1.766 is shelved. The shelving judgement is the
+# mathematician's AD3 call, already exercised on seven shells of these
+# families. Rows from me would double-track that process. No row.
+#
+# LJ-1.765-SPLIT-SPLIT (no-change, 0 files): the R7 park described above --
+# an unmeasurable return after two worker deaths, att 1 of 4. The six facts
+# name no verdict. No row.
+#
+# LJ-1.728-SPLIT-SPLIT / LJ-1.740-SPLIT / LJ-1.742-SPLIT-SPLIT-SPLIT
+# / LJ-1.753-SPLIT-SPLIT (no-change, 0 files): capacity and queue parks whose
+# instances returned without touching the tree. A verdict from me would be
+# invented, not measured. No row.
+#
+# LJ-1.755 ... LJ-1.763 (nine tasks, no-change, 0 files): new-family queue
+# tasks whose first instances produced nothing; the mathematician owns their
+# verdicts. No row.
+#
+# THE SHADOWING LIST is empty this window.
+#
+# THE EXPIRY FALLOUT lists re-falls of long-closed LJ-1.39x-1.42x records to
+# system rows and NO MATCH. Those tasks are DONE; expiry re-routes records,
+# it does not reopen tasks. A proposal row keyed to a DONE task would move
+# live records and breach R3. No row.

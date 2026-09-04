@@ -1,0 +1,70 @@
+# Maintainer batch 20260827-203744. NO ROWS, NO QUEUE ENTRIES.
+#
+# Written while the loop was STOPPED twice today on the same count. First stop:
+# dev/pod/transitions/2026-08.jsonl seq 4839, {"to": "STOPPED", "why": "5 parked"},
+# 2026-08-27T09:45:14Z. Second run (started 20:37 local, exit 3 after 79 s,
+# keeper pane): swept rules (a1)-(e), then stopped again WITHOUT a second
+# LOOP_STOPPED line, which is correct by construction:
+# scripts/pod/pod.py `_rule_d`, `if STOPPED_FILE.exists(): return STOP`
+# ("already stopped: one line, not one a tick"). Author of both stops is RULE (d):
+# `stop_counted()` = exactly 4 `launch` parks + LJ-1.710, and
+# `parked_max = 5` (dev/pod/heads.toml:290).
+#
+# THE FIVE PARKED TASKS, ONE VERDICT EACH.
+#
+# LJ-1.710: NO ROW IS WRITABLE. Its four attempts are four frozen corpus records,
+# every one routed by its own task-scoped row:
+#   rg -o '"row": "[^"]*"' dev/pod/replay-corpus.jsonl | rg '710'
+#     -> task-lj-1-710-lint-back-to-author, x4
+# AD10/R3: any candidate row whose [branch.when] matches those records' shape
+# (exit_code=1, error_class=lint) moves frozen winners at replay and is refused;
+# any candidate disjoint from them has no record to act on and cannot lift an
+# attempt_max park, which has no clock and no auto-reopen (`_rule_a2()` branch
+# list, scripts/pod/pod.py). The CODE defect behind its loop is already fixed
+# this session: review_brief() grants lj-1.710-report.md to a coder-slot lint
+# escalation (scripts/pod/pod.py:2693, :2703), and the fix postdates every
+# wrapper this task was dispatched with. Un-parking it needs the owner's word,
+# plain or --retry LJ-1.710; the next escalation would regenerate under the
+# fixed wrapper. NOT proposed here: writing it as a row would be refused, and
+# saying so costs nothing (AD10; standing instruction).
+#
+# LJ-1.711, LJ-1.712, LJ-1.713, LJ-1.714: NO ROWS, AND A DEFECT FOUND AND FIXED
+# INSTEAD. Their parks are CAPACITY refusals, not failures to start: transition
+# lines seq 4807-4810 carry `why`: "every model of [heads].coder is at its own
+# max_concurrency (Qwen3.8-27B-oQ4e-mtp 1/1, glm-5.3-flash 1/1) ... It re-opens
+# when one closes." There are no facts to key a row on (exit_code null,
+# obligations_delta null, zero changed files), so routing never consults them.
+# THE DEFECT WAS THE PROMISE ITSELF: head_full_refusal() promised reopen-on-
+# close, but _rule_a2()'s only reader for reason "launch" waited for a NEWER
+# dev/pod/table.toml (mtime 15:56:25 < parked_at 16:41), so the promise had no
+# mechanism. Both coders were idle from 09:44:58Z; the four parks never moved;
+# their count reached parked_max and stopped the loop, which froze them further.
+# FIXED this batch in scripts/pod/pod.py + scripts/tests/test_pod_loop.py:
+# capacity refusals now mark themselves (`launch_capacity` task field, set ONLY
+# at pick_head_config()'s refusal site), and _rule_a2() opens such a park when
+# capacity_head_free() - same accessor, same selection policy, same census as
+# launch() - finds a seat of the task's own slot free, without waiting for a
+# table edit. Every other launch cause keeps the mtime-only rule. Five new
+# tests pin the mark, the reopen, the saturated case, and the kind-boundary.
+#
+# CONSEQUENCE FOR THE OWNER, MEASURED BEFORE REPAIR: a plain `pod.py resume`
+# would have bounced off rule (d) on its first tick (nothing rewrites the table
+# while rule (f) is refused, cmd_resume runs the same narrow tests). AFTER this
+# repair, resume alone heals the count: all five counted parks either reopen
+# mechanically (the four launches; heads idle) or stay for judgement (LJ-1.710),
+# leaving 1 < 5. Resume remains YOUR word, requested, never assumed.
+#
+# THE SHELVED TASKS hold no parked_max slot and ask for nothing.
+#
+# THE NO-MATCH RECORDS window names LJ-1.702 (accept-1.out, cited twice): the
+# killed-witness record backlog item 41 measured, whose safe-close row cannot be
+# written because exit_code 0 + obligations_delta 0 also matches a task that
+# delivered nothing. Still open, still the owner's (resume recommended there),
+# and still not row-writable here.
+#
+# THE SHADOWING LIST (`sys-lint-accept` lost 6x) is the pod-math cure working:
+# task-scoped lint-back-to-author rows outrank it on their own tasks by AD8's
+# scope-first ordering. Losses here are wins elsewhere; nothing to admit.
+#
+# THE EXPIRY FALLOUT names settled, terminal records only (c-74 through c-4799);
+# no live task waits on any of them, so coverage is restored nowhere.

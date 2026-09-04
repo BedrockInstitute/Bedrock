@@ -1,0 +1,3 @@
+missing   exit=42       1.81s  agents/tasks/LJ-1-711/Probe711.agda::bound-in-tower  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-711/.pod-state/witness/Witness-POD-555d3255.agda:39)
+witness: 1 UNRESOLVED of 1, 1.81 s, probe_red=False
+METER-EXIT=1

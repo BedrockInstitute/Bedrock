@@ -1,0 +1,39 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T14:29:46Z
+Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
+ Checking LJ-1-698.Probe698 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-698/Probe698.agda).
+  Checking LJ-1-693.Probe693 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-693/Probe693.agda).
+   Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-520/Probe520.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:90.45-49: error: [NotInScope]
+Not in scope:
+  sucV
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:90.45-49
+    (did you mean
+       'Base.Prelude.Fin.suc' or
+       'Base.Prelude.ℕ.suc' or
+       'Base.Prelude.suc' or
+       'Fin.suc' or
+       'ℕ.suc' or
+       'suc'?)
+when scope checking sucV
+       26.18 real        25.57 user         0.45 sys
+           802881536  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               50863  page reclaims
+                 238  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 687  voluntary context switches
+               11330  involuntary context switches
+        299987691715  instructions retired
+        103767277709  cycles elapsed
+           742196352  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:30:12Z

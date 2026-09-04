@@ -329,7 +329,11 @@ parked_max = 5                # this many PARKED tasks stop the loop, rule (d)
 # `agda_holders_in_tier()` (`scripts/pod/launcher.py`) is now the ONE implementation
 # both sides call.
 [tiers.wide]
-slots = 2                     # OWNER'S RULING 2026-08-23 (second, restored after the
+slots = 3                     # OWNER'S DIRECTIVE 2026-08-28 evening: three writers
+                               # (so the coder slot's 3-way glm really runs; supersedes
+                               # the 2026-08-23 two-writer ruling, whose race history
+                               # is kept above and below).
+                               # OWNER'S RULING 2026-08-23 (second, restored after the
                                # admits()/launcher() race above was fixed): two writers
 heap = "-A64m -I0 -M2g"       # OWNER'S RULING 2026-08-23 (second): 2 GB cap each
 
@@ -353,17 +357,29 @@ heap = "-A64m -I0 -M4g"       # OWNER'S RULING 2026-08-23: 4 GB cap, unchanged
 # this is a rare, hand-invoked, 8 GB commitment, and the owner's ruling here is no
 # qwen running at all, full stop.
 [tiers.superheavy]
-heap = "-A64m -I0 -M8g"       # OWNER'S RULING 2026-08-25: 8 GB cap, manual use only
+heap = "-A64m -I0 -M8g"       # OWNER'S RULING 2026-08-28 (option a of item 43b):
+                              # restored to 8 GB -- the backstop pair moved to 9g in the
+                              # same breath (per_process_backstop_gb above + LIMIT_KB in
+                              # agda-watchdog.sh), so an 8g run is no longer killed at
+                              # 6.8g. History: -M8g (2026-08-25) -> briefly -M5g pinned
+                              # under the old 6g backstop (2026-08-28 morning) -> 8g
+                              # again the same day with a backstop that can hold it.
 
 [tiers.shared]
 max_heap_sum_gb = 6           # OWNER'S RULING 2026-08-23 (second): the worst live mix is
                                # one HEAVY (4 GB) plus one WIDE (2 GB) at once; two WIDE
-                               # (4 GB) sits under it with room to spare, and the slot
-                               # ceilings above make two HEAVY, or three writers of any
-                               # mix, unreachable, so this bar never needs to catch them.
-free_memory_pct_for_extra = 25  # dead under a slot ceiling of 2 or less (a third slot is
-                               # never opened), left in place rather than removed
-per_process_backstop_gb = 6   # OWNER'S RULING 2026-08-23: the maintainer's own choice,
+                               # (4 GB) sits under it with room to spare. **UPDATE
+                               # 2026-08-28: three WIDE writers are now reachable
+                               # ([tiers.wide].slots = 3) and sit EXACTLY at this bar
+                               # (6 GB); one HEAVY plus two WIDE (8 GB) exceeds it and
+                               # serializes behind the wides. The number is unchanged.**
+free_memory_pct_for_extra = 25  # LIVE again since 2026-08-28: with [tiers.wide].slots
+                               # = 3, this gate holds back the THIRD writer whenever
+                               # free memory is at or under 25 percent.
+per_process_backstop_gb = 9   # OWNER'S RULING 2026-08-28 (option a of item 43b):
+                              # raised from 6 so the -M8g superheavy tier is reachable
+                              # (the 6g backstop killed both real 8g runs at ~6.8g RSS).
+                              # Was the maintainer's own choice on 2026-08-23;
                                # not the owner's number. Follows C-12's own derivation
                                # (14 GB was ~2 GB above HEAVY's 12 GB cap); 6 GB is 2 GB
                                # above HEAVY's 4 GB cap, the larger of the two tiers'
@@ -532,7 +548,16 @@ mathematician_adversarial = { model = "glm-5.3-flash", effort = "", harness = "h
 # prior return, not an occasional one. The owner's acceptance of the risk shape was
 # not conditioned on the overflow fraction, but the fraction changed and is
 # recorded here for the next reader.
-coder                     = { model = "glm-5.3-flash", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 1 }
+# **OPENED TO TWO SEATS, OWNER'S ORDER 2026-08-27 EVENING:** 「coder开放两个槽」.
+# This row's cap leaves the 2026-08-24 blanket policy (every glm/grok row at 1)
+# BY NAME FOR THIS ONE SLOT: with the single-head drop above the slot had become
+# one seat total and the ready queue drained serially behind it. The Agda side
+# needs nothing: `[tiers.wide] slots = 2` and the shared 6 GB budget were both
+# sized for two concurrent WIDE writers on 2026-08-23.
+# **OPENED TO THREE SEATS, OWNER'S ORDER 2026-08-28 LATE EVENING** (supersedes the
+# two-seat order of 2026-08-27): 「最多允许3路」. Requires [tiers.wide].slots >= 3 to
+# be real, which the same order grants.
+coder                     = { model = "glm-5.3-flash", effort = "", harness = "herdr-pi", sandbox = "acceptEdits", max_concurrency = 2 }   # OWNER'S DIRECTIVE 2026-09-03 evening: two glm-5.3-flash lanes from the next task on
 #
 # **DROPPED TO A SINGLE HEAD, `grok-4.6` ALONE, OWNER'S RULING 2026-08-27.**
 # `glm-5.3` and `claude-opus-5` both leave this slot; `glm-5.3` moves to

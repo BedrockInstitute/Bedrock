@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-09-02T22:55:24Z
+Checking LJ-1-768.runs.GapPieces768 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-768/agents/tasks/LJ-1-768/runs/GapPieces768.agda).
+     1800.11 real      1794.54 user         4.67 sys
+          4708302848  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              289414  page reclaims
+                  16  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                   7  voluntary context switches
+              168518  involuntary context switches
+            15510896  instructions retired
+             6708946  cycles elapsed
+             1179960  peak memory footprint
+EXIT=124
+ended 2026-09-02T23:25:25Z

@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.728-SPLIT-SPLIT"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.728-SPLIT-SPLIT briefed grounded-from-complete, the pinned Sigma. It did not close GO: no-change, no report. LJ-1.767-SPLIT-SPLIT's obligation line names that same object and closed GO: reading-only pack, 210.63 s. Retrying 728-SPLIT-SPLIT is the pinned composition 765 already measured and 767-SPLIT-SPLIT replaced. The live GFC is the 767-SPLIT-SPLIT export. The meter on that name is GO."
+evidence = [
+  "agents/tasks/LJ-1-728-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT.md:28",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/LJ-1.767-SPLIT-SPLIT.md:28",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/lj-1.767-SPLIT-SPLIT-report.md:5",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/Probe767SplitSplit.agda:148",
+]
+reopen = "Reopen if a consumer needs grounded-from-complete at 728-SPLIT-SPLIT's own pinned Sigma and heavy path, and the 767-SPLIT-SPLIT term is gone. Not retry the pinned GFC 765 already measured and 767-SPLIT-SPLIT replaced."
+by = "mathematician"

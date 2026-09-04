@@ -1,0 +1,11 @@
+GHCRTS=[-A64m -I0 -M2g]
+direct re-run of p-55 bytes (runner artifact)
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:855.20-69: error: [NoParseForApplication]
+Could not parse the application
+∣ x , (hxA , (hxw , (∣ e′ , (hcons , hr) ∣₁)) ∣₁)
+Operators used in the grammar:
+  , (infixr operator, level 4) [_,_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/prim/lib/prim/Agda/Builtin/Sigma.agda:8.15-18)]
+when scope checking
+∣ x , (hxA , (hxw , (∣ e′ , (hcons , hr) ∣₁)) ∣₁)
+EXIT=42

@@ -735,8 +735,9 @@ def main() -> int:
     check("the caliber is READ from heads.toml and is not a second literal",
           [mod.agda_heap(t) for t in ("wide", "heavy")],
           [heads["tiers"]["wide"]["heap"], heads["tiers"]["heavy"]["heap"]])
-    check("owner's ruling 2026-08-23, second same-day ruling: WIDE admits TWO "
-          "concurrent Agda writers", mod.agda_slots("wide"), 2)
+    check("owner's directive 2026-08-28: WIDE admits THREE concurrent Agda "
+          "writers (2026-08-23's two-writer ruling superseded)",
+          mod.agda_slots("wide"), 3)
     check("owner's ruling 2026-08-23: HEAVY admits only ONE", mod.agda_slots("heavy"), 1)
     check("the loader was reachable, so no fallback literal is in play",
           mod.HEADS_ERROR, "")
@@ -1256,11 +1257,10 @@ def main() -> int:
            "parked_max", "tick_seconds", "worker_deadline_s"])
     check_true("the Agda deadline clears the widest measured acceptance run, "
                "300.81 s at [LJ-4-0] gap B3", limits["agda_deadline_s"] > 300.81)
-    check("owner's ruling 2026-08-23, second same-day ruling: WIDE admits TWO "
-          "concurrent Agda writers (raced admits()'s process census against "
-          "this registry check for one hour before the fix; "
-          "agda_registry_slots() in pod.py has the measurement)",
-          heads["tiers"]["wide"]["slots"], 2)
+    check("owner's directive 2026-08-28 evening: WIDE admits THREE concurrent "
+          "Agda writers (the 2026-08-23 two-writer ruling is superseded; its "
+          "census-race history is in agda_registry_slots()'s docstring)",
+          heads["tiers"]["wide"]["slots"], 3)
     check("owner's ruling 2026-08-23: HEAVY admits only ONE",
           heads["tiers"]["heavy"]["slots"], 1)
     check("the WIDE caliber is the owner's 2026-08-23 second-ruling 2 GB cut",
@@ -1271,8 +1271,9 @@ def main() -> int:
           heads["tiers"]["shared"]["max_heap_sum_gb"], 6)
     check("slots three and four need system free memory above 25 percent",
           heads["tiers"]["shared"]["free_memory_pct_for_extra"], 25)
-    check("the per-process backstop follows HEAVY's 4 GB cap, the larger tier",
-          heads["tiers"]["shared"]["per_process_backstop_gb"], 6)
+    check("the per-process backstop follows SUPERHEAVY's 8 GB cap plus headroom "
+          "(owner's ruling 2026-08-28, option a of item 43b)",
+          heads["tiers"]["shared"]["per_process_backstop_gb"], 9)
     check("and C-12's system free floor with it",
           heads["tiers"]["shared"]["system_free_floor_pct"], 8)
     # THIS CHECK USED TO BE `4*8 + 2*12 > 32`, which is 64 > 32 and cannot fail

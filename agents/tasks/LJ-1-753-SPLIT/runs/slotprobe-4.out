@@ -1,0 +1,7 @@
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/runs/SlotProbe.agda:39.8-36: error: [ModuleDefinedInOtherFile]
+You tried to load
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/runs/SlotProbe.agda
+which defines the module LJ-1-753-SPLIT.Probe753Split. However,
+according to the include path this module should be defined in
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda
+rc=42

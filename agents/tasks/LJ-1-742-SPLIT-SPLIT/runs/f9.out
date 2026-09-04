@@ -1,0 +1,4 @@
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda.txt: error: [InvalidExtensionError]
+Unsupported extension.
+Supported extensions are: .agda, .lagda, .lagda.rst, .lagda.tex,
+                          .lagda.md, .lagda.org, .lagda.tree, .lagda.typ

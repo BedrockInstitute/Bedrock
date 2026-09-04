@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T23:10:49Z
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:833.32: error: [ParseError]
+=<ERROR> PT.rec (snd GOALΩ)
+      (λ { ...
+        0.07 real         0.04 user         0.01 sys
+           107118592  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8294  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  36  involuntary context switches
+           780160863  instructions retired
+           204534676  cycles elapsed
+            86426224  peak memory footprint
+EXIT=42

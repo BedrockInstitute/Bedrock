@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.727"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.727 briefed completeness-from-pack and did not inhabit it: packing does not close BoundInStage. What 727 produced is level-at-pair, the unbounded level reading at the packed pair. LJ-1.727-SPLIT's obligation line names that same object level-at-pair and closed GO: accept conjuncts held, delta -1, open 0, row task-lj-1-727-split-go, status DONE. Retrying 727 is either the briefed composition 727 already measured does not close, or the transcription 727-SPLIT already closed."
+evidence = [
+  "agents/tasks/LJ-1-727-SPLIT/runs/accept-1.out:20",
+  "agents/tasks/LJ-1-727-SPLIT/LJ-1.727-SPLIT.md:27",
+  "agents/tasks/LJ-1-727-SPLIT/Probe727Split.agda:139",
+  "agents/tasks/LJ-1-727/Probe727.agda:166",
+  "agents/tasks/LJ-1-727/LJ-1.727.md:22",
+]
+reopen = "Reopen if a consumer needs completeness-from-pack as packed, and a later proof supplies BoundInStage from packing. Not retry the level-at-pair transcription 727-SPLIT already closed."
+by = "mathematician"

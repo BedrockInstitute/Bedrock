@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-29T04:15:50Z
+Checking LJ-1-732.runs.Amb3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-732/runs/Amb3.agda).
+        3.74 real         3.51 user         0.21 sys
+           748666880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               47450  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   3  voluntary context switches
+                1105  involuntary context switches
+         44342991991  instructions retired
+         14696215523  cycles elapsed
+           689390672  peak memory footprint
+EXIT=0
+ended 2026-08-29T04:15:54Z

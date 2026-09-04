@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.737"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.737 briefed table-sat and did not inhabit it: two tree debts block the recording. What 737 produced is pair-in-Lγω, the closedω pair placement. LJ-1.737-SPLIT's obligation line names that same object pair-in-Lγω and closed GO: accept conjuncts held, delta -1, open 0, row task-lj-1-737-split-go, status DONE. Retrying 737 is either the briefed recording 737 already measured does not close, or the transcription 737-SPLIT already closed."
+evidence = [
+  "agents/tasks/LJ-1-737-SPLIT/runs/accept-1.out:20",
+  "agents/tasks/LJ-1-737-SPLIT/LJ-1.737-SPLIT.md:23",
+  "agents/tasks/LJ-1-737-SPLIT/Probe737Split.agda:151",
+  "agents/tasks/LJ-1-737/Probe737.agda:115",
+  "agents/tasks/LJ-1-737/LJ-1.737.md:26",
+]
+reopen = "Reopen if a consumer needs table-sat at closedω, the two 737 debts have placement legs, and a later proof supplies the recording. Not retry the pair-in-Lγω transcription 737-SPLIT already closed."
+by = "mathematician"

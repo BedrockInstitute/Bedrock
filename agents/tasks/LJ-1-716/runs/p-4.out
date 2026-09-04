@@ -1,0 +1,27 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:13:01Z
+Checking LJ-1-716.Probe716 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:70.60-61: error: [UnequalTerms]
+3 != 4 of type ℕ
+when checking that the expression ψ has type Formula ⊥* 4
+        3.27 real         3.05 user         0.20 sys
+           831160320  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               52808  page reclaims
+                  20  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 399  involuntary context switches
+         40793528026  instructions retired
+         13604991620  cycles elapsed
+           771982464  peak memory footprint
+EXIT=42
+ended 2026-08-27T15:13:04Z

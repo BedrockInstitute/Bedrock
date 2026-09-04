@@ -1,0 +1,40 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-726.ProbeExp {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ )
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.runs.W3 {ℓ} lem as W3
+
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open import Cubical.Data.Vec using ( lookup )
+open import Cubical.Foundations.Prelude using ( cong )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( module InfinitySet )
+open InfinitySet {ℓ} using ( sucV; #_; ω )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+module CS = hPropStructure 𝒮ʟ
+
+module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+open SemV using ( _^_ )
+module AtF = SemV.At CS.S fst
+
+exp : (a p z : V ℓ)
+    → ⟨ (a ∷ p ∷ z ∷ []) P652.⊨ₚ W3.erased ⟩
+    → ∥ Σ[ x ∈ V ℓ ] ( ⟨ x ∈ˢ z ⟩ × (x ∷ a ∷ p ∷ z ∷ []) P652.⊨ₚ W3.s4 ) ∥₁
+exp a p z t = PT.map (λ { (x , x∈ , rest) → x , (x∈ , rest) }) t
+
+exp2 : (a p z : V ℓ)
+    → ⟨ (a ∷ p ∷ z ∷ []) AtF.⊨ W3.three ⟩
+    → ∥ Σ[ x ∈ V ℓ ] ( ⟨ x ∈ˢ z ⟩ × ⟨ (x ∷ a ∷ p ∷ z ∷ []) AtF.⊨ W3.s4 ⟩ ) ∥₁
+exp2 a p z t = PT.map (λ { (x , x∈ , rest) → x , (x∈ , rest) }) t

@@ -1,0 +1,10 @@
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda:231.17: error: [ParseError]
+Not a valid pattern: λ _ @ (u , _) hu _ @ (v , _) hv ant →
+  Empty.rec*
+  (PT.rec Empty.isProp⊥*
+   (λ { (w , w∈ , _) → Empty.rec* (subst ⟨_⟩ (empty-spec (w .fst)) w∈)
+      })
+   ant)
+real 0.07
+user 0.03
+sys 0.01

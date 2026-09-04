@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.725"
+claim = "proven-futile"
+reason = "Situation 2. No task closed GO on carved-is-hier. What settles THIS route (carved-is-hier from table-sat as 724 stated, with no extra height) is a different task: LJ-1.724 measured that table-sat is false as stated. At a successor ordinal the A-bounded recording has no approximation inside Lset gamma, so pr x (Lset x) is not in carved. The minimal counterexample is gamma = 2, x = 1. 725's brief took that exact type as a hypothesis. Retrying 725 is that fact again, now known false. The first inclusion and the stage-read type 725 wrote are untouched. The continuation is scoped table-sat (LJ-1.724-SPLIT, running) plus the stage bound (LJ-1.729 to LJ-1.733), not a 725 retry."
+evidence = [
+  "agents/tasks/LJ-1-724/lj-1.724-report.md:3",
+  "agents/tasks/LJ-1-724/lj-1.724-report.md:26",
+  "agents/tasks/LJ-1-724/Probe724.agda:75",
+  "agents/tasks/LJ-1-725/LJ-1.725.md:16",
+  "agents/tasks/LJ-1-725/Probe725.agda:82",
+]
+reopen = "Reopen if LJ-1.724-SPLIT inhabits table-sat at omega <= gamma and sucV (sucV x) in gamma, and a later brief inhabits carved-is-hier from that term plus the stage bound 725-SPLIT named. Not retry carved-is-hier from table-sat as 724 stated."
+by = "mathematician"

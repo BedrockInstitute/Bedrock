@@ -1,0 +1,212 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T11:44:32Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:183.3-8: error: [MissingDefinitions]
+The following names are declared but not accompanied by a
+definition: inner
+when scope checking the declaration
+  matrix₃-table a p z h
+    = PT.rec squash₁ peelT
+      (transport (three-sat (a ∷ p ∷ z ∷ [])) (h .snd))
+    where
+      tableT : Type (ℓ-suc ℓ)
+      tableT
+        = ∥ Σ[ c ∈ V ℓ ]
+          (⟨ c ∈ˢ z ⟩ ×
+           ((x : V ℓ) →
+            ⟨ x ∈ˢ z ⟩ →
+            ⟨ x ∈ˢ p ⟩ → ∥ Σ[ y ∈ V ℓ ] (⟨ y ∈ˢ z ⟩ × ⟨ pr x y ∈ˢ c ⟩) ∥₁))
+          ∥₁
+      inner : (a ∷ p ∷ z ∷ []) AtF.⊨ W3.three → tableT
+      peelT t
+        = PT.rec squash₁
+          (λ { (x₁ , (_ , t₁))
+                 → PT.rec squash₁
+                   (λ { (x₂ , (_ , t₂))
+                          → PT.rec squash₁
+                            (λ { (x₃ , (_ , t₃))
+                                   → PT.rec squash₁
+                                     (λ { (x₄ , (_ , t₄))
+                                            → PT.rec squash₁
+                                              (λ { (x₅ , (_ , t₅))
+                                                     → PT.rec squash₁
+                                                       (λ { (x₆ , (_ , t₆))
+                                                              → PT.rec squash₁
+                                                                (λ { (x₇ , (_ , t₇))
+                                                                       → PT.rec squash₁
+                                                                         (λ { (x₈ , (_ , t₈))
+                                                                                → PT.rec squash₁
+                                                                                  (λ { (x₉ ,
+                                                                                        (_ , t₉))
+                                                                                         → PT.rec
+                                                                                           squash₁
+                                                                                           (λ { (x₁₀
+                                                                                                 ,
+                                                                                                 (_
+                                                                                                  ,
+                                                                                                  t₁₀))
+                                                                                                  → PT.rec
+                                                                                                    squash₁
+                                                                                                    (λ { (x₁₁
+                                                                                                          ,
+                                                                                                          (_
+                                                                                                           ,
+                                                                                                           t₁₁))
+                                                                                                           → PT.rec
+                                                                                                             squash₁
+                                                                                                             (λ { (x₁₂
+                                                                                                                   ,
+                                                                                                                   (_
+                                                                                                                    ,
+                                                                                                                    m))
+                                                                                                                    → PT.rec
+                                                                                                                      squash₁
+                                                                                                                      (λ { (c
+                                                                                                                            ,
+                                                                                                                            (c∈
+                                                                                                                             ,
+                                                                                                                             as))
+                                                                                                                             → ∣
+                                                                                                                               c
+                                                                                                                               ,
+                                                                                                                               (c∈
+                                                                                                                                ,
+                                                                                                                                λ x
+                                                                                                                                  x∈z
+                                                                                                                                  x∈p →
+                                                                                                                                  PT.rec
+                                                                                                                                  squash₁
+                                                                                                                                  (λ { (y
+                                                                                                                                        ,
+                                                                                                                                        (y∈
+                                                                                                                                         ,
+                                                                                                                                         appsat))
+                                                                                                                                         → PT.rec
+                                                                                                                                           squash₁
+                                                                                                                                           (λ { (w
+                                                                                                                                                 ,
+                                                                                                                                                 (w∈c
+                                                                                                                                                  ,
+                                                                                                                                                  w≡))
+                                                                                                                                                  → ∣
+                                                                                                                                                    y
+                                                                                                                                                    ,
+                                                                                                                                                    (y∈
+                                                                                                                                                     ,
+                                                                                                                                                     subst
+                                                                                                                                                     (λ q →
+                                                                                                                                                        ⟨
+                                                                                                                                                        q
+                                                                                                                                                        ∈ˢ
+                                                                                                                                                        c
+                                                                                                                                                        ⟩)
+                                                                                                                                                     (sym
+                                                                                                                                                      w≡)
+                                                                                                                                                     w∈c)
+                                                                                                                                                    ∣₁
+                                                                                                                                              })
+                                                                                                                                           (transport
+                                                                                                                                            (appAt-sat
+                                                                                                                                             2
+                                                                                                                                             1
+                                                                                                                                             0
+                                                                                                                                             (y
+                                                                                                                                              ∷
+                                                                                                                                              x
+                                                                                                                                              ∷
+                                                                                                                                              c
+                                                                                                                                              ∷
+                                                                                                                                              x₁₂
+                                                                                                                                              ∷
+                                                                                                                                              x₁₁
+                                                                                                                                              ∷
+                                                                                                                                              x₁₀
+                                                                                                                                              ∷
+                                                                                                                                              x₉
+                                                                                                                                              ∷
+                                                                                                                                              x₈
+                                                                                                                                              ∷
+                                                                                                                                              x₇
+                                                                                                                                              ∷
+                                                                                                                                              x₆
+                                                                                                                                              ∷
+                                                                                                                                              x₅
+                                                                                                                                              ∷
+                                                                                                                                              x₄
+                                                                                                                                              ∷
+                                                                                                                                              x₃
+                                                                                                                                              ∷
+                                                                                                                                              x₂
+                                                                                                                                              ∷
+                                                                                                                                              x₁
+                                                                                                                                              ∷
+                                                                                                                                              a
+                                                                                                                                              ∷
+                                                                                                                                              p
+                                                                                                                                              ∷
+                                                                                                                                              z))
+                                                                                                                                            appsat)
+                                                                                                                                     })
+                                                                                                                                  ((as
+                                                                                                                                    .fst)
+                                                                                                                                   x
+                                                                                                                                   x∈z
+                                                                                                                                   .snd
+                                                                                                                                   x∈p))
+                                                                                                                               ∣₁
+                                                                                                                         })
+                                                                                                                      (m
+                                                                                                                       .snd
+                                                                                                                       .snd)
+                                                                                                                })
+                                                                                                             (t₁₁
+                                                                                                              .snd)
+                                                                                                       })
+                                                                                                    (t₁₀
+                                                                                                     .snd)
+                                                                                              })
+                                                                                           (t₉ .snd)
+                                                                                     })
+                                                                                  (t₈ .snd)
+                                                                            })
+                                                                         (t₇ .snd)
+                                                                   })
+                                                                (t₆ .snd)
+                                                          })
+                                                       (t₅ .snd)
+                                                 })
+                                              (t₄ .snd)
+                                        })
+                                     (t₃ .snd)
+                               })
+                            (t₂ .snd)
+                      })
+                   (t₁ .snd)
+             })
+          t
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:183.3-8: error: [ClashingDefinition]
+Multiple definitions of inner. Previous definition at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-667/runs/W3.agda:63.1-6
+when scope checking the declaration
+  inner : (a ∷ p ∷ z ∷ []) AtF.⊨ W3.three → tableT
+        3.47 real         3.09 user         0.26 sys
+           716587008  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45430  page reclaims
+                  73  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 596  voluntary context switches
+                1641  involuntary context switches
+         31617816041  instructions retired
+         13129542052  cycles elapsed
+           658637880  peak memory footprint
+EXIT=42
+ended 2026-08-28T11:44:35Z

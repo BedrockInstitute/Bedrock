@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:134.1-11: error: [MissingDefinitions]
+The following names are declared but not accompanied by a
+definition: three-satx
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:136.1-139.76: error: [MissingTypeSignature.Function]
+Missing type signature for left hand side three-sat γ
+when scope checking the declaration
+  three-sat γ = ?
+        2.81 real         2.59 user         0.20 sys
+           727056384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               46121  page reclaims
+                  13  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  48  voluntary context switches
+                 888  involuntary context switches
+         31849075706  instructions retired
+         11069261925  cycles elapsed
+           669123640  peak memory footprint
+EXIT=42

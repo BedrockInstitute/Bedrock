@@ -1,0 +1,38 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T11:41:26Z
+Checking LJ-1-728.runs.FLOOR728 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-728/runs/FLOOR728.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-667/Probe667.agda).
+  Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-667/runs/W3.agda).
+   Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-520/Probe520.agda).
+ Checking LJ-1-673.Probe673 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-673/Probe673.agda).
+ Checking LJ-1-692.Probe692 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-692/Probe692.agda).
+  Checking LJ-1-686.Probe686 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-686/Probe686.agda).
+  Checking LJ-1-689.Probe689 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-689/Probe689.agda).
+   Checking LJ-1-680.Probe680 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-680/Probe680.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-728/runs/FLOOR728.agda:146.43-48: error: [NotInScope]
+Not in scope:
+  mapFo
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728/agents/tasks/LJ-1-728/runs/FLOOR728.agda:146.43-48
+when scope checking mapFo
+      280.31 real       277.74 user         2.14 sys
+          1796096000  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              111377  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 743  voluntary context switches
+               84632  involuntary context switches
+       3260507911137  instructions retired
+       1100472270549  cycles elapsed
+          1735690040  peak memory footprint
+EXIT=42
+ended 2026-08-28T11:46:06Z

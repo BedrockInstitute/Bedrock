@@ -1,0 +1,76 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 90s (perl alarm)
+started 2026-08-28T16:25:41Z
+Checking LJ-1-724-SPLIT.runs.devc (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/runs/devc.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/runs/devc.agda:171.61-62: error: [NotInScope]
+Not in scope:
+  ⊨
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/runs/devc.agda:171.61-62
+    (did you mean
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.Mse._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.SemM.At._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.SemV.At._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.Refine.Abs.V._⊨_' or
+       '.#L.Axioms.Basic-13385603638965545320.FinOf.DefC.SemanticsM.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AbsL.Mse._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AbsL.SemM.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AbsL.SemV.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AbsL.V._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.DefC.Refine.Abs.Mse._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.DefC.Refine.Abs.SemM.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.DefC.Refine.Abs.SemV.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.DefC.Refine.Abs.V._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.DefC.SemanticsM.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.RefC.Abs.Mse._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.RefC.Abs.SemM.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.RefC.Abs.SemV.At._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.AtStage.RefC.Abs.V._⊨_' or
+       '.#L.Axioms.Separation-13679061090959132633.SemV.At._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.Mse._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.SemM.At._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.SemV.At._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.Refine.Abs.V._⊨_' or
+       '.#L.Definability-1260217953329213676.DefOf.SemanticsM.At._⊨_' or
+       'AL.Mse._⊨_' or
+       'AL.SemM.At._⊨_' or
+       'AL.SemV.At._⊨_' or
+       'AL.V._⊨_' or
+       'AbsL.Mse._⊨_' or
+       'AbsL.SemM.At._⊨_' or
+       'AbsL.SemV.At._⊨_' or
+       'AbsL.V._⊨_' or
+       'AtStage.DefC.Refine.Abs.Mse._⊨_' or
+       'AtStage.DefC.Refine.Abs.SemM.At._⊨_' or
+       'AtStage.DefC.Refine.Abs.SemV.At._⊨_' or
+       'AtStage.DefC.Refine.Abs.V._⊨_' or
+       'AtStage.DefC.SemanticsM.At._⊨_' or
+       'AtStage.RefC.Abs.Mse._⊨_' or
+       'AtStage.RefC.Abs.SemM.At._⊨_' or
+       'AtStage.RefC.Abs.SemV.At._⊨_' or
+       'AtStage.RefC.Abs.V._⊨_' or
+       'DefOf.Refine.Abs.Mse._⊨_' or
+       'DefOf.Refine.Abs.SemM.At._⊨_' or
+       'DefOf.Refine.Abs.SemV.At._⊨_' or
+       'DefOf.Refine.Abs.V._⊨_' or
+       'DefOf.SemanticsM.At._⊨_'?)
+when scope checking ⊨
+        1.95 real         1.74 user         0.17 sys
+           604291072  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38907  page reclaims
+                  76  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 146  voluntary context switches
+                 357  involuntary context switches
+         21736722744  instructions retired
+          7853507741  cycles elapsed
+           546374592  peak memory footprint
+EXIT=42
+ended 2026-08-28T16:25:43Z

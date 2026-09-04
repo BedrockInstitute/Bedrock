@@ -1,0 +1,5 @@
+Checking LJ-1-746.runs.B1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746/agents/tasks/LJ-1-746/runs/B1.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746/agents/tasks/LJ-1-746/runs/B1.agda:37.18-26: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746/agents/tasks/LJ-1-746/runs/B1.agda:37.18-26
+        6.05 real         3.10 user         0.28 sys

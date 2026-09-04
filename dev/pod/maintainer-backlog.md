@@ -19,6 +19,153 @@ the same batch that lands the fix, so the next brief no longer carries it.
 
 ## Open
 
+### 42. The brief template has no branch for a clean return that owes more work. MEASURED THREE TIMES, 2026-08-27/28
+
+**INSTANCE ONE (hypothesis-broker): LJ-1.717, parked `no-match` 2026-08-27 evening.** Its plan
+role is transfer: "Completeness from 716 and 720 as hypotheses". Its return was clean (exit 0,
+delta 0, open 1, 18 owned files, probe correctly `.agda.txt`, report present, NO review-of), and
+no branch wanted it: `go` needs `delta_max = -1` (`dev/pod/table.toml:36261`), `stop-stated`
+needs a `review-of` artifact, `no-go-*` need exit 42. A transfer is neither a close nor a stop.
+
+**INSTANCE TWO (worked, no verdict): LJ-1.720, parked `no-match` the same night.** Exit 0,
+delta 0, open 1, 9 owned files, report present, no review-of, probe correctly claimed `.agda`.
+Same gap: worked-and-returned with its census still open has no branch at all.
+
+**INSTANCE THREE (fix pass done, work owed): LJ-1.713, parked `no-match` 2026-08-28 03:22 (seq
+4992).** Its lint fix pass did exactly what the wrapper asked (survey passes now, conjunct 6
+held, exit 0, one owned report edit), and the obligation it was dispatched for is STILL open.
+The template has "fix the report" and "close the term" but no "fix pass done, re-attempt the
+real work" branch, so the honest return no-matches.
+
+**INSTANCE FOUR (the gap propagated into a cure): LJ-1.722, parked `no-match` 2026-08-28
+05:07 (seq 5087).** 722 was pod-math's OWN successor for 717 -- "717's report is a
+transfer: the term is written, the bridge walls every shape at 2 GB, it asked for -M4g" --
+and it inherited the same missing branch: heavy run, 62 minutes, pid dead at return,
+acceptance exit 0, delta 0, open 1, own 10 = scene 10 (`Probe722.agda.txt`, report present,
+no review-of). A transfer cannot close its own census, so the cure no-matches like the
+disease it was queued to cure. Template consequence: every successor of a transfer-shape
+task needs the transfer branch AT QUEUE TIME, not after its first park.
+
+**SHELVE SAFETY NOTE for this family (verified in `_rule_a3`, pod.py):** shelving a
+transfer-shaped park salvages the task home (`home_only=True`) and KEEPS the worktree,
+recording its base commit on the shelve line -- the deliverable (untypable probe, report,
+stage runs) survives as files even though shelved/parked homes stay uncommitted in git
+(item 38). What is NOT settled by shelving is the census: `open` stays 1 in the record, so
+a later landing still needs a real task or an owner word.
+
+**CURE IS AD3's, AND TWO PATHS ARE PROVEN:** the split-successor queue entry (tonight's
+LJ-1.715-SPLIT, and LJ-1.636-split before it) carries each result forward as a fresh task, or
+an owner-authorised task-scoped escalate row (the LJ-1.505 `no-verdict` precedent, item 25).
+A brief amendment alone admits nothing (item 25, measured). Going forward, pod-math's
+template wants one more branch per shape: transfer-done (delta 0 + open 1 + report + probe,
+no review), and fix-pass-done (same, at attempt >= 1 after a lint escalation). Note for
+template authors: give any new escalate branch the item-20 exclusion
+(`changed_files_none = ["agents/tasks/<CODE>/review-of-LJ-*-*.md"]`) -- 718's stop-stated
+already carries it and 716's no-go-stated does not (safe only since the seq-4904 own-scope
+repair, because a critic return never reproduces exit 42 on owned targets).
+
+### 45. A pid-dead mid-work return was being routed as a stated verdict. FIXED 2026-08-28 ~19:2x
+
+**OWNER CAUGHT IT LIVE:** 「724跟725压根没完成任务, 它们是因为项目外部原因导致系统死机而停掉的,
+应该原样resume, 怎么就升级critic了呢」. Measured: seq 5154/5157 -- both retried instances died
+pid-dead (the glm session ceiling), their HALF-WRITTEN probes produced `exit 42
+unsolved_meta`, and the `no-go-attacked` rows escalated CRITICS to attack statements
+nobody made. The ownership fix (own-scoped fact 4) kept inherited files out but could
+not tell 「died mid-draft」 from 「finished and stated」.
+
+**FIX (`_rule_b` + `_accept_one`):** rule (b) now marks both abnormal deaths (pid dead,
+deadline kill) on the task; rule (c) then routes a pid-dead FAILED return (exit != 0)
+away from the verdict rows: the attempt is counted, the SAME brief re-queues on the SAME
+kept worktree (原样: the scene is the continuation), and rule (f) re-dispatches in the
+same tick. Bounded by attempt_max → parks `attempt_max:pid-dead` (reason built by
+concatenation, so the Emit vocabulary test reads only the `attempt_max:` prefix). A
+pid-dead return with exit 0 routes normally -- a worker that finished before dying
+closes honestly (go/satisfied). In-memory flag: an acceptance that survives a restart
+routes per the old table (documented residual). Tests: continue at att 0, park at max,
+exit-0 routes normally.
+
+### 44. Rule (d) now auto-recovers instead of latching. OWNER DIRECTIVE 2026-08-28, SHIPPED SAME DAY
+
+**THE DIRECTIVE:** 「不要老是让我resume……以后都不要让我resume, 请改成可以自动恢复」 and,
+one message later, 「你就应该自动发消息问数学家如何解开, 然后协调解开事宜」. Delivered
+verbatim: reaching `parked_max` no longer latches the loop -- it opens an EPISODE.
+
+**EPISODE SEMANTICS** (`_rule_d`, `scripts/pod/pod.py`):
+1. At the limit: the owner is NOTIFIED once (visibility, not a request), the resident
+   pod-math is PROMPTED automatically with one line per park (code, reason, exit/delta/
+   open, own-count) asking for AD3 rulings -- shelve requests or successors -- and the
+   loop KEEPS TICKING, so those file writes are consumed by rules (a3)/(f) as they land.
+2. Progress (a changed counted set or a DONE) resets the window. Zero progress across
+   `PARK_EPISODE_MINUTES` (60) triggers ONE re-prompt of pod-math and a second window.
+3. Only after TWO zero-progress windows does the loop latch for real
+   (`"<N> parked without progress"`) -- a wall no ruling is touching. Then resume is
+   genuinely the owner's.
+Declared stops, stop_loop rows and the owner's own `pod stop` still latch immediately
+and never auto-recover.
+
+**MIGRATION:** the legacy `"<N> parked"` latch auto-clears at the next `pod.py run`
+(`_auto_recover_legacy_park_latch`, exact-format match plus timestamp agreement), so
+tonight's 14:08 latch needed no owner resume after this shipped.
+
+**WHY THE LATCH SURVIVES AT ALL:** a truly frozen system (routing bug, parks multiplying
+with no DONE) must still stop and page; two windows of zero progress is that test.
+Every progressing case -- successors draining, staged shelves landing -- resets the
+window and never pages twice.
+
+### 43. Salvage and author writes could launder evidence past the router. FIXED 2026-08-28 ~03:10
+
+**TWO STACKED HOLES, BOTH MEASURED, BOTH CLOSED TONIGHT.**
+
+P1: `salvage_worktree()` copied with a plain write, stamping every salvaged path with the
+salvage moment. `own_changed_files()` keys provenance on `mtime >= started`, so a PRIOR
+instance's artifacts became "this attempt's work" after any salvage. Measured at seq 4953
+(LJ-1.711, 02:47): a retried instance whose worker died pid-dead at 12 minutes was accepted
+over a first-instance `review-of-*.md` (salvage-stamped) and closed DONE
+`sys-critic-upheld-no-go`, no critic ever dispatched. Fixed: salvage copies preserve the
+source mtime (pod.py `salvage_worktree()`).
+
+P2: an AUTHOR instance can mint a verdict-named file. Measured at seq 4973 (LJ-1.712, 03:04):
+an escalated coder's fix pass wrote `review-of-LJ-1-712-1.md` itself (fresh mtime, honestly
+owned), and the same glob read the author's write as "a critic has spoken". Fixed in
+`accept.py` next to A21: a non-adversarial instance's verdict-named writes are dropped from
+fact 4 (field `verdict_files_refused`, kept on disk, committed by the close-recovery via
+`_a21_probe_paths()`), while `mathematician_adversarial` / `coder_adversarial` instances
+still mint real verdicts. No new matchable key: R1's six-fact fence holds.
+
+**CONSEQUENCE FOR THREE CLOSED TASKS (owner's verdict wanted):** LJ-1.710, LJ-1.711 and
+LJ-1.712 all stand DONE `sys-critic-upheld-no-go` on evidence this fix now excludes
+(inherited or author-minted files; the meter said `open = 1` in all three). Either the
+17:45-era critic word stands as final for 710 and the others re-queue as successors, or each
+needs one honest re-verdict. **RULED by pod-math 2026-08-28 10:01**
+(`agents/tasks/POD-MATH/owner-five-case-2026-08-28.md`): all three MATHEMATICAL no-gos
+stand (710's critic word; 711's `bound-in-tower` ceiling; 712's `refuted-pin` term), no
+re-queues; the closes stay as the tainted-but-superseded record. Successors: LJ-1.722
+(717), LJ-1.721 (720), LJ-1.723 (713).
+
+### 43b. `[tiers.superheavy]` (-M8g) and the watchdog's 6 GB backstop contradict each other. MEASURED 2026-08-28, owner ruling wanted
+
+**THE TIER PROMISES A RUN THE BACKSTOP FORBIDS.** `superheavy-check.py` sets
+`GHCRTS=-M8g`; `scripts/ops/agda-watchdog.sh` `LIMIT_KB = 6*1024*1024` kills any agda at
+~6.8 GiB RSS (`"6g backstop cap"`, sized "to HEAVY's cap, the larger of the two" against
+`dev/pod/heads.toml:366 per_process_backstop_gb = 6`). Measured twice on the LJ-1.715
+worktree (`Everything.lagda.md`, the pod-math-named cap question): both runs killed by the
+backstop at rss ~7,119,xxx KB, 59 s and 70 s in, both inside `L.Condensation` -- the exact
+file where the -M4g RTS wall lands at 217 s (watchdog log 11:21:49 and 11:23:29; the first
+run was under overnight memory pressure, the second at 63 percent free, same kill).
+
+**A SECOND, SMALLER GAP, FIXED IN THE SAME BATCH:** the script hard-coded `cwd=ROOT`, so a
+worktree target resolved the module to the MAIN tree's copy (`ModuleDefinedInOtherFile`,
+exit 42 at 0.11 s) -- worktree scenes could never be asked the cap question at all. Fixed:
+when the target lives under `.pod-state/worktrees/<CODE>/` and that worktree carries a
+`bedrock.agda-lib`, agda runs from the worktree with the worktree-relative path. Gates
+unchanged (qwen-idle refusal, single explicit target, 8 GB RTS from `[tiers.superheavy]`).
+
+**OWNER'S OPTIONS:** (a) raise the backstop PAIR together (`heads.toml` + `LIMIT_KB`) so the
+tier is reachable; (b) pin superheavy's heap to 6g so the tier is honest; (c) accept the
+measured futility -- three generations (4g RTS wall x3, >6.8g RSS killed x2) say the
+LJ-1.715 family route does not close on this machine at any ruled cap, which empirically
+confirms the `proven-futile` shelve of LJ-1.715. The number is AD26/infra, the owner's.
+
 ### 41. A memory-walled WITNESS sub-run reads exactly like an unsolved obligation, with nothing in the record to tell them apart. MEASURED on LJ-1.702, 2026-08-27
 
 **LJ-1.702 (item 37/38's repair for LJ-1.643) parked `no-match`: `exit_code 0,
@@ -680,6 +827,12 @@ LJ-1.630 stays PARKED until a corrective row is admitted (a batch proposal) or t
 runs `--retry`.
 
 ### 29. `maintainer_scope_ok()` has no BEFORE snapshot, so long-standing ambient drift refuses every batch on `scope`. MEASURED 2026-08-25
+
+**SECOND SIGHTING, AND THE FIRST ONE THAT COST A REPAIR INSTEAD OF ONLY ROWS. 2026-08-27, transitions seq 4849.** The maintainer's zero-row batch
+`dev/pod/proposals/20260827-203744.toml` was refused at harvest with verdict `scope`, and the refusal's own path list named `scripts/pod/pod.py` and
+`scripts/tests/test_pod_loop.py`: the pod-repair that POD-REVIEW duty had just ordered (`launch_capacity` mark, `_rule_a2()` head-aware reopen, migration
+classifier). The tree was dirty because the REVIEW instructions demand a tree edit, so under today's gate a maintainer cannot both repair the program and
+land its own reasoned record in the same window. Content survived here and in the slot return; the structural gap (no before-snapshot) is UNCHANGED.
 
 **THE DRIFT NAMED BELOW IS NOW CLEARED, OWNER-AUTHORISED 2026-08-25.** Six
 commits (`f71700d2`, `9de9c337`, `f5e74d0d`, `33a526b6`, `fdc66a15`,

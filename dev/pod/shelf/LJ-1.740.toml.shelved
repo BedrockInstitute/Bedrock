@@ -1,0 +1,11 @@
+[shelve]
+task = "LJ-1.740"
+claim = "delivered-elsewhere"
+reason = "Situation 1, owner 2026-08-28: the transfer is complete. LJ-1.740 briefed Sat-at-asConst and delivered a green prefix. It did not close GO. LJ-1.740-SPLIT's obligation line names that same object. Retrying 740 is the prefix 740-SPLIT already takes. The meter is not GO."
+evidence = [
+  "agents/tasks/LJ-1-740/lj-1.740-report.md:13",
+  "agents/tasks/LJ-1-740/LJ-1.740.md:26",
+  "agents/tasks/LJ-1-740-SPLIT/LJ-1.740-SPLIT.md:28",
+]
+reopen = "Reopen if a consumer needs Sat-at-asConst at 740's own path, and the 740-SPLIT brief is gone. Not retry the prefix 740 already wrote."
+by = "mathematician"

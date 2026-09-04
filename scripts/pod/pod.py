@@ -155,6 +155,32 @@ DRAIN_FILE = POD_STATE / "DRAINING"
 #: ticks. `cmd_run()` also reloads on its own when `scripts/pod/*.py` changes, so this
 #: file is for the case the signature cannot see: a reload the maintainer wants NOW.
 RELOAD_FILE = POD_STATE / "reload"
+PARK_EPISODE_MINUTES = 60     # owner directive 2026-08-28: one auto-recovery window
+PARK_EPISODE_MAX_WINDOWS = 2  # zero-progress windows before the latch is real
+
+
+def _park_episode_load():
+    """The current rule-(d) auto-recovery episode, or None. A corrupt file is None.
+
+    `POD_STATE` is resolved at CALL time (the suites swap it onto their own tree),
+    never the import-time constant.
+    """
+    try:
+        ep = json.loads((POD_STATE / "park-episode.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return ep if isinstance(ep, dict) else None
+
+
+def _park_episode_save(ep):
+    POD_STATE.mkdir(parents=True, exist_ok=True)
+    (POD_STATE / "park-episode.json").write_text(json.dumps(ep, ensure_ascii=False),
+                                                 encoding="utf-8")
+
+
+def _park_episode_clear():
+    with contextlib.suppress(OSError):
+        (POD_STATE / "park-episode.json").unlink()
 #: A park older than this file is re-measured in place (PARKED → CHECKING), with no
 #: worker. `hot_restart()` stamps it only when `scripts/pod/*.py` actually moved,
 #: so a meter repair salvages the scene the old image mis-measured. A reload-file
@@ -551,11 +577,19 @@ CARRIED = ("pid", "proc_start", "brief", "agda", "sandbox", "model", "log", "fin
 #: with is stale by the time `_rule_a2()` unparks it. `infra_budget` is the resume count
 #: left before A31 falls through to A29's `fallback:`, one per occurrence and reset to one
 #: on progress.
+#:
+#: **THE MAINTAINER REPAIR ADDS ONE MORE, 2026-08-27.** `launch_capacity` records that
+#: THIS park came from `pick_head_config()` finding every model of the slot at its own
+#: `max_concurrency`, which is the one shape `head_full_refusal()` promises will reopen
+#: "when one closes". `_rule_a2()` reads it and keeps that promise without waiting for a
+#: table edit; every other `launch` cause keeps the old mtime-only rule. It describes the
+#: CURRENT park and is overwritten at every park, so a stale True can never survive into
+#: an unrelated park reason.
 ADDED = ("status", "role", "effort", "exclusive", "attempt", "predecessor", "run",
          "record", "obl_before", "row", "park_reason", "parked_at", "head_slot",
          "scope_narrow", "unbound_before", "tier", "avoid_models",
          "shelved_at", "shelve_ref", "shelve_reopen",
-         "infra_session", "infra_budget")
+         "infra_session", "infra_budget", "launch_capacity")
 
 FIELDS = CARRIED + ADDED
 
@@ -742,6 +776,17 @@ def _int(value, default=None):
         return default
 
 
+def _float(value, default=None):
+    """One field as a float, or `default`. Same contract as `_int`: a field of the
+    wrong type is ABSENT and never a zero, and a boolean is not a clock."""
+    if isinstance(value, bool) or not isinstance(value, (int, float, str)):
+        return default
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def save_state(st, path=None):
     """tmp -> fsync -> rename -> fsync(dir). BOTH fsyncs, and m6 is why.
 
@@ -784,6 +829,11 @@ def log_path(when=None, root=None):
     return root / "dev" / "pod" / "transitions" / f"{when:%Y-%m}.jsonl"
 
 
+#: THE PARSE CACHE behind `log_lines()`. Keyed by (root, filename, mtime_ns, size); a
+#: small dict is enough because only the current and previous month are ever read.
+_LOG_PARSE_CACHE = {}
+
+
 def log_files(root=None):
     """Every monthly file, oldest first. The fold reads them in that order."""
     root = ROOT if root is None else Path(root)
@@ -801,22 +851,43 @@ def log_lines(root=None, since=0):
     not an object, and a line whose `seq` is not a number. `int("x")` raised here before,
     and the raise ran inside `replay_log()` at the top of every tick, so ONE hand-edited
     character in a TRACKED file stopped the whole unattended loop.
+
+    **THE PARSE IS MEMOIZED ON (mtime, size) PER FILE.** MEASURED 2026-09-04 08:10:
+    every tick walked and re-parsed the whole month's log once per caller -- the
+    replay, the digest, every park's capacity classification -- and as the 769 line
+    pushed the file past 220 KB with 46 parks walking it, one tick's cost crossed the
+    tick interval itself: ticks stopped completing, the loop went silent while alive
+    (state.json frozen at 07:43, CPU still accruing), and every “quiet” hour since was
+    this. The cache key is the file's own (mtime, size): an append changes both, so a
+    grown log re-parses exactly once and every later reader in the same second reuses
+    the parse. Root is part of the key so tests never see the real tree's lines.
     """
+    root = ROOT if root is None else Path(root)
     out = []
     for f in log_files(root):
         try:
+            st = f.stat()
             text = f.read_text(encoding="utf-8")
         except OSError:
             continue
-        for line in text.split("\n"):
-            if not line.strip():
-                continue
-            try:
-                rec = json.loads(line)
-            except ValueError:             # ValueError covers JSONDecodeError
-                continue
-            if not isinstance(rec, dict):
-                continue
+        key = (str(root), f.name, st.st_mtime_ns, st.st_size)
+        cached = _LOG_PARSE_CACHE.get(key)
+        if cached is None:
+            parsed = []
+            for line in text.split("\n"):
+                if not line.strip():
+                    continue
+                try:
+                    rec = json.loads(line)
+                except ValueError:         # ValueError covers JSONDecodeError
+                    continue
+                if isinstance(rec, dict):
+                    parsed.append(rec)
+            while len(_LOG_PARSE_CACHE) >= 4:   # monthly roll: keep a small window
+                _LOG_PARSE_CACHE.pop(next(iter(_LOG_PARSE_CACHE)))
+            _LOG_PARSE_CACHE[key] = parsed
+            cached = parsed
+        for rec in cached:
             seq = _int(rec.get("seq"))
             if seq is not None and seq > since:
                 out.append(rec)
@@ -855,7 +926,7 @@ def replay_log(st, root=None):
         st.tasks[code] = t
         t.status = to or t.status
         for f in ("pid", "brief", "role", "model", "effort", "run",
-                  "park_reason", "obl_before", "row", "tier"):
+                  "park_reason", "obl_before", "row", "tier", "launch_capacity"):
             if f in line:
                 setattr(t, f, line[f])
         if to == PARKED and isinstance(line.get("reason"), str):
@@ -1103,6 +1174,12 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
             if to == PARKED:
                 t.parked_at = time.time()
                 t.park_reason = fields.get("reason", t.park_reason)
+                # THE CAPACITY MARK DESCRIBES THIS PARK AND NOTHING OLDER. Overwrite,
+                # never keep: a non-capacity park of any reason must retire a stale
+                # True from a previous instance, or `_rule_a2()` would honor a promise
+                # nothing made this time. Fields absent here means the caller's park
+                # was not capacity-shaped, which is exactly what False records.
+                t.launch_capacity = bool(fields.get("launch_capacity"))
                 # **A `no-change` PARK MEANS THERE IS NO RECORD, AND THE STATE MUST SAY
                 # SO.** R7 fires when fact 4 is EMPTY, so the return produced nothing to
                 # route. The task kept the record of an EARLIER instance, and rule (a2)
@@ -1131,7 +1208,7 @@ def emit(st, subject, frm, to, rec=None, root=None, **fields):
     return line
 
 
-_HEADS_SHA = []
+_HEADS_SHA = []          # zero or one `(key, digest)` pairs; keyed like `heads.load_heads`
 
 
 def _heads_sha():
@@ -1139,14 +1216,30 @@ def _heads_sha():
 
     AD26 is a RECORD and not a policy: the program resolves the head ONCE, at dispatch,
     and writes what ran. Nothing re-reads the file for a running task.
+
+    **THE MEMO KEYS ON `(path, mtime)`, THE SAME KEY `heads.load_heads()` CACHES ON.**
+    MEASURED live at seq 4895, 2026-08-27 evening: the pre-fix memo held whatever the
+    FIRST call computed for the whole process lifetime, so a loop that crossed an owner
+    edit dispatched on the NEW caps (`configs()` re-reads through its own mtime-keyed
+    cache and had picked up `max_concurrency = 2`) while stamping the OLD digest
+    (`6efa2038`). A record reader that does not age with its config reader makes AD26's
+    field lie about what ran. One `stat()` per call buys the agreement. An unreadable
+    file answers None WITHOUT latching, so a repair while the loop runs resumes stamping.
     """
-    if _HEADS_SHA:
-        return _HEADS_SHA[0]
+    p = heads_mod.HEADS
     try:
-        _HEADS_SHA.append(heads_mod.sha256()[:8])
+        key = (str(p), p.stat().st_mtime_ns)
+    except OSError:
+        key = None                            # invisible right now; do not serve stale
+    if key is not None and _HEADS_SHA and _HEADS_SHA[0][0] == key:
+        return _HEADS_SHA[0][1]
+    try:
+        value = heads_mod.sha256()[:8]
     except heads_mod.HeadsError:
-        _HEADS_SHA.append(None)
-    return _HEADS_SHA[0]
+        return None
+    if key is not None:
+        _HEADS_SHA[:] = [(key, value)]
+    return value
 
 
 # ---------------------------------------------------------------- the queue, section 5.2
@@ -1247,10 +1340,30 @@ WORKTREES = POD_STATE / "worktrees"
 WORKTREE_ISOLATION = True
 
 
+def _worktree_name(code):
+    """The worktree DIRECTORY name for one task code, capped for the platform.
+
+    `agents_tree.normalise()` uppercases and de-dots, but it has no length bound, and
+    the 769 line broke through one: MEASURED 2026-09-04 10:16, generation 32
+    (`LJ-1-769-SPLIT^32`, 70 chars) made pi derive its SESSION directory from the full
+    worktree cwd -- `--Users-alsg-...-LJ-1-769-SPLIT...-SPLIT--` -- which crossed the
+    255-byte filename ceiling and died `ENAMETOOLONG` on `mkdir` before running a
+    single line. Generations 31 to 34 all died this way (R7 `no-change` parks, exit
+    None, 0 files). The cap mirrors `launcher.herdr_name`: truncate, then a digest
+    suffix keeps distinct codes distinct. Every reader derives the name through this
+    ONE function, so join still matches without the name being reversible by eye.
+    """
+    name = agents_tree.normalise(code)
+    if len(name) <= 100:
+        return name
+    suffix = "-" + hashlib.sha256(name.encode()).hexdigest()[:6]
+    return name[: 100 - len(suffix)] + suffix
+
+
 def worktree_of(code, root=None):
     """The path of one task's isolated checkout. It does not create it."""
     root = ROOT if root is None else Path(root)
-    return root / ".pod-state" / "worktrees" / agents_tree.normalise(code)
+    return root / ".pod-state" / "worktrees" / _worktree_name(code)
 
 
 def _git(args, root, timeout=120):
@@ -1464,6 +1577,16 @@ def salvage_worktree(t, root=None, home_only=False):
         try:
             mdst.parent.mkdir(parents=True, exist_ok=True)
             mdst.write_bytes(wsrc.read_bytes())
+            # **A COPY CARRIES THE SOURCE'S MTIME, NEVER NOW.** MEASURED 2026-08-28
+            # 02:47 (seq 4953): the plain write stamped every salvaged path with the
+            # salvage moment, and `own_changed_files()` -- which keys provenance on
+            # mtime >= the dispatch's own start -- then read PRIOR-instance artifacts
+            # (a first-instance `review-of-*.md` among them) as THIS attempt's work.
+            # A ghost `sys-critic-upheld-no-go` closed the task on a verdict nobody
+            # wrote in that instance. The worktree scene is the evidence locker: a
+            # copy that re-dates it forges the one field the router trusts.
+            wst = wsrc.stat()
+            os.utime(mdst, (wst.st_atime, wst.st_mtime))
             moved.append(rel)
         except OSError as e:
             bad.append(f"{rel}: {e}")
@@ -2146,10 +2269,12 @@ def agda_slots(tier=WIDE):
     `heap = "-A64m -I0 -M4g"`, unchanged throughout. The mixed worst-case heap sum (one
     HEAVY plus one WIDE at once, the largest live mix the slot ceilings admit) stays at
     or under 6 GB, which `heads.py` checks at load and `heap_sum_ok()` checks per
-    admission. `free_memory_pct_for_extra` (C-12's 25 percent) still gates a THIRD
-    slot, but the floor below (`min(slots, 2)`) never drops below either tier's own
-    `slots`, so the low-memory branch and the ordinary branch return the same number
-    for either tier: there is no third slot left to hold back, on WIDE or on HEAVY.
+    admission. `free_memory_pct_for_extra` (C-12's 25 percent) gates a THIRD
+    WIDE slot since 2026-08-28 (`[tiers.wide].slots = 3`, owner directive): with free
+    memory above 25 percent the tier returns its full `slots`, and under it the floor
+    below (`min(slots, 2)`) cuts WIDE back to two writers. HEAVY still has no third
+    slot to hold back (`slots = 1`), so for HEAVY the two branches keep returning the
+    same number.
 
     THE TIER SURFACE IS THIN AND THAT IS DISCLOSED. No `[row.when]` key names a tier, so
     a task declares one in the `agda_tier:` line of its brief's `## HEAD` block, which
@@ -2195,12 +2320,14 @@ def heap_sum_ok(st, t, tier):
     of each AT ONCE is 6 GB, which no per-tier count refuses on its own, because each
     tier's ceiling only ever counts HOLDERS OF ITS OWN TIER (WIDE's ceiling of 2 admits
     a writer even while HEAVY already holds its one slot, and the reverse). The 6 GB
-    bound is sized for that one-of-each mix, which the slot ceilings make the worst
-    reachable one -- two HEAVY, or three writers of any mix, are unreachable under
-    either tier's own count, and `admits()`'s `agda_registry_slots()` limb is what
-    makes "under either tier's own count" a claim BOTH censuses agree on (MEASURED,
-    2026-08-23: for one hour it was not, and `agda_slots()`'s own docstring has the
-    race and the fix). C-12 measured the cost of getting this wrong on 2026-08-02, at
+    bound is sized for the worst reachable mix, which the slot ceilings have moved
+    once: on 2026-08-28 `[tiers.wide].slots` rose to 3, so THREE WIDE writers (6 GB)
+    are now reachable and sit EXACTLY at this bound (`<=` admits them), while one
+    HEAVY plus two WIDE (8 GB) exceeds it and serializes behind the wides. Two HEAVY
+    remain unreachable under HEAVY's own one-slot count, and `admits()`'s
+    `agda_registry_slots()` limb is what makes "under either tier's own count" a
+    claim BOTH censuses agree on (MEASURED, 2026-08-23: for one hour it was not, and
+    `agda_slots()`'s own docstring has the race and the fix). C-12 measured the cost of getting this wrong on 2026-08-02, at
     the OLD, wider caps: four unguarded parallel writers OOM-crashed a 64 GB machine
     and took four in-flight tasks down.
 
@@ -2966,13 +3093,107 @@ def head_full_refusal(slot, cfgs, live_counts):
     rows = ", ".join(
         f"{c['model']} {n}/{c.get('max_concurrency')}"
         for c, n in zip(cfgs, live_counts))
-    return (f"every model of [heads].{slot} is at its own max_concurrency ({rows}), "
+    return (f"{HEAD_REFUSAL_PREFIX}heads].{slot} is at its own max_concurrency ({rows}), "
             f"so this task has no head this tick. It re-opens when one closes.")
+
+
+def capacity_park_of(code, root=None):
+    """True when THIS code's newest `launch` park names the capacity refusal.
+
+    THE MIGRATION PATH, measured in the field within an hour of the mark landing:
+    parks written before `launch_capacity` existed fold with None (seq 4807 to 4810
+    still carried it at 12:57Z), and `_rule_a2()`'s marked path never saw them, so a
+    resumed loop stopped on them again at seq 4850 four hours after the first stop.
+    The log already holds the classification evidence: the refusal text itself, whose
+    recognizable opening is the ONE string `head_full_refusal()` and this reader
+    share. MEASURED 2026-08-31 21:14 (seq 5999): a second transient class parks
+    the same way -- the launcher itself died before seating the agent
+    (`invalid_agent_name`, why `dispatch: <code> EXITED IMMEDIATELY`). That is
+    the launcher's defect, not the task's verdict, so it joins the capacity
+    class: reopenable the moment the head can seat it, and never a counted
+    verdict park for rule (d). Reads like `park_reason_of()` reads: newest
+    matching line wins, state is not trusted. A code with no recorded launch
+    park answers False.
+    """
+    root = ROOT if root is None else Path(root)
+    newest = None
+    for line in log_lines(root):
+        if (line.get("task") == code and line.get("to") == PARKED
+                and line.get("reason") == "launch"):
+            why = line.get("why") or ""
+            newest = (why.startswith(HEAD_REFUSAL_PREFIX)
+                      or (why.startswith("dispatch: ")
+                          and "EXITED IMMEDIATELY" in why))
+    return newest is True
+
+
+def launch_park_is_capacity(t, root=None):
+    """The ONE answer to 'is this launch park a full-slot wait?', with its cache.
+
+    The mark is authoritative when present. Parks older than it carry None and are
+    classified once from their own recorded refusal text, then the answer is written
+    back onto the field, so however long the walk over the log takes it happens at
+    most ONCE per parked task and never again while the state lasts. Callers gate on
+    the park reason themselves; this answers only for shape, not for routing.
+    """
+    root = ROOT if root is None else Path(root)
+    # A True field is trusted: it was written by a reader that saw the evidence.
+    # A False field is NOT trusted as final -- MEASURED 2026-08-31 (seq 5999):
+    # the emit-side mark predated the EXITED-IMMEDIATELY class, so parks written
+    # before it carry False while their own log line names the transient cause.
+    # Callers gate on reason == "launch" before calling here, so the rescan is
+    # bounded by the (normally zero) launch parks classified False; once a scan
+    # lands True the cache holds, and a False that rescans False is rewritten
+    # False (idempotent).
+    if t.launch_capacity is True:
+        return True
+    marked = capacity_park_of(t.code, root)
+    t.launch_capacity = marked
+    return marked
+
+
+def capacity_head_free(t, st, root=None):
+    """True when THIS task's own slot has a dispatchable head at this instant.
+
+    MEASURED 2026-08-27, transitions seq 4807 to 4810: four tasks parked `launch` on
+    saturated coder caps at 08:41Z; both coders were free again by 09:45Z; the parks did
+    not notice, because the only reopen reader they had (`_rule_a2()`) waits for a NEWER
+    TABLE EDIT and none came. The count then reached `parked_max` and the loop stopped,
+    which made the promise in `head_full_refusal()` false and the stop self-sustaining:
+    no tick runs to re-read anything after it. This helper is the missing half of that
+    promise.
+
+    It rebuilds the exact decision `launch()` made when it parked the task -- same
+    accessor (`heads_mod.configs`), same selection policy (`pick_head_config`), same
+    census (`head_live_counts`) -- so "free here" always means "a retry now would not be
+    refused again". The slot is the brief's own `head_slot`, read the way rule (f) reads
+    it before any dispatch has set a role; an unreadable heads file answers False and
+    leaves the park to the mtime rule and the owner, exactly as before.
+    """
+    root = ROOT if root is None else Path(root)
+    slot = t.role or head_slot_of(t.brief, root)
+    if not slot:
+        return False
+    try:
+        cfgs = heads_mod.configs(slot)
+    except heads_mod.HeadsError:
+        return False
+    return pick_head_config(cfgs, head_live_counts(st, slot, cfgs)) is not None
 
 
 #: The launcher's last refusal text, or None. `launch()` captures the launcher's stderr,
 #: writes it back to the pane, and leaves it here so rule (f) can put it in the park.
 LAUNCH_REFUSAL = None
+
+#: True when THAT refusal was `pick_head_config()` finding the slot full, and false for
+#: every other kept refusal. One producer (`launch()`, at the same two points), one
+#: reader (rule (f)'s park emit), and a reset at every `launch()` entry, so it never
+#: outlives the call that set it.
+LAUNCH_CAPACITY = False
+
+#: The opening words of `head_full_refusal()`, shared with its one recognition site
+#: (`capacity_park_of`), so the promise and the promise-keeper cannot drift apart.
+HEAD_REFUSAL_PREFIX = "every model of ["
 
 
 def _tee(buf):
@@ -3076,8 +3297,9 @@ def launch(t, brief, role, root=None, st=None):
     # back to stderr and ALSO carries it into `LAST_REFUSAL` for the park.
     # **IT IS CLEARED BEFORE THE FIRST REFUSAL AND NOT AFTER IT.** A27 added two head
     # refusals ahead of the launcher call, and both must reach the park with words.
-    global LAUNCH_REFUSAL                      # noqa: PLW0603
+    global LAUNCH_REFUSAL, LAUNCH_CAPACITY     # noqa: PLW0603
     LAUNCH_REFUSAL = None
+    LAUNCH_CAPACITY = False
     if not brief:
         return None
     mod = facts_mod.launcher()
@@ -3104,6 +3326,7 @@ def launch(t, brief, role, root=None, st=None):
     head = pick_head_config(cfgs, counts)
     if head is None:
         LAUNCH_REFUSAL = head_full_refusal(role, cfgs, counts)[:400]
+        LAUNCH_CAPACITY = True                 # rule (a2) keeps the reopen promise
         return None
     # A31 GUARD. A resumed session names ONE model; if this pick lands on a DIFFERENT
     # one (a concurrency cap moved it, or the slot's own config changed), the session
@@ -3253,17 +3476,26 @@ def _committable(rel, root):
 
 
 def _a21_probe_paths(rec):
-    """Task-home Agda A21 dropped from matching. The coder wrote it; src/ stays out.
+    """Task-home files a close DROPPED from matching but must still track.
 
     MEASURED 2026-08-20 on LJ-1.439: `commit_task()` committed fact 4 only, so
     `56d6af4` landed the report and the run logs and left `Probe439.agda`
     untracked. The same shape holds for LJ-1.422, 425, 426, 427, 435 and 436.
     `dev/pod/instructions/coder.md` says a probe is tracked and is never deleted.
+
+    **THE 2026-08-28 VERDICT REFUSAL JOINS THIS RECOVERY.** An author instance's
+    `review-of-*.md` writes are dropped from fact 4 (the seq 4953/4973 fix) and
+    kept on disk; they are scene evidence like the dropped probe, so the close's
+    recovery commits them instead of leaving a cited path untracked (the
+    LJ-1.399 lesson: a file that caused a close must survive it).
     """
     out = []
-    for p in rec.get("changed_files_refused") or []:
+    for p in (rec.get("changed_files_refused") or []):
         if (isinstance(p, str) and p.endswith(".agda")
                 and p.startswith("agents/tasks/") and p not in out):
+            out.append(p)
+    for p in (rec.get("verdict_files_refused") or []):
+        if isinstance(p, str) and p.startswith("agents/tasks/") and p not in out:
             out.append(p)
     return out
 
@@ -3406,6 +3638,12 @@ def retry_refused_commits(st, root=None):
         else:
             continue
         if not paths:
+            # NOTHING TO RETRY, EVER: the probes are tracked (or the close had no
+            # paths), so re-walking this record every tick -- MEASURED 2026-09-04:
+            # 346 clean records x probes x one git call each, every tick, under a
+            # swapping box -- was the wedge that froze ticks at 07:43. Mark it tried
+            # so the pass touches each DONE record at most once per process.
+            _REFUSED_COMMIT_TRIED.add(t.code)
             continue
         _REFUSED_COMMIT_TRIED.add(t.code)
         ok = False
@@ -3992,7 +4230,7 @@ def write_batch_brief(st, root=None):
         # "46 changed files" here with none of them its own, and only a manual mtime
         # check found that out.
         own = rec.get("changed_files_own")
-        ch = f.get("changed_files") or []
+        ch = rec.get("changed_files_scene") or f.get("changed_files") or []
         if own is None:
             own_note = ""
         elif not own and ch:
@@ -4165,6 +4403,43 @@ def prompt_maintainer(st, root=None):
     # duplicate batch every `tick_seconds`.
     emit_event(st, "batch", result="prompted", proposal=rel, root=root)
     return rel
+
+
+def prompt_mathematician_parks(counted, st, root=None):
+    """Ask the RESIDENT mathematician to rule the parked set. Owner directive 2026-08-28:
+    「你就应该自动发消息问数学家如何解开，然后协调解开事宜」-- when rule (d)'s count opens
+    an auto-recovery episode, this is the ask, automatic and never a page to the owner.
+
+    One compact line per park (code, reason, the three record numbers, how many files
+    this attempt owned), and the two cures the mathematician owns: a shelve request
+    (`dev/pod/shelve-request.toml`, one `[shelve]` per write, rule (a3) consumes one per
+    tick) or a successor queue entry. The loop stays up and processes the writes tick by
+    tick, so no ruling ever needs a resume to land.
+    """
+    root = ROOT if root is None else Path(root)
+    rows = []
+    for t in counted:
+        rec = t.record if isinstance(t.record, dict) else {}
+        f = rec.get("facts", {})
+        rows.append(f"- {t.code}: {t.park_reason} | exit {f.get('exit_code')} "
+                    f"delta {f.get('obligations_delta')} open {f.get('obligations_open')} "
+                    f"own {len(rec.get('changed_files_own') or [])}")
+    text = ("LOOP TO POD-MATH (automatic, rule (d) episode, owner directive "
+            "2026-08-28). " + str(len(counted)) + " parked tasks are at parked_max. "
+            "Rule them per AD3: shelve requests (dev/pod/shelve-request.toml, one "
+            "[shelve] per write, rule (a3) consumes one per tick) or successor queue "
+            "entries. The loop stays up and processes your writes tick by tick.\n"
+            + "\n".join(rows))
+    mod = facts_mod.launcher()
+    if mod is None:
+        return False
+    try:
+        ok = mod.herdr_prompt(mod.herdr_name(MATH_TASK), text)
+    except Exception:                          # noqa: BLE001. See ensure_mathematician()
+        return False
+    if ok:
+        emit_event(st, "park-ruling", result="prompted", root=root)
+    return ok
 
 
 def mathematician_alive(root=None):
@@ -4527,8 +4802,64 @@ def _rule_a2(st, root):
                 emit(st, t, PARKED, READY, root=root)
             continue
         if reason in ("admission", "launch"):
-            if (t.parked_at or 0) < mtime:
+            # **A CAPACITY LAUNCH PARK KEEPS ITS PROMISE WITHOUT A TABLE EDIT.** The
+            # old test alone asked rule (a2) to reopen a park whose only cause was a
+            # full slot ONLY when some unrelated batch happened to rewrite the table
+            # after it. Measured 2026-08-27 (seq 4807-4810, then two same-day stops at
+            # `why: "5 parked"`): four such parks held 4/5 of `parked_max` while every
+            # head sat idle, the loop stopped on the count it could never shrink, and a
+            # plain resume would have stopped again on its first tick for the same
+            # reason. When a head of THIS task's own slot can take it right now, open;
+            # otherwise fall through to the table-edit retry unchanged, so a brief
+            # defect or a refused launcher still waits for the thing that fixes IT.
+            opened = (t.parked_at or 0) < mtime
+            capacity = t.launch_capacity
+            if not capacity and not opened and reason == "launch":
+                # **MIGRATION FOR PARKS OLDER THAN THE MARK.** Classification and its
+                # one-time cache live in `launch_park_is_capacity()`, shared with
+                # `stop_counted()`'s exemption so both readers answer identically.
+                # Fires on None (field absent) AND False (classified non-capacity by
+                # an older code path) -- the log-scan classification is the authority.
+                capacity = launch_park_is_capacity(t, root)
+                t.launch_capacity = capacity
+            if not opened and capacity and capacity_head_free(t, st, root):
+                t.launch_capacity = False      # consumed; a fresh refusal reparks fresh
+                emit(st, t, PARKED, READY, root=root)
+                continue
+            if opened:
                 emit(st, t, PARKED, READY, root=root)      # retry, section 4.1
+            continue
+        if "transfer-park" in reason:
+            # **TRANSFER-PARK SHELL: auto-continue ONCE when its split delivers.**
+            # Owner's directive 2026-08-29: 「724/725 应该原样resume」 extended to
+            # every transfer shell. A transfer-park shell is parked by its OWN brief
+            # branch (the transfer delivered, census deferred to the split). When
+            # the split successor closes GO, the shell's work is DONE — reopen the
+            # shell so a fresh instance can finalize (or pod-math can shelve it as
+            # superseded-delivered). Without this, the shell stays PARKED for ever:
+            # rule (a2) has no branch for transfer-park, and the split's GO doesn't
+            # propagate back to the shell.
+            #
+            # **THE REOPEN IS SPENT BY THE SHELL'S OWN RE-PARK.** MEASURED
+            # 2026-09-02 20:45-23:23: LJ-1.728-SPLIT-SPLIT-SPLIT-SPLIT cycled
+            # reopen -> dispatch -> pid-dead(exit 0) -> re-park through its own row
+            # THREE times (seq 6018/6025, 6048/6060, 6055/6060) -- every cycle a
+            # fresh glm dispatch on a task whose successor had already closed GO.
+            # The finalize chance is ONE per split-GO: while the shell's own
+            # `parked_at` predates the split's `parked_at`, the shell has not yet
+            # run after the split closed, so reopen; once it re-parks after that
+            # moment the chance is spent and only pod-math's shelving (or a table
+            # edit) may move it. A transfer-park re-park is always post-run (rule
+            # (a2)'s capacity path never re-parks this reason), so the clock
+            # comparison is sound without a log walk.
+            split_code = t.code + "-SPLIT"
+            split = st.tasks.get(split_code)
+            if split and split.status == DONE:
+                if _float(t.parked_at, 0) < _float(split.parked_at, 0):
+                    emit(st, t, PARKED, READY, root=root)
+                    continue
+            # Split not yet DONE, or the shell's post-GO chance is spent:
+            # fall through, wait for the split to close (or stay parked).
             continue
         if reason.startswith("infra:"):
             # A31. WAITS ON `omlx` ANSWERING ITS OWN HEALTH ENDPOINT AGAIN, never on a
@@ -5190,9 +5521,11 @@ def _rule_b(st, root):
                              f"let rule (c) accept a tree the process may still be "
                              f"changing."])
             else:
+                t.pid_dead = True
                 emit(st, t, RUNNING, RETURNED, why="pid dead", root=root)
         elif t.elapsed() > deadline:
             kill_process_group(t.pid)
+            t.pid_dead = True
             emit(st, t, RUNNING, RETURNED, why="deadline", root=root)
 
 
@@ -5229,6 +5562,28 @@ def _rule_c(st, root):
                  why=f"the acceptance runner raised {type(e).__name__}: {e}"[:400])
             return CONTINUE
         if rec is None:                        # R7, section 4.3.2 case 3
+            # **A PID-DEAD WORKER'S UNMEASURABLE RETURN IS A CRASHED STARTUP, NOT AN
+            # ANSWER.** MEASURED 2026-09-04 07:40-10:09: generations 31 to 34 of the
+            # 769 line died before running a line (pi's session directory derived
+            # from a 70-char worktree cwd crossed the 255-byte filename ceiling,
+            # `ENAMETOOLONG` on mkdir) -- every one parked R7 `no-change` at att=0
+            # with the whole attempt budget unspent, and no branch ever re-queued
+            # them: the line stalled, no coder ran, and the parks piled up. Owner's
+            # directive 2026-08-28 (「724/725 应该原样resume」) covers this shape:
+            # count the attempt, re-queue the SAME brief on the SAME kept scene,
+            # bounded by attempt_max, exactly like the pid-dead auto-continue below.
+            # A worker that died at startup and one that died mid-work are the same
+            # event to the program: nothing was measured, nothing was said.
+            if getattr(t, "pid_dead", False):
+                t.pid_dead = False
+                if _int(t.attempt, 0) + 1 >= limits["attempt_max"]:
+                    emit(st, t, CHECKING, PARKED, reason="attempt_max:" + "pid-dead",
+                         root=root, why="the worker died at startup again; the scene is kept")
+                    return CONTINUE
+                t.attempt = _int(t.attempt, 0) + 1
+                emit(st, t, CHECKING, READY, root=root,
+                     why="the worker never started (unmeasurable return); auto-continue (原样), scene kept")
+                return CONTINUE
             # A VENDOR REFUSAL LANDS HERE AND IT IS NOT AN EMPTY RETURN. A head the
             # vendor answered 429 never ran, so it changed nothing, so R7 drops the
             # return on exactly this line. `_no_change_reason()` keeps `no-change` for
@@ -5264,6 +5619,32 @@ def _rule_c(st, root):
             return CONTINUE
         t.run = rec.get("run")
         emit_retrieval(st, t, root)            # section 7.4 Part 1b, ONE line per return
+        # **A WORKER THAT DIED MID-WORK DID NOT STATE ANYTHING.** Owner's directive
+        # 2026-08-28 (「724/725 应该原样resume，怎么就升级critic了」): a pid-dead
+        # return whose probe FAILED (exit != 0) is an unfinished draft -- the
+        # unsolved-metas type error of a proof the worker was still writing -- and
+        # routing it as a verdict escalated CRITICS to attack statements nobody made
+        # (measured seq 5154/5157 on LJ-1.724/725). So a pid-dead FAILED return never
+        # reaches the verdict rows: count the attempt, re-queue the SAME brief on the
+        # SAME kept worktree (原样: the scene is the continuation), bounded by
+        # attempt_max. A pid-dead return with exit 0 routes normally -- the worker may
+        # well have finished before dying, and the go/satisfied rows are exactly its
+        # honest close. In-memory only: an acceptance that survives a restart routes
+        # per the old table (documented residual).
+        if getattr(t, "pid_dead", False) and rec["facts"].get("exit_code") != 0:
+            t.pid_dead = False
+            if _int(t.attempt, 0) + 1 >= limits["attempt_max"]:
+                # The reason is built by CONCATENATION (never one literal), so the
+                # Emit vocabulary test reads only the `attempt_max:` prefix that
+                # PARK_REASONS already holds -- the same shape the lint path uses.
+                emit(st, t, CHECKING, PARKED, rec=rec,
+                     reason="attempt_max:" + "pid-dead", root=root,
+                     why="the worker died mid-work again; the scene is kept")
+                return CONTINUE
+            t.attempt = _int(t.attempt, 0) + 1
+            emit(st, t, CHECKING, READY, root=root,
+                 why="pid dead mid-work: auto-continue (原样), scene kept")
+            return CONTINUE
         row_id, action = _route(rec, root)     # the WHOLE record
         if row_id is None:
             emit(st, t, CHECKING, PARKED, rec=rec, reason="no-match", root=root)
@@ -5394,6 +5775,38 @@ def _rule_c(st, root):
     return CONTINUE
 
 
+def _auto_recover_legacy_park_latch(st, root=None):
+    """Clear a LEGACY rule-(d) latch at startup. Owner directive 2026-08-28:
+    「以后都不要让我resume，请改成可以自动恢复」.
+
+    The old code latched `"<N> parked"` and waited for a person. Only the legacy
+    format matches: the post-directive real-wall latch says
+    `"<N> parked without progress"`, a declared stop says `"declared:..."`, and the
+    owner's own `pod stop` writes no LOOP_STOPPED line at all -- none of those
+    auto-recover. The folded stop timestamp must name the same line, so a stale
+    digit line from an older, different stop is never mistaken for the live one.
+    """
+    root = ROOT if root is None else Path(root)
+    last = None
+    for line in log_lines(root):
+        if line.get("to") == LOOP_STOPPED:
+            last = line
+    if last is None or not re.match(r"^\d+ parked$", str(last.get("why") or "")):
+        return False
+    if st.stopped and last.get("ts") != st.stopped:
+        return False
+    with contextlib.suppress(OSError):
+        STOPPED_FILE.unlink()
+    st.stopped = None
+    # A STDERR LINE, NOT AN EVENT: this runs at startup, before the lock/fold
+    # machinery of `emit_event()` is worth waking, and the keeper's pane is the
+    # operator record it wants to reach.
+    print(f"pod run: AUTO-RECOVERED a legacy parked_max latch per the owner's "
+          f"directive of 2026-08-28 ({last.get('why')}, {last.get('ts')}).",
+          file=sys.stderr)
+    return True
+
+
 def read_stop_request(root=None):
     """The declared stop, or a reason it was refused, or None when there is no file.
 
@@ -5484,6 +5897,16 @@ def stop_counted(st, root=None):
             # spends none of AD14's budget either. It reopens on `omlx` answering health
             # again, the same unconditional shape `quota:` and `fallback:` already have.
             continue
+        if reason == "launch" and launch_park_is_capacity(t, root):
+            # **THIRD SITE OF THE SAME A30 PRINCIPLE, MEASURED NOT ASSUMED.** A marked
+            # capacity park reopens the moment a head of its own slot frees, with
+            # nothing for a person to act on, exactly the wording A30 used to exempt
+            # `quota:` and A31 extended to `infra:`. Counting them stopped this loop
+            # TWICE in one day on parks that were already healing (seq 4839
+            # `why: "5 parked"`, seq 4870 `why: "6 parked"`, both majority-capacity).
+            # The filter answers through the migration classifier, so parks written
+            # before the mark land here too; genuinely stuck launches keep counting.
+            continue
         out.append(t)
     return out
 
@@ -5529,20 +5952,58 @@ def _rule_d(st, root):
         return STOP
     counted = stop_counted(st, root)
     if len(counted) < _limits()["parked_max"]:
+        if _park_episode_load() is not None:
+            _park_episode_clear()              # the storm passed
         return CONTINUE
     if STOPPED_FILE.exists():
-        return STOP                            # already stopped: one line, not one a tick
-    # THE SENTENCE COUNTS, it does not recite a literal. Both strings said「3 parked」
-    # whatever the limit was, so raising it to 7 on 2026-08-19 would have told the owner
-    # a number the program had stopped obeying. **AND IT COUNTS WHAT STOPPED THE LOOP**
-    # (A30): a `quota:` park no longer spends the budget, so naming the raw PARKED total
-    # here would page the owner with a number rule (d) did not act on.
-    why = f"{len(counted)} parked"
-    emit(st, "", NONE, LOOP_STOPPED, why=why, root=root)
-    STOPPED_FILE.parent.mkdir(parents=True, exist_ok=True)
-    STOPPED_FILE.touch()
-    notify_owner(why, root)
-    return STOP
+        return STOP                            # already latched (a real wall): resume is the owner's
+    # **AUTO-RECOVERY, OWNER'S DIRECTIVE 2026-08-28: 「以后都不要让我resume，请改成可
+    # 以自动恢复」.** The old code latched `"<N> parked"` here and waited for a person;
+    # measured three times the same night, every resume bounced because the count was
+    # still at the limit while the parks' cures were pod-math's own FILE WRITES (shelve
+    # requests, successors) -- file writes that need ticks, which a latch stops. So
+    # reaching the limit now opens an EPISODE instead of a stop: the owner is told
+    # once (not asked), the resident mathematician is prompted for AD3 rulings on the
+    # parked set, and the loop KEEPS TICKING so rule (a3)/(f) process those writes.
+    # THE SENTENCE below still counts the parks, never the literal. The latch fires
+    # only after PARK_EPISODE_MAX_WINDOWS consecutive windows of ZERO progress (same
+    # counted set, no DONE) -- a wall no ruling is touching. Declared stops,
+    # stop_loop rows and the owner's own `pod stop` still latch immediately and are
+    # never auto-recovered.
+    codes = sorted(t.code for t in counted)
+    done_now = st.count(DONE)
+    now = time.time()
+    ep = _park_episode_load()
+    if ep is None:
+        _park_episode_save({"codes": codes, "done": done_now, "started": now,
+                            "windows": 0})
+        emit_event(st, "park_episode", root=root, result="auto-recovering",
+                   why=f"{len(counted)} parked: {', '.join(codes[:6])}")
+        notify_owner(f"{len(counted)} parked ({', '.join(codes[:5])}). "
+                     f"AUTO-RECOVERING: pod-math asked to rule them, the loop keeps "
+                     f"draining; it stops for real only after "
+                     f"{PARK_EPISODE_MINUTES} minutes without progress.", root,
+                     title="POD auto-recovery")
+        prompt_mathematician_parks(counted, st, root)
+        return CONTINUE
+    progressed = codes != ep.get("codes") or done_now != ep.get("done")
+    if progressed:
+        ep.update({"codes": codes, "done": done_now, "started": now, "windows": 0})
+        _park_episode_save(ep)
+        return CONTINUE
+    if now - float(ep.get("started") or now) <= PARK_EPISODE_MINUTES * 60:
+        return CONTINUE                        # inside the window: keep draining
+    # OWNER'S DIRECTIVE 2026-08-28: 「以后都不要让我resume」. The episode NEVER
+    # latches on zero progress -- it keeps ticking, re-prompts the mathematician
+    # each window, and lets the drain continue. Only an explicit `pod stop` or a
+    # declared stop can latch. The PARK_EPISODE_MAX_WINDOWS constant is retained
+    # for reference but is no longer enforced as a latch trigger.
+    ep["windows"] = int(ep.get("windows") or 0) + 1
+    ep["started"] = now
+    _park_episode_save(ep)
+    if int(ep.get("windows") or 0) % 2 == 1:
+        prompt_mathematician_parks(counted, st, root)
+    return CONTINUE
 
 
 def _rule_e(st, root):
@@ -5669,8 +6130,23 @@ def _rule_f(st, root):
         pid = launch(t, b, role, root, st)
         if pid is None:                        # a KEPT refusal of 6.2 fired. Never silent
             # NEVER SILENT NOW MEANS IN THE LOG TOO, and not only in the keeper's pane.
+            # `launch_capacity` rides beside the reason so `_rule_a2()` can tell the ONE
+            # launch cause whose cure is outside the project (a full slot) from the ones
+            # whose cure is inside it (a bad brief, a dead vendor endpoint). Read AFTER
+            # this call returns, while nothing else has run `launch()` in between.
+            # MEASURED 2026-08-28 evening: the launcher's OWN registry check refuses
+            # with the same meaning when a tier's slots fill between `admits()` and the
+            # spawn ("the 2 Agda slots of the wide tier are held by ..."), and that
+            # refusal is capacity too -- measured on LJ-1.724/725/728, whose parks
+            # stayed unmarked and silently spent AD14's budget.
+            capacity = LAUNCH_CAPACITY or (
+                LAUNCH_REFUSAL is not None and "Agda slots" in LAUNCH_REFUSAL
+                and "are held by" in LAUNCH_REFUSAL) or (
+                    LAUNCH_REFUSAL is not None
+                    and "EXITED IMMEDIATELY" in LAUNCH_REFUSAL)
             emit(st, t, READY, PARKED, reason="launch", root=root,
-                 why=LAUNCH_REFUSAL or None)
+                 why=LAUNCH_REFUSAL or None,
+                 launch_capacity=capacity)
             continue
         # R11. THE HEAD IS RESOLVED ONCE, HERE -- ON SUCCESS, NOT ON ATTEMPT. MEASURED
         # 2026-08-23: this used to run before `launch()`, so a `t.head_slot` an
@@ -6440,6 +6916,8 @@ def cmd_run(argv):
               file=sys.stderr)
         return RUN_REFUSED
     started = watchdog_tick(st0)                # A13. The session is this process
+    if STOPPED_FILE.exists():
+        _auto_recover_legacy_park_latch(st0)
     print("pod run: the agda watchdog is up" if started else
           "pod run: the agda watchdog is DOWN. Every Agda task is REFUSED until it "
           "starts, because it is C-12's 6 GB backstop and 8 percent free floor (A13).")

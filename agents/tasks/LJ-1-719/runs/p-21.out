@@ -1,0 +1,22 @@
+Checking LJ-1-719.Probe719 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 2147483648 bytes (2048 MB).
+agda: Use `+RTS -M<size>' to increase it.
+      215.11 real       214.26 user         0.83 sys
+          2602106880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              160505  page reclaims
+                  72  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 580  voluntary context switches
+               14735  involuntary context switches
+       2891963892004  instructions retired
+        871815150516  cycles elapsed
+          2543896952  peak memory footprint

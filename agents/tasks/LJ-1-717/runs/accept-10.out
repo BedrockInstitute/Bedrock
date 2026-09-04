@@ -1,0 +1,24 @@
+# arm accept-10
+# task LJ-1.717
+# brief agents/tasks/LJ-1-717/LJ-1.717.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (4.61328125, 4.1806640625, 4.6376953125)
+# started 2026-08-28 12:59:43
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 18
+# changed files own 18 of 18
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-717/Probe717.agda.txt", "agents/tasks/LJ-1-717/lj-1.717-report.md", "agents/tasks/LJ-1-717/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-717/runs/floor-1.out", "agents/tasks/LJ-1-717/runs/floor-2.out", "agents/tasks/LJ-1-717/runs/p-1.out", "agents/tasks/LJ-1-717/runs/p-2.out", "agents/tasks/LJ-1-717/runs/p-3.out", "agents/tasks/LJ-1-717/runs/p-4.out", "agents/tasks/LJ-1-717/runs/p-5.out", "agents/tasks/LJ-1-717/runs/run.sh", "agents/tasks/LJ-1-717/runs/stage1.agda.txt", "agents/tasks/LJ-1-717/runs/stage1.out", "agents/tasks/LJ-1-717/runs/stage2.out", "agents/tasks/LJ-1-717/runs/stage3.out", "agents/tasks/LJ-1-717/runs/stage4.out", "agents/tasks/LJ-1-717/runs/stage7.out", "agents/tasks/LJ-1-717/runs/stage8.out"], "changed_files_refused": [], "changed_files_scene": ["agents/tasks/LJ-1-717/Probe717.agda.txt", "agents/tasks/LJ-1-717/lj-1.717-report.md", "agents/tasks/LJ-1-717/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-717/runs/floor-1.out", "agents/tasks/LJ-1-717/runs/floor-2.out", "agents/tasks/LJ-1-717/runs/p-1.out", "agents/tasks/LJ-1-717/runs/p-2.out", "agents/tasks/LJ-1-717/runs/p-3.out", "agents/tasks/LJ-1-717/runs/p-4.out", "agents/tasks/LJ-1-717/runs/p-5.out", "agents/tasks/LJ-1-717/runs/run.sh", "agents/tasks/LJ-1-717/runs/stage1.agda.txt", "agents/tasks/LJ-1-717/runs/stage1.out", "agents/tasks/LJ-1-717/runs/stage2.out", "agents/tasks/LJ-1-717/runs/stage3.out", "agents/tasks/LJ-1-717/runs/stage4.out", "agents/tasks/LJ-1-717/runs/stage7.out", "agents/tasks/LJ-1-717/runs/stage8.out"], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-717/Probe717.agda.txt", "agents/tasks/LJ-1-717/lj-1.717-report.md", "agents/tasks/LJ-1-717/runs/FLOOR.agda.txt", "agents/tasks/LJ-1-717/runs/floor-1.out", "agents/tasks/LJ-1-717/runs/floor-2.out", "agents/tasks/LJ-1-717/runs/p-1.out", "agents/tasks/LJ-1-717/runs/p-2.out", "agents/tasks/LJ-1-717/runs/p-3.out", "agents/tasks/LJ-1-717/runs/p-4.out", "agents/tasks/LJ-1-717/runs/p-5.out", "agents/tasks/LJ-1-717/runs/run.sh", "agents/tasks/LJ-1-717/runs/stage1.agda.txt", "agents/tasks/LJ-1-717/runs/stage1.out", "agents/tasks/LJ-1-717/runs/stage2.out", "agents/tasks/LJ-1-717/runs/stage3.out", "agents/tasks/LJ-1-717/runs/stage4.out", "agents/tasks/LJ-1-717/runs/stage7.out", "agents/tasks/LJ-1-717/runs/stage8.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.717", "tier": "wide", "unbound_vacuous": true, "verdict_files_refused": [], "witness_seconds": 0.0}

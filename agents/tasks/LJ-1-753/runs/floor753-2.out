@@ -1,0 +1,29 @@
+Checking LJ-1-753.runs.Floor753 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-673.Probe673 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-673/Probe673.agda).
+  Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-667/Probe667.agda).
+   Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-667/runs/W3.agda).
+    Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-520/Probe520.agda).
+ Checking LJ-1-732.runs.Num (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-732/runs/Num.agda).
+ Checking LJ-1-746-SPLIT-SPLIT.runs.Amb7 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-746-SPLIT-SPLIT/runs/Amb7.agda).
+  Checking LJ-1-732.runs.Amb1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-732/runs/Amb1.agda).
+  Checking LJ-1-732.runs.Amb5 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-732/runs/Amb5.agda).
+  Checking LJ-1-732.runs.Amb7a (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-732/runs/Amb7a.agda).
+ Checking LJ-1-746-SPLIT-SPLIT.runs.PT (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-746-SPLIT-SPLIT/runs/PT.agda).
+  Checking LJ-1-732.runs.Amb4a (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-732/runs/Amb4a.agda).
+  Checking LJ-1-732.runs.Amb6 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-732/runs/Amb6.agda).
+  Checking LJ-1-746-SPLIT-SPLIT.runs.EraseIrr (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-746-SPLIT-SPLIT/runs/EraseIrr.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda:36.8-10: error: [ShadowedModule]
+Duplicate definition of module At. Previous definition of module At
+at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-673/Probe673.agda:57.8-10
+when scope checking the declaration
+  module At (lam : S) (ordλ : IsOrd lam)
+            (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩) (X : S)
+            (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+            (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+            (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+real 231.62
+user 230.45
+sys 0.93

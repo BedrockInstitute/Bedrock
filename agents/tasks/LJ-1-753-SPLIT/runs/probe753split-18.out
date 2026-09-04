@@ -1,0 +1,133 @@
+Checking LJ-1-753-SPLIT.Probe753Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:364.53-57: error: [UnequalTerms]
+Vec SL 0 !=<
+Σ
+⟨
+(AbsL.SM AbsL.SemM.At.⊨ id)
+((n 0 , n∈Lλ 0) ∷
+ (n 0 , n∈Lλ 0) ∷
+ (n 1 , n∈Lλ 1) ∷
+ (n 2 , n∈Lλ 2) ∷
+ (n 3 , n∈Lλ 3) ∷
+ (n 4 , n∈Lλ 4) ∷
+ (n 5 , n∈Lλ 5) ∷
+ (n 6 , n∈Lλ 6) ∷
+ (n 7 , n∈Lλ 7) ∷
+ (n 8 , n∈Lλ 8) ∷
+ (n 9 , n∈Lλ 9) ∷
+ (n 10 , n∈Lλ 10) ∷ (n 11 , n∈Lλ 11) ∷ zsl ∷ ysl ∷ wxs ∷ [])
+(mapFo val
+ (mapFo At673.slide
+  (Irr.erase W3.B.CS.S
+   (∀̇∈ (var (suc (LJ-1-667.runs.W3.ww lem))) W3.Mx.G.S.witB)
+   (Irr.plus-zero-l W3.B.CS.S
+    (Irr.plus-zero-r W3.B.CS.S
+     (Irr.plus-zero-r W3.B.CS.S
+      (Irr.plus-zero-r W3.B.CS.S
+       (Irr.plus-zero-r W3.B.CS.S
+        (Irr.plus-zero-r W3.B.CS.S
+         (Irr.plus-zero-r W3.B.CS.S
+          (Irr.plus-zero-r W3.B.CS.S
+           (Irr.plus-zero-r W3.B.CS.S
+            (Irr.plus-zero-r W3.B.CS.S
+             (Irr.plus-zero-r W3.B.CS.S
+              (Irr.plus-zero-r W3.B.CS.S
+               (Irr.plus-zero-r W3.B.CS.S
+                (Irr.plus-zero-r W3.B.CS.S
+                 (Irr.plus-zero-r W3.B.CS.S
+                  (Irr.plus-zero-r W3.B.CS.S
+                   (Irr.plus-zero-r W3.B.CS.S W3.count-three))))))))))))))))))))
+⟩
+(λ _ →
+   ⟨
+   (AbsL.SM AbsL.SemM.At.⊨ id)
+   ((n 0 , n∈Lλ 0) ∷
+    (n 0 , n∈Lλ 0) ∷
+    (n 1 , n∈Lλ 1) ∷
+    (n 2 , n∈Lλ 2) ∷
+    (n 3 , n∈Lλ 3) ∷
+    (n 4 , n∈Lλ 4) ∷
+    (n 5 , n∈Lλ 5) ∷
+    (n 6 , n∈Lλ 6) ∷
+    (n 7 , n∈Lλ 7) ∷
+    (n 8 , n∈Lλ 8) ∷
+    (n 9 , n∈Lλ 9) ∷
+    (n 10 , n∈Lλ 10) ∷ (n 11 , n∈Lλ 11) ∷ zsl ∷ ysl ∷ wxs ∷ [])
+   (mapFo val
+    (mapFo At673.slide
+     (Irr.erase W3.B.CS.S
+      (∀̇∈ (var (suc (LJ-1-667.runs.W3.kk lem)))
+       (W3.Mx.G.S.witB ⇒̇
+        var zero ∈̇ var (suc (suc (LJ-1-667.runs.W3.ww lem)))))
+      (Irr.plus-zero-r W3.B.CS.S
+       (Irr.plus-zero-r W3.B.CS.S
+        (Irr.plus-zero-r W3.B.CS.S
+         (Irr.plus-zero-r W3.B.CS.S
+          (Irr.plus-zero-r W3.B.CS.S
+           (Irr.plus-zero-r W3.B.CS.S
+            (Irr.plus-zero-r W3.B.CS.S
+             (Irr.plus-zero-r W3.B.CS.S
+              (Irr.plus-zero-r W3.B.CS.S
+               (Irr.plus-zero-r W3.B.CS.S
+                (Irr.plus-zero-r W3.B.CS.S
+                 (Irr.plus-zero-r W3.B.CS.S
+                  (Irr.plus-zero-r W3.B.CS.S
+                   (Irr.plus-zero-r W3.B.CS.S
+                    (Irr.plus-zero-r W3.B.CS.S
+                     (Irr.plus-zero-r W3.B.CS.S
+                      (Irr.plus-zero-r W3.B.CS.S W3.count-three))))))))))))))))))))
+   ⟩)
+when checking that the expression step has type
+⟨
+(AbsL.SM AbsL.SemM.At.⊨ id)
+((n 0 , n∈Lλ 0) ∷
+ (n 0 , n∈Lλ 0) ∷
+ (n 1 , n∈Lλ 1) ∷
+ (n 2 , n∈Lλ 2) ∷
+ (n 3 , n∈Lλ 3) ∷
+ (n 4 , n∈Lλ 4) ∷
+ (n 5 , n∈Lλ 5) ∷
+ (n 6 , n∈Lλ 6) ∷
+ (n 7 , n∈Lλ 7) ∷
+ (n 8 , n∈Lλ 8) ∷
+ (n 9 , n∈Lλ 9) ∷
+ (n 10 , n∈Lλ 10) ∷ (n 11 , n∈Lλ 11) ∷ zsl ∷ ysl ∷ wxs ∷ [])
+(mapFo val
+ (mapFo At673.slide
+  (Irr.erase W3.B.CS.S W3.Mx.G.S.stepBndAt
+   (Irr.plus-zero-r W3.B.CS.S
+    (Irr.plus-zero-r W3.B.CS.S
+     (Irr.plus-zero-r W3.B.CS.S
+      (Irr.plus-zero-r W3.B.CS.S
+       (Irr.plus-zero-r W3.B.CS.S
+        (Irr.plus-zero-r W3.B.CS.S
+         (Irr.plus-zero-r W3.B.CS.S
+          (Irr.plus-zero-r W3.B.CS.S
+           (Irr.plus-zero-r W3.B.CS.S
+            (Irr.plus-zero-r W3.B.CS.S
+             (Irr.plus-zero-r W3.B.CS.S
+              (Irr.plus-zero-r W3.B.CS.S
+               (Irr.plus-zero-r W3.B.CS.S
+                (Irr.plus-zero-r W3.B.CS.S
+                 (Irr.plus-zero-r W3.B.CS.S
+                  (Irr.plus-zero-r W3.B.CS.S W3.count-three)))))))))))))))))))
+⟩
+      132.68 real       131.99 user         0.61 sys
+          1620656128  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              100672  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 145  voluntary context switches
+               31063  involuntary context switches
+       1750808307771  instructions retired
+        522003362416  cycles elapsed
+          1560823440  peak memory footprint
+rc=42

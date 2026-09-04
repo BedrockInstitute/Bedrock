@@ -1,0 +1,23 @@
+# Maintainer batch 20260829-073924. NO ROWS, NO QUEUE ENTRIES.
+#
+# Seven parks, all with living dispositions. The transfer family keeps
+# converting: 739's fix pass (att=1) returned with the term DELIVERED
+# (delta -1, open 0) at seq 5415 -- its shell now awaits pod-math's staged
+# shelve, like 722 before it (shelved 12:04). The episode is open (7 counted,
+# windows 0) and holds without latching, per the owner's directive.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.739 (transfer-park shell, att=1): its second session DELIVERED the
+# soundness-at-SL term (delta -1, open 0). Same staged-shelve path as 722.
+# No row.
+#
+# LJ-1.724 / LJ-1.727 / LJ-1.728 / LJ-1.728-SPLIT (transfer-park shells):
+# each awaits its split successor's result, then pod-math's staged shelving.
+# No row.
+#
+# LJ-1.715-SPLIT-SPLIT (heap-wall, delivered third gen): the 8g close is
+# MEASURED (exit 0, 220.94 s at -M8g, backlog item 43b update). pod-math
+# rules the family's disposition. No row.
+#
+# NO-MATCH window lists the re-accepts, once per table edit, by design.

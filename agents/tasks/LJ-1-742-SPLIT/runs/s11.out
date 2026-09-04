@@ -1,0 +1,61 @@
+Checking LJ-1-742-SPLIT.Probe742Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:99.3-100.66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝒟ₒ-intro
+  union-spec
+when scope checking the declaration
+  open
+    .#L.Axioms.Basic-17774674555833355489 {ℓ}
+      using (LsetS; Lset-suc; pr∈Lset-suc; sgl∈Lset-suc; pair∈Lset-suc;
+             𝒟ₒ→isL; uniqueL; 𝒟ₒ-intro; union-spec; module UnionOf)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:121.3-131.42: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  memb
+when scope checking the declaration
+  open
+    .#L.Coding.Model-15518578315326569460 {ℓ}
+      using (prʟ; prAtL; prAtL-adequate; tagAtL; tagAtL-adequate;
+             tagPairAtL; tagPairAtL-adequate; arityTagAtL; arityTagAtL-adequate;
+             arityTagPairAtL; arityTagPairAtL-adequate; appAt; appAt-adequate;
+             sucAtL; sucAtL-adequate; consAtL; consAtL-adequate; subValAt;
+             subValAt-adequate; subValSuccAt; subValSuccAt-adequate; extAt;
+             domAt; inDomAt; svAt; valuesInAt; pairsInAt; envOverAt; envSetAt;
+             memb; interAt; unionAt; diffAt; sameAt; emptyAt; implAt; closedAt;
+             binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt;
+             tmValAt)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:904.14-25: error: [NotInScope]
+Not in scope:
+  binClauseAt
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:904.14-25
+    (did you mean
+       '.#L.Coding.Model-15518578315326569460.allInClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.andClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.binClause-in' or
+       '.#L.Coding.Model-15518578315326569460.binClause-out' or
+       '.#L.Coding.Model-15518578315326569460.binClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.botClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.eqClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.exInClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.impClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.memClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.negClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.orClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.topClauseAt' or
+       '.#L.Coding.Model-15518578315326569460.unClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.allInClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.andClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.binClause-in' or
+       '.#L.Coding.Model-8525051417893240542.binClause-out' or
+       '.#L.Coding.Model-8525051417893240542.binClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.botClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.eqClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.exInClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.impClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.memClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.negClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.orClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.topClauseAt' or
+       '.#L.Coding.Model-8525051417893240542.unClauseAt'?)
+when scope checking binClauseAt

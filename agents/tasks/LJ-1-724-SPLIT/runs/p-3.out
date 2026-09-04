@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T14:30:40Z
+Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:105.16-18: error: [NotInScope]
+Not in scope:
+  pr
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:105.16-18
+when scope checking pr
+        2.21 real         1.94 user         0.21 sys
+           605306880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38961  page reclaims
+                  87  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 328  voluntary context switches
+                 951  involuntary context switches
+         21498702025  instructions retired
+          8579546724  cycles elapsed
+           547439576  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:30:42Z

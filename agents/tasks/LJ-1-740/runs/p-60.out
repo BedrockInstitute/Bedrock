@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T23:09:51Z
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:482.10: error: [ParseError]
+=<ERROR> subst (λ z → ⟨ ⟪ Lset β ⟫↪ fib...
+        0.06 real         0.03 user         0.01 sys
+           107134976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8295  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  32  involuntary context switches
+           728829065  instructions retired
+           194040552  cycles elapsed
+            86442608  peak memory footprint
+EXIT=42

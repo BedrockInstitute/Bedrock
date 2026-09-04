@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-29T04:12:57Z
+Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-520/Probe520.agda).
+        2.52 real         2.21 user         0.24 sys
+           640647168  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               40856  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 251  voluntary context switches
+                1023  involuntary context switches
+         24787169934  instructions retired
+          9606072094  cycles elapsed
+           580256752  peak memory footprint
+EXIT=0
+ended 2026-08-29T04:13:00Z

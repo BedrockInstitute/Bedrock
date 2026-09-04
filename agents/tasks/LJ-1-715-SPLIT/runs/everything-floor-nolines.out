@@ -1,0 +1,12 @@
+  Checking L.Model (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/src/L/Model.lagda.md).
+ Checking Landmarks (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/src/Landmarks.lagda.md).
+   Checking V.CantorBernstein (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/src/V/CantorBernstein.lagda.md).
+ Checking L.CardinalAbove (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/src/L/CardinalAbove.lagda.md).
+ Checking L.StageBound (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/src/L/StageBound.lagda.md).
+Checking Everything (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT/src/Everything.lagda.md).
+
+real	1m51.906s
+user	1m51.201s
+sys	0m0.687s
+EXIT=0
+# ended 2026-08-28 02:58:02

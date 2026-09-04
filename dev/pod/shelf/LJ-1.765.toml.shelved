@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.765"
+claim = "delivered-elsewhere"
+reason = "Situation 1, owner 2026-08-28: the transfer is complete. LJ-1.765 briefed grounded-from-complete. It did not close GO: amb alone heap-walls. LJ-1.767-SPLIT-SPLIT's obligation line names that same object and closed GO: reading-only pack, 210.63 s. Retrying 765 is the amb composition. The live GFC is the 767-SPLIT-SPLIT export. The meter on that name is GO."
+evidence = [
+  "agents/tasks/LJ-1-765/lj-1.765-report.md:10",
+  "agents/tasks/LJ-1-765/LJ-1.765.md:28",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/LJ-1.767-SPLIT-SPLIT.md:28",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/lj-1.767-SPLIT-SPLIT-report.md:5",
+]
+reopen = "Reopen if a consumer needs grounded-from-complete at 765's pinned Sigma with amb, and the 767-SPLIT-SPLIT term is gone. Not retry amb."
+by = "mathematician"

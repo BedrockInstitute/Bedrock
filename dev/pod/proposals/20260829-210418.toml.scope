@@ -1,0 +1,21 @@
+# Maintainer batch 20260829-210418. NO ROWS, NO QUEUE ENTRIES.
+#
+# Thirteen parks, zero rows. The transfer family keeps spawning: 742's chain
+# has now reached its FOURTH generation (742-SPLIT-SPLIT-SPLIT, capacity
+# park), and 753's split is in flight. The auto-recovery episode (item 44) is
+# holding the count without latching or paging the owner.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.728 / LJ-1.728-SPLIT / LJ-1.740 / LJ-1.740-SPLIT / LJ-1.742
+# / LJ-1.742-SPLIT / LJ-1.742-SPLIT-SPLIT / LJ-1.742-SPLIT-SPLIT-SPLIT
+# / LJ-1.753 / LJ-1.755 / LJ-1.756 / LJ-1.757 / LJ-1.758
+# (transfer-park shells and launch-capacity parks): each transfer shell
+# awaits its split successor's result; each capacity park reopens
+# automatically when a glm seat frees. No row.
+#
+# THE EPISODE HOLDS: counted 13 >= parked_max, windows 0 (progress resets
+# it), no latch, pod-math prompted. The count falls as the splits close and
+# staged shelving lands.
+#
+# NO-MATCH window lists the re-accepts, once per table edit, by design.

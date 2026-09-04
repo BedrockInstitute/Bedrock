@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:35:06Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+time: command terminated abnormally
+        8.98 real         8.77 user         0.21 sys
+           813137920  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51375  page reclaims
+                   9  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                1321  involuntary context switches
+        114897130471  instructions retired
+         32929220148  cycles elapsed
+           752845928  peak memory footprint
+time: signal: Invalid argument
+EXIT=1

@@ -1,0 +1,9 @@
+# ordinal-final
+# task LJ-1.715-SPLIT
+# GHCRTS -A64m -I0 -M4g
+# tier heavy
+
+real	0m0.821s
+user	0m0.694s
+sys	0m0.104s
+EXIT=0

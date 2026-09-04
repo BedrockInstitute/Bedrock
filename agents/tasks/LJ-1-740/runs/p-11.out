@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T21:58:12Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:243.38-39: error: [UnequalTerms]
+(V ℓ) !=< ℕ
+when checking that the expression w has type ℕ
+        2.96 real         2.76 user         0.18 sys
+           491454464  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               31750  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 419  involuntary context switches
+         34521743963  instructions retired
+         10504109938  cycles elapsed
+           430769040  peak memory footprint
+EXIT=42

@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T12:11:53Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:334.21-22: error: [UnequalTerms]
+V ℓ !=< Vec (V ℓ) 1
+when checking that the expression z has type Vec (V ℓ) 1
+      128.13 real       126.78 user         1.16 sys
+          1575747584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              109147  page reclaims
+                  87  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 641  voluntary context switches
+               36326  involuntary context switches
+       1525432267869  instructions retired
+        502112991540  cycles elapsed
+          1517864592  peak memory footprint
+EXIT=42
+ended 2026-08-28T12:14:01Z

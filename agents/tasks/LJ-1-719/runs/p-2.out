@@ -1,0 +1,25 @@
+Checking LJ-1-719.Probe719 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda:72.8-13: error: [ShadowedModule]
+Duplicate definition of module SemVᵃ. Previous definition of module
+SemVᵃ at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-652/Probe652.agda:43.8-13
+when scope checking the declaration
+  module SemVᵃ = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+        2.57 real         2.38 user         0.17 sys
+           831700992  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               52517  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 335  involuntary context switches
+         31185716405  instructions retired
+         10764326981  cycles elapsed
+           774030464  peak memory footprint

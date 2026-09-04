@@ -1,0 +1,31 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T14:04:14Z
+Checking LJ-1-712.Probe712 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda:195.27-39: error: [NoParseForApplication]
+Could not parse the application ⟨ # 1 ∈ˢ w ⟩
+Operators used in the grammar:
+  #   (prefix operator, level 20) [#_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/HITs/CumulativeHierarchy/Constructions.agda:163.3-5)]
+  ∈ˢ  (infix operator, level 20)  [_∈ˢ_ (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/src/FOL/ZFStructure.lagda.md:48.10-14)]                
+  ⟨_⟩ (closed operator)           [⟨_⟩ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Foundations/Structure.agda:43.1-4)]                 
+when scope checking ⟨ # 1 ∈ˢ w ⟩
+        1.75 real         1.58 user         0.14 sys
+           602226688  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38842  page reclaims
+                  13  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 269  involuntary context switches
+         21603732806  instructions retired
+          7424690657  cycles elapsed
+           544261080  peak memory footprint
+EXIT=42
+ended 2026-08-27T14:04:15Z

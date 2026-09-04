@@ -1,0 +1,28 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T11:43:20Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:90.19-20: error: [NotInScope]
+Not in scope:
+  V
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:90.19-20
+when scope checking V
+        3.43 real         3.05 user         0.26 sys
+           716406784  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               45481  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 694  voluntary context switches
+                1039  involuntary context switches
+         31727502483  instructions retired
+         13008636598  cycles elapsed
+           658670648  peak memory footprint
+EXIT=42
+ended 2026-08-28T11:43:24Z

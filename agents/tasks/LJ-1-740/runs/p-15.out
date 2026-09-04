@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:05:35Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:288.25-57: error: [UnequalTerms]
+Σ _A_9700 _B_9701 !=< V ℓ
+when checking that the inferred type of an application
+  Σ _A_9700 _B_9701
+matches the expected type
+  V ℓ
+        3.17 real         2.97 user         0.18 sys
+           509362176  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               32844  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                  43  voluntary context switches
+                 466  involuntary context switches
+         37753267761  instructions retired
+         11490274746  cycles elapsed
+           448644008  peak memory footprint
+EXIT=42

@@ -1,0 +1,115 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:22:18Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:484.57-58: error: [NotInScope]
+Not in scope:
+  ^
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:484.57-58
+    (did you mean
+       '.#L.Absoluteness-15455044049495652738.AbsL.SemM._^_' or
+       '.#L.Absoluteness-15455044049495652738.AbsL.SemV._^_' or
+       '.#L.Absoluteness-15455044049495652738.AbsL._^_' or
+       '.#L.Absoluteness-15455044049495652738.SemV._^_' or
+       '.#L.Axioms.Basic-11504158069527344705.FinOf.DefC.Refine.Abs.SemM._^_' or
+       '.#L.Axioms.Basic-11504158069527344705.FinOf.DefC.Refine.Abs.SemV._^_' or
+       '.#L.Axioms.Basic-11504158069527344705.FinOf.DefC.Refine.Abs._^_' or
+       '.#L.Axioms.Basic-11504158069527344705.FinOf.DefC.SemanticsM._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AbsL.SemM._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AbsL.SemV._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AbsL._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AtStage.DefC.Refine.Abs.SemM._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AtStage.DefC.Refine.Abs.SemV._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AtStage.DefC.Refine.Abs._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AtStage.DefC.SemanticsM._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AtStage.RefC.Abs.SemM._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AtStage.RefC.Abs.SemV._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.AtStage.RefC.Abs._^_' or
+       '.#L.Axioms.Separation-5865714580124658999.SemV._^_' or
+       '.#L.Choice.Name-14087690221266022916.Naming.DA.Refine.Abs.SemM._^_' or
+       '.#L.Choice.Name-14087690221266022916.Naming.DA.Refine.Abs.SemV._^_' or
+       '.#L.Choice.Name-14087690221266022916.Naming.DA.Refine.Abs._^_' or
+       '.#L.Choice.Name-14087690221266022916.Naming.DA.SemanticsM._^_' or
+       '.#L.Coding.Base-3499222836386663808.Sem._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.AbsL.SemM._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.AbsL.SemV._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.AbsL._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.DB.Refine.Abs.SemM._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.DB.Refine.Abs.SemV._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.DB.Refine.Abs._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.DB.SemanticsM._^_' or
+       '.#L.Coding.Bridge-7313124626063666438.SemB._^_' or
+       '.#L.Coding.EnvSet-2582673439585789533.AbsL.SemM._^_' or
+       '.#L.Coding.EnvSet-2582673439585789533.AbsL.SemV._^_' or
+       '.#L.Coding.EnvSet-2582673439585789533.AbsL._^_' or
+       '.#L.Coding.Environment-15194176788031760513.Sem._^_' or
+       '.#L.Coding.Key-13968189009826122901.AbsL.SemM._^_' or
+       '.#L.Coding.Key-13968189009826122901.AbsL.SemV._^_' or
+       '.#L.Coding.Key-13968189009826122901.AbsL._^_' or
+       '.#L.Coding.Key-13968189009826122901.Carve.AS.DefC.Refine.Abs.SemM._^_' or
+       '.#L.Coding.Key-13968189009826122901.Carve.AS.DefC.Refine.Abs.SemV._^_' or
+       '.#L.Coding.Key-13968189009826122901.Carve.AS.DefC.Refine.Abs._^_' or
+       '.#L.Coding.Key-13968189009826122901.Carve.AS.DefC.SemanticsM._^_' or
+       '.#L.Coding.Key-13968189009826122901.Carve.AS.RefC.Abs.SemM._^_' or
+       '.#L.Coding.Key-13968189009826122901.Carve.AS.RefC.Abs.SemV._^_' or
+       '.#L.Coding.Key-13968189009826122901.Carve.AS.RefC.Abs._^_' or
+       '.#L.Coding.Model-4543822339212023801.AbsL.SemM._^_' or
+       '.#L.Coding.Model-4543822339212023801.AbsL.SemV._^_' or
+       '.#L.Coding.Model-4543822339212023801.AbsL._^_' or
+       '.#L.Coding.Sat-7588819580012313700.AbsL.SemM._^_' or
+       '.#L.Coding.Sat-7588819580012313700.AbsL.SemV._^_' or
+       '.#L.Coding.Sat-7588819580012313700.AbsL._^_' or
+       '.#L.Definability-12763972878846354018.DefOf.Refine.Abs.SemM._^_' or
+       '.#L.Definability-12763972878846354018.DefOf.Refine.Abs.SemV._^_' or
+       '.#L.Definability-12763972878846354018.DefOf.Refine.Abs._^_' or
+       '.#L.Definability-12763972878846354018.DefOf.SemanticsM._^_' or
+       '.#V.Model-14524407937926378618.SemanticsV._^_' or
+       'AbsL.SemM._^_' or
+       'AbsL.SemV._^_' or
+       'AbsL._^_' or
+       'AtStage.DefC.Refine.Abs.SemM._^_' or
+       'AtStage.DefC.Refine.Abs.SemV._^_' or
+       'AtStage.DefC.Refine.Abs._^_' or
+       'AtStage.DefC.SemanticsM._^_' or
+       'AtStage.RefC.Abs.SemM._^_' or
+       'AtStage.RefC.Abs.SemV._^_' or
+       'AtStage.RefC.Abs._^_' or
+       'Cubical.Data.Nat._^_' or
+       'DefOf.Refine.Abs.SemM._^_' or
+       'DefOf.Refine.Abs.SemV._^_' or
+       'DefOf.Refine.Abs._^_' or
+       'DefOf.SemanticsM._^_' or
+       'Dσ.Refine.Abs.SemM._^_' or
+       'Dσ.Refine.Abs.SemV._^_' or
+       'Dσ.Refine.Abs._^_' or
+       'Dσ.SemanticsM._^_' or
+       'FOL.Absoluteness.Single.SemM._^_' or
+       'FOL.Absoluteness.Single.SemV._^_' or
+       'FOL.Absoluteness.Single._^_' or
+       'SatPlace.ASβ.DefC.Refine.Abs.SemM._^_' or
+       'SatPlace.ASβ.DefC.Refine.Abs.SemV._^_' or
+       'SatPlace.ASβ.DefC.Refine.Abs._^_' or
+       'SatPlace.ASβ.DefC.SemanticsM._^_' or
+       'SatPlace.ASβ.RefC.Abs.SemM._^_' or
+       'SatPlace.ASβ.RefC.Abs.SemV._^_' or
+       'SatPlace.ASβ.RefC.Abs._^_'?)
+when scope checking ^
+        1.86 real         1.68 user         0.17 sys
+           423952384  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27631  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 295  involuntary context switches
+         20239522409  instructions retired
+          6577588542  cycles elapsed
+           365904736  peak memory footprint
+EXIT=42

@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M4g]
+cap 1800s (perl alarm)
+started 2026-08-31T10:45:16Z
+Checking LJ-1-728-SPLIT-SPLIT-SPLIT.runs.CureFloor728SSS (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT-SPLIT-SPLIT/agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/runs/CureFloor728SSS.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 4294967296 bytes (4096 MB).
+agda: Use `+RTS -M<size>' to increase it.
+     1673.38 real      1667.37 user         5.47 sys
+          5260951552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              390006  page reclaims
+                 198  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 811  voluntary context switches
+              257617  involuntary context switches
+      21094803540841  instructions retired
+       6790455355940  cycles elapsed
+          5204349176  peak memory footprint
+EXIT=251
+ended 2026-08-31T11:13:09Z

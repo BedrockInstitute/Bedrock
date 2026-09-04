@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:33:52Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:513.38-44: error: [NotInScope]
+Not in scope:
+  graphA
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:513.38-44
+    (did you mean '.#L.Coding.Bridge-7313124626063666438.graph'?)
+when scope checking graphA
+        1.87 real         1.69 user         0.17 sys
+           423821312  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               27623  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 313  involuntary context switches
+         20361674068  instructions retired
+          6704501577  cycles elapsed
+           365757304  peak memory footprint
+EXIT=42

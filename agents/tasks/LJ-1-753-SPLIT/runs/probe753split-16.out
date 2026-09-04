@@ -1,0 +1,137 @@
+Checking LJ-1-753-SPLIT.Probe753Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:313.37-39: error: [UnequalTerms]
+Vec SL 0 !=<
+((x : FOL.ZFStructure.ZFStructure.S AbsL.𝒮M) →
+ ⟨
+ (AbsL.𝒮M FOL.ZFStructure.ZFStructure.∈ˢ x)
+ (AbsL.SemM.At.⟦ AbsL.SM ⟧ id
+  (FOL.Manipulation.Relabelling.mapTm val
+   (FOL.Manipulation.Relabelling.mapTm At673.slide
+    (Irr.eraseTm W3.B.CS.S (var (suc (LJ-1-667.runs.W3.kk lem)))
+     (Irr.plus-zero-l W3.B.CS.S
+      (Irr.plus-zero-r W3.B.CS.S
+       (Irr.plus-zero-l W3.B.CS.S
+        (Irr.plus-zero-r W3.B.CS.S
+         (Irr.plus-zero-r W3.B.CS.S
+          (Irr.plus-zero-r W3.B.CS.S
+           (Irr.plus-zero-r W3.B.CS.S
+            (Irr.plus-zero-r W3.B.CS.S
+             (Irr.plus-zero-r W3.B.CS.S
+              (Irr.plus-zero-r W3.B.CS.S
+               (Irr.plus-zero-r W3.B.CS.S
+                (Irr.plus-zero-r W3.B.CS.S
+                 (Irr.plus-zero-r W3.B.CS.S
+                  (Irr.plus-zero-r W3.B.CS.S
+                   (Irr.plus-zero-r W3.B.CS.S
+                    (Irr.plus-zero-r W3.B.CS.S
+                     (Irr.plus-zero-r W3.B.CS.S
+                      (Irr.plus-zero-r W3.B.CS.S W3.count-three)))))))))))))))))))))
+  ((n 0 , n∈Lλ 0) ∷
+   (n 0 , n∈Lλ 0) ∷
+   (n 1 , n∈Lλ 1) ∷
+   (n 2 , n∈Lλ 2) ∷
+   (n 3 , n∈Lλ 3) ∷
+   (n 4 , n∈Lλ 4) ∷
+   (n 5 , n∈Lλ 5) ∷
+   (n 6 , n∈Lλ 6) ∷
+   (n 7 , n∈Lλ 7) ∷
+   (n 8 , n∈Lλ 8) ∷
+   (n 9 , n∈Lλ 9) ∷
+   (n 10 , n∈Lλ 10) ∷ (n 11 , n∈Lλ 11) ∷ zsl ∷ ysl ∷ wxs ∷ []))
+ ⇒
+ (AbsL.SM AbsL.SemM.At.⊨ id)
+ (x ∷
+  (n 0 , n∈Lλ 0) ∷
+  (n 0 , n∈Lλ 0) ∷
+  (n 1 , n∈Lλ 1) ∷
+  (n 2 , n∈Lλ 2) ∷
+  (n 3 , n∈Lλ 3) ∷
+  (n 4 , n∈Lλ 4) ∷
+  (n 5 , n∈Lλ 5) ∷
+  (n 6 , n∈Lλ 6) ∷
+  (n 7 , n∈Lλ 7) ∷
+  (n 8 , n∈Lλ 8) ∷
+  (n 9 , n∈Lλ 9) ∷
+  (n 10 , n∈Lλ 10) ∷ (n 11 , n∈Lλ 11) ∷ zsl ∷ ysl ∷ wxs ∷ [])
+ (mapFo val
+  (mapFo At673.slide
+   (Irr.erase W3.B.CS.S
+    (Formula.∀̇∈ (var (suc (suc (LJ-1-667.runs.W3.kk lem))))
+     (appAt (suc (suc zero)) (suc zero) zero ⇒̇ W3.Mx.G.A.S.stepBndAt))
+    (Irr.plus-zero-r W3.B.CS.S
+     (Irr.plus-zero-r W3.B.CS.S
+      (Irr.plus-zero-l W3.B.CS.S
+       (Irr.plus-zero-r W3.B.CS.S
+        (Irr.plus-zero-r W3.B.CS.S
+         (Irr.plus-zero-r W3.B.CS.S
+          (Irr.plus-zero-r W3.B.CS.S
+           (Irr.plus-zero-r W3.B.CS.S
+            (Irr.plus-zero-r W3.B.CS.S
+             (Irr.plus-zero-r W3.B.CS.S
+              (Irr.plus-zero-r W3.B.CS.S
+               (Irr.plus-zero-r W3.B.CS.S
+                (Irr.plus-zero-r W3.B.CS.S
+                 (Irr.plus-zero-r W3.B.CS.S
+                  (Irr.plus-zero-r W3.B.CS.S
+                   (Irr.plus-zero-r W3.B.CS.S
+                    (Irr.plus-zero-r W3.B.CS.S
+                     (Irr.plus-zero-r W3.B.CS.S W3.count-three)))))))))))))))))))))
+ ⟩)
+when checking that the expression ba has type
+⟨
+(AbsL.SM AbsL.SemM.At.⊨ id)
+((n 0 , n∈Lλ 0) ∷
+ (n 0 , n∈Lλ 0) ∷
+ (n 1 , n∈Lλ 1) ∷
+ (n 2 , n∈Lλ 2) ∷
+ (n 3 , n∈Lλ 3) ∷
+ (n 4 , n∈Lλ 4) ∷
+ (n 5 , n∈Lλ 5) ∷
+ (n 6 , n∈Lλ 6) ∷
+ (n 7 , n∈Lλ 7) ∷
+ (n 8 , n∈Lλ 8) ∷
+ (n 9 , n∈Lλ 9) ∷
+ (n 10 , n∈Lλ 10) ∷ (n 11 , n∈Lλ 11) ∷ zsl ∷ ysl ∷ wxs ∷ [])
+(mapFo val
+ (mapFo At673.slide
+  (Irr.erase W3.B.CS.S
+   (Formula.∀̇∈ (var (suc (LJ-1-667.runs.W3.kk lem)))
+    (Formula.∀̇∈ (var (suc (suc (LJ-1-667.runs.W3.kk lem))))
+     (appAt (suc (suc zero)) (suc zero) zero ⇒̇ W3.Mx.G.A.S.stepBndAt)))
+   (Irr.plus-zero-r W3.B.CS.S
+    (Irr.plus-zero-l W3.B.CS.S
+     (Irr.plus-zero-r W3.B.CS.S
+      (Irr.plus-zero-r W3.B.CS.S
+       (Irr.plus-zero-r W3.B.CS.S
+        (Irr.plus-zero-r W3.B.CS.S
+         (Irr.plus-zero-r W3.B.CS.S
+          (Irr.plus-zero-r W3.B.CS.S
+           (Irr.plus-zero-r W3.B.CS.S
+            (Irr.plus-zero-r W3.B.CS.S
+             (Irr.plus-zero-r W3.B.CS.S
+              (Irr.plus-zero-r W3.B.CS.S
+               (Irr.plus-zero-r W3.B.CS.S
+                (Irr.plus-zero-r W3.B.CS.S
+                 (Irr.plus-zero-r W3.B.CS.S
+                  (Irr.plus-zero-r W3.B.CS.S
+                   (Irr.plus-zero-r W3.B.CS.S W3.count-three))))))))))))))))))))
+⟩
+       21.12 real        20.66 user         0.30 sys
+          1229570048  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               76734  page reclaims
+                  71  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 611  voluntary context switches
+                3333  involuntary context switches
+        311372962554  instructions retired
+         82598573257  cycles elapsed
+          1169540512  peak memory footprint
+rc=42

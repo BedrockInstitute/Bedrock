@@ -1,0 +1,33 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-28T14:54:42Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:152.18-27: error: [NotInScope]
+Not in scope:
+  BoundedFo
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:152.18-27
+    (did you mean
+       '.#L.Axioms.Separation-7294726452231760982.mkBoundedFo' or
+       '.#LJ-1-698.Probe698-2782838983202463288.bound-of' or
+       'mkBoundedFo'?)
+when scope checking BoundedFo
+        2.09 real         1.83 user         0.19 sys
+           614842368  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39538  page reclaims
+                  88  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 255  voluntary context switches
+                 919  involuntary context switches
+         21901096102  instructions retired
+          7939856951  cycles elapsed
+           556893168  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:54:44Z

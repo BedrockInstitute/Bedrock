@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.765-SPLIT-SPLIT"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.765-SPLIT-SPLIT briefed grounded-from-complete at code coordinates with extra recs. It did not close GO: no-change, vendors only, no report. LJ-1.767-SPLIT-SPLIT's obligation line names that same object and closed GO: reading-only pack, 210.63 s. Retrying 765-SPLIT-SPLIT is the extra-recs packing 767 and 767-SPLIT already measured and 767-SPLIT-SPLIT replaced. The live GFC is the 767-SPLIT-SPLIT export. The meter on that name is GO."
+evidence = [
+  "agents/tasks/LJ-1-765-SPLIT-SPLIT/LJ-1.765-SPLIT-SPLIT.md:32",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/LJ-1.767-SPLIT-SPLIT.md:28",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/lj-1.767-SPLIT-SPLIT-report.md:5",
+  "agents/tasks/LJ-1-767-SPLIT-SPLIT/Probe767SplitSplit.agda:148",
+]
+reopen = "Reopen if a consumer needs grounded-from-complete with the extra recs at 765-SPLIT-SPLIT's own path, and the 767-SPLIT-SPLIT term is gone. Not retry the extra-recs packing 767-SPLIT already measured and 767-SPLIT-SPLIT replaced."
+by = "mathematician"

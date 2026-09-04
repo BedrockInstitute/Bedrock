@@ -1,0 +1,19 @@
+2026-09-03 18:35:55 dipfire watcher started pid=$$ FIRE<8100MB swap=8746MB
+2026-09-03 19:38:07 dipfire watcher started pid=$$ FIRE<8150MB swap=8634MB
+2026-09-03 20:44:09 FIRE OBLIGATION (swap 7186MB)
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-09-03T12:44:09Z
+        0.67 real         0.03 user         0.05 sys
+           105562112  maximum resident set size
+EXIT=42
+ended 2026-09-03T12:44:10Z
+2026-09-03 20:44:10 LANDED OBLIGATION EXIT=42
+2026-09-03 20:44:10 FIRE ConvOnly (swap 7186MB)
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-09-03T12:44:10Z
+     1626.38 real      1566.96 user        13.95 sys
+          4478189568  maximum resident set size
+EXIT=1
+ended 2026-09-03T13:11:17Z
+2026-09-03 21:11:17 LANDED ConvOnly EXIT=1
+2026-09-03 22:16:38 dipfire2 watcher started pid=$$ FIRE<8150MB swap=9962MB

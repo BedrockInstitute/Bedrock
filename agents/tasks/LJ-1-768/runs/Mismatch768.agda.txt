@@ -1,0 +1,67 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.768] MISMATCH INSTRUMENT.  Where does the nearest producer of
+-- an ambient reading LAND?  conv0 = [LJ-1.692]'s constructed
+-- hull-convert-at-matrix, declared at the vendor's measured shape
+-- (codomain a solved meta, definition unapplied), then APPLIED and
+-- checked against the pinned coordinates as a STANDALONE definition:
+-- no rec, no codeOf, no hull half, no membership, no tuple.  The
+-- expected outcome is the elaborator spelling the mismatch between
+-- the producer's output coordinates (fst (val ca) ∷ fst (val cp) ∷
+-- fst a) and the pinned coordinates (Lset δ ∷ δ ∷ fst a).  This file
+-- is expected NOT to typecheck and rests at .agda.txt, never .agda
+-- (naming rule); a temporary same-stem .agda copy runs it and is
+-- deleted at once.  Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-768.runs.Mismatch768 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+open import FOL.Manipulation.Relabelling using ( mapFo )
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+import LJ-1-768.runs.Frame768 {ℓ} lem as Frame
+
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import Cubical.Data.Sigma using ( _×_ )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( Completeness; SatIn; val; hull-convert-at-matrix
+          ; module A; module F; module HS ; Code )
+
+  -- THE CONSTRUCTED CONVERSION, the vendor's measured shape: the
+  -- domain the inline spelling, the codomain a solved meta, the
+  -- definition unapplied (Probe767SplitSplit.agda:119-122).
+  conv0 : (ca cp : Code) (a : F.HS.ASt.SL)
+        → SatIn a ca cp
+        → _
+  conv0 = hull-convert-at-matrix
+
+  -- THE MISMATCH, ASKED PLAINLY.  The producer applied at the pinned
+  -- codomain.  The elaborator must either unify its meta with the
+  -- pinned coordinates (no producer can: the codomain of
+  -- hull-convert-at-matrix is hard-typed by [LJ-1.692]'s Convert,
+  -- Probe673.agda:118-124, Probe689.agda:52-63) or fail here, in
+  -- public.
+  probe-mismatch :
+    (δ : S) (ca cp : Code) (a : F.HS.ASt.SL)
+    → SatIn a ca cp
+    → ⟨ (Lset δ ∷ δ ∷ fst a ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+  probe-mismatch δ ca cp a sat = conv0 ca cp a sat

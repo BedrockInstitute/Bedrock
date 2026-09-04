@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M4g]
+DIAGNOSTIC instrument, cap 420 s (never reported as a price)
+started 2026-09-02T20:19:29Z
+Checking LJ-1-767-SPLIT.runs.S1ReadingHoled (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-767-SPLIT/agents/tasks/LJ-1-767-SPLIT/runs/S1ReadingHoled.agda).
+      420.05 real       418.78 user         1.15 sys
+          3977854976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              244780  page reclaims
+                  68  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                 659  voluntary context switches
+               55240  involuntary context switches
+            15597821  instructions retired
+             6620698  cycles elapsed
+             1179960  peak memory footprint
+EXIT=124
+ended 2026-09-02T20:26:29Z

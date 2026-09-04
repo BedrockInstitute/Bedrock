@@ -1,0 +1,26 @@
+Checking LJ-1-742-SPLIT-SPLIT.Probe742SplitSplit (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda:103.3-104.66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝒟ₒ-intro
+  union-spec
+when scope checking the declaration
+  open
+    .#L.Axioms.Basic-7974013421024015539 {ℓ}
+      using (LsetS; Lset-suc; pr∈Lset-suc; sgl∈Lset-suc; pair∈Lset-suc;
+             𝒟ₒ→isL; uniqueL; 𝒟ₒ-intro; union-spec; module UnionOf)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda:168.39-89: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  satGraphAt
+when scope checking the declaration
+  open
+    .#L.Coding.Powerset-17952869750466094595 {ℓ} lem
+      using (DefBody; isCodeAt; satGraphAt; DefinesAt)
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda:238.1-19: error: [MissingDefinitions]
+The following names are declared but not accompanied by a
+definition: defat-fill-asConst
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda:1529.13-1610.43: error: [UnsolvedMetaVariables]
+Unsolved metas at the following locations:
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda:1529.13-38
+  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT-SPLIT/agents/tasks/LJ-1-742-SPLIT-SPLIT/Probe742SplitSplit.agda:1610.39-43

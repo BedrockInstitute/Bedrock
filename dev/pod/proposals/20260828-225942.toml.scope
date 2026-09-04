@@ -1,0 +1,33 @@
+# Maintainer batch 20260828-225942. NO ROWS, NO QUEUE ENTRIES.
+#
+# Five parks, one shape family plus one held shell: everything here is either a
+# transfer shell awaiting its split successor, the delivered third generation
+# awaiting the item 43b ruling, or a fix-pass shell awaiting pod-math's
+# dependency tree. Zero rows.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.725 (transfer-park, att=1): its continue instance ran 118 minutes,
+# delivered the transfer (report + probe + runs, own 17), and the verdict guard
+# correctly refused its one touch of a review-of-named file from fact 4 (the
+# author cannot mint verdicts). Census open 1 by design -- deferred to
+# LJ-1.725-SPLIT (queue.toml:7503). No row.
+#
+# LJ-1.727 + LJ-1.728 (transfer-park shells): 727-SPLIT already RUNNING;
+# 728-SPLIT queued. The shells await their splits' results, then pod-math's
+# staged shelving. No row.
+#
+# LJ-1.715-SPLIT-SPLIT (heap-wall, delivered third gen): the 8g close is
+# MEASURED (exit 0, 220.94 s at -M8g on its own worktree, this evening).
+# pod-math rules its disposition with that fact -- the futility claim on the
+# family is falsified at 8g. No row.
+#
+# LJ-1.704 (no-match, att=2): fix pass done (survey passes), term still owed;
+# pod-math's dependency tree (726/727-SPLIT results) writes its next brief. No
+# row.
+#
+# THE EPISODE IS WORKING AS THE DIRECTIVE REQUIRES: counted 5 at the limit, no
+# latch, pod-math prompted at episode open, windows 0. The count falls as the
+# splits close and pod-math's staged shelving lands.
+#
+# NO-MATCH window lists the re-accepts, once per table edit, by design.

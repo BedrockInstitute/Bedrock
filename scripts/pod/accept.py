@@ -492,15 +492,47 @@ def run_acceptance(t, root=None, tier=None):
             print(f"accept: {t.code} ran as `{role}` and wrote Agda, which A21 forbids. "
                   f"DISCARDED from fact 4, kept on disk: {', '.join(refused_agda)}",
                   file=sys.stderr)
-    if not ch:
+    # **A VERDICT ARTIFACT IS MINTED BY A VERDICT SLOT AND BY NOBODY ELSE.**
+    # `review-of-*.md` is the reviewer's deliverable by the program's own naming
+    # division (`program_task_write()`): the program's INPUT is `review-<PRED>.md`,
+    # the reviewer's OUTPUT is `review-of-<PRED>.md`, and the no-go-stated /
+    # sys-critic-upheld-no-go rows read the output glob as "a critic has spoken".
+    # MEASURED TWICE on 2026-08-27/28: seq 4953 (LJ-1.711) and seq 4973 (LJ-1.712)
+    # both closed DONE `sys-critic-upheld-no-go` on a `review-of-*.md` file that the
+    # ESCALATED CODER itself wrote during a lint-back-to-author fix pass -- no
+    # critic was ever dispatched in either instance. The A21 penalty is the match,
+    # and this is its sibling: an author instance's verdict-named writes are
+    # dropped from fact 4 and kept on disk as scene evidence. No verdict slot, no
+    # verdict artifact; a genuine critic's return still carries its own.
+    refused_verdict = []
+    if role not in ("mathematician_adversarial", "coder_adversarial"):
+        refused_verdict = [p for p in ch
+                           if p.rsplit("/", 1)[-1].startswith("review-of-")
+                           and p.endswith(".md")]
+        if refused_verdict:
+            ch = [p for p in ch if p not in refused_verdict]
+            print(f"accept: {t.code} ran as `{role}` and wrote verdict-named files, "
+                  f"which only an adversarial slot may mint. DISCARDED from fact 4, "
+                  f"kept on disk: {', '.join(refused_verdict)}", file=sys.stderr)
+    own = facts_mod.own_changed_files(ch, getattr(t, "started", None), root)
+    routed_changed = own if own is not None else ch
+    scene_changed = ch                 # the whole reused scene, provenance only
+    if not routed_changed:
+        # **R7 NOW READS THE OWNED SLICE, NOT THE REUSED SCENE.** A dispatch that
+        # died before writing a byte over a scene an earlier instance left dirty
+        # used to be accepted, routed on the inherited files and, at seq 4904,
+        # closed DONE on their verdicts. This attempt's evidence is empty; the
+        # record-less `no-change` park is the honest answer, and the scene stays on
+        # disk exactly as every other kept refusal does.
         return None                            # R7, section 4.3.2 case 3. No record.
     # PROVENANCE, NOT A CONJUNCT. `own` is None when `t.started` cannot say (the CLI's
     # `_Task` stub carries no `started`), else the subset of `ch` this dispatch itself
     # wrote. Recorded so a reader never has to redo the mtime archaeology `[LJ-1.582]`
-    # took (owner's ruling 2026-08-23): it is measured and shown, never routed on, because
-    # R1 closes `[row.when]` to the six facts of AD11 plus `lines` and `obligations_open`,
-    # and adding a seventh matchable key is an amendment this maintainer does not make.
-    own = facts_mod.own_changed_files(ch, getattr(t, "started", None), root)
+    # took (owner's ruling 2026-08-23): it is measured and shown, never routed on,
+    # because R1 closes `[row.when]` to the six facts of AD11 plus `lines` and
+    # `obligations_open`, and adding a seventh matchable key is an amendment this
+    # maintainer does not make. (The seq-4904 repair above does not add one either:
+    # it re-scopes what key #4 MEANS, keeping the six-key fence intact.)
     c5 = spec_surface(root)                    # cheapest, and A3 puts it first
     # **THE DETAIL IS CAPTURED ONLY ON FAILURE, and the signature above is unchanged on
     # purpose**: `scripts/tests/test_pod_facts.py:919` patches `spec_surface` with a
@@ -514,10 +546,11 @@ def run_acceptance(t, root=None, tier=None):
     # which is backlog item 6: the same sentence for a landed trophy, a deleted one and
     # a foreign edit. The row's behaviour is the owner's and stays; this names the mover.
     c5_detail = "" if c5 else " ".join(_run(SPEC_SURFACE, root)[1].split())[:600]
-    r1 = conjunct1(facts_mod.verification_target(ch, t.code, root), root, tier=tier)
+    r1 = conjunct1(facts_mod.verification_target(routed_changed, t.code, root),
+                   root, tier=tier)
     d3, wsec, red, open3 = witness_mod.witness_delta(t, root)   # facts 3 and 8, 4.7
     c3 = closure(root)
-    c4, uvac = unbound_new(ch, getattr(t, "unbound_before", None), root)
+    c4, uvac = unbound_new(routed_changed, getattr(t, "unbound_before", None), root)
     c6 = precommit_set(t.code, root)
     # SAME PATTERN AS c5_detail, SAME REASON: captured only on the rare red path, so the
     # green path pays nothing. `precommit_detail()` re-runs the seven members in order
@@ -533,7 +566,9 @@ def run_acceptance(t, root=None, tier=None):
            "agda_vacuous": r1.get("vacuous", False), "unbound_vacuous": uvac,
            "changed_files_foreign": foreign,   # outside the scope, 4.3.1. Digest counts it
            "changed_files_refused": refused_agda,   # A21: a mathematician's Agda, dropped
+           "verdict_files_refused": refused_verdict,   # author-minted review-of, dropped
            "changed_files_own": own,           # provenance for [LJ-1.582]. NOT matchable
+           "changed_files_scene": scene_changed,   # the reused scene. NOT matchable
            "spec_surface_detail": c5_detail,   # provenance for the stop. NOT matchable
            "lint_detail": c6_detail,           # which of the 7 conjunct-6 checks. NOT matchable
            "runs_all": r1["runs_all"],         # every other Agda wall, provenance
@@ -542,11 +577,13 @@ def run_acceptance(t, root=None, tier=None):
                                   (r1["rc"] if bad == 1 else 1),
                      "error_class": None if bad is None else
                                     (r1["agda_class"] if bad == 1 else RUNNER_CLASS[bad]),
-                     "obligations_delta": d3, "changed_files": ch,
+                     "obligations_delta": d3, "changed_files": routed_changed,
                      "seconds": r1["seconds"], "heap_wall": r1["heap_wall"],
                      # FACT 7, A10. It is measured over the SAME list fact 4 reports, so
                      # the ratio's numerator and denominator describe one task's work.
-                     "lines": in_fence_lines(ch, root),
+                     # (And since the seq-4904 repair, "one task's work" means ONE
+                     # attempt's work whenever `started` can say so.)
+                     "lines": in_fence_lines(routed_changed, root),
                      # **FACT 8: THE UNRESOLVED COUNT AT EXIT, a LEVEL and not a
                      # difference.** Fact 3 is a delta, and a delta cannot tell a finished
                      # task from an idle one: 0 before and 0 after reads the same as 5 and

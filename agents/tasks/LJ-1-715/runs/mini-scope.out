@@ -1,0 +1,11 @@
+Checking LJ-1-715.MiniScope (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715/agents/tasks/LJ-1-715/MiniScope.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715/agents/tasks/LJ-1-715/MiniScope.agda:36.13-18: error: [NotInScope]
+Not in scope:
+  bar.f
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715/agents/tasks/LJ-1-715/MiniScope.agda:36.13-18
+when scope checking bar.f
+
+real	0m0.057s
+user	0m0.037s
+sys	0m0.016s
+EXIT=42

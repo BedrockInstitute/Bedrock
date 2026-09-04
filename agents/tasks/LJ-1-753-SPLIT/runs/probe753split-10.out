@@ -1,0 +1,23 @@
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:255.25: error: [ParseError]
+)<ERROR>  })
+              ant)
+       ...
+        0.06 real         0.03 user         0.01 sys
+           107134976  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+                8295  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                  34  involuntary context switches
+           696645509  instructions retired
+           193718417  cycles elapsed
+            86442608  peak memory footprint
+rc=42

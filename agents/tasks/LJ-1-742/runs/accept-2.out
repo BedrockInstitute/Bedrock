@@ -1,0 +1,24 @@
+# arm accept-2
+# task LJ-1.742
+# brief agents/tasks/LJ-1-742/LJ-1.742.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 2
+# load before (4.3359375, 4.625, 4.6416015625)
+# started 2026-08-29 08:02:21
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# changed files 4
+# changed files own 4 of 4
+# in-fence lines 0
+# obligations delta 0
+# wall seconds 0.0
+# error class None
+# exit 0
+
+{"agda_vacuous": true, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-742/Probe742.agda.txt", "agents/tasks/LJ-1-742/lj-1.742-report.md", "agents/tasks/LJ-1-742/runs/p-25-desc.out", "agents/tasks/LJ-1-742/runs/p-26-desc.out"], "changed_files_refused": [], "changed_files_scene": ["agents/tasks/LJ-1-742/Probe742.agda.txt", "agents/tasks/LJ-1-742/lj-1.742-report.md", "agents/tasks/LJ-1-742/runs/p-1-floor.out", "agents/tasks/LJ-1-742/runs/p-10-bisect.out", "agents/tasks/LJ-1-742/runs/p-11.out", "agents/tasks/LJ-1-742/runs/p-12.out", "agents/tasks/LJ-1-742/runs/p-13.out", "agents/tasks/LJ-1-742/runs/p-14.out", "agents/tasks/LJ-1-742/runs/p-15.out", "agents/tasks/LJ-1-742/runs/p-16.out", "agents/tasks/LJ-1-742/runs/p-17.out", "agents/tasks/LJ-1-742/runs/p-18.out", "agents/tasks/LJ-1-742/runs/p-19.out", "agents/tasks/LJ-1-742/runs/p-2-floor.out", "agents/tasks/LJ-1-742/runs/p-20.out", "agents/tasks/LJ-1-742/runs/p-21.out", "agents/tasks/LJ-1-742/runs/p-22.out", "agents/tasks/LJ-1-742/runs/p-23.out", "agents/tasks/LJ-1-742/runs/p-24-final.out", "agents/tasks/LJ-1-742/runs/p-25-desc.out", "agents/tasks/LJ-1-742/runs/p-26-desc.out", "agents/tasks/LJ-1-742/runs/p-3-final.out", "agents/tasks/LJ-1-742/runs/p-4-final.out", "agents/tasks/LJ-1-742/runs/p-5-final.out", "agents/tasks/LJ-1-742/runs/p-6-final.out", "agents/tasks/LJ-1-742/runs/p-7-bisect.out", "agents/tasks/LJ-1-742/runs/p-8-bisect.out", "agents/tasks/LJ-1-742/runs/p-9-bisect.out", "agents/tasks/LJ-1-742/runs/run.sh"], "concurrency": 2, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-742/Probe742.agda.txt", "agents/tasks/LJ-1-742/lj-1.742-report.md", "agents/tasks/LJ-1-742/runs/p-25-desc.out", "agents/tasks/LJ-1-742/runs/p-26-desc.out"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": 0, "obligations_open": 1, "seconds": 0.0}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [], "spec_surface_detail": "", "task": "LJ-1.742", "tier": "wide", "unbound_vacuous": true, "verdict_files_refused": [], "witness_seconds": 0.0}

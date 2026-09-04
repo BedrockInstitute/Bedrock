@@ -1,0 +1,38 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T14:31:08Z
+Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:130.22-57: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  σ
+  oσ
+  φᵣ
+  hφ
+  carved
+when scope checking the declaration
+  open Frame γ oγ hγ using (σ; oσ; φᵣ; hφ; carved; dφ)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:131.8-15: error: [NoSuchModule]
+No module AtStage in scope
+when scope checking the declaration
+  open AtStage σ oσ using (imageIn; imageOut; ⊨-transport; _⊨_)
+        2.28 real         1.94 user         0.22 sys
+           605437952  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               38965  page reclaims
+                  90  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 691  voluntary context switches
+                 863  involuntary context switches
+         21581589942  instructions retired
+          8561582135  cycles elapsed
+           547439576  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:31:10Z

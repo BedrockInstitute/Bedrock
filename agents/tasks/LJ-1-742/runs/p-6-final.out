@@ -1,0 +1,37 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T23:12:57Z
+Checking LJ-1-742.Probe742 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda:99.3-100.66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝒟ₒ-intro
+  union-spec
+when scope checking the declaration
+  open
+    .#L.Axioms.Basic-17774674555833355489 {ℓ}
+      using (LsetS; Lset-suc; pr∈Lset-suc; sgl∈Lset-suc; pair∈Lset-suc;
+             𝒟ₒ→isL; uniqueL; 𝒟ₒ-intro; union-spec; module UnionOf)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742/agents/tasks/LJ-1-742/Probe742.agda:298.30-31: error: [UnequalTerms]
+fst (δ ⊨ᴬ φ) !=< fst (δ ⊨ φ)
+when checking that the expression h has type ⟨ δ ⊨ᴬ ¬̇ φ ⟩
+        2.78 real         2.56 user         0.21 sys
+           687226880  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44037  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 471  involuntary context switches
+         30140942950  instructions retired
+          9982009800  cycles elapsed
+           627147808  peak memory footprint
+EXIT=42
+ended 2026-08-28T23:13:00Z

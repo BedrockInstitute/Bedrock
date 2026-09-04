@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T22:47:04Z
+Checking LJ-1-732.runs.Amb7 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-732/agents/tasks/LJ-1-732/runs/Amb7.agda).
+time: command terminated abnormally
+       20.22 real        19.92 user         0.29 sys
+          1754529792  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              108839  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                3143  involuntary context switches
+        226820605040  instructions retired
+         76834153740  cycles elapsed
+          1696220960  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-28T22:47:24Z

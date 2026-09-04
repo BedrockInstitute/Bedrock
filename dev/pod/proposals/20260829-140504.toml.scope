@@ -1,0 +1,27 @@
+# Maintainer batch 20260829-140504. NO ROWS, NO QUEUE ENTRIES.
+#
+# Ten parks, zero rows. The transfer family is draining exactly per pod-math's
+# staged plan, and the auto-recovery episode (item 44) is holding the count
+# without latching or paging the owner.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.715-SPLIT-SPLIT (heap-wall, delivered third gen): the item 43b ruling
+# landed this evening (backstop pair 9g, option a) -- the -M8g superheavy
+# measurement on this scene is now UNBLOCKED and runnable on request. pod-math
+# rules the family's disposition with that in hand. No row.
+#
+# LJ-1.724 / LJ-1.728 / LJ-1.728-SPLIT / LJ-1.737 / LJ-1.742 / LJ-1.742-SPLIT
+# (transfer-park shells): each awaits its split successor's result, then
+# pod-math's staged shelving. No row.
+#
+# LJ-1.744 / LJ-1.746 / LJ-1.746-SPLIT (transfer-park shells): same staged
+# pattern -- their splits' results decide the shells' shelving. No row.
+#
+# THE DRAIN IS REAL AND MEASURED: DONE rose 322 -> 340 in the last hours
+# (729/730/731/733/734/735/736/738/741/743/744 GO + the first-generation
+# splits), SHELVED rose to 19 (pod-math's staged shelving executing), PARKED
+# stable at 10 (all counted, episode holds, no latch, no page). counted = 8;
+# the capacity-marked launch parks reopen on their own.
+#
+# NO-MATCH window lists the re-accepts, once per table edit, by design.

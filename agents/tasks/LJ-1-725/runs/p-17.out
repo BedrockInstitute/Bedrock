@@ -1,0 +1,42 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-28T14:09:37Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:260.8-62: error: [UnequalTerms]
+V.sett
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+  (Cubical.HITs.CumulativeHierarchy.Constructions.SingletonSet.SINGL
+   (fst u))
+  (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PAIR
+   (fst u) (Lset (fst u)))))
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+ (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+  (Cubical.HITs.CumulativeHierarchy.Constructions.SingletonSet.SINGL
+   (fst u))
+  (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PAIR
+   (fst u) (Lset (fst u)))))
+!= w of type V ℓ
+when checking that the expression
+hier-in γ oγ (hierL γ hγ oγ) (hierL-spec γ hγ oγ) u u∈ has type
+⟨ w ∈ fst (hierL γ hγ oγ) ⟩
+      381.75 real       378.96 user         1.86 sys
+          1088913408  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               68554  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 341  voluntary context switches
+              175129  involuntary context switches
+       4312976809727  instructions retired
+       1481293412048  cycles elapsed
+          1028998464  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:15:59Z

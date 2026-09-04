@@ -1,0 +1,50 @@
+# Maintainer batch 20260904-005530. NO ROWS, NO QUEUE ENTRIES.
+#
+# Twenty parks examined. One movement since batch 20260904-004144:
+# LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT ran and completed. Its
+# return is pid-dead with exit 0 (the acceptance arm records the probe
+# clean), 5 changed files all its own, and its own brief's transfer-park
+# branch parked it. The 769 line has now delivered across SEVEN
+# generations (769 through ...-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT), each
+# census landing in a queued successor that then delivered. Every
+# generation's facts measured clean (exit 0, error_class None).
+#
+# AN OBSERVATION FOR THE MATHEMATICIAN, measured not judged: the 769 chain
+# is seven generations deep and each generation adds one park to this
+# table. The program-side bound (one finalize dispatch per split-GO,
+# landed 2026-09-02) caps what each SHELL can cost, but the LINE's length
+# is set by the refill's park_and_split queueing. Seven clean deliveries
+# of 5-file terms with the census always deferring is a shape the AD3
+# owner may want to look at whole: shelve the line as delivered-elsewhere
+# (the 728 precedent) or name the terminal generation. No row from me --
+# the judgement is not mine -- but the count is now loud enough to say.
+#
+# PER-TASK VERDICTS (carried from 001740, restated for this file's record).
+#
+# LJ-1.765-SPLIT / LJ-1.769 / LJ-1.769-SPLIT / LJ-1.769-SPLIT-SPLIT
+# / LJ-1.769-SPLIT-SPLIT-SPLIT / LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT
+# / LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT
+# / LJ-1.769-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT-SPLIT (transfer-park, exit 0,
+# 6/37/33/5/5/1/5/5 files, own): each shell's own brief parks it with the
+# census deferred to a successor or continuation. The 765 line is fully
+# shelved at its head; the 769 line delivered across seven generations.
+# The shelving judgement is the mathematician's AD3 call, now exercised on
+# fourteen shells of these families. Rows from me would double-track that
+# process. No row.
+#
+# LJ-1.740-SPLIT / LJ-1.742-SPLIT-SPLIT-SPLIT / LJ-1.753-SPLIT-SPLIT
+# (no-change, 0 files): capacity and queue parks whose instances returned
+# without touching the tree. The six facts name no verdict
+# (obligations_delta None, error_class None). A verdict from me would be
+# invented, not measured. No row.
+#
+# LJ-1.755 ... LJ-1.763 (nine tasks, no-change, 0 files): new-family queue
+# tasks whose first instances produced nothing; the mathematician owns their
+# verdicts. No row.
+#
+# THE SHADOWING LIST is empty this window.
+#
+# THE EXPIRY FALLOUT lists re-falls of long-closed LJ-1.39x-1.42x records to
+# system rows and NO MATCH. Those tasks are DONE; expiry re-routes records,
+# it does not reopen tasks. A proposal row keyed to a DONE task would move
+# live records and breach R3. No row.

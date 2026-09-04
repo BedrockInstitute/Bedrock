@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:24:12Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:489.9-20: error: [UnequalTerms]
+fst (fst (numS (toℕ i)) ∈ Lset σ₀) !=< Type _ℓ_10515
+when checking that the expression rN₀ (toℕ i) has type
+Type _ℓ_10515
+        3.82 real         3.61 user         0.18 sys
+           550518784  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               35356  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 598  involuntary context switches
+         46930936883  instructions retired
+         13872781790  cycles elapsed
+           489751488  peak memory footprint
+EXIT=42

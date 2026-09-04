@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 1800s (perl alarm)
+started 2026-08-28T14:32:30Z
+Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda:171.12-40: error: [NoParseForApplication]
+Could not parse the application ⟨ (⟪ Lset σ ⟫↪ m) ∈ carved ⟩
+Operators used in the grammar:
+  ⟨_⟩ (closed operator) [⟨_⟩ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Foundations/Structure.agda:43.1-4)]
+when scope checking ⟨ (⟪ Lset σ ⟫↪ m) ∈ carved ⟩
+        2.58 real         1.95 user         0.29 sys
+           604356608  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34822  page reclaims
+                4165  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 558  voluntary context switches
+                3916  involuntary context switches
+         22046085011  instructions retired
+          8780996892  cycles elapsed
+           546391000  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:32:32Z

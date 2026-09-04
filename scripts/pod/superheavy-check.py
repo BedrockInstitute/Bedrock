@@ -32,7 +32,7 @@ Usage:
   .venv/bin/python scripts/pod/superheavy-check.py src/Everything.lagda.md
 
 Exit status: 0 the typecheck passed; 1 the typecheck failed (including a heap wall
-at 8 GB); 2 refused before Agda ever ran (the pod has a live qwen dispatch, a usage
+at the superheavy cap); 2 refused before Agda ever ran (the pod has a live qwen dispatch, a usage
 error, or the state/config could not be read).
 """
 
@@ -94,6 +94,24 @@ def main(argv: list[str]) -> int:
         print(f"superheavy-check: REFUSED. {target} is not a file under {ROOT}.",
               file=sys.stderr)
         return 2
+    # **A PARKED WORKTREE IS A LEGITIMATE SCENE, 2026-08-28.** pod-math's ruling on
+    # the LJ-1.715 family asks the cap question about the SPLIT worktree's tree --
+    # the 33 lines exist ONLY there (the task delivered its term and walled; the
+    # scene is kept by design). Running from ROOT resolves the module to the MAIN
+    # tree's copy instead: MEASURED, `ModuleDefinedInOtherFile`, exit 42 at 0.11 s.
+    # When the target lives under a task worktree, agda runs FROM that worktree so
+    # its own `bedrock.agda-lib` include wins; every gate below is unchanged.
+    cwd = ROOT
+    agda_target = target
+    parts = Path(target).parts
+    if len(parts) > 3 and parts[0] == ".pod-state" and parts[1] == "worktrees":
+        candidate = ROOT / parts[0] / parts[1] / parts[2]
+        if (candidate / "bedrock.agda-lib").is_file():
+            cwd = candidate
+            # agda resolves the target against CWD: from the worktree, the path is
+            # the worktree-relative one, exactly as the main-tree case passes
+            # `src/Everything.lagda.md` from ROOT.
+            agda_target = str(Path(*parts[3:]))
 
     dispatched = _qwen_dispatched()
     if dispatched is None:
@@ -101,7 +119,7 @@ def main(argv: list[str]) -> int:
               "[legal.pi_provider] or the pod's own state could not be read, so "
               "this cannot confirm qwen is idle, and this gate has no "
               "--assume-quiet escape (owner's ruling 2026-08-25: never a guess, "
-              "for an 8 GB commitment). Check `pod.py status` by hand first.",
+              "for a superheavy commitment). Check `pod.py status` by hand first.",
               file=sys.stderr)
         return 2
     if dispatched:
@@ -124,7 +142,7 @@ def main(argv: list[str]) -> int:
     env = dict(os.environ)
     env["GHCRTS"] = heap
     started = time.monotonic()
-    proc = subprocess.run(["agda", target], cwd=ROOT, env=env)
+    proc = subprocess.run(["agda", agda_target], cwd=cwd, env=env)
     seconds = time.monotonic() - started
     print(f"superheavy-check: exit {proc.returncode}, {seconds:.2f}s", file=sys.stderr)
     return 0 if proc.returncode == 0 else 1

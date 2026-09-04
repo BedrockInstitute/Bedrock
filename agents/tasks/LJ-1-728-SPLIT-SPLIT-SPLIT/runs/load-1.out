@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M4g]
+cap 1800s (perl alarm)
+started 2026-08-31T11:47:46Z
+Checking LJ-1-728-SPLIT-SPLIT-SPLIT.runs.Load728SSS (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT-SPLIT-SPLIT/agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/runs/Load728SSS.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT-SPLIT-SPLIT/agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/runs/Load728SSS.agda:35.12-15: error: [UnequalSorts]
+Type₁ != Type
+when checking that the expression Type has type Type
+        5.34 real         4.99 user         0.21 sys
+           763248640  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               48506  page reclaims
+                 175  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 812  voluntary context switches
+                1418  involuntary context switches
+         77580441831  instructions retired
+         22446749948  cycles elapsed
+           704791656  peak memory footprint
+EXIT=42
+ended 2026-08-31T11:47:52Z

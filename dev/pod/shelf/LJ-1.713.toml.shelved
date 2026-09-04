@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.713"
+claim = "delivered-elsewhere"
+reason = "Situation 1. LJ-1.713 briefed below-closed and did not inhabit it: CompletenessFrom is a type. What 713 produced is below-closed-via, CompletenessFrom as a hypothesis. LJ-1.723's obligation line names that same object below-closed-via and closed GO: accept conjuncts held, delta -1, open 0, row task-lj-1-723-go, status DONE. Retrying 713 is either the briefed name 700 already NO-GO'd, or the transcription 723 already closed."
+evidence = [
+  "agents/tasks/LJ-1-723/runs/accept-1.out:20",
+  "agents/tasks/LJ-1-723/LJ-1.723.md:25",
+  "agents/tasks/LJ-1-723/Probe723.agda:127",
+  ".pod-state/worktrees/LJ-1-713/agents/tasks/LJ-1-713/Probe713.agda:120",
+  "agents/tasks/LJ-1-713/LJ-1.713.md:20",
+]
+reopen = "Reopen if a consumer needs below-closed at 713's briefed type, with CompletenessFrom inhabited, and a later proof supplies that inhabitant. Not retry the via transcription 723 already closed."
+by = "mathematician"

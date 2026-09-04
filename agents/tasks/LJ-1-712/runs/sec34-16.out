@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T14:12:19Z
+Checking LJ-1-712.Probe712 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda).
+       10.58 real        10.41 user         0.17 sys
+           779436032  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49663  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                 919  involuntary context switches
+        141629121066  instructions retired
+         43889309859  cycles elapsed
+           719766608  peak memory footprint
+EXIT=0
+ended 2026-08-27T14:12:30Z

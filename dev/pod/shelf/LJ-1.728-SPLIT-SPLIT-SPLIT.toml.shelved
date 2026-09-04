@@ -1,0 +1,12 @@
+[shelve]
+task = "LJ-1.728-SPLIT-SPLIT-SPLIT"
+claim = "delivered-elsewhere"
+reason = "Situation 1, owner 2026-08-28: the transfer is complete. LJ-1.728-SPLIT-SPLIT-SPLIT briefed grounded-from-complete. It did not close GO: heap wall, transport terminal at -M4g. LJ-1.765's obligation line names that same object and holds the composition walk (un-ascribed conv0, then amb). Retrying SSS is the write 765 already takes. The live continuation is 767. The meter is not GO."
+evidence = [
+  "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/lj-1.728-SPLIT-SPLIT-SPLIT-report.md:9",
+  "agents/tasks/LJ-1-728-SPLIT-SPLIT-SPLIT/LJ-1.728-SPLIT-SPLIT-SPLIT.md:28",
+  "agents/tasks/LJ-1-765/LJ-1.765.md:28",
+  "agents/tasks/LJ-1-765/lj-1.765-report.md:10",
+]
+reopen = "Reopen if a consumer needs grounded-from-complete at SSS's own heavy path, and the 765/767 line is gone. Not retry the transport SSS already measured."
+by = "mathematician"

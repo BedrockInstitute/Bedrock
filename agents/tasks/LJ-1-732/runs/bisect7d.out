@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T23:21:33Z
+Checking LJ-1-732.runs.Bisect7d (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-732/agents/tasks/LJ-1-732/runs/Bisect7d.agda).
+time: command terminated abnormally
+       16.60 real        16.31 user         0.28 sys
+          1707507712  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              105969  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                2331  involuntary context switches
+        186681711871  instructions retired
+         61551582887  cycles elapsed
+          1648985840  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-28T23:21:49Z

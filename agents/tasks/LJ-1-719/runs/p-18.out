@@ -1,0 +1,64 @@
+Checking LJ-1-719.Probe719 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-719/agents/tasks/LJ-1-719/Probe719.agda:144.28-29: error: [CannotEliminateWithPattern]
+Cannot eliminate type
+Cubical.HITs.PropositionalTruncation.Base.∥
+Σ
+(FOL.ZFStructure.ZFStructure.S
+ (FOL.Absoluteness.Single.𝒮M V.Hierarchy.𝒮ᵥ L.Constructible.isL
+  L.Constructible.isL-trans))
+(λ x →
+   ⟨
+   (hPropAlgebra (ℓ-suc ℓ) TruthAlgebra.⊓
+    (FOL.Absoluteness.Single.𝒮M V.Hierarchy.𝒮ᵥ L.Constructible.isL
+     L.Constructible.isL-trans
+     FOL.ZFStructure.ZFStructure.∈ˢ x)
+    (FOL.Semantics.At.⟦ hPropAlgebra (ℓ-suc ℓ) ⟧
+     (FOL.Absoluteness.Single.𝒮M V.Hierarchy.𝒮ᵥ L.Constructible.isL
+      L.Constructible.isL-trans)
+     (FOL.Absoluteness.Single.SM V.Hierarchy.𝒮ᵥ L.Constructible.isL
+      L.Constructible.isL-trans)
+     id
+     (FOL.Manipulation.Relabelling.mapTm Empty.rec*
+      (FOL.Count.Count.eraseTm
+       (FOL.ZFStructure.ZFStructure.S L.Constructible.𝒮ʟ)
+       (FOL.Syntax.var (LJ-1-667.runs.W3.lastFin lem))
+       (FOL.Count.Count.plus-zero-l
+        (FOL.ZFStructure.ZFStructure.S L.Constructible.𝒮ʟ)
+        (LJ-1-667.runs.W3.count-three lem))))
+     (packed lam ordλ a p z)))
+   ((hPropAlgebra (ℓ-suc ℓ) FOL.Semantics.At.⊨
+     FOL.Absoluteness.Single.𝒮M V.Hierarchy.𝒮ᵥ L.Constructible.isL
+     L.Constructible.isL-trans)
+    (FOL.Absoluteness.Single.SM V.Hierarchy.𝒮ᵥ L.Constructible.isL
+     L.Constructible.isL-trans)
+    id (x ∷ packed lam ordλ a p z)
+    (FOL.Manipulation.Relabelling.mapFo Empty.rec*
+     (FOL.Count.Count.erase
+      (FOL.ZFStructure.ZFStructure.S L.Constructible.𝒮ʟ)
+      (LJ-1-667.runs.W3.s4 lem)
+      (FOL.Count.Count.plus-zero-r
+       (FOL.ZFStructure.ZFStructure.S L.Constructible.𝒮ʟ)
+       (LJ-1-667.runs.W3.count-three lem)))))
+   ⟩)
+∥₁
+with variable pattern h (did you supply too many arguments?)
+when checking the clause left hand side
+from-V1 lam ordλ a p z raw h
+       11.65 real        11.44 user         0.19 sys
+           869187584  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               54805  page reclaims
+                   3  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                1097  involuntary context switches
+        185454450465  instructions retired
+         49065842814  cycles elapsed
+           809698456  peak memory footprint

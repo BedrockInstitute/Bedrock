@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:16:19Z
+Checking LJ-1-717.Probe717 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-717/agents/tasks/LJ-1-717/Probe717.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-717/agents/tasks/LJ-1-717/Probe717.agda:48.6-19: error: [NoSuchModule]
+No module FOL.Semantics in scope
+when scope checking the declaration
+  open FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ using (_^_)
+        2.65 real         2.46 user         0.18 sys
+           795951104  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               50334  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 373  involuntary context switches
+         32411517043  instructions retired
+         11052233551  cycles elapsed
+           738329704  peak memory footprint
+EXIT=42
+ended 2026-08-27T15:16:22Z

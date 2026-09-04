@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T13:30:53Z
+Checking LJ-1-711.Probe711 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-711/agents/tasks/LJ-1-711/Probe711.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-711/agents/tasks/LJ-1-711/Probe711.agda:86.12-23: error: [NotInScope]
+Not in scope:
+  P710.bound2
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-711/agents/tasks/LJ-1-711/Probe711.agda:86.12-23
+when scope checking P710.bound2
+        1.84 real         1.59 user         0.17 sys
+           606306304  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               39018  page reclaims
+                  85  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 408  voluntary context switches
+                 346  involuntary context switches
+         21792871555  instructions retired
+          7457275977  cycles elapsed
+           548488152  peak memory footprint
+EXIT=42
+ended 2026-08-27T13:30:55Z

@@ -1,0 +1,8 @@
+Checking LJ-1-753.Probe753 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda:219.55-56: error: [UnequalTerms]
+(Σ S (λ x → x ∈ᶜ (λ x₁ → x₁ ∈ˢ Lset lam))) !=<
+(Cubical.HITs.CumulativeHierarchy.Base.V ℓ)
+when checking that the expression c has type S
+real 10.99
+user 10.58
+sys 0.31

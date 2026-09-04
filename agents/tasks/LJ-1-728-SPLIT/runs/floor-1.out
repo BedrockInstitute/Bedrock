@@ -1,0 +1,27 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-08-28T16:09:08Z
+Checking LJ-1-728-SPLIT.runs.FLOOR728SPLIT (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT/agents/tasks/LJ-1-728-SPLIT/runs/FLOOR728SPLIT.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-728-SPLIT/agents/tasks/LJ-1-641/Probe641.agda).
+time: command terminated abnormally
+        4.04 real         3.80 user         0.20 sys
+           810647552  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               51190  page reclaims
+                  43  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 161  voluntary context switches
+                 572  involuntary context switches
+         52946778716  instructions retired
+         16381665897  cycles elapsed
+           750208104  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-28T16:09:12Z

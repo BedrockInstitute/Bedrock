@@ -1,0 +1,27 @@
+# Maintainer batch 20260829-165154. NO ROWS, NO QUEUE ENTRIES.
+#
+# Third batch prompt in three minutes (AD15's park-edge trigger fires per new
+# park; the transfer family is cycling park -> capacity-reopen -> re-dispatch
+# -> park as the three glm seats turn over). Content identical in substance to
+# 20260829-165112.toml.scope (scope-refused, item 29): the maintainer's own
+# uncommitted repair files keep tripping maintainer_scope_ok().
+#
+# SIX PARKS AT WRITE TIME, zero rows:
+#
+# LJ-1.704 (no-match): fix-pass shell; awaits pod-math's dependency tree
+# (726/727-SPLIT results). No row.
+#
+# LJ-1.715-SPLIT-SPLIT (heap-wall, delivered third gen): the 8g close is
+# MEASURED on its own scene (exit 0, 220.94 s at -M8g, 21:0x local). Its
+# disposition awaits pod-math (unshelve/re-queue at 8g is viable under the 9g
+# backstop). No row.
+#
+# LJ-1.724 / LJ-1.725 / LJ-1.727 / LJ-1.728 / LJ-1.728-SPLIT / LJ-1.740
+# / LJ-1.740-SPLIT / LJ-1.742 / LJ-1.742-SPLIT / LJ-1.746 / LJ-1.746-SPLIT
+# (transfer-park shells and capacity launch parks): each shell awaits its split
+# successor's result, then pod-math's staged shelving; each capacity park
+# reopens automatically when a glm seat frees. No row.
+#
+# THE EPISODE HOLDS: counted 15 >= parked_max, windows 0 (progress resets it),
+# no latch, pod-math prompted. The count falls as the splits close and staged
+# shelving lands.

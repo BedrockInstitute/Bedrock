@@ -39,6 +39,31 @@ MAX_FAST=${KEEPER_MAX_FAST:-3}       # this many and we stop guessing and ask fo
 BACKOFF=${KEEPER_BACKOFF:-5}         # seconds, doubled per fast failure, capped
 BACKOFF_MAX=${KEEPER_BACKOFF_MAX:-300}
 
+# lockfree: can THIS process take .pod-state/run.lock right now? 0 free, 1 held by
+# another runner, 2 cannot even open the file (unwritable state dir). MEASURED
+# 2026-08-31 16:25: the maintainer restarted the loop by hand during a keeper gap;
+# the keeper's own attempt then exited 4 (lock held) and the keeper quit, leaving the
+# one live loop unsupervised -- when it died nobody restarted it. Exit 4 has two
+# causes and only one is a defect: a lock held by a healthy runner is a WAIT, not a
+# repair. The probe acquires and releases the lock; a probe that takes it never
+# ticks (pod.py checks the lock before any tick), so the probe cannot dispatch.
+lockfree() {
+    "$PY" - <<'PYEOF'
+import fcntl, os, sys
+path = os.path.join(os.environ.get('KEEPER_ROOT', '.'), '.pod-state', 'run.lock')
+try:
+    fh = open(path, 'a+')
+except OSError:
+    sys.exit(2)
+try:
+    fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+except OSError:
+    sys.exit(1)
+sys.exit(0)
+PYEOF
+}
+export KEEPER_ROOT="$ROOT"
+
 # Tell the maintainer, and NEVER the owner first: owner's ruling, 2026-08-18. The prompt
 # queues if the head is busy and is read when its current tool call ends (C-61).
 #
@@ -122,13 +147,25 @@ while :; do
         0)  printf 'keeper: the loop exited on a signal. Nothing to restart.\n'
             exit 0 ;;
         3)  # EXIT 3 IS THREE DIFFERENT DECISIONS AND THIS MESSAGE USED TO NAME ONLY ONE.
-            # `.pod-state/STOPPED` has three writers: rule (d) at three parked tasks
-            # (pod.py:2629), a matched table row whose action is `stop_loop` (pod.py:2386),
+            # `.pod-state/STOPPED` has three writers: rule (d) at the parked_max count
+            # (pod.py:2629; the live number lives in dev/pod/heads.toml), a matched table row whose action is `stop_loop` (pod.py:2386),
             # and the owner's own `pod stop` (pod.py:3088). Naming rule (d) for all three
             # sent the maintainer to look for parked tasks after a `stop_loop` row fired.
-            tell "the pod STOPPED (exit 3) after $ran s. That is a DECISION, not a crash, and it has three possible authors: rule (d) at three parked tasks, a table row whose action is stop_loop, or the owner's own \`pod stop\`. Read the newest LOOP_STOPPED line in dev/pod/transitions/ for the reason before you do anything. To continue: .venv/bin/python scripts/pod/pod.py resume"
+            tell "the pod STOPPED (exit 3) after $ran s. That is a DECISION, not a crash, and it has three possible authors: rule (d) at the parked_max count of parked tasks, a table row whose action is stop_loop, or the owner's own \`pod stop\`. Read the newest LOOP_STOPPED line in dev/pod/transitions/ for the reason before you do anything. To continue: .venv/bin/python scripts/pod/pod.py resume"
             exit 3 ;;
-        4)  tell "the loop REFUSED to start (exit 4) after $ran s. It never ticked. Read this pane for the reason, repair it, then touch .pod-state/keeper-retry"
+        4)  lkr=$(lockfree; echo $?)
+            if [ "$lkr" = 1 ]; then
+                # BENIGN RACE, NOT A DEFECT: another runner owns the loop. Waiting
+                # here keeps supervision alive -- the moment the other runner exits,
+                # this keeper takes the lock and supervises again. Hot-looping is
+                # avoided by the poll (15 s), not by quitting: quitting is what left
+                # the loop unsupervised on 2026-08-31.
+                tell "another loop instance holds run.lock. I wait for it to exit, then supervise again."
+                while ! lockfree; do sleep 15; done
+                tell "the other instance exited. Resuming supervision."
+                continue
+            fi
+            tell "the loop REFUSED to start (exit 4) after $ran s. It never ticked. Read this pane for the reason, repair it, then touch .pod-state/keeper-retry"
             exit 4 ;;
     esac
 

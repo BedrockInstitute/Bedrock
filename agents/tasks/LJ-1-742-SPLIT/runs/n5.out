@@ -1,0 +1,62 @@
+Checking LJ-1-742-SPLIT.Probe742Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:100.3-101.66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝒟ₒ-intro
+  union-spec
+when scope checking the declaration
+  open
+    .#L.Axioms.Basic-10760367051045672527 {ℓ}
+      using (LsetS; Lset-suc; pr∈Lset-suc; sgl∈Lset-suc; pair∈Lset-suc;
+             𝒟ₒ→isL; uniqueL; 𝒟ₒ-intro; union-spec; module UnionOf)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:122.3-134.35: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  memb
+  negRel
+  (did you mean
+     'eqRel' or
+     'memRel'?)
+  impRel
+  topRel
+  (did you mean
+     'atomRel' or
+     'propRel'?)
+when scope checking the declaration
+  open
+    .#L.Coding.Model-16741885588495375390 {ℓ}
+      using (prʟ; prAtL; prAtL-adequate; tagAtL; tagAtL-adequate;
+             tagPairAtL; tagPairAtL-adequate; arityTagAtL; arityTagAtL-adequate;
+             arityTagPairAtL; arityTagPairAtL-adequate; appAt; appAt-adequate;
+             sucAtL; sucAtL-adequate; consAtL; consAtL-adequate; subValAt;
+             subValAt-adequate; subValSuccAt; subValSuccAt-adequate; extAt;
+             domAt; inDomAt; svAt; valuesInAt; pairsInAt; envOverAt; envSetAt;
+             memb; interAt; unionAt; diffAt; sameAt; emptyAt; implAt; numL;
+             closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt;
+             succSndAt; tmValAt; binClauseAt; unClauseAt; propClauseAt;
+             quantRel; atomRel; bndRel; negRel; impRel; topRel)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:147.39-89: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  satGraphAt
+when scope checking the declaration
+  open
+    .#L.Coding.Powerset-2231052588811239397 {ℓ} lem
+      using (DefBody; isCodeAt; satGraphAt; DefinesAt)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:744.97-99: error: [UnequalTerms]
+(fst z) !=
+(V.sett
+ (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+  (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+   ⁅ fst (lookup (suc x) (z ∷ δ)) ⁆s
+   ⁅ fst (lookup (suc x) (z ∷ δ)) , fst (lookup (suc y) (z ∷ δ)) ⁆))
+ (Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+  (Cubical.HITs.CumulativeHierarchy.Constructions.PairingSet.PairingStructure
+   ⁅ fst (lookup (suc x) (z ∷ δ)) ⁆s
+   ⁅ fst (lookup (suc x) (z ∷ δ)) , fst (lookup (suc y) (z ∷ δ)) ⁆)))
+of type (V ℓ)
+when checking that the expression z∈ has type
+⟨
+pr (fst (lookup (suc x) (z ∷ δ))) (fst (lookup (suc y) (z ∷ δ))) ∈
+fst (lookup f δ)
+⟩

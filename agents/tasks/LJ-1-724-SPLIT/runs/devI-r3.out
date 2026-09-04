@@ -1,0 +1,26 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 90s (perl alarm)
+started 2026-08-28T16:41:56Z
+Checking LJ-1-724-SPLIT.runs.devI (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-724-SPLIT/agents/tasks/LJ-1-724-SPLIT/runs/devI.agda).
+time: command terminated abnormally
+       19.23 real        18.99 user         0.25 sys
+          2029355008  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              125944  page reclaims
+                  12  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   1  voluntary context switches
+                2180  involuntary context switches
+        253054188639  instructions retired
+         75647116042  cycles elapsed
+          1971062752  peak memory footprint
+time: signal: Invalid argument
+EXIT=1
+ended 2026-08-28T16:42:16Z

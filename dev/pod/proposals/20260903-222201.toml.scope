@@ -1,0 +1,42 @@
+# Maintainer batch 20260903-222201. NO ROWS, NO QUEUE ENTRIES.
+#
+# Fifteen parks examined. One movement since batch 20260903-123020:
+# LJ-1.769-SPLIT completed its att=1 delivery and parked through its own
+# brief's transfer-park branch (seq 6192; the acceptance arm records
+# exit_code 0, error_class None, the probe clean). The delivery closes the
+# census 769 deferred; the 769 line has now delivered across two
+# generations (769 at seq 6165, 769-SPLIT tonight). Its own successor
+# LJ-1.769-SPLIT-SPLIT is queued (dev/pod/queue.toml) and holds the
+# continuation.
+#
+# A program note: the coder lane cap rose to two glm-5.3-flash this evening
+# (owner's directive, dev/pod/heads.toml:560, `max_concurrency = 2`,
+# reload live at 21:32). The next dispatches may run two wide coders in
+# parallel; nothing on this list changes its verdict for that reason.
+#
+# PER-TASK VERDICTS (carried from 123020, restated for this file's record).
+#
+# LJ-1.765-SPLIT / LJ-1.769 / LJ-1.769-SPLIT (transfer-park, exit 0, 6/37/33
+# files, own): each shell's own brief parks it with the census deferred to a
+# successor or continuation. The 765 line is fully shelved at its head; the
+# 769 line delivered across two generations and its continuation is queued.
+# The shelving judgement is the mathematician's AD3 call, now exercised on
+# fourteen shells of these families. Rows from me would double-track that
+# process. No row.
+#
+# LJ-1.740-SPLIT / LJ-1.742-SPLIT-SPLIT-SPLIT / LJ-1.753-SPLIT-SPLIT
+# (no-change, 0 files): capacity and queue parks whose instances returned
+# without touching the tree. The six facts name no verdict
+# (obligations_delta None, error_class None). A verdict from me would be
+# invented, not measured. No row.
+#
+# LJ-1.755 ... LJ-1.763 (nine tasks, no-change, 0 files): new-family queue
+# tasks whose first instances produced nothing; the mathematician owns their
+# verdicts. No row.
+#
+# THE SHADOWING LIST is empty this window.
+#
+# THE EXPIRY FALLOUT lists re-falls of long-closed LJ-1.39x-1.42x records to
+# system rows and NO MATCH. Those tasks are DONE; expiry re-routes records,
+# it does not reopen tasks. A proposal row keyed to a DONE task would move
+# live records and breach R3. No row.

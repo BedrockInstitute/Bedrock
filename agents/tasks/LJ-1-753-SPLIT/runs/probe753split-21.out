@@ -1,0 +1,37 @@
+Checking LJ-1-753-SPLIT.Probe753Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:199.10-15: error: [WrongNamedArgument]
+Function does not accept argument {m = _} (possible arguments: n)
+when checking that
+{m =
+ suc
+ (suc
+  (suc
+   (suc
+    (suc
+     (suc
+      (suc
+       (suc
+        (suc
+         (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))))))))}
+(suc (suc zero)) (suc zero) zero are valid arguments to a function
+of type
+{n = n₁ : ℕ} → Fin n₁ → Fin n₁ → Fin n₁ → Formula W3.B.CS.S n₁
+       11.83 real        11.49 user         0.27 sys
+           882343936  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               55608  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 395  voluntary context switches
+                1889  involuntary context switches
+        173760583212  instructions retired
+         46336028425  cycles elapsed
+           822346904  peak memory footprint
+rc=42

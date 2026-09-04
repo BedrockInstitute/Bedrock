@@ -1,0 +1,49 @@
+# Maintainer batch 20260828-032459. NO ROWS, NO QUEUE ENTRIES.
+#
+# The 03:25 stop (seq 4997, "5 parked") is the rules working, not a defect:
+# all five counted parks are judgment/resource shapes, none is a capacity ghost,
+# none is laundered evidence. Every one of the five needs a mathematician ruling
+# (AD3) or an owner word before the count can honestly drop, and rule (d) now
+# sits in front of rule (f), so a resume before those rulings would re-stop on
+# its first tick. Sequence that works: pod-math rules first (its pane is alive;
+# queue entries and shelves are file writes that need no ticks), THEN one owner
+# resume. Both owner-words: ask me to relay the five-case summary to pod-math,
+# or rule them yourself.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.715 (heap wall, delta -1, heavy): the term DELIVERED, then the frame
+# walled. Playbook already ran once: LJ-1.715-SPLIT was pod-math's successor,
+# and it DELIVERED AGAIN (delta -1, open 0) and walled AGAIN (exit 251, heavy)
+# at seq 4995. Two generations, two walls at -M4g: the frame, not the split
+# depth, is the cost (pod-math's own item-26 measurement said as much on
+# LJ-1.534). Next move is theirs: superheavy tier, a third split, or accept the
+# two delivered terms as the record and shelve the shells. No row from me.
+#
+# LJ-1.715-SPLIT: same verdict as above, its own rows fired correctly
+# (task-lj-1-715-split-heap-wall-park, seq 4995). No row from me.
+#
+# LJ-1.717 + LJ-1.720 (no-match): the hypothesis-broker and no-verdict shapes,
+# backlog item 42, unchanged since batch 20260828-024750. The table edits since
+# (715-SPLIT admissions) re-accepted each exactly once -- seq 4983, 4981 -- and
+# both re-measured to the same shape and re-parked. Cure is a pod-math branch
+# (template fix going forward) or successor queue entries carrying their
+# hypotheses forward; item 25 measured that a brief amendment alone admits
+# nothing. No row from me.
+#
+# LJ-1.713 (no-match, att=1): THIRD shape for item 42. Its lint fix pass did
+# what the wrapper asked (survey now passes, conjunct 6 held, exit 0, one owned
+# report edit), and the obligation it was originally dispatched for is STILL
+# open (delta 0, open 1). The brief has a branch for "fix the report" and for
+# "close the term", but none for "fix pass done, the real work is still owed,
+# re-attempt it" -- so the honest return no-matches. Cure = a re-attempt
+# (continue) branch from pod-math, or a successor task. No row from me.
+#
+# SHELVED tasks ask for nothing. NO-MATCH window lists the re-accepts above.
+# SHADOW LIST: system rows losing to task rows is AD8 working. EXPIRY FALLOUT:
+# settled records only.
+#
+# Also in flight, unaffected by the stop: LJ-1.714 RUNNING (its lint fix pass,
+# att=1). The stop never touches a running worker; its return is processed on
+# the first tick after resume, and tonight's R7/ownership guards will judge
+# only what that instance wrote.

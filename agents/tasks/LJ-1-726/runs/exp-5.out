@@ -1,0 +1,25 @@
+GHCRTS=[-A64m -I0 -M2g]
+Checking LJ-1-726.runs.exp (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/runs/exp.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/runs/exp.agda:48.17-23: error: [ConstructorPatternInWrongDatatype]
+_,_ is not a constructor of the datatype ∥_∥₁
+when checking that the pattern _ , t₁ has type
+⟨ (x₁ ∷ a ∷ p ∷ z ∷ []) AtF.⊨ s4 ⟩
+        7.09 real         6.65 user         0.31 sys
+           707870720  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               44895  page reclaims
+                  72  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 766  voluntary context switches
+                4985  involuntary context switches
+         83903315818  instructions retired
+         27096782712  cycles elapsed
+           648168480  peak memory footprint
+EXIT=42

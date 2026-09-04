@@ -1,0 +1,3 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T16:43:17Z
+Checking LJ-1-718.runs.D1 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-718/agents/tasks/LJ-1-718/runs/D1.agda).

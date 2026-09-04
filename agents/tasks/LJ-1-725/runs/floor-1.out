@@ -1,0 +1,53 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T09:50:37Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+ Checking LJ-1-698.Probe698 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-698/Probe698.agda).
+  Checking LJ-1-693.Probe693 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-693/Probe693.agda).
+   Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-520/Probe520.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:53.3-53: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  _⊨_
+when scope checking the declaration
+  open
+    .#L.Axioms.Separation-14735420822226152554 {ℓ} lem
+      using (mkBoundedFo; Below′; module AtStage; _⊨_)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:130.19-135.70: error: [NoParseForApplication]
+Could not parse the application
+⟨ fst u ∈ γ ⟩ × Σ[ z ∈ S ]
+(⟨ fst z ∈ Lset γ ⟩ ×
+ (w ≡ pr (fst u) (fst z) × Σ[ W ∈ S ]
+  ((fst W ≡ w) × ⟨ (z ∷ u ∷ W ∷ []) ⊨ relativize (LsetS γ oγ)
+   (LsetGraphAt zero (suc zero)) ⟩)))
+Operators used in the grammar:
+  ×      (infixr operator, level 5) [_×_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Data/Sigma/Base.agda:22.1-4)]              
+  ∈      (infix operator, level 5)  [_∈_ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/HITs/CumulativeHierarchy/Base.agda:31.1-4)]
+  Σ[_∈_] (prefix notation, level 2) [Σ-syntax (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Core/Primitives.agda:205.1-9)]        
+  ⟨_⟩    (closed operator)          [⟨_⟩ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Foundations/Structure.agda:43.1-4)]        
+when scope checking
+⟨ fst u ∈ γ ⟩ × Σ[ z ∈ S ]
+(⟨ fst z ∈ Lset γ ⟩ ×
+ (w ≡ pr (fst u) (fst z) × Σ[ W ∈ S ]
+  ((fst W ≡ w) × ⟨ (z ∷ u ∷ W ∷ []) ⊨ relativize (LsetS γ oγ)
+   (LsetGraphAt zero (suc zero)) ⟩)))
+       25.79 real        24.75 user         0.65 sys
+           805781504  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               46837  page reclaims
+                4441  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 569  voluntary context switches
+               15447  involuntary context switches
+        299846868297  instructions retired
+        103009333692  cycles elapsed
+           744965224  peak memory footprint
+EXIT=42
+ended 2026-08-28T09:51:02Z

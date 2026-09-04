@@ -1,0 +1,37 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-28T14:17:47Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:274.22-275.71: error: [UnequalTerms]
+fst (L.Hierarchy.hierAt lem γ hγ oγ .fst) !=
+AtStage.carve (Carved.σ γ oγ hγ) (Carved.oσ γ oγ hγ)
+(FOL.Manipulation.Bounding.Relabel.liftFo (λ r → fst r)
+ ⟪ Lset (Carved.σ γ oγ hγ) ⟫↪
+ (AtStage.Below (Carved.σ γ oγ hγ) (Carved.oσ γ oγ hγ))
+ (λ c p → ∈-asFiber p .fst) (λ c p → ∈-asFiber p .snd)
+ (Carved.φᵣ γ oγ hγ) (Carved.hφ γ oγ hγ))
+of type V ℓ
+when checking that the expression
+carved-into-hierL-from sr γ oγ hγ x
+(∈∈ₛ {a = x} {b = At.carved γ oγ hγ} .snd x∈ₛ)
+has type ⟨ x ∈ Carved.carved γ oγ hγ ⟩
+      383.12 real       380.14 user         1.83 sys
+          1088946176  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               68553  page reclaims
+                   9  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 124  voluntary context switches
+              200135  involuntary context switches
+       4314952998374  instructions retired
+       1480505574668  cycles elapsed
+          1028998464  peak memory footprint
+EXIT=42
+ended 2026-08-28T14:24:11Z

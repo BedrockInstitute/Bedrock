@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.715"
+claim = "proven-futile"
+reason = "Situation 2. No task closed GO on bound2-in-limit in live src/. What settles THIS route is a different task's measurement: LJ-1.715-SPLIT transcribed the 33-line landing into L.Ordinal.lagda.md and proved, by a controlled pair, that Everything at heavy -M4g and one Agda process dies at L.Condensation with those lines and closes without them. Retrying LJ-1.715 is the same landing in the same master at the same cap. The term itself is not false: the isolated master checks in 0.82 s. The route that edits L.Ordinal.lagda.md and closes via Everything cannot succeed at this cap. LJ-1.715-SPLIT-SPLIT is the other route, a sibling module, and is not this shelve."
+evidence = [
+  "agents/tasks/LJ-1-715-SPLIT/review-of-bound2-in-limit.md:25",
+  "agents/tasks/LJ-1-715-SPLIT/review-of-bound2-in-limit.md:26",
+  "agents/tasks/LJ-1-715-SPLIT/runs/everything-floor.out:56",
+  "agents/tasks/LJ-1-715/runs/accept-1.out:16",
+  "src/L/Ordinal.lagda.md:185",
+]
+reopen = "Reopen if the owner raises the Everything cap above 4 GB, or if LJ-1.715-SPLIT-SPLIT's hole from L.Ordinal.Limit fails and a later proof shows the lemma must sit in L.Ordinal.lagda.md under a cap that has been measured to close. Not try the same 33 lines again."
+by = "mathematician"

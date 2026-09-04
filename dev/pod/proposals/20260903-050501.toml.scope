@@ -1,0 +1,43 @@
+# Maintainer batch 20260903-050501. NO ROWS, NO QUEUE ENTRIES.
+#
+# Seventeen parks examined. Two movements since batch 20260903-032031.
+#
+# MOVEMENT ONE: LJ-1.767 left the park list -- the mathematician shelved it
+# (`delivered-elsewhere`, seq 6113, now on the shelf list above). SHELVED
+# 36. The consumption continues at the pace the per-case evidence allows.
+#
+# MOVEMENT TWO: LJ-1.767-SPLIT ran and completed. Its return is pid-dead
+# with exit 0 (seq 6115; the acceptance arm is clean), 35 changed files
+# (31 own -- Probe767S and its runs), and its own brief's transfer-park
+# branch parked it (seq 6118). The delivery closes the census 767 deferred;
+# the split generation of the 767 line has now itself delivered. The staged
+# pattern is fully self-consistent: every park on this list is a shell
+# whose successor delivered, or an empty instance awaiting the
+# mathematician's verdict.
+#
+# PER-TASK VERDICTS (carried from 032031, restated for this file's record).
+#
+# LJ-1.765 / LJ-1.765-SPLIT / LJ-1.767-SPLIT (transfer-park, exit 0, 25/6/35
+# files, own): each shell's own brief parks it with the census deferred to a
+# successor or continuation. The 765 line delivered across three
+# generations (continuation 766 shelved); the 767 line delivered across two
+# (767 shelved tonight). The shelving judgement is the mathematician's AD3
+# call, now exercised on eleven shells of these families. Rows from me
+# would double-track that process. No row.
+#
+# LJ-1.728-SPLIT-SPLIT / LJ-1.740-SPLIT / LJ-1.742-SPLIT-SPLIT-SPLIT
+# / LJ-1.753-SPLIT-SPLIT / LJ-1.765-SPLIT-SPLIT (no-change, 0 files):
+# capacity and queue parks whose instances returned without touching the
+# tree. The six facts name no verdict (obligations_delta None, error_class
+# None). A verdict from me would be invented, not measured. No row.
+#
+# LJ-1.755 ... LJ-1.763 (nine tasks, no-change, 0 files): new-family queue
+# tasks whose first instances produced nothing; the mathematician owns their
+# verdicts. No row.
+#
+# THE SHADOWING LIST is empty this window.
+#
+# THE EXPIRY FALLOUT lists re-falls of long-closed LJ-1.39x-1.42x records to
+# system rows and NO MATCH. Those tasks are DONE; expiry re-routes records,
+# it does not reopen tasks. A proposal row keyed to a DONE task would move
+# live records and breach R3. No row.

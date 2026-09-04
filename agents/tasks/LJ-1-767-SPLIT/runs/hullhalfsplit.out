@@ -1,0 +1,23 @@
+GHCRTS=[-A64m -I0 -M4g]
+started 2026-09-02T19:31:49Z
+Checking LJ-1-767-SPLIT.runs.HullHalfSplit (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-767-SPLIT/agents/tasks/LJ-1-767-SPLIT/runs/HullHalfSplit.agda).
+      206.54 real       205.83 user         0.71 sys
+          1771880448  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              110207  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   1  signals received
+                   1  voluntary context switches
+               27996  involuntary context switches
+            15437683  instructions retired
+             5867394  cycles elapsed
+             1179960  peak memory footprint
+EXIT=0
+ended 2026-09-02T19:35:15Z

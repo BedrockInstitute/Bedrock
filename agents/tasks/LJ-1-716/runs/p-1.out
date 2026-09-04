@@ -1,0 +1,35 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:11:51Z
+Checking LJ-1-716.Probe716 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-667/Probe667.agda).
+  Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-667/runs/W3.agda).
+   Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-520/Probe520.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:98.10-37: error: [NoParseForApplication]
+Could not parse the application Σ[ c ∈ CS.S ] ⟨ fst c ∈ ∅ ⟩
+Operators used in the grammar:
+  Σ[_∈_] (prefix notation, level 2) [Σ-syntax (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Core/Primitives.agda:205.1-9)]
+  ⟨_⟩    (closed operator)          [⟨_⟩ (/opt/homebrew/Cellar/agda/2.8.0-r3/share/agda/cubical/Cubical/Foundations/Structure.agda:43.1-4)]
+when scope checking Σ[ c ∈ CS.S ] ⟨ fst c ∈ ∅ ⟩
+       16.32 real        15.06 user         0.39 sys
+          1791508480  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              107012  page reclaims
+                4431  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 791  voluntary context switches
+                3742  involuntary context switches
+        247711936718  instructions retired
+         66176190793  cycles elapsed
+          1731086136  peak memory footprint
+EXIT=42
+ended 2026-08-27T15:12:07Z

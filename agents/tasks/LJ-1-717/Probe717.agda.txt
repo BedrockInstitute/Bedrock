@@ -1,0 +1,214 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- VERIFICATION STATUS, 2026-08-27.  This term is COMPLETE but its
+-- elaboration exceeds the wide caliber's heap cap.  The measured
+-- records: agents/tasks/LJ-1-717/runs/p-5.out (this exact shape,
+-- 221.51 s, 2.62 GB, heap exhausted, EXIT=251), stage7.out, stage8.out
+-- (the bridge alone, 198.20 s, 2.55 GB), against the green partials
+-- floor-2.out (7.86 s, 1.43 GB), stage1.out (32.96 s, 1.79 GB),
+-- stage4.out (80.79 s, 1.72 GB).  Five shapes were built and tested
+-- under the same cap; every shape containing the amb->atL bridge
+-- walls.  Delivered as .agda.txt per the brief's naming rule, because
+-- it cannot typecheck at the pane caliber.  A heavier caliber, or a
+-- smaller satisfaction normal form, reopens it.
+
+
+-- [LJ-1.717] PROBE.  Completeness from the AMBIENT reading at the
+-- table, as a hypothesis.  Lands nothing in src/.
+--
+--   THE OBLIGATION  completeness-from-ambient.  [LJ-1.700] stopped
+--                   because SameHyp and HierInStage fire at the packed
+--                   codes and do not reach BoundInStage.  This file
+--                   names the missing input: the ambient 3-slot reading
+--                   of matrix₃ at (Lset δ, δ, hierL δ), as a hypothesis
+--                   type.  SameAsGraph is NOT used anywhere here.
+--   W3              whether ambient matrix₃ at a stage triple packs to
+--                   BoundInStage at the codes, or the ≐ pins demand a
+--                   code val does not invert.  Answered by the term:
+--                   the pins never read a code backwards.  The value
+--                   slot is witnessed BY Lset (fst (val cp)) itself, so
+--                   the value pin closes by sym eq and the parameter
+--                   pin by refl; only the tiny membership motive is
+--                   transported.
+--
+-- SHAPE NOTE (heap-wall ruling, 2026-08-23).  The first shape carried
+-- the transport as a where-clause whose motive restated the ambient
+-- satisfaction under a binder; it walled at 337 s / 2.4 GB (runs/p-2.out,
+-- runs/stage2.out, runs/stage3.out).  This shape splits every helper
+-- into a top-level lemma and reduces the satisfaction normal forms held
+-- at once.  Run records in runs/.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide
+-- caliber, set on the pane by the program and untouched here.
+-- Nothing is postulated.  No hole.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-717.Probe717 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
+open import FOL.Manipulation.Relabelling using ( embed; mapFo; mapFo-comp )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset→isL )
+open import L.Hierarchy {ℓ} lem using ( hierL )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import Cubical.Data.Vec using ( map; _∷_; [] )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁; ∣_∣₁ )
+import Cubical.Data.Empty as Empty
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+open import LJ-1-679.Probe679 {ℓ} lem as P679
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+-- CS comes from Probe679, which declares `module CS = hPropStructure 𝒮ʟ`
+-- publicly (Probe679.agda:38); redeclaring it here shadows and fails.
+open FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ using ( _^_ )
+
+module Spend (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  module A = P679.At lam ordλ succλ X X⊆Lλ ∅∈λ elem
+  open A using ( Completeness; HierInStage; BoundInStage; inBound; Code; val )
+  module F = P652.Frame652 lam ordλ succλ X X⊆Lλ ∅∈λ
+  module Cy = F.Carry elem
+
+  -- ===================================================================
+  -- THE PACKING, AS LEMMAS WITH EXPLICIT CODOMAINS.  Probe700's,
+  -- restated per the brief: the [LJ-1.700] review named the `_`
+  -- codomain of hier-at-code as the likeliest wall
+  -- (review-of-LJ-1-700-1.md:150-153).  same-at-codes is NOT restated:
+  -- this route never reads SameAsGraph.
+  -- ===================================================================
+
+  toL : F.HS.ASt.SL → CS.S
+  toL x = fst x , Lset→isL lam ordλ (fst x) (snd x)
+
+  -- The table at the parameter code.  hierL lands in the class
+  -- carrier (src/L/Hierarchy.lagda.md:621-622, under
+  -- `open hPropStructure 𝒮ʟ` at :73), so fst of it is the stage the
+  -- membership statements read.
+  table : (cp : Code) (o : IsOrd (fst (val cp))) → S
+  table cp o = fst (hierL (fst (toL (val cp))) (snd (toL (val cp))) o)
+
+  -- EXPLICIT CODOMAIN.  HierInStage at the parameter code.
+  hier-at-code : HierInStage
+               → (cp : Code) (o : IsOrd (fst (val cp)))
+               → ⟨ table cp o ∈ˢ Lset lam ⟩
+  hier-at-code hier cp o =
+    hier (toL (val cp)) o (snd (val cp))
+
+  -- ===================================================================
+  -- THE MISSING INPUT OF [LJ-1.700], NAMED.  The ambient 3-slot
+  -- reading at (Lset δ, δ, the table): the brief's sketch
+  -- ⟨ (Lset δ ∷ δ ∷ hierL δ ∷ []) ⊨ₚ matrix₃ ⟩ over the telescope
+  -- HierInStage itself carries.
+  -- ===================================================================
+
+  AmbientAt-at-hier : Type (ℓ-suc ℓ)
+  AmbientAt-at-hier =
+    (δ : CS.S) (oδ : IsOrd (fst δ))
+    → ⟨ fst δ ∈ˢ Lset lam ⟩
+    → ⟨ ( Lset (fst δ) ∷ fst δ
+          ∷ fst (hierL (fst δ) (δ .snd) oδ) ∷ [] )
+        P652.⊨ₚ P667.matrix₃ ⟩
+
+  -- mapFo val sends matrix₃-Code to embed matrix₃: its only constants
+  -- come from slide, which is the absurd eliminator
+  -- (Probe673.agda:68-69), and compose with val to the eliminator
+  -- again.  atL is stated at embed φ, so this is the one path the
+  -- matrix conjunct needs.
+  val-matrix-embed :
+    mapFo val A.A.matrix₃-Code ≡ embed P667.matrix₃
+  val-matrix-embed =
+      mapFo-comp A.A.slide val P667.matrix₃
+    ∙ cong (λ h → mapFo h P667.matrix₃) (funExt (λ b → Empty.rec* b))
+
+  -- The value slot's carrier witness.  eq transports the VALUE code's
+  -- own membership onto the tower value, with the membership atom as
+  -- the motive: the smallest family the transport can travel in.
+  lset-val-mem :
+    (ca cp : Code)
+    (eq : fst (val ca) ≡ Lset (fst (val cp)))
+    → ⟨ Lset (fst (val cp)) ∈ˢ Lset lam ⟩
+  lset-val-mem ca cp eq =
+    subst (λ z → ⟨ z ∈ˢ Lset lam ⟩) eq (snd (val ca))
+
+  -- The three existential witnesses of BoundInStage, in the slot order
+  -- value / parameter / witness.  The value slot is the tower value
+  -- itself, NOT the code's image, so the ambient hypothesis applies
+  -- with no satisfaction-level transport anywhere.
+  wb wp wH : (ca cp : Code)
+    (eq : fst (val ca) ≡ Lset (fst (val cp)))
+    (hier : HierInStage) (ocp : IsOrd (fst (val cp)))
+    → F.HS.ASt.SL
+  wb ca cp eq hier ocp =
+    ( Lset (fst (val cp))
+    , lset-val-mem ca cp eq )
+  wp ca cp eq hier ocp =
+    (fst (val cp) , snd (val cp))
+  wH ca cp eq hier ocp =
+    (table cp ocp , hier-at-code hier cp ocp)
+
+  -- The matrix conjunct, STEP 1: atL read backwards at the witness
+  -- triple.  amb fires DIRECTLY: map fst of the triple reduces to amb's
+  -- own reading vector, so no ambient satisfaction is restated anywhere.
+  -- Ascribed at the embed side; step 2 moves the formula.
+  matrix-embed-at :
+    (amb : AmbientAt-at-hier) (hier : HierInStage)
+    (ca cp : Code) (eq : fst (val ca) ≡ Lset (fst (val cp)))
+    (ocp : IsOrd (fst (val cp)))
+    → ⟨ ( wb ca cp eq hier ocp ∷ wp ca cp eq hier ocp
+          ∷ wH ca cp eq hier ocp ∷ [] )
+        F.HS.ASt.AbsL.⊨ᵐ embed P667.matrix₃ ⟩
+  matrix-embed-at amb hier ca cp eq ocp =
+    subst ⟨_⟩ (sym (Cy.atL P667.Δ₀-matrix₃ triple))
+      (amb (toL (val cp)) ocp (snd (val cp)))
+    where
+    triple : F.HS.ASt.SL ^ 3
+    triple =
+      wb ca cp eq hier ocp ∷ wp ca cp eq hier ocp
+        ∷ wH ca cp eq hier ocp ∷ []
+
+  -- STEP 2: the formula transport, alone in its own definition so the
+  -- two big satisfaction normal forms are never alive together.
+  matrix-mapped-at :
+    (amb : AmbientAt-at-hier) (hier : HierInStage)
+    (ca cp : Code) (eq : fst (val ca) ≡ Lset (fst (val cp)))
+    (ocp : IsOrd (fst (val cp)))
+    → ⟨ ( wb ca cp eq hier ocp ∷ wp ca cp eq hier ocp
+          ∷ wH ca cp eq hier ocp ∷ [] )
+        F.HS.ASt.AbsL.⊨ᵐ mapFo val A.A.matrix₃-Code ⟩
+  matrix-mapped-at amb hier ca cp eq ocp =
+    subst (λ ψ → ⟨ ( wb ca cp eq hier ocp ∷ wp ca cp eq hier ocp
+                     ∷ wH ca cp eq hier ocp ∷ [] )
+                   F.HS.ASt.AbsL.⊨ᵐ ψ ⟩)
+          (sym val-matrix-embed)
+          (matrix-embed-at amb hier ca cp eq ocp)
+
+  -- ===================================================================
+  -- THE TERM.  BoundInStage ca cp = ⟨ [] AbsL.⊨ᵐ ∃̇ (mapFo val (inBound
+  -- ca cp)) ⟩ has three existentials: the outer one (BoundInStage's
+  -- own) takes the WITNESS, here the table; the inner two take the
+  -- parameter and the value.  The value pin closes by sym eq, the
+  -- parameter pin by refl.
+  -- ===================================================================
+
+  completeness-from-ambient :
+    AmbientAt-at-hier → HierInStage → Completeness
+  completeness-from-ambient amb hier ca cp ocp eq =
+    ∣ wH ca cp eq hier ocp
+    , ∣ wp ca cp eq hier ocp
+      , ∣ wb ca cp eq hier ocp
+        , ( matrix-mapped-at amb hier ca cp eq ocp
+          , ( sym eq , refl ) )
+        ∣₁ ∣₁ ∣₁

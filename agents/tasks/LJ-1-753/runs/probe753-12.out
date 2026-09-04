@@ -1,0 +1,30 @@
+Checking LJ-1-753.Probe753 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda:125.13-19: error: [UnequalTerms]
+Σ
+Cubical.HITs.CumulativeHierarchy.Properties.⟪
+Cubical.HITs.CumulativeHierarchy.Constructions.⁅ n 11 ,
+Cubical.HITs.CumulativeHierarchy.Constructions.⁅ n 11 ⁆s ⁆
+⟫
+(λ r →
+   Cubical.HITs.CumulativeHierarchy.Properties.⟪
+   Cubical.HITs.CumulativeHierarchy.Properties.⟪
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ n 11 ,
+   Cubical.HITs.CumulativeHierarchy.Constructions.⁅ n 11 ⁆s ⁆
+   ⟫↪
+   r
+   ⟫)
+!= Lift Empty.⊥ of type Type ℓ
+when checking that the expression isOrd₁ has type
+⟨
+(At673.I.O.Cy.TL.Ab.SM At673.I.O.Cy.TL.Ab.SemM.At.⊨ id)
+(zsl ∷ ysl ∷ wxs ∷ [])
+(FOL.Manipulation.Relabelling.mapFo val
+ (FOL.Manipulation.Relabelling.mapFo At673.slide
+  (FOL.Syntax.Formula.∀̇∈ (FOL.Syntax.Term.var (suc zero))
+   (FOL.Syntax.Formula.∀̇∈ (FOL.Syntax.Term.var zero)
+    (FOL.Syntax.Term.var zero FOL.Syntax.Formula.∈̇
+     FOL.Syntax.Term.var (suc (suc (suc zero))))))))
+⟩
+real 11.21
+user 10.82
+sys 0.32

@@ -1,0 +1,122 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.716] PROBE.  The ambient 3-slot matrix at the table.  D-10
+-- verdict: the target is FALSE, and this file carries the machine
+-- refutation beside the briefed type.  It runs in
+-- agents/tasks/LJ-1-716/ and lands nothing in src/.
+--
+--   THE OBLIGATION  ambient-at-hier.  P667.matrix₃ at
+--                   (Lset δ₀, δ₀, hierL δ₀) for EVERY constructible
+--                   ordinal δ₀.  Stated below with the designed hole:
+--                   the refutation at δ₀ = ∅ proves it uninhabitable.
+--   W3              whether graph + SameAsGraph + erase yield φ₃ at
+--                   (Lset δ, δ, hierL δ).  Answered NO: the 2-slot
+--                   graph and the 3-slot matrix remain distinct, and
+--                   the miss is the MATRIX's witness-slot content, not
+--                   the graph, not the erase, not isOrd-at-p.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide caliber,
+-- set on the pane by the program and untouched here.
+-- Nothing is postulated.  One designed hole, at ambient-at-hier.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-716.Probe716 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; ∃̇∈ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset )
+open import L.Ordinal {ℓ} using ( ∅-ord )
+open import V.Coding {ℓ} using ( pr )
+open import L.Axioms.Basic {ℓ} using ( ∅∈L )
+open import L.Hierarchy {ℓ} lem
+  using ( hierL; hierL-spec; Recorded; IsHier )
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; ∅-empty )
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+module CS = hPropStructure 𝒮ʟ
+
+-- =====================================================================
+-- THE BRIEFED TYPE, restated from Probe673.agda:108-109.  Unoccupied;
+-- the refutation below proves it uninhabitable at δ₀ = ∅.
+-- =====================================================================
+
+AmbientAt : (δ z : S) → Type (ℓ-suc ℓ)
+AmbientAt δ z = ⟨ (Lset δ ∷ δ ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+
+-- =====================================================================
+-- W2, THE INVERSION KIT.  Satisfaction is a structural recursion
+-- (src/FOL/Semantics.lagda.md:102-103), so the first bounded
+-- existential of the erased matrix surrenders a member of the witness
+-- slot by the truncation's own map, checked against the reduct.  A
+-- bound-term-generic lemma was tried first and the unifier blocked on
+-- the erased bound (runs/p-6.out); inlined at the formula, it checks.
+-- =====================================================================
+
+first-of-erased :
+  (a p z : S)
+  → ⟨ (a ∷ p ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩
+  → ∥ Σ[ x ∈ S ] ⟨ x ∈ˢ z ⟩ ∥₁
+first-of-erased a p z h = {!! floor !}
+
+-- =====================================================================
+-- THE TABLE IS EMPTY AT ∅.  Every member of fst (hierL ∅ …) dies: it
+-- lands in Recorded ∅ through the spec, and Recorded ∅ quantifies over
+-- members of ∅ (L.Hierarchy's Recorded, the ⋁ over c with fst c ∈ B).
+-- isL-trans is what lifts the ambient member into the constructible
+-- carrier the spec quantifies over.
+-- =====================================================================
+
+no-member-of-hierL∅ :
+  (h0 : ⟨ isL ∅ ⟩) (o0 : IsOrd ∅) (x : S)
+  → ⟨ x ∈ˢ fst (hierL ∅ h0 o0) ⟩ → Empty.⊥
+no-member-of-hierL∅ h0 o0 x x∈H =
+  PT.rec Empty.isProp⊥ kill (subst ⟨_⟩ (spec z) x∈H)
+  where
+  H : CS.S
+  H = hierL ∅ h0 o0
+  xL : ⟨ isL x ⟩
+  xL = isL-trans x∈H (H .snd)
+  z : CS.S
+  z = x , xL
+  spec : IsHier ∅ H
+  spec = hierL-spec ∅ h0 o0
+  kill : Σ[ c ∈ CS.S ]
+           (⟨ fst c ∈ ∅ ⟩ × (x ≡ pr (fst c) (Lset (fst c)))) → Empty.⊥
+  kill (c , c∈∅ , _) =
+    Empty.rec (∅-empty (fst c) (∈∈ₛ {a = fst c} {b = ∅} .fst c∈∅))
+
+-- =====================================================================
+-- THE REFUTATION, D-10.  matrix₃ at (Lset ∅, ∅, hierL ∅) is absurd:
+-- its φ₃ half opens with one bounded existential over the witness
+-- slot, and the table has no members.
+-- =====================================================================
+
+zero-refutes :
+  (h : AmbientAt ∅ (fst (hierL ∅ ∅∈L ∅-ord))) → Empty.⊥
+zero-refutes h = {!! floor !}
+
+-- =====================================================================
+-- THE OBLIGATION, WITH THE DESIGNED HOLE.  Uninhabitable: zero-refutes
+-- applied at δ := (∅ , ∅∈L) with oδ := ∅-ord turns any inhabitant into
+-- ⊥.  The corrected target stands beside it (D-10), unstated as a
+-- candidate for the next brief to price.
+-- =====================================================================
+
+ambient-at-hier : (δ : CS.S) (oδ : IsOrd (fst δ))
+  → AmbientAt (fst δ) (fst (hierL (fst δ) (δ .snd) oδ))
+ambient-at-hier δ oδ = {!! NO-GO — the target is false at δ₀ = ∅; see
+                          review-of-ambient-at-hier.md and zero-refutes above !}

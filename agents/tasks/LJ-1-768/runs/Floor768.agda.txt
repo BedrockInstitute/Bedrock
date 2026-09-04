@@ -1,0 +1,56 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.768] FLOOR INSTRUMENT.  This is Probe768 with the term's body
+-- a designed hole: everything the obligation elaborates besides the
+-- body stands above it (the imports, the Build telescope, the
+-- obligation's type).  Coder law, owner ruling 2026-08-23: on a heavy
+-- object, measure the floor before you prove.  The hole is DESIGNED;
+-- this file cannot typecheck and rests at .agda.txt, never .agda
+-- (naming rule).  A temporary same-stem .agda copy runs it and is
+-- deleted at once after its run.  Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-768.runs.Floor768 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+import LJ-1-768.runs.Frame768 {ℓ} lem as Frame
+import LJ-1-768.runs.GFC768 {ℓ} lem as GFC
+
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁; squash₁ )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( Completeness; module HS )
+
+  -- THE OBLIGATION'S TYPE, the brief's type verbatim: the pinned
+  -- Sigma of LsetGrounded (Probe652.agda:260-264) at matrix₃, with
+  -- Completeness a HYPOTHESIS and the soundness direction spelled.
+  lset-grounded-from-reading :
+    Completeness
+    → ((a p z : S)
+       → ⟨ (a ∷ p ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩ → IsOrd p → a ≡ Lset p)
+    → (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.M ⟩ → ⟨ Lset δ ∈ˢ HS.M ⟩
+    → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ HS.M ⟩ × ⟨ Lset δ ∈ˢ HS.M ⟩
+                  × ⟨ (Lset δ ∷ δ ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩) ∥₁
+  lset-grounded-from-reading comp sound δ ordδ δ∈M Lδ∈M = {!!}

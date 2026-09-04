@@ -1,0 +1,124 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.717] PROBE.  Completeness from the AMBIENT reading at the
+-- table, as a hypothesis.  Lands nothing in src/.
+--
+--   THE OBLIGATION  completeness-from-ambient.  [LJ-1.700] stopped
+--                   because SameHyp and HierInStage fire at the packed
+--                   codes and do not reach BoundInStage.  This file
+--                   names the missing input: the ambient 3-slot reading
+--                   of matrix₃ at (Lset δ, δ, hierL δ), as a hypothesis
+--                   type.  SameAsGraph is NOT used anywhere here.
+--   W3              whether ambient matrix₃ at a stage triple packs to
+--                   BoundInStage at the codes, or the ≐ pins demand a
+--                   code val does not invert.  Answered by the term:
+--                   the three existential witnesses are the codes' own
+--                   values and the table, so both pins close by refl.
+--
+-- ONE Agda process per run, GHCRTS="-A64m -I0 -M2g", the wide
+-- caliber, set on the pane by the program and untouched here.
+-- Nothing is postulated.  No hole.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-717.runs.stage1 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
+open import FOL.Manipulation.Relabelling using ( embed; mapFo; mapFo-comp )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset→isL )
+open import L.Hierarchy {ℓ} lem using ( hierL )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁; ∣_∣₁ )
+import Cubical.Data.Empty as Empty
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+open import LJ-1-679.Probe679 {ℓ} lem as P679
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+-- CS comes from Probe679, which declares `module CS = hPropStructure 𝒮ʟ`
+-- publicly (Probe679.agda:38); redeclaring it here shadows and fails.
+open FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ using ( _^_ )
+
+module Spend (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  module A = P679.At lam ordλ succλ X X⊆Lλ ∅∈λ elem
+  open A using ( Completeness; HierInStage; BoundInStage; inBound; Code; val )
+  module F = P652.Frame652 lam ordλ succλ X X⊆Lλ ∅∈λ
+  module Cy = F.Carry elem
+
+  -- ===================================================================
+  -- THE PACKING, AS LEMMAS WITH EXPLICIT CODOMAINS.  Probe700's,
+  -- restated per the brief: the [LJ-1.700] review named the `_`
+  -- codomain of hier-at-code as the likeliest wall
+  -- (review-of-LJ-1-700-1.md:150-153).  same-at-codes is NOT restated:
+  -- this route never reads SameAsGraph.
+  -- ===================================================================
+
+  toL : F.HS.ASt.SL → CS.S
+  toL x = fst x , Lset→isL lam ordλ (fst x) (snd x)
+
+  -- The table at the parameter code.  hierL lands in the class
+  -- carrier (src/L/Hierarchy.lagda.md:621-622, under
+  -- `open hPropStructure 𝒮ʟ` at :73), so fst of it is the stage the
+  -- membership statements read.
+  table : (cp : Code) (o : IsOrd (fst (val cp))) → S
+  table cp o = fst (hierL (fst (toL (val cp))) (snd (toL (val cp))) o)
+
+  -- EXPLICIT CODOMAIN.  HierInStage at the parameter code.
+  hier-at-code : HierInStage
+               → (cp : Code) (o : IsOrd (fst (val cp)))
+               → ⟨ table cp o ∈ˢ Lset lam ⟩
+  hier-at-code hier cp o =
+    hier (toL (val cp)) o (snd (val cp))
+
+  -- ===================================================================
+  -- THE MISSING INPUT OF [LJ-1.700], NAMED.  The ambient 3-slot
+  -- reading at (Lset δ, δ, the table): the brief's sketch
+  -- ⟨ (Lset δ ∷ δ ∷ hierL δ ∷ []) ⊨ₚ matrix₃ ⟩ over the telescope
+  -- HierInStage itself carries.
+  -- ===================================================================
+
+  AmbientAt-at-hier : Type (ℓ-suc ℓ)
+  AmbientAt-at-hier =
+    (δ : CS.S) (oδ : IsOrd (fst δ))
+    → ⟨ fst δ ∈ˢ Lset lam ⟩
+    → ⟨ ( Lset (fst δ) ∷ fst δ
+          ∷ fst (hierL (fst δ) (δ .snd) oδ) ∷ [] )
+        P652.⊨ₚ P667.matrix₃ ⟩
+
+  -- mapFo val sends matrix₃-Code to embed matrix₃: its only constants
+  -- come from slide, which is the absurd eliminator
+  -- (Probe673.agda:68-69), and compose with val to the eliminator
+  -- again.  atL is stated at embed φ, so this is the one path the
+  -- matrix conjunct needs.
+  val-matrix-embed :
+    mapFo val A.A.matrix₃-Code ≡ embed P667.matrix₃
+  val-matrix-embed =
+      mapFo-comp A.A.slide val P667.matrix₃
+    ∙ cong (λ h → mapFo h P667.matrix₃) (funExt (λ b → Empty.rec* b))
+
+  -- ===================================================================
+  -- THE TERM.  BoundInStage ca cp = ⟨ [] AbsL.⊨ᵐ ∃̇ (mapFo val (inBound
+  -- ca cp)) ⟩ has three existentials: the outer one (BoundInStage's
+  -- own) takes the WITNESS, here the table; the inner two take the
+  -- parameter and the value, here the codes' own values, so the two ≐
+  -- pins close by refl.  The matrix conjunct is atL read backwards,
+  -- with eq spending the value slot's code image.
+  -- ===================================================================
+
+  completeness-from-ambient :
+    AmbientAt-at-hier → HierInStage → Completeness
+  completeness-from-ambient amb hier = {!!}

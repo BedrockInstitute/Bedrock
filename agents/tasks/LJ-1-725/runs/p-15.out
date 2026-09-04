@@ -1,0 +1,52 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 900s (perl alarm)
+started 2026-08-28T13:53:42Z
+Checking LJ-1-725.Probe725 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-725/agents/tasks/LJ-1-725/Probe725.agda:148.24-27: error: [UnequalTerms]
+(Σ (FOL.ZFStructure.ZFStructure.S AbsL725.𝒮M)
+ (λ x →
+    ⟨
+    (AbsL725.𝒮M FOL.ZFStructure.ZFStructure.∈ˢ x)
+    (AbsL725.⟦ FOL.Syntax.con (γ , hγ) ⟧ᵐ e₀)
+    ⊓
+    ((x ∷ e₀) ⊨
+     relativize (LsetS γ oγ)
+     (L.Coding.Sequence.RecShape.PairGraphAt lem
+      (L.Coding.Sequence.StepAt lem) (suc zero) zero))
+    ⟩))
+!=<
+∥
+Σ (FOL.ZFStructure.ZFStructure.S AbsL725.𝒮M)
+(λ x →
+   ⟨
+   (AbsL725.𝒮M FOL.ZFStructure.ZFStructure.∈ˢ x)
+   (AbsL725.⟦ FOL.Syntax.con (γ , hγ) ⟧ᵐ e₀)
+   ⊓
+   ((x ∷ e₀) ⊨
+    relativize (LsetS γ oγ)
+    (L.Coding.Sequence.RecShape.PairGraphAt lem
+     (L.Coding.Sequence.StepAt lem) (suc zero) zero))
+   ⟩)
+∥₁
+of type (Type (ℓ-suc ℓ))
+when checking that the expression sat has type ∥ ⟨ e₀ ⊨ Cγ.φᵣ ⟩ ∥₁
+      358.32 real       357.16 user         1.15 sys
+          1088782336  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               68382  page reclaims
+                 170  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 268  voluntary context switches
+               51546  involuntary context switches
+       4294915144972  instructions retired
+       1446878671598  cycles elapsed
+          1028949312  peak memory footprint
+EXIT=42
+ended 2026-08-28T13:59:40Z

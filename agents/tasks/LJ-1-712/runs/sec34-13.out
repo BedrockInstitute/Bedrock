@@ -1,0 +1,38 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T14:10:44Z
+Checking LJ-1-712.Probe712 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda:220.46-59: error: [UnequalTerms]
+fst (numeralL 11) !=
+V.sett
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.X
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ # 10 ,
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ # 10 ⁆s ⁆))
+(Cubical.HITs.CumulativeHierarchy.Constructions.SetStructure.ix
+ (Cubical.HITs.CumulativeHierarchy.Constructions.UnionSet.UnionStructure
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ # 10 ,
+  Cubical.HITs.CumulativeHierarchy.Constructions.⁅ # 10 ⁆s ⁆))
+of type V ℓ
+when checking that the expression u ∅ ∅-ord ∅∈L has type
+⟨ (# 11) ∈ Lset (step 2 ∅) ⟩
+       10.52 real        10.34 user         0.17 sys
+           785727488  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               50048  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 931  involuntary context switches
+        141388074208  instructions retired
+         43500847430  cycles elapsed
+           725779560  peak memory footprint
+EXIT=42
+ended 2026-08-27T14:10:55Z

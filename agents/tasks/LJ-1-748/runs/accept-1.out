@@ -1,0 +1,25 @@
+# arm accept-1
+# task LJ-1.748
+# brief agents/tasks/LJ-1-748/LJ-1.748.md
+# flags (none)
+# GHCRTS -A64m -I0 -M2g
+# tier wide
+# agda slots during 3
+# load before (6.90087890625, 6.71826171875, 7.3134765625)
+# started 2026-08-29 11:50:06
+# conjunct 1 held
+# conjunct 2 held
+# conjunct 3 held
+# conjunct 4 held
+# conjunct 5 held
+# conjunct 6 held
+# run agents/tasks/LJ-1-748/Probe748.agda rc 0 seconds 1.2
+# changed files 8
+# changed files own 8 of 8
+# in-fence lines 0
+# obligations delta -1
+# wall seconds 1.2
+# error class None
+# exit 0
+
+{"agda_vacuous": false, "caliber": "-A64m -I0 -M2g", "changed_files_foreign": [], "changed_files_own": ["agents/tasks/LJ-1-748/Probe748.agda", "agents/tasks/LJ-1-748/lj-1.748-report.md", "agents/tasks/LJ-1-748/runs/floor-1.out", "agents/tasks/LJ-1-748/runs/floor-1.time", "agents/tasks/LJ-1-748/runs/green-1.out", "agents/tasks/LJ-1-748/runs/green-1.time", "agents/tasks/LJ-1-748/runs/green-2.out", "agents/tasks/LJ-1-748/runs/green-2.time"], "changed_files_refused": [], "changed_files_scene": ["agents/tasks/LJ-1-748/Probe748.agda", "agents/tasks/LJ-1-748/lj-1.748-report.md", "agents/tasks/LJ-1-748/runs/floor-1.out", "agents/tasks/LJ-1-748/runs/floor-1.time", "agents/tasks/LJ-1-748/runs/green-1.out", "agents/tasks/LJ-1-748/runs/green-1.time", "agents/tasks/LJ-1-748/runs/green-2.out", "agents/tasks/LJ-1-748/runs/green-2.time"], "concurrency": 3, "conjuncts": {"1": true, "2": true, "3": true, "4": true, "5": true, "6": true}, "error_names_all": [], "facts": {"changed_files": ["agents/tasks/LJ-1-748/Probe748.agda", "agents/tasks/LJ-1-748/lj-1.748-report.md", "agents/tasks/LJ-1-748/runs/floor-1.out", "agents/tasks/LJ-1-748/runs/floor-1.time", "agents/tasks/LJ-1-748/runs/green-1.out", "agents/tasks/LJ-1-748/runs/green-1.time", "agents/tasks/LJ-1-748/runs/green-2.out", "agents/tasks/LJ-1-748/runs/green-2.time"], "error_class": null, "exit_code": 0, "heap_wall": false, "lines": 0, "obligations_delta": -1, "obligations_open": 0, "seconds": 1.2}, "lint_detail": "", "obligations_probe_red": false, "runs_all": [{"rc": 0, "seconds": 1.2, "target": "agents/tasks/LJ-1-748/Probe748.agda"}], "spec_surface_detail": "", "task": "LJ-1.748", "tier": "wide", "unbound_vacuous": true, "verdict_files_refused": [], "witness_seconds": 1.18}

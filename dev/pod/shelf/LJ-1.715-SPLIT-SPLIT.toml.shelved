@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.715-SPLIT-SPLIT"
+claim = "proven-futile"
+reason = "Situation 2. No task closed GO on bound2-in-limit in live src/. What settles THIS route (new L.Ordinal.Limit master, import in Everything, close at heavy -M4g) is a different task's measurement: LJ-1.715-SPLIT. Its everything-floor run dies at L.Condensation at the same 4 GB cap. Retrying LJ-1.715-SPLIT-SPLIT is a fourth src/ landing of bound2-in-limit through a gate where a different task already measured HEAD Everything-cold walls. The term is not false: the isolated master checks, the probe closed (delta -1, open 0), and live src/ still has no lemma. A30 does not use this task's own pristine-HEAD runs as the proof."
+evidence = [
+  "agents/tasks/LJ-1-715-SPLIT/runs/everything-floor.out:56",
+  "agents/tasks/LJ-1-715-SPLIT-SPLIT/LJ-1.715-SPLIT-SPLIT.md:20",
+  "agents/tasks/LJ-1-715-SPLIT-SPLIT/runs/accept-1.out:10",
+  "agents/tasks/LJ-1-715-SPLIT-SPLIT/lj-1.715-SPLIT-SPLIT-report.md:34",
+  "src/L/Ordinal.lagda.md:185",
+]
+reopen = "Reopen if the owner raises the Everything cap above 4 GB, or if HEAD Everything-cold at the heavy cap starts to close. Not a fourth src/ landing of bound2-in-limit."
+by = "mathematician"

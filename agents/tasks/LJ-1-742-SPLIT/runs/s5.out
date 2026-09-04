@@ -1,0 +1,41 @@
+Checking LJ-1-742-SPLIT.Probe742Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:99.3-100.66: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  𝒟ₒ-intro
+  union-spec
+when scope checking the declaration
+  open
+    .#L.Axioms.Basic-17774674555833355489 {ℓ}
+      using (LsetS; Lset-suc; pr∈Lset-suc; sgl∈Lset-suc; pair∈Lset-suc;
+             𝒟ₒ→isL; uniqueL; 𝒟ₒ-intro; union-spec; module UnionOf)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:121.3-131.42: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  memb
+when scope checking the declaration
+  open
+    .#L.Coding.Model-15518578315326569460 {ℓ}
+      using (prAtL; prAtL-adequate; tagAtL; tagAtL-adequate; tagPairAtL;
+             tagPairAtL-adequate; arityTagAtL; arityTagAtL-adequate;
+             arityTagPairAtL; arityTagPairAtL-adequate; appAt; appAt-adequate;
+             sucAtL; sucAtL-adequate; consAtL; consAtL-adequate; subValAt;
+             subValAt-adequate; subValSuccAt; subValSuccAt-adequate; extAt;
+             domAt; inDomAt; svAt; valuesInAt; pairsInAt; envOverAt; envSetAt;
+             memb; interAt; unionAt; diffAt; sameAt; emptyAt; implAt; closedAt;
+             binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt;
+             tmValAt)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:647.42-46: error: [NotInScope]
+Not in scope:
+  cons
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-742-SPLIT/agents/tasks/LJ-1-742-SPLIT/Probe742Split.agda:647.42-46
+    (did you mean
+       '.#L.Coding.Environment-14034540592188401673.cons' or
+       '.#L.Coding.Sat-9163263758431023968.cond' or
+       'Base.Prelude.cong' or
+       'FOL.Syntax.Term.con' or
+       'FOL.Syntax.con' or
+       'Term.con' or
+       'con' or
+       'cong'?)
+when scope checking cons

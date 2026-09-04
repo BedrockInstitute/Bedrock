@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.724"
+claim = "proven-futile"
+reason = "Situation 2. No task closed GO on table-sat. What settles THIS route (table-sat as 724 stated, no extra height) is a different task: LJ-1.724-SPLIT. Its obligation is the first scoped repair, ω ∈ γ and sucV (sucV x) ∈ γ, and the critic upheld NO-GO: table-sat is false at that scope too. Retrying 724 is the unscoped statement whose first repair is already closed. The live continuation is closedω, which 737 took. Not retry table-sat as 724 stated."
+evidence = [
+  "agents/tasks/LJ-1-724-SPLIT/lj-1.724-SPLIT-report.md:3",
+  "agents/tasks/LJ-1-724-SPLIT/review-of-LJ-1-724-SPLIT-1.md:8",
+  "agents/tasks/LJ-1-724-SPLIT/LJ-1.724-SPLIT.md:16",
+  "agents/tasks/LJ-1-724/LJ-1.724.md:24",
+  "agents/tasks/LJ-1-724-SPLIT/runs/accept-3.out:22",
+]
+reopen = "Reopen if a consumer needs table-sat as 724 stated, with no extra height, and a later proof supplies an inhabitant. Not retry the x+2 repair 724-SPLIT and the critic already closed."
+by = "mathematician"

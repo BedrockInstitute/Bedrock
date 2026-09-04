@@ -1,0 +1,7 @@
+Checking LJ-1-753-SPLIT.runs.SlotProbe (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/runs/SlotProbe.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/runs/SlotProbe.agda:281.42-43: error: [NotInScope]
+Not in scope:
+  u
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/runs/SlotProbe.agda:281.42-43
+when scope checking u
+rc=42

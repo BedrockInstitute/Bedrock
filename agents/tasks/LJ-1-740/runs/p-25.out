@@ -1,0 +1,29 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-28T22:17:23Z
+Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:424.12-425.59: error: [UnequalTerms]
+L.Coding.Sat.sep lem (envSet A n) (cond A χ) .fst != v of type V ℓ
+when checking that the expression
+cong (_, snd (Sat A χ))
+(extensionalV (λ w → ⇔toPath (out w) (inw w)))
+has type _x_10267 ≡ _y_10268
+        3.60 real         3.39 user         0.18 sys
+           539918336  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               34705  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 711  involuntary context switches
+         44650187564  instructions retired
+         13539719373  cycles elapsed
+           479085504  peak memory footprint
+EXIT=42

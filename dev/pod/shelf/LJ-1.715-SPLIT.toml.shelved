@@ -1,0 +1,13 @@
+[shelve]
+task = "LJ-1.715-SPLIT"
+claim = "proven-futile"
+reason = "Situation 2. No task closed GO on bound2-in-limit in live src/. What settles THIS route (edit L.Ordinal.lagda.md and close through Everything at heavy -M4g) is a different task's measurement: LJ-1.715-SPLIT-SPLIT. Its runs 4 and 5 are pristine HEAD, module absent, and both die at L.Condensation at the same cap. LJ-1.715-SPLIT's own floor A already died at that site with the 33 lines. Retrying LJ-1.715-SPLIT is the same landing in the same master at a cap where HEAD itself walls. The term is not false: the isolated master checks in 0.82 s. The 111.91 s control is stale and is not a live number. LJ-1.715-SPLIT-SPLIT stays PARKED: its sibling hole is GO, and A30 cannot use a task's own runs to shelve that same task."
+evidence = [
+  "agents/tasks/LJ-1-715-SPLIT-SPLIT/lj-1.715-SPLIT-SPLIT-report.md:39",
+  "agents/tasks/LJ-1-715-SPLIT-SPLIT/lj-1.715-SPLIT-SPLIT-report.md:40",
+  "agents/tasks/LJ-1-715-SPLIT-SPLIT/runs/everything-pristine-cold.out:97",
+  "agents/tasks/LJ-1-715-SPLIT/runs/everything-floor.out:56",
+  "src/L/Ordinal.lagda.md:185",
+]
+reopen = "Reopen if the owner raises the Everything cap above 4 GB, or if HEAD Everything-cold at the heavy cap starts to close. Not try the same 33 lines in L.Ordinal.lagda.md again."
+by = "mathematician"

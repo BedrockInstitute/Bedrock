@@ -1,0 +1,78 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.768] GAP INSTRUMENT, THE PIECES.  The same obligation as
+-- Probe768, but assembled from the PIECES instead of through the
+-- supplier's export: both codeOf searches discharged, the code
+-- equations IN SCOPE, the hull half applied, the tuple packed at the
+-- pinned coordinates.  Every legal move of the frame stands; the
+-- ONE designed hole is the reading at (Lset δ ∷ δ ∷ fst a ∷ []) --
+-- and the hole's scope holds exactly the two equations
+-- fst (val ca) ≡ Lset δ and fst (val cp) ≡ δ that a transport would
+-- consume, the transport the brief forbids.  conv0 is deliberately
+-- NOT applied here (its output type lands at the code coordinates;
+-- runs/ConvApp768.agda.txt measures that mismatch).  This file
+-- cannot typecheck and rests at .agda.txt, never .agda (naming
+-- rule); a temporary same-stem .agda copy runs it and is deleted at
+-- once.  Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-768.runs.GapPieces768 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+import LJ-1-768.runs.Frame768 {ℓ} lem as Frame
+import LJ-1-768.runs.HullHalf768 {ℓ} lem as HullHalf
+
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁; squash₁ )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( Completeness; codeOf; module HS )
+  open HullHalf.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( hullClosed )
+
+  lset-grounded-from-reading :
+    Completeness
+    → ((a p z : S)
+       → ⟨ (a ∷ p ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩ → IsOrd p → a ≡ Lset p)
+    → (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.M ⟩ → ⟨ Lset δ ∈ˢ HS.M ⟩
+    → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ HS.M ⟩ × ⟨ Lset δ ∈ˢ HS.M ⟩
+                  × ⟨ (Lset δ ∷ δ ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩) ∥₁
+  lset-grounded-from-reading comp sound δ ordδ δ∈M Lδ∈M =
+    PT.rec squash₁
+      (λ { (cp , cp≡δ) →
+      PT.rec squash₁
+        (λ { (ca , ca≡Lδ) →
+        PT.map (λ { (a , a∈H , sat) →
+                 fst a , a∈H , Lδ∈M ,
+                 -- THE DESIGNED HOLE, the only one.  In scope:
+                 -- ca≡Lδ : fst (val ca) ≡ Lset δ and
+                 -- cp≡δ : fst (val cp) ≡ δ -- the bridges a
+                 -- transport of the reading would consume, the
+                 -- transport the brief forbids; conv0's application
+                 -- lands at the code coordinates instead
+                 -- (runs/ConvApp768.agda.txt).
+                 {!!} })
+               (hullClosed comp δ ordδ ca cp ca≡Lδ cp≡δ) })
+        (codeOf (Lset δ) Lδ∈M) })
+      (codeOf δ δ∈M)

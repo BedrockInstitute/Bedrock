@@ -1,0 +1,74 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.768] RESTRUCTURE INSTRUMENT, THE REC ALONE.  ValHull768
+-- (runs/valhull768.out) walled at 1800 s at 1.5 GB: a TIME wall.  The
+-- delta over MinPieces768 (green, 5.53 s) was: one PT.rec over
+-- codeOf, the code equation bound, and val-in-Hull's real membership
+-- packed.  This instrument keeps the rec and the equation and drops
+-- only the real membership (the tuple back to pure variables).  If
+-- this greens, the wall sits in the membership bridge; if it walls,
+-- the rec over codeOf into the pinned goal is itself the wall.
+-- GapPieces768 walled at the 1800 s cap (runs/gappieces768.out) with
+-- the hull half's witness packed real; MinPieces768 greened to its
+-- designed hole (runs/minpieces768.out) with every packed term a
+-- variable.  This instrument sits between them: the hull member is
+-- the VALUE OF A CODE (z := fst (val ca), ca from codeOf), its
+-- membership the one-application fact val-in-Hull (src/L/
+-- Hull.lagda.md, the Hull module's T), no hull half, no second
+-- search.  If this greens to the designed hole, the wall is routed
+-- around at a real-but-cheap membership, and the only gap left at
+-- this site is the pinned reading's producer.  This file cannot
+-- typecheck and rests at .agda.txt, never .agda (naming rule); a
+-- temporary same-stem .agda copy runs it and is deleted at once.
+-- Lands nothing in src/.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-768.runs.RecVars768 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+import LJ-1-768.runs.Frame768 {ℓ} lem as Frame
+
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( Completeness; codeOf; module HS )
+
+  lset-grounded-from-reading :
+    Completeness
+    → ((a p z : S)
+       → ⟨ (a ∷ p ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩ → IsOrd p → a ≡ Lset p)
+    → (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.M ⟩ → ⟨ Lset δ ∈ˢ HS.M ⟩
+    → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ HS.M ⟩ × ⟨ Lset δ ∈ˢ HS.M ⟩
+                  × ⟨ (Lset δ ∷ δ ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩) ∥₁
+  lset-grounded-from-reading comp sound δ ordδ δ∈M Lδ∈M =
+    PT.rec squash₁
+      (λ { (ca , ca≡Lδ) →
+      ∣ δ , δ∈M , Lδ∈M ,
+      -- THE DESIGNED HOLE, the only one: the reading at
+      -- (Lset δ ∷ δ ∷ δ ∷ []).  The code equation ca≡Lδ stands in
+      -- scope and is NOT consumed: no subst of any reading along it
+      -- stands anywhere.
+      {!!} ∣₁ })
+      (codeOf (Lset δ) Lδ∈M)

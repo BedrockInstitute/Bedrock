@@ -1,0 +1,22 @@
+Checking LJ-1-726.runs.exp (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/runs/exp.agda).
+time: command terminated abnormally
+        9.74 real         0.86 user         0.21 sys
+           310001664  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               16549  page reclaims
+                4126  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 385  voluntary context switches
+                3134  involuntary context switches
+         10479022928  instructions retired
+          4073092166  cycles elapsed
+           252478232  peak memory footprint
+time: signal: Invalid argument
+EXIT=1

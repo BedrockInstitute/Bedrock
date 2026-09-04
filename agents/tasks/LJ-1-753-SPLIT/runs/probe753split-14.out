@@ -1,0 +1,65 @@
+Checking LJ-1-753-SPLIT.Probe753Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753-SPLIT/agents/tasks/LJ-1-753-SPLIT/Probe753Split.agda:249.27-257.61: error: [UnequalTerms]
+(ant : ∥ _A_576 ∥₁) →
+Σ
+(_A_563 (lem = lem) (lam = lam) (ordλ = ordλ) (succλ = succλ)
+ (X = X) (X⊆Lλ = X⊆Lλ) (∅∈λ = ∅∈λ) (elem = elem) (gen = gen)
+ (ca = ca) (cp = cp) (hcp = hcp) (hca = hca) (x = x) (hu = hu)
+ (ant = ant))
+(_B_564 (lem = lem) (lam = lam) (ordλ = ordλ) (succλ = succλ)
+ (X = X) (X⊆Lλ = X⊆Lλ) (∅∈λ = ∅∈λ) (elem = elem) (gen = gen)
+ (ca = ca) (cp = cp) (hcp = hcp) (hca = hca) (x = x) (hu = hu)
+ (ant = ant))
+!=<
+Σ
+⟨
+(AbsL.SM AbsL.SemM.At.⊨ id) (x ∷ genv16)
+(mapFo val
+ (mapFo At673.slide
+  (Irr.erase W3.B.CS.S Aimp (Irr.plus-zero-l W3.B.CS.S countDom))))
+⟩
+(λ _ →
+   ⟨
+   (AbsL.SM AbsL.SemM.At.⊨ id) (x ∷ genv16)
+   (mapFo val
+    (mapFo At673.slide
+     (Irr.erase W3.B.CS.S Bimp (Irr.plus-zero-r W3.B.CS.S countDom))))
+   ⟩)
+when checking that the expression
+λ ant →
+  Empty.rec*
+  (PT.rec isProp⊥*
+   (λ { (w , w∈ , appat)
+          → Empty.rec*
+            (PT.rec Empty.isProp⊥*
+             (λ { (pr , pr∈∅ , _)
+                    → Empty.rec* (subst ⟨_⟩ (empty-spec (pr .fst)) pr∈∅)
+                })
+             appat)
+      })
+   ant)
+  , λ h → Empty.rec* (subst ⟨_⟩ (empty-spec (x .fst)) h)
+has type
+⟨
+(x ∷ genv16) AbsL.⊨ᵐ
+mapFo val (mapFo At673.slide (CntS.erase domBf countDom))
+⟩
+       13.59 real        13.17 user         0.31 sys
+           927465472  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               58295  page reclaims
+                  71  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 608  voluntary context switches
+                5659  involuntary context switches
+        190391003283  instructions retired
+         51772875267  cycles elapsed
+           867419336  peak memory footprint
+rc=42

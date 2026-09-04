@@ -1,0 +1,25 @@
+# Maintainer batch 20260829-203641. NO ROWS, NO QUEUE ENTRIES.
+#
+# Eleven parks, zero rows. Everything here is on an automated path: the
+# transfer family advances generation by generation (the park_and_split
+# machinery queues each split), the capacity-marked launch parks reopen
+# head-aware as glm seats turn over (three coders busy: 742-SPLIT-SPLIT /
+# 754 / two more in flight), and pod-math's staged shelving continues.
+#
+# PER-TASK VERDICTS.
+#
+# LJ-1.728 / LJ-1.728-SPLIT / LJ-1.740 / LJ-1.742 / LJ-1.742-SPLIT / LJ-1.753
+# (transfer-park shells): each awaits its split successor's result, then
+# pod-math's staged shelving. No row.
+#
+# LJ-1.740-SPLIT / LJ-1.755 / LJ-1.756 / LJ-1.757 / LJ-1.758
+# (launch-capacity parks, cap=True): reopen automatically via rule (a2)'s
+# head-aware capacity check when a glm seat frees. No row.
+#
+# LJ-1.715-SPLIT-SPLIT (heap-wall, delivered third gen): the 8g close is
+# MEASURED on its own scene (exit 0, 220.94 s at -M8g). Its disposition awaits
+# pod-math (unshelve/re-queue at 8g is viable under the 9g backstop). No row.
+#
+# THE EPISODE HOLDS: counted 11 >= parked_max, windows 0 (progress resets it),
+# no latch, pod-math prompted. The count falls as the splits close and staged
+# shelving lands.

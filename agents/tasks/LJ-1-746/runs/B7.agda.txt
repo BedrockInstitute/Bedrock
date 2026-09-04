@@ -1,0 +1,28 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.746] runs/B7.  THE DIAGNOSTIC, not a deliverable: does the
+-- erased-graph conjunct's proof spelling convert by refl, or does the
+-- count-proof split force countFo normalization?  A file that may
+-- grind is named .agda.txt; the run copies it to a transient .agda.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-746.runs.B7 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-732.runs.Num {ℓ} lem
+open import LJ-1-732.runs.Amb1 {ℓ} lem
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+probe :
+    ⟨ (n 0 ∷ γ15) P652.⊨ₚ CntS.erase Mx.G.A.approxBndAt countA ⟩
+  ≡ ⟨ (n 0 ∷ γ15) P652.⊨ₚ CntS.erase Mx.G.A.approxBndAt
+        (CntS.plus-zero-l (CntS.plus-zero-r countGB)) ⟩
+probe = refl

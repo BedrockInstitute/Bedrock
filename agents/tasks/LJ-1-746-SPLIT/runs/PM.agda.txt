@@ -1,0 +1,50 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.746-SPLIT] runs/PM.  THE ONE-LEVEL MIRROR BRIDGE, isolated.
+-- GraphMirror writes the graph reading with the big subtrees SUSPENDED
+-- behind small applications (CntS.eraseTm (var kk) p, CntS.erase
+-- (approxBndAt and stepBndAt) p) at the exact shape the semantics'
+-- exist-in-carrier produces (Logic: ∃[]-syntax P = ∥ Σ A (⟨_⟩ ∘ P) ∥ₚ,
+-- the meet carrier ⟨ A ⊓ B ⟩ = ⟨ A ⟩ × ⟨ B ⟩).  The single conversion
+-- this file runs is GraphMirror ≟ GraphAt: if it is cheap, a mirror
+-- row assembled against written slots can be transported into GraphAt
+-- by one subst, and Amb4 closes without any row ever meeting a
+-- derived slot.  If it walls, every conversion in the erased-graph
+-- world is fatal and the chain is closed at wide.
+--
+-- ONE Agda process, caliber from the pane, never set here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-746-SPLIT.runs.PM {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( var; _∧̇_ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import Cubical.HITs.PropositionalTruncation
+  using ( ∥_∥₁ )
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-732.runs.Num {ℓ} lem
+open import LJ-1-732.runs.Amb1 {ℓ} lem
+open import LJ-1-732.runs.Amb4a {ℓ} lem
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+-- the graph reading, written ONE level unfolded: the existential
+-- carrier with both subtrees suspended behind small applications.
+GraphMirror : Type (ℓ-suc ℓ)
+GraphMirror =
+  ∥ Σ[ x ∈ S ]
+      ⟨ ( x ∈ˢ P652.AtP.⟦ CntS.eraseTm (var kk) (CntS.plus-zero-l countGB) ⟧ γ15 )
+        ⊓
+        ( (x ∷ γ15) P652.⊨ₚ CntS.erase
+            (Mx.G.A.approxBndAt ∧̇ Mx.G.S.stepBndAt)
+            (CntS.plus-zero-r countGB) ) ⟩ ∥₁
+
+-- THE BRIDGE.  One conversion.  Cheap or the chain is closed.
+bridge : GraphMirror ≡ GraphAt
+bridge = refl

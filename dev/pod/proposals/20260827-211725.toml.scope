@@ -1,0 +1,42 @@
+# Maintainer batch 20260827-211725. NO ROWS, NO QUEUE ENTRIES.
+#
+# Context in one line: the loop stopped a THIRD time today at seq 4870
+# ("6 parked", 13:17:27Z), the count again majority-capacity. Repairs landed this
+# session (all 9 pod suites green, live dry-run shows stop_counted = [LJ-1.710]
+# only): capacity launch parks are marked (`launch_capacity`), reopen head-aware
+# without a table edit, AND no longer spend AD14's budget (`stop_counted()`
+# exemption, A30's own self-healing criterion at its third site).
+#
+# VERDICTS ON THE SIX PARKED TASKS.
+#
+# LJ-1.704, LJ-1.712, LJ-1.713, LJ-1.714, LJ-1.715: NO ROW, ALL FIVE ARE
+# CAPACITY WAITS (`why` names "every model of [heads].coder is at its own
+# max_concurrency"; heads.coder is one seat today, glm-5.3-flash 1/1). They hold
+# zero facts to key a row on, they reopen mechanically when a seat frees, and
+# after this session's stop_counted exemption they no longer feed the stop that
+# kept killing the queue drain. Nothing to admit; anything proposed here would be
+# refused by replay anyway or would page nobody usefully.
+#
+# LJ-1.710: NO ROW IS WRITABLE, UNCHANGED FROM BATCH 20260827-203744. Its four
+# attempts are four frozen corpus records, every one won by its own row
+# task-lj-1-710-lint-back-to-author; a candidate matching those shapes moves
+# frozen winners and is refused (AD10), a disjoint candidate has nothing to act
+# on, and attempt_max has no clock. The wrapper defect behind its loop is fixed
+# in code since 20260827-122203-era repairs. Needs the owner's word, once:
+# `pod.py resume --retry LJ-1.710`.
+#
+# THE SHELVED TASKS hold no parked_max slot and ask for nothing.
+#
+# THE NO-MATCH RECORDS window names LJ-1.702 twice: the killed-witness record,
+# backlog item 41, measured dead-end for rows (exit_code 0 + delta 0 also fits a
+# delivery of nothing). Owner word, recommended there and unchanged:
+# `--retry LJ-1.702` (or plain resume; its reaccept stamp already sits).
+#
+# SHADOWING LIST and EXPIRY FALLOUT are informational: sys-lint-accept losing to
+# task-scoped rows IS pod-math's routing cure working; every fallout record
+# belongs to a settled terminal task.
+#
+# KNOWN COST, recorded under backlog item 29: because this session's repairs sit
+# uncommitted in scripts/pod/, maintainer_scope_ok() will probably retire THIS
+# file with verdict scope too, exactly as it did 20260827-203744.toml at seq
+# 4849. The verdicts survive here, in the slot return, and in the backlog note.

@@ -1,0 +1,6 @@
+GHCRTS=-A64m -I0 -M2g (pane caliber, program-set). Temp same-stem copy procedure (746-SPLIT-SPLIT precedent).
+t=0s   rss_kb=1083280  (~1.08 GB)
+t=5m   rss_kb=2273216  cputime=5:21   (rss > 2 GiB cap: heap wall entered)
+t=10m  rss_kb=2340800  cputime=10:28
+t=15m  rss_kb=2415504  cputime=15:34
+killed at ~17m: no completion; no error line; run record runs/probe753-ground.out

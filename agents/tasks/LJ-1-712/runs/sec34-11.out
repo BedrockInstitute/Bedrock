@@ -1,0 +1,31 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T14:10:08Z
+Checking LJ-1-712.Probe712 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda:189.3-13: error: [UnequalTerms]
+(isProp _P_197 →
+ ⟨ _x_196 ∈ˢ sucV _A_195 ⟩ →
+ (⟨ _x_196 ∈ˢ _A_195 ⟩ → _P_197) →
+ (_x_196 ≡ _A_195 → _P_197) → _P_197)
+!=< (Lift Empty.⊥)
+when checking that the expression ∈sucV-elim has type ⊥*
+        9.80 real         9.63 user         0.16 sys
+           784662528  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49982  page reclaims
+                   7  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 865  involuntary context switches
+        137694204696  instructions retired
+         42029308673  cycles elapsed
+           724730984  peak memory footprint
+EXIT=42
+ended 2026-08-27T14:10:18Z

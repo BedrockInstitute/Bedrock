@@ -1,0 +1,93 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.722] B2: THE BARE BRIDGE, AT HEAVY.  Reconstruction of
+-- [LJ-1.717]'s stage8 (its source was not delivered; rebuilt here
+-- from the stage8 record and report): the general-vector
+-- atL-backwards lemma, ONE ambient application at the hier triple,
+-- the membership subst.  No Code, no witness triple, no
+-- matrix-mapped-at, no term.  RED BY DESIGN: the two lemmas are the
+-- probe.  Delivered as `.agda.txt` (every `.agda` under the task home
+-- is a verification target).
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-722.runs.B2-bridgebare {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
+open import FOL.Manipulation.Relabelling using ( embed; mapFo; mapFo-comp )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset→isL )
+open import L.Hierarchy {ℓ} lem using ( hierL )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import Cubical.Data.Vec using ( map; _∷_; [] )
+open import Cubical.HITs.PropositionalTruncation using ( ∥_∥₁; ∣_∣₁ )
+import Cubical.Data.Empty as Empty
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+open import LJ-1-679.Probe679 {ℓ} lem as P679
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+open FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ using ( _^_ )
+-- CS comes from Probe679, which declares `module CS = hPropStructure 𝒮ʟ`
+-- publicly (Probe679.agda:38); redeclaring it here shadows and fails.
+
+module Spend (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  module A = P679.At lam ordλ succλ X X⊆Lλ ∅∈λ elem
+  open A using ( Completeness; HierInStage; BoundInStage; inBound; Code; val )
+  module F = P652.Frame652 lam ordλ succλ X X⊆Lλ ∅∈λ
+  module Cy = F.Carry elem
+
+  AmbientAt-at-hier : Type (ℓ-suc ℓ)
+  AmbientAt-at-hier =
+    (δ : CS.S) (oδ : IsOrd (fst δ))
+    → ⟨ fst δ ∈ˢ Lset lam ⟩
+    → ⟨ ( Lset (fst δ) ∷ fst δ
+          ∷ fst (hierL (fst δ) (δ .snd) oδ) ∷ [] )
+        P652.⊨ₚ P667.matrix₃ ⟩
+
+  -- THE MEMBERSHIP SUBST, as delivered (the smallest family: the
+  -- membership atom).
+  lset-val-mem :
+    (ca cp : Code)
+    (eq : fst (val ca) ≡ Lset (fst (val cp)))
+    → ⟨ Lset (fst (val cp)) ∈ˢ Lset lam ⟩
+  lset-val-mem ca cp eq =
+    subst (λ z → ⟨ z ∈ˢ Lset lam ⟩) eq (snd (val ca))
+
+  -- THE GENERAL-VECTOR atL-BACKWARDS LEMMA.  Same idiom as the
+  -- delivered matrix-embed-at body, at an abstract v.
+  atL-backwards :
+    (v : F.HS.ASt.SL ^ 3)
+    → ⟨ map fst v P652.⊨ₚ P667.matrix₃ ⟩
+    → ⟨ v F.HS.ASt.AbsL.⊨ᵐ embed P667.matrix₃ ⟩
+  atL-backwards v r =
+    subst ⟨_⟩ (sym (Cy.atL P667.Δ₀-matrix₃ v)) r
+
+  -- ONE AMBIENT APPLICATION AT THE HIER TRIPLE, BRIDGED.  map fst of
+  -- the triple reduces to amb's own reading vector, so `r` is amb's
+  -- codomain itself.
+  bridge-applied :
+    (amb : AmbientAt-at-hier)
+    (δ : CS.S) (oδ : IsOrd (fst δ)) (h : ⟨ fst δ ∈ˢ Lset lam ⟩)
+    (hz : ⟨ fst (hierL (fst δ) (δ .snd) oδ) ∈ˢ Lset lam ⟩)
+    (hL : ⟨ Lset (fst δ) ∈ˢ Lset lam ⟩)
+    → ⟨ ( (Lset (fst δ) , hL) ∷ (fst δ , h)
+        ∷ (fst (hierL (fst δ) (δ .snd) oδ) , hz) ∷ [] )
+        F.HS.ASt.AbsL.⊨ᵐ embed P667.matrix₃ ⟩
+  bridge-applied amb δ oδ h hz hL =
+    atL-backwards
+      ( (Lset (fst δ) , hL) ∷ (fst δ , h)
+      ∷ (fst (hierL (fst δ) (δ .snd) oδ) , hz) ∷ [] )
+      (amb δ oδ h)

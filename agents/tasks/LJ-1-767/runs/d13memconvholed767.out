@@ -1,0 +1,24 @@
+GHCRTS=[-A64m -I0 -M4g]
+DIAGNOSTIC bisect, cap 420 s (never reported as a price)
+started 2026-09-02T18:42:10Z
+Checking LJ-1-767.runs.D13MemConvHoled767 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-767/agents/tasks/LJ-1-767/runs/D13MemConvHoled767.agda).
+      420.06 real       418.95 user         1.09 sys
+          3947413504  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              242987  page reclaims
+                   4  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   2  signals received
+                   4  voluntary context switches
+               56629  involuntary context switches
+            15451064  instructions retired
+             6195802  cycles elapsed
+             1179960  peak memory footprint
+EXIT=124
+ended 2026-09-02T18:49:10Z

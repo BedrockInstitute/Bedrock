@@ -1,0 +1,40 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.746-SPLIT] runs/M0.  The 746 b12 shape re-measured in THIS
+-- worktree against the vendored green modules: both graph slots given
+-- as variables AT the split spellings, the assembly checked against
+-- GraphAt.  746 measured this shape at >150 s without completion
+-- (runs/b12.out of LJ-1-746).  This file decides whether the wall is
+-- the conversion itself or that worktree's state.
+--
+-- ONE Agda process, caliber from the pane, never set here.
+-- Nothing is postulated.  No hole in the delivered file.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-746-SPLIT.runs.M0 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁ )
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-732.runs.Num {ℓ} lem
+open import LJ-1-732.runs.Amb1 {ℓ} lem
+open import LJ-1-732.runs.Amb4a {ℓ} lem
+open import LJ-1-732.runs.Amb6 {ℓ} lem
+open import LJ-1-746-SPLIT.runs.Amb7 {ℓ} lem
+
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
+open hPropStructure 𝒮ᵥ
+
+graph-part-test :
+    (gen : StepKilledGen)
+    (ap : ⟨ (n 0 ∷ γ15) P652.⊨ₚ CntS.erase Mx.G.A.approxBndAt
+              (CntS.plus-zero-l (CntS.plus-zero-r countGB)) ⟩)
+    (sp : ⟨ (n 0 ∷ γ15) P652.⊨ₚ CntS.erase Mx.G.S.stepBndAt
+              (CntS.plus-zero-r (CntS.plus-zero-r countGB)) ⟩)
+    → GraphAt
+graph-part-test gen ap sp = ∣ n 0 , (mem0 , ap , sp) ∣₁

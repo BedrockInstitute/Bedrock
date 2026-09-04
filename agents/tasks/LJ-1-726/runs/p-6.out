@@ -1,0 +1,52 @@
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-28T11:37:17Z
+Checking LJ-1-726.Probe726 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda).
+ Checking LJ-1-652.Probe652 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-652/Probe652.agda).
+  Checking LJ-1-641.Probe641 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-641/Probe641.agda).
+ Checking LJ-1-667.Probe667 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-667/Probe667.agda).
+  Checking LJ-1-667.runs.W3 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-667/runs/W3.agda).
+   Checking LJ-1-520.Probe520 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-520/Probe520.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:64.3-55: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  ω
+when scope checking the declaration
+  open
+    .#L.Ordinal-649203659717452247 {ℓ}
+      using (ω; ω-ord; ∅-ord; suc-ord; numeral-ord; #∈ω)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:68.3-42: warning: -W[no]ModuleDoesntExport
+The module _ doesn't export the following:
+  self∈singl
+  inl∈⁅,⁆
+  ⁅_⁆s
+when scope checking the declaration
+  open
+    .#V.Coding-16722710462800097794 {ℓ}
+      using (pr; self∈singl; inl∈⁅,⁆; ⁅_⁆s)
+
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-726/Probe726.agda:76.8-9: error: [ShadowedModule]
+Duplicate definition of module B. Previous definition of module B
+at
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-726/agents/tasks/LJ-1-667/runs/W3.agda:23.8-9
+when scope checking the declaration
+  module B = Bnd {ℓ} lem
+       18.57 real        18.01 user         0.43 sys
+          1765670912  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+              109518  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                 718  voluntary context switches
+                5364  involuntary context switches
+        245890285406  instructions retired
+         72629478937  cycles elapsed
+          1705183008  peak memory footprint
+EXIT=42
+ended 2026-08-28T11:37:36Z

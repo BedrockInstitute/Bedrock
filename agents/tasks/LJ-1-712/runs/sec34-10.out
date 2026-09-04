@@ -1,0 +1,49 @@
+GHCRTS=[-A64m -I0 -M2g]
+cap 600s (perl alarm)
+started 2026-08-27T14:09:47Z
+Checking LJ-1-712.Probe712 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-712/agents/tasks/LJ-1-712/Probe712.agda:189.3-210.69: error: [UnequalTerms]
+Lift Empty.⊥ !=< Empty.⊥
+when checking that the expression
+∈sucV-elim {A = sucV ∅} {x = # 11} {P = ⊥* {ℓ = ℓ-suc ℓ}} isProp⊥*
+(ord∈Lset→∈ (step 2 ∅) (suc-ord (suc-ord ∅-ord)) (# 11) (ord# 11)
+ h)
+(λ q₁ →
+   ∈sucV-elim {A = ∅} {x = # 11} {P = ⊥* {ℓ = ℓ-suc ℓ}} isProp⊥* q₁
+   (λ q₂ →
+      Empty.rec (∅-empty (# 11) (∈∈ₛ {a = # 11} {b = ∅} .fst q₂)))
+   (λ e₂ →
+      Empty.rec
+      (∅-empty (# 1)
+       (∈∈ₛ {a = # 1} {b = ∅} .fst
+        (subst (λ w → ⟨ (# 1) ∈ w ⟩) e₂ #1∈#11)))))
+(λ e₁ →
+   ∈sucV-elim {A = ∅} {x = # 2} {P = ⊥* {ℓ = ℓ-suc ℓ}} isProp⊥*
+   (subst (λ w → ⟨ (# 2) ∈ w ⟩) e₁ #2∈#11)
+   (λ q₂ → Empty.rec (∅-empty (# 2) (∈∈ₛ {a = # 2} {b = ∅} .fst q₂)))
+   (λ e₂ →
+      Empty.rec
+      (∅-empty (# 1)
+       (∈∈ₛ {a = # 1} {b = ∅} .fst
+        (subst (λ w → ⟨ (# 1) ∈ w ⟩) e₂ (self∈sucV (# 1)))))))
+has type Empty.⊥
+       10.13 real         9.94 user         0.16 sys
+           784662528  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               49981  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 896  involuntary context switches
+        141363086370  instructions retired
+         43326512612  cycles elapsed
+           724714600  peak memory footprint
+EXIT=42
+ended 2026-08-27T14:09:58Z

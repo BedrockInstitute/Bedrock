@@ -1,0 +1,105 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- [LJ-1.768] PROBE, THE OBLIGATION.  lset-grounded-from-reading: the
+-- pinned Sigma of LsetGrounded (Probe652.agda:260-264) at matrix₃,
+-- assembled FROM the reading-only export of [LJ-1.767-SPLIT-SPLIT].
+-- NOT GREEN: this file rests at .agda.txt, never .agda (naming rule);
+-- a temporary same-stem .agda copy runs it and is deleted at once
+-- after its run.  Lands nothing in src/.
+--
+--   THE SUPPLIER   [LJ-1.767-SPLIT-SPLIT]'s grounded-from-complete
+--                  (Probe767SplitSplit.agda:148), transcribed verbatim
+--                  at runs/GFC768.agda (green at this site,
+--                  runs/gfc768.out).  It is the reading at code
+--                  coordinates, as the brief orders.
+--   THE GAP        the supplier's Sigma packs FOUR things and no more:
+--                  the codes ca cp, a stage value z, and the reading
+--                  at (fst (val ca) ∷ fst (val cp) ∷ z).  The pinned
+--                  Sigma asks for a HULL MEMBER, Lset δ in the hull,
+--                  and the reading at (Lset δ ∷ δ ∷ z).  The scope
+--                  under the rec binder carries no equation naming ca
+--                  or cp at Lset δ or δ, and no hull membership for z.
+--                  The hole below is the filling that scope cannot
+--                  give; it is DESIGNED and it is the only one.
+--   THE PROHIBITIONS, HELD BY CONSTRUCTION.  The supplier's two
+--            PT.rec binders are untouched: no second real factor is
+--            packed under them.  No subst of the reading along
+--            fst (val ca) ≡ Lset δ or fst (val cp) ≡ δ stands
+--            anywhere.  conv0 is not declared.  Convert is not
+--            hypothesised.  conv-at-Lδ is not inhabited.  mkWit's
+--            spelled codomain is not restored.  Completeness is a
+--            HYPOTHESIS, never inhabited.
+--   Floor first (coder law, owner ruling 2026-08-23):
+--            runs/Floor768.agda.txt is this file with the body a
+--            hole, and it runs before this file.
+--   NO POSTULATE.  One Agda process per run, caliber from the pane,
+--            never set here.
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+
+module LJ-1-768.runs.ExportGoal768 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import L.Constructible {ℓ} using ( IsOrd; Lset )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; module InfinitySet )
+open InfinitySet {ℓ} using ( sucV )
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮ᵥ
+
+open import LJ-1-652.Probe652 {ℓ} lem as P652
+open import LJ-1-667.Probe667 {ℓ} lem as P667
+
+-- qualified imports only: this file carries its own module Build,
+-- and a plain import of a module holding a Build of its own shadows
+-- it (measured: ShadowedModule, SSS runs/hull-1.out).
+import LJ-1-768.runs.Frame768 {ℓ} lem as Frame
+import LJ-1-768.runs.GFC768 {ℓ} lem as GFC
+
+open import Cubical.Data.Vec using ( _∷_; [] )
+open import Cubical.Data.Sigma using ( _×_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁; squash₁ )
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : P652.Frame652.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  open Frame.Build lam ordλ succλ X X⊆Lλ ∅∈λ elem
+    using ( Completeness; module HS )
+
+  -- THE OBLIGATION'S TYPE, the brief's type verbatim.
+  lset-grounded-from-reading :
+    Completeness
+    → ((a p z : S)
+       → ⟨ (a ∷ p ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩ → IsOrd p → a ≡ Lset p)
+    → (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.M ⟩ → ⟨ Lset δ ∈ˢ HS.M ⟩
+    → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ HS.M ⟩ × ⟨ Lset δ ∈ˢ HS.M ⟩
+                  × ⟨ (Lset δ ∷ δ ∷ z ∷ []) P652.⊨ₚ P667.matrix₃ ⟩) ∥₁
+
+  -- THE BODY.  The brief's estimate, spelled: one GFC rec, then the
+  -- pinned Sigma.  The rec binds EVERYTHING the supplier delivers --
+  -- codes, a stage value, the reading at the code coordinates -- and
+  -- the hole is the filling of the pinned Sigma from exactly that
+  -- scope.  The soundness argument is bound and unused, as in the
+  -- supplier itself.
+  lset-grounded-from-reading comp sound δ ordδ δ∈M Lδ∈M =
+    PT.rec squash₁
+      (λ { (ca , cp , z , rdg) →
+      -- GOAL-TYPE INSTRUMENT: the hole is replaced by a deliberately
+      -- wrong term so the elaborator spells the hole's GOAL TYPE into
+      -- the run's output.  The goal is the pinned Sigma; the scope
+      -- (ca cp z rdg) is what the supplier delivers.
+      δ∈M })
+      (GFC.grounded-from-complete lam ordλ succλ X X⊆Lλ ∅∈λ elem
+        comp sound δ ordδ δ∈M Lδ∈M)
+
+-- THE OBLIGATION'S NAME, exported at the file's top level
+-- (Probe692.agda:68's pattern), as the brief orders.  The file does
+-- not typecheck (the designed hole above), so it rests at .agda.txt
+-- and this name ships nothing until a legal filling exists.
+lset-grounded-from-reading = Build.lset-grounded-from-reading

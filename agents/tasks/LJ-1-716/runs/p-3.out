@@ -1,0 +1,29 @@
+wallcap=600s (perl alarm; SIGALRM kills agda past the cap)
+GHCRTS=[-A64m -I0 -M2g]
+started 2026-08-27T15:12:43Z
+Checking LJ-1-716.Probe716 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda).
+/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:87.10-27: error: [NotInScope]
+Not in scope:
+  Empty.isPropEmpty
+  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-716/agents/tasks/LJ-1-716/Probe716.agda:87.10-27
+when scope checking Empty.isPropEmpty
+        2.64 real         2.43 user         0.19 sys
+           791904256  maximum resident set size
+                   0  average shared memory size
+                   0  average unshared data size
+                   0  average unshared stack size
+               50423  page reclaims
+                   8  page faults
+                   0  swaps
+                   0  block input operations
+                   0  block output operations
+                   0  messages sent
+                   0  messages received
+                   0  signals received
+                   0  voluntary context switches
+                 346  involuntary context switches
+         31739696217  instructions retired
+         10978765565  cycles elapsed
+           734135400  peak memory footprint
+EXIT=42
+ended 2026-08-27T15:12:46Z
