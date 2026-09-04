@@ -409,6 +409,7 @@ import L.GCH.Level
 import L.GCH.TableIn
 import L.GCH.SuccIntoPower
 import L.GCH.Complete
+import L.GCH.Sequences
 import L.GCH.Sound
 import L.Choice.Transversal
 ```
