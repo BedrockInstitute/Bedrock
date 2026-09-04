@@ -71,7 +71,8 @@ InternalBoundedSubset =
 
 -- 3.  The successor cardinal injects into the power set.
 SuccIntoPower : ModelL.isZFModel → Type (ℓ-suc ℓ)
-SuccIntoPower zf = (κ δ : SL.S) → SuccCardL δ κ → InjL δ (𝒫 κ)
+SuccIntoPower zf =
+    (κ δ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥) → SuccCardL δ κ → InjL δ (𝒫 κ)
   where open ModelL.isZFModel zf using ( 𝒫 )
 
 -- 4.  The successor cardinal exists.  Section 2 proves it.
@@ -295,5 +296,5 @@ gch-from-internal-bill zf scc ibs sip κ ordκ cardκ κ∉ω =
   step : Σ[ δ ∈ SL.S ] SuccCardL δ κ
        → Σ[ δ ∈ SL.S ] (SuccCardL δ κ × InjL (𝒫 κ) δ × InjL δ (𝒫 κ))
   step (δ , sc) =
-    δ , sc , power-into-succ zf scc ibs κ ordκ cardκ κ∉ω δ sc , sip κ δ sc
+    δ , sc , power-into-succ zf scc ibs κ ordκ cardκ κ∉ω δ sc , sip κ δ κ∉ω sc
 ```
