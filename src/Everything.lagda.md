@@ -398,6 +398,12 @@ import L.CardinalAbove
 import L.GCH.Stages
 import L.GCH.Placement
 import L.GCH.Assembly
+import L.GCH.Frame
+import L.GCH.Definable
+import L.GCH.BelowSucc
+import L.GCH.OrderType
+import L.GCH.CardOf
+import L.GCH.Sound
 import L.Choice.Transversal
 ```
 
