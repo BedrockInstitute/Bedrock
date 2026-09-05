@@ -385,18 +385,11 @@ import L.Choice.Limit
 import L.Choice.Before
 import L.Choice.Order
 import L.Hull
-import L.SquareLawClosed
 import L.StageCardinal
 import L.Condensation
-import L.Condensation.LowerAgree
-import L.Condensation.UpperAgree
-import L.Condensation.TwelveAgree
-import L.Coding.EnvSupply
 import L.BoundedSubset
-import L.StageBound
 import L.CardinalAbove
 import L.GCH.Stages
-import L.GCH.Placement
 import L.GCH.Assembly
 import L.GCH.Frame
 import L.GCH.Definable
@@ -407,7 +400,6 @@ import L.GCH.Pairing
 import L.GCH.LevelRows
 import L.GCH.Level
 import L.GCH.Rows
-import L.GCH.TableIn
 import L.GCH.SuccIntoPower
 import L.GCH.Complete
 import L.GCH.Sequences
