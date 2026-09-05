@@ -395,6 +395,9 @@ import L.GCH.OrderType
 import L.GCH.CardOf
 import L.GCH.Pairing
 import L.GCH.LevelRows
+import L.GCH.SatFrame
+import L.GCH.SatDescribe
+import L.GCH.DefDescribe
 import L.GCH.Level
 import L.GCH.Rows
 import L.GCH.SuccIntoPower
