@@ -75,12 +75,12 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 -- The V-carrier: the ambient membership lives here.
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropStructure 𝒮ᵥ using ()
 -- The L-carrier: `InjL` and `IsCardinalL` live here.
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using (S; _∈ˢ_)
 open SL using ( S )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_^_; _⊨ᵐ_)
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 isSetS : isSet S
@@ -555,7 +555,7 @@ module Coll (κ : S) (oκ : IsOrd (fst κ)) where
   Rsub : (y x : S) → Holds R y x → ⟨ fst y ∈ fst P ⟩ × ⟨ fst x ∈ fst P ⟩
   Rsub y x h = godel-out P y x h .fst , godel-out P y x h .snd .fst
 
-  module OT = Code P R Rsub
+  module OT = Code P R Rsub using (Dom; Dom≡; isProp≺; toDom; up; up-mem; up-toDom; ↪; _≺_; ≺-in; ≺-out; module Conjuncts)
 
   -- The host pair of a member of the product.
   φ : OT.Dom → Pair
@@ -596,9 +596,8 @@ module Coll (κ : S) (oκ : IsOrd (fst κ)) where
     go (eq e) = inr (inl (φ-inj a b e))
     go (gt h) = inr (inr (≺-bwd b a h))
 
-  module C = OT.Conjuncts wf ≺-trans
-  module I = C.Inj tri
-
+  module C = OT.Conjuncts wf ≺-trans using (module Inj; col; col-ord; col-out; colTable; colTable-in; colTable-pair; colʟ; otL; otL-out)
+  module I = C.Inj tri using (code; col-inj)
   -- The product injects into its order type, internally.
   injL-ot : InjL P C.otL
   injL-ot = ∣ C.colTable , I.code ∣₁
@@ -681,7 +680,7 @@ module ProdMap (a b F : S)
                (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
                     → ⟨ fst y ∈ fst b ⟩) where
 
-  module E = Extract F a sv dm
+  module E = Extract F a sv dm using (toFun; toFun-graph; toFun-inj)
 
   Mem : S → Type (ℓ-suc ℓ)
   Mem p = ⟨ fst p ∈ˢ fst (prodL a) ⟩
@@ -1141,7 +1140,7 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
       g∉ω : ⟨ g ∈ˢ ω ⟩ → Empty.⊥
       g∉ω h = m∉ω (ω-ord .fst (self∈sucV (mV p)) h)
 
-      module IV = Inv p gL (seg-fst p) (seg-snd p)
+      module IV = Inv p gL (seg-fst p) (seg-snd p) using (injL)
 
       col↪g : InjL (C.colʟ p) gL
       col↪g = injl-trans (C.colʟ p) (prodL gL) gL IV.injL (prod-into gL og g∈a g∉ω)

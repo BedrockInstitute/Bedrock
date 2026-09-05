@@ -1182,10 +1182,18 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
   module DV = DefV {m} d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (body; defAt; defAt-out)
 
   private
-    Kv Ov Wv : V ℓ
+    Kv Ov : V ℓ
     Kv = fst (lookup K γ)
     Ov = fst (lookup O γ)
-    Wv = fst (lookup w γ)
+
+    -- The carrier, ONE spelling: every `DefOf.defSet (fst W) ψ` and
+    -- `𝒟ₒ (fst W)` below is written from W, never from a second name
+    -- for its value.  Measured at this site: the two spellings `fst W`
+    -- and a private `Wv = fst (lookup w γ)` cost 2.3 s per conversion
+    -- under a fully applied `defSet`, whose `sett` the membership
+    -- reduces through; `defSet-Sat W ψ` is stated at `fst W`.
+    W : CS.S
+    W = lookup w γ
 
     InK : V ℓ → Type (ℓ-suc ℓ)
     InK x = ⟨ x ∈ Kv ⟩
@@ -1238,7 +1246,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       ; innerK = unK
       ; innerPairK = binK
       ; pairK = C.pairK
-      ; carrierK = λ v hv → C.transK Wv (fst v) wK hv
+      ; carrierK = λ v hv → C.transK (fst W) (fst v) wK hv
       ; arityK = arityK }
 
     module Tw = Tower {3 + m} i0 (sh3 O) (sh3 w) (sh3 K) (Ês ∷ Ts ∷ Cs ∷ γ) kc ÊK htow using (module At; Entry; entryK; some-entry)
@@ -1333,13 +1341,13 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
 
     -- The environment ties of a row, from the tower, at the row's own
     -- environment: the arity slot holds a numeral, the carrier slot w.
-    envK-of : ∀ {n'} (δ : CS.S ^ n') (ar Bi : Fin n') → fst (lookup Bi δ) ≡ Wv
+    envK-of : ∀ {n'} (δ : CS.S ^ n') (ar Bi : Fin n') → fst (lookup Bi δ) ≡ fst W
             → ∥ Σ[ n ∈ ℕ ] (fst (lookup ar δ) ≡ # n) ∥₁
             → (Ei : Fin n') → ⟨ δ ⊨ envSetAt Ei ar Bi ⟩ → InK (fst (lookup Ei δ))
     envK-of δ ar Bi qb arNum Ei hE = PT.rec (snd (fst (lookup Ei δ) ∈ Kv))
       (λ { (n , q) → Tw.At.envK δ ar Bi n q qb Ei hE }) arNum
 
-    envInK-of : ∀ {n'} (δ : CS.S ^ n') (ar Bi : Fin n') → fst (lookup Bi δ) ≡ Wv
+    envInK-of : ∀ {n'} (δ : CS.S ^ n') (ar Bi : Fin n') → fst (lookup Bi δ) ≡ fst W
               → ∥ Σ[ n ∈ ℕ ] (fst (lookup ar δ) ≡ # n) ∥₁
               → (z : CS.S) → ⟨ (z ∷ δ) ⊨ envOverAt zero (suc ar) (suc Bi) ⟩ → InK (fst z)
     envInK-of δ ar Bi qb arNum z hz = PT.rec (snd (fst z ∈ Kv))
@@ -1455,7 +1463,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
              → (z x e' : CS.S)
              → ⟨ (z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) ⊨
                  envOverAt zero i5 (sh7 (sh2 w)) ⟩
-             → ⟨ fst x ∈ Wv ⟩
+             → ⟨ fst x ∈ fst W ⟩
              → ⟨ (e' ∷ x ∷ z ∷ E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) ⊨
                  consAtL zero (suc zero) (suc (suc zero)) ⟩
              → InK (fst e')
@@ -1470,7 +1478,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
               → (z w' x e' : CS.S)
               → ⟨ (z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) ⊨
                   envOverAt zero i6 (sh8 (sh2 w)) ⟩
-              → ⟨ fst x ∈ Wv ⟩
+              → ⟨ fst x ∈ fst W ⟩
               → ⟨ (e' ∷ x ∷ w' ∷ z ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) ⊨
                   consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
               → InK (fst e')
@@ -1603,13 +1611,10 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     -- =================================================================
 
     private
-      W : CS.S
-      W = lookup w γ
-
-      toS : ∀ {k} → Formula ⟪ Wv ⟫ k → Formula CS.S k
+      toS : ∀ {k} → Formula ⟪ fst W ⟫ k → Formula CS.S k
       toS = mapFo (asConst W)
 
-      toT : ∀ {k} → Term ⟪ Wv ⟫ k → Term CS.S k
+      toT : ∀ {k} → Term ⟪ fst W ⟫ k → Term CS.S k
       toT = mapTm (asConst W)
 
       γ′ : CS.S ^ (2 + m)
@@ -1650,24 +1655,24 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
         (subst InK (prʟ-fst (numeralL k) (LCode.⌜ χ ⌝)) (cK (keyʟ χ) c∈))
 
       -- the code of a term is in K
-      tmK : ∀ {k} (t : Term ⟪ Wv ⟫ k) → InK (fst (LCode.⌜ toT t ⌝ᵗ))
+      tmK : ∀ {k} (t : Term ⟪ fst W ⟫ k) → InK (fst (LCode.⌜ toT t ⌝ᵗ))
       tmK (con q) = C.pairK (numeralL 0) (asConst W q) (C.numK 0)
-                      (C.transK Wv (fst (asConst W q)) wK (snd (DefOf.ι Wv q)))
+                      (C.transK (fst W) (fst (asConst W q)) wK (snd (DefOf.ι (fst W) q)))
       tmK (var i) = C.pairK (numeralL 1) (numeralL (toℕ i)) (C.numK 1) (C.numK (toℕ i))
 
       -- THE TERM PREDICATE, at any environment holding the term code at
       -- `s`, the arity numeral at `ar`, and the carrier, bound and two
       -- tags at their slots.
-      tmAt-in : ∀ {k n'} (t : Term ⟪ Wv ⟫ k) (δ : CS.S ^ n') (s ar wi Ki N0i N1i : Fin n')
+      tmAt-in : ∀ {k n'} (t : Term ⟪ fst W ⟫ k) (δ : CS.S ^ n') (s ar wi Ki N0i N1i : Fin n')
               → fst (lookup s δ) ≡ fst (LCode.⌜ toT t ⌝ᵗ)
               → fst (lookup ar δ) ≡ fst (numeralL k)
-              → fst (lookup wi δ) ≡ Wv → fst (lookup Ki δ) ≡ Kv
+              → fst (lookup wi δ) ≡ fst W → fst (lookup Ki δ) ≡ Kv
               → fst (lookup N0i δ) ≡ fst (numeralL 0)
               → fst (lookup N1i δ) ≡ fst (numeralL 1)
               → ⟨ δ ⊨ tmAt s ar wi Ki N0i N1i ⟩
       tmAt-in (con q) δ s ar wi Ki N0i N1i qs qar qw qK qN0 qN1 =
         ∣ inl ∣ asConst W q
-              , ( subst (λ u → ⟨ fst (asConst W q) ∈ u ⟩) (sym qw) (snd (DefOf.ι Wv q))
+              , ( subst (λ u → ⟨ fst (asConst W q) ∈ u ⟩) (sym qw) (snd (DefOf.ι (fst W) q))
                 , ∣ numeralL 0
                   , ( subst (λ u → ⟨ fst (numeralL 0) ∈ u ⟩) (sym qK) (C.numK 0)
                     , ( sym qN0
@@ -1717,7 +1722,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     -- binds, the tag slot and its numeral, the formula and its code
     -- equation, and returns the key's membership in C.
     private
-      atomC : ∀ {k} (t u : Term ⟪ Wv ⟫ k) (Ni : Fin m) (k' : ℕ) (χ : Formula CS.S k)
+      atomC : ∀ {k} (t u : Term ⟪ fst W ⟫ k) (Ni : Fin m) (k' : ℕ) (χ : Formula CS.S k)
             → LCode.⌜ χ ⌝ ≡ prʟ (numeralL k') (prʟ (LCode.⌜ toT t ⌝ᵗ) (LCode.⌜ toT u ⌝ᵗ))
             → fst (lookup (sh2 Ni) γ′) ≡ fst (numeralL k')
             → ⟨ γ′ ⊨ Close.atomAt {2 + m} i1 (sh2 O) (sh2 w) (sh2 K)
@@ -1892,7 +1897,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                      (pr-out i0 (sh6 (sh2 Ni)) i2 (s' ∷ c ∷ δ₄) es)
                      te) )
 
-      bqC : ∀ {k} (t : Term ⟪ Wv ⟫ k) (χ₁ : Formula CS.S (suc k)) → ⟨ fst (keyʟ χ₁) ∈ fst Cs ⟩
+      bqC : ∀ {k} (t : Term ⟪ fst W ⟫ k) (χ₁ : Formula CS.S (suc k)) → ⟨ fst (keyʟ χ₁) ∈ fst Cs ⟩
           → (Ni : Fin m) (k' : ℕ) (χ : Formula CS.S k)
           → LCode.⌜ χ ⌝ ≡ prʟ (numeralL k') (prʟ (LCode.⌜ toT t ⌝ᵗ) (LCode.⌜ χ₁ ⌝))
           → fst (lookup (sh2 Ni) γ′) ≡ fst (numeralL k')
@@ -1937,7 +1942,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                        te) )
 
     -- THE INDUCTION.
-    key∈C : ∀ {k} (ψ : Formula ⟪ Wv ⟫ k) → ⟨ fst (keyʟ (toS ψ)) ∈ fst Cs ⟩
+    key∈C : ∀ {k} (ψ : Formula ⟪ fst W ⟫ k) → ⟨ fst (keyʟ (toS ψ)) ∈ fst Cs ⟩
     key∈C (t ∈̇ u) = atomC t u N0 0 (toS (t ∈̇ u)) refl (tags2 .t0) hAt0
     key∈C (t ≐ u) = atomC t u N1 1 (toS (t ≐ u)) refl (tags2 .t1) hAt1
     key∈C (a ∧̇ b) = binC (toS a) (toS b) (key∈C a) (key∈C b) N2 2 (toS (a ∧̇ b)) refl (tags2 .t2) hBin2
@@ -1959,57 +1964,78 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     -- formula, which lies in C, so the completeness half puts it in d.
     -- =================================================================
 
+    -- THE DEFINABLE SUBSET, READ AT VARIABLES.  The value A and the set
+    -- D are abstract, tied by a membership bridge; the proof is sealed,
+    -- and the one instantiation below meets `defSet-Sat` at its own
+    -- spelling.  Measured at this site: the two readings stated at the
+    -- concrete value, where a second name for the carrier met `fst W`
+    -- under the fully applied `defSet`, cost 6.1 s and 5.0 s.
+    private
+      module DefRd {n'} (δ : CS.S ^ n') (xi wi vi : Fin n') (D A : V ℓ)
+                   (qw : fst (lookup wi δ) ≡ fst W)
+                   (D⊆ : (y : V ℓ) → ⟨ y ∈ D ⟩ → ⟨ y ∈ fst W ⟩)
+                   (qv : fst (lookup vi δ) ≡ A)
+                   (br : (q : ⟪ fst W ⟫) → (⟪ fst W ⟫↪ q ∈ D) ≡ (envOne (⟪ fst W ⟫↪ q) ∈ A))
+                   (hD : ⟨ δ ⊨ DefinesAt xi wi vi ⟩) where
+        opaque
+          eq : fst (lookup xi δ) ≡ D
+          eq = extensionalV {a = fst (lookup xi δ)} {b = D}
+            (λ y → ⇔toPath (fwd y) (bwd y))
+            where
+            fwd : (y : V ℓ) → ⟨ y ∈ fst (lookup xi δ) ⟩ → ⟨ y ∈ D ⟩
+            fwd y y∈ = subst (λ u → ⟨ u ∈ D ⟩) (fib .snd)
+              (subst ⟨_⟩ (sym (br (fib .fst)))
+                (subst (λ u → ⟨ envOne u ∈ A ⟩) (sym (fib .snd))
+                  (subst (λ u → ⟨ envOne y ∈ u ⟩) qv (hz .snd))))
+              where
+              yS : CS.S
+              yS = down (lookup xi δ) y y∈
+              hz : ⟨ fst yS ∈ fst (lookup wi δ) ⟩ × ⟨ envOne (fst yS) ∈ fst (lookup vi δ) ⟩
+              hz = DefinesAt-out xi wi vi δ hD yS y∈
+              fib : Σ[ q ∈ ⟪ fst W ⟫ ] (⟪ fst W ⟫↪ q ≡ y)
+              fib = ∈-asFiber {a = y} {b = fst W} (subst (λ u → ⟨ y ∈ u ⟩) qw (hz .fst))
+            bwd : (y : V ℓ) → ⟨ y ∈ D ⟩ → ⟨ y ∈ fst (lookup xi δ) ⟩
+            bwd y y∈ = DefinesAt-in xi wi vi δ hD yS
+              ( subst (λ u → ⟨ y ∈ u ⟩) (sym qw) yw
+              , subst (λ u → ⟨ envOne u ∈ fst (lookup vi δ) ⟩) (fib .snd)
+                  (subst (λ u → ⟨ envOne (⟪ fst W ⟫↪ (fib .fst)) ∈ u ⟩) (sym qv)
+                    (subst ⟨_⟩ (br (fib .fst))
+                      (subst (λ u → ⟨ u ∈ D ⟩) (sym (fib .snd)) y∈))) )
+              where
+              yw : ⟨ y ∈ fst W ⟩
+              yw = D⊆ y y∈
+              yS : CS.S
+              yS = y , isL-trans {x = fst W} {y = y} yw (snd W)
+              fib : Σ[ q ∈ ⟪ fst W ⟫ ] (⟪ fst W ⟫↪ q ≡ y)
+              fib = ∈-asFiber {a = y} {b = fst W} yw
+
     private
       -- The definable subset of a formula, from the DefinesAt facts at
-      -- the satisfaction set.
-      defines-defSet : ∀ {n'} (δ : CS.S ^ n') (xi wi vi : Fin n')
-                     → fst (lookup wi δ) ≡ Wv
-                     → (ψ : Formula ⟪ Wv ⟫ 1)
-                     → fst (lookup vi δ) ≡ fst (Sat W (toS ψ))
-                     → ⟨ δ ⊨ DefinesAt xi wi vi ⟩
-                     → fst (lookup xi δ) ≡ DefOf.defSet Wv ψ
-      defines-defSet δ xi wi vi qw ψ qv hD =
-        extensionalV {a = fst (lookup xi δ)} {b = DefOf.defSet Wv ψ}
-          (λ y → ⇔toPath (fwd y) (bwd y))
-        where
-        fwd : (y : V ℓ) → ⟨ y ∈ fst (lookup xi δ) ⟩ → ⟨ y ∈ DefOf.defSet Wv ψ ⟩
-        fwd y y∈ = subst (λ u → ⟨ u ∈ DefOf.defSet Wv ψ ⟩) (fib .snd)
-          (subst ⟨_⟩ (sym (defSet-Sat W ψ (fib .fst)))
-            (subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) (sym (fib .snd))
-              (subst (λ u → ⟨ envOne y ∈ u ⟩) qv (hz .snd))))
-          where
-          yS : CS.S
-          yS = down (lookup xi δ) y y∈
-          hz = DefinesAt-out xi wi vi δ hD yS y∈
-          fib : Σ[ q ∈ ⟪ Wv ⟫ ] (⟪ Wv ⟫↪ q ≡ y)
-          fib = ∈-asFiber {a = y} {b = Wv} (subst (λ u → ⟨ y ∈ u ⟩) qw (hz .fst))
-        bwd : (y : V ℓ) → ⟨ y ∈ DefOf.defSet Wv ψ ⟩ → ⟨ y ∈ fst (lookup xi δ) ⟩
-        bwd y y∈ = DefinesAt-in xi wi vi δ hD yS
-          ( subst (λ u → ⟨ y ∈ u ⟩) (sym qw) yw
-          , subst (λ u → ⟨ envOne y ∈ u ⟩) (sym qv)
-              (subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) (fib .snd)
-                (subst ⟨_⟩ (defSet-Sat W ψ (fib .fst))
-                  (subst (λ u → ⟨ u ∈ DefOf.defSet Wv ψ ⟩) (sym (fib .snd)) y∈))) )
-          where
-          yw : ⟨ y ∈ Wv ⟩
-          yw = DefOf.defSet⊆A Wv ψ y y∈
-          yS : CS.S
-          yS = y , isL-trans {x = Wv} {y = y} yw (snd W)
-          fib : Σ[ q ∈ ⟪ Wv ⟫ ] (⟪ Wv ⟫↪ q ≡ y)
-          fib = ∈-asFiber {a = y} {b = Wv} yw
+      -- the satisfaction set: the reading above, instantiated once.
+      opaque
+        defines-defSet : ∀ {n'} (δ : CS.S ^ n') (xi wi vi : Fin n')
+                       → fst (lookup wi δ) ≡ fst W
+                       → (ψ : Formula ⟪ fst W ⟫ 1)
+                       → fst (lookup vi δ) ≡ fst (Sat W (toS ψ))
+                       → ⟨ δ ⊨ DefinesAt xi wi vi ⟩
+                       → fst (lookup xi δ) ≡ DefOf.defSet (fst W) ψ
+        defines-defSet δ xi wi vi qw ψ qv hD =
+          DefRd.eq δ xi wi vi (DefOf.defSet (fst W) ψ) (fst (Sat W (toS ψ))) qw
+            (DefOf.defSet⊆A (fst W) ψ) qv (defSet-Sat W ψ) hD
 
+    private
       -- DefinesBS to DefinesAt, at x ∷ γ'' with the value at v and the
       -- carrier at w.
       module Def3 (e0 e1 e2 : CS.S) (xi vi : Fin (3 + (2 + m))) where
         module DfA = DefinesAgree {3 + (2 + m)} xi (sh3 (sh2 w)) vi (sh3 (sh2 K)) (sh3 (sh2 N0))
                       (e0 ∷ e1 ∷ e2 ∷ γ′)
                       (tags2 .t0) (C.numK 0) C.pairK
-                      (λ u hu → C.transK Wv (fst u) wK hu) arityK
-                      (λ z hz → C.transK Wv (fst z) wK (hz .fst)) using (back)
+                      (λ u hu → C.transK (fst W) (fst u) wK hu) arityK
+                      (λ z hz → C.transK (fst W) (fst z) wK (hz .fst)) using (back)
 
     -- SOUNDNESS HALF: every member of d is a definable subset of w.
-    into : (x : V ℓ) → ⟨ x ∈ fst (lookup d γ) ⟩ → ⟨ x ∈ 𝒟ₒ Wv ⟩
-    into x x∈ = PT.rec (snd (x ∈ 𝒟ₒ Wv)) byC (hmem xS x∈)
+    into : (x : V ℓ) → ⟨ x ∈ fst (lookup d γ) ⟩ → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
+    into x x∈ = PT.rec (snd (x ∈ 𝒟ₒ (fst W))) byC (hmem xS x∈)
       where
       xS : CS.S
       xS = down (lookup d γ) x x∈
@@ -2018,16 +2044,16 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                   ( keyArBS i1 (sh3 (sh2 N1)) (sh3 (sh2 K))
                   ∧̇ ( appAt (sh3 i0) i1 i0
                     ∧̇ DefinesBS i2 (sh3 (sh2 w)) i0 (sh3 (sh2 K)) (sh3 (sh2 N0)) )) ⟩)
-          → ⟨ x ∈ 𝒟ₒ Wv ⟩
-      byC (c , (c∈ , hv)) = PT.rec (snd (x ∈ 𝒟ₒ Wv)) byV hv
+          → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
+      byC (c , (c∈ , hv)) = PT.rec (snd (x ∈ 𝒟ₒ (fst W))) byV hv
         where
         byV : Σ[ v ∈ CS.S ] (InK (fst v)
                 × ⟨ (v ∷ c ∷ xS ∷ γ′) ⊨
                     ( keyArBS i1 (sh3 (sh2 N1)) (sh3 (sh2 K))
                     ∧̇ ( appAt (sh3 i0) i1 i0
                       ∧̇ DefinesBS i2 (sh3 (sh2 w)) i0 (sh3 (sh2 K)) (sh3 (sh2 N0)) )) ⟩)
-            → ⟨ x ∈ 𝒟ₒ Wv ⟩
-        byV (v , (_ , (hk , (ha , hdB)))) = PT.rec (snd (x ∈ 𝒟ₒ Wv)) byT hk
+            → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
+        byV (v , (_ , (hk , (ha , hdB)))) = PT.rec (snd (x ∈ 𝒟ₒ (fst W))) byT hk
           where
           hcv : ⟨ pr (fst c) (fst v) ∈ fst Ts ⟩
           hcv = app-out (sh3 i0) i1 i0 (v ∷ c ∷ xS ∷ γ′) ha
@@ -2037,15 +2063,15 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                   × ⟨ (t ∷ v ∷ c ∷ xS ∷ γ′) ⊨ ∃̇∈ (var (suc (sh3 (sh2 K))))
                       ((var zero ≐ var (suc (suc (sh3 (sh2 N1)))))
                        ∧̇ prAtL (suc (suc i1)) zero (suc zero)) ⟩)
-              → ⟨ x ∈ 𝒟ₒ Wv ⟩
-          byT (t , (_ , har)) = PT.rec (snd (x ∈ 𝒟ₒ Wv)) byAr har
+              → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
+          byT (t , (_ , har)) = PT.rec (snd (x ∈ 𝒟ₒ (fst W))) byAr har
             where
             byAr : Σ[ ar ∈ CS.S ] (InK (fst ar)
                      × ⟨ (ar ∷ t ∷ v ∷ c ∷ xS ∷ γ′) ⊨
                          ((var zero ≐ var (suc (suc (sh3 (sh2 N1)))))
                           ∧̇ prAtL (suc (suc i1)) zero (suc zero)) ⟩)
-                 → ⟨ x ∈ 𝒟ₒ Wv ⟩
-            byAr (ar , (_ , (ae , ap))) = PT.rec (snd (x ∈ 𝒟ₒ Wv)) byψ
+                 → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
+            byAr (ar , (_ , (ae , ap))) = PT.rec (snd (x ∈ 𝒟ₒ (fst W))) byψ
               (codeAt-out W zero (sh3 w) (c ∷ γ′) refl (hk1 , hw1))
               where
               ceq : fst c ≡ pr (# 1) (fst t)
@@ -2055,19 +2081,19 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
               hk1 = keyArityAtL-in zero 1 (c ∷ γ′) t ceq
               hw1 : ⟨ (c ∷ γ′) ⊨ hasWitnessAt (sh3 w) zero ⟩
               hw1 = ∣ Cs , (c∈ , (closed , shaped)) ∣₁
-              byψ : Σ[ ψ ∈ Formula ⟪ Wv ⟫ 1 ] (fst c ≡ fst (keyS W ψ)) → ⟨ x ∈ 𝒟ₒ Wv ⟩
-              byψ (ψ , qc) = 𝒟ₒ-intro Wv x ∣ ψ , sym xeq ∣₁
+              byψ : Σ[ ψ ∈ Formula ⟪ fst W ⟫ 1 ] (fst c ≡ fst (keyS W ψ)) → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
+              byψ (ψ , qc) = 𝒟ₒ-intro (fst W) x ∣ ψ , sym xeq ∣₁
                 where
                 qv : fst v ≡ fst (Sat W (toS ψ))
                 qv = pinned (toS ψ) c v (qc ∙ keyBridge W ψ) c∈ hcv
-                xeq : x ≡ DefOf.defSet Wv ψ
+                xeq : x ≡ DefOf.defSet (fst W) ψ
                 xeq = defines-defSet (v ∷ c ∷ xS ∷ γ′) i2 (sh3 (sh2 w)) i0 refl ψ qv hD
 
     -- COMPLETENESS HALF: every definable subset of w is a member of d.
-    over : (y : V ℓ) → ⟨ y ∈ 𝒟ₒ Wv ⟩ → ⟨ y ∈ fst (lookup d γ) ⟩
-    over y y∈ = PT.rec (snd (y ∈ fst (lookup d γ))) byψ (𝒟ₒ-inv Wv y y∈)
+    over : (y : V ℓ) → ⟨ y ∈ 𝒟ₒ (fst W) ⟩ → ⟨ y ∈ fst (lookup d γ) ⟩
+    over y y∈ = PT.rec (snd (y ∈ fst (lookup d γ))) byψ (𝒟ₒ-inv (fst W) y y∈)
       where
-      byψ : Σ[ ψ ∈ Formula ⟪ Wv ⟫ 1 ] (DefOf.defSet Wv ψ ≡ y) → ⟨ y ∈ fst (lookup d γ) ⟩
+      byψ : Σ[ ψ ∈ Formula ⟪ fst W ⟫ 1 ] (DefOf.defSet (fst W) ψ ≡ y) → ⟨ y ∈ fst (lookup d γ) ⟩
       byψ (ψ , qy) = PT.rec (snd (y ∈ fst (lookup d γ))) byV
         (hall c c∈ ∣ LCode.⌜ toS ψ ⌝ , (codeK (toS ψ) c∈
               , ∣ numeralL 1 , (C.numK 1 , (sym (tags2 .t1)
@@ -2095,12 +2121,12 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
             where
             hD : ⟨ (x ∷ v ∷ c ∷ γ′) ⊨ DefinesAt i0 (sh3 (sh2 w)) i1 ⟩
             hD = Def3.DfA.back x v c i0 i1 hdB
-            xeq : fst x ≡ DefOf.defSet Wv ψ
+            xeq : fst x ≡ DefOf.defSet (fst W) ψ
             xeq = defines-defSet (x ∷ v ∷ c ∷ γ′) i0 (sh3 (sh2 w)) i1 refl ψ qv hD
 
     -- THE ROW IS SOUND.
-    def-eq : fst (lookup d γ) ≡ 𝒟ₒ Wv
-    def-eq = extensionalV {a = fst (lookup d γ)} {b = 𝒟ₒ Wv}
+    def-eq : fst (lookup d γ) ≡ 𝒟ₒ (fst W)
+    def-eq = extensionalV {a = fst (lookup d γ)} {b = 𝒟ₒ (fst W)}
       (λ x → ⇔toPath (into x) (over x))
 
   -- THE READING, spending the two existentials of the row and the
