@@ -137,7 +137,6 @@ import FOL.Absoluteness
 
 ```agda
 import FOL.ZFModel
-import FOL.Bernstein
 import FOL.Count
 ```
 
@@ -359,7 +358,6 @@ import L.Coding.Shape
 import L.Coding.Recover
 import L.Coding.CodeSet
 import L.Coding.Bound
-import L.Coding.KeyRead
 import L.Coding.Graph
 import L.Coding.Uniform
 import L.Coding.Powerset
@@ -372,7 +370,6 @@ import L.Choice.Finite
 import L.Choice.Name
 import L.Choice.Step
 import L.Cardinal
-import L.Absorption
 import L.GCH
 import L.CantorBernstein
 import L.Choice.Internal
@@ -382,7 +379,6 @@ import L.Choice.Adequate
 import L.Choice.Limit
 import L.Choice.Before
 import L.Choice.Order
-import L.StageCardinal
 import L.GCH.Hull
 import L.CardinalAbove
 import L.GCH.Assembly
