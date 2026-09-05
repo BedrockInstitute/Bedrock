@@ -28,9 +28,8 @@ open import L.GCH.Hull {ℓ} lem using
   ( module HullStage; isOrdAt; Δ₀-isOrdAt; module Amb
   ; module Frame; module Unpack; module HullConvert; _⊨ₚ_
   ; embed-map; lemma; isOrd-at-p )
-open import L.GCH.Level {ℓ} lem using ( levelFo; Δ₀-levelFo; level-sound )
-open import L.GCH.Complete {ℓ} lem using
-  ( Superadequate; Adequate; level-complete; Lset∈suc )
+open import L.GCH.HierDescribe {ℓ} lem using ( levelFo; Δ₀-levelFo; level-sound; level-complete )
+open import L.GCH.Complete {ℓ} lem using ( Superadequate; Adequate; Lset∈suc )
 
 open import Cubical.Data.Vec using ( map; _∷_; [] )
 open import Cubical.Data.Sigma using ( _×_ )
@@ -149,7 +148,7 @@ pinY-map f ψ c = refl
 
 module Pin (U : S) (Utr : isTrans U) where
 
-  module Un = Unpack U Utr using (Ab; module Ab; read)
+  module Un = Unpack U Utr using (module Ab; read)
   module Ab = Un.Ab using (SM; _⊨ᵐ_)
 
   unpack₂ : (ψ χ : Formula Ab.SM 3) (a : Ab.SM)
@@ -210,7 +209,7 @@ module Pin (U : S) (Utr : isTrans U) where
 -- elementary (`elem`), superadequate (`sup`), and with its collapse
 -- image inside L (`pixL`).  `pixL` is NOT derived here: the tree's
 -- `pix-in-L` (src/L/GCH/Stages.lagda.md) takes `Site.Cover`, which is
--- `cover` itself, and `level-sound` (src/L/GCH/Level.lagda.md) reads
+-- `cover` itself, and `level-sound` (src/L/GCH/HierDescribe.lagda.md) reads
 -- its three slots in L, so the collapse values must be known in L
 -- before the level formula is sound at them.
 -- =====================================================================
@@ -227,7 +226,7 @@ module Condense (lam : S) (ordλ : IsOrd lam)
 
   module F = Frame lam ordλ succλ X X⊆L ∅∈λ using (module A; module Carry; module HS)
   module HS = F.HS using (module ASt; module C; module Condense; module H; M)
-  module Cy = F.Carry elem using (module CIso; at; atM; atπ; push)
+  module Cy = F.Carry elem using (module CIso; atM; atπ; push)
   module P = Pin (Lset lam) HS.ASt.Ltr using (module Un; convA; convP)
   module HC = HullConvert (Lset lam) HS.ASt.Ltr using (hull-convert; inBound)
 
@@ -356,7 +355,7 @@ module Condense (lam : S) (ordλ : IsOrd lam)
               (level-complete γ adγ d od d∈γ))
 
   -- The conversion at Devlin's shape, its codomain inferred (the
-  -- measured-green shape of src/L/GCH/Frame.lagda.md `Build.conv0`).
+  -- measured-green shape of archive/src-2026-09-05/L/GCH/Frame.lagda.md `Build.conv0`).
   convF : (ca cd : Code) (a : HS.ASt.SL)
         → ⟨ (a ∷ []) HS.ASt.AbsL.⊨ᵐ (mapFo val (HC.inBound levelFo slide ca cd)) ⟩
         → _

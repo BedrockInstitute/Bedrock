@@ -354,7 +354,6 @@ module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
             x'∈ })
         (RD.all-out ha (keyS W ψ) (sndS (keyS W ψ) (# 1) (cd ψ) refl) (SR.C-in (keyS W ψ) (key∈AllCodes W ψ)) refl) })
       (𝒟ₒ-inv (fst W) x hx)
-```
 
   def-complete : Vv ≡ 𝒟ₒ (fst W) → ⟨ γ ⊨ defAt v w T C N ⟩
   def-complete qv = defAt-in v w T C N γ mem all

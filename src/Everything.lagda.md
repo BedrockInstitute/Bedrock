@@ -383,23 +383,19 @@ import L.Choice.Limit
 import L.Choice.Before
 import L.Choice.Order
 import L.StageCardinal
-import L.Condensation
 import L.GCH.Hull
 import L.CardinalAbove
 import L.GCH.Assembly
-import L.GCH.Frame
 import L.GCH.Definable
 import L.GCH.Least
 import L.GCH.BelowSucc
 import L.GCH.OrderType
 import L.GCH.CardOf
 import L.GCH.Pairing
-import L.GCH.LevelRows
 import L.GCH.SatFrame
 import L.GCH.SatDescribe
 import L.GCH.DefDescribe
-import L.GCH.Level
-import L.GCH.Rows
+import L.GCH.HierDescribe
 import L.GCH.SuccIntoPower
 import L.GCH.Complete
 import L.GCH.Sequences
@@ -411,7 +407,6 @@ import L.GCH.HullElem
 import L.GCH.HullCount
 import L.GCH.BoundedSubset
 import L.GCH.Theorem
-import L.GCH.Sound
 import L.Choice.Transversal
 ```
 

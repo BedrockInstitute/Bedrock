@@ -48,7 +48,8 @@ open import L.Coding.Environment {ℓ} using ( env; cons )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
 open import L.Choice.Name {ℓ} lem using ( limitCode; numeral∈limit; pr∈limit )
 open import L.Choice.Internal {ℓ} lem using ( freeCode-out )
-open import L.GCH.Complete {ℓ} lem using ( Superadequate; module SatMap )
+open import L.GCH.Complete {ℓ} lem using ( Superadequate )
+open import L.GCH.SatFrame {ℓ} lem using ( module SatGraph )
 open import L.GCH.Hull {ℓ} lem using ( module Frame; module HullStage )
 open import L.GCH.HullIn {ℓ} lem using ( module Condense′; module Telescope )
 open import L.GCH.StageCount {ℓ} lem
@@ -468,7 +469,12 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   module B = Telescope.Build lam ordλ succλ X X⊆L ∅∈λ
     using ( A; Body; module BodyRd; C₀; Env; module KeyIn; bodyFo; wL; witFo-out
           ; Φ; Φ-out; λ-isL; ω-num; pack )
-  module SM = SatMap B.A using ( pairs; pairs-out; valOf )
+  module SM = SatGraph B.A using ( pairs; pairs-shape; valOf )
+
+  -- A member of the graph, read as a pair of a code and its value.
+  pairs-out : (x : V ℓ) → ⟨ x ∈ fst SM.pairs ⟩
+            → ∥ Σ[ c ∈ S ] Σ[ m ∈ ⟨ fst c ∈ fst (AllCodes B.A) ⟩ ] (x ≡ pr (fst c) (fst (SM.valOf c m))) ∥₁
+  pairs-out x h = SM.pairs-shape (x , isL-trans {x = fst SM.pairs} {y = x} h (snd SM.pairs)) h
   module It = Telescope.HullIter.It lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack
     using ( Num; iter; iter-in; iter-out; iterUnion-out; ω-num )
   module HI = Telescope.HullIter lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack using ( hullStep⊆Hull )
@@ -819,8 +825,8 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
       -- the two satisfaction sets agree
       T≡ : fst T ≡ fst T₂
       T≡ = PT.rec2 (setIsSet (fst T) (fst T₂)) read
-        (SM.pairs-out (pr (fst s) (fst T)) (A₁.Rd.b-tab hb))
-        (SM.pairs-out (pr (fst s) (fst T₂)) (A₂.Rd.b-tab hb₂))
+        (pairs-out (pr (fst s) (fst T)) (A₁.Rd.b-tab hb))
+        (pairs-out (pr (fst s) (fst T₂)) (A₂.Rd.b-tab hb₂))
         where
         read : Σ[ x ∈ S ] Σ[ m ∈ ⟨ fst x ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T) ≡ pr (fst x) (fst (SM.valOf x m)))
              → Σ[ x' ∈ S ] Σ[ m' ∈ ⟨ fst x' ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T₂) ≡ pr (fst x') (fst (SM.valOf x' m')))

@@ -53,7 +53,8 @@ open import L.GCH.OrderType {ℓ} lem
 open import L.GCH.OmegaRec {ℓ} lem
   using ( module Iterate; pairʟ-in; pairʟ-out; unionʟ-in; unionʟ-out )
 open import L.GCH.Hull {ℓ} lem using ( module HullStage; module Frame )
-open import L.GCH.Complete {ℓ} lem using ( Superadequate; module SatMap )
+open import L.GCH.Complete {ℓ} lem using ( Superadequate )
+open import L.GCH.SatFrame {ℓ} lem using ( module SatGraph )
 open import L.GCH.Condense {ℓ} lem using ( module Condense )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
@@ -774,7 +775,7 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
   -- of the parameter-free formulas (src/L/Choice/Internal.lagda.md
   -- `freeCode-in/out` at `AllCodes ∅ʟ`), the stage `Lset lam`, the
   -- graph of the stage's uniform satisfaction table
-  -- (src/L/GCH/Complete.lagda.md `SatMap.pairs`), the stage's order
+  -- (src/L/GCH/SatFrame.lagda.md `SatGraph.pairs`), the stage's order
   -- element `relL lam` and `ωʟ`.  Every host reading is stated at a
   -- variable and reaches the construction by an equation.
   -- ===================================================================
@@ -787,7 +788,12 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     A : CS.S
     A = LsetS lam ordλ
 
-    module SM = SatMap A using ( pairs; pairs-in; pairs-out; valOf; valOf≡ )
+    module SM = SatGraph A using ( pairs; pairs-in; pairs-shape; valOf; valOf≡ )
+
+    -- A member of the graph, read as a pair of a code and its value.
+    pairs-out : (x : V ℓ) → ⟨ x ∈ˢ fst SM.pairs ⟩
+              → ∥ Σ[ c ∈ CS.S ] Σ[ m ∈ ⟨ fst c ∈ˢ fst (AllCodes A) ⟩ ] (x ≡ pr (fst c) (fst (SM.valOf c m))) ∥₁
+    pairs-out x h = SM.pairs-shape (x , isL-trans {x = fst SM.pairs} {y = x} h (snd SM.pairs)) h
     module DA = DefOf (Lset lam) using ( ι; _⊨ᵐ_; 𝒮M )
 
     C₀ : CS.S
@@ -1242,7 +1248,7 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
                    qT : fst T ≡ fst (Tof (suc n) χ)
                    qT = pr-inj e .snd ∙ cong fst (valOf-same x m (suc n) χ (sym ex ∙ qs))
                in ∣ AtTable.searched qT ∣₁ })
-            (SM.pairs-out (pr (fst s) (fst T)) (Rd.b-tab h))
+            (pairs-out (pr (fst s) (fst T)) (Rd.b-tab h))
 
         code : ∥ Searched Z (fst w) ∥₁
         code = PT.rec squash₁
