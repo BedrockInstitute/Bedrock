@@ -15,7 +15,7 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
 open import L.Constructible {ℓ} using
-  ( 𝒮ʟ; isL; isL-trans; IsOrd; isPropIsOrd; Lset; Lset-mono; Lset→isL
+  ( 𝒮ʟ; isL; isL-trans; IsOrd; isPropIsOrd; Lset; Lset-mono; Lset→isL; Lset-layer; layer-trans
   ; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out )
 open import L.Ordinal {ℓ} using
   ( boundingOrd; bound2; setUnion-ord; mem-ord; suc-ord; ω-ord; #∈ω )
@@ -39,7 +39,6 @@ open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; keyS )
 open import L.Coding.Uniform {ℓ} lem using ( module Table )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap ) renaming ( module Graph to MapGraph )
 open import L.Coding.Bound {ℓ} lem using ( module Bound; Lset-out′; Lset-trans′ )
-open import L.Coding.Key {ℓ} lem using ( union∈Lset-suc )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
 open import L.BoundedSubset {ℓ} lem using ( module Cnt )
@@ -66,7 +65,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber; _∈ₛ_ )
+  using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber; _∈ₛ_; _⊆_; extensionality )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⋃_; union-ax; ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV; ω )
@@ -80,6 +79,67 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- The 𝒮ʟ carrier, for the syntax.  Same name as src/L/GCH/Level.lagda.md.
 module CS = hPropStructure 𝒮ʟ using (S)
+private
+  -- Moved from L.Coding.Key (A1): the level union closure. Complete is its only consumer.
+  union∈Lset-suc : (σ x : S) → ⟨ x ∈ Lset σ ⟩ → ⟨ ⋃ x ∈ Lset (sucV σ) ⟩
+  union∈Lset-suc σ x x∈ =
+    subst (λ w → ⟨ ⋃ x ∈ w ⟩) (sym (Lset-suc σ)) union∈𝒟ₒ
+    where
+    module DefA = DefOf (Lset σ)
+    Atrans = layer-trans (Lset-layer σ)
+    mₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .fst
+    qₓ : ⟪ Lset σ ⟫↪ mₓ ≡ x
+    qₓ = ∈-asFiber {a = x} {b = Lset σ} x∈ .snd
+
+    φ : Formula ⟪ Lset σ ⟫ 1
+    φ = ∃̇∈ (con mₓ) (var (suc zero) ∈̇ var zero)
+
+    defSet≡ : DefA.defSet φ ≡ ⋃ x
+    defSet≡ = extensionality (DefA.defSet φ) (⋃ x) (sub₁ , sub₂)
+      where
+      sub₁ : ⟨ DefA.defSet φ ⊆ ⋃ x ⟩
+      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⋃ x))
+        (λ { ((m , h) , q) →
+          subst (λ w → ⟨ w ∈ₛ ⋃ x ⟩) q
+            (PT.rec (snd (⟪ Lset σ ⟫↪ m ∈ₛ ⋃ x))
+              (λ { (v , (fstv∈mₓ , m∈fstv)) →
+                union-ax x (⟪ Lset σ ⟫↪ m) .snd
+                  ∣ fst v
+                  , ( ∈∈ₛ {a = fst v} {b = x} .fst
+                        (subst (λ w → ⟨ fst v ∈ w ⟩) qₓ fstv∈mₓ)
+                    , ∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = fst v} .fst m∈fstv ) ∣₁ })
+              (subst ⟨_⟩ (DefA.defSet-mem φ m) ∣ (m , h) , refl ∣₁)) })
+        (∈∈ₛ {a = y} {b = DefA.defSet φ} .snd y∈ₛ)
+      sub₂ : ⟨ ⋃ x ⊆ DefA.defSet φ ⟩
+      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet φ))
+        (λ { (v , (v∈ₛx , y∈ₛv)) → member v v∈ₛx y∈ₛv })
+        (union-ax x y .fst y∈ₛ)
+        where
+        member : (v : S) → ⟨ v ∈ₛ x ⟩ → ⟨ y ∈ₛ v ⟩
+               → ⟨ y ∈ₛ DefA.defSet φ ⟩
+        member v v∈ₛx y∈ₛv =
+          subst (λ w → ⟨ w ∈ₛ DefA.defSet φ ⟩) q'
+            (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m'} {b = DefA.defSet φ} .fst
+              (subst ⟨_⟩ (sym (DefA.defSet-mem φ m')) sat))
+          where
+          v∈x = ∈∈ₛ {a = v} {b = x} .snd v∈ₛx
+          y∈v = ∈∈ₛ {a = y} {b = v} .snd y∈ₛv
+          v∈A = Atrans {x = x} {y = v} v∈x x∈
+          y∈A = Atrans {x = v} {y = y} y∈v v∈A
+          fib = ∈-asFiber {a = y} {b = Lset σ} y∈A
+          m' = fib .fst
+          q' = fib .snd
+          sat : ⟨ (DefA.ι m' ∷ []) DefA.⊨ᵐ φ ⟩
+          sat = ∣ (v , v∈A)
+                , ( subst (λ w → ⟨ v ∈ w ⟩) (sym qₓ) v∈x
+                  , subst (λ w → ⟨ w ∈ v ⟩) (sym q') y∈v ) ∣₁
+
+    union∈𝒟ₒ : ⟨ ⋃ x ∈ 𝒟ₒ (Lset σ) ⟩
+    union∈𝒟ₒ = 𝒟ₒ-intro (Lset σ) (⋃ x) ∣ φ , defSet≡ ∣₁
+
+  -- =====================================================================
+  -- The env closure, stated over a transitive level (K, Ktr) plus the four
+
 
 -- A member of a class-carrier element, packaged as one.
 down : (x : CS.S) (y : V ℓ) → ⟨ y ∈ fst x ⟩ → CS.S

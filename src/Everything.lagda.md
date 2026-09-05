@@ -359,7 +359,6 @@ import L.Coding.Shape
 import L.Coding.Recover
 import L.Coding.CodeSet
 import L.Coding.Bound
-import L.Coding.Key
 import L.Coding.KeyRead
 import L.Coding.Graph
 import L.Coding.Uniform
