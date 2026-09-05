@@ -76,14 +76,20 @@ open import L.Coding.Bridge {ℓ} lem
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; slot; satTable; total; inSlot; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
-open import L.Coding.Sound {ℓ} lem using ( soundness )
-open import L.Coding.Unique {ℓ} lem using ( module Good )
-open import L.Coding.Graph {ℓ} lem using ( satGraph; graph-in; graph-out )
+open import L.Coding.Clauses {ℓ} lem using
+  ( Tags; nn; towerAt; tableAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ; module Tower; module TowerHolds )
+open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds ) renaming ( keyBridge to keyBridge' )
+open import L.Coding.Graph {ℓ} lem using
+  ( satGraph; graph-in; graph-out; GraphWit
+  ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
 open import L.Coding.CodeSet {ℓ} lem
   using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
 open import L.Recursion {ℓ} lem using ( Recursion; mereFunct; module Of )
 
+open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
+open import Cubical.Data.Vec using ( _∷_; [] )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
@@ -179,19 +185,12 @@ in a slot can use it without supplying a second carrier it does not have.
 module _ (A : S) where
   keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
             → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
-  keyBridge {n} ψ =
-      cong (pr (# n))
-        ( cong (λ χ → VCode.⌜ χ ⌝) (sym (mapFo-comp (asConst A) fst ψ))
-        ∙ sym (codeBridge (mapFo (asConst A) ψ)) )
-    ∙ cong (λ w → pr w (fst LCode.⌜ mapFo (asConst A) ψ ⌝))
-        (sym (numeralL-fst n))
-    ∙ sym (prʟ-fst (numeralL n) LCode.⌜ mapFo (asConst A) ψ ⌝)
+  keyBridge = keyBridge' A
 
 module _ (A B : S) where
   private
     toS : ∀ {n} → Formula ⟪ fst A ⟫ n → Formula S n
     toS = mapFo (asConst A)
-
 ```
 
 <!--en-->
@@ -227,35 +226,53 @@ line and is the difference between elaborating and not.
 <!--/-->
 
 ```agda
-    Ci Ti : Fin 5
-    Ci = suc (suc zero)
-    Ti = suc zero
+    toB : ∀ {n} → Formula ⟪ fst B ⟫ n → Formula S n
+    toB = mapFo (asConst B)
 
-    hdom : ∀ {n} (φ : Formula S n) (x y : S)
-         → ⟨ (B ∷ satTable B φ ∷ slot B φ ∷ y ∷ x ∷ []) ⊨ domAt Ti Ci ⟩
-    hdom φ x y = domAt-intro Ti Ci (B ∷ satTable B φ ∷ slot B φ ∷ y ∷ x ∷ [])
+    -- The graph's frame at the per-formula slot: the tower, the slot,
+    -- the table and the carrier, with the twelve numerals beside them.
+    fr : ∀ {n} (φ : Formula S n) (x y : S) → S ^ (16 + 2)
+    fr φ x y = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B (y ∷ x ∷ [])
+
+    hdom : ∀ {n} (φ : Formula S n) (x y : S) → ⟨ fr φ x y ⊨ domAt Ti Ci ⟩
+    hdom φ x y = domAt-intro Ti Ci (fr φ x y)
       (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot B φ)))
                 (λ { (w , hw) → inSlot B φ (fst z) (fst w) hw }) h)
            , (λ h → total B φ (fst z) h))
 
-    exists : ∀ {n} (φ : Formula S n) (x : S) → fst x ≡ fst (keyʟ φ)
-           → ⟨ (Sat B φ ∷ x ∷ []) ⊨ satGraph B ⟩
-    exists φ x k = graph-in B x (Sat B φ)
-      ∣ slot B φ , (satTable B φ , (B , (refl
-      , ( slotClosed B φ (Sat B φ ∷ x ∷ [])
-      , ( hdom φ x (Sat B φ)
-      , ( subst (λ w → ⟨ pr w (fst (Sat B φ)) ∈ fst (satTable B φ) ⟩) (sym k)
-            (entry-in B φ)
-      , soundness B φ (Sat B φ ∷ x ∷ []) )))))) ∣₁
+    htow : ∀ {n} (φ : Formula S n) (x y : S) → ⟨ fr φ x y ⊨ towerAt Ei Bi (NN f0) ⟩
+    htow φ x y = TowerHolds.holds Ei Bi (NN f0) (fr φ x y) B refl refl refl
 
-    unique : ∀ {n} (φ : Formula S n) (x : S) → fst x ≡ fst (keyʟ φ)
-           → (y : S) → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩ → y ≡ Sat B φ
-    unique φ x k y hy = Σ≡Prop (λ v → snd (isL v))
-      (PT.rec (setIsSet (fst y) (fst (Sat B φ)))
-        (λ { (C , (T , (b , (eb , (hc , (hd , (ha , h12))))))) →
-          Good.pinned (b ∷ T ∷ C ∷ y ∷ x ∷ []) Ci Ti zero hc hd h12 φ x y k
-              (domAt-out Ti Ci (b ∷ T ∷ C ∷ y ∷ x ∷ []) hd x y ha) ha
-          ∙ cong (λ w → fst (Sat w φ)) (Σ≡Prop (λ v → snd (isL v)) eb) })
+    exists : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) → fst x ≡ fst (keyʟ (toB ψ))
+           → ⟨ (Sat B (toB ψ) ∷ x ∷ []) ⊨ satGraph B ⟩
+    exists {n} ψ x k = graph-in B x (Sat B (toB ψ))
+      ∣ numν
+      , (Tower.tower B
+      , (slot B (toB ψ)
+      , (satTable B (toB ψ)
+      , (B
+      , (refl
+      , (numTags (Tower.tower B) (slot B (toB ψ)) (satTable B (toB ψ)) B (Sat B (toB ψ) ∷ x ∷ [])
+      , (htow (toB ψ) x (Sat B (toB ψ))
+      , (slotClosed B (toB ψ) (Tower.tower B ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
+            ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
+            ∷ numν f11 ∷ Sat B (toB ψ) ∷ x ∷ [])
+      , (hdom (toB ψ) x (Sat B (toB ψ))
+      , (subst (λ w → ⟨ pr w (fst (Sat B (toB ψ))) ∈ fst (satTable B (toB ψ)) ⟩) (sym k)
+            (entry-in B (toB ψ))
+      , SlotHolds.holds B Ti Bi Ci Ei NN (fr (toB ψ) x (Sat B (toB ψ))) refl
+          (numTags (Tower.tower B) (slot B (toB ψ)) (satTable B (toB ψ)) B (Sat B (toB ψ) ∷ x ∷ []))
+          (htow (toB ψ) x (Sat B (toB ψ))) ψ refl refl)))))))))) ∣₁
+
+    unique : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) → fst x ≡ fst (keyʟ (toB ψ))
+           → (y : S) → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩ → y ≡ Sat B (toB ψ)
+    unique {n} ψ x k y hy = Σ≡Prop (λ v → snd (isL v))
+      (PT.rec (setIsSet (fst y) (fst (Sat B (toB ψ))))
+        (λ { (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12))))))))))) →
+          SatSoundC.pinned Ti Bi Ci Ei NN (ev ν E C T b (y ∷ x ∷ [])) B eb tg hE hc h12
+            ψ (subst (λ u → ⟨ u ∈ fst C ⟩) (k ∙ sym (keyBridge' B ψ))
+                 (domAt-out Ti Ci (ev ν E C T b (y ∷ x ∷ [])) hd x y ha)) y
+            (subst (λ u → ⟨ pr u (fst y) ∈ fst T ⟩) (k ∙ sym (keyBridge' B ψ)) ha) })
         (graph-out B x y hy))
 ```
 
@@ -286,14 +303,14 @@ meaning.
 
 ```agda
   satRec : Recursion
-  Recursion.dom satRec = AllCodes A
+  Recursion.dom satRec = AllCodes B
   Recursion.graph satRec = satGraph B
   Recursion.funct satRec x x∈ = mereFunct (satGraph B) x
     (PT.map
-      (λ { (n , ψ , q) → Sat B (toS ψ)
-         , ( exists (toS ψ) x (q ∙ keyBridge A ψ)
-           , unique (toS ψ) x (q ∙ keyBridge A ψ) ) })
-      (AllCodes-out A x x∈))
+      (λ { (n , ψ , q) → Sat B (toB ψ)
+         , ( exists ψ x (q ∙ keyBridge' B ψ)
+           , unique ψ x (q ∙ keyBridge' B ψ) ) })
+      (AllCodes-out B x x∈))
 
   module Table = Of satRec
 ```
@@ -339,11 +356,11 @@ what the type mentions there does not unfold.
 <!--/-->
 
 ```agda
-  val-at : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n) (x : S) (x∈ : ⟨ x ∈ˢ AllCodes A ⟩)
-         → fst x ≡ fst (keyS A ψ)
-         → Table.val x x∈ ≡ Sat B (toS ψ)
+  val-at : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) (x∈ : ⟨ x ∈ˢ AllCodes B ⟩)
+         → fst x ≡ fst (keyS B ψ)
+         → Table.val x x∈ ≡ Sat B (toB ψ)
   val-at ψ x x∈ q =
-    Table.val-uniq x x∈ (Sat B (toS ψ)) (exists (toS ψ) x (q ∙ keyBridge A ψ))
+    Table.val-uniq x x∈ (Sat B (toB ψ)) (exists ψ x (q ∙ keyBridge' B ψ))
 
 ```
 

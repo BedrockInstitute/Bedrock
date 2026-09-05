@@ -59,16 +59,20 @@ open import L.Coding.CodeSet {ℓ} lem
   using ( keyArityAtL; keyArityAtL-in; keyArityAtL-out; hasWitnessAt
         ; codeS; keyS; witnessAt-in; witnessAt-out )
 open import L.Coding.Graph {ℓ} lem
-  using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out )
+  using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
+        ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
+open import L.Coding.Clauses {ℓ} lem using
+  ( Tags; towerAt; tableAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ; module Tower; module TowerHolds )
+open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; slot; satTable; total; inSlot; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
-open import L.Coding.Sound {ℓ} lem using ( soundness )
-open import L.Coding.Unique {ℓ} lem using ( module Good )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Bridge {ℓ} lem using ( asConst; defSet-Sat )
 open import L.Coding.Uniform {ℓ} lem using ( keyBridge )
 
+open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -347,27 +351,44 @@ instead of seconds.
 ```agda
 module _ (B : S) where
   private
-    Ci Ti : ∀ {k} → Fin (suc (suc (suc k)))
-    Ci = suc (suc zero)
-    Ti = suc zero
+    toB : ∀ {n} → Formula ⟪ fst B ⟫ n → Formula S n
+    toB = mapFo (asConst B)
 
-  graphAt-holds : ∀ {m n} (φ : Formula S m) (w c v : Fin n) (γ : S ^ n)
+    fr : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → S ^ (16 + n)
+    fr φ γ = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B γ
+
+  graphAt-holds : ∀ {m n} (ψ : Formula ⟪ fst B ⟫ m) (w c v : Fin n) (γ : S ^ n)
                 → fst (lookup w γ) ≡ fst B
-                → fst (lookup c γ) ≡ fst (keyʟ φ)
-                → fst (lookup v γ) ≡ fst (Sat B φ)
+                → fst (lookup c γ) ≡ fst (keyʟ (toB ψ))
+                → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
                 → ⟨ γ ⊨ satGraphAt w c v ⟩
-  graphAt-holds φ w c v γ qw qc qv = graphAt-in w c v γ
-    ∣ slot B φ , (satTable B φ , (B , (sym qw
-    , ( slotClosed B φ γ
-    , ( hdom
-    , ( entry
-    , soundness B φ γ )))))) ∣₁
+  graphAt-holds {m} {n} ψ w c v γ qw qc qv = graphAt-in w c v γ
+    ∣ numν
+    , (Tower.tower B
+    , (slot B φ
+    , (satTable B φ
+    , (B
+    , (sym qw
+    , (tg
+    , (htow
+    , (slotClosed B φ (Tower.tower B ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
+         ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
+         ∷ numν f11 ∷ γ)
+    , (hdom
+    , (entry
+    , SlotHolds.holds B Ti Bi Ci Ei NN (fr φ γ) refl tg htow ψ refl refl)))))))))) ∣₁
     where
-    δ : S ^ (suc (suc (suc _)))
-    δ = B ∷ satTable B φ ∷ slot B φ ∷ γ
+    φ : Formula S m
+    φ = toB ψ
 
-    hdom : ⟨ δ ⊨ domAt Ti Ci ⟩
-    hdom = domAt-intro Ti Ci δ
+    tg : Tags (fr φ γ) NN
+    tg = numTags (Tower.tower B) (slot B φ) (satTable B φ) B γ
+
+    htow : ⟨ fr φ γ ⊨ towerAt Ei Bi (NN f0) ⟩
+    htow = TowerHolds.holds Ei Bi (NN f0) (fr φ γ) B refl refl refl
+
+    hdom : ⟨ fr φ γ ⊨ domAt Ti Ci ⟩
+    hdom = domAt-intro Ti Ci (fr φ γ)
       (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot B φ)))
                   (λ { (u , hu) → inSlot B φ (fst z) (fst u) hu }) h)
            , (λ h → total B φ (fst z) h))
@@ -376,21 +397,23 @@ module _ (B : S) where
     entry = subst2 (λ a b → ⟨ pr a b ∈ fst (satTable B φ) ⟩)
       (sym qc) (sym qv) (entry-in B φ)
 
-  graphAt-unique : ∀ {m n} (φ : Formula S m) (w c v : Fin n) (γ : S ^ n)
+  graphAt-unique : ∀ {m n} (ψ : Formula ⟪ fst B ⟫ m) (w c v : Fin n) (γ : S ^ n)
                  → fst (lookup w γ) ≡ fst B
-                 → fst (lookup c γ) ≡ fst (keyʟ φ)
+                 → fst (lookup c γ) ≡ fst (keyʟ (toB ψ))
                  → ⟨ γ ⊨ satGraphAt w c v ⟩
-                 → fst (lookup v γ) ≡ fst (Sat B φ)
-  graphAt-unique φ w c v γ qw qc h =
-    PT.rec (setIsSet (fst (lookup v γ)) (fst (Sat B φ))) step
+                 → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
+  graphAt-unique {m} {n} ψ w c v γ qw qc h =
+    PT.rec (setIsSet (fst (lookup v γ)) (fst (Sat B (toB ψ)))) step
       (graphAt-out w c v γ h)
     where
-    step : GraphWitAt w c v γ → fst (lookup v γ) ≡ fst (Sat B φ)
-    step (C , (T , (b , (eb , (hc , (hd , (ha , h12)))))))
-      = Good.pinned (b ∷ T ∷ C ∷ γ) Ci Ti zero hc hd h12 φ
-          (lookup c γ) (lookup v γ) qc
-          (domAt-out Ti Ci (b ∷ T ∷ C ∷ γ) hd (lookup c γ) (lookup v γ) ha) ha
-      ∙ cong (λ u → fst (Sat u φ)) (Σ≡Prop (λ u → snd (isL u)) (eb ∙ qw))
+    step : GraphWitAt w c v γ → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
+    step (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12)))))))))))
+      = SatSoundC.pinned Ti Bi Ci Ei NN (ev ν E C T b γ) B (eb ∙ qw) tg hE hc h12
+          ψ (subst (λ u → ⟨ u ∈ fst C ⟩) (qc ∙ sym (keyBridge B ψ))
+               (domAt-out Ti Ci (ev ν E C T b γ) hd (lookup c γ) (lookup v γ) ha))
+          (lookup v γ)
+          (subst (λ u → ⟨ pr u (fst (lookup v γ)) ∈ fst T ⟩)
+             (qc ∙ sym (keyBridge B ψ)) ha)
 ```
 
 <!--en-->
@@ -509,7 +532,7 @@ module _ (A : S) where
     hcode = codeAt-in A (suc zero) (sh3 w) δ qw ψ refl
 
     hgraph : ⟨ δ ⊨ satGraphAt (sh3 w) (suc zero) zero ⟩
-    hgraph = graphAt-holds A (toS ψ) (sh3 w) (suc zero) zero δ qw
+    hgraph = graphAt-holds A ψ (sh3 w) (suc zero) zero δ qw
                (keyBridge A ψ) refl
 
     Holds : S → Type (ℓ-suc ℓ)
@@ -557,7 +580,7 @@ module _ (A : S) where
     step (ψ , qc) = ∣ ψ , extensionality (DA.defSet ψ) (fst z) (sub₁ , sub₂) ∣₁
       where
       qv : fst v ≡ fst (Sat A (toS ψ))
-      qv = graphAt-unique A (toS ψ) (sh3 w) (suc zero) zero δ qw
+      qv = graphAt-unique A ψ (sh3 w) (suc zero) zero δ qw
              (qc ∙ keyBridge A ψ) hgraph
 
       sub₁ : ⟨ DA.defSet ψ ⊆ fst z ⟩

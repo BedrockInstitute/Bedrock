@@ -43,10 +43,14 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( closedAt; domAt; appAt; appAt-adequate
-        ; memClauseAt; eqClauseAt; andClauseAt; orClauseAt; impClauseAt
-        ; negClauseAt; topClauseAt; botClauseAt; existClauseAt; forallClauseAt
-        ; allInClauseAt; exInClauseAt )
+  using ( closedAt; domAt; appAt; appAt-adequate )
+open import L.Coding.Clauses {ℓ} lem using
+  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; i9; i10; i11; i12; i13; i14; i15
+  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ; sh; nn; Tags; towerAt; tableAt )
+open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.Data.Vec using ( _∷_; []; lookup )
 
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
@@ -82,33 +86,100 @@ three slots, with the two free slots shifted past the three binders.
 <!--/-->
 
 ```agda
+-- =====================================================================
+-- THE FRAME.  Sixteen bound sets: the twelve numeral slots the Δ₀
+-- clauses index their tags by, the tower, the index set, the table and
+-- the carrier, innermost last.  The numerals are pinned to constants,
+-- which costs nothing under a binder because a numeral is the same set
+-- wherever it is named; the tower is pinned by its own Δ₀ description,
+-- which is why no caller has to hold a slot for it.
+-- =====================================================================
+
+Bi Ti Ci Ei : ∀ {n} → Fin (16 + n)
+Bi = i0
+Ti = i1
+Ci = i2
+Ei = i3
+
+-- The tag slots, innermost first: N 0 at i4 up to N 11 at i15.
+NN : ∀ {n} → Fin 12 → Fin (16 + n)
+NN zero = i4
+NN (suc zero) = i5
+NN (suc (suc zero)) = i6
+NN (suc (suc (suc zero))) = i7
+NN (suc (suc (suc (suc zero)))) = i8
+NN (suc (suc (suc (suc (suc zero))))) = i9
+NN (suc (suc (suc (suc (suc (suc zero)))))) = i10
+NN (suc (suc (suc (suc (suc (suc (suc zero))))))) = i11
+NN (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = i12
+NN (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = i13
+NN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = i14
+NN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = i15
+
+sh16 : ∀ {n} → Fin n → Fin (16 + n)
+sh16 i = sh 16 i
+
+-- The frame environment of a witness.
+ev : ∀ {n} → (Fin 12 → S) → S → S → S → S → S ^ n → S ^ (16 + n)
+ev ν E C T b γ =
+  b ∷ T ∷ C ∷ E ∷ ν f0 ∷ ν f1 ∷ ν f2 ∷ ν f3 ∷ ν f4 ∷ ν f5
+    ∷ ν f6 ∷ ν f7 ∷ ν f8 ∷ ν f9 ∷ ν f10 ∷ ν f11 ∷ γ
+
+-- The twelve numerals themselves, and the tags they satisfy.
+numν : Fin 12 → S
+numν k = nn (toℕ k)
+
+numTags : ∀ {n} (E C T b : S) (γ : S ^ n) → Tags (ev numν E C T b γ) NN
+numTags E C T b γ zero = refl
+numTags E C T b γ (suc zero) = refl
+numTags E C T b γ (suc (suc zero)) = refl
+numTags E C T b γ (suc (suc (suc zero))) = refl
+numTags E C T b γ (suc (suc (suc (suc zero)))) = refl
+numTags E C T b γ (suc (suc (suc (suc (suc zero))))) = refl
+numTags E C T b γ (suc (suc (suc (suc (suc (suc zero)))))) = refl
+numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc zero))))))) = refl
+numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = refl
+numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = refl
+numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = refl
+numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = refl
+
+-- The twelve tags, pinned to the numerals they name.
+numsAt : ∀ {n} → Formula S (16 + n)
+numsAt =
+  ((var i4 ≐ con (nn 0)) ∧̇ ((var i5 ≐ con (nn 1)) ∧̇ ((var i6 ≐ con (nn 2)) ∧̇ ((var i7 ≐ con (nn 3)) ∧̇ ((var i8 ≐ con (nn 4)) ∧̇ ((var i9 ≐ con (nn 5)) ∧̇ ((var i10 ≐ con (nn 6)) ∧̇ ((var i11 ≐ con (nn 7)) ∧̇ ((var i12 ≐ con (nn 8)) ∧̇ ((var i13 ≐ con (nn 9)) ∧̇ ((var i14 ≐ con (nn 10)) ∧̇ (var i15 ≐ con (nn 11)))))))))))))
+
+nums-out : ∀ {n} (ν : Fin 12 → S) (E C T b : S) (γ : S ^ n)
+         → ⟨ ev ν E C T b γ ⊨ numsAt ⟩ → Tags (ev ν E C T b γ) NN
+nums-out ν E C T b γ h zero = h .fst
+nums-out ν E C T b γ h (suc zero) = h .snd .fst
+nums-out ν E C T b γ h (suc (suc zero)) = h .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc zero))) = h .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc zero)))) = h .snd .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc (suc zero))))) = h .snd .snd .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc zero)))))) = h .snd .snd .snd .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc (suc zero))))))) = h .snd .snd .snd .snd .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = h .snd .snd .snd .snd .snd .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
+nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd
+
+nums-in : ∀ {n} (ν : Fin 12 → S) (E C T b : S) (γ : S ^ n)
+        → Tags (ev ν E C T b γ) NN → ⟨ ev ν E C T b γ ⊨ numsAt ⟩
+nums-in ν E C T b γ tg =
+    tg f0 , (tg f1 , (tg f2 , (tg f3 , (tg f4 , (tg f5
+  , (tg f6 , (tg f7 , (tg f8 , (tg f9 , (tg f10 , tg f11))))))))))
+
 private
-  Ci Ti Bi : ∀ {n} → Fin (suc (suc (suc n)))
-  Ci = suc (suc zero)
-  Ti = suc zero
-  Bi = zero
-
-  sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
-  sh3 i = suc (suc (suc i))
-
-twelveAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
-twelveAt C T B =
-  memClauseAt C T B ∧̇ (eqClauseAt C T B
-  ∧̇ (andClauseAt C T ∧̇ (orClauseAt C T
-  ∧̇ (impClauseAt C T B ∧̇ (negClauseAt C T B
-  ∧̇ (topClauseAt C T B ∧̇ (botClauseAt C T
-  ∧̇ (existClauseAt C T B ∧̇ (forallClauseAt C T B
-  ∧̇ (allInClauseAt C T B ∧̇ exInClauseAt C T B))))))))))
-
-private
-  satGraphOn : ∀ {n} → Formula S (suc (suc (suc n)))
+  satGraphOn : ∀ {n} → Formula S (16 + n)
              → Fin n → Fin n → Formula S n
   satGraphOn pin x y =
-    ∃̇ (∃̇ (∃̇ ( pin
-            ∧̇ ( closedAt Ci
-            ∧̇ ( domAt Ti Ci
-            ∧̇ ( appAt Ti (sh3 x) (sh3 y)
-            ∧̇ twelveAt Ci Ti Bi ))))))
+    ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (( pin
+      ∧̇ ( numsAt
+      ∧̇ ( towerAt Ei Bi (NN f0)
+      ∧̇ ( closedAt Ci
+      ∧̇ ( domAt Ti Ci
+      ∧̇ ( appAt Ti (sh16 x) (sh16 y)
+      ∧̇ tableAt Ti Bi Ci Ei NN ))))))))))))))))))))))
 ```
 
 <!--en-->
@@ -138,37 +209,75 @@ variable equated to a variable read as the same equation between underlying sets
 ```agda
 private
   GraphWitOn : ∀ {n} → S → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
-  GraphWitOn W x y γ = Σ[ C ∈ S ] (Σ[ T ∈ S ] (Σ[ b ∈ S ]
-    ((fst b ≡ fst W)
-     × (⟨ (b ∷ T ∷ C ∷ γ) ⊨ closedAt Ci ⟩
-        × (⟨ (b ∷ T ∷ C ∷ γ) ⊨ domAt Ti Ci ⟩
-           × (⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst T ⟩
-              × ⟨ (b ∷ T ∷ C ∷ γ) ⊨ twelveAt Ci Ti Bi ⟩))))))
+  GraphWitOn W x y γ =
+    Σ[ ν ∈ (Fin 12 → S) ] (Σ[ E ∈ S ] (Σ[ C ∈ S ] (Σ[ T ∈ S ] (Σ[ b ∈ S ] ((fst b ≡ fst W) × (Tags (ev ν E C T b γ) NN × (⟨ (ev ν E C T b γ) ⊨ towerAt Ei Bi (NN f0) ⟩ × (⟨ (ev ν E C T b γ) ⊨ closedAt Ci ⟩ × (⟨ (ev ν E C T b γ) ⊨ domAt Ti Ci ⟩ × (⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst T ⟩ × ⟨ (ev ν E C T b γ) ⊨ tableAt Ti Bi Ci Ei NN ⟩))))))))))
 
-  module _ {n : ℕ} (pin : Formula S (suc (suc (suc n)))) (W : S)
+  module _ {n : ℕ} (pin : Formula S (16 + n)) (W : S)
            (x y : Fin n) (γ : S ^ n) where
 
-    graphOn-in : ((b T C : S) → fst b ≡ fst W → ⟨ (b ∷ T ∷ C ∷ γ) ⊨ pin ⟩)
+    graphOn-in : ((ν : Fin 12 → S) (E C T b : S) → fst b ≡ fst W
+                   → ⟨ ev ν E C T b γ ⊨ pin ⟩)
                → ∥ GraphWitOn W x y γ ∥₁ → ⟨ γ ⊨ satGraphOn pin x y ⟩
     graphOn-in rd = PT.map
-      (λ { (C , (T , (b , (eb , (hc , (hd , (ha , h12))))))) → C
-         , ∣ T , ∣ b , (rd b T C eb , (hc , (hd
-           , ( subst ⟨_⟩
-                 (sym (appAt-adequate Ti (sh3 x) (sh3 y) (b ∷ T ∷ C ∷ γ))) ha
-             , h12 )))) ∣₁ ∣₁ })
+      (λ { (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12))))))))))) →
+          ν f11
+        , ∣ ν f10 , ∣ ν f9 , ∣ ν f8 , ∣ ν f7 , ∣ ν f6 , ∣ ν f5 , ∣ ν f4
+        , ∣ ν f3 , ∣ ν f2 , ∣ ν f1 , ∣ ν f0 , ∣ E , ∣ C , ∣ T , ∣ b
+        , ( rd ν E C T b eb
+          , ( nums-in ν E C T b γ tg
+          , ( hE
+          , ( hc
+          , ( hd
+          , ( subst ⟨_⟩
+                (sym (appAt-adequate Ti (sh16 x) (sh16 y) (ev ν E C T b γ))) ha
+            , h12 ))))))
+          ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ })
 
-    graphOn-out : ((b T C : S) → ⟨ (b ∷ T ∷ C ∷ γ) ⊨ pin ⟩ → fst b ≡ fst W)
+    graphOn-out : ((ν : Fin 12 → S) (E C T b : S)
+                    → ⟨ ev ν E C T b γ ⊨ pin ⟩ → fst b ≡ fst W)
                 → ⟨ γ ⊨ satGraphOn pin x y ⟩ → ∥ GraphWitOn W x y γ ∥₁
-    graphOn-out rd = PT.rec squash₁
-      (λ { (C , hT) → PT.rec squash₁
-        (λ { (T , hb) → PT.map
-          (λ { (b , (eb , (hc , (hd , (ha , h12))))) →
-            C , (T , (b , (rd b T C eb , (hc , (hd
-              , ( subst ⟨_⟩
-                    (appAt-adequate Ti (sh3 x) (sh3 y) (b ∷ T ∷ C ∷ γ)) ha
-                , h12 )))))) })
-          hb })
-        hT })
+    graphOn-out rd h = PT.rec squash₁ (λ { (n11 , h11) →
+      PT.rec squash₁ (λ { (n10 , h10) →
+      PT.rec squash₁ (λ { (n9 , h9) →
+      PT.rec squash₁ (λ { (n8 , h8) →
+      PT.rec squash₁ (λ { (n7 , h7) →
+      PT.rec squash₁ (λ { (n6 , h6) →
+      PT.rec squash₁ (λ { (n5 , h5) →
+      PT.rec squash₁ (λ { (n4 , h4) →
+      PT.rec squash₁ (λ { (n3 , h3) →
+      PT.rec squash₁ (λ { (n2 , h2) →
+      PT.rec squash₁ (λ { (n1 , h1) →
+      PT.rec squash₁ (λ { (n0 , h0) →
+      PT.rec squash₁ (λ { (E , hE') →
+      PT.rec squash₁ (λ { (C , hC') →
+      PT.rec squash₁ (λ { (T , hT') →
+      PT.map (λ { (b , (hpin , (hnum , (hE , (hc , (hd , (ha , h12))))))) →
+        let ν : Fin 12 → S
+            ν = ν' n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11
+        in ν , (E , (C , (T , (b , (rd ν E C T b hpin
+           , ( nums-out ν E C T b γ hnum
+           , ( hE
+           , ( hc
+           , ( hd
+           , ( subst ⟨_⟩
+                 (appAt-adequate Ti (sh16 x) (sh16 y) (ev ν E C T b γ)) ha
+             , h12 )))))))))) })
+        hT' }) hC' }) hE' }) h0 }) h1 }) h2 }) h3 }) h4 }) h5 }) h6 })
+        h7 }) h8 }) h9 }) h10 }) h11 }) h
+      where
+      ν' : S → S → S → S → S → S → S → S → S → S → S → S → Fin 12 → S
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 zero = a0
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc zero) = a1
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc zero)) = a2
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc zero))) = a3
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc zero)))) = a4
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc (suc zero))))) = a5
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc (suc (suc zero)))))) = a6
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc (suc (suc (suc zero))))))) = a7
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = a8
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = a9
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = a10
+      ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 a10 a11 (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = a11
 ```
 
 <!--en-->
@@ -202,7 +311,7 @@ GraphWitAt B x y γ = GraphWitOn (lookup B γ) x y γ
 -- witness.
 opaque
   satGraphAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
-  satGraphAt B x y = satGraphOn (var Bi ≐ var (sh3 B)) x y
+  satGraphAt B x y = satGraphOn (var Bi ≐ var (sh16 B)) x y
 
 opaque
   unfolding satGraphAt
@@ -210,12 +319,12 @@ opaque
   graphAt-in : ∀ {n} (B x y : Fin n) (γ : S ^ n)
              → ∥ GraphWitAt B x y γ ∥₁ → ⟨ γ ⊨ satGraphAt B x y ⟩
   graphAt-in B x y γ =
-    graphOn-in (var Bi ≐ var (sh3 B)) (lookup B γ) x y γ (λ _ _ _ e → e)
+    graphOn-in (var Bi ≐ var (sh16 B)) (lookup B γ) x y γ (λ _ _ _ _ _ e → e)
 
   graphAt-out : ∀ {n} (B x y : Fin n) (γ : S ^ n)
               → ⟨ γ ⊨ satGraphAt B x y ⟩ → ∥ GraphWitAt B x y γ ∥₁
   graphAt-out B x y γ =
-    graphOn-out (var Bi ≐ var (sh3 B)) (lookup B γ) x y γ (λ _ _ _ h → h)
+    graphOn-out (var Bi ≐ var (sh16 B)) (lookup B γ) x y γ (λ _ _ _ _ _ h → h)
 ```
 
 <!--en-->
@@ -243,9 +352,9 @@ GraphWit B x y = GraphWitOn B (suc zero) zero (y ∷ x ∷ [])
 
 graph-in : (B x y : S) → ∥ GraphWit B x y ∥₁ → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩
 graph-in B x y =
-  graphOn-in (var Bi ≐ con B) B (suc zero) zero (y ∷ x ∷ []) (λ _ _ _ e → e)
+  graphOn-in (var Bi ≐ con B) B (suc zero) zero (y ∷ x ∷ []) (λ _ _ _ _ _ e → e)
 
 graph-out : (B x y : S) → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩ → ∥ GraphWit B x y ∥₁
 graph-out B x y =
-  graphOn-out (var Bi ≐ con B) B (suc zero) zero (y ∷ x ∷ []) (λ _ _ _ h → h)
+  graphOn-out (var Bi ≐ con B) B (suc zero) zero (y ∷ x ∷ []) (λ _ _ _ _ _ h → h)
 ```

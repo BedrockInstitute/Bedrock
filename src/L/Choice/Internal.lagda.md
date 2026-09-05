@@ -59,19 +59,24 @@ open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Table {ℓ} lem
   using ( slot; satTable; total; inSlot; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
-open import L.Coding.Sound {ℓ} lem using ( soundness )
-open import L.Coding.Unique {ℓ} lem using ( module Good )
 open import L.Coding.Bridge {ℓ} lem using ( asConst )
 open import L.Coding.CodeSet {ℓ} lem
   using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
 open import L.Coding.Uniform {ℓ} lem using ( keyBridge )
-open import L.Coding.Graph {ℓ} lem using ( satGraphAt; graphAt-in; graphAt-out )
+open import L.Coding.Graph {ℓ} lem using
+  ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
+  ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
+open import L.Coding.Clauses {ℓ} lem using
+  ( Tags; towerAt; tableAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ; module Tower; module TowerHolds )
+open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Hierarchy {ℓ} lem using ( Lset-defines )
 open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )
 open import L.Choice.Finite {ℓ} lem using ( Limit; limitOrder )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
 
+open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Nat.Order
   using ( _<_; zero-≤; suc-≤-suc; pred-≤-pred; ¬-<-zero; <-trans )
 open import Cubical.Data.FinData using ( toℕ )
@@ -495,18 +500,20 @@ nothing else satisfies the graph there.
 ```agda
 module _ {n : ℕ} (B x y : Fin n) (γ : S ^ n) where
   private
-    Ci Ti : Fin (suc (suc (suc n)))
-    Ci = suc (suc zero)
-    Ti = suc zero
-
     Bs : S
     Bs = lookup B γ
 
-    δ : ∀ {m} (φ : Formula S m) → S ^ (suc (suc (suc n)))
-    δ φ = Bs ∷ satTable Bs φ ∷ slot Bs φ ∷ γ
+    fr : ∀ {m} (φ : Formula S m) → S ^ (16 + n)
+    fr φ = ev numν (Tower.tower Bs) (slot Bs φ) (satTable Bs φ) Bs γ
 
-    hdom : ∀ {m} (φ : Formula S m) → ⟨ δ φ ⊨ domAt Ti Ci ⟩
-    hdom φ = domAt-intro Ti Ci (δ φ)
+    tgs : ∀ {m} (φ : Formula S m) → Tags (fr φ) NN
+    tgs φ = numTags (Tower.tower Bs) (slot Bs φ) (satTable Bs φ) Bs γ
+
+    htow : ∀ {m} (φ : Formula S m) → ⟨ fr φ ⊨ towerAt Ei Bi (NN f0) ⟩
+    htow φ = TowerHolds.holds Ei Bi (NN f0) (fr φ) Bs refl refl refl
+
+    hdom : ∀ {m} (φ : Formula S m) → ⟨ fr φ ⊨ domAt Ti Ci ⟩
+    hdom φ = domAt-intro Ti Ci (fr φ)
       (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot Bs φ)))
                  (λ { (w , hw) → inSlot Bs φ (fst z) (fst w) hw }) h)
            , (λ h → total Bs φ (fst z) h))
@@ -515,32 +522,39 @@ module _ {n : ℕ} (B x y : Fin n) (γ : S ^ n) where
                 → fst (lookup x γ) ≡ fst (keyS Bs ψ)
                 → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
                 → ⟨ γ ⊨ satGraphAt B x y ⟩
-  graphAt-value ψ qx qy = graphAt-in B x y γ
-    ∣ slot Bs φ , (satTable Bs φ , (Bs , (refl
-    , ( slotClosed Bs φ γ
-    , ( hdom φ
-    , ( subst2 (λ u v → ⟨ pr u v ∈ fst (satTable Bs φ) ⟩)
-          (sym (qx ∙ keyBridge Bs ψ)) (sym qy) (entry-in Bs φ)
-    , soundness Bs φ γ )))))) ∣₁
+  graphAt-value {m} ψ qx qy = graphAt-in B x y γ
+    ∣ numν
+    , (Tower.tower Bs
+    , (slot Bs φ
+    , (satTable Bs φ
+    , (Bs
+    , (refl
+    , (tgs φ
+    , (htow φ
+    , (slotClosed Bs φ (Tower.tower Bs ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
+         ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
+         ∷ numν f11 ∷ γ)
+    , (hdom φ
+    , (subst2 (λ u v → ⟨ pr u v ∈ fst (satTable Bs φ) ⟩)
+         (sym (qx ∙ keyBridge Bs ψ)) (sym qy) (entry-in Bs φ)
+    , SlotHolds.holds Bs Ti Bi Ci Ei NN (fr φ) refl (tgs φ) (htow φ) ψ refl refl)))))))))) ∣₁
     where
-    φ : Formula S _
+    φ : Formula S m
     φ = mapFo (asConst Bs) ψ
 
   graphAt-only : ∀ {m} (ψ : Formula ⟪ fst Bs ⟫ m)
                → fst (lookup x γ) ≡ fst (keyS Bs ψ)
                → ⟨ γ ⊨ satGraphAt B x y ⟩
                → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
-  graphAt-only ψ qx h = PT.rec (setIsSet _ _) read (graphAt-out B x y γ h)
+  graphAt-only {m} ψ qx h = PT.rec (setIsSet _ _) read (graphAt-out B x y γ h)
     where
-    φ : Formula S _
-    φ = mapFo (asConst Bs) ψ
-
-    read : _ → fst (lookup y γ) ≡ fst (Sat Bs φ)
-    read (C , (T , (b , (eb , (hc , (hd , (ha , h12))))))) =
-        Good.pinned (b ∷ T ∷ C ∷ γ) Ci Ti zero hc hd h12 φ
-          (lookup x γ) (lookup y γ) (qx ∙ keyBridge Bs ψ)
-          (domAt-out Ti Ci (b ∷ T ∷ C ∷ γ) hd (lookup x γ) (lookup y γ) ha) ha
-      ∙ cong (λ w → fst (Sat w φ)) (Σ≡Prop (λ v → snd (isL v)) eb)
+    read : GraphWitAt B x y γ → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
+    read (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12))))))))))) =
+      SatSoundC.pinned Ti Bi Ci Ei NN (ev ν E C T b γ) Bs eb tg hE hc h12
+        ψ (subst (λ u → ⟨ u ∈ fst C ⟩) qx
+             (domAt-out Ti Ci (ev ν E C T b γ) hd (lookup x γ) (lookup y γ) ha))
+        (lookup y γ)
+        (subst (λ u → ⟨ pr u (fst (lookup y γ)) ∈ fst T ⟩) qx ha)
 ```
 
 <!--en-->

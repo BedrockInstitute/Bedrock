@@ -21,6 +21,7 @@ open import L.Coding.Model {ℓ} using ( consAtL )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS )
 open import L.Coding.Uniform {ℓ} lem using ( module Table; val-at )
+open import L.Coding.Pinned {ℓ} lem using ( module Match ) public
 open import L.Coding.Sat {ℓ} lem using ( cond∈-in; cond∈-out; cond≐-in; cond≐-out )
 open import L.Coding.EnvSet {ℓ} lem using ( envS )
 open import L.GCH.SatFrame {ℓ} lem using
@@ -335,54 +336,8 @@ module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
 -- table's values, and the bridge supplies the body.
 -- =====================================================================
 
--- A code's constructor and payload, from its tag.
-module Match (W : S) where
-  open Alphabet W
-
-  MatchN : ∀ {n} → ℕ → Formula Ab n → V ℓ → Type (ℓ-suc ℓ)
-  MatchN {n} 0 ψ r = Σ[ t ∈ Term Ab n ] Σ[ u ∈ Term Ab n ] ((ψ ≡ t ∈̇ u) × (r ≡ pr (ct t) (ct u)))
-  MatchN {n} 1 ψ r = Σ[ t ∈ Term Ab n ] Σ[ u ∈ Term Ab n ] ((ψ ≡ t ≐ u) × (r ≡ pr (ct t) (ct u)))
-  MatchN {n} 2 ψ r = Σ[ a ∈ Formula Ab n ] Σ[ b ∈ Formula Ab n ] ((ψ ≡ a ∧̇ b) × (r ≡ pr (cd a) (cd b)))
-  MatchN {n} 3 ψ r = Σ[ a ∈ Formula Ab n ] Σ[ b ∈ Formula Ab n ] ((ψ ≡ a ∨̇ b) × (r ≡ pr (cd a) (cd b)))
-  MatchN {n} 4 ψ r = Σ[ a ∈ Formula Ab n ] Σ[ b ∈ Formula Ab n ] ((ψ ≡ a ⇒̇ b) × (r ≡ pr (cd a) (cd b)))
-  MatchN {n} 5 ψ r = Σ[ a ∈ Formula Ab n ] ((ψ ≡ ¬̇ a) × (r ≡ cd a))
-  MatchN 6 ψ r = (ψ ≡ ⊤̇) × (r ≡ # 0)
-  MatchN 7 ψ r = (ψ ≡ ⊥̇) × (r ≡ # 0)
-  MatchN {n} 8 ψ r = Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇ a) × (r ≡ cd a))
-  MatchN {n} 9 ψ r = Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∀̇ a) × (r ≡ cd a))
-  MatchN {n} 10 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∀̇∈ t a) × (r ≡ pr (ct t) (cd a)))
-  MatchN {n} 11 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇∈ t a) × (r ≡ pr (ct t) (cd a)))
-  MatchN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))))) ψ r = Empty.⊥*
-
-  private
-    at : ∀ {n} (ψ : Formula Ab n) (j k : ℕ) (r : V ℓ) → pr (# j) (cd ψ) ≡ pr (# j) (cd ψ)
-       → MatchN j ψ r → (r' : V ℓ) → pr (# j) r ≡ pr (# k) r' → MatchN k ψ r'
-    at ψ j k r _ mj r' e =
-      subst2 (λ i x → MatchN i ψ x) (#-inj′ (pr-inj e .fst)) (pr-inj e .snd) mj
-
-  matchAt : ∀ {n} (ψ : Formula Ab n) (k : ℕ) (r : V ℓ) → cd ψ ≡ pr (# k) r → MatchN k ψ r
-  matchAt (t ∈̇ u) k r e = at (t ∈̇ u) 0 k _ refl (t , u , (refl , refl)) r e
-  matchAt (t ≐ u) k r e = at (t ≐ u) 1 k _ refl (t , u , (refl , refl)) r e
-  matchAt (a ∧̇ b) k r e = at (a ∧̇ b) 2 k _ refl (a , b , (refl , refl)) r e
-  matchAt (a ∨̇ b) k r e = at (a ∨̇ b) 3 k _ refl (a , b , (refl , refl)) r e
-  matchAt (a ⇒̇ b) k r e = at (a ⇒̇ b) 4 k _ refl (a , b , (refl , refl)) r e
-  matchAt (¬̇ a) k r e = at (¬̇ a) 5 k _ refl (a , (refl , refl)) r e
-  matchAt ⊤̇ k r e = at ⊤̇ 6 k _ refl (refl , refl) r e
-  matchAt ⊥̇ k r e = at ⊥̇ 7 k _ refl (refl , refl) r e
-  matchAt (∃̇ a) k r e = at (∃̇ a) 8 k _ refl (a , (refl , refl)) r e
-  matchAt (∀̇ a) k r e = at (∀̇ a) 9 k _ refl (a , (refl , refl)) r e
-  matchAt (∀̇∈ t a) k r e = at (∀̇∈ t a) 10 k _ refl (t , a , (refl , refl)) r e
-  matchAt (∃̇∈ t a) k r e = at (∃̇∈ t a) 11 k _ refl (t , a , (refl , refl)) r e
-
-  -- A member of the code set at a stated arity decodes.
-  decodeAll : (c : S) → ⟨ fst c ∈ fst (AllCodes W) ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
-            → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
-  decodeAll c c∈ n z e = PT.map
-    (λ { (n₁ , ψ₁ , e₁) →
-      let q = pr-inj (sym e₁ ∙ e)
-          nq = #-inj′ (q .fst)
-      in subst (Formula Ab) nq ψ₁ , (sym (q .snd) ∙ sym (cd-subst nq ψ₁)) })
-    (AllCodes-out W c c∈)
+-- A code's constructor and payload, from its tag, are read in
+-- src/L/Coding/Pinned.lagda.md.
 
 module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qT : fst (lookup T γ) ≡ fst (SatGraph.pairs W))

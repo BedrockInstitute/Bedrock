@@ -351,13 +351,15 @@ import L.Coding.Sat
 import L.Coding.Bridge
 import L.Coding.Table
 import L.Coding.Sound
-import L.Coding.Unique
+import L.Coding.Tower
 import L.Coding.Slot
 import L.Coding.Descent
 import L.Coding.Shape
 import L.Coding.Recover
 import L.Coding.CodeSet
 import L.Coding.Bound
+import L.Coding.Clauses
+import L.Coding.Pinned
 import L.Coding.Graph
 import L.Coding.Uniform
 import L.Coding.Powerset
@@ -471,11 +473,6 @@ The root, stated today and finished over the remaining parts:
   verification is four moves and three are already built; what is left is a set
   identity, and those are cheap because the meta-level recursion defined its
   value by the very condition the identity reads back.
-- `L.Coding.Unique`{.Agda}: a table satisfying the twelve clauses over a
-  subcode-closed index records at each key the value the recursion built there,
-  which is what makes the graph single-valued. Stated against the canonical value
-  and with the index a variable, because a key substituted into a satisfaction
-  does not typecheck in any reasonable time.
 - `L.Coding.Slot`{.Agda}: the slot a formula's recursion is indexed by satisfies
   the object language's closedness predicate, which is the hypothesis the
   satisfaction graph states about its index set. The closure chapter's theorem
@@ -987,7 +984,6 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Bridge`{.Agda}：那个取值**是什么**。在载体之上的每个环境处，「属于它」就是「在世界 `(B, ∈)` 中被满足」，而后者正是可定义幂集据以定义的概念；没有这条陈述，从那场递归读出的内部 `Def` 可证地与任何东西都不相符。右端取内层语义，不取相对化在周遭的读法，因为只有内层那种像那个条件一样对有界量词设两道防。`defSet-Sat`{.Agda} 把它直接花在 `L.Definability`{.Agda} 上。登记在案的那份相干性风险没有引爆：把这座桥以内层环境向量为索引之后，量词的扩张就是底族上的前置，于是相干性只剩四条量词子句共享的两条 `refl`{.Agda} 分支，而带截断的那次恢复被关进「一个成员无非就是一个环境」那条推论里。
 - `L.Coding.Table`{.Agda}：诸条目，每条子公式一个；以及递归向它们索取的两件事：每个成员都是一个条目，且键决定它的取值。后者正是花掉码等式单射性的地方，而元数由道路归纳消掉，好让那条等式在它唯一成立的那个元数处使用。此处一切按构造都是模型的元素，因为诸码就是模型自己的。
 - `L.Coding.Sound`{.Agda}：那张表满足诸子句，一条一条地。每次验证是四步，其中三步已经造好；剩下的是一条集合等式，而它们便宜，因为元语言的递归当初正是用那条等式所读回的那个条件来定义它的取值的。
-- `L.Coding.Unique`{.Agda}：一张在子码封闭的索引上满足十二条子句的表，在每个键处记录的就是递归在那里造出的取值，而正是这一点使那个图单值。对着典范取值陈述，且索引取作变元，因为把键代进一个满足关系里，在任何合理时间内都不会通过类型检查。
 - `L.Coding.Slot`{.Agda}：一条公式的递归所索引的那个槽，满足对象语言的封闭性谓词，而那正是满足关系那个图对它的索引集所陈述的假设。是闭包那一章的定理再来一遍，落在模型自己的编码上。
 - `L.Coding.Descent`{.Agda}：一场跑在码上的递归如何从一条码走到它的诸部件，而成员关系办不到这件事：Kuratowski 的对把一个部件放在四个成员步之下，而中间那些集合不是码。秩沿成员关系严格增长，故那四步经序数的传递性合成，递归改跑在秩上。
 - `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。成形性是在**两位**上陈述的，即那个集合与一个载体，因为一个词项有两样东西要界住，而两者不同：变元的序号由元数数码界住，常元由「属于载体」界住。第二样使一个成员成为该载体之上、而非模型之上某条公式的键，而它写作一位、不写作常元，好让下面的一切都不被重新索引。`isTmAt-decode`{.Agda} 在任意字母表上把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的；它的常元那一支需要一样谓词供不出的东西，即载体的诸成员就是字母表的像，于是把它取作一条假设。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十二者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。另一个方向同样欠着，因为一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明：`shaped-in`{.Agda} 由「每个成员一次选择」造出那个十二重析取，而 `closureShaped`{.Agda} 把它花在一条公式的闭包上，那正是解码的第一个调用方所欠的第二条假设。一条值得留存的测量：`isTmAt`{.Agda} 的两个析取支由两条点了名的引理去读，而写成一个函数的两条子句时，本章十分钟内跑不完，因为类型靠推断的分支是对着整个析取、而不是对着它自己那一支求解的。
