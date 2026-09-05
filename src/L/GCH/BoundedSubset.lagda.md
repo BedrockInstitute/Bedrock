@@ -33,8 +33,7 @@ open import L.GCH.HullElem {ℓ} lem using ( module Elem )
 open import L.GCH.Pairing {ℓ} lem
   using ( prodL; prodL-in; ordL; coded→ambient; ω⊆; Goal; module Step )
 open import L.GCH.Complete {ℓ} lem using ( superadequate-above; Superadequate )
-open import L.GCH.CountableBase {ℓ} lem using ( stage-counted )
-open import L.GCH.StageCount {ℓ} lem using ( move )
+open import L.GCH.StageCount {ℓ} lem using ( move; stage-counted )
 open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in )
 open import L.GCH.HullCount {ℓ} lem
   using ( ord⊆Lset; module Union2; tag-union; module Point; module Count; S≡ )

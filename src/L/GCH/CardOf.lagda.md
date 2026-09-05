@@ -35,9 +35,9 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 -- The V-carrier: the ambient membership lives here.
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropStructure 𝒮ᵥ using ( S )
 -- The L-carrier: `InjL` and `IsCardinalL` live here.
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using ( S )
 
 -- =====================================================================
 -- THE THEOREM.  Every ordinal α of L has an internal cardinal: an
@@ -76,7 +76,7 @@ cardOf :
        × InjL α μ × InjL μ α ) ∥₁
 cardOf α oα = ∣ μ , oμ , cardμ , μ⊆α , α↪μ , μ↪α ∣₁
   where
-  module LC = LeastCardInjL α oα
+  module LC = LeastCardInjL α oα using ( hSucα; self; self-eq; w; w-lt )
 
   T : SV.S
   T = sucV (fst α)

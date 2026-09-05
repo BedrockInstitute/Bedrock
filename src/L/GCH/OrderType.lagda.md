@@ -46,11 +46,11 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- Renaming, read at the same satisfaction as `_⊨_` (as L.Axioms.Full does).
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
+module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 
 isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
@@ -120,7 +120,7 @@ module Collapse (D R : S)
   module Col (wf : WellFounded _≺_)
              (≺-trans : {a b c : Dom} → a ≺ b → b ≺ c → a ≺ c) where
 
-    module W = WFI wf
+    module W = WFI wf using ( induction; induction-compute )
 
     colStep : (p : Dom) → (∀ r → r ≺ p → V ℓ) → V ℓ
     colStep p rec = sett (Σ[ r ∈ Dom ] (r ≺ p)) (λ z → rec (fst z) (snd z))
@@ -406,8 +406,8 @@ module Internal (D R : S)
                       → ⟨ fst y ∈ fst D ⟩ × ⟨ fst x ∈ fst D ⟩) where
 
   open Collapse D R Rsub public
-  module CF = ColFo R
-  module PF = PairFo CF.colFo
+  module CF = ColFo R using ( colFo; colFo-in; colFo-out )
+  module PF = PairFo CF.colFo using ( pair-in; pair-out; pairFo )
 
   up-toDom : (q : S) (mq : Mem q) → up (toDom q mq) ≡ q
   up-toDom q mq = Σ≡Prop (λ v → snd (isL v)) (toDom-val q mq)
@@ -578,7 +578,7 @@ module Internal (D R : S)
                      ; (inr (_ , e)) → Σ≡Prop (λ w → snd (isL w)) e })
                   (ψ-out z' q hz') ) ∣₁
 
-        module T = Of (record { dom = D ; graph = ψ ; funct = fc })
+        module T = Of (record { dom = D ; graph = ψ ; funct = fc }) using ( table; table-in; table-out )
 
       Fa : S
       Fa = T.table
@@ -699,7 +699,7 @@ module Internal (D R : S)
             ∣ colʟ (toDom q mq)
             , (approx-at q mq , λ v hv → Σ≡Prop (λ w → snd (isL w)) (colFo-val q mq v hv)) ∣₁ }
 
-      module OT = Of otR
+      module OT = Of otR using ( table; table-in; table-out )
 
     otL : S
     otL = OT.table
@@ -745,7 +745,7 @@ module Internal (D R : S)
           zb : S
           zb = prʟ q (colʟ b)
 
-      module CT = Of tabR
+      module CT = Of tabR using ( table; table-in; table-out )
 
     colTable : S
     colTable = CT.table

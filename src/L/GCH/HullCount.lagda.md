@@ -18,7 +18,7 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Presentation {ℓ} using ( member; fiber )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset→isL; Lset-layer; layer-trans )
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
 open import L.Ordinal {ℓ} using ( mem-ord; ω-ord; #∈ω )
 open import L.Ordinal.Stages {ℓ} lem using ( Lset-cumul; ord∈Lset-suc )
 open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; isL-Lset )
@@ -29,15 +29,16 @@ open import L.Coding.Model {ℓ}
   using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; numL; appAt; appAt-adequate
         ; svAt-out; domAt-in; domAt-out; tagAtL; tagAtL-adequate )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out; module Extract )
-open import L.Choice.Step {ℓ} lem using ( orderAt; relOf ) renaming ( Mem to MemOf )
-open import L.Choice.Order {ℓ} lem using ( relL; relL-fill; relL-rep )
+open import L.Choice.Step {ℓ} lem using ( relOf )
+open import L.Choice.Order {ℓ} lem using ( relL-fill )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; leastOf; lt; eq; gt ) renaming ( Tri to Tri∙ )
+  using ( SWO; lt; eq; gt ) renaming ( Tri to Tri∙ )
 open import L.Cardinal {ℓ} lem using ( InjCode )
 open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Assembly {ℓ} lem using ( inclusion-coded; injl-trans )
-open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj; module Graph )
-open import L.GCH.Pairing {ℓ} lem using ( prodL; prodL-in; prodL-out; isL-ord; ordL )
+open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.Least {ℓ} lem using ( module Least )
+open import L.GCH.Pairing {ℓ} lem using ( prodL; prodL-in; prodL-out; ordL )
 open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in; pairʟ-out; unionʟ-in; unionʟ-out )
 open import L.InjChain {ℓ} lem using ( appC; appC-adequate; module PairBound )
 open import L.Stage {ℓ} lem using ( LeastOrd; isPropLeastOrd; leastOrd; stage; stage-ord; stage-mem )
@@ -52,9 +53,9 @@ open import L.GCH.Frame {ℓ} lem using ( module Frame )
 open import L.BoundedSubset {ℓ} lem using ( module HullStage )
 open import L.GCH.HullIn {ℓ} lem using ( module Condense′; module Telescope )
 open import L.GCH.StageCount {ℓ} lem
-  using ( isPropInjCode; injcode-resp; injFo; module InjFo; pinAt; pin-in; pin-out; seq-map; Lω )
+  using ( isPropInjCode; injcode-resp; injFo; module InjFo; pinAt; pin-in; pin-out; seq-map; Lω
+        ; limit-stage-counted )
 open import L.GCH.Sequences {ℓ} lem using ( seqL; seqL-in; seq-count )
-open import L.GCH.CountableBase {ℓ} lem using ( limit-stage-counted )
 open import L.GCH.Pairing {ℓ} lem using ( prod-inj; ω⊆; Goal; module Step )
 open import L.Cardinal {ℓ} lem using ( IsCardinalL )
 open import V.Hierarchy {ℓ} using ( regularityV )
@@ -343,10 +344,8 @@ tag-union κ h0 h1 D₁ D₂ = PT.rec2 squash₁
 -- z ↦ the stage-order-least p with (p, z) ∈ G is a definable map
 -- D → P, its graph is a set of L, and when G is functional in the
 -- sense "(p, z), (p, z') ∈ G force z = z'" the map is injective.
---
---   The graph, over (p ∷ z ∷ []): "(p, z) ∈ G, p ∈ L_γ, and no p' ∈ L_γ
---   below p in the stage order has (p', z) ∈ G".  Inside the bounded
---   binder p' is 0, p is 1, z is 2.
+-- The selection, the graph and the table are `L.GCH.Least` at γ, D
+-- and the predicate "(p, z) ∈ G", over (p ∷ z ∷ []).
 -- =====================================================================
 
 module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
@@ -354,140 +353,41 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
   (P⊆L : (p : S) → ⟨ fst p ∈ fst P ⟩ → ⟨ fst p ∈ Lset γ ⟩)
   (have : (z : S) → ⟨ fst z ∈ fst D ⟩ → ∥ Σ[ p ∈ S ] Holds G p z ∥₁) where
 
-  -- Sealed: the elements that reach a slot.
-  opaque
-    Lγ : S
-    Lγ = LsetS γ oγ
-
-    Lγ-fst : fst Lγ ≡ Lset γ
-    Lγ-fst = refl
-
-    hγ : ⟨ isL γ ⟩
-    hγ = isL-ord γ oγ
-
-  Rγ : S
-  Rγ = relL γ hγ oγ
-
-  Mγ : Type (ℓ-suc ℓ)
-  Mγ = MemOf (Lset γ)
-
-  memS : Mγ → S
-  memS c = fst c , Lset→isL γ oγ (fst c) (snd c)
-
-  Good : S → Mγ → hProp (ℓ-suc ℓ)
-  Good z c = ∥ Σ[ p ∈ S ] ((fst p ≡ fst c) × Holds G p z) ∥₁ , squash₁
-
   Mem : S → Type (ℓ-suc ℓ)
   Mem z = ⟨ fst z ∈ fst D ⟩
 
-  module AtZ (z : S) (m : Mem z) where
+  private
+    graphFo : Formula S 2
+    graphFo = appC G i0 i1
 
-    nonempty : ∥ Σ[ c ∈ Mγ ] ⟨ Good z c ⟩ ∥₁
-    nonempty = PT.map (λ { (p , h) → (fst p , P⊆L p (inP p z h)) , ∣ p , refl , h ∣₁ })
+    have-γ : (z : S) → Mem z
+           → ∥ Σ[ p ∈ S ] (⟨ fst p ∈ Lset γ ⟩ × ⟨ (p ∷ z ∷ []) ⊨ graphFo ⟩) ∥₁
+    have-γ z m = PT.map
+      (λ { (p , h) → p , P⊆L p (inP p z h)
+                       , subst ⟨_⟩ (sym (appC-adequate G i0 i1 (p ∷ z ∷ []))) h })
       (have z m)
 
-    -- The selection, sealed with its two facts.
-    opaque
-      c : Mγ
-      c = fst (leastOf (orderAt γ oγ) lem (Good z) nonempty)
-
-      c-good : ⟨ Good z c ⟩
-      c-good = fst (snd (leastOf (orderAt γ oγ) lem (Good z) nonempty))
-
-      minimal : (c' : Mγ) → ⟨ Good z c' ⟩ → relOf (orderAt γ oγ) c' c → Empty.⊥
-      minimal = snd (snd (leastOf (orderAt γ oγ) lem (Good z) nonempty))
-
-    e : S
-    e = memS c
-
-    e-holds : Holds G e z
-    e-holds = PT.rec (snd (pr (fst e) (fst z) ∈ fst G))
-      (λ { (p , q , h) → subst (λ w → ⟨ pr w (fst z) ∈ fst G ⟩) q h }) c-good
-
-    e∈P : ⟨ fst e ∈ fst P ⟩
-    e∈P = inP e z e-holds
-
-    e∈Lγ : ⟨ fst e ∈ Lset γ ⟩
-    e∈Lγ = snd c
+    module Ls = Least γ oγ D graphFo have-γ using ( fn; fn-holds; Dmap; T; T-in; T-out )
 
   fn : (z : S) → Mem z → S
-  fn z m = AtZ.e z m
+  fn = Ls.fn
 
-  -- The graph and its host reading.
-  TWit : (p z : S) → Type (ℓ-suc ℓ)
-  TWit p z =
-      Holds G p z
-    × ⟨ fst p ∈ Lset γ ⟩
-    × ((p' : S) → ⟨ fst p' ∈ Lset γ ⟩ → Holds G p' z
-        → ⟨ pr (fst p') (fst p) ∈ fst Rγ ⟩ → Empty.⊥)
-
-  opaque
-    private
-      leastFo : Formula S 2
-      leastFo = ∀̇∈ (con Lγ) (¬̇ (appC G i0 i2 ∧̇ appC Rγ i0 i1))
-
-    fo : Formula S 2
-    fo = appC G i0 i1 ∧̇ ((var i0 ∈̇ con Lγ) ∧̇ leastFo)
-
-    fo-out : (p z : S) → ⟨ (p ∷ z ∷ []) ⊨ fo ⟩ → TWit p z
-    fo-out p z (hg , (hl , hm)) =
-        subst ⟨_⟩ (appC-adequate G i0 i1 (p ∷ z ∷ [])) hg
-      , subst (λ w → ⟨ fst p ∈ w ⟩) Lγ-fst hl
-      , λ p' hp' hg' hr → hm p' (subst (λ w → ⟨ fst p' ∈ w ⟩) (sym Lγ-fst) hp')
-          ( subst ⟨_⟩ (sym (appC-adequate G i0 i2 (p' ∷ p ∷ z ∷ []))) hg'
-          , subst ⟨_⟩ (sym (appC-adequate Rγ i0 i1 (p' ∷ p ∷ z ∷ []))) hr )
-
-    fo-in : (p z : S) → TWit p z → ⟨ (p ∷ z ∷ []) ⊨ fo ⟩
-    fo-in p z (hg , hl , mn) =
-        subst ⟨_⟩ (sym (appC-adequate G i0 i1 (p ∷ z ∷ []))) hg
-      , subst (λ w → ⟨ fst p ∈ w ⟩) (sym Lγ-fst) hl
-      , λ p' hp' hc → mn p' (subst (λ w → ⟨ fst p' ∈ w ⟩) Lγ-fst hp')
-          (subst ⟨_⟩ (appC-adequate G i0 i2 (p' ∷ p ∷ z ∷ [])) (fst hc))
-          (subst ⟨_⟩ (appC-adequate Rγ i0 i1 (p' ∷ p ∷ z ∷ [])) (snd hc))
-
-  private
-    defines : (z : S) (m : Mem z) → ⟨ (fn z m ∷ z ∷ []) ⊨ fo ⟩
-    defines z m = fo-in (fn z m) z (Z.e-holds , Z.e∈Lγ , mn)
-      where
-      module Z = AtZ z m using ( c; e; e-holds; e∈Lγ; minimal )
-      mn : (p' : S) → ⟨ fst p' ∈ Lset γ ⟩ → Holds G p' z
-         → ⟨ pr (fst p') (fst Z.e) ∈ fst Rγ ⟩ → Empty.⊥
-      mn p' hp' hg' hr = Z.minimal (fst p' , hp') ∣ p' , refl , hg' ∣₁
-        (relL-rep γ hγ oγ (fst p' , hp') Z.c hr)
-
-    only : (z : S) (m : Mem z) (p' : S) → ⟨ (p' ∷ z ∷ []) ⊨ fo ⟩ → p' ≡ fn z m
-    only z m p' h = S≡ (read (fo-out p' z h))
-      where
-      module Z = AtZ z m using ( c; e; e-holds; e∈Lγ; minimal )
-      read : TWit p' z → fst p' ≡ fst (fn z m)
-      read (hg , hp' , mn') = go (SWO.tri∙ (orderAt γ oγ) c' Z.c)
-        where
-        c' : Mγ
-        c' = fst p' , hp'
-        go : Tri∙ (relOf (orderAt γ oγ) c' Z.c) (c' ≡ Z.c) (relOf (orderAt γ oγ) Z.c c')
-           → fst p' ≡ fst (fn z m)
-        go (lt h') = Empty.rec (Z.minimal c' ∣ p' , refl , hg ∣₁ h')
-        go (eq q)  = cong fst q
-        go (gt h') = Empty.rec (mn' Z.e Z.e∈Lγ Z.e-holds (relL-fill γ hγ oγ Z.c c' h'))
+  fn-holds : (z : S) (m : Mem z) → Holds G (fn z m) z
+  fn-holds z m = subst ⟨_⟩ (appC-adequate G i0 i1 (fn z m ∷ z ∷ [])) (Ls.fn-holds z m)
 
   Dmap : DefinableMap
-  Dmap = record
-    { dom = D ; cod = P ; fn = fn
-    ; into = λ z m → AtZ.e∈P z m
-    ; graph = fo ; defines = defines ; only = only }
-
-  module Gr = Graph Dmap using ( F; F-in; pair-out )
+  Dmap = record Ls.Dmap { cod = P ; into = λ z m → inP (fn z m) z (fn-holds z m) }
 
   -- THE TABLE: the set of pairs (z, e_z), z ∈ D.
   T : S
-  T = Gr.F
+  T = Ls.T
 
   T-in : (z : S) (m : Mem z) → ⟨ pr (fst z) (fst (fn z m)) ∈ fst T ⟩
-  T-in = Gr.F-in
+  T-in = Ls.T-in
 
   T-out : (z e : S) → ⟨ pr (fst z) (fst e) ∈ fst T ⟩
         → Σ[ m ∈ Mem z ] (fst e ≡ fst (fn z m))
-  T-out = Gr.pair-out
+  T-out = Ls.T-out
 
   -- THE INJECTION, when G is functional.
   module Functional
@@ -495,8 +395,8 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
 
     inj : (z : S) (m : Mem z) (z' : S) (m' : Mem z')
         → fst (fn z m) ≡ fst (fn z' m') → fst z ≡ fst z'
-    inj z m z' m' q = funct (fn z m) z z' (AtZ.e-holds z m)
-      (subst (λ w → ⟨ pr w (fst z') ∈ fst G ⟩) (sym q) (AtZ.e-holds z' m'))
+    inj z m z' m' q = funct (fn z m) z z' (fn-holds z m)
+      (subst (λ w → ⟨ pr w (fst z') ∈ fst G ⟩) (sym q) (fn-holds z' m'))
 
     injL : InjL D P
     injL = Inj.injL Dmap inj
@@ -1155,7 +1055,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     (λ F n h → subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) (Gt-out F n h .fst))
     (λ F hF → subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF)
     have-code
-    using ( T; fn; T-in; T-out; module AtZ )
+    using ( T; fn; T-in; T-out; fn-holds )
 
   -- THE TABLE, and its entries.
   Te : S
@@ -1174,7 +1074,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   -- The entry at n codes an injection of some iterate recorded at n.
   e-wit : (n : S) (m : ⟨ fst n ∈ fst ωʟ ⟩)
         → ∥ Σ[ Zn ∈ S ] (Holds Iter n Zn × InjCode (eS n m) Zn κ) ∥₁
-  e-wit n m = Gt-out (eS n m) n (Tb.AtZ.e-holds n m) .snd
+  e-wit n m = Gt-out (eS n m) n (Tb.fn-holds n m) .snd
 
   -- The entry at the numeral k codes an injection of the k-th iterate.
   e-code : (k : ℕ) → InjCode (eS (nn k) (#∈ω k)) (hullStep k) κ

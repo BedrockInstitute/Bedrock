@@ -59,12 +59,12 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 -- The V-carrier: the ambient membership lives here.
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropStructure 𝒮ᵥ using ()
 -- The L-carrier: `InjL` lives here.
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 open SL using ( S )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- The numeral k as an element of L.
@@ -130,7 +130,7 @@ seqL-out A x hx = PT.rec squash₁ step1 (subst ⟨_⟩ (seqL-spec A x) hx .snd)
     ∣ k , subst (λ w → ⟨ w ∈ˢ fst (envSet A k) ⟩) (sym R.recovers) (envSet-in A R.g) ∣₁
     where
     module R = Recover A k (b ∷ d ∷ x ∷ []) (suc (suc zero)) (suc zero) zero
-                 (sym q) eb hov
+                 (sym q) eb hov using ( g; recovers )
 
   step1 : Σ[ d ∈ S ] (⟨ fst d ∈ˢ ω ⟩
             × ∥ Σ[ b ∈ S ] ((fst b ≡ fst A)
@@ -173,7 +173,7 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
   up : ⟪ fst α ⟫ → M
   up m = (⟪ fst α ⟫↪ m , isL-trans (member (fst α) m) (snd α)) , member (fst α) m
 
-  module E = Extract F (prodL α) sv dm
+  module E = Extract F (prodL α) sv dm using ( toFun; toFun-graph; toFun-inj )
 
   -- Sealed: a proof of a proposition, never to be unfolded in a
   -- conversion (measured at this site: unsealed, `chain n g (suc k)`
@@ -669,7 +669,7 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
           , λ y' h → Σ≡Prop (λ v → snd (isL v)) (AtSeq.only n g s e y' (fo-out y' s h)) ) })
         (rep s m)) }
 
-  module T = Of R
+  module T = Of R using ( funct; val; val-uniq )
 
   fn : (s : S) → Mem s → S
   fn = T.val

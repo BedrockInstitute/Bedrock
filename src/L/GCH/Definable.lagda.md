@@ -35,11 +35,11 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- Renaming, read at the same satisfaction as `_⊨_` (as L.Axioms.Full does).
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
+module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 
 -- =====================================================================
 -- SECTION 1.  THE FORM.
@@ -75,31 +75,33 @@ module PairFo (graph : Formula S 2) where
   ρ zero       = zero
   ρ (suc zero) = suc (suc zero)
 
-  fo : Formula S 2
-  fo = ∃̇ (prAtL (suc zero) (suc (suc zero)) zero ∧̇ renameFo ρ graph)
+  -- Sealed with its two readings.
+  opaque
+    fo : Formula S 2
+    fo = ∃̇ (prAtL (suc zero) (suc (suc zero)) zero ∧̇ renameFo ρ graph)
 
-  private
-    ag : (z p x : S) → Ren.Agrees ρ (z ∷ p ∷ x ∷ []) (z ∷ x ∷ [])
-    ag z p x zero       = refl
-    ag z p x (suc zero) = refl
+    private
+      ag : (z p x : S) → Ren.Agrees ρ (z ∷ p ∷ x ∷ []) (z ∷ x ∷ [])
+      ag z p x zero       = refl
+      ag z p x (suc zero) = refl
 
-    at : (z p x : S)
-       → ⟨ (z ∷ p ∷ x ∷ []) ⊨ prAtL (suc zero) (suc (suc zero)) zero ⟩
-       ≡ (fst p ≡ pr (fst x) (fst z))
-    at z p x = cong ⟨_⟩ (prAtL-adequate (suc zero) (suc (suc zero)) zero (z ∷ p ∷ x ∷ []))
+      at : (z p x : S)
+         → ⟨ (z ∷ p ∷ x ∷ []) ⊨ prAtL (suc zero) (suc (suc zero)) zero ⟩
+         ≡ (fst p ≡ pr (fst x) (fst z))
+      at z p x = cong ⟨_⟩ (prAtL-adequate (suc zero) (suc (suc zero)) zero (z ∷ p ∷ x ∷ []))
 
-    gr : (z p x : S)
-       → ⟨ (z ∷ p ∷ x ∷ []) ⊨ renameFo ρ graph ⟩ ≡ ⟨ (z ∷ x ∷ []) ⊨ graph ⟩
-    gr z p x = cong ⟨_⟩ (Ren.⊨-rename ρ graph (z ∷ p ∷ x ∷ []) (z ∷ x ∷ []) (ag z p x))
+      gr : (z p x : S)
+         → ⟨ (z ∷ p ∷ x ∷ []) ⊨ renameFo ρ graph ⟩ ≡ ⟨ (z ∷ x ∷ []) ⊨ graph ⟩
+      gr z p x = cong ⟨_⟩ (Ren.⊨-rename ρ graph (z ∷ p ∷ x ∷ []) (z ∷ x ∷ []) (ag z p x))
 
-  out : (p x : S) → ⟨ (p ∷ x ∷ []) ⊨ fo ⟩
-      → ∥ Σ[ z ∈ S ] ((fst p ≡ pr (fst x) (fst z)) × ⟨ (z ∷ x ∷ []) ⊨ graph ⟩) ∥₁
-  out p x = PT.map (λ { (z , (e , h)) →
-    z , (transport (at z p x) e , transport (gr z p x) h) })
+    out : (p x : S) → ⟨ (p ∷ x ∷ []) ⊨ fo ⟩
+        → ∥ Σ[ z ∈ S ] ((fst p ≡ pr (fst x) (fst z)) × ⟨ (z ∷ x ∷ []) ⊨ graph ⟩) ∥₁
+    out p x = PT.map (λ { (z , (e , h)) →
+      z , (transport (at z p x) e , transport (gr z p x) h) })
 
-  into : (p x z : S) → fst p ≡ pr (fst x) (fst z) → ⟨ (z ∷ x ∷ []) ⊨ graph ⟩
-       → ⟨ (p ∷ x ∷ []) ⊨ fo ⟩
-  into p x z e h = ∣ z , (transport (sym (at z p x)) e , transport (sym (gr z p x)) h) ∣₁
+    into : (p x z : S) → fst p ≡ pr (fst x) (fst z) → ⟨ (z ∷ x ∷ []) ⊨ graph ⟩
+         → ⟨ (p ∷ x ∷ []) ⊨ fo ⟩
+    into p x z e h = ∣ z , (transport (sym (at z p x)) e , transport (sym (gr z p x)) h) ∣₁
 
 -- =====================================================================
 -- SECTION 3.  THE GRAPH AS A SET OF L, AND THREE CONJUNCTS.
@@ -120,7 +122,7 @@ module Graph (M : DefinableMap) where
   isPropMem x = snd (fst x ∈ˢ fst dom)
 
   private
-    module Fo = PairFo graph
+    module Fo = PairFo graph using ( fo; into; out )
 
     isSetS : isSet S
     isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
@@ -148,7 +150,7 @@ module Graph (M : DefinableMap) where
           , Fo.into (pairOf x m) x (fn x m) (prʟ-fst x (fn x m)) (defines x m) )
         , λ { (p , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ Fo.fo)) (sym (uniq x m p h)) } }
 
-    module T = Of R
+    module T = Of R using ( table; table-in; table-out )
 
   F : S
   F = T.table

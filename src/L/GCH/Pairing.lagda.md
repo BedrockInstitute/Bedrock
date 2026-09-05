@@ -28,6 +28,7 @@ open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
+open import L.Choice.Stage {ℓ} lem using ( ord-suc-inj )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import V.Coding {ℓ} using ( pr; pr-inj )
@@ -39,11 +40,12 @@ open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 import L.Ordinal.SquareLaw {ℓ} lem as SQ
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( lt; eq; gt ) renaming ( Tri to TriW )
+open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt )
+  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt; sucAtL; sucAtL-adequate )
 open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
 open import L.Cardinal {ℓ} lem using ( InjCode; IsCardinalL; _↪_ )
 open import L.GCH {ℓ} lem using ( InjL )
@@ -53,7 +55,6 @@ open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
 open import L.InjChain {ℓ} lem
   using ( module PairBound; appC; appC-adequate; ω-limit; finite-excl-ω )
-open import L.CodedShift {ℓ} lem using ( shift-coded )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
@@ -61,9 +62,9 @@ open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels
   using ( isProp×; isPropΣ; isSetΣSndProp )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet )
+  using ( ∅; ∅-empty; module InfinitySet )
 open InfinitySet {ℓ} using ( ω; sucV; #_ )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 import Cubical.Induction.WellFounded as WF
@@ -861,7 +862,167 @@ prod-inj a b = PT.rec squash₁
 
 ```agda
 -- =====================================================================
--- SECTION 8.  THE THEOREM, BY ∈-INDUCTION ON THE L-CARDINAL.
+-- SECTION 8.  THE SHIFT.  At an infinite ordinal m, m + 1 injects into
+-- m, internally: x ↦ x + 1 on the finite ordinals, every other member
+-- of m to itself, and m to ∅.  A definable map, injective.
+--
+--   The graph, over (y ∷ x ∷ []): "x ∈ ω and y = x + 1, or x ∉ ω, x ∈ m
+--   and y = x, or x = m and y = ∅".  The two decisions at a member,
+--   finite or not and in m or the top, are taken once, by `lem`.
+-- =====================================================================
+
+module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ → Empty.⊥) where
+
+  private
+    m : V ℓ
+    m = fst mL
+
+    D : S
+    D = sucʟ mL
+
+    S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
+    S≡ = Σ≡Prop (λ v → snd (isL v))
+
+    ω⊆m : (z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ m ⟩
+    ω⊆m = ω⊆ m om m∉ω
+
+    Mem : S → Type (ℓ-suc ℓ)
+    Mem x = ⟨ fst x ∈ˢ fst D ⟩
+
+    -- The two decisions at a member.
+    Fin? : S → Type (ℓ-suc ℓ)
+    Fin? x = ⟨ fst x ∈ˢ ω ⟩ ⊎ (⟨ fst x ∈ˢ ω ⟩ → Empty.⊥)
+
+    Top? : S → Type (ℓ-suc ℓ)
+    Top? x = ⟨ fst x ∈ˢ m ⟩ ⊎ (fst x ≡ m)
+
+    fin? : (x : S) → Fin? x
+    fin? x = lem (fst x ∈ˢ ω)
+
+    top? : (x : S) → Mem x → Top? x
+    top? x h = go (lem (fst x ∈ˢ m))
+      where
+      go : ⟨ fst x ∈ˢ m ⟩ ⊎ (⟨ fst x ∈ˢ m ⟩ → Empty.⊥) → Top? x
+      go (inl k)  = inl k
+      go (inr nk) = inr (∈sucV-elim {A = m} {x = fst x} (setIsSet (fst x) m)
+        (subst (λ w → ⟨ fst x ∈ˢ w ⟩) (sucʟ-fst mL) h) (λ k → Empty.rec (nk k)) (λ q → q))
+
+    -- The two sides of each decision exclude each other.
+    not-both : (x : S) → ⟨ fst x ∈ˢ m ⟩ → fst x ≡ m → Empty.⊥
+    not-both x k q = ∈-irrefl m (subst (λ w → ⟨ w ∈ˢ m ⟩) q k)
+
+    ω-fin : (x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst x ≡ m → Empty.⊥
+    ω-fin x k q = m∉ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) q k)
+
+    suc≢∅ : (a : V ℓ) → sucV a ≡ ∅ → Empty.⊥
+    suc≢∅ a e = ∅-empty a
+      (∈∈ₛ {a = a} {b = ∅} .fst (subst (λ w → ⟨ a ∈ˢ w ⟩) e (self∈sucV a)))
+
+    value : (x : S) → Fin? x → Top? x → S
+    value x (inl _) _       = sucʟ x
+    value x (inr _) (inl _) = x
+    value x (inr _) (inr _) = ∅ʟ
+
+    value-in : (x : S) (f : Fin? x) (t : Top? x) → ⟨ fst (value x f t) ∈ˢ m ⟩
+    value-in x (inl k) _ =
+      subst (λ w → ⟨ w ∈ˢ m ⟩) (sym (sucʟ-fst x)) (ω⊆m (sucV (fst x)) (ω-limit (fst x) k))
+    value-in x (inr _) (inl k) = k
+    value-in x (inr _) (inr _) = ω⊆m ∅ (#∈ω zero)
+
+    Wit : (y x : S) → Type (ℓ-suc ℓ)
+    Wit y x = ∥ (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
+              ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → Empty.⊥) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
+                ⊎ ((fst x ≡ m) × (fst y ≡ ∅)) ) ∥₁
+
+  opaque
+    graph : Formula S 2
+    graph = ((var (suc zero) ∈̇ con ωʟ) ∧̇ sucAtL (suc zero) zero)
+          ∨̇ ( ( (¬̇ (var (suc zero) ∈̇ con ωʟ))
+              ∧̇ ((var (suc zero) ∈̇ con mL) ∧̇ (var zero ≐ var (suc zero))) )
+            ∨̇ ((var (suc zero) ≐ con mL) ∧̇ (var zero ≐ con ∅ʟ)) )
+
+    private
+      sa : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ sucAtL (suc zero) zero ⟩ ≡ (fst y ≡ sucV (fst x))
+      sa y x = cong ⟨_⟩ (sucAtL-adequate (suc zero) zero (y ∷ x ∷ []))
+
+    graph-out : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → Wit y x
+    graph-out y x = PT.rec squash₁
+      (λ { (inl (k , e)) → ∣ inl (k , transport (sa y x) e) ∣₁
+         ; (inr h) → PT.map (λ { (inl (n , (k , e))) → inr (inl (n , k , e))
+                              ; (inr (q , e)) → inr (inr (q , e)) }) h })
+
+    in-fin : (y x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst y ≡ sucV (fst x) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
+    in-fin y x k e = ∣ inl (k , transport (sym (sa y x)) e) ∣₁
+
+    in-mid : (y x : S) → (⟨ fst x ∈ˢ ω ⟩ → Empty.⊥) → ⟨ fst x ∈ˢ m ⟩ → fst y ≡ fst x
+           → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
+    in-mid y x n k e = ∣ inr ∣ inl (n , (k , e)) ∣₁ ∣₁
+
+    in-top : (y x : S) → fst x ≡ m → fst y ≡ ∅ → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
+    in-top y x q e = ∣ inr ∣ inr (q , e) ∣₁ ∣₁
+
+  private
+    fn : (x : S) → Mem x → S
+    fn x h = value x (fin? x) (top? x h)
+
+    defines' : (x : S) (f : Fin? x) (t : Top? x) → ⟨ (value x f t ∷ x ∷ []) ⊨ graph ⟩
+    defines' x (inl k) _       = in-fin (sucʟ x) x k (sucʟ-fst x)
+    defines' x (inr n) (inl k) = in-mid x x n k refl
+    defines' x (inr n) (inr q) = in-top ∅ʟ x q refl
+
+    only' : (x : S) (f : Fin? x) (t : Top? x) (y : S)
+          → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ value x f t
+    only' x f t y hy = PT.rec (isSetS y (value x f t)) (go f t) (graph-out y x hy)
+      where
+      go : (f : Fin? x) (t : Top? x)
+         → (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
+           ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → Empty.⊥) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
+             ⊎ ((fst x ≡ m) × (fst y ≡ ∅)) )
+         → y ≡ value x f t
+      go (inl k) _       (inl (_ , e))             = S≡ (e ∙ sym (sucʟ-fst x))
+      go (inl k) _       (inr (inl (n , _ , _)))   = Empty.rec (n k)
+      go (inl k) _       (inr (inr (q , _)))       = Empty.rec (ω-fin x k q)
+      go (inr n) (inl k) (inl (k' , _))            = Empty.rec (n k')
+      go (inr n) (inl k) (inr (inl (_ , _ , e)))   = S≡ e
+      go (inr n) (inl k) (inr (inr (q , _)))       = Empty.rec (not-both x k q)
+      go (inr n) (inr q) (inl (k' , _))            = Empty.rec (n k')
+      go (inr n) (inr q) (inr (inl (_ , k , _)))   = Empty.rec (not-both x k q)
+      go (inr n) (inr q) (inr (inr (_ , e)))       = S≡ e
+
+    M : DefinableMap
+    M = record
+      { dom = D ; cod = mL ; fn = fn
+      ; into = λ x h → value-in x (fin? x) (top? x h)
+      ; graph = graph
+      ; defines = λ x h → defines' x (fin? x) (top? x h)
+      ; only = λ x h → only' x (fin? x) (top? x h) }
+
+    inj' : (x : S) (f : Fin? x) (t : Top? x) (x' : S) (f' : Fin? x') (t' : Top? x')
+         → fst (value x f t) ≡ fst (value x' f' t') → fst x ≡ fst x'
+    inj' x (inl k) _ x' (inl k') _ e =
+      ord-suc-inj (fst x) (fst x') (mem-ord {A = ω} ω-ord (fst x) k)
+        (sym (sucʟ-fst x) ∙ e ∙ sucʟ-fst x')
+    inj' x (inl k) _ x' (inr n') (inl _) e =
+      Empty.rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x) ∙ e) (ω-limit (fst x) k)))
+    inj' x (inl k) _ x' (inr n') (inr _) e =
+      Empty.rec (suc≢∅ (fst x) (sym (sucʟ-fst x) ∙ e))
+    inj' x (inr n) (inl _) x' (inl k') _ e =
+      Empty.rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x') ∙ sym e) (ω-limit (fst x') k')))
+    inj' x (inr n) (inl _) x' (inr n') (inl _) e = e
+    inj' x (inr n) (inl _) x' (inr n') (inr _) e =
+      Empty.rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym e) (#∈ω zero)))
+    inj' x (inr n) (inr _) x' (inl k') _ e =
+      Empty.rec (suc≢∅ (fst x') (sym (sucʟ-fst x') ∙ sym e))
+    inj' x (inr n) (inr _) x' (inr n') (inl _) e =
+      Empty.rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) e (#∈ω zero)))
+    inj' x (inr n) (inr q) x' (inr n') (inr q') e = q ∙ sym q'
+
+  -- THE INJECTION, m + 1 ↪ m.
+  injL : InjL (sucʟ mL) mL
+  injL = Inj.injL M (λ x h x' h' → inj' x (fin? x) (top? x h) x' (fin? x') (top? x' h'))
+
+-- =====================================================================
+-- SECTION 9.  THE THEOREM, BY ∈-INDUCTION ON THE L-CARDINAL.
 --
 --   At an infinite L-cardinal κ, every value of the collapse lies in κ.
 --   For a pair p with maximum m: if m is finite, the segment below p
@@ -916,7 +1077,7 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
       fin : ⟨ m ∈ˢ ω ⟩ ⊎ ((m ≡ ω) ⊎ ⟨ ω ∈ˢ m ⟩) → Empty.⊥
       fin (inl m∈ω) = a∉ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) e (ω-limit m m∈ω))
       fin (inr r) =
-        carda mL m∈a (subst (λ w → InjL w mL) sucL≡κ (shift-coded mL om m∉ω nums))
+        carda mL m∈a (subst (λ w → InjL w mL) sucL≡κ (Shift.injL mL om m∉ω))
         where
         m∉ω : ⟨ m ∈ˢ ω ⟩ → Empty.⊥
         m∉ω h = rr r
@@ -924,8 +1085,6 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
           rr : (m ≡ ω) ⊎ ⟨ ω ∈ˢ m ⟩ → Empty.⊥
           rr (inl e') = ∈-irrefl ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) e' h)
           rr (inr ω∈m) = ∈-irrefl ω (ω-ord .fst ω∈m h)
-        nums : (k : ℕ) → ⟨ (# k) ∈ˢ m ⟩
-        nums k = ω⊆ m om m∉ω (# k) (#∈ω k)
         sucL≡κ : sucʟ mL ≡ κ
         sucL≡κ = Σ≡Prop (λ v → snd (isL v)) (sucʟ-fst mL ∙ e)
     go (inr (inr h)) = Empty.rec*
@@ -1072,10 +1231,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
     fn : (x : S) → Mem x → S
     fn x mx = OT.up (seg p (fst x) mx .fst)
 
-    graph : Formula S 2
-    graph = appC C.colTable zero (suc zero)
+    -- Sealed with its reading.
+    opaque
+      graph : Formula S 2
+      graph = appC C.colTable zero (suc zero)
 
-    private
       at : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ ≡ ⟨ pr (fst y) (fst x) ∈ fst C.colTable ⟩
       at y x = cong ⟨_⟩ (appC-adequate C.colTable zero (suc zero) (y ∷ x ∷ []))
 

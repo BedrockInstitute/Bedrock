@@ -17,22 +17,19 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; extensionalV; ∈-irrefl )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; IsOrd; Lset; Lset-mono; Lset→isL; isL; isL-trans )
+  using ( 𝒮ʟ; IsOrd; Lset; Lset-mono; isL; isL-trans )
 open import L.Ordinal {ℓ} using ( mem-ord; #∈ω )
 open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Axioms.Power {ℓ} lem using ( hasPowerL )
 open import L.Choice.Stage {ℓ} lem using ( stage-below; stageBound )
-open import L.Choice.Step {ℓ} lem using ( Mem; orderAt )
-open import L.Choice.Order {ℓ} lem using ( relL; relL-fill; relL-rep )
 open import L.Cardinal {ℓ} lem using ( InjCode; IsCardinalL )
 open import L.InjChain {ℓ} lem using ( module PairBound; appC; appC-adequate )
+open import L.GCH.Least {ℓ} lem using ( module Least )
 open import L.Coding.Model {ℓ}
   using ( prʟ; prʟ-fst; prAtL; prAtL-adequate; appAt; appAt-adequate
         ; domAt-in; domAt-out )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out )
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; IsLeast; leastOf; module SWO; Tri; lt; eq; gt )
 open import L.GCH {ℓ} lem using ( SuccCardL; InjL )
 open import L.GCH.BelowSucc {ℓ} lem using ( below-succ-injects )
 open import L.GCH.Assembly {ℓ} lem using ( SuccIntoPower; injl-trans )
@@ -40,13 +37,13 @@ open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.OrderType {ℓ} lem
   using ( Holds; Complete; Src; ValueIs; Correct; correctAt; correct-out; correct-in )
 open import L.GCH.Pairing {ℓ} lem
-  using ( prodL; prodL-in; ω⊆; no-fin; prod-inj; Goal; module Step; isL-ord )
+  using ( prodL; prodL-in; ω⊆; no-fin; prod-inj; Goal; module Step )
 open import L.GCH.CardOf {ℓ} lem using ( cardOf )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ; isSetΣSndProp )
+open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
@@ -62,19 +59,16 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 -- The V-carrier: the ambient membership lives here.
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropStructure 𝒮ᵥ using ( S )
 -- The L-carrier: `SuccCardL`, `InjL` and the model live here.
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 -- The instance src/L/GCH.lagda.md names, at the same 𝒮ʟ.
-module ModelL = FOL.ZFModel 𝒮ʟ
+module ModelL = FOL.ZFModel 𝒮ʟ using ( isZFModel; module isZFModel; ℩-spec )
 
 -- Satisfaction, read exactly as `L.GCH.Definable` reads it: the record
 -- `DefinableMap` is built here, so the two must be the same relation.
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-
-isSetS : isSet SL.S
-isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
 
 -- Two elements of L with the same underlying set are equal.
 S≡ : {x y : SL.S} → fst x ≡ fst y → x ≡ y
@@ -137,7 +131,7 @@ ord-∅ a oa n∅ = extensionalV {a = a} {b = ∅} (λ x → ⇔toPath
 --   κ is infinite and δ is its successor cardinal in L.  The injection
 --   δ ↪ 𝒫 κ is the composite of two definable maps:
 --
---     1.  α ↦ R_α, the `relL`-least subset R of prodL κ that carries a
+--     1.  α ↦ R_α, the stage-order-least subset R of prodL κ that carries a
 --         CORRECT TABLE (src/L/GCH/OrderType.lagda.md, `Correct`) with
 --         an entry at every member of κ whose set of values is α.  The
 --         member ∅ of δ, which no such R fits, is sent to prodL κ
@@ -184,35 +178,17 @@ module Main (κ δ : SL.S) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
   Sq∈A : ⟨ fst Sq ∈ fst A ⟩
   Sq∈A = A-in Sq (λ z h → h)
 
-  -- The site: one stage holding every member of A, and the element of
-  -- L that realizes the stage order there.
+  -- The site: one stage holding every member of A; the stage order
+  -- there is the one `L.GCH.Least` selects by.
   β : SV.S
   β = stageBound (fst A) (snd A) .fst
 
   oβ : IsOrd β
   oβ = stageBound (fst A) (snd A) .snd .fst
 
-  hβ : ⟨ isL β ⟩
-  hβ = isL-ord β oβ
-
   site : (R : SL.S) → ⟨ fst R ∈ fst A ⟩ → ⟨ fst R ∈ Lset β ⟩
   site R h = Lset-mono (stageBound (fst A) (snd A) .snd .snd .snd)
                        (stage-below (fst A) (snd A) (fst R) h)
-
-  up : Mem (Lset β) → SL.S
-  up (x , m) = x , Lset→isL β oβ x m
-
-  pt : (R : SL.S) → ⟨ fst R ∈ fst A ⟩ → Mem (Lset β)
-  pt R h = fst R , site R h
-
-  up-pt : (R : SL.S) (h : ⟨ fst R ∈ fst A ⟩) → up (pt R h) ≡ R
-  up-pt R h = S≡ refl
-
-  W : SWO (Mem (Lset β))
-  W = orderAt β oβ
-
-  rel : SL.S
-  rel = relL β hβ oβ
 
   -- -------------------------------------------------------------------
   -- 3.1  The host predicate "R carries a total correct table with
@@ -683,165 +659,91 @@ module Main (κ δ : SL.S) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
       codes : Codes R α
       codes = ∣ F , correct , total , values ∣₁
 
-    -- THE SELECTION, as `L.GCH.SuccIntoPower.Canon` selected before:
-    -- the least point of the site that is a member of A and codes α.
-    Good : Mem (Lset β) → hProp (ℓ-suc ℓ)
-    Good G = (⟨ fst (up G) ∈ fst A ⟩ × Codes (up G) α)
-           , isProp× (snd (fst (up G) ∈ fst A)) squash₁
-
-    good-at : (R : SL.S) (h : ⟨ fst R ∈ fst A ⟩) → Codes R α → ⟨ Good (pt R h) ⟩
-    good-at R h c = subst (λ w → ⟨ fst w ∈ fst A ⟩ × Codes w α) (sym (up-pt R h)) (h , c)
-
-    nonempty : ⟨ ∅ ∈ fst α ⟩ → ∥ Σ[ G ∈ Mem (Lset β) ] ⟨ Good G ⟩ ∥₁
-    nonempty ∅∈α = PT.map
-      (λ { (Ff , code) →
-        pt (Exist.R ∅∈α Ff code) (Exist.R∈A ∅∈α Ff code)
-          , good-at (Exist.R ∅∈α Ff code) (Exist.R∈A ∅∈α Ff code) (Exist.codes ∅∈α Ff code) })
-      (below-succ-injects κ δ sc α ordα mα)
-
-    least : ⟨ ∅ ∈ fst α ⟩ → Σ[ G ∈ Mem (Lset β) ] IsLeast W Good G
-    least ∅∈α = leastOf W lem Good (nonempty ∅∈α)
-
-    -- The branch: ∅ ∈ α or not, decided once.
-    Dec : Type (ℓ-suc ℓ)
-    Dec = ⟨ ∅ ∈ fst α ⟩ ⊎ (⟨ ∅ ∈ fst α ⟩ → Empty.⊥)
-
-    dec : Dec
-    dec = lem (∅ ∈ fst α)
-
-    value : Dec → SL.S
-    value (inl h) = up (fst (least h))
-    value (inr _) = Sq
-
-    value∈A : (d : Dec) → ⟨ fst (value d) ∈ fst A ⟩
-    value∈A (inl h) = fst (fst (snd (least h)))
-    value∈A (inr _) = Sq∈A
-
-    value-codes : (h : ⟨ ∅ ∈ fst α ⟩) → Codes (up (fst (least h))) α
-    value-codes h = snd (fst (snd (least h)))
-
   -- -------------------------------------------------------------------
-  -- 3.4  THE FIRST GRAPH, over (R ∷ α ∷ []): either ∅ ∉ α and R is
-  --      prodL κ, or ∅ ∈ α, R ∈ A codes α, and no R' ∈ A coding α lies
-  --      below R in `rel`.  Inside the ∀̇ of the last clause: R' is 0,
-  --      R is 1, α is 2.
+  -- 3.4  THE CODE PREDICATE, over (R ∷ α ∷ []): either ∅ ∉ α and R is
+  --      prodL κ, or ∅ ∈ α and R ∈ A codes α.  The selection of the
+  --      stage-order-least such R, its graph and its table are `L.GCH.Least`
+  --      at the site β.
   -- -------------------------------------------------------------------
-
-  Least : SL.S → SL.S → Type (ℓ-suc ℓ)
-  Least R α = (R' : SL.S) → ⟨ fst R' ∈ fst A ⟩ → Codes R' α
-            → ⟨ pr (fst R') (fst R) ∈ fst rel ⟩ → Empty.⊥
 
   LeftOf : SL.S → SL.S → Type (ℓ-suc ℓ)
   LeftOf R α = (⟨ ∅ ∈ fst α ⟩ → Empty.⊥) × (fst R ≡ fst Sq)
 
   RightOf : SL.S → SL.S → Type (ℓ-suc ℓ)
-  RightOf R α = ⟨ ∅ ∈ fst α ⟩ × ⟨ fst R ∈ fst A ⟩ × Codes R α × Least R α
+  RightOf R α = ⟨ ∅ ∈ fst α ⟩ × ⟨ fst R ∈ fst A ⟩ × Codes R α
 
   opaque
-    leastFo : Formula SL.S 2
-    leastFo = ∀̇ ( (var zero ∈̇ con A)
-                ⇒̇ (predAt zero (suc (suc zero)) ⇒̇ (¬̇ appC rel zero (suc zero))) )
-
-    graph1 : Formula SL.S 2
-    graph1 = ( (¬̇ (con ∅ʟ ∈̇ var (suc zero))) ∧̇ (var zero ≐ con Sq) )
+    codeFo : Formula SL.S 2
+    codeFo = ( (¬̇ (con ∅ʟ ∈̇ var (suc zero))) ∧̇ (var zero ≐ con Sq) )
            ∨̇ ( (con ∅ʟ ∈̇ var (suc zero))
-             ∧̇ ( (var zero ∈̇ con A) ∧̇ (predAt zero (suc zero) ∧̇ leastFo) ) )
+             ∧̇ ( (var zero ∈̇ con A) ∧̇ predAt zero (suc zero) ) )
 
-    private
-      lo : (R' R α : SL.S)
-         → ⟨ (R' ∷ R ∷ α ∷ []) ⊨ appC rel zero (suc zero) ⟩
-         ≡ ⟨ pr (fst R') (fst R) ∈ fst rel ⟩
-      lo R' R α = cong ⟨_⟩ (appC-adequate rel zero (suc zero) (R' ∷ R ∷ α ∷ []))
-
-      least-out : (R α : SL.S) → ⟨ (R ∷ α ∷ []) ⊨ leastFo ⟩ → Least R α
-      least-out R α h R' hA c b =
-        h R' hA (pred-in zero (suc (suc zero)) (R' ∷ R ∷ α ∷ []) c) (transport (sym (lo R' R α)) b)
-
-      least-in : (R α : SL.S) → Least R α → ⟨ (R ∷ α ∷ []) ⊨ leastFo ⟩
-      least-in R α h R' hA p b =
-        h R' hA (pred-out zero (suc (suc zero)) (R' ∷ R ∷ α ∷ []) p) (transport (lo R' R α) b)
-
-    graph1-out : (R α : SL.S) → ⟨ (R ∷ α ∷ []) ⊨ graph1 ⟩ → ∥ LeftOf R α ⊎ RightOf R α ∥₁
-    graph1-out R α = PT.map
+    code-out : (R α : SL.S) → ⟨ (R ∷ α ∷ []) ⊨ codeFo ⟩ → ∥ LeftOf R α ⊎ RightOf R α ∥₁
+    code-out R α = PT.map
       (λ { (inl (n , e)) → inl (n , e)
-         ; (inr (h , (hA , (p , l)))) →
-             inr (h , hA , pred-out zero (suc zero) (R ∷ α ∷ []) p , least-out R α l) })
+         ; (inr (h , (hA , p))) → inr (h , hA , pred-out zero (suc zero) (R ∷ α ∷ []) p) })
 
-    graph1-left : (R α : SL.S) → LeftOf R α → ⟨ (R ∷ α ∷ []) ⊨ graph1 ⟩
-    graph1-left R α (n , e) = ∣ inl (n , e) ∣₁
+    code-left : (R α : SL.S) → LeftOf R α → ⟨ (R ∷ α ∷ []) ⊨ codeFo ⟩
+    code-left R α (n , e) = ∣ inl (n , e) ∣₁
 
-    graph1-right : (R α : SL.S) → RightOf R α → ⟨ (R ∷ α ∷ []) ⊨ graph1 ⟩
-    graph1-right R α (h , hA , c , l) =
-      ∣ inr (h , (hA , (pred-in zero (suc zero) (R ∷ α ∷ []) c , least-in R α l))) ∣₁
+    code-right : (R α : SL.S) → RightOf R α → ⟨ (R ∷ α ∷ []) ⊨ codeFo ⟩
+    code-right R α (h , hA , c) =
+      ∣ inr (h , (hA , pred-in zero (suc zero) (R ∷ α ∷ []) c)) ∣₁
 
   -- THE FIRST MAP, δ → A.
   module Map1 where
 
-    fn : (α : SL.S) → ⟨ fst α ∈ fst δ ⟩ → SL.S
-    fn α mα = At.value α mα (At.dec α mα)
-
-    defines' : (α : SL.S) (mα : ⟨ fst α ∈ fst δ ⟩) (d : At.Dec α mα)
-             → ⟨ (At.value α mα d ∷ α ∷ []) ⊨ graph1 ⟩
-    defines' α mα (inl h) = graph1-right (up G) α (h , fst gd , snd gd , lst)
+    -- A witness at the site: a code when ∅ ∈ α, and Sq otherwise.
+    have : (α : SL.S) (mα : ⟨ fst α ∈ fst δ ⟩)
+         → ∥ Σ[ R ∈ SL.S ] (⟨ fst R ∈ Lset β ⟩ × ⟨ (R ∷ α ∷ []) ⊨ codeFo ⟩) ∥₁
+    have α mα = go (lem (∅ ∈ fst α))
       where
-      G : Mem (Lset β)
-      G = fst (At.least α mα h)
-      gd : ⟨ At.Good α mα G ⟩
-      gd = fst (snd (At.least α mα h))
-      lst : Least (up G) α
-      lst R' hA c b = snd (snd (At.least α mα h)) (pt R' hA)
-        (At.good-at α mα R' hA c) (relL-rep β hβ oβ (pt R' hA) G b)
-    defines' α mα (inr n) = graph1-left Sq α (n , refl)
-
-    only' : (α : SL.S) (mα : ⟨ fst α ∈ fst δ ⟩) (d : At.Dec α mα) (y : SL.S)
-          → ⟨ (y ∷ α ∷ []) ⊨ graph1 ⟩ → y ≡ At.value α mα d
-    only' α mα d y h = PT.rec (isSetS y (At.value α mα d)) (go d) (graph1-out y α h)
-      where
-      go : (d : At.Dec α mα) → LeftOf y α ⊎ RightOf y α → y ≡ At.value α mα d
-      go (inl h∅) (inl (n , _)) = Empty.rec (n h∅)
-      go (inl h∅) (inr (_ , yA , cy , ly)) = tri (SWO.tri∙ W Gy G)
+      from : (h : ⟨ ∅ ∈ fst α ⟩) → Σ[ Ff ∈ SL.S ] InjCode Ff α κ
+           → Σ[ R ∈ SL.S ] (⟨ fst R ∈ Lset β ⟩ × ⟨ (R ∷ α ∷ []) ⊨ codeFo ⟩)
+      from h (Ff , code) = E.R , site E.R E.R∈A , code-right E.R α (h , E.R∈A , E.codes)
         where
-        G : Mem (Lset β)
-        G = fst (At.least α mα h∅)
-        lst : IsLeast W (At.Good α mα) G
-        lst = snd (At.least α mα h∅)
-        Gy : Mem (Lset β)
-        Gy = pt y yA
-        tri : Tri (SWO._<∙_ W Gy G) (Gy ≡ G) (SWO._<∙_ W G Gy) → y ≡ up G
-        tri (lt k) = Empty.rec (snd lst Gy (At.good-at α mα y yA cy) k)
-        tri (eq e) = sym (up-pt y yA) ∙ cong up e
-        tri (gt k) = Empty.rec (ly (up G) (fst (fst lst)) (snd (fst lst)) (relL-fill β hβ oβ G Gy k))
-      go (inr n) (inl (_ , e)) = S≡ e
-      go (inr n) (inr (h∅ , _)) = Empty.rec (n h∅)
+        module E = At.Exist α mα h Ff code using ( R; R∈A; codes )
+      go : ⟨ ∅ ∈ fst α ⟩ ⊎ (⟨ ∅ ∈ fst α ⟩ → Empty.⊥)
+         → ∥ Σ[ R ∈ SL.S ] (⟨ fst R ∈ Lset β ⟩ × ⟨ (R ∷ α ∷ []) ⊨ codeFo ⟩) ∥₁
+      go (inl h) = PT.map (from h) (below-succ-injects κ δ sc α (At.ordα α mα) mα)
+      go (inr n) = ∣ Sq , site Sq Sq∈A , code-left Sq α (n , refl) ∣₁
 
-    inj' : (α : SL.S) (mα : ⟨ fst α ∈ fst δ ⟩) (α' : SL.S) (mα' : ⟨ fst α' ∈ fst δ ⟩)
-           (d : At.Dec α mα) (d' : At.Dec α' mα')
-         → fst (At.value α mα d) ≡ fst (At.value α' mα' d') → fst α ≡ fst α'
-    inj' α mα α' mα' (inl h) (inl h') e =
-      values-unique (At.value α mα (inl h)) α α' (At.value-codes α mα h)
-        (subst (λ w → Codes w α') (sym (S≡ {At.value α mα (inl h)} {At.value α' mα' (inl h')} e))
-          (At.value-codes α' mα' h'))
-    inj' α mα α' mα' (inl h) (inr n') e =
-      Empty.rec (noCodesSq α (subst (λ w → Codes w α) (S≡ {At.value α mα (inl h)} {Sq} e)
-        (At.value-codes α mα h)))
-    inj' α mα α' mα' (inr n) (inl h') e =
-      Empty.rec (noCodesSq α' (subst (λ w → Codes w α') (sym (S≡ {Sq} {At.value α' mα' (inl h')} e))
-        (At.value-codes α' mα' h')))
-    inj' α mα α' mα' (inr n) (inr n') e =
-      ord-∅ (fst α) (At.ordα α mα) n ∙ sym (ord-∅ (fst α') (At.ordα α' mα') n')
+    module Ls = Least β oβ δ codeFo have using ( fn; fn-holds; Dmap )
+
+    fn : (α : SL.S) → ⟨ fst α ∈ fst δ ⟩ → SL.S
+    fn = Ls.fn
+
+    -- The value, read at the predicate.
+    fn-read : (α : SL.S) (mα : ⟨ fst α ∈ fst δ ⟩) → ∥ LeftOf (fn α mα) α ⊎ RightOf (fn α mα) α ∥₁
+    fn-read α mα = code-out (fn α mα) α (Ls.fn-holds α mα)
+
+    -- The value is a member of A, in both cases.
+    fn∈A : (α : SL.S) (mα : ⟨ fst α ∈ fst δ ⟩) → ⟨ fst (fn α mα) ∈ fst A ⟩
+    fn∈A α mα = PT.rec (snd (fst (fn α mα) ∈ fst A))
+      (λ { (inl (_ , e)) → subst (λ w → ⟨ w ∈ fst A ⟩) (sym e) Sq∈A
+         ; (inr (_ , hA , _)) → hA })
+      (fn-read α mα)
 
     M : DefinableMap
-    M = record
-      { dom     = δ
-      ; cod     = A
-      ; fn      = fn
-      ; into    = λ α mα → At.value∈A α mα (At.dec α mα)
-      ; graph   = graph1
-      ; defines = λ α mα → defines' α mα (At.dec α mα)
-      ; only    = λ α mα → only' α mα (At.dec α mα) }
+    M = record Ls.Dmap { cod = A ; into = fn∈A }
+
+    inj : (α : SL.S) (mα : ⟨ fst α ∈ fst δ ⟩) (α' : SL.S) (mα' : ⟨ fst α' ∈ fst δ ⟩)
+        → fst (fn α mα) ≡ fst (fn α' mα') → fst α ≡ fst α'
+    inj α mα α' mα' q = PT.rec2 (setIsSet (fst α) (fst α')) go (fn-read α mα) (fn-read α' mα')
+      where
+      go : LeftOf (fn α mα) α ⊎ RightOf (fn α mα) α
+         → LeftOf (fn α' mα') α' ⊎ RightOf (fn α' mα') α' → fst α ≡ fst α'
+      go (inl (n , _)) (inl (n' , _)) =
+        ord-∅ (fst α) (At.ordα α mα) n ∙ sym (ord-∅ (fst α') (At.ordα α' mα') n')
+      go (inl (_ , e)) (inr (_ , _ , c')) =
+        Empty.rec (noCodesSq α' (subst (λ w → Codes w α') (S≡ {fn α' mα'} {Sq} (sym q ∙ e)) c'))
+      go (inr (_ , _ , c)) (inl (_ , e')) =
+        Empty.rec (noCodesSq α (subst (λ w → Codes w α) (S≡ {fn α mα} {Sq} (q ∙ e')) c))
+      go (inr (_ , _ , c)) (inr (_ , _ , c')) =
+        values-unique (fn α mα) α α' c (subst (λ w → Codes w α') (S≡ {fn α' mα'} {fn α mα} (sym q)) c')
 
     injL : InjL δ A
-    injL = Inj.injL M (λ α mα α' mα' → inj' α mα α' mα' (At.dec α mα) (At.dec α' mα'))
+    injL = Inj.injL M inj
 
   -- -------------------------------------------------------------------
   -- 3.5  THE SECOND MAP, A → 𝒫 κ: the image under a coded pairing.

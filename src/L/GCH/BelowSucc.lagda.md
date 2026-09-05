@@ -29,9 +29,9 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 -- The V-carrier: the ambient membership lives here.
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropStructure 𝒮ᵥ using ( S )
 -- The L-carrier: `SuccCardL` and `InjL` live here.
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using ( S )
 
 -- =====================================================================
 -- THE THEOREM.  Let δ be the successor cardinal of κ in L.  Every

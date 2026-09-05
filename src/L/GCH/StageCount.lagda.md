@@ -15,11 +15,11 @@ open import FOL.Syntax
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
-open import V.Model {ℓ} using ( self∈sucV )
+open import V.Model {ℓ} using ( ∈sucV-inl; self∈sucV )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; isPropIsOrd; Lset; Lset-mono; Lset→isL )
-open import L.Ordinal {ℓ} using ( ∈#-elim; mem-ord; suc-ord; ω-ord; boundingOrd )
+open import L.Ordinal {ℓ} using ( ∈#-elim; mem-ord; suc-ord; ω-ord; numeral-ord; #∈ω; boundingOrd )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
 open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
 open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; isL-Lset )
@@ -43,31 +43,34 @@ open import L.Choice.Internal {ℓ} lem using ( domAt-numeral; domAt-fill; Least
 open import L.Choice.Adequate {ℓ} lem using ( module At )
 open import L.Choice.Name {ℓ} lem using ( module Naming; code-inj; limitCode )
 open import L.Choice.Step {ℓ} lem
-  using ( carry; orderAt; relOf; IsLeastName; leastNameOf; denotesAt
-        ; birth; birth-ord; birth-in; birth-mem; birth-suc )
+  using ( carry; memOf; orderAt; orderAt-step; relOf; IsLeastName; leastNameOf; denotesAt
+        ; birth; birth-ord; birth-in; birth-mem; birth-suc; module Family )
   renaming ( Mem to MemOf )
 open import L.Choice.Before {ℓ} lem using ( codeOrder; codeOrder-fill; codeOrder-rep )
-open import L.Choice.Table {ℓ} lem using ( ixRel-rep; ixRel-fill )
-open import L.Choice.Order {ℓ} lem using ( relL; relL-spec; relL-fill; relL-rep )
+open import L.Choice.Table {ℓ} lem using ( Related; IsRel; ixRel-rep; ixRel-fill )
+open import L.Choice.Order {ℓ} lem using ( relL; relL-spec )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; IsLeast; leastOf; isPropLeastOf; lt; eq; gt )
-  renaming ( Tri to Tri∙ )
+  using ( SWO; leastOf; isPropLeastOf; lt; eq; gt ) renaming ( Tri to TriW )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
 open import L.Cardinal {ℓ} lem using ( InjCode; IsCardinalL )
 open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Assembly {ℓ} lem
   using ( StageCountedCoded; inclusion-coded; injl-trans )
 open import L.GCH.CardOf {ℓ} lem using ( cardOf )
-open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj; module Graph )
+open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.Least {ℓ} lem using ( module Least )
 open import L.GCH.Pairing {ℓ} lem
   using ( prodL; prodL-in; Goal; module Step; prod-inj; no-fin; ω⊆; ordL; isL-ord )
 open import L.GCH.Sequences {ℓ} lem using ( seqL; seqL-in; seqL-out; seq-count )
-open import L.InjChain {ℓ} lem using ( appC; appC-adequate; ω-limit )
+open import L.InjChain {ℓ} lem using ( appC; appC-adequate; ω-limit; finite-excl-ω )
+open import L.Choice.Finite {ℓ} lem
+  using ( Tally; StageOrder; stageOrder; finiteStage; natOrder )  -- lint-agda: keep (StageOrder used as the projection qualifier)
+open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
 
 open import Cubical.Data.Nat using ( injSuc )
-open import Cubical.Data.Nat.Order using ( _<_ )
+open import Cubical.Data.Nat.Order using ( _<_; isProp≤ )
 open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
+open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId'; inj-toℕ )
 open import Cubical.Data.Sigma using ( Σ≡Prop; ΣPathP )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Foundations.Prelude using ( subst2; J )
@@ -78,6 +81,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_; ω; sucV )
 import Cubical.Induction.WellFounded as WF
+open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
@@ -86,12 +90,12 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 -- The V-carrier: the ambient membership lives here.
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropStructure 𝒮ᵥ using ()
 -- The L-carrier: `InjL` lives here.
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using ( S )
 open SL using ( S )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- The numeral k as an element of L.
@@ -158,7 +162,7 @@ module SeqMap (A B E : S)
               (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst E ⟩
                    → ⟨ fst y ∈ fst B ⟩) where
 
-  module Sm = Small E A B sv dm ij ran
+  module Sm = Small E A B sv dm ij ran using ( at; fib; small; small-inj; module E )
 
   -- The map on the presentations, with its graph and its injectivity.
   -- Sealed: measured at this site, an unsealed `f (g j)` met by the
@@ -377,7 +381,7 @@ module SeqMap (A B E : S)
           , λ y' h → Σ≡Prop (λ v → snd (isL v)) (AtSeq.only n g s e y' (fo-out y' s h)) ) })
         (rep s m)) }
 
-  module T = Of R
+  module T = Of R using ( funct; val; val-uniq )
 
   fn : (s : S) → Mem s → S
   fn = T.val
@@ -582,11 +586,12 @@ module Succ (βL : S) (oβ : IsOrd (fst βL)) (β∉ω : ⟨ fst βL ∈ˢ ω �
   Ps : S
   Ps = relL β (snd βL) oβ
 
-  module NM = Naming (Lset β) w
-  module A6 = At (Lset β) (snd (LsetS β oβ)) w
+  module NM = Naming (Lset β) w using ( Name; arity; codeOf; denote; formula; nameOrder; params )
+  module A6 = At (Lset β) (snd (LsetS β oβ)) w using ( module Least; codeEl; codeEl-fst; envEl; envEl-fst; numAt; numAt-fst )
   module L6 = A6.Least codeOrder Ps codeOrder-rep codeOrder-fill
                 (ixRel-rep β oβ Ps (relL-spec β (snd βL) oβ))
                 (ixRel-fill β oβ Ps (relL-spec β (snd βL) oβ))
+    using ( module Min )
 
   open NM using ( Name; arity; formula; params; codeOf; denote )
 
@@ -666,7 +671,7 @@ module Succ (βL : S) (oβ : IsOrd (fst βL)) (β∉ω : ⟨ fst βL ∈ˢ ω �
         read : ⟨ γ ⊨ Fo ⟩ → ∥ Σ[ t ∈ Name ] Least t ∥₁
         read = LeastAt-read
 
-  module LF = LNAt {10} i7 i6 i5 i4 i3 i2 i1 i0 i9
+  module LF = LNAt {10} i7 i6 i5 i4 i3 i2 i1 i0 i9 using ( Fo; module Rd )
   module Min (y x s a e : S) = LF.Rd (Γ y x s a e) refl refl tw-eq cs-eq c0-eq
 
   LN : (y x s a e : S) → Type (ℓ-suc ℓ)
@@ -699,10 +704,10 @@ module Succ (βL : S) (oβ : IsOrd (fst βL)) (β∉ω : ⟨ fst βL ∈ˢ ω �
   Wit : (y x : S) → Type (ℓ-suc ℓ)
   Wit y x = ∥ Σ[ s ∈ S ] Σ[ a ∈ S ] Σ[ e ∈ S ] (LN y x s a e × CN y x s a e) ∥₁
 
-  body : Formula S 10
-  body = LF.Fo ∧̇ cnFo
-
   opaque
+    body : Formula S 10
+    body = LF.Fo ∧̇ cnFo
+
     fo : Formula S 2
     fo = pin5At codeOrder Ps tw cs c0 (∃₃ body)
 
@@ -880,16 +885,10 @@ succ-step βL oβ β∉ω = PT.rec squash₁
 --
 --   A stage γ is chosen that holds one code for every β ∈ δ: the least
 --   stage holding one is a function of β (src/L/Stage.lagda.md
---   `leastOrd`), and γ bounds those.  e_β is the `orderAt γ`-least
---   member of L_γ coding an injection L_β ↪ δ, selected as in
---   src/L/GCH/CardOf.lagda.md: the predicate carries the code and the
---   index equation, so nothing is transported along a path.
---
---   The graph, over (e ∷ b ∷ []): "there is B, the tower at b, with e a
---   member of L_γ coding an injection of B into δ, below which no
---   member of L_γ in the stage order codes one".  Binders: B, then in
---   the leastness clause e'.  Inside B: B is 0, e is 1, b is 2; inside
---   e': e' is 0, B is 1, e is 2, b is 3.
+--   `leastOrd`), and γ bounds those.  The selection of e_β, its graph
+--   and its table are `L.GCH.Least` at γ, δ and the code predicate of
+--   `CodeFo`: over (e ∷ b ∷ []), "there is B, the tower at b, with e
+--   coding an injection of B into δ".  Inside B: B is 0, e is 1, b is 2.
 -- =====================================================================
 
 -- An injection code is a proposition, and it respects the index
@@ -956,52 +955,37 @@ module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
     , λ x y p → ran x y (subst ⟨_⟩ (appAt-adequate (suc (suc f)) i1 i0 (y ∷ x ∷ γ)) p)
 
 
--- The table body at slots, sealed, with its two readings at a variable
--- environment.  B is the tower, e the code, b the index; under the
--- leastness binder e' is 0.  The concrete instance in section 3.3 is
--- only ever compared under the seal.  Measured at this site: the two
--- readings written at the concrete environment cost 7 s each.
-module TableFo {n : ℕ} (Lγ Rγ δL : S) (B e b : Fin n) where
+-- The code predicate at slots, sealed, with its two readings at a
+-- variable environment: "there is B, the tower at b, with e coding an
+-- injection of B into δ".  Inside B: B is 0 and the slots shift by one.
+-- Measured at this site: the two readings written at the concrete
+-- environment cost 7 s each.
+module CodeFo {n : ℕ} (δL : S) (e b : Fin n) where
   opaque
     Fo : Formula S n
-    Fo = LsetGraphAt B b ∧̇ (var e ∈̇ con Lγ) ∧̇ injFo δL e B
-       ∧̇ ∀̇∈ (con Lγ) (¬̇ (appC Rγ zero (suc e) ∧̇ injFo δL zero (suc B)))
+    Fo = ∃̇ (LsetGraphAt i0 (suc b) ∧̇ injFo δL (suc e) i0)
 
-    read : (γ : S ^ n) (Bv ev bv : S)
-         → lookup B γ ≡ Bv → lookup e γ ≡ ev → lookup b γ ≡ bv
-         → IsOrd (fst bv) → ⟨ γ ⊨ Fo ⟩
-         → (fst Bv ≡ Lset (fst bv))
-         × ⟨ fst ev ∈ fst Lγ ⟩
-         × InjCode ev Bv δL
-         × ((e' : S) → ⟨ fst e' ∈ fst Lγ ⟩ → ⟨ pr (fst e') (fst ev) ∈ fst Rγ ⟩
-             → InjCode e' Bv δL → Empty.⊥)
-    read γ Bv ev bv qB qe qb ob (hg , he , hi , hl) =
-        cong fst (sym qB)
-          ∙ Lset-only B b γ hg (subst (λ v → IsOrd (fst v)) (sym qb) ob)
-          ∙ cong (λ v → Lset (fst v)) qb
-      , subst (λ v → ⟨ fst v ∈ fst Lγ ⟩) qe he
-      , subst2 (λ u v → InjCode u v δL) qe qB (InjFo.read δL e B γ hi)
-      , λ e' he' hr hc → hl e' he'
-          ( subst ⟨_⟩ (sym (appC-adequate Rγ zero (suc e) (e' ∷ γ)))
-              (subst (λ v → ⟨ pr (fst e') (fst v) ∈ fst Rγ ⟩) (sym qe) hr)
-          , InjFo.fill δL zero (suc B) (e' ∷ γ) (subst (λ v → InjCode e' v δL) (sym qB) hc) )
+    read : (γ : S ^ n) (ev bv : S) → lookup e γ ≡ ev → lookup b γ ≡ bv
+         → (ob : IsOrd (fst bv)) → ⟨ γ ⊨ Fo ⟩ → InjCode ev (LsetS (fst bv) ob) δL
+    read γ ev bv qe qb ob = PT.rec (isPropInjCode ev (LsetS (fst bv) ob) δL) at
+      where
+      at : Σ[ B ∈ S ] ( ⟨ (B ∷ γ) ⊨ LsetGraphAt i0 (suc b) ⟩
+                      × ⟨ (B ∷ γ) ⊨ injFo δL (suc e) i0 ⟩ )
+         → InjCode ev (LsetS (fst bv) ob) δL
+      at (B , hg , hi) = injcode-resp (lookup e γ) ev B (LsetS (fst bv) ob) δL (cong fst qe)
+        ( Lset-only i0 (suc b) (B ∷ γ) hg (subst (λ v → IsOrd (fst v)) (sym qb) ob)
+        ∙ cong (λ v → Lset (fst v)) qb )
+        (InjFo.read δL (suc e) i0 (B ∷ γ) hi)
 
-    fill : (γ : S ^ n) (Bv ev bv : S)
-         → lookup B γ ≡ Bv → lookup e γ ≡ ev → lookup b γ ≡ bv
-         → IsOrd (fst bv)
-         → (fst Bv ≡ Lset (fst bv)) → ⟨ fst ev ∈ fst Lγ ⟩ → InjCode ev Bv δL
-         → ((e' : S) → ⟨ fst e' ∈ fst Lγ ⟩ → ⟨ pr (fst e') (fst ev) ∈ fst Rγ ⟩
-             → InjCode e' Bv δL → Empty.⊥)
-         → ⟨ γ ⊨ Fo ⟩
-    fill γ Bv ev bv qB qe qb ob q he code mn =
-        Lset-defines B b γ (subst (λ v → IsOrd (fst v)) (sym qb) ob)
-          (cong fst qB ∙ q ∙ cong (λ v → Lset (fst v)) (sym qb))
-      , subst (λ v → ⟨ fst v ∈ fst Lγ ⟩) (sym qe) he
-      , InjFo.fill δL e B γ (subst2 (λ u v → InjCode u v δL) (sym qe) (sym qB) code)
-      , λ e' he' hc → mn e' he'
-          (subst (λ v → ⟨ pr (fst e') (fst v) ∈ fst Rγ ⟩) qe
-            (subst ⟨_⟩ (appC-adequate Rγ zero (suc e) (e' ∷ γ)) (fst hc)))
-          (subst (λ v → InjCode e' v δL) qB (InjFo.read δL zero (suc B) (e' ∷ γ) (snd hc)))
+    fill : (γ : S ^ n) (ev bv : S) → lookup e γ ≡ ev → lookup b γ ≡ bv
+         → (ob : IsOrd (fst bv)) → InjCode ev (LsetS (fst bv) ob) δL → ⟨ γ ⊨ Fo ⟩
+    fill γ ev bv qe qb ob code =
+      ∣ LsetS (fst bv) ob
+      , Lset-defines i0 (suc b) (LsetS (fst bv) ob ∷ γ) (subst (λ v → IsOrd (fst v)) (sym qb) ob)
+          (cong (λ v → Lset (fst v)) (sym qb))
+      , InjFo.fill δL (suc e) i0 (LsetS (fst bv) ob ∷ γ)
+          (injcode-resp ev (lookup e γ) (LsetS (fst bv) ob) (LsetS (fst bv) ob) δL
+            (cong fst (sym qe)) refl code) ∣₁
 
 module Table (δL : S) (oδ : IsOrd (fst δL))
              (have : (β : V ℓ) (oβ : IsOrd β) → ⟨ β ∈ fst δL ⟩ → InjL (LsetS β oβ) δL)
@@ -1016,8 +1000,8 @@ module Table (δL : S) (oδ : IsOrd (fst δL))
   -- -------------------------------------------------------------------
 
   -- Some code at the stage σ.
-  Holds : (β : V ℓ) (oβ : IsOrd β) → V ℓ → hProp (ℓ-suc ℓ)
-  Holds β oβ σ =
+  HasCode : (β : V ℓ) (oβ : IsOrd β) → V ℓ → hProp (ℓ-suc ℓ)
+  HasCode β oβ σ =
     ∥ Σ[ F ∈ S ] (⟨ fst F ∈ Lset σ ⟩ × InjCode F (LsetS β oβ) δL) ∥₁ , squash₁
 
   -- An index with its ordinal-hood and its membership in δ.
@@ -1027,11 +1011,11 @@ module Table (δL : S) (oδ : IsOrd (fst δL))
   -- The least stage holding a code, a function of the index.  Sealed:
   -- a well-founded selection, never to meet the unifier.
   opaque
-    ls : (p : Ix3) → LeastOrd (Holds (fst p) (fst (snd p)))
-    ls (β , oβ , β∈δ) = PT.rec (isPropLeastOrd (Holds β oβ)) from (have β oβ β∈δ)
+    ls : (p : Ix3) → LeastOrd (HasCode (fst p) (fst (snd p)))
+    ls (β , oβ , β∈δ) = PT.rec (isPropLeastOrd (HasCode β oβ)) from (have β oβ β∈δ)
       where
-      from : Σ[ F ∈ S ] InjCode F (LsetS β oβ) δL → LeastOrd (Holds β oβ)
-      from (F , code) = leastOrd (Holds β oβ)
+      from : Σ[ F ∈ S ] InjCode F (LsetS β oβ) δL → LeastOrd (HasCode β oβ)
+      from (F , code) = leastOrd (HasCode β oβ)
         ∣ stage (fst F) (snd F) , stage-ord (fst F) (snd F)
         , ∣ F , stage-mem (fst F) (snd F) , code ∣₁ ∣₁
 
@@ -1050,22 +1034,8 @@ module Table (δL : S) (oδ : IsOrd (fst δL))
     bnd-in : (m : ⟪ δ ⟫) → ⟨ ls (at m) .fst ∈ γ ⟩
     bnd-in = boundingOrd ⟪ δ ⟫ (λ m → ls (at m) .fst) (λ m → ls (at m) .snd .fst) .snd .snd
 
-  -- Sealed: the elements that reach a slot.
-  opaque
-    Lγ : S
-    Lγ = LsetS γ oγ
-
-    Lγ-fst : fst Lγ ≡ Lset γ
-    Lγ-fst = refl
-
-    hγ : ⟨ isL γ ⟩
-    hγ = isL-ord γ oγ
-
-  Rγ : S
-  Rγ = relL γ hγ oγ
-
   -- Every β ∈ δ has a code in L_γ: its least stage sits below γ.
-  code-at-γ : (β : V ℓ) (oβ : IsOrd β) (β∈δ : ⟨ β ∈ δ ⟩) → ⟨ Holds β oβ γ ⟩
+  code-at-γ : (β : V ℓ) (oβ : IsOrd β) (β∈δ : ⟨ β ∈ δ ⟩) → ⟨ HasCode β oβ γ ⟩
   code-at-γ β oβ β∈δ = PT.map raise (ls p .snd .snd .fst)
     where
     p : Ix3
@@ -1082,174 +1052,40 @@ module Table (δL : S) (oδ : IsOrd (fst δL))
     raise (F , h , code) = F , Lset-mono {α = γ} {β = ls p .fst} σ∈γ h , code
 
   -- -------------------------------------------------------------------
-  -- 3.2  The least code at β.
-  -- -------------------------------------------------------------------
-
-  Mγ : Type (ℓ-suc ℓ)
-  Mγ = MemOf (Lset γ)
-
-  memS : Mγ → S
-  memS c = fst c , Lset→isL γ oγ (fst c) (snd c)
-
-  Good : (β : V ℓ) (oβ : IsOrd β) → Mγ → hProp (ℓ-suc ℓ)
-  Good β oβ c = ∥ Σ[ F ∈ S ] ((fst F ≡ fst c) × InjCode F (LsetS β oβ) δL) ∥₁ , squash₁
-
-  module AtIndex (β : V ℓ) (oβ : IsOrd β) (β∈δ : ⟨ β ∈ δ ⟩) where
-
-    nonempty : ∥ Σ[ c ∈ Mγ ] ⟨ Good β oβ c ⟩ ∥₁
-    nonempty = PT.map (λ { (F , h , code) → (fst F , h) , ∣ F , refl , code ∣₁ })
-      (code-at-γ β oβ β∈δ)
-
-    -- The selection, sealed with its two facts.
-    opaque
-      c : Mγ
-      c = fst (leastOf (orderAt γ oγ) lem (Good β oβ) nonempty)
-
-      c-good : ⟨ Good β oβ c ⟩
-      c-good = fst (snd (leastOf (orderAt γ oγ) lem (Good β oβ) nonempty))
-
-      minimal : (c' : Mγ) → ⟨ Good β oβ c' ⟩ → relOf (orderAt γ oγ) c' c → Empty.⊥
-      minimal = snd (snd (leastOf (orderAt γ oγ) lem (Good β oβ) nonempty))
-
-    e : S
-    e = memS c
-
-    -- The code, untruncated: an injection code is a proposition.
-    code : InjCode e (LsetS β oβ) δL
-    code = PT.rec (isPropInjCode e (LsetS β oβ) δL)
-      (λ { (F , q , cd) → injcode-resp F e (LsetS β oβ) (LsetS β oβ) δL q refl cd })
-      c-good
-
-  -- The stage at b, as one sealed element.
-  opaque
-    twAt : (b : V ℓ) → IsOrd b → S
-    twAt b ob = LsetS b ob
-
-    twAt-fst : (b : V ℓ) (ob : IsOrd b) → fst (twAt b ob) ≡ Lset b
-    twAt-fst b ob = refl
-
-  -- -------------------------------------------------------------------
-  -- 3.3  The graph, and its host reading.
-  -- -------------------------------------------------------------------
-
-  TWit : (e b : S) → Type (ℓ-suc ℓ)
-  TWit e b = ∥ Σ[ B ∈ S ]
-      ( (fst B ≡ Lset (fst b))
-      × ⟨ fst e ∈ Lset γ ⟩
-      × InjCode e B δL
-      × ((e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
-          → InjCode e' B δL → Empty.⊥) ) ∥₁
-
-  module TF = TableFo {3} Lγ Rγ δL i0 i1 i2
-
-  opaque
-    fo : Formula S 2
-    fo = ∃̇ TF.Fo
-
-    fo-out : (e b : S) → IsOrd (fst b) → ⟨ (e ∷ b ∷ []) ⊨ fo ⟩ → TWit e b
-    fo-out e b ob = PT.map (λ { (B , h) → B , fix B (TF.read (B ∷ e ∷ b ∷ []) B e b refl refl refl ob h) })
-      where
-      fix : (B : S)
-          → (fst B ≡ Lset (fst b)) × ⟨ fst e ∈ fst Lγ ⟩ × InjCode e B δL
-            × ((e' : S) → ⟨ fst e' ∈ fst Lγ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
-                → InjCode e' B δL → Empty.⊥)
-          → (fst B ≡ Lset (fst b)) × ⟨ fst e ∈ Lset γ ⟩ × InjCode e B δL
-            × ((e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
-                → InjCode e' B δL → Empty.⊥)
-      fix B (q , he , code , mn) =
-          q , subst (λ w → ⟨ fst e ∈ w ⟩) Lγ-fst he , code
-        , λ e' he' → mn e' (subst (λ w → ⟨ fst e' ∈ w ⟩) (sym Lγ-fst) he')
-
-    fo-in : (e b : S) → IsOrd (fst b)
-          → (B : S) → (fst B ≡ Lset (fst b)) → ⟨ fst e ∈ Lset γ ⟩ → InjCode e B δL
-          → ((e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
-              → InjCode e' B δL → Empty.⊥)
-          → ⟨ (e ∷ b ∷ []) ⊨ fo ⟩
-    fo-in e b ob B qB he code mn =
-      ∣ B , TF.fill (B ∷ e ∷ b ∷ []) B e b refl refl refl ob qB
-              (subst (λ w → ⟨ fst e ∈ w ⟩) (sym Lγ-fst) he) code
-              (λ e' he' → mn e' (subst (λ w → ⟨ fst e' ∈ w ⟩) Lγ-fst he')) ∣₁
-
-  -- -------------------------------------------------------------------
-  -- 3.4  The definable map b ↦ e_b, and its table.
+  -- 3.2  The least code at each index, and its table: `L.GCH.Least` at
+  -- γ, δ and the code predicate.
   -- -------------------------------------------------------------------
 
   ordAt : (b : S) → ⟨ fst b ∈ δ ⟩ → IsOrd (fst b)
   ordAt b m = mem-ord {A = δ} oδ (fst b) m
 
+  private
+    module CF = CodeFo {2} δL i0 i1 using ( Fo; fill; read )
+
+    have-γ : (b : S) (m : ⟨ fst b ∈ δ ⟩)
+           → ∥ Σ[ e ∈ S ] (⟨ fst e ∈ Lset γ ⟩ × ⟨ (e ∷ b ∷ []) ⊨ CF.Fo ⟩) ∥₁
+    have-γ b m = PT.map
+      (λ { (F , h , code) → F , h , CF.fill (F ∷ b ∷ []) F b refl refl (ordAt b m) code })
+      (code-at-γ (fst b) (ordAt b m) m)
+
+    module Ls = Least γ oγ δL CF.Fo have-γ using ( fn; fn-holds; T; T-in; T-out )
+
   eS : (b : S) → ⟨ fst b ∈ δ ⟩ → S
-  eS b m = AtIndex.e (fst b) (ordAt b m) m
+  eS = Ls.fn
 
   e-code : (b : S) (m : ⟨ fst b ∈ δ ⟩) → InjCode (eS b m) (LsetS (fst b) (ordAt b m)) δL
-  e-code b m = AtIndex.code (fst b) (ordAt b m) m
-
-  e-mem : (b : S) (m : ⟨ fst b ∈ δ ⟩) → ⟨ fst (eS b m) ∈ Lset γ ⟩
-  e-mem b m = snd (AtIndex.c (fst b) (ordAt b m) m)
-
-  private
-    -- The leastness clause, at the selected code.
-    minimal : (b : S) (m : ⟨ fst b ∈ δ ⟩)
-            → (e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst (eS b m)) ∈ fst Rγ ⟩
-            → InjCode e' (twAt (fst b) (ordAt b m)) δL → Empty.⊥
-    minimal b m e' he' hr code' =
-      AtIndex.minimal (fst b) (ordAt b m) m (fst e' , he')
-        ∣ e' , refl
-        , injcode-resp e' e' (twAt (fst b) (ordAt b m)) (LsetS (fst b) (ordAt b m)) δL
-            refl (twAt-fst (fst b) (ordAt b m)) code' ∣₁
-        (relL-rep γ hγ oγ (fst e' , he') (AtIndex.c (fst b) (ordAt b m) m) hr)
-
-    defines : (b : S) (m : ⟨ fst b ∈ δ ⟩) → ⟨ (eS b m ∷ b ∷ []) ⊨ fo ⟩
-    defines b m = fo-in (eS b m) b (ordAt b m) (twAt (fst b) (ordAt b m))
-      (twAt-fst (fst b) (ordAt b m)) (e-mem b m)
-      (injcode-resp (eS b m) (eS b m) (LsetS (fst b) (ordAt b m)) (twAt (fst b) (ordAt b m)) δL
-        refl (sym (twAt-fst (fst b) (ordAt b m))) (e-code b m))
-      (minimal b m)
-
-    only : (b : S) (m : ⟨ fst b ∈ δ ⟩) (e' : S) → ⟨ (e' ∷ b ∷ []) ⊨ fo ⟩ → e' ≡ eS b m
-    only b m e' h = Σ≡Prop (λ v → snd (isL v))
-      (PT.rec (setIsSet (fst e') (fst (eS b m))) read (fo-out e' b (ordAt b m) h))
-      where
-      ob = ordAt b m
-      module I = AtIndex (fst b) ob m
-      read : Σ[ B ∈ S ]
-               ( (fst B ≡ Lset (fst b))
-               × ⟨ fst e' ∈ Lset γ ⟩
-               × InjCode e' B δL
-               × ((e'' : S) → ⟨ fst e'' ∈ Lset γ ⟩ → ⟨ pr (fst e'') (fst e') ∈ fst Rγ ⟩
-                   → InjCode e'' B δL → Empty.⊥) )
-           → fst e' ≡ fst (eS b m)
-      read (B , qB , he' , code' , mn') = go (SWO.tri∙ (orderAt γ oγ) c' I.c)
-        where
-        c' : Mγ
-        c' = fst e' , he'
-        good' : ⟨ Good (fst b) ob c' ⟩
-        good' = ∣ e' , refl , injcode-resp e' e' B (LsetS (fst b) ob) δL refl qB code' ∣₁
-        go : Tri∙ (relOf (orderAt γ oγ) c' I.c) (c' ≡ I.c) (relOf (orderAt γ oγ) I.c c')
-           → fst e' ≡ fst (eS b m)
-        go (lt h) = Empty.rec (I.minimal c' good' h)
-        go (eq q) = cong fst q
-        go (gt h) = Empty.rec (mn' (eS b m) (e-mem b m)
-          (relL-fill γ hγ oγ I.c c' h)
-          (injcode-resp (eS b m) (eS b m) (LsetS (fst b) ob) B δL refl (sym qB) (e-code b m)))
-
-  D : DefinableMap
-  D = record
-    { dom = δL ; cod = Lγ ; fn = eS
-    ; into = λ b m → subst (λ w → ⟨ fst (eS b m) ∈ w ⟩) (sym Lγ-fst) (e-mem b m)
-    ; graph = fo ; defines = defines ; only = only }
-
-  module G = Graph D
+  e-code b m = CF.read (eS b m ∷ b ∷ []) (eS b m) b refl refl (ordAt b m) (Ls.fn-holds b m)
 
   -- THE TABLE: the set of pairs (b, e_b), b ∈ δ.
   T : S
-  T = G.F
+  T = Ls.T
 
   T-in : (b : S) (m : ⟨ fst b ∈ δ ⟩) → ⟨ pr (fst b) (fst (eS b m)) ∈ fst T ⟩
-  T-in = G.F-in
+  T-in = Ls.T-in
 
   T-out : (b e : S) → ⟨ pr (fst b) (fst e) ∈ fst T ⟩
         → Σ[ m ∈ ⟨ fst b ∈ δ ⟩ ] (fst e ≡ fst (eS b m))
-  T-out = G.pair-out
+  T-out = Ls.T-out
 
 -- =====================================================================
 -- SECTION 4.  THE LIMIT STEP.  At a limit ordinal δ (closed under the
@@ -1278,7 +1114,7 @@ module Lim (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩
     δ : V ℓ
     δ = fst δL
 
-  module Tb = Table δL oδ have
+  module Tb = Table δL oδ have using ( T; T-in; T-out; e-code; eS; ordAt )
   open Tb using ( T; T-in; T-out; eS; e-code; ordAt )
 
   -- -------------------------------------------------------------------
@@ -1430,7 +1266,7 @@ module Lim (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩
   wit x m = ∣ X.bS , X.e , X.v
     , ( X.b∈δ , T-in X.bS X.b∈δ , X.v-graph , prʟ-fst X.bS X.v , mn ) ∣₁
     where
-    module X = AtX x m
+    module X = AtX x m using ( b; bS; b∈δ; code; e; not-below; ob; v; v-graph; v∈δ )
     mn : (b' e' : S) → ⟨ fst b' ∈ X.b ⟩ → ⟨ pr (fst b') (fst e') ∈ fst T ⟩
        → (v' : S) → ⟨ pr (fst x) (fst v') ∈ fst e' ⟩ → Empty.⊥
     mn b' e' hb ht v' hv = X.not-below (fst b') (ordAt b' (fst es)) hb (snd es)
@@ -1441,7 +1277,7 @@ module Lim (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩
   only x m y = PT.rec (setIsSet (fst y) (fst (fn x m)))
     (λ { (b , e , v , (hb , ht , hv , hy , mn)) → Read.final b e v hb ht hv hy mn })
     where
-    module X = AtX x m
+    module X = AtX x m using ( b; bS; b∈δ; code; e; not-below; ob; v; v-graph; v∈δ )
     module Read (b e v : S) (hb : ⟨ fst b ∈ δ ⟩)
                 (ht : ⟨ pr (fst b) (fst e) ∈ fst T ⟩)
                 (hv : ⟨ pr (fst x) (fst v) ∈ fst e ⟩)
@@ -1498,7 +1334,7 @@ module Lim (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩
       X.v x x' X.v-graph
       (subst2 (λ w u → ⟨ pr (fst x') w ∈ u ⟩) (sym qv) qe X'.v-graph)
     where
-    module X  = AtX x m
+    module X  = AtX x m using ( b; bS; b∈δ; code; e; not-below; ob; v; v-graph; v∈δ )
     module X' = AtX x' m'
     pq : (fst X.bS ≡ fst X'.bS) × (fst X.v ≡ fst X'.v)
     pq = pr-inj (sym (prʟ-fst X.bS X.v) ∙ q ∙ prʟ-fst X'.bS X'.v)
@@ -1628,4 +1464,273 @@ stage-counted-from : LimitStageCounted → StageCountedCoded
 stage-counted-from base δ Lδ oδ δ∉ω q =
   move (LsetS (fst δ) oδ) Lδ (ordL (fst δ) oδ) δ (sym q) refl
     (Induction.counted base (fst δ) oδ δ∉ω)
+
+-- =====================================================================
+-- SECTION 6.  THE BASE OF THE COUNT: THE LIMIT STAGE L_ω IS COUNTABLE,
+-- INTERNALLY.  The stage order at ω is a set of L (`relL ω`); its
+-- collapse (src/L/GCH/OrderType.lagda.md) is an ordinal every value of
+-- which is finite, because the segment below a member sits in one
+-- finite stage and omega does not inject into a finite stage.
+-- =====================================================================
+
+-- =====================================================================
+-- 6.1  A FINITE STAGE HOLDS NO COPY OF omega.
+--
+--   src/L/Choice/Finite.lagda.md tallies the finite stage L_n: a finite
+--   list of members covering it.  At every member the least tally index
+--   is a natural number below the tally's size, so an injection of omega
+--   into L_n composes to one into the numeral `# size`, which
+--   `finite-excl-ω` refutes.  The index is chosen by `leastOf` over the
+--   natural order; minimality is never used, any deterministic index
+--   would do.
+-- =====================================================================
+
+private
+  module FinNo (n : ℕ) where
+    t : Tally (finiteStage n)
+    t = StageOrder.tally (stageOrder n)
+
+    open Tally t using ( size; item; onto )
+
+    -- The tally indices naming x, as natural numbers.
+    Named : V ℓ → ℕ → hProp (ℓ-suc ℓ)
+    Named x k = ∥ Σ[ i ∈ Fin size ] ((toℕ i ≡ k) × (item i ≡ x)) ∥₁ , squash₁
+
+    least : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ k ∈ ℕ ] ⟨ Named x k ⟩
+    least x hx = fst l , fst (snd l)
+      where
+      l = leastOf natOrder lem (Named x)
+            (PT.map (λ { (i , q) → toℕ i , ∣ i , refl , q ∣₁ }) (onto x hx))
+
+    noinj : (f : ⟪ ω ⟫ → ⟪ Lset (# n) ⟫)
+          → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
+    noinj f finj = finite-excl-ω (# size) (numeral-ord size) (#∈ω size)
+      (λ x → q x , q x) (λ x y e → finj x y (qq x y (cong fst e)))
+      where
+      vl : ⟪ ω ⟫ → V ℓ
+      vl x = ⟪ Lset (# n) ⟫↪ (f x)
+      mm : (x : ⟪ ω ⟫) → ⟨ vl x ∈ˢ finiteStage n ⟩
+      mm x = member (Lset (# n)) (f x)
+      k : ⟪ ω ⟫ → ℕ
+      k x = least (vl x) (mm x) .fst
+      kb : (x : ⟪ ω ⟫) → k x < size
+      kb x = PT.rec isProp≤
+        (λ { (i , (pi , _)) → subst (λ w → w < size) pi (toℕ<n i) })
+        (least (vl x) (mm x) .snd)
+      q : ⟪ ω ⟫ → ⟪ # size ⟫
+      q x = fiber (# size) (#mono (k x) size (kb x)) .fst
+      q-spec : (x : ⟪ ω ⟫) → ⟪ # size ⟫↪ (q x) ≡ # (k x)
+      q-spec x = fiber (# size) (#mono (k x) size (kb x)) .snd
+      qq : (x y : ⟪ ω ⟫) → q x ≡ q y → f x ≡ f y
+      qq x y e = ↪-inj {a = Lset (# n)}
+        (PT.rec2 (setIsSet (vl x) (vl y)) go (least (vl x) (mm x) .snd) (least (vl y) (mm y) .snd))
+        where
+        ek : k x ≡ k y
+        ek = #-inj′ (sym (q-spec x) ∙ cong ⟪ # size ⟫↪ e ∙ q-spec y)
+        go : Σ[ i ∈ Fin size ] ((toℕ i ≡ k x) × (item i ≡ vl x))
+           → Σ[ j ∈ Fin size ] ((toℕ j ≡ k y) × (item j ≡ vl y))
+           → vl x ≡ vl y
+        go (i , pi , qi) (j , pj , qj) = sym qi ∙ cong item (inj-toℕ (pi ∙ ek ∙ sym pj)) ∙ qj
+
+  NoInto : V ℓ → Type ℓ
+  NoInto w = (f : ⟪ ω ⟫ → ⟪ Lset w ⟫)
+           → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
+
+  no-inj-fin : (g : V ℓ) → ⟨ g ∈ˢ ω ⟩ → NoInto g
+  no-inj-fin g g∈ω = PT.rec (isPropΠ2 (λ _ _ → Empty.isProp⊥))
+    (λ { (k , e) → subst NoInto e (FinNo.noinj (lower k)) }) g∈ω
+
+-- =====================================================================
+-- 6.2  L_ω, THE ORDER ON IT AS A SET OF L, AND ITS DOMAIN READING.
+--
+--   `relL ω` is the stage order at omega, realized as an element of L
+--   (src/L/Choice/Order.lagda.md).  `Related` says what its members
+--   are: pairs of two members of the stage.  That is the domain
+--   hypothesis `OrderType.Code` asks for.
+-- =====================================================================
+
+hω : ⟨ isL ω ⟩
+hω = isL-ord ω ω-ord
+
+Rω : SL.S
+Rω = relL ω hω ω-ord
+
+specω : IsRel ω Rω
+specω = relL-spec ω hω ω-ord
+
+Rsub : (y x : SL.S) → Holds Rω y x
+     → ⟨ fst y ∈ˢ Lset ω ⟩ × ⟨ fst x ∈ˢ Lset ω ⟩
+Rsub y x h = PT.rec isP
+  (λ { (_ , h₁) → PT.rec isP
+    (λ { (a , h₂) → PT.rec isP
+      (λ { (b , (q , _)) →
+             subst (λ w → ⟨ w ∈ˢ Lset ω ⟩) (sym (pr-inj q .fst)) (a .snd)
+           , subst (λ w → ⟨ w ∈ˢ Lset ω ⟩) (sym (pr-inj q .snd)) (b .snd) })
+      h₂ })
+    h₁ })
+  rel
+  where
+  isP : isProp (⟨ fst y ∈ˢ Lset ω ⟩ × ⟨ fst x ∈ˢ Lset ω ⟩)
+  isP = isProp× (snd (fst y ∈ˢ Lset ω)) (snd (fst x ∈ˢ Lset ω))
+  rel : ⟨ Related ω (pr (fst y) (fst x)) ⟩
+  rel = subst (λ w → ⟨ Related ω w ⟩) (prʟ-fst y x)
+    (specω (prʟ y x) .fst
+      (subst (λ w → ⟨ w ∈ˢ fst Rω ⟩) (sym (prʟ-fst y x)) h))
+
+module OT = Code Lω Rω Rsub using ( module Conjuncts; Dom; _≺_; isProp≺; ≺-in; ≺-out )
+
+-- The host order at the same presentation, and the two directions
+-- between it and the sealed relation of the collapse.
+Wω : SWO ⟪ Lset ω ⟫
+Wω = carry (Lset ω) (orderAt ω ω-ord)
+
+open SWO Wω using () renaming ( _<∙_ to _<ω_ )
+
+≺→< : (a b : OT.Dom) → a OT.≺ b → a <ω b
+≺→< a b k = ixRel-rep ω ω-ord Rω specω a b (OT.≺-out a b k)
+
+<→≺ : (a b : OT.Dom) → a <ω b → a OT.≺ b
+<→≺ a b k = OT.≺-in a b (ixRel-fill ω ω-ord Rω specω a b k)
+
+wfω : WellFounded OT._≺_
+wfω m = go (SWO.wf∙ Wω m)
+  where
+  go : {n : OT.Dom} → Acc _<ω_ n → Acc OT._≺_ n
+  go {n} (acc r) = acc (λ n' k → go (r n' (≺→< n' n k)))
+
+transω : {a b c : OT.Dom} → a OT.≺ b → b OT.≺ c → a OT.≺ c
+transω {a} {b} {c} k k' =
+  <→≺ a c (SWO.trans∙ Wω a b c (≺→< a b k) (≺→< b c k'))
+
+triω : (a b : OT.Dom) → (a OT.≺ b) ⊎ ((a ≡ b) ⊎ (b OT.≺ a))
+triω a b = go (SWO.tri∙ Wω a b)
+  where
+  go : TriW (a <ω b) (a ≡ b) (b <ω a)
+     → (a OT.≺ b) ⊎ ((a ≡ b) ⊎ (b OT.≺ a))
+  go (lt h) = inl (<→≺ a b h)
+  go (eq e) = inr (inl e)
+  go (gt h) = inr (inr (<→≺ b a h))
+
+module C = OT.Conjuncts wfω transω using ( module Inj; col; col-ord; col-out; colTable; otL; otL-out )
+module I = C.Inj triω using ( code; col-inj )
+-- =====================================================================
+-- 6.3  THE SEGMENT BELOW A MEMBER SITS IN ONE FINITE STAGE.
+--
+--   The stage order compares the BIRTH first (src/L/Choice/Step.lagda.md,
+--   `Family._≺_`), so a predecessor of x is born at or below the birth
+--   of x, hence belongs to the stage one above that birth.  At omega
+--   that stage is finite.
+-- =====================================================================
+
+private
+  module F = Family ω (λ δ _ → orderAt δ) ω-ord using ( _≺_; bornAt )
+
+  unfoldω : (a b : MemOf (Lset ω))
+          → relOf (orderAt ω ω-ord) a b ≡ F._≺_ a b
+  unfoldω a b = cong (λ z → relOf (z ω-ord) a b) (orderAt-step ω)
+
+  bAt : MemOf (Lset ω) → V ℓ
+  bAt a = F.bornAt a .fst
+
+  bAt∈ω : (a : MemOf (Lset ω)) → ⟨ bAt a ∈ˢ ω ⟩
+  bAt∈ω a = F.bornAt a .snd
+
+  bAt-ord : (a : MemOf (Lset ω)) → IsOrd (bAt a)
+  bAt-ord a = mem-ord {A = ω} ω-ord (bAt a) (bAt∈ω a)
+
+  self-at : (a : MemOf (Lset ω)) → ⟨ a .fst ∈ˢ Lset (sucV (bAt a)) ⟩
+  self-at a = birth-mem (a .fst) (Lset→isL ω ω-ord (a .fst) (a .snd))
+
+  step-bound : (a b : MemOf (Lset ω)) → F._≺_ a b
+             → ⟨ a .fst ∈ˢ Lset (sucV (bAt b)) ⟩
+  step-bound a b (inl h) =
+    raise (suc∈or≡ (bAt a) (bAt b) (bAt-ord a) (bAt-ord b) h)
+    where
+    raise : ⟨ sucV (bAt a) ∈ˢ bAt b ⟩ ⊎ (sucV (bAt a) ≡ bAt b)
+          → ⟨ a .fst ∈ˢ Lset (sucV (bAt b)) ⟩
+    raise (inl k) = Lset-mono {α = sucV (bAt b)} {β = sucV (bAt a)}
+      (∈sucV-inl {A = bAt b} {x = sucV (bAt a)} k) (self-at a)
+    raise (inr e) = Lset-mono {α = sucV (bAt b)} {β = sucV (bAt a)}
+      (subst (λ w → ⟨ sucV (bAt a) ∈ˢ sucV w ⟩) e (self∈sucV (sucV (bAt a))))
+      (self-at a)
+  step-bound a b (inr (e , u)) =
+    subst (λ w → ⟨ a .fst ∈ˢ Lset (sucV w) ⟩) (sym e) (u .fst)
+
+  atIx : OT.Dom → MemOf (Lset ω)
+  atIx m = ⟪ Lset ω ⟫↪ m , memOf (Lset ω) m
+
+  gOf : OT.Dom → V ℓ
+  gOf p = sucV (bAt (atIx p))
+
+  gOf∈ω : (p : OT.Dom) → ⟨ gOf p ∈ˢ ω ⟩
+  gOf∈ω p = ω-limit (bAt (atIx p)) (bAt∈ω (atIx p))
+
+  seg-bound : (p r : OT.Dom) → r OT.≺ p
+            → ⟨ ⟪ Lset ω ⟫↪ r ∈ˢ Lset (gOf p) ⟩
+  seg-bound p r k =
+    step-bound (atIx r) (atIx p) (transport (unfoldω (atIx r) (atIx p)) (≺→< r p k))
+-- =====================================================================
+-- 6.4  THE ORDER TYPE IS INCLUDED IN omega.
+--
+--   The collapse value at p is the order type of the segment below p.
+--   That segment injects, ambiently, into the finite stage of section 3,
+--   so omega does not inject into it; and an ordinal that omega does not
+--   reach is a member of omega.  This is the shape of `Step.col-fin`
+--   (src/L/GCH/Pairing.lagda.md:979).
+-- =====================================================================
+
+private
+  Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
+  Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
+
+  isPropSeg : (p : OT.Dom) (b : V ℓ) → isProp (Seg p b)
+  isPropSeg p b (r , _ , e) (r' , _ , e') =
+    Σ≡Prop (λ z → isProp× (OT.isProp≺ z p) (setIsSet _ _))
+      (I.col-inj r r' (e ∙ sym e'))
+
+  seg : (p : OT.Dom) (b : V ℓ) → ⟨ b ∈ˢ C.col p ⟩ → Seg p b
+  seg p b h = PT.rec (isPropSeg p b) (λ z → z) (C.col-out p b h)
+
+col-fin : (p : OT.Dom) → ⟨ C.col p ∈ˢ ω ⟩
+col-fin p = go (ord-tri (C.col p) (C.col-ord p) ω ω-ord)
+  where
+  refute : ((z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ C.col p ⟩) → Empty.⊥
+  refute sub = no-inj-fin (gOf p) (gOf∈ω p) f f-inj
+    where
+    s : (x : ⟪ ω ⟫) → Seg p (⟪ ω ⟫↪ x)
+    s x = seg p (⟪ ω ⟫↪ x) (sub (⟪ ω ⟫↪ x) (member ω x))
+    fb : (x : ⟪ ω ⟫)
+       → Σ[ m ∈ ⟪ Lset (gOf p) ⟫ ] (⟪ Lset (gOf p) ⟫↪ m ≡ ⟪ Lset ω ⟫↪ (s x .fst))
+    fb x = fiber (Lset (gOf p)) (seg-bound p (s x .fst) (s x .snd .fst))
+    f : ⟪ ω ⟫ → ⟪ Lset (gOf p) ⟫
+    f x = fb x .fst
+    f-inj : (x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y
+    f-inj x y e = ↪-inj {a = ω}
+      (sym (s x .snd .snd) ∙ cong C.col rr ∙ s y .snd .snd)
+      where
+      rr : s x .fst ≡ s y .fst
+      rr = ↪-inj {a = Lset ω}
+        (sym (fb x .snd) ∙ cong ⟪ Lset (gOf p) ⟫↪ e ∙ fb y .snd)
+
+  go : ⟨ C.col p ∈ˢ ω ⟩ ⊎ ((C.col p ≡ ω) ⊎ ⟨ ω ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ ω ⟩
+  go (inl k) = k
+  go (inr (inl e)) =
+    Empty.rec (refute (λ z z∈ω → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω))
+  go (inr (inr ω∈c)) =
+    Empty.rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
+
+otL⊆ω : (z : V ℓ) → ⟨ z ∈ˢ fst C.otL ⟩ → ⟨ z ∈ˢ ω ⟩
+otL⊆ω z h = PT.rec (snd (z ∈ˢ ω))
+  (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ ω ⟩) e (col-fin b) })
+  (C.otL-out z h)
+-- 6.5  THE TWO THEOREMS: the premise of section 5, and the trophy's
+-- first line.
+
+limit-stage-counted : LimitStageCounted
+limit-stage-counted =
+  injl-trans Lω C.otL ωʟ ∣ C.colTable , I.code ∣₁
+    (inclusion-coded C.otL ωʟ otL⊆ω)
+
+stage-counted : StageCountedCoded
+stage-counted = stage-counted-from limit-stage-counted
 ```
