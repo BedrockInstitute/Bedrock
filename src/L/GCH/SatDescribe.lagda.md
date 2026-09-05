@@ -53,14 +53,12 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-```agda
--- =====================================================================
--- THE TABLE IS SOUND.  A table satisfying the twelve clauses over the
--- code set and the tower records, at the key of every formula, the
--- value the meta-level recursion built there: induction on the
--- formula, one clause reader and one bridge per constructor.
--- =====================================================================
+THE TABLE IS SOUND.  A table satisfying the twelve clauses over the
+code set and the tower records, at the key of every formula, the
+value the meta-level recursion built there: induction on the
+formula, one clause reader and one bridge per constructor.
 
+```agda
 module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hC : ⟨ γ ⊨ codesAt C w E N ⟩)
@@ -328,17 +326,15 @@ module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
     (AllCodes-out W x mx)
 ```
 
+THE TABLE IS COMPLETE.  The graph of the uniform table, over the
+code set and the tower, satisfies the description: each clause is
+read at its frame, the code is decoded, the entries are read as the
+table's values, and the bridge supplies the body.
+
+A code's constructor and payload, from its tag, are read in
+src/L/Coding/Pinned.lagda.md.
+
 ```agda
--- =====================================================================
--- THE TABLE IS COMPLETE.  The graph of the uniform table, over the
--- code set and the tower, satisfies the description: each clause is
--- read at its frame, the code is decoded, the entries are read as the
--- table's values, and the bridge supplies the body.
--- =====================================================================
-
--- A code's constructor and payload, from its tag, are read in
--- src/L/Coding/Pinned.lagda.md.
-
 module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qT : fst (lookup T γ) ≡ fst (SatGraph.pairs W))
   (qC : fst (lookup C γ) ≡ fst (AllCodes W)) (qE : fst (lookup E γ) ≡ fst (Tower.tower W))
@@ -615,13 +611,11 @@ module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
   holds = total , (onC , twelve)
 ```
 
-```agda
--- =====================================================================
--- THE DESCRIPTION, SEALED.  "T is the satisfaction table of w over
--- the code set C and the environment tower E."  The seal holds the
--- three conjuncts; its readers are the two projections.
--- =====================================================================
+THE DESCRIPTION, SEALED.  "T is the satisfaction table of w over
+the code set C and the environment tower E."  The seal holds the
+three conjuncts; its readers are the two projections.
 
+```agda
 opaque
   satAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
   satAt T w C E N = towerAt E w (N f0) ∧̇ (codesAt C w E N ∧̇ tableAt T w C E N)
@@ -641,14 +635,14 @@ opaque
            → ⟨ γ ⊨ towerAt E w (N f0) ⟩ → ⟨ γ ⊨ codesAt C w E N ⟩ → ⟨ γ ⊨ tableAt T w C E N ⟩
            → ⟨ γ ⊨ satAt T w C E N ⟩
   satAt-in T w C E N γ hE hC hT = hE , (hC , hT)
+```
 
--- =====================================================================
--- THE TWO THEOREMS.  Soundness: a reading of `satAt` at (T, w, C, E)
--- makes T the graph of the uniform table of w, C the code set and E
--- the tower, each read both ways.  Completeness: the graph, the code
--- set and the tower satisfy `satAt`.
--- =====================================================================
+THE TWO THEOREMS.  Soundness: a reading of `satAt` at (T, w, C, E)
+makes T the graph of the uniform table of w, C the code set and E
+the tower, each read both ways.  Completeness: the graph, the code
+set and the tower satisfy `satAt`.
 
+```agda
 module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (h : ⟨ γ ⊨ satAt T w C E N ⟩) where
   private

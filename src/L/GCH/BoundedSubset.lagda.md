@@ -59,21 +59,24 @@ open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 open hPropStructure 𝒮ʟ using ( S )
 
 open FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using () renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- Every module application below names what it takes: a module
--- application copies every definition it brings into scope into this
--- module's interface, and the copies are what the interface stores.
+Every module application below names what it takes: a module
+application copies every definition it brings into scope into this
+module's interface, and the copies are what the interface stores.
+
+```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
+```
 
--- =====================================================================
--- THE SITE.  An infinite L-cardinal κ and a subset y of κ, both
--- elements of L.  The start X = L_κ ∪ {y} is transitive and an element
--- of L; λ is a superadequate stage above κ and above y; the Skolem hull
--- M of X in L_λ collapses to a stage L_β (src/L/GCH/HullIn.lagda.md
--- `Condense′`); y is fixed by the collapse, so y ∈ L_β; and β ⊆ L_β =
--- πX ↪ M ↪ κ, the last by src/L/GCH/HullCount.lagda.md.
--- =====================================================================
+THE SITE.  An infinite L-cardinal κ and a subset y of κ, both
+elements of L.  The start X = L_κ ∪ {y} is transitive and an element
+of L; λ is a superadequate stage above κ and above y; the Skolem hull
+M of X in L_λ collapses to a stage L_β (src/L/GCH/HullIn.lagda.md
+`Condense′`); y is fixed by the collapse, so y ∈ L_β; and β ⊆ L_β =
+πX ↪ M ↪ κ, the last by src/L/GCH/HullCount.lagda.md.
 
+```agda
 module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
           (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
           (y : S) (y⊆κ : (z : V ℓ) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩) where
@@ -345,11 +348,11 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
 
   result : Σ[ b ∈ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
   result = βL , oβ , y∈Lβ , β↪κ
+```
 
--- =====================================================================
--- THE THEOREM.  Hypothesis 2 of src/L/GCH/Assembly.lagda.md.
--- =====================================================================
+THE THEOREM.  Hypothesis 2 of src/L/GCH/Assembly.lagda.md.
 
+```agda
 internal-bounded-subset : InternalBoundedSubset
 internal-bounded-subset κ oκ cκ κ∉ω y y⊆κ =
   ∣ At.result κ oκ cκ κ∉ω y y⊆κ ∣₁

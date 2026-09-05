@@ -27,25 +27,32 @@ import Cubical.Induction.WellFounded as WF
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+```
 
--- The V-carrier: the ambient membership lives here.
+The V-carrier: the ambient membership lives here.
+
+```agda
 module SV = hPropStructure 𝒮ᵥ using ( S )
--- The L-carrier: `SuccCardL` and `InjL` live here.
+```
+
+The L-carrier: `SuccCardL` and `InjL` live here.
+
+```agda
 module SL = hPropStructure 𝒮ʟ using ( S )
+```
 
--- =====================================================================
--- THE THEOREM.  Let δ be the successor cardinal of κ in L.  Every
--- ordinal α ∈ δ injects into κ, internally.
---
---   Well-founded induction on α, by trichotomy against κ.  If α ∈ κ or
---   α ≡ κ then α ⊆ κ, and an inclusion is an internal injection.  If
---   κ ∈ α then α is not an L-cardinal: it would be an ordinal
---   L-cardinal above κ, so δ ⊆ α by leastness, so α ∈ α.  With the
---   excluded middle the failure of `IsCardinalL α` yields, merely, some
---   γ ∈ α with α injecting into γ; γ ∈ δ by transitivity, the induction
---   hypothesis injects γ into κ, and the two injections compose.
--- =====================================================================
+THE THEOREM.  Let δ be the successor cardinal of κ in L.  Every
+ordinal α ∈ δ injects into κ, internally.
 
+  Well-founded induction on α, by trichotomy against κ.  If α ∈ κ or
+  α ≡ κ then α ⊆ κ, and an inclusion is an internal injection.  If
+  κ ∈ α then α is not an L-cardinal: it would be an ordinal
+  L-cardinal above κ, so δ ⊆ α by leastness, so α ∈ α.  With the
+  excluded middle the failure of `IsCardinalL α` yields, merely, some
+  γ ∈ α with α injecting into γ; γ ∈ δ by transitivity, the induction
+  hypothesis injects γ into κ, and the two injections compose.
+
+```agda
 below-succ-injects :
     (κ δ : SL.S) → SuccCardL δ κ
   → (α : SL.S) → IsOrd (fst α) → ⟨ fst α ∈ˢ fst δ ⟩

@@ -36,22 +36,23 @@ open InfinitySet {ℓ} using ( sucV; ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
+```
 
--- The 𝒮ʟ carrier.
+The 𝒮ʟ carrier.
+
+```agda
 module CS = hPropStructure 𝒮ʟ using (S)
 ```
 
-```agda
--- =====================================================================
--- SECTION 1.  THE WITNESSES AT A STAGE, AND ADEQUACY.  At an ordinal c
--- the level description (src/L/GCH/HierDescribe.lagda.md) names four
--- sets over the carrier w = Lset c: the hierarchy table on c, the code
--- set, the graph of the uniform satisfaction table and the environment
--- tower.  Every other set its rows bound is a member of one of these,
--- a numeral, or a stage below, and the closures of an adequate stage
--- reach it.
--- =====================================================================
+SECTION 1.  THE WITNESSES AT A STAGE, AND ADEQUACY.  At an ordinal c
+the level description (src/L/GCH/HierDescribe.lagda.md) names four
+sets over the carrier w = Lset c: the hierarchy table on c, the code
+set, the graph of the uniform satisfaction table and the environment
+tower.  Every other set its rows bound is a member of one of these,
+a numeral, or a stage below, and the closures of an adequate stage
+reach it.
 
+```agda
 module At (c : V ℓ) (oc : IsOrd c) where
 
   A : CS.S
@@ -71,8 +72,11 @@ module At (c : V ℓ) (oc : IsOrd c) where
 
   tower : CS.S
   tower = Tower.tower A
+```
 
--- The four witnesses at c lie in K, at whatever proof of ordinality.
+The four witnesses at c lie in K, at whatever proof of ordinality.
+
+```agda
 Witnesses : V ℓ → V ℓ → Type (ℓ-suc ℓ)
 Witnesses K c = (oc : IsOrd c)
   → ⟨ fst (At.hier c oc) ∈ K ⟩
@@ -85,9 +89,12 @@ isPropWitnesses K c = isPropΠ λ oc →
   isProp× (snd (fst (At.hier c oc) ∈ K))
     (isProp× (snd (fst (At.codes c oc) ∈ K))
       (isProp× (snd (fst (At.table c oc) ∈ K)) (snd (fst (At.tower c oc) ∈ K))))
+```
 
--- ADEQUACY.  γ is an ordinal closed under successor, holds ω, and
--- Lset γ holds the four witnesses of every c ∈ γ.
+ADEQUACY.  γ is an ordinal closed under successor, holds ω, and
+Lset γ holds the four witnesses of every c ∈ γ.
+
+```agda
 Adequate : V ℓ → Type (ℓ-suc ℓ)
 Adequate γ =
     IsOrd γ
@@ -109,17 +116,16 @@ module Adequate (γ : V ℓ) (ad : Adequate γ) where
   wit = ad .snd .snd .snd
 ```
 
-```agda
--- =====================================================================
--- SECTION 2.  AN ADEQUATE STAGE ABOVE ANY ORDINAL.  One step bounds
--- the birth stages of the witnesses of every member of α, the
--- successors of the members, α itself and ω (src/L/Ordinal.lagda.md
--- `boundingOrd`, `bound2`); ω steps from p+1 and the union of the chain
--- is adequate: a member of the union is a member of some step, and
--- whatever that step owes is in the next.
--- =====================================================================
+SECTION 2.  AN ADEQUATE STAGE ABOVE ANY ORDINAL.  One step bounds
+the birth stages of the witnesses of every member of α, the
+successors of the members, α itself and ω (src/L/Ordinal.lagda.md
+`boundingOrd`, `bound2`); ω steps from p+1 and the union of the chain
+is adequate: a member of the union is a member of some step, and
+whatever that step owes is in the next.
 
--- The members of a set as a family of stages, and the union of a chain.
+The members of a set as a family of stages, and the union of a chain.
+
+```agda
 private
   ι : (α : V ℓ) → ⟪ α ⟫ → V ℓ
   ι α = ⟪ α ⟫↪
@@ -130,8 +136,11 @@ private
   -- Membership in an ordinal is transitive, spelled at the values.
   tr : (β : V ℓ) → IsOrd β → (x y : V ℓ) → ⟨ x ∈ β ⟩ → ⟨ y ∈ x ⟩ → ⟨ y ∈ β ⟩
   tr β oβ x y x∈ y∈ = oβ .fst {x = x} {y = y} y∈ x∈
+```
 
--- ONE STEP.
+ONE STEP.
+
+```agda
 module Bound1 (α : V ℓ) (oα : IsOrd α) where
 
   private
@@ -229,10 +238,13 @@ module Bound1 (α : V ℓ) (oα : IsOrd α) where
     where
     fib : Σ[ m ∈ ⟪ α ⟫ ] (ι α m ≡ c)
     fib = ∈-asFiber {a = c} {b = α} c∈
+```
 
--- THE UNION OF AN ω-CHAIN OF ORDINALS, with its two membership
--- directions.  The chain is any family; the consumers below supply
--- one whose every step lies in the next.
+THE UNION OF AN ω-CHAIN OF ORDINALS, with its two membership
+directions.  The chain is any family; the consumers below supply
+one whose every step lies in the next.
+
+```agda
 module Union (ch : ℕ → V ℓ) (och : (n : ℕ) → IsOrd (ch n)) where
 
   private
@@ -261,8 +273,11 @@ module Union (ch : ℕ → V ℓ) (och : (n : ℕ) → IsOrd (ch n)) where
       (λ { (n , q) → lower n
          , ∈∈ₛ {a = x} {b = ch (lower n)} .snd (subst (λ u → ⟨ x ∈ₛ u ⟩) (sym q) x∈w) })
       (∈∈ₛ {a = w} {b = sett (Lift {ℓ-zero} {ℓ} ℕ) F} .snd w∈)
+```
 
--- THE STAGE ABOVE p.
+THE STAGE ABOVE p.
+
+```agda
 module Above (p : V ℓ) (op : IsOrd p) where
 
   private
@@ -314,22 +329,20 @@ adequate-above : (p : V ℓ) → IsOrd p
 adequate-above p op = Above.γ p op , ( Above.oγ p op , ( Above.p∈γ p op , Above.adequate p op ))
 ```
 
-```agda
--- =====================================================================
--- SECTION 3.  SUPERADEQUACY.  λ is superadequate when every member
--- lies in an adequate member.  Iterating `adequate-above` ω times from
--- α and taking the union gives a stage that is adequate and
--- superadequate at once: a member of the union lies in some step, and
--- every step is adequate and lies in the next.
---
--- NOTE.  src/L/Ordinal.lagda.md:205-213 `IsLimit` asks closure under
--- EVERY small-indexed union.  No ω-union has that property: the chain
--- itself, indexed by ℕ, is a small family in the union whose union is
--- the union.  So the stage below is delivered with the two closure
--- facts an ω-union does have (successor closure, and ω as a member),
--- as `Adequate` states them, and not with `IsLimit`.
--- =====================================================================
+SECTION 3.  SUPERADEQUACY.  λ is superadequate when every member
+lies in an adequate member.  Iterating `adequate-above` ω times from
+α and taking the union gives a stage that is adequate and
+superadequate at once: a member of the union lies in some step, and
+every step is adequate and lies in the next.
 
+NOTE.  src/L/Ordinal.lagda.md:205-213 `IsLimit` asks closure under
+EVERY small-indexed union.  No ω-union has that property: the chain
+itself, indexed by ℕ, is a small family in the union whose union is
+the union.  So the stage below is delivered with the two closure
+facts an ω-union does have (successor closure, and ω as a member),
+as `Adequate` states them, and not with `IsLimit`.
+
+```agda
 Superadequate : V ℓ → Type (ℓ-suc ℓ)
 Superadequate lam = (d : V ℓ) → ⟨ d ∈ lam ⟩
   → ∥ Σ[ γ ∈ V ℓ ] (⟨ γ ∈ lam ⟩ × ⟨ d ∈ γ ⟩ × Adequate γ) ∥₁
@@ -395,12 +408,10 @@ superadequate-above α oα =
   Super.lam α oα , ( Super.olam α oα , ( Super.α∈λ α oα , ( Super.adequate α oα , Super.super α oα )))
 ```
 
-```agda
--- =====================================================================
--- SECTION 4.  A stage is a member of the next stage: it is the
--- definable subset of itself that ⊤̇ carves out.
--- =====================================================================
+SECTION 4.  A stage is a member of the next stage: it is the
+definable subset of itself that ⊤̇ carves out.
 
+```agda
 Lset∈suc : (β : V ℓ) → ⟨ Lset β ∈ Lset (sucV β) ⟩
 Lset∈suc β = subst (λ w → ⟨ Lset β ∈ w ⟩) (sym (Lset-suc β))
   (𝒟ₒ-intro (Lset β) (Lset β) ∣ ⊤̇ , DefOf.defSet⊤≡A (Lset β) ∣₁)

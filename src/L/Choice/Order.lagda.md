@@ -120,9 +120,10 @@ conversion every time the satisfaction is read, and the seal is what stops that.
 六个集合中有两个是从阶段算出来的：那里的塔，以及它的可定义子集。二者都是模型的元素，亦即一个集合与一份「它是可构造的」的证明所成的对，且二者都**在被造出之处封印**，各配一条读式说出它的集合那一半是什么。这正是诞生描述实测为 178 秒对 2 秒的那条定律，而那次实测没有任何一处是它自己所特有的：一个抵达满足关系内部某个槽位的元素，每次那个满足关系被读时都会被转换检查展开，而封印正是止住这件事的东西。
 <!--/-->
 
+perf: the elements the step description binds are sealed where they are built,
+as the birth description's were (measured there at 178 s against 2 s)
+
 ```agda
--- perf: the elements the step description binds are sealed where they are built,
--- as the birth description's were (measured there at 178 s against 2 s)
 opaque
   towerS : (β : V ℓ) → IsOrd β → S
   towerS β ob = LsetS β ob
@@ -170,8 +171,9 @@ law the family chapter measured at 376 s against 3.8 s.
 整条公式被封印。它在下游被读在诸常元上，而那正是族那一章实测为 376 秒对 3.8 秒的定律。
 <!--/-->
 
+perf: the description is read at constants, so it is sealed where it is built
+
 ```agda
--- perf: the description is read at constants, so it is sealed where it is built
 opaque
   Stp : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
   Stp d f u v =

@@ -38,9 +38,12 @@ open ModelL using ( SetOf )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- An injective graph, in the object language: the second component
--- determines the first.  The mirror of `svAt`.
+An injective graph, in the object language: the second component
+determines the first.  The mirror of `svAt`.
+
+```agda
 injAt : ∀ {n} → Fin n → Formula S n
 injAt f = ∀̇ (∀̇ (∀̇ (
       appAt (suc (suc (suc f))) (suc zero) (suc (suc zero))
@@ -73,10 +76,13 @@ module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
            → ⟨ γ ⊨ injAt f ⟩
   injAt-in h y x x' p q = h y x x'
     (subst ⟨_⟩ (at₁ y x x') p) (subst ⟨_⟩ (at₂ y x x') q)
+```
 
--- The readback, first half: from a member of the domain to its image
--- under the graph, with injectivity.  A4 does not consume this; A5 row 1
--- and A6 do.
+The readback, first half: from a member of the domain to its image
+under the graph, with injectivity.  A4 does not consume this; A5 row 1
+and A6 do.
+
+```agda
 module Extract (F D : S)
                (sv : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
                (dm : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩) where
@@ -117,9 +123,12 @@ module Extract (F D : S)
     toFun-inj u v e = injAt-out zero γ ij (toFun v) (fst u) (fst v)
       (subst (λ w → ⟨ pr (fst (fst u)) w ∈ fst F ⟩) e (toFun-graph u))
       (toFun-graph v)
+```
 
--- The readback, second half: the honest injection between the small index
--- types, with the range supplied rather than assumed.
+The readback, second half: the honest injection between the small index
+types, with the range supplied rather than assumed.
+
+```agda
 module Small (F D C : S)
              (sv : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
              (dm : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩)
@@ -148,11 +157,14 @@ module Small (F D C : S)
   small-inj m n e = ↪-inj {a = fst D} {m = m} {n = n}
     (E.toFun-inj ij (at m) (at n)
       (sym (snd (fib m)) ∙ cong ⟪ fst C ⟫↪ e ∙ snd (fib n)))
+```
 
--- The range machinery below is the master's own proof that an injective
--- graph has a range set, produced by replacement.  No block outside this
--- master names it, so it stays private; the exported surface above is what
--- A3, A4, A5, A6 and A7 consume.
+The range machinery below is the master's own proof that an injective
+graph has a range set, produced by replacement.  No block outside this
+master names it, so it stays private; the exported surface above is what
+A3, A4, A5, A6 and A7 consume.
+
+```agda
 private
 
   -- The graph, read value-first, as `hasReplacementL` wants it.

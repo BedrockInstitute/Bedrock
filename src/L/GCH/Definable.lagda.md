@@ -38,19 +38,22 @@ open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- Renaming, read at the same satisfaction as `_⊨_` (as L.Axioms.Full does).
+Renaming, read at the same satisfaction as `_⊨_` (as L.Axioms.Full does).
+
+```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
+```
 
--- =====================================================================
--- SECTION 1.  THE FORM.
---
---   A function on the members of a set of L, landing in a set of L,
---   whose graph an object-language formula defines: the formula holds
---   of the function's own value (`defines`) and of nothing else
---   (`only`).  Value first, index second, as `Recursion.graph`.
--- =====================================================================
+SECTION 1.  THE FORM.
 
+  A function on the members of a set of L, landing in a set of L,
+  whose graph an object-language formula defines: the formula holds
+  of the function's own value (`defines`) and of nothing else
+  (`only`).  Value first, index second, as `Recursion.graph`.
+
+```agda
 record DefinableMap : Type (ℓ-suc (ℓ-suc ℓ)) where
   field
     dom cod : S
@@ -61,16 +64,16 @@ record DefinableMap : Type (ℓ-suc (ℓ-suc ℓ)) where
             → ⟨ (fn x m ∷ x ∷ []) ⊨ graph ⟩
     only    : (x : S) (m : ⟨ fst x ∈ˢ fst dom ⟩) (y : S)
             → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x m
+```
 
--- =====================================================================
--- SECTION 2.  THE PAIR FORMULA.
--- SECTION 3.  THE GRAPH AS A SET OF L, AND THREE CONJUNCTS.
---
---   `Recursion.funct` takes the membership proof, so `fn` fills it as
---   it stands: no total extension off `dom` and no use of `lem`.  The
---   table is the replacement image (src/L/Recursion.lagda.md, `Of`).
--- =====================================================================
+SECTION 2.  THE PAIR FORMULA.
+SECTION 3.  THE GRAPH AS A SET OF L, AND THREE CONJUNCTS.
 
+  `Recursion.funct` takes the membership proof, so `fn` fills it as
+  it stands: no total extension off `dom` and no use of `lem`.  The
+  table is the replacement image (src/L/Recursion.lagda.md, `Of`).
+
+```agda
 module Graph (M : DefinableMap) where
   open DefinableMap M public
 
@@ -183,11 +186,11 @@ module Graph (M : DefinableMap) where
     where
     m = fst (pair-out x y h)
     e = snd (pair-out x y h)
+```
 
--- =====================================================================
--- SECTION 4.  INJECTIVE, HENCE CODED.
--- =====================================================================
+SECTION 4.  INJECTIVE, HENCE CODED.
 
+```agda
 module Inj (M : DefinableMap)
            (inj : (x : S) (m : ⟨ fst x ∈ˢ fst (DefinableMap.dom M) ⟩)
                   (x' : S) (m' : ⟨ fst x' ∈ˢ fst (DefinableMap.dom M) ⟩)

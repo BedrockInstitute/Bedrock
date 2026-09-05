@@ -81,14 +81,20 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
+```
 
--- The 𝒮ʟ carrier, for the syntax of every formula below.
+The 𝒮ʟ carrier, for the syntax of every formula below.
+
+```agda
 module CS = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- Renaming, read at the same satisfaction as `_⊨_` (as OmegaRec does).
+Renaming, read at the same satisfaction as `_⊨_` (as OmegaRec does).
+
+```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 
 private
@@ -131,19 +137,19 @@ private
   agf : (w Z' Z : CS.S) → Ren.Agrees ρf (w ∷ Z' ∷ Z ∷ []) (w ∷ Z ∷ [])
   agf w Z' Z zero = refl
   agf w Z' Z (suc zero) = refl
+```
 
--- =====================================================================
--- SECTION 1.  THE COLLAPSE OF A CARRIER THAT IS AN ELEMENT OF L LANDS
--- IN L.  Generic in the carrier M.  The graph of the collapse on M is
--- read by src/L/GCH/OrderType.lagda.md's three table formulas at the
--- membership relation of M; that chapter's `Graph` is not used, since
--- its `col-isL` rests on `col-ord`, which needs the relation to be
--- transitive, and a hull is not.  Here the L-membership of a collapse
--- value is proved by an induction on the stage of the argument: the
--- values at the slice M ∩ Lset δ form one table in L, and the value at
--- a member born at δ is the image of that table at it.
--- =====================================================================
+SECTION 1.  THE COLLAPSE OF A CARRIER THAT IS AN ELEMENT OF L LANDS
+IN L.  Generic in the carrier M.  The graph of the collapse on M is
+read by src/L/GCH/OrderType.lagda.md's three table formulas at the
+membership relation of M; that chapter's `Graph` is not used, since
+its `col-isL` rests on `col-ord`, which needs the relation to be
+transitive, and a hull is not.  Here the L-membership of a collapse
+value is proved by an induction on the stage of the argument: the
+values at the slice M ∩ Lset δ form one table in L, and the value at
+a member born at δ is the image of that table at it.
 
+```agda
 module PiIn (Mʟ : CS.S) where
 
   M : S
@@ -567,17 +573,17 @@ module PiIn (Mʟ : CS.S) where
   πX-isL x x∈πX = PT.rec (snd (isL x))
     (λ { (y , (y∈M , e)) → subst (λ w → ⟨ isL w ⟩) e (π-isL y y∈M) })
     (C.πX-member x x∈πX)
+```
 
--- =====================================================================
--- SECTION 2.  THE HULL AS THE UNION OF AN ω-ITERATION.  One hull stage
--- (src/L/GCH/Hull.lagda.md `HullStage`), a start X that is an
--- element of L, and a one-step closure Φ that is definable on the
--- whole model (the shape src/L/GCH/OmegaRec.lagda.md `Iterate` takes)
--- and reads the hull's own search: Φ Z keeps Z, holds the junk value,
--- holds the least witness of every parameter-free formula at every
--- parameter vector drawn from Z, and holds nothing else.
--- =====================================================================
+SECTION 2.  THE HULL AS THE UNION OF AN ω-ITERATION.  One hull stage
+(src/L/GCH/Hull.lagda.md `HullStage`), a start X that is an
+element of L, and a one-step closure Φ that is definable on the
+whole model (the shape src/L/GCH/OmegaRec.lagda.md `Iterate` takes)
+and reads the hull's own search: Φ Z keeps Z, holds the junk value,
+holds the least witness of every parameter-free formula at every
+parameter vector drawn from Z, and holds nothing else.
 
+```agda
 module Telescope (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
@@ -880,7 +886,6 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     -- code of a parameter-free formula of arity a+1" (the shape of
     -- src/L/Choice/Internal.lagda.md `FreeAt`, at the constant C₀).
     -- =================================================================
-
 
     -- "s is a key of C₀ of arity a+1": s is in C₀ and s is the pair of the
     -- successor of a with some code.  Inside: the successor is 0; then
@@ -1379,13 +1384,13 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       where
       zS : (Z : CS.S) (z : S) → ⟨ z ∈ˢ fst (Φ Z) ⟩ → CS.S
       zS Z z hz = z , isL-trans {x = fst (Φ Z)} {y = z} hz (snd (Φ Z))
+```
 
--- =====================================================================
--- SECTION 3.  THE TRANSFER WITH `pixL` DISCHARGED.  From the hull as
--- an element of L: its collapse values are in L (section 1), so the
--- premise of src/L/GCH/Condense.lagda.md's `Condense` is met.
--- =====================================================================
+SECTION 3.  THE TRANSFER WITH `pixL` DISCHARGED.  From the hull as
+an element of L: its collapse values are in L (section 1), so the
+premise of src/L/GCH/Condense.lagda.md's `Condense` is met.
 
+```agda
 module Discharge (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
@@ -1398,10 +1403,13 @@ module Discharge (lam : S) (ordλ : IsOrd lam)
 
   pixL : (x : S) → ⟨ x ∈ˢ HSC.πX ⟩ → ⟨ isL x ⟩
   pixL = P.πX-isL
+```
 
--- The telescope of `Condense` minus `pixL`, plus the start X as an
--- element of L (the iteration begins at X, and OmegaRec's `Iterate`
--- starts at an element of L).
+The telescope of `Condense` minus `pixL`, plus the start X as an
+element of L (the iteration begins at X, and OmegaRec's `Iterate`
+starts at an element of L).
+
+```agda
 module Condense′ (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)

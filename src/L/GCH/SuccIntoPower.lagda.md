@@ -57,34 +57,51 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+```
 
--- The V-carrier: the ambient membership lives here.
+The V-carrier: the ambient membership lives here.
+
+```agda
 module SV = hPropStructure 𝒮ᵥ using ( S )
--- The L-carrier: `SuccCardL`, `InjL` and the model live here.
-module SL = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
--- The instance src/L/GCH.lagda.md names, at the same 𝒮ʟ.
-module ModelL = FOL.ZFModel 𝒮ʟ using ( isZFModel; module isZFModel; ℩-spec )
+```
 
--- Satisfaction, read exactly as `L.GCH.Definable` reads it: the record
--- `DefinableMap` is built here, so the two must be the same relation.
+The L-carrier: `SuccCardL`, `InjL` and the model live here.
+
+```agda
+module SL = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
+```
+
+The instance src/L/GCH.lagda.md names, at the same 𝒮ʟ.
+
+```agda
+module ModelL = FOL.ZFModel 𝒮ʟ using ( isZFModel; module isZFModel; ℩-spec )
+```
+
+Satisfaction, read exactly as `L.GCH.Definable` reads it: the record
+`DefinableMap` is built here, so the two must be the same relation.
+
+```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- Two elements of L with the same underlying set are equal.
+Two elements of L with the same underlying set are equal.
+
+```agda
 S≡ : {x y : SL.S} → fst x ≡ fst y → x ≡ y
 S≡ = Σ≡Prop (λ v → snd (isL v))
+```
 
--- =====================================================================
--- SECTION 1.  A SUBSET OF κ IS A MEMBER OF THE MODEL'S POWER SET.
---
---   `𝒫 κ` IS `℩ (hasPower κ)` by definition, so `℩-spec` is the whole
---   proof.  This is the converse of `z-strongest`
---   (src/L/GCH/Assembly.lagda.md:229), which reads the same equation in
---   the other direction.  `_⊆ˢ_` is the model's own subset relation
---   (src/FOL/ZFModel.lagda.md:141), so it quantifies over L-elements
---   only, and that is exactly what the caller can supply.
--- =====================================================================
+SECTION 1.  A SUBSET OF κ IS A MEMBER OF THE MODEL'S POWER SET.
 
+  `𝒫 κ` IS `℩ (hasPower κ)` by definition, so `℩-spec` is the whole
+  proof.  This is the converse of `z-strongest`
+  (src/L/GCH/Assembly.lagda.md:229), which reads the same equation in
+  the other direction.  `_⊆ˢ_` is the model's own subset relation
+  (src/FOL/ZFModel.lagda.md:141), so it quantifies over L-elements
+  only, and that is exactly what the caller can supply.
+
+```agda
 into-power :
     (zf : ModelL.isZFModel) (κ y : SL.S)
   → ((z : SL.S) → ⟨ fst z ∈ˢ fst y ⟩ → ⟨ fst z ∈ˢ fst κ ⟩)
@@ -92,14 +109,14 @@ into-power :
 into-power zf κ y sub =
   subst ⟨_⟩ (sym (ModelL.℩-spec (hasPower κ) y)) sub
   where open ModelL.isZFModel zf using ( hasPower )
+```
 
--- =====================================================================
--- SECTION 2.  AN ORDINAL WITHOUT ∅ AS A MEMBER IS ∅.
---
---   One membership induction: a member x of a is either empty, and then
---   ∅ ∈ a, or has a member w, and w ∈ a by transitivity.
--- =====================================================================
+SECTION 2.  AN ORDINAL WITHOUT ∅ AS A MEMBER IS ∅.
 
+  One membership induction: a member x of a is either empty, and then
+  ∅ ∈ a, or has a member w, and w ∈ a by transitivity.
+
+```agda
 ord-∅ : (a : SV.S) → IsOrd a → (⟨ ∅ ∈ a ⟩ → Empty.⊥) → a ≡ ∅
 ord-∅ a oa n∅ = extensionalV {a = a} {b = ∅} (λ x → ⇔toPath
   (λ h → Empty.rec (none x h))
@@ -124,24 +141,24 @@ ord-∅ a oa n∅ = extensionalV {a = a} {b = ∅} (λ x → ⇔toPath
       go (inl h) = PT.rec Empty.isProp⊥
         (λ { (w , w∈x) → IH w w∈x (oa .fst w∈x x∈a) }) h
       go (inr h) = n∅ (subst (λ t → ⟨ t ∈ a ⟩) (empty x h) x∈a)
+```
 
--- =====================================================================
--- SECTION 3.  THE CONSTRUCTION, AT ONE SUCCESSOR CARDINAL.
---
---   κ is infinite and δ is its successor cardinal in L.  The injection
---   δ ↪ 𝒫 κ is the composite of two definable maps:
---
---     1.  α ↦ R_α, the stage-order-least subset R of prodL κ that carries a
---         CORRECT TABLE (src/L/GCH/OrderType.lagda.md, `Correct`) with
---         an entry at every member of κ whose set of values is α.  The
---         member ∅ of δ, which no such R fits, is sent to prodL κ
---         itself, which no such table fits either.
---     2.  R ↦ g[R], the image under the coded pairing g : prodL κ ↪ κ.
---
---   Both maps land in one fixed set, so `DefinableMap` applies to each
---   and `injl-trans` composes the two coded injections.
--- =====================================================================
+SECTION 3.  THE CONSTRUCTION, AT ONE SUCCESSOR CARDINAL.
 
+  κ is infinite and δ is its successor cardinal in L.  The injection
+  δ ↪ 𝒫 κ is the composite of two definable maps:
+
+    1.  α ↦ R_α, the stage-order-least subset R of prodL κ that carries a
+        CORRECT TABLE (src/L/GCH/OrderType.lagda.md, `Correct`) with
+        an entry at every member of κ whose set of values is α.  The
+        member ∅ of δ, which no such R fits, is sent to prodL κ
+        itself, which no such table fits either.
+    2.  R ↦ g[R], the image under the coded pairing g : prodL κ ↪ κ.
+
+  Both maps land in one fixed set, so `DefinableMap` applies to each
+  and `injl-trans` composes the two coded injections.
+
+```agda
 module Main (κ δ : SL.S) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
             (sc : SuccCardL δ κ) where
 
@@ -914,11 +931,11 @@ module Main (κ δ : SL.S) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
     result = PT.rec squash₁
       (λ { (G , code) → injl-trans δ A (𝒫 κ) Map1.injL (Image.injL zf G code) })
       pairing
+```
 
--- =====================================================================
--- SECTION 4.  HYPOTHESIS 3 OF src/L/GCH/Assembly.lagda.md, discharged.
--- =====================================================================
+SECTION 4.  HYPOTHESIS 3 OF src/L/GCH/Assembly.lagda.md, discharged.
 
+```agda
 succ-into-power : (zf : ModelL.isZFModel) → SuccIntoPower zf
 succ-into-power zf κ δ κ∉ω sc = Main.Final.result κ δ κ∉ω sc zf
 ```

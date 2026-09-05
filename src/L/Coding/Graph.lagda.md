@@ -85,23 +85,24 @@ three slots, with the two free slots shifted past the three binders.
 那个框架依次绑定索引集、表与载体，并以「钉住其中最后一个」的那条子句开头。在那条钉住之下，两个实例之间没有任何东西改变：同样三条守卫、同样十二条、落在同样三个槽位上，而那两个自由槽位越过那三个绑定作平移。
 <!--/-->
 
-```agda
--- =====================================================================
--- THE FRAME.  Sixteen bound sets: the twelve numeral slots the Δ₀
--- clauses index their tags by, the tower, the index set, the table and
--- the carrier, innermost last.  The numerals are pinned to constants,
--- which costs nothing under a binder because a numeral is the same set
--- wherever it is named; the tower is pinned by its own Δ₀ description,
--- which is why no caller has to hold a slot for it.
--- =====================================================================
+THE FRAME.  Sixteen bound sets: the twelve numeral slots the Δ₀
+clauses index their tags by, the tower, the index set, the table and
+the carrier, innermost last.  The numerals are pinned to constants,
+which costs nothing under a binder because a numeral is the same set
+wherever it is named; the tower is pinned by its own Δ₀ description,
+which is why no caller has to hold a slot for it.
 
+```agda
 Bi Ti Ci Ei : ∀ {n} → Fin (16 + n)
 Bi = i0
 Ti = i1
 Ci = i2
 Ei = i3
+```
 
--- The tag slots, innermost first: N 0 at i4 up to N 11 at i15.
+The tag slots, innermost first: N 0 at i4 up to N 11 at i15.
+
+```agda
 NN : ∀ {n} → Fin 12 → Fin (16 + n)
 NN zero = i4
 NN (suc zero) = i5
@@ -118,14 +119,20 @@ NN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = i15
 
 sh16 : ∀ {n} → Fin n → Fin (16 + n)
 sh16 i = sh 16 i
+```
 
--- The frame environment of a witness.
+The frame environment of a witness.
+
+```agda
 ev : ∀ {n} → (Fin 12 → S) → S → S → S → S → S ^ n → S ^ (16 + n)
 ev ν E C T b γ =
   b ∷ T ∷ C ∷ E ∷ ν f0 ∷ ν f1 ∷ ν f2 ∷ ν f3 ∷ ν f4 ∷ ν f5
     ∷ ν f6 ∷ ν f7 ∷ ν f8 ∷ ν f9 ∷ ν f10 ∷ ν f11 ∷ γ
+```
 
--- The twelve numerals themselves, and the tags they satisfy.
+The twelve numerals themselves, and the tags they satisfy.
+
+```agda
 numν : Fin 12 → S
 numν k = nn (toℕ k)
 
@@ -142,8 +149,11 @@ numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = refl
 numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = refl
 numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = refl
 numTags E C T b γ (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = refl
+```
 
--- The twelve tags, pinned to the numerals they name.
+The twelve tags, pinned to the numerals they name.
+
+```agda
 numsAt : ∀ {n} → Formula S (16 + n)
 numsAt =
   ((var i4 ≐ con (nn 0)) ∧̇ ((var i5 ≐ con (nn 1)) ∧̇ ((var i6 ≐ con (nn 2)) ∧̇ ((var i7 ≐ con (nn 3)) ∧̇ ((var i8 ≐ con (nn 4)) ∧̇ ((var i9 ≐ con (nn 5)) ∧̇ ((var i10 ≐ con (nn 6)) ∧̇ ((var i11 ≐ con (nn 7)) ∧̇ ((var i12 ≐ con (nn 8)) ∧̇ ((var i13 ≐ con (nn 9)) ∧̇ ((var i14 ≐ con (nn 10)) ∧̇ (var i15 ≐ con (nn 11)))))))))))))
@@ -299,16 +309,19 @@ many binders as it likes.
 ```agda
 GraphWitAt : ∀ {n} → Fin n → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
 GraphWitAt B x y γ = GraphWitOn (lookup B γ) x y γ
+```
 
--- SEALED (P-t), and the reason is a measurement rather than a preference.
--- This formula is a conjunct of three larger ones, and every consumer of
--- those splits them.  A split REDUCES the conjunct's type while the
--- consumer's own signature names it FOLDED, so the conversion checker walks
--- the whole tree to see that the two agree.  Open, that one coercion cost
--- 2,459 ms at the site this seal serves; sealed, both sides are the same
--- stuck head and the check is syntactic.  The two readers below are the
--- official unfolding, so no consumer needs `unfolding` to build or read a
--- witness.
+SEALED (P-t), and the reason is a measurement rather than a preference.
+This formula is a conjunct of three larger ones, and every consumer of
+those splits them.  A split REDUCES the conjunct's type while the
+consumer's own signature names it FOLDED, so the conversion checker walks
+the whole tree to see that the two agree.  Open, that one coercion cost
+2,459 ms at the site this seal serves; sealed, both sides are the same
+stuck head and the check is syntactic.  The two readers below are the
+official unfolding, so no consumer needs `unfolding` to build or read a
+witness.
+
+```agda
 opaque
   satGraphAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   satGraphAt B x y = satGraphOn (var Bi ≐ var (sh16 B)) x y

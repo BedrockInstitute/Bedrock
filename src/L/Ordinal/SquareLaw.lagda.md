@@ -62,11 +62,14 @@ open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded; module 
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
+```
 
--- The lexicographic product of two strict well-orders, delivered here
--- because today's tree has no combinator chapter (the LJ-1.47 probe
--- measured it separately).  Generic template content: the J tower
--- instantiates the same module unchanged.
+The lexicographic product of two strict well-orders, delivered here
+because today's tree has no combinator chapter (the LJ-1.47 probe
+measured it separately).  Generic template content: the J tower
+instantiates the same module unchanged.
+
+```agda
 connex : {ℓc : Level} {A : Type ℓc} (w : SWO A) (a b : A)
        → (SWO._<∙_ w a b → Empty.⊥) → (SWO._<∙_ w b a → Empty.⊥) → a ≡ b
 connex w a b ¬ab ¬ba with SWO.tri∙ w a b
@@ -680,15 +683,21 @@ module FiniteBase where
         (sym (retEq e (f x)) ∙ cong (invEq e) e' ∙ retEq e (f y))
 
 open FiniteBase
+```
 
--- The square law, and its truncated form.
+The square law, and its truncated form.
+
+```agda
 sq : S → Type ℓ
 sq α = Σ[ f ∈ (⟪ α ⟫ × ⟪ α ⟫ → ⟪ α ⟫) ]
          ((x y : ⟪ α ⟫ × ⟪ α ⟫) → f x ≡ f y → x ≡ y)
+```
 
--- An ordinal is initial in this chapter: it has omega as a member (so
--- omega itself is not initial), is closed under successors, and its index
--- injects into no infinite member's square.
+An ordinal is initial in this chapter: it has omega as a member (so
+omega itself is not initial), is closed under successors, and its index
+injects into no infinite member's square.
+
+```agda
 Init : S → Type (ℓ-suc ℓ)
 Init α = IsOrd α
        × ⟨ ω ∈ˢ α ⟩
@@ -696,10 +705,13 @@ Init α = IsOrd α
        × ((β : S) → IsOrd β → ⟨ β ∈ˢ α ⟩ → ⟨ ω ∈ˢ β ⟩
           → (f : ⟪ α ⟫ → ⟪ β ⟫ × ⟪ β ⟫)
           → ((m n : ⟪ α ⟫) → f m ≡ f n → m ≡ n) → Empty.⊥)
+```
 
--- The order core with the no-injection hypothesis in its square form: the
--- law at members is never needed, since the exclusion case refutes an
--- injection of the index into the square of a member directly.
+The order core with the no-injection hypothesis in its square form: the
+law at members is never needed, since the exclusion case refutes an
+injection of the index into the square of a member directly.
+
+```agda
 module InitialCore (α : S) (oα : IsOrd α)
   (α-limit : (γ : S) → ⟨ γ ∈ˢ α ⟩ → ⟨ sucV γ ∈ˢ α ⟩)
   (noinj² : (β : S) → IsOrd β → ⟨ β ∈ˢ α ⟩ → ⟨ ω ∈ˢ β ⟩

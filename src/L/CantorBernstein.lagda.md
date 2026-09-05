@@ -22,14 +22,18 @@ open PT using ( ∥_∥₁ )
 open hPropStructure 𝒮ʟ using ( S )
 ```
 
+Set-ness of the small member type, delegated: `small-set` is stated
+at `V ℓ`, and `fst a` is a `V ℓ` for every `a : S`.
+
 ```agda
--- Set-ness of the small member type, delegated: `small-set` is stated
--- at `V ℓ`, and `fst a` is a `V ℓ` for every `a : S`.
 setPL : (a : S) → isSet (⟪ fst a ⟫)
 setPL a = small-set (fst a)
+```
 
--- The readback at the code notion: an `InjCode` witness is four
--- satisfaction facts, and `Small` consumes exactly those four.
+The readback at the code notion: an `InjCode` witness is four
+satisfaction facts, and `Small` consumes exactly those four.
+
+```agda
 readL : (a b : S) → Σ[ F ∈ S ] InjCode F a b
       → Σ[ f ∈ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
           ((x y : ⟪ fst a ⟫) → f x ≡ f y → x ≡ y)
@@ -41,13 +45,14 @@ module MutualInjL = MutualInj S (λ a → ⟪ fst a ⟫)
   (λ a b → Σ[ F ∈ S ] InjCode F a b) setPL readL
 ```
 
+`InjL` is definitionally the truncation of the witness relation the
+application above was made at, so `∃bijection` reads off with no
+conversion.  The surjectivity stays truncated: the hypotheses are
+truncated existentials, so the conclusion is the same grade of
+object they speak in.  A consumer holding a witness as data reads
+`MutualInjL.mutual→bijection` off the same application.
+
 ```agda
--- `InjL` is definitionally the truncation of the witness relation the
--- application above was made at, so `∃bijection` reads off with no
--- conversion.  The surjectivity stays truncated: the hypotheses are
--- truncated existentials, so the conclusion is the same grade of
--- object they speak in.  A consumer holding a witness as data reads
--- `MutualInjL.mutual→bijection` off the same application.
 mutual-inj→bijection : (a b : S) → InjL a b → InjL b a
   → ∥ Σ[ h ∈ (⟪ fst a ⟫ → ⟪ fst b ⟫) ]
        (((x y : ⟪ fst a ⟫) → h x ≡ h y → x ≡ y)

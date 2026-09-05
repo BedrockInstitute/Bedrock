@@ -57,30 +57,40 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+```
 
--- The V-carrier: the ambient membership lives here.
+The V-carrier: the ambient membership lives here.
+
+```agda
 module SV = hPropStructure 𝒮ᵥ using ()
--- The L-carrier: `InjL` lives here.
+```
+
+The L-carrier: `InjL` lives here.
+
+```agda
 module SL = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 open SL using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- The numeral k as an element of L.
+The numeral k as an element of L.
+
+```agda
 nn : ℕ → S
 nn k = # k , numL k
+```
 
--- =====================================================================
--- SECTION 1.  THE FINITE SEQUENCES OVER A, AS ONE SET OF L.
---
---   `seqL A` is the union over n of `envSet A n`: the environments of
---   every finite length over A.  It is carved by separation out of a
---   stage that contains every `envS A g` (`smallDom`), with the
---   one-place description "x is an environment over A whose domain is
---   a member of ω".  Inside the two binders: b is 0, n is 1, x is 2.
--- =====================================================================
+SECTION 1.  THE FINITE SEQUENCES OVER A, AS ONE SET OF L.
 
+  `seqL A` is the union over n of `envSet A n`: the environments of
+  every finite length over A.  It is carved by separation out of a
+  stage that contains every `envS A g` (`smallDom`), with the
+  one-place description "x is an environment over A whose domain is
+  a member of ω".  Inside the two binders: b is 0, n is 1, x is 2.
+
+```agda
 SeqIx : S → Type ℓ
 SeqIx A = Σ[ n ∈ ℕ ] Ix A n
 
@@ -138,20 +148,20 @@ seqL-out A x hx = PT.rec squash₁ step1 (subst ⟨_⟩ (seqL-spec A x) hx .snd)
         → ∥ Σ[ n ∈ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
   step1 (d , d∈ω , h) = PT.rec squash₁
     (λ { (k , q) → PT.rec squash₁ (step2 d (lower k) q) h }) d∈ω
+```
 
--- =====================================================================
--- SECTION 2.  THE CODE OF A SEQUENCE, AT AN INFINITE ORDINAL α WITH A
--- CODED PAIRING F : prodL α ↪ α.
---
---   A sequence s of length n is coded by folding F along it and then
---   tagging with the length: c(s) = F(n, v_n) where v_0 = 0 and
---   v_{i+1} = F(s(i), v_i).  The graph of s ↦ c(s) is expressible: "there
---   is a finite chain C, an environment over α on the domain n + 1,
---   with C(0) = 0, C(i+1) = F(s(i), C(i)) for every i ∈ n, and
---   c = F(n, C(n))".  The fold is host recursion; the formula is read
---   in both directions, and `Definable.Inj` codes the injection.
--- =====================================================================
+SECTION 2.  THE CODE OF A SEQUENCE, AT AN INFINITE ORDINAL α WITH A
+CODED PAIRING F : prodL α ↪ α.
 
+  A sequence s of length n is coded by folding F along it and then
+  tagging with the length: c(s) = F(n, v_n) where v_0 = 0 and
+  v_{i+1} = F(s(i), v_i).  The graph of s ↦ c(s) is expressible: "there
+  is a finite chain C, an environment over α on the domain n + 1,
+  with C(0) = 0, C(i+1) = F(s(i), C(i)) for every i ∈ n, and
+  c = F(n, C(n))".  The fold is host recursion; the formula is read
+  in both directions, and `Definable.Inj` codes the injection.
+
+```agda
 module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ → Empty.⊥)
             (F : S)
             (sv : ⟨ (F ∷ prodL α ∷ []) ⊨ svAt zero ⟩)
@@ -701,17 +711,17 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
 
   injL : InjL (seqL α) α
   injL = Inj.injL D inj
+```
 
--- =====================================================================
--- SECTION 3.  THE THEOREM.  At an infinite ordinal α, the finite
--- sequences over α inject into α, inside L.
---
---   The pairing at α is the one src/L/GCH/SuccIntoPower.lagda.md builds:
---   α ↪ μ at the internal cardinal μ of α, so prodL α ↪ prodL μ; the
---   square law of src/L/GCH/Pairing.lagda.md at μ, which is infinite
---   because α is; and μ ↪ α.
--- =====================================================================
+SECTION 3.  THE THEOREM.  At an infinite ordinal α, the finite
+sequences over α inject into α, inside L.
 
+  The pairing at α is the one src/L/GCH/SuccIntoPower.lagda.md builds:
+  α ↪ μ at the internal cardinal μ of α, so prodL α ↪ prodL μ; the
+  square law of src/L/GCH/Pairing.lagda.md at μ, which is infinite
+  because α is; and μ ↪ α.
+
+```agda
 seq-count :
     (α : SL.S) → IsOrd (fst α) → (⟨ fst α ∈ˢ ω ⟩ → Empty.⊥)
   → InjL (seqL α) α

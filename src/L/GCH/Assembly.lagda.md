@@ -40,56 +40,77 @@ open PT using ( ∥_∥₁; ∣_∣₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+```
 
--- The V-carrier: `Lset` and the ambient membership live here.
+The V-carrier: `Lset` and the ambient membership live here.
+
+```agda
 module SV = hPropStructure 𝒮ᵥ
--- The L-carrier: `GCHStatement` lives here.
+```
+
+The L-carrier: `GCHStatement` lives here.
+
+```agda
 module SL = hPropStructure 𝒮ʟ
--- The instance src/L/GCH.lagda.md names, at the same 𝒮ʟ.
+```
+
+The instance src/L/GCH.lagda.md names, at the same 𝒮ʟ.
+
+```agda
 module ModelL = FOL.ZFModel 𝒮ʟ
+```
 
--- =====================================================================
--- SECTION 1.  THE FOUR HYPOTHESES, ALL INTERNAL TO L.
--- =====================================================================
+SECTION 1.  THE FOUR HYPOTHESES, ALL INTERNAL TO L.
 
--- 1.  The stage at an INFINITE ordinal δ is coded into δ.  The row is
---     false at finite δ, so the infinity premise is part of the type.
+1.  The stage at an INFINITE ordinal δ is coded into δ.  The row is
+    false at finite δ, so the infinity premise is part of the type.
+
+```agda
 StageCountedCoded : Type (ℓ-suc ℓ)
 StageCountedCoded =
     (δ Lδ : SL.S) → IsOrd (fst δ) → (⟨ fst δ ∈ˢ ω ⟩ → Empty.⊥)
   → fst Lδ ≡ Lset (fst δ) → InjL Lδ δ
+```
 
--- 2.  The bounded subset theorem, internally: a subset y of an infinite
---     L-cardinal κ appears at a stage whose index injects into κ.
+2.  The bounded subset theorem, internally: a subset y of an infinite
+    L-cardinal κ appears at a stage whose index injects into κ.
+
+```agda
 InternalBoundedSubset : Type (ℓ-suc ℓ)
 InternalBoundedSubset =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
   → (y : SL.S) → ((z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩)
   → ∥ Σ[ β ∈ SL.S ]
        (IsOrd (fst β) × ⟨ fst y ∈ˢ Lset (fst β) ⟩ × InjL β κ) ∥₁
+```
 
--- 3.  The successor cardinal injects into the power set.
+3.  The successor cardinal injects into the power set.
+
+```agda
 SuccIntoPower : ModelL.isZFModel → Type (ℓ-suc ℓ)
 SuccIntoPower zf =
     (κ δ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥) → SuccCardL δ κ → InjL δ (𝒫 κ)
   where open ModelL.isZFModel zf using ( 𝒫 )
+```
 
--- 4.  The successor cardinal exists.  Section 2 proves it.
+4.  The successor cardinal exists.  Section 2 proves it.
+
+```agda
 SuccCardExists : Type (ℓ-suc ℓ)
 SuccCardExists =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
   → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
   → ∥ Σ[ δ ∈ SL.S ] SuccCardL δ κ ∥₁
+```
 
--- =====================================================================
--- SECTION 2.  HYPOTHESIS 4 IS A THEOREM.
---
---   `CardAboveL` (src/L/CardinalAbove.lagda.md) gives SOME ordinal
---   L-cardinal above κ; the least one is selected along the ordinal
---   well-order on the tower at `sucV θ`, and its minimality is the
---   leastness clause of `SuccCardL` (src/L/GCH.lagda.md:50-53).
--- =====================================================================
+SECTION 2.  HYPOTHESIS 4 IS A THEOREM.
 
+  `CardAboveL` (src/L/CardinalAbove.lagda.md) gives SOME ordinal
+  L-cardinal above κ; the least one is selected along the ordinal
+  well-order on the tower at `sucV θ`, and its minimality is the
+  leastness clause of `SuccCardL` (src/L/GCH.lagda.md:50-53).
+
+```agda
 module Reduce (κ : SL.S) (oκ : IsOrd (fst κ))
               (θ : SL.S) (oθ : IsOrd (fst θ))
               (cθ : IsCardinalL θ) (κ∈θ : ⟨ fst κ ∈ˢ fst θ ⟩) where
@@ -182,23 +203,30 @@ succCardExists κ oκ cκ κ∉ω = PT.map build (CardAboveL κ oκ cκ κ∉ω)
         → Σ[ δ ∈ SL.S ] SuccCardL δ κ
   build (θ , oθ , cθ , κ∈θ) = R.δ , R.oδ , R.cδ , R.κ∈δ , R.leastness
     where module R = Reduce κ oκ θ oθ cθ κ∈θ
+```
 
--- =====================================================================
--- SECTION 3.  THREE ROWS src/ PAYS.
--- =====================================================================
+SECTION 3.  THREE ROWS src/ PAYS.
 
--- The stage at an ordinal is constructible (src/L/Axioms/Basic.lagda.md).
+The stage at an ordinal is constructible (src/L/Axioms/Basic.lagda.md).
+
+```agda
 stage-is-L : (δ : SL.S) → IsOrd (fst δ) → ⟨ isL (Lset (fst δ)) ⟩
 stage-is-L δ ordδ = isL-Lset (fst δ) ordδ
+```
 
--- An inclusion is an internal injection (src/L/InjChain.lagda.md, row 3).
+An inclusion is an internal injection (src/L/InjChain.lagda.md, row 3).
+
+```agda
 inclusion-coded : (a b : SL.S)
                 → ((z : SV.S) → ⟨ z ∈ˢ fst a ⟩ → ⟨ z ∈ˢ fst b ⟩)
                 → InjL a b
 inclusion-coded a b sub = ∣ I.G , (I.sv , I.dm , I.ij , I.ran) ∣₁
   where module I = InclGraph a b sub
+```
 
--- Internal injections compose (src/L/InjChain.lagda.md, row 1).
+Internal injections compose (src/L/InjChain.lagda.md, row 1).
+
+```agda
 injl-trans : (a b c : SL.S) → InjL a b → InjL b c → InjL a c
 injl-trans a b c = PT.rec2 PT.squash₁ step
   where
@@ -209,16 +237,19 @@ injl-trans a b c = PT.rec2 PT.squash₁ step
     ∣ K.K , (K.svK , K.dmK , K.ijK , K.ranK) ∣₁
     where
     module K = Comp a b c F H svF dmF ijF ranF svH dmH ijH ranH
+```
 
--- A member z of a member y of the internal power set of an ordinal κ:
--- z is constructible, a member of κ, and an ordinal.
---
---   `𝒫 κ = ℩ (hasPower κ)` and `hasPower` realizes the class
---   `λ x → x ⊆ˢ κ` (src/FOL/ZFModel.lagda.md), where `⊆ˢ` is the
---   INTERNAL subset relation: it quantifies over SL.S only.  So the
---   power-set hypothesis only speaks about CONSTRUCTIBLE members of
---   `y`, and `z` arrives ambient.  The bridge is transitivity of the
---   class `isL` (src/L/Constructible.lagda.md).
+A member z of a member y of the internal power set of an ordinal κ:
+z is constructible, a member of κ, and an ordinal.
+
+  `𝒫 κ = ℩ (hasPower κ)` and `hasPower` realizes the class
+  `λ x → x ⊆ˢ κ` (src/FOL/ZFModel.lagda.md), where `⊆ˢ` is the
+  INTERNAL subset relation: it quantifies over SL.S only.  So the
+  power-set hypothesis only speaks about CONSTRUCTIBLE members of
+  `y`, and `z` arrives ambient.  The bridge is transitivity of the
+  class `isL` (src/L/Constructible.lagda.md).
+
+```agda
 zStrongest : ModelL.isZFModel → Type (ℓ-suc ℓ)
 zStrongest zf =
     (κ y : SL.S) → IsOrd (fst κ) → ⟨ fst y ∈ˢ fst (𝒫 κ) ⟩
@@ -243,15 +274,15 @@ z-strongest zf κ y ordκ y∈𝒫κ z z∈y = isLz , z∈κ , mem-ord {A = fst 
   -- z re-enters the internal subset relation as the L-element (z , isLz).
   z∈κ : ⟨ z ∈ˢ fst κ ⟩
   z∈κ = y⊆κ (z , isLz) z∈y
+```
 
--- =====================================================================
--- SECTION 4.  THE LANDING: A SUBSET OF κ LIES IN THE STAGE AT κ⁺.
---
---   Hypothesis 2 places y at some stage β with β injecting into κ.
---   By trichotomy β ∈ δ, since β ≡ δ or δ ∈ β would inject δ into κ
---   against `IsCardinalL δ` at κ ∈ δ.  Then `Lset-mono` lifts y to δ.
--- =====================================================================
+SECTION 4.  THE LANDING: A SUBSET OF κ LIES IN THE STAGE AT κ⁺.
 
+  Hypothesis 2 places y at some stage β with β injecting into κ.
+  By trichotomy β ∈ δ, since β ≡ δ or δ ∈ β would inject δ into κ
+  against `IsCardinalL δ` at κ ∈ δ.  Then `Lset-mono` lifts y to δ.
+
+```agda
 stage-landing :
     (zf : ModelL.isZFModel) → InternalBoundedSubset
   → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
@@ -285,11 +316,11 @@ stage-landing zf ibs κ ordκ cardκ κ∉ω δ (ordδ , cardδ , κ∈δ , _) y
       where
       δ⊆β : (z : SV.S) → ⟨ z ∈ˢ fst δ ⟩ → ⟨ z ∈ˢ fst β ⟩
       δ⊆β z z∈δ = ordβ .fst z∈δ δ∈β
+```
 
--- =====================================================================
--- SECTION 5.  THE POWER SET INJECTS INTO THE SUCCESSOR.
--- =====================================================================
+SECTION 5.  THE POWER SET INJECTS INTO THE SUCCESSOR.
 
+```agda
 power-into-succ :
     (zf : ModelL.isZFModel) → StageCountedCoded → InternalBoundedSubset
   → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
@@ -313,11 +344,11 @@ power-into-succ zf scc ibs κ ordκ cardκ κ∉ω δ sc@(ordδ , _ , κ∈δ , 
   into : (z : SV.S) → ⟨ z ∈ˢ fst (𝒫 κ) ⟩ → ⟨ z ∈ˢ fst Lδ ⟩
   into z z∈ =
     stage-landing zf ibs κ ordκ cardκ κ∉ω δ sc (z , isL-trans z∈ (snd (𝒫 κ))) z∈
+```
 
--- =====================================================================
--- SECTION 6.  THE THEOREM.
--- =====================================================================
+SECTION 6.  THE THEOREM.
 
+```agda
 gch-from-internal-bill :
     (zf : ModelL.isZFModel)
   → StageCountedCoded → InternalBoundedSubset → SuccIntoPower zf

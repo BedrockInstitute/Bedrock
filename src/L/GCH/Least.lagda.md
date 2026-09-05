@@ -36,8 +36,11 @@ open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- Renaming, read at the same satisfaction as `_⊨_` (as L.GCH.Definable does).
+Renaming, read at the same satisfaction as `_⊨_` (as L.GCH.Definable does).
+
+```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 
 private
@@ -49,20 +52,20 @@ private
   -- Two elements of L with the same underlying set are equal.
   S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
   S≡ = Σ≡Prop (λ v → snd (isL v))
+```
 
--- =====================================================================
--- THE TOOL.  P is a predicate over (w ∷ x ∷ []), "w witnesses x", and
--- every x ∈ X has a witness in the stage L_γ.  x ↦ the stage-order-least
--- witness in L_γ is a definable map X → L_γ: its graph is "P w x, w ∈
--- L_γ, and no w' ∈ L_γ below w in the stage order witnesses x", its
--- table is a set of L, and its readers give the witness, its leastness
--- and its uniqueness.  Inside the bounded binder w' is 0, w is 1, x is
--- 2; P is renamed from (w' ∷ x ∷ []) into that environment.
---
--- Five parameters: the bound γ with its ordinality, the index set X,
--- the predicate P, and the existence of a witness at the bound.
--- =====================================================================
+THE TOOL.  P is a predicate over (w ∷ x ∷ []), "w witnesses x", and
+every x ∈ X has a witness in the stage L_γ.  x ↦ the stage-order-least
+witness in L_γ is a definable map X → L_γ: its graph is "P w x, w ∈
+L_γ, and no w' ∈ L_γ below w in the stage order witnesses x", its
+table is a set of L, and its readers give the witness, its leastness
+and its uniqueness.  Inside the bounded binder w' is 0, w is 1, x is
+2; P is renamed from (w' ∷ x ∷ []) into that environment.
 
+Five parameters: the bound γ with its ordinality, the index set X,
+the predicate P, and the existence of a witness at the bound.
+
+```agda
 module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
   (have : (x : S) → ⟨ fst x ∈ fst X ⟩
         → ∥ Σ[ w ∈ S ] (⟨ fst w ∈ Lset γ ⟩ × ⟨ (w ∷ x ∷ []) ⊨ P ⟩) ∥₁) where

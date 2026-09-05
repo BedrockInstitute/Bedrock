@@ -39,8 +39,11 @@ open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- The slot arithmetic this chapter needs, at the four innermost slots.
+The slot arithmetic this chapter needs, at the four innermost slots.
+
+```agda
 private
   i0 : ∀ {j} → Fin (suc j)
   i0 = zero
@@ -64,13 +67,11 @@ private
   down x y h = y , isL-trans {x = fst x} {y = y} h (snd x)
 ```
 
-```agda
--- =====================================================================
--- THE TOWER SET.  The pairs (n, Eₙ), cut by separation out of a stage
--- that holds every entry.  The cutting formula is not Δ₀ and need not
--- be: it builds the set, and only its two readers leave this section.
--- =====================================================================
+THE TOWER SET.  The pairs (n, Eₙ), cut by separation out of a stage
+that holds every entry.  The cutting formula is not Δ₀ and need not
+be: it builds the set, and only its two readers leave this section.
 
+```agda
 module Tower (W : S) where
   entry : ℕ → S
   entry n = prʟ (numeralL n) (envSet W n)

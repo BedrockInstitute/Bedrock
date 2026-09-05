@@ -34,10 +34,13 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 
 module CS = hPropStructure 𝒮ʟ
+```
 
--- A stage function and the five facts the closure argument uses.  Nothing in
--- this module names a tower: the argument is decompose, merge two stages by
--- trichotomy, climb by one successor, and every tower supplies that shape.
+A stage function and the five facts the closure argument uses.  Nothing in
+this module names a tower: the argument is decompose, merge two stages by
+trichotomy, climb by one successor, and every tower supplies that shape.
+
+```agda
 module BoundOver
   (T : S → S)
   (T-out : (α x : S) → ⟨ x ∈ˢ T α ⟩
@@ -114,9 +117,12 @@ module BoundOver
         (λ { (k , hk) → T-mono {α = lam} {β = sucIter k (sucV δ)}
                (suc^∈λ k (sucV δ) (succλ δ δ∈)) {x = D x} hk })
         (powIter (sucV δ) x hδ)
+```
 
--- The L tower supplies the five facts.  Two need an adapter, and both
--- adapters are one call: `Lset-out` lands in `𝒟ₒ` and `Lset-suc` renames it.
+The L tower supplies the five facts.  Two need an adapter, and both
+adapters are one call: `Lset-out` lands in `𝒟ₒ` and `Lset-suc` renames it.
+
+```agda
 Lset-out′ : (α x : S) → ⟨ x ∈ˢ Lset α ⟩
           → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ Lset (sucV δ) ⟩) ∥₁
 Lset-out′ α x hx = PT.map

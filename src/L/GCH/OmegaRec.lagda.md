@@ -47,8 +47,11 @@ open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- Renaming, read at the same satisfaction as `_⊨_` (as OrderType does).
+Renaming, read at the same satisfaction as `_⊨_` (as OrderType does).
+
+```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
 
 isSetS : isSet S
@@ -56,20 +59,26 @@ isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
 
 S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
 S≡ = Σ≡Prop (λ v → snd (isL v))
+```
 
--- "The pair (x, y) is a member of F", the shape every clause below reads.
+"The pair (x, y) is a member of F", the shape every clause below reads.
+
+```agda
 Holds : S → S → S → Type (ℓ-suc ℓ)
 Holds F x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+```
 
--- The numeral k as an element of L.
+The numeral k as an element of L.
+
+```agda
 nn : ℕ → S
 nn k = # k , numL k
+```
 
--- =====================================================================
--- MEMBERSHIP IN THE MODEL'S PAIR AND UNION, read through the projection
--- equations of src/L/Axioms/Numerals.lagda.md and the hierarchy's specs.
--- =====================================================================
+MEMBERSHIP IN THE MODEL'S PAIR AND UNION, read through the projection
+equations of src/L/Axioms/Numerals.lagda.md and the hierarchy's specs.
 
+```agda
 pairʟ-in : (a b y : S) → (fst y ≡ fst a) ⊎ (fst y ≡ fst b) → ⟨ y ∈ˢ pairʟ a b ⟩
 pairʟ-in a b y k = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (pairʟ-fst a b))
   (subst ⟨_⟩ (sym (pair-spec (fst a) (fst b) (fst y))) ∣ k ∣₁)
@@ -86,13 +95,13 @@ unionʟ-out : (A y : S) → ⟨ y ∈ˢ unionʟ A ⟩
            → ∥ Σ[ B ∈ V ℓ ] (⟨ B ∈ fst A ⟩ × ⟨ fst y ∈ B ⟩) ∥₁
 unionʟ-out A y h = subst ⟨_⟩ (union-spec (fst A) (fst y))
   (subst (λ w → ⟨ fst y ∈ w ⟩) (unionʟ-fst A) h)
+```
 
--- =====================================================================
--- THE RECURSION.  `a` is the start, `stepFo` defines `step` on the whole
--- model (the two directions of src/L/Recursion.lagda.md's `Definition`,
--- with no domain clause), and `it` is the iteration, in the host.
--- =====================================================================
+THE RECURSION.  `a` is the start, `stepFo` defines `step` on the whole
+model (the two directions of src/L/Recursion.lagda.md's `Definition`,
+with no domain clause), and `it` is the iteration, in the host.
 
+```agda
 module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
                (defines : (x : S) → ⟨ (step x ∷ x ∷ []) ⊨ stepFo ⟩)
                (only : (x y : S) → ⟨ (y ∷ x ∷ []) ⊨ stepFo ⟩ → y ≡ step x) where

@@ -60,12 +60,10 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-```agda
--- =====================================================================
--- THE TWO CODINGS AGREE AT A KEY.  The hierarchy's key and the
--- model's key of the same formula are the same element.
--- =====================================================================
+THE TWO CODINGS AGREE AT A KEY.  The hierarchy's key and the
+model's key of the same formula are the same element.
 
+```agda
 module _ (A : S) where
   keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
             → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
@@ -78,10 +76,9 @@ module _ (A : S) where
     ∙ sym (prʟ-fst (numeralL n) LCode.⌜ mapFo (asConst A) ψ ⌝)
 ```
 
-```agda
--- =====================================================================
+A code's constructor and payload, from its tag.
 
--- A code's constructor and payload, from its tag.
+```agda
 module Match (W : S) where
   open Alphabet W
 
@@ -131,14 +128,11 @@ module Match (W : S) where
     (AllCodes-out W c c∈)
 ```
 
+PROBE.  The uniqueness half of SatDescribe.SatSound, at an ARBITRARY
+subcode-closed C: `codesAt C w E N` is replaced by `closedAt C`, and
+`Pinned` is conditional on the formula's key being in C.
+
 ```agda
--- =====================================================================
--- PROBE.  The uniqueness half of SatDescribe.SatSound, at an ARBITRARY
--- subcode-closed C: `codesAt C w E N` is replaced by `closedAt C`, and
--- `Pinned` is conditional on the formula's key being in C.
--- =====================================================================
-
-
 module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hcl : ⟨ γ ⊨ closedAt C ⟩)
@@ -364,7 +358,6 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
       tS : S
       tS = fstS pS (ct t) (cd a) refl
 
-
   pinned : ∀ {n} (ψ : Formula Ab n) → Pinned ψ
   pinned (t ∈̇ u) = atomCase _∈̇_ f0 t u refl (var i1 ∈̇ var i0) refl
     (λ env wi ti ui N0i N1i qw' qt qu q0 q1 →
@@ -404,14 +397,12 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
     (clBq n 11 t a (∃̇∈ t a) (hcl .snd .snd .snd .snd .snd .snd .snd) refl) (pinned a)
 ```
 
-```agda
--- =====================================================================
--- PROBE.  `SatHolds` of src/L/GCH/SatDescribe.lagda.md, with the four
--- places that named the ALL-CODES objects taken as parameters: the
--- value at a key, the decode of a member, and the two halves of the
--- domain.  Nothing else changes.
--- =====================================================================
+PROBE.  `SatHolds` of src/L/GCH/SatDescribe.lagda.md, with the four
+places that named the ALL-CODES objects taken as parameters: the
+value at a key, the decode of a member, and the two halves of the
+domain.  Nothing else changes.
 
+```agda
 module _ (W : S) where
   open Alphabet W
   open Bridge W
@@ -676,12 +667,10 @@ module _ (W : S) where
     holds = total , (onC , twelve)
 ```
 
-```agda
--- =====================================================================
--- THE SLOT INSTANCE.  The four are supplied at C := the slot of one
--- formula and T := its table, from src/L/Coding/Table.lagda.md.
--- =====================================================================
+THE SLOT INSTANCE.  The four are supplied at C := the slot of one
+formula and T := its table, from src/L/Coding/Table.lagda.md.
 
+```agda
 module _ (W : S) where
   open Alphabet W
   open Bridge W

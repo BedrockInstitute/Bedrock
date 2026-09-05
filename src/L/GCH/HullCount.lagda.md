@@ -84,15 +84,24 @@ open SL using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- Renaming, read at the same satisfaction as `_⊨_` (as HullIn does).
+Renaming, read at the same satisfaction as `_⊨_` (as HullIn does).
+
+```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
+```
 
--- "The pair (x, y) is a member of F", the shape every clause reads.
+"The pair (x, y) is a member of F", the shape every clause reads.
+
+```agda
 Holds : S → S → S → Type (ℓ-suc ℓ)
 Holds F x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+```
 
--- The numeral k as an element of L.
+The numeral k as an element of L.
+
+```agda
 nn : ℕ → S
 nn k = # k , numL k
 
@@ -148,20 +157,24 @@ private
   ag₉ T e' k Zv e s z p q (suc (suc (suc (suc zero)))) = refl
   ag₉ T e' k Zv e s z p q (suc (suc (suc (suc (suc zero))))) = refl
   ag₉ T e' k Zv e s z p q (suc (suc (suc (suc (suc (suc zero)))))) = refl
+```
 
--- =====================================================================
--- SECTION 0.  TWO SMALL FACTS.
--- =====================================================================
+SECTION 0.  TWO SMALL FACTS.
 
--- An ordinal is a subset of its own stage.
+An ordinal is a subset of its own stage.
+
+```agda
 ord⊆Lset : (α : V ℓ) → IsOrd α → (z : V ℓ) → ⟨ z ∈ α ⟩ → ⟨ z ∈ Lset α ⟩
 ord⊆Lset α oα z z∈α =
   Lset-cumul z α oz oα z∈α (ord∈Lset-suc z oz)
   where
   oz : IsOrd z
   oz = mem-ord {A = α} oα z z∈α
+```
 
--- Membership in the model's binary union of two elements.
+Membership in the model's binary union of two elements.
+
+```agda
 module Union2 (D₁ D₂ : S) where
 
   D : S
@@ -184,16 +197,16 @@ module Union2 (D₁ D₂ : S) where
       (λ { (inl q) → inl (subst (λ w → ⟨ fst z ∈ w ⟩) q hz)
          ; (inr q) → inr (subst (λ w → ⟨ fst z ∈ w ⟩) q hz) })
       (pairʟ-out D₁ D₂ (B , isL-trans {x = fst P} {y = B} hB (snd P)) hB)
+```
 
--- =====================================================================
--- SECTION 1.  TWO CODED INJECTIONS INTO κ, TAGGED INTO THE PRODUCT.
---
---   z ↦ (0, E₁ z) on D₁, and z ↦ (1, E₂ z) off D₁.  The graph, over
---   (y ∷ z ∷ []): "z ∈ D₁ and some v has (z, v) ∈ E₁ and y = (0, v), or
---   z ∉ D₁ and some v has (z, v) ∈ E₂ and y = (1, v)".  Inside the
---   binder v is 0, y is 1, z is 2.
--- =====================================================================
+SECTION 1.  TWO CODED INJECTIONS INTO κ, TAGGED INTO THE PRODUCT.
 
+  z ↦ (0, E₁ z) on D₁, and z ↦ (1, E₂ z) off D₁.  The graph, over
+  (y ∷ z ∷ []): "z ∈ D₁ and some v has (z, v) ∈ E₁ and y = (0, v), or
+  z ∉ D₁ and some v has (z, v) ∈ E₂ and y = (1, v)".  Inside the
+  binder v is 0, y is 1, z is 2.
+
+```agda
 module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (1∈κ : ⟨ # 1 ∈ fst κ ⟩)
                 (D₁ D₂ E₁ E₂ : S) (c₁ : InjCode E₁ D₁ κ) (c₂ : InjCode E₂ D₂ κ) where
 
@@ -330,24 +343,27 @@ module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (1∈κ : ⟨ # 1 ∈
 
   injL : InjL D (prodL κ)
   injL = Inj.injL Dmap inj
+```
 
--- THE LEMMA: two internal injections into κ give one on the union.
+THE LEMMA: two internal injections into κ give one on the union.
+
+```agda
 tag-union : (κ : S) → ⟨ # 0 ∈ fst κ ⟩ → ⟨ # 1 ∈ fst κ ⟩
           → (D₁ D₂ : S) → InjL D₁ κ → InjL D₂ κ
           → InjL (unionʟ (pairʟ D₁ D₂)) (prodL κ)
 tag-union κ h0 h1 D₁ D₂ = PT.rec2 squash₁
   (λ { (E₁ , c₁) (E₂ , c₂) → TagUnion.injL κ h0 h1 D₁ D₂ E₁ E₂ c₁ c₂ })
+```
 
--- =====================================================================
--- SECTION 2.  THE LEAST PREIMAGE.  G is a set of pairs (p, z) whose
--- first components lie in P ⊆ L_γ, and every z ∈ D has a preimage.
--- z ↦ the stage-order-least p with (p, z) ∈ G is a definable map
--- D → P, its graph is a set of L, and when G is functional in the
--- sense "(p, z), (p, z') ∈ G force z = z'" the map is injective.
--- The selection, the graph and the table are `L.GCH.Least` at γ, D
--- and the predicate "(p, z) ∈ G", over (p ∷ z ∷ []).
--- =====================================================================
+SECTION 2.  THE LEAST PREIMAGE.  G is a set of pairs (p, z) whose
+first components lie in P ⊆ L_γ, and every z ∈ D has a preimage.
+z ↦ the stage-order-least p with (p, z) ∈ G is a definable map
+D → P, its graph is a set of L, and when G is functional in the
+sense "(p, z), (p, z') ∈ G force z = z'" the map is injective.
+The selection, the graph and the table are `L.GCH.Least` at γ, D
+and the predicate "(p, z) ∈ G", over (p ∷ z ∷ []).
 
+```agda
 module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
   (inP : (p z : S) → Holds G p z → ⟨ fst p ∈ fst P ⟩)
   (P⊆L : (p : S) → ⟨ fst p ∈ fst P ⟩ → ⟨ fst p ∈ Lset γ ⟩)
@@ -400,12 +416,12 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
 
     injL : InjL D P
     injL = Inj.injL Dmap inj
+```
 
--- =====================================================================
--- SECTION 3.  A SINGLETON INJECTS INTO AN INFINITE ORDINAL: the one
--- member goes to 0.  The graph, over (y ∷ z ∷ []): "y = ∅".
--- =====================================================================
+SECTION 3.  A SINGLETON INJECTS INTO AN INFINITE ORDINAL: the one
+member goes to 0.  The graph, over (y ∷ z ∷ []): "y = ∅".
 
+```agda
 module Point (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (a : S) where
 
   Y : S
@@ -438,18 +454,16 @@ module Point (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (a : S) where
 
 ## The count of the hull
 
-```agda
--- =====================================================================
--- SECTION 4.  THE HULL OF A COUNTED START.  The telescope of
--- src/L/GCH/HullIn.lagda.md `Condense′`, plus an infinite L-cardinal κ
--- and an internal injection of the start X into κ.  Each iterate of
--- the hull is counted by induction: the new members of a step are the
--- least satisfiers of a key at a parameter environment over the last
--- iterate, and z ↦ the least such (key, environment) pair is a
--- definable injection (section 2), while the pairs are counted by the
--- limit stage and the finite sequences (src/L/GCH/Sequences.lagda.md).
--- =====================================================================
+SECTION 4.  THE HULL OF A COUNTED START.  The telescope of
+src/L/GCH/HullIn.lagda.md `Condense′`, plus an infinite L-cardinal κ
+and an internal injection of the start X into κ.  Each iterate of
+the hull is counted by induction: the new members of a step are the
+least satisfiers of a key at a parameter environment over the last
+iterate, and z ↦ the least such (key, environment) pair is a
+definable injection (section 2), while the pairs are counted by the
+limit stage and the finite sequences (src/L/GCH/Sequences.lagda.md).
 
+```agda
 module Count (lam : V ℓ) (ordλ : IsOrd lam)
   (succλ : (d : V ℓ) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : V ℓ) (X⊆L : (x : V ℓ) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)

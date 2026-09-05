@@ -33,41 +33,48 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+```
 
--- The V-carrier: the ambient membership lives here.
+The V-carrier: the ambient membership lives here.
+
+```agda
 module SV = hPropStructure 𝒮ᵥ using ( S )
--- The L-carrier: `InjL` and `IsCardinalL` live here.
+```
+
+The L-carrier: `InjL` and `IsCardinalL` live here.
+
+```agda
 module SL = hPropStructure 𝒮ʟ using ( S )
+```
 
--- =====================================================================
--- THE THEOREM.  Every ordinal α of L has an internal cardinal: an
--- ordinal L-cardinal μ ⊆ α with α and μ injecting into each other
--- inside L.
---
---   Select, by `leastOf` over the ordinal well-order `w` of
---   `LeastCardInjL` on ⟪ sucV α ⟫ (the order is ∈ itself, `w-lt`), the
---   least member μ that α injects into internally.  The set is
---   non-empty: α is a member of `sucV α` and the inclusion α ⊆ α is an
---   internal injection.  μ is an ordinal because every member of
---   `sucV α` is.  μ is an L-cardinal: a γ ∈ μ with μ ↪ γ gives α ↪ γ by
---   composition, and γ is a member of `sucV α` below μ, against
---   leastness.  μ ⊆ α because μ ∈ α or μ ≡ α, and μ ↪ α is that
---   inclusion.
---
---   The stage order `orderAt` of `InternalLeastCard` is not used: no
---   exported lemma relates ∈ on ordinals to `orderAt`, so the
---   selection runs on the ordinal well-order instead.
---
---   Three measured cures, at this site.  (1) The predicate carries the
---   L-element and its index equation, so no `InjL` is ever transported
---   along a path in the carrier: the first draft, which did, ran 48 min
---   at 8.6 GB before it was killed.  (2) The level-hood of `sucV α` is
---   a sealed proof of a proposition.  (3) μ ⊆ α is read off `ord-tri`,
---   not `∈sucV-elim`: with the selected member as its point, that
---   eliminator alone exceeded a 120 s cap, and this whole module checks
---   in about 7 s without it.
--- =====================================================================
+THE THEOREM.  Every ordinal α of L has an internal cardinal: an
+ordinal L-cardinal μ ⊆ α with α and μ injecting into each other
+inside L.
 
+  Select, by `leastOf` over the ordinal well-order `w` of
+  `LeastCardInjL` on ⟪ sucV α ⟫ (the order is ∈ itself, `w-lt`), the
+  least member μ that α injects into internally.  The set is
+  non-empty: α is a member of `sucV α` and the inclusion α ⊆ α is an
+  internal injection.  μ is an ordinal because every member of
+  `sucV α` is.  μ is an L-cardinal: a γ ∈ μ with μ ↪ γ gives α ↪ γ by
+  composition, and γ is a member of `sucV α` below μ, against
+  leastness.  μ ⊆ α because μ ∈ α or μ ≡ α, and μ ↪ α is that
+  inclusion.
+
+  The stage order `orderAt` of `InternalLeastCard` is not used: no
+  exported lemma relates ∈ on ordinals to `orderAt`, so the
+  selection runs on the ordinal well-order instead.
+
+  Three measured cures, at this site.  (1) The predicate carries the
+  L-element and its index equation, so no `InjL` is ever transported
+  along a path in the carrier: the first draft, which did, ran 48 min
+  at 8.6 GB before it was killed.  (2) The level-hood of `sucV α` is
+  a sealed proof of a proposition.  (3) μ ⊆ α is read off `ord-tri`,
+  not `∈sucV-elim`: with the selected member as its point, that
+  eliminator alone exceeded a 120 s cap, and this whole module checks
+  in about 7 s without it.
+
+```agda
 cardOf :
     (α : SL.S) → IsOrd (fst α)
   → ∥ Σ[ μ ∈ SL.S ]

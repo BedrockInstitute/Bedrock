@@ -21,22 +21,23 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪ )
 ```
 
+Two injections, one each way, give one bijection.  The installed
+library does not ship it, and both target theorems want it as a
+reading, so it is proved once here at two ARBITRARY types under one
+set-ness hypothesis.  The construction names no tower, no stage and
+no satisfaction relation.
+
+The proof runs on the index level, which is why it transfers cheaply.
+The BAD elements of `A` are those reachable by a finite alternating
+preimage chain starting outside the image of `g`; `ĥ` sends a bad
+element through `f` and a good one back along `g⁻¹`.  The chain is the
+small predicate family `Cₙ`, and the one structural fact needed is
+that `x ↦ g (f x)` closes the bad set.  Excluded middle enters TWICE:
+to decide the bad set, and to extract `g⁻¹` from the truncated image
+statement.  The dose is taken at the level of the types themselves, so
+a chapter holding `LEM (ℓ-suc ℓ)` redeems it through `lowerLEM`.
+
 ```agda
--- Two injections, one each way, give one bijection.  The installed
--- library does not ship it, and both target theorems want it as a
--- reading, so it is proved once here at two ARBITRARY types under one
--- set-ness hypothesis.  The construction names no tower, no stage and
--- no satisfaction relation.
---
--- The proof runs on the index level, which is why it transfers cheaply.
--- The BAD elements of `A` are those reachable by a finite alternating
--- preimage chain starting outside the image of `g`; `ĥ` sends a bad
--- element through `f` and a good one back along `g⁻¹`.  The chain is the
--- small predicate family `Cₙ`, and the one structural fact needed is
--- that `x ↦ g (f x)` closes the bad set.  Excluded middle enters TWICE:
--- to decide the bad set, and to extract `g⁻¹` from the truncated image
--- statement.  The dose is taken at the level of the types themselves, so
--- a chapter holding `LEM (ℓ-suc ℓ)` redeems it through `lowerLEM`.
 module Bernstein {A B : Type ℓ} (setA : isSet A)
                  (f : A → B) (fi : (x y : A) → f x ≡ f y → x ≡ y)
                  (g : B → A) (gi : (x y : B) → g x ≡ g y → x ≡ y) where
@@ -130,9 +131,10 @@ module Bernstein {A B : Type ℓ} (setA : isSet A)
     (h-surj y (lem (C (g y))))
 ```
 
+The set form, at a small carrier: a `V`'s member type embeds into a
+set, so it is one.
+
 ```agda
--- The set form, at a small carrier: a `V`'s member type embeds into a
--- set, so it is one.
 small-set : (a : V ℓ) → isSet (⟪ a ⟫)
 small-set a = Embedding-into-isSet→isSet (⟪ a ⟫↪ , isEmb⟪ a ⟫↪) setIsSet
 
@@ -147,12 +149,13 @@ cantor-bernstein a b f fi g gi = M.ĥ , ( M.ĥ-inj , M.ĥ-surj )
   module M = Bernstein {A = ⟪ a ⟫} {B = ⟪ b ⟫} (small-set a) f fi g gi
 ```
 
+The corollary, generic in the carrier `C`, the small-type assignment
+`P` and the code notion.  A consumer supplies set-ness and a readback
+from a code to an honest injection, and reads back a bijection from a
+pair of codes.  `∃bijection` takes the pair truncated; `mutual→bijection`
+takes it as data.
+
 ```agda
--- The corollary, generic in the carrier `C`, the small-type assignment
--- `P` and the code notion.  A consumer supplies set-ness and a readback
--- from a code to an honest injection, and reads back a bijection from a
--- pair of codes.  `∃bijection` takes the pair truncated; `mutual→bijection`
--- takes it as data.
 module MutualInj {ℓ₁ ℓ₂ : Level} (C : Type ℓ₁) (P : C → Type ℓ)
     (R : (a b : C) → Type ℓ₂)
     (setP : (a : C) → isSet (P a))

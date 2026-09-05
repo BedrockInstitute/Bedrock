@@ -31,14 +31,12 @@ open AbsSF using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 ```
 
-```agda
--- =====================================================================
--- THE GRAPH OF THE UNIFORM TABLE, as a set.  The value function of
--- src/L/Coding/Uniform.lagda.md `Table` is a definable map, and
--- src/L/GCH/Definable.lagda.md `Graph` makes its graph a set.  Sealed
--- where it is built; its two readers are what the consumer holds.
--- =====================================================================
+THE GRAPH OF THE UNIFORM TABLE, as a set.  The value function of
+src/L/Coding/Uniform.lagda.md `Table` is a definable map, and
+src/L/GCH/Definable.lagda.md `Graph` makes its graph a set.  Sealed
+where it is built; its two readers are what the consumer holds.
 
+```agda
 open import L.Coding.Uniform {ℓ} lem using ( module Table )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap ) renaming ( module Graph to MapGraph )
 

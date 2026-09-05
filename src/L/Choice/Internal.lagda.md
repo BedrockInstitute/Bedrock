@@ -146,9 +146,10 @@ description is satisfied at are sealed for the reason the marker records.
 那个图在经两条等式抵达的**一对变元位**上解除，这正是塔诸章据以写下的规矩；而描述在其上被满足的那两个元素被封印，理由记在标记里。
 <!--/-->
 
+perf: the limit stage's two elements are sealed; unsealed, checking any term
+at a satisfaction of the tower graph over them runs 77 s instead of 1.6 s
+
 ```agda
--- perf: the limit stage's two elements are sealed; unsealed, checking any term
--- at a satisfaction of the tower graph over them runs 77 s instead of 1.6 s
 opaque
   ωAt : S
   ωAt = ωʟ
@@ -929,7 +930,6 @@ LeastNameAt R P B C C₀ s a e d =
                       (suc (suc zero)) (suc zero) zero (sh3 d)
              ⇒̇ ¬̇ (≺At (sh3 R) (sh3 P) (suc (suc zero)) (suc zero) zero
                         (sh3 s) (sh3 a) (sh3 e)) )))
-
 
 ∃₆ : ∀ {n} → Formula S (suc (suc (suc (suc (suc (suc n)))))) → Formula S n
 ∃₆ φ = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ φ)))))

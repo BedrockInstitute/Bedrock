@@ -109,8 +109,11 @@ private
 
   sh6 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc (suc (suc n))))))
   sh6 i = sh2 (sh4 i)
+```
 
--- perf: the finite stage and the numerals are sealed where they are built
+perf: the finite stage and the numerals are sealed where they are built
+
+```agda
 opaque
   stageS : ℕ → S
   stageS n = LsetS (# n) (numeral-ord n)
@@ -174,8 +177,9 @@ consumer wants, at a pair rather than at a member.
 `relAt-out`{.Agda} 与 `relAt-in`{.Agda} 是这场递归的两条读式，二者一并证出，用的是对数码的普通归纳。每个方向都在前趋处花掉另一个，因为上一个关系只在一致性子句内部被查阅，而 `precedes-map`{.Agda} 就是把它搬过去的那一行：一致性对基底关系是反变的，故从被记录的关系走到 `before`{.Agda}，需要的是反方向的那条读式。`relAt-rep`{.Agda} 与 `relAt-fill`{.Agda} 是消费方想要的推论，落在一个对上、而非落在一个成员上。
 <!--/-->
 
+every pair of members of a finite stage lies in one set of the model
+
 ```agda
--- every pair of members of a finite stage lies in one set of the model
 pairsAt : (n : ℕ)
         → Σ[ D ∈ S ] ((u v : V ℓ) → ⟨ u ∈ finiteStage n ⟩ → ⟨ v ∈ finiteStage n ⟩
                      → ⟨ pr u v ∈ fst D ⟩)
@@ -200,8 +204,11 @@ pairsAt n = d .fst , onPair
     where
     fu = ∈-asFiber {a = u} {b = finiteStage n} hu
     fv = ∈-asFiber {a = v} {b = finiteStage n} hv
+```
 
--- the base relation transferred across the agreement clause
+the base relation transferred across the agreement clause
+
+```agda
 precedes-map : (R R' : V ℓ → V ℓ → Ω) (A x y : V ℓ)
              → ((w z : V ℓ) → ⟨ w ∈ A ⟩ → ⟨ z ∈ A ⟩ → ⟨ R' w z ⟩ → ⟨ R w z ⟩)
              → ⟨ precedes R A x y ⟩ → ⟨ precedes R' A x y ⟩
@@ -213,10 +220,13 @@ precedes-map R R' A x y f = PT.map step
     where
     ag' : Agrees R' A x y z
     ag' w w∈A hR' = ag w w∈A (f w z w∈A z∈A hR')
+```
 
--- the condition the separation carves with: the base relation and the base
--- stage arrive as bound variables pinned to constants, so the step description
--- stands at slots exactly as it was delivered
+the condition the separation carves with: the base relation and the base
+stage arrive as bound variables pinned to constants, so the step description
+stands at slots exactly as it was delivered
+
+```agda
 RelCond : (R A A' : S) → Formula S 1
 RelCond R A A' =
   ∃̇ ( (var zero ≐ con R)

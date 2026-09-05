@@ -42,7 +42,11 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
--- lint-agda: keep (⊤̇ names the defining formula behind `LsetS`)
+```
+
+lint-agda: keep (⊤̇ names the defining formula behind `LsetS`)
+
+```agda
 open import FOL.Manipulation.Bounding using ( BoundedTm; BoundedFo )
 open import FOL.Manipulation.Relativize using ( relativize; module Correct )
 import FOL.Absoluteness

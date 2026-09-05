@@ -74,10 +74,17 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+```
 
--- The V-carrier: the ambient membership lives here.
+The V-carrier: the ambient membership lives here.
+
+```agda
 module SV = hPropStructure 𝒮ᵥ using ()
--- The L-carrier: `InjL` and `IsCardinalL` live here.
+```
+
+The L-carrier: `InjL` and `IsCardinalL` live here.
+
+```agda
 module SL = hPropStructure 𝒮ʟ using (S; _∈ˢ_)
 open SL using ( S )
 
@@ -86,35 +93,44 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
+```
 
--- The pair path, sealed: `cong₂ _,_` at the concrete `Pair` made the
--- enclosing lemma dominate the whole check (measured in the O3 bisect).
+The pair path, sealed: `cong₂ _,_` at the concrete `Pair` made the
+enclosing lemma dominate the whole check (measured in the O3 bisect).
+
+```agda
 opaque
   pair≡ : {A : Type ℓ} {B : Type ℓ} {a a' : A} {b b' : B}
         → a ≡ a' → b ≡ b' → (a , b) ≡ (a' , b')
   pair≡ e1 e2 = λ i → e1 i , e2 i
+```
 
--- An ordinal is an element of L.  Sealed: a proof of a proposition.
+An ordinal is an element of L.  Sealed: a proof of a proposition.
+
+```agda
 opaque
   isL-ord : (x : V ℓ) → IsOrd x → ⟨ isL x ⟩
   isL-ord x ox = Lset→isL (sucV x) (suc-ord ox) x (ord∈Lset-suc x ox)
 
 ordL : (x : V ℓ) → IsOrd x → S
 ordL x ox = x , isL-ord x ox
+```
 
--- =====================================================================
--- SECTION 1.  THE PRODUCT, AS A SET OF L.
---
---   `prodL K` is the set of the ordered pairs of two members of K.  It
---   is carved by separation out of the stage `PairBound` names, with
---   the one-place description "e is the pair of a member and a member".
---   Inside the two bounded binders: b is 0, a is 1, e is 2.
--- =====================================================================
+SECTION 1.  THE PRODUCT, AS A SET OF L.
 
+  `prodL K` is the set of the ordered pairs of two members of K.  It
+  is carved by separation out of the stage `PairBound` names, with
+  the one-place description "e is the pair of a member and a member".
+  Inside the two bounded binders: b is 0, a is 1, e is 2.
+
+```agda
 prodFo : S → Formula S 1
 prodFo K = ∃̇∈ (con K) (∃̇∈ (con K) (prAtL (suc (suc zero)) (suc zero) zero))
+```
 
--- The host reading of membership in the product.
+The host reading of membership in the product.
+
+```agda
 InProd : S → V ℓ → Type (ℓ-suc ℓ)
 InProd K e = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ]
                (⟨ fst a ∈ˢ fst K ⟩ × ⟨ fst b ∈ˢ fst K ⟩
@@ -155,10 +171,13 @@ prodL-in K a b ma mb =
 
 prodL-out : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩ → InProd K (fst e)
 prodL-out K e h = ProdFo.out K e (snd (subst ⟨_⟩ (prodL-spec K e) h))
+```
 
--- The pair of two members, as an element of the product, and its
--- components read back.  The components are unique, so the reading is
--- untruncated when it lands in the presentation of K.
+The pair of two members, as an element of the product, and its
+components read back.  The components are unique, so the reading is
+untruncated when it lands in the presentation of K.
+
+```agda
 prodL-fst : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩
           → Σ[ a ∈ ⟪ fst K ⟫ ] Σ[ b ∈ ⟪ fst K ⟫ ]
               (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b))
@@ -184,18 +203,16 @@ prodL-fst K e h = PT.rec isPropFib
 ## 作为公式的 Gödel 序
 <!--/-->
 
-```agda
--- =====================================================================
--- SECTION 2.  THE GÖDEL ORDER ON PAIRS, IN THE OBJECT LANGUAGE.
---
---   (a, b) is below (c, d) when max(a, b) ∈ max(c, d), or the two
---   maxima agree and (a, b) is lexicographically below (c, d).  The
---   maximum of two ordinals is "b if a ∈ b, else a", which is exactly
---   the host `maxOrd` of src/L/Ordinal/SquareLaw.lagda.md:200.
---   Every connective below reads definitionally; only the pair atoms
---   are transported along `prAtL-adequate`.
--- =====================================================================
+SECTION 2.  THE GÖDEL ORDER ON PAIRS, IN THE OBJECT LANGUAGE.
 
+  (a, b) is below (c, d) when max(a, b) ∈ max(c, d), or the two
+  maxima agree and (a, b) is lexicographically below (c, d).  The
+  maximum of two ordinals is "b if a ∈ b, else a", which is exactly
+  the host `maxOrd` of src/L/Ordinal/SquareLaw.lagda.md:200.
+  Every connective below reads definitionally; only the pair atoms
+  are transported along `prAtL-adequate`.
+
+```agda
 MaxIs : S → S → S → Type (ℓ-suc ℓ)
 MaxIs m a b =
   ∥ (⟨ fst a ∈ˢ fst b ⟩ × (fst m ≡ fst b))
@@ -216,8 +233,11 @@ ordAt m n a b c d =
     (var m ∈̇ var n)
   ∨̇ ((var m ≐ var n)
      ∧̇ ((var a ∈̇ var c) ∨̇ ((var a ≐ var c) ∧̇ (var b ∈̇ var d))))
+```
 
--- Both readings are definitional.
+Both readings are definitional.
+
+```agda
 max-read : ∀ {k} (m a b : Fin k) (γ : S ^ k)
          → ⟨ γ ⊨ maxAt m a b ⟩ ≡ MaxIs (lookup m γ) (lookup a γ) (lookup b γ)
 max-read m a b γ = refl
@@ -227,8 +247,11 @@ ord-read : ∀ {k} (m n a b c d : Fin k) (γ : S ^ k)
          ≡ OrdIs (lookup m γ) (lookup n γ) (lookup a γ) (lookup b γ)
                  (lookup c γ) (lookup d γ)
 ord-read m n a b c d γ = refl
+```
 
--- "p is below q": the host reading, with the six witnesses.
+"p is below q": the host reading, with the six witnesses.
+
+```agda
 Lt : V ℓ → V ℓ → Type (ℓ-suc ℓ)
 Lt p q = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
            ( (p ≡ pr (fst a) (fst b)) × (q ≡ pr (fst c) (fst d))
@@ -250,8 +273,11 @@ private
   i4 = suc (suc (suc (suc zero)))
   i5 : ∀ {k} → Fin (suc (suc (suc (suc (suc (suc k))))))
   i5 = suc (suc (suc (suc (suc zero))))
+```
 
--- Six binders: a is 5, b is 4, c is 3, d is 2, m is 1, n is 0.
+Six binders: a is 5, b is 4, c is 3, d is 2, m is 1, n is 0.
+
+```agda
 opaque
   ltAt : ∀ {k} → Fin k → Fin k → Formula S k
   ltAt p q = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (
@@ -294,14 +320,14 @@ opaque
       , ( transport (sym (atP p γ a b c d m n)) ep
         , ( transport (sym (atQ q γ a b c d m n)) eq'
         , ( hM , ( hN , hO )))) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ })
+```
 
--- =====================================================================
--- SECTION 3.  THE ORDER, AS A SET OF L.
---
---   `godel P` is the set of the pairs (p, q) of two members of P with p
---   below q.  Inside the two bounded binders: q is 0, p is 1, e is 2.
--- =====================================================================
+SECTION 3.  THE ORDER, AS A SET OF L.
 
+  `godel P` is the set of the pairs (p, q) of two members of P with p
+  below q.  Inside the two bounded binders: q is 0, p is 1, e is 2.
+
+```agda
 godelFo : S → Formula S 1
 godelFo P = ∃̇∈ (con P) (∃̇∈ (con P)
   (prAtL (suc (suc zero)) (suc zero) zero ∧̇ ltAt (suc zero) zero))
@@ -380,15 +406,13 @@ godel-out P p q h = PT.rec
 ## 到宿主序的搬运
 <!--/-->
 
-```agda
--- =====================================================================
--- SECTION 4.  AT AN ORDINAL κ, THE FORMULA READS AS THE HOST ORDER.
---
---   The host order `SQ._≺_` on ⟪ κ ⟫ × ⟪ κ ⟫ carries well-foundedness,
---   transitivity and trichotomy (src/L/Ordinal/SquareLaw.lagda.md).
---   `Lt` at two coded pairs is that order, both ways.
--- =====================================================================
+SECTION 4.  AT AN ORDINAL κ, THE FORMULA READS AS THE HOST ORDER.
 
+  The host order `SQ._≺_` on ⟪ κ ⟫ × ⟪ κ ⟫ carries well-foundedness,
+  transitivity and trichotomy (src/L/Ordinal/SquareLaw.lagda.md).
+  `Lt` at two coded pairs is that order, both ways.
+
+```agda
 module Order (κ : S) (oκ : IsOrd (fst κ)) where
 
   K : V ℓ
@@ -534,15 +558,15 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
     ∈sucV-inl (≤→≺ b (maxOrd a b) (maxOrd c d) (SQ.max-spec K oκ a b .snd) h)
   snd∈suc (a , b) (c , d) (inr (e , _)) =
     ≤→∈suc b (maxOrd a b) (maxOrd c d) (SQ.max-spec K oκ a b .snd) e
+```
 
--- =====================================================================
--- SECTION 5.  THE COLLAPSE, INSTANTIATED AT (prodL κ, godel (prodL κ)).
---
---   `OrderType.Code` wants the relation well-founded, transitive and
---   trichotomous on the presentation of the product; all three are
---   read off the host order through the bijection φ below.
--- =====================================================================
+SECTION 5.  THE COLLAPSE, INSTANTIATED AT (prodL κ, godel (prodL κ)).
 
+  `OrderType.Code` wants the relation well-founded, transitive and
+  trichotomous on the presentation of the product; all three are
+  read off the host order through the bijection φ below.
+
+```agda
 module Coll (κ : S) (oκ : IsOrd (fst κ)) where
 
   open Order κ oκ
@@ -610,12 +634,11 @@ module Coll (κ : S) (oκ : IsOrd (fst κ)) where
 ## 三条计数事实
 <!--/-->
 
-```agda
--- =====================================================================
--- SECTION 6.  THREE COUNTING FACTS, AMBIENT.
--- =====================================================================
+SECTION 6.  THREE COUNTING FACTS, AMBIENT.
 
--- An inclusion of two sets, as an injection of the presentations.
+An inclusion of two sets, as an injection of the presentations.
+
+```agda
 incl : (a b : V ℓ) → ((z : V ℓ) → ⟨ z ∈ˢ a ⟩ → ⟨ z ∈ˢ b ⟩) → ⟪ a ⟫ ↪ ⟪ b ⟫
 incl a b sub = ι , ι-inj
   where
@@ -626,15 +649,21 @@ incl a b sub = ι , ι-inj
     (sym (fiber b (sub (⟪ a ⟫↪ m) (member a m)) .snd)
      ∙ cong ⟪ b ⟫↪ e
      ∙ fiber b (sub (⟪ a ⟫↪ n) (member a n)) .snd)
+```
 
--- A coded injection, read back as an ambient one.  Sealed at the
--- definition, as `Carve.incl` is (src/L/InjChain.lagda.md:549-560).
+A coded injection, read back as an ambient one.  Sealed at the
+definition, as `Carve.incl` is (src/L/InjChain.lagda.md:549-560).
+
+```agda
 opaque
   coded→ambient : (a b : S) → Σ[ F ∈ S ] InjCode F a b → ⟪ fst a ⟫ ↪ ⟪ fst b ⟫
   coded→ambient a b (F , sv , dm , ij , ran) = Sm.small , Sm.small-inj
     where module Sm = Small F a b sv dm ij ran
+```
 
--- An infinite ordinal contains ω.
+An infinite ordinal contains ω.
+
+```agda
 ω⊆ : (a : V ℓ) → IsOrd a → (⟨ a ∈ˢ ω ⟩ → Empty.⊥)
    → (z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ a ⟩
 ω⊆ a oa a∉ω z z∈ω = go (ord-tri a oa ω ω-ord)
@@ -643,8 +672,11 @@ opaque
   go (inl h)         = Empty.rec (a∉ω h)
   go (inr (inl e))   = subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω
   go (inr (inr ω∈a)) = oa .fst z∈ω ω∈a
+```
 
--- An infinite ordinal has no coded injection into a finite one.
+An infinite ordinal has no coded injection into a finite one.
+
+```agda
 no-fin : (a b : S) → IsOrd (fst a) → (⟨ fst a ∈ˢ ω ⟩ → Empty.⊥)
        → IsOrd (fst b) → ⟨ fst b ∈ˢ ω ⟩ → InjL a b → Empty.⊥
 no-fin a b oa a∉ω ob b∈ω = PT.rec Empty.isProp⊥ (λ c →
@@ -664,16 +696,14 @@ no-fin a b oa a∉ω ob b∈ω = PT.rec Empty.isProp⊥ (λ c →
 ## 编码单射提升到乘积
 <!--/-->
 
-```agda
--- =====================================================================
--- SECTION 7.  A CODED INJECTION F : a ↪ b LIFTS TO prodL a ↪ prodL b,
--- COORDINATEWISE, AS A DEFINABLE MAP.
---
---   Over (q ∷ p ∷ []), the graph says "p is the pair of x and y, q is
---   the pair of x' and y', and F sends x to x' and y to y'".  Inside
---   the four binders: x is 3, y is 2, x' is 1, y' is 0; p is 5, q is 4.
--- =====================================================================
+SECTION 7.  A CODED INJECTION F : a ↪ b LIFTS TO prodL a ↪ prodL b,
+COORDINATEWISE, AS A DEFINABLE MAP.
 
+  Over (q ∷ p ∷ []), the graph says "p is the pair of x and y, q is
+  the pair of x' and y', and F sends x to x' and y to y'".  Inside
+  the four binders: x is 3, y is 2, x' is 1, y' is 0; p is 5, q is 4.
+
+```agda
 module ProdMap (a b F : S)
                (sv : ⟨ (F ∷ a ∷ []) ⊨ svAt zero ⟩)
                (dm : ⟨ (F ∷ a ∷ []) ⊨ domAt zero (suc zero) ⟩)
@@ -860,17 +890,15 @@ prod-inj a b = PT.rec squash₁
 ## 定理
 <!--/-->
 
-```agda
--- =====================================================================
--- SECTION 8.  THE SHIFT.  At an infinite ordinal m, m + 1 injects into
--- m, internally: x ↦ x + 1 on the finite ordinals, every other member
--- of m to itself, and m to ∅.  A definable map, injective.
---
---   The graph, over (y ∷ x ∷ []): "x ∈ ω and y = x + 1, or x ∉ ω, x ∈ m
---   and y = x, or x = m and y = ∅".  The two decisions at a member,
---   finite or not and in m or the top, are taken once, by `lem`.
--- =====================================================================
+SECTION 8.  THE SHIFT.  At an infinite ordinal m, m + 1 injects into
+m, internally: x ↦ x + 1 on the finite ordinals, every other member
+of m to itself, and m to ∅.  A definable map, injective.
 
+  The graph, over (y ∷ x ∷ []): "x ∈ ω and y = x + 1, or x ∉ ω, x ∈ m
+  and y = x, or x = m and y = ∅".  The two decisions at a member,
+  finite or not and in m or the top, are taken once, by `lem`.
+
+```agda
 module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ → Empty.⊥) where
 
   private
@@ -1020,25 +1048,26 @@ module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ �
   -- THE INJECTION, m + 1 ↪ m.
   injL : InjL (sucʟ mL) mL
   injL = Inj.injL M (λ x h x' h' → inj' x (fin? x) (top? x h) x' (fin? x') (top? x' h'))
+```
 
--- =====================================================================
--- SECTION 9.  THE THEOREM, BY ∈-INDUCTION ON THE L-CARDINAL.
---
---   At an infinite L-cardinal κ, every value of the collapse lies in κ.
---   For a pair p with maximum m: if m is finite, the segment below p
---   sits inside the square of a numeral, and an ordinal that injects
---   into a finite set is a numeral.  If m is infinite, the segment
---   sits inside prodL (sucV m); the collapse at p injects into it by
---   the inverse collapse (a definable map whose graph is the converse
---   of `colTable`); prodL (sucV m) injects into sucV m by the induction
---   hypothesis at the internal cardinal of sucV m; and sucV m ∈ κ by
---   the coded shift.  Were col p outside κ, κ would inject into a
---   member of itself.
--- =====================================================================
+SECTION 9.  THE THEOREM, BY ∈-INDUCTION ON THE L-CARDINAL.
 
--- Two members with the same fiber index are equal.  Stated once at an
--- abstract carrier and sealed: measured at the concrete g = sucV (mV p)
--- inside col-fin, the same equation unfolded ⟪ g ⟫↪ and cost 282 s.
+  At an infinite L-cardinal κ, every value of the collapse lies in κ.
+  For a pair p with maximum m: if m is finite, the segment below p
+  sits inside the square of a numeral, and an ordinal that injects
+  into a finite set is a numeral.  If m is infinite, the segment
+  sits inside prodL (sucV m); the collapse at p injects into it by
+  the inverse collapse (a definable map whose graph is the converse
+  of `colTable`); prodL (sucV m) injects into sucV m by the induction
+  hypothesis at the internal cardinal of sucV m; and sucV m ∈ κ by
+  the coded shift.  Were col p outside κ, κ would inject into a
+  member of itself.
+
+Two members with the same fiber index are equal.  Stated once at an
+abstract carrier and sealed: measured at the concrete g = sucV (mV p)
+inside col-fin, the same equation unfolded ⟪ g ⟫↪ and cost 282 s.
+
+```agda
 opaque
   fiber-inj : (g : V ℓ) {x y : V ℓ} (mx : ⟨ x ∈ˢ g ⟩) (my : ⟨ y ∈ˢ g ⟩)
             → fiber g mx .fst ≡ fiber g my .fst → x ≡ y
@@ -1199,7 +1228,6 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
     g∈ω : ⟨ g ∈ˢ ω ⟩
     g∈ω = ω-limit (mV p) m∈ω
 
-
     refute : ((z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ C.col p ⟩) → Empty.⊥
     refute sub = finite-excl-ω g og g∈ω f f-inj
       where
@@ -1322,12 +1350,12 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
     ot⊆a : (z : V ℓ) → ⟨ z ∈ˢ fst C.otL ⟩ → ⟨ z ∈ˢ a ⟩
     ot⊆a z hz = PT.rec (snd (z ∈ˢ a))
       (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ a ⟩) e (colIn b) }) (C.otL-out z hz)
+```
 
--- =====================================================================
--- THE THEOREM.  At an L-cardinal κ above ω, the product of κ with
--- itself injects into κ, inside L.
--- =====================================================================
+THE THEOREM.  At an L-cardinal κ above ω, the product of κ with
+itself injects into κ, inside L.
 
+```agda
 square-law-L :
     (κ : S) → IsOrd (fst κ) → IsCardinalL κ → ⟨ ω ∈ˢ fst κ ⟩
   → InjL (prodL κ) κ

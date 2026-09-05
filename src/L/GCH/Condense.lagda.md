@@ -46,15 +46,15 @@ open hPropStructure 𝒮ᵥ
 
 module SemVᵃ = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open SemVᵃ using ( _^_ )
+```
 
--- =====================================================================
--- SECTION 1.  RENAMING, AT THE Δ₀ CERTIFICATE AND AT THE AMBIENT
--- READING.  The level formula has its value slot first and its
--- witness slot last; `hull-closed` frees the LAST slot of a one-slot
--- formula, so the slot that must come out of the hull is moved to
--- the end by a renaming.
--- =====================================================================
+SECTION 1.  RENAMING, AT THE Δ₀ CERTIFICATE AND AT THE AMBIENT
+READING.  The level formula has its value slot first and its
+witness slot last; `hull-closed` frees the LAST slot of a one-slot
+formula, so the slot that must come out of the hull is moved to
+the end by a renaming.
 
+```agda
 Δ₀-rename : {ℓc : Level} {K : Type ℓc} {n m : ℕ} (ρ : Fin n → Fin m)
             {φ : Formula K n} → Δ₀ φ → Δ₀ (renameFo ρ φ)
 Δ₀-rename ρ δ-∈ = δ-∈
@@ -67,14 +67,20 @@ open SemVᵃ using ( _^_ )
 Δ₀-rename ρ δ-⊥ = δ-⊥
 Δ₀-rename ρ (δ-∀∈ d) = δ-∀∈ (Δ₀-rename (liftρ ρ) d)
 Δ₀-rename ρ (δ-∃∈ d) = δ-∃∈ (Δ₀-rename (liftρ ρ) d)
+```
 
--- The ambient reading is `Sat` at the empty constant domain, the same
--- reading `_⊨ₚ_` names.
+The ambient reading is `Sat` at the empty constant domain, the same
+reading `_⊨ₚ_` names.
+
+```agda
 module RS = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ {K = ⊥* {ℓ-suc ℓ}}
                (λ b → Empty.rec* b) using (Agrees; ⊨-rename)
+```
 
--- SHAPE A: the value slot last.  The inner environment reads
--- (p ∷ z ∷ a ∷ []).
+SHAPE A: the value slot last.  The inner environment reads
+(p ∷ z ∷ a ∷ []).
+
+```agda
 ρa : Fin 3 → Fin 3
 ρa zero = suc (suc zero)
 ρa (suc zero) = zero
@@ -94,9 +100,12 @@ agA p z a (suc (suc zero)) = refl
 readA : (p z a : S)
       → ((p ∷ z ∷ a ∷ []) ⊨ₚ levelA) ≡ ((a ∷ p ∷ z ∷ []) ⊨ₚ levelFo)
 readA p z a = RS.⊨-rename ρa levelFo (p ∷ z ∷ a ∷ []) (a ∷ p ∷ z ∷ []) (agA p z a)
+```
 
--- SHAPE P: the parameter slot last.  The inner environment reads
--- (a ∷ z ∷ p ∷ []).
+SHAPE P: the parameter slot last.  The inner environment reads
+(a ∷ z ∷ p ∷ []).
+
+```agda
 ρp : Fin 3 → Fin 3
 ρp zero = zero
 ρp (suc zero) = suc (suc zero)
@@ -116,20 +125,23 @@ agP a z p (suc (suc zero)) = refl
 readP : (a z p : S)
       → ((a ∷ z ∷ p ∷ []) ⊨ₚ levelP) ≡ ((a ∷ p ∷ z ∷ []) ⊨ₚ levelFo)
 readP a z p = RS.⊨-rename ρp levelFo (a ∷ z ∷ p ∷ []) (a ∷ p ∷ z ∷ []) (agP a z p)
+```
 
--- The parameter conjunct of the level formula, read off.
+The parameter conjunct of the level formula, read off.
+
+```agda
 isOrd-at-p-out : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ₚ isOrd-at-p ⟩ → IsOrd p
 isOrd-at-p-out a p z h =
     ( λ {x₁} {y} y∈x₁ x₁∈p → h .fst x₁ x₁∈p y y∈x₁ )
   , ( λ b b∈p {x₁} {y} y∈x₁ x₁∈b → h .snd b b∈p x₁ x₁∈b y y∈x₁ )
+```
 
--- =====================================================================
--- SECTION 2.  THE TWO ONE-PIN SHAPES.  Two existentials bind the first
--- two slots; one conjunct pins the parameter to a constant (shape A)
--- or asks the value to hold a constant (shape P); the last slot is
--- free, and `hull-closed` produces it.
--- =====================================================================
+SECTION 2.  THE TWO ONE-PIN SHAPES.  Two existentials bind the first
+two slots; one conjunct pins the parameter to a constant (shape A)
+or asks the value to hold a constant (shape P); the last slot is
+free, and `hull-closed` produces it.
 
+```agda
 pinP : {ℓc : Level} {K : Type ℓc} → Formula K 3 → K → Formula K 1
 pinP ψ c = ∃̇ (∃̇ (ψ ∧̇ (var zero ≐ con c)))
 
@@ -203,17 +215,17 @@ module Pin (U : S) (Utr : isTrans U) where
       , subst ⟨_⟩ (readP (fst x0) (fst x1) (fst a))
           (subst ⟨_⟩ (Un.read Δ₀-levelP (x0 ∷ x1 ∷ a ∷ [])) hψ)
       , m
+```
 
--- =====================================================================
--- SECTION 3.  THE TRANSFER.  One hull stage at `HullStage`'s telescope,
--- elementary (`elem`), superadequate (`sup`), and with its collapse
--- image inside L (`pixL`).  `pixL` is NOT derived here: the tree's
--- `pix-in-L` (src/L/GCH/Stages.lagda.md) takes `Site.Cover`, which is
--- `cover` itself, and `level-sound` (src/L/GCH/HierDescribe.lagda.md) reads
--- its three slots in L, so the collapse values must be known in L
--- before the level formula is sound at them.
--- =====================================================================
+SECTION 3.  THE TRANSFER.  One hull stage at `HullStage`'s telescope,
+elementary (`elem`), superadequate (`sup`), and with its collapse
+image inside L (`pixL`).  `pixL` is NOT derived here: the tree's
+`pix-in-L` (src/L/GCH/Stages.lagda.md) takes `Site.Cover`, which is
+`cover` itself, and `level-sound` (src/L/GCH/HierDescribe.lagda.md) reads
+its three slots in L, so the collapse values must be known in L
+before the level formula is sound at them.
 
+```agda
 module Condense (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)

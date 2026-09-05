@@ -62,16 +62,22 @@ open hPropStructure 𝒮ᵥ
 
 module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ using ( _^_; module At )
 open SemV using ( _^_ )
+```
 
--- The 𝒮ʟ carrier, for the syntax of the witness slot, and the
--- constant count at it.
+The 𝒮ʟ carrier, for the syntax of the witness slot, and the
+constant count at it.
+
+```agda
 module CS = hPropStructure 𝒮ʟ using ( S )
 module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S using ( erase; erase-inv )
 
 module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → Empty.rec* b)
   using ( Δ₀-small )
+```
 
--- J tower instantiates the same core (DD4)
+J tower instantiates the same core (DD4)
+
+```agda
 module TermAlgebra (𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ)))
                    (toSet : ZFStructure.S 𝒮 → V ℓ)
                    (wo : SWO (ZFStructure.S 𝒮))
@@ -617,8 +623,11 @@ module IsoInv (M : S) (PM : S)
                       (subst (λ e → ⟨ e ⊨ᵖᵐ mapFo g ψ ⟩)
                         (sym (cong (λ z → z ∷ map g δ) gq≡p)) hp)
           in ∣ q , q∈t , hψ ∣₁
+```
 
--- The collapse instance: M = the carrier X, PM = the collapse image piX.
+The collapse instance: M = the carrier X, PM = the collapse image piX.
+
+```agda
 module CollapseIso (X : S) (Xext : isExt X) where
   module C = Collapse X using ( module InjExt; π; πX; πX-intro; πX-member )
   module CI = C.InjExt Xext using ( iso; π-inj )
@@ -654,22 +663,21 @@ module CollapseIso (X : S) (Xext : isExt X) where
 
 ## The elementarity of the hull
 
-```agda
--- =====================================================================
--- WALL 2, PLACED ([LJ-1.53] probe A).  The parameter-to-code
--- relabelling inside TV/ElemDown.  The generic close operation that
--- replaces the top parameters by their codes as constants, its
--- satisfaction adequacy, and the TarskiVaught instance at every arity
--- assembled from hull-closed through the two halves.  AtM.TV-thm
--- turns the instance into Elementary, hence ElemDown.
--- =====================================================================
+WALL 2, PLACED ([LJ-1.53] probe A).  The parameter-to-code
+relabelling inside TV/ElemDown.  The generic close operation that
+replaces the top parameters by their codes as constants, its
+satisfaction adequacy, and the TarskiVaught instance at every arity
+assembled from hull-closed through the two halves.  AtM.TV-thm
+turns the instance into Elementary, hence ElemDown.
 
--- The generic close operation (syntax): a formula of arity d + n has
--- its top n variables replaced by the constants δ, the
--- parameter-as-constant spelling.  The first d variables (the binders
--- already crossed) stay variables.  Both consumers are one recursion:
--- close keeps the witness variable free (d = 1), closeAll closes every
--- top variable (d = 0).
+The generic close operation (syntax): a formula of arity d + n has
+its top n variables replaced by the constants δ, the
+parameter-as-constant spelling.  The first d variables (the binders
+already crossed) stay variables.  Both consumers are one recursion:
+close keeps the witness variable free (d = 1), closeAll closes every
+top variable (d = 0).
+
+```agda
 module CloseSyntax where
 
   closeTmAt : {K : Type (ℓ-suc ℓ)} (d n : ℕ) (δ : Vec K n)
@@ -753,9 +761,12 @@ module CloseSyntax where
     (mapTm-close d n δ g t) (mapFo-close (suc d) n δ g ψ)
   mapFo-close d n δ g (∃̇∈ t ψ) = cong₂ ∃̇∈
     (mapTm-close d n δ g t) (mapFo-close (suc d) n δ g ψ)
+```
 
--- The adequacy of the close operation (semantics): the original
--- formula at the environment γ ++ map ι δ is the closed formula at γ.
+The adequacy of the close operation (semantics): the original
+formula at the environment γ ++ map ι δ is the closed formula at γ.
+
+```agda
 module CloseSem {𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ))}
                 {K : Type (ℓ-suc ℓ)} (ι : K → ZFStructure.S 𝒮) where
 
@@ -826,10 +837,13 @@ module CloseSem {𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ))}
   ⊨-closeAll : (n : ℕ) (φ : Formula K n) (δ : Vec K n)
              → map ι δ ⊨ φ ≡ [] ⊨ Cl.closeAll n δ φ
   ⊨-closeAll n φ δ = ⊨-close 0 n φ δ []
+```
 
--- The hull instance: the codes of the constants of one formula, read
--- off the hull membership at each call, then the TarskiVaught instance
--- at every arity, and ElemDown.
+The hull instance: the codes of the constants of one formula, read
+off the hull membership at each call, then the TarskiVaught instance
+at every arity, and ElemDown.
+
+```agda
 module HullElemDown (α : S) (ordα : IsOrd α)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩) (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
 
@@ -957,26 +971,33 @@ module HullElemDown (α : S) (ordα : IsOrd α)
 
 ## The ambient parameter-free reading
 
+The ambient reading of the parameter-free formulas: the full
+hierarchy semantics at the empty constant domain.
+
 ```agda
--- The ambient reading of the parameter-free formulas: the full
--- hierarchy semantics at the empty constant domain.
 module AtP = SemV.At (⊥* {ℓ-suc ℓ}) (λ b → Empty.rec* b) using ( _⊨_ )
 
 _⊨ₚ_ : {n : ℕ} → S ^ n → Formula (⊥* {ℓ-suc ℓ}) n → hProp (ℓ-suc ℓ)
 _⊨ₚ_ = AtP._⊨_
+```
 
--- A parameter-free formula is FIXED by every relabelling: `embed` has
--- already sent the empty constant domain everywhere, and there is
--- nothing left for `f` to move.
+A parameter-free formula is FIXED by every relabelling: `embed` has
+already sent the empty constant domain everywhere, and there is
+nothing left for `f` to move.
+
+```agda
 embed-map : {ℓ₁ ℓ₂ : Level} {K : Type ℓ₁} {K' : Type ℓ₂} (f : K → K')
             {n : ℕ} (φ : Formula (⊥* {ℓ-suc ℓ}) n)
           → mapFo f (embed φ) ≡ embed φ
 embed-map f φ =
     mapFo-comp Empty.rec* f φ
   ∙ cong (λ h → mapFo h φ) (funExt (λ b → Empty.rec* b))
+```
 
--- Ordinality, as a one-slot Δ₀ formula.  Sealed: its readers are the
--- two below, and every other consumer reads it through them.
+Ordinality, as a one-slot Δ₀ formula.  Sealed: its readers are the
+two below, and every other consumer reads it through them.
+
+```agda
 opaque
   isOrdAt : Formula (⊥* {ℓ-suc ℓ}) 1
   isOrdAt =
@@ -1001,9 +1022,12 @@ module Amb where
     isOrdAt-in x o =
         ( λ a a∈x b hb → o .fst {a} {b} hb a∈x )
       , ( λ a a∈x b b∈a c hc → o .snd a a∈x {b} {c} hc b∈a )
+```
 
--- Ordinality of the parameter, as a 3-slot conjunct, p at slot 1.  Not
--- sealed: `L.GCH.Condense` and `L.GCH.Complete` read its shape.
+Ordinality of the parameter, as a 3-slot conjunct, p at slot 1.  Not
+sealed: `L.GCH.Condense` and `L.GCH.Complete` read its shape.
+
+```agda
 isOrd-at-p : Formula (⊥* {ℓ-suc ℓ}) 3
 isOrd-at-p =
     (∀̇∈ (var (suc zero))
@@ -1014,9 +1038,12 @@ isOrd-at-p =
 
 Δ₀-isOrd-at-p : Δ₀ isOrd-at-p
 Δ₀-isOrd-at-p = δ-∧ (δ-∀∈ (δ-∀∈ δ-∈)) (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
+```
 
--- The erase of a constant-free formula carries the Delta-0 witness:
--- erase is a pure syntactic erasure, so the certificate recurses.
+The erase of a constant-free formula carries the Delta-0 witness:
+erase is a pure syntactic erasure, so the certificate recurses.
+
+```agda
 erase-Δ₀ : {m : ℕ} (φ : Formula CS.S m) (p : countFo φ ≡ 0)
          → Δ₀ φ → Δ₀ (Cnt.erase φ p)
 erase-Δ₀ (t ∈̇ u) p δ-∈ = δ-∈
@@ -1031,13 +1058,13 @@ erase-Δ₀ (∀̇∈ t φ) p (δ-∀∈ c) = δ-∀∈ (erase-Δ₀ φ _ c)
 erase-Δ₀ (∃̇∈ t φ) p (δ-∃∈ c) = δ-∃∈ (erase-Δ₀ φ _ c)
 erase-Δ₀ (∃̇ φ) p ()
 erase-Δ₀ (∀̇ φ) p ()
+```
 
--- =====================================================================
--- THE LEFTOVER EQUATION.  [LJ-1.686] Probe686.agda:34-55, module `At`
--- renamed `EmbedAt`.  `mapFo val (mapFo slide φ) ≡ embed φ` by
--- mapFo-comp and uniqueness of maps out of ⊥*.
--- =====================================================================
+THE LEFTOVER EQUATION.  [LJ-1.686] Probe686.agda:34-55, module `At`
+renamed `EmbedAt`.  `mapFo val (mapFo slide φ) ≡ embed φ` by
+mapFo-comp and uniqueness of maps out of ⊥*.
 
+```agda
 lemma : {ℓc ℓd : Level} {K : Type ℓc} {K' : Type ℓd} {n : ℕ}
         (φ : Formula (⊥* {ℓ-suc ℓ}) n)
         (slide : ⊥* {ℓ-suc ℓ} → K)
@@ -1050,16 +1077,17 @@ lemma φ slide val =
 
 ## The hull stage and its condensation
 
+The hull of X at the stage Lset λ, its collapse, and the condensation
+theorem at this one instance (D-30: the consumer's shape, not the
+general theory).  The two transfer hypotheses are Devlin's (h) and
+(n)-(p): the collapse is closed under the level construction at its
+own ordinals, and every hull member is covered by a level below the
+collapse's ordinals.  [LJ-1.48] measured the skeleton around them
+(elementarity, iso-invariance, the level-hood certificate) at
+0.0097 s per line; the level-hood instantiation at the hull is the
+priced residue.
+
 ```agda
--- The hull of X at the stage Lset λ, its collapse, and the condensation
--- theorem at this one instance (D-30: the consumer's shape, not the
--- general theory).  The two transfer hypotheses are Devlin's (h) and
--- (n)-(p): the collapse is closed under the level construction at its
--- own ordinals, and every hull member is covered by a level below the
--- collapse's ordinals.  [LJ-1.48] measured the skeleton around them
--- (elementarity, iso-invariance, the level-hood certificate) at
--- 0.0097 s per line; the level-hood instantiation at the hull is the
--- priced residue.
 module HullStage (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩) (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
@@ -1196,10 +1224,13 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
 
     condenses : Σ[ γ ∈ S ] (IsOrd γ × (C.πX ≡ Lset γ))
     condenses = β , β-isOrd , ext
+```
 
--- The generator Lset α ∪ {x} and its stage facts: x is a member, the
--- generator lies in the stage, the generator is transitive when x is a
--- subset of the stage, and the empty set lies in the limit index.
+The generator Lset α ∪ {x} and its stage facts: x is a member, the
+generator lies in the stage, the generator is transitive when x is a
+subset of the stage, and the empty set lies in the limit index.
+
+```agda
 module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
   (α∈λ : ⟨ α ∈ˢ lam ⟩) (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
   (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥) where
@@ -1277,19 +1308,20 @@ module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
   ∅∈λ : ⟨ ∅ ∈ˢ lam ⟩
   ∅∈λ = subst (λ w → ⟨ w ∈ˢ lam ⟩) (rank-fix ∅ ∅-ord)
     (rank-Lset lam ordλ ∅ ∅∈Lλ)
+```
 
--- =====================================================================
--- THE HULL IS EXTENSIONAL (the `Mext` hypothesis of the collapse iso).
--- Two hull members that agree on the hull's memberships differ nowhere:
--- a global difference witness z ∈ x \ y would satisfy the difference
--- formula "v ∈ x ∧ v ∉ y" over the codes of x and y in the stage, so
--- hull-closed produces a hull member with the same property, and the
--- agreement hypothesis refutes it.  The codes come from the truncated
--- hull membership, eliminated into the proposition x ≡ y; no least-code
--- selection is needed.  The classical steps are the two directions of
--- extensionality contrapositive and the difference-witness extraction,
--- each one LEM on a proposition.
--- =====================================================================
+THE HULL IS EXTENSIONAL (the `Mext` hypothesis of the collapse iso).
+Two hull members that agree on the hull's memberships differ nowhere:
+a global difference witness z ∈ x \ y would satisfy the difference
+formula "v ∈ x ∧ v ∉ y" over the codes of x and y in the stage, so
+hull-closed produces a hull member with the same property, and the
+agreement hypothesis refutes it.  The codes come from the truncated
+hull membership, eliminated into the proposition x ≡ y; no least-code
+selection is needed.  The classical steps are the two directions of
+extensionality contrapositive and the difference-witness extraction,
+each one LEM on a proposition.
+
+```agda
 module HullExt (α : S) (ordα : IsOrd α)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩)
   (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
@@ -1418,15 +1450,14 @@ module HullExt (α : S) (ordα : IsOrd α)
 
 ## The carry across the collapse
 
-```agda
--- =====================================================================
--- THE GENERIC UNPACK.  [LJ-1.680] Probe680.agda:48-146.  Two ∃̇ and
--- two ≐ unpacked at a generic transitive carrier, then abs₀ at a
--- generic 3-slot Δ₀ formula.
--- =====================================================================
+THE GENERIC UNPACK.  [LJ-1.680] Probe680.agda:48-146.  Two ∃̇ and
+two ≐ unpacked at a generic transitive carrier, then abs₀ at a
+generic 3-slot Δ₀ formula.
 
--- Two ∃̇ bind value then parameter; two ≐ pin those binders to
--- constants; the remaining free slot is the witness.
+Two ∃̇ bind value then parameter; two ≐ pin those binders to
+constants; the remaining free slot is the witness.
+
+```agda
 pin₃ : {ℓc : Level} {K : Type ℓc} → Formula K 3 → K → K → Formula K 1
 pin₃ φ ca cp =
   ∃̇ (∃̇ (φ ∧̇ (var zero ≐ con ca) ∧̇ (var (suc zero) ≐ con cp)))
@@ -1501,14 +1532,14 @@ module Unpack (U : S) (Utr : isTrans U) where
           (subst ⟨_⟩ (read dφ (y ∷ x ∷ a ∷ [])) hφ))
 
   convert-at-true = convert-generic {φ = ⊤̇} δ-⊤
+```
 
--- =====================================================================
--- THE HULL CONVERT.  [LJ-1.689] Probe689.agda:37-71, module `Convert`
--- renamed `HullConvert`.  From hull-closed's hypothesis form
--- `mapFo val (inBound ca cp)` onto the generic unpack, taking the
--- equation `mapFo val (mapFo slide φ) ≡ embed φ` as a hypothesis.
--- =====================================================================
+THE HULL CONVERT.  [LJ-1.689] Probe689.agda:37-71, module `Convert`
+renamed `HullConvert`.  From hull-closed's hypothesis form
+`mapFo val (inBound ca cp)` onto the generic unpack, taking the
+equation `mapFo val (mapFo slide φ) ≡ embed φ` as a hypothesis.
 
+```agda
 module HullConvert (U : S) (Utr : isTrans U) where
   open Unpack U Utr hiding ( convert-generic; convert-at-true )
 

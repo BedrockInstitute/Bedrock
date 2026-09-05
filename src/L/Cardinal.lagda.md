@@ -42,22 +42,25 @@ open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- The ambient injection type, as the square-law chain carries it.
+The ambient injection type, as the square-law chain carries it.
+
+```agda
 _↪_ : Type ℓ → Type ℓ → Type ℓ
 X ↪ Y = Σ[ f ∈ (X → Y) ] ((x y : X) → f x ≡ f y → x ≡ y)
+```
 
--- =====================================================================
--- A1.  The least cardinal, in the ambient-injection form.
---
---   The ambient square-law chain's `LeastCardInj` restated over the
---   L-carrier: α is an L-element, the per-site hypothesis is the
---   ordinal certificate `oα`, and the crossing `up` lifts a member of
---   the tower at `sucV (fst α)` into the L-carrier.  The lift is where
---   the three delivered L-lemmas surface: `ord∈Lset-suc` and `Lset→isL`
---   give level-hood of the stage, `isL-trans` pushes it down.
--- =====================================================================
+A1.  The least cardinal, in the ambient-injection form.
 
+  The ambient square-law chain's `LeastCardInj` restated over the
+  L-carrier: α is an L-element, the per-site hypothesis is the
+  ordinal certificate `oα`, and the crossing `up` lifts a member of
+  the tower at `sucV (fst α)` into the L-carrier.  The lift is where
+  the three delivered L-lemmas surface: `ord∈Lset-suc` and `Lset→isL`
+  give level-hood of the stage, `isL-trans` pushes it down.
+
+```agda
 module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
 
   Inj : S → Type ℓ
@@ -152,14 +155,14 @@ module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
     b<γ : SWO._<∙_ w b γ-card
     b<γ = transport (λ i → sym (w-lt b γ-card) i)
             (subst (λ z → ⟨ z ∈ˢ fst κ ⟩) (sym bδ) δ∈κ)
+```
 
--- =====================================================================
--- The stage-bound device shared by the two internal faces (A3 and A4):
--- for an L-element, the ordinal β that `stageBound` returns, its
--- ordinal certificate, and the crossing `up` that lifts a member of
--- `Lset β` to an L-element.
--- =====================================================================
+The stage-bound device shared by the two internal faces (A3 and A4):
+for an L-element, the ordinal β that `stageBound` returns, its
+ordinal certificate, and the crossing `up` that lifts a member of
+`Lset β` to an L-element.
 
+```agda
 module SiteBound (a : S) where
 
   β : V ℓ
@@ -170,15 +173,15 @@ module SiteBound (a : S) where
 
   up : Mem (Lset β) → S
   up (x , m) = x , Lset→isL β oβ x m
+```
 
--- =====================================================================
--- A3.  The canonical selection, β supplied by `stageBound`.
---
---   The selection `leastOf (orderAt β oβ)` over the bare graph atoms
---   (A2's `svAt`, `domAt`, `injAt`), with β and oβ PRODUCED rather than
---   assumed.  The module has no β hypothesis.
--- =====================================================================
+A3.  The canonical selection, β supplied by `stageBound`.
 
+  The selection `leastOf (orderAt β oβ)` over the bare graph atoms
+  (A2's `svAt`, `domAt`, `injAt`), with β and oβ PRODUCED rather than
+  assumed.  The module has no β hypothesis.
+
+```agda
 module Canonical (a : S) (D : S) where
 
   open SiteBound a
@@ -208,18 +211,18 @@ module Canonical (a : S) (D : S) where
 
     ij : ⟨ (F₀ ∷ D ∷ []) ⊨ injAt zero ⟩
     ij = snd (snd good)
+```
 
--- =====================================================================
--- A4.  The internal cardinal, and the internal least cardinal.
---
---   `InjCode` is A2's three conjuncts plus the value-in-b clause, the
---   four pieces A2's `Small` readback consumes.  `IsCardinalL` is the
---   internal cardinal: no smaller L-element admits a code.  The trophy
---   statement names both; the internal least-of selects δ by the sealed
---   `orderAt`, with the truncated L-element existential inside the
---   predicate.
--- =====================================================================
+A4.  The internal cardinal, and the internal least cardinal.
 
+  `InjCode` is A2's three conjuncts plus the value-in-b clause, the
+  four pieces A2's `Small` readback consumes.  `IsCardinalL` is the
+  internal cardinal: no smaller L-element admits a code.  The trophy
+  statement names both; the internal least-of selects δ by the sealed
+  `orderAt`, with the truncated L-element existential inside the
+  predicate.
+
+```agda
 InjCode : S → S → S → Type (ℓ-suc ℓ)
 InjCode F a b =
     ⟨ (F ∷ a ∷ []) ⊨ svAt zero ⟩

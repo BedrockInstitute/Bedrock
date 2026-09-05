@@ -86,9 +86,12 @@ open SWO limitOrder using () renaming ( _<∙_ to _≺ˡ_ )
 private
   sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
   sh2 i = suc (suc i)
+```
 
--- perf: the tower at a numeral is sealed where it is built, as in the birth
--- description of the previous chapter (measured there at 178 s against 2 s)
+perf: the tower at a numeral is sealed where it is built, as in the birth
+description of the previous chapter (measured there at 178 s against 2 s)
+
+```agda
 opaque
   towerS : ℕ → S
   towerS k = LsetS (# k) (numeral-ord k)
@@ -268,9 +271,10 @@ chapter measured: it is the pair, not the set inside it, that reaches the slot.
 两个方向只差一步记账。元语言在层级的诸集合上量化，对象语言在模型的诸元素上量化，故每一个过界的见证都得取得或卸下它的可构造性证明，而那份证明是有的，因为 `L` 的集合的成员就是 `L` 的元素。携带它的那个对在造出之处被**封印**，理由上一章已实测过：抵达槽位的是那个对，而不是它里面的集合。
 <!--/-->
 
+perf: a member of a set of the model, paired with the constructibility proof
+it inherits, is sealed where it is built (the previous chapter's measurement)
+
 ```agda
--- perf: a member of a set of the model, paired with the constructibility proof
--- it inherits, is sealed where it is built (the previous chapter's measurement)
 opaque
   memS : (A : S) (z : V ℓ) → ⟨ z ∈ fst A ⟩ → S
   memS A z h = z , isL-trans {x = fst A} {y = z} h (snd A)
@@ -400,8 +404,9 @@ other two cases have absurdity for a goal, where the truncation may be opened.
 反着读那个析取要花一条引理，而它正是序之表那一章早已为每一个严格良序一举隔离出来的那一条：对象析取是截断的，元层面的比较不是，故先请出三歧，严格那一情形原封不动交出比较，另外两种情形的目标是荒谬，而截断可以在那里打开。
 <!--/-->
 
+perf: the limit stage and its members, sealed where they are built
+
 ```agda
--- perf: the limit stage and its members, sealed where they are built
 opaque
   limitEl : Limit → S
   limitEl a = fst a , Lset→isL ω ω-ord (fst a) (snd a)

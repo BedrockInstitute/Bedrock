@@ -109,9 +109,10 @@ a later reader of this description should not have to re-measure.
 那条公式被封印，依的是常设定律：读在常元上的描述要在被造出之处封印。但在此处这条定律是免费的、而非决定性的：封印与不封印都检查 2.3 秒，本章据实说出这一点，而不去借用别处的数字。理由值得写一行，因为它说清了此前那些实测究竟在测什么。那些描述内部装着已编码的语法，每次在具体环境上的满足关系都要把一整条层级描述正规化；而这一条装的是四条原子与一次应用，没有什么大东西可展开。封印仍然保留，因为它分文不花，也因为日后读这条描述的人不该被迫重测一遍。
 <!--/-->
 
+perf: sealed by the standing law (a description read at constants), though
+measured here at 2.3 s either way: this description names no coded syntax
+
 ```agda
--- perf: sealed by the standing law (a description read at constants), though
--- measured here at 2.3 s either way: this description names no coded syntax
 opaque
   Pick : S → S → Formula S 1
   Pick c r =

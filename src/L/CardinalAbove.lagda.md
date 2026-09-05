@@ -2,15 +2,17 @@
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
+```
 
--- One ordinal L-cardinal of L, above every L-cardinal.
---
--- `[LJ-1.526]` delivered `reduction : CardAboveL → SuccCardExists`
--- (agents/tasks/LJ-1-526/Probe526.agda:285-292).  `CardAboveL` is the
--- one input that reduction still wants.
---
--- Nothing is postulated.
+One ordinal L-cardinal of L, above every L-cardinal.
 
+`[LJ-1.526]` delivered `reduction : CardAboveL → SuccCardExists`
+(agents/tasks/LJ-1-526/Probe526.agda:285-292).  `CardAboveL` is the
+one input that reduction still wants.
+
+Nothing is postulated.
+
+```agda
 open import Base.Prelude
 open import Base.Truth
 open import Base.Classical using ( LEM; lowerLEM )
@@ -54,10 +56,13 @@ module SV = hPropStructure 𝒮ᵥ
 module SL = hPropStructure 𝒮ʟ
 
 open SV using ( _∈ˢ_ )
+```
 
--- The ambient cardinal at `L.Cardinal`'s injection type, and the two
--- injection facts the Hartogs argument reads: injections compose, and
--- a member of an ordinal embeds into it.
+The ambient cardinal at `L.Cardinal`'s injection type, and the two
+injection facts the Hartogs argument reads: injections compose, and
+a member of an ordinal embeds into it.
+
+```agda
 IsCardinal : SV.S → Type (ℓ-suc ℓ)
 IsCardinal κ = (δ : SV.S) → ⟨ δ ∈ˢ κ ⟩ → (⟪ κ ⟫ ↪ ⟪ δ ⟫ → Empty.⊥)
 
@@ -75,61 +80,62 @@ ord-emb a b ob a∈b = f , inj
     (sym (fiber b {x = ⟪ a ⟫↪ m} (ob .fst (member a m) a∈b) .snd)
       ∙ cong (⟪ b ⟫↪) e
       ∙ fiber b {x = ⟪ a ⟫↪ n} (ob .fst (member a n) a∈b) .snd)
+```
 
--- =====================================================================
--- SECTION 1.  THE OBLIGATION, at `[LJ-1.526]`'s own binding
--- (agents/tasks/LJ-1-526/Probe526.agda:178-183).
--- =====================================================================
+SECTION 1.  THE OBLIGATION, at `[LJ-1.526]`'s own binding
+(agents/tasks/LJ-1-526/Probe526.agda:178-183).
 
--- The type, named apart so that the reductions can quantify over it.
--- THE OBLIGATION ITSELF IS THE TERM `CardAboveL` AT THE FOOT OF THIS
--- FILE, and its type is written out there in the brief's own words.
+The type, named apart so that the reductions can quantify over it.
+THE OBLIGATION ITSELF IS THE TERM `CardAboveL` AT THE FOOT OF THIS
+FILE, and its type is written out there in the brief's own words.
+
+```agda
 CardAboveLᵀ : Type (ℓ-suc ℓ)
 CardAboveLᵀ =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
   → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
   → ∥ Σ[ θ ∈ SL.S ]
        (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩) ∥₁
+```
 
--- =====================================================================
--- SECTION 2.  EVERY ORDINAL IS AN L-ELEMENT, AND IT IS ONE LINE.
---
---   `[LJ-1.526]`'s report lists "the construction must produce an
---   L-ELEMENT θ, so whatever set is collected must be shown
---   constructible" as one of the two things it could not price
---   (agents/tasks/LJ-1-526/lj-1.526-report.md, `## What CardAboveL is`).
---
---   FOR AN ORDINAL THAT DEMAND IS FREE.  `ord∈Lset-suc`
---   (src/L/Ordinal/Stages.lagda.md:434) puts an ordinal at the stage
---   after itself, and `Lset→isL` (src/L/Constructible.lagda.md:395)
---   reads membership of a stage as level-hood.  The pair is already
---   written inside `LeastCardInjL` (src/L/Cardinal.lagda.md:70-74) for
---   ONE ordinal; nothing in the tree names it generally.
--- =====================================================================
+SECTION 2.  EVERY ORDINAL IS AN L-ELEMENT, AND IT IS ONE LINE.
 
+  `[LJ-1.526]`'s report lists "the construction must produce an
+  L-ELEMENT θ, so whatever set is collected must be shown
+  constructible" as one of the two things it could not price
+  (agents/tasks/LJ-1-526/lj-1.526-report.md, `## What CardAboveL is`).
+
+  FOR AN ORDINAL THAT DEMAND IS FREE.  `ord∈Lset-suc`
+  (src/L/Ordinal/Stages.lagda.md:434) puts an ordinal at the stage
+  after itself, and `Lset→isL` (src/L/Constructible.lagda.md:395)
+  reads membership of a stage as level-hood.  The pair is already
+  written inside `LeastCardInjL` (src/L/Cardinal.lagda.md:70-74) for
+  ONE ordinal; nothing in the tree names it generally.
+
+```agda
 ordL : (x : SV.S) → IsOrd x → SL.S
 ordL x ox = x , Lset→isL (sucV x) (suc-ord ox) x (ord∈Lset-suc x ox)
+```
 
--- =====================================================================
--- SECTION 3.  THE BRIDGE, re-derived.  `[LJ-1.526]` built it at
--- agents/tasks/LJ-1-526/Probe526.agda:105-107; three lines, so this
--- file states its own rather than importing a 14 s module.
--- =====================================================================
+SECTION 3.  THE BRIDGE, re-derived.  `[LJ-1.526]` built it at
+agents/tasks/LJ-1-526/Probe526.agda:105-107; three lines, so this
+file states its own rather than importing a 14 s module.
 
+```agda
 ambient→internal : (κ : SL.S) → IsCardinal (fst κ) → IsCardinalL κ
 ambient→internal κ c δ δ∈κ h =
   PT.rec Empty.isProp⊥ (λ w → c (fst δ) δ∈κ (readL κ δ w)) h
+```
 
--- =====================================================================
--- SECTION 4.  THE AMBIENT CARDINAL, BY SEPARATION.
---
---   Fix an ordinal `a` and an ordinal `β`.  Separate out of β the
---   members that inject into a.  THE PREDICATE IS ALREADY SMALL:
---   `⟪ x ⟫` and `⟪ a ⟫` both live in `Type ℓ`, so the cubical
---   library's `SeparationSet` takes it with no resizing and no
---   impredicativity parameter.
--- =====================================================================
+SECTION 4.  THE AMBIENT CARDINAL, BY SEPARATION.
 
+  Fix an ordinal `a` and an ordinal `β`.  Separate out of β the
+  members that inject into a.  THE PREDICATE IS ALREADY SMALL:
+  `⟪ x ⟫` and `⟪ a ⟫` both live in `Type ℓ`, so the cubical
+  library's `SeparationSet` takes it with no resizing and no
+  impredicativity parameter.
+
+```agda
 module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
 
   ϕ : SV.S → hProp ℓ
@@ -190,21 +196,24 @@ module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
       Empty.rec (PT.rec Empty.isProp⊥ noinj
         (θ-inj γ (subst (λ v → ⟨ γ ∈ˢ v ⟩) (sym e) γ∈β)))
     go (inr (inr β∈θ)) = Empty.rec (∈-irrefl β (θ⊆β β β∈θ))
+```
 
--- =====================================================================
--- SECTION 5.  THE REDUCTION.  `CardAboveL` FROM ONE AMBIENT STATEMENT.
---
---   `NoInjOrd` carries NO constructibility, NO code, NO cardinal
---   predicate and NO leastness: for every ordinal, some ordinal does
---   not inject into it.  That is the Hartogs fact in its weakest form.
--- =====================================================================
+SECTION 5.  THE REDUCTION.  `CardAboveL` FROM ONE AMBIENT STATEMENT.
 
+  `NoInjOrd` carries NO constructibility, NO code, NO cardinal
+  predicate and NO leastness: for every ordinal, some ordinal does
+  not inject into it.  That is the Hartogs fact in its weakest form.
+
+```agda
 NoInjOrd : Type (ℓ-suc ℓ)
 NoInjOrd = (x : SV.S) → IsOrd x
          → ∥ Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ x ⟫ → Empty.⊥)) ∥₁
+```
 
--- An ordinal that does not inject into `a` is automatically ABOVE `a`:
--- the other two legs of trichotomy each hand back an injection.
+An ordinal that does not inject into `a` is automatically ABOVE `a`:
+the other two legs of trichotomy each hand back an injection.
+
+```agda
 above : (a γ : SV.S) → IsOrd a → IsOrd γ → (⟪ γ ⟫ ↪ ⟪ a ⟫ → Empty.⊥)
       → ⟨ a ∈ˢ γ ⟩
 above a γ oa oγ noinj = go (ord-tri γ oγ a oa)
@@ -216,9 +225,12 @@ above a γ oa oγ noinj = go (ord-tri γ oγ a oa)
   go (inr (inl e))  =
     Empty.rec (noinj (subst (λ v → ⟪ γ ⟫ ↪ ⟪ v ⟫) e idInj))
   go (inr (inr a∈γ)) = a∈γ
+```
 
--- THE AMBIENT HALF AT ONE ORDINAL, UNTRUNCATED.  This is the whole
--- construction; everything after it is plumbing.
+THE AMBIENT HALF AT ONE ORDINAL, UNTRUNCATED.  This is the whole
+construction; everything after it is plumbing.
+
+```agda
 cardAboveAt : (a : SV.S) → IsOrd a
   → Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ a ⟫ → Empty.⊥))
   → Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩)
@@ -236,11 +248,14 @@ cardAboveAt a oa (γ , oγ , noinj) =
 ambientCardAbove : NoInjOrd → (a : SV.S) → IsOrd a
   → ∥ Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩) ∥₁
 ambientCardAbove ni a oa = PT.map (cardAboveAt a oa) (ni a oa)
+```
 
--- THE WHOLE OBLIGATION, GIVEN `NoInjOrd`.  GREEN, NO HOLES.
---
--- NEITHER `IsCardinalL κ` NOR `κ ∉ ω` IS CONSUMED.  Both hypotheses of
--- `CardAboveL` are dead on this route, and the report says so.
+THE WHOLE OBLIGATION, GIVEN `NoInjOrd`.  GREEN, NO HOLES.
+
+NEITHER `IsCardinalL κ` NOR `κ ∉ ω` IS CONSUMED.  Both hypotheses of
+`CardAboveL` are dead on this route, and the report says so.
+
+```agda
 noInjOrd→CardAboveLᵀ : NoInjOrd → CardAboveLᵀ
 noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
   PT.map build (ambientCardAbove ni (fst κ) oκ)
@@ -250,32 +265,32 @@ noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
             (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩)
   build (θ , oθ , cθ , κ∈θ) =
     ordL θ oθ , oθ , ambient→internal (ordL θ oθ) cθ , κ∈θ
+```
 
--- =====================================================================
--- SECTION 6.  `NoInjOrd`, BUILT.  THE HARTOGS ORDINAL WITHOUT ORDER
--- TYPES.
---
---   `[LJ-1.94]` built the ambient Hartogs at ω in 1058 lines
---   (archive/dev/LJ-dispatch-index.md:170) through order types: the
---   collapse of a well-order, its uniqueness under isomorphism, and
---   initial segments.  NONE OF THAT IS NEEDED HERE, and the reason is
---   section 6's contradiction shape.
---
---   The classical construction wants `ot w ≡ μ`, which forces
---   uniqueness-under-isomorphism.  THIS ONE WANTS ONLY `μ ⊆ ot w`,
---   because `ot w ∈ μ` already holds by construction and the two
---   together give `ot w ∈ ot w`.  A subset claim needs no order
---   isomorphism, so trichotomy, initial segments and the uniqueness
---   theorem all drop out, and the relation may be an arbitrary
---   TRANSITIVE WELL-FOUNDED one rather than a well-order.
---
---   THE INDEX IS `Bool`-VALUED AND SO IT IS ALREADY SMALL.
---   `⟪ a ⟫ → ⟪ a ⟫ → Bool` lives in `Type ℓ`, so this file needs no
---   small classifier `Ω'`, no `HPropSmallness` and no `Impredicativity`
---   parameter.  `[LJ-1.94]` paid for that classifier
---   (agents/tasks/LJ-1-94/ProbeLJ194A.agda:29); this does not.
--- =====================================================================
+SECTION 6.  `NoInjOrd`, BUILT.  THE HARTOGS ORDINAL WITHOUT ORDER
+TYPES.
 
+  `[LJ-1.94]` built the ambient Hartogs at ω in 1058 lines
+  (archive/dev/LJ-dispatch-index.md:170) through order types: the
+  collapse of a well-order, its uniqueness under isomorphism, and
+  initial segments.  NONE OF THAT IS NEEDED HERE, and the reason is
+  section 6's contradiction shape.
+
+  The classical construction wants `ot w ≡ μ`, which forces
+  uniqueness-under-isomorphism.  THIS ONE WANTS ONLY `μ ⊆ ot w`,
+  because `ot w ∈ μ` already holds by construction and the two
+  together give `ot w ∈ ot w`.  A subset claim needs no order
+  isomorphism, so trichotomy, initial segments and the uniqueness
+  theorem all drop out, and the relation may be an arbitrary
+  TRANSITIVE WELL-FOUNDED one rather than a well-order.
+
+  THE INDEX IS `Bool`-VALUED AND SO IT IS ALREADY SMALL.
+  `⟪ a ⟫ → ⟪ a ⟫ → Bool` lives in `Type ℓ`, so this file needs no
+  small classifier `Ω'`, no `HPropSmallness` and no `Impredicativity`
+  parameter.  `[LJ-1.94]` paid for that classifier
+  (agents/tasks/LJ-1-94/ProbeLJ194A.agda:29); this does not.
+
+```agda
 module Hartogs (a : SV.S) where
 
   Rel : Type ℓ
@@ -584,16 +599,19 @@ module Hartogs (a : SV.S) where
   -- THE HARTOGS FACT AT `a`.
   noInj : (⟪ μ ⟫ ↪ ⟪ a ⟫) → Empty.⊥
   noInj f = NoInj.absurd f
+```
 
--- =====================================================================
--- SECTION 7.  THE OBLIGATION, INHABITED.
--- =====================================================================
+SECTION 7.  THE OBLIGATION, INHABITED.
 
+```agda
 noInjOrd : NoInjOrd
 noInjOrd x ox = ∣ Hartogs.μ x , Hartogs.μ-ord x , Hartogs.noInj x ∣₁
+```
 
--- THE OBLIGATION, AT `[LJ-1.526]`'S OWN TYPE.
--- GREEN, NO HOLES, NO POSTULATE, NO CHOICE.
+THE OBLIGATION, AT `[LJ-1.526]`'S OWN TYPE.
+GREEN, NO HOLES, NO POSTULATE, NO CHOICE.
+
+```agda
 CardAboveL :
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
   → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)

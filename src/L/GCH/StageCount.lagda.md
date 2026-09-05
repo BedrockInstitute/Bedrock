@@ -88,17 +88,27 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
+```
 
--- The V-carrier: the ambient membership lives here.
+The V-carrier: the ambient membership lives here.
+
+```agda
 module SV = hPropStructure 𝒮ᵥ using ()
--- The L-carrier: `InjL` lives here.
+```
+
+The L-carrier: `InjL` lives here.
+
+```agda
 module SL = hPropStructure 𝒮ʟ using ( S )
 open SL using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- The numeral k as an element of L.
+The numeral k as an element of L.
+
+```agda
 nn : ℕ → S
 nn k = # k , numL k
 
@@ -123,15 +133,15 @@ private
   i8 = suc i7
   i9 : ∀ {k} → Fin (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc k))))))))))
   i9 = suc i8
+```
 
--- =====================================================================
--- SECTION 0.  TWO FACTS ABOUT ENVIRONMENTS.
---
---   An environment determines its length (read off `domAt`, through
---   the two readings src/L/Choice/Internal.lagda.md exports), and two
---   environments of one length that are equal agree entrywise.
--- =====================================================================
+SECTION 0.  TWO FACTS ABOUT ENVIRONMENTS.
 
+  An environment determines its length (read off `domAt`, through
+  the two readings src/L/Choice/Internal.lagda.md exports), and two
+  environments of one length that are equal agree entrywise.
+
+```agda
 env-len : (E : S) {n n' : ℕ} (h : Fin n → V ℓ) (h' : Fin n' → V ℓ)
         → ((i : Fin n) → ⟨ isL (h i) ⟩) → ((i : Fin n') → ⟨ isL (h' i) ⟩)
         → fst E ≡ env h → fst E ≡ env h' → n ≡ n'
@@ -143,18 +153,18 @@ env-pt : {n : ℕ} (h h' : Fin n → V ℓ) → env h ≡ env h' → (i : Fin n)
 env-pt h h' q i = subst ⟨_⟩ (lookup-spec h' i (h i))
   (subst (λ w → ⟨ pr (# (toℕ i)) (h i) ∈ w ⟩) q
     (subst ⟨_⟩ (sym (lookup-spec h i (h i))) refl))
+```
 
--- =====================================================================
--- SECTION 1.  A CODED INJECTION E : A ↪ B LIFTS POINTWISE TO THE FINITE
--- SEQUENCES, seqL A ↪ seqL B.
---
---   Over (y ∷ s ∷ []): "there is n with dom s = n, and y is an
---   environment over B on n whose entry at every i ∈ n is the E-image
---   of the entry of s at i".  Binders, outermost first: n, then b
---   pinned to B, then i ∈ n, then u, v.  Inside all of them: v is 0,
---   u is 1, i is 2, b is 3, n is 4, y is 5, s is 6.
--- =====================================================================
+SECTION 1.  A CODED INJECTION E : A ↪ B LIFTS POINTWISE TO THE FINITE
+SEQUENCES, seqL A ↪ seqL B.
 
+  Over (y ∷ s ∷ []): "there is n with dom s = n, and y is an
+  environment over B on n whose entry at every i ∈ n is the E-image
+  of the entry of s at i".  Binders, outermost first: n, then b
+  pinned to B, then i ∈ n, then u, v.  Inside all of them: v is 0,
+  u is 1, i is 2, b is 3, n is 4, y is 5, s is 6.
+
+```agda
 module SeqMap (A B E : S)
               (sv : ⟨ (E ∷ A ∷ []) ⊨ svAt zero ⟩)
               (dm : ⟨ (E ∷ A ∷ []) ⊨ domAt zero (suc zero) ⟩)
@@ -432,32 +442,36 @@ module SeqMap (A B E : S)
 
   injL : InjL (seqL A) (seqL B)
   injL = Inj.injL D inj
+```
 
--- THE LIFT.  A coded injection of A into B lifts to the finite sequences.
+THE LIFT.  A coded injection of A into B lifts to the finite sequences.
+
+```agda
 seq-map : (A B E : S) → InjCode E A B → InjL (seqL A) (seqL B)
 seq-map A B E (sv , dm , ij , ran) = SeqMap.injL A B E sv dm ij ran
+```
 
--- =====================================================================
--- SECTION 2.  THE SUCCESSOR STEP.  At an infinite ordinal β with a
--- coded injection E : L_β ↪ β, the stage L_{β+1} = 𝒟ₒ(L_β) injects into
--- β+1, internally.
---
---   Every member x of L_{β+1} has a least name (src/L/Choice/Step.lagda.md
---   `leastNameOf`): a parameter-free code s at L_ω, an arity a, and a
---   parameter environment e over L_β.  Since β is infinite the code is
---   itself a member of L_β, so x ↦ s :: e is a map into the finite
---   sequences over L_β.  Its graph is the least-name description
---   `LeastNameAt` of src/L/Choice/Internal.lagda.md, with the code
---   order, the stage order, the tower, its code set and the free code
---   set pinned as constants, followed by the cons.  Then seqL L_β ↪
---   seqL β by section 1 and seqL β ↪ β by src/L/GCH/Sequences.lagda.md.
---
---   Binders, outermost first: R, P, B, C, C₀ pinned, then s, a, e.
---   Inside all of them: e is 0, a is 1, s is 2, C₀ is 3, C is 4, B is
---   5, P is 6, R is 7, y is 8, x is 9.
--- =====================================================================
+SECTION 2.  THE SUCCESSOR STEP.  At an infinite ordinal β with a
+coded injection E : L_β ↪ β, the stage L_{β+1} = 𝒟ₒ(L_β) injects into
+β+1, internally.
 
--- A binder pinned to a constant, with its two readings.
+  Every member x of L_{β+1} has a least name (src/L/Choice/Step.lagda.md
+  `leastNameOf`): a parameter-free code s at L_ω, an arity a, and a
+  parameter environment e over L_β.  Since β is infinite the code is
+  itself a member of L_β, so x ↦ s :: e is a map into the finite
+  sequences over L_β.  Its graph is the least-name description
+  `LeastNameAt` of src/L/Choice/Internal.lagda.md, with the code
+  order, the stage order, the tower, its code set and the free code
+  set pinned as constants, followed by the cons.  Then seqL L_β ↪
+  seqL β by section 1 and seqL β ↪ β by src/L/GCH/Sequences.lagda.md.
+
+  Binders, outermost first: R, P, B, C, C₀ pinned, then s, a, e.
+  Inside all of them: e is 0, a is 1, s is 2, C₀ is 3, C is 4, B is
+  5, P is 6, R is 7, y is 8, x is 9.
+
+A binder pinned to a constant, with its two readings.
+
+```agda
 pinAt : ∀ {n} → S → Formula S (suc n) → Formula S n
 pinAt c φ = ∃̇ ((var zero ≐ con c) ∧̇ φ)
 
@@ -469,10 +483,13 @@ pin-out : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : S ^ n)
         → ⟨ γ ⊨ pinAt c φ ⟩ → ⟨ (c ∷ γ) ⊨ φ ⟩
 pin-out c φ γ = PT.rec (snd ((c ∷ γ) ⊨ φ))
   (λ { (z , (ez , h)) → subst (λ v → ⟨ (v ∷ γ) ⊨ φ ⟩) (Σ≡Prop (λ v → snd (isL v)) ez) h })
+```
 
--- Five pinned binders and three plain binders, read once for a
--- variable body, and sealed.  Measured at this site: the same readings
--- checked at the concrete body of section 2 cost about 10 s per binder.
+Five pinned binders and three plain binders, read once for a
+variable body, and sealed.  Measured at this site: the same readings
+checked at the concrete body of section 2 cost about 10 s per binder.
+
+```agda
 opaque
   pin5At : ∀ {n} (c₁ c₂ c₃ c₄ c₅ : S)
          → Formula S (suc (suc (suc (suc (suc n))))) → Formula S n
@@ -523,11 +540,14 @@ opaque
   ∃₃-in : ∀ {n} (φ : Formula S (suc (suc (suc n)))) (γ : S ^ n)
         → (s a e : S) → ⟨ (e ∷ a ∷ s ∷ γ) ⊨ φ ⟩ → ⟨ γ ⊨ ∃₃ φ ⟩
   ∃₃-in φ γ s a e h = ∣ s , ∣ a , ∣ e , h ∣₁ ∣₁ ∣₁
+```
 
--- A name is determined by its code and its parameters.  Proved once, at
--- variable formulas and vectors, by J: at the reflexive length no
--- transport remains.  Measured at this site: the same assembly written
--- at the concrete names of section 2 did not finish in 150 s.
+A name is determined by its code and its parameters.  Proved once, at
+variable formulas and vectors, by J: at the reflexive length no
+transport remains.  Measured at this site: the same assembly written
+at the concrete names of section 2 did not finish in 150 s.
+
+```agda
 NameOf : Type ℓ → Type ℓ
 NameOf X = Σ[ k ∈ ℕ ] (Formula (⊥* {ℓ}) (suc k) × Vec X k)
 
@@ -830,7 +850,6 @@ module Succ (βL : S) (oβ : IsOrd (fst βL)) (β∉ω : ⟨ fst βL ∈ˢ ω �
         (subst2 (λ k v → ⟨ pr (# (suc k)) (pfam t i) ∈ v ⟩) eij q
           (at (cons (fst (codeOf t)) (pfam t)) (suc i))))
 
-
   -- 2.4  The definable map, the coded injection, and the step.
   -- -------------------------------------------------------------------
 
@@ -876,23 +895,24 @@ succ-step : (βL : S) (oβ : IsOrd (fst βL)) → (⟨ fst βL ∈ˢ ω ⟩ → 
           → InjL (LsetS (sucV (fst βL)) (suc-ord oβ)) (ordL (sucV (fst βL)) (suc-ord oβ))
 succ-step βL oβ β∉ω = PT.rec squash₁
   (λ { (E , code) → Succ.result βL oβ β∉ω E code })
+```
 
--- =====================================================================
--- SECTION 3.  THE TABLE OF LEAST INJECTIONS.  At an ordinal δ such that
--- every stage L_β, β ∈ δ, merely injects into δ internally, the family
--- β ↦ e_β of the stage-order-least such injection codes is one set of
--- L: the graph of a definable map on δ.
---
---   A stage γ is chosen that holds one code for every β ∈ δ: the least
---   stage holding one is a function of β (src/L/Stage.lagda.md
---   `leastOrd`), and γ bounds those.  The selection of e_β, its graph
---   and its table are `L.GCH.Least` at γ, δ and the code predicate of
---   `CodeFo`: over (e ∷ b ∷ []), "there is B, the tower at b, with e
---   coding an injection of B into δ".  Inside B: B is 0, e is 1, b is 2.
--- =====================================================================
+SECTION 3.  THE TABLE OF LEAST INJECTIONS.  At an ordinal δ such that
+every stage L_β, β ∈ δ, merely injects into δ internally, the family
+β ↦ e_β of the stage-order-least such injection codes is one set of
+L: the graph of a definable map on δ.
 
--- An injection code is a proposition, and it respects the index
--- equations of its graph and its domain.
+  A stage γ is chosen that holds one code for every β ∈ δ: the least
+  stage holding one is a function of β (src/L/Stage.lagda.md
+  `leastOrd`), and γ bounds those.  The selection of e_β, its graph
+  and its table are `L.GCH.Least` at γ, δ and the code predicate of
+  `CodeFo`: over (e ∷ b ∷ []), "there is B, the tower at b, with e
+  coding an injection of B into δ".  Inside B: B is 0, e is 1, b is 2.
+
+An injection code is a proposition, and it respects the index
+equations of its graph and its domain.
+
+```agda
 isPropInjCode : (F a b : S) → isProp (InjCode F a b)
 isPropInjCode F a b =
   isProp× (snd ((F ∷ a ∷ []) ⊨ svAt zero))
@@ -921,9 +941,12 @@ injcode-resp F F' a a' b qF qa (sv , dm , ij , ran) =
   mv {u} {v} = subst (λ w → ⟨ pr u v ∈ w ⟩) (sym qF)
   mv' : {u v : V ℓ} → ⟨ pr u v ∈ fst F ⟩ → ⟨ pr u v ∈ fst F' ⟩
   mv' {u} {v} = subst (λ w → ⟨ pr u v ∈ w ⟩) qF
+```
 
--- The injection-code formula at two slots, against the constant b:
--- single-valued, with domain B, injective, with values in b.
+The injection-code formula at two slots, against the constant b:
+single-valued, with domain B, injective, with values in b.
+
+```agda
 injFo : ∀ {n} → S → Fin n → Fin n → Formula S n
 injFo b f B = svAt f ∧̇ domAt f B ∧̇ injAt f
             ∧̇ ∀̇ (∀̇ (appAt (suc (suc f)) i1 i0 ⇒̇ (var i0 ∈̇ con b)))
@@ -953,13 +976,15 @@ module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
         , (λ hx → domAt-in zero (suc zero) (F ∷ A ∷ []) dm x hx))
     , injAt-in f γ (λ y x x' p q → injAt-out zero (F ∷ A ∷ []) ij y x x' p q)
     , λ x y p → ran x y (subst ⟨_⟩ (appAt-adequate (suc (suc f)) i1 i0 (y ∷ x ∷ γ)) p)
+```
 
+The code predicate at slots, sealed, with its two readings at a
+variable environment: "there is B, the tower at b, with e coding an
+injection of B into δ".  Inside B: B is 0 and the slots shift by one.
+Measured at this site: the two readings written at the concrete
+environment cost 7 s each.
 
--- The code predicate at slots, sealed, with its two readings at a
--- variable environment: "there is B, the tower at b, with e coding an
--- injection of B into δ".  Inside B: B is 0 and the slots shift by one.
--- Measured at this site: the two readings written at the concrete
--- environment cost 7 s each.
+```agda
 module CodeFo {n : ℕ} (δL : S) (e b : Fin n) where
   opaque
     Fo : Formula S n
@@ -1086,25 +1111,25 @@ module Table (δL : S) (oδ : IsOrd (fst δL))
   T-out : (b e : S) → ⟨ pr (fst b) (fst e) ∈ fst T ⟩
         → Σ[ m ∈ ⟨ fst b ∈ δ ⟩ ] (fst e ≡ fst (eS b m))
   T-out = Ls.T-out
+```
 
--- =====================================================================
--- SECTION 4.  THE LIMIT STEP.  At a limit ordinal δ (closed under the
--- successor) such that every stage L_β, β ∈ δ, merely injects into δ
--- internally, L_δ injects into δ.
---
---   x ∈ L_δ is born at some stage: b_x = birth x + 1 is the least
---   ordinal with x ∈ L_{b_x}, and b_x ∈ δ because δ is a limit.  With
---   the table T of section 3, x ↦ (b_x, e_{b_x}(x)) lands in prodL δ,
---   and prodL δ ↪ δ by the pairing at δ.
---
---   The graph, over (y ∷ x ∷ []): "there is b ∈ δ and e with (b, e) ∈ T
---   and some v with (x, v) ∈ e and y = (b, v), and for every b' ∈ b and
---   e' with (b', e') ∈ T no v' has (x, v') ∈ e'".  Binders: b, e, then
---   v; the leastness clause binds b', e', then v'.  Inside b, e: e is
---   0, b is 1, y is 2, x is 3; v adds one; in the leastness clause e'
---   is 0, b' is 1, e is 2, b is 3, y is 4, x is 5, and v' adds one.
--- =====================================================================
+SECTION 4.  THE LIMIT STEP.  At a limit ordinal δ (closed under the
+successor) such that every stage L_β, β ∈ δ, merely injects into δ
+internally, L_δ injects into δ.
 
+  x ∈ L_δ is born at some stage: b_x = birth x + 1 is the least
+  ordinal with x ∈ L_{b_x}, and b_x ∈ δ because δ is a limit.  With
+  the table T of section 3, x ↦ (b_x, e_{b_x}(x)) lands in prodL δ,
+  and prodL δ ↪ δ by the pairing at δ.
+
+  The graph, over (y ∷ x ∷ []): "there is b ∈ δ and e with (b, e) ∈ T
+  and some v with (x, v) ∈ e and y = (b, v), and for every b' ∈ b and
+  e' with (b', e') ∈ T no v' has (x, v') ∈ e'".  Binders: b, e, then
+  v; the leastness clause binds b', e', then v'.  Inside b, e: e is
+  0, b is 1, y is 2, x is 3; v adds one; in the leastness clause e'
+  is 0, b' is 1, e is 2, b is 3, y is 4, x is 5, and v' adds one.
+
+```agda
 module Lim (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ → Empty.⊥)
            (lim : (β : V ℓ) → ⟨ β ∈ fst δL ⟩ → ⟨ sucV β ∈ fst δL ⟩)
            (have : (β : V ℓ) (oβ : IsOrd β) → ⟨ β ∈ fst δL ⟩ → InjL (LsetS β oβ) δL)
@@ -1370,26 +1395,29 @@ module Lim (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩
 
   result : InjL (LsetS δ oδ) δL
   result = injl-trans (LsetS δ oδ) (prodL δL) δL injL pairing
+```
 
--- =====================================================================
--- SECTION 5.  THE THEOREM, BY ∈-INDUCTION, FROM THE BASE L_ω ↪ ω.
---
---   At an infinite ordinal δ: if δ = β+1 then β is infinite and the
---   successor step applies to the hypothesis at β; otherwise δ is a
---   limit, every β ∈ δ has L_β ↪ δ (through the hypothesis at an
---   infinite β, through L_ω ↪ ω at a finite one), and the limit step
---   applies.  The base at ω is the one row this chapter takes as its
---   hypothesis: the code set of the names sits in L_ω and in no finite
---   stage, so the successor map of section 2 has no target below ω.
--- =====================================================================
+SECTION 5.  THE THEOREM, BY ∈-INDUCTION, FROM THE BASE L_ω ↪ ω.
 
+  At an infinite ordinal δ: if δ = β+1 then β is infinite and the
+  successor step applies to the hypothesis at β; otherwise δ is a
+  limit, every β ∈ δ has L_β ↪ δ (through the hypothesis at an
+  infinite β, through L_ω ↪ ω at a finite one), and the limit step
+  applies.  The base at ω is the one row this chapter takes as its
+  hypothesis: the code set of the names sits in L_ω and in no finite
+  stage, so the successor map of section 2 has no target below ω.
+
+```agda
 Lω : S
 Lω = LsetS ω ω-ord
 
 LimitStageCounted : Type (ℓ-suc ℓ)
 LimitStageCounted = InjL Lω ωʟ
+```
 
--- An internal injection moves along equal carriers, by inclusions.
+An internal injection moves along equal carriers, by inclusions.
+
+```agda
 move : (a a' b b' : S) → fst a ≡ fst a' → fst b ≡ fst b' → InjL a b → InjL a' b'
 move a a' b b' qa qb h =
   injl-trans a' a b' (inclusion-coded a' a (λ z hz → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym qa) hz))
@@ -1458,33 +1486,34 @@ module Induction (base : LimitStageCounted) where
 
   counted : (δ : V ℓ) → P δ
   counted = WF.WFI.induction regularityV {P = P} Ind.result
+```
 
--- THE THEOREM, from the base.
+THE THEOREM, from the base.
+
+```agda
 stage-counted-from : LimitStageCounted → StageCountedCoded
 stage-counted-from base δ Lδ oδ δ∉ω q =
   move (LsetS (fst δ) oδ) Lδ (ordL (fst δ) oδ) δ (sym q) refl
     (Induction.counted base (fst δ) oδ δ∉ω)
+```
 
--- =====================================================================
--- SECTION 6.  THE BASE OF THE COUNT: THE LIMIT STAGE L_ω IS COUNTABLE,
--- INTERNALLY.  The stage order at ω is a set of L (`relL ω`); its
--- collapse (src/L/GCH/OrderType.lagda.md) is an ordinal every value of
--- which is finite, because the segment below a member sits in one
--- finite stage and omega does not inject into a finite stage.
--- =====================================================================
+SECTION 6.  THE BASE OF THE COUNT: THE LIMIT STAGE L_ω IS COUNTABLE,
+INTERNALLY.  The stage order at ω is a set of L (`relL ω`); its
+collapse (src/L/GCH/OrderType.lagda.md) is an ordinal every value of
+which is finite, because the segment below a member sits in one
+finite stage and omega does not inject into a finite stage.
 
--- =====================================================================
--- 6.1  A FINITE STAGE HOLDS NO COPY OF omega.
---
---   src/L/Choice/Finite.lagda.md tallies the finite stage L_n: a finite
---   list of members covering it.  At every member the least tally index
---   is a natural number below the tally's size, so an injection of omega
---   into L_n composes to one into the numeral `# size`, which
---   `finite-excl-ω` refutes.  The index is chosen by `leastOf` over the
---   natural order; minimality is never used, any deterministic index
---   would do.
--- =====================================================================
+6.1  A FINITE STAGE HOLDS NO COPY OF omega.
 
+  src/L/Choice/Finite.lagda.md tallies the finite stage L_n: a finite
+  list of members covering it.  At every member the least tally index
+  is a natural number below the tally's size, so an injection of omega
+  into L_n composes to one into the numeral `# size`, which
+  `finite-excl-ω` refutes.  The index is chosen by `leastOf` over the
+  natural order; minimality is never used, any deterministic index
+  would do.
+
+```agda
 private
   module FinNo (n : ℕ) where
     t : Tally (finiteStage n)
@@ -1539,16 +1568,16 @@ private
   no-inj-fin : (g : V ℓ) → ⟨ g ∈ˢ ω ⟩ → NoInto g
   no-inj-fin g g∈ω = PT.rec (isPropΠ2 (λ _ _ → Empty.isProp⊥))
     (λ { (k , e) → subst NoInto e (FinNo.noinj (lower k)) }) g∈ω
+```
 
--- =====================================================================
--- 6.2  L_ω, THE ORDER ON IT AS A SET OF L, AND ITS DOMAIN READING.
---
---   `relL ω` is the stage order at omega, realized as an element of L
---   (src/L/Choice/Order.lagda.md).  `Related` says what its members
---   are: pairs of two members of the stage.  That is the domain
---   hypothesis `OrderType.Code` asks for.
--- =====================================================================
+6.2  L_ω, THE ORDER ON IT AS A SET OF L, AND ITS DOMAIN READING.
 
+  `relL ω` is the stage order at omega, realized as an element of L
+  (src/L/Choice/Order.lagda.md).  `Related` says what its members
+  are: pairs of two members of the stage.  That is the domain
+  hypothesis `OrderType.Code` asks for.
+
+```agda
 hω : ⟨ isL ω ⟩
 hω = isL-ord ω ω-ord
 
@@ -1578,9 +1607,12 @@ Rsub y x h = PT.rec isP
       (subst (λ w → ⟨ w ∈ˢ fst Rω ⟩) (sym (prʟ-fst y x)) h))
 
 module OT = Code Lω Rω Rsub using ( module Conjuncts; Dom; _≺_; isProp≺; ≺-in; ≺-out )
+```
 
--- The host order at the same presentation, and the two directions
--- between it and the sealed relation of the collapse.
+The host order at the same presentation, and the two directions
+between it and the sealed relation of the collapse.
+
+```agda
 Wω : SWO ⟪ Lset ω ⟫
 Wω = carry (Lset ω) (orderAt ω ω-ord)
 
@@ -1613,15 +1645,16 @@ triω a b = go (SWO.tri∙ Wω a b)
 
 module C = OT.Conjuncts wfω transω using ( module Inj; col; col-ord; col-out; colTable; otL; otL-out )
 module I = C.Inj triω using ( code; col-inj )
--- =====================================================================
--- 6.3  THE SEGMENT BELOW A MEMBER SITS IN ONE FINITE STAGE.
---
---   The stage order compares the BIRTH first (src/L/Choice/Step.lagda.md,
---   `Family._≺_`), so a predecessor of x is born at or below the birth
---   of x, hence belongs to the stage one above that birth.  At omega
---   that stage is finite.
--- =====================================================================
+```
 
+6.3  THE SEGMENT BELOW A MEMBER SITS IN ONE FINITE STAGE.
+
+  The stage order compares the BIRTH first (src/L/Choice/Step.lagda.md,
+  `Family._≺_`), so a predecessor of x is born at or below the birth
+  of x, hence belongs to the stage one above that birth.  At omega
+  that stage is finite.
+
+```agda
 private
   module F = Family ω (λ δ _ → orderAt δ) ω-ord using ( _≺_; bornAt )
 
@@ -1669,16 +1702,17 @@ private
             → ⟨ ⟪ Lset ω ⟫↪ r ∈ˢ Lset (gOf p) ⟩
   seg-bound p r k =
     step-bound (atIx r) (atIx p) (transport (unfoldω (atIx r) (atIx p)) (≺→< r p k))
--- =====================================================================
--- 6.4  THE ORDER TYPE IS INCLUDED IN omega.
---
---   The collapse value at p is the order type of the segment below p.
---   That segment injects, ambiently, into the finite stage of section 3,
---   so omega does not inject into it; and an ordinal that omega does not
---   reach is a member of omega.  This is the shape of `Step.col-fin`
---   (src/L/GCH/Pairing.lagda.md:979).
--- =====================================================================
+```
 
+6.4  THE ORDER TYPE IS INCLUDED IN omega.
+
+  The collapse value at p is the order type of the segment below p.
+  That segment injects, ambiently, into the finite stage of section 3,
+  so omega does not inject into it; and an ordinal that omega does not
+  reach is a member of omega.  This is the shape of `Step.col-fin`
+  (src/L/GCH/Pairing.lagda.md:979).
+
+```agda
 private
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
   Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
@@ -1723,9 +1757,12 @@ otL⊆ω : (z : V ℓ) → ⟨ z ∈ˢ fst C.otL ⟩ → ⟨ z ∈ˢ ω ⟩
 otL⊆ω z h = PT.rec (snd (z ∈ˢ ω))
   (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ ω ⟩) e (col-fin b) })
   (C.otL-out z h)
--- 6.5  THE TWO THEOREMS: the premise of section 5, and the trophy's
--- first line.
+```
 
+6.5  THE TWO THEOREMS: the premise of section 5, and the trophy's
+first line.
+
+```agda
 limit-stage-counted : LimitStageCounted
 limit-stage-counted =
   injl-trans Lω C.otL ωʟ ∣ C.colTable , I.code ∣₁

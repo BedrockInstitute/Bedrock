@@ -25,18 +25,27 @@ open InfinitySet using ( sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
+```
 
--- Pointwise inclusion at the big membership, as the ordinal chapters read it.
+Pointwise inclusion at the big membership, as the ordinal chapters read it.
+
+```agda
 _⊆_ : S → S → Type (ℓ-suc ℓ)
 u ⊆ v = (x : S) → ⟨ x ∈ˢ u ⟩ → ⟨ x ∈ˢ v ⟩
+```
 
--- The finite successor chain above a stage.
+The finite successor chain above a stage.
+
+```agda
 sucIter : ℕ → S → S
 sucIter zero u = u
 sucIter (suc n) u = sucV (sucIter n u)
+```
 
--- The ω-block above a stage: the union of the finitely iterated successors.
--- The union representation is sealed at birth (R-38). Consumers see an atom.
+The ω-block above a stage: the union of the finitely iterated successors.
+The union representation is sealed at birth (R-38). Consumers see an atom.
+
+```agda
 opaque
   +ω : S → S
   +ω u = ⋃ (sett (Lift {ℓ-zero} {ℓ} ℕ) (λ m → sucIter (suc (lower m)) u))
@@ -76,19 +85,28 @@ opaque
   +ω-ord : (u : S) → IsOrd u → IsOrd (+ω u)
   +ω-ord u ou = setUnion-ord (Lift {ℓ-zero} {ℓ} ℕ)
     (λ m → sucIter (suc (lower m)) u) (λ m → sucIter-ord (suc (lower m)) ou)
+```
 
--- Closure under +ω: the ω-block above every member stays inside α.
+Closure under +ω: the ω-block above every member stays inside α.
+
+```agda
 closedω : S → Type (ℓ-suc ℓ)
 closedω α = (d : S) → ⟨ d ∈ˢ α ⟩ → ⟨ +ω d ∈ˢ α ⟩
+```
 
--- The code set over the carrier at δ sits at stage δ+ω. Under closure, the
--- stage δ+ω stays below α for every δ below α, so the bound lands in Lset α.
+The code set over the carrier at δ sits at stage δ+ω. Under closure, the
+stage δ+ω stays below α for every δ below α, so the bound lands in Lset α.
+
+```agda
 boundCloses : (α δ : S) (cl : closedω α) → ⟨ δ ∈ˢ α ⟩
             → (b : S) → ⟨ b ∈ˢ Lset (+ω δ) ⟩ → ⟨ b ∈ˢ Lset α ⟩
 boundCloses α δ cl δ∈α b b∈ =
   Lset-mono {α = α} {β = +ω δ} (cl δ δ∈α) b∈
+```
 
--- The environment at δ+3 lifts by the finite-iterate law, then by closure.
+The environment at δ+3 lifts by the finite-iterate law, then by closure.
+
+```agda
 envCloses : (α δ : S) (cl : closedω α) → ⟨ δ ∈ˢ α ⟩
           → (env : S) → ⟨ env ∈ˢ Lset (sucIter 3 δ) ⟩ → ⟨ env ∈ˢ Lset α ⟩
 envCloses α δ cl δ∈α env env∈ =

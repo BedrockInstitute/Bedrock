@@ -48,23 +48,27 @@ open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
+```
 
--- =====================================================================
--- THE FORMULA.  v is the definable power set of w, in the value
--- polarity: every member of v is the set the table T cuts from w at
--- some arity-one code of C, and every arity-one code of C cuts a
--- member of v from w.  The tower is not needed: the one-entry
--- environment of a member is bounded by the value it is looked up in.
--- =====================================================================
+THE FORMULA.  v is the definable power set of w, in the value
+polarity: every member of v is the set the table T cuts from w at
+some arity-one code of C, and every arity-one code of C cuts a
+member of v from w.  The tower is not needed: the one-entry
+environment of a member is bounded by the value it is looked up in.
 
--- e is the one-entry environment ⁅ (N0, z) ⁆.
+e is the one-entry environment ⁅ (N0, z) ⁆.
+
+```agda
 singleOf : ∀ {j} → Fin j → Fin j → Fin j → Formula S j
 singleOf e N0 z = ∀̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z)) ∧̇ ∃̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z))
 
 Δ₀-singleOf : ∀ {j} (e N0 z : Fin j) → Δ₀ (singleOf e N0 z)
 Δ₀-singleOf e N0 z = δ-∧ (δ-∀∈ (Δ₀-prAtL i0 (sh 1 N0) (sh 1 z))) (δ-∃∈ (Δ₀-prAtL i0 (sh 1 N0) (sh 1 z)))
+```
 
--- x is the set of members of w whose one-entry environment lies in y.
+x is the set of members of w whose one-entry environment lies in y.
+
+```agda
 definesB : ∀ {j} → Fin j → Fin j → Fin j → Fin j → Formula S j
 definesB x w y N0 =
     ∀̇∈ (var x) ((var i0 ∈̇ var (sh 1 w)) ∧̇ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1))
@@ -74,16 +78,22 @@ definesB x w y N0 =
 Δ₀-definesB x w y N0 =
   δ-∧ (δ-∀∈ (δ-∧ δ-∈ (δ-∃∈ (Δ₀-singleOf i0 (sh 2 N0) i1))))
       (δ-∀∈ (δ-⇒ (δ-∃∈ (Δ₀-singleOf i0 (sh 2 N0) i1)) δ-∈))
+```
 
--- Every member of v is cut by some arity-one code: at
--- y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ x ∷ γ, x at i6, y at i0.
+Every member of v is cut by some arity-one code: at
+y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ x ∷ γ, x at i6, y at i0.
+
+```agda
 memAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
 memAt v w T C N =
   ∀̇∈ (var v) (∃̇∈ (var (sh 1 C)) (sndEx i0 (sh 2 (N f1))
     (∃̇∈ (var (sh 4 T)) (sndEx i0 i3 (definesB i6 (sh 7 w) i0 (sh 7 (N f0)))))))
+```
 
--- Every arity-one code cuts a member of v: at
--- x ∷ y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ γ, x at i0, y at i1.
+Every arity-one code cuts a member of v: at
+x ∷ y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ γ, x at i0, y at i1.
+
+```agda
 allAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
 allAt v w T C N =
   ∀̇∈ (var C) (sndAll i0 (sh 1 (N f1))
@@ -118,13 +128,12 @@ opaque
   defAt-in v w T C N γ h1 h2 = h1 , h2
 ```
 
-```agda
--- =====================================================================
--- THE READERS.  The one-entry environment, the cut, and the two
--- clauses, at variable environments.
--- =====================================================================
+THE READERS.  The one-entry environment, the cut, and the two
+clauses, at variable environments.
 
--- ⁅ (# 0, z) ⁆, both ways.
+⁅ (# 0, z) ⁆, both ways.
+
+```agda
 module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 0) where
   private
     E = fst (lookup e δ)
@@ -156,9 +165,12 @@ module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 
     where
     yS : S
     yS = down (lookup e δ) (pr (# 0) Z) (subst (λ u → ⟨ pr (# 0) Z ∈ u ⟩) (sym q) ∣ lift zero , refl ∣₁)
+```
 
--- The cut, both ways: x is exactly the members of w whose one-entry
--- environment lies in y.
+The cut, both ways: x is exactly the members of w whose one-entry
+environment lies in y.
+
+```agda
 Cuts : (X Wv Y : V ℓ) → Type (ℓ-suc ℓ)
 Cuts X Wv Y = ((z : S) → ⟨ fst z ∈ X ⟩ → ⟨ fst z ∈ Wv ⟩ × ⟨ envOne (fst z) ∈ Y ⟩)
             × ((z : S) → ⟨ fst z ∈ Wv ⟩ → ⟨ envOne (fst z) ∈ Y ⟩ → ⟨ fst z ∈ X ⟩)
@@ -182,8 +194,11 @@ module _ {j : ℕ} (x w y N0 : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ 
 
   definesB-in : Cuts X Wv Y → ⟨ δ ⊨ definesB x w y N0 ⟩
   definesB-in (o , i) = (λ z hz → o z hz .fst , one-in z (o z hz .snd)) , (λ z hw he → i z hw (one-out z he))
+```
 
--- The two clauses.
+The two clauses.
+
+```agda
 module Read {m : ℕ} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
   private
     Vv = fst (lookup v γ)
@@ -262,13 +277,11 @@ module Read {m : ℕ} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg 
       (∃̇∈ (var (sh 3 T)) (sndEx i0 i3 (∃̇∈ (var (sh 6 v)) (definesB i0 (sh 7 w) i1 (sh 7 (N f0)))))) (c ∷ γ)
 ```
 
-```agda
--- =====================================================================
--- THE TWO THEOREMS.  With T, C read by `satAt`: a reading of `defAt`
--- at (v, w, T, C) makes v the definable power set of w, and the
--- definable power set satisfies `defAt`.
--- =====================================================================
+THE TWO THEOREMS.  With T, C read by `satAt`: a reading of `defAt`
+at (v, w, T, C) makes v the definable power set of w, and the
+definable power set satisfies `defAt`.
 
+```agda
 module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (hs : ⟨ γ ⊨ satAt T w C E N ⟩) where
   open Alphabet W
@@ -387,8 +400,11 @@ module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
            , ( subst (λ u → ⟨ DA.defSet ψ ∈ u ⟩) (sym qv) (𝒟ₒ-intro (fst W) (DA.defSet ψ) ∣ ψ , refl ∣₁)
              , subst (λ u → Cuts (DA.defSet ψ) Wv u) (sym (entry ψ .snd .snd)) (cuts-of ψ xS refl) ) ) })
       (decodeAll c (SR.C-out c c∈) 1 (fst p) ec))
+```
 
--- The two theorems, at the seal.
+The two theorems, at the seal.
+
+```agda
 def-sound : ∀ {m} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
           → fst (lookup w γ) ≡ fst W → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
           → ⟨ γ ⊨ defAt v w T C N ⟩ → fst (lookup v γ) ≡ 𝒟ₒ (fst W)
