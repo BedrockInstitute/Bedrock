@@ -569,7 +569,7 @@ module PiIn (Mʟ : CS.S) where
 
 -- =====================================================================
 -- SECTION 2.  THE HULL AS THE UNION OF AN ω-ITERATION.  One hull stage
--- (src/L/BoundedSubset.lagda.md `HullStage`), a start X that is an
+-- (src/L/GCH/Hull.lagda.md `HullStage`), a start X that is an
 -- element of L, and a one-step closure Φ that is definable on the
 -- whole model (the shape src/L/GCH/OmegaRec.lagda.md `Iterate` takes)
 -- and reads the hull's own search: Φ Z keeps Z, holds the junk value,

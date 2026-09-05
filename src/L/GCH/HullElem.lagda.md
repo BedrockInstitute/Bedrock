@@ -41,10 +41,9 @@ open hPropStructure 𝒮ʟ using ( S )
 
 -- =====================================================================
 -- THE SITE.  A stage λ, a start X ⊆ L_λ, and an infinite L-cardinal κ
--- with the ambient pairing on κ and an ambient injection X ↪ κ (both
--- read off the internal ones by src/L/GCH/BoundedSubset.lagda.md).
--- src/L/BoundedSubset.lagda.md `HullElemDown.WithCode` wants a
--- canonical code for each hull member; `CanonCode` picks it by the
+-- with the ambient pairing on κ and an ambient injection X ↪ κ.
+-- Each hull member needs a
+-- canonical code; `CanonCode` picks it by the
 -- least count under κ's own well-order, and the count is the term
 -- algebra's code count at the pairing and the injection.
 --
@@ -95,8 +94,7 @@ module Elem (κ : S) (oκ : IsOrd (fst κ)) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ �
   numeral-inj n m e = #-inj n m
     (sym (fiber (fst κ) (num∈κ n) .snd) ∙ cong ⟪ fst κ ⟫↪ e ∙ fiber (fst κ) (num∈κ m) .snd)
 
-  -- The code count of the term algebra, as src/L/BoundedSubset.lagda.md
-  -- `CodeCount` writes it at the stage-cardinal bound.
+  -- The code count of the term algebra, at the stage-cardinal bound.
   module CodeCount where
 
     Code : Type ℓ

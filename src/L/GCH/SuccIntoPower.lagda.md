@@ -79,7 +79,7 @@ S≡ = Σ≡Prop (λ v → snd (isL v))
 --
 --   `𝒫 κ` IS `℩ (hasPower κ)` by definition, so `℩-spec` is the whole
 --   proof.  This is the converse of `z-strongest`
---   (src/L/GCH/Stages.lagda.md:103), which reads the same equation in
+--   (src/L/GCH/Assembly.lagda.md:229), which reads the same equation in
 --   the other direction.  `_⊆ˢ_` is the model's own subset relation
 --   (src/FOL/ZFModel.lagda.md:141), so it quantifies over L-elements
 --   only, and that is exactly what the caller can supply.
