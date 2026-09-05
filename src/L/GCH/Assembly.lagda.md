@@ -25,7 +25,6 @@ open import L.Cardinal {ℓ} lem
   using ( InjCode; IsCardinalL; module LeastCardInjL )
 open import L.CardinalAbove {ℓ} lem using ( CardAboveL )
 open import L.GCH {ℓ} lem using ( GCHStatement; SuccCardL; InjL )
-open import L.GCH.Stages {ℓ} lem using ( z-strongest )
 open import L.InjChain {ℓ} lem using ( module InclGraph; module Comp )
 
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
@@ -210,6 +209,40 @@ injl-trans a b c = PT.rec2 PT.squash₁ step
     ∣ K.K , (K.svK , K.dmK , K.ijK , K.ranK) ∣₁
     where
     module K = Comp a b c F H svF dmF ijF ranF svH dmH ijH ranH
+
+-- A member z of a member y of the internal power set of an ordinal κ:
+-- z is constructible, a member of κ, and an ordinal.
+--
+--   `𝒫 κ = ℩ (hasPower κ)` and `hasPower` realizes the class
+--   `λ x → x ⊆ˢ κ` (src/FOL/ZFModel.lagda.md), where `⊆ˢ` is the
+--   INTERNAL subset relation: it quantifies over SL.S only.  So the
+--   power-set hypothesis only speaks about CONSTRUCTIBLE members of
+--   `y`, and `z` arrives ambient.  The bridge is transitivity of the
+--   class `isL` (src/L/Constructible.lagda.md).
+zStrongest : ModelL.isZFModel → Type (ℓ-suc ℓ)
+zStrongest zf =
+    (κ y : SL.S) → IsOrd (fst κ) → ⟨ fst y ∈ˢ fst (𝒫 κ) ⟩
+  → (z : SV.S) → ⟨ z ∈ˢ fst y ⟩
+  → (⟨ isL z ⟩ × ⟨ z ∈ˢ fst κ ⟩ × IsOrd z)
+  where open ModelL.isZFModel zf using ( 𝒫 )
+
+z-strongest : (zf : ModelL.isZFModel) → zStrongest zf
+z-strongest zf κ y ordκ y∈𝒫κ z z∈y = isLz , z∈κ , mem-ord {A = fst κ} ordκ z z∈κ
+  where
+  open ModelL.isZFModel zf using ( 𝒫; hasPower )
+
+  -- z is constructible, because y is and L is transitive.
+  isLz : ⟨ isL z ⟩
+  isLz = isL-trans z∈y (snd y)
+
+  -- The power-set specification, read off `℩-spec`; `𝒫 κ` IS
+  -- `℩ (hasPower κ)` by definition, so no transport is needed.
+  y⊆κ : ⟨ y ModelL.⊆ˢ κ ⟩
+  y⊆κ = subst ⟨_⟩ (ModelL.℩-spec (hasPower κ) y) y∈𝒫κ
+
+  -- z re-enters the internal subset relation as the L-element (z , isLz).
+  z∈κ : ⟨ z ∈ˢ fst κ ⟩
+  z∈κ = y⊆κ (z , isLz) z∈y
 
 -- =====================================================================
 -- SECTION 4.  THE LANDING: A SUBSET OF κ LIES IN THE STAGE AT κ⁺.

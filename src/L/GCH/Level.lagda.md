@@ -64,9 +64,9 @@ open import L.Condensation {ℓ} lem using
   ; arTagB; arTagPairB; subValB; subValSuccB; envHypU; envHypB2; envHypB2T
   ; propBodyB; binFullAt; tmValB; atomBodyB
   ; keyU; succU )
-open import L.BoundedSubset {ℓ} lem using ( module Cnt; erase-Δ₀ )
-open import L.GCH.Frame {ℓ} lem using
-  ( module W3; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
+open import L.GCH.Hull {ℓ} lem using
+  ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
+open import L.GCH.Frame {ℓ} lem using ( module W3 )
 open import L.GCH.Sound {ℓ} lem using
   ( module MatrixP; module Read; read; ord-out; unwrap )
 open import L.GCH.LevelRows {ℓ} lem using

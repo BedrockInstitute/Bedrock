@@ -19,19 +19,15 @@ module L.CardinalAbove {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; regularityV )
-open import V.Presentation {ℓ} using ( member; fiber )
+open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; IsOrd; Lset→isL; isTransV; isPropIsTransV )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; setUnion-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL )
-open import L.BoundedSubset {ℓ} lem
-  using ( IsCardinal; _↪_; module Devlin55 )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL; _↪_ )
 open import L.CantorBernstein {ℓ} lem using ( readL )
-
-open Devlin55 using ( comp-inj; ord-emb )
 
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; sett; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
@@ -58,6 +54,27 @@ module SV = hPropStructure 𝒮ᵥ
 module SL = hPropStructure 𝒮ʟ
 
 open SV using ( _∈ˢ_ )
+
+-- The ambient cardinal at `L.Cardinal`'s injection type, and the two
+-- injection facts the Hartogs argument reads: injections compose, and
+-- a member of an ordinal embeds into it.
+IsCardinal : SV.S → Type (ℓ-suc ℓ)
+IsCardinal κ = (δ : SV.S) → ⟨ δ ∈ˢ κ ⟩ → (⟪ κ ⟫ ↪ ⟪ δ ⟫ → Empty.⊥)
+
+comp-inj : {A B C : Type ℓ} → A ↪ B → B ↪ C → A ↪ C
+comp-inj (f , injf) (g , injg) =
+  (λ x → g (f x)) , λ x y e → injf x y (injg (f x) (f y) e)
+
+ord-emb : (a b : SV.S) → IsOrd b → ⟨ a ∈ˢ b ⟩ → ⟪ a ⟫ ↪ ⟪ b ⟫
+ord-emb a b ob a∈b = f , inj
+  where
+  f : ⟪ a ⟫ → ⟪ b ⟫
+  f m = fiber b {x = ⟪ a ⟫↪ m} (ob .fst (member a m) a∈b) .fst
+  inj : (m n : ⟪ a ⟫) → f m ≡ f n → m ≡ n
+  inj m n e = ↪-inj {a = a}
+    (sym (fiber b {x = ⟪ a ⟫↪ m} (ob .fst (member a m) a∈b) .snd)
+      ∙ cong (⟪ b ⟫↪) e
+      ∙ fiber b {x = ⟪ a ⟫↪ n} (ob .fst (member a n) a∈b) .snd)
 
 -- =====================================================================
 -- SECTION 1.  THE OBLIGATION, at `[LJ-1.526]`'s own binding
@@ -139,7 +156,7 @@ module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
   -- θ IS AN ORDINAL.  Its members are members of β, so they are
   -- transitive; and it is transitive itself because a member of a
   -- member of θ embeds into that member (`ord-emb`) and so into a
-  -- (`comp-inj`), both delivered at src/L/BoundedSubset.lagda.md.
+  -- (`comp-inj`), both above.
   θ-ord : IsOrd θ
   θ-ord = trans , (λ x x∈θ → oβ .snd x (θ⊆β x x∈θ))
     where

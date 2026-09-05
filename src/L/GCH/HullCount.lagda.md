@@ -49,8 +49,7 @@ open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
 open import L.Choice.Name {ℓ} lem using ( limitCode; numeral∈limit; pr∈limit )
 open import L.Choice.Internal {ℓ} lem using ( freeCode-out )
 open import L.GCH.Complete {ℓ} lem using ( Superadequate; module SatMap )
-open import L.GCH.Frame {ℓ} lem using ( module Frame )
-open import L.BoundedSubset {ℓ} lem using ( module HullStage )
+open import L.GCH.Hull {ℓ} lem using ( module Frame; module HullStage )
 open import L.GCH.HullIn {ℓ} lem using ( module Condense′; module Telescope )
 open import L.GCH.StageCount {ℓ} lem
   using ( isPropInjCode; injcode-resp; injFo; module InjFo; pinAt; pin-in; pin-out; seq-map; Lω

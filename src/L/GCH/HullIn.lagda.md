@@ -52,8 +52,7 @@ open import L.GCH.OrderType {ℓ} lem
         ; module PairFo )
 open import L.GCH.OmegaRec {ℓ} lem
   using ( module Iterate; pairʟ-in; pairʟ-out; unionʟ-in; unionʟ-out )
-open import L.BoundedSubset {ℓ} lem using ( module HullStage )
-open import L.GCH.Frame {ℓ} lem using ( module Frame )
+open import L.GCH.Hull {ℓ} lem using ( module HullStage; module Frame )
 open import L.GCH.Complete {ℓ} lem using ( Superadequate; module SatMap )
 open import L.GCH.Condense {ℓ} lem using ( module Condense )
 

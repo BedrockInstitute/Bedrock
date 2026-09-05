@@ -41,8 +41,8 @@ open import L.GCH.Definable {ℓ} lem using ( DefinableMap ) renaming ( module G
 open import L.Coding.Bound {ℓ} lem using ( module Bound; Lset-out′; Lset-trans′ )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
-open import L.BoundedSubset {ℓ} lem using ( module Cnt )
-open import L.GCH.Frame {ℓ} lem using ( module W3; isOrd-at-p; _⊨ₚ_ )
+open import L.GCH.Hull {ℓ} lem using ( module Cnt; isOrd-at-p; _⊨ₚ_ )
+open import L.GCH.Frame {ℓ} lem using ( module W3 )
 open import L.GCH.Sound {ℓ} lem using ( read )
 open import L.GCH.Level {ℓ} lem using
   ( module W3V; levelFo; Δ₀-levelFo; module DefV; module StepV; module ApproxV; module GraphV

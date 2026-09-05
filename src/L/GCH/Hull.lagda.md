@@ -1,4 +1,4 @@
-# The bounded-subset lemma
+# The Skolem hull and its collapse
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -7,61 +7,449 @@ open import Base.Prelude
 open import Base.Truth
 open import Base.Classical using ( LEM )
 
-module L.BoundedSubset {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+module L.GCH.Hull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( ZFStructure; module hPropStructure; _↾_ )
 open import FOL.Syntax using
-  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
-  ; Term; ∃̇_; ∀̇_; ∃̇∈; ∀̇∈ )
+  ( Formula; Term; con; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+  ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈
-  ; Σ₁; σ-Δ₀; σ-∃ )
-open import FOL.Manipulation.Relabelling using ( mapFo; mapTm; mapFo-comp; embed )
-open import FOL.Manipulation.Renaming using ( renameFo; renameTm )
-open import FOL.Manipulation.Parameters using ( countFo; padRight; lookup-map )
-import FOL.Count
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Absoluteness
+import FOL.Count
 import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-irrefl )
+open import FOL.Manipulation.Parameters
+  using ( countFo; constantsFo; absFo; ⊨-abs; lookup-map )
+open import FOL.Manipulation.Relabelling
+  using ( mapFo; mapTm; mapFo-comp; embed; embed-⊨; mapΔ₀; ⊨-map )
+open import FOL.Manipulation.Renaming using ( renameTm )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Presentation {ℓ} using ( member; fiber )
+open import V.Collapse {ℓ} using ( module Collapse; isExt; isTrans )
+open import V.Smallness {ℓ} using ( separateFromSmall; module Δ₀Small )
+open import L.Axioms.Basic {ℓ} using ( ∅∈𝒟ₒ; Lset-suc )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; isTransV; Lset; Lset→isL; 𝒟ₒ; Lset-out
-        ; Lset-mono; layer-trans; Lset-layer )
-open import L.Condensation {ℓ} lem using
-  ( DefBodyB; Δ₀-DefBodyB
-  ; module GraphB
-  )
-open import L.Hull {ℓ} lem using ( module AtStage )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; leastOf )
-open import V.Presentation {ℓ} using ( fiber; member; ↪-inj )
-open import V.Collapse {ℓ} using ( module Collapse; isExt )
+  using ( 𝒮ʟ; isTransV; IsOrd; Lset; Lset-in; Lset-out; Lset-mono; 𝒟ₒ
+        ; layer-trans; Lset-layer )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; ω-ord; #∈ω; ∅-ord )
+open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡; rank-Lset )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.Rank {ℓ} using ( rank-fix )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; leastOf; IsLeast )
+open import L.Choice.Step {ℓ} lem using ( orderAt )
 
 open import Cubical.Data.Nat using ( _+_ )
-import Cubical.Data.Empty as Empty
+open import Cubical.Data.Vec using ( Vec; map; lookup; _∷_; []; _++_ )
+open import Cubical.Data.Sigma using ( Σ≡Prop; _×_; _,_ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Sum as Sum
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Data.Unit using ( tt* )
-open import Cubical.Data.Vec using ( Vec; map; lookup; _∷_; []; _++_ )
-open import Cubical.Data.Sigma using ( _×_; _,_; Σ≡Prop )
+import Cubical.Data.Empty as Empty
+open import Cubical.Data.Empty.Properties using ( isProp⊥ )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Functions.Embedding using ( Embedding-into-isSet→isSet )
 open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
-open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
+open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett )
+open import Cubical.HITs.CumulativeHierarchy.Constructions
+  using ( ∅; _∪_; ⁅_,_⁆; ⁅_⁆s; union-ax; pairing-ax; module InfinitySet
+        ; SetPackage; SingletonPackage )  -- lint-agda: keep (SetPackage via record projection)
+open InfinitySet using ( ω; sucV )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪; extensionality )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 
-module CS = hPropStructure 𝒮ʟ
+module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ using ( _^_; module At )
+open SemV using ( _^_ )
 
-module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S
+-- The 𝒮ʟ carrier, for the syntax of the witness slot, and the
+-- constant count at it.
+module CS = hPropStructure 𝒮ʟ using ( S )
+module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S using ( erase; erase-inv )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( _^_ )
+module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → Empty.rec* b)
+  using ( Δ₀-small )
 
+-- J tower instantiates the same core (DD4)
+module TermAlgebra (𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ)))
+                   (toSet : ZFStructure.S 𝒮 → V ℓ)
+                   (wo : SWO (ZFStructure.S 𝒮))
+                   (junk : ZFStructure.S 𝒮)
+                   {K : Type ℓ} (emb : K → ZFStructure.S 𝒮) where
+
+  open ZFStructure 𝒮 hiding ( _∈ˢ_ ) renaming ( S to S𝒮 )
+
+  private module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮
+  open Sem using () renaming ( _^_ to _^𝒮_ )
+  module At0 = Sem.At (⊥* {ℓ}) Empty.rec* using ( _⊨_ )
+  _⊨₀_ : {n : ℕ} → S𝒮 ^𝒮 n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
+  _⊨₀_ = At0._⊨_
+
+  data Code : Type ℓ where
+    base : K → Code
+    wit  : (k : ℕ) → Formula (⊥* {ℓ}) (suc k) → Vec Code k → Code
+
+  Sat : (k : ℕ) → Formula (⊥* {ℓ}) (suc k) → Vec S𝒮 k → Type (ℓ-suc ℓ)
+  Sat k ψ vs = ∥ Σ[ a ∈ S𝒮 ] ⟨ (a ∷ vs) ⊨₀ ψ ⟩ ∥₁
+
+  search : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
+         → Sat k ψ vs → S𝒮
+  search k ψ vs w = leastOf wo {ℓ'' = ℓ-suc ℓ} lem (λ a → (a ∷ vs) ⊨₀ ψ) w .fst
+
+  mutual
+    vals : {m : ℕ} → Vec Code m → Vec S𝒮 m
+    vals [] = []
+    vals (c ∷ cs') = val c ∷ vals cs'
+
+    val : Code → S𝒮
+    val (base m) = emb m
+    val (wit k ψ cs) = Sum.rec (search k ψ (vals cs)) (λ _ → junk)
+                       (lem (Sat k ψ (vals cs) , squash₁))
+
+  module AtCode = Sem.At Code val using ( _⊨_ )
+  _⊨c_ : {n : ℕ} → S𝒮 ^𝒮 n → Formula Code n → hProp (ℓ-suc ℓ)
+  _⊨c_ = AtCode._⊨_
+
+  -- the junk split hides the search; open it when a witness exists, since
+  -- the other branch carries a contradiction
+  sum-stuck : {X : Type (ℓ-suc ℓ)} (x : X) (px : isProp X)
+            → (f : X → S𝒮) (g : (X → Empty.⊥) → S𝒮) (s : X ⊎ (X → Empty.⊥))
+            → Sum.rec f g s ≡ f x
+  sum-stuck x px f g (Sum.inl x') = sym (cong f (px x x'))
+  sum-stuck x px f g (Sum.inr h)  = Empty.rec (h x)
+
+  val-wit : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+          → (w : Sat k ψ (vals cs)) → val (wit k ψ cs) ≡ search k ψ (vals cs) w
+  val-wit k ψ cs w = sum-stuck w squash₁ (search k ψ (vals cs)) (λ _ → junk)
+                       (lem (Sat k ψ (vals cs) , squash₁))
+
+  vals≡map : {m : ℕ} (cs : Vec Code m) → vals cs ≡ map val cs
+  vals≡map [] = refl
+  vals≡map (c ∷ cs') = cong₂ _∷_ refl (vals≡map cs')
+
+  Hull : V ℓ
+  Hull = sett Code (λ c → toSet (val c))
+
+  inHull : (c : Code) → ⟨ toSet (val c) ∈ˢ Hull ⟩
+  inHull c = ∣ c , refl ∣₁
+
+  closed : (φ : Formula Code 1)
+         → ∥ Σ[ a ∈ S𝒮 ] ⟨ (a ∷ []) ⊨c φ ⟩ ∥₁
+         → ∥ Σ[ a ∈ S𝒮 ] (⟨ toSet a ∈ˢ Hull ⟩ × ⟨ (a ∷ []) ⊨c φ ⟩) ∥₁
+  closed φ h = ∣ a , (a∈H , sat) ∣₁
+    where
+    ψ : Formula (⊥* {ℓ}) (suc (countFo φ))
+    ψ = absFo φ
+    cs : Vec Code (countFo φ)
+    cs = constantsFo φ
+    w : Sat (countFo φ) ψ (vals cs)
+    w = PT.map (λ { (b , hb) →
+      b , subst ⟨_⟩ (cong (λ vs → (b ∷ vs) ⊨₀ ψ) (sym (vals≡map cs)))
+            (subst ⟨_⟩ (⊨-abs (hPropAlgebra (ℓ-suc ℓ)) 𝒮 val φ (b ∷ [])) hb) }) h
+    a : S𝒮
+    a = search (countFo φ) ψ (vals cs) w
+    pa : ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩
+    pa = leastOf wo {ℓ'' = ℓ-suc ℓ} lem (λ a → (a ∷ vals cs) ⊨₀ ψ) w .snd .fst
+    a∈H : ⟨ toSet a ∈ˢ Hull ⟩
+    a∈H = subst (λ z → ⟨ toSet z ∈ˢ Hull ⟩) (val-wit (countFo φ) ψ cs w)
+            (inHull (wit (countFo φ) ψ cs))
+    sat : ⟨ (a ∷ []) ⊨c φ ⟩
+    sat = subst ⟨_⟩ (sym (⊨-abs (hPropAlgebra (ℓ-suc ℓ)) 𝒮 val φ (a ∷ [])))
+            (subst ⟨_⟩ (cong (λ vs → (a ∷ vs) ⊨₀ ψ) (vals≡map cs)) pa)
+```
+
+## Elementarity at a set carrier inside a stage
+
+```agda
+module AtStage (α : S) (ordα : IsOrd α) where
+
+  Ltr : isTransV (Lset α)
+  Ltr = layer-trans (Lset-layer α)
+
+  module AbsL = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ Lset α) Ltr
+    using ( SM; 𝒮M; _⊨ᵐ_; ⟦_⟧ᵐ; abs₀ )
+
+  SL : Type (ℓ-suc ℓ)
+  SL = AbsL.SM
+
+  wL : SWO SL
+  wL = orderAt α ordα
+
+  -- the equivalence holds at any carrier: the inner world is the restricted
+  -- structure, and the bounded cases route through the criterion (Devlin 5.1)
+  module AtM (M : S) (M⊆L : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ x ∈ˢ Lset α ⟩) where
+
+    SM : Type (ℓ-suc ℓ)
+    SM = Σ[ x ∈ S ] ⟨ x ∈ˢ M ⟩
+
+    module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
+      using ( module At )
+    open SemM.At SM id renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
+
+    inL : SM → SL
+    inL c = fst c , M⊆L (fst c) (snd c)
+
+    Elementary : Type (ℓ-suc (ℓ-suc ℓ))
+    Elementary = (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+               → (δ ⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
+
+    TarskiVaught : Type (ℓ-suc ℓ)
+    TarskiVaught = (n : ℕ) (φ : Formula SM (suc n)) (δ : SM ^ n)
+                 → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ φ)) ⟩
+                 → ∥ Σ[ q ∈ SM ] ⟨ (inL q ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL φ) ⟩ ∥₁
+
+    private
+      lookup-inL : {n : ℕ} (i : Fin n) (δ : SM ^ n)
+                 → lookup i (map inL δ) ≡ inL (lookup i δ)
+      lookup-inL zero (c ∷ δ) = refl
+      lookup-inL (suc i) (c ∷ δ) = lookup-inL i δ
+
+      tm-agree : (n : ℕ) (t : Term SM n) (δ : SM ^ n)
+               → fst (⟦ t ⟧ᵐ δ) ≡ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ))
+      tm-agree n (con c) δ = refl
+      tm-agree n (var i) δ = sym (cong fst (lookup-inL i δ))
+
+      -- weakening one variable is meaning-preserving at the stage
+      renL : {n : ℕ} (t : Term SL n) (x : SL) (δ : SL ^ n)
+           → AbsL.⟦ renameTm suc t ⟧ᵐ (x ∷ δ) ≡ AbsL.⟦ t ⟧ᵐ δ
+      renL (con c) x δ = refl
+      renL (var i) x δ = refl
+
+      -- relabelling and renaming commute on terms
+      mapTm-rename : {n m : ℕ} (f : SM → SL) (ρ : Fin n → Fin m) (t : Term SM n)
+                   → mapTm f (renameTm ρ t) ≡ renameTm ρ (mapTm f t)
+      mapTm-rename f ρ (con c) = refl
+      mapTm-rename f ρ (var i) = refl
+
+      -- the outer membership of x in t survives the weakening of t
+      mem-ren : {n : ℕ} (t : Term SM n) (x : SL) (δ : SM ^ n)
+              → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
+              → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL (renameTm suc t) ⟧ᵐ (x ∷ map inL δ)) ⟩
+      mem-ren t x δ hx =
+        subst (λ s → ⟨ fst x ∈ˢ s ⟩)
+          (sym (cong fst
+            (cong (λ u → AbsL.⟦ u ⟧ᵐ (x ∷ map inL δ)) (mapTm-rename inL suc t)
+               ∙ renL (mapTm inL t) x (map inL δ))))
+          hx
+
+      -- the criterion's outer witness q reads back into the inner membership
+      mem-inner : {n : ℕ} (t : Term SM n) (q : SM) (δ : SM ^ n)
+                → ⟨ fst q ∈ˢ fst (AbsL.⟦ mapTm inL (renameTm suc t) ⟧ᵐ (inL q ∷ map inL δ)) ⟩
+                → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩
+      mem-inner {n} t q δ hq =
+        subst (λ s → ⟨ fst q ∈ˢ s ⟩) (sym (tm-agree n t δ))
+          (subst (λ s → ⟨ fst q ∈ˢ s ⟩)
+            (cong fst
+              (cong (λ u → AbsL.⟦ u ⟧ᵐ (inL q ∷ map inL δ)) (mapTm-rename inL suc t)
+                 ∙ renL (mapTm inL t) (inL q) (map inL δ)))
+            hq)
+
+      dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
+      dne P h = Sum.rec (λ p → p)
+        (λ (np : ⟨ P ⟩ → Empty.⊥) → Empty.rec (h np)) (lem P)
+
+    elem→TV : Elementary → TarskiVaught
+    elem→TV elem n φ δ h =
+      PT.map (λ { (q , hq) →
+        q , subst ⟨_⟩ (elem (suc n) φ (q ∷ δ)) hq })
+        (subst ⟨_⟩ (sym (elem n (∃̇ φ) δ)) h)
+
+    TV→elem : TarskiVaught → Elementary
+    TV→elem tv n φ δ = go n φ δ
+      where
+      go : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+         → (δ ⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
+      go n (t ∈̇ u) δ = cong₂ _∈ˢ_ (tm-agree n t δ) (tm-agree n u δ)
+      go n (t ≐ u) δ = cong₂ _≈ˢ_ (tm-agree n t δ) (tm-agree n u δ)
+      go n (φ ∧̇ ψ) δ = cong₂ _⊓_ (go n φ δ) (go n ψ δ)
+      go n (φ ∨̇ ψ) δ = cong₂ _⊔_ (go n φ δ) (go n ψ δ)
+      go n (φ ⇒̇ ψ) δ = cong₂ _⇒_ (go n φ δ) (go n ψ δ)
+      go n (¬̇ φ) δ = cong ¬_ (go n φ δ)
+      go n ⊤̇ δ = refl
+      go n ⊥̇ δ = refl
+      go n (∃̇ ψ) δ = ⇔toPath fwd bwd
+        where
+        fwd : ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩ → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩
+        fwd = PT.rec (snd (map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ))))
+          (λ { (q , hq) → ∣ inL q , subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) hq ∣₁ })
+        bwd : ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩ → ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩
+        bwd h = PT.map (λ { (q , hq) → q , subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) hq })
+          (tv n ψ δ h)
+      go n (∀̇ ψ) δ = ⇔toPath fwd bwd
+        where
+        fwd : ((q : SM) → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩)
+            → (x : SL) → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩
+        fwd h x = dne ((x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ)) λ nx →
+          PT.rec isProp⊥ (λ { (q , hq) →
+            hq (subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) (h q)) })
+            (tv n (¬̇ ψ) δ ∣ x , nx ∣₁)
+        bwd : ((x : SL) → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
+            → (q : SM) → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
+        bwd h q = subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) (h (inL q))
+      go n (∀̇∈ t ψ) δ = ⇔toPath fwd bwd
+        where
+        mat : Formula SM (suc n)
+        mat = (var zero ∈̇ renameTm suc t) ∧̇ ¬̇ ψ
+        fwd : ((q : SM) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩)
+            → (x : SL) → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
+            → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩
+        fwd h x hx =
+          dne ((x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ)) λ nx →
+          PT.rec isProp⊥ (λ { (q , hq) →
+            hq .snd (subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) (h q (mem-inner t q δ (hq .fst)))) })
+            (tv n mat δ ∣ x , (mem-ren t x δ hx , nx) ∣₁)
+        bwd : ((x : SL) → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
+                     → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
+            → (q : SM) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
+        bwd h q hq =
+          subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ)))
+            (h (inL q) (subst (λ s → ⟨ fst q ∈ˢ s ⟩) (tm-agree n t δ) hq))
+      go n (∃̇∈ t ψ) δ = ⇔toPath fwd bwd
+        where
+        mat : Formula SM (suc n)
+        mat = (var zero ∈̇ renameTm suc t) ∧̇ ψ
+        fwd : ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩) ∥₁
+            → ∥ Σ[ x ∈ SL ] (⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
+                          × ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩) ∥₁
+        fwd = PT.map (λ { (q , hq , hψ) →
+          inL q , (subst (λ s → ⟨ fst q ∈ˢ s ⟩) (tm-agree n t δ) hq ,
+                   subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) hψ) })
+        bwd : ∥ Σ[ x ∈ SL ] (⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
+                          × ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩) ∥₁
+            → ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩) ∥₁
+        bwd h = PT.map (λ { (q , hq) →
+          q , (mem-inner t q δ (hq .fst) , subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) (hq .snd)) })
+          (tv n mat δ (PT.map (λ { (x , hx , hψ) → x , (mem-ren t x δ hx , hψ) }) h))
+
+    TV-thm : (Elementary → TarskiVaught) × (TarskiVaught → Elementary)
+    TV-thm = elem→TV , TV→elem
+```
+
+## The definable hull
+
+```agda
+  module Hull (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩)
+               (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
+
+    -- the junk value: the empty set, a member of every nonempty stage
+    ∅∈Lsetα : ⟨ ∅ ∈ˢ Lset α ⟩
+    ∅∈Lsetα = Lset-in α ∅ ∅ ∅∈α (∅∈𝒟ₒ ∅)
+
+    inStg : ⟪ X ⟫ → SL
+    inStg m = ⟪ X ⟫↪ m , X⊆L (⟪ X ⟫↪ m) (member X m)
+
+    module T = TermAlgebra AbsL.𝒮M fst wL (∅ , ∅∈Lsetα) {K = ⟪ X ⟫} inStg
+    open T using ( Code; base; vals; val; Hull; inHull; closed; _⊨c_; _⊨₀_; Sat )
+
+    toSL : ⟪ Lset α ⟫ → SL
+    toSL m = ⟪ Lset α ⟫↪ m , member (Lset α) m
+
+    -- the hull lies in the stage: every code value is a stage member
+    Hull⊆L : (x : S) → ⟨ x ∈ˢ Hull ⟩ → ⟨ x ∈ˢ Lset α ⟩
+    Hull⊆L x x∈H = PT.rec (snd (x ∈ˢ Lset α)) go x∈H
+      where
+      go : Σ[ c ∈ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
+      go (c , q) = subst (λ z → ⟨ z ∈ˢ Lset α ⟩) q (snd (val c))
+
+    -- reading the hull's membership back: a member is the value of a code
+    hull-member : (x : S) → ⟨ x ∈ˢ Hull ⟩
+                → ∥ Σ[ c ∈ Code ] (fst (val c) ≡ x) ∥₁
+    hull-member x x∈H = x∈H
+
+    val-in-Hull : (c : Code) → ⟨ fst (val c) ∈ˢ Hull ⟩
+    val-in-Hull c = inHull c
+
+    module XInM (x : S) (x∈X : ⟨ x ∈ˢ X ⟩) where
+      mx : ⟪ X ⟫
+      mx = fiber X x∈X .fst
+
+      x≡val : ⟪ X ⟫↪ mx ≡ x
+      x≡val = fiber X x∈X .snd
+
+      inM : ⟨ x ∈ˢ Hull ⟩
+      inM = subst (λ z → ⟨ z ∈ˢ Hull ⟩) x≡val (inHull (base mx))
+
+    X⊆M : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Hull ⟩
+    X⊆M x x∈X = XInM.inM x x∈X
+
+    -- re-stated over Code: a small witness lives in the stage's
+    -- presentation, a big witness in the stage's inner world
+    Witnessed-small : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k))
+                    → (cs : Vec Code k) → Type (ℓ-suc ℓ)
+    Witnessed-small k ψ cs =
+      ∥ Σ[ m ∈ ⟪ Lset α ⟫ ] ⟨ (toSL m ∷ vals cs) ⊨₀ ψ ⟩ ∥₁
+
+    small→big : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+              → Witnessed-small k ψ cs → Sat k ψ (vals cs)
+    small→big k ψ cs = PT.map (λ { (m , hm) → toSL m , hm })
+
+    big→small : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+              → Sat k ψ (vals cs) → Witnessed-small k ψ cs
+    big→small k ψ cs = PT.map (λ { (a , ha) → toSmall a ha })
+      where
+      toSmall : (a : SL) → ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩
+              → Σ[ m ∈ ⟪ Lset α ⟫ ] ⟨ (toSL m ∷ vals cs) ⊨₀ ψ ⟩
+      toSmall a ha =
+        let m = fiber (Lset α) (snd a) .fst
+            p : a ≡ toSL m
+            p = Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) (sym (fiber (Lset α) (snd a) .snd))
+        in m , subst (λ (e : SL) → fst ((e ∷ vals cs) ⊨₀ ψ)) p ha
+
+    SatAt-h : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+            → SL → hProp (ℓ-suc ℓ)
+    SatAt-h k ψ cs a =
+      (fst ((a ∷ vals cs) ⊨₀ ψ) , snd ((a ∷ vals cs) ⊨₀ ψ))
+
+    -- perf: the search unfolds to a descent; seal at birth, spec as the read
+    -- lemma (R-36)
+    opaque
+      leastSearch : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+                  → Witnessed-small k ψ cs
+                  → Σ[ a ∈ SL ] IsLeast wL (SatAt-h k ψ cs) a
+      leastSearch k ψ cs w =
+        leastOf wL {ℓ'' = ℓ-suc ℓ} lem (SatAt-h k ψ cs) (small→big k ψ cs w)
+
+    opaque
+      unfolding leastSearch
+      leastSearch-spec : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+                       → (w : Witnessed-small k ψ cs)
+                       → leastSearch k ψ cs w
+                       ≡ leastOf wL {ℓ'' = ℓ-suc ℓ} lem (SatAt-h k ψ cs)
+                           (small→big k ψ cs w)
+      leastSearch-spec k ψ cs w = refl
+
+    leastWit : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+             → Witnessed-small k ψ cs → SL
+    leastWit k ψ cs w = leastSearch k ψ cs w .fst
+
+    leastWit-spec : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
+                  → (w : Witnessed-small k ψ cs)
+                  → IsLeast wL (SatAt-h k ψ cs) (leastWit k ψ cs w)
+    leastWit-spec k ψ cs w = leastSearch k ψ cs w .snd
+
+    hullVal : Code → S
+    hullVal c = fst (val c)
+
+    hull-closed : (φ : Formula Code 1) → ⟨ [] AbsL.⊨ᵐ (∃̇ (mapFo val φ)) ⟩
+                → ∥ Σ[ a ∈ SL ] (⟨ fst a ∈ˢ Hull ⟩
+                               × ⟨ (a ∷ []) AbsL.⊨ᵐ (mapFo val φ) ⟩) ∥₁
+    hull-closed φ h = PT.map (λ { (a , a∈H , sat) → a , a∈H ,
+      subst ⟨_⟩ (sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) AbsL.𝒮M val id φ (a ∷ [])))
+        sat })
+      (closed φ w')
+      where
+      w' : ∥ Σ[ b ∈ SL ] ⟨ (b ∷ []) ⊨c φ ⟩ ∥₁
+      w' = PT.map (λ { (b , hb) →
+        b , subst ⟨_⟩ (⊨-map (hPropAlgebra (ℓ-suc ℓ)) AbsL.𝒮M val id φ (b ∷ []))
+              hb }) h
+```
+
+## The collapse of the hull, and the iso-invariance of satisfaction
+
+```agda
 module IsoInv (M : S) (PM : S)
   (p : S → S)
   (p∈ : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ p x ∈ˢ PM ⟩)
@@ -85,7 +473,9 @@ module IsoInv (M : S) (PM : S)
   g m = p (fst m) , p∈ (fst m) (snd m)
 
   module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
+    using ( module At )
   module SemPM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ (λ x → x ∈ˢ PM))
+    using ( module At )
   open module Mse = SemM.At SM id public renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
   open module Pse = SemPM.At SPM id public renaming ( _⊨_ to _⊨ᵖᵐ_ ; ⟦_⟧ to ⟦_⟧ᵖᵐ )
 
@@ -232,8 +622,8 @@ module IsoInv (M : S) (PM : S)
 
 -- The collapse instance: M = the carrier X, PM = the collapse image piX.
 module CollapseIso (X : S) (Xext : isExt X) where
-  module C = Collapse X
-  module CI = C.InjExt Xext
+  module C = Collapse X using ( module InjExt; π; πX; πX-intro; πX-member )
+  module CI = C.InjExt Xext using ( iso; π-inj )
 
   PM : S
   PM = C.πX
@@ -261,112 +651,16 @@ module CollapseIso (X : S) (Xext : isExt X) where
   surj = C.πX-member
 
   module I = IsoInv X PM p p∈ iso-fwd iso-bwd p-inj surj
+    using ( SM; SPM; g; surj'; iso-inv; iso-inv-bwd; _⊨ᵐ_; _⊨ᵖᵐ_; ⟦_⟧ᵐ; ⟦_⟧ᵖᵐ )
+```
 
--- =====================================================================
--- SECTION 3: THE DOWN-REFLECTION AT M THROUGH hull-closed.
--- =====================================================================
+## The canonical code and the elementarity of the hull
 
-module DownReflect (α : S) (ordα : IsOrd α)
-  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩) (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
-
-  module ASt = AtStage α ordα
-  module H = ASt.Hull X X⊆L ∅∈α
-
-  SM : Type (ℓ-suc ℓ)
-  SM = Σ[ x ∈ S ] ⟨ x ∈ˢ H.T.Hull ⟩
-
-  module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ))
-                  (𝒮ᵥ ↾ (λ x → x ∈ˢ H.T.Hull))
-  open module Mse = SemM.At SM id public renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
-
-  inL : SM → ASt.SL
-  inL c = fst c , H.Hull⊆L (fst c) (snd c)
-
-  codeValM : H.T.Code → SM
-  codeValM c = fst (H.T.val c) , H.val-in-Hull c
-
-  inL∘codeValM : H.T.Code → ASt.SL
-  inL∘codeValM c = inL (codeValM c)
-
-  inL∘codeValM≡val : (c : H.T.Code) → inL∘codeValM c ≡ H.T.val c
-  inL∘codeValM≡val c =
-    cong₂ _,_ refl ((fst (H.T.val c) ∈ˢ Lset α) .snd _ _)
-
-  mapTm-ext : {n : ℕ} (t : Term H.T.Code n)
-            → mapTm inL∘codeValM t ≡ mapTm H.T.val t
-  mapTm-ext (con c) = cong con (inL∘codeValM≡val c)
-  mapTm-ext (var i) = refl
-
-  mapFo-ext : {n : ℕ} (φ : Formula H.T.Code n)
-            → mapFo inL∘codeValM φ ≡ mapFo H.T.val φ
-  mapFo-ext (t ∈̇ u)  = cong₂ _∈̇_ (mapTm-ext t) (mapTm-ext u)
-  mapFo-ext (t ≐ u)  = cong₂ _≐_ (mapTm-ext t) (mapTm-ext u)
-  mapFo-ext (φ ∧̇ ψ)  = cong₂ _∧̇_ (mapFo-ext φ) (mapFo-ext ψ)
-  mapFo-ext (φ ∨̇ ψ)  = cong₂ _∨̇_ (mapFo-ext φ) (mapFo-ext ψ)
-  mapFo-ext (φ ⇒̇ ψ)  = cong₂ _⇒̇_ (mapFo-ext φ) (mapFo-ext ψ)
-  mapFo-ext (¬̇ φ)    = cong ¬̇_ (mapFo-ext φ)
-  mapFo-ext ⊤̇        = refl
-  mapFo-ext ⊥̇        = refl
-  mapFo-ext (∃̇ φ)    = cong ∃̇_ (mapFo-ext φ)
-  mapFo-ext (∀̇ φ)    = cong ∀̇_ (mapFo-ext φ)
-  mapFo-ext (∀̇∈ t φ) = cong₂ ∀̇∈ (mapTm-ext t) (mapFo-ext φ)
-  mapFo-ext (∃̇∈ t φ) = cong₂ ∃̇∈ (mapTm-ext t) (mapFo-ext φ)
-
-  qOf : (a : ASt.SL) → ⟨ fst a ∈ˢ H.T.Hull ⟩ → SM
-  qOf a a∈H = fst a , a∈H
-
-  env-eq : (a : ASt.SL) (a∈H : ⟨ fst a ∈ˢ H.T.Hull ⟩)
-         → map inL (qOf a a∈H ∷ []) ≡ a ∷ []
-  env-eq a a∈H =
-    cong₂ _∷_ (Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) refl) refl
-
-  ElemDown : Type (ℓ-suc ℓ)
-  ElemDown = (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
-           → ⟨ map inL δ ASt.AbsL.⊨ᵐ (mapFo inL φ) ⟩ → ⟨ δ ⊨ᵐ φ ⟩
-
-  module _ (ed : ElemDown) where
-
-    env-trans : (φ : Formula H.T.Code 1) (a : ASt.SL) (a∈H : ⟨ fst a ∈ˢ H.T.Hull ⟩)
-              → ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val φ) ⟩
-              → ⟨ map inL (qOf a a∈H ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val φ) ⟩
-    env-trans φ a a∈H = transport
-      (cong (λ e → ⟨ e ASt.AbsL.⊨ᵐ (mapFo H.T.val φ) ⟩) (sym (env-eq a a∈H)))
-
-    form-trans : (φ : Formula H.T.Code 1) (a : ASt.SL) (a∈H : ⟨ fst a ∈ˢ H.T.Hull ⟩)
-               → ⟨ map inL (qOf a a∈H ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val φ) ⟩
-               → ⟨ map inL (qOf a a∈H ∷ []) ASt.AbsL.⊨ᵐ (mapFo (inL∘codeValM) φ) ⟩
-    form-trans φ a a∈H = transport
-      (sym (cong (λ ψ → ⟨ map inL (qOf a a∈H ∷ []) ASt.AbsL.⊨ᵐ ψ ⟩) (mapFo-ext φ)))
-
-    form-trans₂ : (φ : Formula H.T.Code 1) (a : ASt.SL) (a∈H : ⟨ fst a ∈ˢ H.T.Hull ⟩)
-                → ⟨ map inL (qOf a a∈H ∷ []) ASt.AbsL.⊨ᵐ (mapFo (inL∘codeValM) φ) ⟩
-                → ⟨ map inL (qOf a a∈H ∷ []) ASt.AbsL.⊨ᵐ
-                      (mapFo inL (mapFo codeValM φ)) ⟩
-    form-trans₂ φ a a∈H = transport
-      (sym (cong (λ ψ → ⟨ map inL (qOf a a∈H ∷ []) ASt.AbsL.⊨ᵐ ψ ⟩)
-        (mapFo-comp codeValM inL φ)))
-
-    bridge : (φ : Formula H.T.Code 1) (a : ASt.SL) (a∈H : ⟨ fst a ∈ˢ H.T.Hull ⟩)
-           → ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val φ) ⟩
-           → ⟨ (qOf a a∈H ∷ []) ⊨ᵐ (mapFo codeValM φ) ⟩
-    bridge φ a a∈H ha =
-      ed 1 (mapFo codeValM φ) (qOf a a∈H ∷ [])
-        (form-trans₂ φ a a∈H (form-trans φ a a∈H (env-trans φ a a∈H ha)))
-
-    down-reflect : (φ : Formula H.T.Code 1)
-                 → ⟨ [] ASt.AbsL.⊨ᵐ (∃̇ (mapFo H.T.val φ)) ⟩
-                 → ∥ Σ[ q ∈ SM ] ⟨ (q ∷ []) ⊨ᵐ (mapFo codeValM φ) ⟩ ∥₁
-    down-reflect φ h = PT.rec squash₁ go (H.hull-closed φ h)
-      where
-      go : Σ[ a ∈ ASt.SL ] (⟨ fst a ∈ˢ H.T.Hull ⟩
-                          × ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val φ) ⟩)
-         → ∥ Σ[ q ∈ SM ] ⟨ (q ∷ []) ⊨ᵐ (mapFo codeValM φ) ⟩ ∥₁
-      go (a , a∈H , ha) = ∣ qOf a a∈H , bridge φ a a∈H ha ∣₁
-
+```agda
 -- =====================================================================
 -- WALL 2, PLACED ([LJ-1.53] probe A).  The parameter-to-code
 -- relabelling inside TV/ElemDown.  The canonical code of each hull
--- member (the CodeSelect least-of pattern, over the ordinal's own
+-- member (the least-of pattern, over the ordinal's own
 -- well-order and the code count), the generic close operation that
 -- replaces the top parameters by their codes as constants, its
 -- satisfaction adequacy, and the TarskiVaught instance at every arity
@@ -506,9 +800,9 @@ module CloseSem {𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ))}
                 {K : Type (ℓ-suc ℓ)} (ι : K → ZFStructure.S 𝒮) where
 
   open ZFStructure 𝒮 renaming ( _∈ˢ_ to _∈ˢ𝒮_ ; _≈ˢ_ to _≈ˢ𝒮_ )
-  module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮
+  module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮 using ( module At; _^_ )
   open Sem.At K ι using ( _⊨_; ⟦_⟧ )
-  module Cl = CloseSyntax
+  module Cl = CloseSyntax using ( closeTmAt; closeAt; close; closeAll )
 
   map-id : {ℓ'' : Level} {A : Type ℓ''} {n : ℕ} (v : Vec A n)
          → map (λ x → x) v ≡ v
@@ -580,16 +874,17 @@ module CloseSem {𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ))}
 module HullElemDown (α : S) (ordα : IsOrd α)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩) (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
 
-  module ASt = AtStage α ordα
+  module ASt = AtStage α ordα using ( module AbsL; module AtM; module Hull; SL )
   module H = ASt.Hull X X⊆L ∅∈α
+    using ( module T; Hull⊆L; hull-closed; hull-member; val-in-Hull )
   M : S
   M = H.T.Hull
-  module A = ASt.AtM M H.Hull⊆L
-  module Mse = A.SemM.At A.SM id
+  module A = ASt.AtM M H.Hull⊆L using ( Elementary; SM; module SemM; TV-thm; inL )
+  module Mse = A.SemM.At A.SM id using ( _⊨_ )
 
-  module Cl = CloseSyntax
-  module CseM = CloseSem {𝒮 = 𝒮ᵥ ↾ (λ x → x ∈ˢ M)} {K = A.SM} id
+  module Cl = CloseSyntax using ( close; mapFo-close )
   module CseL = CloseSem {𝒮 = 𝒮ᵥ ↾ (λ x → x ∈ˢ Lset α)} {K = ASt.SL} id
+    using ( module Cl; map-id; ⊨-closeAll; ⊨-close₁ )
 
   module WithCode (f : A.SM → H.T.Code)
     (f-spec : (q : A.SM) → fst (H.T.val (f q)) ≡ fst q) where
@@ -676,34 +971,67 @@ module HullElemDown (α : S) (ordα : IsOrd α)
               → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL φ) ⟩
               → fst (Mse._⊨_ δ φ)
     elem-down n φ δ h = subst ⟨_⟩ (sym (elem n φ δ)) h
+```
 
-isOrdAt : Formula (⊥* {ℓ-suc ℓ}) 1
-isOrdAt =
-  (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero)))))
-  ∧̇ (∀̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
+## The ambient parameter-free reading
 
-Δ₀-isOrdAt : Δ₀ isOrdAt
-Δ₀-isOrdAt =
-  δ-∧ (δ-∀∈ (δ-∀∈ δ-∈))
-      (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
-
+```agda
 -- The ambient reading of the parameter-free formulas: the full
 -- hierarchy semantics at the empty constant domain.
+module AtP = SemV.At (⊥* {ℓ-suc ℓ}) (λ b → Empty.rec* b) using ( _⊨_ )
+
+_⊨ₚ_ : {n : ℕ} → S ^ n → Formula (⊥* {ℓ-suc ℓ}) n → hProp (ℓ-suc ℓ)
+_⊨ₚ_ = AtP._⊨_
+
+-- A parameter-free formula is FIXED by every relabelling: `embed` has
+-- already sent the empty constant domain everywhere, and there is
+-- nothing left for `f` to move.
+embed-map : {ℓ₁ ℓ₂ : Level} {K : Type ℓ₁} {K' : Type ℓ₂} (f : K → K')
+            {n : ℕ} (φ : Formula (⊥* {ℓ-suc ℓ}) n)
+          → mapFo f (embed φ) ≡ embed φ
+embed-map f φ =
+    mapFo-comp Empty.rec* f φ
+  ∙ cong (λ h → mapFo h φ) (funExt (λ b → Empty.rec* b))
+
+-- Ordinality, as a one-slot Δ₀ formula.  Sealed: its readers are the
+-- two below, and every other consumer reads it through them.
+opaque
+  isOrdAt : Formula (⊥* {ℓ-suc ℓ}) 1
+  isOrdAt =
+    (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero)))))
+    ∧̇ (∀̇∈ (var zero) (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
+
+  Δ₀-isOrdAt : Δ₀ isOrdAt
+  Δ₀-isOrdAt =
+    δ-∧ (δ-∀∈ (δ-∀∈ δ-∈))
+        (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
+
 module Amb where
-  module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
-  module AtP = SemV.At (⊥* {ℓ-suc ℓ}) (λ b → Empty.rec* b)
-  _⊨ₚ_ : {n : ℕ} → S ^ n → Formula (⊥* {ℓ-suc ℓ}) n → hProp (ℓ-suc ℓ)
-  _⊨ₚ_ = AtP._⊨_
+  opaque
+    unfolding isOrdAt
 
-  isOrdAt-out : (x : S) → ⟨ (x ∷ []) ⊨ₚ isOrdAt ⟩ → IsOrd x
-  isOrdAt-out x h =
-      ( λ {x₁} {y} y∈x₁ x₁∈x → h .fst x₁ x₁∈x y y∈x₁ )
-    , ( λ a a∈x {x₁} {y} y∈x₁ x₁∈a → h .snd a a∈x x₁ x₁∈a y y∈x₁ )
+    isOrdAt-out : (x : S) → ⟨ (x ∷ []) ⊨ₚ isOrdAt ⟩ → IsOrd x
+    isOrdAt-out x h =
+        ( λ {x₁} {y} y∈x₁ x₁∈x → h .fst x₁ x₁∈x y y∈x₁ )
+      , ( λ a a∈x {x₁} {y} y∈x₁ x₁∈a → h .snd a a∈x x₁ x₁∈a y y∈x₁ )
 
-  isOrdAt-in : (x : S) → IsOrd x → ⟨ (x ∷ []) ⊨ₚ isOrdAt ⟩
-  isOrdAt-in x o =
-      ( λ a a∈x b hb → o .fst {a} {b} hb a∈x )
-    , ( λ a a∈x b b∈a c hc → o .snd a a∈x {b} {c} hc b∈a )
+    isOrdAt-in : (x : S) → IsOrd x → ⟨ (x ∷ []) ⊨ₚ isOrdAt ⟩
+    isOrdAt-in x o =
+        ( λ a a∈x b hb → o .fst {a} {b} hb a∈x )
+      , ( λ a a∈x b b∈a c hc → o .snd a a∈x {b} {c} hc b∈a )
+
+-- Ordinality of the parameter, as a 3-slot conjunct, p at slot 1.  Not
+-- sealed: `L.GCH.Condense` and `L.GCH.Complete` read its shape.
+isOrd-at-p : Formula (⊥* {ℓ-suc ℓ}) 3
+isOrd-at-p =
+    (∀̇∈ (var (suc zero))
+      (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc (suc zero))))))
+  ∧̇ (∀̇∈ (var (suc zero))
+      (∀̇∈ (var zero)
+        (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero))))))
+
+Δ₀-isOrd-at-p : Δ₀ isOrd-at-p
+Δ₀-isOrd-at-p = δ-∧ (δ-∀∈ (δ-∀∈ δ-∈)) (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
 
 -- The erase of a constant-free formula carries the Delta-0 witness:
 -- erase is a pure syntactic erasure, so the certificate recurses.
@@ -723,28 +1051,24 @@ erase-Δ₀ (∃̇ φ) p ()
 erase-Δ₀ (∀̇ φ) p ()
 
 -- =====================================================================
--- SECTION 4B: THE CONDENSATION THEOREM AT THE HULL INSTANCE.
+-- THE LEFTOVER EQUATION.  [LJ-1.686] Probe686.agda:34-55, module `At`
+-- renamed `EmbedAt`.  `mapFo val (mapFo slide φ) ≡ embed φ` by
+-- mapFo-comp and uniqueness of maps out of ⊥*.
 -- =====================================================================
 
-open import V.Smallness {ℓ} using ( separateFromSmall; module Δ₀Small )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
-open import V.Model {ℓ} using ( self∈sucV )
-open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡; rank-Lset; ord∈Lset-suc )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.Rank {ℓ} using ( rank-fix )
-open import L.Axioms.Basic {ℓ} using ( Lset-suc; LsetS )
-import L.StageCardinal
-open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet; _∪_; ⁅_,_⁆; ⁅_⁆s; union-ax; pairing-ax
-        ; SetPackage; SingletonPackage )  -- lint-agda: keep (SetPackage via record projection)
-open InfinitySet using ( ω; sucV )
-open import Cubical.Data.Sum using ( _⊎_ )
-open import Cubical.Data.Sigma.Properties using ( ΣPathP )
-open import Cubical.Foundations.Transport using ( substSubst⁻ )
-open import Cubical.Foundations.Prelude using ( toPathP; PathP; transportRefl; J )
+lemma : {ℓc ℓd : Level} {K : Type ℓc} {K' : Type ℓd} {n : ℕ}
+        (φ : Formula (⊥* {ℓ-suc ℓ}) n)
+        (slide : ⊥* {ℓ-suc ℓ} → K)
+        (val : K → K')
+      → mapFo val (mapFo slide φ) ≡ embed φ
+lemma φ slide val =
+    mapFo-comp slide val φ
+  ∙ cong (λ h → mapFo h φ) (funExt (λ b → Empty.rec* b))
+```
 
-module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → Empty.rec* b)
+## The hull stage and its condensation
 
+```agda
 -- The hull of X at the stage Lset λ, its collapse, and the condensation
 -- theorem at this one instance (D-30: the consumer's shape, not the
 -- general theory).  The two transfer hypotheses are Devlin's (h) and
@@ -759,13 +1083,17 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩) (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 
   module ASt = AtStage lam ordλ
+    using ( module AbsL; module AtM; module Hull; Ltr; SL; wL )
 
   module H = ASt.Hull X X⊆L ∅∈λ
+    using ( module T; module XInM; Hull⊆L; X⊆M; hull-member; hull-closed
+          ; val-in-Hull; ∅∈Lsetα; inStg; toSL; hullVal; leastWit; leastWit-spec )
 
   M : S
   M = H.T.Hull
 
   module C = Collapse M
+    using ( module InjExt; π; πX; πX-intro; πX-member; πX-trans; fixes )
 
   module Condense
     (levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ C.πX ⟩ → ⟨ Lset δ ∈ˢ C.πX ⟩)
@@ -777,14 +1105,14 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
     -- ordinal formula.  This is the L-native supremum (ProbeT261's
     -- shape at the transitive carrier).
     β-sep : Σ[ s ∈ S ]
-              (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) Amb.⊨ₚ isOrdAt)))
-    β-sep = separateFromSmall C.πX (λ y → (y ∷ []) Amb.⊨ₚ isOrdAt)
+              (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) ⊨ₚ isOrdAt)))
+    β-sep = separateFromSmall C.πX (λ y → (y ∷ []) ⊨ₚ isOrdAt)
               (λ y → D0.Δ₀-small Δ₀-isOrdAt (y ∷ []))
 
     β : S
     β = β-sep .fst
 
-    β-spec : (y : S) → (y ∈ˢ β) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) Amb.⊨ₚ isOrdAt))
+    β-spec : (y : S) → (y ∈ˢ β) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) ⊨ₚ isOrdAt))
     β-spec = β-sep .snd
 
     β∈πX : (δ : S) → ⟨ δ ∈ˢ β ⟩ → ⟨ δ ∈ˢ C.πX ⟩
@@ -887,112 +1215,6 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
     condenses : Σ[ γ ∈ S ] (IsOrd γ × (C.πX ≡ Lset γ))
     condenses = β , β-isOrd , ext
 
--- =====================================================================
--- SECTION 5: DEVLIN 5.5, THE BOUNDED-SUBSET LEMMA.
--- =====================================================================
-
-open import L.Ordinal {ℓ} using ( ω-ord; #∈ω; ∅-ord )
-open import L.Axioms.Basic {ℓ} using ( ∅∈𝒟ₒ )
-
-_↪_ : Type ℓ → Type ℓ → Type ℓ
-X ↪ Y = Σ[ f ∈ (X → Y) ] ((x y : X) → f x ≡ f y → x ≡ y)
-
-IsCardinal : S → Type (ℓ-suc ℓ)
-IsCardinal κ = (δ : S) → ⟨ δ ∈ˢ κ ⟩ → (⟪ κ ⟫ ↪ ⟪ δ ⟫ → Empty.⊥)
-
--- =====================================================================
--- THE INVERSE COLLAPSE, IN TWO GENERIC LEGS (ProbeDD25G3, transplanted).
--- The witness of a collapse value is a member of M, and THAT fibre is a
--- proposition because π is injective on M; only the code fibre is not a
--- proposition, and the least-of-the-class pattern over the ordinal's own
--- well-order (leastOf over L.StageCardinal.OrdSWO.ordSWO) picks a
--- canonical code.  The
--- composite replaces the `collapseCode` hypothesis outright.
--- =====================================================================
-
-module InvColl (M : S) (Mext : isExt M) where
-  module C = Collapse M
-  module CI = C.InjExt Mext
-
-  Fib : S → Type (ℓ-suc ℓ)
-  Fib z = Σ[ m ∈ ⟪ M ⟫ ] (C.π (⟪ M ⟫↪ m) ≡ z)
-
-  isPropFib : (z : S) → isProp (Fib z)
-  isPropFib z (m , p) (n , q) = ΣPathP (mn , toPathP (isSetS _ _ _ _))
-    where
-    ↪mn : ⟪ M ⟫↪ m ≡ ⟪ M ⟫↪ n
-    ↪mn = CI.π-inj (⟪ M ⟫↪ m) (⟪ M ⟫↪ n) (member M m) (member M n)
-            (p ∙ sym q)
-    mn : m ≡ n
-    mn = ↪-inj {a = M} ↪mn
-
-  getFib : (z : S) → ⟨ z ∈ˢ C.πX ⟩ → Fib z
-  getFib z z∈ = PT.rec (isPropFib z) go (C.πX-member z z∈)
-    where
-    go : Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ z)) → Fib z
-    go (y , y∈M , e) =
-      fiber M y∈M .fst ,
-      cong C.π (fiber M y∈M .snd) ∙ e
-
-  inv : ⟪ C.πX ⟫ → ⟪ M ⟫
-  inv p = getFib (⟪ C.πX ⟫↪ p) (member C.πX p) .fst
-
-  inv-inj : (p q : ⟪ C.πX ⟫) → inv p ≡ inv q → p ≡ q
-  inv-inj p q e = ↪-inj {a = C.πX} step
-    where
-    ep : C.π (⟪ M ⟫↪ (inv p)) ≡ ⟪ C.πX ⟫↪ p
-    ep = getFib (⟪ C.πX ⟫↪ p) (member C.πX p) .snd
-    eq : C.π (⟪ M ⟫↪ (inv q)) ≡ ⟪ C.πX ⟫↪ q
-    eq = getFib (⟪ C.πX ⟫↪ q) (member C.πX q) .snd
-    step : ⟪ C.πX ⟫↪ p ≡ ⟪ C.πX ⟫↪ q
-    step = sym ep ∙ cong (λ m → C.π (⟪ M ⟫↪ m)) e ∙ eq
-
-  leg1 : ⟪ C.πX ⟫ ↪ ⟪ M ⟫
-  leg1 = inv , inv-inj
-
-module CodeSelect (α : S) (oα : IsOrd α) (w : SWO {ℓ} ⟪ α ⟫)
-  (M : S) (Code : Type ℓ) (val : Code → S)
-  (mem-code : (x : S) → ⟨ x ∈ˢ M ⟩ → ∥ Σ[ c ∈ Code ] (val c ≡ x) ∥₁)
-  (cnt : Code → ⟪ α ⟫)
-  (cnt-inj : (c d : Code) → cnt c ≡ cnt d → c ≡ d)
-  where
-
-  cls : ⟪ M ⟫ → ⟪ α ⟫ → hProp (ℓ-suc ℓ)
-  cls m y = ( ∥ Σ[ c ∈ Code ] ((val c ≡ ⟪ M ⟫↪ m) × (cnt c ≡ y)) ∥₁
-            , squash₁ )
-
-  nonempty : (m : ⟪ M ⟫) → ∥ Σ[ y ∈ ⟪ α ⟫ ] ⟨ cls m y ⟩ ∥₁
-  nonempty m = PT.map (λ { (c , e) → cnt c , ∣ c , (e , refl) ∣₁ })
-                      (mem-code (⟪ M ⟫↪ m) (member M m))
-
-  h : ⟪ M ⟫ → ⟪ α ⟫
-  h m = fst (leastOf w {ℓ'' = ℓ-suc ℓ} lem (cls m) (nonempty m))
-
-  h-inj : (m n : ⟪ M ⟫) → h m ≡ h n → m ≡ n
-  h-inj m n e = ↪-inj {a = M} (go pm)
-    where
-    lm = leastOf w {ℓ'' = ℓ-suc ℓ} lem (cls m) (nonempty m)
-    ln = leastOf w {ℓ'' = ℓ-suc ℓ} lem (cls n) (nonempty n)
-    pm : ⟨ cls m (fst ln) ⟩
-    pm = subst (λ y → ⟨ cls m y ⟩) e (fst (snd lm))
-    pn : ⟨ cls n (fst ln) ⟩
-    pn = fst (snd ln)
-    go : ⟨ cls m (fst ln) ⟩ → ⟪ M ⟫↪ m ≡ ⟪ M ⟫↪ n
-    go = PT.rec (isSetS (⟪ M ⟫↪ m) (⟪ M ⟫↪ n)) go₁
-      where
-      go₁ : Σ[ c ∈ Code ] ((val c ≡ ⟪ M ⟫↪ m) × (cnt c ≡ fst ln))
-          → ⟪ M ⟫↪ m ≡ ⟪ M ⟫↪ n
-      go₁ (c , (ec , en)) =
-        PT.rec (isSetS (⟪ M ⟫↪ m) (⟪ M ⟫↪ n)) go₂ pn
-        where
-        go₂ : Σ[ d ∈ Code ] ((val d ≡ ⟪ M ⟫↪ n) × (cnt d ≡ fst ln))
-            → ⟪ M ⟫↪ m ≡ ⟪ M ⟫↪ n
-        go₂ (d , (ed , en')) =
-          sym ec ∙ cong val (cnt-inj c d (en ∙ sym en')) ∙ ed
-
-  leg2 : ⟪ M ⟫ ↪ ⟪ α ⟫
-  leg2 = h , h-inj
-
 -- The generator Lset α ∪ {x} and its stage facts: x is a member, the
 -- generator lies in the stage, the generator is transitive when x is a
 -- subset of the stage, and the empty set lies in the limit index.
@@ -1075,7 +1297,7 @@ module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
     (rank-Lset lam ordλ ∅ ∅∈Lλ)
 
 -- =====================================================================
--- THE HULL IS EXTENSIONAL (discharges the `Mext` hypothesis of `Co`).
+-- THE HULL IS EXTENSIONAL (the `Mext` hypothesis of the collapse iso).
 -- Two hull members that agree on the hull's memberships differ nowhere:
 -- a global difference witness z ∈ x \ y would satisfy the difference
 -- formula "v ∈ x ∧ v ∉ y" over the codes of x and y in the stage, so
@@ -1090,8 +1312,8 @@ module HullExt (α : S) (ordα : IsOrd α)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩)
   (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
 
-  module ASt = AtStage α ordα
-  module H = ASt.Hull X X⊆L ∅∈α
+  module ASt = AtStage α ordα using ( module AbsL; module Hull; SL )
+  module H = ASt.Hull X X⊆L ∅∈α using ( module T; Hull⊆L; hull-closed; hull-member )
 
   M : S
   M = H.T.Hull
@@ -1210,385 +1432,178 @@ module HullExt (α : S) (ordα : IsOrd α)
         dir2 : ((⟨ subF x y ⟩) → Empty.⊥) ⊎ ((⟨ subF y x ⟩) → Empty.⊥) → Empty.⊥
         dir2 (inl ¬xy) = refute x y x∈M y∈M ag1 c d ec ed ¬xy
         dir2 (inr ¬yx) = refute2 x y x∈M y∈M ag2 c d ec ed ¬yx
+```
 
-open import Cubical.Data.Nat.Properties using ( znots; snotz; injSuc )
+## The carry across the collapse
 
-module Devlin55
-  where
+```agda
+-- =====================================================================
+-- THE GENERIC UNPACK.  [LJ-1.680] Probe680.agda:48-146.  Two ∃̇ and
+-- two ≐ unpacked at a generic transitive carrier, then abs₀ at a
+-- generic 3-slot Δ₀ formula.
+-- =====================================================================
 
-  comp-inj : {A B C : Type ℓ} → A ↪ B → B ↪ C → A ↪ C
-  comp-inj (f , injf) (g , injg) =
-    (λ x → g (f x)) , λ x y e → injf x y (injg (f x) (f y) e)
+-- Two ∃̇ bind value then parameter; two ≐ pin those binders to
+-- constants; the remaining free slot is the witness.
+pin₃ : {ℓc : Level} {K : Type ℓc} → Formula K 3 → K → K → Formula K 1
+pin₃ φ ca cp =
+  ∃̇ (∃̇ (φ ∧̇ (var zero ≐ con ca) ∧̇ (var (suc zero) ≐ con cp)))
 
-  -- The ordinal embedding: a member of an ordinal embeds its index.
-  ord-emb : (a b : S) → IsOrd b → ⟨ a ∈ˢ b ⟩ → ⟪ a ⟫ ↪ ⟪ b ⟫
-  ord-emb a b ob a∈b = f , inj
+pin₃-map : {ℓc ℓd : Level} {K : Type ℓc} {K' : Type ℓd}
+           (f : K → K') (φ : Formula K 3) (ca cp : K)
+         → mapFo f (pin₃ φ ca cp) ≡ pin₃ (mapFo f φ) (f ca) (f cp)
+pin₃-map f φ ca cp = refl
+
+module Unpack (U : S) (Utr : isTrans U) where
+
+  module Ab = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ U) Utr using (SM; abs₀; _⊨ᵐ_)
+
+  read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Ab.SM ^ n)
+       → (δ Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+  read {n} {φ} dφ δ =
+      Ab.abs₀ (mapΔ₀ Empty.rec* dφ) δ
+    ∙ embed-⊨ (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ {K = Ab.SM} fst φ (map fst δ)
+    ∙ cong (λ ι → SemV.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
+           (funExt (λ b → Empty.rec* b))
+
+  unpack-pin :
+      (φ : Formula Ab.SM 3)
+    → (ca cp a : Ab.SM)
+    → ⟨ (a ∷ []) Ab.⊨ᵐ (pin₃ φ ca cp) ⟩
+    → ∥ Σ[ y ∈ Ab.SM ] Σ[ x ∈ Ab.SM ]
+         ( ⟨ (y ∷ x ∷ a ∷ []) Ab.⊨ᵐ φ ⟩
+         × (fst y ≡ fst ca)
+         × (fst x ≡ fst cp) ) ∥₁
+  unpack-pin φ ca cp a h =
+    PT.rec squash₁ outer h
     where
-    f : ⟪ a ⟫ → ⟪ b ⟫
-    f m = fiber b {x = ⟪ a ⟫↪ m} (ob .fst (member a m) a∈b) .fst
-    inj : (m n : ⟪ a ⟫) → f m ≡ f n → m ≡ n
-    inj m n e = ↪-inj {a = a}
-      (sym (fiber b {x = ⟪ a ⟫↪ m} (ob .fst (member a m) a∈b) .snd)
-        ∙ cong (⟪ b ⟫↪) e
-        ∙ fiber b {x = ⟪ a ⟫↪ n} (ob .fst (member a n) a∈b) .snd)
-
-  -- The bounded-subset lemma at one instance: the hull of Lset alpha
-  -- union {x} at the limit stage lam, its collapse, the condensation
-  -- (the two transfer hypotheses), the size chain and the cardinal
-  -- argument.
-  module BoundedSubsetAt
-    (κ : S) (ordκ : IsOrd κ) (cardκ : IsCardinal κ) (κ∉ω : ⟨ κ ∈ˢ ω ⟩ → Empty.⊥)
-    (α : S) (ordα : IsOrd α) (α∈κ : ⟨ α ∈ˢ κ ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
-    (sq : (δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥)
-        → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
-            ((x y : ⟪ δ ⟫ × ⟪ δ ⟫) → f x ≡ f y → x ≡ y))
-    (x : S) (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
-    (absorbs : ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫)
-    (lam : S) (ordλ : IsOrd lam) (α∈λ : ⟨ α ∈ˢ lam ⟩)
-    (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
-    (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩) where
-
-    module SC = L.StageCardinal {ℓ} lem α ordα sq
-    module Up = SC.Upper
-
-    stage-card-upper : (γ : S) → IsOrd γ → ⟨ γ ∈ˢ sucV α ⟩
-                     → (⟨ γ ∈ˢ ω ⟩ → Empty.⊥) → ⟪ Lset γ ⟫ ↪ ⟪ γ ⟫
-    stage-card-upper = Up.stage-card-upper
-
-    -- ingredient (iv) of `class-pred` ([LJ-1.608], sited by [LJ-1.625]):
-    -- the branch's graph at a strictly infinite member stage, both
-    -- directions, from the member stage's own graph.  `Sx` here is the
-    -- constructible carrier (the restriction of the V-structure to `isL`);
-    -- the stages are bare `V` elements, and `SC` is instantiated at the
-    -- module's own `α`.
-    module RGraph where
-
-      -- the constructible carrier: the restriction of the V-structure to `isL`
-      Sx : Type (ℓ-suc ℓ)
-      Sx = CS.S
-
-      open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
-      isL-ord : (β : V ℓ) → IsOrd β → ⟨ isL β ⟩
-      isL-ord β oβ = Lset→isL (sucV β) (suc-ord oβ) β (ord∈Lset-suc β oβ)
-
-      up : (b : Sx) → ⟪ fst b ⟫ → Sx
-      up b m = ⟪ fst b ⟫↪ m , isL-trans (member (fst b) m) (snd b)
-
-      ixOf : (b x : Sx) → ⟨ fst x ∈ fst b ⟩ → ⟪ fst b ⟫
-      ixOf b x k = fiber (fst b) {x = fst x} k .fst
-
-      comp-fst : {A B C : Type ℓ} (g : A ↪ B) (h : B ↪ C) (j : A)
-        → fst (SC.Upper.comp-inj g h) j ≡ fst h (fst g j)
-      comp-fst (f , _) (g , _) j = refl
-
-      module At (β : V ℓ) (oβ : IsOrd β) (β∈suc : ⟨ β ∈ˢ sucV α ⟩)
-               (infβ : ⟨ β ∈ˢ ω ⟩ → Empty.⊥)
-               (IH : (δ : V ℓ) → ⟨ δ ∈ˢ β ⟩ → SC.Upper.P δ)
-               (m : ⟪ β ⟫) (ω∈δ : ⟨ ω ∈ˢ (⟪ β ⟫↪ m) ⟩) where
-
-        δ : V ℓ
-        δ = ⟪ β ⟫↪ m
-
-        δ∈β : ⟨ δ ∈ˢ β ⟩
-        δ∈β = member β m
-
-        oδ : IsOrd δ
-        oδ = mem-ord {A = β} oβ δ δ∈β
-
-        δ∈suc : ⟨ δ ∈ˢ sucV α ⟩
-        δ∈suc = suc-ord ordα .fst {x = β} {y = δ} δ∈β β∈suc
-
-        infδ : ⟨ δ ∈ˢ ω ⟩ → Empty.⊥
-        infδ h = ∈-irrefl ω (ω-ord .fst ω∈δ h)
-
-        IHδ : ⟪ Lset δ ⟫ ↪ ⟪ δ ⟫
-        IHδ = IH δ δ∈β oδ δ∈suc infδ
-
-        br : ⟪ Lset δ ⟫ ↪ ⟪ β ⟫
-        br = SC.Upper.comp-inj IHδ (SC.Upper.Emb.emb β oβ δ δ∈β)
-
-        δL : Sx
-        δL = LsetS δ oδ
-
-        βO : Sx
-        βO = β , isL-ord β oβ
-
-        δO : Sx
-        δO = δ , isL-ord δ oδ
-
-        val : (x : Sx) (k : ⟨ fst x ∈ fst δL ⟩) → Sx
-        val x k = up βO (fst br (ixOf δL x k))
-
-        valδ : (x : Sx) (k : ⟨ fst x ∈ fst δL ⟩) → Sx
-        valδ x k = up δO (fst IHδ (ixOf δL x k))
-
-        IHGraph : Type (ℓ-suc ℓ)
-        IHGraph = Σ[ ψ ∈ Formula Sx 2 ]
-          ( ((x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
-             → fst y ≡ fst (valδ x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩)
-          × ((x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩ → (k : ⟨ fst x ∈ fst δL ⟩)
-             → fst y ≡ fst (valδ x k)) )
-
-        RecGraph∞ : Type (ℓ-suc ℓ)
-        RecGraph∞ = IHGraph →
-          Σ[ ψ ∈ Formula Sx 2 ]
-            ( ((x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
-               → fst y ≡ fst (val x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩)
-            × ((x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩ → (k : ⟨ fst x ∈ fst δL ⟩)
-               → fst y ≡ fst (val x k)) )
-
-        the-graph : RecGraph∞
-        the-graph G = ψ , (defines-side , only-side)
-          where
-          ψ : Formula Sx 2
-          ψ = fst G
-          val-eq : (x : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
-            → fst (val x k) ≡ fst (valδ x k)
-          val-eq x k =
-            cong (⟪ β ⟫↪)
-              ( comp-fst IHδ (SC.Upper.Emb.emb β oβ δ δ∈β) (ixOf δL x k) )
-            ∙ fiber β {x = ⟪ δ ⟫↪ (fst IHδ (ixOf δL x k))}
-                ( oβ .fst (member δ (fst IHδ (ixOf δL x k))) δ∈β ) .snd
-          IHd : (x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
-            → fst y ≡ fst (valδ x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
-          IHd = fst (snd G)
-          IHo : (x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
-            → (k : ⟨ fst x ∈ fst δL ⟩) → fst y ≡ fst (valδ x k)
-          IHo = snd (snd G)
-          defines-side : (x y : Sx) (k : ⟨ fst x ∈ fst δL ⟩)
-            → fst y ≡ fst (val x k) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
-          defines-side x y k e = IHd x y k (e ∙ val-eq x k)
-          only-side : (x y : Sx) → ⟨ (y ∷ x ∷ []) ⊨ ψ ⟩
-            → (k : ⟨ fst x ∈ fst δL ⟩) → fst y ≡ fst (val x k)
-          only-side x y sat k = IHo x y sat k ∙ sym (val-eq x k)
-
-      class-pred-iv : (β : V ℓ) (oβ : IsOrd β) (β∈suc : ⟨ β ∈ˢ sucV α ⟩)
-        (infβ : ⟨ β ∈ˢ ω ⟩ → Empty.⊥)
-        (IH : (δ : V ℓ) → ⟨ δ ∈ˢ β ⟩ → SC.Upper.P δ)
-        (m : ⟪ β ⟫) (ω∈δ : ⟨ ω ∈ˢ (⟪ β ⟫↪ m) ⟩)
-          → At.RecGraph∞ β oβ β∈suc infβ IH m ω∈δ
-      class-pred-iv β oβ β∈suc infβ IH m ω∈δ =
-        At.the-graph β oβ β∈suc infβ IH m ω∈δ
-
-    module UK = UnionKit α lam x ordα ordλ α∈λ x⊆Lα x∈Lλ α∉ω
-    module HS = HullStage lam ordλ succλ UK.X UK.X⊆Lλ UK.∅∈λ
-    module HE = HullExt lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
-
-    -- The code count: the hull's term algebra injects into alpha.
-    module CodeCount (g : ⟪ UK.X ⟫ ↪ ⟪ α ⟫) where
-      module B = SC.Bound α ordα α∉ω (sq α (self∈sucV α) α∉ω)
-
-      code-stable-suc : (k k' : ℕ) (p : k' ≡ k) (ψ : Formula (⊥* {ℓ}) (suc k'))
-                      → FOL.Count.code (subst (λ j → Formula (⊥* {ℓ}) (suc j)) p ψ)
-                        ≡ FOL.Count.code ψ
-      code-stable-suc k k' p ψ =
-        J (λ k p → FOL.Count.code (subst (λ j → Formula (⊥* {ℓ}) (suc j)) p ψ)
-                   ≡ FOL.Count.code ψ)
-          (cong FOL.Count.code (transportRefl ψ)) p
-
-      mutual
-        count : HS.H.T.Code → ⟪ α ⟫
-        count (HS.H.T.base m) = B.pair (B.numeral 0) (fst g m)
-        count (HS.H.T.wit k ψ cs) =
-          B.pair (B.numeral (suc k))
-            (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-              (tuple k cs))
-
-        tuple : (j : ℕ) → Vec HS.H.T.Code j → ⟪ α ⟫
-        tuple zero [] = B.numeral 0
-        tuple (suc j) (c ∷ cs) = B.pair (count c) (tuple j cs)
-
-        tuple-inj : (j : ℕ) (cs ds : Vec HS.H.T.Code j)
-                  → tuple j cs ≡ tuple j ds → cs ≡ ds
-        tuple-inj zero [] [] e = refl
-        tuple-inj (suc j) (c ∷ cs) (d ∷ ds) e =
-          cong₂ (λ (x : HS.H.T.Code) (y : Vec HS.H.T.Code j) → x ∷ y) hc hcs
-          where
-          p : (count c ≡ count d) × (tuple j cs ≡ tuple j ds)
-          p = B.pair-inj (count c) (tuple j cs) (count d) (tuple j ds) e
-          hc : c ≡ d
-          hc = count-inj c d (fst p)
-          hcs : cs ≡ ds
-          hcs = tuple-inj j cs ds (snd p)
-
-        tuple-stable : (j j' : ℕ) (p : j' ≡ j) (cs : Vec HS.H.T.Code j')
-                     → tuple j (subst (Vec HS.H.T.Code) p cs) ≡ tuple j' cs
-        tuple-stable j j' p cs =
-          J (λ j p → tuple j (subst (Vec HS.H.T.Code) p cs) ≡ tuple j' cs)
-            (cong (tuple j') (transportRefl cs)) p
-
-        count-inj : (c d : HS.H.T.Code) → count c ≡ count d → c ≡ d
-        count-inj (HS.H.T.base m) (HS.H.T.base m') e =
-          cong HS.H.T.base (snd g m m' (B.pair-inj _ _ _ _ e .snd))
-        count-inj (HS.H.T.base m) (HS.H.T.wit k' ψ' cs') e =
-          Empty.rec (znots (B.numeral-inj 0 (suc k') (B.pair-inj _ _ _ _ e .fst)))
-        count-inj (HS.H.T.wit k ψ cs) (HS.H.T.base m') e =
-          Empty.rec (snotz (B.numeral-inj (suc k) 0 (B.pair-inj _ _ _ _ e .fst)))
-        count-inj (HS.H.T.wit k ψ cs) (HS.H.T.wit k' ψ' cs') e = wit-eq
-          where
-          e-out : (B.numeral (suc k) ≡ B.numeral (suc k'))
-                × (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-                     (tuple k cs)
-                  ≡ B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
-                     (tuple k' cs'))
-          e-out = B.pair-inj (B.numeral (suc k))
-                      (B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-                        (tuple k cs))
-                      (B.numeral (suc k'))
-                      (B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
-                        (tuple k' cs'))
-                      e
-          psk : suc k ≡ suc k'
-          psk = B.numeral-inj (suc k) (suc k') (fst e-out)
-          pk : k ≡ k'
-          pk = injSuc psk
-          e-in : B.pair (B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k)))
-                      (tuple k cs)
-                ≡ B.pair (B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k')))
-                      (tuple k' cs')
-          e-in = snd e-out
-          e-fst : B.pair (B.numeral (FOL.Count.code ψ)) (B.numeral (suc k))
-                ≡ B.pair (B.numeral (FOL.Count.code ψ')) (B.numeral (suc k'))
-          e-fst = fst (B.pair-inj _ _ _ _ e-in)
-          e-code : FOL.Count.code ψ ≡ FOL.Count.code ψ'
-          e-code = B.numeral-inj (FOL.Count.code ψ) (FOL.Count.code ψ') (fst (B.pair-inj _ _ _ _ e-fst))
-          e-tup : tuple k cs ≡ tuple k' cs'
-          e-tup = snd (B.pair-inj _ _ _ _ e-in)
-          ψ₀ : Formula (⊥* {ℓ}) (suc k)
-          ψ₀ = subst (λ j → Formula (⊥* {ℓ}) (suc j)) (sym pk) ψ'
-          sψ : ψ ≡ ψ₀
-          sψ = snd FOL.Count.shape-count-inj {k = suc k} {φ = ψ} {ψ = ψ₀}
-                 (e-code ∙ sym (code-stable-suc k k' (sym pk) ψ'))
-          qψ : PathP (λ i → Formula (⊥* {ℓ}) (suc (pk i))) ψ ψ'
-          qψ = toPathP (cong (subst (λ j → Formula (⊥* {ℓ}) (suc j)) pk) sψ
-                        ∙ substSubst⁻ (λ j → Formula (⊥* {ℓ}) (suc j)) pk ψ')
-          cs₀ : Vec HS.H.T.Code k
-          cs₀ = subst (Vec HS.H.T.Code) (sym pk) cs'
-          scs : cs ≡ cs₀
-          scs = tuple-inj k cs cs₀
-                  (e-tup ∙ sym (tuple-stable k k' (sym pk) cs'))
-          qcs : PathP (λ i → Vec HS.H.T.Code (pk i)) cs cs'
-          qcs = toPathP (cong (subst (Vec HS.H.T.Code) pk) scs
-                        ∙ substSubst⁻ (Vec HS.H.T.Code) pk cs')
-          wit-eq : HS.H.T.wit k ψ cs ≡ HS.H.T.wit k' ψ' cs'
-          wit-eq = cong (λ x → HS.H.T.wit (fst x) (fst (snd x)) (snd (snd x)))
-            (ΣPathP {A = λ _ → ℕ} {B = λ i k →
-                         Formula (⊥* {ℓ}) (suc k) × Vec HS.H.T.Code k}
-                     (pk , ΣPathP {A = λ i → Formula (⊥* {ℓ}) (suc (pk i))}
-                  {B = λ i _ → Vec HS.H.T.Code (pk i)}
-                                  (qψ , qcs)))
-
-    code-inj : ⟪ UK.X ⟫ ↪ ⟪ α ⟫
-    code-inj = comp-inj absorbs (stage-card-upper α ordα (self∈sucV α) α∉ω)
-
-    module CC = CodeCount code-inj
-
-    module IC = InvColl HS.M HE.hullExt
-    module CSel = CodeSelect α ordα (SC.OrdSWO.ordSWO α ordα)
-      HS.M HS.H.T.Code (λ c → fst (HS.H.T.val c))
-      HS.H.hull-member CC.count CC.count-inj
-
-    -- WALL 2, PLACED.  The canonical code of each hull member at the
-    -- delivered count (CanonCode at CC.count/CC.count-inj and the
-    -- hull's own well-order), and the HullElemDown instance at the
-    -- hull's stage.  The fibre coercion is V.Presentation.fiber: the
-    -- hull-member type SM is the fiber of the embedding, so the
-    -- canonical-code machinery (stated on ⟪ M ⟫) applies to it.
-    module CCn = CanonCode α ordα (SC.OrdSWO.ordSWO α ordα)
-      HS.M HS.H.T.Code (λ c → fst (HS.H.T.val c))
-      HS.H.hull-member CC.count CC.count-inj
-
-    hedF : (Σ[ x ∈ S ] ⟨ x ∈ˢ HS.M ⟩) → HS.H.T.Code
-    hedF q = CCn.canonical (fiber HS.M (snd q) .fst)
-
-    hedF-spec : (q : Σ[ x ∈ S ] ⟨ x ∈ˢ HS.M ⟩)
-              → fst (HS.H.T.val (hedF q)) ≡ fst q
-    hedF-spec q = go (fiber HS.M (snd q))
+    outer : Σ[ x ∈ Ab.SM ]
+              ⟨ (x ∷ a ∷ []) Ab.⊨ᵐ
+                  (∃̇ (φ ∧̇ (var zero ≐ con ca)
+                         ∧̇ (var (suc zero) ≐ con cp))) ⟩
+          → ∥ Σ[ y ∈ Ab.SM ] Σ[ x ∈ Ab.SM ]
+               ( ⟨ (y ∷ x ∷ a ∷ []) Ab.⊨ᵐ φ ⟩
+               × (fst y ≡ fst ca)
+               × (fst x ≡ fst cp) ) ∥₁
+    outer (x , hx) =
+      PT.rec squash₁ inner hx
       where
-      go : (f : Σ[ m ∈ ⟪ HS.M ⟫ ] (⟪ HS.M ⟫↪ m ≡ fst q))
-         → fst (HS.H.T.val (CCn.canonical (f .fst))) ≡ fst q
-      go f = CCn.canonical-spec (f .fst) ∙ f .snd
+      inner : Σ[ y ∈ Ab.SM ]
+                ⟨ (y ∷ x ∷ a ∷ []) Ab.⊨ᵐ
+                    (φ ∧̇ (var zero ≐ con ca)
+                       ∧̇ (var (suc zero) ≐ con cp)) ⟩
+            → ∥ Σ[ y ∈ Ab.SM ] Σ[ x ∈ Ab.SM ]
+                 ( ⟨ (y ∷ x ∷ a ∷ []) Ab.⊨ᵐ φ ⟩
+                 × (fst y ≡ fst ca)
+                 × (fst x ≡ fst cp) ) ∥₁
+      inner (y , hy) = ∣ y , x , hy .fst , hy .snd .fst , hy .snd .snd ∣₁
 
-    module HED = HullElemDown lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
-    module HEDC = HED.WithCode hedF hedF-spec
+  convert-generic :
+      {φ : Formula (⊥* {ℓ-suc ℓ}) 3}
+    → Δ₀ φ
+    → (ca cp a : Ab.SM)
+    → ⟨ (a ∷ []) Ab.⊨ᵐ (pin₃ (embed φ) ca cp) ⟩
+    → ⟨ (fst ca ∷ fst cp ∷ fst a ∷ []) ⊨ₚ φ ⟩
+  convert-generic {φ} dφ ca cp a h =
+    PT.rec (snd ((fst ca ∷ fst cp ∷ fst a ∷ []) ⊨ₚ φ)) go
+           (unpack-pin (embed φ) ca cp a h)
+    where
+    go : Σ[ y ∈ Ab.SM ] Σ[ x ∈ Ab.SM ]
+           ( ⟨ (y ∷ x ∷ a ∷ []) Ab.⊨ᵐ embed φ ⟩
+           × (fst y ≡ fst ca)
+           × (fst x ≡ fst cp) )
+       → ⟨ (fst ca ∷ fst cp ∷ fst a ∷ []) ⊨ₚ φ ⟩
+    go (y , x , hφ , ey , ex) =
+      subst (λ v → ⟨ (v ∷ fst cp ∷ fst a ∷ []) ⊨ₚ φ ⟩) ey
+        (subst (λ p → ⟨ (fst y ∷ p ∷ fst a ∷ []) ⊨ₚ φ ⟩) ex
+          (subst ⟨_⟩ (read dφ (y ∷ x ∷ a ∷ [])) hφ))
 
-    -- The consumer-facing ElemDown at the hull: the stage reading of
-    -- a formula over hull constants implies the hull reading, wired
-    -- into DownReflect's ElemDown at the hull's stage.
-    module DR54 = DownReflect lam ordλ UK.X UK.X⊆Lλ UK.∅∈λ
+  convert-at-true = convert-generic {φ = ⊤̇} δ-⊤
 
-    elem-down : DR54.ElemDown
-    elem-down = HEDC.elem-down
+-- =====================================================================
+-- THE HULL CONVERT.  [LJ-1.689] Probe689.agda:37-71, module `Convert`
+-- renamed `HullConvert`.  From hull-closed's hypothesis form
+-- `mapFo val (inBound ca cp)` onto the generic unpack, taking the
+-- equation `mapFo val (mapFo slide φ) ≡ embed φ` as a hypothesis.
+-- =====================================================================
 
-    module Co
-      (levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.C.πX ⟩ → ⟨ Lset δ ∈ˢ HS.C.πX ⟩)
-      (cover : (y : S) → ⟨ y ∈ˢ HS.M ⟩
-             → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ HS.C.π y ∈ˢ Lset γ ⟩) ∥₁)
+module HullConvert (U : S) (Utr : isTrans U) where
+  open Unpack U Utr hiding ( convert-generic; convert-at-true )
+
+  inBound : {ℓc : Level} {K : Type ℓc}
+          → Formula (⊥* {ℓ-suc ℓ}) 3
+          → (⊥* {ℓ-suc ℓ} → K) → K → K → Formula K 1
+  inBound φ slide ca cp = pin₃ (mapFo slide φ) ca cp
+
+  hull-convert :
+      {ℓc : Level} {K : Type ℓc}
+      {φ : Formula (⊥* {ℓ-suc ℓ}) 3}
+    → Δ₀ φ
+    → (slide : ⊥* {ℓ-suc ℓ} → K)
+    → (val : K → Ab.SM)
+    → (eq : mapFo val (mapFo slide φ) ≡ embed φ)
+    → (ca cp : K) (a : Ab.SM)
+    → ⟨ (a ∷ []) Ab.⊨ᵐ (mapFo val (inBound φ slide ca cp)) ⟩
+    → ⟨ (fst (val ca) ∷ fst (val cp) ∷ fst a ∷ []) ⊨ₚ φ ⟩
+  hull-convert {φ = φ} dφ slide val eq ca cp a h =
+    Unpack.convert-generic U Utr {φ = φ} dφ (val ca) (val cp) a
+      (subst (λ ψ → ⟨ (a ∷ []) Ab.⊨ᵐ (pin₃ ψ (val ca) (val cp)) ⟩) eq
+        (subst (λ ψ → ⟨ (a ∷ []) Ab.⊨ᵐ ψ ⟩)
+               (pin₃-map val (mapFo slide φ) ca cp)
+               h))
+
+module Frame (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+
+  module HS = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ using (module ASt; module C; module Condense; module H; M)
+  module ASt = HS.ASt using (module AbsL; module AtM; Ltr; SL)
+  module A = ASt.AtM HS.M HS.H.Hull⊆L using (Elementary; SM; inL)
+
+  -- SECTION 2.  THE CARRY.  Ambient truth at hull members becomes
+  -- ambient truth at their collapse values: (1) down into the hull by
+  -- `elem`, (2) across by the collapse iso `iso-inv`, (3) out of the
+  -- collapse by Δ₀ absoluteness at the transitive range `πX`.
+  module HE = HullExt lam ordλ X X⊆Lλ ∅∈λ using (hullExt)
+
+  Mext : isExt HS.M
+  Mext = HE.hullExt
+
+  module Carry (elem : A.Elementary) where
+
+    module CIso = CollapseIso HS.M Mext using (module I; iso-fwd; iso-bwd)
+    module TL = Unpack (Lset lam) ASt.Ltr using (read)
+    module Tπ = Unpack HS.C.πX HS.C.πX-trans using (module Ab; read)
+
+    atL : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : ASt.SL ^ n)
+        → (δ ASt.AbsL.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+    atL dφ δ = TL.read dφ δ
+
+    atπ : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Tπ.Ab.SM ^ n)
+        → (δ Tπ.Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+    atπ dφ δ = Tπ.read dφ δ
+
+    atM : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
+        → (δ CIso.I.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
+    atM {n} {φ} dφ δ =
+        elem n (embed φ) δ
+      ∙ cong (λ ψ → map A.inL δ ASt.AbsL.⊨ᵐ ψ) (embed-map A.inL φ)
+      ∙ atL dφ (map A.inL δ)
+      ∙ cong (λ γ → γ ⊨ₚ φ) (map-inL-fst δ)
       where
+      map-inL-fst : {m : ℕ} (γ : A.SM ^ m)
+                  → map fst (map A.inL γ) ≡ map fst γ
+      map-inL-fst [] = refl
+      map-inL-fst (q ∷ γ) = cong (fst q ∷_) (map-inL-fst γ)
 
-      module Cn = HS.Condense levelIn cover
-
-      β : S
-      β = Cn.condenses .fst
-
-      β-isOrd : IsOrd β
-      β-isOrd = Cn.condenses .snd .fst
-
-      ext : HS.C.πX ≡ Lset β
-      ext = Cn.condenses .snd .snd
-
-      -- The inverse collapse composite, with NO `collapseCode` hypothesis:
-      -- leg 1 is the propositional fibre (π is injective on M), leg 2 is
-      -- the least count over the ordinal's own well-order.
-      πX↪α : ⟪ HS.C.πX ⟫ ↪ ⟪ α ⟫
-      πX↪α = (λ p → CSel.h (IC.inv p))
-           , (λ p q e → IC.inv-inj p q (CSel.h-inj (IC.inv p) (IC.inv q) e))
-
-      β↪α : ⟪ β ⟫ ↪ ⟪ α ⟫
-      β↪α = comp-inj
-              (subst (λ A → ⟪ β ⟫ ↪ ⟪ A ⟫) (sym ext)
-                (SC.stage-card-lower β β-isOrd))
-              πX↪α
-
-      -- x is a member of the collapse, fixed by the collapse.
-      x∈M : ⟨ x ∈ˢ HS.M ⟩
-      x∈M = HS.H.X⊆M x UK.x∈X
-
-      x∈πX : ⟨ x ∈ˢ HS.C.πX ⟩
-      x∈πX = subst (λ w → ⟨ w ∈ˢ HS.C.πX ⟩)
-        (HS.C.fixes UK.X (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst
-          (HS.H.X⊆M a (∈∈ₛ {a = a} {b = UK.X} .snd a∈ₛX))) UK.Xtr x UK.x∈X)
-        (HS.C.πX-intro x x∈M)
-
-      β∈κ : ⟨ β ∈ˢ κ ⟩
-      β∈κ = Sum.rec
-          (λ b∈κ → b∈κ)
-          (Sum.rec (λ b≡κ → Empty.rec (cardκ α α∈κ
-              (comp-inj (subst (λ A → ⟪ κ ⟫ ↪ ⟪ A ⟫) (sym b≡κ)
-                ((λ m → m) , (λ m n e → e)))
-                β↪α)))
-                   (λ κ∈β → Empty.rec (cardκ α α∈κ
-              (comp-inj (ord-emb κ β β-isOrd κ∈β) β↪α))))
-          (ord-tri β β-isOrd κ ordκ)
-
-      x∈Lκ : ⟨ x ∈ˢ Lset κ ⟩
-      x∈Lκ = PT.rec (snd (x ∈ˢ Lset κ)) go (cover x x∈M)
-        where
-        go : Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ HS.C.π x ∈ˢ Lset γ ⟩)
-           → ⟨ x ∈ˢ Lset κ ⟩
-        go (γ , oγ , γ∈πX , h) =
-          Lset-mono {α = κ} {β = γ} γ∈κ
-            (subst (λ w → ⟨ w ∈ˢ Lset γ ⟩)
-              (HS.C.fixes UK.X (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst
-                (HS.H.X⊆M a (∈∈ₛ {a = a} {b = UK.X} .snd a∈ₛX))) UK.Xtr x UK.x∈X) h)
-          where
-          γ∈β : ⟨ γ ∈ˢ β ⟩
-          γ∈β = Cn.ord∈β γ γ∈πX oγ
-          γ∈κ : ⟨ γ ∈ˢ κ ⟩
-          γ∈κ = ordκ .fst γ∈β β∈κ
-
-      theorem : ⟨ x ∈ˢ Lset κ ⟩
-      theorem = x∈Lκ
-
+    -- THE CARRY ITSELF.
+    push : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
+         → ⟨ map fst δ ⊨ₚ φ ⟩
+         → ⟨ map fst (map CIso.I.g δ) ⊨ₚ φ ⟩
+    push {n} {φ} dφ δ h =
+      subst ⟨_⟩ (atπ dφ (map CIso.I.g δ))
+        (subst (λ ψ → ⟨ map CIso.I.g δ CIso.I.⊨ᵖᵐ ψ ⟩)
+               (embed-map CIso.I.g φ)
+               (CIso.I.iso-inv n (embed φ) δ (subst ⟨_⟩ (sym (atM dφ δ)) h)))
 ```

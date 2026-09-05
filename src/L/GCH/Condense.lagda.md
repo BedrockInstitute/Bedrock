@@ -24,10 +24,9 @@ open import L.Constructible {ℓ} using
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc; ord∈Lset→∈ )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc )
-open import L.BoundedSubset {ℓ} lem using
-  ( module HullStage; isOrdAt; Δ₀-isOrdAt; module Amb )
-open import L.GCH.Frame {ℓ} lem using
-  ( module Frame; module Unpack; module HullConvert; _⊨ₚ_
+open import L.GCH.Hull {ℓ} lem using
+  ( module HullStage; isOrdAt; Δ₀-isOrdAt; module Amb
+  ; module Frame; module Unpack; module HullConvert; _⊨ₚ_
   ; embed-map; lemma; isOrd-at-p )
 open import L.GCH.Level {ℓ} lem using ( levelFo; Δ₀-levelFo; level-sound )
 open import L.GCH.Complete {ℓ} lem using

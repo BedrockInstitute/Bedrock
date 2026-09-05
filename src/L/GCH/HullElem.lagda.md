@@ -20,7 +20,7 @@ open import L.Ordinal {ℓ} using ( #∈ω )
 open import L.Ordinal.SquareLaw {ℓ} lem using ( ordSWO )
 open import L.Cardinal {ℓ} lem using ( _↪_ )
 open import L.GCH.Pairing {ℓ} lem using ( prodL; prodL-in; ω⊆ )
-open import L.BoundedSubset {ℓ} lem using ( module CanonCode; module HullElemDown )
+open import L.GCH.Hull {ℓ} lem using ( module CanonCode; module HullElemDown )
 
 open import Cubical.Data.Nat.Properties using ( znots; snotz; injSuc )
 open import Cubical.Data.Sigma using ( _×_; ΣPathP )

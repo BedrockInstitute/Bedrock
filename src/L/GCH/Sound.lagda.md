@@ -27,9 +27,9 @@ open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Condensation {ℓ} lem using ( Δ₀-prAtL; Δ₀-sucAtL; module KFactsNS )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Hierarchy {ℓ} lem using ( Lset-only )
-open import L.BoundedSubset {ℓ} lem using ( module Cnt; erase-Δ₀ )
-open import L.GCH.Frame {ℓ} lem using
-  ( module Matrix; module W3; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
+open import L.GCH.Hull {ℓ} lem using
+  ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
+open import L.GCH.Frame {ℓ} lem using ( module Matrix; module W3 )
 
 open import Cubical.Data.Vec using ( _∷_; []; map; lookup )
 open import Cubical.Data.Sigma using ( _×_ )

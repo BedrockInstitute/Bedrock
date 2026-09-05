@@ -27,7 +27,7 @@ open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Assembly {ℓ} lem
   using ( InternalBoundedSubset; inclusion-coded; injl-trans )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
-open import L.GCH.Frame {ℓ} lem using ( module Frame )
+open import L.GCH.Hull {ℓ} lem using ( module Frame; module UnionKit; module HullStage )
 open import L.GCH.HullIn {ℓ} lem using ( module PiIn; module Condense′ )
 open import L.GCH.HullElem {ℓ} lem using ( module Elem )
 open import L.GCH.Pairing {ℓ} lem
@@ -37,8 +37,6 @@ open import L.GCH.StageCount {ℓ} lem using ( move; stage-counted )
 open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in )
 open import L.GCH.HullCount {ℓ} lem
   using ( ord⊆Lset; module Union2; tag-union; module Point; module Count; S≡ )
-open import L.BoundedSubset {ℓ} lem
-  using ( module UnionKit; module HullStage )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
