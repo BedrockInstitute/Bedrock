@@ -27,6 +27,8 @@ open import FOL.ZFModel using ( isZFModel; isZFCModel )
 open import L.Constructible using ( 𝒮ʟ )
 import V.Model
 import L.Model
+import L.GCH
+import L.GCH.Theorem
 ```
 
 <!--en-->
@@ -75,4 +77,24 @@ inside it.
 ```agda
 L⊨ZFC : ∀ {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) → isZFCModel (𝒮ʟ {ℓ})
 L⊨ZFC = L.Model.L⊨ZFC
+```
+
+<!--en-->
+## The constructible universe models GCH
+
+The second trophy (chapter `L.GCH.Theorem`{.Agda}): under the same single
+hypothesis, the constructible structure satisfies the generalized continuum
+hypothesis, stated in L's own terms: for every infinite cardinal κ of L, the
+model's power set of κ and the successor cardinal of κ inject into each other by
+injections that are themselves elements of L (chapter `L.GCH`{.Agda} states it).
+<!--zh-->
+## 可构造宇宙满足 GCH
+
+第二座奖杯 (章节 `L.GCH.Theorem`{.Agda})：在同一个唯一假设下，可构造结构满足广义连续统假设，且以 L 自己的语言陈述：对 L 的每个无穷基数 κ，模型自身的 κ 的幂集与 κ 的后继基数之间存在互相的单射，而这些单射本身是 L 的元素 (章节 `L.GCH`{.Agda} 给出陈述)。
+<!--/-->
+
+```agda
+L⊨GCH : ∀ {ℓ : Level} (lem : LEM (ℓ-suc ℓ))
+      → L.GCH.GCHStatement lem (L.Model.L⊨ZF lem)
+L⊨GCH lem = L.GCH.Theorem.L⊨GCH lem
 ```
