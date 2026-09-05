@@ -954,11 +954,3 @@ unconditional theorem.
 
 不在此处的，是那一步自身的充分性，即 `L.Choice.Internal`{.Agda} 的 `StepAt`{.Agda} 对着 `stepAt`{.Agda}。它以参数 `Stp`{.Agda} 的身份进场，`stp-out`{.Agda} 与 `stp-in`{.Agda} 是它的含义，前者取用表在该载体处所记录的**每一个**取值上的正确性，后者取用「实现那里的序」的单个取值；而它是对着早已存在的诸章记账的一整章：把参数序列读回成向量、把指称与元层面名字的指称认同、把这条描述诸名字中的最小者与元层面诸名字中的最小者认同。那个框架的两条假设已经没了；剩下这一条，就是横在这个构造与一条无条件定理之间的东西。
 <!--/-->
-
-```agda
--- the carrier's key at the certified stage: ingredient (v) of the class
--- predicate, re-stated in this chapter rather than imported from a probe;
--- one row, and it elaborates only under the written type
-class-pred-v : (δ : V ℓ) (oδ : IsOrd δ) {n : ℕ} → Formula ⟪ Lset δ ⟫ n → S
-class-pred-v δ oδ = keyS (LsetS δ oδ)
-```

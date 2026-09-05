@@ -196,39 +196,6 @@ bound2 σ₁ σ₂ o₁ o₂ =
   r = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f fo
 ```
 
-```agda
--- A limit ordinal, as the closure facts the book needs state it:
--- ordinality, closure under successor, and closure under
--- small-indexed unions at any family, so a consumer may hand the
--- union clause the union set in whatever presentation it has.
-
-IsLimit : S → Type (ℓ-suc ℓ)
-IsLimit α =
-    IsOrd α
-  × ((x : S) → ⟨ x ∈ˢ α ⟩ → ⟨ sucV x ∈ˢ α ⟩)
-  × ((X : Type ℓ) (f : X → S)
-      → ((i : X) → ⟨ f i ∈ˢ α ⟩)
-      → ⟨ (⋃ (sett X f)) ∈ˢ α ⟩)
-
--- The merge of two members of a limit stays in the limit.  The bound
--- is bound2's own first projection, a union over a family local to
--- that definition, so the union clause takes it back by
--- unification: the family argument is left open and solved against
--- the goal, after which the two membership branches close at the
--- concrete boolean indices, where the local family is the two
--- successors.
-
-bound2-in-limit :
-    (α : S) (Lim : IsLimit α)
-    (σ₁ σ₂ : S) (o₁ : IsOrd σ₁) (o₂ : IsOrd σ₂)
-    (h₁ : ⟨ σ₁ ∈ˢ α ⟩) (h₂ : ⟨ σ₂ ∈ˢ α ⟩)
-  → ⟨ fst (bound2 σ₁ σ₂ o₁ o₂) ∈ˢ α ⟩
-bound2-in-limit α (_ , succCl , unionCl) σ₁ σ₂ _ _ h₁ h₂ =
-  unionCl (Lift {ℓ-zero} {ℓ} Bool) _
-    λ { (lift true)  → succCl σ₁ h₁
-      ; (lift false) → succCl σ₂ h₂ }
-```
-
 <!--en-->
 ## Members
 <!--zh-->

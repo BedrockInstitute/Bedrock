@@ -504,8 +504,6 @@ IsHier B h = (z : S) → (fst z ∈ fst h) ≡ Recorded B (fst z)
 HierOf : V ℓ → Type (ℓ-suc (ℓ-suc ℓ))
 HierOf B = Σ[ h ∈ S ] IsHier B h
 
-hier-unique : (B : V ℓ) (h k : S) → IsHier B h → IsHier B k → h ≡ k
-hier-unique B h k sp sq = extensionalL (λ z → sp z ∙ sym (sq z))
 
 module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsHier B h) where
   hier-out : (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩
