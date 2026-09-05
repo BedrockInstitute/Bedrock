@@ -23,6 +23,7 @@ open import L.Coding.Model {ℓ}
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
 open import L.Cardinal {ℓ} lem using ( InjCode )
 open import L.GCH {ℓ} lem using ( InjL )
+open import L.GCH.OrderType {ℓ} lem using ( module PairFo )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Foundations.HLevels using ( isPropΣ; isSetΣSndProp )
@@ -63,47 +64,6 @@ record DefinableMap : Type (ℓ-suc (ℓ-suc ℓ)) where
 
 -- =====================================================================
 -- SECTION 2.  THE PAIR FORMULA.
---
---   Over (p ∷ x ∷ []): "p is the pair of x and some z with graph z x".
---   Inside the binder z is 0, p is 1, x is 2; the graph is renamed
---   from (z ∷ x ∷ []) into that environment.
--- =====================================================================
-
-module PairFo (graph : Formula S 2) where
-
-  ρ : Fin 2 → Fin 3
-  ρ zero       = zero
-  ρ (suc zero) = suc (suc zero)
-
-  -- Sealed with its two readings.
-  opaque
-    fo : Formula S 2
-    fo = ∃̇ (prAtL (suc zero) (suc (suc zero)) zero ∧̇ renameFo ρ graph)
-
-    private
-      ag : (z p x : S) → Ren.Agrees ρ (z ∷ p ∷ x ∷ []) (z ∷ x ∷ [])
-      ag z p x zero       = refl
-      ag z p x (suc zero) = refl
-
-      at : (z p x : S)
-         → ⟨ (z ∷ p ∷ x ∷ []) ⊨ prAtL (suc zero) (suc (suc zero)) zero ⟩
-         ≡ (fst p ≡ pr (fst x) (fst z))
-      at z p x = cong ⟨_⟩ (prAtL-adequate (suc zero) (suc (suc zero)) zero (z ∷ p ∷ x ∷ []))
-
-      gr : (z p x : S)
-         → ⟨ (z ∷ p ∷ x ∷ []) ⊨ renameFo ρ graph ⟩ ≡ ⟨ (z ∷ x ∷ []) ⊨ graph ⟩
-      gr z p x = cong ⟨_⟩ (Ren.⊨-rename ρ graph (z ∷ p ∷ x ∷ []) (z ∷ x ∷ []) (ag z p x))
-
-    out : (p x : S) → ⟨ (p ∷ x ∷ []) ⊨ fo ⟩
-        → ∥ Σ[ z ∈ S ] ((fst p ≡ pr (fst x) (fst z)) × ⟨ (z ∷ x ∷ []) ⊨ graph ⟩) ∥₁
-    out p x = PT.map (λ { (z , (e , h)) →
-      z , (transport (at z p x) e , transport (gr z p x) h) })
-
-    into : (p x z : S) → fst p ≡ pr (fst x) (fst z) → ⟨ (z ∷ x ∷ []) ⊨ graph ⟩
-         → ⟨ (p ∷ x ∷ []) ⊨ fo ⟩
-    into p x z e h = ∣ z , (transport (sym (at z p x)) e , transport (sym (gr z p x)) h) ∣₁
-
--- =====================================================================
 -- SECTION 3.  THE GRAPH AS A SET OF L, AND THREE CONJUNCTS.
 --
 --   `Recursion.funct` takes the membership proof, so `fn` fills it as
@@ -122,7 +82,7 @@ module Graph (M : DefinableMap) where
   isPropMem x = snd (fst x ∈ˢ fst dom)
 
   private
-    module Fo = PairFo graph using ( fo; into; out )
+    module Fo = PairFo graph renaming ( pairFo to fo; pair-out to out; pair-in to into )
 
     isSetS : isSet S
     isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))

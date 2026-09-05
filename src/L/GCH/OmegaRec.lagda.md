@@ -465,19 +465,4 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
     it-up n zero    z h = h
     it-up n (suc k) z h = it-mono (k + n) z (it-up n k z h)
 
-    start : (z : S) → ⟨ fst z ∈ fst a ⟩ → ⟨ z ∈ˢ iterUnion ⟩
-    start = iterUnion-in 0
-
-    stage : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ z ∈ˢ iterUnion ⟩
-    stage = iterUnion-in
-
-    closed-stage : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (step (it n)) ⟩ → ⟨ z ∈ˢ iterUnion ⟩
-    closed-stage n = iterUnion-in (suc n)
-
-    module Mono (mono : (x y : S) → ((z : S) → ⟨ fst z ∈ fst x ⟩ → ⟨ fst z ∈ fst y ⟩)
-                      → (z : S) → ⟨ fst z ∈ fst (step x) ⟩ → ⟨ fst z ∈ fst (step y) ⟩) where
-
-      closed : (x : S) (n : ℕ) → ((z : S) → ⟨ fst z ∈ fst x ⟩ → ⟨ fst z ∈ fst (it n) ⟩)
-             → (z : S) → ⟨ fst z ∈ fst (step x) ⟩ → ⟨ z ∈ˢ iterUnion ⟩
-      closed x n sub z hz = iterUnion-in (suc n) z (mono x (it n) sub z hz)
 ```

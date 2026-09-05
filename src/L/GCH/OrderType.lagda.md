@@ -65,7 +65,7 @@ Holds F x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
 --   D is a set of L, R is a set of L of pairs of members of D, and the
 --   relation "pr x y ∈ R" is well-founded and transitive on the members
 --   of D.  `col` is the Mostowski collapse, by well-founded recursion as
---   `Hartogs.Col.col` (src/L/CardinalAbove.lagda.md); `ot` its image.
+--   `Hartogs.Col.col` (src/L/CardinalAbove.lagda.md).
 -- =====================================================================
 
 module Collapse (D R : S)
@@ -177,27 +177,6 @@ module Collapse (D R : S)
     colʟ : Dom → S
     colʟ p = col p , col-isL p
 
-    -- The order type, as a bare image.
-    ot : V ℓ
-    ot = sett Dom col
-
-    ot-in : (p : Dom) → ⟨ col p ∈ ot ⟩
-    ot-in p = ∣ p , refl ∣₁
-
-    ot-ord : IsOrd ot
-    ot-ord = tr , mem
-      where
-      mem : (x : V ℓ) → ⟨ x ∈ ot ⟩ → isTransV x
-      mem x x∈ = PT.rec (isPropIsTransV x)
-        (λ z → subst isTransV (snd z) (col-ord (fst z) .fst)) x∈
-      tr : isTransV ot
-      tr {x} {y} y∈x x∈ot = PT.rec (snd (y ∈ ot)) outer x∈ot
-        where
-        outer : Σ[ p ∈ Dom ] (col p ≡ x) → ⟨ y ∈ ot ⟩
-        outer (p , e) =
-          PT.rec (snd (y ∈ ot))
-            (λ z → subst (λ v → ⟨ v ∈ ot ⟩) (snd (snd z)) (ot-in (fst z)))
-            (col-out p y (subst (λ v → ⟨ y ∈ v ⟩) (sym e) y∈x))
 ```
 
 <!--en-->
@@ -713,15 +692,6 @@ module Internal (D R : S)
       where
       yS : S
       yS = y , isL-trans {x = fst otL} {y = y} hy (snd otL)
-
-    otL≡ot : fst otL ≡ ot
-    otL≡ot = extensionalV {a = fst otL} {b = ot} (λ y → ⇔toPath
-      (λ h → PT.map (λ { (b , e) → b , e }) (otL-out y h))
-      (λ h → PT.rec (snd (y ∈ fst otL))
-               (λ { (b , e) → subst (λ t → ⟨ t ∈ fst otL ⟩) e (otL-in b) }) h))
-
-    otL-ord : IsOrd (fst otL)
-    otL-ord = subst IsOrd (sym otL≡ot) ot-ord
 
     private
       tabR : Recursion

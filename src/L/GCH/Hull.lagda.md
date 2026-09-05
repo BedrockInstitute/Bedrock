@@ -47,8 +47,6 @@ open import Cubical.Data.Unit using ( tt* )
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Empty.Properties using ( isProp⊥ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Functions.Embedding using ( Embedding-into-isSet→isSet )
-open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett )
@@ -57,7 +55,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
         ; SetPackage; SingletonPackage )  -- lint-agda: keep (SetPackage via record projection)
 open InfinitySet using ( ω; sucV )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪; extensionality )
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; extensionality )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
@@ -654,55 +652,17 @@ module CollapseIso (X : S) (Xext : isExt X) where
     using ( SM; SPM; g; surj'; iso-inv; iso-inv-bwd; _⊨ᵐ_; _⊨ᵖᵐ_; ⟦_⟧ᵐ; ⟦_⟧ᵖᵐ )
 ```
 
-## The canonical code and the elementarity of the hull
+## The elementarity of the hull
 
 ```agda
 -- =====================================================================
 -- WALL 2, PLACED ([LJ-1.53] probe A).  The parameter-to-code
--- relabelling inside TV/ElemDown.  The canonical code of each hull
--- member (the least-of pattern, over the ordinal's own
--- well-order and the code count), the generic close operation that
+-- relabelling inside TV/ElemDown.  The generic close operation that
 -- replaces the top parameters by their codes as constants, its
 -- satisfaction adequacy, and the TarskiVaught instance at every arity
 -- assembled from hull-closed through the two halves.  AtM.TV-thm
 -- turns the instance into Elementary, hence ElemDown.
 -- =====================================================================
-module CanonCode (α : S) (oα : IsOrd α) (w : SWO {ℓ} ⟪ α ⟫)
-  (M : S) (Code : Type ℓ) (val : Code → S)
-  (mem-code : (x : S) → ⟨ x ∈ˢ M ⟩ → ∥ Σ[ c ∈ Code ] (val c ≡ x) ∥₁)
-  (cnt : Code → ⟪ α ⟫) (cnt-inj : (c d : Code) → cnt c ≡ cnt d → c ≡ d) where
-
-  cls : ⟪ M ⟫ → ⟪ α ⟫ → hProp (ℓ-suc ℓ)
-  cls m y = ( ∥ Σ[ c ∈ Code ] ((val c ≡ ⟪ M ⟫↪ m) × (cnt c ≡ y)) ∥₁
-            , squash₁ )
-
-  nonempty : (m : ⟪ M ⟫) → ∥ Σ[ y ∈ ⟪ α ⟫ ] ⟨ cls m y ⟩ ∥₁
-  nonempty m = PT.map (λ { (c , e) → cnt c , ∣ c , (e , refl) ∣₁ })
-                      (mem-code (⟪ M ⟫↪ m) (member M m))
-
-  isSet⟪α⟫ : isSet ⟪ α ⟫
-  isSet⟪α⟫ = Embedding-into-isSet→isSet (⟪ α ⟫↪ , isEmb⟪ α ⟫↪) isSetS
-
-  least : (m : ⟪ M ⟫) → ⟪ α ⟫
-  least m = fst (leastOf w {ℓ'' = ℓ-suc ℓ} lem (cls m) (nonempty m))
-
-  least-wit : (m : ⟪ M ⟫)
-            → ∥ Σ[ c ∈ Code ] ((val c ≡ ⟪ M ⟫↪ m) × (cnt c ≡ least m)) ∥₁
-  least-wit m = fst (snd (leastOf w {ℓ'' = ℓ-suc ℓ} lem (cls m) (nonempty m)))
-
-  isPropFib : (m : ⟪ M ⟫)
-            → isProp (Σ[ c ∈ Code ] ((val c ≡ ⟪ M ⟫↪ m)
-                                   × (cnt c ≡ least m)))
-  isPropFib m (c , e , p) (d , e' , p') =
-    Σ≡Prop (λ c → isProp× (isSetS (val c) (⟪ M ⟫↪ m))
-                            (isSet⟪α⟫ (cnt c) (least m)))
-      (cnt-inj c d (p ∙ sym p'))
-
-  canonical : ⟪ M ⟫ → Code
-  canonical m = fst (PT.rec (isPropFib m) (λ w → w) (least-wit m))
-
-  canonical-spec : (m : ⟪ M ⟫) → val (canonical m) ≡ ⟪ M ⟫↪ m
-  canonical-spec m = fst (snd (PT.rec (isPropFib m) (λ w → w) (least-wit m)))
 
 -- The generic close operation (syntax): a formula of arity d + n has
 -- its top n variables replaced by the constants δ, the
@@ -867,10 +827,9 @@ module CloseSem {𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ))}
              → map ι δ ⊨ φ ≡ [] ⊨ Cl.closeAll n δ φ
   ⊨-closeAll n φ δ = ⊨-close 0 n φ δ []
 
--- The hull instance: f is the canonical code of each hull member
--- (CanonCode at the consumer's count), and the module proves the
--- relabelling transfer, the TarskiVaught instance at every arity, and
--- ElemDown.
+-- The hull instance: the codes of the constants of one formula, read
+-- off the hull membership at each call, then the TarskiVaught instance
+-- at every arity, and ElemDown.
 module HullElemDown (α : S) (ordα : IsOrd α)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩) (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
 
@@ -886,32 +845,56 @@ module HullElemDown (α : S) (ordα : IsOrd α)
   module CseL = CloseSem {𝒮 = 𝒮ᵥ ↾ (λ x → x ∈ˢ Lset α)} {K = ASt.SL} id
     using ( module Cl; map-id; ⊨-closeAll; ⊨-close₁ )
 
-  module WithCode (f : A.SM → H.T.Code)
-    (f-spec : (q : A.SM) → fst (H.T.val (f q)) ≡ fst q) where
+  -- D-30: the consumer needs a code for each constant that OCCURS, not
+  -- a total section of `val`.  A formula is finite, so the codes come
+  -- out of the hull membership one constant at a time, and each
+  -- truncation stays outside the goal of `tv`, which is a proposition.
+  codeOf : (q : A.SM) → ∥ Σ[ c ∈ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
+  codeOf q = PT.map (λ { (c , e) → c , Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) e })
+    (H.hull-member (fst q) (snd q))
 
-    -- val ∘ f and inL agree pointwise, so the relabelling preserves the
-    -- formula up to the interpretation
-    val∘f≡inL : (q : A.SM) → H.T.val (f q) ≡ A.inL q
-    val∘f≡inL q = Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) (f-spec q)
+  codeTm : {n : ℕ} (t : Term A.SM n)
+         → ∥ Σ[ t' ∈ Term H.T.Code n ] (mapTm H.T.val t' ≡ mapTm A.inL t) ∥₁
+  codeTm (con q) = PT.map (λ { (c , e) → con c , cong con e }) (codeOf q)
+  codeTm (var i) = ∣ var i , refl ∣₁
 
-    rel : {n : ℕ} (φ : Formula A.SM n)
-        → mapFo H.T.val (mapFo f φ) ≡ mapFo A.inL φ
-    rel {n} φ =
-      mapFo-comp f H.T.val φ
-      ∙ cong (λ g → mapFo g φ) (funExt val∘f≡inL)
+  codeFo : {n : ℕ} (φ : Formula A.SM n)
+         → ∥ Σ[ φ' ∈ Formula H.T.Code n ] (mapFo H.T.val φ' ≡ mapFo A.inL φ) ∥₁
+  codeFo (t ∈̇ u) = PT.map2
+    (λ { (t' , e) (u' , d) → (t' ∈̇ u') , cong₂ _∈̇_ e d }) (codeTm t) (codeTm u)
+  codeFo (t ≐ u) = PT.map2
+    (λ { (t' , e) (u' , d) → (t' ≐ u') , cong₂ _≐_ e d }) (codeTm t) (codeTm u)
+  codeFo (φ ∧̇ ψ) = PT.map2
+    (λ { (φ' , e) (ψ' , d) → (φ' ∧̇ ψ') , cong₂ _∧̇_ e d }) (codeFo φ) (codeFo ψ)
+  codeFo (φ ∨̇ ψ) = PT.map2
+    (λ { (φ' , e) (ψ' , d) → (φ' ∨̇ ψ') , cong₂ _∨̇_ e d }) (codeFo φ) (codeFo ψ)
+  codeFo (φ ⇒̇ ψ) = PT.map2
+    (λ { (φ' , e) (ψ' , d) → (φ' ⇒̇ ψ') , cong₂ _⇒̇_ e d }) (codeFo φ) (codeFo ψ)
+  codeFo (¬̇ φ) = PT.map (λ { (φ' , e) → ¬̇ φ' , cong ¬̇_ e }) (codeFo φ)
+  codeFo ⊤̇ = ∣ ⊤̇ , refl ∣₁
+  codeFo ⊥̇ = ∣ ⊥̇ , refl ∣₁
+  codeFo (∃̇ φ) = PT.map (λ { (φ' , e) → ∃̇ φ' , cong ∃̇_ e }) (codeFo φ)
+  codeFo (∀̇ φ) = PT.map (λ { (φ' , e) → ∀̇ φ' , cong ∀̇_ e }) (codeFo φ)
+  codeFo (∀̇∈ t φ) = PT.map2
+    (λ { (t' , e) (φ' , d) → ∀̇∈ t' φ' , cong₂ ∀̇∈ e d }) (codeTm t) (codeFo φ)
+  codeFo (∃̇∈ t φ) = PT.map2
+    (λ { (t' , e) (φ' , d) → ∃̇∈ t' φ' , cong₂ ∃̇∈ e d }) (codeTm t) (codeFo φ)
 
-    -- TarskiVaught at every arity: the stage existential at the closed
-    -- parameters is hull-closed, and the code formula reads back
-    -- through the relabelling and the close transfer
-    tv : (n : ℕ) (ψ : Formula A.SM (suc n)) (δ : Vec A.SM n)
-       → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL (∃̇ ψ)) ⟩
-       → ∥ Σ[ q ∈ A.SM ]
-            ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩ ∥₁
-    tv n ψ δ h = PT.rec squash₁ go (H.hull-closed ψ' h')
+  -- TarskiVaught at every arity: the stage existential at the closed
+  -- parameters is hull-closed, and the code formula reads back
+  -- through the relabelling and the close transfer
+  tv : (n : ℕ) (ψ : Formula A.SM (suc n)) (δ : Vec A.SM n)
+     → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL (∃̇ ψ)) ⟩
+     → ∥ Σ[ q ∈ A.SM ]
+          ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩ ∥₁
+  tv n ψ δ h = PT.rec squash₁ step (codeFo (Cl.close n δ ψ))
+    where
+    step : Σ[ ψ' ∈ Formula H.T.Code 1 ]
+             (mapFo H.T.val ψ' ≡ mapFo A.inL (Cl.close n δ ψ))
+         → ∥ Σ[ q ∈ A.SM ]
+              ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩ ∥₁
+    step (ψ' , rel) = PT.rec squash₁ go (H.hull-closed ψ' h')
       where
-      ψ' : Formula H.T.Code 1
-      ψ' = mapFo f (Cl.close n δ ψ)
-
       h' : ⟨ [] ASt.AbsL.⊨ᵐ (∃̇ (mapFo H.T.val ψ')) ⟩
       h' = subst (λ ψ → ⟨ [] ASt.AbsL.⊨ᵐ ψ ⟩) p
         (subst ⟨_⟩ (CseL.⊨-closeAll n (mapFo A.inL (∃̇ ψ)) (map A.inL δ)) h₁)
@@ -926,7 +909,7 @@ module HullElemDown (α : S) (ordα : IsOrd α)
                (sym (Cl.mapFo-close 1 n δ A.inL ψ))
         p : CseL.Cl.closeAll n (map A.inL δ) (mapFo A.inL (∃̇ ψ))
           ≡ FOL.Syntax.∃̇_ (mapFo H.T.val ψ')
-        p = p1 ∙ cong FOL.Syntax.∃̇_ (sym (rel (Cl.close n δ ψ)))
+        p = p1 ∙ cong FOL.Syntax.∃̇_ (sym rel)
 
       go : Σ[ a ∈ ASt.SL ] (⟨ fst a ∈ˢ M ⟩
                           × ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val ψ') ⟩)
@@ -957,20 +940,19 @@ module HullElemDown (α : S) (ordα : IsOrd α)
               where
               q-path : CseL.Cl.close n (map A.inL δ) (mapFo A.inL ψ)
                      ≡ mapFo H.T.val ψ'
-              q-path = sym (Cl.mapFo-close 1 n δ A.inL ψ)
-                       ∙ sym (rel (Cl.close n δ ψ))
+              q-path = sym (Cl.mapFo-close 1 n δ A.inL ψ) ∙ sym rel
               sat₂ : ⟨ (A.inL q ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val ψ') ⟩
               sat₂ = subst (λ z → ⟨ (z ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val ψ') ⟩)
                        (sym q≡a)
                        hsat
 
-    elem : A.Elementary
-    elem = A.TV-thm .snd tv
+  elem : A.Elementary
+  elem = A.TV-thm .snd tv
 
-    elem-down : (n : ℕ) (φ : Formula A.SM n) (δ : Vec A.SM n)
-              → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL φ) ⟩
-              → fst (Mse._⊨_ δ φ)
-    elem-down n φ δ h = subst ⟨_⟩ (sym (elem n φ δ)) h
+  elem-down : (n : ℕ) (φ : Formula A.SM n) (δ : Vec A.SM n)
+            → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL φ) ⟩
+            → fst (Mse._⊨_ δ φ)
+  elem-down n φ δ h = subst ⟨_⟩ (sym (elem n φ δ)) h
 ```
 
 ## The ambient parameter-free reading

@@ -53,6 +53,7 @@ open import L.GCH.OrderType {ℓ} lem
 open import L.GCH.OmegaRec {ℓ} lem
   using ( module Iterate; pairʟ-in; pairʟ-out; unionʟ-in; unionʟ-out )
 open import L.GCH.Hull {ℓ} lem using ( module HullStage; module Frame )
+open import L.InjChain {ℓ} lem using ( appC; appC-adequate )
 open import L.GCH.Complete {ℓ} lem using ( Superadequate )
 open import L.GCH.SatFrame {ℓ} lem using ( module SatGraph )
 open import L.GCH.Condense {ℓ} lem using ( module Condense )
@@ -880,27 +881,6 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     -- src/L/Choice/Internal.lagda.md `FreeAt`, at the constant C₀).
     -- =================================================================
 
-    appC : ∀ {n} → CS.S → Fin n → Fin n → Formula CS.S n
-    appC F x y = ∃̇∈ (con F) (prAtL zero (suc x) (suc y))
-
-    appC-adequate : ∀ {n} (F : CS.S) (x y : Fin n) (γ : CS.S ^ n)
-      → (γ ⊨ appC F x y)
-      ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ˢ fst F)
-    appC-adequate F x y γ = ⇔toPath fwd bwd
-      where
-      a = fst (lookup x γ)
-      b = fst (lookup y γ)
-      read : (z : CS.S) → ⟨ (z ∷ γ) ⊨ prAtL zero (suc x) (suc y) ⟩ → fst z ≡ pr a b
-      read z h = subst ⟨_⟩ (prAtL-adequate zero (suc x) (suc y) (z ∷ γ)) h
-      fwd : ⟨ γ ⊨ appC F x y ⟩ → ⟨ pr a b ∈ˢ fst F ⟩
-      fwd = PT.rec (snd (pr a b ∈ˢ fst F))
-        (λ { (z , (z∈F , h)) → subst (λ w → ⟨ w ∈ˢ fst F ⟩) (read z h) z∈F })
-      bwd : ⟨ pr a b ∈ˢ fst F ⟩ → ⟨ γ ⊨ appC F x y ⟩
-      bwd h = ∣ zS , (h , subst ⟨_⟩
-          (sym (prAtL-adequate zero (suc x) (suc y) (zS ∷ γ))) refl) ∣₁
-        where
-        zS : CS.S
-        zS = pr a b , isL-trans {x = fst F} {y = pr a b} h (snd F)
 
     -- "s is a key of C₀ of arity a+1": s is in C₀ and s is the pair of the
     -- successor of a with some code.  Inside: the successor is 0; then

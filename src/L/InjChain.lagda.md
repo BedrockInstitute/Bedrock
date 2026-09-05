@@ -119,11 +119,6 @@ module StageBound (I : Type ℓ) (g : I → S) where
   go : Σ[ n ∈ ℕ ] (β ≡ # n) → Empty.⊥
   go (n , p) = ∈-irrefl ω (ω-ord .fst (subst (λ w → ⟨ ω ∈ w ⟩) p ω∈β) (#∈ω n))
 
--- The vacuous infinite-member clause, in the square form.
-noinj²ω : (β : V ℓ) → IsOrd β → ⟨ β ∈ ω ⟩ → ⟨ ω ∈ β ⟩
-        → (f : ⟪ ω ⟫ → ⟪ β ⟫ × ⟪ β ⟫)
-        → ((m n : ⟪ ω ⟫) → f m ≡ f n → m ≡ n) → Empty.⊥
-noinj²ω β oβ β∈ω ω∈β f finj = ω∉β β β∈ω ω∈β
 
 -- The numeral-into-ω injection, without `ω ∈ ω`.
 numeral-into-ω : (m : ℕ) → ⟪ # m ⟫ → ⟪ ω ⟫
@@ -166,23 +161,6 @@ finite-excl-ω β oβ β∈ω f finj =
     finj' : (x y : ⟪ ω ⟫) → f' x ≡ f' y → x ≡ y
     finj' x y e' = finj x y
       (sym (retEq e (f x)) ∙ cong (invEq e) e' ∙ retEq e (f y))
-
--- The base at ω: `InitialCore` instantiated, then the direct pairing.
-module Coreω = InitialCore ω ω-ord ω-limit noinj²ω finite-excl-ω
-
-open Coreω using ( colA; col∈α )
-
-pairω : ⟪ ω ⟫ × ⟪ ω ⟫ → ⟪ ω ⟫
-pairω p = fiber ω {x = colA p} (col∈α p) .fst
-
-pairω-inj : (p q : ⟪ ω ⟫ × ⟪ ω ⟫) → pairω p ≡ pairω q → p ≡ q
-pairω-inj p q e = SQ.col-inj ω ω-ord {p = p} {q = q}
-  (sym (fiber ω {x = colA p} (col∈α p) .snd)
-   ∙ cong (⟪ ω ⟫↪) e
-   ∙ fiber ω {x = colA q} (col∈α q) .snd)
-
-squareω : sq ω
-squareω = pairω , pairω-inj
 
 -- ---------------------------------------------------------------------
 -- ROW 1.  The composition of two injection graphs, by separation.

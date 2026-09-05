@@ -22,16 +22,16 @@ open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Cardinal {ℓ} lem using ( InjCode; IsCardinalL; _↪_ )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL )
 open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Assembly {ℓ} lem
   using ( InternalBoundedSubset; inclusion-coded; injl-trans )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
-open import L.GCH.Hull {ℓ} lem using ( module Frame; module UnionKit; module HullStage )
+open import L.GCH.Hull {ℓ} lem
+  using ( module Frame; module UnionKit; module HullStage; module HullElemDown )
 open import L.GCH.HullIn {ℓ} lem using ( module PiIn; module Condense′ )
-open import L.GCH.HullElem {ℓ} lem using ( module Elem )
 open import L.GCH.Pairing {ℓ} lem
-  using ( prodL; prodL-in; ordL; coded→ambient; ω⊆; Goal; module Step )
+  using ( prodL; prodL-in; ordL; ω⊆; Goal; module Step )
 open import L.GCH.Complete {ℓ} lem using ( superadequate-above; Superadequate )
 open import L.GCH.StageCount {ℓ} lem using ( move; stage-counted )
 open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in )
@@ -188,174 +188,163 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
       pairκ)
 
   -- -------------------------------------------------------------------
-  -- 4.  ELEMENTARITY OF THE HULL, at the ambient pairing on κ and the
-  -- ambient injection X ↪ κ, both read off the internal ones
-  -- (src/L/GCH/HullElem.lagda.md).
+  -- 4.  ELEMENTARITY OF THE HULL: the hull's Tarski-Vaught instance
+  -- reads the code of each constant off the hull membership, so the
+  -- start needs no ambient count here (src/L/GCH/Hull.lagda.md).
   -- -------------------------------------------------------------------
 
-  module WithCodes (Fp : Σ[ F ∈ S ] InjCode F (prodL κ) κ)
-                   (Fx : Σ[ F ∈ S ] InjCode F XS κ) where
+  elem = HullElemDown.elem lam ordλ X UK.X⊆Lλ UK.∅∈λ
 
-    -- the ambient pairing on κ and the ambient injection of the start
-    pκ : ⟪ fst (prodL κ) ⟫ ↪ ⟪ fst κ ⟫
-    pκ = coded→ambient (prodL κ) κ Fp
+  -- -------------------------------------------------------------------
+  -- 5.  THE HULL, ITS COLLAPSE L_β, AND ITS COUNT.
+  -- -----------------------------------------------------------------
 
-    g : ⟪ X ⟫ ↪ ⟪ fst κ ⟫
-    g = coded→ambient XS κ Fx
+  -- Read at the source, applied to the telescope: no module
+  -- application, so nothing of `Count` or `Condense′` is copied.
+  hull↪κ = Count.hull↪κ lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL κ oκ cκ κ∉ω base
+  condenses′ = Condense′.condenses′ lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
+  M-isL = Condense′.M-isL lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
 
-    -- The elementarity of the hull, src/L/GCH/HullElem.lagda.md.
-    elem = Elem.elem κ oκ κ∉ω lam ordλ X UK.X⊆Lλ UK.∅∈λ pκ g
+  -- The hull stage, its collapse, and the collapse graph, read at the
+  -- source modules `Cn` copies from.
+  module HS = HullStage lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( M )
+  module HSH = HullStage.H lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( X⊆M )
+  module HSC = HullStage.C lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ
+    using ( πX; π; fixes; πX-intro; πX-member )
+  module P = PiIn (HS.M , M-isL) using ( piFo; up; good-at; piFo-val )
 
-    -- -----------------------------------------------------------------
-    -- 5.  THE HULL, ITS COLLAPSE L_β, AND ITS COUNT.
-    -- -----------------------------------------------------------------
+  β : V ℓ
+  β = condenses′ .fst
 
-    -- Read at the source, applied to the telescope: no module
-    -- application, so nothing of `Count` or `Condense′` is copied.
-    hull↪κ = Count.hull↪κ lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL κ oκ cκ κ∉ω base
-    condenses′ = Condense′.condenses′ lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
-    M-isL = Condense′.M-isL lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
+  oβ : IsOrd β
+  oβ = condenses′ .snd .fst
 
-    -- The hull stage, its collapse, and the collapse graph, read at the
-    -- source modules `Cn` copies from.
-    module HS = HullStage lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( M )
-    module HSH = HullStage.H lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( X⊆M )
-    module HSC = HullStage.C lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ
-      using ( πX; π; fixes; πX-intro; πX-member )
-    module P = PiIn (HS.M , M-isL) using ( piFo; up; good-at; piFo-val )
+  ext : HSC.πX ≡ Lset β
+  ext = condenses′ .snd .snd
 
-    β : V ℓ
-    β = condenses′ .fst
+  Lβ : S
+  Lβ = LsetS β oβ
 
-    oβ : IsOrd β
-    oβ = condenses′ .snd .fst
+  βL : S
+  βL = ordL β oβ
 
-    ext : HSC.πX ≡ Lset β
-    ext = condenses′ .snd .snd
+  hullL : S
+  hullL = Condense′.hullL lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
 
-    Lβ : S
-    Lβ = LsetS β oβ
+  M≡ : fst hullL ≡ HS.M
+  M≡ = Condense′.hullL-spec lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
 
-    βL : S
-    βL = ordL β oβ
+  Mext : isExt HS.M
+  Mext = Frame.Mext lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ
 
-    hullL : S
-    hullL = Condense′.hullL lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
+  module CI = HullStage.C.InjExt lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ Mext using ( π-inj )
 
-    M≡ : fst hullL ≡ HS.M
-    M≡ = Condense′.hullL-spec lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
+  -- -----------------------------------------------------------------
+  -- 5.1  y is a member of L_β: y ∈ X ⊆ M, X is transitive, so the
+  -- collapse fixes y (src/V/Collapse.lagda.md `fixes`).
+  -- -----------------------------------------------------------------
 
-    Mext : isExt HS.M
-    Mext = Frame.Mext lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ
+  y∈M : ⟨ fst y ∈ˢ HS.M ⟩
+  y∈M = HSH.X⊆M (fst y) UK.x∈X
 
-    module CI = HullStage.C.InjExt lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ Mext using ( π-inj )
+  πy : HSC.π (fst y) ≡ fst y
+  πy = HSC.fixes X
+    (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst (HSH.X⊆M a (∈∈ₛ {a = a} {b = X} .snd a∈ₛX)))
+    UK.Xtr (fst y) UK.x∈X
 
-    -- -----------------------------------------------------------------
-    -- 5.1  y is a member of L_β: y ∈ X ⊆ M, X is transitive, so the
-    -- collapse fixes y (src/V/Collapse.lagda.md `fixes`).
-    -- -----------------------------------------------------------------
+  y∈Lβ : ⟨ fst y ∈ˢ Lset β ⟩
+  y∈Lβ = subst (λ w → ⟨ w ∈ˢ Lset β ⟩) πy
+    (subst (λ w → ⟨ HSC.π (fst y) ∈ˢ w ⟩) ext (HSC.πX-intro (fst y) y∈M))
 
-    y∈M : ⟨ fst y ∈ˢ HS.M ⟩
-    y∈M = HSH.X⊆M (fst y) UK.x∈X
+  -- -----------------------------------------------------------------
+  -- 5.2  THE INVERSE COLLAPSE, L_β ↪ M, as a definable map: v ↦ the
+  -- member of M collapsing to v.  The graph, over (x ∷ v ∷ []):
+  -- "x ∈ M and the collapse graph holds at (v, x)", the latter being
+  -- src/L/GCH/HullIn.lagda.md `PiIn.piFo` read at (v ∷ x ∷ []).
+  -- -----------------------------------------------------------------
 
-    πy : HSC.π (fst y) ≡ fst y
-    πy = HSC.fixes X
-      (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst (HSH.X⊆M a (∈∈ₛ {a = a} {b = X} .snd a∈ₛX)))
-      UK.Xtr (fst y) UK.x∈X
+  Pre : S → Type (ℓ-suc ℓ)
+  Pre v = Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
 
-    y∈Lβ : ⟨ fst y ∈ˢ Lset β ⟩
-    y∈Lβ = subst (λ w → ⟨ w ∈ˢ Lset β ⟩) πy
-      (subst (λ w → ⟨ HSC.π (fst y) ∈ˢ w ⟩) ext (HSC.πX-intro (fst y) y∈M))
+  isPropPre : (v : S) → isProp (Pre v)
+  isPropPre v (x , mx , e) (x' , mx' , e') =
+    Σ≡Prop (λ x → isProp× (snd (x ∈ˢ HS.M)) (setIsSet _ _)) (CI.π-inj x x' mx mx' (e ∙ sym e'))
 
-    -- -----------------------------------------------------------------
-    -- 5.2  THE INVERSE COLLAPSE, L_β ↪ M, as a definable map: v ↦ the
-    -- member of M collapsing to v.  The graph, over (x ∷ v ∷ []):
-    -- "x ∈ M and the collapse graph holds at (v, x)", the latter being
-    -- src/L/GCH/HullIn.lagda.md `PiIn.piFo` read at (v ∷ x ∷ []).
-    -- -----------------------------------------------------------------
+  Mem : S → Type (ℓ-suc ℓ)
+  Mem v = ⟨ fst v ∈ˢ fst Lβ ⟩
 
-    Pre : S → Type (ℓ-suc ℓ)
-    Pre v = Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
+  pre : (v : S) → Mem v → Pre v
+  pre v m = PT.rec (isPropPre v) (λ w → w)
+    (HSC.πX-member (fst v) (subst (λ w → ⟨ fst v ∈ˢ w ⟩) (sym ext) m))
 
-    isPropPre : (v : S) → isProp (Pre v)
-    isPropPre v (x , mx , e) (x' , mx' , e') =
-      Σ≡Prop (λ x → isProp× (snd (x ∈ˢ HS.M)) (setIsSet _ _)) (CI.π-inj x x' mx mx' (e ∙ sym e'))
+  fn : (v : S) → Mem v → S
+  fn v m = pre v m .fst
+         , isL-trans {x = fst hullL} {y = pre v m .fst}
+             (subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)) (snd hullL)
 
-    Mem : S → Type (ℓ-suc ℓ)
-    Mem v = ⟨ fst v ∈ˢ fst Lβ ⟩
+  ρ : Fin 2 → Fin 2
+  ρ zero = suc zero
+  ρ (suc zero) = zero
 
-    pre : (v : S) → Mem v → Pre v
-    pre v m = PT.rec (isPropPre v) (λ w → w)
-      (HSC.πX-member (fst v) (subst (λ w → ⟨ fst v ∈ˢ w ⟩) (sym ext) m))
+  private
+    ag : (x v : S) → Ren.Agrees ρ (x ∷ v ∷ []) (v ∷ x ∷ [])
+    ag x v zero = refl
+    ag x v (suc zero) = refl
 
-    fn : (v : S) → Mem v → S
-    fn v m = pre v m .fst
-           , isL-trans {x = fst hullL} {y = pre v m .fst}
-               (subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)) (snd hullL)
+    rn : (x v : S) → ⟨ (x ∷ v ∷ []) ⊨ renameFo ρ P.piFo ⟩ ≡ ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
+    rn x v = cong ⟨_⟩ (Ren.⊨-rename ρ P.piFo (x ∷ v ∷ []) (v ∷ x ∷ []) (ag x v))
 
-    ρ : Fin 2 → Fin 2
-    ρ zero = suc zero
-    ρ (suc zero) = zero
+  invFo : Formula S 2
+  invFo = (var zero ∈̇ con hullL) ∧̇ renameFo ρ P.piFo
 
-    private
-      ag : (x v : S) → Ren.Agrees ρ (x ∷ v ∷ []) (v ∷ x ∷ [])
-      ag x v zero = refl
-      ag x v (suc zero) = refl
-
-      rn : (x v : S) → ⟨ (x ∷ v ∷ []) ⊨ renameFo ρ P.piFo ⟩ ≡ ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-      rn x v = cong ⟨_⟩ (Ren.⊨-rename ρ P.piFo (x ∷ v ∷ []) (v ∷ x ∷ []) (ag x v))
-
-    invFo : Formula S 2
-    invFo = (var zero ∈̇ con hullL) ∧̇ renameFo ρ P.piFo
-
-    -- the collapse graph holds at (π x, x) for x ∈ M
-    π-graph : (x : S) (mx : ⟨ fst x ∈ˢ HS.M ⟩) (v : S) → HSC.π (fst x) ≡ fst v
-            → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-    π-graph x mx v e = PT.rec (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
+  -- the collapse graph holds at (π x, x) for x ∈ M
+  π-graph : (x : S) (mx : ⟨ fst x ∈ˢ HS.M ⟩) (v : S) → HSC.π (fst x) ≡ fst v
+          → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
+  π-graph x mx v e = PT.rec (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
+    where
+    read : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
+    read (α , oα , M∈Lα) =
+      subst2 (λ a b → ⟨ (a ∷ b ∷ []) ⊨ P.piFo ⟩)
+        (S≡ {x = HSC.π (fst x) , G .fst} {y = v} e) (S≡ {x = P.up (fst x) mx} {y = x} refl)
+        (G .snd mx)
       where
-      read : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-      read (α , oα , M∈Lα) =
-        subst2 (λ a b → ⟨ (a ∷ b ∷ []) ⊨ P.piFo ⟩)
-          (S≡ {x = HSC.π (fst x) , G .fst} {y = v} e) (S≡ {x = P.up (fst x) mx} {y = x} refl)
-          (G .snd mx)
-        where
-        G = P.good-at α oα (fst x) mx (layer-trans (Lset-layer α) {x = HS.M} {y = fst x} mx M∈Lα)
+      G = P.good-at α oα (fst x) mx (layer-trans (Lset-layer α) {x = HS.M} {y = fst x} mx M∈Lα)
 
-    defines : (v : S) (m : Mem v) → ⟨ (fn v m ∷ v ∷ []) ⊨ invFo ⟩
-    defines v m =
-        subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)
-      , transport (sym (rn (fn v m) v)) (π-graph (fn v m) (pre v m .snd .fst) v (pre v m .snd .snd))
+  defines : (v : S) (m : Mem v) → ⟨ (fn v m ∷ v ∷ []) ⊨ invFo ⟩
+  defines v m =
+      subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)
+    , transport (sym (rn (fn v m) v)) (π-graph (fn v m) (pre v m .snd .fst) v (pre v m .snd .snd))
 
-    only : (v : S) (m : Mem v) (x' : S) → ⟨ (x' ∷ v ∷ []) ⊨ invFo ⟩ → x' ≡ fn v m
-    only v m x' (hx , hp) = S≡ (CI.π-inj (fst x') (pre v m .fst) mx' (pre v m .snd .fst)
-      (sym (P.piFo-val x' mx' v (transport (rn x' v) hp)) ∙ sym (pre v m .snd .snd)))
-      where
-      mx' : ⟨ fst x' ∈ˢ HS.M ⟩
-      mx' = subst (λ w → ⟨ fst x' ∈ˢ w ⟩) M≡ hx
+  only : (v : S) (m : Mem v) (x' : S) → ⟨ (x' ∷ v ∷ []) ⊨ invFo ⟩ → x' ≡ fn v m
+  only v m x' (hx , hp) = S≡ (CI.π-inj (fst x') (pre v m .fst) mx' (pre v m .snd .fst)
+    (sym (P.piFo-val x' mx' v (transport (rn x' v) hp)) ∙ sym (pre v m .snd .snd)))
+    where
+    mx' : ⟨ fst x' ∈ˢ HS.M ⟩
+    mx' = subst (λ w → ⟨ fst x' ∈ˢ w ⟩) M≡ hx
 
-    Dmap : DefinableMap
-    Dmap = record
-      { dom = Lβ ; cod = hullL ; fn = fn
-      ; into = λ v m → subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)
-      ; graph = invFo ; defines = defines ; only = only }
+  Dmap : DefinableMap
+  Dmap = record
+    { dom = Lβ ; cod = hullL ; fn = fn
+    ; into = λ v m → subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)
+    ; graph = invFo ; defines = defines ; only = only }
 
-    inj : (v : S) (m : Mem v) (v' : S) (m' : Mem v') → fst (fn v m) ≡ fst (fn v' m') → fst v ≡ fst v'
-    inj v m v' m' q = sym (pre v m .snd .snd) ∙ cong HSC.π q ∙ pre v' m' .snd .snd
+  inj : (v : S) (m : Mem v) (v' : S) (m' : Mem v') → fst (fn v m) ≡ fst (fn v' m') → fst v ≡ fst v'
+  inj v m v' m' q = sym (pre v m .snd .snd) ∙ cong HSC.π q ∙ pre v' m' .snd .snd
 
-    Lβ↪M : InjL Lβ hullL
-    Lβ↪M = Inj.injL Dmap inj
+  Lβ↪M : InjL Lβ hullL
+  Lβ↪M = Inj.injL Dmap inj
 
-    -- -----------------------------------------------------------------
-    -- 5.3  THE CHAIN: β ⊆ L_β ↪ M ↪ κ.
-    -- -----------------------------------------------------------------
+  -- -----------------------------------------------------------------
+  -- 5.3  THE CHAIN: β ⊆ L_β ↪ M ↪ κ.
+  -- -----------------------------------------------------------------
 
-    β↪κ : InjL βL κ
-    β↪κ = injl-trans βL Lβ κ
-      (inclusion-coded βL Lβ (λ z hz → ord⊆Lset β oβ z hz))
-      (injl-trans Lβ hullL κ Lβ↪M hull↪κ)
+  β↪κ : InjL βL κ
+  β↪κ = injl-trans βL Lβ κ
+    (inclusion-coded βL Lβ (λ z hz → ord⊆Lset β oβ z hz))
+    (injl-trans Lβ hullL κ Lβ↪M hull↪κ)
 
-    result : Σ[ b ∈ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
-    result = βL , oβ , y∈Lβ , β↪κ
+  result : Σ[ b ∈ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
+  result = βL , oβ , y∈Lβ , β↪κ
 
 -- =====================================================================
 -- THE THEOREM.  Hypothesis 2 of src/L/GCH/Assembly.lagda.md.
@@ -363,9 +352,5 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
 
 internal-bounded-subset : InternalBoundedSubset
 internal-bounded-subset κ oκ cκ κ∉ω y y⊆κ =
-  PT.rec squash₁
-    (λ Fp → PT.rec squash₁
-      (λ Fx → ∣ At.WithCodes.result κ oκ cκ κ∉ω y y⊆κ Fp Fx ∣₁)
-      (At.base κ oκ cκ κ∉ω y y⊆κ))
-    (At.pairκ κ oκ cκ κ∉ω y y⊆κ)
+  ∣ At.result κ oκ cκ κ∉ω y y⊆κ ∣₁
 ```
