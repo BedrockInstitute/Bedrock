@@ -1,4 +1,4 @@
 name: bedrock
-include: src agents/tasks
+include: src
 depend: cubical
 flags: -WnoUnsupportedIndexedMatch
