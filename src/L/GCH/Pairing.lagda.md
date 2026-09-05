@@ -1,18 +1,17 @@
 # The square law at the L-cardinals, internally
 
 <!--en-->
-Measured: this master checks in about 290 s at 1.6 GB peak (2026-09-05,
-`GHCRTS="-A64m -I0 -M8g"`).  Sections 1 to 7 and `Step.suc∈`,
-`Step.prod-into`, `Step.seg`, `Step.seg-fst` together take under 10 s;
-the remaining time is `Step.col-fin` (the finite case) alone.  Candidate
-seals, not yet measured: the where-bound `h`/`h-inj` of `col-fin` (the
-`fiber` calls at the sealed `seg-fst`), and `refute`.
+Measured: this master checks in about 14 s at 1.5 GB peak (2026-09-05,
+`GHCRTS="-A64m -I0 -M8g"`).  The 290 s of the previous measurement sat in
+`Step.col-fin`'s where-bound `h-inj`; the cure (O3 bisect) was the sealed
+`pair≡`/`h`/`h-fst`/`h-snd` blocks and the standalone `step-e1`/`step-e2`/
+`step-inj` lemmas below, replacing `cong₂ _,_` at the concrete `Pair`.
 <!--zh-->
-测量：本主文件检查约 290 s，峰值 1.6 GB (2026-09-05，
-`GHCRTS="-A64m -I0 -M8g"`)。第 1 至 7 节与 `Step.suc∈`、`Step.prod-into`、
-`Step.seg`、`Step.seg-fst` 合计不到 10 s；其余时间全在 `Step.col-fin`
-(有穷情形)。候选封印，尚未测量：`col-fin` 中 where 绑定的 `h`/`h-inj`
-(在已封印的 `seg-fst` 处调用 `fiber`)，以及 `refute`。
+测量：本主文件检查约 14 s，峰值 1.5 GB (2026-09-05，
+`GHCRTS="-A64m -I0 -M8g"`)。上次测量的 290 s 全部花在 `Step.col-fin`
+的 where 绑定 `h-inj` 上；治疗（O3 二分）是封印的 `pair≡`/`h`/`h-fst`/
+`h-snd` 块与独立的 `step-e1`/`step-e2`/`step-inj` 引理，取代了在具体
+`Pair` 上的 `cong₂ _,_`。
 <!--/-->
 
 ```agda
@@ -86,6 +85,13 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
+
+-- The pair path, sealed: `cong₂ _,_` at the concrete `Pair` made the
+-- enclosing lemma dominate the whole check (measured in the O3 bisect).
+opaque
+  pair≡ : {A : Type ℓ} {B : Type ℓ} {a a' : A} {b b' : B}
+        → a ≡ a' → b ≡ b' → (a , b) ≡ (a' , b')
+  pair≡ e1 e2 = λ i → e1 i , e2 i
 
 -- An ordinal is an element of L.  Sealed: a proof of a proposition.
 opaque
@@ -870,6 +876,14 @@ prod-inj a b = PT.rec squash₁
 --   member of itself.
 -- =====================================================================
 
+-- Two members with the same fiber index are equal.  Stated once at an
+-- abstract carrier and sealed: measured at the concrete g = sucV (mV p)
+-- inside col-fin, the same equation unfolded ⟪ g ⟫↪ and cost 282 s.
+opaque
+  fiber-inj : (g : V ℓ) {x y : V ℓ} (mx : ⟨ x ∈ˢ g ⟩) (my : ⟨ y ∈ˢ g ⟩)
+            → fiber g mx .fst ≡ fiber g my .fst → x ≡ y
+  fiber-inj g mx my e = sym (fiber g mx .snd) ∙ cong ⟪ g ⟫↪ e ∙ fiber g my .snd
+
 Goal : V ℓ → Type (ℓ-suc ℓ)
 Goal a = (la : ⟨ isL a ⟩) → IsOrd a → IsCardinalL (a , la)
        → (⟨ a ∈ˢ ω ⟩ → Empty.⊥) → InjL (prodL (a , la)) (a , la)
@@ -974,6 +988,47 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
     seg-snd : (p r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ sucV (mV p) ⟩
     seg-snd p r k = snd∈suc (φ r) (φ p) (≺-fwd r p k)
 
+  -- The finite-case carrier: the successor of the maximum below p.
+  gfin : OT.Dom → V ℓ
+  gfin p = sucV (mV p)
+
+  -- The pair of fibers at p, sealed, with explicit first/second
+  -- projections stated outside the where: the concrete `cong fst` on
+  -- the unsealed `h` made `h-inj` dominate the whole check.
+  opaque
+    h : (p r : OT.Dom) (k : r OT.≺ p) → ⟪ gfin p ⟫ × ⟪ gfin p ⟫
+    h p r k = fiber (gfin p) (seg-fst p r k) .fst , fiber (gfin p) (seg-snd p r k) .fst
+
+    h-fst : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
+          → h p r k ≡ h p r' k'
+          → fiber (gfin p) (seg-fst p r k) .fst
+          ≡ fiber (gfin p) (seg-fst p r' k') .fst
+    h-fst p r r' k k' e = cong fst e
+
+    h-snd : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
+          → h p r k ≡ h p r' k'
+          → fiber (gfin p) (seg-snd p r k) .fst
+          ≡ fiber (gfin p) (seg-snd p r' k') .fst
+    h-snd p r r' k k' e = cong snd e
+
+  -- The fiber equations and the final injection, stated standalone with
+  -- explicit written types: where-bound, their elaboration dominated the
+  -- whole check (measured in the O3 bisect).
+  step-e1 : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
+          → h p r k ≡ h p r' k' → φ r .fst ≡ φ r' .fst
+  step-e1 p r r' k k' e =
+    ↪-inj {a = K} (fiber-inj (gfin p) (seg-fst p r k) (seg-fst p r' k') (h-fst p r r' k k' e))
+
+  step-e2 : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
+          → h p r k ≡ h p r' k' → φ r .snd ≡ φ r' .snd
+  step-e2 p r r' k k' e =
+    ↪-inj {a = K} (fiber-inj (gfin p) (seg-snd p r k) (seg-snd p r' k') (h-snd p r r' k k' e))
+
+  step-inj : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
+           → h p r k ≡ h p r' k' → r ≡ r'
+  step-inj p r r' k k' e =
+    φ-inj r r' (pair≡ (step-e1 p r r' k k' e) (step-e2 p r r' k k' e))
+
   -- THE FINITE CASE.  The segment below p injects into the square of
   -- the numeral sucV (mV p), so ω cannot inject into col p.
   col-fin : (p : OT.Dom) → ⟨ mV p ∈ˢ ω ⟩ → ⟨ C.col p ∈ˢ ω ⟩
@@ -986,20 +1041,6 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
     g∈ω : ⟨ g ∈ˢ ω ⟩
     g∈ω = ω-limit (mV p) m∈ω
 
-    h : (r : OT.Dom) → r OT.≺ p → ⟪ g ⟫ × ⟪ g ⟫
-    h r k = fiber g (seg-fst p r k) .fst , fiber g (seg-snd p r k) .fst
-
-    h-inj : (r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p) → h r k ≡ h r' k' → r ≡ r'
-    h-inj r r' k k' e = φ-inj r r' (cong₂ _,_ e1 e2)
-      where
-      e1 : φ r .fst ≡ φ r' .fst
-      e1 = ↪-inj {a = K}
-        (sym (fiber g (seg-fst p r k) .snd) ∙ cong ⟪ g ⟫↪ (cong fst e)
-         ∙ fiber g (seg-fst p r' k') .snd)
-      e2 : φ r .snd ≡ φ r' .snd
-      e2 = ↪-inj {a = K}
-        (sym (fiber g (seg-snd p r k) .snd) ∙ cong ⟪ g ⟫↪ (cong snd e)
-         ∙ fiber g (seg-snd p r' k') .snd)
 
     refute : ((z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ C.col p ⟩) → Empty.⊥
     refute sub = finite-excl-ω g og g∈ω f f-inj
@@ -1007,11 +1048,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
       s : (x : ⟪ ω ⟫) → Seg p (⟪ ω ⟫↪ x)
       s x = seg p (⟪ ω ⟫↪ x) (sub (⟪ ω ⟫↪ x) (member ω x))
       f : ⟪ ω ⟫ → ⟪ g ⟫ × ⟪ g ⟫
-      f x = h (s x .fst) (s x .snd .fst)
+      f x = h p (s x .fst) (s x .snd .fst)
       f-inj : (x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y
       f-inj x y e = ↪-inj {a = ω}
         (sym (s x .snd .snd)
-         ∙ cong C.col (h-inj (s x .fst) (s y .fst) (s x .snd .fst) (s y .snd .fst) e)
+         ∙ cong C.col (step-inj p (s x .fst) (s y .fst) (s x .snd .fst) (s y .snd .fst) e)
          ∙ s y .snd .snd)
 
     go : ⟨ C.col p ∈ˢ ω ⟩ ⊎ ((C.col p ≡ ω) ⊎ ⟨ ω ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ ω ⟩

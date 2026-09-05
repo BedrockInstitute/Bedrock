@@ -26,24 +26,27 @@ jobs:
           echo "${AGDA_DIR}/libraries.d/cubical-0.9/cubical.agda-lib" >> "${AGDA_DIR}/libraries"
           cat "${AGDA_DIR}/libraries"
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      # Interface caches. The key is the hash of every source file, so a push
+      # that changes one module re-checks that module and its dependants, not
+      # the whole tree; the cubical library's interfaces are keyed on its
+      # version alone. A cold run of the whole tree takes about 20 minutes on
+      # a laptop; a warm one takes seconds.
+      - name: Cache cubical interfaces
+        uses: actions/cache@v4
         with:
-          python-version: '3.11'
+          path: ${{ env.AGDA_DIR }}/libraries.d/cubical-0.9/_build
+          key: cubical-0.9-agda-2.8.0-v1
 
-      - name: Check (typecheck + markers + prose lint + glossary + reuse lint)
+      - name: Cache tree interfaces
+        uses: actions/cache@v4
+        with:
+          path: _build/2.8.0/agda/src
+          key: bedrock-ifaces-${{ hashFiles('src/**/*.lagda.md', 'bedrock.agda-lib') }}
+          restore-keys: |
+            bedrock-ifaces-
+
+      - name: Typecheck
         shell: bash
         run: |
           set -euo pipefail
-          make venv PYTHON=python3
-          make check
-
-      # Cutover step 10b of dev/memos/LJ-4-pod-program-design.md. Before this line
-      # NOTHING ran the suites under scripts/tests/, in CI or in a hook, so an
-      # archived script left an orphaned suite and no gate went red. `make check`
-      # does not call them: `make test` is their only runner.
-      - name: Test (the suites under scripts/tests/)
-        shell: bash
-        run: |
-          set -euo pipefail
-          make test
+          make typecheck

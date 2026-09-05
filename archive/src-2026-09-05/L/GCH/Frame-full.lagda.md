@@ -349,6 +349,9 @@ module Unpack (U : S) (Utr : isTrans U) where
 
   convert-at-true = convert-generic {φ = ⊤̇} δ-⊤
 
+convert-generic = Unpack.convert-generic
+convert-at-true = Unpack.convert-at-true
+
 -- =====================================================================
 -- THE HULL CONVERT.  [LJ-1.689] Probe689.agda:37-71, module `Convert`
 -- renamed `HullConvert`.  From hull-closed's hypothesis form
@@ -380,6 +383,8 @@ module HullConvert (U : S) (Utr : isTrans U) where
         (subst (λ ψ → ⟨ (a ∷ []) Ab.⊨ᵐ ψ ⟩)
                (pin₃-map val (mapFo slide φ) ca cp)
                h))
+
+hull-convert = HullConvert.hull-convert
 
 -- =====================================================================
 -- THE WITNESS SLOT, AS SYNTAX.  [LJ-1.520] Probe520.agda:53-128
@@ -524,6 +529,21 @@ module W3 where
   syntax₃ : Σ[ φ ∈ Formula (⊥* {ℓ-suc ℓ}) 3 ] Δ₀ φ
   syntax₃ = erased , Δ₀-erased
 
+-- =====================================================================
+-- THE MATRIX THE LITERATURE HAS.  [LJ-1.667] Probe667.agda:46-109.
+-- Devlin 5.2 (a), Φ(z, v, γ), with the consumer's slot order
+-- (v, γ, z) = (a, p, z).
+-- =====================================================================
+
+φ₃ : Formula (⊥* {ℓ-suc ℓ}) 3
+φ₃ = W3.erased
+
+Δ₀-φ₃ : Δ₀ φ₃
+Δ₀-φ₃ = W3.Δ₀-erased
+
+count-φ₃ : countFo φ₃ ≡ 0
+count-φ₃ = refl
+
 -- Ordinality of the parameter, as a 3-slot conjunct, p at slot 1.
 isOrd-at-p : Formula (⊥* {ℓ-suc ℓ}) 3
 isOrd-at-p =
@@ -535,6 +555,16 @@ isOrd-at-p =
 
 Δ₀-isOrd-at-p : Δ₀ isOrd-at-p
 Δ₀-isOrd-at-p = δ-∧ (δ-∀∈ (δ-∀∈ δ-∈)) (δ-∀∈ (δ-∀∈ (δ-∀∈ δ-∈)))
+
+matrix₃ : Formula (⊥* {ℓ-suc ℓ}) 3
+matrix₃ = isOrd-at-p ∧̇ φ₃
+
+Δ₀-matrix₃ : Δ₀ matrix₃
+Δ₀-matrix₃ = δ-∧ Δ₀-isOrd-at-p Δ₀-φ₃
+
+-- THE TYPE clause (iii) OWES.
+WitnessedLset : Type (ℓ-suc ℓ)
+WitnessedLset = Witnessed Lset
 
 -- =====================================================================
 -- THE LEFTOVER EQUATION.  [LJ-1.686] Probe686.agda:34-55, module `At`
@@ -551,4 +581,135 @@ lemma φ slide val =
     mapFo-comp slide val φ
   ∙ cong (λ h → mapFo h φ) (funExt (λ b → Empty.rec* b))
 
+module EmbedAt {ℓc ℓd : Level} {K : Type ℓc} {K' : Type ℓd}
+  (slide : ⊥* {ℓ-suc ℓ} → K)
+  (val : K → K') where
+
+  slide-embed-eq : mapFo val (mapFo slide matrix₃) ≡ embed matrix₃
+  slide-embed-eq = lemma matrix₃ slide val
+
+slide-embed-eq = EmbedAt.slide-embed-eq
+
+-- =====================================================================
+-- THE BOUND'S HULL MEMBERSHIP AT matrix₃.  [LJ-1.673] Probe673.agda
+-- :54-138.  `inBound` is matrix₃ with the value slot and the parameter
+-- slot pinned to hull codes; `Convert` and `Completeness` are the two
+-- named residues, and `Convert` is inhabited below by `Spend`.
+-- =====================================================================
+
+count-matrix₃ : countFo matrix₃ ≡ 0
+count-matrix₃ = refl
+
+module At (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : Frame.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  module F = Frame lam ordλ succλ X X⊆Lλ ∅∈λ
+  module I = F.Instances elem
+
+  M : S
+  M = F.HS.M
+
+  open F.HS.H.T using ( Code; val )
+  open F.HS.H using ( hull-closed; hull-member )
+
+  slide : ⊥* {ℓ-suc ℓ} → Code
+  slide b = Empty.rec* b
+
+  -- matrix₃ over the hull's alphabet.  Not a new formula.
+  matrix₃-Code : Formula Code 3
+  matrix₃-Code = mapFo slide matrix₃
+
+  -- Two existentials bind value then parameter; the remaining free
+  -- slot is the witness.  The two ≐ conjuncts pin those binders.
+  inBound : (ca cp : Code) → Formula Code 1
+  inBound ca cp =
+    ∃̇ (∃̇ (matrix₃-Code
+         ∧̇ (var zero ≐ con ca)
+         ∧̇ (var (suc zero) ≐ con cp)))
+
+  -- THE STAGE EXISTENTIAL hull-closed demands (src/L/Hull.lagda.md).
+  BoundInStage : (ca cp : Code) → Type (ℓ-suc ℓ)
+  BoundInStage ca cp =
+    ⟨ [] F.HS.ASt.AbsL.⊨ᵐ (∃̇ (mapFo val (inBound ca cp))) ⟩
+
+  -- Given the stage existential, a bound is a hull member.
+  bound-from-stage : (ca cp : Code) → BoundInStage ca cp
+                   → ∥ Σ[ z ∈ S ] ⟨ z ∈ˢ M ⟩ ∥₁
+  bound-from-stage ca cp h =
+    PT.map (λ { (a , a∈H , _) → fst a , a∈H })
+           (hull-closed (inBound ca cp) h)
+
+  -- What LsetGrounded still asks after hull membership.
+  AmbientAt : (δ z : S) → Type (ℓ-suc ℓ)
+  AmbientAt δ z = ⟨ (Lset δ ∷ δ ∷ z ∷ []) ⊨ₚ matrix₃ ⟩
+
+  -- AbsL satisfaction of inBound to the ambient 3-slot reading.
+  Convert : Type (ℓ-suc ℓ)
+  Convert =
+    (ca cp : Code) (a : F.HS.ASt.SL)
+    → ⟨ (a ∷ []) F.HS.ASt.AbsL.⊨ᵐ (mapFo val (inBound ca cp)) ⟩
+    → ⟨ (fst (val ca) ∷ fst (val cp) ∷ fst a ∷ []) ⊨ₚ matrix₃ ⟩
+
+  -- Completeness of matrix₃ at hull codes.  Named, not inhabited.
+  Completeness : Type (ℓ-suc ℓ)
+  Completeness =
+    (ca cp : Code)
+    → fst (val ca) ≡ Lset (fst (val cp))
+    → BoundInStage ca cp
+
+  -- Witnessed at matrix₃, given soundness.
+  WitnessedAt :
+      ((a p z : S)
+       → ⟨ (a ∷ p ∷ z ∷ []) ⊨ₚ matrix₃ ⟩
+       → a ≡ Lset p)
+    → Witnessed Lset
+  WitnessedAt sound = matrix₃ , Δ₀-matrix₃ , sound
+
+-- =====================================================================
+-- THE HULL CONVERT SPENT AT matrix₃.  [LJ-1.692] Probe692.agda:46-68
+-- and [LJ-1.764] Probe764.agda:39-59.  `hull-convert` at
+-- {φ = matrix₃} with Δ₀-matrix₃, `At.slide` and the hull's `val`, the
+-- leftover equation discharged by `slide-embed-eq`.  The result is
+-- `At.Convert`.
+-- =====================================================================
+
+module Spend (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : Frame.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  module A = At lam ordλ succλ X X⊆Lλ ∅∈λ elem
+  module F = Frame lam ordλ succλ X X⊆Lλ ∅∈λ
+  open A using (slide; Convert)
+  open A.F.HS.H.T using (val)
+  open HullConvert (Lset lam) F.HS.ASt.Ltr hiding ( hull-convert )
+
+  hull-convert-at-matrix : Convert
+  hull-convert-at-matrix =
+    HullConvert.hull-convert (Lset lam) F.HS.ASt.Ltr
+      {φ = matrix₃} Δ₀-matrix₃ slide val
+      (slide-embed-eq slide val)
+
+hull-convert-at-matrix = Spend.hull-convert-at-matrix
+
+module Build (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : Frame.A.Elementary lam ordλ succλ X X⊆Lλ ∅∈λ) where
+
+  module A = At lam ordλ succλ X X⊆Lλ ∅∈λ elem
+  module F = A.F
+  module HS = F.HS
+
+  open F.HS.H.T using ( Code; val )
+
+  -- The constructed term, whole, NO ascription: its type is inferred.
+  conv0 = Spend.hull-convert-at-matrix lam ordλ succλ X X⊆Lλ ∅∈λ elem
+
+conv0 = Build.conv0
 ```

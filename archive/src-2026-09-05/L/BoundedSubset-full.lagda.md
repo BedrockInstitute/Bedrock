@@ -62,6 +62,93 @@ module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ )
 
+-- =====================================================================
+-- SECTION 1: THE SIGMA-1 LEVEL-HOOD AT THE CLASS CARRIER.
+-- =====================================================================
+
+-- The bounded graph at the class carrier, at the environment
+-- u ∷ v ∷ γ ∷ K ∷ δ (4 + n).  Slot zero is unused; v is the value,
+-- γ the ordinal index, K the one bound.  The bounded existential
+-- binds the witness w, ranges over K (variable three), and the
+-- machinery shares that bound ([LJ-1.312], [LJ-1.313], [LJ-1.318]).
+module LevelHood {n : ℕ}
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fin (5 + n))
+  (M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 : Fin (7 + n)) where
+
+  m : ℕ
+  m = suc (suc (suc (suc (suc n))))
+
+  module G = GraphB {m}
+    (DefBodyB {m} (suc zero) (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+      (suc (suc (suc (suc (suc N0))))) (suc (suc (suc (suc (suc N1)))))
+      (suc (suc (suc (suc (suc N2))))) (suc (suc (suc (suc (suc N3)))))
+      (suc (suc (suc (suc (suc N4))))) (suc (suc (suc (suc (suc N5)))))
+      (suc (suc (suc (suc (suc N6))))) (suc (suc (suc (suc (suc N7)))))
+      (suc (suc (suc (suc (suc N8))))) (suc (suc (suc (suc (suc N9)))))
+      (suc (suc (suc (suc (suc N10))))) (suc (suc (suc (suc (suc N11)))))
+      (suc (suc (suc (suc (suc t0))))) (suc (suc (suc (suc (suc t1))))))
+    (DefBodyB {suc (suc m)} (suc zero) (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))
+      (suc (suc (suc (suc (suc M0)))))
+      (suc (suc (suc (suc (suc M1)))))
+      (suc (suc (suc (suc (suc M2)))))
+      (suc (suc (suc (suc (suc M3)))))
+      (suc (suc (suc (suc (suc M4)))))
+      (suc (suc (suc (suc (suc M5)))))
+      (suc (suc (suc (suc (suc M6)))))
+      (suc (suc (suc (suc (suc M7)))))
+      (suc (suc (suc (suc (suc M8)))))
+      (suc (suc (suc (suc (suc M9)))))
+      (suc (suc (suc (suc (suc M10)))))
+      (suc (suc (suc (suc (suc M11)))))
+      (suc (suc (suc (suc (suc s0)))))
+      (suc (suc (suc (suc (suc s1))))))
+    zero (suc (suc (suc zero))) (suc (suc (suc (suc zero))))
+
+  -- The bounded matrix: exists w in K (graph w gamma K and v = w).
+  levelHoodB : Formula CS.S (suc (suc (suc (suc n))))
+  levelHoodB =
+    ∃̇∈ (var (suc (suc (suc zero))))
+      (G.graphBndAt ∧̇ (var (suc (suc zero)) ≐ var zero))
+
+  Δ₀-levelHoodB : Δ₀ levelHoodB
+  Δ₀-levelHoodB =
+    δ-∃∈ (δ-∧ (G.Δ₀-graphBndAt (Δ₀-DefBodyB (suc zero)
+              (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))
+              (suc (suc (suc (suc (suc N0))))) (suc (suc (suc (suc (suc N1)))))
+              (suc (suc (suc (suc (suc N2))))) (suc (suc (suc (suc (suc N3)))))
+              (suc (suc (suc (suc (suc N4))))) (suc (suc (suc (suc (suc N5)))))
+              (suc (suc (suc (suc (suc N6))))) (suc (suc (suc (suc (suc N7)))))
+              (suc (suc (suc (suc (suc N8))))) (suc (suc (suc (suc (suc N9)))))
+              (suc (suc (suc (suc (suc N10))))) (suc (suc (suc (suc (suc N11)))))
+              (suc (suc (suc (suc (suc t0))))) (suc (suc (suc (suc (suc t1))))))
+            (Δ₀-DefBodyB (suc zero) (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))
+              (suc (suc (suc (suc (suc M0)))))
+              (suc (suc (suc (suc (suc M1)))))
+              (suc (suc (suc (suc (suc M2)))))
+              (suc (suc (suc (suc (suc M3)))))
+              (suc (suc (suc (suc (suc M4)))))
+              (suc (suc (suc (suc (suc M5)))))
+              (suc (suc (suc (suc (suc M6)))))
+              (suc (suc (suc (suc (suc M7)))))
+              (suc (suc (suc (suc (suc M8)))))
+              (suc (suc (suc (suc (suc M9)))))
+              (suc (suc (suc (suc (suc M10)))))
+              (suc (suc (suc (suc (suc M11)))))
+              (suc (suc (suc (suc (suc s0)))))
+              (suc (suc (suc (suc (suc s1)))))))
+      δ-≐)
+
+  -- The Sigma-1 form: closes the unused slot over the bounded matrix.
+  levelHoodΣ₁ : Formula CS.S (suc (suc (suc n)))
+  levelHoodΣ₁ = ∃̇ levelHoodB
+
+  Σ₁-levelHood : Σ₁ levelHoodΣ₁
+  Σ₁-levelHood = σ-∃ (σ-Δ₀ Δ₀-levelHoodB)
+
+-- =====================================================================
+-- SECTION 2: THE SATISFACTION ISO-INVARIANCE UNDER THE COLLAPSE.
+-- =====================================================================
+
 module IsoInv (M : S) (PM : S)
   (p : S → S)
   (p∈ : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ p x ∈ˢ PM ⟩)
@@ -677,6 +764,34 @@ module HullElemDown (α : S) (ordα : IsOrd α)
               → fst (Mse._⊨_ δ φ)
     elem-down n φ δ h = subst ⟨_⟩ (sym (elem n φ δ)) h
 
+-- The one instance: the level-hood statement at the hull of the stage,
+-- with the collapse iso and the elementarity-down residue as the
+-- assembly's priced hypotheses.
+module AtHullInstance (α : S) (ordα : IsOrd α)
+  (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩) (∅∈α : ⟨ ∅ ∈ˢ α ⟩)
+  (Xext : isExt X) where
+
+  module CIso = CollapseIso X Xext
+  module DR = DownReflect α ordα X X⊆L ∅∈α
+
+  transfer : {n : ℕ} (φ : Formula CIso.I.SM n) (δ : CIso.I.SM ^ n)
+           → (⟨ δ CIso.I.⊨ᵐ φ ⟩ → ⟨ map CIso.I.g δ CIso.I.⊨ᵖᵐ mapFo CIso.I.g φ ⟩)
+          × (⟨ map CIso.I.g δ CIso.I.⊨ᵖᵐ mapFo CIso.I.g φ ⟩ → ⟨ δ CIso.I.⊨ᵐ φ ⟩)
+  transfer {n} φ δ = CIso.I.iso-inv n φ δ , CIso.I.iso-inv-bwd n φ δ
+
+  reflect : DR.ElemDown
+          → (φ : Formula DR.H.T.Code 1)
+          → ⟨ [] DR.ASt.AbsL.⊨ᵐ (∃̇ (mapFo DR.H.T.val φ)) ⟩
+          → ∥ Σ[ q ∈ DR.SM ] ⟨ (q ∷ []) DR.⊨ᵐ (mapFo DR.codeValM φ) ⟩ ∥₁
+  reflect = DR.down-reflect
+
+-- =====================================================================
+-- SECTION 4A: THE ORDINAL FORMULA, AND THE LEVEL-HOOD AT n = 0.
+-- =====================================================================
+
+-- "x is an ordinal" in the tree's sense: x is transitive and every
+-- member of x is transitive.  Parameter-free; the same spelling embeds
+-- to every carrier.
 isOrdAt : Formula (⊥* {ℓ-suc ℓ}) 1
 isOrdAt =
   (∀̇∈ (var zero) (∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero)))))
@@ -721,6 +836,37 @@ erase-Δ₀ (∀̇∈ t φ) p (δ-∀∈ c) = δ-∀∈ (erase-Δ₀ φ _ c)
 erase-Δ₀ (∃̇∈ t φ) p (δ-∃∈ c) = δ-∃∈ (erase-Δ₀ φ _ c)
 erase-Δ₀ (∃̇ φ) p ()
 erase-Δ₀ (∀̇ φ) p ()
+
+module LevelHood0
+  (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1 : Fin 5)
+  (M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1 : Fin 7) where
+
+  module LH = LevelHood {0} N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 t0 t1
+    M0 M1 M2 M3 M4 M5 M6 M7 M8 M9 M10 M11 s0 s1
+
+  -- The bounded matrix at env w ∷ v ∷ γ ∷ K ∷ [].
+  matrix : Formula CS.S 4
+  matrix = LH.levelHoodB
+
+  Δ₀-matrix : Δ₀ matrix
+  Δ₀-matrix = LH.Δ₀-levelHoodB
+
+  -- The Sigma-1 statement at env γ ∷ []: exists K, v, w in K.
+  Σ₂ : Formula CS.S 1
+  Σ₂ = ∃̇ (∃̇ (∃̇∈ (var (suc (suc zero))) LH.levelHoodB))
+
+  Σ₁-Σ₂ : Σ₁ Σ₂
+  Σ₁-Σ₂ = σ-∃ (σ-∃ (σ-Δ₀ (δ-∃∈ Δ₀-matrix)))
+
+  -- The reverse statement at env y ∷ []: exists K, an ordinal gamma,
+  -- v and w in K, with the matrix and y in v.  The matrix and the
+  -- ordinal formula are weakened past the accumulating binders.
+  reverse : Formula CS.S 1
+  reverse =
+    ∃̇ (∃̇ ( (renameFo (padRight 2) (embed isOrdAt))
+          ∧̇ (∃̇ (∃̇∈ (var (suc (suc zero)))
+                ( (renameFo (padRight 1) LH.levelHoodB)
+                ∧̇ (var (suc (suc (suc (suc zero)))) ∈̇ var (suc zero)) ))) ))
 
 -- =====================================================================
 -- SECTION 4B: THE CONDENSATION THEOREM AT THE HULL INSTANCE.
@@ -1590,5 +1736,22 @@ module Devlin55
 
       theorem : ⟨ x ∈ˢ Lset κ ⟩
       theorem = x∈Lκ
+
+-- [LJ-1.634]: the obligation `class-pred-iv` is metered at the module top
+-- level, and the row at the site it lands in, `Devlin55.BoundedSubsetAt`
+-- `RGraph`, is the implementation. The alias carries the site's telescope;
+-- the name below is the one the meter and the assembler read. The alias is
+-- required: a path into the parameterized submodule in term position is not
+-- a term, while the dotted reference through the alias is.
+module BSA634 (κ : S) (ordκ : IsOrd κ) (cardκ : IsCardinal κ) (κ∉ω : ⟨ κ ∈ˢ ω ⟩ → Empty.⊥)
+             (α : S) (ordα : IsOrd α) (α∈κ : ⟨ α ∈ˢ κ ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥)
+             (sq : (δ : S) → ⟨ δ ∈ˢ sucV α ⟩ → (⟨ δ ∈ˢ ω ⟩ → Empty.⊥)
+                 → Σ[ f ∈ (⟪ δ ⟫ × ⟪ δ ⟫ → ⟪ δ ⟫) ]
+                     ((x y : ⟪ δ ⟫ × ⟪ δ ⟫) → f x ≡ f y → x ≡ y))
+  = Devlin55.BoundedSubsetAt κ ordκ cardκ κ∉ω α ordα α∈κ α∉ω sq
+
+class-pred-iv = BSA634.RGraph.class-pred-iv
+
+-- =====================================================================
 
 ```
