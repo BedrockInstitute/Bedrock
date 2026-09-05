@@ -73,7 +73,7 @@ open SemVᵃ using ( _^_ )
 -- The ambient reading is `Sat` at the empty constant domain, the same
 -- reading `_⊨ₚ_` names.
 module RS = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ {K = ⊥* {ℓ-suc ℓ}}
-               (λ b → Empty.rec* b)
+               (λ b → Empty.rec* b) using (Agrees; ⊨-rename)
 
 -- SHAPE A: the value slot last.  The inner environment reads
 -- (p ∷ z ∷ a ∷ []).
@@ -150,8 +150,8 @@ pinY-map f ψ c = refl
 
 module Pin (U : S) (Utr : isTrans U) where
 
-  module Un = Unpack U Utr
-  module Ab = Un.Ab
+  module Un = Unpack U Utr using (Ab; module Ab; read)
+  module Ab = Un.Ab using (SM; _⊨ᵐ_)
 
   unpack₂ : (ψ χ : Formula Ab.SM 3) (a : Ab.SM)
           → ⟨ (a ∷ []) Ab.⊨ᵐ (∃̇ (∃̇ (ψ ∧̇ χ))) ⟩
@@ -226,11 +226,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
         → ⟨ isL x ⟩)
   where
 
-  module F = Frame lam ordλ succλ X X⊆L ∅∈λ
-  module HS = F.HS
-  module Cy = F.Carry elem
-  module P = Pin (Lset lam) HS.ASt.Ltr
-  module HC = HullConvert (Lset lam) HS.ASt.Ltr
+  module F = Frame lam ordλ succλ X X⊆L ∅∈λ using (module A; module Carry; module HS)
+  module HS = F.HS using (module ASt; module C; module Condense; module H; M)
+  module Cy = F.Carry elem using (module CIso; at; atM; atπ; push)
+  module P = Pin (Lset lam) HS.ASt.Ltr using (module Un; convA; convP)
+  module HC = HullConvert (Lset lam) HS.ASt.Ltr using (hull-convert; inBound)
 
   open HS.H.T using ( Code; val )
   open HS.H using ( hull-closed; hull-member; Hull⊆L )
@@ -559,7 +559,7 @@ module Condense (lam : S) (ordλ : IsOrd lam)
   -- THE THEOREM.  The collapse of the hull is a level.
   -- =====================================================================
 
-  module Cn = HS.Condense levelIn cover
+  module Cn = HS.Condense levelIn cover using (condenses)
 
   condenses : Σ[ β ∈ S ] (IsOrd β × (HS.C.πX ≡ Lset β))
   condenses = Cn.condenses

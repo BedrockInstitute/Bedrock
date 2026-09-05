@@ -102,15 +102,15 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; ⁅_⁆s; pairing-ax; module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
-open hPropStructure 𝒮ᵥ
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
+open hPropStructure 𝒮ᵥ using (S; _∈ˢ_)
 
 -- The class-carrier reading, as src/L/Condensation.lagda.md:76-77.
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_^_; _⊨ᵐ_)
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- The 𝒮ʟ carrier, for the syntax.  Same name as src/L/GCH/Frame.lagda.md.
-module CS = hPropStructure 𝒮ʟ
+module CS = hPropStructure 𝒮ʟ using (S)
 
 -- =====================================================================
 -- SLOT ARITHMETIC.  Every formula below is written at a variable
@@ -633,8 +633,8 @@ module GraphV {m : ℕ} (w b K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m) 
 module MatrixV {m : ℕ} (w b K O : Fin m)
                (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m) where
 
-  module P = MatrixP {m} w b K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
-  module G = GraphV {m} w b K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
+  module P = MatrixP {m} w b K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (pairK; pins; sucK; transK; Δ₀-pairK; Δ₀-pins; Δ₀-sucK; Δ₀-transK)
+  module G = GraphV {m} w b K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (graphAt; Δ₀-graphAt)
 
   -- The value and the parameter lie in the witness.
   matrix : Formula CS.S m
@@ -673,7 +673,7 @@ module W3V where
   bb  = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))))
   kk  = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))))))
 
-  module Mx = MatrixV {16} ww bb kk oo n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11
+  module Mx = MatrixV {16} ww bb kk oo n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11 using (matrix; Δ₀-matrix; module P)
 
   open W3 using ( wrap; δ-wrap )
 
@@ -783,7 +783,7 @@ record Tags {m : ℕ} (N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     t9 : fst (lookup N9 γ) ≡ fst (numeralL 9)
     t10 : fst (lookup N10 γ) ≡ fst (numeralL 10)
     t11 : fst (lookup N11 γ) ≡ fst (numeralL 11)
-open Tags
+open Tags using (t0; t1; t2; t3; t4; t5; t6; t7; t8; t9; t10; t11)
 
 -- The same record one element deeper: every lookup is definitionally
 -- the outer one.
@@ -856,8 +856,8 @@ module Tower {m : ℕ} (Ê O w K : Fin m) (γ : CS.S ^ m)
     InK : V ℓ → Type (ℓ-suc ℓ)
     InK x = ⟨ x ∈ Kv ⟩
 
-  module C = KC Kv Ov kc
-  module Z = Chain Kv C.transK
+  module C = KC Kv Ov kc using (numK; numO; transK)
+  module Z = Chain Kv C.transK using (sndK)
 
   arityK : (N v : CS.S) → ⟨ fst v ∈ fst N ⟩ → InK (fst N) → InK (fst v)
   arityK N v h' hN = C.transK (fst N) (fst v) hN h'
@@ -921,9 +921,9 @@ module Tower {m : ℕ} (Ê O w K : Fin m) (γ : CS.S ^ m)
     envInK0 z hz = subst InK (numeralL-fst 0 ∙ sym (R.recovers ∙ env0≡∅ _)) (C.numK 0)
       where
       module R = Recover W zero (z ∷ En ∷ nS zero ∷ γ) zero (suc i1) (suc (sh2 w))
-                   (numeralL-fst 0) refl hz
+                   (numeralL-fst 0) refl hz using (g; recovers)
     module ES = EnvSet {2 + m} i0 i1 (sh2 w) (sh2 K) (En ∷ nS zero ∷ γ)
-                  arityK (entryK zero En p) (C.numK 0) envInK0
+                  arityK (entryK zero En p) (C.numK 0) envInK0 using (back; bnd→over; over→bnd; φB)
     hov : ⟨ (Ev g ∷ En ∷ nS zero ∷ γ) ⊨ envOverAt zero (suc i1) (suc (sh2 w)) ⟩
     hov = envOverAt-transport (W ∷ (# zero , numL zero) ∷ Ev g ∷ []) (Ev g ∷ En ∷ nS zero ∷ γ)
             (suc (suc zero)) (suc zero) zero zero (suc i1) (suc (sh2 w))
@@ -963,7 +963,7 @@ module Tower {m : ℕ} (Ê O w K : Fin m) (γ : CS.S ^ m)
     over-in z hz En p =
       subst (λ u → ⟨ u ∈ fst En ⟩) (sym R.recovers) (all-in n R.g En p)
       where
-      module R = Recover W n (z ∷ γ') zero (suc ar) (suc Bi) qd qb hz
+      module R = Recover W n (z ∷ γ') zero (suc ar) (suc Bi) qd qb hz using (g; recovers)
 
     over-K : (z : CS.S) → ⟨ (z ∷ γ') ⊨ envOverAt zero (suc ar) (suc Bi) ⟩ → InK (fst z)
     over-K z hz = PT.rec (snd (fst z ∈ Kv))
@@ -990,9 +990,9 @@ module Tower {m : ℕ} (Ê O w K : Fin m) (γ : CS.S ^ m)
         (some-entry n)
         where
         module R = Recover W n (u ∷ En ∷ nS n ∷ γ) zero (suc i1) (suc (sh2 w))
-                     (numeralL-fst n) refl hu
+                     (numeralL-fst n) refl hu using (g; recovers)
       module ES = EnvSet {2 + m} i0 i1 (sh2 w) (sh2 K) (En ∷ nS n ∷ γ)
-                    arityK (entryK n En p) (C.numK n) envInK'
+                    arityK (entryK n En p) (C.numK n) envInK' using (back; bnd→over; over→bnd; φB)
 
     -- THE TRUE ENVIRONMENT SET IS AN ENTRY, hence lies in K.
     envK : (Ei : Fin n') → ⟨ γ' ⊨ envSetAt Ei ar Bi ⟩ → InK (fst (lookup Ei γ'))
@@ -1028,7 +1028,7 @@ module Tower {m : ℕ} (Ê O w K : Fin m) (γ : CS.S ^ m)
              (subst (λ u → ⟨ u ∈ fst E₁ ⟩) eq (all-in (suc n) g' E₁ p₁)) })
       (some-entry (suc n))
       where
-      module R = Recover W n (z ∷ γ') zero (suc ar) (suc Bi) qd qb hz
+      module R = Recover W n (z ∷ γ') zero (suc ar) (suc Bi) qd qb hz using (g; recovers)
       fib : Σ[ q ∈ ⟪ Wv ⟫ ] (ι q ≡ fst x)
       fib = ∈-asFiber {a = fst x} {b = Wv} x∈
       g' : Ix W (suc n)
@@ -1099,9 +1099,9 @@ module Nums {m : ℕ} (O N0 : Fin m) (γ : CS.S ^ m)
 module Closure (γ : CS.S ^ 16) (h : ⟨ γ ⊨ W3V.Mx.matrix ⟩)
                (n0K : ⟨ fst (lookup W3V.n0 γ) ∈ fst (lookup W3V.kk γ) ⟩)
                (ooK : ⟨ fst (lookup W3V.oo γ) ∈ fst (lookup W3V.kk γ) ⟩) where
-  open W3V
+  open W3V using (bb; kk; n0; n1; n10; n11; n2; n3; n4; n5; n6; n7; n8; n9; oo; ww)
 
-  module R = Read {16} ww bb kk n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11 γ
+  module R = Read {16} ww bb kk n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11 γ using (InK; Kv; module Tags; numK-all; pair-out; trans-out)
 
   ht = h .fst
   hq = h .snd .fst
@@ -1112,7 +1112,7 @@ module Closure (γ : CS.S ^ 16) (h : ⟨ γ ⊨ W3V.Mx.matrix ⟩)
   bK = h .snd .snd .snd .snd .snd .snd .fst
   hg = h .snd .snd .snd .snd .snd .snd .snd
 
-  module T = R.Tags hp
+  module T = R.Tags hp using (t0; t1; t10; t11; t2; t3; t4; t5; t6; t7; t8; t9)
 
   tags : Tags n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11 γ
   tags = record
@@ -1123,7 +1123,7 @@ module Closure (γ : CS.S ^ 16) (h : ⟨ γ ⊨ W3V.Mx.matrix ⟩)
     ; t8 = T.t8 ∙ sym (numeralL-fst 8) ; t9 = T.t9 ∙ sym (numeralL-fst 9)
     ; t10 = T.t10 ∙ sym (numeralL-fst 10) ; t11 = T.t11 ∙ sym (numeralL-fst 11) }
 
-  module N = Nums {16} oo n0 γ hn (tags .t0)
+  module N = Nums {16} oo n0 γ hn (tags .t0) using (nums; only-nums)
 
   -- Successor closure, from the pin `sucK`.
   sucK-out : (a : CS.S) → R.InK (fst a) → R.InK (sucV (fst a))
@@ -1171,7 +1171,7 @@ DefSound =
 -- tower.
 -- =====================================================================
 
-open KFactsNS
+open KFactsNS using (KFacts)
 
 module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                (γ : CS.S ^ m)
@@ -1179,7 +1179,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                (tags : Tags N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ)
                (wK : ⟨ fst (lookup w γ) ∈ fst (lookup K γ) ⟩) where
 
-  module DV = DefV {m} d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
+  module DV = DefV {m} d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (body; defAt; defAt-out)
 
   private
     Kv Ov Wv : V ℓ
@@ -1190,8 +1190,8 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     InK : V ℓ → Type (ℓ-suc ℓ)
     InK x = ⟨ x ∈ Kv ⟩
 
-  module C = KC Kv Ov kc
-  module Z = Chain Kv C.transK
+  module C = KC Kv Ov kc using (O-num; numK; numO; pairK; sucK; transK)
+  module Z = Chain Kv C.transK using (fstK; prK-fst; prK-snd; sndK)
 
   arityK : (N v : CS.S) → ⟨ fst v ∈ fst N ⟩ → InK (fst N) → InK (fst v)
   arityK N v h hN = C.transK (fst N) (fst v) hN h
@@ -1241,7 +1241,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       ; carrierK = λ v hv → C.transK Wv (fst v) wK hv
       ; arityK = arityK }
 
-    module Tw = Tower {3 + m} i0 (sh3 O) (sh3 w) (sh3 K) (Ês ∷ Ts ∷ Cs ∷ γ) kc ÊK htow
+    module Tw = Tower {3 + m} i0 (sh3 O) (sh3 w) (sh3 K) (Ês ∷ Ts ∷ Cs ∷ γ) kc ÊK htow using (module At; Entry; entryK; some-entry)
 
     -- THE CODE-SET TIES.  A code's components lie in K by the pair
     -- chain from C ∈ K; its arity is a numeral by the arity pin.
@@ -1349,7 +1349,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     module CA = ClosedAgree {2 + m} i1 (sh2 K) (sh2 N2) (sh2 N3) (sh2 N4) (sh2 N5)
                   (sh2 N8) (sh2 N9) (sh2 N10) (sh2 N11)
                   (sh2 w) (sh2 N0) (sh2 N1) (sh2 N6) (sh2 N7) (Ts ∷ Cs ∷ γ)
-                  facts binCodes unCodes entryC
+                  facts binCodes unCodes entryC using (back)
 
     closed : ⟨ (Ts ∷ Cs ∷ γ) ⊨ closedAt i1 ⟩
     closed = CA.back hcl
@@ -1357,19 +1357,19 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     module SA = ShapedAgree {2 + m} i1 (sh2 w) (sh2 K)
                   (sh2 N0) (sh2 N1) (sh2 N2) (sh2 N3) (sh2 N4) (sh2 N5)
                   (sh2 N6) (sh2 N7) (sh2 N8) (sh2 N9) (sh2 N10) (sh2 N11) (Ts ∷ Cs ∷ γ)
-                  facts binCodes unCodes
+                  facts binCodes unCodes using (back)
 
     shaped : ⟨ (Ts ∷ Cs ∷ γ) ⊨ shapedAt i1 (sh2 w) ⟩
     shaped = SA.back hsh
 
-    module DA = DomainAgree {2 + m} i0 i1 (sh2 K) (Ts ∷ Cs ∷ γ) entryT cK
+    module DA = DomainAgree {2 + m} i0 i1 (sh2 K) (Ts ∷ Cs ∷ γ) entryT cK using (back)
 
     total : ⟨ (Ts ∷ Cs ∷ γ) ⊨ domAt i0 i1 ⟩
     total = DA.back hdom
 
     -- THE FOUR ROWS WHOSE TELESCOPES THE TIES ABOVE FILL DIRECTLY.
     module RBot = BotAgree {2 + m} i1 i0 (sh2 w) (sh2 N7) (sh2 K) (Ts ∷ Cs ∷ γ)
-                    (tags2 .t7) (C.numK 7) (unK 7) (unCodes 7) (valK-un' 7)
+                    (tags2 .t7) (C.numK 7) (unK 7) (unCodes 7) (valK-un' 7) using (bot-in)
 
     rowBot : ⟨ (Ts ∷ Cs ∷ γ) ⊨ botClauseAt i1 i0 ⟩
     rowBot = RBot.bot-in (h12 .snd .snd .snd .snd .snd .snd .snd .fst)
@@ -1379,7 +1379,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                     (λ yc a ar c E arNum hE →
                        envK-of (E ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i3 (sh5 (sh2 w)) refl arNum zero hE)
                     (λ yc a ar c E arK arNum z hz →
-                       envInK-of (E ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i3 (sh5 (sh2 w)) refl arNum z hz)
+                       envInK-of (E ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i3 (sh5 (sh2 w)) refl arNum z hz) using (back)
 
     rowTop : ⟨ (Ts ∷ Cs ∷ γ) ⊨ topClauseAt i1 i0 (sh2 w) ⟩
     rowTop = RTop.back (h12 .snd .snd .snd .snd .snd .snd .fst)
@@ -1393,7 +1393,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                     (λ ya yc a ar c E arNum hE →
                        envK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum zero hE)
                     (λ ya yc a ar c E arK arNum z hz →
-                       envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz)
+                       envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz) using (back)
 
     rowNeg : ⟨ (Ts ∷ Cs ∷ γ) ⊨ negClauseAt i1 i0 (sh2 w) ⟩
     rowNeg = RNeg.back (h12 .snd .snd .snd .snd .snd .fst)
@@ -1408,7 +1408,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                     (λ E yb ya yc b a ar c arNum hE →
                        envK-of (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i6 (sh8 (sh2 w)) refl arNum zero hE)
                     (λ E ya yc b a ar c arK arNum z hz →
-                       envInK-of (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i5 (sh7 (sh2 w)) refl arNum z hz)
+                       envInK-of (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i5 (sh7 (sh2 w)) refl arNum z hz) using (back)
 
     rowImp : ⟨ (Ts ∷ Cs ∷ γ) ⊨ impClauseAt i1 i0 (sh2 w) ⟩
     rowImp = RImp.back (h12 .snd .snd .snd .snd .fst)
@@ -1440,7 +1440,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                         (En ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ)
                         arityK (Tw.entryK n En p) arK
                         (λ z hz → Tw.At.over-K (En ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ)
-                                    i5 (sh7 (sh2 w)) n q refl z hz)
+                                    i5 (sh7 (sh2 w)) n q refl z hz) using (back; bnd→over; over→bnd; φB)
           machine : ⟨ (En ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) ⊨
                       envSetAt zero i5 (sh7 (sh2 w)) ⟩
           machine = extAt-in-both zero (envOverAt zero (suc i5) (suc (sh7 (sh2 w))))
@@ -1494,7 +1494,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                     (λ yc b a ar c E arNum hE →
                        envK-of (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum zero hE)
                     (λ yc b a ar c E arK arNum z hz →
-                       envInK-of (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz)
+                       envInK-of (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz) using (back)
 
     rowMem : ⟨ (Ts ∷ Cs ∷ γ) ⊨ memClauseAt i1 i0 (sh2 w) ⟩
     rowMem = RMem.back (h12 .fst)
@@ -1505,7 +1505,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                    (λ yc b a ar c E arNum hE →
                       envK-of (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum zero hE)
                    (λ yc b a ar c E arK arNum z hz →
-                      envInK-of (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz)
+                      envInK-of (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz) using (back)
 
     rowEq : ⟨ (Ts ∷ Cs ∷ γ) ⊨ eqClauseAt i1 i0 (sh2 w) ⟩
     rowEq = REq.back (h12 .snd .fst)
@@ -1516,7 +1516,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                        subK-of (sh7 i0) i5 i4 i1 (x ∷ y ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) refl hs)
                     (λ y ya yc b a ar c hs →
                        subK-of (sh7 i0) i5 i3 i0 (y ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) refl hs)
-                    (λ ya yc b a ar c _ _ _ arNum → someEnv-of ya yc b a ar c arNum)
+                    (λ ya yc b a ar c _ _ _ arNum → someEnv-of ya yc b a ar c arNum) using (back)
 
     rowAnd : ⟨ (Ts ∷ Cs ∷ γ) ⊨ binClauseAt i1 i0 2 (propRel i0 (interAt (suc (suc zero)) (suc zero) zero)) ⟩
     rowAnd = RAnd.back (h12 .snd .snd .fst)
@@ -1527,7 +1527,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                       subK-of (sh7 i0) i5 i4 i1 (x ∷ y ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) refl hs)
                    (λ y ya yc b a ar c hs →
                       subK-of (sh7 i0) i5 i3 i0 (y ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) refl hs)
-                   (λ ya yc b a ar c _ _ _ arNum → someEnv-of ya yc b a ar c arNum)
+                   (λ ya yc b a ar c _ _ _ arNum → someEnv-of ya yc b a ar c arNum) using (back)
 
     rowOr : ⟨ (Ts ∷ Cs ∷ γ) ⊨ binClauseAt i1 i0 3 (propRel i0 (unionAt (suc (suc zero)) (suc zero) zero)) ⟩
     rowOr = ROr.back (h12 .snd .snd .snd .fst)
@@ -1539,7 +1539,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                       (λ ya yc a ar c E arNum hE →
                          envK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum zero hE)
                       (λ ya yc a ar c E arK arNum z hz →
-                         envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz)
+                         envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz) using (back)
 
     rowExist : ⟨ (Ts ∷ Cs ∷ γ) ⊨ existClauseAt i1 i0 (sh2 w) ⟩
     rowExist = RExist.back (h12 .snd .snd .snd .snd .snd .snd .snd .snd .fst)
@@ -1552,7 +1552,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                           envK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum zero hE)
                        (λ ya yc a ar c E arK arNum z hz →
                           envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i4 (sh6 (sh2 w)) refl arNum z hz)
-                       consK-un
+                       consK-un using (back)
 
     rowForall : ⟨ (Ts ∷ Cs ∷ γ) ⊨ forallClauseAt i1 i0 (sh2 w) ⟩
     rowForall = RForall.back (h12 .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst)
@@ -1566,7 +1566,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                       (λ E ya yc b a ar c arK arNum z hz →
                          envInK-of (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i5 (sh7 (sh2 w)) refl arNum z hz)
                       consK-bin
-                      (tags2 .t0) (tags2 .t1) t0K (C.numK 1)
+                      (tags2 .t0) (tags2 .t1) t0K (C.numK 1) using (back-all)
 
     rowAllIn : ⟨ (Ts ∷ Cs ∷ γ) ⊨ allInClauseAt i1 i0 (sh2 w) ⟩
     rowAllIn = RAllIn.back-all (h12 .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst)
@@ -1580,7 +1580,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                      (λ E ya yc b a ar c arK arNum z hz →
                         envInK-of (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ Ts ∷ Cs ∷ γ) i5 (sh7 (sh2 w)) refl arNum z hz)
                      consK-bin
-                     (tags2 .t0) (tags2 .t1) t0K (C.numK 1)
+                     (tags2 .t0) (tags2 .t1) t0K (C.numK 1) using (back-ex)
 
     rowExIn : ⟨ (Ts ∷ Cs ∷ γ) ⊨ exInClauseAt i1 i0 (sh2 w) ⟩
     rowExIn = RExIn.back-ex (h12 .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd)
@@ -2005,7 +2005,7 @@ module DefRead {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                       (e0 ∷ e1 ∷ e2 ∷ γ′)
                       (tags2 .t0) (C.numK 0) C.pairK
                       (λ u hu → C.transK Wv (fst u) wK hu) arityK
-                      (λ z hz → C.transK Wv (fst z) wK (hz .fst))
+                      (λ z hz → C.transK Wv (fst z) wK (hz .fst)) using (back)
 
     -- SOUNDNESS HALF: every member of d is a definable subset of w.
     into : (x : V ℓ) → ⟨ x ∈ fst (lookup d γ) ⟩ → ⟨ x ∈ 𝒟ₒ Wv ⟩
@@ -2145,8 +2145,8 @@ module Sound4 (ds : DefSound) where
               (fK : ⟨ fst (lookup f γ) ∈ fst (lookup K γ) ⟩)
               (bK : ⟨ fst (lookup b γ) ∈ fst (lookup K γ) ⟩) where
 
-    module SV = StepV {m} v b f K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
-    module Z = Chain (fst (lookup K γ)) (KC.transK (fst (lookup K γ)) (fst (lookup O γ)) kc)
+    module SV = StepV {m} v b f K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (intoAt; overAt; stepAt)
+    module Z = Chain (fst (lookup K γ)) (KC.transK (fst (lookup K γ)) (fst (lookup O γ)) kc) using (sndK)
 
     private
       Kv Bv Fv Vv : V ℓ
@@ -2278,7 +2278,7 @@ module Sound4 (ds : DefSound) where
                 (h : ⟨ γ ⊨ ApproxV.approxAt f a K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 ⟩)
                 (oa : IsOrd (fst (lookup a γ))) where
 
-    module Z = Chain (fst (lookup K γ)) (KC.transK (fst (lookup K γ)) (fst (lookup O γ)) kc)
+    module Z = Chain (fst (lookup K γ)) (KC.transK (fst (lookup K γ)) (fst (lookup O γ)) kc) using (fstK; prK-fst; prK-snd; sndK)
 
     private
       Kv Av Fv : V ℓ
@@ -2336,7 +2336,7 @@ module Sound4 (ds : DefSound) where
                       (z ∷ d ∷ γ) kc
                       (tagsCons _ _ _ _ _ _ _ _ _ _ _ _ (d ∷ γ) z
                         (tagsCons _ _ _ _ _ _ _ _ _ _ _ _ γ d tags))
-                      fK uK
+                      fK uK using (step-Lset)
         vals : Values (lookup f γ) u
         vals c y c∈ q = IH (fst c) c∈ (snd c) y q
         ents : Entries (lookup f γ) u
@@ -2380,11 +2380,11 @@ module Sound4 (ds : DefSound) where
         module Ap = Approx {1 + m} i0 (sh1 b) (sh1 K) (sh1 O)
                       (sh1 N0) (sh1 N1) (sh1 N2) (sh1 N3) (sh1 N4) (sh1 N5)
                       (sh1 N6) (sh1 N7) (sh1 N8) (sh1 N9) (sh1 N10) (sh1 N11)
-                      (f ∷ γ) kc tags' fK bK ha ob
+                      (f ∷ γ) kc tags' fK bK ha ob using (approx-val; dom-in)
         module St = Step {1 + m} (sh1 w) (sh1 b) i0 (sh1 K) (sh1 O)
                       (sh1 N0) (sh1 N1) (sh1 N2) (sh1 N3) (sh1 N4) (sh1 N5)
                       (sh1 N6) (sh1 N7) (sh1 N8) (sh1 N9) (sh1 N10) (sh1 N11)
-                      (f ∷ γ) kc tags' fK bK
+                      (f ∷ γ) kc tags' fK bK using (step-Lset)
         vals : Values f Bv
         vals c z _ p = Ap.approx-val c z p
         ents : Entries f Bv
@@ -2404,10 +2404,10 @@ module Sound4 (ds : DefSound) where
          → fst (lookup W3V.ww γ) ≡ Lset (fst (lookup W3V.bb γ))
   finish γ h n0K ooK ob = Gr.graph-Lset Cl.hg ob
     where
-    open W3V
-    module Cl = Closure γ h n0K ooK
+    open W3V using (bb; kk; n0; n1; n10; n11; n2; n3; n4; n5; n6; n7; n8; n9; oo; ww)
+    module Cl = Closure γ h n0K ooK using (bK; hg; kc; tags)
     module Gr = Graph {16} ww bb kk oo n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11
-                  γ Cl.kc Cl.tags Cl.bK
+                  γ Cl.kc Cl.tags Cl.bK using (graph-Lset)
 
   -- THE THEOREM AT THE CLASS CARRIER.  perf: the environment is spelled
   -- out at every step and never abbreviated (src/L/GCH/Sound.lagda.md:481).
@@ -2417,7 +2417,7 @@ module Sound4 (ds : DefSound) where
     go (subst (λ ψ → ⟨ (a ∷ p ∷ z ∷ []) ⊨ ψ ⟩)
               (Cnt.erase-inv W3V.three W3V.count-three) hφ)
     where
-    open W3V
+    open W3V using (inner; inner-out; s10; s11; s12; s13; s14; s15; s4; s5; s6; s7; s8; s9; three)
 
     ordp : IsOrd (fst p)
     ordp = ord-out a p z ho
@@ -2461,7 +2461,7 @@ module Sound4 (ds : DefSound) where
 -- THE THEOREM.  Step 4 at the discharged hypothesis.
 -- =====================================================================
 
-module Final = Sound4 defSound
+module Final = Sound4 defSound using (level-sound-L)
 
 level-sound : (a p z : S) → ⟨ isL a ⟩ → ⟨ isL p ⟩ → ⟨ isL z ⟩
             → ⟨ (a ∷ p ∷ z ∷ []) ⊨ₚ levelFo ⟩ → a ≡ Lset p

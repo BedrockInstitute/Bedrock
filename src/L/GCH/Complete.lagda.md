@@ -75,11 +75,11 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 
 -- The class-carrier reading, as src/L/Condensation.lagda.md:76-77.
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_^_; _⊨ᵐ_)
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- The 𝒮ʟ carrier, for the syntax.  Same name as src/L/GCH/Level.lagda.md.
-module CS = hPropStructure 𝒮ʟ
+module CS = hPropStructure 𝒮ʟ using (S)
 
 -- A member of a class-carrier element, packaged as one.
 down : (x : CS.S) (y : V ℓ) → ⟨ y ∈ fst x ⟩ → CS.S
@@ -180,7 +180,7 @@ module EnvTower (B : CS.S) where
           byK (k , qn) = ∣ lower k , xq ∙ cong₂ pr (qn ∙ numeralL-fst (lower k)) Eq ∣₁
             where
             module Am = Ambient B (E ∷ n ∷ b ∷ x ∷ []) i0 i1 i2 (lower k)
-                          (qn ∙ numeralL-fst (lower k)) qb hE
+                          (qn ∙ numeralL-fst (lower k)) qb hE using (into; outof)
             Eq : fst E ≡ fst (envSet B (lower k))
             Eq = extensionalV {a = fst E} {b = fst (envSet B (lower k))}
               (λ z → ⇔toPath
@@ -221,7 +221,7 @@ module SatMap (A : CS.S) where
     ; defines = λ x m → Table.funct A A x m .fst .snd
     ; only    = λ x m y h → sym (Table.val-uniq A A x m y h) }
 
-  module G = MapGraph M
+  module G = MapGraph M using (F; F-in; F-out)
 
   -- SEALED (P-t): the value at a member is a contractibility centre,
   -- and written out inside a satisfaction it does not elaborate
@@ -484,7 +484,7 @@ module Above (p : V ℓ) (op : IsOrd p) where
   ch zero = base .fst , base .snd .fst
   ch (suc n) = Bound1.β (ch n .fst) (ch n .snd) , Bound1.oβ (ch n .fst) (ch n .snd)
 
-  module C = Union (λ n → ch n .fst) (λ n → ch n .snd)
+  module C = Union (λ n → ch n .fst) (λ n → ch n .snd) using (into; o; outof; oγ; γ)
 
   γ : V ℓ
   γ = C.γ
@@ -557,7 +557,7 @@ module Super (α : V ℓ) (oα : IsOrd α) where
     , ( adequate-above (ch n .fst) (ch n .snd .fst) .snd .fst
       , adequate-above (ch n .fst) (ch n .snd .fst) .snd .snd .snd )
 
-  module U = Union (λ n → ch n .fst) (λ n → ch n .snd .fst)
+  module U = Union (λ n → ch n .fst) (λ n → ch n .snd .fst) using (into; o; outof; oγ; γ)
 
   lam : V ℓ
   lam = U.γ
@@ -629,7 +629,7 @@ module Closed (lam : V ℓ) (ad : Adequate lam) where
   ∅∈λ : ⟨ ∅ ∈ lam ⟩
   ∅∈λ = tr lam ord ω ∅ ω∈ (#∈ω zero)
 
-  module B = Bound lam ord succ ∅∈λ
+  module B = Bound lam ord succ ∅∈λ using (num; num∈λ; pr; prʟ∈λ)
 
   K : V ℓ
   K = Lset lam
@@ -739,8 +739,8 @@ module Complete4 (dc : DefComplete) where
               (vals : Values (lookup f γ) (fst (lookup b γ)))
               (ents : Entries (lookup f γ) (fst (lookup b γ))) where
 
-    module SV = StepV {m} v b f K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
-    module Cl = Closed lam ad
+    module SV = StepV {m} v b f K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (intoAt; overAt; stepAt)
+    module Cl = Closed lam ad using (Lset; Lset∈K; O-num; module B; kc; numO; ord; ord∈K; sucK; succ; transK; wit; ω∈K)
 
     private
       Kv Bv Fv Vv : V ℓ
@@ -854,8 +854,8 @@ module Complete4 (dc : DefComplete) where
                 (a∈λ : ⟨ fst (lookup a γ) ∈ lam ⟩)
                 (sp : IsHier (fst (lookup a γ)) (lookup f γ)) where
 
-    module AV = ApproxV {m} f a K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
-    module Cl = Closed lam ad
+    module AV = ApproxV {m} f a K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (approxAt)
+    module Cl = Closed lam ad using (Lset; Lset∈K; O-num; module B; kc; numO; ord; ord∈K; sucK; succ; transK; wit; ω∈K)
 
     private
       Kv Av Fv : V ℓ
@@ -913,7 +913,7 @@ module Complete4 (dc : DefComplete) where
                     (w ∷ c ∷ γ) lam ad Kq Oq
                     (tagsCons _ _ _ _ _ _ _ _ _ _ _ _ (c ∷ γ) w
                       (tagsCons _ _ _ _ _ _ _ _ _ _ _ _ γ c tags))
-                    oc (tr lam Cl.ord Av (fst c) a∈λ c∈a) wq vals ents
+                    oc (tr lam Cl.ord Av (fst c) a∈λ c∈a) wq vals ents using (step)
 
     approx : ⟨ γ ⊨ AV.approxAt ⟩
     approx = dom , steps
@@ -930,8 +930,8 @@ module Complete4 (dc : DefComplete) where
                (b∈λ : ⟨ fst (lookup b γ) ∈ lam ⟩)
                (wq : fst (lookup w γ) ≡ Lset (fst (lookup b γ))) where
 
-    module GV = GraphV {m} w b K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
-    module Cl = Closed lam ad
+    module GV = GraphV {m} w b K O N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 using (graphAt)
+    module Cl = Closed lam ad using (Lset; Lset∈K; O-num; module B; kc; numO; ord; ord∈K; sucK; succ; transK; wit; ω∈K)
 
     private
       Bv : V ℓ
@@ -957,19 +957,19 @@ module Complete4 (dc : DefComplete) where
       module Ap = Approx {1 + m} i0 (sh1 b) (sh1 K) (sh1 O)
                     (sh1 N0) (sh1 N1) (sh1 N2) (sh1 N3) (sh1 N4) (sh1 N5)
                     (sh1 N6) (sh1 N7) (sh1 N8) (sh1 N9) (sh1 N10) (sh1 N11)
-                    (F ∷ γ) lam ad Kq Oq tags' ob b∈λ sp
+                    (F ∷ γ) lam ad Kq Oq tags' ob b∈λ sp using (approx)
       module St = Step {1 + m} (sh1 w) (sh1 b) i0 (sh1 K) (sh1 O)
                     (sh1 N0) (sh1 N1) (sh1 N2) (sh1 N3) (sh1 N4) (sh1 N5)
                     (sh1 N6) (sh1 N7) (sh1 N8) (sh1 N9) (sh1 N10) (sh1 N11)
-                    (F ∷ γ) lam ad Kq Oq tags' ob b∈λ wq vals ents
+                    (F ∷ γ) lam ad Kq Oq tags' ob b∈λ wq vals ents using (step)
 
   -- THE MATRIX at the sixteen-slot environment: the twelve numerals,
   -- ω, Lset p, p and Lset λ.
   module Finish (lam : V ℓ) (ad : Adequate lam)
                 (p : V ℓ) (op : IsOrd p) (p∈λ : ⟨ p ∈ lam ⟩) where
 
-    open W3V
-    module Cl = Closed lam ad
+    open W3V using (module Mx; n0; n1; n10; n11; n2; n3; n4; n5; n6; n7; n8; n9; oo; ww; bb; kk; s4; s5; s6; s7; s8; s9; s10; s11; s12; s13; s14; s15; three; erased; count-three; inner; inner-in; inner-out; Δ₀-three; Δ₀-erased)
+    module Cl = Closed lam ad using (Lset; Lset∈K; O-num; module B; kc; numO; ord; ord∈K; sucK; succ; transK; wit; ω∈K)
 
     aS pS zS : CS.S
     aS = LsetS p op
@@ -1055,7 +1055,7 @@ module Complete4 (dc : DefComplete) where
     bK = Cl.ord∈K p p∈λ
 
     module Gr = Graph {16} ww bb kk oo n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11
-                  E lam ad refl refl tags op p∈λ refl
+                  E lam ad refl refl tags op p∈λ refl using (graph)
 
     hm : ⟨ E ⊨ Mx.matrix ⟩
     hm = ht , ( hq , ( hs , ( hp , ( hn , ( wK , ( bK , Gr.graph ))))))
@@ -1125,7 +1125,7 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
             (wq : fst (lookup w γ) ≡ Lset c)
             (dq : fst (lookup d γ) ≡ 𝒟ₒ (Lset c)) where
 
-  module Cl = Closed lam ad
+  module Cl = Closed lam ad using (Lset; Lset∈K; O-num; module B; kc; numO; ord; ord∈K; sucK; succ; transK; wit; ω∈K)
   module DV = DefV {m} d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11
 
   A Cs Ts Ês : CS.S
@@ -1162,7 +1162,7 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     transK : (x y : V ℓ) → InK x → ⟨ y ∈ x ⟩ → InK y
     transK x y xK y∈x = toK y (Cl.transK x y (subst (λ u → ⟨ x ∈ u ⟩) Kq xK) y∈x)
 
-    module Z = Chain Kv transK
+    module Z = Chain Kv transK using (sndK)
 
     arityK : (N v : CS.S) → ⟨ fst v ∈ fst N ⟩ → InK (fst N) → InK (fst v)
     arityK N v v∈N NK = transK (fst N) (fst v) NK v∈N
@@ -1244,7 +1244,7 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
         (subst (λ u → ⟨ fst z ∈ u ⟩) (sym qE)
           (subst (λ u → ⟨ u ∈ fst (envSet A k) ⟩) (sym R.recovers) (envSet-in A R.g)))
       where
-      module R = Recover A k (z ∷ Ek ∷ n ∷ E3) zero (suc i1) (suc (sh5 w)) qn wq hz
+      module R = Recover A k (z ∷ Ek ∷ n ∷ E3) zero (suc i1) (suc (sh5 w)) qn wq hz using (g; recovers)
 
     -- The bounded environment-set condition at an entry.
     bnd : (k : ℕ) (n Ek : CS.S) → fst n ≡ # k → fst Ek ≡ fst (envSet A k)
@@ -1253,7 +1253,7 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     bnd k n Ek qn qE nK EkK = ES.back hAt
       where
       module ES = EnvSet {2 + (3 + m)} i0 i1 (sh2 (sh3 w)) (sh2 (sh3 K)) (Ek ∷ n ∷ E3)
-                    arityK EkK nK (envInK k n Ek qn qE EkK)
+                    arityK EkK nK (envInK k n Ek qn qE EkK) using (back)
       hAt : ⟨ (Ek ∷ n ∷ E3) ⊨ envSetAt i0 i1 (sh2 (sh3 w)) ⟩
       hAt = AmbientHolds.holds A (Ek ∷ n ∷ E3) i0 i1 (sh2 (sh3 w)) k qE qn wq
 
@@ -1360,7 +1360,7 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
 
   module RR = Site d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 γ A Ts
                 (SatMap.valOf A) (SatMap.valOf≡ A) (SatMap.pairs-in A) (SatMap.pairs-out A)
-                kcγ tags wq dq wK CK TK
+                kcγ tags wq dq wK CK TK using (Twelve; all; closeR; closed; mem; shaped; module Twelve)
 
   closed : Closed
   closed = RR.closed
@@ -1379,7 +1379,7 @@ module Rows {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
 
   -- ROW 7, from the same site, with the tower read as the environment
   -- ties.
-  module Tw12 = RR.Twelve Ês ÊK towerHolds
+  module Tw12 = RR.Twelve Ês ÊK towerHolds using (twelve)
 
   twelve : Twelve
   twelve = Tw12.twelve

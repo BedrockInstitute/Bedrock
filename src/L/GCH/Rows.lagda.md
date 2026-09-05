@@ -86,15 +86,15 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
-open hPropStructure 𝒮ᵥ
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
+open hPropStructure 𝒮ᵥ using ()
 
 -- The class-carrier reading, as src/L/GCH/Complete.lagda.md:77-78.
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_^_; _⊨ᵐ_)
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- The 𝒮ʟ carrier, for the syntax.  Same name as src/L/GCH/Level.lagda.md.
-module CS = hPropStructure 𝒮ʟ
+module CS = hPropStructure 𝒮ʟ using (S)
 ```
 
 ```agda
@@ -244,7 +244,7 @@ module Codes (A : CS.S) where
 -- =====================================================================
 
 module Closure (A : CS.S) where
-  open Codes A
+  open Codes A using (Ab; Decoded; MatchA; cd; cdS; ct; ctS; decode; keyC; nn; ι; ιL; ι∈)
 
   module _ {n : ℕ} (C : Fin n) (γ : CS.S ^ n) (qC : fst (lookup C γ) ≡ fst (AllCodes A)) where
 
@@ -431,7 +431,7 @@ module UniformSound (A Ts : CS.S)
   (qT : fst (lookup Ti δ) ≡ fst Ts)
   (qB : fst (lookup Bi δ) ≡ fst A) where
 
-  open Codes A
+  open Codes A using (Ab; Decoded; MatchA; cd; ct; decode; ι)
 
   toS : ∀ {n} → Formula Ab n → Formula CS.S n
   toS = mapFo (asConst A)
@@ -1058,8 +1058,8 @@ module UniformSound (A Ts : CS.S)
 -- the ties the bound supplies.
 -- =====================================================================
 
-open KFactsNS
-open Tags
+open KFactsNS using (KFacts)
+open Tags using (t0; t1; t2; t3; t4; t5; t6; t7; t8; t9; t10; t11)
 
 module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
             (γ : CS.S ^ m) (A Ts : CS.S)
@@ -1079,7 +1079,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
             (CK : ⟨ fst (AllCodes A) ∈ fst (lookup K γ) ⟩)
             (TK : ⟨ fst Ts ∈ fst (lookup K γ) ⟩) where
 
-  open Codes A
+  open Codes A using (Ab; cd; cd-subst; cdS; ct; keyC; varWit; ι)
 
   Cs : CS.S
   Cs = AllCodes A
@@ -1096,8 +1096,8 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
     InK : V ℓ → Type (ℓ-suc ℓ)
     InK x = ⟨ x ∈ Kv ⟩
 
-  module C = KC Kv Ov kc
-  module Z = Chain Kv C.transK
+  module C = KC Kv Ov kc using (O-num; numK; numO; pairK; sucK; transK)
+  module Z = Chain Kv C.transK using (fstK; prK-fst; prK-snd; sndK)
 
   toS : ∀ {k} → Formula Ab k → Formula CS.S k
   toS = mapFo (asConst A)
@@ -1194,7 +1194,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
   module CA = ClosedAgree {2 + m} i1 (sh2 K) (sh2 N2) (sh2 N3) (sh2 N4) (sh2 N5)
                 (sh2 N8) (sh2 N9) (sh2 N10) (sh2 N11)
                 (sh2 w) (sh2 N0) (sh2 N1) (sh2 N6) (sh2 N7) E2
-                facts binCodes unCodes entryC
+                facts binCodes unCodes entryC using (out)
 
   closed : ⟨ E2 ⊨ closedBS i1 (sh2 K) (sh2 N2) (sh2 N3) (sh2 N4) (sh2 N5)
                     (sh2 N8) (sh2 N9) (sh2 N10) (sh2 N11) ⟩
@@ -1204,7 +1204,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
   module SA = ShapedAgree {2 + m} i1 (sh2 w) (sh2 K)
                 (sh2 N0) (sh2 N1) (sh2 N2) (sh2 N3) (sh2 N4) (sh2 N5)
                 (sh2 N6) (sh2 N7) (sh2 N8) (sh2 N9) (sh2 N10) (sh2 N11) E2
-                facts binCodes unCodes
+                facts binCodes unCodes using (out)
 
   shaped : ⟨ E2 ⊨ shapedBS i1 (sh2 w) (sh2 K)
                     (sh2 N0) (sh2 N1) (sh2 N2) (sh2 N3) (sh2 N4) (sh2 N5)
@@ -1280,7 +1280,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       module DfA = DefinesAgree {3 + (2 + m)} xi (sh3 (sh2 w)) vi (sh3 (sh2 K)) (sh3 (sh2 N0))
                      (e0 ∷ e1 ∷ e2 ∷ E2)
                      (tags .t0) (C.numK 0) C.pairK carrierK arityK
-                     (λ z hz → carrierK z (hz .fst))
+                     (λ z hz → carrierK z (hz .fst)) using (out)
 
   mem : ⟨ E2 ⊨ memAt (sh2 d) (sh2 w) i1 i0 (sh2 K) (sh2 N0) (sh2 N1) ⟩
   mem x x∈d = PT.rec squash₁ byψ
@@ -1417,7 +1417,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
 
     module Cl = Close {2 + m} i1 (sh2 O) (sh2 w) (sh2 K)
                   (sh2 N0) (sh2 N1) (sh2 N2) (sh2 N3) (sh2 N4) (sh2 N5)
-                  (sh2 N6) (sh2 N7) (sh2 N8) (sh2 N9) (sh2 N10) (sh2 N11)
+                  (sh2 N6) (sh2 N7) (sh2 N8) (sh2 N9) (sh2 N10) (sh2 N11) using (atomAt; binAt; bqAt; closeAt; conAt; quAt; unAt)
 
     -- THE SIX CLAUSE SHAPES, each generic in its constructor.
     atom : (k : ℕ) (Ni : Fin m) (op : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j)
@@ -1742,7 +1742,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                 (htow : ⟨ (Ês ∷ E2) ⊨ towerAt i0 (sh3 O) (sh3 w) (sh3 K) ⟩) where
 
     module US = UniformSound A Ts valOf valOf≡ pairs-out E2 i1 i0 (sh2 w) refl refl wq
-    module Tw = Tower {3 + m} i0 (sh3 O) (sh3 w) (sh3 K) (Ês ∷ E2) kc ÊK htow
+    module Tw = Tower {3 + m} i0 (sh3 O) (sh3 w) (sh3 K) (Ês ∷ E2) kc ÊK htow using (module At)
 
     private
       t0K : InK (fst (lookup (sh2 N0) E2))
@@ -1828,7 +1828,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
 
     -- THE FOUR ROWS WHOSE TELESCOPES THE TIES ABOVE FILL DIRECTLY.
     module RBot = BotAgree {2 + m} i1 i0 (sh2 w) (sh2 N7) (sh2 K) E2
-                    (tags2 .t7) (C.numK 7) (unK 7) (unCodes 7) (valK-un' 7)
+                    (tags2 .t7) (C.numK 7) (unK 7) (unCodes 7) (valK-un' 7) using (bot-out)
 
     rowBot : ⟨ E2 ⊨ Bot.botBndAt i1 i0 (sh2 w) (sh2 N7) (sh2 K) ⟩
     rowBot = RBot.bot-out US.botSound
@@ -1838,7 +1838,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                     (λ yc a ar c E arNum' hE →
                        envK-of (E ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i3 (sh5 (sh2 w)) refl arNum' zero hE)
                     (λ yc a ar c E arK arNum' z hz →
-                       envInK-of (E ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i3 (sh5 (sh2 w)) refl arNum' z hz)
+                       envInK-of (E ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i3 (sh5 (sh2 w)) refl arNum' z hz) using (out)
 
     rowTop : ⟨ E2 ⊨ Top.topBndAt i1 i0 (sh2 w) (sh2 N6) (sh2 K) ⟩
     rowTop = RTop.out US.topSound
@@ -1852,7 +1852,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                     (λ ya yc a ar c E arNum' hE →
                        envK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i4 (sh6 (sh2 w)) refl arNum' zero hE)
                     (λ ya yc a ar c E arK arNum' z hz →
-                       envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i4 (sh6 (sh2 w)) refl arNum' z hz)
+                       envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i4 (sh6 (sh2 w)) refl arNum' z hz) using (out)
 
     rowNeg : ⟨ E2 ⊨ Neg.negBndAt i1 i0 (sh2 w) (sh2 N5) (sh2 K) ⟩
     rowNeg = RNeg.out US.negSound
@@ -1867,7 +1867,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                     (λ E yb ya yc b a ar c arNum' hE →
                        envK-of (E ∷ yb ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ E2) i6 (sh8 (sh2 w)) refl arNum' zero hE)
                     (λ E ya yc b a ar c arK arNum' z hz →
-                       envInK-of (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ E2) i5 (sh7 (sh2 w)) refl arNum' z hz)
+                       envInK-of (E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ E2) i5 (sh7 (sh2 w)) refl arNum' z hz) using (out)
 
     rowImp : ⟨ E2 ⊨ Imp.impBndAt i1 i0 (sh2 w) (sh2 N4) (sh2 K) ⟩
     rowImp = RImp.out US.impSound
@@ -1890,7 +1890,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       hbM = US.memSound c c∈ ar a b yc shD hc E (E'.out henv)
       module L = AtomLeaf′ E yc b a ar c E2 (sh2 N0) (sh2 N1) (sh2 K)
                    C.transK aK bK EK (tags .t0) (tags .t1) t0K (C.numK 1)
-                   (var (suc zero) ∈̇ var zero)
+                   (var (suc zero) ∈̇ var zero) using (bodyM; bodyS; bwd; fwd)
 
     eqOut : ⟨ E2 ⊨ Eq.eqBndAt i1 i0 (sh2 w) (sh2 N1) (sh2 K) (sh2 N0) (sh2 N1) ⟩
     eqOut c c∈ ar arK a aK b bK yc ycK shB hc E EK henv =
@@ -1907,7 +1907,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       hbM = US.eqSound c c∈ ar a b yc shD hc E (E'.out henv)
       module L = AtomLeaf′ E yc b a ar c E2 (sh2 N0) (sh2 N1) (sh2 K)
                    C.transK aK bK EK (tags .t0) (tags .t1) t0K (C.numK 1)
-                   (var (suc zero) ≐ var zero)
+                   (var (suc zero) ≐ var zero) using (bodyM; bodyS; bwd; fwd)
 
     -- THE QUANTIFIER ROWS: `ForallAgree.out` with the extension tie
     -- from the tower, `ExistAgree.out` with the re-tied leaf.
@@ -1943,7 +1943,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
                       (λ ya yc a ar c E arNum' hE →
                          envK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i4 (sh6 (sh2 w)) refl arNum' zero hE)
                       (λ ya yc a ar c E arK arNum' z hz →
-                         envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i4 (sh6 (sh2 w)) refl arNum' z hz)
+                         envInK-of (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ E2) i4 (sh6 (sh2 w)) refl arNum' z hz) using (module Leaf)
 
     existOut : ⟨ E2 ⊨ Exist.existBndAt i1 i0 (sh2 w) (sh2 N8) (sh2 K) ⟩
     existOut c c∈ ar arK a aK yc ycK shB hc ya yaK E EK hsub henv =
@@ -1961,7 +1961,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       hya' = SubValSuccB2T.back {m = 6 + (2 + m)} (sh6 i0) i4 i3 i1 (sh6 (sh2 K)) env6
                (C.sucK ar arK) (sucKeyK ar a arK aK) hsub
       hbM = US.existSound c c∈ ar a yc shD hc ya E hya' (E'.out henv)
-      module L = RExist.Leaf E ya yc a ar c yaK
+      module L = RExist.Leaf E ya yc a ar c yaK using (all-bwd; all-fwd; bodyM; bodyS; fwd; bwd)
 
     -- THE BOUNDED-QUANTIFIER ROWS, through the re-tied leaf
     -- `BndLeaf′`: the body of `AllInAgree.out`.
@@ -1983,7 +1983,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       hbM = US.allInSound c c∈ ar a b yc shD hc yb E hyb' hE'
       module L = BndLeaf′ (sh2 w) (sh2 N0) (sh2 N1) (sh2 K) E yb yc b a ar c E2
                    (tags .t0) (tags .t1) t0K C.transK aK EK (C.numK 1) hE'
-                   (λ z w' x e' hz x∈ hc' → consK-bin E yb yc b a ar c arNum' z w' x e' hz x∈ hc')
+                   (λ z w' x e' hz x∈ hc' → consK-bin E yb yc b a ar c arNum' z w' x e' hz x∈ hc') using (bodyM; bodyS; all-fwd; all-bwd; bodyMx; bodySx; ex-bwd; ex-fwd)
 
     exInOut : ⟨ E2 ⊨ ExIn.exInBndAt i1 i0 (sh2 w) (sh2 N11) (sh2 K) (sh2 N0) (sh2 N1) ⟩
     exInOut c c∈ ar arK a aK b bK yc ycK shB hc yb ybK E EK hsub henv =
@@ -2003,7 +2003,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
       hbM = US.exInSound c c∈ ar a b yc shD hc yb E hyb' hE'
       module L = BndLeaf′ (sh2 w) (sh2 N0) (sh2 N1) (sh2 K) E yb yc b a ar c E2
                    (tags .t0) (tags .t1) t0K C.transK aK EK (C.numK 1) hE'
-                   (λ z w' x e' hz x∈ hc' → consK-bin E yb yc b a ar c arNum' z w' x e' hz x∈ hc')
+                   (λ z w' x e' hz x∈ hc' → consK-bin E yb yc b a ar c arNum' z w' x e' hz x∈ hc') using (bodyM; bodyS; all-fwd; all-bwd; bodyMx; bodySx; ex-bwd; ex-fwd)
 
     -- THE PROPOSITIONAL ROWS, read off the table.  The recorded value
     -- at the code is the satisfaction set of the connective, the two
@@ -2049,7 +2049,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
           P.hb')
         P.ha'
       where
-      module P = PropSite 2 N2 (tags .t2) c ar a b yc ya yb E c∈ shB hc hsubA hsubB
+      module P = PropSite 2 N2 (tags .t2) c ar a b yc ya yb E c∈ shB hc hsubA hsubB using (ha'; hb'; hc'; shEq)
       env8 : CS.S ^ (8 + (2 + m))
       env8 = yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ E2
       body : US.BinAnd.Parts ar yc ya yb → ⟨ env8 ⊨ interB i3 i2 i0 (sh8 (sh2 K)) ⟩
@@ -2074,7 +2074,7 @@ module Site {m : ℕ} (d w O K N0 N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 : Fin m)
           P.hb')
         P.ha'
       where
-      module P = PropSite 3 N3 (tags .t3) c ar a b yc ya yb E c∈ shB hc hsubA hsubB
+      module P = PropSite 3 N3 (tags .t3) c ar a b yc ya yb E c∈ shB hc hsubA hsubB using (ha'; hb'; hc'; shEq)
       env8 : CS.S ^ (8 + (2 + m))
       env8 = yb ∷ E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ E2
       body : US.BinOr.Parts ar yc ya yb → ⟨ env8 ⊨ unionB i3 i2 i0 (sh8 (sh2 K)) ⟩

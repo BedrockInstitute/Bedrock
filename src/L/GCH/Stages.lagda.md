@@ -56,13 +56,13 @@ open hPropStructure 𝒮ᵥ using () renaming ( _∈ˢ_ to _∈ˢᵥ_ )
 -- The V-carrier.  `𝒮ᵥ` sets `S = V ℓ` and `_∈ˢ_ = _∈_`
 -- (src/V/Hierarchy.lagda.md:80,83), so a `V ℓ` fact is an `SV.S` fact
 -- with no conversion.
-module SV = hPropStructure 𝒮ᵥ
+module SV = hPropStructure 𝒮ᵥ using (S)
 -- The L-carrier.  `𝒮ʟ = 𝒮ᵥ ↾ isL`, so SL.S is Σ[ x ∈ SV.S ] ⟨ isL x ⟩
 -- and SL._∈ˢ_ a b is definitionally fst a ∈ˢ fst b
 -- (src/FOL/ZFStructure.lagda.md:149).
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using (S; _∈ˢ_)
 -- The same instance `src/L/GCH.lagda.md` names, at the same 𝒮ʟ.
-module ModelL = FOL.ZFModel 𝒮ʟ
+module ModelL = FOL.ZFModel 𝒮ʟ using (isZFModel; _⊆ˢ_; S; _∈ˢ_; ℩-spec)
 
 -- =====================================================================
 -- Lset-trans-set.  Members of members of Lset γ lie in Lset γ.  The
@@ -212,7 +212,7 @@ module Above (m : SV.S) (ordm : IsOrd m) where
   G-up : (n : ℕ) → ⟨ G n ∈ˢ G (suc n) ⟩
   G-up n = self∈sucV (G n)
 
-  module Lad = Ladder G G-ord G-up
+  module Lad = Ladder G G-ord G-up using (G∈top; top; top-ord; δ∈top→fin)
 
   lam : SV.S
   lam = Lad.top
@@ -273,7 +273,7 @@ limitAboveΣ α x β oα oβ x∈Lβ = A.lam
   t : Σ[ m ∈ SV.S ] ( IsOrd m × ⟨ α ∈ˢ sucV m ⟩ × ⟨ β ∈ˢ sucV m ⟩ )
   t = twoAbove α β oα oβ
 
-  module A = Above (t .fst) (t .snd .fst)
+  module A = Above (t .fst) (t .snd .fst) using (into; lam; lam-ord; suc-closed)
 
 -- The same under one `PT.map`; `stageOf` is the identity, so the
 -- truncation is the whole difference from the explicit construction.
@@ -369,9 +369,9 @@ module Adjoin (α x : S) where
 
 module Shift (α x : S) (ordα : IsOrd α) (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥) where
 
-  module W = W3 α ordα α∉ω
-  module A = Adjoin α x
-  module SA = ShiftAbs α ordα α∉ω W.num∈α
+  module W = W3 α ordα α∉ω using (num∈L; num∈α)
+  module A = Adjoin α x using (X; X-elim; x∈X)
+  module SA = ShiftAbs α ordα α∉ω W.num∈α using (numeralOf; numeralOf-spec; numeralOf-uniq)
 
   v-of : ⟪ A.X ⟫ → S
   v-of m = ⟪ A.X ⟫↪ m
@@ -498,7 +498,7 @@ AbsorbsAt :
   → ⟪ Lset α ∪ ⁅ x ⁆s ⟫ ↪ ⟪ Lset α ⟫
 AbsorbsAt α x ordα α∉ω _ = SH.shift , SH.shift-inj
   where
-  module SH = Shift α x ordα α∉ω
+  module SH = Shift α x ordα α∉ω using (shift; shift-inj)
 
 -- =====================================================================
 -- The collapse image of the hull is constructible.  The generic core
@@ -507,7 +507,7 @@ AbsorbsAt α x ordα α∉ω _ = SH.shift , SH.shift-inj
 -- =====================================================================
 
 module Coll (M : S) where
-  module C = Collapse M
+  module C = Collapse M using (π; πX; πX-member; πX-trans)
 
   -- The WEAKEST hypothesis that closes the target: every collapse
   -- VALUE of a member of M is constructible.
@@ -552,8 +552,8 @@ module Site (lam : S) (ordλ : IsOrd lam)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 
-  module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ
-  module K = Coll HS.M
+  module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ using (module C; M)
+  module K = Coll HS.M using (Cover; πX⊆L-from-cover)
 
   Cover : Type (ℓ-suc ℓ)
   Cover = K.Cover
@@ -567,12 +567,12 @@ module Site (lam : S) (ordλ : IsOrd lam)
   pix-in-L-at cov = K.πX⊆L-from-cover cov
 
   -- The hull is extensional, src/L/BoundedSubset.lagda.md (HullExt).
-  module HE = HullExt lam ordλ X X⊆L ∅∈λ
+  module HE = HullExt lam ordλ X X⊆L ∅∈λ using (hullExt)
 
   Mext : isExt HS.M
   Mext = HE.hullExt
 
-  module CIso = CollapseIso HS.M Mext
+  module CIso = CollapseIso HS.M Mext using (module I; iso-fwd; iso-bwd)
 
   -- The two restricted carriers: the collapse image and the class
   -- carrier of L (src/L/Hierarchy.lagda.md).

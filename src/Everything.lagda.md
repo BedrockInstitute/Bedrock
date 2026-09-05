@@ -408,6 +408,7 @@ import L.GCH.StageCount
 import L.GCH.OmegaRec
 import L.GCH.CountableBase
 import L.GCH.HullIn
+import L.GCH.HullElem
 import L.GCH.HullCount
 import L.GCH.BoundedSubset
 import L.GCH.Theorem

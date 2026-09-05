@@ -82,13 +82,13 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 
 -- The 𝒮ʟ carrier, for the syntax of every formula below.
-module CS = hPropStructure 𝒮ʟ
+module CS = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- Renaming, read at the same satisfaction as `_⊨_` (as OmegaRec does).
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
+module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 
 private
   i0 : ∀ {k} → Fin (suc k)
@@ -112,6 +112,25 @@ private
   isSetSʟ : isSet CS.S
   isSetSʟ = isSetΣSndProp setIsSet (λ v → snd (isL v))
 
+  -- The two renamings of the witness formula and their agreements, at
+  -- the top level.  Measured in this file: the same clauses cost
+  -- 0.24-0.41 s per definition inside `Telescope.Build`.
+  ρs : Fin 2 → Fin 2
+  ρs zero = suc zero
+  ρs (suc zero) = zero
+
+  ρf : Fin 2 → Fin 3
+  ρf zero = zero
+  ρf (suc zero) = suc (suc zero)
+
+  ags : (Z'' w : CS.S) → Ren.Agrees ρs (Z'' ∷ w ∷ []) (w ∷ Z'' ∷ [])
+  ags Z'' w zero = refl
+  ags Z'' w (suc zero) = refl
+
+  agf : (w Z' Z : CS.S) → Ren.Agrees ρf (w ∷ Z' ∷ Z ∷ []) (w ∷ Z ∷ [])
+  agf w Z' Z zero = refl
+  agf w Z' Z (suc zero) = refl
+
 -- =====================================================================
 -- SECTION 1.  THE COLLAPSE OF A CARRIER THAT IS AN ELEMENT OF L LANDS
 -- IN L.  Generic in the carrier M.  The graph of the collapse on M is
@@ -129,7 +148,7 @@ module PiIn (Mʟ : CS.S) where
   M : S
   M = fst Mʟ
 
-  module C = Collapse M
+  module C = Collapse M using ( Fiber; π; π-compute; πX; πX-member; π∈-fwd )
 
   memL : (y : S) → ⟨ y ∈ˢ M ⟩ → ⟨ isL y ⟩
   memL y y∈M = isL-trans {x = M} {y = y} y∈M (snd Mʟ)
@@ -156,15 +175,15 @@ module PiIn (Mʟ : CS.S) where
   -- two binders: x is 0, y is 1, z is 2.
   -- ===================================================================
 
-  memFo : Formula CS.S 1
-  memFo = ∃̇ (∃̇ ( prAtL i2 i1 i0 ∧̇ (var i1 ∈̇ var i0) ))
-
-  private
-    at : (x y z : CS.S)
-       → ⟨ (x ∷ y ∷ z ∷ []) ⊨ prAtL i2 i1 i0 ⟩ ≡ (fst z ≡ pr (fst y) (fst x))
-    at x y z = cong ⟨_⟩ (prAtL-adequate i2 i1 i0 (x ∷ y ∷ z ∷ []))
-
   opaque
+    memFo : Formula CS.S 1
+    memFo = ∃̇ (∃̇ ( prAtL i2 i1 i0 ∧̇ (var i1 ∈̇ var i0) ))
+
+    private
+      at : (x y z : CS.S)
+         → ⟨ (x ∷ y ∷ z ∷ []) ⊨ prAtL i2 i1 i0 ⟩ ≡ (fst z ≡ pr (fst y) (fst x))
+      at x y z = cong ⟨_⟩ (prAtL-adequate i2 i1 i0 (x ∷ y ∷ z ∷ []))
+
     R : CS.S
     R = hasSeparationL (prodL Mʟ) memFo .fst .fst
 
@@ -344,7 +363,7 @@ module PiIn (Mʟ : CS.S) where
   module Step (δ' : S) (oδ' : IsOrd δ')
               (IH : (q : S) → Good δ' q) where
 
-    module Sl = Cut (LsetS δ' oδ')
+    module Sl = Cut (LsetS δ' oδ') using ( cut; cut-in; cut-out )
 
     Lδ'-trans : {x y : S} → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ Lset δ' ⟩ → ⟨ y ∈ˢ Lset δ' ⟩
     Lδ'-trans {x} {y} = layer-trans (Lset-layer δ') {x = x} {y = y}
@@ -362,7 +381,7 @@ module PiIn (Mʟ : CS.S) where
       my : ⟨ fst y ∈ˢ M ⟩
       my = Sl.cut-out y hy .fst
 
-    module PF = PairFo piFo
+    module PF = PairFo piFo using ( pairFo; pair-in; pair-out )
 
     private
       tabR : Recursion
@@ -382,7 +401,7 @@ module PiIn (Mʟ : CS.S) where
                       ∙ sym (prʟ-fst y (πʟ y hy))) })
                 (PF.pair-out e' y he') ) ∣₁
 
-      module T = Of tabR
+      module T = Of tabR using ( table; table-in; table-out )
 
     Tab : CS.S
     Tab = T.table
@@ -459,7 +478,7 @@ module PiIn (Mʟ : CS.S) where
       cl y y∈q y∈M = Sl.cut-in (up y y∈M) y∈M (q⊆ y y∈q)
 
       -- The collapse value itself: the image of the graph over the members of q in M.
-      module Mq = Cut qS
+      module Mq = Cut qS using ( cut; cut-in; cut-out )
 
       private
         valR : Recursion
@@ -480,7 +499,7 @@ module PiIn (Mʟ : CS.S) where
             hy' : ⟨ y CS.∈ˢ Sl.cut ⟩
             hy' = Sl.cut-in y my (q⊆ (fst y) (Mq.cut-out y hy .snd))
 
-        module Vq = Of valR
+        module Vq = Of valR using ( table; table-in; table-out )
 
       val≡π : fst Vq.table ≡ C.π q
       val≡π = extensionalV {a = fst Vq.table} {b = C.π q} (λ w → ⇔toPath (fwd w) (bwd w))
@@ -532,8 +551,8 @@ module PiIn (Mʟ : CS.S) where
         where
         oδ' : IsOrd δ'
         oδ' = mem-ord {A = δ} oδ δ' δ'∈δ
-        module St = Step δ' oδ' (IH δ' δ'∈δ oδ')
-        module A = St.At q mq (λ y y∈q → 𝒟ₒ∋⊆ (Lset δ') q q∈𝒟 y y∈q)
+        module A = Step.At δ' oδ' (IH δ' δ'∈δ oδ') q mq (λ y y∈q → 𝒟ₒ∋⊆ (Lset δ') q q∈𝒟 y y∈q)
+          using ( πq-isL; good )
 
   -- THE RESULT: every collapse value of a member of M is constructible.
   π-isL : (y : S) → ⟨ y ∈ˢ M ⟩ → ⟨ isL (C.π y) ⟩
@@ -563,11 +582,19 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 
-  module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ
-  open HS.H.T public using ( Code; base; wit; val; vals; search; Sat; Hull; val-wit )
+  -- Every module application below carries a `using` list: an
+  -- unrestricted application copies every definition of the module
+  -- into this interface (measured on this file: the `Condense` copy
+  -- alone cost 7 s and 0.6 MB).
+  module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ using ( M )
+  module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ
+    using ( ∅∈Lsetα; hull-member; X⊆M; Hull⊆L )
+  open HullStage.H.T lam ordλ succλ X X⊆L ∅∈λ public
+    using ( Code; base; wit; val; vals; search; Sat; Hull; val-wit )
+  open HullStage.H.T lam ordλ succλ X X⊆L ∅∈λ using ( inHull; _⊨₀_ )
 
   SL : Type (ℓ-suc ℓ)
-  SL = HS.ASt.SL
+  SL = HullStage.ASt.SL lam ordλ succλ X X⊆L ∅∈λ
 
   -- Parameters drawn from a set.
   From : {k : ℕ} → CS.S → Vec SL k → Type (ℓ-suc ℓ)
@@ -602,7 +629,8 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     Xʟ = X , X-isL
 
     module It = Iterate Xʟ ΦFo Φ defines only
-    module Cl = It.Closure (λ Z z → grows Z (fst z))
+      using ( it; module Closure; iterUnion; iterUnion-in; iterUnion-out; iter; iter-in; iter-out; ω-num; Num )
+    module Cl = It.Closure (λ Z z → grows Z (fst z)) using ( it-up )
 
     hullStep : ℕ → CS.S
     hullStep = It.it
@@ -649,7 +677,7 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
         n : ℕ
         n = depths cs
         go : (s : Sat k ψ (vals cs) ⊎ (Sat k ψ (vals cs) → Empty.⊥))
-           → ⟨ fst (Sum.rec (search k ψ (vals cs)) (λ _ → (∅ , HS.H.∅∈Lsetα)) s)
+           → ⟨ fst (Sum.rec (search k ψ (vals cs)) (λ _ → (∅ , HSH.∅∈Lsetα)) s)
                 ∈ˢ fst (hullStep (suc n)) ⟩
         go (inl w) = least (hullStep n) k ψ (vals cs) (vals-in cs) w
         go (inr h) = junk (hullStep n)
@@ -683,28 +711,28 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
         (λ { (cs , ecs) → (c ∷ cs)
            , cong₂ _∷_ (Σ≡Prop (λ z → snd (z ∈ˢ Lset lam)) ec) ecs })
         (choose vs (λ i → h (suc i))) })
-        (HS.H.hull-member (fst v) (h zero))
+        (HSH.hull-member (fst v) (h zero))
 
       -- the search at a value vector is the value of the witness code
       search-val : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k) (vs : Vec SL k)
                  → vals cs ≡ vs → (w : Sat k ψ vs) → ⟨ fst (search k ψ vs w) ∈ˢ Hull ⟩
       search-val k ψ cs vs e w =
         J (λ vs' e' → (w' : Sat k ψ vs') → ⟨ fst (search k ψ vs' w') ∈ˢ Hull ⟩)
-          (λ w' → subst (λ z → ⟨ fst z ∈ˢ Hull ⟩) (val-wit k ψ cs w') (HS.H.T.inHull (wit k ψ cs)))
+          (λ w' → subst (λ z → ⟨ fst z ∈ˢ Hull ⟩) (val-wit k ψ cs w') (inHull (wit k ψ cs)))
           e w
 
       junk∈Hull : ⟨ ∅ ∈ˢ Hull ⟩
       junk∈Hull = subst (λ z → ⟨ fst z ∈ˢ Hull ⟩)
-        (stuck-r no (search 0 ⊥̇ []) (λ _ → (∅ , HS.H.∅∈Lsetα)) (lem (Sat 0 ⊥̇ [] , squash₁)))
-        (HS.H.T.inHull (wit 0 ⊥̇ []))
+        (stuck-r no (search 0 ⊥̇ []) (λ _ → (∅ , HSH.∅∈Lsetα)) (lem (Sat 0 ⊥̇ [] , squash₁)))
+        (inHull (wit 0 ⊥̇ []))
         where
         no : Sat 0 ⊥̇ [] → Empty.⊥
         no = PT.rec Empty.isProp⊥ (λ { (a , h) → Empty.rec* h })
 
     hullStep⊆Hull : (n : ℕ) (z : S) → ⟨ z ∈ˢ fst (hullStep n) ⟩ → ⟨ z ∈ˢ Hull ⟩
-    hullStep⊆Hull zero z h = HS.H.X⊆M z h
+    hullStep⊆Hull zero z h = HSH.X⊆M z h
     hullStep⊆Hull (suc n) z h = PT.rec (snd (z ∈ˢ Hull)) read
-      (out (hullStep n) (λ z' hz' → HS.H.Hull⊆L z' (hullStep⊆Hull n z' hz')) z h)
+      (out (hullStep n) (λ z' hz' → HSH.Hull⊆L z' (hullStep⊆Hull n z' hz')) z h)
       where
       read : Reads (hullStep n) z → ⟨ z ∈ˢ Hull ⟩
       read (inl h') = hullStep⊆Hull n z h'
@@ -734,10 +762,10 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       bwd z h = PT.rec (snd (z ∈ˢ fst hullL))
         (λ { (c , ec) → It.iterUnion-in (depth c) zS
                (subst (λ t → ⟨ t ∈ˢ fst (hullStep (depth c)) ⟩) ec (hullStep-in c)) })
-        (HS.H.hull-member z h)
+        (HSH.hull-member z h)
         where
         zS : CS.S
-        zS = z , Lset→isL lam ordλ z (HS.H.Hull⊆L z h)
+        zS = z , Lset→isL lam ordλ z (HSH.Hull⊆L z h)
 
     M-isL : ⟨ isL HS.M ⟩
     M-isL = subst (λ t → ⟨ isL t ⟩) hullL-spec (snd hullL)
@@ -760,10 +788,8 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     A : CS.S
     A = LsetS lam ordλ
 
-    module SM = SatMap A
-    module DA = DefOf (Lset lam)
-    module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M
-    open HS.H.T using ( _⊨₀_ )
+    module SM = SatMap A using ( pairs; pairs-in; pairs-out; valOf; valOf≡ )
+    module DA = DefOf (Lset lam) using ( ι; _⊨ᵐ_; 𝒮M )
 
     C₀ : CS.S
     C₀ = AllCodes ∅ʟ
@@ -796,7 +822,8 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     sat-bridge : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : SL ^ k)
                → (δ ⊨₀ χ) ≡ (δ DA.⊨ᵐ mapFo ε′ χ)
     sat-bridge k χ δ =
-        cong (λ κ → SemM.At._⊨_ (⊥* {ℓ}) κ δ χ) (funExt (λ b → Empty.rec* b))
+        cong (λ κ → FOL.Semantics.At._⊨_ (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M (⊥* {ℓ}) κ δ χ)
+          (funExt (λ b → Empty.rec* b))
       ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M ε′ DA.ι χ δ)
 
     -- THE KEY OF A PARAMETER-FREE FORMULA AT THE STAGE, sealed
@@ -872,47 +899,52 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     -- "s is a key of C₀ of arity a+1": s is in C₀ and s is the pair of the
     -- successor of a with some code.  Inside: the successor is 0; then
-    -- the code is 0, the successor 1.
-    keyIn : ∀ {n} → Fin n → Fin n → Formula CS.S n
-    keyIn s a = (var s ∈̇ con C₀)
-              ∧̇ ∃̇ ( sucAtL (suc a) zero
-                   ∧̇ ∃̇ (prAtL (suc (suc s)) (suc zero) zero) )
+    -- the code is 0, the successor 1.  Sealed at its slots; the two
+    -- readings are stated at a variable environment.
+    opaque
+      keyIn : ∀ {n} → Fin n → Fin n → Formula CS.S n
+      keyIn s a = (var s ∈̇ con C₀)
+                ∧̇ ∃̇ ( sucAtL (suc a) zero
+                     ∧̇ ∃̇ (prAtL (suc (suc s)) (suc zero) zero) )
 
     module KeyIn {n : ℕ} (s a : Fin n) (γ : CS.S ^ n) (k : ℕ)
                  (qa : fst (lookup a γ) ≡ # k) where
 
-      keyIn-in : ⟨ fst (lookup s γ) ∈ˢ fst C₀ ⟩ → (c : V ℓ)
-               → fst (lookup s γ) ≡ pr (# (suc k)) c → ⟨ γ ⊨ keyIn s a ⟩
-      keyIn-in h c q = h , ∣ numAt , ( hsuc , ∣ cS , hpr ∣₁ ) ∣₁
-        where
-        numAt : CS.S
-        numAt = nn (suc k)
-        cS : CS.S
-        cS = c , pr-snd-isL (# (suc k)) c
-                   (subst (λ u → ⟨ isL u ⟩) q (isL-trans h (snd C₀)))
-        hsuc : ⟨ (numAt ∷ γ) ⊨ sucAtL (suc a) zero ⟩
-        hsuc = subst ⟨_⟩ (sym (sucAtL-adequate (suc a) zero (numAt ∷ γ)))
-          (cong sucV (sym qa))
-        hpr : ⟨ (cS ∷ numAt ∷ γ) ⊨ prAtL (suc (suc s)) (suc zero) zero ⟩
-        hpr = subst ⟨_⟩
-          (sym (prAtL-adequate (suc (suc s)) (suc zero) zero (cS ∷ numAt ∷ γ))) q
+      opaque
+        unfolding keyIn
 
-      keyIn-out : ⟨ γ ⊨ keyIn s a ⟩
-                → ⟨ fst (lookup s γ) ∈ˢ fst C₀ ⟩
-                × ∥ Σ[ c ∈ V ℓ ] (fst (lookup s γ) ≡ pr (# (suc k)) c) ∥₁
-      keyIn-out (h , hk) = h , PT.rec squash₁ atNum hk
-        where
-        atNum : Σ[ z ∈ CS.S ] ( ⟨ (z ∷ γ) ⊨ sucAtL (suc a) zero ⟩
-                              × ⟨ (z ∷ γ) ⊨ ∃̇ (prAtL (suc (suc s)) (suc zero) zero) ⟩ )
-              → ∥ Σ[ c ∈ V ℓ ] (fst (lookup s γ) ≡ pr (# (suc k)) c) ∥₁
-        atNum (z , (hs , hc)) = PT.map
-          (λ { (c , hp) → fst c
-             , ( subst ⟨_⟩ (prAtL-adequate (suc (suc s)) (suc zero) zero (c ∷ z ∷ γ)) hp
-               ∙ cong (λ u → pr u (fst c)) (qz ∙ cong sucV qa) ) })
-          hc
+        keyIn-in : ⟨ fst (lookup s γ) ∈ˢ fst C₀ ⟩ → (c : V ℓ)
+                 → fst (lookup s γ) ≡ pr (# (suc k)) c → ⟨ γ ⊨ keyIn s a ⟩
+        keyIn-in h c q = h , ∣ numAt , ( hsuc , ∣ cS , hpr ∣₁ ) ∣₁
           where
-          qz : fst z ≡ sucV (fst (lookup a γ))
-          qz = subst ⟨_⟩ (sucAtL-adequate (suc a) zero (z ∷ γ)) hs
+          numAt : CS.S
+          numAt = nn (suc k)
+          cS : CS.S
+          cS = c , pr-snd-isL (# (suc k)) c
+                     (subst (λ u → ⟨ isL u ⟩) q (isL-trans h (snd C₀)))
+          hsuc : ⟨ (numAt ∷ γ) ⊨ sucAtL (suc a) zero ⟩
+          hsuc = subst ⟨_⟩ (sym (sucAtL-adequate (suc a) zero (numAt ∷ γ)))
+            (cong sucV (sym qa))
+          hpr : ⟨ (cS ∷ numAt ∷ γ) ⊨ prAtL (suc (suc s)) (suc zero) zero ⟩
+          hpr = subst ⟨_⟩
+            (sym (prAtL-adequate (suc (suc s)) (suc zero) zero (cS ∷ numAt ∷ γ))) q
+
+        keyIn-out : ⟨ γ ⊨ keyIn s a ⟩
+                  → ⟨ fst (lookup s γ) ∈ˢ fst C₀ ⟩
+                  × ∥ Σ[ c ∈ V ℓ ] (fst (lookup s γ) ≡ pr (# (suc k)) c) ∥₁
+        keyIn-out (h , hk) = h , PT.rec squash₁ atNum hk
+          where
+          atNum : Σ[ z ∈ CS.S ] ( ⟨ (z ∷ γ) ⊨ sucAtL (suc a) zero ⟩
+                                × ⟨ (z ∷ γ) ⊨ ∃̇ (prAtL (suc (suc s)) (suc zero) zero) ⟩ )
+                → ∥ Σ[ c ∈ V ℓ ] (fst (lookup s γ) ≡ pr (# (suc k)) c) ∥₁
+          atNum (z , (hs , hc)) = PT.map
+            (λ { (c , hp) → fst c
+               , ( subst ⟨_⟩ (prAtL-adequate (suc (suc s)) (suc zero) zero (c ∷ z ∷ γ)) hp
+                 ∙ cong (λ u → pr u (fst c)) (qz ∙ cong sucV qa) ) })
+            hc
+            where
+            qz : fst z ≡ sucV (fst (lookup a γ))
+            qz = subst ⟨_⟩ (sucAtL-adequate (suc a) zero (z ∷ γ)) hs
 
     -- =================================================================
     -- THE WITNESS FORMULA, over (w ∷ Z ∷ []).  Five binders: k, the
@@ -920,38 +952,107 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     -- satisfaction set T.  Inside the body: T is 0, e' is 1, e is 2, s
     -- is 3, k is 4, w is 5, Z is 6.  Under the minimality binder w' is
     -- 0 and the rest shift by one; under its existential e'' is 0.
+    --
+    -- The body is sealed at its slots.  Its eight readings and its
+    -- filling are stated once, at a variable environment (`BodyRd`),
+    -- and every concrete site instantiates them: the concrete instance
+    -- is only ever compared under the seal.
     -- =================================================================
-
-    minFo : Formula CS.S 7
-    minFo = ∀̇∈ (con A)
-      ( (∃̇ ( consAtL i0 i1 i4 ∧̇ (var i0 ∈̇ var i2) )) ⇒̇ ¬̇ (appC Rel i0 i6) )
-
-    bodyFo : Formula CS.S 7
-    bodyFo = (var i4 ∈̇ con ωʟ)
-          ∧̇ ( keyIn i3 i4
-          ∧̇ ( envOverAt i2 i4 i6
-          ∧̇ ( consAtL i1 i5 i2
-          ∧̇ ( appC SM.pairs i3 i0
-          ∧̇ ( (var i1 ∈̇ var i0)
-          ∧̇ ( (var i5 ∈̇ con A)
-          ∧̇ minFo ))))))
-
-    witFo : Formula CS.S 2
-    witFo = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ bodyFo))))
 
     Env : CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S ^ 7
     Env T e' e s k w Z = T ∷ e' ∷ e ∷ s ∷ k ∷ w ∷ Z ∷ []
 
-    witFo-in : (w Z T e' e s k : CS.S) → ⟨ Env T e' e s k w Z ⊨ bodyFo ⟩
-             → ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
-    witFo-in w Z T e' e s k h = ∣ k , ∣ s , ∣ e , ∣ e' , ∣ T , h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+    opaque
+      minFo : Formula CS.S 7
+      minFo = ∀̇∈ (con A)
+        ( (∃̇ ( consAtL i0 i1 i4 ∧̇ (var i0 ∈̇ var i2) )) ⇒̇ ¬̇ (appC Rel i0 i6) )
 
-    witFo-out : (w Z : CS.S) → ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
-              → ∥ Σ[ T ∈ CS.S ] Σ[ e' ∈ CS.S ] Σ[ e ∈ CS.S ] Σ[ s ∈ CS.S ] Σ[ k ∈ CS.S ]
-                   ⟨ Env T e' e s k w Z ⊨ bodyFo ⟩ ∥₁
-    witFo-out w Z = PT.rec squash₁ (λ { (k , hk) → PT.rec squash₁ (λ { (s , hs) →
-      PT.rec squash₁ (λ { (e , he) → PT.rec squash₁ (λ { (e' , he') → PT.map
-        (λ { (T , hT) → T , e' , e , s , k , hT }) he' }) he }) hs }) hk })
+      bodyFo : Formula CS.S 7
+      bodyFo = (var i4 ∈̇ con ωʟ)
+            ∧̇ ( keyIn i3 i4
+            ∧̇ ( envOverAt i2 i4 i6
+            ∧̇ ( consAtL i1 i5 i2
+            ∧̇ ( appC SM.pairs i3 i0
+            ∧̇ ( (var i1 ∈̇ var i0)
+            ∧̇ ( (var i5 ∈̇ con A)
+            ∧̇ minFo ))))))
+
+    module BodyRd (T e' e s k w Z : CS.S) where
+
+      γ₇ : CS.S ^ 7
+      γ₇ = Env T e' e s k w Z
+
+      -- The minimality clause, host-side, at a family g presenting e.
+      Min : {m : ℕ} (g : Fin m → V ℓ) → Type (ℓ-suc ℓ)
+      Min g = (w' : CS.S) → ⟨ fst w' ∈ˢ fst A ⟩ → (e'' : CS.S)
+            → fst e'' ≡ env (cons (fst w') g) → ⟨ fst e'' ∈ˢ fst T ⟩
+            → ⟨ pr (fst w') (fst w) ∈ˢ fst Rel ⟩ → Empty.⊥
+
+      opaque
+        unfolding bodyFo
+
+        b-num : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ fst k ∈ˢ fst ωʟ ⟩
+        b-num h = h .fst
+
+        b-key : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ γ₇ ⊨ keyIn i3 i4 ⟩
+        b-key h = h .snd .fst
+
+        b-env : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ γ₇ ⊨ envOverAt i2 i4 i6 ⟩
+        b-env h = h .snd .snd .fst
+
+        b-cons : {m : ℕ} (g : Fin m → V ℓ) → fst e ≡ env g
+               → ⟨ γ₇ ⊨ bodyFo ⟩ → fst e' ≡ env (cons (fst w) g)
+        b-cons g hE h =
+          subst ⟨_⟩ (consAtL-adequate i1 i5 i2 γ₇ g hE) (h .snd .snd .snd .fst)
+
+        b-tab : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ pr (fst s) (fst T) ∈ˢ fst SM.pairs ⟩
+        b-tab h = subst ⟨_⟩ (appC-adequate SM.pairs i3 i0 γ₇) (h .snd .snd .snd .snd .fst)
+
+        b-mem : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ fst e' ∈ˢ fst T ⟩
+        b-mem h = h .snd .snd .snd .snd .snd .fst
+
+        b-stage : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ fst w ∈ˢ fst A ⟩
+        b-stage h = h .snd .snd .snd .snd .snd .snd .fst
+
+        b-min : {m : ℕ} (g : Fin m → V ℓ) → fst e ≡ env g → ⟨ γ₇ ⊨ bodyFo ⟩ → Min g
+        b-min g hE h w' hw' e'' qe hm hr =
+          h .snd .snd .snd .snd .snd .snd .snd w' hw' ∣ e'' , (hc , hm) ∣₁
+            (subst ⟨_⟩ (sym (appC-adequate Rel i0 i6 (w' ∷ γ₇))) hr)
+          where
+          hc : ⟨ (e'' ∷ w' ∷ γ₇) ⊨ consAtL i0 i1 i4 ⟩
+          hc = subst ⟨_⟩ (sym (consAtL-adequate i0 i1 i4 (e'' ∷ w' ∷ γ₇) g hE)) qe
+
+        b-fill : {m : ℕ} (g : Fin m → V ℓ) → fst e ≡ env g
+               → ⟨ fst k ∈ˢ fst ωʟ ⟩ → ⟨ γ₇ ⊨ keyIn i3 i4 ⟩ → ⟨ γ₇ ⊨ envOverAt i2 i4 i6 ⟩
+               → fst e' ≡ env (cons (fst w) g) → ⟨ pr (fst s) (fst T) ∈ˢ fst SM.pairs ⟩
+               → ⟨ fst e' ∈ˢ fst T ⟩ → ⟨ fst w ∈ˢ fst A ⟩ → Min g
+               → ⟨ γ₇ ⊨ bodyFo ⟩
+        b-fill g hE c1 c2 c3 c4 c5 c6 c7 mn =
+          c1 , c2 , c3
+          , subst ⟨_⟩ (sym (consAtL-adequate i1 i5 i2 γ₇ g hE)) c4
+          , subst ⟨_⟩ (sym (appC-adequate SM.pairs i3 i0 γ₇)) c5
+          , c6 , c7
+          , λ w' hw' hex hr → PT.rec Empty.isProp⊥
+              (λ { (e'' , (hc , hm)) → mn w' hw' e''
+                     (subst ⟨_⟩ (consAtL-adequate i0 i1 i4 (e'' ∷ w' ∷ γ₇) g hE) hc) hm
+                     (subst ⟨_⟩ (appC-adequate Rel i0 i6 (w' ∷ γ₇)) hr) })
+              hex
+
+    -- The five binders, sealed with their two readings.
+    opaque
+      witFo : Formula CS.S 2
+      witFo = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ bodyFo))))
+
+      witFo-in : (w Z T e' e s k : CS.S) → ⟨ Env T e' e s k w Z ⊨ bodyFo ⟩
+               → ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
+      witFo-in w Z T e' e s k h = ∣ k , ∣ s , ∣ e , ∣ e' , ∣ T , h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+
+      witFo-out : (w Z : CS.S) → ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
+                → ∥ Σ[ T ∈ CS.S ] Σ[ e' ∈ CS.S ] Σ[ e ∈ CS.S ] Σ[ s ∈ CS.S ] Σ[ k ∈ CS.S ]
+                     ⟨ Env T e' e s k w Z ⊨ bodyFo ⟩ ∥₁
+      witFo-out w Z = PT.rec squash₁ (λ { (k , hk) → PT.rec squash₁ (λ { (s , hs) →
+        PT.rec squash₁ (λ { (e , he) → PT.rec squash₁ (λ { (e' , he') → PT.map
+          (λ { (T , hT) → T , e' , e , s , k , hT }) he' }) he }) hs }) hk })
 
     -- The numeral read out of a member of ωʟ.
     ω-num : (q : CS.S) → ⟨ fst q ∈ˢ fst ωʟ ⟩ → ∥ Σ[ n ∈ ℕ ] (fst q ≡ # n) ∥₁
@@ -1031,11 +1132,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       c3 = envOverAt-transport (Z ∷ nn k ∷ e ∷ []) γ₇ i2 i1 i0 i2 i4 i6 refl refl refl
              (envOver Z g)
 
-      c4 : ⟨ γ₇ ⊨ consAtL i1 i5 i2 ⟩
-      c4 = subst ⟨_⟩ (sym (consAtL-adequate i1 i5 i2 γ₇ g′ refl)) (ext-graph a)
+      c4 : fst (ext a) ≡ env (cons (fst a) g′)
+      c4 = ext-graph a
 
-      c5 : ⟨ γ₇ ⊨ appC SM.pairs i3 i0 ⟩
-      c5 = subst ⟨_⟩ (sym (appC-adequate SM.pairs i3 i0 γ₇)) (Tof-pair (suc k) χ)
+      c5 : ⟨ pr (fst sS) (fst T) ∈ˢ fst SM.pairs ⟩
+      c5 = Tof-pair (suc k) χ
 
       c6 : ⟨ fst (ext a) ∈ˢ fst T ⟩
       c6 = transport (sym (cong ⟨_⟩ (ext-sat a))) (a-least .fst)
@@ -1043,29 +1144,20 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       c7 : ⟨ fst aS ∈ˢ fst A ⟩
       c7 = snd a
 
-      c8 : ⟨ γ₇ ⊨ minFo ⟩
-      c8 w' w'∈ hex hr = PT.rec Empty.isProp⊥ read hex
+      c8 : BodyRd.Min T (ext a) e sS (nn k) aS Z g′
+      c8 w' w'∈ e'' q hm hr = a-least .snd w'S sat lt
         where
         w'S : SL
         w'S = fst w' , w'∈
         lt : relOf-at w'S a
-        lt = relL-rep lam λ-isL ordλ w'S a
-               (subst ⟨_⟩ (appC-adequate Rel i0 i6 (w' ∷ γ₇)) hr)
-        read : Σ[ e'' ∈ CS.S ] ( ⟨ (e'' ∷ w' ∷ γ₇) ⊨ consAtL i0 i1 i4 ⟩
-                               × ⟨ fst e'' ∈ˢ fst T ⟩ )
-             → Empty.⊥
-        read (e'' , (hc , hm)) = a-least .snd w'S sat lt
-          where
-          q : fst e'' ≡ fst (ext w'S)
-          q = subst ⟨_⟩ (consAtL-adequate i0 i1 i4 (e'' ∷ w' ∷ γ₇) g′ refl) hc
-              ∙ sym (ext-graph w'S)
-          sat : ⟨ (w'S ∷ vs) ⊨₀ χ ⟩
-          sat = transport (cong ⟨_⟩ (ext-sat w'S))
-                  (subst (λ t → ⟨ t ∈ˢ fst T ⟩) q hm)
+        lt = relL-rep lam λ-isL ordλ w'S a hr
+        sat : ⟨ (w'S ∷ vs) ⊨₀ χ ⟩
+        sat = transport (cong ⟨_⟩ (ext-sat w'S))
+                (subst (λ t → ⟨ t ∈ˢ fst T ⟩) (q ∙ sym (ext-graph w'S)) hm)
 
       least : ⟨ (aS ∷ Z ∷ []) ⊨ witFo ⟩
       least = witFo-in aS Z T (ext a) e sS (nn k)
-        (c1 , (c2 , (c3 , (c4 , (c5 , (c6 , (c7 , c8)))))))
+        (BodyRd.b-fill T (ext a) e sS (nn k) aS Z g′ refl c1 c2 c3 c4 c5 c6 c7 c8)
 
     -- =================================================================
     -- THE FORMULA READS BACK AS A SEARCH (the `out` clause).
@@ -1074,24 +1166,18 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     module Out (Z : CS.S) (Z⊆ : (z : S) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
                (w T e' e s k : CS.S) (h : ⟨ Env T e' e s k w Z ⊨ bodyFo ⟩) where
 
-      h1 = h .fst
-      h2 = h .snd .fst
-      h3 = h .snd .snd .fst
-      h4 = h .snd .snd .snd .fst
-      h5 = h .snd .snd .snd .snd .fst
-      h6 = h .snd .snd .snd .snd .snd .fst
-      h7 = h .snd .snd .snd .snd .snd .snd .fst
-      h8 = h .snd .snd .snd .snd .snd .snd .snd
+      module Rd = BodyRd T e' e s k w Z
+        using ( b-num; b-key; b-env; b-cons; b-tab; b-mem; b-stage; b-min )
 
       wS : SL
-      wS = fst w , h7
+      wS = fst w , Rd.b-stage h
 
       module AtNum (n : ℕ) (qk : fst k ≡ # n) where
 
         s∈ : ⟨ fst s ∈ˢ fst C₀ ⟩
-        s∈ = KeyIn.keyIn-out i3 i4 (Env T e' e s k w Z) n qk h2 .fst
+        s∈ = KeyIn.keyIn-out i3 i4 (Env T e' e s k w Z) n qk (Rd.b-key h) .fst
 
-        module R = Recover Z n (Env T e' e s k w Z) i2 i4 i6 qk refl h3
+        module R = Recover Z n (Env T e' e s k w Z) i2 i4 i6 qk refl (Rd.b-env h) using ( g; recovers )
 
         g′ : Fin n → V ℓ
         g′ i = ⟪ fst Z ⟫↪ (R.g i)
@@ -1116,8 +1202,7 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
           ∙ cong env (funExt (λ { zero → refl ; (suc i) → vs-val i }))
 
         e'≡ : fst e' ≡ fst (ext wS)
-        e'≡ = subst ⟨_⟩ (consAtL-adequate i1 i5 i2 (Env T e' e s k w Z) g′ hE) h4
-            ∙ sym (ext-graph wS)
+        e'≡ = Rd.b-cons g′ hE h ∙ sym (ext-graph wS)
 
         module AtCode (χ : Formula (⊥* {ℓ}) (suc n)) (qs : fst s ≡ fst (keyOf (suc n) χ)) where
 
@@ -1131,21 +1216,16 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
             sat : ⟨ P wS ⟩
             sat = transport (ext-sat wS)
-              (subst2 (λ u t → ⟨ u ∈ˢ t ⟩) e'≡ qT h6)
+              (subst2 (λ u t → ⟨ u ∈ˢ t ⟩) e'≡ qT (Rd.b-mem h))
 
             min : (b : SL) → ⟨ P b ⟩ → relOf-at b wS → Empty.⊥
-            min b pb lt = h8 bS (snd b) ∣ ext b , (hc , hm) ∣₁ hr
+            min b pb lt = Rd.b-min g′ hE h bS (snd b) (ext b) (ext-graph b) hm
+              (relL-fill lam λ-isL ordλ b wS lt)
               where
               bS : CS.S
               bS = fst b , Lset→isL lam ordλ (fst b) (snd b)
-              hc : ⟨ (ext b ∷ bS ∷ Env T e' e s k w Z) ⊨ consAtL i0 i1 i4 ⟩
-              hc = subst ⟨_⟩ (sym (consAtL-adequate i0 i1 i4 (ext b ∷ bS ∷ Env T e' e s k w Z) g′ hE))
-                     (ext-graph b)
               hm : ⟨ fst (ext b) ∈ˢ fst T ⟩
               hm = subst (λ t → ⟨ fst (ext b) ∈ˢ t ⟩) (sym qT) (transport (sym (ext-sat b)) pb)
-              hr : ⟨ (bS ∷ Env T e' e s k w Z) ⊨ appC Rel i0 i6 ⟩
-              hr = subst ⟨_⟩ (sym (appC-adequate Rel i0 i6 (bS ∷ Env T e' e s k w Z)))
-                     (relL-fill lam λ-isL ordλ b wS lt)
 
             w₀ : Sat n χ vs
             w₀ = ∣ wS , sat ∣₁
@@ -1163,8 +1243,7 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
                    qT : fst T ≡ fst (Tof (suc n) χ)
                    qT = pr-inj e .snd ∙ cong fst (valOf-same x m (suc n) χ (sym ex ∙ qs))
                in ∣ AtTable.searched qT ∣₁ })
-            (SM.pairs-out (pr (fst s) (fst T))
-              (subst ⟨_⟩ (appC-adequate SM.pairs i3 i0 (Env T e' e s k w Z)) h5))
+            (SM.pairs-out (pr (fst s) (fst T)) (Rd.b-tab h))
 
         code : ∥ Searched Z (fst w) ∥₁
         code = PT.rec squash₁
@@ -1172,10 +1251,10 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
             (λ { (χ , ec) → AtCode.table χ
                    (qc ∙ cong (pr (# (suc n))) ec ∙ sym (keyOf-fst (suc n) χ)) })
             (freeCode-out (suc n) c (subst (λ u → ⟨ u ∈ˢ fst C₀ ⟩) qc s∈)) })
-          (KeyIn.keyIn-out i3 i4 (Env T e' e s k w Z) n qk h2 .snd)
+          (KeyIn.keyIn-out i3 i4 (Env T e' e s k w Z) n qk (Rd.b-key h) .snd)
 
       searched : ∥ Searched Z (fst w) ∥₁
-      searched = PT.rec squash₁ (λ { (n , qk) → AtNum.code n qk }) (ω-num k h1)
+      searched = PT.rec squash₁ (λ { (n , qk) → AtNum.code n qk }) (ω-num k (Rd.b-num h))
 
     -- =================================================================
     -- THE STEP ITSELF: carved by separation out of Z ∪ Lset lam.
@@ -1196,42 +1275,36 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     wit-L : (Z w : CS.S) → ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩ → ⟨ fst w ∈ˢ Lset lam ⟩
     wit-L Z w hw = PT.rec (snd (fst w ∈ˢ Lset lam))
-      (λ { (T , e' , e , s , k , h) → h .snd .snd .snd .snd .snd .snd .fst })
+      (λ { (T , e' , e , s , k , h) → BodyRd.b-stage T e' e s k w Z h })
       (witFo-out w Z hw)
 
     -- The separating description, over (w ∷ []), with Z a constant; the
-    -- witness formula is reached by binding Z and renaming.
-    ρs : Fin 2 → Fin 2
-    ρs zero = suc zero
-    ρs (suc zero) = zero
+    -- witness formula is reached by binding Z and renaming.  Sealed with
+    -- its two readings.
+    opaque
+      sepFo : CS.S → Formula CS.S 1
+      sepFo Z = (var i0 ∈̇ con Z)
+              ∨̇ ( (var i0 ≐ con ∅ʟ)
+                ∨̇ ∃̇ ( (var i0 ≐ con Z) ∧̇ renameFo ρs witFo ) )
 
-    sepFo : CS.S → Formula CS.S 1
-    sepFo Z = (var i0 ∈̇ con Z)
-            ∨̇ ( (var i0 ≐ con ∅ʟ)
-              ∨̇ ∃̇ ( (var i0 ≐ con Z) ∧̇ renameFo ρs witFo ) )
+      private
+        rs : (Z'' w : CS.S)
+           → ⟨ (Z'' ∷ w ∷ []) ⊨ renameFo ρs witFo ⟩ ≡ ⟨ (w ∷ Z'' ∷ []) ⊨ witFo ⟩
+        rs Z'' w = cong ⟨_⟩ (Ren.⊨-rename ρs witFo (Z'' ∷ w ∷ []) (w ∷ Z'' ∷ []) (ags Z'' w))
 
-    private
-      ags : (Z'' w : CS.S) → Ren.Agrees ρs (Z'' ∷ w ∷ []) (w ∷ Z'' ∷ [])
-      ags Z'' w zero = refl
-      ags Z'' w (suc zero) = refl
+      sep-out : (Z w : CS.S) → ⟨ (w ∷ []) ⊨ sepFo Z ⟩ → ∥ Body Z w ∥₁
+      sep-out Z w = PT.rec squash₁ (λ
+        { (inl hz) → ∣ inl hz ∣₁
+        ; (inr h') → PT.rec squash₁ (λ
+          { (inl e) → ∣ inr (inl e) ∣₁
+          ; (inr hw) → PT.map (λ { (Z'' , (eZ , hr)) → inr (inr
+              (subst (λ u → ⟨ (w ∷ u ∷ []) ⊨ witFo ⟩) (S≡ {x = Z''} {y = Z} eZ)
+                (transport (rs Z'' w) hr))) }) hw }) h' })
 
-      rs : (Z'' w : CS.S)
-         → ⟨ (Z'' ∷ w ∷ []) ⊨ renameFo ρs witFo ⟩ ≡ ⟨ (w ∷ Z'' ∷ []) ⊨ witFo ⟩
-      rs Z'' w = cong ⟨_⟩ (Ren.⊨-rename ρs witFo (Z'' ∷ w ∷ []) (w ∷ Z'' ∷ []) (ags Z'' w))
-
-    sep-out : (Z w : CS.S) → ⟨ (w ∷ []) ⊨ sepFo Z ⟩ → ∥ Body Z w ∥₁
-    sep-out Z w = PT.rec squash₁ (λ
-      { (inl hz) → ∣ inl hz ∣₁
-      ; (inr h') → PT.rec squash₁ (λ
-        { (inl e) → ∣ inr (inl e) ∣₁
-        ; (inr hw) → PT.map (λ { (Z'' , (eZ , hr)) → inr (inr
-            (subst (λ u → ⟨ (w ∷ u ∷ []) ⊨ witFo ⟩) (S≡ {x = Z''} {y = Z} eZ)
-              (transport (rs Z'' w) hr))) }) hw }) h' })
-
-    sep-in : (Z w : CS.S) → Body Z w → ⟨ (w ∷ []) ⊨ sepFo Z ⟩
-    sep-in Z w (inl hz) = ∣ inl hz ∣₁
-    sep-in Z w (inr (inl e)) = ∣ inr ∣ inl e ∣₁ ∣₁
-    sep-in Z w (inr (inr hw)) = ∣ inr ∣ inr ∣ Z , (refl , transport (sym (rs Z w)) hw) ∣₁ ∣₁ ∣₁
+      sep-in : (Z w : CS.S) → Body Z w → ⟨ (w ∷ []) ⊨ sepFo Z ⟩
+      sep-in Z w (inl hz) = ∣ inl hz ∣₁
+      sep-in Z w (inr (inl e)) = ∣ inr ∣ inl e ∣₁ ∣₁
+      sep-in Z w (inr (inr hw)) = ∣ inr ∣ inr ∣ Z , (refl , transport (sym (rs Z w)) hw) ∣₁ ∣₁ ∣₁
 
     opaque
       Φ : CS.S → CS.S
@@ -1245,7 +1318,7 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       where
       bnd : Body Z w → ⟨ w CS.∈ˢ Bnd Z ⟩
       bnd (inl hz) = bnd-Z Z w hz
-      bnd (inr (inl e)) = bnd-L Z w (subst (λ u → ⟨ u ∈ˢ Lset lam ⟩) (sym e) HS.H.∅∈Lsetα)
+      bnd (inr (inl e)) = bnd-L Z w (subst (λ u → ⟨ u ∈ˢ Lset lam ⟩) (sym e) HSH.∅∈Lsetα)
       bnd (inr (inr hw)) = bnd-L Z w (wit-L Z w hw)
 
     Φ-out : (Z w : CS.S) → ⟨ fst w ∈ˢ fst (Φ Z) ⟩ → ∥ Body Z w ∥₁
@@ -1253,57 +1326,51 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     -- The step formula, over (Z' ∷ Z ∷ []): "the members of Z' are
     -- exactly the members of Z, the empty set, and the witnesses at Z".
-    ρf : Fin 2 → Fin 3
-    ρf zero = zero
-    ρf (suc zero) = suc (suc zero)
+    -- Sealed with the two facts the iteration consumes.
+    opaque
+      bodyF : Formula CS.S 3
+      bodyF = (var i0 ∈̇ var i2) ∨̇ ((var i0 ≐ con ∅ʟ) ∨̇ renameFo ρf witFo)
 
-    bodyF : Formula CS.S 3
-    bodyF = (var i0 ∈̇ var i2) ∨̇ ((var i0 ≐ con ∅ʟ) ∨̇ renameFo ρf witFo)
+      ΦFo : Formula CS.S 2
+      ΦFo = ∀̇ ( ((var i0 ∈̇ var i1) ⇒̇ bodyF) ∧̇ (bodyF ⇒̇ (var i0 ∈̇ var i1)) )
 
-    ΦFo : Formula CS.S 2
-    ΦFo = ∀̇ ( ((var i0 ∈̇ var i1) ⇒̇ bodyF) ∧̇ (bodyF ⇒̇ (var i0 ∈̇ var i1)) )
+      private
+        rf : (w Z' Z : CS.S)
+           → ⟨ (w ∷ Z' ∷ Z ∷ []) ⊨ renameFo ρf witFo ⟩ ≡ ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
+        rf w Z' Z = cong ⟨_⟩ (Ren.⊨-rename ρf witFo (w ∷ Z' ∷ Z ∷ []) (w ∷ Z ∷ []) (agf w Z' Z))
 
-    private
-      agf : (w Z' Z : CS.S) → Ren.Agrees ρf (w ∷ Z' ∷ Z ∷ []) (w ∷ Z ∷ [])
-      agf w Z' Z zero = refl
-      agf w Z' Z (suc zero) = refl
+        bodyF-out : (w Z' Z : CS.S) → ⟨ (w ∷ Z' ∷ Z ∷ []) ⊨ bodyF ⟩ → ∥ Body Z w ∥₁
+        bodyF-out w Z' Z = PT.rec squash₁ (λ
+          { (inl hz) → ∣ inl hz ∣₁
+          ; (inr h') → PT.map (λ
+            { (inl e) → inr (inl e)
+            ; (inr hw) → inr (inr (transport (rf w Z' Z) hw)) }) h' })
 
-      rf : (w Z' Z : CS.S)
-         → ⟨ (w ∷ Z' ∷ Z ∷ []) ⊨ renameFo ρf witFo ⟩ ≡ ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
-      rf w Z' Z = cong ⟨_⟩ (Ren.⊨-rename ρf witFo (w ∷ Z' ∷ Z ∷ []) (w ∷ Z ∷ []) (agf w Z' Z))
+        bodyF-in : (w Z' Z : CS.S) → Body Z w → ⟨ (w ∷ Z' ∷ Z ∷ []) ⊨ bodyF ⟩
+        bodyF-in w Z' Z (inl hz) = ∣ inl hz ∣₁
+        bodyF-in w Z' Z (inr (inl e)) = ∣ inr ∣ inl e ∣₁ ∣₁
+        bodyF-in w Z' Z (inr (inr hw)) = ∣ inr ∣ inr (transport (sym (rf w Z' Z)) hw) ∣₁ ∣₁
 
-    bodyF-out : (w Z' Z : CS.S) → ⟨ (w ∷ Z' ∷ Z ∷ []) ⊨ bodyF ⟩ → ∥ Body Z w ∥₁
-    bodyF-out w Z' Z = PT.rec squash₁ (λ
-      { (inl hz) → ∣ inl hz ∣₁
-      ; (inr h') → PT.map (λ
-        { (inl e) → inr (inl e)
-        ; (inr hw) → inr (inr (transport (rf w Z' Z) hw)) }) h' })
+      Φ-defines : (Z : CS.S) → ⟨ (Φ Z ∷ Z ∷ []) ⊨ ΦFo ⟩
+      Φ-defines Z w =
+          (λ h → PT.rec (snd ((w ∷ Φ Z ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in w (Φ Z) Z) (Φ-out Z w h))
+        , (λ h → PT.rec (snd (fst w ∈ˢ fst (Φ Z))) (Φ-in Z w) (bodyF-out w (Φ Z) Z h))
 
-    bodyF-in : (w Z' Z : CS.S) → Body Z w → ⟨ (w ∷ Z' ∷ Z ∷ []) ⊨ bodyF ⟩
-    bodyF-in w Z' Z (inl hz) = ∣ inl hz ∣₁
-    bodyF-in w Z' Z (inr (inl e)) = ∣ inr ∣ inl e ∣₁ ∣₁
-    bodyF-in w Z' Z (inr (inr hw)) = ∣ inr ∣ inr (transport (sym (rf w Z' Z)) hw) ∣₁ ∣₁
-
-    Φ-defines : (Z : CS.S) → ⟨ (Φ Z ∷ Z ∷ []) ⊨ ΦFo ⟩
-    Φ-defines Z w =
-        (λ h → PT.rec (snd ((w ∷ Φ Z ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in w (Φ Z) Z) (Φ-out Z w h))
-      , (λ h → PT.rec (snd (fst w ∈ˢ fst (Φ Z))) (Φ-in Z w) (bodyF-out w (Φ Z) Z h))
-
-    Φ-only : (Z Z' : CS.S) → ⟨ (Z' ∷ Z ∷ []) ⊨ ΦFo ⟩ → Z' ≡ Φ Z
-    Φ-only Z Z' h = S≡ (extensionalV {a = fst Z'} {b = fst (Φ Z)}
-      (λ v → ⇔toPath (fwd v) (bwd v)))
-      where
-      fwd : (v : S) → ⟨ v ∈ˢ fst Z' ⟩ → ⟨ v ∈ˢ fst (Φ Z) ⟩
-      fwd v hv = PT.rec (snd (v ∈ˢ fst (Φ Z))) (Φ-in Z vS) (bodyF-out vS Z' Z (h vS .fst hv))
+      Φ-only : (Z Z' : CS.S) → ⟨ (Z' ∷ Z ∷ []) ⊨ ΦFo ⟩ → Z' ≡ Φ Z
+      Φ-only Z Z' h = S≡ (extensionalV {a = fst Z'} {b = fst (Φ Z)}
+        (λ v → ⇔toPath (fwd v) (bwd v)))
         where
-        vS : CS.S
-        vS = v , isL-trans {x = fst Z'} {y = v} hv (snd Z')
-      bwd : (v : S) → ⟨ v ∈ˢ fst (Φ Z) ⟩ → ⟨ v ∈ˢ fst Z' ⟩
-      bwd v hv = h vS .snd
-        (PT.rec (snd ((vS ∷ Z' ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in vS Z' Z) (Φ-out Z vS hv))
-        where
-        vS : CS.S
-        vS = v , isL-trans {x = fst (Φ Z)} {y = v} hv (snd (Φ Z))
+        fwd : (v : S) → ⟨ v ∈ˢ fst Z' ⟩ → ⟨ v ∈ˢ fst (Φ Z) ⟩
+        fwd v hv = PT.rec (snd (v ∈ˢ fst (Φ Z))) (Φ-in Z vS) (bodyF-out vS Z' Z (h vS .fst hv))
+          where
+          vS : CS.S
+          vS = v , isL-trans {x = fst Z'} {y = v} hv (snd Z')
+        bwd : (v : S) → ⟨ v ∈ˢ fst (Φ Z) ⟩ → ⟨ v ∈ˢ fst Z' ⟩
+        bwd v hv = h vS .snd
+          (PT.rec (snd ((vS ∷ Z' ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in vS Z' Z) (Φ-out Z vS hv))
+          where
+          vS : CS.S
+          vS = v , isL-trans {x = fst (Φ Z)} {y = v} hv (snd (Φ Z))
 
     -- THE PACK.
     pack : StepPack
@@ -1340,10 +1407,11 @@ module Discharge (lam : S) (ordλ : IsOrd lam)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
   (M-isL : ⟨ isL (HullStage.M lam ordλ succλ X X⊆L ∅∈λ) ⟩) where
 
-  module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ
-  module P = PiIn (HS.M , M-isL)
+  module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ using ( M )
+  module HSC = HullStage.C lam ordλ succλ X X⊆L ∅∈λ using ( πX )
+  module P = PiIn (HS.M , M-isL) using ( πX-isL )
 
-  pixL : (x : S) → ⟨ x ∈ˢ HS.C.πX ⟩ → ⟨ isL x ⟩
+  pixL : (x : S) → ⟨ x ∈ˢ HSC.πX ⟩ → ⟨ isL x ⟩
   pixL = P.πX-isL
 
 -- The telescope of `Condense` minus `pixL`, plus the start X as an
@@ -1358,22 +1426,26 @@ module Condense′ (lam : S) (ordλ : IsOrd lam)
   (X-isL : ⟨ isL X ⟩)
   where
 
-  module T = Telescope lam ordλ succλ X X⊆L ∅∈λ
-  module HI = T.HullIter X-isL T.Build.pack
-  module D = Discharge lam ordλ succλ X X⊆L ∅∈λ HI.M-isL
-  module Cn = Condense lam ordλ succλ X X⊆L ∅∈λ elem sup D.pixL
+  module T = Telescope lam ordλ succλ X X⊆L ∅∈λ using ( Code; val; Reads; module StepPack )
+  module TB = Telescope.Build lam ordλ succλ X X⊆L ∅∈λ using ( pack; Φ )
+  module HI = Telescope.HullIter lam ordλ succλ X X⊆L ∅∈λ X-isL TB.pack
+    using ( hullL; hullL-spec; hullStep; hullStep-suc; hullStep-in; hullStep⊆Hull; depth; M-isL )
+  module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ using ( M )
+  module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ using ( Hull⊆L )
+  module HSC = HullStage.C lam ordλ succλ X X⊆L ∅∈λ using ( πX )
+  module D = Discharge lam ordλ succλ X X⊆L ∅∈λ HI.M-isL using ( pixL )
 
   -- The hull as an element of L, and the iteration that reaches it.
   hullL : CS.S
   hullL = HI.hullL
 
-  hullL-spec : fst hullL ≡ T.HS.M
+  hullL-spec : fst hullL ≡ HS.M
   hullL-spec = HI.hullL-spec
 
   hullStep : ℕ → CS.S
   hullStep = HI.hullStep
 
-  hullStep-suc : (n : ℕ) → hullStep (suc n) ≡ T.Build.Φ (hullStep n)
+  hullStep-suc : (n : ℕ) → hullStep (suc n) ≡ TB.Φ (hullStep n)
   hullStep-suc = HI.hullStep-suc
 
   hullStep-in : (c : T.Code) → ⟨ fst (T.val c) ∈ˢ fst (hullStep (HI.depth c)) ⟩
@@ -1381,15 +1453,15 @@ module Condense′ (lam : S) (ordλ : IsOrd lam)
 
   hullStep-out : (n : ℕ) (z : S) → ⟨ z ∈ˢ fst (hullStep (suc n)) ⟩ → ∥ T.Reads (hullStep n) z ∥₁
   hullStep-out n z h =
-    T.Build.pack .T.StepPack.out (hullStep n)
-      (λ z' hz' → T.HS.H.Hull⊆L z' (HI.hullStep⊆Hull n z' hz')) z h
+    TB.pack .T.StepPack.out (hullStep n)
+      (λ z' hz' → HSH.Hull⊆L z' (HI.hullStep⊆Hull n z' hz')) z h
 
-  M-isL : ⟨ isL T.HS.M ⟩
+  M-isL : ⟨ isL HS.M ⟩
   M-isL = HI.M-isL
 
-  pixL : (x : S) → ⟨ x ∈ˢ T.HS.C.πX ⟩ → ⟨ isL x ⟩
+  pixL : (x : S) → ⟨ x ∈ˢ HSC.πX ⟩ → ⟨ isL x ⟩
   pixL = D.pixL
 
-  condenses′ : Σ[ β ∈ S ] (IsOrd β × (T.HS.C.πX ≡ Lset β))
-  condenses′ = Cn.condenses
+  condenses′ : Σ[ β ∈ S ] (IsOrd β × (HSC.πX ≡ Lset β))
+  condenses′ = Condense.condenses lam ordλ succλ X X⊆L ∅∈λ elem sup D.pixL
 ```

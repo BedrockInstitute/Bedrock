@@ -50,14 +50,14 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 open InfinitySet {ℓ} using ( #_; sucV )
 open import V.Model {ℓ} using ( pair-singleton )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
-open hPropStructure 𝒮ᵥ
+open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
+open hPropStructure 𝒮ᵥ using ()
 
 -- The class-carrier reading, as src/L/Condensation.lagda.md:76-77.
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using (_^_; _⊨ᵐ_)
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
-module CS = hPropStructure 𝒮ʟ
+module CS = hPropStructure 𝒮ʟ using (S)
 
 -- The pair chain of src/L/Condensation.lagda.md `ChainZ`, at a value.
 module Chain (Kv : V ℓ)
@@ -109,7 +109,7 @@ tmVal-K : (Kv : V ℓ) (transK : (x y : V ℓ) → ⟨ x ∈ Kv ⟩ → ⟨ y �
 tmVal-K Kv transK γ t e v tK eK h =
   PT.rec (snd (fst (lookup v γ) ∈ Kv)) go (tmValAt-out t e v γ h)
   where
-  module Z = Chain Kv transK
+  module Z = Chain Kv transK using (prK-snd; sndK)
   go : (Σ[ k ∈ CS.S ] ((fst (lookup t γ) ≡ pr (# 1) (fst k))
           × ⟨ pr (fst k) (fst (lookup v γ)) ∈ fst (lookup e γ) ⟩))
      ⊎ (fst (lookup t γ) ≡ pr (# 0) (fst (lookup v γ)))
@@ -155,7 +155,7 @@ module AtomLeaf′ {m : ℕ} (E yc b a ar c₀ : CS.S) (γ : CS.S ^ m)
   bodyM : Formula CS.S (7 + m)
   bodyM = atomBody cmp
 
-  module Z = ChainZ {m} K γ arityK
+  module Z = ChainZ {m} K γ arityK using (b∈pair; pair∈pr)
 
   keyK-of : (z v w : CS.S) (c : Fin (9 + m))
           → ⟨ fst (lookup c (w ∷ v ∷ z ∷ E ∷ yc ∷ b ∷ a ∷ ar ∷ c₀ ∷ γ))
@@ -390,10 +390,10 @@ module MemAgree′ {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : CS.S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E arK arNum)
+                       (envInK yc b a ar c E arK arNum) using (back; memE-bnd)
         henv = E'.back hE
         module L = AtomLeaf′ E yc b a ar c γ t0 t1 K
-                     transK aK bK EK t0eq t1eq t0K num1K cmp
+                     transK aK bK EK t0eq t1eq t0K num1K cmp using (bodyM; bodyS; bwd; fwd)
         hb = h c c∈ ar arK a aK b bK yc ycK shB hc E EK henv
     in extAtB→extAt (suc zero) (suc (suc (suc (suc (suc (suc K))))))
          L.bodyS L.bodyM (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) L.fwd L.bwd
@@ -458,10 +458,10 @@ module EqAgree′ {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : CS.S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK yc b a ar c E arK arNum)
+                       (envInK yc b a ar c E arK arNum) using (back; memE-bnd)
         henv = E'.back hE
         module L = AtomLeaf′ E yc b a ar c γ t0 t1 K
-                     transK aK bK EK t0eq t1eq t0K num1K cmp
+                     transK aK bK EK t0eq t1eq t0K num1K cmp using (bodyM; bodyS; bwd; fwd)
         hb = h c c∈ ar arK a aK b bK yc ycK shB hc E EK henv
     in extAtB→extAt (suc zero) (suc (suc (suc (suc (suc (suc K))))))
          L.bodyS L.bodyM (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) L.fwd L.bwd
@@ -539,7 +539,7 @@ module BndLeaf′ {m : ℕ} (B t0 t1 K : Fin m) (E ya yc b a ar c : CS.S) (γ : 
   bodyM : Formula CS.S (8 + m)
   bodyM = bodyAll B
 
-  module Z = ChainZ {m} K γ arityK
+  module Z = ChainZ {m} K γ arityK using (b∈pair; pair∈pr)
 
   -- The environment z, a member of E, is an environment.
   zOv : (z : CS.S) → ⟨ fst z ∈ fst E ⟩
@@ -832,9 +832,9 @@ module BndAgree′ {m : ℕ} (C T B N K t0 t1 : Fin m) (γ : CS.S ^ m) (k : ℕ)
                    (suc (suc (suc (suc (suc (suc (suc B)))))))
                    (suc (suc (suc (suc (suc (suc (suc K)))))))
                    (E ∷ yb ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                   (envInK E yb yc b a ar c arK arNum)
+                   (envInK E yb yc b a ar c arK arNum) using (back; memE-bnd)
     module L = BndLeaf′ B t0 t1 K E yb yc b a ar c γ
-                 t0eq t1eq t0K transK aK EK num1K hE (consK E yb yc b a ar c arNum)
+                 t0eq t1eq t0K transK aK EK num1K hE (consK E yb yc b a ar c arNum) using (bodyM; bodyS; all-fwd; all-bwd; bodyMx; bodySx; fwd; bwd; ex-bwd; ex-fwd)
     henv = E'.back hE
     hsubA = SubValSuccB2T.out {m = 7 + m}
               (suc (suc (suc (suc (suc (suc (suc T)))))))
@@ -968,7 +968,7 @@ module ForallAgree′ {m : ℕ} (C T B N K : Fin m) (γ : CS.S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK arNum)
+                       (envInK ya yc a ar c E arK arNum) using (back; memE-bnd)
         henv = E'.back hE
         hsub = SubValSuccB2T.out {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
@@ -1123,9 +1123,9 @@ module ExistAgree′ {m : ℕ} (C T B N K : Fin m) (γ : CS.S ^ m)
                        (suc (suc (suc (suc (suc (suc B))))))
                        (suc (suc (suc (suc (suc (suc K))))))
                        (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) arityK EK arK
-                       (envInK ya yc a ar c E arK arNum)
+                       (envInK ya yc a ar c E arK arNum) using (back; memE-bnd)
         henv = E'.back hE
-        module L = Leaf E ya yc a ar c yaK
+        module L = Leaf E ya yc a ar c yaK using (bwd; fwd)
         hsub = SubValSuccB2T.out {m = 6 + m}
                  (suc (suc (suc (suc (suc (suc T))))))
                  (suc (suc (suc (suc zero))))

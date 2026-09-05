@@ -44,7 +44,7 @@ open hPropStructure 𝒮ᵥ
 
 -- The 𝒮ʟ carrier, for the syntax of the witness slot.  Same name as
 -- src/L/BoundedSubset.lagda.md:58.
-module CS = hPropStructure 𝒮ʟ
+module CS = hPropStructure 𝒮ʟ using (S)
 
 module SemVᵃ = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open SemVᵃ using ( _^_ )
@@ -53,7 +53,7 @@ open SemVᵃ using ( _^_ )
 -- THE AMBIENT PARAMETER-FREE READING.  [LJ-1.652] Probe652.agda:46-91.
 -- =====================================================================
 
-module AtP = SemVᵃ.At (⊥* {ℓ-suc ℓ}) (λ b → Empty.rec* b)
+module AtP = SemVᵃ.At (⊥* {ℓ-suc ℓ}) (λ b → Empty.rec* b) using (_⊨_)
 
 _⊨ₚ_ : {n : ℕ} → S ^ n → Formula (⊥* {ℓ-suc ℓ}) n → hProp (ℓ-suc ℓ)
 _⊨ₚ_ = AtP._⊨_
@@ -99,7 +99,7 @@ module Frame641 (lam : S) (ordλ : IsOrd lam)
                 (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
                 (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 
-  module HS = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ
+  module HS = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ using (module ASt; module C; module Condense; module H; M)
 
   Commute : Type (ℓ-suc ℓ)
   Commute =
@@ -118,15 +118,15 @@ module Frame (lam : S) (ordλ : IsOrd lam)
   (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 
-  module HS = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ
-  module F641 = Frame641 lam ordλ succλ X X⊆Lλ ∅∈λ
-  module ASt = HS.ASt
-  module A = ASt.AtM HS.M HS.H.Hull⊆L
+  module HS = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ using (module ASt; module C; module Condense; module H; M)
+  module F641 = Frame641 lam ordλ succλ X X⊆Lλ ∅∈λ using (Commute)
+  module ASt = HS.ASt using (module AbsL; module AtM; Ltr; SL)
+  module A = ASt.AtM HS.M HS.H.Hull⊆L using (Elementary; SM; inL; _⊨ᵐ_)
 
   -- SECTION 1.  THE READING OF A Σ₀ MATRIX AT A TRANSITIVE CARRIER.
   module AtTrans (U : S) (Utr : isTrans U) where
 
-    module Ab = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ U) Utr
+    module Ab = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ U) Utr using (SM; abs₀; _⊨ᵐ_)
 
     read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Ab.SM ^ n)
          → (δ Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
@@ -140,15 +140,15 @@ module Frame (lam : S) (ordλ : IsOrd lam)
   -- ambient truth at their collapse values: (1) down into the hull by
   -- `elem`, (2) across by the collapse iso `iso-inv`, (3) out of the
   -- collapse by Δ₀ absoluteness at the transitive range `πX`.
-  module HE = HullExt lam ordλ X X⊆Lλ ∅∈λ
+  module HE = HullExt lam ordλ X X⊆Lλ ∅∈λ using (hullExt)
 
   Mext : isExt HS.M
   Mext = HE.hullExt
 
   module Carry (elem : A.Elementary) where
 
-    module CIso = CollapseIso HS.M Mext
-    module TL = AtTrans (Lset lam) ASt.Ltr
+    module CIso = CollapseIso HS.M Mext using (module I; iso-fwd; iso-bwd)
+    module TL = AtTrans (Lset lam) ASt.Ltr using (read)
     module Tπ = AtTrans HS.C.πX HS.C.πX-trans
 
     atL : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : ASt.SL ^ n)
@@ -185,7 +185,7 @@ module Frame (lam : S) (ordλ : IsOrd lam)
   -- SECTION 3.  WHAT THE CARRY PRODUCES, AT THE TWO MATRIX SHAPES.
   module Op (elem : A.Elementary) where
 
-    module Cy = Carry elem
+    module Cy = Carry elem using (push)
 
     -- SHAPE A: a two-slot Σ₀ matrix.  The operation commutes with the
     -- collapse at every hull member WHOSE VALUE THE HULL CONTAINS.
@@ -216,7 +216,7 @@ module Frame (lam : S) (ordλ : IsOrd lam)
   -- SECTION 4.  THE TWO INSTANCES, SIDE BY SIDE.
   module Instances (elem : A.Elementary) where
 
-    module O = Op elem
+    module O = Op elem using (commute₂; commute₃)
 
     -- (i) CLAUSE (iii)'s `Commute`.  It carries `⟨ Lset δ ∈ˢ M ⟩` as
     -- its OWN hypothesis.  The `IsOrd (π δ)` argument is never read.
@@ -285,7 +285,7 @@ pin₃-map f φ ca cp = refl
 
 module Unpack (U : S) (Utr : isTrans U) where
 
-  module Ab = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ U) Utr
+  module Ab = FOL.Absoluteness.Single 𝒮ᵥ (λ x → x ∈ˢ U) Utr using (SM; abs₀; _⊨ᵐ_)
 
   read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Ab.SM ^ n)
        → (δ Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
@@ -409,7 +409,7 @@ module Matrix {m : ℕ} (w b K : Fin m)
          (sh7 N6) (sh7 N7) (sh7 N8) (sh7 N9) (sh7 N10) (sh7 N11)
          (sh7 N0) (sh7 N1)
 
-  module G = GraphB {m} ψs ψa w b K
+  module G = GraphB {m} ψs ψa w b K using (graphBndAt; Δ₀-graphBndAt; module A; module S)
 
   Δ₀-ψs : Δ₀ ψs
   Δ₀-ψs = Δ₀-DefBodyB {m} (suc zero) (sh5 K)
@@ -477,7 +477,7 @@ module W3 where
     bb  = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))))
     kk  = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))))))
 
-  module Mx = Matrix {15} ww bb kk n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11
+  module Mx = Matrix {15} ww bb kk n0 n1 n2 n3 n4 n5 n6 n7 n8 n9 n10 n11 using (matrix; Δ₀-matrix)
 
   lastFin : {n : ℕ} → Fin (suc n)
   lastFin {zero} = zero

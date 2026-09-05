@@ -639,60 +639,81 @@ module Succ (βL : S) (oβ : IsOrd (fst βL)) (β∉ω : ⟨ fst βL ∈ˢ ω �
   Γ : (y x s a e : S) → S ^ 10
   Γ y x s a e = e ∷ a ∷ s ∷ γ₇ y x
 
-  module Min (y x s a e : S) =
-    L6.Min i7 i6 i5 i4 i3 i2 i1 i0 i9 (Γ y x s a e) refl refl tw-eq cs-eq c0-eq
+  -- The least-name formula at slots, sealed, and its two readings at a
+  -- variable environment.  The concrete instance below is only ever
+  -- compared under the seal.  Measured at this site: the same two
+  -- readings stated at the concrete environment cost 7.5 s each, and
+  -- the graph readings through a transparent body 9 s each.
+  module LNAt {n : ℕ} (R P B C C₀ s a e d : Fin n) where
+    opaque
+      Fo : Formula S n
+      Fo = LeastNameAt R P B C C₀ s a e d
 
-  -- Sealed: the type the least-name frame concludes in, at the concrete
-  -- elements (the law src/L/Choice/Order.lagda.md measured).
+    module Rd (γ : S ^ n)
+              (qR : fst (lookup R γ) ≡ fst codeOrder)
+              (qP : fst (lookup P γ) ≡ fst Ps)
+              (qB : lookup B γ ≡ LsetS β oβ)
+              (qC : fst (lookup C γ) ≡ fst (AllCodes (LsetS β oβ)))
+              (q₀ : fst (lookup C₀ γ) ≡ fst (AllCodes ∅ʟ)) where
+      open L6.Min R P B C C₀ s a e d γ qR qP qB qC q₀ public
+
+      opaque
+        unfolding Fo
+
+        fill : (t : Name) → Least t → ⟨ γ ⊨ Fo ⟩
+        fill = LeastAt-fill
+
+        read : ⟨ γ ⊨ Fo ⟩ → ∥ Σ[ t ∈ Name ] Least t ∥₁
+        read = LeastAt-read
+
+  module LF = LNAt {10} i7 i6 i5 i4 i3 i2 i1 i0 i9
+  module Min (y x s a e : S) = LF.Rd (Γ y x s a e) refl refl tw-eq cs-eq c0-eq
+
+  LN : (y x s a e : S) → Type (ℓ-suc ℓ)
+  LN y x s a e = ⟨ Γ y x s a e ⊨ LF.Fo ⟩
+
+  ln-fill : (y x s a e : S) (t : Name) → Min.Least y x s a e t → LN y x s a e
+  ln-fill = Min.fill
+
+  ln-read : (y x s a e : S) → LN y x s a e → ∥ Σ[ t ∈ Name ] Min.Least y x s a e t ∥₁
+  ln-read = Min.read
+
+  -- The cons formula, sealed the same way.
   opaque
-    LN : (y x s a e : S) → Type (ℓ-suc ℓ)
-    LN y x s a e = ⟨ Γ y x s a e ⊨ LeastNameAt i7 i6 i5 i4 i3 i2 i1 i0 i9 ⟩
-
-    ln-fill : (y x s a e : S) (t : Name) → Min.Least y x s a e t → LN y x s a e
-    ln-fill y x s a e = Min.LeastAt-fill y x s a e
-
-    ln-read : (y x s a e : S) → LN y x s a e → ∥ Σ[ t ∈ Name ] Min.Least y x s a e t ∥₁
-    ln-read y x s a e = Min.LeastAt-read y x s a e
-
-    CN : (y x s a e : S) → Type (ℓ-suc ℓ)
-    CN y x s a e = ⟨ Γ y x s a e ⊨ consAtL i8 i2 i0 ⟩
+    cnFo : Formula S 10
+    cnFo = consAtL i8 i2 i0
 
     cn-fill : (y x s a e : S) {k : ℕ} (g : Fin k → V ℓ) → fst e ≡ env g
-            → fst y ≡ env (cons (fst s) g) → CN y x s a e
+            → fst y ≡ env (cons (fst s) g) → ⟨ Γ y x s a e ⊨ cnFo ⟩
     cn-fill y x s a e g qe q =
       subst ⟨_⟩ (sym (consAtL-adequate i8 i2 i0 (Γ y x s a e) g qe)) q
 
     cn-read : (y x s a e : S) {k : ℕ} (g : Fin k → V ℓ) → fst e ≡ env g
-            → CN y x s a e → fst y ≡ env (cons (fst s) g)
+            → ⟨ Γ y x s a e ⊨ cnFo ⟩ → fst y ≡ env (cons (fst s) g)
     cn-read y x s a e g qe h =
       subst ⟨_⟩ (consAtL-adequate i8 i2 i0 (Γ y x s a e) g qe) h
+
+  CN : (y x s a e : S) → Type (ℓ-suc ℓ)
+  CN y x s a e = ⟨ Γ y x s a e ⊨ cnFo ⟩
 
   Wit : (y x : S) → Type (ℓ-suc ℓ)
   Wit y x = ∥ Σ[ s ∈ S ] Σ[ a ∈ S ] Σ[ e ∈ S ] (LN y x s a e × CN y x s a e) ∥₁
 
+  body : Formula S 10
+  body = LF.Fo ∧̇ cnFo
+
   opaque
-    unfolding LN CN
-
-    body : Formula S 10
-    body = LeastNameAt i7 i6 i5 i4 i3 i2 i1 i0 i9 ∧̇ consAtL i8 i2 i0
-
-    body-out : (y x s a e : S) → ⟨ Γ y x s a e ⊨ body ⟩ → LN y x s a e × CN y x s a e
-    body-out y x s a e h = h
-
-    body-in : (y x s a e : S) → LN y x s a e × CN y x s a e → ⟨ Γ y x s a e ⊨ body ⟩
-    body-in y x s a e h = h
-
     fo : Formula S 2
     fo = pin5At codeOrder Ps tw cs c0 (∃₃ body)
 
     fo-out : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ fo ⟩ → Wit y x
-    fo-out y x h = PT.map (λ { (s , a , e , hb) → s , a , e , body-out y x s a e hb })
-      (∃₃-out body (γ₇ y x) (pin5-out codeOrder Ps tw cs c0 (∃₃ body) (y ∷ x ∷ []) h))
+    fo-out y x h =
+      ∃₃-out body (γ₇ y x) (pin5-out codeOrder Ps tw cs c0 (∃₃ body) (y ∷ x ∷ []) h)
 
     fo-in : (y x : S) → Wit y x → ⟨ (y ∷ x ∷ []) ⊨ fo ⟩
     fo-in y x = PT.rec (snd ((y ∷ x ∷ []) ⊨ fo))
       (λ { (s , a , e , hb) → pin5-in codeOrder Ps tw cs c0 (∃₃ body) (y ∷ x ∷ [])
-             (∃₃-in body (γ₇ y x) s a e (body-in y x s a e hb)) })
+             (∃₃-in body (γ₇ y x) s a e hb) })
 
   -- -------------------------------------------------------------------
   -- 2.2  At a member x of L_{β+1} with least name t: the value satisfies
@@ -703,13 +724,33 @@ module Succ (βL : S) (oβ : IsOrd (fst βL)) (β∉ω : ⟨ fst βL ∈ˢ ω �
   Mem x = ⟨ fst x ∈ Lset (sucV β) ⟩
 
   -- The least name, sealed: a well-founded selection, never to meet
-  -- the unifier.
+  -- the unifier.  Being a least name is sealed too, at a variable
+  -- name, so that the selected name is only ever compared under the
+  -- seal.  Measured at this site: compared under the transparent
+  -- predicate, the name order unfolds to its level search, 17 s.
+  opaque
+    leastP : (x : S) → Mem x → Σ[ t ∈ Name ] IsLeastName β w t (fst x)
+    leastP x m = leastNameOf β w (fst x , m)
+
+  opaque
+    IsLN : Name → S → Type (ℓ-suc ℓ)
+    IsLN t x = IsLeastName β w t (fst x)
+
+    isLN-in : (t : Name) (x : S) → IsLeastName β w t (fst x) → IsLN t x
+    isLN-in t x h = h
+
+    isLN-out : (t : Name) (x : S) → IsLN t x → IsLeastName β w t (fst x)
+    isLN-out t x h = h
+
   opaque
     least : (x : S) → Mem x → Name
-    least x m = leastNameOf β w (fst x , m) .fst
+    least x m = leastP x m .fst
 
-    least-is : (x : S) (m : Mem x) → IsLeastName β w (least x m) (fst x)
-    least-is x m = leastNameOf β w (fst x , m) .snd
+    least-isLN : (x : S) (m : Mem x) → IsLN (least x m) x
+    least-isLN x m = isLN-in (leastP x m .fst) x (leastP x m .snd)
+
+  least-is : (x : S) (m : Mem x) → IsLeastName β w (least x m) (fst x)
+  least-is x m = isLN-out (least x m) x (least-isLN x m)
 
   fn : (x : S) → Mem x → S
   fn x m = valS (least x m)
@@ -914,6 +955,54 @@ module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
     , injAt-in f γ (λ y x x' p q → injAt-out zero (F ∷ A ∷ []) ij y x x' p q)
     , λ x y p → ran x y (subst ⟨_⟩ (appAt-adequate (suc (suc f)) i1 i0 (y ∷ x ∷ γ)) p)
 
+
+-- The table body at slots, sealed, with its two readings at a variable
+-- environment.  B is the tower, e the code, b the index; under the
+-- leastness binder e' is 0.  The concrete instance in section 3.3 is
+-- only ever compared under the seal.  Measured at this site: the two
+-- readings written at the concrete environment cost 7 s each.
+module TableFo {n : ℕ} (Lγ Rγ δL : S) (B e b : Fin n) where
+  opaque
+    Fo : Formula S n
+    Fo = LsetGraphAt B b ∧̇ (var e ∈̇ con Lγ) ∧̇ injFo δL e B
+       ∧̇ ∀̇∈ (con Lγ) (¬̇ (appC Rγ zero (suc e) ∧̇ injFo δL zero (suc B)))
+
+    read : (γ : S ^ n) (Bv ev bv : S)
+         → lookup B γ ≡ Bv → lookup e γ ≡ ev → lookup b γ ≡ bv
+         → IsOrd (fst bv) → ⟨ γ ⊨ Fo ⟩
+         → (fst Bv ≡ Lset (fst bv))
+         × ⟨ fst ev ∈ fst Lγ ⟩
+         × InjCode ev Bv δL
+         × ((e' : S) → ⟨ fst e' ∈ fst Lγ ⟩ → ⟨ pr (fst e') (fst ev) ∈ fst Rγ ⟩
+             → InjCode e' Bv δL → Empty.⊥)
+    read γ Bv ev bv qB qe qb ob (hg , he , hi , hl) =
+        cong fst (sym qB)
+          ∙ Lset-only B b γ hg (subst (λ v → IsOrd (fst v)) (sym qb) ob)
+          ∙ cong (λ v → Lset (fst v)) qb
+      , subst (λ v → ⟨ fst v ∈ fst Lγ ⟩) qe he
+      , subst2 (λ u v → InjCode u v δL) qe qB (InjFo.read δL e B γ hi)
+      , λ e' he' hr hc → hl e' he'
+          ( subst ⟨_⟩ (sym (appC-adequate Rγ zero (suc e) (e' ∷ γ)))
+              (subst (λ v → ⟨ pr (fst e') (fst v) ∈ fst Rγ ⟩) (sym qe) hr)
+          , InjFo.fill δL zero (suc B) (e' ∷ γ) (subst (λ v → InjCode e' v δL) (sym qB) hc) )
+
+    fill : (γ : S ^ n) (Bv ev bv : S)
+         → lookup B γ ≡ Bv → lookup e γ ≡ ev → lookup b γ ≡ bv
+         → IsOrd (fst bv)
+         → (fst Bv ≡ Lset (fst bv)) → ⟨ fst ev ∈ fst Lγ ⟩ → InjCode ev Bv δL
+         → ((e' : S) → ⟨ fst e' ∈ fst Lγ ⟩ → ⟨ pr (fst e') (fst ev) ∈ fst Rγ ⟩
+             → InjCode e' Bv δL → Empty.⊥)
+         → ⟨ γ ⊨ Fo ⟩
+    fill γ Bv ev bv qB qe qb ob q he code mn =
+        Lset-defines B b γ (subst (λ v → IsOrd (fst v)) (sym qb) ob)
+          (cong fst qB ∙ q ∙ cong (λ v → Lset (fst v)) (sym qb))
+      , subst (λ v → ⟨ fst v ∈ fst Lγ ⟩) (sym qe) he
+      , InjFo.fill δL e B γ (subst2 (λ u v → InjCode u v δL) (sym qe) (sym qB) code)
+      , λ e' he' hc → mn e' he'
+          (subst (λ v → ⟨ pr (fst e') (fst v) ∈ fst Rγ ⟩) qe
+            (subst ⟨_⟩ (appC-adequate Rγ zero (suc e) (e' ∷ γ)) (fst hc)))
+          (subst (λ v → InjCode e' v δL) qB (InjFo.read δL zero (suc B) (e' ∷ γ) (snd hc)))
+
 module Table (δL : S) (oδ : IsOrd (fst δL))
              (have : (β : V ℓ) (oβ : IsOrd β) → ⟨ β ∈ fst δL ⟩ → InjL (LsetS β oβ) δL)
              where
@@ -1051,49 +1140,35 @@ module Table (δL : S) (oδ : IsOrd (fst δL))
       × ((e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
           → InjCode e' B δL → Empty.⊥) ) ∥₁
 
+  module TF = TableFo {3} Lγ Rγ δL i0 i1 i2
+
   opaque
-    private
-      leastFo : Formula S 3
-      leastFo = ∀̇∈ (con Lγ) (¬̇ (appC Rγ i0 i2 ∧̇ injFo δL i0 i1))
-
-      body : Formula S 3
-      body = LsetGraphAt i0 i2 ∧̇ (var i1 ∈̇ con Lγ) ∧̇ injFo δL i1 i0 ∧̇ leastFo
-
     fo : Formula S 2
-    fo = ∃̇ body
-
-    private
-      bodyOut : (e b B : S) → IsOrd (fst b) → ⟨ (B ∷ e ∷ b ∷ []) ⊨ body ⟩ → TWit e b
-      bodyOut e b B ob (hg , he , hi , hl) =
-        ∣ B , ( Lset-only i0 i2 (B ∷ e ∷ b ∷ []) hg ob
-              , subst (λ w → ⟨ fst e ∈ w ⟩) Lγ-fst he
-              , InjFo.read δL i1 i0 (B ∷ e ∷ b ∷ []) hi
-              , λ e' he' hr hc → hl e' (subst (λ w → ⟨ fst e' ∈ w ⟩) (sym Lγ-fst) he')
-                  ( subst ⟨_⟩ (sym (appC-adequate Rγ i0 i2 (e' ∷ B ∷ e ∷ b ∷ []))) hr
-                  , InjFo.fill δL i0 i1 (e' ∷ B ∷ e ∷ b ∷ []) hc ) ) ∣₁
-
-      bodyIn : (e b B : S) → IsOrd (fst b)
-             → (fst B ≡ Lset (fst b)) → ⟨ fst e ∈ Lset γ ⟩ → InjCode e B δL
-             → ((e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
-                 → InjCode e' B δL → Empty.⊥)
-             → ⟨ (B ∷ e ∷ b ∷ []) ⊨ body ⟩
-      bodyIn e b B ob qB he code mn =
-          Lset-defines i0 i2 (B ∷ e ∷ b ∷ []) ob qB
-        , subst (λ w → ⟨ fst e ∈ w ⟩) (sym Lγ-fst) he
-        , InjFo.fill δL i1 i0 (B ∷ e ∷ b ∷ []) code
-        , λ e' he' hc → mn e' (subst (λ w → ⟨ fst e' ∈ w ⟩) Lγ-fst he')
-            (subst ⟨_⟩ (appC-adequate Rγ i0 i2 (e' ∷ B ∷ e ∷ b ∷ [])) (fst hc))
-            (InjFo.read δL i0 i1 (e' ∷ B ∷ e ∷ b ∷ []) (snd hc))
+    fo = ∃̇ TF.Fo
 
     fo-out : (e b : S) → IsOrd (fst b) → ⟨ (e ∷ b ∷ []) ⊨ fo ⟩ → TWit e b
-    fo-out e b ob = PT.rec squash₁ (λ { (B , h) → bodyOut e b B ob h })
+    fo-out e b ob = PT.map (λ { (B , h) → B , fix B (TF.read (B ∷ e ∷ b ∷ []) B e b refl refl refl ob h) })
+      where
+      fix : (B : S)
+          → (fst B ≡ Lset (fst b)) × ⟨ fst e ∈ fst Lγ ⟩ × InjCode e B δL
+            × ((e' : S) → ⟨ fst e' ∈ fst Lγ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
+                → InjCode e' B δL → Empty.⊥)
+          → (fst B ≡ Lset (fst b)) × ⟨ fst e ∈ Lset γ ⟩ × InjCode e B δL
+            × ((e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
+                → InjCode e' B δL → Empty.⊥)
+      fix B (q , he , code , mn) =
+          q , subst (λ w → ⟨ fst e ∈ w ⟩) Lγ-fst he , code
+        , λ e' he' → mn e' (subst (λ w → ⟨ fst e' ∈ w ⟩) (sym Lγ-fst) he')
 
     fo-in : (e b : S) → IsOrd (fst b)
           → (B : S) → (fst B ≡ Lset (fst b)) → ⟨ fst e ∈ Lset γ ⟩ → InjCode e B δL
           → ((e' : S) → ⟨ fst e' ∈ Lset γ ⟩ → ⟨ pr (fst e') (fst e) ∈ fst Rγ ⟩
               → InjCode e' B δL → Empty.⊥)
           → ⟨ (e ∷ b ∷ []) ⊨ fo ⟩
-    fo-in e b ob B qB he code mn = ∣ B , bodyIn e b B ob qB he code mn ∣₁
+    fo-in e b ob B qB he code mn =
+      ∣ B , TF.fill (B ∷ e ∷ b ∷ []) B e b refl refl refl ob qB
+              (subst (λ w → ⟨ fst e ∈ w ⟩) (sym Lγ-fst) he) code
+              (λ e' he' → mn e' (subst (λ w → ⟨ fst e' ∈ w ⟩) Lγ-fst he')) ∣₁
 
   -- -------------------------------------------------------------------
   -- 3.4  The definable map b ↦ e_b, and its table.

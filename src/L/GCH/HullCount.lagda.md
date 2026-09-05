@@ -42,7 +42,6 @@ open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in; pairʟ-out; unionʟ-in; 
 open import L.InjChain {ℓ} lem using ( appC; appC-adequate; module PairBound )
 open import L.Stage {ℓ} lem using ( LeastOrd; isPropLeastOrd; leastOrd; stage; stage-ord; stage-mem )
 open import L.Ordinal using ( boundingOrd )
-open import L.Coding.Model {ℓ} using ( consAtL; consAtL-adequate )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet; envSet-in; module Recover )
 open import L.Coding.Environment {ℓ} using ( env; cons )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
@@ -50,7 +49,8 @@ open import L.Choice.Name {ℓ} lem using ( limitCode; numeral∈limit; pr∈lim
 open import L.Choice.Internal {ℓ} lem using ( freeCode-out )
 open import L.GCH.Complete {ℓ} lem using ( Superadequate; module SatMap )
 open import L.GCH.Frame {ℓ} lem using ( module Frame )
-open import L.GCH.HullIn {ℓ} lem using ( module Condense′ )
+open import L.BoundedSubset {ℓ} lem using ( module HullStage )
+open import L.GCH.HullIn {ℓ} lem using ( module Condense′; module Telescope )
 open import L.GCH.StageCount {ℓ} lem
   using ( isPropInjCode; injcode-resp; injFo; module InjFo; pinAt; pin-in; pin-out; seq-map; Lω )
 open import L.GCH.Sequences {ℓ} lem using ( seqL; seqL-in; seq-count )
@@ -78,14 +78,14 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
-module SL = hPropStructure 𝒮ʟ
+module SL = hPropStructure 𝒮ʟ using ( S )
 open SL using ( S )
 
-module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
+module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 -- Renaming, read at the same satisfaction as `_⊨_` (as HullIn does).
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
+module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 
 -- "The pair (x, y) is a member of F", the shape every clause reads.
 Holds : S → S → S → Type (ℓ-suc ℓ)
@@ -120,6 +120,33 @@ private
   i7 = suc i6
   i8 : ∀ {k} → Fin (suc (suc (suc (suc (suc (suc (suc (suc (suc k)))))))))
   i8 = suc i7
+
+  -- The renaming of section 4.1's body into its nine slots, and its
+  -- agreement, at the top level.  Measured: the same clauses cost
+  -- 3.4 s and 5.3 s inside `Count.OneStep`, 0.5 s and 1.4 s here, and
+  -- 13 ms and 36 ms in a probe file that imports only their context;
+  -- the cost of a clause grows with what the module already holds.
+  -- Slots, outermost first: T is 0, e' is 1, k is 2, Z is 3, e is 4,
+  -- s is 5, z is 6, p is 7, q is 8; the body reads
+  -- (T ∷ e' ∷ e ∷ s ∷ k ∷ z ∷ Z ∷ []).
+  ρ₉ : Fin 7 → Fin 9
+  ρ₉ zero = i0
+  ρ₉ (suc zero) = i1
+  ρ₉ (suc (suc zero)) = i4
+  ρ₉ (suc (suc (suc zero))) = i5
+  ρ₉ (suc (suc (suc (suc zero)))) = i2
+  ρ₉ (suc (suc (suc (suc (suc zero))))) = i6
+  ρ₉ (suc (suc (suc (suc (suc (suc zero)))))) = i3
+
+  ag₉ : (T e' k Zv e s z p q : S)
+      → Ren.Agrees ρ₉ (T ∷ e' ∷ k ∷ Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []) (T ∷ e' ∷ e ∷ s ∷ k ∷ z ∷ Zv ∷ [])
+  ag₉ T e' k Zv e s z p q zero = refl
+  ag₉ T e' k Zv e s z p q (suc zero) = refl
+  ag₉ T e' k Zv e s z p q (suc (suc zero)) = refl
+  ag₉ T e' k Zv e s z p q (suc (suc (suc zero))) = refl
+  ag₉ T e' k Zv e s z p q (suc (suc (suc (suc zero)))) = refl
+  ag₉ T e' k Zv e s z p q (suc (suc (suc (suc (suc zero))))) = refl
+  ag₉ T e' k Zv e s z p q (suc (suc (suc (suc (suc (suc zero)))))) = refl
 
 -- =====================================================================
 -- SECTION 0.  TWO SMALL FACTS.
@@ -169,10 +196,10 @@ module Union2 (D₁ D₂ : S) where
 module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (1∈κ : ⟨ # 1 ∈ fst κ ⟩)
                 (D₁ D₂ E₁ E₂ : S) (c₁ : InjCode E₁ D₁ κ) (c₂ : InjCode E₂ D₂ κ) where
 
-  open Union2 D₁ D₂ public
+  open Union2 D₁ D₂ public using ( D; in₁; in₂; out )
 
-  module X₁ = Extract E₁ D₁ (fst c₁) (fst (snd c₁))
-  module X₂ = Extract E₂ D₂ (fst c₂) (fst (snd c₂))
+  module X₁ = Extract E₁ D₁ (fst c₁) (fst (snd c₁)) using ( toFun; toFun-graph )
+  module X₂ = Extract E₂ D₂ (fst c₂) (fst (snd c₂)) using ( toFun; toFun-graph )
 
   Mem : S → Type (ℓ-suc ℓ)
   Mem z = ⟨ fst z ∈ fst D ⟩
@@ -422,7 +449,7 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
     defines : (z : S) (m : Mem z) → ⟨ (fn z m ∷ z ∷ []) ⊨ fo ⟩
     defines z m = fo-in (fn z m) z (Z.e-holds , Z.e∈Lγ , mn)
       where
-      module Z = AtZ z m
+      module Z = AtZ z m using ( c; e; e-holds; e∈Lγ; minimal )
       mn : (p' : S) → ⟨ fst p' ∈ Lset γ ⟩ → Holds G p' z
          → ⟨ pr (fst p') (fst Z.e) ∈ fst Rγ ⟩ → Empty.⊥
       mn p' hp' hg' hr = Z.minimal (fst p' , hp') ∣ p' , refl , hg' ∣₁
@@ -431,7 +458,7 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
     only : (z : S) (m : Mem z) (p' : S) → ⟨ (p' ∷ z ∷ []) ⊨ fo ⟩ → p' ≡ fn z m
     only z m p' h = S≡ (read (fo-out p' z h))
       where
-      module Z = AtZ z m
+      module Z = AtZ z m using ( c; e; e-holds; e∈Lγ; minimal )
       read : TWit p' z → fst p' ≡ fst (fn z m)
       read (hg , hp' , mn') = go (SWO.tri∙ (orderAt γ oγ) c' Z.c)
         where
@@ -449,7 +476,7 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
     ; into = λ z m → AtZ.e∈P z m
     ; graph = fo ; defines = defines ; only = only }
 
-  module Gr = Graph Dmap
+  module Gr = Graph Dmap using ( F; F-in; pair-out )
 
   -- THE TABLE: the set of pairs (z, e_z), z ∈ D.
   T : S
@@ -533,9 +560,20 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
   (base : InjL (X , X-isL) κ) where
 
-  module Cn = Condense′ lam ordλ succλ X X⊆L ∅∈λ elem sup X-isL
-  module B = Cn.T.Build
-  module It = Cn.HI.It
+  -- Every module application carries a `using` list (an unrestricted
+  -- one copies the whole module into this interface); the step
+  -- builder, the iteration and the hull stage are taken from
+  -- src/L/GCH/HullIn.lagda.md `Telescope` directly, not through copies
+  -- of `Condense′`'s copies.
+  module Cn = Condense′ lam ordλ succλ X X⊆L ∅∈λ elem sup X-isL using ( hullStep; hullL )
+  module B = Telescope.Build lam ordλ succλ X X⊆L ∅∈λ
+    using ( A; Body; module BodyRd; C₀; Env; module KeyIn; bodyFo; wL; witFo-out
+          ; Φ; Φ-out; λ-isL; ω-num; pack )
+  module SM = SatMap B.A using ( pairs; pairs-out; valOf )
+  module It = Telescope.HullIter.It lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack
+    using ( Num; iter; iter-in; iter-out; iterUnion-out; ω-num )
+  module HI = Telescope.HullIter lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack using ( hullStep⊆Hull )
+  module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ using ( Hull⊆L )
   open Cn using ( hullStep; hullL )
 
   -- -------------------------------------------------------------------
@@ -593,8 +631,8 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
       Dw-out : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅ → Empty.⊥)
       Dw-out z h = subst ⟨_⟩ (hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .snd z) h
 
-    module U₁ = Union2 Z D₂
-    module U₃ = Union2 D∅ Dw
+    module U₁ = Union2 Z D₂ using ( D; in₁; in₂ )
+    module U₃ = Union2 D∅ Dw using ( D; in₁; in₂ )
 
     ΦZ⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst ΦZ ⟩ → ⟨ z ∈ˢ fst U₁.D ⟩
     ΦZ⊆ z h = go (lem (z ∈ fst Z))
@@ -633,46 +671,26 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     --   6, p is 7, q is 8; bodyFo reads (T ∷ e' ∷ e ∷ s ∷ k ∷ w ∷ Z ∷ []).
     -- -----------------------------------------------------------------
 
-    module U₂ = Union2 Lω (seqL Z)
+    module U₂ = Union2 Lω (seqL Z) using ( D; in₁; in₂ )
 
     PB : S
     PB = prodL U₂.D
 
-    module PBd = PairBound PB Dw
-
-    ρ : Fin 7 → Fin 9
-    ρ zero = i0
-    ρ (suc zero) = i1
-    ρ (suc (suc zero)) = i4
-    ρ (suc (suc (suc zero))) = i5
-    ρ (suc (suc (suc (suc zero)))) = i2
-    ρ (suc (suc (suc (suc (suc zero))))) = i6
-    ρ (suc (suc (suc (suc (suc (suc zero)))))) = i3
+    module PBd = PairBound PB Dw using ( bnd; below )
 
     Γ : (T e' k Zv e s z p q : S) → S ^ 9
     Γ T e' k Zv e s z p q = T ∷ e' ∷ k ∷ Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []
 
-    private
-      ag : (T e' k Zv e s z p q : S)
-         → Ren.Agrees ρ (Γ T e' k Zv e s z p q) (B.Env T e' e s k z Zv)
-      ag T e' k Zv e s z p q zero = refl
-      ag T e' k Zv e s z p q (suc zero) = refl
-      ag T e' k Zv e s z p q (suc (suc zero)) = refl
-      ag T e' k Zv e s z p q (suc (suc (suc zero))) = refl
-      ag T e' k Zv e s z p q (suc (suc (suc (suc zero)))) = refl
-      ag T e' k Zv e s z p q (suc (suc (suc (suc (suc zero))))) = refl
-      ag T e' k Zv e s z p q (suc (suc (suc (suc (suc (suc zero)))))) = refl
-
     -- The body, renamed, sealed with its reading.
     opaque
       body₉ : Formula S 9
-      body₉ = renameFo ρ B.bodyFo
+      body₉ = renameFo ρ₉ B.bodyFo
 
       body₉-read : (T e' k Zv e s z p q : S)
                  → ⟨ Γ T e' k Zv e s z p q ⊨ body₉ ⟩ ≡ ⟨ B.Env T e' e s k z Zv ⊨ B.bodyFo ⟩
       body₉-read T e' k Zv e s z p q =
-        cong ⟨_⟩ (Ren.⊨-rename ρ B.bodyFo (Γ T e' k Zv e s z p q) (B.Env T e' e s k z Zv)
-                    (ag T e' k Zv e s z p q))
+        cong ⟨_⟩ (Ren.⊨-rename ρ₉ B.bodyFo (Γ T e' k Zv e s z p q) (B.Env T e' e s k z Zv)
+                    (ag₉ T e' k Zv e s z p q))
 
     -- Three plain binders, sealed with their readings.
     opaque
@@ -802,26 +820,30 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     -- and the environment is a finite sequence over Z.
     -- -----------------------------------------------------------------
 
+    -- The body is read through src/L/GCH/HullIn.lagda.md `BodyRd`, at
+    -- this variable environment.
     module AtBody (z T e' e s k : S) (hb : ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩) where
 
       γ₇ : S ^ 7
       γ₇ = B.Env T e' e s k z Z
 
-      h1 = hb .fst
-      h2 = hb .snd .fst
-      h3 = hb .snd .snd .fst
-      h4 = hb .snd .snd .snd .fst
-      h5 = hb .snd .snd .snd .snd .fst
-      h6 = hb .snd .snd .snd .snd .snd .fst
-      h7 = hb .snd .snd .snd .snd .snd .snd .fst
-      h8 = hb .snd .snd .snd .snd .snd .snd .snd
+      module Rd = B.BodyRd T e' e s k z Z using ( b-num; b-key; b-env; b-cons; b-tab; b-mem; b-stage )
+
+      h1 : ⟨ fst k ∈ fst ωʟ ⟩
+      h1 = Rd.b-num hb
+
+      h6 : ⟨ fst e' ∈ fst T ⟩
+      h6 = Rd.b-mem hb
+
+      h7 : ⟨ fst z ∈ fst B.A ⟩
+      h7 = Rd.b-stage hb
 
       module AtNum (n : ℕ) (qk : fst k ≡ # n) where
 
         s∈Lω : ⟨ fst s ∈ Lset ω ⟩
         s∈Lω = PT.rec (snd (fst s ∈ Lset ω)) read (kr .snd)
           where
-          kr = B.KeyIn.keyIn-out i3 i4 γ₇ n qk h2
+          kr = B.KeyIn.keyIn-out i3 i4 γ₇ n qk (Rd.b-key hb)
           read : Σ[ c ∈ V ℓ ] (fst s ≡ pr (# (suc n)) c) → ⟨ fst s ∈ Lset ω ⟩
           read (c , qs) = PT.rec (snd (fst s ∈ Lset ω))
             (λ { (χ , qc) → subst (λ w → ⟨ w ∈ Lset ω ⟩) (sym qs)
@@ -829,7 +851,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
                      (subst (λ w → ⟨ w ∈ˢ Lset ω ⟩) (sym qc) (snd (limitCode χ)))) })
             (freeCode-out (suc n) c (subst (λ u → ⟨ u ∈ fst B.C₀ ⟩) qs (kr .fst)))
 
-        module R = Recover Z n γ₇ i2 i4 i6 qk refl h3
+        module R = Recover Z n γ₇ i2 i4 i6 qk refl (Rd.b-env hb) using ( g; recovers )
 
         g′ : Fin n → V ℓ
         g′ i = ⟪ fst Z ⟫↪ (R.g i)
@@ -856,7 +878,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
              → ∥ Σ[ p ∈ S ] Holds G p z ∥₁
         read (T , e' , e , s , k , hb) = PT.map at (B.ω-num k (AB.h1))
           where
-          module AB = AtBody z T e' e s k hb
+          module AB = AtBody z T e' e s k hb using ( h1; module AtNum )
           at : Σ[ n ∈ ℕ ] (fst k ≡ # n) → Σ[ p ∈ S ] Holds G p z
           at (n , qk) = prʟ s e
             , G-in (prʟ s e) z (subst (λ w → ⟨ w ∈ fst PB ⟩) (sym (prʟ-fst s e)) (AB.AtNum.p∈PB n qk))
@@ -872,37 +894,37 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
 
     private
       same-val : (x x' : S) (m : ⟨ fst x ∈ fst (AllCodes B.A) ⟩) (m' : ⟨ fst x' ∈ fst (AllCodes B.A) ⟩)
-               → fst x ≡ fst x' → fst (B.SM.valOf x m) ≡ fst (B.SM.valOf x' m')
+               → fst x ≡ fst x' → fst (SM.valOf x m) ≡ fst (SM.valOf x' m')
       same-val x x' m m' q =
-        subst (λ x'' → (m'' : ⟨ fst x'' ∈ fst (AllCodes B.A) ⟩) → fst (B.SM.valOf x m) ≡ fst (B.SM.valOf x'' m''))
-          (S≡ q) (λ m'' → cong (λ v → fst (B.SM.valOf x v)) (snd (fst x ∈ fst (AllCodes B.A)) m m'')) m'
+        subst (λ x'' → (m'' : ⟨ fst x'' ∈ fst (AllCodes B.A) ⟩) → fst (SM.valOf x m) ≡ fst (SM.valOf x'' m''))
+          (S≡ q) (λ m'' → cong (λ v → fst (SM.valOf x v)) (snd (fst x ∈ fst (AllCodes B.A)) m m'')) m'
 
     module Unique (z T e' e s k : S) (hb : ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩)
                   (z' T₂ e'₂ k₂ : S) (hb₂ : ⟨ B.Env T₂ e'₂ e s k₂ z' Z ⊨ B.bodyFo ⟩)
                   (n : ℕ) (qk : fst k ≡ # n) where
 
-      module A₁ = AtBody z T e' e s k hb
-      module A₂ = AtBody z' T₂ e'₂ e s k₂ hb₂
-      module N = A₁.AtNum n qk
+      module A₁ = AtBody z T e' e s k hb using ( h6; h7; module Rd; module AtNum )
+      module A₂ = AtBody z' T₂ e'₂ e s k₂ hb₂ using ( h6; h7; module Rd )
+      module N = A₁.AtNum n qk using ( g′; hE )
 
-      zS z'S : Cn.T.SL
+      zS z'S : Telescope.SL lam ordλ succλ X X⊆L ∅∈λ
       zS  = fst z , A₁.h7
       z'S = fst z' , A₂.h7
 
       e'≡ : fst e' ≡ env (cons (fst z) N.g′)
-      e'≡ = subst ⟨_⟩ (consAtL-adequate i1 i5 i2 A₁.γ₇ N.g′ N.hE) A₁.h4
+      e'≡ = A₁.Rd.b-cons N.g′ N.hE hb
 
       e'₂≡ : fst e'₂ ≡ env (cons (fst z') N.g′)
-      e'₂≡ = subst ⟨_⟩ (consAtL-adequate i1 i5 i2 A₂.γ₇ N.g′ N.hE) A₂.h4
+      e'₂≡ = A₂.Rd.b-cons N.g′ N.hE hb₂
 
       -- the two satisfaction sets agree
       T≡ : fst T ≡ fst T₂
       T≡ = PT.rec2 (setIsSet (fst T) (fst T₂)) read
-        (B.SM.pairs-out (pr (fst s) (fst T)) (subst ⟨_⟩ (appC-adequate B.SM.pairs i3 i0 A₁.γ₇) A₁.h5))
-        (B.SM.pairs-out (pr (fst s) (fst T₂)) (subst ⟨_⟩ (appC-adequate B.SM.pairs i3 i0 A₂.γ₇) A₂.h5))
+        (SM.pairs-out (pr (fst s) (fst T)) (A₁.Rd.b-tab hb))
+        (SM.pairs-out (pr (fst s) (fst T₂)) (A₂.Rd.b-tab hb₂))
         where
-        read : Σ[ x ∈ S ] Σ[ m ∈ ⟨ fst x ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T) ≡ pr (fst x) (fst (B.SM.valOf x m)))
-             → Σ[ x' ∈ S ] Σ[ m' ∈ ⟨ fst x' ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T₂) ≡ pr (fst x') (fst (B.SM.valOf x' m')))
+        read : Σ[ x ∈ S ] Σ[ m ∈ ⟨ fst x ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T) ≡ pr (fst x) (fst (SM.valOf x m)))
+             → Σ[ x' ∈ S ] Σ[ m' ∈ ⟨ fst x' ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T₂) ≡ pr (fst x') (fst (SM.valOf x' m')))
              → fst T ≡ fst T₂
         read (x , m , q) (x' , m' , q') =
           pr-inj q .snd ∙ same-val x x' m m' (sym (pr-inj q .fst) ∙ pr-inj q' .fst) ∙ sym (pr-inj q' .snd)
@@ -913,15 +935,8 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
                   (e'b : S) → fst e'b ≡ env (cons (fst b) N.g′) → ⟨ fst e'b ∈ fst Ta ⟩
                 → relOf B.wL (fst b , hb') (fst a , ha) → Empty.⊥
       not-below a b ha hb' Ta e'a ka hba e'b qe hm b<a =
-        hba .snd .snd .snd .snd .snd .snd .snd b hb' ∣ e'b , (hc , hm) ∣₁ hr
-        where
-        γa : S ^ 7
-        γa = B.Env Ta e'a e s ka a Z
-        hc : ⟨ (e'b ∷ b ∷ γa) ⊨ consAtL i0 i1 i4 ⟩
-        hc = subst ⟨_⟩ (sym (consAtL-adequate i0 i1 i4 (e'b ∷ b ∷ γa) N.g′ N.hE)) qe
-        hr : ⟨ (b ∷ γa) ⊨ appC B.Rel i0 i6 ⟩
-        hr = subst ⟨_⟩ (sym (appC-adequate B.Rel i0 i6 (b ∷ γa)))
-               (relL-fill lam B.λ-isL ordλ (fst b , hb') (fst a , ha) b<a)
+        B.BodyRd.b-min Ta e'a e s ka a Z N.g′ N.hE hba b hb' e'b qe hm
+          (relL-fill lam B.λ-isL ordλ (fst b , hb') (fst a , ha) b<a)
 
       result : fst z ≡ fst z'
       result = go (SWO.tri∙ B.wL zS z'S)
@@ -943,7 +958,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
            → fst z ≡ fst z'
       read (s , e , T , e' , k , (q , hb)) (s₂ , e₂ , T₂ , e'₂ , k₂ , (q₂ , hb₂)) =
         PT.rec (setIsSet (fst z) (fst z')) (λ { (n , qk) → Unique.result z T e' e s k hb z' T₂ e'₂ k₂ hb₂' n qk })
-          (B.ω-num k (hb .fst))
+          (B.ω-num k (B.BodyRd.b-num T e' e s k z Z hb))
         where
         ee : (fst s₂ ≡ fst s) × (fst e₂ ≡ fst e)
         ee = pr-inj (sym q₂ ∙ q)
@@ -966,6 +981,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     PB⊆Lγ p hp = layer-trans (Lset-layer γG) {x = fst PB} {y = fst p} hp (stage-mem (fst PB) (snd PB))
 
     module LP = LeastPre γG oγG G Dw PB (λ p z h → G-out p z h .fst) PB⊆Lγ have
+      using ( module Functional )
 
     Dw↪PB : InjL Dw PB
     Dw↪PB = LP.Functional.injL funct
@@ -996,7 +1012,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
 
   -- Every iterate is counted.
   iter⊆L : (n : ℕ) (z : V ℓ) → ⟨ z ∈ˢ fst (hullStep n) ⟩ → ⟨ z ∈ˢ Lset lam ⟩
-  iter⊆L n z hz = Cn.T.HS.H.Hull⊆L z (Cn.HI.hullStep⊆Hull n z hz)
+  iter⊆L n z hz = HSH.Hull⊆L z (HI.hullStep⊆Hull n z hz)
 
   counted : (n : ℕ) → InjL (hullStep n) κ
   counted zero    = base
@@ -1097,7 +1113,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
                                       × ⟨ (n ∷ F ∷ q ∷ []) ⊨ ∃̇ (appC Iter i1 i0 ∧̇ injFo κ i2 i0) ⟩ ) ) ∥₁ → Out
       at₁ (F , h) = PT.rec squash₁ (at₂ F) h
 
-  module Tbd = PairBound Lγ ωʟ
+  module Tbd = PairBound Lγ ωʟ using ( bnd; below )
 
   opaque
     Gt : S
@@ -1139,6 +1155,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     (λ F n h → subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) (Gt-out F n h .fst))
     (λ F hF → subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF)
     have-code
+    using ( T; fn; T-in; T-out; module AtZ )
 
   -- THE TABLE, and its entries.
   Te : S
@@ -1259,7 +1276,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
                                     × ⟨ (z ∷ p ∷ q ∷ []) ⊨ nv₃ ⟩ ) ∥₁ → Out
       at₁ (p , h) = PT.rec squash₁ (at₂ p) h
 
-  module Fbd = PairBound (prodL κ) hullL
+  module Fbd = PairBound (prodL κ) hullL using ( bnd; below )
 
   opaque
     Gf : S
@@ -1353,7 +1370,7 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   prodκ⊆Lγ p hp =
     layer-trans (Lset-layer γf) {x = fst (prodL κ)} {y = fst p} hp (stage-mem (fst (prodL κ)) (snd (prodL κ)))
 
-  module LF = LeastPre γf oγf Gf hullL (prodL κ) inPκ prodκ⊆Lγ have-fin
+  module LF = LeastPre γf oγf Gf hullL (prodL κ) inPκ prodκ⊆Lγ have-fin using ( module Functional )
 
   -- THE THEOREM OF THIS SECTION: the hull injects into κ, internally.
   hull↪κ : InjL hullL κ
