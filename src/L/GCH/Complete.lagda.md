@@ -126,8 +126,11 @@ private
 
   ι∈ : (α : V ℓ) (m : ⟪ α ⟫) → ⟨ ι α m ∈ α ⟩
   ι∈ α m = ∈∈ₛ {a = ι α m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
+```
 
-  -- Membership in an ordinal is transitive, spelled at the values.
+Membership in an ordinal is transitive, spelled at the values.
+
+```agda
   tr : (β : V ℓ) → IsOrd β → (x y : V ℓ) → ⟨ x ∈ β ⟩ → ⟨ y ∈ x ⟩ → ⟨ y ∈ β ⟩
   tr β oβ x y x∈ y∈ = oβ .fst {x = x} {y = y} y∈ x∈
 ```
@@ -204,8 +207,12 @@ module Bound1 (α : V ℓ) (oα : IsOrd α) where
     fib = ∈-asFiber {a = x} {b = α} x∈
 
   private
-    -- A witness at an indexed member lies in Lset β, through its stage
-    -- and the bound of the stages.
+```
+
+A witness at an indexed member lies in `Lset β`, through its stage and the bound
+of the stages.
+
+```agda
     land : (f : (c : V ℓ) (o : IsOrd c) → CS.S)
            (b : Σ[ σ ∈ V ℓ ] (IsOrd σ × ((m : ⟪ α ⟫) → ⟨ st f m ∈ σ ⟩)))
          → ⟨ b .fst ∈ β ⟩
@@ -214,8 +221,11 @@ module Bound1 (α : V ℓ) (oα : IsOrd α) where
       Lset-mono {α = β} {β = b .fst} b∈
         (Lset-mono {α = b .fst} {β = st f m} (b .snd .snd m)
           (stage-mem (fst (f (ι α m) (oc m))) (snd (f (ι α m) (oc m)))))
+```
 
-    -- At the indexed member, at any proof of its ordinality.
+At the indexed member, at any proof of its ordinality.
+
+```agda
     witAt : (m : ⟪ α ⟫) → Witnesses (Lset β) (ι α m)
     witAt m o =
         subst (λ u → ⟨ fst (At.hier (ι α m) u) ∈ Lset β ⟩) (isPropIsOrd (ι α m) (oc m) o)

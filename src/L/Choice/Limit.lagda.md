@@ -470,9 +470,12 @@ module Described
                 → ⟨ γ ⊨ BeforeAt b x y ⟩
                 → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
   where
+```
 
-  -- perf: the composed description is sealed where it is built; unsealed, the
-  -- separation's condition unfolds it under two binders and does not finish
+Perf: the composed description is sealed where it is built; unsealed, the
+separation's condition unfolds it under two binders and does not finish.
+
+```agda
   opaque
     LimitOrdAt : ∀ {n} → Fin n → Fin n → Formula S n
     LimitOrdAt x y =
@@ -624,9 +627,12 @@ untruncation lemma, since a membership is a proposition and the comparison is no
   Cond₀ : Formula S 1
   Cond₀ = ∃̇ ( ∃̇ ( prAtL (sh2 zero) (suc zero) zero
                  ∧̇ LimitOrdAt (suc zero) zero ) )
+```
 
-  -- perf: the separation is a description read at constants, so the set it
-  -- carves is sealed where it is built
+Perf: the separation is a description read at constants, so the set it carves is
+sealed where it is built.
+
+```agda
   opaque
     codeOrder : S
     codeOrder = hasSeparationL (pairsBound .fst) Cond₀ .fst .fst

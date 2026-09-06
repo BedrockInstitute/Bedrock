@@ -205,8 +205,11 @@ module Read {m : ℕ} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg 
     Tv = fst (lookup T γ)
     Cv = fst (lookup C γ)
     N1v = fst (lookup (N f1) γ)
+```
 
-  -- A member of v is cut by an arity-one code with an entry.
+A member of `v` is cut by an arity-one code with an entry.
+
+```agda
   mem-out : ⟨ γ ⊨ memAt v w T C N ⟩ → (x : S) → ⟨ fst x ∈ Vv ⟩
           → ∥ Σ[ c ∈ S ] Σ[ p ∈ S ] Σ[ y ∈ S ]
               (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁
@@ -240,8 +243,11 @@ module Read {m : ℕ} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg 
                               (definesB-in i6 (sh 7 w) i0 (sh 7 (N f0)) δ7 (tg f0) cuts) i3 refl ) ∣₁
                  (sh 2 (N f1)) refl ) })
     (g x x∈)
+```
 
-  -- An arity-one code has an entry and cuts a member of v.
+An arity-one code has an entry and cuts a member of `v`.
+
+```agda
   all-out : ⟨ γ ⊨ allAt v w T C N ⟩ → (c p : S) → ⟨ fst c ∈ Cv ⟩ → fst c ≡ pr (# 1) (fst p)
           → ∥ Σ[ y ∈ S ] Σ[ x ∈ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁
   all-out h c p c∈ ec = PT.rec squash₁
@@ -296,13 +302,19 @@ module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
 
     toS : Formula Ab 1 → Formula S 1
     toS = mapFo (asConst W)
+```
 
-    -- the value at the key of ψ, from an entry
+The value at the key of `ψ`, from an entry.
+
+```agda
     valOf : (ψ : Formula Ab 1) (c y : S) → fst c ≡ fst (keyS W ψ) → ⟨ pr (fst c) (fst y) ∈ Tv ⟩
           → fst y ≡ fst (Sat W (toS ψ))
     valOf ψ c y qc h = SR.T-out c y h .snd ∙ cong fst (val-at W W ψ c (SR.T-out c y h .fst) qc)
+```
 
-    -- a cut by the value at ψ is the definable subset of ψ
+A cut by the value at `ψ` is the definable subset of `ψ`.
+
+```agda
     cut≡ : (ψ : Formula Ab 1) (x : S) → Cuts (fst x) Wv (fst (Sat W (toS ψ))) → DA.defSet ψ ≡ fst x
     cut≡ ψ x (o , i) = extensionalV (λ z → ⇔toPath (fwd z) (bwd z))
       where
@@ -370,7 +382,11 @@ module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
   def-complete : Vv ≡ 𝒟ₒ (fst W) → ⟨ γ ⊨ defAt v w T C N ⟩
   def-complete qv = defAt-in v w T C N γ mem all
     where
-    -- the entry at the key of ψ, and its value
+```
+
+The entry at the key of `ψ`, and its value.
+
+```agda
     entry : (ψ : Formula Ab 1) → Σ[ y ∈ S ] (⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ × (fst y ≡ fst (Sat W (toS ψ))))
     entry ψ = Table.val W W (keyS W ψ) (key∈AllCodes W ψ)
             , ( SR.T-in (keyS W ψ) (key∈AllCodes W ψ)

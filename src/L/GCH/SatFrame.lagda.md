@@ -50,9 +50,13 @@ open import L.Coding.Uniform {ℓ} lem using ( module Table )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap ) renaming ( module Graph to MapGraph )
 
 module SatGraph (W : S) where
-  -- SEALED: the value at a member is a contractibility centre, and
-  -- written out it does not elaborate (src/L/Coding/Uniform.lagda.md
-  -- `val-at`'s measurement).  Every use below names it by this atom.
+```
+
+SEALED: the value at a member is a contractibility centre, and written out it
+does not elaborate (src/L/Coding/Uniform.lagda.md `val-at`'s measurement). Every
+use below names it by this atom.
+
+```agda
   opaque
     valOf : (x : S) → ⟨ fst x ∈ fst (AllCodes W) ⟩ → S
     valOf x mx = Table.val W W x mx
@@ -97,8 +101,11 @@ module SatGraph (W : S) where
     pairs-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst pairs ⟩
               → Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (valOf x mx))
     pairs-out = G.pair-out
+```
 
-    -- Every member is a pair.
+Every member is a pair.
+
+```agda
     pairs-shape : (e : S) → ⟨ fst e ∈ fst pairs ⟩
                 → ∥ Σ[ x ∈ S ] Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst e ≡ pr (fst x) (fst (valOf x mx))) ∥₁
     pairs-shape e h = MapGraph.F-out M (fst e) h

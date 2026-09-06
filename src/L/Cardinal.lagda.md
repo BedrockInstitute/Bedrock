@@ -59,32 +59,43 @@ it down. The selection itself is the consumer's: `L.GCH.CardOf` runs
 
 ```agda
 module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
+```
 
-  -- `⟨ isL α ⟩` alone does not give level-hood of `sucV (fst α)`;
-  -- it comes from an ordinal appearing at the stage after itself,
-  -- plus membership in a stage being level-hood.
+`⟨ isL α ⟩` alone does not give level-hood of `sucV (fst α)`; it comes from an
+ordinal appearing at the stage after itself, plus membership in a stage being
+level-hood.
+
+```agda
   hSucα : ⟨ isL (sucV (fst α)) ⟩
   hSucα = Lset→isL (sucV (sucV (fst α))) (suc-ord (suc-ord oα)) (sucV (fst α))
             (ord∈Lset-suc (sucV (fst α)) (suc-ord oα))
+```
 
-  -- `isL-trans` propagates level-hood down to the members, turning a
-  -- member of the tower into an L-element.
+`isL-trans` propagates level-hood down to the members, turning a member of the
+tower into an L-element.
+
+```agda
   up : ⟪ sucV (fst α) ⟫ → S
   up m = ⟪ sucV (fst α) ⟫↪ m
        , isL-trans (member (sucV (fst α)) m) hSucα
+```
 
-  -- The well-order is SEALED.  Transparent, its comparison unfolds the
-  -- union representation `⟪ sucV (fst α) ⟫` inside every conversion
-  -- check the consumer's selection runs.  The seal makes `leastOf w` a
-  -- stuck atom, so the selected member never re-unfolds, and the master
-  -- that selects on it falls from about 100 s to about 9 s.
+The well-order is SEALED. Transparent, its comparison unfolds the union
+representation `⟪ sucV (fst α) ⟫` inside every conversion check the consumer's
+selection runs. The seal makes `leastOf w` a stuck atom, so the selected member
+never re-unfolds, and the master that selects on it falls from about 100 s to
+about 9 s.
+
+```agda
   opaque
     w : SWO (⟪ sucV (fst α) ⟫)
     w = ordSWO (sucV (fst α)) (suc-ord oα)
+```
 
-  -- The one read the seal needs (R-36): the sealed comparison, in the
-  -- ambient membership form, proved inside the seal.  No exported type
-  -- names `w`.
+The one read the seal needs (R-36): the sealed comparison, in the ambient
+membership form, proved inside the seal. No exported type names `w`.
+
+```agda
   opaque
     unfolding w
     w-lt : (m n : ⟪ sucV (fst α) ⟫)

@@ -81,9 +81,12 @@ module Site (lam : V ℓ) (ordλ : IsOrd lam)
 
   condenses′ = Condense′.condenses′ lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL
   M-isL = Condense′.M-isL lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL
+```
 
-  -- The hull stage, its collapse, and the collapse graph, read at the
-  -- source modules `Cn` copies from.
+The hull stage, its collapse, and the collapse graph, read at the source
+modules `Cn` copies from.
+
+```agda
   module HS = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ using ( M )
   module HSH = HullStage.H lam ordλ succλ X X⊆Lλ ∅∈λ using ( X⊆M )
   module HSC = HullStage.C lam ordλ succλ X X⊆Lλ ∅∈λ
@@ -115,14 +118,14 @@ module Site (lam : V ℓ) (ordλ : IsOrd lam)
   Mext = Frame.Mext lam ordλ succλ X X⊆Lλ ∅∈λ
 
   module CI = HullStage.C.InjExt lam ordλ succλ X X⊆Lλ ∅∈λ Mext using ( π-inj )
+```
 
-  -- -----------------------------------------------------------------
-  -- 5.2  THE INVERSE COLLAPSE, L_β ↪ M, as a definable map: v ↦ the
-  -- member of M collapsing to v.  The graph, over (x ∷ v ∷ []):
-  -- "x ∈ M and the collapse graph holds at (v, x)", the latter being
-  -- src/L/GCH/HullIn.lagda.md `PiIn.piFo` read at (v ∷ x ∷ []).
-  -- -----------------------------------------------------------------
+5.2 The inverse collapse, `L_β ↪ M`, as a definable map: `v` ↦ the member of
+`M` collapsing to `v`. The graph, over `(x ∷ v ∷ [])`: "`x ∈ M` and the collapse
+graph holds at `(v, x)`", the latter being src/L/GCH/HullIn.lagda.md
+`PiIn.piFo` read at `(v ∷ x ∷ [])`.
 
+```agda
   Pre : S → Type (ℓ-suc ℓ)
   Pre v = Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
 
@@ -156,8 +159,11 @@ module Site (lam : V ℓ) (ordλ : IsOrd lam)
 
   invFo : Formula S 2
   invFo = (var zero ∈̇ con hullL) ∧̇ renameFo ρ P.piFo
+```
 
-  -- the collapse graph holds at (π x, x) for x ∈ M
+The collapse graph holds at `(π x, x)` for `x ∈ M`.
+
+```agda
   π-graph : (x : S) (mx : ⟨ fst x ∈ˢ HS.M ⟩) (v : S) → HSC.π (fst x) ≡ fst v
           → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
   π-graph x mx v e = PT.rec (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
@@ -210,12 +216,12 @@ module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ 
 
   δ : V ℓ
   δ = fst δL
+```
 
-  -- -------------------------------------------------------------------
-  -- 1.  THE STAGE λ, above the stage of δ.  Sealed: every consumer
-  -- wants λ as an atom.
-  -- -------------------------------------------------------------------
+1. The stage `λ`, above the stage of `δ`. Sealed: every consumer wants `λ` as
+an atom.
 
+```agda
   private
     α₀ : V ℓ
     α₀ = stage δ (snd δL)
@@ -243,11 +249,11 @@ module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ 
 
     δ∈λ : ⟨ δ ∈ˢ lam ⟩
     δ∈λ = ordλ .fst (ord∈Lset→∈ α₀ oα₀ δ oδ δ∈Lα₀) (sa .snd .snd .fst)
+```
 
-  -- -------------------------------------------------------------------
-  -- 2.  THE START X = δ+1, an ordinal below λ, an element of L.
-  -- -------------------------------------------------------------------
+2. The start `X = δ+1`, an ordinal below `λ`, an element of L.
 
+```agda
   X : V ℓ
   X = sucV δ
 
@@ -265,20 +271,20 @@ module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ 
 
   XS : S
   XS = X , X-isL
+```
 
-  -- -------------------------------------------------------------------
-  -- 3.  THE START IS COUNTED: δ+1 ↪ δ ↪ μ.
-  -- -------------------------------------------------------------------
+3. The start is counted: `δ+1 ↪ δ ↪ μ`.
 
+```agda
   base : InjL XS μ
   base = injl-trans XS δL μ
     (move (sucʟ δL) XS δL δL (sucʟ-fst δL) refl (Shift.injL δL oδ δ∉ω))
     δ↪μ
+```
 
-  -- -------------------------------------------------------------------
-  -- 4.  THE HULL, ITS COLLAPSE L_β, AND ITS COUNT.
-  -- -------------------------------------------------------------------
+4. The hull, its collapse `L_β`, and its count.
 
+```agda
   elem = HullElemDown.elem lam ordλ X X⊆Lλ ∅∈λ
 
   hull↪μ = Count.hull↪κ lam ordλ succλ X X⊆Lλ ∅∈λ elem sup X-isL μ oμ cμ μ∉ω base
@@ -290,12 +296,12 @@ module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ 
   module HSH = HullStage.H lam ordλ succλ X X⊆Lλ ∅∈λ using ( X⊆M )
   module HSC = HullStage.C lam ordλ succλ X X⊆Lλ ∅∈λ
     using ( π; fixes; πX-intro )
+```
 
-  -- -------------------------------------------------------------------
-  -- 5.  δ IS A MEMBER OF L_β: δ ∈ X ⊆ M, X is transitive, so the
-  -- collapse fixes δ (src/V/Collapse.lagda.md `fixes`).
-  -- -------------------------------------------------------------------
+5. `δ` is a member of `L_β`: `δ ∈ X ⊆ M`, `X` is transitive, so the collapse
+fixes `δ` (src/V/Collapse.lagda.md `fixes`).
 
+```agda
   δ∈X : ⟨ δ ∈ˢ X ⟩
   δ∈X = self∈sucV δ
 
@@ -310,11 +316,11 @@ module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ 
   δ∈Lβ : ⟨ δ ∈ˢ Lset St.β ⟩
   δ∈Lβ = subst (λ w → ⟨ w ∈ˢ Lset St.β ⟩) πδ
     (subst (λ w → ⟨ HSC.π δ ∈ˢ w ⟩) St.ext (HSC.πX-intro δ δ∈M))
+```
 
-  -- -------------------------------------------------------------------
-  -- 6.  THE CHAIN: L_δ ⊆ L_β ↪ M ↪ μ ↪ δ.
-  -- -------------------------------------------------------------------
+6. The chain: `L_δ ⊆ L_β ↪ M ↪ μ ↪ δ`.
 
+```agda
   δ∈β : ⟨ δ ∈ˢ St.β ⟩
   δ∈β = ord∈Lset→∈ St.β St.oβ δ oδ δ∈Lβ
 

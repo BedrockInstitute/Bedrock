@@ -70,24 +70,33 @@ module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
 
     hTot = hT .fst
     hOn = hT .snd .fst
+```
 
-    -- The value at a subformula's key, from totality.
+The value at a subformula's key, from totality.
+
+```agda
     sub : ∀ {n} (a : Formula Ab n) → ∥ Σ[ ya ∈ S ] ⟨ pr (fst (keyS W a)) (fst ya) ∈ Tv ⟩ ∥₁
     sub a = Fr.total-out hTot (keyS W a) (CC.key-in a)
+```
 
-  -- EVERY ENTRY IS PINNED.  The recursion is the general one of
-  -- src/L/Coding/Pinned.lagda.md, read at the code set: the shape
-  -- clause supplies the closure it asks of the index set, and
-  -- completeness discharges the membership its statement carries.
+EVERY ENTRY IS PINNED. The recursion is the general one of
+src/L/Coding/Pinned.lagda.md, read at the code set: the shape clause supplies
+the closure it asks of the index set, and completeness discharges the membership
+its statement carries.
+
+```agda
   Pinned : ∀ {n} (ψ : Formula Ab n) → Type (ℓ-suc ℓ)
   Pinned ψ = (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
 
   pinned : ∀ {n} (ψ : Formula Ab n) → Pinned ψ
   pinned ψ = SC.pinned ψ (CC.key-in ψ)
+```
 
-  -- WHAT SOUNDNESS SAYS.  C is the code set, E the tower, and T the
-  -- graph of the uniform table: every entry is at a key and records
-  -- the table's value there, and every key has that entry.
+WHAT SOUNDNESS SAYS. `C` is the code set, `E` the tower, and `T` the graph of
+the uniform table: every entry is at a key and records the table's value there,
+and every key has that entry.
+
+```agda
   C-out : (c : S) → ⟨ fst c ∈ Cv ⟩ → ⟨ fst c ∈ fst (AllCodes W) ⟩
   C-out c c∈ = PT.rec (snd (fst c ∈ fst (AllCodes W)))
     (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ fst (AllCodes W) ⟩) (sym e) (key∈AllCodes W ψ) })
@@ -149,20 +158,29 @@ module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
   private
     Tv = fst (lookup T γ)
     Cv = fst (lookup C γ)
+```
 
-    -- an entry of T is the table's value at a key
+An entry of `T` is the table's value at a key.
+
+```agda
     val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → fst c ≡ fst (keyS W ψ)
          → ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ → fst yc ≡ fst (SatW ψ)
     val≡ ψ c yc qc h =
       let p = SatGraph.pairs-out W c yc (subst (λ u → ⟨ pr (fst c) (fst yc) ∈ u ⟩) qT h)
       in p .snd ∙ cong fst (SatGraph.valOf≡ W c (p .fst)) ∙ cong fst (val-at W W ψ c (p .fst) qc)
+```
 
-    -- a member of C at arity n decodes
+A member of `C` at arity `n` decodes.
+
+```agda
     decode : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
            → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
     decode c c∈ = Match.decodeAll W c (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈)
+```
 
-    -- the two halves of the domain
+The two halves of the domain.
+
+```agda
     tot : (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
     tot c c∈ =
       let mx = subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈
@@ -173,10 +191,12 @@ module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
     onc e e∈ = PT.map
       (λ { (x , mx , ee) → x , SatGraph.valOf W x mx , (ee , subst (λ u → ⟨ fst x ∈ u ⟩) (sym qC) mx) })
       (SatGraph.pairs-shape W e (subst (λ u → ⟨ fst e ∈ u ⟩) qT e∈))
+```
 
-  -- THE DESCRIPTION IS SATISFIED.  The general theorem of
-  -- src/L/Coding/Pinned.lagda.md, at the four objects the all-codes
-  -- reading names.
+THE DESCRIPTION IS SATISFIED. The general theorem of
+src/L/Coding/Pinned.lagda.md, at the four objects the all-codes reading names.
+
+```agda
   holds : ⟨ γ ⊨ tableAt T w C E N ⟩
   holds = SatHoldsC.holds W T w C E N γ qw tg
     (TowerHolds.holds E w (N f0) γ W qw qE (tg f0)) val≡ decode tot onc

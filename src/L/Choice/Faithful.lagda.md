@@ -547,9 +547,12 @@ module Ordered (Stp : StpFo) (stp-out : StpOut Stp) (stp-in : StpIn Stp) where
           ∧̇ ( (var (suc zero) ∈̇ var zero)
             ∨̇ ( (var zero ≐ var (suc zero))
               ∧̇ Stp (suc zero) (sh4 f) (sh3 zero) (sh2 zero) ) ) ) ) )
+```
 
-  -- perf: the order description is sealed where it is built; unsealed, its two
-  -- readings at the constants the separation wants run 160 s each instead of 2 s
+Perf: the order description is sealed where it is built; unsealed, its two
+readings at the constants the separation wants run 160 s each instead of 2 s.
+
+```agda
   opaque
     CondCore : ∀ {n} → Fin n → Term S n → Fin n → Formula S n
     CondCore z tb f =
@@ -797,10 +800,12 @@ a satisfaction and the satisfaction is the largest term in the chapter.
 
            hmv₀ : ⟨ fst dv ∈ fst (⟦ tm4 tb ⟧ (dv ∷ du ∷ v ∷ u ∷ γ)) ⟩
            hmv₀ = subst (λ w → ⟨ fst dv ∈ fst w ⟩) (sym (shift u v du dv)) hmv
+```
 
-           -- perf: law of the route: a two-way split concluding in a
-           -- satisfaction is a named helper, never a `with`; as a `with` this
-           -- one alone runs past 300 s
+Perf: law of the route: a two-way split concluding in a satisfaction is a
+named helper, never a `with`; as a `with` this one alone runs past 300 s.
+
+```agda
            atCmp : ⟨ bornOf α oα a ∈ bornOf α oα c ⟩
                  ⊎ ( (bornOf α oα c ≡ bornOf α oα a)
                    × Under (bornOf α oα a) (stepOrder (bornOf α oα a)

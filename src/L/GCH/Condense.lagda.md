@@ -179,9 +179,12 @@ module Pin (U : S) (Utr : isTrans U) where
                  ( ⟨ (x0 ∷ x1 ∷ a ∷ []) Ab.⊨ᵐ ψ ⟩
                  × ⟨ (x0 ∷ x1 ∷ a ∷ []) Ab.⊨ᵐ χ ⟩ ) ∥₁
       inner (x0 , h0) = ∣ x0 , x1 , h0 .fst , h0 .snd ∣₁
+```
 
-  -- SHAPE A, CONVERTED: a is the value, c the parameter, and the
-  -- witness is bound.
+SHAPE A, CONVERTED: `a` is the value, `c` the parameter, and the witness is
+bound.
+
+```agda
   convA : (c a : Ab.SM)
         → ⟨ (a ∷ []) Ab.⊨ᵐ pinP (embed levelA) c ⟩
         → ∥ Σ[ z ∈ Ab.SM ] ⟨ (fst a ∷ fst c ∷ fst z ∷ []) ⊨ₚ levelFo ⟩ ∥₁
@@ -194,9 +197,12 @@ module Pin (U : S) (Utr : isTrans U) where
       x1 , subst (λ p → ⟨ (fst a ∷ p ∷ fst x1 ∷ []) ⊨ₚ levelFo ⟩) e
              (subst ⟨_⟩ (readA (fst x0) (fst x1) (fst a))
                (subst ⟨_⟩ (Un.read Δ₀-levelA (x0 ∷ x1 ∷ a ∷ [])) hψ))
+```
 
-  -- SHAPE P, CONVERTED: a is the parameter, the value holds c, and
-  -- the witness is bound.
+SHAPE P, CONVERTED: `a` is the parameter, the value holds `c`, and the witness
+is bound.
+
+```agda
   convP : (c a : Ab.SM)
         → ⟨ (a ∷ []) Ab.⊨ᵐ pinY (embed levelP) c ⟩
         → ∥ Σ[ u ∈ Ab.SM ] Σ[ z ∈ Ab.SM ]
@@ -252,9 +258,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
 
   slide : ⊥* {ℓ-suc ℓ} → Code
   slide b = Empty.rec* b
+```
 
-  -- The three lifted formulas over the stage carrier, each equal to
-  -- its embedding.
+The three lifted formulas over the stage carrier, each equal to its embedding.
+
+```agda
   LA : Formula HS.ASt.SL 3
   LA = mapFo val (mapFo slide levelA)
 
@@ -272,8 +280,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
 
   eqF : LF ≡ embed levelFo
   eqF = lemma levelFo slide val
+```
 
-  -- Stage memberships.
+Stage memberships.
+
+```agda
   isLλ : (x : S) → ⟨ x ∈ˢ Lset lam ⟩ → ⟨ isL x ⟩
   isLλ = Lset→isL lam ordλ
 
@@ -283,8 +294,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
   ord∈Lλ : (d : S) → IsOrd d → ⟨ d ∈ˢ lam ⟩ → ⟨ d ∈ˢ Lset lam ⟩
   ord∈Lλ d od d∈λ =
     Lset-mono {α = lam} {β = sucV d} (succλ d d∈λ) (ord∈Lset-suc d od)
+```
 
-  -- THE PULL: the mirror of `Carry.push`, by `iso-inv-bwd`.
+THE PULL: the mirror of `Carry.push`, by `iso-inv-bwd`.
+
+```agda
   pull : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : F.A.SM ^ n)
        → ⟨ map fst (map Cy.CIso.I.g δ) ⊨ₚ φ ⟩
        → ⟨ map fst δ ⊨ₚ φ ⟩
@@ -294,8 +308,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
         (subst (λ ψ → ⟨ map Cy.CIso.I.g δ Cy.CIso.I.⊨ᵖᵐ ψ ⟩)
                (sym (embed-map Cy.CIso.I.g φ))
                (subst ⟨_⟩ (sym (Cy.atπ dφ (map Cy.CIso.I.g δ))) h)))
+```
 
-  -- Ordinality crosses the collapse in both directions.
+Ordinality crosses the collapse in both directions.
+
+```agda
   ord-push : (d : S) (d∈M : ⟨ d ∈ˢ M ⟩) → IsOrd d → IsOrd (π d)
   ord-push d d∈M od =
     Amb.isOrdAt-out (π d)
@@ -305,9 +322,12 @@ module Condense (lam : S) (ordλ : IsOrd lam)
   ord-pull d d∈M oπd =
     Amb.isOrdAt-out d
       (pull Δ₀-isOrdAt ((d , d∈M) ∷ []) (Amb.isOrdAt-in (π d) oπd))
+```
 
-  -- THE STAGE EXISTENTIALS, from `level-complete` at an adequate
-  -- stage.  Shape A at the parameter's code.
+THE STAGE EXISTENTIALS, from `level-complete` at an adequate stage. Shape A at
+the parameter's code.
+
+```agda
   stageA : (d γ : S) (od : IsOrd d) (adγ : Adequate γ) (d∈γ : ⟨ d ∈ˢ γ ⟩)
          → (cd : Code) → fst (val cd) ≡ d
          → ⟨ d ∈ˢ Lset lam ⟩ → ⟨ Lset d ∈ˢ Lset lam ⟩ → ⟨ Lset γ ∈ˢ Lset lam ⟩
@@ -325,8 +345,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
     sat : ⟨ δ HS.ASt.AbsL.⊨ᵐ LA ⟩
     sat = subst (λ ψ → ⟨ δ HS.ASt.AbsL.⊨ᵐ ψ ⟩) (sym eqA)
             (subst ⟨_⟩ (sym (P.Un.read Δ₀-levelA δ)) amb)
+```
 
-  -- Shape P at the member's code.
+Shape P at the member's code.
+
+```agda
   stageP : (y p γ : S) (op : IsOrd p) (adγ : Adequate γ) (p∈γ : ⟨ p ∈ˢ γ ⟩)
          → (cy : Code) → fst (val cy) ≡ y → ⟨ y ∈ˢ Lset p ⟩
          → ⟨ p ∈ˢ Lset lam ⟩ → ⟨ Lset p ∈ˢ Lset lam ⟩ → ⟨ Lset γ ∈ˢ Lset lam ⟩
@@ -347,9 +370,12 @@ module Condense (lam : S) (ordλ : IsOrd lam)
 
     mem : ⟨ fst (val cy) ∈ˢ Lset p ⟩
     mem = subst (λ w → ⟨ w ∈ˢ Lset p ⟩) (sym ey) y∈Lp
+```
 
-  -- Devlin's own shape, both the value and the parameter pinned, the
-  -- witness free (`HullConvert.inBound`).
+Devlin's own shape, both the value and the parameter pinned, the witness free
+(`HullConvert.inBound`).
+
+```agda
   stageF : (d γ : S) (od : IsOrd d) (adγ : Adequate γ) (d∈γ : ⟨ d ∈ˢ γ ⟩)
          → (ca cd : Code) → fst (val ca) ≡ Lset d → fst (val cd) ≡ d
          → ⟨ d ∈ˢ Lset lam ⟩ → ⟨ Lset d ∈ˢ Lset lam ⟩ → ⟨ Lset γ ∈ˢ Lset lam ⟩
@@ -364,19 +390,22 @@ module Condense (lam : S) (ordλ : IsOrd lam)
     sat = subst (λ ψ → ⟨ δ HS.ASt.AbsL.⊨ᵐ ψ ⟩) (sym eqF)
             (subst ⟨_⟩ (sym (P.Un.read Δ₀-levelFo δ))
               (level-complete γ adγ d od d∈γ))
+```
 
-  -- The conversion at Devlin's shape, its codomain inferred (the
-  -- measured-green shape of archive/src-2026-09-05/L/GCH/Frame.lagda.md `Build.conv0`).
+The conversion at Devlin's shape, its codomain inferred (the measured-green
+shape of archive/src-2026-09-05/L/GCH/Frame.lagda.md `Build.conv0`).
+
+```agda
   convF : (ca cd : Code) (a : HS.ASt.SL)
         → ⟨ (a ∷ []) HS.ASt.AbsL.⊨ᵐ (mapFo val (HC.inBound levelFo slide ca cd)) ⟩
         → _
   convF = HC.hull-convert {φ = levelFo} Δ₀-levelFo slide val eqF
+```
 
-  -- =====================================================================
-  -- THE WITNESS.  At an ordinal of the hull: its level is in the hull,
-  -- and a hull witness reads the level formula at (Lset d, d, z).
-  -- =====================================================================
+THE WITNESS. At an ordinal of the hull: its level is in the hull, and a hull
+witness reads the level formula at `(Lset d, d, z)`.
 
+```agda
   Witness : S → Type (ℓ-suc ℓ)
   Witness d = ∥ Σ[ z ∈ S ] ( ⟨ z ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
                            × ⟨ (Lset d ∷ d ∷ z ∷ []) ⊨ₚ levelFo ⟩ ) ∥₁
@@ -447,10 +476,12 @@ module Condense (lam : S) (ordλ : IsOrd lam)
                 , subst (λ v → ⟨ (v ∷ d ∷ fst w ∷ []) ⊨ₚ levelFo ⟩) ea
                     (subst (λ p → ⟨ (fst (val ca) ∷ p ∷ fst w ∷ []) ⊨ₚ levelFo ⟩) ed
                       (convF ca cd w satw))
+```
 
-  -- THE COMMUTATION.  The collapse of the level at a hull ordinal is
-  -- the level at the collapsed ordinal; `pixL` places the pushed
-  -- triple in L for `level-sound`.
+THE COMMUTATION. The collapse of the level at a hull ordinal is the level at the
+collapsed ordinal; `pixL` places the pushed triple in L for `level-sound`.
+
+```agda
   commute : (d : S) → IsOrd d → (d∈M : ⟨ d ∈ˢ M ⟩)
           → ⟨ Lset d ∈ˢ M ⟩ × (π (Lset d) ≡ Lset (π d))
   commute d od d∈M =
@@ -471,11 +502,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
              (pixL (π d) (HS.C.πX-intro d d∈M))
              (pixL (π z) (HS.C.πX-intro z z∈M))
              pushed
+```
 
-  -- =====================================================================
-  -- THE TWO HYPOTHESES OF `HullStage.Condense`.
-  -- =====================================================================
+THE TWO HYPOTHESES OF `HullStage.Condense`.
 
+```agda
   levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.C.πX ⟩ → ⟨ Lset δ ∈ˢ HS.C.πX ⟩
   levelIn δ oδ δ∈πX =
     PT.rec (snd (Lset δ ∈ˢ HS.C.πX)) go (HS.C.πX-member δ δ∈πX)
@@ -563,11 +594,11 @@ module Condense (lam : S) (ordλ : IsOrd lam)
               πy∈ : ⟨ π y ∈ˢ Lset (π p′) ⟩
               πy∈ = subst (λ w → ⟨ π y ∈ˢ w ⟩) (cm .snd)
                       (Cy.CIso.iso-fwd (Lset p′) y (cm .fst) y∈M y∈Lp′)
+```
 
-  -- =====================================================================
-  -- THE THEOREM.  The collapse of the hull is a level.
-  -- =====================================================================
+THE THEOREM. The collapse of the hull is a level.
 
+```agda
   module Cn = HS.Condense levelIn cover using (condenses)
 
   condenses : Σ[ β ∈ S ] (IsOrd β × (HS.C.πX ≡ Lset β))

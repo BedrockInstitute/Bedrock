@@ -48,8 +48,11 @@ private
   i0 = zero
   i1 : ∀ {k} → Fin (suc (suc k))
   i1 = suc i0
+```
 
-  -- Two elements of L with the same underlying set are equal.
+Two elements of L with the same underlying set are equal.
+
+```agda
   S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
   S≡ = Σ≡Prop (λ v → snd (isL v))
 ```
@@ -69,8 +72,11 @@ predicate `P`, and the existence of a witness at the bound.
 module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
   (have : (x : S) → ⟨ fst x ∈ fst X ⟩
         → ∥ Σ[ w ∈ S ] (⟨ fst w ∈ Lset γ ⟩ × ⟨ (w ∷ x ∷ []) ⊨ P ⟩) ∥₁) where
+```
 
-  -- Sealed: the elements that reach a slot.
+Sealed: the elements that reach a slot.
+
+```agda
   opaque
     Lγ : S
     Lγ = LsetS γ oγ
@@ -99,8 +105,11 @@ module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
 
     Good : S → Mγ → hProp (ℓ-suc ℓ)
     Good x c = At (memS c) x
+```
 
-    -- A satisfaction at w, moved to the member w names.
+A satisfaction at `w`, moved to the member `w` names.
+
+```agda
     toMem : (x w : S) (hw : ⟨ fst w ∈ Lset γ ⟩) → ⟨ At w x ⟩ → ⟨ Good x (fst w , hw) ⟩
     toMem x w hw = subst (λ v → ⟨ At v x ⟩) (S≡ refl)
 
@@ -109,8 +118,11 @@ module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
     private
       nonempty : ∥ Σ[ c ∈ Mγ ] ⟨ Good x c ⟩ ∥₁
       nonempty = PT.map (λ { (w , hw , hp) → (fst w , hw) , toMem x w hw hp }) (have x m)
+```
 
-    -- The selection, sealed with its two facts.
+The selection, sealed with its two facts.
+
+```agda
     opaque
       c : Mγ
       c = fst (leastOf (orderAt γ oγ) lem (Good x) nonempty)
@@ -129,8 +141,11 @@ module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
 
     e∈Lγ : ⟨ fst e ∈ Lset γ ⟩
     e∈Lγ = snd c
+```
 
-  -- THE MAP, with its three readers.
+THE MAP, with its three readers.
+
+```agda
   fn : (x : S) → Mem x → S
   fn x m = Sel.e x m
 
@@ -144,16 +159,22 @@ module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
            → ⟨ pr (fst w') (fst (fn x m)) ∈ fst Rγ ⟩ → Empty.⊥
   fn-least x m w' hw' hp hr = Sel.minimal x m (fst w' , hw') (toMem x w' hw' hp)
     (relL-rep γ hγ oγ (fst w' , hw') (Sel.c x m) hr)
+```
 
-  -- The graph, read on the host side.
+The graph, read on the host side.
+
+```agda
   TWit : (w x : S) → Type (ℓ-suc ℓ)
   TWit w x =
       ⟨ (w ∷ x ∷ []) ⊨ P ⟩
     × ⟨ fst w ∈ Lset γ ⟩
     × ((w' : S) → ⟨ fst w' ∈ Lset γ ⟩ → ⟨ (w' ∷ x ∷ []) ⊨ P ⟩
         → ⟨ pr (fst w') (fst w) ∈ fst Rγ ⟩ → Empty.⊥)
+```
 
-  -- Anything the graph holds of is the selected witness.
+Anything the graph holds of is the selected witness.
+
+```agda
   fn-unique : (x : S) (m : Mem x) (w : S) → TWit w x → fst w ≡ fst (fn x m)
   fn-unique x m w (hp , hw , mn) = go (SWO.tri∙ (orderAt γ oγ) c' (Sel.c x m))
     where
@@ -203,8 +224,11 @@ module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
       , λ w' hw' hc → mn w' (subst (λ v → ⟨ fst w' ∈ v ⟩) Lγ-fst hw')
           (transport (ren w' w x) (snd hc))
           (subst ⟨_⟩ (appC-adequate Rγ i0 i1 (w' ∷ w ∷ x ∷ [])) (fst hc))
+```
 
-  -- THE DEFINABLE MAP, into the stage.
+THE DEFINABLE MAP, into the stage.
+
+```agda
   Dmap : DefinableMap
   Dmap = record
     { dom = X ; cod = Lγ ; fn = fn
@@ -215,8 +239,11 @@ module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
 
   private
     module Gr = Graph Dmap using ( F; F-in; pair-out )
+```
 
-  -- THE TABLE: the set of pairs (x, fn x), x ∈ X.
+THE TABLE: the set of pairs `(x, fn x)`, `x ∈ X`.
+
+```agda
   T : S
   T = Gr.F
 

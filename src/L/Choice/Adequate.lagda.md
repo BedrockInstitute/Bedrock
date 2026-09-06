@@ -288,9 +288,10 @@ the description consumes.
 指称那个合取项绑定四个集合，而「该合取项成立」的证明必须把它们供上。每一个都是一次构造，而每一个都抵达一个满足关系**内部**的槽位，那正是前几章量过两回的处境：作为 `L` 之元素的扩张后环境、它长度的数码、由长度与骨架造出的键，以及表在那个键处的取值。故四者都在被造出之处封印，而封印所暴露的，恰是那条描述所消费的诸等式。
 <!--/-->
 
+Perf: the four elements the denotation conjunct is satisfied at are sealed, for
+the reason the two chapters before this one measured.
+
 ```agda
-  -- perf: the four elements the denotation conjunct is satisfied at are sealed,
-  -- for the reason the two chapters before this one measured
   opaque
     envAt : Name → ⟪ A ⟫ → S
     envAt t m = envFor Aʟ (environment t m)
@@ -665,9 +666,10 @@ before them.
 又有三个元素抵达满足关系内部的诸位，而它们正是一个名字的三样组成：它的码、作为数码的元数，以及作为载体之上环境的诸参数。这条描述所携带的那个全称要在它们处实例化，故它们像前面四个一样，在被造出之处封印。
 <!--/-->
 
+Perf: a name's own three data reach slots inside a satisfaction, so they are
+sealed too.
+
 ```agda
-  -- perf: a name's own three data reach slots inside a satisfaction, so they
-  -- are sealed too
   opaque
     codeEl : Name → S
     codeEl t = fst (codeOf t)

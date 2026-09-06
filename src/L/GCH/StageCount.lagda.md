@@ -157,11 +157,14 @@ module SeqMap (A B E : S)
                    → ⟨ fst y ∈ fst B ⟩) where
 
   module Sm = Small E A B sv dm ij ran using ( at; fib; small; small-inj; module E )
+```
 
-  -- The map on the presentations, with its graph and its injectivity.
-  -- Sealed: measured at this site, an unsealed `f (g j)` met by the
-  -- unifier (in `cong (λ h → fst (envS B h)) (funExt pt)`) unfolds the
-  -- readback's eliminators and exhausts an 8g heap in under 2 min.
+The map on the presentations, with its graph and its injectivity. Sealed:
+measured at this site, an unsealed `f (g j)` met by the unifier (in
+`cong (λ h → fst (envS B h)) (funExt pt)`) unfolds the readback's eliminators
+and exhausts an 8g heap in under 2 min.
+
+```agda
   opaque
     f : ⟪ fst A ⟫ → ⟪ fst B ⟫
     f = Sm.small
@@ -188,11 +191,11 @@ module SeqMap (A B E : S)
 
   isLB : {n : ℕ} (h : Ix B n) (i : Fin n) → ⟨ isL (vB h i) ⟩
   isLB h i = isL-trans (member (fst B) (h i)) (snd B)
+```
 
-  -- -------------------------------------------------------------------
-  -- 1.1  The graph, and its host reading.
-  -- -------------------------------------------------------------------
+1.1 The graph, and its host reading.
 
+```agda
   Ent : (y s i : S) → Type (ℓ-suc ℓ)
   Ent y s i = ∥ Σ[ u ∈ S ] Σ[ v ∈ S ]
       ( ⟨ pr (fst i) (fst u) ∈ fst s ⟩
@@ -253,19 +256,23 @@ module SeqMap (A B E : S)
     fo-in y s = PT.rec (snd ((y ∷ s ∷ []) ⊨ fo))
       (λ { (n , (hd , he , hS)) →
         ∣ n , ( hd , ∣ B , ( refl , he , λ i i∈n → entIn y s n i (hS i i∈n) ) ∣₁ ) ∣₁ })
+```
 
-  -- -------------------------------------------------------------------
-  -- 1.2  At a sequence s ≡ envS g of length N: the image sequence
-  --      satisfies the graph (`wit`), and nothing else does (`only`).
-  -- -------------------------------------------------------------------
+1.2 At a sequence `s ≡ envS g` of length `N`: the image sequence satisfies the
+graph (`wit`), and nothing else does (`only`).
 
+```agda
   module AtSeq (N : ℕ) (g : Ix A N) (s : S) (e : fst s ≡ fst (envS A g)) where
 
     y₀ : S
     y₀ = envS B (fg g)
 
     private
-      -- The entry of an environment at a natural index.
+```
+
+The entry of an environment at a natural index.
+
+```agda
       at : {k : ℕ} (h : Fin k → V ℓ) (j : Fin k)
          → ⟨ pr (# (toℕ j)) (h j) ∈ env h ⟩
       at h j = subst ⟨_⟩ (sym (lookup-spec h j (h j))) refl
@@ -310,17 +317,23 @@ module SeqMap (A B E : S)
 
         qn : fst n ≡ # N
         qn = domAt-numeral i2 i0 (n ∷ y ∷ s ∷ []) N (vA g) (isLA g) e hd
+```
 
-        -- The recovered sequence, sealed: a truncation eliminator, never
-        -- to meet the unifier.
+The recovered sequence, sealed: a truncation eliminator, never to meet the
+unifier.
+
+```agda
         opaque
           gR : Ix B N
           gR = Recover.g B N (B ∷ n ∷ y ∷ s ∷ []) i2 i1 i0 qn refl he
 
           gR-eq : fst y ≡ fst (envS B gR)
           gR-eq = Recover.recovers B N (B ∷ n ∷ y ∷ s ∷ []) i2 i1 i0 qn refl he
+```
 
-        -- The recovered entry at j is the E-image of the entry of s.
+The recovered entry at `j` is the `E`-image of the entry of `s`.
+
+```agda
         pt : (j : Fin N) → gR j ≡ fg g j
         pt j = ↪-inj {a = fst B} (PT.rec (setIsSet _ _) read (hS (nn (toℕ j)) j∈n))
           where
@@ -345,15 +358,19 @@ module SeqMap (A B E : S)
                     (subst (λ w → ⟨ pr w (vB (fg g) j) ∈ fst E ⟩) (sym qu) (f-graph (g j)))
 
         final : fst y ≡ fst y₀
-        -- A path lambda, not `cong`: measured at this site, `cong` (or
-        -- `congS`) at this function sends the unifier through `envS`
-        -- and exhausts an 8g heap; the lambda checks in seconds.
+```
+
+A path lambda, not `cong`: measured at this site, `cong` (or `congS`) at this
+function sends the unifier through `envS` and exhausts an 8g heap; the lambda
+checks in seconds.
+
+```agda
         final = gR-eq ∙ λ i → fst (envS B (funExt pt i))
+```
 
-  -- -------------------------------------------------------------------
-  -- 1.3  The recursion, the definable map, and the coded injection.
-  -- -------------------------------------------------------------------
+1.3 The recursion, the definable map, and the coded injection.
 
+```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem s = ⟨ fst s ∈ˢ fst (seqL A) ⟩
 
@@ -396,9 +413,12 @@ module SeqMap (A B E : S)
     { dom = seqL A ; cod = seqL B ; fn = fn ; into = into ; graph = fo
     ; defines = λ s m → T.funct s m .fst .snd
     ; only    = λ s m y h → sym (T.val-uniq s m y h) }
+```
 
-  -- Injectivity: equal image sequences have one length, and then
-  -- agree entrywise through the injectivity of the small map.
+Injectivity: equal image sequences have one length, and then agree entrywise
+through the injectivity of the small map.
+
+```agda
   private
     same : (n : ℕ) (g : Ix A n) (n' : ℕ) (g' : Ix A n')
          → fst (envS B (fg g)) ≡ fst (envS B (fg g'))
@@ -528,7 +548,6 @@ module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
     , λ x y p → ran x y (subst ⟨_⟩ (appAt-adequate (suc (suc f)) i1 i0 (y ∷ x ∷ γ)) p)
 ```
 
-
 ## Section 5. The stage `L_ω`, and a move along equal carriers
 
 The base of the count is `L_ω ↪ ω`, proved in section 6. The row at an infinite
@@ -575,8 +594,11 @@ private
     t = StageOrder.tally (stageOrder n)
 
     open Tally t using ( size; item; onto )
+```
 
-    -- The tally indices naming x, as natural numbers.
+The tally indices naming `x`, as natural numbers.
+
+```agda
     Named : V ℓ → ℕ → hProp (ℓ-suc ℓ)
     Named x k = ∥ Σ[ i ∈ Fin size ] ((toℕ i ≡ k) × (item i ≡ x)) ∥₁ , squash₁
 

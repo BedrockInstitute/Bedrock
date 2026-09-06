@@ -137,8 +137,11 @@ module Cantor (zf : ModelL.isZFModel) (κ : SL.S) where
       a1 : (ξ A : SL.S)
          → ⟨ (A ∷ ξ ∷ []) ⊨ appC F zero (suc zero) ⟩ ≡ Holds F A ξ
       a1 ξ A = cong ⟨_⟩ (appC-adequate F zero (suc zero) (A ∷ ξ ∷ []))
+```
 
-    -- Inside the binder: A is 0 and ξ is 1.
+Inside the binder: `A` is 0 and `ξ` is 1.
+
+```agda
     opaque
       φD : Formula SL.S 1
       φD = ∃̇∈ (con (𝒫 κ))
@@ -164,14 +167,21 @@ module Cantor (zf : ModelL.isZFModel) (κ : SL.S) where
     absurd : Σ[ ξ ∈ SL.S ] Holds F D₀ ξ → Empty.⊥
     absurd (ξ , h₀) = out inside
       where
-      -- ξ in the diagonal set: the witness A is D₀ by injectivity.
+```
+
+`ξ` in the diagonal set: the witness `A` is `D₀` by injectivity.
+
+```agda
       out : ⟨ fst ξ ∈ fst D₀ ⟩ → Empty.⊥
       out hm = PT.rec Empty.isProp⊥
         (λ { (A , _ , hA , n) →
           n (subst (λ w → ⟨ fst ξ ∈ w ⟩) (injF ξ D₀ A h₀ hA) hm) })
         (φD-out ξ (snd (subst ⟨_⟩ (D₀-spec ξ) hm)))
+```
 
-      -- ξ outside the diagonal set: D₀ itself is the witness.
+`ξ` outside the diagonal set: `D₀` itself is the witness.
+
+```agda
       inside : ⟨ fst ξ ∈ fst D₀ ⟩
       inside = subst ⟨_⟩ (sym (D₀-spec ξ))
         (ranF D₀ ξ h₀ , φD-in ξ D₀ D₀∈𝒫κ h₀ out)
@@ -230,9 +240,12 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
 
   injG : (y x x' : SL.S) → Holds G x y → Holds G x' y → fst x ≡ fst x'
   injG = injAt-out zero γG (code .snd .snd .fst)
+```
 
-  -- Single-valuedness makes the fibre a proposition, so the value is
-  -- read out of the truncation as a function.
+Single-valuedness makes the fibre a proposition, so the value is read out of the
+truncation as a function.
+
+```agda
   isPropVal : (x : SL.S) → isProp (Σ[ y ∈ SL.S ] Holds G x y)
   isPropVal x (y , h) (y' , h') =
     Σ≡Prop (λ w → snd (pr (fst x) (fst w) ∈ fst G)) (S≡ (svG x y y' h h'))
@@ -273,10 +286,13 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
     b4 p A B x y = cong ⟨_⟩
       (prAtL-adequate (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
         (suc (suc zero)) (env5 p A B x y))
+```
 
-  -- Over (p ∷ []): "p is the pair of A and B, both members of the
-  -- power set, and the value at A is a member of the value at B".
-  -- Inside the four binders: y is 0, x is 1, B is 2, A is 3, p is 4.
+Over `(p ∷ [])`: "`p` is the pair of `A` and `B`, both members of the power set,
+and the value at `A` is a member of the value at `B`". Inside the four binders:
+`y` is 0, `x` is 1, `B` is 2, `A` is 3, `p` is 4.
+
+```agda
   opaque
     φR : Formula SL.S 1
     φR = ∃̇∈ (con P) (∃̇∈ (con P) (∃̇ (∃̇

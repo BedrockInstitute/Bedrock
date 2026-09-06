@@ -168,11 +168,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
             (ij : ⟨ (F ∷ prodL α ∷ []) ⊨ injAt zero ⟩)
             (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
                  → ⟨ fst y ∈ fst α ⟩) where
+```
 
-  -- -------------------------------------------------------------------
-  -- 2.1  Members of α, and the pairing read as a function.
-  -- -------------------------------------------------------------------
+2.1 Members of `α`, and the pairing read as a function.
 
+```agda
   M : Type (ℓ-suc ℓ)
   M = Σ[ v ∈ S ] ⟨ fst v ∈ˢ fst α ⟩
 
@@ -183,16 +183,22 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
   up m = (⟪ fst α ⟫↪ m , isL-trans (member (fst α) m) (snd α)) , member (fst α) m
 
   module E = Extract F (prodL α) sv dm using ( toFun; toFun-graph; toFun-inj )
+```
 
-  -- Sealed: a proof of a proposition, never to be unfolded in a
-  -- conversion (measured at this site: unsealed, `chain n g (suc k)`
-  -- against `app (ext n g k) (chain n g k)` exhausts an 8g heap).
+Sealed: a proof of a proposition, never to be unfolded in a conversion (measured
+at this site: unsealed, `chain n g (suc k)` against `app (ext n g k) (chain n g
+k)` exhausts an 8g heap).
+
+```agda
   opaque
     pairMem : (a u : M) → ⟨ fst (prʟ (fst a) (fst u)) ∈ˢ fst (prodL α) ⟩
     pairMem a u = subst (λ w → ⟨ w ∈ˢ fst (prodL α) ⟩) (sym (prʟ-fst (fst a) (fst u)))
                     (prodL-in α (fst a) (fst u) (snd a) (snd u))
+```
 
-  -- Sealed with its two readings, as `Pairing.ProdMap.val` is.
+Sealed with its two readings, as `Pairing.ProdMap.val` is.
+
+```agda
   opaque
     val : (x : S) → ⟨ fst x ∈ˢ fst (prodL α) ⟩ → S
     val x mx = E.toFun (x , mx)
@@ -205,8 +211,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
               (x' : S) (mx' : ⟨ fst x' ∈ˢ fst (prodL α) ⟩)
             → fst (val x mx) ≡ fst (val x' mx') → fst x ≡ fst x'
     val-inj x mx x' mx' = E.toFun-inj ij (x , mx) (x' , mx')
+```
 
-  -- Sealed with its three facts, for the same reason.
+Sealed with its three facts, for the same reason.
+
+```agda
   opaque
     app : M → M → M
     app a u = val (prʟ (fst a) (fst u)) (pairMem a u)
@@ -225,8 +234,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
       (sym (prʟ-fst (fst a) (fst u))
        ∙ val-inj (prʟ (fst a) (fst u)) (pairMem a u) (prʟ (fst a') (fst u')) (pairMem a' u') e
        ∙ prʟ-fst (fst a') (fst u'))
+```
 
-    -- F is single-valued: any value recorded at the pair is the value.
+`F` is single-valued: any value recorded at the pair is the value.
+
+```agda
     app-uniq : (a u : M) (w : S)
              → ⟨ pr (pr (fst (fst a)) (fst (fst u))) (fst w) ∈ fst F ⟩
              → fst w ≡ fst (fst (app a u))
@@ -234,13 +246,13 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
       svAt-out zero (F ∷ prodL α ∷ []) sv (prʟ (fst a) (fst u)) w (fst (app a u))
         (subst (λ z → ⟨ pr z (fst w) ∈ fst F ⟩) (sym (prʟ-fst (fst a) (fst u))) h)
         (val-graph (prʟ (fst a) (fst u)) (pairMem a u))
+```
 
-  -- -------------------------------------------------------------------
-  -- 2.2  The fold, by host recursion on the length, and its injectivity.
-  -- -------------------------------------------------------------------
+2.2 The fold, by host recursion on the length, and its injectivity.
 
-  -- The sequence extended to every natural index, with a junk value
-  -- past its length.
+The sequence extended to every natural index, with a junk value past its length.
+
+```agda
   ext : (n : ℕ) → (Fin n → ⟪ fst α ⟫) → ℕ → M
   ext zero    g k       = num zero
   ext (suc n) g zero    = up (g zero)
@@ -256,8 +268,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
 
   code : (n : ℕ) → (Fin n → ⟪ fst α ⟫) → M
   code n g = app (num n) (chain n g n)
+```
 
-  -- Injectivity of the fold, by downward induction on the length.
+Injectivity of the fold, by downward induction on the length.
+
+```agda
   chain-inj : (n : ℕ) (g g' : Fin n → ⟪ fst α ⟫) (k : ℕ)
             → fst (fst (chain n g k)) ≡ fst (fst (chain n g' k))
             → (j : ℕ) → j < k → fst (fst (ext n g j)) ≡ fst (fst (ext n g' j))
@@ -287,17 +302,17 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
         ( sym (cong (λ z → fst (fst z)) (ext-at n g i))
         ∙ chain-inj n g h n e' (toℕ i) (toℕ<n i)
         ∙ cong (λ z → fst (fst z)) (ext-at n h i) )
+```
 
-  -- -------------------------------------------------------------------
-  -- 2.3  The graph, in the object language, and its host reading.
-  --
-  --   Over (y ∷ s ∷ []).  Outer binders: n ∈ ω, then m, C, b, z, so
-  --   that z is 0, b is 1, C is 2, m is 3, n is 4, y is 5, s is 6.  The
-  --   step clause binds i ∈ n, then j, then a, u, w, p: p is 0, w is 1,
-  --   u is 2, a is 3, j is 4, i is 5, and the outer seven shift by 6.
-  --   The final clause binds v then q: q is 0, v is 1, shift by 2.
-  -- -------------------------------------------------------------------
+2.3 The graph, in the object language, and its host reading.
 
+Over `(y ∷ s ∷ [])`. Outer binders: `n ∈ ω`, then `m`, `C`, `b`, `z`, so that
+`z` is 0, `b` is 1, `C` is 2, `m` is 3, `n` is 4, `y` is 5, `s` is 6. The step
+clause binds `i ∈ n`, then `j`, then `a`, `u`, `w`, `p`: `p` is 0, `w` is 1, `u`
+is 2, `a` is 3, `j` is 4, `i` is 5, and the outer seven shift by 6. The final
+clause binds `v` then `q`: `q` is 0, `v` is 1, shift by 2.
+
+```agda
   StepAt : (s C i : S) → Type (ℓ-suc ℓ)
   StepAt s C i = ∥ Σ[ j ∈ S ] Σ[ a ∈ S ] Σ[ u ∈ S ] Σ[ w ∈ S ]
       ( (fst j ≡ sucV (fst i))
@@ -408,11 +423,13 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
                 , subst (λ r → ⟨ pr r (fst y) ∈ fst F ⟩)
                     (subst ⟨_⟩ (prAtL-adequate i0 i6 i1 γ) h2)
                     (subst ⟨_⟩ (appC-adequate F i0 i7 γ) h3) ) ∣₁ }) hq })
+```
 
-      -- The body is read by a function with a stated type, not by a
-      -- pattern lambda under `PT.rec`.  Measured at this site: the
-      -- pattern-lambda form exceeded 40 s and 6 GB; this form checks in
-      -- under 7 s.
+The body is read by a function with a stated type, not by a pattern lambda under
+`PT.rec`. Measured at this site: the pattern-lambda form exceeded 40 s and 6 GB;
+this form checks in under 7 s.
+
+```agda
       bodyOut : (y s n m C b z : S) → ⟨ fst n ∈ ω ⟩
               → ⟨ e7 y s n m C b z ⊨ body ⟩ → Wit y s
       bodyOut y s n m C b z n∈ω (eb , (ez , (em , (hd , (hE , (h0 , (hS , hF))))))) =
@@ -486,12 +503,12 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
         ∣ n , ( n∈ω
               , ∣ m , ∣ C , ∣ α , ∣ nn zero
               , bodyIn y s n m C em hd hE h0 hS hF ∣₁ ∣₁ ∣₁ ∣₁ ) ∣₁ })
+```
 
-  -- -------------------------------------------------------------------
-  -- 2.4  At a sequence s ≡ envS g of length N: the graph holds of the
-  --      code (`wit`), and of nothing else (`only`).
-  -- -------------------------------------------------------------------
+2.4 At a sequence `s ≡ envS g` of length `N`: the graph holds of the code
+(`wit`), and of nothing else (`only`).
 
+```agda
   module AtSeq (N : ℕ) (g : Fin N → ⟪ fst α ⟫) (s : S) (e : fst s ≡ fst (envS α g)) where
 
     private
@@ -503,8 +520,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
 
       gV : Fin N → V ℓ
       gV i = ⟪ fst α ⟫↪ (g i)
+```
 
-      -- The entries of s, at a natural index below N.
+The entries of `s`, at a natural index below `N`.
+
+```agda
       extMem : (k : ℕ) (p : k < N)
              → ⟨ pr (# k) (fst (fst (ext N g k))) ∈ fst (envS α g) ⟩
       extMem k p = subst (λ k → ⟨ pr (# k) (fst (fst (ext N g k))) ∈ fst (envS α g) ⟩)
@@ -514,8 +534,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
         where
         i : Fin N
         i = fromℕ' N k p
+```
 
-      -- An entry of s at k reads back as the k-th term.
+An entry of `s` at `k` reads back as the `k`-th term.
+
+```agda
       s-uniq : (k : ℕ) (p : k < N) (a : S)
              → ⟨ pr (# k) (fst a) ∈ fst (envS α g) ⟩
              → fst a ≡ fst (fst (ext N g k))
@@ -527,8 +550,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
         where
         i : Fin N
         i = fromℕ' N k p
+```
 
-      -- The chain, as an environment over α of length N + 1.
+The chain, as an environment over `α` of length `N + 1`.
+
+```agda
       h : Fin (suc N) → ⟪ fst α ⟫
       h i = fiber (fst α) (snd (chain N g (toℕ i))) .fst
 
@@ -595,8 +621,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
                   (hF : ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C' ⟩
                                      × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁)
                   where
+```
 
-        -- The domain of s is the numeral N, so n is # N.
+The domain of `s` is the numeral `N`, so `n` is `# N`.
+
+```agda
         n≡ : fst n ≡ # N
         n≡ = extensionalV (λ x → ⇔toPath (fwd x) (bwd x))
           where
@@ -615,14 +644,20 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
             where
             xS : S
             xS = x , isL-trans {x = # N} {y = x} x∈N (numL N)
+```
 
-        -- C' is single-valued.
+`C'` is single-valued.
+
+```agda
         svC : (x v v' : S) → ⟨ pr (fst x) (fst v) ∈ fst C' ⟩ → ⟨ pr (fst x) (fst v') ∈ fst C' ⟩
             → fst v ≡ fst v'
         svC = svAt-out (suc (suc zero)) (α ∷ m ∷ C' ∷ [])
                 (envOver-sv (suc (suc zero)) (suc zero) zero (α ∷ m ∷ C' ∷ []) hE)
+```
 
-        -- Every entry of C' below N + 1 is the fold.
+Every entry of `C'` below `N + 1` is the fold.
+
+```agda
         entry : (k : ℕ) → k < suc N → (v : S)
               → ⟨ pr (# k) (fst v) ∈ fst C' ⟩ → fst v ≡ fst (fst (chain N g k))
         entry zero    p v hv = svC (nn zero) v (nn zero) hv h0
@@ -652,11 +687,11 @@ module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ �
             in app-uniq (num N) (chain N g N) y
                  (subst (λ q → ⟨ pr q (fst y) ∈ fst F ⟩) (cong₂ pr n≡ ev) hy) })
           hF
+```
 
-  -- -------------------------------------------------------------------
-  -- 2.5  The recursion, the definable map, and the coded injection.
-  -- -------------------------------------------------------------------
+2.5 The recursion, the definable map, and the coded injection.
 
+```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem s = ⟨ fst s ∈ˢ fst (seqL α) ⟩
 

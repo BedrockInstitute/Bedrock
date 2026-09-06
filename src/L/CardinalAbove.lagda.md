@@ -157,11 +157,13 @@ module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
 
   θ-inj : (x : SV.S) → ⟨ x ∈ˢ θ ⟩ → ∥ ⟪ x ⟫ ↪ ⟪ a ⟫ ∥₁
   θ-inj x x∈θ = separation-ax x .fst (∈∈ₛ {a = x} {b = θ} .fst x∈θ) .snd
+```
 
-  -- θ IS AN ORDINAL.  Its members are members of β, so they are
-  -- transitive; and it is transitive itself because a member of a
-  -- member of θ embeds into that member (`ord-emb`) and so into a
-  -- (`comp-inj`), both above.
+`θ` IS AN ORDINAL. Its members are members of `β`, so they are transitive; and
+it is transitive itself because a member of a member of `θ` embeds into that
+member (`ord-emb`) and so into `a` (`comp-inj`), both above.
+
+```agda
   θ-ord : IsOrd θ
   θ-ord = trans , (λ x x∈θ → oβ .snd x (θ⊆β x x∈θ))
     where
@@ -171,20 +173,29 @@ module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
         (PT.map
           (comp-inj (ord-emb y x (mem-ord {A = β} oβ x (θ⊆β x x∈θ)) y∈x))
           (θ-inj x x∈θ))
+```
 
-  -- a ∈ θ, as soon as a is inside the ambient bound.
+`a ∈ θ`, as soon as `a` is inside the ambient bound.
+
+```agda
   a∈θ : ⟨ a ∈ˢ β ⟩ → ⟨ a ∈ˢ θ ⟩
   a∈θ a∈β = θ-in a a∈β ∣ (λ m → m) , (λ m n e → e) ∣₁
+```
 
-  -- THE CARDINAL CLAUSE, and it is the one place the bound is spent.
-  -- If θ is itself a member of β, then an injection of θ into one of
-  -- its own members would put θ into θ.
+THE CARDINAL CLAUSE, and it is the one place the bound is spent. If `θ` is
+itself a member of `β`, then an injection of `θ` into one of its own members
+would put `θ` into `θ`.
+
+```agda
   θ-card : ⟨ θ ∈ˢ β ⟩ → IsCardinal θ
   θ-card θ∈β δ δ∈θ f =
     ∈-irrefl θ (θ-in θ θ∈β (PT.map (comp-inj f) (θ-inj δ δ∈θ)))
+```
 
-  -- AND THE BOUND IS SPENT BY ONE WITNESS: any member of β that does
-  -- NOT inject into a forces θ ∈ β through trichotomy.
+AND THE BOUND IS SPENT BY ONE WITNESS: any member of `β` that does NOT inject
+into `a` forces `θ ∈ β` through trichotomy.
+
+```agda
   θ∈β : (γ : SV.S) → ⟨ γ ∈ˢ β ⟩ → (⟪ γ ⟫ ↪ ⟪ a ⟫ → Empty.⊥)
       → ⟨ θ ∈ˢ β ⟩
   θ∈β γ γ∈β noinj = go (ord-tri θ θ-ord β oβ)
@@ -348,9 +359,12 @@ module Hartogs (a : SV.S) where
 
   Holds : Rel → ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ-zero
   Holds R x y = R x y ≡ true
+```
 
-  -- A transitive well-founded relation on ⟪ a ⟫.  NOT a well-order:
-  -- no trichotomy, no irreflexivity clause.
+A transitive well-founded relation on `⟪ a ⟫`. NOT a well-order: no trichotomy,
+no irreflexivity clause.
+
+```agda
   WFR : Type ℓ
   WFR = Σ[ R ∈ Rel ]
           ( ({x y z : ⟪ a ⟫} → Holds R x y → Holds R y z → Holds R x z)
@@ -360,8 +374,11 @@ module Hartogs (a : SV.S) where
 
     R : Rel
     R = fst w
+```
 
-    -- lifted to `Type ℓ`, the level the shared collapse indexes at
+Lifted to `Type ℓ`, the level the shared collapse indexes at.
+
+```agda
     _≺_ : ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ
     x ≺ y = Lift (Holds R x y)
 
@@ -376,8 +393,11 @@ module Hartogs (a : SV.S) where
 
     open Mostowski ⟪ a ⟫ _≺_ ≺-wf ≺-trans public
       using ( col; col-eq; col-in; col-out; col-ord )
+```
 
-    -- The order type, as a bare image.  No union, no successor.
+The order type, as a bare image. No union, no successor.
+
+```agda
     ot : SV.S
     ot = sett ⟪ a ⟫ col
 
@@ -398,8 +418,11 @@ module Hartogs (a : SV.S) where
           PT.rec (snd (y ∈ˢ ot))
             (λ z → subst (λ v → ⟨ v ∈ˢ ot ⟩) (snd (snd z)) (ot-in (fst z)))
             (col-out p y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
+```
 
-  -- THE CANDIDATE: the sup of every order type this family reaches.
+THE CANDIDATE: the sup of every order type this family reaches.
+
+```agda
   μ : SV.S
   μ = ⋃ (sett WFR (λ w → sucV (Col.ot w)))
 
@@ -418,8 +441,11 @@ module Hartogs (a : SV.S) where
     inSuc : ⟨ Col.ot w ∈ₛ sucV (Col.ot w) ⟩
     inSuc = ∈∈ₛ {a = Col.ot w} {b = sucV (Col.ot w)} .fst
               (self∈sucV (Col.ot w))
+```
 
-  -- ⟪ x ⟫ is a set: it embeds into `V ℓ`, which is one.
+`⟪ x ⟫` is a set: it embeds into `V ℓ`, which is one.
+
+```agda
   isSet⟪⟫ : (x : SV.S) → isSet ⟪ x ⟫
   isSet⟪⟫ x = Embedding-into-isSet→isSet (⟪ x ⟫↪ , isEmb⟪ x ⟫↪) setIsSet
 
@@ -429,13 +455,12 @@ module Hartogs (a : SV.S) where
 
   lemℓ : LEM ℓ
   lemℓ = lowerLEM lem
+```
 
-  -- =================================================================
-  -- Suppose μ DID inject into a.  Pull the membership order on ⟪ μ ⟫
-  -- back along the injection, and the pullback is one of the relations
-  -- μ was built from.
-  -- =================================================================
+Suppose `μ` DID inject into `a`. Pull the membership order on `⟪ μ ⟫` back along
+the injection, and the pullback is one of the relations `μ` was built from.
 
+```agda
   module NoInj (f : ⟪ μ ⟫ ↪ ⟪ a ⟫) where
 
     F : ⟪ μ ⟫ → ⟪ a ⟫
@@ -475,8 +500,11 @@ module Hartogs (a : SV.S) where
       go : (d : PreT x y ⊎ (PreT x y → Empty.⊥)) → decB d ≡ true
       go (inl _) = refl
       go (inr n) = Empty.rec (n h)
+```
 
-    -- Transitivity comes from the members of μ being transitive sets.
+Transitivity comes from the members of `μ` being transitive sets.
+
+```agda
     R-trans : {x y z : ⟪ a ⟫} → Holds R x y → Holds R y z → Holds R x z
     R-trans {x} {y} {z} e1 e2 = Pre→R x z (p , r , goal)
       where
@@ -497,9 +525,12 @@ module Hartogs (a : SV.S) where
       goal = ∈∈ₛ {a = ⟪ μ ⟫↪ (fst p)} {b = ⟪ μ ⟫↪ (fst r)} .fst
         (rTr (∈∈ₛ {a = ⟪ μ ⟫↪ (fst p)} {b = ⟪ μ ⟫↪ (fst q')} .snd h1')
              (∈∈ₛ {a = ⟪ μ ⟫↪ (fst q')} {b = ⟪ μ ⟫↪ (fst r)} .snd (snd (snd d2))))
+```
 
-    -- Well-foundedness is regularity, transported along the injection.
-    -- A point outside the image has no predecessor at all.
+Well-foundedness is regularity, transported along the injection. A point outside
+the image has no predecessor at all.
+
+```agda
     wfAux : (v : SV.S) → Acc SV._∈ᵗ_ v → (m : ⟪ μ ⟫) → ⟪ μ ⟫↪ m ≡ v
           → Acc (λ x y → Holds R x y) (F m)
     wfAux v (acc rec) m e = acc go
@@ -534,12 +565,14 @@ module Hartogs (a : SV.S) where
     w = R , R-trans , R-wf
 
     open Col w using ( col; col-in; col-out; ot; ot-in; _≺_ )
+```
 
-    -- THE ONE INDUCTION.  The collapse of the pullback REPRODUCES the
-    -- members of μ.  This is where `[LJ-1.94]` needed the order type
-    -- of an ordinal's own membership order plus uniqueness under
-    -- isomorphism; here it is one ∈-induction, because the target is a
-    -- set equality proved by extensionality and not an order iso.
+THE ONE INDUCTION. The collapse of the pullback REPRODUCES the members of `μ`.
+This is where `[LJ-1.94]` needed the order type of an ordinal's own membership
+order plus uniqueness under isomorphism; here it is one `∈`-induction, because
+the target is a set equality proved by extensionality and not an order iso.
+
+```agda
     key : (v : SV.S) → Acc SV._∈ᵗ_ v → (m : ⟪ μ ⟫) → ⟪ μ ⟫↪ m ≡ v
         → col (F m) ≡ ⟪ μ ⟫↪ m
     key v (acc rec) m e =
@@ -593,22 +626,30 @@ module Hartogs (a : SV.S) where
 
     key' : (m : ⟪ μ ⟫) → col (F m) ≡ ⟪ μ ⟫↪ m
     key' m = key (⟪ μ ⟫↪ m) (regularityV (⟪ μ ⟫↪ m)) m refl
+```
 
-    -- μ ⊆ ot w.  THE SUBSET IS ALL THE ARGUMENT NEEDS.  Nothing here
-    -- claims `ot w ≡ μ`, and that is why no uniqueness theorem appears
-    -- in this file.
+`μ ⊆ ot w`. THE SUBSET IS ALL THE ARGUMENT NEEDS. Nothing here claims `ot w ≡
+μ`, and that is why no uniqueness theorem appears in this file.
+
+```agda
     μ⊆ot : (b : SV.S) → ⟨ b ∈ˢ μ ⟩ → ⟨ b ∈ˢ ot ⟩
     μ⊆ot b b∈μ =
       subst (λ t → ⟨ t ∈ˢ ot ⟩) (key' (fst fb) ∙ snd fb)
         (ot-in (F (fst fb)))
       where
       fb = fiber μ b∈μ
+```
 
-    -- `ot w ∈ μ` by construction, `μ ⊆ ot w` by the induction.
+`ot w ∈ μ` by construction, `μ ⊆ ot w` by the induction.
+
+```agda
     absurd : Empty.⊥
     absurd = ∈-irrefl ot (μ⊆ot ot (ot∈μ w))
+```
 
-  -- THE HARTOGS FACT AT `a`.
+THE HARTOGS FACT AT `a`.
+
+```agda
   noInj : (⟪ μ ⟫ ↪ ⟪ a ⟫) → Empty.⊥
   noInj f = NoInj.absurd f
 ```

@@ -238,8 +238,11 @@ self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
   (union-ax ⁅ a , ⁅ a ⁆s ⁆ a .snd
     ∣ ⁅ a ⁆s , (pairing-ax a ⁅ a ⁆s ⁅ a ⁆s .snd ∣ Sum.inr refl ∣₁
               , SetPackage.classification (SingletonPackage a) a .snd refl) ∣₁)
+```
 
--- The two pinning equations, for any chain that aligns with the library's.
+The two pinning equations, for any chain that aligns with the library's.
+
+```agda
 module NumPin (a : ℕ → S) (q : (n : ℕ) → a n ≡ # n) where
   pinZero : (z : S) → ⟨ z ∈ˢ a zero ⟩ → Empty.⊥
   pinZero z z∈ = ∅-empty z

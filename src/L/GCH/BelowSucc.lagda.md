@@ -71,15 +71,21 @@ below-succ-injects κ δ (ordδ , _ , κ∈δ , least) α =
     where
     α' : SL.S
     α' = a , la
+```
 
-    -- Once κ ∈ α, an L-cardinal α would put δ inside α, hence α ∈ α.
+Once `κ ∈ α`, an L-cardinal `α` would put `δ` inside `α`, hence `α ∈ α`.
+
+```agda
     not-card : ⟨ fst κ ∈ˢ a ⟩ → IsCardinalL α' → Empty.⊥
     not-card κ∈a c = ∈-irrefl a (least α' orda c κ∈a α' a∈δ)
 
     Ex : Type (ℓ-suc ℓ)
     Ex = ∥ Σ[ γ ∈ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) ∥₁
+```
 
-    -- The excluded middle turns the refuted Π into a mere witness.
+The excluded middle turns the refuted Π into a mere witness.
+
+```agda
     some-γ : ⟨ fst κ ∈ˢ a ⟩ → Ex
     some-γ κ∈a = decide (lem (Ex , squash₁))
       where

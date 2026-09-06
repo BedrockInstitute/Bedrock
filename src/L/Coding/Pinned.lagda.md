@@ -117,8 +117,11 @@ module Match (W : S) where
   matchAt (∀̇ a) k r e = at (∀̇ a) 9 k _ refl (a , (refl , refl)) r e
   matchAt (∀̇∈ t a) k r e = at (∀̇∈ t a) 10 k _ refl (t , a , (refl , refl)) r e
   matchAt (∃̇∈ t a) k r e = at (∃̇∈ t a) 11 k _ refl (t , a , (refl , refl)) r e
+```
 
-  -- A member of the code set at a stated arity decodes.
+A member of the code set at a stated arity decodes.
+
+```agda
   decodeAll : (c : S) → ⟨ fst c ∈ fst (AllCodes W) ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
             → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
   decodeAll c c∈ n z e = PT.map
@@ -157,8 +160,11 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
 
     cl : (k : Fin 12) → ⟨ γ ⊨ Cl.clause k ⟩
     cl = bigAnd-out γ 11 Cl.clause h12
+```
 
-    -- An entry at the key of a formula, and the frame it opens.
+An entry at the key of a formula, and the frame it opens.
+
+```agda
     module Case {n : ℕ} (ψ : Formula Ab n) (k : Fin 12) (rS : S)
       (ep : cd ψ ≡ pr (# (toℕ k)) (fst rS)) (c∈ : ⟨ fst (keyS W ψ) ∈ Cv ⟩)
       (y : S) (mem : ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩) where
@@ -171,8 +177,11 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
       rel : ⟨ δ12 ⊨ R.relN (toℕ k) ⟩
       rel = Fr.clause-out k (cl k) (nn n) (envSet W n) (keyS W ψ) (codeS W ψ) rS y q∈ c∈ refl ep mem
       module RR = RelRead T w N δ12
+```
 
-    -- The value at a subformula's key, from totality.
+The value at a subformula's key, from totality.
+
+```agda
     sub : ∀ {n} (a : Formula Ab n) → ⟨ fst (keyS W a) ∈ Cv ⟩
         → ∥ Σ[ ya ∈ S ] ⟨ pr (fst (keyS W a)) (fst ya) ∈ Tv ⟩ ∥₁
     sub a a∈ = Fr.total-out hTot (keyS W a) a∈
@@ -182,12 +191,18 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
            → (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
 
   private
+```
 
-    -- the payload of each constructor, as an element of L
+The payload of each constructor, as an element of L.
+
+```agda
     payS : ∀ {n} (ψ : Formula Ab n) (k : ℕ) (r : V ℓ) → cd ψ ≡ pr (# k) r → S
     payS ψ k r e = sndS (codeS W ψ) (# k) r e
+```
 
-    -- the binary connectives share one case
+The binary connectives share one case.
+
+```agda
     binCase : ∀ {n} (op : ∀ {j} → Formula S j → Formula S j → Formula S j)
               (opA : Formula Ab n → Formula Ab n → Formula Ab n) (k : Fin 12)
               (a b : Formula Ab n) (code : cd (opA a b) ≡ pr (# (toℕ k)) (pr (cd a) (cd b)))
@@ -307,10 +322,13 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
     eqAgree : ∀ {j} (env : S ^ j) (z v x : S)
             → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩ → fst v ≡ fst x) × ((fst v ≡ fst x) → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ≐ var i0 ⟩)
     eqAgree env z v x = (λ h → h) , (λ h → h)
+```
 
-    -- The four subcode readers.  Each is `closedAt`'s conjunct, read at
-    -- the key of the composite formula: this is the whole of what the
-    -- all-codes hypothesis used to supply to the recursion.
+The four subcode readers. Each is `closedAt`'s conjunct, read at the key of the
+composite formula: this is the whole of what the all-codes hypothesis used to
+supply to the recursion.
+
+```agda
     clSame : (n k : ℕ) → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩
            → (ψ a b : Formula Ab n) → cd ψ ≡ pr (# k) (pr (cd a) (cd b))
            → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩ × ⟨ fst (keyS W b) ∈ Cv ⟩
@@ -415,8 +433,11 @@ module _ (W : S) where
       module Fr = Frame T w C E N γ tg
       module Cl = Clause T w C E N
       module R = Rel T w N
+```
 
-      -- an entry of E is (# n, envSet n)
+An entry of `E` is `(# n, envSet n)`.
+
+```agda
       Arity : (ar F : S) → Type (ℓ-suc ℓ)
       Arity ar F = ∥ Σ[ n ∈ ℕ ] ((fst ar ≡ # n) × (fst F ≡ fst (envSet W n))) ∥₁
 
@@ -430,9 +451,12 @@ module _ (W : S) where
 
       onC : ⟨ γ ⊨ Cl.onC ⟩
       onC = Fr.onC-in onc
+```
 
-      -- THE CLAUSES.  Each is read at its frame; the data of the frame
-      -- are decoded, and the relation is filled from the bridge.
+THE CLAUSES. Each is read at its frame; the data of the frame are decoded, and
+the relation is filled from the bridge.
+
+```agda
       record Args (k : Fin 12) : Type (ℓ-suc ℓ) where
         field
           q ar F s c p s1 r s2 e yc s3 : S
@@ -457,9 +481,12 @@ module _ (W : S) where
 
         isPropGoal : isProp Goal
         isPropGoal = snd (frame ⊨ R.relN (toℕ k))
+```
 
-        -- the extension fact of yc over F, from the recursion's value at
-        -- the formula the code decodes to
+The extension fact of `yc` over `F`, from the recursion's value at the formula
+the code decodes to.
+
+```agda
         transfer : (n : ℕ) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
                  → fst p ≡ cd ψ → {j : ℕ} (env : S ^ j) (φ : Formula S (1 + j))
                  → ExtFact (fst (SatW ψ)) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩)
@@ -467,8 +494,11 @@ module _ (W : S) where
         transfer n ψ qa qF qp env φ ext =
           subst2 (λ Y F' → ExtFact Y F' (λ z → ⟨ (z ∷ env) ⊨ φ ⟩))
             (sym (val≡ ψ c yc (ec ∙ cong₂ pr qa qp) (subst (λ u → ⟨ u ∈ Tv ⟩) ee e∈))) (sym qF) ext
+```
 
-        -- the value at a subkey
+The value at a subkey.
+
+```agda
         subVal : (n : ℕ) (a : Formula Ab n) (c₁ ya e₁ : S) → fst ar ≡ # n
                → ⟨ fst e₁ ∈ Tv ⟩ → fst e₁ ≡ pr (fst c₁) (fst ya) → fst c₁ ≡ pr (fst ar) (cd a)
                → fst ya ≡ fst (SatW a)
@@ -480,8 +510,11 @@ module _ (W : S) where
                 → fst ya ≡ fst (SatW a)
         subValS n a c₁ ya e₁ ar' qa e₁∈ ee₁ e₁' es =
           val≡ a c₁ ya (e₁' ∙ cong (λ v → pr v (cd a)) (es ∙ cong sucV qa)) (subst (λ u → ⟨ u ∈ Tv ⟩) ee₁ e₁∈)
+```
 
-        -- the frame's data, decoded
+The frame's data, decoded.
+
+```agda
         Data : Type (ℓ-suc ℓ)
         Data = Σ[ n ∈ ℕ ] ((fst ar ≡ # n) × ((fst F ≡ fst (envSet W n))
                  × (Σ[ ψ ∈ Formula Ab n ] ((fst p ≡ cd ψ) × MatchN (toℕ k) ψ (fst r)))))
@@ -492,8 +525,11 @@ module _ (W : S) where
             (λ { (ψ , qp) → n , (qa , qF , ψ , (qp , matchAt ψ (toℕ k) (fst r) (sym qp ∙ ep))) })
             (decode c c∈ n (fst p) (ec ∙ cong (λ v → pr v (fst p)) qa)) })
           (arity q ar F q∈ eq)
+```
 
-        -- the binary connectives
+The binary connectives.
+
+```agda
         module BinFill (op : ∀ {j} → Formula S j → Formula S j → Formula S j)
           (opA : ∀ {j} → Formula Ab j → Formula Ab j → Formula Ab j)
           (bridge : ∀ {n} (a b : Formula Ab n) {j : ℕ} (env : S ^ j) (ya yb : Fin j)
@@ -512,8 +548,11 @@ module _ (W : S) where
                 P z = ⟨ (z ∷ env) ⊨ R.binBody op ⟩
             in transfer n ψ qa qF qp env (R.binBody op)
                  (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ) (bridge a b env i4 i0 ya≡ yb≡)))
+```
 
-        -- the unbounded quantifiers
+The unbounded quantifiers.
+
+```agda
         module QuFill (q' : ∀ {j} → Term S j → Formula S (suc j) → Formula S j)
           (qA : ∀ {j} → Formula Ab (suc j) → Formula Ab j)
           (bridge : ∀ {n} (a : Formula Ab (suc n)) {j : ℕ} (env : S ^ j) (wi yai : Fin j)
@@ -530,8 +569,11 @@ module _ (W : S) where
                 P z = ⟨ (z ∷ env) ⊨ R.quBody q' ⟩
             in transfer n ψ qa qF qp env (R.quBody q')
                  (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ) (bridge a env (sh 18 w) i2 qw ya≡)))
+```
 
-        -- the bounded quantifiers
+The bounded quantifiers.
+
+```agda
         module BqFill (q' : ∀ {j} → Term S j → Formula S (suc j) → Formula S j)
           (c' : ∀ {j} → Formula S j → Formula S j → Formula S j)
           (qA : ∀ {j} → Term Ab j → Formula Ab (suc j) → Formula Ab j)
@@ -558,8 +600,11 @@ module _ (W : S) where
                    (subst (λ φ → ExtFact (fst (SatW (qA t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩))
                      (bodyIs (sh 21 w) i7 i2 (sh 21 (N f0)) (sh 21 (N f1)))
                      (bridge t a env (sh 21 w) i7 i2 (sh 21 (N f0)) (sh 21 (N f1)) qw (q'' .fst) ya≡ (tg f0) (tg f1)))))
+```
 
-        -- the atoms
+The atoms.
+
+```agda
         module AtomFill (opA : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j) (rel : Formula S (18 + m))
           (bridge : ∀ {n} (t u : Term Ab n) (env : S ^ (15 + m)) (wi ti ui N0i N1i : Fin (15 + m))
                   → fst (lookup wi env) ≡ Wv → fst (lookup ti env) ≡ ct t → fst (lookup ui env) ≡ ct u
@@ -576,8 +621,11 @@ module _ (W : S) where
             in transfer n ψ qa qF qp env (R.atomBody rel)
                  (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ)
                    (bridge t u env (sh 15 w) i1 i0 (sh 15 (N f0)) (sh 15 (N f1)) qw (q' .fst) (q' .snd) (tg f0) (tg f1))))
+```
 
-        -- negation and the constants
+Negation and the constants.
+
+```agda
         negGo : (n : ℕ) (a ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
               → fst p ≡ cd ψ → ψ ≡ ¬̇ a → fst r ≡ cd a → ⟨ frame ⊨ R.negRel ⟩
         negGo n a ψ qa qF qp qψ qr = RR.neg-in (λ c₁ ya s' e' e'∈ ee₁ e₁' →
@@ -599,8 +647,11 @@ module _ (W : S) where
         botGo n ψ qa qF qp qψ = extB-in i0 i8 ⊥̇ frame
           (transfer n ψ qa qF qp frame ⊥̇
             (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) (λ z → ⟨ (z ∷ frame) ⊨ ⊥̇ ⟩)) (sym qψ) (botBridge n frame)))
+```
 
-      -- The dispatch on the tag, one clause each.
+The dispatch on the tag, one clause each.
+
+```agda
       fill : (k : Fin 12) (A : Args k) → Fill.Data k A → Fill.Goal k A
       fill f0 A (n , (qa , qF , ψ , (qp , (t , u , (qψ , qr))))) =
         Fill.AtomFill.go f0 A _∈̇_ (var i1 ∈̇ var i0)
@@ -652,9 +703,12 @@ The slot instance. The four are supplied at `C` := the slot of one formula and
 module _ (W : S) where
   open Alphabet W
   open Bridge W
+```
 
-  -- Every member of the slot of `toS ψ` is the key of a formula over
-  -- the alphabet: one induction, the slot's own shape.
+Every member of the slot of `toS ψ` is the key of a formula over the alphabet:
+one induction, the slot's own shape.
+
+```agda
   slotAb : ∀ {n} (ψ : Formula Ab n) (x : V ℓ)
          → ⟨ x ∈ fst (slot W (toS ψ)) ⟩
          → ∥ Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula Ab m ] (x ≡ fst (keyS W χ)) ∥₁

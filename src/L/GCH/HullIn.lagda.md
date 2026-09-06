@@ -117,10 +117,13 @@ private
 
   isSetSʟ : isSet CS.S
   isSetSʟ = isSetΣSndProp setIsSet (λ v → snd (isL v))
+```
 
-  -- The two renamings of the witness formula and their agreements, at
-  -- the top level.  Measured in this file: the same clauses cost
-  -- 0.24-0.41 s per definition inside `Telescope.Build`.
+The two renamings of the witness formula and their agreements, at the top level.
+Measured in this file: the same clauses cost 0.24-0.41 s per definition inside
+`Telescope.Build`.
+
+```agda
   ρs : Fin 2 → Fin 2
   ρs zero = suc zero
   ρs (suc zero) = zero
@@ -161,9 +164,12 @@ module PiIn (Mʟ : CS.S) where
 
   up : (y : S) → ⟨ y ∈ˢ M ⟩ → CS.S
   up y y∈M = y , memL y y∈M
+```
 
-  -- A member of a collapse value is the collapse of a member of the
-  -- argument that lies in M (`π-compute`, with the fibre kept).
+A member of a collapse value is the collapse of a member of the argument that
+lies in `M` (`π-compute`, with the fibre kept).
+
+```agda
   π-mem-out : (x w : S) → ⟨ w ∈ˢ C.π x ⟩
             → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ x ⟩ × ⟨ y ∈ˢ M ⟩ × (C.π y ≡ w)) ∥₁
   π-mem-out x w w∈ = PT.map mk (subst (λ u → ⟨ w ∈ˢ u ⟩) (C.π-compute x) w∈)
@@ -174,13 +180,13 @@ module PiIn (Mʟ : CS.S) where
                , ( member x (p .fst)
                  , ∈∈ₛ {a = ⟪ x ⟫↪ (p .fst)} {b = M} .snd (p .snd)
                  , q )
+```
 
-  -- ===================================================================
-  -- THE MEMBERSHIP RELATION OF M, as a set of pairs in L: carved out of
-  -- the product by "z is the pair of a member of a member".  Inside the
-  -- two binders: x is 0, y is 1, z is 2.
-  -- ===================================================================
+THE MEMBERSHIP RELATION OF `M`, as a set of pairs in L: carved out of the
+product by "z is the pair of a member of a member". Inside the two binders: `x`
+is 0, `y` is 1, `z` is 2.
 
+```agda
   opaque
     memFo : Formula CS.S 1
     memFo = ∃̇ (∃̇ ( prAtL i2 i1 i0 ∧̇ (var i1 ∈̇ var i0) ))
@@ -230,13 +236,13 @@ module PiIn (Mʟ : CS.S) where
              in subst2 (λ u v → ⟨ u ∈ˢ v ⟩) (sym (e .fst)) (sym (e .snd)) m })
           hy' })
         (both .snd)
+```
 
-  -- ===================================================================
-  -- THE GRAPH FORMULA, over (v ∷ p ∷ []): "some set correct for the
-  -- membership of M is complete at p, and v is its value at p".  Inside:
-  -- r is 0, v is 1, p is 2; then F is 0, r is 1, v is 2, p is 3.
-  -- ===================================================================
+THE GRAPH FORMULA, over `(v ∷ p ∷ [])`: "some set correct for the membership of
+`M` is complete at p, and v is its value at p". Inside: `r` is 0, `v` is 1, `p`
+is 2; then `F` is 0, `r` is 1, `v` is 2, `p` is 3.
 
+```agda
   opaque
     piFo : Formula CS.S 2
     piFo = ∃̇ ( (var i0 ≐ con R)
@@ -261,12 +267,12 @@ module PiIn (Mʟ : CS.S) where
       , ( correct-in i0 i1 (F ∷ R ∷ v ∷ p ∷ []) hc
         , ( complete-in i0 i1 i3 (F ∷ R ∷ v ∷ p ∷ []) hm
           , value-in i0 i1 i3 i2 (F ∷ R ∷ v ∷ p ∷ []) hv ) ) ∣₁) ∣₁
+```
 
-  -- ===================================================================
-  -- UNIQUENESS.  A value that is complete and right relative to a
-  -- correct set is the collapse.  One membership induction.
-  -- ===================================================================
+UNIQUENESS. A value that is complete and right relative to a correct set is the
+collapse. One membership induction.
 
+```agda
   private
     Pv : CS.S → S → Type (ℓ-suc ℓ)
     Pv F x = (xL : ⟨ isL x ⟩) → ⟨ x ∈ˢ M ⟩ → (v : CS.S)
@@ -318,19 +324,22 @@ module PiIn (Mʟ : CS.S) where
   value-val : (F : CS.S) → Correct F R → (x : CS.S) → ⟨ fst x ∈ˢ M ⟩ → (v : CS.S)
             → Complete F R x → ValueIs F R x v → fst v ≡ C.π (fst x)
   value-val F hc x = value-val′ F hc (fst x) (snd x)
+```
 
-  -- The graph formula, read at a member of M.
+The graph formula, read at a member of `M`.
+
+```agda
   piFo-val : (q : CS.S) → ⟨ fst q ∈ˢ M ⟩ → (v : CS.S) → ⟨ (v ∷ q ∷ []) ⊨ piFo ⟩
            → fst v ≡ C.π (fst q)
   piFo-val q mq v h = PT.rec (setIsSet (fst v) (C.π (fst q)))
     (λ { (F , (hc , (hm , hv))) → value-val F hc q mq v hm hv })
     (piFo-out v q h)
+```
 
-  -- ===================================================================
-  -- A SLICE OF M: the members of M that lie in a given element K of L,
-  -- as an element of L.
-  -- ===================================================================
+A SLICE OF `M`: the members of `M` that lie in a given element `K` of L, as an
+element of L.
 
+```agda
   module Cut (K : CS.S) where
 
     cutFo : Formula CS.S 1
@@ -348,15 +357,14 @@ module PiIn (Mʟ : CS.S) where
 
       cut-out : (y : CS.S) → ⟨ y CS.∈ˢ cut ⟩ → ⟨ fst y ∈ˢ M ⟩ × ⟨ fst y ∈ˢ fst K ⟩
       cut-out y h = subst ⟨_⟩ (cut-mem y) h
+```
 
-  -- ===================================================================
-  -- THE INDUCTION.  At an ordinal δ: every member of M in Lset δ has its
-  -- collapse in L, and the graph formula holds there.  The hypothesis
-  -- at δ' ∈ δ gives one table of pairs over the slice M ∩ Lset δ', and
-  -- that table is correct because the slice is closed under membership
-  -- within M.
-  -- ===================================================================
+THE INDUCTION. At an ordinal `δ`: every member of `M` in `Lset δ` has its
+collapse in L, and the graph formula holds there. The hypothesis at `δ' ∈ δ`
+gives one table of pairs over the slice `M ∩ Lset δ'`, and that table is correct
+because the slice is closed under membership within `M`.
 
+```agda
   Good : S → S → Type (ℓ-suc ℓ)
   Good δ q = ⟨ q ∈ˢ M ⟩ → ⟨ q ∈ˢ Lset δ ⟩
            → Σ[ qL ∈ ⟨ isL (C.π q) ⟩ ] ((mq : ⟨ q ∈ˢ M ⟩)
@@ -373,8 +381,11 @@ module PiIn (Mʟ : CS.S) where
 
     Lδ'-trans : {x y : S} → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ Lset δ' ⟩ → ⟨ y ∈ˢ Lset δ' ⟩
     Lδ'-trans {x} {y} = layer-trans (Lset-layer δ') {x = x} {y = y}
+```
 
-    -- The collapse of a slice member, as an element of L.
+The collapse of a slice member, as an element of L.
+
+```agda
     πʟ : (y : CS.S) → ⟨ y CS.∈ˢ Sl.cut ⟩ → CS.S
     πʟ y hy = C.π (fst y) , IH (fst y) (Sl.cut-out y hy .fst) (Sl.cut-out y hy .snd) .fst
 
@@ -427,8 +438,11 @@ module PiIn (Mʟ : CS.S) where
             , ee .snd ∙ piFo-val q (Sl.cut-out q hq .fst) z hz ∙ cong C.π (sym (ee .fst)) })
         (PF.pair-out (prʟ x v) q hp) })
       (T.table-out (prʟ x v) (subst (λ w → ⟨ w ∈ˢ fst Tab ⟩) (sym (prʟ-fst x v)) h))
+```
 
-    -- A member is CLOSED when its members in M lie in the slice.
+A member is CLOSED when its members in `M` lie in the slice.
+
+```agda
     Closed : CS.S → Type (ℓ-suc ℓ)
     Closed x = (y : S) (y∈x : ⟨ y ∈ˢ fst x ⟩) (y∈M : ⟨ y ∈ˢ M ⟩)
              → ⟨ up y y∈M CS.∈ˢ Sl.cut ⟩
@@ -473,8 +487,11 @@ module PiIn (Mʟ : CS.S) where
       mx = Sl.cut-out x hx .fst
       cl : Closed x
       cl = slice-closed x hx
+```
 
-    -- THE STEP: a member of M whose members lie in Lset δ' is good.
+THE STEP: a member of `M` whose members lie in `Lset δ'` is good.
+
+```agda
     module At (q : S) (mq : ⟨ q ∈ˢ M ⟩) (q⊆ : (y : S) → ⟨ y ∈ˢ q ⟩ → ⟨ y ∈ˢ Lset δ' ⟩) where
 
       qS : CS.S
@@ -482,8 +499,12 @@ module PiIn (Mʟ : CS.S) where
 
       cl : Closed qS
       cl y y∈q y∈M = Sl.cut-in (up y y∈M) y∈M (q⊆ y y∈q)
+```
 
-      -- The collapse value itself: the image of the graph over the members of q in M.
+The collapse value itself: the image of the graph over the members of `q` in
+`M`.
+
+```agda
       module Mq = Cut qS using ( cut; cut-in; cut-out )
 
       private
@@ -543,8 +564,11 @@ module PiIn (Mʟ : CS.S) where
       good mq' = subst (λ q' → ⟨ ((C.π q , πq-isL) ∷ q' ∷ []) ⊨ piFo ⟩) (S≡ refl)
         (piFo-in (C.π q , πq-isL) qS Tab Tab-correct (complete-of qS cl)
           (valueIs-of qS mq cl (C.π q , πq-isL) refl))
+```
 
-  -- The induction on the stage.
+The induction on the stage.
+
+```agda
   good-at : (δ : S) → IsOrd δ → (q : S) → Good δ q
   good-at = ∈-induction {P = λ δ → IsOrd δ → (q : S) → Good δ q} go
     where
@@ -559,15 +583,21 @@ module PiIn (Mʟ : CS.S) where
         oδ' = mem-ord {A = δ} oδ δ' δ'∈δ
         module A = Step.At δ' oδ' (IH δ' δ'∈δ oδ') q mq (λ y y∈q → 𝒟ₒ∋⊆ (Lset δ') q q∈𝒟 y y∈q)
           using ( πq-isL; good )
+```
 
-  -- THE RESULT: every collapse value of a member of M is constructible.
+THE RESULT: every collapse value of a member of `M` is constructible.
+
+```agda
   π-isL : (y : S) → ⟨ y ∈ˢ M ⟩ → ⟨ isL (C.π y) ⟩
   π-isL y y∈M = PT.rec (snd (isL (C.π y)))
     (λ { (α , (oα , M∈Lα)) →
        good-at α oα y y∈M (layer-trans (Lset-layer α) {x = M} {y = y} y∈M M∈Lα) .fst })
     (snd Mʟ)
+```
 
-  -- and so is every member of the collapse image.
+And so is every member of the collapse image.
+
+```agda
   πX-isL : (x : S) → ⟨ x ∈ˢ C.πX ⟩ → ⟨ isL x ⟩
   πX-isL x x∈πX = PT.rec (snd (isL x))
     (λ { (y , (y∈M , e)) → subst (λ w → ⟨ isL w ⟩) e (π-isL y y∈M) })
@@ -588,11 +618,13 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+```
 
-  -- Every module application below carries a `using` list: an
-  -- unrestricted application copies every definition of the module
-  -- into this interface (measured on this file: the `Condense` copy
-  -- alone cost 7 s and 0.6 MB).
+Every module application below carries a `using` list: an unrestricted
+application copies every definition of the module into this interface (measured
+on this file: the `Condense` copy alone cost 7 s and 0.6 MB).
+
+```agda
   module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ using ( M )
   module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ
     using ( ∅∈Lsetα; hull-member; X⊆M; Hull⊆L )
@@ -602,17 +634,26 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
   SL : Type (ℓ-suc ℓ)
   SL = HullStage.ASt.SL lam ordλ succλ X X⊆L ∅∈λ
+```
 
-  -- Parameters drawn from a set.
+Parameters drawn from a set.
+
+```agda
   From : {k : ℕ} → CS.S → Vec SL k → Type (ℓ-suc ℓ)
   From {k} Z vs = (i : Fin k) → ⟨ fst (lookup i vs) ∈ˢ fst Z ⟩
+```
 
-  -- A least witness at parameters from Z.
+A least witness at parameters from `Z`.
+
+```agda
   Searched : CS.S → S → Type (ℓ-suc ℓ)
   Searched Z z = Σ[ k ∈ ℕ ] Σ[ ψ ∈ Formula (⊥* {ℓ}) (suc k) ] Σ[ vs ∈ Vec SL k ]
                  Σ[ w ∈ Sat k ψ vs ] (From Z vs × (z ≡ fst (search k ψ vs w)))
+```
 
-  -- What a member of the closure of Z is.
+What a member of the closure of `Z` is.
+
+```agda
   Reads : CS.S → S → Type (ℓ-suc ℓ)
   Reads Z z = ⟨ z ∈ˢ fst Z ⟩ ⊎ ((z ≡ ∅) ⊎ Searched Z z)
 
@@ -652,11 +693,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       where
       zL : ⟨ isL z ⟩
       zL = isL-trans {x = fst (hullStep n)} {y = z} h (snd (hullStep n))
+```
 
-    -- =================================================================
-    -- HULL ⊆ UNION: a code of depth n has its value at the n-th stage.
-    -- =================================================================
+HULL ⊆ UNION: a code of depth `n` has its value at the `n`-th stage.
 
+```agda
     mutual
       depth : Code → ℕ
       depth (base m) = 0
@@ -692,16 +733,18 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       vals-in (c ∷ cs) (suc i) =
         hullStep-≤ (depths cs) (max (depth c) (depths cs)) right-≤-max
           (fst (lookup i (vals cs))) (vals-in cs i)
+```
 
-    -- =================================================================
-    -- UNION ⊆ HULL: the start is in the hull, and the hull is closed
-    -- under the step, since every parameter vector from the hull is the
-    -- value vector of a code vector.
-    -- =================================================================
+UNION ⊆ HULL: the start is in the hull, and the hull is closed under the step,
+since every parameter vector from the hull is the value vector of a code vector.
 
+```agda
     private
+```
 
-      -- codes for a vector of hull members
+Codes for a vector of hull members.
+
+```agda
       choose : {k : ℕ} (vs : Vec SL k)
              → ((i : Fin k) → ⟨ fst (lookup i vs) ∈ˢ Hull ⟩)
              → ∥ Σ[ cs ∈ Vec Code k ] (vals cs ≡ vs) ∥₁
@@ -711,8 +754,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
            , cong₂ _∷_ (Σ≡Prop (λ z → snd (z ∈ˢ Lset lam)) ec) ecs })
         (choose vs (λ i → h (suc i))) })
         (HSH.hull-member (fst v) (h zero))
+```
 
-      -- the search at a value vector is the value of the witness code
+The search at a value vector is the value of the witness code.
+
+```agda
       search-val : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k) (vs : Vec SL k)
                  → vals cs ≡ vs → (w : Sat k ψ vs) → ⟨ fst (search k ψ vs w) ∈ˢ Hull ⟩
       search-val k ψ cs vs e w =
@@ -741,11 +787,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
           (PT.rec (snd (fst (search k ψ vs w) ∈ˢ Hull))
             (λ { (cs , ecs) → search-val k ψ cs vs ecs w })
             (choose vs (λ i → hullStep⊆Hull n (fst (lookup i vs)) (from i))))
+```
 
-    -- =================================================================
-    -- THE HULL AS AN ELEMENT OF L.
-    -- =================================================================
+THE HULL AS AN ELEMENT OF L.
 
+```agda
     hullL : CS.S
     hullL = It.iterUnion
 
@@ -768,17 +814,16 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     M-isL : ⟨ isL HS.M ⟩
     M-isL = subst (λ t → ⟨ isL t ⟩) hullL-spec (snd hullL)
+```
 
-  -- ===================================================================
-  -- THE DEFINABLE STEP.  The formula names, as constants, the code set
-  -- of the parameter-free formulas (src/L/Choice/Internal.lagda.md
-  -- `freeCode-in/out` at `AllCodes ∅ʟ`), the stage `Lset lam`, the
-  -- graph of the stage's uniform satisfaction table
-  -- (src/L/GCH/SatFrame.lagda.md `SatGraph.pairs`), the stage's order
-  -- element `relL lam` and `ωʟ`.  Every host reading is stated at a
-  -- variable and reaches the construction by an equation.
-  -- ===================================================================
+THE DEFINABLE STEP. The formula names, as constants, the code set of the
+parameter-free formulas (src/L/Choice/Internal.lagda.md `freeCode-in/out` at
+`AllCodes ∅ʟ`), the stage `Lset lam`, the graph of the stage's uniform
+satisfaction table (src/L/GCH/SatFrame.lagda.md `SatGraph.pairs`), the stage's
+order element `relL lam` and `ωʟ`. Every host reading is stated at a variable
+and reaches the construction by an equation.
 
+```agda
   module Build where
 
     λ-isL : ⟨ isL lam ⟩
@@ -788,8 +833,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     A = LsetS lam ordλ
 
     module SM = SatGraph A using ( pairs; pairs-in; pairs-shape; valOf; valOf≡ )
+```
 
-    -- A member of the graph, read as a pair of a code and its value.
+A member of the graph, read as a pair of a code and its value.
+
+```agda
     pairs-out : (x : V ℓ) → ⟨ x ∈ˢ fst SM.pairs ⟩
               → ∥ Σ[ c ∈ CS.S ] Σ[ m ∈ ⟨ fst c ∈ˢ fst (AllCodes A) ⟩ ] (x ≡ pr (fst c) (fst (SM.valOf c m))) ∥₁
     pairs-out x h = SM.pairs-shape (x , isL-trans {x = fst SM.pairs} {y = x} h (snd SM.pairs)) h
@@ -803,12 +851,18 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     wL : SWO SL
     wL = orderAt lam ordλ
+```
 
-    -- the stage order, as the relation `relL` represents
+The stage order, as the relation `relL` represents.
+
+```agda
     relOf-at : SL → SL → Type (ℓ-suc ℓ)
     relOf-at = relOf wL
+```
 
-    -- the second component of a constructible pair is constructible
+The second component of a constructible pair is constructible.
+
+```agda
     pr-snd-isL : (a b : V ℓ) → ⟨ isL (pr a b) ⟩ → ⟨ isL b ⟩
     pr-snd-isL a b h =
       isL-trans {x = ⁅ a , b ⁆} {y = b} (subst ⟨_⟩ (sym (pair-spec a b b)) ∣ inr refl ∣₁)
@@ -820,19 +874,25 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     ε′ : ⊥* {ℓ} → ⟪ Lset lam ⟫
     ε′ = Empty.rec*
+```
 
-    -- The stage's inner satisfaction of a parameter-free formula, read
-    -- with the constants relabelled into the stage's alphabet.
+The stage's inner satisfaction of a parameter-free formula, read with the
+constants relabelled into the stage's alphabet.
+
+```agda
     sat-bridge : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : SL ^ k)
                → (δ ⊨₀ χ) ≡ (δ DA.⊨ᵐ mapFo ε′ χ)
     sat-bridge k χ δ =
         cong (λ κ → FOL.Semantics.At._⊨_ (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M (⊥* {ℓ}) κ δ χ)
           (funExt (λ b → Empty.rec* b))
       ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M ε′ DA.ι χ δ)
+```
 
-    -- THE KEY OF A PARAMETER-FREE FORMULA AT THE STAGE, sealed
-    -- (src/L/Coding/Uniform.lagda.md's law: a key written out inside a
-    -- satisfaction does not elaborate).
+THE KEY OF A PARAMETER-FREE FORMULA AT THE STAGE, sealed
+(src/L/Coding/Uniform.lagda.md's law: a key written out inside a satisfaction
+does not elaborate).
+
+```agda
     opaque
       keyOf : (k : ℕ) → Formula (⊥* {ℓ}) k → CS.S
       keyOf k χ = keyS A (mapFo ε′ χ)
@@ -848,41 +908,51 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       keyOf-fst k χ = cong (pr (# k)) (cong VCode.⌜_⌝
         ( mapFo-comp ε′ ⟪ Lset lam ⟫↪ χ
         ∙ cong (λ f → mapFo f χ) (funExt (λ b → Empty.rec* b)) ))
+```
 
-    -- The satisfaction set at that key, sealed with the key.
+The satisfaction set at that key, sealed with the key.
+
+```agda
     Tof : (k : ℕ) → Formula (⊥* {ℓ}) k → CS.S
     Tof k χ = SM.valOf (keyOf k χ) (keyOf∈ k χ)
 
     Tof-pair : (k : ℕ) (χ : Formula (⊥* {ℓ}) k)
              → ⟨ pr (fst (keyOf k χ)) (fst (Tof k χ)) ∈ˢ fst SM.pairs ⟩
     Tof-pair k χ = SM.pairs-in (keyOf k χ) (keyOf∈ k χ)
+```
 
-    -- A satisfaction value at another member with the same key.
+A satisfaction value at another member with the same key.
+
+```agda
     valOf-same : (x : CS.S) (m : ⟨ x CS.∈ˢ AllCodes A ⟩) (k : ℕ) (χ : Formula (⊥* {ℓ}) k)
                → fst x ≡ fst (keyOf k χ) → SM.valOf x m ≡ Tof k χ
     valOf-same x m k χ e =
       J (λ x' e' → (m' : ⟨ x' CS.∈ˢ AllCodes A ⟩) → SM.valOf x m ≡ SM.valOf x' m')
         (λ m' → cong (SM.valOf x) (snd (x CS.∈ˢ AllCodes A) m m'))
         (S≡ {x = x} {y = keyOf k χ} e) (keyOf∈ k χ)
+```
 
-    -- MEMBERSHIP IN THE SATISFACTION SET IS THE STAGE'S SATISFACTION.
+MEMBERSHIP IN THE SATISFACTION SET IS THE STAGE'S SATISFACTION.
+
+```agda
     sat-at : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : SL ^ k) (z : CS.S)
            → fst z ≡ graph A δ → (z CS.∈ˢ Tof k χ) ≡ (δ ⊨₀ χ)
     sat-at k χ δ z qz =
         cong (z CS.∈ˢ_) (SM.valOf≡ (keyOf k χ) (keyOf∈ k χ))
       ∙ val-sat A (mapFo ε′ χ) (keyOf k χ) (keyOf∈ k χ) (cong fst (keyOf≡ k χ)) δ z qz
       ∙ sym (sat-bridge k χ δ)
+```
 
-    -- =================================================================
-    -- THE ATOMS.  "The pair of x and y is in the constant F"; "s is the
-    -- code of a parameter-free formula of arity a+1" (the shape of
-    -- src/L/Choice/Internal.lagda.md `FreeAt`, at the constant C₀).
-    -- =================================================================
+THE ATOMS. "The pair of x and y is in the constant F"; "s is the code of a
+parameter-free formula of arity a+1" (the shape of
+src/L/Choice/Internal.lagda.md `FreeAt`, at the constant `C₀`).
 
-    -- "s is a key of C₀ of arity a+1": s is in C₀ and s is the pair of the
-    -- successor of a with some code.  Inside: the successor is 0; then
-    -- the code is 0, the successor 1.  Sealed at its slots; the two
-    -- readings are stated at a variable environment.
+"s is a key of C₀ of arity a+1": `s` is in `C₀` and `s` is the pair of the
+successor of `a` with some code. Inside: the successor is 0; then the code is 0,
+the successor 1. Sealed at its slots; the two readings are stated at a variable
+environment.
+
+```agda
     opaque
       keyIn : ∀ {n} → Fin n → Fin n → Formula CS.S n
       keyIn s a = (var s ∈̇ con C₀)
@@ -927,20 +997,19 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
             where
             qz : fst z ≡ sucV (fst (lookup a γ))
             qz = subst ⟨_⟩ (sucAtL-adequate (suc a) zero (z ∷ γ)) hs
+```
 
-    -- =================================================================
-    -- THE WITNESS FORMULA, over (w ∷ Z ∷ []).  Five binders: k, the
-    -- code s, the environment e, the extended environment e', and the
-    -- satisfaction set T.  Inside the body: T is 0, e' is 1, e is 2, s
-    -- is 3, k is 4, w is 5, Z is 6.  Under the minimality binder w' is
-    -- 0 and the rest shift by one; under its existential e'' is 0.
-    --
-    -- The body is sealed at its slots.  Its eight readings and its
-    -- filling are stated once, at a variable environment (`BodyRd`),
-    -- and every concrete site instantiates them: the concrete instance
-    -- is only ever compared under the seal.
-    -- =================================================================
+THE WITNESS FORMULA, over `(w ∷ Z ∷ [])`. Five binders: `k`, the code `s`, the
+environment `e`, the extended environment `e'`, and the satisfaction set `T`.
+Inside the body: `T` is 0, `e'` is 1, `e` is 2, `s` is 3, `k` is 4, `w` is 5,
+`Z` is 6. Under the minimality binder `w'` is 0 and the rest shift by one; under
+its existential `e''` is 0.
 
+The body is sealed at its slots. Its eight readings and its filling are stated
+once, at a variable environment (`BodyRd`), and every concrete site instantiates
+them: the concrete instance is only ever compared under the seal.
+
+```agda
     Env : CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S ^ 7
     Env T e' e s k w Z = T ∷ e' ∷ e ∷ s ∷ k ∷ w ∷ Z ∷ []
 
@@ -963,8 +1032,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
       γ₇ : CS.S ^ 7
       γ₇ = Env T e' e s k w Z
+```
 
-      -- The minimality clause, host-side, at a family g presenting e.
+The minimality clause, host-side, at a family `g` presenting `e`.
+
+```agda
       Min : {m : ℕ} (g : Fin m → V ℓ) → Type (ℓ-suc ℓ)
       Min g = (w' : CS.S) → ⟨ fst w' ∈ˢ fst A ⟩ → (e'' : CS.S)
             → fst e'' ≡ env (cons (fst w') g) → ⟨ fst e'' ∈ˢ fst T ⟩
@@ -1019,8 +1091,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
                      (subst ⟨_⟩ (consAtL-adequate i0 i1 i4 (e'' ∷ w' ∷ γ₇) g hE) hc) hm
                      (subst ⟨_⟩ (appC-adequate Rel i0 i6 (w' ∷ γ₇)) hr) })
               hex
+```
 
-    -- The five binders, sealed with their two readings.
+The five binders, sealed with their two readings.
+
+```agda
     opaque
       witFo : Formula CS.S 2
       witFo = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ bodyFo))))
@@ -1035,13 +1110,19 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       witFo-out w Z = PT.rec squash₁ (λ { (k , hk) → PT.rec squash₁ (λ { (s , hs) →
         PT.rec squash₁ (λ { (e , he) → PT.rec squash₁ (λ { (e' , he') → PT.map
           (λ { (T , hT) → T , e' , e , s , k , hT }) he' }) he }) hs }) hk })
+```
 
-    -- The numeral read out of a member of ωʟ.
+The numeral read out of a member of `ωʟ`.
+
+```agda
     ω-num : (q : CS.S) → ⟨ fst q ∈ˢ fst ωʟ ⟩ → ∥ Σ[ n ∈ ℕ ] (fst q ≡ # n) ∥₁
     ω-num q h = PT.map (λ { (n , e) → lower n , (e ∙ numeralL-fst (lower n)) })
       (subst ⟨_⟩ (ω-specL q) h)
+```
 
-    -- A vector from a family, with its lookups.
+A vector from a family, with its lookups.
+
+```agda
     vecOf : {k : ℕ} → (Fin k → SL) → Vec SL k
     vecOf {zero} f = []
     vecOf {suc k} f = f zero ∷ vecOf (λ i → f (suc i))
@@ -1049,11 +1130,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     lookup-vecOf : {k : ℕ} (f : Fin k → SL) (i : Fin k) → lookup i (vecOf f) ≡ f i
     lookup-vecOf {suc k} f zero = refl
     lookup-vecOf {suc k} f (suc i) = lookup-vecOf (λ j → f (suc j)) i
+```
 
-    -- =================================================================
-    -- THE SEARCH SATISFIES THE FORMULA (the `least` clause).
-    -- =================================================================
+THE SEARCH SATISFIES THE FORMULA (the `least` clause).
 
+```agda
     module Least (Z : CS.S) (k : ℕ) (χ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec SL k)
                  (from : From Z vs) (w₀ : Sat k χ vs) where
 
@@ -1068,8 +1149,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
       aS : CS.S
       aS = fst a , Lset→isL lam ordλ (fst a) (snd a)
+```
 
-      -- the parameters, as indices of Z
+The parameters, as indices of `Z`.
+
+```agda
       g : Ix Z k
       g i = fiber (fst Z) (from i) .fst
 
@@ -1081,8 +1165,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
       e : CS.S
       e = envS Z g
+```
 
-      -- the extended environments
+The extended environments.
+
+```agda
       ext : SL → CS.S
       ext b = envFor A (b ∷ vs)
 
@@ -1140,11 +1227,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       least : ⟨ (aS ∷ Z ∷ []) ⊨ witFo ⟩
       least = witFo-in aS Z T (ext a) e sS (nn k)
         (BodyRd.b-fill T (ext a) e sS (nn k) aS Z g′ refl c1 c2 c3 c4 c5 c6 c7 c8)
+```
 
-    -- =================================================================
-    -- THE FORMULA READS BACK AS A SEARCH (the `out` clause).
-    -- =================================================================
+THE FORMULA READS BACK AS A SEARCH (the `out` clause).
 
+```agda
     module Out (Z : CS.S) (Z⊆ : (z : S) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
                (w T e' e s k : CS.S) (h : ⟨ Env T e' e s k w Z ⊨ bodyFo ⟩) where
 
@@ -1215,8 +1302,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
             searched : Searched Z (fst w)
             searched = n , χ , vs , w₀ , (from , sym (cong (λ q → fst (fst q))
               (isPropLeastOf wL P (leastOf wL {ℓ'' = ℓ-suc ℓ} lem P w₀) (wS , (sat , min)))))
+```
 
-          -- the table slot is the satisfaction set at the key
+The table slot is the satisfaction set at the key.
+
+```agda
           table : ∥ Searched Z (fst w) ∥₁
           table = PT.rec squash₁
             (λ { (x , m , e) →
@@ -1237,11 +1327,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
       searched : ∥ Searched Z (fst w) ∥₁
       searched = PT.rec squash₁ (λ { (n , qk) → AtNum.code n qk }) (ω-num k (Rd.b-num h))
+```
 
-    -- =================================================================
-    -- THE STEP ITSELF: carved by separation out of Z ∪ Lset lam.
-    -- =================================================================
+THE STEP ITSELF: carved by separation out of `Z ∪ Lset lam`.
 
+```agda
     Bnd : CS.S → CS.S
     Bnd Z = unionʟ (pairʟ Z A)
 
@@ -1250,8 +1340,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     bnd-L : (Z z : CS.S) → ⟨ fst z ∈ˢ Lset lam ⟩ → ⟨ z CS.∈ˢ Bnd Z ⟩
     bnd-L Z z h = unionʟ-in (pairʟ Z A) z A (pairʟ-in Z A A (inr refl)) h
+```
 
-    -- What a member of the step is, host-side.
+What a member of the step is, host-side.
+
+```agda
     Body : CS.S → CS.S → Type (ℓ-suc ℓ)
     Body Z w = ⟨ fst w ∈ˢ fst Z ⟩ ⊎ ((fst w ≡ ∅) ⊎ ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩)
 
@@ -1259,10 +1352,12 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     wit-L Z w hw = PT.rec (snd (fst w ∈ˢ Lset lam))
       (λ { (T , e' , e , s , k , h) → BodyRd.b-stage T e' e s k w Z h })
       (witFo-out w Z hw)
+```
 
-    -- The separating description, over (w ∷ []), with Z a constant; the
-    -- witness formula is reached by binding Z and renaming.  Sealed with
-    -- its two readings.
+The separating description, over `(w ∷ [])`, with `Z` a constant; the witness
+formula is reached by binding `Z` and renaming. Sealed with its two readings.
+
+```agda
     opaque
       sepFo : CS.S → Formula CS.S 1
       sepFo Z = (var i0 ∈̇ con Z)
@@ -1305,10 +1400,13 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
 
     Φ-out : (Z w : CS.S) → ⟨ fst w ∈ˢ fst (Φ Z) ⟩ → ∥ Body Z w ∥₁
     Φ-out Z w h = sep-out Z w (subst ⟨_⟩ (Φ-mem Z w) h .snd)
+```
 
-    -- The step formula, over (Z' ∷ Z ∷ []): "the members of Z' are
-    -- exactly the members of Z, the empty set, and the witnesses at Z".
-    -- Sealed with the two facts the iteration consumes.
+The step formula, over `(Z' ∷ Z ∷ [])`: "the members of Z' are exactly the
+members of Z, the empty set, and the witnesses at Z". Sealed with the two facts
+the iteration consumes.
+
+```agda
     opaque
       bodyF : Formula CS.S 3
       bodyF = (var i0 ∈̇ var i2) ∨̇ ((var i0 ≐ con ∅ʟ) ∨̇ renameFo ρf witFo)
@@ -1353,8 +1451,11 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
           where
           vS : CS.S
           vS = v , isL-trans {x = fst (Φ Z)} {y = v} hv (snd (Φ Z))
+```
 
-    -- THE PACK.
+THE PACK.
+
+```agda
     pack : StepPack
     pack = record
       { Φ       = Φ
@@ -1420,8 +1521,11 @@ module Condense′ (lam : S) (ordλ : IsOrd lam)
   module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ using ( Hull⊆L )
   module HSC = HullStage.C lam ordλ succλ X X⊆L ∅∈λ using ( πX )
   module D = Discharge lam ordλ succλ X X⊆L ∅∈λ HI.M-isL using ( pixL )
+```
 
-  -- The hull as an element of L, and the iteration that reaches it.
+The hull as an element of L, and the iteration that reaches it.
+
+```agda
   hullL : CS.S
   hullL = HI.hullL
 

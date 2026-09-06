@@ -47,17 +47,23 @@ carrier `X`.
 
 ```agda
 module Collapse (X : S) where
+```
 
-  -- the filtered small index: the small members of x that are small members
-  -- of the carrier. The filter uses the small membership, so Fiber x is small
+The filtered small index: the small members of `x` that are small members of the
+carrier. The filter uses the small membership, so `Fiber x` is small.
+
+```agda
   Fiber : S → Type ℓ
   Fiber x = Σ[ m ∈ ⟪ x ⟫ ] ⟨ ⟪ x ⟫↪ m ∈ₛ X ⟩
 
   step : (x : S) → (∀ y → y ∈ᵗ x → S) → S
   step x rec = sett (Fiber x) (λ p → rec (⟪ x ⟫↪ (p .fst)) (member x (p .fst)))
+```
 
-  -- perf: the recursion unfolds to an accessibility eliminator; seal at
-  -- birth, computation law as the read lemma (R-36)
+Perf: the recursion unfolds to an accessibility eliminator; seal at birth,
+computation law as the read lemma (R-36).
+
+```agda
   opaque
     π : S → S
     π = ∈-induction step
@@ -66,9 +72,12 @@ module Collapse (X : S) where
     unfolding π
     π-compute : (x : S) → π x ≡ step x (λ y _ → π y)
     π-compute = ∈-induction-compute step
+```
 
-  -- every member of a collapse value is a collapse value of a member of the
-  -- carrier; the filter carries the carrier-membership witness
+Every member of a collapse value is a collapse value of a member of the carrier;
+the filter carries the carrier-membership witness.
+
+```agda
   π-member : (x z : S) → ⟨ z ∈ˢ π x ⟩
            → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
   π-member x z z∈ = PT.map mk (subst (λ w → ⟨ z ∈ˢ w ⟩) (π-compute x) z∈)
@@ -78,9 +87,12 @@ module Collapse (X : S) where
     mk (p , q) = ⟪ x ⟫↪ (p .fst)
                , ( ∈∈ₛ {a = ⟪ x ⟫↪ (p .fst)} {b = X} .snd (p .snd)
                  , q )
+```
 
-  -- the range as a set: the small members of the carrier, their collapse
-  -- values collected
+The range as a set: the small members of the carrier, their collapse values
+collected.
+
+```agda
   πX : S
   πX = sett ⟪ X ⟫ (λ m → π (⟪ X ⟫↪ m))
 
@@ -105,9 +117,12 @@ module Collapse (X : S) where
       y∈πz = subst (λ w → y ∈ᵗ w) (sym pzx) y∈x
       go₂ : Σ[ w ∈ S ] (⟨ w ∈ˢ X ⟩ × (π w ≡ y)) → ⟨ y ∈ˢ πX ⟩
       go₂ (w , w∈X , pwy) = subst (λ v → ⟨ v ∈ˢ πX ⟩) pwy (πX-intro w w∈X)
+```
 
-  -- membership forward: a member of a carrier member collapses into the
-  -- collapsed carrier member
+Membership forward: a member of a carrier member collapses into the collapsed
+carrier member.
+
+```agda
   π∈-fwd : (x y : S) → y ∈ᵗ x → y ∈ᵗ X → ⟨ π y ∈ˢ π x ⟩
   π∈-fwd x y yx yu = subst (λ w → ⟨ π y ∈ˢ w ⟩) (sym (π-compute x)) wit
     where
@@ -121,17 +136,23 @@ module Collapse (X : S) where
     sm = ∈∈ₛ {a = ⟪ x ⟫↪ m} {b = X} .fst (subst (λ w → ⟨ w ∈ˢ X ⟩) (sym p) yu)
     wit : ⟨ π y ∈ˢ sett (Fiber x) (λ q → π (⟪ x ⟫↪ (q .fst))) ⟩
     wit = ∣ (m , sm) , cong π p ∣₁
+```
 
-  -- extensional injectivity on the carrier; the carrier's structure
-  -- extensionality is a module parameter here and only here. The memberships
-  -- the transitive proof took from Xtr are carried by the fibers or by the
-  -- extensionality quantification, so no transitivity is needed
+Extensional injectivity on the carrier; the carrier's structure extensionality
+is a module parameter here and only here. The memberships the transitive proof
+took from `Xtr` are carried by the fibers or by the extensionality
+quantification, so no transitivity is needed.
+
+```agda
   module InjExt (Xext : isExt X) where
 
     P : S → Type (ℓ-suc ℓ)
     P x = (y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
+```
 
-    -- direction 1: move a member z of x into y; the hypothesis fires at z ∈ x
+Direction 1: move a member `z` of `x` into `y`; the hypothesis fires at `z ∈ x`.
+
+```agda
     in⊆ : (x y z : S) → x ∈ᵗ X → y ∈ᵗ X → z ∈ᵗ x → z ∈ᵗ X
         → π x ≡ π y
         → ((a : S) → a ∈ᵗ x → P a)
@@ -151,9 +172,12 @@ module Collapse (X : S) where
         bu = ∈∈ₛ {a = b} {b = X} .snd (p .snd)
         z≡b : z ≡ b
         z≡b = IH z zx b zu bu (sym q)
+```
 
-    -- direction 2: move a member z of y into x; the hypothesis fires at the
-    -- witness b ∈ x extracted from the collapsed membership
+Direction 2: move a member `z` of `y` into `x`; the hypothesis fires at the
+witness `b ∈ x` extracted from the collapsed membership.
+
+```agda
     out⊆ : (x y z : S) → x ∈ᵗ X → y ∈ᵗ X → z ∈ᵗ y → z ∈ᵗ X
          → π y ≡ π x
          → ((a : S) → a ∈ᵗ x → P a)
@@ -181,13 +205,19 @@ module Collapse (X : S) where
       to z zu zx = in⊆ x y z xu yu zx zu e IH
       from : (z : S) → z ∈ᵗ X → ⟨ z ∈ˢ y ⟩ → ⟨ z ∈ˢ x ⟩
       from z zu zy = out⊆ x y z xu yu zy zu (sym e) IH
+```
 
-    -- extensional injectivity on the carrier, by ∈-induction
+Extensional injectivity on the carrier, by `∈`-induction.
+
+```agda
     π-inj : (x y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
     π-inj = ∈-induction step-inj
+```
 
-    -- the backward direction: a collapsed membership names a witness in the
-    -- carrier member, and injectivity identifies it
+The backward direction: a collapsed membership names a witness in the carrier
+member, and injectivity identifies it.
+
+```agda
     π∈-bwd : (x y : S) → x ∈ᵗ X → y ∈ᵗ X → ⟨ π y ∈ˢ π x ⟩ → y ∈ᵗ x
     π∈-bwd x y xu yu h =
       PT.rec (snd (y ∈ˢ x)) step2 (subst (λ w → ⟨ π y ∈ˢ w ⟩) (π-compute x) h)
@@ -203,13 +233,19 @@ module Collapse (X : S) where
         cu = ∈∈ₛ {a = c} {b = X} .snd (p .snd)
         c≡y : c ≡ y
         c≡y = π-inj c y cu yu q
+```
 
-    -- the iso reading on the carrier, both directions
+The iso reading on the carrier, both directions.
+
+```agda
     iso : (x y : S) → x ∈ᵗ X → y ∈ᵗ X
         → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩)
     iso x y xu yu = (λ yx → π∈-fwd x y yx yu) , π∈-bwd x y xu yu
+```
 
-  -- the collapse is the unique solution of its recursion equation
+The collapse is the unique solution of its recursion equation.
+
+```agda
   unique : (f : S → S)
          → ((x : S) → f x ≡ sett (Fiber x) (λ p → f (⟪ x ⟫↪ (p .fst))))
          → (x : S) → π x ≡ f x
@@ -228,10 +264,13 @@ module Collapse (X : S) where
         where
         ih' : (p : Fiber x) → π (⟪ x ⟫↪ (p .fst)) ≡ f (⟪ x ⟫↪ (p .fst))
         ih' p = IH (⟪ x ⟫↪ (p .fst)) (member x (p .fst))
+```
 
-  -- Devlin 5.2(ii): if Y ⊆ X is transitive, the collapse fixes Y pointwise.
-  -- The filter on a member y of Y is full, because Y is transitive and
-  -- Y ⊆ X, so every member of y lies in X
+Devlin 5.2(ii): if `Y ⊆ X` is transitive, the collapse fixes `Y` pointwise. The
+filter on a member `y` of `Y` is full, because `Y` is transitive and `Y ⊆ X`, so
+every member of `y` lies in `X`.
+
+```agda
   fixes : (Y : S) → ⟨ Y ⊆ X ⟩ → isTrans Y → (y : S) → y ∈ᵗ Y → π y ≡ y
   fixes Y YX Ytr = ∈-induction stepF
     where
@@ -272,6 +311,6 @@ module Collapse (X : S) where
           ihq = IH (⟪ y ⟫↪ (p .fst)) (member y (p .fst))
                   (Ytr {x = y} {y = ⟪ y ⟫↪ (p .fst)} (member y (p .fst)) yY)
                 ∙ fp .snd
-
-  -- Devlin 5.2(ii) at the carrier itself
 ```
+
+Devlin 5.2(ii) at the carrier itself.

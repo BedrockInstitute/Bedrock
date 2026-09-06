@@ -128,15 +128,17 @@ private
   i7 = suc i6
   i8 : ∀ {k} → Fin (suc (suc (suc (suc (suc (suc (suc (suc (suc k)))))))))
   i8 = suc i7
+```
 
-  -- The renaming of section 4.1's body into its nine slots, and its
-  -- agreement, at the top level.  Measured: the same clauses cost
-  -- 3.4 s and 5.3 s inside `Count.OneStep`, 0.5 s and 1.4 s here, and
-  -- 13 ms and 36 ms in a probe file that imports only their context;
-  -- the cost of a clause grows with what the module already holds.
-  -- Slots, outermost first: T is 0, e' is 1, k is 2, Z is 3, e is 4,
-  -- s is 5, z is 6, p is 7, q is 8; the body reads
-  -- (T ∷ e' ∷ e ∷ s ∷ k ∷ z ∷ Z ∷ []).
+The renaming of section 4.1's body into its nine slots, and its agreement, at
+the top level. Measured: the same clauses cost 3.4 s and 5.3 s inside
+`Count.OneStep`, 0.5 s and 1.4 s here, and 13 ms and 36 ms in a probe file that
+imports only their context; the cost of a clause grows with what the module
+already holds. Slots, outermost first: `T` is 0, `e'` is 1, `k` is 2, `Z` is 3,
+`e` is 4, `s` is 5, `z` is 6, `p` is 7, `q` is 8; the body reads `(T ∷ e' ∷ e ∷
+s ∷ k ∷ z ∷ Z ∷ [])`.
+
+```agda
   ρ₉ : Fin 7 → Fin 9
   ρ₉ zero = i0
   ρ₉ (suc zero) = i1
@@ -232,8 +234,11 @@ module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (1∈κ : ⟨ # 1 ∈
 
   fn : (z : S) → Mem z → S
   fn z m = val z m (decide z)
+```
 
-  -- The graph and its host reading.
+The graph and its host reading.
+
+```agda
   Wit : (y z : S) → Type (ℓ-suc ℓ)
   Wit y z =
       (⟨ fst z ∈ fst D₁ ⟩
@@ -390,8 +395,11 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
 
   Dmap : DefinableMap
   Dmap = record Ls.Dmap { cod = P ; into = λ z m → inP (fn z m) z (fn-holds z m) }
+```
 
-  -- THE TABLE: the set of pairs (z, e_z), z ∈ D.
+THE TABLE: the set of pairs `(z, e_z)`, `z ∈ D`.
+
+```agda
   T : S
   T = Ls.T
 
@@ -401,8 +409,11 @@ module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
   T-out : (z e : S) → ⟨ pr (fst z) (fst e) ∈ fst T ⟩
         → Σ[ m ∈ Mem z ] (fst e ≡ fst (fn z m))
   T-out = Ls.T-out
+```
 
-  -- THE INJECTION, when G is functional.
+THE INJECTION, when `G` is functional.
+
+```agda
   module Functional
     (funct : (p z z' : S) → Holds G p z → Holds G p z' → fst z ≡ fst z') where
 
@@ -470,19 +481,24 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   (X-isL : ⟨ isL X ⟩)
   (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
   (base : InjL (X , X-isL) κ) where
+```
 
-  -- Every module application carries a `using` list (an unrestricted
-  -- one copies the whole module into this interface); the step
-  -- builder, the iteration and the hull stage are taken from
-  -- src/L/GCH/HullIn.lagda.md `Telescope` directly, not through copies
-  -- of `Condense′`'s copies.
+Every module application carries a `using` list (an unrestricted one copies the
+whole module into this interface); the step builder, the iteration and the hull
+stage are taken from src/L/GCH/HullIn.lagda.md `Telescope` directly, not through
+copies of `Condense′`'s copies.
+
+```agda
   module Cn = Condense′ lam ordλ succλ X X⊆L ∅∈λ elem sup X-isL using ( hullStep; hullL )
   module B = Telescope.Build lam ordλ succλ X X⊆L ∅∈λ
     using ( A; Body; module BodyRd; C₀; Env; module KeyIn; bodyFo; wL; witFo-out
           ; Φ; Φ-out; λ-isL; ω-num; pack )
   module SM = SatGraph B.A using ( pairs; pairs-shape; valOf )
+```
 
-  -- A member of the graph, read as a pair of a code and its value.
+A member of the graph, read as a pair of a code and its value.
+
+```agda
   pairs-out : (x : V ℓ) → ⟨ x ∈ fst SM.pairs ⟩
             → ∥ Σ[ c ∈ S ] Σ[ m ∈ ⟨ fst c ∈ fst (AllCodes B.A) ⟩ ] (x ≡ pr (fst c) (fst (SM.valOf c m))) ∥₁
   pairs-out x h = SM.pairs-shape (x , isL-trans {x = fst SM.pairs} {y = x} h (snd SM.pairs)) h
@@ -491,34 +507,40 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   module HI = Telescope.HullIter lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack using ( hullStep⊆Hull )
   module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ using ( Hull⊆L )
   open Cn using ( hullStep; hullL )
+```
 
-  -- -------------------------------------------------------------------
-  -- 4.0  Facts about κ.
-  -- -------------------------------------------------------------------
+Section 4.0. Facts about `κ`.
 
+```agda
   num∈κ : (k : ℕ) → ⟨ # k ∈ fst κ ⟩
   num∈κ k = ω⊆ (fst κ) oκ κ∉ω (# k) (#∈ω k)
+```
 
-  -- The pairing at κ (src/L/GCH/Pairing.lagda.md's square law).
+The pairing at `κ` (src/L/GCH/Pairing.lagda.md's square law).
+
+```agda
   pairκ : InjL (prodL κ) κ
   pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (fst κ) (snd κ) oκ cκ κ∉ω
 
   Lω↪κ : InjL Lω κ
   Lω↪κ = injl-trans Lω ωʟ κ limit-stage-counted
     (inclusion-coded ωʟ κ (λ z hz → ω⊆ (fst κ) oκ κ∉ω z hz))
+```
 
-  -- -------------------------------------------------------------------
-  -- 4.1  ONE STEP.  Z is an iterate (a subset of the stage) with a
-  -- coded injection E : Z ↪ κ; Φ Z is counted.
-  -- -------------------------------------------------------------------
+Section 4.1. ONE STEP. `Z` is an iterate (a subset of the stage) with a coded
+injection `E : Z ↪ κ`; `Φ Z` is counted.
 
+```agda
   module OneStep (Z : S) (Z⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
                  (E : S) (cE : InjCode E Z κ) where
 
     ΦZ : S
     ΦZ = B.Φ Z
+```
 
-    -- The new members; among them the junk value and the witnesses.
+The new members; among them the junk value and the witnesses.
+
+```agda
     opaque
       D₂ : S
       D₂ = hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .fst
@@ -567,26 +589,29 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
       go : (z ≡ ∅) ⊎ (z ≡ ∅ → Empty.⊥) → ⟨ z ∈ fst U₃.D ⟩
       go (inl e)  = U₃.in₁ zS (D∅-in zS h e)
       go (inr ne) = U₃.in₂ zS (Dw-in zS h ne)
+```
 
-    -- The junk value is 0 ∈ κ.
+The junk value is `0 ∈ κ`.
+
+```agda
     D∅↪κ : InjL D∅ κ
     D∅↪κ = inclusion-coded D∅ κ
       (λ z hz → subst (λ w → ⟨ w ∈ fst κ ⟩)
         (sym (D∅-out (z , isL-trans {x = fst D∅} {y = z} hz (snd D∅)) hz .snd)) (num∈κ 0))
+```
 
-    -- -----------------------------------------------------------------
-    -- THE WITNESS PAIRS.  p = (s, e): s the key of a parameter-free
-    -- formula (a member of L_ω), e the parameter environment over Z (a
-    -- member of seqL Z).  (p, z) ∈ G when z is the least satisfier of
-    -- s at e, in the words of src/L/GCH/HullIn.lagda.md `bodyFo`.
-    --
-    --   The separating description, over (q ∷ []): "q = (p, z), p ∈ PB,
-    --   p = (s, e), and for Z pinned, some k, e', T make bodyFo hold".
-    --   Binders, outermost first: p, z, s, e, Z, k, e', T.  Inside all
-    --   of them: T is 0, e' is 1, k is 2, Z is 3, e is 4, s is 5, z is
-    --   6, p is 7, q is 8; bodyFo reads (T ∷ e' ∷ e ∷ s ∷ k ∷ w ∷ Z ∷ []).
-    -- -----------------------------------------------------------------
+THE WITNESS PAIRS. `p = (s, e)`: `s` the key of a parameter-free formula (a
+member of `L_ω`), `e` the parameter environment over `Z` (a member of `seqL Z`).
+`(p, z) ∈ G` when `z` is the least satisfier of `s` at `e`, in the words of
+src/L/GCH/HullIn.lagda.md `bodyFo`.
 
+The separating description, over `(q ∷ [])`: "`q = (p, z)`, `p ∈ PB`, `p = (s,
+e)`, and for `Z` pinned, some `k`, `e'`, `T` make `bodyFo` hold". Binders,
+outermost first: `p`, `z`, `s`, `e`, `Z`, `k`, `e'`, `T`. Inside all of them:
+`T` is 0, `e'` is 1, `k` is 2, `Z` is 3, `e` is 4, `s` is 5, `z` is 6, `p` is 7,
+`q` is 8; `bodyFo` reads `(T ∷ e' ∷ e ∷ s ∷ k ∷ w ∷ Z ∷ [])`.
+
+```agda
     module U₂ = Union2 Lω (seqL Z) using ( D; in₁; in₂ )
 
     PB : S
@@ -596,8 +621,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
 
     Γ : (T e' k Zv e s z p q : S) → S ^ 9
     Γ T e' k Zv e s z p q = T ∷ e' ∷ k ∷ Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []
+```
 
-    -- The body, renamed, sealed with its reading.
+The body, renamed, sealed with its reading.
+
+```agda
     opaque
       body₉ : Formula S 9
       body₉ = renameFo ρ₉ B.bodyFo
@@ -607,8 +635,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
       body₉-read T e' k Zv e s z p q =
         cong ⟨_⟩ (Ren.⊨-rename ρ₉ B.bodyFo (Γ T e' k Zv e s z p q) (B.Env T e' e s k z Zv)
                     (ag₉ T e' k Zv e s z p q))
+```
 
-    -- Three plain binders, sealed with their readings.
+Three plain binders, sealed with their readings.
+
+```agda
     opaque
       wit₆ : Formula S 6
       wit₆ = ∃̇ (∃̇ (∃̇ body₉))
@@ -630,8 +661,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
         at₂ k (e' , h) = PT.rec squash₁ (at₃ k e') h
         at₁ : Σ[ k ∈ S ] ∥ Σ[ e' ∈ S ] ∥ Σ[ T ∈ S ] ⟨ Γ T e' k Zv e s z p q ⊨ body₉ ⟩ ∥₁ ∥₁ → Out
         at₁ (k , h) = PT.rec squash₁ (at₂ k) h
+```
 
-    -- Z pinned, sealed.
+`Z` pinned, sealed.
+
+```agda
     opaque
       pin₅ : Formula S 5
       pin₅ = pinAt Z wit₆
@@ -644,13 +678,19 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
       pin₅-out : (e s z p q : S) → ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ pin₅ ⟩
                → ∥ Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ k ∈ S ] ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩ ∥₁
       pin₅-out e s z p q h = wit₆-out Z e s z p q (pin-out Z wit₆ (e ∷ s ∷ z ∷ p ∷ q ∷ []) h)
+```
 
-    -- The host reading of a witness pair.
+The host reading of a witness pair.
+
+```agda
     GW : (p z : S) → Type (ℓ-suc ℓ)
     GW p z = ∥ Σ[ s ∈ S ] Σ[ e ∈ S ] Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ k ∈ S ]
                ((fst p ≡ pr (fst s) (fst e)) × ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩) ∥₁
+```
 
-    -- s and e bound, sealed.
+`s` and `e` bound, sealed.
+
+```agda
     opaque
       se₃ : Formula S 3
       se₃ = ∃̇ (∃̇ (prAtL i3 i1 i0 ∧̇ pin₅))
@@ -673,8 +713,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
         at₁ : Σ[ s ∈ S ] ∥ Σ[ e ∈ S ] ( ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ prAtL i3 i1 i0 ⟩
                                       × ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ pin₅ ⟩ ) ∥₁ → GW p z
         at₁ (s , h) = PT.rec squash₁ (at₂ s) h
+```
 
-    -- The separating description, sealed.
+The separating description, sealed.
+
+```agda
     opaque
       gFo : Formula S 1
       gFo = ∃̇ (∃̇ (prAtL i2 i1 i0 ∧̇ ((var i1 ∈̇ con PB) ∧̇ se₃)))
@@ -699,8 +742,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
         at₁ : Σ[ p ∈ S ] ∥ Σ[ z ∈ S ] ( ⟨ (z ∷ p ∷ q ∷ []) ⊨ prAtL i2 i1 i0 ⟩
                                       × (⟨ fst p ∈ fst PB ⟩ × ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩) ) ∥₁ → Out
         at₁ (p , h) = PT.rec squash₁ (at₂ p) h
+```
 
-    -- THE RELATION, carved out of the pair bound.
+THE RELATION, carved out of the pair bound.
+
+```agda
     opaque
       G : S
       G = hasSeparationL PBd.bnd gFo .fst .fst
@@ -729,15 +775,16 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
           where
           ee : (fst p ≡ fst p') × (fst z ≡ fst z')
           ee = pr-inj (sym (prʟ-fst p z) ∙ qq)
+```
 
-    -- -----------------------------------------------------------------
-    -- EXISTENCE: every witness has a pair.  The key is a member of L_ω
-    -- (it is the arity numeral paired with a hereditarily finite code),
-    -- and the environment is a finite sequence over Z.
-    -- -----------------------------------------------------------------
+EXISTENCE: every witness has a pair. The key is a member of `L_ω` (it is the
+arity numeral paired with a hereditarily finite code), and the environment is a
+finite sequence over `Z`.
 
-    -- The body is read through src/L/GCH/HullIn.lagda.md `BodyRd`, at
-    -- this variable environment.
+The body is read through src/L/GCH/HullIn.lagda.md `BodyRd`, at this variable
+environment.
+
+```agda
     module AtBody (z T e' e s k : S) (hb : ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩) where
 
       γ₇ : S ^ 7
@@ -799,15 +846,14 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
           at (n , qk) = prʟ s e
             , G-in (prʟ s e) z (subst (λ w → ⟨ w ∈ fst PB ⟩) (sym (prʟ-fst s e)) (AB.AtNum.p∈PB n qk))
                 hz s e T e' k (prʟ-fst s e) hb
+```
 
-    -- -----------------------------------------------------------------
-    -- FUNCTIONALITY: one key and one environment have one least
-    -- satisfier.  The two satisfaction sets are the same table value,
-    -- the two extended environments are the cons of each satisfier
-    -- onto the one environment, and each minimality clause refutes the
-    -- other satisfier being below.
-    -- -----------------------------------------------------------------
+FUNCTIONALITY: one key and one environment have one least satisfier. The two
+satisfaction sets are the same table value, the two extended environments are
+the cons of each satisfier onto the one environment, and each minimality clause
+refutes the other satisfier being below.
 
+```agda
     private
       same-val : (x x' : S) (m : ⟨ fst x ∈ fst (AllCodes B.A) ⟩) (m' : ⟨ fst x' ∈ fst (AllCodes B.A) ⟩)
                → fst x ≡ fst x' → fst (SM.valOf x m) ≡ fst (SM.valOf x' m')
@@ -832,8 +878,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
 
       e'₂≡ : fst e'₂ ≡ env (cons (fst z') N.g′)
       e'₂≡ = A₂.Rd.b-cons N.g′ N.hE hb₂
+```
 
-      -- the two satisfaction sets agree
+The two satisfaction sets agree.
+
+```agda
       T≡ : fst T ≡ fst T₂
       T≡ = PT.rec2 (setIsSet (fst T) (fst T₂)) read
         (pairs-out (pr (fst s) (fst T)) (A₁.Rd.b-tab hb))
@@ -844,8 +893,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
              → fst T ≡ fst T₂
         read (x , m , q) (x' , m' , q') =
           pr-inj q .snd ∙ same-val x x' m m' (sym (pr-inj q .fst) ∙ pr-inj q' .fst) ∙ sym (pr-inj q' .snd)
+```
 
-      -- neither satisfier is below the other
+Neither satisfier is below the other.
+
+```agda
       not-below : (a b : S) (ha : ⟨ fst a ∈ fst B.A ⟩) (hb' : ⟨ fst b ∈ fst B.A ⟩)
                   (Ta e'a ka : S) (hba : ⟨ B.Env Ta e'a e s ka a Z ⊨ B.bodyFo ⟩)
                   (e'b : S) → fst e'b ≡ env (cons (fst b) N.g′) → ⟨ fst e'b ∈ fst Ta ⟩
@@ -881,12 +933,13 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
         hb₂' : ⟨ B.Env T₂ e'₂ e s k₂ z' Z ⊨ B.bodyFo ⟩
         hb₂' = subst2 (λ s' e'' → ⟨ B.Env T₂ e'₂ e'' s' k₂ z' Z ⊨ B.bodyFo ⟩)
                  (S≡ {x = s₂} {y = s} (fst ee)) (S≡ {x = e₂} {y = e} (snd ee)) hb₂
+```
 
-    -- -----------------------------------------------------------------
-    -- THE STEP COUNT.
-    -- -----------------------------------------------------------------
+THE STEP COUNT.
 
-    -- the stage of the pair bound
+The stage of the pair bound.
+
+```agda
     γG : V ℓ
     γG = stage (fst PB) (snd PB)
 
@@ -925,28 +978,30 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   step-count : (Z : S) → ((z : V ℓ) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
              → InjL Z κ → InjL (B.Φ Z) κ
   step-count Z Z⊆ = PT.rec squash₁ (λ { (E , cE) → OneStep.result Z Z⊆ E cE })
+```
 
-  -- Every iterate is counted.
+Every iterate is counted.
+
+```agda
   iter⊆L : (n : ℕ) (z : V ℓ) → ⟨ z ∈ˢ fst (hullStep n) ⟩ → ⟨ z ∈ˢ Lset lam ⟩
   iter⊆L n z hz = HSH.Hull⊆L z (HI.hullStep⊆Hull n z hz)
 
   counted : (n : ℕ) → InjL (hullStep n) κ
   counted zero    = base
   counted (suc n) = step-count (hullStep n) (iter⊆L n) (counted n)
+```
 
-  -- -------------------------------------------------------------------
-  -- 4.2  THE TABLE OF LEAST CODES, n ↦ e_n, as a set of L.  A stage γ
-  -- holds one code for every n (the least stage holding one is a
-  -- function of n, and γ bounds those), and e_n is the stage-order-
-  -- least member of L_γ coding an injection of the n-th iterate into κ:
-  -- the least preimage under the relation "(F, n): F ∈ L_γ codes an
-  -- injection of the iterate at n into κ".
-  --
-  --   The relation's description, over (q ∷ []): "q = (F, n), F ∈ L_γ,
-  --   and some B has (n, B) in the iteration table and F an injection
-  --   code from B into κ".  Inside: B is 0, n is 1, F is 2, q is 3.
-  -- -------------------------------------------------------------------
+Section 4.2. THE TABLE OF LEAST CODES, `n ↦ e_n`, as a set of L. A stage `γ`
+holds one code for every `n` (the least stage holding one is a function of `n`,
+and `γ` bounds those), and `e_n` is the stage-order-least member of `L_γ` coding
+an injection of the n-th iterate into `κ`: the least preimage under the relation
+"`(F, n)`: `F ∈ L_γ` codes an injection of the iterate at `n` into `κ`".
 
+The relation's description, over `(q ∷ [])`: "`q = (F, n)`, `F ∈ L_γ`, and some
+`B` has `(n, B)` in the iteration table and `F` an injection code from `B` into
+`κ`". Inside: `B` is 0, `n` is 1, `F` is 2, `q` is 3.
+
+```agda
   HoldsAt : ℕ → V ℓ → hProp (ℓ-suc ℓ)
   HoldsAt n σ = ∥ Σ[ F ∈ S ] (⟨ fst F ∈ Lset σ ⟩ × InjCode F (hullStep n) κ) ∥₁ , squash₁
 
@@ -976,8 +1031,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     raise : Σ[ F ∈ S ] (⟨ fst F ∈ Lset (ls n .fst) ⟩ × InjCode F (hullStep n) κ)
           → Σ[ F ∈ S ] (⟨ fst F ∈ Lset γ ⟩ × InjCode F (hullStep n) κ)
     raise (F , h , code) = F , Lset-mono {α = γ} {β = ls n .fst} (bnd-in n) h , code
+```
 
-  -- Sealed: the elements that reach a slot.
+Sealed: the elements that reach a slot.
+
+```agda
   opaque
     Lγ : S
     Lγ = LsetS γ oγ
@@ -1072,8 +1130,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     (λ F hF → subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF)
     have-code
     using ( T; fn; T-in; T-out; fn-holds )
+```
 
-  -- THE TABLE, and its entries.
+THE TABLE, and its entries.
+
+```agda
   Te : S
   Te = Tb.T
 
@@ -1086,13 +1147,19 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   Te-out : (n F : S) → ⟨ pr (fst n) (fst F) ∈ fst Te ⟩
          → Σ[ m ∈ ⟨ fst n ∈ fst ωʟ ⟩ ] (fst F ≡ fst (eS n m))
   Te-out = Tb.T-out
+```
 
-  -- The entry at n codes an injection of some iterate recorded at n.
+The entry at `n` codes an injection of some iterate recorded at `n`.
+
+```agda
   e-wit : (n : S) (m : ⟨ fst n ∈ fst ωʟ ⟩)
         → ∥ Σ[ Zn ∈ S ] (Holds Iter n Zn × InjCode (eS n m) Zn κ) ∥₁
   e-wit n m = Gt-out (eS n m) n (Tb.fn-holds n m) .snd
+```
 
-  -- The entry at the numeral k codes an injection of the k-th iterate.
+The entry at the numeral `k` codes an injection of the k-th iterate.
+
+```agda
   e-code : (k : ℕ) → InjCode (eS (nn k) (#∈ω k)) (hullStep k) κ
   e-code k = PT.rec (isPropInjCode (eS (nn k) (#∈ω k)) (hullStep k) κ) read (e-wit (nn k) (#∈ω k))
     where
@@ -1108,23 +1175,25 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
         where
         ee : (# k ≡ # k') × (fst Zn ≡ fst (hullStep k'))
         ee = pr-inj (sym (prʟ-fst (nn k) Zn) ∙ q)
+```
 
-  -- -------------------------------------------------------------------
-  -- 4.3  THE HULL INJECTS INTO κ.  z ↦ the least (n, v) with z at the
-  -- n-th iterate and (z, v) an entry of e_n, into prodL κ, then the
-  -- pairing at κ.  The relation "((n, v), z): n ∈ ω, (n, F) ∈ Te,
-  -- (z, v) ∈ F" is functional in the sense of section 2, since each
-  -- e_n is injective.
-  --
-  --   Its description, over (q ∷ []): binders p, z, then n, v, then F.
-  --   Inside: F is 0, v is 1, n is 2, z is 3, p is 4, q is 5.
-  -- -------------------------------------------------------------------
+Section 4.3. THE HULL INJECTS INTO `κ`. `z ↦` the least `(n, v)` with `z` at the
+n-th iterate and `(z, v)` an entry of `e_n`, into `prodL κ`, then the pairing at
+`κ`. The relation "`((n, v), z)`: `n ∈ ω`, `(n, F) ∈ Te`, `(z, v) ∈ F`" is
+functional in the sense of section 2, since each `e_n` is injective.
 
+Its description, over `(q ∷ [])`: binders `p`, `z`, then `n`, `v`, then `F`.
+Inside: `F` is 0, `v` is 1, `n` is 2, `z` is 3, `p` is 4, `q` is 5.
+
+```agda
   FinWit : (p z : S) → Type (ℓ-suc ℓ)
   FinWit p z = ∥ Σ[ n ∈ S ] Σ[ v ∈ S ] Σ[ F ∈ S ]
       ((fst p ≡ pr (fst n) (fst v)) × ⟨ fst n ∈ fst ωʟ ⟩ × Holds Te n F × Holds F z v) ∥₁
+```
 
-  -- The innermost conjunction, sealed with its readings.
+The innermost conjunction, sealed with its readings.
+
+```agda
   opaque
     inner₆ : Formula S 6
     inner₆ = appC Te i2 i0 ∧̇ appAt i0 i3 i1
@@ -1140,8 +1209,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     inner₆-out F v n z p q (ht , hv) =
         subst ⟨_⟩ (appC-adequate Te i2 i0 (F ∷ v ∷ n ∷ z ∷ p ∷ q ∷ [])) ht
       , subst ⟨_⟩ (appAt-adequate i0 i3 i1 (F ∷ v ∷ n ∷ z ∷ p ∷ q ∷ [])) hv
+```
 
-  -- n, v and F bound, sealed.
+`n`, `v` and `F` bound, sealed.
+
+```agda
   opaque
     nv₃ : Formula S 3
     nv₃ = ∃̇ (∃̇ (prAtL i3 i1 i0 ∧̇ ((var i1 ∈̇ con ωʟ) ∧̇ ∃̇ inner₆)))
@@ -1219,8 +1291,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
         where
         ee : (fst p ≡ fst p') × (fst z ≡ fst z')
         ee = pr-inj (sym (prʟ-fst p z) ∙ qq)
+```
 
-  -- A value of the entry at n is a member of κ.
+A value of the entry at `n` is a member of `κ`.
+
+```agda
   entry-ran : (n F z v : S) → Holds Te n F → Holds F z v → ⟨ fst v ∈ fst κ ⟩
   entry-ran n F z v ht hv = PT.rec (snd (fst v ∈ fst κ))
     (λ { (Zn , _ , code) → snd (snd (snd code)) z v
@@ -1269,7 +1344,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
       ee = pr-inj (sym qp ∙ qp')
       m : ⟨ fst n ∈ fst ωʟ ⟩
       m = Te-out n F ht .fst
-      -- the table value at the same index is the same value
+```
+
+The table value at the same index is the same value.
+
+```agda
       pth : _≡_ {A = Σ[ c ∈ S ] ⟨ fst c ∈ fst ωʟ ⟩} (n' , Te-out n' F' ht' .fst) (n , m)
       pth = Σ≡Prop (λ c → snd (fst c ∈ fst ωʟ)) (S≡ {x = n'} {y = n} (sym (fst ee)))
 
@@ -1287,8 +1366,11 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
     layer-trans (Lset-layer γf) {x = fst (prodL κ)} {y = fst p} hp (stage-mem (fst (prodL κ)) (snd (prodL κ)))
 
   module LF = LeastPre γf oγf Gf hullL (prodL κ) inPκ prodκ⊆Lγ have-fin using ( module Functional )
+```
 
-  -- THE THEOREM OF THIS SECTION: the hull injects into κ, internally.
+THE THEOREM OF THIS SECTION: the hull injects into `κ`, internally.
+
+```agda
   hull↪κ : InjL hullL κ
   hull↪κ = injl-trans hullL (prodL κ) κ (LF.Functional.injL funct-fin) pairκ
 ```

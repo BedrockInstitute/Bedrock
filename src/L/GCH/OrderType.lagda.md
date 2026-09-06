@@ -84,10 +84,13 @@ module Collapse (D R : S)
 
   isPropMem : (x : S) → isProp (Mem x)
   isPropMem x = snd (fst x ∈ fst D)
+```
 
-  -- The members of D, as the small type that presents D.  The index of
-  -- a `sett` must be small, so the relation is read through the small
-  -- membership `_∈ₛ_` (as `Hartogs` reads a Bool-valued one).
+The members of `D`, as the small type that presents `D`. The index of a `sett`
+must be small, so the relation is read through the small membership `_∈ₛ_` (as
+`Hartogs` reads a Bool-valued one).
+
+```agda
   Dom : Type ℓ
   Dom = ⟪ fst D ⟫
 
@@ -108,9 +111,12 @@ module Collapse (D R : S)
 
   toDom-val : (x : S) (mx : Mem x) → ↪ (toDom x mx) ≡ fst x
   toDom-val x mx = snd (fiber (fst D) mx)
+```
 
-  -- Sealed: `_∈ₛ_` unfolds the presentation, and an unsealed relation
-  -- exhausts an 8g heap at the first check.
+Sealed: `_∈ₛ_` unfolds the presentation, and an unsealed relation exhausts an 8g
+heap at the first check.
+
+```agda
   opaque
     _≺_ : Dom → Dom → Type ℓ
     a ≺ b = ⟨ pr (↪ a) (↪ b) ∈ₛ fst R ⟩
@@ -126,16 +132,22 @@ module Collapse (D R : S)
 
   module Col (wf : WellFounded _≺_)
              (≺-trans : {a b c : Dom} → a ≺ b → b ≺ c → a ≺ c) where
+```
 
-    -- src/L/CardinalAbove.lagda.md holds the recursion; this site and
-    -- `Hartogs.Col` there are its two instances
+src/L/CardinalAbove.lagda.md holds the recursion; this site and `Hartogs.Col`
+there are its two instances.
+
+```agda
     open Mostowski Dom _≺_ wf ≺-trans public
       using ( module W; col; col-eq; col-in; col-out; col-ord )
+```
 
-    -- An ordinal is constructible: it appears at the stage after itself.
-    -- Sealed: a proof of a proposition, and unsealed it is normalised at
-    -- every conversion of a `colʟ` pair (measured: one transport of the
-    -- graph formula along an index equation exceeds 100 s).
+An ordinal is constructible: it appears at the stage after itself. Sealed: a
+proof of a proposition, and unsealed it is normalised at every conversion of a
+`colʟ` pair (measured: one transport of the graph formula along an index
+equation exceeds 100 s).
+
+```agda
     opaque
       col-isL : (p : Dom) → ⟨ isL (col p) ⟩
       col-isL p = Lset→isL (sucV (col p)) (suc-ord (col-ord p)) (col p)
@@ -369,8 +381,11 @@ module Internal (D R : S)
 
   up-toDom : (q : S) (mq : Mem q) → up (toDom q mq) ≡ q
   up-toDom q mq = Σ≡Prop (λ v → snd (isL v)) (toDom-val q mq)
+```
 
-  -- Transport of the graph formula along an equation of the index.
+Transport of the graph formula along an equation of the index.
+
+```agda
   colFo-at : (v : S) {x y : S} → x ≡ y
            → ⟨ (v ∷ x ∷ []) ⊨ CF.colFo ⟩ → ⟨ (v ∷ y ∷ []) ⊨ CF.colFo ⟩
   colFo-at v e = subst (λ t → ⟨ (v ∷ t ∷ []) ⊨ CF.colFo ⟩) e
@@ -382,9 +397,12 @@ module Internal (D R : S)
 
     ≺-irrefl : (a : Dom) → a ≺ a → Empty.⊥
     ≺-irrefl = W.induction {P = λ a → a ≺ a → Empty.⊥} (λ a rec h → rec a h h)
+```
 
-    -- UNIQUENESS: a value a correct set records at a member of D is the
-    -- collapse there.
+UNIQUENESS: a value a correct set records at a member of `D` is the collapse
+there.
+
+```agda
     correct-val : (F : S) → Correct F R → (a : Dom) (v : S)
                 → Holds F (up a) v → fst v ≡ col a
     correct-val F hc = W.induction {P = λ a → (v : S) → Holds F (up a) v → fst v ≡ col a} go
@@ -426,36 +444,51 @@ module Internal (D R : S)
             inner : Σ[ u ∈ S ] Holds F (up r) u → ⟨ w ∈ fst v ⟩
             inner (u , fu) = val wS .snd
               ∣ up r , (≺-out r a ra , subst (λ t → ⟨ pr (↪ r) t ∈ fst F ⟩) (IH r ra u fu ∙ e) fu) ∣₁
+```
 
-    -- The graph formula, read at a member of D given as an element.
+The graph formula, read at a member of `D` given as an element.
+
+```agda
     colFo-val : (q : S) (mq : Mem q) (v : S) → ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩
               → fst v ≡ col (toDom q mq)
     colFo-val q mq v h = PT.rec (setIsSet (fst v) (col (toDom q mq)))
       (λ { (F , (hc , hv)) → correct-val F hc (toDom q mq) v
              (subst (λ t → ⟨ pr t (fst v) ∈ fst F ⟩) (sym (toDom-val q mq)) hv) })
       (CF.colFo-out v q h)
+```
 
-    -- EXISTENCE, at one a, from the graph formula below a.
+EXISTENCE, at one `a`, from the graph formula below `a`.
+
+```agda
     module Approx (a : Dom)
                   (IH : (b : Dom) → b ≺ a → ⟨ (colʟ b ∷ up b ∷ []) ⊨ CF.colFo ⟩) where
+```
 
-      -- The default entry.
+The default entry.
+
+```agda
       ea : S
       ea = prʟ (up a) (colʟ a)
 
       ρ₂ : Fin 2 → Fin 4
       ρ₂ zero       = suc (suc zero)
       ρ₂ (suc zero) = suc (suc (suc zero))
+```
 
-      -- The graph, read: at q R a the pair of q and the value the graph
-      -- formula gives there; elsewhere the default entry.
+The graph, read: at `q R a` the pair of `q` and the value the graph formula
+gives there; elsewhere the default entry.
+
+```agda
       Body : S → S → Type (ℓ-suc ℓ)
       Body z q =
           (Holds R q (up a)
              × ∥ Σ[ v ∈ S ] ((fst z ≡ pr (fst q) (fst v)) × ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩) ∥₁)
         ⊎ ((Holds R q (up a) → Empty.⊥) × (fst z ≡ fst ea))
+```
 
-      -- Inside: p is 0, r is 1, z is 2, q is 3.
+Inside: `p` is 0, `r` is 1, `z` is 2, `q` is 3.
+
+```agda
       opaque
         body : Formula S 4
         body = ( appAt (suc zero) (suc (suc (suc zero))) zero ∧̇ renameFo ρ₂ PF.pairFo )
@@ -594,7 +627,11 @@ module Internal (D R : S)
               → Complete Fa R x × ValueIs Fa R x v
         build (b , (k , ex , ev)) = cmp , (λ w → fwd w , bwd w)
           where
-          -- An R-predecessor of x, as a member below b.
+```
+
+An `R`-predecessor of `x`, as a member below `b`.
+
+```agda
           pred : (y : S) → Holds R y x → Σ[ c ∈ Dom ] ((c ≺ b) × (↪ c ≡ fst y))
           pred y hy = c , (≺-in c b (subst2 (λ s t → ⟨ pr s t ∈ fst R ⟩)
                               (sym (toDom-val y my)) (sym ex) hy) , toDom-val y my)
@@ -635,19 +672,22 @@ module Internal (D R : S)
 
       approx-step : ⟨ (colʟ a ∷ up a ∷ []) ⊨ CF.colFo ⟩
       approx-step = CF.colFo-in (colʟ a) (up a) Fa Fa-correct (Fa-in a (inr refl))
+```
 
-    -- THE GRAPH FORMULA HOLDS OF THE COLLAPSE, everywhere on D.
+THE GRAPH FORMULA HOLDS OF THE COLLAPSE, everywhere on `D`.
+
+```agda
     approx : (a : Dom) → ⟨ (colʟ a ∷ up a ∷ []) ⊨ CF.colFo ⟩
     approx = W.induction {P = λ a → ⟨ (colʟ a ∷ up a ∷ []) ⊨ CF.colFo ⟩}
       (λ a IH → Approx.approx-step a IH)
 
     approx-at : (q : S) (mq : Mem q) → ⟨ (colʟ (toDom q mq) ∷ q ∷ []) ⊨ CF.colFo ⟩
     approx-at q mq = colFo-at (colʟ (toDom q mq)) (up-toDom q mq) (approx (toDom q mq))
+```
 
-    -- =================================================================
-    -- SECTION 4.  THE TABLES: THE ORDER TYPE AND THE GRAPH, IN L.
-    -- =================================================================
+SECTION 4. THE TABLES: THE ORDER TYPE AND THE GRAPH, IN L.
 
+```agda
     private
       otR : Recursion
       otR = record
@@ -712,9 +752,12 @@ module Internal (D R : S)
            , e ∙ cong₂ pr (sym (toDom-val q mq)) (colFo-val q mq v hv) })
         (PF.pair-out y q h) })
       (CT.table-out y hy)
+```
 
-    -- A pair in the table, read as a value of `col`.  The target is a
-    -- proposition, so the truncation comes off.
+A pair in the table, read as a value of `col`. The target is a proposition, so
+the truncation comes off.
+
+```agda
     Fib : S → S → Type (ℓ-suc ℓ)
     Fib x v = Σ[ mx ∈ Mem x ] (fst v ≡ col (toDom x mx))
 
@@ -783,8 +826,11 @@ module Code (D R : S)
     ran : (x y : S) → Holds colTable x y → ⟨ fst y ∈ fst otL ⟩
     ran x y h = subst (λ t → ⟨ t ∈ fst otL ⟩) (sym (snd (colTable-pair x y h)))
       (otL-in (toDom x (fst (colTable-pair x y h))))
+```
 
-    -- Injectivity, under trichotomy.
+Injectivity, under trichotomy.
+
+```agda
     module Inj (tri : (a b : Dom) → (a ≺ b) ⊎ ((a ≡ b) ⊎ (b ≺ a))) where
 
       col-inj : (a b : Dom) → col a ≡ col b → a ≡ b

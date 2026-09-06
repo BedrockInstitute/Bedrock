@@ -166,8 +166,11 @@ module Decode {K : Type ℓ} (f : K → V ℓ)
           → Wf i u → Coded f i u
       rec i u lt wu = IH (rank (fst u))
         (subst (λ w → ⟨ rank (fst u) ∈ w ⟩) qr lt) i u refl wu
+```
 
-      -- the arity numeral and the payload, read out of the key's shape
+The arity numeral and the payload, read out of the key's shape.
+
+```agda
       split : (N : S) (p : V ℓ) → fst (keyOf j z) ≡ pr (fst N) p
             → (# j ≡ fst N) × (fst z ≡ p)
       split N p e = pr-inj (sym (keyOf-fst j z) ∙ e)
@@ -181,12 +184,15 @@ module Decode {K : Type ℓ} (f : K → V ℓ)
            → ⟨ pr (sucV (fst N)) (fst u) ∈ D ⟩ → Wf (suc i) u
       inD⁺ i N u qN h = subst (λ w → ⟨ w ∈ D ⟩)
         (cong₂ pr (cong sucV (sym qN)) refl ∙ sym (keyOf-fst (suc i) u)) h
+```
 
-      -- the six frames. Each takes the constructor's coding equation rather
-      -- than leaving the elaborator to find it: with the constructor a
-      -- variable, nothing reduces, and the unification is the whole cost.
-      -- Over the alphabet the equation is still refl at every call site,
-      -- because relabelling commutes with every constructor definitionally.
+The six frames. Each takes the constructor's coding equation rather than
+leaving the elaborator to find it: with the constructor a variable, nothing
+reduces, and the unification is the whole cost. Over the alphabet the equation
+is still `refl` at every call site, because relabelling commutes with every
+constructor definitionally.
+
+```agda
       atom : (k : ℕ) (op : ∀ {i} → Term K i → Term K i → Formula K i)
            → (∀ {i} (t u : Term K i)
               → VCode.⌜ mapFo f (op t u) ⌝

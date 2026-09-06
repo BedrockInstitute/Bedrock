@@ -182,9 +182,13 @@ appAt-adequate f x y γ = ⇔toPath fwd bwd
     where
     zS : S
     zS = pr a b , isL-trans {x = fst F} {y = pr a b} h (F .snd)
+```
 
--- The same reader with the function held as a CONSTANT rather than in a slot.
--- L.InjChain and L.Choice.Before each wrote this out; it belongs beside appAt.
+The same reader with the function held as a CONSTANT rather than in a slot.
+`L.InjChain` and `L.Choice.Before` each wrote this out; it belongs beside
+`appAt`.
+
+```agda
 appC : ∀ {n} → S → Fin n → Fin n → Formula S n
 appC F x y = ∃̇∈ (con F) (prAtL zero (suc x) (suc y))
 
@@ -1253,10 +1257,9 @@ module _ {n : ℕ} where
     yc6' = suc (suc zero)
     ya6' = suc zero
     E6'  = zero
-
-    -- at the innermost point: e' = 0, m = 1, e = 2, E = 3, ya = 4
-
 ```
+
+At the innermost point: `e'` = 0, `m` = 1, `e` = 2, `E` = 3, `ya` = 4.
 
 <!--en-->
 The quantifier clauses read the same way, and the tag and the body are what a
@@ -1348,8 +1351,12 @@ module _ {n : ℕ} where
     ar6″ = suc (suc (suc (suc zero)))
     yc6″ = suc zero
     E6″  = zero
+```
 
-    -- at the innermost point: w = 0, v = 1, e = 2, E = 3, yc = 4, b = 5, a = 6
+At the innermost point: `w` = 0, `v` = 1, `e` = 2, `E` = 3, `yc` = 4, `b` = 5,
+`a` = 6.
+
+```agda
     a9″ b9″ e9″ v9″ w9″ : Fin (9 + n)
     a9″ = suc (suc (suc (suc (suc (suc zero)))))
     b9″ = suc (suc (suc (suc (suc zero))))
@@ -1403,31 +1410,39 @@ each of the three innermost binders carries.
 ```agda
 module _ {n : ℕ} where
   private
+```
 
-    -- at depth 7: E = 0, yb = 1, yc = 2, b = 3, a = 4, ar = 5, c = 6
+At depth 7: `E` = 0, `yb` = 1, `yc` = 2, `b` = 3, `a` = 4, `ar` = 5, `c` = 6.
+
+```agda
     ar7B b7B yc7B yb7B E7B : Fin (7 + n)
     ar7B = suc (suc (suc (suc (suc zero))))
     b7B  = suc (suc (suc zero))
     yc7B = suc (suc zero)
     yb7B = suc zero
     E7B  = zero
+```
 
-    -- at depth 9: w = 0, e = 1, a = 6
+At depth 9: `w` = 0, `e` = 1, `a` = 6.
+
+```agda
     a9B e9B w9B : Fin (9 + n)
     a9B = suc (suc (suc (suc (suc (suc zero)))))
     e9B = suc zero
     w9B = zero
+```
 
-    -- at depth 11: e' = 0, m = 1, e = 3, yb = 5
+At depth 11: `e'` = 0, `m` = 1, `e` = 3, `yb` = 5.
+
+```agda
     e'11 m11 e11 yb11 : Fin (11 + n)
     e'11 = zero
     m11  = suc zero
     e11  = suc (suc (suc zero))
     yb11 = suc (suc (suc (suc (suc zero))))
-
-    -- inside the bound's quantifier, at depth 10: m = 0, w = 1
-
 ```
+
+Inside the bound's quantifier, at depth 10: `m` = 0, `w` = 1.
 
 <!--en-->
 ## A domain that is closed under subcodes

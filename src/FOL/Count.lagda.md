@@ -24,9 +24,11 @@ constant.
 module Count (K : Type ℓ) where
 
 ```
+
+The boundary case: a formula with no constants closes the shape under `∃̇`;
+`erase` removes the constants, and `erase-inv` re-enters the domain.
+
 ```agda
-  -- The boundary case: a formula with no constants closes the shape under
-  -- ∃̇; erase removes the constants, and erase-inv re-enters the domain.
   plus-zero-l : {a b : ℕ} → a + b ≡ 0 → a ≡ 0
   plus-zero-l {zero} {b} p = refl
   plus-zero-l {suc a} {b} p = Empty.rec (snotz p)

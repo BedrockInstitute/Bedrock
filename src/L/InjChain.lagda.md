@@ -80,8 +80,11 @@ module StageBound (I : Type ℓ) (g : I → S) where
 
     b : Σ[ β ∈ V ℓ ] (IsOrd β × ((i : I) → ⟨ stg i ∈ β ⟩))
     b = boundingOrd I stg (λ i → stage-ord (fst (g i)) (snd (g i)))
+```
 
-  -- Sealed: every consumer wants the bound as an ATOM.
+Sealed: every consumer wants the bound as an ATOM.
+
+```agda
   opaque
     β : V ℓ
     β = b .fst
@@ -256,8 +259,11 @@ module PairBound (D C : S) where
     pw (m , k) = prʟ (toD m) (toC k)
 
     module SB = StageBound Ix pw
+```
 
-  -- An alias of a SEALED name, so it is an atom here too.
+An alias of a SEALED name, so it is an atom here too.
+
+```agda
   bnd : S
   bnd = SB.bnd
 
@@ -300,8 +306,11 @@ module Comp (D E C F H : S)
 
     γH : S ^ 2
     γH = H ∷ E ∷ []
+```
 
-  -- THE COMPOSITE, BY SEPARATION.
+The composite, by separation.
+
+```agda
   opaque
     K : S
     K = fst (fst (hasSeparationL PB.bnd (compFo F H)))
@@ -309,8 +318,11 @@ module Comp (D E C F H : S)
     K-spec : (p : S) → (p ∈ˢ K)
            ≡ ((p ∈ˢ PB.bnd) ⊓ ((p ∷ []) ⊨ compFo F H))
     K-spec = snd (fst (hasSeparationL PB.bnd (compFo F H)))
+```
 
-  -- The two readings of membership.
+The two readings of membership.
+
+```agda
   K-out : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩
         → ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
                       × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
@@ -340,8 +352,11 @@ module Comp (D E C F H : S)
         ( subst (λ w → ⟨ w ∈ fst PB.bnd ⟩) (sym (prʟ-fst x z))
             (PB.below x z mx mz)
         , CF.into (prʟ x z) x y z (prʟ-fst x z , (hf , hh)) ))
+```
 
-  -- THE FOUR CONJUNCTS, for the composite.
+The four conjuncts, for the composite.
+
+```agda
   γK : S ^ 2
   γK = K ∷ D ∷ []
 
@@ -388,11 +403,13 @@ module Comp (D E C F H : S)
   ranK : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩ → ⟨ fst z ∈ fst C ⟩
   ranK x z h = PT.rec (snd (fst z ∈ fst C))
     (λ { (w , (_ , hh)) → ranH w z hh }) (K-out x z h)
+```
 
-  -- The composite, read back as an honest function.  Sealed.
+The composite, read back as an honest function. Sealed.
+
+```agda
   private
     module Sm = Small K D C svK dmK ijK ranK
-
 ```
 
 Row 3. The inclusion of one set into another, carved.
@@ -438,8 +455,11 @@ module Carve (D C bnd : S)
 
   private
     module Fo = InclFo D
+```
 
-  -- One separation, and no replacement.  Sealed.
+One separation, and no replacement. Sealed.
+
+```agda
   opaque
     G : S
     G = fst (fst (sep bnd (inclFo D)))
@@ -474,9 +494,12 @@ module Carve (D C bnd : S)
   pair-in : (x : S) → ⟨ x ∈ˢ D ⟩ → ⟨ pr (fst x) (fst x) ∈ fst G ⟩
   pair-in x m = subst (λ w → ⟨ w ∈ fst G ⟩) (prʟ-fst x x)
                   (G-in (prʟ x x) x m (prʟ-fst x x))
+```
 
-  -- THE FOUR CONJUNCTS.  The range conjunct is the one line the identity
-  -- graph does not have, and it is where the subset witness is spent.
+The four conjuncts. The range conjunct is the one line the identity graph does
+not have, and it is where the subset witness is spent.
+
+```agda
   γI : S ^ 2
   γI = G ∷ D ∷ []
 
@@ -510,21 +533,23 @@ module Carve (D C bnd : S)
   ran x y h = PT.rec (snd (fst y ∈ fst C))
     (λ r → sub (fst y) (subst (λ w → ⟨ w ∈ fst D ⟩) (fst r) (snd r)))
     (pair-out x y h)
+```
 
-  -- The graph, read back as an honest injection between the small types.
-  -- Sealed at the definition: an unsealed `Small` application exhausts an
-  -- 8g heap.
+The graph, read back as an honest injection between the small types. Sealed at
+the definition: an unsealed `Small` application exhausts an 8g heap.
+
+```agda
   private
     module Sm = Small G D C sv dm ij ran
 
   opaque
     incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
     incl = Sm.small
-
-    -- AND IT IS THE INCLUSION.  A graph that carves, proves four
-    -- conjuncts and reads back as SOME injection is not evidence for THIS
-    -- object.  This line says the value is the same SET.
 ```
+
+And it is the inclusion. A graph that carves, proves four conjuncts and reads
+back as SOME injection is not evidence for THIS object. This line says the
+value is the same SET.
 
 The L instantiation.  It supplies two things and no more: the stage
 bound, and `hasSeparationL`.
@@ -537,8 +562,11 @@ module InclGraph (D C : S)
     toD : ⟪ fst D ⟫ → S
     toD m = ⟪ fst D ⟫↪ m
           , isL-trans {x = fst D} {y = ⟪ fst D ⟫↪ m} (member (fst D) m) (snd D)
+```
 
-    -- The pairs live inside a set you can name BEFORE you build them.
+The pairs live inside a set you can name BEFORE you build them.
+
+```agda
     dg : ⟪ fst D ⟫ → S
     dg m = prʟ (toD m) (toD m)
 

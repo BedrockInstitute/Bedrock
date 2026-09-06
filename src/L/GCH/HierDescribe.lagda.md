@@ -477,10 +477,12 @@ module Inner where
   aa = sh 13 (i0 {2})
   pp = sh 14 (i0 {1})
   zz = sh 15 (i0 {0})
+```
 
-  -- SEALED: the row is thousands of nodes, and the thirteen wraps
-  -- would normalise it thirteen times.  The two readers are the
-  -- official unfolding.
+Sealed: the row is thousands of nodes, and the thirteen wraps would normalise
+it thirteen times. The two readers are the official unfolding.
+
+```agda
   opaque
     inner : Formula S 16
     inner = pins N16 ∧̇ hierAt aa pp ff zz N16
@@ -500,8 +502,11 @@ module Inner where
   lastFin : {n : ℕ} → Fin (suc n)
   lastFin {zero} = zero
   lastFin {suc n} = suc (lastFin {n})
+```
 
-  -- One bounded existential over the last slot.
+One bounded existential over the last slot.
+
+```agda
   wrap : {n : ℕ} → Formula S (suc (suc n)) → Formula S (suc n)
   wrap {n} φ = ∃̇∈ (var (lastFin {n})) φ
 
@@ -539,9 +544,12 @@ module Inner where
 
   Δ₀-erased : Δ₀ erased
   Δ₀-erased = erase-Δ₀ three count-three Δ₀-three
+```
 
-  -- One bounded existential over the last slot, spent into a
-  -- proposition, and introduced.
+One bounded existential over the last slot, spent into a proposition, and
+introduced.
+
+```agda
   unwrap : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : S ^ (suc n)) {P : hProp (ℓ-suc ℓ)}
          → ((x : S) → ⟨ fst x ∈ fst (lookup (lastFin {n}) γ) ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ P ⟩)
          → ⟨ γ ⊨ wrap {n} φ ⟩ → ⟨ P ⟩
@@ -604,9 +612,11 @@ private
       where
       tg : Tags γ N16
       tg = PinsRead.pins-out N16 γ (inner-out γ h .fst)
+```
 
-    -- perf: the environment is spelled out at every step and never
-    -- abbreviated.
+Perf: the environment is spelled out at every step and never abbreviated.
+
+```agda
     sound-L : (a p z : S) → ⟨ (a ∷ p ∷ z ∷ []) ⊨ embed levelFo ⟩ → fst a ≡ Lset (fst p)
     sound-L a p z (ho , hφ) =
       go (subst (λ ψ → ⟨ (a ∷ p ∷ z ∷ []) ⊨ ψ ⟩) (Cnt.erase-inv three count-three) hφ)
@@ -712,9 +722,11 @@ private
 
     FK : ⟨ fst F ∈ K ⟩
     FK = wit p p∈λ op .fst
+```
 
-    -- The thirteen bounded existentials, spent with the table and the
-    -- numerals.
+The thirteen bounded existentials, spent with the table and the numerals.
+
+```agda
     h3 : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ three ⟩
     h3 =
       wrap-in s4 (aS ∷ pS ∷ zS ∷ []) F FK (

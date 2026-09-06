@@ -109,17 +109,17 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
   it : ℕ → S
   it zero    = a
   it (suc n) = step (it n)
+```
 
-  -- ===================================================================
-  -- SECTION 1.  THE APPROXIMATION FORMULA, AND HOW TO READ IT.
-  --
-  --   A set F of pairs is CORRECT when its entries at 0 are a, any two
-  --   entries at successive indices are related by the step, and every
-  --   entry at x' has an entry at each member of x'.  No domain clause
-  --   and no single-valuedness: section 2 shows every entry at a numeral
-  --   is the iterate there, and section 3 builds one correct set per n.
-  -- ===================================================================
+Section 1. The approximation formula, and how to read it.
 
+A set `F` of pairs is CORRECT when its entries at 0 are `a`, any two entries at
+successive indices are related by the step, and every entry at `x'` has an entry
+at each member of `x'`. No domain clause and no single-valuedness: section 2
+shows every entry at a numeral is the iterate there, and section 3 builds one
+correct set per `n`.
+
+```agda
   Zero : S → Type (ℓ-suc ℓ)
   Zero F = (v : S) → Holds F (nn 0) v → fst v ≡ fst a
 
@@ -133,8 +133,11 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
 
   Correct : S → Type (ℓ-suc ℓ)
   Correct F = Zero F × (Step F × Down F)
+```
 
-  -- "Every entry of f at 0 is a."  Inside: z is 0; then v is 0, z is 1.
+"Every entry of `f` at 0 is `a`." Inside: `z` is 0; then `v` is 0, `z` is 1.
+
+```agda
   opaque
     zeroAt : ∀ {n} → Fin n → Formula S n
     zeroAt f = ∀̇ ( (var zero ≐ con (nn 0))
@@ -148,9 +151,12 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
     zero-in f γ h z ez v hv = h v
       (subst (λ t → ⟨ pr t (fst v) ∈ fst (lookup f γ) ⟩) ez
         (subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ z ∷ γ)) hv))
+```
 
-  -- "Entries at x and at x' = suc x are related by the step."  Inside:
-  -- x is 3, v is 2, x' is 1, v' is 0; the step formula reads (v' ∷ v ∷ []).
+"Entries at `x` and at `x' = suc x` are related by the step." Inside: `x` is 3,
+`v` is 2, `x'` is 1, `v'` is 0; the step formula reads `(v' ∷ v ∷ [])`.
+
+```agda
   private
     ρ : ∀ {n} → Fin 2 → Fin (suc (suc (suc (suc n))))
     ρ zero       = zero
@@ -188,9 +194,12 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
         (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc f)))) (suc (suc (suc zero))) (suc (suc zero)) (v' ∷ x' ∷ v ∷ x ∷ γ)) p)
         (subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc f)))) (suc zero) zero (v' ∷ x' ∷ v ∷ x ∷ γ)) q)
         (subst ⟨_⟩ (sucAtL-adequate (suc (suc (suc zero))) (suc zero) (v' ∷ x' ∷ v ∷ x ∷ γ)) s))
+```
 
-  -- "Every entry at x' has an entry at each member x of x'."  Inside:
-  -- x' is 2, v' is 1, x is 0; then v is 0, x is 1, x' is 3.
+"Every entry at `x'` has an entry at each member `x` of `x'`." Inside: `x'` is
+2, `v'` is 1, `x` is 0; then `v` is 0, `x` is 1, `x'` is 3.
+
+```agda
   opaque
     downAt : ∀ {n} → Fin n → Formula S n
     downAt f = ∀̇ (∀̇ (∀̇ (
@@ -217,9 +226,12 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
 
     corr-in : ∀ {n} (f : Fin n) (γ : S ^ n) → Correct (lookup f γ) → ⟨ γ ⊨ corrAt f ⟩
     corr-in f γ (z , (s , d)) = zero-in f γ z , (step-in f γ s , down-in f γ d)
+```
 
-  -- THE GRAPH FORMULA, over (y ∷ q ∷ []): "y is recorded at q by some
-  -- correct set".  Inside: F is 0, y is 1, q is 2.
+The graph formula, over `(y ∷ q ∷ [])`: "`y` is recorded at `q` by some correct
+set". Inside: `F` is 0, `y` is 1, `q` is 2.
+
+```agda
   opaque
     itFo : Formula S 2
     itFo = ∃̇ ( corrAt zero ∧̇ appAt zero (suc (suc zero)) (suc zero) )
@@ -234,17 +246,20 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
     itFo-in y q F hc hq = ∣ F
       , ( corr-in zero (F ∷ y ∷ q ∷ []) hc
         , subst ⟨_⟩ (sym (appAt-adequate zero (suc (suc zero)) (suc zero) (F ∷ y ∷ q ∷ []))) hq ) ∣₁
+```
 
-  -- Transport of the graph formula along an equation of the index.
+Transport of the graph formula along an equation of the index.
+
+```agda
   itFo-at : (v : S) {x y : S} → x ≡ y
           → ⟨ (v ∷ x ∷ []) ⊨ itFo ⟩ → ⟨ (v ∷ y ∷ []) ⊨ itFo ⟩
   itFo-at v e = subst (λ t → ⟨ (v ∷ t ∷ []) ⊨ itFo ⟩) e
+```
 
-  -- ===================================================================
-  -- SECTION 2.  UNIQUENESS: a correct set records the iterate at every
-  -- numeral.  One induction on the numeral.
-  -- ===================================================================
+Section 2. Uniqueness: a correct set records the iterate at every numeral. One
+induction on the numeral.
 
+```agda
   corr-val : (F : S) → Correct F → (k : ℕ) (v : S)
            → Holds F (nn k) v → fst v ≡ fst (it k)
   corr-val F (z , (s , d)) zero    v h = z v h
@@ -261,12 +276,12 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
   itFo-val : (k : ℕ) (v : S) → ⟨ (v ∷ nn k ∷ []) ⊨ itFo ⟩ → fst v ≡ fst (it k)
   itFo-val k v h = PT.rec (setIsSet (fst v) (fst (it k)))
     (λ { (F , (hc , hv)) → corr-val F hc k v hv }) (itFo-out v (nn k) h)
+```
 
-  -- ===================================================================
-  -- SECTION 3.  EXISTENCE: the finite table { (k, it k) : k ≤ n }, built
-  -- by one pair and one union per step, is correct.
-  -- ===================================================================
+Section 3. Existence: the finite table `{ (k, it k) : k ≤ n }`, built by one
+pair and one union per step, is correct.
 
+```agda
   private
     e : ℕ → S
     e k = prʟ (nn k) (it k)
@@ -316,8 +331,11 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
   Fn-out : (n : ℕ) (y : S) → ⟨ y ∈ˢ Fn n ⟩
          → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × (fst y ≡ pr (# k) (fst (it k)))) ∥₁
   Fn-out n y h = PT.map (λ { (k , (p , q)) → k , (p , q ∙ prʟ-fst (nn k) (it k)) }) (Fn-out′ n y h)
+```
 
-  -- A pair in the table, read as an index and a value.
+A pair in the table, read as an index and a value.
+
+```agda
   Fn-pair : (n : ℕ) (x v : S) → Holds (Fn n) x v
           → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k)))) ∥₁
   Fn-pair n x v h = PT.map (λ { (k , (p , q)) → k , (p , pr-inj (sym (prʟ-fst x v) ∙ q)) })
@@ -359,15 +377,18 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
            , subst (λ t → ⟨ pr t (fst (it j)) ∈ fst (Fn n) ⟩) (sym ej)
                (Fn-in n j (≤-trans (<-weaken j<) p')) })
         (∈#-elim k' (fst x) (subst (λ w → ⟨ fst x ∈ w ⟩) ex' m))
+```
 
-  -- THE GRAPH FORMULA HOLDS OF THE ITERATE, at every numeral.
+The graph formula holds of the iterate, at every numeral.
+
+```agda
   it-graph : (k : ℕ) → ⟨ (it k ∷ nn k ∷ []) ⊨ itFo ⟩
   it-graph k = itFo-in (it k) (nn k) (Fn k) (Fn-correct k) (Fn-in k k ≤-refl)
+```
 
-  -- ===================================================================
-  -- SECTION 4.  THE TABLES: the values, their union, and the graph, in L.
-  -- ===================================================================
+Section 4. The tables: the values, their union, and the graph, in L.
 
+```agda
   Num : S → Type (ℓ-suc ℓ)
   Num q = Σ[ k ∈ ℕ ] (nn k ≡ q)
 
@@ -414,8 +435,11 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
       (λ { (n , eB) → n , subst (λ w → ⟨ fst z ∈ w ⟩) eB hz })
       (values-out (B , isL-trans {x = fst values} {y = B} hB (snd values)) hB) })
     (unionʟ-out values z h)
+```
 
-  -- The graph { (n, it n) : n ∈ ℕ }, through OrderType's pair form.
+The graph `{ (n, it n) : n ∈ ℕ }`, through `OrderType`'s pair form.
+
+```agda
   module PF = PairFo itFo
 
   private
@@ -455,13 +479,13 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
         (ω-num q q∈) })
       (PF.pair-out y q h) })
     (TR.table-out y hy)
+```
 
-  -- ===================================================================
-  -- SECTION 5.  ONE INSTANCE: a step that only grows.  The union starts
-  -- at a, every stage sits below the next, and the step of any set
-  -- bounded by a stage lands inside the union.
-  -- ===================================================================
+Section 5. One instance: a step that only grows. The union starts at `a`, every
+stage sits below the next, and the step of any set bounded by a stage lands
+inside the union.
 
+```agda
   module Closure (grows : (x z : S) → ⟨ fst z ∈ fst x ⟩ → ⟨ fst z ∈ fst (step x) ⟩) where
 
     it-mono : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ fst z ∈ fst (it (suc n)) ⟩
@@ -470,5 +494,4 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
     it-up : (n k : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ fst z ∈ fst (it (k + n)) ⟩
     it-up n zero    z h = h
     it-up n (suc k) z h = it-mono (k + n) z (it-up n k z h)
-
 ```

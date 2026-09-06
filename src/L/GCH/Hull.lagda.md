@@ -115,9 +115,12 @@ module TermAlgebra (𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ)))
   module AtCode = Sem.At Code val using ( _⊨_ )
   _⊨c_ : {n : ℕ} → S𝒮 ^𝒮 n → Formula Code n → hProp (ℓ-suc ℓ)
   _⊨c_ = AtCode._⊨_
+```
 
-  -- the junk split hides the search; open it when a witness exists, since
-  -- the other branch carries a contradiction
+The junk split hides the search; open it when a witness exists, since the
+other branch carries a contradiction.
+
+```agda
   sum-stuck : {X : Type (ℓ-suc ℓ)} (x : X) (px : isProp X)
             → (f : X → S𝒮) (g : (X → Empty.⊥) → S𝒮) (s : X ⊎ (X → Empty.⊥))
             → Sum.rec f g s ≡ f x
@@ -166,10 +169,11 @@ module TermAlgebra (𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ)))
 
 ## Satisfaction along a carrier map
 
+One twelve-clause recursion, shared by the inclusion of a carrier into the
+stage and by the collapse bijection: the non-atomic clauses are the same in
+both, so the atoms and the witness principle are parameters.
+
 ```agda
--- one twelve-clause recursion, shared by the inclusion of a carrier into
--- the stage and by the collapse bijection: the non-atomic clauses are the
--- same in both, so the atoms and the witness principle are parameters
 module SatTransfer (MA MB : S → hProp (ℓ-suc ℓ)) where
 
   SA : Type (ℓ-suc ℓ)
@@ -188,8 +192,11 @@ module SatTransfer (MA MB : S → hProp (ℓ-suc ℓ)) where
   Agree : (SA → SB) → Type (ℓ-suc (ℓ-suc ℓ))
   Agree g = (n : ℕ) (φ : Formula SA n) (δ : SA ^ n)
           → (δ ⊨ᴬ φ) ≡ (map g δ ⊨ᴮ mapFo g φ)
+```
 
-  -- every outer witness of an existential is met by an inner one
+Every outer witness of an existential is met by an inner one.
+
+```agda
   Witness : (SA → SB) → Type (ℓ-suc ℓ)
   Witness g = (n : ℕ) (φ : Formula SA (suc n)) (δ : SA ^ n)
             → ⟨ map g δ ⊨ᴮ mapFo g (∃̇ φ) ⟩
@@ -212,8 +219,11 @@ module SatTransfer (MA MB : S → hProp (ℓ-suc ℓ)) where
            → ⟦ renameTm suc t ⟧ᴮ (x ∷ δ) ≡ ⟦ t ⟧ᴮ δ
       renB (con c) x δ = refl
       renB (var i) x δ = refl
+```
 
-      -- relabelling and weakening commute on terms
+Relabelling and weakening commute on terms.
+
+```agda
       mapTm-ren : {n : ℕ} (t : Term SA n)
                 → mapTm g (renameTm suc t) ≡ renameTm suc (mapTm g t)
       mapTm-ren (con c) = refl
@@ -228,8 +238,11 @@ module SatTransfer (MA MB : S → hProp (ℓ-suc ℓ)) where
              → (fst x ∈ˢ fst (⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ)))
              ≡ (fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)))
       memRen t x δ = cong (λ s → fst x ∈ˢ fst s) (renG t x δ)
+```
 
-      -- the side condition of a bounded quantifier, read across the map
+The side condition of a bounded quantifier, read across the map.
+
+```agda
       memPath : {n : ℕ} (t : Term SA n) (q : SA) (δ : SA ^ n)
               → (fst q ∈ˢ fst (⟦ t ⟧ᴬ δ))
               ≡ (fst (g q) ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)))
@@ -327,9 +340,12 @@ module AtStage (α : S) (ordα : IsOrd α) where
 
   wL : SWO SL
   wL = orderAt α ordα
+```
 
-  -- the equivalence holds at any carrier: the inner world is the restricted
-  -- structure, and the bounded cases route through the criterion (Devlin 5.1)
+The equivalence holds at any carrier: the inner world is the restricted
+structure, and the bounded cases route through the criterion (Devlin 5.1).
+
+```agda
   module AtM (M : S) (M⊆L : (x : S) → ⟨ x ∈ˢ M ⟩ → ⟨ x ∈ˢ Lset α ⟩) where
 
     SM : Type (ℓ-suc ℓ)
@@ -361,9 +377,12 @@ module AtStage (α : S) (ordα : IsOrd α) where
                → fst (⟦ t ⟧ᵐ δ) ≡ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ))
       tm-agree n (con c) δ = refl
       tm-agree n (var i) δ = sym (cong fst (lookup-inL i δ))
+```
 
-    -- the stage inclusion is the map; the atoms are congruences of the
-    -- term dictionary, and TarskiVaught is exactly the witness principle
+The stage inclusion is the map; the atoms are congruences of the term
+dictionary, and `TarskiVaught` is exactly the witness principle.
+
+```agda
     module Tr = SatTransfer (λ x → x ∈ˢ M) (λ x → x ∈ˢ Lset α)
 
     TV→elem : TarskiVaught → Elementary
@@ -378,8 +397,11 @@ module AtStage (α : S) (ordα : IsOrd α) where
 ```agda
   module Hull (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset α ⟩)
                (∅∈α : ⟨ ∅ ∈ˢ α ⟩) where
+```
 
-    -- the junk value: the empty set, a member of every nonempty stage
+The junk value: the empty set, a member of every nonempty stage.
+
+```agda
     ∅∈Lsetα : ⟨ ∅ ∈ˢ Lset α ⟩
     ∅∈Lsetα = Lset-in α ∅ ∅ ∅∈α (∅∈𝒟ₒ ∅)
 
@@ -391,15 +413,21 @@ module AtStage (α : S) (ordα : IsOrd α) where
 
     toSL : ⟪ Lset α ⟫ → SL
     toSL m = ⟪ Lset α ⟫↪ m , member (Lset α) m
+```
 
-    -- the hull lies in the stage: every code value is a stage member
+The hull lies in the stage: every code value is a stage member.
+
+```agda
     Hull⊆L : (x : S) → ⟨ x ∈ˢ Hull ⟩ → ⟨ x ∈ˢ Lset α ⟩
     Hull⊆L x x∈H = PT.rec (snd (x ∈ˢ Lset α)) go x∈H
       where
       go : Σ[ c ∈ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
       go (c , q) = subst (λ z → ⟨ z ∈ˢ Lset α ⟩) q (snd (val c))
+```
 
-    -- reading the hull's membership back: a member is the value of a code
+Reading the hull's membership back: a member is the value of a code.
+
+```agda
     hull-member : (x : S) → ⟨ x ∈ˢ Hull ⟩
                 → ∥ Σ[ c ∈ Code ] (fst (val c) ≡ x) ∥₁
     hull-member x x∈H = x∈H
@@ -419,9 +447,12 @@ module AtStage (α : S) (ordα : IsOrd α) where
 
     X⊆M : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Hull ⟩
     X⊆M x x∈X = XInM.inM x x∈X
+```
 
-    -- re-stated over Code: a small witness lives in the stage's
-    -- presentation, a big witness in the stage's inner world
+Re-stated over `Code`: a small witness lives in the stage's presentation, a big
+witness in the stage's inner world.
+
+```agda
     Witnessed-small : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k))
                     → (cs : Vec Code k) → Type (ℓ-suc ℓ)
     Witnessed-small k ψ cs =
@@ -435,9 +466,12 @@ module AtStage (α : S) (ordα : IsOrd α) where
             → SL → hProp (ℓ-suc ℓ)
     SatAt-h k ψ cs a =
       (fst ((a ∷ vals cs) ⊨₀ ψ) , snd ((a ∷ vals cs) ⊨₀ ψ))
+```
 
-    -- perf: the search unfolds to a descent; seal at birth, spec as the read
-    -- lemma (R-36)
+Perf: the search unfolds to a descent; seal at birth, spec as the read lemma
+(R-36).
+
+```agda
     opaque
       leastSearch : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
                   → Witnessed-small k ψ cs
@@ -510,9 +544,12 @@ module IsoInv (M : S) (PM : S)
              → p (fst (⟦ t ⟧ᵐ δ)) ≡ fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ))
     tm-agree (con m) δ = refl
     tm-agree (var i) δ = lookup-g i δ
+```
 
-    -- the atoms of the collapse: forward by the order isomorphism,
-    -- backward by its inverse and injectivity
+The atoms of the collapse: forward by the order isomorphism, backward by its
+inverse and injectivity.
+
+```agda
     at∈ : (n : ℕ) (t u : Term SM n) (δ : SM ^ n)
         → (δ ⊨ᵐ (t ∈̇ u)) ≡ (map g δ ⊨ᵖᵐ mapFo g (t ∈̇ u))
     at∈ n t u δ = ⇔toPath
@@ -536,8 +573,11 @@ module IsoInv (M : S) (PM : S)
         (subst (λ z → z ≡ p (fst (⟦ u ⟧ᵐ δ))) (sym (tm-agree t δ))
           (subst (λ z → fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) ≡ z)
             (sym (tm-agree u δ)) h)))
+```
 
-    -- surjectivity supplies the witness principle
+Surjectivity supplies the witness principle.
+
+```agda
     wit : Tr.Witness g
     wit n ψ δ h = PT.rec squash₁
       (λ { (p' , hp) → PT.map
@@ -635,19 +675,28 @@ module CloseSyntax where
   closeAt d n δ (∀̇ ψ) = ∀̇ (closeAt (suc d) n δ ψ)
   closeAt d n δ (∀̇∈ t ψ) = ∀̇∈ (closeTmAt d n δ t) (closeAt (suc d) n δ ψ)
   closeAt d n δ (∃̇∈ t ψ) = ∃̇∈ (closeTmAt d n δ t) (closeAt (suc d) n δ ψ)
+```
 
-  -- the closure of the parameter block and the witness variable
+The closure of the parameter block and the witness variable.
+
+```agda
   close : {K : Type (ℓ-suc ℓ)} (n : ℕ) (δ : Vec K n)
         → (φ : Formula K (suc n)) → Formula K 1
   close n δ φ = closeAt 1 n δ φ
+```
 
-  -- the full closure (no witness variable left)
+The full closure (no witness variable left).
+
+```agda
   closeAll : {K : Type (ℓ-suc ℓ)} (n : ℕ) (δ : Vec K n)
            → (φ : Formula K n) → Formula K 0
   closeAll n δ φ = closeAt 0 n δ φ
+```
 
-  -- relabelling and closure commute: closing after relabelling is
-  -- relabelling after closing
+Relabelling and closure commute: closing after relabelling is relabelling
+after closing.
+
+```agda
   mapTm-rename : {K K' : Type (ℓ-suc ℓ)} {n m : ℕ} (g : K → K')
                → (ρ : Fin n → Fin m) (t : Term K n)
                → mapTm g (renameTm ρ t) ≡ renameTm ρ (mapTm g t)
@@ -710,16 +759,22 @@ module CloseSem {𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ))}
          → map (λ x → x) v ≡ v
   map-id [] = refl
   map-id (x ∷ v) = cong (x ∷_) (map-id v)
+```
 
-  -- a term lifted past a binder reads the tail of the environment
+A term lifted past a binder reads the tail of the environment.
+
+```agda
   renameTm-suc-sat : {d : ℕ} (X : Term K d) (y : ZFStructure.S 𝒮)
                    (γ : Sem._^_ (ZFStructure.S 𝒮) d)
                    → ⟦ renameTm suc X ⟧ (y ∷ γ) ≡ ⟦ X ⟧ γ
   renameTm-suc-sat (con c) y γ = refl
   renameTm-suc-sat (var i) y γ = refl
+```
 
-  -- the term-level adequacy: every clause is lookup-map or the
-  -- induction hypothesis, and the kept variables are refl
+The term-level adequacy: every clause is lookup-map or the induction
+hypothesis, and the kept variables are `refl`.
+
+```agda
   ⟦⟧-close : (d n : ℕ) (t : Term K (d + n)) (δ : Vec K n)
            (γ : Sem._^_ (ZFStructure.S 𝒮) d)
            → ⟦ t ⟧ (γ ++ map ι δ) ≡ ⟦ Cl.closeTmAt d n δ t ⟧ γ
@@ -731,9 +786,12 @@ module CloseSem {𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ))}
   ⟦⟧-close (suc d) n (var (suc j)) δ (y ∷ γ) =
     ⟦⟧-close d n (var j) δ γ
     ∙ sym (renameTm-suc-sat (Cl.closeTmAt d n δ (var j)) y γ)
+```
 
-  -- the formula-level adequacy: the fourteen clauses of the semantics,
-  -- each a congruence, the binders pushing a value onto the env
+The formula-level adequacy: the fourteen clauses of the semantics, each a
+congruence, the binders pushing a value onto the env.
+
+```agda
   ⊨-close : (d n : ℕ) (φ : Formula K (d + n)) (δ : Vec K n)
           (γ : Sem._^_ (ZFStructure.S 𝒮) d)
           → (γ ++ map ι δ) ⊨ φ ≡ γ ⊨ Cl.closeAt d n δ φ
@@ -789,11 +847,14 @@ module HullElemDown (α : S) (ordα : IsOrd α)
   module Cl = CloseSyntax using ( close; mapFo-close )
   module CseL = CloseSem {𝒮 = 𝒮ᵥ ↾ (λ x → x ∈ˢ Lset α)} {K = ASt.SL} id
     using ( module Cl; map-id; ⊨-closeAll; ⊨-close₁ )
+```
 
-  -- D-30: the consumer needs a code for each constant that OCCURS, not
-  -- a total section of `val`.  A formula is finite, so the codes come
-  -- out of the hull membership one constant at a time, and each
-  -- truncation stays outside the goal of `tv`, which is a proposition.
+D-30: the consumer needs a code for each constant that OCCURS, not a total
+section of `val`. A formula is finite, so the codes come out of the hull
+membership one constant at a time, and each truncation stays outside the goal
+of `tv`, which is a proposition.
+
+```agda
   codeOf : (q : A.SM) → ∥ Σ[ c ∈ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
   codeOf q = PT.map (λ { (c , e) → c , Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) e })
     (H.hull-member (fst q) (snd q))
@@ -824,10 +885,13 @@ module HullElemDown (α : S) (ordα : IsOrd α)
     (λ { (t' , e) (φ' , d) → ∀̇∈ t' φ' , cong₂ ∀̇∈ e d }) (codeTm t) (codeFo φ)
   codeFo (∃̇∈ t φ) = PT.map2
     (λ { (t' , e) (φ' , d) → ∃̇∈ t' φ' , cong₂ ∃̇∈ e d }) (codeTm t) (codeFo φ)
+```
 
-  -- TarskiVaught at every arity: the stage existential at the closed
-  -- parameters is hull-closed, and the code formula reads back
-  -- through the relabelling and the close transfer
+`TarskiVaught` at every arity: the stage existential at the closed parameters is
+hull-closed, and the code formula reads back through the relabelling and the
+close transfer.
+
+```agda
   tv : (n : ℕ) (ψ : Formula A.SM (suc n)) (δ : Vec A.SM n)
      → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL (∃̇ ψ)) ⟩
      → ∥ Σ[ q ∈ A.SM ]
@@ -893,7 +957,6 @@ module HullElemDown (α : S) (ordα : IsOrd α)
 
   elem : A.Elementary
   elem = A.TV→elem tv
-
 ```
 
 ## The ambient parameter-free reading
@@ -1036,10 +1099,12 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
     (cover : (y : S) → ⟨ y ∈ˢ M ⟩
            → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ C.π y ∈ˢ Lset γ ⟩) ∥₁)
     where
+```
 
-    -- beta = the ordinals of the collapse, separated by the Delta-0
-    -- ordinal formula.  This is the L-native supremum (ProbeT261's
-    -- shape at the transitive carrier).
+Beta = the ordinals of the collapse, separated by the Delta-0 ordinal formula.
+This is the L-native supremum (ProbeT261's shape at the transitive carrier).
+
+```agda
     β-sep : Σ[ s ∈ S ]
               (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ C.πX) ⊓ ((y ∷ []) ⊨ₚ isOrdAt)))
     β-sep = separateFromSmall C.πX (λ y → (y ∷ []) ⊨ₚ isOrdAt)
@@ -1070,10 +1135,13 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
           , Amb.isOrdAt-in z (mem-ord {A = x} (β-ord x x∈β) z z∈x) )
       β-mem : (x : S) → ⟨ x ∈ˢ β ⟩ → isTransV x
       β-mem x x∈β = β-ord x x∈β .fst
+```
 
-    -- Every ordinal of the collapse is a member of a larger ordinal of
-    -- the collapse: the transfer's cover plus the ordinals-in-stages
-    -- fact (rank).  This is Devlin's lim(β) step.
+Every ordinal of the collapse is a member of a larger ordinal of the collapse:
+the transfer's cover plus the ordinals-in-stages fact (`rank`). This is Devlin's
+lim(β) step.
+
+```agda
     β-succ : (δ : S) → ⟨ δ ∈ˢ β ⟩
            → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩) ∥₁
     β-succ δ δ∈β = PT.rec squash₁ go (C.πX-member δ (β∈πX δ δ∈β))
@@ -1109,9 +1177,12 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
           (λ s∈γ → C.πX-trans {x = γ} {y = sucV δ} s∈γ (β∈πX γ γ∈β))
           (λ s≡γ → subst (λ w → ⟨ w ∈ˢ C.πX ⟩) (sym s≡γ) (β∈πX γ γ∈β))
           (suc∈or≡ δ γ oδ oγ δ∈γ)
+```
 
-    -- The reverse inclusion: every member of the collapse lies in a
-    -- level below beta.
+The reverse inclusion: every member of the collapse lies in a level below
+beta.
+
+```agda
     πX⊆Lβ : (x : S) → ⟨ x ∈ˢ C.πX ⟩ → ⟨ x ∈ˢ Lset β ⟩
     πX⊆Lβ x x∈πX = PT.rec (snd (x ∈ˢ Lset β)) go (C.πX-member x x∈πX)
       where
@@ -1124,9 +1195,12 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
         go₂ (γ , oγ , γ∈πX , h) =
           Lset-mono {α = β} {β = γ} (ord∈β γ γ∈πX oγ)
             (subst (λ w → ⟨ w ∈ˢ Lset γ ⟩) e h)
+```
 
-    -- The forward inclusion: every level below beta lies in the
-    -- collapse, via the transfer's levelIn and the successor closure.
+The forward inclusion: every level below beta lies in the collapse, via the
+transfer's `levelIn` and the successor closure.
+
+```agda
     Lβ⊆πX : (x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ C.πX ⟩
     Lβ⊆πX x x∈Lβ = PT.rec (snd (x ∈ˢ C.πX)) go (Lset-out β x x∈Lβ)
       where
@@ -1136,8 +1210,11 @@ module HullStage (lam : S) (ordλ : IsOrd lam)
         C.πX-trans {x = Lset (sucV δ)} {y = x}
           (subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Lset-suc δ)) x∈𝒟ₒδ)
           (levelIn (sucV δ) (suc-ord (β-ord δ δ∈β)) (β∈πX (sucV δ) (sucV∈β δ δ∈β)))
+```
 
-    -- The equality: the collapse is the level at beta.
+The equality: the collapse is the level at beta.
+
+```agda
     ext : C.πX ≡ Lset β
     ext = extensionality C.πX (Lset β) (sub , sup)
       where
@@ -1163,8 +1240,11 @@ module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
 
   X : S
   X = Lset α ∪ ⁅ x ⁆s
+```
 
-  -- the union membership of a singleton member
+The union membership of a singleton member.
+
+```agda
   x∈sgl : ⟨ x ∈ₛ ⁅ x ⁆s ⟩
   x∈sgl = SetPackage.classification (SingletonPackage x) x .snd refl
 
@@ -1214,9 +1294,12 @@ module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
     go (inl a∈Lα) = Lα∈X b (layer-trans (Lset-layer α) b∈a a∈Lα)
     go (inr a∈sgl) = Lα∈X b (x⊆Lα b
       (subst (λ u → ⟨ b ∈ˢ u ⟩) (sgl≡ a a∈sgl) b∈a))
+```
 
-  -- 1 = sucV ∅ lies in the infinite ordinal alpha, and the empty set
-  -- lies in the limit index.
+1 = `sucV ∅` lies in the infinite ordinal alpha, and the empty set lies in the
+limit index.
+
+```agda
   one∈α : ⟨ sucV ∅ ∈ˢ α ⟩
   one∈α = Sum.rec
       (λ α∈ω → Empty.rec (α∉ω α∈ω))
@@ -1256,18 +1339,23 @@ module HullExt (α : S) (ordα : IsOrd α)
 
   M : S
   M = H.T.Hull
+```
 
-  -- the inclusion with the truncated membership, at the levels the hull
-  -- speaks
+The inclusion with the truncated membership, at the levels the hull speaks.
+
+```agda
   testP : S → S → Type (ℓ-suc ℓ)
   testP x y = (z : S) → fst (z ∈ˢ x) → fst (z ∈ˢ y)
 
   subF : S → S → hProp (ℓ-suc ℓ)
   subF x y = ( testP x y
              , isPropΠ (λ z → isPropΠ (λ _ → snd (z ∈ˢ y))) )
+```
 
-  -- a global difference witness in one direction, classically: from
-  -- ¬ (x ⊆ y) extract a member of x that is not a member of y
+A global difference witness in one direction, classically: from `¬ (x ⊆ y)`
+extract a member of `x` that is not a member of `y`.
+
+```agda
   diff-witness : (x y : S) → ((⟨ subF x y ⟩) → Empty.⊥)
                → ∥ Σ[ z ∈ S ] ((z ∈ᵗ x) × ((z ∈ᵗ y) → Empty.⊥)) ∥₁
   diff-witness x y ¬xy = go (lem P)
@@ -1282,20 +1370,29 @@ module HullExt (α : S) (ordα : IsOrd α)
       x⊆y z z∈x = Sum.rec (λ q → q)
         (λ nzy → Empty.rec (¬p ∣ z , (z∈x , nzy) ∣₁))
         (lem (z ∈ˢ y))
+```
 
-  -- extensionality contrapositive, in the two directions
+Extensionality contrapositive, in the two directions.
+
+```agda
   ext-contra : (x y : S) → (x ≡ y → Empty.⊥)
              → ((⟨ subF x y ⟩) → Empty.⊥) ⊎ ((⟨ subF y x ⟩) → Empty.⊥)
   ext-contra x y nxy = Sum.rec
     (λ hxy → inr (λ hyx → nxy (extensionalV (λ z → ⇔toPath (hxy z) (hyx z)))))
     (λ ¬hxy → inl ¬hxy)
     (lem (subF x y))
+```
 
-  -- the outer difference formula over the codes of the two hull members
+The outer difference formula over the codes of the two hull members.
+
+```agda
   φ : (c d : H.T.Code) → Formula H.T.Code 1
   φ c d = (var zero ∈̇ con c) ∧̇ (¬̇ (var zero ∈̇ con d))
+```
 
-  -- the outer satisfaction from a global difference witness
+The outer satisfaction from a global difference witness.
+
+```agda
   outer : (u v : S) (u∈M : u ∈ᵗ M)
         → (c d : H.T.Code) (ec : fst (H.T.val c) ≡ u) (ed : fst (H.T.val d) ≡ v)
         → (z : S) → (z ∈ᵗ u) → ((z ∈ᵗ v) → Empty.⊥)
@@ -1309,9 +1406,12 @@ module HullExt (α : S) (ordα : IsOrd α)
     sat : ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo H.T.val (φ c d)) ⟩
     sat = ( subst (λ w → z ∈ᵗ w) (sym ec) zx
          , λ h → nzy (subst (λ w → z ∈ᵗ w) ed h) )
+```
 
-  -- the difference argument: hull-closed turns the outer witness into a
-  -- hull member, and the agreement hypothesis refutes it
+The difference argument: hull-closed turns the outer witness into a hull
+member, and the agreement hypothesis refutes it.
+
+```agda
   refute : (x y : S) (x∈M : x ∈ᵗ M) (y∈M : y ∈ᵗ M)
          → (ag1 : (z : S) → z ∈ᵗ M → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ y ⟩)
          → (c d : H.T.Code) (ec : fst (H.T.val c) ≡ x) (ed : fst (H.T.val d) ≡ y)
@@ -1498,11 +1598,14 @@ module Frame (lam : S) (ordλ : IsOrd lam)
   module HS = HullStage lam ordλ succλ X X⊆Lλ ∅∈λ using (module ASt; module C; module Condense; module H; M)
   module ASt = HS.ASt using (module AbsL; module AtM; Ltr; SL)
   module A = ASt.AtM HS.M HS.H.Hull⊆L using (Elementary; SM; inL)
+```
 
-  -- SECTION 2.  THE CARRY.  Ambient truth at hull members becomes
-  -- ambient truth at their collapse values: (1) down into the hull by
-  -- `elem`, (2) across by the collapse iso `iso-inv`, (3) out of the
-  -- collapse by Δ₀ absoluteness at the transitive range `πX`.
+Section 2. The carry. Ambient truth at hull members becomes ambient truth at
+their collapse values: (1) down into the hull by `elem`, (2) across by the
+collapse iso `iso-inv`, (3) out of the collapse by Δ₀ absoluteness at the
+transitive range `πX`.
+
+```agda
   module HE = HullExt lam ordλ X X⊆Lλ ∅∈λ using (hullExt)
 
   Mext : isExt HS.M
@@ -1534,8 +1637,11 @@ module Frame (lam : S) (ordλ : IsOrd lam)
                   → map fst (map A.inL γ) ≡ map fst γ
       map-inL-fst [] = refl
       map-inL-fst (q ∷ γ) = cong (fst q ∷_) (map-inL-fst γ)
+```
 
-    -- THE CARRY ITSELF.
+The carry itself.
+
+```agda
     push : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
          → ⟨ map fst δ ⊨ₚ φ ⟩
          → ⟨ map fst (map CIso.I.g δ) ⊨ₚ φ ⟩

@@ -679,7 +679,11 @@ it is built.
     tableAt = ∈-induction {P = λ α → ⟨ isL α ⟩ → IsOrd α → Bundle α}
       (build (PairGraphAt zero (suc zero)) refl)
       where
-      -- perf: the pair graph enters as a variable with its own equation
+```
+
+Perf: the pair graph enters as a variable with its own equation.
+
+```agda
       build : (φ : Formula S 2) → φ ≡ PairGraphAt zero (suc zero)
             → (α : V ℓ)
             → ((δ : V ℓ) → ⟨ δ ∈ α ⟩ → ⟨ isL δ ⟩ → IsOrd δ → Bundle δ)

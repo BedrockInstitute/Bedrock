@@ -36,13 +36,19 @@ module BoundOver
   (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+```
 
-  -- Every numeral is an ordinal of the limit, by the two parameters alone.
+Every numeral is an ordinal of the limit, by the two parameters alone.
+
+```agda
   #∈λ : (k : ℕ) → ⟨ (# k) ∈ˢ lam ⟩
   #∈λ zero    = ∅∈λ
   #∈λ (suc k) = succλ (# k) (#∈λ k)
+```
 
-  -- The formula set: Devlin's `𝓕 ∪ {vᵢ}`, here the numerals.
+The formula set: Devlin's `𝓕 ∪ {vᵢ}`, here the numerals.
+
+```agda
   #∈Tλ : (k : ℕ) → ⟨ (# k) ∈ˢ T lam ⟩
   #∈Tλ k = T-mono {α = lam} {β = sucV (# k)} (#∈λ (suc k))
     {x = # k} (T-ord (# k) (numeral-ord k))
@@ -57,9 +63,12 @@ module Bound (lam : S) (ordλ : IsOrd lam)
              (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 
   open BoundOver Lset Lset-mono ord∈Lset-suc lam ordλ succλ ∅∈λ public
+```
 
-  -- The numerals as elements of L, and the model's own pair.  Both are the
-  -- L presentation of a fact `BoundOver` already has.
+The numerals as elements of L, and the model's own pair. Both are the L
+presentation of a fact `BoundOver` already has.
+
+```agda
   num∈λ : (k : ℕ) → ⟨ fst (numeralL k) ∈ˢ Lset lam ⟩
   num∈λ k = subst (λ w → ⟨ w ∈ˢ Lset lam ⟩) (sym (numeralL-fst k)) (#∈Tλ k)
 ```

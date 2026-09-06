@@ -67,13 +67,12 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
 
   Lκ : S
   Lκ = LsetS (fst κ) oκ
+```
 
-  -- -------------------------------------------------------------------
-  -- 1.  THE STAGE λ.  α₀ is the stage of the pair {κ, y}; λ is the
-  -- superadequate stage above α₀.  Sealed: every consumer wants λ as
-  -- an atom.
-  -- -------------------------------------------------------------------
+1. THE STAGE `λ`. `α₀` is the stage of the pair `{κ, y}`; `λ` is the
+superadequate stage above `α₀`. Sealed: every consumer wants `λ` as an atom.
 
+```agda
   private
     P₀ : S
     P₀ = pairʟ κ y
@@ -112,11 +111,11 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
 
     y∈Lλ : ⟨ fst y ∈ˢ Lset lam ⟩
     y∈Lλ = Lset-mono {α = lam} {β = α₀} (sa .snd .snd .fst) y∈Lα₀
+```
 
-  -- -------------------------------------------------------------------
-  -- 2.  THE START X = L_κ ∪ {y}, transitive, an element of L.
-  -- -------------------------------------------------------------------
+2. THE START `X = L_κ ∪ {y}`, transitive, an element of L.
 
+```agda
   y⊆Lκ : (z : V ℓ) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ Lset (fst κ) ⟩
   y⊆Lκ z hz = ord⊆Lset (fst κ) oκ z (y⊆κ z hz)
 
@@ -125,8 +124,11 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
 
   X : V ℓ
   X = UK.X
+```
 
-  -- X as the model's own union of L_κ and {y}.
+`X` as the model's own union of `L_κ` and `{y}`.
+
+```agda
   module Pt = Point κ (num∈κ 0) y using ( Y; Y-out; Y-in; injL )
   module U = Union2 Lκ Pt.Y using ( D; out; in₁; in₂ )
 
@@ -156,12 +158,13 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
 
   XS : S
   XS = X , X-isL
+```
 
-  -- -------------------------------------------------------------------
-  -- 3.  THE START IS COUNTED: L_κ ↪ κ and {y} ↪ κ, tagged, then paired.
-  -- -------------------------------------------------------------------
+3. THE START IS COUNTED: `L_κ ↪ κ` and `{y} ↪ κ`, tagged, then paired.
 
-  -- The pairing at κ: src/L/GCH/Pairing.lagda.md's square law.
+The pairing at `κ`: src/L/GCH/Pairing.lagda.md's square law.
+
+```agda
   pairκ : InjL (prodL κ) κ
   pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (fst κ) (snd κ) oκ cκ κ∉ω
 
@@ -170,40 +173,47 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
     (injl-trans Xʟ (prodL κ) κ
       (tag-union κ (num∈κ 0) (num∈κ 1) Lκ Pt.Y (stage-counted κ Lκ oκ κ∉ω refl) Pt.injL)
       pairκ)
+```
 
-  -- -------------------------------------------------------------------
-  -- 4.  ELEMENTARITY OF THE HULL: the hull's Tarski-Vaught instance
-  -- reads the code of each constant off the hull membership, so the
-  -- start needs no ambient count here (src/L/GCH/Hull.lagda.md).
-  -- -------------------------------------------------------------------
+4. ELEMENTARITY OF THE HULL: the hull's Tarski-Vaught instance reads the code of
+each constant off the hull membership, so the start needs no ambient count here
+(src/L/GCH/Hull.lagda.md).
 
+```agda
   elem = HullElemDown.elem lam ordλ X UK.X⊆Lλ UK.∅∈λ
+```
 
-  -- -------------------------------------------------------------------
-  -- 5.  THE HULL, ITS COLLAPSE L_β, AND ITS COUNT.
-  -- -----------------------------------------------------------------
+5. THE HULL, ITS COLLAPSE `L_β`, AND ITS COUNT.
 
-  -- Read at the source, applied to the telescope: no module
-  -- application, so nothing of `Count` is copied.
+Read at the source, applied to the telescope: no module application, so nothing
+of `Count` is copied.
+
+```agda
   hull↪κ = Count.hull↪κ lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL κ oκ cκ κ∉ω base
+```
 
-  -- The collapse stage L_β and the inverse collapse L_β ↪ M, at the
-  -- same telescope (src/L/GCH/StageCounted.lagda.md `Site`).
+The collapse stage `L_β` and the inverse collapse `L_β ↪ M`, at the same
+telescope (src/L/GCH/StageCounted.lagda.md `Site`).
+
+```agda
   module St = Site lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
     using ( β; oβ; ext; Lβ; βL; hullL; Lβ↪M )
+```
 
-  -- The hull stage, its collapse and the collapse graph, read at the
-  -- source modules `Site` copies from.
+The hull stage, its collapse and the collapse graph, read at the source modules
+`Site` copies from.
+
+```agda
   module HS = HullStage lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( M )
   module HSH = HullStage.H lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( X⊆M )
   module HSC = HullStage.C lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ
     using ( πX; π; fixes; πX-intro )
+```
 
-  -- -----------------------------------------------------------------
-  -- 5.1  y is a member of L_β: y ∈ X ⊆ M, X is transitive, so the
-  -- collapse fixes y (src/V/Collapse.lagda.md `fixes`).
-  -- -----------------------------------------------------------------
+5.1 `y` is a member of `L_β`: `y ∈ X ⊆ M`, `X` is transitive, so the collapse
+fixes `y` (src/V/Collapse.lagda.md `fixes`).
 
+```agda
   y∈M : ⟨ fst y ∈ˢ HS.M ⟩
   y∈M = HSH.X⊆M (fst y) UK.x∈X
 
@@ -215,11 +225,11 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
   y∈Lβ : ⟨ fst y ∈ˢ Lset St.β ⟩
   y∈Lβ = subst (λ w → ⟨ w ∈ˢ Lset St.β ⟩) πy
     (subst (λ w → ⟨ HSC.π (fst y) ∈ˢ w ⟩) St.ext (HSC.πX-intro (fst y) y∈M))
+```
 
-  -- -----------------------------------------------------------------
-  -- 5.2  THE CHAIN: β ⊆ L_β ↪ M ↪ κ.
-  -- -----------------------------------------------------------------
+5.2 THE CHAIN: `β ⊆ L_β ↪ M ↪ κ`.
 
+```agda
   β↪κ : InjL St.βL κ
   β↪κ = injl-trans St.βL St.Lβ κ
     (inclusion-coded St.βL St.Lβ (λ z hz → ord⊆Lset St.β St.oβ z hz))

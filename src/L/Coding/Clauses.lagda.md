@@ -183,8 +183,11 @@ module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
   private
     X = fst (lookup x γ)
     U = fst (lookup u γ)
+```
 
-  -- Out: the witness's second component is pinned by pair injectivity.
+Out: the witness's second component is pinned by pair injectivity.
+
+```agda
   sndEx-out : ⟨ γ ⊨ sndEx x u body ⟩
             → ∥ Σ[ v ∈ S ] Σ[ s ∈ S ] ((X ≡ pr U (fst v)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
   sndEx-out = PT.rec squash₁ (λ { (s , (s∈ , h)) → PT.map
@@ -352,8 +355,11 @@ module EnvFacts (W : S) where
 
     g0 : Ix W 0
     g0 ()
+```
 
-  -- An empty set is the empty environment.
+An empty set is the empty environment.
+
+```agda
   noMembers→env0 : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → Empty.⊥) → z ≡ fst (envS W g0)
   noMembers→env0 z k = extensionalV (λ y → ⇔toPath
     (λ hy → Empty.rec (k y hy))
@@ -370,8 +376,11 @@ module EnvFacts (W : S) where
 
   envSet0-in : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → Empty.⊥) → ⟨ z ∈ fst (envSet W 0) ⟩
   envSet0-in z k = subst (λ u → ⟨ u ∈ fst (envSet W 0) ⟩) (sym (noMembers→env0 z k)) (envSet-in W g0)
+```
 
-  -- The cons of a member onto an environment is an environment.
+The cons of a member onto an environment is an environment.
+
+```agda
   cons-env : (q : ⟪ fst W ⟫) {k : ℕ} (g : Ix W k)
            → env (cons (ι q) (λ i → ι (g i))) ≡ fst (envS W (cons q g))
   cons-env q g = cong env (funExt (λ { zero → refl ; (suc i) → refl }))
@@ -391,20 +400,25 @@ module EnvFacts (W : S) where
             → ⟨ fst e' ∈ fst (envSet W (suc k)) ⟩
   envSuc-in {k} x e' x∈ g qe' =
     subst (λ u → ⟨ u ∈ fst (envSet W (suc k)) ⟩) (sym qe') (envCons∈ (fst x) x∈ g)
+```
 
-  -- An environment at a successor arity splits as a cons.
+An environment at a successor arity splits as a cons.
+
+```agda
   env-split : {k : ℕ} (g' : Ix W (suc k))
             → fst (envS W g') ≡ env (cons (ι (g' zero)) (λ i → ι (g' (suc i))))
   env-split g' = cong env (funExt (λ { zero → refl ; (suc i) → refl }))
+```
 
-  -- A member of the successor set is a cons.
+A member of the successor set is a cons.
+
+```agda
   envSuc-out : {k : ℕ} (e' : S) → ⟨ fst e' ∈ fst (envSet W (suc k)) ⟩
              → ∥ Σ[ q ∈ ⟪ fst W ⟫ ] Σ[ g ∈ Ix W k ]
                   (fst e' ≡ env (cons (ι q) (λ i → ι (g i)))) ∥₁
   envSuc-out {k} e' h = PT.map
     (λ { (g' , e) → g' zero , (λ i → g' (suc i)) , (e ∙ env-split g') })
     (envSet-out W (suc k) e' h)
-
 ```
 
 The tower, read. Soundness: every entry is `(# k, envSet k)`, by `∈`-induction
@@ -422,9 +436,12 @@ module ConsImageRead {m : ℕ} (F' F w : Fin m) (γ : S ^ m) (W : S)
 
     ι∈' : (q : ⟪ fst W ⟫) → ⟨ ι q ∈ fst W ⟩
     ι∈' q = ∈∈ₛ {a = ι q} {b = fst W} .snd (∈ₛ⟪ fst W ⟫↪ q)
+```
 
-  -- Out: the members of F' are exactly the cons of members of w onto
-  -- members of F, so at F = envSet k, F' = envSet (suc k).
+Out: the members of `F'` are exactly the cons of members of `w` onto members of
+`F`, so at `F = envSet k`, `F' = envSet (suc k)`.
+
+```agda
   consImage-out : (k : ℕ) → fst (lookup F γ) ≡ fst (envSet W k)
                 → ⟨ γ ⊨ consImage F' F w ⟩ → fst (lookup F' γ) ≡ fst (envSet W (suc k))
   consImage-out k qF (h1 , h2) = extensionalV (λ z → ⇔toPath (fwd z) (bwd z))
@@ -548,8 +565,11 @@ module TowerRead {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
 
   Entry : V ℓ → V ℓ → Type (ℓ-suc ℓ)
   Entry n F = ∥ Σ[ k ∈ ℕ ] ((n ≡ # k) × (F ≡ fst (envSet W k))) ∥₁
+```
 
-  -- Every entry is (# k, envSet k).
+Every entry is `(# k, envSet k)`.
+
+```agda
   entry-out : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩ → Entry (fst n) (fst F)
   entry-out n F = ∈-induction {P = P} step (fst n) n F refl
     where
@@ -586,8 +606,11 @@ module TowerRead {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
                 (subst (λ u → ⟨ u ∈ Ev ⟩) qp' p'∈)) })
           (bothEx-out i0 (downBody w) (p' ∷ δ) hb) })
         hs
+```
 
-  -- Every (# k, envSet k) is an entry.
+Every `(# k, envSet k)` is an entry.
+
+```agda
   entry-in : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
   entry-in zero = PT.rec (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
     (λ { (p , (p∈ , hs)) → PT.rec (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
@@ -889,8 +912,11 @@ module Shape {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) where
   Δ₀-quPay = Δ₀-keyUp C9 i5 i0
   Δ₀-bqPay : Δ₀ bqPay
   Δ₀-bqPay = Δ₀-bothEx i0 _ (δ-∧ (Δ₀-isTm i1 i8 _ _ _) (Δ₀-keyUp (sh 12 C) i8 i0))
+```
 
-  -- The payload formula of each tag, by the tag's number.
+The payload formula of each tag, by the tag's number.
+
+```agda
   payN : ℕ → Formula S (9 + m)
   payN 0 = atomPay
   payN 1 = atomPay
@@ -926,9 +952,12 @@ module Shape {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) where
 
   Δ₀-pay : (k : Fin 12) → Δ₀ (pay k)
   Δ₀-pay k = Δ₀-payN (toℕ k)
+```
 
-  -- At p ∷ s' ∷ F ∷ ar ∷ s ∷ q ∷ c ∷ γ (7 + m): p is (N k, r) for one
-  -- of the twelve tags, with r's payload condition.
+At `p ∷ s' ∷ F ∷ ar ∷ s ∷ q ∷ c ∷ γ` (7 + m): `p` is `(N k, r)` for one of the
+twelve tags, with `r`'s payload condition.
+
+```agda
   at : Fin 12 → Formula S (7 + m)
   at k = sndEx i0 (sh 7 (N k)) (pay k)
 
@@ -964,8 +993,11 @@ module Close {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) where
     C4 w4 : Fin (4 + m)
     C4 = sh 4 C
     w4 = sh 4 w
+```
 
-  -- X and Y are bounds at 4 + m and 5 + m: the carrier or the arity.
+`X` and `Y` are bounds at 4 + m and 5 + m: the carrier or the arity.
+
+```agda
   atomClose : (k Nx Ny : Fin 12) (X : Fin (4 + m)) (Y : Fin (5 + m)) → Formula S (4 + m)
   atomClose k Nx Ny X Y =
     ∀̇∈ (var X) (∀̇∈ (var Y) (atomKey (sh 6 C) i3 (sh 6 (N k)) (sh 6 (N Nx)) i1 (sh 6 (N Ny)) i0))
@@ -979,8 +1011,12 @@ module Close {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) where
 
   conClose : (k : Fin 12) → Formula S (4 + m)
   conClose k = unKey C4 i1 (sh 4 (N k)) (sh 4 (N f0))
+```
 
-  -- At a ∷ ar' ∷ s ∷ c₁ ∷ F ∷ ar ∷ s ∷ q ∷ γ (8 + m): ar at i5, ar' at i1.
+At `a ∷ ar' ∷ s ∷ c₁ ∷ F ∷ ar ∷ s ∷ q ∷ γ` (8 + m): `ar` at `i5`, `ar'` at
+`i1`.
+
+```agda
   quClose : (k : Fin 12) → Formula S (4 + m)
   quClose k = ∀̇∈ (var C4) (bothAll i0 (sucAtL i5 i1 ⇒̇ unKey (sh 8 C) i5 (sh 8 (N k)) i0))
 
@@ -1001,9 +1037,12 @@ module Close {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) where
   Δ₀-bqClose : (k Nx : Fin 12) (X : Fin (8 + m)) → Δ₀ (bqClose k Nx X)
   Δ₀-bqClose k Nx X =
     δ-∀∈ (Δ₀-bothAll i0 _ (δ-⇒ (Δ₀-sucAtL i5 i1) (δ-∀∈ (Δ₀-bndKey (sh 9 C) i6 _ _ i0 i1))))
+```
 
-  -- The twenty instances: four term combinations for each atom, two
-  -- for each bounded quantifier.
+The twenty instances: four term combinations for each atom, two for each
+bounded quantifier.
+
+```agda
   all : Formula S (4 + m)
   all =
       atomClose f0 f0 f0 w4 (sh 1 w4) ∧̇ (atomClose f0 f0 f1 w4 i2
@@ -1079,8 +1118,11 @@ module CodesSem (Wv Cv : V ℓ) where
   PayN 10 = BqP
   PayN 11 = BqP
   PayN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))))) _ _ = Empty.⊥*
+```
 
-  -- p is the tagged payload of some tag.
+`p` is the tagged payload of some tag.
+
+```agda
   Key : V ℓ → V ℓ → Type (ℓ-suc ℓ)
   Key ar p = ∥ Σ[ k ∈ Fin 12 ] Σ[ r ∈ V ℓ ] ((p ≡ pr (# (toℕ k)) r) × PayN (toℕ k) ar r) ∥₁
 ```
@@ -1547,8 +1589,11 @@ module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (4 + m
     arS = lookup i1 δ
     CS = lookup (sh 4 C) δ
     module Cl = Close C w N
+```
 
-  -- The atoms.
+The atoms.
+
+```agda
   atomClose-out : (k Nx Ny : Fin 12) (X : Fin (4 + m)) (Y : Fin (5 + m))
                 → ⟨ δ ⊨ Cl.atomClose k Nx Ny X Y ⟩
                 → (x y : S) → ⟨ fst x ∈ fst (lookup X δ) ⟩ → ⟨ fst y ∈ fst (lookup Y (x ∷ δ)) ⟩
@@ -1567,8 +1612,11 @@ module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (4 + m
       (subst (λ u → ⟨ u ∈ Cv ⟩)
         (sym (cong (pr A) (cong₂ pr (tg k) (cong₂ pr (cong (λ a → pr a (fst x)) (tg Nx)) (cong (λ a → pr a (fst y)) (tg Ny))))))
         (g x y x∈ y∈))
+```
 
-  -- The binary connectives.
+The binary connectives.
+
+```agda
   binClose-out : (k : Fin 12) → ⟨ δ ⊨ Cl.binClose k ⟩
                → (c₁ c₂ a b : S) → ⟨ fst c₁ ∈ Cv ⟩ → ⟨ fst c₂ ∈ Cv ⟩
                → fst c₁ ≡ pr A (fst a) → fst c₂ ≡ pr A (fst b)
@@ -1598,8 +1646,11 @@ module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (4 + m
       binKey-in (sh 10 C) i7 (sh 10 (N k)) i3 i0 (b ∷ s' ∷ c₂ ∷ a ∷ s ∷ c₁ ∷ δ)
         (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong (λ v → pr v (pr (fst a) (fst b))) (tg k))))
           (g c₁ c₂ a b c₁∈ c₂∈ e₁ e₂))))
+```
 
-  -- Negation.
+Negation.
+
+```agda
   unClose-out : (k : Fin 12) → ⟨ δ ⊨ Cl.unClose k ⟩
               → (c₁ a : S) → ⟨ fst c₁ ∈ Cv ⟩ → fst c₁ ≡ pr A (fst a)
               → ⟨ pr A (pr (# (toℕ k)) (fst a)) ∈ Cv ⟩
@@ -1615,8 +1666,11 @@ module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (4 + m
   unClose-in k g c₁ c₁∈ = sndAll-in i0 i2 (unKey (sh 7 C) i4 (sh 7 (N k)) i0) (c₁ ∷ δ) (λ a s s∈ a∈ e₁ →
     unKey-in (sh 7 C) i4 (sh 7 (N k)) i0 (a ∷ s ∷ c₁ ∷ δ)
       (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong (λ v → pr v (fst a)) (tg k)))) (g c₁ a c₁∈ e₁)))
+```
 
-  -- The constants.
+The constants.
+
+```agda
   conClose-out : (k : Fin 12) → ⟨ δ ⊨ Cl.conClose k ⟩ → ⟨ pr A (pr (# (toℕ k)) (# 0)) ∈ Cv ⟩
   conClose-out k h =
     subst (λ u → ⟨ u ∈ Cv ⟩) (cong (pr A) (cong₂ pr (tg k) (tg f0)))
@@ -1626,8 +1680,11 @@ module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (4 + m
   conClose-in k h =
     unKey-in (sh 4 C) i1 (sh 4 (N k)) (sh 4 (N f0)) δ
       (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong₂ pr (tg k) (tg f0)))) h)
+```
 
-  -- The unbounded quantifiers.
+The unbounded quantifiers.
+
+```agda
   quClose-out : (k : Fin 12) → ⟨ δ ⊨ Cl.quClose k ⟩
               → (c₁ ar' a : S) → ⟨ fst c₁ ∈ Cv ⟩ → fst c₁ ≡ pr (fst ar') (fst a) → fst ar' ≡ sucV A
               → ⟨ pr A (pr (# (toℕ k)) (fst a)) ∈ Cv ⟩
@@ -1648,9 +1705,12 @@ module CloseRead {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (4 + m
     unKey-in (sh 8 C) i5 (sh 8 (N k)) i0 (a ∷ ar' ∷ s ∷ c₁ ∷ δ)
       (subst (λ u → ⟨ u ∈ Cv ⟩) (sym (cong (pr A) (cong (λ v → pr v (fst a)) (tg k))))
         (g c₁ ar' a c₁∈ e₁ (suc-out i5 i1 (a ∷ ar' ∷ s ∷ c₁ ∷ δ) hs))))
+```
 
-  -- The bounded quantifiers.  The bound X is read at the frame the
-  -- container makes, which reduces at either instance.
+The bounded quantifiers. The bound `X` is read at the frame the container
+makes, which reduces at either instance.
+
+```agda
   bqClose-out : (k Nx : Fin 12) (X : Fin (8 + m)) → ⟨ δ ⊨ Cl.bqClose k Nx X ⟩
               → (c₁ ar' a : S) → ⟨ fst c₁ ∈ Cv ⟩ → (e₁ : fst c₁ ≡ pr (fst ar') (fst a)) → fst ar' ≡ sucV A
               → (x : S) → ⟨ fst x ∈ fst (lookup X (a ∷ ar' ∷ container c₁ ar' a e₁ .fst ∷ c₁ ∷ δ)) ⟩
@@ -1712,8 +1772,11 @@ module _ (Wv Cv : V ℓ) where
   isPropPayN 10 ar r = squash₁
   isPropPayN 11 ar r = squash₁
   isPropPayN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))))) ar r = Empty.isProp⊥*
+```
 
-  -- A key read at a stated tag.
+A key read at a stated tag.
+
+```agda
   keyAt : (ar p : V ℓ) → Key ar p → (n : ℕ) (r : V ℓ) → p ≡ pr (# n) r → PayN n ar r
   keyAt ar p key n r e = PT.rec (isPropPayN n ar r)
     (λ { (k , r' , (e' , pay)) →
@@ -1751,11 +1814,18 @@ module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
   open CodesSem Wv Cv
 
   private
-    -- The frame the decode reads in: C at slot zero, the member at one.
+```
+
+The frame the decode reads in: `C` at slot zero, the member at one.
+
+```agda
     δ' : S → S ^ (2 + m)
     δ' c = CS ∷ c ∷ γ
+```
 
-    -- The shape of a member, at a stated tag.
+The shape of a member, at a stated tag.
+
+```agda
     at : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (ar r : V ℓ) → fst c ≡ pr ar (pr (# n) r)
        → PayN n ar r
     at c c∈ n ar r e = PT.rec (isPropPayN Wv Cv n ar r)
@@ -1792,8 +1862,11 @@ module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
       , ( unSuccClosed-in zero 9 (δ' c) (λ c' ar a c'∈ e → at c' c'∈ 9 (fst ar) (fst a) e)
       , ( binSuccClosed-in zero 10 (δ' c) (bqAt 10 refl)
       ,   binSuccClosed-in zero 11 (δ' c) (bqAt 11 refl) ))))))
+```
 
-    -- A member's shape witness for `shapedAt`.
+A member's shape witness for `shapedAt`.
+
+```agda
     wit : (c c' : S) → ⟨ fst c' ∈ Cv ⟩ → ∥ ShapeWit (sh 2 w) (δ' c) c' ∥₁
     wit c c' c'∈ = PT.rec squash₁
       (λ { (ar , F , p , (q∈ , (ec , key))) → PT.rec squash₁
@@ -1810,8 +1883,11 @@ module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
       where
       env4 : (c' arS b a : S) → S ^ (6 + m)
       env4 c' arS b a = b ∷ a ∷ arS ∷ c' ∷ δ' c
+```
 
-      -- the pair witness of an atom, a connective or a bounded quantifier
+The pair witness of an atom, a connective or a bounded quantifier.
+
+```agda
       pairWit : (k : ℕ) (rel : Formula S (4 + (2 + m))) (c' arS rS : S)
               → fst c' ≡ pr (fst arS) (pr (# k) (fst rS))
               → (t u : V ℓ) → fst rS ≡ pr t u
@@ -1875,8 +1951,11 @@ module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
 
     hsh : (c : S) → ⟨ δ' c ⊨ shapedAt zero (sh 2 w) ⟩
     hsh c = shaped-in zero (sh 2 w) (δ' c) (wit c)
+```
 
-  -- The same eight, read at C in γ rather than at the decode's frame.
+The same eight, read at `C` in `γ` rather than at the decode's frame.
+
+```agda
   closed : ⟨ γ ⊨ closedAt C ⟩
   closed =
       binSameClosed-in C 2 γ (binAt 2 refl)
@@ -1931,8 +2010,11 @@ module Alphabet (W : S) where
   cd-subst : ∀ {n n'} (e : n ≡ n') (ψ : Formula Ab n) → cd (subst (Formula Ab) e ψ) ≡ cd ψ
   cd-subst {n} e ψ = J (λ n' e' → cd (subst (Formula Ab) e' ψ) ≡ cd ψ)
     (cong cd (substRefl {B = Formula Ab} ψ)) e
+```
 
-  -- A term's code is a term code.
+A term's code is a term code.
+
+```agda
   tmV : ∀ {n} (Wv : V ℓ) → ((q : Ab) → ⟨ ι q ∈ Wv ⟩) → (t : Term Ab n) → IsTmV Wv (ct t) (# n)
   tmV Wv into (con q) = ∣ inl (ι q , (refl , into q)) ∣₁
   tmV {n} Wv into (var i) = ∣ inr (# (toℕ i) , (refl , #mono (toℕ i) n (toℕ<n i))) ∣₁
@@ -1961,8 +2043,11 @@ module CodesComplete {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ 
     frame n = useBoth i0 (qS n ∷ γ) (nn n) (envSet W n) refl (Close.all C w N) (hc (qS n) (arity∈ n))
 
     module CR (n : ℕ) = CloseRead C w N (δ4 n) tg
+```
 
-    -- The variable index as a member of the arity numeral.
+The variable index as a member of the arity numeral.
+
+```agda
     var∈ : (n : ℕ) (i : Fin n) → ⟨ # (toℕ i) ∈ # n ⟩
     var∈ n i = #mono (toℕ i) n (toℕ<n i)
 
@@ -2019,8 +2104,11 @@ module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
 
     tm : ∀ {n} (t : Term Ab n) → IsTmV Wv (ct t) (# n)
     tm = tmV Wv ι∈w
+```
 
-    -- The key of every formula, as the description sees it.
+The key of every formula, as the description sees it.
+
+```agda
     keyOf : ∀ {n} (ψ : Formula Ab n) → Key (# n) (cd ψ)
     keyOf (t ∈̇ u) = ∣ f0 , pr (ct t) (ct u) , (refl , ∣ ct t , ct u , (refl , (tm t , tm u)) ∣₁) ∣₁
     keyOf (t ≐ u) = ∣ f1 , pr (ct t) (ct u) , (refl , ∣ ct t , ct u , (refl , (tm t , tm u)) ∣₁) ∣₁
@@ -2039,9 +2127,12 @@ module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
     shape = ShapeRead.shape-in C w E N γ tg (λ c c∈ → PT.map
       (λ { (n , ψ , e) → # n , fst (envSet W n) , cd ψ , (entry∈ n , (e , keyOf ψ)) })
       (AllCodes-out W c (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈)))
+```
 
-    -- A member handed over as a key at a stated arity decodes to a
-    -- formula at that arity.
+A member handed over as a key at a stated arity decodes to a formula at that
+arity.
+
+```agda
     decodeAt : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
              → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
     decodeAt c c∈ n z e = PT.map
@@ -2050,9 +2141,12 @@ module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
             nq = #-inj′ (q .fst)
         in subst (Formula Ab) nq ψ₁ , (sym (q .snd) ∙ sym (cd-subst nq ψ₁)) })
       (AllCodes-out W c (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈))
+```
 
-    -- The term decoders: a member of w is a constant's code, a member
-    -- of the arity is a variable's.
+The term decoders: a member of `w` is a constant's code, a member of the arity
+is a variable's.
+
+```agda
     TmDec : ∀ {n} → Fin 12 → V ℓ → Type (ℓ-suc ℓ)
     TmDec {n} Nx bound = (x : V ℓ) → ⟨ x ∈ bound ⟩ → ∥ Σ[ t ∈ Term Ab n ] (ct t ≡ pr (# (toℕ Nx)) x) ∥₁
 
@@ -2066,8 +2160,11 @@ module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
     varDec n A qa x x∈ = PT.map
       (λ { (j , (p , ex)) → var (fromℕ' n j p) , cong (pr (# 1)) (cong #_ (toFromId' n j p) ∙ sym ex) })
       (∈#-elim n x (subst (λ u → ⟨ x ∈ u ⟩) qa x∈))
+```
 
-    -- The closure clauses at an entry (ar, F) of the tower, ar = # n.
+The closure clauses at an entry `(ar, F)` of the tower, `ar = # n`.
+
+```agda
     module At (q : S) (q∈ : ⟨ fst q ∈ Ev ⟩) (ar F s : S) (n : ℕ) (qa : fst ar ≡ # n) where
       private
         δ4 : S ^ (4 + m)
@@ -2078,9 +2175,12 @@ module CodesHolds {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
 
         in-key : ∀ {k} (ψ : Formula Ab k) (x : V ℓ) → x ≡ fst (keyS W ψ) → ⟨ x ∈ Cv ⟩
         in-key ψ x e = subst (λ u → ⟨ u ∈ Cv ⟩) (sym e) (mem ψ)
+```
 
-        -- Every truncated payload is named before PT.rec sees it
-        -- (the law of src/L/Coding/CodeSet.lagda.md, met again).
+Every truncated payload is named before `PT.rec` sees it (the law of
+src/L/Coding/CodeSet.lagda.md, met again).
+
+```agda
         Dec : ∀ {k} (ψ : Formula Ab k) → Type (ℓ-suc ℓ)
         Dec {k} ψ = Σ[ ψ' ∈ Formula Ab k ] (cd ψ' ≡ cd ψ)
 
@@ -2280,30 +2380,45 @@ module Rel {m : ℕ} (T w : Fin m) (N : Fin 12 → Fin m) where
     N0 N1 : ∀ {j} → Fin (j + m)
     N0 {j} = sh j (N f0)
     N1 {j} = sh j (N f1)
+```
 
-  -- At z ∷ ya ∷ c₁ ∷ s ∷ e' ∷ frame: ya at i1.
+At `z ∷ ya ∷ c₁ ∷ s ∷ e' ∷ frame`: `ya` at `i1`.
+
+```agda
   negBody : Formula S (17 + m)
   negBody = ¬̇ (var i0 ∈̇ var i1)
+```
 
-  -- At z ∷ yb ∷ c₂ ∷ s₂ ∷ e₂ ∷ ya ∷ c₁ ∷ s₁ ∷ e₁ ∷ b ∷ a ∷ s ∷ frame:
-  -- ya at i5, yb at i1.
+At `z ∷ yb ∷ c₂ ∷ s₂ ∷ e₂ ∷ ya ∷ c₁ ∷ s₁ ∷ e₁ ∷ b ∷ a ∷ s ∷ frame`: `ya` at
+`i5`, `yb` at `i1`.
+
+```agda
   binBody : (∀ {j} → Formula S j → Formula S j → Formula S j) → Formula S (24 + m)
   binBody op = op (var i0 ∈̇ var i5) (var i0 ∈̇ var i1)
+```
 
-  -- At z ∷ ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ frame: ya at i3, w at sh 19 w.
+At `z ∷ ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ frame`: `ya` at `i3`, `w` at `sh 19 w`.
+
+```agda
   quBody : (∀ {j} → Term S j → Formula S (suc j) → Formula S j) → Formula S (19 + m)
   quBody q = q (var (sh 19 w)) (∃̇∈ (var i4) (consAtL i0 i1 i2))
+```
 
-  -- At z ∷ ar' ∷ s' ∷ ya ∷ c₁ ∷ s₁ ∷ e' ∷ a ∷ t ∷ s ∷ frame: ya at i3,
-  -- t at i8, w at sh 22 w.
+At `z ∷ ar' ∷ s' ∷ ya ∷ c₁ ∷ s₁ ∷ e' ∷ a ∷ t ∷ s ∷ frame`: `ya` at `i3`, `t` at
+`i8`, `w` at `sh 22 w`.
+
+```agda
   bqBody : (∀ {j} → Term S j → Formula S (suc j) → Formula S j)
          → (∀ {j} → Formula S j → Formula S j → Formula S j) → Formula S (22 + m)
   bqBody q c =
     q (var (sh 22 w)) (c (tmIs i9 i1 i0 N0 N1)
       (q (var (sh 23 w)) (c (var i0 ∈̇ var i1) (∃̇∈ (var i5) (consAtL i0 i1 i3)))))
+```
 
-  -- At z ∷ u ∷ t ∷ s ∷ frame: u at i1, t at i2, w at sh 16 w; rel at
-  -- x ∷ v ∷ z ∷ u ∷ t ∷ s ∷ frame, v at i1, x at i0.
+At `z ∷ u ∷ t ∷ s ∷ frame`: `u` at `i1`, `t` at `i2`, `w` at `sh 16 w`; `rel` at
+`x ∷ v ∷ z ∷ u ∷ t ∷ s ∷ frame`, `v` at `i1`, `x` at `i0`.
+
+```agda
   atomBody : Formula S (18 + m) → Formula S (16 + m)
   atomBody rel =
     ∃̇∈ (var (sh 16 w)) (∃̇∈ (var (sh 17 w))
@@ -2398,8 +2513,11 @@ module Clause {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) where
   Δ₀-clause k =
     δ-∀∈ (Δ₀-bothAll i0 _ (δ-∀∈ (Δ₀-sndAll i0 i2 _ (Δ₀-sndAll i0 (sh 7 (N k)) _
       (δ-∀∈ (Δ₀-sndAll i0 i5 _ (R.Δ₀-relN (toℕ k))))))))
+```
 
-  -- Every key has an entry, and every entry is at a key.
+Every key has an entry, and every entry is at a key.
+
+```agda
   total onC : Formula S m
   total = ∀̇∈ (var C) (∃̇∈ (var (sh 1 T)) (sndEx i0 i1 ⊤̇))
   onC = ∀̇∈ (var T) (bothEx i0 (var i1 ∈̇ var (sh 4 C)))
@@ -2594,8 +2712,11 @@ module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg
     inner7 k = sndAll i0 (sh 7 (N k)) (inner9 k)
     inner4 : Fin 12 → Formula S (4 + m)
     inner4 k = ∀̇∈ (var (sh 4 C)) (sndAll i0 i2 (inner7 k))
+```
 
-  -- The frame environment of an entry, with its containers.
+The frame environment of an entry, with its containers.
+
+```agda
   module At (ar F c p r yc : S) (q∈ : ⟨ pr (fst ar) (fst F) ∈ Ev ⟩)
             (ec : fst c ≡ pr (fst ar) (fst p)) (k : Fin 12)
             (ep : fst p ≡ pr (fst (lookup (N k) γ)) (fst r))
@@ -2640,8 +2761,11 @@ module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg
       sndAll-in i0 (sh 7 (N k)) (inner9 k) (p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ) (λ r s2 s2∈ r∈ ep e e∈ →
         sndAll-in i0 i5 (R.relN (toℕ k)) (e ∷ r ∷ s2 ∷ p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ) (λ yc s3 s3∈ yc∈ ee →
           g q ar F s c p s1 r s2 e yc s3 q∈ eq c∈ ec (ep ∙ cong (λ a → pr a (fst r)) (tg k)) e∈ ee))))
+```
 
-  -- Totality and the domain.
+Totality and the domain.
+
+```agda
   total-out : ⟨ γ ⊨ Cl.total ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
   total-out h c c∈ = PT.rec squash₁
     (λ { (e , (e∈ , hs)) → PT.map
@@ -2681,12 +2805,18 @@ module RelRead {m : ℕ} (T w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (12 + m)
     Tv = fst (lookup (sh 12 T) δ)
     A = fst ar
     Rv = fst r
+```
 
-  -- The extension fact of yc in F with the body at a frame.
+The extension fact of `yc` in `F` with the body at a frame.
+
+```agda
   Ext : ∀ {k} (env : S ^ k) (φ : Formula S (1 + k)) → Type (ℓ-suc ℓ)
   Ext env φ = ExtFact (fst yc) (fst F) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩)
+```
 
-  -- Negation.
+Negation.
+
+```agda
   neg-out : ⟨ δ ⊨ R.negRel ⟩ → (c₁ ya : S) → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr A Rv
           → ∥ Σ[ s ∈ S ] Σ[ e' ∈ S ] Ext (ya ∷ c₁ ∷ s ∷ e' ∷ δ) R.negBody ∥₁
   neg-out h c₁ ya mem e =
@@ -2699,8 +2829,11 @@ module RelRead {m : ℕ} (T w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (12 + m)
             → Ext (ya ∷ c₁ ∷ s ∷ e' ∷ δ) R.negBody)
          → ⟨ δ ⊨ R.negRel ⟩
   neg-in g = subAt-in (sh 12 T) i9 i3 (extB i4 i12 R.negBody) δ g
+```
 
-  -- The binary connectives.
+The binary connectives.
+
+```agda
   bin-out : (op : ∀ {j} → Formula S j → Formula S j → Formula S j) → ⟨ δ ⊨ R.binRel op ⟩
           → (a b c₁ ya c₂ yb : S) → Rv ≡ pr (fst a) (fst b)
           → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr A (fst a)
@@ -2737,8 +2870,11 @@ module RelRead {m : ℕ} (T w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (12 + m)
           subAt-in (sh 19 T) i16 i4 (extB i11 i19 (R.binBody op)) (ya ∷ c₁ ∷ s₁ ∷ e₁ ∷ b ∷ a ∷ s ∷ δ)
             (λ c₂ yb s₂ e₂ e₂∈ ee₂ e₂' →
               g a b s c₁ ya s₁ e₁ c₂ yb s₂ e₂ er e₁∈ ee₁ e₁' e₂∈ ee₂ e₂')))
+```
 
-  -- The unbounded quantifiers.
+The unbounded quantifiers.
+
+```agda
   qu-out : (q : ∀ {j} → Term S j → Formula S (suc j) → Formula S j) → ⟨ δ ⊨ R.quRel q ⟩
          → (c₁ ya ar' : S) → ⟨ pr (fst c₁) (fst ya) ∈ Tv ⟩ → fst c₁ ≡ pr (fst ar') Rv → fst ar' ≡ sucV A
          → ∥ Σ[ s ∈ S ] Σ[ s' ∈ S ] Σ[ e' ∈ S ] Ext (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) (R.quBody q) ∥₁
@@ -2755,8 +2891,11 @@ module RelRead {m : ℕ} (T w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (12 + m)
            → Ext (ar' ∷ s' ∷ ya ∷ c₁ ∷ s ∷ e' ∷ δ) (R.quBody q))
         → ⟨ δ ⊨ R.quRel q ⟩
   qu-in q g = subSucAt-in (sh 12 T) i9 i3 (extB i6 i14 (R.quBody q)) δ g
+```
 
-  -- The bounded quantifiers.
+The bounded quantifiers.
+
+```agda
   bq-out : (q : ∀ {j} → Term S j → Formula S (suc j) → Formula S j)
          → (c : ∀ {j} → Formula S j → Formula S j → Formula S j) → ⟨ δ ⊨ R.bqRel q c ⟩
          → (t a c₁ ya ar' : S) → Rv ≡ pr (fst t) (fst a)
@@ -2785,8 +2924,11 @@ module RelRead {m : ℕ} (T w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (12 + m)
     (λ t a s s∈ t∈ a∈ er →
       subSucAt-in (sh 15 T) i12 i0 (extB i9 i17 (R.bqBody q c)) (a ∷ t ∷ s ∷ δ)
         (λ c₁ ya ar' s₁ s' e' e'∈ ee e es → g t a s c₁ ya ar' s₁ s' e' er e'∈ ee e es))
+```
 
-  -- The atoms.
+The atoms.
+
+```agda
   atom-out : (rel : Formula S (18 + m)) → ⟨ δ ⊨ R.atomRel rel ⟩
            → (t u : S) → Rv ≡ pr (fst t) (fst u)
            → ∥ Σ[ s ∈ S ] Ext (u ∷ t ∷ s ∷ δ) (R.atomBody rel) ∥₁
@@ -2824,15 +2966,21 @@ module Bridge (W : S) where
 
   SatW : ∀ {n} → Formula Ab n → S
   SatW ψ = Sat W (toS ψ)
+```
 
-  -- An environment over W at arity n, as its family.
+An environment over `W` at arity `n`, as its family.
+
+```agda
   Env : ℕ → S → Type (ℓ-suc ℓ)
   Env n z = ∥ Σ[ g ∈ Ix W n ] (fst z ≡ env (λ i → ι (g i))) ∥₁
 
   envOf : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (envSet W n) ⟩ → Env n z
   envOf n z hz = envSet-out W n z hz
+```
 
-  -- A value of a term at an environment lies in W.
+A value of a term at an environment lies in `W`.
+
+```agda
   tmIn : ∀ {n} (t : Term Ab n) (g : Ix W n) (z v : S) → fst z ≡ env (λ i → ι (g i))
        → TmIsV (ct t) (fst z) (fst v) → ⟨ fst v ∈ Wv ⟩
   tmIn (con q) g z v qz = PT.rec (snd (fst v ∈ Wv))
@@ -2845,10 +2993,13 @@ module Bridge (W : S) where
              (sym (subst ⟨_⟩ (lookup-spec (λ j → ι (g j)) i (fst v))
                (subst2 (λ a b → ⟨ pr a (fst v) ∈ b ⟩) (sym (pr-inj e .snd)) qz hp)))
              (ι∈ (g i)) })
+```
 
-  -- The clause's term reader and the recursion's agree.
+The clause's term reader and the recursion's agree.
 
-  -- The cons reader, between the recursion's frame and any other.
+The cons reader, between the recursion's frame and any other.
+
+```agda
   consToS : ∀ {k} (δ : S ^ k) (e' x z : Fin k) {n : ℕ} (g : Ix W n)
           → fst (lookup z δ) ≡ env (λ i → ι (g i))
           → ⟨ δ ⊨ consAtL e' x z ⟩
@@ -2864,8 +3015,11 @@ module Bridge (W : S) where
   consFromS δ e' x z g qz h =
     consAtL-transport (lookup e' δ ∷ lookup x δ ∷ lookup z δ ∷ []) δ zero (suc zero) (suc (suc zero)) e' x z
       (λ i → ι (g i)) qz refl refl refl h
+```
 
-  -- The recursion's value, read.
+The recursion's value, read.
+
+```agda
   Sat-out : ∀ {n} (ψ : Formula Ab n) (z : S) → ⟨ fst z ∈ fst (SatW ψ) ⟩
           → ⟨ fst z ∈ fst (envSet W n) ⟩ × ⟨ (z ∷ []) ⊨ cond W (toS ψ) ⟩
   Sat-out ψ z h = subst ⟨_⟩ (Sat-mem W (toS ψ) z) h
@@ -2873,8 +3027,11 @@ module Bridge (W : S) where
   Sat-in : ∀ {n} (ψ : Formula Ab n) (z : S) → ⟨ fst z ∈ fst (envSet W n) ⟩
          → ⟨ (z ∷ []) ⊨ cond W (toS ψ) ⟩ → ⟨ fst z ∈ fst (SatW ψ) ⟩
   Sat-in ψ z hz hc = subst ⟨_⟩ (sym (Sat-mem W (toS ψ) z)) (hz , hc)
+```
 
-  -- THE CONSTANTS.
+The constants.
+
+```agda
   topBridge : (n : ℕ) {k : ℕ} (env : S ^ k)
             → ExtFact (fst (SatW (⊤̇ {n = n}))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ ⊤̇ ⟩)
   topBridge n env = (λ z hz → Sat-out ⊤̇ z hz .fst , tt*) , (λ z hz _ → Sat-in ⊤̇ z hz tt*)
@@ -2882,8 +3039,11 @@ module Bridge (W : S) where
   botBridge : (n : ℕ) {k : ℕ} (env : S ^ k)
             → ExtFact (fst (SatW (⊥̇ {n = n}))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ ⊥̇ ⟩)
   botBridge n env = (λ z hz → Sat-out ⊥̇ z hz .fst , Sat-out ⊥̇ z hz .snd) , (λ z hz b → Empty.rec* b)
+```
 
-  -- THE CONNECTIVES, with the subvalues at slots.
+The connectives, with the subvalues at slots.
+
+```agda
   andBridge : ∀ {n} (a b : Formula Ab n) {k : ℕ} (env : S ^ k) (ya yb : Fin k)
             → fst (lookup ya env) ≡ fst (SatW a) → fst (lookup yb env) ≡ fst (SatW b)
             → ExtFact (fst (SatW (a ∧̇ b))) (fst (envSet W n))
@@ -2926,15 +3086,22 @@ module Bridge (W : S) where
       (λ z hz → Sat-out (¬̇ a) z hz .fst
               , (λ h1 → Sat-out (¬̇ a) z hz .snd (subst (λ u → ⟨ fst z ∈ u ⟩) qa h1)))
     , (λ z hz h → Sat-in (¬̇ a) z hz (λ h1 → h (subst (λ u → ⟨ fst z ∈ u ⟩) (sym qa) h1)))
+```
 
-  -- THE UNBOUNDED QUANTIFIERS.  The body at z: for some/every x in w,
-  -- some member of ya is cons x z.
+The unbounded quantifiers. The body at `z`: for some/every `x` in `w`, some
+member of `ya` is `cons x z`.
+
+```agda
   quEx quAll : ∀ {k} → Fin k → Fin k → Formula S (1 + k)
   quEx wi yai = ∃̇∈ (var (suc wi)) (∃̇∈ (var (suc (suc yai))) (consAtL i0 i1 i2))
   quAll wi yai = ∀̇∈ (var (suc wi)) (∃̇∈ (var (suc (suc yai))) (consAtL i0 i1 i2))
 
   private
-    -- The cons of x onto z, as an element of L, and its two readings.
+```
+
+The cons of `x` onto `z`, as an element of L, and its two readings.
+
+```agda
     consS : (n : ℕ) (g : Ix W n) (x : S) → ⟨ fst x ∈ Wv ⟩ → S
     consS n g x hx = down (envSet W (suc n)) (env (cons (fst x) (λ i → ι (g i)))) (EnvFacts.envCons∈ W (fst x) hx g)
 
@@ -2995,9 +3162,12 @@ module Bridge (W : S) where
               (subst (λ u → ⟨ fst e'' ∈ u ⟩) qa e''∈) })
           (h x (subst (λ u → ⟨ fst x ∈ u ⟩) (sym qw) x∈)))) })
       (envOf n z hz)
+```
 
-  -- THE BOUNDED QUANTIFIERS.  The body at z: for the value v of t at
-  -- z and some/every x ∈ w with x ∈ v, some member of ya is cons x z.
+The bounded quantifiers. The body at `z`: for the value `v` of `t` at `z` and
+some/every `x ∈ w` with `x ∈ v`, some member of `ya` is `cons x z`.
+
+```agda
   bqAll bqEx : ∀ {k} → Fin k → Fin k → Fin k → Fin k → Fin k → Formula S (1 + k)
   bqAll wi ti yai N0i N1i =
     ∀̇∈ (var (suc wi)) (tmIs (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i))
@@ -3005,8 +3175,11 @@ module Bridge (W : S) where
   bqEx wi ti yai N0i N1i =
     ∃̇∈ (var (suc wi)) (tmIs (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i))
       ∧̇ ∃̇∈ (var (suc (suc wi))) ((var i0 ∈̇ var i1) ∧̇ ∃̇∈ (var (suc (suc (suc yai)))) (consAtL i0 i1 i3)))
+```
 
-  -- The term readers at any frame and slots.
+The term readers at any frame and slots.
+
+```agda
   tmToS' : ∀ {n} (t : Term Ab n) {k : ℕ} (δs : S ^ k) (vs es : Fin k)
          → TmIsV (ct t) (fst (lookup es δs)) (fst (lookup vs δs)) → ⟨ δs ⊨ tmIsS (toT t) vs es ⟩
   tmToS' (con q) δs vs es = PT.rec (setIsSet (fst (lookup vs δs)) (fst (asConst W q)))
@@ -3028,7 +3201,11 @@ module Bridge (W : S) where
     (q0 : fst (lookup N0i Γ) ≡ # 0) (q1 : fst (lookup N1i Γ) ≡ # 1) where
 
     private
-      -- the term, read at v ∷ z ∷ Γ and carried to the recursion's frame
+```
+
+The term, read at `v ∷ z ∷ Γ` and carried to the recursion's frame.
+
+```agda
       tmOut : (z v : S) → ⟨ (v ∷ z ∷ Γ) ⊨ tmIs (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)) ⟩
             → TmIsV (ct t) (fst z) (fst v)
       tmOut z v h = subst (λ u → TmIsV u (fst z) (fst v)) qt
@@ -3038,8 +3215,11 @@ module Bridge (W : S) where
             → ⟨ (v ∷ z ∷ Γ) ⊨ tmIs (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)) ⟩
       tmIn' z v h = tmIs-in (suc (suc ti)) i1 i0 (suc (suc N0i)) (suc (suc N1i)) (v ∷ z ∷ Γ) q0 q1
         (subst (λ u → TmIsV u (fst z) (fst v)) (sym qt) h)
+```
 
-      -- cons at the two frames
+Cons at the two frames.
+
+```agda
       consOut : (g : Ix W n) (z v x e' : S) → fst z ≡ env (λ i → ι (g i))
               → ⟨ (e' ∷ x ∷ v ∷ z ∷ Γ) ⊨ consAtL i0 i1 i3 ⟩ → fst e' ≡ env (cons (fst x) (λ i → ι (g i)))
       consOut g z v x e' qz h = subst ⟨_⟩ (consAtL-adequate i0 i1 i3 (e' ∷ x ∷ v ∷ z ∷ Γ) (λ i → ι (g i)) qz) h
@@ -3092,7 +3272,11 @@ module Bridge (W : S) where
         (envOf n z hz)
 
     private
-      -- the inner part of the body, at v ∷ z ∷ Γ
+```
+
+The inner part of the body, at `v ∷ z ∷ Γ`.
+
+```agda
       innerEx : Formula S (2 + k)
       innerEx = ∃̇∈ (var (suc (suc wi))) ((var i0 ∈̇ var i1) ∧̇ ∃̇∈ (var (suc (suc (suc yai)))) (consAtL i0 i1 i3))
 
@@ -3150,8 +3334,12 @@ module Bridge (W : S) where
       inn z hz h = PT.rec (snd (fst z ∈ fst (SatW (∃̇∈ t a))))
         (λ { (g , qz) → Sat-in (∃̇∈ t a) z hz (cond∃∈-in W (toT t) (toS a) z (inEx g z qz h)) })
         (envOf n z hz)
+```
 
-  -- THE ATOMS.  The body at z: for the values v, x of t, u at z, v rel x.
+The atoms. The body at `z`: for the values `v`, `x` of `t`, `u` at `z`,
+`v rel x`.
+
+```agda
   atomEx : ∀ {k} → Fin k → Fin k → Fin k → Fin k → Fin k → Formula S (3 + k) → Formula S (1 + k)
   atomEx wi ti ui N0i N1i rel =
     ∃̇∈ (var (suc wi)) (∃̇∈ (var (suc (suc wi)))

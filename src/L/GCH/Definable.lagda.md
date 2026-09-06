@@ -77,8 +77,11 @@ image (src/L/Recursion.lagda.md, `Of`).
 ```agda
 module Graph (M : DefinableMap) where
   open DefinableMap M public
+```
 
-  -- Membership in the domain, as `fn` consumes it.
+Membership in the domain, as `fn` consumes it.
+
+```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem x = ⟨ fst x ∈ˢ fst dom ⟩
 
@@ -90,12 +93,18 @@ module Graph (M : DefinableMap) where
 
     isSetS : isSet S
     isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
+```
 
-    -- The value does not depend on which membership proof was given.
+The value does not depend on which membership proof was given.
+
+```agda
     fn-irr : (x : S) (m m' : Mem x) → fn x m ≡ fn x m'
     fn-irr x m m' = cong (fn x) (isPropMem x m m')
+```
 
-    -- The pair, as an element of L.
+The pair, as an element of L.
+
+```agda
     pairOf : (x : S) → Mem x → S
     pairOf x m = prʟ x (fn x m)
 
@@ -137,9 +146,12 @@ module Graph (M : DefinableMap) where
       (λ { (z , (e , gz)) →
         x , m , (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z gz)) })
       (Fo.out pS x g)
+```
 
-  -- A pair in F, read as a value of `fn`.  The target is a proposition,
-  -- so the truncation comes off.
+A pair in `F`, read as a value of `fn`. The target is a proposition, so the
+truncation comes off.
+
+```agda
   Fib : S → S → Type (ℓ-suc ℓ)
   Fib x y = Σ[ m ∈ Mem x ] (fst y ≡ fst (fn x m))
 
@@ -162,8 +174,11 @@ module Graph (M : DefinableMap) where
       val : fst (fn x m) ≡ fst (fn x' m')
       val = subst (λ w → (k : Mem w) → fst (fn x m) ≡ fst (fn w k)) xx
               (λ k → cong (λ v → fst (fn x v)) (isPropMem x m k)) m'
+```
 
-  -- THE CONJUNCTS.
+THE CONJUNCTS.
+
+```agda
   γ : S ^ 2
   γ = F ∷ dom ∷ []
 

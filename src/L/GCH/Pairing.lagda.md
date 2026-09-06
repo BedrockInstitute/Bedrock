@@ -426,8 +426,11 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
 
   ord↑ : (m : ⟪ K ⟫) → IsOrd (↑ m)
   ord↑ m = mem-ord {A = K} oκ (↑ m) (member K m)
+```
 
-  -- The maximum, read off `MaxIs`, and written into it.
+The maximum, read off `MaxIs`, and written into it.
+
+```agda
   max-out : (a b m : S) (a' b' : ⟪ K ⟫) → fst a ≡ ↑ a' → fst b ≡ ↑ b'
           → MaxIs m a b → fst m ≡ ↑ (maxOrd a' b')
   max-out a b m a' b' ea eb = PT.rec (setIsSet _ _) (go (SQ.tri₁ K oκ a' b'))
@@ -457,13 +460,19 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
     go (lt h) = ∣ inl (h , refl) ∣₁
     go (eq p) = ∣ inr ((λ h → ∈-irrefl (↑ b') (subst (λ w → ⟨ ↑ w ∈ˢ ↑ b' ⟩) p h)) , refl) ∣₁
     go (gt h) = ∣ inr ((λ h' → ∈-irrefl (↑ a') (ord↑ a' .fst {x = ↑ b'} {y = ↑ a'} h' h)) , refl) ∣₁
+```
 
-  -- The coded pair of a host pair.
+The coded pair of a host pair.
+
+```agda
   code : Pair → V ℓ
   code p = pr (↑ (fst p)) (↑ (snd p))
+```
 
-  -- Downwards: `Lt` at two coded pairs refutes the failure of the host
-  -- order, and the host order is decidable.
+Downwards: `Lt` at two coded pairs refutes the failure of the host order, and
+the host order is decidable.
+
+```agda
   private
     refute : (p q : Pair) → (p ≺ₚ q → Empty.⊥)
            → Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
@@ -504,8 +513,12 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
   lt→≺ : (p q : Pair) → Lt (code p) (code q) → p ≺ₚ q
   lt→≺ p q l = go (SQ.tri≺ K oκ p q)
     where
-    -- The decision `≺-dec` used to stand here; trichotomy's two
-    -- off-diagonal cases give the same refutand from `irr≺`/`trans≺`.
+```
+
+The decision `≺-dec` used to stand here; trichotomy's two off-diagonal cases
+give the same refutand from `irr≺`/`trans≺`.
+
+```agda
     refuted : ((p ≺ₚ q) → Empty.⊥) → p ≺ₚ q
     refuted nk = Empty.rec (PT.rec Empty.isProp⊥ (refute p q nk) l)
 
@@ -524,11 +537,14 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
     ord (inl h)                 = ∣ inl h ∣₁
     ord (inr (e , inl h))       = ∣ inr (cong ↑ e , ∣ inl h ∣₁) ∣₁
     ord (inr (e , inr (f , h))) = ∣ inr (cong ↑ e , ∣ inr (cong ↑ f , h) ∣₁) ∣₁
+```
 
-  -- Both components of a pair below (c, d) lie in the successor of
-  -- max(c, d).  The retired `InitialCore`, now at
-  -- archive/src-2026-09-06/L/Ordinal/SquareLawAmbient.lagda.md, had the
-  -- same shape in `fst∈sucmax` and never exported it.
+Both components of a pair below `(c, d)` lie in the successor of `max(c, d)`.
+The retired `InitialCore`, now at
+archive/src-2026-09-06/L/Ordinal/SquareLawAmbient.lagda.md, had the same shape
+in `fst∈sucmax` and never exported it.
+
+```agda
   private
     ≤→≺ : (x y z : ⟪ K ⟫) → SQ._≤₁_ K oκ x y → y ≺₁ z → x ≺₁ z
     ≤→≺ x y z (inl h) h' = SQ.trans₁ K oκ x y z h h'
@@ -576,8 +592,11 @@ module Coll (κ : S) (oκ : IsOrd (fst κ)) where
   Rsub y x h = godel-out P y x h .fst , godel-out P y x h .snd .fst
 
   module OT = Code P R Rsub using (Dom; Dom≡; isProp≺; toDom; up; up-mem; up-toDom; ↪; _≺_; ≺-in; ≺-out; module Conjuncts)
+```
 
-  -- The host pair of a member of the product.
+The host pair of a member of the product.
+
+```agda
   φ : OT.Dom → Pair
   φ m = prodL-fst κ (OT.up m) (OT.up-mem m) .fst
       , prodL-fst κ (OT.up m) (OT.up-mem m) .snd .fst
@@ -618,7 +637,11 @@ module Coll (κ : S) (oκ : IsOrd (fst κ)) where
 
   module C = OT.Conjuncts wf ≺-trans using (module Inj; col; col-ord; col-out; colTable; colTable-in; colTable-pair; colʟ; otL; otL-out)
   module I = C.Inj tri using (code; col-inj)
-  -- The product injects into its order type, internally.
+```
+
+The product injects into its order type, internally.
+
+```agda
   injL-ot : InjL P C.otL
   injL-ot = ∣ C.colTable , I.code ∣₁
 ```
@@ -710,8 +733,11 @@ module ProdMap (a b F : S)
 
   Mem : S → Type (ℓ-suc ℓ)
   Mem p = ⟨ fst p ∈ˢ fst (prodL a) ⟩
+```
 
-  -- The components of a member of the product, untruncated.
+The components of a member of the product, untruncated.
+
+```agda
   Comp : S → Type (ℓ-suc ℓ)
   Comp p = Σ[ x ∈ S ] Σ[ y ∈ S ]
              (⟨ fst x ∈ˢ fst a ⟩ × ⟨ fst y ∈ˢ fst a ⟩ × (fst p ≡ pr (fst x) (fst y)))
@@ -730,10 +756,13 @@ module ProdMap (a b F : S)
 
   comp : (p : S) → Mem p → Comp p
   comp p mp = PT.rec (isPropComp p) (λ z → z) (prodL-out a p mp)
+```
 
-  -- The value of F at a member of a.  Sealed with its two readings:
-  -- unsealed, the read-back `Extract.toFun` exhausts an 8g heap at the
-  -- first conversion (measured at this site, 85 s to the heap limit).
+The value of `F` at a member of `a`. Sealed with its two readings: unsealed, the
+read-back `Extract.toFun` exhausts an 8g heap at the first conversion (measured
+at this site, 85 s to the heap limit).
+
+```agda
   opaque
     val : (x : S) → ⟨ fst x ∈ˢ fst a ⟩ → S
     val x mx = E.toFun (x , mx)
@@ -911,8 +940,11 @@ module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ �
 
     Mem : S → Type (ℓ-suc ℓ)
     Mem x = ⟨ fst x ∈ˢ fst D ⟩
+```
 
-    -- The two decisions at a member.
+The two decisions at a member.
+
+```agda
     Fin? : S → Type (ℓ-suc ℓ)
     Fin? x = ⟨ fst x ∈ˢ ω ⟩ ⊎ (⟨ fst x ∈ˢ ω ⟩ → Empty.⊥)
 
@@ -929,8 +961,11 @@ module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ �
       go (inl k)  = inl k
       go (inr nk) = inr (∈sucV-elim {A = m} {x = fst x} (setIsSet (fst x) m)
         (subst (λ w → ⟨ fst x ∈ˢ w ⟩) (sucʟ-fst mL) h) (λ k → Empty.rec (nk k)) (λ q → q))
+```
 
-    -- The two sides of each decision exclude each other.
+The two sides of each decision exclude each other.
+
+```agda
     not-both : (x : S) → ⟨ fst x ∈ˢ m ⟩ → fst x ≡ m → Empty.⊥
     not-both x k q = ∈-irrefl m (subst (λ w → ⟨ w ∈ˢ m ⟩) q k)
 
@@ -1039,8 +1074,11 @@ module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ �
     inj' x (inr n) (inr _) x' (inr n') (inl _) e =
       Empty.rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) e (#∈ω zero)))
     inj' x (inr n) (inr q) x' (inr n') (inr q') e = q ∙ sym q'
+```
 
-  -- THE INJECTION, m + 1 ↪ m.
+THE INJECTION, `m + 1 ↪ m`.
+
+```agda
   injL : InjL (sucʟ mL) mL
   injL = Inj.injL M (λ x h x' h' → inj' x (fin? x) (top? x h) x' (fin? x') (top? x' h'))
 ```
@@ -1083,8 +1121,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
 
   ω⊆a : (z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ a ⟩
   ω⊆a = ω⊆ a oa a∉ω
+```
 
-  -- κ is closed under successor: the coded shift refutes κ ≡ sucV m.
+`κ` is closed under successor: the coded shift refutes `κ ≡ sucV m`.
+
+```agda
   suc∈ : (m : V ℓ) → ⟨ m ∈ˢ a ⟩ → ⟨ sucV m ∈ˢ a ⟩
   suc∈ m m∈a = go (ord-tri (sucV m) (suc-ord om) a oa)
     where
@@ -1114,9 +1155,12 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
       (∈sucV-elim {A = m} {x = a} {P = Empty.⊥* {ℓ-suc ℓ}} Empty.isProp⊥* h
         (λ a∈m → lift (∈-irrefl a (oa .fst a∈m m∈a)))
         (λ a≡m → lift (∈-irrefl m (subst (λ w → ⟨ m ∈ˢ w ⟩) a≡m m∈a))))
+```
 
-  -- THE LEMMA.  An infinite ordinal below κ pairs into itself: through
-  -- its internal cardinal μ, at which the induction hypothesis speaks.
+THE LEMMA. An infinite ordinal below `κ` pairs into itself: through its internal
+cardinal `μ`, at which the induction hypothesis speaks.
+
+```agda
   prod-into : (γ : S) → IsOrd (fst γ) → ⟨ fst γ ∈ˢ a ⟩
             → (⟨ fst γ ∈ˢ ω ⟩ → Empty.⊥) → InjL (prodL γ) γ
   prod-into γ oγ γ∈a γ∉ω = PT.rec squash₁ build (cardOf γ oγ)
@@ -1139,8 +1183,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
         go (inr (inr h)) = Empty.rec (∈-irrefl (fst γ) (μ⊆γ (fst γ) h))
       μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → Empty.⊥
       μ∉ω h = no-fin γ μ oγ γ∉ω oμ h γ↪μ
+```
 
-  -- The member below p whose collapse is b: unique, hence untruncated.
+The member below `p` whose collapse is `b`: unique, hence untruncated.
+
+```agda
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
   Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
 
@@ -1150,32 +1197,44 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
 
   seg : (p : OT.Dom) (b : V ℓ) → ⟨ b ∈ˢ C.col p ⟩ → Seg p b
   seg p b h = PT.rec (isPropSeg p b) (λ z → z) (C.col-out p b h)
+```
 
-  -- The maximum of a member of the product.
+The maximum of a member of the product.
+
+```agda
   mx : OT.Dom → ⟪ K ⟫
   mx p = maxOrd (φ p .fst) (φ p .snd)
 
   mV : OT.Dom → V ℓ
   mV p = ↑ (mx p)
+```
 
-  -- Both components of a member below p lie in sucV (mV p).  Sealed:
-  -- proofs of propositions that reach `tri≺`, hence `ord-tri`'s
-  -- well-founded induction, if ever normalised (measured at this site:
-  -- unsealed, `col-fin` alone takes about 280 s).
+Both components of a member below `p` lie in `sucV (mV p)`. Sealed: proofs of
+propositions that reach `tri≺`, hence `ord-tri`'s well-founded induction, if
+ever normalised (measured at this site: unsealed, `col-fin` alone takes about
+280 s).
+
+```agda
   opaque
     seg-fst : (p r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .fst) ∈ˢ sucV (mV p) ⟩
     seg-fst p r k = fst∈suc (φ r) (φ p) (≺-fwd r p k)
 
     seg-snd : (p r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ sucV (mV p) ⟩
     seg-snd p r k = snd∈suc (φ r) (φ p) (≺-fwd r p k)
+```
 
-  -- The finite-case carrier: the successor of the maximum below p.
+The finite-case carrier: the successor of the maximum below `p`.
+
+```agda
   gfin : OT.Dom → V ℓ
   gfin p = sucV (mV p)
+```
 
-  -- The pair of fibers at p, sealed, with explicit first/second
-  -- projections stated outside the where: the concrete `cong fst` on
-  -- the unsealed `h` made `h-inj` dominate the whole check.
+The pair of fibers at `p`, sealed, with explicit first and second projections
+stated outside the where: the concrete `cong fst` on the unsealed `h` made
+`h-inj` dominate the whole check.
+
+```agda
   opaque
     h : (p r : OT.Dom) (k : r OT.≺ p) → ⟪ gfin p ⟫ × ⟪ gfin p ⟫
     h p r k = fiber (gfin p) (seg-fst p r k) .fst , fiber (gfin p) (seg-snd p r k) .fst
@@ -1191,10 +1250,13 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
           → fiber (gfin p) (seg-snd p r k) .fst
           ≡ fiber (gfin p) (seg-snd p r' k') .fst
     h-snd p r r' k k' e = cong snd e
+```
 
-  -- The fiber equations and the final injection, stated standalone with
-  -- explicit written types: where-bound, their elaboration dominated the
-  -- whole check (measured in the O3 bisect).
+The fiber equations and the final injection, stated standalone with explicit
+written types: where-bound, their elaboration dominated the whole check
+(measured in the O3 bisect).
+
+```agda
   step-e1 : (p r r' : OT.Dom) (k : r OT.≺ p) (k' : r' OT.≺ p)
           → h p r k ≡ h p r' k' → φ r .fst ≡ φ r' .fst
   step-e1 p r r' k k' e =
@@ -1209,9 +1271,12 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
            → h p r k ≡ h p r' k' → r ≡ r'
   step-inj p r r' k k' e =
     φ-inj r r' (pair≡ (step-e1 p r r' k k' e) (step-e2 p r r' k k' e))
+```
 
-  -- THE FINITE CASE.  The segment below p injects into the square of
-  -- the numeral sucV (mV p), so ω cannot inject into col p.
+THE FINITE CASE. The segment below `p` injects into the square of the numeral
+`sucV (mV p)`, so `ω` cannot inject into `col p`.
+
+```agda
   col-fin : (p : OT.Dom) → ⟨ mV p ∈ˢ ω ⟩ → ⟨ C.col p ∈ˢ ω ⟩
   col-fin p m∈ω = go (ord-tri (C.col p) (C.col-ord p) ω ω-ord)
     where
@@ -1239,10 +1304,13 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
     go (inl k)         = k
     go (inr (inl e))   = Empty.rec (refute (λ z z∈ω → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω))
     go (inr (inr ω∈c)) = Empty.rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
+```
 
-  -- THE INVERSE COLLAPSE below p, as a definable map into prodL g, for
-  -- any g holding both components of every member below p.  Its graph
-  -- is the converse of `colTable`, read by `appC`.
+THE INVERSE COLLAPSE below `p`, as a definable map into `prodL g`, for any `g`
+holding both components of every member below `p`. Its graph is the converse of
+`colTable`, read by `appC`.
+
+```agda
   module Inv (p : OT.Dom) (g : S)
              (bfst : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .fst) ∈ˢ fst g ⟩)
              (bsnd : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ fst g ⟩) where
@@ -1252,8 +1320,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
 
     fn : (x : S) → Mem x → S
     fn x mx = OT.up (seg p (fst x) mx .fst)
+```
 
-    -- Sealed with its reading.
+Sealed with its reading.
+
+```agda
     opaque
       graph : Formula S 2
       graph = appC C.colTable zero (suc zero)
@@ -1295,8 +1366,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
 
     injL : InjL (C.colʟ p) (prodL g)
     injL = Inj.injL M inj
+```
 
-  -- EVERY VALUE OF THE COLLAPSE LIES IN κ.
+EVERY VALUE OF THE COLLAPSE LIES IN `κ`.
+
+```agda
   colIn : (p : OT.Dom) → ⟨ C.col p ∈ˢ a ⟩
   colIn p = go (ord-tri (mV p) (ord↑ (mx p)) ω ω-ord)
     where
@@ -1326,8 +1400,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
 
       col↪g : InjL (C.colʟ p) gL
       col↪g = injl-trans (C.colʟ p) (prodL gL) gL IV.injL (prod-into gL og g∈a g∉ω)
+```
 
-      -- Were col p not below κ, κ would inject into g ∈ κ.
+Were `col p` not below `κ`, `κ` would inject into `g ∈ κ`.
+
+```agda
       absurd : ((z : V ℓ) → ⟨ z ∈ˢ a ⟩ → ⟨ z ∈ˢ C.col p ⟩) → Empty.⊥
       absurd sub = carda gL g∈a
         (injl-trans κ (C.colʟ p) gL (inclusion-coded κ (C.colʟ p) sub) col↪g)
@@ -1336,8 +1413,11 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
       go' (inl h)       = h
       go' (inr (inl e)) = Empty.rec (absurd (λ z z∈a → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈a))
       go' (inr (inr h)) = Empty.rec (absurd (λ z z∈a → C.col-ord p .fst z∈a h))
+```
 
-  -- The order type lies inside κ, and the product injects into it.
+The order type lies inside `κ`, and the product injects into it.
+
+```agda
   result : InjL (prodL κ) κ
   result = injl-trans P C.otL κ injL-ot (inclusion-coded C.otL κ ot⊆a)
     where

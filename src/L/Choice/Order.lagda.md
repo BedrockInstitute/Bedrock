@@ -208,10 +208,13 @@ module Reading {n : ℕ} (d f u v : Fin n) (γ : S ^ n)
 
     Goal : Type (ℓ-suc ℓ)
     Goal = ∥ Under δ (stepOrder δ od) (fst (lookup u γ)) (fst (lookup v γ)) ∥₁
+```
 
-    -- perf: the type the step adequacy concludes in is sealed where it is built;
-    -- unsealed, instantiating the frame at the concrete elements this description
-    -- binds does not finish (over 200 s against 7 s for the whole chapter)
+Perf: the type the step adequacy concludes in is sealed where it is built;
+unsealed, instantiating the frame at the concrete elements this description
+binds does not finish (over 200 s against 7 s for the whole chapter).
+
+```agda
     opaque
       StepHolds : (tw pw rl cs ro c0 : S) → Type (ℓ-suc ℓ)
       StepHolds tw pw rl cs ro c0 =

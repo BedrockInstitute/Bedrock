@@ -78,9 +78,12 @@ module Tower (W : S) where
   private
     dom : Σ[ d ∈ S ] ((k : Lift {ℓ-zero} {ℓ} ℕ) → ⟨ fst (entry (lower k)) ∈ fst d ⟩)
     dom = smallDom (Lift {ℓ-zero} {ℓ} ℕ) (λ k → entry (lower k))
+```
 
-    -- At F ∷ n ∷ b ∷ z ∷ []: b = W, z = (n, F), n ∈ ω, F the environment
-    -- set of arity n over b.
+At `F ∷ n ∷ b ∷ z ∷ []`: `b = W`, `z = (n, F)`, `n ∈ ω`, `F` the environment set
+of arity `n` over `b`.
+
+```agda
     towerFo : Formula S 1
     towerFo = ∃̇ (∃̇ (∃̇ ( (var i2 ≐ con W)
                       ∧̇ ( prAtL i3 i1 i0

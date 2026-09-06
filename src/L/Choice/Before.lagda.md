@@ -1177,10 +1177,14 @@ decide.
 
 ```agda
 private
-  -- perf: the pair graph enters as a variable carrying its own equation, and
-  -- nothing the frame hands back mentions a formula at all; with the closed
-  -- sentence spelled out in the family's specification the chapter does not
-  -- close (past 400 s)
+```
+
+Perf: the pair graph enters as a variable carrying its own equation, and
+nothing the frame hands back mentions a formula at all; with the closed
+sentence spelled out in the family's specification the chapter does not close
+(past 400 s).
+
+```agda
   famBuild : (φ : Formula S 2) → φ ≡ PairRelGraphAt zero (suc zero)
            → Σ[ h ∈ S ]
                ( ((k : ℕ) → ⟨ pr (# k) (fst (relAt k)) ∈ fst h ⟩)

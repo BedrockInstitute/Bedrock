@@ -172,7 +172,11 @@ module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
     readBody ok z c w d (hb , (ha , (hd , hz))) =
       c , w , rec , subst (λ X → ⟨ fst z ∈ X ⟩) qd hz
       where
-      -- perf: env spelled out at both ends; via an abbreviation, 15 s per conversion
+```
+
+Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
+
+```agda
       rec : Records b f γ c w
       rec = hb , subst ⟨_⟩ (appAt-adequate
         (sh4 f) (suc (suc zero)) (suc zero) (d ∷ w ∷ c ∷ z ∷ γ)) ha
@@ -203,7 +207,11 @@ module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
     fill ok z (c , (w , (rec , hz))) =
       ∣ c , ∣ w , ∣ D , (rec .fst , (ha , (hdef , hz))) ∣₁ ∣₁ ∣₁
       where
-      -- perf: env spelled out at both ends; via an abbreviation, 15 s per conversion
+```
+
+Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
+
+```agda
       D : S
       D = 𝒟ₒ (fst w) , ok c w rec
 

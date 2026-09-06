@@ -124,9 +124,12 @@ module Reduce (κ : SL.S) (oκ : IsOrd (fst κ))
 
   A : Type ℓ
   A = ⟪ sucV (fst θ) ⟫
+```
 
-  -- Sealed: unsealed, this selection is measured at over a hundred
-  -- seconds at the same site (agents/tasks/LJ-1-526/runs/s4-2.out).
+Sealed: unsealed, this selection is measured at over a hundred seconds at the
+same site (agents/tasks/LJ-1-526/runs/s4-2.out).
+
+```agda
   opaque
     w : SWO A
     w = ordSWO (sucV (fst θ)) (suc-ord oθ)
@@ -265,17 +268,26 @@ z-strongest : (zf : ModelL.isZFModel) → zStrongest zf
 z-strongest zf κ y ordκ y∈𝒫κ z z∈y = isLz , z∈κ , mem-ord {A = fst κ} ordκ z z∈κ
   where
   open ModelL.isZFModel zf using ( 𝒫; hasPower )
+```
 
-  -- z is constructible, because y is and L is transitive.
+`z` is constructible, because `y` is and L is transitive.
+
+```agda
   isLz : ⟨ isL z ⟩
   isLz = isL-trans z∈y (snd y)
+```
 
-  -- The power-set specification, read off `℩-spec`; `𝒫 κ` IS
-  -- `℩ (hasPower κ)` by definition, so no transport is needed.
+The power-set specification, read off `℩-spec`; `𝒫 κ` IS `℩ (hasPower κ)` by
+definition, so no transport is needed.
+
+```agda
   y⊆κ : ⟨ y ModelL.⊆ˢ κ ⟩
   y⊆κ = subst ⟨_⟩ (ModelL.℩-spec (hasPower κ) y) y∈𝒫κ
+```
 
-  -- z re-enters the internal subset relation as the L-element (z , isLz).
+`z` re-enters the internal subset relation as the L-element `(z , isLz)`.
+
+```agda
   z∈κ : ⟨ z ∈ˢ fst κ ⟩
   z∈κ = y⊆κ (z , isLz) z∈y
 ```
@@ -298,9 +310,12 @@ stage-landing zf ibs κ ordκ cardκ κ∉ω δ (ordδ , cardδ , κ∈δ , _) y
   where
   y⊆κ : (z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩
   y⊆κ z z∈y = z-strongest zf κ y ordκ y∈𝒫κ z z∈y .snd .fst
+```
 
-  -- An internal injection of δ into κ is absurd: δ is an L-cardinal
-  -- and κ is a member of it.
+An internal injection of `δ` into `κ` is absurd: `δ` is an L-cardinal and `κ` is
+a member of it.
+
+```agda
   no-δ↪κ : InjL δ κ → Empty.⊥
   no-δ↪κ = cardδ κ κ∈δ
 
@@ -338,13 +353,19 @@ power-into-succ zf scc ibs κ ordκ cardκ κ∉ω δ sc@(ordδ , _ , κ∈δ , 
 
   Lδ : SL.S
   Lδ = Lset (fst δ) , stage-is-L δ ordδ
+```
 
-  -- ω is transitive, so κ ∈ δ ∈ ω would put κ in ω.
+`ω` is transitive, so `κ ∈ δ ∈ ω` would put `κ` in `ω`.
+
+```agda
   δ∉ω : ⟨ fst δ ∈ˢ ω ⟩ → Empty.⊥
   δ∉ω δ∈ω = κ∉ω (ω-ord .fst {x = fst δ} {y = fst κ} κ∈δ δ∈ω)
+```
 
-  -- Every member of the model's power set is constructible, because L
-  -- is transitive, and then it lands at δ by section 4.
+Every member of the model's power set is constructible, because L is transitive,
+and then it lands at δ by section 4.
+
+```agda
   into : (z : SV.S) → ⟨ z ∈ˢ fst (𝒫 κ) ⟩ → ⟨ z ∈ˢ fst Lδ ⟩
   into z z∈ =
     stage-landing zf ibs κ ordκ cardκ κ∉ω δ sc (z , isL-trans z∈ (snd (𝒫 κ))) z∈

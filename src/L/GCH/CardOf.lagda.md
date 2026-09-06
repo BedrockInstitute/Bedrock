@@ -85,23 +85,35 @@ cardOf α oα = ∣ μ , oμ , cardμ , μ⊆α , α↪μ , μ↪α ∣₁
 
   oT : IsOrd T
   oT = suc-ord oα
+```
 
-  -- Sealed: a proof of a proposition, never to be normalised.
+Sealed: a proof of a proposition, never to be normalised.
+
+```agda
   opaque
     hT : ⟨ isL T ⟩
     hT = LC.hSucα
+```
 
-  -- The crossing from the tower at T to the L-carrier.
+The crossing from the tower at `T` to the L-carrier.
+
+```agda
   upL : ⟪ T ⟫ → SL.S
   upL b = ⟪ T ⟫↪ b , isL-trans (member T b) hT
+```
 
-  -- The predicate: some L-element at the member's index that α injects
-  -- into internally.  The index equation rides along, so the injection
-  -- is never transported.
+The predicate: some L-element at the member's index that `α` injects into
+internally. The index equation rides along, so the injection is never
+transported.
+
+```agda
   Good : ⟪ T ⟫ → hProp (ℓ-suc ℓ)
   Good b = ∥ Σ[ δ ∈ SL.S ] ((fst δ ≡ ⟪ T ⟫↪ b) × InjL α δ) ∥₁ , squash₁
+```
 
-  -- α itself is a member, and the identity inclusion is coded.
+`α` itself is a member, and the identity inclusion is coded.
+
+```agda
   selfGood : ⟨ Good LC.self ⟩
   selfGood = ∣ α , sym LC.self-eq , inclusion-coded α α (λ z z∈α → z∈α) ∣₁
 
@@ -122,9 +134,12 @@ cardOf α oα = ∣ μ , oμ , cardμ , μ⊆α , α↪μ , μ↪α ∣₁
 
   oμ : IsOrd (fst μ)
   oμ = mem-ord {A = T} oT (fst μ) μ∈T
+```
 
-  -- The selected witness, moved to μ through the index equation by an
-  -- inclusion: only memberships are substituted.
+The selected witness, moved to `μ` through the index equation by an inclusion:
+only memberships are substituted.
+
+```agda
   α↪μ : InjL α μ
   α↪μ = PT.rec squash₁ from (fst (snd least))
     where
@@ -132,8 +147,11 @@ cardOf α oα = ∣ μ , oμ , cardμ , μ⊆α , α↪μ , μ↪α ∣₁
     from (δ , e , α↪δ) =
       injl-trans α δ μ α↪δ
         (inclusion-coded δ μ (λ z z∈δ → subst (λ v → ⟨ z ∈ˢ v ⟩) e z∈δ))
+```
 
-  -- Leastness, read at a member of μ.
+Leastness, read at a member of `μ`.
+
+```agda
   cardμ : IsCardinalL μ
   cardμ δ δ∈μ μ↪δ = snd (snd least) b bGood b<m
     where
@@ -148,10 +166,13 @@ cardOf α oα = ∣ μ , oμ , cardμ , μ⊆α , α↪μ , μ↪α ∣₁
     b<m : SWO._<∙_ LC.w b m
     b<m = transport (λ i → sym (LC.w-lt b m) i)
             (subst (λ z → ⟨ z ∈ˢ fst μ ⟩) (sym bδ) δ∈μ)
+```
 
-  -- Trichotomy against α.  Below or equal, μ ⊆ α by transitivity.
-  -- Above is absurd: α is itself a member of `sucV α` that α injects
-  -- into, and α ∈ μ puts it below μ in `w`, against leastness.
+Trichotomy against `α`. Below or equal, `μ ⊆ α` by transitivity. Above is
+absurd: `α` is itself a member of `sucV α` that `α` injects into, and `α ∈ μ`
+puts it below `μ` in `w`, against leastness.
+
+```agda
   μ⊆α : (z : SV.S) → ⟨ z ∈ˢ fst μ ⟩ → ⟨ z ∈ˢ fst α ⟩
   μ⊆α = go (ord-tri (fst μ) oμ (fst α) oα)
     where

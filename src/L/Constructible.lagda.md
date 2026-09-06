@@ -306,12 +306,14 @@ opaque
   𝒟ₒ-inv : (A x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩
          → ∥ Σ[ φ ∈ Formula ⟪ A ⟫ 1 ] (DefOf.defSet A φ ≡ x) ∥₁
   𝒟ₒ-inv A x p = p
+```
 
-  -- The pair the stage-cardinality construction takes at its limit step,
-  -- one term: the definable power set at the stage, read as a map from
-  -- formulas (DefOf.defSet at the stage), and the inversion that recovers
-  -- a member's defining formula (𝒟ₒ-inv at the stage).
+The pair the stage-cardinality construction takes at its limit step, one term:
+the definable power set at the stage, read as a map from formulas
+(`DefOf.defSet` at the stage), and the inversion that recovers a member's
+defining formula (`𝒟ₒ-inv` at the stage).
 
+```agda
   Lset⊆𝒟ₒ : (β x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩
   Lset⊆𝒟ₒ β x = DefOf.Refine.A⊆Def (Lset β) (layer-trans (Lset-layer β)) x
 
