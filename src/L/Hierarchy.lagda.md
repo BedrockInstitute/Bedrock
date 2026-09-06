@@ -298,11 +298,6 @@ module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
         named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst (lookup f γ) ⟩)
           (IH (fst c) c∈ (snd c) y q) q
 
-  approx-uniq : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd (fst (lookup a γ))
-              → (x y z : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-              → ⟨ pr (fst x) (fst z) ∈ fst (lookup f γ) ⟩ → y ≡ z
-  approx-uniq h oa x y z p q = Σ≡Prop (λ u → snd (isL u))
-    (approx-val h oa x y p ∙ sym (approx-val h oa x z q))
 ```
 
 <!--en-->
@@ -503,7 +498,6 @@ IsHier B h = (z : S) → (fst z ∈ fst h) ≡ Recorded B (fst z)
 
 HierOf : V ℓ → Type (ℓ-suc (ℓ-suc ℓ))
 HierOf B = Σ[ h ∈ S ] IsHier B h
-
 
 module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsHier B h) where
   hier-out : (c z : S) → ⟨ pr (fst c) (fst z) ∈ fst h ⟩

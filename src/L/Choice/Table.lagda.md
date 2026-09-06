@@ -460,12 +460,6 @@ an ordinal and ordinals are transitive, so the approximation has a value there.
         ents : Entries (lookup f γ) u
         ents e e∈ = ApproxAt-value f a γ h e (oa .fst {x = u} {y = fst e} e∈ u∈a)
 
-    approx-uniq : ⟨ γ ⊨ ApproxAt f a ⟩ → IsOrd (fst (lookup a γ))
-                → (c r r' : S) → IsOrd (fst c)
-                → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
-                → ⟨ pr (fst c) (fst r') ∈ fst (lookup f γ) ⟩ → r ≡ r'
-    approx-uniq h oa c r r' oc p q = rel-unique (fst c) r r'
-      (approx-val h oa c oc r p) (approx-val h oa c oc r' q)
 ```
 
 <!--en-->

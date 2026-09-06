@@ -350,8 +350,6 @@ open RecShape StepAt public renaming ( GraphAt to LsetGraphAt
                                      ; Graph-in to LsetGraph-in
                                      ; Graph-out to LsetGraph-out )
 
-LsetGraph : Formula S 2
-LsetGraph = LsetGraphAt zero (suc zero)
 ```
 
 <!--en-->

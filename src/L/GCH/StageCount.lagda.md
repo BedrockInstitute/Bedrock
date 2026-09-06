@@ -1428,9 +1428,6 @@ module Induction (base : LimitStageCounted) where
   P : V ℓ → Type (ℓ-suc ℓ)
   P δ = (oδ : IsOrd δ) → (⟨ δ ∈ ω ⟩ → Empty.⊥) → InjL (LsetS δ oδ) (ordL δ oδ)
 
-  isPropP : (δ : V ℓ) → isProp (P δ)
-  isPropP δ = isPropΠ2 (λ _ _ → squash₁)
-
   module Ind (δ : V ℓ) (ih : (β : V ℓ) → ⟨ β ∈ δ ⟩ → P β)
               (oδ : IsOrd δ) (δ∉ω : ⟨ δ ∈ ω ⟩ → Empty.⊥) where
 

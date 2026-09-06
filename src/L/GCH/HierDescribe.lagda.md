@@ -674,9 +674,6 @@ private
       Lset∈K : (c : V ℓ) → ⟨ c ∈ lam ⟩ → ⟨ Lset c ∈ K ⟩
       Lset∈K c c∈ = Lset-mono {α = lam} {β = sucV c} (succ c c∈) (Lset∈suc c)
 
-      ord∈K : (c : V ℓ) → IsOrd c → ⟨ c ∈ lam ⟩ → ⟨ c ∈ K ⟩
-      ord∈K c oc c∈ = Lset-mono {α = lam} {β = sucV c} (succ c c∈) (ord∈Lset-suc c oc)
-
       num∈K : (k : ℕ) → ⟨ # k ∈ K ⟩
       num∈K k = subst (λ u → ⟨ u ∈ K ⟩) (numeralL-fst k) (B.num∈λ k)
 

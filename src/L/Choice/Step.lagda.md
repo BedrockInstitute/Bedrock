@@ -824,15 +824,6 @@ module _ (γ β : S) (oγ : IsOrd γ) (oβ : IsOrd β) (i : ⟨ γ ∈ˢ β ⟩)
                 ⊎ ( (sameBirth b k ≡ sameBirth a k)
                   × Under (sameBirth a k) (sameStep a k) (a .fst) (b .fst) )
 
-    unfoldγ : (a b : Mem (Lset γ)) → relOf (orderAt γ oγ) a b ≡ (a ≺ᵍ b)
-    unfoldγ a b = cong (λ z → relOf (z oγ) a b) (orderAt-step γ)
-
-    unfoldβ : (a b : Mem (Lset β)) → relOf (orderAt β oβ) a b ≡ (a ≺ᵇ b)
-    unfoldβ a b = cong (λ z → relOf (z oβ) a b) (orderAt-step β)
-
-  endExtension : (a b : Mem (Lset γ))
-               → relOf (orderAt γ oγ) a b ≡ relOf (orderAt β oβ) (up a) (up b)
-  endExtension a b = unfoldγ a b ∙ agree a b ∙ sym (unfoldβ (up a) (up b))
 ```
 
 <!--en-->

@@ -255,10 +255,6 @@ private
               → ⟨ fst y ∈ fst (lookup c γ) ⟩
     ranAt-out h x y p = h y .fst (subst ⟨_⟩ (sym (step y)) ∣ x , p ∣₁)
 
-    ranAt-in : ⟨ γ ⊨ ranAt f c ⟩ → (y : S) → ⟨ fst y ∈ fst (lookup c γ) ⟩
-             → ∥ (Σ[ x ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩) ∥₁
-    ranAt-in h y m = subst ⟨_⟩ (step y) (h y .snd m)
-
     ranAt-intro : ((y : S)
                    → (⟨ ∃[ x ∶ S ] (pr (fst x) (fst y) ∈ fst (lookup f γ)) ⟩
                       → ⟨ fst y ∈ fst (lookup c γ) ⟩)
@@ -313,6 +309,4 @@ private
     injection : ⟪ fst D ⟫ → ⟪ fst H.C ⟫
     injection = S.small
 
-    injection-inj : (m n : ⟪ fst D ⟫) → injection m ≡ injection n → m ≡ n
-    injection-inj = S.small-inj
 ```

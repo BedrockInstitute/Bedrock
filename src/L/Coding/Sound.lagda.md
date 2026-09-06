@@ -117,14 +117,6 @@ module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
     ov : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
     ov = extAt-out Ei (envOverAt zero (suc di) (suc bi)) γ hE z hz
 
-  asEnv : (z : S) → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
-        → Σ[ g ∈ Ix B m ] (fst z ≡ fst (envS B g))
-  asEnv z hz = Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov
-             , Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb ov
-    where
-    ov : ⟨ (z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi) ⟩
-    ov = extAt-out Ei (envOverAt zero (suc di) (suc bi)) γ hE z hz
-
   outof : (z : S) → ⟨ fst z ∈ fst (envSet B m) ⟩
         → ⟨ fst z ∈ fst (lookup Ei γ) ⟩
   outof z hz = PT.rec (snd (fst z ∈ fst (lookup Ei γ)))
@@ -173,28 +165,6 @@ module TermAgree {k : ℕ} (γ : S ^ k) (ti ei vi : Fin k) where
     Ev = fst (lookup ei γ)
     Vl = fst (lookup vi γ)
 
-  fromVar : (i : ℕ) → Tc ≡ pr (# 1) (# i)
-          → ⟨ pr (# i) Vl ∈ Ev ⟩ → ⟨ γ ⊨ tmValAt ti ei vi ⟩
-  fromVar i q m = tmValAt-var ti ei vi γ (nn i) q m
-
-  fromCon : (x : V ℓ) → Tc ≡ pr (# 0) x → Vl ≡ x → ⟨ γ ⊨ tmValAt ti ei vi ⟩
-  fromCon x q e = tmValAt-con ti ei vi γ
-    (q ∙ cong (pr (# 0)) (sym e))
-
-  toVar : (i : ℕ) → Tc ≡ pr (# 1) (# i) → ⟨ γ ⊨ tmValAt ti ei vi ⟩
-        → ⟨ pr (# i) Vl ∈ Ev ⟩
-  toVar i q h = PT.rec (snd (pr (# i) Vl ∈ Ev))
-    (λ { (inl (x , (qx , mx))) →
-           subst (λ w → ⟨ pr w Vl ∈ Ev ⟩) (pr-inj (sym qx ∙ q) .snd) mx
-       ; (inr qc) → Empty.rec (snotz (#-inj 1 0 (pr-inj (sym q ∙ qc) .fst))) })
-    (tmValAt-out ti ei vi γ h)
-
-  toCon : (x : V ℓ) → Tc ≡ pr (# 0) x → ⟨ γ ⊨ tmValAt ti ei vi ⟩ → Vl ≡ x
-  toCon x q h = PT.rec (setIsSet Vl x)
-    (λ { (inl (y , (qy , _))) →
-           Empty.rec (znots (#-inj 0 1 (pr-inj (sym q ∙ qy) .fst)))
-       ; (inr qc) → sym (pr-inj (sym q ∙ qc) .snd) })
-    (tmValAt-out ti ei vi γ h)
 ```
 
 <!--en-->
@@ -209,35 +179,7 @@ with the two of `tmIs`{.Agda}.
 
 ```agda
 private
-  tmCode : ∀ {m} (t : Term S m)
-         → Σ[ j ∈ ℕ ] (Σ[ x ∈ V ℓ ]
-             ((fst LCode.⌜ t ⌝ᵗ ≡ pr (# j) x)))
-  tmCode (con c) = 0 , fst c
-    , (prʟ-fst (numeralL 0) c ∙ cong (λ w → pr w (fst c)) (numeralL-fst 0))
-  tmCode (var i) = 1 , # (toℕ i)
-    , (prʟ-fst (numeralL 1) (numeralL (toℕ i))
-      ∙ cong₂ pr (numeralL-fst 1) (numeralL-fst (toℕ i)))
 
-termAgree : ∀ {m} (t : Term S m) {k k'} (γ : S ^ k) (ti ei vi : Fin k)
-            (γ' : S ^ k') (vi' ei' : Fin k')
-          → fst (lookup ti γ) ≡ fst LCode.⌜ t ⌝ᵗ
-          → fst (lookup ei γ) ≡ fst (lookup ei' γ')
-          → fst (lookup vi γ) ≡ fst (lookup vi' γ')
-          → (⟨ γ ⊨ tmValAt ti ei vi ⟩ → ⟨ γ' ⊨ tmIs t vi' ei' ⟩)
-          × (⟨ γ' ⊨ tmIs t vi' ei' ⟩ → ⟨ γ ⊨ tmValAt ti ei vi ⟩)
-termAgree (var i) γ ti ei vi γ' vi' ei' qt qe qv =
-    (λ h → tmIs-var-in i γ' vi' ei'
-      (subst2 (λ p q → ⟨ pr (# (toℕ i)) p ∈ q ⟩) qv qe
-        (TermAgree.toVar γ ti ei vi (toℕ i) (qt ∙ tmCode (var i) .snd .snd) h)))
-  , (λ h → TermAgree.fromVar γ ti ei vi (toℕ i)
-      (qt ∙ tmCode (var i) .snd .snd)
-      (subst2 (λ p q → ⟨ pr (# (toℕ i)) p ∈ q ⟩) (sym qv) (sym qe)
-        (tmIs-var-out i γ' vi' ei' h)))
-termAgree {m} (con c) γ ti ei vi γ' vi' ei' qt qe qv =
-    (λ h → sym qv ∙ TermAgree.toCon γ ti ei vi (fst c)
-             (qt ∙ tmCode {m} (con c) .snd .snd) h)
-  , (λ h → TermAgree.fromCon γ ti ei vi (fst c)
-      (qt ∙ tmCode {m} (con c) .snd .snd) (qv ∙ h))
 ```
 
 <!--en-->

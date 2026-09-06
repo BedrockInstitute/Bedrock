@@ -748,9 +748,6 @@ module InitialCore (α : S) (oα : IsOrd α)
   cm : {p q : PairA} → p ≺' q → ⟨ colA p ∈ˢ colA q ⟩
   cm = col-mono α oα
 
-  ci : {p q : PairA} → colA p ≡ colA q → p ≡ q
-  ci = col-inj α oα
-
   cimg : (q : PairA) (b : S) → ⟨ b ∈ˢ colA q ⟩
        → ∥ Σ[ r ∈ PairA ] (colA r ≡ b) ∥₁
   cimg = col-img α oα
@@ -969,9 +966,5 @@ module Initial (α : S) (iα : Init α) where
   truncated = ∣ square ∣₁
 
 opaque
-  via-col-square : (α : S) → Init α → sq α
-  via-col-square α iα = Initial.square α iα
 
-  via-col-truncated : (α : S) → Init α → ∥ sq α ∥₁
-  via-col-truncated α iα = Initial.truncated α iα
 ```

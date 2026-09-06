@@ -642,9 +642,6 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     hullStep : ℕ → CS.S
     hullStep = It.it
 
-    hullStep-zero : hullStep 0 ≡ Xʟ
-    hullStep-zero = refl
-
     hullStep-suc : (n : ℕ) → hullStep (suc n) ≡ Φ (hullStep n)
     hullStep-suc n = refl
 
@@ -1443,11 +1440,6 @@ module Condense′ (lam : S) (ordλ : IsOrd lam)
 
   hullStep-in : (c : T.Code) → ⟨ fst (T.val c) ∈ˢ fst (hullStep (HI.depth c)) ⟩
   hullStep-in = HI.hullStep-in
-
-  hullStep-out : (n : ℕ) (z : S) → ⟨ z ∈ˢ fst (hullStep (suc n)) ⟩ → ∥ T.Reads (hullStep n) z ∥₁
-  hullStep-out n z h =
-    TB.pack .T.StepPack.out (hullStep n)
-      (λ z' hz' → HSH.Hull⊆L z' (HI.hullStep⊆Hull n z' hz')) z h
 
   M-isL : ⟨ isL HS.M ⟩
   M-isL = HI.M-isL

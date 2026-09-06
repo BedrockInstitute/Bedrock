@@ -69,32 +69,8 @@ module BoundOver
 
   -- The sequences: the Kuratowski pair, which every code is built from.  This
   -- is the one `κ → κ` pairing closure, at an ARBITRARY limit.
-  pr∈λ : (x y : S) → ⟨ x ∈ˢ T lam ⟩ → ⟨ y ∈ˢ T lam ⟩ → ⟨ pr x y ∈ˢ T lam ⟩
-  pr∈λ x y hx hy = PT.rec (snd (pr x y ∈ˢ T lam))
-    (λ px → PT.rec (snd (pr x y ∈ˢ T lam)) (both px) (T-out lam y hy))
-    (T-out lam x hx)
-    where
-    climb : (σ : S) → ⟨ σ ∈ˢ lam ⟩ → ⟨ x ∈ˢ T σ ⟩ → ⟨ y ∈ˢ T σ ⟩
-          → ⟨ pr x y ∈ˢ T lam ⟩
-    climb σ σ∈ hxσ hyσ =
-      T-mono {α = lam} {β = sucV (sucV σ)}
-        (succλ (sucV σ) (succλ σ σ∈)) {x = pr x y} (T-pr σ x y hxσ hyσ)
-    both : At x → At y → ⟨ pr x y ∈ˢ T lam ⟩
-    both (δ , (δ∈ , hxδ)) (ε , (ε∈ , hyε)) =
-      Sum.rec
-        (λ p → climb (sucV ε) (succλ ε ε∈)
-                 (T-mono {α = sucV ε} {β = sucV δ} p {x = x} hxδ) hyε)
-        (Sum.rec
-          (λ q → climb (sucV ε) (succλ ε ε∈)
-                   (subst (λ w → ⟨ x ∈ˢ T w ⟩) q hxδ) hyε)
-          (λ r → climb (sucV δ) (succλ δ δ∈) hxδ
-                   (T-mono {α = sucV δ} {β = sucV ε} r {x = y} hyε)))
-        (ord-tri (sucV δ) (suc-ord {A = δ} (mem-ord {A = lam} ordλ δ δ∈))
-                 (sucV ε) (suc-ord {A = ε} (mem-ord {A = lam} ordλ ε ε∈)))
 
   -- The carrier and the transitivity, one call each.
-  trans∈λ : {x y : S} → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ T lam ⟩ → ⟨ y ∈ˢ T lam ⟩
-  trans∈λ {x} {y} = T-trans lam {x = x} {y = y}
 
   -- Climbing any finite iterate costs `succλ` alone: no limit fact enters.
   suc^∈λ : (k : ℕ) (σ : S) → ⟨ σ ∈ˢ lam ⟩ → ⟨ sucIter k σ ∈ˢ lam ⟩
@@ -144,11 +120,6 @@ module Bound (lam : S) (ordλ : IsOrd lam)
   -- L presentation of a fact `BoundOver` already has.
   num∈λ : (k : ℕ) → ⟨ fst (numeralL k) ∈ˢ Lset lam ⟩
   num∈λ k = subst (λ w → ⟨ w ∈ˢ Lset lam ⟩) (sym (numeralL-fst k)) (#∈Tλ k)
-
-  prʟ∈λ : (a b : CS.S) → ⟨ fst a ∈ˢ Lset lam ⟩ → ⟨ fst b ∈ˢ Lset lam ⟩
-        → ⟨ fst (prʟ a b) ∈ˢ Lset lam ⟩
-  prʟ∈λ a b ha hb = subst (λ w → ⟨ w ∈ˢ Lset lam ⟩) (sym (prʟ-fst a b))
-    (pr∈λ (fst a) (fst b) ha hb)
 
   -- The reduction at the L step operator.  `powIter` stays a hypothesis:
   -- MEASURED, nothing in `src/` proves it, and `L.Coding.Powerset` and

@@ -248,28 +248,16 @@ witness is read straight off its shape.
 sglAt : ∀ {n} → Fin n → Fin n → Formula (V ℓ) n
 sglAt k i = (var i ∈̇ var k) ∧̇ (∀̇∈ (var k) (var zero ≐ var (suc i)))
 
-sglConAt : ∀ {n} → Fin n → V ℓ → Formula (V ℓ) n
-sglConAt k c = (con c ∈̇ var k) ∧̇ (∀̇∈ (var k) (var zero ≐ con c))
-
 pairAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
 pairAt k i j = (var i ∈̇ var k) ∧̇ ((var j ∈̇ var k)
             ∧̇ (∀̇∈ (var k) ((var zero ≐ var (suc i)) ∨̇ (var zero ≐ var (suc j)))))
 
-pairConAt : ∀ {n} → Fin n → V ℓ → Fin n → Formula (V ℓ) n
-pairConAt k c j = (con c ∈̇ var k) ∧̇ ((var j ∈̇ var k)
-               ∧̇ (∀̇∈ (var k) ((var zero ≐ con c) ∨̇ (var zero ≐ var (suc j)))))
-
 Δ₀-sglAt : ∀ {n} (k i : Fin n) → Δ₀ (sglAt k i)
 Δ₀-sglAt k i = δ-∧ δ-∈ (δ-∀∈ δ-≐)
-
-Δ₀-sglConAt : ∀ {n} (k : Fin n) (c : V ℓ) → Δ₀ (sglConAt k c)
-Δ₀-sglConAt k c = δ-∧ δ-∈ (δ-∀∈ δ-≐)
 
 Δ₀-pairAt : ∀ {n} (k i j : Fin n) → Δ₀ (pairAt k i j)
 Δ₀-pairAt k i j = δ-∧ δ-∈ (δ-∧ δ-∈ (δ-∀∈ (δ-∨ δ-≐ δ-≐)))
 
-Δ₀-pairConAt : ∀ {n} (k : Fin n) (c : V ℓ) (j : Fin n) → Δ₀ (pairConAt k c j)
-Δ₀-pairConAt k c j = δ-∧ δ-∈ (δ-∧ δ-∈ (δ-∀∈ (δ-∨ δ-≐ δ-≐)))
 ```
 
 <!--en-->
@@ -287,20 +275,11 @@ prAt q u v = (∃̇∈ (var q) (sglAt zero (suc u)))
           ∧̇ ((∃̇∈ (var q) (pairAt zero (suc u) (suc v)))
           ∧̇ (∀̇∈ (var q) (sglAt zero (suc u) ∨̇ pairAt zero (suc u) (suc v))))
 
-tagAt : ∀ {n} → Fin n → ℕ → Fin n → Formula (V ℓ) n
-tagAt s k x = (∃̇∈ (var s) (sglConAt zero (# k)))
-           ∧̇ ((∃̇∈ (var s) (pairConAt zero (# k) (suc x)))
-           ∧̇ (∀̇∈ (var s) (sglConAt zero (# k) ∨̇ pairConAt zero (# k) (suc x))))
-
 Δ₀-prAt : ∀ {n} (q u v : Fin n) → Δ₀ (prAt q u v)
 Δ₀-prAt q u v = δ-∧ (δ-∃∈ (Δ₀-sglAt zero (suc u)))
   (δ-∧ (δ-∃∈ (Δ₀-pairAt zero (suc u) (suc v)))
        (δ-∀∈ (δ-∨ (Δ₀-sglAt zero (suc u)) (Δ₀-pairAt zero (suc u) (suc v)))))
 
-Δ₀-tagAt : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) → Δ₀ (tagAt s k x)
-Δ₀-tagAt s k x = δ-∧ (δ-∃∈ (Δ₀-sglConAt zero (# k)))
-  (δ-∧ (δ-∃∈ (Δ₀-pairConAt zero (# k) (suc x)))
-       (δ-∀∈ (δ-∨ (Δ₀-sglConAt zero (# k)) (Δ₀-pairConAt zero (# k) (suc x)))))
 ```
 
 <!--en-->
@@ -328,12 +307,6 @@ prAt-adequate q u v γ = ⇔toPath
   (λ { (h₁ , h₂ , h₃) → prChar-fwd _ _ _ h₁ h₂ h₃ })
   (λ e → prChar-bwd _ _ _ e)
 
-tagAt-adequate : ∀ {n} (s : Fin n) (k : ℕ) (x : Fin n) (γ : (V ℓ) ^ n)
-               → (γ ⊨ tagAt s k x) ≡ ((⟦ var s ⟧ γ ≡ pr (# k) (⟦ var x ⟧ γ))
-                                     , setIsSet _ _)
-tagAt-adequate s k x γ = ⇔toPath
-  (λ { (h₁ , h₂ , h₃) → prChar-fwd _ _ _ h₁ h₂ h₃ })
-  (λ e → prChar-bwd _ _ _ e)
 ```
 
 <!--en-->

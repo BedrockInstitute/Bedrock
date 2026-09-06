@@ -102,13 +102,6 @@ Adequate γ =
   × ⟨ ω ∈ γ ⟩
   × ((c : V ℓ) → ⟨ c ∈ γ ⟩ → Witnesses (Lset γ) c)
 
-isPropAdequate : (γ : V ℓ) → isProp (Adequate γ)
-isPropAdequate γ =
-  isProp× (isPropIsOrd γ)
-    (isProp× (isPropΠ λ x → isPropΠ λ _ → snd (sucV x ∈ γ))
-      (isProp× (snd (ω ∈ γ))
-        (isPropΠ λ c → isPropΠ λ _ → isPropWitnesses (Lset γ) c)))
-
 module Adequate (γ : V ℓ) (ad : Adequate γ) where
   ord = ad .fst
   succ = ad .snd .fst

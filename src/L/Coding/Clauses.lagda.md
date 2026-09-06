@@ -395,9 +395,6 @@ module EnvFacts (W : S) where
     (λ hy → Empty.rec (k y hy))
     (PT.rec (snd (y ∈ z)) (λ { (lift () , _) })))
 
-  env0-noMembers : (y : V ℓ) → ⟨ y ∈ fst (envS W g0) ⟩ → Empty.⊥
-  env0-noMembers y = PT.rec Empty.isProp⊥ (λ { (lift () , _) })
-
   envAny0-noMembers : (g : Ix W 0) (y : V ℓ) → ⟨ y ∈ fst (envS W g) ⟩ → Empty.⊥
   envAny0-noMembers g y = PT.rec Empty.isProp⊥ (λ { (lift () , _) })
 
@@ -444,8 +441,6 @@ module EnvFacts (W : S) where
     (λ { (g' , e) → g' zero , (λ i → g' (suc i)) , (e ∙ env-split g') })
     (envSet-out W (suc k) e' h)
 
-  member∈W : {k : ℕ} (g : Ix W k) (i : Fin k) → ⟨ ι (g i) ∈ fst W ⟩
-  member∈W g i = ι∈ (g i)
 ```
 
 THE TOWER, READ.  Soundness: every entry is (# k, envSet k), by
@@ -2945,20 +2940,6 @@ module Bridge (W : S) where
              (ι∈ (g i)) })
 
   -- The clause's term reader and the recursion's agree.
-  tmToS : ∀ {n} (t : Term Ab n) (g : Ix W n) (z v : S) → fst z ≡ env (λ i → ι (g i))
-        → TmIsV (ct t) (fst z) (fst v) → ⟨ (v ∷ z ∷ []) ⊨ tmIsS (toT t) zero (suc zero) ⟩
-  tmToS (con q) g z v qz = PT.rec (setIsSet (fst v) (fst (asConst W q)))
-    (λ { (inl e) → sym (pr-inj e .snd)
-       ; (inr (i , (e , _))) → Empty.rec (znots (#-inj′ {0} {1} (pr-inj e .fst))) })
-  tmToS (var i) g z v qz = PT.rec (snd ((v ∷ z ∷ []) ⊨ tmIsS (toT (var i)) zero (suc zero)))
-    (λ { (inl e) → Empty.rec (snotz (#-inj′ {1} {0} (pr-inj e .fst)))
-       ; (inr (i' , (e , hp))) → tmIsS-var-in i (v ∷ z ∷ []) zero (suc zero)
-           (subst (λ a → ⟨ pr a (fst v) ∈ fst z ⟩) (sym (pr-inj e .snd)) hp) })
-
-  tmFromS : ∀ {n} (t : Term Ab n) (z v : S)
-          → ⟨ (v ∷ z ∷ []) ⊨ tmIsS (toT t) zero (suc zero) ⟩ → TmIsV (ct t) (fst z) (fst v)
-  tmFromS (con q) z v h = ∣ inl (cong (pr (# 0)) (sym h)) ∣₁
-  tmFromS (var i) z v h = ∣ inr (# (toℕ i) , (refl , tmIsS-var-out i (v ∷ z ∷ []) zero (suc zero) h)) ∣₁
 
   -- The cons reader, between the recursion's frame and any other.
   consToS : ∀ {k} (δ : S ^ k) (e' x z : Fin k) {n : ℕ} (g : Ix W n)

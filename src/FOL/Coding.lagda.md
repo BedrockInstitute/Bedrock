@@ -155,31 +155,10 @@ information as the code function, presented so that a proof can match on the
 ```agda
 data CodesT {n : ℕ} : S → Term S n → Type ℓ where
   c-con : (x : S)     → CodesT (mkTag 0 x) (con x)
-  c-var : (i : Fin n) → CodesT (mkTag 1 (encℕ (toℕ i))) (var i)
 
 data Codes : {n : ℕ} → S → Formula S n → Type ℓ where
   c-∈  : ∀ {n s s'} {t u : Term S n}
        → CodesT s t → CodesT s' u → Codes (mkTag 0 (pr s s')) (t ∈̇ u)
-  c-≐  : ∀ {n s s'} {t u : Term S n}
-       → CodesT s t → CodesT s' u → Codes (mkTag 1 (pr s s')) (t ≐ u)
-  c-∧  : ∀ {n s s'} {φ ψ : Formula S n}
-       → Codes s φ → Codes s' ψ → Codes (mkTag 2 (pr s s')) (φ ∧̇ ψ)
-  c-∨  : ∀ {n s s'} {φ ψ : Formula S n}
-       → Codes s φ → Codes s' ψ → Codes (mkTag 3 (pr s s')) (φ ∨̇ ψ)
-  c-⇒  : ∀ {n s s'} {φ ψ : Formula S n}
-       → Codes s φ → Codes s' ψ → Codes (mkTag 4 (pr s s')) (φ ⇒̇ ψ)
-  c-¬  : ∀ {n s} {φ : Formula S n}
-       → Codes s φ → Codes (mkTag 5 s) (¬̇ φ)
-  c-⊤  : ∀ {n} → Codes {n} (mkTag 6 (encℕ 0)) ⊤̇
-  c-⊥  : ∀ {n} → Codes {n} (mkTag 7 (encℕ 0)) ⊥̇
-  c-∃  : ∀ {n s} {φ : Formula S (suc n)}
-       → Codes s φ → Codes (mkTag 8 s) (∃̇ φ)
-  c-∀  : ∀ {n s} {φ : Formula S (suc n)}
-       → Codes s φ → Codes (mkTag 9 s) (∀̇ φ)
-  c-∀∈ : ∀ {n s s'} {t : Term S n} {φ : Formula S (suc n)}
-       → CodesT s t → Codes s' φ → Codes (mkTag 10 (pr s s')) (∀̇∈ t φ)
-  c-∃∈ : ∀ {n s s'} {t : Term S n} {φ : Formula S (suc n)}
-       → CodesT s t → Codes s' φ → Codes (mkTag 11 (pr s s')) (∃̇∈ t φ)
 ```
 
 <!--en-->

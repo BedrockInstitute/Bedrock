@@ -110,9 +110,6 @@ module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
   it zero    = a
   it (suc n) = step (it n)
 
-  it-suc : (n : ℕ) → it (suc n) ≡ step (it n)
-  it-suc n = refl
-
   -- ===================================================================
   -- SECTION 1.  THE APPROXIMATION FORMULA, AND HOW TO READ IT.
   --

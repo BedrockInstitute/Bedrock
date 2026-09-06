@@ -402,8 +402,6 @@ codeBridge (∀̇∈ t a) = tagBridge 10 _ ∙ cong (VCode.mkTag 10)
 codeBridge (∃̇∈ t a) = tagBridge 11 _ ∙ cong (VCode.mkTag 11)
   (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridge a))
 
-
-
 ```
 
 <!--en-->
@@ -681,21 +679,12 @@ private
   memb : ∀ {n} → Fin n → Formula S (suc n)
   memb a = var zero ∈̇ var (suc a)
 
-
-unionAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
-unionAt y a b = extAt y (memb a ∨̇ memb b)
-
 diffAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 diffAt y a b = extAt y (memb a ∧̇ ¬̇ memb b)
 
 sameAt : ∀ {n} → Fin n → Fin n → Formula S n
 sameAt y a = extAt y (memb a)
 
-emptyAt : ∀ {n} → Fin n → Formula S n
-emptyAt y = extAt y ⊥̇
-
-implAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
-implAt y e a b = extAt y (memb e ∧̇ (memb a ⇒̇ memb b))
 ```
 
 <!--en-->
@@ -816,32 +805,6 @@ subValAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
 subValAt T ar a y =
   ∃̇ (prAtL zero (suc ar) (suc a) ∧̇ appAt (suc T) zero (suc y))
 
-subValAt-adequate : ∀ {n} (T ar a y : Fin n) (γ : S ^ n)
-  → (γ ⊨ subValAt T ar a y)
-  ≡ (pr (pr (fst (lookup ar γ)) (fst (lookup a γ))) (fst (lookup y γ))
-      ∈ fst (lookup T γ))
-subValAt-adequate T ar a y γ = ⇔toPath fwd bwd
-  where
-  K = pr (fst (lookup ar γ)) (fst (lookup a γ))
-  target = pr K (fst (lookup y γ)) ∈ fst (lookup T γ)
-
-  fwd : ⟨ γ ⊨ subValAt T ar a y ⟩ → ⟨ target ⟩
-  fwd = PT.rec (snd target)
-    (λ { (z , (p , q)) →
-      subst (λ w → ⟨ pr w (fst (lookup y γ)) ∈ fst (lookup T γ) ⟩)
-        (subst ⟨_⟩ (prAtL-adequate zero (suc ar) (suc a) (z ∷ γ)) p)
-        (subst ⟨_⟩ (appAt-adequate (suc T) zero (suc y) (z ∷ γ)) q) })
-
-  bwd : ⟨ target ⟩ → ⟨ γ ⊨ subValAt T ar a y ⟩
-  bwd h = ∣ zS
-    , ( subst ⟨_⟩ (sym (prAtL-adequate zero (suc ar) (suc a) (zS ∷ γ))) e
-      , subst ⟨_⟩ (sym (appAt-adequate (suc T) zero (suc y) (zS ∷ γ)))
-          (subst (λ w → ⟨ pr w (fst (lookup y γ)) ∈ fst (lookup T γ) ⟩) (sym e) h) ) ∣₁
-    where
-    zS : S
-    zS = prʟ (lookup ar γ) (lookup a γ)
-    e : fst zS ≡ K
-    e = prʟ-fst (lookup ar γ) (lookup a γ)
 ```
 
 <!--en-->
@@ -892,13 +855,6 @@ module _ {n : ℕ} where
     b5  = suc zero
     yc5 = zero
 
-  binClauseAt : Fin n → Fin n → ℕ → Formula S (5 + n) → Formula S n
-  binClauseAt C T k rel =
-    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇ (∀̇
-      ( arityTagPairAtL c5 n5 k a5 b5
-      ⇒̇ ( appAt (sh5 T) c5 yc5
-      ⇒̇ rel ))))))
-
 ```
 
 <!--en-->
@@ -913,20 +869,6 @@ the same substitutions run backwards.
 <!--/-->
 
 ```agda
-  binClause-in : (C T : Fin n) (k : ℕ) (rel : Formula S (5 + n)) (γ : S ^ n)
-    → ((c ar a b yc : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-       → ⟨ (yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
-    → ⟨ γ ⊨ binClauseAt C T k rel ⟩
-  binClause-in C T k rel γ g c c∈ ar a b yc sh hc =
-    g c ar a b yc c∈
-      (subst ⟨_⟩ (arityTagPairAtL-adequate c5 n5 k a5 b5 δ) sh)
-      (subst ⟨_⟩ (appAt-adequate (sh5 T) c5 yc5 δ) hc)
-    where
-    δ : S ^ (5 + n)
-    δ = yc ∷ b ∷ a ∷ ar ∷ c ∷ γ
 ```
 
 <!--en-->
@@ -970,30 +912,9 @@ back the same way.
     a4  = suc zero
     yc4 = zero
 
-  unClauseAt : Fin n → Fin n → ℕ → Formula S (4 + n) → Formula S n
-  unClauseAt C T k rel =
-    ∀̇∈ (var C) (∀̇ (∀̇ (∀̇
-      ( arityTagAtL c4 n4 k a4
-      ⇒̇ ( appAt (sh4 T) c4 yc4
-      ⇒̇ rel )))))
-
 ```
 
 ```agda
-  unClause-in : (C T : Fin n) (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n)
-    → ((c ar a yc : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
-       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-       → ⟨ (yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ rel ⟩)
-    → ⟨ γ ⊨ unClauseAt C T k rel ⟩
-  unClause-in C T k rel γ g c c∈ ar a yc sh hc =
-    g c ar a yc c∈
-      (subst ⟨_⟩ (arityTagAtL-adequate c4 n4 k a4 δ) sh)
-      (subst ⟨_⟩ (appAt-adequate (sh4 T) c4 yc4 δ) hc)
-    where
-    δ : S ^ (4 + n)
-    δ = yc ∷ a ∷ ar ∷ c ∷ γ
 ```
 
 <!--en-->
@@ -1028,8 +949,6 @@ truth is monotone in their parts and those whose truth is not.
 ```agda
 module _ {n : ℕ} where
   private
-    sh7 : Fin n → Fin (7 + n)
-    sh7 i = suc (suc (suc (suc (suc (suc (suc i))))))
 
   c7 ar7 a7 b7 yc7 ya7 yb7 : Fin (7 + n)
   c7  = suc (suc (suc (suc (suc (suc zero)))))
@@ -1040,20 +959,6 @@ module _ {n : ℕ} where
   ya7 = suc zero
   yb7 = zero
 
-  propRel : Fin n → Formula S (7 + n) → Formula S (5 + n)
-  propRel T op =
-    ∀̇ (∀̇ ( subValAt (sh7 T) ar7 a7 ya7
-         ⇒̇ ( subValAt (sh7 T) ar7 b7 yb7
-         ⇒̇ op )))
-
-  propClauseAt : Fin n → Fin n → ℕ → Formula S (7 + n) → Formula S n
-  propClauseAt C T k op = binClauseAt C T k (propRel T op)
-
-
-
-
-  orClauseAt : Fin n → Fin n → Formula S n
-  orClauseAt C T = propClauseAt C T 3 (unionAt yc7 ya7 yb7)
 ```
 
 <!--en-->
@@ -1103,26 +1008,9 @@ module _ {n : ℕ} where
            ⇒̇ ( envSetAt E6 ar6 (sh6 B)
            ⇒̇ diffAt yc6 E6 ya6 )))
 
-  negClauseAt : Fin n → Fin n → Fin n → Formula S n
-  negClauseAt C T B = unClauseAt C T 5 (negRel T B)
-
 ```
 
 ```agda
-  negClause-in : (C T B : Fin n) (γ : S ^ n)
-    → ((c ar a yc ya E : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# 5) (fst a))
-       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-       → ⟨ pr (pr (fst ar) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
-       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6 ar6 (sh6 B) ⟩
-       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ diffAt yc6 E6 ya6 ⟩)
-    → ⟨ γ ⊨ negClauseAt C T B ⟩
-  negClause-in C T B γ g = unClause-in C T 5 (negRel T B) γ
-    (λ c ar a yc c∈ sh hc ya E ha hE →
-      g c ar a yc ya E c∈ sh hc
-        (subst ⟨_⟩ (subValAt-adequate (sh6 T) ar6 a6 ya6
-          (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ha) hE)
 ```
 
 <!--en-->
@@ -1162,8 +1050,6 @@ it.
 ```agda
 module _ {n : ℕ} where
   private
-    sh8 : Fin n → Fin (8 + n)
-    sh8 i = suc (suc (suc (suc (suc (suc (suc (suc i)))))))
 
     ar8 a8 b8 yc8 ya8 yb8 E8 : Fin (8 + n)
     ar8 = suc (suc (suc (suc (suc (suc zero)))))
@@ -1173,13 +1059,6 @@ module _ {n : ℕ} where
     ya8 = suc (suc zero)
     yb8 = suc zero
     E8  = zero
-
-    impRel : Fin n → Fin n → Formula S (5 + n)
-    impRel T B =
-      ∀̇ (∀̇ (∀̇ ( subValAt (sh8 T) ar8 a8 ya8
-              ⇒̇ ( subValAt (sh8 T) ar8 b8 yb8
-              ⇒̇ ( envSetAt E8 ar8 (sh8 B)
-              ⇒̇ implAt yc8 E8 ya8 yb8 )))))
 
     sh5 : Fin n → Fin (5 + n)
     sh5 i = suc (suc (suc (suc (suc i))))
@@ -1192,10 +1071,6 @@ module _ {n : ℕ} where
     topRel : Fin n → Formula S (4 + n)
     topRel B = ∀̇ ( envSetAt E5 ar5 (sh5 B) ⇒̇ sameAt yc5 E5 )
 
-
-
-  botClauseAt : Fin n → Fin n → Formula S n
-  botClauseAt C T = unClauseAt C T 7 (emptyAt zero)
 ```
 
 <!--en-->
@@ -1209,18 +1084,6 @@ less, not because they are special.
 
 ```agda
 
-
-
-
-
-  botClause-in : (C T : Fin n) (γ : S ^ n)
-    → ((c ar a yc : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# 7) (fst a))
-       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-       → ⟨ (yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ emptyAt zero ⟩)
-    → ⟨ γ ⊨ botClauseAt C T ⟩
-  botClause-in C T γ = unClause-in C T 7 (emptyAt zero) γ
 ```
 
 <!--en-->
@@ -1256,37 +1119,6 @@ sucAtL-adequate i j γ =
   ∙ sucAt-adequate i j (map fst γ)
   ∙ cong₂ PairIs (lookup-fst j γ) (cong sucV (lookup-fst i γ))
 
-subValSuccAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
-subValSuccAt T ar a y =
-  ∃̇ (sucAtL (suc ar) zero ∧̇ subValAt (suc T) zero (suc a) (suc y))
-
-subValSuccAt-adequate : ∀ {n} (T ar a y : Fin n) (γ : S ^ n)
-  → (γ ⊨ subValSuccAt T ar a y)
-  ≡ (pr (pr (sucV (fst (lookup ar γ))) (fst (lookup a γ))) (fst (lookup y γ))
-      ∈ fst (lookup T γ))
-subValSuccAt-adequate T ar a y γ = ⇔toPath fwd bwd
-  where
-  key : V ℓ → V ℓ
-  key w = pr (pr w (fst (lookup a γ))) (fst (lookup y γ))
-  target = key (sucV (fst (lookup ar γ))) ∈ fst (lookup T γ)
-
-  fwd : ⟨ γ ⊨ subValSuccAt T ar a y ⟩ → ⟨ target ⟩
-  fwd = PT.rec (snd target)
-    (λ { (z , (sz , v)) →
-      subst (λ w → ⟨ key w ∈ fst (lookup T γ) ⟩)
-        (subst ⟨_⟩ (sucAtL-adequate (suc ar) zero (z ∷ γ)) sz)
-        (subst ⟨_⟩ (subValAt-adequate (suc T) zero (suc a) (suc y) (z ∷ γ)) v) })
-
-  bwd : ⟨ target ⟩ → ⟨ γ ⊨ subValSuccAt T ar a y ⟩
-  bwd h = ∣ zS
-    , ( subst ⟨_⟩ (sym (sucAtL-adequate (suc ar) zero (zS ∷ γ))) e
-      , subst ⟨_⟩ (sym (subValAt-adequate (suc T) zero (suc a) (suc y) (zS ∷ γ)))
-          (subst (λ w → ⟨ key w ∈ fst (lookup T γ) ⟩) (sym e) h) ) ∣₁
-    where
-    zS : S
-    zS = sucʟ (lookup ar γ)
-    e : fst zS ≡ sucV (fst (lookup ar γ))
-    e = sucʟ-fst (lookup ar γ)
 ```
 
 <!--en-->
@@ -1402,11 +1234,6 @@ could hold outside the ambient set would be asking for a value that is not a set
 ```agda
 module _ {n : ℕ} where
   private
-    sh6' : Fin n → Fin (6 + n)
-    sh6' i = suc (suc (suc (suc (suc (suc i)))))
-
-    sh7' : Fin n → Fin (7 + n)
-    sh7' i = suc (suc (suc (suc (suc (suc (suc i))))))
 
     ar6' a6' yc6' ya6' E6' : Fin (6 + n)
     ar6' = suc (suc (suc (suc zero)))
@@ -1416,18 +1243,6 @@ module _ {n : ℕ} where
     E6'  = zero
 
     -- at the innermost point: e' = 0, m = 1, e = 2, E = 3, ya = 4
-
-
-
-
-
-
-  quantRel : Fin n → Fin n → Formula S (7 + n) → Formula S (4 + n)
-  quantRel T B body =
-      ∀̇ (∀̇ ( subValSuccAt (sh6' T) ar6' a6' ya6'
-           ⇒̇ ( envSetAt E6' ar6' (sh6' B)
-           ⇒̇ extAt yc6' body )))
-
 
 ```
 
@@ -1441,20 +1256,6 @@ up, which is the only difference from negation.
 
 ```agda
 
-  quantClause-in : (C T B : Fin n) (k : ℕ) (body : Formula S (7 + n)) (γ : S ^ n)
-    → ((c ar a yc ya E : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (fst a))
-       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-       → ⟨ pr (pr (sucV (fst ar)) (fst a)) (fst ya) ∈ fst (lookup T γ) ⟩
-       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6' ar6' (sh6' B) ⟩
-       → ⟨ (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc6' body ⟩)
-    → ⟨ γ ⊨ unClauseAt C T k (quantRel T B body) ⟩
-  quantClause-in C T B k body γ g = unClause-in C T k (quantRel T B body) γ
-    (λ c ar a yc c∈ sh hc ya E ha hE →
-      g c ar a yc ya E c∈ sh hc
-        (subst ⟨_⟩ (subValSuccAt-adequate (sh6' T) ar6' a6' ya6'
-          (E ∷ ya ∷ yc ∷ a ∷ ar ∷ c ∷ γ)) ha) hE)
 ```
 
 <!--en-->
@@ -1559,25 +1360,10 @@ module _ {n : ℕ} where
   atomRel B cmp =
       ∀̇ ( envSetAt E6″ ar6″ (sh6″ B) ⇒̇ extAt yc6″ (atomBody cmp) )
 
-
-
-
-
-
 ```
 
 ```agda
 
-  atomClause-in : (C T B : Fin n) (k : ℕ) (cmp : Formula S (9 + n)) (γ : S ^ n)
-    → ((c ar a b yc E : S)
-       → ⟨ fst c ∈ fst (lookup C γ) ⟩
-       → fst c ≡ pr (fst ar) (pr (# k) (pr (fst a) (fst b)))
-       → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩
-       → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ envSetAt E6″ ar6″ (sh6″ B) ⟩
-       → ⟨ (E ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ γ) ⊨ extAt yc6″ (atomBody cmp) ⟩)
-    → ⟨ γ ⊨ binClauseAt C T k (atomRel B cmp) ⟩
-  atomClause-in C T B k cmp γ g = binClause-in C T k (atomRel B cmp) γ
-    (λ c ar a b yc c∈ sh hc E hE → g c ar a b yc E c∈ sh hc hE)
 ```
 
 <!--en-->
@@ -1613,8 +1399,6 @@ each of the three innermost binders carries.
 ```agda
 module _ {n : ℕ} where
   private
-    sh7B : Fin n → Fin (7 + n)
-    sh7B i = suc (suc (suc (suc (suc (suc (suc i))))))
 
     -- at depth 7: E = 0, yb = 1, yc = 2, b = 3, a = 4, ar = 5, c = 6
     ar7B b7B yc7B yb7B E7B : Fin (7 + n)
@@ -1637,17 +1421,7 @@ module _ {n : ℕ} where
     e11  = suc (suc (suc zero))
     yb11 = suc (suc (suc (suc (suc zero))))
 
-    sh9B : Fin n → Fin (9 + n)
-    sh9B i = suc (suc (suc (suc (suc (suc (suc (suc (suc i))))))))
-
     -- inside the bound's quantifier, at depth 10: m = 0, w = 1
-
-
-
-
-
-
-
 
 ```
 

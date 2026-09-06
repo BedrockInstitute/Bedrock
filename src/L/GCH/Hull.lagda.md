@@ -390,18 +390,6 @@ module AtStage (α : S) (ordα : IsOrd α) where
               → Witnessed-small k ψ cs → Sat k ψ (vals cs)
     small→big k ψ cs = PT.map (λ { (m , hm) → toSL m , hm })
 
-    big→small : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
-              → Sat k ψ (vals cs) → Witnessed-small k ψ cs
-    big→small k ψ cs = PT.map (λ { (a , ha) → toSmall a ha })
-      where
-      toSmall : (a : SL) → ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩
-              → Σ[ m ∈ ⟪ Lset α ⟫ ] ⟨ (toSL m ∷ vals cs) ⊨₀ ψ ⟩
-      toSmall a ha =
-        let m = fiber (Lset α) (snd a) .fst
-            p : a ≡ toSL m
-            p = Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) (sym (fiber (Lset α) (snd a) .snd))
-        in m , subst (λ (e : SL) → fst ((e ∷ vals cs) ⊨₀ ψ)) p ha
-
     SatAt-h : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
             → SL → hProp (ℓ-suc ℓ)
     SatAt-h k ψ cs a =
@@ -418,12 +406,6 @@ module AtStage (α : S) (ordα : IsOrd α) where
 
     opaque
       unfolding leastSearch
-      leastSearch-spec : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
-                       → (w : Witnessed-small k ψ cs)
-                       → leastSearch k ψ cs w
-                       ≡ leastOf wL {ℓ'' = ℓ-suc ℓ} lem (SatAt-h k ψ cs)
-                           (small→big k ψ cs w)
-      leastSearch-spec k ψ cs w = refl
 
     leastWit : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
              → Witnessed-small k ψ cs → SL
@@ -963,10 +945,6 @@ module HullElemDown (α : S) (ordα : IsOrd α)
   elem : A.Elementary
   elem = A.TV-thm .snd tv
 
-  elem-down : (n : ℕ) (φ : Formula A.SM n) (δ : Vec A.SM n)
-            → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL φ) ⟩
-            → fst (Mse._⊨_ δ φ)
-  elem-down n φ δ h = subst ⟨_⟩ (sym (elem n φ δ)) h
 ```
 
 ## The ambient parameter-free reading

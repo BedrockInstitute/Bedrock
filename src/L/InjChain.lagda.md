@@ -117,11 +117,6 @@ Successor closure at ω: every member of ω is a numeral.
 No member of ω contains ω.
 
 ```agda
-ω∉β : (β : V ℓ) → ⟨ β ∈ ω ⟩ → ⟨ ω ∈ β ⟩ → Empty.⊥
-ω∉β β β∈ω ω∈β = PT.rec Empty.isProp⊥ go (ω-mem→numeral β β∈ω)
-  where
-  go : Σ[ n ∈ ℕ ] (β ≡ # n) → Empty.⊥
-  go (n , p) = ∈-irrefl ω (ω-ord .fst (subst (λ w → ⟨ ω ∈ w ⟩) p ω∈β) (#∈ω n))
 ```
 
 The numeral-into-ω injection, without `ω ∈ ω`.
@@ -425,11 +420,7 @@ module Comp (D E C F H : S)
     module Sm = Small K D C svK dmK ijK ranK
 
   opaque
-    compFun : ⟪ fst D ⟫ → ⟪ fst C ⟫
-    compFun = Sm.small
 
-    compFun-inj : (m n : ⟪ fst D ⟫) → compFun m ≡ compFun n → m ≡ n
-    compFun-inj = Sm.small-inj
 ```
 
 ROW 3.  The inclusion of one set into another, carved.
@@ -558,19 +549,9 @@ module Carve (D C bnd : S)
     incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
     incl = Sm.small
 
-    incl-inj : (m n : ⟪ fst D ⟫) → incl m ≡ incl n → m ≡ n
-    incl-inj = Sm.small-inj
-
     -- AND IT IS THE INCLUSION.  A graph that carves, proves four
     -- conjuncts and reads back as SOME injection is not evidence for THIS
     -- object.  This line says the value is the same SET.
-    incl-val : (m : ⟪ fst D ⟫) → ⟪ fst C ⟫↪ (incl m) ≡ ⟪ fst D ⟫↪ m
-    incl-val m = snd (Sm.fib m) ∙ sym val
-      where
-      val : ⟪ fst D ⟫↪ m ≡ fst (Sm.E.toFun (Sm.at m))
-      val = PT.rec (setIsSet (⟪ fst D ⟫↪ m) (fst (Sm.E.toFun (Sm.at m)))) fst
-        (pair-out (Sm.toS m) (Sm.E.toFun (Sm.at m))
-          (Sm.E.toFun-graph (Sm.at m)))
 ```
 
 The L instantiation.  It supplies two things and no more: the stage

@@ -121,8 +121,6 @@ module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
   Pinned ψ = (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
 
   private
-    isPropPinned : ∀ {n} (ψ : Formula Ab n) → isProp (Pinned ψ)
-    isPropPinned ψ f g = funExt (λ y → funExt (λ h → setIsSet _ _ (f y h) (g y h)))
 
     -- the payload of each constructor, as an element of L
     payS : ∀ {n} (ψ : Formula Ab n) (k : ℕ) (r : V ℓ) → cd ψ ≡ pr (# k) r → S
@@ -649,16 +647,6 @@ module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (
     module SS = SatSound T w C E N γ W qw tg
       (satAt-out T w C E N γ h .fst) (satAt-out T w C E N γ h .snd .fst) (satAt-out T w C E N γ h .snd .snd)
   open SS public using ( C-out; C-in; E-out; E-in; T-out; T-in )
-
-sat-sound : ∀ {m} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
-          → fst (lookup w γ) ≡ fst W → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
-          → ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup T γ) ⟩
-               → Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (Table.val W W x mx)))
-          × ((x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩)
-               → ⟨ pr (fst x) (fst (Table.val W W x mx)) ∈ fst (lookup T γ) ⟩)
-sat-sound T w C E N γ W qw tg h = SR.T-out , SR.T-in
-  where
-  module SR = SatRead T w C E N γ W qw tg h
 
 sat-complete : ∀ {m} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
              → fst (lookup w γ) ≡ fst W

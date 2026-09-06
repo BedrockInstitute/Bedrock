@@ -219,9 +219,6 @@ module Collapse (X : S) where
               × ((x y : S) → x ∈ᵗ X → y ∈ᵗ X
                → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩))
 
-    mostowski : Mostowski
-    mostowski = πX-trans , π-inj , iso
-
   -- extensional injectivity on the carrier; the carrier's structure
   -- extensionality is a module parameter here and only here. The memberships
   -- the transitive proof took from Xtr are carried by the fibers or by the
@@ -317,9 +314,6 @@ module Collapse (X : S) where
               × ((x y : S) → x ∈ᵗ X → y ∈ᵗ X
                → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩))
 
-    mostowski : Mostowski
-    mostowski = πX-trans , π-inj , iso
-
   -- the collapse is the unique solution of its recursion equation
   unique : (f : S → S)
          → ((x : S) → f x ≡ sett (Fiber x) (λ p → f (⟪ x ⟫↪ (p .fst))))
@@ -385,6 +379,4 @@ module Collapse (X : S) where
                 ∙ fp .snd
 
   -- Devlin 5.2(ii) at the carrier itself
-  fixes-X : isTrans X → (y : S) → y ∈ᵗ X → π y ≡ y
-  fixes-X Xtr = fixes X (λ x xx → xx) Xtr
 ```

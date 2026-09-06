@@ -129,32 +129,8 @@ module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
   oκ = mem-ord {A = sucV (fst α)} (suc-ord oα) (fst κ)
          (member (sucV (fst α)) γ-card)
 
-  κ∈sα : ⟨ fst κ ∈ˢ sucV (fst α) ⟩
-  κ∈sα = member (sucV (fst α)) γ-card
-
   -- The witness, an injection, still truncated, still not an hProp.
-  κ-inj : ∥ ⟪ fst α ⟫ ↪ ⟪ fst κ ⟫ ∥₁
-  κ-inj = fst (snd least)
 
-  κ-min : (b : ⟪ sucV (fst α) ⟫) → ⟨ InjP' b ⟩
-        → (SWO._<∙_ w b γ-card → Empty.⊥)
-  κ-min = snd (snd least)
-
-  κ-min-at : (δ : S) → ⟨ fst δ ∈ˢ fst κ ⟩
-           → ∥ ⟪ fst α ⟫ ↪ ⟪ fst δ ⟫ ∥₁ → Empty.⊥
-  κ-min-at δ δ∈κ α↪δ = κ-min b bInjP b<γ
-    where
-    δ∈sα : ⟨ fst δ ∈ˢ sucV (fst α) ⟩
-    δ∈sα = suc-ord oα .fst {x = fst κ} {y = fst δ} δ∈κ κ∈sα
-    b : ⟪ sucV (fst α) ⟫
-    b = fiber (sucV (fst α)) δ∈sα .fst
-    bδ : ⟪ sucV (fst α) ⟫↪ b ≡ fst δ
-    bδ = fiber (sucV (fst α)) δ∈sα .snd
-    bInjP : ⟨ InjP' b ⟩
-    bInjP = subst (λ v → ∥ ⟪ fst α ⟫ ↪ ⟪ v ⟫ ∥₁) (sym bδ) α↪δ
-    b<γ : SWO._<∙_ w b γ-card
-    b<γ = transport (λ i → sym (w-lt b γ-card) i)
-            (subst (λ z → ⟨ z ∈ˢ fst κ ⟩) (sym bδ) δ∈κ)
 ```
 
 The stage-bound device shared by the two internal faces (A3 and A4):
@@ -253,12 +229,8 @@ module InternalLeastCard (κ : S) (oκ : IsOrd (fst κ)) where
     δ-card = fst least
 
     -- the internal least cardinal, as an L-element
-    δᴸ : S
-    δᴸ = up δ-card
 
     -- the witness: some L-element codes ⟪κ⟫ ↪ ⟪δᴸ⟫, still truncated
-    δ-inj : ∥ Σ[ F ∈ Mem (Lset β) ] InjCode (up F) κ δᴸ ∥₁
-    δ-inj = fst (snd least)
 
     -- leastness at a member of δᴸ: a smaller δ' with a code is absurd
     δ-min : (b : Mem (Lset β)) → ⟨ Good b ⟩

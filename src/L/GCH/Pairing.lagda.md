@@ -238,15 +238,7 @@ ordAt m n a b c d =
 Both readings are definitional.
 
 ```agda
-max-read : ∀ {k} (m a b : Fin k) (γ : S ^ k)
-         → ⟨ γ ⊨ maxAt m a b ⟩ ≡ MaxIs (lookup m γ) (lookup a γ) (lookup b γ)
-max-read m a b γ = refl
 
-ord-read : ∀ {k} (m n a b c d : Fin k) (γ : S ^ k)
-         → ⟨ γ ⊨ ordAt m n a b c d ⟩
-         ≡ OrdIs (lookup m γ) (lookup n γ) (lookup a γ) (lookup b γ)
-                 (lookup c γ) (lookup d γ)
-ord-read m n a b c d γ = refl
 ```
 
 "p is below q": the host reading, with the six witnesses.

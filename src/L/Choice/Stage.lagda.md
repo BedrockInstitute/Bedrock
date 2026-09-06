@@ -301,13 +301,7 @@ opaque
 
 opaque
   unfolding defStage
-  defStage-ord : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
-               → IsOrd (defStage u pu h)
-  defStage-ord u pu h = thePred u pu h .snd .fst
 
-  defStage-suc : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
-               → sucV (defStage u pu h) ≡ μ u pu h
-  defStage-suc u pu h = thePred u pu h .snd .snd
 ```
 
 <!--en-->
@@ -321,10 +315,6 @@ belongs to the least stage that does not.
 <!--/-->
 
 ```agda
-Lset-μ : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
-       → Lset (μ u pu h) ≡ 𝒟ₒ (Lset (defStage u pu h))
-Lset-μ u pu h =
-  cong Lset (sym (defStage-suc u pu h)) ∙ Lset-suc (defStage u pu h)
 
 ```
 

@@ -192,8 +192,6 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
            → (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
 
   private
-    isPropPinned : ∀ {n} (ψ : Formula Ab n) → isProp (Pinned ψ)
-    isPropPinned ψ f g = funExt (λ c → funExt (λ y → funExt (λ h → setIsSet _ _ (f c y h) (g c y h))))
 
     -- the payload of each constructor, as an element of L
     payS : ∀ {n} (ψ : Formula Ab n) (k : ℕ) (r : V ℓ) → cd ψ ≡ pr (# k) r → S

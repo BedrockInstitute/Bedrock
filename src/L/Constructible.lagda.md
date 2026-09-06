@@ -311,11 +311,6 @@ opaque
   -- one term: the definable power set at the stage, read as a map from
   -- formulas (DefOf.defSet at the stage), and the inversion that recovers
   -- a member's defining formula (𝒟ₒ-inv at the stage).
-  class-pred-i : Σ[ D ∈ ((δ : S) → Formula ⟪ Lset δ ⟫ 1 → S) ]
-               ((δ : S) (y : S) → ⟨ y ∈ˢ 𝒟ₒ (Lset δ) ⟩
-               → ∥ Σ[ φ₀ ∈ Formula ⟪ Lset δ ⟫ 1 ] (D δ φ₀ ≡ y) ∥₁)
-  class-pred-i = (λ δ φ → DefOf.defSet (Lset δ) φ) ,
-    (λ δ y h → 𝒟ₒ-inv (Lset δ) y h)
 
   Lset⊆𝒟ₒ : (β x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩
   Lset⊆𝒟ₒ β x = DefOf.Refine.A⊆Def (Lset β) (layer-trans (Lset-layer β)) x
