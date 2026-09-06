@@ -73,9 +73,6 @@ module BoundOver
   -- The carrier and the transitivity, one call each.
 
   -- Climbing any finite iterate costs `succλ` alone: no limit fact enters.
-  suc^∈λ : (k : ℕ) (σ : S) → ⟨ σ ∈ˢ lam ⟩ → ⟨ sucIter k σ ∈ˢ lam ⟩
-  suc^∈λ zero    σ h = h
-  suc^∈λ (suc k) σ h = succλ (sucIter k σ) (suc^∈λ k σ h)
 
   -- The step operator at a limit, reduced to ONE fact about the step at a
   -- successor: the step of a stage member lands a bounded number of stages
@@ -85,14 +82,6 @@ module BoundOver
     (powIter : (δ y : S) → ⟨ y ∈ˢ T δ ⟩
              → ∥ Σ[ k ∈ ℕ ] ⟨ D y ∈ˢ T (sucIter k δ) ⟩ ∥₁) where
 
-    pow∈λ : (x : S) → ⟨ x ∈ˢ T lam ⟩ → ⟨ D x ∈ˢ T lam ⟩
-    pow∈λ x hx = PT.rec (snd (D x ∈ˢ T lam)) step (T-out lam x hx)
-      where
-      step : At x → ⟨ D x ∈ˢ T lam ⟩
-      step (δ , (δ∈ , hδ)) = PT.rec (snd (D x ∈ˢ T lam))
-        (λ { (k , hk) → T-mono {α = lam} {β = sucIter k (sucV δ)}
-               (suc^∈λ k (sucV δ) (succλ δ δ∈)) {x = D x} hk })
-        (powIter (sucV δ) x hδ)
 ```
 
 The L tower supplies the five facts.  Two need an adapter, and both

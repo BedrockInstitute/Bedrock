@@ -132,12 +132,6 @@ opaque
   μ-ord : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u) → IsOrd (μ u pu h)
   μ-ord u pu h = theEarliestMeet u pu h .snd .fst
 
-  μ-meets : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u) → ⟨ meets u (μ u pu h) ⟩
-  μ-meets u pu h = theEarliestMeet u pu h .snd .snd .fst
-
-  μ-earliest : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
-             → isLeastOrd (meets u) (μ u pu h)
-  μ-earliest u pu h = theEarliestMeet u pu h .snd .snd .snd
 ```
 
 <!--en-->
@@ -268,10 +262,6 @@ instance and a bare membership.
 <!--/-->
 
 ```agda
-carveMeets : (u σ : S) → ⟨ meets u σ ⟩ → ∥ Carved (meets u) σ ∥₁
-carveMeets u σ = PT.rec squash₁
-  (λ { (z , (z∈u , z∈Lσ)) → carveAt (meets u) σ z z∈Lσ
-    (λ δ hz → ∣ z , (z∈u , hz) ∣₁) })
 ```
 
 <!--en-->
@@ -290,14 +280,8 @@ with its two properties beside it, as `μ`{.Agda} was.
 <!--/-->
 
 ```agda
-thePred : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u)
-        → Σ[ δ ∈ S ] IsPredOf (μ u pu h) δ
-thePred u pu h = predOf (meets u) (μ u pu h) (μ-ord u pu h) (μ-earliest u pu h)
-  (carveMeets u (μ u pu h) (μ-meets u pu h))
 
 opaque
-  defStage : (u : S) → ⟨ isL u ⟩ → Inhabited u → S
-  defStage u pu h = thePred u pu h .fst
 
 opaque
   unfolding defStage

@@ -449,18 +449,6 @@ module AtStage (α : S) (ordα : IsOrd α) where
     opaque
       unfolding leastSearch
 
-    leastWit : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
-             → Witnessed-small k ψ cs → SL
-    leastWit k ψ cs w = leastSearch k ψ cs w .fst
-
-    leastWit-spec : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
-                  → (w : Witnessed-small k ψ cs)
-                  → IsLeast wL (SatAt-h k ψ cs) (leastWit k ψ cs w)
-    leastWit-spec k ψ cs w = leastSearch k ψ cs w .snd
-
-    hullVal : Code → S
-    hullVal c = fst (val c)
-
     hull-closed : (φ : Formula Code 1) → ⟨ [] AbsL.⊨ᵐ (∃̇ (mapFo val φ)) ⟩
                 → ∥ Σ[ a ∈ SL ] (⟨ fst a ∈ˢ Hull ⟩
                                × ⟨ (a ∷ []) AbsL.⊨ᵐ (mapFo val φ) ⟩) ∥₁

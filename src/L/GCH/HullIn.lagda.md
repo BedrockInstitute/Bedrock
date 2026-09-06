@@ -700,11 +700,6 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
     -- =================================================================
 
     private
-      Vec≡ : {k : ℕ} (cs : Vec Code k) (vs : Vec SL k)
-           → ((i : Fin k) → fst (lookup i (vals cs)) ≡ fst (lookup i vs)) → vals cs ≡ vs
-      Vec≡ [] [] h = refl
-      Vec≡ (c ∷ cs) (v ∷ vs) h =
-        cong₂ _∷_ (Σ≡Prop (λ z → snd (z ∈ˢ Lset lam)) (h zero)) (Vec≡ cs vs (λ i → h (suc i)))
 
       -- codes for a vector of hull members
       choose : {k : ℕ} (vs : Vec SL k)
