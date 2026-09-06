@@ -1,5 +1,0 @@
-Checking LJ-1-436.Probe436 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-436/agents/tasks/LJ-1-436/Probe436.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-436/agents/tasks/LJ-1-436/Probe436.agda:202.10-250.18: error: [UnsolvedInteractionMetas]
-Unsolved interaction metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-436/agents/tasks/LJ-1-436/Probe436.agda:202.10-14
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-436/agents/tasks/LJ-1-436/Probe436.agda:250.14-18

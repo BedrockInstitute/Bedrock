@@ -1,7 +1,0 @@
-# Maintainer batch 20260822-193913. NO ROWS. Same three parked tasks, unchanged.
-# See 20260822-191413 for the full reasoning on all three; not repeated.
-
-[batch]
-ts = "20260822-193913"
-rows_proposed = 0
-reason = "No table row. Same three parked tasks as the prior batches, unchanged: LJ-1.498 self-reopening, LJ-1.505 already resolved (row matched, waiting on a critic slot), LJ-1.534 correctly parked on a memory ceiling. See 20260822-191413 for the fuller reasoning."

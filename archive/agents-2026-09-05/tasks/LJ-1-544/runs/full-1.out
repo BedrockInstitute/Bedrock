@@ -1,6 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# full-1, sections 1 to 4, first attempt
-Checking LJ-1-544.Probe544 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-544/agents/tasks/LJ-1-544/Probe544.agda).
-# KILLED at 120 s by my own harness (SIGTERM). No exit line and no heap
-# message, so this is a TIME blow-up and NOT a heap wall. Cause measured in
-# runs/bisectA-1.out to runs/bisectD-1.out: the nested Sum.rec of the merge.

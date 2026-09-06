@@ -1,9 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:306.34-55: error: [UnequalTerms]
-Σ
-(⟨ (DA.ι m₀ ∷ []) DA.⊨ᵐ ψ ⟩ → ⟨ repV (DA.ι m₀ ∷ []) DS.⊨ᵐ cnd ψ ⟩)
-(λ _ →
-   ⟨ repV (DA.ι m₀ ∷ []) DS.⊨ᵐ cnd ψ ⟩ → ⟨ (DA.ι m₀ ∷ []) DA.⊨ᵐ ψ ⟩)
-!=< _x_1324 ≡ _y_1325
-when checking that the expression sat≈ ψ (DA.ι m₀ ∷ []) has type
-_x_1324 ≡ _y_1325

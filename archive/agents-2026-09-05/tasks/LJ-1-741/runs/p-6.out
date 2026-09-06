@@ -1,3 +1,0 @@
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:75.2: error: [ParseError]
-infixl<ERROR>  30 _^_
-_^_ : ∀ {ℓ''} → Type ℓ...

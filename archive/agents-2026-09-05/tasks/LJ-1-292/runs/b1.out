@@ -1,8 +1,0 @@
-Checking LJ-1-292.Bisect (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-292/Bisect.lagda.md).
-Total              856,881ms 
-Miscellaneous          794ms 
-LJ-1-292.Bisect.w4 419,218ms 
-LJ-1-292.Bisect.l4 418,031ms 
-LJ-1-292.Bisect.s3   9,330ms 
-LJ-1-292.Bisect.w3   9,286ms 
-LJ-1-292.Bisect.w2     219ms 

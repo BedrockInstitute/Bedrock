@@ -1,7 +1,0 @@
-Checking LJ-1-412.Probe412 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-412/agents/tasks/LJ-1-412/Probe412.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-412/agents/tasks/LJ-1-412/Probe412.agda:174.20-45: error: [UnsolvedMetaVariables]
-Unsolved metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-412/agents/tasks/LJ-1-412/Probe412.agda:174.20-45
-real 9.49
-user 9.11
-sys 0.33

@@ -1,4 +1,0 @@
-Checking LJ-1-439.Probe439 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-439/agents/tasks/LJ-1-439/Probe439.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-439/agents/tasks/LJ-1-439/Probe439.agda:73.49-52: error: [UnequalTerms]
-u != d of type (Cubical.HITs.CumulativeHierarchy.Base.V ℓ)
-when checking that the expression d∈u has type ⟨ d ∈ˢ d ⟩

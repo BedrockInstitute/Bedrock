@@ -1,7 +1,0 @@
-Checking LJ-1-753.runs.Bisect753b (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Bisect753b.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Bisect753b.agda:222.23-38: error: [ConstructorPatternInWrongDatatype]
-_,_ is not a constructor of the datatype Lift
-when checking that the pattern s , s∈z , appat has type ⊥*
-real 15.16
-user 14.73
-sys 0.32

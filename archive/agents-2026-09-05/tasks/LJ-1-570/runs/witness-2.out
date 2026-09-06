@@ -1,7 +1,0 @@
-pass      exit=0        3.46s  agents/tasks/LJ-1-570/Probe570.agda::halves-are-cohyps  (grouped run, exit 0)
-pass      exit=0        3.46s  agents/tasks/LJ-1-570/Probe570.agda::row3-is-cohyps  (grouped run, exit 0)
-pass      exit=0        3.46s  agents/tasks/LJ-1-570/Probe570.agda::gch-from-five-at-the-hull  (grouped run, exit 0)
-pass      exit=0        3.46s  agents/tasks/LJ-1-570/Probe570.agda::elem-down-at-the-site  (grouped run, exit 0)
-pass      exit=0        3.46s  agents/tasks/LJ-1-570/Probe570.agda::matrix-decode  (grouped run, exit 0)
-pass      exit=0        3.46s  agents/tasks/LJ-1-570/Probe570.agda::adeq-decode  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 6, 3.46 s, probe_red=False

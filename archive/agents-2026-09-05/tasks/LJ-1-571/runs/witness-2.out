@@ -1,6 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# witness-2: re-run after the comment-only citation fix
-# interpreter: /Users/alsg/Agentic/Bedrock/.venv/bin/python (this worktree carries no .venv)
-pass      exit=0        2.83s  agents/tasks/LJ-1-571/Probe571.agda::sqat-or-what-it-wants
-witness: 0 UNRESOLVED of 1, 2.83 s, probe_red=False
-EXIT=0

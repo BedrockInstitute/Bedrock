@@ -46,10 +46,9 @@ open import L.Coding.InL {ℓ}
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Sum using ( inl; inr )
 open import Cubical.Foundations.Prelude using ( J )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
+open PT using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )

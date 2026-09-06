@@ -1,6 +1,0 @@
-Checking LJ-1-553.Probe553 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-553/agents/tasks/LJ-1-553/Probe553.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-553/agents/tasks/LJ-1-553/Probe553.agda:159.22-24: error: [NotInScope]
-Not in scope:
-  pr
-  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-553/agents/tasks/LJ-1-553/Probe553.agda:159.22-24
-when scope checking pr

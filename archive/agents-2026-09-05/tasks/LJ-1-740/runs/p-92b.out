@@ -1,8 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-direct re-run of p-92 bytes (runner artifact)
-Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:162.67-69: error: [UnequalTerms]
-sa != (sa + sb) of type ℕ
-when checking that the expression ≤r has type
-nsuc (d + sa) ≤ⁿ nsuc (d + (sa + sb))
-EXIT=42

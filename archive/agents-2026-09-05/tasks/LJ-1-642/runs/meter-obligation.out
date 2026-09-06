@@ -1,2 +1,0 @@
-pass      exit=0        2.33s  agents/tasks/LJ-1-642/Probe642.agda::clause-i-at-ord
-witness: 0 UNRESOLVED of 1, 2.33 s, probe_red=False

@@ -1,7 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-started 2026-08-26T23:30:43Z
-pass      exit=0        5.44s  agents/tasks/LJ-1-692/Probe692.agda::hull-convert-at-matrix  (grouped run, exit 0)
-pass      exit=0        5.44s  agents/tasks/LJ-1-692/Probe692.agda::Spend.hull-convert-at-matrix  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 2, 5.44 s, probe_red=False
-EXIT=0
-ended 2026-08-26T23:30:48Z

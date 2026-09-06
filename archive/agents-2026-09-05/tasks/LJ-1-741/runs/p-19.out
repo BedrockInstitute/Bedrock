@@ -1,8 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:202.28-29: error: [UnequalTerms]
-(Lset σ) != a of type (V ℓ)
-when checking that the expression h has type
-⟨
-fst (DA.SemanticsM.At.⟦ ⟪ a ⟫ ⟧ DA.ι t δ) ∈
-fst (DS.⟦ mapTm κ t ⟧ᵐ (repV δ))
-⟩

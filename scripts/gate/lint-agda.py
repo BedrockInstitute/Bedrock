@@ -339,6 +339,13 @@ def lint_file(path):
     def used(name):
         if name in tokset or name.endswith("-syntax"):
             return True
+        # A QUALIFIED USE IS A USE, and missing this once broke the tree.
+        # A record or module brought in by name, `using ( SWO )`, is then
+        # spelled `SWO.tri`, which is ONE token; the bare name never appears.
+        # Reporting it as unused made a sweep delete it, on 2026-09-06.
+        dotted = name + "."
+        if any(t.startswith(dotted) for t in tokset):
+            return True
         parts = [p for p in name.split("_") if p]
         return bool(parts) and all(p in stripped for p in parts)
 

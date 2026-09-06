@@ -1,2 +1,0 @@
-missing   exit=42       2.83s  agents/tasks/LJ-1-466/Probe466.agda::lset-codes  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-466/.pod-state/witness/Witness-LJ-1-466-581c7bbb.agda:27)
-witness: 1 UNRESOLVED of 1, 2.83 s, probe_red=False

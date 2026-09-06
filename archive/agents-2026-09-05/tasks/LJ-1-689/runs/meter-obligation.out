@@ -1,6 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-started 2026-08-26T22:46:52Z
-pass      exit=0        1.07s  agents/tasks/LJ-1-689/Probe689.agda::hull-convert
-witness: 0 UNRESOLVED of 1, 1.07 s, probe_red=False
-EXIT=0
-ended 2026-08-26T22:46:53Z

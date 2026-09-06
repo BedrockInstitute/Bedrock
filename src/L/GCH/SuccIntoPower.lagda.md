@@ -25,7 +25,7 @@ open import L.Cardinal {ℓ} lem using ( InjCode )
 open import L.InjChain {ℓ} lem using ( appC; appC-adequate )
 open import L.Coding.Model {ℓ}
   using ( prʟ; prʟ-fst; prAtL; prAtL-adequate
-        ; svAt-out; domAt-in; domAt-out )
+        ; svAt-out; domAt-in )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out )
 open import L.GCH {ℓ} lem using ( SuccCardL; InjL )
 open import L.GCH.BelowSucc {ℓ} lem using ( below-succ-injects )
@@ -82,14 +82,13 @@ S≡ : {x y : SL.S} → fst x ≡ fst y → x ≡ y
 S≡ = Σ≡Prop (λ v → snd (isL v))
 ```
 
-SECTION 1.  A SUBSET OF κ IS A MEMBER OF THE MODEL'S POWER SET.
+## Section 1. A subset of `κ` is a member of the model's power set
 
-  `𝒫 κ` IS `℩ (hasPower κ)` by definition, so `℩-spec` is the whole
-  proof.  This is the converse of `z-strongest`
-  (src/L/GCH/Assembly.lagda.md), which reads the same equation in the
-  other direction.  `_⊆ˢ_` is the model's own subset relation
-  (src/FOL/ZFModel.lagda.md), so it quantifies over L-elements only,
-  and that is exactly what the caller can supply.
+`𝒫 κ` IS `℩ (hasPower κ)` by definition, so `℩-spec` is the whole proof. This is
+the converse of `z-strongest` (src/L/GCH/Assembly.lagda.md), which reads the
+same equation in the other direction. `_⊆ˢ_` is the model's own subset relation
+(src/FOL/ZFModel.lagda.md), so it quantifies over L-elements only, and that is
+exactly what the caller can supply.
 
 ```agda
 into-power :
@@ -101,15 +100,14 @@ into-power zf κ y sub =
   where open ModelL.isZFModel zf using ( hasPower )
 ```
 
-SECTION 2.  CANTOR, INSIDE L.
+## Section 2. Cantor, inside L
 
-  No set of L codes an injection of the model's power set of κ into
-  κ.  The diagonal set is carved out of κ by `hasSeparationL`, at the
-  formula "some A in the power set is sent to ξ and does not hold
-  ξ".  The bound on A is the power set itself, so the quantifier is
-  bounded.  Injectivity of the code forces that A to be the diagonal
-  set at the diagonal set's own value, and the two readings of that
-  one membership contradict each other.
+No set of L codes an injection of the model's power set of `κ` into `κ`. The
+diagonal set is carved out of `κ` by `hasSeparationL`, at the formula "some `A`
+in the power set is sent to `ξ` and does not hold `ξ`". The bound on `A` is the
+power set itself, so the quantifier is bounded. Injectivity of the code forces
+that `A` to be the diagonal set at the diagonal set's own value, and the two
+readings of that one membership contradict each other.
 
 ```agda
 module Cantor (zf : ModelL.isZFModel) (κ : SL.S) where
@@ -186,27 +184,24 @@ module Cantor (zf : ModelL.isZFModel) (κ : SL.S) where
       where module D = Diag F code
 ```
 
-SECTION 3.  THE ORDER TYPE OF THE POWER SET, AND THE TWO INJECTIONS.
+## Section 3. The order type of the power set, and the two injections
 
-  src/L/GCH/Assembly.lagda.md pays `InjL (𝒫 κ) δ` out of the first
-  two internal hypotheses alone, before this one is consumed.  Take a
-  code G for it.  The relation "the value of G at A is a member of
-  its value at B" is a set of L by separation over `prodL (𝒫 κ)`, and
-  it is well-founded, transitive and trichotomous on the presentation
-  of `𝒫 κ` because the values are ordinals below δ and G is
-  injective.  So `OrderType.Code` applies: `colTable` codes
-  `𝒫 κ ↪ otL`, and the converse of `colTable` codes `otL ↪ 𝒫 κ`, the
-  inverse-collapse pattern of `Pairing`'s `Step.Inv`.
+src/L/GCH/Assembly.lagda.md pays `InjL (𝒫 κ) δ` out of the first two internal
+hypotheses alone, before this one is consumed. Take a code `G` for it. The
+relation "the value of `G` at `A` is a member of its value at `B`" is a set of L
+by separation over `prodL (𝒫 κ)`, and it is well-founded, transitive and
+trichotomous on the presentation of `𝒫 κ` because the values are ordinals below
+`δ` and `G` is injective. So `OrderType.Code` applies: `colTable` codes
+`𝒫 κ ↪ otL`, and the converse of `colTable` codes `otL ↪ 𝒫 κ`, the
+inverse-collapse pattern of `Pairing`'s `Step.Inv`.
 
-  `otL` is an ordinal: its members are values of the collapse, each
-  an ordinal, and it is transitive because a member of `col b` is
-  `col r` for some r.
+`otL` is an ordinal: its members are values of the collapse, each an ordinal,
+and it is transitive because a member of `col b` is `col r` for some `r`.
 
-  Trichotomy against δ closes the argument.  Below δ,
-  `below-succ-injects` injects `otL` into κ, and then the power set
-  injects into κ against section 2.  At or above δ, δ is a subset of
-  `otL`, and an inclusion composed with the inverse collapse is the
-  theorem.
+Trichotomy against `δ` closes the argument. Below `δ`, `below-succ-injects`
+injects `otL` into `κ`, and then the power set injects into `κ` against
+section 2. At or above `δ`, `δ` is a subset of `otL`, and an inclusion composed
+with the inverse collapse is the theorem.
 
 ```agda
 module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
@@ -246,7 +241,7 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
   val x m = PT.rec (isPropVal x) (λ z → z) (valG x m)
 ```
 
-3.1  THE PULLBACK ORDER, AS A SET OF L.
+### 3.1 The pullback order, as a set of L
 
 ```agda
   InR : SL.S → Type (ℓ-suc ℓ)
@@ -353,7 +348,7 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
     (R-out a b h)
 ```
 
-3.2  THE COLLAPSE, AT (𝒫 κ, R).
+### 3.2 The collapse, at `(𝒫 κ, R)`
 
 ```agda
   module OT = Code P R Rsub
@@ -424,7 +419,7 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
   power-into-ot = ∣ C.colTable , I.code ∣₁
 ```
 
-3.3  THE ORDER TYPE IS AN ORDINAL.
+### 3.3 The order type is an ordinal
 
 ```agda
   ot-ord : IsOrd (fst C.otL)
@@ -449,10 +444,10 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
           subst (λ w → ⟨ w ∈ˢ fst C.otL ⟩) e2 (C.otL-in r)
 ```
 
-3.4  THE INVERSE COLLAPSE, AS A DEFINABLE MAP INTO THE POWER SET.
+### 3.4 The inverse collapse, as a definable map into the power set
 
-  The graph is the converse of `colTable`, read by `appC`: the
-  pattern of `Pairing`'s `Step.Inv`.
+The graph is the converse of `colTable`, read by `appC`: the pattern of
+`Pairing`'s `Step.Inv`.
 
 ```agda
   Fib : V ℓ → Type (ℓ-suc ℓ)
@@ -518,7 +513,7 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
     injL = Inj.injL M inj
 ```
 
-3.5  TRICHOTOMY AGAINST δ.
+### 3.5 Trichotomy against `δ`
 
 ```agda
   result : InjL δ P
@@ -539,7 +534,7 @@ module Build (zf : ModelL.isZFModel) (κ δ : SL.S) (sc : SuccCardL δ κ)
       from-sub (λ z h → ot-ord .fst h δ∈ot)
 ```
 
-SECTION 4.  HYPOTHESIS 3 OF src/L/GCH/Assembly.lagda.md, discharged.
+## Section 4. Hypothesis 3 of src/L/GCH/Assembly.lagda.md, discharged
 
 ```agda
 succ-into-power : (zf : ModelL.isZFModel) → SuccIntoPower zf

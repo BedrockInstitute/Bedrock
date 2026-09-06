@@ -1,5 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# witness-1: the program's own obligation witness for col-step
-pass      exit=0        1.95s  agents/tasks/LJ-1-567/Probe567.agda::col-step
-witness: 0 UNRESOLVED of 1, 1.95 s, probe_red=False
-EXIT=0

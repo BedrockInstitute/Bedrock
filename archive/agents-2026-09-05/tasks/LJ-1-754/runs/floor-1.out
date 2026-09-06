@@ -1,5 +1,0 @@
-Checking LJ-1-754.Probe754 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-754/agents/tasks/LJ-1-754/Probe754.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-754/agents/tasks/LJ-1-754/Probe754.agda:42.6-23: error: [NoSuchModule]
-No module LJ-1-747.Probe747 in scope
-when scope checking the declaration
-  open LJ-1-747.Probe747 {ℓ = ℓ} lem using (numeralL-in-carrier-lim)

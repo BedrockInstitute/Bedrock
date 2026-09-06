@@ -1,6 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:217.30-33: error: [NotInScope]
-Not in scope:
-  tt*
-  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:217.30-33
-when scope checking tt*

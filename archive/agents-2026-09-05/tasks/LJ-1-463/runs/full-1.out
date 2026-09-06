@@ -1,5 +1,0 @@
-Checking LJ-1-463.Probe463 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-463/agents/tasks/LJ-1-463/Probe463.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-463/agents/tasks/LJ-1-463/Probe463.agda:86.10-28: error: [UnequalTerms]
-fst (numeralL 0) != fst G.envSetGen of type V ℓ
-when checking that the expression KFacts.numK0 facts has type
-⟨ fst E ∈ fst bound ⟩

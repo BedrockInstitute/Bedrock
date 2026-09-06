@@ -1,2 +1,0 @@
-pass      exit=0        1.59s  agents/tasks/LJ-1-431/Probe431.agda::arrow-at-kappaC
-witness: 0 UNRESOLVED of 1, 1.59 s, probe_red=False

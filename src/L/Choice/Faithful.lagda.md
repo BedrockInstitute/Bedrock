@@ -108,8 +108,8 @@ private
   tm4-val (var i) a b c d γ = refl
 ```
 
-perf: the two witnesses the birth description is satisfied at are sealed;
-unsealed, the chapter's first section alone runs 178 s instead of 2 s
+Perf: the two witnesses the birth description is satisfied at are sealed;
+unsealed, the chapter's first section alone runs 178 s instead of 2 s.
 
 ```agda
 opaque
@@ -455,8 +455,8 @@ that the birth description is discharged by `refl`{.Agda} at each call site.
 另有四个元素抵达满足关系内部的诸位，它们出于同一条实测理由被封印。封印所暴露的诸等式，恰是这条描述要消费的那三条：一个成员的底集、一个诞生阶段的底集，以及那条说「某个诞生阶段**就是**它旁边那个成员的诞生阶段」的等式，于是诞生描述在每个调用点由 `refl`{.Agda} 解除。
 <!--/-->
 
-perf: the four elements the order description is satisfied at are sealed;
-unsealed, the reading back into the object language runs past 400 s
+Perf: the four elements the order description is satisfied at are sealed;
+unsealed, the reading back into the object language runs past 400 s.
 
 ```agda
 opaque

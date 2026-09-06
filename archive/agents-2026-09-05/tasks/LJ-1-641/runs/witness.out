@@ -1,2 +1,0 @@
-missing   exit=42       2.93s  agents/tasks/LJ-1-641/Probe641.agda::commute-at-ordinal  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-641/.pod-state/witness/Witness-POD-d066e8f1.agda:35)
-witness: 1 UNRESOLVED of 1, 2.93 s, probe_red=False

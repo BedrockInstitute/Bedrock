@@ -1,2 +1,0 @@
-missing   exit=42       3.26s  agents/tasks/LJ-1-679/Probe679.agda::bound-in-stage  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-679/.pod-state/witness/Witness-POD-481d6e4a.agda:27)
-witness: 1 UNRESOLVED of 1, 3.26 s, probe_red=False

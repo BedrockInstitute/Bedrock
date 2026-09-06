@@ -1,8 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-CMD: agda agents/tasks/LJ-1-727/Probe727.agda  (p-1: the delivered file, warm cone)
-Checking LJ-1-727.Probe727 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-727/agents/tasks/LJ-1-727/Probe727.agda).
-
-real	12m58.976s
-user	12m53.288s
-sys	0m4.472s
-EXIT=0

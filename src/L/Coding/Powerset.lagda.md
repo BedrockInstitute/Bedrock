@@ -52,7 +52,7 @@ open import L.Definability {ℓ} using ( module DefOf )
 open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; LsetS )
 open import L.Coding.Model {ℓ}
   using ( extAt; extAt-out; extAt-in; extAt-in-both; tagAtL; tagAtL-adequate
-        ; domAt; domAt-intro; domAt-out )
+        ; domAt-out )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Coding.Recover {ℓ} using ( keyOf; keyOf-fst )
 open import L.Coding.CodeSet {ℓ} lem
@@ -60,22 +60,20 @@ open import L.Coding.CodeSet {ℓ} lem
         ; codeS; keyS; witnessAt-in; witnessAt-out )
 open import L.Coding.Graph {ℓ} lem
   using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
-        ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
+        ; Bi; Ti; Ci; Ei; NN; ev; numν )
 open import L.Coding.Clauses {ℓ} lem using
-  ( Tags; towerAt; tableAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
-  ; module Tower; module TowerHolds )
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ; module Tower )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Coding.Table {ℓ} lem
-  using ( keyʟ; slot; satTable; total; inSlot; entry-in )
+  using ( keyʟ; slot; satTable; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Bridge {ℓ} lem using ( asConst; defSet-Sat )
 open import L.Coding.Uniform {ℓ} lem using ( keyBridge; fr; frTags; frTow; frDom )
 
-open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels using ( isProp× )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )

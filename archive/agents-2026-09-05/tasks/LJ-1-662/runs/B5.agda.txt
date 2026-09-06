@@ -1,7 +1,0 @@
-{-# OPTIONS --cubical --safe --guardedness #-}
-open import Base.Prelude
-open import Base.Truth
-open import Base.Classical using ( LEM )
-module LJ-1-662.runs.B5 {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-import LJ-1-662.runs.Bridge662
-module Br = LJ-1-662.runs.Bridge662 {ℓ} lem

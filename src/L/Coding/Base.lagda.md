@@ -44,7 +44,7 @@ open import Base.Truth
 module L.Coding.Base {ℓ : Level} where
 
 open import FOL.Syntax
-  using ( con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
+  using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )

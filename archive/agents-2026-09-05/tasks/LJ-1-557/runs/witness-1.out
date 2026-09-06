@@ -1,4 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# witness-1: the declared obligation, derived from the brief
-pass      exit=0        1.53s  agents/tasks/LJ-1-557/Probe557.agda::member-code-into-kappa
-witness: 0 UNRESOLVED of 1, 1.53 s, probe_red=False

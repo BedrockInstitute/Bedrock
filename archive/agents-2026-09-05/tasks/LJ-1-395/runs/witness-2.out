@@ -1,8 +1,0 @@
-# arm witness-2
-# task LJ-1-395
-# brief agents/tasks/LJ-1.395.md path below
-# GHCRTS -A64m -I0 -M8g
-pass      exit=0        1.47s  agents/tasks/LJ-1-395/Probe395.agda::band-owes  (grouped run, exit 0)
-pass      exit=0        1.47s  agents/tasks/LJ-1-395/Probe395.agda::sq-band  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 2, 1.47 s, probe_red=False
-exit=0

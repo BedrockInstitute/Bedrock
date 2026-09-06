@@ -1,9 +1,0 @@
-Checking LJ-1-753.Probe753 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda:215.26-31: error: [NotInScope]
-Not in scope:
-  mapFo
-  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda:215.26-31
-when scope checking mapFo
-real 3.15
-user 2.90
-sys 0.23

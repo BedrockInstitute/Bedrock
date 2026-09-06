@@ -1,5 +1,0 @@
-pass      exit=0        2.43s  agents/tasks/LJ-1-664/Probe664.agda::At.dee-from-code  (grouped run, exit 0)
-pass      exit=0        2.43s  agents/tasks/LJ-1-664/Probe664.agda::At.DeeCode∥  (grouped run, exit 0)
-pass      exit=0        2.43s  agents/tasks/LJ-1-664/Probe664.agda::At.PowIter  (grouped run, exit 0)
-pass      exit=0        2.43s  agents/tasks/LJ-1-664/Probe664.agda::At.hull-mem-is-code  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 4, 2.43 s, probe_red=False

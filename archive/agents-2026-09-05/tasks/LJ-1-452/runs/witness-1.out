@@ -1,2 +1,0 @@
-pass      exit=0        3.74s  agents/tasks/LJ-1-452/Probe452.agda::sq-data-closed
-witness: 0 UNRESOLVED of 1, 3.74 s, probe_red=False

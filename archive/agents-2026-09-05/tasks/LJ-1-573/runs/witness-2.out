@@ -1,6 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# witness-2: the obligation meter re-run against the FINAL probe
-# interpreter: /Users/alsg/Agentic/Bedrock/.venv/bin/python (this worktree carries no .venv)
-missing   exit=42       3.09s  agents/tasks/LJ-1-573/Probe573.agda::sq-collect-at  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-573/.pod-state/witness/Witness-POD-8366577e.agda:27)
-witness: 1 UNRESOLVED of 1, 3.09 s, probe_red=False
-EXIT=1

@@ -1,7 +1,0 @@
-src/L/Absorption.lagda.md:398: below: rule 3, no premise at all: x are free
-src/L/Absorption.lagda.md:400: sep: rule 3, no premise at all: b are free
-src/L/InjChain.lagda.md:471: sep: rule 3, no premise at all: b are free
-src/L/Reflect.lagda.md:365: answers: rule 3, no premise at all: ms are free
-src/L/StageCardinal.lagda.md:281: ih: rule 3, no premise at all: m are free
-
-check-unbound-hyp: 5 hypothesis/hypotheses worth a refutation attempt (see dev/LESSONS.md C-38, and agents/tasks/LJ-1-97/ProbeLJ197A.agda for the probe shape)

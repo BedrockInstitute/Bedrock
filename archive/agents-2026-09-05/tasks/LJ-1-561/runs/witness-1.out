@@ -1,2 +1,0 @@
-pass      exit=0        2.96s  agents/tasks/LJ-1-561/Probe561.agda::one-wall
-witness: 0 UNRESOLVED of 1, 2.96 s, probe_red=False

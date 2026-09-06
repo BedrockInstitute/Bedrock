@@ -1,2 +1,0 @@
-missing   exit=42       1.76s  agents/tasks/LJ-1-462/Probe462.agda::levelIn  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-462/.pod-state/witness/Witness-POD-38114206.agda:27)
-witness: 1 UNRESOLVED of 1, 1.76 s, probe_red=False

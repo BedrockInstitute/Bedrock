@@ -1,2 +1,0 @@
-pass      exit=0        1.83s  agents/tasks/LJ-1-576/Probe576.agda::least-card-inj-coded
-witness: 0 UNRESOLVED of 1, 1.83 s, probe_red=False

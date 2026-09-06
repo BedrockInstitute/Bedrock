@@ -18,7 +18,7 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-irrefl )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset→isL; isTransV; isPropIsTransV )
+  using ( 𝒮ʟ; isL; isL-trans; Lset→isL )
 open import L.Ordinal {ℓ} using ( suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
@@ -34,12 +34,12 @@ open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ; isPropΣ; isSetΣSndProp )
 open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; _∈ₛ_; ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( sucV )
-open import Cubical.Induction.WellFounded using ( WellFounded; module WFI )
+open import Cubical.Induction.WellFounded using ( WellFounded )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
@@ -51,7 +51,7 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-Renaming, read at the same satisfaction as `_⊨_` (as L.Axioms.Full does).
+Renaming, read at the same satisfaction as `_⊨_` (as `L.Axioms.Full` does).
 
 ```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
@@ -60,20 +60,19 @@ isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
 ```
 
-"The pair (x, y) is a member of F", the shape every clause below reads.
+"The pair `(x, y)` is a member of `F`", the shape every clause below reads.
 
 ```agda
 Holds : S → S → S → Type (ℓ-suc ℓ)
 Holds F x y = ⟨ pr (fst x) (fst y) ∈ fst F ⟩
 ```
 
-SECTION 1.  THE SETTING, AND THE HOST-LEVEL COLLAPSE.
+Section 1. The setting, and the host-level collapse.
 
-  D is a set of L, R is a set of L of pairs of members of D, and the
-  relation "pr x y ∈ R" is well-founded and transitive on the members
-  of D.  `col` is the Mostowski collapse, taken from `Mostowski`
-  (src/L/CardinalAbove.lagda.md), the one recursion `Hartogs.Col` there
-  also instantiates.
+`D` is a set of L, `R` is a set of L of pairs of members of `D`, and the relation
+"`pr x y ∈ R`" is well-founded and transitive on the members of `D`. `col` is the
+Mostowski collapse, taken from `Mostowski` (src/L/CardinalAbove.lagda.md), the
+one recursion `Hartogs.Col` there also instantiates.
 
 ```agda
 module Collapse (D R : S)
@@ -153,16 +152,16 @@ module Collapse (D R : S)
 ## 诸公式
 <!--/-->
 
-SECTION 2.  THE OBJECT-LANGUAGE FORMULAS, AND HOW TO READ THEM.
+Section 2. The object-language formulas, and how to read them.
 
-  A set F of pairs is CORRECT for R when every entry (x, v) of F is
-  complete (every R-predecessor of x has an entry) and its value is
-  right relative to F (v is exactly the set of values recorded at the
-  R-predecessors of x).  No domain clause: a correct set may record
-  more than a segment, and section 3 shows every entry is the collapse.
+A set `F` of pairs is CORRECT for `R` when every entry `(x, v)` of `F` is
+complete (every `R`-predecessor of `x` has an entry) and its value is right
+relative to `F` (`v` is exactly the set of values recorded at the
+`R`-predecessors of `x`). No domain clause: a correct set may record more than a
+segment, and section 3 shows every entry is the collapse.
 
-  Every formula is sealed with its two reading lemmas inside the seal,
-  so a later renaming or replacement never unfolds it.
+Every formula is sealed with its two reading lemmas inside the seal, so a later
+renaming or replacement never unfolds it.
 
 Host-level readings.
 
@@ -181,8 +180,8 @@ Correct : S → S → Type (ℓ-suc ℓ)
 Correct F R = (x v : S) → Holds F x v → Complete F R x × ValueIs F R x v
 ```
 
-"Every R-predecessor y of x has an entry in f."  Inside: y is 0, then
-u is 0 and y is 1.
+"Every `R`-predecessor `y` of `x` has an entry in `f`." Inside: `y` is 0, then
+`u` is 0 and `y` is 1.
 
 ```agda
 opaque
@@ -206,8 +205,8 @@ opaque
     (h y (subst ⟨_⟩ (appAt-adequate (suc r) zero (suc x) (y ∷ γ)) p))
 ```
 
-"w is in v iff w is recorded in f at some R-predecessor of x."
-Inside: w is 0; then y is 0 and w is 1.
+"`w` is in `v` iff `w` is recorded in `f` at some `R`-predecessor of `x`."
+Inside: `w` is 0; then `y` is 0 and `w` is 1.
 
 ```agda
 opaque
@@ -250,7 +249,7 @@ opaque
     , (λ s → h w .snd (src-out (suc f) (suc r) (suc x) zero (w ∷ γ) s))
 ```
 
-Inside: x is 1 and v is 0.
+Inside: `x` is 1 and `v` is 0.
 
 ```agda
 opaque
@@ -276,9 +275,9 @@ opaque
      , value-in (suc (suc f)) (suc (suc r)) (suc zero) zero (v ∷ x ∷ γ) w
 ```
 
-THE GRAPH FORMULA, over (z ∷ p ∷ []): "z is recorded at p by some set
-correct for R".  Inside: r is 0, z is 1, p is 2; then f is 0, r is 1,
-z is 2, p is 3.  R enters as a constant, bound to a variable.
+The graph formula, over `(z ∷ p ∷ [])`: "`z` is recorded at `p` by some set
+correct for `R`". Inside: `r` is 0, `z` is 1, `p` is 2; then `f` is 0, `r` is 1,
+`z` is 2, `p` is 3. `R` enters as a constant, bound to a variable.
 
 ```agda
 module ColFo (R : S) where
@@ -306,9 +305,9 @@ module ColFo (R : S) where
         , subst ⟨_⟩ (sym (appAt-adequate zero (suc (suc (suc zero))) (suc (suc zero)) (F ∷ R ∷ z ∷ p ∷ []))) hp ) ∣₁) ∣₁
 ```
 
-The pair form of a graph, over (e ∷ p ∷ []): "e is the pair of p and
-some z with φ z p" (the shape src/L/Hierarchy.lagda.md pays for the
-hierarchy).  Inside the binder z is 0, e is 1, p is 2.
+The pair form of a graph, over `(e ∷ p ∷ [])`: "`e` is the pair of `p` and some
+`z` with `φ z p`" (the shape src/L/Hierarchy.lagda.md pays for the hierarchy).
+Inside the binder `z` is 0, `e` is 1, `p` is 2.
 
 ```agda
 module PairFo (φ : Formula S 2) where
@@ -351,13 +350,13 @@ module PairFo (φ : Formula S 2) where
 ## 唯一性、存在性与诸表
 <!--/-->
 
-SECTION 3.  EVERY CORRECT SET RECORDS THE COLLAPSE, AND ONE EXISTS.
+Section 3. Every correct set records the collapse, and one exists.
 
-  Uniqueness is one well-founded induction on the entry's index.
-  Existence at a is one replacement over D: the set of the pairs
-  (q, col q) for q R a, with the pair (a, col a) as the value at every
-  other q, so no separation and no union is needed.  Its graph is
-  decided by `lem`, inside `mereFunct`, where a proposition is proved.
+Uniqueness is one well-founded induction on the entry's index. Existence at `a`
+is one replacement over `D`: the set of the pairs `(q, col q)` for `q R a`, with
+the pair `(a, col a)` as the value at every other `q`, so no separation and no
+union is needed. Its graph is decided by `lem`, inside `mereFunct`, where a
+proposition is proved.
 
 ```agda
 module Internal (D R : S)
@@ -743,11 +742,11 @@ module Internal (D R : S)
 ## 作为编码单射的图
 <!--/-->
 
-SECTION 5.  THE FOUR CONJUNCTS, IN THE SHAPE `InjCode` CONSUMES.
+Section 5. The four conjuncts, in the shape `InjCode` consumes.
 
-  Single-valuedness, the domain and the range come from the table's
-  pair reading alone.  Injectivity needs the relation to be linear:
-  trichotomy is a hypothesis of this section only.
+Single-valuedness, the domain and the range come from the table's pair reading
+alone. Injectivity needs the relation to be linear: trichotomy is a hypothesis
+of this section only.
 
 ```agda
 module Code (D R : S)

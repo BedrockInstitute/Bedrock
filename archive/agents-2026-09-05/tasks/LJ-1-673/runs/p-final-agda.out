@@ -1,5 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-started 2026-08-26T16:20:38Z
-Checking LJ-1-673.Probe673 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-673/agents/tasks/LJ-1-673/Probe673.agda).
-AGDA_EXIT=137
-ended 2026-08-26T16:21:03Z

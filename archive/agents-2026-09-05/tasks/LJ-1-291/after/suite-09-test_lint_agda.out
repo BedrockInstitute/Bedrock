@@ -1,9 +1,0 @@
-ok   clean module
-ok   seeded violations
-ok   Everything exempt
-ok   keep marker
-ok   missing OPTIONS
-ok   hiding is bare
-ok   no ghost usage
-
-all lint-agda tests passed

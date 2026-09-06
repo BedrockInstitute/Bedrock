@@ -1,6 +1,0 @@
-Checking LJ-1-498.Probe498 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-498/agents/tasks/LJ-1-498/Probe498.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-498/agents/tasks/LJ-1-498/Probe498.agda:73.17-21: error: [UnequalTerms]
-1328 != 0 of type ℕ
-when checking that the expression refl has type
-tally w b ≡
-0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ 0 ∷ []

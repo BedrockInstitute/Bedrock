@@ -1,3 +1,0 @@
-pass      exit=0        1.16s  agents/tasks/LJ-1-668/Probe668.agda::A∈𝒟ₒ  (grouped run, exit 0)
-pass      exit=0        1.16s  agents/tasks/LJ-1-668/Probe668.agda::dee-empty  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 2, 1.16 s, probe_red=False

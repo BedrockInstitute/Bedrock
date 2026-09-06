@@ -10,15 +10,15 @@ open import Base.Classical using ( LEM )
 module L.GCH.Definable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; ∃̇_ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+open import FOL.Syntax using ( Formula )
+open import FOL.Manipulation.Renaming using ( module Sat )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of )
 open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst
+  using ( prʟ; prʟ-fst
         ; svAt; svAt-in; domAt; domAt-intro )
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
 open import L.Cardinal {ℓ} lem using ( InjCode )
@@ -40,18 +40,18 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-Renaming, read at the same satisfaction as `_⊨_` (as L.Axioms.Full does).
+Renaming, read at the same satisfaction as `_⊨_` (as `L.Axioms.Full` does).
 
 ```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
-SECTION 1.  THE FORM.
+## Section 1. The form
 
-  A function on the members of a set of L, landing in a set of L,
-  whose graph an object-language formula defines: the formula holds
-  of the function's own value (`defines`) and of nothing else
-  (`only`).  Value first, index second, as `Recursion.graph`.
+A function on the members of a set of L, landing in a set of L, whose graph an
+object-language formula defines: the formula holds of the function's own value
+(`defines`) and of nothing else (`only`). Value first, index second, as
+`Recursion.graph`.
 
 ```agda
 record DefinableMap : Type (ℓ-suc (ℓ-suc ℓ)) where
@@ -66,12 +66,13 @@ record DefinableMap : Type (ℓ-suc (ℓ-suc ℓ)) where
             → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x m
 ```
 
-SECTION 2.  THE PAIR FORMULA.
-SECTION 3.  THE GRAPH AS A SET OF L, AND THREE CONJUNCTS.
+## Section 2. The pair formula
 
-  `Recursion.funct` takes the membership proof, so `fn` fills it as
-  it stands: no total extension off `dom` and no use of `lem`.  The
-  table is the replacement image (src/L/Recursion.lagda.md, `Of`).
+## Section 3. The graph as a set of L, and three conjuncts
+
+`Recursion.funct` takes the membership proof, so `fn` fills it as it stands: no
+total extension off `dom` and no use of `lem`. The table is the replacement
+image (src/L/Recursion.lagda.md, `Of`).
 
 ```agda
 module Graph (M : DefinableMap) where
@@ -188,7 +189,7 @@ module Graph (M : DefinableMap) where
     e = snd (pair-out x y h)
 ```
 
-SECTION 4.  INJECTIVE, HENCE CODED.
+## Section 4. Injective, hence coded
 
 ```agda
 module Inj (M : DefinableMap)

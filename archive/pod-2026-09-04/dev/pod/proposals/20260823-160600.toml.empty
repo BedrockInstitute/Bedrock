@@ -1,6 +1,0 @@
-# No table rows proposed.
-# LJ-1.541, LJ-1.547, LJ-1.572: unchanged, still awaiting the mathematician's judgement
-#   on the three already-filed [[queue]] REQUESTs.
-# LJ-1.582: same mathematician-authored park-not-escalate pattern as LJ-1.565/536/534
-#   (dev/pod/table.toml:20312, action = "park", "PARK, NOT ESCALATE. MEASURED on
-#   LJ-1.534..."). No program action needed; waits for a person by design.

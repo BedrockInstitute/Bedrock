@@ -67,7 +67,7 @@ open import L.Coding.Graph {ℓ} lem using
   ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
   ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
 open import L.Coding.Clauses {ℓ} lem using
-  ( Tags; towerAt; tableAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
   ; module Tower; module TowerHolds )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )

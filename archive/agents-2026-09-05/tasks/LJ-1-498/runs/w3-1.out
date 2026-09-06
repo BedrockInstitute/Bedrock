@@ -1,5 +1,0 @@
-Checking LJ-1-498.Probe498 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-498/agents/tasks/LJ-1-498/Probe498.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-498/agents/tasks/LJ-1-498/Probe498.agda:41.16-20: error: [UnequalTerms]
-664 != 0 of type ℕ
-when checking that the expression refl has type
-countFo (LsetGraphAt w b) ≡ 0

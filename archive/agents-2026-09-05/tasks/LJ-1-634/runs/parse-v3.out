@@ -1,6 +1,0 @@
-Checking L.BoundedSubset (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md:1758.3-11: error: [NotInScope]
-Not in scope:
-  BSA-test
-  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-634/src/L/BoundedSubset.lagda.md:1758.3-11
-when scope checking BSA-test

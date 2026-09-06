@@ -1,4 +1,0 @@
-Checking LJ-1-397.CodeLandsHole (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-397/agents/tasks/LJ-1-397/CodeLandsHole.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-397/agents/tasks/LJ-1-397/CodeLandsHole.agda:41.9-13: error: [UnsolvedInteractionMetas]
-Unsolved interaction metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-397/agents/tasks/LJ-1-397/CodeLandsHole.agda:41.9-13

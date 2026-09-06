@@ -1,9 +1,0 @@
-Checking LJ-1-516.runs.WitnessNoGo (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/runs/WitnessNoGo.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/runs/WitnessNoGo.agda:21.11-37: error: [NotInScope]
-Not in scope:
-  Target.graphSat-transports
-  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/runs/WitnessNoGo.agda:21.11-37
-    (did you mean
-       'LJ-1-516.Probe516.GraphSatTransports' or
-       'Target.GraphSatTransports'?)
-when scope checking Target.graphSat-transports

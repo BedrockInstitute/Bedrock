@@ -11,41 +11,31 @@ module L.GCH.SatDescribe {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
+  ( Formula; _∧̇_ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∧ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
+open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ} using ( consAtL )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; key∈AllCodes; keyS )
 open import L.Coding.Uniform {ℓ} lem using ( module Table; val-at )
 open import L.Coding.Pinned {ℓ} lem using ( module Match ) public
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SatHoldsC )
-open import L.Coding.Sat {ℓ} lem using ( cond∈-in; cond∈-out; cond≐-in; cond≐-out )
-open import L.Coding.EnvSet {ℓ} lem using ( envS )
 open import L.GCH.SatFrame {ℓ} lem using
-  ( sh; i0; i1; i2; i3; i4; i5; i6; i7; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11; Tags; nn; down; fstS; sndS
-  ; tmIs; extB-out; extB-in; ExtFact; ext-unique
-  ; towerAt; Δ₀-towerAt; codesAt; Δ₀-codesAt; tableAt; Δ₀-tableAt
+  ( f0; Tags; down; towerAt; Δ₀-towerAt; codesAt; Δ₀-codesAt; tableAt; Δ₀-tableAt
   ; module Tower; module TowerRead; module TowerHolds
   ; module CodesSound; module CodesComplete; module CodesHolds
-  ; module Frame; module Clause; module Rel; module RelRead
-  ; module Alphabet; module Bridge; module SatGraph )
+  ; module Frame; module Alphabet; module Bridge; module SatGraph )
 
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Vec using ( _∷_; []; lookup )
+open import Cubical.Data.Vec using ( lookup )
 open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels using ( isPropΣ )
-import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open PT using ( ∥_∥₁; ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet {ℓ} using ( #_; sucV )
-open import Cubical.Data.FinData using ( toℕ )
+open InfinitySet {ℓ} using ( #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
 open hPropStructure 𝒮ʟ using ( S )
@@ -54,10 +44,10 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-THE TABLE IS SOUND.  A table satisfying the twelve clauses over the
-code set and the tower records, at the key of every formula, the
-value the meta-level recursion built there: induction on the
-formula, one clause reader and one bridge per constructor.
+The table is sound. A table satisfying the twelve clauses over the code set and
+the tower records, at the key of every formula, the value the meta-level
+recursion built there: induction on the formula, one clause reader and one
+bridge per constructor.
 
 ```agda
 module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
@@ -141,10 +131,10 @@ module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
     (AllCodes-out W x mx)
 ```
 
-THE TABLE IS COMPLETE.  The graph of the uniform table, over the
-code set and the tower, satisfies the description: each clause is
-read at its frame, the code is decoded, the entries are read as the
-table's values, and the bridge supplies the body.
+The table is complete. The graph of the uniform table, over the code set and the
+tower, satisfies the description: each clause is read at its frame, the code is
+decoded, the entries are read as the table's values, and the bridge supplies the
+body.
 
 A code's constructor and payload, from its tag, are read in
 src/L/Coding/Pinned.lagda.md.
@@ -192,9 +182,9 @@ module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
     (TowerHolds.holds E w (N f0) γ W qw qE (tg f0)) val≡ decode tot onc
 ```
 
-THE DESCRIPTION, SEALED.  "T is the satisfaction table of w over
-the code set C and the environment tower E."  The seal holds the
-three conjuncts; its readers are the two projections.
+The description, sealed. "`T` is the satisfaction table of `w` over the code set
+`C` and the environment tower `E`." The seal holds the three conjuncts; its
+readers are the two projections.
 
 ```agda
 opaque
@@ -218,10 +208,10 @@ opaque
   satAt-in T w C E N γ hE hC hT = hE , (hC , hT)
 ```
 
-THE TWO THEOREMS.  Soundness: a reading of `satAt` at (T, w, C, E)
-makes T the graph of the uniform table of w, C the code set and E
-the tower, each read both ways.  Completeness: the graph, the code
-set and the tower satisfy `satAt`.
+The two theorems. Soundness: a reading of `satAt` at `(T, w, C, E)` makes `T`
+the graph of the uniform table of `w`, `C` the code set and `E` the tower, each
+read both ways. Completeness: the graph, the code set and the tower satisfy
+`satAt`.
 
 ```agda
 module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)

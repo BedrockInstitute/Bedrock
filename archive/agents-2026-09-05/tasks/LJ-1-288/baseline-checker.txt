@@ -1,1 +1,0 @@
-dispatch policy OK: `in-harness-subagent-mode` in force, 586 brief(s) read, 30 pre-epoch note(s) not judged (run with --notes to see them)

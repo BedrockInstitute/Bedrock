@@ -1,6 +1,0 @@
-pass      exit=0        1.16s  agents/tasks/LJ-1-696/Probe696.agda::describes-at-n3  (grouped run, exit 0)
-pass      exit=0        1.16s  agents/tasks/LJ-1-696/Probe696.agda::describes-triple  (grouped run, exit 0)
-pass      exit=0        1.16s  agents/tasks/LJ-1-696/Probe696.agda::classify3  (grouped run, exit 0)
-pass      exit=0        1.16s  agents/tasks/LJ-1-696/Probe696.agda::pair∈dee  (grouped run, exit 0)
-pass      exit=0        1.16s  agents/tasks/LJ-1-696/Probe696.agda::triple-spd  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 5, 1.16 s, probe_red=False

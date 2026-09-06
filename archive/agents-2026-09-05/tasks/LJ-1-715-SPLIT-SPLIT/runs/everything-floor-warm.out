@@ -1,5 +1,0 @@
-Checking Everything (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT-SPLIT/src/Everything.lagda.md).
- Checking L.Condensation (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-715-SPLIT-SPLIT/src/L/Condensation.lagda.md).
-agda: Heap exhausted;
-agda: Current maximum heap size is 4294967296 bytes (4096 MB).
-agda: Use `+RTS -M<size>' to increase it.

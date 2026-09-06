@@ -1,2 +1,0 @@
-.venv/bin/python scripts/pod/check-closure.py --check closure
-check-closure: clean (103 masters; closure, archive)

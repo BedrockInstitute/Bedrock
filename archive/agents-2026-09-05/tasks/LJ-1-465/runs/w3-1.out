@@ -1,5 +1,0 @@
-Checking LJ-1-465.Probe465 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-465/agents/tasks/LJ-1-465/Probe465.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-465/agents/tasks/LJ-1-465/Probe465.agda:158.15-40: error: [UnequalTerms]
-fst F != fst IG.G of type V ℓ
-when checking that the expression stage-mem (fst F) (snd F) has
-type ⟨ fst F ∈ˢ Lset stgG ⟩

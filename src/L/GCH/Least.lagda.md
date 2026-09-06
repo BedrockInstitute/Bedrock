@@ -26,10 +26,10 @@ open import L.GCH.Pairing {ℓ} lem using ( isL-ord )
 open import L.InjChain {ℓ} lem using ( appC; appC-adequate )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open PT using ( ∥_∥₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -38,7 +38,7 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-Renaming, read at the same satisfaction as `_⊨_` (as L.GCH.Definable does).
+Renaming, read at the same satisfaction as `_⊨_` (as `L.GCH.Definable` does).
 
 ```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
@@ -54,16 +54,16 @@ private
   S≡ = Σ≡Prop (λ v → snd (isL v))
 ```
 
-THE TOOL.  P is a predicate over (w ∷ x ∷ []), "w witnesses x", and
-every x ∈ X has a witness in the stage L_γ.  x ↦ the stage-order-least
-witness in L_γ is a definable map X → L_γ: its graph is "P w x, w ∈
-L_γ, and no w' ∈ L_γ below w in the stage order witnesses x", its
-table is a set of L, and its readers give the witness, its leastness
-and its uniqueness.  Inside the bounded binder w' is 0, w is 1, x is
-2; P is renamed from (w' ∷ x ∷ []) into that environment.
+The tool. `P` is a predicate over `(w ∷ x ∷ [])`, "`w` witnesses `x`", and every
+`x ∈ X` has a witness in the stage `L_γ`. `x ↦` the stage-order-least witness in
+`L_γ` is a definable map `X → L_γ`: its graph is "`P w x`, `w ∈ L_γ`, and no
+`w' ∈ L_γ` below `w` in the stage order witnesses `x`", its table is a set of L,
+and its readers give the witness, its leastness and its uniqueness. Inside the
+bounded binder `w'` is 0, `w` is 1, `x` is 2; `P` is renamed from
+`(w' ∷ x ∷ [])` into that environment.
 
-Five parameters: the bound γ with its ordinality, the index set X,
-the predicate P, and the existence of a witness at the bound.
+Five parameters: the bound `γ` with its ordinality, the index set `X`, the
+predicate `P`, and the existence of a witness at the bound.
 
 ```agda
 module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)

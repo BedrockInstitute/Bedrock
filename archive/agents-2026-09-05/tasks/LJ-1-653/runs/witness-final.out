@@ -1,2 +1,0 @@
-pass      exit=0        3.27s  agents/tasks/LJ-1-653/Probe653.agda::step4-at-ord-status
-witness: 0 UNRESOLVED of 1, 3.27 s, probe_red=False

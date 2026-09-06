@@ -1,4 +1,0 @@
-Checking ProbeT242 (/Users/alsg/Agentic/Bedrock/src/ProbeT242.agda).
-real 40.99
-user 39.95
-sys 0.28

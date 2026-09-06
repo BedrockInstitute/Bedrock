@@ -1,4 +1,0 @@
-pass      exit=0        0.95s  agents/tasks/LJ-1-674/Probe674.agda::describes-status  (grouped run, exit 0)
-pass      exit=0        0.95s  agents/tasks/LJ-1-674/Probe674.agda::carve-self  (grouped run, exit 0)
-pass      exit=0        0.95s  agents/tasks/LJ-1-674/Probe674.agda::Describes  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 3, 0.95 s, probe_red=False

@@ -64,12 +64,11 @@ open import FOL.Syntax using ( Formula )
 open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; ⊨-map )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; module VCode )
+open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Definability {ℓ} using ( module DefOf )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ}
-  using ( module LCode; prʟ-fst; codeBridge; domAt; domAt-intro; domAt-out )
+  using ( domAt; domAt-intro; domAt-out )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Bridge {ℓ} lem
   using ( intoL; asConst; Sat-spec ) renaming ( graph to envGraph )
@@ -77,12 +76,11 @@ open import L.Coding.Table {ℓ} lem
   using ( keyʟ; slot; satTable; total; inSlot; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
 open import L.Coding.Clauses {ℓ} lem using
-  ( Tags; nn; towerAt; tableAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
   ; module Tower; module TowerHolds )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds ) renaming ( keyBridge to keyBridge' )
 open import L.Coding.Graph {ℓ} lem using
-  ( satGraph; graph-in; graph-out; GraphWit
-  ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
+  ( satGraph; graph-in; graph-out; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
 open import L.Coding.CodeSet {ℓ} lem
   using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
 open import L.Recursion {ℓ} lem using ( Recursion; mereFunct; module Of )
@@ -94,9 +92,6 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
-open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet )
-open InfinitySet using ( #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ

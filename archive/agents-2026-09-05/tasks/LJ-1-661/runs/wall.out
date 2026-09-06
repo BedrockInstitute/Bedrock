@@ -1,5 +1,0 @@
-Checking LJ-1-661.Wall661 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Wall661.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Wall661.agda:48.14-64.17: error: [UnsolvedInteractionMetas]
-Unsolved interaction metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Wall661.agda:48.14-18
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-661/agents/tasks/LJ-1-661/Wall661.agda:64.13-17

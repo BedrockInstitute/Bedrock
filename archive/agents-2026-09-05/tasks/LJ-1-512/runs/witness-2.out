@@ -1,2 +1,0 @@
-pass      exit=0        2.31s  agents/tasks/LJ-1-512/Probe512.agda::honest-covers-record
-witness: 0 UNRESOLVED of 1, 2.31 s, probe_red=False

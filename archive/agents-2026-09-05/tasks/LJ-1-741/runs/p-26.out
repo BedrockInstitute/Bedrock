@@ -1,6 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:251.20-252.55: error: [UnequalTerms]
-zero != n of type ℕ
-when checking that the expression
-cong (λ E → E ∷ []) (Σ≡Prop (λ y → snd (DS.M y)) refl) has type
-_x_921 ≡ _y_922

@@ -1,2 +1,0 @@
-pass      exit=0        5.64s  agents/tasks/LJ-1-568/Probe568.agda::W-restricted
-witness: 0 UNRESOLVED of 1, 5.64 s, probe_red=False

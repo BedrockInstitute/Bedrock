@@ -1,4 +1,0 @@
-Checking LJ-1-498.Probe498 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-498/agents/tasks/LJ-1-498/Probe498.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-498/agents/tasks/LJ-1-498/Probe498.agda:108.16-20: error: [UnequalTerms]
-260000100004000010000100002 != 0 of type ℕ
-when checking that the expression refl has type pack (tally2 A) ≡ 0

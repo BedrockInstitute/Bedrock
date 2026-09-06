@@ -1,9 +1,0 @@
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::hull-closed-lset  (grouped run, exit 0)
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::HullStage.hull-mem-is-code  (grouped run, exit 0)
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::HullStage.hull-closed-op  (grouped run, exit 0)
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::HullStage.hull-closed-op∥  (grouped run, exit 0)
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::HullStage.hull-closed-lset  (grouped run, exit 0)
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::HullStage.hull-closed-lset∥  (grouped run, exit 0)
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::HullStage.hull-closed-lset-plain  (grouped run, exit 0)
-pass      exit=0        2.34s  agents/tasks/LJ-1-647/Probe647.agda::HullStage.hull-closed-lset-at-ord  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 8, 2.34 s, probe_red=False

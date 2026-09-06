@@ -1,2 +1,0 @@
-missing   exit=42       3.76s  agents/tasks/LJ-1-578/Probe578.agda::cohyps-supplied  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-578/.pod-state/witness/Witness-POD-671bc2dc.agda:23)
-witness: 1 UNRESOLVED of 1, 3.76 s, probe_red=False

@@ -1,3 +1,0 @@
-probe-red exit=42       1.90s  agents/tasks/LJ-1-396/Probe396.agda::amb-card-at-kappa  (exit 42 inside the probe: SolvedButOpenHoles)
-probe-red exit=42       1.91s  agents/tasks/LJ-1-396/Probe396.agda::kappa-is-limit  (exit 42 inside the probe: SolvedButOpenHoles)
-witness: 2 UNRESOLVED of 2, 5.71 s, probe_red=True

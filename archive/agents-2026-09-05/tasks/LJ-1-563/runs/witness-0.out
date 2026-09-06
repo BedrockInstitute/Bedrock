@@ -1,2 +1,0 @@
-pass      exit=0        2.61s  agents/tasks/LJ-1-563/Probe563.agda::last-three-collected
-witness: 0 UNRESOLVED of 1, 2.61 s, probe_red=False

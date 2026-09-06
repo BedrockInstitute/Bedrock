@@ -1,6 +1,0 @@
-Checking LJ-1-411.Probe411 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-411/agents/tasks/LJ-1-411/Probe411.agda).
-real 1.64
-user 1.45
-sys 0.16
-EXIT=0
-GHCRTS=-A64m -I0 -M8g

@@ -1,4 +1,0 @@
-Checking LJ-1-652.runs.RESIDUE (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-652/agents/tasks/LJ-1-652/runs/RESIDUE.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-652/agents/tasks/LJ-1-652/runs/RESIDUE.agda:39.35-38: error: [UnequalTerms]
-y != (𝒟ₒ y) of type (Cubical.HITs.CumulativeHierarchy.Base.V ℓ)
-when checking that the expression y∈M has type ⟨ 𝒟ₒ y ∈ˢ F.HS.M ⟩

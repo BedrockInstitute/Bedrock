@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Catch Agda that sits OUTSIDE a code fence in a `.lagda.md` master.
+"""Two rules about the boundary between code and prose in a `.lagda.md` master.
+
+RULE 1, [unfenced-agda]: no Agda outside a fence. Agda reads only fenced code.
+RULE 2, [fenced-comment]: no comment inside a fence. A comment is prose, and
+prose belongs between the fences, where the site renders it and the size ledger
+does not count it as code.
 
 WHY THIS EXISTS, and it is one measured failure rather than a tidiness wish.
 On 2026-08-11 `[LJ-1.41]` reported two condensation row agreements CLOSED and
@@ -84,6 +89,61 @@ PROSE_ANYWHERE = ("`", "**", "{.Agda}", "<!--")
 
 DEFAULT_RUN = 3
 
+# RULE 2. A line comment or a block comment inside a ```agda fence.
+# `{-# ... #-}` is a pragma, not a comment, and stays.
+LINE_COMMENT = re.compile(r"^\s*--(\s|$|-)")
+BLOCK_OPEN = re.compile(r"^\s*\{-(?!#)")
+BLOCK_CLOSE = re.compile(r"-\}")
+
+REMEDY = """    HOW TO FIX ONE. Do not delete the sentence: split the fence where the
+    comment is, and write it as prose between the two halves.
+
+        ```agda            ```agda
+        f : A → B          f : A → B
+        -- why it is so    ```
+        f x = ...
+        ```                Why it is so.
+
+                           ```agda
+                           f x = ...
+                           ```
+
+    A fence may be split ANYWHERE, including inside a `where` block: Agda
+    blanks the prose and keeps every line and column, so the layout survives
+    and the definition is still one definition. This was measured, not assumed.
+    An `{-# OPTIONS ... #-}` pragma is not a comment and is exempt."""
+
+
+def fenced_comments(path: pathlib.Path) -> list[tuple[int, str]]:
+    """Every comment line inside a ```agda fence."""
+    fenced = False
+    in_block = False
+    hits: list[tuple[int, str]] = []
+    for i, line in enumerate(path.read_text().split("\n"), 1):
+        if line.startswith("```agda"):
+            fenced = True
+            continue
+        if line.startswith("```"):
+            fenced = False
+            in_block = False
+            continue
+        if not fenced:
+            continue
+        if in_block:
+            hits.append((i, line))
+            if BLOCK_CLOSE.search(line):
+                in_block = False
+            continue
+        if BLOCK_OPEN.match(line):
+            hits.append((i, line))
+            if not BLOCK_CLOSE.search(line):
+                in_block = True
+            continue
+        if LINE_COMMENT.match(line):
+            hits.append((i, line))
+    return hits
+
+
 
 def suspects(path: pathlib.Path, run: int) -> list[tuple[int, str]]:
     fenced = False
@@ -154,10 +214,32 @@ def main() -> int:
         if len(hits) > 6:
             print(f"    ... and {len(hits) - 6} more")
 
+    commented = 0
+    comment_lines = 0
+    for m in masters:
+        hits = fenced_comments(m)
+        if not hits:
+            continue
+        commented += 1
+        comment_lines += len(hits)
+        rel = m.relative_to(ROOT)
+        print(f"  DEFECT [fenced-comment]: {rel} has {len(hits)} comment "
+              f"line(s) inside a fence. A comment is prose, and prose belongs "
+              f"between the fences.")
+        for i, line in hits[:6]:
+            print(f"    {rel}:{i}: {line.strip()[:72]}")
+        if len(hits) > 6:
+            print(f"    ... and {len(hits) - 6} more")
+
     if defects:
         print(f"\ncheck-fences: {defects} master(s) with unfenced Agda. "
               f"[LJ-1.41] reported two theorems CLOSED that sat outside a "
               f"fence and had four defects; every other gate passed.")
+    if commented:
+        print(f"\ncheck-fences: {comment_lines} comment line(s) inside a fence "
+              f"in {commented} master(s).")
+        print(REMEDY)
+    if defects or commented:
         return 1 if args.check else 0
 
     print(f"check-fences: clean ({len(masters)} masters, run threshold "

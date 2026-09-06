@@ -1,2 +1,0 @@
-pass      exit=0        2.04s  agents/tasks/LJ-1-472/Probe472.agda::numerals-in-hull
-witness: 0 UNRESOLVED of 1, 2.04 s, probe_red=False

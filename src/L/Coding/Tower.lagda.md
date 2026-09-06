@@ -11,7 +11,7 @@ module L.Coding.Tower {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
+  ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -66,9 +66,9 @@ down : (x : S) (y : V ℓ) → ⟨ y ∈ fst x ⟩ → S
 down x y h = y , isL-trans {x = fst x} {y = y} h (snd x)
 ```
 
-THE TOWER SET.  The pairs (n, Eₙ), cut by separation out of a stage
-that holds every entry.  The cutting formula is not Δ₀ and need not
-be: it builds the set, and only its two readers leave this section.
+The tower set: the pairs `(n, Eₙ)`, cut by separation out of a stage that holds
+every entry. The cutting formula is not Δ₀ and need not be: it builds the set,
+and only its two readers leave this section.
 
 ```agda
 module Tower (W : S) where

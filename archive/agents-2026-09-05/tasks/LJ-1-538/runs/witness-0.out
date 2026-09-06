@@ -1,2 +1,0 @@
-pass      exit=0        2.26s  agents/tasks/LJ-1-538/Probe538.agda::envK-frame-inhabited
-witness: 0 UNRESOLVED of 1, 2.26 s, probe_red=False

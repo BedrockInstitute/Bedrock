@@ -14,11 +14,11 @@ import Cubical.Data.Empty as Empty
 module FOL.Count {ℓ : Level} where
 ```
 
-The count: formulas over K with one free variable inject into the disjoint
-union over k of the parameter-free arity-k shapes paired with k-tuples of
-constants. A constant occurrence becomes a marker variable in the shape;
-the tuple lists the constants in traversal order, padded with one copy of
-the first constant.
+The count: formulas over `K` with one free variable inject into the disjoint
+union over `k` of the parameter-free arity-`k` shapes paired with `k`-tuples of
+constants. A constant occurrence becomes a marker variable in the shape; the
+tuple lists the constants in traversal order, padded with one copy of the first
+constant.
 
 ```agda
 module Count (K : Type ℓ) where

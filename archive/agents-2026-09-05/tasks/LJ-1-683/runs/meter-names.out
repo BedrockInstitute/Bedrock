@@ -1,6 +1,0 @@
-pass      exit=0        0.90s  agents/tasks/LJ-1-683/Probe683.agda::from-hyps  (grouped run, exit 0)
-pass      exit=0        0.90s  agents/tasks/LJ-1-683/Probe683.agda::subsetFo  (grouped run, exit 0)
-pass      exit=0        0.90s  agents/tasks/LJ-1-683/Probe683.agda::Describes  (grouped run, exit 0)
-pass      exit=0        0.90s  agents/tasks/LJ-1-683/Probe683.agda::Dee⊆stage  (grouped run, exit 0)
-pass      exit=0        0.90s  agents/tasks/LJ-1-683/Probe683.agda::StagePowDef  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 5, 0.90 s, probe_red=False

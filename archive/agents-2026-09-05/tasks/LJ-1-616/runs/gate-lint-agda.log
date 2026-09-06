@@ -1,1 +1,0 @@
-.venv/bin/python scripts/gate/lint-agda.py --check

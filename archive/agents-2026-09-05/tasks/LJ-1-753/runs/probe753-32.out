@@ -1,6 +1,0 @@
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/Probe753.agda:234.15: error: [ParseError]
-×<ERROR>  ( ⟨ u .fst ∈ˢ ∅ ⟩ →
-         ...
-real 0.06
-user 0.03
-sys 0.01

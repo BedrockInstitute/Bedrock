@@ -1,3 +1,0 @@
-pass      exit=0        2.90s  agents/tasks/LJ-1-651/Probe651.agda::lset-formula
-witness: 0 UNRESOLVED of 1, 2.90 s, probe_red=False
-        2.98 real         2.35 user         0.28 sys

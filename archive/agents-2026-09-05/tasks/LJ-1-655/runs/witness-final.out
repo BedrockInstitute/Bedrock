@@ -1,2 +1,0 @@
-pass      exit=0        3.62s  agents/tasks/LJ-1-655/Probe655.agda::elem-at-collapse
-witness: 0 UNRESOLVED of 1, 3.62 s, probe_red=False

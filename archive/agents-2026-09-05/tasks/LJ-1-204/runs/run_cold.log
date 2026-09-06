@@ -1,4 +1,0 @@
-run 1 done rc=0 -> agents/tasks/LJ-1-204/runs/src_L_Condensation.today.int1.txt
-run 2 done rc=0 -> agents/tasks/LJ-1-204/runs/src_L_Condensation.today.int2.txt
-run 3 done rc=0 -> agents/tasks/LJ-1-204/runs/src_L_Condensation.today.int3.txt
-ALL DONE

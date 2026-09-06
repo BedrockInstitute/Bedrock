@@ -1,2 +1,0 @@
-pass      exit=0        4.22s  agents/tasks/LJ-1-723/Probe723.agda::below-closed-via
-witness: 0 UNRESOLVED of 1, 4.22 s, probe_red=False

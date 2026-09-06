@@ -1,3 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-started 2026-08-23T19:44:19Z
-Checking LJ-1-602.runs.FLOOR (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-602/agents/tasks/LJ-1-602/runs/FLOOR.agda).

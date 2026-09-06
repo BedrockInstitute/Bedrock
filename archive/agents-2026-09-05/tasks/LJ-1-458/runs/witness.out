@@ -1,2 +1,0 @@
-pass      exit=0        1.36s  agents/tasks/LJ-1-458/Probe458.agda::LsetAt
-witness: 0 UNRESOLVED of 1, 1.36 s, probe_red=False

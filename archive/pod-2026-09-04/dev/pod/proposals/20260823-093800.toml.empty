@@ -1,8 +1,0 @@
-# No table rows proposed.
-# LJ-1.541, LJ-1.547: unchanged, still awaiting the mathematician's judgement on the
-#   two already-filed [[queue]] REQUESTs.
-# LJ-1.565: unchanged (still the same 2 PARKED transitions reviewed in the prior batch),
-#   the mathematician's park-not-escalate design continues to hold.
-# LJ-1.577: transient `pid dead` (ran ~7.5 min then the process vanished, no other
-#   anomaly), the same class as LJ-1.552/553 -- retried PARKED -> READY directly via
-#   pod.emit(), owner-authorized.

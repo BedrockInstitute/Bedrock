@@ -85,12 +85,11 @@ three slots, with the two free slots shifted past the three binders.
 那个框架依次绑定索引集、表与载体，并以「钉住其中最后一个」的那条子句开头。在那条钉住之下，两个实例之间没有任何东西改变：同样三条守卫、同样十二条、落在同样三个槽位上，而那两个自由槽位越过那三个绑定作平移。
 <!--/-->
 
-THE FRAME.  Sixteen bound sets: the twelve numeral slots the Δ₀
-clauses index their tags by, the tower, the index set, the table and
-the carrier, innermost last.  The numerals are pinned to constants,
-which costs nothing under a binder because a numeral is the same set
-wherever it is named; the tower is pinned by its own Δ₀ description,
-which is why no caller has to hold a slot for it.
+The frame. Sixteen bound sets: the twelve numeral slots the Δ₀ clauses index
+their tags by, the tower, the index set, the table and the carrier, innermost
+last. The numerals are pinned to constants, which costs nothing under a binder
+because a numeral is the same set wherever it is named; the tower is pinned by
+its own Δ₀ description, which is why no caller has to hold a slot for it.
 
 ```agda
 Bi Ti Ci Ei : ∀ {n} → Fin (16 + n)
@@ -100,7 +99,7 @@ Ci = i2
 Ei = i3
 ```
 
-The tag slots, innermost first: N 0 at i4 up to N 11 at i15.
+The tag slots, innermost first: `N 0` at `i4` up to `N 11` at `i15`.
 
 ```agda
 NN : ∀ {n} → Fin 12 → Fin (16 + n)
@@ -311,15 +310,14 @@ GraphWitAt : ∀ {n} → Fin n → Fin n → Fin n → S ^ n → Type (ℓ-suc �
 GraphWitAt B x y γ = GraphWitOn (lookup B γ) x y γ
 ```
 
-SEALED (P-t), and the reason is a measurement rather than a preference.
-This formula is a conjunct of three larger ones, and every consumer of
-those splits them.  A split REDUCES the conjunct's type while the
-consumer's own signature names it FOLDED, so the conversion checker walks
-the whole tree to see that the two agree.  Open, that one coercion cost
-2,459 ms at the site this seal serves; sealed, both sides are the same
-stuck head and the check is syntactic.  The two readers below are the
-official unfolding, so no consumer needs `unfolding` to build or read a
-witness.
+Sealed (P-t), and the reason is a measurement rather than a preference. This
+formula is a conjunct of three larger ones, and every consumer of those splits
+them. A split REDUCES the conjunct's type while the consumer's own signature
+names it FOLDED, so the conversion checker walks the whole tree to see that the
+two agree. Open, that one coercion cost 2,459 ms at the site this seal serves;
+sealed, both sides are the same stuck head and the check is syntactic. The two
+readers below are the official unfolding, so no consumer needs `unfolding` to
+build or read a witness.
 
 ```agda
 opaque

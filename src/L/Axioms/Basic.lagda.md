@@ -53,7 +53,6 @@ open import L.Constructible {ℓ}
         ; Lset-mono; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; bound2 )
 
-open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.Data.FinData using ( zero; suc )
 open import Cubical.Data.Sum using ( inl; inr )
 open import Cubical.Functions.Logic using ( ⇔toPath )

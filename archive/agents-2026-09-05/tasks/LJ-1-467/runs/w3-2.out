@@ -1,5 +1,0 @@
-Checking LJ-1-467.Probe467 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-467/agents/tasks/LJ-1-467/Probe467.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-467/agents/tasks/LJ-1-467/Probe467.agda:105.16-26: error: [UnequalSorts]
-Type != (Type (ℓ-suc ℓ))
-when checking that the solution Empty.⊥ of metavariable _P_124 has
-the expected type Type (ℓ-suc ℓ)

@@ -1,8 +1,0 @@
-Checking LJ-1-504.Probe504 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-504/agents/tasks/LJ-1-504/Probe504.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-504/agents/tasks/LJ-1-504/Probe504.agda:86.59-60: error: [UnequalTerms]
-lam != gam of type V ℓ
-when checking that the expression h has type
-⟨
-(E ∷ ya ∷ yc ∷ b ∷ a ∷ ar ∷ c ∷ gam' g1 g2 g3 g4 g5) ⊨
-envHypB2 zero (suc (suc (suc (suc (suc (suc KV.iK))))))
-⟩

@@ -19,15 +19,14 @@ import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using
-  ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-in; Lset-out; Lset-mono; Lset→isL; 𝒟ₒ )
+  ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-in; Lset-out; Lset-mono; 𝒟ₒ )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; #∈ω )
-open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Axioms.Basic {ℓ} using ( LsetS; Lset-suc )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
+open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
 open import L.Coding.Model {ℓ} using ( sucAtL )
 open import L.Coding.Bound {ℓ} lem using ( module Bound )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
-open import L.Hierarchy {ℓ} lem using ( hierL; hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
+open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
 open import L.GCH.Hull {ℓ} lem using ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
 open import L.GCH.SatFrame {ℓ} lem using
   ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
@@ -62,15 +61,14 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 module SemVᵃ = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 ```
 
-THE ROWS.  A hierarchy table f on the ordinal p: every c ∈ p has an
-entry, and every entry (c, w) is a step: w holds exactly the members
-of the definable power sets of the values recorded below c.  The
-definable power set of a recorded value is named through `satAt`
-and `defAt`, its three tables and itself bounded by the witness z.
-The value a is the step at p from f.
+The rows. A hierarchy table `f` on the ordinal `p`: every `c ∈ p` has an entry,
+and every entry `(c, w)` is a step: `w` holds exactly the members of the
+definable power sets of the values recorded below `c`. The definable power set
+of a recorded value is named through `satAt` and `defAt`, its three tables and
+itself bounded by the witness `z`. The value `a` is the step at `p` from `f`.
 
-At d ∷ E ∷ C ∷ T ∷ δ: d is the definable power set of w, through a
-satisfaction table T over the code set C and the tower E, all in z.
+At `d ∷ E ∷ C ∷ T ∷ δ`: `d` is the definable power set of `w`, through a
+satisfaction table `T` over the code set `C` and the tower `E`, all in `z`.
 
 ```agda
 defIn : ∀ {k} → Fin k → Fin k → (Fin 12 → Fin k) → Formula S (4 + k) → Formula S k
@@ -85,8 +83,8 @@ defIn w z N body =
                               (δ-∧ (Δ₀-defAt i0 (sh 4 w) i3 i2 (shN 4 N)) d)))))
 ```
 
-Every x ∈ v lies in the definable power set of a value recorded at
-some c ∈ b.  Innermost: d ∷ E ∷ C ∷ T ∷ w ∷ s ∷ q ∷ c ∷ x ∷ γ.
+Every `x ∈ v` lies in the definable power set of a value recorded at some
+`c ∈ b`. Innermost: `d ∷ E ∷ C ∷ T ∷ w ∷ s ∷ q ∷ c ∷ x ∷ γ`.
 
 ```agda
 intoAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
@@ -95,8 +93,8 @@ intoAt v b f z N =
     (sndEx i0 i1 (defIn i0 (sh 5 z) (shN 5 N) (var i8 ∈̇ var i0)))))
 ```
 
-The definable power set of every value recorded at a c ∈ b lies
-inside v.  Innermost: y ∷ d ∷ E ∷ C ∷ T ∷ w ∷ s ∷ q ∷ c ∷ γ.
+The definable power set of every value recorded at a `c ∈ b` lies inside `v`.
+Innermost: `y ∷ d ∷ E ∷ C ∷ T ∷ w ∷ s ∷ q ∷ c ∷ γ`.
 
 ```agda
 overAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
@@ -113,8 +111,8 @@ stepAt v b f z N = intoAt v b f z N ∧̇ overAt v b f z N
       (δ-∀∈ (δ-∀∈ (Δ₀-sndAll i0 i1 _ (Δ₀-defIn i0 (sh 4 z) (shN 4 N) _ (δ-∀∈ δ-∈)))))
 ```
 
-Every c ∈ b has an entry, and every entry (c, w) is the step at c.
-The step sits at w ∷ c ∷ s ∷ q ∷ γ.
+Every `c ∈ b` has an entry, and every entry `(c, w)` is the step at `c`. The
+step sits at `w ∷ c ∷ s ∷ q ∷ γ`.
 
 ```agda
 approxAt : ∀ {m} → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
@@ -134,8 +132,8 @@ hierAt a p f z N = approxAt f p z N ∧̇ stepAt a p f z N
 Δ₀-hierAt a p f z N = δ-∧ (Δ₀-approxAt f p z N) (Δ₀-stepAt a p f z N)
 ```
 
-THE TAGS ARE THE NUMERALS: the first is empty, each next is the
-successor of the one before.
+The tags are the numerals: the first is empty, each next is the successor of the
+one before.
 
 ```agda
 pins : ∀ {m} → (Fin 12 → Fin m) → Formula S m
@@ -155,7 +153,7 @@ pins N =
     (δ-∧ (Δ₀-sucAtL (N f9) (N f10)) (Δ₀-sucAtL (N f10) (N f11))))))))))))
 ```
 
-THE READERS.  Each row at a variable environment, both ways.
+The readers: each row at a variable environment, both ways.
 
 ```agda
 module PinsRead {m : ℕ} (N : Fin 12 → Fin m) (γ : S ^ m) where
@@ -209,7 +207,7 @@ module PinsRead {m : ℕ} (N : Fin 12 → Fin m) (γ : S ^ m) where
     st j k e = suc-in (N j) (N k) γ (tg k ∙ e ∙ cong sucV (sym (tg j)))
 ```
 
-The definable power set of the value at w, in z.
+The definable power set of the value at `w`, in `z`.
 
 ```agda
 module DefInRead {k : ℕ} (w z : Fin k) (N : Fin 12 → Fin k) (body : Formula S (4 + k))
@@ -242,8 +240,8 @@ module DefInRead {k : ℕ} (w z : Fin k) (N : Fin 12 → Fin k) (body : Formula 
     hs = sat-complete i3 (sh 4 w) i2 i1 (shN 4 N) (δ4 T C E d) W qw qT qC qE tg
 ```
 
-The three witnesses of a carrier Lset c and its definable power
-set, all in a bound.
+The three witnesses of a carrier `Lset c` and its definable power set, all in a
+bound.
 
 ```agda
 Supply : (Zv : V ℓ) (c : V ℓ) → IsOrd c → Type (ℓ-suc ℓ)
@@ -254,8 +252,8 @@ Supply Zv c oc =
   × ⟨ Lset (sucV c) ∈ Zv ⟩ ))
 ```
 
-The step at (v, b, f): v is the union of the definable power sets
-of the values recorded below b.
+The step at `(v, b, f)`: `v` is the union of the definable power sets of the
+values recorded below `b`.
 
 ```agda
 module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
@@ -353,9 +351,9 @@ module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
              (Lset-in Bv (fst c) (fst y) c∈ (subst (λ u → ⟨ fst y ∈ u ⟩) (Lset-suc (fst c)) y∈d))))
 ```
 
-The approximation at (f, b): every value f records below the
-ordinal b is the stage there, by ∈-induction on the argument, and
-every argument below b is recorded.
+The approximation at `(f, b)`: every value `f` records below the ordinal `b` is
+the stage there, by `∈`-induction on the argument, and every argument below `b`
+is recorded.
 
 ```agda
 module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
@@ -440,7 +438,7 @@ module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
            (λ d od d∈ → sup d od (ob .fst {x = fst c} {y = d} d∈ c∈)))
 ```
 
-The hierarchy row at (a, p, f), both ways.
+The hierarchy row at `(a, p, f)`, both ways.
 
 ```agda
 module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
@@ -464,9 +462,9 @@ module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
         (hier-in Pv op (lookup f γ) sp) sup
 ```
 
-THE THREE-SLOT FORM.  Sixteen innermost slots: the twelve tags, the
-table, a, p, z.  Thirteen bounded existentials over z.  The tags are
-pinned to the numerals once, at the seal.
+The three-slot form. Sixteen innermost slots: the twelve tags, the table, `a`,
+`p`, `z`. Thirteen bounded existentials over `z`. The tags are pinned to the
+numerals once, at the seal.
 
 ```agda
 module Inner where
@@ -554,8 +552,8 @@ module Inner where
   wrap-in φ γ x m h = ∣ x , (m , h) ∣₁
 ```
 
-THE LEVEL DESCRIPTION, at the consumer's slot order (a, p, z): p is
-an ordinal, and the pinned hierarchy row holds with witness z.
+The level description, at the consumer's slot order `(a, p, z)`: `p` is an
+ordinal, and the pinned hierarchy row holds with witness `z`.
 
 ```agda
 levelFo : Formula (⊥* {ℓ-suc ℓ}) 3
@@ -565,9 +563,9 @@ levelFo = isOrd-at-p ∧̇ Inner.erased
 Δ₀-levelFo = δ-∧ Δ₀-isOrd-at-p Inner.Δ₀-erased
 ```
 
-THE TWO READINGS OF A PARAMETER-FREE FORMULA.  The class-carrier
-reading of a Δ₀ formula is its ambient reading at the underlying
-sets; the ordinality conjunct at the class carrier.
+The two readings of a parameter-free formula. The class-carrier reading of a Δ₀
+formula is its ambient reading at the underlying sets; the ordinality conjunct
+at the class carrier.
 
 ```agda
 read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : S ^ n)
@@ -591,9 +589,9 @@ ord-in a p z op =
   , (λ x x∈p y y∈x u u∈y → op .snd (fst x) x∈p {x = fst y} {y = fst u} u∈y y∈x)
 ```
 
-SOUNDNESS.  At three constructible sets, the level description makes
-a the stage at p: the thirteen existentials are spent, the tags are
-read as the numerals, and the hierarchy row is read.
+Soundness. At three constructible sets, the level description makes `a` the
+stage at `p`: the thirteen existentials are spent, the tags are read as the
+numerals, and the hierarchy row is read.
 
 ```agda
 private
@@ -638,7 +636,7 @@ private
             finish (x0 ∷ x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) hm ordp
 ```
 
-THE THEOREM, at three ambient sets known to be constructible.
+The theorem, at three ambient sets known to be constructible.
 
 ```agda
 level-sound : (a p z : V ℓ) → ⟨ isL a ⟩ → ⟨ isL p ⟩ → ⟨ isL z ⟩
@@ -648,10 +646,10 @@ level-sound a p z la lp lz h =
     (subst ⟨_⟩ (sym (read Δ₀-levelFo ((a , la) ∷ (p , lp) ∷ (z , lz) ∷ []))) h)
 ```
 
-COMPLETENESS.  At an adequate stage γ and an ordinal p ∈ γ, the
-level description holds at (Lset p, p, Lset γ): the witnesses are
-the numerals and the hierarchy table on p, and every set the rows
-bound by z is in Lset γ by adequacy.
+Completeness. At an adequate stage `γ` and an ordinal `p ∈ γ`, the level
+description holds at `(Lset p, p, Lset γ)`: the witnesses are the numerals and
+the hierarchy table on `p`, and every set the rows bound by `z` is in `Lset γ`
+by adequacy.
 
 ```agda
 private
@@ -741,7 +739,7 @@ private
     complete = subst ⟨_⟩ (read Δ₀-levelFo (aS ∷ pS ∷ zS ∷ [])) (ord-in aS pS zS op , hφ)
 ```
 
-THE THEOREM.
+The theorem.
 
 ```agda
 level-complete : (γ : V ℓ) → Adequate γ → (p : V ℓ) → IsOrd p → ⟨ p ∈ γ ⟩

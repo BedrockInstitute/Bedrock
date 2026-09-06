@@ -11,7 +11,7 @@ module L.Coding.Pinned {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; Term; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
+  ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
 open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -20,28 +20,28 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ} using
   ( module LCode; prʟ-fst; codeBridge
-  ; consAtL; closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt
+  ; consAtL; closedAt; binShapeAt; unShapeAt; bothSameAt; oneSuccAt; succSndAt
   ; binSameClosed-out; unSameClosed-out; unSuccClosed-out; binSuccClosed-out )
-open import L.Coding.EnvSet {ℓ} lem using ( envSet; envS )
+open import L.Coding.EnvSet {ℓ} lem using ( envSet )
 open import L.Coding.InL {ℓ} using ( sglʟ; cupʟ; sglʟ-out; cupʟ-out )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS )
+open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; keyS; codeS )
 open import L.Coding.Sat {ℓ} lem using
   ( Sat; cond∈-in; cond∈-out; cond≐-in; cond≐-out )
 open import L.Coding.Bridge {ℓ} lem using ( asConst )
 open import L.Coding.Table {ℓ} lem using
   ( keyʟ; slot; satTable; entry-out; inSlot; ent-slot ) renaming ( total to slotTotal )
 open import L.Coding.Clauses {ℓ} lem using
-  ( sh; i0; i1; i2; i3; i4; i5; i6; i7; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
-  ; Tags; nn; down; fstS; sndS
+  ( sh; i0; i1; i2; i3; i4; i7; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ; Tags; nn; fstS; sndS
   ; tmIs; extB-out; extB-in; ExtFact; ext-unique
   ; towerAt; tableAt
-  ; module Tower; module TowerRead
+  ; module TowerRead
   ; bigAnd-in; bigAnd-out
   ; module Frame; module Clause; module Rel; module RelRead
   ; module Alphabet; module Bridge )
 
 open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Vec using ( _∷_; []; lookup )
+open import Cubical.Data.Vec using ( _∷_; lookup )
 open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Data.Sum using ( inl; inr )
 open import Cubical.Foundations.Prelude using ( subst2 )
@@ -61,8 +61,8 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-THE TWO CODINGS AGREE AT A KEY.  The hierarchy's key and the
-model's key of the same formula are the same element.
+The two codings agree at a key. The hierarchy's key and the model's key of the
+same formula are the same element.
 
 ```agda
 module _ (A : S) where
@@ -129,9 +129,9 @@ module Match (W : S) where
     (AllCodes-out W c c∈)
 ```
 
-PROBE.  The uniqueness half of SatDescribe.SatSound, at an ARBITRARY
-subcode-closed C: `codesAt C w E N` is replaced by `closedAt C`, and
-`Pinned` is conditional on the formula's key being in C.
+Probe. The uniqueness half of `SatDescribe.SatSound`, at an ARBITRARY
+subcode-closed `C`: `codesAt C w E N` is replaced by `closedAt C`, and `Pinned`
+is conditional on the formula's key being in `C`.
 
 ```agda
 module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
@@ -385,10 +385,9 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
     (clBq n 11 t a (∃̇∈ t a) (hcl .snd .snd .snd .snd .snd .snd .snd) refl) (pinned a)
 ```
 
-PROBE.  `SatHolds` of src/L/GCH/SatDescribe.lagda.md, with the four
-places that named the ALL-CODES objects taken as parameters: the
-value at a key, the decode of a member, and the two halves of the
-domain.  Nothing else changes.
+Probe. `SatHolds` of src/L/GCH/SatDescribe.lagda.md, with the four places that
+named the ALL-CODES objects taken as parameters: the value at a key, the decode
+of a member, and the two halves of the domain. Nothing else changes.
 
 ```agda
 module _ (W : S) where
@@ -646,8 +645,8 @@ module _ (W : S) where
     holds = total , (onC , twelve)
 ```
 
-THE SLOT INSTANCE.  The four are supplied at C := the slot of one
-formula and T := its table, from src/L/Coding/Table.lagda.md.
+The slot instance. The four are supplied at `C` := the slot of one formula and
+`T` := its table, from src/L/Coding/Table.lagda.md.
 
 ```agda
 module _ (W : S) where

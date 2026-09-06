@@ -51,7 +51,7 @@ open import V.Coding {ℓ} using ( pr; pr-inj )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; Lset; Lset-in; Lset-out; IsOrd )
 open import L.Ordinal {ℓ} using ( mem-ord )
-open import L.Axioms.Basic {ℓ} using ( LsetS; isL-𝒟ₒ; extensionalL )
+open import L.Axioms.Basic {ℓ} using ( LsetS; isL-𝒟ₒ )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
 open import L.Recursion {ℓ} lem using ( mereFunct )
 open import L.Coding.Model {ℓ}

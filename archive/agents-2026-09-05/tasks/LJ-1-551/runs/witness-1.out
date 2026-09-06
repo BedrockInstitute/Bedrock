@@ -1,2 +1,0 @@
-pass      exit=0        9.05s  agents/tasks/LJ-1-551/Probe551.agda::clean-forms-collected
-witness: 0 UNRESOLVED of 1, 9.05 s, probe_red=False

@@ -1,2 +1,0 @@
-missing   exit=42       2.41s  agents/tasks/LJ-1-489/Probe489.agda::piCommuteD  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-489/.pod-state/witness/Witness-POD-a4cadd1f.agda:31)
-witness: 1 UNRESOLVED of 1, 2.41 s, probe_red=False

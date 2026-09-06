@@ -1,9 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:363.16-17: error: [UnequalTerms]
-(V ℓ) !=<
-(Σ (L.Constructible.isTransV _A_1601)
- (λ _ →
-    (x : FOL.ZFStructure.ZFStructure.S 𝒮ᵥ) →
-    ⟨ (𝒮ᵥ FOL.ZFStructure.ZFStructure.∈ˢ x) _A_1601 ⟩ →
-    L.Constructible.isTransV x))
-when checking that the expression δ has type IsOrd _A_1601

@@ -1,2 +1,0 @@
-pass      exit=0        3.41s  agents/tasks/LJ-1-499/Probe499.agda::envK-family
-witness: 0 UNRESOLVED of 1, 3.41 s, probe_red=False

@@ -1,8 +1,0 @@
-# arm full-5
-# task LJ-1-395
-# brief agents/tasks/LJ-1-395/LJ-1.395.md
-# flags (none)
-# GHCRTS -A64m -I0 -M8g
-# second dispatch, file unchanged since full-3
-        1.47 real         1.31 user         0.14 sys
-exit=0

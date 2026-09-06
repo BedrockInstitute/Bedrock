@@ -1,2 +1,0 @@
-probe-red exit=42       1.66s  agents/tasks/LJ-1-441/Probe441.agda::amb-to-coded-at-least  (exit 42 inside the probe: SolvedButOpenHoles)
-witness: 1 UNRESOLVED of 1, 1.66 s, probe_red=True

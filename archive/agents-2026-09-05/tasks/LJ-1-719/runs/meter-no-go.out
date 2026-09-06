@@ -1,2 +1,0 @@
-probe-red exit=42      97.85s  agents/tasks/LJ-1-719/Probe719.agda::soundness-at-SL  (exit 42 inside the probe: SolvedButOpenHoles)
-witness: 1 UNRESOLVED of 1, 97.85 s, probe_red=True

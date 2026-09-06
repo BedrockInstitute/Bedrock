@@ -1,4 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:144.43-44: error: [UnequalTerms]
-n != (suc n) of type ℕ
-when checking that the expression t has type Term ⟪ a ⟫ (suc n)

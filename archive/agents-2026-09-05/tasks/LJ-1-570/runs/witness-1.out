@@ -1,2 +1,0 @@
-pass      exit=0        3.49s  agents/tasks/LJ-1-570/Probe570.agda::cohyps-at-today
-witness: 0 UNRESOLVED of 1, 3.49 s, probe_red=False

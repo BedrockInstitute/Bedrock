@@ -14,7 +14,7 @@ open import FOL.Syntax
   using ( Formula; con; _∧̇_; ∃̇_; ∃̇∈ )
 import FOL.Absoluteness
 import FOL.ZFModel
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import L.Constructible {ℓ}
@@ -48,7 +48,7 @@ module IS = InfinitySet {ℓ}
 open IS using ( sucV; #_; ω )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
-open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
+open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
@@ -63,14 +63,13 @@ open FiniteBase using ( ω-mem→numeral; toFin; toFin-inj; fromFin; fromFin-inj
 open FiniteBase using ( module AbstractChase )
 ```
 
-THE SHARED BOUND.  One device, every carve in this master and in
-`L.Absorption`.
+The shared bound. One device, every carve in this master and in `L.Absorption`.
 
-A carve needs a set that already holds every pair it will keep.  The
-pairs form a family over a SMALL index type, so `boundingOrd` bounds
-their stages and the bounding stage is an element of L.  No
-replacement builds it.  The module is generic in the index type and
-in the family, so each consumer supplies its own pairs.
+A carve needs a set that already holds every pair it will keep. The pairs form a
+family over a SMALL index type, so `boundingOrd` bounds their stages and the
+bounding stage is an element of L. No replacement builds it. The module is
+generic in the index type and in the family, so each consumer supplies its own
+pairs.
 
 ```agda
 module StageBound (I : Type ℓ) (g : I → S) where
@@ -98,15 +97,15 @@ module StageBound (I : Type ℓ) (g : I → S) where
                 (stage-mem (fst (g i)) (snd (g i)))
 ```
 
-ROW 5.  The pairing on ω, by the order route, zero arithmetic.
+Row 5. The pairing on `ω`, by the order route, zero arithmetic.
 
-The square law at an initial ordinal wanted three hypotheses, and ω is
-not initial (it would need `⟨ ω ∈ˢ ω ⟩`, refuted by `∈-irrefl`), so the
-three are supplied at ω directly.  Of the three only `finite-excl-ω`
-still has a consumer; the ambient law they fed is retired to
+The square law at an initial ordinal wanted three hypotheses, and `ω` is not
+initial (it would need `⟨ ω ∈ˢ ω ⟩`, refuted by `∈-irrefl`), so the three are
+supplied at `ω` directly. Of the three only `finite-excl-ω` still has a
+consumer; the ambient law they fed is retired to
 `archive/src-2026-09-06/L/Ordinal/SquareLawAmbient.lagda.md`.
 
-Successor closure at ω: every member of ω is a numeral.
+Successor closure at `ω`: every member of `ω` is a numeral.
 
 ```agda
 ω-limit : (γ : V ℓ) → ⟨ γ ∈ ω ⟩ → ⟨ sucV γ ∈ ω ⟩
@@ -116,9 +115,9 @@ Successor closure at ω: every member of ω is a numeral.
   go (n , p) = subst (λ w → ⟨ sucV w ∈ ω ⟩) (sym p) (#∈ω (suc n))
 ```
 
-No member of ω contains ω.
+No member of `ω` contains `ω`.
 
-The numeral-into-ω injection, without `ω ∈ ω`.
+The numeral-into-`ω` injection, without `ω ∈ ω`.
 
 ```agda
 numeral-into-ω : (m : ℕ) → ⟪ # m ⟫ → ⟪ ω ⟫
@@ -132,7 +131,7 @@ numeral-into-ω-inj m i₁ i₂ e = ↪-inj {a = # m}
     ∙ fiber ω (ω-ord .fst (member (# m) i₂) (#∈ω m)) .snd)
 ```
 
-No injection of ω into a finite square.
+No injection of `ω` into a finite square.
 
 ```agda
 no-inj-finite-ω : (n : ℕ) → (f : ⟪ ω ⟫ → ⟪ # n ⟫ × ⟪ # n ⟫)
@@ -148,7 +147,7 @@ no-inj-finite-ω n f finj =
     n f finj
 ```
 
-The finite-exclusion clause at ω.
+The finite-exclusion clause at `ω`.
 
 ```agda
 finite-excl-ω : (β : V ℓ) → IsOrd β → ⟨ β ∈ ω ⟩
@@ -169,12 +168,12 @@ finite-excl-ω β oβ β∈ω f finj =
       (sym (retEq e (f x)) ∙ cong (invEq e) e' ∙ retEq e (f y))
 ```
 
-ROW 1.  The composition of two injection graphs, by separation.
+Row 1. The composition of two injection graphs, by separation.
 
-`appC` reads a graph out of a CONSTANT (not the context), because
-separation takes a formula of one place.  `compFo` is the composite
-condition; `PairBound` builds the bound as a stage (no replacement);
-`Comp` carves the composite and reads it back as an honest injection.
+`appC` reads a graph out of a CONSTANT (not the context), because separation
+takes a formula of one place. `compFo` is the composite condition; `PairBound`
+builds the bound as a stage (no replacement); `Comp` carves the composite and
+reads it back as an honest injection.
 
 ```agda
 ```
@@ -277,7 +276,7 @@ module PairBound (D C : S) where
        ∙ cong₂ pr (fD .snd) (fC .snd)
 ```
 
-THE COMPOSITE.  Two graphs, four conjuncts each, not one replacement.
+The composite. Two graphs, four conjuncts each, not one replacement.
 
 ```agda
 module Comp (D E C F H : S)
@@ -396,13 +395,13 @@ module Comp (D E C F H : S)
 
 ```
 
-ROW 3.  The inclusion of one set into another, carved.
+Row 3. The inclusion of one set into another, carved.
 
-The description takes ONE place, and the codomain does not appear in
-it: an inclusion IS the identity on its domain, so the codomain enters
-the four conjuncts and not the formula.  That is why the inclusion
-costs what the identity graph costs.  Inside the binder the bound
-variable x is 0 and the free variable p is 1.
+The description takes ONE place, and the codomain does not appear in it: an
+inclusion IS the identity on its domain, so the codomain enters the four
+conjuncts and not the formula. That is why the inclusion costs what the identity
+graph costs. Inside the binder the bound variable `x` is 0 and the free variable
+`p` is 1.
 
 ```agda
 inclFo : S → Formula S 1
@@ -424,11 +423,11 @@ module InclFo (D : S) where
   into p x m e = ∣ x , (m , subst (λ T → T) (sym (at p x)) e) ∣₁
 ```
 
-THE GRAPH, carved between TWO sets.  The bound, the subset witness and
-the separation field are all PARAMETERS, so no line of this module
-names an L axiom or an L stage.  The residue, stated rather than
-hidden: the module still sits over the structure `S` and the coding
-layer.  That is the model's pair vocabulary, not L's axioms.
+The graph, carved between TWO sets. The bound, the subset witness and the
+separation field are all PARAMETERS, so no line of this module names an L axiom
+or an L stage. The residue, stated rather than hidden: the module still sits
+over the structure `S` and the coding layer. That is the model's pair
+vocabulary, not L's axioms.
 
 ```agda
 module Carve (D C bnd : S)
@@ -557,10 +556,9 @@ module InclGraph (D C : S)
   open Carve D C SB.bnd sub bel hasSeparationL public
 ```
 
-THE ORDINAL INCLUSION, which is A5's row-3 object.  The module is
-generic in the ordinal: nothing below names a stage, a numeral or ω.
-The ordinal supplies the subset witness through its own transitivity,
-and that is all it supplies.
+The ordinal inclusion, which is A5's row-3 object. The module is generic in the
+ordinal: nothing below names a stage, a numeral or `ω`. The ordinal supplies the
+subset witness through its own transitivity, and that is all it supplies.
 
 ```agda
 module OrdIncl (C : S) (oC : IsOrd (fst C))

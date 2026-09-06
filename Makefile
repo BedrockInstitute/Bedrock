@@ -1,5 +1,6 @@
 # Bedrock. Three jobs: typecheck the tree, lint it, build the site.
 #
+#   make check       the full gate: typecheck, lint, test
 #   make typecheck   typecheck src/Everything.lagda.md
 #   make lint        run the four gates over the whole tree
 #   make test        run the gate unit tests
@@ -25,18 +26,22 @@ BASE_URL   :=
 PORT       := 8000
 CF_PROJECT := bedrock
 
-.PHONY: typecheck lint test hooks venv gen html types site serve deploy clean
+.PHONY: check typecheck lint test hooks venv gen html types site serve deploy clean
+
+# The gate every document names. CI runs it, the hook runs its cheap half.
+check: typecheck lint test
 
 typecheck:
 	$(AGDA) $(EVERYTHING)
 
 # The four gates. lint-prose and lint-agda take --staged in the hook; here they
 # sweep the tree. check-glossary needs tomllib, so it wants the venv's 3.11.
+# --check makes a gate a gate: without it these report and exit 0.
 lint:
-	$(PY) scripts/gate/lint-prose.py
-	$(PY) scripts/gate/lint-agda.py
-	$(PY) scripts/gate/check-glossary.py
-	$(PY) scripts/gate/check-fences.py
+	$(PY) scripts/gate/lint-prose.py --check
+	$(PY) scripts/gate/lint-agda.py --check
+	$(PY) scripts/gate/check-glossary.py --check
+	$(PY) scripts/gate/check-fences.py --check
 	$(PY) scripts/site/weave-i18n.py --check
 
 test:

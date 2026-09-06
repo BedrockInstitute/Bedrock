@@ -1,8 +1,0 @@
-Checking LJ-1-748.Probe748 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-748/agents/tasks/LJ-1-748/Probe748.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-748/agents/tasks/LJ-1-748/Probe748.agda:105.20-122.48: error: [UnsolvedInteractionMetas]
-Unsolved interaction metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-748/agents/tasks/LJ-1-748/Probe748.agda:105.20-63
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-748/agents/tasks/LJ-1-748/Probe748.agda:109.26-61
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-748/agents/tasks/LJ-1-748/Probe748.agda:111.46-75
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-748/agents/tasks/LJ-1-748/Probe748.agda:122.37-48
-rc=42

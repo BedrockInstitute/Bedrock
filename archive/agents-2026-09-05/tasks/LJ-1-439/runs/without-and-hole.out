@@ -1,9 +1,0 @@
-Checking LJ-1-439.Probe439 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-439/agents/tasks/LJ-1-439/Probe439.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-439/agents/tasks/LJ-1-439/Probe439.agda:159.42-45: error: [NotInScope]
-Not in scope:
-  d∈n
-  at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-439/agents/tasks/LJ-1-439/Probe439.agda:159.42-45
-    (did you mean
-       'd∈' or
-       'd∈sn'?)
-when scope checking d∈n

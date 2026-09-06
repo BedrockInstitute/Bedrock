@@ -82,8 +82,7 @@ ord-emb a b ob a∈b = f , inj
       ∙ fiber b {x = ⟪ a ⟫↪ n} (ob .fst (member a n) a∈b) .snd)
 ```
 
-SECTION 1.  THE OBLIGATION, at `[LJ-1.526]`'s own binding
-(agents/tasks/LJ-1-526/Probe526.agda:178-183).
+## Section 1. The obligation, at `[LJ-1.526]`'s own binding (agents/tasks/LJ-1-526/Probe526.agda:178-183)
 
 The type, named apart so that the reductions can quantify over it.
 THE OBLIGATION ITSELF IS THE TERM `CardAboveL` AT THE FOOT OF THIS
@@ -98,28 +97,29 @@ CardAboveLᵀ =
        (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩) ∥₁
 ```
 
-SECTION 2.  EVERY ORDINAL IS AN L-ELEMENT, AND IT IS ONE LINE.
+## Section 2. Every ordinal is an L-element, and it is one line
 
-  `[LJ-1.526]`'s report lists "the construction must produce an
-  L-ELEMENT θ, so whatever set is collected must be shown
-  constructible" as one of the two things it could not price
-  (agents/tasks/LJ-1-526/lj-1.526-report.md, `## What CardAboveL is`).
+`[LJ-1.526]`'s report lists "the construction must produce an L-ELEMENT θ, so
+whatever set is collected must be shown constructible" as one of the two things
+it could not price (agents/tasks/LJ-1-526/lj-1.526-report.md,
+`## What CardAboveL is`).
 
-  FOR AN ORDINAL THAT DEMAND IS FREE.  `ord∈Lset-suc`
-  (src/L/Ordinal/Stages.lagda.md:434) puts an ordinal at the stage
-  after itself, and `Lset→isL` (src/L/Constructible.lagda.md:395)
-  reads membership of a stage as level-hood.  The pair is already
-  written inside `LeastCardInjL` (src/L/Cardinal.lagda.md:70-74) for
-  ONE ordinal; nothing in the tree names it generally.
+FOR AN ORDINAL THAT DEMAND IS FREE. `ord∈Lset-suc`
+(src/L/Ordinal/Stages.lagda.md:434) puts an ordinal at the stage after itself,
+and `Lset→isL` (src/L/Constructible.lagda.md:395) reads membership of a stage as
+level-hood. The pair is already written inside `LeastCardInjL`
+(src/L/Cardinal.lagda.md:70-74) for ONE ordinal; nothing in the tree names it
+generally.
 
 ```agda
 ordL : (x : SV.S) → IsOrd x → SL.S
 ordL x ox = x , Lset→isL (sucV x) (suc-ord ox) x (ord∈Lset-suc x ox)
 ```
 
-SECTION 3.  THE BRIDGE, re-derived.  `[LJ-1.526]` built it at
-agents/tasks/LJ-1-526/Probe526.agda:105-107; three lines, so this
-file states its own rather than importing a 14 s module.
+## Section 3. The bridge, re-derived
+
+`[LJ-1.526]` built it at agents/tasks/LJ-1-526/Probe526.agda:105-107; three
+lines, so this file states its own rather than importing a 14 s module.
 
 ```agda
 ambient→internal : (κ : SL.S) → IsCardinal (fst κ) → IsCardinalL κ
@@ -127,13 +127,12 @@ ambient→internal κ c δ δ∈κ h =
   PT.rec Empty.isProp⊥ (λ w → c (fst δ) δ∈κ (readL κ δ w)) h
 ```
 
-SECTION 4.  THE AMBIENT CARDINAL, BY SEPARATION.
+## Section 4. The ambient cardinal, by separation
 
-  Fix an ordinal `a` and an ordinal `β`.  Separate out of β the
-  members that inject into a.  THE PREDICATE IS ALREADY SMALL:
-  `⟪ x ⟫` and `⟪ a ⟫` both live in `Type ℓ`, so the cubical
-  library's `SeparationSet` takes it with no resizing and no
-  impredicativity parameter.
+Fix an ordinal `a` and an ordinal `β`. Separate out of `β` the members that
+inject into `a`. THE PREDICATE IS ALREADY SMALL: `⟪ x ⟫` and `⟪ a ⟫` both live
+in `Type ℓ`, so the cubical library's `SeparationSet` takes it with no resizing
+and no impredicativity parameter.
 
 ```agda
 module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
@@ -198,11 +197,11 @@ module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
     go (inr (inr β∈θ)) = Empty.rec (∈-irrefl β (θ⊆β β β∈θ))
 ```
 
-SECTION 5.  THE REDUCTION.  `CardAboveL` FROM ONE AMBIENT STATEMENT.
+## Section 5. The reduction. `CardAboveL` from one ambient statement
 
-  `NoInjOrd` carries NO constructibility, NO code, NO cardinal
-  predicate and NO leastness: for every ordinal, some ordinal does
-  not inject into it.  That is the Hartogs fact in its weakest form.
+`NoInjOrd` carries NO constructibility, NO code, NO cardinal predicate and NO
+leastness: for every ordinal, some ordinal does not inject into it. That is the
+Hartogs fact in its weakest form.
 
 ```agda
 NoInjOrd : Type (ℓ-suc ℓ)
@@ -227,8 +226,8 @@ above a γ oa oγ noinj = go (ord-tri γ oγ a oa)
   go (inr (inr a∈γ)) = a∈γ
 ```
 
-THE AMBIENT HALF AT ONE ORDINAL, UNTRUNCATED.  This is the whole
-construction; everything after it is plumbing.
+The ambient half at one ordinal, untruncated. This is the whole construction;
+everything after it is plumbing.
 
 ```agda
 cardAboveAt : (a : SV.S) → IsOrd a
@@ -250,7 +249,7 @@ ambientCardAbove : NoInjOrd → (a : SV.S) → IsOrd a
 ambientCardAbove ni a oa = PT.map (cardAboveAt a oa) (ni a oa)
 ```
 
-THE WHOLE OBLIGATION, GIVEN `NoInjOrd`.  GREEN, NO HOLES.
+The whole obligation, given `NoInjOrd`. Green, no holes.
 
 NEITHER `IsCardinalL κ` NOR `κ ∉ ω` IS CONSUMED.  Both hypotheses of
 `CardAboveL` are dead on this route, and the report says so.
@@ -267,9 +266,10 @@ noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
     ordL θ oθ , oθ , ambient→internal (ordL θ oθ) cθ , κ∈θ
 ```
 
-SECTION 5.5.  THE MOSTOWSKI COLLAPSE OF A TRANSITIVE WELL-FOUNDED
-RELATION.  One recursion, two sites: `Hartogs.Col` below and
-src/L/GCH/OrderType.lagda.md's `Collapse.Col`.
+## Section 5.5. The Mostowski collapse of a transitive well-founded relation
+
+One recursion, two sites: `Hartogs.Col` below and src/L/GCH/OrderType.lagda.md's
+`Collapse.Col`.
 
 ```agda
 module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
@@ -321,28 +321,24 @@ module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
             subst (λ v → ⟨ v ∈ˢ col p ⟩) e2 (col-in p s (≺-trans sr rp))
 ```
 
-SECTION 6.  `NoInjOrd`, BUILT.  THE HARTOGS ORDINAL WITHOUT ORDER
-TYPES.
+## Section 6. `NoInjOrd`, built. The Hartogs ordinal without order types
 
-  `[LJ-1.94]` built the ambient Hartogs at ω in 1058 lines
-  (archive/dev/LJ-dispatch-index.md:170) through order types: the
-  collapse of a well-order, its uniqueness under isomorphism, and
-  initial segments.  NONE OF THAT IS NEEDED HERE, and the reason is
-  section 6's contradiction shape.
+`[LJ-1.94]` built the ambient Hartogs at ω in 1058 lines
+(archive/dev/LJ-dispatch-index.md:170) through order types: the collapse of a
+well-order, its uniqueness under isomorphism, and initial segments. NONE OF THAT
+IS NEEDED HERE, and the reason is section 6's contradiction shape.
 
-  The classical construction wants `ot w ≡ μ`, which forces
-  uniqueness-under-isomorphism.  THIS ONE WANTS ONLY `μ ⊆ ot w`,
-  because `ot w ∈ μ` already holds by construction and the two
-  together give `ot w ∈ ot w`.  A subset claim needs no order
-  isomorphism, so trichotomy, initial segments and the uniqueness
-  theorem all drop out, and the relation may be an arbitrary
-  TRANSITIVE WELL-FOUNDED one rather than a well-order.
+The classical construction wants `ot w ≡ μ`, which forces
+uniqueness-under-isomorphism. THIS ONE WANTS ONLY `μ ⊆ ot w`, because
+`ot w ∈ μ` already holds by construction and the two together give
+`ot w ∈ ot w`. A subset claim needs no order isomorphism, so trichotomy, initial
+segments and the uniqueness theorem all drop out, and the relation may be an
+arbitrary TRANSITIVE WELL-FOUNDED one rather than a well-order.
 
-  THE INDEX IS `Bool`-VALUED AND SO IT IS ALREADY SMALL.
-  `⟪ a ⟫ → ⟪ a ⟫ → Bool` lives in `Type ℓ`, so this file needs no
-  small classifier `Ω'`, no `HPropSmallness` and no `Impredicativity`
-  parameter.  `[LJ-1.94]` paid for that classifier
-  (agents/tasks/LJ-1-94/ProbeLJ194A.agda:29); this does not.
+THE INDEX IS `Bool`-VALUED AND SO IT IS ALREADY SMALL.
+`⟪ a ⟫ → ⟪ a ⟫ → Bool` lives in `Type ℓ`, so this file needs no small classifier
+`Ω'`, no `HPropSmallness` and no `Impredicativity` parameter. `[LJ-1.94]` paid
+for that classifier (agents/tasks/LJ-1-94/ProbeLJ194A.agda:29); this does not.
 
 ```agda
 module Hartogs (a : SV.S) where
@@ -617,15 +613,15 @@ module Hartogs (a : SV.S) where
   noInj f = NoInj.absurd f
 ```
 
-SECTION 7.  THE OBLIGATION, INHABITED.
+## Section 7. The obligation, inhabited
 
 ```agda
 noInjOrd : NoInjOrd
 noInjOrd x ox = ∣ Hartogs.μ x , Hartogs.μ-ord x , Hartogs.noInj x ∣₁
 ```
 
-THE OBLIGATION, AT `[LJ-1.526]`'S OWN TYPE.
-GREEN, NO HOLES, NO POSTULATE, NO CHOICE.
+The obligation, at `[LJ-1.526]`'s own type. Green, no holes, no postulate, no
+choice.
 
 ```agda
 CardAboveL : CardAboveLᵀ

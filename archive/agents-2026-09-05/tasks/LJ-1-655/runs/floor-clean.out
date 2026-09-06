@@ -1,2 +1,0 @@
-Checking LJ-1-655.Probe655 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-655/agents/tasks/LJ-1-655/Probe655.agda).
-agda --safe -i .pod-state/witness -i src -i agents/tasks   2.81s user 0.22s system 98% cpu 3.075 total

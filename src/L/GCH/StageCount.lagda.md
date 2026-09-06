@@ -20,25 +20,23 @@ open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∈#-elim; mem-ord; ω-ord; numeral-ord; #∈ω )
-open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
+open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-open import L.Stage {ℓ} lem using ( stage )
 open import L.Coding.Model {ℓ}
   using ( prʟ; prʟ-fst; numL
         ; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro
         ; appAt; appAt-adequate; envOverAt; envOverAt-transport )
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-in; injAt-out; module Small )
-open import L.Coding.Environment {ℓ} using ( env; lookup-spec; cons )
+open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
 open import L.Coding.EnvSet {ℓ} lem
-  using ( Ix; envS; envSet; envSet-in; envSet-out; envOver; module Recover )
+  using ( Ix; envS; envSet-in; envSet-out; envOver; module Recover )
 open import L.Choice.Internal {ℓ} lem using ( domAt-numeral; domAt-fill )
-open import L.Choice.Adequate {ℓ} lem using ( module At )
 open import L.Choice.Step {ℓ} lem
   using ( carry; memOf; orderAt; orderAt-step; relOf
-        ; birth; birth-mem; module Family )
+        ; birth-mem; module Family )
   renaming ( Mem to MemOf )
 open import L.Choice.Table {ℓ} lem using ( Related; IsRel; ixRel-rep; ixRel-fill )
 open import L.Choice.Order {ℓ} lem using ( relL; relL-spec )
@@ -61,7 +59,7 @@ open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId'; inj-toℕ )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.Prelude using ( subst2; J )
+open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ2; isPropΠ3 )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
@@ -93,7 +91,7 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-The numeral k as an element of L.
+The numeral `k` as an element of L.
 
 ```agda
 nn : ℕ → S
@@ -122,11 +120,11 @@ private
   i9 = suc i8
 ```
 
-SECTION 0.  TWO FACTS ABOUT ENVIRONMENTS.
+## Section 0. Two facts about environments
 
-  An environment determines its length (read off `domAt`, through
-  the two readings src/L/Choice/Internal.lagda.md exports), and two
-  environments of one length that are equal agree entrywise.
+An environment determines its length (read off `domAt`, through the two readings
+src/L/Choice/Internal.lagda.md exports), and two environments of one length that
+are equal agree entrywise.
 
 ```agda
 env-len : (E : S) {n n' : ℕ} (h : Fin n → V ℓ) (h' : Fin n' → V ℓ)
@@ -142,14 +140,13 @@ env-pt h h' q i = subst ⟨_⟩ (lookup-spec h' i (h i))
     (subst ⟨_⟩ (sym (lookup-spec h i (h i))) refl))
 ```
 
-SECTION 1.  A CODED INJECTION E : A ↪ B LIFTS POINTWISE TO THE FINITE
-SEQUENCES, seqL A ↪ seqL B.
+## Section 1. A coded injection `E : A ↪ B` lifts pointwise to the finite sequences, `seqL A ↪ seqL B`
 
-  Over (y ∷ s ∷ []): "there is n with dom s = n, and y is an
-  environment over B on n whose entry at every i ∈ n is the E-image
-  of the entry of s at i".  Binders, outermost first: n, then b
-  pinned to B, then i ∈ n, then u, v.  Inside all of them: v is 0,
-  u is 1, i is 2, b is 3, n is 4, y is 5, s is 6.
+Over `(y ∷ s ∷ [])`: "there is `n` with `dom s = n`, and `y` is an environment
+over `B` on `n` whose entry at every `i ∈ n` is the `E`-image of the entry of
+`s` at `i`". Binders, outermost first: `n`, then `b` pinned to `B`, then
+`i ∈ n`, then `u`, `v`. Inside all of them: `v` is 0, `u` is 1, `i` is 2, `b` is
+3, `n` is 4, `y` is 5, `s` is 6.
 
 ```agda
 module SeqMap (A B E : S)
@@ -431,16 +428,17 @@ module SeqMap (A B E : S)
   injL = Inj.injL D inj
 ```
 
-THE LIFT.  A coded injection of A into B lifts to the finite sequences.
+The lift: a coded injection of `A` into `B` lifts to the finite sequences.
 
 ```agda
 seq-map : (A B E : S) → InjCode E A B → InjL (seqL A) (seqL B)
 seq-map A B E (sv , dm , ij , ran) = SeqMap.injL A B E sv dm ij ran
 ```
 
-SECTION 2.  A BINDER PINNED TO A CONSTANT, with its two readings.
-The consumer is the injection formula of section 3, and through it
-the hull's own count (src/L/GCH/HullCount.lagda.md).
+## Section 2. A binder pinned to a constant, with its two readings
+
+The consumer is the injection formula of section 3, and through it the hull's
+own count (src/L/GCH/HullCount.lagda.md).
 
 ```agda
 pinAt : ∀ {n} → S → Formula S (suc n) → Formula S n
@@ -456,9 +454,10 @@ pin-out c φ γ = PT.rec (snd ((c ∷ γ) ⊨ φ))
   (λ { (z , (ez , h)) → subst (λ v → ⟨ (v ∷ γ) ⊨ φ ⟩) (Σ≡Prop (λ v → snd (isL v)) ez) h })
 ```
 
-SECTION 3.  THE INJECTION FORMULA.  A coded injection said inside
-the model at two slots against a constant target, with the readings
-src/L/GCH/HullCount.lagda.md fills and reads at the hull.
+## Section 3. The injection formula
+
+A coded injection said inside the model at two slots against a constant target,
+with the readings src/L/GCH/HullCount.lagda.md fills and reads at the hull.
 
 An injection code is a proposition, and it respects the index
 equations of its graph and its domain.
@@ -494,8 +493,8 @@ injcode-resp F F' a a' b qF qa (sv , dm , ij , ran) =
   mv' {u} {v} = subst (λ w → ⟨ pr u v ∈ w ⟩) qF
 ```
 
-The injection-code formula at two slots, against the constant b:
-single-valued, with domain B, injective, with values in b.
+The injection-code formula at two slots, against the constant `b`:
+single-valued, with domain `B`, injective, with values in `b`.
 
 ```agda
 injFo : ∀ {n} → S → Fin n → Fin n → Formula S n
@@ -530,10 +529,11 @@ module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
 ```
 
 
-SECTION 5.  THE STAGE L_ω, AND A MOVE ALONG EQUAL CARRIERS.  The
-base of the count is L_ω ↪ ω, proved in section 6.  The row at an
-infinite ordinal is src/L/GCH/StageCounted.lagda.md, which runs the
-hull at δ+1 and takes only this base from here.
+## Section 5. The stage `L_ω`, and a move along equal carriers
+
+The base of the count is `L_ω ↪ ω`, proved in section 6. The row at an infinite
+ordinal is src/L/GCH/StageCounted.lagda.md, which runs the hull at `δ+1` and
+takes only this base from here.
 
 ```agda
 Lω : S
@@ -552,21 +552,21 @@ move a a' b b' qa qb h =
     (injl-trans a b b' h (inclusion-coded b b' (λ z hz → subst (λ w → ⟨ z ∈ˢ w ⟩) qb hz)))
 ```
 
-SECTION 6.  THE BASE OF THE COUNT: THE LIMIT STAGE L_ω IS COUNTABLE,
-INTERNALLY.  The stage order at ω is a set of L (`relL ω`); its
-collapse (src/L/GCH/OrderType.lagda.md) is an ordinal every value of
-which is finite, because the segment below a member sits in one
-finite stage and omega does not inject into a finite stage.
+## Section 6. The base of the count: the limit stage `L_ω` is countable, internally
 
-6.1  A FINITE STAGE HOLDS NO COPY OF omega.
+The stage order at `ω` is a set of L (`relL ω`); its collapse
+(src/L/GCH/OrderType.lagda.md) is an ordinal every value of which is finite,
+because the segment below a member sits in one finite stage and omega does not
+inject into a finite stage.
 
-  src/L/Choice/Finite.lagda.md tallies the finite stage L_n: a finite
-  list of members covering it.  At every member the least tally index
-  is a natural number below the tally's size, so an injection of omega
-  into L_n composes to one into the numeral `# size`, which
-  `finite-excl-ω` refutes.  The index is chosen by `leastOf` over the
-  natural order; minimality is never used, any deterministic index
-  would do.
+### 6.1 A finite stage holds no copy of omega
+
+src/L/Choice/Finite.lagda.md tallies the finite stage `L_n`: a finite list of
+members covering it. At every member the least tally index is a natural number
+below the tally's size, so an injection of omega into `L_n` composes to one into
+the numeral `# size`, which `finite-excl-ω` refutes. The index is chosen by
+`leastOf` over the natural order; minimality is never used, any deterministic
+index would do.
 
 ```agda
 private
@@ -625,12 +625,11 @@ private
     (λ { (k , e) → subst NoInto e (FinNo.noinj (lower k)) }) g∈ω
 ```
 
-6.2  L_ω, THE ORDER ON IT AS A SET OF L, AND ITS DOMAIN READING.
+### 6.2 `L_ω`, the order on it as a set of L, and its domain reading
 
-  `relL ω` is the stage order at omega, realized as an element of L
-  (src/L/Choice/Order.lagda.md).  `Related` says what its members
-  are: pairs of two members of the stage.  That is the domain
-  hypothesis `OrderType.Code` asks for.
+`relL ω` is the stage order at omega, realized as an element of L
+(src/L/Choice/Order.lagda.md). `Related` says what its members are: pairs of two
+members of the stage. That is the domain hypothesis `OrderType.Code` asks for.
 
 ```agda
 hω : ⟨ isL ω ⟩
@@ -702,12 +701,11 @@ module C = OT.Conjuncts wfω transω using ( module Inj; col; col-ord; col-out; 
 module I = C.Inj triω using ( code; col-inj )
 ```
 
-6.3  THE SEGMENT BELOW A MEMBER SITS IN ONE FINITE STAGE.
+### 6.3 The segment below a member sits in one finite stage
 
-  The stage order compares the BIRTH first (src/L/Choice/Step.lagda.md,
-  `Family._≺_`), so a predecessor of x is born at or below the birth
-  of x, hence belongs to the stage one above that birth.  At omega
-  that stage is finite.
+The stage order compares the BIRTH first (src/L/Choice/Step.lagda.md,
+`Family._≺_`), so a predecessor of `x` is born at or below the birth of `x`,
+hence belongs to the stage one above that birth. At omega that stage is finite.
 
 ```agda
 private
@@ -759,13 +757,12 @@ private
     step-bound (atIx r) (atIx p) (transport (unfoldω (atIx r) (atIx p)) (≺→< r p k))
 ```
 
-6.4  THE ORDER TYPE IS INCLUDED IN omega.
+### 6.4 The order type is included in omega
 
-  The collapse value at p is the order type of the segment below p.
-  That segment injects, ambiently, into the finite stage of section 3,
-  so omega does not inject into it; and an ordinal that omega does not
-  reach is a member of omega.  This is the shape of `Step.col-fin`
-  (src/L/GCH/Pairing.lagda.md:979).
+The collapse value at `p` is the order type of the segment below `p`. That
+segment injects, ambiently, into the finite stage of section 3, so omega does
+not inject into it; and an ordinal that omega does not reach is a member of
+omega. This is the shape of `Step.col-fin` (src/L/GCH/Pairing.lagda.md:979).
 
 ```agda
 private
@@ -814,8 +811,7 @@ otL⊆ω z h = PT.rec (snd (z ∈ˢ ω))
   (C.otL-out z h)
 ```
 
-6.5  THE TWO THEOREMS: the premise of section 5, and the trophy's
-first line.
+### 6.5 The two theorems: the premise of section 5, and the trophy's first line
 
 ```agda
 limit-stage-counted : LimitStageCounted

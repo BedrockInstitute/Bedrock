@@ -1,8 +1,0 @@
-pass      exit=0        0.67s  agents/tasks/LJ-1-680/Probe680.agda::convert-generic  (grouped run, exit 0)
-pass      exit=0        0.67s  agents/tasks/LJ-1-680/Probe680.agda::pin₃  (grouped run, exit 0)
-pass      exit=0        0.67s  agents/tasks/LJ-1-680/Probe680.agda::pin₃-map  (grouped run, exit 0)
-pass      exit=0        0.67s  agents/tasks/LJ-1-680/Probe680.agda::Unpack.read  (grouped run, exit 0)
-pass      exit=0        0.67s  agents/tasks/LJ-1-680/Probe680.agda::Unpack.unpack-pin  (grouped run, exit 0)
-pass      exit=0        0.67s  agents/tasks/LJ-1-680/Probe680.agda::Unpack.convert-generic  (grouped run, exit 0)
-pass      exit=0        0.67s  agents/tasks/LJ-1-680/Probe680.agda::convert-at-true  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 7, 0.67 s, probe_red=False

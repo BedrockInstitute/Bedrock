@@ -1,7 +1,0 @@
-# No table rows proposed. One [[queue]] REQUEST for the mathematician's attention.
-
-[[queue]]
-code = "LJ-1.541"
-reason = "REQUEST, no brief: LJ-1.541 exhausted attempt_max on sys-timeout-escalate itself (the system escalation row, not a task-level one) -- three consecutive 1800 s timeouts under coder_adversarial (grok-4.6), the underlying fact never changing (dev/pod/transitions/2026-08.jsonl, task LJ-1.541, seq 2926/2971/2980). There is no better-fitting existing row to fall through to. LJ-1.547 is the same brief family (Bis*.agda bisimulation checks) and is running the same pattern, close to the same wall but not yet parked. This needs a deadline or term-size decision, which the program will not make: is Probe541's bisimulation check expected to complete under 1800 s at all, does it need a narrower probe, or does agda_deadline_s need a task-specific exception?"
-added = 2026-08-23
-added_by = "maintainer"

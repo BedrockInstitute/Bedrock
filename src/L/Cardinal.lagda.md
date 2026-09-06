@@ -48,15 +48,14 @@ _↪_ : Type ℓ → Type ℓ → Type ℓ
 X ↪ Y = Σ[ f ∈ (X → Y) ] ((x y : X) → f x ≡ f y → x ≡ y)
 ```
 
-A1.  The site at `sucV (fst α)`, for a least-cardinal selection.
+A1. The site at `sucV (fst α)`, for a least-cardinal selection.
 
-  α is an L-element, the per-site hypothesis is the ordinal
-  certificate `oα`, and the crossing `up` lifts a member of the tower
-  at `sucV (fst α)` into the L-carrier.  The lift is where the three
-  delivered L-lemmas surface: `ord∈Lset-suc` and `Lset→isL` give
-  level-hood of the stage, `isL-trans` pushes it down.  The selection
-  itself is the consumer's: `L.GCH.CardOf` runs `leastOf w`, and
-  `L.GCH.Assembly` takes `up`, `self` and `self-eq`.
+`α` is an L-element, the per-site hypothesis is the ordinal certificate `oα`,
+and the crossing `up` lifts a member of the tower at `sucV (fst α)` into the
+L-carrier. The lift is where the three delivered L-lemmas surface:
+`ord∈Lset-suc` and `Lset→isL` give level-hood of the stage, `isL-trans` pushes
+it down. The selection itself is the consumer's: `L.GCH.CardOf` runs
+`leastOf w`, and `L.GCH.Assembly` takes `up`, `self` and `self-eq`.
 
 ```agda
 module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
@@ -100,12 +99,11 @@ module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
 
 ```
 
-A4.  The internal cardinal.
+A4. The internal cardinal.
 
-  `InjCode` is A2's three conjuncts plus the value-in-b clause, the
-  four pieces A2's `Small` readback consumes.  `IsCardinalL` is the
-  internal cardinal: no smaller L-element admits a code.  The trophy
-  statement names both.
+`InjCode` is A2's three conjuncts plus the value-in-`b` clause, the four pieces
+A2's `Small` readback consumes. `IsCardinalL` is the internal cardinal: no
+smaller L-element admits a code. The trophy statement names both.
 
 ```agda
 InjCode : S → S → S → Type (ℓ-suc ℓ)

@@ -20,18 +20,18 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open hPropStructure 𝒮ᵥ
 ```
 
-transitivity of a set, in the absoluteness-chapter shape; definitionally the
-same predicate as the constructible chapter's isTransV, so a consumer's
-transitivity witness passes through unchanged
+Transitivity of a set, in the absoluteness-chapter shape; definitionally the
+same predicate as the constructible chapter's `isTransV`, so a consumer's
+transitivity witness passes through unchanged.
 
 ```agda
 isTrans : S → Type (ℓ-suc ℓ)
 isTrans u = Transitive 𝒮ᵥ (λ x → x ∈ˢ u)
 ```
 
-structure extensionality of a set: equal carrier members have equal
-comparisons against the carrier's members. The collapse's injectivity
-half holds under this hypothesis, without transitivity of the carrier
+Structure extensionality of a set: equal carrier members have equal comparisons
+against the carrier's members. The collapse's injectivity half holds under this
+hypothesis, without transitivity of the carrier.
 
 ```agda
 isExt : S → Type (ℓ-suc ℓ)
@@ -41,9 +41,9 @@ isExt X = (x y : S) → x ∈ᵗ X → y ∈ᵗ X
         → x ≡ y
 ```
 
-the collapse is defined by ∈-recursion over the whole hierarchy, one step per
-set: π x is the set of the π-images of the members of x that lie in the
-carrier X
+The collapse is defined by `∈`-recursion over the whole hierarchy, one step per
+set: `π x` is the set of the `π`-images of the members of `x` that lie in the
+carrier `X`.
 
 ```agda
 module Collapse (X : S) where

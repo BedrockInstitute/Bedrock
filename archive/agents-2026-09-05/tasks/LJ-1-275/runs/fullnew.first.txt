@@ -1,8 +1,0 @@
-# LJ-1.275 CURE A, FULL step 6 arm, FIRST RUN (a warm-up, discarded from the series)
-# THE HEAP-WALL ARM.  The same content heap-exhausted at -M8g inside the chapter.
-# command GHCRTS="-A64m -I0 -M8g" agda agents/tasks/LJ-1-275/SupplyFullNew.lagda.md
-# load before 10:58 load averages: 3.86 5.12 5.78
-# load after  11:06 load averages: 4.68 5.10 5.47
-# wall seconds 462
-# exit 0
-Checking LJ-1-275.SupplyFullNew (/Users/alsg/Agentic/Bedrock/agents/tasks/LJ-1-275/SupplyFullNew.lagda.md).

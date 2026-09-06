@@ -38,13 +38,11 @@ open import V.Coding {ℓ} using ( #mono; pr-inj )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Axioms.Power {ℓ} lem using ( hasPowerL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Coding.InL {ℓ} using ( envL )
 open import L.Coding.Model {ℓ}
-  using ( envSetAt; envOverAt; envOverAt-transport; extAt-in-both
-        ; svAt; domAt; valuesInAt; pairsInAt; inDomAt
+  using ( envOverAt; svAt; domAt; valuesInAt; pairsInAt; inDomAt
         ; prʟ; prʟ-fst; numL; svAt-in; svAt-out; inDomAt-adequate
         ; appAt-adequate; domAt-in; valuesInAt-out
         ; envOver-sv; envOver-dom; envOver-values; envOver-pairs
@@ -67,7 +65,6 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
-open ModelL using ( _⊆ˢ_ )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )

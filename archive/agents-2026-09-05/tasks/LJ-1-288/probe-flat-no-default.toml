@@ -1,7 +1,0 @@
-# PROBE. A flat vendor that names no `default_mode`, so `auto` has nothing to ask.
-in_force = "glm"
-
-[vendors.glm]
-model = "glm-model-id-not-yet-known"
-pi_provider = "glm"
-pi_wired = false

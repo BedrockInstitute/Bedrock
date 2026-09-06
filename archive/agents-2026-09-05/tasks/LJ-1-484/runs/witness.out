@@ -1,2 +1,0 @@
-missing   exit=42       2.70s  agents/tasks/LJ-1-484/Probe484.agda::cover  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-484/.pod-state/witness/Witness-POD-c131f312.agda:25)
-witness: 1 UNRESOLVED of 1, 2.70 s, probe_red=False

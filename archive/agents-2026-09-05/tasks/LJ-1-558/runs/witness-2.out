@@ -1,5 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# witness-2: the declared obligation, on the file as delivered
-pass      exit=0        1.52s  agents/tasks/LJ-1-558/Probe558.agda::gch-route-without-stage
-witness: 0 UNRESOLVED of 1, 1.52 s, probe_red=False
-exit=0

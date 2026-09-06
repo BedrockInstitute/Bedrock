@@ -281,7 +281,7 @@ once.
 以下一切都相对于一个集合 `A`，即诸名字所依据写出的那个阶段，也相对于那个阶段的成员上的一个良序，故本章在模块 `Naming A w` 中工作。一个**名字**是一个元数、一条比该元数多一个自由变量的无参公式，以及一个由 `A` 的小成员类型取出的、长度为该元数的参数向量。多出来的那个变量正是子集被刻出时所用的那个；其余的接收诸参数，而第一个键当即从那条公式读出。
 <!--/-->
 
-perf: the naming data are definitions of this module, not of another
+Perf: the naming data are definitions of this module, not of another.
 
 ```agda
 module Naming (A : S) (w : SWO ⟪ A ⟫) where

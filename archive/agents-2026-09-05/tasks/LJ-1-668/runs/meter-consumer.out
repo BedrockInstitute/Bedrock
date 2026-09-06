@@ -1,6 +1,0 @@
-pass      exit=0        1.15s  agents/tasks/LJ-1-668/Probe668.agda::At.lset∈limit  (grouped run, exit 0)
-pass      exit=0        1.15s  agents/tasks/LJ-1-668/Probe668.agda::At.dee-stage∈limit  (grouped run, exit 0)
-pass      exit=0        1.15s  agents/tasks/LJ-1-668/Probe668.agda::At.empty∈limit  (grouped run, exit 0)
-pass      exit=0        1.15s  agents/tasks/LJ-1-668/Probe668.agda::At.dee-empty∈limit  (grouped run, exit 0)
-pass      exit=0        1.15s  agents/tasks/LJ-1-668/Probe668.agda::At.from-iter  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 5, 1.15 s, probe_red=False

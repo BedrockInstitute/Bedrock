@@ -1,2 +1,0 @@
-missing   exit=42       2.49s  agents/tasks/LJ-1-494/Probe494.agda::GraphSatAtStage  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-494/.pod-state/witness/Witness-LJ-1-494-f6f34fc3.agda:22)
-witness: 1 UNRESOLVED of 1, 2.49 s, probe_red=False

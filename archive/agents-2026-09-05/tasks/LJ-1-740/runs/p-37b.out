@@ -1,8 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-direct re-run of p-37 bytes (runner artifact)
-Checking LJ-1-740.Probe740 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-740/agents/tasks/LJ-1-740/Probe740.agda:514.44-45: error: [UnequalTerms]
-(Vec DBA.SM n) !=<
-(Σ (FOL.ZFStructure.ZFStructure.S 𝒮ᵥ) (λ x → x ∈ᶜ isL))
-when checking that the expression δ has type S
-EXIT=42

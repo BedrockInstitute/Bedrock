@@ -1,9 +1,0 @@
-Checking LJ-1-395.Probe395 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-395/agents/tasks/LJ-1-395/Probe395.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-395/agents/tasks/LJ-1-395/Probe395.agda:152.24-157.27: error: [UnsolvedInteractionMetas]
-Unsolved interaction metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-395/agents/tasks/LJ-1-395/Probe395.agda:152.24-28
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-395/agents/tasks/LJ-1-395/Probe395.agda:156.22-26
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-395/agents/tasks/LJ-1-395/Probe395.agda:157.23-27
-real 2.03
-user 1.46
-sys 0.21

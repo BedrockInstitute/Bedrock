@@ -1,7 +1,0 @@
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-751/agents/tasks/LJ-1-751/Probe751.agda:94.8: error: [ParseError]
-:<ERROR>  ℕ) → ⟨ sucIter n x ∈ˢ γ ⟩
-suc...
-real 0.07
-user 0.03
-sys 0.02
-exit=42

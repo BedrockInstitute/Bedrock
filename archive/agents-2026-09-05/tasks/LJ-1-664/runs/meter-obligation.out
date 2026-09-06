@@ -1,2 +1,0 @@
-missing   exit=42       2.70s  agents/tasks/LJ-1-664/Probe664.agda::DeeInHull  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-664/.pod-state/witness/Witness-LJ-1-664-afea44a4.agda:25)
-witness: 1 UNRESOLVED of 1, 2.70 s, probe_red=False

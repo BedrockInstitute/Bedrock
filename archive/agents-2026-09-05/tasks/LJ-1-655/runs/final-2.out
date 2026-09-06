@@ -1,1 +1,0 @@
-agda --safe -i .pod-state/witness -i src -i agents/tasks   2.72s user 0.22s system 99% cpu 2.958 total

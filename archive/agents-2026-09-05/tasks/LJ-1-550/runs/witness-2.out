@@ -1,9 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# witness-2: the terms this task DID deliver
-pass      exit=0        4.21s  agents/tasks/LJ-1-550/Probe550.agda::bridge-with-residues  (grouped run, exit 0)
-pass      exit=0        4.21s  agents/tasks/LJ-1-550/Probe550.agda::site-forced  (grouped run, exit 0)
-pass      exit=0        4.21s  agents/tasks/LJ-1-550/Probe550.agda::ambient→internal  (grouped run, exit 0)
-pass      exit=0        4.21s  agents/tasks/LJ-1-550/Probe550.agda::b5-from-cardδ  (grouped run, exit 0)
-pass      exit=0        4.21s  agents/tasks/LJ-1-550/Probe550.agda::b5-is-the-spent-slot  (grouped run, exit 0)
-pass      exit=0        4.21s  agents/tasks/LJ-1-550/Probe550.agda::bridge-b5-unused  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 6, 4.21 s, probe_red=False

@@ -1,6 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# witness-1: the program's own obligation witness for sqat-or-what-it-wants
-# interpreter: /Users/alsg/Agentic/Bedrock/.venv/bin/python (this worktree carries no .venv)
-pass      exit=0        3.11s  agents/tasks/LJ-1-571/Probe571.agda::sqat-or-what-it-wants
-witness: 0 UNRESOLVED of 1, 3.11 s, probe_red=False
-EXIT=0

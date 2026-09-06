@@ -18,7 +18,7 @@ open import V.Collapse {ℓ} using ( isExt )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
-open import L.Ordinal {ℓ} using ( ω-ord; #∈ω; suc-ord )
+open import L.Ordinal {ℓ} using ( #∈ω; suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
@@ -44,7 +44,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet; ∅ )
-open InfinitySet {ℓ} using ( #_; ω; sucV )
+open InfinitySet {ℓ} using ( ω; sucV )
 open import Cubical.Data.Vec using ( _∷_; [] )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
@@ -64,12 +64,11 @@ Every module application below names what it takes.
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
-THE HULL SITE, WITHOUT A TARGET.  The telescope of
-src/L/GCH/HullIn.lagda.md `Condense′`: a superadequate stage λ, a
-start X inside L_λ that is an element of L, and the elementarity of
-the hull.  What comes out is the collapse stage L_β and the inverse
-collapse L_β ↪ M, a definable map on L_β.  No count of X appears
-here, so the same site serves both consumers of the hull.
+The hull site, without a target: the telescope of src/L/GCH/HullIn.lagda.md
+`Condense′`, a superadequate stage `λ`, a start `X` inside `L_λ` that is an
+element of L, and the elementarity of the hull. What comes out is the collapse
+stage `L_β` and the inverse collapse `L_β ↪ M`, a definable map on `L_β`. No
+count of `X` appears here, so the same site serves both consumers of the hull.
 
 ```agda
 module Site (lam : V ℓ) (ordλ : IsOrd lam)
@@ -196,13 +195,12 @@ module Site (lam : V ℓ) (ordλ : IsOrd lam)
   Lβ↪M = Inj.injL Dmap inj
 ```
 
-THE SITE AT AN INFINITE ORDINAL δ.  The start is X = δ+1, transitive
-because it is an ordinal, and an element of L.  λ is the
-superadequate stage above the stage of δ, so δ ∈ λ and δ+1 ∈ λ.  The
-start is counted at μ, the internal cardinal of δ: δ+1 ↪ δ by
-src/L/GCH/Pairing.lagda.md `Shift`, then δ ↪ μ.  The collapse fixes
-δ pointwise, so δ ∈ L_β, hence δ ∈ β, hence L_δ ⊆ L_β; and the chain
-L_δ ↪ L_β ↪ M ↪ μ ↪ δ is the row.
+The site at an infinite ordinal `δ`. The start is `X = δ+1`, transitive because
+it is an ordinal, and an element of L. `λ` is the superadequate stage above the
+stage of `δ`, so `δ ∈ λ` and `δ+1 ∈ λ`. The start is counted at `μ`, the
+internal cardinal of `δ`: `δ+1 ↪ δ` by src/L/GCH/Pairing.lagda.md `Shift`, then
+`δ ↪ μ`. The collapse fixes `δ` pointwise, so `δ ∈ L_β`, hence `δ ∈ β`, hence
+`L_δ ⊆ L_β`; and the chain `L_δ ↪ L_β ↪ M ↪ μ ↪ δ` is the row.
 
 ```agda
 module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ → Empty.⊥)
@@ -330,8 +328,8 @@ module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ 
       (injl-trans St.hullL μ δL hull↪μ μ↪δ))
 ```
 
-THE THEOREM.  Hypothesis 1 of src/L/GCH/Assembly.lagda.md, at the
-internal cardinal of δ.
+The theorem: hypothesis 1 of src/L/GCH/Assembly.lagda.md, at the internal
+cardinal of `δ`.
 
 ```agda
 stage-counted : StageCountedCoded

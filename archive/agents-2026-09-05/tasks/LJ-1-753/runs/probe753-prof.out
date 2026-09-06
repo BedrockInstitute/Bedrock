@@ -1,2 +1,0 @@
-Error: Not a valid profiling option: 'Probe753.agda'. Valid options are constraints, conversion, definitions, instances, interactive, internal, metas, modules, serialize, sharing, or all.
-Run 'agda --help' for help on command line options.

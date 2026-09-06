@@ -1,8 +1,0 @@
-Checking LJ-1-516.runs.Sweep516 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/runs/Sweep516.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-516/agents/tasks/LJ-1-516/runs/Sweep516.agda:30.3-9: error: [ShouldBeEmpty]
-Δ₀ (ApproxAt w b) should be empty, but the following constructor
-patterns are valid:
-  Δ₀.δ-∧ {._} {._} {._} _ _
-  Agda.Primitive.Cubical.primHComp {._} {._} {_} _ _
-when checking the clause left hand side
-s02 ()

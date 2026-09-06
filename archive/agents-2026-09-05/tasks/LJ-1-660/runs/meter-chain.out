@@ -1,4 +1,0 @@
-pass      exit=0        5.38s  agents/tasks/LJ-1-660/Chain660.agda::levelin-from-keystone-and-hood  (grouped run, exit 0)
-pass      exit=0        5.38s  agents/tasks/LJ-1-660/Chain660.agda::AtSite.step4-from-keystone  (grouped run, exit 0)
-pass      exit=0        5.38s  agents/tasks/LJ-1-660/Chain660.agda::AtSite.levelin-from-truncated-keystone  (grouped run, exit 0)
-witness: 0 UNRESOLVED of 3, 5.38 s, probe_red=False

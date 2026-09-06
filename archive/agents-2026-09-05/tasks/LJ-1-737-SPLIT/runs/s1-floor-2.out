@@ -1,8 +1,0 @@
-Checking LJ-1-737-SPLIT.Probe737Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-737-SPLIT/agents/tasks/LJ-1-737-SPLIT/Probe737Split.agda).
- Checking LJ-1-724-SPLIT.Probe724Split (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-737-SPLIT/agents/tasks/LJ-1-724-SPLIT/Probe724Split.agda).
-  Checking LJ-1-698.Probe698 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-737-SPLIT/agents/tasks/LJ-1-698/Probe698.agda).
-time: command terminated abnormally
-real 10.82
-user 10.62
-sys 0.19
-time: signal: Invalid argument

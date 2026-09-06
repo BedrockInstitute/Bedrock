@@ -1,2 +1,0 @@
-missing   exit=42       2.80s  agents/tasks/LJ-1-575/Probe575.agda::tfacts-value  ([NotInScope] at /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-575/.pod-state/witness/Witness-LJ-1-575-4f64565a.agda:28)
-witness: 1 UNRESOLVED of 1, 2.80 s, probe_red=False

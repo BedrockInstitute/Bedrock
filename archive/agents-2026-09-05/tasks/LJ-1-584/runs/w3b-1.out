@@ -1,4 +1,0 @@
-GHCRTS=[-A64m -I0 -M8g]
-BOUND=180s
-started 2026-08-23T04:27:04Z
-Checking LJ-1-584.runs.W3b (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-584/agents/tasks/LJ-1-584/runs/W3b.agda).

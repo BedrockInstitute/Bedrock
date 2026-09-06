@@ -18,5 +18,5 @@ PY=python3
 $PY scripts/gate/lint-prose.py --staged
 $PY scripts/site/weave-i18n.py --check
 $PY scripts/gate/lint-agda.py --staged
-$PY scripts/gate/check-glossary.py
-$PY scripts/gate/check-fences.py
+$PY scripts/gate/check-glossary.py --check
+$PY scripts/gate/check-fences.py --check

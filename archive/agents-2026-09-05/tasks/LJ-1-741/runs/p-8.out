@@ -1,6 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:183.23-70: error: [UnequalTerms]
-Lset σ != a of type V ℓ
-when checking that the expression
-cong₂ (λ X Y → X ∈ Y) (tm-fst t δ) (tm-fst u δ) has type
-δ DA.⊨ᵐ t ∈̇ u ≡ repV δ DS.⊨ᵐ cnd (t ∈̇ u)

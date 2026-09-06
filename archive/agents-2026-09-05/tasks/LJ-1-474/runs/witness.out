@@ -1,2 +1,0 @@
-pass      exit=0        2.05s  agents/tasks/LJ-1-474/Probe474.agda::lset-codes
-witness: 0 UNRESOLVED of 1, 2.05 s, probe_red=False

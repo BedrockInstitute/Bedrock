@@ -11,8 +11,8 @@ module L.GCH.HullIn {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈; ⊥̇ )
-open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; ⊨-map; embed )
+  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ⊥̇ )
+open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; ⊨-map )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Absoluteness
 import FOL.Semantics
@@ -23,7 +23,7 @@ open import V.Collapse {ℓ} using ( module Collapse )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-out; Lset→isL; 𝒟ₒ; 𝒟ₒ∋⊆
         ; Lset-layer; layer-trans )
-open import L.Ordinal {ℓ} using ( mem-ord; ω-ord; #∈ω )
+open import L.Ordinal {ℓ} using ( mem-ord; #∈ω )
 open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
@@ -51,7 +51,7 @@ open import L.GCH.OrderType {ℓ} lem
         ; correctAt; correct-in; correct-out
         ; module PairFo )
 open import L.GCH.OmegaRec {ℓ} lem
-  using ( module Iterate; pairʟ-in; pairʟ-out; unionʟ-in; unionʟ-out )
+  using ( module Iterate; pairʟ-in; unionʟ-in )
 open import L.GCH.Hull {ℓ} lem using ( module HullStage; module Frame )
 open import L.InjChain {ℓ} lem using ( appC; appC-adequate )
 open import L.GCH.Complete {ℓ} lem using ( Superadequate )
@@ -59,13 +59,12 @@ open import L.GCH.SatFrame {ℓ} lem using ( module SatGraph )
 open import L.GCH.Condense {ℓ} lem using ( module Condense )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Nat.Properties using ( max )
-open import Cubical.Data.Nat.Order using ( _≤_; ≤-refl; ≤-trans; left-≤-max; right-≤-max )
+open import Cubical.Data.Nat.Order using ( _≤_; left-≤-max; right-≤-max )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Sum as Sum
 import Cubical.Data.Empty as Empty
-open import Cubical.Foundations.Prelude using ( subst2; J; substRefl )
+open import Cubical.Foundations.Prelude using ( subst2; J )
 open import Cubical.Data.Vec using ( Vec; _∷_; []; lookup )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
@@ -92,7 +91,7 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-Renaming, read at the same satisfaction as `_⊨_` (as OmegaRec does).
+Renaming, read at the same satisfaction as `_⊨_` (as `OmegaRec` does).
 
 ```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
@@ -139,15 +138,15 @@ private
   agf w Z' Z (suc zero) = refl
 ```
 
-SECTION 1.  THE COLLAPSE OF A CARRIER THAT IS AN ELEMENT OF L LANDS
-IN L.  Generic in the carrier M.  The graph of the collapse on M is
-read by src/L/GCH/OrderType.lagda.md's three table formulas at the
-membership relation of M; that chapter's `Graph` is not used, since
-its `col-isL` rests on `col-ord`, which needs the relation to be
-transitive, and a hull is not.  Here the L-membership of a collapse
-value is proved by an induction on the stage of the argument: the
-values at the slice M ∩ Lset δ form one table in L, and the value at
-a member born at δ is the image of that table at it.
+## Section 1. The collapse of a carrier that is an element of L lands in L
+
+Generic in the carrier `M`. The graph of the collapse on `M` is read by
+src/L/GCH/OrderType.lagda.md's three table formulas at the membership relation
+of `M`; that chapter's `Graph` is not used, since its `col-isL` rests on
+`col-ord`, which needs the relation to be transitive, and a hull is not. Here
+the L-membership of a collapse value is proved by an induction on the stage of
+the argument: the values at the slice `M ∩ Lset δ` form one table in L, and the
+value at a member born at `δ` is the image of that table at it.
 
 ```agda
 module PiIn (Mʟ : CS.S) where
@@ -575,13 +574,14 @@ module PiIn (Mʟ : CS.S) where
     (C.πX-member x x∈πX)
 ```
 
-SECTION 2.  THE HULL AS THE UNION OF AN ω-ITERATION.  One hull stage
-(src/L/GCH/Hull.lagda.md `HullStage`), a start X that is an
-element of L, and a one-step closure Φ that is definable on the
-whole model (the shape src/L/GCH/OmegaRec.lagda.md `Iterate` takes)
-and reads the hull's own search: Φ Z keeps Z, holds the junk value,
-holds the least witness of every parameter-free formula at every
-parameter vector drawn from Z, and holds nothing else.
+## Section 2. The hull as the union of an ω-iteration
+
+One hull stage (src/L/GCH/Hull.lagda.md `HullStage`), a start `X` that is an
+element of L, and a one-step closure `Φ` that is definable on the whole model
+(the shape src/L/GCH/OmegaRec.lagda.md `Iterate` takes) and reads the hull's own
+search: `Φ Z` keeps `Z`, holds the junk value, holds the least witness of every
+parameter-free formula at every parameter vector drawn from `Z`, and holds
+nothing else.
 
 ```agda
 module Telescope (lam : S) (ordλ : IsOrd lam)
@@ -1378,9 +1378,10 @@ module Telescope (lam : S) (ordλ : IsOrd lam)
       zS Z z hz = z , isL-trans {x = fst (Φ Z)} {y = z} hz (snd (Φ Z))
 ```
 
-SECTION 3.  THE TRANSFER WITH `pixL` DISCHARGED.  From the hull as
-an element of L: its collapse values are in L (section 1), so the
-premise of src/L/GCH/Condense.lagda.md's `Condense` is met.
+## Section 3. The transfer with `pixL` discharged
+
+From the hull as an element of L: its collapse values are in L (section 1), so
+the premise of src/L/GCH/Condense.lagda.md's `Condense` is met.
 
 ```agda
 module Discharge (lam : S) (ordλ : IsOrd lam)
@@ -1397,9 +1398,9 @@ module Discharge (lam : S) (ordλ : IsOrd lam)
   pixL = P.πX-isL
 ```
 
-The telescope of `Condense` minus `pixL`, plus the start X as an
-element of L (the iteration begins at X, and OmegaRec's `Iterate`
-starts at an element of L).
+The telescope of `Condense` minus `pixL`, plus the start `X` as an element of L
+(the iteration begins at `X`, and `OmegaRec`'s `Iterate` starts at an element of
+L).
 
 ```agda
 module Condense′ (lam : S) (ordλ : IsOrd lam)

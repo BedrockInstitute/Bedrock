@@ -1,5 +1,0 @@
-      23 declared  protected
-       2 declared  runtime
-     508 declared  toolchain
-
-every file in _build/ declares a lifecycle.

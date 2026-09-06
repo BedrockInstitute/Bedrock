@@ -58,9 +58,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Lint
+      - name: Lint and test
         shell: bash
         run: |
           set -euo pipefail
           make lint PY=python
           make test PY=python
+          # `make check` is typecheck + lint + test; the typecheck ran above
+          # with its interface cache, so the two halves are split here.

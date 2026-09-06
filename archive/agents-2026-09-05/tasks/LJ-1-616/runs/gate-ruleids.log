@@ -1,2 +1,0 @@
-.venv/bin/python scripts/gate/check-rule-ids.py
-check-rule-ids: clean (56 files, 165 lessons, 68 decisions, dev/rules.toml)

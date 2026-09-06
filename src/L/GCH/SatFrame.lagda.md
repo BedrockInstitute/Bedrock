@@ -16,12 +16,21 @@ open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
 open import L.Coding.Clauses {ℓ} lem public
+  using ( Tags; bothAll; bothAll-in; codesAt; container; down; f0; f1; f10
+        ; f11; f2; f3; f4; f5; f6; f7; f8; f9; fillSnd; i0; i1; i2; i3; i6
+        ; i8; nn; pr-in; pr-out; sh; shN; sndAll; sndAll-in; sndEx
+        ; sndEx-out; sndS; suc-in; suc-out; tableAt; towerAt; useBoth
+        ; useSnd; Δ₀-bothAll; Δ₀-codesAt; Δ₀-prAtL; Δ₀-sndAll; Δ₀-sndEx
+        ; Δ₀-sucAtL; Δ₀-tableAt; Δ₀-towerAt; module Alphabet; module Bridge
+        ; module CodesComplete; module CodesHolds; module CodesSound
+        ; module Frame; module SatGraph; module Tower; module TowerHolds
+        ; module TowerRead )
 
 open import FOL.Syntax using ( Formula )
 open import Cubical.Data.Vec using ( _∷_; [] )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
 open hPropStructure 𝒮ʟ using ( S )
@@ -31,10 +40,10 @@ open AbsSF using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
 ```
 
-THE GRAPH OF THE UNIFORM TABLE, as a set.  The value function of
+The graph of the uniform table, as a set. The value function of
 src/L/Coding/Uniform.lagda.md `Table` is a definable map, and
-src/L/GCH/Definable.lagda.md `Graph` makes its graph a set.  Sealed
-where it is built; its two readers are what the consumer holds.
+src/L/GCH/Definable.lagda.md `Graph` makes its graph a set. Sealed where it is
+built; its two readers are what the consumer holds.
 
 ```agda
 open import L.Coding.Uniform {ℓ} lem using ( module Table )

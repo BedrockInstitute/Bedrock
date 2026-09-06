@@ -1,9 +1,0 @@
-GHCRTS=-A64m -I0 -M8g
-# neg-1: does B5 fill the cardκ slot? the converse of b5-from-cardδ
-Checking LJ-1-550.runs.Neg550 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-550/agents/tasks/LJ-1-550/runs/Neg550.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-550/agents/tasks/LJ-1-550/runs/Neg550.agda:417.27-36: error: [UnequalTerms]
-Cubical.HITs.CumulativeHierarchy.Base.V ℓ !=<
-Σ (⟪ fst δ ⟫ → ⟪ fst κ ⟫)
-(λ f → (x y : ⟪ fst δ ⟫) → f x ≡ f y → x ≡ y)
-when checking that the expression b5 κ δ sc has type
-IsCardinal (fst δ)

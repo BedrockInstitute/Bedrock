@@ -1,2 +1,0 @@
-pass      exit=0        5.69s  agents/tasks/LJ-1-665/Probe665.agda::certificate-remainder
-witness: 0 UNRESOLVED of 1, 5.69 s, probe_red=False

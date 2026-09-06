@@ -1,7 +1,0 @@
-Checking LJ-1-741.Probe741 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-741/agents/tasks/LJ-1-741/Probe741.agda:378.6-26: error: [UnequalTerms]
-⟨ δ ∈ γ ⟩ →
-⟨ fst A ∈ 𝒟ₒ (Lset δ) ⟩ → ⟨ DefOf.defSet (fst A) ψ ∈ Lset γ ⟩
-!=< (DefOf.defSet (fst A) ψ ∈ Lset γ) .fst
-when checking that the expression landing γ oγ clγ A ψ has type
-V ℓ → (DefOf.defSet (fst A) ψ ∈ Lset γ) .fst

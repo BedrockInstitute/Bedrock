@@ -1,5 +1,0 @@
-    45	## VERDICT
-    46	
-    47	**GO.** The obligation typechecks at the delivered type
-    48	(`src/L/SquareLawClosed.lagda.md:325-328`, exit 0, median 2.01 s on three
-    49	forced rechecks) and it PASSes the program's witness meter

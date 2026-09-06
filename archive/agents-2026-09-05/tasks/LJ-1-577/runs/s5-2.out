@@ -1,7 +1,0 @@
-GHCRTS=[-A64m -I0 -M8g]
-started 2026-08-23T02:28:19Z
-Checking LJ-1-577.Probe577 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-577/agents/tasks/LJ-1-577/Probe577.agda).
-EXIT=143
-ended 2026-08-23T02:32:17Z
-EXIT=KILLED-BY-AGENT (not a heap wall; no exhaustion message)
-ended 2026-08-23T02:32:18Z

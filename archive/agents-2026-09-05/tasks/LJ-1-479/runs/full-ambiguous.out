@@ -1,8 +1,0 @@
-Checking LJ-1-479.Probe479 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-479/agents/tasks/LJ-1-479/Probe479.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-479/agents/tasks/LJ-1-479/Probe479.agda:81.27-28: error: [AmbiguousOverloadedProjection]
-Cannot resolve overloaded projection S because
-it is not applied to a visible argument
-  candidates in scope:
-- S : Type (ℓ-suc ℓ)
-- S : Type (ℓ-suc ℓ)
-when checking that the expression S has type _77

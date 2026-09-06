@@ -1,7 +1,0 @@
-Checking LJ-1-753.runs.Floor753 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda:53.50-51: error: [UnsolvedInteractionMetas]
-Unsolved interaction metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-753/agents/tasks/LJ-1-753/runs/Floor753.agda:53.50-51
-real 5.65
-user 5.23
-sys 0.29

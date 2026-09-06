@@ -1,5 +1,0 @@
-python3.11 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else "make venv: need Python 3.11+ (got %s); pass PYTHON=<python3.11+>" % sys.version.split()[0])'
-python3.11 -m venv .venv
-.venv/bin/python -m pip install --quiet --upgrade pip
-.venv/bin/python -m pip install --quiet -r requirements-dev.txt
-venv ready: .venv (Python 3.11.16)

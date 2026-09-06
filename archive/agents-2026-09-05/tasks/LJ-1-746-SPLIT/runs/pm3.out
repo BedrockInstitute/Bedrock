@@ -1,3 +1,0 @@
-GHCRTS=[-A64m -I0 -M2g]
-started 2026-08-29T04:50:25Z
-Checking LJ-1-746-SPLIT.runs.PM (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-746-SPLIT/agents/tasks/LJ-1-746-SPLIT/runs/PM.agda).

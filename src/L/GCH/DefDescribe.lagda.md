@@ -15,31 +15,30 @@ open import FOL.LevyHierarchy using ( Δ₀; δ-∧; δ-⇒; δ-∀∈; δ-∃�
 open import FOL.Manipulation.Relabelling using ( mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr; pr-inj )
+open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Coding.Model {ℓ} using ( prAtL )
 open import L.Coding.Bridge {ℓ} lem using ( asConst; defSet-Sat )
 open import L.Coding.Powerset {ℓ} lem using ( envOne )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; keyS; key∈AllCodes )
+open import L.Coding.CodeSet {ℓ} lem using ( keyS; key∈AllCodes )
 open import L.Coding.Uniform {ℓ} lem using ( module Table; val-at )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
-open import L.Coding.EnvSet {ℓ} lem using ( envS )
 open import L.GCH.SatFrame {ℓ} lem using
-  ( sh; i0; i1; i2; i3; i6; f0; f1; Tags; down; container; nn; fstS; sndS
-  ; sndEx; sndAll; Δ₀-sndEx; Δ₀-sndAll; sndEx-out; sndAll-out; sndAll-in; fillSnd; useSnd
+  ( sh; i0; i1; i3; i6; f0; f1; Tags; down; container; sndS
+  ; sndEx; sndAll; Δ₀-sndEx; Δ₀-sndAll; sndEx-out; sndAll-in; fillSnd; useSnd
   ; Δ₀-prAtL; pr-out; pr-in; module Alphabet )
 open import L.GCH.SatDescribe {ℓ} lem using ( satAt; module SatRead; module Match )
 
 open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Vec using ( _∷_; []; lookup )
+open import Cubical.Data.Vec using ( _∷_; lookup )
 open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈-asFiber; ∈ₛ⟪_⟫↪_ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_ )
 
@@ -50,13 +49,13 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-THE FORMULA.  v is the definable power set of w, in the value
-polarity: every member of v is the set the table T cuts from w at
-some arity-one code of C, and every arity-one code of C cuts a
-member of v from w.  The tower is not needed: the one-entry
-environment of a member is bounded by the value it is looked up in.
+The formula. `v` is the definable power set of `w`, in the value polarity: every
+member of `v` is the set the table `T` cuts from `w` at some arity-one code of
+`C`, and every arity-one code of `C` cuts a member of `v` from `w`. The tower is
+not needed: the one-entry environment of a member is bounded by the value it is
+looked up in.
 
-e is the one-entry environment ⁅ (N0, z) ⁆.
+`e` is the one-entry environment `⁅ (N0, z) ⁆`.
 
 ```agda
 singleOf : ∀ {j} → Fin j → Fin j → Fin j → Formula S j
@@ -66,7 +65,7 @@ singleOf e N0 z = ∀̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z)) ∧̇ ∃̇∈ 
 Δ₀-singleOf e N0 z = δ-∧ (δ-∀∈ (Δ₀-prAtL i0 (sh 1 N0) (sh 1 z))) (δ-∃∈ (Δ₀-prAtL i0 (sh 1 N0) (sh 1 z)))
 ```
 
-x is the set of members of w whose one-entry environment lies in y.
+`x` is the set of members of `w` whose one-entry environment lies in `y`.
 
 ```agda
 definesB : ∀ {j} → Fin j → Fin j → Fin j → Fin j → Formula S j
@@ -80,8 +79,8 @@ definesB x w y N0 =
       (δ-∀∈ (δ-⇒ (δ-∃∈ (Δ₀-singleOf i0 (sh 2 N0) i1)) δ-∈))
 ```
 
-Every member of v is cut by some arity-one code: at
-y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ x ∷ γ, x at i6, y at i0.
+Every member of `v` is cut by some arity-one code: at
+`y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ x ∷ γ`, `x` at `i6`, `y` at `i0`.
 
 ```agda
 memAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
@@ -90,8 +89,8 @@ memAt v w T C N =
     (∃̇∈ (var (sh 4 T)) (sndEx i0 i3 (definesB i6 (sh 7 w) i0 (sh 7 (N f0)))))))
 ```
 
-Every arity-one code cuts a member of v: at
-x ∷ y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ γ, x at i0, y at i1.
+Every arity-one code cuts a member of `v`: at
+`x ∷ y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ γ`, `x` at `i0`, `y` at `i1`.
 
 ```agda
 allAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
@@ -128,10 +127,10 @@ opaque
   defAt-in v w T C N γ h1 h2 = h1 , h2
 ```
 
-THE READERS.  The one-entry environment, the cut, and the two
-clauses, at variable environments.
+The readers: the one-entry environment, the cut, and the two clauses, at
+variable environments.
 
-⁅ (# 0, z) ⁆, both ways.
+`⁅ (# 0, z) ⁆`, both ways.
 
 ```agda
 module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 0) where
@@ -167,8 +166,8 @@ module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 
     yS = down (lookup e δ) (pr (# 0) Z) (subst (λ u → ⟨ pr (# 0) Z ∈ u ⟩) (sym q) ∣ lift zero , refl ∣₁)
 ```
 
-The cut, both ways: x is exactly the members of w whose one-entry
-environment lies in y.
+The cut, both ways: `x` is exactly the members of `w` whose one-entry
+environment lies in `y`.
 
 ```agda
 Cuts : (X Wv Y : V ℓ) → Type (ℓ-suc ℓ)
@@ -277,9 +276,9 @@ module Read {m : ℕ} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg 
       (∃̇∈ (var (sh 3 T)) (sndEx i0 i3 (∃̇∈ (var (sh 6 v)) (definesB i0 (sh 7 w) i1 (sh 7 (N f0)))))) (c ∷ γ)
 ```
 
-THE TWO THEOREMS.  With T, C read by `satAt`: a reading of `defAt`
-at (v, w, T, C) makes v the definable power set of w, and the
-definable power set satisfies `defAt`.
+The two theorems. With `T`, `C` read by `satAt`: a reading of `defAt` at
+`(v, w, T, C)` makes `v` the definable power set of `w`, and the definable power
+set satisfies `defAt`.
 
 ```agda
 module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)

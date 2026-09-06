@@ -13,7 +13,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
-open import L.Ordinal {ℓ} using ( ω-ord; #∈ω )
+open import L.Ordinal {ℓ} using ( #∈ω )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ )
@@ -39,11 +39,10 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet; ⁅_⁆s )
 open InfinitySet {ℓ} using ( #_; ω; sucV )
-open import Cubical.Data.Vec using ( _∷_; [] )
 import Cubical.Induction.WellFounded as WF
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open PT using ( ∣_∣₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
@@ -51,12 +50,12 @@ open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 open hPropStructure 𝒮ʟ using ( S )
 ```
 
-THE SITE.  An infinite L-cardinal κ and a subset y of κ, both
-elements of L.  The start X = L_κ ∪ {y} is transitive and an element
-of L; λ is a superadequate stage above κ and above y; the Skolem hull
-M of X in L_λ collapses to a stage L_β (src/L/GCH/StageCounted.lagda.md
-`Site`); y is fixed by the collapse, so y ∈ L_β; and β ⊆ L_β =
-πX ↪ M ↪ κ, the last by src/L/GCH/HullCount.lagda.md.
+The site. An infinite L-cardinal `κ` and a subset `y` of `κ`, both elements of
+L. The start `X = L_κ ∪ {y}` is transitive and an element of L; `λ` is a
+superadequate stage above `κ` and above `y`; the Skolem hull `M` of `X` in
+`L_λ` collapses to a stage `L_β` (src/L/GCH/StageCounted.lagda.md `Site`); `y`
+is fixed by the collapse, so `y ∈ L_β`; and `β ⊆ L_β = πX ↪ M ↪ κ`, the last by
+src/L/GCH/HullCount.lagda.md.
 
 ```agda
 module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
@@ -230,7 +229,7 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
   result = St.βL , St.oβ , y∈Lβ , β↪κ
 ```
 
-THE THEOREM.  Hypothesis 2 of src/L/GCH/Assembly.lagda.md.
+The theorem: hypothesis 2 of src/L/GCH/Assembly.lagda.md.
 
 ```agda
 internal-bounded-subset : InternalBoundedSubset

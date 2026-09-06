@@ -1,4 +1,0 @@
-Checking LJ-1-473.Probe473 (/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-473/agents/tasks/LJ-1-473/Probe473.agda).
-/Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-473/agents/tasks/LJ-1-473/Probe473.agda:99.17-21: error: [UnsolvedInteractionMetas]
-Unsolved interaction metas at the following locations:
-  /Users/alsg/Agentic/Bedrock/.pod-state/worktrees/LJ-1-473/agents/tasks/LJ-1-473/Probe473.agda:99.17-21
