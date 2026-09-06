@@ -327,7 +327,6 @@ import L.Ordinal
 import L.Rank
 import L.Ordinal.Linear
 import L.Ordinal.Stages
-import L.Ordinal.StageArith
 import L.Ordinal.SquareLaw
 import L.WellOrder.Base
 import L.Coding.Base
