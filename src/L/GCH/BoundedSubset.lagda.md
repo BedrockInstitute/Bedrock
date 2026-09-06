@@ -10,11 +10,7 @@ open import Base.Classical using ( LEM )
 module L.GCH.BoundedSubset {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
-import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
-open import V.Collapse {ℓ} using ( isExt )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-layer; layer-trans )
 open import L.Ordinal {ℓ} using ( ω-ord; #∈ω )
@@ -26,25 +22,21 @@ open import L.Cardinal {ℓ} lem using ( IsCardinalL )
 open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Assembly {ℓ} lem
   using ( InternalBoundedSubset; inclusion-coded; injl-trans )
-open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.Hull {ℓ} lem
-  using ( module Frame; module UnionKit; module HullStage; module HullElemDown )
-open import L.GCH.HullIn {ℓ} lem using ( module PiIn; module Condense′ )
-open import L.GCH.Pairing {ℓ} lem
-  using ( prodL; prodL-in; ordL; ω⊆; Goal; module Step )
+  using ( module UnionKit; module HullStage; module HullElemDown )
+open import L.GCH.Pairing {ℓ} lem using ( prodL; ω⊆; Goal; module Step )
 open import L.GCH.Complete {ℓ} lem using ( superadequate-above; Superadequate )
-open import L.GCH.StageCount {ℓ} lem using ( move; stage-counted )
+open import L.GCH.StageCount {ℓ} lem using ( move )
+open import L.GCH.StageCounted {ℓ} lem using ( stage-counted; module Site )
 open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in )
 open import L.GCH.HullCount {ℓ} lem
-  using ( ord⊆Lset; module Union2; tag-union; module Point; module Count; S≡ )
+  using ( ord⊆Lset; module Union2; tag-union; module Point; module Count )
 
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
+open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ∈∈ₛ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet; ⁅_⁆s )
 open InfinitySet {ℓ} using ( #_; ω; sucV )
 open import Cubical.Data.Vec using ( _∷_; [] )
@@ -57,23 +49,13 @@ open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 open hPropStructure 𝒮ʟ using ( S )
-
-open FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using () renaming ( _⊨ᵐ_ to _⊨_ )
-```
-
-Every module application below names what it takes: a module
-application copies every definition it brings into scope into this
-module's interface, and the copies are what the interface stores.
-
-```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
 THE SITE.  An infinite L-cardinal κ and a subset y of κ, both
 elements of L.  The start X = L_κ ∪ {y} is transitive and an element
 of L; λ is a superadequate stage above κ and above y; the Skolem hull
-M of X in L_λ collapses to a stage L_β (src/L/GCH/HullIn.lagda.md
-`Condense′`); y is fixed by the collapse, so y ∈ L_β; and β ⊆ L_β =
+M of X in L_λ collapses to a stage L_β (src/L/GCH/StageCounted.lagda.md
+`Site`); y is fixed by the collapse, so y ∈ L_β; and β ⊆ L_β =
 πX ↪ M ↪ κ, the last by src/L/GCH/HullCount.lagda.md.
 
 ```agda
@@ -203,44 +185,20 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
   -- -----------------------------------------------------------------
 
   -- Read at the source, applied to the telescope: no module
-  -- application, so nothing of `Count` or `Condense′` is copied.
+  -- application, so nothing of `Count` is copied.
   hull↪κ = Count.hull↪κ lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL κ oκ cκ κ∉ω base
-  condenses′ = Condense′.condenses′ lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
-  M-isL = Condense′.M-isL lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
 
-  -- The hull stage, its collapse, and the collapse graph, read at the
-  -- source modules `Cn` copies from.
+  -- The collapse stage L_β and the inverse collapse L_β ↪ M, at the
+  -- same telescope (src/L/GCH/StageCounted.lagda.md `Site`).
+  module St = Site lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
+    using ( β; oβ; ext; Lβ; βL; hullL; Lβ↪M )
+
+  -- The hull stage, its collapse and the collapse graph, read at the
+  -- source modules `Site` copies from.
   module HS = HullStage lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( M )
   module HSH = HullStage.H lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ using ( X⊆M )
   module HSC = HullStage.C lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ
-    using ( πX; π; fixes; πX-intro; πX-member )
-  module P = PiIn (HS.M , M-isL) using ( piFo; up; good-at; piFo-val )
-
-  β : V ℓ
-  β = condenses′ .fst
-
-  oβ : IsOrd β
-  oβ = condenses′ .snd .fst
-
-  ext : HSC.πX ≡ Lset β
-  ext = condenses′ .snd .snd
-
-  Lβ : S
-  Lβ = LsetS β oβ
-
-  βL : S
-  βL = ordL β oβ
-
-  hullL : S
-  hullL = Condense′.hullL lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
-
-  M≡ : fst hullL ≡ HS.M
-  M≡ = Condense′.hullL-spec lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL
-
-  Mext : isExt HS.M
-  Mext = Frame.Mext lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ
-
-  module CI = HullStage.C.InjExt lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ Mext using ( π-inj )
+    using ( πX; π; fixes; πX-intro )
 
   -- -----------------------------------------------------------------
   -- 5.1  y is a member of L_β: y ∈ X ⊆ M, X is transitive, so the
@@ -255,99 +213,21 @@ module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
     (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst (HSH.X⊆M a (∈∈ₛ {a = a} {b = X} .snd a∈ₛX)))
     UK.Xtr (fst y) UK.x∈X
 
-  y∈Lβ : ⟨ fst y ∈ˢ Lset β ⟩
-  y∈Lβ = subst (λ w → ⟨ w ∈ˢ Lset β ⟩) πy
-    (subst (λ w → ⟨ HSC.π (fst y) ∈ˢ w ⟩) ext (HSC.πX-intro (fst y) y∈M))
+  y∈Lβ : ⟨ fst y ∈ˢ Lset St.β ⟩
+  y∈Lβ = subst (λ w → ⟨ w ∈ˢ Lset St.β ⟩) πy
+    (subst (λ w → ⟨ HSC.π (fst y) ∈ˢ w ⟩) St.ext (HSC.πX-intro (fst y) y∈M))
 
   -- -----------------------------------------------------------------
-  -- 5.2  THE INVERSE COLLAPSE, L_β ↪ M, as a definable map: v ↦ the
-  -- member of M collapsing to v.  The graph, over (x ∷ v ∷ []):
-  -- "x ∈ M and the collapse graph holds at (v, x)", the latter being
-  -- src/L/GCH/HullIn.lagda.md `PiIn.piFo` read at (v ∷ x ∷ []).
+  -- 5.2  THE CHAIN: β ⊆ L_β ↪ M ↪ κ.
   -- -----------------------------------------------------------------
 
-  Pre : S → Type (ℓ-suc ℓ)
-  Pre v = Σ[ x ∈ V ℓ ] (⟨ x ∈ˢ HS.M ⟩ × (HSC.π x ≡ fst v))
-
-  isPropPre : (v : S) → isProp (Pre v)
-  isPropPre v (x , mx , e) (x' , mx' , e') =
-    Σ≡Prop (λ x → isProp× (snd (x ∈ˢ HS.M)) (setIsSet _ _)) (CI.π-inj x x' mx mx' (e ∙ sym e'))
-
-  Mem : S → Type (ℓ-suc ℓ)
-  Mem v = ⟨ fst v ∈ˢ fst Lβ ⟩
-
-  pre : (v : S) → Mem v → Pre v
-  pre v m = PT.rec (isPropPre v) (λ w → w)
-    (HSC.πX-member (fst v) (subst (λ w → ⟨ fst v ∈ˢ w ⟩) (sym ext) m))
-
-  fn : (v : S) → Mem v → S
-  fn v m = pre v m .fst
-         , isL-trans {x = fst hullL} {y = pre v m .fst}
-             (subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)) (snd hullL)
-
-  ρ : Fin 2 → Fin 2
-  ρ zero = suc zero
-  ρ (suc zero) = zero
-
-  private
-    ag : (x v : S) → Ren.Agrees ρ (x ∷ v ∷ []) (v ∷ x ∷ [])
-    ag x v zero = refl
-    ag x v (suc zero) = refl
-
-    rn : (x v : S) → ⟨ (x ∷ v ∷ []) ⊨ renameFo ρ P.piFo ⟩ ≡ ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-    rn x v = cong ⟨_⟩ (Ren.⊨-rename ρ P.piFo (x ∷ v ∷ []) (v ∷ x ∷ []) (ag x v))
-
-  invFo : Formula S 2
-  invFo = (var zero ∈̇ con hullL) ∧̇ renameFo ρ P.piFo
-
-  -- the collapse graph holds at (π x, x) for x ∈ M
-  π-graph : (x : S) (mx : ⟨ fst x ∈ˢ HS.M ⟩) (v : S) → HSC.π (fst x) ≡ fst v
-          → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-  π-graph x mx v e = PT.rec (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
-    where
-    read : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-    read (α , oα , M∈Lα) =
-      subst2 (λ a b → ⟨ (a ∷ b ∷ []) ⊨ P.piFo ⟩)
-        (S≡ {x = HSC.π (fst x) , G .fst} {y = v} e) (S≡ {x = P.up (fst x) mx} {y = x} refl)
-        (G .snd mx)
-      where
-      G = P.good-at α oα (fst x) mx (layer-trans (Lset-layer α) {x = HS.M} {y = fst x} mx M∈Lα)
-
-  defines : (v : S) (m : Mem v) → ⟨ (fn v m ∷ v ∷ []) ⊨ invFo ⟩
-  defines v m =
-      subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)
-    , transport (sym (rn (fn v m) v)) (π-graph (fn v m) (pre v m .snd .fst) v (pre v m .snd .snd))
-
-  only : (v : S) (m : Mem v) (x' : S) → ⟨ (x' ∷ v ∷ []) ⊨ invFo ⟩ → x' ≡ fn v m
-  only v m x' (hx , hp) = S≡ (CI.π-inj (fst x') (pre v m .fst) mx' (pre v m .snd .fst)
-    (sym (P.piFo-val x' mx' v (transport (rn x' v) hp)) ∙ sym (pre v m .snd .snd)))
-    where
-    mx' : ⟨ fst x' ∈ˢ HS.M ⟩
-    mx' = subst (λ w → ⟨ fst x' ∈ˢ w ⟩) M≡ hx
-
-  Dmap : DefinableMap
-  Dmap = record
-    { dom = Lβ ; cod = hullL ; fn = fn
-    ; into = λ v m → subst (λ w → ⟨ pre v m .fst ∈ˢ w ⟩) (sym M≡) (pre v m .snd .fst)
-    ; graph = invFo ; defines = defines ; only = only }
-
-  inj : (v : S) (m : Mem v) (v' : S) (m' : Mem v') → fst (fn v m) ≡ fst (fn v' m') → fst v ≡ fst v'
-  inj v m v' m' q = sym (pre v m .snd .snd) ∙ cong HSC.π q ∙ pre v' m' .snd .snd
-
-  Lβ↪M : InjL Lβ hullL
-  Lβ↪M = Inj.injL Dmap inj
-
-  -- -----------------------------------------------------------------
-  -- 5.3  THE CHAIN: β ⊆ L_β ↪ M ↪ κ.
-  -- -----------------------------------------------------------------
-
-  β↪κ : InjL βL κ
-  β↪κ = injl-trans βL Lβ κ
-    (inclusion-coded βL Lβ (λ z hz → ord⊆Lset β oβ z hz))
-    (injl-trans Lβ hullL κ Lβ↪M hull↪κ)
+  β↪κ : InjL St.βL κ
+  β↪κ = injl-trans St.βL St.Lβ κ
+    (inclusion-coded St.βL St.Lβ (λ z hz → ord⊆Lset St.β St.oβ z hz))
+    (injl-trans St.Lβ St.hullL κ St.Lβ↪M hull↪κ)
 
   result : Σ[ b ∈ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
-  result = βL , oβ , y∈Lβ , β↪κ
+  result = St.βL , St.oβ , y∈Lβ , β↪κ
 ```
 
 THE THEOREM.  Hypothesis 2 of src/L/GCH/Assembly.lagda.md.

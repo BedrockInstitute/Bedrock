@@ -399,6 +399,7 @@ import L.GCH.Complete
 import L.GCH.Sequences
 import L.GCH.Condense
 import L.GCH.StageCount
+import L.GCH.StageCounted
 import L.GCH.OmegaRec
 import L.GCH.HullIn
 import L.GCH.HullCount
