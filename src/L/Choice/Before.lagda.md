@@ -67,7 +67,7 @@ open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt; module RecShape )
 open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
 open import L.Coding.Model {ℓ}
   using ( numL; prAtL; prAtL-adequate; prʟ; prʟ-fst
-        ; appAt; appAt-adequate; domAt-intro
+        ; appAt; appAt-adequate; appC; appC-adequate; domAt-intro
         ; extAt; extAt-out; extAt-in; extAt-in-both )
 
 import FOL.Absoluteness
@@ -1283,7 +1283,7 @@ opaque
 
 This is the formula the previous chapter asked for, and it is the step body again
 with two changes. The approximation slot is gone, because the family is now a
-set and can be **named**: `appAtC`{.Agda} is application at a constant, one
+set and can be **named**: `appC`{.Agda} is application at a constant, one
 bounded existential and one pair reader, with the adequacy the model chapter
 proves for the slot version proved here for the constant version. And the two
 compared sets are not confined to any stage, because the frame asks for the
@@ -1299,7 +1299,7 @@ the law the level was measured under one chapter ago.
 <!--zh-->
 ## 某个槽位所持数码处的那个序
 
-这就是上一章所索取的那条公式，而它就是那个步进体，只改了两处。逼近那一位没了，因为那一族如今是个集合、可以被**点名**：`appAtC`{.Agda} 是在常元处的应用，一个有界存在量词加一次对读式，而模型那一章为槽位版所证的充分性，在此处为常元版证一遍。以及，被比较的那两个集合不被禁闭在任何阶段里，因为那个框架索取的是在模型**任意**成员处的双条件，而最先分歧处的比较本来也不需要它们被禁闭：只有那个见证与它以下的诸点在一个阶段上取值。
+这就是上一章所索取的那条公式，而它就是那个步进体，只改了两处。逼近那一位没了，因为那一族如今是个集合、可以被**点名**：`appC`{.Agda} 是在常元处的应用，一个有界存在量词加一次对读式，而模型那一章为槽位版所证的充分性，在此处为常元版证一遍。以及，被比较的那两个集合不被禁闭在任何阶段里，因为那个框架索取的是在模型**任意**成员处的双条件，而最先分歧处的比较本来也不需要它们被禁闭：只有那个见证与它以下的诸点在一个阶段上取值。
 
 于是只剩四层绑定：前趋、那一族在那里所持有的关系、那里的阶段，此外再无其他。`BeforeAt-out`{.Agda} 与 `BeforeAt-in`{.Agda} 是两条读式，二者都站在变元环境的变元位上，而那个数码以**携带自己定义等式的变元**身份到场，那正是一章之前层号所据以实测的那条定律。
 <!--/-->
@@ -1308,41 +1308,12 @@ the law the level was measured under one chapter ago.
 private
   sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
   sh3 i = suc (suc (suc i))
-
-appAtC : ∀ {n} → S → Fin n → Fin n → Formula S n
-appAtC F x y = ∃̇∈ (con F) (prAtL zero (suc x) (suc y))
-
-appAtC-adequate : ∀ {n} (F : S) (x y : Fin n) (γ : S ^ n)
-  → (γ ⊨ appAtC F x y)
-  ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F)
-appAtC-adequate F x y γ = ⇔toPath fwd bwd
-  where
-  fwd : ⟨ γ ⊨ appAtC F x y ⟩
-      → ⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F ⟩
-  fwd = PT.rec (snd (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F)) read
-    where
-    read : Σ[ z ∈ S ] ( ⟨ z ∈ˢ F ⟩
-                      × ⟨ (z ∷ γ) ⊨ prAtL zero (suc x) (suc y) ⟩ )
-         → ⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F ⟩
-    read (z , (z∈ , h)) = subst (λ t → ⟨ t ∈ fst F ⟩)
-      (subst ⟨_⟩ (prAtL-adequate zero (suc x) (suc y) (z ∷ γ)) h) z∈
-
-  bwd : ⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F ⟩
-      → ⟨ γ ⊨ appAtC F x y ⟩
-  bwd hp = ∣ memS F (pr (fst (lookup x γ)) (fst (lookup y γ))) hp
-          , ( subst (λ t → ⟨ t ∈ fst F ⟩)
-                (sym (memS-fst F (pr (fst (lookup x γ)) (fst (lookup y γ))) hp))
-                hp
-            , subst ⟨_⟩ (sym (prAtL-adequate zero (suc x) (suc y)
-                (memS F (pr (fst (lookup x γ)) (fst (lookup y γ))) hp ∷ γ)))
-                (memS-fst F (pr (fst (lookup x γ)) (fst (lookup y γ))) hp) ) ∣₁
-
 opaque
   BeforeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   BeforeAt b x y =
     ∃̇ ( (var zero ∈̇ var (suc b))
       ∧̇ ( ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero))
-        ∧̇ ∃̇ ( appAtC beforeFam (suc zero) zero
+        ∧̇ ∃̇ ( appC beforeFam (suc zero) zero
              ∧̇ ∃̇ ( LsetGraphAt zero (suc (suc zero))
                   ∧̇ PrecedesAt (suc zero) zero (sh3 x) (sh3 y) ) ) ) )
 
@@ -1356,7 +1327,7 @@ module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
 
     AtR : (c : S) → Type (ℓ-suc ℓ)
     AtR c = Σ[ r ∈ S ]
-      ( ⟨ (r ∷ c ∷ γ) ⊨ appAtC beforeFam (suc zero) zero ⟩
+      ( ⟨ (r ∷ c ∷ γ) ⊨ appC beforeFam (suc zero) zero ⟩
       × ∥ (Σ[ A ∈ S ] Inner c r A) ∥₁ )
 
     AtC : Type (ℓ-suc ℓ)
@@ -1410,7 +1381,7 @@ module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
         (λ { (A , hi) → atA c r A j qc qm hf hi }) hA
       where
       hf : ⟨ pr (fst c) (fst r) ∈ fst beforeFam ⟩
-      hf = subst ⟨_⟩ (appAtC-adequate beforeFam (suc zero) zero (r ∷ c ∷ γ))
+      hf = subst ⟨_⟩ (appC-adequate beforeFam (suc zero) zero (r ∷ c ∷ γ))
              happ
 
     atC : AtC → Goal
@@ -1479,9 +1450,9 @@ module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
             (subst (λ t → ⟨ t ∈ # i ⟩) (numS-fst j)
               (subst (λ t → ⟨ fst (numS j) ∈ t ⟩) qd hc))
 
-      happ : ⟨ (relAt j ∷ numS j ∷ γ) ⊨ appAtC beforeFam (suc zero) zero ⟩
+      happ : ⟨ (relAt j ∷ numS j ∷ γ) ⊨ appC beforeFam (suc zero) zero ⟩
       happ = subst ⟨_⟩
-        (sym (appAtC-adequate beforeFam (suc zero) zero (relAt j ∷ numS j ∷ γ)))
+        (sym (appC-adequate beforeFam (suc zero) zero (relAt j ∷ numS j ∷ γ)))
         (subst (λ t → ⟨ pr t (fst (relAt j)) ∈ fst beforeFam ⟩)
           (sym (numS-fst j)) (beforeFam-in j))
 
@@ -1585,7 +1556,7 @@ replacement along `ωʟ`{.Agda}, sealed where it is built, with its two directio
 stated against the recursion and not against any formula.
 
 `BeforeAt`{.Agda} is what the previous chapter asked for: the family read at the
-numeral held in a slot, with `appAtC`{.Agda} for application at a constant, and
+numeral held in a slot, with `appC`{.Agda} for application at a constant, and
 the two compared sets left **unconfined**, since the comparison never needed them
 confined. With its two readings, `Described`{.Agda} is instantiated, and
 `codeOrder`{.Agda} together with `CodeKeys`{.Agda} become unconditional.
@@ -1606,7 +1577,7 @@ which no formula appears at all.
 
 `approx-val`{.Agda} 把逼近所记录的每个取值钉住，靠的是在数码上的一次良基归纳，任何地方都没有单值性假设，而 `rel-only`{.Agda} 是那个图的确定性。`approxSet`{.Agda} 是当场拿出来的那个逼近，而它**根本不花任何公式**：某个数码以下的逼近是有穷的，故只要 `smallStage`{.Agda} 把它的诸成员放进同一个阶段，`finSetL`{.Agda} 就把它张出来。`beforeFam`{.Agda} 是那一族本身，沿 `ωʟ`{.Agda} 的一次替换，在造出之处封印，而它的两个方向陈述成对着这场递归、而不对着任何公式。
 
-`BeforeAt`{.Agda} 就是上一章所索取的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appAtC`{.Agda}，而被比较的那两个集合**不加禁闭**，因为那次比较本来就不需要它们被禁闭。有了它的两条读式，`Described`{.Agda} 便被实例化，而 `codeOrder`{.Agda} 连同 `CodeKeys`{.Agda} 成为无条件的。
+`BeforeAt`{.Agda} 就是上一章所索取的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appC`{.Agda}，而被比较的那两个集合**不加禁闭**，因为那次比较本来就不需要它们被禁闭。有了它的两条读式，`Described`{.Agda} 便被实例化，而 `codeOrder`{.Agda} 连同 `CodeKeys`{.Agda} 成为无条件的。
 
 一次实测，而它是本部记下的最大的一次。这场递归的四条描述必须**在造出之处封印**：不封印时，每一次在具体环境上的满足关系都要把一条内部装着两份完整层级描述的公式正规化，本章要花 376 秒；封印之后是 3.8 秒，九十九倍，而数学分毫未动。造出那一族的那个框架在高一层遵守同一条定律：它交回来的三元组中根本不出现任何公式。
 <!--/-->

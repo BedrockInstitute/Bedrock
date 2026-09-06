@@ -29,6 +29,7 @@ open import L.Coding.Model {ℓ}
   using ( prAtL; prAtL-adequate; prʟ; prʟ-fst
         ; svAt; svAt-in; svAt-out
         ; domAt; domAt-in; domAt-out; domAt-intro )
+open import L.Coding.Model {ℓ} using ( appC; appC-adequate ) public
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-out; injAt-in; module Small )
 
@@ -176,30 +177,6 @@ condition; `PairBound` builds the bound as a stage (no replacement);
 `Comp` carves the composite and reads it back as an honest injection.
 
 ```agda
-appC : ∀ {n} → S → Fin n → Fin n → Formula S n
-appC F x y = ∃̇∈ (con F) (prAtL zero (suc x) (suc y))
-
-appC-adequate : ∀ {n} (F : S) (x y : Fin n) (γ : S ^ n)
-  → (γ ⊨ appC F x y)
-  ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F)
-appC-adequate F x y γ = ⇔toPath fwd bwd
-  where
-  a = fst (lookup x γ)
-  b = fst (lookup y γ)
-
-  read : (z : S) → ⟨ (z ∷ γ) ⊨ prAtL zero (suc x) (suc y) ⟩ → fst z ≡ pr a b
-  read z h = subst ⟨_⟩ (prAtL-adequate zero (suc x) (suc y) (z ∷ γ)) h
-
-  fwd : ⟨ γ ⊨ appC F x y ⟩ → ⟨ pr a b ∈ fst F ⟩
-  fwd = PT.rec (snd (pr a b ∈ fst F))
-    (λ { (z , (z∈F , h)) → subst (λ w → ⟨ w ∈ fst F ⟩) (read z h) z∈F })
-
-  bwd : ⟨ pr a b ∈ fst F ⟩ → ⟨ γ ⊨ appC F x y ⟩
-  bwd h = ∣ zS , (h , subst ⟨_⟩
-      (sym (prAtL-adequate zero (suc x) (suc y) (zS ∷ γ))) refl) ∣₁
-    where
-    zS : S
-    zS = pr a b , isL-trans {x = fst F} {y = pr a b} h (F .snd)
 ```
 
 The composite condition, as one formula of one place.

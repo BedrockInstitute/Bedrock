@@ -182,6 +182,33 @@ appAt-adequate f x y γ = ⇔toPath fwd bwd
     where
     zS : S
     zS = pr a b , isL-trans {x = fst F} {y = pr a b} h (F .snd)
+
+-- The same reader with the function held as a CONSTANT rather than in a slot.
+-- L.InjChain and L.Choice.Before each wrote this out; it belongs beside appAt.
+appC : ∀ {n} → S → Fin n → Fin n → Formula S n
+appC F x y = ∃̇∈ (con F) (prAtL zero (suc x) (suc y))
+
+appC-adequate : ∀ {n} (F : S) (x y : Fin n) (γ : S ^ n)
+  → (γ ⊨ appC F x y)
+  ≡ (pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst F)
+appC-adequate F x y γ = ⇔toPath fwd bwd
+  where
+  a = fst (lookup x γ)
+  b = fst (lookup y γ)
+
+  read : (z : S) → ⟨ (z ∷ γ) ⊨ prAtL zero (suc x) (suc y) ⟩ → fst z ≡ pr a b
+  read z h = subst ⟨_⟩ (prAtL-adequate zero (suc x) (suc y) (z ∷ γ)) h
+
+  fwd : ⟨ γ ⊨ appC F x y ⟩ → ⟨ pr a b ∈ fst F ⟩
+  fwd = PT.rec (snd (pr a b ∈ fst F))
+    (λ { (z , (z∈F , h)) → subst (λ w → ⟨ w ∈ fst F ⟩) (read z h) z∈F })
+
+  bwd : ⟨ pr a b ∈ fst F ⟩ → ⟨ γ ⊨ appC F x y ⟩
+  bwd h = ∣ zS , (h , subst ⟨_⟩
+      (sym (prAtL-adequate zero (suc x) (suc y) (zS ∷ γ))) refl) ∣₁
+    where
+    zS : S
+    zS = pr a b , isL-trans {x = fst F} {y = pr a b} h (F .snd)
 ```
 
 <!--en-->
