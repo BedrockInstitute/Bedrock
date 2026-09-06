@@ -84,12 +84,17 @@ InternalBoundedSubset =
        (IsOrd (fst β) × ⟨ fst y ∈ˢ Lset (fst β) ⟩ × InjL β κ) ∥₁
 ```
 
-3.  The successor cardinal injects into the power set.
+3.  The successor cardinal injects into the power set, GIVEN the
+    injection section 5 pays out of hypotheses 1 and 2.  The extra
+    premise is what makes the row a theorem rather than an axiom:
+    src/L/GCH/SuccIntoPower.lagda.md inverts that injection through
+    an order type and refutes the remaining case by Cantor.
 
 ```agda
 SuccIntoPower : ModelL.isZFModel → Type (ℓ-suc ℓ)
 SuccIntoPower zf =
-    (κ δ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥) → SuccCardL δ κ → InjL δ (𝒫 κ)
+    (κ δ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥) → SuccCardL δ κ
+  → InjL (𝒫 κ) δ → InjL δ (𝒫 κ)
   where open ModelL.isZFModel zf using ( 𝒫 )
 ```
 
@@ -359,6 +364,8 @@ gch-from-internal-bill zf scc ibs sip κ ordκ cardκ κ∉ω =
   open ModelL.isZFModel zf using ( 𝒫 )
   step : Σ[ δ ∈ SL.S ] SuccCardL δ κ
        → Σ[ δ ∈ SL.S ] (SuccCardL δ κ × InjL (𝒫 κ) δ × InjL δ (𝒫 κ))
-  step (δ , sc) =
-    δ , sc , power-into-succ zf scc ibs κ ordκ cardκ κ∉ω δ sc , sip κ δ κ∉ω sc
+  step (δ , sc) = δ , sc , pis , sip κ δ κ∉ω sc pis
+    where
+    pis : InjL (𝒫 κ) δ
+    pis = power-into-succ zf scc ibs κ ordκ cardκ κ∉ω δ sc
 ```
