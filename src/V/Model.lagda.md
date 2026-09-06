@@ -238,6 +238,31 @@ self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
   (union-ax ⁅ a , ⁅ a ⁆s ⁆ a .snd
     ∣ ⁅ a ⁆s , (pairing-ax a ⁅ a ⁆s ⁅ a ⁆s .snd ∣ Sum.inr refl ∣₁
               , SetPackage.classification (SingletonPackage a) a .snd refl) ∣₁)
+
+-- The two pinning equations, for any chain that aligns with the library's.
+module NumPin (a : ℕ → S) (q : (n : ℕ) → a n ≡ # n) where
+  pinZero : (z : S) → ⟨ z ∈ˢ a zero ⟩ → Empty.⊥
+  pinZero z z∈ = ∅-empty z
+    (∈∈ₛ {a = z} {b = ∅} .fst (subst (λ w → ⟨ z ∈ˢ w ⟩) (q zero) z∈))
+
+  pinSuc : (n : ℕ) (z : S)
+         → (⟨ z ∈ˢ a (suc n) ⟩ → ⟨ (z ∈ˢ a n) ⊔ (z ≈ˢ a n) ⟩)
+         × (⟨ (z ∈ˢ a n) ⊔ (z ≈ˢ a n) ⟩ → ⟨ z ∈ˢ a (suc n) ⟩)
+  pinSuc n z = fwd , bwd
+    where
+    fwd : ⟨ z ∈ˢ a (suc n) ⟩ → ⟨ (z ∈ˢ a n) ⊔ (z ≈ˢ a n) ⟩
+    fwd z∈ = ∈sucV-elim {A = # n} {x = z}
+      (snd ((z ∈ˢ a n) ⊔ (z ≈ˢ a n)))
+      (subst (λ w → ⟨ z ∈ˢ w ⟩) (q (suc n)) z∈)
+      (λ z∈#n → ∣ Sum.inl (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q n)) z∈#n) ∣₁)
+      (λ z≡#n → ∣ Sum.inr (z≡#n ∙ sym (q n)) ∣₁)
+    bwd : ⟨ (z ∈ˢ a n) ⊔ (z ≈ˢ a n) ⟩ → ⟨ z ∈ˢ a (suc n) ⟩
+    bwd = PT.rec (snd (z ∈ˢ a (suc n)))
+      (λ { (Sum.inl z∈n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
+             (∈sucV-inl {A = # n} (subst (λ w → ⟨ z ∈ˢ w ⟩) (q n) z∈n))
+         ; (Sum.inr z≡n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
+             (subst (λ w → ⟨ w ∈ˢ sucV (# n) ⟩) (sym (z≡n ∙ q n))
+               (self∈sucV (# n))) })
 ```
 
 <!--en-->
@@ -371,31 +396,10 @@ module VModel (imp : Impredicativity ℓ) where
     ; hasReplacement = λ a φ fc → one _ (replaceImage a φ fc , replaceImage-spec a φ fc)
     ; hasPower       = λ a → one _ (𝒫V a , power-spec a)
     ; numeral        = numeralV
-    ; numeral-zero   = pin0
-    ; numeral-suc    = pinS
+    ; numeral-zero   = NumPin.pinZero numeralV numeralV≡#
+    ; numeral-suc    = NumPin.pinSuc numeralV numeralV≡#
     ; hasInfinity    = one _ (ω , ω-specV) }
     where
-    pin0 : (z : S) → ⟨ z ∈ˢ numeralV zero ⟩ → Empty.⊥
-    pin0 z z∈ = ∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst z∈)
-    pinS : (n : ℕ) (z : S)
-         → (⟨ z ∈ˢ numeralV (suc n) ⟩ → ⟨ (z ∈ˢ numeralV n) ⊔ (z ≈ˢ numeralV n) ⟩)
-         × (⟨ (z ∈ˢ numeralV n) ⊔ (z ≈ˢ numeralV n) ⟩ → ⟨ z ∈ˢ numeralV (suc n) ⟩)
-    pinS n z = fwd , bwd
-      where
-      fwd : ⟨ z ∈ˢ numeralV (suc n) ⟩ → ⟨ (z ∈ˢ numeralV n) ⊔ (z ≈ˢ numeralV n) ⟩
-      fwd z∈ = ∈sucV-elim {A = # n} {x = z}
-        (snd ((z ∈ˢ numeralV n) ⊔ (z ≈ˢ numeralV n)))
-        (subst (λ w → ⟨ z ∈ˢ w ⟩) (numeralV≡# (suc n)) z∈)
-        (λ z∈#n → ∣ Sum.inl (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (numeralV≡# n)) z∈#n) ∣₁)
-        (λ z≡#n → ∣ Sum.inr (z≡#n ∙ sym (numeralV≡# n)) ∣₁)
-      bwd : ⟨ (z ∈ˢ numeralV n) ⊔ (z ≈ˢ numeralV n) ⟩ → ⟨ z ∈ˢ numeralV (suc n) ⟩
-      bwd = PT.rec (snd (z ∈ˢ numeralV (suc n)))
-        (λ { (Sum.inl z∈n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (numeralV≡# (suc n)))
-               (∈sucV-inl {A = # n}
-                 (subst (λ w → ⟨ z ∈ˢ w ⟩) (numeralV≡# n) z∈n))
-           ; (Sum.inr z≡n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (numeralV≡# (suc n)))
-               (subst (λ w → ⟨ w ∈ˢ sucV (# n) ⟩) (sym (z≡n ∙ numeralV≡# n))
-                 (self∈sucV (# n))) })
     one : (Q : S → hProp (ℓ-suc ℓ)) → SetOf Q → isContr (SetOf Q)
     one = setOf-unique extensionalV
 ```

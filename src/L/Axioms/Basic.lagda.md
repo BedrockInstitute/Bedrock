@@ -51,7 +51,7 @@ open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; Lset-compute
         ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
         ; Lset-mono; Lset→isL )
-open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; boundingOrd )
+open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; bound2 )
 
 open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.Data.FinData using ( zero; suc )
@@ -391,19 +391,9 @@ isL-directed x y px py = PT.rec2 squash₁ go px py
   go : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ x ∈ Lset α ⟩)
      → Σ[ β ∈ V ℓ ] (IsOrd β × ⟨ y ∈ Lset β ⟩) → ∥ Bound ∥₁
   go (α , (oα , x∈Lα)) (β , (oβ , y∈Lβ)) =
-    ∣ σ , (oσ , ( Lset-mono (mem (lift true)) x∈Lα
-                , Lset-mono (mem (lift false)) y∈Lβ )) ∣₁
-    where
-    f : Lift {ℓ-zero} {ℓ} Bool → V ℓ
-    f (lift true)  = α
-    f (lift false) = β
-    hf : (b : Lift {ℓ-zero} {ℓ} Bool) → IsOrd (f b)
-    hf (lift true)  = oα
-    hf (lift false) = oβ
-    bnd = boundingOrd (Lift {ℓ-zero} {ℓ} Bool) f hf
-    σ = bnd .fst
-    oσ = bnd .snd .fst
-    mem = bnd .snd .snd
+    ∣ bnd .fst , (bnd .snd .fst , ( Lset-mono (bnd .snd .snd .fst) x∈Lα
+                                  , Lset-mono (bnd .snd .snd .snd) y∈Lβ )) ∣₁
+    where bnd = bound2 α β oα oβ
 ```
 
 <!--en-->

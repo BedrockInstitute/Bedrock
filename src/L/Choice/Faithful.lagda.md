@@ -88,13 +88,13 @@ open hPropStructure 𝒮ʟ
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
 
+sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
+sh2 i = suc (suc i)
+
+sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
+sh3 i = suc (suc (suc i))
+
 private
-  sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
-  sh2 i = suc (suc i)
-
-  sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
-  sh3 i = suc (suc (suc i))
-
   sh4 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc n))))
   sh4 i = suc (suc (suc (suc i)))
 
@@ -519,21 +519,24 @@ one. Measured, that binder is the difference between 3 s and 160 s.
 <!--/-->
 
 ```agda
-module Ordered
-  (Stp : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n)
-  (stp-out : ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
+StpFo : Type (ℓ-suc ℓ)
+StpFo = ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
+
+StpOut StpIn : StpFo → Type (ℓ-suc ℓ)
+StpOut Stp = ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
            → ((r : S) → ⟨ pr (fst (lookup d γ)) (fst r) ∈ fst (lookup f γ) ⟩
               → IsRel (fst (lookup d γ)) r)
            → ⟨ γ ⊨ Stp d f u v ⟩
            → ∥ Under (fst (lookup d γ)) (stepOrder (fst (lookup d γ)) od)
-                 (fst (lookup u γ)) (fst (lookup v γ)) ∥₁)
-  (stp-in : ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
+                 (fst (lookup u γ)) (fst (lookup v γ)) ∥₁
+StpIn Stp = ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
           → (r : S) → ⟨ pr (fst (lookup d γ)) (fst r) ∈ fst (lookup f γ) ⟩
           → IsRel (fst (lookup d γ)) r
           → Under (fst (lookup d γ)) (stepOrder (fst (lookup d γ)) od)
               (fst (lookup u γ)) (fst (lookup v γ))
-          → ⟨ γ ⊨ Stp d f u v ⟩)
-  where
+          → ⟨ γ ⊨ Stp d f u v ⟩
+
+module Ordered (Stp : StpFo) (stp-out : StpOut Stp) (stp-in : StpIn Stp) where
 
   OrdBody : ∀ {n} → Term S n → Fin n → Formula S (suc (suc (suc (suc n))))
   OrdBody tb f =

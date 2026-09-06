@@ -49,7 +49,7 @@ open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; 𝒟ₒ )
 open import L.Ordinal {ℓ} using ( suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Axioms.Basic {ℓ} using ( LsetS; 𝒟ₒS; ∅ʟ; Lset-suc )
+open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; Lset-suc )
 open import L.Choice.Stage {ℓ} lem using ( stageBound )
 open import L.Choice.Step {ℓ} lem
   using ( Mem; New; relOf; carry; orderAt; Under
@@ -58,7 +58,8 @@ open import L.Choice.Name {ℓ} lem using ( module Naming )
 open import L.Choice.Internal {ℓ} lem using ( StepAt )
 open import L.Choice.Table {ℓ} lem using ( IsRel; ixRel-fill; ixRel-rep )
 open import L.Choice.Faithful {ℓ} lem
-  using ( CodesAt; CodesAt-in; CodesAt-out; stepOrder; module Ordered )
+  using ( CodesAt; CodesAt-in; CodesAt-out; stepOrder; module Ordered
+        ; towerS; towerS-fst; powS; powS-fst; sh2; sh3; StpOut; StpIn )
 open import L.Choice.Adequate {ℓ} lem using ( module At )
 open import L.Choice.Before {ℓ} lem
   using ( codeOrder; codeOrder-fill; codeOrder-rep )
@@ -86,12 +87,6 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 
 private
-  sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
-  sh2 i = suc (suc i)
-
-  sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
-  sh3 i = suc (suc (suc i))
-
   sh6 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc (suc (suc n))))))
   sh6 i = suc (suc (suc (suc (suc (suc i)))))
 
@@ -122,21 +117,6 @@ conversion every time the satisfaction is read, and the seal is what stops that.
 
 perf: the elements the step description binds are sealed where they are built,
 as the birth description's were (measured there at 178 s against 2 s)
-
-```agda
-opaque
-  towerS : (β : V ℓ) → IsOrd β → S
-  towerS β ob = LsetS β ob
-
-  towerS-fst : (β : V ℓ) (ob : IsOrd β) → fst (towerS β ob) ≡ Lset β
-  towerS-fst β ob = refl
-
-  powS : (β : V ℓ) → IsOrd β → S
-  powS β ob = 𝒟ₒS β ob
-
-  powS-fst : (β : V ℓ) (ob : IsOrd β) → fst (powS β ob) ≡ 𝒟ₒ (Lset β)
-  powS-fst β ob = refl
-```
 
 <!--en-->
 ## The description
@@ -602,20 +582,10 @@ completeness takes the single value the caller realizes with.
 ```
 
 ```agda
-stp-out : ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
-        → ((r : S) → ⟨ pr (fst (lookup d γ)) (fst r) ∈ fst (lookup f γ) ⟩
-           → IsRel (fst (lookup d γ)) r)
-        → ⟨ γ ⊨ Stp d f u v ⟩
-        → ∥ Under (fst (lookup d γ)) (stepOrder (fst (lookup d γ)) od)
-              (fst (lookup u γ)) (fst (lookup v γ)) ∥₁
+stp-out : StpOut Stp
 stp-out = Reading.read
 
-stp-in : ∀ {n} (d f u v : Fin n) (γ : S ^ n) (od : IsOrd (fst (lookup d γ)))
-       → (r : S) → ⟨ pr (fst (lookup d γ)) (fst r) ∈ fst (lookup f γ) ⟩
-       → IsRel (fst (lookup d γ)) r
-       → Under (fst (lookup d γ)) (stepOrder (fst (lookup d γ)) od)
-           (fst (lookup u γ)) (fst (lookup v γ))
-       → ⟨ γ ⊨ Stp d f u v ⟩
+stp-in : StpIn Stp
 stp-in = Reading.fill
 ```
 

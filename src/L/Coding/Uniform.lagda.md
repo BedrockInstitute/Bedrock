@@ -187,6 +187,22 @@ module _ (A : S) where
             → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
   keyBridge = keyBridge' A
 
+module _ (B : S) where
+  fr : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → S ^ (16 + n)
+  fr φ γ = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B γ
+
+  frTags : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → Tags (fr φ γ) NN
+  frTags φ γ = numTags (Tower.tower B) (slot B φ) (satTable B φ) B γ
+
+  frTow : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → ⟨ fr φ γ ⊨ towerAt Ei Bi (NN f0) ⟩
+  frTow φ γ = TowerHolds.holds Ei Bi (NN f0) (fr φ γ) B refl refl refl
+
+  frDom : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → ⟨ fr φ γ ⊨ domAt Ti Ci ⟩
+  frDom φ γ = domAt-intro Ti Ci (fr φ γ)
+    (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot B φ)))
+              (λ { (w , hw) → inSlot B φ (fst z) (fst w) hw }) h)
+         , (λ h → total B φ (fst z) h))
+
 module _ (A B : S) where
   private
     toS : ∀ {n} → Formula ⟪ fst A ⟫ n → Formula S n
@@ -229,20 +245,6 @@ line and is the difference between elaborating and not.
     toB : ∀ {n} → Formula ⟪ fst B ⟫ n → Formula S n
     toB = mapFo (asConst B)
 
-    -- The graph's frame at the per-formula slot: the tower, the slot,
-    -- the table and the carrier, with the twelve numerals beside them.
-    fr : ∀ {n} (φ : Formula S n) (x y : S) → S ^ (16 + 2)
-    fr φ x y = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B (y ∷ x ∷ [])
-
-    hdom : ∀ {n} (φ : Formula S n) (x y : S) → ⟨ fr φ x y ⊨ domAt Ti Ci ⟩
-    hdom φ x y = domAt-intro Ti Ci (fr φ x y)
-      (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot B φ)))
-                (λ { (w , hw) → inSlot B φ (fst z) (fst w) hw }) h)
-           , (λ h → total B φ (fst z) h))
-
-    htow : ∀ {n} (φ : Formula S n) (x y : S) → ⟨ fr φ x y ⊨ towerAt Ei Bi (NN f0) ⟩
-    htow φ x y = TowerHolds.holds Ei Bi (NN f0) (fr φ x y) B refl refl refl
-
     exists : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) → fst x ≡ fst (keyʟ (toB ψ))
            → ⟨ (Sat B (toB ψ) ∷ x ∷ []) ⊨ satGraph B ⟩
     exists {n} ψ x k = graph-in B x (Sat B (toB ψ))
@@ -252,17 +254,17 @@ line and is the difference between elaborating and not.
       , (satTable B (toB ψ)
       , (B
       , (refl
-      , (numTags (Tower.tower B) (slot B (toB ψ)) (satTable B (toB ψ)) B (Sat B (toB ψ) ∷ x ∷ [])
-      , (htow (toB ψ) x (Sat B (toB ψ))
+      , (frTags B (toB ψ) δ2
+      , (frTow B (toB ψ) δ2
       , (slotClosed B (toB ψ) (Tower.tower B ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
             ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
             ∷ numν f11 ∷ Sat B (toB ψ) ∷ x ∷ [])
-      , (hdom (toB ψ) x (Sat B (toB ψ))
+      , (frDom B (toB ψ) δ2
       , (subst (λ w → ⟨ pr w (fst (Sat B (toB ψ))) ∈ fst (satTable B (toB ψ)) ⟩) (sym k)
             (entry-in B (toB ψ))
-      , SlotHolds.holds B Ti Bi Ci Ei NN (fr (toB ψ) x (Sat B (toB ψ))) refl
-          (numTags (Tower.tower B) (slot B (toB ψ)) (satTable B (toB ψ)) B (Sat B (toB ψ) ∷ x ∷ []))
-          (htow (toB ψ) x (Sat B (toB ψ))) ψ refl refl)))))))))) ∣₁
+      , SlotHolds.holds B Ti Bi Ci Ei NN (fr B (toB ψ) δ2) refl
+          (frTags B (toB ψ) δ2) (frTow B (toB ψ) δ2) ψ refl refl)))))))))) ∣₁
+      where δ2 = Sat B (toB ψ) ∷ x ∷ []
 
     unique : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) → fst x ≡ fst (keyʟ (toB ψ))
            → (y : S) → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩ → y ≡ Sat B (toB ψ)

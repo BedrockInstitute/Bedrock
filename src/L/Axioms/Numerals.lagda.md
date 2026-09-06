@@ -34,20 +34,16 @@ module L.Axioms.Numerals {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 import FOL.ZFModel
-open import V.Model {ℓ}
-  using ( pair-singleton; ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import V.Model {ℓ} using ( pair-singleton; module NumPin )
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
 open import L.Axioms.Basic {ℓ}
   using ( hasPairL; hasUnionL; module PairOf; module UnionOf; isL-directed; ∅ʟ )
 
-open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ∅-empty; ⁅_,_⁆; ⋃_; module InfinitySet )
+  using ( ⁅_,_⁆; ⋃_; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -201,39 +197,14 @@ description operator.
 
 ```agda
 numeralL-zero : (z : S) → ⟨ z ∈ˢ numeralL zero ⟩ → Empty.⊥
-numeralL-zero z z∈ = ∅-empty (fst z)
-  (∈∈ₛ {a = fst z} {b = ∅} .fst
-    (subst (λ w → ⟨ fst z ∈ w ⟩) (numeralL-fst zero) z∈))
+numeralL-zero z = NumPin.pinZero (λ k → fst (numeralL k)) numeralL-fst (fst z)
 
 numeralL-suc : (n : ℕ) (z : S)
              → (⟨ z ∈ˢ numeralL (suc n) ⟩
                   → ⟨ (z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n) ⟩)
              × (⟨ (z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n) ⟩
                   → ⟨ z ∈ˢ numeralL (suc n) ⟩)
-numeralL-suc n z = fwd , bwd
-  where
-  up : ⟨ z ∈ˢ numeralL (suc n) ⟩ → ⟨ fst z ∈ sucV (# n) ⟩
-  up z∈ = subst (λ w → ⟨ fst z ∈ w ⟩) (numeralL-fst (suc n)) z∈
-
-  fwd : ⟨ z ∈ˢ numeralL (suc n) ⟩
-      → ⟨ (z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n) ⟩
-  fwd z∈ = ∈sucV-elim {A = # n} {x = fst z}
-    (snd ((z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n)))
-    (up z∈)
-    (λ fz∈#n → ∣ inl (subst (λ w → ⟨ fst z ∈ w ⟩) (sym (numeralL-fst n)) fz∈#n) ∣₁)
-    (λ fz≡#n → ∣ inr (fz≡#n ∙ sym (numeralL-fst n)) ∣₁)
-
-  bwd : ⟨ (z ∈ˢ numeralL n) ⊔ (z ≈ˢ numeralL n) ⟩
-      → ⟨ z ∈ˢ numeralL (suc n) ⟩
-  bwd = PT.rec (snd (z ∈ˢ numeralL (suc n)))
-    (λ { (inl z∈n) →
-           subst (λ w → ⟨ fst z ∈ w ⟩) (sym (numeralL-fst (suc n)))
-             (∈sucV-inl {A = # n}
-               (subst (λ w → ⟨ fst z ∈ w ⟩) (numeralL-fst n) z∈n))
-       ; (inr z≡n) →
-           subst (λ w → ⟨ fst z ∈ w ⟩) (sym (numeralL-fst (suc n)))
-             (subst (λ w → ⟨ w ∈ sucV (# n) ⟩)
-               (sym (z≡n ∙ numeralL-fst n)) (self∈sucV (# n))) })
+numeralL-suc n z = NumPin.pinSuc (λ k → fst (numeralL k)) numeralL-fst n (fst z)
 ```
 
 <!--en-->

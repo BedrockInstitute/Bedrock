@@ -20,12 +20,14 @@ open import V.Coding {ℓ} using ( pr; pr-inj )
 open import V.Model {ℓ} using ( pair-singleton )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Absoluteness {ℓ} using ( Δ₀-liftFo )
-open import L.Coding.Base {ℓ} using ( Δ₀-prAt )
+open import L.Coding.Base {ℓ} using ( Δ₀-prAt; ∈pair-introL; ∈pair-introR )
 open import L.Coding.Environment {ℓ} using ( Δ₀-consAt; Δ₀-sucAt; env; cons; lookup-spec )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst; sucʟ; sucʟ-fst )
 open import L.Coding.Model {ℓ} using
   ( prAtL; prAtL-adequate; appAt; appAt-adequate; sucAtL; sucAtL-adequate
   ; consAtL; consAtL-adequate; consAtL-transport; prʟ; prʟ-fst; numL )
+open import L.Coding.Tower {ℓ} lem using
+  ( module Tower; i0; i1; i2; i3; pr-out; pr-in; down ) public
 
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Vec using ( _∷_; []; lookup )
@@ -57,14 +59,6 @@ sh : ∀ {m} (k : ℕ) → Fin m → Fin (k + m)
 sh zero i = i
 sh (suc k) i = suc (sh k i)
 
-i0 : ∀ {j} → Fin (suc j)
-i0 = zero
-i1 : ∀ {j} → Fin (2 + j)
-i1 = suc i0
-i2 : ∀ {j} → Fin (3 + j)
-i2 = suc i1
-i3 : ∀ {j} → Fin (4 + j)
-i3 = suc i2
 i4 : ∀ {j} → Fin (5 + j)
 i4 = suc i3
 i5 : ∀ {j} → Fin (6 + j)
@@ -115,18 +109,9 @@ THE ATOMS AND THEIR CERTIFICATES.
 Δ₀-appAt f x y = δ-∃∈ (Δ₀-prAtL zero (suc x) (suc y))
 ```
 
-The pair reader, both ways, at a variable environment.
+The successor reader, both ways, at a variable environment.
 
 ```agda
-pr-out : ∀ {m} (q u v : Fin m) (γ : S ^ m) → ⟨ γ ⊨ prAtL q u v ⟩
-       → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
-pr-out q u v γ h = subst ⟨_⟩ (prAtL-adequate q u v γ) h
-
-pr-in : ∀ {m} (q u v : Fin m) (γ : S ^ m)
-      → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
-      → ⟨ γ ⊨ prAtL q u v ⟩
-pr-in q u v γ e = subst ⟨_⟩ (sym (prAtL-adequate q u v γ)) e
-
 suc-out : ∀ {m} (i j : Fin m) (γ : S ^ m) → ⟨ γ ⊨ sucAtL i j ⟩
         → fst (lookup j γ) ≡ sucV (fst (lookup i γ))
 suc-out i j γ h = subst ⟨_⟩ (sucAtL-adequate i j γ) h
@@ -139,23 +124,6 @@ suc-in i j γ e = subst ⟨_⟩ (sym (sucAtL-adequate i j γ)) e
 THE PAIR AS A CONTAINER.  Both components of pr u v lie in the
 member ⁅ u , v ⁆ of it.  This is what lets a Δ₀ formula bind the
 components of a pair it holds, with no ambient bound at all.
-
-A member of a member of an element of L, as an element of L.
-
-```agda
-down : (x : S) (y : V ℓ) → ⟨ y ∈ fst x ⟩ → S
-down x y h = y , isL-trans {x = fst x} {y = y} h (snd x)
-
-pair∈pr : (u v : V ℓ) → ⟨ ⁅ u , v ⁆ ∈ pr u v ⟩
-pair∈pr u v = ∈∈ₛ {a = ⁅ u , v ⁆} {b = pr u v} .snd
-  (pairing-ax ⁅ u ⁆s ⁅ u , v ⁆ ⁅ u , v ⁆ .snd ∣ inr refl ∣₁)
-
-u∈pair : (u v : V ℓ) → ⟨ u ∈ ⁅ u , v ⁆ ⟩
-u∈pair u v = ∈∈ₛ {a = u} {b = ⁅ u , v ⁆} .snd (pairing-ax u v u .snd ∣ inl refl ∣₁)
-
-v∈pair : (u v : V ℓ) → ⟨ v ∈ ⁅ u , v ⁆ ⟩
-v∈pair u v = ∈∈ₛ {a = v} {b = ⁅ u , v ⁆} .snd (pairing-ax u v v .snd ∣ inr refl ∣₁)
-```
 
 The container of the components, as an element of L.
 
@@ -170,10 +138,10 @@ the pairing axiom into every frame that holds it.
 ```agda
 opaque
   container : (x u v : S) → fst x ≡ pr (fst u) (fst v) → Container x u v
-  container x u v e = s , (s∈ , (u∈pair (fst u) (fst v) , v∈pair (fst u) (fst v)))
+  container x u v e = s , (s∈ , (∈pair-introL {u = fst u} {v = fst v} refl , ∈pair-introR {u = fst u} {v = fst v} refl))
     where
     s∈ : ⟨ ⁅ fst u , fst v ⁆ ∈ fst x ⟩
-    s∈ = subst (λ w → ⟨ ⁅ fst u , fst v ⁆ ∈ w ⟩) (sym e) (pair∈pr (fst u) (fst v))
+    s∈ = subst (λ w → ⟨ ⁅ fst u , fst v ⁆ ∈ w ⟩) (sym e) (∈pair-introR {u = ⁅ fst u ⁆s} {v = ⁅ fst u , fst v ⁆} refl)
     s : S
     s = down x ⁅ fst u , fst v ⁆ s∈
 ```
@@ -527,7 +495,6 @@ module ConsImageRead {m : ℕ} (F' F w : Fin m) (γ : S ^ m) (W : S)
 
 ```agda
 open import FOL.Syntax using ( ∃̇_; ∀̇_ )
-open import L.Coding.Tower {ℓ} lem using ( module Tower ) public
 ```
 
 The numeral k, as an element of L.
@@ -726,9 +693,6 @@ fstEx : ∀ {m} → Fin m → Fin m → Formula S (2 + m) → Formula S m
 fstEx x v body =
   ∃̇∈ (var x) (∃̇∈ (var i0) (prAtL (sh 2 x) i0 (sh 2 v) ∧̇ body))
 
-Δ₀-fstEx : ∀ {m} (x v : Fin m) (body : Formula S (2 + m)) → Δ₀ body → Δ₀ (fstEx x v body)
-Δ₀-fstEx x v body d = δ-∃∈ (δ-∃∈ (δ-∧ (Δ₀-prAtL (sh 2 x) i0 (sh 2 v)) d))
-
 module _ {m : ℕ} (x v : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
   fstEx-out : ⟨ γ ⊨ fstEx x v body ⟩
             → ∥ Σ[ u ∈ S ] Σ[ s ∈ S ]
@@ -737,17 +701,11 @@ module _ {m : ℕ} (x v : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
     (λ { (u , (u∈ , (e , hb))) → u , s , (pr-out (sh 2 x) i0 (sh 2 v) (u ∷ s ∷ γ) e , hb) })
     h })
 
-  fstEx-in : (u s : S) → ⟨ fst s ∈ fst (lookup x γ) ⟩ → ⟨ fst u ∈ fst s ⟩
-           → fst (lookup x γ) ≡ pr (fst u) (fst (lookup v γ))
-           → ⟨ (u ∷ s ∷ γ) ⊨ body ⟩ → ⟨ γ ⊨ fstEx x v body ⟩
-  fstEx-in u s s∈ u∈ e hb = ∣ s , (s∈ , ∣ u , (u∈ , (pr-in (sh 2 x) i0 (sh 2 v) (u ∷ s ∷ γ) e , hb)) ∣₁) ∣₁
-
 fillFst : ∀ {m} (x : Fin m) (γ : S ^ m) (u v : S) (e : fst (lookup x γ) ≡ pr (fst u) (fst v))
         → (body : Formula S (2 + m)) → ⟨ (u ∷ container (lookup x γ) u v e .fst ∷ γ) ⊨ body ⟩
         → (vi : Fin m) → fst (lookup vi γ) ≡ fst v → ⟨ γ ⊨ fstEx x vi body ⟩
-fillFst x γ u v e body hb vi qv =
-  fstEx-in x vi body γ u (c .fst) (c .snd .fst) (c .snd .snd .fst)
-    (e ∙ cong (pr (fst u)) (sym qv)) hb
+fillFst x γ u v e body hb vi qv = ∣ c .fst , (c .snd .fst , ∣ u , (c .snd .snd .fst ,
+  (pr-in (sh 2 x) i0 (sh 2 vi) (u ∷ c .fst ∷ γ) (e ∙ cong (pr (fst u)) (sym qv)) , hb)) ∣₁) ∣₁
   where c = container (lookup x γ) u v e
 ```
 
@@ -831,7 +789,7 @@ bndKey C ar N Nx x a =
 
 Δ₀-bndKey : ∀ {m} (C ar N Nx x a : Fin m) → Δ₀ (bndKey C ar N Nx x a)
 Δ₀-bndKey C ar N Nx x a =
-  Δ₀-keyEx C ar N _ (Δ₀-fstEx i0 (sh 5 a) _ (Δ₀-prAtL i0 (sh 7 Nx) (sh 7 x)))
+  Δ₀-keyEx C ar N _ (δ-∃∈ (δ-∃∈ (δ-∧ (Δ₀-prAtL i2 i0 (sh 7 a)) (Δ₀-prAtL i0 (sh 7 Nx) (sh 7 x)))))
 ```
 
 THE TAG SLOTS, as one function from the twelve tags.  f k names the
@@ -1369,8 +1327,8 @@ The components of a pair held as an element of L, as elements of L.
 
 ```agda
 fstS sndS : (x : S) (u v : V ℓ) → fst x ≡ pr u v → S
-fstS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈ z ⟩) (sym e) (pair∈pr u v))) u (u∈pair u v)
-sndS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈ z ⟩) (sym e) (pair∈pr u v))) v (v∈pair u v)
+fstS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈ z ⟩) (sym e) (∈pair-introR {u = ⁅ u ⁆s} {v = ⁅ u , v ⁆} refl))) u (∈pair-introL {u = u} {v = v} refl)
+sndS x u v e = down (down x ⁅ u , v ⁆ (subst (λ z → ⟨ ⁅ u , v ⁆ ∈ z ⟩) (sym e) (∈pair-introR {u = ⁅ u ⁆s} {v = ⁅ u , v ⁆} refl))) v (∈pair-introR {u = u} {v = v} refl)
 ```
 
 THE PAYLOADS, READ.  At r ∷ s'' ∷ p ∷ s' ∷ F ∷ ar ∷ s ∷ q ∷ c ∷ γ.
@@ -1956,57 +1914,6 @@ open import L.Ordinal {ℓ} using ( ∈#-elim )
 open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId' )
 ```
 
-The twenty closure conjuncts, projected.
-
-```agda
-module Proj {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (4 + m))
-  (h : ⟨ δ ⊨ Close.all C w N ⟩) where
-  private
-    module Cl = Close C w N
-    w4 : Fin (4 + m)
-    w4 = sh 4 w
-  p1 : ⟨ δ ⊨ Cl.atomClose f0 f0 f0 w4 (sh 1 w4) ⟩
-  p1 = h .fst
-  p2 : ⟨ δ ⊨ Cl.atomClose f0 f0 f1 w4 i2 ⟩
-  p2 = h .snd .fst
-  p3 : ⟨ δ ⊨ Cl.atomClose f0 f1 f0 i1 (sh 1 w4) ⟩
-  p3 = h .snd .snd .fst
-  p4 : ⟨ δ ⊨ Cl.atomClose f0 f1 f1 i1 i2 ⟩
-  p4 = h .snd .snd .snd .fst
-  p5 : ⟨ δ ⊨ Cl.atomClose f1 f0 f0 w4 (sh 1 w4) ⟩
-  p5 = h .snd .snd .snd .snd .fst
-  p6 : ⟨ δ ⊨ Cl.atomClose f1 f0 f1 w4 i2 ⟩
-  p6 = h .snd .snd .snd .snd .snd .fst
-  p7 : ⟨ δ ⊨ Cl.atomClose f1 f1 f0 i1 (sh 1 w4) ⟩
-  p7 = h .snd .snd .snd .snd .snd .snd .fst
-  p8 : ⟨ δ ⊨ Cl.atomClose f1 f1 f1 i1 i2 ⟩
-  p8 = h .snd .snd .snd .snd .snd .snd .snd .fst
-  p9 : ⟨ δ ⊨ Cl.binClose f2 ⟩
-  p9 = h .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p10 : ⟨ δ ⊨ Cl.binClose f3 ⟩
-  p10 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p11 : ⟨ δ ⊨ Cl.binClose f4 ⟩
-  p11 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p12 : ⟨ δ ⊨ Cl.unClose f5 ⟩
-  p12 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p13 : ⟨ δ ⊨ Cl.conClose f6 ⟩
-  p13 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p14 : ⟨ δ ⊨ Cl.conClose f7 ⟩
-  p14 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p15 : ⟨ δ ⊨ Cl.quClose f8 ⟩
-  p15 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p16 : ⟨ δ ⊨ Cl.quClose f9 ⟩
-  p16 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p17 : ⟨ δ ⊨ Cl.bqClose f10 f0 (sh 8 w) ⟩
-  p17 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p18 : ⟨ δ ⊨ Cl.bqClose f10 f1 i5 ⟩
-  p18 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p19 : ⟨ δ ⊨ Cl.bqClose f11 f0 (sh 8 w) ⟩
-  p19 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-  p20 : ⟨ δ ⊨ Cl.bqClose f11 f1 i5 ⟩
-  p20 = h .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd
-```
-
 The alphabet of w, its codes and its terms' codes.
 
 ```agda
@@ -2059,37 +1966,36 @@ module CodesComplete {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ 
     frame n = useBoth i0 (qS n ∷ γ) (nn n) (envSet W n) refl (Close.all C w N) (hc (qS n) (arity∈ n))
 
     module CR (n : ℕ) = CloseRead C w N (δ4 n) tg
-    module P (n : ℕ) = Proj C w N (δ4 n) (frame n)
 
     -- The variable index as a member of the arity numeral.
     var∈ : (n : ℕ) (i : Fin n) → ⟨ # (toℕ i) ∈ # n ⟩
     var∈ n i = #mono (toℕ i) n (toℕ<n i)
 
   key-in : ∀ {n} (ψ : Formula Ab n) → ⟨ fst (keyS W ψ) ∈ Cv ⟩
-  key-in {n} (con x ∈̇ con y) = CR.atomClose-out n f0 f0 f0 (sh 4 w) (sh 5 w) (P.p1 n) (ιS x) (ιS y) (ι∈w x) (ι∈w y)
-  key-in {n} (con x ∈̇ var j) = CR.atomClose-out n f0 f0 f1 (sh 4 w) i2 (P.p2 n) (ιS x) (nn (toℕ j)) (ι∈w x) (var∈ n j)
-  key-in {n} (var i ∈̇ con y) = CR.atomClose-out n f0 f1 f0 i1 (sh 5 w) (P.p3 n) (nn (toℕ i)) (ιS y) (var∈ n i) (ι∈w y)
-  key-in {n} (var i ∈̇ var j) = CR.atomClose-out n f0 f1 f1 i1 i2 (P.p4 n) (nn (toℕ i)) (nn (toℕ j)) (var∈ n i) (var∈ n j)
-  key-in {n} (con x ≐ con y) = CR.atomClose-out n f1 f0 f0 (sh 4 w) (sh 5 w) (P.p5 n) (ιS x) (ιS y) (ι∈w x) (ι∈w y)
-  key-in {n} (con x ≐ var j) = CR.atomClose-out n f1 f0 f1 (sh 4 w) i2 (P.p6 n) (ιS x) (nn (toℕ j)) (ι∈w x) (var∈ n j)
-  key-in {n} (var i ≐ con y) = CR.atomClose-out n f1 f1 f0 i1 (sh 5 w) (P.p7 n) (nn (toℕ i)) (ιS y) (var∈ n i) (ι∈w y)
-  key-in {n} (var i ≐ var j) = CR.atomClose-out n f1 f1 f1 i1 i2 (P.p8 n) (nn (toℕ i)) (nn (toℕ j)) (var∈ n i) (var∈ n j)
-  key-in {n} (a ∧̇ b) = CR.binClose-out n f2 (P.p9 n) (keyS W a) (keyS W b) (codeS W a) (codeS W b) (key-in a) (key-in b) refl refl
-  key-in {n} (a ∨̇ b) = CR.binClose-out n f3 (P.p10 n) (keyS W a) (keyS W b) (codeS W a) (codeS W b) (key-in a) (key-in b) refl refl
-  key-in {n} (a ⇒̇ b) = CR.binClose-out n f4 (P.p11 n) (keyS W a) (keyS W b) (codeS W a) (codeS W b) (key-in a) (key-in b) refl refl
-  key-in {n} (¬̇ a) = CR.unClose-out n f5 (P.p12 n) (keyS W a) (codeS W a) (key-in a) refl
-  key-in {n} ⊤̇ = CR.conClose-out n f6 (P.p13 n)
-  key-in {n} ⊥̇ = CR.conClose-out n f7 (P.p14 n)
-  key-in {n} (∃̇ a) = CR.quClose-out n f8 (P.p15 n) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl
-  key-in {n} (∀̇ a) = CR.quClose-out n f9 (P.p16 n) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl
+  key-in {n} (con x ∈̇ con y) = CR.atomClose-out n f0 f0 f0 (sh 4 w) (sh 5 w) (frame n .fst) (ιS x) (ιS y) (ι∈w x) (ι∈w y)
+  key-in {n} (con x ∈̇ var j) = CR.atomClose-out n f0 f0 f1 (sh 4 w) i2 (frame n .snd .fst) (ιS x) (nn (toℕ j)) (ι∈w x) (var∈ n j)
+  key-in {n} (var i ∈̇ con y) = CR.atomClose-out n f0 f1 f0 i1 (sh 5 w) (frame n .snd .snd .fst) (nn (toℕ i)) (ιS y) (var∈ n i) (ι∈w y)
+  key-in {n} (var i ∈̇ var j) = CR.atomClose-out n f0 f1 f1 i1 i2 (frame n .snd .snd .snd .fst) (nn (toℕ i)) (nn (toℕ j)) (var∈ n i) (var∈ n j)
+  key-in {n} (con x ≐ con y) = CR.atomClose-out n f1 f0 f0 (sh 4 w) (sh 5 w) (frame n .snd .snd .snd .snd .fst) (ιS x) (ιS y) (ι∈w x) (ι∈w y)
+  key-in {n} (con x ≐ var j) = CR.atomClose-out n f1 f0 f1 (sh 4 w) i2 (frame n .snd .snd .snd .snd .snd .fst) (ιS x) (nn (toℕ j)) (ι∈w x) (var∈ n j)
+  key-in {n} (var i ≐ con y) = CR.atomClose-out n f1 f1 f0 i1 (sh 5 w) (frame n .snd .snd .snd .snd .snd .snd .fst) (nn (toℕ i)) (ιS y) (var∈ n i) (ι∈w y)
+  key-in {n} (var i ≐ var j) = CR.atomClose-out n f1 f1 f1 i1 i2 (frame n .snd .snd .snd .snd .snd .snd .snd .fst) (nn (toℕ i)) (nn (toℕ j)) (var∈ n i) (var∈ n j)
+  key-in {n} (a ∧̇ b) = CR.binClose-out n f2 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (keyS W b) (codeS W a) (codeS W b) (key-in a) (key-in b) refl refl
+  key-in {n} (a ∨̇ b) = CR.binClose-out n f3 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (keyS W b) (codeS W a) (codeS W b) (key-in a) (key-in b) refl refl
+  key-in {n} (a ⇒̇ b) = CR.binClose-out n f4 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (keyS W b) (codeS W a) (codeS W b) (key-in a) (key-in b) refl refl
+  key-in {n} (¬̇ a) = CR.unClose-out n f5 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (codeS W a) (key-in a) refl
+  key-in {n} ⊤̇ = CR.conClose-out n f6 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst)
+  key-in {n} ⊥̇ = CR.conClose-out n f7 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst)
+  key-in {n} (∃̇ a) = CR.quClose-out n f8 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl
+  key-in {n} (∀̇ a) = CR.quClose-out n f9 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl
   key-in {n} (∀̇∈ (con x) a) =
-    CR.bqClose-out n f10 f0 (sh 8 w) (P.p17 n) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (ιS x) (ι∈w x)
+    CR.bqClose-out n f10 f0 (sh 8 w) (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (ιS x) (ι∈w x)
   key-in {n} (∀̇∈ (var i) a) =
-    CR.bqClose-out n f10 f1 i5 (P.p18 n) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (nn (toℕ i)) (var∈ n i)
+    CR.bqClose-out n f10 f1 i5 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (nn (toℕ i)) (var∈ n i)
   key-in {n} (∃̇∈ (con x) a) =
-    CR.bqClose-out n f11 f0 (sh 8 w) (P.p19 n) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (ιS x) (ι∈w x)
+    CR.bqClose-out n f11 f0 (sh 8 w) (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (ιS x) (ι∈w x)
   key-in {n} (∃̇∈ (var i) a) =
-    CR.bqClose-out n f11 f1 i5 (P.p20 n) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (nn (toℕ i)) (var∈ n i)
+    CR.bqClose-out n f11 f1 i5 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (nn (toℕ i)) (var∈ n i)
 ```
 
 THE CODE SET SATISFIES THE DESCRIPTION, at C = AllCodes w and E the
@@ -2329,8 +2235,6 @@ The first component, universally.
 fstAll : ∀ {j} → Fin j → Fin j → Formula S (2 + j) → Formula S j
 fstAll x v body = ∀̇∈ (var x) (∀̇∈ (var i0) (prAtL (sh 2 x) i0 (sh 2 v) ⇒̇ body))
 
-Δ₀-fstAll : ∀ {j} (x v : Fin j) (body : Formula S (2 + j)) → Δ₀ body → Δ₀ (fstAll x v body)
-Δ₀-fstAll x v body d = δ-∀∈ (δ-∀∈ (δ-⇒ (Δ₀-prAtL (sh 2 x) i0 (sh 2 v)) d))
 ```
 
 The value at the subkey (ar, a): every entry (c₁, ya) of T with
@@ -2354,7 +2258,7 @@ subSucAt T ar a body =
 
 Δ₀-subSucAt : ∀ {j} (T ar a : Fin j) (body : Formula S (6 + j)) → Δ₀ body → Δ₀ (subSucAt T ar a body)
 Δ₀-subSucAt T ar a body d =
-  δ-∀∈ (Δ₀-bothAll i0 _ (Δ₀-fstAll i1 (sh 4 a) _ (δ-⇒ (Δ₀-sucAtL (sh 6 ar) i0) d)))
+  δ-∀∈ (Δ₀-bothAll i0 _ (δ-∀∈ (δ-∀∈ (δ-⇒ (Δ₀-prAtL i3 i0 (sh 6 a)) (δ-⇒ (Δ₀-sucAtL (sh 6 ar) i0) d)))))
 ```
 
 v is the value of the term code t in the environment z: t is the
@@ -2690,6 +2594,12 @@ module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg
     Ev = fst (lookup E γ)
     module Cl = Clause T w C E N
     module R = Rel T w N
+    inner9 : Fin 12 → Formula S (9 + m)
+    inner9 k = ∀̇∈ (var (sh 9 T)) (sndAll i0 i5 (R.relN (toℕ k)))
+    inner7 : Fin 12 → Formula S (7 + m)
+    inner7 k = sndAll i0 (sh 7 (N k)) (inner9 k)
+    inner4 : Fin 12 → Formula S (4 + m)
+    inner4 k = ∀̇∈ (var (sh 4 C)) (sndAll i0 i2 (inner7 k))
 
   -- The frame environment of an entry, with its containers.
   module At (ar F c p r yc : S) (q∈ : ⟨ pr (fst ar) (fst F) ∈ Ev ⟩)
@@ -2718,18 +2628,12 @@ module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg
     useSnd i0 (A.eS ∷ A.δ9) c yc refl (R.relN (toℕ k)) i5 refl (h9 A.eS e∈)
     where
     module A = At ar F c p r yc q∈ ec k (ep ∙ cong (λ a → pr a (fst r)) (sym (tg k))) e∈
-    inner9 : Formula S (9 + m)
-    inner9 = ∀̇∈ (var (sh 9 T)) (sndAll i0 i5 (R.relN (toℕ k)))
-    inner7 : Formula S (7 + m)
-    inner7 = sndAll i0 (sh 7 (N k)) inner9
-    inner4 : Formula S (4 + m)
-    inner4 = ∀̇∈ (var (sh 4 C)) (sndAll i0 i2 inner7)
-    h4 : ⟨ A.δ4 ⊨ inner4 ⟩
-    h4 = useBoth i0 (A.qS ∷ γ) ar F refl inner4 (h A.qS q∈)
-    h7 : ⟨ A.δ7 ⊨ inner7 ⟩
-    h7 = useSnd i0 (c ∷ A.δ4) ar p ec inner7 i2 refl (h4 c c∈)
-    h9 : ⟨ A.δ9 ⊨ inner9 ⟩
-    h9 = useSnd i0 A.δ7 (lookup (N k) γ) r (ep ∙ cong (λ a → pr a (fst r)) (sym (tg k))) inner9 (sh 7 (N k)) refl h7
+    h4 : ⟨ A.δ4 ⊨ inner4 k ⟩
+    h4 = useBoth i0 (A.qS ∷ γ) ar F refl (inner4 k) (h A.qS q∈)
+    h7 : ⟨ A.δ7 ⊨ inner7 k ⟩
+    h7 = useSnd i0 (c ∷ A.δ4) ar p ec (inner7 k) i2 refl (h4 c c∈)
+    h9 : ⟨ A.δ9 ⊨ inner9 k ⟩
+    h9 = useSnd i0 A.δ7 (lookup (N k) γ) r (ep ∙ cong (λ a → pr a (fst r)) (sym (tg k))) (inner9 k) (sh 7 (N k)) refl h7
 
   clause-in : (k : Fin 12)
             → ((q ar F s c p s1 r s2 e yc s3 : S) → ⟨ fst q ∈ Ev ⟩ → fst q ≡ pr (fst ar) (fst F)
@@ -2737,18 +2641,11 @@ module Frame {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg
                → ⟨ fst e ∈ Tv ⟩ → fst e ≡ pr (fst c) (fst yc)
                → ⟨ (yc ∷ s3 ∷ e ∷ r ∷ s2 ∷ p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ) ⊨ R.relN (toℕ k) ⟩)
             → ⟨ γ ⊨ Cl.clause k ⟩
-  clause-in k g q q∈ = bothAll-in i0 inner4 (q ∷ γ) (λ ar F s s∈ ar∈ F∈ eq c c∈ →
-    sndAll-in i0 i2 inner7 (c ∷ F ∷ ar ∷ s ∷ q ∷ γ) (λ p s1 s1∈ p∈ ec →
-      sndAll-in i0 (sh 7 (N k)) inner9 (p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ) (λ r s2 s2∈ r∈ ep e e∈ →
+  clause-in k g q q∈ = bothAll-in i0 (inner4 k) (q ∷ γ) (λ ar F s s∈ ar∈ F∈ eq c c∈ →
+    sndAll-in i0 i2 (inner7 k) (c ∷ F ∷ ar ∷ s ∷ q ∷ γ) (λ p s1 s1∈ p∈ ec →
+      sndAll-in i0 (sh 7 (N k)) (inner9 k) (p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ) (λ r s2 s2∈ r∈ ep e e∈ →
         sndAll-in i0 i5 (R.relN (toℕ k)) (e ∷ r ∷ s2 ∷ p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ) (λ yc s3 s3∈ yc∈ ee →
           g q ar F s c p s1 r s2 e yc s3 q∈ eq c∈ ec (ep ∙ cong (λ a → pr a (fst r)) (tg k)) e∈ ee))))
-    where
-    inner9 : Formula S (9 + m)
-    inner9 = ∀̇∈ (var (sh 9 T)) (sndAll i0 i5 (R.relN (toℕ k)))
-    inner7 : Formula S (7 + m)
-    inner7 = sndAll i0 (sh 7 (N k)) inner9
-    inner4 : Formula S (4 + m)
-    inner4 = ∀̇∈ (var (sh 4 C)) (sndAll i0 i2 inner7)
 
   -- Totality and the domain.
   total-out : ⟨ γ ⊨ Cl.total ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁

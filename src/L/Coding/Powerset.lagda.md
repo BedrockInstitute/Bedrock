@@ -70,7 +70,7 @@ open import L.Coding.Table {ℓ} lem
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Bridge {ℓ} lem using ( asConst; defSet-Sat )
-open import L.Coding.Uniform {ℓ} lem using ( keyBridge )
+open import L.Coding.Uniform {ℓ} lem using ( keyBridge; fr; frTags; frTow; frDom )
 
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Foundations.Prelude using ( subst2 )
@@ -354,9 +354,6 @@ module _ (B : S) where
     toB : ∀ {n} → Formula ⟪ fst B ⟫ n → Formula S n
     toB = mapFo (asConst B)
 
-    fr : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → S ^ (16 + n)
-    fr φ γ = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B γ
-
   graphAt-holds : ∀ {m n} (ψ : Formula ⟪ fst B ⟫ m) (w c v : Fin n) (γ : S ^ n)
                 → fst (lookup w γ) ≡ fst B
                 → fst (lookup c γ) ≡ fst (keyʟ (toB ψ))
@@ -369,29 +366,18 @@ module _ (B : S) where
     , (satTable B φ
     , (B
     , (sym qw
-    , (tg
-    , (htow
+    , (frTags B φ γ
+    , (frTow B φ γ
     , (slotClosed B φ (Tower.tower B ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
          ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
          ∷ numν f11 ∷ γ)
-    , (hdom
+    , (frDom B φ γ
     , (entry
-    , SlotHolds.holds B Ti Bi Ci Ei NN (fr φ γ) refl tg htow ψ refl refl)))))))))) ∣₁
+    , SlotHolds.holds B Ti Bi Ci Ei NN (fr B φ γ) refl
+        (frTags B φ γ) (frTow B φ γ) ψ refl refl)))))))))) ∣₁
     where
     φ : Formula S m
     φ = toB ψ
-
-    tg : Tags (fr φ γ) NN
-    tg = numTags (Tower.tower B) (slot B φ) (satTable B φ) B γ
-
-    htow : ⟨ fr φ γ ⊨ towerAt Ei Bi (NN f0) ⟩
-    htow = TowerHolds.holds Ei Bi (NN f0) (fr φ γ) B refl refl refl
-
-    hdom : ⟨ fr φ γ ⊨ domAt Ti Ci ⟩
-    hdom = domAt-intro Ti Ci (fr φ γ)
-      (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot B φ)))
-                  (λ { (u , hu) → inSlot B φ (fst z) (fst u) hu }) h)
-           , (λ h → total B φ (fst z) h))
 
     entry : ⟨ pr (fst (lookup c γ)) (fst (lookup v γ)) ∈ fst (satTable B φ) ⟩
     entry = subst2 (λ a b → ⟨ pr a b ∈ fst (satTable B φ) ⟩)

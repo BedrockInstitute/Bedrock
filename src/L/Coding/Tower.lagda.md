@@ -44,27 +44,26 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 The slot arithmetic this chapter needs, at the four innermost slots.
 
 ```agda
-private
-  i0 : ∀ {j} → Fin (suc j)
-  i0 = zero
-  i1 : ∀ {j} → Fin (2 + j)
-  i1 = suc i0
-  i2 : ∀ {j} → Fin (3 + j)
-  i2 = suc i1
-  i3 : ∀ {j} → Fin (4 + j)
-  i3 = suc i2
+i0 : ∀ {j} → Fin (suc j)
+i0 = zero
+i1 : ∀ {j} → Fin (2 + j)
+i1 = suc i0
+i2 : ∀ {j} → Fin (3 + j)
+i2 = suc i1
+i3 : ∀ {j} → Fin (4 + j)
+i3 = suc i2
 
-  pr-out : ∀ {m} (q u v : Fin m) (γ : S ^ m) → ⟨ γ ⊨ prAtL q u v ⟩
-         → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
-  pr-out q u v γ h = subst ⟨_⟩ (prAtL-adequate q u v γ) h
+pr-out : ∀ {m} (q u v : Fin m) (γ : S ^ m) → ⟨ γ ⊨ prAtL q u v ⟩
+       → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
+pr-out q u v γ h = subst ⟨_⟩ (prAtL-adequate q u v γ) h
 
-  pr-in : ∀ {m} (q u v : Fin m) (γ : S ^ m)
-        → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
-        → ⟨ γ ⊨ prAtL q u v ⟩
-  pr-in q u v γ e = subst ⟨_⟩ (sym (prAtL-adequate q u v γ)) e
+pr-in : ∀ {m} (q u v : Fin m) (γ : S ^ m)
+      → fst (lookup q γ) ≡ pr (fst (lookup u γ)) (fst (lookup v γ))
+      → ⟨ γ ⊨ prAtL q u v ⟩
+pr-in q u v γ e = subst ⟨_⟩ (sym (prAtL-adequate q u v γ)) e
 
-  down : (x : S) (y : V ℓ) → ⟨ y ∈ fst x ⟩ → S
-  down x y h = y , isL-trans {x = fst x} {y = y} h (snd x)
+down : (x : S) (y : V ℓ) → ⟨ y ∈ fst x ⟩ → S
+down x y h = y , isL-trans {x = fst x} {y = y} h (snd x)
 ```
 
 THE TOWER SET.  The pairs (n, Eₙ), cut by separation out of a stage
