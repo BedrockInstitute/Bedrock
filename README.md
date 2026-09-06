@@ -5,7 +5,7 @@
 **English** · [中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
 [![Typecheck](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml)
-![Status: early](https://img.shields.io/badge/status-early-orange)
+![Status: first goal proved](https://img.shields.io/badge/first%20goal-L%20%E2%8A%A8%20GCH%20proved-brightgreen)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
 [![Content: CC BY-NC-SA 4.0](https://img.shields.io/badge/content-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -18,20 +18,25 @@ A machine-checked development, in [Cubical Agda](https://github.com/agda/cubical
 of the set theory underlying contemporary questions about the universe of sets:
 forcing, inner models, and the structure of V.
 
-## First goal
+## First goal, proved
 
-The immediate, self-contained target is a full mechanization of
+The first, self-contained target was a full mechanization of
 
 > **`L` ⊨ GCH**, where `L` is the constructible hierarchy built over the
 > cumulative hierarchy `V` realised as a higher inductive type. This is a semantic
 > theorem internal to the host.
 
+**It is proved.** `L⊨GCH` and `L⊨ZFC` are both stated in
+[src/Landmarks.lagda.md](src/Landmarks.lagda.md), each on `LEM (ℓ-suc ℓ)` and
+nothing else: internal cardinals, internal injections, the model's own power set.
+The proof term is `L⊨GCH` in `src/L/GCH/Theorem.lagda.md`.
+
 The content is Gödel's 1938 result, but the route is not the textbook one, and not
-one anyone has taken for GCH. It is the right first stone because it exercises the
+one anyone has taken for GCH. It was the right first stone because it exercises the
 entire base layer the rest of the project needs: a deeply embedded first-order
 language, the cumulative hierarchy, `L`, and the dual-semantics machinery. And it
 commits from line one to the host-language-maximalist approach described below.
-Getting it right calibrates the infrastructure everything else will stand on.
+Getting it right calibrated the infrastructure everything else will stand on.
 
 ## Direction
 
@@ -98,7 +103,7 @@ The development typechecks against the following pinned toolchain:
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
+`make check` (typecheck, the four linters, their unit tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
 environment by `make venv` (run once per clone). Every push is typechecked against these versions
 by [GitHub Actions](.github/workflows/typecheck.yml).

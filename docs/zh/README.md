@@ -16,11 +16,13 @@
 
 一项在 [Cubical Agda](https://github.com/agda/cubical) 中的机器验证工作，针对当代集合宇宙问题背后的那部分集合论：力迫、内模型，以及 V 的结构。
 
-## 首个目标
+## 首个目标，已证
 
-眼下的首要目标，是完整机械化：
+第一个自足的目标，是完整机械化：
 
 > **`L` ⊨ GCH**，其中 `L` 是在以高阶归纳类型实现的累积层级 `V` 之上构造的可构造层级。这是一个宿主内部的语义定理。
+
+**它已经证成。**`L⊨GCH` 与 `L⊨ZFC` 都陈述在 [src/Landmarks.lagda.md](../../src/Landmarks.lagda.md) 中，各自只依赖 `LEM (ℓ-suc ℓ)`，不多不少：内部基数、内部单射、模型自身的幂集。证明项是 `src/L/GCH/Theorem.lagda.md` 中的 `L⊨GCH`。
 
 内容是哥德尔 1938 年的结果，但路线不是教科书那条，也没有人针对 GCH 走过这条路线。它适合作为第一块基石，是因为它会演练本项目其余部分所需的整个基础层：深嵌入的一阶语言、累积层级、`L`、以及双语义机制。而它从第一行起就锚定了下文那套宿主语言最大化的进路。把它做对，就校准了其余一切赖以站立的基础设施。
 
@@ -64,7 +66,7 @@ Cubical 类型论是当代类型论的前沿，是当下正被书写的数学基
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` 与站点构建需 Python 3.11+；开发工具 (`reuse` 检查器) 固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，并由 `make venv` 安装进本地虚拟环境 (每个克隆运行一次即可)。每次推送都会经 [GitHub Actions](../../.github/workflows/typecheck.yml) 针对上述版本进行类型检查。
+`make check` (类型检查、四个检查器、以及它们的单元测试) 与站点构建需 Python 3.11+；开发工具 (`reuse` 检查器) 固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，并由 `make venv` 安装进本地虚拟环境 (每个克隆运行一次即可)。每次推送都会经 [GitHub Actions](../../.github/workflows/typecheck.yml) 针对上述版本进行类型检查。
 
 ## 贡献
 

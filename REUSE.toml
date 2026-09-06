@@ -34,14 +34,6 @@ precedence = "override"
 SPDX-FileCopyrightText = "2026 Bedrock Institute"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
 
-# ---- Carve-out: archived content keeps its original license (CC BY-NC-SA) ----
-# Retired modules move out of src/ with their license intact: moving a file must
-# not relicense it. REUSE stays repository-wide, so lint still covers archive/.
-[[annotations]]
-path = "archive/**"
-precedence = "override"
-SPDX-FileCopyrightText = "2026 Bedrock Institute"
-SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
 
 # ---- Carve-out: self-hosted third-party web fonts -> OFL-1.1 (per-font copyright) --
 [[annotations]]

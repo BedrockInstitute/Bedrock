@@ -8,10 +8,12 @@ documented one level down instead.
 
 ## Workflows
 
-Triggered on push to `main` (typecheck also runs on pull requests):
+`typecheck.yml` runs on every push and every pull request; the two deploy workflows run on
+push to `main`:
 
-- `typecheck.yml`: the **proof gate**. Runs `make check` (typecheck the masters, validate i18n
-  markers, prose linter, glossary check).
+- `typecheck.yml`: the **proof gate**. It typechecks the masters with an interface cache, then
+  runs `make lint` (the four gates plus the i18n marker check) and `make test` (their unit
+  tests). Together those are `make check`, split so the typecheck can use its cache.
 - `cloudflare.yml`: builds the site (root base URL) and deploys to **Cloudflare Pages**, the
   primary host ([bedrock.institute](https://bedrock.institute)).
 - `pages.yml`: builds the site (base URL `/Bedrock`) and deploys the **GitHub Pages** mirror.

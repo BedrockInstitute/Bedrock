@@ -8,10 +8,10 @@ rule set is [AGENTS.md](../AGENTS.md).
 **Read this file when your write scope names a path under `site/`.**
 
 **The publishing pipeline runs outside `make check`:** `scripts/site/extract-types.py`,
-`gen-depmap.py`, `link-check.py`, `render-site.py`, `depmap-template.html` and
-`scripts/ops/agda-watchdog.sh`. `make site`, `make serve` and the two deploy workflows run
-them, and `link-check.py` is the only script the deploy runs. Their index is
-[scripts/README.md](../scripts/README.md) and it stays their canonical home.
+`gen-depmap.py`, `link-check.py`, `render-site.py`, `weave-i18n.py`, `i18n_markers.py` and
+`depmap-template.html`. `make html`, `make types`, `make site`, `make serve` and the two deploy
+workflows run them. The one exception is `weave-i18n.py --check`, which `make lint` does run,
+because a broken language marker is a defect in a master rather than in the site.
 
 ## Contents
 

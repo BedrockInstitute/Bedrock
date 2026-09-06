@@ -15,9 +15,10 @@ Nothing here is generated: the woven mono-lingual copies and the rendered site l
 
 ## `Everything.lagda.md`
 
-The aggregator and the book's **reading catalog** (PLAN §5: two-catalog doctrine). It
+The aggregator and the book's **reading catalog** (the two-catalog doctrine of
+[dev/STYLE-agda.md](../dev/STYLE-agda.md)). It
 imports every module, so `agda src/Everything.lagda.md` typechecks the whole development
-(this is what `make check` runs). It is also rendered as the **site landing page**
+(this is what `make typecheck` runs, and `make check` adds the linters). It is also rendered as the **site landing page**
 (`index.html`); its prose lists every module with a one-line bilingual description, its
 import order is the reading order, and each chapter page carries previous/next links along
 it. The sidebar's module tree is the **structure catalog**, derived from the namespace tree
@@ -33,15 +34,17 @@ not duplicate it, because a second list drifts: MEASURED 2026-08-17, this sectio
 `src/V/` and 71 under `src/L/`, and the repository held zero `.gitkeep` files.
 
 `Landmarks.lagda.md` is the trophy case and reads first in the catalog, by owner ruling: the
-storefront, before Part 0. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC` and `L⊨ZFC`, each a
-self-contained signature naming its proving chapter. **`L ⊨ GCH` is NOT there yet**: its
-statement type is `GCHStatement` at `src/L/GCH.lagda.md:59-60` and no proof term exists.
+storefront, before Part 0. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC`, `L⊨ZFC` and
+`L⊨GCH`, each a self-contained signature naming its proving chapter. **Both `L` trophies are
+proved.** `L⊨GCH` was proved on 2026-09-05; its statement type is `GCHStatement` in
+`L/GCH.lagda.md` and its proof term is `L⊨GCH` in `L/GCH/Theorem.lagda.md`. The only
+hypothesis either takes is `LEM (ℓ-suc ℓ)`.
 
-The book-part skeleton is [archive/dev/PLAN-archived.md](../archive/dev/PLAN-archived.md) §4 and the namespace tree is the
-structure catalog, derived and never hand-maintained. **The reading order is not the namespace
-order** (the two-catalog doctrine in `dev/STYLE-agda.md`). Two retirement records that used to sit in this
-section moved to [dev/ARCHIVE.md](../dev/ARCHIVE.md) on 2026-08-17: `FOL/Reification/` and the
-`L/Frontier.lagda.md` debt registry, each with its measurement.
+The namespace tree is the structure catalog, derived and never hand-maintained. **The reading
+order is not the namespace order** (the two-catalog doctrine in
+[dev/STYLE-agda.md](../dev/STYLE-agda.md)). Retired chapters left the tree entirely on
+2026-09-06: the archive now lives outside the repository, at `~/Agentic/Archive/Bedrock-archive`,
+mirroring the paths the files had here.
 
 ## Symbol master table
 
