@@ -41,7 +41,8 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ} using ( module LCode; prʟ; prʟ-fst )
 open import L.Coding.InL {ℓ}
-  using ( sglʟ; cupʟ; sglʟ-in; sglʟ-out; cupʟ-inl; cupʟ-inr; cupʟ-out )
+  using ( sglʟ; sglʟ-in; cupʟ-inl; tree; Of; tree-inv )
+  renaming ( module Parts to TreeParts )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -67,15 +68,16 @@ open hPropStructure 𝒮ʟ using ( S )
 A key is the arity paired with the code, which is the shape every clause of the
 internal recursion reads. An entry is a key paired with the value.
 
-The shape both live in is the same, so it is written once. `tree`{.Agda} gathers
-one thing per subformula, and what that thing is is its parameter: with the entry
-it gives the table, with the key it gives the **slot** the table is indexed by.
-The recursion needs both and needs them to agree constructor for constructor,
-which is a reason to build them from one recursion rather than two.
+The shape both live in is the same, so it is written once and written
+elsewhere. `tree`{.Agda} is the closure chapter's recursion: it gathers one
+thing per subformula, and what that thing is is its parameter. With the entry it
+gives the table, with the key it gives the **slot** the table is indexed by. The
+recursion needs both and needs them to agree constructor for constructor, which
+is why they come from one recursion rather than two.
 <!--zh-->
 一个键是元数与码之对，而那正是内部递归每条子句所读的形状。一个条目是键与取值之对。
 
-两者所在的形状相同，故只写一次。`tree`{.Agda} 为每条子公式收集一样东西，而那样东西是什么是它的参数：给它条目，得到那张表；给它键，得到表所索引的那个**槽**。递归两者都要，且要它们逐个构造子地一致，而这正是「用一次递归而非两次造出它们」的理由。
+两者所在的形状相同，故只写一次，且写在别处。`tree`{.Agda} 就是闭包那一章的那次递归：它为每条子公式收集一样东西，而那样东西是什么是它的参数。给它条目，得到那张表；给它键，得到表所索引的那个**槽**。递归两者都要，且要它们逐个构造子地一致，故两者出自同一次递归而非两次。
 <!--/-->
 
 ```agda
@@ -85,20 +87,6 @@ keyʟ {n} φ = prʟ (numeralL n) LCode.⌜ φ ⌝
 module _ (B : S) where
   ent : ∀ {n} → Formula S n → S
   ent φ = prʟ (keyʟ φ) (Sat B φ)
-
-  tree : (∀ {m} → Formula S m → S) → ∀ {n} → Formula S n → S
-  tree f φ@(t ∈̇ u)  = sglʟ (f φ)
-  tree f φ@(t ≐ u)  = sglʟ (f φ)
-  tree f φ@⊤̇        = sglʟ (f φ)
-  tree f φ@⊥̇        = sglʟ (f φ)
-  tree f φ@(a ∧̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
-  tree f φ@(a ∨̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
-  tree f φ@(a ⇒̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
-  tree f φ@(¬̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
-  tree f φ@(∃̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
-  tree f φ@(∀̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
-  tree f φ@(∀̇∈ t a) = cupʟ (sglʟ (f φ)) (tree f a)
-  tree f φ@(∃̇∈ t a) = cupʟ (sglʟ (f φ)) (tree f a)
 
   satTable : ∀ {n} → Formula S n → S
   satTable = tree ent
@@ -114,118 +102,16 @@ module _ (B : S) where
 <!--/-->
 
 <!--en-->
-Every member is one of the things gathered, which is the inversion the closure
-chapter needed in its own shape, and it is proved once for both. The two combinators take the inclusions rather than an equation
-between the two constructions, which is the rule that chapter measured.
+Every member is one of the things gathered. That is the inversion the closure
+chapter proves, stated there against two collections at once, so the four
+readings below are four instantiations of it and no induction runs here.
 <!--zh-->
-每个成员都是被收集的东西之一，而这正是闭包那一章以自己的形状所需的那次求逆，且为两者只证一次。两个组合子接受的是诸包含映射、而非两个构造之间的一条等式，那是那一章测量出来的规矩。
+每个成员都是被收集之物之一。那正是闭包那一章所证的求逆，且它在那里是对着两个收集同时陈述的，故下面四条读式是它的四次实例化，此处不跑归纳。
 <!--/-->
 
 ```agda
-  Of : (f g : ∀ {m} → Formula S m → S) {n : ℕ} → Formula S n → V ℓ
-     → Type (ℓ-suc ℓ)
-  Of f g φ x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula S m ]
-                   ((x ≡ fst (f χ))
-                    × ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩
-                       → ⟨ z ∈ fst (tree g φ) ⟩))) ∥₁
-
-  private
-    module _ (f g : ∀ {m} → Formula S m → S) where
-      one : ∀ {n} (φ : Formula S n) (x : V ℓ)
-          → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f g φ x
-      one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
-
-      wider : ∀ {n m} (φ : Formula S n) (χ : Formula S m) {x : V ℓ}
-            → ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩ → ⟨ z ∈ fst (tree g φ) ⟩)
-            → Of f g χ x → Of f g φ x
-      wider _ _ s = PT.map
-        (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
-
-      un : ∀ {n m} (φ : Formula S n) (a : Formula S m)
-         → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (tree g a)) ⟩
-            → ⟨ z ∈ fst (tree g φ) ⟩)
-         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
-         → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f g φ x
-      un φ a into ra x h = PT.rec squash₁
-        (λ { (inl e) → one φ x e
-           ; (inr e) → wider φ a
-               (λ z hz → into z (cupʟ-inr (sglʟ (g φ)) (tree g a) z hz))
-               (ra x e) })
-        (cupʟ-out (sglʟ (f φ)) (tree f a) x h)
-
-      bin : ∀ {n m} (φ : Formula S n) (a b : Formula S m)
-          → ((z : V ℓ)
-             → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (cupʟ (tree g a) (tree g b))) ⟩
-             → ⟨ z ∈ fst (tree g φ) ⟩)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
-          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f g b x)
-          → (x : V ℓ)
-          → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
-          → Of f g φ x
-      bin φ a b into ra rb x h = PT.rec squash₁
-        (λ { (inl e) → one φ x e
-           ; (inr e) → PT.rec squash₁
-               (λ { (inl ea) → wider φ a (λ z hz → into z
-                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
-                        (cupʟ-inl (tree g a) (tree g b) z hz)))
-                      (ra x ea)
-                  ; (inr eb) → wider φ b (λ z hz → into z
-                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
-                        (cupʟ-inr (tree g a) (tree g b) z hz)))
-                      (rb x eb) })
-               (cupʟ-out (tree f a) (tree f b) x e) })
-        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
-
   module Parts (f : ∀ {m} → Formula S m → S) where
-    self : ∀ {n} (φ : Formula S n) → ⟨ fst (f φ) ∈ fst (tree f φ) ⟩
-    self φ@(t ∈̇ u)  = sglʟ-in (f φ) _ refl
-    self φ@(t ≐ u)  = sglʟ-in (f φ) _ refl
-    self φ@⊤̇        = sglʟ-in (f φ) _ refl
-    self φ@⊥̇        = sglʟ-in (f φ) _ refl
-    self φ@(a ∧̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(a ∨̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(a ⇒̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(¬̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(∃̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(∀̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-
-    left : ∀ {n m} (χ : Formula S n) (a b : Formula S m) (z : V ℓ)
-         → ⟨ z ∈ fst (tree f a) ⟩
-         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
-    left χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
-                       (cupʟ-inl (tree f a) (tree f b) z h)
-
-    right : ∀ {n m} (χ : Formula S n) (a b : Formula S m) (z : V ℓ)
-          → ⟨ z ∈ fst (tree f b) ⟩
-          → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
-    right χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
-                        (cupʟ-inr (tree f a) (tree f b) z h)
-
-    only : ∀ {n m} (χ : Formula S n) (a : Formula S m) (z : V ℓ)
-         → ⟨ z ∈ fst (tree f a) ⟩
-         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (tree f a)) ⟩
-    only χ a z h = cupʟ-inr (sglʟ (f χ)) (tree f a) z h
-
-  tree-inv : (f g : ∀ {m} → Formula S m → S)
-           → ∀ {n} (φ : Formula S n) (x : V ℓ)
-           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f g φ x
-  tree-inv f g φ@(t ∈̇ u) = one f g φ
-  tree-inv f g φ@(t ≐ u) = one f g φ
-  tree-inv f g φ@⊤̇       = one f g φ
-  tree-inv f g φ@⊥̇       = one f g φ
-  tree-inv f g φ@(a ∧̇ b) = bin f g φ a b (λ _ hz → hz)
-                             (tree-inv f g a) (tree-inv f g b)
-  tree-inv f g φ@(a ∨̇ b) = bin f g φ a b (λ _ hz → hz)
-                             (tree-inv f g a) (tree-inv f g b)
-  tree-inv f g φ@(a ⇒̇ b) = bin f g φ a b (λ _ hz → hz)
-                             (tree-inv f g a) (tree-inv f g b)
-  tree-inv f g φ@(¬̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
-  tree-inv f g φ@(∃̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
-  tree-inv f g φ@(∀̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
-  tree-inv f g φ@(∀̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
-  tree-inv f g φ@(∃̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+    open TreeParts f public
 
   satTable-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
                → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent ent φ x

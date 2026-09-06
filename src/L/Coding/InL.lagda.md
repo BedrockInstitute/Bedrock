@@ -195,11 +195,18 @@ envL σ oσ {n} g h =
 <!--en-->
 Two more shapes, and the model supplies both directly. A singleton is the pair of
 a thing with itself, and a binary union is the union of the pair, so each is the
-model's own operation read through the underlying set. They are what a set built
-by recursion out of smaller sets needs, and the next section is the first such
-set.
+model's own operation read through the underlying set.
+
+Each shape comes twice over. Once on the underlying set, with the two lemmas that
+read a member of a singleton or of a binary union back, and once on the model's
+own sets, where the constructibility certificate rides along and the same lemmas
+are restated through the equation that reads the underlying set out. The
+recursion below runs on the second, so a set it builds is an element of `L` by
+construction and not by a second induction.
 <!--zh-->
-再来两种形状，而模型直接供给两者。单点集是一物与自身之对，二元并是那个对之并，故各是模型自家的运算沿底集读出。它们正是「由更小的集合递归造出的集合」所需要的，而下一节就是第一个这样的集合。
+再来两种形状，而模型直接供给两者。单点集是一物与自身之对，二元并是那个对之并，故各是模型自家的运算沿底集读出。
+
+每种形状都来两遍。一遍落在底集上，配两条把单元集或二元并的成员读回来的引理；一遍落在模型自己的集合上，此时可构造性证书一路带着，而同样那些引理经由「读出底集」那条等式重述一次。下面那个递归跑在第二遍上，故它造出的集合按构造就是 `L` 的元素，而不必再来一次归纳。
 <!--/-->
 
 ```agda
@@ -215,126 +222,6 @@ cupL {a} {b} pa pb =
       ∙ cong (⋃_) (pairʟ-fst (a , pa) (b , pb)))
     (unionʟ (pairʟ (a , pa) (b , pb)) .snd)
 
-```
-
-<!--en-->
-## The subformula closure
-<!--zh-->
-## 子公式闭包
-<!--/-->
-
-<!--en-->
-A recursion on codes is stated against a *slot*: a set of codes closed under
-immediate subcodes, holding the one the recursion is asked about. The smallest
-such slot is the set of codes of a formula's own subformulas, and it is built by
-the recursion the formula's shape dictates: a code, together with the closures of
-whatever it is built from.
-
-Each entry carries its arity, because the recursion's own key does; a binder's
-subformula therefore enters at the successor. That is the only place the
-bookkeeping is visible, and it is visible because the arity is what the frames
-bind.
-
-The set is constructible for the reason every finite thing here is: it is built
-by pairing and union out of pieces that are, and the shapes above say so in one
-line each.
-<!--zh-->
-对码的递归是相对某个**槽**陈述的：一个对直接子码封闭、且装着被问及的那个码的码集。最小的这种槽，就是一条公式自身诸子公式的码之集，而它由公式的形状所规定的递归造出：一个码，连同它所由构造之物的诸闭包。
-
-每个条目都携带自己的元数，因为递归自己的键就携带；故绑定子的子公式在后继处进入。那是记账唯一可见之处，而它可见，是因为元数正是诸框架所绑定的东西。
-
-这个集合可构造，理由与此处每件有穷之物相同：它由配对与并从可构造的部件造出，而上面两种形状各用一行把这一点说出。
-<!--/-->
-
-```agda
-module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
-
-  key : ∀ {n} → Formula K n → V ℓ
-  key {n} φ = pr (# n) VCode.⌜ mapFo f φ ⌝
-
-  keyL : ∀ {n} (φ : Formula K n) → ⟨ isL (key φ) ⟩
-  keyL φ = prL (numL _) (codeL f h φ)
-
-  closure : ∀ {n} → Formula K n → V ℓ
-  closure φ@(t ∈̇ u)  = ⁅ key φ ⁆s
-  closure φ@(t ≐ u)  = ⁅ key φ ⁆s
-  closure φ@(a ∧̇ b)  = ⁅ key φ ⁆s ∪ (closure a ∪ closure b)
-  closure φ@(a ∨̇ b)  = ⁅ key φ ⁆s ∪ (closure a ∪ closure b)
-  closure φ@(a ⇒̇ b)  = ⁅ key φ ⁆s ∪ (closure a ∪ closure b)
-  closure φ@(¬̇ a)    = ⁅ key φ ⁆s ∪ closure a
-  closure φ@⊤̇        = ⁅ key φ ⁆s
-  closure φ@⊥̇        = ⁅ key φ ⁆s
-  closure φ@(∃̇ a)    = ⁅ key φ ⁆s ∪ closure a
-  closure φ@(∀̇ a)    = ⁅ key φ ⁆s ∪ closure a
-  closure φ@(∀̇∈ t a) = ⁅ key φ ⁆s ∪ closure a
-  closure φ@(∃̇∈ t a) = ⁅ key φ ⁆s ∪ closure a
-
-  closureL : ∀ {n} (φ : Formula K n) → ⟨ isL (closure φ) ⟩
-  closureL φ@(t ∈̇ u)  = sglL (keyL φ)
-  closureL φ@(t ≐ u)  = sglL (keyL φ)
-  closureL φ@(a ∧̇ b)  = cupL (sglL (keyL φ)) (cupL (closureL a) (closureL b))
-  closureL φ@(a ∨̇ b)  = cupL (sglL (keyL φ)) (cupL (closureL a) (closureL b))
-  closureL φ@(a ⇒̇ b)  = cupL (sglL (keyL φ)) (cupL (closureL a) (closureL b))
-  closureL φ@(¬̇ a)    = cupL (sglL (keyL φ)) (closureL a)
-  closureL φ@⊤̇        = sglL (keyL φ)
-  closureL φ@⊥̇        = sglL (keyL φ)
-  closureL φ@(∃̇ a)    = cupL (sglL (keyL φ)) (closureL a)
-  closureL φ@(∀̇ a)    = cupL (sglL (keyL φ)) (closureL a)
-  closureL φ@(∀̇∈ t a) = cupL (sglL (keyL φ)) (closureL a)
-  closureL φ@(∃̇∈ t a) = cupL (sglL (keyL φ)) (closureL a)
-```
-
-<!--en-->
-## Recap
-<!--zh-->
-## 小结
-<!--/-->
-
-<!--en-->
-`codeL`{.Agda} says every code is an element of `L`, and `numL`{.Agda},
-`prL`{.Agda} and `tagL`{.Agda} are the three shapes it is built from. With it a
-code may be named as a constant of the model's object language, and a family of
-codes may be the domain of an internalized recursion.
-
-`envL`{.Agda} then puts an environment in `L` with no recursion on its length and
-no use of replacement, because an environment is on the nose the finite set of
-its entries. `closure`{.Agda} is the smallest slot a recursion on a code can be
-stated against, and `closureL`{.Agda} puts it in `L` by the same two shapes,
-`sglL`{.Agda} and `cupL`{.Agda}, one line per constructor.
-
-The set of all codes is still not an element of `L`, and is still not needed.
-<!--zh-->
-`codeL`{.Agda} 说每个码都是 `L` 的元素，而 `numL`{.Agda}、`prL`{.Agda} 与 `tagL`{.Agda} 是它所由构造的三种形状。有了它，一个码就可以被点名为模型对象语言的常元，而一族码就可以充当某个已内化递归的定义域。
-
-`envL`{.Agda} 随后把一个环境放进 `L`，既不沿长度递归，也不用替换，因为一个环境恰恰就是它诸条目构成的有穷集。`closure`{.Agda} 是「对一个码的递归」所能相对陈述的最小的槽，而 `closureL`{.Agda} 用同样两种形状 `sglL`{.Agda} 与 `cupL`{.Agda} 把它放进 `L`，每个构造子一行。
-
-全体码之集仍然不是 `L` 的元素，也仍然不需要是。
-<!--/-->
-
-<!--en-->
-## Reading a closure back
-<!--zh-->
-## 把闭包读回来
-<!--/-->
-
-<!--en-->
-A recursion over codes has to know what the elements of its domain are, and
-"whatever the union of these singletons happens to contain" is not an answer.
-The lemma below is the answer: every element of a closure is the key of a
-formula, and that formula's own closure sits inside the one it came from. The
-second half is what an induction consumes, since it is how the induction knows
-its hypothesis is available where it wants to apply it.
-
-The proof is the definition read backwards, one constructor at a time, and the
-only machinery under it is membership in a singleton and in a binary union. Both
-are stated first, in the shape the cases use.
-<!--zh-->
-对码的递归必须知道自己定义域的元素是什么，而「这些单元集之并恰好含有的任何东西」不是一个回答。下面这条引理就是回答：闭包的每个元素都是某条公式的键，而那条公式自己的闭包坐落在它所出自的那个之内。后一半才是归纳所消费的，因为归纳正是靠它知道自己的假设在想用的地方可用。
-
-证明就是把定义倒着读，一次一个构造子，其下的全部机械只有「属于单元集」与「属于二元并」。两者先陈述，形状按诸情形所用。
-<!--/-->
-
-```agda
 sgl-out : (a x : V ℓ) → ⟨ x ∈ ⁅ a ⁆s ⟩ → x ≡ a
 sgl-out a x h = PT.rec (setIsSet x a) (λ { (inl e) → e ; (inr e) → e })
   (subst ⟨_⟩ (pair-spec a a x)
@@ -392,69 +279,258 @@ cupʟ-out a b x h = cup-out (fst a) (fst b) x
   (subst (λ w → ⟨ x ∈ w ⟩) (cupʟ-fst a b) h)
 ```
 
+<!--en-->
+## The subformula recursion
+<!--zh-->
+## 子公式递归
+<!--/-->
+
+<!--en-->
+One recursion over the twelve constructors, with what it collects left as its
+parameter. It gathers one thing per subformula: give it the key and it gives the
+subformula closure of the next section, give it an entry and it gives the
+satisfaction table of a later chapter. Both want the same inversion, so the
+inversion is proved here once and instantiated twice.
+
+`Of`{.Agda} says what a member of such a set is: one of the things gathered,
+gathered at some subformula whose own set sits inside the one it came from.
+`tree-inv`{.Agda} proves it, and `Parts`{.Agda} carries the memberships the other
+direction needs, one for each shape a clause of the recursion produces.
+<!--zh-->
+沿十二个构造子的一次递归，收集什么留作它的参数。它为每条子公式收集一样东西：给它键，得到下一节那个子公式闭包；给它条目，得到后续某章那张可满足性表。两者要的是同一次求逆，故那次求逆在此只证一次，再实例化两次。
+
+`Of`{.Agda} 说出这种集合的成员是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合坐落于它所出自的那个之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 携带另一方向所需的诸隶属关系，递归的每条子句所产生的每种形状各一条。
+<!--/-->
+
+```agda
+module _ {ℓ' : Level} {K : Type ℓ'} where
+
+  tree : (∀ {m} → Formula K m → S) → ∀ {n} → Formula K n → S
+  tree f φ@(t ∈̇ u)  = sglʟ (f φ)
+  tree f φ@(t ≐ u)  = sglʟ (f φ)
+  tree f φ@⊤̇        = sglʟ (f φ)
+  tree f φ@⊥̇        = sglʟ (f φ)
+  tree f φ@(a ∧̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
+  tree f φ@(a ∨̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
+  tree f φ@(a ⇒̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
+  tree f φ@(¬̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∃̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∀̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∀̇∈ t a) = cupʟ (sglʟ (f φ)) (tree f a)
+  tree f φ@(∃̇∈ t a) = cupʟ (sglʟ (f φ)) (tree f a)
+
+  Of : (f g : ∀ {m} → Formula K m → S) {n : ℕ} → Formula K n → V ℓ
+     → Type (ℓ-max (ℓ-suc ℓ) ℓ')
+  Of f g φ x = ∥ (Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula K m ]
+                   ((x ≡ fst (f χ))
+                    × ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩
+                       → ⟨ z ∈ fst (tree g φ) ⟩))) ∥₁
+
+  private
+    module _ (f g : ∀ {m} → Formula K m → S) where
+      one : ∀ {n} (φ : Formula K n) (x : V ℓ)
+          → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f g φ x
+      one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
+
+      wider : ∀ {n m} (φ : Formula K n) (χ : Formula K m) {x : V ℓ}
+            → ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩ → ⟨ z ∈ fst (tree g φ) ⟩)
+            → Of f g χ x → Of f g φ x
+      wider _ _ s = PT.map
+        (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
+
+      un : ∀ {n m} (φ : Formula K n) (a : Formula K m)
+         → ((z : V ℓ) → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (tree g a)) ⟩
+            → ⟨ z ∈ fst (tree g φ) ⟩)
+         → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
+         → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f g φ x
+      un φ a into ra x h = PT.rec squash₁
+        (λ { (inl e) → one φ x e
+           ; (inr e) → wider φ a
+               (λ z hz → into z (cupʟ-inr (sglʟ (g φ)) (tree g a) z hz))
+               (ra x e) })
+        (cupʟ-out (sglʟ (f φ)) (tree f a) x h)
+
+      bin : ∀ {n m} (φ : Formula K n) (a b : Formula K m)
+          → ((z : V ℓ)
+             → ⟨ z ∈ fst (cupʟ (sglʟ (g φ)) (cupʟ (tree g a) (tree g b))) ⟩
+             → ⟨ z ∈ fst (tree g φ) ⟩)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
+          → ((x : V ℓ) → ⟨ x ∈ fst (tree f b) ⟩ → Of f g b x)
+          → (x : V ℓ)
+          → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
+          → Of f g φ x
+      bin φ a b into ra rb x h = PT.rec squash₁
+        (λ { (inl e) → one φ x e
+           ; (inr e) → PT.rec squash₁
+               (λ { (inl ea) → wider φ a (λ z hz → into z
+                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
+                        (cupʟ-inl (tree g a) (tree g b) z hz)))
+                      (ra x ea)
+                  ; (inr eb) → wider φ b (λ z hz → into z
+                      (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
+                        (cupʟ-inr (tree g a) (tree g b) z hz)))
+                      (rb x eb) })
+               (cupʟ-out (tree f a) (tree f b) x e) })
+        (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
+
+  module Parts (f : ∀ {m} → Formula K m → S) where
+    self : ∀ {n} (φ : Formula K n) → ⟨ fst (f φ) ∈ fst (tree f φ) ⟩
+    self φ@(t ∈̇ u)  = sglʟ-in (f φ) _ refl
+    self φ@(t ≐ u)  = sglʟ-in (f φ) _ refl
+    self φ@⊤̇        = sglʟ-in (f φ) _ refl
+    self φ@⊥̇        = sglʟ-in (f φ) _ refl
+    self φ@(a ∧̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(a ∨̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(a ⇒̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(¬̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∃̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∀̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+    self φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
+
+    left : ∀ {n m} (χ : Formula K n) (a b : Formula K m) (z : V ℓ)
+         → ⟨ z ∈ fst (tree f a) ⟩
+         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
+    left χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
+                       (cupʟ-inl (tree f a) (tree f b) z h)
+
+    right : ∀ {n m} (χ : Formula K n) (a b : Formula K m) (z : V ℓ)
+          → ⟨ z ∈ fst (tree f b) ⟩
+          → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (cupʟ (tree f a) (tree f b))) ⟩
+    right χ a b z h = cupʟ-inr (sglʟ (f χ)) (cupʟ (tree f a) (tree f b)) z
+                        (cupʟ-inr (tree f a) (tree f b) z h)
+
+    only : ∀ {n m} (χ : Formula K n) (a : Formula K m) (z : V ℓ)
+         → ⟨ z ∈ fst (tree f a) ⟩
+         → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (tree f a)) ⟩
+    only χ a z h = cupʟ-inr (sglʟ (f χ)) (tree f a) z h
+
+  tree-inv : (f g : ∀ {m} → Formula K m → S)
+           → ∀ {n} (φ : Formula K n) (x : V ℓ)
+           → ⟨ x ∈ fst (tree f φ) ⟩ → Of f g φ x
+  tree-inv f g φ@(t ∈̇ u) = one f g φ
+  tree-inv f g φ@(t ≐ u) = one f g φ
+  tree-inv f g φ@⊤̇       = one f g φ
+  tree-inv f g φ@⊥̇       = one f g φ
+  tree-inv f g φ@(a ∧̇ b) = bin f g φ a b (λ _ hz → hz)
+                             (tree-inv f g a) (tree-inv f g b)
+  tree-inv f g φ@(a ∨̇ b) = bin f g φ a b (λ _ hz → hz)
+                             (tree-inv f g a) (tree-inv f g b)
+  tree-inv f g φ@(a ⇒̇ b) = bin f g φ a b (λ _ hz → hz)
+                             (tree-inv f g a) (tree-inv f g b)
+  tree-inv f g φ@(¬̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∃̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∀̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∀̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+  tree-inv f g φ@(∃̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
+```
+
+<!--en-->
+## The subformula closure
+<!--zh-->
+## 子公式闭包
+<!--/-->
+
+<!--en-->
+A recursion on codes is stated against a *slot*: a set of codes closed under
+immediate subcodes, holding the one the recursion is asked about. The smallest
+such slot is the set of codes of a formula's own subformulas, and it is the
+recursion above taken at the key.
+
+Each entry carries its arity, because the recursion's own key does; a binder's
+subformula therefore enters at the successor. That is the only place the
+bookkeeping is visible, and it is visible because the arity is what the frames
+bind.
+
+Constructibility is not a second proof. The recursion above runs on the model's
+own sets, so the certificate comes out of it together with the set.
+<!--zh-->
+对码的递归是相对某个**槽**陈述的：一个对直接子码封闭、且装着被问及的那个码的码集。最小的这种槽，就是一条公式自身诸子公式的码之集，而它就是上面那个递归在键处的取值。
+
+每个条目都携带自己的元数，因为递归自己的键就携带；故绑定子的子公式在后继处进入。那是记账唯一可见之处，而它可见，是因为元数正是诸框架所绑定的东西。
+
+可构造性不是第二次证明。上面那个递归跑在模型自己的集合上，故证书随集合一并出来。
+<!--/-->
 
 ```agda
 module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
-  private
-    Key = key f h
-    Cl : ∀ {n} → Formula K n → V ℓ
-    Cl = closure f h
 
+  key : ∀ {n} → Formula K n → V ℓ
+  key {n} φ = pr (# n) VCode.⌜ mapFo f φ ⌝
+
+  keyL : ∀ {n} (φ : Formula K n) → ⟨ isL (key φ) ⟩
+  keyL φ = prL (numL _) (codeL f h φ)
+
+  private
+    keyS : ∀ {m} → Formula K m → S
+    keyS φ = key φ , keyL φ
+
+  closure : ∀ {n} → Formula K n → V ℓ
+  closure φ = fst (tree keyS φ)
+
+  closureL : ∀ {n} (φ : Formula K n) → ⟨ isL (closure φ) ⟩
+  closureL φ = snd (tree keyS φ)
+```
+
+<!--en-->
+## Recap
+<!--zh-->
+## 小结
+<!--/-->
+
+<!--en-->
+`codeL`{.Agda} says every code is an element of `L`, and `numL`{.Agda},
+`prL`{.Agda} and `tagL`{.Agda} are the three shapes it is built from. With it a
+code may be named as a constant of the model's object language, and a family of
+codes may be the domain of an internalized recursion.
+
+`envL`{.Agda} then puts an environment in `L` with no recursion on its length and
+no use of replacement, because an environment is on the nose the finite set of
+its entries. `closure`{.Agda} is the smallest slot a recursion on a code can be
+stated against, and `closureL`{.Agda} reads its certificate off the recursion
+that built it rather than proving it a second time.
+
+The set of all codes is still not an element of `L`, and is still not needed.
+<!--zh-->
+`codeL`{.Agda} 说每个码都是 `L` 的元素，而 `numL`{.Agda}、`prL`{.Agda} 与 `tagL`{.Agda} 是它所由构造的三种形状。有了它，一个码就可以被点名为模型对象语言的常元，而一族码就可以充当某个已内化递归的定义域。
+
+`envL`{.Agda} 随后把一个环境放进 `L`，既不沿长度递归，也不用替换，因为一个环境恰恰就是它诸条目构成的有穷集。`closure`{.Agda} 是「对一个码的递归」所能相对陈述的最小的槽，而 `closureL`{.Agda} 把它的证书从造出它的那个递归上读下来，不必再证第二次。
+
+全体码之集仍然不是 `L` 的元素，也仍然不需要是。
+<!--/-->
+
+<!--en-->
+## Reading a closure back
+<!--zh-->
+## 把闭包读回来
+<!--/-->
+
+<!--en-->
+A recursion over codes has to know what the elements of its domain are, and
+"whatever the union of these singletons happens to contain" is not an answer.
+The lemma below is the answer: every element of a closure is the key of a
+formula, and that formula's own closure sits inside the one it came from. The
+second half is what an induction consumes, since it is how the induction knows
+its hypothesis is available where it wants to apply it.
+
+It and the membership of a key in its own closure are the recursion above read
+at the key, so neither is an induction here.
+<!--zh-->
+对码的递归必须知道自己定义域的元素是什么，而「这些单元集之并恰好含有的任何东西」不是一个回答。下面这条引理就是回答：闭包的每个元素都是某条公式的键，而那条公式自己的闭包坐落在它所出自的那个之内。后一半才是归纳所消费的，因为归纳正是靠它知道自己的假设在想用的地方可用。
+
+它与「键属于自己的闭包」都是上面那个递归在键处的读法，故此处两者都不是归纳。
+<!--/-->
+
+```agda
   Inv : ∀ {n} → Formula K n → V ℓ → Type (ℓ-suc ℓ)
-  Inv φ x = ∥ (Σ[ m ∈ ℕ ] Σ[ ψ ∈ Formula K m ]
-                ((x ≡ Key ψ) × ((z : V ℓ) → ⟨ z ∈ Cl ψ ⟩ → ⟨ z ∈ Cl φ ⟩))) ∥₁
+  Inv φ x = Of keyS keyS φ x
 
-  private
-    here : ∀ {n} (φ : Formula K n) (x : V ℓ) → ⟨ x ∈ ⁅ Key φ ⁆s ⟩ → Inv φ x
-    here {n} φ x e = ∣ n , φ , sgl-out (Key φ) x e , (λ _ hz → hz) ∣₁
+  closure-inv : ∀ {n} (φ : Formula K n) (x : V ℓ)
+              → ⟨ x ∈ closure φ ⟩ → Inv φ x
+  closure-inv φ x hx = tree-inv keyS keyS φ x hx
 
-    un : ∀ {n m} (φ : Formula K n) (a : Formula K m)
-       → ((z : V ℓ) → ⟨ z ∈ (⁅ Key φ ⁆s ∪ Cl a) ⟩ → ⟨ z ∈ Cl φ ⟩)
-       → ((z : V ℓ) → ⟨ z ∈ Cl φ ⟩ → ⟨ z ∈ (⁅ Key φ ⁆s ∪ Cl a) ⟩)
-       → ((x : V ℓ) → ⟨ x ∈ Cl a ⟩ → Inv a x)
-       → (x : V ℓ) → ⟨ x ∈ Cl φ ⟩ → Inv φ x
-    un φ a into out ra x hx = PT.rec squash₁
-      (λ { (inl e) → here φ x e
-         ; (inr e) → PT.map
-             (λ { (m , χ , q , t) → m , χ , q
-                , (λ z hz → into z (cup-inr ⁅ Key φ ⁆s (Cl a) z (t z hz))) })
-             (ra x e) })
-      (cup-out ⁅ Key φ ⁆s (Cl a) x (out x hx))
-
-    bin : ∀ {n m} (φ : Formula K n) (a b : Formula K m)
-        → ((z : V ℓ) → ⟨ z ∈ (⁅ Key φ ⁆s ∪ (Cl a ∪ Cl b)) ⟩ → ⟨ z ∈ Cl φ ⟩)
-        → ((z : V ℓ) → ⟨ z ∈ Cl φ ⟩ → ⟨ z ∈ (⁅ Key φ ⁆s ∪ (Cl a ∪ Cl b)) ⟩)
-        → ((x : V ℓ) → ⟨ x ∈ Cl a ⟩ → Inv a x)
-        → ((x : V ℓ) → ⟨ x ∈ Cl b ⟩ → Inv b x)
-        → (x : V ℓ) → ⟨ x ∈ Cl φ ⟩ → Inv φ x
-    bin φ a b into out ra rb x hx = PT.rec squash₁
-      (λ { (inl e) → here φ x e
-         ; (inr e) → PT.rec squash₁
-             (λ { (inl ea) → step a (cup-inl (Cl a) (Cl b)) (ra x ea)
-                ; (inr eb) → step b (cup-inr (Cl a) (Cl b)) (rb x eb) })
-             (cup-out (Cl a) (Cl b) x e) })
-      (cup-out ⁅ Key φ ⁆s (Cl a ∪ Cl b) x (out x hx))
-      where
-      step : ∀ {m} (χ : Formula K m)
-           → ((z : V ℓ) → ⟨ z ∈ Cl χ ⟩ → ⟨ z ∈ (Cl a ∪ Cl b) ⟩)
-           → Inv χ x → Inv φ x
-      step _ j = PT.map
-        (λ { (m , χ , q , t) → m , χ , q , (λ z hz →
-          into z (cup-inr ⁅ Key φ ⁆s (Cl a ∪ Cl b) z (j z (t z hz)))) })
-
-  closure-inv : ∀ {n} (φ : Formula K n) (x : V ℓ) → ⟨ x ∈ Cl φ ⟩ → Inv φ x
-  closure-inv φ@(t ∈̇ u) x hx = here φ x hx
-  closure-inv φ@(t ≐ u) x hx = here φ x hx
-  closure-inv φ@⊤̇       x hx = here φ x hx
-  closure-inv φ@⊥̇       x hx = here φ x hx
-  closure-inv φ@(a ∧̇ b) x = bin φ a b (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) (closure-inv b) x
-  closure-inv φ@(a ∨̇ b) x = bin φ a b (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) (closure-inv b) x
-  closure-inv φ@(a ⇒̇ b) x = bin φ a b (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) (closure-inv b) x
-  closure-inv φ@(¬̇ a)    x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
-  closure-inv φ@(∃̇ a)    x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
-  closure-inv φ@(∀̇ a)    x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
-  closure-inv φ@(∀̇∈ t a) x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
-  closure-inv φ@(∃̇∈ t a) x = un φ a (λ _ hz → hz) (λ _ hz → hz) (closure-inv a) x
+  key∈closure : ∀ {n} (φ : Formula K n) → ⟨ key φ ∈ closure φ ⟩
+  key∈closure φ = Parts.self keyS φ
 ```
 
 <!--en-->
@@ -483,26 +559,6 @@ the successor, and a constructor with no subformula demands nothing.
 <!--/-->
 
 ```agda
-module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
-  private
-    Key = key f h
-    Cl : ∀ {n} → Formula K n → V ℓ
-    Cl = closure f h
-
-  key∈closure : ∀ {n} (φ : Formula K n) → ⟨ Key φ ∈ Cl φ ⟩
-  key∈closure φ@(t ∈̇ u)  = sgl-in (Key φ) (Key φ) refl
-  key∈closure φ@(t ≐ u)  = sgl-in (Key φ) (Key φ) refl
-  key∈closure φ@⊤̇        = sgl-in (Key φ) (Key φ) refl
-  key∈closure φ@⊥̇        = sgl-in (Key φ) (Key φ) refl
-  key∈closure φ@(a ∧̇ b)  = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-  key∈closure φ@(a ∨̇ b)  = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-  key∈closure φ@(a ⇒̇ b)  = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-  key∈closure φ@(¬̇ a)    = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-  key∈closure φ@(∃̇ a)    = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-  key∈closure φ@(∀̇ a)    = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-  key∈closure φ@(∀̇∈ t a) = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-  key∈closure φ@(∃̇∈ t a) = cup-inl _ _ (Key φ) (sgl-in (Key φ) (Key φ) refl)
-
   module _ (C : V ℓ) where
     BothSame : V ℓ → V ℓ → Type (ℓ-suc ℓ)
     BothSame ar p = (u v : V ℓ) → p ≡ pr u v
@@ -524,11 +580,11 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 
     private
       Below : ∀ {n} → Formula K n → Type (ℓ-suc ℓ)
-      Below φ = (z : V ℓ) → ⟨ z ∈ Cl φ ⟩ → ⟨ z ∈ C ⟩
+      Below φ = (z : V ℓ) → ⟨ z ∈ closure φ ⟩ → ⟨ z ∈ C ⟩
 
       inC : ∀ {n m} (φ : Formula K n) (a : Formula K m)
-          → Below φ → ⟨ Key a ∈ Cl φ ⟩ → {w : V ℓ} → Key a ≡ w → ⟨ w ∈ C ⟩
-      inC φ a below mem q = subst (λ w → ⟨ w ∈ C ⟩) q (below (Key a) mem)
+          → Below φ → ⟨ key a ∈ closure φ ⟩ → {w : V ℓ} → key a ≡ w → ⟨ w ∈ C ⟩
+      inC φ a below mem q = subst (λ w → ⟨ w ∈ C ⟩) q (below (key a) mem)
 
       atTag : ∀ {m k : ℕ} {ar p : V ℓ} (j : ℕ) (q : V ℓ)
             → pr (# m) (VCode.mkTag j q) ≡ pr ar (pr (# k) p)
@@ -537,7 +593,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
                   , (pr-inj e .fst , VCode.mkTag-inj (pr-inj e .snd) .snd)
 
       bothOf : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
-             → Below φ' → ⟨ Key a ∈ Cl φ' ⟩ → ⟨ Key b ∈ Cl φ' ⟩
+             → Below φ' → ⟨ key a ∈ closure φ' ⟩ → ⟨ key b ∈ closure φ' ⟩
              → (ar p : V ℓ) → # m' ≡ ar
              → pr VCode.⌜ mapFo f a ⌝ VCode.⌜ mapFo f b ⌝ ≡ p
              → BothSame ar p
@@ -546,13 +602,13 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
         , inC φ' b below mb (cong₂ pr qa (pr-inj (qp ∙ qu) .snd))
 
       oneOf : ∀ {n m'} (φ' : Formula K n) (a : Formula K m')
-            → Below φ' → ⟨ Key a ∈ Cl φ' ⟩
+            → Below φ' → ⟨ key a ∈ closure φ' ⟩
             → (ar p : V ℓ) → # m' ≡ ar → VCode.⌜ mapFo f a ⌝ ≡ p
             → ⟨ pr ar p ∈ C ⟩
       oneOf φ' a below ma ar p qa qp = inC φ' a below ma (cong₂ pr qa qp)
 
       upOf : ∀ {n m'} (φ' : Formula K n) (a : Formula K (suc m'))
-           → Below φ' → ⟨ Key a ∈ Cl φ' ⟩
+           → Below φ' → ⟨ key a ∈ closure φ' ⟩
            → (ar p : V ℓ) → # m' ≡ ar → VCode.⌜ mapFo f a ⌝ ≡ p
            → ⟨ pr (sucV ar) p ∈ C ⟩
       upOf φ' a below ma ar p qa qp =
@@ -560,7 +616,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 
       sndUpOf : ∀ {n m'} (φ' : Formula K n) (t : Term K m')
                 (a : Formula K (suc m'))
-              → Below φ' → ⟨ Key a ∈ Cl φ' ⟩
+              → Below φ' → ⟨ key a ∈ closure φ' ⟩
               → (ar p : V ℓ) → # m' ≡ ar
               → pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝ ≡ p
               → SecondSucc ar p
@@ -568,21 +624,21 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
         inC φ' a below ma (cong₂ pr (cong sucV qa) (pr-inj (qp ∙ qu) .snd))
 
       left : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
-           → ⟨ Key a ∈ (⁅ Key φ' ⁆s ∪ (Cl a ∪ Cl b)) ⟩
-      left φ' a b = cup-inr ⁅ Key φ' ⁆s (Cl a ∪ Cl b) (Key a)
-                      (cup-inl (Cl a) (Cl b) (Key a) (key∈closure a))
+           → ⟨ key a ∈ fst (cupʟ (sglʟ (keyS φ'))
+                              (cupʟ (tree keyS a) (tree keyS b))) ⟩
+      left φ' a b = Parts.left keyS φ' a b (key a) (key∈closure a)
 
       right : ∀ {n m'} (φ' : Formula K n) (a b : Formula K m')
-            → ⟨ Key b ∈ (⁅ Key φ' ⁆s ∪ (Cl a ∪ Cl b)) ⟩
-      right φ' a b = cup-inr ⁅ Key φ' ⁆s (Cl a ∪ Cl b) (Key b)
-                       (cup-inr (Cl a) (Cl b) (Key b) (key∈closure b))
+            → ⟨ key b ∈ fst (cupʟ (sglʟ (keyS φ'))
+                               (cupʟ (tree keyS a) (tree keyS b))) ⟩
+      right φ' a b = Parts.right keyS φ' a b (key b) (key∈closure b)
 
       only : ∀ {n m'} (φ' : Formula K n) (a : Formula K m')
-           → ⟨ Key a ∈ (⁅ Key φ' ⁆s ∪ Cl a) ⟩
-      only φ' a = cup-inr ⁅ Key φ' ⁆s (Cl a) (Key a) (key∈closure a)
+           → ⟨ key a ∈ fst (cupʟ (sglʟ (keyS φ')) (tree keyS a)) ⟩
+      only φ' a = Parts.only keyS φ' a (key a) (key∈closure a)
 
     byTag : ∀ {m} (φ : Formula K m) (k : ℕ) (ar p : V ℓ)
-          → Below φ → Key φ ≡ pr ar (pr (# k) p) → Concl k ar p
+          → Below φ → key φ ≡ pr ar (pr (# k) p) → Concl k ar p
     byTag (t ∈̇ u) k ar p below eq = subst (λ j → Concl j ar p)
       (atTag 0 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapTm f u ⌝ᵗ) eq .fst) tt*
     byTag (t ≐ u) k ar p below eq = subst (λ j → Concl j ar p)
