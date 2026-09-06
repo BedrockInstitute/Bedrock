@@ -57,7 +57,7 @@ open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
 open import L.Choice.Finite {ℓ} lem
   using ( Limit; level; level-in; levelData; limitOrder
-        ; before; precedes; Agrees; Witness )
+        ; before; precedes; Agrees; Witness; finiteStage )
 open import L.Choice.Internal {ℓ} lem using ( module Adequacy )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
 
@@ -377,9 +377,12 @@ module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
 
 The two keys are joined here, and the second one enters as a **named hypothesis**
 rather than a construction: a formula saying that the relation at a numeral held
-in a slot puts one slot before another, together with its two readings against
-the finite chapter's `before`{.Agda}. Everything from here on is generic in that
-description, and the last section says exactly what discharging it needs.
+in a slot puts one slot before another, for two sets **confined to the stage at
+that numeral**, together with its two readings against the finite chapter's
+`before`{.Agda}. Everything from here on is generic in that description, and the
+last section says exactly what discharging it needs. The confinement costs the
+two call sites below nothing, because each already carries the level equation of
+both sets it compares.
 
 The composition is a disjunction, and its two disjuncts bind different numbers of
 levels. The first binds two, one for each side, and compares them by membership,
@@ -397,7 +400,7 @@ other two cases have absurdity for a goal, where the truncation may be opened.
 <!--zh-->
 ## 那个序，接合起来
 
-两个键在此接合，而第二个以**具名假设**的身份进场、不是作为一个构造：一条公式，说「某个槽位所持有的数码处的关系把一个槽位排在另一个之前」，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。自此往下的一切都对那条描述保持通用，而最后一节将说准：兑现它需要什么。
+两个键在此接合，而第二个以**具名假设**的身份进场、不是作为一个构造：一条公式，说「某个槽位所持有的数码处的关系把一个槽位排在另一个之前」，而被比较的那两个集合**被禁闭在该数码处的阶段之内**，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。自此往下的一切都对那条描述保持通用，而最后一节将说准：兑现它需要什么。那次禁闭对下面两个调用处不花分文，因为每一处都已经握着它所比较的两个集合的层号等式。
 
 接合是一个析取，而它的两支绑定的层号个数不同。第一支绑两个，每边一个，并按隶属比较它们，那就是数码上的序。第二支绑**一个**，断言它是两边的层号，并把比较交给那里的关系。绑一个数码而不是两个，正是把「层号之间的等式」挡在对象语言之外的办法；否则那个等式就得用对象等词写出、再换回来。
 
@@ -449,14 +452,21 @@ strictLimit a b h = decide (SWO.tri∙ limitOrder a b)
   decide (gt k) = Empty.rec (PT.rec Empty.isProp⊥
     (λ j → SWO.irr∙ limitOrder a (SWO.trans∙ limitOrder a b a j k)) h)
 
+levelStage : (a : Limit) (k : ℕ) → level a ≡ k → ⟨ fst a ∈ finiteStage k ⟩
+levelStage a k q = subst (λ j → ⟨ fst a ∈ Lset (# j) ⟩) q (level-in a)
+
 module Described
   (BeforeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n)
   (BeforeAt-in : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
                → fst (lookup b γ) ≡ # m
+               → ⟨ fst (lookup x γ) ∈ finiteStage m ⟩
+               → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
                → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
                → ⟨ γ ⊨ BeforeAt b x y ⟩)
   (BeforeAt-out : ∀ {n} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
                 → fst (lookup b γ) ≡ # m
+                → ⟨ fst (lookup x γ) ∈ finiteStage m ⟩
+                → ⟨ fst (lookup y γ) ∈ finiteStage m ⟩
                 → ⟨ γ ⊨ BeforeAt b x y ⟩
                 → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
   where
@@ -507,6 +517,10 @@ module Described
         , ( Level.LevelAt-in v ku (e ∙ qu) zero (suc y) (numS ku ∷ γ)
               (numS-fst ku) qy
           , BeforeAt-in zero (suc x) (suc y) (numS ku ∷ γ) ku (numS-fst ku)
+              (subst (λ t → ⟨ t ∈ finiteStage ku ⟩) (sym qx)
+                (levelStage u ku qu))
+              (subst (λ t → ⟨ t ∈ finiteStage ku ⟩) (sym qy)
+                (levelStage v ku (e ∙ qu)))
               (subst2 (λ s t → ⟨ before ku s t ⟩) (sym qx) (sym qy)
                 (subst (λ j → ⟨ before j (fst u) (fst v) ⟩) qu h)) )
 
@@ -529,10 +543,15 @@ module Described
         qc' = Lv.LevelAt-out zero (suc y) (c ∷ γ) hy qy
         e : level v ≡ level u
         e = qv ∙ sym (#-inj′ (sym qc ∙ qc')) ∙ sym qu
+        xIn : ⟨ fst (lookup x γ) ∈ finiteStage ku ⟩
+        xIn = subst (λ t → ⟨ t ∈ finiteStage ku ⟩) (sym qx) (levelStage u ku qu)
+        yIn : ⟨ fst (lookup y γ) ∈ finiteStage ku ⟩
+        yIn = subst (λ t → ⟨ t ∈ finiteStage ku ⟩) (sym qy)
+          (levelStage v ku (e ∙ qu))
         below : ⟨ before (level u) (fst u) (fst v) ⟩
         below = subst (λ j → ⟨ before j (fst u) (fst v) ⟩) (sym qu)
           (subst2 (λ s t → ⟨ before ku s t ⟩) qx qy
-            (BeforeAt-out zero (suc x) (suc y) (c ∷ γ) ku qc hb))
+            (BeforeAt-out zero (suc x) (suc y) (c ∷ γ) ku qc xIn yIn hb))
 
     opaque
       unfolding LimitOrdAt
@@ -729,8 +748,9 @@ here is exactly the half that had no supplier.
 One hypothesis of `Described`{.Agda} is open, and it is the whole of what stands
 between this chapter and an unconditional theorem: a formula `BeforeAt`{.Agda}
 saying that the earliest-disagreement order at the numeral held in one slot puts
-a second slot before a third, together with its two readings against the finite
-chapter's `before`{.Agda}.
+a second slot before a third, for two sets confined to the stage at that
+numeral, together with its two readings against the finite chapter's
+`before`{.Agda}.
 
 Discharging it is one thing and not several, and the shape is settled. The
 relation at a numeral is the value of a recursion along the numerals, so what has
@@ -753,7 +773,7 @@ application, on pain of the wall that Law 1 names.
 <!--zh-->
 ## 剩下什么，点准了名
 
-`Described`{.Agda} 有一条假设仍然敞着，而它就是横在本章与一条无条件定理之间的全部：一条公式 `BeforeAt`{.Agda}，说「某个槽位所持有的数码处、按最先分歧处的那个序，把第二个槽位排在第三个之前」，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。
+`Described`{.Agda} 有一条假设仍然敞着，而它就是横在本章与一条无条件定理之间的全部：一条公式 `BeforeAt`{.Agda}，说「某个槽位所持有的数码处、按最先分歧处的那个序，把第二个槽位排在第三个之前」，其中被比较的两个集合被禁闭在该数码处的阶段之内，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。
 
 兑现它是一件事、不是几件，而形状已经定了。某个数码处的关系是沿诸数码的一场递归的取值，故要被描述的是一个**逼近**：一个集合，在它定义域以下的每个数码处记录那里的关系；与塔、与序之表被描述的方式一模一样：一个对诸逼近作量化的图、一条把逼近所记录的每个取值钉住的值引理，以及在元层面把每个数码处的逼近当场拿出来。有两件事使它比两位前辈都更便宜。索引是 `ωʟ`{.Agda} 的成员，而 `ωʟ`{.Agda} 是个集合，故外层归纳是对一个自然数作的，层级那一章那半场真类收集根本不会出现。而那一步已经写好：`PrecedesAt`{.Agda} 就是这场递归的步进条件，且对「上一个关系被握在哪一位」保持通用，而那恰是一个图查阅它时必须采取的形式。
 

@@ -1281,133 +1281,61 @@ opaque
 <!--en-->
 ## The order at a numeral held in a slot
 
-This is the formula the previous chapter asked for, and it is the step body again
-with two changes. The approximation slot is gone, because the family is now a
-set and can be **named**: `appC`{.Agda} is application at a constant, one
-bounded existential and one pair reader, with the adequacy the model chapter
-proves for the slot version proved here for the constant version. And the two
-compared sets are not confined to any stage, because the frame asks for the
-biconditional at **arbitrary** members of the model, and the comparison at the
-earliest disagreement never needed them confined: only the witness and the points
-below it range over a stage.
+This is the formula the previous chapter asked for, and it is **one binder**
+wide. The family is a set and can be named, so `appC`{.Agda} reads it at the
+numeral the slot holds: application at a constant, one bounded existential and
+one pair reader, with the adequacy the model chapter proves for the slot version
+proved there for the constant version too. What the relation so read holds is
+then a single membership of a pair, which is `appAt`{.Agda} at that same slot.
 
-So four binders remain: the predecessor, the relation the family holds there, the
-stage there, and nothing else. `BeforeAt-out`{.Agda} and `BeforeAt-in`{.Agda} are
-the two readings, and both stand at variable slots in a variable environment with
-the numeral arriving as a **variable carrying its defining equation**, which is
-the law the level was measured under one chapter ago.
+The two compared sets arrive **confined to the stage at that numeral**, and the
+confinement is what buys the shortness. Without it the step has to be re-expanded
+here, through the maximal predecessor of the numeral, the stage graph and the
+precedence formula; with it, the comparison at a stage against the relation
+recorded there is exactly what `relAt-rep`{.Agda} and `relAt-fill`{.Agda} already
+prove, so each reading is one composition of those with the family's own
+direction. `BeforeAt-out`{.Agda} and `BeforeAt-in`{.Agda} both stand at variable
+slots in a variable environment with the numeral arriving as a **variable
+carrying its defining equation**, which is the law the level was measured under
+one chapter ago.
 <!--zh-->
 ## 某个槽位所持数码处的那个序
 
-这就是上一章所索取的那条公式，而它就是那个步进体，只改了两处。逼近那一位没了，因为那一族如今是个集合、可以被**点名**：`appC`{.Agda} 是在常元处的应用，一个有界存在量词加一次对读式，而模型那一章为槽位版所证的充分性，在此处为常元版证一遍。以及，被比较的那两个集合不被禁闭在任何阶段里，因为那个框架索取的是在模型**任意**成员处的双条件，而最先分歧处的比较本来也不需要它们被禁闭：只有那个见证与它以下的诸点在一个阶段上取值。
+这就是上一章所索取的那条公式，而它只有**一层绑定**。那一族如今是个集合、可以被点名，故 `appC`{.Agda} 在那一位所持的数码处把它读出：在常元处的应用，一个有界存在量词加一次对读式，而模型那一章为槽位版所证的充分性，在那里也已为常元版证过。如此读出的那个关系所持有的东西，随后只是一个对的单次隶属，那就是同一位上的 `appAt`{.Agda}。
 
-于是只剩四层绑定：前趋、那一族在那里所持有的关系、那里的阶段，此外再无其他。`BeforeAt-out`{.Agda} 与 `BeforeAt-in`{.Agda} 是两条读式，二者都站在变元环境的变元位上，而那个数码以**携带自己定义等式的变元**身份到场，那正是一章之前层号所据以实测的那条定律。
+被比较的那两个集合以**被禁闭在该数码处的阶段之内**的身份到场，而这次禁闭正是短下来的本钱。没有它，那一步就得在此处重新展开一遍：经由该数码的极大前趋、阶段之图与那条先序公式；有了它，「在一个阶段上、对着那里所记录的关系」的那次比较，恰是 `relAt-rep`{.Agda} 与 `relAt-fill`{.Agda} 已经证过的东西，故每条读式都只是它们与那一族自己那个方向的一次复合。`BeforeAt-out`{.Agda} 与 `BeforeAt-in`{.Agda} 都站在变元环境的变元位上，而那个数码以**携带自己定义等式的变元**身份到场，那正是一章之前层号所据以实测的那条定律。
 <!--/-->
 
 ```agda
-private
-  sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
-  sh3 i = suc (suc (suc i))
 opaque
   BeforeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   BeforeAt b x y =
-    ∃̇ ( (var zero ∈̇ var (suc b))
-      ∧̇ ( ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero))
-        ∧̇ ∃̇ ( appC beforeFam (suc zero) zero
-             ∧̇ ∃̇ ( LsetGraphAt zero (suc (suc zero))
-                  ∧̇ PrecedesAt (suc zero) zero (sh3 x) (sh3 y) ) ) ) )
+    ∃̇ ( appC beforeFam (suc b) zero ∧̇ appAt zero (suc x) (suc y) )
 
 module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
-         (qb : fst (lookup b γ) ≡ # m) where
+         (qb : fst (lookup b γ) ≡ # m)
+         (hx : ⟨ fst (lookup x γ) ∈ finiteStage m ⟩)
+         (hy : ⟨ fst (lookup y γ) ∈ finiteStage m ⟩) where
   private
-    Inner : (c r A : S) → Type (ℓ-suc ℓ)
-    Inner c r A =
-        ⟨ (A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
-      × ⟨ (A ∷ r ∷ c ∷ γ) ⊨ PrecedesAt (suc zero) zero (sh3 x) (sh3 y) ⟩
-
-    AtR : (c : S) → Type (ℓ-suc ℓ)
-    AtR c = Σ[ r ∈ S ]
-      ( ⟨ (r ∷ c ∷ γ) ⊨ appC beforeFam (suc zero) zero ⟩
-      × ∥ (Σ[ A ∈ S ] Inner c r A) ∥₁ )
-
-    AtC : Type (ℓ-suc ℓ)
-    AtC = Σ[ c ∈ S ]
-      ( ⟨ fst c ∈ fst (lookup b γ) ⟩
-      × ( ⟨ (c ∷ γ) ⊨ ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero)) ⟩
-        × ∥ AtR c ∥₁ ) )
-
     Goal : Type (ℓ-suc ℓ)
     Goal = ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
 
-    atA : (c r A : S) (j : ℕ) → fst c ≡ # j → m ≡ suc j
-        → ⟨ pr (fst c) (fst r) ∈ fst beforeFam ⟩ → Inner c r A → Goal
-    atA c r A j qc qm hf (hg , hprec) =
-      subst (λ i → ⟨ before i (fst (lookup x γ)) (fst (lookup y γ)) ⟩) (sym qm)
-        (precedes-map (Rel j) (before j) (finiteStage j)
-          (fst (lookup x γ)) (fst (lookup y γ))
-          (λ w t hw ht hbf → relAt-fill j w t hw ht hbf) atJ)
+    AtR : Type (ℓ-suc ℓ)
+    AtR = Σ[ r ∈ S ]
+      ( ⟨ (r ∷ γ) ⊨ appC beforeFam (suc b) zero ⟩
+      × ⟨ (r ∷ γ) ⊨ appAt zero (suc x) (suc y) ⟩ )
+
+    atR : AtR → Goal
+    atR (r , (happ , hmem)) =
+      relAt-rep m (fst (lookup x γ)) (fst (lookup y γ)) hx hy
+        (subst (λ t → ⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ t ⟩) qr
+          (subst ⟨_⟩ (appAt-adequate zero (suc x) (suc y) (r ∷ γ)) hmem))
       where
-      Rrep : (s t : S)
-           → ⟨ pr (fst s) (fst t)
-               ∈ fst (lookup (suc zero) (A ∷ r ∷ c ∷ γ)) ⟩
-           → ⟨ Held r (fst s) (fst t) ⟩
-      Rrep s t p = p
+      hf : ⟨ pr (fst (lookup b γ)) (fst r) ∈ fst beforeFam ⟩
+      hf = subst ⟨_⟩ (appC-adequate beforeFam (suc b) zero (r ∷ γ)) happ
 
-      Rfill : (s t : S) → ⟨ Held r (fst s) (fst t) ⟩
-            → ⟨ pr (fst s) (fst t)
-                ∈ fst (lookup (suc zero) (A ∷ r ∷ c ∷ γ)) ⟩
-      Rfill s t p = p
-
-      module P = Precedes (suc zero) zero (sh3 x) (sh3 y) (A ∷ r ∷ c ∷ γ)
-                          (Held r) Rrep Rfill
-
-      qA : fst A ≡ finiteStage j
-      qA = Lset-only zero (suc (suc zero)) (A ∷ r ∷ c ∷ γ) hg
-             (subst IsOrd (sym qc) (numeral-ord j))
-         ∙ cong Lset qc
-
-      atJ : ⟨ precedes (Rel j) (finiteStage j)
-               (fst (lookup x γ)) (fst (lookup y γ)) ⟩
-      atJ = subst (λ t → ⟨ precedes (λ s u → pr s u ∈ t) (finiteStage j)
-                            (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
-              (beforeFam-out c r j qc hf)
-        (subst (λ t → ⟨ precedes (Held r) t
-                          (fst (lookup x γ)) (fst (lookup y γ)) ⟩) qA
-          (P.PrecedesAt-out hprec))
-
-    atR : (c : S) (j : ℕ) → fst c ≡ # j → m ≡ suc j → AtR c → Goal
-    atR c j qc qm (r , (happ , hA)) =
-      PT.rec (snd (before m (fst (lookup x γ)) (fst (lookup y γ))))
-        (λ { (A , hi) → atA c r A j qc qm hf hi }) hA
-      where
-      hf : ⟨ pr (fst c) (fst r) ∈ fst beforeFam ⟩
-      hf = subst ⟨_⟩ (appC-adequate beforeFam (suc zero) zero (r ∷ c ∷ γ))
-             happ
-
-    atC : AtC → Goal
-    atC (c , (c∈ , (hmax , hr))) =
-      PT.rec (snd (before m (fst (lookup x γ)) (fst (lookup y γ)))) named
-        (∈#-elim m (fst c) (subst (λ t → ⟨ fst c ∈ t ⟩) qb c∈))
-      where
-      named : Σ[ j ∈ ℕ ] ((j < m) × (fst c ≡ # j)) → Goal
-      named (j , (hj , qc)) =
-        PT.rec (snd (before m (fst (lookup x γ)) (fst (lookup y γ))))
-          (atR c j qc qm) hr
-        where
-        qm : m ≡ suc j
-        qm = decide (suc j ≟ m)
-          where
-          decide : NatOrder.Trichotomy (suc j) m → m ≡ suc j
-          decide (NatOrder.lt hlt) = Empty.rec
-            (hmax (numS (suc j))
-              (subst (λ t → ⟨ fst (numS (suc j)) ∈ t ⟩) (sym qb)
-                (subst (λ t → ⟨ t ∈ # m ⟩) (sym (numS-fst (suc j)))
-                  (#mono (suc j) m hlt)))
-              (subst (λ t → ⟨ fst c ∈ t ⟩) (sym (numS-fst (suc j)))
-                (subst (λ t → ⟨ t ∈ # (suc j) ⟩) (sym qc)
-                  (#mono j (suc j) NatOrder.≤-refl))))
-          decide (NatOrder.eq e) = sym e
-          decide (NatOrder.gt hgt) = Empty.rec (<-asym hj (pred-≤-pred hgt))
+      qr : fst r ≡ fst (relAt m)
+      qr = beforeFam-out (lookup b γ) r m qb hf
 
   opaque
     unfolding BeforeAt
@@ -1415,80 +1343,22 @@ module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
     BeforeAt-out : ⟨ γ ⊨ BeforeAt b x y ⟩
                  → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
     BeforeAt-out h =
-      PT.rec (snd (before m (fst (lookup x γ)) (fst (lookup y γ)))) atC h
+      PT.rec (snd (before m (fst (lookup x γ)) (fst (lookup y γ)))) atR h
 
     BeforeAt-in : ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
                 → ⟨ γ ⊨ BeforeAt b x y ⟩
-    BeforeAt-in h =
-      ∣ numS j , (c∈ , (hmax , ∣ relAt j , (happ
-        , ∣ stageS j , (hg , hprec) ∣₁) ∣₁)) ∣₁
+    BeforeAt-in h = ∣ relAt m , (happ , hmem) ∣₁
       where
-      j : ℕ
-      j = before-suc m (fst (lookup x γ)) (fst (lookup y γ)) h .fst
-
-      qm : m ≡ suc j
-      qm = before-suc m (fst (lookup x γ)) (fst (lookup y γ)) h .snd
-
-      hj : j < m
-      hj = subst (λ i → j < i) (sym qm) NatOrder.≤-refl
-
-      c∈ : ⟨ fst (numS j) ∈ fst (lookup b γ) ⟩
-      c∈ = subst (λ t → ⟨ fst (numS j) ∈ t ⟩) (sym qb)
-        (subst (λ t → ⟨ t ∈ # m ⟩) (sym (numS-fst j)) (#mono j m hj))
-
-      hmax : ⟨ (numS j ∷ γ)
-             ⊨ ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero)) ⟩
-      hmax d hd hc = PT.rec Empty.isProp⊥ step
-        (∈#-elim m (fst d) (subst (λ t → ⟨ fst d ∈ t ⟩) qb hd))
-        where
-        step : Σ[ i ∈ ℕ ] ((i < m) × (fst d ≡ # i)) → Empty.⊥
-        step (i , (hi , qd)) =
-          <-asym ji (pred-≤-pred (subst (λ t → i < t) qm hi))
-          where
-          ji : j < i
-          ji = #∈#-elim j i
-            (subst (λ t → ⟨ t ∈ # i ⟩) (numS-fst j)
-              (subst (λ t → ⟨ fst (numS j) ∈ t ⟩) qd hc))
-
-      happ : ⟨ (relAt j ∷ numS j ∷ γ) ⊨ appC beforeFam (suc zero) zero ⟩
+      happ : ⟨ (relAt m ∷ γ) ⊨ appC beforeFam (suc b) zero ⟩
       happ = subst ⟨_⟩
-        (sym (appC-adequate beforeFam (suc zero) zero (relAt j ∷ numS j ∷ γ)))
-        (subst (λ t → ⟨ pr t (fst (relAt j)) ∈ fst beforeFam ⟩)
-          (sym (numS-fst j)) (beforeFam-in j))
+        (sym (appC-adequate beforeFam (suc b) zero (relAt m ∷ γ)))
+        (subst (λ t → ⟨ pr t (fst (relAt m)) ∈ fst beforeFam ⟩) (sym qb)
+          (beforeFam-in m))
 
-      hg : ⟨ (stageS j ∷ relAt j ∷ numS j ∷ γ)
-           ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
-      hg = Lset-defines zero (suc (suc zero))
-        (stageS j ∷ relAt j ∷ numS j ∷ γ)
-        (subst IsOrd (sym (numS-fst j)) (numeral-ord j))
-        (stageS-fst j ∙ cong Lset (sym (numS-fst j)))
-
-      Rrep : (s t : S)
-           → ⟨ pr (fst s) (fst t)
-               ∈ fst (lookup (suc zero) (stageS j ∷ relAt j ∷ numS j ∷ γ)) ⟩
-           → ⟨ Held (relAt j) (fst s) (fst t) ⟩
-      Rrep s t p = p
-
-      Rfill : (s t : S) → ⟨ Held (relAt j) (fst s) (fst t) ⟩
-            → ⟨ pr (fst s) (fst t)
-                ∈ fst (lookup (suc zero) (stageS j ∷ relAt j ∷ numS j ∷ γ)) ⟩
-      Rfill s t p = p
-
-      module P = Precedes (suc zero) zero (sh3 x) (sh3 y)
-                          (stageS j ∷ relAt j ∷ numS j ∷ γ)
-                          (Held (relAt j)) Rrep Rfill
-
-      hprec : ⟨ (stageS j ∷ relAt j ∷ numS j ∷ γ)
-              ⊨ PrecedesAt (suc zero) zero (sh3 x) (sh3 y) ⟩
-      hprec = P.PrecedesAt-in
-        (subst (λ t → ⟨ precedes (Rel j) t
-                         (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
-          (sym (stageS-fst j))
-          (precedes-map (before j) (Rel j) (finiteStage j)
-            (fst (lookup x γ)) (fst (lookup y γ))
-            (λ w t hw ht hR → relAt-rep j w t hw ht hR)
-            (subst (λ i → ⟨ before i (fst (lookup x γ)) (fst (lookup y γ)) ⟩)
-              qm h)))
+      hmem : ⟨ (relAt m ∷ γ) ⊨ appAt zero (suc x) (suc y) ⟩
+      hmem = subst ⟨_⟩
+        (sym (appAt-adequate zero (suc x) (suc y) (relAt m ∷ γ)))
+        (relAt-fill m (fst (lookup x γ)) (fst (lookup y γ)) hx hy h)
 ```
 
 <!--en-->
@@ -1556,10 +1426,13 @@ replacement along `ωʟ`{.Agda}, sealed where it is built, with its two directio
 stated against the recursion and not against any formula.
 
 `BeforeAt`{.Agda} is what the previous chapter asked for: the family read at the
-numeral held in a slot, with `appC`{.Agda} for application at a constant, and
-the two compared sets left **unconfined**, since the comparison never needed them
-confined. With its two readings, `Described`{.Agda} is instantiated, and
-`codeOrder`{.Agda} together with `CodeKeys`{.Agda} become unconditional.
+numeral held in a slot, with `appC`{.Agda} for application at a constant and
+`appAt`{.Agda} for the pair the relation there holds, and the two compared sets
+arriving **confined to the stage at that numeral**, which is what lets each
+reading be one composition of `relAt-rep`{.Agda} or `relAt-fill`{.Agda} with the
+family's own direction. With its two readings, `Described`{.Agda} is
+instantiated, and `codeOrder`{.Agda} together with `CodeKeys`{.Agda} become
+unconditional.
 
 One measurement, and it is the largest this part has recorded. The four
 descriptions of the recursion must be **sealed where they are built**: unsealed,
@@ -1577,7 +1450,7 @@ which no formula appears at all.
 
 `approx-val`{.Agda} 把逼近所记录的每个取值钉住，靠的是在数码上的一次良基归纳，任何地方都没有单值性假设，而 `rel-only`{.Agda} 是那个图的确定性。`approxSet`{.Agda} 是当场拿出来的那个逼近，而它**根本不花任何公式**：某个数码以下的逼近是有穷的，故只要 `smallStage`{.Agda} 把它的诸成员放进同一个阶段，`finSetL`{.Agda} 就把它张出来。`beforeFam`{.Agda} 是那一族本身，沿 `ωʟ`{.Agda} 的一次替换，在造出之处封印，而它的两个方向陈述成对着这场递归、而不对着任何公式。
 
-`BeforeAt`{.Agda} 就是上一章所索取的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appC`{.Agda}，而被比较的那两个集合**不加禁闭**，因为那次比较本来就不需要它们被禁闭。有了它的两条读式，`Described`{.Agda} 便被实例化，而 `codeOrder`{.Agda} 连同 `CodeKeys`{.Agda} 成为无条件的。
+`BeforeAt`{.Agda} 就是上一章所索取的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appC`{.Agda}，那里的关系所持有的那个对用 `appAt`{.Agda}；而被比较的那两个集合以**被禁闭在该数码处的阶段之内**的身份到场，正是这一点使每条读式都只是 `relAt-rep`{.Agda} 或 `relAt-fill`{.Agda} 与那一族自己那个方向的一次复合。有了它的两条读式，`Described`{.Agda} 便被实例化，而 `codeOrder`{.Agda} 连同 `CodeKeys`{.Agda} 成为无条件的。
 
 一次实测，而它是本部记下的最大的一次。这场递归的四条描述必须**在造出之处封印**：不封印时，每一次在具体环境上的满足关系都要把一条内部装着两份完整层级描述的公式正规化，本章要花 376 秒；封印之后是 3.8 秒，九十九倍，而数学分毫未动。造出那一族的那个框架在高一层遵守同一条定律：它交回来的三元组中根本不出现任何公式。
 <!--/-->
