@@ -21,7 +21,7 @@ open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset-mono )
 open import L.Ordinal {ℓ} using ( ω-ord; #∈ω; boundingOrd )
 import L.Ordinal.SquareLaw {ℓ} lem as SQ
-open SQ using ( sq; module FiniteBase; module InitialCore )
+open SQ using ( module FiniteBase )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
@@ -99,10 +99,11 @@ module StageBound (I : Type ℓ) (g : I → S) where
 
 ROW 5.  The pairing on ω, by the order route, zero arithmetic.
 
-`InitialCore` (src/L/Ordinal/SquareLaw.lagda.md:703) gives the square
-law at an initial ordinal from three hypotheses.  The base at ω is not
-initial (`Init ω` needs `⟨ ω ∈ˢ ω ⟩`, refuted by `∈-irrefl`), so the
-three hypotheses are supplied at ω directly.
+The square law at an initial ordinal wanted three hypotheses, and ω is
+not initial (it would need `⟨ ω ∈ˢ ω ⟩`, refuted by `∈-irrefl`), so the
+three are supplied at ω directly.  Of the three only `finite-excl-ω`
+still has a consumer; the ambient law they fed is retired to
+`archive/src-2026-09-06/L/Ordinal/SquareLawAmbient.lagda.md`.
 
 Successor closure at ω: every member of ω is a numeral.
 

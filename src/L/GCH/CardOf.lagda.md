@@ -61,9 +61,9 @@ inside L.
   leastness.  μ ⊆ α because μ ∈ α or μ ≡ α, and μ ↪ α is that
   inclusion.
 
-  The stage order `orderAt` of `InternalLeastCard` is not used: no
-  exported lemma relates ∈ on ordinals to `orderAt`, so the
-  selection runs on the ordinal well-order instead.
+  The stage order `orderAt` is not used: no exported lemma relates ∈
+  on ordinals to `orderAt`, so the selection runs on the ordinal
+  well-order instead.
 
   Three measured cures, at this site.  (1) The predicate carries the
   L-element and its index equation, so no `InjL` is ever transported

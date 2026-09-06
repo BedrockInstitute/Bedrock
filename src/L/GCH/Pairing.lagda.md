@@ -506,11 +506,17 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
         (λ w → nk (inr (↪-inj {a = K} (sym em ∙ e ∙ en) , inner w))) h
 
   lt→≺ : (p q : Pair) → Lt (code p) (code q) → p ≺ₚ q
-  lt→≺ p q l = go (SQ.≺-dec K oκ p q)
+  lt→≺ p q l = go (SQ.tri≺ K oκ p q)
     where
-    go : (p ≺ₚ q) ⊎ ((p ≺ₚ q) → Empty.⊥) → p ≺ₚ q
-    go (inl k)  = k
-    go (inr nk) = Empty.rec (PT.rec Empty.isProp⊥ (refute p q nk) l)
+    -- The decision `≺-dec` used to stand here; trichotomy's two
+    -- off-diagonal cases give the same refutand from `irr≺`/`trans≺`.
+    refuted : ((p ≺ₚ q) → Empty.⊥) → p ≺ₚ q
+    refuted nk = Empty.rec (PT.rec Empty.isProp⊥ (refute p q nk) l)
+
+    go : TriW (p ≺ₚ q) (p ≡ q) (q ≺ₚ p) → p ≺ₚ q
+    go (lt k) = k
+    go (eq e) = refuted (λ k → SQ.irr≺ K oκ q (subst (λ w → w ≺ₚ q) e k))
+    go (gt h) = refuted (λ k → SQ.irr≺ K oκ p (SQ.trans≺ K oκ p q p k h))
 
   ≺→lt : (p q : Pair) → p ≺ₚ q → Lt (code p) (code q)
   ≺→lt (a' , b') (c' , d') k =
@@ -524,8 +530,9 @@ module Order (κ : S) (oκ : IsOrd (fst κ)) where
     ord (inr (e , inr (f , h))) = ∣ inr (cong ↑ e , ∣ inr (cong ↑ f , h) ∣₁) ∣₁
 
   -- Both components of a pair below (c, d) lie in the successor of
-  -- max(c, d) (the shape of `InitialCore.fst∈sucmax`, which that module
-  -- does not export).
+  -- max(c, d).  The retired `InitialCore`, now at
+  -- archive/src-2026-09-06/L/Ordinal/SquareLawAmbient.lagda.md, had the
+  -- same shape in `fst∈sucmax` and never exported it.
   private
     ≤→≺ : (x y z : ⟪ K ⟫) → SQ._≤₁_ K oκ x y → y ≺₁ z → x ≺₁ z
     ≤→≺ x y z (inl h) h' = SQ.trans₁ K oκ x y z h h'
@@ -1157,7 +1164,7 @@ module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
   mV p = ↑ (mx p)
 
   -- Both components of a member below p lie in sucV (mV p).  Sealed:
-  -- proofs of propositions that reach `≺-dec`, hence `ord-tri`'s
+  -- proofs of propositions that reach `tri≺`, hence `ord-tri`'s
   -- well-founded induction, if ever normalised (measured at this site:
   -- unsealed, `col-fin` alone takes about 280 s).
   opaque
