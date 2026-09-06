@@ -47,7 +47,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl; ∈-induction; ∈-induction-compute )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ}
-  using ( IsOrd; isPropIsOrd; isL; Lset; Lset-mono; Lset→isL )
+  using ( IsOrd; isL; Lset; Lset→isL )
 open import L.Ordinal {ℓ} using ( mem-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem; stage-earliest )
@@ -58,7 +58,7 @@ open import L.Choice.Name {ℓ} lem using ( module Naming )
 open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( Tri; lt; eq; gt; SWO; IsLeast; isPropLeastOf )
 
-open import Cubical.Foundations.Prelude using ( J; PathP; subst2 )
+open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
@@ -144,15 +144,14 @@ its successor is the earliest stage. Everything the chapter uses is derived from
 those two without opening anything. The set is a member of the stage just above
 its birth, which is where the naming chapter looks for it. The birth does not
 depend on which proof of constructibility is supplied, because constructibility
-is a proposition, and that one line is what makes the end extension work at the
-end of the chapter. And a member of a stage is born strictly below that stage:
+is a proposition. And a member of a stage is born strictly below that stage:
 its earliest stage is below the stage or equal to it, and its birth is below its
 earliest stage, so ordinal trichotomy settles the three cases, again in a named
 helper with its conclusion written down.
 <!--zh-->
 如此取出的那个序数，就是该集合的**诞生阶段**：`x` 据以被雕出的那个阶段，比包含它的最早阶段低一级。它按 `stage`{.Agda} 与 `defStage`{.Agda} 当初那样封印，理由相同：它展开是一次穿过那座塔的良基下降，而此后每个提到它的类型都会把那次下降拖进转换检查。
 
-有两条读式开封，别无其他：诞生阶段是序数；它的后继是最早阶段。本章所用的一切都由这两条推出，不再开封任何东西。该集合是它诞生阶段之上一级那个阶段的成员，而命名那一章正是在那里找它。诞生阶段不依赖于所供给的是哪一份可构造性证明，因为可构造性是命题，而正是这一行使本章末尾的尾节扩张得以成立。以及，一个阶段的成员诞生于严格更低处：它的最早阶段或低于该阶段、或与之相等，而它的诞生阶段低于它的最早阶段，故序数三歧了结这三种情形，同样写在一个写明结论的具名辅助件里。
+有两条读式开封，别无其他：诞生阶段是序数；它的后继是最早阶段。本章所用的一切都由这两条推出，不再开封任何东西。该集合是它诞生阶段之上一级那个阶段的成员，而命名那一章正是在那里找它。诞生阶段不依赖于所供给的是哪一份可构造性证明，因为可构造性是命题。以及，一个阶段的成员诞生于严格更低处：它的最早阶段或低于该阶段、或与之相等，而它的诞生阶段低于它的最早阶段，故序数三歧了结这三种情形，同样写在一个写明结论的具名辅助件里。
 <!--/-->
 
 ```agda
@@ -514,13 +513,12 @@ The comparison is then the two-key one: births first, and, when the births agree
 the step order at the common birth. The equality of births is carried in the
 direction that lets the second set be read at the first's birth, which keeps the
 definition free of a transport; and it is carried as an equality of **ordinals**
-rather than of the packaged pairs, which is what makes the end extension below a
-path instead of an argument. The packaged form is recovered where the transports
+rather than of the packaged pairs. The packaged form is recovered where the transports
 want it, since the membership is a proposition.
 <!--zh-->
 归纳的这一步，收下 `γ` 以下每个序数处的序，产出 `γ` 处的一个。`Lset γ`{.Agda} 的每个成员都可构造，因为 `γ` 是序数，故它有诞生阶段；而那个诞生阶段是 `γ` 的成员。把诞生阶段与那条隶属打成包，得到的恰是归纳假设可以施用其上的那个数据，而 `stepIn`{.Agda} 就是那里的步进序。
 
-于是比较是两个键的：先诞生阶段，若诞生阶段相符，则用共同诞生阶段处的步进序。诞生阶段的等式所携带的方向，使第二个集合可以在第一个的诞生阶段处读出，这让定义中不出现搬运；而它携带的是**序数**之间的等式、不是打包之对之间的等式，正是这一点使下文的尾节扩张成为一条路径、而非一段论证。打包的形式在诸搬运需要它的地方现取，因为那条隶属是命题。
+于是比较是两个键的：先诞生阶段，若诞生阶段相符，则用共同诞生阶段处的步进序。诞生阶段的等式所携带的方向，使第二个集合可以在第一个的诞生阶段处读出，这让定义中不出现搬运；而它携带的是**序数**之间的等式、不是打包之对之间的等式。打包的形式在诸搬运需要它的地方现取，因为那条隶属是命题。
 <!--/-->
 
 ```agda
@@ -713,12 +711,13 @@ one stated at the member.
 The family is that step run by membership induction, and it is sealed. Unsealed,
 an order at a stage unfolds into a recursion over the whole hierarchy, and every
 type mentioning one would carry that unfolding into conversion;
-`orderAt-step`{.Agda} opens the seal once, on the recursion equation alone, and
-the end extension below is its only consumer. `stageOrder`{.Agda} is the same
+`orderAt-step`{.Agda} opens the seal once, on the recursion equation alone, for
+the two chapters that unfold it, `L.Choice.Faithful`{.Agda} and
+`L.GCH.StageCount`{.Agda}. `stageOrder`{.Agda} is the same
 order at the presentation the naming chapter takes, and it is what the argument
 ahead will hand to `leastName`{.Agda}.
 <!--zh-->
-这一族就是那一步沿成员归纳跑出来的东西，而它被封印。不封印的话，一个阶段处的序会展开成一场遍历整座层级的递归，而每个提到某个这样的序的类型都会把那次展开带进转换检查；`orderAt-step`{.Agda} 开封一次，且只为那条递归方程，而下文的尾节扩张是它唯一的消费方。`stageOrder`{.Agda} 是同一个序，取在命名那一章所用的那种表示上，而它正是后续论证将要递给 `leastName`{.Agda} 的东西。
+这一族就是那一步沿成员归纳跑出来的东西，而它被封印。不封印的话，一个阶段处的序会展开成一场遍历整座层级的递归，而每个提到某个这样的序的类型都会把那次展开带进转换检查；`orderAt-step`{.Agda} 开封一次，且只为那条递归方程，供展开它的两章使用：`L.Choice.Faithful`{.Agda} 与 `L.GCH.StageCount`{.Agda}。`stageOrder`{.Agda} 是同一个序，取在命名那一章所用的那种表示上，而它正是后续论证将要递给 `leastName`{.Agda} 的东西。
 <!--/-->
 
 ```agda
@@ -737,93 +736,6 @@ opaque
 
 stageOrder : (γ : S) → IsOrd γ → SWO ⟪ Lset γ ⟫
 stageOrder γ oγ = carry (Lset γ) (orderAt γ oγ)
-```
-
-<!--en-->
-## End extension
-<!--zh-->
-## 尾节扩张
-<!--/-->
-
-<!--en-->
-Two stages, one a member of the other, and a set that is a member of both: the
-two orders have to agree on it. They do, and the reason is the whole design. A
-comparison mentions the two births and the step orders at those births, and never
-the stage it is read at. So two things have to be checked, and both are facts
-about propositions. The birth of a set does not depend on which stage it was read
-as a member of, since constructibility is a proposition. And the step order at a
-birth does not either: it is built from the family below, applied to a proof that
-the birth is an ordinal, and any two such proofs are equal.
-
-The second of those is the chapter's one path induction, and its whole content is
-that last sentence, transported over the equality of the two births.
-<!--zh-->
-两个阶段，其一是另一个的成员，还有一个同为两者成员的集合：那两个序必须在它上面相符。它们确实相符，而理由就是整套设计。一次比较提到的是那两个诞生阶段以及那两处的步进序，从不提到它是在哪个阶段处被读的。于是要查的有两件，而两件都是关于命题的事实。一个集合的诞生阶段，不依赖于它是被当作哪个阶段的成员来读的，因为可构造性是命题。而诞生阶段处的步进序也不依赖：它由下面那一族造出，施用于一份「该诞生阶段是序数」的证明，而任何两份这样的证明都相等。
-
-其中第二件是本章唯一的一次路径归纳，而它的全部内容就是上一句话，沿两个诞生阶段的等式搬运过去。
-<!--/-->
-
-```agda
-private
-  stepPath : (δ : S) (o : IsOrd δ) (δ' : S) (e : δ ≡ δ') (o' : IsOrd δ')
-           → PathP (λ k → SWO (New (e k)))
-               (stepAt δ (carry (Lset δ) (orderAt δ o)))
-               (stepAt δ' (carry (Lset δ') (orderAt δ' o')))
-  stepPath δ o δ' e o' = J Motive base e o'
-    where
-    Motive : (z : S) → δ ≡ z → Type (ℓ-suc (ℓ-suc ℓ))
-    Motive z ez = (oz : IsOrd z) → PathP (λ k → SWO (New (ez k)))
-      (stepAt δ (carry (Lset δ) (orderAt δ o)))
-      (stepAt z (carry (Lset z) (orderAt z oz)))
-    base : Motive δ refl
-    base oz =
-      cong (λ q → stepAt δ (carry (Lset δ) (orderAt δ q))) (isPropIsOrd δ o oz)
-```
-
-<!--en-->
-With that, the agreement is one line. The comparison is a sum of two components,
-each of which is a path pointwise in the equality of births, so the two
-comparisons are not merely equivalent but **equal**, and every reading of end
-extension, either direction of the implication included, follows by transport.
-The order at the larger stage, restricted to the smaller, is the order there.
-
-This is what the route audit predicted, and the measurement bears it out: one
-path-induction lemma of a dozen lines, one line for the agreement, and two lines
-to unseal the recursion equation at either end. Nothing else in the chapter was
-spent on it. The reason is worth stating once more, because it is the reason the
-primary key was chosen the way it was: the definition of the comparison is
-already stage-free, so end extension has nothing left to prove beyond the
-proof-irrelevance of the two propositions it does mention.
-<!--zh-->
-有了它，相符就是一行。比较是两个分量的和，而每个分量都逐点地是一条沿诞生阶段等式的路径，故那两次比较不只是等价，而是**相等**；尾节扩张的每一种读法，包括蕴含的任一方向，皆由搬运随之而来。较大阶段处的序限制到较小者上，就是那里的序。
-
-这正是路线审计所预测的，而测量也证实了：一条十来行的路径归纳引理、一行相符，外加两行在两端解封那条递归方程。本章余下之处未为它花过一分。这个理由值得再说一遍，因为它正是主键当初如此选取的理由：那次比较的定义本就与阶段无关，故尾节扩张除了「它确实提到的那两个命题的证明无关性」之外，无事可证。
-<!--/-->
-
-```agda
-module _ (γ β : S) (oγ : IsOrd γ) (oβ : IsOrd β) (i : ⟨ γ ∈ˢ β ⟩) where
-  private
-    module Fγ = Family γ (λ δ _ → orderAt δ) oγ
-    module Fβ = Family β (λ δ _ → orderAt δ) oβ
-    open Fγ using () renaming ( _≺_ to _≺ᵍ_ ; bornAt to bornγ )
-    open Fβ using () renaming ( _≺_ to _≺ᵇ_ ; bornAt to bornβ )
-
-    up : Mem (Lset γ) → Mem (Lset β)
-    up a = a .fst , Lset-mono {α = β} {β = γ} i {x = a .fst} (a .snd)
-
-    sameBirth : (a : Mem (Lset γ)) → bornγ a .fst ≡ bornβ (up a) .fst
-    sameBirth a = birth-proof (a .fst) _ _
-
-    sameStep : (a : Mem (Lset γ))
-             → PathP (λ k → SWO (New (sameBirth a k)))
-                 (Fγ.stepIn (bornγ a)) (Fβ.stepIn (bornβ (up a)))
-    sameStep a = stepPath (bornγ a .fst) _ (bornβ (up a) .fst) (sameBirth a) _
-
-    agree : (a b : Mem (Lset γ)) → (a ≺ᵍ b) ≡ (up a ≺ᵇ up b)
-    agree a b k = ⟨ sameBirth a k ∈ˢ sameBirth b k ⟩
-                ⊎ ( (sameBirth b k ≡ sameBirth a k)
-                  × Under (sameBirth a k) (sameStep a k) (a .fst) (b .fst) )
-
 ```
 
 <!--en-->
@@ -866,10 +778,8 @@ proved inside the telescope the seal lives in and never restated at top level
 `orderAt`{.Agda} is the family: at every ordinal, a strict well-order of that
 stage's members, all four laws included, built by membership induction from the
 orders below. Its comparison has the **birth as the primary key** and the step
-order at a common birth as the secondary; `endExtension`{.Agda} is what that
-buys, and it is a path, not an implication: the comparison of two members never
-mentions the stage it is read at, so the order at a large stage, restricted to a
-small one, is the order there on the nose.
+order at a common birth as the secondary, and it never mentions the stage it is
+read at.
 
 What is now available is exactly the missing hypothesis of the previous chapter,
 at every stage at once. The argument ahead takes the one stage the choice-stage
@@ -882,7 +792,7 @@ picks the least name.
 
 有三个定义为外面的调用方说清那个拉回的序是什么：`denotesAt`{.Agda} 是一个集合的诸名字，`IsLeastName`{.Agda} 是良序那一章的 `IsLeast`{.Agda} 架在那一族上，而 `leastNameOf`{.Agda} 就是那场搜寻。随后 `stepAt-fill`{.Agda} 与 `stepAt-read`{.Agda} 两个方向地把那一步对着名字之序读出来，读在「调用方已证为最小的任意两个名字」处。这五行背后有两次实测：那条性质必须是那一族自家的 `IsLeast`{.Agda}、绝不可另写一遍 (16 秒对分文不花，因为在算出来的名字处的一次比较会把码之序打开)，而两条读式都必须证在封印所在的那条模块序列之内、绝不可在顶层重述 (各 39 秒对分文不花，这是第 20 条定律在新地方)。
 
-`orderAt`{.Agda} 就是那一族：在每个序数处，该阶段诸成员上的一个严格良序，四条定律齐备，由下面诸序沿成员归纳造出。它的比较以**诞生阶段为主键**，以共同诞生阶段处的步进序为次键；`endExtension`{.Agda} 就是这一点换来的东西，而它是一条路径、不是一个蕴含：两个成员的比较从不提到它是在哪个阶段处被读的，故大阶段处的序限制到小阶段上，分毫不差地就是那里的序。
+`orderAt`{.Agda} 就是那一族：在每个序数处，该阶段诸成员上的一个严格良序，四条定律齐备，由下面诸序沿成员归纳造出。它的比较以**诞生阶段为主键**，以共同诞生阶段处的步进序为次键，而且从不提到它是在哪个阶段处被读的。
 
 现在到手的，恰是上一章所缺的那个前提，且一举在每个阶段处到手。后续论证取选取阶段那一章单挑出来的那一个阶段，把 `stageOrder`{.Agda} 递给写在其上的诸名字，再挑出最小的名字。
 <!--/-->

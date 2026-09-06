@@ -868,9 +868,6 @@ the same substitutions run backwards.
 每个框架也向另一个方向读，而另一个方向才是实例要用的。消去是为「手上握着一个码」的消费方把子句拆开；引入是为「必须**满足**它」的一张表把子句装起来。两个框架都以一个 λ 引入，因为模型上的有界全称就是成员上的函数，而蕴含就是读式证明上的函数，故两者是同样几次代换倒着跑。
 <!--/-->
 
-```agda
-```
-
 <!--en-->
 Counting the shapes is worth a moment, because it says how much of the twelve is
 really there, and because counting it wrong is easy: this paragraph has been
@@ -914,9 +911,6 @@ back the same way.
 
 ```
 
-```agda
-```
-
 <!--en-->
 ## The positive connectives
 <!--zh-->
@@ -948,8 +942,6 @@ truth is monotone in their parts and those whose truth is not.
 
 ```agda
 module _ {n : ℕ} where
-  private
-
   c7 ar7 a7 b7 yc7 ya7 yb7 : Fin (7 + n)
   c7  = suc (suc (suc (suc (suc (suc zero)))))
   ar7 = suc (suc (suc (suc (suc zero))))
@@ -1008,9 +1000,6 @@ module _ {n : ℕ} where
            ⇒̇ ( envSetAt E6 ar6 (sh6 B)
            ⇒̇ diffAt yc6 E6 ya6 )))
 
-```
-
-```agda
 ```
 
 <!--en-->
@@ -1081,10 +1070,6 @@ less, not because they are special.
 <!--zh-->
 再三对读式，而套路不变：消去把框架与那条关系自己的诸绑定剥掉，引入再装回去。两个常量比那个联结词短，是因为它们的关系绑得少，不是因为它们特殊。
 <!--/-->
-
-```agda
-
-```
 
 <!--en-->
 ## The next arity
@@ -1254,10 +1239,6 @@ up, which is the only difference from negation.
 两条量词子句读法相同，而标签与主体由调用方提供，故一对读式服务两者。子取值高一个元数，这也是它与否定唯一的差别。
 <!--/-->
 
-```agda
-
-```
-
 <!--en-->
 ## Evaluating a term, and the atoms
 <!--zh-->
@@ -1362,10 +1343,6 @@ module _ {n : ℕ} where
 
 ```
 
-```agda
-
-```
-
 <!--en-->
 ## The bounded quantifiers
 <!--zh-->
@@ -1422,10 +1399,6 @@ module _ {n : ℕ} where
     yb11 = suc (suc (suc (suc (suc zero))))
 
     -- inside the bound's quantifier, at depth 10: m = 0, w = 1
-
-```
-
-```agda
 
 ```
 

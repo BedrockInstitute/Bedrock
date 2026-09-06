@@ -66,16 +66,7 @@ opaque
 
 Closure under +ω: the ω-block above every member stays inside α.
 
-```agda
-```
-
 The code set over the carrier at δ sits at stage δ+ω. Under closure, the
 stage δ+ω stays below α for every δ below α, so the bound lands in Lset α.
 
-```agda
-```
-
 The environment at δ+3 lifts by the finite-iterate law, then by closure.
-
-```agda
-```

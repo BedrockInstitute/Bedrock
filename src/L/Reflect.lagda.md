@@ -413,13 +413,13 @@ to cross between syntax and the meta-level.
 ```
 
 <!--en-->
-## The ladder for a single matrix
+## The step for a single matrix
 <!--zh-->
-## 单矩阵的梯
+## 单矩阵的步进
 <!--/-->
 
 <!--en-->
-And the first ladder. A stage's index set is a type of the ambient size, and so
+And the step. A stage's index set is a type of the ambient size, and so
 is any tuple over it, so the bounding lemma applies: the answering stages of all
 the environments drawn from one stage have a common bound. Merging that bound
 with the stage itself gives the step, which therefore both contains its argument,
@@ -433,7 +433,7 @@ The three properties open the seal once each, and the last of them is the one
 place transitivity is used, so the chain from the answer through the bound into
 the step is closed inside the seal and the caller sees only its conclusion.
 <!--zh-->
-以及第一架梯。阶段的索引集是周遭大小的类型，其上的元组也是，故界层引理适用：取自同一阶段的全部环境，其作答阶段有公共上界。把那个上界与该阶段本身合并，就得到步进，它因而既包含自己的自变量，使迭代得以攀升，又包含自变量的诸环境的每个回答，而后者恰是那条作答假设。
+以及那一步。阶段的索引集是周遭大小的类型，其上的元组也是，故界层引理适用：取自同一阶段的全部环境，其作答阶段有公共上界。把那个上界与该阶段本身合并，就得到步进，它因而既包含自己的自变量，使迭代得以攀升，又包含自变量的诸环境的每个回答，而后者恰是那条作答假设。
 
 步进被封印。展开来，它是由排中律所造之界再造之界，而闭包论证反复在诸级上匹配；透明的定义会把那整座塔推进每一次转换检查。三条性质各开封一次，其中最后一条是唯一用到传递性之处，故从回答经上界进入步进的这条链封在印内，调用方只见其结论。
 <!--/-->
@@ -458,10 +458,6 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
     Fstep-ord : (σ : V ℓ) (oσ : IsOrd σ) → IsOrd (Fstep σ oσ)
     Fstep-ord σ oσ = bound2 (Fbnd σ oσ .fst) σ (Fbnd σ oσ .snd .fst) oσ .snd .fst
 
-    σ∈Fstep : (σ : V ℓ) (oσ : IsOrd σ) → ⟨ σ ∈ Fstep σ oσ ⟩
-    σ∈Fstep σ oσ =
-      bound2 (Fbnd σ oσ .fst) σ (Fbnd σ oσ .snd .fst) oσ .snd .snd .snd
-
     pickLand : (σ : V ℓ) (oσ : IsOrd σ) (ms : ⟪ Lset σ ⟫ ^ k)
              → ⟨ pickStage ψ (LsetEnv σ oσ ms) ∈ Fstep σ oσ ⟩
     pickLand σ oσ ms =
@@ -469,31 +465,6 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
                           {y = pickStage ψ (LsetEnv σ oσ ms)}
         (Fbnd σ oσ .snd .snd ms)
         (bound2 (Fbnd σ oσ .fst) σ (Fbnd σ oσ .snd .fst) oσ .snd .snd .fst)
-
-  βₙ : ℕ → V ℓ
-  βₙ-ord : (n : ℕ) → IsOrd (βₙ n)
-  βₙ zero        = ∅
-  βₙ (suc n)     = Fstep (βₙ n) (βₙ-ord n)
-  βₙ-ord zero    = ∅-ord
-  βₙ-ord (suc n) = Fstep-ord (βₙ n) (βₙ-ord n)
-
-  βₙ-step : (n : ℕ) → ⟨ βₙ n ∈ βₙ (suc n) ⟩
-  βₙ-step n = σ∈Fstep (βₙ n) (βₙ-ord n)
-
-  module L = Ladder βₙ βₙ-ord βₙ-step
-
-  βω : V ℓ
-  βω = L.top
-
-  answers : (n : ℕ) (ms : ⟪ Lset (βₙ n) ⟫ ^ k)
-          → ⟨ pickStage ψ (LsetEnv (βₙ n) (βₙ-ord n) ms) ∈ βₙ (suc n) ⟩
-  answers n = pickLand (βₙ n) (βₙ-ord n)
-
-  closed : ClosedFor βω ψ
-  closed = L.closure ψ answers
-
-  reflect : (ρ : S ^ k) → Below βω ρ → (ρ ⊨ (∃̇ ψ)) ≡ Wit ψ ρ βω
-  reflect = L.reflect ψ answers
 ```
 
 <!--en-->
@@ -506,7 +477,7 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
 A **ladder** is an ascending chain of ordinals; it **answers** for a matrix when
 each rung's environments have their answering stages on the next rung; and when
 it does, its limit is closed for that matrix, which `reflect`{.Agda} restates as
-the reflection of an existential. `Single`{.Agda} builds the ladder for one
+the reflection of an existential. `Single`{.Agda} builds the step for one
 matrix, by bounding a stage's answers and merging with the stage.
 
 The construction used the excluded middle twice, once to decide satisfiability
@@ -519,7 +490,7 @@ formula has many quantifiers, hence many matrices, and no single-matrix limit
 serves them all; the next chapter builds a ladder whose step closes all of them
 at once, and gets everything above for it without rerunning any of it.
 <!--zh-->
-一架**梯**是上升的序数链；它对某矩阵**作答**，指每一级的环境其作答阶段都落在下一级上；而当它作答时，它的极限对该矩阵闭合，`reflect`{.Agda} 把这一点重述为存在量词的反射。`Single`{.Agda} 造出单矩阵的梯，办法是界住一个阶段的诸回答，再与该阶段合并。
+一架**梯**是上升的序数链；它对某矩阵**作答**，指每一级的环境其作答阶段都落在下一级上；而当它作答时，它的极限对该矩阵闭合，`reflect`{.Agda} 把这一点重述为存在量词的反射。`Single`{.Agda} 造出单矩阵的步进，办法是界住一个阶段的诸回答，再与该阶段合并。
 
 这个构造用了两次排中律，一次判定可满足性，一次在下降之内，而选择公理一次也没用。这正是取最小**阶段**而非最小**见证**的用意：序数自带良序，而此处没有任何东西需要索取 L 的良序。
 

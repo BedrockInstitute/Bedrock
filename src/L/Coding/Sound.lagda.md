@@ -34,41 +34,19 @@ open import Base.Classical using ( LEM )
 module L.Coding.Sound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ}
-  using ( module LCode; prʟ-fst; envSetAt; envOverAt; envOverAt-transport
-        ; tmValAt; tmValAt-var; tmValAt-con; tmValAt-out
+  using ( envSetAt; envOverAt; envOverAt-transport
         ; extAt-out; extAt-in; extAt-in-both; numL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Sat {ℓ} lem
-  using ( Sat; Sat-mem; tmIs; tmIs-var-in; tmIs-var-out; cond∈-in; cond∈-out; cond≐-in; cond≐-out
-        ; cond∃-in; cond∃-out; cond∀-in; cond∀-out
-        ; cond∀∈-in; cond∀∈-out; cond∃∈-in; cond∃∈-out )
 open import L.Coding.EnvSet {ℓ} lem
-  using ( envSet; envSet-in; envSet-out; envS; envOver; Ix
-        ; module Recover; module Generic )
-open import L.Coding.Table {ℓ} lem
-  using ( keyʟ; keyʟ-shape; satTable; slot; slot-inv; entry-out )
+  using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
 
-open import Cubical.Foundations.HLevels using ( isProp× )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Data.Empty using ( isProp⊥ )
-import Cubical.Data.Empty as Empty
-open import Cubical.Data.Unit using ( tt* )
-open import Cubical.Data.Nat using ( snotz; znots )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫↪ )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
-open InfinitySet using ( #_; sucV )
+open InfinitySet using ( #_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -129,58 +107,6 @@ module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
     (envSet-out B m z hz)
 ```
 
-<!--en-->
-## The environment a clause is read in
-<!--zh-->
-## 子句被读入的那个环境
-<!--/-->
-
-<!--en-->
-Three slots, in the order the clauses take them: the index, the table, the
-carrier.
-<!--zh-->
-三个槽位，按诸子句取用的次序：索引、表、载体。
-<!--/-->
-
-<!--en-->
-## The two term readers agree
-<!--zh-->
-## 两条词项读式一致
-<!--/-->
-
-<!--en-->
-A clause reads a term's value off its code, because a clause has only the code;
-the meta-level recursion reads it off the term, because it has the term. The two
-have to say the same thing, and saying so is the only place in this chapter where
-the two tags of a term code are separated: a variable's code is not a constant's,
-because numerals are distinct, and that is what rules out the wrong disjunct.
-<!--zh-->
-子句从词项的**码**读出它的取值，因为子句只有码；元语言的递归从**词项**读出它，因为它有词项。两者必须说同一件事，而把这件事说出来，是本章唯一分开词项码那两个标签的地方：变元的码不是常元的码，因为诸数码两两相异，而正是这一点排除了错的那个析取项。
-<!--/-->
-
-```agda
-module TermAgree {k : ℕ} (γ : S ^ k) (ti ei vi : Fin k) where
-  private
-    Tc = fst (lookup ti γ)
-    Ev = fst (lookup ei γ)
-    Vl = fst (lookup vi γ)
-
-```
-
-<!--en-->
-Put together, a meta term reads the same on both sides. The clause's reader is
-handed the code and the two slots its own frame put things in; the recursion's
-reader is handed the term and its own two slots; the statement says they agree
-whenever the slots agree. Two cases, and each is the four readings above composed
-with the two of `tmIs`{.Agda}.
-<!--zh-->
-合起来说：一个元语言的词项在两侧读起来一样。子句那条读式拿到的是码、以及它自己框架给的两个槽位；递归那条读式拿到的是词项与它自己的两个槽位；而这条陈述说：只要槽位一致，两者就一致。两种情形，而每种都是上面那四条读法与 `tmIs`{.Agda} 那两条的复合。
-<!--/-->
-
-```agda
-private
-
-```
 
 <!--en-->
 And the same agreement in the producing direction. A clause that *binds* its
@@ -214,18 +140,4 @@ module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
       (subst (λ w → ⟨ w ∈ fst (envSet B m) ⟩)
         (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb h))
         (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb h)))
-
-module AmbientHoldsGen (B ar : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k)
-  (qE : fst (lookup Ei γ) ≡ fst (Generic.envSetGen B ar))
-  (qd : fst (lookup di γ) ≡ fst ar) (qb : fst (lookup bi γ) ≡ fst B)
-  where
-
-  holds : ⟨ γ ⊨ envSetAt Ei di bi ⟩
-  holds = H.holds
-    where
-    module G = Generic B ar
-    module H = G.Holds γ Ei di bi qE qd qb
-
-module NumeralFromGeneric (B : S) (n : ℕ) where
-
 ```

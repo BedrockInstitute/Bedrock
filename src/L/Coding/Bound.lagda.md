@@ -11,44 +11,27 @@ module L.Coding.Bound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr )
-open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; IsOrd; Lset; 𝒟ₒ; Lset-out; Lset-mono; layer-trans; Lset-layer )
-open import L.Axioms.Basic {ℓ} using ( Lset-suc; pr∈Lset-suc )
+open import L.Constructible {ℓ} using ( IsOrd; Lset; Lset-mono )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; numeral-ord )
-open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
+open import L.Ordinal {ℓ} using ( numeral-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Ordinal.StageArith {ℓ} lem using ( sucIter )
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
 
-import Cubical.Data.Sum as Sum
-open import Cubical.Data.Sigma using ( _×_; _,_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; module InfinitySet )
 open InfinitySet using ( #_; sucV )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
-
-module CS = hPropStructure 𝒮ʟ
 ```
 
-A stage function and the five facts the closure argument uses.  Nothing in
-this module names a tower: the argument is decompose, merge two stages by
-trichotomy, climb by one successor, and every tower supplies that shape.
+A stage function and the two facts the numeral argument uses.  Nothing in
+this module names a tower: the argument climbs by one successor, and every
+tower supplies that shape.
 
 ```agda
 module BoundOver
   (T : S → S)
-  (T-out : (α x : S) → ⟨ x ∈ˢ T α ⟩
-         → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ T (sucV δ) ⟩) ∥₁)
   (T-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → {x : S} → ⟨ x ∈ˢ T β ⟩ → ⟨ x ∈ˢ T α ⟩)
-  (T-pr : (σ x y : S) → ⟨ x ∈ˢ T σ ⟩ → ⟨ y ∈ˢ T σ ⟩
-        → ⟨ pr x y ∈ˢ T (sucV (sucV σ)) ⟩)
-  (T-trans : (α : S) {x y : S} → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ T α ⟩ → ⟨ y ∈ˢ T α ⟩)
   (T-ord : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ T (sucV δ) ⟩)
   (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
@@ -63,58 +46,20 @@ module BoundOver
   #∈Tλ : (k : ℕ) → ⟨ (# k) ∈ˢ T lam ⟩
   #∈Tλ k = T-mono {α = lam} {β = sucV (# k)} (#∈λ (suc k))
     {x = # k} (T-ord (# k) (numeral-ord k))
-
-  At : S → Type (ℓ-suc ℓ)
-  At x = Σ[ δ ∈ S ] (⟨ δ ∈ˢ lam ⟩ × ⟨ x ∈ˢ T (sucV δ) ⟩)
-
-  -- The sequences: the Kuratowski pair, which every code is built from.  This
-  -- is the one `κ → κ` pairing closure, at an ARBITRARY limit.
-
-  -- The carrier and the transitivity, one call each.
-
-  -- Climbing any finite iterate costs `succλ` alone: no limit fact enters.
-
-  -- The step operator at a limit, reduced to ONE fact about the step at a
-  -- successor: the step of a stage member lands a bounded number of stages
-  -- above it.  The fact is a HYPOTHESIS here and it has no supplier; `src/`
-  -- assumes the same fact twice, as `DefOK` and as `PowOK`.
-  module Iter (D : S → S)
-    (powIter : (δ y : S) → ⟨ y ∈ˢ T δ ⟩
-             → ∥ Σ[ k ∈ ℕ ] ⟨ D y ∈ˢ T (sucIter k δ) ⟩ ∥₁) where
-
 ```
 
-The L tower supplies the five facts.  Two need an adapter, and both
-adapters are one call: `Lset-out` lands in `𝒟ₒ` and `Lset-suc` renames it.
+The L tower supplies the two facts outright: `Lset-mono` and
+`ord∈Lset-suc`, one call each.
 
 ```agda
-Lset-out′ : (α x : S) → ⟨ x ∈ˢ Lset α ⟩
-          → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ Lset (sucV δ) ⟩) ∥₁
-Lset-out′ α x hx = PT.map
-  (λ { (δ , (δ∈ , h)) → δ , (δ∈ , subst (λ w → ⟨ x ∈ˢ w ⟩)
-         (sym (Lset-suc δ)) h) })
-  (Lset-out α x hx)
-
-Lset-trans′ : (α : S) {x y : S} → ⟨ y ∈ˢ x ⟩ → ⟨ x ∈ˢ Lset α ⟩ → ⟨ y ∈ˢ Lset α ⟩
-Lset-trans′ α {x} {y} = layer-trans (Lset-layer α) {x = x} {y = y}
-
 module Bound (lam : S) (ordλ : IsOrd lam)
              (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
              (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 
-  open BoundOver Lset Lset-out′ Lset-mono pr∈Lset-suc Lset-trans′
-    ord∈Lset-suc lam ordλ succλ ∅∈λ public
+  open BoundOver Lset Lset-mono ord∈Lset-suc lam ordλ succλ ∅∈λ public
 
   -- The numerals as elements of L, and the model's own pair.  Both are the
   -- L presentation of a fact `BoundOver` already has.
   num∈λ : (k : ℕ) → ⟨ fst (numeralL k) ∈ˢ Lset lam ⟩
   num∈λ k = subst (λ w → ⟨ w ∈ˢ Lset lam ⟩) (sym (numeralL-fst k)) (#∈Tλ k)
-
-  -- The reduction at the L step operator.  `powIter` stays a hypothesis:
-  -- MEASURED, nothing in `src/` proves it, and `L.Coding.Powerset` and
-  -- `L.Coding.Sequence` each assume it under another name.
-  module PowIter
-    (powIter : (δ y : S) → ⟨ y ∈ˢ Lset δ ⟩
-             → ∥ Σ[ k ∈ ℕ ] ⟨ 𝒟ₒ y ∈ˢ Lset (sucIter k δ) ⟩ ∥₁) where
-    open Iter 𝒟ₒ powIter public
 ```

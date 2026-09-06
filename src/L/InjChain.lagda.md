@@ -117,9 +117,6 @@ Successor closure at ω: every member of ω is a numeral.
 
 No member of ω contains ω.
 
-```agda
-```
-
 The numeral-into-ω injection, without `ω ∈ ω`.
 
 ```agda
@@ -419,8 +416,6 @@ module Comp (D E C F H : S)
   -- The composite, read back as an honest function.  Sealed.
   private
     module Sm = Small K D C svK dmK ijK ranK
-
-  opaque
 
 ```
 

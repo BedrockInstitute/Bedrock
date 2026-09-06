@@ -45,18 +45,18 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
 open import V.Model {ℓ} using ( ∈sucV-elim; self∈sucV )
 open import L.Constructible {ℓ}
-  using ( IsOrd; isPropIsOrd; isL; isL-trans; Lset; Lset-layer; Lset-out
-        ; Lset-mono; layer-trans; 𝒟ₒ )
+  using ( IsOrd; isPropIsOrd; isL; Lset; Lset-layer; Lset-out
+        ; Lset-mono; layer-trans )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; bound2; ω-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
 open import L.Stage {ℓ} lem
-  using ( isLeastOrd; LeastOrd; leastOrd; stage; stage-ord; stage-mem )
+  using ( isLeastOrd; stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ} using ( Lset-suc )
 
 import Cubical.Data.Sum as Sum
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
+open PT using ( ∥_∥₁ )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
@@ -66,72 +66,6 @@ open InfinitySet using ( sucV; ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
-```
-
-<!--en-->
-## The least stage meeting a set
-<!--zh-->
-## 与一个集合相交的最小阶段
-<!--/-->
-
-<!--en-->
-"Some member of `u` has appeared by stage `σ`" is a property of ordinals and
-nothing more, so the least-ordinal operator applies to it with no work: that
-operator was written generic in its property precisely so that instances like
-this one cost a line.
-
-The operator wants a truncated witness that *some* ordinal qualifies, and an
-inhabited cell supplies it. A member of the cell is constructible, because `L`
-is a transitive class and the cell is one of its sets; and constructibility is
-by definition the existence of a stage containing it. So the witness is the
-member's own stage, read straight off the class.
-<!--zh-->
-「到阶段 `σ` 为止，`u` 的某个成员已经现身」是一条关于序数的性质，仅此而已，故最小序数算子对它零成本地适用：当初把那个算子写成对性质泛型的，正是为了让这样的实例只花一行。
-
-算子要一份截断的见证，说**某个**序数合用，而一个非空的格恰好供得出。该格的成员可构造，因为 `L` 是传递类而该格是它的一个集合；而可构造按定义就是「存在一个包含它的阶段」。于是见证就是那个成员自己的阶段，从类上直接读出。
-<!--/-->
-
-```agda
-meets : S → S → Ω
-meets u σ = ⋁ S (λ z → (z ∈ˢ u) ⊓ (z ∈ˢ Lset σ))
-
-Inhabited : S → Type (ℓ-suc ℓ)
-Inhabited u = ∥ Σ[ z ∈ S ] ⟨ z ∈ˢ u ⟩ ∥₁
-
-meetsSome : (u : S) → ⟨ isL u ⟩ → Inhabited u
-          → ∥ Σ[ σ ∈ S ] (IsOrd σ × ⟨ meets u σ ⟩) ∥₁
-meetsSome u pu = PT.rec squash₁ atMember
-  where
-  atMember : Σ[ z ∈ S ] ⟨ z ∈ˢ u ⟩
-           → ∥ Σ[ σ ∈ S ] (IsOrd σ × ⟨ meets u σ ⟩) ∥₁
-  atMember (z , z∈u) = PT.map
-    (λ { (α , (ordα , z∈Lα)) → α , (ordα , ∣ z , (z∈u , z∈Lα) ∣₁) })
-    (isL-trans {x = u} {y = z} z∈u pu)
-```
-
-<!--en-->
-The least such ordinal is `μ u`, and it is sealed exactly as the stage function
-was, for exactly the same reason: it unfolds to a well-founded descent whose
-steps mention the tower, and every later type mentioning it would drag that
-unfolding into conversion. The three projections open the seal once each, and
-they are the whole interface.
-<!--zh-->
-最小的这样的序数是 `μ u`，它按阶段函数当初那样封印，理由完全相同：它展开是一次良基下降，其步进提到那座塔，而此后每个提到它的类型都会把那次展开拖进转换检查。三个投影各开封一次，而它们就是全部接口。
-<!--/-->
-
-```agda
-theEarliestMeet : (u : S) → ⟨ isL u ⟩ → Inhabited u → LeastOrd (meets u)
-theEarliestMeet u pu h = leastOrd (meets u) (meetsSome u pu h)
-
-opaque
-  μ : (u : S) → ⟨ isL u ⟩ → Inhabited u → S
-  μ u pu h = theEarliestMeet u pu h .fst
-
-opaque
-  unfolding μ
-  μ-ord : (u : S) (pu : ⟨ isL u ⟩) (h : Inhabited u) → IsOrd (μ u pu h)
-  μ-ord u pu h = theEarliestMeet u pu h .snd .fst
-
 ```
 
 <!--en-->
@@ -246,63 +180,6 @@ module _ (P : S → Ω) where
 ```
 
 <!--en-->
-## A first appearance is a successor
-<!--zh-->
-## 首次现身处是后继
-<!--/-->
-
-<!--en-->
-The cell's case is one application, and its only work is a truncation. A cell is
-met at a stage by *some* member, so the member has to be brought out of a
-truncation before `carveAt`{.Agda} can read it, and put back into one afterwards;
-`carveMeets`{.Agda} is that step, and it is the whole difference between this
-instance and a bare membership.
-<!--zh-->
-格的这一情形是一次施用，而它唯一要干的活是一次截断。一格在一个阶段处是被**某个**成员相交的，故那个成员必须先从一个截断中取出，`carveAt`{.Agda} 才读得到它，此后再放回一个截断里；`carveMeets`{.Agda} 就是那一步，而它就是这个实例与「光秃秃的隶属」之间的全部差别。
-<!--/-->
-
-```agda
-```
-
-<!--en-->
-## The stage a first appearance is defined over
-<!--zh-->
-## 首次现身所依据的那个阶段
-<!--/-->
-
-<!--en-->
-Applying the argument at `μ`{.Agda} itself hands the predecessor over outright,
-and that is what makes `defStage`{.Agda} a function: the *definition stage* of a
-cell, the stage over which the cell's first members are written. It is sealed
-with its two properties beside it, as `μ`{.Agda} was.
-<!--zh-->
-把那个论证径直施用在 `μ`{.Agda} 处，前一阶段就当场交出，而正是这一点使 `defStage`{.Agda} 成为函数：一格的**定义阶段**，即该格最先现身的诸成员所依据写出的那个阶段。它连同两条性质一并封印，与 `μ`{.Agda} 当初一样。
-<!--/-->
-
-```agda
-
-opaque
-
-opaque
-  unfolding defStage
-
-```
-
-<!--en-->
-Two readings of that equation, and they are the two the construction ahead uses.
-The stage where the cell is first met is the definable powerset of the
-definition stage, so a first member of the cell *is* a definable subset there
-and has a name. And the definition stage misses the cell outright, since it
-belongs to the least stage that does not.
-<!--zh-->
-那条等式的两种读法，也正是后续构造所用的两种。该格首次被相交的那个阶段，是定义阶段的可定义幂集，故该格的一个最先成员**就是**那里的一个可定义子集，从而有名字。而定义阶段则干脆与该格不相交，因为它属于那个相交的最小阶段。
-<!--/-->
-
-```agda
-
-```
-
-<!--en-->
 ## One stage for everything below a set
 <!--zh-->
 ## 一个阶段装下一个集合以下的一切
@@ -354,18 +231,14 @@ bound-below₂ a p x y y∈x x∈a =
 <!--/-->
 
 <!--en-->
-`μ`{.Agda} is the earliest stage at which a set of `L` has a member, and
-that stage is a successor, because a set enters the tower
-only by being carved out of the stage below. That argument reads nothing about
-cells, so it is written once over any property of ordinals: `carveAt`{.Agda}
-carves a witness below the least stage, and `predOf`{.Agda} turns the carve into
-the predecessor, closing the truncation on `isPropPredOf`{.Agda}. The next
-chapter is its second instance, at plain membership in the tower.
-`defStage`{.Agda} is the stage `μ`{.Agda} succeeds, a function because a
-successor determines what it succeeds among ordinals (`ord-suc-inj`{.Agda}), and
-`Lset-μ`{.Agda} identifies the stage of first appearance with the definable
-powerset over it. So every set that first appears there carries a name written
-over one fixed stage, which is what the choosing device will compare. `stageBound`{.Agda} supplies the ordinal the
+The least stage at which a property of ordinals holds is a successor, because a
+set enters the tower only by being carved out of the stage below. That argument
+reads nothing about cells, so it is written once over any property of ordinals:
+`carveAt`{.Agda} carves a witness below the least stage, and `predOf`{.Agda}
+turns the carve into the predecessor, closing the truncation on
+`isPropPredOf`{.Agda}. The predecessor is definite because a successor
+determines what it succeeds among ordinals (`ord-suc-inj`{.Agda}).
+`stageBound`{.Agda} supplies the ordinal the
 bookkeeping runs in: above a set's own stage, hence above its members and
 theirs, and above the tower's limit level, where the names themselves live.
 
@@ -373,7 +246,7 @@ Nothing here states a relation on `L`, and nothing here is a recursion. The
 comparison and the recursion both arrive in the next chapters, and both are
 confined to the material this one has located.
 <!--zh-->
-`μ`{.Agda} 是 `L` 的一个集合拥有成员的最早阶段，那个阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。那个论证不读取关于格的任何东西，故它对任意一条序数性质只写一遍：`carveAt`{.Agda} 在最小阶段之下雕出一个见证，而 `predOf`{.Agda} 把那次雕出变成前一阶段，并按 `isPropPredOf`{.Agda} 把截断闭合。下一章就是它的第二个实例，取在塔中光秃秃的隶属上。`defStage`{.Agda} 是 `μ`{.Agda} 所后继的那个阶段，之所以是函数，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})；而 `Lset-μ`{.Agda} 把首次现身的那个阶段与其上的可定义幂集认同。于是每个首次现身于该处的集合，都带着一个写在单一固定阶段之上的名字，而那正是选取装置将要比较的东西。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
+某条序数性质成立的最小阶段是后继，因为集合进入塔的唯一途径是从它下面那个阶段中被雕出。那个论证不读取关于格的任何东西，故它对任意一条序数性质只写一遍：`carveAt`{.Agda} 在最小阶段之下雕出一个见证，而 `predOf`{.Agda} 把那次雕出变成前一阶段，并按 `isPropPredOf`{.Agda} 把截断闭合。那个前一阶段之所以确定，是因为在序数之内后继决定它所后继的东西 (`ord-suc-inj`{.Agda})。`stageBound`{.Agda} 供应记账所在的序数：在一个集合自身的阶段之上，从而在它的成员及其成员之上，也在塔的极限层之上，而诸名字自身正住在那里。
 
 此处没有一条陈述涉及 `L` 上的关系，也没有一处是递归。比较与递归都在后面几章到场，而两者都被限制在本章所定位的材料之内。
 <!--/-->

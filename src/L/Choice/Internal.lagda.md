@@ -45,9 +45,9 @@ import FOL.Absoluteness
 open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; embed )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′; module VCode )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; isL; isL-trans; Lset )
-open import L.Ordinal {ℓ} using ( ω-ord; ∈#-elim; #∈#-elim )
-open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset )
+open import L.Ordinal {ℓ} using ( ∈#-elim; #∈#-elim )
+open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
 open import L.Coding.Model {ℓ}
@@ -70,8 +70,6 @@ open import L.Coding.Clauses {ℓ} lem using
   ( Tags; towerAt; tableAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
   ; module Tower; module TowerHolds )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
-open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
-open import L.Hierarchy {ℓ} lem using ( Lset-defines )
 open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )
 open import L.Choice.Finite {ℓ} lem using ( Limit; limitOrder )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
@@ -114,89 +112,20 @@ private
 ```
 
 <!--en-->
-## A skeleton, said as one atom
+## The same code at the empty alphabet
 
 A name's formula carries no parameters: the parameters left the syntax two
 chapters ago and arrived as an environment. Saying so inside the model looks, at
-first, like a demand for a recursion. "No constant tag occurs anywhere in this
-code" is a statement about every subcode, and a statement about every subcode is
-a descent, which would have to be internalized with its own graph, its own table
-and its own uniqueness theorem.
+first, like a demand for a recursion, and it is not one. Membership in the limit
+stage will not say it: a member of the limit stage is a hereditarily finite set,
+and a hereditarily finite set can be the code of a formula whose constants are
+hereditarily finite; over a carrier containing the limit stage those constants
+are members of the carrier, so a stage condition alone admits skeletons the meta
+`Name`{.Agda} excludes, and a least name inside would not have to be a least
+name outside. The description says the thing itself: the skeleton carries **no**
+constants.
 
-The descent is not needed, and this is the chapter's cheapest line. A
-parameter-free code is built from numerals and Kuratowski pairs and from nothing
-else, so it is hereditarily finite, and the naming chapter proved exactly that:
-the code lies in `Lset ω`{.Agda}. Membership is **one atom**. So the first
-condition the description carries is that the skeleton belongs to the limit
-stage, and the sequence chapter already says inside what the limit stage is, as
-the value its graph assigns at the constant `ωʟ`{.Agda}. What that atom does not
-say is constant-freeness itself, and the next section says it, with a second atom
-rather than a recursion.
-
-The graph is discharged at a **variable** pair of slots reached by two equations,
-which is the law the tower chapters were written under, and the two elements the
-description is satisfied at are sealed for the reason the marker records.
-<!--zh-->
-## 骨架，说成一个原子
-
-一个名字的公式不带参数：两章之前，参数已经离开语法、以环境的身份到场。要在模型内部把这句话说出来，乍看像是在索要一场递归。「这个码里任何地方都不出现常量标签」是一句关于每个子码的陈述，而关于每个子码的陈述就是一次下降，那得连同它自己的图、自己的表、自己的唯一性定理一并内化。
-
-那次下降其实不需要，而这是本章最便宜的一行。无参的码由数码与 Kuratowski 对造成、别无他物，故它是遗传有穷的，而命名那一章证的恰是这一条：该码落在 `Lset ω`{.Agda} 中。隶属是**一个原子**。于是这条描述所携带的第一个条件就是「骨架属于极限阶段」，而序列那一章已经在内部说清了极限阶段是什么，即它的图在常元 `ωʟ`{.Agda} 处所指派的取值。那个原子没有说出的，正是无参性本身，而下一节把它说出来，靠的是第二个原子、不是一场递归。
-
-那个图在经两条等式抵达的**一对变元位**上解除，这正是塔诸章据以写下的规矩；而描述在其上被满足的那两个元素被封印，理由记在标记里。
-<!--/-->
-
-perf: the limit stage's two elements are sealed; unsealed, checking any term
-at a satisfaction of the tower graph over them runs 77 s instead of 1.6 s
-
-```agda
-opaque
-  ωAt : S
-  ωAt = ωʟ
-
-  ωStage : S
-  ωStage = LsetS ω ω-ord
-
-  ωAt-fst : fst ωAt ≡ ω
-  ωAt-fst = refl
-
-  ωStage-fst : fst ωStage ≡ Lset ω
-  ωStage-fst = refl
-
-limitGraph : ∀ {n} (v o : Fin n) (γ : S ^ n)
-           → fst (lookup o γ) ≡ ω → fst (lookup v γ) ≡ Lset ω
-           → ⟨ γ ⊨ LsetGraphAt v o ⟩
-limitGraph v o γ qo qv =
-  Lset-defines v o γ (subst IsOrd (sym qo) ω-ord) (qv ∙ cong Lset (sym qo))
-
-InLimitAt : ∀ {n} → Fin n → Formula S n
-InLimitAt s = ∃̇ (∃̇ ( (var zero ≐ con ωʟ)
-                    ∧̇ ( LsetGraphAt (suc zero) zero
-                      ∧̇ (var (sh2 s) ∈̇ var (suc zero)) ) ))
-
-module _ {n : ℕ} (s : Fin n) (γ : S ^ n) where
-  InLimitAt-in : ⟨ fst (lookup s γ) ∈ Lset ω ⟩ → ⟨ γ ⊨ InLimitAt s ⟩
-  InLimitAt-in h = ∣ ωStage , ∣ ωAt , (ωAt-fst , (gr , held)) ∣₁ ∣₁
-    where
-    gr : ⟨ (ωAt ∷ ωStage ∷ γ) ⊨ LsetGraphAt (suc zero) zero ⟩
-    gr = limitGraph (suc zero) zero (ωAt ∷ ωStage ∷ γ) ωAt-fst ωStage-fst
-    held : ⟨ fst (lookup s γ) ∈ fst ωStage ⟩
-    held = subst (λ u → ⟨ fst (lookup s γ) ∈ u ⟩) (sym ωStage-fst) h
-```
-
-<!--en-->
-## The same code at the empty alphabet
-
-That condition puts the code where the order of codes lives, and it is not the
-condition the meta-language imposes. A member of the limit stage is a
-hereditarily finite set, and a hereditarily finite set can be the code of a
-formula whose constants are hereditarily finite; over a carrier containing the
-limit stage those constants are members of the carrier, so the skeleton
-condition alone admits skeletons the meta `Name`{.Agda} excludes, and a least
-name inside would not have to be a least name outside. The description has to
-say the other thing as well: the skeleton carries **no** constants.
-
-It costs one more membership atom, and it reuses a set the coding chapters
+It costs one membership atom, and it reuses a set the coding chapters
 already build. `AllCodes A`{.Agda} holds exactly the keys of the formulas over
 the alphabet `⟪ A ⟫`{.Agda}; take the alphabet **empty** and it holds exactly
 the keys of the parameter-free formulas. So the second code set reaches the
@@ -217,9 +146,9 @@ direction that leaves the code alone.
 <!--zh-->
 ## 同一个码，落在空字母表上
 
-那个条件把码放到了诸码之序所在之处，而它并不是元语言所加的条件。极限阶段的成员是遗传有穷集，而遗传有穷集可以是某条「常量为遗传有穷」的公式之码；在一个含有极限阶段的载体之上，那些常量正是载体的成员，故单凭骨架条件，这条描述放进了元层面 `Name`{.Agda} 所排除的骨架，于是内部的最小名字未必得是外部的最小名字。这条描述还得把另一件事说出来：那个骨架**不带**常量。
+一个名字的公式不带参数：参数已在两章之前离开语法、以环境的身份到场。要在模型内部把这句话说出来，乍看像是在索要一场递归，其实不是。「属于极限阶段」说不出它：极限阶段的成员是遗传有穷集，而遗传有穷集可以是某条「常量为遗传有穷」的公式之码；在一个含有极限阶段的载体之上，那些常量正是载体的成员，故单凭阶段条件，这条描述放进了元层面 `Name`{.Agda} 所排除的骨架，于是内部的最小名字未必得是外部的最小名字。这条描述直接说那件事本身：那个骨架**不带**常量。
 
-代价是再来一个隶属原子，而它复用编码诸章早已造好的一个集合。`AllCodes A`{.Agda} 恰好持有字母表 `⟪ A ⟫`{.Agda} 之上诸公式的诸键；把字母表取作**空的**，它持有的就恰好是诸无参公式的诸键。于是第二个码集像第一个一样，以一个位的身份抵达这条描述，而那个原子说：由元数与骨架造出的那个键落在其中。
+代价是一个隶属原子，而它复用编码诸章早已造好的一个集合。`AllCodes A`{.Agda} 恰好持有字母表 `⟪ A ⟫`{.Agda} 之上诸公式的诸键；把字母表取作**空的**，它持有的就恰好是诸无参公式的诸键。于是第二个码集像第一个一样，以一个位的身份抵达这条描述，而那个原子说：由元数与骨架造出的那个键落在其中。
 
 写下它之前有一件事必须核查，而它成立：一条无参公式在两个字母表上**有同一个码**。它的常量的两种读法都是从空类型出发的函数，任何两个这样的函数都相符，而变换又可复合，故那两个码是同一个集合，每个方向四行。空字母表处无须满足任何东西，因为那个合取项是原子，而码集据以切出的那次分离，在它被造出之处就已对它的载体证成通用。
 
@@ -612,9 +541,9 @@ DenoteBody B C s e =
 NameAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Fin n → Fin n → Fin n
        → Formula S n
 NameAt B C C₀ s a e d =
-  InLimitAt s ∧̇ ( FreeAt C₀ s a
-                ∧̇ ( (var a ∈̇ con ωʟ)
-                  ∧̇ ( envOverAt e a B ∧̇ extAt d (DenoteBody B C s e) ) ) )
+  FreeAt C₀ s a
+  ∧̇ ( (var a ∈̇ con ωʟ)
+    ∧̇ ( envOverAt e a B ∧̇ extAt d (DenoteBody B C s e) ) )
 
 module _ {n : ℕ} (B C s e : Fin n) (γ : S ^ n) where
   AtValue : (z c k key : S) → Type (ℓ-suc ℓ)
@@ -681,8 +610,7 @@ module _ {n : ℕ} (B C s e : Fin n) (γ : S ^ n) where
     atCons z (c , (hc , ha)) = PT.rec squash₁ (atArity z c hc) ha
 
 module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
-  NameAt-in : ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-            → ⟨ γ ⊨ FreeAt C₀ s a ⟩
+  NameAt-in : ⟨ γ ⊨ FreeAt C₀ s a ⟩
             → ⟨ fst (lookup a γ) ∈ ω ⟩
             → ⟨ γ ⊨ envOverAt e a B ⟩
             → ((z : S) → ⟨ fst z ∈ fst (lookup d γ) ⟩
@@ -690,12 +618,12 @@ module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
             → ((z : S) → ⟨ fst z ∈ fst (lookup B γ) ⟩ → DenoteOf B C s e γ z
                → ⟨ fst z ∈ fst (lookup d γ) ⟩)
             → ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩
-  NameAt-in hs hf ha he into back =
-    InLimitAt-in s γ hs , (hf , (ha , (he , extAt-in-both d (DenoteBody B C s e) γ
+  NameAt-in hf ha he into back =
+    hf , (ha , (he , extAt-in-both d (DenoteBody B C s e) γ
       (λ z hz → DenoteBody-in B C s e γ z (into z hz .fst) (into z hz .snd))
       (λ z h → PT.rec (snd (fst z ∈ fst (lookup d γ)))
                  (back z (DenoteBody-out B C s e γ z h .fst))
-                 (DenoteBody-out B C s e γ z h .snd)))))
+                 (DenoteBody-out B C s e γ z h .snd))))
 
 ```
 
@@ -1223,13 +1151,7 @@ it.
 
 ## Recap
 
-`InLimitAt`{.Agda} is the skeleton's **stage** condition, one membership atom in
-the limit stage said through the sequence chapter's graph at the constant
-`ωʟ`{.Agda}. It is not constant-freeness, and saying so is this chapter's own
-correction: a hereditarily finite code may name hereditarily finite constants,
-and over a carrier containing the limit stage those are members of the carrier.
-
-`FreeAt`{.Agda} is constant-freeness, and it is one membership atom as well: the
+`FreeAt`{.Agda} is constant-freeness, and it is one membership atom: the
 key made from the arity and the skeleton lies in the code set **at the empty
 alphabet**. `freeCode-in`{.Agda} and `freeCode-out`{.Agda} are that set's two
 directions at that alphabet, resting on the fact that a parameter-free formula
@@ -1241,8 +1163,8 @@ sequence is, and
 `graphAt-value`{.Agda}/`graphAt-only`{.Agda} are the satisfaction table's two
 halves at a carrier held in a slot.
 
-`NameAt`{.Agda} is a name described at slots: a skeleton in the limit stage and
-free of constants, a parameter sequence over the carrier whose domain is the
+`NameAt`{.Agda} is a name described at slots: a skeleton free of constants, a
+parameter sequence over the carrier whose domain is the
 arity, and a denotation written as one `extAt`{.Agda} whose condition reads the
 value `satGraphAt`{.Agda} assigns at the key the arity and the skeleton make.
 Two code sets reach it as slots: the one at the carrier, without which the
@@ -1275,11 +1197,9 @@ chapter's first job.
 
 ## 小结
 
-`InLimitAt`{.Agda} 是骨架的**阶段**条件，即经序列那一章的图在常元 `ωʟ`{.Agda} 处说出的、一个「属于极限阶段」的隶属原子。它不是无参性，而把这句话说出来正是本章对自己的更正：遗传有穷的码可以点名遗传有穷的常量，而在一个含有极限阶段的载体之上，那些常量正是载体的成员。
+`FreeAt`{.Agda} 就是无参性，而它是一个隶属原子：由元数与骨架造出的那个键，落在**空字母表处**的码集中。`freeCode-in`{.Agda} 与 `freeCode-out`{.Agda} 是那个集合在那个字母表处的两个方向，所倚的事实是一条无参公式在两个字母表上有同一个码；`codeFree-in`{.Agda} 与 `codeFree-out`{.Agda} 把它们读在诸位上，于是骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。`domAt-numeral`{.Agda} 说清一个序列有多长，而 `graphAt-value`{.Agda} 与 `graphAt-only`{.Agda} 是满足关系表的两半，落在握于一位上的载体处。
 
-`FreeAt`{.Agda} 才是无参性，而它同样是一个隶属原子：由元数与骨架造出的那个键，落在**空字母表处**的码集中。`freeCode-in`{.Agda} 与 `freeCode-out`{.Agda} 是那个集合在那个字母表处的两个方向，所倚的事实是一条无参公式在两个字母表上有同一个码；`codeFree-in`{.Agda} 与 `codeFree-out`{.Agda} 把它们读在诸位上，于是骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。`domAt-numeral`{.Agda} 说清一个序列有多长，而 `graphAt-value`{.Agda} 与 `graphAt-only`{.Agda} 是满足关系表的两半，落在握于一位上的载体处。
-
-`NameAt`{.Agda} 是描述在诸位上的名字：一个落在极限阶段且不带常量的骨架、一个定义域为元数的载体之上参数序列，以及一个写成单次 `extAt`{.Agda} 的指称，其条件读的是 `satGraphAt`{.Agda} 在「由元数与骨架造出的键」处所指派的取值。有两个码集以位的身份抵达它：载体处那一个，没有它，图那张作存在绑定的表什么也钉不住；以及空字母表处那一个，没有它，那个骨架就不是元层面某个名字的骨架。
+`NameAt`{.Agda} 是描述在诸位上的名字：一个不带常量的骨架、一个定义域为元数的载体之上参数序列，以及一个写成单次 `extAt`{.Agda} 的指称，其条件读的是 `satGraphAt`{.Agda} 在「由元数与骨架造出的键」处所指派的取值。有两个码集以位的身份抵达它：载体处那一个，没有它，图那张作存在绑定的表什么也钉不住；以及空字母表处那一个，没有它，那个骨架就不是元层面某个名字的骨架。
 
 `≺At`{.Agda} 是那次比较，而它**不跑递归**：一个对着既有之序的隶属原子、一个数码之间的隶属原子作元数之用，以及一次为参数所设的有界字典序量化。`StepAt`{.Agda} 是这一族的一步，只有**一**支，按最小名字说出。
 

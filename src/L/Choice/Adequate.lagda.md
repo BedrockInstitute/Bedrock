@@ -50,7 +50,7 @@ open import L.Coding.Bridge {ℓ} lem
 open import L.Coding.CodeSet {ℓ} lem using ( keyS; AllCodes )
 open import L.Coding.Uniform {ℓ} lem
   using ( val-at; val-sat; keyIn; keyIn≡; keyIn∈; module Table )
-open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode; code∈limit )
+open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )
 open import L.Choice.Finite {ℓ} lem using ( Limit; limitOrder )
 open import L.Choice.Internal {ℓ} lem
   using ( NameAt; NameAt-in; LeastNameAt; ≺At; StepAt; StepOf; StepAt-in; StepAt-out; DenoteOf; DenoteBody; DenoteBody-in; DenoteBody-out
@@ -557,12 +557,9 @@ extensionality, one direction per reading of the extension.
 ```agda
     NameAt-fill : (t : Name) → Data t → ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩
     NameAt-fill t (qs , (qa , (qe , qd))) =
-      NameAt-in B C C₀ s a e d γ hs hf ha he into back
+      NameAt-in B C C₀ s a e d γ hf ha he into back
       where
       module Bt = Body t qs qa qe
-
-      hs : ⟨ fst (lookup s γ) ∈ Lset ω ⟩
-      hs = subst (λ u → ⟨ u ∈ Lset ω ⟩) (sym qs) (code∈limit (formula t))
 
       hf : ⟨ γ ⊨ FreeAt C₀ s a ⟩
       hf = codeFree-in C₀ s a γ (arity t) q₀ qa (formula t) qs
@@ -599,7 +596,7 @@ extensionality, one direction per reading of the extension.
         fib = ∈-asFiber {a = fst z} {b = A} hA
 
     NameAt-read : ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩ → ∥ Σ[ t ∈ Name ] Data t ∥₁
-    NameAt-read (hl , (hf , (ha , (he , hd)))) =
+    NameAt-read (hf , (ha , (he , hd))) =
       PT.rec squash₁ atArity ha
       where
       atCode : (k : ℕ) (qa : fst (lookup a γ) ≡ # k)
