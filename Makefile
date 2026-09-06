@@ -1,6 +1,9 @@
-# Bedrock. Two jobs: typecheck the tree, build the site.
+# Bedrock. Three jobs: typecheck the tree, lint it, build the site.
 #
 #   make typecheck   typecheck src/Everything.lagda.md
+#   make lint        run the four gates over the whole tree
+#   make test        run the gate unit tests
+#   make hooks       install scripts/git-hooks into .git/hooks
 #   make site        render the HTML site into _build/site
 #   make serve       serve _build/site locally
 #   make deploy      push _build/site to Cloudflare Pages (owner only)
@@ -22,10 +25,26 @@ BASE_URL   :=
 PORT       := 8000
 CF_PROJECT := bedrock
 
-.PHONY: typecheck venv gen html types site serve deploy clean
+.PHONY: typecheck lint test hooks venv gen html types site serve deploy clean
 
 typecheck:
 	$(AGDA) $(EVERYTHING)
+
+# The four gates. lint-prose and lint-agda take --staged in the hook; here they
+# sweep the tree. check-glossary needs tomllib, so it wants the venv's 3.11.
+lint:
+	$(PY) scripts/gate/lint-prose.py
+	$(PY) scripts/gate/lint-agda.py
+	$(PY) scripts/gate/check-glossary.py
+	$(PY) scripts/gate/check-fences.py
+	$(PY) scripts/site/weave-i18n.py --check
+
+test:
+	$(PY) -m unittest discover -s scripts/tests -p "test_*.py" -t scripts/tests -v
+
+hooks:
+	install -m 755 scripts/git-hooks/pre-commit .git/hooks/pre-commit
+	@echo "pre-commit installed; bypass one commit with --no-verify"
 
 venv:
 	$(PYTHON) -m venv $(VENV)

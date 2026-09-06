@@ -1,0 +1,1065 @@
+# Bedrock translation glossary -- canonical, machine-checked term data.
+#
+# This TOML file is the single source of truth for the trilingual glossary; the prose
+# explanation (what the checks do, how to maintain entries) lives in dev/GLOSSARY.md.
+# scripts/gate/check-glossary.py reads this file via tomllib (Python 3.11+) and enforces it as
+# part of `make check` and the pre-commit hook.
+#
+# Each [[term]] has: category, en, zh, ja; optional avoid (a list of known wrong
+# renderings, each optionally tagged `zh:`/`ja:` to scope it to one language; an untagged
+# entry applies to both); optional presence (true enables the safety-net check); optional
+# notes (human-only; the checker ignores it). CJK values are plain strings -- TOML is not
+# prose-linted, so no backtick wrapping is needed.
+
+# ---- Set theory --------------------------------------------------------------
+
+[[term]]
+category = "Set theory"
+en = "producer"
+zh = "生产者"
+ja = "生成者"
+avoid = ["zh:生成者"]
+notes = "owner-ruled 2026-08-03; the book's name for SZ p. 11's nameless minimal triple (i, u, v); ja tentative pending a literature check"
+
+[[term]]
+category = "Set theory"
+en = "stage-bounded"
+zh = "循阶的"
+ja = "段階有界"
+avoid = ["zh:扎根的", "grounded"]
+notes = "owner-ruled 2026-08-03; the producer-tree argument bound; renamed from grounded to avoid both the geology ground-family and the logic tradition where grounded means well-founded; ja tentative"
+
+[[term]]
+category = "Set theory"
+en = "coherence"
+zh = "相容"
+ja = "整合"
+avoid = ["zh:融贯"]
+notes = "owner-ruled 2026-08-03; the restriction-compatibility of the level orders; ja tentative"
+
+[[term]]
+category = "Set theory"
+en = "key"
+zh = "键"
+ja = "鍵"
+notes = "owner-ruled 2026-08-03; the least-producer key the order pulls back along"
+
+[[term]]
+category = "Set theory"
+en = "rudimentary function"
+zh = "初步函数"
+ja = "初歩的関数"
+avoid = ["zh:初始函数", "zh:rud 函数"]
+presence = true
+notes = "owner-ruled 2026-08-02; zh follows the E-C Math Vocabulary 3rd ed. pattern (rudimentary set = 初步集); ja tentative pending a literature check"
+
+[[term]]
+category = "Set theory"
+en = "forcing"
+zh = "力迫"
+ja = "強制"
+presence = true
+notes = "zh 力迫 vs ja 強制 (deliberate)"
+
+[[term]]
+category = "Set theory"
+en = "forcing extension"
+zh = "力迫扩张"
+ja = "強制拡大"
+
+[[term]]
+category = "Set theory"
+en = "ground"
+zh = "基模型"
+ja = "基礎モデル"
+avoid = ["zh:基底模型"]
+notes = "Owner ruling 2026-08-05: geology's \"ground\" and forcing's \"ground model\" are one concept and take ONE rendering, so a reader never meets two names for the same thing. 地基 is NOT on the avoid list even though it is the tempting geological metaphor: it is the canonical rendering of \"neutral ground\" (中立的地基) and reads naturally as ordinary groundwork, so banning it machine-wide produced five false positives on prose that never meant a ground model. The discipline here is a review matter, not a linter one."
+
+[[term]]
+category = "Set theory"
+en = "ground model"
+zh = "基模型"
+ja = "基礎モデル"
+avoid = ["zh:基底模型"]
+notes = "Same rendering as \"ground\" by the owner ruling of 2026-08-05; \"grounds\" also renders 基模型"
+
+[[term]]
+category = "Set theory"
+en = "ground-model definability"
+zh = "基模型的可定义性"
+ja = "基礎モデルの定義可能性"
+
+[[term]]
+category = "Set theory"
+en = "multiverse"
+zh = "多宇宙"
+ja = "多宇宙"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "universism"
+zh = "单宇宙观"
+ja = "単一宇宙観"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "multiversism"
+zh = "多宇宙观"
+ja = "多宇宙観"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "ultrapower"
+zh = "超幂"
+ja = "超冪"
+
+[[term]]
+category = "Set theory"
+en = "set-theoretic geology"
+zh = "集合论地质学"
+ja = "集合論の地質学"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "mantle"
+zh = "地幔"
+ja = "マントル"
+
+[[term]]
+category = "Set theory"
+en = "generic absoluteness"
+zh = "脱殊绝对性"
+ja = "ジェネリック絶対性"
+presence = true
+notes = "zh 脱殊 (translate) vs ja ジェネリック (transliterate)"
+
+[[term]]
+category = "Set theory"
+en = "independence results"
+zh = "独立性结果"
+ja = "独立性の結果"
+
+[[term]]
+category = "Set theory"
+en = "axiom of infinity"
+zh = "无穷公理"
+ja = "無限公理"
+notes = "also \"infinity axiom\""
+
+[[term]]
+category = "Set theory"
+en = "regularity"
+zh = "正则公理"
+ja = "正則性公理"
+notes = "zh also 正则性; also called foundation in some books, a name this book does not use; ZF field name regularity ([L1.4])"
+
+[[term]]
+category = "Set theory"
+en = "standard model"
+zh = "标准模型"
+ja = "標準モデル"
+notes = "of ZF"
+
+[[term]]
+category = "Set theory"
+en = "infinite descent"
+zh = "无穷下降"
+ja = "無限降下"
+
+[[term]]
+category = "Set theory"
+en = "constructible hierarchy"
+zh = "可构造层级"
+ja = "構成可能階層"
+presence = true
+notes = "the L hierarchy"
+
+[[term]]
+category = "Set theory"
+en = "constructible universe"
+zh = "可构造宇宙"
+ja = "構成可能宇宙"
+presence = true
+notes = "the class L; 可构造/構成可能 matches the constructible hierarchy entry"
+
+[[term]]
+category = "Set theory"
+en = "cumulative hierarchy"
+zh = "累积层级"
+ja = "累積階層"
+presence = true
+notes = "V; the zh rendering is already in use in Everything.lagda.md"
+
+[[term]]
+category = "Set theory"
+en = "condensation"
+zh = "凝聚"
+ja = "凝縮"
+presence = true
+notes = "condensation lemma = 凝聚引理 / 凝縮補題; zh 凝聚 vs ja 凝縮 (deliberate)"
+
+[[term]]
+category = "Set theory"
+en = "absoluteness"
+zh = "绝对性"
+ja = "絶対性"
+notes = "consistent with the generic absoluteness entry; Δ₀-absoluteness keeps the prefix symbol"
+
+[[term]]
+category = "Set theory"
+en = "relative consistency"
+zh = "相对一致性"
+ja = "相対無矛盾性"
+presence = true
+notes = "consistency diverges: zh 一致性 vs ja 無矛盾性 (deliberate); see the consistency entry"
+
+[[term]]
+category = "Set theory"
+en = "well-order"
+zh = "良序"
+ja = "整列順序"
+notes = "the noun; well-ordered = zh 良序的 / ja 整列された"
+
+[[term]]
+category = "Set theory"
+en = "axiom of choice"
+zh = "选择公理"
+ja = "選択公理"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "inner model"
+zh = "内模型"
+ja = "内部モデル"
+presence = true
+notes = "the zh rendering is already in use in the README trio"
+
+# ---- Type theory -------------------------------------------------------------
+
+[[term]]
+category = "Type theory"
+en = "host language"
+zh = "宿主语言"
+ja = "ホスト言語"
+notes = "the proof assistant's own language"
+
+[[term]]
+category = "Type theory"
+en = "host-language maximalism"
+zh = "宿主语言最大化"
+ja = "ホスト言語最大主義"
+presence = true
+notes = "zh 最大化 vs ja 最大主義 (deliberate)"
+
+[[term]]
+category = "Type theory"
+en = "unique existence"
+zh = "唯一存在"
+ja = "一意存在"
+notes = "the isContr notion"
+
+[[term]]
+category = "Type theory"
+en = "definite-description operator"
+zh = "摹状词算子"
+ja = "確定記述の演算子"
+notes = "the ℩ operator"
+
+[[term]]
+category = "Type theory"
+en = "description axiom"
+zh = "描述公理"
+ja = "記述公理"
+
+[[term]]
+category = "Type theory"
+en = "propositional extensionality"
+zh = "命题外延性"
+ja = "命題外延性"
+
+[[term]]
+category = "Type theory"
+en = "path equality"
+zh = "路径等式"
+ja = "道の等式"
+notes = "zh 路径 vs ja 道"
+
+[[term]]
+category = "Type theory"
+en = "transport"
+zh = "传输"
+ja = "輸送"
+notes = "structure transport (SIP)"
+
+[[term]]
+category = "Type theory"
+en = "inductive type"
+zh = "归纳类型"
+ja = "帰納型"
+
+[[term]]
+category = "Type theory"
+en = "inductive predicate"
+zh = "归纳谓词"
+ja = "帰納的述語"
+notes = "how L is defined"
+
+[[term]]
+category = "Type theory"
+en = "structural recursion"
+zh = "结构递归"
+ja = "構造的再帰"
+
+[[term]]
+category = "Type theory"
+en = "deep embedding"
+zh = "深嵌入"
+ja = "深い埋め込み"
+notes = "of Formula"
+
+[[term]]
+category = "Type theory"
+en = "reflection"
+zh = "反射"
+ja = "反射"
+notes = "drives reification"
+
+[[term]]
+category = "Type theory"
+en = "reification"
+zh = "reification"
+ja = "reification"
+notes = "keep the English word in all languages; do not translate"
+
+[[term]]
+category = "Type theory"
+en = "adequacy"
+zh = "充分性"
+ja = "妥当性"
+presence = true
+avoid = ["zh:适足性"]
+notes = "Owner ruling 2026-08-05 on the glossary review. 适足性 appears in Chinese only as the finance term 资本适足性; PLFA's Chinese edition titles the chapter 充分性. The sufficiency homonym is accepted."
+
+[[term]]
+category = "Type theory"
+en = "representation"
+zh = "表示"
+ja = "表現"
+notes = "the Rep family: a formula paired with its adequacy certificate; paired with reification"
+
+[[term]]
+category = "Type theory"
+en = "Tarski universe"
+zh = "塔斯基宇宙"
+ja = "タルスキ宇宙"
+notes = "the explicit-level universe tower of the host (Base.Prelude)"
+
+[[term]]
+category = "Type theory"
+en = "truth value"
+zh = "真值"
+ja = "真理値"
+notes = "zh 真值 vs ja 真理値"
+
+[[term]]
+category = "Type theory"
+en = "truth algebra"
+zh = "真值代数"
+ja = "真理値代数"
+presence = true
+notes = "the TruthAlgebra record, Base.Truth"
+
+[[term]]
+category = "Type theory"
+en = "propositional resizing"
+zh = "命题降层"
+ja = "命題リサイズ"
+notes = "tentative (owner review): zh renders by meaning (drop a universe level); ja transliterates"
+
+# ---- Logic and philosophy ----------------------------------------------------
+
+[[term]]
+category = "Logic and philosophy"
+en = "abstraction"
+zh = "抽象"
+ja = "抽象"
+notes = "of parameters: replacing a formula's constants by fresh variables, so a formula with parameters becomes a parameter-free (无参) formula of higher arity plus a vector of the constants; owner ruling 2026-07-30, first used in FOL.Manipulation.Parameters"
+
+[[term]]
+category = "Logic and philosophy"
+en = "occurrence"
+zh = "出现"
+ja = "出現"
+notes = "of a constant in a formula, counted positionally: two occurrences of one constant are two entries, which is what spares the development a decidable equality on the alphabet; owner ruling 2026-07-30"
+
+[[term]]
+category = "Logic and philosophy"
+en = "placement"
+zh = "安置"
+ja = "配置"
+notes = "the map sending each constant occurrence to the variable slot that will carry it; owner ruling 2026-07-30, FOL.Manipulation.Parameters"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Levy hierarchy"
+zh = "Lévy 层级"
+ja = "Lévy 階層"
+avoid = ["zh:列维层级", "zh:分级证书", "zh:Levy 层级"]
+notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18); witness/见证 is not a standalone name: always write it anchored, the Δ₀ witness / Δ₀ 见证, Levy witnesses / Lévy 见证, smallness witness / 小性见证 (owner ruling 2026-07-19)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "relativization"
+zh = "相对化"
+ja = "相対化"
+
+[[term]]
+category = "Logic and philosophy"
+en = "satisfaction"
+zh = "满足关系"
+ja = "充足関係"
+notes = "zh 满足 vs ja 充足 (deliberate)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "arithmetization"
+zh = "算术化"
+ja = "算術化"
+notes = "of syntax"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Gödel numbering"
+zh = "哥德尔配数"
+ja = "ゲーデル数化"
+avoid = ["zh:哥德尔数"]
+notes = "Owner ruling 2026-08-05. 哥德尔数 is the number, 哥德尔配数 the scheme, which is what this term means."
+
+[[term]]
+category = "Logic and philosophy"
+en = "first-order definability"
+zh = "一阶可定义性"
+ja = "一階定義可能性"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bi-implication"
+zh = "双向蕴含"
+ja = "双条件"
+notes = "ja 双条件 (biconditional); not the calque 双方向含意"
+
+[[term]]
+category = "Logic and philosophy"
+en = "proof-theoretic reduction"
+zh = "证明论归约"
+ja = "証明論的還元"
+notes = "reduction: zh 归约 vs ja 還元"
+
+[[term]]
+category = "Logic and philosophy"
+en = "classical principles"
+zh = "经典原理"
+ja = "古典原理"
+notes = "LEM, AC"
+
+[[term]]
+category = "Logic and philosophy"
+en = "metatheory"
+zh = "元理论"
+ja = "メタ理論"
+notes = "meta-level is 元层 / メタレベル"
+
+[[term]]
+category = "Logic and philosophy"
+en = "metaphysics"
+zh = "形而上学"
+ja = "形而上学"
+presence = true
+notes = "of V"
+
+[[term]]
+category = "Logic and philosophy"
+en = "determinate"
+zh = "确定"
+ja = "確定"
+notes = "of V's structure"
+
+[[term]]
+category = "Logic and philosophy"
+en = "canonical"
+zh = "典范"
+ja = "典範"
+
+[[term]]
+category = "Logic and philosophy"
+en = "falsifiable"
+zh = "可证伪"
+ja = "反証可能"
+
+[[term]]
+category = "Logic and philosophy"
+en = "rigor"
+zh = "严格性"
+ja = "厳密さ"
+
+[[term]]
+category = "Logic and philosophy"
+en = "finitism"
+zh = "有穷主义"
+ja = "有限主義"
+
+[[term]]
+category = "Logic and philosophy"
+en = "neutral ground"
+zh = "中立的地基"
+ja = "中立的な地盤"
+notes = "zh 地基 vs ja 地盤"
+
+[[term]]
+category = "Logic and philosophy"
+en = "groundwork"
+zh = "奠基"
+ja = "基盤"
+notes = "the Groundwork / 奠基 / 基盤 section"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bedrock"
+zh = "基岩"
+ja = "岩盤"
+notes = "the metaphor; the project name Bedrock stays untranslated"
+
+[[term]]
+category = "Logic and philosophy"
+en = "term"
+zh = "词项"
+ja = "項"
+notes = "of the object language"
+
+[[term]]
+category = "Logic and philosophy"
+en = "formula"
+zh = "公式"
+ja = "論理式"
+notes = "zh 公式 vs ja 論理式 (deliberate)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "sentence"
+zh = "句子"
+ja = "文"
+notes = "a formula with no free variables; zh 句子 per the owner's math-logic convention"
+
+[[term]]
+category = "Logic and philosophy"
+en = "parameter-free"
+zh = "无参"
+ja = "無パラメータ"
+notes = "无参公式, formulas with constant domain ⊥*; like sentences, no named definition (owner ruling 2026-07-19), spelt Formula ⊥* n; ja tentative"
+
+[[term]]
+category = "Logic and philosophy"
+en = "constant domain"
+zh = "常量域"
+ja = "定数域"
+notes = "the K parameter of the syntax; ja tentative"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bounded quantifier"
+zh = "有界量词"
+ja = "有界量化子"
+
+[[term]]
+category = "Logic and philosophy"
+en = "environment"
+zh = "环境"
+ja = "環境"
+notes = "an assignment of carrier elements to free variables"
+
+[[term]]
+category = "Logic and philosophy"
+en = "structure"
+zh = "结构"
+ja = "構造"
+notes = "model-theoretic structure, ZFStructure"
+
+[[term]]
+category = "Logic and philosophy"
+en = "carrier"
+zh = "载体"
+ja = "台"
+notes = "of a structure; ja 台 as in 台集合"
+
+[[term]]
+category = "Logic and philosophy"
+en = "renaming"
+zh = "改名"
+ja = "改名"
+avoid = ["zh:变量变换"]
+notes = "Owner ruling 2026-08-05. Chinese logic renames bound variables with 改名, 换名 or 更名; 变量变换 reads as change of variables, as did the Japanese 変数変換."
+
+[[term]]
+category = "Set theory"
+en = "transitive class"
+zh = "传递类"
+ja = "推移的クラス"
+
+[[term]]
+category = "Logic and philosophy"
+en = "consistency"
+zh = "一致性"
+ja = "無矛盾性"
+notes = "of a theory; zh 一致性 vs ja 無矛盾性 (deliberate); no presence check, the English word is too common"
+
+[[term]]
+category = "Logic and philosophy"
+en = "excluded middle"
+zh = "排中律"
+ja = "排中律"
+presence = true
+notes = "law of excluded middle, LEM"
+
+# ---- Other -------------------------------------------------------------------
+
+[[term]]
+category = "Other"
+en = "charter"
+zh = "纲领"
+ja = "綱領"
+avoid = ["zh:宪章", "ja:憲章"]
+presence = true
+notes = "the project's founding document; file slug stays CHARTER.md"
+
+[[term]]
+category = "Other"
+en = "prose"
+zh = "文稿"
+ja = "文章"
+avoid = ["散文"]
+notes = "written body text, not the literary essay genre"
+
+[[term]]
+category = "Other"
+en = "proof assistant"
+zh = "证明助手"
+ja = "証明支援系"
+presence = true
+avoid = ["zh:证明助理"]
+notes = "Owner ruling 2026-08-05. 助手 is what the Coq, Lean and Isabelle Chinese materials use; 助理 reads as an office assistant."
+
+[[term]]
+category = "Other"
+en = "machine-checked development"
+zh = "机器验证工作"
+ja = "機械検証の開発"
+avoid = ["zh:机器验证开发", "ja:機械検査の開発"]
+presence = true
+notes = "the README tagline; \"machine-checked\" is zh 机器 / ja 機械 and \"development\" is zh 工作 / ja 開発 (deliberate); the certificate/ground phrasings (机器可检的证书 / 经机器检验的地基 etc.) are separate and not covered here"
+
+[[term]]
+category = "Set theory"
+en = "axiom of extensionality"
+zh = "外延公理"
+ja = "外延性公理"
+notes = "the property alone reads zh 外延性 / ja 外延性; ZF field extensional"
+
+[[term]]
+category = "Set theory"
+en = "axiom of separation"
+zh = "分离公理"
+ja = "分出公理"
+notes = "first-order schema; ZF field hasSeparation, operation separate"
+
+[[term]]
+category = "Set theory"
+en = "axiom of replacement"
+zh = "替换公理"
+ja = "置換公理"
+notes = "ZF field hasReplacement"
+
+[[term]]
+category = "Set theory"
+en = "axiom of pairing"
+zh = "配对公理"
+ja = "対の公理"
+notes = "ZF field hasPair"
+
+[[term]]
+category = "Set theory"
+en = "axiom of union"
+zh = "并公理"
+ja = "和集合の公理"
+notes = "ZF field hasUnion; the operation 并/和集合"
+
+[[term]]
+category = "Set theory"
+en = "power set"
+zh = "幂集"
+ja = "冪集合"
+notes = "the axiom reads 幂集公理 / 冪集合公理; ZF field hasPower, operation 𝒫"
+
+[[term]]
+category = "Set theory"
+en = "empty set"
+zh = "空集"
+ja = "空集合"
+
+[[term]]
+category = "Set theory"
+en = "successor"
+zh = "后继"
+ja = "後者"
+notes = "the von Neumann step a ⁺ = a ∪ {a}"
+
+[[term]]
+category = "Set theory"
+en = "numeral"
+zh = "数码"
+ja = "数項"
+notes = "the von Neumann naturals inside a model; ZF field numeral, class isNumeral"
+
+[[term]]
+category = "Set theory"
+en = "choice set"
+zh = "选择集"
+ja = "選択集合"
+notes = "the form of hasChoice: one point in each member of a disjoint family"
+
+[[term]]
+category = "Set theory"
+en = "class"
+zh = "类"
+ja = "クラス"
+notes = "propositional predicate on a carrier; proper class = 真类 / 真クラス"
+
+[[term]]
+category = "Set theory"
+en = "well-founded"
+zh = "良基"
+ja = "整礎"
+notes = "well-foundedness = 良基性 / 整礎性"
+
+[[term]]
+category = "Logic and philosophy"
+en = "compactness"
+zh = "紧致性"
+ja = "コンパクト性"
+notes = "the compactness theorem = 紧致性定理 / コンパクト性定理; told, not proven, in the ZF chapter"
+
+[[term]]
+category = "Other"
+en = "von Neumann"
+zh = "冯·诺伊曼"
+ja = "フォン・ノイマン"
+
+[[term]]
+category = "Type theory"
+en = "smallness"
+zh = "小性"
+ja = "小ささ"
+notes = "isSmall: equivalence to a proposition one universe down; small = 小"
+
+[[term]]
+category = "Type theory"
+en = "small classifier"
+zh = "小分类器"
+ja = "小分類子"
+notes = "HPropSmallness: a small type equivalent to hProp"
+
+[[term]]
+category = "Set theory"
+en = "set-level choice"
+zh = "集合层选择"
+ja = "集合レベルの選択"
+notes = "SetChoice: truncation commutes with products over an h-set of indices"
+
+[[term]]
+category = "Set theory"
+en = "transitive set"
+zh = "传递集"
+ja = "推移的集合"
+notes = "matches the transitive class entry; isTransV"
+
+[[term]]
+category = "Set theory"
+en = "ordinal"
+zh = "序数"
+ja = "順序数"
+notes = "IsOrd: a transitive set whose members are all transitive (von Neumann)"
+
+[[term]]
+category = "Set theory"
+en = "bounding ordinal"
+zh = "上界序数"
+ja = "上界順序数"
+avoid = ["zh:界层序数"]
+notes = "Owner ruling 2026-08-05. 界层 is not a Chinese mathematical word and reads as boundary layer; 上界序数 is attested for the ordinal bound of a family."
+
+[[term]]
+category = "Set theory"
+en = "definable subset"
+zh = "可定义子集"
+ja = "定義可能部分集合"
+notes = "the Def operator's output; V.Definability"
+
+[[term]]
+category = "Set theory"
+en = "birth stage"
+zh = "诞生阶段"
+ja = "誕生段階"
+notes = "L.Choice.Step: the ordinal a constructible set is carved over, one below the least stage containing it; owner delegated the rendering 2026-07-30. zh 阶段 / ja 段階 follow the prose's existing rendering of stage, against 階層 which is reserved for hierarchy"
+
+[[term]]
+category = "Set theory"
+en = "end extension"
+zh = "尾节扩张"
+ja = "端拡大"
+avoid = ["zh:末端扩张"]
+notes = "Owner ruling 2026-08-05. 尾节扩张 is the rendering of this project's own school (郝兆宽 et al., 递归论); 末端扩张 has no model-theoretic attestation."
+
+[[term]]
+category = "Set theory"
+en = "layer"
+zh = "层"
+ja = "層"
+notes = "a stage of the L tower; isLayer"
+
+[[term]]
+category = "Other"
+en = "frontier"
+zh = "前沿"
+ja = "フロンティア"
+notes = "the L.Frontier debt registry; reader-facing name for the root-first device"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Diaconescu's theorem"
+zh = "Diaconescu 定理"
+ja = "ディアコネスクの定理"
+notes = "choice implies excluded middle (Goodman-Myhill form); zh keeps the surname in Latin, matching the book's practice for untransliterated names; choice→lem in Base.Choice"
+
+[[term]]
+category = "Type theory"
+en = "set quotient"
+zh = "集合商"
+ja = "集合商"
+notes = "the SetQuotients HIT; quotient by a relation = 按关系取商"
+
+[[term]]
+category = "Type theory"
+en = "impredicativity"
+zh = "非直谓性"
+ja = "非可述性"
+notes = "the Impredicativity packing (Resizing + HPropSmallness); impredicative = 非直谓 / 非可述"
+
+[[term]]
+category = "Logic and philosophy"
+en = "relabelling"
+zh = "常量改名"
+ja = "定数の改名"
+avoid = ["zh:常量变换"]
+notes = "Owner ruling 2026-08-05. No literature either way; paired with renaming by analogy so the 2026-07-18 pairing stays visible."
+
+# ---- Added 2026-08-05 by owner ruling on the terminology dossier ----
+# Dossier with sources, candidates and the explicit guessing list:
+# dev/literature/terms-2026-08.md
+
+[[term]]
+category = "Logic"
+en = "face"
+zh = "面孔"
+ja = "顔"
+notes = "The side an object presents to a consumer, as in the satisfaction face of Def. Metaphor: no Chinese or Japanese source found (terms-2026-08 section 1), adopted on use in seven sites. 接口 collides with interface, 面 alone with a polytope's face."
+
+[[term]]
+category = "Set theory"
+en = "initial segment"
+zh = "初始段"
+ja = "始切片"
+avoid = ["zh:初段"]
+notes = "Established: 数学辞海 vol. 1 p. 624; the Chinese translation of Natanson's real-analysis text. 初段 is REJECTED: it was the drift minority here and it is the Go rank."
+
+[[term]]
+category = "Type theory"
+en = "presentation"
+zh = "呈现"
+ja = "提示"
+notes = "A set given as an index type plus an indexing map, the HIT sense. No source for that sense (terms-2026-08 section 3); 表示 is rejected because the glossary already spends it on representation."
+
+[[term]]
+category = "Logic"
+en = "crossing"
+zh = "跨越"
+ja = "越境"
+notes = "Moving a statement between an ambient reading and an inner one, as in Delta-0 is a crossing tax. Metaphor, no source; 横断 collides with transversal."
+
+[[term]]
+category = "Logic"
+en = "decode"
+zh = "解码"
+ja = "復号"
+notes = "解码 and 译码 are both attested and the prose does not drift; 解码 is fixed here to keep it that way."
+
+[[term]]
+category = "Set theory"
+en = "order type"
+zh = "序型"
+ja = "順序型"
+avoid = ["zh:序类型"]
+notes = "Established: 数学辞海 vol. 1 p. 624; 点集拓扑学. 序类型 is the encyclopedic long form, not wrong but not ours."
+
+[[term]]
+category = "Set theory"
+en = "canonical well-ordering"
+zh = "典范良序"
+ja = "正準整列順序"
+notes = "Composes the glossary's own 典范 and 良序; attested in 代数学方法 and university set-theory notes."
+
+[[term]]
+category = "Set theory"
+en = "square law"
+zh = "平方律"
+ja = "平方律"
+avoid = ["zh:平方定理"]
+notes = "The cardinal identity that an infinite ordinal's product is equinumerous with it. No Chinese source names it; the fact is stated as 无穷基数的平方等于自身. Cited here as a bound rather than proved, so 律 rather than 定理. Distinct by one character from 平方配对, deliberately."
+
+[[term]]
+category = "Set theory"
+en = "equinumerous"
+zh = "等势"
+ja = "対等"
+avoid = ["zh:等数"]
+notes = "Established: 数学辞海 vol. 4. 等数 is REJECTED: it was live drift in the cardinal predicates chapter and has no source."
+
+[[term]]
+category = "Set theory"
+en = "initial ordinal"
+zh = "初始序数"
+ja = "始順序数"
+notes = "Established: 数学辞海 vol. 1 p. 626."
+
+[[term]]
+category = "Logic"
+en = "count"
+zh = "计数"
+ja = "数え上げ"
+notes = "Ordinary established mathematical vocabulary (组合计数, 计数原理), used here as the subject of how many formulas there are."
+
+[[term]]
+category = "Logic"
+en = "shape count"
+zh = "形状计数"
+ja = "形状の数え上げ"
+notes = "The count of constant-free formulas per arity. No source; compounds 形状 and 计数."
+
+[[term]]
+category = "Logic"
+en = "square pairing"
+zh = "平方配对"
+ja = "平方対関数"
+notes = "The pairing function on the naturals used by the shape count. No source for the scheme; 配对函数 is the established generic. One character from 平方律, and the two must stay visibly distinct: one is a function, the other a cardinal law."
+
+[[term]]
+category = "Logic"
+en = "pair atom"
+zh = "对原子"
+ja = "対原子"
+avoid = ["zh:对子原子"]
+notes = "The singleton, pair and ordered-pair atoms of a formula over a carrier. 原子公式 is established; 对原子 is unanimous in the chapters. 对子原子 is REJECTED: it appeared only in the catalog, written by the orchestrator."
+
+[[term]]
+category = "Logic"
+en = "frame"
+zh = "框架"
+ja = "フレーム"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. A reusable formula shape in the internal language. ja per the Nagoya TPP2024 slides, not ja Wikipedia (T153 corrected the citation)."
+
+[[term]]
+category = "Logic"
+en = "disjunction"
+zh = "析取"
+ja = "論理和"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. Every cited source held, including kotobank."
+
+[[term]]
+category = "Set theory"
+en = "slice"
+zh = "切片"
+ja = "スライス"
+avoid = ["zh:像片"]
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. 像片 means photograph and is REJECTED; it had drifted into Images:460 and StepGraph while 切片 held 15 sites."
+
+[[term]]
+category = "Other"
+en = "landing site"
+zh = "落点"
+ja = "着地点"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. Project vocabulary: where future content will land."
+
+[[term]]
+category = "Logic"
+en = "graph layer"
+zh = "图层"
+ja = "グラフレイヤー"
+avoid = ["ja:グラフ層"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). ja 層 is the sheaf headword and sheaves on graphs are a live object (T153 section 2), so the katakana layer carries the architecture sense. zh keeps 图层 with a modifier at first use per chapter (运算图层 style), because the bare word is lexicalized for image layers."
+
+[[term]]
+category = "Set theory"
+en = "membership formula"
+zh = "隶属公式"
+ja = "帰属論理式"
+avoid = ["ja:所属式"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). ja per the attested 帰属 (ja Wikipedia 元(数学), six instances) plus the ruled formula = 論理式; 所属 is attested nowhere in the cited pages. zh 隶属 rides the standard 隶属函数 pattern of the fuzzy-set literature."
+
+[[term]]
+category = "Logic"
+en = "equality frame"
+zh = "等词框架"
+ja = "等号フレーム"
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). zh 等词 attested by 张清宇 (12 instances, 带等词的语言) and the BUAA syllabus (等词公理), both found by the T153 review after the dossier's sources broke. The division of labour: 等号 names the sign, 等词 the predicate; this frame argues about the predicate."
+
+[[term]]
+category = "Set theory"
+en = "transitive carrier"
+zh = "传递载体"
+ja = "推移的台"
+avoid = ["ja:推移的な台"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). Composition follows the ruled siblings 推移的集合 and 推移的クラス: no な. The compound is pure composition of ruled heads."
+
+[[term]]
+category = "Logic"
+en = "read lemma"
+zh = "读引理"
+ja = "読み補題"
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). A project coinage pair for P-k's read-lemma concept; the literature is silent. zh has 18 lines in 8 files of standing; ja is coined to match and marked as a coinage."
+
+[[term]]
+category = "Other"
+en = "survivor"
+zh = "存活"
+ja = "存続"
+avoid = ["ja:生存ホーム", "ja:生存モジュール"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). Project vocabulary: what remains after a retirement. ja 生存 rejected: 生存ホーム reads as a care facility (T153 section 9); 存続 carries the institutional-continuation sense. Attributive forms: 存続モジュール, 存続する章."
+
+[[term]]
+category = "Other"
+en = "master"
+zh = "主章"
+ja = "原本"
+avoid = ["ja:主章"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). The canonical trilingual source file of a chapter. ja 主章 rejected: it reads as the principal chapter; マスター rejected as IT register. 原本, the document original, matches one-master-per-module with woven copies."
+
+[[term]]
+category = "Other"
+en = "wing"
+zh = "GCH 侧"
+ja = "GCH 側"
+avoid = ["zh:机翼"]
+notes = "Owner-ruled DIRECTLY 2026-08-10, so it did NOT go through DD19's two-agent pipeline; the pipeline settles terms nobody has ruled. Project vocabulary: the GCH half of the double-trophy endpoint. THE ENGLISH IS UNCHANGED and stays wing, by the same ruling: about 160 occurrences across dev/ and scripts/ stand, and the ledger key gch_wing is NOT renamed. So this entry records a RENDERING, not a rename. zh 机翼 is banned and the ban is safe: the word had never entered the repo, so it can never fire on an innocent use. ja tentative, formed on the zh by the same 側 reading, pending a literature check."

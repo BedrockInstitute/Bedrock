@@ -50,3 +50,17 @@ jobs:
         run: |
           set -euo pipefail
           make typecheck
+
+      # The gates. Python only, so they cost seconds and run after the
+      # typecheck rather than gating it. check-glossary needs tomllib.
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          make lint PY=python
+          make test PY=python

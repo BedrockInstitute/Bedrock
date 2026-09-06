@@ -1,0 +1,22 @@
+#!/bin/sh
+# Bedrock pre-commit. Four gates plus the i18n marker check.
+#
+# The POD program's own gates (probes, closure, rule ids, spec surface) retired
+# with it on 2026-09-04 and are NOT here.
+#
+# check-fences is the one that exists because of a measured failure: on
+# 2026-08-11 two theorems were reported machine-checked while sitting outside a
+# code fence, carrying four real defects. Agda reads only fenced code, so every
+# other gate passed.
+#
+# Bypass in an emergency with: git commit --no-verify
+
+set -e
+PY=python3
+[ -x .venv/bin/python ] && PY=.venv/bin/python
+
+$PY scripts/gate/lint-prose.py --staged
+$PY scripts/site/weave-i18n.py --check
+$PY scripts/gate/lint-agda.py --staged
+$PY scripts/gate/check-glossary.py
+$PY scripts/gate/check-fences.py
