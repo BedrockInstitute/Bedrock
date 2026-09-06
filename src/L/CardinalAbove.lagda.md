@@ -87,7 +87,7 @@ SECTION 1.  THE OBLIGATION, at `[LJ-1.526]`'s own binding
 
 The type, named apart so that the reductions can quantify over it.
 THE OBLIGATION ITSELF IS THE TERM `CardAboveL` AT THE FOOT OF THIS
-FILE, and its type is written out there in the brief's own words.
+FILE, and this is its type.
 
 ```agda
 CardAboveLᵀ : Type (ℓ-suc ℓ)
@@ -267,6 +267,60 @@ noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
     ordL θ oθ , oθ , ambient→internal (ordL θ oθ) cθ , κ∈θ
 ```
 
+SECTION 5.5.  THE MOSTOWSKI COLLAPSE OF A TRANSITIVE WELL-FOUNDED
+RELATION.  One recursion, two sites: `Hartogs.Col` below and
+src/L/GCH/OrderType.lagda.md's `Collapse.Col`.
+
+```agda
+module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
+                 (wf : WellFounded _≺_)
+                 (≺-trans : {x y z : A} → x ≺ y → y ≺ z → x ≺ z) where
+
+  module W = WFI wf using ( induction; induction-compute )
+
+  colStep : (p : A) → (∀ r → r ≺ p → SV.S) → SV.S
+  colStep p rec = sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))
+
+  opaque
+    col : A → SV.S
+    col = W.induction {P = λ _ → SV.S} colStep
+
+    col-eq : (p : A) → col p ≡ sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → col (fst z))
+    col-eq = W.induction-compute colStep
+
+  col-in : (p r : A) → r ≺ p → ⟨ col r ∈ˢ col p ⟩
+  col-in p r rp =
+    subst (λ v → ⟨ col r ∈ˢ v ⟩) (sym (col-eq p)) ∣ (r , rp) , refl ∣₁
+
+  col-out : (p : A) (b : SV.S) → ⟨ b ∈ˢ col p ⟩
+          → ∥ Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ b)) ∥₁
+  col-out p b b∈ =
+    PT.map (λ z → fst (fst z) , snd (fst z) , snd z)
+      (subst (λ v → ⟨ b ∈ˢ v ⟩) (col-eq p) b∈)
+
+  col-ord : (p : A) → IsOrd (col p)
+  col-ord = W.induction {P = λ p → IsOrd (col p)} ih
+    where
+    ih : (p : A) → (∀ r → r ≺ p → IsOrd (col r)) → IsOrd (col p)
+    ih p rec = tr , mem
+      where
+      mem : (x : SV.S) → ⟨ x ∈ˢ col p ⟩ → isTransV x
+      mem x x∈ = PT.rec (isPropIsTransV x)
+        (λ z → subst isTransV (snd (snd z)) (rec (fst z) (fst (snd z)) .fst))
+        (col-out p x x∈)
+      tr : isTransV (col p)
+      tr {x} {y} y∈x x∈col = PT.rec (snd (y ∈ˢ col p)) outer (col-out p x x∈col)
+        where
+        outer : Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ˢ col p ⟩
+        outer (r , rp , e) =
+          PT.rec (snd (y ∈ˢ col p)) inner
+            (col-out r y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
+          where
+          inner : Σ[ s ∈ A ] ((s ≺ r) × (col s ≡ y)) → ⟨ y ∈ˢ col p ⟩
+          inner (s , sr , e2) =
+            subst (λ v → ⟨ v ∈ˢ col p ⟩) e2 (col-in p s (≺-trans sr rp))
+```
+
 SECTION 6.  `NoInjOrd`, BUILT.  THE HARTOGS ORDINAL WITHOUT ORDER
 TYPES.
 
@@ -311,59 +365,21 @@ module Hartogs (a : SV.S) where
     R : Rel
     R = fst w
 
-    _≺_ : ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ-zero
-    x ≺ y = Holds R x y
+    -- lifted to `Type ℓ`, the level the shared collapse indexes at
+    _≺_ : ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ
+    x ≺ y = Lift (Holds R x y)
 
     ≺-trans : {x y z : ⟪ a ⟫} → x ≺ y → y ≺ z → x ≺ z
-    ≺-trans = fst (snd w)
+    ≺-trans p q = lift (fst (snd w) (lower p) (lower q))
 
     ≺-wf : WellFounded _≺_
-    ≺-wf = snd (snd w)
-
-    module W = WFI ≺-wf
-
-    step : (p : ⟪ a ⟫) → (∀ r → r ≺ p → SV.S) → SV.S
-    step p rec = sett (Σ[ r ∈ ⟪ a ⟫ ] (r ≺ p)) (λ z → rec (fst z) (snd z))
-
-    opaque
-      col : ⟪ a ⟫ → SV.S
-      col = W.induction {P = λ _ → SV.S} step
-
-      col-eq : (p : ⟪ a ⟫)
-             → col p ≡ sett (Σ[ r ∈ ⟪ a ⟫ ] (r ≺ p)) (λ z → col (fst z))
-      col-eq = W.induction-compute step
-
-    col-in : (p r : ⟪ a ⟫) → r ≺ p → ⟨ col r ∈ˢ col p ⟩
-    col-in p r rp =
-      subst (λ v → ⟨ col r ∈ˢ v ⟩) (sym (col-eq p)) ∣ (r , rp) , refl ∣₁
-
-    col-out : (p : ⟪ a ⟫) (b : SV.S) → ⟨ b ∈ˢ col p ⟩
-            → ∥ Σ[ r ∈ ⟪ a ⟫ ] ((r ≺ p) × (col r ≡ b)) ∥₁
-    col-out p b b∈ =
-      PT.map (λ z → fst (fst z) , snd (fst z) , snd z)
-        (subst (λ v → ⟨ b ∈ˢ v ⟩) (col-eq p) b∈)
-
-    col-ord : (p : ⟪ a ⟫) → IsOrd (col p)
-    col-ord = W.induction {P = λ p → IsOrd (col p)} ih
+    ≺-wf x = go x (snd (snd w) x)
       where
-      ih : (p : ⟪ a ⟫) → (∀ r → r ≺ p → IsOrd (col r)) → IsOrd (col p)
-      ih p rec = tr , mem
-        where
-        mem : (x : SV.S) → ⟨ x ∈ˢ col p ⟩ → isTransV x
-        mem x x∈ = PT.rec (isPropIsTransV x)
-          (λ z → subst isTransV (snd (snd z)) (rec (fst z) (fst (snd z)) .fst))
-          (col-out p x x∈)
-        tr : isTransV (col p)
-        tr {x} {y} y∈x x∈col = PT.rec (snd (y ∈ˢ col p)) outer (col-out p x x∈col)
-          where
-          outer : Σ[ r ∈ ⟪ a ⟫ ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ˢ col p ⟩
-          outer (r , rp , e) =
-            PT.rec (snd (y ∈ˢ col p)) inner
-              (col-out r y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
-            where
-            inner : Σ[ s ∈ ⟪ a ⟫ ] ((s ≺ r) × (col s ≡ y)) → ⟨ y ∈ˢ col p ⟩
-            inner (s , sr , e2) =
-              subst (λ v → ⟨ v ∈ˢ col p ⟩) e2 (col-in p s (≺-trans sr rp))
+      go : (y : ⟪ a ⟫) → Acc (λ u v → Holds R u v) y → Acc _≺_ y
+      go y (acc h) = acc (λ z k → go z (h z (lower k)))
+
+    open Mostowski ⟪ a ⟫ _≺_ ≺-wf ≺-trans public
+      using ( col; col-eq; col-in; col-out; col-ord )
 
     -- The order type, as a bare image.  No union, no successor.
     ot : SV.S
@@ -521,7 +537,7 @@ module Hartogs (a : SV.S) where
     w : WFR
     w = R , R-trans , R-wf
 
-    open Col w using ( col; col-in; col-out; ot; ot-in )
+    open Col w using ( col; col-in; col-out; ot; ot-in; _≺_ )
 
     -- THE ONE INDUCTION.  The collapse of the pullback REPRODUCES the
     -- members of μ.  This is where `[LJ-1.94]` needed the order type
@@ -537,11 +553,11 @@ module Hartogs (a : SV.S) where
       fwd b b∈ = PT.rec (snd (b ∈ₛ ⟪ μ ⟫↪ m)) go
                    (col-out (F m) b (∈∈ₛ {a = b} {b = col (F m)} .snd b∈))
         where
-        go : Σ[ r ∈ ⟪ a ⟫ ] ((Holds R r (F m)) × (col r ≡ b))
+        go : Σ[ r ∈ ⟪ a ⟫ ] ((r ≺ F m) × (col r ≡ b))
            → ⟨ b ∈ₛ ⟪ μ ⟫↪ m ⟩
         go (r , rr , cr) = subst (λ t → ⟨ t ∈ₛ ⟪ μ ⟫↪ m ⟩) (cpr ∙ cr) hh
           where
-          d = R→Pre r (F m) rr
+          d = R→Pre r (F m) (lower rr)
           p = fst d
           q = fst (snd d)
           hh : ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ m ⟩
@@ -572,7 +588,7 @@ module Hartogs (a : SV.S) where
         pre : PreT (F k) (F m)
         pre = (k , refl) , ((m , refl) , k∈m)
         inCol : ⟨ col (F k) ∈ˢ col (F m) ⟩
-        inCol = col-in (F m) (F k) (Pre→R (F k) (F m) pre)
+        inCol = col-in (F m) (F k) (lift (Pre→R (F k) (F m) pre))
         below : ⟪ μ ⟫↪ k SV.∈ᵗ v
         below = subst (λ t → ⟨ ⟪ μ ⟫↪ k ∈ˢ t ⟩) e
                   (∈∈ₛ {a = ⟪ μ ⟫↪ k} {b = ⟪ μ ⟫↪ m} .snd k∈m)
@@ -612,10 +628,6 @@ THE OBLIGATION, AT `[LJ-1.526]`'S OWN TYPE.
 GREEN, NO HOLES, NO POSTULATE, NO CHOICE.
 
 ```agda
-CardAboveL :
-    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
-  → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
-  → ∥ Σ[ θ ∈ SL.S ]
-       (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩) ∥₁
+CardAboveL : CardAboveLᵀ
 CardAboveL = noInjOrd→CardAboveLᵀ noInjOrd
 ```

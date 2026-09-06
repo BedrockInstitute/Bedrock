@@ -27,6 +27,7 @@ open import L.Coding.Model {ℓ}
         ; svAt; svAt-in; domAt; domAt-intro )
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
 open import L.Cardinal {ℓ} lem using ( InjCode )
+open import L.CardinalAbove {ℓ} lem using ( module Mostowski )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Foundations.Prelude using ( subst2 )
@@ -70,8 +71,9 @@ SECTION 1.  THE SETTING, AND THE HOST-LEVEL COLLAPSE.
 
   D is a set of L, R is a set of L of pairs of members of D, and the
   relation "pr x y ∈ R" is well-founded and transitive on the members
-  of D.  `col` is the Mostowski collapse, by well-founded recursion as
-  `Hartogs.Col.col` (src/L/CardinalAbove.lagda.md).
+  of D.  `col` is the Mostowski collapse, taken from `Mostowski`
+  (src/L/CardinalAbove.lagda.md), the one recursion `Hartogs.Col` there
+  also instantiates.
 
 ```agda
 module Collapse (D R : S)
@@ -126,50 +128,10 @@ module Collapse (D R : S)
   module Col (wf : WellFounded _≺_)
              (≺-trans : {a b c : Dom} → a ≺ b → b ≺ c → a ≺ c) where
 
-    module W = WFI wf using ( induction; induction-compute )
-
-    colStep : (p : Dom) → (∀ r → r ≺ p → V ℓ) → V ℓ
-    colStep p rec = sett (Σ[ r ∈ Dom ] (r ≺ p)) (λ z → rec (fst z) (snd z))
-
-    opaque
-      col : Dom → V ℓ
-      col = W.induction {P = λ _ → V ℓ} colStep
-
-      col-eq : (p : Dom)
-             → col p ≡ sett (Σ[ r ∈ Dom ] (r ≺ p)) (λ z → col (fst z))
-      col-eq = W.induction-compute colStep
-
-    col-in : (p r : Dom) → r ≺ p → ⟨ col r ∈ col p ⟩
-    col-in p r rp =
-      subst (λ v → ⟨ col r ∈ v ⟩) (sym (col-eq p)) ∣ (r , rp) , refl ∣₁
-
-    col-out : (p : Dom) (b : V ℓ) → ⟨ b ∈ col p ⟩
-            → ∥ Σ[ r ∈ Dom ] ((r ≺ p) × (col r ≡ b)) ∥₁
-    col-out p b b∈ =
-      PT.map (λ z → fst (fst z) , snd (fst z) , snd z)
-        (subst (λ v → ⟨ b ∈ v ⟩) (col-eq p) b∈)
-
-    col-ord : (p : Dom) → IsOrd (col p)
-    col-ord = W.induction {P = λ p → IsOrd (col p)} ih
-      where
-      ih : (p : Dom) → (∀ r → r ≺ p → IsOrd (col r)) → IsOrd (col p)
-      ih p rec = tr , mem
-        where
-        mem : (x : V ℓ) → ⟨ x ∈ col p ⟩ → isTransV x
-        mem x x∈ = PT.rec (isPropIsTransV x)
-          (λ z → subst isTransV (snd (snd z)) (rec (fst z) (fst (snd z)) .fst))
-          (col-out p x x∈)
-        tr : isTransV (col p)
-        tr {x} {y} y∈x x∈col = PT.rec (snd (y ∈ col p)) outer (col-out p x x∈col)
-          where
-          outer : Σ[ r ∈ Dom ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ col p ⟩
-          outer (r , rp , e) =
-            PT.rec (snd (y ∈ col p)) inner
-              (col-out r y (subst (λ v → ⟨ y ∈ v ⟩) (sym e) y∈x))
-            where
-            inner : Σ[ s ∈ Dom ] ((s ≺ r) × (col s ≡ y)) → ⟨ y ∈ col p ⟩
-            inner (s , sr , e2) =
-              subst (λ v → ⟨ v ∈ col p ⟩) e2 (col-in p s (≺-trans sr rp))
+    -- src/L/CardinalAbove.lagda.md holds the recursion; this site and
+    -- `Hartogs.Col` there are its two instances
+    open Mostowski Dom _≺_ wf ≺-trans public
+      using ( module W; col; col-eq; col-in; col-out; col-ord )
 
     -- An ordinal is constructible: it appears at the stage after itself.
     -- Sealed: a proof of a proposition, and unsealed it is normalised at

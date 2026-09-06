@@ -165,6 +165,153 @@ module TermAlgebra (𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ)))
             (subst ⟨_⟩ (cong (λ vs → (a ∷ vs) ⊨₀ ψ) (vals≡map cs)) pa)
 ```
 
+## Satisfaction along a carrier map
+
+```agda
+-- one twelve-clause recursion, shared by the inclusion of a carrier into
+-- the stage and by the collapse bijection: the non-atomic clauses are the
+-- same in both, so the atoms and the witness principle are parameters
+module SatTransfer (MA MB : S → hProp (ℓ-suc ℓ)) where
+
+  SA : Type (ℓ-suc ℓ)
+  SA = Σ[ x ∈ S ] ⟨ MA x ⟩
+
+  SB : Type (ℓ-suc ℓ)
+  SB = Σ[ x ∈ S ] ⟨ MB x ⟩
+
+  module SemA = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ MA)
+    using ( module At )
+  module SemB = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ MB)
+    using ( module At )
+  open SemA.At SA id renaming ( _⊨_ to _⊨ᴬ_ ; ⟦_⟧ to ⟦_⟧ᴬ )
+  open SemB.At SB id renaming ( _⊨_ to _⊨ᴮ_ ; ⟦_⟧ to ⟦_⟧ᴮ )
+
+  Agree : (SA → SB) → Type (ℓ-suc (ℓ-suc ℓ))
+  Agree g = (n : ℕ) (φ : Formula SA n) (δ : SA ^ n)
+          → (δ ⊨ᴬ φ) ≡ (map g δ ⊨ᴮ mapFo g φ)
+
+  -- every outer witness of an existential is met by an inner one
+  Witness : (SA → SB) → Type (ℓ-suc ℓ)
+  Witness g = (n : ℕ) (φ : Formula SA (suc n)) (δ : SA ^ n)
+            → ⟨ map g δ ⊨ᴮ mapFo g (∃̇ φ) ⟩
+            → ∥ Σ[ q ∈ SA ] ⟨ (g q ∷ map g δ) ⊨ᴮ mapFo g φ ⟩ ∥₁
+
+  module Along (g : SA → SB)
+    (at∈ : (n : ℕ) (t u : Term SA n) (δ : SA ^ n)
+         → (δ ⊨ᴬ (t ∈̇ u)) ≡ (map g δ ⊨ᴮ mapFo g (t ∈̇ u)))
+    (at≐ : (n : ℕ) (t u : Term SA n) (δ : SA ^ n)
+         → (δ ⊨ᴬ (t ≐ u)) ≡ (map g δ ⊨ᴮ mapFo g (t ≐ u)))
+    (wit : Witness g) where
+
+    private
+      renA : {n : ℕ} (t : Term SA n) (x : SA) (δ : SA ^ n)
+           → ⟦ renameTm suc t ⟧ᴬ (x ∷ δ) ≡ ⟦ t ⟧ᴬ δ
+      renA (con c) x δ = refl
+      renA (var i) x δ = refl
+
+      renB : {n : ℕ} (t : Term SB n) (x : SB) (δ : SB ^ n)
+           → ⟦ renameTm suc t ⟧ᴮ (x ∷ δ) ≡ ⟦ t ⟧ᴮ δ
+      renB (con c) x δ = refl
+      renB (var i) x δ = refl
+
+      -- relabelling and weakening commute on terms
+      mapTm-ren : {n : ℕ} (t : Term SA n)
+                → mapTm g (renameTm suc t) ≡ renameTm suc (mapTm g t)
+      mapTm-ren (con c) = refl
+      mapTm-ren (var i) = refl
+
+      renG : {n : ℕ} (t : Term SA n) (x : SB) (δ : SA ^ n)
+           → ⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ) ≡ ⟦ mapTm g t ⟧ᴮ (map g δ)
+      renG t x δ = cong (λ u → ⟦ u ⟧ᴮ (x ∷ map g δ)) (mapTm-ren t)
+                 ∙ renB (mapTm g t) x (map g δ)
+
+      memRen : {n : ℕ} (t : Term SA n) (x : SB) (δ : SA ^ n)
+             → (fst x ∈ˢ fst (⟦ mapTm g (renameTm suc t) ⟧ᴮ (x ∷ map g δ)))
+             ≡ (fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)))
+      memRen t x δ = cong (λ s → fst x ∈ˢ fst s) (renG t x δ)
+
+      -- the side condition of a bounded quantifier, read across the map
+      memPath : {n : ℕ} (t : Term SA n) (q : SA) (δ : SA ^ n)
+              → (fst q ∈ˢ fst (⟦ t ⟧ᴬ δ))
+              ≡ (fst (g q) ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)))
+      memPath {n} t q δ =
+        cong (λ s → fst q ∈ˢ fst s) (sym (renA t q δ))
+        ∙ at∈ (suc n) (var zero) (renameTm suc t) (q ∷ δ)
+        ∙ memRen t (g q) δ
+
+      dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
+      dne P h = Sum.rec (λ p → p)
+        (λ (np : ⟨ P ⟩ → Empty.⊥) → Empty.rec (h np)) (lem P)
+
+    agree : Agree g
+    agree n (t ∈̇ u) δ = at∈ n t u δ
+    agree n (t ≐ u) δ = at≐ n t u δ
+    agree n (φ ∧̇ ψ) δ = cong₂ _⊓_ (agree n φ δ) (agree n ψ δ)
+    agree n (φ ∨̇ ψ) δ = cong₂ _⊔_ (agree n φ δ) (agree n ψ δ)
+    agree n (φ ⇒̇ ψ) δ = cong₂ _⇒_ (agree n φ δ) (agree n ψ δ)
+    agree n (¬̇ φ) δ = cong ¬_ (agree n φ δ)
+    agree n ⊤̇ δ = refl
+    agree n ⊥̇ δ = refl
+    agree n (∃̇ ψ) δ = ⇔toPath fwd bwd
+      where
+      fwd : ⟨ δ ⊨ᴬ (∃̇ ψ) ⟩ → ⟨ map g δ ⊨ᴮ mapFo g (∃̇ ψ) ⟩
+      fwd = PT.rec (snd (map g δ ⊨ᴮ mapFo g (∃̇ ψ)))
+        (λ { (q , hq) → ∣ g q , subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) hq ∣₁ })
+      bwd : ⟨ map g δ ⊨ᴮ mapFo g (∃̇ ψ) ⟩ → ⟨ δ ⊨ᴬ (∃̇ ψ) ⟩
+      bwd h = PT.map (λ { (q , hq) →
+        q , subst ⟨_⟩ (sym (agree (suc n) ψ (q ∷ δ))) hq }) (wit n ψ δ h)
+    agree n (∀̇ ψ) δ = ⇔toPath fwd bwd
+      where
+      fwd : ((q : SA) → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩)
+          → (x : SB) → ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩
+      fwd h x = dne ((x ∷ map g δ) ⊨ᴮ mapFo g ψ) λ nx →
+        PT.rec isProp⊥ (λ { (q , hq) →
+          hq (subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) (h q)) })
+          (wit n (¬̇ ψ) δ ∣ x , nx ∣₁)
+      bwd : ((x : SB) → ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩)
+          → (q : SA) → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩
+      bwd h q = subst ⟨_⟩ (sym (agree (suc n) ψ (q ∷ δ))) (h (g q))
+    agree n (∀̇∈ t ψ) δ = ⇔toPath fwd bwd
+      where
+      mat : Formula SA (suc n)
+      mat = (var zero ∈̇ renameTm suc t) ∧̇ ¬̇ ψ
+      fwd : ((q : SA) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩)
+          → (x : SB) → ⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+          → ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩
+      fwd h x hx =
+        dne ((x ∷ map g δ) ⊨ᴮ mapFo g ψ) λ nx →
+        PT.rec isProp⊥ (λ { (q , hq) →
+          hq .snd (subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ))
+            (h q (subst ⟨_⟩ (sym (memPath t q δ))
+                    (subst ⟨_⟩ (memRen t (g q) δ) (hq .fst))))) })
+          (wit n mat δ ∣ x , (subst ⟨_⟩ (sym (memRen t x δ)) hx , nx) ∣₁)
+      bwd : ((x : SB) → ⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+                   → ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩)
+          → (q : SA) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩
+      bwd h q hq =
+        subst ⟨_⟩ (sym (agree (suc n) ψ (q ∷ δ)))
+          (h (g q) (subst ⟨_⟩ (memPath t q δ) hq))
+    agree n (∃̇∈ t ψ) δ = ⇔toPath fwd bwd
+      where
+      mat : Formula SA (suc n)
+      mat = (var zero ∈̇ renameTm suc t) ∧̇ ψ
+      fwd : ∥ Σ[ q ∈ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+          → ∥ Σ[ x ∈ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+                        × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
+      fwd = PT.map (λ { (q , hq , hψ) →
+        g q , (subst ⟨_⟩ (memPath t q δ) hq ,
+               subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) hψ) })
+      bwd : ∥ Σ[ x ∈ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
+                        × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
+          → ∥ Σ[ q ∈ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
+      bwd h = PT.map (λ { (q , hq) →
+        q , ( subst ⟨_⟩ (sym (memPath t q δ))
+                (subst ⟨_⟩ (memRen t (g q) δ) (hq .fst))
+            , subst ⟨_⟩ (sym (agree (suc n) ψ (q ∷ δ))) (hq .snd)) })
+        (wit n mat δ (PT.map (λ { (x , hx , hψ) →
+          x , (subst ⟨_⟩ (sym (memRen t x δ)) hx , hψ) }) h))
+```
+
 ## Elementarity at a set carrier inside a stage
 
 ```agda
@@ -216,120 +363,15 @@ module AtStage (α : S) (ordα : IsOrd α) where
       tm-agree n (con c) δ = refl
       tm-agree n (var i) δ = sym (cong fst (lookup-inL i δ))
 
-      -- weakening one variable is meaning-preserving at the stage
-      renL : {n : ℕ} (t : Term SL n) (x : SL) (δ : SL ^ n)
-           → AbsL.⟦ renameTm suc t ⟧ᵐ (x ∷ δ) ≡ AbsL.⟦ t ⟧ᵐ δ
-      renL (con c) x δ = refl
-      renL (var i) x δ = refl
-
-      -- relabelling and renaming commute on terms
-      mapTm-rename : {n m : ℕ} (f : SM → SL) (ρ : Fin n → Fin m) (t : Term SM n)
-                   → mapTm f (renameTm ρ t) ≡ renameTm ρ (mapTm f t)
-      mapTm-rename f ρ (con c) = refl
-      mapTm-rename f ρ (var i) = refl
-
-      -- the outer membership of x in t survives the weakening of t
-      mem-ren : {n : ℕ} (t : Term SM n) (x : SL) (δ : SM ^ n)
-              → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
-              → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL (renameTm suc t) ⟧ᵐ (x ∷ map inL δ)) ⟩
-      mem-ren t x δ hx =
-        subst (λ s → ⟨ fst x ∈ˢ s ⟩)
-          (sym (cong fst
-            (cong (λ u → AbsL.⟦ u ⟧ᵐ (x ∷ map inL δ)) (mapTm-rename inL suc t)
-               ∙ renL (mapTm inL t) x (map inL δ))))
-          hx
-
-      -- the criterion's outer witness q reads back into the inner membership
-      mem-inner : {n : ℕ} (t : Term SM n) (q : SM) (δ : SM ^ n)
-                → ⟨ fst q ∈ˢ fst (AbsL.⟦ mapTm inL (renameTm suc t) ⟧ᵐ (inL q ∷ map inL δ)) ⟩
-                → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩
-      mem-inner {n} t q δ hq =
-        subst (λ s → ⟨ fst q ∈ˢ s ⟩) (sym (tm-agree n t δ))
-          (subst (λ s → ⟨ fst q ∈ˢ s ⟩)
-            (cong fst
-              (cong (λ u → AbsL.⟦ u ⟧ᵐ (inL q ∷ map inL δ)) (mapTm-rename inL suc t)
-                 ∙ renL (mapTm inL t) (inL q) (map inL δ)))
-            hq)
-
-      dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
-      dne P h = Sum.rec (λ p → p)
-        (λ (np : ⟨ P ⟩ → Empty.⊥) → Empty.rec (h np)) (lem P)
-
-    elem→TV : Elementary → TarskiVaught
-    elem→TV elem n φ δ h =
-      PT.map (λ { (q , hq) →
-        q , subst ⟨_⟩ (elem (suc n) φ (q ∷ δ)) hq })
-        (subst ⟨_⟩ (sym (elem n (∃̇ φ) δ)) h)
+    -- the stage inclusion is the map; the atoms are congruences of the
+    -- term dictionary, and TarskiVaught is exactly the witness principle
+    module Tr = SatTransfer (λ x → x ∈ˢ M) (λ x → x ∈ˢ Lset α)
 
     TV→elem : TarskiVaught → Elementary
-    TV→elem tv n φ δ = go n φ δ
-      where
-      go : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
-         → (δ ⊨ᵐ φ) ≡ (map inL δ AbsL.⊨ᵐ (mapFo inL φ))
-      go n (t ∈̇ u) δ = cong₂ _∈ˢ_ (tm-agree n t δ) (tm-agree n u δ)
-      go n (t ≐ u) δ = cong₂ _≈ˢ_ (tm-agree n t δ) (tm-agree n u δ)
-      go n (φ ∧̇ ψ) δ = cong₂ _⊓_ (go n φ δ) (go n ψ δ)
-      go n (φ ∨̇ ψ) δ = cong₂ _⊔_ (go n φ δ) (go n ψ δ)
-      go n (φ ⇒̇ ψ) δ = cong₂ _⇒_ (go n φ δ) (go n ψ δ)
-      go n (¬̇ φ) δ = cong ¬_ (go n φ δ)
-      go n ⊤̇ δ = refl
-      go n ⊥̇ δ = refl
-      go n (∃̇ ψ) δ = ⇔toPath fwd bwd
-        where
-        fwd : ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩ → ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩
-        fwd = PT.rec (snd (map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ))))
-          (λ { (q , hq) → ∣ inL q , subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) hq ∣₁ })
-        bwd : ⟨ map inL δ AbsL.⊨ᵐ (mapFo inL (∃̇ ψ)) ⟩ → ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩
-        bwd h = PT.map (λ { (q , hq) → q , subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) hq })
-          (tv n ψ δ h)
-      go n (∀̇ ψ) δ = ⇔toPath fwd bwd
-        where
-        fwd : ((q : SM) → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩)
-            → (x : SL) → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩
-        fwd h x = dne ((x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ)) λ nx →
-          PT.rec isProp⊥ (λ { (q , hq) →
-            hq (subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) (h q)) })
-            (tv n (¬̇ ψ) δ ∣ x , nx ∣₁)
-        bwd : ((x : SL) → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
-            → (q : SM) → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
-        bwd h q = subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) (h (inL q))
-      go n (∀̇∈ t ψ) δ = ⇔toPath fwd bwd
-        where
-        mat : Formula SM (suc n)
-        mat = (var zero ∈̇ renameTm suc t) ∧̇ ¬̇ ψ
-        fwd : ((q : SM) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩)
-            → (x : SL) → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
-            → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩
-        fwd h x hx =
-          dne ((x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ)) λ nx →
-          PT.rec isProp⊥ (λ { (q , hq) →
-            hq .snd (subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) (h q (mem-inner t q δ (hq .fst)))) })
-            (tv n mat δ ∣ x , (mem-ren t x δ hx , nx) ∣₁)
-        bwd : ((x : SL) → ⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
-                     → ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩)
-            → (q : SM) → ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ → ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
-        bwd h q hq =
-          subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ)))
-            (h (inL q) (subst (λ s → ⟨ fst q ∈ˢ s ⟩) (tm-agree n t δ) hq))
-      go n (∃̇∈ t ψ) δ = ⇔toPath fwd bwd
-        where
-        mat : Formula SM (suc n)
-        mat = (var zero ∈̇ renameTm suc t) ∧̇ ψ
-        fwd : ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩) ∥₁
-            → ∥ Σ[ x ∈ SL ] (⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
-                          × ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩) ∥₁
-        fwd = PT.map (λ { (q , hq , hψ) →
-          inL q , (subst (λ s → ⟨ fst q ∈ˢ s ⟩) (tm-agree n t δ) hq ,
-                   subst ⟨_⟩ (go (suc n) ψ (q ∷ δ)) hψ) })
-        bwd : ∥ Σ[ x ∈ SL ] (⟨ fst x ∈ˢ fst (AbsL.⟦ mapTm inL t ⟧ᵐ (map inL δ)) ⟩
-                          × ⟨ (x ∷ map inL δ) AbsL.⊨ᵐ (mapFo inL ψ) ⟩) ∥₁
-            → ∥ Σ[ q ∈ SM ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩) ∥₁
-        bwd h = PT.map (λ { (q , hq) →
-          q , (mem-inner t q δ (hq .fst) , subst ⟨_⟩ (sym (go (suc n) ψ (q ∷ δ))) (hq .snd)) })
-          (tv n mat δ (PT.map (λ { (x , hx , hψ) → x , (mem-ren t x δ hx , hψ) }) h))
-
-    TV-thm : (Elementary → TarskiVaught) × (TarskiVaught → Elementary)
-    TV-thm = elem→TV , TV→elem
+    TV→elem tv = Tr.Along.agree inL
+      (λ n t u δ → cong₂ _∈ˢ_ (tm-agree n t δ) (tm-agree n u δ))
+      (λ n t u δ → cong₂ _≈ˢ_ (tm-agree n t δ) (tm-agree n u δ))
+      tv
 ```
 
 ## The definable hull
@@ -469,6 +511,8 @@ module IsoInv (M : S) (PM : S)
   surj' (z , z∈) = PT.map (λ { (y , y∈ , e) →
     (y , y∈) , Σ≡Prop (λ w → (w ∈ˢ PM) .snd) e }) (surj z z∈)
 
+  module Tr = SatTransfer (λ x → x ∈ˢ M) (λ x → x ∈ˢ PM)
+
   private
     lookup-g : {n : ℕ} (i : Fin n) (δ : SM ^ n)
              → p (fst (lookup i δ)) ≡ fst (lookup i (map g δ))
@@ -480,131 +524,51 @@ module IsoInv (M : S) (PM : S)
     tm-agree (con m) δ = refl
     tm-agree (var i) δ = lookup-g i δ
 
-  mutual
-    iso-inv : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
-            → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩
-    iso-inv n (t ∈̇ u) δ h =
-      subst (λ z → ⟨ fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) ∈ˢ z ⟩)
-            (tm-agree u δ)
+    -- the atoms of the collapse: forward by the order isomorphism,
+    -- backward by its inverse and injectivity
+    at∈ : (n : ℕ) (t u : Term SM n) (δ : SM ^ n)
+        → (δ ⊨ᵐ (t ∈̇ u)) ≡ (map g δ ⊨ᵖᵐ mapFo g (t ∈̇ u))
+    at∈ n t u δ = ⇔toPath
+      (λ h → subst (λ z → ⟨ fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) ∈ˢ z ⟩) (tm-agree u δ)
         (subst (λ z → ⟨ z ∈ˢ p (fst (⟦ u ⟧ᵐ δ)) ⟩) (tm-agree t δ)
           (iso-fwd (fst (⟦ u ⟧ᵐ δ)) (fst (⟦ t ⟧ᵐ δ)) (snd (⟦ u ⟧ᵐ δ))
-            (snd (⟦ t ⟧ᵐ δ)) h))
-    iso-inv n (t ≐ u) δ h =
-      subst (λ z → z ≡ fst (⟦ mapTm g u ⟧ᵖᵐ (map g δ))) (tm-agree t δ)
-        (subst (λ z → p (fst (⟦ t ⟧ᵐ δ)) ≡ z) (tm-agree u δ) (cong p h))
-    iso-inv n (φ ∧̇ ψ) δ h = iso-inv n φ δ (h .fst) , iso-inv n ψ δ (h .snd)
-    iso-inv n (φ ∨̇ ψ) δ h =
-      PT.map (λ { (inl hφ) → inl (iso-inv n φ δ hφ)
-                ; (inr hψ) → inr (iso-inv n ψ δ hψ) }) h
-    iso-inv n (φ ⇒̇ ψ) δ h h' =
-      iso-inv n ψ δ (h (iso-inv-bwd n φ δ h'))
-    iso-inv n (¬̇ φ) δ h h' = h (iso-inv-bwd n φ δ h')
-    iso-inv n ⊤̇ δ _ = tt*
-    iso-inv n ⊥̇ δ ()
-    iso-inv n (∃̇ ψ) δ h =
-      PT.rec (snd (map g δ ⊨ᵖᵐ mapFo g (∃̇ ψ))) go h
-      where
-      go : Σ[ q ∈ SM ] ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
-         → ⟨ map g δ ⊨ᵖᵐ mapFo g (∃̇ ψ) ⟩
-      go (q , hq) = ∣ g q , iso-inv (suc n) ψ (q ∷ δ) hq ∣₁
-    iso-inv n (∀̇ ψ) δ h =
-      λ p' → PT.rec (snd ((p' ∷ map g δ) ⊨ᵖᵐ mapFo g ψ))
-        (λ { (q , gq≡p) →
-          subst (λ e → ⟨ e ⊨ᵖᵐ mapFo g ψ ⟩) (cong (λ z → z ∷ map g δ) gq≡p)
-            (iso-inv (suc n) ψ (q ∷ δ) (h q)) })
-        (surj' p')
-    iso-inv n (∀̇∈ t ψ) δ h =
-      λ p' p∈t → PT.rec (snd ((p' ∷ map g δ) ⊨ᵖᵐ mapFo g ψ))
-        (λ { (q , gq≡p) →
-          let p∈gx : ⟨ fst p' ∈ˢ p (fst (⟦ t ⟧ᵐ δ)) ⟩
-              p∈gx = subst (λ z → ⟨ fst p' ∈ˢ z ⟩) (sym (tm-agree t δ)) p∈t
-              p∈gx' : ⟨ fst (g q) ∈ˢ p (fst (⟦ t ⟧ᵐ δ)) ⟩
-              p∈gx' = subst (λ z → ⟨ z ∈ˢ p (fst (⟦ t ⟧ᵐ δ)) ⟩)
-                        (sym (cong fst gq≡p)) p∈gx
-              q∈t : ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩
-              q∈t = iso-bwd (fst (⟦ t ⟧ᵐ δ)) (fst q)
-                      (snd (⟦ t ⟧ᵐ δ)) (snd q) p∈gx'
-              hψ : ⟨ (g q ∷ map g δ) ⊨ᵖᵐ mapFo g ψ ⟩
-              hψ = iso-inv (suc n) ψ (q ∷ δ) (h q q∈t)
-          in subst (λ e → ⟨ e ⊨ᵖᵐ mapFo g ψ ⟩)
-               (cong (λ z → z ∷ map g δ) gq≡p) hψ })
-        (surj' p')
-    iso-inv n (∃̇∈ t ψ) δ h =
-      PT.map (λ { (q , q∈t , hψ) →
-        g q ,
-        ( subst (λ z → ⟨ p (fst q) ∈ˢ z ⟩) (tm-agree t δ)
-            (iso-fwd (fst (⟦ t ⟧ᵐ δ)) (fst q) (snd (⟦ t ⟧ᵐ δ)) (snd q) q∈t)
-        , iso-inv (suc n) ψ (q ∷ δ) hψ ) }) h
-
-    iso-inv-bwd : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
-                → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩ → ⟨ δ ⊨ᵐ φ ⟩
-    iso-inv-bwd n (t ∈̇ u) δ h =
-      iso-bwd (fst (⟦ u ⟧ᵐ δ)) (fst (⟦ t ⟧ᵐ δ)) (snd (⟦ u ⟧ᵐ δ))
+            (snd (⟦ t ⟧ᵐ δ)) h)))
+      (λ h → iso-bwd (fst (⟦ u ⟧ᵐ δ)) (fst (⟦ t ⟧ᵐ δ)) (snd (⟦ u ⟧ᵐ δ))
         (snd (⟦ t ⟧ᵐ δ))
         (subst (λ z → ⟨ p (fst (⟦ t ⟧ᵐ δ)) ∈ˢ z ⟩) (sym (tm-agree u δ))
           (subst (λ z → ⟨ z ∈ˢ fst (⟦ mapTm g u ⟧ᵖᵐ (map g δ)) ⟩)
-            (sym (tm-agree t δ)) h))
-    iso-inv-bwd n (t ≐ u) δ h =
-      p-inj (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ)) (snd (⟦ t ⟧ᵐ δ))
+            (sym (tm-agree t δ)) h)))
+
+    at≐ : (n : ℕ) (t u : Term SM n) (δ : SM ^ n)
+        → (δ ⊨ᵐ (t ≐ u)) ≡ (map g δ ⊨ᵖᵐ mapFo g (t ≐ u))
+    at≐ n t u δ = ⇔toPath
+      (λ h → subst (λ z → z ≡ fst (⟦ mapTm g u ⟧ᵖᵐ (map g δ))) (tm-agree t δ)
+        (subst (λ z → p (fst (⟦ t ⟧ᵐ δ)) ≡ z) (tm-agree u δ) (cong p h)))
+      (λ h → p-inj (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ)) (snd (⟦ t ⟧ᵐ δ))
         (snd (⟦ u ⟧ᵐ δ))
         (subst (λ z → z ≡ p (fst (⟦ u ⟧ᵐ δ))) (sym (tm-agree t δ))
           (subst (λ z → fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) ≡ z)
-            (sym (tm-agree u δ)) h))
-    iso-inv-bwd n (φ ∧̇ ψ) δ h =
-      iso-inv-bwd n φ δ (h .fst) , iso-inv-bwd n ψ δ (h .snd)
-    iso-inv-bwd n (φ ∨̇ ψ) δ h =
-      PT.map (λ { (inl hφ) → inl (iso-inv-bwd n φ δ hφ)
-                ; (inr hψ) → inr (iso-inv-bwd n ψ δ hψ) }) h
-    iso-inv-bwd n (φ ⇒̇ ψ) δ h h' =
-      iso-inv-bwd n ψ δ (h (iso-inv n φ δ h'))
-    iso-inv-bwd n (¬̇ φ) δ h h' = h (iso-inv n φ δ h')
-    iso-inv-bwd n ⊤̇ δ _ = tt*
-    iso-inv-bwd n ⊥̇ δ ()
-    iso-inv-bwd n (∃̇ ψ) δ h =
-      PT.rec (snd (δ ⊨ᵐ (∃̇ ψ))) go h
-      where
-      go : Σ[ p' ∈ SPM ] ⟨ (p' ∷ map g δ) ⊨ᵖᵐ mapFo g ψ ⟩
-         → ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩
-      go (p' , hp) = PT.rec (snd (δ ⊨ᵐ (∃̇ ψ))) go₂ (surj' p')
-        where
-        go₂ : Σ[ q ∈ SM ] (g q ≡ p') → ⟨ δ ⊨ᵐ (∃̇ ψ) ⟩
-        go₂ (q , gq≡p) =
-          ∣ q , iso-inv-bwd (suc n) ψ (q ∷ δ)
-                (subst (λ e → ⟨ e ⊨ᵖᵐ mapFo g ψ ⟩)
-                  (sym (cong (λ z → z ∷ map g δ) gq≡p)) hp) ∣₁
-    iso-inv-bwd n (∀̇ ψ) δ h =
-      λ q → iso-inv-bwd (suc n) ψ (q ∷ δ) (h (g q))
-    iso-inv-bwd n (∀̇∈ t ψ) δ h =
-      λ q q∈t →
-        iso-inv-bwd (suc n) ψ (q ∷ δ)
-          (h (g q)
-            (subst (λ z → ⟨ p (fst q) ∈ˢ z ⟩) (tm-agree t δ)
-              (iso-fwd (fst (⟦ t ⟧ᵐ δ)) (fst q)
-                (snd (⟦ t ⟧ᵐ δ)) (snd q) q∈t)))
-    iso-inv-bwd n (∃̇∈ t ψ) δ h =
-      PT.rec (snd (δ ⊨ᵐ (∃̇∈ t ψ))) go h
-      where
-      go : Σ[ p' ∈ SPM ]
-             (⟨ fst p' ∈ˢ fst (⟦ mapTm g t ⟧ᵖᵐ (map g δ)) ⟩
-            × ⟨ (p' ∷ map g δ) ⊨ᵖᵐ mapFo g ψ ⟩)
-         → ⟨ δ ⊨ᵐ (∃̇∈ t ψ) ⟩
-      go (p' , p∈t , hp) = PT.rec (snd (δ ⊨ᵐ (∃̇∈ t ψ))) go₂ (surj' p')
-        where
-        go₂ : Σ[ q ∈ SM ] (g q ≡ p') → ⟨ δ ⊨ᵐ (∃̇∈ t ψ) ⟩
-        go₂ (q , gq≡p) =
-          let p∈gx : ⟨ fst p' ∈ˢ p (fst (⟦ t ⟧ᵐ δ)) ⟩
-              p∈gx = subst (λ z → ⟨ fst p' ∈ˢ z ⟩) (sym (tm-agree t δ)) p∈t
-              p∈gx' : ⟨ fst (g q) ∈ˢ p (fst (⟦ t ⟧ᵐ δ)) ⟩
-              p∈gx' = subst (λ z → ⟨ z ∈ˢ p (fst (⟦ t ⟧ᵐ δ)) ⟩)
-                        (sym (cong fst gq≡p)) p∈gx
-              q∈t : ⟨ fst q ∈ˢ fst (⟦ t ⟧ᵐ δ) ⟩
-              q∈t = iso-bwd (fst (⟦ t ⟧ᵐ δ)) (fst q)
-                      (snd (⟦ t ⟧ᵐ δ)) (snd q) p∈gx'
-              hψ : ⟨ (q ∷ δ) ⊨ᵐ ψ ⟩
-              hψ = iso-inv-bwd (suc n) ψ (q ∷ δ)
-                      (subst (λ e → ⟨ e ⊨ᵖᵐ mapFo g ψ ⟩)
-                        (sym (cong (λ z → z ∷ map g δ) gq≡p)) hp)
-          in ∣ q , q∈t , hψ ∣₁
+            (sym (tm-agree u δ)) h)))
+
+    -- surjectivity supplies the witness principle
+    wit : Tr.Witness g
+    wit n ψ δ h = PT.rec squash₁
+      (λ { (p' , hp) → PT.map
+        (λ { (q , gq≡p) →
+          q , subst (λ z → ⟨ (z ∷ map g δ) ⊨ᵖᵐ mapFo g ψ ⟩) (sym gq≡p) hp })
+        (surj' p') }) h
+
+  agree : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+        → (δ ⊨ᵐ φ) ≡ (map g δ ⊨ᵖᵐ mapFo g φ)
+  agree = Tr.Along.agree g at∈ at≐ wit
+
+  iso-inv : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+          → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩
+  iso-inv n φ δ = subst ⟨_⟩ (agree n φ δ)
+
+  iso-inv-bwd : (n : ℕ) (φ : Formula SM n) (δ : SM ^ n)
+              → ⟨ map g δ ⊨ᵖᵐ mapFo g φ ⟩ → ⟨ δ ⊨ᵐ φ ⟩
+  iso-inv-bwd n φ δ = subst ⟨_⟩ (sym (agree n φ δ))
 ```
 
 The collapse instance: M = the carrier X, PM = the collapse image piX.
@@ -649,7 +613,7 @@ WALL 2, PLACED ([LJ-1.53] probe A).  The parameter-to-code
 relabelling inside TV/ElemDown.  The generic close operation that
 replaces the top parameters by their codes as constants, its
 satisfaction adequacy, and the TarskiVaught instance at every arity
-assembled from hull-closed through the two halves.  AtM.TV-thm
+assembled from hull-closed through the two halves.  AtM.TV→elem
 turns the instance into Elementary, hence ElemDown.
 
 The generic close operation (syntax): a formula of arity d + n has
@@ -834,7 +798,7 @@ module HullElemDown (α : S) (ordα : IsOrd α)
     using ( module T; Hull⊆L; hull-closed; hull-member; val-in-Hull )
   M : S
   M = H.T.Hull
-  module A = ASt.AtM M H.Hull⊆L using ( Elementary; SM; module SemM; TV-thm; inL )
+  module A = ASt.AtM M H.Hull⊆L using ( Elementary; SM; module SemM; TV→elem; inL )
   module Mse = A.SemM.At A.SM id using ( _⊨_ )
 
   module Cl = CloseSyntax using ( close; mapFo-close )
@@ -943,7 +907,7 @@ module HullElemDown (α : S) (ordα : IsOrd α)
                        hsat
 
   elem : A.Elementary
-  elem = A.TV-thm .snd tv
+  elem = A.TV→elem tv
 
 ```
 
