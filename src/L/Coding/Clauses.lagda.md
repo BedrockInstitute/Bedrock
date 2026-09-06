@@ -838,25 +838,72 @@ THE TAG SLOTS, as one function from the twelve tags.  f k names the
 tag k; `Tags γ N` says the slots hold the numerals.
 
 ```agda
-f0 f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 : Fin 12
-f0 = zero
-f1 = suc (zero)
-f2 = suc (suc (zero))
-f3 = suc (suc (suc (zero)))
-f4 = suc (suc (suc (suc (zero))))
-f5 = suc (suc (suc (suc (suc (zero)))))
-f6 = suc (suc (suc (suc (suc (suc (zero))))))
-f7 = suc (suc (suc (suc (suc (suc (suc (zero)))))))
-f8 = suc (suc (suc (suc (suc (suc (suc (suc (zero))))))))
-f9 = suc (suc (suc (suc (suc (suc (suc (suc (suc (zero)))))))))
-f10 = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (zero))))))))))
-f11 = suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (zero)))))))))))
+pattern f0 = zero
+pattern f1 = suc f0
+pattern f2 = suc f1
+pattern f3 = suc f2
+pattern f4 = suc f3
+pattern f5 = suc f4
+pattern f6 = suc f5
+pattern f7 = suc f6
+pattern f8 = suc f7
+pattern f9 = suc f8
+pattern f10 = suc f9
+pattern f11 = suc f10
 
 Tags : ∀ {m} (γ : S ^ m) (N : Fin 12 → Fin m) → Type (ℓ-suc ℓ)
 Tags γ N = (k : Fin 12) → fst (lookup (N k) γ) ≡ # (toℕ k)
 
 shN : ∀ {m} (j : ℕ) → (Fin 12 → Fin m) → Fin 12 → Fin (j + m)
 shN j N k = sh j (N k)
+```
+
+THE CHAIN OVER THE TAGS.  Every tag-indexed chain in this chapter is
+the same fold of a family, right-nested with the last tag as its
+base, and its four readers are the fold's introduction and
+elimination.  Nothing here is tag-specific.
+
+```agda
+bigOr bigAnd : ∀ {m} (n : ℕ) → (Fin (suc n) → Formula S m) → Formula S m
+bigOr 0 φ = φ zero
+bigOr (suc n) φ = φ zero ∨̇ bigOr n (λ k → φ (suc k))
+bigAnd 0 φ = φ zero
+bigAnd (suc n) φ = φ zero ∧̇ bigAnd n (λ k → φ (suc k))
+
+Δ₀-bigOr : ∀ {m} (n : ℕ) (φ : Fin (suc n) → Formula S m)
+         → ((k : Fin (suc n)) → Δ₀ (φ k)) → Δ₀ (bigOr n φ)
+Δ₀-bigOr 0 φ d = d zero
+Δ₀-bigOr (suc n) φ d = δ-∨ (d zero) (Δ₀-bigOr n (λ k → φ (suc k)) (λ k → d (suc k)))
+
+Δ₀-bigAnd : ∀ {m} (n : ℕ) (φ : Fin (suc n) → Formula S m)
+          → ((k : Fin (suc n)) → Δ₀ (φ k)) → Δ₀ (bigAnd n φ)
+Δ₀-bigAnd 0 φ d = d zero
+Δ₀-bigAnd (suc n) φ d = δ-∧ (d zero) (Δ₀-bigAnd n (λ k → φ (suc k)) (λ k → d (suc k)))
+
+module _ {m : ℕ} (γ : S ^ m) where
+  bigOr-in : (n : ℕ) (φ : Fin (suc n) → Formula S m) (k : Fin (suc n))
+           → ⟨ γ ⊨ φ k ⟩ → ⟨ γ ⊨ bigOr n φ ⟩
+  bigOr-in 0 φ zero h = h
+  bigOr-in (suc n) φ zero h = ∣ inl h ∣₁
+  bigOr-in (suc n) φ (suc k) h = ∣ inr (bigOr-in n (λ j → φ (suc j)) k h) ∣₁
+
+  bigOr-out : (n : ℕ) (φ : Fin (suc n) → Formula S m) → ⟨ γ ⊨ bigOr n φ ⟩
+            → ∥ Σ[ k ∈ Fin (suc n) ] ⟨ γ ⊨ φ k ⟩ ∥₁
+  bigOr-out 0 φ h = ∣ zero , h ∣₁
+  bigOr-out (suc n) φ = PT.rec squash₁
+    (λ { (inl h) → ∣ zero , h ∣₁
+       ; (inr h) → PT.map (λ { (k , hk) → suc k , hk }) (bigOr-out n (λ j → φ (suc j)) h) })
+
+  bigAnd-in : (n : ℕ) (φ : Fin (suc n) → Formula S m)
+            → ((k : Fin (suc n)) → ⟨ γ ⊨ φ k ⟩) → ⟨ γ ⊨ bigAnd n φ ⟩
+  bigAnd-in 0 φ h = h zero
+  bigAnd-in (suc n) φ h = h zero , bigAnd-in n (λ j → φ (suc j)) (λ k → h (suc k))
+
+  bigAnd-out : (n : ℕ) (φ : Fin (suc n) → Formula S m) → ⟨ γ ⊨ bigAnd n φ ⟩
+             → (k : Fin (suc n)) → ⟨ γ ⊨ φ k ⟩
+  bigAnd-out 0 φ h zero = h
+  bigAnd-out (suc n) φ h zero = h .fst
+  bigAnd-out (suc n) φ h (suc k) = bigAnd-out n (λ j → φ (suc j)) (h .snd) k
 ```
 
 THE SHAPE CLAUSE.  At r ∷ s'' ∷ p ∷ s' ∷ F ∷ ar ∷ s ∷ q ∷ c ∷ γ
@@ -933,17 +980,13 @@ module Shape {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) where
   at k = sndEx i0 (sh 7 (N k)) (pay k)
 
   twelve : Formula S (7 + m)
-  twelve =
-      at f0 ∨̇ (at f1 ∨̇ (at f2 ∨̇ (at f3 ∨̇ (at f4 ∨̇ (at f5
-    ∨̇ (at f6 ∨̇ (at f7 ∨̇ (at f8 ∨̇ (at f9 ∨̇ (at f10 ∨̇ at f11))))))))))
+  twelve = bigOr 11 at
 
   Δ₀-at : (k : Fin 12) → Δ₀ (at k)
   Δ₀-at k = Δ₀-sndEx i0 (sh 7 (N k)) (pay k) (Δ₀-pay k)
 
   Δ₀-twelve : Δ₀ twelve
-  Δ₀-twelve =
-    δ-∨ (Δ₀-at f0) (δ-∨ (Δ₀-at f1) (δ-∨ (Δ₀-at f2) (δ-∨ (Δ₀-at f3) (δ-∨ (Δ₀-at f4) (δ-∨ (Δ₀-at f5)
-    (δ-∨ (Δ₀-at f6) (δ-∨ (Δ₀-at f7) (δ-∨ (Δ₀-at f8) (δ-∨ (Δ₀-at f9) (δ-∨ (Δ₀-at f10) (Δ₀-at f11)))))))))))
+  Δ₀-twelve = Δ₀-bigOr 11 at Δ₀-at
 ```
 
 Every member of C is a key: ∀ c ∈ C, ∃ (ar, F) ∈ E, c = (ar, p), p
@@ -1487,42 +1530,11 @@ module TwelveRead {m : ℕ} (C w : Fin m) (N : Fin 12 → Fin m) (δ : S ^ (7 + 
     e' = e ∙ cong (λ a → pr a r) (sym (tg j))
 
   twelve-out : ⟨ δ ⊨ Sh.twelve ⟩ → Key A P
-  twelve-out = PT.rec squash₁ (λ { (inl h) → at-out f0 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f1 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f2 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f3 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f4 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f5 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f6 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f7 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f8 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f9 h ; (inr h) → PT.rec squash₁
-    (λ { (inl h) → at-out f10 h ; (inr h) → at-out f11 h }) h }) h }) h }) h }) h }) h }) h }) h }) h }) h })
-
-  private
-    inj : (j : Fin 12) → ⟨ δ ⊨ Sh.at j ⟩ → ⟨ δ ⊨ Sh.twelve ⟩
-    inj zero h = ∣ inl h ∣₁
-    inj (suc zero) h = ∣ inr ∣ inl h ∣₁ ∣₁
-    inj (suc (suc zero)) h = ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc zero))) h = ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc zero)))) h = ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc (suc zero))))) h = ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc (suc (suc zero)))))) h =
-      ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc (suc (suc (suc zero))))))) h =
-      ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) h =
-      ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) h =
-      ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) h =
-      ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-    inj (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) h =
-      ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  twelve-out h = PT.rec squash₁ (λ { (j , hj) → at-out j hj }) (bigOr-out δ 11 Sh.at h)
 
   twelve-in : Key A P → ⟨ δ ⊨ Sh.twelve ⟩
   twelve-in = PT.rec (snd (δ ⊨ Sh.twelve))
-    (λ { (j , r , (e , pay)) → inj j (at-in j r e pay) })
+    (λ { (j , r , (e , pay)) → bigOr-in δ 11 Sh.at j (at-in j r e pay) })
 ```
 
 THE SHAPE CLAUSE, READ.
@@ -1910,6 +1922,18 @@ module CodesSound {m : ℕ} (C w E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
 
     hsh : (c : S) → ⟨ δ' c ⊨ shapedAt zero (sh 2 w) ⟩
     hsh c = shaped-in zero (sh 2 w) (δ' c) (wit c)
+
+  -- The same eight, read at C in γ rather than at the decode's frame.
+  closed : ⟨ γ ⊨ closedAt C ⟩
+  closed =
+      binSameClosed-in C 2 γ (binAt 2 refl)
+    , ( binSameClosed-in C 3 γ (binAt 3 refl)
+    , ( binSameClosed-in C 4 γ (binAt 4 refl)
+    , ( unSameClosed-in C 5 γ (λ c' ar a c'∈ e → at c' c'∈ 5 (fst ar) (fst a) e)
+    , ( unSuccClosed-in C 8 γ (λ c' ar a c'∈ e → at c' c'∈ 8 (fst ar) (fst a) e)
+    , ( unSuccClosed-in C 9 γ (λ c' ar a c'∈ e → at c' c'∈ 9 (fst ar) (fst a) e)
+    , ( binSuccClosed-in C 10 γ (bqAt 10 refl)
+    ,   binSuccClosed-in C 11 γ (bqAt 11 refl) ))))))
 
   key-out : (c : S) → ⟨ fst c ∈ Cv ⟩
           → ∥ Σ[ k ∈ ℕ ] Σ[ ψ ∈ Formula ⟪ fst W ⟫ k ] (fst c ≡ fst (keyS W ψ)) ∥₁
@@ -2487,15 +2511,10 @@ module Clause {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) where
   Δ₀-onC = δ-∀∈ (Δ₀-bothEx i0 _ δ-∈)
 
   twelve : Formula S m
-  twelve =
-      clause f0 ∧̇ (clause f1 ∧̇ (clause f2 ∧̇ (clause f3 ∧̇ (clause f4 ∧̇ (clause f5
-    ∧̇ (clause f6 ∧̇ (clause f7 ∧̇ (clause f8 ∧̇ (clause f9 ∧̇ (clause f10 ∧̇ clause f11))))))))))
+  twelve = bigAnd 11 clause
 
   Δ₀-twelve : Δ₀ twelve
-  Δ₀-twelve =
-    δ-∧ (Δ₀-clause f0) (δ-∧ (Δ₀-clause f1) (δ-∧ (Δ₀-clause f2) (δ-∧ (Δ₀-clause f3) (δ-∧ (Δ₀-clause f4)
-    (δ-∧ (Δ₀-clause f5) (δ-∧ (Δ₀-clause f6) (δ-∧ (Δ₀-clause f7) (δ-∧ (Δ₀-clause f8) (δ-∧ (Δ₀-clause f9)
-    (δ-∧ (Δ₀-clause f10) (Δ₀-clause f11)))))))))))
+  Δ₀-twelve = Δ₀-bigAnd 11 clause Δ₀-clause
 
 tableAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
 tableAt T w C E N = Clause.total T w C E N ∧̇ (Clause.onC T w C E N ∧̇ Clause.twelve T w C E N)

@@ -36,6 +36,7 @@ open import L.Coding.Clauses {ℓ} lem using
   ; tmIs; extB-out; extB-in; ExtFact; ext-unique
   ; towerAt; tableAt
   ; module Tower; module TowerRead
+  ; bigAnd-in; bigAnd-out
   ; module Frame; module Clause; module Rel; module RelRead
   ; module Alphabet; module Bridge )
 
@@ -155,18 +156,7 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
     h12 = hT .snd .snd
 
     cl : (k : Fin 12) → ⟨ γ ⊨ Cl.clause k ⟩
-    cl zero = h12 .fst
-    cl (suc zero) = h12 .snd .fst
-    cl (suc (suc zero)) = h12 .snd .snd .fst
-    cl (suc (suc (suc zero))) = h12 .snd .snd .snd .fst
-    cl (suc (suc (suc (suc zero)))) = h12 .snd .snd .snd .snd .fst
-    cl (suc (suc (suc (suc (suc zero))))) = h12 .snd .snd .snd .snd .snd .fst
-    cl (suc (suc (suc (suc (suc (suc zero)))))) = h12 .snd .snd .snd .snd .snd .snd .fst
-    cl (suc (suc (suc (suc (suc (suc (suc zero))))))) = h12 .snd .snd .snd .snd .snd .snd .snd .fst
-    cl (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = h12 .snd .snd .snd .snd .snd .snd .snd .snd .fst
-    cl (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = h12 .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-    cl (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = h12 .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst
-    cl (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = h12 .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd
+    cl = bigAnd-out γ 11 Cl.clause h12
 
     -- An entry at the key of a formula, and the frame it opens.
     module Case {n : ℕ} (ψ : Formula Ab n) (k : Fin 12) (rS : S)
@@ -613,40 +603,32 @@ module _ (W : S) where
 
       -- The dispatch on the tag, one clause each.
       fill : (k : Fin 12) (A : Args k) → Fill.Data k A → Fill.Goal k A
-      fill zero A (n , (qa , qF , ψ , (qp , (t , u , (qψ , qr))))) =
-        Fill.AtomFill.go zero A _∈̇_ (var i1 ∈̇ var i0)
+      fill f0 A (n , (qa , qF , ψ , (qp , (t , u , (qψ , qr))))) =
+        Fill.AtomFill.go f0 A _∈̇_ (var i1 ∈̇ var i0)
           (λ t u env wi ti ui N0i N1i qw' qt qu q0 q1 →
             AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _∈̇_ (λ v x → ⟨ fst v ∈ fst x ⟩)
               (var i1 ∈̇ var i0) (λ z v x → (λ h → h) , (λ h → h)) (cond∈-out W (toT t) (toT u)) (cond∈-in W (toT t) (toT u)))
           n t u ψ qa qF qp qψ qr
-      fill (suc zero) A (n , (qa , qF , ψ , (qp , (t , u , (qψ , qr))))) =
-        Fill.AtomFill.go (suc zero) A _≐_ (var i1 ≐ var i0)
+      fill f1 A (n , (qa , qF , ψ , (qp , (t , u , (qψ , qr))))) =
+        Fill.AtomFill.go f1 A _≐_ (var i1 ≐ var i0)
           (λ t u env wi ti ui N0i N1i qw' qt qu q0 q1 →
             AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _≐_ (λ v x → fst v ≡ fst x)
               (var i1 ≐ var i0) (λ z v x → (λ h → h) , (λ h → h)) (cond≐-out W (toT t) (toT u)) (cond≐-in W (toT t) (toT u)))
           n t u ψ qa qF qp qψ qr
-      fill (suc (suc zero)) A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) =
-        Fill.BinFill.go (suc (suc zero)) A _∧̇_ _∧̇_ andBridge n a b ψ qa qF qp qψ qr
-      fill (suc (suc (suc zero))) A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) =
-        Fill.BinFill.go (suc (suc (suc zero))) A _∨̇_ _∨̇_ orBridge n a b ψ qa qF qp qψ qr
-      fill (suc (suc (suc (suc zero)))) A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) =
-        Fill.BinFill.go (suc (suc (suc (suc zero)))) A _⇒̇_ _⇒̇_ impBridge n a b ψ qa qF qp qψ qr
-      fill (suc (suc (suc (suc (suc zero))))) A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) =
-        Fill.negGo (suc (suc (suc (suc (suc zero))))) A n a ψ qa qF qp qψ qr
-      fill (suc (suc (suc (suc (suc (suc zero)))))) A (n , (qa , qF , ψ , (qp , (qψ , qr)))) =
-        Fill.topGo (suc (suc (suc (suc (suc (suc zero)))))) A n ψ qa qF qp qψ
-      fill (suc (suc (suc (suc (suc (suc (suc zero))))))) A (n , (qa , qF , ψ , (qp , (qψ , qr)))) =
-        Fill.botGo (suc (suc (suc (suc (suc (suc (suc zero))))))) A n ψ qa qF qp qψ
-      fill (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) =
-        Fill.QuFill.go (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) A ∃̇∈ ∃̇_ exBridge n a ψ qa qF qp qψ qr
-      fill (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) =
-        Fill.QuFill.go (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) A ∀̇∈ ∀̇_ allBridge n a ψ qa qF qp qψ qr
-      fill (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
-        Fill.BqFill.go (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) A ∀̇∈ _⇒̇_ ∀̇∈ bqAll (λ _ _ _ _ _ → refl)
+      fill f2 A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) = Fill.BinFill.go f2 A _∧̇_ _∧̇_ andBridge n a b ψ qa qF qp qψ qr
+      fill f3 A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) = Fill.BinFill.go f3 A _∨̇_ _∨̇_ orBridge n a b ψ qa qF qp qψ qr
+      fill f4 A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) = Fill.BinFill.go f4 A _⇒̇_ _⇒̇_ impBridge n a b ψ qa qF qp qψ qr
+      fill f5 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.negGo f5 A n a ψ qa qF qp qψ qr
+      fill f6 A (n , (qa , qF , ψ , (qp , (qψ , qr)))) = Fill.topGo f6 A n ψ qa qF qp qψ
+      fill f7 A (n , (qa , qF , ψ , (qp , (qψ , qr)))) = Fill.botGo f7 A n ψ qa qF qp qψ
+      fill f8 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.QuFill.go f8 A ∃̇∈ ∃̇_ exBridge n a ψ qa qF qp qψ qr
+      fill f9 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.QuFill.go f9 A ∀̇∈ ∀̇_ allBridge n a ψ qa qF qp qψ qr
+      fill f10 A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
+        Fill.BqFill.go f10 A ∀̇∈ _⇒̇_ ∀̇∈ bqAll (λ _ _ _ _ _ → refl)
           (λ t a env wi ti yai N0i N1i qw' qt qa' q0 q1 → BqBridge.allInBridge t a env wi ti yai N0i N1i qw' qt qa' q0 q1)
           n t a ψ qa qF qp qψ qr
-      fill (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
-        Fill.BqFill.go (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) A ∃̇∈ _∧̇_ ∃̇∈ bqEx (λ _ _ _ _ _ → refl)
+      fill f11 A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
+        Fill.BqFill.go f11 A ∃̇∈ _∧̇_ ∃̇∈ bqEx (λ _ _ _ _ _ → refl)
           (λ t a env wi ti yai N0i N1i qw' qt qa' q0 q1 → BqBridge.exInBridge t a env wi ti yai N0i N1i qw' qt qa' q0 q1)
           n t a ψ qa qF qp qψ qr
 
@@ -658,8 +640,7 @@ module _ (W : S) where
         in PT.rec (Fill.isPropGoal k A) (fill k A) (Fill.data' k A))
 
       twelve : ⟨ γ ⊨ Cl.twelve ⟩
-      twelve = clause f0 , (clause f1 , (clause f2 , (clause f3 , (clause f4 , (clause f5
-             , (clause f6 , (clause f7 , (clause f8 , (clause f9 , (clause f10 , clause f11))))))))))
+      twelve = bigAnd-in γ 11 Cl.clause clause
 
     holds : ⟨ γ ⊨ tableAt T w C E N ⟩
     holds = total , (onC , twelve)
