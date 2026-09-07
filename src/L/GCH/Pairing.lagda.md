@@ -40,8 +40,8 @@ open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
 open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt; sucAtL; sucAtL-adequate )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
 open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
 open import L.Cardinal {ℓ} lem using ( InjCode; IsCardinalL; _↪_ )
 open import L.GCH {ℓ} lem using ( InjL )
@@ -475,9 +475,8 @@ give the same refutand from `irr≺`/`trans≺`.
 ```
 
 Both components of a pair below `(c, d)` lie in the successor of `max(c, d)`.
-The retired `InitialCore`, now at
-archive/src-2026-09-06/L/Ordinal/SquareLawAmbient.lagda.md, had the same shape
-in `fst∈sucmax` and never exported it.
+The proof is kept local because it combines this chapter's coded-pair order
+with the ordinal maximum and has no independent interface.
 
 ```agda
   private

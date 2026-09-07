@@ -33,11 +33,7 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ}
-  using ( closedAt; binShapeAt; unShapeAt
-        ; bothSameAt; oneSameAt; oneSuccAt; succSndAt
-        ; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in
-        )
+open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in )
 open import L.Coding.InL {ℓ}
   using ( closure; closureL; closure-inv; byTag; Concl; key )
 

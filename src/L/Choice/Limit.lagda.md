@@ -1,8 +1,8 @@
 # The order on the limit stage, as an element of `L`
 
 <!--en-->
-Every chapter of this part has reduced its obligation to a smaller one, and the
-last chapter named what was left: the frame that internalizes the naming
+The Choice construction has reduced its obligation at each stage, and
+`L.Choice.Internal` named what was left: the frame that internalizes the naming
 comparison holds a **relation slot for the codes**, and what that slot wants is
 the order on the members of the limit stage, `limitOrder`{.Agda}, as a set of the
 model. Nothing built it. This chapter does.
@@ -23,7 +23,7 @@ values are sets cannot be named by a term, so what gets described is an
 two keys are then joined by a disjunction, and the model's own separation carves
 the set out of a bound the pairs cannot escape.
 <!--zh-->
-本部的每一章都把自己的债务归约成一笔更小的，而上一章点出了剩下的那笔：内化命名比较的那个框架持有一个**为诸码所设的关系位**，而那一位所要的，是极限阶段诸成员上的序 `limitOrder`{.Agda} 作为模型的一个集合。至今无人造出它。本章造。
+Choice 构造在每个阶段都把自己的债务归约成更小的一笔，而 `L.Choice.Internal`{.Agda} 点出了剩下的那笔：内化命名比较的那个框架持有一个**为诸码所设的关系位**，而那一位所要的，是极限阶段诸成员上的序 `limitOrder`{.Agda} 作为模型的一个集合。本章造出这个集合。
 
 那个序以层号为主键。极限阶段的成员首次现身于某个有穷阶段，最小的这种数码就是它的**层号**，而层号不同的两个成员仅凭层号比较。同层的两个成员按那一层自己的序比较，而后者是在**最先分歧处**的比较：两个集合总在某处相异，而在上一个阶段自己的序之下最小的那个相异点作出裁决，持有它的那个集合排在后面。
 
@@ -51,8 +51,8 @@ open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Recursion {ℓ} lem using ( smallDom )
-open import L.Coding.Model {ℓ}
-  using ( numL; appAt; appAt-adequate; prAtL; prAtL-adequate; prʟ; prʟ-fst )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; prAtL; prAtL-adequate; prʟ; prʟ-fst )
+open import L.Coding.Expressions {ℓ} using ( numL )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
 open import L.Choice.Finite {ℓ} lem

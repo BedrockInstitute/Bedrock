@@ -1,7 +1,7 @@
 # The definable subsets
 
 <!--en-->
-Part 4 is about to open, and its plan fits in one sentence: build, inside the
+The constructible-universe sequence is about to open, and its plan fits in one sentence: build, inside the
 model just assembled, the sub-universe of sets reachable by **first-order
 definability alone**. This chapter forges the single step that the whole
 construction iterates: from a set `A`, form `Def A`, the set of all subsets of
@@ -18,7 +18,7 @@ type. And satisfaction is the **inner** semantics, on the restricted structure
 smallness of the previous chapters bite: every formula evaluates small, so
 `Def A` is a set with no resizing spent at all.
 <!--zh-->
-第四部即将开幕，其计划一句话讲完：在刚装配好的模型内部，构造仅凭**一阶可定义性**所能到达的子宇宙。本章锻造整个构造反复迭代的那一步：从集合 `A` 造出 `Def A`，即结构 `(A, ∈)` 中由带 `A` 中参数的公式可定义的 `A` 的全体子集之集。模型章称之为数学内容的那道「谓词与公式的落差」，在此变成一台机器：`Def A` 收集的恰是 `A` 的幂集的一阶影子。
+可构造宇宙的学习阶段即将开幕，其计划一句话讲完：在刚装配好的模型内部，构造仅凭**一阶可定义性**所能到达的子宇宙。本章锻造整个构造反复迭代的那一步：从集合 `A` 造出 `Def A`，即结构 `(A, ∈)` 中由带 `A` 中参数的公式可定义的 `A` 的全体子集之集。模型章称之为数学内容的那道「谓词与公式的落差」，在此变成一台机器：`Def A` 收集的恰是 `A` 的幂集的一阶影子。
 
 两个设计点撑起本章。公式以 `A` 的小成员类型 `⟪ A ⟫` 为常量域，于是「参数来自 `A`」由类型强制。满足取**内层**语义，在限制结构 `𝒮ᵥ ↾ (∈ A)` 上：量词只跑 `A` 的成员，这正是教科书里「在 `(A, ∈)` **中**可定义」的含义，也让前几章的本质小性咬合发力：任何公式求值皆小，`Def A` 是集合，降层分文未花。
 <!--/-->
@@ -34,7 +34,8 @@ module L.Definability {ℓ : Level} where
 open import FOL.ZFStructure using ( ZFStructure; Transitive )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; ⊤̇ )
 open import FOL.LevyHierarchy using ( Δ₀ )
-open import FOL.Manipulation.Relabelling using ( mapFo; mapΔ₀; ⊨-map )
+open import FOL.Manipulation.Mapping using ( mapFo )
+open import FOL.Manipulation.Relabelling using ( mapΔ₀; ⊨-map )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Smallness {ℓ} using ( module InnerSmall )
@@ -205,9 +206,9 @@ formula "the variable is a member of `a`". Separation's implicit "∈ A" clause 
 what transitivity discharges: members of `a` are already members of `A`, so the
 atom carves out exactly `a`. Hence `A ⊆ Def A`: the step loses no one. Combined
 with the previous section, iterating `Def` can only accumulate, which is the
-shape Part 4's tower needs.
+shape the constructible tower needs.
 <!--zh-->
-当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义，用的正是模型章造交集的那记两符号招式：原子公式「该变量属于 `a`」。分离暗含的「∈ A」条款恰由传递性兑清：`a` 的成员已是 `A` 的成员，于是原子公式刻出的恰好是 `a`。故 `A ⊆ Def A`：这一步不丢任何人。与上一节合观，迭代 `Def` 只进不出，正是第四部那座塔需要的形状。
+当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义，用的正是模型章造交集的那记两符号招式：原子公式「该变量属于 `a`」。分离暗含的「∈ A」条款恰由传递性兑清：`a` 的成员已是 `A` 的成员，于是原子公式刻出的恰好是 `a`。故 `A ⊆ Def A`：这一步不丢任何人。与上一节合观，迭代 `Def` 只进不出，正是可构造塔需要的形状。
 <!--/-->
 
 ```agda
@@ -256,7 +257,7 @@ shape Part 4's tower needs.
 <!--/-->
 
 <!--en-->
-One consequence deserves its own name, because Part 4 leans on it repeatedly.
+One consequence deserves its own name, because the constructible-stage proofs lean on it repeatedly.
 Membership in `defSet φ` is a statement of the *inner* world `(A, ∈)`, and the
 arguments to come are conducted in the ambient hierarchy. For a Δ₀ formula the
 two readings agree, which is the absoluteness theorem; what remains is
@@ -268,7 +269,7 @@ relabelling of the formula, then absoluteness.
 `A` must be transitive for this, which is why the lemma lives in this
 submodule; every stage of the tower is.
 <!--zh-->
-有一条推论值得单独命名，因为第四部要反复倚重它。属于 `defSet φ` 是**内层**世界 `(A, ∈)` 的陈述，而接下来的论证都在环境层级中进行。对 Δ₀ 公式，两种读法一致，那就是绝对性定理；余下的是记账，因为绝对性对类的成员陈述，而 `defSet` 对小索引类型陈述。重标填平这道缝，整个证明是一条三步路径：`defSet` 的规格、公式的重标、然后绝对性。
+有一条推论值得单独命名，因为可构造阶段的证明要反复倚重它。属于 `defSet φ` 是**内层**世界 `(A, ∈)` 的陈述，而接下来的论证都在环境层级中进行。对 Δ₀ 公式，两种读法一致，那就是绝对性定理；余下的是记账，因为绝对性对类的成员陈述，而 `defSet` 对小索引类型陈述。重标填平这道缝，整个证明是一条三步路径：`defSet` 的规格、公式的重标、然后绝对性。
 
 这需要 `A` 传递，故本引理住在这个子模块里；塔的每个阶段都传递。
 <!--/-->

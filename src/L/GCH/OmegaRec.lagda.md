@@ -25,8 +25,8 @@ open import L.Axioms.Numerals {ℓ}
   using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
-open import L.Coding.Model {ℓ}
-  using ( appAt; appAt-adequate; sucAtL; sucAtL-adequate; prʟ; prʟ-fst; numL )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; prʟ; prʟ-fst )
+open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate; numL )
 
 open import Cubical.Data.Nat.Order
   using ( _≤_; ≤-refl; ≤-trans; <-weaken; pred-≤-pred; suc-≤-suc )

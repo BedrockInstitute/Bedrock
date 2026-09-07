@@ -13,7 +13,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
 open import FOL.LevyHierarchy using
   ( Δ₀ )
-open import FOL.Manipulation.Relabelling using ( mapFo; embed )
+open import FOL.Manipulation.Mapping using ( mapFo; embed )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using

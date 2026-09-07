@@ -39,9 +39,10 @@ open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Semantics
-open import FOL.Manipulation.Relabelling using ( mapTm; embed; embed-⊨ )
-open import FOL.Manipulation.Parameters
-  using ( countFo; constantsFo; absFo; ⊨-abs₁ )
+open import FOL.Manipulation.Mapping using ( mapTm; embed )
+open import FOL.Manipulation.Relabelling using ( embed-⊨ )
+open import FOL.Manipulation.Occurrences using ( countFo; constantsFo )
+open import FOL.Manipulation.Parameters using ( absFo; ⊨-abs₁ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; module VCode )
 open import V.Model {ℓ} using ( self∈sucV )

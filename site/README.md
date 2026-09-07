@@ -13,6 +13,12 @@ rule set is [AGENTS.md](../AGENTS.md).
 workflows run them. The one exception is `weave-i18n.py --check`, which `make lint` does run,
 because a broken language marker is a defect in a master rather than in the site.
 
+The dependency map derives its graph from fenced source imports and its learning
+stages from the bilingual Everything catalog. Compact, learning-stage and namespace
+layouts share the same nodes and edges; skeleton mode preserves reachability.
+Landmarks appears at the bottom as a dependency endpoint, although readers meet
+its theorem statements first as a preview.
+
 ## Contents
 
 - `template.html`: the page shell. The renderer fills `%%...%%` slots (content, navigation, the

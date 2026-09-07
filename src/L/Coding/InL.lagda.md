@@ -38,10 +38,11 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
+open import FOL.Manipulation.Mapping using ( mapTm; mapFo )
 open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; IsOrd; Lset )
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; numL )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
+open import L.Coding.Expressions {ℓ} using ( numL )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )

@@ -46,7 +46,8 @@ open import FOL.Syntax
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∃∈ )
 open import FOL.Manipulation.Bounding
   using ( BoundedTm; BoundedFo; BoundedTm-mono; BoundedFo-mono; module Relabel )
-open import FOL.Manipulation.Relabelling using ( mapFo; ⊨-map )
+open import FOL.Manipulation.Mapping using ( mapFo )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
 import FOL.Semantics
 import FOL.Absoluteness
 import FOL.ZFModel

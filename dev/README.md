@@ -6,8 +6,8 @@ is trilingual and lives in [docs/](../docs/). The rule set is [AGENTS.md](../AGE
 
 ## Contents
 
-- `REFACTOR.md`: the current proof-size goal, line-count baseline, batch plan,
-  and comparable typechecking measurements.
+- `TEACHING.md`: the current module architecture and reading-order plan.
+- `REFACTOR.md`: the closed proof-size refactoring run and its measurements.
 - `STYLE-agda.md`: the law for Agda inside the ```agda fences, enforced by
   `scripts/gate/lint-agda.py`. The OPTIONS pragma, no bare `open import`, no unused import,
   nothing that breaks `--safe`, and the symbol table `src/README.md` carries.

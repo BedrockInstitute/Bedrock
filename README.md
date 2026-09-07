@@ -38,7 +38,9 @@ language, the cumulative hierarchy, `L`, and the dual-semantics machinery. And i
 commits from line one to the host-language-maximalist approach described below.
 Getting it right calibrated the infrastructure everything else will stand on.
 
-As of 2026-09-07: **26,308 nonblank Agda code lines · 201.38 s fresh project typecheck (Cubical cache retained) · 1.74 GiB peak RSS.**
+As of 2026-09-07: **26,458 nonblank Agda code lines · 206.23 s fresh project typecheck (Cubical cache retained) · 1.56 GiB peak RSS.**
+
+The 117 chapters form an acyclic dependency graph with 1,572 direct imports, 211 skeleton edges and a longest chain of 33 modules.
 
 ## Direction
 
@@ -105,7 +107,7 @@ The development typechecks against the following pinned toolchain:
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (typecheck, the four linters, their unit tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
+`make check` (typecheck, the four linters, reading-order validation and gate tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
 environment by `make venv` (run once per clone). Every push is typechecked against these versions
 by [GitHub Actions](.github/workflows/typecheck.yml).

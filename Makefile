@@ -2,7 +2,7 @@
 #
 #   make check       the full gate: typecheck, lint, test
 #   make typecheck   typecheck src/Everything.lagda.md
-#   make lint        run the four gates over the whole tree
+#   make lint        run source and reading-order gates over the whole tree
 #   make test        run the gate unit tests
 #   make hooks       install scripts/git-hooks into .git/hooks
 #   make site        render the HTML site into _build/site
@@ -34,7 +34,7 @@ check: typecheck lint test
 typecheck:
 	$(AGDA) $(EVERYTHING)
 
-# The four gates. lint-prose and lint-agda take --staged in the hook; here they
+# Source and reading-order gates. lint-prose and lint-agda take --staged; here they
 # sweep the tree. check-glossary needs tomllib, so it wants the venv's 3.11.
 # --check makes a gate a gate: without it these report and exit 0.
 lint:
@@ -42,6 +42,7 @@ lint:
 	$(PY) scripts/gate/lint-agda.py --check
 	$(PY) scripts/gate/check-glossary.py --check
 	$(PY) scripts/gate/check-fences.py --check
+	$(PY) scripts/gate/check-reading-order.py
 	$(PY) scripts/site/weave-i18n.py --check
 
 test:
@@ -62,7 +63,7 @@ html:
 	$(AGDA) --html --html-highlight=code --html-dir=$(HTML_DIR) $(EVERYTHING)
 
 types:
-	$(PY) scripts/site/extract-types.py --out _build/types.json
+	$(PY) scripts/site/extract-types.py --html-dir $(HTML_DIR) --out _build/types.json
 
 site: html types
 	$(PY) scripts/site/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \

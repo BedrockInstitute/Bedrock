@@ -59,14 +59,14 @@ On the propositional side nothing is lost: when the hierarchy chapter assembles
 the book's instance, it simply takes paths for `≈ˢ`.
 
 And a remark on what is **not** here: no axioms. This record is the bare structure;
-well-foundedness, extensionality, and the rest belong to Part 2, where they become
+well-foundedness, extensionality, and the rest belong to the model chapters, where they become
 the fields of a model. Everything this part builds consumes only the three
 projections above, so any two isomorphic structures are, by the host's structure
 identity principle, simply equal, and the whole development transports across.
 <!--zh-->
 关于字段的两点。结构等词 `≈ˢ` 是**字段**而非硬连到宿主的路径相等，这一点是承重的：在本书的力迫部分，等词与成员将是一对互递归定义的分级关系，是模型的真实内容，任何元层相等都供应不了。命题侧则毫无损失，届时装配本书实例的层级章径直以路径充当 `≈ˢ`。
 
-再说说这里**没有**的东西：公理。这个 record 是裸结构；良基、外延等等属于第二部，在那里它们将成为模型的字段。本部构建的一切只消费上面三个投影，于是任何两个同构的结构，按宿主的结构等同原理，干脆就相等，整个开发沿之搬运。
+再说说这里**没有**的东西：公理。这个 record 是裸结构；良基、外延等等属于模型诸章，在那里它们将成为模型的字段。本部构建的一切只消费上面三个投影，于是任何两个同构的结构，按宿主的结构等同原理，干脆就相等，整个开发沿之搬运。
 <!--/-->
 
 <!--en-->
@@ -106,10 +106,10 @@ module hPropStructure {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
 <!--en-->
 A class `M` over a carrier is **transitive** when members of its members stay in
 it. The absoluteness chapter's theorems consume exactly this hypothesis, and
-Part 4 builds its world out of transitive stages; the name is minted here,
+the constructible-universe development builds its world out of transitive stages; the name is minted here,
 beside the memberships it speaks.
 <!--zh-->
-载体上的类 `M`，若成员的成员仍在其中，称为**传递**。绝对性一章的诸定理消费的恰是这一前提，第四部的世界也由传递的阶段砌成；名字在此铸下，与它谈论的成员关系为邻。
+载体上的类 `M`，若成员的成员仍在其中，称为**传递**。绝对性一章的诸定理消费的恰是这一前提，可构造宇宙诸章的世界也由传递的阶段砌成；名字在此铸下，与它谈论的成员关系为邻。
 <!--/-->
 
 ```agda
@@ -133,10 +133,10 @@ membership in `M`, and inherits both relations along the first projection. The
 consequence worth savouring: instantiate the whole framework at `𝒮 ↾ M`, and the
 constant domain of the syntax automatically contains only members of `M`. "The
 parameters may only come from this class" stops being a side condition to police
-and becomes the shape of a type; Part 4 builds the constructible universe through
+and becomes the shape of a type; the constructible-universe development builds the constructible universe through
 exactly this channel.
 <!--zh-->
-`↾` 读作「限制」：教科书里从全宇宙过渡到 $(A, \in \restriction A)$ 的那一步。给定命题值的类 `M`，限制结构 `𝒮 ↾ M` 以「元素配上属于 `M` 的证明」的对为载体，两个关系沿第一投影继承。值得品味的后果是：在 `𝒮 ↾ M` 上实例化整个框架，语法的常量域就自动只含 `M` 的成员。「参数只能来自这个类」不再是需要巡查的附加条件，而成为类型的形状；第四部正是经由这条通道构造可构造宇宙。
+`↾` 读作「限制」：教科书里从全宇宙过渡到 $(A, \in \restriction A)$ 的那一步。给定命题值的类 `M`，限制结构 `𝒮 ↾ M` 以「元素配上属于 `M` 的证明」的对为载体，两个关系沿第一投影继承。值得品味的后果是：在 `𝒮 ↾ M` 上实例化整个框架，语法的常量域就自动只含 `M` 的成员。「参数只能来自这个类」不再是需要巡查的附加条件，而成为类型的形状；可构造宇宙的开发正是经由这条通道构造可构造宇宙。
 <!--/-->
 
 ```agda

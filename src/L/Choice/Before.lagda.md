@@ -65,10 +65,8 @@ open import L.Choice.Limit {ℓ} lem
   using ( PrecedesAt; module Precedes; module Described )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt; module RecShape )
 open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
-open import L.Coding.Model {ℓ}
-  using ( numL; prAtL; prAtL-adequate; prʟ; prʟ-fst
-        ; appAt; appAt-adequate; appC; appC-adequate; domAt-intro
-        ; extAt; extAt-out; extAt-in; extAt-in-both )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; appAt; appAt-adequate; appC; appC-adequate; domAt-intro )
+open import L.Coding.Expressions {ℓ} using ( numL; extAt; extAt-out; extAt-in; extAt-in-both )
 
 import FOL.Absoluteness
 import FOL.ZFModel

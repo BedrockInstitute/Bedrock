@@ -31,16 +31,15 @@ module L.Choice.Adequate {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
-open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; embed )
+open import FOL.Manipulation.Mapping using ( mapFo; mapFo-comp; embed )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Ordinal {ℓ} using ( #∈ω; ω-ord )
 open import L.Axioms.Basic {ℓ} using ( ∅ʟ; LsetS )
 open import L.Coding.Environment {ℓ} using ( env )
-open import L.Coding.Model {ℓ}
-  using ( envOverAt; envOverAt-transport; domAt
-        ; extAt-in; extAt-out; numL; consAtL )
+open import L.Coding.Model {ℓ} using ( envOverAt; envOverAt-transport; domAt )
+open import L.Coding.Expressions {ℓ} using ( extAt-in; extAt-out; numL; consAtL )
 open import L.Coding.EnvSet {ℓ} lem using ( module Recover; envS; envOver )
 open import L.Coding.Graph {ℓ} lem using ( satGraphAt )
 open import L.Coding.Sat {ℓ} lem using ( Sat )

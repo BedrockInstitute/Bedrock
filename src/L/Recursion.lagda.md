@@ -49,8 +49,7 @@ import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; domAt; domAt-intro )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; domAt; domAt-intro )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.Foundations.HLevels using ( isPropΣ )
 open import Cubical.Functions.Logic using ( ∃[∶]-syntax )

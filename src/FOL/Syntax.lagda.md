@@ -1,7 +1,7 @@
 # The object language
 
 <!--en-->
-Part 1 begins. The host language has been speaking all along; this part builds the
+the first-order logic chapters begins. The host language has been speaking all along; this part builds the
 language that will be **spoken about**: the first-order language of set theory, with
 membership and equality as its only predicates, embedded deeply as an inductive
 datatype. The host is strictly more expressive, so the embedded `Formula`{.Agda} is
@@ -9,7 +9,7 @@ never needed to *say* anything; it exists because later parts study formulas as
 mathematical objects: count them, code them, and ask what is definable by them.
 This chapter is pure syntax, owing nothing to truth values or structures.
 <!--zh-->
-第一部开篇。宿主语言从头到尾都在说话；本部要构造的是**被谈论**的语言：以成员与等词为仅有谓词的集合论一阶语言，作为归纳数据类型深嵌入。宿主的表达力严格更强，所以嵌入的 `Formula`{.Agda} 从不用来**说**什么；它存在，是因为后面各部要把公式当作数学对象来研究：数它们、编码它们、追问它们能定义什么。本章是纯语法，不欠真值与结构任何东西。
+一阶逻辑诸章开篇。宿主语言从头到尾都在说话；本部要构造的是**被谈论**的语言：以成员与等词为仅有谓词的集合论一阶语言，作为归纳数据类型深嵌入。宿主的表达力严格更强，所以嵌入的 `Formula`{.Agda} 从不用来**说**什么；它存在，是因为后面各部要把公式当作数学对象来研究：数它们、编码它们、追问它们能定义什么。本章是纯语法，不欠真值与结构任何东西。
 <!--/-->
 
 ```agda
@@ -72,8 +72,8 @@ shape: later chapters classify formulas by a datatype over their constructors,
 and certify "all quantifiers bounded" by a datatype that simply has **no case**
 for `∃̇` and `∀̇`, an absence that can only speak if the bounded forms stand on
 their own. Formulas of that shape behave remarkably tamely across structures,
-a thread picked up once Part 2's model is on the table and carried into
-Part 4. The fixity table here is the book's single declaration for the object
+a thread picked up once the model chapters' model is on the table and carried into
+the constructible-universe chapters. The fixity table here is the book's single declaration for the object
 layer, each level chosen to match the truth-algebra operation it will be
 interpreted by.
 <!--zh-->
@@ -81,7 +81,7 @@ interpreted by.
 
 构造子清单里可以看出两个设计决定。其一，二元联结词是原语，理由在这门语言即将奔赴的语义：每个构造子将恰好意指一个真值代数运算，而该代数是构造性的。经典教科书可以省笔墨，把 `φ ∨ ψ` 拼作 `¬ (¬ φ ∧ ¬ ψ)`、`∀` 拼作 `¬ ∃ ¬`、`φ ⇒ ψ` 拼作 `¬ φ ∨ ψ`，因为经典地看双重否定会互相抵消。构造性地看它们不抵消：`¬ ¬ P` 严格弱于 `P`，上述每一种拼写都会给联结词指派**错误的含义**。所以 `∨`、`∀`、`⇒` 必须是构造子。否定与真采用诚实的拼写：`¬̇ φ` 即 `φ ⇒̇ ⊥̇`，`⊤̇` 即 `⊥̇ ⇒̇ ⊥̇`。
 
-其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位。倘若它们只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` **恰巧如何拼写**的事实，任何在 `φ` 的形状上计算的东西都看不见它。作为构造子，有界性就是形状：后面的章节按构造子给公式分类，用一个对 `∃̇` 与 `∀̇` **不设情形**的归纳数据来证明「量词皆有界」，而这种缺席要能开口说话，有界形式必须自立门户。这种形状的公式在不同结构之间表现格外驯良，这条线索将在第二部的模型落定后重新拾起并延伸进第四部。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
+其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位。倘若它们只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` **恰巧如何拼写**的事实，任何在 `φ` 的形状上计算的东西都看不见它。作为构造子，有界性就是形状：后面的章节按构造子给公式分类，用一个对 `∃̇` 与 `∀̇` **不设情形**的归纳数据来证明「量词皆有界」，而这种缺席要能开口说话，有界形式必须自立门户。这种形状的公式在不同结构之间表现格外驯良，这条线索将在模型诸章的模型落定后重新拾起并延伸进可构造宇宙诸章。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
 <!--/-->
 
 ```agda
@@ -111,7 +111,7 @@ The parameter `K` is where one syntax covers every use the book will make of it:
 |---|---|
 | the carrier of a structure | the working syntax: any set may appear in a formula as a parameter |
 | `⊥*`{.Agda} (no constants) | the **parameter-free formulas**: countable and codable, where theories and codes will live |
-| a restricted carrier | parameters confined to a class; the shape Part 4 builds `L` with |
+| a restricted carrier | parameters confined to a class; the shape the constructible-universe development builds `L` with |
 <!--zh-->
 参数 `K` 让一族语法覆盖全书的所有用途：
 
@@ -119,7 +119,7 @@ The parameter `K` is where one syntax covers every use the book will make of it:
 |---|---|
 | 某结构的载体 | 日常工作语法：任何集合都能以参数身份出现在公式里 |
 | `⊥*`{.Agda} (无常量) | **无参公式**：可数、可编码，理论与码的居所 |
-| 受限制的载体 | 参数只许来自某个类；第四部构造 `L` 用的正是这个形状 |
+| 受限制的载体 | 参数只许来自某个类；可构造宇宙诸章构造 `L` 用的正是这个形状 |
 <!--/-->
 
 <!--en-->

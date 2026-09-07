@@ -43,21 +43,15 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
+open import FOL.Manipulation.Mapping using ( mapTm; mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; #mono; module VCode )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ}
-  using ( tagAtL; tagAtL-adequate
-        ; closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt
-        ; oneSuccAt; succSndAt
-        ; binSameClosed-out; unSameClosed-out
-        ; unSuccClosed-out; binSuccClosed-out
-        ; arityTagAtL; arityTagAtL-adequate
-        ; arityTagPairAtL; arityTagPairAtL-adequate; numL )
+open import L.Coding.Expressions {ℓ} using ( tagAtL; tagAtL-adequate; arityTagAtL; arityTagAtL-adequate; arityTagPairAtL; arityTagPairAtL-adequate; numL )
+open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt; binSameClosed-out; unSameClosed-out; unSuccClosed-out; binSuccClosed-out )
 open import L.Coding.InL {ℓ} using ( closure-inv; key; codeL; codeTmL )
 open import L.Coding.Closed {ℓ} using ( clo )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )

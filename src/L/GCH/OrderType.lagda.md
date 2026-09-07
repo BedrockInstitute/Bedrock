@@ -21,14 +21,13 @@ open import L.Constructible {ℓ}
 open import L.Ordinal {ℓ} using ( suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
-open import L.Coding.Model {ℓ}
-  using ( appAt; appAt-adequate; appC; appC-adequate; prʟ; prʟ-fst
-        ; svAt; domAt; module PairExpression )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; appC; appC-adequate; prʟ; prʟ-fst; svAt; domAt )
+open import L.Coding.Expressions {ℓ} using ( module PairExpression )
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
 open import L.Cardinal {ℓ} lem using ( InjCode )
 open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
-open import L.CardinalAbove {ℓ} lem using ( module Mostowski )
+open import L.Mostowski {ℓ} using ( module Mostowski )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Foundations.Prelude using ( subst2 )
@@ -71,7 +70,7 @@ Section 1. The setting, and the host-level collapse.
 
 `D` is a set of L, `R` is a set of L of pairs of members of `D`, and the relation
 "`pr x y ∈ R`" is well-founded and transitive on the members of `D`. `col` is the
-Mostowski collapse, taken from `Mostowski` (src/L/CardinalAbove.lagda.md), the
+Mostowski collapse, taken from `L.Mostowski`, the
 one recursion `Hartogs.Col` there also instantiates.
 
 ```agda
@@ -134,7 +133,7 @@ heap at the first check.
              (≺-trans : {a b c : Dom} → a ≺ b → b ≺ c → a ≺ c) where
 ```
 
-src/L/CardinalAbove.lagda.md holds the recursion; this site and `Hartogs.Col`
+`L.Mostowski` holds the recursion; this site and `Hartogs.Col`
 there are its two instances.
 
 ```agda

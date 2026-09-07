@@ -41,12 +41,8 @@ open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Coding.InL {ℓ} using ( envL )
-open import L.Coding.Model {ℓ}
-  using ( envOverAt; svAt; domAt; valuesInAt; pairsInAt; inDomAt
-        ; prʟ; prʟ-fst; numL; svAt-in; svAt-out; inDomAt-adequate
-        ; appAt-adequate; domAt-in; valuesInAt-out
-        ; envOver-sv; envOver-dom; envOver-values; envOver-pairs
-        ; pairsIn-in; pairsIn-out )
+open import L.Coding.Model {ℓ} using ( envOverAt; svAt; domAt; valuesInAt; pairsInAt; inDomAt; prʟ; prʟ-fst; svAt-in; svAt-out; inDomAt-adequate; appAt-adequate; domAt-in; valuesInAt-out; envOver-sv; envOver-dom; envOver-values; envOver-pairs; pairsIn-in; pairsIn-out )
+open import L.Coding.Expressions {ℓ} using ( numL )
 
 open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )

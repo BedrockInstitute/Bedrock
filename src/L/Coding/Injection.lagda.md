@@ -15,8 +15,7 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ}
-  using ( appAt; appAt-adequate; svAt; svAt-out; domAt; domAt-in )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; svAt; svAt-out; domAt; domAt-in )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.Data.Sigma using ( Σ≡Prop )

@@ -13,15 +13,14 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
-open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp )
+open import FOL.Manipulation.Mapping using ( mapFo; mapFo-comp )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Model {ℓ} using
-  ( module LCode; prʟ-fst; codeBridge
-  ; consAtL; closedAt; binShapeAt; unShapeAt; bothSameAt; oneSuccAt; succSndAt
-  ; binSameClosed-out; unSuccClosed-out; binSuccClosed-out )
+open import L.Coding.Model {ℓ} using ( module LCode; prʟ-fst; codeBridge )
+open import L.Coding.Expressions {ℓ} using ( consAtL )
+open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSuccAt; succSndAt; binSameClosed-out; unSuccClosed-out; binSuccClosed-out )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
 open import L.Coding.InL {ℓ} using ( sglʟ; cupʟ; tree; tree-inv )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; keyS; codeS )
@@ -30,16 +29,14 @@ open import L.Coding.Sat {ℓ} lem using
 open import L.Coding.Bridge {ℓ} lem using ( asConst )
 open import L.Coding.Table {ℓ} lem using
   ( keyʟ; slot; satTable; entry-out; inSlot; ent-slot ) renaming ( total to slotTotal )
+open import L.Coding.Quantification {ℓ} using ( sh; i0; i1; i2; i3; i4; i7; i8 ; fstS; sndS )
+open import L.Coding.Tower {ℓ} lem using ( nn; towerAt; module TowerRead )
+open import L.Coding.CodeDomain {ℓ} lem using
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; Tags
+  ; bigAnd-in; bigAnd-out; module Alphabet )
 open import L.Coding.Clauses {ℓ} lem using
-  ( sh; i0; i1; i2; i3; i4; i7; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; Tags; nn; fstS; sndS
-  ; tmIs; extB-out; extB-in; ExtFact; ext-unique
-  ; towerAt; tableAt
-  ; module TowerRead
-  ; bigAnd-in; bigAnd-out
-  ; module Frame; module Clause; module Rel; module RelRead
-  ; module Alphabet; module Bridge )
-
+  ( tmIs; extB-out; extB-in; ExtFact; ext-unique; tableAt
+  ; module Frame; module Clause; module Rel; module RelRead; module Bridge )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Vec using ( _∷_; lookup )
 open import Cubical.Data.Sigma using ( _×_ )

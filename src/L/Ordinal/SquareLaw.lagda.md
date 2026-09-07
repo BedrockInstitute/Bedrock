@@ -1,5 +1,11 @@
 # The ordinal well-order, the Godel pair order and the finite base
 
+<!--en-->
+Building on strict well-orders and their natural-number example, this chapter constructs the ordinal order, the lexicographic Godel pair order, and the finite base that connects members of omega with `Fin` indices.
+<!--zh-->
+本章以严格良序及其自然数例子为基础，构造序数序、字典式哥德尔配对序，以及在欧米伽成员与 `Fin` 指标之间转换的有穷基底。
+<!--/-->
+
 This chapter carries three things the tree consumes: the strict
 well-order `ordSWO` on the index of an ordinal, the Godel pair order
 `_≺_` on the square of that index with its trichotomy, irreflexivity,
@@ -29,9 +35,8 @@ open import L.Constructible {ℓ} using ( IsOrd )
 open import L.Ordinal {ℓ} using ( mem-ord; ∈#-elim )
 open import V.Coding {ℓ} using ( #-inj′; #mono )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.Choice.Finite {ℓ} lem using ( natOrder )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; Tri; lt; eq; gt; leastOf; module SWO )
+  using ( SWO; Tri; lt; eq; gt; leastOf; natOrder; module SWO )
 
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT

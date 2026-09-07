@@ -30,6 +30,7 @@ open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
 open import L.Cardinal {ℓ} lem using ( IsCardinalL; _↪_ )
 open import L.CantorBernstein {ℓ} lem using ( readL )
+open import L.Mostowski {ℓ} using ( module Mostowski )
 
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; sett; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
@@ -42,7 +43,7 @@ open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Foundations.HLevels using ( isPropΣ )
 open import Cubical.Data.Bool using ( Bool; true; false; false≢true )
 open import Cubical.Induction.WellFounded
-  using ( Acc; acc; WellFounded; module WFI )
+  using ( Acc; acc; WellFounded )
 open import Cubical.Functions.Embedding
   using ( isEmbedding; injEmbedding; isEmbedding→hasPropFibers
         ; Embedding-into-isSet→isSet )
@@ -275,61 +276,6 @@ noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
             (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩)
   build (θ , oθ , cθ , κ∈θ) =
     ordL θ oθ , oθ , ambient→internal (ordL θ oθ) cθ , κ∈θ
-```
-
-## Section 5.5. The Mostowski collapse of a transitive well-founded relation
-
-One recursion, two sites: `Hartogs.Col` below and src/L/GCH/OrderType.lagda.md's
-`Collapse.Col`.
-
-```agda
-module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
-                 (wf : WellFounded _≺_)
-                 (≺-trans : {x y z : A} → x ≺ y → y ≺ z → x ≺ z) where
-
-  module W = WFI wf using ( induction; induction-compute )
-
-  colStep : (p : A) → (∀ r → r ≺ p → SV.S) → SV.S
-  colStep p rec = sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → rec (fst z) (snd z))
-
-  opaque
-    col : A → SV.S
-    col = W.induction {P = λ _ → SV.S} colStep
-
-    col-eq : (p : A) → col p ≡ sett (Σ[ r ∈ A ] (r ≺ p)) (λ z → col (fst z))
-    col-eq = W.induction-compute colStep
-
-  col-in : (p r : A) → r ≺ p → ⟨ col r ∈ˢ col p ⟩
-  col-in p r rp =
-    subst (λ v → ⟨ col r ∈ˢ v ⟩) (sym (col-eq p)) ∣ (r , rp) , refl ∣₁
-
-  col-out : (p : A) (b : SV.S) → ⟨ b ∈ˢ col p ⟩
-          → ∥ Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ b)) ∥₁
-  col-out p b b∈ =
-    PT.map (λ z → fst (fst z) , snd (fst z) , snd z)
-      (subst (λ v → ⟨ b ∈ˢ v ⟩) (col-eq p) b∈)
-
-  col-ord : (p : A) → IsOrd (col p)
-  col-ord = W.induction {P = λ p → IsOrd (col p)} ih
-    where
-    ih : (p : A) → (∀ r → r ≺ p → IsOrd (col r)) → IsOrd (col p)
-    ih p rec = tr , mem
-      where
-      mem : (x : SV.S) → ⟨ x ∈ˢ col p ⟩ → isTransV x
-      mem x x∈ = PT.rec (isPropIsTransV x)
-        (λ z → subst isTransV (snd (snd z)) (rec (fst z) (fst (snd z)) .fst))
-        (col-out p x x∈)
-      tr : isTransV (col p)
-      tr {x} {y} y∈x x∈col = PT.rec (snd (y ∈ˢ col p)) outer (col-out p x x∈col)
-        where
-        outer : Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ˢ col p ⟩
-        outer (r , rp , e) =
-          PT.rec (snd (y ∈ˢ col p)) inner
-            (col-out r y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
-          where
-          inner : Σ[ s ∈ A ] ((s ≺ r) × (col s ≡ y)) → ⟨ y ∈ˢ col p ⟩
-          inner (s , sr , e2) =
-            subst (λ v → ⟨ v ∈ˢ col p ⟩) e2 (col-in p s (≺-trans sr rp))
 ```
 
 ## Section 6. `NoInjOrd`, built. The Hartogs ordinal without order types

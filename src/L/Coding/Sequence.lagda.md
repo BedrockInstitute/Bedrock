@@ -46,9 +46,8 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ )
-open import L.Coding.Model {ℓ}
-  using ( extAt; extAt-out; extAt-in; extAt-in-both; appAt; appAt-adequate
-        ; domAt; domAt-in; domAt-out; prAtL; prAtL-adequate )
+open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; domAt; domAt-in; domAt-out; prAtL; prAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-out; extAt-in; extAt-in-both )
 open import L.Coding.Powerset {ℓ} lem using ( DefAt; DefAt-in; DefAt-out )
 
 import Cubical.HITs.PropositionalTruncation as PT
@@ -139,7 +138,7 @@ PowOK b f γ = (c w : S) → Records b f γ c w → ⟨ isL (𝒟ₒ (fst w)) �
 
 <!--en-->
 Reading the body is where the three existentials are spent, and each `PT.rec`
-below names the type of its payload. That is the law the last chapter was
+below names the type of its payload. That is the law the Powerset chapter was
 written under and it is not a stylistic one: left to inference the payload is a
 metavariable standing for the satisfaction of a formula the elaborator has not
 committed to, and the same two lines then run past two minutes instead of two
@@ -447,7 +446,7 @@ hypothesis carried an environment written out while the application named it
 behind an abbreviation. Concrete slots are not the mechanism and cost nothing.
 Written so that the two sides are the same expression, the chapter checks in
 under two seconds rather than 130, with no change to the mathematics. The law
-the last chapters were written under, that an adequacy is discharged at a
+the preceding coding chapters were written under, that an adequacy is discharged at a
 variable argument, holds for a **statement** exactly as it does for a
 substitution.
 <!--zh-->

@@ -6,37 +6,34 @@ GCH. Both are proved and both are registered in `src/Landmarks.lagda.md`: `L⊨Z
 
 Requirements: Agda 2.8.0, cubical 0.9, Python 3.11 or later.
 `src/Everything.lagda.md` imports every module. `make check` is the gate: it typechecks
-the tree, runs the four linters and runs their unit tests.
+the tree, runs the four linters, checks the reading order and runs the gate tests.
 
-## Current goal: smaller proofs and faster builds
+## Current goal: coherent modules and a teachable reading order
 
-Refactor the completed proofs and their code to reduce code size, proof length,
-and typechecking/build time. Preserve `L⊨ZFC`, `L⊨GCH`, their statements, and their
-single `LEM (ℓ-suc ℓ)` hypothesis.
+Reorganize the completed development so that each module is a coherent learning
+unit and the reading order introduces concepts before their substantive use.
+Good mathematical interfaces, cohesive modules and clear teaching should support
+one another. Preserve `L⊨ZFC`, `L⊨GCH`, their statements and their single
+`LEM (ℓ-suc ℓ)` hypothesis.
 
-The first milestone is a net reduction of at least 3,000 nonblank Agda code lines
-from the 2026-09-06 baseline of 28,973, reaching at most 25,973 (and therefore
-below 27,000). Count only lines inside Agda fences in `src/**/*.lagda.md`;
-prose, fences, and blank lines do not count. Do not meet the target by packing
-lines, deleting explanations, weakening statements, or moving code outside the
-counted tree. Prefer shared proofs, simpler constructions, and removal of
-verified redundant code. Record comparable timings, including cache conditions;
-fewer lines alone do not establish a faster build.
+The former line-reduction run is closed. Code size, build time and peak memory
+are costs to measure, not optimization targets for this task. Modest increases
+are acceptable when a concrete improvement in comprehension or modularity
+justifies them. The coordinating agent is authorized to make these tradeoffs.
+Do not compress proofs or merge unrelated material to reduce the module count.
 
-Prioritize structural refactoring and mathematically simpler proofs. The line
-milestone is a measurement, not a reason to sacrifice readability. Do not pursue
-small textual reductions or add abstractions whose only benefit is fewer lines.
+A restructuring brief may rename, split or merge modules and definitions,
+change intermediate APIs, and migrate all real consumers. Keep necessary
+opacity boundaries. Avoid compatibility shells that leave the old conceptual
+fragmentation in place. Update chapter introductions, the reading catalog,
+namespace references and site navigation together.
 
-A refactoring brief may change intermediate APIs and migrate their actual
-consumers together. Preserve mathematical statements and necessary opacity
-boundaries; do not retain redundant compatibility wrappers solely to preserve
-old helper names. Include every consumer migration in the net cost.
+Use GPT 5.6 Sol for scoped audits, migrations and verification. Reserve GPT 6
+Astra for difficult mathematical design. Delegate disjoint concrete changes;
+the coordinating agent owns the overall architecture and final checks.
 
-Use GPT 5.6 Sol for routine refactoring, audits, and verification. Reserve GPT 6
-Astra for difficult proof design that needs it. Keep task briefs bounded, batch
-related checks, and avoid repeated readiness messages or speculative searches.
-
-The plan, measurements, and accepted changes live in `dev/REFACTOR.md`.
+The current architecture plan and acceptance criteria live in `dev/TEACHING.md`.
+The previous closed run's record remains in `dev/REFACTOR.md`.
 
 ## Rules for a dispatched agent
 

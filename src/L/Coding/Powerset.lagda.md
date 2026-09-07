@@ -42,7 +42,7 @@ module L.Coding.Powerset {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_ )
-open import FOL.Manipulation.Relabelling using ( mapFo )
+open import FOL.Manipulation.Mapping using ( mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -50,9 +50,8 @@ open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; LsetS )
-open import L.Coding.Model {ℓ}
-  using ( extAt; extAt-out; extAt-in; extAt-in-both; tagAtL; tagAtL-adequate
-        ; domAt-out )
+open import L.Coding.Model {ℓ} using ( domAt-out )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-out; extAt-in; extAt-in-both; tagAtL; tagAtL-adequate )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Coding.Recover {ℓ} using ( keyOf; keyOf-fst )
 open import L.Coding.CodeSet {ℓ} lem
@@ -61,9 +60,9 @@ open import L.Coding.CodeSet {ℓ} lem
 open import L.Coding.Graph {ℓ} lem
   using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
         ; Bi; Ti; Ci; Ei; NN; ev; numν )
-open import L.Coding.Clauses {ℓ} lem using
-  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; module Tower )
+open import L.Coding.Tower {ℓ} lem using ( module Tower )
+open import L.Coding.CodeDomain {ℓ} lem using
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; slot; satTable; entry-in )

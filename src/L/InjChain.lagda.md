@@ -23,10 +23,7 @@ import L.Ordinal.SquareLaw {ℓ} lem as SQ
 open SQ using ( module FiniteBase )
 open import L.Recursion {ℓ} lem using ( smallDom )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst
-        ; svAt; svAt-in; svAt-out
-        ; domAt; domAt-in; domAt-out; domAt-intro )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro )
 open import L.Coding.Model {ℓ} using ( appC; appC-adequate ) public
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-out; injAt-in; module Small )
@@ -80,11 +77,10 @@ module StageBound (I : Type ℓ) (g : I → S) where
 
 Row 5. The pairing on `ω`, by the order route, zero arithmetic.
 
-The square law at an initial ordinal wanted three hypotheses, and `ω` is not
-initial (it would need `⟨ ω ∈ˢ ω ⟩`, refuted by `∈-irrefl`), so the three are
-supplied at `ω` directly. Of the three only `finite-excl-ω` still has a
-consumer; the ambient law they fed is retired to
-`archive/src-2026-09-06/L/Ordinal/SquareLawAmbient.lagda.md`.
+The argument at `ω` needs the successor closure and limit behavior of the
+natural numbers directly. The finite exclusion lemma remains useful to the
+injection-chain construction below, so these facts are proved at the precise
+strength consumed here.
 
 Successor closure at `ω`: every member of `ω` is a numeral.
 

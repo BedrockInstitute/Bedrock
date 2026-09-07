@@ -42,7 +42,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
-open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; embed )
+open import FOL.Manipulation.Mapping using ( mapFo; mapFo-comp; embed )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset )
@@ -50,11 +50,8 @@ open import L.Ordinal {ℓ} using ( ∈#-elim; #∈#-elim )
 open import L.Axioms.Basic {ℓ} using ( ∅ʟ; extensionalL )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
-open import L.Coding.Model {ℓ}
-  using ( extAt; extAt-in-both
-        ; prAtL; prAtL-adequate; appAt; appAt-adequate
-        ; domAt; domAt-in; domAt-out; domAt-intro; numL
-        ; sucAtL; sucAtL-adequate; envOverAt; consAtL )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; appAt; appAt-adequate; domAt; domAt-in; domAt-out; domAt-intro; envOverAt )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in-both; numL; sucAtL; sucAtL-adequate; consAtL )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Table {ℓ} lem
   using ( slot; satTable; total; inSlot; entry-in )
@@ -66,9 +63,9 @@ open import L.Coding.Uniform {ℓ} lem using ( keyBridge )
 open import L.Coding.Graph {ℓ} lem using
   ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
   ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
-open import L.Coding.Clauses {ℓ} lem using
-  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; module Tower; module TowerHolds )
+open import L.Coding.Tower {ℓ} lem using ( towerAt; module Tower; module TowerHolds )
+open import L.Coding.CodeDomain {ℓ} lem using
+  ( Tags; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )
 open import L.Choice.Finite {ℓ} lem using ( Limit; limitOrder )

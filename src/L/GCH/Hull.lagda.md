@@ -16,12 +16,12 @@ open import FOL.Syntax using
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Absoluteness
-import FOL.Count
+import FOL.Manipulation.Occurrences
 import FOL.Semantics
-open import FOL.Manipulation.Parameters
-  using ( countFo; constantsFo; absFo; ⊨-abs )
-open import FOL.Manipulation.Relabelling
-  using ( mapFo; mapTm; mapFo-comp; embed; embed-⊨; mapΔ₀; ⊨-map )
+open import FOL.Manipulation.Occurrences using ( countFo; constantsFo )
+open import FOL.Manipulation.Parameters using ( absFo; ⊨-abs )
+open import FOL.Manipulation.Mapping using ( mapFo; mapTm; mapFo-comp; embed )
+open import FOL.Manipulation.Relabelling using ( embed-⊨; mapΔ₀; ⊨-map )
 open import FOL.Manipulation.Renaming using ( renameTm )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Presentation {ℓ} using ( member; fiber )
@@ -69,7 +69,7 @@ constant count at it.
 
 ```agda
 module CS = hPropStructure 𝒮ʟ using ( S )
-module Cnt = FOL.Count.Count {ℓ = ℓ-suc ℓ} CS.S using ( erase; erase-inv )
+module Cnt = FOL.Manipulation.Occurrences.ZeroOccurrences CS.S using ( erase; erase-inv )
 
 module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → Empty.rec* b)
   using ( Δ₀-small )

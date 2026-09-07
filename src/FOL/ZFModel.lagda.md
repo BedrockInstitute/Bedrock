@@ -1,7 +1,7 @@
 # Models
 
 <!--en-->
-Part 1 built a language, gave it worlds to talk about, and pinned down meaning. But
+the first-order logic chapters built a language, gave it worlds to talk about, and pinned down meaning. But
 nothing so far deserves the name set theory: a bare structure believes nothing. Its
 membership relation need not admit an empty set, need not pair two elements, need
 not gather the subsets of anything. What a universe of sets must provide is exactly
@@ -11,7 +11,7 @@ chosen universe. A **model of ZF** is a record whose fields *are* the axioms, so
 "`𝒮` satisfies ZF" means nothing more mysterious than "this record has an
 inhabitant at `𝒮`".
 <!--zh-->
-第一部造出了语言，给了它可谈论的世界，并钉下了含义。但至此还没有任何东西配得上「集合论」之名：裸结构什么都不信，它的成员关系未必容纳空集，未必能配对两个元素，未必聚得起谁的子集。一个集合宇宙必须供应什么，正是 **ZF 公理**要说的内容，本章把它们陈述出来。但不是作为公设：本书从不扩充自己的元理论，且本书的结构有许多个，而非某个钦定的宇宙。**ZF 模型**是一个以公理为字段的 record，于是「`𝒮` 满足 ZF」并无任何神秘之处：它只是说这个 record 在 `𝒮` 处有居民。
+一阶逻辑诸章造出了语言，给了它可谈论的世界，并钉下了含义。但至此还没有任何东西配得上「集合论」之名：裸结构什么都不信，它的成员关系未必容纳空集，未必能配对两个元素，未必聚得起谁的子集。一个集合宇宙必须供应什么，正是 **ZF 公理**要说的内容，本章把它们陈述出来。但不是作为公设：本书从不扩充自己的元理论，且本书的结构有许多个，而非某个钦定的宇宙。**ZF 模型**是一个以公理为字段的 record，于是「`𝒮` 满足 ZF」并无任何神秘之处：它只是说这个 record 在 `𝒮` 处有居民。
 <!--/-->
 
 ```agda
@@ -158,12 +158,12 @@ regularity, empty set, pairing, union, separation, replacement, power set
 **Separation and replacement consume the book's own formulas.** A textbook writes
 "for every formula `φ`"; these two fields take a `Formula S 1`{.Agda} or
 `Formula S 2`{.Agda} and interpret it with the satisfaction relation of the
-semantics chapter. The language built in Part 1 stops being an object of
+semantics chapter. The language built in the first-order logic chapters stops being an object of
 contemplation here and starts bearing weight. Why formulas, and not arbitrary host
 predicates `S → Ω`? Because that stronger schema is a different, second-order
 theory: the point of ZF's separation is that only *first-order describable*
 properties are guaranteed to cut sets out of sets. The gap between "predicate" and
-"formula" is mathematical content, and Part 4's protagonist lives inside exactly
+"formula" is mathematical content, and the constructible universe lives inside exactly
 that gap.
 
 **Regularity is stated at the meta level** (some books call it foundation): the
@@ -176,7 +176,7 @@ set over through `℩`.
 <!--zh-->
 这里是本章的心脏。字段就是熟悉的那串清单：外延、正则、空集、配对、并、分离、替换、幂集 (无穷稍后加入)。看代码之前，有三处值得多停留一眼。
 
-**分离与替换消费本书自家的公式。**教科书写「对每条公式 `φ`」；这两个字段就收一条 `Formula S 1`{.Agda} 或 `Formula S 2`{.Agda}，并用语义章的满足关系解释它。第一部造出的语言在此不再是观赏对象，而开始承重。为什么收公式，而不收任意宿主谓词 `S → Ω`？因为那个更强的模式是另一门二阶理论：ZF 分离公理的要义恰在于，只有**一阶可描述**的性质才保证能从集合中切出集合。「谓词」与「公式」之间的落差是数学内容，第四部的主角就住在这道落差里。
+**分离与替换消费本书自家的公式。**教科书写「对每条公式 `φ`」；这两个字段就收一条 `Formula S 1`{.Agda} 或 `Formula S 2`{.Agda}，并用语义章的满足关系解释它。一阶逻辑诸章造出的语言在此不再是观赏对象，而开始承重。为什么收公式，而不收任意宿主谓词 `S → Ω`？因为那个更强的模式是另一门二阶理论：ZF 分离公理的要义恰在于，只有**一阶可描述**的性质才保证能从集合中切出集合。「谓词」与「公式」之间的落差是数学内容，可构造宇宙就住在这道落差里。
 
 **正则公理陈述在元层面** (有些书称基础公理)：成员关系是良基的，其中 `WellFounded`{.Agda} 取自宿主库，而非任何对象语言的句子。为什么没有句子能胜任，下一节交代。
 
@@ -237,13 +237,13 @@ moves this line, and a formalization can only choose where to be honest about it
 Here the choice is: regularity lives at the meta level, as a field. The ceiling
 also has a productive face. It shows that the first-order shadow of a structure is
 strictly coarser than the structure, so restricting attention to "what first-order
-formulas can see" is a genuine restriction. Part 4 builds its universe out of
+formulas can see" is a genuine restriction. the constructible-universe development builds its universe out of
 precisely that restriction; were the shadow lossless, the construction would
 return everything and prove nothing.
 <!--zh-->
 其余公理说的要么是对象语言，要么是单纯的成员关系；唯独正则公理伸手去取宿主的良基概念。这是不得不然：**没有任何一阶句子能表达外部良基性**。这个经典论证值得讲一遍，尽管本书只讲不证；下文不依赖它，紧致性也不在本书展开。假设某句子恰好在良基结构中成立。给语言添上新常量 $a_0, a_1, a_2, \dots$ 与公理 $a_{n+1} \in a_n$。这些公理中的有限多条只要求一条有限长的下降链，良基结构供应得起；于是扩充理论的每个有限片段都有模型。经典模型论的**紧致性定理**随即给出一个一次满足全部公理的结构：它满足那个句子，常量却在其中划出一条无穷下降的 ∈-链。可见那个句子从头就没有抓住良基性。
 
-紧致性是一阶逻辑自身的性质；换任何宿主系统都动不了这条线，形式化能选择的只是在哪里对它诚实。此处的选择是：正则公理住在元层面，作为字段。这道天花板也有多产的一面。它表明结构的一阶影子严格粗于结构本身，于是把眼光限制到「一阶公式看得见的东西」是一次真正的限制。第四部的宇宙恰恰用这次限制建成；影子若是无损的，那个构造将原样吐回一切，什么也证明不了。
+紧致性是一阶逻辑自身的性质；换任何宿主系统都动不了这条线，形式化能选择的只是在哪里对它诚实。此处的选择是：正则公理住在元层面，作为字段。这道天花板也有多产的一面。它表明结构的一阶影子严格粗于结构本身，于是把眼光限制到「一阶公式看得见的东西」是一次真正的限制。可构造宇宙诸章的宇宙恰恰用这次限制建成；影子若是无损的，那个构造将原样吐回一切，什么也证明不了。
 <!--/-->
 
 <!--en-->
@@ -310,11 +310,11 @@ predicate, and hand-assembling syntax at that scale is out of the question.
 Turning host predicates into formulas, certificate included, is a craft of its
 own, the *reification* framework catalogued at the book's tail; the witnesses
 it runs on, the Levy grades and their travel theorems, are already in hand from
-the close of Part 1.
+the close of the first-order logic chapters.
 <!--zh-->
 二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 说「该变量是 `b` 的成员」；把它递给 `separate`{.Agda} 作用在 `a` 上，公理便交回 `a ∩ b`。更妙的是：它的规格就**是**分离的规格，一字不差，因为按 `⊨` 的定义子句，那条公式的满足直接计算为 `x ∈ˢ b`。语义章许诺的忠实性，此刻开始以集合、而不只是以逻辑付账。
 
-这也是本章的坦白。一条公式手写便宜。可本书今后想沿着分离或替换使用的每个谓词都需要一条公式，每条还得配上「公式的含义恰是该谓词」的证明，那样的规模之下手工拼装语法绝无可能。把宿主谓词变成公式、随附保义证书，这门手艺自成一体，即编在书末的 reification 框架；它所依赖的见证，即 Lévy 分级与其旅行定理，第一部收束时已然在手。
+这也是本章的坦白。一条公式手写便宜。可本书今后想沿着分离或替换使用的每个谓词都需要一条公式，每条还得配上「公式的含义恰是该谓词」的证明，那样的规模之下手工拼装语法绝无可能。把宿主谓词变成公式、随附保义证书，这门手艺自成一体，即编在书末的 reification 框架；它所依赖的见证，即 Lévy 分级与其旅行定理，绝对性定理完成时已然在手。
 <!--/-->
 
 ```agda
@@ -401,7 +401,7 @@ realizer is the unique realizer.
 
 <!--en-->
 The line between ZF and ZFC is drawn as a record boundary, because the book's
-capstone lives on that line: Part 4 constructs, inside any model of ZF, a
+capstone lives on that line: the constructible-universe chapters constructs, inside any model of ZF, a
 sub-universe satisfying choice, and folding choice into the base record would
 erase the very distinction that construction is about. The **axiom of choice** is
 taken in choice-set form: given a set `a` whose members are nonempty and pairwise
@@ -412,7 +412,7 @@ that the hypotheses and the conclusion all wear the truncation `∥_∥₁`{.Agd
 choice asserts bare existence, promising no canonical choice set, and that
 reticence is exactly its force.
 <!--zh-->
-ZF 与 ZFC 的分界线画成了 record 的边界，因为本书的压轴戏就住在这条线上：第四部将在任意 ZF 模型内部构造一个满足选择公理的子宇宙，若把选择混入基础 record，恰恰抹掉了那个构造所要谈论的分界。**选择公理**取选择集形态：给定一个集合 `a`，其成员非空且两两不交，则存在一个集合与 `a` 的每个成员恰交于一点。这个形态仅用成员关系与派生的交即可陈述；它与其他表述的等价性属于模型内部的数学，推迟到需要时再证。留意各前提与结论都穿着截断 `∥_∥₁`{.Agda}：选择公理断言的是赤裸的存在，不许诺任何典范选择集，而这份缄默正是它的力量所在。
+ZF 与 ZFC 的分界线画成了 record 的边界，因为本书的压轴戏就住在这条线上：可构造宇宙诸章将在任意 ZF 模型内部构造一个满足选择公理的子宇宙，若把选择混入基础 record，恰恰抹掉了那个构造所要谈论的分界。**选择公理**取选择集形态：给定一个集合 `a`，其成员非空且两两不交，则存在一个集合与 `a` 的每个成员恰交于一点。这个形态仅用成员关系与派生的交即可陈述；它与其他表述的等价性属于模型内部的数学，推迟到需要时再证。留意各前提与结论都穿着截断 `∥_∥₁`{.Agda}：选择公理断言的是赤裸的存在，不许诺任何典范选择集，而这份缄默正是它的力量所在。
 <!--/-->
 
 ```agda
@@ -443,9 +443,9 @@ constructions, separation and replacement consuming the book's own formulas, and
 strong infinity through the numeral chain. `℩` turns fields into operations whose
 specifications are projections; intersection fell out of separation and a
 two-symbol formula, the first set built by feeding the framework its own language.
-`isZFCModel`{.Agda} adds choice on top. The record's appetite for formulas is now
-the book's outstanding debt; the reification framework at the book's tail is the
-factory that will pay it, running on the Levy witnesses Part 1 already forged.
+`isZFCModel`{.Agda} adds choice on top. Later coding chapters meet the record's
+appetite for formulas by representing syntax and satisfaction inside `L`; the
+Lévy witnesses developed here control the bounded formulas used along the way.
 <!--zh-->
-ZF 模型是一个 record：外延公理、元层面的正则公理 (紧致性天花板使其他任何安置都不诚实)、以唯一存在形态陈述的诸构造字段、消费本书自家公式的分离与替换，以及经数码链的强无穷。`℩` 把字段兑成运算，规格皆为投影；交由分离加一条两符号公式落袋，是框架吃自家语言造出的第一个集合。`isZFCModel`{.Agda} 在其上添加选择。record 对公式的胃口成了本书的未清之债；书末的 reification 框架是将来还债的工厂，其燃料，即 Lévy 见证，第一部已锻造完毕。
+ZF 模型是一个 record：外延公理、元层面的正则公理 (紧致性天花板使其他任何安置都不诚实)、以唯一存在形态陈述的诸构造字段、消费本书自家公式的分离与替换，以及经数码链的强无穷。`℩` 把字段兑成运算，规格皆为投影；交由分离加一条两符号公式落袋，是框架吃自家语言造出的第一个集合。`isZFCModel`{.Agda} 在其上添加选择。后面的编码诸章把语法与满足关系表示在 `L` 内，从而满足 record 对公式的要求；这里建立的 Lévy 见证则控制途中使用的有界公式。
 <!--/-->

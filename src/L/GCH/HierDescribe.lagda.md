@@ -12,8 +12,9 @@ module L.GCH.HierDescribe {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀; δ-∧; δ-∃∈ )
-open import FOL.Manipulation.Parameters using ( countFo )
-open import FOL.Manipulation.Relabelling using ( embed; embed-⊨; mapΔ₀ )
+open import FOL.Manipulation.Occurrences using ( countFo )
+open import FOL.Manipulation.Mapping using ( embed )
+open import FOL.Manipulation.Relabelling using ( embed-⊨; mapΔ₀ )
 import FOL.Absoluteness
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
@@ -23,18 +24,18 @@ open import L.Constructible {ℓ} using
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; #∈ω )
 open import L.Axioms.Basic {ℓ} using ( LsetS; Lset-suc )
 open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
-open import L.Coding.Model {ℓ} using ( sucAtL )
+open import L.Coding.Expressions {ℓ} using ( sucAtL )
 open import L.Coding.Bound {ℓ} lem using ( module Bound )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
 open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
 open import L.GCH.Hull {ℓ} lem using ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
 open import L.GCH.SatFrame {ℓ} lem using
   ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; Tags; shN; nn; down; sndS; container
+  ; Tags; shN; nn; down; container
   ; suc-out; suc-in
   ; sndEx; sndAll; bothAll
   ; sndEx-out; sndAll-in; bothAll-in; fillSnd; useSnd; useBoth
-  ; module Tower; module SatGraph )
+  ; module Tower; module SatGraph ; sndS )
 open import L.GCH.SatDescribe {ℓ} lem using ( satAt; sat-complete )
 open import L.GCH.DefDescribe {ℓ} lem using ( defAt; def-sound; def-complete )
 open import L.GCH.Complete {ℓ} lem using ( Adequate; module Adequate; module At; Lset∈suc )

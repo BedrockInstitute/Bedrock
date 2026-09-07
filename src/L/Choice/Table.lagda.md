@@ -52,8 +52,8 @@ open import L.Ordinal {ℓ} using ( mem-ord )
 open import L.Axioms.Basic {ℓ} using ( extensionalL )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL; hasSeparationL )
 open import L.Recursion {ℓ} lem using ( mereFunct; smallDom )
-open import L.Coding.Model {ℓ}
-  using ( extAt; extAt-in; extAt-out; extAt-in-both; domAt-intro; prʟ; prʟ-fst )
+open import L.Coding.Model {ℓ} using ( domAt-intro; prʟ; prʟ-fst )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in; extAt-out; extAt-in-both )
 open import L.Coding.Sequence {ℓ} lem using ( module RecShape )
 open import L.Choice.Step {ℓ} lem using ( Mem; relOf; orderAt; memOf; carry )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; Tri; lt; eq; gt )
@@ -805,11 +805,11 @@ is fixed is which realizing set is meant.
 
 Nothing here is an approximation to the statement. The membership is an
 equivalence, so a separation that carves with this set carves with the order
-itself, and that is what the last chapter of the part will do.
+itself, and that is what the transversal chapter will do.
 <!--zh-->
 最后两条陈述是本章的交付物，而每一条都是上文那些读式读在本章所造的那个集合上：阶段处的关系实现那个类，故它是那些读式适用的一个集合。此处不证任何新东西；被定下来的是「所指的是哪一个实现该类的集合」。
 
-此处没有任何东西是对那条陈述的近似。隶属是一条等价，故拿这个集合去作的分离，就是拿那个序本身去作的分离，而这正是本部最后一章要做的事。
+此处没有任何东西是对那条陈述的近似。隶属是一条等价，故拿这个集合去作的分离，就是拿那个序本身去作的分离，而这正是横截集那一章要做的事。
 <!--/-->
 
 ```agda

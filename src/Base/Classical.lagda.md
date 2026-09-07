@@ -270,9 +270,9 @@ The previous chapter packed the two instruments as `Impredicativity`{.Agda},
 by co-consumption, not implication: neither derives the other. Only the
 excluded middle redeems both at once, and from a **single instance** at the
 higher level: resizing consumes it as is, and `lowerLEM`{.Agda} hands the
-classifier its lower copy. Part 3 will name its exact prices in this packing.
+classifier its lower copy. the cumulative-hierarchy chapters will name its exact prices in this packing.
 <!--zh-->
-上一章把两件器具打包为 `Impredicativity`{.Agda}，依据是共同消费而非相互蕴含：谁也推不出谁。唯有排中律能一次赎回两件，而且只需较高层级上的**单个实例**：降层原样消费它，`lowerLEM`{.Agda} 把它的低层副本递给分类器。第三部将用这份打包开出自己的准确价格。
+上一章把两件器具打包为 `Impredicativity`{.Agda}，依据是共同消费而非相互蕴含：谁也推不出谁。唯有排中律能一次赎回两件，而且只需较高层级上的**单个实例**：降层原样消费它，`lowerLEM`{.Agda} 把它的低层副本递给分类器。累积层级诸章将用这份打包开出自己的准确价格。
 <!--/-->
 
 ```agda
@@ -295,9 +295,9 @@ classical mathematics is therefore a compile-time fact. The previous chapter's
 two interfaces are banked as dividends, the small classifier by
 `lem→hPropSmallness`{.Agda} and propositional resizing by
 `lem→resizing`{.Agda}, and the packing `Impredicativity`{.Agda} is redeemed
-whole (`lem→impredicativity`{.Agda}). Part 3
+whole (`lem→impredicativity`{.Agda}). the cumulative-hierarchy chapters
 will spend exactly this packing: it prices, for the cumulative hierarchy `V`,
 the smallness assumptions behind full separation and power set.
 <!--zh-->
-排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。上一章的两个接口作为红利入账：小分类器经 `lem→hPropSmallness`{.Agda}，命题降层经 `lem→resizing`{.Agda}；打包 `Impredicativity`{.Agda} 整份赎回 (`lem→impredicativity`{.Agda})。第三部将恰好花掉这份打包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
+排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。上一章的两个接口作为红利入账：小分类器经 `lem→hPropSmallness`{.Agda}，命题降层经 `lem→resizing`{.Agda}；打包 `Impredicativity`{.Agda} 整份赎回 (`lem→impredicativity`{.Agda})。累积层级诸章将恰好花掉这份打包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
 <!--/-->

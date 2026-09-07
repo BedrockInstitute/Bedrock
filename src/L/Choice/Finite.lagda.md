@@ -1,7 +1,7 @@
 # The finite stages, and the order they carry
 
 <!--en-->
-The previous chapter located, for each cell of a family, the one stage at which
+The earlier choice construction locates, for each cell of a family, the stage at which
 the cell first has a member, and showed that this stage is a successor. Every
 member of the cell that appears exactly there is therefore a definable subset of
 one and the same set: a name written over a single stage. What is still missing
@@ -40,7 +40,7 @@ finite stages are compared by those stage numbers alone; two that first appear a
 the same stage are compared by that stage's own order. Nothing else is needed,
 and nothing else is true.
 <!--zh-->
-上一章为一个族的每一格定位了该格首次拥有成员的那个阶段，并证明了它是一个后继。于是该格中恰在那里现身的每个成员，都是同一个集合的可定义子集：一个写在单一阶段之上的名字。尚缺的是**比较**这些名字的办法，而本章要在塔的底部造出的正是这种比较。
+先前的选择构造为一个族的每一格定位了该格首次拥有成员的阶段，并证明了它是一个后继。于是该格中恰在那里现身的每个成员，都是同一个集合的可定义子集：一个写在单一阶段之上的名字。尚缺的是**比较**这些名字的办法，而本章要在塔的底部造出的正是这种比较。
 
 两个论断撑起本章。第一，凡以数码为索引的阶段都是有穷的，其确切含义见下文：它附带一份有穷的集合清单，命中它的全部成员。第二，有穷阶段带有一个良序，其比较方式是看两个成员最先在何处出现分歧，并把较大的位置判给二者中含有该处的那一个。
 
@@ -67,7 +67,7 @@ open import L.Ordinal {ℓ} using ( numeral-ord )
 open import L.Axioms.Basic {ℓ}
   using ( finSet; finSet-in; finSet-out; Lset-suc; module FinOf )
 open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf )
+  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf; natOrder )
 
 open import Cubical.Data.Bool using ( Bool; true; false; false≢true )
 open import Cubical.Data.Nat using ( _+_ )
@@ -564,50 +564,6 @@ module Search {A : Type (ℓ-suc ℓ)} (_≺_ : A → A → Type (ℓ-suc ℓ))
           pick : (Acc _≺_ b ⊎ (Acc _≺_ b → Empty.⊥)) → Acc _≺_ b
           pick (inl h)  = h
           pick (inr nb) = Empty.rec (found .snd .snd b nb hb)
-```
-
-<!--en-->
-## The natural numbers, well-ordered
-<!--zh-->
-## 自然数，良序化
-<!--/-->
-
-<!--en-->
-One order in this chapter is not finite, and it is the one that counts the
-floors. The library supplies everything about the usual order on the natural
-numbers, so the bundle is assembled rather than proved: the trichotomy is the
-library's decision procedure with its three-way answer renamed, and
-well-foundedness is the library's own.
-
-The lift is bookkeeping and nothing more. A bundle carries its relation at a
-single universe level fixed once for the whole chapter, and the order on the
-natural numbers lives at the bottom, so it is raised to meet it. This is the
-first time the well-order chapter is exercised at all.
-<!--zh-->
-本章有一个序不是有穷的，正是数楼层的那一个。关于自然数上通常的序，库已备齐一切，故这个束是装配出来的、而非证出来的：三歧取库的判定程序，把它的三路答案改个名；良基性则直接是库自己的。
-
-提升只是记账，别无他意。一个束把它的关系带在为全章一次固定的单一宇宙层级上，而自然数上的序住在最底层，故把它抬上来相会。这也是良序那一章头一回被真正使唤。
-<!--/-->
-
-```agda
-liftAcc : (n : ℕ) → Acc _<_ n → Acc (λ a b → Lift {ℓ-zero} {ℓ-suc ℓ} (a < b)) n
-liftAcc n (acc r) = acc (λ m h → liftAcc m (r m (lower h)))
-
-natOrder : SWO {ℓ-zero} ℕ
-natOrder = record
-  { _<∙_   = λ a b → Lift (a < b)
-  ; tri∙   = triOf
-  ; irr∙   = λ a h → ¬m<m (lower h)
-  ; trans∙ = λ a b c h k → lift (<-trans (lower h) (lower k))
-  ; wf∙    = λ n → liftAcc n (<-wellfounded n) }
-  where
-  triOf : (a b : ℕ) → Tri (Lift (a < b)) (a ≡ b) (Lift (b < a))
-  triOf a b = fromNat (a ≟ b)
-    where
-    fromNat : NatOrder.Trichotomy a b → Tri (Lift (a < b)) (a ≡ b) (Lift (b < a))
-    fromNat (NatOrder.lt h) = lt (lift h)
-    fromNat (NatOrder.eq h) = eq h
-    fromNat (NatOrder.gt h) = gt (lift h)
 ```
 
 <!--en-->

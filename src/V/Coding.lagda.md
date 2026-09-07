@@ -222,9 +222,9 @@ pr-inj {a} {b} {c} {d} p = a≡c , b≡d
 <!--en-->
 Both parameters discharged, the coding chapter applies to the hierarchy, and
 formulas over the hierarchy's own sets acquire codes that are again sets of the
-hierarchy. This is the object Part 4's certificates read and write.
+hierarchy. This is the object the internal coding certificates read and write.
 <!--zh-->
-两组参数都已兑现，编码那一章便适用于层级，而以层级自家集合为常元的公式，获得的码又是层级的集合。这就是第四部的诸证书所读写的对象。
+两组参数都已兑现，编码那一章便适用于层级，而以层级自家集合为常元的公式，获得的码又是层级的集合。这就是内部编码诸章的证书所读写的对象。
 <!--/-->
 
 ```agda
@@ -242,8 +242,8 @@ Numerals are injective (`#-inj`{.Agda}, through monotonicity and
 irreflexivity) and Kuratowski pairs are injective (`pr-inj`{.Agda}, through the
 classification specifications), so `VCode`{.Agda} is the previous chapter's
 coding applied to the hierarchy. Formulas are now sets of `V`, with the
-`Codes`{.Agda} relation available to reason about them, and Part 4 can start
+`Codes`{.Agda} relation available to reason about them, and the internal coding development can start
 building certificates that quantify over coded syntax.
 <!--zh-->
-数码单射 (`#-inj`{.Agda}，经单调性与无自环性)，Kuratowski 对单射 (`pr-inj`{.Agda}，经分类规格)，于是 `VCode`{.Agda} 就是上一章的编码施于层级。公式如今是 `V` 的集合，`Codes`{.Agda} 关系可用来对它们推理，而第四部可以开始搭建对编码语法作量化的证书了。
+数码单射 (`#-inj`{.Agda}，经单调性与无自环性)，Kuratowski 对单射 (`pr-inj`{.Agda}，经分类规格)，于是 `VCode`{.Agda} 就是上一章的编码施于层级。公式如今是 `V` 的集合，`Codes`{.Agda} 关系可用来对它们推理，而可构造宇宙诸章可以开始搭建对编码语法作量化的证书了。
 <!--/-->

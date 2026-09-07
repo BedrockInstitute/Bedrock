@@ -37,13 +37,13 @@ import L.GCH.Theorem
 The headline is classical: granted one instance of the excluded middle, at the
 model's own truth level, the cumulative hierarchy is a model of ZF (chapter
 `V.Model`{.Agda}). Its exact-price form carries the hypothesis as a suffix,
-charging only Part 0's impredicativity packing; and by Diaconescu's theorem
+charging only the foundational impredicativity package; and by Diaconescu's theorem
 (chapter `Base.Choice`{.Agda}), one instance of set-level choice funds the
 upgrade all the way to ZFC.
 <!--zh-->
 ## 层级满足 ZF(C)
 
-主打名是经典版：给定模型自身真值层上的一份排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收第零部的非直谓性打包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择就资助到 ZFC。
+主打名是经典版：给定模型自身真值层上的一份排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收基础章节给出的非直谓性打包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择就资助到 ZFC。
 <!--/-->
 
 ```agda
@@ -62,16 +62,13 @@ V⊨ZFC = V.Model.V⊨ZFC
 
 The book's main theorem (chapter `L.Model`{.Agda}): given one instance of the
 excluded middle at the model's truth level, the constructible structure models
-ZFC. One hypothesis, and it is the same one the previous landmark pays. This
-signature carried a second parameter for most of the book's life, a registry of
-statements the remaining parts still owed; the registry is empty and the
-parameter is gone. Read with the previous landmark, it is the semantic form of
+ZFC. One hypothesis, and it is the same one the previous landmark pays. Read with the previous landmark, it is the semantic form of
 the relative consistency of choice: a ZF universe carries a ZFC sub-universe
 inside it.
 <!--zh-->
 ## 可构造宇宙满足 ZFC
 
-本书的主定理 (章节 `L.Model`{.Agda})：给定模型真值层上的一份排中律，可构造结构满足 ZFC。一个假设，而它与上一座地标所付的是同一个。这条签名在全书大半光景里还带第二个参数，即余部尚欠陈述的登记簿；如今登记簿已空，那个参数也已消失。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
+本书的主定理 (章节 `L.Model`{.Agda})：给定模型真值层上的一份排中律，可构造结构满足 ZFC。一个假设，而它与上一座地标所付的是同一个。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
 <!--/-->
 
 ```agda

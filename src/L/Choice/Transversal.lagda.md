@@ -1,8 +1,8 @@
-# Choice, and the frontier emptied
+# Choice by a transversal
 
 <!--en-->
-The last debt. What the registry still asks for is the axiom of choice at `𝒮ʟ`,
-in the **transversal** form the model record states it: given a set whose members
+This chapter proves the axiom of choice at `𝒮ʟ` in the **transversal** form
+used by the model record: given a set whose members
 are inhabited and pairwise disjoint, merely a set meeting each member in exactly
 one point.
 
@@ -31,7 +31,7 @@ stated relative to a ZF model on this carrier, because the intersection it names
 is that model's derived operation; and the whole of that dependence is one
 transport along the intersection's specification.
 <!--zh-->
-最后一笔债。登记簿仍在索取的，是选择公理在 `𝒮ʟ` 处的实例，且取模型 record 陈述它时所用的**横截**形式：给定一个集合，其成员非空且两两不交，则仅仅存在一个与它每个成员恰交于一点的集合。
+本章证明选择公理在 `𝒮ʟ` 处的实例，采用模型 record 所用的**横截**形式：给定一个集合，其成员非空且两两不交，则仅仅存在一个与它每个成员恰交于一点的集合。
 
 论证的形状就是经典的那个，只是那昂贵的一步早已付讫。教科书把宇宙良序化，再取每一格中最小的成员。`L` 整体的良序是真类上的关系，本书从未造过一个；前几章造出来的，是每个**阶段**上的良序，一致地造出，且在每个序数处都作为模型的一个元素。这就够了，因为集合是小的。单个序数一举界住一个族、它的成员与它们的成员，而在那个序数处的塔之内，选取不过是一次普通的极小元搜索。
 
@@ -344,16 +344,15 @@ operation. `hasChoiceL`{.Agda} proves it. The root chapter applies it to the ver
 model it is assembling, which is why the statement quantifies over the model in
 the first place.
 
-With this line the registry is empty, so `L.Frontier`{.Agda} is deleted, and the
-root chapter's second parameter with it. That was the promise the device was
-built on: a field, once proven, is deleted, and the record disappears when it
-empties.
+This line supplies the Choice field used by the root theorem. Its statement
+remains relative to the ZF model being assembled because intersection is the
+derived operation of that model.
 <!--zh-->
 ## 定理
 
 `ChoiceStatement`{.Agda} 就是前沿曾经持有的那条陈述，原样移到此处，且不再是一笔债：模型的选择字段在 `𝒮ʟ` 处的样子，相对于此载体上的一个 ZF 模型而言，因为那个交是那个模型的派生运算。`hasChoiceL`{.Agda} 证出它。根章把它施于正在装配的那个模型自身，而这正是这条陈述一开始就要对模型作全称的原因。
 
-有了这一行，登记簿便空了，于是 `L.Frontier`{.Agda} 被删除，根章的第二个参数也随之删除。这正是那件装置立身的承诺：字段一经证明即被删除，而账清之日 record 随之消失。
+这一行供应根定理所用的选择字段。它仍相对于正在装配的 ZF 模型陈述，因为交是该模型的派生运算。
 <!--/-->
 
 ```agda
@@ -399,20 +398,18 @@ not about where it is read.
 
 This is the end of the chain, so it is worth saying plainly what stands. **In
 cubical Agda, granted one instance of the excluded middle at the model's own
-truth level, the constructible universe is a model of ZFC.** Read with Part 3,
-where the ambient hierarchy models ZF, that is Gödel's relative consistency of
+truth level, the constructible universe is a model of ZFC.** Read with the
+ambient-hierarchy result that the hierarchy models ZF, that is Gödel's relative consistency of
 choice in semantic form: a universe satisfying ZF contains inside it a
 sub-universe satisfying ZFC, so an inconsistency of ZFC would already be an
 inconsistency of ZF.
 
 Every price is printed on the label. The host is cubical Agda with its universe
-tower, informally about as strong as ZFC plus an inaccessible; the excluded
-middle is a module parameter and not an axiom, and it is the only hypothesis the
-theorem carries; and there are no postulates anywhere in this development, no
-holes, and, as of this chapter, no registry of statements not yet proven. The book
-opened by stating its main theorem before it could prove it, and paid for that
-honesty with a record whose fields were the outstanding claims. The record is
-empty. What is left is a theorem.
+tower, informally about as strong as ZFC plus an inaccessible; excluded middle
+is a module parameter rather than an axiom, and it is the only hypothesis the
+theorem carries; and the development has no postulates or holes. This chapter
+supplies the Choice field that `L.Model`{.Agda} combines with the earlier ZF
+structure.
 <!--zh-->
 `Pick`{.Agda} 是那条描述：该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前。`pick-in`{.Agda} 与 `pick-out`{.Agda} 是它对着「是某个成员的极小元」的两条读式。`transversalSet`{.Agda} 是模型的分离据它在该族的上界序数处的塔之上雕出的东西，而 `transversal`{.Agda} 数清它与每个成员之交：恰一点，存在性来自那场极小元搜索，唯一性来自两两不交。`hasChoiceL`{.Agda} 就是模型的选择字段，有了它，前沿即告清空并被删除。
 
@@ -420,7 +417,7 @@ empty. What is left is a theorem.
 
 ## 本书是为了什么
 
-这是这条链的终点，故值得把立住的东西平白说一遍。**在 cubical Agda 之内，给定模型自身真值层级上的一份排中律，可构造宇宙是 ZFC 的模型。**与第三部 (环境层级满足 ZF) 合读，这就是哥德尔的选择公理相对一致性的语义形式：满足 ZF 的宇宙内部含有一个满足 ZFC 的子宇宙，故 ZFC 的任何矛盾都早已是 ZF 的矛盾。
+这是 Choice 构造链的终点，故值得把立住的东西平白说一遍。**在 cubical Agda 之内，给定模型自身真值层级上的一份排中律，可构造宇宙是 ZFC 的模型。**与环境层级满足 ZF 的结果合读，这就是哥德尔的选择公理相对一致性的语义形式：满足 ZF 的宇宙内部含有一个满足 ZFC 的子宇宙，故 ZFC 的任何矛盾都早已是 ZF 的矛盾。
 
-每一分价格都印在标签上。宿主是带宇宙塔的 cubical Agda，其强度非形式地约当于 ZFC 加一个不可达基数；排中律是模块参数而非公理，且是这条定理携带的唯一假设；而本开发中处处没有公设、没有洞，且自本章起，也没有尚未证明之陈述的登记簿。本书开篇先陈述了自己还证不出的主定理，并以一个 record 为这份诚实付账，其字段就是那些未清的论断。那个 record 空了。剩下的是一条定理。
+每一分价格都印在标签上。宿主是带宇宙塔的 cubical Agda，其强度非形式地约当于 ZFC 加一个不可达基数；排中律是模块参数而非公理，且是这条定理携带的唯一假设；本开发中处处没有公设、没有洞。本章交付选择公理字段，`L.Model`{.Agda} 再把它与此前的 ZF 结构装配起来。
 <!--/-->

@@ -54,8 +54,7 @@ open import L.Ordinal {ℓ} using ( mem-ord )
 open import L.Axioms.Basic {ℓ} using ( LsetS; isL-𝒟ₒ )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
 open import L.Recursion {ℓ} lem using ( mereFunct )
-open import L.Coding.Model {ℓ}
-  using ( prʟ; prʟ-fst; domAt-intro )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; domAt-intro )
 open import L.Coding.Sequence {ℓ} lem
   using ( StepAt; StepOf; PowOK; StepAt-in; StepAt-out; StepAt-back
         ; ApproxAt; ApproxAt-dom; ApproxAt-value; ApproxAt-step; ApproxAt-in

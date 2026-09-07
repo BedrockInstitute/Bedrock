@@ -56,11 +56,11 @@ open ZFStructure 𝒮ᵥ
 <!--en-->
 A proposition one universe up **is small** when it is equivalent to some
 proposition one universe down: the definition (`isSmall`{.Agda}) was minted in
-Part 0, where the resizing interface asserts it of every proposition wholesale.
+`Base.Impredicativity`, where the resizing interface asserts it of every proposition wholesale.
 This chapter assumes no such thing. It **earns** instances, one atom at a time,
 and the whole chapter is an exercise in passing the earned witnesses around.
 <!--zh-->
-高一层的命题**是小的**，指它与某个低一层的命题等价：这个定义 (`isSmall`{.Agda}) 铸于第零部，在那里，降层接口把它一揽子断言于每个命题。本章不作这种假设。它逐原子地**挣得**实例，而整章无非是把挣来的见证传来传去的一套体操。
+高一层的命题**是小的**，指它与某个低一层的命题等价：这个定义 (`isSmall`{.Agda}) 铸于基础章节，在那里，降层接口把它一揽子断言于每个命题。本章不作这种假设。它逐原子地**挣得**实例，而整章无非是把挣来的见证传来传去的一套体操。
 <!--/-->
 
 <!--en-->
@@ -321,9 +321,9 @@ The consequence: over an essentially small restricted structure, **every** formu
 evaluates small, no Δ₀ witness required. The quantifier clauses walk along the
 equivalence, the atoms drop back to `V`'s atomic smallness through the first
 projection. This is "spoken inside a small world, everything said is small", and
-it is the engine of Part 4's single construction step.
+it is the engine of the constructible hierarchy's definability step.
 <!--zh-->
-后果是：在本质小的限制结构上，**任何**公式求值皆小，无需 Δ₀ 见证。量词子句沿等价行走，原子经第一投影落回 `V` 的原子小性。这就是「在小世界里说话，说什么都小」，也是第四部那一步构造的发动机。
+后果是：在本质小的限制结构上，**任何**公式求值皆小，无需 Δ₀ 见证。量词子句沿等价行走，原子经第一投影落回 `V` 的原子小性。这就是「在小世界里说话，说什么都小」，也是可构造层级的可定义性步骤的发动机。
 <!--/-->
 
 ```agda

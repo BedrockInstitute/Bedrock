@@ -38,10 +38,10 @@ The bound enters as a **constant** `c` of the domain: `con c`{.Agda} is a term a
 every arity, so pushing the operator under binders needs no variable bookkeeping
 whatsoever. Atoms and bounded quantifiers pass through untouched; only the two
 unbounded constructors change clothes. A bound that is a proper class has no
-constant to stand on, and lies beyond this operator's range; Part 4 meets that
+constant to stand on, and lies beyond this operator's range; the constructible-universe development meets that
 wall head-on.
 <!--zh-->
-界以常量域中的**常量** `c` 进场：`con c`{.Agda} 在每个元数下都是词项，算子推进约束子之下不需要任何变量记账。原子与有界量词原样通过；只有两个无界构造子换装。真类之界没有常量可立足，超出本算子的射程；第四部将正面迎上那堵墙。
+界以常量域中的**常量** `c` 进场：`con c`{.Agda} 在每个元数下都是词项，算子推进约束子之下不需要任何变量记账。原子与有界量词原样通过；只有两个无界构造子换装。真类之界没有常量可立足，超出本算子的射程；可构造宇宙诸章将正面迎上那堵墙。
 <!--/-->
 
 ```agda
@@ -160,10 +160,10 @@ companion's clause, since `⟦ con c ⟧ γ` is `A`; everything else is congruen
 <!--en-->
 `relativize`{.Agda} tightens the unbounded quantifiers to a constant bound,
 `Δ₀-relativize`{.Agda} certifies the result, and `relativize-correct`{.Agda} pins
-its meaning to the bounded reading. With this, Part 1 closes: the object language,
+its meaning to the bounded reading. With this, relativization is complete: the object language,
 its structures and semantics, the variable calculus, representations with their
 certificate algebra, the Levy hierarchy, absoluteness, and relativization. Every
 later part of the book speaks through this toolkit; next, the axioms of set theory.
 <!--zh-->
-`relativize`{.Agda} 把无界量词收紧到常量界，`Δ₀-relativize`{.Agda} 为结果出具见证，`relativize-correct`{.Agda} 把它的含义钉在有界读法上。至此第一部收官：对象语言、其结构与语义、变量演算、表示与证书代数、分级层级、绝对性与相对化。本书此后各部都经这套工具箱说话；接下来，集合论的公理。
+`relativize`{.Agda} 把无界量词收紧到常量界，`Δ₀-relativize`{.Agda} 为结果出具见证，`relativize-correct`{.Agda} 把它的含义钉在有界读法上。至此，相对化这一课完成：对象语言、其结构与语义、变量演算、表示与证书代数、分级层级、绝对性与相对化。本书此后各部都经这套工具箱说话；后续的变换、参数化与编码章节将在这套工具箱上继续搭建。
 <!--/-->

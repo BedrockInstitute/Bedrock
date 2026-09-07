@@ -6,7 +6,8 @@ doctrine's third view): nodes and edges come from the `import` lines of the
 masters under src/, the reading order and the per-module one-line descriptions
 come from the Everything reading catalog (its import block and its bullet
 lists, per language), lanes mirror the sidebar's namespace grouping, and the
-horizontal position is the longest-path dependency depth. Output is a fully
+default layout follows dependency depth vertically; an alternate view groups
+chapters by the learning stages in the reading catalog. Output is a fully
 self-contained HTML page (inline CSS/JS, no external assets) written to
 <out>/<lang>/depmap.html; render-site.py links to it from the sidebar.
 
@@ -25,7 +26,8 @@ from i18n_markers import weave  # noqa: E402
 
 AGGREGATOR = "Everything"
 HUBS = ["Base.Prelude", "Base.Truth"]   # the designated hub modules (STYLE-agda §2)
-IMPORT_RE = re.compile(r'^\s*(?:open )?import ([A-Za-z][\w.]*)', re.M)
+FENCE_RE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
+IMPORT_RE = re.compile(r'^\s*(?:open\s+)?import\s+([A-Za-z][\w.]*)', re.M)
 BULLET_RE = re.compile(r'^- `([A-Za-z][\w.]*)`\{\.Agda\}[:：]\s*(.*)$')
 
 # lane colour slots, assigned by lane order of first appearance in the catalog
@@ -38,53 +40,147 @@ SLOTS = [
 UI = {
     "en": {
         "title": "Dependency map", "back": "← Bedrock",
-        "sub": ("Direct imports between the {n} literate chapters. Horizontal axis is "
-                "dependency depth (no dependencies at the left, the root theorem at the "
-                "right); lanes are the sidebar's namespace tree. <b>A → B means B imports "
-                "A</b>. Hover for a chapter's dependency cones; click to pin."),
+        "sub": ("Dependencies between {n} chapters flow from top to bottom. "
+                "A → B means B imports A. Choose a compact overview, learning stages, "
+                "or namespace lanes. Hover to trace prerequisites; click to pin."),
+        "layout": "Layout:", "compact": "Compact", "teaching": "Learning stages", "namespace": "Namespaces",
         "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
-        "alledges": "all direct imports",
-        "lmk": "include Landmarks' references",
-        "hint": "— hover or click any chapter —",
-        "hubnote": ("The hubs <span class=mono>Base.Prelude</span> and <span class=mono>"
-                    "Base.Truth</span> are imported by every chapter; those edges are "
-                    "omitted (the detail card still lists them)."),
+        "alledges": "all direct imports", "lmk": "include Landmarks' references",
+        "hint": "Select a chapter to trace its prerequisites",
+        "hubnote": ("The widely used Base.Prelude and Base.Truth imports are omitted "
+                    "from the drawing but retained in chapter details."),
         "reading": "reading position", "imports": "direct imports", "consumers": "direct consumers",
-        "footer": ("Reading order (corner numbers) and dependency order differ on purpose: "
-                   "this page is the third derived view of the two-catalog doctrine "
-                   "(PLAN §5). Regenerated from the import lines of "
-                   "<span class=mono>src/**.lagda.md</span> on every site build."),
+        "footer": ("The skeleton preserves reachability, not every direct use of a definition. "
+                   "An omitted edge is not permission to delete an import. Learning stages and "
+                   "reading positions come from Everything; Landmarks is the opening preview "
+                   "and appears at the bottom here as the endpoint. All views use the same source graph."),
     },
     "zh": {
         "title": "依赖地图", "back": "← Bedrock",
-        "sub": ("{n} 个文学化章节的直接导入关系。横轴为依赖深度 (左端无依赖，右端是根定理)；"
-                "泳道即侧边栏的命名空间结构树。<b>A → B 表示 B 导入 A</b>。悬停看依赖锥，点击钉住。"),
-        "edgemode": "边：", "skeleton": "骨架 (传递约简)",
-        "alledges": "全部直接边",
-        "lmk": "包含 Landmarks 的引用边",
-        "hint": "— 悬停或点击任一章节 —",
-        "hubnote": ("中枢 <span class=mono>Base.Prelude</span> 与 <span class=mono>Base.Truth"
-                    "</span> 被每一章导入，图中省略这些边 (详情卡仍列出)。"),
+        "sub": ("{n} 个章节的依赖从上向下展开。A → B 表示 B 导入 A。可切换紧凑总览、学习阶段或命名空间分栏。悬停追踪先修关系，点击固定。"),
+        "layout": "布局：", "compact": "紧凑总览", "teaching": "学习阶段", "namespace": "命名空间",
+        "edgemode": "边：", "skeleton": "骨架 (传递约简)", "alledges": "全部直接边",
+        "lmk": "包含 Landmarks 的引用边", "hint": "选择章节以追踪先修关系",
+        "hubnote": "图中省略广泛使用的 Base.Prelude 和 Base.Truth 导入边，章节详情仍保留它们。",
         "reading": "阅读序号", "imports": "直接导入", "consumers": "直接消费者",
-        "footer": ("阅读顺序 (角标数字) 与依赖顺序刻意不同：本页是两目录法条 (PLAN §5) 的第三个"
-                   "派生视图。每次站点构建都从 <span class=mono>src/**.lagda.md</span> 的 "
-                   "import 行重新生成。"),
+        "footer": ("骨架保留可达关系，并不展示每一次直接使用；省略一条边不表示可以删除对应导入。学习阶段和阅读序号取自 Everything。Landmarks 是开篇预览，在此作为终点置于底部。各视图使用同一份源码依赖图。"),
     },
     "ja": {
         "title": "依存マップ", "back": "← Bedrock",
-        "sub": ("{n} 章の直接 import 関係。横軸は依存の深さ、レーンはサイドバーの名前空間ツリー。"
-                "<b>A → B は B が A を import する</b>ことを表す。ホバーで依存錐、クリックで固定。"),
-        "edgemode": "辺：", "skeleton": "骨格 (推移簡約)",
-        "alledges": "すべての直接 import",
-        "lmk": "Landmarks の参照を含める",
-        "hint": "— 章にホバーまたはクリック —",
-        "hubnote": ("ハブ <span class=mono>Base.Prelude</span> と <span class=mono>Base.Truth"
-                    "</span> は全章から import されるため、辺は省略 (詳細カードには表示)。"),
-        "reading": "読書順", "imports": "直接 import", "consumers": "直接の消費者",
-        "footer": ("読書順 (隅の番号) と依存順は意図的に異なる。本頁はサイトビルドごとに "
-                   "<span class=mono>src/**.lagda.md</span> から再生成される。"),
+        "sub": "{n} 章の依存関係を上から下へ表示。A → B は B が A を import することを表す。章を選ぶと前提を追跡できます。",
+        "layout": "配置：", "compact": "コンパクト", "teaching": "学習段階", "namespace": "名前空間",
+        "edgemode": "辺：", "skeleton": "骨格 (推移簡約)", "alledges": "直接 import 全体",
+        "lmk": "Landmarks の参照を含める", "hint": "章を選択して前提を確認",
+        "hubnote": "広く使われる Base.Prelude と Base.Truth の辺は図から省略し、章の詳細には残します。",
+        "reading": "読書順", "imports": "直接 import", "consumers": "直接の利用者",
+        "footer": "骨格は到達関係を保ちます。省略された辺の import が不要とは限りません。学習段階は Everything に従います。冒頭の予告 Landmarks は、この図では終点として下部に置きます。",
     },
 }
+
+
+def imports(text):
+    return [name for block in FENCE_RE.findall(text) for name in IMPORT_RE.findall(block)]
+
+
+def teaching_stages(text, lang):
+    stages, membership, current, inside = [], {}, None, False
+    for line in weave(text, lang).splitlines():
+        if line == "```agda":
+            inside = True
+        elif inside and line == "```":
+            inside = False
+        elif not inside and line.startswith("## "):
+            current = str(len(stages))
+            stages.append({"key": current, "label": line[3:]})
+        elif inside:
+            found = IMPORT_RE.match(line)
+            if found and current is not None:
+                membership[found.group(1)] = current
+    return stages, membership
+
+
+def reduced_edges(nodes, edges):
+    adjacency = {n: set() for n in nodes}
+    for a, b in edges:
+        adjacency[a].add(b)
+    def alternate(a, b):
+        pending, seen = list(adjacency[a] - {b}), set()
+        while pending:
+            n = pending.pop()
+            if n == b:
+                return True
+            if n not in seen:
+                seen.add(n)
+                pending.extend(adjacency[n])
+        return False
+    return [(a, b) for a, b in edges if not alternate(a, b)]
+
+
+def packed_layout(nodes, edges, ranks, order, top=34):
+    """Place each depth on one row; use adjacent ranks to reduce crossings."""
+    levels = {}
+    for n in sorted(nodes, key=lambda n: order[n]):
+        levels.setdefault(ranks[n], []).append(n)
+    parents = {n: [] for n in nodes}
+    children = {n: [] for n in nodes}
+    for a, b in edges:
+        if a in parents and b in parents:
+            parents[b].append(a)
+            children[a].append(b)
+    for sweep in range(8):
+        adjacent = parents if sweep % 2 == 0 else children
+        positions = {n: (i + .5) / len(row) for row in levels.values() for i, n in enumerate(row)}
+        for rank in sorted(levels, reverse=bool(sweep % 2)):
+            def score(n):
+                xs = [positions[a] for a in adjacent[n]]
+                return sum(xs) / len(xs) if xs else positions[n]
+            levels[rank].sort(key=lambda n: (score(n), order[n]))
+            positions.update({n: (i + .5) / len(levels[rank]) for i, n in enumerate(levels[rank])})
+    width = max((len(row) for row in levels.values()), default=1) * 142 + 28
+    positions = {}
+    for rank, row in levels.items():
+        offset = (width - len(row) * 142) / 2
+        for i, n in enumerate(row):
+            positions[n] = {"x": offset + i * 142 + 7, "y": top + rank * 66}
+    return {"width": width, "height": top + (max(ranks.values(), default=0) + 1) * 66,
+            "positions": positions, "bands": []}
+
+
+def layouts(nodes, edges, order, depth, row, lanes, stages, membership):
+    skeleton = reduced_edges(nodes, [(a, b) for a, b in edges if a not in HUBS])
+    compact = packed_layout(nodes, skeleton, depth, order)
+    compact["bands"] = []
+    x, positions, bands = 4, {}, []
+    for lane in lanes:
+        group = [n for n in nodes if lane_of(n) == lane]
+        width = max(row[n] + 1 for n in group) * 142 + 14
+        bands.append({"x": x, "y": 0, "width": width, "height": compact["height"], "label": lane})
+        for n in group:
+            positions[n] = {"x": x + 14 + row[n] * 142, "y": 34 + depth[n] * 66}
+        x += width
+    namespace = {"width": x + 4, "height": compact["height"], "positions": positions, "bands": bands}
+    # Landmarks is read as a preview but depends on the final results.
+    stage_order = [s for s in stages if s["key"] != membership.get("Landmarks")]
+    stage_order += [s for s in stages if s["key"] == membership.get("Landmarks")]
+    teaching = {"width": 0, "height": 0, "positions": {}, "bands": []}
+    for stage in stage_order:
+        group = [n for n in nodes if membership[n] == stage["key"]]
+        ranks = {}
+        for n in sorted(group, key=lambda n: depth[n]):
+            ranks[n] = max((ranks[a] + 1 for a, b in edges if b == n and a in ranks), default=0)
+        block = packed_layout(group, skeleton, ranks, order)
+        y = teaching["height"]
+        teaching["bands"].append({"x": 0, "y": y, "width": block["width"], "height": block["height"], "label": stage["label"]})
+        teaching["positions"].update({n: {"x": p["x"], "y": p["y"] + y} for n, p in block["positions"].items()})
+        teaching["width"] = max(teaching["width"], block["width"])
+        teaching["height"] += block["height"]
+    for band in teaching["bands"]:
+        offset = (teaching["width"] - band["width"]) / 2
+        for point in teaching["positions"].values():
+            if band["y"] <= point["y"] < band["y"] + band["height"]:
+                point["x"] += offset
+        band["width"] = teaching["width"]
+    return {"compact": compact, "teaching": teaching, "namespace": namespace}
 
 
 def masters(src):
@@ -132,10 +228,10 @@ def build_graph(src):
     internal = set(mods)
     edges = []
     for mod, text in sorted(mods.items()):
-        for imp in sorted(set(IMPORT_RE.findall(text))):
+        for imp in sorted(set(imports(text))):
             if imp in internal and imp != mod:
                 edges.append((imp, mod))
-    order = [m for m in IMPORT_RE.findall(everything) if m in internal]
+    order = [m for m in imports(everything) if m in internal]
     ordnum = {m: i + 1 for i, m in enumerate(order)}
 
     # dependency depth: longest path over the full edge set
@@ -197,7 +293,12 @@ def main(argv):
             "id": m, "lane": lane_of(m), "col": col[m], "row": row[m],
             "ord": ordnum.get(m, 0), "desc": descs.get(m, ""),
         } for m in sorted(internal, key=lambda m: (ordnum.get(m, 999), m))]
+        stages, membership = teaching_stages(everything, lang)
+        stage_labels = {stage["key"]: stage["label"] for stage in stages}
+        for node in nodes:
+            node["stage"] = stage_labels[membership[node["id"]]]
         data = {
+            "layouts": layouts(internal, edges, ordnum, col, row, lanes, stages, membership),
             "nodes": nodes,
             "edges": [list(e) for e in edges],
             "lanes": [{"key": ln, "light": slot[ln][0], "dark": slot[ln][1]}
@@ -206,6 +307,8 @@ def main(argv):
             "landmark": "Landmarks",
         }
         page = TEMPLATE
+        for key in ("layout", "compact", "teaching", "namespace"):
+            page = page.replace("__" + key.upper() + "__", ui[key])
         page = page.replace("__LANG__", lang)
         page = page.replace("__TITLE__", ui["title"])
         page = page.replace("__BACK__", ui["back"])

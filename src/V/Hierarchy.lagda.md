@@ -1,7 +1,7 @@
 # The cumulative hierarchy
 
 <!--en-->
-Part 3 opens, and the tone changes. So far every model has been hypothetical:
+the cumulative-hierarchy chapters opens, and the tone changes. So far every model has been hypothetical:
 `isZFModel`{.Agda} is a specification, and nothing yet inhabits it. This part
 exhibits the inhabitant, and the universe it lives on is not built by this book at
 all: the cubical library ships the **cumulative hierarchy** `V`{.Agda} as a higher
@@ -9,7 +9,7 @@ inductive type, following the HoTT book. This chapter introduces that type, plug
 it into the framework as a structure, and banks the first two fields of the record
 for free.
 <!--zh-->
-第三部开幕，语气随之一变。至此的模型都是假设性的：`isZFModel`{.Agda} 是一份规格书，尚无居民。本部就来交出居民，而它栖身的宇宙甚至不是本书亲手所造：cubical 库自带**累积层级** `V`{.Agda}，一个沿 HoTT book 构造的高阶归纳类型。本章介绍这个类型，把它作为结构插进框架，并免费入账 record 的头两个字段。
+累积层级诸章开幕，语气随之一变。至此的模型都是假设性的：`isZFModel`{.Agda} 是一份规格书，尚无居民。本部就来交出居民，而它栖身的宇宙甚至不是本书亲手所造：cubical 库自带**累积层级** `V`{.Agda}，一个沿 HoTT book 构造的高阶归纳类型。本章介绍这个类型，把它作为结构插进框架，并免费入账 record 的头两个字段。
 <!--/-->
 
 ```agda
@@ -168,9 +168,9 @@ recursion, so the library's well-founded induction instantiates on membership:
 to define something for every set, it suffices to define it for `x` given its
 values on the members of `x`, into an **arbitrary** type family, with the
 recursion equation holding propositionally. This is transfinite recursion with
-no ordinals in sight, and Part 4 builds its universe with it.
+no ordinals in sight, and the constructible-universe development builds its universe with it.
 <!--zh-->
-正则性立刻付出第一笔红利。良基关系支持递归，于是库的良基归纳在成员关系上实例化：要对每个集合定义某物，只需在给定 `x` 各成员处取值的前提下给出 `x` 处的值，落点是**任意**类型族，递归方程命题级成立。这是不见序数的超穷递归，第四部就用它构造自己的宇宙。
+正则性立刻付出第一笔红利。良基关系支持递归，于是库的良基归纳在成员关系上实例化：要对每个集合定义某物，只需在给定 `x` 各成员处取值的前提下给出 `x` 处的值，落点是**任意**类型族，递归方程命题级成立。这是不见序数的超穷递归，可构造宇宙的开发就用它构造自己的宇宙。
 <!--/-->
 
 ```agda

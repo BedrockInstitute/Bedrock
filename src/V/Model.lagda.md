@@ -298,13 +298,13 @@ module NumPin (a : ℕ → S) (q : (n : ℕ) → a n ≡ # n) where
 <!--en-->
 Two fields remain, full separation and power set, and neither is free: both need
 truth values brought down a universe with no Δ₀ witness to pay the fare. The
-price is exactly Part 0's impredicativity packing: `resizing`{.Agda} compresses
+price is exactly the impredicativity packing of `Base.Impredicativity`: `resizing`{.Agda} compresses
 any proposition, and `hPropSmallness`{.Agda} is the small classifier the power
 set will be indexed by. Nothing here is an axiom; the assembly takes the
 packing as a parameter, and the classical reader rides free through
 `lem→impredicativity`{.Agda}, which is what the dividends were saved for.
 <!--zh-->
-还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 见证替它们买票。价格恰是第零部打包好的非直谓性接口：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以这份打包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
+还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 见证替它们买票。价格恰是`Base.Impredicativity` 打包的非直谓性接口：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以这份打包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
 <!--/-->
 
 <!--en-->
@@ -432,11 +432,11 @@ module VModel (imp : Impredicativity ℓ) where
 **This is the semantic relative-consistency theorem this part promised**: within
 cubical Agda and its universes, granted impredicativity, the cumulative
 hierarchy is a model of ZF. The schemas are honoured for **all** formulas at
-once; the deep embedding of Part 1 takes its first full load here. The name
+once; the deep embedding of the first-order logic chapters takes its first full load here. The name
 carries the exact hypothesis as a suffix, and the unsuffixed headline is the
 classical redemption:
 <!--zh-->
-**这就是本部许诺的语义版相对一致性定理**：在 cubical Agda 及其宇宙之内，给定非直谓性，累积层级是 ZF 的模型。两条模式公理对**所有**公式一次性履约；第一部的深嵌入语法在此第一次满载。定理名以后缀携带精确假设，不带后缀的主打名则是经典赎回版：
+**这就是本部许诺的语义版相对一致性定理**：在 cubical Agda 及其宇宙之内，给定非直谓性，累积层级是 ZF 的模型。两条模式公理对**所有**公式一次性履约；一阶逻辑诸章的深嵌入语法在此第一次满载。定理名以后缀携带精确假设，不带后缀的主打名则是经典赎回版：
 <!--/-->
 
 ```agda
@@ -572,10 +572,10 @@ The account closes balanced. Empty set, pair, and union were library stock
 reshaped by `∈∈ₛ` and `⇔toPath`{.Agda}; replacement came free through `sett`
 over untruncated fibers; strong infinity was `ω`'s definition plus one chain
 alignment (`numeralV≡#`{.Agda}). The two debts, full separation and power set,
-cost exactly Part 0's `Impredicativity`{.Agda} packing: assembly gives
+cost exactly `Base.Impredicativity`'s `Impredicativity`{.Agda} packing: assembly gives
 `V⊨ZF-impredicative`{.Agda} at that exact price, the excluded middle redeems it
 into the headline `V⊨ZF`{.Agda}, and by Diaconescu the choice interface alone
-funds `V⊨ZFC`{.Agda}. The universe that Part 4 will dig inside now exists.
+funds `V⊨ZFC`{.Agda}. The universe that the constructible-universe chapters will dig inside now exists.
 <!--zh-->
-账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为第零部打包的 `Impredicativity`{.Agda}：合龙以此精确价格给出 `V⊨ZF-impredicative`{.Agda}，排中律把它赎回成主打的 `V⊨ZF`{.Agda}，经 Diaconescu 更是单凭选择接口就资助了 `V⊨ZFC`{.Agda}。第四部将要向内开凿的那个宇宙，现在存在了。
+账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为基础章节打包的 `Impredicativity`{.Agda}：合龙以此精确价格给出 `V⊨ZF-impredicative`{.Agda}，排中律把它赎回成主打的 `V⊨ZF`{.Agda}，经 Diaconescu 更是单凭选择接口就资助了 `V⊨ZFC`{.Agda}。可构造宇宙诸章将要向内开凿的那个宇宙，现在存在了。
 <!--/-->

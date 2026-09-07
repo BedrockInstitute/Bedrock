@@ -20,11 +20,8 @@ open import L.Ordinal {ℓ} using ( #∈ω; ∈#-elim )
 open import L.Axioms.Basic {ℓ} using ( extensionalL )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; numL
-        ; svAt; svAt-out; domAt; domAt-in; domAt-out; domAt-intro
-        ; appAt; appAt-adequate; sucAtL; sucAtL-adequate
-        ; envOverAt; envOver-sv; envOver-dom; envOverAt-transport )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt; domAt-in; domAt-out; domAt-intro; appAt; appAt-adequate; envOverAt; envOver-sv; envOver-dom; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( numL; sucAtL; sucAtL-adequate )
 open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract )
 open import L.Coding.Environment {ℓ} using ( lookup-spec )
 open import L.Coding.EnvSet {ℓ} lem

@@ -1,17 +1,15 @@
 # Relabelling
 
 <!--en-->
-The constant domain is a parameter, and the book keeps swapping it: the working
-syntax takes a carrier, the parameter-free formulas take the empty type, Part 4
-takes a restricted carrier. This chapter is the kit for such swaps, and it works
-at three altitudes at once: a map between constant domains pushes through
-**syntax** functorially, preserves **meaning** on the nose, and carries the
-Levy **witnesses** along unchanged. Like its tail-mates, the kit has no
+The constant domain is a parameter, and the book keeps swapping it. The mapping
+chapter defined the syntactic action. This chapter proves its two invariance
+theorems: relabelling preserves **meaning** on the nose and carries Levy
+**witnesses** along unchanged. Like its tail-mates, the kit has no
 consumer in the trunk yet; its customers arrive with the deeper chapters of
-Part 4, where formulas migrate between the inner world's constants, the codes'
+the constructible-universe chapters, where formulas migrate between the inner world's constants, the codes'
 empty domain, and the ambient carrier.
 <!--zh-->
-常量域是一个参数，而本书不停地换它：工作语法取载体，无参公式取空类型，第四部取受限载体。本章就是这类更换的工具组，且一次在三个海拔上工作：常量域之间的一个映射，沿**语法**函子式推送，在**含义**上分毫不差，还把 Lévy **见证**原样携带。与书末诸同伴一样，这套工具在主干上尚无消费者；它的客户随第四部的深层章节到来，届时公式将在内层世界的常量、码的空域与环境载体之间迁徙。
+常量域是一个参数，而本书不停地换它。映射章已定义语法上的作用；本章证明它的两条不变性定理：重标在**含义**上分毫不差，并把 Lévy **见证**原样携带。与书末诸同伴一样，这套工具在主干上尚无消费者；它的客户随可构造宇宙诸章的深层章节到来，届时公式将在内层世界的常量、码的空域与环境载体之间迁徙。
 <!--/-->
 
 ```agda
@@ -24,94 +22,12 @@ open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
   ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+open import FOL.Manipulation.Mapping using ( mapTm; mapFo; embed )
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
   ; Σₙ; σ-Δ₀; σ-Π; σ-∃; Πₙ; π-Δ₀; π-Σ; π-∀ )
 import FOL.Semantics
 import Cubical.Data.Empty as Empty
-```
-
-<!--en-->
-## Syntax level
-<!--zh-->
-## 语法层
-<!--/-->
-
-<!--en-->
-The syntax is functorial in its constant domain: a map `K → K'` pushes through a
-term or formula, relabelling constants and touching nothing else. One clause per
-constructor, each doing the obvious thing.
-<!--zh-->
-语法对常量域是函子式的：一个映射 `K → K'` 沿词项或公式推送，变换常量，不碰其他任何东西。一构造子一子句，各做显然之事。
-<!--/-->
-
-```agda
-mapTm : ∀ {ℓ ℓ'} {K : Type ℓ} {K' : Type ℓ'} {n}
-      → (K → K') → Term K n → Term K' n
-mapTm f (con k) = con (f k)
-mapTm f (var i) = var i
-
-mapFo : ∀ {ℓ ℓ'} {K : Type ℓ} {K' : Type ℓ'} {n}
-      → (K → K') → Formula K n → Formula K' n
-mapFo f (t ∈̇ u)  = mapTm f t ∈̇ mapTm f u
-mapFo f (t ≐ u)  = mapTm f t ≐ mapTm f u
-mapFo f (φ ∧̇ ψ)  = mapFo f φ ∧̇ mapFo f ψ
-mapFo f (φ ∨̇ ψ)  = mapFo f φ ∨̇ mapFo f ψ
-mapFo f (φ ⇒̇ ψ)  = mapFo f φ ⇒̇ mapFo f ψ
-mapFo f ⊥̇        = ⊥̇
-mapFo f (∃̇ φ)    = ∃̇ mapFo f φ
-mapFo f (∀̇ φ)    = ∀̇ mapFo f φ
-mapFo f (∀̇∈ t φ) = ∀̇∈ (mapTm f t) (mapFo f φ)
-mapFo f (∃̇∈ t φ) = ∃̇∈ (mapTm f t) (mapFo f φ)
-```
-
-<!--en-->
-Two such maps in a row are one map. The composite is the only thing a chapter
-that migrates a formula through an intermediate domain ever wants, and proving it
-where the syntax is defined costs ten congruences and stops every later
-chapter from writing its own. Both term cases are `refl`{.Agda}, because a
-variable carries no constant and a constant is relabelled by application.
-<!--zh-->
-连着两次这样的映射就是一次映射。凡经中间域迁徙一条公式的章节，想要的无非是那个复合；而在语法被定义之处证它，代价是十次同余，却省得此后每一章各写一遍。两个词项情形都是 `refl`{.Agda}，因为变元不携带常量，而常量的变换就是把映射施用上去。
-<!--/-->
-
-```agda
-mapTm-comp : ∀ {ℓ ℓ' ℓ''} {K : Type ℓ} {K' : Type ℓ'} {K'' : Type ℓ''} {n}
-             (f : K → K') (g : K' → K'') (t : Term K n)
-           → mapTm g (mapTm f t) ≡ mapTm (λ k → g (f k)) t
-mapTm-comp f g (con k) = refl
-mapTm-comp f g (var i) = refl
-
-mapFo-comp : ∀ {ℓ ℓ' ℓ''} {K : Type ℓ} {K' : Type ℓ'} {K'' : Type ℓ''} {n}
-             (f : K → K') (g : K' → K'') (φ : Formula K n)
-           → mapFo g (mapFo f φ) ≡ mapFo (λ k → g (f k)) φ
-mapFo-comp f g (t ∈̇ u)  = cong₂ _∈̇_ (mapTm-comp f g t) (mapTm-comp f g u)
-mapFo-comp f g (t ≐ u)  = cong₂ _≐_ (mapTm-comp f g t) (mapTm-comp f g u)
-mapFo-comp f g (φ ∧̇ ψ)  = cong₂ _∧̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
-mapFo-comp f g (φ ∨̇ ψ)  = cong₂ _∨̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
-mapFo-comp f g (φ ⇒̇ ψ)  = cong₂ _⇒̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
-mapFo-comp f g ⊥̇        = refl
-mapFo-comp f g (∃̇ φ)    = cong ∃̇_ (mapFo-comp f g φ)
-mapFo-comp f g (∀̇ φ)    = cong ∀̇_ (mapFo-comp f g φ)
-mapFo-comp f g (∀̇∈ t φ) = cong₂ ∀̇∈ (mapTm-comp f g t) (mapFo-comp f g φ)
-mapFo-comp f g (∃̇∈ t φ) = cong₂ ∃̇∈ (mapTm-comp f g t) (mapFo-comp f g φ)
-```
-
-<!--en-->
-The most-travelled instance: entering a constant domain from **no** constants.
-The syntax chapter introduced the **parameter-free formulas**, the data axis
-with the empty type as constant domain; like sentences they bear no separate
-name, the type `Formula (⊥* {ℓ}) n` says it whole. From the empty type anything
-follows, the library's eliminator `Empty.rec*`{.Agda} says so, and relabelling
-along it embeds a parameter-free formula into the syntax over any domain
-whatsoever.
-<!--zh-->
-走动最勤的实例：从**没有**常量的域进入任何常量域。语法章介绍过**无参公式**，即以空类型为常量域的数据轴；与句子一样，本书不为它另设名字，类型 `Formula (⊥* {ℓ}) n` 已经说完全部。从空类型可以推出一切，库的消去子 `Empty.rec*`{.Agda} 说的正是这句话，沿它变换，无参公式便嵌入任意常量域上的语法。
-<!--/-->
-
-```agda
-embed : ∀ {ℓ ℓ'} {K : Type ℓ'} {n} → Formula (⊥* {ℓ}) n → Formula K n
-embed = mapFo Empty.rec*
 ```
 
 <!--en-->
@@ -241,12 +157,9 @@ mutual
 <!--/-->
 
 <!--en-->
-One map of constant domains, three altitudes of transport: `mapFo`{.Agda} moves
-the syntax (with `embed`{.Agda} as the parameter-free entrance), `⊨-map`{.Agda}
-and `embed-⊨`{.Agda} certify that meaning does not move at all, and
-`mapΔ₀`{.Agda} with its tower carries the Levy witnesses. A formula, its meaning,
-and its grade travel as one; the chapters that migrate formulas between worlds
-will lean on exactly that.
+Given the syntactic action `mapFo`{.Agda}, `⊨-map`{.Agda} and `embed-⊨`{.Agda}
+certify that meaning does not move, while `mapΔ₀`{.Agda} and its tower carry the
+Levy witnesses. A formula, its meaning, and its grade travel as one.
 <!--zh-->
-一个常量域映射，三个海拔的搬运：`mapFo`{.Agda} 搬语法 (`embed`{.Agda} 是无参入口)，`⊨-map`{.Agda} 与 `embed-⊨`{.Agda} 认证含义纹丝不动，`mapΔ₀`{.Agda} 及其塔搬 Lévy 见证。公式、含义与级别作为一体旅行；将来在诸世界之间迁徙公式的章节，靠的正是这一点。
+给定语法作用 `mapFo`{.Agda}，`⊨-map`{.Agda} 与 `embed-⊨`{.Agda} 认证含义纹丝不动，`mapΔ₀`{.Agda} 及其塔搬运 Lévy 见证。公式、含义与级别作为一体旅行。
 <!--/-->

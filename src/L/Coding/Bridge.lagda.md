@@ -49,8 +49,8 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; con; var; Formula
         ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.Relabelling
-  using ( mapTm; mapFo; mapFo-comp; ⊨-map )
+open import FOL.Manipulation.Mapping using ( mapTm; mapFo; mapFo-comp )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
 import FOL.Absoluteness
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -58,7 +58,7 @@ open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Coding.Environment {ℓ} using ( env; cons; lookup-spec )
-open import L.Coding.Model {ℓ} using ( consAtL; consAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( consAtL; consAtL-adequate )
 open import L.Coding.EnvSet {ℓ} lem
   using ( Ix; envS; envSet; envSet-in; envSet-out )
 open import L.Coding.Sat {ℓ} lem

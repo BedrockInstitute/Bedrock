@@ -141,11 +141,11 @@ data Π₁ {ℓc} {K : Type ℓc} : ∀ {n} → Formula K n → Type ℓc where
 <!--en-->
 Σ₁ and Π₁ are the first floor of an alternating tower: Σₙ₊₁ stacks existential
 blocks on Πₙ, Πₙ₊₁ stacks universal blocks on Σₙ, and Δ₀ sits inside every level.
-Part 4's reflection arguments will climb this tower level by level; the
+the constructible-universe reflection arguments will climb this tower level by level; the
 constructors follow the same one-quantifier-per-step pattern, with `σ-Π` and
 `π-Σ` providing the alternation.
 <!--zh-->
-Σ₁ 与 Π₁ 是一座交替之塔的第一层：Σₙ₊₁ 在 Πₙ 上叠存在块，Πₙ₊₁ 在 Σₙ 上叠全称块，Δ₀ 坐落于每一级之内。第四部的反射论证将沿这座塔逐级攀升；构造子沿用一步一量词的模式，`σ-Π` 与 `π-Σ` 提供交替升级。
+Σ₁ 与 Π₁ 是一座交替之塔的第一层：Σₙ₊₁ 在 Πₙ 上叠存在块，Πₙ₊₁ 在 Σₙ 上叠全称块，Δ₀ 坐落于每一级之内。可构造宇宙的反射论证将沿这座塔逐级攀升；构造子沿用一步一量词的模式，`σ-Π` 与 `π-Σ` 提供交替升级。
 <!--/-->
 
 ```agda

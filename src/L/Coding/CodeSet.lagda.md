@@ -73,7 +73,7 @@ module L.Coding.CodeSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
-open import FOL.Manipulation.Relabelling using ( mapFo )
+open import FOL.Manipulation.Mapping using ( mapFo )
 import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -83,8 +83,9 @@ open import L.Recursion {ℓ} lem using ( smallDom )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; tagAtL; tagAtL-adequate; closedAt )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( tagAtL; tagAtL-adequate )
+open import L.Coding.Closure {ℓ} using ( closedAt )
 open import L.Coding.InL {ℓ} using ( key; keyL; codeL; key∈closure )
 open import L.Coding.Closed {ℓ} using ( clo; closureClosed )
 open import L.Coding.Shape {ℓ} using ( shapedAt; closureShaped )

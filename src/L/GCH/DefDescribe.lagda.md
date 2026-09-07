@@ -12,7 +12,7 @@ module L.GCH.DefDescribe {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
-open import FOL.Manipulation.Relabelling using ( mapFo )
+open import FOL.Manipulation.Mapping using ( mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
@@ -25,9 +25,9 @@ open import L.Coding.CodeSet {ℓ} lem using ( keyS; key∈AllCodes )
 open import L.Coding.Uniform {ℓ} lem using ( module Table; val-at )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.GCH.SatFrame {ℓ} lem using
-  ( sh; i0; i1; i3; i6; f0; f1; Tags; down; container; sndS
+  ( sh; i0; i1; i3; i6; f0; f1; Tags; down; container
   ; sndEx; sndAll; sndEx-out; sndAll-in; fillSnd; useSnd
-  ; pr-out; pr-in; module Alphabet )
+  ; pr-out; pr-in; module Alphabet ; sndS )
 open import L.GCH.SatDescribe {ℓ} lem using ( satAt; module SatRead; module Match )
 
 open import Cubical.Data.Nat using ( _+_ )

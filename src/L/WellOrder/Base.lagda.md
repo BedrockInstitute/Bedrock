@@ -1,47 +1,13 @@
 # Strict well-orders, and least elements
 
 <!--en-->
-One construction ahead needs to *choose*: the axiom of choice, at the end of the
-book, has to pick an element out of each cell of a family, and the classical way
-to make that choice is to well-order the candidates and take the least one that
-qualifies.
+Strict well-orders support a recurring mathematical operation: choose the least witness of an inhabited property. This chapter introduces the order bundle, proves existence and uniqueness of least elements, and then assembles the natural numbers as the foundational example used by later constructions.
 
-The reflection argument was expected to be a second consumer and is not. It was
-delivered with no order at all, as a ladder whose limit answers for every matrix
-at once, built jointly rather than selected from. So this vocabulary has one
-consumer rather than two, and it is `L.Choice.Transversal`{.Agda}, the last
-chapter of the book: the search below is what picks a point out of each cell of a
-disjoint family.
-
-This chapter provides the vocabulary. A strict well-order on a type is a
-relation that is trichotomous, irreflexive, transitive and well founded, bundled
-as a record so that later chapters can carry one around as data. The bundle is
-level-generic in a way worth one remark: the carrier and the relation take
-*separate* universe levels, because the order that Part 4 eventually builds
-compares formulas, which are small, by data that mentions ordinals, which are
-not.
-
-The theorem is that a non-empty subset has a least element, and it is unique.
-Uniqueness is free from trichotomy. Existence is not: deciding, at each step,
-whether anything smaller still qualifies is exactly a decision about an
-arbitrary predicate, so this is the second place the book spends the excluded
-middle. Unlike the first, here the cost buys a genuine choice function rather
-than a comparison.
-
-The assumption sits on that one theorem rather than on the chapter, which is
-worth doing wherever it can be done: the bundle, the uniqueness of least
-elements, and everything a later chapter needs in order to *state* an order are
-constructive, and only the search is not.
+The carrier and relation may live at separate universe levels. Most of the vocabulary is constructive; excluded middle appears only in the descent that finds a least witness.
 <!--zh-->
-接下来有一个构造需要**选取**：本书末尾的选择公理要从一个族的每一格里挑出一个元素，而作出这个选取的经典方式，是把候选者良序化，再取合格者中最小的那个。
+严格良序支撑一个反复出现的数学操作：从一个非空性质中选取最小见证。本章引入良序束，证明极小元的存在与唯一性，并把自然数装配成后续构造使用的基础例子。
 
-反射论证本来预期是第二个消费方，结果不是。它交付时根本没有用到任何序，而是一道阶梯，其极限一举为每个母式作答，是合起来造出来的、不是从中挑出来的。故这套词汇只有一个消费方、不是两个，那就是本书的最后一章 `L.Choice.Transversal`{.Agda}：下文那场搜索，正是从不交族的每一格里挑出一个点的那件东西。
-
-本章提供相应的词汇。类型上的严格良序，是一个三歧、非自反、传递且良基的关系，打成 record，好让后续章节把它当数据携带。这个束的层级泛型有一点值得说明：载体与关系取**各自独立**的宇宙层级，因为第四部最终造出的那个序比较的是公式 (小的)，而据以比较的数据要提到序数 (不小)。
-
-定理是：非空子集有极小元，且唯一。唯一性由三歧免费得到。存在性则不然：每一步都要判定「是否还有更小的合格者」，那恰是关于任意谓词的一次判定，故这是本书第二次花费排中律。与第一次不同，这里的代价换来的是一个真正的选择函数，而不是一次比较。
-
-这个假设落在那一条定理上，而非落在整章上，而这件事只要做得到就值得做：束、极小元的唯一性，以及后续章节**陈述**一个序所需的一切，都是构造性的，唯有搜索不是。
+载体与关系可以位于不同宇宙层级。大部分词汇都是构造性的；排中律只出现在寻找最小见证的下降过程里。
 <!--/-->
 
 ```agda
@@ -54,6 +20,9 @@ open import Base.Classical using ( LEM )
 module L.WellOrder.Base {ℓₚ : Level} where
 
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
+open import Cubical.Data.Nat using ( ℕ )
+open import Cubical.Data.Nat.Order using ( _<_; <-trans; ¬m<m; <-wellfounded; _≟_ )
+import Cubical.Data.Nat.Order as NatOrder
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -173,6 +142,48 @@ arbitrary predicate, and that is where the excluded middle enters.
 ```
 
 <!--en-->
+## The natural numbers, well-ordered
+<!--zh-->
+## 自然数，良序化
+<!--/-->
+
+<!--en-->
+The natural numbers give the basic infinite example of a strict well-order and later count construction stages. The library supplies everything about the usual order on the natural
+numbers, so the bundle is assembled rather than proved: the trichotomy is the
+library's decision procedure with its three-way answer renamed, and
+well-foundedness is the library's own.
+
+The lift is bookkeeping and nothing more. A bundle carries its relation at a
+single universe level fixed once for the whole chapter, and the order on the
+natural numbers lives at the bottom, so it is raised to meet it. It also demonstrates how a low-level relation is used in a universe-polymorphic bundle.
+<!--zh-->
+自然数给出严格良序的基本无穷例子，随后也用来为构造阶段计数。关于自然数上通常的序，库已备齐一切，故这个束是装配出来的、而非证出来的：三歧取库的判定程序，把它的三路答案改个名；良基性则直接是库自己的。
+
+提升只是记账，别无他意。一个束把它的关系带在为全章一次固定的单一宇宙层级上，而自然数上的序住在最底层，故把它抬上来相会。它也示范如何在宇宙多态的束中使用低层级关系。
+<!--/-->
+
+```agda
+liftAcc : (n : ℕ) → Acc _<_ n → Acc (λ a b → Lift {ℓ-zero} {ℓₚ} (a < b)) n
+liftAcc n (acc r) = acc (λ m h → liftAcc m (r m (lower h)))
+
+natOrder : SWO {ℓ-zero} ℕ
+natOrder = record
+  { _<∙_   = λ a b → Lift (a < b)
+  ; tri∙   = triOf
+  ; irr∙   = λ a h → ¬m<m (lower h)
+  ; trans∙ = λ a b c h k → lift (<-trans (lower h) (lower k))
+  ; wf∙    = λ n → liftAcc n (<-wellfounded n) }
+  where
+  triOf : (a b : ℕ) → Tri (Lift (a < b)) (a ≡ b) (Lift (b < a))
+  triOf a b = fromNat (a ≟ b)
+    where
+    fromNat : NatOrder.Trichotomy a b → Tri (Lift (a < b)) (a ≡ b) (Lift (b < a))
+    fromNat (NatOrder.lt h) = lt (lift h)
+    fromNat (NatOrder.eq h) = eq h
+    fromNat (NatOrder.gt h) = gt (lift h)
+```
+
+<!--en-->
 ## Recap
 <!--zh-->
 ## 小结
@@ -180,12 +191,7 @@ arbitrary predicate, and that is where the excluded middle enters.
 
 <!--en-->
 `SWO`{.Agda} bundles a strict well-order, and `leastOf`{.Agda} extracts the least
-element of any non-empty subset, uniquely (`isPropLeastOf`{.Agda}). The bundle
-is the interface the choice construction takes; it does not care which order it
-is handed, which is why the chapter is generic. The excluded middle is spent
-once, on the decision at each descent step, and the
-level discipline (carrier and relation separately generic) is what will let the
-order of Part 4 compare small things by large data.
+element of any non-empty subset, uniquely (`isPropLeastOf`{.Agda}). The bundle is a generic interface for later constructions, while `natOrder`{.Agda} is its basic infinite instance. Excluded middle is spent once, on the decision at each descent step; the bundle and the natural-number order remain constructive.
 <!--zh-->
-`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是选择构造取用的接口；它不在乎拿到的是哪个序，这正是本章泛型的原因。排中律花在一处，即每一步下降时的那次判定，且只记在那一条定理账上：此处其余一切都是构造性的。而层级纪律 (载体与关系各自泛型) 将使第四部的那个序能以大的数据去比较小的东西。
+`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是后续构造使用的泛型接口，而 `natOrder`{.Agda} 是它的基本无穷实例。排中律只花在每一步下降的判定上；良序束与自然数序本身仍是构造性的。
 <!--/-->

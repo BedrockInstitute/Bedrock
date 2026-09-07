@@ -24,9 +24,8 @@ open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ; unionʟ )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; numL; appAt; appAt-adequate
-        ; svAt-out; domAt-in; tagAtL; tagAtL-adequate )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; appAt; appAt-adequate; svAt-out; domAt-in )
+open import L.Coding.Expressions {ℓ} using ( numL; tagAtL; tagAtL-adequate )
 open import L.Coding.InL {ℓ}
   using ( sglʟ; sglʟ-in; sglʟ-out; cupʟ; cupʟ-inl; cupʟ-inr; cupʟ-out )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out; module Extract )

@@ -1,53 +1,29 @@
 # Satisfaction over the whole code set
 
 <!--en-->
-The first instance of this recursion, since retired, was indexed by
-`slot B φ`{.Agda}, the keys of one formula and its subformulas. Nothing
-downstream can use it. A consumer
-arrives holding a **code**, not the formula the code came from: the internal
-definable powerset ranges over the codes of arity one at a stage, and the
-well-order compares two codes that are subcodes of no common formula. Indexed by
-one formula's slot there is a table per formula, and "what does the table say at
-this code" has no answer until someone produces a formula the code is a subcode
-of.
+Consumers of internal satisfaction arrive holding a **code**, not the formula
+from which it came. The internal definable powerset ranges over all arity-one
+codes at a stage, while the well-order may compare codes that are not subcodes
+of any common formula. The recursion therefore needs one table whose visible
+domain is the whole stage code set. `AllCodes`{.Agda} supplies exactly those
+keys, at every arity.
 
-The domain that answers is the code set at a stage, and the previous goal built
-it. `AllCodes`{.Agda} holds the keys of the formulas over the carrier at *every*
-arity, which is exactly what a consumer arrives holding.
+The graph itself binds a table and a qualifying index set existentially. To show
+that a member has a graph value, `funct`{.Agda} may use the member's own
+subformula slot, whose closed, total, clause-satisfying table was certified by
+the preceding coding chapters. Uniformity then says that these local witnesses
+cohere into the value read from the whole code set.
 
-Closedness of the whole code set is **not** what discharges the graph's demand on
-an index set, and it is worth saying so, because that theorem is what the previous
-goal was registered for. The graph binds its table and its index set
-**existentially**, so `funct`{.Agda} owes only *some* qualifying set containing the
-member, and the smallest one is the member's own formula's slot, closed by the
-chapter that built it. Nothing anywhere consumed it, and it has since been
-retired.
-
-What the change costs is the whole content of this chapter, and it is almost
-nothing, for a reason worth stating before any of it. The graph binds its table
-**existentially**. So `funct`{.Agda} at a member does not have to exhibit a table
-over the whole domain; it has to exhibit some closed, total, clause-satisfying
-table holding that member, and the smallest such table is the subformula slot of
-the member's own formula, which four earlier chapters already built and
-certified. The recursion changes its domain and nothing else changes:
-`Table`{.Agda}, `Slot`{.Agda}, `Sound`{.Agda} and `Unique`{.Agda} are untouched
-statement for statement.
-
-One thing here is genuinely new, and it is not about recursion at all. The code
-set's members are keys taken in the **hierarchy's** coding over the stage's own
-alphabet; everything the recursion speaks is keys taken in the **model's** coding
-over the model's language. Those are the same construction at two alphabets, and
-no theorem connected them.
+A second bridge is needed because the code set uses the **hierarchy's** coding
+over a stage alphabet, whereas the recursive table uses the **model's** coding
+over the model language. This chapter identifies the two presentations and
+exports the uniform satisfaction table consumed by powerset and Choice.
 <!--zh-->
-这场递归的第一个实例以 `slot B φ`{.Agda} 为索引，即一条公式及其诸子公式的诸键，此后已予撤除。下游没有任何东西用得上它。消费方到场时手里握着的是一个**码**，而不是该码所出自的那条公式：内部可定义幂集在某阶段处元数一的诸码上取值，而良序要比较的两个码并非任何共同公式的子码。以一条公式的槽为索引，就是一条公式一张表，而「这张表在这个码处说什么」在有人拿出「该码是其子码」的某条公式之前，根本没有答案。
+内部满足关系的消费方到场时手里握着的是一个**码**，而不是该码所出自的公式。内部可定义幂集遍历某阶段处全部元数一的码，良序也可能比较不属于任何共同公式的两个子码。因此递归需要一张可见定义域为整个阶段码集的表；`AllCodes`{.Agda} 恰好在每个元数处供应这些键。
 
-作答的那个定义域是某阶段处的码集，而上一个目标已经把它造好。`AllCodes`{.Agda} 持有载体之上诸公式在**每个**元数处的诸键，而那恰是消费方到场时手里握着的东西。
+图把表与合格索引集作存在绑定。为了证明一个成员有图值，`funct`{.Agda} 可以取该成员自己的子公式槽；前面的编码章节已经证明那张槽表封闭、全且满足诸子句。统一性随后说明这些局部见证与从整个码集读出的取值相容。
 
-整个码集的封闭性**不是**打发图对索引集之要求的那个东西，而这件事值得说出来，因为那条定理正是上一个目标为之登记的。图把自己的表与索引集都作**存在**绑定，故 `funct`{.Agda} 只欠「**某个**装着该成员的合格集合」，而最小的那个就是该成员自己那条公式的槽，其封闭性由造出它的那一章给出。它在任何地方都不被消费，故此后已予撤除。
-
-这次更换的代价就是本章的全部内容，而它几乎为零；理由值得在一切之前说明。那个图把自己的表**存在**绑定。故 `funct`{.Agda} 在一个成员处不必拿出一张覆盖整个定义域的表；它只需拿出「某张封闭、全的、满足诸子句的、装着该成员的表」，而最小的这样一张，就是该成员自己那条公式的子公式槽，而它已由前面四章造好并认证。这场递归换掉它的定义域，其余一概不变：`Table`{.Agda}、`Slot`{.Agda}、`Sound`{.Agda} 与 `Unique`{.Agda} 逐条陈述原封不动。
-
-此处确有一件全新的东西，而它压根与递归无关。码集的诸成员是在**层级**的编码里、在该阶段自己的字母表之上取的键；而这场递归所说的一切，是在**模型**的编码里、在模型的语言之上取的键。两者是同一套构造落在两个字母表上，而没有任何定理把它们接上。
+还需另一座桥，因为码集使用**层级**在阶段字母表上的编码，而递归表使用**模型**在模型语言上的编码。本章认同这两种呈现，并导出供幂集与 Choice 消费的统一满足关系表。
 <!--/-->
 
 ```agda
@@ -61,23 +37,23 @@ module L.Coding.Uniform {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula )
-open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; ⊨-map )
+open import FOL.Manipulation.Mapping using ( mapFo; mapFo-comp )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.Model {ℓ}
-  using ( domAt; domAt-intro; domAt-out )
+open import L.Coding.Model {ℓ} using ( domAt; domAt-intro; domAt-out )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Bridge {ℓ} lem
   using ( intoL; asConst; Sat-spec ) renaming ( graph to envGraph )
 open import L.Coding.Table {ℓ} lem
   using ( keyʟ; slot; satTable; total; inSlot; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
-open import L.Coding.Clauses {ℓ} lem using
-  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; module Tower; module TowerHolds )
+open import L.Coding.Tower {ℓ} lem using ( towerAt; module Tower; module TowerHolds )
+open import L.Coding.CodeDomain {ℓ} lem using
+  ( Tags; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds ) renaming ( keyBridge to keyBridge' )
 open import L.Coding.Graph {ℓ} lem using
   ( satGraph; graph-in; graph-out; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )

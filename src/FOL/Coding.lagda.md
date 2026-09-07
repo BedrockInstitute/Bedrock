@@ -3,7 +3,7 @@
 <!--en-->
 Everything so far has kept formulas outside the sets they talk about: a formula
 is host-level data, a set is a point of the structure, and satisfaction is the
-bridge. Part 4 needs the other direction. To say inside a model that some set is
+bridge. the internal coding development needs the other direction. To say inside a model that some set is
 definable, or to compare two formulas by an order that a model can see, the
 formulas themselves must be sets. This chapter injects them.
 
@@ -28,7 +28,7 @@ an equation between two of them forces a typechecker to unfold both. The
 relation makes the shape a constructor index instead, so matching is syntactic
 and the values are never normalized.
 <!--zh-->
-迄今为止的一切都把公式留在它们所谈论的集合之外：公式是宿主层的数据，集合是结构的点，满足关系是二者之间的桥。第四部需要相反的方向。要在模型内部说某个集合可定义，或者用模型看得见的序去比较两条公式，公式自身就必须是集合。本章把它们注入进去。
+迄今为止的一切都把公式留在它们所谈论的集合之外：公式是宿主层的数据，集合是结构的点，满足关系是二者之间的桥。内部编码诸章需要相反的方向。要在模型内部说某个集合可定义，或者用模型看得见的序去比较两条公式，公式自身就必须是集合。本章把它们注入进去。
 
 这套编码刻意平淡。没有算术化，没有哥德尔编号，没有递归花招：公式的码是一个带标签的对，标签是构造子的序号，载荷是各部分的码。递归留在它该在的地方，即宿主的归纳类型 `Formula`{.Agda} 上，而码是一种边界格式。唯一的优雅之处是：集合常量本来就是集合，故常量即自身的码。
 

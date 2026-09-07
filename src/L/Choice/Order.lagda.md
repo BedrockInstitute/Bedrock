@@ -587,7 +587,7 @@ open Ordered Stp stp-out stp-in public
 <!--en-->
 ## The order at the bounding ordinal
 
-The last chapter will want one particular instance, in one particular shape. Given
+The transversal chapter needs one particular instance, in one particular shape. Given
 a set of `L`, the stage chapter's bounding ordinal is an ordinal above that set's
 own stage, hence above its members and their members, and above `ω` as well. It is
 constructible, because an ordinal appears at the stage after itself. So the family
@@ -598,7 +598,7 @@ element and its two lemmas, is what a separation will be run against.
 <!--zh-->
 ## 上界序数处的序
 
-最后一章要的是一个特定的实例，且要一个特定的形状。给定 `L` 的一个集合，阶段那一章的上界序数是一个高于该集合自身阶段的序数，从而高于它的成员及其成员，也高于 `ω`。它是可构造的，因为一个序数现身于自身之后的那个阶段。于是那一族在那里的塔的诸成员上有一个序，而表把那个序作为**模型的一个元素**握在手里，两条表示引理则把对该元素的隶属与元层面的比较双向读通。这个三元组，即那个元素与它的两条引理，正是一次分离将要据以施行的东西。
+横截集那一章要的是一个特定的实例，且要一个特定的形状。给定 `L` 的一个集合，阶段那一章的上界序数是一个高于该集合自身阶段的序数，从而高于它的成员及其成员，也高于 `ω`。它是可构造的，因为一个序数现身于自身之后的那个阶段。于是那一族在那里的塔的诸成员上有一个序，而表把那个序作为**模型的一个元素**握在手里，两条表示引理则把对该元素的隶属与元层面的比较双向读通。这个三元组，即那个元素与它的两条引理，正是一次分离将要据以施行的东西。
 <!--/-->
 
 ```agda
@@ -662,7 +662,7 @@ because it is read at constants.
 
 `open Ordered`{.Agda} is the one line, and with it the order table is
 unconditional: the construction and all four of its readings, together with
-everything the two frames export. `Bound`{.Agda} is the shape the last chapter
+everything the two frames export. `Bound`{.Agda} is the shape the transversal chapter
 separates with: the bounding ordinal of a set of `L`, the order on the members of
 the tower there as an element of the model, and its two representation lemmas.
 <!--zh-->
@@ -674,5 +674,5 @@ the tower there as an element of the model, and its two representation lemmas.
 
 一次实测，且是一条定律在新地方的现身：**一个框架所结论于其中的类型，要在它被造出之处封印**。`StepHolds`{.Agda} 就是那一步充分性的结论；把那个框架实例化到本描述所绑定的具体元素上会把它正规化，而不封印时那件事跑不完 (超过 200 秒，对全章的 7 秒)。另有两条承袭而来的定律无须新实测即被遵守：抵达诸槽位的元素被封印，而那条描述自身被封印，因为它被读在诸常元上。
 
-`open Ordered`{.Agda} 就是那一行，随之，序之表变成无条件的：那个构造连同它的全部四条读式，以及两个框架所导出的一切。`Bound`{.Agda} 是最后一章据以分离的那个形状：`L` 的一个集合的上界序数、那里的塔的诸成员上的序作为模型的一个元素，以及它的两条表示引理。
+`open Ordered`{.Agda} 就是那一行，随之，序之表变成无条件的：那个构造连同它的全部四条读式，以及两个框架所导出的一切。`Bound`{.Agda} 是横截集那一章据以分离的那个形状：`L` 的一个集合的上界序数、那里的塔的诸成员上的序作为模型的一个元素，以及它的两条表示引理。
 <!--/-->

@@ -37,9 +37,8 @@ open import FOL.ZFStructure using ( module hPropStructure )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ}
-  using ( envSetAt; envOverAt; envOverAt-transport
-        ; extAt-out; extAt-in; extAt-in-both; numL )
+open import L.Coding.Model {ℓ} using ( envOverAt; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( envSetAt; extAt-out; extAt-in; extAt-in-both; numL )
 open import L.Coding.EnvSet {ℓ} lem
   using ( envSet; envSet-in; envSet-out; envS; envOver; module Recover )
 

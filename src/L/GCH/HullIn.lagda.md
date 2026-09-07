@@ -12,7 +12,8 @@ module L.GCH.HullIn {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ⊥̇ )
-open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; ⊨-map )
+open import FOL.Manipulation.Mapping using ( mapFo; mapFo-comp )
+open import FOL.Manipulation.Relabelling using ( ⊨-map )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Absoluteness
 import FOL.Semantics
@@ -30,9 +31,8 @@ open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
 open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; numL; sucAtL; sucAtL-adequate
-        ; consAtL; consAtL-adequate; envOverAt; envOverAt-transport )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; envOverAt; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( numL; sucAtL; sucAtL-adequate; consAtL; consAtL-adequate )
 open import L.Coding.Environment {ℓ} using ( env; cons )
 open import L.Coding.EnvSet {ℓ} lem using ( envS; Ix; envOver; module Recover )
 open import L.Coding.Bridge {ℓ} lem using ( graph; envFor; envFor-graph )

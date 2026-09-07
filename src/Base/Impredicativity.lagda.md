@@ -8,9 +8,9 @@ to grow with the universe. This chapter mints the vocabulary: what it is for one
 proposition to be small, the two sweeping interfaces that assert smallness
 wholesale, and their packing. Nothing is assumed and nothing is proven here;
 these are interfaces. The next chapter redeems them all from excluded middle,
-and Part 3 prices concrete model fields in exactly this currency.
+and the cumulative-hierarchy chapters prices concrete model fields in exactly this currency.
 <!--zh-->
-宿主的宇宙排成一架梯子，而梯子反复抛出同一个问题：住在高一层的东西，在低层有没有替身？对**命题**而言，这个问题正是**非直谓性**的标志：真值的世界拒绝随宇宙一起膨胀。本章铸下这套词汇：单个命题「是小的」是什么意思，一揽子断言小性的两个接口，以及它们的打包。此处无所假设、亦无所证明；这些是接口。下一章将用排中律把它们全部赎回，第三部则恰以这种货币为具体的模型字段标价。
+宿主的宇宙排成一架梯子，而梯子反复抛出同一个问题：住在高一层的东西，在低层有没有替身？对**命题**而言，这个问题正是**非直谓性**的标志：真值的世界拒绝随宇宙一起膨胀。本章铸下这套词汇：单个命题「是小的」是什么意思，一揽子断言小性的两个接口，以及它们的打包。此处无所假设、亦无所证明；这些是接口。下一章将用排中律把它们全部赎回，累积层级诸章则恰以这种货币为具体的模型字段标价。
 <!--/-->
 
 ```agda
@@ -32,11 +32,11 @@ open import Cubical.Foundations.Equiv using ( _≃_ )
 A proposition one universe up **is small** when it is equivalent to some
 proposition one universe down. The definition carries the witness: to hold an
 inhabitant of `isSmall P`{.Agda} is to hold the small stand-in together with the
-equivalence. The smallness chapter of Part 3 will make a whole gymnastics of
+equivalence. The smallness chapter of the cumulative-hierarchy chapters will make a whole gymnastics of
 passing such witnesses around, earning instances one atom at a time without any
 axiom.
 <!--zh-->
-高一层的命题**是小的**，指它与某个低一层的命题等价。定义随身携带见证：手握 `isSmall P`{.Agda} 的居民，就是手握小替身连同那份等价。第三部的小性一章将把传递这种见证做成一整套体操，逐原子地挣得实例，不花任何公理。
+高一层的命题**是小的**，指它与某个低一层的命题等价。定义随身携带见证：手握 `isSmall P`{.Agda} 的居民，就是手握小替身连同那份等价。累积层级诸章的小性一章将把传递这种见证做成一整套体操，逐原子地挣得实例，不花任何公理。
 <!--/-->
 
 ```agda

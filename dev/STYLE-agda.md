@@ -32,9 +32,9 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
 5. **Strictness over convenience.** Code here is written by agents; typing burden is
    never a reason for a style decision. Of two candidates separated only by
    engineering convenience, take the stricter.
-6. **The reader is a beginner.** Bedrock-specific: where a stricter and a more
-   teachable option genuinely conflict (rare), surface the conflict to the owner
-   instead of deciding locally.
+6. **The reader is a beginner.** Bedrock-specific: when a stricter and a more
+   teachable option conflict, explain the tradeoff in review. For the current
+   architecture task, the owner delegates that decision to the coordinating agent.
 
 ## 1. Options and assumptions
 
@@ -104,15 +104,15 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   lists). A genuine exception the linter cannot see (an instance-only import) is
   marked `-- lint-agda: keep`.
 - Every module is imported by `Everything` in reading order (enforced by the
-  L5-ported audit; a module outside `Everything` is unchecked and unlisted). Its
-  reading position is where its first consumer needs it. **The book keeps two
+  `check-reading-order.py` gate; no master may be absent from the catalog). Its
+  reading position introduces its concepts before their substantive use. **The book keeps two
   catalogs** (owner ruling, 2026-07-18, archived from PLAN §5): the **reading
   catalog** is `Everything.lagda.md`, hand-maintained, with import order =
   reading order; the **structure catalog** is the namespace tree, derived
   automatically and never hand-maintained. Namespace membership is decided by
-  subject, reading position by first consumption, and the two are independent.
-  Thematic grouping is the structure catalog's job, never a reason to move a
-  chapter forward.
+  subject; reading order follows mathematical prerequisites and coherent learning
+  units. An explicit preview such as Landmarks may precede its proof chapters,
+  but the instructional sequence must not silently rely on unread chapters.
 
 ## 3. Naming
 

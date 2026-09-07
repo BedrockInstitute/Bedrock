@@ -56,8 +56,8 @@ open import L.Choice.Step {ℓ} lem
         ; Mem; New; relOf; carry; Under; stepAt
         ; orderAt; orderAt-step; module Family )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
-open import L.Coding.Model {ℓ}
-  using ( extAt; extAt-in; extAt-out; extAt-in-both; prAtL; prAtL-adequate )
+open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
+open import L.Coding.Expressions {ℓ} using ( extAt; extAt-in; extAt-out; extAt-in-both )
 open import L.Coding.Sequence {ℓ} lem using ( LsetGraphAt )
 open import L.Coding.Powerset {ℓ} lem using ( DefAt; DefAt-stage )
 open import L.Coding.CodeSet {ℓ} lem

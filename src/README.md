@@ -23,7 +23,9 @@ imports every module, so `agda src/Everything.lagda.md` typechecks the whole dev
 import order is the reading order, and each chapter page carries previous/next links along
 it. The sidebar's module tree is the **structure catalog**, derived from the namespace tree
 and never hand-maintained. **When you add a module, add its import here and its one-line
-entry in the reading catalog**, at the position its first consumer dictates.
+entry in the reading catalog**, after its prerequisites and before its substantive
+consumers. `scripts/gate/check-reading-order.py` checks this order and exact
+coverage; Landmarks is the explicitly labelled preview exception.
 
 ## Current modules
 
@@ -34,7 +36,7 @@ not duplicate it, because a second list drifts: MEASURED 2026-08-17, this sectio
 `src/V/` and 71 under `src/L/`, and the repository held zero `.gitkeep` files.
 
 `Landmarks.lagda.md` is the trophy case and reads first in the catalog, by owner ruling: the
-storefront, before Part 0. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC`, `L⊨ZFC` and
+storefront, before the foundations stage. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC`, `L⊨ZFC` and
 `L⊨GCH`, each a self-contained signature naming its proving chapter. **Both `L` trophies are
 proved.** `L⊨GCH` was proved on 2026-09-05; its statement type is `GCHStatement` in
 `L/GCH.lagda.md` and its proof term is `L⊨GCH` in `L/GCH/Theorem.lagda.md`. The only

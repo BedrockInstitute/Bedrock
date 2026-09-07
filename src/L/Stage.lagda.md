@@ -206,10 +206,10 @@ naming the earliest stage containing a constructible set, with
 `stage-ord`{.Agda}, `stage-mem`{.Agda} and `stage-earliest`{.Agda} its three
 properties. Existence is a well-founded descent and uniqueness is trichotomy, so
 the chapter is classical; and the function is sealed, so the descent never
-reaches a later conversion problem. Reflection is the first consumer, and it uses
+reaches a later conversion problem. Reflection is an early consumer, and it uses
 both: it places a formula's parameters at a common stage by bounding their
 stages, and it picks a witness for an existential by taking the least stage that
 has one.
 <!--zh-->
-`leastOrd`{.Agda} 从「合用的序数存在」这一截断见证出发，为任意序数性质选出满足它的最小序数。`stage`{.Agda} 是它的头一个实例，为可构造集命名包含它的最早阶段，`stage-ord`{.Agda}、`stage-mem`{.Agda} 与 `stage-earliest`{.Agda} 是它的三条性质。存在性是一次良基下降，唯一性是三歧，故本章经典；而函数被封印，故那次下降永不抵达日后的转换问题。反射是第一个消费方，且两者都用：它经界住诸阶段而把公式的参数安置在公共阶段上，又经取「有见证的最早阶段」而为一个存在量词选出见证。
+`leastOrd`{.Agda} 从「合用的序数存在」这一截断见证出发，为任意序数性质选出满足它的最小序数。`stage`{.Agda} 是它的头一个实例，为可构造集命名包含它的最早阶段，`stage-ord`{.Agda}、`stage-mem`{.Agda} 与 `stage-earliest`{.Agda} 是它的三条性质。存在性是一次良基下降，唯一性是三歧，故本章经典；而函数被封印，故那次下降永不抵达日后的转换问题。反射是早期的消费方，且两者都用：它经界住诸阶段而把公式的参数安置在公共阶段上，又经取「有见证的最早阶段」而为一个存在量词选出见证。
 <!--/-->

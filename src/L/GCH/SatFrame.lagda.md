@@ -15,16 +15,19 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
+open import L.Coding.Model {ℓ} using ( container ) public
+open import L.Coding.Quantification {ℓ} public
+  using ( bothAll; bothAll-in; down; fillSnd; i0; i1; i2; i3; i6; i8
+        ; sndS; pr-in; pr-out; sh; sndAll; sndAll-in; sndEx; sndEx-out; suc-in; suc-out
+        ; useBoth; useSnd; Δ₀-bothAll; Δ₀-prAtL; Δ₀-sndAll; Δ₀-sndEx; Δ₀-sucAtL )
+open import L.Coding.Tower {ℓ} lem public
+  using ( nn; towerAt; Δ₀-towerAt; module Tower; module TowerHolds; module TowerRead )
+open import L.Coding.CodeDomain {ℓ} lem public
+  using ( Tags; codesAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; shN
+        ; Δ₀-codesAt; module Alphabet; module CodesComplete; module CodesHolds
+        ; module CodesSound )
 open import L.Coding.Clauses {ℓ} lem public
-  using ( Tags; bothAll; bothAll-in; codesAt; container; down; f0; f1; f2; f3
-        ; f4; f5; f6; f7; f8; f9; fillSnd; i0; i1; i2; i3; i6
-        ; i8; nn; pr-in; pr-out; sh; shN; sndAll; sndAll-in; sndEx
-        ; sndEx-out; sndS; suc-in; suc-out; tableAt; towerAt; useBoth
-        ; useSnd; Δ₀-bothAll; Δ₀-codesAt; Δ₀-prAtL; Δ₀-sndAll; Δ₀-sndEx
-        ; Δ₀-sucAtL; Δ₀-tableAt; Δ₀-towerAt; module Alphabet; module Bridge
-        ; module CodesComplete; module CodesHolds; module CodesSound
-        ; module Frame; module Tower; module TowerHolds
-        ; module TowerRead )
+  using ( tableAt; Δ₀-tableAt; module Bridge; module Frame )
 
 open import FOL.Syntax using ( Formula )
 open import Cubical.Data.Sigma using ( Σ≡Prop )

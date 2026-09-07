@@ -46,7 +46,7 @@ module L.Ordinal.Stages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∀∈ )
-open import FOL.Manipulation.Relabelling using ( mapFo )
+open import FOL.Manipulation.Mapping using ( mapFo )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-irrefl )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import L.Definability {ℓ} using ( module DefOf )

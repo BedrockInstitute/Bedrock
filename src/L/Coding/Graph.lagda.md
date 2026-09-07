@@ -42,12 +42,14 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Coding.Model {ℓ}
-  using ( closedAt; domAt; appAt; appAt-adequate )
-open import L.Coding.Clauses {ℓ} lem using
-  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; i9; i10; i11; i12; i13
-  ; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; sh; nn; Tags; towerAt; tableAt )
+open import L.Coding.Model {ℓ} using ( domAt; appAt; appAt-adequate )
+open import L.Coding.Closure {ℓ} using ( closedAt )
+open import L.Coding.Quantification {ℓ} using
+  ( i0; i1; i2; i3; i4; i5; i6; i7; i8; i9; i10; i11; i12; i13; sh )
+open import L.Coding.Tower {ℓ} lem using ( nn; towerAt )
+open import L.Coding.CodeDomain {ℓ} lem using
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; Tags )
+open import L.Coding.Clauses {ℓ} lem using ( tableAt )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.Vec using ( _∷_; []; lookup )

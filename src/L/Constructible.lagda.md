@@ -1,7 +1,7 @@
 # The constructible universe
 
 <!--en-->
-Part 4 opens on the book's protagonist. Gödel's **constructible universe** is
+The constructible-universe sequence opens on the book's protagonist. Gödel's **constructible universe** is
 what remains of a universe of sets when every appeal to arbitrary subsets is
 replaced by the previous chapter's operator: start from nothing, take definable
 subsets at every step, collect at every limit. The textbook writes it as a tower,
@@ -18,7 +18,7 @@ ordinals it is exactly Gödel's tower. Alongside it runs an inductive predicate
 `isLayer`{.Agda}, "being a stage", whose constructors are the tower's closure
 principles; the two views cooperate throughout.
 <!--zh-->
-第四部以本书的主角开幕。哥德尔的**可构造宇宙**，是把一个集合宇宙里对任意子集的每次诉求都换成上一章那个算子之后剩下的东西：从空无出发，每一步只取可定义子集，每个极限处收拢。教科书把它写成一座塔，`L₀ = ∅`、`L_{α+1} = Def(L_α)`、极限取并，`L` 就是塔中出现过的一切。本章建起这座塔与类 `L`，并把结果打包成结构 `𝒮ʟ`，本部余下章节研究的世界。
+可构造宇宙的学习阶段以本书的主角开幕。哥德尔的**可构造宇宙**，是把一个集合宇宙里对任意子集的每次诉求都换成上一章那个算子之后剩下的东西：从空无出发，每一步只取可定义子集，每个极限处收拢。教科书把它写成一座塔，`L₀ = ∅`、`L_{α+1} = Def(L_α)`、极限取并，`L` 就是塔中出现过的一切。本章建起这座塔与类 `L`，并把结果打包成结构 `𝒮ʟ`，供后续公理、内部编码与 GCH 章节共同研究。
 
 一个设计选择承担了大部分工作。塔的索引不是另立的序数类型，而是**集合自身**，凭借正则性所授权的沿成员关系的递归：`Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`。这一条方程同时覆盖零、后继与极限，而在冯·诺伊曼序数上它恰是哥德尔的塔。与之并行的是归纳谓词 `isLayer`{.Agda}，「是一个层」，其构造子就是塔的闭包原则；两个视角全章协作。
 <!--/-->
@@ -133,9 +133,9 @@ nothing: an **ordinal** is a transitive set of transitive sets.
 Well-foundedness and extensionality need not be asked, the hierarchy supplies
 them globally, and linearity is a classical theorem for later, not part of the
 notion. This chapter needs only the predicate and its propositionality; the
-theory of ordinals gets its own chapters when Part 4 needs them.
+theory of ordinals gets its own chapters when the closure proofs need it.
 <!--zh-->
-塔的诚实索引是冯·诺伊曼序数，而在良基、外延的宇宙里，经典定义缩得几乎不剩什么：**序数**就是由传递集组成的传递集。良基与外延无须写进定义，层级全局供应；线序是留待后文的经典定理，不属于概念本身。本章只需要这个谓词及其命题性；序数的理论等第四部用到时另章展开。
+塔的诚实索引是冯·诺伊曼序数，而在良基、外延的宇宙里，经典定义缩得几乎不剩什么：**序数**就是由传递集组成的传递集。良基与外延无须写进定义，层级全局供应；线序是留待后文的经典定理，不属于概念本身。本章只需要这个谓词及其命题性；序数的理论等闭包证明用到时另章展开。
 <!--/-->
 
 ```agda

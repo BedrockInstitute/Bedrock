@@ -16,7 +16,7 @@ set-theoretic characterizations.
 
 The discipline throughout: nothing ever compares two code *values*. Membership
 is transported along paths through the library's classification lemmas, and the
-shape of a code is carried by the coding relation of Part 1. Comparing code
+shape of a code is carried by the first-order coding relation developed earlier. Comparing code
 values directly is what makes these proofs stop terminating, and the previous
 chapters were arranged specifically so that it never has to happen.
 <!--zh-->
@@ -24,7 +24,7 @@ chapters were arranged specifically so that it never has to happen.
 
 本章提供**读式**：说「这个集合是那个的单点集」「这是无序对」「这是 Kuratowski 对」的对象公式。它们的量词都有界，de Bruijn 位置取作参数，故同一条公式在任何嵌套深度上都能用。组装后的对读式配有适足引理，把满足关系换成与 Kuratowski 对的相等；其中的单点集与无序对子句使用相应的集合论特征刻画。
 
-全程的纪律：任何时候都不比较两个码**值**。隶属关系经库的分类引理沿路径搬运，而码的形状由第一部的编码关系携带。直接比较码值，正是使这些证明停止终止的原因，而前几章的安排就是为了让这件事永远不必发生。
+全程的纪律：任何时候都不比较两个码**值**。隶属关系经库的分类引理沿路径搬运，而码的形状由前面的一阶编码关系携带。直接比较码值，正是使这些证明停止终止的原因，而前几章的安排就是为了让这件事永远不必发生。
 <!--/-->
 
 ```agda

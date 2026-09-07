@@ -185,9 +185,9 @@ open import Cubical.Data.Nat public
 <!--en-->
 Vectors: `Vec A n`{.Agda} is a list of exactly `n` elements of `A`, built with `[]`{.Agda}
 and `_∷_`{.Agda} and queried with `lookup`{.Agda}. Vectors are the raw material of
-variable environments, coming in Part 1.
+variable environments, coming in the first-order logic chapters.
 <!--zh-->
-向量：`Vec A n`{.Agda} 是恰含 `n` 个 `A` 元素的表，由 `[]`{.Agda} 与 `_∷_`{.Agda} 构造，用 `lookup`{.Agda} 查询。向量是变量环境的原材料，将在第一部登场。
+向量：`Vec A n`{.Agda} 是恰含 `n` 个 `A` 元素的表，由 `[]`{.Agda} 与 `_∷_`{.Agda} 构造，用 `lookup`{.Agda} 查询。向量是变量环境的原材料，将在一阶逻辑诸章登场。
 <!--/-->
 
 ```agda

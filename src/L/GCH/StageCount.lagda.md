@@ -24,10 +24,8 @@ open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Ordinal.Stages {ℓ} lem using ( suc∈or≡ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-open import L.Coding.Model {ℓ}
-  using ( prʟ; prʟ-fst; numL
-        ; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro
-        ; appAt; appAt-adequate; envOverAt; envOverAt-transport )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; svAt; svAt-in; svAt-out; domAt; domAt-in; domAt-out; domAt-intro; appAt; appAt-adequate; envOverAt; envOverAt-transport )
+open import L.Coding.Expressions {ℓ} using ( numL )
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-in; injAt-out; module Small )
 open import L.Coding.Environment {ℓ} using ( env; lookup-spec )

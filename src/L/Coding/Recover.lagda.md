@@ -59,14 +59,15 @@ module L.Coding.Recover {ℓ : Level} where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
+open import FOL.Manipulation.Mapping using ( mapTm; mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
 open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Rank {ℓ} using ( rank )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst; closedAt )
+open import L.Coding.Model {ℓ} using ( prʟ; prʟ-fst )
+open import L.Coding.Closure {ℓ} using ( closedAt )
 open import L.Coding.Descent {ℓ} using ( payload≺; leftPart; rightPart )
 open import L.Coding.Shape {ℓ}
   using ( shapedAt; isTmAt-decode; Onto; BinWit; UnWit; bothTm; zeroPay

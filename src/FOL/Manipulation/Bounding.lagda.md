@@ -2,7 +2,7 @@
 
 <!--en-->
 Relabelling moved a formula from one constant domain to another along a total
-function. The constructions of Part 4 need the partial case. There, a formula
+function. The constructions of the constructible-universe chapters need the partial case. There, a formula
 arrives with constants drawn from a whole universe, and it has to be replanted
 inside one *stage* of a hierarchy, which can only receive the constants that
 happen to lie in that stage. A total function does not exist; what exists is a
@@ -19,7 +19,7 @@ The companion is monotonicity. A certificate for a narrower predicate is one for
 a wider predicate, which is how certificates written against different stages are
 brought to a common stage before being used together.
 <!--zh-->
-重标沿一个全函数把公式从一个常量域搬到另一个。第四部的构造需要部分函数的情形。在那里，公式带着取自整个宇宙的常元到来，却必须被移植进层级的某**一个阶段**里面，而那个阶段只能接收恰好落在其中的常元。全函数并不存在；存在的是逐次出现的一份证书，说明这个常元是目标接收得了的。
+重标沿一个全函数把公式从一个常量域搬到另一个。可构造宇宙诸章的构造需要部分函数的情形。在那里，公式带着取自整个宇宙的常元到来，却必须被移植进层级的某**一个阶段**里面，而那个阶段只能接收恰好落在其中的常元。全函数并不存在；存在的是逐次出现的一份证书，说明这个常元是目标接收得了的。
 
 本章就是那份证书。`BoundedFo P φ` 逐次出现地记录：`φ` 中出现的每个常元都满足 `P`。它按被检查公式的同一套分情形定义，故在模式匹配下自动拆开，任何证明都不必对「公式的常元列表」作推理。由于是纯语法，本章既不提层级也不提阶段，且分文不花。
 
@@ -38,7 +38,7 @@ open import FOL.Syntax
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy
   using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
-open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
+open import FOL.Manipulation.Mapping using ( mapTm; mapFo )
 
 open import Cubical.Data.Unit using ( Unit )
 ```

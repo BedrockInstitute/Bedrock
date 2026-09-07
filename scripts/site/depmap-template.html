@@ -20,7 +20,7 @@ body {
   margin: 0; background: var(--bg); color: var(--ink);
   font: 15px/1.65 -apple-system, "PingFang SC", "Hiragino Sans GB", "Segoe UI", sans-serif;
 }
-header { max-width: 1180px; margin: 0 auto; padding: 1.6rem 1.4rem 0.6rem; }
+header { max-width: 1280px; margin: 0 auto; padding: 1.6rem 1.4rem 0.6rem; }
 .backrow { font-size: .85rem; margin-bottom: .8rem; }
 .backrow a { color: var(--link); text-decoration: none; font-weight: 600; }
 h1 {
@@ -30,7 +30,7 @@ h1 {
 .sub { color: var(--ink-soft); margin: 0; max-width: 68ch; }
 .mono { font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .88em; }
 .controls {
-  max-width: 1180px; margin: .9rem auto 0; padding: 0 1.4rem;
+  max-width: 1280px; margin: .9rem auto 0; padding: 0 1.4rem;
   display: flex; flex-wrap: wrap; gap: .55rem 1.4rem; align-items: center;
   font-size: .84rem; color: var(--ink-soft);
 }
@@ -45,12 +45,13 @@ h1 {
 .chip { display: inline-flex; align-items: center; gap: .34rem; }
 .chip .mono { font-size: .8em; }
 .dot { width: .62rem; height: .62rem; border-radius: 2px; display: inline-block; }
-.mapwrap { max-width: 1180px; margin: 1rem auto; padding: 0 1.4rem 0.4rem; }
+.mapwrap { max-width: 1280px; margin: 1rem auto; padding: 0 1.4rem 0.4rem; }
 .mapscroll {
   overflow-x: auto; border: 1px solid var(--panel-edge); border-radius: 10px;
   background: var(--panel); box-shadow: var(--shadow);
 }
 svg { display: block; }
+select { color: var(--ink); background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: .3rem; }
 .lanelabel { font: 600 .72rem/1 -apple-system, "PingFang SC", sans-serif; letter-spacing: .09em; }
 .node rect { rx: 6; stroke-width: 1.4; cursor: pointer; transition: opacity .15s ease, stroke-width .15s ease; }
 .node text { cursor: pointer; }
@@ -60,7 +61,7 @@ svg { display: block; }
 .node.faded rect, .node.faded text { opacity: .18; }
 .node.pinned rect { stroke-width: 3; }
 @media (prefers-reduced-motion: reduce) { .edge, .node rect { transition: none; } }
-.info { max-width: 1180px; margin: 0 auto 1.4rem; padding: 0 1.4rem; }
+.info { max-width: 1280px; margin: 0 auto 1.4rem; padding: 0 1.4rem; }
 .infocard {
   border: 1px solid var(--panel-edge); border-left-width: 4px; border-radius: 8px;
   background: var(--panel); padding: .9rem 1.1rem; box-shadow: var(--shadow);
@@ -72,7 +73,7 @@ svg { display: block; }
 .deps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .3rem 1.4rem; font-size: .84rem; }
 .deps b { font-weight: 600; color: var(--ink-soft); }
 .deps span { font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .86em; }
-.note { max-width: 1180px; margin: 0 auto 2.4rem; padding: 0 1.4rem; color: var(--ink-soft); font-size: .82rem; }
+.note { max-width: 1280px; margin: 0 auto 2.4rem; padding: 0 1.4rem; color: var(--ink-soft); font-size: .82rem; }
 .note p { max-width: 74ch; margin: .3rem 0; }
 </style>
 </head>
@@ -84,6 +85,11 @@ svg { display: block; }
 </header>
 
 <div class="controls">
+  <label><b>__LAYOUT__</b> <select id="layout">
+    <option value="compact">__COMPACT__</option>
+    <option value="teaching">__TEACHING__</option>
+    <option value="namespace">__NAMESPACE__</option>
+  </select></label>
   <span class="radiogroup" role="radiogroup" aria-label="__EDGEMODE__">
     <span class="grouplbl">__EDGEMODE__</span>
     <label><input type="radio" name="edgemode" value="skeleton" checked> __SKELETON__</label>
@@ -133,24 +139,8 @@ const byId = {}; DATA.nodes.forEach(n => byId[n.id] = n);
 const HUBS = new Set(DATA.hubs);
 const short = id => id.split(".").pop();
 
-// ---- geometry: vertical lanes, dependency depth flowing downward -------
-const NODEW = 112, NODEH = 30, HGAP = 14, VROW = 58, LANEPAD = 14, LANEHEAD = 34, TOPPAD = 4;
-const laneOrder = DATA.lanes.map(l => l.key);
-const maxCol = Math.max(...DATA.nodes.map(n => n.col));
-const laneSlots = {};
-DATA.nodes.forEach(n => { laneSlots[n.lane] = Math.max(laneSlots[n.lane] || 0, n.row + 1); });
-let x0 = TOPPAD; const laneX = {}, laneW = {};
-laneOrder.forEach(k => {
-  laneX[k] = x0;
-  laneW[k] = (laneSlots[k] || 1) * (NODEW + HGAP) - HGAP + LANEPAD * 2;
-  x0 += laneW[k];
-});
-const W = x0 + 4, H = LANEHEAD + (maxCol + 1) * VROW + 18;
-const pos = {};
-DATA.nodes.forEach(n => {
-  pos[n.id] = { x: laneX[n.lane] + LANEPAD + n.row * (NODEW + HGAP),
-                y: LANEHEAD + n.col * VROW + (VROW - NODEH) / 2 };
-});
+// Layout coordinates are generated from the same source graph for every view.
+const NODEW = 128, NODEH = 34;
 
 // ---- graph helpers -----------------------------------------------------
 const consumersOf = {}, importsOf = {};
@@ -180,25 +170,37 @@ const scroll = document.getElementById("scroll");
 let pinned = null;
 function render() {
   const es = visibleEdges();
+  const layout = DATA.layouts[document.getElementById("layout").value];
+  const { width: W, height: H, positions: pos } = layout;
   const svgNS = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   svg.setAttribute("width", W); svg.setAttribute("height", H);
   svg.style.minWidth = W + "px";
 
-  laneOrder.forEach((k, i) => {
+  layout.bands.forEach((band, i) => {
     const r = document.createElementNS(svgNS, "rect");
-    r.setAttribute("x", laneX[k]); r.setAttribute("y", 0);
-    r.setAttribute("width", laneW[k]); r.setAttribute("height", H);
+    for (const key of ["x", "y", "width", "height"]) r.setAttribute(key, band[key]);
     r.setAttribute("fill", i % 2 ? "var(--lane-alt)" : "var(--lane)");
     svg.appendChild(r);
     const t = document.createElementNS(svgNS, "text");
-    t.setAttribute("x", laneX[k] + laneW[k] / 2); t.setAttribute("y", 20);
-    t.setAttribute("text-anchor", "middle");
-    t.setAttribute("fill", laneColor[k]); t.setAttribute("class", "lanelabel");
-    t.textContent = k;
+    t.setAttribute("x", band.x + 14); t.setAttribute("y", band.y + 21);
+    t.setAttribute("fill", "var(--ink-soft)"); t.setAttribute("class", "lanelabel");
+    t.textContent = band.label;
     svg.appendChild(t);
   });
+
+  const defs = document.createElementNS(svgNS, "defs");
+  const marker = document.createElementNS(svgNS, "marker");
+  marker.setAttribute("id", "dependency-arrow");
+  marker.setAttribute("viewBox", "0 0 6 6");
+  marker.setAttribute("refX", "6"); marker.setAttribute("refY", "3");
+  marker.setAttribute("markerWidth", "5"); marker.setAttribute("markerHeight", "5");
+  marker.setAttribute("orient", "auto");
+  const arrow = document.createElementNS(svgNS, "path");
+  arrow.setAttribute("d", "M0 0 L6 3 L0 6 Z");
+  arrow.setAttribute("fill", "var(--ink-soft)");
+  marker.appendChild(arrow); defs.appendChild(marker); svg.appendChild(defs);
 
   const edgeEls = [];
   es.forEach(([a, b]) => {
@@ -208,6 +210,7 @@ function render() {
     const path = document.createElementNS(svgNS, "path");
     path.setAttribute("d", `M ${x1} ${y1} C ${x1} ${y1 + dy}, ${x2} ${y2 - dy}, ${x2} ${y2}`);
     path.setAttribute("class", "edge");
+    path.setAttribute("marker-end", "url(#dependency-arrow)");
     path.setAttribute("stroke", laneColor[byId[a].lane]);
     path.setAttribute("opacity", "var(--edge-dim)");
     path.dataset.a = a; path.dataset.b = b;
@@ -218,6 +221,10 @@ function render() {
   DATA.nodes.forEach(n => {
     const g = document.createElementNS(svgNS, "g");
     g.setAttribute("class", "node"); g.dataset.id = n.id;
+    g.setAttribute("tabindex", "0"); g.setAttribute("role", "button");
+    g.setAttribute("aria-label", n.id + ": " + n.desc);
+    const title = document.createElementNS(svgNS, "title");
+    title.textContent = n.id; g.appendChild(title);
     const { x, y } = pos[n.id];
     const r = document.createElementNS(svgNS, "rect");
     r.setAttribute("x", x); r.setAttribute("y", y);
@@ -259,6 +266,11 @@ function render() {
   }
   Object.entries(nodeEls).forEach(([id, el]) => {
     el.addEventListener("mouseenter", () => highlight(id));
+    el.addEventListener("focus", () => highlight(id));
+    el.addEventListener("blur", clear);
+    el.addEventListener("keydown", ev => {
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); el.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
+    });
     el.addEventListener("mouseleave", clear);
     el.addEventListener("click", ev => {
       ev.stopPropagation();
@@ -281,7 +293,7 @@ function showCard(id) {
   document.getElementById("card").style.borderLeftColor = laneColor[n.lane];
   document.getElementById("c-name").textContent = id;
   document.getElementById("c-meta").textContent =
-    `${n.lane} · ${STR.reading} ${String(n.ord).padStart(2, "0")}`;
+    `${n.stage} · ${n.lane} · ${STR.reading} ${String(n.ord).padStart(2, "0")}`;
   document.getElementById("c-desc").textContent = n.desc;
   const imp = importsOf[id], con = consumersOf[id];
   document.getElementById("c-deps").innerHTML =
@@ -293,6 +305,7 @@ document.getElementById("legend").innerHTML = DATA.lanes.map((l, i) =>
   `<span class="chip"><span class="dot" style="background:var(--lc-${i})"></span><span class="mono">${l.key}</span></span>`).join("");
 
 document.querySelectorAll('input[name="edgemode"]').forEach(el => el.addEventListener("change", render));
+document.getElementById("layout").addEventListener("change", render);
 document.getElementById("lmk").addEventListener("change", render);
 render();
 </script>
