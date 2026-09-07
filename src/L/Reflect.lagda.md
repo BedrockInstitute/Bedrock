@@ -47,6 +47,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( union-family-in; union-family-out )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono; Lset-in; Lset-out
         ; Lset→isL )
@@ -63,9 +64,9 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
+  using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ⋃_; union-ax )
+  using ( ∅; ⋃_ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
@@ -272,12 +273,7 @@ module Ladder (G : ℕ → V ℓ) (G-ord : (n : ℕ) → IsOrd (G n))
   top-ord = setUnion-ord (Lift {ℓ-zero} {ℓ} ℕ) fam (λ i → G-ord (lower i))
 
   G∈top : (n : ℕ) → ⟨ G n ∈ top ⟩
-  G∈top n = ∈∈ₛ {a = G n} {b = top} .snd
-    (union-ax (sett (Lift {ℓ-zero} {ℓ} ℕ) fam) (G n) .snd
-      ∣ G (suc n)
-      , ( ∈∈ₛ {a = G (suc n)} {b = sett (Lift {ℓ-zero} {ℓ} ℕ) fam} .fst
-            ∣ lift (suc n) , refl ∣₁
-        , ∈∈ₛ {a = G n} {b = G (suc n)} .fst (G-up n) ) ∣₁)
+  G∈top n = union-family-in (Lift {ℓ-zero} {ℓ} ℕ) fam (lift (suc n)) (G n) (G-up n)
 ```
 
 <!--en-->
@@ -300,14 +296,8 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
 
 ```agda
   δ∈top→fin : (δ : V ℓ) → ⟨ δ ∈ top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ δ ∈ G N ⟩) ∥₁
-  δ∈top→fin δ δ∈ = PT.rec squash₁
-    (λ { (v , (v∈ₛsett , δ∈ₛv)) → PT.map
-        (λ { (i , Gi≡v) → lower i
-           , ∈∈ₛ {a = δ} {b = G (lower i)} .snd
-               (subst (λ w → ⟨ δ ∈ₛ w ⟩) (sym Gi≡v) δ∈ₛv) })
-        (∈∈ₛ {a = v} {b = sett (Lift {ℓ-zero} {ℓ} ℕ) fam} .snd v∈ₛsett) })
-    (union-ax (sett (Lift {ℓ-zero} {ℓ} ℕ) fam) δ .fst
-      (∈∈ₛ {a = δ} {b = top} .fst δ∈))
+  δ∈top→fin δ δ∈ = PT.map (λ { (i , h) → lower i , h })
+    (union-family-out (Lift {ℓ-zero} {ℓ} ℕ) fam δ δ∈)
 
   localize₁ : (e : V ℓ) → ⟨ e ∈ Lset top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ e ∈ Lset (G N) ⟩) ∥₁
   localize₁ e e∈ = PT.rec squash₁

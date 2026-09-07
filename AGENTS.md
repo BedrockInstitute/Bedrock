@@ -8,6 +8,36 @@ Requirements: Agda 2.8.0, cubical 0.9, Python 3.11 or later.
 `src/Everything.lagda.md` imports every module. `make check` is the gate: it typechecks
 the tree, runs the four linters and runs their unit tests.
 
+## Current goal: smaller proofs and faster builds
+
+Refactor the completed proofs and their code to reduce code size, proof length,
+and typechecking/build time. Preserve `L⊨ZFC`, `L⊨GCH`, their statements, and their
+single `LEM (ℓ-suc ℓ)` hypothesis.
+
+The first milestone is a net reduction of at least 3,000 nonblank Agda code lines
+from the 2026-09-06 baseline of 28,973, reaching at most 25,973 (and therefore
+below 27,000). Count only lines inside Agda fences in `src/**/*.lagda.md`;
+prose, fences, and blank lines do not count. Do not meet the target by packing
+lines, deleting explanations, weakening statements, or moving code outside the
+counted tree. Prefer shared proofs, simpler constructions, and removal of
+verified redundant code. Record comparable timings, including cache conditions;
+fewer lines alone do not establish a faster build.
+
+Prioritize structural refactoring and mathematically simpler proofs. The line
+milestone is a measurement, not a reason to sacrifice readability. Do not pursue
+small textual reductions or add abstractions whose only benefit is fewer lines.
+
+A refactoring brief may change intermediate APIs and migrate their actual
+consumers together. Preserve mathematical statements and necessary opacity
+boundaries; do not retain redundant compatibility wrappers solely to preserve
+old helper names. Include every consumer migration in the net cost.
+
+Use GPT 5.6 Sol for routine refactoring, audits, and verification. Reserve GPT 6
+Astra for difficult proof design that needs it. Keep task briefs bounded, batch
+related checks, and avoid repeated readiness messages or speculative searches.
+
+The plan, measurements, and accepted changes live in `dev/REFACTOR.md`.
+
 ## Rules for a dispatched agent
 
 1. **Write only the files your brief names.** Do not touch any other file. Never commit,

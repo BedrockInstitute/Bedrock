@@ -21,7 +21,7 @@ module FOL.Semantics {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructu
 
 open import FOL.Syntax using
   ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 
 open TruthAlgebra 𝕋
 open ZFStructure 𝒮
@@ -75,10 +75,10 @@ module At {ℓc} (K : Type ℓc) (ι : K → S) where
 Two readings, both straight from the textbook: `⟦_⟧`{.Agda} reads "the value of",
 and `_⊨_`{.Agda} reads "satisfies", with the environment on the left, `γ ⊨ φ`.
 Evaluation of a term either asks `ι` (a constant) or looks up the environment (a
-variable). Satisfaction is a single structural recursion over the twelve
+variable). Satisfaction is a single structural recursion over the ten
 constructors.
 <!--zh-->
-两个记号都直接来自教科书：`⟦_⟧`{.Agda} 读作「取值」，`_⊨_`{.Agda} 读作「满足」，环境在左，写 `γ ⊨ φ`。词项求值要么问 `ι` (常量)，要么查环境 (变量)。满足关系是对十二个构造子的一次结构递归。
+两个记号都直接来自教科书：`⟦_⟧`{.Agda} 读作「取值」，`_⊨_`{.Agda} 读作「满足」，环境在左，写 `γ ⊨ φ`。词项求值要么问 `ι` (常量)，要么查环境 (变量)。满足关系是对十个构造子的一次结构递归。
 <!--/-->
 
 ```agda
@@ -94,8 +94,6 @@ constructors.
   γ ⊨ (φ ∧̇ ψ)  = (γ ⊨ φ) ⊓ (γ ⊨ ψ)
   γ ⊨ (φ ∨̇ ψ)  = (γ ⊨ φ) ⊔ (γ ⊨ ψ)
   γ ⊨ (φ ⇒̇ ψ)  = (γ ⊨ φ) ⇒ (γ ⊨ ψ)
-  γ ⊨ (¬̇ φ)    = ¬ (γ ⊨ φ)
-  γ ⊨ ⊤̇        = ⊤
   γ ⊨ ⊥̇        = ⊥
   γ ⊨ (∃̇ φ)    = ⋁ S (λ x → (x ∷ γ) ⊨ φ)
   γ ⊨ (∀̇ φ)    = ⋀ S (λ x → (x ∷ γ) ⊨ φ)
@@ -104,8 +102,8 @@ constructors.
 ```
 
 <!--en-->
-Look at the right-hand sides: each is **exactly** the truth algebra's corresponding
-operation, applied to the meanings of the subformulas. Object conjunction means
+Look at the right-hand sides: each primitive constructor uses the truth algebra's
+corresponding operation, applied to the meanings of the subformulas. Object conjunction means
 host conjunction, the object quantifiers mean `⋀` and `⋁` over the carrier; there
 is no translation layer in between. A formula with `n` free variables thus means a
 function `S ^ n → Ω`{.Agda}, deliberately the same shape as a **predicate** written
@@ -118,7 +116,7 @@ the members of `⟦ t ⟧ γ`. The syntax chapter promised that formulas whose
 quantifiers are all bounded behave tamely across structures; that behaviour lives
 physically in these two lines, and later chapters return to them again and again.
 <!--zh-->
-看各子句的右端：每一条都**恰好是**真值代数的对应运算，作用在子公式的含义上。对象合取的含义就是宿主合取，对象量词的含义就是载体上的 `⋀` 与 `⋁`，中间没有任何翻译层。于是带 `n` 个自由变量的公式，含义是一个 `S ^ n → Ω`{.Agda} 型的函数，与宿主语言直接写出的**谓词**刻意同形；两者之间的桥编在书末，而这份忠实性将让那座桥的每一块板都归于一行同余。
+看各子句的右端：每个原语构造子都采用真值代数的对应运算，作用在子公式的含义上。对象合取的含义就是宿主合取，对象量词的含义就是载体上的 `⋀` 与 `⋁`，中间没有任何翻译层。于是带 `n` 个自由变量的公式，含义是一个 `S ^ n → Ω`{.Agda} 型的函数，与宿主语言直接写出的**谓词**刻意同形；两者之间的桥编在书末，而这份忠实性将让那座桥的每一块板都归于一行同余。
 
 两条有界子句值得再看一眼：它们的量化被钉在 `⟦ t ⟧ γ` 的成员上。语法章许诺过，全部量词皆有界的公式在结构之间表现驯良；那份驯良物理上就住在这两行里，后面的章节将一次次回到这里。
 <!--/-->

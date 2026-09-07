@@ -34,16 +34,17 @@ module L.Constructible {ℓ : Level} where
 open import FOL.ZFStructure using ( ZFStructure; _↾_; module hPropStructure; Transitive )
 open import FOL.Syntax using ( Formula )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
+open import V.Model {ℓ} using ( union-family-in; union-family-out )
 open import L.Definability {ℓ} using ( module DefOf )
 
 open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.Data.Empty as Empty
 import Cubical.Data.Sum as Sum
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
+  using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; _∪_ )
 
@@ -326,38 +327,18 @@ stageFam α m = 𝒟ₒ (Lset (⟪ α ⟫↪ m))
 Lset-in : (α δ x : S) → ⟨ δ ∈ˢ α ⟩ → ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩ → ⟨ x ∈ˢ Lset α ⟩
 Lset-in α δ x δ∈α x∈𝒟ₒδ =
   subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (Lset-compute α))
-    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ α ⟫ (stageFam α))} .snd
-      (union-ax (sett ⟪ α ⟫ (stageFam α)) x .snd
-        ∣ 𝒟ₒ (Lset δ) , (𝒟ₒLδ∈ₛsett , x∈ₛ𝒟ₒLδ) ∣₁))
+    (union-family-in ⟪ α ⟫ (stageFam α) (fib .fst) x
+      (subst (λ δ → ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) (sym (fib .snd)) x∈𝒟ₒδ))
   where
   fib = ∈-asFiber {a = δ} {b = α} δ∈α
-  m = fib .fst
-  p : ⟪ α ⟫↪ m ≡ δ
-  p = fib .snd
-  𝒟ₒLδ∈ₛsett : ⟨ 𝒟ₒ (Lset δ) ∈ₛ sett ⟪ α ⟫ (stageFam α) ⟩
-  𝒟ₒLδ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset δ)} {b = sett ⟪ α ⟫ (stageFam α)} .fst
-    ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
-  x∈ₛ𝒟ₒLδ : ⟨ x ∈ₛ 𝒟ₒ (Lset δ) ⟩
-  x∈ₛ𝒟ₒLδ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset δ)} .fst x∈𝒟ₒδ
 
 Lset-out : (α x : S) → ⟨ x ∈ˢ Lset α ⟩
          → ∥ Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) ∥₁
-Lset-out α x x∈Lα = PT.rec squash₁ uStep
-  (union-ax (sett ⟪ α ⟫ (stageFam α)) x .fst
-    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ α ⟫ (stageFam α))} .fst
-      (subst (λ w → ⟨ x ∈ˢ w ⟩) (Lset-compute α) x∈Lα)))
-  where
-  G : Type (ℓ-suc ℓ)
-  G = Σ[ δ ∈ S ] (⟨ δ ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
-  atFib : (v : S) → ⟨ x ∈ₛ v ⟩ → (m : ⟪ α ⟫) → stageFam α m ≡ v → G
-  atFib v x∈ₛv m sm≡v = ⟪ α ⟫↪ m
-    , ( ∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
-      , ∈∈ₛ {a = x} {b = stageFam α m} .snd
-          (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym sm≡v) x∈ₛv) )
-  uStep : Σ[ v ∈ S ] (⟨ v ∈ₛ sett ⟪ α ⟫ (stageFam α) ⟩ × ⟨ x ∈ₛ v ⟩) → ∥ G ∥₁
-  uStep (v , v∈ₛsett , x∈ₛv) = PT.map
-    (λ { (m , sm≡v) → atFib v x∈ₛv m sm≡v })
-    (∈∈ₛ {a = v} {b = sett ⟪ α ⟫ (stageFam α)} .snd v∈ₛsett)
+Lset-out α x x∈Lα = PT.map
+  (λ { (m , hx) → ⟪ α ⟫↪ m
+    , (∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m) , hx) })
+  (union-family-out ⟪ α ⟫ (stageFam α) x
+    (subst (λ w → ⟨ x ∈ˢ w ⟩) (Lset-compute α) x∈Lα))
 
 Lset-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → {x : S} → ⟨ x ∈ˢ Lset β ⟩ → ⟨ x ∈ˢ Lset α ⟩
 Lset-mono {α} {β} β∈α {x} x∈Lβ = Lset-in α β x β∈α (Lset⊆𝒟ₒ β x x∈Lβ)

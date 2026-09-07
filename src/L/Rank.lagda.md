@@ -39,18 +39,17 @@ module L.Rank {ℓ : Level} where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ}
   using ( 𝒮ᵥ; extensionalV; ∈-induction; ∈-induction-compute )
-open import V.Model {ℓ} using ( ∈sucV-elim; self∈sucV )
+open import V.Model {ℓ} using ( union-family-in; union-family-out; ∈sucV-elim; self∈sucV )
 open import L.Constructible {ℓ} using ( IsOrd )
 open import L.Ordinal {ℓ} using ( suc-ord; setUnion-ord; mem-ord )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
+  using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ⋃_; union-ax; module InfinitySet )
+  using ( ⋃_; module InfinitySet )
 open InfinitySet using ( sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -116,21 +115,10 @@ uses this instead.
 ```agda
 rank-mono : (x y : S) → ⟨ x ∈ˢ y ⟩ → ⟨ rank x ∈ˢ rank y ⟩
 rank-mono x y x∈y = subst (λ w → ⟨ rank x ∈ˢ w ⟩) (sym (rank-compute y))
-  (∈∈ₛ {a = rank x} {b = ⋃ (sett ⟪ y ⟫ s)} .snd
-    (union-ax (sett ⟪ y ⟫ s) (rank x) .snd
-      ∣ sucV (rank (⟪ y ⟫↪ m)) , (sm∈ₛsett , x∈ₛsm) ∣₁))
+  (union-family-in ⟪ y ⟫ (λ m → sucV (rank (⟪ y ⟫↪ m))) (fib .fst) (rank x)
+    (subst (λ w → ⟨ rank x ∈ˢ sucV (rank w) ⟩) (sym (fib .snd)) (self∈sucV (rank x))))
   where
-  s : ⟪ y ⟫ → S
-  s k = sucV (rank (⟪ y ⟫↪ k))
-  fibx = ∈-asFiber {a = x} {b = y} x∈y
-  m = fibx .fst
-  q : ⟪ y ⟫↪ m ≡ x
-  q = fibx .snd
-  sm∈ₛsett : ⟨ sucV (rank (⟪ y ⟫↪ m)) ∈ₛ sett ⟪ y ⟫ s ⟩
-  sm∈ₛsett = ∈∈ₛ {a = sucV (rank (⟪ y ⟫↪ m))} {b = sett ⟪ y ⟫ s} .fst ∣ m , refl ∣₁
-  x∈ₛsm : ⟨ rank x ∈ₛ sucV (rank (⟪ y ⟫↪ m)) ⟩
-  x∈ₛsm = ∈∈ₛ {a = rank x} {b = sucV (rank (⟪ y ⟫↪ m))} .fst
-    (subst (λ w → ⟨ rank x ∈ˢ sucV (rank w) ⟩) (sym q) (self∈sucV (rank x)))
+  fib = ∈-asFiber {a = x} {b = y} x∈y
 ```
 
 <!--en-->
@@ -158,6 +146,37 @@ rank-ord = ∈-induction {P = λ A → IsOrd (rank A)} step
     where
     mem : (m : ⟪ A ⟫) → ⟪ A ⟫↪ m ∈ᵗ A
     mem m = ∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m)
+```
+
+<!--en-->
+## Bounding a rank
+
+If every member's rank lies in an ordinal, the rank of the set is included in
+that ordinal. Every member of the defining union lies in a successor of a
+member's rank; transitivity closes the inclusion. Both ordinal fixed points and
+bounds on the ranks in a constructible stage use this argument.
+<!--zh-->
+## 界住秩
+
+若一个集合的每个成员的秩都属于某序数，该集合的秩就包含于该序数。定义之并的每个成员落在某个成员之秩的后继中，传递性给出所需包含。序数的不动点性质与可构造阶段中的秩界都用这条论证。
+<!--/-->
+
+```agda
+rank-upper : (A β : S) → IsOrd β
+           → ((y : S) → ⟨ y ∈ˢ A ⟩ → ⟨ rank y ∈ˢ β ⟩)
+           → (x : S) → ⟨ x ∈ˢ rank A ⟩ → ⟨ x ∈ˢ β ⟩
+rank-upper A β oβ bound x hx = PT.rec (snd (x ∈ˢ β))
+  (λ { (m , hm) → ∈sucV-elim (snd (x ∈ˢ β)) hm
+    (λ h → oβ .fst h (below m))
+    (λ q → subst (λ w → ⟨ w ∈ˢ β ⟩) (sym q) (below m)) })
+  (union-family-out ⟪ A ⟫ s x
+    (subst (λ w → ⟨ x ∈ˢ w ⟩) (rank-compute A) hx))
+  where
+  s : ⟪ A ⟫ → S
+  s m = sucV (rank (⟪ A ⟫↪ m))
+  below : (m : ⟪ A ⟫) → ⟨ rank (⟪ A ⟫↪ m) ∈ˢ β ⟩
+  below m = bound (⟪ A ⟫↪ m)
+    (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m))
 ```
 
 <!--en-->
@@ -195,44 +214,14 @@ rank-fix = ∈-induction {P = λ A → IsOrd A → rank A ≡ A} step
        → IsOrd A → rank A ≡ A
   step A IH ordA = extensionalV (λ x → ⇔toPath (toA x) (fromA x))
     where
-    s : ⟪ A ⟫ → S
-    s m = sucV (rank (⟪ A ⟫↪ m))
-    mem : (m : ⟪ A ⟫) → ⟨ ⟪ A ⟫↪ m ∈ˢ A ⟩
-    mem m = ∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m)
-    rk : (m : ⟪ A ⟫) → rank (⟪ A ⟫↪ m) ≡ ⟪ A ⟫↪ m
-    rk m = IH (⟪ A ⟫↪ m) (mem m) (mem-ord {A = A} ordA (⟪ A ⟫↪ m) (mem m))
-
     toA : (x : S) → ⟨ x ∈ˢ rank A ⟩ → ⟨ x ∈ˢ A ⟩
-    toA x x∈r = PT.rec (snd (x ∈ˢ A))
-      (λ { (v , (v∈ₛsett , x∈ₛv)) → PT.rec (snd (x ∈ˢ A))
-          (λ { (m , sm≡v) →
-              ∈sucV-elim (snd (x ∈ˢ A))
-                (∈∈ₛ {a = x} {b = sucV (rank (⟪ A ⟫↪ m))} .snd
-                  (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym sm≡v) x∈ₛv))
-                (λ x∈rm → ordA .fst (subst (λ w → ⟨ x ∈ˢ w ⟩) (rk m) x∈rm) (mem m))
-                (λ x≡rm → subst (λ w → ⟨ w ∈ˢ A ⟩) (sym (x≡rm ∙ rk m)) (mem m)) })
-          (∈∈ₛ {a = v} {b = sett ⟪ A ⟫ s} .snd v∈ₛsett) })
-      (union-ax (sett ⟪ A ⟫ s) x .fst
-        (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ A ⟫ s)} .fst
-          (subst (λ w → ⟨ x ∈ˢ w ⟩) (rank-compute A) x∈r)))
+    toA = rank-upper A A ordA
+      (λ y hy → subst (λ w → ⟨ w ∈ˢ A ⟩)
+        (sym (IH y hy (mem-ord {A = A} ordA y hy))) hy)
 
     fromA : (x : S) → ⟨ x ∈ˢ A ⟩ → ⟨ x ∈ˢ rank A ⟩
-    fromA x x∈A = subst (λ w → ⟨ x ∈ˢ w ⟩) (sym (rank-compute A))
-      (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ A ⟫ s)} .snd
-        (union-ax (sett ⟪ A ⟫ s) x .snd
-          ∣ sucV (rank (⟪ A ⟫↪ m)) , (sm∈ₛsett , x∈ₛsm) ∣₁))
-      where
-      fibx = ∈-asFiber {a = x} {b = A} x∈A
-      m = fibx .fst
-      q : ⟪ A ⟫↪ m ≡ x
-      q = fibx .snd
-      sm∈ₛsett : ⟨ sucV (rank (⟪ A ⟫↪ m)) ∈ₛ sett ⟪ A ⟫ s ⟩
-      sm∈ₛsett = ∈∈ₛ {a = sucV (rank (⟪ A ⟫↪ m))} {b = sett ⟪ A ⟫ s} .fst
-        ∣ m , refl ∣₁
-      x∈ₛsm : ⟨ x ∈ₛ sucV (rank (⟪ A ⟫↪ m)) ⟩
-      x∈ₛsm = ∈∈ₛ {a = x} {b = sucV (rank (⟪ A ⟫↪ m))} .fst
-        (subst (λ w → ⟨ w ∈ˢ sucV (rank (⟪ A ⟫↪ m)) ⟩) (rk m ∙ q)
-          (self∈sucV (rank (⟪ A ⟫↪ m))))
+    fromA x x∈A = subst (λ w → ⟨ w ∈ˢ rank A ⟩)
+      (IH x x∈A (mem-ord {A = A} ordA x x∈A)) (rank-mono x A x∈A)
 ```
 
 <!--en-->

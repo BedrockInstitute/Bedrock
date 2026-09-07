@@ -33,15 +33,15 @@ open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; embed )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
-open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′; module VCode )
+open import V.Coding {ℓ} using ( pr; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Ordinal {ℓ} using ( #∈ω; ω-ord )
 open import L.Axioms.Basic {ℓ} using ( ∅ʟ; LsetS )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Coding.Model {ℓ}
-  using ( envOverAt; svAt; svAt-in; domAt; valuesInAt-in; pairsInAt; pairsIn-in
-        ; extAt-in; extAt-out; numL; consAtL; valuesInAt )
-open import L.Coding.EnvSet {ℓ} lem using ( module Recover; envS )
+  using ( envOverAt; envOverAt-transport; domAt
+        ; extAt-in; extAt-out; numL; consAtL )
+open import L.Coding.EnvSet {ℓ} lem using ( module Recover; envS; envOver )
 open import L.Coding.Graph {ℓ} lem using ( satGraphAt )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.Coding.Bridge {ℓ} lem
@@ -59,16 +59,14 @@ open import L.Choice.Internal {ℓ} lem
         ; domAt-numeral; domAt-fill; module Adequacy )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
 
-open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
-open import Cubical.Data.FinData.Properties using ( toℕ<n )
 open import Cubical.Data.Vec.Properties using ( FinVec→Vec; FinVec→Vec→FinVec )
 open import Cubical.Data.Vec using ( map )
 open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Foundations.Prelude using ( subst2; J; substRefl )
+open import Cubical.Foundations.Transport using ( constSubstCommSlice )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; squash₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -150,7 +148,7 @@ module At (A : V ℓ) (pA : ⟨ isL A ⟩) (w : SWO ⟪ A ⟫) where
 
     module NM = Naming A w
 
-  open Adequacy A pA w using ( ix; ixL; pfam; module Keys )
+  open Adequacy A pA w using ( ix; pfam; module Keys )
   open NM using
     ( Name; arity; formula; params; codeOf; denote; environment
     ; _≺ₙ_ )
@@ -178,67 +176,10 @@ because every member of a graph is one.
               → fst (lookup a γ) ≡ # k
               → fst (lookup B γ) ≡ A
               → ⟨ γ ⊨ envOverAt e a B ⟩
-  paramSeq-in e a B γ k g qe qa qB = sv , (dom , (vals , pairs))
-    where
-    gv : Fin k → V ℓ
-    gv i = ix (g i)
-
-    memberOf : (x y : V ℓ) → ⟨ pr x y ∈ fst (lookup e γ) ⟩
-             → ∥ Σ[ i ∈ Fin k ] ((x ≡ # (toℕ i)) × (y ≡ gv i)) ∥₁
-    memberOf x y h = PT.map
-      (λ { (li , q) → lower li
-         , (sym (pr-inj q .fst) , sym (pr-inj q .snd)) })
-      (subst (λ u → ⟨ pr x y ∈ u ⟩) qe h)
-
-    val∈ : (i : Fin k) → ⟨ gv i ∈ A ⟩
-    val∈ i = ∈∈ₛ {a = ix (g i)} {b = A} .snd (∈ₛ⟪ A ⟫↪ (g i))
-
-    sv : ⟨ γ ⊨ svAt e ⟩
-    sv = svAt-in e γ step
-      where
-      step : (x y y' : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup e γ) ⟩
-           → ⟨ pr (fst x) (fst y') ∈ fst (lookup e γ) ⟩ → fst y ≡ fst y'
-      step x y y' p q = PT.rec (setIsSet (fst y) (fst y'))
-        (λ { (i , (qi , qy)) → PT.rec (setIsSet (fst y) (fst y'))
-          (λ { (j , (qj , qy')) → qy
-             ∙ cong gv (inj-toℕ (#-inj′ (sym qi ∙ qj)))
-             ∙ sym qy' })
-          (memberOf (fst x) (fst y') q) })
-        (memberOf (fst x) (fst y) p)
-
-    dom : ⟨ γ ⊨ domAt e a ⟩
-    dom = domAt-fill e a γ k gv (λ i → snd (ixL (g i))) qe qa
-
-    vals : ⟨ γ ⊨ valuesInAt e B ⟩
-    vals = valuesInAt-in e B γ step
-      where
-      step : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup e γ) ⟩
-           → ⟨ fst y ∈ fst (lookup B γ) ⟩
-      step x y h = PT.rec (snd (fst y ∈ fst (lookup B γ)))
-        (λ { (i , (_ , qy)) → subst2 (λ u v → ⟨ u ∈ v ⟩) (sym qy) (sym qB)
-               (val∈ i) })
-        (memberOf (fst x) (fst y) h)
-
-    pairs : ⟨ γ ⊨ pairsInAt e a B ⟩
-    pairs = pairsIn-in e a B γ step
-      where
-      num : ℕ → S
-      num m = # m , numL m
-
-      step : (s : S) → ⟨ fst s ∈ fst (lookup e γ) ⟩
-           → ∥ (Σ[ u ∈ S ] (Σ[ v ∈ S ]
-                 (⟨ fst u ∈ fst (lookup a γ) ⟩
-                  × (⟨ fst v ∈ fst (lookup B γ) ⟩
-                     × (fst s ≡ pr (fst u) (fst v)))))) ∥₁
-      step s h = PT.map
-        (λ { (li , q) → num (toℕ (lower li))
-           , ( ixL (g (lower li))
-             , ( subst (λ u → ⟨ # (toℕ (lower li)) ∈ u ⟩) (sym qa)
-                   (#mono (toℕ (lower li)) k (toℕ<n (lower li)))
-               , ( subst (λ u → ⟨ gv (lower li) ∈ u ⟩) (sym qB)
-                     (val∈ (lower li))
-                 , sym q ) ) ) })
-        (subst (λ u → ⟨ fst s ∈ u ⟩) qe h)
+  paramSeq-in e a B γ k g qe qa qB =
+    envOverAt-transport (Aʟ ∷ (# k , numL k) ∷ envS Aʟ g ∷ []) γ
+      (suc (suc zero)) (suc zero) zero e a B
+      (sym qe) (sym qa) (sym qB) (envOver Aʟ g)
 ```
 
 <!--en-->
@@ -407,29 +348,15 @@ the value, and it is the whole cost of letting the carrier be a slot.
       keyψ : (t : Name)
            → fst (keyS (lookup B γ) (ψAt t))
            ≡ fst (keyS Aʟ (embed (formula t)))
-      keyψ t = J Motive base (sym qB)
-        where
-        Motive : (X : S) → Aʟ ≡ X → Type (ℓ-suc ℓ)
-        Motive X p = fst (keyS X (subst (λ Y → Fo Y (suc (arity t))) p
-                                    (embed (formula t))))
-                   ≡ fst (keyS Aʟ (embed (formula t)))
-        base : Motive Aʟ refl
-        base = cong (λ u → fst (keyS Aʟ u))
-          (substRefl {B = λ Y → Fo Y (suc (arity t))} {x = Aʟ} (embed (formula t)))
+      keyψ t = sym (constSubstCommSlice (λ X → Fo X (suc (arity t))) (V ℓ)
+        (λ X ψ → fst (keyS X ψ)) (sym qB) (embed (formula t)))
 
       satψ : (t : Name)
            → fst (Sat (lookup B γ) (mapFo (asConst (lookup B γ)) (ψAt t)))
            ≡ fst (Sat Aʟ (mapFo (asConst Aʟ) (embed (formula t))))
-      satψ t = J Motive base (sym qB)
-        where
-        Motive : (X : S) → Aʟ ≡ X → Type (ℓ-suc ℓ)
-        Motive X p = fst (Sat X (mapFo (asConst X)
-                       (subst (λ Y → Fo Y (suc (arity t))) p
-                          (embed (formula t)))))
-                   ≡ fst (Sat Aʟ (mapFo (asConst Aʟ) (embed (formula t))))
-        base : Motive Aʟ refl
-        base = cong (λ u → fst (Sat Aʟ (mapFo (asConst Aʟ) u)))
-          (substRefl {B = λ Y → Fo Y (suc (arity t))} {x = Aʟ} (embed (formula t)))
+      satψ t = sym (constSubstCommSlice (λ X → Fo X (suc (arity t))) (V ℓ)
+        (λ X ψ → fst (Sat X (mapFo (asConst X) ψ)))
+        (sym qB) (embed (formula t)))
 
     Data : Name → Type (ℓ-suc ℓ)
     Data t = (fst (lookup s γ) ≡ fst (codeOf t))
@@ -530,6 +457,26 @@ the value, and it is the whole cost of letting the carrier be a slot.
         inner = subst ⟨_⟩
           (val-sat Aʟ (embed (formula t)) key key∈ qkey'
              (environment t m) c qcg) inTable
+
+      member-fill : (z : S) → ⟨ fst z ∈ denote t ⟩
+                  → ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
+      member-fill z hz = subst (λ u → ⟨ fst z ∈ u ⟩) (sym (cong fst qB)) hA
+        , denote-fill z (fib .fst) (fib .snd)
+            (subst (λ u → ⟨ u ∈ denote t ⟩) (sym (fib .snd)) hz)
+        where
+        hA : ⟨ fst z ∈ A ⟩
+        hA = denoteMem t (fst z) hz
+        fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
+        fib = ∈-asFiber {a = fst z} {b = A} hA
+
+      member-read : (z : S) → ⟨ fst z ∈ fst (lookup B γ) ⟩
+                  → DenoteOf B C s e γ z → ⟨ fst z ∈ denote t ⟩
+      member-read z hz hDen = subst (λ u → ⟨ u ∈ denote t ⟩) (fib .snd)
+        (denote-read z (fib .fst) (fib .snd) hDen)
+        where
+        fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
+        fib = ∈-asFiber {a = fst z} {b = A}
+          (subst (λ u → ⟨ fst z ∈ u ⟩) (cong fst qB) hz)
 ```
 
 <!--en-->
@@ -574,27 +521,12 @@ extensionality, one direction per reading of the extension.
 
       into : (z : S) → ⟨ fst z ∈ fst (lookup d γ) ⟩
            → ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
-      into z hz = subst (λ u → ⟨ fst z ∈ u ⟩) (sym (cong fst qB)) hA
-                , Bt.denote-fill z (fib .fst) (fib .snd)
-                    (subst (λ u → ⟨ u ∈ denote t ⟩) (sym (fib .snd)) hden)
-        where
-        hden : ⟨ fst z ∈ denote t ⟩
-        hden = subst (λ u → ⟨ fst z ∈ u ⟩) qd hz
-        hA : ⟨ fst z ∈ A ⟩
-        hA = denoteMem t (fst z) hden
-        fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
-        fib = ∈-asFiber {a = fst z} {b = A} hA
+      into z hz = Bt.member-fill z (subst (λ u → ⟨ fst z ∈ u ⟩) qd hz)
 
       back : (z : S) → ⟨ fst z ∈ fst (lookup B γ) ⟩ → DenoteOf B C s e γ z
            → ⟨ fst z ∈ fst (lookup d γ) ⟩
       back z hzB hDen = subst (λ u → ⟨ fst z ∈ u ⟩) (sym qd)
-        (subst (λ u → ⟨ u ∈ denote t ⟩) (fib .snd)
-          (Bt.denote-read z (fib .fst) (fib .snd) hDen))
-        where
-        hA : ⟨ fst z ∈ A ⟩
-        hA = subst (λ u → ⟨ fst z ∈ u ⟩) (cong fst qB) hzB
-        fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ fst z)
-        fib = ∈-asFiber {a = fst z} {b = A} hA
+        (Bt.member-read z hzB hDen)
 
     NameAt-read : ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩ → ∥ Σ[ t ∈ Name ] Data t ∥₁
     NameAt-read (hf , (ha , (he , hd))) =
@@ -615,33 +547,23 @@ extensionality, one direction per reading of the extension.
         module Bt = Body t qs qa qe
 
         fwd : (y : V ℓ) → ⟨ y ∈ fst (lookup d γ) ⟩ → ⟨ y ∈ denote t ⟩
-        fwd y hy = PT.rec (snd (y ∈ denote t)) step (body .snd)
+        fwd y hy = PT.rec (snd (y ∈ denote t))
+          (Bt.member-read z (body .fst)) (body .snd)
           where
           z : S
           z = y , isL-trans hy (snd (lookup d γ))
           body : ⟨ fst z ∈ fst (lookup B γ) ⟩ × ∥ DenoteOf B C s e γ z ∥₁
           body = DenoteBody-out B C s e γ z
                    (extAt-out d (DenoteBody B C s e) γ hd z hy)
-          fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ y)
-          fib = ∈-asFiber {a = y} {b = A}
-                  (subst (λ u → ⟨ y ∈ u ⟩) (cong fst qB) (body .fst))
-          step : DenoteOf B C s e γ z → ⟨ y ∈ denote t ⟩
-          step dof = subst (λ u → ⟨ u ∈ denote t ⟩) (fib .snd)
-            (Bt.denote-read z (fib .fst) (fib .snd) dof)
 
         bwd : (y : V ℓ) → ⟨ y ∈ denote t ⟩ → ⟨ y ∈ fst (lookup d γ) ⟩
         bwd y hy = extAt-in d (DenoteBody B C s e) γ hd z
-          (DenoteBody-in B C s e γ z
-            (subst (λ u → ⟨ y ∈ u ⟩) (sym (cong fst qB)) hA)
-            (Bt.denote-fill z (fib .fst) (fib .snd)
-              (subst (λ u → ⟨ u ∈ denote t ⟩) (sym (fib .snd)) hy)))
+          (DenoteBody-in B C s e γ z (body .fst) (body .snd))
           where
-          hA : ⟨ y ∈ A ⟩
-          hA = denoteMem t y hy
           z : S
-          z = y , isL-trans hA pA
-          fib : Σ[ mm ∈ ⟪ A ⟫ ] (⟪ A ⟫↪ mm ≡ y)
-          fib = ∈-asFiber {a = y} {b = A} hA
+          z = y , isL-trans (denoteMem t y hy) pA
+          body : ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
+          body = Bt.member-fill z hy
 
         qd : fst (lookup d γ) ≡ denote t
         qd = extensionalV (λ y → ⇔toPath (fwd y) (bwd y))
@@ -743,10 +665,10 @@ that has them as sets of the model supplies them.
                    (suc (suc zero)) (suc zero) zero (sh3 d) ⟩
              → ⟨ (e' ∷ a' ∷ s' ∷ γ) ⊨ ≺At (sh3 R) (sh3 P)
                    (suc (suc zero)) (suc zero) zero (sh3 s) (sh3 a) (sh3 e) ⟩
-             → Empty.⊥
-        univ s' a' e' hn hlt = PT.rec Empty.isProp⊥ step
+             → Lift {j = ℓ-suc ℓ} Empty.⊥
+        univ s' a' e' hn hlt = lift (PT.rec Empty.isProp⊥ step
           (Named.NameAt-read (sh3 B) (sh3 C) (sh3 C₀) (suc (suc zero))
-             (suc zero) zero (sh3 d) (e' ∷ a' ∷ s' ∷ γ) qB qC q₀ hn)
+             (suc zero) zero (sh3 d) (e' ∷ a' ∷ s' ∷ γ) qB qC q₀ hn))
           where
           step : Σ[ t' ∈ Name ] Named.Data (sh3 B) (sh3 C) (sh3 C₀)
                    (suc (suc zero)) (suc zero) zero (sh3 d)
@@ -767,7 +689,7 @@ that has them as sets of the model supplies them.
         step (t , dt) = t , (dt , mt)
           where
           mt : IsMin t
-          mt t' qd' lt = hu (codeEl t') (numAt (arity t')) (envEl t')
+          mt t' qd' lt = lower (hu (codeEl t') (numAt (arity t')) (envEl t')
             (Named.NameAt-fill (sh3 B) (sh3 C) (sh3 C₀) (suc (suc zero))
                (suc zero) zero (sh3 d)
                (envEl t' ∷ numAt (arity t') ∷ codeEl t' ∷ γ) qB qC q₀ t'
@@ -777,7 +699,7 @@ that has them as sets of the model supplies them.
                (sh3 s) (sh3 a) (sh3 e)
                (envEl t' ∷ numAt (arity t') ∷ codeEl t' ∷ γ) t' t
                qR qP (codeEl-fst t') (dt .fst) (numAt-fst (arity t'))
-               (dt .snd .fst) (envEl-fst t') (dt .snd .snd .fst) lt)
+               (dt .snd .fst) (envEl-fst t') (dt .snd .snd .fst) lt))
 ```
 
 <!--en-->

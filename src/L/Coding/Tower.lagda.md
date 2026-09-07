@@ -13,7 +13,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ} using
@@ -21,6 +21,7 @@ open import L.Coding.Model {ℓ} using
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
 open import L.Coding.Sound {ℓ} lem using ( module Ambient; module AmbientHolds )
 open import L.Recursion {ℓ} lem using ( smallDom )
+open import L.Axioms.Basic {ℓ} using ( extensionalL )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
@@ -152,8 +153,6 @@ of arity `n` over `b`.
             module Am = Ambient W (F ∷ n ∷ b ∷ x ∷ []) i0 i1 i2 (lower k)
                           (qn ∙ numeralL-fst (lower k)) qb hE using (into; outof)
             Eq : fst F ≡ fst (envSet W (lower k))
-            Eq = extensionalV {a = fst F} {b = fst (envSet W (lower k))}
-              (λ z → ⇔toPath
-                (λ z∈ → Am.into (down F z z∈) z∈)
-                (λ z∈ → Am.outof (down (envSet W (lower k)) z z∈) z∈))
+            Eq = cong fst (extensionalL {a = F} {b = envSet W (lower k)}
+              (λ z → ⇔toPath (Am.into z) (Am.outof z)))
 ```

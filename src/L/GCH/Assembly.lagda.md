@@ -228,7 +228,7 @@ An inclusion is an internal injection (src/L/InjChain.lagda.md, row 3).
 inclusion-coded : (a b : SL.S)
                 → ((z : SV.S) → ⟨ z ∈ˢ fst a ⟩ → ⟨ z ∈ˢ fst b ⟩)
                 → InjL a b
-inclusion-coded a b sub = ∣ I.G , (I.sv , I.dm , I.ij , I.ran) ∣₁
+inclusion-coded a b sub = ∣ I.G , I.code ∣₁
   where module I = InclGraph a b sub
 ```
 

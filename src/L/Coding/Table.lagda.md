@@ -35,13 +35,13 @@ module L.Coding.Table {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  using ( Formula )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ} using ( module LCode; prʟ; prʟ-fst )
 open import L.Coding.InL {ℓ}
-  using ( sglʟ; sglʟ-in; cupʟ-inl; tree; Of; tree-inv )
+  using ( tree; Of; tree-inv )
   renaming ( module Parts to TreeParts )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 
@@ -198,25 +198,10 @@ which is the only arity at which it is true.
       r .snd ∙ cong fst (sym (key-determines ψ χ (r .fst))) })
     (satTable-inv φ (pr (fst (keyʟ ψ)) y) h)
 
-  private
-    top : ∀ {n} (φ : Formula S n)
-        → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (sglʟ (ent φ)) ⟩
-    top φ = sglʟ-in (ent φ) _ (sym (prʟ-fst (keyʟ φ) (Sat B φ)))
-
   entry-in : ∀ {n} (φ : Formula S n)
            → ⟨ pr (fst (keyʟ φ)) (fst (Sat B φ)) ∈ fst (satTable φ) ⟩
-  entry-in φ@(t ∈̇ u)  = top φ
-  entry-in φ@(t ≐ u)  = top φ
-  entry-in φ@⊤̇        = top φ
-  entry-in φ@⊥̇        = top φ
-  entry-in φ@(a ∧̇ b)  = cupʟ-inl _ _ _ (top φ)
-  entry-in φ@(a ∨̇ b)  = cupʟ-inl _ _ _ (top φ)
-  entry-in φ@(a ⇒̇ b)  = cupʟ-inl _ _ _ (top φ)
-  entry-in φ@(¬̇ a)    = cupʟ-inl _ _ _ (top φ)
-  entry-in φ@(∃̇ a)    = cupʟ-inl _ _ _ (top φ)
-  entry-in φ@(∀̇ a)    = cupʟ-inl _ _ _ (top φ)
-  entry-in φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (top φ)
-  entry-in φ@(∃̇∈ t a) = cupʟ-inl _ _ _ (top φ)
+  entry-in φ = subst (λ w → ⟨ w ∈ fst (satTable φ) ⟩)
+    (prʟ-fst (keyʟ φ) (Sat B φ)) (Parts.self ent φ)
 ```
 
 <!--en-->
@@ -226,7 +211,7 @@ which is the only arity at which it is true.
 <!--/-->
 
 <!--en-->
-The dispatch a clause performs, and the last piece before the twelve
+The dispatch a clause performs, and the last piece before the ten
 verifications. A clause is stated at a tag and receives a key of that shape; the
 formula the key names is recovered by the inversion above, and then its
 constructor has to be matched against the tag. That match is the coding chapter's
@@ -234,13 +219,13 @@ own device, exported rather than rebuilt: the constructor is recoverable from th
 tag, so what a formula of a given tag looks like is **computed** from the tag,
 and the tag equation carries the formula's own case to it.
 
-So one lemma serves all twelve clauses, and it hands back three things: what the
+So one lemma serves all ten clauses, and it hands back three things: what the
 formula's constructor is, that the arity read is the formula's, and that the
 payload read is the formula's.
 <!--zh-->
-子句所作的那次分派，也是十二次验证之前的最后一块。一条子句在某个标签处陈述，收到一个那种形状的键；键所命名的公式由上面那次求逆恢复出来，随后它的构造子必须与那个标签对上。那次对上用的是编码那一章自己的装置，导出而非重造：构造子可从标签还原，故「带某个标签的公式长什么样」是从标签**算**出来的，而那条标签等式把公式自己的情形搬到它上面。
+子句所作的那次分派，也是十次验证之前的最后一块。一条子句在某个标签处陈述，收到一个那种形状的键；键所命名的公式由上面那次求逆恢复出来，随后它的构造子必须与那个标签对上。那次对上用的是编码那一章自己的装置，导出而非重造：构造子可从标签还原，故「带某个标签的公式长什么样」是从标签**算**出来的，而那条标签等式把公式自己的情形搬到它上面。
 
-于是一条引理服务全部十二条子句，而它交回三件东西：那条公式的构造子是什么、被读出的元数就是它的元数、被读出的载荷就是它的载荷。
+于是一条引理服务全部十条子句，而它交回三件东西：那条公式的构造子是什么、被读出的元数就是它的元数、被读出的载荷就是它的载荷。
 <!--/-->
 
 ```agda

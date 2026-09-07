@@ -24,16 +24,17 @@ module V.Smallness {ℓ : Level} where
 open import Base.Impredicativity using ( isSmall )
 open import FOL.ZFStructure using ( ZFStructure; _↾_ )
 open import FOL.Syntax
-  using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  using ( Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy
-  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
+  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 
 open import Cubical.Foundations.Equiv
-  using ( _≃_; equivFun; invEq; invEquiv; secEq; propBiimpl→Equiv )
+  using ( _≃_; equivFun; invEq; invEquiv; equivΠ; propBiimpl→Equiv )
 import Cubical.Functions.Logic as Logic
 open import Cubical.Functions.Logic using ( ⇔toPath )
+open import Cubical.Data.Sigma using ( Σ-cong-equiv )
 import Cubical.Data.Sum as Sum
 open import Cubical.Data.Unit using ( tt* )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -98,22 +99,16 @@ codomain of the compression.)
 
 ```agda
 small⊓ : {P Q : hProp (ℓ-suc ℓ)} → isSmall P → isSmall Q → isSmall (P ⊓ Q)
-small⊓ {P} {Q} (P' , eP) (Q' , eQ) = (P' Logic.⊓ Q') ,
-  propBiimpl→Equiv (snd (P ⊓ Q)) (snd (P' Logic.⊓ Q'))
-    (λ pq → equivFun eP (pq .fst) , equivFun eQ (pq .snd))
-    (λ pq → invEq eP (pq .fst) , invEq eQ (pq .snd))
+small⊓ {P} {Q} (P' , eP) (Q' , eQ) =
+  (P' Logic.⊓ Q') , Σ-cong-equiv eP (λ _ → eQ)
 
 small⊔ : {P Q : hProp (ℓ-suc ℓ)} → isSmall P → isSmall Q → isSmall (P ⊔ Q)
-small⊔ {P} {Q} (P' , eP) (Q' , eQ) = (P' Logic.⊔ Q') ,
-  propBiimpl→Equiv (snd (P ⊔ Q)) (snd (P' Logic.⊔ Q'))
-    (PT.map (Sum.map (equivFun eP) (equivFun eQ)))
-    (PT.map (Sum.map (invEq eP) (invEq eQ)))
+small⊔ {P} {Q} (P' , eP) (Q' , eQ) =
+  (P' Logic.⊔ Q') , PT.propTrunc≃ (Sum.⊎-equiv eP eQ)
 
 small⇒ : {P Q : hProp (ℓ-suc ℓ)} → isSmall P → isSmall Q → isSmall (P ⇒ Q)
-small⇒ {P} {Q} (P' , eP) (Q' , eQ) = (P' Logic.⇒ Q') ,
-  propBiimpl→Equiv (snd (P ⇒ Q)) (snd (P' Logic.⇒ Q'))
-    (λ f p' → equivFun eQ (f (invEq eP p')))
-    (λ g p → invEq eQ (g (equivFun eP p)))
+small⇒ {P} {Q} (P' , eP) (Q' , eQ) =
+  (P' Logic.⇒ Q') , equivΠ eP (λ _ → eQ)
 
 small¬ : {P : hProp (ℓ-suc ℓ)} → isSmall P → isSmall (¬ P)
 small¬ {P} (P' , eP) = (Logic.¬ P') ,
@@ -258,8 +253,6 @@ module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
     small⊔ {P = γ ⊨ φ} {Q = γ ⊨ ψ} (Δ₀-small c γ) (Δ₀-small d γ)
   Δ₀-small (δ-⇒ {φ = φ} {ψ} c d) γ =
     small⇒ {P = γ ⊨ φ} {Q = γ ⊨ ψ} (Δ₀-small c γ) (Δ₀-small d γ)
-  Δ₀-small (δ-¬ {φ = φ} c) γ = small¬ {P = γ ⊨ φ} (Δ₀-small c γ)
-  Δ₀-small δ-⊤ γ = small⊤
   Δ₀-small δ-⊥ γ = small⊥
   Δ₀-small (δ-∀∈ {t = t} {φ = φ} c) γ =
     small-∀∈ (⟦ t ⟧ γ) {B = λ x → (x ∷ γ) ⊨ φ} (λ x → Δ₀-small c (x ∷ γ))
@@ -313,31 +306,14 @@ over all of `V ℓ`; here the range is the carrier of a **restricted structure**
 small-⋀ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
         → (∀ a → isSmall (B a))
         → isSmall (⋀ A B)
-small-⋀ {A} {X} e {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
-  where
-  big = ⋀ A B
-  Qsm = Logic.∀[]-syntax (λ (m : X) → sm (equivFun e m) .fst)
-  fwd : ⟨ big ⟩ → ⟨ Qsm ⟩
-  fwd f m = equivFun (sm (equivFun e m) .snd) (f (equivFun e m))
-  bwd : ⟨ Qsm ⟩ → ⟨ big ⟩
-  bwd g a = subst (λ v → ⟨ B v ⟩) (secEq e a)
-                  (invEq (sm (equivFun e (invEq e a)) .snd) (g (invEq e a)))
+small-⋀ e sm = Logic.∀[]-syntax (λ m → sm (equivFun e m) .fst)
+  , invEquiv (equivΠ e (λ m → invEquiv (sm (equivFun e m) .snd)))
 
 small-⋁ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
         → (∀ a → isSmall (B a))
         → isSmall (⋁ A B)
-small-⋁ {A} {X} e {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
-  where
-  big = ⋁ A B
-  Qsm = Logic.∃[]-syntax (λ (m : X) → sm (equivFun e m) .fst)
-  fwd : ⟨ big ⟩ → ⟨ Qsm ⟩
-  fwd = PT.map λ where
-    (a , ba) → invEq e a ,
-               equivFun (sm (equivFun e (invEq e a)) .snd)
-                        (subst (λ v → ⟨ B v ⟩) (sym (secEq e a)) ba)
-  bwd : ⟨ Qsm ⟩ → ⟨ big ⟩
-  bwd = PT.map λ where
-    (m , q) → equivFun e m , invEq (sm (equivFun e m) .snd) q
+small-⋁ e sm = Logic.∃[]-syntax (λ m → sm (equivFun e m) .fst)
+  , invEquiv (PT.propTrunc≃ (Σ-cong-equiv e (λ m → invEquiv (sm (equivFun e m) .snd))))
 ```
 
 <!--en-->
@@ -374,8 +350,6 @@ module InnerSmall (M : S → hProp (ℓ-suc ℓ))
     small⊔ {P = δ ⊨ᵐ φ} {Q = δ ⊨ᵐ ψ} (⊨ᵐ-small φ δ) (⊨ᵐ-small ψ δ)
   ⊨ᵐ-small (φ ⇒̇ ψ)  δ =
     small⇒ {P = δ ⊨ᵐ φ} {Q = δ ⊨ᵐ ψ} (⊨ᵐ-small φ δ) (⊨ᵐ-small ψ δ)
-  ⊨ᵐ-small (¬̇ φ)    δ = small¬ {P = δ ⊨ᵐ φ} (⊨ᵐ-small φ δ)
-  ⊨ᵐ-small ⊤̇        δ = small⊤
   ⊨ᵐ-small ⊥̇        δ = small⊥
   ⊨ᵐ-small (∃̇ φ)    δ =
     small-⋁ e {B = λ xm → (xm ∷ δ) ⊨ᵐ φ} (λ xm → ⊨ᵐ-small φ (xm ∷ δ))

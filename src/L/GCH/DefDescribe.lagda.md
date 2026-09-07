@@ -11,7 +11,7 @@ module L.GCH.DefDescribe {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∧; δ-⇒; δ-∀∈; δ-∃∈; δ-∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
 open import FOL.Manipulation.Relabelling using ( mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
@@ -26,11 +26,12 @@ open import L.Coding.Uniform {ℓ} lem using ( module Table; val-at )
 open import L.Coding.Sat {ℓ} lem using ( Sat )
 open import L.GCH.SatFrame {ℓ} lem using
   ( sh; i0; i1; i3; i6; f0; f1; Tags; down; container; sndS
-  ; sndEx; sndAll; Δ₀-sndEx; Δ₀-sndAll; sndEx-out; sndAll-in; fillSnd; useSnd
-  ; Δ₀-prAtL; pr-out; pr-in; module Alphabet )
+  ; sndEx; sndAll; sndEx-out; sndAll-in; fillSnd; useSnd
+  ; pr-out; pr-in; module Alphabet )
 open import L.GCH.SatDescribe {ℓ} lem using ( satAt; module SatRead; module Match )
 
 open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.Data.Unit using ( tt )
 open import Cubical.Data.Vec using ( _∷_; lookup )
 open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Foundations.HLevels using ( isProp× )
@@ -61,8 +62,6 @@ looked up in.
 singleOf : ∀ {j} → Fin j → Fin j → Fin j → Formula S j
 singleOf e N0 z = ∀̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z)) ∧̇ ∃̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z))
 
-Δ₀-singleOf : ∀ {j} (e N0 z : Fin j) → Δ₀ (singleOf e N0 z)
-Δ₀-singleOf e N0 z = δ-∧ (δ-∀∈ (Δ₀-prAtL i0 (sh 1 N0) (sh 1 z))) (δ-∃∈ (Δ₀-prAtL i0 (sh 1 N0) (sh 1 z)))
 ```
 
 `x` is the set of members of `w` whose one-entry environment lies in `y`.
@@ -73,17 +72,13 @@ definesB x w y N0 =
     ∀̇∈ (var x) ((var i0 ∈̇ var (sh 1 w)) ∧̇ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1))
   ∧̇ ∀̇∈ (var w) (∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⇒̇ (var i0 ∈̇ var (sh 1 x)))
 
-Δ₀-definesB : ∀ {j} (x w y N0 : Fin j) → Δ₀ (definesB x w y N0)
-Δ₀-definesB x w y N0 =
-  δ-∧ (δ-∀∈ (δ-∧ δ-∈ (δ-∃∈ (Δ₀-singleOf i0 (sh 2 N0) i1))))
-      (δ-∀∈ (δ-⇒ (δ-∃∈ (Δ₀-singleOf i0 (sh 2 N0) i1)) δ-∈))
 ```
 
 Every member of `v` is cut by some arity-one code: at
 `y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ x ∷ γ`, `x` at `i6`, `y` at `i0`.
 
 ```agda
-memAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+memAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 memAt v w T C N =
   ∀̇∈ (var v) (∃̇∈ (var (sh 1 C)) (sndEx i0 (sh 2 (N f1))
     (∃̇∈ (var (sh 4 T)) (sndEx i0 i3 (definesB i6 (sh 7 w) i0 (sh 7 (N f0)))))))
@@ -93,36 +88,28 @@ Every arity-one code cuts a member of `v`: at
 `x ∷ y ∷ s' ∷ e ∷ p ∷ s ∷ c ∷ γ`, `x` at `i0`, `y` at `i1`.
 
 ```agda
-allAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+allAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 allAt v w T C N =
   ∀̇∈ (var C) (sndAll i0 (sh 1 (N f1))
     (∃̇∈ (var (sh 3 T)) (sndEx i0 i3 (∃̇∈ (var (sh 6 v)) (definesB i0 (sh 7 w) i1 (sh 7 (N f0)))))))
 
-Δ₀-memAt : ∀ {m} (v w T C : Fin m) (N : Fin 12 → Fin m) → Δ₀ (memAt v w T C N)
-Δ₀-memAt v w T C N =
-  δ-∀∈ (δ-∃∈ (Δ₀-sndEx i0 (sh 2 (N f1)) _
-    (δ-∃∈ (Δ₀-sndEx i0 i3 _ (Δ₀-definesB i6 (sh 7 w) i0 (sh 7 (N f0)))))))
 
-Δ₀-allAt : ∀ {m} (v w T C : Fin m) (N : Fin 12 → Fin m) → Δ₀ (allAt v w T C N)
-Δ₀-allAt v w T C N =
-  δ-∀∈ (Δ₀-sndAll i0 (sh 1 (N f1)) _
-    (δ-∃∈ (Δ₀-sndEx i0 i3 _ (δ-∃∈ (Δ₀-definesB i0 (sh 7 w) i1 (sh 7 (N f0)))))))
 
 opaque
-  defAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+  defAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
   defAt v w T C N = memAt v w T C N ∧̇ allAt v w T C N
 
 opaque
   unfolding defAt
 
-  Δ₀-defAt : ∀ {m} (v w T C : Fin m) (N : Fin 12 → Fin m) → Δ₀ (defAt v w T C N)
-  Δ₀-defAt v w T C N = δ-∧ (Δ₀-memAt v w T C N) (Δ₀-allAt v w T C N)
+  Δ₀-defAt : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) → Δ₀ (defAt v w T C N)
+  Δ₀-defAt v w T C N = checkΔ₀ (defAt v w T C N) tt
 
-  defAt-out : ∀ {m} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
+  defAt-out : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
             → ⟨ γ ⊨ defAt v w T C N ⟩ → ⟨ γ ⊨ memAt v w T C N ⟩ × ⟨ γ ⊨ allAt v w T C N ⟩
   defAt-out v w T C N γ h = h
 
-  defAt-in : ∀ {m} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
+  defAt-in : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
            → ⟨ γ ⊨ memAt v w T C N ⟩ → ⟨ γ ⊨ allAt v w T C N ⟩ → ⟨ γ ⊨ defAt v w T C N ⟩
   defAt-in v w T C N γ h1 h2 = h1 , h2
 ```
@@ -198,7 +185,7 @@ module _ {j : ℕ} (x w y N0 : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ 
 The two clauses.
 
 ```agda
-module Read {m : ℕ} (v w T C : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module Read {m : ℕ} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
   private
     Vv = fst (lookup v γ)
     Wv = fst (lookup w γ)
@@ -287,7 +274,7 @@ The two theorems. With `T`, `C` read by `satAt`: a reading of `defAt` at
 set satisfies `defAt`.
 
 ```agda
-module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (hs : ⟨ γ ⊨ satAt T w C E N ⟩) where
   open Alphabet W
   open Match W
@@ -420,12 +407,12 @@ The entry at the key of `ψ`, and its value.
 The two theorems, at the seal.
 
 ```agda
-def-sound : ∀ {m} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+def-sound : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
           → fst (lookup w γ) ≡ fst W → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
           → ⟨ γ ⊨ defAt v w T C N ⟩ → fst (lookup v γ) ≡ 𝒟ₒ (fst W)
 def-sound v w T C E N γ W qw tg hs = DefRead.def-sound v w T C E N γ W qw tg hs
 
-def-complete : ∀ {m} (v w T C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+def-complete : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
              → fst (lookup w γ) ≡ fst W → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
              → fst (lookup v γ) ≡ 𝒟ₒ (fst W) → ⟨ γ ⊨ defAt v w T C N ⟩
 def-complete v w T C E N γ W qw tg hs = DefRead.def-complete v w T C E N γ W qw tg hs

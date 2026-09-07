@@ -26,7 +26,7 @@ open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
   ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Semantics
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Vec using ( _++_; map )
@@ -55,7 +55,7 @@ strictly necessary, paid in variables that receive a value twice over, and nothi
 downstream can tell the difference: a vector of parameters is a vector of
 parameters.
 
-The count is a structural recursion over the twelve constructors, with a term's
+The count is a structural recursion over the ten constructors, with a term's
 count feeding it: a constant is one occurrence, a variable is none. Where a
 constructor has two parts, the counts add, left part first.
 <!--zh-->
@@ -63,7 +63,7 @@ constructor has two parts, the counts add, left part first.
 
 若读者期待的是公式所提及的常量之**集**，他会去找那件能把同一常量的两次出现认作一次的可判定相等，并且找不到。本就没有可找的：常量域是任意类型，没有任何东西迫使它的相等可判定，而在集合的载体上它显然不可判定。逐次出现地计数，正是让整章摆脱这项索求的关键。代价是抽象出来的元数高于严格必要的元数，以「同一取值被喂了两遍」的变量支付，而下游分辨不出差别：参数向量就是参数向量。
 
-计数是对十二个构造子的一次结构递归，由词项的计数供料：常量算一次出现，变量算零次。构造子分两部分处的计数相加，左部在先。
+计数是对十个构造子的一次结构递归，由词项的计数供料：常量算一次出现，变量算零次。构造子分两部分处的计数相加，左部在先。
 <!--/-->
 
 ```agda
@@ -77,8 +77,6 @@ countFo (t ≐ u)  = countTm t + countTm u
 countFo (φ ∧̇ ψ)  = countFo φ + countFo ψ
 countFo (φ ∨̇ ψ)  = countFo φ + countFo ψ
 countFo (φ ⇒̇ ψ)  = countFo φ + countFo ψ
-countFo (¬̇ φ)    = countFo φ
-countFo ⊤̇        = zero
 countFo ⊥̇        = zero
 countFo (∃̇ φ)    = countFo φ
 countFo (∀̇ φ)    = countFo φ
@@ -108,8 +106,6 @@ constantsFo (t ≐ u)  = constantsTm t ++ constantsTm u
 constantsFo (φ ∧̇ ψ)  = constantsFo φ ++ constantsFo ψ
 constantsFo (φ ∨̇ ψ)  = constantsFo φ ++ constantsFo ψ
 constantsFo (φ ⇒̇ ψ)  = constantsFo φ ++ constantsFo ψ
-constantsFo (¬̇ φ)    = constantsFo φ
-constantsFo ⊤̇        = []
 constantsFo ⊥̇        = []
 constantsFo (∃̇ φ)    = constantsFo φ
 constantsFo (∀̇ φ)    = constantsFo φ
@@ -207,14 +203,14 @@ needing a second pass. A conjunction's occurrences are its left operand's follow
 by its right operand's, so the two operands are abstracted under the placements
 `θ ∘ padRight` and `θ ∘ padLeft`, **composed before the traversal** rather than
 recovered afterwards by renaming the two halves into the joined context. One pass
-over the formula, no weakening lemma, and each of the twelve clauses is the shape
+over the formula, no weakening lemma, and each of the ten clauses is the shape
 the corresponding clause of every other structural recursion in this part has.
 Under a binder the placement gains a `suc`, which is the parameter block riding one
 index higher, and nothing else happens at all.
 <!--zh-->
 抽象以泛型形式写一遍，再实例化一次。泛型形式收一件**安置**：一个函数 `θ`，为公式的每次常量出现指派目标语境中的一个变量；它返回把每个常量换成 `θ` 为它点名的那个变量之后的公式。目标的元数是 `n + k`，其中 `k` 由安置自由选取，故泛型形式抽象进的语境留有余地。
 
-此处的泛型不是装饰，而是让两部分的构造子免于第二趟遍历的关键。合取的诸次出现，是左合取项的诸次出现后接右合取项的诸次出现，于是两个合取项在安置 `θ ∘ padRight` 与 `θ ∘ padLeft` 之下被抽象，而这两件安置是在**遍历之前复合**的，不是事后把两半重标进合并语境再补回来。对公式只走一趟，不需要弱化引理，十二条子句各自的形状就是本部其他每一场结构递归的对应子句的形状。约束子之下，安置多得一个 `suc`，那正是参数块整体高一个序号，除此之外什么也没发生。
+此处的泛型不是装饰，而是让两部分的构造子免于第二趟遍历的关键。合取的诸次出现，是左合取项的诸次出现后接右合取项的诸次出现，于是两个合取项在安置 `θ ∘ padRight` 与 `θ ∘ padLeft` 之下被抽象，而这两件安置是在**遍历之前复合**的，不是事后把两半重标进合并语境再补回来。对公式只走一趟，不需要弱化引理，十条子句各自的形状就是本部其他每一场结构递归的对应子句的形状。约束子之下，安置多得一个 `suc`，那正是参数块整体高一个序号，除此之外什么也没发生。
 <!--/-->
 
 ```agda
@@ -235,8 +231,6 @@ placeFo (φ ∨̇ ψ)  θ = placeFo φ (λ i → θ (padRight (countFo ψ) i))
                    ∨̇ placeFo ψ (λ j → θ (padLeft (countFo φ) j))
 placeFo (φ ⇒̇ ψ)  θ = placeFo φ (λ i → θ (padRight (countFo ψ) i))
                    ⇒̇ placeFo ψ (λ j → θ (padLeft (countFo φ) j))
-placeFo (¬̇ φ)    θ = ¬̇ placeFo φ θ
-placeFo ⊤̇        θ = ⊤̇
 placeFo ⊥̇        θ = ⊥̇
 placeFo (∃̇ φ)    θ = ∃̇ placeFo φ (λ j → suc (θ j))
 placeFo (∀̇ φ)    θ = ∀̇ placeFo φ (λ j → suc (θ j))
@@ -345,9 +339,9 @@ finds it again in the extended environment.
 ```
 
 <!--en-->
-Then the fourteen cases of the formula induction, twelve of them here and the two
-term cases just discharged. Every propositional clause is a congruence, because
-the semantics assigns each object connective exactly the truth algebra's
+Then the twelve cases of the induction, ten formula cases here and the two
+term cases just discharged. Every primitive propositional clause is a congruence, because
+the semantics assigns its constructor exactly the truth algebra's
 operation and there is no translation layer to cross. The four binding clauses
 push a value onto the environment and appeal to the induction hypothesis at the
 extended one, and the hypothesis about the parameter slots travels **unchanged**:
@@ -355,7 +349,7 @@ consing on the left and shifting the placement by `suc` cancel each other by
 computation, so the binders need no lemma of their own. The two bounded clauses
 split, term on the left and body on the right, exactly as their constructors do.
 <!--zh-->
-然后是公式归纳的十四个情形，十二个在此，两个词项情形刚已交割。命题的每条子句都是同余，因为语义给每个对象联结词指派的恰是真值代数的运算，中间没有翻译层要跨。四条约束子句向环境压入一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**通行：左侧的前置与安置的 `suc` 移位靠计算互相抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
+然后是归纳的十二个情形，十个公式情形在此，两个词项情形刚已交割。命题的每条原语子句都是同余，因为语义给每个构造子指派的恰是真值代数的对应运算，中间没有翻译层要跨。四条约束子句向环境压入一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**通行：左侧的前置与安置的 `suc` 移位靠计算互相抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
 <!--/-->
 
 ```agda
@@ -388,8 +382,6 @@ split, term on the left and body on the right, exactly as their constructors do.
         (leftHalf θ γ σ (constantsFo φ) (constantsFo ψ) h))
       (⊨-place ψ (λ j → θ (padLeft (countFo φ) j)) γ σ
         (rightHalf (countFo φ) θ γ σ (constantsFo φ) (constantsFo ψ) h))
-    ⊨-place (¬̇ φ)   θ γ σ h = cong ¬_ (⊨-place φ θ γ σ h)
-    ⊨-place ⊤̇       θ γ σ h = refl
     ⊨-place ⊥̇       θ γ σ h = refl
     ⊨-place (∃̇ φ)   θ γ σ h = cong (⋁ S) (funExt (λ x →
       ⊨-place φ (λ j → suc (θ j)) (x ∷ γ) σ h))

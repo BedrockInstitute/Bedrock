@@ -34,10 +34,10 @@ open import Base.Prelude
 module FOL.Manipulation.Bounding where
 
 open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy
-  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
+  using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 
 open import Cubical.Data.Unit using ( Unit )
@@ -70,8 +70,6 @@ BoundedFo P (t ≐ u)  = BoundedTm P t × BoundedTm P u
 BoundedFo P (φ ∧̇ ψ)  = BoundedFo P φ × BoundedFo P ψ
 BoundedFo P (φ ∨̇ ψ)  = BoundedFo P φ × BoundedFo P ψ
 BoundedFo P (φ ⇒̇ ψ)  = BoundedFo P φ × BoundedFo P ψ
-BoundedFo P (¬̇ φ)    = BoundedFo P φ
-BoundedFo P ⊤̇        = Lift Unit
 BoundedFo P ⊥̇        = Lift Unit
 BoundedFo P (∃̇ φ)    = BoundedFo P φ
 BoundedFo P (∀̇ φ)    = BoundedFo P φ
@@ -108,8 +106,6 @@ module _ {ℓk ℓp ℓq} {K : Type ℓk} {P : K → Type ℓp} {Q : K → Type 
   BoundedFo-mono (φ ∧̇ ψ)  (hφ , hψ) = BoundedFo-mono φ hφ , BoundedFo-mono ψ hψ
   BoundedFo-mono (φ ∨̇ ψ)  (hφ , hψ) = BoundedFo-mono φ hφ , BoundedFo-mono ψ hψ
   BoundedFo-mono (φ ⇒̇ ψ)  (hφ , hψ) = BoundedFo-mono φ hφ , BoundedFo-mono ψ hψ
-  BoundedFo-mono (¬̇ φ)    hφ        = BoundedFo-mono φ hφ
-  BoundedFo-mono ⊤̇        _         = _
   BoundedFo-mono ⊥̇        _         = _
   BoundedFo-mono (∃̇ φ)    hφ        = BoundedFo-mono φ hφ
   BoundedFo-mono (∀̇ φ)    hφ        = BoundedFo-mono φ hφ
@@ -165,8 +161,6 @@ module Relabel
   liftFo (φ ∧̇ ψ)  (hφ , hψ) = liftFo φ hφ ∧̇ liftFo ψ hψ
   liftFo (φ ∨̇ ψ)  (hφ , hψ) = liftFo φ hφ ∨̇ liftFo ψ hψ
   liftFo (φ ⇒̇ ψ)  (hφ , hψ) = liftFo φ hφ ⇒̇ liftFo ψ hψ
-  liftFo (¬̇ φ)    hφ        = ¬̇ liftFo φ hφ
-  liftFo ⊤̇        _         = ⊤̇
   liftFo ⊥̇        _         = ⊥̇
   liftFo (∃̇ φ)    hφ        = ∃̇ liftFo φ hφ
   liftFo (∀̇ φ)    hφ        = ∀̇ liftFo φ hφ
@@ -207,8 +201,6 @@ Lévy 见证也存活下来，因为重标动的是常元，而见证从不看�
     cong₂ _∨̇_ (liftFo-correct φ hφ) (liftFo-correct ψ hψ)
   liftFo-correct (φ ⇒̇ ψ) (hφ , hψ) =
     cong₂ _⇒̇_ (liftFo-correct φ hφ) (liftFo-correct ψ hψ)
-  liftFo-correct (¬̇ φ) hφ = cong ¬̇_ (liftFo-correct φ hφ)
-  liftFo-correct ⊤̇ _ = refl
   liftFo-correct ⊥̇ _ = refl
   liftFo-correct (∃̇ φ) hφ = cong ∃̇_ (liftFo-correct φ hφ)
   liftFo-correct (∀̇ φ) hφ = cong ∀̇_ (liftFo-correct φ hφ)
@@ -223,8 +215,6 @@ Lévy 见证也存活下来，因为重标动的是常元，而见证从不看�
   Δ₀-liftFo (hφ , hψ) (δ-∧ c d) = δ-∧ (Δ₀-liftFo hφ c) (Δ₀-liftFo hψ d)
   Δ₀-liftFo (hφ , hψ) (δ-∨ c d) = δ-∨ (Δ₀-liftFo hφ c) (Δ₀-liftFo hψ d)
   Δ₀-liftFo (hφ , hψ) (δ-⇒ c d) = δ-⇒ (Δ₀-liftFo hφ c) (Δ₀-liftFo hψ d)
-  Δ₀-liftFo hφ        (δ-¬ c)   = δ-¬ (Δ₀-liftFo hφ c)
-  Δ₀-liftFo _         δ-⊤       = δ-⊤
   Δ₀-liftFo _         δ-⊥       = δ-⊥
   Δ₀-liftFo (ht , hφ) (δ-∀∈ c)  = δ-∀∈ (Δ₀-liftFo hφ c)
   Δ₀-liftFo (ht , hφ) (δ-∃∈ c)  = δ-∃∈ (Δ₀-liftFo hφ c)

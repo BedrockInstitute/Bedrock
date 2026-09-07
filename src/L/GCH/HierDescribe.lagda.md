@@ -11,7 +11,7 @@ module L.GCH.HierDescribe {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∧; δ-∀∈; δ-∃∈; δ-∈; δ-⊤; δ-⊥ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀; δ-∧; δ-∃∈ )
 open import FOL.Manipulation.Parameters using ( countFo )
 open import FOL.Manipulation.Relabelling using ( embed; embed-⊨; mapΔ₀ )
 import FOL.Absoluteness
@@ -29,20 +29,20 @@ open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
 open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
 open import L.GCH.Hull {ℓ} lem using ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
 open import L.GCH.SatFrame {ℓ} lem using
-  ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
   ; Tags; shN; nn; down; sndS; container
-  ; Δ₀-sucAtL; suc-out; suc-in
-  ; sndEx; sndAll; bothAll; Δ₀-sndEx; Δ₀-sndAll; Δ₀-bothAll
+  ; suc-out; suc-in
+  ; sndEx; sndAll; bothAll
   ; sndEx-out; sndAll-in; bothAll-in; fillSnd; useSnd; useBoth
   ; module Tower; module SatGraph )
-open import L.GCH.SatDescribe {ℓ} lem using ( satAt; Δ₀-satAt; sat-complete )
-open import L.GCH.DefDescribe {ℓ} lem using ( defAt; Δ₀-defAt; def-sound; def-complete )
+open import L.GCH.SatDescribe {ℓ} lem using ( satAt; sat-complete )
+open import L.GCH.DefDescribe {ℓ} lem using ( defAt; def-sound; def-complete )
 open import L.GCH.Complete {ℓ} lem using ( Adequate; module Adequate; module At; Lset∈suc )
 
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Vec using ( _∷_; []; map; lookup )
 open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Unit using ( tt* )
+open import Cubical.Data.Unit using ( tt )
 open import Cubical.Data.FinData using ( toℕ; weakenFin )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.Data.Empty as Empty
@@ -71,23 +71,18 @@ At `d ∷ E ∷ C ∷ T ∷ δ`: `d` is the definable power set of `w`, through 
 satisfaction table `T` over the code set `C` and the tower `E`, all in `z`.
 
 ```agda
-defIn : ∀ {k} → Fin k → Fin k → (Fin 12 → Fin k) → Formula S (4 + k) → Formula S k
+defIn : ∀ {k} → Fin k → Fin k → (Fin 10 → Fin k) → Formula S (4 + k) → Formula S k
 defIn w z N body =
   ∃̇∈ (var z) (∃̇∈ (var (sh 1 z)) (∃̇∈ (var (sh 2 z)) (∃̇∈ (var (sh 3 z))
     (satAt i3 (sh 4 w) i2 i1 (shN 4 N) ∧̇ (defAt i0 (sh 4 w) i3 i2 (shN 4 N) ∧̇ body)))))
 
-Δ₀-defIn : ∀ {k} (w z : Fin k) (N : Fin 12 → Fin k) (body : Formula S (4 + k))
-         → Δ₀ body → Δ₀ (defIn w z N body)
-Δ₀-defIn w z N body d =
-  δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∃∈ (δ-∧ (Δ₀-satAt i3 (sh 4 w) i2 i1 (shN 4 N))
-                              (δ-∧ (Δ₀-defAt i0 (sh 4 w) i3 i2 (shN 4 N)) d)))))
 ```
 
 Every `x ∈ v` lies in the definable power set of a value recorded at some
 `c ∈ b`. Innermost: `d ∷ E ∷ C ∷ T ∷ w ∷ s ∷ q ∷ c ∷ x ∷ γ`.
 
 ```agda
-intoAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+intoAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 intoAt v b f z N =
   ∀̇∈ (var v) (∃̇∈ (var (sh 1 b)) (∃̇∈ (var (sh 2 f))
     (sndEx i0 i1 (defIn i0 (sh 5 z) (shN 5 N) (var i8 ∈̇ var i0)))))
@@ -97,66 +92,48 @@ The definable power set of every value recorded at a `c ∈ b` lies inside `v`.
 Innermost: `y ∷ d ∷ E ∷ C ∷ T ∷ w ∷ s ∷ q ∷ c ∷ γ`.
 
 ```agda
-overAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+overAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 overAt v b f z N =
   ∀̇∈ (var b) (∀̇∈ (var (sh 1 f))
     (sndAll i0 i1 (defIn i0 (sh 4 z) (shN 4 N) (∀̇∈ (var i0) (var i0 ∈̇ var (sh 9 v))))))
 
-stepAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+stepAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 stepAt v b f z N = intoAt v b f z N ∧̇ overAt v b f z N
 
-Δ₀-stepAt : ∀ {m} (v b f z : Fin m) (N : Fin 12 → Fin m) → Δ₀ (stepAt v b f z N)
-Δ₀-stepAt v b f z N =
-  δ-∧ (δ-∀∈ (δ-∃∈ (δ-∃∈ (Δ₀-sndEx i0 i1 _ (Δ₀-defIn i0 (sh 5 z) (shN 5 N) _ δ-∈)))))
-      (δ-∀∈ (δ-∀∈ (Δ₀-sndAll i0 i1 _ (Δ₀-defIn i0 (sh 4 z) (shN 4 N) _ (δ-∀∈ δ-∈)))))
 ```
 
 Every `c ∈ b` has an entry, and every entry `(c, w)` is the step at `c`. The
 step sits at `w ∷ c ∷ s ∷ q ∷ γ`.
 
 ```agda
-approxAt : ∀ {m} → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+approxAt : ∀ {m} → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 approxAt f b z N =
     ∀̇∈ (var b) (∃̇∈ (var (sh 1 f)) (sndEx i0 i1 ⊤̇))
   ∧̇ ∀̇∈ (var f) (bothAll i0 (stepAt i0 i1 (sh 4 f) (sh 4 z) (shN 4 N)))
 
-Δ₀-approxAt : ∀ {m} (f b z : Fin m) (N : Fin 12 → Fin m) → Δ₀ (approxAt f b z N)
-Δ₀-approxAt f b z N =
-  δ-∧ (δ-∀∈ (δ-∃∈ (Δ₀-sndEx i0 i1 _ δ-⊤)))
-      (δ-∀∈ (Δ₀-bothAll i0 _ (Δ₀-stepAt i0 i1 (sh 4 f) (sh 4 z) (shN 4 N))))
 
-hierAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+hierAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 hierAt a p f z N = approxAt f p z N ∧̇ stepAt a p f z N
 
-Δ₀-hierAt : ∀ {m} (a p f z : Fin m) (N : Fin 12 → Fin m) → Δ₀ (hierAt a p f z N)
-Δ₀-hierAt a p f z N = δ-∧ (Δ₀-approxAt f p z N) (Δ₀-stepAt a p f z N)
 ```
 
 The tags are the numerals: the first is empty, each next is the successor of the
 one before.
 
 ```agda
-pins : ∀ {m} → (Fin 12 → Fin m) → Formula S m
+pins : ∀ {m} → (Fin 10 → Fin m) → Formula S m
 pins N =
     ∀̇∈ (var (N f0)) ⊥̇
   ∧̇ ( sucAtL (N f0) (N f1) ∧̇ ( sucAtL (N f1) (N f2) ∧̇ ( sucAtL (N f2) (N f3)
   ∧̇ ( sucAtL (N f3) (N f4) ∧̇ ( sucAtL (N f4) (N f5) ∧̇ ( sucAtL (N f5) (N f6)
-  ∧̇ ( sucAtL (N f6) (N f7) ∧̇ ( sucAtL (N f7) (N f8) ∧̇ ( sucAtL (N f8) (N f9)
-  ∧̇ ( sucAtL (N f9) (N f10) ∧̇ sucAtL (N f10) (N f11) ))))))))))
+  ∧̇ ( sucAtL (N f6) (N f7) ∧̇ ( sucAtL (N f7) (N f8) ∧̇ sucAtL (N f8) (N f9) ))))))))
 
-Δ₀-pins : ∀ {m} (N : Fin 12 → Fin m) → Δ₀ (pins N)
-Δ₀-pins N =
-  δ-∧ (δ-∀∈ δ-⊥)
-    (δ-∧ (Δ₀-sucAtL (N f0) (N f1)) (δ-∧ (Δ₀-sucAtL (N f1) (N f2)) (δ-∧ (Δ₀-sucAtL (N f2) (N f3))
-    (δ-∧ (Δ₀-sucAtL (N f3) (N f4)) (δ-∧ (Δ₀-sucAtL (N f4) (N f5)) (δ-∧ (Δ₀-sucAtL (N f5) (N f6))
-    (δ-∧ (Δ₀-sucAtL (N f6) (N f7)) (δ-∧ (Δ₀-sucAtL (N f7) (N f8)) (δ-∧ (Δ₀-sucAtL (N f8) (N f9))
-    (δ-∧ (Δ₀-sucAtL (N f9) (N f10)) (Δ₀-sucAtL (N f10) (N f11))))))))))))
 ```
 
 The readers: each row at a variable environment, both ways.
 
 ```agda
-module PinsRead {m : ℕ} (N : Fin 12 → Fin m) (γ : S ^ m) where
+module PinsRead {m : ℕ} (N : Fin 10 → Fin m) (γ : S ^ m) where
 
   pins-out : ⟨ γ ⊨ pins N ⟩ → Tags γ N
   pins-out (h0 , hs) = go
@@ -178,9 +155,7 @@ module PinsRead {m : ℕ} (N : Fin 12 → Fin m) (γ : S ^ m) where
     q6 = up (N f5) (N f6) 5 (hs .snd .snd .snd .snd .snd .fst) q5
     q7 = up (N f6) (N f7) 6 (hs .snd .snd .snd .snd .snd .snd .fst) q6
     q8 = up (N f7) (N f8) 7 (hs .snd .snd .snd .snd .snd .snd .snd .fst) q7
-    q9 = up (N f8) (N f9) 8 (hs .snd .snd .snd .snd .snd .snd .snd .snd .fst) q8
-    q10 = up (N f9) (N f10) 9 (hs .snd .snd .snd .snd .snd .snd .snd .snd .snd .fst) q9
-    q11 = up (N f10) (N f11) 10 (hs .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd) q10
+    q9 = up (N f8) (N f9) 8 (hs .snd .snd .snd .snd .snd .snd .snd .snd) q8
 
     go : Tags γ N
     go zero = q0
@@ -193,24 +168,22 @@ module PinsRead {m : ℕ} (N : Fin 12 → Fin m) (γ : S ^ m) where
     go (suc (suc (suc (suc (suc (suc (suc zero))))))) = q7
     go (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = q8
     go (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = q9
-    go (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = q10
-    go (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = q11
 
   pins-in : Tags γ N → ⟨ γ ⊨ pins N ⟩
   pins-in tg =
       (λ x x∈ → Empty.rec (∅-empty (fst x) (∈∈ₛ {a = fst x} {b = ∅} .fst
                   (subst (λ u → ⟨ fst x ∈ u ⟩) (tg f0) x∈))))
     , ( st f0 f1 refl , ( st f1 f2 refl , ( st f2 f3 refl , ( st f3 f4 refl , ( st f4 f5 refl , ( st f5 f6 refl
-    , ( st f6 f7 refl , ( st f7 f8 refl , ( st f8 f9 refl , ( st f9 f10 refl , st f10 f11 refl ))))))))))
+    , ( st f6 f7 refl , ( st f7 f8 refl , st f8 f9 refl ))))))))
     where
-    st : (j k : Fin 12) → # (toℕ k) ≡ sucV (# (toℕ j)) → ⟨ γ ⊨ sucAtL (N j) (N k) ⟩
+    st : (j k : Fin 10) → # (toℕ k) ≡ sucV (# (toℕ j)) → ⟨ γ ⊨ sucAtL (N j) (N k) ⟩
     st j k e = suc-in (N j) (N k) γ (tg k ∙ e ∙ cong sucV (sym (tg j)))
 ```
 
 The definable power set of the value at `w`, in `z`.
 
 ```agda
-module DefInRead {k : ℕ} (w z : Fin k) (N : Fin 12 → Fin k) (body : Formula S (4 + k))
+module DefInRead {k : ℕ} (w z : Fin k) (N : Fin 10 → Fin k) (body : Formula S (4 + k))
   (δ : S ^ k) (tg : Tags δ N) where
   private
     Wv = fst (lookup w δ)
@@ -256,7 +229,7 @@ The step at `(v, b, f)`: `v` is the union of the definable power sets of the
 values recorded below `b`.
 
 ```agda
-module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
   private
     Vv = fst (lookup v γ)
     Bv = fst (lookup b γ)
@@ -356,7 +329,7 @@ the stage there, by `∈`-induction on the argument, and every argument below `b
 is recorded.
 
 ```agda
-module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
   private
     Fv = fst (lookup f γ)
     Bv = fst (lookup b γ)
@@ -417,7 +390,7 @@ module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
     hin = hier-in Bv ob (lookup f γ) sp
 
     dom : ⟨ γ ⊨ ∀̇∈ (var b) (∃̇∈ (var (sh 1 f)) (sndEx i0 i1 ⊤̇)) ⟩
-    dom c c∈ = ∣ q , ( hin c c∈ , fillSnd i0 (q ∷ c ∷ γ) c w refl ⊤̇ tt* i1 refl ) ∣₁
+    dom c c∈ = ∣ q , ( hin c c∈ , fillSnd i0 (q ∷ c ∷ γ) c w refl ⊤̇ (λ z → z) i1 refl ) ∣₁
       where
       w : S
       w = LsetS (fst c) (mem-ord {A = Bv} ob (fst c) c∈)
@@ -441,7 +414,7 @@ module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
 The hierarchy row at `(a, p, f)`, both ways.
 
 ```agda
-module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
   private
     Av = fst (lookup a γ)
     Pv = fst (lookup p γ)
@@ -462,41 +435,44 @@ module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) 
         (hier-in Pv op (lookup f γ) sp) sup
 ```
 
-The three-slot form. Sixteen innermost slots: the twelve tags, the table, `a`,
-`p`, `z`. Thirteen bounded existentials over `z`. The tags are pinned to the
+The three-slot form. Fourteen innermost slots: the ten tags, the table, `a`,
+`p`, `z`. Eleven bounded existentials over `z`. The tags are pinned to the
 numerals once, at the seal.
 
 ```agda
 module Inner where
 
-  N16 : Fin 12 → Fin 16
-  N16 k = weakenFin (weakenFin (weakenFin (weakenFin k)))
+  N14 : Fin 10 → Fin 14
+  N14 k = weakenFin (weakenFin (weakenFin (weakenFin k)))
 
-  ff aa pp zz : Fin 16
-  ff = sh 12 (i0 {3})
-  aa = sh 13 (i0 {2})
-  pp = sh 14 (i0 {1})
-  zz = sh 15 (i0 {0})
+  ff aa pp zz : Fin 14
+  ff = sh 10 (i0 {3})
+  aa = sh 11 (i0 {2})
+  pp = sh 12 (i0 {1})
+  zz = sh 13 (i0 {0})
 ```
 
-Sealed: the row is thousands of nodes, and the thirteen wraps would normalise
-it thirteen times. The two readers are the official unfolding.
+Sealed: the row is thousands of nodes, and the eleven wraps would normalise
+it eleven times. The two readers are the official unfolding.
 
 ```agda
   opaque
-    inner : Formula S 16
-    inner = pins N16 ∧̇ hierAt aa pp ff zz N16
+    inner : Formula S 14
+    inner = pins N14 ∧̇ hierAt aa pp ff zz N14
+
+  opaque
+    unfolding inner satAt defAt
+
+    Δ₀-inner : Δ₀ inner
+    Δ₀-inner = checkΔ₀ inner tt
 
   opaque
     unfolding inner
 
-    Δ₀-inner : Δ₀ inner
-    Δ₀-inner = δ-∧ (Δ₀-pins N16) (Δ₀-hierAt aa pp ff zz N16)
-
-    inner-out : (γ : S ^ 16) → ⟨ γ ⊨ inner ⟩ → ⟨ γ ⊨ pins N16 ⟩ × ⟨ γ ⊨ hierAt aa pp ff zz N16 ⟩
+    inner-out : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → ⟨ γ ⊨ pins N14 ⟩ × ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩
     inner-out γ h = h
 
-    inner-in : (γ : S ^ 16) → ⟨ γ ⊨ pins N16 ⟩ → ⟨ γ ⊨ hierAt aa pp ff zz N16 ⟩ → ⟨ γ ⊨ inner ⟩
+    inner-in : (γ : S ^ 14) → ⟨ γ ⊨ pins N14 ⟩ → ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩ → ⟨ γ ⊨ inner ⟩
     inner-in γ h1 h2 = h1 , h2
 
   lastFin : {n : ℕ} → Fin (suc n)
@@ -513,9 +489,7 @@ One bounded existential over the last slot.
   δ-wrap : {n : ℕ} {φ : Formula S (suc (suc n))} → Δ₀ φ → Δ₀ (wrap {n} φ)
   δ-wrap d = δ-∃∈ d
 
-  s15 = wrap {14} inner
-  s14 = wrap {13} s15
-  s13 = wrap {12} s14
+  s13 = wrap {12} inner
   s12 = wrap {11} s13
   s11 = wrap {10} s12
   s10 = wrap {9}  s11
@@ -531,7 +505,7 @@ One bounded existential over the last slot.
   Δ₀-three : Δ₀ three
   Δ₀-three =
     δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap
-      (δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap Δ₀-inner))))))))))))
+      (δ-wrap (δ-wrap (δ-wrap (δ-wrap Δ₀-inner))))))))))
 
   opaque
     unfolding inner satAt defAt
@@ -598,7 +572,7 @@ ord-in a p z op =
 ```
 
 Soundness. At three constructible sets, the level description makes `a` the
-stage at `p`: the thirteen existentials are spent, the tags are read as the
+stage at `p`: the eleven existentials are spent, the tags are read as the
 numerals, and the hierarchy row is read.
 
 ```agda
@@ -606,12 +580,12 @@ private
   module Sound where
     open Inner
 
-    finish : (γ : S ^ 16) → ⟨ γ ⊨ inner ⟩ → IsOrd (fst (lookup pp γ))
+    finish : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → IsOrd (fst (lookup pp γ))
            → fst (lookup aa γ) ≡ Lset (fst (lookup pp γ))
-    finish γ h op = HierRead.hier-sound aa pp ff zz N16 γ tg (inner-out γ h .snd) op
+    finish γ h op = HierRead.hier-sound aa pp ff zz N14 γ tg (inner-out γ h .snd) op
       where
-      tg : Tags γ N16
-      tg = PinsRead.pins-out N16 γ (inner-out γ h .fst)
+      tg : Tags γ N14
+      tg = PinsRead.pins-out N14 γ (inner-out γ h .fst)
 ```
 
 Perf: the environment is spelled out at every step and never abbreviated.
@@ -629,21 +603,20 @@ Perf: the environment is spelled out at every step and never abbreviated.
 
       go : ⟨ (a ∷ p ∷ z ∷ []) ⊨ three ⟩ → ⟨ G ⟩
       go =
-        unwrap s4 (a ∷ p ∷ z ∷ []) {G} λ x12 m12 →
-        unwrap s5 (x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x11 m11 →
-        unwrap s6 (x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x10 m10 →
-        unwrap s7 (x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x9 m9 →
-        unwrap s8 (x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x8 m8 →
-        unwrap s9 (x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x7 m7 →
-        unwrap s10 (x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x6 m6 →
-        unwrap s11 (x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x5 m5 →
-        unwrap s12 (x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x4 m4 →
-        unwrap s13 (x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x3 m3 →
-        unwrap s14 (x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x2 m2 →
-        unwrap s15 (x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G} λ x1 m1 →
-        unwrap inner (x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) {G}
+        unwrap s4 (a ∷ p ∷ z ∷ []) {G} λ F mF →
+        unwrap s5 (F ∷ a ∷ p ∷ z ∷ []) {G} λ x9 m9 →
+        unwrap s6 (x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x8 m8 →
+        unwrap s7 (x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x7 m7 →
+        unwrap s8 (x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x6 m6 →
+        unwrap s9 (x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x5 m5 →
+        unwrap s10 (x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x4 m4 →
+        unwrap s11 (x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x3 m3 →
+        unwrap s12 (x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x2 m2 →
+        unwrap s13 (x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G} λ x1 m1 →
+        unwrap inner (x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G}
           λ x0 m0 hm →
-            finish (x0 ∷ x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ x10 ∷ x11 ∷ x12 ∷ a ∷ p ∷ z ∷ []) hm ordp
+            finish (x0 ∷ x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) hm ordp
+
 ```
 
 The theorem, at three ambient sets known to be constructible.
@@ -691,11 +664,11 @@ private
     zS = LsetS lam ord
     F = At.hier p op
 
-    E : S ^ 16
-    E = nn 0 ∷ nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11
+    E : S ^ 14
+    E = nn 0 ∷ nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9
       ∷ F ∷ aS ∷ pS ∷ zS ∷ []
 
-    tg : Tags E N16
+    tg : Tags E N14
     tg zero = refl
     tg (suc zero) = refl
     tg (suc (suc zero)) = refl
@@ -706,8 +679,6 @@ private
     tg (suc (suc (suc (suc (suc (suc (suc zero))))))) = refl
     tg (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = refl
     tg (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = refl
-    tg (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))))) = refl
-    tg (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))))) = refl
 
     sup : (c : V ℓ) (oc : IsOrd c) → ⟨ c ∈ p ⟩ → Supply K c oc
     sup c oc c∈ = w .snd .snd .fst , ( w .snd .fst , ( w .snd .snd .snd , Lset∈K (sucV c) (succ c c∈λ) ))
@@ -717,32 +688,30 @@ private
       w = wit c c∈λ oc
 
     hm : ⟨ E ⊨ inner ⟩
-    hm = inner-in E (PinsRead.pins-in N16 E tg)
-           (HierRead.hier-complete aa pp ff zz N16 E tg op refl (hierL-spec p (At.cL p op) op) sup)
+    hm = inner-in E (PinsRead.pins-in N14 E tg)
+           (HierRead.hier-complete aa pp ff zz N14 E tg op refl (hierL-spec p (At.cL p op) op) sup)
 
     FK : ⟨ fst F ∈ K ⟩
     FK = wit p p∈λ op .fst
 ```
 
-The thirteen bounded existentials, spent with the table and the numerals.
+The eleven bounded existentials, spent with the table and the numerals.
 
 ```agda
     h3 : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ three ⟩
     h3 =
       wrap-in s4 (aS ∷ pS ∷ zS ∷ []) F FK (
-      wrap-in s5 (F ∷ aS ∷ pS ∷ zS ∷ []) (nn 11) (num∈K 11) (
-      wrap-in s6 (nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 10) (num∈K 10) (
-      wrap-in s7 (nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 9) (num∈K 9) (
-      wrap-in s8 (nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 8) (num∈K 8) (
-      wrap-in s9 (nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 7) (num∈K 7) (
-      wrap-in s10 (nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 6) (num∈K 6) (
-      wrap-in s11 (nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 5) (num∈K 5) (
-      wrap-in s12 (nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 4) (num∈K 4) (
-      wrap-in s13 (nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 3) (num∈K 3) (
-      wrap-in s14 (nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 2) (num∈K 2) (
-      wrap-in s15 (nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 1) (num∈K 1) (
-      wrap-in inner (nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ nn 10 ∷ nn 11 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 0) (num∈K 0)
-        hm))))))))))))
+      wrap-in s5 (F ∷ aS ∷ pS ∷ zS ∷ []) (nn 9) (num∈K 9) (
+      wrap-in s6 (nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 8) (num∈K 8) (
+      wrap-in s7 (nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 7) (num∈K 7) (
+      wrap-in s8 (nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 6) (num∈K 6) (
+      wrap-in s9 (nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 5) (num∈K 5) (
+      wrap-in s10 (nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 4) (num∈K 4) (
+      wrap-in s11 (nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 3) (num∈K 3) (
+      wrap-in s12 (nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 2) (num∈K 2) (
+      wrap-in s13 (nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 1) (num∈K 1) (
+      wrap-in inner (nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 0) (num∈K 0)
+        hm))))))))))
 
     hφ : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ embed erased ⟩
     hφ = subst (λ ψ → ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ ψ ⟩) (sym (Cnt.erase-inv three count-three)) h3

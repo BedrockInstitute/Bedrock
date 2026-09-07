@@ -27,6 +27,8 @@ open import L.Axioms.Numerals {ℓ} using ( pairʟ; unionʟ )
 open import L.Coding.Model {ℓ}
   using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; numL; appAt; appAt-adequate
         ; svAt-out; domAt-in; tagAtL; tagAtL-adequate )
+open import L.Coding.InL {ℓ}
+  using ( sglʟ; sglʟ-in; sglʟ-out; cupʟ; cupʟ-inl; cupʟ-inr; cupʟ-out )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out; module Extract )
 open import L.Choice.Step {ℓ} lem using ( relOf )
 open import L.Choice.Order {ℓ} lem using ( relL-fill )
@@ -37,9 +39,8 @@ open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Assembly {ℓ} lem using ( inclusion-coded; injl-trans )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.Least {ℓ} lem using ( module Least )
-open import L.GCH.Pairing {ℓ} lem using ( prodL; prodL-in )
-open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in; pairʟ-out; unionʟ-in; unionʟ-out )
-open import L.InjChain {ℓ} lem using ( appC; appC-adequate; module PairBound )
+open import L.GCH.Pairing {ℓ} lem using ( prodL; prodL-in; module Relation )
+open import L.InjChain {ℓ} lem using ( appC; appC-adequate )
 open import L.Stage {ℓ} lem using ( LeastOrd; isPropLeastOrd; leastOrd; stage; stage-ord; stage-mem )
 open import L.Ordinal using ( boundingOrd )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet; envSet-in; module Recover )
@@ -126,8 +127,6 @@ private
   i6 = suc i5
   i7 : ∀ {k} → Fin (suc (suc (suc (suc (suc (suc (suc (suc k))))))))
   i7 = suc i6
-  i8 : ∀ {k} → Fin (suc (suc (suc (suc (suc (suc (suc (suc (suc k)))))))))
-  i8 = suc i7
 ```
 
 The renaming of section 4.1's body into its nine slots, and its agreement, at
@@ -172,31 +171,22 @@ ord⊆Lset α oα z z∈α =
   oz = mem-ord {A = α} oα z z∈α
 ```
 
-Membership in the model's binary union of two elements.
+The shared constructible binary union, with the local names used below.
 
 ```agda
 module Union2 (D₁ D₂ : S) where
 
   D : S
-  D = unionʟ (pairʟ D₁ D₂)
+  D = cupʟ D₁ D₂
 
   in₁ : (z : S) → ⟨ fst z ∈ fst D₁ ⟩ → ⟨ fst z ∈ fst D ⟩
-  in₁ z h = unionʟ-in (pairʟ D₁ D₂) z D₁ (pairʟ-in D₁ D₂ D₁ (inl refl)) h
+  in₁ z = cupʟ-inl D₁ D₂ (fst z)
 
   in₂ : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → ⟨ fst z ∈ fst D ⟩
-  in₂ z h = unionʟ-in (pairʟ D₁ D₂) z D₂ (pairʟ-in D₁ D₂ D₂ (inr refl)) h
+  in₂ z = cupʟ-inr D₁ D₂ (fst z)
 
   out : (z : S) → ⟨ fst z ∈ fst D ⟩ → ∥ ⟨ fst z ∈ fst D₁ ⟩ ⊎ ⟨ fst z ∈ fst D₂ ⟩ ∥₁
-  out z h = PT.rec squash₁ step (unionʟ-out (pairʟ D₁ D₂) z h)
-    where
-    P : S
-    P = pairʟ D₁ D₂
-    step : Σ[ B ∈ V ℓ ] (⟨ B ∈ fst P ⟩ × ⟨ fst z ∈ B ⟩)
-         → ∥ ⟨ fst z ∈ fst D₁ ⟩ ⊎ ⟨ fst z ∈ fst D₂ ⟩ ∥₁
-    step (B , (hB , hz)) = PT.map
-      (λ { (inl q) → inl (subst (λ w → ⟨ fst z ∈ w ⟩) q hz)
-         ; (inr q) → inr (subst (λ w → ⟨ fst z ∈ w ⟩) q hz) })
-      (pairʟ-out D₁ D₂ (B , isL-trans {x = fst P} {y = B} hB (snd P)) hB)
+  out z = cupʟ-out D₁ D₂ (fst z)
 ```
 
 Section 1. Two coded injections into `κ`, tagged into the product.
@@ -269,13 +259,15 @@ The graph and its host reading.
     fo-out : (y z : S) → ⟨ (y ∷ z ∷ []) ⊨ fo ⟩ → ∥ Wit y z ∥₁
     fo-out y z = PT.map
       (λ { (inl (h , hv)) → inl (h , PT.map (λ { (v , (ha , ht)) → v , rd E₁ 0 y z v ha ht }) hv)
-         ; (inr (h , hv)) → inr (h , PT.map (λ { (v , (ha , ht)) → v , rd E₂ 1 y z v ha ht }) hv) })
+         ; (inr (h , hv)) → inr ((λ z∈ → lower (h z∈))
+             , PT.map (λ { (v , (ha , ht)) → v , rd E₂ 1 y z v ha ht }) hv) })
 
     fo-in : (y z : S) → Wit y z → ⟨ (y ∷ z ∷ []) ⊨ fo ⟩
     fo-in y z (inl (h , hv)) =
       ∣ inl (h , PT.map (λ { (v , (ha , ht)) → v , wr E₁ 0 y z v ha ht }) hv) ∣₁
     fo-in y z (inr (h , hv)) =
-      ∣ inr (h , PT.map (λ { (v , (ha , ht)) → v , wr E₂ 1 y z v ha ht }) hv) ∣₁
+      ∣ inr ((λ z∈ → lift (h z∈))
+          , PT.map (λ { (v , (ha , ht)) → v , wr E₂ 1 y z v ha ht }) hv) ∣₁
 
   private
     sv₁ : (x y y' : S) → Holds E₁ x y → Holds E₁ x y' → fst y ≡ fst y'
@@ -433,13 +425,13 @@ Section 3. A singleton injects into an infinite ordinal: the one member goes to
 module Point (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (a : S) where
 
   Y : S
-  Y = pairʟ a a
+  Y = sglʟ a
 
   Y-in : ⟨ fst a ∈ fst Y ⟩
-  Y-in = pairʟ-in a a a (inl refl)
+  Y-in = sglʟ-in a (fst a) refl
 
   Y-out : (z : S) → ⟨ fst z ∈ fst Y ⟩ → fst z ≡ fst a
-  Y-out z h = PT.rec (setIsSet _ _) (λ { (inl q) → q ; (inr q) → q }) (pairʟ-out a a z h)
+  Y-out z = sglʟ-out a (fst z)
 
   fo : Formula S 2
   fo = var i0 ≐ con ∅ʟ
@@ -493,15 +485,12 @@ copies of `Condense′`'s copies.
   module B = Telescope.Build lam ordλ succλ X X⊆L ∅∈λ
     using ( A; Body; module BodyRd; C₀; Env; module KeyIn; bodyFo; wL; witFo-out
           ; Φ; Φ-out; λ-isL; ω-num; pack )
-  module SM = SatGraph B.A using ( pairs; pairs-shape; valOf )
+  module SM = SatGraph B.A using ( pairs; pairs-out; valOf )
 ```
 
 A member of the graph, read as a pair of a code and its value.
 
 ```agda
-  pairs-out : (x : V ℓ) → ⟨ x ∈ fst SM.pairs ⟩
-            → ∥ Σ[ c ∈ S ] Σ[ m ∈ ⟨ fst c ∈ fst (AllCodes B.A) ⟩ ] (x ≡ pr (fst c) (fst (SM.valOf c m))) ∥₁
-  pairs-out x h = SM.pairs-shape (x , isL-trans {x = fst SM.pairs} {y = x} h (snd SM.pairs)) h
   module It = Telescope.HullIter.It lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack
     using ( Num; iter; iter-in; iter-out; iterUnion-out; ω-num )
   module HI = Telescope.HullIter lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack using ( hullStep⊆Hull )
@@ -540,35 +529,64 @@ injection `E : Z ↪ κ`; `Φ Z` is counted.
 
 The new members; among them the junk value and the witnesses.
 
+The three separation specifications are sealed apart from their readers. If a
+reader opens `hasSeparationL` while conversion checks its result, this block alone
+runs past 120 seconds. Through the named specifications, a fresh check of this
+module takes 12.17 seconds.
+
 ```agda
     opaque
       D₂ : S
       D₂ = hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .fst
 
+      D₂-spec : (z : S) → (fst z ∈ fst D₂)
+              ≡ ((fst z ∈ fst ΦZ) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ∈̇ con Z)))
+      D₂-spec z = hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .snd z
+
+    opaque
       D₂-in : (z : S) → ⟨ fst z ∈ fst ΦZ ⟩ → (⟨ fst z ∈ fst Z ⟩ → Empty.⊥) → ⟨ fst z ∈ fst D₂ ⟩
-      D₂-in z h no = subst ⟨_⟩ (sym (hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .snd z)) (h , no)
+      D₂-in z h no = subst ⟨_⟩ (sym (D₂-spec z)) (h , λ z∈ → lift (no z∈))
 
       D₂-out : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → ⟨ fst z ∈ fst ΦZ ⟩ × (⟨ fst z ∈ fst Z ⟩ → Empty.⊥)
-      D₂-out z h = subst ⟨_⟩ (hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .snd z) h
+      D₂-out z h = r .fst , λ z∈ → lower (r .snd z∈)
+        where
+        r : ⟨ fst z ∈ fst ΦZ ⟩
+          × ⟨ (z ∷ []) ⊨ ¬̇ (var i0 ∈̇ con Z) ⟩
+        r = subst ⟨_⟩ (D₂-spec z) h
 
+    opaque
       D∅ : S
       D∅ = hasSeparationL D₂ (var i0 ≐ con ∅ʟ) .fst .fst
 
+      D∅-spec : (z : S) → (fst z ∈ fst D∅)
+              ≡ ((fst z ∈ fst D₂) ⊓ ((z ∷ []) ⊨ var i0 ≐ con ∅ʟ))
+      D∅-spec z = hasSeparationL D₂ (var i0 ≐ con ∅ʟ) .fst .snd z
+
+    opaque
       D∅-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → fst z ≡ ∅ → ⟨ fst z ∈ fst D∅ ⟩
-      D∅-in z h e = subst ⟨_⟩ (sym (hasSeparationL D₂ (var i0 ≐ con ∅ʟ) .fst .snd z)) (h , e)
+      D∅-in z h e = subst ⟨_⟩ (sym (D∅-spec z)) (h , e)
 
       D∅-out : (z : S) → ⟨ fst z ∈ fst D∅ ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅)
-      D∅-out z h = subst ⟨_⟩ (hasSeparationL D₂ (var i0 ≐ con ∅ʟ) .fst .snd z) h
+      D∅-out z h = subst ⟨_⟩ (D∅-spec z) h
 
+    opaque
       Dw : S
       Dw = hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .fst
 
+      Dw-spec : (z : S) → (fst z ∈ fst Dw)
+              ≡ ((fst z ∈ fst D₂) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ≐ con ∅ʟ)))
+      Dw-spec z = hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .snd z
+
+    opaque
       Dw-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → (fst z ≡ ∅ → Empty.⊥) → ⟨ fst z ∈ fst Dw ⟩
-      Dw-in z h ne = subst ⟨_⟩ (sym (hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .snd z)) (h , ne)
+      Dw-in z h ne = subst ⟨_⟩ (sym (Dw-spec z)) (h , λ q → lift (ne q))
 
       Dw-out : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅ → Empty.⊥)
-      Dw-out z h = subst ⟨_⟩ (hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .snd z) h
-
+      Dw-out z h = r .fst , λ q → lower (r .snd q)
+        where
+        r : ⟨ fst z ∈ fst D₂ ⟩
+          × ⟨ (z ∷ []) ⊨ ¬̇ (var i0 ≐ con ∅ʟ) ⟩
+        r = subst ⟨_⟩ (Dw-spec z) h
     module U₁ = Union2 Z D₂ using ( D; in₁; in₂ )
     module U₃ = Union2 D∅ Dw using ( D; in₁; in₂ )
 
@@ -616,8 +634,6 @@ outermost first: `p`, `z`, `s`, `e`, `Z`, `k`, `e'`, `T`. Inside all of them:
 
     PB : S
     PB = prodL U₂.D
-
-    module PBd = PairBound PB Dw using ( bnd; below )
 
     Γ : (T e' k Zv e s z p q : S) → S ^ 9
     Γ T e' k Zv e s z p q = T ∷ e' ∷ k ∷ Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []
@@ -718,64 +734,28 @@ The host reading of a witness pair.
 The separating description, sealed.
 
 ```agda
-    opaque
-      gFo : Formula S 1
-      gFo = ∃̇ (∃̇ (prAtL i2 i1 i0 ∧̇ ((var i1 ∈̇ con PB) ∧̇ se₃)))
+    private
+      module WitnessGraph = Relation PB Dw ((var i1 ∈̇ con PB) ∧̇ se₃)
+        (λ p z → (fst p ∈ fst PB) ⊓ (GW p z , squash₁))
+        (λ p z q h → h .fst , se₃-out z p q (h .snd))
+        (λ p z q h → h .fst , PT.rec (snd ((z ∷ p ∷ q ∷ []) ⊨ se₃))
+          (λ { (s , e , T , e' , k , qp , hb) → se₃-in z p q s e T e' k qp hb }) (h .snd))
 
-      gFo-in : (q p z : S) → fst q ≡ pr (fst p) (fst z) → ⟨ fst p ∈ fst PB ⟩
-             → (s e T e' k : S) → fst p ≡ pr (fst s) (fst e)
-             → ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩ → ⟨ (q ∷ []) ⊨ gFo ⟩
-      gFo-in q p z qq hp s e T e' k qp h =
-        ∣ p , ∣ z , ( subst ⟨_⟩ (sym (prAtL-adequate i2 i1 i0 (z ∷ p ∷ q ∷ []))) qq
-                    , ( hp , se₃-in z p q s e T e' k qp h ) ) ∣₁ ∣₁
+    G : S
+    G = WitnessGraph.rel
 
-      gFo-out : (q : S) → ⟨ (q ∷ []) ⊨ gFo ⟩
-              → ∥ Σ[ p ∈ S ] Σ[ z ∈ S ] ((fst q ≡ pr (fst p) (fst z)) × ⟨ fst p ∈ fst PB ⟩ × GW p z) ∥₁
-      gFo-out q = PT.rec squash₁ at₁
-        where
-        Out : Type (ℓ-suc ℓ)
-        Out = ∥ Σ[ p ∈ S ] Σ[ z ∈ S ] ((fst q ≡ pr (fst p) (fst z)) × ⟨ fst p ∈ fst PB ⟩ × GW p z) ∥₁
-        at₂ : (p : S) → Σ[ z ∈ S ] ( ⟨ (z ∷ p ∷ q ∷ []) ⊨ prAtL i2 i1 i0 ⟩
-                                   × (⟨ fst p ∈ fst PB ⟩ × ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩) ) → Out
-        at₂ p (z , (qq , (hp , h))) =
-          ∣ p , z , ( subst ⟨_⟩ (prAtL-adequate i2 i1 i0 (z ∷ p ∷ q ∷ [])) qq , hp , se₃-out z p q h ) ∣₁
-        at₁ : Σ[ p ∈ S ] ∥ Σ[ z ∈ S ] ( ⟨ (z ∷ p ∷ q ∷ []) ⊨ prAtL i2 i1 i0 ⟩
-                                      × (⟨ fst p ∈ fst PB ⟩ × ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩) ) ∥₁ → Out
-        at₁ (p , h) = PT.rec squash₁ (at₂ p) h
+    G-in : (p z : S) → ⟨ fst p ∈ fst PB ⟩ → ⟨ fst z ∈ fst Dw ⟩
+         → (s e T e' k : S) → fst p ≡ pr (fst s) (fst e)
+         → ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩ → Holds G p z
+    G-in p z hp hz s e T e' k qp h =
+      WitnessGraph.into p z hp hz (hp , ∣ s , e , T , e' , k , qp , h ∣₁)
+
+    G-out : (p z : S) → Holds G p z → ⟨ fst p ∈ fst PB ⟩ × GW p z
+    G-out = WitnessGraph.pair-out
 ```
 
-THE RELATION, carved out of the pair bound.
-
-```agda
-    opaque
-      G : S
-      G = hasSeparationL PBd.bnd gFo .fst .fst
-
-      G-in : (p z : S) → ⟨ fst p ∈ fst PB ⟩ → ⟨ fst z ∈ fst Dw ⟩
-           → (s e T e' k : S) → fst p ≡ pr (fst s) (fst e)
-           → ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩ → Holds G p z
-      G-in p z hp hz s e T e' k qp h =
-        subst (λ w → ⟨ w ∈ fst G ⟩) (prʟ-fst p z)
-          (subst ⟨_⟩ (sym (hasSeparationL PBd.bnd gFo .fst .snd (prʟ p z)))
-            ( subst (λ w → ⟨ w ∈ fst PBd.bnd ⟩) (sym (prʟ-fst p z)) (PBd.below p z hp hz)
-            , gFo-in (prʟ p z) p z (prʟ-fst p z) hp s e T e' k qp h ))
-
-      G-out : (p z : S) → Holds G p z → ⟨ fst p ∈ fst PB ⟩ × GW p z
-      G-out p z h = PT.rec (isProp× (snd (fst p ∈ fst PB)) squash₁) read
-        (gFo-out (prʟ p z)
-          (subst ⟨_⟩ (hasSeparationL PBd.bnd gFo .fst .snd (prʟ p z))
-            (subst (λ w → ⟨ w ∈ fst G ⟩) (sym (prʟ-fst p z)) h) .snd))
-        where
-        read : Σ[ p' ∈ S ] Σ[ z' ∈ S ]
-                 ((fst (prʟ p z) ≡ pr (fst p') (fst z')) × ⟨ fst p' ∈ fst PB ⟩ × GW p' z')
-             → ⟨ fst p ∈ fst PB ⟩ × GW p z
-        read (p' , z' , (qq , hp , gw)) =
-            subst (λ w → ⟨ w ∈ fst PB ⟩) (sym (fst ee)) hp
-          , subst2 GW (S≡ {x = p'} {y = p} (sym (fst ee))) (S≡ {x = z'} {y = z} (sym (snd ee))) gw
-          where
-          ee : (fst p ≡ fst p') × (fst z ≡ fst z')
-          ee = pr-inj (sym (prʟ-fst p z) ∙ qq)
-```
+The relation is carved from the bound on `PB × Dw`; its pair reading is supplied
+by `Relation`.
 
 EXISTENCE: every witness has a pair. The key is a member of `L_ω` (it is the
 arity numeral paired with a hereditarily finite code), and the environment is a
@@ -854,13 +834,6 @@ the cons of each satisfier onto the one environment, and each minimality clause
 refutes the other satisfier being below.
 
 ```agda
-    private
-      same-val : (x x' : S) (m : ⟨ fst x ∈ fst (AllCodes B.A) ⟩) (m' : ⟨ fst x' ∈ fst (AllCodes B.A) ⟩)
-               → fst x ≡ fst x' → fst (SM.valOf x m) ≡ fst (SM.valOf x' m')
-      same-val x x' m m' q =
-        subst (λ x'' → (m'' : ⟨ fst x'' ∈ fst (AllCodes B.A) ⟩) → fst (SM.valOf x m) ≡ fst (SM.valOf x'' m''))
-          (S≡ q) (λ m'' → cong (λ v → fst (SM.valOf x v)) (snd (fst x ∈ fst (AllCodes B.A)) m m'')) m'
-
     module Unique (z T e' e s k : S) (hb : ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩)
                   (z' T₂ e'₂ k₂ : S) (hb₂ : ⟨ B.Env T₂ e'₂ e s k₂ z' Z ⊨ B.bodyFo ⟩)
                   (n : ℕ) (qk : fst k ≡ # n) where
@@ -884,15 +857,12 @@ The two satisfaction sets agree.
 
 ```agda
       T≡ : fst T ≡ fst T₂
-      T≡ = PT.rec2 (setIsSet (fst T) (fst T₂)) read
-        (pairs-out (pr (fst s) (fst T)) (A₁.Rd.b-tab hb))
-        (pairs-out (pr (fst s) (fst T₂)) (A₂.Rd.b-tab hb₂))
-        where
-        read : Σ[ x ∈ S ] Σ[ m ∈ ⟨ fst x ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T) ≡ pr (fst x) (fst (SM.valOf x m)))
-             → Σ[ x' ∈ S ] Σ[ m' ∈ ⟨ fst x' ∈ fst (AllCodes B.A) ⟩ ] (pr (fst s) (fst T₂) ≡ pr (fst x') (fst (SM.valOf x' m')))
-             → fst T ≡ fst T₂
-        read (x , m , q) (x' , m' , q') =
-          pr-inj q .snd ∙ same-val x x' m m' (sym (pr-inj q .fst) ∙ pr-inj q' .fst) ∙ sym (pr-inj q' .snd)
+      T≡ =
+        let p = SM.pairs-out s T (A₁.Rd.b-tab hb)
+            q = SM.pairs-out s T₂ (A₂.Rd.b-tab hb₂)
+        in snd p ∙ cong (λ m → fst (SM.valOf s m))
+          (snd (fst s ∈ fst (AllCodes B.A)) (fst p) (fst q)) ∙ sym (snd q)
+
 ```
 
 Neither satisfier is below the other.
@@ -1056,64 +1026,35 @@ Sealed: the elements that reach a slot.
   TabWit F n = ⟨ fst F ∈ Lset γ ⟩ × ∥ Σ[ Zn ∈ S ] (Holds Iter n Zn × InjCode F Zn κ) ∥₁
 
   opaque
-    tabFo : Formula S 1
-    tabFo = ∃̇ (∃̇ (prAtL i2 i1 i0 ∧̇ ((var i1 ∈̇ con Lγ) ∧̇ ∃̇ (appC Iter i1 i0 ∧̇ injFo κ i2 i0))))
+    tabBody : Formula S 3
+    tabBody = (var i1 ∈̇ con Lγ) ∧̇ ∃̇ (appC Iter i1 i0 ∧̇ injFo κ i2 i0)
 
-    tabFo-in : (q F n Zn : S) → fst q ≡ pr (fst F) (fst n) → ⟨ fst F ∈ Lset γ ⟩
-             → Holds Iter n Zn → InjCode F Zn κ → ⟨ (q ∷ []) ⊨ tabFo ⟩
-    tabFo-in q F n Zn qq hF hI code =
-      ∣ F , ∣ n , ( subst ⟨_⟩ (sym (prAtL-adequate i2 i1 i0 (n ∷ F ∷ q ∷ []))) qq
-                  , ( subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF
-                    , ∣ Zn , ( subst ⟨_⟩ (sym (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ []))) hI
-                             , InjFo.fill κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) code ) ∣₁ ) ) ∣₁ ∣₁
+    tab-read : (F n q : S) → ⟨ (n ∷ F ∷ q ∷ []) ⊨ tabBody ⟩ → TabWit F n
+    tab-read F n q (hF , h) = subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF
+      , PT.map (λ { (Zn , hI , hc) → Zn
+          , subst ⟨_⟩ (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ [])) hI
+          , InjFo.read κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) hc }) h
 
-    tabFo-out : (q : S) → ⟨ (q ∷ []) ⊨ tabFo ⟩
-              → ∥ Σ[ F ∈ S ] Σ[ n ∈ S ] ((fst q ≡ pr (fst F) (fst n)) × TabWit F n) ∥₁
-    tabFo-out q = PT.rec squash₁ at₁
-      where
-      Out : Type (ℓ-suc ℓ)
-      Out = ∥ Σ[ F ∈ S ] Σ[ n ∈ S ] ((fst q ≡ pr (fst F) (fst n)) × TabWit F n) ∥₁
-      at₂ : (F : S) → Σ[ n ∈ S ] ( ⟨ (n ∷ F ∷ q ∷ []) ⊨ prAtL i2 i1 i0 ⟩
-                                 × ( ⟨ fst F ∈ fst Lγ ⟩
-                                   × ⟨ (n ∷ F ∷ q ∷ []) ⊨ ∃̇ (appC Iter i1 i0 ∧̇ injFo κ i2 i0) ⟩ ) ) → Out
-      at₂ F (n , (qq , (hF , h))) =
-        ∣ F , n , ( subst ⟨_⟩ (prAtL-adequate i2 i1 i0 (n ∷ F ∷ q ∷ [])) qq
-                  , ( subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF
-                    , PT.map (λ { (Zn , (hI , hc)) → Zn
-                        , ( subst ⟨_⟩ (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ [])) hI
-                          , InjFo.read κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) hc ) }) h ) ) ∣₁
-      at₁ : Σ[ F ∈ S ] ∥ Σ[ n ∈ S ] ( ⟨ (n ∷ F ∷ q ∷ []) ⊨ prAtL i2 i1 i0 ⟩
-                                    × ( ⟨ fst F ∈ fst Lγ ⟩
-                                      × ⟨ (n ∷ F ∷ q ∷ []) ⊨ ∃̇ (appC Iter i1 i0 ∧̇ injFo κ i2 i0) ⟩ ) ) ∥₁ → Out
-      at₁ (F , h) = PT.rec squash₁ (at₂ F) h
+    tab-fill : (F n q : S) → TabWit F n → ⟨ (n ∷ F ∷ q ∷ []) ⊨ tabBody ⟩
+    tab-fill F n q (hF , h) = subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF
+      , PT.map (λ { (Zn , hI , hc) → Zn
+          , subst ⟨_⟩ (sym (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ []))) hI
+          , InjFo.fill κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) hc }) h
 
-  module Tbd = PairBound Lγ ωʟ using ( bnd; below )
+  private
+    module TableGraph = Relation Lγ ωʟ tabBody
+      (λ F n → TabWit F n , isProp× (snd (fst F ∈ Lset γ)) squash₁) tab-read tab-fill
 
-  opaque
-    Gt : S
-    Gt = hasSeparationL Tbd.bnd tabFo .fst .fst
+  Gt : S
+  Gt = TableGraph.rel
 
-    Gt-in : (F n Zn : S) → ⟨ fst F ∈ Lset γ ⟩ → ⟨ fst n ∈ fst ωʟ ⟩
-          → Holds Iter n Zn → InjCode F Zn κ → Holds Gt F n
-    Gt-in F n Zn hF hn hI code =
-      subst (λ w → ⟨ w ∈ fst Gt ⟩) (prʟ-fst F n)
-        (subst ⟨_⟩ (sym (hasSeparationL Tbd.bnd tabFo .fst .snd (prʟ F n)))
-          ( subst (λ w → ⟨ w ∈ fst Tbd.bnd ⟩) (sym (prʟ-fst F n))
-              (Tbd.below F n (subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF) hn)
-          , tabFo-in (prʟ F n) F n Zn (prʟ-fst F n) hF hI code ))
+  Gt-in : (F n Zn : S) → ⟨ fst F ∈ Lset γ ⟩ → ⟨ fst n ∈ fst ωʟ ⟩
+        → Holds Iter n Zn → InjCode F Zn κ → Holds Gt F n
+  Gt-in F n Zn hF hn hI code = TableGraph.into F n
+    (subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF) hn (hF , ∣ Zn , hI , code ∣₁)
 
-    Gt-out : (F n : S) → Holds Gt F n → TabWit F n
-    Gt-out F n h = PT.rec (isProp× (snd (fst F ∈ Lset γ)) squash₁) read
-      (tabFo-out (prʟ F n)
-        (subst ⟨_⟩ (hasSeparationL Tbd.bnd tabFo .fst .snd (prʟ F n))
-          (subst (λ w → ⟨ w ∈ fst Gt ⟩) (sym (prʟ-fst F n)) h) .snd))
-      where
-      read : Σ[ F' ∈ S ] Σ[ n' ∈ S ] ((fst (prʟ F n) ≡ pr (fst F') (fst n')) × TabWit F' n')
-           → TabWit F n
-      read (F' , n' , (qq , tw)) = subst2 TabWit (S≡ {x = F'} {y = F} (sym (fst ee))) (S≡ {x = n'} {y = n} (sym (snd ee))) tw
-        where
-        ee : (fst F ≡ fst F') × (fst n ≡ fst n')
-        ee = pr-inj (sym (prʟ-fst F n) ∙ qq)
+  Gt-out : (F n : S) → Holds Gt F n → TabWit F n
+  Gt-out = TableGraph.pair-out
 
   have-code : (n : S) → ⟨ fst n ∈ fst ωʟ ⟩ → ∥ Σ[ F ∈ S ] Holds Gt F n ∥₁
   have-code n hn = PT.rec squash₁ at (It.ω-num n hn)
@@ -1240,57 +1181,22 @@ The innermost conjunction, sealed with its readings.
       at₁ : Σ[ n ∈ S ] ∥ Σ[ v ∈ S ] Inner n v ∥₁ → FinWit p z
       at₁ (n , h) = PT.rec squash₁ (at₂ n) h
 
-  opaque
-    finFo : Formula S 1
-    finFo = ∃̇ (∃̇ (prAtL i2 i1 i0 ∧̇ nv₃))
+  private
+    module FinalGraph = Relation (prodL κ) hullL nv₃ (λ p z → FinWit p z , squash₁)
+      (λ p z q → nv₃-out z p q)
+      (λ p z q → PT.rec (snd ((z ∷ p ∷ q ∷ []) ⊨ nv₃))
+        (λ { (n , v , F , qp , hn , ht , hv) → nv₃-in z p q n v F qp hn ht hv }))
 
-    finFo-in : (q p z n v F : S) → fst q ≡ pr (fst p) (fst z) → fst p ≡ pr (fst n) (fst v)
-             → ⟨ fst n ∈ fst ωʟ ⟩ → Holds Te n F → Holds F z v → ⟨ (q ∷ []) ⊨ finFo ⟩
-    finFo-in q p z n v F qq qp hn ht hv =
-      ∣ p , ∣ z , ( subst ⟨_⟩ (sym (prAtL-adequate i2 i1 i0 (z ∷ p ∷ q ∷ []))) qq
-                  , nv₃-in z p q n v F qp hn ht hv ) ∣₁ ∣₁
+  Gf : S
+  Gf = FinalGraph.rel
 
-    finFo-out : (q : S) → ⟨ (q ∷ []) ⊨ finFo ⟩
-              → ∥ Σ[ p ∈ S ] Σ[ z ∈ S ] ((fst q ≡ pr (fst p) (fst z)) × FinWit p z) ∥₁
-    finFo-out q = PT.rec squash₁ at₁
-      where
-      Out : Type (ℓ-suc ℓ)
-      Out = ∥ Σ[ p ∈ S ] Σ[ z ∈ S ] ((fst q ≡ pr (fst p) (fst z)) × FinWit p z) ∥₁
-      at₂ : (p : S) → Σ[ z ∈ S ] ( ⟨ (z ∷ p ∷ q ∷ []) ⊨ prAtL i2 i1 i0 ⟩
-                                 × ⟨ (z ∷ p ∷ q ∷ []) ⊨ nv₃ ⟩ ) → Out
-      at₂ p (z , (qq , h)) =
-        ∣ p , z , ( subst ⟨_⟩ (prAtL-adequate i2 i1 i0 (z ∷ p ∷ q ∷ [])) qq , nv₃-out z p q h ) ∣₁
-      at₁ : Σ[ p ∈ S ] ∥ Σ[ z ∈ S ] ( ⟨ (z ∷ p ∷ q ∷ []) ⊨ prAtL i2 i1 i0 ⟩
-                                    × ⟨ (z ∷ p ∷ q ∷ []) ⊨ nv₃ ⟩ ) ∥₁ → Out
-      at₁ (p , h) = PT.rec squash₁ (at₂ p) h
+  Gf-in : (p z n v F : S) → ⟨ fst p ∈ fst (prodL κ) ⟩ → ⟨ fst z ∈ fst hullL ⟩
+        → fst p ≡ pr (fst n) (fst v) → ⟨ fst n ∈ fst ωʟ ⟩ → Holds Te n F → Holds F z v
+        → Holds Gf p z
+  Gf-in p z n v F hp hz qp hn ht hv = FinalGraph.into p z hp hz ∣ n , v , F , qp , hn , ht , hv ∣₁
 
-  module Fbd = PairBound (prodL κ) hullL using ( bnd; below )
-
-  opaque
-    Gf : S
-    Gf = hasSeparationL Fbd.bnd finFo .fst .fst
-
-    Gf-in : (p z n v F : S) → ⟨ fst p ∈ fst (prodL κ) ⟩ → ⟨ fst z ∈ fst hullL ⟩
-          → fst p ≡ pr (fst n) (fst v) → ⟨ fst n ∈ fst ωʟ ⟩ → Holds Te n F → Holds F z v
-          → Holds Gf p z
-    Gf-in p z n v F hp hz qp hn ht hv =
-      subst (λ w → ⟨ w ∈ fst Gf ⟩) (prʟ-fst p z)
-        (subst ⟨_⟩ (sym (hasSeparationL Fbd.bnd finFo .fst .snd (prʟ p z)))
-          ( subst (λ w → ⟨ w ∈ fst Fbd.bnd ⟩) (sym (prʟ-fst p z)) (Fbd.below p z hp hz)
-          , finFo-in (prʟ p z) p z n v F (prʟ-fst p z) qp hn ht hv ))
-
-    Gf-out : (p z : S) → Holds Gf p z → FinWit p z
-    Gf-out p z h = PT.rec squash₁ read
-      (finFo-out (prʟ p z)
-        (subst ⟨_⟩ (hasSeparationL Fbd.bnd finFo .fst .snd (prʟ p z))
-          (subst (λ w → ⟨ w ∈ fst Gf ⟩) (sym (prʟ-fst p z)) h) .snd))
-      where
-      read : Σ[ p' ∈ S ] Σ[ z' ∈ S ] ((fst (prʟ p z) ≡ pr (fst p') (fst z')) × FinWit p' z')
-           → FinWit p z
-      read (p' , z' , (qq , fw)) = subst2 FinWit (S≡ {x = p'} {y = p} (sym (fst ee))) (S≡ {x = z'} {y = z} (sym (snd ee))) fw
-        where
-        ee : (fst p ≡ fst p') × (fst z ≡ fst z')
-        ee = pr-inj (sym (prʟ-fst p z) ∙ qq)
+  Gf-out : (p z : S) → Holds Gf p z → FinWit p z
+  Gf-out = FinalGraph.pair-out
 ```
 
 A value of the entry at `n` is a member of `κ`.

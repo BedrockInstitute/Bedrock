@@ -319,18 +319,12 @@ carving, a definite element of the model. The meaning is the hypothesis, stated
 once for each form: at a correct and complete table below an ordinal, the
 condition holds of a set exactly when that set is a pair the order there relates.
 
-That is the whole of what the description owes, and naming it is deliberate. It
-is also more than one chapter's worth, and understating it would cost the next
-author the discovery. The previous chapter's `StepAt`{.Agda} is one part of what
-fills it, and only one: it describes a single successor step over the new
-members, while the condition here must describe `orderAt`{.Agda} at **every**
-ordinal, and that family is birth-primary, with the step entering only as the
-secondary key at a shared birth. So filling this needs three things and not one:
-`StepAt`{.Agda}'s own adequacy against the meta step, which is unproved; the
-birth described in the object language, which nothing describes yet; and the code
-set at a carrier that moves with the birth. What this chapter proves is that
-**given** it, the relation at every stage is an element of `L` whose members are
-exactly the right pairs.
+This interface has three ingredients: the adequacy of `StepAt`{.Agda}, the
+object-language description of birth stages, and the code set over a carrier
+that varies with the birth stage. The later chapters `L.Choice.Adequate`{.Agda},
+`L.Choice.Faithful`{.Agda}, and `L.Choice.Order`{.Agda} supply and assemble them.
+Here the construction is generic in that interface: given it, the relation at
+every stage is an element of `L` whose members are exactly the right pairs.
 
 The step itself is one `extAt`{.Agda}, for the reason every set-valued clause on
 this route is one: a value is the set of exactly the things meeting a condition,
@@ -338,7 +332,7 @@ and writing that as a pair of inclusions would say the condition twice.
 <!--zh-->
 某个序数处的那一步说清：给定以下的表，那里的关系持有哪些对。本节之后的一切都对那个条件保持通用，而它以**参数**身份进场，取两种形式、只有一个含义：落在诸位上，因为图必须绑定它所查阅的那张表；以及落在常元上，因为分离是用单自由变量的公式去雕的，而它所查阅的那张表，在下刀的那一刻是模型的一个确定元素。含义就是那条假设，两种形式各说一遍：在某个序数以下一张正确且完备的表上，那个条件对某个集合成立，当且仅当该集合是那里的序所关联的一个对。
 
-那就是这条描述所欠的全部，而把它点名是有意为之。它也不止一章之量，而把它说小了，代价要由下一位作者以「亲自发现」来付。上一章的 `StepAt`{.Agda} 是填它的**其中一件**，且仅是一件：它描述的是新成员之上的**单独一次后继步**，而此处这条条件必须描述**每一个**序数处的 `orderAt`{.Agda}，而那一族以诞生阶段为主键，那一步只作为「同一诞生阶段处」的次键进入。故填它需要三件事、不是一件：`StepAt`{.Agda} 自己对着元层面那一步的充分性，尚未证明；诞生阶段在对象语言里的描述，至今无人描述；以及在一个随诞生阶段移动的载体上的码集。本章所证的是：**给定**它，每个阶段处的关系都是 `L` 的一个元素，其成员恰是那些正确的对。
+这个接口包含三项：`StepAt`{.Agda} 的充分性、诞生阶段的对象语言描述，以及随诞生阶段变化的载体上的码集。后面的 `L.Choice.Adequate`{.Agda}、`L.Choice.Faithful`{.Agda} 与 `L.Choice.Order`{.Agda} 供应并组装它们。本章的构造对这个接口保持通用：给定它，每个阶段处的关系都是 `L` 的一个元素，其成员恰是那些正确的对。
 
 那一步自身是一次 `extAt`{.Agda}，理由与这条路线上每一条取值为集合的子句相同：一个取值恰是满足某条件的那些东西之集，而若写成一对包含，那个条件就要说两遍。
 <!--/-->

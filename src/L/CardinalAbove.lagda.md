@@ -25,7 +25,7 @@ open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import V.Model {ℓ} using ( self∈sucV )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; IsOrd; Lset→isL; isTransV; isPropIsTransV )
-open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; setUnion-ord )
+open import L.Ordinal {ℓ} using ( mem-ord; suc-ord; boundingOrd )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
 open import L.Cardinal {ℓ} lem using ( IsCardinalL; _↪_ )
@@ -35,7 +35,7 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; sett; setIsSet 
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; _∈ₛ_; extensionality; isEmb⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( module InfinitySet; module SeparationSet; ⋃_; union-ax )
+  using ( module InfinitySet; module SeparationSet; ⋃_ )
 open InfinitySet {ℓ} using ( ω; sucV )
 open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
@@ -427,20 +427,11 @@ THE CANDIDATE: the sup of every order type this family reaches.
   μ = ⋃ (sett WFR (λ w → sucV (Col.ot w)))
 
   μ-ord : IsOrd μ
-  μ-ord = setUnion-ord WFR (λ w → sucV (Col.ot w))
-            (λ w → suc-ord (Col.ot-ord w))
+  μ-ord = boundingOrd WFR Col.ot Col.ot-ord .snd .fst
 
   ot∈μ : (w : WFR) → ⟨ Col.ot w ∈ˢ μ ⟩
-  ot∈μ w = ∈∈ₛ {a = Col.ot w} {b = μ} .snd
-    (union-ax (sett WFR (λ v → sucV (Col.ot v))) (Col.ot w) .snd
-      ∣ sucV (Col.ot w) , (inSett , inSuc) ∣₁)
-    where
-    inSett : ⟨ sucV (Col.ot w) ∈ₛ sett WFR (λ v → sucV (Col.ot v)) ⟩
-    inSett = ∈∈ₛ {a = sucV (Col.ot w)}
-                 {b = sett WFR (λ v → sucV (Col.ot v))} .fst ∣ w , refl ∣₁
-    inSuc : ⟨ Col.ot w ∈ₛ sucV (Col.ot w) ⟩
-    inSuc = ∈∈ₛ {a = Col.ot w} {b = sucV (Col.ot w)} .fst
-              (self∈sucV (Col.ot w))
+  ot∈μ = boundingOrd WFR Col.ot Col.ot-ord .snd .snd
+
 ```
 
 `⟪ x ⟫` is a set: it embeds into `V ℓ`, which is one.

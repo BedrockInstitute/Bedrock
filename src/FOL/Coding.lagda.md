@@ -54,7 +54,7 @@ module FOL.Coding {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
 open ZFStructure 𝒮 using ( S )
 open import FOL.Syntax
   using ( Term; con; var; Formula
-        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Nat using ( znots; snotz )
@@ -113,11 +113,10 @@ injected. Terms are separated enough that their injectivity is immediate.
 ```
 
 <!--en-->
-Then formulas: twelve constructors, twelve tags. Binary constructors pair the
-two sub-codes, unary ones take the sub-code bare, and the two constants take a
-dummy payload since the tag already tells them apart.
+Then formulas: ten constructors, ten tags. Binary constructors pair the
+two sub-codes, unary ones take the sub-code bare, and falsity takes a dummy payload since its tag already determines it.
 <!--zh-->
-然后是公式：十二个构造子，十二个标签。二元构造子把两个子码配成对，一元的直接取子码，而两个常量取一个虚载荷，因为标签已经把它们区分开了。
+然后是公式：十个构造子，十个标签。二元构造子把两个子码配成对，一元的直接取子码，而假取一个虚载荷，因为标签已经决定了它。
 <!--/-->
 
 ```agda
@@ -127,13 +126,11 @@ dummy payload since the tag already tells them apart.
 ⌜ φ ∧̇ ψ ⌝   = mkTag 2  (pr ⌜ φ ⌝ ⌜ ψ ⌝)
 ⌜ φ ∨̇ ψ ⌝   = mkTag 3  (pr ⌜ φ ⌝ ⌜ ψ ⌝)
 ⌜ φ ⇒̇ ψ ⌝   = mkTag 4  (pr ⌜ φ ⌝ ⌜ ψ ⌝)
-⌜ ¬̇ φ ⌝     = mkTag 5  ⌜ φ ⌝
-⌜ ⊤̇ ⌝       = mkTag 6  (encℕ 0)
-⌜ ⊥̇ ⌝       = mkTag 7  (encℕ 0)
-⌜ ∃̇ φ ⌝     = mkTag 8  ⌜ φ ⌝
-⌜ ∀̇ φ ⌝     = mkTag 9  ⌜ φ ⌝
-⌜ ∀̇∈ t φ ⌝  = mkTag 10 (pr ⌜ t ⌝ᵗ ⌜ φ ⌝)
-⌜ ∃̇∈ t φ ⌝  = mkTag 11 (pr ⌜ t ⌝ᵗ ⌜ φ ⌝)
+⌜ ⊥̇ ⌝       = mkTag 5 (encℕ 0)
+⌜ ∃̇ φ ⌝     = mkTag 6 ⌜ φ ⌝
+⌜ ∀̇ φ ⌝     = mkTag 7 ⌜ φ ⌝
+⌜ ∀̇∈ t φ ⌝  = mkTag 8 (pr ⌜ t ⌝ᵗ ⌜ φ ⌝)
+⌜ ∃̇∈ t φ ⌝  = mkTag 9 (pr ⌜ t ⌝ᵗ ⌜ φ ⌝)
 ```
 
 <!--en-->
@@ -186,7 +183,7 @@ pairing and an injection of the naturals; the hierarchy supplies both.
 <!--en-->
 Two formulas of the same arity with the same code are the same formula. The
 statement was dropped once, on the ground that its natural proof is a grid of
-twelve by twelve of which a hundred and thirty-two clauses carry no mathematics,
+ten by ten of which a ninety clauses carry no mathematics,
 and that the `Codes`{.Agda} relation was what every consumer had been designed
 around. A consumer arrived that wants the equation rather than the relation, and
 it wants it for a reason no relation answers: a recursion's table is a **set**, so
@@ -197,19 +194,19 @@ The grid does not have to be written. The constructor is recoverable from the
 tag, and the tag is a number, so what a formula's constructor *is* can be
 **computed** from it: one type family over the tag saying what having that tag
 looks like, one function producing it, and the tag equation the pairing's
-injectivity yields carries the second to the first. Twelve clauses each, and
-twelve more for the case analysis, in place of a hundred and forty-four.
+injectivity yields carries the second to the first. Ten clauses each, and
+ten more for the case analysis, in place of a hundred.
 
-That is the same move the constructibility chapter makes to match twelve
+That is the same move the constructibility chapter makes to match ten
 constructors against eight demands, and it is worth saying once in general: **when
 a case analysis is indexed by two things that a tag already relates, compute one
 side from the tag instead of matching both.**
 <!--zh-->
-同一元数、同一码的两条公式是同一条公式。这条陈述曾被丢掉，理由是它的自然证明是一张十二乘十二的网格，其中一百三十二条子句不含数学，而每个消费方当初都是围绕 `Codes`{.Agda} 关系设计的。如今来了一个要等式而非要关系的消费方，而它要的理由是任何关系都答不了的：递归的表是一个**集合**，故若两处不同子公式共用一个码，那张表就真的多值，垮掉的将是它的**存在性**，而不只是它的证明。
+同一元数、同一码的两条公式是同一条公式。这条陈述曾被丢掉，理由是它的自然证明是一张十乘十的网格，其中九十条子句不含数学，而每个消费方当初都是围绕 `Codes`{.Agda} 关系设计的。如今来了一个要等式而非要关系的消费方，而它要的理由是任何关系都答不了的：递归的表是一个**集合**，故若两处不同子公式共用一个码，那张表就真的多值，垮掉的将是它的**存在性**，而不只是它的证明。
 
-那张网格不必写。构造子可从标签还原，而标签是一个数，故一条公式的构造子**是什么**可以从标签**算**出来：一个以标签为索引的类型族，说出「带那个标签」长什么样；一个函数把它造出来；而配对的单射性所给出的那条标签等式把后者搬到前者上。两者各十二条子句，再加十二条作情形分析，取代一百四十四条。
+那张网格不必写。构造子可从标签还原，而标签是一个数，故一条公式的构造子**是什么**可以从标签**算**出来：一个以标签为索引的类型族，说出「带那个标签」长什么样；一个函数把它造出来；而配对的单射性所给出的那条标签等式把后者搬到前者上。两者各十条子句，再加十条作情形分析，取代一百条。
 
-这与可构造性那一章「把十二个构造子对上八项要求」所用的是同一个动作，而它值得一般地说一次：**当一次情形分析由两样东西索引、而某个标签已经把它们关联起来时，就从标签算出一侧，不要两侧都匹配。**
+这与可构造性那一章「把十个构造子对上八项要求」所用的是同一个动作，而它值得一般地说一次：**当一次情形分析由两样东西索引、而某个标签已经把它们关联起来时，就从标签算出一侧，不要两侧都匹配。**
 <!--/-->
 
 ```agda
@@ -219,13 +216,11 @@ tagOf (t ≐ u)  = 1
 tagOf (a ∧̇ b)  = 2
 tagOf (a ∨̇ b)  = 3
 tagOf (a ⇒̇ b)  = 4
-tagOf (¬̇ a)    = 5
-tagOf ⊤̇        = 6
-tagOf ⊥̇        = 7
-tagOf (∃̇ a)    = 8
-tagOf (∀̇ a)    = 9
-tagOf (∀̇∈ t a) = 10
-tagOf (∃̇∈ t a) = 11
+tagOf ⊥̇        = 5
+tagOf (∃̇ a)    = 6
+tagOf (∀̇ a)    = 7
+tagOf (∀̇∈ t a) = 8
+tagOf (∃̇∈ t a) = 9
 
 payOf : ∀ {n} → Formula S n → S
 payOf (t ∈̇ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
@@ -233,8 +228,6 @@ payOf (t ≐ u)  = pr ⌜ t ⌝ᵗ ⌜ u ⌝ᵗ
 payOf (a ∧̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
 payOf (a ∨̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
 payOf (a ⇒̇ b)  = pr ⌜ a ⌝ ⌜ b ⌝
-payOf (¬̇ a)    = ⌜ a ⌝
-payOf ⊤̇        = encℕ 0
 payOf ⊥̇        = encℕ 0
 payOf (∃̇ a)    = ⌜ a ⌝
 payOf (∀̇ a)    = ⌜ a ⌝
@@ -247,8 +240,6 @@ shape (t ≐ u)  = refl
 shape (a ∧̇ b)  = refl
 shape (a ∨̇ b)  = refl
 shape (a ⇒̇ b)  = refl
-shape (¬̇ a)    = refl
-shape ⊤̇        = refl
 shape ⊥̇        = refl
 shape (∃̇ a)    = refl
 shape (∀̇ a)    = refl
@@ -261,13 +252,11 @@ Match {n} 1  φ = Σ[ t ∈ Term S n ] (Σ[ u ∈ Term S n ] (φ ≡ (t ≐ u)))
 Match {n} 2  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∧̇ b)))
 Match {n} 3  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ∨̇ b)))
 Match {n} 4  φ = Σ[ a ∈ Formula S n ] (Σ[ b ∈ Formula S n ] (φ ≡ (a ⇒̇ b)))
-Match {n} 5  φ = Σ[ a ∈ Formula S n ] (φ ≡ (¬̇ a))
-Match     6  φ = φ ≡ ⊤̇
-Match     7  φ = φ ≡ ⊥̇
-Match {n} 8  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∃̇ a))
-Match {n} 9  φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∀̇ a))
-Match {n} 10 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
-Match {n} 11 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
+Match     5 φ = φ ≡ ⊥̇
+Match {n} 6 φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∃̇ a))
+Match {n} 7 φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∀̇ a))
+Match {n} 8 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
+Match {n} 9 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
 Match     _  _ = Empty.⊥*
 
 matches : ∀ {n} (φ : Formula S n) → Match (tagOf φ) φ
@@ -276,8 +265,6 @@ matches (t ≐ u)  = t , (u , refl)
 matches (a ∧̇ b)  = a , (b , refl)
 matches (a ∨̇ b)  = a , (b , refl)
 matches (a ⇒̇ b)  = a , (b , refl)
-matches (¬̇ a)    = a , refl
-matches ⊤̇        = refl
 matches ⊥̇        = refl
 matches (∃̇ a)    = a , refl
 matches (∀̇ a)    = a , refl
@@ -303,8 +290,6 @@ private
   go (a ⇒̇ b) ψ (a' , (b' , q)) p =
     cong₂ _⇒̇_ (⌜⌝-inj a a' (pr-inj (p ∙ cong payOf q) .fst))
               (⌜⌝-inj b b' (pr-inj (p ∙ cong payOf q) .snd)) ∙ sym q
-  go (¬̇ a) ψ (a' , q) p = cong ¬̇_ (⌜⌝-inj a a' (p ∙ cong payOf q)) ∙ sym q
-  go ⊤̇ ψ q p = sym q
   go ⊥̇ ψ q p = sym q
   go (∃̇ a) ψ (a' , q) p = cong ∃̇_ (⌜⌝-inj a a' (p ∙ cong payOf q)) ∙ sym q
   go (∀̇ a) ψ (a' , q) p = cong ∀̇_ (⌜⌝-inj a a' (p ∙ cong payOf q)) ∙ sym q

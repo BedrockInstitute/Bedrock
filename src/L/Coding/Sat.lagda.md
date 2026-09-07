@@ -8,7 +8,7 @@ satisfy it, built by recursion on the formula.
 Nothing here is internal. The recursion is on a formula Agda can see, so each
 step may name the sets the previous steps produced as constants, and the object
 language never has to quantify over a code. That is what makes every step a
-single separation off the ambient set, and what makes the twelve clauses of the
+single separation off the ambient set, and what makes the ten clauses of the
 internal recursion, when they come, into identities rather than definitions.
 
 The atoms are shorter here than in the internal clauses for the same reason. A
@@ -17,7 +17,7 @@ which, so the reader for its value is one case rather than two.
 <!--zh-->
 表将要记录的那个取值。给定元语言的一条公式，以及诸环境所落之上的 `L` 的一个集合，这就是满足它的那些环境构成的集合，沿公式递归造出。
 
-此处没有任何内部的东西。递归沿一条 Agda 看得见的公式进行，故每一步都可以把前几步产出的集合以常元点名，而对象语言从不必对码作量化。正是这一点使每一步只是「在周遭集合上作一次分离」，也正是这一点使内部递归那十二条子句到来时成为**等式**而非定义。
+此处没有任何内部的东西。递归沿一条 Agda 看得见的公式进行，故每一步都可以把前几步产出的集合以常元点名，而对象语言从不必对码作量化。正是这一点使每一步只是「在周遭集合上作一次分离」，也正是这一点使内部递归那十条子句到来时成为**等式**而非定义。
 
 出于同样理由，此处的原子比内部子句短。元语言的一个词项要么是变元、要么是常元，而递归知道是哪个，故读它取值的读式只有一种情形，不是两种。
 <!--/-->
@@ -34,7 +34,7 @@ module L.Coding.Sat {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; con; var; Formula
-        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
@@ -106,7 +106,7 @@ tmIs-var-out i γ v e = PT.rec
 <!--/-->
 
 <!--en-->
-Twelve clauses, each one separation off the ambient set. The propositional ones
+Ten clauses, each one separation off the ambient set. The propositional ones
 name the values below them and combine them with the object language's own
 connective, which is why the clause for implication is the Heyting arrow rather
 than a complement of a union: the chapter that wrote the internal clauses made
@@ -121,7 +121,7 @@ caught it: a member of the bound need not be a member of the carrier, so the
 environment it would be consed onto would not be an environment, and the two
 sides would not agree.
 <!--zh-->
-十二条子句，每条都是在周遭集合上作一次分离。命题的那几条把它们下面的诸取值点名，再用对象语言自己的联结词把它们合起来；蕴含那一条因此是 Heyting 箭头，而非「并的补」：写内部诸子句的那一章出于同样理由作了同样的选择，而两者必须一致。
+十条子句，每条都是在周遭集合上作一次分离。命题的那几条把它们下面的诸取值点名，再用对象语言自己的联结词把它们合起来；蕴含那一条因此是 Heyting 箭头，而非「并的补」：写内部诸子句的那一章出于同样理由作了同样的选择，而两者必须一致。
 
 两个量词把载体的一个成员接到环境头上，再问结果是否落在下面那个取值之中，而后者高一个元数。两个有界量词做同样的事，而那个成员**取自载体、由界项的取值设防**，不是单取自那个取值。单取自那个取值是错的，理由与它在内部诸子句里曾经错的理由相同 (那次由一次审计抓出)：界的成员未必是载体的成员，于是被接上去的环境根本不是环境，两侧也就对不上。
 <!--/-->
@@ -160,8 +160,6 @@ module _ (B : S) where
     ((var zero ∈̇ con (Sat a)) ∨̇ (var zero ∈̇ con (Sat b)))
   cond (a ⇒̇ b) =
     ((var zero ∈̇ con (Sat a)) ⇒̇ (var zero ∈̇ con (Sat b)))
-  cond (¬̇ a) = ¬̇ (var zero ∈̇ con (Sat a))
-  cond ⊤̇ = ⊤̇
   cond ⊥̇ = ⊥̇
   cond (∃̇ a) =
     (∃̇∈ (con B) (∃̇ ( consAtL zero (suc zero) (suc (suc zero))

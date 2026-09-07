@@ -26,7 +26,7 @@ open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
   ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Semantics
 ```
 
@@ -61,8 +61,6 @@ renameFo ρ (t ≐ u)  = renameTm ρ t ≐ renameTm ρ u
 renameFo ρ (φ ∧̇ ψ)  = renameFo ρ φ ∧̇ renameFo ρ ψ
 renameFo ρ (φ ∨̇ ψ)  = renameFo ρ φ ∨̇ renameFo ρ ψ
 renameFo ρ (φ ⇒̇ ψ)  = renameFo ρ φ ⇒̇ renameFo ρ ψ
-renameFo ρ (¬̇ φ)    = ¬̇ renameFo ρ φ
-renameFo ρ ⊤̇        = ⊤̇
 renameFo ρ ⊥̇        = ⊥̇
 renameFo ρ (∃̇ φ)    = ∃̇ renameFo (liftρ ρ) φ
 renameFo ρ (∀̇ φ)    = ∀̇ renameFo (liftρ ρ) φ
@@ -132,8 +130,6 @@ obtained by choosing `ρ`.
   ⊨-rename ρ (φ ∧̇ ψ)  γ δ ag = cong₂ _⊓_ (⊨-rename ρ φ γ δ ag) (⊨-rename ρ ψ γ δ ag)
   ⊨-rename ρ (φ ∨̇ ψ)  γ δ ag = cong₂ _⊔_ (⊨-rename ρ φ γ δ ag) (⊨-rename ρ ψ γ δ ag)
   ⊨-rename ρ (φ ⇒̇ ψ)  γ δ ag = cong₂ _⇒_ (⊨-rename ρ φ γ δ ag) (⊨-rename ρ ψ γ δ ag)
-  ⊨-rename ρ (¬̇ φ)    γ δ ag = cong ¬_ (⊨-rename ρ φ γ δ ag)
-  ⊨-rename ρ ⊤̇        γ δ ag = refl
   ⊨-rename ρ ⊥̇        γ δ ag = refl
   ⊨-rename ρ (∃̇ φ)    γ δ ag = cong (⋁ S) (funExt (λ x →
     ⊨-rename (liftρ ρ) φ (x ∷ γ) (x ∷ δ) (agrees∷ x ag)))

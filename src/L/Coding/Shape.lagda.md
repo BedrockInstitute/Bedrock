@@ -3,11 +3,11 @@
 <!--en-->
 The half of "is a code" that closedness does not say.
 
-`closedAt`{.Agda} is eight implications keyed by tag: *if* a member has this tag,
+`closedAt`{.Agda} is seven implications keyed by tag: *if* a member has this tag,
 *then* its parts are members too. Nothing there rules out a member with no
-recognized tag at all, and such a member satisfies all eight vacuously. So a
+recognized tag at all, and such a member satisfies all seven vacuously. So a
 closed set may hold junk, and the predicate that says otherwise is this one:
-every member is an arity-tagged pair whose tag is one of the twelve, with a
+every member is an arity-tagged pair whose tag is one of the ten, with a
 payload of the shape that tag calls for.
 
 The four leaf tags are delegated to a parameter. Their payloads mention term
@@ -24,7 +24,7 @@ re-indexes nothing.
 <!--zh-->
 「是一个码」中封闭性没有说出的那一半。
 
-`closedAt`{.Agda} 是八条以标签为键的蕴含：**若**某个成员带这个标签，**则**它的诸部件也是成员。那里没有任何东西排除掉「压根没有可辨标签」的成员，而这样的成员平凡地满足全部八条。故一个封闭集可以含有垃圾，而说出相反之事的谓词就是这一条：每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷具有该标签所要求的形状。
+`closedAt`{.Agda} 是七条以标签为键的蕴含：**若**某个成员带这个标签，**则**它的诸部件也是成员。那里没有任何东西排除掉「压根没有可辨标签」的成员，而这样的成员平凡地满足全部七条。故一个封闭集可以含有垃圾，而说出相反之事的谓词就是这一条：每个成员都是一个带元数标签的对，其标签属于那十个之一，且载荷具有该标签所要求的形状。
 
 四个叶子标签交给一个参数。它们的载荷提到的是词项码与一个数码、从不提公式码，故它们身上没有任何东西会下降，也没有任何东西属于同一场归纳；它们在别处写一次，然后递进来。
 
@@ -41,7 +41,7 @@ module L.Coding.Shape {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+  using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊤̇; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 import FOL.Absoluteness
@@ -67,10 +67,10 @@ open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId'; toℕ<n )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
+import Cubical.Data.Sum as Sum
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Data.Unit using ( tt* )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -87,12 +87,12 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 <!--/-->
 
 <!--en-->
-A tag whose payload is a pair, and a tag whose payload is a single code. Twelve
+A tag whose payload is a pair, and a tag whose payload is a single code. Ten
 tags, two shapes: which one a tag takes is the only thing that varies, and the
 rest of what a tag demands of its payload is a relation the frame carries. That
 is the same division the closedness predicate makes, and for the same reason.
 <!--zh-->
-一类标签的载荷是一个对，另一类的载荷是单个码。十二个标签，两种形状：标签取哪一种是唯一变动的东西，而它对载荷的其余要求，是框架所携带的一条关系。这与封闭性谓词所作的划分相同，理由也相同。
+一类标签的载荷是一个对，另一类的载荷是单个码。十个标签，两种形状：标签取哪一种是唯一变动的东西，而它对载荷的其余要求，是框架所携带的一条关系。这与封闭性谓词所作的划分相同，理由也相同。
 <!--/-->
 
 ```agda
@@ -143,14 +143,14 @@ isTmAt t N A = ∃̇ (tagAtL (suc t) 0 zero ∧̇ (var zero ∈̇ var (suc A)))
 ```
 
 <!--en-->
-## The twelve, as one predicate
+## The ten, as one predicate
 <!--zh-->
-## 十二条，作为一条谓词
+## 十条，作为一条谓词
 <!--/-->
 
 <!--en-->
 Every member is a well-formed key: an arity-tagged pair carrying one of the
-twelve tags, with the payload that tag calls for. The relations say what
+ten tags, with the payload that tag calls for. The relations say what
 closedness does not: that an atom's two parts are term codes, that a bounded
 quantifier's first part is one, and that a constant's payload is zero. The
 formula parts are left to closedness, which is where they belong, since they are
@@ -160,7 +160,7 @@ Being shaped is therefore relative to two slots and not one: the set, and the
 carrier its terms name their constants from. Only the four relations that mention
 a term look at the second, and they are the only four that could.
 <!--zh-->
-每个成员都是一个良构的键：一个带元数标签的对，携带那十二个标签之一，且载荷是该标签所要求的那种。诸关系说出封闭性没有说的事：原子的两个部件是词项码、有界量词的第一个部件是词项码、常元的载荷是零。公式部件留给封闭性，那也正是它们该在的地方，因为它们是唯一有东西会下降进去的部件。
+每个成员都是一个良构的键：一个带元数标签的对，携带那十个标签之一，且载荷是该标签所要求的那种。诸关系说出封闭性没有说的事：原子的两个部件是词项码、有界量词的第一个部件是词项码、常元的载荷是零。公式部件留给封闭性，那也正是它们该在的地方，因为它们是唯一有东西会下降进去的部件。
 
 于是「成形」相对的是两位、而非一位：那个集合，以及它的诸词项从中点名常元的那个载体。只有那四条提到词项的关系去看第二位，而它们也是仅有的四条能去看的。
 <!--/-->
@@ -182,9 +182,8 @@ module _ {n : ℕ} where
   shapes : Fin n → Formula S (suc n)
   shapes A = binForm 0 (bothTm A) ∨̇ (binForm 1 (bothTm A)
            ∨̇ (binForm 2 noneB ∨̇ (binForm 3 noneB ∨̇ (binForm 4 noneB
-           ∨̇ (unForm 5 noneU ∨̇ (unForm 6 zeroPay ∨̇ (unForm 7 zeroPay
-           ∨̇ (unForm 8 noneU ∨̇ (unForm 9 noneU
-           ∨̇ (binForm 10 (fstTm A) ∨̇ binForm 11 (fstTm A)))))))))))
+           ∨̇ (unForm 5 zeroPay ∨̇ (unForm 6 noneU ∨̇ (unForm 7 noneU
+           ∨̇ (binForm 8 (fstTm A) ∨̇ binForm 9 (fstTm A)))))))))
 
   shapedAt : Fin n → Fin n → Formula S n
   shapedAt C A = ∀̇∈ (var C) (shapes A)
@@ -197,11 +196,11 @@ module _ {n : ℕ} where
 <!--/-->
 
 <!--en-->
-Twelve alternatives. The two frames are read once each, generically in the
-relation they carry, so that the walk over the disjunction below is twelve
-applications of two readers rather than twelve copies of the same unnesting.
+Ten alternatives. The two frames are read once each, generically in the
+relation they carry, so that the walk over the disjunction below is ten
+applications of two readers rather than ten copies of the same unnesting.
 <!--zh-->
-十二个可能。两个框架各读一次，且对它们所携带的关系泛型，好让下面那趟走过析取的路是两条读式的十二次施用，而不是同一段解嵌套的十二份拷贝。
+十个可能。两个框架各读一次，且对它们所携带的关系泛型，好让下面那趟走过析取的路是两条读式的十次施用，而不是同一段解嵌套的十份拷贝。
 <!--/-->
 
 ```agda
@@ -235,45 +234,42 @@ ShapeWit : ∀ {n} → Fin n → S ^ n → S → Type (ℓ-suc ℓ)
 ShapeWit A γ c =
     BinWit 0 (bothTm A) γ c ⊎ (BinWit 1 (bothTm A) γ c
   ⊎ (BinWit 2 noneB γ c ⊎ (BinWit 3 noneB γ c ⊎ (BinWit 4 noneB γ c
-  ⊎ (UnWit 5 noneU γ c ⊎ (UnWit 6 zeroPay γ c ⊎ (UnWit 7 zeroPay γ c
-  ⊎ (UnWit 8 noneU γ c ⊎ (UnWit 9 noneU γ c
-  ⊎ (BinWit 10 (fstTm A) γ c ⊎ BinWit 11 (fstTm A) γ c))))))))))
+  ⊎ (UnWit 5 zeroPay γ c ⊎ (UnWit 6 noneU γ c ⊎ (UnWit 7 noneU γ c
+  ⊎ (BinWit 8 (fstTm A) γ c ⊎ BinWit 9 (fstTm A) γ c))))))))
+
+private
+  sum-out : {A B C D : Type (ℓ-suc ℓ)}
+          → (A → ∥ C ∥₁) → (B → ∥ D ∥₁) → ∥ A ⊎ B ∥₁ → ∥ C ⊎ D ∥₁
+  sum-out f g = PT.rec squash₁
+    (Sum.rec (λ x → PT.map inl (f x)) (λ y → PT.map inr (g y)))
+
+  sum-in : {A B C D : Type (ℓ-suc ℓ)}
+         → (A → C) → (B → D) → A ⊎ B → ∥ C ⊎ D ∥₁
+  sum-in f g x = ∣ Sum.map f g x ∣₁
 
 shaped-out : ∀ {n} (C A : Fin n) (γ : S ^ n) → ⟨ γ ⊨ shapedAt C A ⟩
            → (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁
-shaped-out C A γ h c c∈ = d1 (h c c∈)
+shaped-out C A γ h c c∈ = read (h c c∈)
   where
-  d11 = PT.rec squash₁
-    (λ { (inl x) → PT.map inl (binForm-out 10 (fstTm A) γ c x)
-       ; (inr x) → PT.map inr (binForm-out 11 (fstTm A) γ c x) })
-  d10 = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 9 noneU γ c x)
-                          ; (inr x) → PT.map inr (d11 x) })
-  d9  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 8 noneU γ c x)
-                          ; (inr x) → PT.map inr (d10 x) })
-  d8  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 7 zeroPay γ c x)
-                          ; (inr x) → PT.map inr (d9 x) })
-  d7  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 6 zeroPay γ c x)
-                          ; (inr x) → PT.map inr (d8 x) })
-  d6  = PT.rec squash₁ (λ { (inl x) → PT.map inl (unForm-out 5 noneU γ c x)
-                          ; (inr x) → PT.map inr (d7 x) })
-  d5  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 4 noneB γ c x)
-                          ; (inr x) → PT.map inr (d6 x) })
-  d4  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 3 noneB γ c x)
-                          ; (inr x) → PT.map inr (d5 x) })
-  d3  = PT.rec squash₁ (λ { (inl x) → PT.map inl (binForm-out 2 noneB γ c x)
-                          ; (inr x) → PT.map inr (d4 x) })
-  d2  = PT.rec squash₁
-    (λ { (inl x) → PT.map inl (binForm-out 1 (bothTm A) γ c x)
-       ; (inr x) → PT.map inr (d3 x) })
-  d1  = PT.rec squash₁
-    (λ { (inl x) → PT.map inl (binForm-out 0 (bothTm A) γ c x)
-       ; (inr x) → PT.map inr (d2 x) })
+  read : ⟨ (c ∷ γ) ⊨ shapes A ⟩ → ∥ ShapeWit A γ c ∥₁
+  read =
+    sum-out (binForm-out 0 (bothTm A) γ c)
+    (sum-out (binForm-out 1 (bothTm A) γ c)
+    (sum-out (binForm-out 2 noneB γ c)
+    (sum-out (binForm-out 3 noneB γ c)
+    (sum-out (binForm-out 4 noneB γ c)
+    (sum-out (unForm-out 5 zeroPay γ c)
+    (sum-out (unForm-out 6 noneU γ c)
+    (sum-out (unForm-out 7 noneU γ c)
+    (sum-out (binForm-out 8 (fstTm A) γ c)
+    (binForm-out 9 (fstTm A) γ c)))))))))
+
 ```
 
 <!--en-->
-## The same twelve, written
+## The same ten, written
 <!--zh-->
-## 同样的十二条，写出来
+## 同样的十条，写出来
 <!--/-->
 
 <!--en-->
@@ -286,13 +282,13 @@ take them apart.
 The two frames are introduced once each, generically in the relation, for the
 reason that decided the elimination and for one more. The adequacy equation each
 frame carries is discharged here, with the tag, the relation and the environment
-all still variables. Discharged at a named tag instead, it would be twelve
+all still variables. Discharged at a named tag instead, it would be ten
 unfoldings of a formula three quantifiers deep, and that is the difference
 between a second and an afternoon.
 <!--zh-->
 一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明。解码把「成形的集合」作为假设收下，故供给那个集合的人欠着那条假设，而欠着它意味着要造：存在式的框架有它的诸见证要产出、一个析取支要选定，而消去那边只需把它们拆开。
 
-两个框架各引入一次，且对关系泛型，理由与决定消去的那个相同，另加一个。每个框架所携带的适足等式在此处交付，其时标签、关系与环境都还是变元。若改在一个点了名的标签处交付，那就是把一条嵌套三层量词的公式展开十二遍，而那是一秒与一下午的差别。
+两个框架各引入一次，且对关系泛型，理由与决定消去的那个相同，另加一个。每个框架所携带的适足等式在此处交付，其时标签、关系与环境都还是变元。若改在一个点了名的标签处交付，那就是把一条嵌套三层量词的公式展开十遍，而那是一秒与一下午的差别。
 <!--/-->
 
 ```agda
@@ -311,15 +307,13 @@ unForm-in k rel γ c (N , (a , (e , hr))) =
 ```
 
 <!--en-->
-The walk over the disjunction is the mirror of the walk that reads it: twelve
-injections into a right-nested chain, each level carrying its own truncation
-because a disjunction of the truth algebra is a truncated sum. The injections
-are written out rather than named, because a lemma generic in the two disjuncts
-would have to recover them from a goal that has already been unfolded, and no
-amount of unification recovers a formula from its meaning. What the caller is
-left owing is exactly one thing per member: which of the twelve that member is.
+The walk over the disjunction mirrors its reading: each level injects one
+summand and carries its own truncation. The shared maps operate on semantic
+types, with each constructor's reader supplied explicitly. They never recover
+a formula from its meaning. The caller supplies exactly one thing per member:
+which of the ten shapes that member has.
 <!--zh-->
-走过那个析取的路，是读它那趟路的镜像：十二次注入一条右嵌套的链，而每一层各自带一个截断，因为真值代数的析取是一个被截断的和。诸注入是写开的，而不是命名的，因为一条对两个析取支泛型的引理，将不得不从一个已经展开了的目标里把它们找回来，而再多的合一也无法从一条公式的含义里把那条公式找回来。调用者最后欠的，对每个成员恰好是一件事：那个成员是十二者中的哪一个。
+走过那个析取的路与读它的路互为镜像：每层注入一个和项，并各自携带截断。共用映射作用于语义类型，各构造子的读式由调用方显式提供，无须从含义反推公式。调用者为每个成员提供的，恰是它属于十种形状中的哪一种。
 <!--/-->
 
 ```agda
@@ -329,35 +323,18 @@ shaped-in : ∀ {n} (C A : Fin n) (γ : S ^ n)
 shaped-in C A γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes A)) fill (g c c∈)
   where
   fill : ShapeWit A γ c → ⟨ (c ∷ γ) ⊨ shapes A ⟩
-  fill (inl x) = ∣ inl (binForm-in 0 (bothTm A) γ c x) ∣₁
-  fill (inr (inl x)) = ∣ inr ∣ inl (binForm-in 1 (bothTm A) γ c x) ∣₁ ∣₁
-  fill (inr (inr (inl x))) =
-    ∣ inr ∣ inr ∣ inl (binForm-in 2 noneB γ c x) ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inl x)))) =
-    ∣ inr ∣ inr ∣ inr ∣ inl (binForm-in 3 noneB γ c x) ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inl x))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inl (binForm-in 4 noneB γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inr (inl x)))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inl (unForm-in 5 noneU γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inr (inr (inl x))))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inl (unForm-in 6 zeroPay γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inr (inr (inr (inl x)))))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inl (unForm-in 7 zeroPay γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inl (unForm-in 8 noneU γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x)))))))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inl (unForm-in 9 noneU γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inl (binForm-in 10 (fstTm A) γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-  fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr x))))))))))) =
-    ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr ∣ inr
-      ∣ inr (binForm-in 11 (fstTm A) γ c x) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
+  fill =
+    sum-in (binForm-in 0 (bothTm A) γ c)
+    (sum-in (binForm-in 1 (bothTm A) γ c)
+    (sum-in (binForm-in 2 noneB γ c)
+    (sum-in (binForm-in 3 noneB γ c)
+    (sum-in (binForm-in 4 noneB γ c)
+    (sum-in (unForm-in 5 zeroPay γ c)
+    (sum-in (unForm-in 6 noneU γ c)
+    (sum-in (unForm-in 7 noneU γ c)
+    (sum-in (binForm-in 8 (fstTm A) γ c)
+    (binForm-in 9 (fstTm A) γ c)))))))))
+
 ```
 
 <!--en-->
@@ -491,7 +468,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
 <!--/-->
 
 <!--en-->
-The two halves meet. Shapedness says which of the twelve a member is and hands
+The two halves meet. Shapedness says which of the ten a member is and hands
 back its parts; closedness says those parts are members too, at the arity the
 tag calls for. Neither half alone gives a step of a recursion, and together they
 give exactly one.
@@ -500,7 +477,7 @@ The equation shapedness produces is, letter for letter, the one closedness
 consumes, so the two compose with nothing in between. That is not luck: both
 were written against the same reading of an arity-tagged pair.
 <!--zh-->
-两半会合。形状说出一个成员是十二者中的哪一个，并把它的部件交回；封闭性说那些部件也是成员，且在该标签所要求的元数上。两半各自都给不出递归的一步，合起来恰好给出一步。
+两半会合。形状说出一个成员是十者中的哪一个，并把它的部件交回；封闭性说那些部件也是成员，且在该标签所要求的元数上。两半各自都给不出递归的一步，合起来恰好给出一步。
 
 形状产出的那条等式，正是封闭性所消费的那一条，逐字相同，故二者之间无需任何东西即可复合。这不是运气：两者都是对着「带元数标签的对」的同一条读法写下的。
 <!--/-->
@@ -531,9 +508,8 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
   PeelWit c =
       BinWit 0 (bothTm A) γ c ⊎ (BinWit 1 (bothTm A) γ c
     ⊎ (BinSame 2 c ⊎ (BinSame 3 c ⊎ (BinSame 4 c
-    ⊎ (UnSame 5 c ⊎ (UnWit 6 zeroPay γ c ⊎ (UnWit 7 zeroPay γ c
-    ⊎ (UnSucc 8 c ⊎ (UnSucc 9 c
-    ⊎ (BinSucc 10 c ⊎ BinSucc 11 c))))))))))
+    ⊎ (UnWit 5 zeroPay γ c ⊎ (UnSucc 6 c ⊎ (UnSucc 7 c
+    ⊎ (BinSucc 8 c ⊎ BinSucc 9 c))))))))
 
   peel : (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ PeelWit c ∥₁
   peel c c∈ = PT.map fill (shaped-out C A γ hsh c c∈)
@@ -559,31 +535,18 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
       N , (a , (b , (e , (hr , binSuccClosed-out C k γ h c N a b c∈ e))))
 
     fill : ShapeWit A γ c → PeelWit c
-    fill (inl x) = inl x
-    fill (inr (inl x)) = inr (inl x)
-    fill (inr (inr (inl x))) = inr (inr (inl (bs 2 (hcl .fst) x)))
-    fill (inr (inr (inr (inl x)))) =
-      inr (inr (inr (inl (bs 3 (hcl .snd .fst) x))))
-    fill (inr (inr (inr (inr (inl x))))) =
-      inr (inr (inr (inr (inl (bs 4 (hcl .snd .snd .fst) x)))))
-    fill (inr (inr (inr (inr (inr (inl x)))))) =
-      inr (inr (inr (inr (inr (inl (us 5 (hcl .snd .snd .snd .fst) x))))))
-    fill (inr (inr (inr (inr (inr (inr (inl x))))))) =
-      inr (inr (inr (inr (inr (inr (inl x))))))
-    fill (inr (inr (inr (inr (inr (inr (inr (inl x)))))))) =
-      inr (inr (inr (inr (inr (inr (inr (inl x)))))))
-    fill (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))) =
-      inr (inr (inr (inr (inr (inr (inr (inr
-        (inl (uz 8 (hcl .snd .snd .snd .snd .fst) x)))))))))
-    fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x)))))))))) =
-      inr (inr (inr (inr (inr (inr (inr (inr (inr
-        (inl (uz 9 (hcl .snd .snd .snd .snd .snd .fst) x))))))))))
-    fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))))) =
-      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr
-        (inl (bz 10 (hcl .snd .snd .snd .snd .snd .snd .fst) x)))))))))))
-    fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr x))))))))))) =
-      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr
-        (inr (bz 11 (hcl .snd .snd .snd .snd .snd .snd .snd) x)))))))))))
+    fill =
+      Sum.map id
+      (Sum.map id
+      (Sum.map (bs 2 (hcl .fst))
+      (Sum.map (bs 3 (hcl .snd .fst))
+      (Sum.map (bs 4 (hcl .snd .snd .fst))
+      (Sum.map id
+      (Sum.map (uz 6 (hcl .snd .snd .snd .fst))
+      (Sum.map (uz 7 (hcl .snd .snd .snd .snd .fst))
+      (Sum.map (bz 8 (hcl .snd .snd .snd .snd .snd .fst))
+      (bz 9 (hcl .snd .snd .snd .snd .snd .snd))))))))))
+
 ```
 
 <!--en-->
@@ -602,10 +565,10 @@ dropped on the floor.
 
 The analysis is on the constructor alone. The tag is not a second index to be
 matched against: it is computed from the constructor, exactly as
-`byTag`{.Agda} computes the closedness demand from it, so the table is twelve
-lines and not twelve times twelve. Nothing here recurses either, because the key
+`byTag`{.Agda} computes the closedness demand from it, so the table is ten
+lines and not ten times ten. Nothing here recurses either, because the key
 of a named constructor already computes to the arity-tagged pair the witness
-type asks for, and no transport is needed anywhere in the twelve tuples.
+type asks for, and no transport is needed anywhere in the ten tuples.
 
 The one thing a tuple cannot compute is the term witness: a payload slot holding
 a term code must be certified as one, and the certificate is the encoder above
@@ -621,7 +584,7 @@ model's own coding it had to bridge two codings first.
 <!--zh-->
 这条谓词是干什么用的。对码的递归收到一个索引集，而那个集合必须封闭，否则诸子句什么也约束不了；也必须成形，否则它们放垃圾进来。封闭性在一章之前已为闭包交付；这里是另一半，而且是较短的那一半，因为成形性对「一个成员随身拖进什么」不作任何要求。于是那个反演返回的东西有一半被丢在地上。
 
-分情形只对构造子进行。标签不是要与之对上的第二个索引：它由构造子算出，正如 `byTag`{.Agda} 从构造子算出封闭性的要求，故这张表是十二行、而不是十二乘十二。此处也没有任何递归，因为一个点了名的构造子之键，已经算成了见证类型所索取的那个带元数标签的对，而那十二个元组里任何地方都不需要搬运。
+分情形只对构造子进行。标签不是要与之对上的第二个索引：它由构造子算出，正如 `byTag`{.Agda} 从构造子算出封闭性的要求，故这张表是十行、而不是十乘十。此处也没有任何递归，因为一个点了名的构造子之键，已经算成了见证类型所索取的那个带元数标签的对，而那十个元组里任何地方都不需要搬运。
 
 元组唯一算不出来的是词项见证：载荷位上放着的词项码必须被认证为词项码，而那份认证就是上面那条编码式施于该构造子所携的词项。这份认证如今有了第二半，而由调用方支付：字母表的每个常元都是载体的成员。它是一条假设，每次调用交付一次、而不是每个构造子交付一次，因为字母表是在公式之前就固定下来的。
 
@@ -673,29 +636,21 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
     go {k} (t ≐ u) c q =
       inr (inl
         (nn k , (ct t , (ct u , (q , (tm1 t (ct u) c , tm0 u (ct t) c))))))
-    go {k} (a ∧̇ b) c q = inr (inr (inl (nn k , (cd a , (cd b , (q , tt*))))))
+    go {k} (a ∧̇ b) c q = inr (inr (inl (nn k , (cd a , (cd b , (q , (λ z → z)))))))
     go {k} (a ∨̇ b) c q =
-      inr (inr (inr (inl (nn k , (cd a , (cd b , (q , tt*)))))))
+      inr (inr (inr (inl (nn k , (cd a , (cd b , (q , (λ z → z))))))))
     go {k} (a ⇒̇ b) c q =
-      inr (inr (inr (inr (inl (nn k , (cd a , (cd b , (q , tt*))))))))
-    go {k} (¬̇ a) c q =
-      inr (inr (inr (inr (inr (inl (nn k , (cd a , (q , tt*))))))))
-    go {k} ⊤̇ c q =
-      inr (inr (inr (inr (inr (inr (inl
-        (nn k , (nn 0 , (q , sym (numeralL-fst 0))))))))))
+      inr (inr (inr (inr (inl (nn k , (cd a , (cd b , (q , (λ z → z)))))))))
     go {k} ⊥̇ c q =
-      inr (inr (inr (inr (inr (inr (inr (inl
-        (nn k , (nn 0 , (q , sym (numeralL-fst 0)))))))))))
+      inr (inr (inr (inr (inr (inl (nn k , (nn 0 , (q , sym (numeralL-fst 0)))))))))
     go {k} (∃̇ a) c q =
-      inr (inr (inr (inr (inr (inr (inr (inr (inl
-        (nn k , (cd a , (q , tt*)))))))))))
+      inr (inr (inr (inr (inr (inr (inl (nn k , (cd a , (q , (λ z → z))))))))))
     go {k} (∀̇ a) c q =
-      inr (inr (inr (inr (inr (inr (inr (inr (inr (inl
-        (nn k , (cd a , (q , tt*))))))))))))
+      inr (inr (inr (inr (inr (inr (inr (inl (nn k , (cd a , (q , (λ z → z)))))))))))
     go {k} (∀̇∈ t a) c q =
-      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl
-        (nn k , (ct t , (cd a , (q , tm1 t (cd a) c))))))))))))))
+      inr (inr (inr (inr (inr (inr (inr (inr (inl
+        (nn k , (ct t , (cd a , (q , tm1 t (cd a) c))))))))))))
     go {k} (∃̇∈ t a) c q =
-      inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr
-        (nn k , (ct t , (cd a , (q , tm1 t (cd a) c))))))))))))))
+      inr (inr (inr (inr (inr (inr (inr (inr (inr
+        (nn k , (ct t , (cd a , (q , tm1 t (cd a) c))))))))))))
 ```

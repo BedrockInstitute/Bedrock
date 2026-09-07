@@ -12,7 +12,6 @@ module L.GCH.OrderType {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-irrefl )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
@@ -21,19 +20,21 @@ open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; Lset→isL )
 open import L.Ordinal {ℓ} using ( suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
 open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; appAt; appAt-adequate; prʟ; prʟ-fst
-        ; svAt; svAt-in; domAt; domAt-intro )
+  using ( appAt; appAt-adequate; appC; appC-adequate; prʟ; prʟ-fst
+        ; svAt; domAt; module PairExpression )
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
 open import L.Cardinal {ℓ} lem using ( InjCode )
+open import L.GCH {ℓ} lem using ( InjL )
+open import L.GCH.Definable {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
 open import L.CardinalAbove {ℓ} lem using ( module Mostowski )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ; isPropΣ; isSetΣSndProp )
-open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
+open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; _∈ₛ_; ∈∈ₛ )
@@ -51,11 +52,10 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-Renaming, read at the same satisfaction as `_⊨_` (as `L.Axioms.Full` does).
+Equality of elements of the model is equality of their underlying sets, since
+constructibility is a proposition.
 
 ```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
-
 isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
 ```
@@ -197,24 +197,24 @@ Correct F R = (x v : S) → Holds F x v → Complete F R x × ValueIs F R x v
 
 ```agda
 opaque
-  completeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
-  completeAt f r x =
-    ∀̇ ( appAt (suc r) zero (suc x)
+  completeAt : ∀ {n} → Fin n → S → Fin n → Formula S n
+  completeAt f R x =
+    ∀̇ ( appC R zero (suc x)
       ⇒̇ ∃̇ (appAt (suc (suc f)) (suc zero) zero) )
 
-  complete-out : ∀ {n} (f r x : Fin n) (γ : S ^ n)
-               → ⟨ γ ⊨ completeAt f r x ⟩
-               → Complete (lookup f γ) (lookup r γ) (lookup x γ)
-  complete-out f r x γ h y p = PT.map
+  complete-out : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : S ^ n)
+               → ⟨ γ ⊨ completeAt f R x ⟩
+               → Complete (lookup f γ) R (lookup x γ)
+  complete-out f R x γ h y p = PT.map
     (λ { (u , q) → u , subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (u ∷ y ∷ γ)) q })
-    (h y (subst ⟨_⟩ (sym (appAt-adequate (suc r) zero (suc x) (y ∷ γ))) p))
+    (h y (subst ⟨_⟩ (sym (appC-adequate R zero (suc x) (y ∷ γ))) p))
 
-  complete-in : ∀ {n} (f r x : Fin n) (γ : S ^ n)
-              → Complete (lookup f γ) (lookup r γ) (lookup x γ)
-              → ⟨ γ ⊨ completeAt f r x ⟩
-  complete-in f r x γ h y p = PT.map
+  complete-in : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : S ^ n)
+              → Complete (lookup f γ) R (lookup x γ)
+              → ⟨ γ ⊨ completeAt f R x ⟩
+  complete-in f R x γ h y p = PT.map
     (λ { (u , q) → u , subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (u ∷ y ∷ γ))) q })
-    (h y (subst ⟨_⟩ (appAt-adequate (suc r) zero (suc x) (y ∷ γ)) p))
+    (h y (subst ⟨_⟩ (appC-adequate R zero (suc x) (y ∷ γ)) p))
 ```
 
 "`w` is in `v` iff `w` is recorded in `f` at some `R`-predecessor of `x`."
@@ -222,43 +222,43 @@ Inside: `w` is 0; then `y` is 0 and `w` is 1.
 
 ```agda
 opaque
-  srcAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
-  srcAt f r x w = ∃̇ ( appAt (suc r) zero (suc x) ∧̇ appAt (suc f) zero (suc w) )
+  srcAt : ∀ {n} → Fin n → S → Fin n → Fin n → Formula S n
+  srcAt f R x w = ∃̇ ( appC R zero (suc x) ∧̇ appAt (suc f) zero (suc w) )
 
-  src-out : ∀ {n} (f r x w : Fin n) (γ : S ^ n)
-          → ⟨ γ ⊨ srcAt f r x w ⟩
-          → Src (lookup f γ) (lookup r γ) (lookup x γ) (lookup w γ)
-  src-out f r x w γ = PT.map (λ { (y , (p , q)) → y
-    , ( subst ⟨_⟩ (appAt-adequate (suc r) zero (suc x) (y ∷ γ)) p
+  src-out : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : S ^ n)
+          → ⟨ γ ⊨ srcAt f R x w ⟩
+          → Src (lookup f γ) R (lookup x γ) (lookup w γ)
+  src-out f R x w γ = PT.map (λ { (y , (p , q)) → y
+    , ( subst ⟨_⟩ (appC-adequate R zero (suc x) (y ∷ γ)) p
       , subst ⟨_⟩ (appAt-adequate (suc f) zero (suc w) (y ∷ γ)) q ) })
 
-  src-in : ∀ {n} (f r x w : Fin n) (γ : S ^ n)
-         → Src (lookup f γ) (lookup r γ) (lookup x γ) (lookup w γ)
-         → ⟨ γ ⊨ srcAt f r x w ⟩
-  src-in f r x w γ = PT.map (λ { (y , (p , q)) → y
-    , ( subst ⟨_⟩ (sym (appAt-adequate (suc r) zero (suc x) (y ∷ γ))) p
+  src-in : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : S ^ n)
+         → Src (lookup f γ) R (lookup x γ) (lookup w γ)
+         → ⟨ γ ⊨ srcAt f R x w ⟩
+  src-in f R x w γ = PT.map (λ { (y , (p , q)) → y
+    , ( subst ⟨_⟩ (sym (appC-adequate R zero (suc x) (y ∷ γ))) p
       , subst ⟨_⟩ (sym (appAt-adequate (suc f) zero (suc w) (y ∷ γ))) q ) })
 
 opaque
   unfolding srcAt
-  valueAt : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Formula S n
-  valueAt f r x v =
-    ∀̇ ( ((var zero ∈̇ var (suc v)) ⇒̇ srcAt (suc f) (suc r) (suc x) zero)
-      ∧̇ (srcAt (suc f) (suc r) (suc x) zero ⇒̇ (var zero ∈̇ var (suc v))) )
+  valueAt : ∀ {n} → Fin n → S → Fin n → Fin n → Formula S n
+  valueAt f R x v =
+    ∀̇ ( ((var zero ∈̇ var (suc v)) ⇒̇ srcAt (suc f) R (suc x) zero)
+      ∧̇ (srcAt (suc f) R (suc x) zero ⇒̇ (var zero ∈̇ var (suc v))) )
 
-  value-out : ∀ {n} (f r x v : Fin n) (γ : S ^ n)
-            → ⟨ γ ⊨ valueAt f r x v ⟩
-            → ValueIs (lookup f γ) (lookup r γ) (lookup x γ) (lookup v γ)
-  value-out f r x v γ h w =
-      (λ w∈ → src-out (suc f) (suc r) (suc x) zero (w ∷ γ) (h w .fst w∈))
-    , (λ s → h w .snd (src-in (suc f) (suc r) (suc x) zero (w ∷ γ) s))
+  value-out : ∀ {n} (f : Fin n) (R : S) (x v : Fin n) (γ : S ^ n)
+            → ⟨ γ ⊨ valueAt f R x v ⟩
+            → ValueIs (lookup f γ) R (lookup x γ) (lookup v γ)
+  value-out f R x v γ h w =
+      (λ w∈ → src-out (suc f) R (suc x) zero (w ∷ γ) (h w .fst w∈))
+    , (λ s → h w .snd (src-in (suc f) R (suc x) zero (w ∷ γ) s))
 
-  value-in : ∀ {n} (f r x v : Fin n) (γ : S ^ n)
-           → ValueIs (lookup f γ) (lookup r γ) (lookup x γ) (lookup v γ)
-           → ⟨ γ ⊨ valueAt f r x v ⟩
-  value-in f r x v γ h w =
-      (λ w∈ → src-in (suc f) (suc r) (suc x) zero (w ∷ γ) (h w .fst w∈))
-    , (λ s → h w .snd (src-out (suc f) (suc r) (suc x) zero (w ∷ γ) s))
+  value-in : ∀ {n} (f : Fin n) (R : S) (x v : Fin n) (γ : S ^ n)
+           → ValueIs (lookup f γ) R (lookup x γ) (lookup v γ)
+           → ⟨ γ ⊨ valueAt f R x v ⟩
+  value-in f R x v γ h w =
+      (λ w∈ → src-in (suc f) R (suc x) zero (w ∷ γ) (h w .fst w∈))
+    , (λ s → h w .snd (src-out (suc f) R (suc x) zero (w ∷ γ) s))
 ```
 
 Inside: `x` is 1 and `v` is 0.
@@ -266,30 +266,30 @@ Inside: `x` is 1 and `v` is 0.
 ```agda
 opaque
   unfolding completeAt valueAt
-  correctAt : ∀ {n} → Fin n → Fin n → Formula S n
-  correctAt f r =
+  correctAt : ∀ {n} → Fin n → S → Formula S n
+  correctAt f R =
     ∀̇ (∀̇ ( appAt (suc (suc f)) (suc zero) zero
-          ⇒̇ ( completeAt (suc (suc f)) (suc (suc r)) (suc zero)
-            ∧̇ valueAt (suc (suc f)) (suc (suc r)) (suc zero) zero ) ))
+          ⇒̇ ( completeAt (suc (suc f)) R (suc zero)
+            ∧̇ valueAt (suc (suc f)) R (suc zero) zero ) ))
 
-  correct-out : ∀ {n} (f r : Fin n) (γ : S ^ n)
-              → ⟨ γ ⊨ correctAt f r ⟩ → Correct (lookup f γ) (lookup r γ)
-  correct-out f r γ h x v p =
+  correct-out : ∀ {n} (f : Fin n) (R : S) (γ : S ^ n)
+              → ⟨ γ ⊨ correctAt f R ⟩ → Correct (lookup f γ) R
+  correct-out f R γ h x v p =
     let (c , w) = h x v (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ x ∷ γ))) p)
-    in complete-out (suc (suc f)) (suc (suc r)) (suc zero) (v ∷ x ∷ γ) c
-     , value-out (suc (suc f)) (suc (suc r)) (suc zero) zero (v ∷ x ∷ γ) w
+    in complete-out (suc (suc f)) R (suc zero) (v ∷ x ∷ γ) c
+     , value-out (suc (suc f)) R (suc zero) zero (v ∷ x ∷ γ) w
 
-  correct-in : ∀ {n} (f r : Fin n) (γ : S ^ n)
-             → Correct (lookup f γ) (lookup r γ) → ⟨ γ ⊨ correctAt f r ⟩
-  correct-in f r γ h x v p =
+  correct-in : ∀ {n} (f : Fin n) (R : S) (γ : S ^ n)
+             → Correct (lookup f γ) R → ⟨ γ ⊨ correctAt f R ⟩
+  correct-in f R γ h x v p =
     let (c , w) = h x v (subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ x ∷ γ)) p)
-    in complete-in (suc (suc f)) (suc (suc r)) (suc zero) (v ∷ x ∷ γ) c
-     , value-in (suc (suc f)) (suc (suc r)) (suc zero) zero (v ∷ x ∷ γ) w
+    in complete-in (suc (suc f)) R (suc zero) (v ∷ x ∷ γ) c
+     , value-in (suc (suc f)) R (suc zero) zero (v ∷ x ∷ γ) w
 ```
 
 The graph formula, over `(z ∷ p ∷ [])`: "`z` is recorded at `p` by some set
-correct for `R`". Inside: `r` is 0, `z` is 1, `p` is 2; then `f` is 0, `r` is 1,
-`z` is 2, `p` is 3. `R` enters as a constant, bound to a variable.
+correct for `R`". Inside the binder, `f` is 0, `z` is 1 and `p` is 2; `R`
+enters directly as a constant.
 
 ```agda
 module ColFo (R : S) where
@@ -297,63 +297,29 @@ module ColFo (R : S) where
   opaque
     unfolding correctAt
     colFo : Formula S 2
-    colFo = ∃̇ ( (var zero ≐ con R)
-              ∧̇ ∃̇ ( correctAt zero (suc zero)
-                   ∧̇ appAt zero (suc (suc (suc zero))) (suc (suc zero)) ) )
+    colFo = ∃̇ ( correctAt zero R
+              ∧̇ appAt zero (suc (suc zero)) (suc zero) )
 
     colFo-out : (z p : S) → ⟨ (z ∷ p ∷ []) ⊨ colFo ⟩
               → ∥ Σ[ F ∈ S ] (Correct F R × Holds F p z) ∥₁
-    colFo-out z p = PT.rec squash₁ (λ { (r , (er , hf)) → PT.map
-      (λ { (F , (hc , ha)) → F
-        , ( subst (Correct F) (Σ≡Prop (λ v → snd (isL v)) {u = r} {v = R} er)
-              (correct-out zero (suc zero) (F ∷ r ∷ z ∷ p ∷ []) hc)
-          , subst ⟨_⟩ (appAt-adequate zero (suc (suc (suc zero))) (suc (suc zero)) (F ∷ r ∷ z ∷ p ∷ [])) ha ) })
-      hf })
+    colFo-out z p = PT.map (λ { (F , (hc , ha)) → F
+      , ( correct-out zero R (F ∷ z ∷ p ∷ []) hc
+        , subst ⟨_⟩ (appAt-adequate zero (suc (suc zero)) (suc zero)
+            (F ∷ z ∷ p ∷ [])) ha ) })
 
     colFo-in : (z p F : S) → Correct F R → Holds F p z
              → ⟨ (z ∷ p ∷ []) ⊨ colFo ⟩
-    colFo-in z p F hc hp = ∣ R , (refl , ∣ F
-      , ( correct-in zero (suc zero) (F ∷ R ∷ z ∷ p ∷ []) hc
-        , subst ⟨_⟩ (sym (appAt-adequate zero (suc (suc (suc zero))) (suc (suc zero)) (F ∷ R ∷ z ∷ p ∷ []))) hp ) ∣₁) ∣₁
+    colFo-in z p F hc hp = ∣ F
+      , ( correct-in zero R (F ∷ z ∷ p ∷ []) hc
+        , subst ⟨_⟩ (sym (appAt-adequate zero (suc (suc zero)) (suc zero)
+            (F ∷ z ∷ p ∷ []))) hp ) ∣₁
 ```
 
-The pair form of a graph, over `(e ∷ p ∷ [])`: "`e` is the pair of `p` and some
-`z` with `φ z p`" (the shape src/L/Hierarchy.lagda.md pays for the hierarchy).
-Inside the binder `z` is 0, `e` is 1, `p` is 2.
+The pair form of a graph is the generic construction from `L.Recursion`.
+The compatibility export keeps its existing qualified name.
 
 ```agda
-module PairFo (φ : Formula S 2) where
-
-  ρ : Fin 2 → Fin 3
-  ρ zero       = zero
-  ρ (suc zero) = suc (suc zero)
-
-  opaque
-    pairFo : Formula S 2
-    pairFo = ∃̇ (prAtL (suc zero) (suc (suc zero)) zero ∧̇ renameFo ρ φ)
-
-    private
-      ag : (z e p : S) → Ren.Agrees ρ (z ∷ e ∷ p ∷ []) (z ∷ p ∷ [])
-      ag z e p zero       = refl
-      ag z e p (suc zero) = refl
-
-      at : (z e p : S)
-         → ⟨ (z ∷ e ∷ p ∷ []) ⊨ prAtL (suc zero) (suc (suc zero)) zero ⟩
-         ≡ (fst e ≡ pr (fst p) (fst z))
-      at z e p = cong ⟨_⟩ (prAtL-adequate (suc zero) (suc (suc zero)) zero (z ∷ e ∷ p ∷ []))
-
-      gr : (z e p : S)
-         → ⟨ (z ∷ e ∷ p ∷ []) ⊨ renameFo ρ φ ⟩ ≡ ⟨ (z ∷ p ∷ []) ⊨ φ ⟩
-      gr z e p = cong ⟨_⟩ (Ren.⊨-rename ρ φ (z ∷ e ∷ p ∷ []) (z ∷ p ∷ []) (ag z e p))
-
-    pair-out : (e p : S) → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
-             → ∥ Σ[ z ∈ S ] ((fst e ≡ pr (fst p) (fst z)) × ⟨ (z ∷ p ∷ []) ⊨ φ ⟩) ∥₁
-    pair-out e p = PT.map (λ { (z , (q , h)) →
-      z , (transport (at z e p) q , transport (gr z e p) h) })
-
-    pair-in : (e p z : S) → fst e ≡ pr (fst p) (fst z) → ⟨ (z ∷ p ∷ []) ⊨ φ ⟩
-            → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
-    pair-in e p z q h = ∣ z , (transport (sym (at z e p)) q , transport (sym (gr z e p)) h) ∣₁
+open import L.Recursion {ℓ} lem public using ( module PairFo )
 ```
 
 <!--en-->
@@ -470,9 +436,6 @@ The default entry.
       ea : S
       ea = prʟ (up a) (colʟ a)
 
-      ρ₂ : Fin 2 → Fin 4
-      ρ₂ zero       = suc (suc zero)
-      ρ₂ (suc zero) = suc (suc (suc zero))
 ```
 
 The graph, read: at `q R a` the pair of `q` and the value the graph formula
@@ -486,53 +449,34 @@ gives there; elsewhere the default entry.
         ⊎ ((Holds R q (up a) → Empty.⊥) × (fst z ≡ fst ea))
 ```
 
-Inside: `p` is 0, `r` is 1, `z` is 2, `q` is 3.
+The relation is the constant carrier of membership, and the upper endpoint is a
+literal leaf of the pair expression. Thus the graph is already a formula in the
+two slots `z` and `q`.
 
 ```agda
+      module PE = PairExpression
+
+      image : PE.Expr 2
+      image = PE.pair (PE.slot (suc zero)) (PE.literal (up a))
+
       opaque
-        body : Formula S 4
-        body = ( appAt (suc zero) (suc (suc (suc zero))) zero ∧̇ renameFo ρ₂ PF.pairFo )
-             ∨̇ ( (¬̇ appAt (suc zero) (suc (suc (suc zero))) zero)
-               ∧̇ (var (suc (suc zero)) ≐ con ea) )
-
         ψ : Formula S 2
-        ψ = ∀̇ ( (var zero ≐ con R) ⇒̇ ∀̇ ( (var zero ≐ con (up a)) ⇒̇ body ) )
-
-        private
-          env : S → S → S ^ 4
-          env z q = up a ∷ R ∷ z ∷ q ∷ []
-
-          ag : (z q : S) → Ren.Agrees ρ₂ (env z q) (z ∷ q ∷ [])
-          ag z q zero       = refl
-          ag z q (suc zero) = refl
-
-          at : (z q : S)
-             → ⟨ env z q ⊨ appAt (suc zero) (suc (suc (suc zero))) zero ⟩ ≡ Holds R q (up a)
-          at z q = cong ⟨_⟩ (appAt-adequate (suc zero) (suc (suc (suc zero))) zero (env z q))
-
-          gr : (z q : S)
-             → ⟨ env z q ⊨ renameFo ρ₂ PF.pairFo ⟩ ≡ ⟨ (z ∷ q ∷ []) ⊨ PF.pairFo ⟩
-          gr z q = cong ⟨_⟩ (Ren.⊨-rename ρ₂ PF.pairFo (env z q) (z ∷ q ∷ []) (ag z q))
+        ψ = (PE.member image (con R) ∧̇ PF.pairFo)
+          ∨̇ ((¬̇ PE.member image (con R)) ∧̇ (var zero ≐ con ea))
 
         ψ-out : (z q : S) → ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩ → ∥ Body z q ∥₁
-        ψ-out z q h = PT.map
-          (λ { (inl (h1 , h2)) → inl (transport (at z q) h1 , PF.pair-out z q (transport (gr z q) h2))
-             ; (inr (h1 , h2)) → inr ((λ k → h1 (transport (sym (at z q)) k)) , h2) })
-          (h R refl (up a) refl)
+        ψ-out z q = PT.map
+          (λ { (inl (h1 , h2)) → inl (PE.member-out image (con R) (z ∷ q ∷ []) h1
+                                         , PF.pair-out z q h2)
+             ; (inr (h1 , h2)) → inr
+                 ((λ k → lower (h1 (PE.member-in image (con R) (z ∷ q ∷ []) k))) , h2) })
 
         ψ-in : (z q : S) → Body z q → ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩
-        ψ-in z q b r er p ep =
-          subst2 (λ p' r' → ⟨ (p' ∷ r' ∷ z ∷ q ∷ []) ⊨ body ⟩)
-            (sym (Σ≡Prop (λ v → snd (isL v)) {u = p} {v = up a} ep))
-            (sym (Σ≡Prop (λ v → snd (isL v)) {u = r} {v = R} er))
-            (put b)
-          where
-          put : Body z q → ⟨ env z q ⊨ body ⟩
-          put (inl (h1 , hv)) = PT.rec (snd (env z q ⊨ body))
-            (λ { (v , (e , hc)) → ∣ inl ( transport (sym (at z q)) h1
-                                         , transport (sym (gr z q)) (PF.pair-in z q v e hc) ) ∣₁ })
-            hv
-          put (inr (h1 , e)) = ∣ inr ((λ k → h1 (transport (at z q) k)) , e) ∣₁
+        ψ-in z q (inl (h1 , hv)) = PT.rec (snd ((z ∷ q ∷ []) ⊨ ψ))
+          (λ { (v , (e , hc)) → ∣ inl (PE.member-in image (con R) (z ∷ q ∷ []) h1
+                                     , PF.pair-in z q v e hc) ∣₁ }) hv
+        ψ-in z q (inr (h1 , e)) =
+          ∣ inr ((λ k → lift (h1 (PE.member-out image (con R) (z ∷ q ∷ []) k))) , e) ∣₁
 
       private
         b≺a-of : (q : S) (mq : Mem q) → Holds R q (up a) → toDom q mq ≺ a
@@ -693,9 +637,9 @@ SECTION 4. THE TABLES: THE ORDER TYPE AND THE GRAPH, IN L.
       otR = record
         { dom   = D
         ; graph = CF.colFo
-        ; funct = λ q mq → mereFunct CF.colFo q
-            ∣ colʟ (toDom q mq)
-            , (approx-at q mq , λ v hv → Σ≡Prop (λ w → snd (isL w)) (colFo-val q mq v hv)) ∣₁ }
+        ; funct = λ q mq → (colʟ (toDom q mq) , approx-at q mq)
+            , λ { (v , hv) → Σ≡Prop (λ w → snd ((w ∷ q ∷ []) ⊨ CF.colFo))
+                (sym (Σ≡Prop (λ w → snd (isL w)) (colFo-val q mq v hv))) } }
 
       module OT = Of otR using ( table; table-in; table-out )
 
@@ -712,50 +656,23 @@ SECTION 4. THE TABLES: THE ORDER TYPE AND THE GRAPH, IN L.
       yS : S
       yS = y , isL-trans {x = fst otL} {y = y} hy (snd otL)
 
-    private
-      tabR : Recursion
-      tabR = record
-        { dom   = D
-        ; graph = PF.pairFo
-        ; funct = λ q mq → mereFunct PF.pairFo q (wit q mq) }
-        where
-        wit : (q : S) (mq : Mem q)
-            → ∥ Σ[ e ∈ S ] (⟨ (e ∷ q ∷ []) ⊨ PF.pairFo ⟩
-                           × ((e' : S) → ⟨ (e' ∷ q ∷ []) ⊨ PF.pairFo ⟩ → e' ≡ e)) ∥₁
-        wit q mq = ∣ zb
-          , ( PF.pair-in zb q (colʟ b) (prʟ-fst q (colʟ b)) (approx-at q mq)
-            , λ e' he' → PT.rec (isSetS e' zb)
-                (λ { (v , (e , hv)) → Σ≡Prop (λ w → snd (isL w))
-                       (e ∙ cong (pr (fst q)) (colFo-val q mq v hv) ∙ sym (prʟ-fst q (colʟ b))) })
-                (PF.pair-out e' q he') ) ∣₁
-          where
-          b : Dom
-          b = toDom q mq
-          zb : S
-          zb = prʟ q (colʟ b)
-
-      module CT = Of tabR using ( table; table-in; table-out )
+    module CT = RecursionGraph otR using ( F; F-in; F-out; pair-out; sv; dm )
 
     colTable : S
-    colTable = CT.table
+    colTable = CT.F
 
     colTable-in : (b : Dom) → ⟨ pr (↪ b) (col b) ∈ fst colTable ⟩
-    colTable-in b = subst (λ w → ⟨ w ∈ fst colTable ⟩) (prʟ-fst (up b) (colʟ b))
-      (CT.table-in (up b) (prʟ (up b) (colʟ b)) (up-mem b)
-        (PF.pair-in (prʟ (up b) (colʟ b)) (up b) (colʟ b) (prʟ-fst (up b) (colʟ b)) (approx b)))
+    colTable-in b = subst (λ t → ⟨ pr (↪ b) t ∈ fst colTable ⟩)
+      (cong col (Dom≡ (toDom-val (up b) (up-mem b)))) (CT.F-in (up b) (up-mem b))
 
     colTable-out : (y : S) → ⟨ y ∈ˢ colTable ⟩
                  → ∥ Σ[ b ∈ Dom ] (fst y ≡ pr (↪ b) (col b)) ∥₁
-    colTable-out y hy = PT.rec squash₁
-      (λ { (q , (mq , h)) → PT.map
-        (λ { (v , (e , hv)) → toDom q mq
-           , e ∙ cong₂ pr (sym (toDom-val q mq)) (colFo-val q mq v hv) })
-        (PF.pair-out y q h) })
-      (CT.table-out y hy)
+    colTable-out y hy = PT.map (λ { (q , mq , e) → toDom q mq
+      , e ∙ cong (λ t → pr t (col (toDom q mq))) (sym (toDom-val q mq)) }) (CT.F-out (fst y) hy)
 ```
 
-A pair in the table, read as a value of `col`. The target is a proposition, so
-the truncation comes off.
+A pair in the table is read by the shared recursion graph. Its membership fibre
+has a unique value.
 
 ```agda
     Fib : S → S → Type (ℓ-suc ℓ)
@@ -765,18 +682,7 @@ the truncation comes off.
     isPropFib x v = isPropΣ (isPropMem x) (λ mx → setIsSet (fst v) (col (toDom x mx)))
 
     colTable-pair : (x v : S) → Holds colTable x v → Fib x v
-    colTable-pair x v h = PT.rec (isPropFib x v) step
-      (colTable-out (prʟ x v) (subst (λ w → ⟨ w ∈ fst colTable ⟩) (sym (prʟ-fst x v)) h))
-      where
-      step : Σ[ b ∈ Dom ] (fst (prʟ x v) ≡ pr (↪ b) (col b)) → Fib x v
-      step (b , e) = mx , (ev ∙ cong col (sym (Dom≡ (toDom-val x mx ∙ ex))))
-        where
-        q : (fst x ≡ ↪ b) × (fst v ≡ col b)
-        q = pr-inj (sym (prʟ-fst x v) ∙ e)
-        ex = fst q
-        ev = snd q
-        mx : Mem x
-        mx = subst (λ t → ⟨ t ∈ fst D ⟩) (sym ex) (up-mem b)
+    colTable-pair = CT.pair-out
 ```
 
 <!--en-->
@@ -807,21 +713,10 @@ module Code (D R : S)
     γ = colTable ∷ D ∷ []
 
     sv : ⟨ γ ⊨ svAt zero ⟩
-    sv = svAt-in zero γ (λ x y y' p q →
-      let (m , e)   = colTable-pair x y p
-          (m' , e') = colTable-pair x y' q
-      in e ∙ cong (λ k → col (toDom x k)) (isPropMem x m m') ∙ sym e')
+    sv = CT.sv
 
     dm : ⟨ γ ⊨ domAt zero (suc zero) ⟩
-    dm = domAt-intro zero (suc zero) γ (λ x → fwd x , bwd x)
-      where
-      fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst colTable) ⟩ → Mem x
-      fwd x = PT.rec (isPropMem x) (λ { (y , p) → fst (colTable-pair x y p) })
-
-      bwd : (x : S) → Mem x → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst colTable) ⟩
-      bwd x m = ∣ colʟ (toDom x m)
-        , subst (λ t → ⟨ pr t (col (toDom x m)) ∈ fst colTable ⟩) (toDom-val x m)
-            (colTable-in (toDom x m)) ∣₁
+    dm = CT.dm
 
     ran : (x y : S) → Holds colTable x y → ⟨ fst y ∈ fst otL ⟩
     ran x y h = subst (λ t → ⟨ t ∈ fst otL ⟩) (sym (snd (colTable-pair x y h)))
@@ -853,4 +748,50 @@ Injectivity, under trichotomy.
 
       code : InjCode colTable D otL
       code = sv , dm , ij , ran
+```
+
+A chosen preimage of each point defines the inverse collapse on any subdomain.
+Only the bound on those preimages depends on the chosen codomain; the converse
+graph and its uniqueness and injectivity proofs are shared.
+
+```agda
+      module Inverse (X Y : S)
+        (pre : (x : S) → ⟨ fst x ∈ fst X ⟩ → Σ[ b ∈ Dom ] (col b ≡ fst x))
+        (bound : (x : S) (mx : ⟨ fst x ∈ fst X ⟩) → ⟨ ↪ (pre x mx .fst) ∈ fst Y ⟩) where
+
+        SourceMem : S → Type (ℓ-suc ℓ)
+        SourceMem x = ⟨ fst x ∈ fst X ⟩
+
+        fn : (x : S) → SourceMem x → S
+        fn x mx = up (pre x mx .fst)
+
+        opaque
+          graph : Formula S 2
+          graph = appC colTable zero (suc zero)
+
+          at : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ ≡ Holds colTable y x
+          at y x = cong ⟨_⟩ (appC-adequate colTable zero (suc zero) (y ∷ x ∷ []))
+
+        only : (x : S) (mx : SourceMem x) (y : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x mx
+        only x mx y hy = sym (up-toDom y my)
+          ∙ cong up (col-inj (toDom y my) (pre x mx .fst) (sym (f .snd) ∙ sym (pre x mx .snd)))
+          where
+          f = colTable-pair y x (transport (at y x) hy)
+          my = f .fst
+
+        M : DefinableMap
+        M = record
+          { dom = X ; cod = Y ; fn = fn ; into = bound ; graph = graph
+          ; defines = λ x mx → transport (sym (at (fn x mx) x))
+              (subst (λ w → ⟨ pr (↪ (pre x mx .fst)) w ∈ fst colTable ⟩)
+                (pre x mx .snd)
+                (colTable-in (pre x mx .fst)))
+          ; only = only }
+
+        inj : (x : S) (mx : SourceMem x) (x' : S) (mx' : SourceMem x')
+            → fst (fn x mx) ≡ fst (fn x' mx') → fst x ≡ fst x'
+        inj x mx x' mx' e = sym (pre x mx .snd) ∙ cong col (Dom≡ e) ∙ pre x' mx' .snd
+
+        injL : InjL X Y
+        injL = DefinableInj.injL M inj
 ```

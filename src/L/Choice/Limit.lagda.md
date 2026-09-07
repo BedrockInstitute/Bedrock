@@ -184,8 +184,8 @@ module Level (a : Limit) (k : ℕ) (qk : level a ≡ k) where
 
       hmin : ⟨ γ ⊨ ∀̇∈ (var b) (∀̇ ( LsetGraphAt zero (suc zero)
                                   ⇒̇ ¬̇ (var (sh2 x) ∈̇ var zero) )) ⟩
-      hmin u u∈ c hg hmem = PT.rec Empty.isProp⊥ step
-        (∈#-elim k (fst u) (subst (λ w → ⟨ fst u ∈ w ⟩) qb u∈))
+      hmin u u∈ c hg hmem = lift (PT.rec Empty.isProp⊥ step
+        (∈#-elim k (fst u) (subst (λ w → ⟨ fst u ∈ w ⟩) qb u∈)))
         where
         step : Σ[ m ∈ ℕ ] ((m < k) × (fst u ≡ # m)) → Empty.⊥
         step (m , (hm , qu)) = aMin m inStage hm
@@ -204,12 +204,12 @@ module Level (a : Limit) (k : ℕ) (qk : level a ≡ k) where
       PT.rec (setIsSet (fst (lookup b γ)) (# k)) named hω
       where
       notAbove : (m : ℕ) → fst (lookup b γ) ≡ # m → k < m → Empty.⊥
-      notAbove m qb hk = hmin (numS k)
+      notAbove m qb hk = lower (hmin (numS k)
         (subst (λ w → ⟨ w ∈ fst (lookup b γ) ⟩) (sym (numS-fst k))
           (subst (λ w → ⟨ # k ∈ w ⟩) (sym qb) (#mono k m hk)))
         (towerS k) (towerGraph k (numS k ∷ γ) zero (numS-fst k))
         (subst (λ w → ⟨ fst (lookup x γ) ∈ w ⟩) (sym (towerS-fst k))
-          (subst (λ w → ⟨ w ∈ Lset (# k) ⟩) (sym qx) aIn))
+          (subst (λ w → ⟨ w ∈ Lset (# k) ⟩) (sym qx) aIn)))
 
       notBelow : (m : ℕ) → fst (lookup b γ) ≡ # m → m < k → Empty.⊥
       notBelow m qb hm = PT.rec Empty.isProp⊥ atTower hex
@@ -320,7 +320,7 @@ module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
     Body : S → Type (ℓ-suc ℓ)
     Body z = ⟨ fst z ∈ fst Aʟ ⟩
            × ( ⟨ fst z ∈ yv ⟩
-             × ( (⟨ fst z ∈ xv ⟩ → Empty.⊥) × Agreeing z ) )
+             × ( (⟨ fst z ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥) × Agreeing z ) )
 
   PrecedesAt-out : ⟨ γ ⊨ PrecedesAt r A x y ⟩
                  → ⟨ precedes R (fst Aʟ) xv yv ⟩
@@ -328,7 +328,7 @@ module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
     where
     atZ : Σ[ z ∈ S ] Body z → ⟨ precedes R (fst Aʟ) xv yv ⟩
     atZ (z , (z∈A , (z∈y , (z∉x , hag)))) =
-      ∣ fst z , (z∈A , (z∈y , (z∉x , ag))) ∣₁
+      ∣ fst z , (z∈A , (z∈y , ((λ h → lower (z∉x h)) , ag))) ∣₁
       where
       ag : Agrees R (fst Aʟ) xv yv (fst z)
       ag w w∈A hR = subst Both (memS-fst Aʟ w w∈A) (hag wS w∈A' happ)
@@ -361,8 +361,8 @@ module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
       z∈A' = subst (λ u → ⟨ u ∈ fst Aʟ ⟩) (sym qz) z∈A
       z∈y' : ⟨ fst zS ∈ yv ⟩
       z∈y' = subst (λ u → ⟨ u ∈ yv ⟩) (sym qz) z∈y
-      z∉x' : ⟨ fst zS ∈ xv ⟩ → Empty.⊥
-      z∉x' h = z∉x (subst (λ u → ⟨ u ∈ xv ⟩) qz h)
+      z∉x' : ⟨ fst zS ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥
+      z∉x' h = lift (z∉x (subst (λ u → ⟨ u ∈ xv ⟩) qz h))
       hag : Agreeing zS
       hag w w∈A happ = ag (fst w) w∈A hR
         where

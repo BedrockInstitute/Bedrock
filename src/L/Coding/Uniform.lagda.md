@@ -76,7 +76,7 @@ open import L.Coding.Table {ℓ} lem
   using ( keyʟ; slot; satTable; total; inSlot; entry-in )
 open import L.Coding.Slot {ℓ} lem using ( slotClosed )
 open import L.Coding.Clauses {ℓ} lem using
-  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
   ; module Tower; module TowerHolds )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds ) renaming ( keyBridge to keyBridge' )
 open import L.Coding.Graph {ℓ} lem using
@@ -183,7 +183,7 @@ module _ (A : S) where
   keyBridge = keyBridge' A
 
 module _ (B : S) where
-  fr : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → S ^ (16 + n)
+  fr : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → S ^ (14 + n)
   fr φ γ = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B γ
 
   frTags : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → Tags (fr φ γ) NN
@@ -200,8 +200,6 @@ module _ (B : S) where
 
 module _ (A B : S) where
   private
-    toS : ∀ {n} → Formula ⟪ fst A ⟫ n → Formula S n
-    toS = mapFo (asConst A)
 ```
 
 <!--en-->
@@ -221,7 +219,7 @@ directly and the transport is gone.
 Uniqueness does not notice the change at all, and the reason is structural.
 `Pinned`{.Agda} speaks about the index set and the table the graph produced,
 which are bound variables of the caller's environment, never about the
-recursion's domain. The domain occurs nowhere in it, nor in the twelve clauses,
+recursion's domain. The domain occurs nowhere in it, nor in the ten clauses,
 so changing what the recursion is indexed by cannot reach uniqueness.
 
 Only the totality hypothesis is written out here, and its environment is written
@@ -231,7 +229,7 @@ line and is the difference between elaborating and not.
 <!--zh-->
 两半都是前几章的，只是施于「该成员是其键的那条公式」而非某条周遭公式，而这次更换使存在性**更短**。按公式索引的那个实例得把一条子公式的条目沿「它自己的子树到周遭表的包含」搬过去；此处被还原出来的那条公式**就是**其表正被递出的那条公式，故 `entry-in`{.Agda} 直接适用，那次搬运消失了。
 
-唯一性压根察觉不到这次更换，而理由是结构性的。`Pinned`{.Agda} 谈的是「图所产出的索引集与表」，那是调用方环境里的被绑定变元，从不谈递归的定义域。定义域既不出现在它里面，也不出现在十二条子句里，故更换递归的索引，够不着唯一性。
+唯一性压根察觉不到这次更换，而理由是结构性的。`Pinned`{.Agda} 谈的是「图所产出的索引集与表」，那是调用方环境里的被绑定变元，从不谈递归的定义域。定义域既不出现在它里面，也不出现在十条子句里，故更换递归的索引，够不着唯一性。
 
 此处只把全性那条假设写出来，而它的环境也一并写出。若交给推断，图那三个存在绑定的槽位什么也决定不了，会剩下六个元变元；把环境点名只花一行，而那正是「能否被展开求解」的分水岭。
 <!--/-->
@@ -252,8 +250,7 @@ line and is the difference between elaborating and not.
       , (frTags B (toB ψ) δ2
       , (frTow B (toB ψ) δ2
       , (slotClosed B (toB ψ) (Tower.tower B ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
-            ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
-            ∷ numν f11 ∷ Sat B (toB ψ) ∷ x ∷ [])
+            ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ Sat B (toB ψ) ∷ x ∷ [])
       , (frDom B (toB ψ) δ2
       , (subst (λ w → ⟨ pr w (fst (Sat B (toB ψ))) ∈ fst (satTable B (toB ψ)) ⟩) (sym k)
             (entry-in B (toB ψ))
@@ -414,7 +411,7 @@ Nothing below was re-indexed and nothing was weakened. The registered risk for
 this goal was that the domain or its well-formedness predicate would need the
 carrier as a *constant* somewhere it cannot be a slot, which would have re-indexed
 the slot, the table, totality and membership at a pair of a carrier and a key, and
-charged the two halves a transport for each of their twelve cases. It did not
+charged the two halves a transport for each of their ten cases. It did not
 fire, and the direct evidence is that `slot`{.Agda}, `satTable`{.Agda},
 `total`{.Agda}, `inSlot`{.Agda}, `slotClosed`{.Agda}, `soundness`{.Agda} and
 `Good.pinned`{.Agda} are all applied above at their existing types. The code
@@ -442,7 +439,7 @@ a goal that is a plain equation.
 <!--zh-->
 `satRec`{.Agda} 是作为已内化递归的满足关系，跑在**某阶段处的诸码**之上，而非跑在一条公式的诸子公式之上，而 `Table`{.Agda} 是它产出的那张表。`val-at`{.Agda} 在一个以键的形式给出的成员处读出取值；`val-sat`{.Agda} 说那个取值**就是**载体之上的满足关系。
 
-底下没有任何东西被重新索引，也没有任何东西被削弱。本目标登记在案的风险是：定义域或它的良构谓词会在某个不能取作槽位之处、把载体当作**常元**来要；那将把槽、表、全性与隶属重新索引在「载体与键」之对上，并为两半的十二个情形各记一笔搬运。它没有引爆，而直接的证据是：`slot`{.Agda}、`satTable`{.Agda}、`total`{.Agda}、`inSlot`{.Agda}、`slotClosed`{.Agda}、`soundness`{.Agda} 与 `Good.pinned`{.Agda} 在上面全都是按它们既有的类型施用的。码载体压根到不了那个图：它在码集自己的谓词里被绑定、被钉住，而出来的是 `L` 的一个元素，而定义域无非就是这个。
+底下没有任何东西被重新索引，也没有任何东西被削弱。本目标登记在案的风险是：定义域或它的良构谓词会在某个不能取作槽位之处、把载体当作**常元**来要；那将把槽、表、全性与隶属重新索引在「载体与键」之对上，并为两半的十个情形各记一笔搬运。它没有引爆，而直接的证据是：`slot`{.Agda}、`satTable`{.Agda}、`total`{.Agda}、`inSlot`{.Agda}、`slotClosed`{.Agda}、`soundness`{.Agda} 与 `Good.pinned`{.Agda} 在上面全都是按它们既有的类型施用的。码载体压根到不了那个图：它在码集自己的谓词里被绑定、被钉住，而出来的是 `L` 的一个元素，而定义域无非就是这个。
 
 使这一切便宜的是图里的那个存在量词，而这值得当作一项设计事实、而非一次偶然留存下来。一个把自己的表存在量化的图，允许一个取值由**任意**一张合格的表来担保，故实例可以在每个索引处用「够得着它的最小的表」作答。倘若那个图把自己的表点了名，定义域与表就得一起长大，而前面每一章都要动。
 

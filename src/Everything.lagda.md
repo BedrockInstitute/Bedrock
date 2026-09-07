@@ -90,8 +90,8 @@ import Base.Choice
 ## Part 1: first-order logic as an object of study
 
 - `FOL.Syntax`{.Agda}: the object language: a deeply embedded `Formula`{.Agda} with
-  the constant domain as a parameter, intrinsic scoping, and every constructor
-  primitive.
+  the constant domain as a parameter and intrinsic scoping. Negation and truth
+  are derived from implication and falsity.
 - `FOL.ZFStructure`{.Agda}: the structures formulas talk about: carrier, equality,
   and membership, valued in a truth algebra; transitive classes and the
   restriction `↾`.
@@ -106,7 +106,7 @@ import Base.Choice
 <!--zh-->
 ## 第一部：作为研究对象的一阶逻辑
 
-- `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴，构造子全原语。
+- `FOL.Syntax`{.Agda}：对象语言：深嵌入的 `Formula`{.Agda}，常量域作参数，作用域内蕴；否定与真值由蕴含和假值派生。
 - `FOL.ZFStructure`{.Agda}：公式所谈论的结构：载体、等词与成员，取值于真值代数；传递类与限制 `↾`。
 - `FOL.Semantics`{.Agda}：环境 `S ^ n`，与结构递归给出的求值 `⟦_⟧`{.Agda} 与满足 `_⊨_`{.Agda}，每条子句恰是对应的真值代数运算。
 - `FOL.LevyHierarchy`{.Agda}：作为归纳见证的 Lévy 层级：无界量词的缺席即 Δ₀，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。
@@ -431,8 +431,8 @@ The root, stated today and finished over the remaining parts:
   an internalized recursion. The set of *all* codes is deliberately not proved to
   be one, and is not needed here. Also `closure`{.Agda}, the finite set of a
   formula's subformula keys, `closure-inv`{.Agda} reading it back, and
-  `byTag`{.Agda}, which matches the twelve constructors against the eight demands
-  a closedness predicate makes, once rather than twelve times eight.
+  `byTag`{.Agda}, which matches the ten constructors against the seven demands
+  a closedness predicate makes, once rather than ten times seven.
 - `L.Coding.Closed`{.Agda}: the closure satisfies the object language's
   closedness predicate, and is the least set that does. Eight instances of four
   readers, then one induction; the hypothesis a recursion over the subcodes of a
@@ -449,7 +449,7 @@ The root, stated today and finished over the remaining parts:
   of environments satisfying it, by recursion on the formula. Nothing internal:
   each step names the previous steps' sets as constants, so each is one
   separation off the ambient set, and the internal clauses become identities
-  rather than definitions. Exports the twelve values and their membership
+  rather than definitions. Exports the ten values and their membership
   equations, and nothing else.
 - `L.Coding.Bridge`{.Agda}: what that value **is**. At every environment over the
   carrier, membership in it is satisfaction in the world `(B, ∈)`, which is the
@@ -485,8 +485,8 @@ The root, stated today and finished over the remaining parts:
 - `L.Coding.Shape`{.Agda}: the half of "is a code" that closedness does not say.
   Closedness is eight implications keyed by tag, so a member with no recognized
   tag satisfies all eight vacuously; `shapedAt`{.Agda} says every member is an
-  arity-tagged pair whose tag is one of the twelve, with the payload that tag
-  calls for. Two frames carry the twelve, because twelve tags have two payload
+  arity-tagged pair whose tag is one of the ten, with the payload that tag
+  calls for. Two frames carry the ten, because ten tags have two payload
   shapes between them; what else a tag demands is a relation the frame carries,
   and `isTmAt`{.Agda} is the one such demand that is not about a formula code.
   Shapedness is stated at **two** slots, the set and a carrier, because a term
@@ -499,11 +499,11 @@ The root, stated today and finished over the remaining parts:
   constant clause needs one thing the predicate cannot supply, that the carrier's
   members are the alphabet's image, and takes it as a hypothesis.
   `Peel.peel`{.Agda} is the two halves meeting: shapedness says which
-  of the twelve a member is and hands back its parts, closedness says those
+  of the ten a member is and hands back its parts, closedness says those
   parts are members too at the arity the tag calls for, and neither alone is a
   step of a recursion. The other direction is owed as well, since a predicate
   written to be consumed proves nothing until something satisfies it:
-  `shaped-in`{.Agda} builds the twelve-fold disjunction from one choice per
+  `shaped-in`{.Agda} builds the ten-fold disjunction from one choice per
   member, and `closureShaped`{.Agda} spends it on the closure of a formula,
   which is the second hypothesis the decode's first caller owes. A measurement
   worth keeping: the two disjuncts of `isTmAt`{.Agda} are read by two named
@@ -527,10 +527,10 @@ The root, stated today and finished over the remaining parts:
   lets the induction come back at the larger one a quantifier raises it to; the
   carrier is not quantified over at all, being a slot fixed before the induction
   starts. Six
-  frames carry the twelve cases, and each takes its constructor's coding equation
+  frames carry the ten cases, and each takes its constructor's coding equation
   as a hypothesis, because with the constructor a variable the coding function
   does not reduce and finding that equation is the whole cost. Over the alphabet
-  those twelve equations are still `refl`{.Agda}, since relabelling commutes with
+  those ten equations are still `refl`{.Agda}, since relabelling commutes with
   every constructor definitionally.
 - `L.Coding.CodeSet`{.Agda}: the codes at a carrier, as sets of `L`, one at arity
   one and one at every arity. `smallDom`{.Agda} contains the keys in a stage and
@@ -579,7 +579,7 @@ The root, stated today and finished over the remaining parts:
   length of proof elaborates.
 - `L.Coding.Graph`{.Agda}: what the satisfaction recursion's graph says. Three
   existentials over the index set, the table and the carrier, guarded by
-  closedness, totality and the twelve clauses, with the value read off the table.
+  closedness, totality and the ten clauses, with the value read off the table.
   Everything is bound because a graph may not name a table it has not been given,
   which is the one thing the internalization theorem forbids. One frame with two
   instances, because the pinning clause is the frame's parameter:
@@ -977,20 +977,20 @@ The root, stated today and finished over the remaining parts:
 - `L.Axioms.Full`{.Agda}：任意公式的分离与替换，办法是反射那条公式，再把有界的器械施于它的相对化；那个禁闭原子正是使替换的像逃不出阶段的东西。
 - `L.Absoluteness`{.Agda}：两门对象语言之间的桥。常元可构造的、关于层级的 Δ₀ 公式，经 `liftFo`{.Agda} 运进 `L` 的语言，而 `transferFo`{.Agda} 说两者说的是同一件事；编码诸章留在层级一侧，从此处被引用。
 - `L.Coding.Model`{.Agda}：模型之上的对象语言。「函数」的含义 (`prAtL`{.Agda}、`appAt`{.Agda}、`svAt`{.Agda}、`domAt`{.Agda})、取值一侧的对、标签读式、环境，以及 `extAt`{.Agda}：每条集值子句的写作框架，其两种读法就是它的两个投影。无常元的读式经桥引用；点名数码的读式直接写，因为无界如今免费。
-- `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，此处也不需要。另有 `closure`{.Agda}，一条公式的诸子公式键构成的有穷集；`closure-inv`{.Agda} 把它读回来；以及 `byTag`{.Agda}，它把十二个构造子与封闭性谓词提出的八项要求对上一次，而非对上十二乘八次。
-- `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词，且是满足它的最小者。四个读式的八个实例，再加一次归纳；前者是「对一条公式的诸子码作递归」关于其索引集所需的那条假设，后者是它的取值唯一的理由。那八条子句从不看一条公式，故只对任意可**剥开**的集合证一次 (`Peel`{.Agda}：一个成员仅仅是某条公式的键，而那条公式自己的闭包坐落于内)，而 `closureClosed`{.Agda} 就是 `closedOf`{.Agda} 落在闭包处、以 `closure-inv`{.Agda} 充当剥开。此处的一般性免费，因为 `byTag`{.Agda} 本就是对着任意目标集写的。
+- `L.Coding.InL`{.Agda}：每个码都是 `L` 的元素，沿构造子的一次归纳，里面什么也没有。正是它使一个码可被点名为模型对象语言的常元，使一族码可充当已内化递归的定义域。**全体**码之集刻意未证，此处也不需要。另有 `closure`{.Agda}，一条公式的诸子公式键构成的有穷集；`closure-inv`{.Agda} 把它读回来；以及 `byTag`{.Agda}，它把十个构造子与封闭性谓词提出的七项要求对上一次，而非对上十乘七次。
+- `L.Coding.Closed`{.Agda}：闭包满足对象语言的封闭性谓词，且是满足它的最小者。四个读式的八个实例，再加一次归纳；前者是「对一条公式的诸子码作递归」关于其索引集所需的那条假设，后者是它的取值唯一的理由。那七条子句从不看一条公式，故只对任意可**剥开**的集合证一次 (`Peel`{.Agda}：一个成员仅仅是某条公式的键，而那条公式自己的闭包坐落于内)，而 `closureClosed`{.Agda} 就是 `closedOf`{.Agda} 落在闭包处、以 `closure-inv`{.Agda} 充当剥开。此处的一般性免费，因为 `byTag`{.Agda} 本就是对着任意目标集写的。
 - `L.Coding.EnvSet`{.Agda}：落在 `L` 某集合之上、给定长度的诸环境构成 `L` 的一个集合，而那正是取补集的诸子句在其中取补的东西。一个小索引类型、一个阶段、一次分离，不用递归。
-- `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十二个取值与它们的成员等式。
+- `L.Coding.Sat`{.Agda}：给定元语言的一条公式与一个载体，满足它的诸环境之集，沿公式递归造出。没有任何内部的东西：每一步把前几步的集合以常元点名，故每一步只是在周遭集合上作一次分离，而内部诸子句因此成为**等式**而非定义。只导出十个取值与它们的成员等式。
 - `L.Coding.Bridge`{.Agda}：那个取值**是什么**。在载体之上的每个环境处，「属于它」就是「在世界 `(B, ∈)` 中被满足」，而后者正是可定义幂集据以定义的概念；没有这条陈述，从那场递归读出的内部 `Def` 可证地与任何东西都不相符。右端取内层语义，不取相对化在周遭的读法，因为只有内层那种像那个条件一样对有界量词设两道防。`defSet-Sat`{.Agda} 把它直接花在 `L.Definability`{.Agda} 上。登记在案的那份相干性风险没有引爆：把这座桥以内层环境向量为索引之后，量词的扩张就是底族上的前置，于是相干性只剩四条量词子句共享的两条 `refl`{.Agda} 分支，而带截断的那次恢复被关进「一个成员无非就是一个环境」那条推论里。
 - `L.Coding.Table`{.Agda}：诸条目，每条子公式一个；以及递归向它们索取的两件事：每个成员都是一个条目，且键决定它的取值。后者正是花掉码等式单射性的地方，而元数由道路归纳消掉，好让那条等式在它唯一成立的那个元数处使用。此处一切按构造都是模型的元素，因为诸码就是模型自己的。
 - `L.Coding.Sound`{.Agda}：那张表满足诸子句，一条一条地。每次验证是四步，其中三步已经造好；剩下的是一条集合等式，而它们便宜，因为元语言的递归当初正是用那条等式所读回的那个条件来定义它的取值的。
 - `L.Coding.Slot`{.Agda}：一条公式的递归所索引的那个槽，满足对象语言的封闭性谓词，而那正是满足关系那个图对它的索引集所陈述的假设。是闭包那一章的定理再来一遍，落在模型自己的编码上。
 - `L.Coding.Descent`{.Agda}：一场跑在码上的递归如何从一条码走到它的诸部件，而成员关系办不到这件事：Kuratowski 的对把一个部件放在四个成员步之下，而中间那些集合不是码。秩沿成员关系严格增长，故那四步经序数的传递性合成，递归改跑在秩上。
-- `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是八条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部八条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十二个之一，且载荷是该标签所要求的那种。两个框架承载那十二条，因为十二个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。成形性是在**两位**上陈述的，即那个集合与一个载体，因为一个词项有两样东西要界住，而两者不同：变元的序号由元数数码界住，常元由「属于载体」界住。第二样使一个成员成为该载体之上、而非模型之上某条公式的键，而它写作一位、不写作常元，好让下面的一切都不被重新索引。`isTmAt-decode`{.Agda} 在任意字母表上把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的；它的常元那一支需要一样谓词供不出的东西，即载体的诸成员就是字母表的像，于是把它取作一条假设。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十二者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。另一个方向同样欠着，因为一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明：`shaped-in`{.Agda} 由「每个成员一次选择」造出那个十二重析取，而 `closureShaped`{.Agda} 把它花在一条公式的闭包上，那正是解码的第一个调用方所欠的第二条假设。一条值得留存的测量：`isTmAt`{.Agda} 的两个析取支由两条点了名的引理去读，而写成一个函数的两条子句时，本章十分钟内跑不完，因为类型靠推断的分支是对着整个析取、而不是对着它自己那一支求解的。
-- `L.Coding.Recover`{.Agda}：解码。在一个于某载体上既封闭又成形的集合里，一个以「某个已言明元数处的键」的形式递交过来的成员，就是**该载体之上**某条公式的键，而 `Decode.recover`{.Agda} 把它造出来。字母表是一个参数，目标在它之上陈述，因为消费方以单个载体之上的诸公式为索引，模型之上的公式对它毫无用处。这也使那六个框架**更短**：在模型之上，每个框架比较码与载荷之前先得把模型的编码搭桥到层级的编码；在字母表之上，码本来就是层级的元素。「**每个**成员都是这样一个键」此处未予证明，欠这笔账的是造那个集合的人，因为形状对它所绑定的元数分量不加任何条件。递归跑在码的秩上，不跑在码上、也不跑在键上：不跑在码上，是因为成员关系不下降进 Kuratowski 的对；不跑在键上，是因为「对的秩的算术」是一条没人证过的事实。元数作为一个自然数在旁边带着，正是这一点让归纳得以在量词把它抬升到的那个更大的元数上回来；载体则压根不被量化，它是归纳开跑前就已固定的一位。六个框架承载那十二个情形，而每个框架都把自己那个构造子的编码等式作为假设收下，因为构造子若是变元，编码函数便不化简，寻找那条等式的代价就是全部代价。在字母表之上，那十二条等式仍是 `refl`{.Agda}，因为常量改名按定义与每个构造子交换。
+- `L.Coding.Shape`{.Agda}：「是一个码」中封闭性没有说出的那一半。封闭性是七条以标签为键的蕴含，故一个没有可辨标签的成员平凡地满足全部七条；`shapedAt`{.Agda} 说的是每个成员都是一个带元数标签的对，其标签属于那十个之一，且载荷是该标签所要求的那种。两个框架承载那十条，因为十个标签之间只有两种载荷形状；标签的其余要求是框架所携带的一条关系，而 `isTmAt`{.Agda} 是其中唯一与公式码无关的那一条。成形性是在**两位**上陈述的，即那个集合与一个载体，因为一个词项有两样东西要界住，而两者不同：变元的序号由元数数码界住，常元由「属于载体」界住。第二样使一个成员成为该载体之上、而非模型之上某条公式的键，而它写作一位、不写作常元，好让下面的一切都不被重新索引。`isTmAt-decode`{.Agda} 在任意字母表上把词项还原出来，它是第一个解码，也是唯一一个不需要归纳的；它的常元那一支需要一样谓词供不出的东西，即载体的诸成员就是字母表的像，于是把它取作一条假设。`Peel.peel`{.Agda} 是两半的会合：形状说出一个成员是十者中的哪一个并交回它的部件，封闭性说那些部件在该标签所要求的元数上也是成员，而两半各自都不是递归的一步。另一个方向同样欠着，因为一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明：`shaped-in`{.Agda} 由「每个成员一次选择」造出那个十重析取，而 `closureShaped`{.Agda} 把它花在一条公式的闭包上，那正是解码的第一个调用方所欠的第二条假设。一条值得留存的测量：`isTmAt`{.Agda} 的两个析取支由两条点了名的引理去读，而写成一个函数的两条子句时，本章十分钟内跑不完，因为类型靠推断的分支是对着整个析取、而不是对着它自己那一支求解的。
+- `L.Coding.Recover`{.Agda}：解码。在一个于某载体上既封闭又成形的集合里，一个以「某个已言明元数处的键」的形式递交过来的成员，就是**该载体之上**某条公式的键，而 `Decode.recover`{.Agda} 把它造出来。字母表是一个参数，目标在它之上陈述，因为消费方以单个载体之上的诸公式为索引，模型之上的公式对它毫无用处。这也使那六个框架**更短**：在模型之上，每个框架比较码与载荷之前先得把模型的编码搭桥到层级的编码；在字母表之上，码本来就是层级的元素。「**每个**成员都是这样一个键」此处未予证明，欠这笔账的是造那个集合的人，因为形状对它所绑定的元数分量不加任何条件。递归跑在码的秩上，不跑在码上、也不跑在键上：不跑在码上，是因为成员关系不下降进 Kuratowski 的对；不跑在键上，是因为「对的秩的算术」是一条没人证过的事实。元数作为一个自然数在旁边带着，正是这一点让归纳得以在量词把它抬升到的那个更大的元数上回来；载体则压根不被量化，它是归纳开跑前就已固定的一位。六个框架承载那十个情形，而每个框架都把自己那个构造子的编码等式作为假设收下，因为构造子若是变元，编码函数便不化简，寻找那条等式的代价就是全部代价。在字母表之上，那十条等式仍是 `refl`{.Agda}，因为常量改名按定义与每个构造子交换。
 - `L.Coding.CodeSet`{.Agda}：某载体处的诸码，作为 `L` 的集合，一个落在元数一、一个落在每个元数。`smallDom`{.Agda} 把诸键装进一个阶段，任意公式的分离再把它们切回来，故本章是两条只差一个合取项的对象语言谓词。共享的那个合取项「仅仅存在一个等于 `A` 的载体、以及一个在它上面成形的封闭集装着它」是若干无界存在，在此处免费；载体在 `hasWitnessAt`{.Agda} 里是**一位**，只在高一层绑定处、即 `hasWitness`{.Agda} 里，才由 `var zero ≐ con A`{.Agda} 钉成常元。这样一拆是消费方逼出来的：内部层级把自己的阶段绑定起来，而集合进入公式的唯一方式是被点名，故一条点名了自己载体的谓词，在那层绑定之下压根说不出口。相异的那个合取项说那个成员是第一分量为数码的对，而它之所以存在，是因为 `recover`{.Agda} 收下实参的形式是**某个已言明元数处的键**，而 `closedAt`{.Agda} 与 `shapedAt`{.Agda} 都不约束元数那一位：形状把它存在量化且不加条件，故那个集合必须从外面把它钉住。`isCodeAny`{.Agda} 把元数绑定，只要求它属于 `ωʟ`{.Agda}，而读回来无须归纳，因为 `ω-specL`{.Agda} 是一条等式，且数码链有投影。**那一对进出闭合了那趟往返**：一个成员**恰是**载体之上某条公式在某个元数处的键，故那个集合是被刻画的，而不是被两条陈述夹住的。全元数那个集合的存在，是为了它所刻画的那一类：对码的递归要在一个码的诸子码处作答，而量词的子公式住在高一级的元数上，一元那一类装不下它，故它当不了定义域。
 - `L.Coding.Uniform`{.Agda}：作为已内化递归的满足关系，跑在**某阶段处的诸码**之上，而那才是每个消费方想要的定义域：以一条公式的槽为索引，就是一条公式一张表，而消费方到场时手里握着的是一个码、而非「它是其子码」的某条公式。`AllCodes`{.Agda} 作定义域，而索引集那笔债由成员自己那条公式的槽偿付，其余一概不动，因为那个图把自己的表**存在**绑定：`funct`{.Agda} 只需拿出**某张**装着该成员的合格的表，而最小的一张就是该成员自己那条公式的子公式槽。故 `Table`{.Agda}、`Slot`{.Agda}、`Sound`{.Agda} 与 `Unique`{.Agda} 都按既有类型施用，而登记在案的那次「在载体与键之对处重新索引」从未发生。唯一新的东西，是把两套编码接起来：层级的编码落在该阶段的字母表之上，模型的编码落在模型的语言之上；用的是 `codeBridge`{.Agda} (为此而写、至今未用) 加上重标的函子性。`val-at`{.Agda} 在一个以键的形式给出的成员处读出取值，`val-sat`{.Agda} 说那个取值**就是**载体之上的满足关系。码载体与环境载体保持为彼此独立的参数，只在满足关系有含义之处被钉在一起。每条读式都把成员取作**变元**、把它的键等式放在旁边，而消费方本会改写的那个名字 `keyIn`{.Agda} 在它被造出之处封印：一旦把键写开，那个构造就落进一个满足关系里面，而无论证明写多长都展开不了。
-- `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十二条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。一个框架带两个实例，因为那条用来钉住的子句就是框架的参数：`satGraphAt`{.Agda} 把载体取作**一位**，供载体本身就是被绑定变元的消费方使用；而 `satGraph`{.Agda} 把它钉在一个常元上，按它一贯的类型与见证元组交付。
+- `L.Coding.Graph`{.Agda}：满足关系那个递归的图说了什么。三个存在量词分别管索引集、表与载体，由封闭性、全性与十条子句设防，取值则从表上读出。一切都被绑定，因为一个图不可以点名一张尚未交给它的表，而那是内化定理唯一禁止的事。一个框架带两个实例，因为那条用来钉住的子句就是框架的参数：`satGraphAt`{.Agda} 把载体取作**一位**，供载体本身就是被绑定变元的消费方使用；而 `satGraph`{.Agda} 把它钉在一个常元上，按它一贯的类型与见证元组交付。
 - `L.Coding.Powerset`{.Agda}：可定义幂集在对象语言中、落在一个作为**槽位**的载体上的描述，也是整条路线为之存在的那一步。内部层级把自己的阶段绑定起来，故一条点名了自己载体的描述在那里压根说不出口；`DefAt`{.Agda} 什么也不点名。它说的是：`u` 恰是那些 `x` 之集，对它们仅仅存在载体之上的一个码 `c` 与一个取值 `v`，使得 `v` 就是满足关系那场递归在 `c` 处所记录的东西，而 `x` 是「其单条目环境落在 `v` 中」的那些载体成员之集。两个存在量词**相邻**，而这是一次探针逼出的更正：若被一个合取项隔开，码那条假设与满足关系那条假设就落到不同的环境上，于是这条路线会平白背上一条它本来永远用不着的弱化引理。`DefinesAt`{.Agda} 是单拿出来的第三个合取项，`envOneAt`{.Agda} 是单条目环境，只有一行，因为长度为一的图只是一个对。`DefAt-in`{.Agda} 说这个算子满足那条描述，`DefAt-out`{.Agda} 说别的东西都不满足，后者在 `DefOK`{.Agda} 之下：描述里的每个存在量词都在 `L` 上取值，只够得着住在其中的东西，故这条描述恰在「载体的诸可定义子集皆可构造」之处适足。那个旁条件只是消去那一半的假设，因为引入自己的假设已蕴含它；而在一个阶段处，它由后继恒等式一劳永逸地解除，剩下 `DefAt-stage`{.Agda}：一条真值之间的等式，说这条描述对 `𝒟ₒS`{.Agda} 成立、对别的什么都不成立。
 - `L.Coding.Sequence`{.Agda}：把层级说成一条**序列**，而这是为它写图时唯一可取的形状。一个图不可以点名它所定义的对象，而塔在某个阶段处是由该阶段以下的塔造出来的，故写下来的改为「*逼近*是什么」。`StepAt`{.Agda} 是某个实参处的那一步：一次 `extAt`{.Agda} 罩住三个相邻的存在量词，即那个实参、逼近在其处所记录的取值，以及它的可定义幂集；最后一样被绑定而不被点名，因为上一章交付的是关于它的一条描述、而不是指称它的一个词项。用一次 `extAt`{.Agda} 而不用手写的一对包含，因为一对包含会把那三个存在量词复制一份，并把每一种读法拆成互非逆的两半交回来。一个旁条件 `PowOK`{.Agda} 服务两个方向，因为一个「是 `L` 的元素」的可定义幂集，也就是一个「诸成员皆可构造」的可定义幂集。`ApproxAt`{.Agda} 是两个合取项、再无其他：`f` 恰好定义在那个实参的诸成员上，且它所记录的每个取值都是「在那里、由 `f` 自身算出的那一步」。它是一条隶属**等价**、而非一个单向的收集，这使即将到来的那场归纳的动机保持为命题，并把一条内部的函数外延性引理从路线上移除；且它**不带单值性合取项**，因为步进条件已经把「在一个实参处记录的每个取值」钉住了，故单值性是一条推论，而不是三个置于满足关系之下的全称量词。`LsetGraph`{.Agda} 把逼近绑定在两者之上。**本章的全部代价都出在转换上**：两条图读法陈述在具体位上，花掉了 130 秒中的 98 秒；而每一处「假设把环境写开、应用却把它藏在一个缩写背后」，再各花 15 秒。写成两侧是同一个表达式之后，它在两秒之内检查完毕，而这把「变元实参」那条规矩从一次代换推广到一条**陈述**。
 - `L.Hierarchy`{.Agda}：上一章那个图，被对着本书真正造出的那座塔证明，以及用来证明它的那个**内部层级**。**表**是有序对之集；它在某个集合上正确，指它在该集合以下所记录的每个取值都是元层面的塔在那里的取值；它完备，指它在以下的每个实参处都记录了一个。`step-Lset`{.Agda} 从一张正确的表上读出一个被满足的步进、把塔取回来，`step-table`{.Agda} 则由它写出那一步，而上一章那个旁条件在两者之内一并解除，因为被记录的取值是塔在某个序数处的值，而阶段的可定义幂集可构造。`approx-val`{.Agda} 是在实参上的一次沿成员的归纳，其动机对**一切**被记录的取值作量化，故单值性从不作为假设，而 `approx-uniq`{.Agda} 三行落地。`Lset-only`{.Agda} 与 `Lset-defines`{.Agda} 是那个图的两个方向，而 `hierL`{.Agda} 是后者据以造出的东西：由「序数与塔在它那里的取值」所成之对的集合，经在一个**成对的图**上作替换而收拢，每个索引的序数性取自 `mem-ord`{.Agda} 且不加截断，函数性经 `mereFunct`{.Agda} 偿付。它的规格是一条**隶属等价**，这使它唯一、也使归纳的动机是命题，而它在被造出之处封印。两次测量，都关乎一个名字：成对的那个图以变元身份进场、随身带着它自己的等式，而不是以那个闭句子的身份进场，价值 85 秒；以及 `mem-ord`{.Agda} 的那个集合实参必须在每次使用时显式给出，因为 `IsOrd`{.Agda} 展开成一条带量词的隶属关系、什么也确定不了。本章正是 `L` 的内部定义的材料，而内部良序就从它上面读出。

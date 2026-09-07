@@ -73,7 +73,8 @@ open import V.Coding {ℓ} using ( pr )
 import FOL.Absoluteness
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Foundations.Prelude using ( J; subst2 )
+open import Cubical.Foundations.Prelude using ( subst2 )
+open import Cubical.Data.Sigma using ( Σ≡Prop )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
@@ -182,7 +183,7 @@ module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
 
     Outer : S → Type (ℓ-suc ℓ)
     Outer c = ⟨ (c ∷ γ) ⊨ LsetGraphAt zero (suc b) ⟩
-            × ( (⟨ fst z ∈ fst c ⟩ → Empty.⊥) × ∥ Inner c ∥₁ )
+            × ( (⟨ fst z ∈ fst c ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥) × ∥ Inner c ∥₁ )
 
     decideBirth : IsOrd β → ⟨ fst z ∈ 𝒟ₒ (Lset β) ⟩
                 → (⟨ fst z ∈ Lset β ⟩ → Empty.⊥)
@@ -233,7 +234,8 @@ module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
 
     atCarrier : Σ[ c ∈ S ] Outer c → β ≡ birth (fst z) (snd z)
     atCarrier (c , (hg , (hn , hi))) =
-      PT.rec (setIsSet β (birth (fst z) (snd z))) (atInner c hg hn) hi
+      PT.rec (setIsSet β (birth (fst z) (snd z)))
+        (atInner c hg (λ k → lower (hn k))) hi
 
   BirthAt-in : IsOrd β → β ≡ birth (fst z) (snd z) → ⟨ γ ⊨ BirthAt b x ⟩
   BirthAt-in ob e = ∣ towerS β ob
@@ -242,11 +244,11 @@ module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
     hg : ⟨ (towerS β ob ∷ γ) ⊨ LsetGraphAt zero (suc b) ⟩
     hg = Lset-defines zero (suc b) (towerS β ob ∷ γ) ob (towerS-fst β ob)
 
-    hn : ⟨ fst z ∈ fst (towerS β ob) ⟩ → Empty.⊥
-    hn k = stage-earliest (fst z) (snd z) β ob
+    hn : ⟨ fst z ∈ fst (towerS β ob) ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥
+    hn k = lift (stage-earliest (fst z) (snd z) β ob
       (subst (λ u → ⟨ fst z ∈ u ⟩) (towerS-fst β ob) k)
       (subst (λ u → ⟨ u ∈ stage (fst z) (snd z) ⟩) (sym e)
-        (birth-stage (fst z) (snd z)))
+        (birth-stage (fst z) (snd z))))
 
     hd : ⟨ (powS β ob ∷ towerS β ob ∷ γ) ⊨ DefAt zero (suc zero) ⟩
     hd = subst ⟨_⟩
@@ -384,11 +386,9 @@ the condition "both compared sets belong to the stage" and keep only "both birth
 lie below it", which is two membership atoms at slots that are bound anyway, and
 one binder cheaper.
 
-`stepMoved`{.Agda} moves a step comparison along an equality of carriers, by path
-induction, with the proof irrelevance of ordinality in the base case. The previous
-chapter has the same lemma privately. It is rebuilt here rather than exported,
-because data reached from another module is what this route pays for, and the cure
-is locality.
+`stepMoved`{.Agda} moves a step comparison along an equality of carriers.
+Proof irrelevance extends that equality to the carriers paired with their
+ordinality proofs; transport along this single equality then moves the comparison.
 <!--zh-->
 ## 阶段处的序，展开一次
 
@@ -396,7 +396,7 @@ is locality.
 
 `bornIn`{.Agda} 是 `birth-in`{.Agda} 的逆：诞生阶段落在某个序数以下的集合，落在那个序数处的塔中。正是它使这条描述得以丢掉「被比较的两个集合都属于这个阶段」那条条件，只留下「两个诞生阶段都落在它以下」，而那是落在反正要绑定的两位上的两个隶属原子，还省下一层绑定。
 
-`stepMoved`{.Agda} 沿载体之间的一条等式搬运一次步进比较，靠路径归纳，基底情形用序数性的证明无关性。上一章私有地持有同一条引理。此处是重建而不是导出，因为从另一个模块够到数据正是这条路线要付代价的地方，而解药是就地。
+`stepMoved`{.Agda} 沿载体之间的一条等式搬运一次步进比较。证明无关性把这条等式扩展到「载体与其序数性证明」所成的对，再沿这一条等式运输比较。
 <!--/-->
 
 ```agda
@@ -405,13 +405,9 @@ stepOrder δ oδ = stepAt δ (carry (Lset δ) (orderAt δ oδ))
 
 stepMoved : (δ δ' : V ℓ) (e : δ ≡ δ') (o : IsOrd δ) (o' : IsOrd δ') (x y : V ℓ)
           → Under δ (stepOrder δ o) x y → Under δ' (stepOrder δ' o') x y
-stepMoved δ δ' e = J Motive base e
-  where
-  Motive : (δ' : V ℓ) → δ ≡ δ' → Type (ℓ-suc ℓ)
-  Motive δ' _ = (o : IsOrd δ) (o' : IsOrd δ') (x y : V ℓ)
-              → Under δ (stepOrder δ o) x y → Under δ' (stepOrder δ' o') x y
-  base : Motive δ refl
-  base o o' x y = subst (λ w → Under δ (stepOrder δ w) x y) (isPropIsOrd δ o o')
+stepMoved δ δ' e o o' x y =
+  subst (λ p → Under (fst p) (stepOrder (fst p) (snd p)) x y)
+    (Σ≡Prop isPropIsOrd {u = δ , o} {v = δ' , o'} e)
 
 bornIn : (α : V ℓ) → IsOrd α → (x : V ℓ) (p : ⟨ isL x ⟩)
        → ⟨ birth x p ∈ α ⟩ → ⟨ x ∈ Lset α ⟩
@@ -598,15 +594,6 @@ merely-existing value may be opened into it.
       Deep : (u v du : S) → S → Type (ℓ-suc ℓ)
       Deep u v du dv = ⟨ (dv ∷ du ∷ v ∷ u ∷ γ) ⊨ OrdBody tb f ⟩
 
-      Mid : (u v : S) → S → Type (ℓ-suc ℓ)
-      Mid u v du = ∥ (Σ[ dv ∈ S ] Deep u v du dv) ∥₁
-
-      Pair : (u : S) → S → Type (ℓ-suc ℓ)
-      Pair u v = ⟨ (v ∷ u ∷ γ) ⊨ prAtL (sh2 z) (suc zero) zero ⟩
-               × ∥ (Σ[ du ∈ S ] Mid u v du) ∥₁
-
-      Top : S → Type (ℓ-suc ℓ)
-      Top u = ∥ (Σ[ v ∈ S ] Pair u v) ∥₁
 ```
 
 <!--en-->
@@ -625,7 +612,11 @@ nothing in this proof normalizes the sentence it is about.
      unfolding CondCore
 
      CondCore-out : ⟨ γ ⊨ CondCore z tb f ⟩ → ⟨ Related α (fst (lookup z γ)) ⟩
-     CondCore-out = PT.rec (snd (Related α (fst (lookup z γ)))) atTop
+     CondCore-out = PT.rec (snd (Related α (fst (lookup z γ))))
+       (λ { (u , hv) → PT.rec (snd (Related α (fst (lookup z γ))))
+         (λ { (v , (hp , hdu)) → PT.rec (snd (Related α (fst (lookup z γ))))
+           (λ { (du , hdv) → PT.rec (snd (Related α (fst (lookup z γ))))
+             (λ { (dv , hd) → atDeep u v du dv hp hd }) hdv }) hdu }) hv })
        where
        Goal : Type (ℓ-suc ℓ)
        Goal = ⟨ Related α (fst (lookup z γ)) ⟩
@@ -694,19 +685,6 @@ nothing in this proof normalizes the sentence it is about.
                    (mem-ord {A = α} oα (bornOf α oα a) (bornMem α oα a))
                    (fst u) (fst v) und)))
 
-       atMid : (u v du : S)
-             → ⟨ (v ∷ u ∷ γ) ⊨ prAtL (sh2 z) (suc zero) zero ⟩
-             → Mid u v du → Goal
-       atMid u v du hp = PT.rec (snd (Related α (fst (lookup z γ))))
-         (λ { (dv , hd) → atDeep u v du dv hp hd })
-
-       atPair : (u v : S) → Pair u v → Goal
-       atPair u v (hp , hm) = PT.rec (snd (Related α (fst (lookup z γ))))
-         (λ { (du , hd) → atMid u v du hp hd }) hm
-
-       atTop : Σ[ u ∈ S ] Top u → Goal
-       atTop (u , h) = PT.rec (snd (Related α (fst (lookup z γ))))
-         (λ { (v , hv) → atPair u v hv }) h
 ```
 
 <!--en-->

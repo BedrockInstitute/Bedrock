@@ -6,19 +6,13 @@ directly: it can only say things in the object language, and what it needs to sa
 is "this set is the code of a formula with such and such a shape". So the shapes
 have to be spelled out as formulas, and this chapter spells them out.
 
-Two things are needed, and the chapter provides both because a certificate needs
-them together. First a *set of codes* to quantify over: all codes of
-parameter-free formulas, at every arity, gathered into one set. Its index is
-small, so the gathering is legitimate, and because every arity is included the
-subformula of a quantifier does not escape it, which is what later certificates
-rely on when they descend into a formula.
-
-Second, the *readers*: object formulas saying "this set is the singleton of
-that", "this is the unordered pair", "this is the Kuratowski pair", "this is
-tagged with such a number". Each is a bounded formula, so each is Δ₀, and each
-comes with an adequacy lemma turning satisfaction into the set-theoretic fact.
-The readers take their de Bruijn positions as arguments, so the same formula
-serves at any depth of nesting.
+The chapter provides the *readers*: object formulas saying "this set is the
+singleton of that", "this is the unordered pair", and "this is the Kuratowski
+pair". Their quantifiers are bounded, and their de Bruijn positions are
+arguments, so the same formula serves at any depth of nesting. The adequacy
+lemma for the assembled pair reader turns satisfaction into equality with a
+Kuratowski pair; its singleton and unordered-pair clauses use the corresponding
+set-theoretic characterizations.
 
 The discipline throughout: nothing ever compares two code *values*. Membership
 is transported along paths through the library's classification lemmas, and the
@@ -28,9 +22,7 @@ chapters were arranged specifically so that it never has to happen.
 <!--zh-->
 码如今是集合了，但住在模型内部的证书不能直接用这一点：它只能用对象语言说话，而它要说的是「这个集合是某种形状的公式的码」。所以那些形状必须被写成公式，本章就来写它们。
 
-需要两样东西，而本章两样都提供，因为证书要一起用它们。第一是可供量化的**码集**：所有无参公式的码，各种元数齐备，汇成一个集合。它的索引是小的，故这次汇集合法；而因为各种元数都在内，量词的子公式不会逃出去，这正是后续证书下降进公式时所依赖的。
-
-第二是**读式**：说「这个集合是那个的单点集」「这是无序对」「这是 Kuratowski 对」「这带着某个数字的标签」的对象公式。每一条都是有界公式，故都是 Δ₀，且每一条都配一条适足引理，把满足关系换成集合论事实。读式把 de Bruijn 位置取作参数，故同一条公式在任何嵌套深度上都能用。
+本章提供**读式**：说「这个集合是那个的单点集」「这是无序对」「这是 Kuratowski 对」的对象公式。它们的量词都有界，de Bruijn 位置取作参数，故同一条公式在任何嵌套深度上都能用。组装后的对读式配有适足引理，把满足关系换成与 Kuratowski 对的相等；其中的单点集与无序对子句使用相应的集合论特征刻画。
 
 全程的纪律：任何时候都不比较两个码**值**。隶属关系经库的分类引理沿路径搬运，而码的形状由第一部的编码关系携带。直接比较码值，正是使这些证明停止终止的原因，而前几章的安排就是为了让这件事永远不必发生。
 <!--/-->
@@ -45,11 +37,12 @@ module L.Coding.Base {ℓ : Level} where
 
 open import FOL.Syntax
   using ( var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
-open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-∀∈; δ-∃∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
 import FOL.Semantics
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 
+open import Cubical.Data.Unit using ( tt )
 import Cubical.Data.Sum as Sum
 open Sum using ( _⊎_; inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -57,7 +50,7 @@ open PT using ( ∥_∥₁; ∣_∣₁ )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; _⊆_; extensionality )
+  using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; pairing-ax; ⁅_⁆s; SingletonPackage; module InfinitySet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -107,32 +100,26 @@ are the meta-level content the readers will express.
     (pairing-ax u v y .snd ∣ inr e ∣₁)
 
 sgl-char : (x u : V ℓ) → ⟨ u ∈ x ⟩ → ((y : V ℓ) → ⟨ y ∈ x ⟩ → y ≡ u) → x ≡ ⁅ u ⁆s
-sgl-char x u hu hall = extensionality x ⁅ u ⁆s (sub₁ , sub₂)
+sgl-char x u hu hall = extensionalV (λ y → ⇔toPath (sub₁ y) (sub₂ y))
   where
-  sub₁ : ⟨ x ⊆ ⁅ u ⁆s ⟩
-  sub₁ y y∈ₛx = ∈∈ₛ {a = y} {b = ⁅ u ⁆s} .fst
-    (∈sgl-intro (hall y (∈∈ₛ {a = y} {b = x} .snd y∈ₛx)))
-  sub₂ : ⟨ ⁅ u ⁆s ⊆ x ⟩
-  sub₂ y y∈ₛs = subst (λ z → ⟨ z ∈ₛ x ⟩)
-    (sym (∈sgl-elim (∈∈ₛ {a = y} {b = ⁅ u ⁆s} .snd y∈ₛs)))
-    (∈∈ₛ {a = u} {b = x} .fst hu)
+  sub₁ : (y : V ℓ) → ⟨ y ∈ x ⟩ → ⟨ y ∈ ⁅ u ⁆s ⟩
+  sub₁ y hy = ∈sgl-intro (hall y hy)
+  sub₂ : (y : V ℓ) → ⟨ y ∈ ⁅ u ⁆s ⟩ → ⟨ y ∈ x ⟩
+  sub₂ y hy = subst (λ z → ⟨ z ∈ x ⟩) (sym (∈sgl-elim hy)) hu
+
 
 pair-char : (x u v : V ℓ) → ⟨ u ∈ x ⟩ → ⟨ v ∈ x ⟩
           → ((y : V ℓ) → ⟨ y ∈ x ⟩ → ∥ (y ≡ u) ⊎ (y ≡ v) ∥₁)
           → x ≡ ⁅ u , v ⁆
-pair-char x u v hu hv hall = extensionality x ⁅ u , v ⁆ (sub₁ , sub₂)
+pair-char x u v hu hv hall = extensionalV (λ y → ⇔toPath (sub₁ y) (sub₂ y))
   where
-  sub₁ : ⟨ x ⊆ ⁅ u , v ⁆ ⟩
-  sub₁ y y∈ₛx = ∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .fst
-    (PT.rec ((y ∈ ⁅ u , v ⁆) .snd)
-      (Sum.rec (λ e → ∈pair-introL {u = u} {v = v} e)
-               (λ e → ∈pair-introR {u = u} {v = v} e))
-      (hall y (∈∈ₛ {a = y} {b = x} .snd y∈ₛx)))
-  sub₂ : ⟨ ⁅ u , v ⁆ ⊆ x ⟩
-  sub₂ y y∈ₛp = PT.rec ((y ∈ₛ x) .snd)
-    (Sum.rec (λ e → subst (λ z → ⟨ z ∈ₛ x ⟩) (sym e) (∈∈ₛ {a = u} {b = x} .fst hu))
-             (λ e → subst (λ z → ⟨ z ∈ₛ x ⟩) (sym e) (∈∈ₛ {a = v} {b = x} .fst hv)))
-    (∈pair-elim (∈∈ₛ {a = y} {b = ⁅ u , v ⁆} .snd y∈ₛp))
+  sub₁ : (y : V ℓ) → ⟨ y ∈ x ⟩ → ⟨ y ∈ ⁅ u , v ⁆ ⟩
+  sub₁ y hy = PT.rec ((y ∈ ⁅ u , v ⁆) .snd)
+    (Sum.rec (∈pair-introL {u = u} {v = v}) (∈pair-introR {u = u} {v = v})) (hall y hy)
+  sub₂ : (y : V ℓ) → ⟨ y ∈ ⁅ u , v ⁆ ⟩ → ⟨ y ∈ x ⟩
+  sub₂ y hy = PT.rec ((y ∈ x) .snd)
+    (Sum.rec (λ e → subst (λ z → ⟨ z ∈ x ⟩) (sym e) hu)
+             (λ e → subst (λ z → ⟨ z ∈ x ⟩) (sym e) hv)) (∈pair-elim hy)
 ```
 
 <!--en-->
@@ -183,28 +170,13 @@ prChar-fwd : (Q U W : V ℓ)
   → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × PairOf U W w) ∥₁
   → ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ SglOf U y ⊎ PairOf U W y ∥₁)
   → Q ≡ pr U W
-prChar-fwd Q U W h₁ h₂ h₃ = extensionality Q (pr U W) (sub₁ , sub₂)
-  where
-  sub₁ : ⟨ Q ⊆ pr U W ⟩
-  sub₁ y y∈ₛQ = PT.rec ((y ∈ₛ pr U W) .snd)
-    (Sum.rec
-      (λ s → ∈∈ₛ {a = y} {b = pr U W} .fst
-        (∈pair-introL {u = ⁅ U ⁆s} {v = ⁅ U , W ⁆} (sglOf→≡ s)))
-      (λ p → ∈∈ₛ {a = y} {b = pr U W} .fst
-        (∈pair-introR {u = ⁅ U ⁆s} {v = ⁅ U , W ⁆} (pairOf→≡ p))))
-    (h₃ y (∈∈ₛ {a = y} {b = Q} .snd y∈ₛQ))
-  sub₂ : ⟨ pr U W ⊆ Q ⟩
-  sub₂ y y∈ₛpr = PT.rec ((y ∈ₛ Q) .snd)
-    (Sum.rec
-      (λ e → PT.rec ((y ∈ₛ Q) .snd)
-        (λ { (w , w∈Q , s) → subst (λ z → ⟨ z ∈ₛ Q ⟩) (sym (e ∙ sym (sglOf→≡ s)))
-               (∈∈ₛ {a = w} {b = Q} .fst w∈Q) })
-        h₁)
-      (λ e → PT.rec ((y ∈ₛ Q) .snd)
-        (λ { (w , w∈Q , p) → subst (λ z → ⟨ z ∈ₛ Q ⟩) (sym (e ∙ sym (pairOf→≡ p)))
-               (∈∈ₛ {a = w} {b = Q} .fst w∈Q) })
-        h₂))
-    (∈pair-elim (∈∈ₛ {a = y} {b = pr U W} .snd y∈ₛpr))
+prChar-fwd Q U W h₁ h₂ h₃ = pair-char Q ⁅ U ⁆s ⁅ U , W ⁆
+  (PT.rec ((⁅ U ⁆s ∈ Q) .snd)
+    (λ { (w , hw , h) → subst (λ z → ⟨ z ∈ Q ⟩) (sglOf→≡ h) hw }) h₁)
+  (PT.rec ((⁅ U , W ⁆ ∈ Q) .snd)
+    (λ { (w , hw , h) → subst (λ z → ⟨ z ∈ Q ⟩) (pairOf→≡ h) hw }) h₂)
+  (λ y hy → PT.map (Sum.map sglOf→≡ pairOf→≡) (h₃ y hy))
+
 
 prChar-bwd : (Q U W : V ℓ) → Q ≡ pr U W
   → (∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × SglOf U w) ∥₁)
@@ -233,13 +205,12 @@ prChar-bwd Q U W e = h₁ , h₂ , h₃
 Now the object formulas. Each takes the de Bruijn positions it speaks about, and
 the bookkeeping is the usual one: a bounded quantifier binds a fresh variable at
 position zero and pushes the others outward, so a position mentioned under one
-binder appears as its successor. A constant needs no such shift, which is the
-small dividend that makes the tagged versions simpler than the plain ones.
+binder appears as its successor.
 
 Every clause is a bounded quantifier or an atom, so every reader is Δ₀ and its
 witness is read straight off its shape.
 <!--zh-->
-现在是对象公式。每一条都取它所谈论的 de Bruijn 位置，而记账是老一套：有界量词在位置零绑定一个新变元，把其余的向外推，故在一层约束之下提到的位置以其后继出现。常量不需要这种移位，这是使带标签的版本比朴素版本更简单的那点小红利。
+现在是对象公式。每一条都取它所谈论的 de Bruijn 位置，而记账是老一套：有界量词在位置零绑定一个新变元，把其余的向外推，故在一层约束之下提到的位置以其后继出现。
 
 每条子句都是有界量词或原子，故每条读式都是 Δ₀，其见证直接从形状读出。
 <!--/-->
@@ -252,21 +223,14 @@ pairAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
 pairAt k i j = (var i ∈̇ var k) ∧̇ ((var j ∈̇ var k)
             ∧̇ (∀̇∈ (var k) ((var zero ≐ var (suc i)) ∨̇ (var zero ≐ var (suc j)))))
 
-Δ₀-sglAt : ∀ {n} (k i : Fin n) → Δ₀ (sglAt k i)
-Δ₀-sglAt k i = δ-∧ δ-∈ (δ-∀∈ δ-≐)
-
-Δ₀-pairAt : ∀ {n} (k i j : Fin n) → Δ₀ (pairAt k i j)
-Δ₀-pairAt k i j = δ-∧ δ-∈ (δ-∧ δ-∈ (δ-∀∈ (δ-∨ δ-≐ δ-≐)))
-
 ```
 
 <!--en-->
-The two assembled readers, each three clauses: some member is the singleton,
-some member is the pair, and every member is one of the two. The tagged version
-is the same with the first component a constant numeral, which is how a
-constructor index is read.
+The assembled pair reader has three clauses: some member is the singleton,
+some member is the pair, and every member is one of the two. The boundedness
+checker certifies the resulting formula from its syntax.
 <!--zh-->
-两条组装好的读式，各三条子句：某个成员是那个单点集，某个成员是那个对，且每个成员二者居其一。带标签的版本与之相同，只是第一分量取常量数码，而那正是读出构造子序号的方式。
+组装好的对读式有三条子句：某个成员是那个单点集，某个成员是那个对，且每个成员二者居其一。有界性检查器从所得公式的语法给出证书。
 <!--/-->
 
 ```agda
@@ -276,9 +240,7 @@ prAt q u v = (∃̇∈ (var q) (sglAt zero (suc u)))
           ∧̇ (∀̇∈ (var q) (sglAt zero (suc u) ∨̇ pairAt zero (suc u) (suc v))))
 
 Δ₀-prAt : ∀ {n} (q u v : Fin n) → Δ₀ (prAt q u v)
-Δ₀-prAt q u v = δ-∧ (δ-∃∈ (Δ₀-sglAt zero (suc u)))
-  (δ-∧ (δ-∃∈ (Δ₀-pairAt zero (suc u) (suc v)))
-       (δ-∀∈ (δ-∨ (Δ₀-sglAt zero (suc u)) (Δ₀-pairAt zero (suc u) (suc v)))))
+Δ₀-prAt q u v = checkΔ₀ (prAt q u v) tt
 
 ```
 
@@ -316,11 +278,11 @@ prAt-adequate q u v γ = ⇔toPath
 <!--/-->
 
 <!--en-->
-`prAt`{.Agda} and `tagAt`{.Agda} read a Kuratowski pair and a tag from inside
-the object language, both Δ₀ and both adequate. Everything a certificate needs
+`prAt`{.Agda} reads a Kuratowski pair from inside the object language; it is
+Δ₀ and adequate. Everything a certificate needs
 in order to destructure a code is now available in bounded form, with no
 recursion and no comparison of code values. The chapters that follow build
 certificates on top of these.
 <!--zh-->
-`prAt`{.Agda} 与 `tagAt`{.Agda} 从对象语言内部读出 Kuratowski 对与标签，二者皆 Δ₀ 且皆适足。证书解构一个码所需的一切，如今都以有界形式就位，无递归，也无码值的比较。随后诸章在这些之上搭建证书。
+`prAt`{.Agda} 从对象语言内部读出 Kuratowski 对，它是 Δ₀ 且适足。证书解构一个码所需的一切，如今都以有界形式就位，无递归，也无码值的比较。随后诸章在这些之上搭建证书。
 <!--/-->

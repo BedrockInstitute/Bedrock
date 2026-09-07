@@ -41,7 +41,7 @@ module L.Axioms.Separation {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( Transitive; module hPropStructure )
 open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∃∈ )
 open import FOL.Manipulation.Bounding
@@ -57,9 +57,11 @@ open import L.Constructible {ℓ}
         ; 𝒟ₒ; 𝒟ₒ-intro; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2 )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Axioms.Basic {ℓ} using ( 𝒟ₒ→isL; uniqueL )
+open import L.Axioms.Basic {ℓ} using ( LsetS; 𝒟ₒ→isL; uniqueL )
 
 open import Cubical.Functions.Logic using ( ⇔toPath )
+open import Cubical.Data.Sigma using ( Σ≡Prop )
+open import Cubical.Data.Unit using ( tt* )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
@@ -76,7 +78,7 @@ open ModelL using ( SetOf )
 module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
 open SemV.At (V ℓ) id using () renaming ( _⊨_ to _⊨v_ )
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
-open AbsL using ( abs₀ ) renaming ( _⊨ᵐ_ to _⊨_ ; _⊨ᵛ_ to _⊨ᵥ_ )
+open AbsL using ( abs₀ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
@@ -98,6 +100,71 @@ field applies a renaming to match.
 ```agda
 ReplImage : (a : S) (φ : Formula S 2) → S → Ω
 ReplImage a φ z = ⋁ S (λ x → (x ∈ˢ a) ⊓ ((x ∷ z ∷ []) ⊨ φ))
+```
+
+<!--en-->
+## Bounding a functional image
+<!--zh-->
+## 界住函数像
+<!--/-->
+
+<!--en-->
+A functional relation on the members of a set has all its values in one stage.
+Choose the unique value at each member, use the small member type to bound the
+stages of those choices, and use uniqueness to put every related value under the
+same bound. The relation is a parameter, so the result is independent of the
+variable order used by a particular formula.
+<!--zh-->
+一个集合的诸成员之上的函数关系，其值全落在同一个阶段。先在每个成员处取唯一值，再用小成员类型界住这些取值的诸阶段，最后以唯一性把每个相关值置于同一界下。关系作为参数传入，故结果不依赖某条特定公式所用的变量次序。
+<!--/-->
+
+```agda
+module FunctionalImage (a : S) (R : S → S → Ω)
+                       (fc : (x : S) → ⟨ x ∈ˢ a ⟩
+                           → isContr (Σ[ y ∈ S ] ⟨ R x y ⟩)) where
+
+  Mem : Type (ℓ-suc ℓ)
+  Mem = Σ[ x ∈ S ] ⟨ x ∈ˢ a ⟩
+
+  img : Mem → S
+  img p = fc (p .fst) (p .snd) .fst .fst
+
+  img-sat : (p : Mem) → ⟨ R (p .fst) (img p) ⟩
+  img-sat p = fc (p .fst) (p .snd) .fst .snd
+
+  img-uniq : (p : Mem) (y : S) → ⟨ R (p .fst) y ⟩ → img p ≡ y
+  img-uniq p y h = cong fst (fc (p .fst) (p .snd) .snd (y , h))
+
+  private
+    memS : ⟪ fst a ⟫ → Mem
+    memS m = (⟪ fst a ⟫↪ m
+             , isL-trans fm∈fa (a .snd)) , fm∈fa
+      where
+      fm∈fa : ⟨ ⟪ fst a ⟫↪ m ∈ fst a ⟩
+      fm∈fa = ∈∈ₛ {a = ⟪ fst a ⟫↪ m} {b = fst a} .snd (∈ₛ⟪ fst a ⟫↪ m)
+
+    bImg = boundingOrd ⟪ fst a ⟫
+      (λ m → stage (fst (img (memS m))) (img (memS m) .snd))
+      (λ m → stage-ord (fst (img (memS m))) (img (memS m) .snd))
+
+  βimg : V ℓ
+  βimg = bImg .fst
+
+  βimg-ord : IsOrd βimg
+  βimg-ord = bImg .snd .fst
+
+  range∈βimg : (x : S) → ⟨ x ∈ˢ a ⟩ → (y : S) → ⟨ R x y ⟩
+              → ⟨ fst y ∈ Lset βimg ⟩
+  range∈βimg x x∈a y h = subst (λ w → ⟨ fst w ∈ Lset βimg ⟩) image≡y
+    (Lset-mono {α = βimg} {β = stage (fst (img (memS m))) (img (memS m) .snd)}
+      (bImg .snd .snd m) (stage-mem (fst (img (memS m))) (img (memS m) .snd)))
+    where
+    m = ∈-asFiber {a = fst x} {b = fst a} x∈a .fst
+    q : memS m .fst ≡ x
+    q = Σ≡Prop (λ z → snd (isL z))
+      (∈-asFiber {a = fst x} {b = fst a} x∈a .snd)
+    image≡y : img (memS m) ≡ y
+    image≡y = img-uniq (memS m) y (subst (λ z → ⟨ R z y ⟩) (sym q) h)
 ```
 
 <!--en-->
@@ -167,25 +234,16 @@ delicate.
   carveSat φ h dφ m xL =
     RefC.abs-defSet (RL.liftFo φ h) (RL.Δ₀-liftFo h dφ) m ∙ satBridge φ h dφ m xL
 
-  carveSatAnd : (mₐ : ⟪ Lset σ ⟫) (φ : Formula S 1) (h : BoundedFo Below φ)
-                (dφ : Δ₀ φ) (m : ⟪ Lset σ ⟫) (xL : ⟨ isL (⟪ Lset σ ⟫↪ m) ⟩)
-              → (⟪ Lset σ ⟫↪ m ∈ DefC.defSet ((var zero ∈̇ con mₐ) ∧̇ RL.liftFo φ h))
-                ≡ ((⟪ Lset σ ⟫↪ m ∈ ⟪ Lset σ ⟫↪ mₐ)
-                   ⊓ (((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ φ))
-  carveSatAnd mₐ φ h dφ m xL =
-      RefC.abs-defSet ((var zero ∈̇ con mₐ) ∧̇ RL.liftFo φ h)
-        (δ-∧ δ-∈ (RL.Δ₀-liftFo h dφ)) m
-    ∙ cong₂ _⊓_ refl (satBridge φ h dφ m xL)
 ```
 
 <!--en-->
-The carved set is sealed, and the four facts about it are proved through the
+The carved set is sealed, and the facts about it are proved through the
 seal. Unsealed, `defSet` unfolds to a set over formulas, and every later type
 mentioning the carved set would carry that unfolding into conversion; sealing it
 and exporting exactly what is needed keeps the rest of the chapter working with a
 black box.
 <!--zh-->
-刻出的集合被封印，而关于它的四个事实经封印证出。不封印的话，`defSet` 会展开成公式之上的一个集合，而此后每个提到该集合的类型都会把那次展开带进转换检查；封印它并只导出所需之物，使本章其余部分对着一个黑箱工作。
+刻出的集合被封印，而关于它的事实经封印证出。不封印的话，`defSet` 会展开成公式之上的一个集合，而此后每个提到该集合的类型都会把那次展开带进转换检查；封印它并只导出所需之物，使本章其余部分对着一个黑箱工作。
 <!--/-->
 
 ```agda
@@ -201,20 +259,6 @@ black box.
     carve⊆ : (ψ : Formula ⟪ Lset σ ⟫ 1) (y : V ℓ) → ⟨ y ∈ carve ψ ⟩
            → ⟨ y ∈ Lset σ ⟩
     carve⊆ ψ y mem = DefC.defSet⊆A ψ y mem
-
-    carveOut : (mₐ : ⟪ Lset σ ⟫) (φ : Formula S 1) (h : BoundedFo Below φ)
-               (dφ : Δ₀ φ) (m : ⟪ Lset σ ⟫) (xL : ⟨ isL (⟪ Lset σ ⟫↪ m) ⟩)
-             → ⟨ ⟪ Lset σ ⟫↪ m ∈ carve ((var zero ∈̇ con mₐ) ∧̇ RL.liftFo φ h) ⟩
-             → ⟨ (⟪ Lset σ ⟫↪ m ∈ ⟪ Lset σ ⟫↪ mₐ)
-                 ⊓ (((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ φ) ⟩
-    carveOut mₐ φ h dφ m xL mem = subst ⟨_⟩ (carveSatAnd mₐ φ h dφ m xL) mem
-
-    carveIn : (mₐ : ⟪ Lset σ ⟫) (φ : Formula S 1) (h : BoundedFo Below φ)
-              (dφ : Δ₀ φ) (m : ⟪ Lset σ ⟫) (xL : ⟨ isL (⟪ Lset σ ⟫↪ m) ⟩)
-            → ⟨ (⟪ Lset σ ⟫↪ m ∈ ⟪ Lset σ ⟫↪ mₐ)
-                ⊓ (((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ φ) ⟩
-            → ⟨ ⟪ Lset σ ⟫↪ m ∈ carve ((var zero ∈̇ con mₐ) ∧̇ RL.liftFo φ h) ⟩
-    carveIn mₐ φ h dφ m xL br = subst ⟨_⟩ (sym (carveSatAnd mₐ φ h dφ m xL)) br
 
     imageOut : (φ : Formula S 1) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
                (m : ⟪ Lset σ ⟫) (xL : ⟨ isL (⟪ Lset σ ⟫↪ m) ⟩)
@@ -232,27 +276,20 @@ black box.
 <!--en-->
 One more small tool. Satisfaction depends only on the underlying set, not on the
 proof of constructibility carried alongside it, so a satisfaction fact transports
-along an equation between underlying sets. For a Δ₀ formula this is immediate:
-step outside, transport, step back.
+along an equation between underlying sets. Constructibility is propositional, so the
+underlying equation gives an equation of model elements directly. The Δ₀
+parameters remain in the interfaces used by the callers.
 <!--zh-->
-还有一件小工具。满足关系只依赖底层集合，而不依赖随之携带的可构造性证明，故满足的事实可沿底层集合之间的等式搬运。对 Δ₀ 公式这是直接的：走到外面、搬运、再走回来。
+还有一件小工具。满足关系只依赖底层集合，而不依赖随之携带的可构造性证明，故满足的事实可沿底层集合之间的等式搬运。可构造性是命题，故底层等式直接给出模型元素的等式。Δ₀ 参数保留在调用方使用的接口中。
 <!--/-->
 
 ```agda
   opaque
     ⊨-transport : (φ : Formula S 1) (dφ : Δ₀ φ) (u v : S) → fst u ≡ fst v
                 → ⟨ (u ∷ []) ⊨ φ ⟩ → ⟨ (v ∷ []) ⊨ φ ⟩
-    ⊨-transport φ dφ u v p hyp =
-      subst ⟨_⟩ (sym (abs₀ dφ (v ∷ [])))
-        (subst (λ w → ⟨ (w ∷ []) ⊨ᵥ φ ⟩) p
-          (subst ⟨_⟩ (abs₀ dφ (u ∷ [])) hyp))
+    ⊨-transport φ dφ u v p =
+      subst (λ z → ⟨ (z ∷ []) ⊨ φ ⟩) (Σ≡Prop (λ x → snd (isL x)) p)
 
-    ⊨-transport₂ : (φ : Formula S 2) (dφ : Δ₀ φ) (u v w : S) → fst u ≡ fst v
-                 → ⟨ (u ∷ w ∷ []) ⊨ φ ⟩ → ⟨ (v ∷ w ∷ []) ⊨ φ ⟩
-    ⊨-transport₂ φ dφ u v w p hyp =
-      subst ⟨_⟩ (sym (abs₀ dφ (v ∷ w ∷ [])))
-        (subst (λ s → ⟨ (s ∷ fst w ∷ []) ⊨ᵥ φ ⟩) p
-          (subst ⟨_⟩ (abs₀ dφ (u ∷ w ∷ [])) hyp))
 ```
 
 <!--en-->
@@ -262,14 +299,13 @@ step outside, transport, step back.
 <!--/-->
 
 <!--en-->
-Now the construction. The formula carving the subset out of the stage is the
-conjunction of "belongs to `a`", written with `a`'s index as a constant, and the
-relabelled `φ`. The carved set is a definable subset of the stage, hence
-constructible; and its members are exactly what the specification asks, by the
-bridge in each direction, with the transport handling the passage between a
-member of the stage and the same set carrying its own constructibility proof.
+The shared construction carves a bounded unary formula whose satisfying sets
+lie in the stage. The carved set is definable, hence constructible; the bridge
+and transport identify its members with the formula's satisfaction predicate.
+Separation instantiates this construction with the conjunction of membership
+in `a` and `φ`. Transitivity supplies the stage cover from the membership conjunct.
 <!--zh-->
-现在是构造本身。从该阶段中刻出子集的那条公式，是「属于 `a`」(以 `a` 的索引为常量写出) 与重标后的 `φ` 的合取。刻出的集合是该阶段的可定义子集，故可构造；而它的成员恰是规格所要求的，经两个方向的那道桥，其中搬运工具负责在「阶段的一个成员」与「携带自身可构造性证明的同一集合」之间过渡。
+共享构造雕刻一条有界一元公式，其满足者均落在该阶段中。刻出的集合可定义，故可构造；语义桥与搬运把它的成员关系认同为公式的满足谓词。分离将该构造实例化为「属于 `a`」与 `φ` 的合取。传递性从成员关系合取项提供阶段覆盖。
 <!--/-->
 
 ```agda
@@ -278,94 +314,19 @@ member of the stage and the same set carrying its own constructibility proof.
     memberIsL m = Lset→isL σ oσ (⟪ Lset σ ⟫↪ m)
       (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = Lset σ} .snd (∈ₛ⟪ Lset σ ⟫↪ m))
 
-  separateAt : (a : S) (fa∈σ : ⟨ fst a ∈ Lset σ ⟩)
-               (φ : Formula S 1) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
-             → isContr (SetOf (λ x → (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)))
-  separateAt a fa∈σ φ h dφ = uniqueL Q (sepElt , spec)
+  carveAt : (χ : Formula S 1) (hχ : BoundedFo Below χ) (dχ : Δ₀ χ)
+            (cover : (z : S) → ⟨ (z ∷ []) ⊨ χ ⟩ → ⟨ fst z ∈ Lset σ ⟩)
+          → isContr (SetOf (λ z → (z ∷ []) ⊨ χ))
+  carveAt χ hχ dχ cover = uniqueL (λ z → (z ∷ []) ⊨ χ) (replElt , spec)
     where
-    Q : S → Ω
-    Q x = (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)
-    mₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈σ .fst
-    qₐ : ⟪ Lset σ ⟫↪ mₐ ≡ fst a
-    qₐ = ∈-asFiber {a = fst a} {b = Lset σ} fa∈σ .snd
-    ψ : Formula ⟪ Lset σ ⟫ 1
-    ψ = (var zero ∈̇ con mₐ) ∧̇ RL.liftFo φ h
-    sepElt : S
-    sepElt = carve ψ , 𝒟ₒ→isL σ oσ (carve ψ) (carve∈𝒟ₒ ψ)
-
-    spec : (z : S) → (z ∈ˢ sepElt) ≡ Q z
-    spec z = ⇔toPath fwd bwd
-      where
-      fwd : ⟨ z ∈ˢ sepElt ⟩ → ⟨ Q z ⟩
-      fwd z∈ = fz∈fa , zφ
-        where
-        fz∈Lσ = carve⊆ ψ (fst z) z∈
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
-        q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
-        xL = memberIsL m
-        m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve ψ ⟩
-        m∈ = subst (λ w → ⟨ w ∈ carve ψ ⟩) (sym q) z∈
-        dk = carveOut mₐ φ h dφ m xL m∈
-        fz∈fa = subst (λ w → ⟨ fst z ∈ w ⟩) qₐ
-          (subst (λ w → ⟨ w ∈ ⟪ Lset σ ⟫↪ mₐ ⟩) q (dk .fst))
-        zφ = ⊨-transport φ dφ (⟪ Lset σ ⟫↪ m , xL) z q (dk .snd)
-
-      bwd : ⟨ Q z ⟩ → ⟨ z ∈ˢ sepElt ⟩
-      bwd (fz∈fa , zφ) = subst (λ w → ⟨ w ∈ carve ψ ⟩) q m∈
-        where
-        fz∈Lσ = layer-trans (Lset-layer σ) {x = fst a} {y = fst z} fz∈fa fa∈σ
-        m = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .fst
-        q : ⟪ Lset σ ⟫↪ m ≡ fst z
-        q = ∈-asFiber {a = fst z} {b = Lset σ} fz∈Lσ .snd
-        xL = memberIsL m
-        p₁ : ⟨ ⟪ Lset σ ⟫↪ m ∈ ⟪ Lset σ ⟫↪ mₐ ⟩
-        p₁ = subst (λ w → ⟨ w ∈ ⟪ Lset σ ⟫↪ mₐ ⟩) (sym q)
-          (subst (λ w → ⟨ fst z ∈ w ⟩) (sym qₐ) fz∈fa)
-        p₂ : ⟨ ((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ φ ⟩
-        p₂ = ⊨-transport φ dφ z (⟪ Lset σ ⟫↪ m , xL) (sym q) zφ
-        m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve ψ ⟩
-        m∈ = carveIn mₐ φ h dφ m xL (p₁ , p₂)
-```
-
-<!--en-->
-## Replacement at a stage
-<!--zh-->
-## 在一个阶段上替换
-<!--/-->
-
-<!--en-->
-Replacement reuses the same engine. The image of `a` under a two-variable formula
-is what a *one*-variable bounded existential says, so the construction hands that
-existential to the machinery above and reads the answer back. The extra
-hypothesis is that the image already lies in the stage; producing it is the work
-of whoever calls this, and the next chapters do it by bounding the stages of the
-images.
-<!--zh-->
-替换复用同一套引擎。`a` 在一条二元公式下的像，正是一条**一元**有界存在所说的东西，故这个构造把那条存在式交给上面的机器，再把答案读回来。多出的那个假设是像已经落在该阶段中；产出它是调用方的工作，而随后诸章正是经界住诸像的阶段来完成它。
-<!--/-->
-
-```agda
-  replaceAt : (a : S) (fa∈σ : ⟨ fst a ∈ Lset σ ⟩)
-              (φ : Formula S 2) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
-              (cover : (z : S) → ⟨ ReplImage a φ z ⟩ → ⟨ fst z ∈ Lset σ ⟩)
-            → isContr (SetOf (ReplImage a φ))
-  replaceAt a fa∈σ φ h dφ cover = uniqueL (ReplImage a φ) (replElt , spec)
-    where
-    χ : Formula S 1
-    χ = ∃̇∈ (con a) φ
-    hχ : BoundedFo Below χ
-    hχ = fa∈σ , h
-    dχ : Δ₀ χ
-    dχ = δ-∃∈ dφ
     replElt : S
     replElt = carve (RL.liftFo χ hχ)
             , 𝒟ₒ→isL σ oσ (carve (RL.liftFo χ hχ)) (carve∈𝒟ₒ (RL.liftFo χ hχ))
 
-    spec : (z : S) → (z ∈ˢ replElt) ≡ ReplImage a φ z
+    spec : (z : S) → (z ∈ˢ replElt) ≡ ((z ∷ []) ⊨ χ)
     spec z = ⇔toPath fwd bwd
       where
-      fwd : ⟨ z ∈ˢ replElt ⟩ → ⟨ ReplImage a φ z ⟩
+      fwd : ⟨ z ∈ˢ replElt ⟩ → ⟨ ((z ∷ []) ⊨ χ) ⟩
       fwd z∈ = ⊨-transport χ dχ (⟪ Lset σ ⟫↪ m , xL) z q (imageOut χ hχ dχ m xL m∈)
         where
         fz∈Lσ = carve⊆ (RL.liftFo χ hχ) (fst z) z∈
@@ -376,7 +337,7 @@ images.
         m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve (RL.liftFo χ hχ) ⟩
         m∈ = subst (λ w → ⟨ w ∈ carve (RL.liftFo χ hχ) ⟩) (sym q) z∈
 
-      bwd : ⟨ ReplImage a φ z ⟩ → ⟨ z ∈ˢ replElt ⟩
+      bwd : ⟨ ((z ∷ []) ⊨ χ) ⟩ → ⟨ z ∈ˢ replElt ⟩
       bwd qz = subst (λ w → ⟨ w ∈ carve (RL.liftFo χ hχ) ⟩) q m∈
         where
         fz∈Lσ = cover z qz
@@ -388,6 +349,13 @@ images.
         satz = ⊨-transport χ dχ z (⟪ Lset σ ⟫↪ m , xL) (sym q) qz
         m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve (RL.liftFo χ hχ) ⟩
         m∈ = imageIn χ hχ dχ m xL satz
+
+  separateAt : (a : S) (fa∈σ : ⟨ fst a ∈ Lset σ ⟩)
+               (φ : Formula S 1) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
+             → isContr (SetOf (λ x → (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)))
+  separateAt a fa∈σ φ h dφ =
+    carveAt ((var zero ∈̇ con a) ∧̇ φ) ((tt* , fa∈σ) , h) (δ-∧ δ-∈ dφ)
+      (λ z q → layer-trans (Lset-layer σ) {x = fst a} {y = fst z} (q .fst) fa∈σ)
 ```
 
 <!--en-->
@@ -452,8 +420,6 @@ mkBoundedFo (t ≐ u) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ σ∈�
 mkBoundedFo (φ ∧̇ ψ) = mkBounded (λ σ∈β → liftFoTo σ∈β φ) (λ σ∈β → liftFoTo σ∈β ψ) (mkBoundedFo φ) (mkBoundedFo ψ)
 mkBoundedFo (φ ∨̇ ψ) = mkBounded (λ σ∈β → liftFoTo σ∈β φ) (λ σ∈β → liftFoTo σ∈β ψ) (mkBoundedFo φ) (mkBoundedFo ψ)
 mkBoundedFo (φ ⇒̇ ψ) = mkBounded (λ σ∈β → liftFoTo σ∈β φ) (λ σ∈β → liftFoTo σ∈β ψ) (mkBoundedFo φ) (mkBoundedFo ψ)
-mkBoundedFo (¬̇ φ)    = mkBoundedFo φ
-mkBoundedFo ⊤̇        = ∅ , (∅-ord , _)
 mkBoundedFo ⊥̇        = ∅ , (∅-ord , _)
 mkBoundedFo (∃̇ φ)    = mkBoundedFo φ
 mkBoundedFo (∀̇ φ)    = mkBoundedFo φ
@@ -499,20 +465,17 @@ separateΔ₀ a φ dφ = AtStage.separateAt σ oσ a fa∈σ φ h dφ
 <!--/-->
 
 <!--en-->
-Replacement needs one thing more: the engine asked that the image already lie in
-the stage, and here is where that is paid. Functionality gives, for each member of
-the argument, a unique image; each image has its own earliest stage; and the
-bounding lemma over the argument's member type merges all of them at once. The
-merged ordinal joins the argument's stage and the formula's, and the covering
-condition follows because anything in the image is, by uniqueness, the image of
-some member.
+Replacement needs one thing more: a stage containing the image. Functionality
+gives the common image bound above. Separate that stage by the bounded
+existential saying that some member of the argument is related to the candidate;
+the resulting predicate is exactly the replacement image.
 
 Worth noting what this does *not* need. The defining formula's only quantifier is
 bounded by the argument, so it stays Δ₀ and absoluteness applies to the whole of
 it. The work is done by functionality, not by any reflection across structures,
 which is the clean line between this lemma and the unbounded case.
 <!--zh-->
-替换还多要一样：引擎要求像已经落在该阶段中，而正是在此处偿付。函数性为实参的每个成员给出唯一的像；每个像有自己的最早阶段；而界层引理在实参的成员类型上一举把它们全部合并。合并后的序数再与实参的阶段、公式的阶段相并，而覆盖条件随之成立，因为像中的任何东西经唯一性都是某个成员的像。
+替换还多要一样：一个装下像的阶段。函数性给出上面的公共像界。用一条有界存在公式「实参的某个成员与候选者相关」在该阶段上作分离；所得谓词恰好就是替换的像。
 
 值得注意它**不**需要什么。定义公式唯一的量词被实参所界，故它保持 Δ₀，绝对性适用于整条公式。出力的是函数性，而非任何跨结构的反射，这正是本引理与无界情形之间那条干净的分界。
 <!--/-->
@@ -521,56 +484,25 @@ which is the clean line between this lemma and the unbounded case.
 replaceΔ₀ : (a : S) (φ : Formula S 2) → Δ₀ φ
           → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (x ∷ y ∷ []) ⊨ φ ⟩))
           → isContr (SetOf (ReplImage a φ))
-replaceΔ₀ a φ dφ fc = AtStage.replaceAt σ oσ a fa∈σ φ h dφ cover
+replaceΔ₀ a φ dφ fc =
+  subst (λ Q → isContr (SetOf Q)) (sym Q≡)
+    (separateΔ₀ (LsetS βimg βimg-ord) imageFo (δ-∃∈ dφ))
   where
-  memS : (m : ⟪ fst a ⟫) → Σ[ x ∈ S ] ⟨ x ∈ˢ a ⟩
-  memS m = xₘ , fm∈fa
+  module I = FunctionalImage a (λ x y → (x ∷ y ∷ []) ⊨ φ) fc
+  open I using ( βimg; βimg-ord; range∈βimg )
+
+  imageFo : Formula S 1
+  imageFo = ∃̇∈ (con a) φ
+
+  BoundedImage : S → Ω
+  BoundedImage y = (y ∈ˢ LsetS βimg βimg-ord) ⊓ ((y ∷ []) ⊨ imageFo)
+
+  Q≡ : ReplImage a φ ≡ BoundedImage
+  Q≡ = funExt (λ y → ⇔toPath (into y) (λ p → p .snd))
     where
-    fm∈fa : ⟨ ⟪ fst a ⟫↪ m ∈ fst a ⟩
-    fm∈fa = ∈∈ₛ {a = ⟪ fst a ⟫↪ m} {b = fst a} .snd (∈ₛ⟪ fst a ⟫↪ m)
-    xₘ : S
-    xₘ = ⟪ fst a ⟫↪ m , isL-trans {x = fst a} {y = ⟪ fst a ⟫↪ m} fm∈fa (a .snd)
-  imgElt : (m : ⟪ fst a ⟫) → S
-  imgElt m = fc (memS m .fst) (memS m .snd) .fst .fst
-  imgStage : ⟪ fst a ⟫ → V ℓ
-  imgStage m = stage (fst (imgElt m)) (imgElt m .snd)
-  bImg = boundingOrd ⟪ fst a ⟫ imgStage
-           (λ m → stage-ord (fst (imgElt m)) (imgElt m .snd))
-  βimg = bImg .fst
-  oβimg = bImg .snd .fst
-  img∈Lβimg : (m : ⟪ fst a ⟫) → ⟨ fst (imgElt m) ∈ Lset βimg ⟩
-  img∈Lβimg m = Lset-mono {α = βimg} {β = imgStage m} (bImg .snd .snd m)
-    (stage-mem (fst (imgElt m)) (imgElt m .snd))
-  rφ = mkBoundedFo φ
-  sa = stage (fst a) (a .snd)
-  b1 = bound2 βimg sa oβimg (stage-ord (fst a) (a .snd))
-  bb = bound2 (b1 .fst) (rφ .fst) (b1 .snd .fst) (rφ .snd .fst)
-  σ  = bb .fst
-  oσ = bb .snd .fst
-  b1∈σ : ⟨ b1 .fst ∈ σ ⟩
-  b1∈σ = bb .snd .snd .fst
-  βimg∈σ : ⟨ βimg ∈ σ ⟩
-  βimg∈σ = oσ .fst {x = b1 .fst} {y = βimg} (b1 .snd .snd .fst) b1∈σ
-  sa∈σ : ⟨ sa ∈ σ ⟩
-  sa∈σ = oσ .fst {x = b1 .fst} {y = sa} (b1 .snd .snd .snd) b1∈σ
-  fa∈σ : ⟨ fst a ∈ Lset σ ⟩
-  fa∈σ = Lset-mono {α = σ} {β = sa} sa∈σ (stage-mem (fst a) (a .snd))
-  h  = liftFoTo {σ = rφ .fst} {β = σ} (bb .snd .snd .snd) φ (rφ .snd .snd)
-  cover : (z : S) → ⟨ ReplImage a φ z ⟩ → ⟨ fst z ∈ Lset σ ⟩
-  cover z = PT.rec (snd (fst z ∈ Lset σ)) step
-    where
-    step : Σ[ x ∈ S ] (⟨ x ∈ˢ a ⟩ × ⟨ (x ∷ z ∷ []) ⊨ φ ⟩) → ⟨ fst z ∈ Lset σ ⟩
-    step (x , x∈a , φxz) = Lset-mono {α = σ} {β = βimg} βimg∈σ fz∈Lβimg
-      where
-      m = ∈-asFiber {a = fst x} {b = fst a} x∈a .fst
-      qx : ⟪ fst a ⟫↪ m ≡ fst x
-      qx = ∈-asFiber {a = fst x} {b = fst a} x∈a .snd
-      φxₘz : ⟨ (memS m .fst ∷ z ∷ []) ⊨ φ ⟩
-      φxₘz = AtStage.⊨-transport₂ σ oσ φ dφ x (memS m .fst) z (sym qx) φxz
-      img≡z : imgElt m ≡ z
-      img≡z = cong fst (fc (memS m .fst) (memS m .snd) .snd (z , φxₘz))
-      fz∈Lβimg : ⟨ fst z ∈ Lset βimg ⟩
-      fz∈Lβimg = subst (λ w → ⟨ fst w ∈ Lset βimg ⟩) img≡z (img∈Lβimg m)
+    into : (y : S) → ⟨ ReplImage a φ y ⟩ → ⟨ BoundedImage y ⟩
+    into y = PT.rec (snd (BoundedImage y)) λ { (x , (x∈a , h)) →
+      range∈βimg x x∈a y h , ∣ x , (x∈a , h) ∣₁ }
 ```
 
 <!--en-->
@@ -581,12 +513,13 @@ replaceΔ₀ a φ dφ fc = AtStage.replaceAt σ oσ a fa∈σ φ h dφ cover
 
 <!--en-->
 Given a stage holding a set and all the constants of a Δ₀ formula,
-`separateAt`{.Agda} carves the subset and `replaceAt`{.Agda} takes the image,
-both landing in `L`. The whole content is `carveSat`{.Agda}: membership in the
-carved set is satisfaction in the model, along a path whose links were proved in
-the definability, relabelling and absoluteness chapters, with Δ₀ spent exactly
-once at the last of them. What remains for the axioms proper is to produce such a
-stage for an arbitrary formula, which is what reflection does.
+`separateAt`{.Agda} carves the subset in `L`. Its semantic content is
+`carveSat`{.Agda}: membership in the carved set is satisfaction in the model,
+along a path supplied by definability, relabelling and absoluteness.
+`FunctionalImage`{.Agda} supplies the other ingredient for replacement by bounding
+the values of any functional relation. Thus `replaceΔ₀`{.Agda} first bounds its
+image and then applies `separateΔ₀`{.Agda} to a bounded existential. For arbitrary
+formulas, the full axiom chapter adds reflection only where separation needs it.
 <!--zh-->
-给定一个装下某集合与某 Δ₀ 公式全部常元的阶段，`separateAt`{.Agda} 刻出子集，`replaceAt`{.Agda} 取出像，二者都落在 `L` 中。全部内容就是 `carveSat`{.Agda}：属于刻出的集合就是在模型中满足，沿着一条其各环分别由可定义性、重标与绝对性三章证出的路径，而 Δ₀ 恰在最后一环花掉一次。`mkBoundedFo`{.Agda} 随后沿递归为任何公式产出这样一个阶段，故 `separateΔ₀`{.Agda} 与 `replaceΔ₀`{.Agda} 对有界片段无条件成立：不需要反射，也不需要前沿字段。诸公理本身余下的是无界情形，那里公式的含义不绝对，必须找到一个**反射**它的阶段。
+给定一个装下某集合与某 Δ₀ 公式全部常元的阶段，`separateAt`{.Agda} 在 `L` 中刻出子集。其语义内容是 `carveSat`{.Agda}：属于刻出的集合就是在模型中满足，所沿道路由可定义性、重标与绝对性给出。`FunctionalImage`{.Agda} 提供替换所需的另一件东西：界住任意函数关系的诸值。因此 `replaceΔ₀`{.Agda} 先界住其像，再把 `separateΔ₀`{.Agda} 施于一条有界存在式。对任意公式，完整公理一章只在分离需要之处加入反射。
 <!--/-->

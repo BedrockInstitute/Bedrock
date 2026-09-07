@@ -37,7 +37,7 @@ module L.Choice.Name {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Term; con; var
-  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Semantics
 open import FOL.Manipulation.Relabelling using ( mapTm; embed; embed-⊨ )
 open import FOL.Manipulation.Parameters
@@ -55,7 +55,8 @@ open import L.Choice.Finite {ℓ} lem using ( Limit; inSome; limitOrder; Tri-map
 open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf )
 
-open import Cubical.Foundations.Prelude using ( J; substRefl; toPathP )
+open import Cubical.Foundations.Prelude using ( toPathP )
+open import Cubical.Foundations.Transport using ( constSubstCommSlice )
 open import Cubical.Foundations.Equiv using ( equivFun; invEq )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 open import Cubical.Functions.Logic using ( ⇔toPath )
@@ -136,12 +137,12 @@ tag∈limit k x h = pr∈limit (# k) x (numeral∈limit k) h
 ```
 
 <!--en-->
-The induction itself is then fourteen one-line clauses, twelve for the formula
+The induction itself is then twelve one-line clauses, ten for the formula
 constructors and two for the terms, and the constant clause is discharged by the
 empty type's eliminator. Nothing about the tag numbers matters beyond their being
 numerals.
 <!--zh-->
-归纳本身于是是十四条一行的子句，十二条对应公式的构造子，两条对应词项，而常量那一条由空类型的消去子打发。标签的编号除了「是数码」之外无关紧要。
+归纳本身于是是十二条一行的子句，十条对应公式的构造子，两条对应词项，而常量那一条由空类型的消去子打发。标签的编号除了「是数码」之外无关紧要。
 <!--/-->
 
 ```agda
@@ -156,13 +157,11 @@ code∈limit (t ≐ u)  = tag∈limit 1 _ (pr∈limit _ _ (codeTm∈limit t) (co
 code∈limit (φ ∧̇ ψ)  = tag∈limit 2 _ (pr∈limit _ _ (code∈limit φ) (code∈limit ψ))
 code∈limit (φ ∨̇ ψ)  = tag∈limit 3 _ (pr∈limit _ _ (code∈limit φ) (code∈limit ψ))
 code∈limit (φ ⇒̇ ψ)  = tag∈limit 4 _ (pr∈limit _ _ (code∈limit φ) (code∈limit ψ))
-code∈limit (¬̇ φ)    = tag∈limit 5 _ (code∈limit φ)
-code∈limit ⊤̇        = tag∈limit 6 _ (numeral∈limit 0)
-code∈limit ⊥̇        = tag∈limit 7 _ (numeral∈limit 0)
-code∈limit (∃̇ φ)    = tag∈limit 8 _ (code∈limit φ)
-code∈limit (∀̇ φ)    = tag∈limit 9 _ (code∈limit φ)
-code∈limit (∀̇∈ t φ) = tag∈limit 10 _ (pr∈limit _ _ (codeTm∈limit t) (code∈limit φ))
-code∈limit (∃̇∈ t φ) = tag∈limit 11 _ (pr∈limit _ _ (codeTm∈limit t) (code∈limit φ))
+code∈limit ⊥̇        = tag∈limit 5 _ (numeral∈limit 0)
+code∈limit (∃̇ φ)    = tag∈limit 6 _ (code∈limit φ)
+code∈limit (∀̇ φ)    = tag∈limit 7 _ (code∈limit φ)
+code∈limit (∀̇∈ t φ) = tag∈limit 8 _ (pr∈limit _ _ (codeTm∈limit t) (code∈limit φ))
+code∈limit (∃̇∈ t φ) = tag∈limit 9 _ (pr∈limit _ _ (codeTm∈limit t) (code∈limit φ))
 ```
 
 <!--en-->
@@ -182,12 +181,9 @@ limitCode χ = VCode.⌜ embed χ ⌝ , code∈limit χ
 code-shift : {i j : ℕ} (e : i ≡ j) (χ : Formula (⊥* {ℓ}) (suc i))
            → VCode.⌜ embed (subst (λ k → Formula (⊥* {ℓ}) (suc k)) e χ) ⌝
            ≡ VCode.⌜ embed χ ⌝
-code-shift {i} e χ =
-  J (λ j' e' → VCode.⌜ embed (subst (λ k → Formula (⊥* {ℓ}) (suc k)) e' χ) ⌝
-             ≡ VCode.⌜ embed χ ⌝)
-    (cong (λ ψ → VCode.⌜ embed ψ ⌝)
-      (substRefl {B = λ k → Formula (⊥* {ℓ}) (suc k)} χ))
-    e
+code-shift e χ = sym (constSubstCommSlice
+  (λ k → Formula (⊥* {ℓ}) (suc k)) S (λ _ ψ → VCode.⌜ embed ψ ⌝) e χ)
+
 ```
 
 <!--en-->
@@ -229,8 +225,6 @@ private
   eraseFo (φ ∧̇ ψ)  = eraseFo φ ∧̇ eraseFo ψ
   eraseFo (φ ∨̇ ψ)  = eraseFo φ ∨̇ eraseFo ψ
   eraseFo (φ ⇒̇ ψ)  = eraseFo φ ⇒̇ eraseFo ψ
-  eraseFo (¬̇ φ)    = ¬̇ eraseFo φ
-  eraseFo ⊤̇        = ⊤̇
   eraseFo ⊥̇        = ⊥̇
   eraseFo (∃̇ φ)    = ∃̇ eraseFo φ
   eraseFo (∀̇ φ)    = ∀̇ eraseFo φ
@@ -248,8 +242,6 @@ private
   eraseFo-embed (φ ∧̇ ψ)  = cong₂ _∧̇_ (eraseFo-embed φ) (eraseFo-embed ψ)
   eraseFo-embed (φ ∨̇ ψ)  = cong₂ _∨̇_ (eraseFo-embed φ) (eraseFo-embed ψ)
   eraseFo-embed (φ ⇒̇ ψ)  = cong₂ _⇒̇_ (eraseFo-embed φ) (eraseFo-embed ψ)
-  eraseFo-embed (¬̇ φ)    = cong ¬̇_ (eraseFo-embed φ)
-  eraseFo-embed ⊤̇        = refl
   eraseFo-embed ⊥̇        = refl
   eraseFo-embed (∃̇ φ)    = cong ∃̇_ (eraseFo-embed φ)
   eraseFo-embed (∀̇ φ)    = cong ∀̇_ (eraseFo-embed φ)
@@ -583,15 +575,14 @@ which meet two vectors whose lengths are equal but not identical.
   private
     ≺ᵥ-subst-left : {i j k : ℕ} (e : i ≡ j) (p : Vec ⟪ A ⟫ i) (q : Vec ⟪ A ⟫ k)
                   → (subst (Vec ⟪ A ⟫) e p ≺ᵥ q) ≡ (p ≺ᵥ q)
-    ≺ᵥ-subst-left {i} e p q =
-      J (λ j' e' → (subst (Vec ⟪ A ⟫) e' p ≺ᵥ q) ≡ (p ≺ᵥ q))
-        (cong (λ v → v ≺ᵥ q) (substRefl {B = Vec ⟪ A ⟫} p)) e
+    ≺ᵥ-subst-left e p q = sym (constSubstCommSlice
+      (Vec ⟪ A ⟫) (Type (ℓ-suc ℓ)) (λ _ v → v ≺ᵥ q) e p)
 
     ≺ᵥ-subst-right : {i j k : ℕ} (e : i ≡ j) (p : Vec ⟪ A ⟫ k) (q : Vec ⟪ A ⟫ i)
                    → (p ≺ᵥ subst (Vec ⟪ A ⟫) e q) ≡ (p ≺ᵥ q)
-    ≺ᵥ-subst-right {i} e p q =
-      J (λ j' e' → (p ≺ᵥ subst (Vec ⟪ A ⟫) e' q) ≡ (p ≺ᵥ q))
-        (cong (λ v → p ≺ᵥ v) (substRefl {B = Vec ⟪ A ⟫} q)) e
+    ≺ᵥ-subst-right e p q = sym (constSubstCommSlice
+      (Vec ⟪ A ⟫) (Type (ℓ-suc ℓ)) (λ _ v → p ≺ᵥ v) e q)
+
 ```
 
 <!--en-->

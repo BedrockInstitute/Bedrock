@@ -22,7 +22,7 @@ module L.GCH.Pairing {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_; ∃̇∈ )
+  using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
 open import L.Choice.Stage {ℓ} lem using ( ord-suc-inj )
@@ -40,7 +40,6 @@ open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
 open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
-open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Coding.Model {ℓ}
   using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt; sucAtL; sucAtL-adequate )
 open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
@@ -51,7 +50,7 @@ open import L.GCH.CardOf {ℓ} lem using ( cardOf )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
 open import L.InjChain {ℓ} lem
-  using ( module PairBound; appC; appC-adequate; ω-limit; finite-excl-ω )
+  using ( appC; appC-adequate; ω-limit; finite-excl-ω )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
@@ -120,54 +119,35 @@ separation out of the stage `PairBound` names, with the one-place description
 "`e` is the pair of a member and a member". Inside the two bounded binders: `b`
 is 0, `a` is 1, `e` is 2.
 
+The shared bounded-relation construction is imported from `L.InjChain`.
+
 ```agda
-prodFo : S → Formula S 1
-prodFo K = ∃̇∈ (con K) (∃̇∈ (con K) (prAtL (suc (suc zero)) (suc zero) zero))
+open import L.InjChain {ℓ} lem public using ( module Relation )
 ```
 
-The host reading of membership in the product.
+The product specializes the relation to membership of both components.
 
 ```agda
+private
+  module Product (K : S) = Relation K K
+    ((var (suc zero) ∈̇ con K) ∧̇ (var zero ∈̇ con K))
+    (λ x y → (fst x ∈ˢ fst K) ⊓ (fst y ∈ˢ fst K))
+    (λ x y e h → h) (λ x y e h → h)
+
+prodL : S → S
+prodL = Product.rel
+
 InProd : S → V ℓ → Type (ℓ-suc ℓ)
 InProd K e = ∥ Σ[ a ∈ S ] Σ[ b ∈ S ]
                (⟨ fst a ∈ˢ fst K ⟩ × ⟨ fst b ∈ˢ fst K ⟩
                 × (e ≡ pr (fst a) (fst b))) ∥₁
 
-module ProdFo (K : S) where
-
-  private
-    at : (e a b : S)
-       → ⟨ (b ∷ a ∷ e ∷ []) ⊨ prAtL (suc (suc zero)) (suc zero) zero ⟩
-       ≡ (fst e ≡ pr (fst a) (fst b))
-    at e a b = cong ⟨_⟩ (prAtL-adequate (suc (suc zero)) (suc zero) zero (b ∷ a ∷ e ∷ []))
-
-  out : (e : S) → ⟨ (e ∷ []) ⊨ prodFo K ⟩ → InProd K (fst e)
-  out e = PT.rec squash₁ (λ { (a , (ma , h)) → PT.map
-    (λ { (b , (mb , q)) → a , b , ma , mb , transport (at e a b) q }) h })
-
-  into : (e a b : S) → ⟨ fst a ∈ˢ fst K ⟩ → ⟨ fst b ∈ˢ fst K ⟩
-       → fst e ≡ pr (fst a) (fst b) → ⟨ (e ∷ []) ⊨ prodFo K ⟩
-  into e a b ma mb q = ∣ a , (ma , ∣ b , (mb , transport (sym (at e a b)) q) ∣₁) ∣₁
-
-opaque
-  prodL : S → S
-  prodL K = fst (fst (hasSeparationL (PairBound.bnd K K) (prodFo K)))
-
-  prodL-spec : (K e : S) → (e SL.∈ˢ prodL K)
-             ≡ ((e SL.∈ˢ PairBound.bnd K K) ⊓ ((e ∷ []) ⊨ prodFo K))
-  prodL-spec K = snd (fst (hasSeparationL (PairBound.bnd K K) (prodFo K)))
-
 prodL-in : (K a b : S) → ⟨ fst a ∈ˢ fst K ⟩ → ⟨ fst b ∈ˢ fst K ⟩
          → ⟨ pr (fst a) (fst b) ∈ˢ fst (prodL K) ⟩
-prodL-in K a b ma mb =
-  subst (λ w → ⟨ w ∈ˢ fst (prodL K) ⟩) (prʟ-fst a b)
-    (subst ⟨_⟩ (sym (prodL-spec K (prʟ a b)))
-      ( subst (λ w → ⟨ w ∈ˢ fst (PairBound.bnd K K) ⟩) (sym (prʟ-fst a b))
-          (PairBound.below K K a b ma mb)
-      , ProdFo.into K (prʟ a b) a b ma mb (prʟ-fst a b) ))
+prodL-in K a b ma mb = Product.into K a b ma mb (ma , mb)
 
 prodL-out : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩ → InProd K (fst e)
-prodL-out K e h = ProdFo.out K e (snd (subst ⟨_⟩ (prodL-spec K e) h))
+prodL-out K e h = PT.map (λ { (a , b , q , ma , mb) → a , b , ma , mb , q }) (Product.out K e h)
 ```
 
 The pair of two members, as an element of the product, and its components read
@@ -298,7 +278,11 @@ opaque
       ∣ a , b , c , d , m , n
       , ( transport (atP p γ a b c d m n) hp
         , transport (atQ q γ a b c d m n) hq
-        , hM , hN , hO ) ∣₁ }) hm }) hd }) hc }) hb }) ha })
+        , PT.map (λ { (inl h) → inl h
+                    ; (inr (n , e)) → inr ((λ k → lower (n k)) , e) }) hM
+        , PT.map (λ { (inl h) → inl h
+                    ; (inr (n , e)) → inr ((λ k → lower (n k)) , e) }) hN
+        , hO ) ∣₁ }) hm }) hd }) hc }) hb }) ha })
 
   lt-in : ∀ {k} (p q : Fin k) (γ : S ^ k)
         → Lt (fst (lookup p γ)) (fst (lookup q γ)) → ⟨ γ ⊨ ltAt p q ⟩
@@ -307,7 +291,11 @@ opaque
       ∣ a , ∣ b , ∣ c , ∣ d , ∣ m , ∣ n
       , ( transport (sym (atP p γ a b c d m n)) ep
         , ( transport (sym (atQ q γ a b c d m n)) eq'
-        , ( hM , ( hN , hO )))) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ })
+        , ( PT.map (λ { (inl h) → inl h
+                      ; (inr (n , e)) → inr ((λ k → lift (n k)) , e) }) hM
+          , ( PT.map (λ { (inl h) → inl h
+                        ; (inr (n , e)) → inr ((λ k → lift (n k)) , e) }) hN
+            , hO )))) ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ })
 ```
 
 Section 3. The order, as a set of L.
@@ -316,76 +304,23 @@ Section 3. The order, as a set of L.
 `q`. Inside the two bounded binders: `q` is 0, `p` is 1, `e` is 2.
 
 ```agda
-godelFo : S → Formula S 1
-godelFo P = ∃̇∈ (con P) (∃̇∈ (con P)
-  (prAtL (suc (suc zero)) (suc zero) zero ∧̇ ltAt (suc zero) zero))
+private
+  module Godel (P : S) = Relation P P
+    ((var (suc zero) ∈̇ con P) ∧̇ ((var zero ∈̇ con P) ∧̇ ltAt (suc zero) zero))
+    (λ p q → (fst p ∈ˢ fst P) ⊓ ((fst q ∈ˢ fst P) ⊓ (Lt (fst p) (fst q) , squash₁)))
+    (λ p q e h → h .fst , h .snd .fst , lt-out (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
+    (λ p q e h → h .fst , h .snd .fst , lt-in (suc zero) zero (q ∷ p ∷ e ∷ []) (h .snd .snd))
 
-InGodel : S → V ℓ → Type (ℓ-suc ℓ)
-InGodel P e = ∥ Σ[ p ∈ S ] Σ[ q ∈ S ]
-                (⟨ fst p ∈ˢ fst P ⟩ × ⟨ fst q ∈ˢ fst P ⟩
-                 × (e ≡ pr (fst p) (fst q)) × Lt (fst p) (fst q)) ∥₁
-
-module GodelFo (P : S) where
-
-  private
-    at : (e p q : S)
-       → ⟨ (q ∷ p ∷ e ∷ []) ⊨ prAtL (suc (suc zero)) (suc zero) zero ⟩
-       ≡ (fst e ≡ pr (fst p) (fst q))
-    at e p q = cong ⟨_⟩ (prAtL-adequate (suc (suc zero)) (suc zero) zero (q ∷ p ∷ e ∷ []))
-
-  out : (e : S) → ⟨ (e ∷ []) ⊨ godelFo P ⟩ → InGodel P (fst e)
-  out e = PT.rec squash₁ (λ { (p , (mp , h)) → PT.map
-    (λ { (q , (mq , (r , l))) →
-       p , q , mp , mq , transport (at e p q) r
-       , lt-out (suc zero) zero (q ∷ p ∷ e ∷ []) l }) h })
-
-  into : (e p q : S) → ⟨ fst p ∈ˢ fst P ⟩ → ⟨ fst q ∈ˢ fst P ⟩
-       → fst e ≡ pr (fst p) (fst q) → Lt (fst p) (fst q)
-       → ⟨ (e ∷ []) ⊨ godelFo P ⟩
-  into e p q mp mq r l =
-    ∣ p , (mp , ∣ q , (mq , ( transport (sym (at e p q)) r
-                          , lt-in (suc zero) zero (q ∷ p ∷ e ∷ []) l )) ∣₁) ∣₁
-
-opaque
-  godel : S → S
-  godel P = fst (fst (hasSeparationL (PairBound.bnd P P) (godelFo P)))
-
-  godel-spec : (P e : S) → (e SL.∈ˢ godel P)
-             ≡ ((e SL.∈ˢ PairBound.bnd P P) ⊓ ((e ∷ []) ⊨ godelFo P))
-  godel-spec P = snd (fst (hasSeparationL (PairBound.bnd P P) (godelFo P)))
+godel : S → S
+godel = Godel.rel
 
 godel-in : (P p q : S) → ⟨ fst p ∈ˢ fst P ⟩ → ⟨ fst q ∈ˢ fst P ⟩
          → Lt (fst p) (fst q) → ⟨ pr (fst p) (fst q) ∈ˢ fst (godel P) ⟩
-godel-in P p q mp mq l =
-  subst (λ w → ⟨ w ∈ˢ fst (godel P) ⟩) (prʟ-fst p q)
-    (subst ⟨_⟩ (sym (godel-spec P (prʟ p q)))
-      ( subst (λ w → ⟨ w ∈ˢ fst (PairBound.bnd P P) ⟩) (sym (prʟ-fst p q))
-          (PairBound.below P P p q mp mq)
-      , GodelFo.into P (prʟ p q) p q mp mq (prʟ-fst p q) l ))
+godel-in P p q mp mq l = Godel.into P p q mp mq (mp , mq , l)
 
 godel-out : (P p q : S) → ⟨ pr (fst p) (fst q) ∈ˢ fst (godel P) ⟩
           → ⟨ fst p ∈ˢ fst P ⟩ × ⟨ fst q ∈ˢ fst P ⟩ × Lt (fst p) (fst q)
-godel-out P p q h = PT.rec
-  (isProp× (snd (fst p ∈ˢ fst P)) (isProp× (snd (fst q ∈ˢ fst P)) squash₁))
-  step
-  (GodelFo.out P (prʟ p q) (snd (subst ⟨_⟩ (godel-spec P (prʟ p q)) h')))
-  where
-  h' : ⟨ fst (prʟ p q) ∈ˢ fst (godel P) ⟩
-  h' = subst (λ w → ⟨ w ∈ˢ fst (godel P) ⟩) (sym (prʟ-fst p q)) h
-
-  step : Σ[ p' ∈ S ] Σ[ q' ∈ S ]
-           (⟨ fst p' ∈ˢ fst P ⟩ × ⟨ fst q' ∈ˢ fst P ⟩
-            × (fst (prʟ p q) ≡ pr (fst p') (fst q')) × Lt (fst p') (fst q'))
-       → ⟨ fst p ∈ˢ fst P ⟩ × ⟨ fst q ∈ˢ fst P ⟩ × Lt (fst p) (fst q)
-  step (p' , q' , mp' , mq' , e , l) =
-      subst (λ w → ⟨ w ∈ˢ fst P ⟩) (sym ep) mp'
-    , subst (λ w → ⟨ w ∈ˢ fst P ⟩) (sym eq') mq'
-    , subst2 Lt (sym ep) (sym eq') l
-    where
-    ep : fst p ≡ fst p'
-    ep = pr-inj (sym (prʟ-fst p q) ∙ e) .fst
-    eq' : fst q ≡ fst q'
-    eq' = pr-inj (sym (prʟ-fst p q) ∙ e) .snd
+godel-out = Godel.pair-out
 ```
 
 <!--en-->
@@ -636,7 +571,7 @@ The host pair of a member of the product.
     go (gt h) = inr (inr (≺-bwd b a h))
 
   module C = OT.Conjuncts wf ≺-trans using (module Inj; col; col-ord; col-out; colTable; colTable-in; colTable-pair; colʟ; otL; otL-out)
-  module I = C.Inj tri using (code; col-inj)
+  module I = C.Inj tri using (code; col-inj; module Inverse)
 ```
 
 The product injects into its order type, internally.
@@ -670,7 +605,7 @@ incl a b sub = ι , ι-inj
 ```
 
 A coded injection, read back as an ambient one.  Sealed at the
-definition, as `Carve.incl` is (src/L/InjChain.lagda.md:549-560).
+definition, as `InclGraph.incl` is (src/L/InjChain.lagda.md).
 
 ```agda
 opaque
@@ -1006,7 +941,8 @@ The two sides of each decision exclude each other.
     graph-out : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → Wit y x
     graph-out y x = PT.rec squash₁
       (λ { (inl (k , e)) → ∣ inl (k , transport (sa y x) e) ∣₁
-         ; (inr h) → PT.map (λ { (inl (n , (k , e))) → inr (inl (n , k , e))
+         ; (inr h) → PT.map (λ { (inl (n , (k , e))) →
+                                  inr (inl ((λ hx → lower (n hx)) , k , e))
                               ; (inr (q , e)) → inr (inr (q , e)) }) h })
 
     in-fin : (y x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst y ≡ sucV (fst x) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
@@ -1014,7 +950,7 @@ The two sides of each decision exclude each other.
 
     in-mid : (y x : S) → (⟨ fst x ∈ˢ ω ⟩ → Empty.⊥) → ⟨ fst x ∈ˢ m ⟩ → fst y ≡ fst x
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
-    in-mid y x n k e = ∣ inr ∣ inl (n , (k , e)) ∣₁ ∣₁
+    in-mid y x n k e = ∣ inr ∣ inl ((λ hx → lift (n hx)) , (k , e)) ∣₁ ∣₁
 
     in-top : (y x : S) → fst x ≡ m → fst y ≡ ∅ → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-top y x q e = ∣ inr ∣ inr (q , e) ∣₁ ∣₁
@@ -1315,57 +1251,19 @@ holding both components of every member below `p`. Its graph is the converse of
              (bfst : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .fst) ∈ˢ fst g ⟩)
              (bsnd : (r : OT.Dom) → r OT.≺ p → ⟨ ↑ (φ r .snd) ∈ˢ fst g ⟩) where
 
-    Mem : S → Type (ℓ-suc ℓ)
-    Mem x = ⟨ fst x ∈ˢ C.col p ⟩
+    private
+      pre : (x : S) → ⟨ fst x ∈ˢ C.col p ⟩ → Σ[ r ∈ OT.Dom ] (C.col r ≡ fst x)
+      pre x mx = seg p (fst x) mx .fst , seg p (fst x) mx .snd .snd
 
-    fn : (x : S) → Mem x → S
-    fn x mx = OT.up (seg p (fst x) mx .fst)
-```
+      bound : (x : S) (mx : ⟨ fst x ∈ˢ C.col p ⟩) → ⟨ OT.↪ (pre x mx .fst) ∈ˢ fst (prodL g) ⟩
+      bound x mx = subst (λ w → ⟨ w ∈ˢ fst (prodL g) ⟩) (sym (φ-eq (seg p (fst x) mx .fst)))
+        (prodL-in g (upK (φ (seg p (fst x) mx .fst) .fst))
+                    (upK (φ (seg p (fst x) mx .fst) .snd))
+                    (bfst _ (seg p (fst x) mx .snd .fst))
+                    (bsnd _ (seg p (fst x) mx .snd .fst)))
 
-Sealed with its reading.
-
-```agda
-    opaque
-      graph : Formula S 2
-      graph = appC C.colTable zero (suc zero)
-
-      at : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ ≡ ⟨ pr (fst y) (fst x) ∈ fst C.colTable ⟩
-      at y x = cong ⟨_⟩ (appC-adequate C.colTable zero (suc zero) (y ∷ x ∷ []))
-
-    only : (x : S) (mx : Mem x) (y : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x mx
-    only x mx y hy =
-      sym (OT.up-toDom y my) ∙ cong OT.up (I.col-inj (OT.toDom y my) r (sym ey ∙ sym e))
-      where
-      r = seg p (fst x) mx .fst
-      e : C.col r ≡ fst x
-      e = seg p (fst x) mx .snd .snd
-      fib = C.colTable-pair y x (transport (at y x) hy)
-      my = fib .fst
-      ey : fst x ≡ C.col (OT.toDom y my)
-      ey = fib .snd
-
-    M : DefinableMap
-    M = record
-      { dom = C.colʟ p ; cod = prodL g ; fn = fn ; graph = graph
-      ; into = λ x mx →
-          subst (λ w → ⟨ w ∈ˢ fst (prodL g) ⟩) (sym (φ-eq (seg p (fst x) mx .fst)))
-            (prodL-in g (upK (φ (seg p (fst x) mx .fst) .fst))
-                        (upK (φ (seg p (fst x) mx .fst) .snd))
-                        (bfst _ (seg p (fst x) mx .snd .fst))
-                        (bsnd _ (seg p (fst x) mx .snd .fst)))
-      ; defines = λ x mx →
-          transport (sym (at (fn x mx) x))
-            (subst (λ w → ⟨ pr (OT.↪ (seg p (fst x) mx .fst)) w ∈ˢ fst C.colTable ⟩)
-              (seg p (fst x) mx .snd .snd) (C.colTable-in (seg p (fst x) mx .fst)))
-      ; only = only }
-
-    inj : (x : S) (mx : Mem x) (x' : S) (mx' : Mem x')
-        → fst (fn x mx) ≡ fst (fn x' mx') → fst x ≡ fst x'
-    inj x mx x' mx' e =
-      sym (seg p (fst x) mx .snd .snd) ∙ cong C.col (OT.Dom≡ e) ∙ seg p (fst x') mx' .snd .snd
-
-    injL : InjL (C.colʟ p) (prodL g)
-    injL = Inj.injL M inj
+    open I.Inverse (C.colʟ p) (prodL g) pre bound public
+      using ( fn; graph; at; only; M; inj; injL ) renaming ( SourceMem to Mem )
 ```
 
 EVERY VALUE OF THE COLLAPSE LIES IN `κ`.

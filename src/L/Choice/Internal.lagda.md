@@ -43,11 +43,11 @@ open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp; embed )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; Lset )
 open import L.Ordinal {ℓ} using ( ∈#-elim; #∈#-elim )
-open import L.Axioms.Basic {ℓ} using ( ∅ʟ )
+open import L.Axioms.Basic {ℓ} using ( ∅ʟ; extensionalL )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Coding.Environment {ℓ} using ( env; lookup-spec )
 open import L.Coding.Model {ℓ}
@@ -67,7 +67,7 @@ open import L.Coding.Graph {ℓ} lem using
   ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
   ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
 open import L.Coding.Clauses {ℓ} lem using
-  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ( Tags; towerAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
   ; module Tower; module TowerHolds )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Choice.Name {ℓ} lem using ( module Naming; limitCode )
@@ -83,7 +83,8 @@ open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Empty as Empty
 open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Foundations.Prelude using ( subst2; J; substRefl )
+open import Cubical.Foundations.Prelude using ( subst2 )
+open import Cubical.Foundations.Transport using ( constSubstCommSlice )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
@@ -178,10 +179,8 @@ private
   codeShift : {i j : ℕ} (e : i ≡ j) (ψ : Fo∅ i)
             → VCode.⌜ mapFo ⟪ ∅ ⟫↪ (subst Fo∅ e ψ) ⌝
             ≡ VCode.⌜ mapFo ⟪ ∅ ⟫↪ ψ ⌝
-  codeShift {i} e ψ =
-    J (λ j' e' → VCode.⌜ mapFo ⟪ ∅ ⟫↪ (subst Fo∅ e' ψ) ⌝
-               ≡ VCode.⌜ mapFo ⟪ ∅ ⟫↪ ψ ⌝)
-      (cong (λ u → VCode.⌜ mapFo ⟪ ∅ ⟫↪ u ⌝) (substRefl {B = Fo∅} ψ)) e
+  codeShift e ψ = sym (constSubstCommSlice
+    Fo∅ (V ℓ) (λ _ u → VCode.⌜ mapFo ⟪ ∅ ⟫↪ u ⌝) e ψ)
 
 freeCode-in : (k : ℕ) (χ : Formula (⊥* {ℓ}) k)
             → ⟨ pr (# k) (fst (limitCode χ)) ∈ fst (AllCodes ∅ʟ) ⟩
@@ -370,21 +369,19 @@ module _ {n : ℕ} (e d : Fin n) (γ : S ^ n)
          (qe : fst (lookup e γ) ≡ env g) where
 
   domAt-numeral : ⟨ γ ⊨ domAt e d ⟩ → fst (lookup d γ) ≡ # k
-  domAt-numeral h = extensionalV {a = fst (lookup d γ)} {b = # k} pt
+  domAt-numeral h = cong fst (extensionalL {a = lookup d γ} {b = # k , numL k} pt)
     where
-    fwd : (x : V ℓ) → ⟨ x ∈ fst (lookup d γ) ⟩ → ⟨ x ∈ # k ⟩
-    fwd x hx = dom-into k g x
-      (subst (λ u → ⟨ ⋁ S (λ y → pr x (fst y) ∈ u) ⟩) qe
-        (domAt-in e d γ h (x , isL-trans hx (lookup d γ .snd)) hx))
-    bwd : (x : V ℓ) → ⟨ x ∈ # k ⟩ → ⟨ x ∈ fst (lookup d γ) ⟩
-    bwd x hx = PT.rec (snd (x ∈ fst (lookup d γ))) put (dom-from k g cg x hx)
+    fwd : (x : S) → ⟨ fst x ∈ fst (lookup d γ) ⟩ → ⟨ fst x ∈ # k ⟩
+    fwd x hx = dom-into k g (fst x)
+      (subst (λ u → ⟨ ⋁ S (λ y → pr (fst x) (fst y) ∈ u) ⟩) qe
+        (domAt-in e d γ h x hx))
+    bwd : (x : S) → ⟨ fst x ∈ # k ⟩ → ⟨ fst x ∈ fst (lookup d γ) ⟩
+    bwd x hx = PT.rec (snd (fst x ∈ fst (lookup d γ))) put (dom-from k g cg (fst x) hx)
       where
-      xS : S
-      xS = x , isL-trans hx (numL k)
-      put : Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ fst (lookup d γ) ⟩
-      put (y , p) = domAt-out e d γ h xS y
-        (subst (λ u → ⟨ pr x (fst y) ∈ u ⟩) (sym qe) p)
-    pt : (x : V ℓ) → (x ∈ fst (lookup d γ)) ≡ (x ∈ # k)
+      put : Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ env g ⟩ → ⟨ fst x ∈ fst (lookup d γ) ⟩
+      put (y , p) = domAt-out e d γ h x y
+        (subst (λ u → ⟨ pr (fst x) (fst y) ∈ u ⟩) (sym qe) p)
+    pt : (x : S) → (fst x ∈ fst (lookup d γ)) ≡ (fst x ∈ # k)
     pt x = ⇔toPath (fwd x) (bwd x)
 
   domAt-fill : fst (lookup d γ) ≡ # k → ⟨ γ ⊨ domAt e d ⟩
@@ -413,7 +410,7 @@ in a slot** and at a variable ambient environment, because the description below
 puts the graph under five binders.
 
 Nothing is re-proved. The index set, the table, its closedness, its totality and
-the twelve clauses are the chapters that built them, applied at this environment;
+the ten clauses are the chapters that built them, applied at this environment;
 the key is carried from the hierarchy's coding to the model's by the bridge
 written for exactly that. So the two readings are the existence and the
 uniqueness halves transplanted, and they say what a consumer wants: the value the
@@ -424,7 +421,7 @@ nothing else satisfies the graph there.
 
 指称就是一个名字的公式所选中的东西，而在模型内部，作选中的是那张满足关系表。一致满足那一章把那张表造成一场递归，并对着模型自家的二元图证出了它的两半。此处所需的是同样两半，但落在**握在一位上的载体**上、落在变元的周遭环境上，因为下面那条描述把那个图放在五层绑定之下。
 
-此处没有重证任何东西。索引集、表、它的封闭性、它的全性以及那十二条子句，都是造出它们的那几章的东西，施用在这个环境上；而那个键，由专为此写下的那座桥从层级的编码搬到模型的编码。故这两条读法就是存在性与唯一性两半的移植，而它们说出了消费方想要的话：图在某条公式之键处所指派的取值，就是该公式的满足集合，而在那里别无他物满足该图。
+此处没有重证任何东西。索引集、表、它的封闭性、它的全性以及那十条子句，都是造出它们的那几章的东西，施用在这个环境上；而那个键，由专为此写下的那座桥从层级的编码搬到模型的编码。故这两条读法就是存在性与唯一性两半的移植，而它们说出了消费方想要的话：图在某条公式之键处所指派的取值，就是该公式的满足集合，而在那里别无他物满足该图。
 <!--/-->
 
 ```agda
@@ -433,7 +430,7 @@ module _ {n : ℕ} (B x y : Fin n) (γ : S ^ n) where
     Bs : S
     Bs = lookup B γ
 
-    fr : ∀ {m} (φ : Formula S m) → S ^ (16 + n)
+    fr : ∀ {m} (φ : Formula S m) → S ^ (14 + n)
     fr φ = ev numν (Tower.tower Bs) (slot Bs φ) (satTable Bs φ) Bs γ
 
     tgs : ∀ {m} (φ : Formula S m) → Tags (fr φ) NN
@@ -462,8 +459,7 @@ module _ {n : ℕ} (B x y : Fin n) (γ : S ^ n) where
     , (tgs φ
     , (htow φ
     , (slotClosed Bs φ (Tower.tower Bs ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
-         ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
-         ∷ numν f11 ∷ γ)
+         ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ γ)
     , (hdom φ
     , (subst2 (λ u v → ⟨ pr u v ∈ fst (satTable Bs φ) ⟩)
          (sym (qx ∙ keyBridge Bs ψ)) (sym qy) (entry-in Bs φ)
@@ -546,25 +542,6 @@ NameAt B C C₀ s a e d =
     ∧̇ ( envOverAt e a B ∧̇ extAt d (DenoteBody B C s e) ) )
 
 module _ {n : ℕ} (B C s e : Fin n) (γ : S ^ n) where
-  AtValue : (z c k key : S) → Type (ℓ-suc ℓ)
-  AtValue z c k key = Σ[ v ∈ S ]
-    ( ⟨ (v ∷ key ∷ k ∷ c ∷ z ∷ γ) ⊨ satGraphAt (sh5 B) (suc zero) zero ⟩
-    × ⟨ fst c ∈ fst v ⟩ )
-
-  AtKey : (z c k : S) → Type (ℓ-suc ℓ)
-  AtKey z c k = Σ[ key ∈ S ]
-    ( ⟨ fst key ∈ fst (lookup C γ) ⟩
-    × ( ⟨ (key ∷ k ∷ c ∷ z ∷ γ) ⊨ prAtL zero (suc zero) (sh4 s) ⟩
-      × ∥ AtValue z c k key ∥₁ ) )
-
-  AtArity : (z c : S) → Type (ℓ-suc ℓ)
-  AtArity z c = Σ[ k ∈ S ]
-    ( ⟨ (k ∷ c ∷ z ∷ γ) ⊨ domAt (suc zero) zero ⟩ × ∥ AtKey z c k ∥₁ )
-
-  AtCons : (z : S) → Type (ℓ-suc ℓ)
-  AtCons z = Σ[ c ∈ S ]
-    ( ⟨ (c ∷ z ∷ γ) ⊨ consAtL zero (suc zero) (sh2 e) ⟩ × ∥ AtArity z c ∥₁ )
-
   DenoteOf : (z : S) → Type (ℓ-suc ℓ)
   DenoteOf z = Σ[ c ∈ S ] Σ[ k ∈ S ] Σ[ key ∈ S ] Σ[ v ∈ S ]
     ( ⟨ (c ∷ z ∷ γ) ⊨ consAtL zero (suc zero) (sh2 e) ⟩
@@ -583,31 +560,14 @@ module _ {n : ℕ} (B C s e : Fin n) (γ : S ^ n) where
 
   DenoteBody-out : (z : S) → ⟨ (z ∷ γ) ⊨ DenoteBody B C s e ⟩
                  → ⟨ fst z ∈ fst (lookup B γ) ⟩ × ∥ DenoteOf z ∥₁
-  DenoteBody-out z (hz , hc) = hz , PT.rec squash₁ (atCons z) hc
-    where
-    atValue : (z c k key : S) → ⟨ (c ∷ z ∷ γ) ⊨ consAtL zero (suc zero) (sh2 e) ⟩
-            → ⟨ (k ∷ c ∷ z ∷ γ) ⊨ domAt (suc zero) zero ⟩
-            → ⟨ fst key ∈ fst (lookup C γ) ⟩
-            → ⟨ (key ∷ k ∷ c ∷ z ∷ γ) ⊨ prAtL zero (suc zero) (sh4 s) ⟩
-            → AtValue z c k key → ∥ DenoteOf z ∥₁
-    atValue z c k key hc hk hi hp (v , (hg , hm)) =
-      ∣ c , (k , (key , (v , (hc , (hk , (hi
-      , ( subst ⟨_⟩ (prAtL-adequate zero (suc zero) (sh4 s) (key ∷ k ∷ c ∷ z ∷ γ)) hp
-        , (hg , hm) ))))))) ∣₁
-
-    atKey : (z c k : S) → ⟨ (c ∷ z ∷ γ) ⊨ consAtL zero (suc zero) (sh2 e) ⟩
-          → ⟨ (k ∷ c ∷ z ∷ γ) ⊨ domAt (suc zero) zero ⟩
-          → AtKey z c k → ∥ DenoteOf z ∥₁
-    atKey z c k hc hk (key , (hi , (hp , hv))) =
-      PT.rec squash₁ (atValue z c k key hc hk hi hp) hv
-
-    atArity : (z c : S) → ⟨ (c ∷ z ∷ γ) ⊨ consAtL zero (suc zero) (sh2 e) ⟩
-            → AtArity z c → ∥ DenoteOf z ∥₁
-    atArity z c hc (k , (hk , hkey)) =
-      PT.rec squash₁ (atKey z c k hc hk) hkey
-
-    atCons : (z : S) → AtCons z → ∥ DenoteOf z ∥₁
-    atCons z (c , (hc , ha)) = PT.rec squash₁ (atArity z c hc) ha
+  DenoteBody-out z (hz , hc) = hz , PT.rec squash₁
+    (λ { (c , (hc , hk)) → PT.rec squash₁
+      (λ { (k , (hk , hkey)) → PT.rec squash₁
+        (λ { (key , (hi , (hp , hv))) → PT.map
+          (λ { (v , (hg , hm)) → c , (k , (key , (v , (hc , (hk , (hi
+            , ( subst ⟨_⟩
+                  (prAtL-adequate zero (suc zero) (sh4 s) (key ∷ k ∷ c ∷ z ∷ γ)) hp
+              , (hg , hm) ))))))) }) hv }) hkey }) hk }) hc
 
 module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
   NameAt-in : ⟨ γ ⊨ FreeAt C₀ s a ⟩
@@ -859,6 +819,12 @@ LeastNameAt R P B C C₀ s a e d =
              ⇒̇ ¬̇ (≺At (sh3 R) (sh3 P) (suc (suc zero)) (suc zero) zero
                         (sh3 s) (sh3 a) (sh3 e)) )))
 
+private
+  exists-map : {A : Type (ℓ-suc ℓ)} {B C : A → Type (ℓ-suc ℓ)}
+             → ((x : A) → B x → ∥ C x ∥₁)
+             → ∥ Σ A B ∥₁ → ∥ Σ A C ∥₁
+  exists-map f = PT.rec squash₁ (λ { (x , h) → PT.map (x ,_) (f x h) })
+
 ∃₆ : ∀ {n} → Formula S (suc (suc (suc (suc (suc (suc n)))))) → Formula S n
 ∃₆ φ = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ (∃̇ φ)))))
 
@@ -873,37 +839,11 @@ module _ {n : ℕ} (φ : Formula S (suc (suc (suc (suc (suc (suc n))))))) (γ : 
     ∣ s₁ , ∣ k₁ , ∣ p₁ , ∣ s₂ , ∣ k₂ , ∣ p₂ , h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
 
   ∃₆-out : ⟨ γ ⊨ ∃₆ φ ⟩ → ∥ Six ∥₁
-  ∃₆-out = PT.rec squash₁ at₁
-    where
-    Body : (s₁ k₁ p₁ s₂ k₂ p₂ : S) → Type (ℓ-suc ℓ)
-    Body s₁ k₁ p₁ s₂ k₂ p₂ = ⟨ (p₂ ∷ k₂ ∷ s₂ ∷ p₁ ∷ k₁ ∷ s₁ ∷ γ) ⊨ φ ⟩
-
-    at₆ : (s₁ k₁ p₁ s₂ k₂ : S)
-        → Σ[ p₂ ∈ S ] Body s₁ k₁ p₁ s₂ k₂ p₂ → ∥ Six ∥₁
-    at₆ s₁ k₁ p₁ s₂ k₂ (p₂ , h) = ∣ s₁ , (k₁ , (p₁ , (s₂ , (k₂ , (p₂ , h))))) ∣₁
-
-    at₅ : (s₁ k₁ p₁ s₂ : S)
-        → Σ[ k₂ ∈ S ] ∥ Σ[ p₂ ∈ S ] Body s₁ k₁ p₁ s₂ k₂ p₂ ∥₁ → ∥ Six ∥₁
-    at₅ s₁ k₁ p₁ s₂ (k₂ , h) = PT.rec squash₁ (at₆ s₁ k₁ p₁ s₂ k₂) h
-
-    at₄ : (s₁ k₁ p₁ : S)
-        → Σ[ s₂ ∈ S ] ∥ Σ[ k₂ ∈ S ]
-            ∥ Σ[ p₂ ∈ S ] Body s₁ k₁ p₁ s₂ k₂ p₂ ∥₁ ∥₁ → ∥ Six ∥₁
-    at₄ s₁ k₁ p₁ (s₂ , h) = PT.rec squash₁ (at₅ s₁ k₁ p₁ s₂) h
-
-    at₃ : (s₁ k₁ : S)
-        → Σ[ p₁ ∈ S ] ∥ Σ[ s₂ ∈ S ] ∥ Σ[ k₂ ∈ S ]
-            ∥ Σ[ p₂ ∈ S ] Body s₁ k₁ p₁ s₂ k₂ p₂ ∥₁ ∥₁ ∥₁ → ∥ Six ∥₁
-    at₃ s₁ k₁ (p₁ , h) = PT.rec squash₁ (at₄ s₁ k₁ p₁) h
-
-    at₂ : (s₁ : S)
-        → Σ[ k₁ ∈ S ] ∥ Σ[ p₁ ∈ S ] ∥ Σ[ s₂ ∈ S ] ∥ Σ[ k₂ ∈ S ]
-            ∥ Σ[ p₂ ∈ S ] Body s₁ k₁ p₁ s₂ k₂ p₂ ∥₁ ∥₁ ∥₁ ∥₁ → ∥ Six ∥₁
-    at₂ s₁ (k₁ , h) = PT.rec squash₁ (at₃ s₁ k₁) h
-
-    at₁ : Σ[ s₁ ∈ S ] ∥ Σ[ k₁ ∈ S ] ∥ Σ[ p₁ ∈ S ] ∥ Σ[ s₂ ∈ S ] ∥ Σ[ k₂ ∈ S ]
-            ∥ Σ[ p₂ ∈ S ] Body s₁ k₁ p₁ s₂ k₂ p₂ ∥₁ ∥₁ ∥₁ ∥₁ ∥₁ → ∥ Six ∥₁
-    at₁ (s₁ , h) = PT.rec squash₁ (at₂ s₁) h
+  ∃₆-out = exists-map (λ s₁ →
+    exists-map (λ k₁ →
+      exists-map (λ p₁ →
+        exists-map (λ s₂ →
+          exists-map (λ k₂ → PT.map (λ p → p))))))
 
 StepBody : ∀ {n} → Fin n → Fin n → Fin n → Fin n → Fin n → Fin n → Fin n
          → Formula S (suc (suc (suc (suc (suc (suc n))))))
@@ -1213,17 +1153,13 @@ chapter's first job.
       envShift : (t : Name) {k : ℕ} (e : arity t ≡ k)
                → env (λ i → ix (lookup i (subst (Vec ⟪ A ⟫) e (params t))))
                ≡ env (pfam t)
-      envShift t = J
-        (λ k' e' → env (λ i → ix (lookup i (subst (Vec ⟪ A ⟫) e' (params t))))
-                 ≡ env (pfam t))
-        (cong (λ v → env (λ i → ix (lookup i v)))
-          (substRefl {B = Vec ⟪ A ⟫} (params t)))
+      envShift t e = sym (constSubstCommSlice
+        (Vec ⟪ A ⟫) (V ℓ) (λ _ v → env (λ i → ix (lookup i v))) e (params t))
 
       vecShift : {i j k : ℕ} (e : i ≡ j) (p : Vec ⟪ A ⟫ k) (q : Vec ⟪ A ⟫ i)
                → (p ≺ᵥ subst (Vec ⟪ A ⟫) e q) ≡ (p ≺ᵥ q)
-      vecShift {i} e p q =
-        J (λ j' e' → (p ≺ᵥ subst (Vec ⟪ A ⟫) e' q) ≡ (p ≺ᵥ q))
-          (cong (λ v → p ≺ᵥ v) (substRefl {B = Vec ⟪ A ⟫} q)) e
+      vecShift e p q = sym (constSubstCommSlice
+        (Vec ⟪ A ⟫) (Type (ℓ-suc ℓ)) (λ _ v → p ≺ᵥ v) e q)
 
     module _ {n : ℕ} (R P s₁ a₁ e₁ s₂ a₂ e₂ : Fin n) (γ : S ^ n) (t₁ t₂ : Name)
              (qR : fst (lookup R γ) ≡ fst Rs) (qP : fst (lookup P γ) ≡ fst Ps)

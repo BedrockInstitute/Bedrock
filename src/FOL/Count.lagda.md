@@ -5,7 +5,7 @@
 
 open import Base.Prelude
 open import FOL.Syntax using
-  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 open import FOL.Manipulation.Parameters using ( countTm; countFo )
 open import Cubical.Data.Nat using ( _+_; snotz )
@@ -47,8 +47,6 @@ The boundary case: a formula with no constants closes the shape under `∃̇`;
   erase (φ ∧̇ ψ) p = erase φ (plus-zero-l p) ∧̇ erase ψ (plus-zero-r p)
   erase (φ ∨̇ ψ) p = erase φ (plus-zero-l p) ∨̇ erase ψ (plus-zero-r p)
   erase (φ ⇒̇ ψ) p = erase φ (plus-zero-l p) ⇒̇ erase ψ (plus-zero-r p)
-  erase (¬̇ φ) p = ¬̇ erase φ p
-  erase ⊤̇ _ = ⊤̇
   erase ⊥̇ _ = ⊥̇
   erase (∃̇ φ) p = ∃̇ erase φ p
   erase (∀̇ φ) p = ∀̇ erase φ p
@@ -72,8 +70,6 @@ The boundary case: a formula with no constants closes the shape under `∃̇`;
     cong₂ _∨̇_ (erase-inv φ (plus-zero-l p)) (erase-inv ψ (plus-zero-r p))
   erase-inv (φ ⇒̇ ψ) p =
     cong₂ _⇒̇_ (erase-inv φ (plus-zero-l p)) (erase-inv ψ (plus-zero-r p))
-  erase-inv (¬̇ φ) p = cong ¬̇_ (erase-inv φ p)
-  erase-inv ⊤̇ _ = refl
   erase-inv ⊥̇ _ = refl
   erase-inv (∃̇ φ) p = cong ∃̇_ (erase-inv φ p)
   erase-inv (∀̇ φ) p = cong ∀̇_ (erase-inv φ p)

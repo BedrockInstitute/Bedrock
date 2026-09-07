@@ -38,6 +38,28 @@ language, the cumulative hierarchy, `L`, and the dual-semantics machinery. And i
 commits from line one to the host-language-maximalist approach described below.
 Getting it right calibrated the infrastructure everything else will stand on.
 
+## Verified size and build measurements
+
+Snapshot on 2026-09-07, after `make check` passed with no warnings:
+
+| Metric | Baseline | Current |
+| --- | ---: | ---: |
+| Nonblank Agda code lines | 28,973 | 26,308 |
+| Fresh project typecheck | 241.11 s | 201.38 s |
+| Peak resident memory | 2,454,323,200 bytes | 1,865,891,840 bytes (1.74 GiB) |
+
+The verified reduction is **2,665 lines**; the 3,000-line milestone remains
+335 lines away. Lines count only nonblank Agda code inside fences in
+`src/**/*.lagda.md`, using `python3 scripts/gate/count-agda.py --json`.
+
+Timing measures `GHCRTS="-A64m -I0 -M8g" agda src/Landmarks.lagda.md` after
+removing all 112 project interfaces, retaining installed Cubical interfaces.
+The figures are single local macOS observations, not full `make check` timings
+or repeated benchmark averages. Elapsed time uses Python's monotonic clock;
+peak memory is the child process's maximum RSS. Unfinished scratch refactors
+are excluded. See [measurement data](dev/refactor-metrics.json) and the
+[refactoring record](dev/REFACTOR.md).
+
 ## Direction
 
 Beyond that first stone, the long-term aim is to push mechanized set theory past

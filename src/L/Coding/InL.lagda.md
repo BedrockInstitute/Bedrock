@@ -13,21 +13,16 @@ graph naming a code as a constant needs that code to be an element of the model,
 since the object language of the model has no other kind of constant. Both
 requirements are this one lemma.
 
-What is deliberately not proved is that the set of *all* codes is an element of
-`L`. Nothing in this part needs it: a recursion over codes puts them inside a
-stage from the small index type, one at a time, and cuts back by separation. The
-set of all codes is a much harder object than any code, and the difference is the
-whole reason it is not here. Whether a later part needs it is a separate question
-with a separate answer: the answer is not yet in, and the place it is expected to
-turn is the point where definability at a stage is internalized, since the
-definable powerset takes syntax as its index type and an internalized index has
-to be a set.
+This chapter establishes constructibility of individual codes. The set of all
+codes over a constructible alphabet is constructed later as `AllCodes`{.Agda}
+in `L.Coding.CodeSet`{.Agda}; it supplies the internal syntax domain needed by
+the definable powerset construction.
 <!--zh-->
 一个码是由配对数码造出的遗传有穷集，故它理应是 `L` 的元素，而本章就这么说。证明是沿公式构造子的一次归纳，里面什么也没有；但这条陈述使后续章节能把码当作模型的寻常元素，而非当作恰好躺在那里的层级集合。
 
 它比看上去要紧。一个在 `L` 中内化的递归，其定义域取自 `L` **诸元素**的小族，而此处那个族就是诸码；而一个把码点名为常元的图，需要那个码是模型的元素，因为模型的对象语言没有别种常元。这两项要求都是这一条引理。
 
-刻意不证的是「**全体**码之集是 `L` 的元素」。本部分没有东西需要它：对码的递归从小索引类型出发，把它们逐个放进一个阶段，再由分离切回来。全体码之集是比任何单个码都难得多的对象，而这个差别正是它不在此处的全部理由。后续部分是否需要它，是另一个问题、另一个答案：那个答案尚未到手，而预计会翻盘的地方是「阶段处的可定义性被内化」之时，因为可定义幂集以语法为索引类型，而被内化的索引必须是一个集合。
+本章建立单个码的可构造性。可构造字母表上的全体码之集，由后面的 `L.Coding.CodeSet`{.Agda} 构造为 `AllCodes`{.Agda}，为可定义幂集的构造提供内部语法定义域。
 <!--/-->
 
 ```agda
@@ -41,7 +36,7 @@ module L.Coding.InL {ℓ : Level} where
 open import FOL.ZFStructure using ( module hPropStructure )
 
 open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
@@ -115,7 +110,7 @@ parameter-free one does, which is what lets the recursion below range over the
 formulas the constructible hierarchy is actually built from. The parameter-free
 case is the instance at the empty type.
 
-Then the formulas, twelve clauses and no content: each constructor's code is a
+Then the formulas, ten clauses and no content: each constructor's code is a
 tag on either a pair of sub-codes, a single sub-code, or a numeral, and the three
 blocks above cover all three shapes. The induction is over the parameter-free
 formula rather than its embedding, which costs nothing because embedding is a
@@ -125,7 +120,7 @@ relabelling and commutes with every constructor definitionally.
 
 这份一般性花掉一条子句，换来的是诸参数。常元取自某阶段成员的公式，其编码与无参公式一样是 `L` 的集合，而正是这一点，使下面的递归得以遍历可构造层级实际由之造出的那些公式。无参情形是空类型处的实例。
 
-然后是诸公式，十二条子句，毫无内容：每个构造子的码，都是「子码之对」「单个子码」或「数码」三者之一上的标签，而上面三块砖覆盖了这三种形状。归纳沿无参公式而非它的嵌入进行，这不费分文，因为嵌入是一次常量改名，按定义与每个构造子交换。
+然后是诸公式，十条子句，毫无内容：每个构造子的码，都是「子码之对」「单个子码」或「数码」三者之一上的标签，而上面三块砖覆盖了这三种形状。归纳沿无参公式而非它的嵌入进行，这不费分文，因为嵌入是一次常量改名，按定义与每个构造子交换。
 <!--/-->
 
 ```agda
@@ -141,13 +136,11 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
   codeL (φ ∧̇ ψ)  = tagL 2  (prL (codeL φ) (codeL ψ))
   codeL (φ ∨̇ ψ)  = tagL 3  (prL (codeL φ) (codeL ψ))
   codeL (φ ⇒̇ ψ)  = tagL 4  (prL (codeL φ) (codeL ψ))
-  codeL (¬̇ φ)    = tagL 5  (codeL φ)
-  codeL ⊤̇        = tagL 6  (numL 0)
-  codeL ⊥̇        = tagL 7  (numL 0)
-  codeL (∃̇ φ)    = tagL 8  (codeL φ)
-  codeL (∀̇ φ)    = tagL 9  (codeL φ)
-  codeL (∀̇∈ t φ) = tagL 10 (prL (codeTmL t) (codeL φ))
-  codeL (∃̇∈ t φ) = tagL 11 (prL (codeTmL t) (codeL φ))
+  codeL ⊥̇        = tagL 5 (numL 0)
+  codeL (∃̇ φ)    = tagL 6 (codeL φ)
+  codeL (∀̇ φ)    = tagL 7 (codeL φ)
+  codeL (∀̇∈ t φ) = tagL 8 (prL (codeTmL t) (codeL φ))
+  codeL (∃̇∈ t φ) = tagL 9 (prL (codeTmL t) (codeL φ))
 ```
 
 <!--en-->
@@ -210,18 +203,6 @@ construction and not by a second induction.
 <!--/-->
 
 ```agda
-sglL : {a : V ℓ} → ⟨ isL a ⟩ → ⟨ isL ⁅ a ⁆s ⟩
-sglL {a} pa =
-  subst (λ w → ⟨ isL w ⟩) (pairʟ-fst (a , pa) (a , pa) ∙ pair-singleton a)
-    (pairʟ (a , pa) (a , pa) .snd)
-
-cupL : {a b : V ℓ} → ⟨ isL a ⟩ → ⟨ isL b ⟩ → ⟨ isL (a ∪ b) ⟩
-cupL {a} {b} pa pb =
-  subst (λ w → ⟨ isL w ⟩)
-    (unionʟ-fst (pairʟ (a , pa) (b , pb))
-      ∙ cong (⋃_) (pairʟ-fst (a , pa) (b , pb)))
-    (unionʟ (pairʟ (a , pa) (b , pb)) .snd)
-
 sgl-out : (a x : V ℓ) → ⟨ x ∈ ⁅ a ⁆s ⟩ → x ≡ a
 sgl-out a x h = PT.rec (setIsSet x a) (λ { (inl e) → e ; (inr e) → e })
   (subst ⟨_⟩ (pair-spec a a x)
@@ -286,7 +267,7 @@ cupʟ-out a b x h = cup-out (fst a) (fst b) x
 <!--/-->
 
 <!--en-->
-One recursion over the twelve constructors, with what it collects left as its
+One recursion over the ten constructors, with what it collects left as its
 parameter. It gathers one thing per subformula: give it the key and it gives the
 subformula closure of the next section, give it an entry and it gives the
 satisfaction table of a later chapter. Both want the same inversion, so the
@@ -297,7 +278,7 @@ gathered at some subformula whose own set sits inside the one it came from.
 `tree-inv`{.Agda} proves it, and `Parts`{.Agda} carries the memberships the other
 direction needs, one for each shape a clause of the recursion produces.
 <!--zh-->
-沿十二个构造子的一次递归，收集什么留作它的参数。它为每条子公式收集一样东西：给它键，得到下一节那个子公式闭包；给它条目，得到后续某章那张可满足性表。两者要的是同一次求逆，故那次求逆在此只证一次，再实例化两次。
+沿十个构造子的一次递归，收集什么留作它的参数。它为每条子公式收集一样东西：给它键，得到下一节那个子公式闭包；给它条目，得到后续某章那张可满足性表。两者要的是同一次求逆，故那次求逆在此只证一次，再实例化两次。
 
 `Of`{.Agda} 说出这种集合的成员是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合坐落于它所出自的那个之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 携带另一方向所需的诸隶属关系，递归的每条子句所产生的每种形状各一条。
 <!--/-->
@@ -308,12 +289,10 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
   tree : (∀ {m} → Formula K m → S) → ∀ {n} → Formula K n → S
   tree f φ@(t ∈̇ u)  = sglʟ (f φ)
   tree f φ@(t ≐ u)  = sglʟ (f φ)
-  tree f φ@⊤̇        = sglʟ (f φ)
   tree f φ@⊥̇        = sglʟ (f φ)
   tree f φ@(a ∧̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
   tree f φ@(a ∨̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
   tree f φ@(a ⇒̇ b)  = cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))
-  tree f φ@(¬̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
   tree f φ@(∃̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
   tree f φ@(∀̇ a)    = cupʟ (sglʟ (f φ)) (tree f a)
   tree f φ@(∀̇∈ t a) = cupʟ (sglʟ (f φ)) (tree f a)
@@ -377,12 +356,10 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
     self : ∀ {n} (φ : Formula K n) → ⟨ fst (f φ) ∈ fst (tree f φ) ⟩
     self φ@(t ∈̇ u)  = sglʟ-in (f φ) _ refl
     self φ@(t ≐ u)  = sglʟ-in (f φ) _ refl
-    self φ@⊤̇        = sglʟ-in (f φ) _ refl
     self φ@⊥̇        = sglʟ-in (f φ) _ refl
     self φ@(a ∧̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
     self φ@(a ∨̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
     self φ@(a ⇒̇ b)  = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
-    self φ@(¬̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
     self φ@(∃̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
     self φ@(∀̇ a)    = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
     self φ@(∀̇∈ t a) = cupʟ-inl _ _ _ (sglʟ-in (f φ) _ refl)
@@ -410,7 +387,6 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
            → ⟨ x ∈ fst (tree f φ) ⟩ → Of f g φ x
   tree-inv f g φ@(t ∈̇ u) = one f g φ
   tree-inv f g φ@(t ≐ u) = one f g φ
-  tree-inv f g φ@⊤̇       = one f g φ
   tree-inv f g φ@⊥̇       = one f g φ
   tree-inv f g φ@(a ∧̇ b) = bin f g φ a b (λ _ hz → hz)
                              (tree-inv f g a) (tree-inv f g b)
@@ -418,7 +394,6 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
                              (tree-inv f g a) (tree-inv f g b)
   tree-inv f g φ@(a ⇒̇ b) = bin f g φ a b (λ _ hz → hz)
                              (tree-inv f g a) (tree-inv f g b)
-  tree-inv f g φ@(¬̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
   tree-inv f g φ@(∃̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
   tree-inv f g φ@(∀̇ a)    = un f g φ a (λ _ hz → hz) (tree-inv f g a)
   tree-inv f g φ@(∀̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
@@ -542,8 +517,8 @@ at the key, so neither is an induction here.
 <!--en-->
 The demand a closedness predicate makes is indexed by a constructor tag, and the
 formula it is made of is indexed by a constructor. Matching the two is the only
-real work in the first instance, and doing it clause by clause would be twelve
-formulas times eight demands. It is not, because the demand can be *computed*
+real work in the first instance, and doing it clause by clause would be ten
+formulas times seven demands. It is not, because the demand can be *computed*
 from the tag: one type family over the tag, one function over the formula, and
 the equation between tags that the key's injectivity yields carries the second to
 the first.
@@ -553,7 +528,7 @@ by pairing's injectivity. What comes out is that an arity-preserving constructor
 demands its components at the arity read, an arity-raising one demands them at
 the successor, and a constructor with no subformula demands nothing.
 <!--zh-->
-封闭性谓词提的要求以构造子标签为索引，而它所谈论的公式以构造子为索引。把这两者对上，是第一个实例里唯一真正的活；而逐条去做会是十二条公式乘八项要求。不必如此，因为那项要求可以从标签**算**出来：一个以标签为索引的类型族、一个以公式为索引的函数，而键的单射性所给出的那条标签等式把后者搬到前者上。
+封闭性谓词提的要求以构造子标签为索引，而它所谈论的公式以构造子为索引。把这两者对上，是第一个实例里唯一真正的活；而逐条去做会是十条公式乘七项要求。不必如此，因为那项要求可以从标签**算**出来：一个以标签为索引的类型族、一个以公式为索引的函数，而键的单射性所给出的那条标签等式把后者搬到前者上。
 
 标签之下，一个键是元数与码之对，两层都由配对的单射性钉住。得出的是：保持元数的构造子在被读出的元数处索取它的诸分量，抬升元数的在后继处索取，而没有子公式的构造子什么也不索取。
 <!--/-->
@@ -571,11 +546,10 @@ the successor, and a constructor with no subformula demands nothing.
     Concl 2  ar p = BothSame ar p
     Concl 3  ar p = BothSame ar p
     Concl 4  ar p = BothSame ar p
-    Concl 5  ar p = ⟨ pr ar p ∈ C ⟩
-    Concl 8  ar p = ⟨ pr (sucV ar) p ∈ C ⟩
-    Concl 9  ar p = ⟨ pr (sucV ar) p ∈ C ⟩
-    Concl 10 ar p = SecondSucc ar p
-    Concl 11 ar p = SecondSucc ar p
+    Concl 6 ar p = ⟨ pr (sucV ar) p ∈ C ⟩
+    Concl 7 ar p = ⟨ pr (sucV ar) p ∈ C ⟩
+    Concl 8 ar p = SecondSucc ar p
+    Concl 9 ar p = SecondSucc ar p
     Concl _  _  _ = Unit*
 
     private
@@ -643,10 +617,8 @@ the successor, and a constructor with no subformula demands nothing.
       (atTag 0 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapTm f u ⌝ᵗ) eq .fst) tt*
     byTag (t ≐ u) k ar p below eq = subst (λ j → Concl j ar p)
       (atTag 1 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapTm f u ⌝ᵗ) eq .fst) tt*
-    byTag ⊤̇ k ar p below eq = subst (λ j → Concl j ar p)
-      (atTag 6 (# 0) eq .fst) tt*
     byTag ⊥̇ k ar p below eq = subst (λ j → Concl j ar p)
-      (atTag 7 (# 0) eq .fst) tt*
+      (atTag 5 (# 0) eq .fst) tt*
     byTag φ@(a ∧̇ b) k ar p below eq =
       let r = atTag 2 (pr VCode.⌜ mapFo f a ⌝ VCode.⌜ mapFo f b ⌝) eq in
       subst (λ j → Concl j ar p) (r .fst)
@@ -662,24 +634,20 @@ the successor, and a constructor with no subformula demands nothing.
       subst (λ j → Concl j ar p) (r .fst)
         (bothOf φ a b below (left φ a b) (right φ a b) ar p
           (r .snd .fst) (r .snd .snd))
-    byTag φ@(¬̇ a) k ar p below eq =
-      let r = atTag 5 VCode.⌜ mapFo f a ⌝ eq in
-      subst (λ j → Concl j ar p) (r .fst)
-        (oneOf φ a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
     byTag φ@(∃̇ a) k ar p below eq =
-      let r = atTag 8 VCode.⌜ mapFo f a ⌝ eq in
+      let r = atTag 6 VCode.⌜ mapFo f a ⌝ eq in
       subst (λ j → Concl j ar p) (r .fst)
         (upOf φ a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
     byTag φ@(∀̇ a) k ar p below eq =
-      let r = atTag 9 VCode.⌜ mapFo f a ⌝ eq in
+      let r = atTag 7 VCode.⌜ mapFo f a ⌝ eq in
       subst (λ j → Concl j ar p) (r .fst)
         (upOf φ a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
     byTag φ@(∀̇∈ t a) k ar p below eq =
-      let r = atTag 10 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝) eq in
+      let r = atTag 8 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝) eq in
       subst (λ j → Concl j ar p) (r .fst)
         (sndUpOf φ t a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
     byTag φ@(∃̇∈ t a) k ar p below eq =
-      let r = atTag 11 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝) eq in
+      let r = atTag 9 (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f a ⌝) eq in
       subst (λ j → Concl j ar p) (r .fst)
         (sndUpOf φ t a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
 ```

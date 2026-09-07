@@ -23,9 +23,9 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
-  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
   ; Σₙ; σ-Δ₀; σ-Π; σ-∃; Πₙ; π-Δ₀; π-Σ; π-∀ )
 import FOL.Semantics
 import Cubical.Data.Empty as Empty
@@ -58,8 +58,6 @@ mapFo f (t ≐ u)  = mapTm f t ≐ mapTm f u
 mapFo f (φ ∧̇ ψ)  = mapFo f φ ∧̇ mapFo f ψ
 mapFo f (φ ∨̇ ψ)  = mapFo f φ ∨̇ mapFo f ψ
 mapFo f (φ ⇒̇ ψ)  = mapFo f φ ⇒̇ mapFo f ψ
-mapFo f (¬̇ φ)    = ¬̇ mapFo f φ
-mapFo f ⊤̇        = ⊤̇
 mapFo f ⊥̇        = ⊥̇
 mapFo f (∃̇ φ)    = ∃̇ mapFo f φ
 mapFo f (∀̇ φ)    = ∀̇ mapFo f φ
@@ -70,11 +68,11 @@ mapFo f (∃̇∈ t φ) = ∃̇∈ (mapTm f t) (mapFo f φ)
 <!--en-->
 Two such maps in a row are one map. The composite is the only thing a chapter
 that migrates a formula through an intermediate domain ever wants, and proving it
-where the syntax is defined costs twelve congruences and stops every later
+where the syntax is defined costs ten congruences and stops every later
 chapter from writing its own. Both term cases are `refl`{.Agda}, because a
 variable carries no constant and a constant is relabelled by application.
 <!--zh-->
-连着两次这样的映射就是一次映射。凡经中间域迁徙一条公式的章节，想要的无非是那个复合；而在语法被定义之处证它，代价是十二次同余，却省得此后每一章各写一遍。两个词项情形都是 `refl`{.Agda}，因为变元不携带常量，而常量的变换就是把映射施用上去。
+连着两次这样的映射就是一次映射。凡经中间域迁徙一条公式的章节，想要的无非是那个复合；而在语法被定义之处证它，代价是十次同余，却省得此后每一章各写一遍。两个词项情形都是 `refl`{.Agda}，因为变元不携带常量，而常量的变换就是把映射施用上去。
 <!--/-->
 
 ```agda
@@ -92,8 +90,6 @@ mapFo-comp f g (t ≐ u)  = cong₂ _≐_ (mapTm-comp f g t) (mapTm-comp f g u)
 mapFo-comp f g (φ ∧̇ ψ)  = cong₂ _∧̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
 mapFo-comp f g (φ ∨̇ ψ)  = cong₂ _∨̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
 mapFo-comp f g (φ ⇒̇ ψ)  = cong₂ _⇒̇_ (mapFo-comp f g φ) (mapFo-comp f g ψ)
-mapFo-comp f g (¬̇ φ)    = cong ¬̇_ (mapFo-comp f g φ)
-mapFo-comp f g ⊤̇        = refl
 mapFo-comp f g ⊥̇        = refl
 mapFo-comp f g (∃̇ φ)    = cong ∃̇_ (mapFo-comp f g φ)
 mapFo-comp f g (∀̇ φ)    = cong ∀̇_ (mapFo-comp f g φ)
@@ -158,8 +154,6 @@ module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) whe
     ⊨-map (φ ∧̇ ψ)  γ = cong₂ _⊓_ (⊨-map φ γ) (⊨-map ψ γ)
     ⊨-map (φ ∨̇ ψ)  γ = cong₂ _⊔_ (⊨-map φ γ) (⊨-map ψ γ)
     ⊨-map (φ ⇒̇ ψ)  γ = cong₂ _⇒_ (⊨-map φ γ) (⊨-map ψ γ)
-    ⊨-map (¬̇ φ)    γ = cong ¬_ (⊨-map φ γ)
-    ⊨-map ⊤̇        γ = refl
     ⊨-map ⊥̇        γ = refl
     ⊨-map (∃̇ φ)    γ = cong (⋁ S) (funExt (λ x → ⊨-map φ (x ∷ γ)))
     ⊨-map (∀̇ φ)    γ = cong (⋀ S) (funExt (λ x → ⊨-map φ (x ∷ γ)))
@@ -213,8 +207,6 @@ mapΔ₀ f δ-≐ = δ-≐
 mapΔ₀ f (δ-∧ c d) = δ-∧ (mapΔ₀ f c) (mapΔ₀ f d)
 mapΔ₀ f (δ-∨ c d) = δ-∨ (mapΔ₀ f c) (mapΔ₀ f d)
 mapΔ₀ f (δ-⇒ c d) = δ-⇒ (mapΔ₀ f c) (mapΔ₀ f d)
-mapΔ₀ f (δ-¬ c)   = δ-¬ (mapΔ₀ f c)
-mapΔ₀ f δ-⊤ = δ-⊤
 mapΔ₀ f δ-⊥ = δ-⊥
 mapΔ₀ f (δ-∀∈ c) = δ-∀∈ (mapΔ₀ f c)
 mapΔ₀ f (δ-∃∈ c) = δ-∃∈ (mapΔ₀ f c)

@@ -106,6 +106,27 @@ union-spec a x = ⇔toPath
 ```
 
 <!--en-->
+For an indexed union, membership reduces to membership in one family member.
+These two readings hide the intermediate set and its indexing fiber.
+<!--zh-->
+对于索引并，成员关系归结为属于某个族元。这两条读式包办中间集合及其索引纤维的转换。
+<!--/-->
+
+```agda
+union-family-in : (X : Type ℓ) (f : X → S) (i : X) (x : S)
+                → ⟨ x ∈ˢ f i ⟩ → ⟨ x ∈ˢ (⋃ (sett X f)) ⟩
+union-family-in X f i x h = subst ⟨_⟩ (sym (union-spec (sett X f) x))
+  ∣ f i , ∣ i , refl ∣₁ , h ∣₁
+
+union-family-out : (X : Type ℓ) (f : X → S) (x : S)
+                 → ⟨ x ∈ˢ (⋃ (sett X f)) ⟩ → ∥ Σ[ i ∈ X ] ⟨ x ∈ˢ f i ⟩ ∥₁
+union-family-out X f x h = PT.rec PT.squash₁
+  (λ { (v , hv , hx) → PT.map
+    (λ { (i , q) → i , subst (λ w → ⟨ x ∈ˢ w ⟩) (sym q) hx }) hv })
+  (subst ⟨_⟩ (union-spec (sett X f) x) h)
+```
+
+<!--en-->
 ## Replacement, for free
 <!--zh-->
 ## 替换，免费

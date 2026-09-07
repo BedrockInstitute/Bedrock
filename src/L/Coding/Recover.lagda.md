@@ -31,8 +31,8 @@ on the key because the key carries the arity beside the code and rank arithmetic
 on a pair is a fact nobody has proved. Carrying the arity as a natural number
 alongside, and descending on the code alone, needs neither.
 
-One step is `peel`{.Agda}, one descent is the previous chapter, and the twelve
-cases collapse to six, because the twelve tags have six shapes between them and
+One step is `peel`{.Agda}, one descent is the previous chapter, and the ten
+cases collapse to six, because the ten tags have six shapes between them and
 what changes inside a shape is a tag and a constructor.
 <!--zh-->
 解码。给定一个在某载体上既封闭又成形的集合，一个以「某个已言明元数处的键」的形式递交过来的成员，就是**该载体之上**某条公式的键，而那条公式可以被造出来。
@@ -45,7 +45,7 @@ what changes inside a shape is a tag and a constructor.
 
 递归跑在**码的秩**上，不跑在码上、也不跑在键上。不跑在码上，是因为成员关系不下降进 Kuratowski 的对；不跑在键上，是因为键在码旁边还带着元数，而「对的秩的算术」是一条没人证过的事实。把元数作为一个自然数在旁边带着、只对码下降，两者都不需要。
 
-一步是 `peel`{.Agda}，一次下降是上一章，而十二个情形收拢为六个，因为十二个标签之间只有六种形状，而一种形状之内变动的只是一个标签与一个构造子。
+一步是 `peel`{.Agda}，一次下降是上一章，而十个情形收拢为六个，因为十个标签之间只有六种形状，而一种形状之内变动的只是一个标签与一个构造子。
 <!--/-->
 
 ```agda
@@ -58,7 +58,7 @@ module L.Coding.Recover {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  using ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling using ( mapTm; mapFo )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
@@ -72,7 +72,7 @@ open import L.Coding.Shape {ℓ}
   using ( shapedAt; isTmAt-decode; Onto; BinWit; UnWit; bothTm; zeroPay
         ; module Peel )
 
-open import Cubical.Data.Sum using ( inl; inr )
+import Cubical.Data.Sum as Sum
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
@@ -300,21 +300,16 @@ constructor definitionally.
         qx = sp .snd
 
       fill : PeelWit (keyOf j z) → Coded f j z
-      fill (inl x) = atom 0 _∈̇_ (λ _ _ → refl) x
-      fill (inr (inl x)) = atom 1 _≐_ (λ _ _ → refl) x
-      fill (inr (inr (inl x))) = binSame 2 _∧̇_ (λ _ _ → refl) x
-      fill (inr (inr (inr (inl x)))) = binSame 3 _∨̇_ (λ _ _ → refl) x
-      fill (inr (inr (inr (inr (inl x))))) = binSame 4 _⇒̇_ (λ _ _ → refl) x
-      fill (inr (inr (inr (inr (inr (inl x)))))) = unSame 5 ¬̇_ (λ _ → refl) x
-      fill (inr (inr (inr (inr (inr (inr (inl x))))))) = konst 6 ⊤̇ (λ _ → refl) x
-      fill (inr (inr (inr (inr (inr (inr (inr (inl x)))))))) =
-        konst 7 ⊥̇ (λ _ → refl) x
-      fill (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))) =
-        unSucc 8 ∃̇_ (λ _ → refl) x
-      fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x)))))))))) =
-        unSucc 9 ∀̇_ (λ _ → refl) x
-      fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inl x))))))))))) =
-        bnd 10 ∀̇∈ (λ _ _ → refl) x
-      fill (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr (inr x))))))))))) =
-        bnd 11 ∃̇∈ (λ _ _ → refl) x
+      fill =
+        Sum.rec (atom 0 _∈̇_ (λ _ _ → refl))
+        (Sum.rec (atom 1 _≐_ (λ _ _ → refl))
+        (Sum.rec (binSame 2 _∧̇_ (λ _ _ → refl))
+        (Sum.rec (binSame 3 _∨̇_ (λ _ _ → refl))
+        (Sum.rec (binSame 4 _⇒̇_ (λ _ _ → refl))
+        (Sum.rec (konst 5 ⊥̇ (λ _ → refl))
+        (Sum.rec (unSucc 6 ∃̇_ (λ _ → refl))
+        (Sum.rec (unSucc 7 ∀̇_ (λ _ → refl))
+        (Sum.rec (bnd 8 ∀̇∈ (λ _ _ → refl))
+        (bnd 9 ∃̇∈ (λ _ _ → refl))))))))))
+
 ```

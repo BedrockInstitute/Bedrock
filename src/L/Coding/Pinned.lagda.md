@@ -11,7 +11,7 @@ module L.Coding.Pinned {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
+  ( Formula; Term; var; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇∈; ∀̇∈; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
 open import FOL.Manipulation.Relabelling using ( mapFo; mapFo-comp )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -21,17 +21,17 @@ open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Coding.Model {ℓ} using
   ( module LCode; prʟ-fst; codeBridge
   ; consAtL; closedAt; binShapeAt; unShapeAt; bothSameAt; oneSuccAt; succSndAt
-  ; binSameClosed-out; unSameClosed-out; unSuccClosed-out; binSuccClosed-out )
+  ; binSameClosed-out; unSuccClosed-out; binSuccClosed-out )
 open import L.Coding.EnvSet {ℓ} lem using ( envSet )
-open import L.Coding.InL {ℓ} using ( sglʟ; cupʟ; sglʟ-out; cupʟ-out )
+open import L.Coding.InL {ℓ} using ( sglʟ; cupʟ; tree; tree-inv )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; keyS; codeS )
 open import L.Coding.Sat {ℓ} lem using
-  ( Sat; cond∈-in; cond∈-out; cond≐-in; cond≐-out )
+  ( Sat )
 open import L.Coding.Bridge {ℓ} lem using ( asConst )
 open import L.Coding.Table {ℓ} lem using
   ( keyʟ; slot; satTable; entry-out; inSlot; ent-slot ) renaming ( total to slotTotal )
 open import L.Coding.Clauses {ℓ} lem using
-  ( sh; i0; i1; i2; i3; i4; i7; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ( sh; i0; i1; i2; i3; i4; i7; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
   ; Tags; nn; fstS; sndS
   ; tmIs; extB-out; extB-in; ExtFact; ext-unique
   ; towerAt; tableAt
@@ -43,11 +43,10 @@ open import L.Coding.Clauses {ℓ} lem using
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Vec using ( _∷_; lookup )
 open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( inl; inr )
 open import Cubical.Foundations.Prelude using ( subst2 )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open PT using ( ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
@@ -89,14 +88,12 @@ module Match (W : S) where
   MatchN {n} 2 ψ r = Σ[ a ∈ Formula Ab n ] Σ[ b ∈ Formula Ab n ] ((ψ ≡ a ∧̇ b) × (r ≡ pr (cd a) (cd b)))
   MatchN {n} 3 ψ r = Σ[ a ∈ Formula Ab n ] Σ[ b ∈ Formula Ab n ] ((ψ ≡ a ∨̇ b) × (r ≡ pr (cd a) (cd b)))
   MatchN {n} 4 ψ r = Σ[ a ∈ Formula Ab n ] Σ[ b ∈ Formula Ab n ] ((ψ ≡ a ⇒̇ b) × (r ≡ pr (cd a) (cd b)))
-  MatchN {n} 5 ψ r = Σ[ a ∈ Formula Ab n ] ((ψ ≡ ¬̇ a) × (r ≡ cd a))
-  MatchN 6 ψ r = (ψ ≡ ⊤̇) × (r ≡ # 0)
-  MatchN 7 ψ r = (ψ ≡ ⊥̇) × (r ≡ # 0)
-  MatchN {n} 8 ψ r = Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇ a) × (r ≡ cd a))
-  MatchN {n} 9 ψ r = Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∀̇ a) × (r ≡ cd a))
-  MatchN {n} 10 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∀̇∈ t a) × (r ≡ pr (ct t) (cd a)))
-  MatchN {n} 11 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇∈ t a) × (r ≡ pr (ct t) (cd a)))
-  MatchN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))))) ψ r = Empty.⊥*
+  MatchN 5 ψ r = (ψ ≡ ⊥̇) × (r ≡ # 0)
+  MatchN {n} 6 ψ r = Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇ a) × (r ≡ cd a))
+  MatchN {n} 7 ψ r = Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∀̇ a) × (r ≡ cd a))
+  MatchN {n} 8 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∀̇∈ t a) × (r ≡ pr (ct t) (cd a)))
+  MatchN {n} 9 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇∈ t a) × (r ≡ pr (ct t) (cd a)))
+  MatchN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) ψ r = Empty.⊥*
 
   private
     at : ∀ {n} (ψ : Formula Ab n) (j k : ℕ) (r : V ℓ) → pr (# j) (cd ψ) ≡ pr (# j) (cd ψ)
@@ -110,13 +107,11 @@ module Match (W : S) where
   matchAt (a ∧̇ b) k r e = at (a ∧̇ b) 2 k _ refl (a , b , (refl , refl)) r e
   matchAt (a ∨̇ b) k r e = at (a ∨̇ b) 3 k _ refl (a , b , (refl , refl)) r e
   matchAt (a ⇒̇ b) k r e = at (a ⇒̇ b) 4 k _ refl (a , b , (refl , refl)) r e
-  matchAt (¬̇ a) k r e = at (¬̇ a) 5 k _ refl (a , (refl , refl)) r e
-  matchAt ⊤̇ k r e = at ⊤̇ 6 k _ refl (refl , refl) r e
-  matchAt ⊥̇ k r e = at ⊥̇ 7 k _ refl (refl , refl) r e
-  matchAt (∃̇ a) k r e = at (∃̇ a) 8 k _ refl (a , (refl , refl)) r e
-  matchAt (∀̇ a) k r e = at (∀̇ a) 9 k _ refl (a , (refl , refl)) r e
-  matchAt (∀̇∈ t a) k r e = at (∀̇∈ t a) 10 k _ refl (t , a , (refl , refl)) r e
-  matchAt (∃̇∈ t a) k r e = at (∃̇∈ t a) 11 k _ refl (t , a , (refl , refl)) r e
+  matchAt ⊥̇ k r e = at ⊥̇ 5 k _ refl (refl , refl) r e
+  matchAt (∃̇ a) k r e = at (∃̇ a) 6 k _ refl (a , (refl , refl)) r e
+  matchAt (∀̇ a) k r e = at (∀̇ a) 7 k _ refl (a , (refl , refl)) r e
+  matchAt (∀̇∈ t a) k r e = at (∀̇∈ t a) 8 k _ refl (t , a , (refl , refl)) r e
+  matchAt (∃̇∈ t a) k r e = at (∃̇∈ t a) 9 k _ refl (t , a , (refl , refl)) r e
 ```
 
 A member of the code set at a stated arity decodes.
@@ -137,7 +132,7 @@ subcode-closed `C`: `codesAt C w E N` is replaced by `closedAt C`, and `Pinned`
 is conditional on the formula's key being in `C`.
 
 ```agda
-module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hcl : ⟨ γ ⊨ closedAt C ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
@@ -156,16 +151,16 @@ module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
 
     hTot = hT .fst
     hOn = hT .snd .fst
-    h12 = hT .snd .snd
+    hTen = hT .snd .snd
 
-    cl : (k : Fin 12) → ⟨ γ ⊨ Cl.clause k ⟩
-    cl = bigAnd-out γ 11 Cl.clause h12
+    cl : (k : Fin 10) → ⟨ γ ⊨ Cl.clause k ⟩
+    cl = bigAnd-out γ 9 Cl.clause hTen
 ```
 
 An entry at the key of a formula, and the frame it opens.
 
 ```agda
-    module Case {n : ℕ} (ψ : Formula Ab n) (k : Fin 12) (rS : S)
+    module Case {n : ℕ} (ψ : Formula Ab n) (k : Fin 10) (rS : S)
       (ep : cd ψ ≡ pr (# (toℕ k)) (fst rS)) (c∈ : ⟨ fst (keyS W ψ) ∈ Cv ⟩)
       (y : S) (mem : ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩) where
       q∈ : ⟨ pr (# n) (fst (envSet W n)) ∈ Ev ⟩
@@ -204,7 +199,7 @@ The binary connectives share one case.
 
 ```agda
     binCase : ∀ {n} (op : ∀ {j} → Formula S j → Formula S j → Formula S j)
-              (opA : Formula Ab n → Formula Ab n → Formula Ab n) (k : Fin 12)
+              (opA : Formula Ab n → Formula Ab n → Formula Ab n) (k : Fin 10)
               (a b : Formula Ab n) (code : cd (opA a b) ≡ pr (# (toℕ k)) (pr (cd a) (cd b)))
               (relIs : R.relN (toℕ k) ≡ R.binRel op)
               (bridge : ∀ {j} (env : S ^ j) (ya yb : Fin j)
@@ -231,7 +226,7 @@ The binary connectives share one case.
       module K = Case (opA a b) k (payS (opA a b) (toℕ k) (pr (cd a) (cd b)) code) code c∈ y mem
 
     quCase : ∀ {n} (q : ∀ {j} → Term S j → Formula S (suc j) → Formula S j)
-             (qA : Formula Ab (suc n) → Formula Ab n) (k : Fin 12)
+             (qA : Formula Ab (suc n) → Formula Ab n) (k : Fin 10)
              (a : Formula Ab (suc n)) (code : cd (qA a) ≡ pr (# (toℕ k)) (cd a))
              (relIs : R.relN (toℕ k) ≡ R.quRel q)
              (bridge : ∀ {j} (env : S ^ j) (wi yai : Fin j)
@@ -255,7 +250,7 @@ The binary connectives share one case.
 
     bqCase : ∀ {n} (q : ∀ {j} → Term S j → Formula S (suc j) → Formula S j)
              (c : ∀ {j} → Formula S j → Formula S j → Formula S j)
-             (qA : Term Ab n → Formula Ab (suc n) → Formula Ab n) (k : Fin 12)
+             (qA : Term Ab n → Formula Ab (suc n) → Formula Ab n) (k : Fin 10)
              (t : Term Ab n) (a : Formula Ab (suc n)) (code : cd (qA t a) ≡ pr (# (toℕ k)) (pr (ct t) (cd a)))
              (relIs : R.relN (toℕ k) ≡ R.bqRel q c)
              (body : ∀ {j} → Fin j → Fin j → Fin j → Fin j → Fin j → Formula S (1 + j))
@@ -289,7 +284,7 @@ The binary connectives share one case.
       tS = fstS rS (ct t) (cd a) refl
       module K = Case (qA t a) k rS code c∈ y mem
 
-    atomCase : ∀ {n} (opA : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j) (k : Fin 12)
+    atomCase : ∀ {n} (opA : ∀ {j} → Term Ab j → Term Ab j → Formula Ab j) (k : Fin 10)
                (t u : Term Ab n) (code : cd (opA t u) ≡ pr (# (toℕ k)) (pr (ct t) (ct u)))
                (rel : Formula S (18 + m))
                (relIs : R.relN (toℕ k) ≡ R.atomRel rel)
@@ -324,7 +319,7 @@ The binary connectives share one case.
     eqAgree env z v x = (λ h → h) , (λ h → h)
 ```
 
-The four subcode readers. Each is `closedAt`'s conjunct, read at the key of the
+The three subcode readers. Each is `closedAt`'s conjunct, read at the key of the
 composite formula: this is the whole of what the all-codes hypothesis used to
 supply to the recursion.
 
@@ -340,12 +335,6 @@ supply to the recursion.
           → (ψ : Formula Ab n) → cd ψ ≡ pr (# k) (pr (cd a) (cd b))
           → ⟨ fst (keyS W ψ) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩ × ⟨ fst (keyS W b) ∈ Cv ⟩
     clBin n k a b h ψ e = clSame n k h ψ a b e
-
-    clNeg : (n : ℕ) (a : Formula Ab n)
-          → ⟨ fst (keyS W (¬̇ a)) ∈ Cv ⟩ → ⟨ fst (keyS W a) ∈ Cv ⟩
-    clNeg n a c∈ =
-      unSameClosed-out C 5 γ (hcl .snd .snd .snd .fst)
-        (keyS W (¬̇ a)) (nn n) (codeS W a) c∈ refl
 
     clQu : (n k : ℕ) (a : Formula Ab (suc n)) (ψ : Formula Ab n)
          → ⟨ γ ⊨ unShapeAt C k (oneSuccAt C) ⟩ → cd ψ ≡ pr (# k) (cd a)
@@ -367,40 +356,26 @@ supply to the recursion.
   pinned : ∀ {n} (ψ : Formula Ab n) → Pinned ψ
   pinned (t ∈̇ u) = atomCase _∈̇_ f0 t u refl (var i1 ∈̇ var i0) refl
     (λ env wi ti ui N0i N1i qw' qt qu q0 q1 →
-      AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _∈̇_ (λ v x → ⟨ fst v ∈ fst x ⟩)
-        (var i1 ∈̇ var i0) (memAgree env) (cond∈-out W (toT t) (toT u)) (cond∈-in W (toT t) (toT u)))
+      AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _∈̇_ (λ v x → ⟨ v ∈ x ⟩)
+        (var i1 ∈̇ var i0) (memAgree env) (λ δ h → h) (λ δ h → h))
   pinned (t ≐ u) = atomCase _≐_ f1 t u refl (var i1 ≐ var i0) refl
     (λ env wi ti ui N0i N1i qw' qt qu q0 q1 →
-      AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _≐_ (λ v x → fst v ≡ fst x)
-        (var i1 ≐ var i0) (eqAgree env) (cond≐-out W (toT t) (toT u)) (cond≐-in W (toT t) (toT u)))
+      AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _≐_ (λ v x → v ≡ x)
+        (var i1 ≐ var i0) (eqAgree env) (λ δ h → h) (λ δ h → h))
   pinned {n} (a ∧̇ b) = binCase _∧̇_ _∧̇_ f2 a b refl refl (andBridge a b) (clBin n 2 a b (hcl .fst) (a ∧̇ b) refl) (pinned a) (pinned b)
   pinned {n} (a ∨̇ b) = binCase _∨̇_ _∨̇_ f3 a b refl refl (orBridge a b) (clBin n 3 a b (hcl .snd .fst) (a ∨̇ b) refl) (pinned a) (pinned b)
   pinned {n} (a ⇒̇ b) = binCase _⇒̇_ _⇒̇_ f4 a b refl refl (impBridge a b) (clBin n 4 a b (hcl .snd .snd .fst) (a ⇒̇ b) refl) (pinned a) (pinned b)
-  pinned {n} (¬̇ a) c∈ y mem = PT.rec (setIsSet _ _) (λ { (ya , ma) →
-    PT.rec (setIsSet _ _)
-      (λ { (s , e' , ext) →
-        let env = ya ∷ keyS W a ∷ s ∷ e' ∷ K.δ12
-            P : S → Type (ℓ-suc ℓ)
-            P z = ⟨ (z ∷ env) ⊨ R.negBody ⟩
-        in ext-unique y (SatW (¬̇ a)) (envSet W n) P ext (negBridge a env i0 (pinned a (clNeg n a c∈) ya ma)) })
-      (K.RR.neg-out K.rel (keyS W a) ya ma refl) })
-    (sub a (clNeg n a c∈))
-    where
-    module K = Case (¬̇ a) f5 (codeS W a) refl c∈ y mem
-  pinned {n} ⊤̇ c∈ y mem = ext-unique y (SatW ⊤̇) (envSet W n) (λ z → ⟨ (z ∷ K.δ12) ⊨ ⊤̇ ⟩) (extB-out i0 i8 ⊤̇ K.δ12 K.rel) (topBridge n K.δ12)
-    where
-    module K = Case ⊤̇ f6 (nn 0) refl c∈ y mem
   pinned {n} ⊥̇ c∈ y mem = ext-unique y (SatW ⊥̇) (envSet W n) (λ z → ⟨ (z ∷ K.δ12) ⊨ ⊥̇ ⟩) (extB-out i0 i8 ⊥̇ K.δ12 K.rel) (botBridge n K.δ12)
     where
-    module K = Case ⊥̇ f7 (nn 0) refl c∈ y mem
-  pinned {n} (∃̇ a) = quCase ∃̇∈ ∃̇_ f8 a refl refl (exBridge a) (clQu n 8 a (∃̇ a) (hcl .snd .snd .snd .snd .fst) refl) (pinned a)
-  pinned {n} (∀̇ a) = quCase ∀̇∈ ∀̇_ f9 a refl refl (allBridge a) (clQu n 9 a (∀̇ a) (hcl .snd .snd .snd .snd .snd .fst) refl) (pinned a)
-  pinned {n} (∀̇∈ t a) = bqCase ∀̇∈ _⇒̇_ ∀̇∈ f10 t a refl refl bqAll (λ _ _ _ _ _ → refl)
+    module K = Case ⊥̇ f5 (nn 0) refl c∈ y mem
+  pinned {n} (∃̇ a) = quCase ∃̇∈ ∃̇_ f6 a refl refl (exBridge a) (clQu n 6 a (∃̇ a) (hcl .snd .snd .snd .fst) refl) (pinned a)
+  pinned {n} (∀̇ a) = quCase ∀̇∈ ∀̇_ f7 a refl refl (allBridge a) (clQu n 7 a (∀̇ a) (hcl .snd .snd .snd .snd .fst) refl) (pinned a)
+  pinned {n} (∀̇∈ t a) = bqCase ∀̇∈ _⇒̇_ ∀̇∈ f8 t a refl refl bqAll (λ _ _ _ _ _ → refl)
     (λ env wi ti yai N0i N1i qw' qt qa q0 q1 → BqBridge.allInBridge t a env wi ti yai N0i N1i qw' qt qa q0 q1)
-    (clBq n 10 t a (∀̇∈ t a) (hcl .snd .snd .snd .snd .snd .snd .fst) refl) (pinned a)
-  pinned {n} (∃̇∈ t a) = bqCase ∃̇∈ _∧̇_ ∃̇∈ f11 t a refl refl bqEx (λ _ _ _ _ _ → refl)
+    (clBq n 8 t a (∀̇∈ t a) (hcl .snd .snd .snd .snd .snd .fst) refl) (pinned a)
+  pinned {n} (∃̇∈ t a) = bqCase ∃̇∈ _∧̇_ ∃̇∈ f9 t a refl refl bqEx (λ _ _ _ _ _ → refl)
     (λ env wi ti yai N0i N1i qw' qt qa q0 q1 → BqBridge.exInBridge t a env wi ti yai N0i N1i qw' qt qa q0 q1)
-    (clBq n 11 t a (∃̇∈ t a) (hcl .snd .snd .snd .snd .snd .snd .snd) refl) (pinned a)
+    (clBq n 9 t a (∃̇∈ t a) (hcl .snd .snd .snd .snd .snd .snd) refl) (pinned a)
 ```
 
 Probe. `SatHolds` of src/L/GCH/SatDescribe.lagda.md, with the four places that
@@ -413,7 +388,7 @@ module _ (W : S) where
   open Bridge W
   open Match W
 
-  module SatHoldsC {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
+  module SatHoldsC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
     (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
     (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩)
     (val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → fst c ≡ fst (keyS W ψ)
@@ -457,7 +432,7 @@ THE CLAUSES. Each is read at its frame; the data of the frame are decoded, and
 the relation is filled from the bridge.
 
 ```agda
-      record Args (k : Fin 12) : Type (ℓ-suc ℓ) where
+      record Args (k : Fin 10) : Type (ℓ-suc ℓ) where
         field
           q ar F s c p s1 r s2 e yc s3 : S
           q∈ : ⟨ fst q ∈ Ev ⟩
@@ -468,7 +443,7 @@ the relation is filled from the bridge.
           e∈ : ⟨ fst e ∈ Tv ⟩
           ee : fst e ≡ pr (fst c) (fst yc)
 
-      module Fill (k : Fin 12) (A : Args k) where
+      module Fill (k : Fin 10) (A : Args k) where
         open Args A
 
         frame : S ^ (12 + m)
@@ -544,10 +519,8 @@ The binary connectives.
                 ya≡ = subVal n a c₁ ya e₁ qa e₁∈ ee₁ (e₁' ∙ cong (pr (fst ar)) (q' .fst))
                 yb≡ = subVal n b c₂ yb e₂ qa e₂∈ ee₂ (e₂' ∙ cong (pr (fst ar)) (q' .snd))
                 env = yb ∷ c₂ ∷ s₂ ∷ e₂ ∷ ya ∷ c₁ ∷ s₁ ∷ e₁ ∷ b' ∷ a' ∷ s' ∷ frame
-                P : S → Type (ℓ-suc ℓ)
-                P z = ⟨ (z ∷ env) ⊨ R.binBody op ⟩
-            in transfer n ψ qa qF qp env (R.binBody op)
-                 (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ) (bridge a b env i4 i0 ya≡ yb≡)))
+            in transfer n (opA a b) qa qF (qp ∙ cong cd qψ) env (R.binBody op)
+                 (bridge a b env i4 i0 ya≡ yb≡))
 ```
 
 The unbounded quantifiers.
@@ -565,10 +538,8 @@ The unbounded quantifiers.
           go n a ψ qa qF qp qψ qr = RR.qu-in q' (λ c₁ ya ar' s' s'' e' e'∈ ee₁ e₁' es →
             let ya≡ = subValS n a c₁ ya e' ar' qa e'∈ ee₁ (e₁' ∙ cong (pr (fst ar')) qr) es
                 env = ar' ∷ s'' ∷ ya ∷ c₁ ∷ s' ∷ e' ∷ frame
-                P : S → Type (ℓ-suc ℓ)
-                P z = ⟨ (z ∷ env) ⊨ R.quBody q' ⟩
-            in transfer n ψ qa qF qp env (R.quBody q')
-                 (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ) (bridge a env (sh 18 w) i2 qw ya≡)))
+            in transfer n (qA a) qa qF (qp ∙ cong cd qψ) env (R.quBody q')
+                 (bridge a env (sh 18 w) i2 qw ya≡))
 ```
 
 The bounded quantifiers.
@@ -593,13 +564,10 @@ The bounded quantifiers.
             let q'' = pr-inj (sym er ∙ qr)
                 ya≡ = subValS n a c₁ ya e' ar' qa e'∈ ee₁ (e₁' ∙ cong (pr (fst ar')) (q'' .snd)) es
                 env = ar' ∷ s'' ∷ ya ∷ c₁ ∷ s₁ ∷ e' ∷ a' ∷ t' ∷ s' ∷ frame
-                P : S → Type (ℓ-suc ℓ)
-                P z = ⟨ (z ∷ env) ⊨ R.bqBody q' c' ⟩
-            in transfer n ψ qa qF qp env (R.bqBody q' c')
-                 (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ)
+            in transfer n (qA t a) qa qF (qp ∙ cong cd qψ) env (R.bqBody q' c')
                    (subst (λ φ → ExtFact (fst (SatW (qA t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ φ ⟩))
                      (bodyIs (sh 21 w) i7 i2 (sh 21 (N f0)) (sh 21 (N f1)))
-                     (bridge t a env (sh 21 w) i7 i2 (sh 21 (N f0)) (sh 21 (N f1)) qw (q'' .fst) ya≡ (tg f0) (tg f1)))))
+                     (bridge t a env (sh 21 w) i7 i2 (sh 21 (N f0)) (sh 21 (N f1)) qw (q'' .fst) ya≡ (tg f0) (tg f1))))
 ```
 
 The atoms.
@@ -616,84 +584,62 @@ The atoms.
           go n t u ψ qa qF qp qψ qr = RR.atom-in rel (λ t' u' s' er →
             let q' = pr-inj (sym er ∙ qr)
                 env = u' ∷ t' ∷ s' ∷ frame
-                P : S → Type (ℓ-suc ℓ)
-                P z = ⟨ (z ∷ env) ⊨ R.atomBody rel ⟩
-            in transfer n ψ qa qF qp env (R.atomBody rel)
-                 (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ)
-                   (bridge t u env (sh 15 w) i1 i0 (sh 15 (N f0)) (sh 15 (N f1)) qw (q' .fst) (q' .snd) (tg f0) (tg f1))))
+            in transfer n (opA t u) qa qF (qp ∙ cong cd qψ) env (R.atomBody rel)
+                   (bridge t u env (sh 15 w) i1 i0 (sh 15 (N f0)) (sh 15 (N f1)) qw (q' .fst) (q' .snd) (tg f0) (tg f1)))
 ```
 
-Negation and the constants.
+The constant.
 
 ```agda
-        negGo : (n : ℕ) (a ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-              → fst p ≡ cd ψ → ψ ≡ ¬̇ a → fst r ≡ cd a → ⟨ frame ⊨ R.negRel ⟩
-        negGo n a ψ qa qF qp qψ qr = RR.neg-in (λ c₁ ya s' e' e'∈ ee₁ e₁' →
-          let ya≡ = subVal n a c₁ ya e' qa e'∈ ee₁ (e₁' ∙ cong (pr (fst ar)) qr)
-              env = ya ∷ c₁ ∷ s' ∷ e' ∷ frame
-              P : S → Type (ℓ-suc ℓ)
-              P z = ⟨ (z ∷ env) ⊨ R.negBody ⟩
-          in transfer n ψ qa qF qp env R.negBody
-               (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) P) (sym qψ) (negBridge a env i0 ya≡)))
-
-        topGo : (n : ℕ) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
-              → fst p ≡ cd ψ → ψ ≡ ⊤̇ → ⟨ frame ⊨ R.topRel ⟩
-        topGo n ψ qa qF qp qψ = extB-in i0 i8 ⊤̇ frame
-          (transfer n ψ qa qF qp frame ⊤̇
-            (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) (λ z → ⟨ (z ∷ frame) ⊨ ⊤̇ ⟩)) (sym qψ) (topBridge n frame)))
-
         botGo : (n : ℕ) (ψ : Formula Ab n) → fst ar ≡ # n → fst F ≡ fst (envSet W n)
               → fst p ≡ cd ψ → ψ ≡ ⊥̇ → ⟨ frame ⊨ R.botRel ⟩
         botGo n ψ qa qF qp qψ = extB-in i0 i8 ⊥̇ frame
-          (transfer n ψ qa qF qp frame ⊥̇
-            (subst (λ χ → ExtFact (fst (SatW χ)) (fst (envSet W n)) (λ z → ⟨ (z ∷ frame) ⊨ ⊥̇ ⟩)) (sym qψ) (botBridge n frame)))
+          (transfer n ⊥̇ qa qF (qp ∙ cong cd qψ) frame ⊥̇ (botBridge n frame))
 ```
 
 The dispatch on the tag, one clause each.
 
 ```agda
-      fill : (k : Fin 12) (A : Args k) → Fill.Data k A → Fill.Goal k A
+      fill : (k : Fin 10) (A : Args k) → Fill.Data k A → Fill.Goal k A
       fill f0 A (n , (qa , qF , ψ , (qp , (t , u , (qψ , qr))))) =
         Fill.AtomFill.go f0 A _∈̇_ (var i1 ∈̇ var i0)
           (λ t u env wi ti ui N0i N1i qw' qt qu q0 q1 →
-            AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _∈̇_ (λ v x → ⟨ fst v ∈ fst x ⟩)
-              (var i1 ∈̇ var i0) (λ z v x → (λ h → h) , (λ h → h)) (cond∈-out W (toT t) (toT u)) (cond∈-in W (toT t) (toT u)))
+            AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _∈̇_ (λ v x → ⟨ v ∈ x ⟩)
+              (var i1 ∈̇ var i0) (λ z v x → (λ h → h) , (λ h → h)) (λ δ h → h) (λ δ h → h))
           n t u ψ qa qF qp qψ qr
       fill f1 A (n , (qa , qF , ψ , (qp , (t , u , (qψ , qr))))) =
         Fill.AtomFill.go f1 A _≐_ (var i1 ≐ var i0)
           (λ t u env wi ti ui N0i N1i qw' qt qu q0 q1 →
-            AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _≐_ (λ v x → fst v ≡ fst x)
-              (var i1 ≐ var i0) (λ z v x → (λ h → h) , (λ h → h)) (cond≐-out W (toT t) (toT u)) (cond≐-in W (toT t) (toT u)))
+            AtomBridge.atomBridge t u env wi ti ui N0i N1i qw' qt qu q0 q1 _≐_ (λ v x → v ≡ x)
+              (var i1 ≐ var i0) (λ z v x → (λ h → h) , (λ h → h)) (λ δ h → h) (λ δ h → h))
           n t u ψ qa qF qp qψ qr
       fill f2 A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) = Fill.BinFill.go f2 A _∧̇_ _∧̇_ andBridge n a b ψ qa qF qp qψ qr
       fill f3 A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) = Fill.BinFill.go f3 A _∨̇_ _∨̇_ orBridge n a b ψ qa qF qp qψ qr
       fill f4 A (n , (qa , qF , ψ , (qp , (a , b , (qψ , qr))))) = Fill.BinFill.go f4 A _⇒̇_ _⇒̇_ impBridge n a b ψ qa qF qp qψ qr
-      fill f5 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.negGo f5 A n a ψ qa qF qp qψ qr
-      fill f6 A (n , (qa , qF , ψ , (qp , (qψ , qr)))) = Fill.topGo f6 A n ψ qa qF qp qψ
-      fill f7 A (n , (qa , qF , ψ , (qp , (qψ , qr)))) = Fill.botGo f7 A n ψ qa qF qp qψ
-      fill f8 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.QuFill.go f8 A ∃̇∈ ∃̇_ exBridge n a ψ qa qF qp qψ qr
-      fill f9 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.QuFill.go f9 A ∀̇∈ ∀̇_ allBridge n a ψ qa qF qp qψ qr
-      fill f10 A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
-        Fill.BqFill.go f10 A ∀̇∈ _⇒̇_ ∀̇∈ bqAll (λ _ _ _ _ _ → refl)
+      fill f5 A (n , (qa , qF , ψ , (qp , (qψ , qr)))) = Fill.botGo f5 A n ψ qa qF qp qψ
+      fill f6 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.QuFill.go f6 A ∃̇∈ ∃̇_ exBridge n a ψ qa qF qp qψ qr
+      fill f7 A (n , (qa , qF , ψ , (qp , (a , (qψ , qr))))) = Fill.QuFill.go f7 A ∀̇∈ ∀̇_ allBridge n a ψ qa qF qp qψ qr
+      fill f8 A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
+        Fill.BqFill.go f8 A ∀̇∈ _⇒̇_ ∀̇∈ bqAll (λ _ _ _ _ _ → refl)
           (λ t a env wi ti yai N0i N1i qw' qt qa' q0 q1 → BqBridge.allInBridge t a env wi ti yai N0i N1i qw' qt qa' q0 q1)
           n t a ψ qa qF qp qψ qr
-      fill f11 A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
-        Fill.BqFill.go f11 A ∃̇∈ _∧̇_ ∃̇∈ bqEx (λ _ _ _ _ _ → refl)
+      fill f9 A (n , (qa , qF , ψ , (qp , (t , a , (qψ , qr))))) =
+        Fill.BqFill.go f9 A ∃̇∈ _∧̇_ ∃̇∈ bqEx (λ _ _ _ _ _ → refl)
           (λ t a env wi ti yai N0i N1i qw' qt qa' q0 q1 → BqBridge.exInBridge t a env wi ti yai N0i N1i qw' qt qa' q0 q1)
           n t a ψ qa qF qp qψ qr
 
-      clause : (k : Fin 12) → ⟨ γ ⊨ Cl.clause k ⟩
+      clause : (k : Fin 10) → ⟨ γ ⊨ Cl.clause k ⟩
       clause k = Fr.clause-in k (λ q ar F s c p s1 r s2 e yc s3 q∈ eq c∈ ec ep e∈ ee →
         let A : Args k
             A = record { q = q ; ar = ar ; F = F ; s = s ; c = c ; p = p ; s1 = s1 ; r = r ; s2 = s2 ; e = e ; yc = yc ; s3 = s3
                        ; q∈ = q∈ ; eq = eq ; c∈ = c∈ ; ec = ec ; ep = ep ; e∈ = e∈ ; ee = ee }
         in PT.rec (Fill.isPropGoal k A) (fill k A) (Fill.data' k A))
 
-      twelve : ⟨ γ ⊨ Cl.twelve ⟩
-      twelve = bigAnd-in γ 11 Cl.clause clause
+      ten : ⟨ γ ⊨ Cl.ten ⟩
+      ten = bigAnd-in γ 9 Cl.clause clause
 
     holds : ⟨ γ ⊨ tableAt T w C E N ⟩
-    holds = total , (onC , twelve)
+    holds = total , (onC , ten)
 ```
 
 The slot instance. The four are supplied at `C` := the slot of one formula and
@@ -706,55 +652,32 @@ module _ (W : S) where
 ```
 
 Every member of the slot of `toS ψ` is the key of a formula over the alphabet:
-one induction, the slot's own shape.
+relabelling preserves the slot's tree, so its existing inversion applies.
 
 ```agda
   slotAb : ∀ {n} (ψ : Formula Ab n) (x : V ℓ)
          → ⟨ x ∈ fst (slot W (toS ψ)) ⟩
          → ∥ Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula Ab m ] (x ≡ fst (keyS W χ)) ∥₁
-  slotAb {n} ψ x h = go ψ x h
+  slotAb ψ x h = PT.map
+    (λ { (m , χ , e , _) → m , χ , (e ∙ sym (keyBridge W χ)) })
+    (tree-inv key key ψ x (subst (λ y → ⟨ x ∈ fst y ⟩) (mapped ψ) h))
     where
-    Goal : V ℓ → Type (ℓ-suc ℓ)
-    Goal x = ∥ Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula Ab m ] (x ≡ fst (keyS W χ)) ∥₁
+    key : ∀ {n} → Formula Ab n → S
+    key χ = keyʟ (toS χ)
 
-    self : ∀ {k} (χ : Formula Ab k) (x : V ℓ) → ⟨ x ∈ fst (sglʟ (keyʟ (toS χ))) ⟩ → Goal x
-    self {k} χ x e = ∣ k , χ , (sglʟ-out (keyʟ (toS χ)) x e ∙ sym (keyBridge W χ)) ∣₁
+    mapped : ∀ {n} (χ : Formula Ab n) → slot W (toS χ) ≡ tree key χ
+    mapped (t ∈̇ u) = refl
+    mapped (t ≐ u) = refl
+    mapped ⊥̇ = refl
+    mapped χ@(a ∧̇ b) = cong (cupʟ (sglʟ (key χ))) (cong₂ cupʟ (mapped a) (mapped b))
+    mapped χ@(a ∨̇ b) = cong (cupʟ (sglʟ (key χ))) (cong₂ cupʟ (mapped a) (mapped b))
+    mapped χ@(a ⇒̇ b) = cong (cupʟ (sglʟ (key χ))) (cong₂ cupʟ (mapped a) (mapped b))
+    mapped χ@(∃̇ a) = cong (cupʟ (sglʟ (key χ))) (mapped a)
+    mapped χ@(∀̇ a) = cong (cupʟ (sglʟ (key χ))) (mapped a)
+    mapped χ@(∀̇∈ t a) = cong (cupʟ (sglʟ (key χ))) (mapped a)
+    mapped χ@(∃̇∈ t a) = cong (cupʟ (sglʟ (key χ))) (mapped a)
 
-    un : ∀ {k j} (χ : Formula Ab k) (a : Formula Ab j)
-       → ((x : V ℓ) → ⟨ x ∈ fst (slot W (toS a)) ⟩ → Goal x)
-       → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (keyʟ (toS χ))) (slot W (toS a))) ⟩ → Goal x
-    un χ a ra x h = PT.rec squash₁
-      (λ { (inl e) → self χ x e ; (inr e) → ra x e })
-      (cupʟ-out (sglʟ (keyʟ (toS χ))) (slot W (toS a)) x h)
-
-    bin : ∀ {k j} (χ : Formula Ab k) (a b : Formula Ab j)
-        → ((x : V ℓ) → ⟨ x ∈ fst (slot W (toS a)) ⟩ → Goal x)
-        → ((x : V ℓ) → ⟨ x ∈ fst (slot W (toS b)) ⟩ → Goal x)
-        → (x : V ℓ)
-        → ⟨ x ∈ fst (cupʟ (sglʟ (keyʟ (toS χ))) (cupʟ (slot W (toS a)) (slot W (toS b)))) ⟩
-        → Goal x
-    bin χ a b ra rb x h = PT.rec squash₁
-      (λ { (inl e) → self χ x e
-         ; (inr e) → PT.rec squash₁
-             (λ { (inl ea) → ra x ea ; (inr eb) → rb x eb })
-             (cupʟ-out (slot W (toS a)) (slot W (toS b)) x e) })
-      (cupʟ-out (sglʟ (keyʟ (toS χ))) (cupʟ (slot W (toS a)) (slot W (toS b))) x h)
-
-    go : ∀ {k} (χ : Formula Ab k) (x : V ℓ) → ⟨ x ∈ fst (slot W (toS χ)) ⟩ → Goal x
-    go χ@(t ∈̇ u)  = self χ
-    go χ@(t ≐ u)  = self χ
-    go χ@⊤̇        = self χ
-    go χ@⊥̇        = self χ
-    go χ@(a ∧̇ b)  = bin χ a b (go a) (go b)
-    go χ@(a ∨̇ b)  = bin χ a b (go a) (go b)
-    go χ@(a ⇒̇ b)  = bin χ a b (go a) (go b)
-    go χ@(¬̇ a)    = un χ a (go a)
-    go χ@(∃̇ a)    = un χ a (go a)
-    go χ@(∀̇ a)    = un χ a (go a)
-    go χ@(∀̇∈ t a) = un χ a (go a)
-    go χ@(∃̇∈ t a) = un χ a (go a)
-
-  module SlotHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
+  module SlotHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
     (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
     (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) {n0 : ℕ} (ψ0 : Formula Ab n0)
     (qT : fst (lookup T γ) ≡ fst (satTable W (toS ψ0)))

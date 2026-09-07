@@ -1,5 +1,9 @@
 # Owner's exploration note on the rud route (reference material)
 
+Current Bedrock status (2026-09-06): `L⊨ZFC` and `L⊨GCH` are proved and
+registered in [Landmarks](../../src/Landmarks.lagda.md). The research and route
+assessments below are historical; they do not describe open Bedrock proof goals.
+
 Provenance: the owner's own exploration in a separate Claude chat, recorded
 2026-08-02 as reference input to `[L3.30-D1]` (the digestion document) and
 `[L3.30-M]` (the design memo). Recorded verbatim except for repository-mandated

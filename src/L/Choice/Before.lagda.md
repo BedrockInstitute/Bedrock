@@ -47,7 +47,7 @@ module L.Choice.Before {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
   ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ¬̇_; ∃̇_; ∀̇∈; ∃̇∈ )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #mono; #-inj′ )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; Lset; Lset→isL; IsOrd; Lset-mono )
@@ -55,7 +55,7 @@ open import L.Ordinal {ℓ} using
   ( numeral-ord; #∈ω; ∈#-elim; #∈#-elim; mem-ord; boundingOrd )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Basic {ℓ}
-  using ( LsetS; ∅ʟ; finSet; finSet-in; finSet-out; module FinOf )
+  using ( extensionalL; LsetS; ∅ʟ; finSet; finSet-in; finSet-out; module FinOf )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL; hasReplacementL )
 open import L.Recursion {ℓ} lem using ( smallDom; mereFunct )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
@@ -278,7 +278,10 @@ relAt-in  : (k : ℕ) (zv : V ℓ) → RelOf k zv → ⟨ zv ∈ fst (relAt k) �
 relAt-out zero zv h = Empty.rec
   (∅-empty zv (∈∈ₛ {a = zv} {b = ∅} .fst
     (subst (λ t → ⟨ zv ∈ fst t ⟩) relAt-zero h)))
-relAt-out (suc n) zv h = PT.rec squash₁ atR cond
+relAt-out (suc n) zv h = PT.rec squash₁
+  (λ { (r , (qr , ha)) → PT.rec squash₁
+    (λ { (a , (qa , hx)) → PT.rec squash₁
+      (λ { (x , (x∈ , hy)) → PT.map (atY r a x qr qa x∈) hy }) hx }) ha }) cond
   where
   zS : S
   zS = memS (relAt (suc n)) zv h
@@ -296,15 +299,6 @@ relAt-out (suc n) zv h = PT.rec squash₁ atR cond
 
   AtY : (r a x : S) → Type (ℓ-suc ℓ)
   AtY r a x = Σ[ y ∈ S ] (⟨ fst y ∈ fst (stageS (suc n)) ⟩ × Body r a x y)
-
-  AtX : (r a : S) → Type (ℓ-suc ℓ)
-  AtX r a = Σ[ x ∈ S ] (⟨ fst x ∈ fst (stageS (suc n)) ⟩ × ∥ AtY r a x ∥₁)
-
-  AtA : (r : S) → Type (ℓ-suc ℓ)
-  AtA r = Σ[ a ∈ S ] ((fst a ≡ fst (stageS n)) × ∥ AtX r a ∥₁)
-
-  AtR : Type (ℓ-suc ℓ)
-  AtR = Σ[ r ∈ S ] ((fst r ≡ fst (relAt n)) × ∥ AtA r ∥₁)
 
   atY : (r a x : S) → fst r ≡ fst (relAt n) → fst a ≡ fst (stageS n)
       → ⟨ fst x ∈ fst (stageS (suc n)) ⟩ → AtY r a x → RelOf (suc n) zv
@@ -337,15 +331,6 @@ relAt-out (suc n) zv h = PT.rec squash₁ atR cond
     qpair : fst zS ≡ pr (fst x) (fst y)
     qpair = subst ⟨_⟩ (prAtL-adequate s4 s1 zero (y ∷ x ∷ a ∷ r ∷ zS ∷ [])) hpr
 
-  atX : (r a : S) → fst r ≡ fst (relAt n) → fst a ≡ fst (stageS n)
-      → AtX r a → ∥ RelOf (suc n) zv ∥₁
-  atX r a qr qa (x , (x∈ , hy)) = PT.map (atY r a x qr qa x∈) hy
-
-  atA : (r : S) → fst r ≡ fst (relAt n) → AtA r → ∥ RelOf (suc n) zv ∥₁
-  atA r qr (a , (qa , hx)) = PT.rec squash₁ (atX r a qr qa) hx
-
-  atR : AtR → ∥ RelOf (suc n) zv ∥₁
-  atR (r , (qr , ha)) = PT.rec squash₁ (atA r qr) ha
 
 relAt-in zero zv (x , (y , (x∈ , (y∈ , (qq , hb))))) = Empty.rec* hb
 relAt-in (suc n) zv (x , (y , (x∈ , (y∈ , (qq , hb))))) =
@@ -356,20 +341,9 @@ relAt-in (suc n) zv (x , (y , (x∈ , (y∈ , (qq , hb))))) =
   inBound = subst (λ t → ⟨ t ∈ fst (pairsAt (suc n) .fst) ⟩) (sym (prS-fst x y))
     (pairsAt (suc n) .snd (fst x) (fst y) x∈ y∈)
 
-  Rrep : (s t : S)
-       → ⟨ pr (fst s) (fst t)
-           ∈ fst (lookup s3 (y ∷ x ∷ stageS n ∷ relAt n ∷ prS x y ∷ [])) ⟩
-       → ⟨ Rel n (fst s) (fst t) ⟩
-  Rrep s t p = p
-
-  Rfill : (s t : S) → ⟨ Rel n (fst s) (fst t) ⟩
-        → ⟨ pr (fst s) (fst t)
-            ∈ fst (lookup s3 (y ∷ x ∷ stageS n ∷ relAt n ∷ prS x y ∷ [])) ⟩
-  Rfill s t p = p
-
   module P = Precedes s3 s2 s1 zero
                       (y ∷ x ∷ stageS n ∷ relAt n ∷ prS x y ∷ [])
-                      (Rel n) Rrep Rfill
+                      (Rel n) (λ _ _ p → p) (λ _ _ p → p)
 
   held : ⟨ precedes (Rel n) (finiteStage n) (fst x) (fst y) ⟩
   held = precedes-map (before n) (Rel n) (finiteStage n) (fst x) (fst y)
@@ -495,32 +469,9 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
     AtY : (c r A A' x : S) → Type (ℓ-suc ℓ)
     AtY c r A A' x = Σ[ y ∈ S ] (⟨ fst y ∈ fst A' ⟩ × Body c r A A' x y)
 
-    AtX : (c r A A' : S) → Type (ℓ-suc ℓ)
-    AtX c r A A' = Σ[ x ∈ S ] (⟨ fst x ∈ fst A' ⟩ × ∥ AtY c r A A' x ∥₁)
-
-    AtA' : (c r A : S) → Type (ℓ-suc ℓ)
-    AtA' c r A = Σ[ A' ∈ S ]
-      ( ⟨ (A' ∷ A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (sh4 b) ⟩
-      × ∥ AtX c r A A' ∥₁ )
-
-    AtA : (c r : S) → Type (ℓ-suc ℓ)
-    AtA c r = Σ[ A ∈ S ]
-      ( ⟨ (A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
-      × ∥ AtA' c r A ∥₁ )
-
-    AtR : (c : S) → Type (ℓ-suc ℓ)
-    AtR c = Σ[ r ∈ S ]
-      ( ⟨ (r ∷ c ∷ γ) ⊨ appAt (sh2 f) (suc zero) zero ⟩ × ∥ AtA c r ∥₁ )
-
     MaxOf : (c : S) → Type (ℓ-suc ℓ)
     MaxOf c = (d : S) → ⟨ fst d ∈ fst (lookup b γ) ⟩ → ⟨ fst c ∈ fst d ⟩
             → Empty.⊥
-
-    AtC : Type (ℓ-suc ℓ)
-    AtC = Σ[ c ∈ S ]
-      ( ⟨ fst c ∈ fst (lookup b γ) ⟩
-      × ( ⟨ (c ∷ γ) ⊨ ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero)) ⟩
-        × ∥ AtR c ∥₁ ) )
 
     atY : (c r A A' x : S) → ⟨ fst c ∈ fst (lookup b γ) ⟩ → MaxOf c
         → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
@@ -533,22 +484,9 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
           , ( subst (λ t → ⟨ fst y ∈ t ⟩) qA' y∈
             , (qpair , hprec') ) ) ) ) ) ) ) )
       where
-      Rrep : (s t : S)
-           → ⟨ pr (fst s) (fst t)
-               ∈ fst (lookup (suc (suc (suc (suc zero))))
-                        (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)) ⟩
-           → ⟨ Held r (fst s) (fst t) ⟩
-      Rrep s t p = p
-
-      Rfill : (s t : S) → ⟨ Held r (fst s) (fst t) ⟩
-            → ⟨ pr (fst s) (fst t)
-                ∈ fst (lookup (suc (suc (suc (suc zero))))
-                         (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)) ⟩
-      Rfill s t p = p
-
       module P = Precedes (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
                           (suc zero) zero (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)
-                          (Held r) Rrep Rfill
+                          (Held r) (λ _ _ p → p) (λ _ _ p → p)
 
       hprec' : ⟨ precedes (Held r) (Lset (fst c)) (fst x) (fst y) ⟩
       hprec' = subst (λ t → ⟨ precedes (Held r) t (fst x) (fst y) ⟩) qA
@@ -559,12 +497,20 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
         (prAtL-adequate (sh6 z) (suc zero) zero
           (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)) hpr
 
+    AtX : (c r A A' : S) → Type (ℓ-suc ℓ)
+    AtX c r A A' = Σ[ x ∈ S ] (⟨ fst x ∈ fst A' ⟩ × ∥ AtY c r A A' x ∥₁)
+
     atX : (c r A A' : S) → ⟨ fst c ∈ fst (lookup b γ) ⟩ → MaxOf c
         → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
         → fst A ≡ Lset (fst c) → fst A' ≡ Lset (fst (lookup b γ))
         → AtX c r A A' → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
     atX c r A A' c∈ cmax hf qA qA' (x , (x∈ , hy)) =
       PT.map (atY c r A A' x c∈ cmax hf qA qA' x∈) hy
+
+    AtA' : (c r A : S) → Type (ℓ-suc ℓ)
+    AtA' c r A = Σ[ A' ∈ S ]
+      ( ⟨ (A' ∷ A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (sh4 b) ⟩
+      × ∥ AtX c r A A' ∥₁ )
 
     atA' : (c r A : S) → ⟨ fst c ∈ fst (lookup b γ) ⟩ → MaxOf c
          → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
@@ -576,6 +522,11 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
       qA' : fst A' ≡ Lset (fst (lookup b γ))
       qA' = Lset-only zero (sh4 b) (A' ∷ A ∷ r ∷ c ∷ γ) hg ob
 
+    AtA : (c r : S) → Type (ℓ-suc ℓ)
+    AtA c r = Σ[ A ∈ S ]
+      ( ⟨ (A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
+      × ∥ AtA' c r A ∥₁ )
+
     atA : (c r : S) → ⟨ fst c ∈ fst (lookup b γ) ⟩ → MaxOf c
         → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
         → AtA c r → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
@@ -584,7 +535,11 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
       where
       qA : fst A ≡ Lset (fst c)
       qA = Lset-only zero (suc (suc zero)) (A ∷ r ∷ c ∷ γ) hg
-             (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈)
+        (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈)
+
+    AtR : (c : S) → Type (ℓ-suc ℓ)
+    AtR c = Σ[ r ∈ S ]
+      ( ⟨ (r ∷ c ∷ γ) ⊨ appAt (sh2 f) (suc zero) zero ⟩ × ∥ AtA c r ∥₁ )
 
     atR : (c : S) → ⟨ fst c ∈ fst (lookup b γ) ⟩ → MaxOf c
         → AtR c → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
@@ -593,18 +548,24 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
       hf : ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
       hf = subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (r ∷ c ∷ γ)) happ
 
+    AtC : Type (ℓ-suc ℓ)
+    AtC = Σ[ c ∈ S ]
+      ( ⟨ fst c ∈ fst (lookup b γ) ⟩
+      × ( ⟨ (c ∷ γ) ⊨ ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero)) ⟩
+        × ∥ AtR c ∥₁ ) )
+
     atC : AtC → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
     atC (c , (c∈ , (hmax , hr))) = PT.rec squash₁ (atR c c∈ cmax) hr
       where
       cmax : MaxOf c
-      cmax d hd hc = hmax d hd hc
+      cmax d hd hc = lower (hmax d hd hc)
 
   opaque
    unfolding RelBodyAt
 
    RelBody-out : ⟨ γ ⊨ RelBodyAt z b f ⟩
                → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
-   RelBody-out h = PT.rec squash₁ atC h
+   RelBody-out = PT.rec squash₁ atC
 
    RelBody-in : StepOf b f γ (fst (lookup z γ)) → ⟨ γ ⊨ RelBodyAt z b f ⟩
    RelBody-in (c , (r , (x , (y , (c∈ , (cmax , (hf , (x∈ , (y∈
@@ -622,7 +583,7 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
      A' = LsetS (fst (lookup b γ)) ob
 
      hmax : ⟨ (c ∷ γ) ⊨ ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero)) ⟩
-     hmax d hd hc = cmax d hd hc
+     hmax d hd hc = lift (cmax d hd hc)
 
      happ : ⟨ (r ∷ c ∷ γ) ⊨ appAt (sh2 f) (suc zero) zero ⟩
      happ = subst ⟨_⟩
@@ -639,22 +600,9 @@ module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
        (sym (prAtL-adequate (sh6 z) (suc zero) zero
          (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ))) qpair
 
-     Rrep : (s t : S)
-          → ⟨ pr (fst s) (fst t)
-              ∈ fst (lookup (suc (suc (suc (suc zero))))
-                       (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)) ⟩
-          → ⟨ Held r (fst s) (fst t) ⟩
-     Rrep s t p = p
-
-     Rfill : (s t : S) → ⟨ Held r (fst s) (fst t) ⟩
-           → ⟨ pr (fst s) (fst t)
-               ∈ fst (lookup (suc (suc (suc (suc zero))))
-                        (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)) ⟩
-     Rfill s t p = p
-
      module P = Precedes (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
                          (suc zero) zero (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)
-                         (Held r) Rrep Rfill
+                         (Held r) (λ _ _ p → p) (λ _ _ p → p)
 
      hprec' : ⟨ (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)
               ⊨ PrecedesAt (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
@@ -874,24 +822,18 @@ module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) (k : ℕ)
           (subst (λ j → ⟨ before j (fst xx) (fst yy) ⟩) qk hbf))
 
   step-rel : ⟨ γ ⊨ RelStepAt v b f ⟩ → fst (lookup v γ) ≡ fst (relAt k)
-  step-rel h = extensionalV {a = fst (lookup v γ)} {b = fst (relAt k)} pt
+  step-rel h = cong fst (extensionalL {a = lookup v γ} {b = relAt k} pt)
     where
-    fwd : (x : V ℓ) → ⟨ x ∈ fst (lookup v γ) ⟩ → ⟨ x ∈ fst (relAt k) ⟩
-    fwd x hx = PT.rec (snd (x ∈ fst (relAt k)))
-      (λ st → into x (subst (StepOf b f γ) (memS-fst (lookup v γ) x hx) st))
-      (RelStep-out v b f γ ob h (memS (lookup v γ) x hx)
-        (subst (λ t → ⟨ t ∈ fst (lookup v γ) ⟩)
-          (sym (memS-fst (lookup v γ) x hx)) hx))
+    fwd : (x : S) → ⟨ fst x ∈ fst (lookup v γ) ⟩ → ⟨ fst x ∈ fst (relAt k) ⟩
+    fwd x hx = PT.rec (snd (fst x ∈ fst (relAt k))) (into (fst x))
+      (RelStep-out v b f γ ob h x hx)
 
-    bwd : (x : V ℓ) → ⟨ x ∈ fst (relAt k) ⟩ → ⟨ x ∈ fst (lookup v γ) ⟩
-    bwd x hx = subst (λ t → ⟨ t ∈ fst (lookup v γ) ⟩)
-      (memS-fst (relAt k) x hx)
-      (PT.rec (snd (fst (memS (relAt k) x hx) ∈ fst (lookup v γ)))
-        (λ ro → RelStep-back v b f γ ob h (memS (relAt k) x hx)
-          (subst (StepOf b f γ) (sym (memS-fst (relAt k) x hx)) (from x ro)))
-        (relAt-out k x hx))
+    bwd : (x : S) → ⟨ fst x ∈ fst (relAt k) ⟩ → ⟨ fst x ∈ fst (lookup v γ) ⟩
+    bwd x hx = PT.rec (snd (fst x ∈ fst (lookup v γ)))
+      (λ ro → RelStep-back v b f γ ob h x (from (fst x) ro))
+      (relAt-out k (fst x) hx)
 
-    pt : (x : V ℓ) → (x ∈ fst (lookup v γ)) ≡ (x ∈ fst (relAt k))
+    pt : (x : S) → (fst x ∈ fst (lookup v γ)) ≡ (fst x ∈ fst (relAt k))
     pt x = ⇔toPath (fwd x) (bwd x)
 
   rel-step : fst (lookup v γ) ≡ fst (relAt k) → ⟨ γ ⊨ RelStepAt v b f ⟩

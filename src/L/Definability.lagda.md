@@ -43,7 +43,6 @@ open import Cubical.Foundations.Equiv
   using ( _≃_; equivFun; invEq; invEquiv; compEquiv; propBiimpl→Equiv )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
-open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
@@ -186,7 +185,7 @@ of `A` as an element and adds only subsets.
       let (m , q) = A-mem y (∈∈ₛ {a = y} {b = A} .snd y∈ₛ)
       in subst (λ v → ⟨ v ∈ₛ defSet ⊤̇ ⟩) q
            (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = defSet ⊤̇} .fst
-             (subst ⟨_⟩ (sym (defSet-mem ⊤̇ m)) tt*))
+             (subst ⟨_⟩ (sym (defSet-mem ⊤̇ m)) (λ z → z)))
 
   Def∋⊆A : (x : S) → ⟨ x ∈ˢ Def ⟩ → (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ A ⟩
   Def∋⊆A x = PT.rec (isPropΠ λ y → isPropΠ λ _ → snd (y ∈ˢ A))

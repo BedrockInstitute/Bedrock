@@ -15,25 +15,23 @@ open import FOL.Syntax
 import FOL.ZFModel
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
-open import V.Coding {ℓ} using ( pr; pr-inj )
+open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; IsOrd; isL; isL-trans; isTransV; isPropIsTransV )
 open import L.Ordinal {ℓ} using ( mem-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Cardinal {ℓ} lem using ( InjCode )
-open import L.InjChain {ℓ} lem using ( appC; appC-adequate )
+open import L.InjChain {ℓ} lem using ( appC; appC-adequate; module Relation )
 open import L.Coding.Model {ℓ}
-  using ( prʟ; prʟ-fst; prAtL; prAtL-adequate
-        ; svAt-out; domAt-in )
+  using ( svAt-out; domAt-in )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out )
 open import L.GCH {ℓ} lem using ( SuccCardL; InjL )
 open import L.GCH.BelowSucc {ℓ} lem using ( below-succ-injects )
 open import L.GCH.Assembly {ℓ} lem
   using ( SuccIntoPower; inclusion-coded; injl-trans )
-open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
+open import L.GCH.Definable {ℓ} lem using ( module Inj )
 open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
-open import L.GCH.Pairing {ℓ} lem using ( prodL; prodL-in )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
@@ -149,11 +147,12 @@ Inside the binder: `A` is 0 and `ξ` is 1.
 
       φD-out : (ξ : SL.S) → ⟨ (ξ ∷ []) ⊨ φD ⟩ → Diagonal ξ
       φD-out ξ = PT.map (λ { (A , (mA , (h , n))) →
-        A , mA , transport (a1 ξ A) h , n })
+        A , mA , transport (a1 ξ A) h , (λ k → lower (n k)) })
 
       φD-in : (ξ A : SL.S) → ⟨ fst A ∈ fst (𝒫 κ) ⟩ → Holds F A ξ
             → (⟨ fst ξ ∈ fst A ⟩ → Empty.⊥) → ⟨ (ξ ∷ []) ⊨ φD ⟩
-      φD-in ξ A mA h n = ∣ A , (mA , (transport (sym (a1 ξ A)) h , n)) ∣₁
+      φD-in ξ A mA h n =
+        ∣ A , (mA , (transport (sym (a1 ξ A)) h , (λ k → lift (n k)))) ∣₁
 
     D₀ : SL.S
     D₀ = fst (fst (hasSeparationL κ φD))
@@ -199,7 +198,7 @@ Inside the binder: `A` is 0 and `ξ` is 1.
 src/L/GCH/Assembly.lagda.md pays `InjL (𝒫 κ) δ` out of the first two internal
 hypotheses alone, before this one is consumed. Take a code `G` for it. The
 relation "the value of `G` at `A` is a member of its value at `B`" is a set of L
-by separation over `prodL (𝒫 κ)`, and it is well-founded, transitive and
+by the shared bounded-relation construction, and it is well-founded, transitive and
 trichotomous on the presentation of `𝒫 κ` because the values are ordinals below
 `δ` and `G` is injective. So `OrderType.Code` applies: `colTable` codes
 `𝒫 κ ↪ otL`, and the converse of `colTable` codes `otL ↪ 𝒫 κ`, the
@@ -257,11 +256,10 @@ truncation as a function.
 ### 3.1 The pullback order, as a set of L
 
 ```agda
-  InR : SL.S → Type (ℓ-suc ℓ)
-  InR p = ∥ Σ[ A ∈ SL.S ] Σ[ B ∈ SL.S ] Σ[ x ∈ SL.S ] Σ[ y ∈ SL.S ]
-            ( ⟨ fst A ∈ fst P ⟩ × ⟨ fst B ∈ fst P ⟩
-            × Holds G A x × Holds G B y × ⟨ fst x ∈ fst y ⟩
-            × (fst p ≡ pr (fst A) (fst B)) ) ∥₁
+  Read : SL.S → SL.S → Type (ℓ-suc ℓ)
+  Read a b = ∥ Σ[ x ∈ SL.S ] Σ[ y ∈ SL.S ]
+               ( ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
+               × Holds G a x × Holds G b y × ⟨ fst x ∈ fst y ⟩ ) ∥₁
 
   private
     env5 : SL.S → SL.S → SL.S → SL.S → SL.S → SL.S ^ 5
@@ -278,83 +276,42 @@ truncation as a function.
     b2 p A B x y = cong ⟨_⟩
       (appC-adequate G (suc (suc zero)) zero (env5 p A B x y))
 
-    b4 : (p A B x y : SL.S)
-       → ⟨ env5 p A B x y
-           ⊨ prAtL (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
-               (suc (suc zero)) ⟩
-       ≡ (fst p ≡ pr (fst A) (fst B))
-    b4 p A B x y = cong ⟨_⟩
-      (prAtL-adequate (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
-        (suc (suc zero)) (env5 p A B x y))
 ```
 
-Over `(p ∷ [])`: "`p` is the pair of `A` and `B`, both members of the power set,
-and the value at `A` is a member of the value at `B`". Inside the four binders:
-`y` is 0, `x` is 1, `B` is 2, `A` is 3, `p` is 4.
+The two endpoints belong to the power set, and their two values under `G`
+are ordered by membership. `Relation` supplies the pair encoding and bound.
+Inside the two value binders, `y` is 0, `x` is 1, `B` is 2, and `A` is 3.
 
 ```agda
-  opaque
-    φR : Formula SL.S 1
-    φR = ∃̇∈ (con P) (∃̇∈ (con P) (∃̇ (∃̇
-           ( appC G (suc (suc (suc zero))) (suc zero)
-           ∧̇ ( appC G (suc (suc zero)) zero
-             ∧̇ ( (var (suc zero) ∈̇ var zero)
-               ∧̇ prAtL (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
-                   (suc (suc zero)) ) ) ) )))
+  private
+    opaque
+      φR : Formula SL.S 3
+      φR = (var (suc zero) ∈̇ con P) ∧̇ ((var zero ∈̇ con P) ∧̇ ∃̇ (∃̇
+        (appC G (suc (suc (suc zero))) (suc zero)
+          ∧̇ (appC G (suc (suc zero)) zero ∧̇ (var (suc zero) ∈̇ var zero)))))
 
-    φR-out : (p : SL.S) → ⟨ (p ∷ []) ⊨ φR ⟩ → InR p
-    φR-out p = PT.rec squash₁ (λ { (A , (mA , h)) →
-      PT.rec squash₁ (λ { (B , (mB , h')) →
-        PT.rec squash₁ (λ { (x , h'') →
-          PT.map (λ { (y , (q1 , (q2 , (q3 , q4)))) →
-            A , B , x , y , mA , mB
-              , transport (b1 p A B x y) q1
-              , transport (b2 p A B x y) q2
-              , q3
-              , transport (b4 p A B x y) q4 }) h'' }) h' }) h })
+      read : (a b p : SL.S) → ⟨ (b ∷ a ∷ p ∷ []) ⊨ φR ⟩ → Read a b
+      read a b p (ma , mb , h) = PT.rec squash₁
+        (λ { (x , hx) → PT.map (λ { (y , ha , hb , hxy) → x , y , ma , mb
+          , transport (b1 p a b x y) ha , transport (b2 p a b x y) hb , hxy }) hx }) h
 
-    φR-in : (p A B x y : SL.S) → ⟨ fst A ∈ fst P ⟩ → ⟨ fst B ∈ fst P ⟩
-          → Holds G A x → Holds G B y → ⟨ fst x ∈ fst y ⟩
-          → fst p ≡ pr (fst A) (fst B) → ⟨ (p ∷ []) ⊨ φR ⟩
-    φR-in p A B x y mA mB q1 q2 q3 q4 =
-      ∣ A , (mA , ∣ B , (mB , ∣ x , ∣ y
-        , ( transport (sym (b1 p A B x y)) q1
-          , ( transport (sym (b2 p A B x y)) q2
-            , ( q3 , transport (sym (b4 p A B x y)) q4 ) ) ) ∣₁ ∣₁ ) ∣₁ ) ∣₁
+      fill : (a b p : SL.S) → Read a b → ⟨ (b ∷ a ∷ p ∷ []) ⊨ φR ⟩
+      fill a b p = PT.rec (snd ((b ∷ a ∷ p ∷ []) ⊨ φR))
+        (λ { (x , y , ma , mb , ha , hb , hxy) → ma , mb , ∣ x , ∣ y
+          , transport (sym (b1 p a b x y)) ha
+          , transport (sym (b2 p a b x y)) hb , hxy ∣₁ ∣₁ })
+
+    module Pullback = Relation P P φR (λ a b → Read a b , squash₁) read fill
 
   R : SL.S
-  R = fst (fst (hasSeparationL (prodL P) φR))
-
-  R-spec : (p : SL.S)
-         → (p SL.∈ˢ R) ≡ ((p SL.∈ˢ prodL P) ⊓ ((p ∷ []) ⊨ φR))
-  R-spec = snd (fst (hasSeparationL (prodL P) φR))
-
-  Read : SL.S → SL.S → Type (ℓ-suc ℓ)
-  Read a b = ∥ Σ[ x ∈ SL.S ] Σ[ y ∈ SL.S ]
-               ( ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
-               × Holds G a x × Holds G b y × ⟨ fst x ∈ fst y ⟩ ) ∥₁
+  R = Pullback.rel
 
   R-out : (a b : SL.S) → Holds R a b → Read a b
-  R-out a b h = PT.map
-    (λ { (A , B , x , y , mA , mB , hA , hB , hxy , e) →
-      let q = pr-inj (sym (prʟ-fst a b) ∙ e) in
-      x , y
-      , subst (λ w → ⟨ w ∈ fst P ⟩) (sym (fst q)) mA
-      , subst (λ w → ⟨ w ∈ fst P ⟩) (sym (snd q)) mB
-      , subst (λ w → ⟨ pr w (fst x) ∈ fst G ⟩) (sym (fst q)) hA
-      , subst (λ w → ⟨ pr w (fst y) ∈ fst G ⟩) (sym (snd q)) hB
-      , hxy })
-    (φR-out (prʟ a b) (snd (subst ⟨_⟩ (R-spec (prʟ a b))
-      (subst (λ w → ⟨ w ∈ fst R ⟩) (sym (prʟ-fst a b)) h))))
+  R-out = Pullback.pair-out
 
   R-in : (a b x y : SL.S) → ⟨ fst a ∈ fst P ⟩ → ⟨ fst b ∈ fst P ⟩
        → Holds G a x → Holds G b y → ⟨ fst x ∈ fst y ⟩ → Holds R a b
-  R-in a b x y ma mb ha hb hxy =
-    subst (λ w → ⟨ w ∈ fst R ⟩) (prʟ-fst a b)
-      (subst ⟨_⟩ (sym (R-spec (prʟ a b)))
-        ( subst (λ w → ⟨ w ∈ˢ fst (prodL P) ⟩) (sym (prʟ-fst a b))
-            (prodL-in P a b ma mb)
-        , φR-in (prʟ a b) a b x y ma mb ha hb hxy (prʟ-fst a b) ))
+  R-in a b x y ma mb ha hb hxy = Pullback.into a b ma mb ∣ x , y , ma , mb , ha , hb , hxy ∣₁
 
   Rsub : (a b : SL.S) → Holds R a b
        → ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
@@ -429,7 +386,7 @@ and the value at `A` is a member of the value at `B`". Inside the four binders:
   module C = OT.Conjuncts wf ≺-trans
     using ( module Inj; col; col-ord; col-out; colTable; colTable-in
           ; colTable-pair; otL; otL-in; otL-out )
-  module I = C.Inj tri using ( code; col-inj )
+  module I = C.Inj tri using ( code; col-inj; module Inverse )
 
   power-into-ot : InjL P C.otL
   power-into-ot = ∣ C.colTable , I.code ∣₁
@@ -477,56 +434,9 @@ The graph is the converse of `colTable`, read by `appC`: the pattern of
   fib w h = PT.rec (isPropFib w) (λ z → z) (C.otL-out w h)
 
   module Back where
-
-    Mem : SL.S → Type (ℓ-suc ℓ)
-    Mem w = ⟨ fst w ∈ˢ fst C.otL ⟩
-
-    fn : (w : SL.S) → Mem w → SL.S
-    fn w mw = OT.up (fib (fst w) mw .fst)
-
-    opaque
-      graph : Formula SL.S 2
-      graph = appC C.colTable zero (suc zero)
-
-      at : (y w : SL.S) → ⟨ (y ∷ w ∷ []) ⊨ graph ⟩
-         ≡ ⟨ pr (fst y) (fst w) ∈ fst C.colTable ⟩
-      at y w = cong ⟨_⟩
-        (appC-adequate C.colTable zero (suc zero) (y ∷ w ∷ []))
-
-    only : (w : SL.S) (mw : Mem w) (y : SL.S)
-         → ⟨ (y ∷ w ∷ []) ⊨ graph ⟩ → y ≡ fn w mw
-    only w mw y hy =
-      sym (OT.up-toDom y my)
-      ∙ cong OT.up (I.col-inj (OT.toDom y my) b (sym ey ∙ sym e))
-      where
-      b = fib (fst w) mw .fst
-      e : C.col b ≡ fst w
-      e = fib (fst w) mw .snd
-      f = C.colTable-pair y w (transport (at y w) hy)
-      my = f .fst
-      ey : fst w ≡ C.col (OT.toDom y my)
-      ey = f .snd
-
-    M : DefinableMap
-    M = record
-      { dom = C.otL ; cod = P ; fn = fn ; graph = graph
-      ; into = λ w mw → OT.up-mem (fib (fst w) mw .fst)
-      ; defines = λ w mw →
-          transport (sym (at (fn w mw) w))
-            (subst (λ t → ⟨ pr (OT.↪ (fib (fst w) mw .fst)) t
-                             ∈ fst C.colTable ⟩)
-              (fib (fst w) mw .snd) (C.colTable-in (fib (fst w) mw .fst)))
-      ; only = only }
-
-    inj : (w : SL.S) (mw : Mem w) (w' : SL.S) (mw' : Mem w')
-        → fst (fn w mw) ≡ fst (fn w' mw') → fst w ≡ fst w'
-    inj w mw w' mw' e =
-        sym (fib (fst w) mw .snd)
-      ∙ cong C.col (OT.Dom≡ e)
-      ∙ fib (fst w') mw' .snd
-
-    injL : InjL C.otL P
-    injL = Inj.injL M inj
+    open I.Inverse C.otL P (λ w mw → fib (fst w) mw)
+      (λ w mw → OT.up-mem (fib (fst w) mw .fst)) public
+      using ( fn; graph; at; only; M; inj; injL ) renaming ( SourceMem to Mem )
 ```
 
 ### 3.5 Trichotomy against `δ`

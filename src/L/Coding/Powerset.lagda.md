@@ -44,7 +44,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_ )
 open import FOL.Manipulation.Relabelling using ( mapFo )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
@@ -62,7 +62,7 @@ open import L.Coding.Graph {ℓ} lem
   using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
         ; Bi; Ti; Ci; Ei; NN; ev; numν )
 open import L.Coding.Clauses {ℓ} lem using
-  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; f10; f11
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
   ; module Tower )
 open import L.Coding.Pinned {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Coding.Table {ℓ} lem
@@ -73,13 +73,12 @@ open import L.Coding.Bridge {ℓ} lem using ( asConst; defSet-Sat )
 open import L.Coding.Uniform {ℓ} lem using ( keyBridge; fr; frTags; frTow; frDom )
 
 open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber; _⊆_; extensionality )
+  using ( ⟪_⟫; ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -157,27 +156,21 @@ module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
       (entry∈ z (subst ⟨_⟩ (tagAtL-adequate zero 0 (suc y) (z ∷ γ)) h))
 
   envOneAt-out : ⟨ γ ⊨ envOneAt e y ⟩ → fst E ≡ envOne v
-  envOneAt-out h = extensionality (fst E) (envOne v) (sub₁ , sub₂)
+  envOneAt-out h = extensionalV (λ w → ⇔toPath (sub₁ w) (sub₂ w))
     where
-    sub₁ : ⟨ fst E ⊆ envOne v ⟩
-    sub₁ w w∈ₛ = ∈∈ₛ {a = w} {b = envOne v} .fst
-      (entry∈ wS (subst ⟨_⟩
+    sub₁ : (w : V ℓ) → ⟨ w ∈ fst E ⟩ → ⟨ w ∈ envOne v ⟩
+    sub₁ w w∈ = entry∈ wS (subst ⟨_⟩
         (tagAtL-adequate zero 0 (suc y) (wS ∷ γ))
-        (extAt-out e (tagAtL zero 0 (suc y)) γ h wS w∈)))
+        (extAt-out e (tagAtL zero 0 (suc y)) γ h wS w∈))
       where
-      w∈ : ⟨ w ∈ fst E ⟩
-      w∈ = ∈∈ₛ {a = w} {b = fst E} .snd w∈ₛ
-
       wS : S
       wS = w , isL-trans {x = fst E} {y = w} w∈ (snd E)
 
-    sub₂ : ⟨ envOne v ⊆ fst E ⟩
-    sub₂ w w∈ₛ = ∈∈ₛ {a = w} {b = fst E} .fst
-      (PT.rec (snd (w ∈ fst E))
+    sub₂ : (w : V ℓ) → ⟨ w ∈ envOne v ⟩ → ⟨ w ∈ fst E ⟩
+    sub₂ w = PT.rec (snd (w ∈ fst E))
         (λ { (lift zero , q) →
                subst (λ u → ⟨ u ∈ fst E ⟩) (keyOf-fst 0 (lookup y γ) ∙ q) hasKey
            ; (lift (suc ()) , _) })
-        (∈∈ₛ {a = w} {b = envOne v} .snd w∈ₛ))
       where
       hasKey : ⟨ fst (keyOf 0 (lookup y γ)) ∈ fst E ⟩
       hasKey = extAt-in e (tagAtL zero 0 (suc y)) γ h (keyOf 0 (lookup y γ))
@@ -332,7 +325,7 @@ The satisfaction recursion's graph was generalized to take its carrier as a slot
 and its two halves are the existence and uniqueness the recursion was built from,
 restated at that slot and at a variable environment. Nothing is proved here that
 was not proved then: existence hands over the subformula slot, the table over it,
-and the twelve clauses, all three of which take the ambient environment as an
+   and the ten clauses, all three of which take the ambient environment as an
 argument already; uniqueness reads the graph's own bound index set and table back
 and applies the pinning theorem at the carrier the graph bound.
 
@@ -341,7 +334,7 @@ named, which is the law the value theorems were written under: naming a key puts
 its construction inside a satisfaction, and the same statement then costs minutes
 instead of seconds.
 <!--zh-->
-满足关系那场递归的图已被推广为把载体取作一位，而它的两半就是那场递归据以建立的存在性与唯一性，只是重新陈述在那一位上、并落在一个变元环境上。此处没有证任何当时未证之事：存在性递出子公式槽、其上的那张表、以及十二条子句，而这三样本来就把周遭环境取作实参；唯一性把图自己绑定的索引集与表读回来，再在图所绑定的那个载体上施用钉住定理。
+满足关系那场递归的图已被推广为把载体取作一位，而它的两半就是那场递归据以建立的存在性与唯一性，只是重新陈述在那一位上、并落在一个变元环境上。此处没有证任何当时未证之事：存在性递出子公式槽、其上的那张表、以及十条子句，而这三样本来就把周遭环境取作实参；唯一性把图自己绑定的索引集与表读回来，再在图所绑定的那个载体上施用钉住定理。
 
 两者都把码与取值以等式抵达、而不是点名，这正是诸取值定理据以写下的那条规矩：点名一个键，就把它的构造塞进了一个满足关系里面，同一条陈述于是从几秒变成几分钟。
 <!--/-->
@@ -367,8 +360,7 @@ module _ (B : S) where
     , (frTags B φ γ
     , (frTow B φ γ
     , (slotClosed B φ (Tower.tower B ∷ numν f0 ∷ numν f1 ∷ numν f2 ∷ numν f3
-         ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ numν f10
-         ∷ numν f11 ∷ γ)
+         ∷ numν f4 ∷ numν f5 ∷ numν f6 ∷ numν f7 ∷ numν f8 ∷ numν f9 ∷ γ)
     , (frDom B φ γ
     , (entry
     , SlotHolds.holds B Ti Bi Ci Ei NN (fr B φ γ) refl
@@ -484,25 +476,21 @@ module _ (A : S) where
     toS : Formula ⟪ fst A ⟫ 1 → Formula S 1
     toS ψ = mapFo (asConst A) ψ
 
-    ιA : ⟪ fst A ⟫ → V ℓ
-    ιA = ⟪ fst A ⟫↪
-
-    ιA∈ : (m : ⟪ fst A ⟫) → ⟨ ιA m ∈ fst A ⟩
-    ιA∈ m = ∈∈ₛ {a = ιA m} {b = fst A} .snd (∈ₛ⟪ fst A ⟫↪ m)
-
-    Fibre : Formula ⟪ fst A ⟫ 1 → V ℓ → Type (ℓ-suc ℓ)
-    Fibre ψ y = Σ[ p ∈ Σ[ m ∈ ⟪ fst A ⟫ ] ⟨ DA.smallSat ψ m ⟩ ]
-                  (ιA (p .fst) ≡ y)
-
-    inSat : (ψ : Formula ⟪ fst A ⟫ 1) (m : ⟪ fst A ⟫)
-          → ⟨ ιA m ∈ DA.defSet ψ ⟩
-          → ⟨ envOne (ιA m) ∈ fst (Sat A (toS ψ)) ⟩
-    inSat ψ m h = subst ⟨_⟩ (defSet-Sat A ψ m) h
-
-    outSat : (ψ : Formula ⟪ fst A ⟫ 1) (m : ⟪ fst A ⟫)
-           → ⟨ envOne (ιA m) ∈ fst (Sat A (toS ψ)) ⟩
-           → ⟨ ιA m ∈ DA.defSet ψ ⟩
-    outSat ψ m h = subst ⟨_⟩ (sym (defSet-Sat A ψ m)) h
+    defined-membership : (ψ : Formula ⟪ fst A ⟫ 1) (y : V ℓ)
+                       → (y ∈ DA.defSet ψ)
+                       ≡ ((y ∈ fst A) ⊓ (envOne y ∈ fst (Sat A (toS ψ))))
+    defined-membership ψ y = ⇔toPath out inn
+      where
+      at : ⟨ y ∈ fst A ⟩ → (y ∈ DA.defSet ψ) ≡ (envOne y ∈ fst (Sat A (toS ψ)))
+      at hy = cong (λ u → u ∈ DA.defSet ψ) (sym e)
+        ∙ defSet-Sat A ψ m ∙ cong (λ u → envOne u ∈ fst (Sat A (toS ψ))) e
+        where
+        m = ∈-asFiber {a = y} {b = fst A} hy .fst
+        e = ∈-asFiber {a = y} {b = fst A} hy .snd
+      out : ⟨ y ∈ DA.defSet ψ ⟩ → ⟨ y ∈ fst A ⟩ × ⟨ envOne y ∈ fst (Sat A (toS ψ)) ⟩
+      out h = DA.defSet⊆A ψ y h , subst ⟨_⟩ (at (DA.defSet⊆A ψ y h)) h
+      inn : ⟨ y ∈ fst A ⟩ × ⟨ envOne y ∈ fst (Sat A (toS ψ)) ⟩ → ⟨ y ∈ DA.defSet ψ ⟩
+      inn (hy , h) = subst ⟨_⟩ (sym (at hy)) h
 
   fill : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
        → (z : S) (ψ : Formula ⟪ fst A ⟫ 1) → DA.defSet ψ ≡ fst z
@@ -523,29 +511,17 @@ module _ (A : S) where
     Holds y = ⟨ fst y ∈ fst (lookup w γ) ⟩
               × ⟨ envOne (fst y) ∈ fst (Sat A (toS ψ)) ⟩
 
+    agrees : (y : S) → (fst y ∈ fst z)
+           ≡ ((fst y ∈ fst (lookup w γ)) ⊓ (envOne (fst y) ∈ fst (Sat A (toS ψ))))
+    agrees y = cong (λ X → fst y ∈ X) (sym qz)
+      ∙ defined-membership ψ (fst y)
+      ∙ cong (λ X → (fst y ∈ X) ⊓ (envOne (fst y) ∈ fst (Sat A (toS ψ)))) (sym qw)
+
     into : (y : S) → ⟨ fst y ∈ fst z ⟩ → Holds y
-    into y y∈ = PT.rec
-      (isProp× (snd (fst y ∈ fst (lookup w γ)))
-               (snd (envOne (fst y) ∈ fst (Sat A (toS ψ)))))
-      step (subst (λ X → ⟨ fst y ∈ X ⟩) (sym qz) y∈)
-      where
-      step : Fibre ψ (fst y) → Holds y
-      step ((m , hm) , qm) =
-          subst (λ u → ⟨ u ∈ fst (lookup w γ) ⟩) qm
-            (subst (λ X → ⟨ ιA m ∈ X ⟩) (sym qw) (ιA∈ m))
-        , subst (λ u → ⟨ envOne u ∈ fst (Sat A (toS ψ)) ⟩) qm
-            (inSat ψ m ∣ (m , hm) , refl ∣₁)
+    into y = subst ⟨_⟩ (agrees y)
 
     back : (y : S) → Holds y → ⟨ fst y ∈ fst z ⟩
-    back y (yw , ys) = subst (λ X → ⟨ fst y ∈ X ⟩) qz
-      (subst (λ u → ⟨ u ∈ DA.defSet ψ ⟩) (fib .snd)
-        (outSat ψ (fib .fst)
-          (subst (λ u → ⟨ envOne u ∈ fst (Sat A (toS ψ)) ⟩)
-            (sym (fib .snd)) ys)))
-      where
-      fib : Σ[ m ∈ ⟪ fst A ⟫ ] (ιA m ≡ fst y)
-      fib = ∈-asFiber {a = fst y} {b = fst A}
-        (subst (λ X → ⟨ fst y ∈ X ⟩) qw yw)
+    back y = subst ⟨_⟩ (sym (agrees y))
 
     hdef : ⟨ δ ⊨ DefinesAt (suc (suc zero)) (sh3 w) zero ⟩
     hdef = DefinesAt-both (suc (suc zero)) (sh3 w) zero δ into back
@@ -561,47 +537,27 @@ module _ (A : S) where
 
     step : Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (fst c ≡ fst (keyS A ψ))
          → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
-    step (ψ , qc) = ∣ ψ , extensionality (DA.defSet ψ) (fst z) (sub₁ , sub₂) ∣₁
+    step (ψ , qc) = ∣ ψ , extensionalV (λ y → ⇔toPath (into y) (back y)) ∣₁
       where
       qv : fst v ≡ fst (Sat A (toS ψ))
       qv = graphAt-unique A ψ (sh3 w) (suc zero) zero δ qw
              (qc ∙ keyBridge A ψ) hgraph
 
-      sub₁ : ⟨ DA.defSet ψ ⊆ fst z ⟩
-      sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = fst z} .fst
-        (PT.rec (snd (y ∈ fst z)) place
-          (∈∈ₛ {a = y} {b = DA.defSet ψ} .snd y∈ₛ))
+      into : (y : V ℓ) → ⟨ y ∈ DA.defSet ψ ⟩ → ⟨ y ∈ fst z ⟩
+      into y hy = DefinesAt-in (suc (suc zero)) (sh3 w) zero δ hdef
+        (y , isL-trans (DA.defSet⊆A ψ y hy) (snd A))
+        (subst (λ X → ⟨ y ∈ X ⟩) (sym qw) (h .fst)
+        , subst (λ X → ⟨ envOne y ∈ X ⟩) (sym qv) (h .snd))
+        where h = subst ⟨_⟩ (defined-membership ψ y) hy
+
+      back : (y : V ℓ) → ⟨ y ∈ fst z ⟩ → ⟨ y ∈ DA.defSet ψ ⟩
+      back y hy = subst ⟨_⟩ (sym (defined-membership ψ y))
+        (subst (λ X → ⟨ y ∈ X ⟩) qw (h .fst)
+        , subst (λ X → ⟨ envOne y ∈ X ⟩) qv (h .snd))
         where
-        place : Fibre ψ y → ⟨ y ∈ fst z ⟩
-        place ((m , hm) , qm) =
-          DefinesAt-in (suc (suc zero)) (sh3 w) zero δ hdef
-            (y , isL-trans {x = fst A} {y = y}
-                   (subst (λ u → ⟨ u ∈ fst A ⟩) qm (ιA∈ m)) (snd A))
-            ( subst (λ X → ⟨ y ∈ X ⟩) (sym qw)
-                (subst (λ u → ⟨ u ∈ fst A ⟩) qm (ιA∈ m))
-            , subst (λ X → ⟨ envOne y ∈ X ⟩) (sym qv)
-                (subst (λ u → ⟨ envOne u ∈ fst (Sat A (toS ψ)) ⟩) qm
-                  (inSat ψ m ∣ (m , hm) , refl ∣₁)) )
+        h = DefinesAt-out (suc (suc zero)) (sh3 w) zero δ hdef
+          (y , isL-trans hy (snd z)) hy
 
-      sub₂ : ⟨ fst z ⊆ DA.defSet ψ ⟩
-      sub₂ y y∈ₛ = ∈∈ₛ {a = y} {b = DA.defSet ψ} .fst
-        (subst (λ u → ⟨ u ∈ DA.defSet ψ ⟩) (fib .snd)
-          (outSat ψ (fib .fst)
-            (subst (λ u → ⟨ envOne u ∈ fst (Sat A (toS ψ)) ⟩) (sym (fib .snd))
-              (subst (λ X → ⟨ envOne y ∈ X ⟩) qv (cond .snd)))))
-        where
-        y∈ : ⟨ y ∈ fst z ⟩
-        y∈ = ∈∈ₛ {a = y} {b = fst z} .snd y∈ₛ
-
-        yS : S
-        yS = y , isL-trans {x = fst z} {y = y} y∈ (snd z)
-
-        cond : ⟨ y ∈ fst (lookup w γ) ⟩ × ⟨ envOne y ∈ fst v ⟩
-        cond = DefinesAt-out (suc (suc zero)) (sh3 w) zero δ hdef yS y∈
-
-        fib : Σ[ m ∈ ⟪ fst A ⟫ ] (ιA m ≡ y)
-        fib = ∈-asFiber {a = y} {b = fst A}
-          (subst (λ X → ⟨ y ∈ X ⟩) qw (cond .fst))
 ```
 
 <!--en-->
@@ -671,29 +627,20 @@ member by member and a member arrives as an element of `L` or not at all.
             → ⟨ γ ⊨ DefAt u w ⟩
             → fst (lookup u γ) ≡ 𝒟ₒ (fst A)
   DefAt-out {n} u w γ ok qw h =
-    extensionality (fst (lookup u γ)) (𝒟ₒ (fst A)) (sub₁ , sub₂)
+    extensionalV (λ y → ⇔toPath (sub₁ y) (sub₂ y))
     where
     Φ : Formula S (suc n)
     Φ = ∃̇ (∃̇ (DefBody w))
 
-    sub₁ : ⟨ fst (lookup u γ) ⊆ 𝒟ₒ (fst A) ⟩
-    sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = 𝒟ₒ (fst A)} .fst
-      (𝒟ₒ-intro (fst A) y (describe w γ qw yS (extAt-out u Φ γ h yS y∈)))
+    sub₁ : (y : V ℓ) → ⟨ y ∈ fst (lookup u γ) ⟩ → ⟨ y ∈ 𝒟ₒ (fst A) ⟩
+    sub₁ y y∈ = 𝒟ₒ-intro (fst A) y (describe w γ qw yS (extAt-out u Φ γ h yS y∈))
       where
-      y∈ : ⟨ y ∈ fst (lookup u γ) ⟩
-      y∈ = ∈∈ₛ {a = y} {b = fst (lookup u γ)} .snd y∈ₛ
-
       yS : S
       yS = y , isL-trans {x = fst (lookup u γ)} {y = y} y∈ (snd (lookup u γ))
 
-    sub₂ : ⟨ 𝒟ₒ (fst A) ⊆ fst (lookup u γ) ⟩
-    sub₂ y y∈ₛ = ∈∈ₛ {a = y} {b = fst (lookup u γ)} .fst
-      (extAt-in u Φ γ h yS
-        (assemble w γ qw yS (𝒟ₒ-inv (fst A) y y∈)))
+    sub₂ : (y : V ℓ) → ⟨ y ∈ 𝒟ₒ (fst A) ⟩ → ⟨ y ∈ fst (lookup u γ) ⟩
+    sub₂ y y∈ = extAt-in u Φ γ h yS (assemble w γ qw yS (𝒟ₒ-inv (fst A) y y∈))
       where
-      y∈ : ⟨ y ∈ 𝒟ₒ (fst A) ⟩
-      y∈ = ∈∈ₛ {a = y} {b = 𝒟ₒ (fst A)} .snd y∈ₛ
-
       yS : S
       yS = y , ok y y∈
 ```

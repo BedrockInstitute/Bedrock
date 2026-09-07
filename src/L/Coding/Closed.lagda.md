@@ -10,13 +10,13 @@ instance will discharge.
 The proof is short because the two halves it needs were built to meet here. An
 element of the closure is the key of a formula, and it brings a closure of its
 own that sits inside; a key of a given constructor shape has known subkeys, and
-which ones is computed from the shape's tag. So each of the eight clauses is the
+which ones is computed from the shape's tag. So each of the seven clauses is the
 same four moves: take the element apart, read its tag, ask what that tag demands,
 and hand back what the formula's own closure already contains.
 <!--zh-->
 对码的递归是相对于一个索引集陈述的，而索引集必须携带其每个成员的诸子码，否则诸子句什么也约束不了。对象语言把这一点说出来了；本章说的是「一条公式的闭包满足对象语言所说的那件事」，而那正是第一个实例要交付的假设。
 
-证明短，因为它所需的两半本就是为了在此处会合而造的。闭包的元素是某条公式的键，而它自带一个坐落于内的闭包；一个给定构造子形状的键有已知的诸子键，而是哪几个由那个形状的标签算出。故八条子句里的每一条都是同样四步：把元素拆开、读出它的标签、问那个标签索取什么，再把该公式自己的闭包早已含有的东西交回去。
+证明短，因为它所需的两半本就是为了在此处会合而造的。闭包的元素是某条公式的键，而它自带一个坐落于内的闭包；一个给定构造子形状的键有已知的诸子键，而是哪几个由那个形状的标签算出。故七条子句里的每一条都是同样四步：把元素拆开、读出它的标签、问那个标签索取什么，再把该公式自己的闭包早已含有的东西交回去。
 <!--/-->
 
 ```agda
@@ -96,13 +96,13 @@ the set is a closure.
 Stating it separately is not tidiness. A later chapter cuts a set of codes out of
 a stage and has to prove the same closedness for it, and that set is not a
 closure of anything; what it has instead is a characterization of its members as
-keys, and `Peel`{.Agda} is what a characterization turns into. So the eight
+keys, and `Peel`{.Agda} is what a characterization turns into. So the seven
 clauses are proved once, for any set that peels, and the closure is the first of
 the two instances rather than the subject.
 <!--zh-->
 下面那些子句从不看一条公式。每一条都取该集合的一个成员，问它是哪个键，再交回该集合早已持有的诸键；故任何一条所消费的、关于闭包的唯一一件事，就是「成员可**剥开**」：它仅仅是某条公式的键，而那条公式自己的闭包坐落于该集合之内。那就是 `Peel`{.Agda}，也正是当那个集合是一个闭包时 `closure-inv`{.Agda} 所返回的东西。
 
-把它单独陈述出来不是为了整洁。后面有一章从一个阶段里切出一个码集，须为它证同一条封闭性，而那个集合不是任何东西的闭包；它手上有的是「其诸成员即诸键」这条刻画，而 `Peel`{.Agda} 正是一条刻画所化成的东西。故八条子句只证一次，对任何可剥开的集合成立，而闭包是那两个实例中的头一个，不是主角。
+把它单独陈述出来不是为了整洁。后面有一章从一个阶段里切出一个码集，须为它证同一条封闭性，而那个集合不是任何东西的闭包；它手上有的是「其诸成员即诸键」这条刻画，而 `Peel`{.Agda} 正是一条刻画所化成的东西。故七条子句只证一次，对任何可剥开的集合成立，而闭包是那两个实例中的头一个，不是主角。
 <!--/-->
 
 ```agda
@@ -113,9 +113,9 @@ the two instances rather than the subject.
 ```
 
 <!--en-->
-## The eight clauses
+## The seven clauses
 <!--zh-->
-## 八条子句
+## 七条子句
 <!--/-->
 
 <!--en-->
@@ -193,15 +193,15 @@ is a proposition.
 <!--/-->
 
 <!--en-->
-Eight instances of four shapes, and the tag is the only argument that moves. The
+Seven instances of four shapes, and the tag is the only argument that moves. The
 continuation handed to each says what the demand at that tag *is*, and it is that
-argument, not the shape, that makes the eight eight.
+argument, not the shape, that makes the seven seven.
 
 `closureClosed`{.Agda} is then the instance at a closure, and its peeling is
 `closure-inv`{.Agda} unchanged: the two statements are the same type, because
 `Peel`{.Agda} was read off that lemma's conclusion.
 <!--zh-->
-四种形状的八个实例，而唯一变动的参数是标签。交给每一个的那段后继说出那个标签处的要求**是什么**，而使这八条成其为八条的正是那个参数，不是形状。
+四种形状的七个实例，而唯一变动的参数是标签。交给每一个的那段后继说出那个标签处的要求**是什么**，而使这七条成其为七条的正是那个参数，不是形状。
 
 `closureClosed`{.Agda} 于是就是落在闭包处的那个实例，而它的剥开就是原样的 `closure-inv`{.Agda}：两条陈述是同一个类型，因为 `Peel`{.Agda} 本就是照着那条引理的结论读出来的。
 <!--/-->
@@ -212,11 +212,10 @@ argument, not the shape, that makes the eight eight.
         same γ 2 (λ _ a b r → r a b refl)
       , ( same γ 3 (λ _ a b r → r a b refl)
       , ( same γ 4 (λ _ a b r → r a b refl)
-      , ( one γ 5 (λ _ _ r → r)
-      , ( up γ 8 (λ _ _ r → r)
-      , ( up γ 9 (λ _ _ r → r)
-      , ( sndUp γ 10 (λ _ a b r → r a b refl)
-      , sndUp γ 11 (λ _ a b r → r a b refl) ))))))
+      , ( up γ 6 (λ _ _ r → r)
+      , ( up γ 7 (λ _ _ r → r)
+      , ( sndUp γ 8 (λ _ a b r → r a b refl)
+      , sndUp γ 9 (λ _ a b r → r a b refl) )))))
 
   closureClosed : ∀ {n m} (φ : Formula K n) (γ : S ^ m)
                 → ⟨ (clo φ ∷ γ) ⊨ closedAt zero ⟩
@@ -232,19 +231,19 @@ argument, not the shape, that makes the eight eight.
 <!--en-->
 `closedOf`{.Agda} is the hypothesis a recursion over subcodes needs about its
 index set, discharged for any set that peels; `closureClosed`{.Agda} is that
-statement at a closure. Nothing in either is about satisfaction: the eight clauses
+statement at a closure. Nothing in either is about satisfaction: the seven clauses
 say only which keys a key of a given shape drags in, and a set that peels holds
 exactly those.
 
 What it cost is worth recording, because the same shape is what the satisfaction
-instance will pay. Four readers, eight lines of instantiation, and one lemma per
-reader; the content is in `byTag`{.Agda} one chapter earlier, where the twelve
-constructors were matched against the eight demands once and for all rather than
-twelve times eight. `byTag`{.Agda} was already written against an arbitrary target
+instance will pay. Four readers, seven lines of instantiation, and one lemma per
+reader; the content is in `byTag`{.Agda} one chapter earlier, where the ten
+constructors were matched against the seven demands once and for all rather than
+ten times seven. `byTag`{.Agda} was already written against an arbitrary target
 set, which is why generality here is free: the closure was never the subject, only
 the first thing handed in.
 <!--zh-->
-`closedOf`{.Agda} 是「对诸子码作递归」关于其索引集所需的那条假设，对任何可剥开的集合交付；`closureClosed`{.Agda} 是那条陈述落在闭包处。两者里都没有任何关于满足关系的东西：八条子句只说一个给定形状的键会拖进哪些键，而一个可剥开的集合恰好持有那些。
+`closedOf`{.Agda} 是「对诸子码作递归」关于其索引集所需的那条假设，对任何可剥开的集合交付；`closureClosed`{.Agda} 是那条陈述落在闭包处。两者里都没有任何关于满足关系的东西：七条子句只说一个给定形状的键会拖进哪些键，而一个可剥开的集合恰好持有那些。
 
-它的代价值得记下，因为满足关系那个实例要付的是同样的形状。四个读式、八行实例化、每个读式一条引理；内容在早一章的 `byTag`{.Agda} 里，那里把十二个构造子与八项要求一次性对上，而不是对上十二乘八次。`byTag`{.Agda} 本就是对着任意目标集写的，这正是此处的一般性免费的原因：闭包从来不是主角，只是头一个被递进来的东西。
+它的代价值得记下，因为满足关系那个实例要付的是同样的形状。四个读式、七行实例化、每个读式一条引理；内容在早一章的 `byTag`{.Agda} 里，那里把十个构造子与七项要求一次性对上，而不是对上十乘七次。`byTag`{.Agda} 本就是对着任意目标集写的，这正是此处的一般性免费的原因：闭包从来不是主角，只是头一个被递进来的东西。
 <!--/-->

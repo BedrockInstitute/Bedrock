@@ -1,17 +1,17 @@
 # The environments over a set form a set
 
 <!--en-->
-The chapter that wrote the twelve clauses said what it means for one thing to be
+The chapter that wrote the ten clauses said what it means for one thing to be
 an environment over a set, and disowned the question of whether all of them
-together form a set. This chapter answers it, and the answer is owed: the clause
-for negation takes a complement, and a complement is taken inside something.
+together form a set. This chapter answers it: the satisfaction predicates will
+be separated from this common set of environments.
 
 The route is the one the axioms already sell. Environments over a set of `L` at a
 fixed length are indexed by a small type, each is an element of `L`, so they all
 lie below one stage; carving that stage by the description gives exactly them.
 Nothing here needs replacement, and nothing here needs a recursion.
 <!--zh-->
-写下十二条子句的那一章说了「单个东西是某集合之上的环境」是什么意思，却把「它们全体是否构成一个集合」这个问题推开了。本章回答它，而这份回答是欠着的：否定那条子句取补集，而补集总是在某个东西之内取的。
+写下十条子句的那一章说了「单个东西是某集合之上的环境」是什么意思，却把「它们全体是否构成一个集合」这个问题推开了。本章回答它：满足关系的谓词将从这个共同的环境集合中分离出来。
 
 路线是诸公理早已卖给我们的那条。给定长度、落在 `L` 的某集合之上的诸环境，由一个小类型索引，每个都是 `L` 的元素，故它们全部落在同一个阶段之下；用那条描述雕出那个阶段，得到的恰是它们。此处不需要替换，也不需要任何递归。
 <!--/-->

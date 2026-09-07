@@ -48,7 +48,7 @@ open import V.Model {ℓ}
 open import V.Coding {ℓ} using ( pr )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer; Lset-compute
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-layer
         ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
         ; Lset-mono; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; bound2 )
@@ -95,24 +95,8 @@ because successors of ordinals are ordinals.
 
 ```agda
 𝒟ₒ→isL : (σ : V ℓ) → IsOrd σ → (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (Lset σ) ⟩ → ⟨ isL x ⟩
-𝒟ₒ→isL σ oσ x x∈𝒟ₒσ = Lset→isL (sucV σ) (suc-ord oσ) x x∈Lsuc
-  where
-  s : ⟪ sucV σ ⟫ → V ℓ
-  s m = 𝒟ₒ (Lset (⟪ sucV σ ⟫↪ m))
-  fib = ∈-asFiber {a = σ} {b = sucV σ} (self∈sucV σ)
-  m = fib .fst
-  p : ⟪ sucV σ ⟫↪ m ≡ σ
-  p = fib .snd
-  𝒟ₒLσ∈ₛsett : ⟨ 𝒟ₒ (Lset σ) ∈ₛ sett ⟪ sucV σ ⟫ s ⟩
-  𝒟ₒLσ∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset σ)} {b = sett ⟪ sucV σ ⟫ s} .fst
-    ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
-  x∈ₛ𝒟ₒLσ : ⟨ x ∈ₛ 𝒟ₒ (Lset σ) ⟩
-  x∈ₛ𝒟ₒLσ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset σ)} .fst x∈𝒟ₒσ
-  x∈Lsuc : ⟨ x ∈ Lset (sucV σ) ⟩
-  x∈Lsuc = subst (λ w → ⟨ x ∈ w ⟩) (sym (Lset-compute (sucV σ)))
-    (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ sucV σ ⟫ s)} .snd
-      (union-ax (sett ⟪ sucV σ ⟫ s) x .snd
-        ∣ 𝒟ₒ (Lset σ) , (𝒟ₒLσ∈ₛsett , x∈ₛ𝒟ₒLσ) ∣₁))
+𝒟ₒ→isL σ oσ x x∈𝒟ₒσ = Lset→isL (sucV σ) (suc-ord oσ) x
+  (Lset-in (sucV σ) σ x (self∈sucV σ) x∈𝒟ₒσ)
 ```
 
 <!--en-->

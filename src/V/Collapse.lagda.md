@@ -8,14 +8,15 @@ open import Base.Prelude
 module V.Collapse {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure; Transitive )
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
-open import V.Presentation {ℓ} using ( member; fiber; ∈ₛ↪ )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-induction; ∈-induction-compute )
+open import V.Presentation {ℓ} using ( member; fiber )
 
+open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( sett; seteq )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; extensionality; _⊆_ )
+  using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; _⊆_ )
 
 open hPropStructure 𝒮ᵥ
 ```
@@ -144,6 +145,17 @@ took from `Xtr` are carried by the fibers or by the extensionality
 quantification, so no transitivity is needed.
 
 ```agda
+  private
+    π∈-recover : (x z : S) → ⟨ π z ∈ˢ π x ⟩
+               → ((b : S) → b ∈ᵗ x → b ∈ᵗ X → π b ≡ π z → b ≡ z)
+               → z ∈ᵗ x
+    π∈-recover x z h same = PT.rec (snd (z ∈ˢ x))
+      (λ { (p , q) → subst (λ w → ⟨ w ∈ˢ x ⟩)
+        (same (⟪ x ⟫↪ (p .fst)) (member x (p .fst))
+          (∈∈ₛ {a = ⟪ x ⟫↪ (p .fst)} {b = X} .snd (p .snd)) q)
+        (member x (p .fst)) })
+      (subst (λ w → ⟨ π z ∈ˢ w ⟩) (π-compute x) h)
+
   module InjExt (Xext : isExt X) where
 
     P : S → Type (ℓ-suc ℓ)
@@ -157,21 +169,9 @@ Direction 1: move a member `z` of `x` into `y`; the hypothesis fires at `z ∈ x
         → π x ≡ π y
         → ((a : S) → a ∈ᵗ x → P a)
         → ⟨ z ∈ˢ y ⟩
-    in⊆ x y z xu yu zx zu e IH = PT.rec (snd (z ∈ˢ y)) step2
-      (subst (λ w → ⟨ π z ∈ˢ w ⟩) (π-compute y)
-        (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd x z zx zu)))
-      where
-      step2 : Σ[ p ∈ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ π z) → ⟨ z ∈ˢ y ⟩
-      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ y ⟩) (sym z≡b) by
-        where
-        b : S
-        b = ⟪ y ⟫↪ (p .fst)
-        by : ⟨ b ∈ˢ y ⟩
-        by = member y (p .fst)
-        bu : ⟨ b ∈ˢ X ⟩
-        bu = ∈∈ₛ {a = b} {b = X} .snd (p .snd)
-        z≡b : z ≡ b
-        z≡b = IH z zx b zu bu (sym q)
+    in⊆ x y z xu yu zx zu e IH = π∈-recover y z
+      (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd x z zx zu))
+      (λ b by bu q → sym (IH z zx b zu bu (sym q)))
 ```
 
 Direction 2: move a member `z` of `y` into `x`; the hypothesis fires at the
@@ -182,21 +182,9 @@ witness `b ∈ x` extracted from the collapsed membership.
          → π y ≡ π x
          → ((a : S) → a ∈ᵗ x → P a)
          → ⟨ z ∈ˢ x ⟩
-    out⊆ x y z xu yu zy zu e IH = PT.rec (snd (z ∈ˢ x)) step2
-      (subst (λ w → ⟨ π z ∈ˢ w ⟩) (π-compute x)
-        (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd y z zy zu)))
-      where
-      step2 : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ π z) → ⟨ z ∈ˢ x ⟩
-      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) b≡z bx
-        where
-        b : S
-        b = ⟪ x ⟫↪ (p .fst)
-        bx : ⟨ b ∈ˢ x ⟩
-        bx = member x (p .fst)
-        bu : ⟨ b ∈ˢ X ⟩
-        bu = ∈∈ₛ {a = b} {b = X} .snd (p .snd)
-        b≡z : b ≡ z
-        b≡z = IH b bx z bu zu q
+    out⊆ x y z xu yu zy zu e IH = π∈-recover x z
+      (subst (λ w → ⟨ π z ∈ˢ w ⟩) e (π∈-fwd y z zy zu))
+      (λ b bx bu q → IH b bx z bu zu q)
 
     step-inj : (x : S) → ((a : S) → a ∈ᵗ x → P a) → P x
     step-inj x IH y xu yu e = Xext x y xu yu to from
@@ -219,20 +207,8 @@ member, and injectivity identifies it.
 
 ```agda
     π∈-bwd : (x y : S) → x ∈ᵗ X → y ∈ᵗ X → ⟨ π y ∈ˢ π x ⟩ → y ∈ᵗ x
-    π∈-bwd x y xu yu h =
-      PT.rec (snd (y ∈ˢ x)) step2 (subst (λ w → ⟨ π y ∈ˢ w ⟩) (π-compute x) h)
-      where
-      step2 : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ π y) → ⟨ y ∈ˢ x ⟩
-      step2 (p , q) = subst (λ w → ⟨ w ∈ˢ x ⟩) c≡y cx
-        where
-        c : S
-        c = ⟪ x ⟫↪ (p .fst)
-        cx : ⟨ c ∈ˢ x ⟩
-        cx = member x (p .fst)
-        cu : ⟨ c ∈ˢ X ⟩
-        cu = ∈∈ₛ {a = c} {b = X} .snd (p .snd)
-        c≡y : c ≡ y
-        c≡y = π-inj c y cu yu q
+    π∈-bwd x y xu yu h = π∈-recover x y h
+      (λ b bx bu q → π-inj b y bu yu q)
 ```
 
 The iso reading on the carrier, both directions.
@@ -256,11 +232,7 @@ The collapse is the unique solution of its recursion equation.
       where
       step-eq : sett (Fiber x) (λ p → π (⟪ x ⟫↪ (p .fst)))
               ≡ sett (Fiber x) (λ p → f (⟪ x ⟫↪ (p .fst)))
-      step-eq = seteq (Fiber x) (Fiber x)
-                  (λ p → π (⟪ x ⟫↪ (p .fst)))
-                  (λ p → f (⟪ x ⟫↪ (p .fst)))
-                  ( (λ p → ∣ p , sym (ih' p) ∣₁)
-                  , (λ p → ∣ p , ih' p ∣₁) )
+      step-eq = cong (sett (Fiber x)) (funExt ih')
         where
         ih' : (p : Fiber x) → π (⟪ x ⟫↪ (p .fst)) ≡ f (⟪ x ⟫↪ (p .fst))
         ih' p = IH (⟪ x ⟫↪ (p .fst)) (member x (p .fst))
@@ -276,41 +248,28 @@ every member of `y` lies in `X`.
     where
     stepF : (y : S) → ((m : S) → m ∈ᵗ y → m ∈ᵗ Y → π m ≡ m)
           → y ∈ᵗ Y → π y ≡ y
-    stepF y IH yY = π-compute y ∙ step-eq
+    stepF y IH yY = extensionalV (λ x → ⇔toPath (to x) (from x))
       where
-      step-eq : sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst))) ≡ y
-      step-eq = extensionality
-                  (sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst)))) y (to , from)
+      to : (x : S) → ⟨ x ∈ˢ π y ⟩ → x ∈ᵗ y
+      to x xπ = PT.rec (snd (x ∈ˢ y)) go
+        (subst (λ w → ⟨ x ∈ˢ w ⟩) (π-compute y) xπ)
         where
-        to : ⟨ sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst))) ⊆ y ⟩
-        to x xπ = PT.rec (snd (x ∈ₛ y)) go
-          (∈∈ₛ {a = x} {b = sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst)))} .snd xπ)
+        go : Σ[ p ∈ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ x) → x ∈ᵗ y
+        go (p , q) = subst (λ w → ⟨ w ∈ˢ y ⟩) (sym ih' ∙ q) (member y (p .fst))
           where
-          go : Σ[ p ∈ Fiber y ] (π (⟪ y ⟫↪ (p .fst)) ≡ x) → ⟨ x ∈ₛ y ⟩
-          go (p , q) = subst (λ w → ⟨ w ∈ₛ y ⟩) (sym ih' ∙ q) (∈ₛ↪ y (p .fst))
-            where
-            ih' : π (⟪ y ⟫↪ (p .fst)) ≡ ⟪ y ⟫↪ (p .fst)
-            ih' = IH (⟪ y ⟫↪ (p .fst)) (member y (p .fst))
-                    (Ytr {x = y} {y = ⟪ y ⟫↪ (p .fst)} (member y (p .fst)) yY)
+          ih' : π (⟪ y ⟫↪ (p .fst)) ≡ ⟪ y ⟫↪ (p .fst)
+          ih' = IH (⟪ y ⟫↪ (p .fst)) (member y (p .fst))
+            (Ytr {x = y} {y = ⟪ y ⟫↪ (p .fst)} (member y (p .fst)) yY)
 
-        from : ⟨ y ⊆ sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst))) ⟩
-        from x xy = ∈∈ₛ {a = x} {b = sett (Fiber y) (λ p → π (⟪ y ⟫↪ (p .fst)))} .fst
-          ∣ (p , ihq) ∣₁
-          where
-          x∈y : x ∈ᵗ y
-          x∈y = ∈∈ₛ {a = x} {b = y} .snd xy
-          x∈Y : x ∈ᵗ Y
-          x∈Y = Ytr {x = y} {y = x} x∈y yY
-          x∈X : ⟨ x ∈ₛ X ⟩
-          x∈X = YX x (∈∈ₛ {a = x} {b = Y} .fst x∈Y)
-          fp : Σ[ m ∈ ⟪ y ⟫ ] (⟪ y ⟫↪ m ≡ x)
-          fp = fiber y x∈y
-          p : Fiber y
-          p = fp .fst , subst (λ w → ⟨ w ∈ₛ X ⟩) (sym (fp .snd)) x∈X
-          ihq : π (⟪ y ⟫↪ (p .fst)) ≡ x
-          ihq = IH (⟪ y ⟫↪ (p .fst)) (member y (p .fst))
-                  (Ytr {x = y} {y = ⟪ y ⟫↪ (p .fst)} (member y (p .fst)) yY)
-                ∙ fp .snd
+      from : (x : S) → x ∈ᵗ y → ⟨ x ∈ˢ π y ⟩
+      from x xy = subst (λ w → ⟨ w ∈ˢ π y ⟩) (IH x xy x∈Y)
+        (π∈-fwd y x xy x∈X)
+        where
+        x∈Y : x ∈ᵗ Y
+        x∈Y = Ytr {x = y} {y = x} xy yY
+        x∈X : x ∈ᵗ X
+        x∈X = ∈∈ₛ {a = x} {b = X} .snd
+          (YX x (∈∈ₛ {a = x} {b = Y} .fst x∈Y))
 ```
 
 Devlin 5.2(ii) at the carrier itself.

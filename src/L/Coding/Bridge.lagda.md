@@ -3,7 +3,7 @@
 <!--en-->
 The previous chapter built the value and characterized it by one membership
 equation per constructor. That is enough to check the internal clauses against
-it, and it is enough for nothing else: a recursion on formulas satisfying twelve
+it, and it is enough for nothing else: a recursion on formulas satisfying ten
 equations of its own devising is an arbitrary recursion, and an internal `Def`
 read off one would provably agree with nothing. This chapter says what the value
 **is**. For an environment over the carrier, membership in `Sat B φ` is
@@ -29,7 +29,7 @@ so there is nothing for the two sides to agree about. The bridge therefore reads
 a formula over the carrier's members and relabels it into the meta-language,
 which is the alphabet the definable powerset indexes by anyway.
 <!--zh-->
-上一章造出了那个取值，并以「每个构造子一条成员等式」刻画了它。那足以拿内部诸子句去对照它，而除此之外什么也不够：一场沿公式的递归，若只满足十二条自己拟定的等式，那就是一场任意的递归；从这样一场递归读出的内部 `Def`，可证地与任何东西都不相符。本章说出那个取值**是什么**。对载体之上的一个环境，「属于 `Sat B φ`」就是「`φ` 在世界 `(B, ∈)` 中被满足」，而后者恰是可定义幂集据以定义的那个概念。
+上一章造出了那个取值，并以「每个构造子一条成员等式」刻画了它。那足以拿内部诸子句去对照它，而除此之外什么也不够：一场沿公式的递归，若只满足十条自己拟定的等式，那就是一场任意的递归；从这样一场递归读出的内部 `Def`，可证地与任何东西都不相符。本章说出那个取值**是什么**。对载体之上的一个环境，「属于 `Sat B φ`」就是「`φ` 在世界 `(B, ∈)` 中被满足」，而后者恰是可定义幂集据以定义的那个概念。
 
 右端取的是限制结构的**内层**语义，不是相对化公式在周遭的读法，而两者的差别恰好落在上一章那次审计已经看过的地方。相对化不动有界量词，故它对被绑变元只设一道防：由界项设防。而那个条件设两道：由载体、由界项。内层语义同样设两道：一道来自它自己的载体，一道来自那条子句；于是它与那个条件逐构造子相符：界上不加附加条件，不要载体的传递性，任何地方也不出现 Δ₀。若取相对化那种读法，则每个有界量词处都要求「界含于载体」，而这条要求得穿过整场归纳。取内层读法还有一个好处：定理直接落在可定义幂集自己的概念上，而不是差它一步。
 
@@ -48,7 +48,7 @@ module L.Coding.Bridge {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; con; var; Formula
-        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+        ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.Manipulation.Relabelling
   using ( mapTm; mapFo; mapFo-comp; ⊨-map )
 import FOL.Absoluteness
@@ -280,15 +280,15 @@ specification on the right by nothing but transitivity. A set identity is not
 available as the primitive, because the set on the other side is not built
 independently: constructing it is what the recursion does.
 
-The twelve clauses are then one step each, and taking each as a lemma over the
+The ten clauses are then one step each, and taking each as a lemma over the
 subformulas' properties rather than as a clause of the induction costs nothing
-and lets each be measured on its own. The propositional five are congruences: the
+and lets each be measured on its own. The four propositional cases are congruences: the
 condition names the subvalues as constants, and the object language's connective
 is the truth algebra's, so there is no translation layer to cross.
 <!--zh-->
 陈述只写一次，作为一条公式的一项具名性质：在每个内层环境处，以及在每个「底集是该环境之图」的 `L` 的元素处，「属于那个取值」就是「满足」。它是一条**真值之间的道路**，不是类型之间的等价，也不是集合之间的等同。道路正是两侧本来就采用的通货，故这一条向左与那个取值的成员等式、向右与可定义幂集的规格，仅凭传递性即可接合。集合等同不能充当原语，因为另一侧那个集合并非独立造出：造它正是这场递归所做的事。
 
-于是十二条子句各是一步；把每一步取作「关于诸子公式之性质的引理」而非「归纳的一条子句」，不花任何代价，却让每一步都能被单独测量。命题的那五条是同余：那个条件把诸子取值以常元点名，而对象语言的联结词就是真值代数的联结词，中间没有翻译层要跨。
+于是十条子句各是一步；把每一步取作「关于诸子公式之性质的引理」而非「归纳的一条子句」，不花任何代价，却让每一步都能被单独测量。命题的那四条是同余：那个条件把诸子取值以常元点名，而对象语言的联结词就是真值代数的联结词，中间没有翻译层要跨。
 <!--/-->
 
 ```agda
@@ -296,8 +296,6 @@ is the truth algebra's, so there is no translation layer to cross.
   Adequate {n} φ = (δ : DB.SM ^ n) (z : S) → fst z ≡ graph δ
                  → (z ∈ˢ Sat B (mapFo intoL φ)) ≡ (δ ⊨ᴮ φ)
 
-  step⊤ : ∀ {n} → Adequate {n} ⊤̇
-  step⊤ δ z q = Sat-cond ⊤̇ δ z q
 
   step⊥ : ∀ {n} → Adequate {n} ⊥̇
   step⊥ δ z q = Sat-cond ⊥̇ δ z q
@@ -317,8 +315,6 @@ is the truth algebra's, so there is no translation layer to cross.
   step⇒ a b ia ib δ z q = Sat-cond (mapFo intoL (a ⇒̇ b)) δ z q
     ∙ cong₂ _⇒_ (ia δ z q) (ib δ z q)
 
-  step¬ : ∀ {n} (a : Formula DB.SM n) → Adequate a → Adequate (¬̇ a)
-  step¬ a ia δ z q = Sat-cond (mapFo intoL (¬̇ a)) δ z q ∙ cong ¬_ (ia δ z q)
 ```
 
 <!--en-->
@@ -510,9 +506,9 @@ quantifier, at every arity, all the way down.
 <!--/-->
 
 <!--en-->
-Twelve steps, one line each, and the recursion is the formula's own.
+Ten steps, one line each, and the recursion is the formula's own.
 <!--zh-->
-十二步，一步一行，而那场递归就是公式自己的递归。
+十步，一步一行，而那场递归就是公式自己的递归。
 <!--/-->
 
 ```agda
@@ -522,8 +518,6 @@ Twelve steps, one line each, and the recursion is the formula's own.
   Sat-spec (a ∧̇ b)  = step∧ a b (Sat-spec a) (Sat-spec b)
   Sat-spec (a ∨̇ b)  = step∨ a b (Sat-spec a) (Sat-spec b)
   Sat-spec (a ⇒̇ b)  = step⇒ a b (Sat-spec a) (Sat-spec b)
-  Sat-spec (¬̇ a)    = step¬ a (Sat-spec a)
-  Sat-spec ⊤̇        = step⊤
   Sat-spec ⊥̇        = step⊥
   Sat-spec (∃̇ a)    = step∃ a (Sat-spec a)
   Sat-spec (∀̇ a)    = step∀ a (Sat-spec a)
@@ -574,6 +568,11 @@ minutes, and the same statement written by hand costs no measurable time.
     tab-graph : ∀ {n} (g : Ix B n) → graph (tab g) ≡ fst (envS B g)
     tab-graph g = cong env (tab-values g)
 
+  envSet-vectors : ∀ {n} (z : S) → ⟨ z ∈ˢ envSet B n ⟩
+                 → ∥ Σ[ δ ∈ DB.SM ^ n ] (fst z ≡ graph δ) ∥₁
+  envSet-vectors {n} z h = PT.map
+    (λ { (g , qg) → tab g , qg ∙ sym (tab-graph g) }) (envSet-out B n z h)
+
   Sat-out : ∀ {n} (φ : Formula DB.SM n) (z : S)
           → ⟨ z ∈ˢ Sat B (mapFo intoL φ) ⟩
           → ∥ (Σ[ δ ∈ DB.SM ^ n ] ((fst z ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
@@ -618,6 +617,12 @@ one-entry vector, which is the same equation at length one.
                  → fst (envS B (λ _ → m)) ≡ graph (DB.ι m ∷ [])
     graph-single m = cong env (funExt (λ { zero → refl ; (suc ()) }))
 
+  Sat-small-spec : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (δ : DB.SM ^ n) (z : S)
+                 → fst z ≡ graph δ
+                 → (z ∈ˢ Sat B (mapFo asConst ψ)) ≡ (δ ⊨ᴮ mapFo DB.ι ψ)
+  Sat-small-spec ψ δ z q = cong (λ χ → z ∈ˢ Sat B χ) (sym (mapFo-fuse ψ))
+    ∙ Sat-spec (mapFo DB.ι ψ) δ z q
+
   defSet-Sat : (ψ : Formula ⟪ fst B ⟫ 1) (m : ⟪ fst B ⟫)
              → (⟪ fst B ⟫↪ m ∈ DB.defSet ψ)
              ≡ (envS B (λ _ → m) ∈ˢ Sat B (mapFo asConst ψ))
@@ -649,7 +654,7 @@ the truncated recovery of an environment and the extension four clauses perform,
 the inner environment vector makes extension consing on the underlying family, so
 the coherence is two `refl`{.Agda} branches under one `funExt`{.Agda}, shared by
 all four quantifier clauses and paid at no arity. The recovery is confined to the
-corollary. The whole chapter, twelve steps and both corollaries, checks in about
+corollary. The whole chapter, ten steps and both corollaries, checks in about
 two seconds. And the one wall this chapter met came from neither the recursion nor
 the model: converting a finite function into a vector through the library's
 round-trip identity ran past eight minutes, while the same two statements written
@@ -666,7 +671,7 @@ reading today.
 <!--zh-->
 `Sat-spec`{.Agda} 就是那场递归先前欠着的充分性：在载体之上的每个环境处，「属于那个取值」就是「在世界 `(B, ∈)` 中被满足」，且是一条真值之间的道路；`Sat-out`{.Agda} 再补上「一个成员再无别的可能」。`defSet-Sat`{.Agda} 把两者花在可定义幂集上，而那正是这条陈述被欠着的理由：如今从这场递归读出的内部可定义幂集，有了一个可证与之相符的对象。
 
-有三次测量值得留存。登记在案的那份风险，即「环境的截断式恢复」与「四条子句所作的扩张」之间的相干性，**没有引爆，而理由是换了陈述**：把这座桥以内层环境向量为索引之后，扩张就是底族上的前置，于是相干性只是一次 `funExt`{.Agda} 之下的两条 `refl`{.Agda} 分支，四条量词子句共享，且不在任何元数上付账。恢复被关进那条推论里。整章十二步加两条推论，约两秒检查完毕。而本章遇到的唯一一堵墙，既不来自那场递归、也不来自模型：用库里「有穷函数与向量」的往返等式去作转换，跑过了八分钟；而把同样两条陈述写成两行递归，则分文不花。
+有三次测量值得留存。登记在案的那份风险，即「环境的截断式恢复」与「四条子句所作的扩张」之间的相干性，**没有引爆，而理由是换了陈述**：把这座桥以内层环境向量为索引之后，扩张就是底族上的前置，于是相干性只是一次 `funExt`{.Agda} 之下的两条 `refl`{.Agda} 分支，四条量词子句共享，且不在任何元数上付账。恢复被关进那条推论里。整章十步加两条推论，约两秒检查完毕。而本章遇到的唯一一堵墙，既不来自那场递归、也不来自模型：用库里「有穷函数与向量」的往返等式去作转换，跑过了八分钟；而把同样两条陈述写成两行递归，则分文不花。
 
 这座桥**没有**说的，以及这笔账该记在哪个目标上：它是对「常元皆为载体成员」的那些公式陈述的，故它不比较「点名了 `L` 的任意元素」的公式处的取值。那不是证明的缺口，而是陈述的形状，因为载体之外的常元在内层世界里没有取值；读那样一条公式要改用周遭的相对化语义，而在那里，两条有界量词子句会背上「界落在载体之内」这条前提。今天没有任何消费者要那种读法。
 <!--/-->

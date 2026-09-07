@@ -12,11 +12,12 @@ module L.GCH.Sequences {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _≐_; _∧̇_; ∃̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
-open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; extensionalV )
+open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd )
 open import L.Ordinal {ℓ} using ( #∈ω; ∈#-elim )
+open import L.Axioms.Basic {ℓ} using ( extensionalL )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Coding.Model {ℓ}
@@ -118,15 +119,12 @@ seqL-in : (A : S) (n : ℕ) (x : S)
 seqL-in A n x hx = PT.rec (snd (fst x ∈ˢ fst (seqL A))) from (envSet-out A n x hx)
   where
   from : Σ[ g ∈ Ix A n ] (fst x ≡ fst (envS A g)) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
-  from (g , e) = subst ⟨_⟩ (sym (seqL-spec A x))
-    ( subst (λ w → ⟨ w ∈ˢ fst (amb A) ⟩) (sym e) (amb-in A (n , g))
-    , ∣ nn n , ( #∈ω n
-               , ∣ A , ( refl
-                       , envOverAt-transport
-                           (A ∷ nn n ∷ envS A g ∷ []) (A ∷ nn n ∷ x ∷ [])
-                           (suc (suc zero)) (suc zero) zero
-                           (suc (suc zero)) (suc zero) zero
-                           (sym e) refl refl (envOver A g) ) ∣₁ ) ∣₁ )
+  from (g , e) = subst (λ w → ⟨ w ∈ˢ fst (seqL A) ⟩) (sym e) canonical
+    where
+    canonical : ⟨ fst (envS A g) ∈ˢ fst (seqL A) ⟩
+    canonical = subst ⟨_⟩ (sym (seqL-spec A (envS A g)))
+      ( amb-in A (n , g)
+      , ∣ nn n , (#∈ω n , ∣ A , (refl , envOver A g) ∣₁) ∣₁ )
 
 seqL-out : (A x : S) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
          → ∥ Σ[ n ∈ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
@@ -627,23 +625,18 @@ The domain of `s` is the numeral `N`, so `n` is `# N`.
 
 ```agda
         n≡ : fst n ≡ # N
-        n≡ = extensionalV (λ x → ⇔toPath (fwd x) (bwd x))
+        n≡ = cong fst (extensionalL {a = n} {b = nn N} (λ x → ⇔toPath (fwd x) (bwd x)))
           where
-          fwd : (x : V ℓ) → ⟨ x ∈ fst n ⟩ → ⟨ x ∈ # N ⟩
-          fwd x x∈n = PT.rec (snd (x ∈ # N))
-            (λ { (yy , p) → domAt-out (suc (suc zero)) (suc zero) δ dom0 xS yy
-                              (subst (λ w → ⟨ pr x (fst yy) ∈ w ⟩) e p) })
-            (hd xS .fst x∈n)
-            where
-            xS : S
-            xS = x , isL-trans {x = fst n} {y = x} x∈n (snd n)
-          bwd : (x : V ℓ) → ⟨ x ∈ # N ⟩ → ⟨ x ∈ fst n ⟩
-          bwd x x∈N = PT.rec (snd (x ∈ fst n))
-            (λ { (yy , p) → hd xS .snd yy (subst (λ w → ⟨ pr x (fst yy) ∈ w ⟩) (sym e) p) })
-            (domAt-in (suc (suc zero)) (suc zero) δ dom0 xS x∈N)
-            where
-            xS : S
-            xS = x , isL-trans {x = # N} {y = x} x∈N (numL N)
+          fwd : (x : S) → ⟨ fst x ∈ fst n ⟩ → ⟨ fst x ∈ # N ⟩
+          fwd x x∈n = PT.rec (snd (fst x ∈ # N))
+            (λ { (yy , p) → domAt-out (suc (suc zero)) (suc zero) δ dom0 x yy
+                              (subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) e p) })
+            (hd x .fst x∈n)
+          bwd : (x : S) → ⟨ fst x ∈ # N ⟩ → ⟨ fst x ∈ fst n ⟩
+          bwd x x∈N = PT.rec (snd (fst x ∈ fst n))
+            (λ { (yy , p) → hd x .snd yy (subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) (sym e) p) })
+            (domAt-in (suc (suc zero)) (suc zero) δ dom0 x x∈N)
+
 ```
 
 `C'` is single-valued.

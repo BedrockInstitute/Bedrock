@@ -39,7 +39,7 @@ module L.Ordinal {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
+open import V.Model {ℓ} using ( union-family-in; union-family-out; ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import V.Coding {ℓ} using ( #-inj′ )
 open import L.Constructible {ℓ}
   using ( isTransV; isPropIsTransV; ∅-trans; setUnion-trans; IsOrd; isPropIsOrd )
@@ -50,9 +50,9 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.Data.Bool using ( Bool; true; false )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( _∈ₛ_; ∈∈ₛ )
+open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ∅; ∅-empty; ⋃_; union-ax; module InfinitySet )
+  using ( ∅; ∅-empty; ⋃_; module InfinitySet )
 open InfinitySet using ( sucV; #_; ω; #-in-ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -128,12 +128,7 @@ setUnion-ord X f hf = setUnion-trans X f (λ x → hf x .fst) , memTr
   where
   memTr : (z : S) → ⟨ z ∈ˢ (⋃ (sett X f)) ⟩ → isTransV z
   memTr z z∈⋃ = PT.rec (isPropIsTransV z)
-    (λ { (w , (w∈ₛsett , z∈ₛw)) → PT.rec (isPropIsTransV z)
-        (λ { (x , fx≡w) → hf x .snd z
-               (∈∈ₛ {a = z} {b = f x} .snd
-                 (subst (λ W → ⟨ z ∈ₛ W ⟩) (sym fx≡w) z∈ₛw)) })
-        (∈∈ₛ {a = w} {b = sett X f} .snd w∈ₛsett) })
-    (union-ax (sett X f) z .fst (∈∈ₛ {a = z} {b = ⋃ (sett X f)} .fst z∈⋃))
+    (λ { (x , hz) → hf x .snd z hz }) (union-family-out X f z z∈⋃)
 ```
 
 <!--en-->
@@ -162,14 +157,7 @@ boundingOrd X f hf = β , (ordβ , memβ)
   ordβ : IsOrd β
   ordβ = setUnion-ord X g (λ x → suc-ord (hf x))
   memβ : (x : X) → ⟨ f x ∈ˢ β ⟩
-  memβ x = ∈∈ₛ {a = f x} {b = β} .snd
-    (union-ax (sett X g) (f x) .snd
-      ∣ sucV (f x) , (s∈ₛsett , fx∈ₛs) ∣₁)
-    where
-    s∈ₛsett : ⟨ sucV (f x) ∈ₛ sett X g ⟩
-    s∈ₛsett = ∈∈ₛ {a = sucV (f x)} {b = sett X g} .fst ∣ x , refl ∣₁
-    fx∈ₛs : ⟨ f x ∈ₛ sucV (f x) ⟩
-    fx∈ₛs = ∈∈ₛ {a = f x} {b = sucV (f x)} .fst (self∈sucV (f x))
+  memβ x = union-family-in X g x (f x) (self∈sucV (f x))
 ```
 
 <!--en-->

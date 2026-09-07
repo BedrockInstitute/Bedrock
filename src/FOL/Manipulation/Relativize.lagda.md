@@ -21,9 +21,9 @@ open import Base.Prelude
 open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
-  ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  ( con; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈ )
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
 import FOL.Semantics
 ```
 
@@ -51,8 +51,6 @@ relativize c (t ≐ u)  = t ≐ u
 relativize c (φ ∧̇ ψ)  = relativize c φ ∧̇ relativize c ψ
 relativize c (φ ∨̇ ψ)  = relativize c φ ∨̇ relativize c ψ
 relativize c (φ ⇒̇ ψ)  = relativize c φ ⇒̇ relativize c ψ
-relativize c (¬̇ φ)    = ¬̇ relativize c φ
-relativize c ⊤̇        = ⊤̇
 relativize c ⊥̇        = ⊥̇
 relativize c (∃̇ φ)    = ∃̇∈ (con c) (relativize c φ)
 relativize c (∀̇ φ)    = ∀̇∈ (con c) (relativize c φ)
@@ -75,8 +73,6 @@ constructor.
 Δ₀-relativize c (φ ∧̇ ψ)  = δ-∧ (Δ₀-relativize c φ) (Δ₀-relativize c ψ)
 Δ₀-relativize c (φ ∨̇ ψ)  = δ-∨ (Δ₀-relativize c φ) (Δ₀-relativize c ψ)
 Δ₀-relativize c (φ ⇒̇ ψ)  = δ-⇒ (Δ₀-relativize c φ) (Δ₀-relativize c ψ)
-Δ₀-relativize c (¬̇ φ)    = δ-¬ (Δ₀-relativize c φ)
-Δ₀-relativize c ⊤̇        = δ-⊤
 Δ₀-relativize c ⊥̇        = δ-⊥
 Δ₀-relativize c (∃̇ φ)    = δ-∃∈ (Δ₀-relativize c φ)
 Δ₀-relativize c (∀̇ φ)    = δ-∀∈ (Δ₀-relativize c φ)
@@ -119,8 +115,6 @@ module Correct {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure �
   γ ⊨ᴬ (φ ∧̇ ψ)  = (γ ⊨ᴬ φ) ⊓ (γ ⊨ᴬ ψ)
   γ ⊨ᴬ (φ ∨̇ ψ)  = (γ ⊨ᴬ φ) ⊔ (γ ⊨ᴬ ψ)
   γ ⊨ᴬ (φ ⇒̇ ψ)  = (γ ⊨ᴬ φ) ⇒ (γ ⊨ᴬ ψ)
-  γ ⊨ᴬ (¬̇ φ)    = ¬ (γ ⊨ᴬ φ)
-  γ ⊨ᴬ ⊤̇        = ⊤
   γ ⊨ᴬ ⊥̇        = ⊥
   γ ⊨ᴬ (∃̇ φ)    = ⋁ S (λ x → (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ))
   γ ⊨ᴬ (∀̇ φ)    = ⋀ S (λ x → (x ∈ˢ A) ⇒ ((x ∷ γ) ⊨ᴬ φ))
@@ -146,8 +140,6 @@ companion's clause, since `⟦ con c ⟧ γ` is `A`; everything else is congruen
   relativize-correct (φ ∧̇ ψ)  γ = cong₂ _⊓_ (relativize-correct φ γ) (relativize-correct ψ γ)
   relativize-correct (φ ∨̇ ψ)  γ = cong₂ _⊔_ (relativize-correct φ γ) (relativize-correct ψ γ)
   relativize-correct (φ ⇒̇ ψ)  γ = cong₂ _⇒_ (relativize-correct φ γ) (relativize-correct ψ γ)
-  relativize-correct (¬̇ φ)    γ = cong ¬_ (relativize-correct φ γ)
-  relativize-correct ⊤̇        γ = refl
   relativize-correct ⊥̇        γ = refl
   relativize-correct (∃̇ φ)    γ = cong (⋁ S) (funExt (λ x →
     cong (λ q → (x ∈ˢ A) ⊓ q) (relativize-correct φ (x ∷ γ))))

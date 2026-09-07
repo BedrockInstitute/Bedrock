@@ -1,5 +1,9 @@
 # Devlin II.5: the Condensation Lemma and the GCH in L
 
+Current Bedrock status (2026-09-06): `L⊨ZFC` and `L⊨GCH` are proved and
+registered in [Landmarks](../../src/Landmarks.lagda.md). The research and route
+assessments below are historical; they do not describe open Bedrock proof goals.
+
 Task `[LJ-0.7]`. Primary source: `_build/literature/dev2.txt`, the OCR of
 Devlin, "Constructibility" (1984), Chapter II. Cite it as `dev2.txt:NNNN`.
 Cross-check source: `_build/literature/jech13.txt`, the typed PDF of Jech,
@@ -559,7 +563,9 @@ archived records:
    the D-26 magnitude evidence; it does not change the direction.
 6. D31/D32 (`archive/dev/DECISIONS-archived.md:51-52`): the condensation
    crossing was severed and its rebuild deferred to the GCH resume.
-   SURVIVES: the crossing is still the open term `[LJ-1.12]` prices.
+   Historical assessment: `[LJ-1.12]` priced that crossing. The current
+   proof supplies it through `L.GCH.Condense` and `L.GCH.HullIn`, used by
+   `L.GCH.BoundedSubset` and the completed `L.GCH.Theorem`.
 
 The route change does not revive the ⊤̇-step story. The retired route's
 useful residue is the route decomposition, the crossing as the widest

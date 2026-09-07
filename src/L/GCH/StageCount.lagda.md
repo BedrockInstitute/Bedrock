@@ -41,7 +41,7 @@ open import L.Choice.Step {ℓ} lem
 open import L.Choice.Table {ℓ} lem using ( Related; IsRel; ixRel-rep; ixRel-fill )
 open import L.Choice.Order {ℓ} lem using ( relL; relL-spec )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; leastOf; lt; eq; gt ) renaming ( Tri to TriW )
+  using ( SWO; lt; eq; gt ) renaming ( Tri to TriW )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
 open import L.Cardinal {ℓ} lem using ( InjCode )
 open import L.GCH {ℓ} lem using ( InjL )
@@ -49,16 +49,21 @@ open import L.GCH.Assembly {ℓ} lem using ( inclusion-coded; injl-trans )
 open import L.GCH.Definable {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.Pairing {ℓ} lem using ( isL-ord )
 open import L.GCH.Sequences {ℓ} lem using ( seqL; seqL-in; seqL-out )
+open import L.Ordinal.SquareLaw {ℓ} lem using ( module FiniteBase )
+open FiniteBase using ( fromFin; fromFin-inj )
 open import L.InjChain {ℓ} lem using ( appC; appC-adequate; ω-limit; finite-excl-ω )
 open import L.Choice.Finite {ℓ} lem
-  using ( Tally; StageOrder; stageOrder; finiteStage; natOrder )  -- lint-agda: keep (StageOrder used as the projection qualifier)
+  using ( Tally; StageOrder; stageOrder; finiteStage )  -- lint-agda: keep (StageOrder used as the projection qualifier)
 open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
 
-open import Cubical.Data.Nat.Order using ( _<_; isProp≤ )
+open import Cubical.Data.Nat.Order using ( _<_ )
 open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.Data.FinData.FinSet using ( DecΣ )
+open import Cubical.Relation.Nullary using ( decRec; yes; no )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId'; inj-toℕ )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+import Cubical.Data.Sum as Sum
 open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ2; isPropΠ3 )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
@@ -492,25 +497,10 @@ isPropInjCode F a b =
 
 injcode-resp : (F F' a a' b : S) → fst F ≡ fst F' → fst a ≡ fst a'
              → InjCode F a b → InjCode F' a' b
-injcode-resp F F' a a' b qF qa (sv , dm , ij , ran) =
-    svAt-in zero γ' (λ x y y' p q → svAt-out zero γ sv x y y' (mv p) (mv q))
-  , domAt-intro zero (suc zero) γ' (λ x →
-        (λ h → subst (λ w → ⟨ fst x ∈ w ⟩) qa
-                 (PT.rec (snd (fst x ∈ fst a))
-                   (λ { (y , p) → domAt-out zero (suc zero) γ dm x y (mv p) }) h))
-      , (λ hx → PT.map (λ { (y , p) → y , mv' p })
-                 (domAt-in zero (suc zero) γ dm x
-                   (subst (λ w → ⟨ fst x ∈ w ⟩) (sym qa) hx))))
-  , injAt-in zero γ' (λ y x x' p q → injAt-out zero γ ij y x x' (mv p) (mv q))
-  , λ x y p → ran x y (mv p)
-  where
-  γ γ' : S ^ 2
-  γ  = F ∷ a ∷ []
-  γ' = F' ∷ a' ∷ []
-  mv : {u v : V ℓ} → ⟨ pr u v ∈ fst F' ⟩ → ⟨ pr u v ∈ fst F ⟩
-  mv {u} {v} = subst (λ w → ⟨ pr u v ∈ w ⟩) (sym qF)
-  mv' : {u v : V ℓ} → ⟨ pr u v ∈ fst F ⟩ → ⟨ pr u v ∈ fst F' ⟩
-  mv' {u} {v} = subst (λ w → ⟨ pr u v ∈ w ⟩) qF
+injcode-resp F F' a a' b qF qa = subst2 {x = F} {y = F'} {z = a} {w = a'}
+  (λ E A → InjCode E A b)
+  (Σ≡Prop (λ v → snd (isL v)) qF) (Σ≡Prop (λ v → snd (isL v)) qa)
+
 ```
 
 The injection-code formula at two slots, against the constant `b`:
@@ -580,12 +570,10 @@ inject into a finite stage.
 
 ### 6.1 A finite stage holds no copy of omega
 
-src/L/Choice/Finite.lagda.md tallies the finite stage `L_n`: a finite list of
-members covering it. At every member the least tally index is a natural number
-below the tally's size, so an injection of omega into `L_n` composes to one into
-the numeral `# size`, which `finite-excl-ω` refutes. The index is chosen by
-`leastOf` over the natural order; minimality is never used, any deterministic
-index would do.
+src/L/Choice/Finite.lagda.md tallies the finite stage `L_n`. Excluded middle
+decides equality with each entry, and finite search chooses a tally index for
+every member. An injection of omega into `L_n` therefore composes to one into
+`# size`, which `finite-excl-ω` refutes.
 
 ```agda
 private
@@ -596,17 +584,14 @@ private
     open Tally t using ( size; item; onto )
 ```
 
-The tally indices naming `x`, as natural numbers.
+Finite search returns the index together with its equation; the tally's
+surjectivity rules out the unsuccessful branch.
 
 ```agda
-    Named : V ℓ → ℕ → hProp (ℓ-suc ℓ)
-    Named x k = ∥ Σ[ i ∈ Fin size ] ((toℕ i ≡ k) × (item i ≡ x)) ∥₁ , squash₁
-
-    least : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ k ∈ ℕ ] ⟨ Named x k ⟩
-    least x hx = fst l , fst (snd l)
-      where
-      l = leastOf natOrder lem (Named x)
-            (PT.map (λ { (i , q) → toℕ i , ∣ i , refl , q ∣₁ }) (onto x hx))
+    named : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ i ∈ Fin size ] (item i ≡ x)
+    named x hx = decRec (λ q → q) (λ nq → Empty.rec (PT.rec Empty.isProp⊥ nq (onto x hx)))
+      (DecΣ size (λ i → item i ≡ x)
+        (λ i → Sum.rec yes no (lem ((item i ≡ x) , setIsSet (item i) x))))
 
     noinj : (f : ⟪ ω ⟫ → ⟪ Lset (# n) ⟫)
           → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
@@ -617,26 +602,13 @@ The tally indices naming `x`, as natural numbers.
       vl x = ⟪ Lset (# n) ⟫↪ (f x)
       mm : (x : ⟪ ω ⟫) → ⟨ vl x ∈ˢ finiteStage n ⟩
       mm x = member (Lset (# n)) (f x)
-      k : ⟪ ω ⟫ → ℕ
-      k x = least (vl x) (mm x) .fst
-      kb : (x : ⟪ ω ⟫) → k x < size
-      kb x = PT.rec isProp≤
-        (λ { (i , (pi , _)) → subst (λ w → w < size) pi (toℕ<n i) })
-        (least (vl x) (mm x) .snd)
       q : ⟪ ω ⟫ → ⟪ # size ⟫
-      q x = fiber (# size) (#mono (k x) size (kb x)) .fst
-      q-spec : (x : ⟪ ω ⟫) → ⟪ # size ⟫↪ (q x) ≡ # (k x)
-      q-spec x = fiber (# size) (#mono (k x) size (kb x)) .snd
+      q x = fromFin size (toℕ (named (vl x) (mm x) .fst) , toℕ<n (named (vl x) (mm x) .fst))
       qq : (x y : ⟪ ω ⟫) → q x ≡ q y → f x ≡ f y
       qq x y e = ↪-inj {a = Lset (# n)}
-        (PT.rec2 (setIsSet (vl x) (vl y)) go (least (vl x) (mm x) .snd) (least (vl y) (mm y) .snd))
-        where
-        ek : k x ≡ k y
-        ek = #-inj′ (sym (q-spec x) ∙ cong ⟪ # size ⟫↪ e ∙ q-spec y)
-        go : Σ[ i ∈ Fin size ] ((toℕ i ≡ k x) × (item i ≡ vl x))
-           → Σ[ j ∈ Fin size ] ((toℕ j ≡ k y) × (item j ≡ vl y))
-           → vl x ≡ vl y
-        go (i , pi , qi) (j , pj , qj) = sym qi ∙ cong item (inj-toℕ (pi ∙ ek ∙ sym pj)) ∙ qj
+        (sym (named (vl x) (mm x) .snd)
+          ∙ cong item (inj-toℕ (cong fst (fromFin-inj size _ _ e)))
+          ∙ named (vl y) (mm y) .snd)
 
   NoInto : V ℓ → Type ℓ
   NoInto w = (f : ⟪ ω ⟫ → ⟪ Lset w ⟫)

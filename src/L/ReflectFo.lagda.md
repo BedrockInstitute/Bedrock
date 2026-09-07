@@ -40,7 +40,7 @@ module L.ReflectFo {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇
+  using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
 
@@ -146,8 +146,6 @@ Answers (t ≐ u)  σ oσ τ = Unit*
 Answers (φ ∧̇ ψ)  σ oσ τ = Answers φ σ oσ τ × Answers ψ σ oσ τ
 Answers (φ ∨̇ ψ)  σ oσ τ = Answers φ σ oσ τ × Answers ψ σ oσ τ
 Answers (φ ⇒̇ ψ)  σ oσ τ = Answers φ σ oσ τ × Answers ψ σ oσ τ
-Answers (¬̇ φ)    σ oσ τ = Answers φ σ oσ τ
-Answers ⊤̇        σ oσ τ = Unit*
 Answers ⊥̇        σ oσ τ = Unit*
 Answers (∃̇ φ)    σ oσ τ = ⟨ Single.Fstep φ σ oσ ∈ τ ⟩ × Answers φ σ oσ τ
 Answers (∀̇ φ)    σ oσ τ = ⟨ Single.Fstep (¬̇ φ) σ oσ ∈ τ ⟩ × Answers φ σ oσ τ
@@ -165,8 +163,6 @@ Answers-mono h o (φ ∨̇ ψ)  σ oσ (a , b) =
   Answers-mono h o φ σ oσ a , Answers-mono h o ψ σ oσ b
 Answers-mono h o (φ ⇒̇ ψ)  σ oσ (a , b) =
   Answers-mono h o φ σ oσ a , Answers-mono h o ψ σ oσ b
-Answers-mono h o (¬̇ φ)    σ oσ a        = Answers-mono h o φ σ oσ a
-Answers-mono h o ⊤̇        σ oσ _        = tt*
 Answers-mono h o ⊥̇        σ oσ _        = tt*
 Answers-mono {τ} h o (∃̇ φ) σ oσ (F , a) =
   o .fst {x = τ} {y = Single.Fstep φ σ oσ} F h , Answers-mono h o φ σ oσ a
@@ -190,15 +186,15 @@ with two children merges its children's ordinals; a quantifier adds one step
 function to its child's.
 
 Each shape is written once, over an arbitrary payload with an arbitrary way of
-raising it, so the recursion itself is twelve one-line clauses and the ordinal
+raising it, so the recursion itself is ten one-line clauses and the ordinal
 bookkeeping is not restated at each. The alternative, which is what one writes
-first, is three parallel recursions of twelve clauses each computing the ordinal,
+first, is three parallel recursions of ten clauses each computing the ordinal,
 its ordinality, and the rung's membership in it; they all traverse the same tree
 and project the same bounds.
 <!--zh-->
 接下来是偿债的那一步。沿公式递归，从一级出发造出它上方的一个序数，带着整棵隶属树。三种形状覆盖了全部构造子：不欠债的节点取该级自己的上界；有两个子节点的合并两个子序数；量词则在子节点之上再添一个步进函数。
 
-每种形状只写一次，针对任意的负载与任意的抬升方式，于是递归本身是十二条一行的子句，而序数的记账不必在每条里重述一遍。另一条路，也是人们最先写出的那条，是三套并行的、各十二条子句的递归，分别算那个序数、它的序数性、以及该级属于它；三者遍历同一棵树，投影同一批上界。
+每种形状只写一次，针对任意的负载与任意的抬升方式，于是递归本身是十条一行的子句，而序数的记账不必在每条里重述一遍。另一条路，也是人们最先写出的那条，是三套并行的、各十条子句的递归，分别算那个序数、它的序数性、以及该级属于它；三者遍历同一棵树，投影同一批上界。
 <!--/-->
 
 ```agda
@@ -248,8 +244,6 @@ gstep (φ ∨̇ ψ)  σ oσ = joinBox (raiseAns φ σ oσ) (raiseAns ψ σ oσ)
                         (gstep φ σ oσ) (gstep ψ σ oσ)
 gstep (φ ⇒̇ ψ)  σ oσ = joinBox (raiseAns φ σ oσ) (raiseAns ψ σ oσ)
                         (gstep φ σ oσ) (gstep ψ σ oσ)
-gstep (¬̇ φ)    σ oσ = gstep φ σ oσ
-gstep ⊤̇        σ oσ = unitBox σ oσ
 gstep ⊥̇        σ oσ = unitBox σ oσ
 gstep (∃̇ φ)    σ oσ = addBox (raiseAns φ σ oσ)
                         (Single.Fstep φ σ oσ) (Single.Fstep-ord φ σ oσ)
@@ -437,13 +431,13 @@ it is the only place.
                → ⟨ (x ∷ γ) ⊨ χ ⟩
         decide (inl yes) = yes
         decide (inr no)  = PT.rec (snd ((x ∷ γ) ⊨ χ)) collide
-          (cl γ bγ ∣ x , no ∣₁)
+          (cl γ bγ ∣ x , (λ yes → lift (no yes)) ∣₁)
           where
           collide : Σ[ q ∈ S ] (⟨ fst q ∈ Lset β ⟩ × ⟨ (q ∷ γ) ⊨ (¬̇ χ) ⟩)
                   → ⟨ (x ∷ γ) ⊨ χ ⟩
           collide (q , (fq∈ , refute)) = Empty.rec
-            (refute (subst ⟨_⟩ (sym (reflectFo χ an bd (q ∷ γ) (fq∈ , bγ)))
-                       (H q fq∈)))
+            (lower (refute (subst ⟨_⟩
+              (sym (reflectFo χ an bd (q ∷ γ) (fq∈ , bγ))) (H q fq∈))))
 
   reflectFo (t ∈̇ u)  an bd γ bγ = refl
   reflectFo (t ≐ u)  an bd γ bγ = refl
@@ -456,8 +450,6 @@ it is the only place.
   reflectFo (χ ⇒̇ ψ)  an bd γ bγ =
     cong₂ _⇒_ (reflectFo χ (λ N → an N .fst) (bd .fst) γ bγ)
               (reflectFo ψ (λ N → an N .snd) (bd .snd) γ bγ)
-  reflectFo (¬̇ χ)    an bd γ bγ = cong ¬_ (reflectFo χ an bd γ bγ)
-  reflectFo ⊤̇        an bd γ bγ = refl
   reflectFo ⊥̇        an bd γ bγ = refl
   reflectFo (∃̇ χ)    an bd γ bγ =
     reflect∃ χ (closureOf χ (λ N → an N .fst)) (λ N → an N .snd) bd γ bγ

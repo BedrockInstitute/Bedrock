@@ -11,19 +11,17 @@ module L.InjChain {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Formula; con; _∧̇_; ∃̇_; ∃̇∈ )
+  using ( Formula; var; _≐_; _∧̇_; ∃̇_ )
 import FOL.Absoluteness
-import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import L.Constructible {ℓ}
-  using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset-mono )
-open import L.Ordinal {ℓ} using ( ω-ord; #∈ω; boundingOrd )
+  using ( 𝒮ʟ; isL; isL-trans; IsOrd )
+open import L.Ordinal {ℓ} using ( ω-ord; #∈ω )
 import L.Ordinal.SquareLaw {ℓ} lem as SQ
 open SQ using ( module FiniteBase )
-open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Axioms.Basic {ℓ} using ( LsetS )
+open import L.Recursion {ℓ} lem using ( smallDom )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Coding.Model {ℓ}
   using ( prAtL; prAtL-adequate; prʟ; prʟ-fst
@@ -32,12 +30,16 @@ open import L.Coding.Model {ℓ}
 open import L.Coding.Model {ℓ} using ( appC; appC-adequate ) public
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-out; injAt-in; module Small )
+open import L.Cardinal {ℓ} lem using ( InjCode )
+open import L.GCH.Definable {ℓ} lem
+  using ( DefinableMap ) renaming ( module Inj to DefinableInj )
 
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.Data.Nat using ( ℕ )
-open import Cubical.Data.Sigma using ( _×_ )
+open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
+open import Cubical.Foundations.Prelude using ( subst2 )
 import Cubical.Foundations.Equiv as Equiv
 open Equiv using ( equivFun; invEq; retEq; _≃_ )
 open import Cubical.Foundations.Univalence using ( pathToEquiv )
@@ -51,53 +53,29 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
-open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
+open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 
-module ModelL = FOL.ZFModel 𝒮ʟ
-open ModelL using ( SetOf )
 
 open FiniteBase using ( ω-mem→numeral; toFin; toFin-inj; fromFin; fromFin-inj )
 open FiniteBase using ( module AbstractChase )
 ```
 
-The shared bound. One device, every carve in this master and in `L.Absorption`.
-
-A carve needs a set that already holds every pair it will keep. The pairs form a
-family over a SMALL index type, so `boundingOrd` bounds their stages and the
-bounding stage is an element of L. No replacement builds it. The module is
-generic in the index type and in the family, so each consumer supplies its own
-pairs.
+The shared bound is `Recursion.smallDom`: a small family of elements of L
+lies in one stage. The bound and its membership reader stay sealed, since every
+consumer uses the bound as an atom.
 
 ```agda
 module StageBound (I : Type ℓ) (g : I → S) where
 
-  private
-    stg : I → V ℓ
-    stg i = stage (fst (g i)) (snd (g i))
-
-    b : Σ[ β ∈ V ℓ ] (IsOrd β × ((i : I) → ⟨ stg i ∈ β ⟩))
-    b = boundingOrd I stg (λ i → stage-ord (fst (g i)) (snd (g i)))
-```
-
-Sealed: every consumer wants the bound as an ATOM.
-
-```agda
   opaque
-    β : V ℓ
-    β = b .fst
-
-    oβ : IsOrd β
-    oβ = b .snd .fst
-
     bnd : S
-    bnd = LsetS β oβ
+    bnd = smallDom I g .fst
 
     below : (i : I) → ⟨ fst (g i) ∈ fst bnd ⟩
-    below i = Lset-mono {α = β} {β = stg i} (b .snd .snd i)
-                (stage-mem (fst (g i)) (snd (g i)))
+    below = smallDom I g .snd
 ```
 
 Row 5. The pairing on `ω`, by the order route, zero arithmetic.
@@ -173,67 +151,8 @@ finite-excl-ω β oβ β∈ω f finj =
 
 Row 1. The composition of two injection graphs, by separation.
 
-`appC` reads a graph out of a CONSTANT (not the context), because separation
-takes a formula of one place. `compFo` is the composite condition; `PairBound`
-builds the bound as a stage (no replacement); `Comp` carves the composite and
-reads it back as an honest injection.
-
-```agda
-```
-
-The composite condition, as one formula of one place.
-
-```agda
-compFo : (F H : S) → Formula S 1
-compFo F H = ∃̇ (∃̇ (∃̇ (
-       prAtL (suc (suc (suc zero))) (suc (suc zero)) zero
-    ∧̇ (appC F (suc (suc zero)) (suc zero)
-    ∧̇  appC H (suc zero) zero))))
-
-module CompFo (F H : S) where
-
-  Chain : S → S → S → S → Type (ℓ-suc ℓ)
-  Chain p x y z = (fst p ≡ pr (fst x) (fst z))
-                × (⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                × ⟨ pr (fst y) (fst z) ∈ fst H ⟩)
-
-  private
-    ctx : (p x y z : S) → S ^ 4
-    ctx p x y z = z ∷ y ∷ x ∷ p ∷ []
-
-    atPr : (p x y z : S)
-         → ((ctx p x y z) ⊨ prAtL (suc (suc (suc zero))) (suc (suc zero)) zero)
-         ≡ ((fst p ≡ pr (fst x) (fst z)) , setIsSet (fst p) (pr (fst x) (fst z)))
-    atPr p x y z =
-      prAtL-adequate (suc (suc (suc zero))) (suc (suc zero)) zero (ctx p x y z)
-
-    atF : (p x y z : S)
-        → ((ctx p x y z) ⊨ appC F (suc (suc zero)) (suc zero))
-        ≡ (pr (fst x) (fst y) ∈ fst F)
-    atF p x y z = appC-adequate F (suc (suc zero)) (suc zero) (ctx p x y z)
-
-    atH : (p x y z : S)
-        → ((ctx p x y z) ⊨ appC H (suc zero) zero)
-        ≡ (pr (fst y) (fst z) ∈ fst H)
-    atH p x y z = appC-adequate H (suc zero) zero (ctx p x y z)
-
-  out : (p : S) → ⟨ (p ∷ []) ⊨ compFo F H ⟩
-      → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] Σ[ z ∈ S ] Chain p x y z ∥₁
-  out p = PT.rec squash₁ (λ { (x , hx) →
-          PT.rec squash₁ (λ { (y , hy) →
-          PT.rec squash₁ (λ { (z , (hp , (hf , hh))) →
-            ∣ x , y , z
-            , ( subst ⟨_⟩ (atPr p x y z) hp
-              , ( subst ⟨_⟩ (atF p x y z) hf
-                , subst ⟨_⟩ (atH p x y z) hh ) ) ∣₁ }) hy }) hx })
-
-  into : (p x y z : S) → Chain p x y z → ⟨ (p ∷ []) ⊨ compFo F H ⟩
-  into p x y z (hp , (hf , hh)) =
-    ∣ x , ∣ y , ∣ z
-    , ( subst ⟨_⟩ (sym (atPr p x y z)) hp
-      , ( subst ⟨_⟩ (sym (atF p x y z)) hf
-        , subst ⟨_⟩ (sym (atH p x y z)) hh ) ) ∣₁ ∣₁ ∣₁
-```
+`appC` reads each graph at a constant. The shared bounded relation binds the
+two endpoints; the composite condition binds their intermediate value.
 
 The bound for row 1, as an instance of the shared device.  The index
 type is the pairs of a domain member and a codomain member, and the
@@ -282,6 +201,50 @@ An alias of a SEALED name, so it is an atom here too.
        ∙ cong₂ pr (fD .snd) (fC .snd)
 ```
 
+A bounded relation uses the same separation and pair-injectivity proof for
+products, orders, and counting graphs. Its description reads over `(y, x, e)`;
+the host predicate depends only on the two components.
+
+```agda
+module Relation (D C : S) (φ : Formula S 3) (P : S → S → hProp (ℓ-suc ℓ))
+                (read : (x y e : S) → ⟨ (y ∷ x ∷ e ∷ []) ⊨ φ ⟩ → ⟨ P x y ⟩)
+                (fill : (x y e : S) → ⟨ P x y ⟩ → ⟨ (y ∷ x ∷ e ∷ []) ⊨ φ ⟩) where
+
+  opaque
+    fo : Formula S 1
+    fo = ∃̇ (∃̇ (prAtL (suc (suc zero)) (suc zero) zero ∧̇ φ))
+
+    rel : S
+    rel = hasSeparationL (PairBound.bnd D C) fo .fst .fst
+
+    out : (e : S) → ⟨ fst e ∈ fst rel ⟩
+        → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] ((fst e ≡ pr (fst x) (fst y)) × ⟨ P x y ⟩) ∥₁
+    out e h = PT.rec squash₁ (λ { (x , hx) → PT.map
+      (λ { (y , q , hy) → x , y
+         , subst ⟨_⟩ (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ e ∷ [])) q
+         , read x y e hy }) hx })
+      (subst ⟨_⟩ (hasSeparationL (PairBound.bnd D C) fo .fst .snd e) h .snd)
+
+    into : (x y : S) → ⟨ fst x ∈ fst D ⟩ → ⟨ fst y ∈ fst C ⟩ → ⟨ P x y ⟩
+         → ⟨ pr (fst x) (fst y) ∈ fst rel ⟩
+    into x y mx my h = subst (λ w → ⟨ w ∈ fst rel ⟩) (prʟ-fst x y)
+      (subst ⟨_⟩ (sym (hasSeparationL (PairBound.bnd D C) fo .fst .snd (prʟ x y)))
+        ( subst (λ w → ⟨ w ∈ fst (PairBound.bnd D C) ⟩) (sym (prʟ-fst x y))
+            (PairBound.below D C x y mx my)
+        , ∣ x , ∣ y
+          , subst ⟨_⟩ (sym (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ prʟ x y ∷ [])))
+              (prʟ-fst x y)
+          , fill x y (prʟ x y) h ∣₁ ∣₁ ))
+
+  pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst rel ⟩ → ⟨ P x y ⟩
+  pair-out x y h = PT.rec (snd (P x y))
+    (λ { (x' , y' , q , h') →
+      subst2 (λ a b → ⟨ P a b ⟩)
+        (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .fst)))
+        (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .snd))) h' })
+    (out (prʟ x y) (subst (λ w → ⟨ w ∈ fst rel ⟩) (sym (prʟ-fst x y)) h))
+```
+
 The composite. Two graphs, four conjuncts each, not one replacement.
 
 ```agda
@@ -298,9 +261,6 @@ module Comp (D E C F H : S)
                   → ⟨ fst z ∈ fst C ⟩) where
 
   private
-    module PB = PairBound D C
-    module CF = CompFo F H
-
     γF : S ^ 2
     γF = F ∷ D ∷ []
 
@@ -308,50 +268,43 @@ module Comp (D E C F H : S)
     γH = H ∷ E ∷ []
 ```
 
-The composite, by separation.
+The composite condition has one intermediate witness. Its two readings only
+interpret the two application atoms; `Relation` supplies the pair graph.
 
 ```agda
-  opaque
-    K : S
-    K = fst (fst (hasSeparationL PB.bnd (compFo F H)))
+  private
+    Chain : S → S → Type (ℓ-suc ℓ)
+    Chain x z = ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
+                             × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
 
-    K-spec : (p : S) → (p ∈ˢ K)
-           ≡ ((p ∈ˢ PB.bnd) ⊓ ((p ∷ []) ⊨ compFo F H))
-    K-spec = snd (fst (hasSeparationL PB.bnd (compFo F H)))
-```
+    opaque
+      body : Formula S 3
+      body = ∃̇ (appC F (suc (suc zero)) zero ∧̇ appC H zero (suc zero))
 
-The two readings of membership.
+      read : (x z p : S) → ⟨ (z ∷ x ∷ p ∷ []) ⊨ body ⟩ → Chain x z
+      read x z p = PT.map (λ { (y , hf , hh) → y
+        , subst ⟨_⟩ (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ [])) hf
+        , subst ⟨_⟩ (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ [])) hh })
 
-```agda
+      fill : (x z p : S) → Chain x z → ⟨ (z ∷ x ∷ p ∷ []) ⊨ body ⟩
+      fill x z p = PT.map (λ { (y , hf , hh) → y
+        , subst ⟨_⟩ (sym (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ []))) hf
+        , subst ⟨_⟩ (sym (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ []))) hh })
+
+    module Composite = Relation D C body (λ x z → Chain x z , squash₁) read fill
+
+  K : S
+  K = Composite.rel
+
   K-out : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩
         → ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
                       × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
-  K-out x z h = PT.rec squash₁ step (CF.out (prʟ x z) (snd (subst ⟨_⟩ (K-spec (prʟ x z)) h')))
-    where
-    h' : ⟨ prʟ x z ∈ˢ K ⟩
-    h' = subst (λ w → ⟨ w ∈ fst K ⟩) (sym (prʟ-fst x z)) h
-
-    step : (Σ[ u ∈ S ] Σ[ v ∈ S ] Σ[ w ∈ S ] CF.Chain (prʟ x z) u v w)
-         → ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                       × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
-    step (u , v , w , (hp , (hf , hh))) = ∣ v , (hf' , hh') ∣₁
-      where
-      q : (fst x ≡ fst u) × (fst z ≡ fst w)
-      q = pr-inj (sym (prʟ-fst x z) ∙ hp)
-      hf' : ⟨ pr (fst x) (fst v) ∈ fst F ⟩
-      hf' = subst (λ t → ⟨ pr t (fst v) ∈ fst F ⟩) (sym (fst q)) hf
-      hh' : ⟨ pr (fst v) (fst z) ∈ fst H ⟩
-      hh' = subst (λ t → ⟨ pr (fst v) t ∈ fst H ⟩) (sym (snd q)) hh
+  K-out = Composite.pair-out
 
   K-in : (x y z : S) → ⟨ fst x ∈ fst D ⟩ → ⟨ fst z ∈ fst C ⟩
        → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → ⟨ pr (fst y) (fst z) ∈ fst H ⟩
        → ⟨ pr (fst x) (fst z) ∈ fst K ⟩
-  K-in x y z mx mz hf hh =
-    subst (λ w → ⟨ w ∈ fst K ⟩) (prʟ-fst x z)
-      (subst ⟨_⟩ (sym (K-spec (prʟ x z)))
-        ( subst (λ w → ⟨ w ∈ fst PB.bnd ⟩) (sym (prʟ-fst x z))
-            (PB.below x z mx mz)
-        , CF.into (prʟ x z) x y z (prʟ-fst x z , (hf , hh)) ))
+  K-in x y z mx mz hf hh = Composite.into x z mx mz ∣ y , hf , hh ∣₁
 ```
 
 The four conjuncts, for the composite.
@@ -412,176 +365,58 @@ The composite, read back as an honest function. Sealed.
     module Sm = Small K D C svK dmK ijK ranK
 ```
 
-Row 3. The inclusion of one set into another, carved.
+Row 3. The inclusion of one set into another.
 
-The description takes ONE place, and the codomain does not appear in it: an
-inclusion IS the identity on its domain, so the codomain enters the four
-conjuncts and not the formula. That is why the inclusion costs what the identity
-graph costs. Inside the binder the bound variable `x` is 0 and the free variable
-`p` is 1.
-
-```agda
-inclFo : S → Formula S 1
-inclFo D = ∃̇∈ (con D) (prAtL (suc zero) zero zero)
-
-module InclFo (D : S) where
-
-  private
-    at : (p x : S) → ⟨ (x ∷ p ∷ []) ⊨ prAtL (suc zero) zero zero ⟩
-       ≡ (fst p ≡ pr (fst x) (fst x))
-    at p x = cong ⟨_⟩ (prAtL-adequate (suc zero) zero zero (x ∷ p ∷ []))
-
-  out : (p : S) → ⟨ (p ∷ []) ⊨ inclFo D ⟩
-      → ∥ Σ[ x ∈ S ] (⟨ x ∈ˢ D ⟩ × (fst p ≡ pr (fst x) (fst x))) ∥₁
-  out p = PT.map (λ { (x , (m , h)) → x , (m , subst (λ T → T) (at p x) h) })
-
-  into : (p x : S) → ⟨ x ∈ˢ D ⟩ → fst p ≡ pr (fst x) (fst x)
-       → ⟨ (p ∷ []) ⊨ inclFo D ⟩
-  into p x m e = ∣ x , (m , subst (λ T → T) (sym (at p x)) e) ∣₁
-```
-
-The graph, carved between TWO sets. The bound, the subset witness and the
-separation field are all PARAMETERS, so no line of this module names an L axiom
-or an L stage. The residue, stated rather than hidden: the module still sits
-over the structure `S` and the coding layer. That is the model's pair
-vocabulary, not L's axioms.
-
-```agda
-module Carve (D C bnd : S)
-             (sub : (z : V ℓ) → ⟨ z ∈ fst D ⟩ → ⟨ z ∈ fst C ⟩)
-             (below : (x : S) → ⟨ x ∈ˢ D ⟩ → ⟨ pr (fst x) (fst x) ∈ fst bnd ⟩)
-             (sep : (b : S) (φ : Formula S 1)
-                  → isContr (SetOf (λ z → (z ∈ˢ b) ⊓ ((z ∷ []) ⊨ φ)))) where
-
-  private
-    module Fo = InclFo D
-```
-
-One separation, and no replacement. Sealed.
-
-```agda
-  opaque
-    G : S
-    G = fst (fst (sep bnd (inclFo D)))
-
-    G-spec : (z : S) → (z ∈ˢ G) ≡ ((z ∈ˢ bnd) ⊓ ((z ∷ []) ⊨ inclFo D))
-    G-spec = snd (fst (sep bnd (inclFo D)))
-
-  G-out : (z : S) → ⟨ z ∈ˢ G ⟩
-        → ∥ Σ[ x ∈ S ] (⟨ x ∈ˢ D ⟩ × (fst z ≡ pr (fst x) (fst x))) ∥₁
-  G-out z h = Fo.out z (snd (subst ⟨_⟩ (G-spec z) h))
-
-  G-in : (z x : S) → ⟨ x ∈ˢ D ⟩ → fst z ≡ pr (fst x) (fst x) → ⟨ z ∈ˢ G ⟩
-  G-in z x m e = subst ⟨_⟩ (sym (G-spec z))
-    ( subst (λ w → ⟨ w ∈ fst bnd ⟩) (sym e) (below x m)
-    , Fo.into z x m e )
-
-  pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst G ⟩
-           → ∥ (fst x ≡ fst y) × ⟨ x ∈ˢ D ⟩ ∥₁
-  pair-out x y h = PT.map step (G-out (prʟ x y) h')
-    where
-    h' : ⟨ prʟ x y ∈ˢ G ⟩
-    h' = subst (λ w → ⟨ w ∈ fst G ⟩) (sym (prʟ-fst x y)) h
-    step : Σ[ u ∈ S ] (⟨ u ∈ˢ D ⟩ × (fst (prʟ x y) ≡ pr (fst u) (fst u)))
-         → (fst x ≡ fst y) × ⟨ x ∈ˢ D ⟩
-    step (u , (m , e)) = (xu ∙ sym yu) , subst (λ w → ⟨ w ∈ fst D ⟩) (sym xu) m
-      where
-      q : (fst x ≡ fst u) × (fst y ≡ fst u)
-      q = pr-inj (sym (prʟ-fst x y) ∙ e)
-      xu = fst q
-      yu = snd q
-
-  pair-in : (x : S) → ⟨ x ∈ˢ D ⟩ → ⟨ pr (fst x) (fst x) ∈ fst G ⟩
-  pair-in x m = subst (λ w → ⟨ w ∈ fst G ⟩) (prʟ-fst x x)
-                  (G-in (prʟ x x) x m (prʟ-fst x x))
-```
-
-The four conjuncts. The range conjunct is the one line the identity graph does
-not have, and it is where the subset witness is spent.
-
-```agda
-  γI : S ^ 2
-  γI = G ∷ D ∷ []
-
-  sv : ⟨ γI ⊨ svAt zero ⟩
-  sv = svAt-in zero γI (λ x y y' p q →
-    PT.rec (setIsSet (fst y) (fst y'))
-      (λ r → PT.rec (setIsSet (fst y) (fst y'))
-        (λ r' → sym (fst r) ∙ fst r') (pair-out x y' q))
-      (pair-out x y p))
-
-  ij : ⟨ γI ⊨ injAt zero ⟩
-  ij = injAt-in zero γI (λ y x x' p q →
-    PT.rec (setIsSet (fst x) (fst x'))
-      (λ r → PT.rec (setIsSet (fst x) (fst x'))
-        (λ r' → fst r ∙ sym (fst r')) (pair-out x' y q))
-      (pair-out x y p))
-
-  dm : ⟨ γI ⊨ domAt zero (suc zero) ⟩
-  dm = domAt-intro zero (suc zero) γI (λ x → fwd x , bwd x)
-    where
-    fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst G) ⟩
-        → ⟨ fst x ∈ fst D ⟩
-    fwd x = PT.rec (snd (fst x ∈ fst D))
-      (λ { (y , p) → PT.rec (snd (fst x ∈ fst D)) snd (pair-out x y p) })
-
-    bwd : (x : S) → ⟨ fst x ∈ fst D ⟩
-        → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst G) ⟩
-    bwd x m = ∣ x , pair-in x m ∣₁
-
-  ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst G ⟩ → ⟨ fst y ∈ fst C ⟩
-  ran x y h = PT.rec (snd (fst y ∈ fst C))
-    (λ r → sub (fst y) (subst (λ w → ⟨ w ∈ fst D ⟩) (fst r) (snd r)))
-    (pair-out x y h)
-```
-
-The graph, read back as an honest injection between the small types. Sealed at
-the definition: an unsealed `Small` application exhausts an 8g heap.
-
-```agda
-  private
-    module Sm = Small G D C sv dm ij ran
-
-  opaque
-    incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
-    incl = Sm.small
-```
-
-And it is the inclusion. A graph that carves, proves four conjuncts and reads
-back as SOME injection is not evidence for THIS object. This line says the
-value is the same SET.
-
-The L instantiation.  It supplies two things and no more: the stage
-bound, and `hasSeparationL`.
+The identity function on the domain has the graph formula `y = x`. The shared
+definable-injection construction collects its argument-value pairs and supplies
+the four coded-injection conjuncts. Equality gives uniqueness and injectivity;
+the given subset inclusion supplies the range proof.
 
 ```agda
 module InclGraph (D C : S)
                  (sub : (z : V ℓ) → ⟨ z ∈ fst D ⟩ → ⟨ z ∈ fst C ⟩) where
 
   private
-    toD : ⟪ fst D ⟫ → S
-    toD m = ⟪ fst D ⟫↪ m
-          , isL-trans {x = fst D} {y = ⟪ fst D ⟫↪ m} (member (fst D) m) (snd D)
+    M : DefinableMap
+    M = record
+      { dom = D ; cod = C
+      ; fn = λ x _ → x
+      ; into = λ x mx → sub (fst x) mx
+      ; graph = var zero ≐ var (suc zero)
+      ; defines = λ _ _ → refl
+      ; only = λ _ _ _ h → Σ≡Prop (λ w → snd (isL w)) h }
+
+    module I = DefinableInj M (λ _ _ _ _ e → e)
+      using ( F; code )
+
+  opaque
+    G : S
+    G = I.F
+
 ```
 
-The pairs live inside a set you can name BEFORE you build them.
+The shared construction packages the opaque graph with its four injection
+conjuncts. The small presentation consumes that package without exposing the
+replacement graph.
 
 ```agda
-    dg : ⟪ fst D ⟫ → S
-    dg m = prʟ (toD m) (toD m)
+  opaque
+    unfolding G
+    code : InjCode G D C
+    code = I.code
+```
 
-    module SB = StageBound ⟪ fst D ⟫ dg
+The small presentation reads the same identity graph. The value remains sealed:
+an unsealed `Small` application at this site previously exhausted an 8g heap.
 
-    bel : (x : S) → ⟨ x ∈ˢ D ⟩ → ⟨ pr (fst x) (fst x) ∈ fst SB.bnd ⟩
-    bel x mx = subst (λ w → ⟨ w ∈ fst SB.bnd ⟩) pa (SB.below (fD .fst))
-      where
-      fD : Σ[ m ∈ ⟪ fst D ⟫ ] (⟪ fst D ⟫↪ m ≡ fst x)
-      fD = fiber (fst D) mx
-      pa : fst (dg (fD .fst)) ≡ pr (fst x) (fst x)
-      pa = prʟ-fst (toD (fD .fst)) (toD (fD .fst))
-         ∙ cong₂ pr (fD .snd) (fD .snd)
+```agda
+  private
+    module Sm = Small G D C (code .fst) (code .snd .fst)
+      (code .snd .snd .fst) (code .snd .snd .snd)
 
-  open Carve D C SB.bnd sub bel hasSeparationL public
+  opaque
+    incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
+    incl = Sm.small
 ```
 
 The ordinal inclusion, which is A5's row-3 object. The module is generic in the

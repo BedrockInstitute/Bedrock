@@ -498,7 +498,8 @@ comparison the step chapter reads off the comparison at the stage.
 ## The two readings
 
 Only here is the seal opened, and only for the two readings, which peel the six
-layers by named helpers, one per layer, each with its conclusion written down. No
+layers and pass their witnesses to `atAll`{.Agda}, whose conclusion is written
+down. No
 `with`{.Agda} appears: a case split concluding in a satisfaction is a named helper
 with its conclusion written down, and that is the law the faithfulness chapter
 measured past 300 s. The exported `stp-out`{.Agda} and `stp-in`{.Agda} are the two
@@ -509,7 +510,7 @@ completeness takes the single value the caller realizes with.
 <!--zh-->
 ## 两条读式
 
-只有到这里才打开那道封印，且只为那两条读式打开。它们按层剥开那六层，每层一个具名辅助，每一个都把自己的结论写下来。全篇不出现 `with`{.Agda}：一次结论落在满足关系上的分情形必须是把结论写下来的具名辅助，而那是忠实那一章实测超过 300 秒的定律。导出的 `stp-out`{.Agda} 与 `stp-in`{.Agda} 就是那两条读式，其类型正是框架所索取的，且它们承接了框架自身的那份不对称：可靠性对表在该载体处记录的每一个取值作全称，因为它所读的那条描述可能自己绑定了一个取值；而完备性取的是调用方据以实现的那单个取值。
+只有到这里才打开那道封印，且只为那两条读式打开。它们按层剥开那六层，把见证交给已写明结论的 `atAll`{.Agda}。全篇不出现 `with`{.Agda}：一次结论落在满足关系上的分情形必须是把结论写下来的具名辅助，而那是忠实那一章实测超过 300 秒的定律。导出的 `stp-out`{.Agda} 与 `stp-in`{.Agda} 就是那两条读式，其类型正是框架所索取的，且它们承接了框架自身的那份不对称：可靠性对表在该载体处记录的每一个取值作全称，因为它所读的那条描述可能自己绑定了一个取值；而完备性取的是调用方据以实现的那单个取值。
 <!--/-->
 
 ```agda
@@ -518,65 +519,15 @@ completeness takes the single value the caller realizes with.
 
     read : ((r : S) → ⟨ pr δ (fst r) ∈ fst (lookup f γ) ⟩ → IsRel δ r)
          → ⟨ γ ⊨ Stp d f u v ⟩ → Goal
-    read vals = PT.rec PT.squash₁ atOne
-      where
-      atSix : (tw pw rl cs ro c0 : S)
-            → ⟨ (tw ∷ γ) ⊨ LsetGraphAt zero (suc d) ⟩
-            → ⟨ (pw ∷ tw ∷ γ) ⊨ DefAt zero (suc zero) ⟩
-            → ⟨ fst (lookup u γ) ∈ fst pw ⟩
-            → ⟨ fst (lookup v γ) ∈ fst pw ⟩
-            → ⟨ (rl ∷ pw ∷ tw ∷ γ) ⊨ appAt (sh3 f) (sh3 d) zero ⟩
-            → ⟨ (cs ∷ rl ∷ pw ∷ tw ∷ γ) ⊨ CodesAt zero (sh3 zero) ⟩
-            → fst ro ≡ fst codeOrder
-            → Six tw pw rl cs ro c0 → Goal
-      atSix tw pw rl cs ro c0 hg hdef hu hv happ hcs qro (qc0 , hstep) =
-        atAll tw pw rl cs ro c0 hg hdef hu hv happ hcs vals qro qc0 hstep
-
-      atFive : (tw pw rl cs ro : S)
-             → ⟨ (tw ∷ γ) ⊨ LsetGraphAt zero (suc d) ⟩
-             → ⟨ (pw ∷ tw ∷ γ) ⊨ DefAt zero (suc zero) ⟩
-             → ⟨ fst (lookup u γ) ∈ fst pw ⟩
-             → ⟨ fst (lookup v γ) ∈ fst pw ⟩
-             → ⟨ (rl ∷ pw ∷ tw ∷ γ) ⊨ appAt (sh3 f) (sh3 d) zero ⟩
-             → ⟨ (cs ∷ rl ∷ pw ∷ tw ∷ γ) ⊨ CodesAt zero (sh3 zero) ⟩
-             → Five tw pw rl cs ro → Goal
-      atFive tw pw rl cs ro hg hdef hu hv happ hcs (qro , h) =
-        PT.rec PT.squash₁
-          (λ { (c0 , hsix) →
-                 atSix tw pw rl cs ro c0 hg hdef hu hv happ hcs qro hsix }) h
-
-      atFour : (tw pw rl cs : S)
-             → ⟨ (tw ∷ γ) ⊨ LsetGraphAt zero (suc d) ⟩
-             → ⟨ (pw ∷ tw ∷ γ) ⊨ DefAt zero (suc zero) ⟩
-             → ⟨ fst (lookup u γ) ∈ fst pw ⟩
-             → ⟨ fst (lookup v γ) ∈ fst pw ⟩
-             → ⟨ (rl ∷ pw ∷ tw ∷ γ) ⊨ appAt (sh3 f) (sh3 d) zero ⟩
-             → Four tw pw rl cs → Goal
-      atFour tw pw rl cs hg hdef hu hv happ (hcs , h) =
-        PT.rec PT.squash₁
-          (λ { (ro , hfive) →
-                 atFive tw pw rl cs ro hg hdef hu hv happ hcs hfive }) h
-
-      atThree : (tw pw rl : S)
-              → ⟨ (tw ∷ γ) ⊨ LsetGraphAt zero (suc d) ⟩
-              → ⟨ (pw ∷ tw ∷ γ) ⊨ DefAt zero (suc zero) ⟩
-              → ⟨ fst (lookup u γ) ∈ fst pw ⟩
-              → ⟨ fst (lookup v γ) ∈ fst pw ⟩
-              → Three tw pw rl → Goal
-      atThree tw pw rl hg hdef hu hv (happ , h) =
-        PT.rec PT.squash₁
-          (λ { (cs , hfour) →
-                 atFour tw pw rl cs hg hdef hu hv happ hfour }) h
-
-      atTwo : (tw pw : S) → ⟨ (tw ∷ γ) ⊨ LsetGraphAt zero (suc d) ⟩
-            → Two tw pw → Goal
-      atTwo tw pw hg (hdef , (hu , (hv , h))) =
-        PT.rec PT.squash₁
-          (λ { (rl , hthree) → atThree tw pw rl hg hdef hu hv hthree }) h
-
-      atOne : Σ[ tw ∈ S ] One tw → Goal
-      atOne (tw , (hg , h)) =
-        PT.rec PT.squash₁ (λ { (pw , htwo) → atTwo tw pw hg htwo }) h
+    read vals = PT.rec PT.squash₁
+      (λ { (tw , (hg , hpw)) → PT.rec PT.squash₁
+        (λ { (pw , (hdef , (hu , (hv , hrl)))) → PT.rec PT.squash₁
+          (λ { (rl , (happ , hcs)) → PT.rec PT.squash₁
+            (λ { (cs , (hcs , hro)) → PT.rec PT.squash₁
+              (λ { (ro , (qro , hc0)) → PT.rec PT.squash₁
+                (λ { (c0 , (qc0 , hstep)) →
+                  atAll tw pw rl cs ro c0 hg hdef hu hv happ hcs vals qro qc0 hstep })
+                hc0 }) hro }) hcs }) hrl }) hpw })
 
     fill : (r : S) → ⟨ pr δ (fst r) ∈ fst (lookup f γ) ⟩ → IsRel δ r
          → Under δ (stepOrder δ od) (fst (lookup u γ)) (fst (lookup v γ))

@@ -213,17 +213,17 @@ Anything the graph holds of is the selected witness.
     fo-out w x (hp , (hl , hm)) =
         hp
       , subst (λ v → ⟨ fst w ∈ v ⟩) Lγ-fst hl
-      , λ w' hw' hp' hr → hm w' (subst (λ v → ⟨ fst w' ∈ v ⟩) (sym Lγ-fst) hw')
+      , λ w' hw' hp' hr → lower (hm w' (subst (λ v → ⟨ fst w' ∈ v ⟩) (sym Lγ-fst) hw')
           ( subst ⟨_⟩ (sym (appC-adequate Rγ i0 i1 (w' ∷ w ∷ x ∷ []))) hr
-          , transport (sym (ren w' w x)) hp' )
+          , transport (sym (ren w' w x)) hp' ))
 
     fo-in : (w x : S) → TWit w x → ⟨ (w ∷ x ∷ []) ⊨ fo ⟩
     fo-in w x (hp , hl , mn) =
         hp
       , subst (λ v → ⟨ fst w ∈ v ⟩) (sym Lγ-fst) hl
-      , λ w' hw' hc → mn w' (subst (λ v → ⟨ fst w' ∈ v ⟩) Lγ-fst hw')
+      , λ w' hw' hc → lift (mn w' (subst (λ v → ⟨ fst w' ∈ v ⟩) Lγ-fst hw')
           (transport (ren w' w x) (snd hc))
-          (subst ⟨_⟩ (appC-adequate Rγ i0 i1 (w' ∷ w ∷ x ∷ [])) (fst hc))
+          (subst ⟨_⟩ (appC-adequate Rγ i0 i1 (w' ∷ w ∷ x ∷ [])) (fst hc)))
 ```
 
 THE DEFINABLE MAP, into the stage.

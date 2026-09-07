@@ -6,15 +6,15 @@ a formula's own recursion is indexed by. It is the closure chapter's theorem
 again, on the model's own coding rather than the hierarchy's, and it is shorter
 here because the pieces it needs were built for the two halves and not for it.
 
-Each of the eight clauses is four moves: invert the index to the formula whose
+Each of the seven clauses is four moves: invert the index to the formula whose
 key it is, compute that formula's constructor from the clause's tag, put the
 part's key back into the whole's slot, and carry it up the containment the
 inversion returned. The four constructors with no subformula have nothing to say
-and are not among the eight.
+and are not among the seven.
 <!--zh-->
 图将要对它的索引集陈述的那条假设，在「一条公式自己的递归所索引的那个槽」处交付。这是闭包那一章的定理再来一遍，只是落在模型自己的编码上、而非层级的编码上；而它在此处更短，因为它所需的部件是为那两半造的，不是为它造的。
 
-八条子句每一条都是四步：把索引求逆回「它是谁的键」的那条公式、从子句的标签算出那条公式的构造子、把部件的键放回整体的槽里，再沿求逆返回的那条包含关系抬上去。没有子公式的那四个构造子无话可说，也不在这八条之列。
+七条子句每一条都是四步：把索引求逆回「它是谁的键」的那条公式、从子句的标签算出那条公式的构造子、把部件的键放回整体的槽里，再沿求逆返回的那条包含关系抬上去。没有子公式的那四个构造子无话可说，也不在这七条之列。
 <!--/-->
 
 ```agda
@@ -28,7 +28,7 @@ module L.Coding.Slot {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
-  using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
+  using ( Term; Formula; _∧̇_; _∨̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj )
@@ -62,12 +62,12 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 <!--/-->
 
 <!--en-->
-The one computation, shared by all eight: the pair a clause reads is the part's
+The one computation, shared by all seven: the pair a clause reads is the part's
 own key, once the arity and the payload component are identified. The successor
 form is the same with the arity raised, which is the only difference the four
 binding constructors make.
 <!--zh-->
-唯一的那次计算，八条共用：一旦把元数与那个载荷分量认同起来，子句所读的那个对就是部件自己的键。后继的形式是同一件事、元数抬高一级，而那也是那四个绑定变元的构造子造成的唯一差别。
+唯一的那次计算，七条共用：一旦把元数与那个载荷分量认同起来，子句所读的那个对就是部件自己的键。后继的形式是同一件事、元数抬高一级，而那也是那四个绑定变元的构造子造成的唯一差别。
 <!--/-->
 
 ```agda
@@ -92,17 +92,17 @@ module _ (B : S) where
 ```
 
 <!--en-->
-## The eight clauses
+## The seven clauses
 <!--zh-->
-## 八条子句
+## 七条子句
 <!--/-->
 
 <!--en-->
-Two shared bodies, one per frame, and eight instantiations. What changes between
+Two shared bodies, one per frame, and seven instantiations. What changes between
 two clauses of the same frame is the tag and which part the constructor hands
 back, and both are arguments.
 <!--zh-->
-两段共用主体，每个框架一段，再加八次实例化。同一框架下两条子句之间变的是标签、以及那个构造子交回哪个部件，而两者都是参数。
+两段共用主体，每个框架一段，再加七次实例化。同一框架下两条子句之间变的是标签、以及那个构造子交回哪个部件，而两者都是参数。
 <!--/-->
 
 ```agda
@@ -239,27 +239,23 @@ back, and both are arguments.
                    (inA t a' _ (Parts.self B keyʟ a')))) })
         (slot-inv B φ (fst c) c∈))
 
-    negC : ⟨ δ ⊨ unShapeAt Ci 5 (oneSameAt Ci) ⟩
-    negC = unSame 5 ¬̇_ (λ _ m → m) (λ _ → refl)
-             (λ a' → Parts.only B keyʟ (¬̇ a') a')
-
-    exC : ⟨ δ ⊨ unShapeAt Ci 8 (oneSuccAt Ci) ⟩
-    exC = unSucc 8 ∃̇_ (λ _ m → m) (λ _ → refl)
+    exC : ⟨ δ ⊨ unShapeAt Ci 6 (oneSuccAt Ci) ⟩
+    exC = unSucc 6 ∃̇_ (λ _ m → m) (λ _ → refl)
             (λ a' → Parts.only B keyʟ (∃̇ a') a')
 
-    allC : ⟨ δ ⊨ unShapeAt Ci 9 (oneSuccAt Ci) ⟩
-    allC = unSucc 9 ∀̇_ (λ _ m → m) (λ _ → refl)
+    allC : ⟨ δ ⊨ unShapeAt Ci 7 (oneSuccAt Ci) ⟩
+    allC = unSucc 7 ∀̇_ (λ _ m → m) (λ _ → refl)
              (λ a' → Parts.only B keyʟ (∀̇ a') a')
 
-    allInC : ⟨ δ ⊨ binShapeAt Ci 10 (succSndAt Ci) ⟩
-    allInC = binSucc 10 ∀̇∈ (λ _ m → m) (λ _ _ → refl)
+    allInC : ⟨ δ ⊨ binShapeAt Ci 8 (succSndAt Ci) ⟩
+    allInC = binSucc 8 ∀̇∈ (λ _ m → m) (λ _ _ → refl)
                (λ t a' → Parts.only B keyʟ (∀̇∈ t a') a')
 
-    exInC : ⟨ δ ⊨ binShapeAt Ci 11 (succSndAt Ci) ⟩
-    exInC = binSucc 11 ∃̇∈ (λ _ m → m) (λ _ _ → refl)
+    exInC : ⟨ δ ⊨ binShapeAt Ci 9 (succSndAt Ci) ⟩
+    exInC = binSucc 9 ∃̇∈ (λ _ m → m) (λ _ _ → refl)
               (λ t a' → Parts.only B keyʟ (∃̇∈ t a') a')
 
     slotClosed : ⟨ δ ⊨ closedAt Ci ⟩
-    slotClosed = andC , (orC , (impC , (negC
-               , (exC , (allC , (allInC , exInC))))))
+    slotClosed = andC , (orC , (impC
+               , (exC , (allC , (allInC , exInC)))))
 ```

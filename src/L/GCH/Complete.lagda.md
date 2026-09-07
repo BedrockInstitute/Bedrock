@@ -12,6 +12,7 @@ module L.GCH.Complete {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( ⊤̇ )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
+open import V.Model {ℓ} using ( union-family-in; union-family-out )
 open import L.Constructible {ℓ} using
   ( 𝒮ʟ; isL; IsOrd; isPropIsOrd; Lset; Lset-mono; Lset→isL; 𝒟ₒ-intro )
 open import L.Ordinal {ℓ} using ( boundingOrd; bound2; setUnion-ord; mem-ord; suc-ord; ω-ord )
@@ -26,12 +27,12 @@ open import L.GCH.SatFrame {ℓ} lem using ( module Tower; module SatGraph )
 open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
+open PT using ( ∥_∥₁; ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber; _∈ₛ_ )
+  using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ⋃_; union-ax; module InfinitySet )
+  using ( ⋃_; module InfinitySet )
 open InfinitySet {ℓ} using ( sucV; ω )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -262,21 +263,11 @@ module Union (ch : ℕ → V ℓ) (och : (n : ℕ) → IsOrd (ch n)) where
   oγ = setUnion-ord (Lift {ℓ-zero} {ℓ} ℕ) F (λ n → och (lower n))
 
   into : (n : ℕ) (x : V ℓ) → ⟨ x ∈ ch n ⟩ → ⟨ x ∈ γ ⟩
-  into n x x∈ = ∈∈ₛ {a = x} {b = γ} .snd
-    (union-ax (sett (Lift {ℓ-zero} {ℓ} ℕ) F) x .snd
-      ∣ ch n , ( ∈∈ₛ {a = ch n} {b = sett (Lift {ℓ-zero} {ℓ} ℕ) F} .fst ∣ lift n , refl ∣₁
-               , ∈∈ₛ {a = x} {b = ch n} .fst x∈ ) ∣₁)
+  into n x = union-family-in (Lift {ℓ-zero} {ℓ} ℕ) F (lift n) x
 
   outof : (x : V ℓ) → ⟨ x ∈ γ ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ ch n ⟩ ∥₁
-  outof x x∈ = PT.rec squash₁ go
-    (union-ax (sett (Lift {ℓ-zero} {ℓ} ℕ) F) x .fst (∈∈ₛ {a = x} {b = γ} .fst x∈))
-    where
-    go : Σ[ w ∈ V ℓ ] (⟨ w ∈ₛ sett (Lift {ℓ-zero} {ℓ} ℕ) F ⟩ × ⟨ x ∈ₛ w ⟩)
-       → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ ch n ⟩ ∥₁
-    go (w , (w∈ , x∈w)) = PT.map
-      (λ { (n , q) → lower n
-         , ∈∈ₛ {a = x} {b = ch (lower n)} .snd (subst (λ u → ⟨ x ∈ₛ u ⟩) (sym q) x∈w) })
-      (∈∈ₛ {a = w} {b = sett (Lift {ℓ-zero} {ℓ} ℕ) F} .snd w∈)
+  outof x h = PT.map (λ { (n , hn) → lower n , hn })
+    (union-family-out (Lift {ℓ-zero} {ℓ} ℕ) F x h)
 ```
 
 The stage above `p`.

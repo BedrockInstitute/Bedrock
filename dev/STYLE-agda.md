@@ -45,11 +45,9 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   sanctioned form of "not proven yet". The Frontier record (PLAN §5, archived
   at `dev/memos/working-mechanisms.md`) was the sanctioned debt form while the
   book was built root-first; its last field was discharged and the record
-  deleted. Its successor is the **named module hypothesis**: when a chapter
-  cannot discharge an obligation, the obligation is stated as a named module
-  hypothesis and the chapter ships conditional on it, with the hypothesis
-  recorded in PLAN §11. The bridge is the live instance (Q-lim and below-lim,
-  `dev/ledger.toml`).
+  deleted. Named module hypotheses remain useful for generic lemmas, but the
+  completed `L⊨ZFC` and `L⊨GCH` each take only `LEM (ℓ-suc ℓ)`. Refactoring
+  must not add an unresolved hypothesis to either theorem.
 - **Classical principles are module parameters, never axioms** (archived D2;
   the live ruling is DD9 in PLAN §3, and DD2 there is the endpoint). The
   canonical packaging (validated by the L0.2 spike):
@@ -232,8 +230,8 @@ symbol / reading / layer / defining chapter / input sequence.
 
 ## 6. Layout and proof organization
 
-- Type signatures aligned on `:`; constructors carry single-line comments to the
-  right where a gloss helps.
+- Type signatures aligned on `:`. Put constructor glosses in the prose before
+  the code fence; no comments belong inside an Agda fence.
 - Record instances prefer record literals (`record { ... }`) over copatterns unless
   field dependencies force an order.
 - Proofs prefer `where` with **named, type-annotated** sub-terms over nested `let`.
@@ -260,11 +258,11 @@ skippable:
 - Allowed: `opaque` seals with `unfolding` blocks, explicitly-spelled implicit
   arguments (`{φ = ...}`), extracted continuation helpers, Π-parameterized
   assumption bundles.
-- Every such use carries a marker comment on its first line: `-- perf: <trigger>`,
-  one line, naming what blew up (for example `-- perf: implicit {φ} metas on a huge
+- Every such use has a short prose note immediately before its code fence,
+  naming what blew up (for example `-- perf: implicit {φ} metas on a huge
   formula; explicit spelling cuts 74min to 66s`). Narration never explains these;
-  the marker is the whole story, and readers are told once (in the Base part) that
-  `-- perf:` lines are engineering, not mathematics.
+  the note records the measured engineering reason. Keep it outside Agda fences
+  as required by `AGENTS.md`.
 - When a module exceeds the per-module budgets (PLAN §7 rule 6, archived at
   `dev/memos/build-constraints.md`; roughly 120 s cold or its heap cap),
   triage against the source playbook (`../fol-reification/docs/WORKLOG.md` §5,

@@ -1,5 +1,9 @@
 # Digest: the orthodox form of the rud route, pinned from the collected literature
 
+Current Bedrock status (2026-09-06): `L⊨ZFC` and `L⊨GCH` are proved and
+registered in [Landmarks](../../src/Landmarks.lagda.md). The research and route
+assessments below are historical; they do not describe open Bedrock proof goals.
+
 Task `[L3.30-D1]`. Authored by the orchestrator directly (per the owner's
 2026-08-02 instruction) from the collection files in this directory and the
 collection report `agents/tasks/archive/L1/l1-report.md`; an independent adversarial audit
@@ -258,7 +262,8 @@ surjection τ -> ξ in J_{ξ+ω}. SZ's own gloss: "acceptability can be
 considered as a strong version of GCH" (p. 16). Note carefully: the fetched
 chapter does NOT itself derive GCH-in-L; the GCH connection in the corpus is
 this remark plus the consequences 1.23-1.27 (j-hierarchy.md section 4). The
-actual GCH-in-L derivation is an OPEN item for the memo (section 7).
+GCH-in-L source request is settled by Devlin II.5, Theorem 5.6
+(section 7, item 6; see also `devlin-II5.md`).
 
 ## 4. Reconciliation against the owner's note
 
@@ -347,8 +352,8 @@ sources disagree, the source wins and the discrepancy is flagged.
    acceptability-as-strong-GCH (Definition 1.20 remark) and the
    consequences 1.23-1.27, and prove J_α acceptable for L (9.1), without
    deriving GCH-in-L in the chapter. The cardinality bookkeeping is
-   supported through the Sigma-1 surjections of SZ 1.17. FLAGGED: the
-   GCH-in-L derivation itself is an OPEN item to source for the memo.
+   supported through the Sigma-1 surjections of SZ 1.17. The source
+   request is settled by Devlin II.5, Theorem 5.6 (section 7, item 6).
 9. **Master codes: Sigma-n over J_α reduced to Sigma-1 over (J_{ρ_n},
    A_n).** SETTLED by the [L3.30-X1] extraction (fine-structure.md): the
    reduction is in the SZ chapter, in the form of Lemma 5.6 (p. 34: for
@@ -469,8 +474,8 @@ assumed axiom or as ambient theorems (Metamath's GCH-implies-AC corpus,
 Kirst-Rech's GCH-to-AC in Coq, Naproche's GCH axiom atom), never as
 "L models GCH".
 
-**The GCH-in-L virginity claim, worded exactly.** Within the fetched
-corpus: no mechanized proof of GCH in L exists; the two formalization
+**The GCH-in-L virginity claim, worded exactly.** Within the external corpus fetched on 2026-08-02,
+no mechanized proof of GCH in L was found; the two formalization
 projects in the fetched corpus that touch this territory both name it as
 future work (P p. 65; PS slide 19; FG README); and no rud-based formalization of
 constructibility appears at all. The [L3.30-L3] sweep then widened the

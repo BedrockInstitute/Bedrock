@@ -44,13 +44,13 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-The table is sound. A table satisfying the twelve clauses over the code set and
+The table is sound. A table satisfying the ten clauses over the code set and
 the tower records, at the key of every formula, the value the meta-level
 recursion built there: induction on the formula, one clause reader and one
 bridge per constructor.
 
 ```agda
-module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hC : ⟨ γ ⊨ codesAt C w E N ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
@@ -149,7 +149,7 @@ A code's constructor and payload, from its tag, are read in
 src/L/Coding/Pinned.lagda.md.
 
 ```agda
-module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qT : fst (lookup T γ) ≡ fst (SatGraph.pairs W))
   (qC : fst (lookup C γ) ≡ fst (AllCodes W)) (qE : fst (lookup E γ) ≡ fst (Tower.tower W))
   (tg : Tags γ N) where
@@ -208,21 +208,21 @@ readers are the two projections.
 
 ```agda
 opaque
-  satAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 12 → Fin m) → Formula S m
+  satAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
   satAt T w C E N = towerAt E w (N f0) ∧̇ (codesAt C w E N ∧̇ tableAt T w C E N)
 
 opaque
   unfolding satAt
 
-  Δ₀-satAt : ∀ {m} (T w C E : Fin m) (N : Fin 12 → Fin m) → Δ₀ (satAt T w C E N)
+  Δ₀-satAt : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) → Δ₀ (satAt T w C E N)
   Δ₀-satAt T w C E N = δ-∧ (Δ₀-towerAt E w (N f0)) (δ-∧ (Δ₀-codesAt C w E N) (Δ₀-tableAt T w C E N))
 
-  satAt-out : ∀ {m} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
+  satAt-out : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
             → ⟨ γ ⊨ satAt T w C E N ⟩
             → ⟨ γ ⊨ towerAt E w (N f0) ⟩ × (⟨ γ ⊨ codesAt C w E N ⟩ × ⟨ γ ⊨ tableAt T w C E N ⟩)
   satAt-out T w C E N γ h = h
 
-  satAt-in : ∀ {m} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m)
+  satAt-in : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
            → ⟨ γ ⊨ towerAt E w (N f0) ⟩ → ⟨ γ ⊨ codesAt C w E N ⟩ → ⟨ γ ⊨ tableAt T w C E N ⟩
            → ⟨ γ ⊨ satAt T w C E N ⟩
   satAt-in T w C E N γ hE hC hT = hE , (hC , hT)
@@ -234,14 +234,14 @@ read both ways. Completeness: the graph, the code set and the tower satisfy
 `satAt`.
 
 ```agda
-module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (h : ⟨ γ ⊨ satAt T w C E N ⟩) where
   private
     module SS = SatSound T w C E N γ W qw tg
       (satAt-out T w C E N γ h .fst) (satAt-out T w C E N γ h .snd .fst) (satAt-out T w C E N γ h .snd .snd)
   open SS public using ( C-out; C-in; E-out; E-in; T-out; T-in )
 
-sat-complete : ∀ {m} (T w C E : Fin m) (N : Fin 12 → Fin m) (γ : S ^ m) (W : S)
+sat-complete : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
              → fst (lookup w γ) ≡ fst W
              → fst (lookup T γ) ≡ fst (SatGraph.pairs W)
              → fst (lookup C γ) ≡ fst (AllCodes W)

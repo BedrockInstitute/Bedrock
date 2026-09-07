@@ -25,7 +25,7 @@ open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure; Transitive; _↾_ )
 open import FOL.Syntax using ( Term; con; var; Formula; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using
-  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-¬; δ-⊤; δ-⊥; δ-∀∈; δ-∃∈
+  ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
   ; Σ₁; σ-Δ₀; σ-∃; Π₁; π-Δ₀; π-∀ )
 import FOL.Semantics
 open import Cubical.Data.Vec using ( map )
@@ -126,8 +126,6 @@ character.
   abs₀ (δ-∧ d e) δ = cong₂ _⊓_ (abs₀ d δ) (abs₀ e δ)
   abs₀ (δ-∨ d e) δ = cong₂ _⊔_ (abs₀ d δ) (abs₀ e δ)
   abs₀ (δ-⇒ d e) δ = cong₂ _⇒_ (abs₀ d δ) (abs₀ e δ)
-  abs₀ (δ-¬ d)   δ = cong ¬_ (abs₀ d δ)
-  abs₀ δ-⊤ δ = refl
   abs₀ δ-⊥ δ = refl
   abs₀ (δ-∀∈ {t = t} {φ = φ} d) δ = ⇔toPath fwd bwd
     where

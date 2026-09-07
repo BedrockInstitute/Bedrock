@@ -64,7 +64,8 @@ Symbol by symbol: `⊓` reads "and" (meet), `⊔` reads "or" (join), `⇒` reads
 `⋁` are meet and join indexed by an arbitrary small type, and quantifier semantics
 will be given by exactly them. The fixity levels here deliberately match
 the object-language connectives introduced later, so mixed expressions read the same
-across layers.
+across layers. Object negation and truth are later derived from implication and
+falsity; the independent fields here remain the metalanguage operations.
 
 Here the book's **scope discipline for logic** is laid down: these eight symbols are
 the book's only logic notation, and the Prelude deliberately exports none of them,
@@ -73,7 +74,7 @@ so the only way they enter scope is by opening a truth algebra
 symbols mean: no symbol ever has two readings in one scope. Generic chapters open an
 abstract `𝕋`; chapters on the propositional side open the canonical instance below.
 <!--zh-->
-逐个符号：`⊓` 读「且」(交)，`⊔` 读「或」(并)，`⇒` 读「蕴含」，`¬` 读「非」，`⊤` 读「真」，`⊥` 读「假」；`⋀` 与其对偶 `⋁` 是按任意小类型索引的交与并，量词语义正由它们给出。这里的优先级刻意与之后引入的对象语言联结词同级，跨层的混合表达式因此读法一致。
+逐个符号：`⊓` 读「且」(交)，`⊔` 读「或」(并)，`⇒` 读「蕴含」，`¬` 读「非」，`⊤` 读「真」，`⊥` 读「假」；`⋀` 与其对偶 `⋁` 是按任意小类型索引的交与并，量词语义正由它们给出。这里的优先级刻意与之后引入的对象语言联结词同级，跨层的混合表达式因此读法一致。对象语言的否定与真随后由蕴涵和假派生；这里的独立字段仍是元语言运算。
 
 本书**逻辑符号的作用域纪律**在此立下：这八个符号是全书仅有的逻辑记号，序章刻意不导出其中任何一个，于是它们进入作用域的唯一方式就是打开某个真值代数 (`open TruthAlgebra 𝕋`{.Agda})。一章打开哪个代数，它的逻辑符号就是那个代数的运算：任一作用域中，没有符号会有两种读法。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
 <!--/-->

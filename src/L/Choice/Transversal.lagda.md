@@ -50,7 +50,7 @@ open import Base.Classical using ( LEM )
 module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ¬̇_; ∃̇_ )
+open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
 import FOL.ZFModel
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -61,7 +61,7 @@ open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Choice.Stage {ℓ} lem using ( bound-below₂ )
 open import L.Choice.Step {ℓ} lem using ( Mem; relOf )
 open import L.Choice.Order {ℓ} lem using ( module Bound )
-open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate )
+open import L.Coding.Model {ℓ} using ( appC; appC-adequate )
 open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( SWO; IsLeast; isPropLeastOf; leastOf )
 
@@ -86,11 +86,8 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 
 One formula, one free variable, two constants. Of a set `z` it says: some member
 of the family contains `z`, and nothing in that member precedes `z` under the
-order. The order enters as a constant and has to be bound to a variable first,
-because the atom saying that a pair belongs to a relation takes the relation from
-a **slot**; that costs one existential and one object equality, the device every
-description in this part has used to name a particular set. The family is named
-directly, since it appears only under a membership atom.
+order. The application atom takes the order directly as a constant. The family
+is likewise named directly, since it appears only under a membership atom.
 
 The formula is sealed, by the standing law that a description read at constants
 is sealed where it is built. Here that law is free rather than decisive: sealed
@@ -104,7 +101,7 @@ a later reader of this description should not have to re-measure.
 <!--zh-->
 ## 那条描述
 
-一条公式，一个自由变元，两个常量。它对一个集合 `z` 说：该族的某个成员含有 `z`，且那个成员中没有任何东西在那个序下排在 `z` 之前。那个序以常量身份进场，而它必须先被绑定到一个变元上，因为「一个对属于某个关系」这条原子是从一个**槽位**取那个关系的；这花一个存在绑定与一条对象等词，正是本部每条描述用来点名某个特定集合的那件装置。族则直接点名，因为它只出现在一条隶属原子之下。
+一条公式，一个自由变元，两个常量。它对一个集合 `z` 说：该族的某个成员含有 `z`，且那个成员中没有任何东西在那个序下排在 `z` 之前。应用原子直接把那个序当作常元。族也直接点名，因为它只出现在一条隶属原子之下。
 
 那条公式被封印，依的是常设定律：读在常元上的描述要在被造出之处封印。但在此处这条定律是免费的、而非决定性的：封印与不封印都检查 2.3 秒，本章据实说出这一点，而不去借用别处的数字。理由值得写一行，因为它说清了此前那些实测究竟在测什么。那些描述内部装着已编码的语法，每次在具体环境上的满足关系都要把一整条层级描述正规化；而这一条装的是四条原子与一次应用，没有什么大东西可展开。封印仍然保留，因为它分文不花，也因为日后读这条描述的人不该被迫重测一遍。
 <!--/-->
@@ -118,9 +115,8 @@ opaque
   Pick c r =
     ∃̇ ( (var zero ∈̇ con c)
       ∧̇ ( (var (suc zero) ∈̇ var zero)
-        ∧̇ ∃̇ ( (var zero ≐ con r)
-             ∧̇ (¬̇ ∃̇ ( (var zero ∈̇ var (suc (suc zero)))
-                    ∧̇ appAt (suc zero) zero (suc (suc (suc zero))) )) ) ) )
+        ∧̇ (¬̇ ∃̇ ( (var zero ∈̇ var (suc zero))
+               ∧̇ appC r zero (suc (suc zero)) )) ) )
 ```
 
 <!--en-->
@@ -147,7 +143,7 @@ neither is a corollary of the other: one builds a satisfaction out of a least
 element, the other extracts a least element from a satisfaction, and each has to
 move a set between the two ways it can be presented, as an element of `L` and as
 a member of the tower at `β`{.Agda}. Every truncation payload is named,
-`Two`{.Agda} through `Four`{.Agda}, so that neither reading writes the nesting
+`Two`{.Agda} and `Predecessor`{.Agda}, so that neither reading writes the nesting
 out; the negation is the one place a truncation is eliminated into the empty
 type, and it is eliminated in a named helper.
 
@@ -168,7 +164,7 @@ proved in the well-order chapter and this is its first use.
 
 `Cell x`{.Agda} 是那些成员之上「是 `x` 的成员」这条谓词，而 `least`{.Agda} 是良序那一章的搜索施于它。那场搜索自写下之日起就一直在等：`L.WellOrder.Base`{.Agda} 交付时点名了恰一个消费方，而手上一个也没有；这里就是那个消费方。这也正是排中律换来一次真正的选取、而非一次比较的地方，而那一章当初说这笔代价就是为此而花的。
 
-`pick-in`{.Agda} 与 `pick-out`{.Agda} 是那条描述的两条读式，而两者互不为推论：一条由极小元造出一个满足关系，另一条由满足关系取出一个极小元，且各自都要把一个集合在它可被呈现的两种形态之间搬动，即作为 `L` 的元素与作为 `β`{.Agda} 处塔的成员。每个截断载荷都有名字，从 `Two`{.Agda} 到 `Four`{.Agda}，于是两条读式都不必把嵌套写开；否定式是唯一一处把截断消去到空类型的地方，而它是在一个具名辅助件里消去的。
+`pick-in`{.Agda} 与 `pick-out`{.Agda} 是那条描述的两条读式，而两者互不为推论：一条由极小元造出一个满足关系，另一条由满足关系取出一个极小元，且各自都要把一个集合在它可被呈现的两种形态之间搬动，即作为 `L` 的元素与作为 `β`{.Agda} 处塔的成员。两个截断载荷分别名为 `Two`{.Agda} 与 `Predecessor`{.Agda}，于是两条读式都不必把嵌套写开；否定式是唯一一处把截断消去到空类型的地方，而它是在一个具名辅助件里消去的。
 
 随后是分离与计数。`transversalSet`{.Agda} 就是模型自家的分离，施于 `β`{.Agda} 处的塔，依那条描述。`Cut`{.Agda} 固定该族的一个成员：交的收缩中心就是那个极小元，它在横截集中，因为 `pick-in`{.Agda} 如此说；它在那个成员中，因为「是极小的」本身就包含「在那里」。唯一性正是不交性被花掉之处。交的另一个点满足那条描述，故它在该族的**某个**成员中是极小的；它同时又落在眼前这个成员里；故那两个成员相交，从而相等；故它在这个成员中也是极小的，而极小元仅凭三歧就唯一。此处没有一处是新论证：`isPropLeastOf`{.Agda} 在良序那一章就已证出，而这是它头一回被使用。
 <!--/-->
@@ -215,17 +211,15 @@ module Trans (zf : isZFModel) (a : S)
     least : (x : S) → ⟨ x ∈ˢ a ⟩ → Σ[ m ∈ Mem (Lset β) ] IsLeast W (Cell x) m
     least x x∈a = leastOf W lem (Cell x) (members x x∈a)
 
-    Four : S → S → S → S → Type (ℓ-suc ℓ)
-    Four x z r w = ⟨ w ∈ˢ x ⟩
-                 × ⟨ (w ∷ r ∷ x ∷ z ∷ [])
-                     ⊨ appAt (suc zero) zero (suc (suc (suc zero))) ⟩
-
-    Three : S → S → S → Type (ℓ-suc ℓ)
-    Three x z r = (fst r ≡ fst rel)
-                × (∥ Σ[ w ∈ S ] Four x z r w ∥₁ → Empty.⊥)
+    Predecessor : S → S → S → Type (ℓ-suc ℓ)
+    Predecessor x z w = ⟨ w ∈ˢ x ⟩
+                      × ⟨ (w ∷ x ∷ z ∷ []) ⊨ appC rel zero (suc (suc zero)) ⟩
 
     Two : S → S → Type (ℓ-suc ℓ)
-    Two x z = ⟨ x ∈ˢ a ⟩ × (⟨ z ∈ˢ x ⟩ × ∥ Σ[ r ∈ S ] Three x z r ∥₁)
+    Two x z = ⟨ x ∈ˢ a ⟩
+            × (⟨ z ∈ˢ x ⟩
+              × (∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
+                 → Lift {j = ℓ-suc ℓ} Empty.⊥))
 
     Out : S → Type (ℓ-suc ℓ)
     Out z = ∥ Σ[ x ∈ S ] (⟨ x ∈ˢ a ⟩ × Least x z) ∥₁
@@ -236,47 +230,40 @@ module Trans (zf : isZFModel) (a : S)
     pick-in : (x : S) → ⟨ x ∈ˢ a ⟩ → (z : S) → Least x z
             → ⟨ (z ∷ []) ⊨ Pick a rel ⟩
     pick-in x x∈a z (hz , (z∈x , mini)) =
-      ∣ x , (x∈a , (z∈x , ∣ rel , (refl , neg) ∣₁)) ∣₁
+      ∣ x , (x∈a , (z∈x , neg)) ∣₁
       where
-      atFour : Σ[ w ∈ S ] Four x z rel w → Empty.⊥
-      atFour (w , (w∈x , hap)) = mini (fst w , hw) w∈x lt
+      noPredecessor : Σ[ w ∈ S ] Predecessor x z w → Empty.⊥
+      noPredecessor (w , (w∈x , hap)) = mini (fst w , hw) w∈x lt
         where
         hw : ⟨ fst w ∈ Lset β ⟩
         hw = bound-below₂ (fst a) (snd a) (fst x) (fst w) w∈x x∈a
         hpr : ⟨ pr (fst w) (fst z) ∈ fst rel ⟩
-        hpr = subst ⟨_⟩ (appAt-adequate (suc zero) zero (suc (suc (suc zero)))
-                (w ∷ rel ∷ x ∷ z ∷ [])) hap
+        hpr = subst ⟨_⟩ (appC-adequate rel zero (suc (suc zero)) (w ∷ x ∷ z ∷ [])) hap
         lt : relOf W (fst w , hw) (fst z , hz)
         lt = B.orderL-rep (fst w , hw) (fst z , hz) hpr
 
-      neg : ∥ Σ[ w ∈ S ] Four x z rel w ∥₁ → Empty.⊥
-      neg = PT.rec Empty.isProp⊥ atFour
+      neg : ∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
+          → Lift {j = ℓ-suc ℓ} Empty.⊥
+      neg q = lift (PT.rec Empty.isProp⊥ noPredecessor q)
 
     pick-out : (z : S) → ⟨ (z ∷ []) ⊨ Pick a rel ⟩ → Out z
     pick-out z = PT.rec PT.squash₁ atTwo
       where
-      atThree : (x : S) → ⟨ x ∈ˢ a ⟩ → ⟨ z ∈ˢ x ⟩ → (r : S) → Three x z r
-              → Out z
-      atThree x x∈a z∈x r (qr , neg) = ∣ x , (x∈a , (hz , (z∈x , mini))) ∣₁
+      atTwo : Σ[ x ∈ S ] Two x z → Out z
+      atTwo (x , (x∈a , (z∈x , neg))) = ∣ x , (x∈a , (hz , (z∈x , mini))) ∣₁
         where
         hz : ⟨ fst z ∈ Lset β ⟩
         hz = bound-below₂ (fst a) (snd a) (fst x) (fst z) z∈x x∈a
 
         mini : (b : Mem (Lset β)) → ⟨ Cell x b ⟩
              → relOf W b (fst z , hz) → Empty.⊥
-        mini b b∈x lt = neg ∣ elt b , (b∈x , hap) ∣₁
+        mini b b∈x lt = lower (neg ∣ elt b , (b∈x , hap) ∣₁)
           where
-          hpr : ⟨ pr (fst b) (fst z) ∈ fst r ⟩
-          hpr = subst (λ s → ⟨ pr (fst b) (fst z) ∈ s ⟩) (sym qr)
-                  (B.orderL-fill b (fst z , hz) lt)
-          hap : ⟨ (elt b ∷ r ∷ x ∷ z ∷ [])
-                  ⊨ appAt (suc zero) zero (suc (suc (suc zero))) ⟩
-          hap = subst ⟨_⟩ (sym (appAt-adequate (suc zero) zero
-                  (suc (suc (suc zero))) (elt b ∷ r ∷ x ∷ z ∷ []))) hpr
-
-      atTwo : Σ[ x ∈ S ] Two x z → Out z
-      atTwo (x , (x∈a , (z∈x , h))) =
-        PT.rec PT.squash₁ (λ { (r , h3) → atThree x x∈a z∈x r h3 }) h
+          hpr : ⟨ pr (fst b) (fst z) ∈ fst rel ⟩
+          hpr = B.orderL-fill b (fst z , hz) lt
+          hap : ⟨ (elt b ∷ x ∷ z ∷ []) ⊨ appC rel zero (suc (suc zero)) ⟩
+          hap = subst ⟨_⟩
+            (sym (appC-adequate rel zero (suc (suc zero)) (elt b ∷ x ∷ z ∷ []))) hpr
 
   transversalSet : S
   transversalSet = separate (LsetS β oβ) (Pick a rel)

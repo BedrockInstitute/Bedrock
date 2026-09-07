@@ -25,6 +25,8 @@ module FOL.LevyHierarchy where
 
 open import Base.Prelude
 open import Base.Truth
+open import Cubical.Data.Bool using ( Bool; true; false; _and_; Bool→Type )
+open import Cubical.Data.Unit using ( tt )
 open import FOL.Syntax using
   ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
@@ -50,11 +52,62 @@ data Δ₀ {ℓc} {K : Type ℓc} : ∀ {n} → Formula K n → Type ℓc where
   δ-∧  : ∀ {n} {φ ψ : Formula K n} → Δ₀ φ → Δ₀ ψ → Δ₀ (φ ∧̇ ψ)
   δ-∨  : ∀ {n} {φ ψ : Formula K n} → Δ₀ φ → Δ₀ ψ → Δ₀ (φ ∨̇ ψ)
   δ-⇒  : ∀ {n} {φ ψ : Formula K n} → Δ₀ φ → Δ₀ ψ → Δ₀ (φ ⇒̇ ψ)
-  δ-¬  : ∀ {n} {φ : Formula K n} → Δ₀ φ → Δ₀ (¬̇ φ)
-  δ-⊤  : ∀ {n} → Δ₀ {n = n} ⊤̇
   δ-⊥  : ∀ {n} → Δ₀ {n = n} ⊥̇
   δ-∀∈ : ∀ {n} {t : Term K n} {φ : Formula K (suc n)} → Δ₀ φ → Δ₀ (∀̇∈ t φ)
   δ-∃∈ : ∀ {n} {t : Term K n} {φ : Formula K (suc n)} → Δ₀ φ → Δ₀ (∃̇∈ t φ)
+
+δ-¬ : ∀ {ℓc} {K : Type ℓc} {n} {φ : Formula K n} → Δ₀ φ → Δ₀ (¬̇ φ)
+δ-¬ d = δ-⇒ d δ-⊥
+
+δ-⊤ : ∀ {ℓc} {K : Type ℓc} {n} → Δ₀ {K = K} {n = n} ⊤̇
+δ-⊤ = δ-⇒ δ-⊥ δ-⊥
+```
+
+<!--en-->
+## Checking concrete formulas
+
+A Boolean traversal recognizes bounded formulas. Its soundness proof builds the
+same `Δ₀` witness as a manual constructor tree. For a concrete bounded formula,
+`checkΔ₀ φ tt` lets normalization verify the classification; variable terms do
+not affect the result.
+<!--zh-->
+## 检查具体公式
+
+一次布尔遍历识别有界公式。可靠性证明构造的仍是手写构造子树所给出的 `Δ₀` 见证。对于具体的有界公式，`checkΔ₀ φ tt` 让归一化核验分级；含变量的项不影响结果。
+<!--/-->
+
+```agda
+bounded : ∀ {ℓc} {K : Type ℓc} {n} → Formula K n → Bool
+bounded (t ∈̇ u) = true
+bounded (t ≐ u) = true
+bounded (φ ∧̇ ψ) = bounded φ and bounded ψ
+bounded (φ ∨̇ ψ) = bounded φ and bounded ψ
+bounded (φ ⇒̇ ψ) = bounded φ and bounded ψ
+bounded ⊥̇ = true
+bounded (∃̇ φ) = false
+bounded (∀̇ φ) = false
+bounded (∀̇∈ t φ) = bounded φ
+bounded (∃̇∈ t φ) = bounded φ
+
+private
+  and-out : (a b : Bool) → Bool→Type (a and b) → Bool→Type a × Bool→Type b
+  and-out false b ()
+  and-out true b h = tt , h
+
+checkΔ₀ : ∀ {ℓc} {K : Type ℓc} {n} (φ : Formula K n) → Bool→Type (bounded φ) → Δ₀ φ
+checkΔ₀ (t ∈̇ u) h = δ-∈
+checkΔ₀ (t ≐ u) h = δ-≐
+checkΔ₀ (φ ∧̇ ψ) h = δ-∧ (checkΔ₀ φ (p .fst)) (checkΔ₀ ψ (p .snd))
+  where p = and-out (bounded φ) (bounded ψ) h
+checkΔ₀ (φ ∨̇ ψ) h = δ-∨ (checkΔ₀ φ (p .fst)) (checkΔ₀ ψ (p .snd))
+  where p = and-out (bounded φ) (bounded ψ) h
+checkΔ₀ (φ ⇒̇ ψ) h = δ-⇒ (checkΔ₀ φ (p .fst)) (checkΔ₀ ψ (p .snd))
+  where p = and-out (bounded φ) (bounded ψ) h
+checkΔ₀ ⊥̇ h = δ-⊥
+checkΔ₀ (∃̇ φ) ()
+checkΔ₀ (∀̇ φ) ()
+checkΔ₀ (∀̇∈ t φ) h = δ-∀∈ (checkΔ₀ φ h)
+checkΔ₀ (∃̇∈ t φ) h = δ-∃∈ (checkΔ₀ φ h)
 ```
 
 <!--en-->

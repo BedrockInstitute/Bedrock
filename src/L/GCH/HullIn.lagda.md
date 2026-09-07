@@ -18,40 +18,39 @@ import FOL.Absoluteness
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; extensionalV )
 open import V.Presentation {ℓ} using ( member; fiber )
-open import V.Coding {ℓ} using ( pr; pr-inj; module VCode )
+open import V.Coding {ℓ} using ( pr; module VCode )
 open import V.Collapse {ℓ} using ( module Collapse )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-out; Lset→isL; 𝒟ₒ; 𝒟ₒ∋⊆
         ; Lset-layer; layer-trans )
 open import L.Ordinal {ℓ} using ( mem-ord; #∈ω )
-open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ )
+open import L.Axioms.Basic {ℓ} using ( LsetS; ∅ʟ; extensionalL )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
-open import L.Axioms.Numerals {ℓ} using ( numeralL-fst; pairʟ; unionʟ )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Coding.Model {ℓ}
-  using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; numL; sucAtL; sucAtL-adequate
+  using ( prAtL; prAtL-adequate; numL; sucAtL; sucAtL-adequate
         ; consAtL; consAtL-adequate; envOverAt; envOverAt-transport )
 open import L.Coding.Environment {ℓ} using ( env; cons )
 open import L.Coding.EnvSet {ℓ} lem using ( envS; Ix; envOver; module Recover )
 open import L.Coding.Bridge {ℓ} lem using ( graph; envFor; envFor-graph )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; keyS; key∈AllCodes )
+open import L.Coding.InL {ℓ} using ( cupʟ; cupʟ-inl; cupʟ-inr )
 open import L.Coding.Uniform {ℓ} lem using ( val-sat )
 open import L.Choice.Name {ℓ} lem using ( limitCode )
 open import L.Choice.Internal {ℓ} lem using ( freeCode-in; freeCode-out )
 open import L.Choice.Order {ℓ} lem using ( relL; relL-fill; relL-rep )
 open import L.Choice.Step {ℓ} lem using ( orderAt; relOf )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; IsLeast; leastOf; isPropLeastOf )
-open import L.GCH.Pairing {ℓ} lem using ( prodL; prodL-in; prodL-out; isL-ord )
+open import L.GCH.Pairing {ℓ} lem using ( module Relation; isL-ord )
 open import L.GCH.OrderType {ℓ} lem
   using ( Holds; Complete; Src; ValueIs; Correct
         ; completeAt; complete-in; complete-out
         ; valueAt; value-in; value-out
-        ; correctAt; correct-in; correct-out
-        ; module PairFo )
-open import L.GCH.OmegaRec {ℓ} lem
-  using ( module Iterate; pairʟ-in; unionʟ-in )
+        ; correctAt; correct-in; correct-out )
+open import L.GCH.OmegaRec {ℓ} lem using ( module Iterate )
 open import L.GCH.Hull {ℓ} lem using ( module HullStage; module Frame )
 open import L.InjChain {ℓ} lem using ( appC; appC-adequate )
 open import L.GCH.Complete {ℓ} lem using ( Superadequate )
@@ -71,7 +70,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 open import V.Model {ℓ} using ( pair-spec )
 open InfinitySet {ℓ} using ( sucV; #_ )
 open import Cubical.Foundations.HLevels
-  using ( isProp×; isPropΣ; isPropΠ; isPropΠ2; isSetΣSndProp )
+  using ( isPropΣ; isPropΠ; isPropΠ2 )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
@@ -115,8 +114,6 @@ private
   S≡ : {x y : CS.S} → fst x ≡ fst y → x ≡ y
   S≡ = Σ≡Prop (λ v → snd (isL v))
 
-  isSetSʟ : isSet CS.S
-  isSetSʟ = isSetΣSndProp setIsSet (λ v → snd (isL v))
 ```
 
 The two renamings of the witness formula and their agreements, at the top level.
@@ -182,91 +179,53 @@ lies in `M` (`π-compute`, with the fibre kept).
                  , q )
 ```
 
-THE MEMBERSHIP RELATION OF `M`, as a set of pairs in L: carved out of the
-product by "z is the pair of a member of a member". Inside the two binders: `x`
-is 0, `y` is 1, `z` is 2.
+THE MEMBERSHIP RELATION OF `M`, as a set of pairs in L: the bounded
+relation requires both endpoints to belong to `M` and the first to belong to
+the second. Inside the two binders: `x` is 0, `y` is 1, `z` is 2.
 
 ```agda
-  opaque
-    memFo : Formula CS.S 1
-    memFo = ∃̇ (∃̇ ( prAtL i2 i1 i0 ∧̇ (var i1 ∈̇ var i0) ))
+  private
+    module Membership = Relation Mʟ Mʟ
+      ((var i1 ∈̇ con Mʟ) ∧̇ ((var i0 ∈̇ con Mʟ) ∧̇ (var i1 ∈̇ var i0)))
+      (λ y x → (fst y ∈ˢ M) ⊓ ((fst x ∈ˢ M) ⊓ (fst y ∈ˢ fst x)))
+      (λ y x z h → h) (λ y x z h → h)
 
-    private
-      at : (x y z : CS.S)
-         → ⟨ (x ∷ y ∷ z ∷ []) ⊨ prAtL i2 i1 i0 ⟩ ≡ (fst z ≡ pr (fst y) (fst x))
-      at x y z = cong ⟨_⟩ (prAtL-adequate i2 i1 i0 (x ∷ y ∷ z ∷ []))
+  R : CS.S
+  R = Membership.rel
 
-    R : CS.S
-    R = hasSeparationL (prodL Mʟ) memFo .fst .fst
+  R-in : (y x : CS.S) → ⟨ fst y ∈ˢ M ⟩ → ⟨ fst x ∈ˢ M ⟩ → ⟨ fst y ∈ˢ fst x ⟩
+       → Holds R y x
+  R-in y x my mx yx = Membership.into y x my mx (my , mx , yx)
 
-    R-mem : (z : CS.S)
-          → (z CS.∈ˢ R) ≡ ((z CS.∈ˢ prodL Mʟ) ⊓ ((z ∷ []) ⊨ memFo))
-    R-mem = hasSeparationL (prodL Mʟ) memFo .fst .snd
+  R-out : (y x : CS.S) → Holds R y x
+        → ⟨ fst y ∈ˢ M ⟩ × ⟨ fst x ∈ˢ M ⟩ × ⟨ fst y ∈ˢ fst x ⟩
+  R-out = Membership.pair-out
 
-    R-in : (y x : CS.S) → ⟨ fst y ∈ˢ M ⟩ → ⟨ fst x ∈ˢ M ⟩ → ⟨ fst y ∈ˢ fst x ⟩
-         → Holds R y x
-    R-in y x my mx yx =
-      subst (λ w → ⟨ w ∈ˢ fst R ⟩) (prʟ-fst y x)
-        (subst ⟨_⟩ (sym (R-mem (prʟ y x)))
-          ( subst (λ w → ⟨ w ∈ˢ fst (prodL Mʟ) ⟩) (sym (prʟ-fst y x))
-              (prodL-in Mʟ y x my mx)
-          , ∣ y , ∣ x , (transport (sym (at x y (prʟ y x))) (prʟ-fst y x) , yx) ∣₁ ∣₁ ))
-
-    R-out : (y x : CS.S) → Holds R y x
-          → ⟨ fst y ∈ˢ M ⟩ × ⟨ fst x ∈ˢ M ⟩ × ⟨ fst y ∈ˢ fst x ⟩
-    R-out y x h = mems .fst , (mems .snd , mem)
-      where
-      both : ⟨ prʟ y x CS.∈ˢ prodL Mʟ ⟩ × ⟨ (prʟ y x ∷ []) ⊨ memFo ⟩
-      both = subst ⟨_⟩ (R-mem (prʟ y x))
-               (subst (λ w → ⟨ w ∈ˢ fst R ⟩) (sym (prʟ-fst y x)) h)
-
-      mems : ⟨ fst y ∈ˢ M ⟩ × ⟨ fst x ∈ˢ M ⟩
-      mems = PT.rec (isProp× (snd (fst y ∈ˢ M)) (snd (fst x ∈ˢ M)))
-        (λ { (a , b , ma , mb , q) →
-           let e = pr-inj (sym (prʟ-fst y x) ∙ q)
-           in subst (λ w → ⟨ w ∈ˢ M ⟩) (sym (e .fst)) ma
-            , subst (λ w → ⟨ w ∈ˢ M ⟩) (sym (e .snd)) mb })
-        (prodL-out Mʟ (prʟ y x) (both .fst))
-
-      mem : ⟨ fst y ∈ˢ fst x ⟩
-      mem = PT.rec (snd (fst y ∈ˢ fst x))
-        (λ { (y' , hy') → PT.rec (snd (fst y ∈ˢ fst x))
-          (λ { (x' , (q , m)) →
-             let e = pr-inj (sym (prʟ-fst y x) ∙ transport (at x' y' (prʟ y x)) q)
-             in subst2 (λ u v → ⟨ u ∈ˢ v ⟩) (sym (e .fst)) (sym (e .snd)) m })
-          hy' })
-        (both .snd)
 ```
 
 THE GRAPH FORMULA, over `(v ∷ p ∷ [])`: "some set correct for the membership of
-`M` is complete at p, and v is its value at p". Inside: `r` is 0, `v` is 1, `p`
-is 2; then `F` is 0, `r` is 1, `v` is 2, `p` is 3.
+`M` is complete at p, and v is its value at p". Inside the binder, `F` is 0,
+`v` is 1 and `p` is 2; the membership relation enters directly as a constant.
 
 ```agda
   opaque
     piFo : Formula CS.S 2
-    piFo = ∃̇ ( (var i0 ≐ con R)
-             ∧̇ ∃̇ ( correctAt i0 i1
-                  ∧̇ ( completeAt i0 i1 i3 ∧̇ valueAt i0 i1 i3 i2 ) ) )
+    piFo = ∃̇ ( correctAt i0 R
+             ∧̇ ( completeAt i0 R i2 ∧̇ valueAt i0 R i2 i1 ) )
 
     piFo-out : (v p : CS.S) → ⟨ (v ∷ p ∷ []) ⊨ piFo ⟩
              → ∥ Σ[ F ∈ CS.S ] (Correct F R × (Complete F R p × ValueIs F R p v)) ∥₁
-    piFo-out v p = PT.rec squash₁ (λ { (r , (er , hf)) → PT.map
-      (λ { (F , (hc , (hm , hv))) → F
-        , ( subst (Correct F) (S≡ {x = r} {y = R} er)
-              (correct-out i0 i1 (F ∷ r ∷ v ∷ p ∷ []) hc)
-          , ( subst (λ r' → Complete F r' p) (S≡ {x = r} {y = R} er)
-                (complete-out i0 i1 i3 (F ∷ r ∷ v ∷ p ∷ []) hm)
-            , subst (λ r' → ValueIs F r' p v) (S≡ {x = r} {y = R} er)
-                (value-out i0 i1 i3 i2 (F ∷ r ∷ v ∷ p ∷ []) hv) ) ) })
-      hf })
+    piFo-out v p = PT.map (λ { (F , (hc , (hm , hv))) → F
+      , ( correct-out i0 R (F ∷ v ∷ p ∷ []) hc
+        , ( complete-out i0 R i2 (F ∷ v ∷ p ∷ []) hm
+          , value-out i0 R i2 i1 (F ∷ v ∷ p ∷ []) hv ) ) })
 
     piFo-in : (v p F : CS.S) → Correct F R → Complete F R p → ValueIs F R p v
             → ⟨ (v ∷ p ∷ []) ⊨ piFo ⟩
-    piFo-in v p F hc hm hv = ∣ R , (refl , ∣ F
-      , ( correct-in i0 i1 (F ∷ R ∷ v ∷ p ∷ []) hc
-        , ( complete-in i0 i1 i3 (F ∷ R ∷ v ∷ p ∷ []) hm
-          , value-in i0 i1 i3 i2 (F ∷ R ∷ v ∷ p ∷ []) hv ) ) ∣₁) ∣₁
+    piFo-in v p F hc hm hv = ∣ F
+      , ( correct-in i0 R (F ∷ v ∷ p ∷ []) hc
+        , ( complete-in i0 R i2 (F ∷ v ∷ p ∷ []) hm
+          , value-in i0 R i2 i1 (F ∷ v ∷ p ∷ []) hv ) ) ∣₁
 ```
 
 UNIQUENESS. A value that is complete and right relative to a correct set is the
@@ -398,46 +357,26 @@ The collapse of a slice member, as an element of L.
       my : ⟨ fst y ∈ˢ M ⟩
       my = Sl.cut-out y hy .fst
 
-    module PF = PairFo piFo using ( pairFo; pair-in; pair-out )
-
     private
-      tabR : Recursion
-      tabR = record
-        { dom   = Sl.cut
-        ; graph = PF.pairFo
-        ; funct = λ y hy → mereFunct PF.pairFo y (wit y hy) }
-        where
-        wit : (y : CS.S) (hy : ⟨ y CS.∈ˢ Sl.cut ⟩)
-            → ∥ Σ[ e ∈ CS.S ] (⟨ (e ∷ y ∷ []) ⊨ PF.pairFo ⟩
-                              × ((e' : CS.S) → ⟨ (e' ∷ y ∷ []) ⊨ PF.pairFo ⟩ → e' ≡ e)) ∥₁
-        wit y hy = ∣ prʟ y (πʟ y hy)
-          , ( PF.pair-in (prʟ y (πʟ y hy)) y (πʟ y hy) (prʟ-fst y (πʟ y hy)) (πʟ-graph y hy)
-            , λ e' he' → PT.rec (isSetSʟ e' (prʟ y (πʟ y hy)))
-                (λ { (v , (e , hv)) → S≡
-                   (e ∙ cong (pr (fst y)) (piFo-val y (Sl.cut-out y hy .fst) v hv)
-                      ∙ sym (prʟ-fst y (πʟ y hy))) })
-                (PF.pair-out e' y he') ) ∣₁
+      Rπ : Recursion
+      Rπ = record
+        { dom = Sl.cut ; graph = piFo
+        ; funct = λ y hy → (πʟ y hy , πʟ-graph y hy)
+            , λ { (v , h) → Σ≡Prop (λ w → snd ((w ∷ y ∷ []) ⊨ piFo))
+                (sym (S≡ (piFo-val y (Sl.cut-out y hy .fst) v h))) } }
 
-      module T = Of tabR using ( table; table-in; table-out )
+      module T = RecursionGraph Rπ using ( F; F-in; pair-out )
 
     Tab : CS.S
-    Tab = T.table
+    Tab = T.F
 
     Tab-in : (y : CS.S) (hy : ⟨ y CS.∈ˢ Sl.cut ⟩) → Holds Tab y (πʟ y hy)
-    Tab-in y hy = subst (λ w → ⟨ w ∈ˢ fst Tab ⟩) (prʟ-fst y (πʟ y hy))
-      (T.table-in y (prʟ y (πʟ y hy)) hy
-        (PF.pair-in (prʟ y (πʟ y hy)) y (πʟ y hy) (prʟ-fst y (πʟ y hy)) (πʟ-graph y hy)))
+    Tab-in = T.F-in
 
     Tab-pair : (x v : CS.S) → Holds Tab x v
              → ⟨ x CS.∈ˢ Sl.cut ⟩ × (fst v ≡ C.π (fst x))
-    Tab-pair x v h = PT.rec (isProp× (snd (x CS.∈ˢ Sl.cut)) (setIsSet (fst v) (C.π (fst x))))
-      (λ { (q , (hq , hp)) → PT.rec (isProp× (snd (x CS.∈ˢ Sl.cut)) (setIsSet (fst v) (C.π (fst x))))
-        (λ { (z , (e , hz)) →
-           let ee = pr-inj (sym (prʟ-fst x v) ∙ e)
-           in subst (λ w → ⟨ w CS.∈ˢ Sl.cut ⟩) (S≡ {x = q} {y = x} (sym (ee .fst))) hq
-            , ee .snd ∙ piFo-val q (Sl.cut-out q hq .fst) z hz ∙ cong C.π (sym (ee .fst)) })
-        (PF.pair-out (prʟ x v) q hp) })
-      (T.table-out (prʟ x v) (subst (λ w → ⟨ w ∈ˢ fst Tab ⟩) (sym (prʟ-fst x v)) h))
+    Tab-pair = T.pair-out
+
 ```
 
 A member is CLOSED when its members in `M` lie in the slice.
@@ -832,15 +771,12 @@ and reaches the construction by an equation.
     A : CS.S
     A = LsetS lam ordλ
 
-    module SM = SatGraph A using ( pairs; pairs-in; pairs-shape; valOf; valOf≡ )
+    module SM = SatGraph A using ( pairs; pairs-in; pairs-out; valOf; valOf≡ )
 ```
 
 A member of the graph, read as a pair of a code and its value.
 
 ```agda
-    pairs-out : (x : V ℓ) → ⟨ x ∈ˢ fst SM.pairs ⟩
-              → ∥ Σ[ c ∈ CS.S ] Σ[ m ∈ ⟨ fst c ∈ˢ fst (AllCodes A) ⟩ ] (x ≡ pr (fst c) (fst (SM.valOf c m))) ∥₁
-    pairs-out x h = SM.pairs-shape (x , isL-trans {x = fst SM.pairs} {y = x} h (snd SM.pairs)) h
     module DA = DefOf (Lset lam) using ( ι; _⊨ᵐ_; 𝒮M )
 
     C₀ : CS.S
@@ -1070,8 +1006,8 @@ The minimality clause, host-side, at a family `g` presenting `e`.
 
         b-min : {m : ℕ} (g : Fin m → V ℓ) → fst e ≡ env g → ⟨ γ₇ ⊨ bodyFo ⟩ → Min g
         b-min g hE h w' hw' e'' qe hm hr =
-          h .snd .snd .snd .snd .snd .snd .snd w' hw' ∣ e'' , (hc , hm) ∣₁
-            (subst ⟨_⟩ (sym (appC-adequate Rel i0 i6 (w' ∷ γ₇))) hr)
+          lower (h .snd .snd .snd .snd .snd .snd .snd w' hw' ∣ e'' , (hc , hm) ∣₁
+            (subst ⟨_⟩ (sym (appC-adequate Rel i0 i6 (w' ∷ γ₇))) hr))
           where
           hc : ⟨ (e'' ∷ w' ∷ γ₇) ⊨ consAtL i0 i1 i4 ⟩
           hc = subst ⟨_⟩ (sym (consAtL-adequate i0 i1 i4 (e'' ∷ w' ∷ γ₇) g hE)) qe
@@ -1086,11 +1022,11 @@ The minimality clause, host-side, at a family `g` presenting `e`.
           , subst ⟨_⟩ (sym (consAtL-adequate i1 i5 i2 γ₇ g hE)) c4
           , subst ⟨_⟩ (sym (appC-adequate SM.pairs i3 i0 γ₇)) c5
           , c6 , c7
-          , λ w' hw' hex hr → PT.rec Empty.isProp⊥
+          , λ w' hw' hex hr → lift (PT.rec Empty.isProp⊥
               (λ { (e'' , (hc , hm)) → mn w' hw' e''
                      (subst ⟨_⟩ (consAtL-adequate i0 i1 i4 (e'' ∷ w' ∷ γ₇) g hE) hc) hm
                      (subst ⟨_⟩ (appC-adequate Rel i0 i6 (w' ∷ γ₇)) hr) })
-              hex
+              hex)
 ```
 
 The five binders, sealed with their two readings.
@@ -1308,14 +1244,11 @@ The table slot is the satisfaction set at the key.
 
 ```agda
           table : ∥ Searched Z (fst w) ∥₁
-          table = PT.rec squash₁
-            (λ { (x , m , e) →
-               let ex : fst s ≡ fst x
-                   ex = pr-inj e .fst
-                   qT : fst T ≡ fst (Tof (suc n) χ)
-                   qT = pr-inj e .snd ∙ cong fst (valOf-same x m (suc n) χ (sym ex ∙ qs))
-               in ∣ AtTable.searched qT ∣₁ })
-            (pairs-out (pr (fst s) (fst T)) (Rd.b-tab h))
+          table = ∣ AtTable.searched
+            (snd p ∙ cong fst (valOf-same s (fst p) (suc n) χ qs)) ∣₁
+            where
+            p : Σ[ m ∈ ⟨ s CS.∈ˢ AllCodes A ⟩ ] (fst T ≡ fst (SM.valOf s m))
+            p = SM.pairs-out s T (Rd.b-tab h)
 
         code : ∥ Searched Z (fst w) ∥₁
         code = PT.rec squash₁
@@ -1333,13 +1266,13 @@ THE STEP ITSELF: carved by separation out of `Z ∪ Lset lam`.
 
 ```agda
     Bnd : CS.S → CS.S
-    Bnd Z = unionʟ (pairʟ Z A)
+    Bnd Z = cupʟ Z A
 
     bnd-Z : (Z z : CS.S) → ⟨ fst z ∈ˢ fst Z ⟩ → ⟨ z CS.∈ˢ Bnd Z ⟩
-    bnd-Z Z z h = unionʟ-in (pairʟ Z A) z Z (pairʟ-in Z A Z (inl refl)) h
+    bnd-Z Z z = cupʟ-inl Z A (fst z)
 
     bnd-L : (Z z : CS.S) → ⟨ fst z ∈ˢ Lset lam ⟩ → ⟨ z CS.∈ˢ Bnd Z ⟩
-    bnd-L Z z h = unionʟ-in (pairʟ Z A) z A (pairʟ-in Z A A (inr refl)) h
+    bnd-L Z z = cupʟ-inr Z A (fst z)
 ```
 
 What a member of the step is, host-side.
@@ -1437,20 +1370,14 @@ the iteration consumes.
         , (λ h → PT.rec (snd (fst w ∈ˢ fst (Φ Z))) (Φ-in Z w) (bodyF-out w (Φ Z) Z h))
 
       Φ-only : (Z Z' : CS.S) → ⟨ (Z' ∷ Z ∷ []) ⊨ ΦFo ⟩ → Z' ≡ Φ Z
-      Φ-only Z Z' h = S≡ (extensionalV {a = fst Z'} {b = fst (Φ Z)}
-        (λ v → ⇔toPath (fwd v) (bwd v)))
+      Φ-only Z Z' h = extensionalL (λ v → ⇔toPath (fwd v) (bwd v))
         where
-        fwd : (v : S) → ⟨ v ∈ˢ fst Z' ⟩ → ⟨ v ∈ˢ fst (Φ Z) ⟩
-        fwd v hv = PT.rec (snd (v ∈ˢ fst (Φ Z))) (Φ-in Z vS) (bodyF-out vS Z' Z (h vS .fst hv))
-          where
-          vS : CS.S
-          vS = v , isL-trans {x = fst Z'} {y = v} hv (snd Z')
-        bwd : (v : S) → ⟨ v ∈ˢ fst (Φ Z) ⟩ → ⟨ v ∈ˢ fst Z' ⟩
-        bwd v hv = h vS .snd
-          (PT.rec (snd ((vS ∷ Z' ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in vS Z' Z) (Φ-out Z vS hv))
-          where
-          vS : CS.S
-          vS = v , isL-trans {x = fst (Φ Z)} {y = v} hv (snd (Φ Z))
+        fwd : (v : CS.S) → ⟨ fst v ∈ˢ fst Z' ⟩ → ⟨ fst v ∈ˢ fst (Φ Z) ⟩
+        fwd v hv = PT.rec (snd (fst v ∈ˢ fst (Φ Z))) (Φ-in Z v) (bodyF-out v Z' Z (h v .fst hv))
+        bwd : (v : CS.S) → ⟨ fst v ∈ˢ fst (Φ Z) ⟩ → ⟨ fst v ∈ˢ fst Z' ⟩
+        bwd v hv = h v .snd
+          (PT.rec (snd ((v ∷ Z' ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in v Z' Z) (Φ-out Z v hv))
+
 ```
 
 THE PACK.

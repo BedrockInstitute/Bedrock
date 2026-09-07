@@ -17,28 +17,29 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
 open import V.Model {ℓ} using ( pair-spec; union-spec; self∈sucV )
-open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Ordinal {ℓ} using ( #∈ω; ∈#-elim )
+open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset; Lset-mono )
+open import L.Ordinal {ℓ} using ( #∈ω; ∈#-elim; boundingOrd )
+open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
+open import L.Axioms.Basic {ℓ} using ( finSet; finSet-in; finSet-out; module FinOf )
 open import L.Axioms.Numerals {ℓ}
   using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
 open import L.Coding.Model {ℓ}
   using ( appAt; appAt-adequate; sucAtL; sucAtL-adequate; prʟ; prʟ-fst; numL )
-open import L.GCH.OrderType {ℓ} lem using ( module PairFo )
 
 open import Cubical.Data.Nat.Order
-  using ( _≤_; _<_; ≤-refl; ≤-suc; ≤-trans; <-weaken; <-split
-        ; pred-≤-pred; suc-≤-suc; ¬-<-zero )
+  using ( _≤_; ≤-refl; ≤-trans; <-weaken; pred-≤-pred; suc-≤-suc )
 open import Cubical.Data.Nat using ( _+_ )
+open import Cubical.Data.FinData using ( toℕ )
+open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
+open import Cubical.Data.Sum using ( _⊎_ )
 open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( sucV; #_ )
-import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
@@ -75,17 +76,14 @@ nn : ℕ → S
 nn k = # k , numL k
 ```
 
-Membership in the model's pair and union, read through the projection equations
-of src/L/Axioms/Numerals.lagda.md and the hierarchy's specs.
+Membership injections for the model's pair and union, and the union reader,
+follow from the projection equations of src/L/Axioms/Numerals.lagda.md and the
+hierarchy's specifications.
 
 ```agda
 pairʟ-in : (a b y : S) → (fst y ≡ fst a) ⊎ (fst y ≡ fst b) → ⟨ y ∈ˢ pairʟ a b ⟩
 pairʟ-in a b y k = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (pairʟ-fst a b))
   (subst ⟨_⟩ (sym (pair-spec (fst a) (fst b) (fst y))) ∣ k ∣₁)
-
-pairʟ-out : (a b y : S) → ⟨ y ∈ˢ pairʟ a b ⟩ → ∥ (fst y ≡ fst a) ⊎ (fst y ≡ fst b) ∥₁
-pairʟ-out a b y h = subst ⟨_⟩ (pair-spec (fst a) (fst b) (fst y))
-  (subst (λ w → ⟨ fst y ∈ w ⟩) (pairʟ-fst a b) h)
 
 unionʟ-in : (A y B : S) → ⟨ fst B ∈ fst A ⟩ → ⟨ fst y ∈ fst B ⟩ → ⟨ y ∈ˢ unionʟ A ⟩
 unionʟ-in A y B hB hy = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (unionʟ-fst A))
@@ -278,59 +276,47 @@ induction on the numeral.
     (λ { (F , (hc , hv)) → corr-val F hc k v hv }) (itFo-out v (nn k) h)
 ```
 
-Section 3. Existence: the finite table `{ (k, it k) : k ≤ n }`, built by one
-pair and one union per step, is correct.
+Section 3. Existence: the finite table `{ (k, it k) : k ≤ n }` is the image of
+`Fin (suc n)` under the entry map. All entries in the infinite family share one
+stage bound, so the general finite-family theorem puts every such table in `L`.
+The generic finite-set readers give its two membership directions directly.
 
 ```agda
   private
     e : ℕ → S
     e k = prʟ (nn k) (it k)
 
-  Fn : ℕ → S
-  Fn zero    = pairʟ (e 0) (e 0)
-  Fn (suc n) = unionʟ (pairʟ (Fn n) (pairʟ (e (suc n)) (e (suc n))))
-
   private
-    Fn-in′ : (n k : ℕ) → k ≤ n → ⟨ e k ∈ˢ Fn n ⟩
-    Fn-in′ zero    zero    _ = pairʟ-in (e 0) (e 0) (e 0) (inl refl)
-    Fn-in′ zero    (suc k) p = Empty.rec (¬-<-zero p)
-    Fn-in′ (suc n) k       p = go (<-split (suc-≤-suc p))
-      where
-      P = pairʟ (Fn n) (pairʟ (e (suc n)) (e (suc n)))
-      go : (k < suc n) ⊎ (k ≡ suc n) → ⟨ e k ∈ˢ Fn (suc n) ⟩
-      go (inl q) = unionʟ-in P (e k) (Fn n)
-        (pairʟ-in (Fn n) (pairʟ (e (suc n)) (e (suc n))) (Fn n) (inl refl))
-        (Fn-in′ n k (pred-≤-pred q))
-      go (inr q) = unionʟ-in P (e k) (pairʟ (e (suc n)) (e (suc n)))
-        (pairʟ-in (Fn n) (pairʟ (e (suc n)) (e (suc n))) (pairʟ (e (suc n)) (e (suc n))) (inr refl))
-        (pairʟ-in (e (suc n)) (e (suc n)) (e k) (inl (cong (λ j → fst (e j)) q)))
+    entryStages = boundingOrd (Lift {ℓ-zero} {ℓ} ℕ)
+      (λ k → stage (fst (e (lower k))) (e (lower k) .snd))
+      (λ k → stage-ord (fst (e (lower k))) (e (lower k) .snd))
 
-    Fn-out′ : (n : ℕ) (y : S) → ⟨ y ∈ˢ Fn n ⟩
-            → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × (fst y ≡ fst (e k))) ∥₁
-    Fn-out′ zero y h = PT.map (λ { (inl q) → 0 , (≤-refl , q) ; (inr q) → 0 , (≤-refl , q) })
-      (pairʟ-out (e 0) (e 0) y h)
-    Fn-out′ (suc n) y h = PT.rec squash₁ outer (unionʟ-out P y h)
-      where
-      P = pairʟ (Fn n) (pairʟ (e (suc n)) (e (suc n)))
-      outer : Σ[ B ∈ V ℓ ] (⟨ B ∈ fst P ⟩ × ⟨ fst y ∈ B ⟩)
-            → ∥ Σ[ k ∈ ℕ ] ((k ≤ suc n) × (fst y ≡ fst (e k))) ∥₁
-      outer (B , (hB , hy)) = PT.rec squash₁ inner
-        (pairʟ-out (Fn n) (pairʟ (e (suc n)) (e (suc n)))
-          (B , isL-trans {x = fst P} {y = B} hB (snd P)) hB)
-        where
-        inner : (B ≡ fst (Fn n)) ⊎ (B ≡ fst (pairʟ (e (suc n)) (e (suc n))))
-              → ∥ Σ[ k ∈ ℕ ] ((k ≤ suc n) × (fst y ≡ fst (e k))) ∥₁
-        inner (inl q) = PT.map (λ { (k , (p , r)) → k , (≤-suc p , r) })
-          (Fn-out′ n y (subst (λ w → ⟨ fst y ∈ w ⟩) q hy))
-        inner (inr q) = PT.map (λ { (inl r) → suc n , (≤-refl , r) ; (inr r) → suc n , (≤-refl , r) })
-          (pairʟ-out (e (suc n)) (e (suc n)) y (subst (λ w → ⟨ fst y ∈ w ⟩) q hy))
+    entryBound : V ℓ
+    entryBound = entryStages .fst
+
+    entryBound-ord : IsOrd entryBound
+    entryBound-ord = entryStages .snd .fst
+
+    entry-in-bound : (k : ℕ) → ⟨ fst (e k) ∈ Lset entryBound ⟩
+    entry-in-bound k = Lset-mono (entryStages .snd .snd (lift k))
+      (stage-mem (fst (e k)) (e k .snd))
+
+  Fn : ℕ → S
+  Fn n = finSet (suc n) (λ i → fst (e (toℕ i))) ,
+    FinOf.finSetL entryBound entryBound-ord
+      (suc n) (λ i → fst (e (toℕ i))) (λ i → entry-in-bound (toℕ i))
 
   Fn-in : (n k : ℕ) → k ≤ n → Holds (Fn n) (nn k) (it k)
-  Fn-in n k p = subst (λ w → ⟨ w ∈ fst (Fn n) ⟩) (prʟ-fst (nn k) (it k)) (Fn-in′ n k p)
+  Fn-in n k p = subst (λ w → ⟨ w ∈ fst (Fn n) ⟩) (prʟ-fst (nn k) (it k))
+    (finSet-in (suc n) (λ i → fst (e (toℕ i))) (fst (e k))
+      ∣ fromℕ' (suc n) k (suc-≤-suc p)
+      , cong (λ j → fst (e j)) (toFromId' (suc n) k (suc-≤-suc p)) ∣₁)
 
   Fn-out : (n : ℕ) (y : S) → ⟨ y ∈ˢ Fn n ⟩
          → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × (fst y ≡ pr (# k) (fst (it k)))) ∥₁
-  Fn-out n y h = PT.map (λ { (k , (p , q)) → k , (p , q ∙ prʟ-fst (nn k) (it k)) }) (Fn-out′ n y h)
+  Fn-out n y h = PT.map (λ { (i , q) → toℕ i
+    , (pred-≤-pred (toℕ<n i) , sym q ∙ prʟ-fst (nn (toℕ i)) (it (toℕ i))) })
+    (finSet-out (suc n) (λ i → fst (e (toℕ i))) (fst y) h)
 ```
 
 A pair in the table, read as an index and a value.
@@ -437,48 +423,26 @@ Section 4. The tables: the values, their union, and the graph, in L.
     (unionʟ-out values z h)
 ```
 
-The graph `{ (n, it n) : n ∈ ℕ }`, through `OrderType`'s pair form.
+The graph `{ (n, it n) : n ∈ ℕ }` is the graph of the same value recursion.
+Its uniqueness identifies each recorded value with the corresponding iterate.
 
 ```agda
-  module PF = PairFo itFo
-
   private
-    tabR : Recursion
-    tabR = record
-      { dom   = ωʟ
-      ; graph = PF.pairFo
-      ; funct = λ q q∈ → mereFunct PF.pairFo q (PT.map (wit q) (ω-num q q∈)) }
-      where
-      wit : (q : S) → Num q
-          → Σ[ p ∈ S ] (⟨ (p ∷ q ∷ []) ⊨ PF.pairFo ⟩
-                       × ((p' : S) → ⟨ (p' ∷ q ∷ []) ⊨ PF.pairFo ⟩ → p' ≡ p))
-      wit q (k , eq) = prʟ q (it k)
-        , ( PF.pair-in (prʟ q (it k)) q (it k) (prʟ-fst q (it k)) (itFo-at (it k) eq (it-graph k))
-          , λ p' hp' → PT.rec (isSetS p' (prʟ q (it k)))
-              (λ { (v , (ev , hv)) → S≡
-                 (ev ∙ cong (pr (fst q)) (itFo-val k v (itFo-at v (sym eq) hv))
-                     ∙ sym (prʟ-fst q (it k))) })
-              (PF.pair-out p' q hp') )
-
-    module TR = Of tabR
+    module TR = RecursionGraph valR using ( F; F-in; F-out )
 
   iter : S
-  iter = TR.table
+  iter = TR.F
 
   iter-in : (n : ℕ) → ⟨ pr (# n) (fst (it n)) ∈ fst iter ⟩
-  iter-in n = subst (λ w → ⟨ w ∈ fst iter ⟩) (prʟ-fst (nn n) (it n))
-    (TR.table-in (nn n) (prʟ (nn n) (it n)) (#∈ω n)
-      (PF.pair-in (prʟ (nn n) (it n)) (nn n) (it n) (prʟ-fst (nn n) (it n)) (it-graph n)))
+  iter-in n = subst (λ v → ⟨ pr (# n) (fst v) ∈ fst iter ⟩)
+    (VR.val-uniq (nn n) (#∈ω n) (it n) (it-graph n)) (TR.F-in (nn n) (#∈ω n))
 
   iter-out : (y : S) → ⟨ y ∈ˢ iter ⟩ → ∥ Σ[ n ∈ ℕ ] (fst y ≡ pr (# n) (fst (it n))) ∥₁
   iter-out y hy = PT.rec squash₁
-    (λ { (q , (q∈ , h)) → PT.rec squash₁
-      (λ { (v , (ev , hv)) → PT.map
-        (λ { (k , eq) → k
-           , ev ∙ cong₂ pr (cong fst (sym eq)) (itFo-val k v (itFo-at v (sym eq) hv)) })
-        (ω-num q q∈) })
-      (PF.pair-out y q h) })
-    (TR.table-out y hy)
+    (λ { (q , q∈ , e) → PT.map (λ { (k , eq) → k
+      , e ∙ cong₂ pr (cong fst (sym eq))
+        (cong fst (VR.val-uniq q q∈ (it k) (itFo-at (it k) eq (it-graph k)))) }) (ω-num q q∈) })
+    (TR.F-out (fst y) hy)
 ```
 
 Section 5. One instance: a step that only grows. The union starts at `a`, every

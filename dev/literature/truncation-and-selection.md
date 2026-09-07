@@ -1,5 +1,9 @@
 # Truncation and selection: how the two literatures pick a witness
 
+Current Bedrock status (2026-09-06): `L⊨ZFC` and `L⊨GCH` are proved and
+registered in [Landmarks](../../src/Landmarks.lagda.md). The research and route
+assessments below are historical; they do not describe open Bedrock proof goals.
+
 Task `[LJ-1.316]`, landed 2026-08-15 by the `[LJ-1.319]` ruling.
 
 **The question.** A proof needs an object. The object exists. In classical set

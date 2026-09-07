@@ -53,17 +53,16 @@ symbol is syntax, not meaning. Reading them:
 member of" and "for some member of". Binding is by de Bruijn: a quantifier takes a
 body with one more free variable, and variable `0` is the one just bound.
 
-Two design decisions are visible in the constructor list. First, **every
-connective is a primitive**, and the reason is the semantics this language is
+Two design decisions are visible in the constructor list. First, the binary
+connectives are primitive, and the reason is the semantics this language is
 headed for: each constructor will mean exactly one truth-algebra operation, and
 the algebra is constructive. A classical text can economize, spelling
 `φ ∨ ψ` as `¬ (¬ φ ∧ ¬ ψ)`, `∀` as `¬ ∃ ¬`, `φ ⇒ ψ` as `¬ φ ∨ ψ`, because
 classically the double negations cancel. Constructively they do not: `¬ ¬ P`
 is weaker than `P`, so every one of those spellings would assign the connective
 the **wrong meaning**. `∨`, `∀`, `⇒` therefore must be constructors. The
-remaining three (`⊤̇`, `⊥̇`, `¬̇`) *could* be spelled honestly, say `¬̇ φ` as
-`φ ⇒̇ ⊥̇`; they are primitive anyway so that every later structural recursion
-treats every connective alike, one clause each, no encoded special cases.
+Negation and truth are spelled honestly: `¬̇ φ` is `φ ⇒̇ ⊥̇`, and `⊤̇` is
+`⊥̇ ⇒̇ ⊥̇`.
 
 Second, the bounded quantifiers earn primitive seats even though `∀̇∈ t φ`
 could be spelled with `∀̇`. Had they been abbreviations, "every quantifier in
@@ -80,7 +79,7 @@ interpreted by.
 <!--zh-->
 公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：这是一枚层标记，见点即知这个符号是语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象等词，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词所取的公式体多出一个自由变量，变量 `0` 即刚被约束的那个。
 
-构造子清单里可以看出两个设计决定。其一，**联结词全部是原语**，理由在这门语言即将奔赴的语义：每个构造子将恰好意指一个真值代数运算，而该代数是构造性的。经典教科书可以省笔墨，把 `φ ∨ ψ` 拼作 `¬ (¬ φ ∧ ¬ ψ)`、`∀` 拼作 `¬ ∃ ¬`、`φ ⇒ ψ` 拼作 `¬ φ ∨ ψ`，因为经典地看双重否定会互相抵消。构造性地看它们不抵消：`¬ ¬ P` 严格弱于 `P`，上述每一种拼写都会给联结词指派**错误的含义**。所以 `∨`、`∀`、`⇒` 必须是构造子。剩下三个 (`⊤̇`、`⊥̇`、`¬̇`) 本来**可以**诚实地拼出，例如 `¬̇ φ` 拼作 `φ ⇒̇ ⊥̇`；仍将它们原语化，是为了让后续每一次结构递归对所有联结词一视同仁，一子句一条，不留任何需要特判的编码。
+构造子清单里可以看出两个设计决定。其一，二元联结词是原语，理由在这门语言即将奔赴的语义：每个构造子将恰好意指一个真值代数运算，而该代数是构造性的。经典教科书可以省笔墨，把 `φ ∨ ψ` 拼作 `¬ (¬ φ ∧ ¬ ψ)`、`∀` 拼作 `¬ ∃ ¬`、`φ ⇒ ψ` 拼作 `¬ φ ∨ ψ`，因为经典地看双重否定会互相抵消。构造性地看它们不抵消：`¬ ¬ P` 严格弱于 `P`，上述每一种拼写都会给联结词指派**错误的含义**。所以 `∨`、`∀`、`⇒` 必须是构造子。否定与真采用诚实的拼写：`¬̇ φ` 即 `φ ⇒̇ ⊥̇`，`⊤̇` 即 `⊥̇ ⇒̇ ⊥̇`。
 
 其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位。倘若它们只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` **恰巧如何拼写**的事实，任何在 `φ` 的形状上计算的东西都看不见它。作为构造子，有界性就是形状：后面的章节按构造子给公式分类，用一个对 `∃̇` 与 `∀̇` **不设情形**的归纳数据来证明「量词皆有界」，而这种缺席要能开口说话，有界形式必须自立门户。这种形状的公式在不同结构之间表现格外驯良，这条线索将在第二部的模型落定后重新拾起并延伸进第四部。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
 <!--/-->
@@ -92,12 +91,17 @@ infixr 10 _⇒̇_
 infix  13 ¬̇_
 
 data Formula {ℓ} (K : Type ℓ) (n : ℕ) : Type ℓ where
-  _∈̇_ _≐_     : Term K n → Term K n → Formula K n        -- atoms: membership, equality
-  _∧̇_ _∨̇_ _⇒̇_ : Formula K n → Formula K n → Formula K n  -- binary connectives
-  ¬̇_          : Formula K n → Formula K n                -- negation
-  ⊤̇ ⊥̇         : Formula K n                              -- truth, falsity
-  ∃̇_ ∀̇_       : Formula K (suc n) → Formula K n          -- quantifiers
-  ∀̇∈ ∃̇∈       : Term K n → Formula K (suc n) → Formula K n  -- bounded quantifiers
+  _∈̇_ _≐_     : Term K n → Term K n → Formula K n
+  _∧̇_ _∨̇_ _⇒̇_ : Formula K n → Formula K n → Formula K n
+  ⊥̇            : Formula K n
+  ∃̇_ ∀̇_       : Formula K (suc n) → Formula K n
+  ∀̇∈ ∃̇∈       : Term K n → Formula K (suc n) → Formula K n
+
+¬̇_ : ∀ {ℓ} {K : Type ℓ} {n} → Formula K n → Formula K n
+¬̇ φ = φ ⇒̇ ⊥̇
+
+⊤̇ : ∀ {ℓ} {K : Type ℓ} {n} → Formula K n
+⊤̇ = ⊥̇ ⇒̇ ⊥̇
 ```
 
 <!--en-->
@@ -151,13 +155,12 @@ formulas that get collected, their parameters fed through environments instead.
 
 <!--en-->
 The object language is an inductive family `Formula K n`{.Agda}: constant domain as
-a parameter, scoping intrinsic through `Fin`{.Agda}, every constructor primitive
-and dotted. Around it: the parameter-free
+a parameter, scoping intrinsic through `Fin`{.Agda}, each constructor dotted. Around it: the parameter-free
 formulas, the data axis whose entry map arrives with the relabelling kit at the
 book's tail. Note what is absent: no substitution and no weakening operators
 anywhere. The design will keep
 it that way, and the little variable machinery the book does need arrives later in
 the book. First, formulas need something to talk about.
 <!--zh-->
-对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全原语、全带点。围绕它的：无参公式，这条数据轴的进入映射随书末的常量改名工具组到来。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本书稍后登场。眼下，公式先得有可谈论的对象。
+对象语言是归纳族 `Formula K n`{.Agda}：常量域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全带点。围绕它的：无参公式，这条数据轴的进入映射随书末的常量改名工具组到来。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本书稍后登场。眼下，公式先得有可谈论的对象。
 <!--/-->

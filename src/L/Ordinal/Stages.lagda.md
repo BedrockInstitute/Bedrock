@@ -51,21 +51,20 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-irrefl )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import L.Definability {ℓ} using ( module DefOf )
 open import L.Constructible {ℓ}
-  using ( IsOrd; isTransV; Lset; Lset-layer; Lset-compute; layer-trans
-        ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; Lset-mono )
+  using ( IsOrd; isTransV; Lset; Lset-layer; layer-trans
+        ; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv; Lset-mono; Lset-in; Lset-out )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-open import L.Rank {ℓ} using ( rank; rank-compute; rank-ord; rank-fix )
+open import L.Rank {ℓ} using ( rank; rank-upper; rank-ord; rank-fix )
 
 open import Cubical.Data.Sum as Sum using ( _⊎_; inl; inr )
 import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
-  using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; extensionality; _⊆_ )
+  using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; extensionality; _⊆_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
-  using ( ⋃_; union-ax; module InfinitySet )
+  using ( module InfinitySet )
 open InfinitySet using ( sucV )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
@@ -194,64 +193,26 @@ rank-Lset = ∈-induction
   step : (α : S)
        → (∀ β → β ∈ᵗ α → IsOrd β → (x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ rank x ∈ˢ β ⟩)
        → IsOrd α → (x : S) → ⟨ x ∈ˢ Lset α ⟩ → ⟨ rank x ∈ˢ α ⟩
-  step α IH ordα x x∈Lα = PT.rec (snd (rank x ∈ˢ α)) fromUnion x∈⋃
+  step α IH ordα x x∈Lα = PT.rec (snd (rank x ∈ˢ α)) fromStage (Lset-out α x x∈Lα)
     where
-    s : ⟪ α ⟫ → S
-    s m = 𝒟ₒ (Lset (⟪ α ⟫↪ m))
-
-    x∈⋃ = union-ax (sett ⟪ α ⟫ s) x .fst
-      (∈∈ₛ {a = x} {b = ⋃ (sett ⟪ α ⟫ s)} .fst
-        (subst (λ w → ⟨ x ∈ˢ w ⟩) (Lset-compute α) x∈Lα))
-
-    fromUnion : Σ[ v ∈ S ] (⟨ v ∈ₛ sett ⟪ α ⟫ s ⟩ × ⟨ x ∈ₛ v ⟩) → ⟨ rank x ∈ˢ α ⟩
-    fromUnion (v , (v∈ₛsett , x∈ₛv)) = PT.rec (snd (rank x ∈ˢ α)) fromFiber
-      (∈∈ₛ {a = v} {b = sett ⟪ α ⟫ s} .snd v∈ₛsett)
+    fromStage : Σ[ β ∈ S ] (⟨ β ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩) → ⟨ rank x ∈ˢ α ⟩
+    fromStage (β , β∈α , x∈𝒟ₒLβ) = rankx∈α
       where
-      fromFiber : Σ[ m ∈ ⟪ α ⟫ ] (s m ≡ v) → ⟨ rank x ∈ˢ α ⟩
-      fromFiber (m , sm≡v) = rankx∈α
-        where
-        β = ⟪ α ⟫↪ m
-        β∈α : ⟨ β ∈ˢ α ⟩
-        β∈α = ∈∈ₛ {a = β} {b = α} .snd (∈ₛ⟪ α ⟫↪ m)
-        ordβ : IsOrd β
-        ordβ = mem-ord {A = α} ordα β β∈α
-        x∈𝒟ₒLβ : ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩
-        x∈𝒟ₒLβ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset β)} .snd
-          (subst (λ w → ⟨ x ∈ₛ w ⟩) (sym sm≡v) x∈ₛv)
-        x⊆Lβ : (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ Lset β ⟩
-        x⊆Lβ = DefOf.Def∋⊆A (Lset β) x (𝒟ₒ-inv (Lset β) x x∈𝒟ₒLβ)
-        ry∈β : (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ rank y ∈ˢ β ⟩
-        ry∈β y y∈x = IH β β∈α ordβ y (x⊆Lβ y y∈x)
+      ordβ : IsOrd β
+      ordβ = mem-ord {A = α} ordα β β∈α
+      x⊆Lβ : (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ Lset β ⟩
+      x⊆Lβ = DefOf.Def∋⊆A (Lset β) x (𝒟ₒ-inv (Lset β) x x∈𝒟ₒLβ)
+      ry∈β : (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ rank y ∈ˢ β ⟩
+      ry∈β y y∈x = IH β β∈α ordβ y (x⊆Lβ y y∈x)
 
-        rankx⊆β : (z : S) → ⟨ z ∈ˢ rank x ⟩ → ⟨ z ∈ˢ β ⟩
-        rankx⊆β z z∈rx = PT.rec (snd (z ∈ˢ β)) viaUnion
-          (union-ax (sett ⟪ x ⟫ g) z .fst
-            (∈∈ₛ {a = z} {b = ⋃ (sett ⟪ x ⟫ g)} .fst
-              (subst (λ w → ⟨ z ∈ˢ w ⟩) (rank-compute x) z∈rx)))
-          where
-          g : ⟪ x ⟫ → S
-          g i = sucV (rank (⟪ x ⟫↪ i))
-          viaUnion : Σ[ w ∈ S ] (⟨ w ∈ₛ sett ⟪ x ⟫ g ⟩ × ⟨ z ∈ₛ w ⟩) → ⟨ z ∈ˢ β ⟩
-          viaUnion (w , (w∈ₛsett , z∈ₛw)) = PT.rec (snd (z ∈ˢ β)) viaFib
-            (∈∈ₛ {a = w} {b = sett ⟪ x ⟫ g} .snd w∈ₛsett)
-            where
-            viaFib : Σ[ i ∈ ⟪ x ⟫ ] (g i ≡ w) → ⟨ z ∈ˢ β ⟩
-            viaFib (i , gi≡w) =
-              ∈sucV-elim {A = rank yᵢ} {x = z} (snd (z ∈ˢ β))
-                (∈∈ₛ {a = z} {b = sucV (rank yᵢ)} .snd
-                  (subst (λ W → ⟨ z ∈ₛ W ⟩) (sym gi≡w) z∈ₛw))
-                (λ z∈ryᵢ → ordβ .fst z∈ryᵢ (ry∈β yᵢ yᵢ∈x))
-                (λ z≡ryᵢ → subst (λ w → ⟨ w ∈ˢ β ⟩) (sym z≡ryᵢ) (ry∈β yᵢ yᵢ∈x))
-              where
-              yᵢ = ⟪ x ⟫↪ i
-              yᵢ∈x : ⟨ yᵢ ∈ˢ x ⟩
-              yᵢ∈x = ∈∈ₛ {a = yᵢ} {b = x} .snd (∈ₛ⟪ x ⟫↪ i)
+      rankx⊆β : (z : S) → ⟨ z ∈ˢ rank x ⟩ → ⟨ z ∈ˢ β ⟩
+      rankx⊆β = rank-upper x β ordβ ry∈β
 
-        rankx∈α : ⟨ rank x ∈ˢ α ⟩
-        rankx∈α = ∈sucV-elim {A = β} {x = rank x} (snd (rank x ∈ˢ α))
-          (⊆→∈suc (rank x) β (rank-ord x) ordβ rankx⊆β)
-          (λ rx∈β → ordα .fst rx∈β β∈α)
-          (λ rx≡β → subst (λ w → ⟨ w ∈ˢ α ⟩) (sym rx≡β) β∈α)
+      rankx∈α : ⟨ rank x ∈ˢ α ⟩
+      rankx∈α = ∈sucV-elim {A = β} {x = rank x} (snd (rank x ∈ˢ α))
+        (⊆→∈suc (rank x) β (rank-ord x) ordβ rankx⊆β)
+        (λ rx∈β → ordα .fst rx∈β β∈α)
+        (λ rx≡β → subst (λ w → ⟨ w ∈ˢ α ⟩) (sym rx≡β) β∈α)
 ```
 
 <!--en-->
@@ -413,23 +374,7 @@ the inclusion the previous section asked for; the formula then carves `α` out o
 ```agda
 private
   𝒟ₒ→Lset-suc : (α : S) → ⟨ α ∈ˢ 𝒟ₒ (Lset α) ⟩ → ⟨ α ∈ˢ Lset (sucV α) ⟩
-  𝒟ₒ→Lset-suc α α∈𝒟ₒ =
-    subst (λ w → ⟨ α ∈ˢ w ⟩) (sym (Lset-compute (sucV α)))
-      (∈∈ₛ {a = α} {b = ⋃ (sett ⟪ sucV α ⟫ s)} .snd
-        (union-ax (sett ⟪ sucV α ⟫ s) α .snd
-          ∣ 𝒟ₒ (Lset α) , (𝒟ₒLα∈ₛsett , α∈ₛ𝒟ₒLα) ∣₁))
-    where
-    s : ⟪ sucV α ⟫ → S
-    s m = 𝒟ₒ (Lset (⟪ sucV α ⟫↪ m))
-    fib = ∈-asFiber {a = α} {b = sucV α} (self∈sucV α)
-    m = fib .fst
-    p : ⟪ sucV α ⟫↪ m ≡ α
-    p = fib .snd
-    𝒟ₒLα∈ₛsett : ⟨ 𝒟ₒ (Lset α) ∈ₛ sett ⟪ sucV α ⟫ s ⟩
-    𝒟ₒLα∈ₛsett = ∈∈ₛ {a = 𝒟ₒ (Lset α)} {b = sett ⟪ sucV α ⟫ s} .fst
-      ∣ m , cong (λ b → 𝒟ₒ (Lset b)) p ∣₁
-    α∈ₛ𝒟ₒLα : ⟨ α ∈ₛ 𝒟ₒ (Lset α) ⟩
-    α∈ₛ𝒟ₒLα = ∈∈ₛ {a = α} {b = 𝒟ₒ (Lset α)} .fst α∈𝒟ₒ
+  𝒟ₒ→Lset-suc α α∈𝒟ₒ = Lset-in (sucV α) α α (self∈sucV α) α∈𝒟ₒ
 
 ord∈Lset-suc : (α : S) → IsOrd α → ⟨ α ∈ˢ Lset (sucV α) ⟩
 ord∈Lset-suc = ∈-induction
