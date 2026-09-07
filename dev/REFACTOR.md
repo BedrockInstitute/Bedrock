@@ -1173,8 +1173,8 @@ metrics in README, then committing and pushing. Accepted source remains
 26,308 nonblank Agda lines, a reduction of 2,665. Fresh project typechecking
 took 201.38 s with peak RSS 1,865,891,840 bytes (1.74 GiB). The full gate
 passed without warnings. English, Chinese and Japanese READMEs now record
-these figures and the cache/measurement conditions; machine-readable evidence
-is retained in `dev/refactor-metrics.json`. All 112 master hashes were checked
+these figures and the cache/measurement conditions. Detailed measurement
+evidence remains in the local build logs. All 112 master hashes were checked
 against the passed-gate snapshot before closeout. The incomplete eight-tag
 experiment remains outside the repository and is excluded from the commit.
 The 3,000-line milestone was not reached; this run is closed at the user's
