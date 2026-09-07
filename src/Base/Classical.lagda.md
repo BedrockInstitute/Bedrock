@@ -1,16 +1,15 @@
+<!--en-->
 # The classical boundary
 
-<!--en-->
-Set theory as most readers know it is classical: excluded middle is ambient air. The
-host, however, is constructive, and this book keeps the boundary between the two
-visible as a matter of law. The rule, fixed in the Charter, is that classical
-principles enter as **explicit parameters**, never as global assumptions: a chapter
-that reasons classically says so in its own interface, the type checker polices the
-boundary, and there is not a single `postulate` in this book. This chapter states
-the one classical principle everything later appeals to, and banks its two basic
-dividends: the impredicativity interfaces of the previous chapter, redeemed.
+Excluded middle says that every proposition is either true or false. Cubical type theory does not assume it, so chapters that use classical reasoning receive it explicitly. This chapter defines that assumption and derives the two smallness principles needed later: a small classifier for propositions and propositional resizing.
 <!--zh-->
-多数读者熟悉的集合论是经典的：排中律如空气般无处不在。然而宿主是构造性的，本书把两者之间的边界作为法条保持可见。纲领定下的规则是：经典原理一律作为**显式参数**进入，绝不作为全局假设。凡经典论证的章节都在自己的接口上言明，类型检查器守卫这条边界，全书没有一个 `postulate`。本章陈述后文一切经典论证所诉诸的那唯一原理，并存入它的两笔基本红利：上一章的非直谓性诸接口，在此赎回。
+# 经典逻辑的边界
+
+排中律说每个命题要么真，要么假。Cubical 类型论并不预设它，因此使用经典推理的章节会显式接收这项假设。本章定义排中律，并由它推出后文所需的两条小性原理：命题的小分类器与命题降层。
+<!--ja-->
+# 古典論理との境界
+
+排中律は、すべての命題が真または偽であると述べます。Cubical 型理論は排中律を仮定しないため、古典的推論を使う章はこの仮定を明示的に受け取ります。本章では排中律を定義し、後で必要となる命題の小分類子と命題リサイズを導きます。
 <!--/-->
 
 ```agda
@@ -33,8 +32,16 @@ open import Cubical.Functions.Logic using ( ⇔toPath )
 
 <!--en-->
 ## The statement
+
+`LEM ℓ`{.Agda} decides every proposition in `hProp ℓ`{.Agda}. Its level index records exactly where classical reasoning enters a later theorem.
 <!--zh-->
 ## 陈述
+
+`LEM ℓ`{.Agda} 判定 `hProp ℓ`{.Agda} 中的每个命题。层级指标准确记录经典推理在后续定理中从何处进入。
+<!--ja-->
+## 排中律の主張
+
+`LEM ℓ`{.Agda} は `hProp ℓ`{.Agda} の各命題を判定します。レベルの添字により、後の定理で古典的推論がどこから入るかが明示されます。
 <!--/-->
 
 ```agda
@@ -84,8 +91,16 @@ lowerLEM {ℓ} lem P = fromLifted (lem lifted)
 
 <!--en-->
 ## The first dividend: a small classifier
+
+A classical proposition has one of two truth values. This section turns that observation into an equivalence between `hProp ℓ`{.Agda} and the small type `Lift Bool`{.Agda}.
 <!--zh-->
 ## 第一笔红利：小分类器
+
+经典命题只有两个真值。本节把这一观察化为 `hProp ℓ`{.Agda} 与小类型 `Lift Bool`{.Agda} 之间的等价。
+<!--ja-->
+## 第一の帰結：小分類子
+
+古典的な命題の真理値は二つです。この節では、その事実を `hProp ℓ`{.Agda} と小さな型 `Lift Bool`{.Agda} の同値として表します。
 <!--/-->
 
 <!--en-->
@@ -209,8 +224,16 @@ lem→hPropSmallness lem = Lift Bool , isoToEquiv (iso decodeB
 
 <!--en-->
 ## The second dividend: propositional resizing
+
+Resizing replaces a proposition one universe higher by an equivalent small proposition. A decision reduces the proof to the two small propositions `⊤` and `⊥`.
 <!--zh-->
 ## 第二笔红利：命题降层
+
+命题降层把高一层宇宙中的命题换成等价的小命题。判定把证明归结为两个小命题 `⊤` 与 `⊥`。
+<!--ja-->
+## 第二の帰結：命題リサイズ
+
+命題リサイズは、一段上の宇宙にある命題を同値な小さい命題に置き換えます。判定により、証明は小さい命題 `⊤` と `⊥` の二場合に帰着します。
 <!--/-->
 
 <!--en-->
@@ -261,8 +284,16 @@ lem→resizing lem P = resizeDec P (lem P)
 
 <!--en-->
 ## Redeeming the packing
+
+The two consequences fill the fields of `Impredicativity ℓ`{.Agda}. The higher-level excluded middle supplies resizing directly and reaches the classifier through `lowerLEM`{.Agda}.
 <!--zh-->
 ## 赎回打包
+
+这两个结论填入 `Impredicativity ℓ`{.Agda} 的字段。高层排中律直接给出命题降层，并经 `lowerLEM`{.Agda} 给出小分类器。
+<!--ja-->
+## 二つの帰結をまとめる
+
+二つの帰結を `Impredicativity ℓ`{.Agda} のフィールドにまとめます。高いレベルの排中律から命題リサイズを直接得て、`lowerLEM`{.Agda} を通して小分類子も得ます。
 <!--/-->
 
 <!--en-->
@@ -284,8 +315,16 @@ lem→impredicativity lem = record
 
 <!--en-->
 ## Recap
+
+Excluded middle is now an explicit, level-indexed assumption. It descends to lower levels and yields both components of the impredicativity interface used by the model chapters.
 <!--zh-->
 ## 小结
+
+排中律现在是显式且带层级指标的假设。它能下降到较低层级，并给出模型章节所用非直谓性接口的两个组成部分。
+<!--ja-->
+## まとめ
+
+排中律は、レベルを添えた明示的な仮定になりました。より低いレベルへ移すことができ、モデルの章で使う非可述性インターフェースの二つの要素を与えます。
 <!--/-->
 
 <!--en-->

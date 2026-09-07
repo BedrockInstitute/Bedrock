@@ -1,4 +1,16 @@
-# The generalized continuum hypothesis, stated
+<!--en-->
+# Stating the generalized continuum hypothesis inside a model
+
+The generalized continuum hypothesis compares each infinite cardinal with its power set. This chapter packages that statement for an arbitrary model of set theory, so later chapters can concentrate on proving it for `L`.
+<!--zh-->
+# 在模型内部陈述广义连续统假设
+
+广义连续统假设比较每个无穷基数及其幂集。本章先为任意集合论模型封装这一陈述，使后续章节可以专注于证明 `L` 满足它。
+<!--ja-->
+# モデルの内部で一般連続体仮説を述べる
+
+一般連続体仮説は、各無限基数とその冪集合を比較する。本章ではこの主張を任意の集合論モデルについて整え、後の章で `L` に対する証明へ集中できるようにする。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}

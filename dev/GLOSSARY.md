@@ -16,25 +16,31 @@ The checker runs two complementary checks, both part of `make check` (the commit
 pre-commit hook, so drift is caught in CI, not in review. Both are **report-only**: they never
 rewrite text, because the right fix is a translation judgement, not a mechanical substitution.
 
-1. **Avoid check (a denylist).** For every entry's `avoid` list it scans the CJK docs
+1. **Avoid check (a denylist).** For every entry's `avoid` list it scans language-scoped prose
    (`docs/zh/`, `docs/ja/`, and the `<!--zh-->` / `<!--ja-->` prose of `src/**.lagda.md`
    masters) and flags any known off-glossary rendering, pointing at the canonical one.
+   Explicit `en:` aliases are checked in English with word boundaries; untagged
+   aliases keep their existing CJK-only meaning. Code and links stay protected.
 2. **Presence check (a safety net).** For an entry with `presence = true`, when the English
    term appears in a doc's English source but the canonical rendering is absent from the
    parallel translation, it warns. This catches wrong renderings the `avoid` list does not
-   enumerate. It runs only on standalone parallel docs (`docs/en/X` vs `docs/zh/X` /
-   `docs/ja/X`, and the root `README.md` for the localized READMEs), never on masters, whose
-   in-file language fallback would make absence ambiguous.
+   enumerate. It runs on standalone parallel docs and explicitly translated
+   language groups in masters. Missing language blocks retain English fallback
+   and are not mistaken for translations. Each translated group is checked
+   separately, so a correct term elsewhere cannot hide a local mismatch.
 
 ## Maintaining `glossary.toml`
 
-Each term is a `[[term]]` entry. **Never add one yourself.** Clause W5 of
-`dev/memos/LJ-4-pod-program-design.md` section 3.1 settles a term the glossary lacks, and
-`AGENTS.md` carries that clause to every slot. The pipeline is two dispatches: a sourced
-provenance dossier, then an adversarial review that returns PASS or FAIL for each term.
-Only a rendering that passes lands here, or one the repository owner rules. The retired
-protocol text is `archive/dev/ORCHESTRATION.md` section 8, which the POD cutover of
-2026-08-18 archived. An entry has this shape:
+Each term is a `[[term]]` entry. Under the owner's 2026-09-07 instruction, the
+coordinator audits existing terms as well as new ones and makes the final
+terminology decisions. Dispatches gather literature evidence, not independent
+vocabularies. Search online for the actual mathematical sense in English,
+Chinese and Japanese. Adopt an attested term when appropriate; if no suitable
+term is found, record the queries and form a descriptive expression from
+attested terminology. A negative search is not proof that a term never occurs.
+Record supporting URLs and distinguish direct attestation from a composed
+expression. Update the canonical table before agents resume dependent prose.
+This owner instruction replaces the former approval protocol. An entry has this shape:
 
 ```toml
 [[term]]
@@ -50,7 +56,7 @@ notes = "..."                  # optional; human-only, the checker ignores it
 - **`en` / `zh` / `ja`** are required: the term and its canonical Chinese and Japanese
   renderings. Values are plain strings (TOML is not prose-linted, so no backtick wrapping is
   needed, unlike in this Markdown doc).
-- **`avoid`** is a list of known wrong renderings. Tag an item with a language (`zh:宪章`,
+- **`avoid`** is a list of known wrong renderings. Tag an item with a language (`en:...`, `zh:宪章`,
   `ja:憲章`) to scope it to that language; an untagged item (`散文`) applies to both Chinese and
   Japanese. Omit `avoid` for an advisory-only entry (agents read the term; the Avoid check does
   not enforce it).

@@ -1,16 +1,18 @@
-# Relabelling
-
 <!--en-->
-The constant domain is a parameter, and the book keeps swapping it. The mapping
-chapter defined the syntactic action. This chapter proves its two invariance
-theorems: relabelling preserves **meaning** on the nose and carries Levy
-**witnesses** along unchanged. Like its tail-mates, the kit has no
-consumer in the trunk yet; its customers arrive with the deeper chapters of
-the constructible-universe chapters, where formulas migrate between the inner world's constants, the codes'
-empty domain, and the ambient carrier.
+# Constant relabelling
+
+Changing the constant domain acts structurally on formulas without changing their logical shape. This chapter proves that evaluation commutes with that action and that witnesses in the Lévy hierarchy survive it.
 <!--zh-->
-常量域是一个参数，而本书不停地换它。映射章已定义语法上的作用；本章证明它的两条不变性定理：重标在**含义**上分毫不差，并把 Lévy **见证**原样携带。与书末诸同伴一样，这套工具在主干上尚无消费者；它的客户随可构造宇宙诸章的深层章节到来，届时公式将在内层世界的常量、码的空域与环境载体之间迁徙。
+# 常元改名
+
+更换常元域会按结构作用于公式，而不改变其逻辑形状。本章证明求值与这一作用可交换，并且 Lévy 层级中的见证在此作用下得以保持。
+<!--ja-->
+# 定数の改名
+
+定数域の変更は論理式へ構造的に作用し、その論理的な形を変えません。本章では、評価がこの作用と可換であり、Lévy 階層の証人が保存されることを示します。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -22,7 +24,7 @@ open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using
   ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-open import FOL.Manipulation.Mapping using ( mapTm; mapFo; embed )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo; embed )
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈
   ; Σₙ; σ-Δ₀; σ-Π; σ-∃; Πₙ; π-Δ₀; π-Σ; π-∀ )
@@ -32,19 +34,19 @@ import Cubical.Data.Empty as Empty
 
 <!--en-->
 ## Meaning level
+
+Evaluating a relabelled formula under `ι` is the same as evaluating the original under the composite interpretation `ι ∘ f`. Structural induction proves the corresponding statements for term denotation and formula satisfaction, including the parameter-free embedding as a corollary.
 <!--zh-->
 ## 含义层
+
+在 `ι` 下求值经常元改名的公式，等同于在复合解释 `ι ∘ f` 下求值原公式。结构归纳证明词项释义与公式满足关系的对应陈述，并以无参嵌入为推论。
+<!--ja-->
+## 意味の水準
+
+定数を改名した論理式を `ι` の下で評価することは、元の論理式を合成解釈 `ι ∘ f` の下で評価することと同じです。構造帰納法により、項の表示と論理式の充足関係について対応する主張が得られ、パラメータなしの埋め込みも系として従います。
 <!--/-->
 
-<!--en-->
-Relabelling constants along `f : K → K'` and then evaluating under `ι` is the
-same as evaluating under `ι ∘ f` directly; the `∘`-marked satisfaction and
-denotation below are the generic semantics opened at that composite. One
-structural induction, every case a congruence; the two term cases are even
-`refl`{.Agda}.
-<!--zh-->
-沿 `f : K → K'` 变换常量后在 `ι` 下求值，与直接在 `ι ∘ f` 下求值相同；下文带 `∘` 标记的满足与释义，就是在该复合解释处打开的泛型语义。一次结构归纳，每个情形都是同余；两个词项情形干脆是 `refl`{.Agda}。
-<!--/-->
+
 
 ```agda
 module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
@@ -86,7 +88,7 @@ the working syntax share one semantics; nothing needs proving twice. (The
 `∅`-marked satisfaction reads the empty constant domain through
 `Empty.rec*`{.Agda}.)
 <!--zh-->
-无参公式等候的推论：经 `embed`{.Agda} 进入任何常量域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。(带 `∅` 标记的满足经 `Empty.rec*`{.Agda} 解读空常量域。)
+无参公式等候的推论：经 `embed`{.Agda} 进入任何常元域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。(带 `∅` 标记的满足经 `Empty.rec*`{.Agda} 解读空常元域。)
 <!--/-->
 
 ```agda
@@ -102,18 +104,19 @@ the working syntax share one semantics; nothing needs proving twice. (The
 
 <!--en-->
 ## Levy witness level
+
+Constant relabelling leaves every connective and quantifier in place, so it transports Δ₀ witnesses constructor by constructor. Mutual induction extends the same fact through the alternating Σ and Π levels of the Lévy hierarchy.
 <!--zh-->
 ## Lévy 见证层
+
+常元改名保持每个联结词与量词的位置，因此可逐构造子搬运 Δ₀ 见证。互归纳把这一事实扩展到 Lévy 层级中交替的 Σ 与 Π 各层。
+<!--ja-->
+## Lévy 証人の水準
+
+定数の改名は結合子と量化子をすべてそのまま保つため、Δ₀ の証人を構成子ごとに移せます。相互帰納法によって、同じ事実が Lévy 階層で交互に現れる Σ と Π の各水準へ拡張されます。
 <!--/-->
 
-<!--en-->
-Relabelling constants preserves the structure of a formula, so a Levy
-witness follows along, constructor by constructor. This little lemma is
-what will let an absoluteness argument carry a Δ₀ witness across a change of
-constant domain.
-<!--zh-->
-变换常量保持公式的结构，Lévy 见证遂逐构造子随行。正是这条小引理，将让绝对性论证携着 Δ₀ 见证跨越常量域的更换。
-<!--/-->
+
 
 ```agda
 mapΔ₀ : ∀ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K')
@@ -152,14 +155,14 @@ mutual
 
 <!--en-->
 ## Recap
+
+The syntactic action `mapFo`{.Agda} commutes with satisfaction and preserves every Lévy grade. A formula can therefore move between constant domains while its meaning and complexity certificate move with it.
 <!--zh-->
 ## 小结
-<!--/-->
 
-<!--en-->
-Given the syntactic action `mapFo`{.Agda}, `⊨-map`{.Agda} and `embed-⊨`{.Agda}
-certify that meaning does not move, while `mapΔ₀`{.Agda} and its tower carry the
-Levy witnesses. A formula, its meaning, and its grade travel as one.
-<!--zh-->
-给定语法作用 `mapFo`{.Agda}，`⊨-map`{.Agda} 与 `embed-⊨`{.Agda} 认证含义纹丝不动，`mapΔ₀`{.Agda} 及其塔搬运 Lévy 见证。公式、含义与级别作为一体旅行。
+语法作用 `mapFo`{.Agda} 与满足关系可交换，并保持每个 Lévy 级别。因此，公式可在常元域之间移动，其含义与复杂度证书会一同移动。
+<!--ja-->
+## まとめ
+
+構文上の作用 `mapFo`{.Agda} は充足関係と可換で、すべての Lévy 等級を保存します。したがって論理式は、意味と複雑さの証明書を伴ったまま定数域の間を移れます。
 <!--/-->

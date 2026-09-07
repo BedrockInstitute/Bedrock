@@ -1,4 +1,16 @@
+<!--en-->
 # Prelude
+
+This chapter gathers the host-language notions needed to read every later theorem statement: universes, paths, h-levels, propositions, pairs, natural-number indices, and the empty type. It also explains why proof-specific operations remain in the chapters that first need them.
+<!--zh-->
+# 基础词汇
+
+本章汇集阅读后续定理陈述所需的宿主语言概念：宇宙、路径、h-层级、命题、序对、自然数指标与空类型。它也说明为何证明专用的运算仍留在首次需要它们的章节中。
+<!--ja-->
+# 基礎語彙
+
+本章では、後の定理の主張を読むために必要なホスト言語の概念、宇宙、道、h-レベル、命題、対、自然数の添字、空型をまとめます。また、証明だけに使う演算を、それが最初に必要となる章に置く理由も説明します。
+<!--/-->
 
 <!--en-->
 Every chapter of this book is literate Agda: the prose and the machine-checked code
@@ -11,13 +23,11 @@ Nothing is proved here; skim it now, and return when a symbol looks unfamiliar.
 本书的每一章都是文学化 Agda：解说的文稿与它所解说的经机器检查的代码同住一个文件，解说先行，代码紧随其后。这开篇一章负责摆桌子：先立下一条决定本书读法的纪律 (任何名字都可溯源)；再从 cubical 标准库转出全书立足的一小套宿主语言词汇。本章不证明任何东西；现在可以速览，之后遇到陌生符号再回来查。
 <!--/-->
 
-<!--en-->
-## Traceable names
-<!--zh-->
-## 名字可溯源
-<!--/-->
+
 
 <!--en-->
+## Traceable names
+
 One machine-enforced convention is stated up front, because it changes how the book
 is read: **every import lists exactly the names it takes**. A chapter's import block
 therefore doubles as its precise list of prerequisites, and "where does this name
@@ -25,8 +35,16 @@ come from" always has a visible answer on the page. The deliberate exception is 
 book's two designated hubs, this chapter and the next: they are opened wholesale,
 so a name not listed in any import comes from a hub.
 <!--zh-->
+## 名字可溯源
+
 有一条由机器执法的纪律须在开篇言明，因为它改变本书的读法：**每条 import 都精确列出所取的名字**。一章的 import 块因此兼作它的先修清单，「这个名字从哪来」在页面上总有答案。有意设置的例外是全书指定的两个枢纽，即本章与下一章：它们被整体打开，凡未见于任何 import 清单的名字都来自枢纽。
+<!--ja-->
+## 名前を追跡できるようにする
+
+各 import は受け取る名前を明示するので、import 欄がその章の正確な前提一覧になります。例外は二つの共通ハブである本章と次章で、ここからの名前だけはまとめて開かれます。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -36,14 +54,20 @@ module Base.Prelude where
 
 <!--en-->
 ## The host vocabulary
+
+The re-exports follow, one import at a time; before each, what it brings and why
+the book wants it.
 <!--zh-->
 ## 宿主词汇
+
+以下逐条转出，一段说明领一条 import：它带来什么，本书要它做什么。
+<!--ja-->
+## ホスト言語の語彙
+
+`Type`、道の等式、`isProp`、`isSet`、`hProp`、Σ 型、自然数と有限添字を公開します。これらは集合論の対象言語ではなく、その構文とモデルを記述するホスト言語の語彙です。
 <!--/-->
 
 <!--en-->
-The re-exports follow, one import at a time; before each, what it brings and why
-the book wants it.
-
 The host organises its types into a tower of Tarski-style universes with explicit
 levels. `Level`{.Agda} is the type of the levels themselves, with its arithmetic
 `ℓ-zero`{.Agda}, `ℓ-suc`{.Agda}, `ℓ-max`{.Agda}; `Type ℓ`{.Agda} is the universe
@@ -51,8 +75,6 @@ at level `ℓ`, and it is itself a type one floor up, in `Type (ℓ-suc ℓ)`{.A
 the book surveys a totality ("all sets", "all propositions"), this level bookkeeping
 is what says how large a totality is being surveyed.
 <!--zh-->
-以下逐条转出，一段说明领一条 import：它带来什么，本书要它做什么。
-
 宿主把类型组织成一座塔斯基式宇宙塔，层级显式。`Level`{.Agda} 是层级本身的类型，配有层级算术 `ℓ-zero`{.Agda}、`ℓ-suc`{.Agda}、`ℓ-max`{.Agda}；`Type ℓ`{.Agda} 是第 `ℓ` 层宇宙，它自身又是高一层的类型，住在 `Type (ℓ-suc ℓ)`{.Agda} 里。本书凡检视某个总体 (「所有集合」「所有命题」)，都由这套层级记账精确说明检视的总体有多大。
 <!--/-->
 
@@ -227,7 +249,7 @@ imaginable: the level-polymorphic identity function. It earns hub residence as
 the book's canonical constant interpretation: a constant standing for the very
 set it names is precisely `id`{.Agda}.
 <!--zh-->
-本章以唯一一个自家定义收尾，而且是能想象的最小的一个：层级多态的恒等函数。它凭一个身份落户枢纽：本书的典范常量解释。常量就代表它指名的那个集合，说的恰是 `id`{.Agda}。
+本章以唯一一个自家定义收尾，而且是能想象的最小的一个：层级多态的恒等函数。它凭一个身份落户枢纽：本书的典范常元解释。常元就代表它指名的那个集合，说的恰是 `id`{.Agda}。
 <!--/-->
 
 ```agda
@@ -237,11 +259,7 @@ id x = x
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 In scope from here on: universes, paths, h-levels, `hProp`{.Agda} with `⟨_⟩`{.Agda}
 and the class membership `∈ᶜ`{.Agda}, pairs, `ℕ`{.Agda}, `Vec`{.Agda}, `Fin`{.Agda},
 `⊥*`{.Agda}, and the identity `id`{.Agda}. This chapter proves nothing, defines
@@ -249,5 +267,11 @@ only `id`{.Agda}, and the logic symbols are deliberately absent: every notion of
 the book is introduced in the chapter where it first earns its keep, and the logic
 arrives with the truth algebra, next.
 <!--zh-->
+## 小结
+
 自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda} 及类隶属 `∈ᶜ`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}、`⊥*`{.Agda}，以及恒等 `id`{.Agda}。本章不证明任何东西，自家定义仅 `id`{.Agda} 一个，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
+<!--ja-->
+## まとめ
+
+以後は、宇宙、パス、h-レベル、`hProp`{.Agda} と `⟨_⟩`{.Agda}、クラス所属 `∈ᶜ`{.Agda}、積、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}、`⊥*`{.Agda}、恒等写像 `id`{.Agda} を共通語彙として使います。本章で定義したのは `id`{.Agda} だけで、論理記号は次章の真理値代数とともに導入されます。
 <!--/-->

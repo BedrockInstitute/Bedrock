@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the per-language dependency-map page from the masters.
+"""Generate and embed the per-language dependency map from the masters.
 
 Everything about the page is derived, never hand-maintained (the two-catalog
 doctrine's third view): nodes and edges come from the `import` lines of the
@@ -7,15 +7,16 @@ masters under src/, the reading order and the per-module one-line descriptions
 come from the Everything reading catalog (its import block and its bullet
 lists, per language), lanes mirror the sidebar's namespace grouping, and the
 default layout follows dependency depth vertically; an alternate view groups
-chapters by the learning stages in the reading catalog. Output is a fully
-self-contained HTML page (inline CSS/JS, no external assets) written to
-<out>/<lang>/depmap.html; render-site.py links to it from the sidebar.
+chapters by the learning stages in the reading catalog. The generated fragment
+is embedded into each language's index and also written separately for testing.
+The former depmap.html route redirects to the dependency-map tab.
 
 Usage:
-  gen-depmap.py [--src src] [--out _build/site] [--langs en,zh]
+  gen-depmap.py [--src src] [--out _build/site] [--langs en,zh,ja]
 """
 
 import glob
+import html as htmllib
 import json
 import os
 import re
@@ -41,39 +42,52 @@ UI = {
     "en": {
         "title": "Dependency map", "back": "← Bedrock",
         "sub": ("Dependencies between {n} chapters flow from top to bottom. "
-                "A → B means B imports A. Choose a compact overview, learning stages, "
-                "or namespace lanes. Hover to trace prerequisites; click to pin."),
+                "A → B means B imports A. Every layout shows the same prerequisite "
+                "partial order. Topics with no dependency path may be interleaved. "
+                "Hover to trace prerequisites; click to pin."),
         "layout": "Layout:", "compact": "Compact", "teaching": "Learning stages", "namespace": "Namespaces",
         "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
         "alledges": "all direct imports", "lmk": "include Landmarks' references",
         "hint": "Select a chapter to trace its prerequisites",
         "hubnote": ("The widely used Base.Prelude and Base.Truth imports are omitted "
                     "from the drawing but retained in chapter details."),
-        "reading": "reading position", "imports": "direct imports", "consumers": "direct consumers",
+        "reading": "example route position", "imports": "direct imports", "consumers": "direct consumers",
+        "legend": "Color key", "fit": "Fit whole graph", "readable": "Readable size",
+        "scrollhint": "Scroll the graph in both directions, or fit the whole graph for an overview.",
+        "none": "None",
+        "noscript": "The dependency map requires JavaScript. You can still use the",
+        "catalog": "chapter catalog",
         "footer": ("The skeleton preserves reachability, not every direct use of a definition. "
-                   "An omitted edge is not permission to delete an import. Learning stages and "
-                   "reading positions come from Everything; Landmarks is the opening preview "
-                   "and appears at the bottom here as the endpoint. All views use the same source graph."),
+                   "An omitted edge is not permission to delete an import. Learning stages do not "
+                   "make every chapter a serial step: finish the listed prerequisites before a "
+                   "converging chapter. Everything supplies one example route. Landmarks is the "
+                   "opening preview and appears at the bottom here as the endpoint."),
     },
     "zh": {
         "title": "依赖地图", "back": "← Bedrock",
-        "sub": ("{n} 个章节的依赖从上向下展开。A → B 表示 B 导入 A。可切换紧凑总览、学习阶段或命名空间分栏。悬停追踪先修关系，点击固定。"),
+        "sub": ("{n} 个章节的依赖从上向下展开。A → B 表示 B 导入 A。各布局展示同一份先修偏序；没有依赖路径的主题可以穿插学习。悬停追踪先修关系，点击固定。"),
         "layout": "布局：", "compact": "紧凑总览", "teaching": "学习阶段", "namespace": "命名空间",
         "edgemode": "边：", "skeleton": "骨架 (传递约简)", "alledges": "全部直接边",
         "lmk": "包含 Landmarks 的引用边", "hint": "选择章节以追踪先修关系",
         "hubnote": "图中省略广泛使用的 Base.Prelude 和 Base.Truth 导入边，章节详情仍保留它们。",
-        "reading": "阅读序号", "imports": "直接导入", "consumers": "直接消费者",
-        "footer": ("骨架保留可达关系，并不展示每一次直接使用；省略一条边不表示可以删除对应导入。学习阶段和阅读序号取自 Everything。Landmarks 是开篇预览，在此作为终点置于底部。各视图使用同一份源码依赖图。"),
+        "reading": "示例路线序号", "imports": "直接导入", "consumers": "直接消费者",
+        "legend": "颜色图例", "fit": "适合全图", "readable": "可读字号",
+        "scrollhint": "可向两个方向滚动图；也可切换为全图概览。", "none": "无",
+        "noscript": "依赖图需要 JavaScript。仍可改读同页的", "catalog": "章节目录",
+        "footer": ("骨架保留可达关系，并不展示每一次直接使用；省略一条边不表示可以删除对应导入。学习阶段不要求把所有章节依次串行；进入汇合章节前，应完成图中所列先修。Everything 给出一条示例路线。Landmarks 是开篇预览，在此作为终点置于底部。"),
     },
     "ja": {
         "title": "依存マップ", "back": "← Bedrock",
-        "sub": "{n} 章の依存関係を上から下へ表示。A → B は B が A を import することを表す。章を選ぶと前提を追跡できます。",
+        "sub": "{n} 章の依存関係を上から下へ表示。A → B は B が A を import することを表します。どの配置も同じ前提関係の半順序を示し、依存経路のない主題は交互に学べます。",
         "layout": "配置：", "compact": "コンパクト", "teaching": "学習段階", "namespace": "名前空間",
         "edgemode": "辺：", "skeleton": "骨格 (推移簡約)", "alledges": "直接 import 全体",
         "lmk": "Landmarks の参照を含める", "hint": "章を選択して前提を確認",
         "hubnote": "広く使われる Base.Prelude と Base.Truth の辺は図から省略し、章の詳細には残します。",
-        "reading": "読書順", "imports": "直接 import", "consumers": "直接の利用者",
-        "footer": "骨格は到達関係を保ちます。省略された辺の import が不要とは限りません。学習段階は Everything に従います。冒頭の予告 Landmarks は、この図では終点として下部に置きます。",
+        "reading": "例示ルート順", "imports": "直接 import", "consumers": "直接の利用者",
+        "legend": "色の凡例", "fit": "全体を表示", "readable": "読みやすい大きさ",
+        "scrollhint": "図は縦横にスクロールできます。全体表示に切り替えると概観できます。", "none": "なし",
+        "noscript": "依存マップには JavaScript が必要です。同じページの", "catalog": "章の目次",
+        "footer": "骨格は到達関係を保ちます。省略された辺の import が不要とは限りません。学習段階は全章を直列に並べるものではありません。合流する章へ進む前に、表示された前提を終えてください。Everything は一例となるルートを示します。冒頭の予告 Landmarks は、この図では終点として下部に置きます。",
     },
 }
 
@@ -270,9 +284,61 @@ TEMPLATE = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
     if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                    "depmap-template.html")) else None
 
+MARKER = "<!-- DEPENDENCY_MAP -->"
+GENERATED_START = "<!-- DEPENDENCY_MAP GENERATED START -->"
+GENERATED_END = "<!-- DEPENDENCY_MAP GENERATED END -->"
+
+
+def render_fragment(data, lang, ui):
+    """Fill the fragment template without introducing a second panel id."""
+    fragment = TEMPLATE
+    for key in ("layout", "compact", "teaching", "namespace", "edgemode",
+                "skeleton", "alledges", "lmk", "hint", "hubnote", "footer",
+                "legend", "fit", "scrollhint", "noscript", "catalog"):
+        fragment = fragment.replace("__" + key.upper() + "__", htmllib.escape(ui[key]))
+    fragment = fragment.replace("__TITLE__", htmllib.escape(ui["title"]))
+    fragment = fragment.replace("__SUB__", htmllib.escape(ui["sub"].format(n=len(data["nodes"]))))
+    strings = {key: ui[key] for key in
+               ("reading", "imports", "consumers", "hint", "hubnote", "fit", "readable", "none")}
+    fragment = fragment.replace("__DATA__", json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
+    fragment = fragment.replace("__STR__", json.dumps(strings, ensure_ascii=False).replace("</", "<\\/"))
+    return fragment
+
+
+def embed_fragment(index, fragment):
+    """Replace either the source marker or a fragment generated on an earlier run."""
+    managed = f"{GENERATED_START}\n{fragment}\n{MARKER}\n{GENERATED_END}"
+    generated = re.compile(re.escape(GENERATED_START) + r".*?" + re.escape(GENERATED_END), re.S)
+    if generated.search(index):
+        return generated.sub(lambda _: managed, index, count=1)
+    if MARKER in index:
+        return index.replace(MARKER, managed, 1)
+    raise ValueError(f"index has neither {MARKER} nor a generated dependency-map block")
+
+
+def standalone_fragment(fragment, lang, title):
+    """Wrap the same fragment so a generator test can open it without an index."""
+    return ("<!DOCTYPE html>\n"
+            f'<html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" '
+            'content="width=device-width, initial-scale=1">'
+            f'<title>{htmllib.escape(title)} · Bedrock</title>'
+            '<link rel="stylesheet" href="../static/bedrock.css"></head><body>'
+            f'<main><section id="dependency-map">{fragment}</section></main></body></html>')
+
+
+def compatibility_page(lang, ui):
+    target = "index.html#dependency-map"
+    return ("<!DOCTYPE html>\n"
+            f'<html lang="{lang}"><head><meta charset="utf-8">'
+            f'<meta http-equiv="refresh" content="0; url={target}">'
+            f'<title>{htmllib.escape(ui["title"])} · Bedrock</title>'
+            f'<link rel="canonical" href="{target}"></head><body>'
+            f'<p><a href="{target}">{htmllib.escape(ui["title"])}</a></p>'
+            f'<script>location.replace("{target}");</script></body></html>')
+
 
 def main(argv):
-    src, out, langs = "src", "_build/site", ["en", "zh"]
+    src, out, langs = "src", "_build/site", ["en", "zh", "ja"]
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -282,10 +348,16 @@ def main(argv):
         else: sys.stderr.write(f"unknown option: {a}\n"); return 2
         i += 1
 
+    if TEMPLATE is None:
+        sys.stderr.write("depmap: missing depmap-template.html\n")
+        return 2
+
     everything, internal, edges, ordnum, col, row, lanes = build_graph(src)
     slot = {ln: SLOTS[i % len(SLOTS)] for i, ln in enumerate(lanes)}
 
     desc_en = descriptions(everything, "en", {})
+    embedded = 0
+    errors = 0
     for lang in langs:
         ui = UI.get(lang, UI["en"])
         descs = descriptions(everything, lang, desc_en)
@@ -306,30 +378,29 @@ def main(argv):
             "hubs": HUBS,
             "landmark": "Landmarks",
         }
-        page = TEMPLATE
-        for key in ("layout", "compact", "teaching", "namespace"):
-            page = page.replace("__" + key.upper() + "__", ui[key])
-        page = page.replace("__LANG__", lang)
-        page = page.replace("__TITLE__", ui["title"])
-        page = page.replace("__BACK__", ui["back"])
-        page = page.replace("__SUB__", ui["sub"].format(n=len(internal)))
-        page = page.replace("__EDGEMODE__", ui["edgemode"])
-        page = page.replace("__SKELETON__", ui["skeleton"])
-        page = page.replace("__ALLEDGES__", ui["alledges"])
-        page = page.replace("__LMK__", ui["lmk"])
-        page = page.replace("__HINT__", ui["hint"])
-        page = page.replace("__HUBNOTE__", ui["hubnote"])
-        page = page.replace("__READING__", ui["reading"])
-        page = page.replace("__IMPORTS__", ui["imports"])
-        page = page.replace("__CONSUMERS__", ui["consumers"])
-        page = page.replace("__FOOTER__", ui["footer"])
-        page = page.replace("__DATA__", json.dumps(data, ensure_ascii=False))
-        dest = os.path.join(out, lang, "depmap.html")
-        os.makedirs(os.path.dirname(dest), exist_ok=True)
-        open(dest, "w", encoding="utf-8").write(page)
+        fragment = render_fragment(data, lang, ui)
+        lang_dir = os.path.join(out, lang)
+        os.makedirs(lang_dir, exist_ok=True)
+        open(os.path.join(lang_dir, "depmap.html"), "w", encoding="utf-8").write(
+            compatibility_page(lang, ui))
+        index_path = os.path.join(lang_dir, "index.html")
+        if not os.path.exists(index_path):
+            open(os.path.join(lang_dir, "depmap-fragment.html"), "w", encoding="utf-8").write(
+                standalone_fragment(fragment, lang, ui["title"]))
+            print(f"depmap: {index_path} missing; wrote standalone depmap-fragment.html", file=sys.stderr)
+            continue
+        index = open(index_path, encoding="utf-8").read()
+        try:
+            index = embed_fragment(index, fragment)
+        except ValueError as error:
+            print(f"depmap: {index_path}: {error}", file=sys.stderr)
+            errors += 1
+            continue
+        open(index_path, "w", encoding="utf-8").write(index)
+        embedded += 1
     print(f"depmap: {len(internal)} node(s), {len(edges)} edge(s) "
-          f"-> {out}/<lang>/depmap.html x{len(langs)}", file=sys.stderr)
-    return 0
+          f"-> {embedded} index fragment(s), {len(langs)} compatibility redirect(s)", file=sys.stderr)
+    return 1 if errors else 0
 
 
 if __name__ == "__main__":

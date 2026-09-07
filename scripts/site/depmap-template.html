@@ -1,313 +1,350 @@
-<!DOCTYPE html>
-<html lang="__LANG__">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>__TITLE__ · Bedrock</title>
 <style>
-:root {
-  --bg: #FCFCFA; --ink: #24292F; --ink-soft: #57606A; --ruler: #D8DCE0;
-  --panel: #FFFFFF; --panel-edge: #E3E7EB; --lane: #F4F5F3; --lane-alt: #EFF1EE;
-  --edge-dim: .16; --shadow: 0 1px 3px rgba(30,40,60,.10); --link: #0054F4;
+#dependency-map {
+  --depmap-panel: var(--text-bg);
+  --depmap-soft: color-mix(in srgb, var(--code-bg) 72%, var(--text-bg));
+  --depmap-lane: color-mix(in srgb, var(--code-bg) 58%, var(--text-bg));
+  --depmap-lane-alt: color-mix(in srgb, var(--code-bg) 82%, var(--text-bg));
+  --depmap-line: color-mix(in srgb, var(--ruler) 62%, transparent);
+  --depmap-edge-dim: .16;
+  color: var(--text-fg); font-family: var(--sans);
 }
-.dark-tokens {
-  --bg: #15181D; --ink: #C6CDD6; --ink-soft: #8B95A3; --ruler: #2C323B;
-  --panel: #1B1F26; --panel-edge: #2C323B; --lane: #191D23; --lane-alt: #1D222A;
-  --edge-dim: .22; --shadow: 0 1px 3px rgba(0,0,0,.4); --link: #119DDB;
+#dependency-map .depmap-head h2 { margin: 0 0 .25rem; font-size: clamp(1.35rem, 3vw, 1.8rem); text-wrap: balance; }
+#dependency-map .depmap-sub { margin: 0; max-width: 68ch; color: var(--fg-alt); font-size: .85rem; line-height: 1.5; }
+#dependency-map .depmap-controls {
+  display: flex; flex-wrap: wrap; gap: .55rem 1rem; align-items: center;
+  margin: 1rem 0 .55rem; font-size: .82rem; color: var(--fg-alt);
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font: 15px/1.65 -apple-system, "PingFang SC", "Hiragino Sans GB", "Segoe UI", sans-serif;
+#dependency-map .depmap-controls label { display: inline-flex; gap: .35rem; align-items: center; cursor: pointer; }
+#dependency-map .depmap-controls input { accent-color: var(--primary); }
+#dependency-map .depmap-radio {
+  display: inline-flex; flex-wrap: wrap; gap: .45rem .75rem; align-items: center;
+  padding: .28rem .55rem; border: 1px solid var(--depmap-line); border-radius: 7px;
+  background: var(--depmap-panel);
 }
-header { max-width: 1280px; margin: 0 auto; padding: 1.6rem 1.4rem 0.6rem; }
-.backrow { font-size: .85rem; margin-bottom: .8rem; }
-.backrow a { color: var(--link); text-decoration: none; font-weight: 600; }
-h1 {
-  font-family: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
-  font-size: 1.7rem; margin: 0 0 .3rem; letter-spacing: .01em; text-wrap: balance;
+#dependency-map .depmap-control-label { font-weight: 700; }
+#dependency-map select, #dependency-map .depmap-zoom {
+  border: 1px solid var(--input-border); border-radius: 6px; background: var(--text-bg);
+  color: var(--text-fg); font: inherit; padding: .36rem .55rem;
 }
-.sub { color: var(--ink-soft); margin: 0; max-width: 68ch; }
-.mono { font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .88em; }
-.controls {
-  max-width: 1280px; margin: .9rem auto 0; padding: 0 1.4rem;
-  display: flex; flex-wrap: wrap; gap: .55rem 1.4rem; align-items: center;
-  font-size: .84rem; color: var(--ink-soft);
+#dependency-map .depmap-zoom { cursor: pointer; }
+#dependency-map .depmap-zoom:hover { border-color: var(--primary); background: var(--button-hover); }
+#dependency-map select:focus-visible, #dependency-map input:focus-visible,
+#dependency-map .depmap-zoom:focus-visible, #dependency-map .depmap-node:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent); outline-offset: 2px;
 }
-.controls label { display: inline-flex; gap: .4rem; align-items: center; cursor: pointer; }
-.controls input { accent-color: var(--link); }
-.radiogroup { display: inline-flex; gap: .8rem; align-items: center;
-  padding: .15rem .6rem; border: 1px solid var(--panel-edge); border-radius: 6px;
-  background: var(--panel); }
-.grouplbl { font-weight: 600; }
-.lmklbl { padding-left: .2rem; }
-.legend { display: flex; flex-wrap: wrap; gap: .35rem .95rem; align-items: center; }
-.chip { display: inline-flex; align-items: center; gap: .34rem; }
-.chip .mono { font-size: .8em; }
-.dot { width: .62rem; height: .62rem; border-radius: 2px; display: inline-block; }
-.mapwrap { max-width: 1280px; margin: 1rem auto; padding: 0 1.4rem 0.4rem; }
-.mapscroll {
-  overflow-x: auto; border: 1px solid var(--panel-edge); border-radius: 10px;
-  background: var(--panel); box-shadow: var(--shadow);
+#dependency-map .depmap-legend { margin: .45rem 0 .7rem; color: var(--fg-alt); font-size: .76rem; }
+#dependency-map .depmap-legend summary { cursor: pointer; font-weight: 700; }
+#dependency-map .depmap-legend-list { display: flex; flex-wrap: wrap; gap: .35rem .85rem; margin-top: .4rem; }
+#dependency-map .depmap-chip { display: inline-flex; align-items: center; gap: .32rem; }
+#dependency-map .depmap-dot { width: .58rem; height: .58rem; border-radius: 2px; display: inline-block; }
+#dependency-map .depmap-mono { font-family: var(--mono); font-size: .88em; }
+#dependency-map .depmap-info {
+  border: 1px solid var(--depmap-line); border-left: 4px solid var(--ruler); border-radius: 8px;
+  background: var(--depmap-panel); padding: .75rem .9rem; margin: .7rem 0;
 }
-svg { display: block; }
-select { color: var(--ink); background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 6px; padding: .3rem; }
-.lanelabel { font: 600 .72rem/1 -apple-system, "PingFang SC", sans-serif; letter-spacing: .09em; }
-.node rect { rx: 6; stroke-width: 1.4; cursor: pointer; transition: opacity .15s ease, stroke-width .15s ease; }
-.node text { cursor: pointer; }
-.node .lbl { font: 500 .82rem/1 "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
-.node .ord { font: 600 .62rem/1 -apple-system, sans-serif; }
-.edge { fill: none; stroke-width: 1.5; transition: opacity .15s ease, stroke-width .15s ease; }
-.node.faded rect, .node.faded text { opacity: .18; }
-.node.pinned rect { stroke-width: 3; }
-@media (prefers-reduced-motion: reduce) { .edge, .node rect { transition: none; } }
-.info { max-width: 1280px; margin: 0 auto 1.4rem; padding: 0 1.4rem; }
-.infocard {
-  border: 1px solid var(--panel-edge); border-left-width: 4px; border-radius: 8px;
-  background: var(--panel); padding: .9rem 1.1rem; box-shadow: var(--shadow);
+#dependency-map .depmap-info h3 { margin: 0 0 .12rem; font: 700 .9rem/1.3 var(--mono); }
+#dependency-map .depmap-info h3 a { color: var(--primary); text-decoration: none; }
+#dependency-map .depmap-info h3 a:hover { text-decoration: underline; }
+#dependency-map .depmap-meta { color: var(--fg-alt); font-size: .72rem; margin-bottom: .3rem; }
+#dependency-map .depmap-info p { margin: .15rem 0 .35rem; max-width: 74ch; font-size: .82rem; line-height: 1.45; }
+#dependency-map .depmap-deps {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: .25rem 1rem; font-size: .76rem;
 }
-.infocard h2 { margin: 0 0 .15rem; font-size: 1.02rem;
-  font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
-.infocard .meta { color: var(--ink-soft); font-size: .8rem; margin-bottom: .45rem; }
-.infocard p { margin: .2rem 0 .5rem; max-width: 74ch; }
-.deps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .3rem 1.4rem; font-size: .84rem; }
-.deps b { font-weight: 600; color: var(--ink-soft); }
-.deps span { font-family: "JuliaMono", ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .86em; }
-.note { max-width: 1280px; margin: 0 auto 2.4rem; padding: 0 1.4rem; color: var(--ink-soft); font-size: .82rem; }
-.note p { max-width: 74ch; margin: .3rem 0; }
+#dependency-map .depmap-deps b { color: var(--fg-alt); }
+#dependency-map .depmap-deps span { font-family: var(--mono); overflow-wrap: anywhere; }
+#dependency-map .depmap-scroll-hint { margin: .45rem 0; color: var(--fg-alt); font-size: .75rem; }
+#dependency-map .depmap-scroll {
+  max-height: min(68vh, 42rem); overflow: auto; overscroll-behavior: contain;
+  border: 1px solid var(--depmap-line); border-radius: 9px; background: var(--depmap-panel);
+  scrollbar-gutter: stable both-edges;
+}
+#dependency-map svg { display: block; }
+#dependency-map .depmap-lane-label { font: 600 .72rem/1 var(--sans); letter-spacing: .09em; fill: var(--fg-alt); }
+#dependency-map .depmap-node rect {
+  rx: 6; stroke-width: 1.4; cursor: pointer; transition: opacity .15s ease, stroke-width .15s ease;
+}
+#dependency-map .depmap-node text { cursor: pointer; }
+#dependency-map .depmap-node .depmap-label { font: 500 13px/1 var(--mono); }
+#dependency-map .depmap-node .depmap-order { font: 600 .62rem/1 var(--sans); }
+#dependency-map .depmap-edge { fill: none; stroke-width: 1.5; transition: opacity .15s ease, stroke-width .15s ease; }
+#dependency-map .depmap-node.is-faded rect, #dependency-map .depmap-node.is-faded text { opacity: .18; }
+#dependency-map .depmap-node.is-pinned rect { stroke-width: 3; }
+#dependency-map .depmap-note { margin: .6rem 0 0; color: var(--fg-alt); font-size: .75rem; line-height: 1.45; }
+#dependency-map .depmap-noscript { color: var(--fg-alt); font-size: .82rem; }
+#dependency-map .depmap-noscript a { color: var(--primary); }
+@media (max-width: 44rem) {
+  #dependency-map .depmap-controls { align-items: stretch; gap: .45rem; }
+  #dependency-map .depmap-radio { flex: 1 0 100%; }
+  #dependency-map .depmap-landmark { flex: 1 0 auto; }
+  #dependency-map .depmap-zoom { min-height: 2.5rem; }
+  #dependency-map .depmap-scroll { max-height: 62vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #dependency-map .depmap-edge, #dependency-map .depmap-node rect { transition: none; }
+}
 </style>
-</head>
-<body>
-<header>
-  <div class="backrow"><a href="index.html">__BACK__</a></div>
-  <h1>__TITLE__</h1>
-  <p class="sub">__SUB__</p>
-</header>
 
-<div class="controls">
-  <label><b>__LAYOUT__</b> <select id="layout">
-    <option value="compact">__COMPACT__</option>
-    <option value="teaching">__TEACHING__</option>
-    <option value="namespace">__NAMESPACE__</option>
-  </select></label>
-  <span class="radiogroup" role="radiogroup" aria-label="__EDGEMODE__">
-    <span class="grouplbl">__EDGEMODE__</span>
-    <label><input type="radio" name="edgemode" value="skeleton" checked> __SKELETON__</label>
-    <label><input type="radio" name="edgemode" value="all"> __ALLEDGES__</label>
-  </span>
-  <label class="lmklbl"><input type="checkbox" id="lmk" checked> __LMK__</label>
-  <span class="legend" id="legend"></span>
+<div class="depmap-root" data-depmap-root>
+  <header class="depmap-head"><h2>__TITLE__</h2><p class="depmap-sub">__SUB__</p></header>
+  <div class="depmap-controls">
+    <label><b>__LAYOUT__</b><select data-depmap-layout>
+      <option value="compact">__COMPACT__</option><option value="teaching">__TEACHING__</option>
+      <option value="namespace">__NAMESPACE__</option>
+    </select></label>
+    <span class="depmap-radio" role="radiogroup" aria-label="__EDGEMODE__">
+      <span class="depmap-control-label">__EDGEMODE__</span>
+      <label><input type="radio" name="depmap-edgemode" value="skeleton" checked> __SKELETON__</label>
+      <label><input type="radio" name="depmap-edgemode" value="all"> __ALLEDGES__</label>
+    </span>
+    <label class="depmap-landmark"><input type="checkbox" data-depmap-landmark checked> __LMK__</label>
+    <button class="depmap-zoom" type="button" data-depmap-zoom aria-pressed="false">__FIT__</button>
+  </div>
+  <details class="depmap-legend"><summary>__LEGEND__</summary>
+    <span class="depmap-legend-list" data-depmap-legend></span></details>
+  <noscript><p class="depmap-noscript">__NOSCRIPT__ <a href="#recommended-reading">__CATALOG__</a>.</p></noscript>
+  <section class="depmap-info" data-depmap-card aria-live="polite">
+    <h3><a data-depmap-name>__HINT__</a></h3><div class="depmap-meta" data-depmap-meta hidden></div>
+    <p data-depmap-desc hidden></p><div class="depmap-deps" data-depmap-deps hidden></div>
+  </section>
+  <p class="depmap-scroll-hint">__SCROLLHINT__</p>
+  <div class="depmap-scroll" data-depmap-scroll tabindex="0" aria-label="__TITLE__"></div>
+  <p class="depmap-note">__HUBNOTE__ __FOOTER__</p>
 </div>
 
-<div class="mapwrap"><div class="mapscroll" id="scroll"></div></div>
-
-<div class="info"><div class="infocard" id="card" style="border-left-color: var(--ruler)">
-  <h2 id="c-name">__HINT__</h2>
-  <div class="meta" id="c-meta">__HUBNOTE__</div>
-  <p id="c-desc"></p>
-  <div class="deps" id="c-deps"></div>
-</div></div>
-
-<div class="note"><p>__FOOTER__</p></div>
-
 <script>
-const DATA = __DATA__;
-const STR = { reading: "__READING__", imports: "__IMPORTS__", consumers: "__CONSUMERS__",
-              hubnote: document.getElementById("c-meta").innerHTML,
-              frontnote: document.getElementById("c-desc").innerHTML };
+(() => {
+  "use strict";
+  const root = document.querySelector("#dependency-map [data-depmap-root]");
+  if (!root || root.dataset.initialised) return;
+  root.dataset.initialised = "true";
+  const DATA = __DATA__, STR = __STR__;
+  const svgNS = "http://www.w3.org/2000/svg", NODEW = 128, NODEH = 34;
+  const byId = {}; DATA.nodes.forEach(node => byId[node.id] = node);
+  const hubs = new Set(DATA.hubs), short = id => id.split(".").pop();
+  const scroll = root.querySelector("[data-depmap-scroll]");
+  const layoutControl = root.querySelector("[data-depmap-layout]");
+  const landmarkControl = root.querySelector("[data-depmap-landmark]");
+  const zoomControl = root.querySelector("[data-depmap-zoom]");
+  let pinned = null, fitWhole = false;
 
-// follow the site's stored theme (bedrock.js convention), else the OS preference
-(function () {
-  let t = "system";
-  try { t = localStorage.getItem("bedrock-theme") || "system"; } catch (e) {}
-  const dark = t === "dark" ||
-    (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  if (dark) document.documentElement.classList.add("dark-tokens");
-})();
+  const laneStyle = document.createElement("style");
+  const light = DATA.lanes.map((lane, i) => `--depmap-color-${i}:${lane.light};`).join("");
+  const dark = DATA.lanes.map((lane, i) => `--depmap-color-${i}:${lane.dark};`).join("");
+  laneStyle.textContent = `#dependency-map{${light}}html.theme-dark #dependency-map{${dark}}` +
+    `@media(prefers-color-scheme:dark){html:not(.theme-light) #dependency-map{${dark}}}`;
+  root.prepend(laneStyle);
+  const laneColor = {}; DATA.lanes.forEach((lane, i) => laneColor[lane.key] = `var(--depmap-color-${i})`);
 
-// lane colour tokens, from the generated lane list
-(function () {
-  const dark = document.documentElement.classList.contains("dark-tokens");
-  const st = document.createElement("style");
-  st.textContent = ":root { " + DATA.lanes.map((l, i) =>
-    `--lc-${i}: ${dark ? l.dark : l.light};`).join(" ") + " }";
-  document.head.appendChild(st);
-})();
+  root.querySelector("[data-depmap-legend]").replaceChildren(...DATA.lanes.map((lane, i) => {
+    const chip = document.createElement("span"); chip.className = "depmap-chip";
+    const dot = document.createElement("span"); dot.className = "depmap-dot";
+    dot.style.background = `var(--depmap-color-${i})`;
+    const label = document.createElement("span"); label.className = "depmap-mono"; label.textContent = lane.key;
+    chip.append(dot, label); return chip;
+  }));
 
-const laneColor = {}; DATA.lanes.forEach((l, i) => laneColor[l.key] = `var(--lc-${i})`);
-const byId = {}; DATA.nodes.forEach(n => byId[n.id] = n);
-const HUBS = new Set(DATA.hubs);
-const short = id => id.split(".").pop();
-
-// Layout coordinates are generated from the same source graph for every view.
-const NODEW = 128, NODEH = 34;
-
-// ---- graph helpers -----------------------------------------------------
-const consumersOf = {}, importsOf = {};
-DATA.nodes.forEach(n => { consumersOf[n.id] = []; importsOf[n.id] = []; });
-DATA.edges.forEach(([a, b]) => { consumersOf[a].push(b); importsOf[b].push(a); });
-
-function cone(start, adj) {
-  const seen = new Set(); const st = [...(adj[start] || [])];
-  while (st.length) { const x = st.pop(); if (!seen.has(x)) { seen.add(x); (adj[x] || []).forEach(y => st.push(y)); } }
-  return seen;
-}
-function visibleEdges() {
-  const showLmk = document.getElementById("lmk").checked;
-  let es = DATA.edges.filter(([a, b]) => !HUBS.has(a) && (showLmk || b !== DATA.landmark));
-  if (document.querySelector('input[name="edgemode"]:checked').value === "skeleton") {
-    const adj = {}; es.forEach(([a, b]) => (adj[a] = adj[a] || []).push(b));
-    es = es.filter(([a, b]) => {
-      const rest = { ...adj, [a]: (adj[a] || []).filter(x => x !== b) };
-      return !cone(a, rest).has(b);
-    });
-  }
-  return es;
-}
-
-// ---- render ------------------------------------------------------------
-const scroll = document.getElementById("scroll");
-let pinned = null;
-function render() {
-  const es = visibleEdges();
-  const layout = DATA.layouts[document.getElementById("layout").value];
-  const { width: W, height: H, positions: pos } = layout;
-  const svgNS = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.setAttribute("width", W); svg.setAttribute("height", H);
-  svg.style.minWidth = W + "px";
-
-  layout.bands.forEach((band, i) => {
-    const r = document.createElementNS(svgNS, "rect");
-    for (const key of ["x", "y", "width", "height"]) r.setAttribute(key, band[key]);
-    r.setAttribute("fill", i % 2 ? "var(--lane-alt)" : "var(--lane)");
-    svg.appendChild(r);
-    const t = document.createElementNS(svgNS, "text");
-    t.setAttribute("x", band.x + 14); t.setAttribute("y", band.y + 21);
-    t.setAttribute("fill", "var(--ink-soft)"); t.setAttribute("class", "lanelabel");
-    t.textContent = band.label;
-    svg.appendChild(t);
-  });
-
-  const defs = document.createElementNS(svgNS, "defs");
-  const marker = document.createElementNS(svgNS, "marker");
-  marker.setAttribute("id", "dependency-arrow");
-  marker.setAttribute("viewBox", "0 0 6 6");
-  marker.setAttribute("refX", "6"); marker.setAttribute("refY", "3");
-  marker.setAttribute("markerWidth", "5"); marker.setAttribute("markerHeight", "5");
-  marker.setAttribute("orient", "auto");
-  const arrow = document.createElementNS(svgNS, "path");
-  arrow.setAttribute("d", "M0 0 L6 3 L0 6 Z");
-  arrow.setAttribute("fill", "var(--ink-soft)");
-  marker.appendChild(arrow); defs.appendChild(marker); svg.appendChild(defs);
-
-  const edgeEls = [];
-  es.forEach(([a, b]) => {
-    const p1 = pos[a], p2 = pos[b];
-    const x1 = p1.x + NODEW / 2, y1 = p1.y + NODEH, x2 = p2.x + NODEW / 2, y2 = p2.y;
-    const dy = Math.max(26, (y2 - y1) * 0.45);
-    const path = document.createElementNS(svgNS, "path");
-    path.setAttribute("d", `M ${x1} ${y1} C ${x1} ${y1 + dy}, ${x2} ${y2 - dy}, ${x2} ${y2}`);
-    path.setAttribute("class", "edge");
-    path.setAttribute("marker-end", "url(#dependency-arrow)");
-    path.setAttribute("stroke", laneColor[byId[a].lane]);
-    path.setAttribute("opacity", "var(--edge-dim)");
-    path.dataset.a = a; path.dataset.b = b;
-    svg.appendChild(path); edgeEls.push(path);
-  });
-
-  const nodeEls = {};
-  DATA.nodes.forEach(n => {
-    const g = document.createElementNS(svgNS, "g");
-    g.setAttribute("class", "node"); g.dataset.id = n.id;
-    g.setAttribute("tabindex", "0"); g.setAttribute("role", "button");
-    g.setAttribute("aria-label", n.id + ": " + n.desc);
-    const title = document.createElementNS(svgNS, "title");
-    title.textContent = n.id; g.appendChild(title);
-    const { x, y } = pos[n.id];
-    const r = document.createElementNS(svgNS, "rect");
-    r.setAttribute("x", x); r.setAttribute("y", y);
-    r.setAttribute("width", NODEW); r.setAttribute("height", NODEH);
-    r.setAttribute("fill", "var(--panel)"); r.setAttribute("stroke", laneColor[n.lane]);
-    g.appendChild(r);
-    const t = document.createElementNS(svgNS, "text");
-    t.setAttribute("x", x + 10); t.setAttribute("y", y + NODEH / 2 + 4);
-    t.setAttribute("fill", "var(--ink)"); t.setAttribute("class", "lbl");
-    t.textContent = short(n.id);
-    g.appendChild(t);
-    if (n.ord) {
-      const o = document.createElementNS(svgNS, "text");
-      o.setAttribute("x", x + NODEW - 7); o.setAttribute("y", y + 11);
-      o.setAttribute("text-anchor", "end"); o.setAttribute("fill", laneColor[n.lane]);
-      o.setAttribute("class", "ord"); o.textContent = String(n.ord).padStart(2, "0");
-      g.appendChild(o);
+  const consumersOf = {}, importsOf = {};
+  DATA.nodes.forEach(node => { consumersOf[node.id] = []; importsOf[node.id] = []; });
+  DATA.edges.forEach(([a, b]) => { consumersOf[a].push(b); importsOf[b].push(a); });
+  function cone(start, adjacency) {
+    const seen = new Set(), pending = [...(adjacency[start] || [])];
+    while (pending.length) {
+      const next = pending.pop();
+      if (!seen.has(next)) { seen.add(next); (adjacency[next] || []).forEach(item => pending.push(item)); }
     }
-    svg.appendChild(g); nodeEls[n.id] = g;
-  });
-
-  function highlight(id) {
-    const up = cone(id, importsOf), down = cone(id, consumersOf);
-    Object.entries(nodeEls).forEach(([nid, el]) =>
-      el.classList.toggle("faded", nid !== id && !up.has(nid) && !down.has(nid)));
-    edgeEls.forEach(el => {
-      const { a, b } = el.dataset;
-      const onUp = (up.has(a) || a === id) && (up.has(b) || b === id);
-      const onDown = (down.has(b) || b === id) && (down.has(a) || a === id);
-      el.setAttribute("opacity", onUp || onDown ? "0.9" : "0.05");
-      el.setAttribute("stroke-width", onUp || onDown ? "2.4" : "1.5");
-    });
-    showCard(id);
+    return seen;
   }
-  function clear() {
-    if (pinned) { highlight(pinned); return; }
-    Object.values(nodeEls).forEach(el => el.classList.remove("faded"));
-    edgeEls.forEach(el => { el.setAttribute("opacity", "var(--edge-dim)"); el.setAttribute("stroke-width", "1.5"); });
+  function visibleEdges() {
+    const showLandmark = landmarkControl.checked;
+    let edges = DATA.edges.filter(([a, b]) => !hubs.has(a) && (showLandmark || b !== DATA.landmark));
+    if (root.querySelector('input[name="depmap-edgemode"]:checked').value === "skeleton") {
+      const adjacency = {}; edges.forEach(([a, b]) => (adjacency[a] = adjacency[a] || []).push(b));
+      edges = edges.filter(([a, b]) => {
+        const rest = { ...adjacency, [a]: (adjacency[a] || []).filter(item => item !== b) };
+        return !cone(a, rest).has(b);
+      });
+    }
+    return edges;
   }
-  Object.entries(nodeEls).forEach(([id, el]) => {
-    el.addEventListener("mouseenter", () => highlight(id));
-    el.addEventListener("focus", () => highlight(id));
-    el.addEventListener("blur", clear);
-    el.addEventListener("keydown", ev => {
-      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); el.dispatchEvent(new MouseEvent("click", { bubbles: true })); }
+  function camelWords(label) {
+    const words = label.match(/[A-Z]+(?=[A-Z][a-z]|[0-9]|$)|[A-Z]?[a-z]+|[0-9]+/g);
+    return words && words.join("") === label ? words : [label];
+  }
+  function labelLines(label, hasOrder) {
+    const words = camelWords(label), candidates = [[label]];
+    for (let i = 1; i < words.length; i++) candidates.push([words.slice(0, i).join(""), words.slice(i).join("")]);
+    const capacity = lines => Math.min(...lines.map((line, i) =>
+      (lines.length === 2 && i === 0 && hasOrder ? 92 : 112) / line.length));
+    return candidates.reduce((best, lines) => {
+      const score = capacity(lines), bestScore = capacity(best);
+      return score > bestScore || (score === bestScore && lines.length < best.length) ? lines : best;
     });
-    el.addEventListener("mouseleave", clear);
-    el.addEventListener("click", ev => {
-      ev.stopPropagation();
-      pinned = (pinned === id) ? null : id;
-      Object.values(nodeEls).forEach(e => e.classList.remove("pinned"));
-      if (pinned) nodeEls[pinned].classList.add("pinned");
-      pinned ? highlight(pinned) : clear();
+  }
+  function fitNodeLabel(label, rect, order) {
+    for (let pass = 0; pass < 4; pass++) {
+      const box = rect.getBBox(), orderBox = order ? order.getBBox() : null;
+      let scale = 1;
+      for (const line of label.children) {
+        const lineBox = line.getBBox(); let right = box.x + box.width - 8;
+        const sharesOrderRow = orderBox &&
+          Math.min(orderBox.y + orderBox.height, lineBox.y + lineBox.height) > Math.max(orderBox.y, lineBox.y);
+        if (sharesOrderRow) right = Math.min(right, orderBox.x - 5);
+        if (lineBox.x + lineBox.width > right) scale = Math.min(scale, (right - lineBox.x) / lineBox.width);
+      }
+      if (scale >= 1) return;
+      label.style.fontSize = `${parseFloat(label.style.fontSize) * scale * .995}px`;
+    }
+  }
+  function resetCard() {
+    const link = root.querySelector("[data-depmap-name]"); link.textContent = STR.hint; link.removeAttribute("href");
+    const meta = root.querySelector("[data-depmap-meta]"); meta.textContent = ""; meta.hidden = true;
+    const desc = root.querySelector("[data-depmap-desc]"); desc.textContent = ""; desc.hidden = true;
+    const deps = root.querySelector("[data-depmap-deps]"); deps.replaceChildren(); deps.hidden = true;
+    root.querySelector("[data-depmap-card]").style.borderLeftColor = "var(--ruler)";
+  }
+  function showCard(id) {
+    const node = byId[id], link = root.querySelector("[data-depmap-name]");
+    link.textContent = id; link.href = `${encodeURIComponent(id)}.html`;
+    root.querySelector("[data-depmap-card]").style.borderLeftColor = laneColor[node.lane];
+    const meta = root.querySelector("[data-depmap-meta]");
+    meta.textContent = `${node.stage} · ${node.lane} · ${STR.reading} ${String(node.ord).padStart(2, "0")}`;
+    meta.hidden = false;
+    const desc = root.querySelector("[data-depmap-desc]"); desc.textContent = node.desc; desc.hidden = false;
+    const deps = root.querySelector("[data-depmap-deps]"); deps.replaceChildren(); deps.hidden = false;
+    for (const [label, items] of [[STR.imports, importsOf[id]], [STR.consumers, consumersOf[id]]]) {
+      const group = document.createElement("div"), heading = document.createElement("b");
+      heading.textContent = `${label} (${items.length})`; group.append(heading, document.createElement("br"));
+      const list = document.createElement("span"); list.textContent = items.map(short).join("、") || STR.none;
+      group.append(list); deps.append(group);
+    }
+  }
+  function render(preserveScroll = false) {
+    if (!root.getClientRects().length) return;
+    const oldLeft = preserveScroll ? scroll.scrollLeft : 0, oldTop = preserveScroll ? scroll.scrollTop : 0;
+    const edges = visibleEdges(), layout = DATA.layouts[layoutControl.value];
+    const { width, height, positions } = layout, svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    let shownWidth = width, shownHeight = height;
+    if (fitWhole) {
+      const scale = Math.min(1, (scroll.clientWidth - 4) / width, (scroll.clientHeight - 4) / height);
+      shownWidth *= scale; shownHeight *= scale;
+    }
+    svg.setAttribute("width", shownWidth); svg.setAttribute("height", shownHeight); svg.style.minWidth = `${shownWidth}px`;
+    scroll.replaceChildren(svg);
+    layout.bands.forEach((band, i) => {
+      const rect = document.createElementNS(svgNS, "rect");
+      for (const key of ["x", "y", "width", "height"]) rect.setAttribute(key, band[key]);
+      rect.setAttribute("fill", i % 2 ? "var(--depmap-lane-alt)" : "var(--depmap-lane)"); svg.append(rect);
+      const text = document.createElementNS(svgNS, "text"); text.setAttribute("x", band.x + 14);
+      text.setAttribute("y", band.y + 21); text.setAttribute("class", "depmap-lane-label");
+      text.textContent = band.label; svg.append(text);
     });
+    const defs = document.createElementNS(svgNS, "defs"), marker = document.createElementNS(svgNS, "marker");
+    marker.setAttribute("id", "depmap-dependency-arrow"); marker.setAttribute("viewBox", "0 0 6 6");
+    marker.setAttribute("refX", "6"); marker.setAttribute("refY", "3"); marker.setAttribute("markerWidth", "5");
+    marker.setAttribute("markerHeight", "5"); marker.setAttribute("orient", "auto");
+    const arrow = document.createElementNS(svgNS, "path"); arrow.setAttribute("d", "M0 0 L6 3 L0 6 Z");
+    arrow.setAttribute("fill", "var(--fg-alt)"); marker.append(arrow); defs.append(marker); svg.append(defs);
+    const edgeElements = [];
+    edges.forEach(([a, b]) => {
+      const p1 = positions[a], p2 = positions[b], x1 = p1.x + NODEW / 2, y1 = p1.y + NODEH;
+      const x2 = p2.x + NODEW / 2, y2 = p2.y, dy = Math.max(26, (y2 - y1) * .45);
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute("d", `M ${x1} ${y1} C ${x1} ${y1 + dy}, ${x2} ${y2 - dy}, ${x2} ${y2}`);
+      path.setAttribute("class", "depmap-edge"); path.setAttribute("marker-end", "url(#depmap-dependency-arrow)");
+      path.setAttribute("stroke", laneColor[byId[a].lane]); path.setAttribute("opacity", "var(--depmap-edge-dim)");
+      path.dataset.a = a; path.dataset.b = b; svg.append(path); edgeElements.push(path);
+    });
+    const nodeElements = {};
+    DATA.nodes.forEach(node => {
+      const group = document.createElementNS(svgNS, "g"); group.setAttribute("class", "depmap-node");
+      group.dataset.id = node.id; group.setAttribute("tabindex", "0"); group.setAttribute("role", "button");
+      group.setAttribute("aria-pressed", String(pinned === node.id));
+      group.setAttribute("aria-label", `${node.id}: ${node.desc}`);
+      const title = document.createElementNS(svgNS, "title"); title.textContent = node.id; group.append(title);
+      const { x, y } = positions[node.id], rect = document.createElementNS(svgNS, "rect");
+      rect.setAttribute("x", x); rect.setAttribute("y", y); rect.setAttribute("width", NODEW); rect.setAttribute("height", NODEH);
+      rect.setAttribute("fill", "var(--depmap-panel)"); rect.setAttribute("stroke", laneColor[node.lane]); group.append(rect);
+      const label = document.createElementNS(svgNS, "text"), lines = labelLines(short(node.id), Boolean(node.ord));
+      label.setAttribute("x", x + 8); label.setAttribute("fill", "var(--text-fg)");
+      label.setAttribute("class", "depmap-label"); label.style.fontSize = "13px";
+      lines.forEach((line, i) => {
+        const span = document.createElementNS(svgNS, "tspan"); span.setAttribute("x", x + 8);
+        span.setAttribute("y", lines.length === 1 ? y + 23 : y + 12 + i * 15);
+        span.textContent = line; label.append(span);
+      });
+      group.append(label); svg.append(group);
+      let order = null;
+      if (node.ord) {
+        order = document.createElementNS(svgNS, "text"); order.setAttribute("x", x + NODEW - 7);
+        order.setAttribute("y", y + 11); order.setAttribute("text-anchor", "end");
+        order.setAttribute("fill", laneColor[node.lane]); order.setAttribute("class", "depmap-order");
+        order.textContent = String(node.ord).padStart(2, "0"); group.append(order);
+      }
+      fitNodeLabel(label, rect, order); nodeElements[node.id] = group;
+    });
+    function highlight(id) {
+      const up = cone(id, importsOf), down = cone(id, consumersOf);
+      Object.entries(nodeElements).forEach(([nodeId, element]) =>
+        element.classList.toggle("is-faded", nodeId !== id && !up.has(nodeId) && !down.has(nodeId)));
+      edgeElements.forEach(element => {
+        const { a, b } = element.dataset;
+        const active = ((up.has(a) || a === id) && (up.has(b) || b === id)) ||
+          ((down.has(b) || b === id) && (down.has(a) || a === id));
+        element.setAttribute("opacity", active ? ".9" : ".05");
+        element.setAttribute("stroke-width", active ? "2.4" : "1.5");
+      });
+    }
+    function clear() {
+      if (pinned) { highlight(pinned); return; }
+      Object.values(nodeElements).forEach(element => element.classList.remove("is-faded"));
+      edgeElements.forEach(element => {
+        element.setAttribute("opacity", "var(--depmap-edge-dim)"); element.setAttribute("stroke-width", "1.5");
+      });
+      resetCard();
+    }
+    Object.entries(nodeElements).forEach(([id, element]) => {
+      element.addEventListener("mouseenter", () => highlight(id)); element.addEventListener("focus", () => highlight(id));
+      element.addEventListener("blur", clear); element.addEventListener("mouseleave", clear);
+      element.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault(); element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        }
+      });
+      element.addEventListener("click", event => {
+        event.stopPropagation(); pinned = pinned === id ? null : id;
+        Object.entries(nodeElements).forEach(([nodeId, item]) => {
+          const selected = nodeId === pinned;
+          item.classList.toggle("is-pinned", selected); item.setAttribute("aria-pressed", String(selected));
+        });
+        if (pinned) { showCard(pinned); highlight(pinned); } else clear();
+      });
+    });
+    svg.addEventListener("click", () => {
+      pinned = null; Object.values(nodeElements).forEach(element => {
+        element.classList.remove("is-pinned"); element.setAttribute("aria-pressed", "false");
+      }); clear();
+    });
+    if (pinned) { nodeElements[pinned].classList.add("is-pinned"); showCard(pinned); highlight(pinned); }
+    else resetCard();
+    scroll.scrollLeft = preserveScroll ? oldLeft : Math.max(0, (scroll.scrollWidth - scroll.clientWidth) / 2);
+    scroll.scrollTop = oldTop;
+  }
+
+  root.querySelectorAll('input[name="depmap-edgemode"]').forEach(control =>
+    control.addEventListener("change", () => render(true)));
+  layoutControl.addEventListener("change", () => render());
+  landmarkControl.addEventListener("change", () => render(true));
+  zoomControl.addEventListener("click", () => {
+    fitWhole = !fitWhole; zoomControl.textContent = fitWhole ? STR.readable : STR.fit;
+    zoomControl.setAttribute("aria-pressed", String(fitWhole)); render();
   });
-  svg.addEventListener("click", () => {
-    pinned = null; Object.values(nodeEls).forEach(e => e.classList.remove("pinned")); clear();
+  if (root.getClientRects().length) render();
+  if (document.fonts) document.fonts.ready.then(() => { if (root.getClientRects().length) render(true); });
+  document.addEventListener("bedrock:tabchange", event => {
+    if (!event.detail || event.detail.id !== "dependency-map") return;
+    requestAnimationFrame(() => render(true));
   });
-
-  scroll.replaceChildren(svg);
-  if (pinned) { nodeEls[pinned].classList.add("pinned"); highlight(pinned); }
-}
-
-function showCard(id) {
-  const n = byId[id];
-  document.getElementById("card").style.borderLeftColor = laneColor[n.lane];
-  document.getElementById("c-name").textContent = id;
-  document.getElementById("c-meta").textContent =
-    `${n.stage} · ${n.lane} · ${STR.reading} ${String(n.ord).padStart(2, "0")}`;
-  document.getElementById("c-desc").textContent = n.desc;
-  const imp = importsOf[id], con = consumersOf[id];
-  document.getElementById("c-deps").innerHTML =
-    `<div><b>${STR.imports}（${imp.length}）</b><br><span>${imp.map(short).join("、") || "—"}</span></div>` +
-    `<div><b>${STR.consumers}（${con.length}）</b><br><span>${con.map(short).join("、") || "—"}</span></div>`;
-}
-
-document.getElementById("legend").innerHTML = DATA.lanes.map((l, i) =>
-  `<span class="chip"><span class="dot" style="background:var(--lc-${i})"></span><span class="mono">${l.key}</span></span>`).join("");
-
-document.querySelectorAll('input[name="edgemode"]').forEach(el => el.addEventListener("change", render));
-document.getElementById("layout").addEventListener("change", render);
-document.getElementById("lmk").addEventListener("change", render);
-render();
+})();
 </script>
-</body>
-</html>

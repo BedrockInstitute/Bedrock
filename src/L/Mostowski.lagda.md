@@ -1,19 +1,24 @@
+<!--en-->
 # Collapsing a transitive well-founded relation
 
-<!--en-->
-A transitive well-founded relation has a canonical set-valued collapse. Each
-point is sent to the set of the collapses of its predecessors; well-founded
-recursion makes that equation a definition, and transitivity makes every value
-an ordinal.
+A transitive well-founded relation on a small type has a canonical set-valued collapse: each point maps to the set of collapse values of its predecessors. The computation rule characterizes membership in each value, and transitivity of the relation makes every collapse value an ordinal.
+<!--zh-->
+# 传递良基关系的塌缩
 
+小类型上的传递良基关系具有典范的集合值塌缩：每个点映到其前驱的塌缩值所成的集合。计算律刻画每个值中的隶属关系，而关系的传递性使每个塌缩值成为序数。
+<!--ja-->
+# 推移的な整礎関係の崩壊
+
+小さな型上の推移的な整礎関係には、正準な集合値の崩壊があります。各点は、その前者の崩壊値からなる集合へ写されます。計算法則が各値の所属を特徴付け、関係の推移性によって各崩壊値は順序数になります。
+<!--/-->
+
+<!--en-->
 The construction is deliberately independent of classical logic and of either
 application that needs it. The Hartogs argument uses the collapse to build an
 ordinal too large to inject into a given set, while the GCH development uses the
 same recursion to turn a well-founded relation represented in `L` into its order
 type.
 <!--zh-->
-一个传递良基关系有一个典范的集合值塌缩。每个点被送到其前驱之塌缩所成的集合；良基递归使这条方程成为定义，而传递性使每个值都成为序数。
-
 这个构造刻意不依赖经典逻辑，也不依赖使用它的任何一个应用。Hartogs 论证借此造出一个过大而不能注入给定集合的序数；GCH 部分则用同一场递归，把 `L` 中表示的良基关系变成它的序型。
 <!--/-->
 

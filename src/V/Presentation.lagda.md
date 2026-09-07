@@ -1,15 +1,18 @@
-# The presentation kit
-
 <!--en-->
-Four one-line facts about the small presentation, collected once so every
-chapter stops re-deriving them. The small member type `⟪ a ⟫` presents the set
-`a` through the embedding `⟪ a ⟫↪`; `member` reads the embedding's value back
-into membership, `fiber` recovers the index of a member (the untruncated fiber
-of the embedding), `↪-inj` is the embedding's injectivity, and `∈ₛ↪` is the
-small membership of the embedding's value.
+# Small presentations of sets
+
+Every set in `V`{.Agda} is presented by a small index type and an embedding into the hierarchy. The lemmas here pass between an index and the corresponding membership proof, and record injectivity and small membership for later constructions.
 <!--zh-->
-小呈现的四条一行事实，一次收齐，让各章不再各自重推。小成员类型 `⟪ a ⟫` 经嵌入 `⟪ a ⟫↪` 呈现集合 `a`；`member` 把嵌入的取值读回隶属关系，`fiber` 还原成员的索引 (嵌入的不加截断的纤维)，`↪-inj` 是嵌入的单射性，`∈ₛ↪` 是嵌入取值的小隶属。
+# 集合的小呈现
+
+`V`{.Agda} 中每个集合都由一个小索引类型及其到层级的嵌入来呈现。这里的引理在索引与相应隶属证明之间往返，并记录单射性与小隶属，供后续构造使用。
+<!--ja-->
+# 集合の小さな提示
+
+`V`{.Agda} の各集合は、小さな添字型と階層への埋め込みによって提示されます。ここでは添字と対応する所属証明を相互に移し、後の構成で使う単射性と小さな所属を記録します。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}

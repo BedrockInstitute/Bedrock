@@ -1,4 +1,16 @@
+<!--en-->
 # Semantics
+
+A formula receives meaning only after choosing a truth algebra, a set-theoretic structure, and an interpretation of its constants. This chapter defines term evaluation and formula satisfaction under an environment, then proves the basic laws for changing environments and constant interpretations.
+<!--zh-->
+# 语义
+
+一条公式只有在选定真值代数、集合论结构与常元解释之后才获得含义。本章定义环境下的词项求值与公式满足关系，再证明改变环境和常元解释时的基本规律。
+<!--ja-->
+# 意味論
+
+論理式は、真理値代数、集合論的構造、定数の解釈を選んで初めて意味を持ちます。本章では環境のもとでの項の評価と論理式の充足関係を定義し、環境や定数解釈を変えるときの基本法則を証明します。
+<!--/-->
 
 <!--en-->
 Three things turn syntax into meaning: a structure `𝒮` to be talked about, an
@@ -7,8 +19,10 @@ variables. The first is a parameter of this whole chapter, along with the truth
 algebra it is valued in; the generic development speaks through the abstract `𝕋`,
 as the scope discipline prescribes.
 <!--zh-->
-把语法变成含义需要三样东西：被谈论的结构 `𝒮`、常量的解释，以及给自由变量赋值的环境。第一样连同它取值的真值代数是本章整体的参数；泛型开发按作用域纪律的安排，经抽象的 `𝕋` 说话。
+把语法变成含义需要三样东西：被谈论的结构 `𝒮`、常元的解释，以及给自由变量赋值的环境。第一样连同它取值的真值代数是本章整体的参数；泛型开发按作用域纪律的安排，经抽象的 `𝕋` 说话。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -29,11 +43,7 @@ open ZFStructure 𝒮
 
 <!--en-->
 ## Environments
-<!--zh-->
-## 环境
-<!--/-->
 
-<!--en-->
 One piece of kit first. To evaluate a formula
 with `n` free variables, each variable needs a value from the carrier: an
 **assignment**, or environment, written `γ` throughout the book. The book's
@@ -41,8 +51,16 @@ notation for its type is `S ^ n`{.Agda}, a vector of length `n`, matching the
 traditional superscript $S^n$ (`_^_`{.Agda} reads "power"); it is nothing but
 notation.
 <!--zh-->
+## 环境
+
 先备一件行头。要对带 `n` 个自由变量的公式求值，每个变量都需要一个来自载体的取值：一份**赋值表**，即环境，全书写作 `γ`。其类型记为 `S ^ n`{.Agda}，长度为 `n` 的向量，对齐传统上标记号 $S^n$ (`_^_`{.Agda} 读作「幂」)；它只是记号。
+<!--ja-->
+## 環境
+
+自由変数が `n` 個ある項や論理式の環境は、構造の台の要素を並べた長さ `n` のベクトルです。`A ^ n`{.Agda} という記法により、変数の個数と環境の長さが型で一致します。
 <!--/-->
+
+
 
 ```agda
 infixl 30 _^_
@@ -53,19 +71,23 @@ A ^ n = Vec A n
 
 <!--en-->
 ## Evaluation and satisfaction
-<!--zh-->
-## 求值与满足
-<!--/-->
 
-<!--en-->
 The remaining ingredient, the constant interpretation `ι : K → S`, is fixed once by
 an inner module `At`{.Agda}: everyday work happens under one fixed `ι` (the
 canonical case takes the carrier itself as constant domain, with `ι` the identity),
 while the occasional lemma that crosses interpretations, such as those at the end
 of this chapter, uses qualified names.
 <!--zh-->
-剩下那样原料，常量解释 `ι : K → S`，由内部模块 `At`{.Agda} 一次固定：日常工作在一个固定的 `ι` 下进行 (典范情形以载体自身为常量域，`ι` 取恒等)，偶尔需要跨解释的引理，如本章末那几条，则以限定名访问。
+## 求值与满足
+
+剩下那样原料，常元解释 `ι : K → S`，由内部模块 `At`{.Agda} 一次固定：日常工作在一个固定的 `ι` 下进行 (典范情形以载体自身为常元域，`ι` 取恒等)，偶尔需要跨解释的引理，如本章末那几条，则以限定名访问。
+<!--ja-->
+## 評価と充足
+
+定数解釈 `ι` と環境 `γ` のもとで、`⟦ t ⟧ γ`{.Agda} は項を集合に評価し、`γ ⊨ φ`{.Agda} は論理式を真理値代数の値に評価します。各構文子は対応する構造または論理演算として解釈されます。
 <!--/-->
+
+
 
 ```agda
 module At {ℓc} (K : Type ℓc) (ι : K → S) where
@@ -78,7 +100,7 @@ Evaluation of a term either asks `ι` (a constant) or looks up the environment (
 variable). Satisfaction is a single structural recursion over the ten
 constructors.
 <!--zh-->
-两个记号都直接来自教科书：`⟦_⟧`{.Agda} 读作「取值」，`_⊨_`{.Agda} 读作「满足」，环境在左，写 `γ ⊨ φ`。词项求值要么问 `ι` (常量)，要么查环境 (变量)。满足关系是对十个构造子的一次结构递归。
+两个记号都直接来自教科书：`⟦_⟧`{.Agda} 读作「取值」，`_⊨_`{.Agda} 读作「满足」，环境在左，写 `γ ⊨ φ`。词项求值要么问 `ι` (常元)，要么查环境 (变量)。满足关系是对十个构造子的一次结构递归。
 <!--/-->
 
 ```agda
@@ -123,11 +145,7 @@ physically in these two lines, and later chapters return to them again and again
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 Meaning is structural recursion: `⟦_⟧`{.Agda} evaluates terms, `γ ⊨ φ` lands in the
 truth algebra, and each clause is the corresponding algebra operation, nothing
 more. Formulas with `n` free variables mean functions `S ^ n → Ω`{.Agda}, the same
@@ -135,5 +153,11 @@ shape as host predicates. The
 one bridge still missing between formulas and predicates is catalogued at the
 book's tail, waiting for the day the demand turns industrial.
 <!--zh-->
+## 小结
+
 含义就是结构递归：`⟦_⟧`{.Agda} 给词项取值，`γ ⊨ φ` 落进真值代数，每条子句恰是对应的代数运算，分毫不多。带 `n` 个自由变量的公式，含义是 `S ^ n → Ω`{.Agda} 型函数，与宿主谓词同形。公式与谓词之间尚缺一座桥；它编在书末，静候需求转入量产的那一天。
+<!--ja-->
+## まとめ
+
+項の評価は集合を返し、論理式の充足は選ばれた真理値代数の値を返します。自由変数は環境から、定数は `ι` から読み取られるので、後の構文変換はこの二つに対する自然性として検証できます。
 <!--/-->

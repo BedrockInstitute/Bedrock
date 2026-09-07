@@ -1,14 +1,18 @@
-# Ordinals
+<!--en-->
+# Ordinal closure and finite ordinals
+
+Ordinals are transitive sets whose members are transitive. This chapter proves closure under zero, successor, and unions, constructs ordinal bounds for small families, and identifies membership among the finite numerals and `ω`.
+<!--zh-->
+# 序数的封闭性与有限序数
+
+序数是其成员也都传递的传递集。本章证明序数对零、后继与并封闭，为小族构造序数上界，并刻画有限数码之间及其与 `ω` 的隶属关系。
+<!--ja-->
+# 順序数の閉性と有限順序数
+
+順序数は、その要素も推移的である推移的集合です。本章では零、後続、和集合に関する閉性を示し、小さな族の順序数上界を構成し、有限数項の間および `ω` との所属関係を特徴付けます。
+<!--/-->
 
 <!--en-->
-The tower of the previous chapter is indexed by ordinals, and so far the book
-has needed exactly one fact about them: that being one is a proposition. The
-constructions ahead need more. Every closure argument for the constructible
-universe has the same shape: a set is built from ingredients that live at
-various stages, and the argument must place the result at a *single* stage. So
-what the axioms need from ordinals is not a theory of order, but a supply of
-upper bounds.
-
 This chapter provides exactly that supply, and nothing else. Zero is an
 ordinal; successors of ordinals are ordinals; a union of ordinals is an
 ordinal; and, the chapter's deliverable, every small family of ordinals lies
@@ -22,8 +26,6 @@ bound is cheaper than a comparison, and it is all the axioms ask for. The book
 takes the cheaper road, and the basic axioms of the constructible universe cost
 no classical logic as a result.
 <!--zh-->
-上一章的塔以序数为索引，而本书迄今只用到关于序数的一个事实：「是序数」是命题。接下来的构造要得更多。可构造宇宙的每一个闭包论证都是同一个形状：一个集合由散落在各个阶段的材料造出，而论证必须把结果安置在**单一**阶段上。所以诸公理向序数索取的不是一套序理论，而是一批上界。
-
 本章恰好提供这批上界，别无他物。零是序数；序数的后继是序数；序数之并是序数；以及本章的交付物：任一小族序数都落在单一序数之下。最后这条把「每份材料**各有**其阶段」变成「它们共处**同一**阶段」，而这正是下一章每个闭包证明所做的动作。
 
 显眼地缺席的是比较。人们期望序数是线序的，它们确实是，但那个事实不构造，而且此处用不上：公共上界比比较廉价，而公理要的只是公共上界。本书取那条廉价的路，于是可构造宇宙的基本公理不花费任何经典逻辑。
@@ -61,17 +63,21 @@ open hPropStructure 𝒮ᵥ
 
 <!--en-->
 ## Zero and successors
-<!--zh-->
-## 零与后继
-<!--/-->
 
-<!--en-->
 Recall the predicate: an ordinal is a transitive set whose members are all
 transitive. Both halves are vacuous for the empty set, so zero is an ordinal
 with nothing to prove.
 <!--zh-->
+## 零与后继
+
 回忆那个谓词：序数是成员皆传递的传递集。两半对空集都真空成立，于是零是序数，无须证明什么。
+<!--ja-->
+## 零と後続
+
+空集合は順序数です。また `A` が順序数なら `A ∪ {A}` も推移的で、その要素はすべて推移的なので、後続 `sucV A`{.Agda} も順序数です。
 <!--/-->
+
+
 
 ```agda
 ∅-ord : IsOrd ∅
@@ -108,18 +114,22 @@ suc-ord {A} (Atr , Amem) = trans-sucV , mem-sucV
 
 <!--en-->
 ## Unions and bounds
-<!--zh-->
-## 并与上界
-<!--/-->
 
-<!--en-->
 Ordinals are closed under small-indexed unions. Transitivity is the closure
 lemma already proved for transitive sets; for the second half, a member of the
 union sits inside some `f x`, and that family member is an ordinal by
 hypothesis, so its own members are transitive.
 <!--zh-->
+## 并与上界
+
 序数对小索引并封闭。传递性就是传递集那边已证的闭包引理；第二半：并的成员落在某个 `f x` 里面，而依假设该族元是序数，故其成员传递。
+<!--ja-->
+## 和集合と上界
+
+順序数からなる小さな族の和集合は順序数です。さらに各順序数を後続にして和を取ると、族のすべての要素を厳密に上回る順序数 `boundingOrd`{.Agda} が得られます。
 <!--/-->
+
+
 
 ```agda
 setUnion-ord : (X : Type ℓ) (f : X → S) → ((x : X) → IsOrd (f x))
@@ -186,22 +196,26 @@ bound2 σ₁ σ₂ o₁ o₂ =
 
 <!--en-->
 ## Members
-<!--zh-->
-## 成员
-<!--/-->
 
-<!--en-->
 Ordinals are closed downwards: a member of an ordinal is an ordinal. Its own
 transitivity is the second half of the hypothesis; that its members are
 transitive follows by pulling them back into the ambient ordinal along
 transitivity.
+<!--zh-->
+## 成员
 
+序数向下封闭：序数的成员是序数。它自身的传递性就是假设的第二半；而其成员传递，则经传递性把它们拉回外层序数即得。
+<!--ja-->
+## 要素
+
+順序数の要素は、定義によって推移的です。元の順序数の推移性を用いると、その要素の各要素も推移的だと分かるため、順序数の要素は再び順序数です。
+<!--/-->
+
+<!--en-->
 The hierarchy chapter's irreflexivity, that no set belongs to itself, is the
 other fact these arguments need; it is recalled here because this is where the
 ordinal proofs start reaching for it.
 <!--zh-->
-序数向下封闭：序数的成员是序数。它自身的传递性就是假设的第二半；而其成员传递，则经传递性把它们拉回外层序数即得。
-
 层级那一章的无自环性，即没有集合属于自身，是这些论证需要的另一个事实；此处提起它，是因为序数的证明正是从这里开始取用。
 <!--/-->
 
@@ -213,11 +227,7 @@ mem-ord {A} (Atr , Amem) x x∈A =
 
 <!--en-->
 ## The numerals, and their limit
-<!--zh-->
-## 数码，及其极限
-<!--/-->
 
-<!--en-->
 The hierarchy's numerals are the iterated successors of zero, so they are
 ordinals by the two facts above, one induction deep. Their limit `ω` is an
 ordinal too, and that is the fact the collection step will need. Its second
@@ -225,8 +235,16 @@ half is free from the numerals; its first half, transitivity, says that a
 member of a numeral is again a numeral, which is another induction, the
 successor case splitting by the eliminator.
 <!--zh-->
+## 数码，及其极限
+
 层级的数码是零的迭代后继，故由上面两个事实即为序数，一层归纳而已。它们的极限 `ω` 也是序数，而那正是收集步骤将要用到的事实。其第二半由数码免费给出；第一半即传递性，说的是数码的成员仍是数码，那是另一次归纳，后继情形按消去子分情形。
+<!--ja-->
+## 数項とその極限
+
+零と後続に関する閉性から、すべての有限数項が順序数になります。各数項は `ω` に属し、有限数項の要素も `ω` に属するため、`ω` は順序数です。
 <!--/-->
+
+
 
 ```agda
 numeral-ord : (n : ℕ) → IsOrd (# n)
@@ -260,11 +278,7 @@ numeral-mem (suc k) y y∈ = ∈sucV-elim (snd (y ∈ˢ ω)) y∈
 
 <!--en-->
 ## What lies below a numeral
-<!--zh-->
-## 数码之下有什么
-<!--/-->
 
-<!--en-->
 The numerals are not merely ordinals, they are *counted* by ordinals: the members
 of the numeral for `n` are exactly the numerals for the smaller naturals. The
 first half of that, elimination, is one induction with the successor eliminator;
@@ -272,8 +286,16 @@ the second half, that a numeral belonging to a numeral means the indices compare
 follows by injectivity. The coding chapters will use these to read an index out of
 a set, which is what a bound on a variable ultimately means.
 <!--zh-->
+## 数码之下有什么
+
 数码不只是序数，它们还被序数**计数**：`n` 的数码的成员，恰是更小自然数的数码。前一半即消去，是一次沿后继消去子的归纳；后一半，即数码属于数码意味着序号可比，则由单射性得出。编码诸章将用它们从一个集合里读出序号，而那正是变元的界最终的含义。
+<!--ja-->
+## 数項の下にあるもの
+
+有限数項の要素は、それより小さい有限数項に限られます。帰納法で要素を数項として復元し、`# a ∈ # b`{.Agda} と自然数の狭義不等式 `a < b` を対応させます。
 <!--/-->
+
+
 
 ```agda
 ∈#-elim : (n : ℕ) (z : S) → ⟨ z ∈ˢ (# n) ⟩
@@ -292,11 +314,7 @@ a set, which is what a bound on a variable ultimately means.
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 Zero, successors and small unions of ordinals are ordinals, and
 `boundingOrd`{.Agda} bounds any small family by a single ordinal. That last
 result is the chapter's whole purpose: it is how "each of finitely many
@@ -306,6 +324,11 @@ closure axioms. Downward closure, the absence of self-membership, and `ω`
 itself as an ordinal are the same theory continued; they wait here for the
 collection step of infinity, which is what first needs them.
 <!--zh-->
-零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。最后这条就是本章的全部目的：它把「有穷多份材料各有其阶段」变成「它们同处一个阶段」，而下一章会把它花掉三次，头几条闭包公理各一次。向下封闭、无自环，以及 `ω` 自身是序数，都是同一套理论的续篇；它们在此等候无穷公理的收集那一步，那是最先需要它们的地方。
-<!--/-->
+## 小结
 
+零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。最后这条就是本章的全部目的：它把「有穷多份材料各有其阶段」变成「它们同处一个阶段」，而下一章会把它花掉三次，头几条闭包公理各一次。向下封闭、无自环，以及 `ω` 自身是序数，都是同一套理论的续篇；它们在此等候无穷公理的收集那一步，那是最先需要它们的地方。
+<!--ja-->
+## まとめ
+
+順序数は零、後続、小さな和集合で閉じ、`boundingOrd`{.Agda} が小さな族の厳密な上界を与えます。有限数項と `ω` は順序数であり、その所属関係は自然数の大小関係に一致します。
+<!--/-->

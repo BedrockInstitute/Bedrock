@@ -133,6 +133,12 @@ class FileCheckTests(unittest.TestCase):
 
 
 class MasterScopeTests(unittest.TestCase):
+    def test_route_metadata_checks_only_language_values(self):
+        text = '<!-- bedrock-routes {"id":"宪章", "title":{"zh":"宪章", "en":"宪章"}} -->'
+        hits = cg.route_metadata_violations(text, CHECKS)
+        self.assertEqual(len(hits), 1)
+        self.assertIn("纲领", hits[0])
+
     MASTER = ("# T\n\n<!--zh-->\n这是 宪章 块。\n<!--ja-->\n憲章 ブロック。\n<!--/-->\n\n"
               "<!--en-->\nThe 宪章 here is shared-ish English.\n<!--/-->\n")
 
@@ -144,6 +150,24 @@ class MasterScopeTests(unittest.TestCase):
             joined = " ".join(msgs(v))
             self.assertIn("use 纲领 (zh)", joined)
             self.assertIn("use 綱領 (ja)", joined)
+
+    def test_english_aliases_are_word_bounded_and_language_scoped(self):
+        checks = cg.build_checks([("constant mapping", "常量映射", "定数写像",
+                                   ["en:constant remap"], False)])
+        with tempfile.TemporaryDirectory() as tmp:
+            p = write(tmp, "src/M.lagda.md", "<!--en-->\nA constant remap.\n"
+                      "A constant remapping.\n`constant remap`\n<!--zh-->\nconstant remap\n<!--/-->")
+            self.assertEqual(len(cg.check_file(p, checks)), 1)
+
+    def test_master_presence_checks_only_present_translations(self):
+        text = "<!--en-->\nA charter.\n<!--zh-->\n纲领。\n<!--/-->"
+        self.assertEqual(cg.master_presence_violations("M.lagda.md", text,
+                         [("charter", "纲领", "綱領")]), [])
+        text += "\n<!--en-->\nThe charter.\n<!--ja-->\n別の言葉。\n<!--/-->"
+        hits = cg.master_presence_violations("M.lagda.md", text,
+                                           [("charter", "纲领", "綱領")])
+        self.assertEqual(len(hits), 1)
+        self.assertIn("綱領", hits[0][1])
 
 
 PRESENCE = [("charter", "纲领", "綱領")]

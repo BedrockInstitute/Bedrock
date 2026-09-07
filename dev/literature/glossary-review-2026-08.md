@@ -1,3 +1,5 @@
+> Historical review. Current decisions supersede this record; see [the September review](terminology-2026-09.md). In particular, its claims of standard usage are not independent evidence.
+
 # Glossary review: the 119 pre-protocol entries
 
 Deliverable of [L3.32-T41], `tier: codex (default)`. Review of every entry in
@@ -696,7 +698,7 @@ slots. **CONFIRMED (abstraction, occurrence); placement IDIOM, NO LITERATURE**
 出現 are standard Japanese；配置 for placement is a plausible Japanese word
 (configuration/assignment), fine as a guess.
 
-#### Levy hierarchy
+#### `Levy hierarchy`
 
 zh Lévy 层级 / ja Lévy 階層，avoid zh：列维层级，zh：分级证书，zh:Levy 层级. The
 surname kept in Latin matches Chinese practice for untransliterated names
@@ -903,7 +905,7 @@ discipline.
 
 zh Diaconescu 定理 / ja ディアコネスクの定理. Established: Diaconescu's theorem
 (choice implies excluded middle) is standard in both languages; keeping the
-surname in Latin in zh matches the book's practice and the Levy hierarchy
+surname in Latin in zh matches the book's practice and the `Levy hierarchy`
 entry. **CONFIRMED.**
 
 ### Reviewed: Other

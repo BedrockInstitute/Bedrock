@@ -1,4 +1,16 @@
-# Ordinals are linearly ordered
+<!--en-->
+# Ordinals are linearly ordered by membership
+
+Two ordinals are always comparable: one belongs to the other or they are equal. This chapter derives that trichotomy from transitivity and well-foundedness, then packages membership as the strict linear order used throughout the hierarchy.
+<!--zh-->
+# 序数由隶属关系线性排序
+
+任意两个序数总可比较：一个属于另一个，或二者相等。本章从传递性与良基性推出这一三歧，并把隶属关系封装成层级各处使用的严格线性序。
+<!--ja-->
+# 順序数は所属によって線形に順序付けられる
+
+任意の二つの順序数は比較でき、一方が他方に属するか、両者が等しい。本章では推移性と整礎性からこの三分性を導き、所属を階層全体で使う狭義線形順序としてまとめる。
+<!--/-->
 
 <!--en-->
 Of any two ordinals, one belongs to the other or the two are equal. This is the
@@ -58,6 +70,16 @@ open hPropStructure 𝒮ᵥ
 ## Inclusion, and what fails it
 <!--zh-->
 ## 包含，及其失败的见证
+<!--ja-->
+## 包含と、その失敗を示す証人
+<!--/-->
+
+<!--en-->
+If one ordinal is not included in another, well-foundedness selects a least element witnessing the failure. Transitivity then shows that this witness contains exactly the common initial part of the two ordinals.
+<!--zh-->
+若一个序数不包含于另一个，良基性会选出见证这一失败的最小元素。传递性随后表明，这个见证恰好包含两个序数共有的初始部分。
+<!--ja-->
+一方の順序数が他方に含まれないなら、整礎性によってその失敗を示す最小の要素を選べる。推移性から、この証人は二つの順序数に共通する最初の部分をちょうど含む。
 <!--/-->
 
 <!--en-->
@@ -114,6 +136,16 @@ member would be in `B` after all, decided one member at a time.
 ## Trichotomy
 <!--zh-->
 ## 三歧
+<!--ja-->
+## 順序数の三分性
+<!--/-->
+
+<!--en-->
+Applying the least-witness argument in both directions leaves exactly three cases: `α ∈ β`, `α ≡ β`, or `β ∈ α`. Irreflexivity makes the cases exclusive and membership transitivity composes comparisons.
+<!--zh-->
+在两个方向使用最小见证论证，只留下三种情形：`α ∈ β`、`α ≡ β` 或 `β ∈ α`。非自反性使三者互斥，而隶属关系的传递性复合比较。
+<!--ja-->
+最小証人の議論を両方向に適用すると、`α ∈ β`、`α ≡ β`、`β ∈ α` の三つの場合だけが残る。非反射性により場合は排他的で、所属の推移性により比較を合成できる。
 <!--/-->
 
 <!--en-->
@@ -177,6 +209,16 @@ ord-tri = WF.WFI.induction regularityV {P = P} stepA
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+Ordinal membership now supplies trichotomy, irreflexivity, and transitivity. These comparison laws are the order-theoretic foundation for stage monotonicity and cardinal arguments later in the book.
+<!--zh-->
+序数隶属关系现在具有三歧性、非自反性与传递性。这些比较定律构成后续阶段单调性与基数论证的序论基础。
+<!--ja-->
+順序数の所属について、三分性、非反射性、推移性が得られた。これらの比較法則は、後の段階の単調性と基数の議論に必要な順序論的基礎となる。
 <!--/-->
 
 <!--en-->

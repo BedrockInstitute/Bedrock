@@ -1,4 +1,16 @@
-# The order type of a well-founded relation of L is an ordinal of L
+<!--en-->
+# Constructing order types inside L
+
+A well-founded, transitive relation coded in `L` can be collapsed internally. This chapter builds the collapse tables, proves that their range is an ordinal of `L`, and extracts the collapse graph as a coded injection.
+<!--zh-->
+# 在 L 内部构造序型
+
+在 `L` 中编码的良基传递关系可以在内部塌缩。本章构造塌缩表，证明其值域是 `L` 中的序数，并把塌缩图提取为编码单射。
+<!--ja-->
+# L の内部で順序型を構成する
+
+`L` で符号化された整礎的で推移的な関係は、内部で崩壊できる。本章では崩壊表を構成し、その値域が `L` の順序数であることを示し、崩壊グラフを符号化された単射として取り出す。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -26,7 +38,7 @@ open import L.Coding.Expressions {ℓ} using ( module PairExpression )
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
 open import L.Cardinal {ℓ} lem using ( InjCode )
 open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Definable {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
+open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
 open import L.Mostowski {ℓ} using ( module Mostowski )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
@@ -161,6 +173,16 @@ equation exceeds 100 s).
 ## The formulas
 <!--zh-->
 ## 诸公式
+<!--ja-->
+## 崩壊表を記述する論理式
+<!--/-->
+
+<!--en-->
+The formulas say when a set of ordered pairs correctly records the collapse below one relation element. Completeness supplies entries for every predecessor, and correctness identifies each value with the set of preceding values.
+<!--zh-->
+这些公式描述一个有序对集合何时正确记录某个关系元素以下的塌缩。完备性为每个前驱提供表项，而正确性把每个值识别为全部前驱值之集。
+<!--ja-->
+これらの論理式は、順序対の集合が一つの関係要素より下の崩壊を正しく記録する条件を述べる。完全性が各前者の項目を与え、正しさが各値をそれ以前の値全体の集合と同定する。
 <!--/-->
 
 Section 2. The object-language formulas, and how to read them.
@@ -325,6 +347,16 @@ open import L.Recursion {ℓ} lem public using ( module PairFo )
 ## Uniqueness, existence, and the tables
 <!--zh-->
 ## 唯一性、存在性与诸表
+<!--ja-->
+## 一意性、存在、崩壊表
+<!--/-->
+
+<!--en-->
+Well-founded induction proves that any two correct tables agree on their common domain. Replacement constructs a correct table below each element, and uniqueness lets the local tables assemble into one collapse function.
+<!--zh-->
+良基归纳证明任意两张正确的表在公共定义域上一致。替换在每个元素以下构造正确表，而唯一性使这些局部表装配成一个塌缩函数。
+<!--ja-->
+整礎帰納法により、任意の二つの正しい表は共通の定義域で一致する。置換が各要素より下に正しい表を構成し、一意性によって局所的な表を一つの崩壊関数へ組み立てられる。
 <!--/-->
 
 Section 3. Every correct set records the collapse, and one exists.
@@ -688,6 +720,16 @@ has a unique value.
 ## The graph as a coded injection
 <!--zh-->
 ## 作为编码单射的图
+<!--ja-->
+## 符号化された単射としてのグラフ
+<!--/-->
+
+<!--en-->
+The assembled table is total and single-valued on the relation's domain. When the relation is linear, distinct inputs have distinct collapse values, so the graph satisfies the internal coded-injection predicate.
+<!--zh-->
+装配后的表在关系的定义域上全域且单值。当关系是线性的，不同输入具有不同塌缩值，因此其图满足内部的编码单射谓词。
+<!--ja-->
+組み立てた表は、関係の定義域上で全域かつ一価である。関係が線形なら異なる入力は異なる崩壊値をもつので、グラフは内部の符号化された単射の述語を満たす。
 <!--/-->
 
 Section 5. The four conjuncts, in the shape `InjCode` consumes.

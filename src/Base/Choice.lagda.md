@@ -1,4 +1,16 @@
+<!--en-->
 # Choice
+
+Choice asserts that a simultaneous choice function merely exists for every family of merely inhabited fibers indexed by a set. This chapter states that principle level by level, proves that it descends to smaller universes, and derives excluded middle from it by Diaconescu’s theorem.
+<!--zh-->
+# 选择原理
+
+选择原理断言：对一个以集合为指标、每根纤维仅仅有元的族，同时选择函数也仅仅存在。本章逐宇宙层级陈述这条原理，证明它能下降到较低层级，并用 Diaconescu 定理由它推出排中律。
+<!--ja-->
+# 選択原理
+
+選択原理は、集合で添字付けられ、各ファイバーが単に要素を持つ族に対して、同時選択関数が単に存在すると主張します。本章ではこの原理を宇宙レベルごとに述べ、低いレベルへ移せることを示し、ディアコネスクの定理によって排中律を導きます。
+<!--/-->
 
 <!--en-->
 The classical boundary has a second interface. Alongside the excluded middle,
@@ -11,14 +23,16 @@ nonempty sets has a choice function", and the h-set restriction on the index is
 what keeps it honest, since over arbitrary types the principle is simply false.
 Like the excluded middle, choice is never assumed globally: a chapter that needs
 it takes it as a parameter, and the first to do so is the cumulative-hierarchy model theorem.
+<!--zh-->
+经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法，而索引上的 h-集限制正是它诚实的关键，因为对任意类型这条原理干脆为假。与排中律一样，选择从不全局假设：需要它的章节以参数领取，而第一个领取者是累积层级的模型定理。
+<!--/-->
 
+<!--en-->
 The two interfaces are not peers, and this chapter proves it on the spot:
 **choice proves the excluded middle**. The observation is due to Diaconescu,
 with the type-theoretic form by Goodman and Myhill; it means that at each level
 the choice interface quietly carries the whole classical boundary with it.
 <!--zh-->
-经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法，而索引上的 h-集限制正是它诚实的关键，因为对任意类型这条原理干脆为假。与排中律一样，选择从不全局假设：需要它的章节以参数领取，而第一个领取者是累积层级的模型定理。
-
 两个接口并非平级，本章当场证明这一点：**选择证明排中律**。这个观察出自 Diaconescu，类型论形式归于 Goodman 与 Myhill；它意味着在每个层级上，选择接口都悄悄把整条经典边界背在身上。
 <!--/-->
 
@@ -46,8 +60,18 @@ open import Cubical.Relation.Binary.Base using ( module BinaryRelation )
 
 <!--en-->
 ## The principle
+
+Like the excluded middle, choice passes **downward** through the levels: lift
+the index set and the fibers one universe up, choose there, lower the choice
+function. A single higher instance therefore covers the levels below.
 <!--zh-->
 ## 原理
+
+与排中律一样，选择沿层级**向下**通行：把索引集与纤维抬高一层宇宙，在那里选择，再把选择函数降回来。于是较高层级上的单个实例覆盖其下诸层。
+<!--ja-->
+## 原理
+
+排中律と同様に、選択原理は宇宙レベルを下向きに移せます。添字集合と各ファイバーを一つ上の宇宙へ持ち上げ、そこで選択し、その選択関数を元のレベルへ戻すため、高いレベルの一つの仮定がそれより低いレベルをすべて覆います。
 <!--/-->
 
 ```agda
@@ -56,13 +80,7 @@ SetChoice ℓ = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
             → ((x : X) → ∥ B x ∥₁) → ∥ ((x : X) → B x) ∥₁
 ```
 
-<!--en-->
-Like the excluded middle, choice passes **downward** through the levels: lift
-the index set and the fibers one universe up, choose there, lower the choice
-function. A single higher instance therefore covers the levels below.
-<!--zh-->
-与排中律一样，选择沿层级**向下**通行：把索引集与纤维抬高一层宇宙，在那里选择，再把选择函数降回来。于是较高层级上的单个实例覆盖其下诸层。
-<!--/-->
+
 
 ```agda
 lowerSetChoice : ∀ {ℓ} → SetChoice (ℓ-suc ℓ) → SetChoice ℓ
@@ -75,11 +93,7 @@ lowerSetChoice sc X setX B inh =
 
 <!--en-->
 ## Diaconescu's theorem
-<!--zh-->
-## Diaconescu 定理
-<!--/-->
 
-<!--en-->
 The theorem: given set-level choice, **any** proposition `P` can be decided,
 proved or refuted. On its face this is absurd, since a decision procedure has
 nothing to inspect: an arbitrary `P` offers no case to split on. The proof's
@@ -87,7 +101,17 @@ idea is to make *geometry* do the inspecting. Build a little space whose very
 shape depends on `P`: it has one point if `P` holds and two points if it fails.
 Ask choice a single question about that space; the answer cannot help but leak
 the shape, and the shape is `P`.
+<!--zh-->
+## Diaconescu 定理
 
+定理说：给定集合层选择，**任何**命题 `P` 都可判定，即或证明或反驳。乍看这很荒谬，因为判定程序无从下手：任意的 `P` 没有可分情形的把手。证明的想法是让**几何**来下手。造一个形状依赖于 `P` 的小空间：`P` 成立时它只有一个点，不成立时有两个点。然后向选择原理问一个关于这个空间的问题；答案不可能不泄露形状，而形状就是 `P`。
+<!--ja-->
+## ディアコネスクの定理
+
+命題 `P` に応じて二点が貼り合わされる集合商を作ります。その商上で選択した二つの値を比較すると `P` を判定できるため、集合レベルの選択原理から排中律が従います。
+<!--/-->
+
+<!--en-->
 Concretely, fix `P`; everything below lives in a module named after the
 theorem's author. Take the two booleans and glue them together exactly when
 `P` holds. "Gluing" is a **set quotient**: the points are still `true` and
@@ -98,8 +122,6 @@ itself** in the two mixed squares, so that "the two points are related" and
 "`P` holds" are the same proposition by definition. That last clause is the
 whole trick, and it will pay twice below.
 <!--zh-->
-定理说：给定集合层选择，**任何**命题 `P` 都可判定，即或证明或反驳。乍看这很荒谬，因为判定程序无从下手：任意的 `P` 没有可分情形的把手。证明的想法是让**几何**来下手。造一个形状依赖于 `P` 的小空间：`P` 成立时它只有一个点，不成立时有两个点。然后向选择原理问一个关于这个空间的问题；答案不可能不泄露形状，而形状就是 `P`。
-
 具体地，固定 `P`；以下一切都住在以定理作者命名的模块里。取两个布尔值，恰当 `P` 成立时把它们粘起来。「粘合」指**集合商**：点仍是 `true` 与 `false`，但凡粘合关系点头，两点之间就添一条路径，最后把结果截断为 h-集。粘合关系最好用一张四格表给出：对角线上平凡成立，混色的两格**就是 `P` 本身**，于是「这两点相关」与「`P` 成立」按定义是同一个命题。最后这一款是全部戏法所在，下文将两次兑付。
 <!--/-->
 
@@ -289,11 +311,7 @@ choice→lem sc P = PT.rec decideIsProp decide (merePicker sc)
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 `SetChoice`{.Agda} is the book's choice interface, one level at a time, in the
 same shape as `LEM`{.Agda}; and by `choice→lem`{.Agda} it is the stronger of the
 two: choice decides every proposition of its level, through the glued booleans,
@@ -303,5 +321,11 @@ interfaces remain distinct. The model chapter spends choice on its choice set,
 and closes by cashing this chapter's theorem: one instance of choice, one
 universe up, funds the entire classical bill.
 <!--zh-->
+## 小结
+
 `SetChoice`{.Agda} 是本书的选择接口，逐层级陈述，与 `LEM`{.Agda} 同款形状；而经 `choice→lem`{.Agda}，它是两者中更强的那个：经由粘合布尔值、`glue`{.Agda}/`unglue`{.Agda} 词典与一次代表元比较，选择判定其层级的每个命题。排中律不回此礼，所以两个接口依然分立。模型章将把选择花在选择集上，并在收尾处兑现本章定理：高一层宇宙上的一份选择，就能付清全部经典账单。
+<!--ja-->
+## まとめ
+
+集合レベルの選択原理は宇宙レベルを下へ移り、各レベルで排中律を含みます。したがって、後の `V` のモデル定理は選択原理だけを受け取っても必要な古典的推論を得られます。
 <!--/-->

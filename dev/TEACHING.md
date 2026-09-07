@@ -10,8 +10,11 @@ properties; chapter count and source line count are not objectives.
 - Landmarks is an explicitly labelled preview of the final theorem statements.
 - All other chapters introduce their direct prerequisites before using them.
 - Each chapter names its mathematical question, required concepts and endpoint.
-- The reading catalog groups chapters by a proof's learning stages. The namespace
-  tree continues to group by subject; both views use the same actual modules.
+- The reading catalog offers one valid linear extension of the prerequisite
+  graph, not a mandatory schedule. Its parallel-route guide identifies shared
+  foundations, independent topics and the prerequisites of their join chapters.
+  Readers may interleave available topics. Namespace and learning-stage views
+  use the same actual modules.
 - A reusable theorem lives outside the particular application that first needed
   it. An application should import its prerequisites, not the earlier application.
 - Split a chapter when it changes its mathematical question or abstraction level;
@@ -31,7 +34,7 @@ properties; chapter count and source line count are not objectives.
    cardinal construction. Hartogs and GCH order types become two explicit users.
 4. **Satisfaction recursion.** Put shared bounded quantification over coded
    pairs in Quantification; colocate tower construction with its specification
-   and readers; isolate the closed code domain in CodeDomain; let Clauses start
+   and readers; isolate the closed code domain in CodeDomain; let SatisfactionClauses start
    with the actual satisfaction relation. Preserve the existing transparent
    proofs, rather than introducing an unnecessary new abstraction framework.
    Generic pair projections belong to Quantification; CodeDomain does not
@@ -43,13 +46,13 @@ properties; chapter count and source line count are not objectives.
 
 ## Boundaries retained after review
 
-- **Choice.Finite** keeps finite enumeration, comparison and the finite-stage
+- **Choice.FiniteStageOrders** keeps finite enumeration, comparison and the finite-stage
   order together: these are successive ingredients of one canonical-order
   construction. The generic natural-number well-order is an example in
   WellOrder.Base, shared by Finite and SquareLaw. This removes the accidental
   dependency from ordinal square-law tools to the Choice construction without
   adding a tiny standalone chapter.
-- **Coding.Sequence** keeps sequence coding with its approximation interface.
+- **Coding.HierarchySequence** keeps sequence coding with its approximation interface.
   These form one short lesson from a sequence predicate to
   the table shape used by the hierarchy and choice constructions.
 - **Constructible** retains transitivity facts beside the layer constructors.
@@ -60,7 +63,7 @@ properties; chapter count and source line count are not objectives.
 - **V.Smallness** retains separation and formula-smallness induction as one
   account of which predicates produce sets. Its consumers need different
   endpoints, but the underlying explanation is shared and the chapter is small.
-- **Bound, Descent and Injection** remain narrow, named mathematical interfaces,
+- **NumeralBound, Descent and Injection** remain narrow, named mathematical interfaces,
   rather than being absorbed into whichever application first imports them.
 
 These choices favor coherent lessons over maximizing either splits or merges.
@@ -73,7 +76,7 @@ These choices favor coherent lessons over maximizing either splits or merges.
   except the explicitly marked Landmarks preview. The reading-order gate checks
   fenced imports and runs with `make check`; its tests cover the preview, backward
   prerequisites, exact coverage and prose that resembles imports.
-- English and Chinese introductions, catalog descriptions, symbols and rendered
+- English, Chinese and Japanese introductions, catalog descriptions, symbols and rendered
   navigation agree with the final module paths and order.
 - `make check` passes; the site build and its internal links are checked after
   moves because Agda alone does not validate reader navigation.
@@ -85,7 +88,7 @@ These choices favor coherent lessons over maximizing either splits or merges.
 ## Dependency map and prose review
 
 The graph review found one accidental subject dependency: SquareLaw used
-Choice.Finite only for the natural-number well-order. That example now lives
+Choice.FiniteStageOrders only for the natural-number well-order. That example now lives
 in WellOrder.Base; the original consumers import it directly. The graph has
 117 nodes, 1,572 direct imports and 211 edges in its full transitive reduction.
 Its longest path contains 33 modules. Genuine convergence in the hull and GCH
@@ -136,3 +139,154 @@ three views. The generated JavaScript also passed 12 layout/edge/reference
 combinations and pin/detail callbacks using a DOM test double. Source-derived
 SVG previews were visually reviewed. Browser control was unavailable, so these
 checks do not claim a real-browser interaction test.
+
+## Parallel reading and definition-level evidence
+
+The definition audit measures first-use separation along the catalog's example
+route. That number depends on the chosen topological ordering. It is not a graph
+distance, a lower bound on learning time, or evidence that the reader must retain
+a definition while studying unrelated branches. Across independent routes, use
+prerequisite readiness and explicit join conditions instead of chapter distance.
+Within a chosen route, local examples and first substantive applications remain
+useful editorial checks; proof helpers and endpoint theorems need separate review.
+
+The next catalog revision places complete optional topics near their applications
+in the example route, while keeping their generic mathematical homes intact.
+Presentation, strict well-orders, coded injections and the two collapse/bijection
+tools can be entered once their prerequisites are ready, without completing every
+chapter listed before them. The bounded-quantification and recursion lessons
+remain a coherent preparation for the environment tower. None of these changes
+introduces a new dependency or changes a proof.
+
+The syntax composition laws remain in ConstantMapping. Moving them into a semantic or
+constructibility application would make the interface conceptually heavier for
+its other consumers. Their explanation now names the concrete two-step constant
+map that the later bridge composes. Transversal no longer falsely claims to be
+the well-order search's sole or first consumer.
+
+The parallel-route guide documents four forks and joins: formula manipulation
+and the ambient model; external canonical orders and internal satisfaction;
+Choice completion and cardinal tools; descriptions and Skolem hulls. Import-closure
+checks confirm their stated independence and joins. In particular Hull needs
+Choice.StageOrders, and the final GCH theorem needs L.Model; neither dependency is
+hidden by calling these routes parallel. The map labels catalog positions as
+example-route positions in all three UI languages.
+
+## Reader-facing route explorer
+
+Everything remains a complete example ordering. A `bedrock-routes` HTML comment
+in its source carries versioned route metadata: stable route IDs, bilingual
+titles/descriptions and chapter membership. Shared chapters may belong to more
+than one route. Dependencies are not duplicated in the annotation: the build
+extracts them from fenced imports and validates coverage and identifiers.
+
+The landing page offers topic cards, side-by-side routes and a readiness view.
+Chapter pages show their own prerequisites and local completion control. A
+completed chapter is a reader's self-report, not a tested mastery score. Progress
+lives only in the current browser and can be cleared. The original catalog and
+dependency map remain available without the explorer; previous/next links are
+explicitly labelled as steps on the example route. Parallel routes do not erase
+shared prerequisites or require the reader to finish an entire unrelated route.
+
+`reading_routes.py` owns metadata validation and the derived reading data.
+`render-site.py` removes annotations from visible prose and emits a language-local
+data file. The static explorer assets consume that file without a server or
+account. `make lint` validates route annotations; the unit gate covers malformed
+metadata and the source-derived prerequisite rules.
+
+### Route explorer verification (2026-09-07)
+
+`make check` passed with 50 tests, including 8 route metadata tests. Source
+comparison confirms that all Agda fences outside Everything are unchanged;
+Everything only changes import order. The proof tree remains at 26,458 nonblank
+Agda lines and 117 reading chapters. Seven optional topics moved within the
+example route; this does not change their actual dependency graph.
+
+The bilingual site renders all 117 chapter explorers and the landing explorer.
+Link checking found zero broken links among 744,892 relative links. Actual
+headless Chrome verification passed topic/compare/readiness views, one-to-three
+route selection, dependency-based readiness, completion and view persistence,
+reset cancellation/confirmation, chapter return and browser Back, preview
+exclusion, keyboard focus, dark theme and the no-JavaScript catalog. At 390 pixels
+the document does not overflow horizontally. Screenshot review caught and fixed
+a sticky column heading that obscured a chapter link; columns now use normal
+flow. The phone header gives search its own row, and wide catalog tables scroll
+inside their own bounds. Review screenshots and the browser test remain in
+ignored build output, not in the source or committed documents.
+
+
+## Trilingual chapter framework (2026-09-07)
+
+The framework covers all 118 masters, including the reading guide: 698 matched
+English, Chinese and Japanese titles, each with an opening paragraph about its
+own mathematical question and result. Long undivided coding and GCH chapters now
+have sections at existing proof boundaries. Later scaffold paragraphs remain for
+another phase; the language weaver preserves their English fallback.
+
+The terminology review first reconsidered all 145 existing entries. The central
+vocabulary now has 159 entries, with literature evidence and explicitly labelled
+composed terms in `literature/terminology-2026-09.md`. Semantic adequacy, local
+adequate stages, and the two meanings of reflection remain distinct. The glossary
+gate checks explicit translation groups without mistaking fallback prose for a
+missing translation.
+
+Fifty-seven module names now state their subjects more clearly. For example,
+`Coding.PairFormulas` introduces pair formulas, `Coding.EnvironmentAgreement`
+proves agreement of the two environment-set presentations, and
+`Coding.NumeralBound` bounds numerals at successor-closed ordinal stages.
+`GCH.StageCountingTools` supplies the tools used by `GCH.StageInjection`;
+`Choice.NameComparisonAdequacy` and `Choice.StageOrderAdequacy` name the particular
+representations they validate. All imports and route metadata use the new names.
+
+The catalog, sidebar, previous/next links and route cards use the actual localized
+chapter titles. All three languages are built by default. Agda code must remain
+outside language groups, so choosing Japanese cannot hide a proof block.
+The framework gate checks every heading and opening; the link checker verifies
+cross-page fragments as well as destination files.
+
+Module-name normalization confirms that the nonblank proof lines are unchanged
+(26,458), and the dependency graph is isomorphic to the preceding tree: 117 nodes
+and 1,572 direct imports. Section changes only split prose and existing fences;
+no mathematical definition or proof was moved between chapters in this phase.
+
+
+The final `make check` passes with 69 unit tests. The three-language site builds
+354 master pages; every rendered H1 matches its language's source heading and
+all three editions display identical highlighted proof code. Link validation
+checks 1,119,318 relative links across 845 generated pages, including cross-page
+fragments, with no broken targets. Browser checks cover the route controls,
+progress persistence, keyboard use, language switching and the 390-pixel mobile
+layout. Long module names wrap in prose navigation and use complete two-line
+labels in the dependency map. Build artifacts and review screenshots stay under
+ignored `_build` directories.
+
+Chrome also verifies all 117 dependency-map labels in each of the three layouts:
+complete names, at most two lines, no overflow or overlap with chapter numbers.
+The map remeasures labels after its fonts load. The verified output is copied to
+`_build/html` and `_build/site`, so `make serve` opens the current edition.
+
+
+## Reading interface refinement
+
+The landing page presents reading routes, the dependency map and the chapter
+catalog as three tabs. Each has a shareable fragment URL; switching tabs retains
+route selections and graph controls. The old dependency-map URL redirects to its
+tab. Without JavaScript, the chapter catalog remains accessible. Keyboard users
+can switch tabs with arrow keys, Home and End.
+
+Chapter introductions precede the collapsed route/prerequisite panel. Chinese
+and Japanese editions keep untranslated English narrative in labelled, initially
+closed disclosures; shared mathematical notation and proof code remain visible.
+This changes presentation, not the scope of translation. The renderer tests cover
+English paragraphs containing CJK quotations as well as symbolic blocks.
+
+The glossary distinguishes the constructible hierarchy, an individual stage
+L_α, and its ordinal index α. The Stage chapter now names and explains the last
+of these explicitly. Literature evidence and the limits of the proposed CJK
+renderings are recorded in `literature/stage-level-hierarchy.md`.
+
+Validation: `make check` passes with 79 unit tests. All 354 master pages retain
+matching localized titles and identical proof code across languages; the site
+link checker reports no broken targets. Chrome checks cover tab history and
+language switching, retained route/map state, progress after reload, English
+disclosures, node selection, all 117 labels in each layout, and mobile/dark views.

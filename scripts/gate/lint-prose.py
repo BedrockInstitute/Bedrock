@@ -70,6 +70,12 @@ SKIP = set(" \t\r*_~()[]")        # whitespace, markdown emphasis, transparent b
 # i18n language markers (see dev/STYLE-i18n.md). Treated as hard block boundaries so the
 # CJK reflow never merges prose across (or into) a language switch.
 MARKER_RE = re.compile(r"^\s*<!--\s*(en|zh|ja|/)\s*-->\s*$")
+ROUTE_METADATA_RE = re.compile(r"<!--\s*bedrock-routes\s*\{.*?\}\s*-->", re.S)
+
+
+def strip_route_metadata(text):
+    """Blank machine-readable route metadata without changing line numbers."""
+    return ROUTE_METADATA_RE.sub(lambda match: re.sub(r"[^\n]", " ", match.group(0)), text)
 
 
 def _in(cp, ranges):
@@ -94,6 +100,10 @@ def build_protected(text):
     """Boolean mask: True where chars are inside code / link dest / URL (untouchable)."""
     n = len(text)
     prot = [False] * n
+
+    for match in ROUTE_METADATA_RE.finditer(text):
+        for j in range(match.start(), match.end()):
+            prot[j] = True
 
     # fenced code blocks (``` or ~~~), inclusive of the fence lines
     pos = 0
@@ -441,7 +451,7 @@ def target_files(explicit, staged):
     elif staged:
         files = git_lines(["diff", "--cached", "--name-only", "--diff-filter=ACM"])
     else:
-        files = git_lines(["ls-files", "*.md", "*.lagda.md"])
+        files = sorted(set(git_lines(["ls-files", "--cached", "--others", "--exclude-standard", "*.md", "*.lagda.md"])))
     return [f for f in files
             if (f.endswith(".md") or f.endswith(".lagda.md"))
             and os.path.basename(f).lower() not in EXCLUDE_BASENAMES
@@ -567,7 +577,7 @@ def check_shared_cjk() -> list[str]:
     """Prose outside every language marker is shared and reaches the English book verbatim."""
     bad = []
     for p in _masters_for_cjk():
-        text = p.read_text(encoding="utf-8")
+        text = strip_route_metadata(p.read_text(encoding="utf-8"))
         in_fence = False
         lang = None
         for n, line in enumerate(text.split("\n"), 1):

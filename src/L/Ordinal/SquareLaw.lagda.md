@@ -1,4 +1,16 @@
-# The ordinal well-order, the Godel pair order and the finite base
+<!--en-->
+# Ordinal indices, the Gödel pair order, and finite indices
+
+This chapter supplies three concrete orders and conversions used by later counting arguments: the membership well-order on an ordinal's index, the Gödel order on pairs of indices, and the correspondence between members of a finite ordinal and `Fin`.
+<!--zh-->
+# 序数指标、Gödel 对序与有穷指标
+
+本章为后续计数论证提供三项具体工具：序数指标上的隶属良序、指标对上的 Gödel 序，以及有穷序数成员与 `Fin` 之间的对应。
+<!--ja-->
+# 順序数の添字、Gödel 対順序、有限添字
+
+本章では後の計数に使う三つの具体的な道具を与える。順序数の添字上の所属整列順序、添字の対上の Gödel 順序、有限順序数の要素と `Fin` の対応である。
+<!--/-->
 
 <!--en-->
 Building on strict well-orders and their natural-number example, this chapter constructs the ordinal order, the lexicographic Godel pair order, and the finite base that connects members of omega with `Fin` indices.
@@ -100,7 +112,19 @@ module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X)
 
 ```
 
-## The order on the index
+<!--en-->
+## The membership order on an ordinal's index
+
+Two indices are compared by membership of the ordinal elements they present. Ordinal trichotomy gives trichotomy on indices, while regularity gives well-foundedness, producing a strict well-order.
+<!--zh-->
+## 序数指标上的隶属序
+
+两个指标通过它们所呈现的序数元素之间的隶属关系比较。序数三歧给出指标三歧，而正则公理给出良基性，从而得到严格良序。
+<!--ja-->
+## 順序数の添字上の所属順序
+
+二つの添字は、それらが提示する順序数要素の所属によって比較する。順序数の三分性が添字の三分性を与え、正則性が整礎性を与えるので、狭義整列順序が得られる。
+<!--/-->
 
 The membership order on the index of an ordinal, its trichotomy from
 `ord-tri` and its well-foundedness from regularity on V.
@@ -273,7 +297,19 @@ well-foundedness of that order through the lexicographic product.
 
 ```
 
-## The finite base
+<!--en-->
+## Moving between finite ordinals and `Fin`
+
+Every member of `ω` is a numeral, and every index of the finite ordinal `# n` determines a unique number below `n`. Least-element search extracts that number and gives the conversions to and from `Fin n`.
+<!--zh-->
+## 在有穷序数与 `Fin` 之间转换
+
+`ω` 的每个成员都是数码，而有穷序数 `# n` 的每个指标都确定唯一的小于 `n` 的自然数。最小元搜索取出该数，并给出与 `Fin n` 之间的双向转换。
+<!--ja-->
+## 有限順序数と `Fin` の間を移る
+
+`ω` の各要素は数項であり、有限順序数 `# n` の各添字は `n` より小さい一意な自然数を定める。最小要素の探索でその数を取り出し、`Fin n` との間の変換を得る。
+<!--/-->
 
 ```agda
 module FiniteBase where

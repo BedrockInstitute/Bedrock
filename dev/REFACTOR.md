@@ -38,15 +38,15 @@ caches. Do not infer build improvement from line counts alone.
 1. Audit current-status prose in all tracked documentation and Agda masters.
    Resolve old proof debts against definitions and consumers. Label dated external
    literature surveys as historical; retain their evidence about other projects.
-2. Simplify repeated semantic adapters in `L.Choice.Before` and related chapters.
+2. Simplify repeated semantic adapters in `L.Choice.EarliestDisagreement` and related chapters.
    Preserve the opaque formula boundaries and typed truncation payloads: both
    have measured importance to elaboration. Check each simplification before
    extending it to another module.
 3. Consolidate repeated formula readers and constructor cases in `L.Coding.Model`,
-   `L.Coding.Clauses`, and `L.Coding.Pinned`. The first two account for 3,250
+   `L.Coding.SatisfactionClauses`, and `L.Coding.PinnedRecursion`. The first two account for 3,250
    nonblank code lines. Share actual arguments and proofs, not merely layouts.
 4. Refactor repeated graph construction, pair bounds, and counting arguments in
-   `L.GCH.Hull`, `HullIn`, `HullCount`, `Pairing`, and `Sequences`. Those five
+   `L.GCH.SkolemHull`, `HullIn`, `HullCount`, `Pairing`, and `Sequences`. Those five
    modules account for 4,600 nonblank code lines. Check import dependencies
    before extracting helpers; preserve internal graph membership in L.
 5. Review remaining one-consumer wrappers and repeated recursion scaffolding,
@@ -57,17 +57,17 @@ caches. Do not infer build improvement from line counts alone.
 ## Measurements and accepted batches
 
 - Initial cached `src/Landmarks.lagda.md` check: exit 0, 3.78 s wall time.
-  Existing warnings: a nonexistent `SatGraph` re-export in `L.GCH.SatFrame`,
-  three nonexistent exports and a useless opaque block in `L.GCH.Hull`.
+  Existing warnings: a nonexistent `SatGraph` re-export in `L.GCH.SatisfactionFrame`,
+  three nonexistent exports and a useless opaque block in `L.GCH.SkolemHull`.
 - Fresh project-interface baseline, `src/Landmarks.lagda.md`: exit 0,
   246.90 s wall, 245.73 s user, 1.02 s system. Project interfaces started empty;
   the installed cubical dependency retained its existing interfaces.
 - First batch: 28,921 nonblank code lines, a net reduction of 52; 2,948 remain
-  to the milestone. `L.Choice.Before`: 901 to 870, replacing three pairs of
-  identity adapters with direct arguments. `L.GCH.Hull`: 1,140 to 1,119,
+  to the milestone. `L.Choice.EarliestDisagreement`: 901 to 870, replacing three pairs of
+  identity adapters with direct arguments. `L.GCH.SkolemHull`: 1,140 to 1,119,
   removing an unconsumed stage-specific least-search chain; the actual closure
   proof continues to use `TermAlgebra.closed`. Removed invalid re-exports in
-  `L.GCH.Hull` and `L.GCH.SatFrame`.
+  `L.GCH.SkolemHull` and `L.GCH.SatisfactionFrame`.
 - Workspace theorem check after the code changes: `src/Landmarks.lagda.md`,
   exit 0, no warnings, 86.13 s with mixed cached/rebuilt project interfaces.
   This is an integration check, not a comparison to the cold baseline.
@@ -93,8 +93,8 @@ not source documentation and were not rewritten.
 
 The current README translations and theorem statements already agreed. Corrected
 settled source requests in `dev/literature/digest.md`, the old condensation
-obligation in `devlin-II5.md`, and intermediate-code prose in `L.Coding.InL`,
-`L.Choice.Table`, and `L.GCH.Condense`. Six research notes now explicitly identify
+obligation in `devlin-II5.md`, and intermediate-code prose in `L.Coding.CodeConstructibility`,
+`L.Choice.OrderTable`, and `L.GCH.CondensationTransfer`. Six research notes now explicitly identify
 their assessments as historical and link the completed Bedrock landmarks.
 Statements about the scope of other researchers' dated developments retain their
 original evidence. The final status references agree with the two completed landmarks.
@@ -147,13 +147,13 @@ integration check is still required before milestone acceptance.
 | Choice 6: retained union readers and internal extensionality | 24 | Choice/Before, GCH/Hull | Exit 0, no warnings; owned-file linters clean |
 | GCH 4: internal extensionality and unused index removal | 14 | GCH/HullCount, rebuilding HullIn and Sequences | Exit 0, no warnings; owned-file linters clean |
 | Choice 7: shared transport and relation-reader continuation removal | 17 | Choice/Internal, Choice/Before | Exit 0, no warnings; owned-file linters clean |
-| GCH 5: inclusion graph and shared domain bounds | 77 | L/InjChain, GCH/HullCount | Exit 0, no warnings; owned-file linters clean |
+| GCH 5: inclusion graph and shared domain bounds | 77 | L/InjectionComposition, GCH/HullCount | Exit 0, no warnings; owned-file linters clean |
 | Coding 5: direct satisfaction bridge and obsolete adapter removal | 115 | Coding/Uniform, rebuilding Clauses and Pinned | Exit 0, no warnings; owned-file linters clean |
 | Choice 8: rank membership and shared denotation fibers | 21 | L/Rank, Choice/Adequate | Exit 0, no warnings; owned-file linters clean |
 | Joint boundedness checker: four concrete endpoints | 141 | Coding/Uniform, rebuilding Clauses and Environment | Exit 0, no warnings; owned-file linters clean |
 | Choice 9: shared rank bounds and constructible membership | 63 | Rank, Axioms/Basic, Ordinal/Stages | Exit 0, no warnings; owned-file linters clean |
-| GCH 6: shared composite relation construction | 49 | L/InjChain, GCH/HullCount | Exit 0, no warnings; owned-file linters clean |
-| Choice 10: shared indexed-union membership | 49 | V/Model, L/Rank, L/Reflect | Exit 0, no warnings; owned-file linters clean |
+| GCH 6: shared composite relation construction | 49 | L/InjectionComposition, GCH/HullCount | Exit 0, no warnings; owned-file linters clean |
+| Choice 10: shared indexed-union membership | 49 | V/Model, L/Rank, L/ExistentialReflection | Exit 0, no warnings; owned-file linters clean |
 | Coding 6: shared pair characterization and environment transport | 28 | Coding/Uniform | Exit 0, no warnings; owned-file linters clean |
 | GCH 7: checked boundedness certificates behind existing seals | 33 | GCH/DefDescribe, GCH/HierDescribe | Exit 0, no warnings; owned-file linters clean |
 | Coding 7: retained pair characterization and boundedness endpoint | 28 | Coding/Uniform | Exit 0, no warnings; owned-file linters clean |
@@ -243,7 +243,7 @@ reviewed for readability before further expansion. Unchecked drafts remain
 excluded from accepted counts.
 
 The Sol readability review identified four regressions in proof presentation:
-deeply nested elimination in Choice.Before, repeated large key expressions,
+deeply nested elimination in Choice.EarliestDisagreement, repeated large key expressions,
 compressed pair-expression induction handlers, and repeated bound-value terms.
 Corrections are authorized even if they increase the line count. These fixes
 are kept separate from the accepted count until checked. The review confirmed
@@ -261,7 +261,7 @@ the numerical milestone.
 The bounded Sol reviews found no worthwhile generic telescope abstraction for
 Choice's remaining staged readers: the intermediate decoded equalities change
 later dependent types, and named stages preserve the proof's structure.
-Likewise, replacing Choice.Finite's ordered scan by `DecΣ` would lose its
+Likewise, replacing Choice.FiniteStageOrders's ordered scan by `DecΣ` would lose its
 leastness certificate; recovering that certificate needs the existing ordered
 fold. The inspected FOL renaming, constant relabelling, partial bounding, and
 parameter-placement inductions perform different operations, so merely moving
@@ -313,7 +313,7 @@ hull membership and closure lemmas still have consumers.
 
 The 1,954-line snapshot has not yet passed the full integration gate.
 `GHCRTS="-A64m -I0 -M8g" make check` exhausted its 8 GB heap while checking
-`L.GCH.HullCount` (Agda exit 251, make exit 2). Independent `make lint`,
+`L.GCH.HullCounting` (Agda exit 251, make exit 2). Independent `make lint`,
 `make test`, and `git diff --check` passed. The failure log is retained as
 `full-gate-sol-final.failed-heap.log` in the measurement directory.
 An isolated control also exhausted the same heap after restoring the old Hull
@@ -372,8 +372,8 @@ modules. No formatting-only reduction is credited.
 
 A fresh project-interface run of guarded Agda with `--profile=modules` on
 Landmarks exited 0 in 254.62 seconds. The top four modules account for 41.83%
-of profiled time: Choice.Order 36.134 s, Coding.Uniform 30.348 s,
-Coding.Graph 20.792 s, and Coding.Clauses 19.228 s. Raw evidence is retained in
+of profiled time: Choice.InternalWellOrder 36.134 s, Coding.UniformSatisfaction 30.348 s,
+Coding.SatisfactionGraph 20.792 s, and Coding.SatisfactionClauses 19.228 s. Raw evidence is retained in
 `profile-1953-modules.log`, `profile-1953-modules.json`, and
 `profile-1953-report.txt` in the measurement directory. Follow-up experiments
 target the transparent constant-carrier satisfaction graph and the broad
@@ -595,7 +595,7 @@ a statistical performance guarantee. Logs and machine-readable measurements:
 
 
 The shared-set-operation batch replaces HullCount's independent binary-union
-elimination and singleton decoding with the existing Coding.InL readers. HullIn
+elimination and singleton decoding with the existing Coding.CodeConstructibility readers. HullIn
 also uses that union API. This retires the last consumers of OmegaRec.pairʟ-out,
 so that reader was removed; pairʟ-in remains used by BoundedSubset and both union
 readers remain used inside OmegaRec. No public theorem or hypothesis changed.
@@ -655,7 +655,7 @@ Further bounded audits rejected three routes without changing the accepted
 source. OmegaRec.zeroAt via PairExpression costs one extra line in readable
 form. Generalizing the environment alphabet to Term needs a two-binder lift
 and its evaluation lemma; the full cost offsets Sequences' 9–10 removable
-lines. Choice.Finite has no supplied injection suitable for pullOrder, and
+lines. Choice.FiniteStageOrders has no supplied injection suitable for pullOrder, and
 abstracting its dependent lexicographic order would add a single-consumer
 framework for at most 0–10 lines of estimated benefit. These routes are not
 credited. A separate Sequences proof-boundary simplification is being checked.
@@ -701,7 +701,7 @@ shortcut was rejected after a bounded source-based proof-direction check.
 InclGraph now uses the existing definable-injection construction for the
 identity map. Assembly consumes its InjCode package, so redundant individual
 field/readback aliases were removed; G and the small inclusion retain their
-opacity boundaries. GCH.Definable's unused Ren namespace and dedicated import
+opacity boundaries. GCH.DefinableInjection's unused Ren namespace and dedicated import
 were also removed after checking consumers. Retaining compatibility wrappers
 would have increased the source; migrating the actual consumer makes the
 whole change reduce 10 lines (InjChain 8, Definable 2, Assembly 0). AGENTS now
@@ -942,7 +942,7 @@ compared all 112 timed masters byte-for-byte with main. Logs:
 milestone remains open: 2,429 lines removed, 571 still required.
 
 Three further bounded Sol audits rejected genericization on full cost.
-Choice.Internal's empty-alphabet recoding core is only 40 lines and already
+Choice.NameComparison's empty-alphabet recoding core is only 40 lines and already
 uses mapFo-comp; a cross-carrier coding theorem adds 28–40 lines while the
 empty-type conversion remains. Before/Table share 65 lines of induction
 (or 89 including graph readers), but the theorem and adapters cost 75
@@ -960,17 +960,17 @@ an acceptance criterion; all binder, environment and consumer costs count.
 Main remains the verified 26,544-line snapshot.
 
 The proof-clone audit found a real graph-table match between Hierarchy and
-Choice.Table. Root corrected its initial cost accounting: two 27-line copies
+Choice.OrderTable. Root corrected its initial cost accounting: two 27-line copies
 mean 54 gross lines removed, giving 6–18 saved after the proposed helper and
 both adapters, rather than a net increase. The explicitly excluded sequence
 evaluator candidate was removed from the report. Broader combined readers
 are estimated at 20–28 lines saved; the whole replacement constructor remains
-negative because Choice.Table must also construct its current relation.
+negative because Choice.OrderTable must also construct its current relation.
 Reports: `/private/tmp/bedrock-sol-proof-clones/REPORT.md` and
 `/private/tmp/bedrock-sol-all-approximation/PLAN.md`.
 
 Sol is drafting the semantic-reader route in an isolated three-file copy
-(Sequence, Hierarchy, Choice.Table). First it weakens Hierarchy.Entries to
+(Sequence, Hierarchy, Choice.OrderTable). First it weakens Hierarchy.Entries to
 existence of a recorded value, using Values where normalization is actually
 needed. That may remove repeated canonical-value transports and reduce the
 shared reader's adapters. Main is unchanged pending measured draft review.
@@ -985,7 +985,7 @@ contract and its temporary ownership is released. No partial experiment is
 being integrated or counted.
 
 The complete semantic-reader draft is a measured negative for acceptance:
-Sequence adds 87 lines, Hierarchy removes 52, Choice.Table removes 40, and
+Sequence adds 87 lines, Hierarchy removes 52, Choice.OrderTable removes 40, and
 HierDescribe is unchanged. The four-file count is 1,398 before and 1,393
 after: only five lines saved across a 360-line diff. The explicit motives,
 restriction proofs and instance adapters consume the predicted benefit.
@@ -1011,7 +1011,7 @@ unchanged. Main remains at the checked 26,544 lines until the complete migration
 and full gate pass. Audit: `/private/tmp/bedrock-sol-derived-connectives/PLAN.md`.
 
 The derived-connective core now typechecks: LevyHierarchy, FOL.Coding, Count,
-all five manipulation modules, Absoluteness, V.Smallness, Choice.Name and
+all five manipulation modules, Absoluteness, V.Smallness, Choice.CanonicalNames and
 ReflectFo exited 0. Concrete semantic adjustments use identity as the derived
 truth witness and explicit lift/lower around falsity. Core prose and Agda
 linters pass. These are intermediate checks only: the whole scratch migration

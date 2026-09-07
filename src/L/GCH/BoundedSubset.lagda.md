@@ -1,4 +1,16 @@
-# The bounded subset theorem, internally
+<!--en-->
+# Bounded subsets appear at controlled stages
+
+The bounded subset theorem locates a constructible subset once its elements and defining parameters are bounded. This internal form is the bridge from definability to the stage estimate used in the GCH argument.
+<!--zh-->
+# 有界子集在受控阶段出现
+
+有界子集定理在元素与定义参数已有界时，确定一个可构造子集出现的位置。它的内部形式把可定义性连接到 GCH 论证所需的阶段估计。
+<!--ja-->
+# 有界部分集合が現れる段階を制御する
+
+有界部分集合定理は、要素と定義パラメータが有界ならば、構成可能な部分集合が現れる位置を定める。この内部版が、定義可能性と GCH の議論で使う段階評価を結ぶ。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -22,14 +34,14 @@ open import L.Cardinal {ℓ} lem using ( IsCardinalL )
 open import L.GCH {ℓ} lem using ( InjL )
 open import L.GCH.Assembly {ℓ} lem
   using ( InternalBoundedSubset; inclusion-coded; injl-trans )
-open import L.GCH.Hull {ℓ} lem
+open import L.GCH.SkolemHull {ℓ} lem
   using ( module UnionKit; module HullStage; module HullElemDown )
-open import L.GCH.Pairing {ℓ} lem using ( prodL; ω⊆; Goal; module Step )
-open import L.GCH.Complete {ℓ} lem using ( superadequate-above; Superadequate )
-open import L.GCH.StageCount {ℓ} lem using ( move )
-open import L.GCH.StageCounted {ℓ} lem using ( stage-counted; module Site )
-open import L.GCH.OmegaRec {ℓ} lem using ( pairʟ-in )
-open import L.GCH.HullCount {ℓ} lem
+open import L.GCH.CardinalSquareLaw {ℓ} lem using ( prodL; ω⊆; Goal; module Step )
+open import L.GCH.AdequateStages {ℓ} lem using ( superadequate-above; Superadequate )
+open import L.GCH.StageCountingTools {ℓ} lem using ( move )
+open import L.GCH.StageInjection {ℓ} lem using ( stage-counted; module Site )
+open import L.GCH.OmegaRecursion {ℓ} lem using ( pairʟ-in )
+open import L.GCH.HullCounting {ℓ} lem
   using ( ord⊆Lset; module Union2; tag-union; module Point; module Count )
 
 open import Cubical.Data.Sigma using ( _×_ )
@@ -56,6 +68,23 @@ superadequate stage above `κ` and above `y`; the Skolem hull `M` of `X` in
 `L_λ` collapses to a stage `L_β` (src/L/GCH/StageCounted.lagda.md `Site`); `y`
 is fixed by the collapse, so `y ∈ L_β`; and `β ⊆ L_β = πX ↪ M ↪ κ`, the last by
 src/L/GCH/HullCount.lagda.md.
+
+```agda
+```
+
+<!--en-->
+## Bounding a constructible subset of a cardinal
+
+Fix an internal cardinal `κ` and a subset `y` of it. A defining formula for `y` uses only finitely many parameters; collecting their birth stages produces one ordinal `β` into which both the parameters and the relevant satisfaction data fit.
+<!--zh-->
+## 为基数的可构造子集取界
+
+固定内部基数 `κ` 及其子集 `y`。定义 `y` 的公式只使用有限多个参数；收集这些参数的诞生阶段，便得到一个同时容纳参数与相关满足关系数据的序数 `β`。
+<!--ja-->
+## 基数の構成可能な部分集合を有界化する
+
+内部基数 `κ` とその部分集合 `y` を固定する。`y` を定義する論理式が使うパラメータは有限個なので、その誕生段階を集めると、パラメータと必要な充足関係のデータを収める一つの順序数 `β` が得られる。
+<!--/-->
 
 ```agda
 module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)

@@ -1,4 +1,16 @@
+<!--en-->
 # The constructible universe satisfies GCH
+
+The preceding counting, condensation, and power-set arguments now meet. This chapter supplies the four internal hypotheses of the assembly theorem and records the final result that `L` satisfies GCH.
+<!--zh-->
+# 可构造宇宙满足 GCH
+
+此前的计数、凝聚与幂集论证在此汇合。本章提供装配定理所需的四条内部假设，并记录最终结果：`L` 满足 GCH。
+<!--ja-->
+# 構成可能宇宙は GCH を満たす
+
+ここで、これまでの計数、凝縮、冪集合の議論が合流する。本章では組み立て定理の四つの内部仮定を与え、最終結果として `L` が GCH を満たすことを記録する。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -12,15 +24,15 @@ module L.GCH.Theorem {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import L.Model {ℓ} lem using ( L⊨ZF )
 open import L.GCH {ℓ} lem using ( GCHStatement )
 open import L.GCH.Assembly {ℓ} lem using ( gch-from-internal-bill )
-open import L.GCH.StageCounted {ℓ} lem using ( stage-counted )
-open import L.GCH.SuccIntoPower {ℓ} lem using ( succ-into-power )
+open import L.GCH.StageInjection {ℓ} lem using ( stage-counted )
+open import L.GCH.SuccessorIntoPowerSet {ℓ} lem using ( succ-into-power )
 open import L.GCH.BoundedSubset {ℓ} lem using ( internal-bounded-subset )
 ```
 
 The trophy: the internal bill of `L.GCH.Assembly`, paid in full.
-`StageCountedCoded` by `L.GCH.StageCounted`, `InternalBoundedSubset` by
+`StageCountedCoded` by `L.GCH.StageInjection`, `InternalBoundedSubset` by
 `L.GCH.BoundedSubset` (the hull in L, its collapse, condensation through the
-level formula, and the count), `SuccIntoPower` by `L.GCH.SuccIntoPower`.
+level formula, and the count), `SuccIntoPower` by `L.GCH.SuccessorIntoPowerSet`.
 
 ```agda
 L⊨GCH : GCHStatement L⊨ZF

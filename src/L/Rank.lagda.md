@@ -1,12 +1,18 @@
-# Rank
+<!--en-->
+# Von Neumann rank
+
+The rank of a set is the union of the successors of the ranks of its members. Membership recursion defines it; rank strictly increases along membership, is always an ordinal, bounds every set beneath a sufficiently large ordinal, and fixes ordinals.
+<!--zh-->
+# Von Neumann 秩
+
+集合的秩是其成员各自秩的后继之并。它由隶属递归定义；秩沿隶属关系严格增长，始终是序数，把每个集合界在足够大的序数之下，并固定序数。
+<!--ja-->
+# von Neumann ランク
+
+集合のランクは、その各要素のランクの後続の和集合です。所属再帰で定義され、所属に沿って狭義単調に増加し、常に順序数となり、各集合を十分大きな順序数の下に置き、順序数を固定します。
+<!--/-->
 
 <!--en-->
-Every set has a rank: the least stage of the cumulative hierarchy at which it
-appears, measured in ordinals. The definition is one of the oldest in set
-theory and reads as a recursion on membership: the rank of `x` is the least
-ordinal above the ranks of all members of `x`, which is the union of their
-successors.
-
 Two facts about it carry this part of the book. The rank of any set is an
 ordinal, so rank really is a measurement in ordinals; and an ordinal is its own
 rank, so rank is the *canonical* ordinal index rather than a second, parallel
@@ -21,8 +27,6 @@ regularity supplied for free. So the whole chapter is constructive, and the
 classical assumption that the next chapter introduces is not needed for any of
 it.
 <!--zh-->
-每个集合都有秩：它在累积层级中现身的最低阶段，以序数度量。这个定义是集合论中最古老的定义之一，读起来就是一条沿成员关系的递归：`x` 的秩是高于 `x` 全部成员之秩的最小序数，也就是它们的后继之并。
-
 关于它有两个事实支撑本书这一部分。任何集合的秩都是序数，故秩确实是以序数进行的度量；而序数是自身的秩，故秩是**典范的**序数索引，不是另一套平行编号。第二个事实使得关于阶段的问题可以换成关于秩的问题再换回来，而无穷公理的收集那一步恰是这样一个问题。
 
 关于递归的架设方式说一句，因为这与塔用的是同一个手法。此处不需要任何外部的序数类型：秩取值于层级自身，而递归跑在良基的成员关系上，那是正则性免费供应的。所以整章是构造性的，下一章引入的经典假设在这里一处也用不上。
@@ -58,16 +62,22 @@ open hPropStructure 𝒮ᵥ
 
 <!--en-->
 ## The recursion
-<!--zh-->
-## 递归
-<!--/-->
 
-<!--en-->
 The step takes the union, over the members of `x`, of the successors of their
 ranks. As with the tower, the recursive calls run over the *small* type of
 members, and the computation rule holds propositionally rather than
 definitionally, which is all any later proof asks of it.
+<!--zh-->
+## 递归
 
+步进取 `x` 的成员上、其秩之后继的并。与塔一样，递归调用跑在成员的**小**类型上，而计算规则是命题级而非定义性成立，这也正是后文任何证明对它的全部要求。
+<!--ja-->
+## 再帰
+
+`rank x`{.Agda} は、`x` の各要素 `y` に対する `sucV (rank y)` の和集合として所属再帰で定義されます。計算法則は、ランクについての後続の帰納証明でこの定義を展開します。
+<!--/-->
+
+<!--en-->
 The rank itself is sealed, for the same reason the tower is: it unfolds to an
 accessibility eliminator, and any goal that mentions the rank of a set built by
 nesting, a pair inside a pair inside a pair, drags that eliminator through
@@ -75,8 +85,6 @@ normalization. Measured, on a goal four constructions deep: **163 seconds
 without the seal, 1.4 with**. `rank-compute`{.Agda} is the official unfolding
 and lives inside the seal, so nothing downstream loses anything.
 <!--zh-->
-步进取 `x` 的成员上、其秩之后继的并。与塔一样，递归调用跑在成员的**小**类型上，而计算规则是命题级而非定义性成立，这也正是后文任何证明对它的全部要求。
-
 秩本身被封起来，理由与塔相同：它展开成一个可及性消去子，而任何提到「由嵌套造出的集合」之秩的目标，例如对子里的对里的对，都会把那个消去子拖进归一化。实测，在一个四层深的构造上：**不封 163 秒，封了 1.4 秒**。`rank-compute`{.Agda} 是官方展开式且住在封内，故下游不失去任何东西。
 <!--/-->
 
@@ -98,19 +106,22 @@ opaque
 <!--en-->
 ## Rank strictly increases along membership
 
-<!--zh-->
-## 秩沿成员关系严格增长
-<!--/-->
-
-<!--en-->
 The one fact that makes rank a descent measure. It is the outward half of the
 fixed-point argument below with the ordinality hypothesis dropped: the same union
 witness, no `IsOrd`{.Agda} anywhere. A recursion that must descend into a set
 built by nesting, rather than into a member, has no membership to induct on and
 uses this instead.
 <!--zh-->
+## 秩沿成员关系严格增长
+
 使秩成为一把下降尺的那一条事实。它就是下文不动点论证的向外那一半，去掉了序数假设：同一个并的见证，全程不见 `IsOrd`{.Agda}。一场必须下降进「由嵌套造出的集合」而非下降进某个成员的递归，没有成员关系可供归纳，于是改用这一条。
+<!--ja-->
+## ランクは所属に沿って狭義単調に増加する
+
+`x ∈ y` なら、`rank x`{.Agda} の後続は `rank y`{.Agda} を作る和集合の一項です。したがって `rank x ∈ rank y` が成り立ちます。
 <!--/-->
+
+
 
 ```agda
 rank-mono : (x y : S) → ⟨ x ∈ˢ y ⟩ → ⟨ rank x ∈ˢ rank y ⟩
@@ -123,17 +134,21 @@ rank-mono x y x∈y = subst (λ w → ⟨ rank x ∈ˢ w ⟩) (sym (rank-compute
 
 <!--en-->
 ## Rank is an ordinal
-<!--zh-->
-## 秩是序数
-<!--/-->
 
-<!--en-->
 One membership induction. Unfold once; the inductive hypothesis makes each
 member's rank an ordinal, successors of ordinals are ordinals, and the previous
 chapter's closure under small unions collects the family back into an ordinal.
 <!--zh-->
+## 秩是序数
+
 一次成员归纳。展开一次；归纳假设使每个成员的秩是序数，序数的后继是序数，而上一章的小并封闭性把这一族收回成序数。
+<!--ja-->
+## ランクは順序数
+
+各要素のランクが順序数であるという帰納仮定から、その後続も順序数となり、それらの和集合も順序数になります。よってすべての集合のランクは順序数です。
 <!--/-->
+
+
 
 ```agda
 rank-ord : (A : S) → IsOrd (rank A)
@@ -159,6 +174,10 @@ bounds on the ranks in a constructible stage use this argument.
 ## 界住秩
 
 若一个集合的每个成员的秩都属于某序数，该集合的秩就包含于该序数。定义之并的每个成员落在某个成员之秩的后继中，传递性给出所需包含。序数的不动点性质与可构造阶段中的秩界都用这条论证。
+<!--ja-->
+## ランクの上界
+
+`β` が順序数で、`A` の各要素のランクを含むなら、ランクの再帰方程式と `β` の推移性により `rank A ⊆ β` が従います。この補題は集合全体のランクを一つの順序数で抑えます。
 <!--/-->
 
 ```agda
@@ -181,11 +200,7 @@ rank-upper A β oβ bound x hx = PT.rec (snd (x ∈ˢ β))
 
 <!--en-->
 ## Ordinals are their own rank
-<!--zh-->
-## 序数是自身的秩
-<!--/-->
 
-<!--en-->
 Again by membership induction, and this time the proof is an extensionality
 between `rank A` and `A`. Left to right, an element of `rank A` sits inside the
 successor of the rank of some member, and that rank *is* the member by the
@@ -193,7 +208,17 @@ inductive hypothesis, so the element is the member or belongs to it, and either
 way it belongs to `A` by transitivity. Right to left, a member of `A` is the
 rank of itself, hence belongs to the successor of that rank, which is one
 branch of the union.
+<!--zh-->
+## 序数是自身的秩
 
+仍是成员归纳，而这次的证明是 `rank A` 与 `A` 之间的一次外延。从左到右：`rank A` 的元素落在某个成员之秩的后继里面，而依归纳假设那个秩**就是**该成员，故该元素或就是该成员、或属于它，两种情形都经传递性属于 `A`。从右到左：`A` 的成员是自身的秩，故属于该秩的后继，而那是并的一支。
+<!--ja-->
+## 順序数は自分自身のランクである
+
+`A` が順序数なら、各要素のランクは帰納法でその要素自身に等しくなります。ランクの計算法則と外延性を用いると `rank A ≡ A` が得られます。
+<!--/-->
+
+<!--en-->
 The shape of the argument is worth one remark: extensionality is applied to
 `rank A` and `A` directly, both of them neutral terms, and the nested union is
 only ever reached through the computation rule as a path. Feeding the unfolded
@@ -201,8 +226,6 @@ union to extensionality instead would force the checker to normalize a deeply
 nested set expression, which is the standard way these proofs become
 uncheckable.
 <!--zh-->
-仍是成员归纳，而这次的证明是 `rank A` 与 `A` 之间的一次外延。从左到右：`rank A` 的元素落在某个成员之秩的后继里面，而依归纳假设那个秩**就是**该成员，故该元素或就是该成员、或属于它，两种情形都经传递性属于 `A`。从右到左：`A` 的成员是自身的秩，故属于该秩的后继，而那是并的一支。
-
 论证的形状值得说一句：外延性直接施于 `rank A` 与 `A`，二者都是中性项，而那个嵌套的并只经计算规则以路径的形式被触及。若改把展开后的并喂给外延性，就会迫使检查器归一化一个深层嵌套的集合表达式，那正是这类证明变得不可检查的标准途径。
 <!--/-->
 
@@ -226,11 +249,7 @@ rank-fix = ∈-induction {P = λ A → IsOrd A → rank A ≡ A} step
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 `rank`{.Agda} measures every set by an ordinal (`rank-ord`{.Agda}) and fixes
 the ordinals themselves (`rank-fix`{.Agda}), which together certify it as the
 canonical index. Both proofs are membership inductions on regularity, so the
@@ -239,5 +258,11 @@ far up does this set appear" and get an ordinal answer, and the next two
 chapters spend that on the one remaining question about the tower: which
 ordinals appear at which stage.
 <!--zh-->
+## 小结
+
 `rank`{.Agda} 以序数度量每个集合 (`rank-ord`{.Agda})，并固定序数自身 (`rank-fix`{.Agda})，二者合起来认证它为典范索引。两个证明都是正则性上的成员归纳，故本章在假设上分文不花。它买到的是「这个集合到多高才现身」这一问的序数答案，而接下来两章会把它花在关于塔的最后一个问题上：哪些序数出现在哪个阶段。
+<!--ja-->
+## まとめ
+
+ランクは所属に沿って増加する順序数であり、指定された順序数上界の中に収まります。順序数に対しては `rank-fix`{.Agda} がランクを恒等写像にするため、ランクと順序数階層が一致します。
 <!--/-->

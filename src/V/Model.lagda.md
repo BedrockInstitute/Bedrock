@@ -1,19 +1,18 @@
-# V ⊨ ZF(C)
-
 <!--en-->
-Time to settle the account. The model record demands twelve fields; two are
-banked (extensionality and regularity, from the hierarchy chapter), and the
-smallness chapter's free tier covers separation only for Δ₀ witnesses, while
-the record wants it for **every** formula. This chapter delivers the rest: the
-stock sets that the library simply has (empty, pair, union), replacement and
-strong infinity, which turn out to cost nothing, and then the two genuine debts,
-full separation and power set, whose exact price is a resizing assumption. With
-that assumption paid, the record is assembled: **V is a model of ZF**, the
-relative-consistency theorem this part exists to prove. Choice then enters as a
-second, independent assumption, and upgrades the model to ZFC.
+# The cumulative hierarchy models ZF and ZFC
+
+The cumulative hierarchy satisfies ZF once propositional resizing supplies full separation and a small classifier for propositions supplies power set. Its remaining axioms follow from the hierarchy constructors; an independent set-level choice assumption then upgrades the model to ZFC.
 <!--zh-->
-清账的时候到了。模型 record 要十二个字段；两个已入账 (外延与正则，层级章)，小性章的免费档又只覆盖带 Δ₀ 见证的分离，而 record 要的是**每条**公式。本章交付其余一切：库里现成的库存集合 (空集、配对、并)，成本意外为零的替换与强无穷，然后是两笔真正的欠账，全分离与幂集，其精确价格是一个降层假设。付讫，record 合龙：**V 是 ZF 的模型**，本部为之而生的相对一致性定理。随后选择公理作为第二个独立假设进场，把模型升级到 ZFC。
+# 累积层级是 ZF 与 ZFC 的模型
+
+命题降层提供全分离、命题的小分类器提供幂集后，累积层级满足 ZF。其余公理由层级构造得到；再加入独立的集合层选择假设，模型便升级为 ZFC。
+<!--ja-->
+# 累積階層は ZF と ZFC のモデル
+
+命題リサイズが完全な分出を、小分類子が冪集合を与えると、累積階層は ZF を満たします。残りの公理は階層の構成から従い、独立な集合レベルの選択の仮定を加えると ZFC のモデルになります。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -66,11 +65,7 @@ open SemanticsV.At S id using ( _⊨_ )
 
 <!--en-->
 ## The stock sets
-<!--zh-->
-## 库存集合
-<!--/-->
 
-<!--en-->
 Empty set, pair, and union sit in the library ready-made, each with its axiom.
 Only the *shape* needs converting, and the recipe is the same three moves every
 time: the library states its axiom in small form (`∈ₛ`), `∈∈ₛ`{.Agda} reshapes
@@ -79,8 +74,16 @@ the record's field wants. For the pair the fit is even closer: the library's
 "equal to `a` or to `b`" *is* the field's `(x ≈ˢ a) ⊔ (x ≈ˢ b)` definitionally,
 so the glue is one layer of `∈∈ₛ` and nothing else.
 <!--zh-->
+## 库存集合
+
 空集、配对、并在库里现成躺着，各带公理。要换的只是**形状**，而配方每次都是同样三步：库公理以小形式 (`∈ₛ`) 陈述，`∈∈ₛ`{.Agda} 逐点换形成员关系，`⇔toPath`{.Agda} 把双蕴含落成字段要的路径。配对甚至更严丝合缝：库的「等于 `a` 或等于 `b`」与字段的 `(x ≈ˢ a) ⊔ (x ≈ˢ b)` **定义性相同**，胶水只剩一层 `∈∈ₛ`。
+<!--ja-->
+## 基本的な集合
+
+空集合、対、和集合は階層のライブラリ構成から得られます。小さな所属の特徴付けを通常の所属へ移すと、モデル構造体が要求する仕様になります。
 <!--/-->
+
+
 
 ```agda
 empty-spec : (x : S) → (x ∈ˢ ∅) ≡ ⊥
@@ -128,11 +131,7 @@ union-family-out X f x h = PT.rec PT.squash₁
 
 <!--en-->
 ## Replacement, for free
-<!--zh-->
-## 替换，免费
-<!--/-->
 
-<!--en-->
 Replacement is the first surprise of the chapter: a *schema* that costs nothing.
 The reason is `sett`{.Agda} itself. Given `φ` functional on `a`, index the image
 by the small member type `⟪ a ⟫` and write the image set down directly; no
@@ -141,8 +140,16 @@ membership fact, and it is the smallness chapter's refrain once more: the fibers
 of `∈-asFiber`{.Agda} are untruncated, so "member to index" is a function, not a
 choice.
 <!--zh-->
+## 替换，免费
+
 替换是本章第一个意外：一条**模式**公理，成本为零。原因就是 `sett`{.Agda} 本身。给定在 `a` 上函数性的 `φ`，以小成员类型 `⟪ a ⟫` 为索引，把像集直接写下来，全程不问任何公理。娇贵的方向是从成员资格回收索引，而这又是小性章的老调重弹：`∈-asFiber`{.Agda} 的纤维不加截断，「从成员到索引」是函数，不是选择。
+<!--ja-->
+## 置換
+
+関数的な論理式の像は、元の集合の小さな提示で添字付けた `sett`{.Agda} として直接作れます。要素から添字への復元には埋め込みの切り詰められていないファイバーを使うため、選択公理は不要です。
 <!--/-->
+
+
 
 ```agda
 private
@@ -174,11 +181,7 @@ module _ (a : S) (φ : Formula S 2)
 
 <!--en-->
 ## The numeral chain and ω
-<!--zh-->
-## 数码链与 ω
-<!--/-->
 
-<!--en-->
 The library's `ω` is `sett` over `Lift ℕ` with the library numerals `#` as the
 family, so its membership is **definitionally** "merely hit by some `#`": strong
 infinity in exactly the record's sense, before any proof is written. What remains
@@ -187,8 +190,16 @@ library's: `numeralV`{.Agda} steps by `a ∪ ⁅ a , a ⁆` while `#`{.Agda} ste
 `sucV a = a ∪ ⁅ a ⁆s`, and the only genuine gap is `⁅ a , a ⁆ ≡ ⁅ a ⁆s`, one
 appeal to extensionality (the two families differ only in index type).
 <!--zh-->
+## 数码链与 ω
+
 库的 `ω` 是以库数码 `#` 为族、在 `Lift ℕ` 上的 `sett`，于是它的成员关系**按定义**就是「仅仅被某个 `#` 命中」：恰是 record 意义上的强无穷，一笔证明未写就已成立。剩下的是两步记账。第一步，模型的链要与库的链对齐：`numeralV`{.Agda} 按 `a ∪ ⁅ a , a ⁆` 走步，`#`{.Agda} 按 `sucV a = a ∪ ⁅ a ⁆s` 走步，唯一的真实间隙是 `⁅ a , a ⁆ ≡ ⁅ a ⁆s`，一次外延性 (两个族只差索引类型)。
+<!--ja-->
+## 数項の列と ω
+
+モデルの後続操作による数項列をライブラリの数項 `#` と同定します。ライブラリの `ω` の所属仕様と合わせることで、強い無限公理に必要な零、後続閉包、有限数項の特徴付けが得られます。
 <!--/-->
+
+
 
 ```agda
 pair-singleton : (a : S) → ⁅ a , a ⁆ ≡ ⁅ a ⁆s
@@ -291,11 +302,7 @@ module NumPin (a : ℕ → S) (q : (n : ℕ) → a n ≡ # n) where
 
 <!--en-->
 ## The price of the rest
-<!--zh-->
-## 其余部分的价格
-<!--/-->
 
-<!--en-->
 Two fields remain, full separation and power set, and neither is free: both need
 truth values brought down a universe with no Δ₀ witness to pay the fare. The
 price is exactly the impredicativity packing of `Base.Impredicativity`: `resizing`{.Agda} compresses
@@ -304,16 +311,20 @@ set will be indexed by. Nothing here is an axiom; the assembly takes the
 packing as a parameter, and the classical reader rides free through
 `lem→impredicativity`{.Agda}, which is what the dividends were saved for.
 <!--zh-->
+## 其余部分的价格
+
 还剩两个字段，全分离与幂集，都不免费：两者都要把真值降下一层宇宙，却没有 Δ₀ 见证替它们买票。价格恰是`Base.Impredicativity` 打包的非直谓性接口：`resizing`{.Agda} 压缩任意命题，`hPropSmallness`{.Agda} 是幂集将用作索引的小分类器。此处无一是公理；合龙以这份打包为参数，经典读者则经 `lem→impredicativity`{.Agda} 免票，当初存下红利，等的就是今天。
+<!--ja-->
+## 残る公理に必要な仮定
+
+完全な分出と冪集合では、任意の真理値を一段低い宇宙へ移す必要があります。命題リサイズと小分類子をまとめた非可述性の仮定が、ちょうどこの二つを構成するために使われます。
 <!--/-->
+
+
 
 <!--en-->
 ## Power set
-<!--zh-->
-## 幂集
-<!--/-->
 
-<!--en-->
 The power set is the one construction the library's own header disclaims, and the
 small classifier is precisely what builds it. Index the candidate subsets by
 **small characteristic functions** `⟪ a ⟫ → Ω'`; realizing one as a set is a
@@ -322,8 +333,16 @@ untruncated fibers: from an actual subset `s`, the characteristic function
 `m ↦ encode (⟪ a ⟫↪ m ∈ₛ s)` is recovered as a function, and extensionality
 closes the loop.
 <!--zh-->
+## 幂集
+
 幂集是库文件头亲口否认的那一件构造，而小分类器恰好把它造出来。以**小特征函数** `⟪ a ⟫ → Ω'` 为候选子集的索引；把一个特征函数实现为集合，就是在它选中的成员上做一次 `sett`。娇贵的方向又一次流经不加截断的纤维：从真实的子集 `s` 回收特征函数 `m ↦ encode (⟪ a ⟫↪ m ∈ₛ s)` 是函数操作，外延性收口。
+<!--ja-->
+## 冪集合
+
+小分類子の値を持つ特性関数で、与えられた集合の部分集合を添字付けます。各特性関数を `sett`{.Agda} で実現し、外延性によってすべての部分集合がこの形で得られることを示します。
 <!--/-->
+
+
 
 ```agda
 module Power (sΩ : HPropSmallness ℓ) where
@@ -383,11 +402,7 @@ module Power (sΩ : HPropSmallness ℓ) where
 
 <!--en-->
 ## Assembly: V ⊨ ZF
-<!--zh-->
-## 合龙：V ⊨ ZF
-<!--/-->
 
-<!--en-->
 Given the impredicativity parameter, full separation is the smallness chapter's
 pipe with the fare paid by `resizing`{.Agda} instead of a Δ₀ witness, and every field
 is on the table. One discipline governs the assembly: each unique-existence field
@@ -396,8 +411,16 @@ projections compute back to the stock sets by definition. The two pinning
 equations for the numeral chain are discharged through the `sucV` case analysis,
 riding `numeralV≡#`{.Agda} between the model's chain and the library's.
 <!--zh-->
+## 合龙：V ⊨ ZF
+
 非直谓性参数在手，全分离就是小性章那根水管，票钱由 `resizing`{.Agda} 代替 Δ₀ 见证付讫，十二个字段至此凑齐。合龙由一条纪律统辖：每个唯一存在字段都以**库存集合为中心**，让摹状词算子的投影按定义算回库存。数码链的两条钉死方程经 `sucV` 分情形装置兑现，其间靠 `numeralV≡#`{.Agda} 在模型链与库链之间往返。
+<!--ja-->
+## 組み立て：V ⊨ ZF
+
+非可述性の仮定から完全な分出と冪集合を得ると、既に構成した集合と定理が `isZFModel`{.Agda} の全欄を満たします。その結果、累積階層が ZF を満たすことが得られます。
 <!--/-->
+
+
 
 ```agda
 module VModel (imp : Impredicativity ℓ) where
@@ -446,11 +469,7 @@ V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→impredicativity lem)
 
 <!--en-->
 ## Choice, independently
-<!--zh-->
-## 选择，另立门户
-<!--/-->
 
-<!--en-->
 The excluded middle does not prove choice, so upgrading to ZFC costs a genuinely
 new assumption: the choice chapter's `SetChoice`{.Agda}. (Recall that the
 dependence runs the *other* way, `choice→lem`{.Agda}; the section after this one
@@ -464,8 +483,16 @@ constructional accident. The choice set is `sett` over the chosen indices, and
 disjointness plus the embedding property pin its intersection with each member
 to exactly one point.
 <!--zh-->
+## 选择，另立门户
+
 排中律推不出选择，于是升级到 ZFC 要花一笔真正新的假设：选择章的 `SetChoice`{.Agda}。(请记得依赖关系走的是**另一个**方向，`choice→lem`{.Agda}；下一节兑现的正是它。) 选择只施加在小成员类型上，断言的是**索引**的选择，是这句话有意义的最低层级。由它可得本载体上**任意** ZF 模型的选择集公理，而不只是上面装配的那一个：证明不消费模型的任何构造细节，只用它的 `∩` 与外延性。这一点值得玩味，选择在此是 V 上 ZF 模型的结构性事实，不是构造的偶然。选择集是选中索引上的一次 `sett`，不交性加嵌入性把它与每个成员的交钉死在恰好一点。
+<!--ja-->
+## 独立な選択
+
+排中律だけでは選択は導けないため、ZFC への拡張では集合レベルの選択を独立に仮定します。階層での選択集合は、各ファイバーから代表を同時に選ぶ関数を用いて構成されます。
 <!--/-->
+
+
 
 ```agda
 private
@@ -535,11 +562,7 @@ module ChoiceLemma (zf : isZFModel) (ac : SetChoice ℓ) where
 
 <!--en-->
 ## V ⊨ ZFC, on choice alone
-<!--zh-->
-## V ⊨ ZFC：单凭选择
-<!--/-->
 
-<!--en-->
 The ZFC theorem now assembles from one hypothesis, one instance, with
 Diaconescu's theorem paying every other bill. Choice at the truth level
 `ℓ-suc ℓ` decides that level's propositions, funding the whole impredicativity
@@ -549,8 +572,16 @@ finer accounting stays visible in the pieces: `VModel`{.Agda} charges exactly
 impredicativity, `ChoiceLemma`{.Agda} exactly one level of choice; only their
 sum is stated here.)
 <!--zh-->
+## V ⊨ ZFC：单凭选择
+
 ZFC 定理现在由单一假设、单个实例合龙，其余账单全由 Diaconescu 定理代付。真值层 `ℓ-suc ℓ` 上的选择判定该层的命题，付得起整份非直谓性打包；同一份实例降一层宇宙，再喂给选择集。模型自己真值层上的一份选择，就是 `V ⊨ ZFC` 的全部价格。(更细的账目在零件上仍然可见：`VModel`{.Agda} 恰收非直谓性，`ChoiceLemma`{.Agda} 恰收一层选择；此处陈述的只是它们的总和。)
+<!--ja-->
+## 選択だけから V ⊨ ZFC
+
+一段高い宇宙での選択は排中律を導き、そこから命題リサイズが得られます。同じ選択仮定が階層の選択公理も与えるため、追加の仮定なしで ZFC のモデルが組み上がります。
 <!--/-->
+
+
 
 ```agda
 V⊨ZFC : SetChoice (ℓ-suc ℓ) → isZFCModel
@@ -563,11 +594,7 @@ V⊨ZFC ac = record
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 The account closes balanced. Empty set, pair, and union were library stock
 reshaped by `∈∈ₛ` and `⇔toPath`{.Agda}; replacement came free through `sett`
 over untruncated fibers; strong infinity was `ω`'s definition plus one chain
@@ -577,5 +604,11 @@ cost exactly `Base.Impredicativity`'s `Impredicativity`{.Agda} packing: assembly
 into the headline `V⊨ZF`{.Agda}, and by Diaconescu the choice interface alone
 funds `V⊨ZFC`{.Agda}. The universe that the constructible-universe chapters will dig inside now exists.
 <!--zh-->
+## 小结
+
 账本轧平。空集、配对、并是库存经 `∈∈ₛ` 与 `⇔toPath`{.Agda} 换形；替换沿不加截断的纤维经 `sett` 白得；强无穷是 `ω` 的定义加一次链对齐 (`numeralV≡#`{.Agda})。两笔欠账，全分离与幂集，价格恰为基础章节打包的 `Impredicativity`{.Agda}：合龙以此精确价格给出 `V⊨ZF-impredicative`{.Agda}，排中律把它赎回成主打的 `V⊨ZF`{.Agda}，经 Diaconescu 更是单凭选择接口就资助了 `V⊨ZFC`{.Agda}。可构造宇宙诸章将要向内开凿的那个宇宙，现在存在了。
+<!--ja-->
+## まとめ
+
+命題リサイズから ZF のモデルが得られ、排中律はそのリサイズを導きます。選択からは階層内の選択公理と排中律の両方が得られるため、一つの高い宇宙での選択仮定だけで `V⊨ZFC`{.Agda} が従います。
 <!--/-->

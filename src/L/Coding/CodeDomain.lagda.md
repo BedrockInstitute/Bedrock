@@ -1,9 +1,15 @@
+<!--en-->
 # The closed domain of formula codes
 
-<!--en-->
-The general closure predicates from `L.Coding.Closure` describe how subcodes must be present. This chapter combines them with constructor shapes and the environment tower to define the actual domain of complete formula codes and prove its soundness and completeness.
+This chapter constructs inside `L` a single domain containing exactly the well-formed formula codes of every arity and closed under their immediate subcodes. It defines constructor-key recognition, proves shape and closure in both semantic directions, and provides witnesses connecting each code to its decoded syntax.
 <!--zh-->
-`L.Coding.Closure` 的一般封闭谓词描述子码必须如何出现。本章把它们与构造子形状、环境塔结合，定义完整公式码的实际定义域，并证明其可靠性与完备性。
+# 公式码的封闭定义域
+
+本章在 `L` 内构造一个定义域，它恰好包含所有元数上的良构公式码，并对其直接子码封闭。本章定义构造子键的识别，双向证明形状与封闭性，并给出连接每个码与其解码语法的见证。
+<!--ja-->
+# 論理式の符号の閉じた定義域
+
+本章では、すべてのアリティの整形式な論理式の符号をちょうど含み、直下の部分符号に閉じた一つの定義域を `L` 内に構成します。構成子キーの認識を定義し、形と閉性を意味論の両方向で示し、各符号を復号された構文へ結ぶ証人を与えます。
 <!--/-->
 
 ```agda
@@ -25,7 +31,7 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; #mono; module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Environment {ℓ} using ( env )
-open import L.Coding.EnvSet {ℓ} lem using ( envSet )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet )
 open import L.Axioms.Numerals {ℓ} using ( numeralL-fst; sucʟ; sucʟ-fst )
 open import L.Coding.Model {ℓ} using ( prAtL; appAt; appAt-adequate )
 open import L.Coding.Expressions {ℓ} using ( sucAtL )
@@ -38,7 +44,7 @@ open import L.Coding.Quantification {ℓ} using
   ; sndEx; sndAll; bothEx; bothAll
   ; sndEx-out; sndAll-in; bothEx-out; bothAll-in
   ; fillSnd; fillBoth; useSnd; useBoth )
-open import L.Coding.Tower {ℓ} lem using ( module Tower; nn )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower; nn )
 
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.FinData using ( toℕ )
@@ -68,6 +74,20 @@ This chapter describes the shapes of formula codes and the closure conditions th
 <!--zh-->
 本章描述公式码的形状，以及使结构归纳可用的封闭条件。
 <!--/-->
+<!--en-->
+## Describing shape and closure
+
+The description of a code domain has two parts. Every member must have one of the ten constructor shapes at a recorded arity, and every constructor key must bring its immediate term and formula subkeys back into the same domain.
+<!--zh-->
+## 描述形状与封闭性
+
+码定义域的描述分为两部分：每个成员都必须在某个记录的元数上具有十种构造子形状之一，而每个构造子键的直接词项子键与公式子键都必须回到同一定义域中。
+<!--ja-->
+## 形と閉性の記述
+
+符号の定義域の記述は二つの部分からなります。各要素は記録されたアリティで十個の構成子の形のいずれかを持ち、各構成子キーの直下にある項と論理式の部分キーは同じ定義域へ戻らなければなりません。
+<!--/-->
+
 The code set. `C` is the set of keys `(n, code)` of the formulas over `w` at
 every arity. Two clauses in Devlin polarity: every member is a key of one of the
 ten shapes, at an arity the tower holds, with its subkeys in `C` and its term
@@ -320,6 +340,20 @@ codesAt C w E N = shapeAt C w E N ∧̇ closeAt C w E N
 Δ₀-codesAt : ∀ {m} (C w E : Fin m) (N : Fin 10 → Fin m) → Δ₀ (codesAt C w E N)
 Δ₀-codesAt C w E N = checkΔ₀ (codesAt C w E N) tt
 ```
+
+<!--en-->
+## Reading the description
+
+The semantic elimination lemmas turn satisfaction of the description into concrete data. They recover term codes, successor-arity keys, constructor tags and payloads, then expose the shape and closure clauses needed to follow a code to its immediate subcodes.
+<!--zh-->
+## 读取描述
+
+语义消去引理把对描述的满足化为具体数据：恢复词项码、后继元数键、构造子标签与载荷，再给出沿码走向其直接子码所需的形状与封闭子句。
+<!--ja-->
+## 記述の読み出し
+
+意味論的な除去補題は、記述の充足から具体的なデータを取り出します。項の符号、後続アリティのキー、構成子タグとペイロードを復元し、符号から直下の部分符号へ進むための形と閉性の条件を明らかにします。
+<!--/-->
 
 The codes, read. The semantic content of the ten payloads, and one reader per
 macro, at variable environments.
@@ -814,6 +848,20 @@ makes, which reduces at either instance.
         (g c₁ ar' a s c₁∈ e₁ (suc-out i5 i1 (a ∷ ar' ∷ s ∷ c₁ ∷ δ) hs) x x∈)))
 ```
 
+<!--en-->
+## Soundness: decoding every member
+
+Every member of a domain satisfying the description decodes to a formula over the chosen constant set. The proof reads its constructor shape, recursively decodes the required subcodes through closure, and reconstructs the corresponding term or formula.
+<!--zh-->
+## 可靠性：解码每个成员
+
+满足该描述的定义域中，每个成员都解码为选定常元集上的公式。证明读取其构造子形状，经封闭性递归解码所需子码，再重建对应词项或公式。
+<!--ja-->
+## 健全性：各要素の復号
+
+記述を満たす定義域の各要素は、選んだ定数集合上の論理式へ復号できます。構成子の形を読み、閉性を使って必要な部分符号を再帰的に復号し、対応する項または論理式を再構成します。
+<!--/-->
+
 `C` is sound: every member is the key of a formula over `w`. The Δ₀ shape clause
 supplies src/L/Coding/Model.lagda.md `closedAt` and
 src/L/Coding/Shape.lagda.md `shapedAt` for `C` itself, and the decode of
@@ -822,11 +870,11 @@ src/L/Coding/CodeSet.lagda.md `witnessAt-out` does the rest.
 ```agda
 open import L.Coding.Expressions {ℓ} using ( tagAtL-adequate )
 open import L.Coding.Closure {ℓ} using ( closedAt; binSameClosed-in; unSuccClosed-in; binSuccClosed-in )
-open import L.Coding.Shape {ℓ} using
+open import L.Coding.CodeShape {ℓ} using
   ( shapedAt; shaped-in; ShapeWit; BinWit; bothTm; fstTm; noneB; isTmAt )
 open import L.Coding.CodeSet {ℓ} lem using
   ( AllCodes; AllCodes-out; key∈AllCodes; keyS; codeS; witnessAt-out )
-open import FOL.Manipulation.Mapping using ( mapFo; mapTm )
+open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm )
 open import Cubical.Foundations.Prelude using ( J; substRefl )
 open import Cubical.Foundations.HLevels using ( isProp× )
 
@@ -1047,6 +1095,20 @@ The same eight, read at `C` in `γ` rather than at the decode's frame.
     (SR.shape-out hs c c∈)
 ```
 
+<!--en-->
+## Completeness: encoding every formula
+
+Conversely, structural induction on a formula shows that its key belongs to the closed domain. Term codes enter through the constant set or arity numeral, and each formula constructor uses the matching closure clause after its subformulas have entered.
+<!--zh-->
+## 完备性：编码每条公式
+
+反过来，对公式作结构归纳可证其键属于封闭定义域。词项码经常元集或元数数码进入，而每个公式构造子都在其子公式进入后使用对应的封闭子句。
+<!--ja-->
+## 完全性：各論理式の符号化
+
+逆に、論理式の構造帰納法により、そのキーが閉じた定義域に属することを示せます。項の符号は定数集合またはアリティの数項から入り、各論理式構成子は部分論理式が入った後で対応する閉性条件を使います。
+<!--/-->
+
 `C` is complete: the key of every formula over `w` is a member, by induction on
 the formula through the closure clauses.
 
@@ -1143,6 +1205,20 @@ The variable index as a member of the arity numeral.
   key-in {n} (∃̇∈ (var i) a) =
     CR.bqClose-out n f9 f1 i5 (frame n .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd .snd ) (keyS W a) (nn (suc n)) (codeS W a) (key-in a) refl refl (nn (toℕ i)) (var∈ n i)
 ```
+
+<!--en-->
+## The canonical closed code domain
+
+Instantiating the description with `AllCodes w`{.Agda} gives both directions at once: every member decodes at its stated arity, and the key of every formula over `w` belongs to the domain. The final term lemmas identify constants and variables at their respective bounds.
+<!--zh-->
+## 典范的封闭码定义域
+
+以 `AllCodes w`{.Agda} 实例化该描述便同时得到两个方向：每个成员都在其声明元数上解码，而 `w` 上每条公式的键都属于该定义域。最后的词项引理在各自的界中识别常元与变量。
+<!--ja-->
+## 正準な閉じた符号の定義域
+
+記述を `AllCodes w`{.Agda} で具体化すると、二つの方向が同時に得られます。各要素は指定されたアリティで復号でき、`w` 上の各論理式のキーは定義域に属します。最後の項の補題は、定数と変数をそれぞれの境界の中で同定します。
+<!--/-->
 
 The code set satisfies the description, at `C = AllCodes w` and `E` the tower.
 Shape: every member is decoded to its formula. Closure: the key of the formula
@@ -1351,3 +1427,17 @@ src/L/Coding/CodeSet.lagda.md, met again).
   holds : ⟨ γ ⊨ codesAt C w E N ⟩
   holds = shape , close
 ```
+
+<!--en-->
+## Recap
+
+The object-language predicate `codesAt`{.Agda} combines shape and subcode closure. Soundness decodes every member of a satisfying domain, completeness inserts every formula key, and `AllCodes`{.Agda} supplies the canonical constructible domain satisfying both requirements at every arity.
+<!--zh-->
+## 小结
+
+对象语言谓词 `codesAt`{.Agda} 合并形状与子码封闭性。可靠性解码满足该谓词的定义域中每个成员，完备性加入每条公式的键，而 `AllCodes`{.Agda} 给出在每个元数上同时满足两项要求的典范可构造定义域。
+<!--ja-->
+## まとめ
+
+対象言語の述語 `codesAt`{.Agda} は、形と部分符号への閉性を組み合わせます。健全性は条件を満たす定義域の各要素を復号し、完全性は各論理式のキーを入れ、`AllCodes`{.Agda} はすべてのアリティで両方を満たす正準な構成可能な定義域を与えます。
+<!--/-->

@@ -16,7 +16,7 @@ per-language search.json, a per-language index, and a root language-redirect + 4
 Usage:
   render-site.py [--html-dir _build/html] [--types _build/types.json] [--src src]
                  [--template site/template.html] [--out _build/site]
-                 [--langs en,zh] [--base-url ""] [--site Bedrock]
+                 [--langs en,zh,ja] [--base-url ""] [--site Bedrock]
 """
 
 import glob
@@ -29,7 +29,8 @@ import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from i18n_markers import weave, group_languages  # noqa: E402
+from i18n_markers import weave_for_site, group_languages  # noqa: E402
+from reading_routes import build_reading_data  # noqa: E402
 
 LANG_LABELS = {"en": "English", "zh": "中文", "ja": "日本語"}
 
@@ -38,8 +39,9 @@ UI = {
            "menu": "Menu", "close": "Close",
            "untranslated": "This page is not yet translated; showing English.",
            "modules": "Modules", "source": "Source", "overview": "Overview",
-           "depmap": "Dependency map",
-           "prev": "Previous", "next": "Next",
+           "depmap": "Dependency map", "routes": "Reading routes",
+           "guide": "Reading guide", "catalog": "Chapter catalog",
+           "prev": "Example route: previous", "next": "Example route: next",
            "license": "content licensed CC BY-NC-SA 4.0",
            "credit": 'Rendered with a generator adapted from '
                      '<a href="https://1lab.dev">the 1lab</a> (AGPL-3.0).',
@@ -49,8 +51,9 @@ UI = {
            "menu": "菜单", "close": "关闭",
            "untranslated": "本页尚未翻译，此处显示英文。",
            "modules": "模块", "source": "源码", "overview": "概览",
-           "depmap": "依赖地图",
-           "prev": "上一章", "next": "下一章",
+           "depmap": "依赖地图", "routes": "阅读路线",
+           "guide": "阅读指南", "catalog": "章节目录",
+           "prev": "示例路线：上一章", "next": "示例路线：下一章",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
            "credit": '使用改编自 <a href="https://1lab.dev">1lab</a> 的生成器渲染 '
                      '(AGPL-3.0)。',
@@ -60,8 +63,9 @@ UI = {
            "menu": "メニュー", "close": "閉じる",
            "untranslated": "このページは未翻訳です。英語を表示しています。",
            "modules": "モジュール", "source": "ソース", "overview": "概要",
-           "depmap": "依存マップ",
-           "prev": "前の章", "next": "次の章",
+           "depmap": "依存マップ", "routes": "学習ルート",
+           "guide": "読書案内", "catalog": "章の目次",
+           "prev": "例示ルート：前の章", "next": "例示ルート：次の章",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
            "credit": '<a href="https://1lab.dev">1lab</a> を改変した'
                      'ジェネレータでレンダリング (AGPL-3.0)。',
@@ -70,6 +74,12 @@ UI = {
 }
 SOURCE_URL = "https://github.com/BedrockInstitute/Bedrock"
 LANDING = "Everything"  # the aggregator master; rendered as the site landing index.html
+CHAPTER_TITLES = {}
+
+
+def chapter_title(module, lang):
+    titles = CHAPTER_TITLES.get(module, {})
+    return titles.get(lang, titles.get("en", module))
 
 PRE_RE = re.compile(r'<pre class="Agda">.*?</pre>', re.DOTALL)
 # Definition site: <a id="NAME"></a><a id="POS" ... class="ASPECT" ...>token</a>
@@ -293,7 +303,7 @@ def modules_nav(current, mods, lang):
     """The 'Modules' sidebar section: the structural catalog. A namespace tree is
     derived from the module list (never hand-maintained): children of every
     level, leaves and subgroups alike, ordered by first appearance in the
-    reading order; leaf labels drop the group prefix. Namespace groups are
+    reading order; leaf labels use localized chapter titles. Namespace groups are
     disclosure sections, collapsed by default, with the current page's
     ancestor chain opened."""
     root = []          # entries: ("leaf", module) | ("group", name, children)
@@ -319,8 +329,9 @@ def modules_nav(current, mods, lang):
             if entry[0] == "leaf":
                 m = entry[1]
                 cur = ' class="modleaf cur"' if m == current else ' class="modleaf"'
-                label = m.rsplit(".", 1)[-1]
-                out.append(f'<li{cur}><a href="{m}.html">{label}</a></li>')
+                label = htmllib.escape(chapter_title(m, lang))
+                active = ' aria-current="page"' if m == current else ""
+                out.append(f'<li{cur}><a href="{m}.html" title="{m}"{active}>{label}</a></li>')
             else:
                 name = entry[1]
                 path = f"{prefix}{name}."
@@ -331,10 +342,35 @@ def modules_nav(current, mods, lang):
                            f'</details></li>')
         return out
 
-    return (f'<a class="navlink nav-title" href="depmap.html">{UI[lang]["depmap"]}</a>'
+    guide = "".join(
+        f'<li><a href="index.html#{target}">{UI[lang][key]}</a></li>'
+        for target, key in (("reading-explorer", "routes"),
+                            ("dependency-map", "depmap"),
+                            ("recommended-reading", "catalog")))
+    return (f'<details class="navsec reading-guide" open><summary class="nav-title">'
+            f'{UI[lang]["guide"]}</summary><ul class="guide-nav">{guide}</ul></details>'
             f'<details class="navsec"><summary class="nav-title">'
             f'{UI[lang]["modules"]}</summary>'
             f'<ul class="modnav">{"".join(render(root, ""))}</ul></details>')
+
+
+def learning_home(body, mount, lang):
+    labels = {
+        "en": ("Explore the book", "Reading routes", "Dependency map", "Chapter catalog"),
+        "zh": ("浏览本书", "阅读路线", "依赖图", "章节目录"),
+        "ja": ("本書を読む", "学習ルート", "依存マップ", "章の目次"),
+    }[lang]
+    intro = re.match(r"(.*?</h1>\s*<p>.*?</p>)(.*)", body, re.DOTALL)
+    heading, catalog = intro.groups() if intro else ("", body)
+    ids = ("reading-explorer", "dependency-map", "recommended-reading")
+    tabs = ''.join(f'<a id="tab-{key}" href="#{key}" data-panel="{key}">{label}</a>'
+                   for key, label in zip(ids, labels[1:]))
+    return (f'<header class="book-intro">{heading}</header>'
+            f'<nav class="book-tabs" aria-label="{labels[0]}">{tabs}</nav>'
+            f'<div class="book-panels">{mount}'
+            f'<section id="dependency-map" class="book-panel">'
+            '<!-- DEPENDENCY_MAP --></section>'
+            f'<section id="recommended-reading" class="book-panel">{catalog}</section></div>')
 
 
 def ext_banner(lang):
@@ -406,6 +442,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             code_blocks.append(m.group(0))
             return f"{NUL}CODE{len(code_blocks)-1}{NUL}"
         text = PRE_RE.sub(lift, raw)
+        text = re.sub(r"<!--\s*bedrock-routes\b.*?-->", "", text, flags=re.DOTALL)
         # links agda already resolved in this module's own code (imports included):
         # name -> (href, aspect classes). The href lets prose reference library
         # identifiers; the aspect paints an inline ref like its code tokens.
@@ -424,7 +461,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             # a library page is bare highlighted code: wrap it and resolve its links
             code = rewrite_links('<pre class="Agda">' + raw + '</pre>', rendered, types_global)
             return code, []
-        woven = weave(text, lang)
+        woven = weave_for_site(text, lang)
         store = {}
         def stash(kind, payload):
             key = f"{NUL}{kind}{len(store)}{NUL}"
@@ -452,34 +489,66 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
     for lang in langs:
         body, toc = page_body(lang)
 
+        if not is_external:
+            fallback = {
+                "en": "Choose a topic, compare routes, or continue from completed prerequisites. The full catalog below remains available without interactive navigation.",
+                "zh": "按主题阅读、并排比较路线，或从已完成的先修继续。下方完整目录也可直接阅读，无须使用交互导航。",
+                "ja": "主題を選び、ルートを比較し、修了した前提から進めます。下の目次は対話機能なしでも読めます。",
+            }
+            if not is_landing:
+                fallback = {
+                    "en": "Read this chapter directly, or use the catalog and dependency map to choose another route.",
+                    "zh": "可以直接阅读本章，也可以通过目录和依赖地图选择其他路线。",
+                    "ja": "この章を読むか、目次と依存マップで別のルートを選べます。",
+                }
+            mount = (f'<section id="reading-explorer" data-current="{module}" '
+                     f'data-lang="{lang}" data-source="reading-routes.json" '
+                     f'aria-label="{UI[lang]["routes"]}">'
+                     f'<p>{fallback.get(lang, fallback["en"])}</p>'
+                     f'<a href="index.html#recommended-reading">{UI[lang]["overview"]}</a>'
+                     f' · <a href="index.html#dependency-map">{UI[lang]["depmap"]}</a></section>')
+            if is_landing:
+                body = learning_home(body, mount, lang)
+            else:
+                opening = re.search(r'</h1>\s*<p>.*?</p>', body, re.DOTALL)
+                heading_end = opening.end() if opening else body.find('</h1>')
+                if heading_end >= 0:
+                    split = heading_end if opening else heading_end + len('</h1>')
+                    body = body[:split] + mount + body[split:]
+                else:
+                    body = mount + body
+
         # previous/next links along the reading order (the reading catalog)
         if not is_external and not is_landing and module in modnav_list:
             i = modnav_list.index(module)
             parts = []
             if i > 0:
                 parts.append(f'<a class="chapnav-prev" href="{modnav_list[i - 1]}.html">'
-                             f'&larr; {UI[lang]["prev"]} · {modnav_list[i - 1]}</a>')
+                             f'&larr; {UI[lang]["prev"]} · {htmllib.escape(chapter_title(modnav_list[i - 1], lang))}</a>')
             if i + 1 < len(modnav_list):
                 parts.append(f'<a class="chapnav-next" href="{modnav_list[i + 1]}.html">'
-                             f'{UI[lang]["next"]} · {modnav_list[i + 1]} &rarr;</a>')
+                             f'{UI[lang]["next"]} · {htmllib.escape(chapter_title(modnav_list[i + 1], lang))} &rarr;</a>')
             body += '<nav class="chapnav">' + "".join(parts) + "</nav>"
 
         banner = ""
         if langs_present and lang not in langs_present:
             banner = f'<div class="banner">{UI[lang]["untranslated"]}</div>'
 
-        title = UI[lang]["overview"] if is_landing else module
+        title = UI[lang]["overview"] if is_landing else chapter_title(module, lang)
         page = fill_template(
             tpl, LANG=lang, TITLE=htmllib.escape(title), SITE=site, DESC=site,
             BASEURL=base, MODULE=module,
-            BODYCLASS="text-page external" if is_external else "text-page",
+            BODYCLASS=("text-page external" if is_external else
+                       "text-page learning-home" if is_landing else "text-page"),
             EXTBANNER=ext_banner(lang) if is_external else "",
             HREFLANG=hreflang_links(out_name, langs, base),
             LANGNAV=lang_nav(out_name, lang, langs),
             MODNAV=modules_nav(current, modnav_list, lang),
-            TOC=toc_html(toc, lang), BANNER=banner, BODY=body, FOOTER=footer_html(lang),
+            TOC="" if is_landing else toc_html(toc, lang),
+            BANNER=banner, BODY=body, FOOTER=footer_html(lang),
             S_SEARCH=UI[lang]["search"], S_THEME=UI[lang]["theme"],
-            S_MENU=UI[lang]["menu"], S_CLOSE=UI[lang]["close"])
+            S_MENU=UI[lang]["menu"], S_CLOSE=UI[lang]["close"],
+            S_CONTENT=UI[lang]["contents"])
         dest = os.path.join(out_dir, lang, out_name)
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         open(dest, "w", encoding="utf-8").write(page)
@@ -568,7 +637,7 @@ def main(argv):
     html_dir, types_path, src = "_build/html", "_build/types.json", "src"
     tpl_path, out_dir = "site/template.html", "_build/site"
     static_dir = "site/static"
-    langs, base, site = ["en", "zh"], "", "Bedrock"
+    langs, base, site = ["en", "zh", "ja"], "", "Bedrock"
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -608,6 +677,10 @@ def main(argv):
     modnav_list = sorted((m for m in internal if m != LANDING),
                          key=lambda m: (order.get(m, len(order)), m))
 
+    # Validate author-maintained routes before producing any reader-facing pages.
+    reading_data = build_reading_data(src)
+    CHAPTER_TITLES.clear()
+    CHAPTER_TITLES.update({node["id"]: node["title"] for node in reading_data["nodes"]})
     types_raw = json.load(open(types_path, encoding="utf-8")) if os.path.exists(types_path) else {}
     tpl = open(tpl_path, encoding="utf-8").read()
     # cache-bust: stamp ?v=<hash> on the CSS/JS so browsers always pick up changes
@@ -618,6 +691,9 @@ def main(argv):
         except OSError:
             return "0"
     tpl = tpl.replace("%%CSSVER%%", _ver("bedrock.css")).replace("%%JSVER%%", _ver("bedrock.js"))
+
+    tpl = tpl.replace("%%ROUTECSSVER%%", _ver("reading-routes.css")).replace(
+        "%%ROUTEJSVER%%", _ver("reading-routes.js"))
 
     # first pass: index every definition (names, positions, aspects) across ALL rendered modules
     name2pos, pos_aspect = {}, {}
@@ -642,6 +718,8 @@ def main(argv):
     for lang in langs:
         os.makedirs(os.path.join(out_dir, lang), exist_ok=True)
         write_search(out_dir, lang, search_mods, name2pos, pos_aspect, types_by_module)
+        with open(os.path.join(out_dir, lang, "reading-routes.json"), "w", encoding="utf-8") as route_file:
+            json.dump(reading_data, route_file, ensure_ascii=False)
     write_root(out_dir, langs, base)
 
     if os.path.isdir(static_dir):                    # committed CSS/JS/favicon

@@ -1,4 +1,20 @@
+<!--en-->
 # Separation and replacement, in full
+<!--zh-->
+# 完整的分离与替换
+<!--ja-->
+# 完全な分出公理と置換公理
+<!--/-->
+
+<!--en-->
+This chapter derives separation and replacement for arbitrary formulas by
+reflecting them to a suitable constructible stage and applying the bounded
+constructions already available there.
+<!--zh-->
+本章把任意公式反射到合适的可构造阶段，再施用已有的有界构造，从而导出任意公式的分离与替换。
+<!--ja-->
+本章では任意の論理式を適切な構成可能段階へ反映し、そこで既に得られている有界な構成を適用して、任意の論理式に対する分出公理と置換公理を導く。
+<!--/-->
 
 <!--en-->
 The separation chapter carved with bounded formulas, and the reflection chapters
@@ -34,7 +50,7 @@ module L.Axioms.Full {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( con; Formula; ∃̇∈ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
-open import FOL.Manipulation.Relativize using ( relativize; Δ₀-relativize )
+open import FOL.Manipulation.Relativization using ( relativize; Δ₀-relativize )
 import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -44,7 +60,7 @@ open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
 open import L.Axioms.Separation {ℓ} lem
   using ( module FunctionalImage; separateΔ₀ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
-open import L.ReflectFo {ℓ} lem using ( mkReflect )
+open import L.FormulaReflection {ℓ} lem using ( mkReflect )
 
 open import Cubical.Data.Unit using ( tt* )
 open import Cubical.Functions.Logic using ( ⇔toPath )
@@ -68,6 +84,17 @@ module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
 ## Two small tools
 <!--zh-->
 ## 两件小工具
+<!--ja-->
+## 二つの補助道具
+<!--/-->
+
+<!--en-->
+Stage transitivity keeps members inside a chosen level, while the two-variable
+renaming swaps source and image positions to match the model record's convention.
+<!--zh-->
+阶段的传递性把成员留在选定层内，而二元改名交换源与像的位置，以匹配模型 record 的约定。
+<!--ja-->
+段階の推移性により要素は選んだ層に留まり、二変数の改名が始域と像の位置を交換してモデルの record の規約に合わせる。
 <!--/-->
 
 <!--en-->
@@ -111,6 +138,18 @@ private
 ## Separation
 <!--zh-->
 ## 分离
+<!--ja-->
+## 分出公理
+<!--/-->
+
+<!--en-->
+`hasSeparationL`{.Agda} reflects an arbitrary unary formula at a stage containing
+its argument, separates with the relativized Δ₀ formula, and transports the
+result back to the original satisfaction predicate.
+<!--zh-->
+`hasSeparationL`{.Agda} 在包含其实参的阶段反射任意一元公式，以相对化后的 Δ₀ 公式分离，再把结果搬回原满足关系谓词。
+<!--ja-->
+`hasSeparationL`{.Agda} は任意の一変数論理式をその引数を含む段階で反映し、相対化された Δ₀ 論理式で分出した後、結果を元の充足関係の述語へ戻す。
 <!--/-->
 
 <!--en-->
@@ -162,6 +201,17 @@ hasSeparationL a φ =
 ## Where the images live
 <!--zh-->
 ## 诸像住在哪里
+<!--ja-->
+## 像を収める段階
+<!--/-->
+
+<!--en-->
+Functionality chooses one image for each member of the source set, and the
+bounded-image construction supplies a single stage containing all those images.
+<!--zh-->
+函数性为源集合的每个成员选出唯一的像，而有界像构造供应一个包含全部这些像的单一阶段。
+<!--ja-->
+関数性により始集合の各要素に一つの像を選び、有界像の構成がそれらすべての像を含む一つの段階を与える。
 <!--/-->
 
 <!--en-->
@@ -191,6 +241,18 @@ module Images (a : S) (φ : Formula S 2)
 ## Replacement
 <!--zh-->
 ## 替换
+<!--ja-->
+## 置換公理
+<!--/-->
+
+<!--en-->
+`hasReplacementL`{.Agda} separates the common image stage by a bounded
+existential over the source set and uses the variable swap to match the required
+image-first relation.
+<!--zh-->
+`hasReplacementL`{.Agda} 以源集合上的有界存在式在公共像阶段上分离，并用变元交换匹配所需的像在前关系。
+<!--ja-->
+`hasReplacementL`{.Agda} は始集合上の有界存在量化で共通の像段階を分出し、変数交換によって要求される像を先に置く関係へ合わせる。
 <!--/-->
 
 <!--en-->
@@ -255,6 +317,17 @@ opaque
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+Reflection upgrades the bounded separation and replacement engines to
+`hasSeparationL`{.Agda} and `hasReplacementL`{.Agda} for arbitrary formulas.
+<!--zh-->
+反射把有界分离与替换引擎提升为适用于任意公式的 `hasSeparationL`{.Agda} 与 `hasReplacementL`{.Agda}。
+<!--ja-->
+反映により有界な分出公理と置換公理の構成を、任意の論理式に対する `hasSeparationL`{.Agda} と `hasReplacementL`{.Agda} へ拡張する。
 <!--/-->
 
 <!--en-->

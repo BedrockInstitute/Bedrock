@@ -1,4 +1,18 @@
+<!--en-->
 # The Mostowski collapse
+
+The Mostowski collapse turns a set-sized extensional membership structure into a transitive set. Membership recursion defines the collapsing map, its range is transitive, and extensionality makes the map injective and hence an isomorphism on the carrier.
+<!--zh-->
+# Mostowski 塌缩
+
+Mostowski 塌缩把集合大小的外延隶属结构变成传递集。沿隶属关系的递归定义塌缩映射，其像是传递的，而外延性使该映射在载体上单射，因而给出同构。
+<!--ja-->
+# Mostowski 崩壊
+
+Mostowski 崩壊は、集合の大きさを持つ外延的な所属構造を推移的集合へ変えます。所属関係上の再帰で崩壊写像を定義し、その像が推移的であることを示し、外延性から台上での単射性と同型を得ます。
+<!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -20,6 +34,20 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 
 open hPropStructure 𝒮ᵥ
 ```
+
+<!--en-->
+## Carrier hypotheses
+
+The collapse starts with a set `X` viewed as a carrier. Transitivity describes closure under membership, while `isExt X`{.Agda} says that two carrier elements are equal once they have the same carrier members; only the latter is needed for injectivity.
+<!--zh-->
+## 载体假设
+
+塌缩从一个被视为载体的集合 `X` 开始。传递性描述对隶属关系的封闭，而 `isExt X`{.Agda} 断言：两个载体元素若有相同的载体成员便相等；只有后者是证明单射性所需的。
+<!--ja-->
+## 台に関する仮定
+
+崩壊は、台とみなす集合 `X` から始まります。推移性は所属に関する閉性を表し、`isExt X`{.Agda} は、二つの台の要素が同じ台内の要素を持てば等しいと述べます。単射性に必要なのは後者だけです。
+<!--/-->
 
 Transitivity of a set, in the absoluteness-chapter shape; definitionally the
 same predicate as the constructible chapter's `isTransV`, so a consumer's
@@ -49,6 +77,20 @@ carrier `X`.
 ```agda
 module Collapse (X : S) where
 ```
+
+<!--en-->
+## The recursive collapse
+
+For each set `x`, the map `π`{.Agda} collects the collapse values of those members of `x` that also lie in `X`. Well-founded recursion on ambient membership defines this map and supplies its computation law.
+<!--zh-->
+## 递归塌缩
+
+对每个集合 `x`，映射 `π`{.Agda} 收集 `x` 中同时属于 `X` 的成员的塌缩值。环境隶属关系上的良基递归定义此映射，并给出其计算律。
+<!--ja-->
+## 再帰的な崩壊
+
+各集合 `x` に対し、写像 `π`{.Agda} は `x` の要素のうち `X` にも属するものの崩壊値を集めます。周囲の所属関係上の整礎再帰がこの写像とその計算法則を与えます。
+<!--/-->
 
 The filtered small index: the small members of `x` that are small members of the
 carrier. The filter uses the small membership, so `Fiber x` is small.
@@ -89,6 +131,20 @@ the filter carries the carrier-membership witness.
                , ( ∈∈ₛ {a = ⟪ x ⟫↪ (p .fst)} {b = X} .snd (p .snd)
                  , q )
 ```
+
+<!--en-->
+## The transitive range
+
+The image `πX`{.Agda} is formed from the small presentation of `X`. Every member of a collapse value is itself the collapse of an element of `X`, so this image is a transitive set and contains `π y`{.Agda} for every `y ∈ X`.
+<!--zh-->
+## 传递的像
+
+像 `πX`{.Agda} 由 `X` 的小呈现构成。塌缩值的每个成员本身都是 `X` 中某元素的塌缩，因此这个像是传递集，并包含每个 `y ∈ X` 的 `π y`{.Agda}。
+<!--ja-->
+## 推移的な像
+
+像 `πX`{.Agda} は `X` の小さな提示から作られます。崩壊値の各要素はそれ自身が `X` のある要素の崩壊なので、この像は推移的集合であり、各 `y ∈ X` に対する `π y`{.Agda} を含みます。
+<!--/-->
 
 The range as a set: the small members of the carrier, their collapse values
 collected.
@@ -138,6 +194,20 @@ carrier member.
     wit : ⟨ π y ∈ˢ sett (Fiber x) (λ q → π (⟪ x ⟫↪ (q .fst))) ⟩
     wit = ∣ (m , sm) , cong π p ∣₁
 ```
+
+<!--en-->
+## Extensionality and the collapse isomorphism
+
+Assuming `isExt X`{.Agda}, membership induction recovers an element of the carrier from its collapse value. Consequently `π`{.Agda} is injective on `X`, and membership in `X` agrees in both directions with membership between collapse values.
+<!--zh-->
+## 外延性与塌缩同构
+
+假设 `isExt X`{.Agda}，隶属归纳可从塌缩值恢复载体元素。因此 `π`{.Agda} 在 `X` 上单射，并且 `X` 中的隶属关系与塌缩值之间的隶属关系双向相符。
+<!--ja-->
+## 外延性と崩壊同型
+
+`isExt X`{.Agda} を仮定すると、所属に関する帰納法によって崩壊値から台の要素を復元できます。したがって `π`{.Agda} は `X` 上で単射となり、`X` 内の所属関係は崩壊値の間の所属関係と双方向に一致します。
+<!--/-->
 
 Extensional injectivity on the carrier; the carrier's structure extensionality
 is a module parameter here and only here. The memberships the transitive proof

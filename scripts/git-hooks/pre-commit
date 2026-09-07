@@ -20,3 +20,4 @@ $PY scripts/site/weave-i18n.py --check
 $PY scripts/gate/lint-agda.py --staged
 $PY scripts/gate/check-glossary.py --check
 $PY scripts/gate/check-fences.py --check
+$PY scripts/gate/check-chapter-framework.py

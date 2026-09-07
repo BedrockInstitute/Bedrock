@@ -55,6 +55,8 @@ if _SCRIPTS is None:
         f"no repo_root.py above {_HERE}: refusing to guess the scripts root (C-43)")
 sys.path.insert(0, str(_SCRIPTS))
 from repo_root import find_root  # noqa: E402
+sys.path.insert(0, str(_SCRIPTS / "site"))
+from reading_routes import strip_metadata  # noqa: E402
 
 ROOT = find_root(__file__)
 SRC = ROOT / "src"
@@ -149,7 +151,11 @@ def suspects(path: pathlib.Path, run: int) -> list[tuple[int, str]]:
     fenced = False
     streak: list[tuple[int, str]] = []
     hits: list[tuple[int, str]] = []
-    for i, line in enumerate(path.read_text().split("\n"), 1):
+    # Route metadata contains declaration-shaped JSON lines. Blank only the
+    # recognized marker, preserving every newline so reported source locations
+    # remain exact. Other HTML comments still pass through the ordinary scan.
+    text = strip_metadata(path.read_text())
+    for i, line in enumerate(text.split("\n"), 1):
         if line.startswith("```agda"):
             fenced = True
             streak = []

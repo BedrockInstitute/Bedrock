@@ -1,13 +1,18 @@
-# The stage of a constructible set
+<!--en-->
+# The index of the least constructible stage
+
+Every constructible set `x` belongs to `Lset α`{.Agda} for a least ordinal α. Here α is the index, `Lset α` is the stage, and the entire ordinal-indexed family is the constructible hierarchy. Well-founded descent produces the least index from any witness, ordinal comparison proves it unique, and `stage x hx`{.Agda} names the resulting α.
+<!--zh-->
+# 最小可构造阶段的索引
+
+每个可构造集合 `x` 都属于某个 `Lset α`{.Agda}，且这样的序数 α 中有一个最小者。这里 α 是索引，`Lset α` 是阶段，而由所有序数索引的整族才是可构造层级。良基下降从任意见证得到最小索引，序数比较证明其唯一，而 `stage x hx`{.Agda} 为所得的 α 命名。
+<!--ja-->
+# 最小の構成可能段階の添字
+
+各構成可能集合 `x` は、ある最小の順序数 α に対する `Lset α`{.Agda} に属します。ここで α は添字、`Lset α` は段階であり、順序数で添字付けられた族全体が構成可能階層です。整礎的な降下が任意の証人から最小の添字を与え、順序数の比較がその一意性を示し、`stage x hx`{.Agda} が得られた α を名付けます。
+<!--/-->
 
 <!--en-->
-Constructibility was defined as "some ordinal stage contains it", and the
-witness was deliberately kept in the statement so that later theory could take it
-back out. Now it takes it out, and sharpens it: not *some* stage but the
-*earliest* one. That function is what every later construction uses to place a
-finite collection of constructible sets at a common stage, since bounding the
-earliest stages bounds every stage that would do.
-
 Two things have to be shown. That a least stage exists, which is a descent: start
 from any stage that works and ask whether a smaller one also works; if so recurse,
 and membership is well founded so the recursion stops. And that it is unique,
@@ -25,8 +30,6 @@ question about an arbitrary set, and uniqueness is comparison. So the least
 ordinal joins the classical cone, and the chapter is the third and last place
 the excluded middle enters the L-side machinery.
 <!--zh-->
-可构造性当初定义为「某个序数阶段包含它」，而那个见证被刻意留在陈述里，好让后续理论把它取回来。现在就取，并且加以锐化：不是**某个**阶段，而是**最早的**那个。正是这个函数，使此后每个构造能把有穷多个可构造集安置在公共阶段上，因为界住最早的阶段就界住了任何合用的阶段。
-
 要证的有两件。最小阶段存在，那是一次下降：从任何合用的阶段出发，问是否有更小的也合用；若有则递归，而成员关系良基，故递归会停。以及它唯一，那是三歧：两个最小阶段无论哪个方向都不能严格相比，故它们相等。
 
 两个论证都不看那条性质说了什么。故本章对任意的序数性质来证，再把阶段函数作为实例读出：此处不费分文，而日后有偿：序数的一个典范**选取**是若干构造都想要的东西，而每个由此获得它的构造，就是一个无须 L 的良序即可获得它的构造。
@@ -61,24 +64,25 @@ open hPropStructure 𝒮ᵥ
 ```
 
 <!--en-->
-## Being the earliest stage
+## The least ordinal satisfying a property
+
+For a property `P` of ordinals, `LeastOrd P`{.Agda} packages an ordinal α satisfying `P` together with the proof that no smaller ordinal satisfies it. This definition concerns the ordinal index itself; only the later specialization `P σ = (x ∈ Lset σ)` turns such an index into the index of a constructible stage.
 <!--zh-->
-## 作为最早的阶段
+## 满足性质的最小序数
+
+对于序数性质 `P`，`LeastOrd P`{.Agda} 把满足 `P` 的序数 α 与「没有更小序数满足 `P`」的证明组成一包。这个定义谈的是序数索引本身；直到稍后取 `P σ = (x ∈ Lset σ)`，这样的索引才成为某个可构造阶段的索引。
+<!--ja-->
+## 性質を満たす最小の順序数
+
+順序数の性質 `P` に対して、`LeastOrd P`{.Agda} は `P` を満たす順序数 α と、それより小さい順序数は `P` を満たさないという証明を組にします。この定義が扱うのは順序数の添字そのものであり、後で `P σ = (x ∈ Lset σ)` と特殊化して初めて構成可能段階の添字になります。
 <!--/-->
 
 <!--en-->
-An ordinal is least for a property when no smaller ordinal has that property.
-Packaging that with the ordinal and the property gives the data a later chapter
-wants; and the package is a proposition, which is what lets it be extracted from
-a truncated witness, as constructibility's is.
-
 Uniqueness is where the property's being an `hProp`{.Agda} earns its keep: the
 two candidates are compared by trichotomy, each strict direction is refuted by
 the other's minimality, and the remaining components are propositions, so the
 equality of the ordinals is the equality of the packages.
 <!--zh-->
-一个序数对某条性质而言是最小的，指没有更小的序数具有该性质。把这一条与序数性、该性质打成包，就得到后续章节想要的数据；而这个包是命题，正是这一点使它能从截断的见证中被取出，可构造性携带的正是这样的见证。
-
 唯一性正是那条性质取值于 `hProp`{.Agda} 的用武之处：两个候选由三歧比较，每个严格方向都被对方的极小性反驳，而其余分量都是命题，故序数相等即是整包相等。
 <!--/-->
 
@@ -108,23 +112,24 @@ module _ (P : S → Ω) where
 ```
 
 <!--en-->
-## The descent
+## Descent to the least ordinal
+
+Starting from any ordinal satisfying `P`, `leastOrdBelow`{.Agda} asks whether a strictly smaller ordinal also satisfies `P` and recurses when one does. Well-foundedness of membership makes this descent terminate at the least ordinal satisfying `P`, before the construction is specialized to constructible stages.
 <!--zh-->
-## 下降
+## 下降到最小序数
+
+从任一满足 `P` 的序数出发，`leastOrdBelow`{.Agda} 询问是否有严格更小的序数也满足 `P`，若有便递归下降。成员关系的良基性使下降终止于满足 `P` 的最小序数；此时构造尚未特化到可构造阶段。
+<!--ja-->
+## 最小の順序数への降下
+
+`P` を満たす任意の順序数から始め、`leastOrdBelow`{.Agda} は、それより小さく `P` を満たす順序数があれば再帰的にそこへ降ります。所属関係の整礎性により、この降下は `P` を満たす最小の順序数で停止します。この時点ではまだ構成可能段階への特殊化は行いません。
 <!--/-->
 
 <!--en-->
-Given any ordinal with the property, walk down. Ask whether a strictly smaller
-ordinal also has it; if one does, recurse into it, and membership being well
-founded the walk terminates; if none does, the current ordinal is least, and the
-refutation of the question is exactly the minimality proof.
-
 The result being a proposition, the starting ordinal may be given truncated, and
 that is the form the callers have: they know a suitable ordinal exists without
 having chosen one.
 <!--zh-->
-给定任一具有该性质的序数，向下走。问是否有严格更小的序数也具有它；若有则递归进去，而成员关系良基，故这趟行走会终止；若没有，则当前序数最小，而对那个问题的反驳恰是极小性的证明。
-
 结果既是命题，起始序数便可以截断的形式给出，而这正是诸调用方手上的形式：它们知道合用的序数存在，却未曾选定一个。
 <!--/-->
 
@@ -152,23 +157,25 @@ having chosen one.
 ```
 
 <!--en-->
-## The stage function
+## The stage-index function
+
+For `P σ = (x ∈ Lset σ)`, the descent returns the least ordinal index α whose stage `Lset α`{.Agda} contains `x`. The function `stage`{.Agda} selects α, `stage-ord`{.Agda} proves that it is an ordinal, and `stage-mem`{.Agda} and `stage-earliest`{.Agda} relate that index to its stage.
 <!--zh-->
-## 阶段函数
+## 阶段索引函数
+
+取 `P σ = (x ∈ Lset σ)` 后，下降得到最小序数索引 α，使阶段 `Lset α`{.Agda} 包含 `x`。函数 `stage`{.Agda} 选出 α，`stage-ord`{.Agda} 证明它是序数，`stage-mem`{.Agda} 与 `stage-earliest`{.Agda} 则把这个索引与相应阶段联系起来。
+<!--ja-->
+## 段階の添字を返す関数
+
+`P σ = (x ∈ Lset σ)` とすると、降下は `x` を含む段階 `Lset α`{.Agda} の最小の順序数添字 α を返します。関数 `stage`{.Agda} が α を選び、`stage-ord`{.Agda} はそれが順序数であることを、`stage-mem`{.Agda} と `stage-earliest`{.Agda} はその添字と対応する段階との関係を示します。
 <!--/-->
 
 <!--en-->
-Constructibility carries its witness truncated, and the descent's result is a
-proposition, so the truncation lifts. The stage is then the ordinal component,
-with its three properties projected out.
-
 The function is sealed. It unfolds to a well-founded recursion whose steps
 mention the tower, and every later type mentioning a stage would otherwise drag
 that unfolding into conversion; the three projections open the seal exactly once
 each, and no consumer needs it open again.
 <!--zh-->
-可构造性携带的见证是截断的，而下降的结果是命题，故截断可以抬过去。阶段就是其序数分量，三条性质随之投影而出。
-
 这个函数被封印。它展开是一次良基递归，其步进提到那座塔，而此后每个提到阶段的类型都会把那次展开拖进转换检查；三个投影各开封一次，而没有任何消费方需要再开封。
 <!--/-->
 
@@ -195,21 +202,14 @@ opaque
 
 <!--en-->
 ## Recap
+
+`leastOrd`{.Agda} extracts the least ordinal satisfying a property from a truncated existence witness. Its specialization `stage x hx`{.Agda} returns the ordinal index α of the least `Lset α`{.Agda} containing `x`; `stage-ord`{.Agda}, `stage-mem`{.Agda}, and `stage-earliest`{.Agda} state exactly those facts. Later arguments can therefore compare or bound these ordinal indices and then use the corresponding constructible stages.
 <!--zh-->
 ## 小结
-<!--/-->
 
-<!--en-->
-`leastOrd`{.Agda} picks the least ordinal satisfying any property of ordinals,
-from a truncated witness that one exists. `stage`{.Agda} is its first instance,
-naming the earliest stage containing a constructible set, with
-`stage-ord`{.Agda}, `stage-mem`{.Agda} and `stage-earliest`{.Agda} its three
-properties. Existence is a well-founded descent and uniqueness is trichotomy, so
-the chapter is classical; and the function is sealed, so the descent never
-reaches a later conversion problem. Reflection is an early consumer, and it uses
-both: it places a formula's parameters at a common stage by bounding their
-stages, and it picks a witness for an existential by taking the least stage that
-has one.
-<!--zh-->
-`leastOrd`{.Agda} 从「合用的序数存在」这一截断见证出发，为任意序数性质选出满足它的最小序数。`stage`{.Agda} 是它的头一个实例，为可构造集命名包含它的最早阶段，`stage-ord`{.Agda}、`stage-mem`{.Agda} 与 `stage-earliest`{.Agda} 是它的三条性质。存在性是一次良基下降，唯一性是三歧，故本章经典；而函数被封印，故那次下降永不抵达日后的转换问题。反射是早期的消费方，且两者都用：它经界住诸阶段而把公式的参数安置在公共阶段上，又经取「有见证的最早阶段」而为一个存在量词选出见证。
+`leastOrd`{.Agda} 从截断的存在见证中提取满足某条性质的最小序数。其特例 `stage x hx`{.Agda} 返回包含 `x` 的最小 `Lset α`{.Agda} 的序数索引 α；`stage-ord`{.Agda}、`stage-mem`{.Agda} 与 `stage-earliest`{.Agda} 精确陈述这些事实。后续论证因而可以比较或约束这些序数索引，再使用对应的可构造阶段。
+<!--ja-->
+## まとめ
+
+`leastOrd`{.Agda} は、ある性質を満たす順序数が存在するという切り詰められた証人から、その最小の順序数を取り出します。その特殊化 `stage x hx`{.Agda} は `x` を含む最小の `Lset α`{.Agda} の順序数添字 α を返し、`stage-ord`{.Agda}、`stage-mem`{.Agda}、`stage-earliest`{.Agda} がその事実を正確に述べます。後の議論では、これらの順序数添字を比較または上から抑えてから、対応する構成可能段階を使えます。
 <!--/-->

@@ -1,4 +1,16 @@
+<!--en-->
 # Absoluteness
+
+A formula is absolute when it has the same truth value in a structure and in a transitive substructure containing its parameters. This chapter proves that every Δ₀ formula is absolute, then derives the one-way preservation laws for Σ₁ and Π₁ formulas.
+<!--zh-->
+# 绝对性
+
+若一条公式在某结构与包含其参数的传递子结构中具有相同真值，就称它是绝对的。本章证明每条 Δ₀ 公式都具有绝对性，再推出 Σ₁ 与 Π₁ 公式的单向保持律。
+<!--ja-->
+# 絶対性
+
+論理式が、そのパラメータを含む構造と推移的部分構造で同じ真理値を持つとき、その論理式は絶対的です。本章ではすべての Δ₀ 論理式の絶対性を証明し、Σ₁ と Π₁ の一方向の保存則を導きます。
+<!--/-->
 
 <!--en-->
 The Levy witnesses earn their keep. The scene is the one the constructible-universe chapters will play out at
@@ -14,6 +26,8 @@ satisfaction.
 <!--zh-->
 Lévy 见证开始挣饭钱。这里的场景正是可构造宇宙诸章将要大规模上演的那一幕：一个模型，一个由类裁出的子世界 `𝒮 ↾ M`，同一批公式两侧各问一遍。驯服这趟通行的唯一条件，`M` 的**传递性** (成员的成员不出 `M`，恰是上一章那个空集之问所需要的)，已随结构一章铸下；本章将它花出，机械化教科书定理：**Δ₀ 公式在传递类与全宇宙之间绝对**，Σ₁ 向上、Π₁ 向下两条转移作为廉价延伸。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -35,11 +49,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 
 <!--en-->
 ## The setting: one syntax, two semantics
-<!--zh-->
-## 设置：一套语法，两套语义
-<!--/-->
 
-<!--en-->
 Fix an ambient structure `𝒮` and a transitive class `M`; the inner world is the
 restriction `𝒮 ↾ M`, whose carrier `SM` consists of `M`'s members. The syntax
 takes `K := SM`: constants in a formula can only be members of `M`, the parameter
@@ -50,8 +60,16 @@ themselves. Relativization is thus not a syntactic operation but two
 instantiations of one generic semantics; the superscripts `ᵛ` and `ᵐ` on the
 satisfaction symbols read "evaluated where".
 <!--zh-->
-固定环境结构 `𝒮` 与传递类 `M`；内层世界是限制结构 `𝒮 ↾ M`，其载体 `SM` 由 `M` 的成员组成。语法取 `K := SM`：公式中的常量只能是 `M` 的成员，参数纪律由类型强制。同一族公式于是得到**两套语义**：在外层 `𝒮` 中求值，常量经 `fst`{.Agda} 解释；在内层 `𝒮 ↾ M` 中求值，常量即其自身。相对化因此不是句法操作，而是同一泛型语义的两次实例化；满足符号上的上标 `ᵛ` 与 `ᵐ` 读作「在哪里求值」。
+## 设置：一套语法，两套语义
+
+固定环境结构 `𝒮` 与传递类 `M`；内层世界是限制结构 `𝒮 ↾ M`，其载体 `SM` 由 `M` 的成员组成。语法取 `K := SM`：公式中的常元只能是 `M` 的成员，参数纪律由类型强制。同一族公式于是得到**两套语义**：在外层 `𝒮` 中求值，常元经 `fst`{.Agda} 解释；在内层 `𝒮 ↾ M` 中求值，常元即其自身。相对化因此不是句法操作，而是同一泛型语义的两次实例化；满足符号上的上标 `ᵛ` 与 `ᵐ` 读作「在哪里求值」。
+<!--ja-->
+## 設定：一つの構文と二つの意味論
+
+同じ論理式を、周囲の構造 `𝒮` と推移的クラスへの制限 `𝒮M` の二箇所で解釈します。部分構造の要素は Σ 型で表され、第一射影によって周囲の構造でも同じパラメータとして読めます。
 <!--/-->
+
+
 
 ```agda
 module Single {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
@@ -83,7 +101,7 @@ Inner and outer environments are related by projecting every entry; two private
 dictionary lemmas settle the term level, where a constant is its own value on both
 sides and a variable is a lookup.
 <!--zh-->
-内外环境经逐项投影相关；两条私有的字典引理解决词项层：常量在两侧都是自身的值，变量是一次查表。
+内外环境经逐项投影相关；两条私有的字典引理解决词项层：常元在两侧都是自身的值，变量是一次查表。
 <!--/-->
 
 ```agda
@@ -101,11 +119,7 @@ sides and a variable is a lookup.
 
 <!--en-->
 ## The theorem
-<!--zh-->
-## 定理
-<!--/-->
 
-<!--en-->
 One induction over the Δ₀ witness. The connective cases are congruences; the
 atoms go through the term lemmas (equality is the structure field `≈ˢ` on both
 sides, so even that case is a `cong₂`{.Agda}). The transitivity hypothesis is
@@ -115,8 +129,16 @@ member of `M`, and `x ∈ ⟦ t ⟧` together with `⟦ t ⟧ ∈ᶜ M` yields e
 transitivity. The machine locates the textbook proof's load-bearing step to the
 character.
 <!--zh-->
+## 定理
+
 对 Δ₀ 见证做一次归纳。联结词情形皆同余；原子走词项引理 (等词两侧都是结构字段 `≈ˢ`，连这个情形也归于 `cong₂`{.Agda})。传递性前提**只在两个有界量词情形被消费**，全部数学内容就在那里：往外走时，`⟦ t ⟧` 的成员 `x` 须重新打包为 `M` 的成员，而 `x ∈ ⟦ t ⟧` 加 `⟦ t ⟧ ∈ᶜ M` 经传递性恰好给出这一点。教科书证明的承重步被机器定位到字符。
+<!--ja-->
+## Δ₀ 絶対性定理
+
+Δ₀ 論理式では量化子が集合によって有界です。推移性が有界量化の範囲を一致させるため、構造帰納法により内部と外部の充足関係が等しいことを証明できます。
 <!--/-->
+
+
 
 ```agda
   abs₀ : ∀ {n} {φ : Formula SM n} → Δ₀ φ → (δ : SM ^ n)
@@ -162,19 +184,23 @@ character.
 
 <!--en-->
 ## Σ₁ upward, Π₁ downward
-<!--zh-->
-## Σ₁ 向上，Π₁ 向下
-<!--/-->
 
-<!--en-->
 The extensions are one constructor each, and note the asymmetry: **neither
 consumes transitivity**. An inner existential witness travels outward through
 `fst`{.Agda}; an outer universal is instantiated at `fst`{.Agda}. Only Δ₀'s
 bounded quantifiers ever needed the hypothesis; the machine states the textbook's
 fine print exactly.
 <!--zh-->
+## Σ₁ 向上，Π₁ 向下
+
 两条延伸各一个构造子，且注意其不对称：**都不消费传递性**。内层的存在见证经 `fst`{.Agda} 走向外层；外层的全称在 `fst`{.Agda} 处实例化。只有 Δ₀ 的有界量词才需要那条前提；教科书的小字被机器一字不差地陈述出来。
+<!--ja-->
+## Σ₁ は上向き、Π₁ は下向き
+
+Σ₁ の存在証人が部分構造にあれば周囲の構造でも使えるので真理は上向きに保存されます。否定を通して、Π₁ の真理は周囲から部分構造へ下向きに保存されます。
 <!--/-->
+
+
 
 ```agda
   σ₁-up : ∀ {n} {φ : Formula SM n} → Σ₁ φ → (δ : SM ^ n)
@@ -190,11 +216,7 @@ fine print exactly.
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 Transitive classes named, and over them the theorem: `abs₀`{.Agda} makes Δ₀
 formulas absolute, with transitivity consumed exactly at the bounded quantifiers;
 `σ₁-up`{.Agda} and `π₁-down`{.Agda} extend the transfer one quantifier kind each,
@@ -202,5 +224,11 @@ free of the hypothesis. These theorems are pure arithmetic on the Levy witnesses
 composition that will spend them wholesale is catalogued with the reification
 framework at the book's tail.
 <!--zh-->
+## 小结
+
 传递类得名，其上是定理本体：`abs₀`{.Agda} 使 Δ₀ 公式绝对，传递性恰在有界量词处被消费；`σ₁-up`{.Agda} 与 `π₁-down`{.Agda} 各以一种量词延伸转移，且不花前提。这些定理是对 Lévy 见证的纯粹算术；将要成批花费它们的那次复合，编在书末的 reification 框架里。
+<!--ja-->
+## まとめ
+
+推移的部分構造は Δ₀ 論理式の真理値を完全に保ちます。この双方向の絶対性から、量化子を一つ加えた Σ₁ の上向き保存と Π₁ の下向き保存が得られます。
 <!--/-->

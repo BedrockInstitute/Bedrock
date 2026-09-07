@@ -76,6 +76,15 @@ class MarkerLintTests(unittest.TestCase):
         bad = "```agda\n<!--en-->\n```\n"
         self.assertTrue(any("code fence" in m for _, m in lint_markers(bad)))
 
+    def test_agda_cannot_be_hidden_inside_a_translation(self):
+        bad = "<!--en-->\nOpening.\n```agda\nx = 1\n```\n<!--ja-->\n開篇。\n<!--/-->"
+        self.assertNotIn("x = 1", weave(bad, "ja"))
+        self.assertTrue(any("code must be shared" in m for _, m in lint_markers(bad)))
+
+    def test_non_agda_example_can_be_localized(self):
+        text = "<!--en-->\n```text\nAn example\n```\n<!--/-->"
+        self.assertEqual(lint_markers(text), [])
+
     def test_unknown_language_code(self):
         bad = "<!--fr-->\nbonjour\n<!--/-->\n"
         self.assertTrue(any("known language" in m for _, m in lint_markers(bad)))

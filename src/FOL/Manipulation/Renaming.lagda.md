@@ -1,9 +1,18 @@
-# Renaming
+<!--en-->
+# Variable renaming
+
+A map between finite variable contexts acts on terms and formulas by renaming free variables while leaving constants fixed. The accompanying agreement relation on environments gives one semantic theorem that covers weakening, exchange, and contraction.
+<!--zh-->
+# 变量改名
+
+有限变量语境之间的映射通过改名自由变量作用于词项与公式，同时保持常元不变。环境上的相符关系给出一条语义定理，统一涵盖弱化、交换与收缩。
+<!--ja-->
+# 変数の改名
+
+有限な変数文脈の間の写像は、定数を固定したまま自由変数を改名して項と論理式へ作用します。環境の一致関係を用いる一つの意味論的定理が、弱化、交換、縮約をまとめて扱います。
+<!--/-->
 
 <!--en-->
-A tool stocked ahead of need: nothing in the trunk consumes it yet, and its
-first consumers arrive with the constructible-universe chapters's deeper chapters. First, variables.
-
 The syntax chapter pointed out an absence: no substitution, no weakening. The
 quantifier clauses take bodies in an extended context directly, so the classical
 apparatus for moving variables around never has to exist. What little variable
@@ -11,8 +20,6 @@ motion the book does need is covered by one device: **renaming**, a map
 `ρ : Fin n → Fin m` pushed through a formula, with a single correctness theorem
 that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
-一件提前备下的工具：主干至今没有消费它，首批消费者随可构造宇宙诸章的深层章节到来。先说变量。
-
 语法章点过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
 <!--/-->
 
@@ -32,19 +39,19 @@ import FOL.Semantics
 
 <!--en-->
 ## The syntactic layer
+
+`renameTm`{.Agda} and `renameFo`{.Agda} push a map `Fin n → Fin m` through the syntax. Beneath a binder, `liftρ`{.Agda} fixes the newly bound variable and shifts the old variables through the given map.
 <!--zh-->
 ## 语法层
+
+`renameTm`{.Agda} 与 `renameFo`{.Agda} 将映射 `Fin n → Fin m` 贯穿语法。在约束子之下，`liftρ`{.Agda} 固定新约束的变量，并通过给定映射移动原有变量。
+<!--ja-->
+## 構文の水準
+
+`renameTm`{.Agda} と `renameFo`{.Agda} は写像 `Fin n → Fin m` を構文へ通します。束縛子の下では、`liftρ`{.Agda} が新しく束縛された変数を固定し、元の変数を与えられた写像で移します。
 <!--/-->
 
-<!--en-->
-Under a binder the renaming must step aside for the freshly bound variable:
-`liftρ ρ` keeps variable `0` fixed and shifts everything else through `ρ`. With
-that, pushing a renaming through terms and formulas is one clause per constructor;
-note it moves only variables, leaving constants alone, exactly complementary to
-the `mapFo`{.Agda} of the previous chapter.
-<!--zh-->
-进入约束子之下，改名须为新约束的变量让位：`liftρ ρ` 固定变量 `0`，其余经 `ρ` 平移。此后沿词项与公式推送变换就是一构造子一子句；注意它只动变量、不碰常量，与上一章的 `mapFo`{.Agda} 恰好互补。
-<!--/-->
+
 
 ```agda
 liftρ : ∀ {n m} → (Fin n → Fin m) → Fin (suc n) → Fin (suc m)
@@ -70,20 +77,19 @@ renameFo ρ (∃̇∈ t φ) = ∃̇∈ (renameTm ρ t) (renameFo (liftρ ρ) φ)
 
 <!--en-->
 ## The semantic layer
+
+`Agrees ρ γ δ`{.Agda} says that the two environments assign equal values to variables related by `ρ`. This condition survives extension beneath a binder, and structural induction then proves equal term denotations and equal satisfaction for renamed formulas.
 <!--zh-->
 ## 语义层
+
+`Agrees ρ γ δ`{.Agda} 表示两个环境为经 `ρ` 对应的变量指派相等取值。该条件在约束子下扩展环境时仍保持，结构归纳遂证明改名后词项释义与公式满足关系相等。
+<!--ja-->
+## 意味論の水準
+
+`Agrees ρ γ δ`{.Agda} は、`ρ` で対応する変数に二つの環境が等しい値を割り当てることを表します。この条件は束縛子の下で環境を拡張しても保たれ、構造帰納法によって改名後の項の表示と論理式の充足関係が等しいと分かります。
 <!--/-->
 
-<!--en-->
-When does renaming preserve meaning? Precisely when the two environments say the
-same things to corresponding variables: `Agrees ρ γ δ` asks that looking up
-`ρ i` in the big environment equals looking up `i` in the small one, and
-`agrees∷`{.Agda} shows the condition survives pushing one new value onto both
-sides, which is what happens under a binder. The development is generic over the
-truth algebra, the structure, and the constant interpretation.
-<!--zh-->
-改名何时保含义？恰当两个环境对相应的变量说同样的话：`Agrees ρ γ δ` 要求在大环境里查 `ρ i` 等于在小环境里查 `i`；`agrees∷`{.Agda} 表明该条件经得起向两侧同时压入一个新值，即约束子之下发生的事。整个展开对真值代数、结构与常量解释都是泛型的。
-<!--/-->
+
 
 ```agda
 module Sat {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
@@ -145,15 +151,14 @@ obtained by choosing `ρ`.
 
 <!--en-->
 ## Recap
+
+Variable renaming consists of the syntactic maps, environment agreement, and the theorem `⊨-rename`{.Agda}. Choosing the context map specializes this single interface to weakening, exchange, or contraction.
 <!--zh-->
 ## 小结
-<!--/-->
 
-<!--en-->
-Renaming is the book's entire variable calculus: `renameFo`{.Agda} on syntax,
-`⊨-rename`{.Agda} on meaning, with `Agrees`{.Agda} naming the exact condition under
-which nothing changes. The book's variable machinery now exists, once and in
-full, ahead of the heavy consumers waiting in the constructible-universe chapters.
-<!--zh-->
-改名就是本书全部的变量演算：语法上 `renameFo`{.Agda}，含义上 `⊨-rename`{.Agda}，`Agrees`{.Agda} 点明了「什么都不变」的确切条件。本书的变量机件至此一次到位、整装完毕，静候可构造宇宙诸章那些重量级消费者。
+变量改名由语法映射、环境相符关系与定理 `⊨-rename`{.Agda} 组成。选择不同语境映射，即可将这一统一接口特化为弱化、交换或收缩。
+<!--ja-->
+## まとめ
+
+変数の改名は、構文写像、環境の一致、定理 `⊨-rename`{.Agda} からなります。文脈の写像を選ぶことで、この一つのインターフェースを弱化、交換、縮約へ特殊化できます。
 <!--/-->

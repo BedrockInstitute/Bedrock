@@ -1,9 +1,31 @@
+<!--en-->
 # Quantifying over coded pairs
+<!--zh-->
+# 对码化有序对的分量量化
+<!--ja-->
+# 符号化された順序対の成分を量化する
+<!--/-->
 
 <!--en-->
-Coded syntax repeatedly quantifies over the components of a pair. Building on the coding vocabulary and formula expressions, this chapter develops the shared slot arithmetic, bounded formulas and semantic readers for those quantifiers.
+This chapter defines bounded formulas that unpack one or both components of a
+coded pair and proves reusable semantic readers that hide the container witnesses
+required by the set encoding.
 <!--zh-->
-码化语法需要反复量化一个配对的分量。本章以码化词汇与公式表达式为基础，构造这些量词共用的槽位运算、有界公式与语义读式。
+本章定义有界公式，用来拆出一个码化有序对的一个或两个分量，并证明可复用的语义读式，以隐藏集合编码所需的容器见证。
+<!--ja-->
+本章では、符号化された順序対の一方または両方の成分を取り出す有界論理式を定義し、集合による符号化が要求する容器の証人を隠す再利用可能な意味論的読み補題を証明する。
+<!--/-->
+
+<!--en-->
+Coded syntax repeatedly quantifies over the components of a pair. Building on
+the coding vocabulary and pair expressions, this chapter develops the shared
+slot arithmetic, bounded formulas and semantic readers for those quantifiers.
+The tower specification is the first consumer; code-domain, satisfaction-clause
+and coded-graph chapters then reuse the same readers. Each can state its
+mathematics in terms of components without repeating the container witnesses
+required by bounded syntax.
+<!--zh-->
+码化语法需要反复量化一个配对的分量。本章以码化词汇与配对表达式为基础，构造这些量词共用的槽位运算、有界公式与语义读式。塔规格首先消费这些读式，随后码域、满足子句与码化图的章节继续复用。它们都可以按分量陈述数学内容，无须重复有界语法所需的容器见证。
 <!--/-->
 
 ```agda
@@ -24,7 +46,7 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Absoluteness {ℓ} using ( Δ₀-liftFo )
-open import L.Coding.Base {ℓ} using ( Δ₀-prAt; ∈pair-introL; ∈pair-introR )
+open import L.Coding.PairFormulas {ℓ} using ( Δ₀-prAt; ∈pair-introL; ∈pair-introR )
 open import L.Coding.Environment {ℓ} using ( Δ₀-sucAt )
 open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate )
 open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
@@ -49,10 +71,23 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
-This chapter develops the bounded frames that expose components of coded pairs and ends with reusable semantic readers.
+## Slot indices and primitive readers
 <!--zh-->
-本章构造揭示码化配对分量的有界框架，终点是可复用的语义读式。
+## 槽位索引与基本读式
+<!--ja-->
+## スロット添字と基本的な読み
 <!--/-->
+
+<!--en-->
+The shift operation and named inner slots organize deeply nested binders, while
+the pair and successor readers turn their atomic formulas back into set
+equalities.
+<!--zh-->
+移位运算与具名内部槽位组织深层嵌套的绑定，而有序对与后继读式把相应原子公式读回集合等式。
+<!--ja-->
+シフト演算と名前の付いた内側のスロットが深く入れ子になった束縛子を整理し、順序対と後者の読み補題が対応する原子論理式を集合の等しさへ戻す。
+<!--/-->
+
 Slot arithmetic. `sh k` pushes an outer slot past `k` binders; the names `i0` ..
 `i19` are the innermost slots at any arity.
 
@@ -127,6 +162,23 @@ i19 : ∀ {j} → Fin (20 + j)
 i19 = suc i18
 ```
 
+<!--en-->
+## Bounded atoms and successor semantics
+<!--zh-->
+## 有界原子与后继语义
+<!--ja-->
+## 有界な原子と後者の意味
+<!--/-->
+
+<!--en-->
+The pair and successor atoms receive Δ₀ witnesses, and `suc-out`{.Agda} with
+`suc-in`{.Agda} gives the two semantic directions at a variable environment.
+<!--zh-->
+有序对与后继原子取得 Δ₀ 见证，而 `suc-out`{.Agda} 与 `suc-in`{.Agda} 给出变元环境处的两个语义方向。
+<!--ja-->
+順序対と後者の原子に Δ₀ の証人を与え、`suc-out`{.Agda} と `suc-in`{.Agda} が変数環境での二つの意味論的方向を与える。
+<!--/-->
+
 The atoms and their certificates.
 
 ```agda
@@ -148,6 +200,24 @@ suc-in : ∀ {m} (i j : Fin m) (γ : S ^ m)
        → fst (lookup j γ) ≡ sucV (fst (lookup i γ)) → ⟨ γ ⊨ sucAtL i j ⟩
 suc-in i j γ e = subst ⟨_⟩ (sym (sucAtL-adequate i j γ)) e
 ```
+
+<!--en-->
+## Bounded quantifiers over pair components
+<!--zh-->
+## 对有序对分量的有界量化
+<!--ja-->
+## 順序対の成分に対する有界量化
+<!--/-->
+
+<!--en-->
+The four macros `sndEx`{.Agda}, `sndAll`{.Agda}, `bothEx`{.Agda}, and
+`bothAll`{.Agda} bind pair components through an internal container, in
+existential and universal forms that remain Δ₀.
+<!--zh-->
+四个宏 `sndEx`{.Agda}、`sndAll`{.Agda}、`bothEx`{.Agda} 与 `bothAll`{.Agda} 通过内部容器绑定有序对分量，并以保持为 Δ₀ 的存在与全称形式给出。
+<!--ja-->
+四つのマクロ `sndEx`{.Agda}、`sndAll`{.Agda}、`bothEx`{.Agda}、`bothAll`{.Agda} は内部の容器を通して順序対の成分を束縛し、Δ₀ のままの存在形と全称形を与える。
+<!--/-->
 
 The pair as a container. Both components of `pr u v` lie in the member
 `⁅ u , v ⁆` of it. This is what lets a Δ₀ formula bind the components of a pair
@@ -193,6 +263,25 @@ module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
     X = fst (lookup x γ)
     U = fst (lookup u γ)
 ```
+
+<!--en-->
+## Reading the component quantifiers
+<!--zh-->
+## 读取分量量词
+<!--ja-->
+## 成分量化子を読む
+<!--/-->
+
+<!--en-->
+The existential `out` lemmas return the propositional truncation of component
+data, recording that suitable components merely exist; the universal readers
+instead accept explicit components. The corresponding `in` lemmas rebuild
+satisfaction from explicit data, using pair injectivity to pin the values.
+<!--zh-->
+存在式的 `out` 引理从满足关系返回分量数据的命题截断，只记录合适分量的仅仅存在性；全称式读引理则接收明确分量。相应的 `in` 引理从明确数据重建满足关系，并用有序对的单射性钉住取值。
+<!--ja-->
+存在形の `out` 補題は充足関係から成分データの命題的切り詰めを返し、適切な成分が単に存在することだけを記録する。全称形の読み補題は明示された成分を受け取る。対応する `in` 補題は明示されたデータから充足関係を再構成し、順序対の単射性で値を確定する。
+<!--/-->
 
 Out: the witness's second component is pinned by pair injectivity.
 
@@ -246,6 +335,24 @@ module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
   bothAll-in k s s∈ u u∈ v v∈ e = k u v s s∈ u∈ v∈ (pr-out (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e)
 ```
 
+<!--en-->
+## Supplying the container witnesses
+<!--zh-->
+## 供应容器见证
+<!--ja-->
+## 容器の証人を与える
+<!--/-->
+
+<!--en-->
+`fillSnd`{.Agda}, `fillBoth`{.Agda}, `useSnd`{.Agda}, and `useBoth`{.Agda}
+construct the internal container automatically from a pair equality, leaving
+callers to reason only about its components.
+<!--zh-->
+`fillSnd`{.Agda}、`fillBoth`{.Agda}、`useSnd`{.Agda} 与 `useBoth`{.Agda} 从有序对等式自动构造内部容器，使调用方只须推理其分量。
+<!--ja-->
+`fillSnd`{.Agda}、`fillBoth`{.Agda}、`useSnd`{.Agda}、`useBoth`{.Agda} は順序対の等式から内部容器を自動的に構成し、呼び出し側には成分についての推論だけを残す。
+<!--/-->
+
 Supplying the junk: a pair at a slot, with its components as
 elements, fills any of the four.
 
@@ -275,3 +382,21 @@ module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
   useBoth body h = bothAll-out x body γ h u v (c .fst) (c .snd .fst) (c .snd .snd .fst)
     (c .snd .snd .snd) e
 ```
+
+<!--en-->
+## Recap
+<!--zh-->
+## 回顾
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+The bounded formulas in this chapter expose one or both components of a coded
+pair, their readers recover the component semantics, and the filling lemmas hide
+the container witnesses needed when those readers are reused in larger formulas.
+<!--zh-->
+本章的有界公式揭示码化有序对的一个或两个分量，相应读式恢复这些分量的语义，而填充引理隐藏了在较大公式中复用这些读式时所需的容器见证。
+<!--ja-->
+本章の有界論理式は符号化された順序対の一方または両方の成分を取り出し、その読み補題が成分の意味を復元する。充填補題は、これらの読みを大きな論理式で再利用するときに必要な容器の証人を隠す。
+<!--/-->

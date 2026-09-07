@@ -1,4 +1,20 @@
+<!--en-->
 # The power set in L
+<!--zh-->
+# L 中的幂集
+<!--ja-->
+# L における冪集合
+<!--/-->
+
+<!--en-->
+This chapter proves the power-set field for `L` by bounding all constructible
+subsets of a given set in one stage and separating that stage by the internal
+inclusion formula.
+<!--zh-->
+本章证明 `L` 的幂集字段：先把给定集合的全部可构造子集界在一个阶段内，再以内部包含公式在该阶段上分离。
+<!--ja-->
+本章では、与えられた集合のすべての構成可能な部分集合を一つの段階で抑え、その段階を内部の包含論理式で分出して、`L` の冪集合フィールドを証明する。
+<!--/-->
 
 <!--en-->
 The power set of a set of `L`, taken inside `L`, is the set of its *constructible*
@@ -82,6 +98,17 @@ module Pow = Power (Impredicativity.hPropSmallness (lem→impredicativity lem))
 ## The condition, as a formula
 <!--zh-->
 ## 作为公式的条件
+<!--ja-->
+## 包含条件を論理式にする
+<!--/-->
+
+<!--en-->
+`subFo a`{.Agda} is the one-variable formula asserting that every member of the
+candidate belongs to `a`, and its satisfaction is exactly internal inclusion.
+<!--zh-->
+`subFo a`{.Agda} 是一条单自由变元公式，断言候选集合的每个成员都属于 `a`；其满足关系恰为内部包含。
+<!--ja-->
+`subFo a`{.Agda} は候補集合の全要素が `a` に属することを述べる一自由変数の論理式であり、その充足関係は内部の包含とちょうど一致する。
 <!--/-->
 
 <!--en-->
@@ -104,6 +131,18 @@ subFo a = ∀̇∈ (var zero) (var zero ∈̇ con a)
 ## Bounding the constructible subsets
 <!--zh-->
 ## 界住诸可构造子集
+<!--ja-->
+## 構成可能な部分集合を抑える
+<!--/-->
+
+<!--en-->
+Propositional resizing makes the type of constructible members of the ambient
+power set small, so their stages admit one bounding ordinal containing every
+constructible subset of `a`.
+<!--zh-->
+命题降层把环境幂集中可构造成员的类型缩小，于是其诸阶段有一个上界序数，包含 `a` 的每个可构造子集。
+<!--ja-->
+命題リサイズにより周囲の冪集合の構成可能な要素の型を小さくし、それらの段階を一つの上界順序数で抑えて、`a` の全構成可能部分集合を収める。
 <!--/-->
 
 <!--en-->
@@ -173,6 +212,17 @@ module Bound (a : S) where
 ## The field
 <!--zh-->
 ## 字段
+<!--ja-->
+## 冪集合フィールド
+<!--/-->
+
+<!--en-->
+`hasPowerL`{.Agda} separates the bounding stage with `subFo`{.Agda} and proves
+that the resulting constructible set contains exactly the subsets of `a` in `L`.
+<!--zh-->
+`hasPowerL`{.Agda} 以 `subFo`{.Agda} 在上界阶段上分离，并证明所得可构造集合恰好包含 `L` 中 `a` 的诸子集。
+<!--ja-->
+`hasPowerL`{.Agda} は上界段階を `subFo`{.Agda} で分出し、得られた構成可能集合が `L` における `a` の部分集合をちょうど含むことを証明する。
 <!--/-->
 
 <!--en-->
@@ -200,6 +250,17 @@ hasPowerL a =
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+Bounding plus separation yields `hasPowerL`{.Agda}, with excluded middle used for
+propositional resizing and the ambient hierarchy's power-set construction.
+<!--zh-->
+上界与分离共同给出 `hasPowerL`{.Agda}；排中律用于命题降层以及环境层级自身的幂集构造。
+<!--ja-->
+上界と分出公理から `hasPowerL`{.Agda} が得られ、排中律は命題リサイズと周囲の階層自身の冪集合構成に用いられる。
 <!--/-->
 
 <!--en-->

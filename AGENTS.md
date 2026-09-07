@@ -6,9 +6,27 @@ GCH. Both are proved and both are registered in `src/Landmarks.lagda.md`: `L⊨Z
 
 Requirements: Agda 2.8.0, cubical 0.9, Python 3.11 or later.
 `src/Everything.lagda.md` imports every module. `make check` is the gate: it typechecks
-the tree, runs the four linters, checks the reading order and runs the gate tests.
+the tree, checks code/prose boundaries, terminology, reading routes and the
+trilingual chapter framework, and runs the gate tests.
 
-## Current goal: coherent modules and a teachable reading order
+## Current goal: a trilingual teaching framework
+
+First audit every existing glossary entry against literature, with particular
+attention to English and Japanese. Existing choices are revisable. Search the
+web before settling a new or revised term: use attested terminology when it
+fits the actual concept, otherwise form a term from attested patterns and label
+that decision honestly. The owner delegates terminology decisions to the
+coordinator. Centralize decisions and evidence in `dev/glossary.toml` before
+parallel authoring; agents must not invent competing translations.
+
+Then give every chapter and subsection a matched English, Chinese and Japanese
+title and first introductory paragraph. Assess English module names and section
+boundaries against their mathematical content. Write for learners: explain the
+question and result of this particular unit. Generic template paragraphs do not
+count. Keep later scaffold prose unchanged in this phase, preserve its English
+fallback, and do not translate or rewrite detailed code explanations yet.
+
+Preserve the agreed parallel reading architecture described below.
 
 Reorganize the completed development so that each module is a coherent learning
 unit and the reading order introduces concepts before their substantive use.
@@ -45,7 +63,10 @@ The previous closed run's record remains in `dev/REFACTOR.md`.
 3. **Memory.** Run Agda only as `GHCRTS="-A64m -I0 -M8g" agda <file>`. Two Agda processes
    at most on this machine, so count them before you start one. Never typecheck
    `src/Everything.lagda.md` unless the brief says so.
-4. **Deliverable.** Either the named file typechecks with exit 0, or a stop report. A stop
+4. **Deliverable.** For a prose-only brief, preserve fenced Agda exactly, run the
+   scoped prose, glossary and chapter-framework gates, and report their exit codes;
+   the coordinator runs the final whole-tree typecheck. For proof changes, either
+   the named file typechecks with exit 0, or provide a stop report. A stop
    report quotes the exact Agda error, the file and line, and the type of the goal that
    stands open. Nothing else counts as a result. **A measured negative is a result**: if
    the plan in your brief does not hold, say so with the evidence and stop.

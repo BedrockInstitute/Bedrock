@@ -1,4 +1,20 @@
+<!--en-->
 # Separation and replacement, bounded
+<!--zh-->
+# 有界分离与替换
+<!--ja-->
+# 有界な分出公理と置換公理
+<!--/-->
+
+<!--en-->
+This chapter proves Δ₀ separation and replacement in `L` by bounding all formula
+constants and functional images in ordinal stages, then carving the required
+sets with absoluteness and relabelling.
+<!--zh-->
+本章证明 `L` 中的 Δ₀ 分离与替换：先把公式的全部常元及函数像界在序数阶段内，再借助绝对性与常元改名雕出所需集合。
+<!--ja-->
+本章では、論理式の全定数と関数的な像を順序数段階で抑え、絶対性と定数の改名を用いて必要な集合を切り出すことにより、`L` における Δ₀ 分出公理と置換公理を証明する。
+<!--/-->
 
 <!--en-->
 Separation asks: given a constructible set and a formula, is the subset it carves
@@ -44,9 +60,9 @@ open import FOL.Syntax
   using ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∃∈ )
-open import FOL.Manipulation.Bounding
+open import FOL.Manipulation.ConstantBounding
   using ( BoundedTm; BoundedFo; BoundedTm-mono; BoundedFo-mono; module Relabel )
-open import FOL.Manipulation.Mapping using ( mapFo )
+open import FOL.Manipulation.ConstantMapping using ( mapFo )
 open import FOL.Manipulation.Relabelling using ( ⊨-map )
 import FOL.Semantics
 import FOL.Absoluteness
@@ -86,6 +102,17 @@ open AbsL using ( abs₀ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ## The replacement image
 <!--zh-->
 ## 替换的像
+<!--ja-->
+## 置換による像
+<!--/-->
+
+<!--en-->
+`ReplImage a φ`{.Agda} names the class of values related by `φ` to some member of
+`a`, fixing the source-first variable convention used by the bounded engine.
+<!--zh-->
+`ReplImage a φ`{.Agda} 点名由 `φ` 与 `a` 的某个成员相关的诸取值之类，并固定有界引擎所用的源在前变元约定。
+<!--ja-->
+`ReplImage a φ`{.Agda} は `a` のある要素と `φ` で関係づけられる値のクラスを名づけ、有界な構成が使う始域変数を先に置く規約を固定する。
 <!--/-->
 
 <!--en-->
@@ -107,6 +134,17 @@ ReplImage a φ z = ⋁ S (λ x → (x ∈ˢ a) ⊓ ((x ∷ z ∷ []) ⊨ φ))
 ## Bounding a functional image
 <!--zh-->
 ## 界住函数像
+<!--ja-->
+## 関数的な像を抑える
+<!--/-->
+
+<!--en-->
+`FunctionalImage`{.Agda} chooses the unique value at each source member and uses
+smallness plus an ordinal bound to place every related image in one stage.
+<!--zh-->
+`FunctionalImage`{.Agda} 为源集合的每个成员选取唯一值，并用小性与序数上界把每个相关像放进单一阶段。
+<!--ja-->
+`FunctionalImage`{.Agda} は始集合の各要素で一意な値を選び、小ささと順序数の上界を用いて、関係するすべての像を一つの段階へ入れる。
 <!--/-->
 
 <!--en-->
@@ -172,6 +210,18 @@ module FunctionalImage (a : S) (R : S → S → Ω)
 ## At a fixed stage
 <!--zh-->
 ## 在固定的阶段上
+<!--ja-->
+## 固定した段階での構成
+<!--/-->
+
+<!--en-->
+Inside one ordinal stage, `Below`{.Agda} supplies indices for its constructible
+members, and the satisfaction bridge relates formulas over the model carrier to
+their relabelled formulas over that stage.
+<!--zh-->
+在一个固定序数阶段内，`Below`{.Agda} 为其可构造成员供应索引，而满足关系之桥把模型载体上的公式与该阶段上经常元改名的公式联系起来。
+<!--ja-->
+一つの順序数段階の内部で、`Below`{.Agda} がその構成可能な要素の添字を与え、充足関係の橋がモデルの台上の論理式を、その段階上で定数の改名を施した論理式と結ぶ。
 <!--/-->
 
 <!--en-->
@@ -297,6 +347,18 @@ parameters remain in the interfaces used by the callers.
 ## Separation at a stage
 <!--zh-->
 ## 在一个阶段上分离
+<!--ja-->
+## 一つの段階で分出する
+<!--/-->
+
+<!--en-->
+`carveAt`{.Agda} turns a bounded unary Δ₀ formula whose witnesses stay in the
+stage into a constructible set, and `separateAt`{.Agda} specializes it to a
+subset of a given set.
+<!--zh-->
+`carveAt`{.Agda} 把见证留在阶段内的有界一元 Δ₀ 公式化为可构造集合，而 `separateAt`{.Agda} 将其专用于给定集合的子集。
+<!--ja-->
+`carveAt`{.Agda} は証人が段階内に留まる有界な一変数 Δ₀ 論理式を構成可能集合へ変え、`separateAt`{.Agda} はそれを与えられた集合の部分集合へ特殊化する。
 <!--/-->
 
 <!--en-->
@@ -363,6 +425,17 @@ in `a` and `φ`. Transitivity supplies the stage cover from the membership conju
 ## Finding the stage
 <!--zh-->
 ## 找到那个阶段
+<!--ja-->
+## 論理式を収める段階を求める
+<!--/-->
+
+<!--en-->
+Structural recursion over terms and formulas computes an ordinal stage containing
+every constant, merging branch bounds and transporting their boundedness proofs.
+<!--zh-->
+对词项与公式作结构递归，可计算出包含全部常元的序数阶段，并在分支处合并上界、传输其有界性证明。
+<!--ja-->
+項と論理式の構造的再帰により全定数を含む順序数段階を計算し、分岐では上界を併合して有界性の証明を輸送する。
 <!--/-->
 
 <!--en-->
@@ -432,6 +505,17 @@ mkBoundedFo (∃̇∈ t φ) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ 
 ## Δ₀ separation
 <!--zh-->
 ## Δ₀ 分离
+<!--ja-->
+## Δ₀ 分出公理
+<!--/-->
+
+<!--en-->
+`separateΔ₀`{.Agda} merges the bounds for the formula's constants and the source
+set, then invokes `separateAt`{.Agda} to realize the bounded separation instance.
+<!--zh-->
+`separateΔ₀`{.Agda} 合并公式常元与源集合的上界，再调用 `separateAt`{.Agda} 实现有界分离实例。
+<!--ja-->
+`separateΔ₀`{.Agda} は論理式の定数と始集合の上界を併合し、`separateAt`{.Agda} を呼び出して有界な分出公理の事例を実現する。
 <!--/-->
 
 <!--en-->
@@ -463,6 +547,17 @@ separateΔ₀ a φ dφ = AtStage.separateAt σ oσ a fa∈σ φ h dφ
 ## Δ₀ replacement
 <!--zh-->
 ## Δ₀ 替换
+<!--ja-->
+## Δ₀ 置換公理
+<!--/-->
+
+<!--en-->
+`replaceΔ₀`{.Agda} first bounds the functional image and then separates that
+stage by the bounded existential defining `ReplImage`{.Agda}.
+<!--zh-->
+`replaceΔ₀`{.Agda} 先界住函数像，再用定义 `ReplImage`{.Agda} 的有界存在式在该阶段上分离。
+<!--ja-->
+`replaceΔ₀`{.Agda} はまず関数的な像を抑え、次に `ReplImage`{.Agda} を定義する有界存在量化でその段階を分出する。
 <!--/-->
 
 <!--en-->
@@ -510,6 +605,17 @@ replaceΔ₀ a φ dφ fc =
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+The bounded engine now yields `separateΔ₀`{.Agda} and `replaceΔ₀`{.Agda}, with
+formula constants and functional images each confined to an explicit stage.
+<!--zh-->
+有界引擎现在给出 `separateΔ₀`{.Agda} 与 `replaceΔ₀`{.Agda}，并把公式常元与函数像分别限制在一个明确阶段内。
+<!--ja-->
+有界な構成から `separateΔ₀`{.Agda} と `replaceΔ₀`{.Agda} が得られ、論理式の定数と関数的な像はそれぞれ明示的な段階に収められる。
 <!--/-->
 
 <!--en-->

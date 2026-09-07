@@ -1,4 +1,18 @@
-# Environments as sets
+<!--en-->
+# Finite environments as set-coded graphs
+<!--zh-->
+# 作为集合编码图的有穷环境
+<!--ja-->
+# 集合で符号化した有限環境
+<!--/-->
+
+<!--en-->
+This chapter represents a finite variable assignment by a set of numeral-value pairs, proves exact lookup in that graph, and defines the set-level operations used when satisfaction passes under a quantifier.
+<!--zh-->
+本章用数码与值的有序对之集表示有穷变元赋值，证明该图中的精确查值，并定义满足关系进入量词之下时使用的集合层运算。
+<!--ja-->
+本章では有限な変数割当てを数項と値の対の集合で表し、そのグラフでの正確な参照を証明し、充足関係が量化子の内側へ進むときに使う集合上の操作を定義します。
+<!--/-->
 
 <!--en-->
 A certificate that talks about satisfaction has to talk about environments, and
@@ -41,7 +55,7 @@ import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl; ∈sucV-elim )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′ )
-open import L.Coding.Base {ℓ}
+open import L.Coding.PairFormulas {ℓ}
   using ( prAt; prAt-adequate; prChar-fwd; prChar-bwd
         ; ∈pair-introL; ∈pair-introR )
 
@@ -71,6 +85,16 @@ open Sem.At (V ℓ) id using ( _⊨_; ⟦_⟧ )
 ## The graph of an environment
 <!--zh-->
 ## 环境的图
+<!--ja-->
+## 環境のグラフと参照
+<!--/-->
+
+<!--en-->
+`env g` collects the pairs `⟨# i , g i⟩`, while `lookup-spec` proves that the value paired with the key for `i` is exactly `g i`.
+<!--zh-->
+`env g` 汇集有序对 `⟨# i , g i⟩`，而 `lookup-spec` 证明与 `i` 的键配对的值恰为 `g i`。
+<!--ja-->
+`env g` は対 `⟨# i , g i⟩` を集め、`lookup-spec` は `i` の鍵と対になる値がちょうど `g i` であることを示します。
 <!--/-->
 
 <!--en-->
@@ -118,9 +142,19 @@ lookup-spec {n} g i v = ⇔toPath fwd bwd
 ```
 
 <!--en-->
-## Going under a quantifier
+## Recognizing successor indices
 <!--zh-->
-## 进入量词之下
+## 识别后继索引
+<!--ja-->
+## 後者となる添字を認識する
+<!--/-->
+
+<!--en-->
+`sucAt i j` is a bounded formula saying that the value at `j` is the von Neumann successor of the value at `i`; `sucAt-adequate` proves this semantic characterization.
+<!--zh-->
+有界公式 `sucAt i j` 表示 `j` 处的值是 `i` 处之值的 von Neumann 后继；`sucAt-adequate` 证明这一语义刻画。
+<!--ja-->
+有界式 `sucAt i j` は `j` での値が `i` での値の von Neumann 後者であることを表し、`sucAt-adequate` がこの意味論的特徴づけを証明します。
 <!--/-->
 
 <!--en-->
@@ -187,6 +221,16 @@ sucAt-adequate i j γ = ⇔toPath
 ## Shifting an entry
 <!--zh-->
 ## 移位一个条目
+<!--ja-->
+## 一つの項目をずらす
+<!--/-->
+
+<!--en-->
+`shiftPairAt p' p` recognizes when the pair at `p'` is obtained from the pair at `p` by replacing its numeral key with its successor and leaving the value unchanged.
+<!--zh-->
+`shiftPairAt p' p` 识别如下情形：把 `p` 处有序对的数码键换成其后继并保持值不变，便得到 `p'` 处的有序对。
+<!--ja-->
+`shiftPairAt p' p` は、`p` にある対の数項の鍵をその後者に置き換え、値を変えずに得られる対が `p'` にあることを認識します。
 <!--/-->
 
 <!--en-->
@@ -302,9 +346,19 @@ shiftPairAt-adequate p' p γ = ⇔toPath fwd bwd
 ```
 
 <!--en-->
-## The empty tag
+## Coding the empty entry
 <!--zh-->
-## 空标签
+## 编码空条目
+<!--ja-->
+## 空の項目を符号化する
+<!--/-->
+
+<!--en-->
+The formulas `sgl0At`, `pair0At`, and `tag0At` recognize the singleton, Kuratowski pair, and tagged pair used for the new zeroth environment entry; their semantic lemmas recover each encoded component.
+<!--zh-->
+公式 `sgl0At`、`pair0At` 与 `tag0At` 识别新添的第零个环境条目所用的单点集、Kuratowski 对与带标签对；相应的充分阶段条件引理恢复各编码分量。
+<!--ja-->
+式 `sgl0At`、`pair0At`、`tag0At` は、新しい第 0 環境項目に使う一元集合、Kuratowski 対、タグ付き対を認識し、対応する十分な段階の条件を示す補題が各符号化成分を復元します。
 <!--/-->
 
 <!--en-->
@@ -316,7 +370,7 @@ set as first component. The singleton and unordered pair share the same
 empty-member witness. Mapping their two predicates together carries the whole
 pair characterization in either direction.
 <!--zh-->
-本章扩展读式所用的标签是 `# 0`，而 `# 0` 按定义就是空集。于是标签可以不借常量说出：一个成员是空的。下面几条读式就是带标签版本的空版。元层机制证明：满足空标签读式的集合，恰是以空集为第一分量的 Kuratowski 对。单点集与无序对共享同一个空成员见证。一起映射这两个谓词，就能在两个方向搬运整条有序对刻画。
+本章扩展读式所用的标签是 `# 0`，而 `# 0` 按定义就是空集。于是标签可以不借常元说出：一个成员是空的。下面几条读式就是带标签版本的空版。元层机制证明：满足空标签读式的集合，恰是以空集为第一分量的 Kuratowski 对。单点集与无序对共享同一个空成员见证。一起映射这两个谓词，就能在两个方向搬运整条有序对刻画。
 <!--/-->
 
 ```agda
@@ -422,6 +476,16 @@ tag0At-adequate s x γ = ⇔toPath
 ## Extending an environment
 <!--zh-->
 ## 扩张环境
+<!--ja-->
+## 環境を拡張する
+<!--/-->
+
+<!--en-->
+`cons a g` puts `a` at index zero and shifts every old entry by one; `consAt` expresses exactly this graph transformation and `consAt-adequate` proves the equivalence.
+<!--zh-->
+`cons a g` 把 `a` 放在索引零处，并把每个旧条目上移一位；`consAt` 恰好表达这一图变换，`consAt-adequate` 证明相应等价。
+<!--ja-->
+`cons a g` は `a` を添字 0 に置き、すべての旧項目を一つずつずらします。`consAt` はこのグラフ変換を正確に表し、`consAt-adequate` がその同値性を証明します。
 <!--/-->
 
 <!--en-->
@@ -430,7 +494,7 @@ one with a new value at index zero. Three clauses. The entry at key zero holds t
 new value; every entry of the old environment appears shifted in the new one; and
 every entry of the new one is either that first entry or a shift of an old one.
 
-Adequacy is stated against an *encoded* environment, because that is the form the
+The semantic characterization is stated against an *encoded* environment, because that is the form the
 certificates hold. Given that the old environment is the graph of `g`, satisfaction
 of the formula says exactly that the new one is the graph of `g` with the value
 consed on. The two sides match key by key, and the match is definitional at the
@@ -569,6 +633,16 @@ consAt-adequate e' m e γ {k} g hE = ⇔toPath fwd bwd
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+The chapter provides a set-coded environment with exact lookup and a bounded, semantically correct description of extension, which are the two environment operations needed by satisfaction clauses.
+<!--zh-->
+本章得到具有精确查值的集合编码环境，以及对环境扩张的有界且语义正确的描述；这正是满足关系子句所需的两种环境操作。
+<!--ja-->
+本章により、正確に参照できる集合符号化環境と、環境拡張の有界で意味論的に正しい記述が得られます。これらが充足関係の各条件に必要な二つの環境操作です。
 <!--/-->
 
 <!--en-->

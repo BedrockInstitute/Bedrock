@@ -1,4 +1,16 @@
+<!--en-->
 # Truth values
+
+First-order semantics needs a type of truth values together with operations for connectives and quantifiers. This chapter records exactly that data in `TruthAlgebra`{.Agda}, then supplies the canonical instance whose truth values are propositions.
+<!--zh-->
+# 真值
+
+一阶语义需要一个真值类型，以及解释联结词与量词的运算。本章用 `TruthAlgebra`{.Agda} 准确记录这些数据，再给出以命题为真值的典范实例。
+<!--ja-->
+# 真理値
+
+一階意味論には、真理値の型と、結合子および量化子を解釈する演算が必要です。本章ではそのデータを `TruthAlgebra`{.Agda} に記録し、命題を真理値とする正準な実例を与えます。
+<!--/-->
 
 <!--en-->
 When a formula is evaluated, the result has to live somewhere: a type of truth
@@ -10,6 +22,8 @@ algebra**, and everything built over it serves both journeys.
 <!--zh-->
 公式求值的结果必须落脚在某处：一个真值类型。本书要去的两个地方对此想要不同的答案：通往可构造宇宙的旅程，以命题 (`hProp`{.Agda}) 作真值即可；力迫部分则要求真值住在完备布尔代数里。所以这个答案不被焊死：语义值域是一个参数，称为**真值代数**，其上构建的一切两程通用。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -23,11 +37,7 @@ import Cubical.Functions.Logic as Logic
 
 <!--en-->
 ## The interface
-<!--zh-->
-## 接口
-<!--/-->
 
-<!--en-->
 The record below is a **pure operation signature**: it asks for eight operations
 and not a single law about them (no associativity, no distributivity, no lattice
 axioms). A law in an interface is a debt every instance must pay, and here nobody
@@ -40,8 +50,16 @@ assumptions. Staying law-free therefore costs nothing, and buys a cheap ticket o
 admission: a semantics joins the book by handing over eight operations, owing no
 proofs.
 <!--zh-->
+## 接口
+
 下面的 record 是**纯运算签名**：只索要八个运算，对它们不要求任何定律 (不要结合律、分配律，也不要任何格公理)。接口里的每条定律都是每个实例必须偿付的债务，而这里根本无人收账：框架核心在 `Ω` 上构建的一切都把这些运算当黑箱，只需要同余 (输入相等则输出相等，即序章的 `cong`{.Agda})，而同余对任意运算都成立。定律只有后面关于具体模型的定理才需要，而那些定理本来就在具体实例上进行，届时定律是实例上的定理而非接口上的假设。零定律因此毫无代价，换来的是廉价的入场券：一个语义要加入本书，交出八个运算即可，不欠任何证明。
+<!--ja-->
+## インターフェース
+
+`TruthAlgebra`{.Agda} は、真理値型 `Ω`、二項結合子、否定、真偽、有界な添字型上の積と和を指定します。意味論に不要な代数法則は仮定しません。
 <!--/-->
+
+
 
 ```agda
 record TruthAlgebra (ℓ ℓ' : Level) : Type (ℓ-suc (ℓ-max ℓ ℓ')) where
@@ -81,17 +99,21 @@ abstract `𝕋`; chapters on the propositional side open the canonical instance 
 
 <!--en-->
 ## The canonical instance: hProp
-<!--zh-->
-## 典范实例：hProp
-<!--/-->
 
-<!--en-->
 Propositions form a truth algebra. Everything in this sentence stands on univalence:
 that `hProp`{.Agda} is a set, and that the operations below are well defined on it,
 are theorems of the cubical library, not assumptions.
 <!--zh-->
+## 典范实例：hProp
+
 命题构成一个真值代数。这句话的全部内容都站在 univalence 上：`hProp`{.Agda} 是集合、下列运算在其上良定义，这些在 cubical 库里都是定理而非假设。
+<!--ja-->
+## 正準な実例：hProp
+
+命題 `hProp`{.Agda} は正準な真理値代数になります。論理結合子は命題の演算で解釈され、全称量化は Π 型、存在量化は命題的切り詰めを施した Σ 型で解釈されます。
 <!--/-->
+
+
 
 ```agda
 hPropAlgebra : ∀ ℓ → TruthAlgebra ℓ (ℓ-suc ℓ)
@@ -137,30 +159,36 @@ Three points worth keeping:
 
 <!--en-->
 ## A seat reserved for forcing
-<!--zh-->
-## 为力迫预留的席位
-<!--/-->
 
-<!--en-->
 The forcing part of this book will provide the second instance: the regular-open
 Boolean completion of a forcing poset, with `Ω` a complete Boolean algebra. The
 record above will carry it unchanged, and the symbol family `∈ᴮ ≈ᴮ` is already
 reserved for that day.
 <!--zh-->
+## 为力迫预留的席位
+
 本书的力迫部分将给出第二个实例：力迫偏序的正则开代数布尔完备化，`Ω` 是完备布尔代数。上面的 record 届时原样承接，符号族 `∈ᴮ ≈ᴮ` 已为那一天预留。
+<!--ja-->
+## 強制法のための余地
+
+意味論は抽象的な `TruthAlgebra`{.Agda} だけに依存します。そのため、後の強制法では真理値を完備ブール代数に替えても、同じ構文と意味論を再利用できます。
 <!--/-->
+
+
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 Truth values are a parameter: the operation-only record `TruthAlgebra`{.Agda}, whose
 eight symbols are the book's entire logic notation, with `hPropAlgebra`{.Agda} as the
 canonical, definitionally transparent instance. Next: the size vocabulary of
 impredicativity, and then the one classical principle that redeems it.
 <!--zh-->
+## 小结
+
 真值是一个参数：只含运算的 record `TruthAlgebra`{.Agda}，其八个符号就是全书的全部逻辑记号；`hPropAlgebra`{.Agda} 是典范且定义性透明的实例。接下来：非直谓性的尺寸词汇，与随后赎回它的那唯一经典原理。
+<!--ja-->
+## まとめ
+
+`TruthAlgebra`{.Agda} は論理式の意味に必要な演算だけを抽象化します。`hPropAlgebra`{.Agda} は通常の命題値意味論を与え、同じインターフェースが後の別の真理値にも対応します。
 <!--/-->

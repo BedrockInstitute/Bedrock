@@ -1,17 +1,18 @@
-# Landmarks
-
 <!--en-->
-The trophy case, and it stands at the entrance on purpose. Each landmark below
-restates a milestone theorem of the book in one self-contained signature, with
-its full bill of assumptions on display, and names the chapter that proves it.
-On a first reading nothing here is expected to make sense yet: these signatures
-are the destination, and learning to read them, symbol by symbol and assumption
-by assumption, is what the rest of the book is for. Come back after each part
-lands. For the returning reader the landmarks are stable anchors: a paper can
-cite one without caring where inside the book its proof lives.
+# Main theorems
+
+This chapter collects the development’s three principal model-theoretic results with their complete assumptions: the cumulative hierarchy models ZF and, under choice, ZFC; the constructible universe models ZFC; and the constructible universe satisfies GCH.
 <!--zh-->
-奖杯陈列室，而且是故意摆在入口处的。下面每座地标都以一条自足的签名重述本书的一项里程碑定理，假设账单全额陈列，并指认证明它的章节。初读时这里的一切都不指望被看懂：这些签名就是目的地，而学会逐个符号、逐条假设地读懂它们，正是全书其余部分的任务。每读完一部，请回到这里。对回访的读者，地标是稳定的锚点：论文可以直接引用，而不必关心其证明住在书中何处。
+# 主要定理
+
+本章汇集整个开发的三项主要模型论结果及其完整假设：累积层级是 ZF 的模型，并在选择下成为 ZFC 的模型；可构造宇宙是 ZFC 的模型；可构造宇宙满足 GCH。
+<!--ja-->
+# 主要定理
+
+本章は、この展開の三つの主要なモデル論的結果とその仮定をまとめます。累積階層は ZF のモデルであり、選択の下では ZFC のモデルです。構成可能宇宙は ZFC のモデルであり、さらに GCH を満たします。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -44,6 +45,10 @@ upgrade all the way to ZFC.
 ## 层级满足 ZF(C)
 
 主打名是经典版：给定模型自身真值层上的一份排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收基础章节给出的非直谓性打包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择就资助到 ZFC。
+<!--ja-->
+## 累積階層は ZF (C) のモデル
+
+累積階層は、命題リサイズをまとめた非可述性から ZF のモデルになります。排中律はその仮定を導き、集合レベルの選択はさらに選択公理を与えるため、同じ階層について ZFC のモデルも得られます。
 <!--/-->
 
 ```agda
@@ -69,6 +74,10 @@ inside it.
 ## 可构造宇宙满足 ZFC
 
 本书的主定理 (章节 `L.Model`{.Agda})：给定模型真值层上的一份排中律，可构造结构满足 ZFC。一个假设，而它与上一座地标所付的是同一个。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
+<!--ja-->
+## 構成可能宇宙は ZFC のモデル
+
+モデルの真理値レベルで一つの排中律を仮定すると、構成可能構造 `𝒮ʟ` は ZFC を満たします。累積階層の ZF モデルと合わせると、これは選択公理の相対無矛盾性を意味論的に表します。
 <!--/-->
 
 ```agda
@@ -88,6 +97,10 @@ injections that are themselves elements of L (chapter `L.GCH`{.Agda} states it).
 ## 可构造宇宙满足 GCH
 
 第二座奖杯 (章节 `L.GCH.Theorem`{.Agda})：在同一个唯一假设下，可构造结构满足广义连续统假设，且以 L 自己的语言陈述：对 L 的每个无穷基数 κ，模型自身的 κ 的幂集与 κ 的后继基数之间存在互相的单射，而这些单射本身是 L 的元素 (章节 `L.GCH`{.Agda} 给出陈述)。
+<!--ja-->
+## 構成可能宇宙は GCH を満たす
+
+同じ一つの排中律の下で、`L` の各無限基数について、その冪集合と後続基数の間に `L` の要素である双方向の単射が存在します。これが構成可能宇宙における GCH の内部的な主張です。
 <!--/-->
 
 ```agda

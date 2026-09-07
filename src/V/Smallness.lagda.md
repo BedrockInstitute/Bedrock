@@ -1,17 +1,18 @@
-# Smallness
-
 <!--en-->
-The previous chapter ended on a warning about universes: `V ℓ` is a large type
-built from small indexing data, and its truth values live in `hProp (ℓ-suc ℓ)`,
-one level up. The warning matters because every set-forming device the library
-offers, `sett`{.Agda} first among them, accepts only **small** input: a small
-index type, a small predicate. To build a set out of a property, the property's
-truth value must first be brought down a universe. This chapter builds the
-toolkit for exactly that, and its payoff is the part's first theorem worth
-framing: separation for Δ₀ formulas costs no axiom at all.
+# Small truth values in the cumulative hierarchy
+
+A proposition over `V`{.Agda} is small when it is equivalent to one in the lower universe. Atomic formulas, connectives, and bounded quantifiers preserve this property, yielding Δ₀ separation without resizing and full smallness over essentially small substructures.
 <!--zh-->
-上一章以一句宇宙警告收尾：`V ℓ` 是由小索引数据造出的大类型，其真值住在高一层的 `hProp (ℓ-suc ℓ)`。这句警告的分量在于：库提供的每一件造集装置，头一件就是 `sett`{.Agda}，都只收**小**输入：小索引类型、小谓词。要想用一条性质造出集合，先得把这条性质的真值降下一个宇宙。本章打造的正是这套工具，而它的回报是本部第一条值得裱起来的定理：Δ₀ 公式的分离不花任何公理。
+# 累积层级中的小真值
+
+`V`{.Agda} 上的命题若等价于低一层宇宙中的命题，就是小的。原子公式、联结词与有界量词保持此性质，由此无需降层即可得到 Δ₀ 分离，并在本质小的子结构上得到全体公式的小性。
+<!--ja-->
+# 累積階層における小さな真理値
+
+`V`{.Agda} 上の命題が一段低い宇宙の命題と同値であるとき、それを小さいと呼びます。原子論理式、結合子、有界量化子はこの性質を保存するので、リサイズなしの Δ₀ 分出と、本質的に小さな部分構造上でのすべての論理式の小ささが得られます。
 <!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -49,19 +50,23 @@ open ZFStructure 𝒮ᵥ
 
 <!--en-->
 ## Being small
-<!--zh-->
-## 何谓小
-<!--/-->
 
-<!--en-->
 A proposition one universe up **is small** when it is equivalent to some
 proposition one universe down: the definition (`isSmall`{.Agda}) was minted in
 `Base.Impredicativity`, where the resizing interface asserts it of every proposition wholesale.
 This chapter assumes no such thing. It **earns** instances, one atom at a time,
 and the whole chapter is an exercise in passing the earned witnesses around.
 <!--zh-->
+## 何谓小
+
 高一层的命题**是小的**，指它与某个低一层的命题等价：这个定义 (`isSmall`{.Agda}) 铸于基础章节，在那里，降层接口把它一揽子断言于每个命题。本章不作这种假设。它逐原子地**挣得**实例，而整章无非是把挣来的见证传来传去的一套体操。
+<!--ja-->
+## 小さい命題
+
+高い宇宙の命題が低い宇宙の命題と同値であるとき、その命題は小さいといいます。階層の所属と等号はライブラリの小さな関係によって、この性質を満たします。
 <!--/-->
+
+
 
 <!--en-->
 The atoms are small straight from the library. This is the local-smallness
@@ -84,18 +89,22 @@ small-≡ a b = (a ∼ b) , invEquiv identityPrinciple
 
 <!--en-->
 ## The connectives preserve smallness
-<!--zh-->
-## 联结词保小
-<!--/-->
 
-<!--en-->
 Each of the six propositional operations passes smallness witnesses through; each
 proof is the mechanical transport of a bi-implication. (The qualified
 `Logic`{.Agda} names are the library's connectives at the *lower* level, the
 codomain of the compression.)
 <!--zh-->
+## 联结词保小
+
 六个命题运算逐个传递小性见证，每条证明都是双蕴含的机械搬运。(限定名 `Logic`{.Agda} 是库在**低**一层的联结词，即压缩的落点。)
+<!--ja-->
+## 結合子による保存
+
+小さな命題の証人は、真、偽、連言、選言、含意、否定を通して組み合わせられます。それぞれの証明は低い宇宙で対応する結合子を作り、同値を移します。
 <!--/-->
+
+
 
 ```agda
 small⊓ : {P Q : hProp (ℓ-suc ℓ)} → isSmall P → isSmall Q → isSmall (P ⊓ Q)
@@ -128,11 +137,7 @@ small⊥ = (⊥* , isProp⊥*) ,
 
 <!--en-->
 ## Bounded quantifiers preserve smallness
-<!--zh-->
-## 有界量词保小
-<!--/-->
 
-<!--en-->
 Here is the load-bearing step, and the point where the syntax chapter's oldest
 promise pays off in the currency of universes. A quantifier over all of `V ℓ`
 ranges over a large type and has no reason to be small. A quantifier **bounded by
@@ -142,8 +147,16 @@ along `∈-asFiber`{.Agda}, whose fibers are **untruncated** because `⟪ a ⟫�
 embedding: passing from "a member of `a`" back to "an index of `⟪ a ⟫`" is a
 function, not a choice.
 <!--zh-->
+## 有界量词保小
+
 承重的一步到了，语法章最古老的那句许诺，在此以宇宙为通货兑付。范围取全 `V ℓ` 的量词量化在大类型上，没有任何理由是小的。而**以集合 `a` 为界**的量词可以改在库的小成员类型 `⟪ a ⟫` 上量化，即 `a` 的族的索引类型，小性就此存活。往返两趟走 `∈-asFiber`{.Agda}，其纤维**不加截断**，因为 `⟪ a ⟫↪` 是嵌入：从「`a` 的成员」回到「`⟪ a ⟫` 的索引」是函数，不是选择。
+<!--ja-->
+## 有界量化子による保存
+
+集合で有界な量化は、その集合の小さな提示上の量化へ移せます。所属のファイバーから要素と添字を相互に移すことで、全称量化と存在量化の小ささが保存されます。
 <!--/-->
+
+
 
 ```agda
 small-∀∈ : (a : S) {B : S → hProp (ℓ-suc ℓ)}
@@ -184,19 +197,23 @@ small-∃∈ a {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
 
 <!--en-->
 ## The separation pipe
-<!--zh-->
-## 分离的水管
-<!--/-->
 
-<!--en-->
 What smallness buys: a pointwise-small predicate can be separated. The library's
 `SeparationSet`{.Agda} accepts only small predicates, and a smallness witness is
 exactly the ticket in; the specification comes back in the model record's field
 shape. Every separation this part performs, whatever pays for the smallness,
 flows through this one pipe.
 <!--zh-->
+## 分离的水管
+
 小性买到的东西：逐点小的谓词可以分离。库的 `SeparationSet`{.Agda} 只收小谓词，小性见证恰好是入场券；规格以模型 record 的字段形状交还。本部往后的每一次分离，无论小性由谁买单，都流经这一根水管。
+<!--ja-->
+## 小ささから分出へ
+
+各点で小さい述語は、ライブラリの分出構成へ渡して集合にできます。`separateFromSmall`{.Agda} は小ささの証人を受け取り、モデルの分出公理と同じ形の所属仕様を返します。
 <!--/-->
+
+
 
 ```agda
 separateFromSmall : (a : S) (P : S → hProp (ℓ-suc ℓ))
@@ -218,11 +235,7 @@ separateFromSmall a P sm = Sep.SEPAREE , λ y → ⇔toPath (fwd y) (bwd y)
 
 <!--en-->
 ## Δ₀ formulas evaluate small
-<!--zh-->
-## Δ₀ 公式求值小
-<!--/-->
 
-<!--en-->
 Now the Δ₀ witnesses earn a second salary. One induction over the `Δ₀`
 witness shows that the witnessed formula's truth value at any environment is
 small: the two atoms are the library compressions, the eight connective cases are
@@ -230,11 +243,19 @@ the closure lemmas, and the two bounded-quantifier cases consume
 `small-∀∈`{.Agda} and `small-∃∈`{.Agda}. There is **no case for the unbounded
 quantifiers, because the witness has no such constructors**: absence is the
 classification. This is the second load-bearing induction over Δ₀ witnesses
-(absoluteness was the first), and it is why the Levy hierarchy doubles as a cost
+(absoluteness was the first), and it is why the Lévy hierarchy doubles as a cost
 accounting: Δ₀ means *free*, in the precise sense of universe levels.
 <!--zh-->
+## Δ₀ 公式求值小
+
 Δ₀ 见证开始挣第二份薪水。对 `Δ₀` 见证做一次归纳，即知带见证的公式在任何环境下的真值都小：两个原子情形是库压缩，八个联结词情形是封闭性引理，两个有界量词情形消费 `small-∀∈`{.Agda} 与 `small-∃∈`{.Agda}。**没有无界量词的情形，因为见证压根没有那两个构造子**：缺席即分类。这是压在 Δ₀ 见证上的第二条承重归纳 (第一条是绝对性)，也是 Lévy 层级兼任成本账簿的原因：Δ₀ 意谓**免费**，在宇宙层级的精确意义上。
+<!--ja-->
+## Δ₀ 論理式の評価は小さい
+
+Δ₀ の証人に関する帰納法により、原子での小ささを結合子と有界量化子へ伝えます。非有界量化子の構成子がないため、どの環境でも評価結果は小さい命題になります。
 <!--/-->
+
+
 
 ```agda
 module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
@@ -262,19 +283,23 @@ module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 
 <!--en-->
 ## The theorem: Δ₀ separation is free
-<!--zh-->
-## 定理：Δ₀ 分离免费
-<!--/-->
 
-<!--en-->
 Compose the induction with the pipe, at the canonical constant interpretation,
 and the flagship falls out: a formula carrying a Δ₀ witness can be separated
 with no resizing and no axiom, `--safe` all the way down. The model chapter will
 still owe *full* separation, but this theorem is the first hard evidence for a
 running theme: the Δ₀ witnesses are portable assets, and carrying them pays.
 <!--zh-->
-把这条归纳与那根水管在典范常量解释处一复合，招牌定理应声落地：携带 Δ₀ 见证的公式，其分离不需任何降层、不花任何公理，一路 `--safe`。模型章仍欠**全**分离，但这条定理是一个贯穿主题的第一份硬证据：Δ₀ 见证是可携资产，随身携带自有回报。
+## 定理：Δ₀ 分离免费
+
+把这条归纳与那根水管在典范常元解释处一复合，招牌定理应声落地：携带 Δ₀ 见证的公式，其分离不需任何降层、不花任何公理，一路 `--safe`。模型章仍欠**全**分离，但这条定理是一个贯穿主题的第一份硬证据：Δ₀ 见证是可携资产，随身携带自有回报。
+<!--ja-->
+## 定理：Δ₀ 分出に仮定は不要
+
+`Δ₀-small`{.Agda} で得た点ごとの小ささを分出構成へ渡すと、Δ₀ 論理式による部分集合が得られます。この定理には命題リサイズも追加の公理も必要ありません。
 <!--/-->
+
+
 
 ```agda
 open Δ₀Small id
@@ -287,11 +312,7 @@ separateΔ₀ a φ c = separateFromSmall a (λ y → (y ∷ []) ⊨ φ) (λ y �
 
 <!--en-->
 ## Essentially small worlds
-<!--zh-->
-## 本质小的世界
-<!--/-->
 
-<!--en-->
 One more register of smallness, bought not by Δ₀ witnesses but by **location**.
 When the quantification range is itself equivalent to a small type, even the
 *unbounded* quantifiers preserve smallness: quantify along the equivalence. This
@@ -299,8 +320,16 @@ does not contradict the cost accounting above, which priced quantifiers ranging
 over all of `V ℓ`; here the range is the carrier of a **restricted structure**
 `𝒮ᵥ ↾ M`, and smallness is exactly what the restriction buys.
 <!--zh-->
+## 本质小的世界
+
 小性还有一种买法，买单的不是 Δ₀ 见证而是**地段**。当量化范围自身等价于某个小类型时，连**无界**量词也保小：沿等价搬运量化即可。这与上文的成本账簿并不冲突，那里标价的是范围为全 `V ℓ` 的量词；此处的范围是**限制结构** `𝒮ᵥ ↾ M` 的载体，小性恰是「限制」二字买来的。
+<!--ja-->
+## 本質的に小さな世界
+
+制限構造の台が小さな型と同値なら、非有界量化もその小さな型上へ移せます。そのため、この世界の中では Δ₀ に限らず、すべての論理式の評価が小さくなります。
 <!--/-->
+
+
 
 ```agda
 small-⋀ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
@@ -367,18 +396,20 @@ module InnerSmall (M : S → hProp (ℓ-suc ℓ))
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 Smallness is equivalence to a proposition one universe down (`isSmall`{.Agda});
 the atoms compress through the library, the connectives and the bounded
 quantifiers pass smallness witnesses along, and `separateFromSmall`{.Agda} is the one pipe
 from small predicates to sets. The induction `Δ₀-small`{.Agda} then makes the
-Levy hierarchy a cost accounting, with `separateΔ₀`{.Agda} as the free tier. What
+Lévy hierarchy a cost accounting, with `separateΔ₀`{.Agda} as the free tier. What
 Δ₀ cannot reach is priced in the model chapter, and the price has a name:
 resizing.
 <!--zh-->
+## 小结
+
 小性即与低一层命题的等价 (`isSmall`{.Agda})；原子经库压缩，联结词与有界量词传递小性见证，`separateFromSmall`{.Agda} 是从小谓词到集合的唯一水管。归纳 `Δ₀-small`{.Agda} 让 Lévy 层级兼任成本账簿，`separateΔ₀`{.Agda} 是其中的免费档。Δ₀ 够不到的部分在模型章标价，而那个价格有名字：降层。
+<!--ja-->
+## まとめ
+
+原子、結合子、有界量化子について小ささが閉じるため、Δ₀ の評価と分出は追加の仮定なしに構成できます。本質的に小さな制限構造では同じ結論がすべての論理式へ広がります。
 <!--/-->

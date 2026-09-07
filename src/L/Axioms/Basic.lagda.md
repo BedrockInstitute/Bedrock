@@ -1,4 +1,20 @@
+<!--en-->
 # The basic axioms
+<!--zh-->
+# 基本公理
+<!--ja-->
+# 基本公理
+<!--/-->
+
+<!--en-->
+This chapter proves extensionality, regularity, empty set, pairing, and union for
+the constructible universe, using transitivity for inherited laws and definable
+subsets of one stage for the constructed sets.
+<!--zh-->
+本章证明可构造宇宙的外延公理、正则公理、空集公理、配对公理与并公理：传递性给出继承来的定律，而单一阶段的可定义子集给出所构造的集合。
+<!--ja-->
+本章では構成可能宇宙について、外延性公理、正則性公理、空集合の公理、対の公理、和集合の公理を証明する。継承される法則には推移性を、構成する集合には一つの段階の定義可能部分集合を用いる。
+<!--/-->
 
 <!--en-->
 The frontier opened with eleven debts. This chapter pays the first five, and
@@ -80,6 +96,18 @@ open ModelL using ( SetOf; setOf-unique )
 ## Definable subsets are constructible
 <!--zh-->
 ## 可定义子集是可构造的
+<!--ja-->
+## 定義可能部分集合は構成可能である
+<!--/-->
+
+<!--en-->
+`defInL`{.Agda} places every definable subset of an ordinal stage into the next
+constructible level, and `isL-Lset`{.Agda} records that each ordinal stage itself
+belongs to `L`.
+<!--zh-->
+`defInL`{.Agda} 把序数阶段的每个可定义子集放入下一可构造层，而 `isL-Lset`{.Agda} 记录每个序数阶段自身都属于 `L`。
+<!--ja-->
+`defInL`{.Agda} は順序数段階の各定義可能部分集合を次の構成可能な層へ入れ、`isL-Lset`{.Agda} は各順序数段階そのものが `L` に属することを記録する。
 <!--/-->
 
 <!--en-->
@@ -148,6 +176,17 @@ LsetS β oβ = Lset β , isL-Lset β oβ
 ## The successor stage
 <!--zh-->
 ## 后继阶段
+<!--ja-->
+## 後者段階
+<!--/-->
+
+<!--en-->
+`Lset-suc`{.Agda} proves that the stage at a successor ordinal is exactly the
+definable powerset of the preceding stage, by establishing both inclusions.
+<!--zh-->
+`Lset-suc`{.Agda} 通过证明两个包含方向，表明后继序数处的阶段恰为前一阶段的可定义幂集。
+<!--ja-->
+`Lset-suc`{.Agda} は二つの包含を証明し、後者順序数における段階が直前の段階の定義可能冪集合とちょうど一致することを示す。
 <!--/-->
 
 <!--en-->
@@ -235,6 +274,18 @@ identity is what makes both hold, at every stage at once.
 ## Finite families
 <!--zh-->
 ## 有穷族
+<!--ja-->
+## 有限族
+<!--/-->
+
+<!--en-->
+The finite-disjunction formula shows that any finite indexed family of members
+of one stage forms a constructible set, with exact membership lemmas
+`finSet-in`{.Agda} and `finSet-out`{.Agda}.
+<!--zh-->
+有穷析取公式证明，同一阶段成员组成的任意有穷索引族都会形成可构造集合，并给出精确的 `finSet-in`{.Agda} 与 `finSet-out`{.Agda} 成员引理。
+<!--ja-->
+有限論理和の論理式により、一つの段階の要素からなる任意の有限添字族が構成可能集合をなすことを示し、正確な所属補題 `finSet-in`{.Agda} と `finSet-out`{.Agda} を得る。
 <!--/-->
 
 <!--en-->
@@ -351,6 +402,17 @@ module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
 ## Two sets, one stage
 <!--zh-->
 ## 两个集合，一个阶段
+<!--ja-->
+## 二つの集合を一つの段階へ
+<!--/-->
+
+<!--en-->
+`isL-directed`{.Agda} uses an ordinal bound to place any two constructible sets
+in one common stage, preparing the finite-family construction for pairing.
+<!--zh-->
+`isL-directed`{.Agda} 用序数上界把任意两个可构造集合放进同一公共阶段，为以有穷族构造配对作准备。
+<!--ja-->
+`isL-directed`{.Agda} は順序数の上界を用いて任意の二つの構成可能集合を一つの共通段階へ入れ、有限族による対の構成を準備する。
 <!--/-->
 
 <!--en-->
@@ -383,6 +445,18 @@ isL-directed x y px py = PT.rec2 squash₁ go px py
 ## The two inherited axioms
 <!--zh-->
 ## 继承来的两条公理
+<!--ja-->
+## 継承される二つの公理
+<!--/-->
+
+<!--en-->
+Transitivity of `L` restricts the ambient hierarchy's extensionality and
+well-founded membership to proofs of the axiom of extensionality and regularity
+inside the constructible carrier.
+<!--zh-->
+`L` 的传递性把环境层级的外延性与良基隶属限制到可构造载体内，从而证明外延公理与正则公理。
+<!--ja-->
+`L` の推移性により、周囲の階層の外延性と整礎な所属を構成可能な台へ制限し、その内部で外延性公理と正則性公理を証明する。
 <!--/-->
 
 <!--en-->
@@ -423,6 +497,18 @@ regularityL (v , p) = accL v (regularityV v) p
 ## Uniqueness, for free
 <!--zh-->
 ## 唯一性，白拿
+<!--ja-->
+## 外延性から得られる一意性
+<!--/-->
+
+<!--en-->
+`uniqueL`{.Agda} uses extensionality to show that any set realizing a fixed
+membership predicate is unique, so later axiom fields need only construct a
+merely existing witness.
+<!--zh-->
+`uniqueL`{.Agda} 用外延性证明，实现固定成员谓词的集合是唯一的，故后续公理字段只须构造一个仅仅存在的见证。
+<!--ja-->
+`uniqueL`{.Agda} は外延性により、固定された所属述語を実現する集合が一意であることを示すため、後の公理フィールドでは命題的切り詰められた存在の証人を構成するだけでよい。
 <!--/-->
 
 <!--en-->
@@ -447,6 +533,18 @@ mere→uniqueL Q = PT.rec isPropIsContr (uniqueL Q)
 ## The empty set
 <!--zh-->
 ## 空集
+<!--ja-->
+## 空集合
+<!--/-->
+
+<!--en-->
+The false object-language formula carves the ambient empty set as a definable
+subset, and `hasEmptyL`{.Agda} packages its constructibility and empty-membership
+specification.
+<!--zh-->
+对象语言中的假公式把环境空集雕成可定义子集，而 `hasEmptyL`{.Agda} 封装其可构造性与空成员规格。
+<!--ja-->
+対象言語の偽な論理式が周囲の空集合を定義可能部分集合として切り出し、`hasEmptyL`{.Agda} がその構成可能性と要素をもたないという仕様をまとめる。
 <!--/-->
 
 <!--en-->
@@ -488,6 +586,17 @@ hasEmptyL = uniqueL _ (∅ʟ , (λ x → empty-spec (fst x)))
 ## Pairing, bounded by a stage
 <!--zh-->
 ## 受阶段界住的配对
+<!--ja-->
+## 一つの段階内で対を作る
+<!--/-->
+
+<!--en-->
+For two members of one stage, a two-constant disjunction carves their unordered
+pair as a definable subset and proves its membership specification.
+<!--zh-->
+对同一阶段的两个成员，一条含两个常元的析取公式把其无序对雕成可定义子集，并证明其成员规格。
+<!--ja-->
+一つの段階の二要素について、二定数の論理和がその非順序対を定義可能部分集合として切り出し、所属の仕様を証明する。
 <!--/-->
 
 <!--en-->
@@ -576,6 +685,17 @@ pr∈Lset-suc σ x y x∈ y∈ = pair∈Lset-suc (sucV σ) ⁅ x ⁆s ⁅ x , y 
 ## Pairing
 <!--zh-->
 ## 配对
+<!--ja-->
+## 対の公理
+<!--/-->
+
+<!--en-->
+`hasPairL`{.Agda} first places two arbitrary constructible sets in a common stage,
+then applies the bounded pair construction and the uniqueness principle.
+<!--zh-->
+`hasPairL`{.Agda} 先把任意两个可构造集合放进公共阶段，再施用有界配对构造与唯一性原理。
+<!--ja-->
+`hasPairL`{.Agda} はまず任意の二つの構成可能集合を共通段階へ入れ、次に有界な対の構成と一意性原理を適用する。
 <!--/-->
 
 <!--en-->
@@ -612,6 +732,18 @@ hasPairL a b = mere→uniqueL (PairOf.Q a b) (PairOf.build a b)
 ## Union
 <!--zh-->
 ## 并
+<!--ja-->
+## 和集合の公理
+<!--/-->
+
+<!--en-->
+Stage transitivity bounds every member of every member of a constructible set,
+so a bounded existential formula carves its union and `hasUnionL`{.Agda} proves
+the exact membership law.
+<!--zh-->
+阶段传递性界住一个可构造集合的成员之成员，故有界存在公式雕出其并，而 `hasUnionL`{.Agda} 证明精确成员律。
+<!--ja-->
+段階の推移性が構成可能集合の各要素の全要素を抑えるため、有界存在の論理式がその和集合を切り出し、`hasUnionL`{.Agda} が正確な所属法則を証明する。
 <!--/-->
 
 <!--en-->
@@ -709,6 +841,17 @@ hasUnionL a = mere→uniqueL (UnionOf.Q a) (UnionOf.build a)
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+The chapter supplies five ZF fields: extensionality and regularity by restriction,
+and empty set, pairing, and union by carving definable subsets of bounded stages.
+<!--zh-->
+本章供应五个 ZF 字段：外延公理与正则公理由限制得到，空集、配对与并则由有界阶段上的可定义子集雕出。
+<!--ja-->
+本章は五つの ZF フィールドを与える。外延性公理と正則性公理は制限から、空集合、対、和集合は有界な段階の定義可能部分集合を切り出すことから得られる。
 <!--/-->
 
 <!--en-->

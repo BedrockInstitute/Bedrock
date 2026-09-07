@@ -1,4 +1,16 @@
+<!--en-->
 # An ordinal L-cardinal above every L-cardinal
+
+For an infinite cardinal of `L`, this chapter constructs a strictly larger cardinal that is also represented by an ordinal of `L`. The proof uses Hartogs' argument in the ambient cumulative hierarchy, turns the resulting ordinal into an element of `L`, and transfers cardinality back through the coded injections available inside `L`.
+<!--zh-->
+# 任意 L 基数之上的序数 L 基数
+
+给定 `L` 中的一个无限基数，本章构造一个严格更大的基数，并让它由 `L` 中的序数表示。证明在环境累积层级中使用 Hartogs 论证，把所得序数变成 `L` 的元素，再通过 `L` 内部已有的编码注入把基数性质传回去。
+<!--ja-->
+# 任意の L 基数より大きい順序数 L 基数
+
+`L` の無限基数が与えられたとき、本章ではそれより真に大きく、しかも `L` の順序数で表される基数を構成します。周囲の累積階層で Hartogs の議論を行い、得られた順序数を `L` の要素にし、`L` 内部の符号化された単射を通して基数性を移します。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -83,7 +95,19 @@ ord-emb a b ob a∈b = f , inj
       ∙ fiber b {x = ⟪ a ⟫↪ n} (ob .fst (member a n) a∈b) .snd)
 ```
 
-## Section 1. The obligation, at `[LJ-1.526]`'s own binding (agents/tasks/LJ-1-526/Probe526.agda:178-183)
+<!--en-->
+## The target statement
+
+`CardAboveLᵀ`{.Agda} isolates the exact result: every infinite ordinal cardinal of `L` has a strictly larger ordinal cardinal in `L`.
+<!--zh-->
+## 目标陈述
+
+`CardAboveLᵀ`{.Agda} 单独写出精确目标：`L` 中每个无限序数基数之上，都有一个严格更大的序数基数仍在 `L` 中。
+<!--ja-->
+## 目標となる主張
+
+`CardAboveLᵀ`{.Agda} は正確な目標を切り出します。`L` の無限な順序数基数には、`L` に属する真に大きい順序数基数があります。
+<!--/-->
 
 The type, named apart so that the reductions can quantify over it.
 THE OBLIGATION ITSELF IS THE TERM `CardAboveL` AT THE FOOT OF THIS
@@ -98,7 +122,19 @@ CardAboveLᵀ =
        (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩) ∥₁
 ```
 
-## Section 2. Every ordinal is an L-element, and it is one line
+<!--en-->
+## Ordinals as elements of L
+
+Every ordinal belongs to the constructible stage immediately after itself, so it has a canonical representative in the carrier of `L`.
+<!--zh-->
+## 序数作为 L 的元素
+
+每个序数都属于紧随自身之后的可构造阶段，因此在 `L` 的载体中有一个典范代表。
+<!--ja-->
+## L の要素としての順序数
+
+各順序数は自分自身の直後の構成可能段階に属するので、`L` の台に正準な代表を持ちます。
+<!--/-->
 
 `[LJ-1.526]`'s report lists "the construction must produce an L-ELEMENT θ, so
 whatever set is collected must be shown constructible" as one of the two things
@@ -117,7 +153,19 @@ ordL : (x : SV.S) → IsOrd x → SL.S
 ordL x ox = x , Lset→isL (sucV x) (suc-ord ox) x (ord∈Lset-suc x ox)
 ```
 
-## Section 3. The bridge, re-derived
+<!--en-->
+## From ambient to internal cardinality
+
+An injection coded inside `L` can be read as an ambient injection. Therefore an ambient cardinal remains a cardinal when viewed inside `L`.
+<!--zh-->
+## 从环境基数性到内部基数性
+
+`L` 内部编码的注入可以读成环境注入。因此，环境中的基数在 `L` 内部看来仍是基数。
+<!--ja-->
+## 周囲の基数性から内部の基数性へ
+
+`L` 内部で符号化された単射は、周囲の単射として読めます。したがって、周囲で基数である集合は `L` の内部でも基数です。
+<!--/-->
 
 `[LJ-1.526]` built it at agents/tasks/LJ-1-526/Probe526.agda:105-107; three
 lines, so this file states its own rather than importing a 14 s module.
@@ -128,7 +176,19 @@ ambient→internal κ c δ δ∈κ h =
   PT.rec Empty.isProp⊥ (λ w → c (fst δ) δ∈κ (readL κ δ w)) h
 ```
 
-## Section 4. The ambient cardinal, by separation
+<!--en-->
+## Separating smaller cardinals
+
+For an ordinal `a`, separation collects the ordinals below a bound that inject into `a`. This set is the input to the Hartogs construction.
+<!--zh-->
+## 分出较小基数
+
+对序数 `a`，分出收集某个上界之下能够注入 `a` 的序数。这个集合将作为 Hartogs 构造的输入。
+<!--ja-->
+## より小さい基数を分出する
+
+順序数 `a` に対し、ある上界より下で `a` に単射を持つ順序数を分出します。この集合を Hartogs の構成に用います。
+<!--/-->
 
 Fix an ordinal `a` and an ordinal `β`. Separate out of `β` the members that
 inject into `a`. THE PREDICATE IS ALREADY SMALL: `⟪ x ⟫` and `⟪ a ⟫` both live
@@ -209,7 +269,19 @@ into `a` forces `θ ∈ β` through trichotomy.
     go (inr (inr β∈θ)) = Empty.rec (∈-irrefl β (θ⊆β β β∈θ))
 ```
 
-## Section 5. The reduction. `CardAboveL` from one ambient statement
+<!--en-->
+## Reducing to an ambient bound
+
+Once an ambient cardinal above the given one is available, its ordinal representative supplies the required member of `L`; the remaining work is the ambient existence theorem.
+<!--zh-->
+## 归结为环境上界
+
+一旦得到高于给定基数的环境基数，其序数代表就给出所需的 `L` 元素；余下工作是证明环境中的存在定理。
+<!--ja-->
+## 周囲の上界へ帰着する
+
+与えられた基数より大きい周囲の基数が得られれば、その順序数代表が必要な `L` の要素になります。残る課題は周囲での存在定理です。
+<!--/-->
 
 `NoInjOrd` carries NO constructibility, NO code, NO cardinal predicate and NO
 leastness: for every ordinal, some ordinal does not inject into it. That is the
@@ -278,7 +350,19 @@ noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
     ordL θ oθ , oθ , ambient→internal (ordL θ oθ) cθ , κ∈θ
 ```
 
-## Section 6. `NoInjOrd`, built. The Hartogs ordinal without order types
+<!--en-->
+## The Hartogs ordinal
+
+Hartogs' construction produces an ordinal that cannot inject into the given set. It uses well-founded collapse rather than assuming a pre-existing order type.
+<!--zh-->
+## Hartogs 序数
+
+Hartogs 构造产生一个不能注入给定集合的序数。这里使用良基坍缩，而不预设已有的序型。
+<!--ja-->
+## Hartogs 順序数
+
+Hartogs の構成は、与えられた集合へ単射を持たない順序数を作ります。既存の順序型を仮定せず、整礎な崩壊を使います。
+<!--/-->
 
 `[LJ-1.94]` built the ambient Hartogs at ω in 1058 lines
 (archive/dev/LJ-dispatch-index.md:170) through order types: the collapse of a
@@ -591,7 +675,19 @@ THE HARTOGS FACT AT `a`.
   noInj f = NoInj.absurd f
 ```
 
-## Section 7. The obligation, inhabited
+<!--en-->
+## The larger L-cardinal
+
+The least cardinal at or above the Hartogs ordinal is strictly above the original cardinal. Converting it to an element of `L` completes `CardAboveL`.
+<!--zh-->
+## 所得的更大 L 基数
+
+Hartogs 序数之上最小的基数严格大于原基数。把它变成 `L` 的元素便完成 `CardAboveL`。
+<!--ja-->
+## 得られた大きい L 基数
+
+Hartogs 順序数以上の最小の基数は、元の基数より真に大きくなります。それを `L` の要素に変換して `CardAboveL` を完成します。
+<!--/-->
 
 ```agda
 noInjOrd : NoInjOrd

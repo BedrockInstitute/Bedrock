@@ -1,4 +1,20 @@
+<!--en-->
 # The numeral chain
+<!--zh-->
+# 数码链
+<!--ja-->
+# 数項列
+<!--/-->
+
+<!--en-->
+This chapter constructs the natural-number chain inside `L` from the model's
+empty-set, pairing, and union operations, and proves that it projects to the
+ambient von Neumann numerals.
+<!--zh-->
+本章从模型自身的空集、配对与并运算，在 `L` 内构造自然数链，并证明它投影到环境中的冯·诺伊曼数码。
+<!--ja-->
+本章ではモデル自身の空集合、対、和集合の演算から `L` 内部の自然数列を構成し、それが周囲のフォン・ノイマン数項へ射影されることを証明する。
+<!--/-->
 
 <!--en-->
 Infinity is stated in this book in its strong form: the numerals form a set. That
@@ -57,6 +73,18 @@ open ModelL using ( SetOf; ℩ )
 ## The model's own operations
 <!--zh-->
 ## 模型自己的运算
+<!--ja-->
+## モデル自身の演算
+<!--/-->
+
+<!--en-->
+The definite-description operator extracts canonical empty-set, pairing, and
+union operations from their unique-existence proofs and defines the model's
+successor from them.
+<!--zh-->
+摹状词算子从唯一存在证明中抽取典范的空集、配对与并运算，并据此定义模型自身的后继。
+<!--ja-->
+確定記述の演算子が一意存在の証明から正準的な空集合、対、和集合の演算を取り出し、それらからモデル自身の後者を定義する。
 <!--/-->
 
 <!--en-->
@@ -105,6 +133,18 @@ opaque
 ## Projection equations
 <!--zh-->
 ## 投影等式
+<!--ja-->
+## 射影方程式
+<!--/-->
+
+<!--en-->
+Contractibility identifies the extracted operations with the ambient hierarchy's
+empty set, unordered pair, and union, yielding projection equations for the
+internal successor.
+<!--zh-->
+可缩性把抽取出的运算与环境层级中的空集、无序对及并对应起来，从而给出内部后继的投影等式。
+<!--ja-->
+可縮性により取り出した演算を周囲の階層の空集合、非順序対、和集合と同一視し、内部の後者について射影方程式を得る。
 <!--/-->
 
 <!--en-->
@@ -157,6 +197,17 @@ is the hierarchy's successor.
 ## The chain
 <!--zh-->
 ## 链
+<!--ja-->
+## 数項列の構成
+<!--/-->
+
+<!--en-->
+Primitive recursion defines `numeralL`{.Agda} from internal zero and successor,
+and induction proves `numeralL-fst`{.Agda}, its equality with the ambient numeral.
+<!--zh-->
+原始递归从内部零与后继定义 `numeralL`{.Agda}，归纳则证明 `numeralL-fst`{.Agda}，即它与环境数码相等。
+<!--ja-->
+原始再帰により内部の零と後者から `numeralL`{.Agda} を定義し、帰納法で周囲の数項との等しさ `numeralL-fst`{.Agda} を証明する。
 <!--/-->
 
 <!--en-->
@@ -181,6 +232,18 @@ built in the previous chapter, whose projection is the empty set on the nose.
 ## The two pinning equations
 <!--zh-->
 ## 两条钉死方程
+<!--ja-->
+## 二つの指定方程式
+<!--/-->
+
+<!--en-->
+`numeralL-zero`{.Agda} proves that internal zero has no members, while
+`numeralL-suc`{.Agda} characterizes the next numeral as the preceding members
+together with its predecessor.
+<!--zh-->
+`numeralL-zero`{.Agda} 证明内部零没有成员，而 `numeralL-suc`{.Agda} 刻画下一数码的成员恰为前一数码的成员及前一数码自身。
+<!--ja-->
+`numeralL-zero`{.Agda} は内部の零に要素がないことを示し、`numeralL-suc`{.Agda} は次の数項の要素が直前の数項の要素とその数項自身からなることを特徴づける。
 <!--/-->
 
 <!--en-->
@@ -211,6 +274,17 @@ numeralL-suc n z = NumPin.pinSuc (λ k → fst (numeralL k)) numeralL-fst n (fst
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+`numeralL`{.Agda} is a constructive internal copy of the von Neumann numerals,
+with the exact zero and successor membership laws required by the model record.
+<!--zh-->
+`numeralL`{.Agda} 是冯·诺伊曼数码的构造性内部副本，并满足模型 record 所需的精确零与后继成员律。
+<!--ja-->
+`numeralL`{.Agda} はフォン・ノイマン数項の構成的な内部コピーであり、モデルの record が要求する零と後者の正確な所属法則を満たす。
 <!--/-->
 
 <!--en-->

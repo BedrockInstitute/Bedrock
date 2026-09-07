@@ -1,4 +1,16 @@
-# Cantor-Schroeder-Bernstein, at the trophy's injections
+<!--en-->
+# Cantor–Schröder–Bernstein inside L
+
+Coded injections in both directions between two sets of `L` yield a bijection between their small presentations. Each injection code is first read as an ordinary injection, after which the type-level Cantor–Schröder–Bernstein theorem supplies the truncated bijection.
+<!--zh-->
+# L 内部的 Cantor–Schröder–Bernstein 定理
+
+`L` 中两个集合之间若有双向的编码单射，便可得到其小呈现之间的双射。每个注入码先被读成普通注入，再由类型层的 Cantor–Schröder–Bernstein 定理给出截断的双射。
+<!--ja-->
+# L の内部における Cantor–Schröder–Bernstein の定理
+
+`L` の二つの集合の間に双方向の符号化された単射があれば、それらの小さな提示の間の全単射が得られます。各単射の符号を通常の単射として読み出し、型の Cantor–Schröder–Bernstein の定理から命題的に切り詰められた全単射を得ます。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}

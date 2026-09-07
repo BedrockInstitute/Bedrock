@@ -1,4 +1,16 @@
-# Descending into a code
+<!--en-->
+# Rank descent through coded pairs
+
+Later well-founded recursions must move from a code to its immediate components. This chapter proves that each component of an ordered pair, and especially the payload of a tagged code, has strictly smaller rank than the whole code.
+<!--zh-->
+# 沿编码对作秩下降
+
+后续良基递归需要从编码走向其直接部件。本章证明有序对的每个部件，特别是带标签编码的载荷，其秩都严格小于整个编码的秩。
+<!--ja-->
+# 符号化された対に沿う階数降下
+
+後の整礎再帰では、コードからその直下の成分へ移る必要がある。本章では順序対の各成分、とくにタグ付きコードのペイロードが、コード全体より真に小さい階数をもつことを示す。
+<!--/-->
 
 <!--en-->
 A recursion on codes has to get from a code to its parts, and membership will
@@ -49,6 +61,16 @@ open hPropStructure 𝒮ᵥ
 ## The steps
 <!--zh-->
 ## 诸步
+<!--ja-->
+## 階数を下げる基本段階
+<!--/-->
+
+<!--en-->
+Membership in an unordered pair selects one of its two components. Combining that fact with rank monotonicity turns membership of a component into a strict decrease of ranks.
+<!--zh-->
+无序对中的隶属关系会选出两个部件之一。把这一事实与秩的单调性结合，即可把部件隶属化为严格的秩下降。
+<!--ja-->
+非順序対への所属から二つの成分の一方が選ばれる。この事実と階数の単調性を組み合わせると、成分への所属を階数の真の減少へ変えられる。
 <!--/-->
 
 <!--en-->
@@ -72,6 +94,16 @@ trans≺ x y z x∈y ry∈rz = rank-ord z .fst (rank-mono x y x∈y) ry∈rz
 ## Into a tagged payload
 <!--zh-->
 ## 进入带标签的载荷
+<!--ja-->
+## タグ付きコードのペイロードへ降りる
+<!--/-->
+
+<!--en-->
+A tagged payload is nested inside two ordered pairs. Applying the component decrease at each layer proves separate descent lemmas for the left part, right part, and payload.
+<!--zh-->
+带标签的载荷嵌套在两层有序对内。逐层应用部件下降，即得左部件、右部件与载荷各自的下降引理。
+<!--ja-->
+タグ付きペイロードは二重の順序対の内側にある。各層で成分の降下を適用すると、左成分、右成分、ペイロードそれぞれの降下補題が得られる。
 <!--/-->
 
 <!--en-->

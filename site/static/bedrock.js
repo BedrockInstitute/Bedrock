@@ -15,15 +15,18 @@
     if (t === "light") root.classList.add("theme-light");
     else if (t === "dark") root.classList.add("theme-dark");
   }
-  applyTheme(localStorage.getItem("bedrock-theme") || "system");
+  function storedTheme() {
+    try { return localStorage.getItem("bedrock-theme") || "system"; } catch (_) { return "system"; }
+  }
+  applyTheme(storedTheme());
   document.addEventListener("DOMContentLoaded", function () {
     try { localStorage.setItem("bedrock-lang", cfg.lang); } catch (e) {}
     var btn = document.getElementById("theme-toggle");
     if (btn) btn.addEventListener("click", function () {
       var order = ["system", "light", "dark"];
-      var cur = localStorage.getItem("bedrock-theme") || "system";
+      var cur = storedTheme();
       var next = order[(order.indexOf(cur) + 1) % order.length];
-      localStorage.setItem("bedrock-theme", next);
+      try { localStorage.setItem("bedrock-theme", next); } catch (_) {}
       applyTheme(next);
     });
     renderMath();
@@ -42,8 +45,12 @@
     var backdrop = document.getElementById("nav-backdrop");
     var close = document.getElementById("nav-close");
     function setOpen(open) {
+      var wasOpen = body.classList.contains("nav-open");
       body.classList.toggle("nav-open", open);
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      if (backdrop) backdrop.hidden = !open;
+      if (open && close) close.focus();
+      else if (wasOpen) toggle.focus();
     }
     toggle.addEventListener("click", function () {
       setOpen(!body.classList.contains("nav-open"));
@@ -52,6 +59,13 @@
     if (close) close.addEventListener("click", function () { setOpen(false); });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") setOpen(false);
+      if (e.key === "Tab" && body.classList.contains("nav-open")) {
+        var items = Array.from(toc.querySelectorAll("button, summary, a[href]"))
+          .filter(function (item) { return item.getClientRects().length > 0; });
+        var first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     });
     /* Tapping any link in the drawer navigates, so dismiss the drawer with it. */
     toc.addEventListener("click", function (e) {
@@ -177,4 +191,91 @@
       if (!out.contains(e.target) && e.target !== box) out.hidden = true;
     });
   }
+})();
+
+/* The landing page keeps routes, the dependency map and the catalog in one place. */
+(function () {
+  "use strict";
+  document.addEventListener("DOMContentLoaded", function () {
+    const list = document.querySelector(".book-tabs");
+    if (!list) return;
+    const tabs = [...list.querySelectorAll("[data-panel]")];
+    const panels = tabs.map(tab => document.getElementById(tab.dataset.panel));
+    let active = null;
+    const scrolls = new Map();
+    list.setAttribute("role", "tablist");
+    tabs.forEach((tab, i) => {
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", panels[i].id);
+      panels[i].setAttribute("role", "tabpanel");
+      panels[i].setAttribute("aria-labelledby", tab.id);
+      panels[i].tabIndex = 0;
+    });
+    function activate(id, updateHistory, restoreScroll) {
+      const index = panels.findIndex(panel => panel.id === id);
+      if (index < 0) return;
+      if (active) scrolls.set(active, window.scrollY);
+      active = id;
+      document.querySelectorAll(".reading-guide a").forEach(link => {
+        if (new URL(link.href).hash === `#${id}`) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
+      tabs.forEach((tab, i) => {
+        const selected = i === index;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        panels[i].hidden = !selected;
+      });
+      if (updateHistory && location.hash !== `#${id}`) history.pushState(null, "", `#${id}`);
+      document.querySelectorAll("#lang-switch a").forEach(link => {
+        const url = new URL(link.href); url.hash = id; link.href = url.href;
+      });
+      document.dispatchEvent(new CustomEvent("bedrock:tabchange", { detail: { id } }));
+      if (restoreScroll) requestAnimationFrame(() => window.scrollTo({
+        top: scrolls.get(id) ?? Math.min(window.scrollY, list.offsetTop), behavior: "instant"
+      }));
+    }
+    function fromHash() {
+      let id;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { id = ""; }
+      const target = document.getElementById(id);
+      const panel = panels.find(p => p === target || (target && p.contains(target)));
+      activate(panel ? panel.id : "reading-explorer", false, false);
+      if (target && target !== panel) requestAnimationFrame(() => target.scrollIntoView());
+    }
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", e => {
+        if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault(); activate(tab.dataset.panel, true, true);
+      });
+      tab.addEventListener("keydown", e => {
+        let next;
+        if (e.key === "ArrowRight") next = (i + 1) % tabs.length;
+        else if (e.key === "ArrowLeft") next = (i + tabs.length - 1) % tabs.length;
+        else if (e.key === "Home") next = 0;
+        else if (e.key === "End") next = tabs.length - 1;
+        else if (e.key === " ") next = i;
+        else return;
+        e.preventDefault(); tabs[next].focus(); activate(tabs[next].dataset.panel, true, true);
+      });
+    });
+    document.addEventListener("click", e => {
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      const link = e.target.closest("a[href]");
+      if (!link || list.contains(link)) return;
+      const url = new URL(link.href);
+      if (url.origin !== location.origin || url.pathname !== location.pathname || !url.hash) return;
+      let id;
+      try { id = decodeURIComponent(url.hash.slice(1)); } catch (_) { return; }
+      const target = document.getElementById(id);
+      const panel = panels.find(p => p === target || (target && p.contains(target)));
+      if (!panel) return;
+      e.preventDefault(); activate(panel.id, false, false);
+      history.pushState(null, "", url.hash);
+      requestAnimationFrame(() => target.scrollIntoView());
+    });
+    window.addEventListener("hashchange", fromHash);
+    window.addEventListener("popstate", fromHash);
+    fromHash();
+  });
 })();

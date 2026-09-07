@@ -564,7 +564,7 @@ archived records:
 6. D31/D32 (`archive/dev/DECISIONS-archived.md:51-52`): the condensation
    crossing was severed and its rebuild deferred to the GCH resume.
    Historical assessment: `[LJ-1.12]` priced that crossing. The current
-   proof supplies it through `L.GCH.Condense` and `L.GCH.HullIn`, used by
+   proof supplies it through `L.GCH.CondensationTransfer` and `L.GCH.ConstructibleHull`, used by
    `L.GCH.BoundedSubset` and the completed `L.GCH.Theorem`.
 
 The route change does not revive the ⊤̇-step story. The retired route's

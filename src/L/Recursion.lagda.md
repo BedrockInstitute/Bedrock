@@ -1,12 +1,18 @@
-# Recursive definitions are internalizable
+<!--en-->
+# Internalizing recursive definitions in L
+
+A definable functional recursion on a set-sized well-founded domain can be represented inside `L` by a table of ordered pairs. The construction handles both explicitly definable value functions and relations known only to have unique values, producing the internal function needed by later hierarchy arguments.
+<!--zh-->
+# L 中递归定义的内部化
+
+集合大小的良基域上的可定义函数递归，可由有序对组成的表在 `L` 内呈现。本章同时处理显式可定义的取值函数，以及仅知每处有唯一取值的关系，产生后续层级论证所需的内部函数。
+<!--ja-->
+# L における再帰的定義の内部化
+
+集合の大きさを持つ整礎的な領域上の定義可能な関数的再帰は、順序対の表によって `L` の内部に提示できます。値関数を明示的に定義できる場合と、各点で一意な値があることだけが分かる関係の両方を扱い、後の階層の議論に必要な内部関数を作ります。
+<!--/-->
 
 <!--en-->
-A definition by recursion produces a table: an index, and for each index a value.
-The table is a family in the meta-language, and the question this chapter answers
-is when it is a *set of `L`*. Everything later that speaks about a
-recursively-defined notion inside the object language needs an answer, because a
-formula can only name a set.
-
 The answer is short, and the reason it is short is worth stating first. The hard
 version of this question asks for a table to be definable *inside a stage*, where
 what a formula means is not what it means outside, so the certificate has to be
@@ -24,8 +30,6 @@ What is left is exactly what should be left. The graph must be expressible, and
 the recursion must be single-valued. Neither is generic; both are the mathematics
 of whatever is being defined.
 <!--zh-->
-一个递归定义产出一张表：一个索引，以及每个索引处的一个值。这张表是元语言中的一个族，而本章要回答的问题是：它何时是 **`L` 的集合**。此后凡在对象语言之内谈论某个递归定义的概念的地方，都需要一个答案，因为公式只能点名集合。
-
 答案很短，而它为何这么短，值得先说。这个问题的困难版本要求一张表在**某个阶段之内**可定义，而在那里公式的含义与在外面不同，于是证书必须绝对，于是它的每条子句都得是 Δ₀，它的每个常元都得被该阶段界住。那是一套沉重的纪律，也是这个问题通常呈现的形状。
 
 它在此处不是那个形状，因为前几章已经一次性买断了一般情形。`L` 中的替换对**任意**复杂度的公式成立，而它的公式是在类模型处读的，在那里公式的含义就是它的含义。故凡图可表达的递归，无论多复杂，其表都在 `L` 中：那张表就是替换的像，此外无须再证。
@@ -77,14 +81,20 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 
 <!--en-->
 ## What a recursion has to supply
+
+Three things, and the record names them so that an instance is a filled form
+rather than a re-run of an argument.
 <!--zh-->
-## 一个递归须供给什么
+## 递归须提供什么
+
+三样，而 record 为它们命名，好让一个实例是一张填好的表格，而非再跑一遍论证。
+<!--ja-->
+## 再帰が与えるべきもの
+
+内部化する再帰は、集合で抑えられた定義域、整礎的な先行関係、各点の値を以前の値から一意に定める論理式を与えます。これらの条件が表の存在と一意性を支えます。
 <!--/-->
 
 <!--en-->
-Three things, and the record names them so that an instance is a filled form
-rather than a re-run of an argument.
-
 The **domain** is the index set, and it is an element of the model, so the
 indices are sets of `L` and the whole index is one set. The **graph** is a
 formula in two variables, the value first and the index second, in the order the
@@ -98,8 +108,6 @@ contractibility rather than as existence plus uniqueness, which is the same thin
 and is what the field consumes. Stated this way it also *is* the value function:
 the centre is the value, and the rest of the chapter reads it off.
 <!--zh-->
-三样，而 record 为它们命名，好让一个实例是一张填好的表格，而非再跑一遍论证。
-
 **定义域**是索引集，且是模型的元素，故诸索引都是 `L` 的集合，而整个索引是一个集合。**图**是二元公式，值在前、索引在后，与模型的替换字段所陈述的顺序相同。它的常元可以是 `L` 的任意元素，故读取某张已内化之表的递归就在此处点名它，而对它别无进一步的条件：无复杂度上界，也不限定它的常元住在哪里。
 
 **单值性**是把关系变成定义的那样东西。它陈述为可缩而非「存在加唯一」，二者是同一回事，而字段消费的正是前者。这样陈述它同时**就是**那个值函数：中心即是值，本章其余部分把它读出来。
@@ -151,23 +159,27 @@ smallDom X f = LsetS β oβ , mem
 
 <!--en-->
 ## The table
-<!--zh-->
-## 那张表
-<!--/-->
 
-<!--en-->
 The table is the replacement image, so it is an element of `L` by construction
 rather than by a theorem, and its membership specification is the field's own
 output. The two directions of that specification are what instances use: a value
 at an index is in the table, and a member of the table is a value at some index.
+<!--zh-->
+## 表
 
+这张表就是替换的像，故它是 `L` 的元素乃出于构造而非出于定理，而它的隶属规格就是那条字段自己的输出。规格的两个方向正是诸实例所用：某索引处的值属于该表，而该表的成员是某索引处的值。
+<!--ja-->
+## 表
+
+表は、既に計算した入力と値を順序対として集めた集合です。局所的な正しさと先行点への閉性を課すことで、整礎帰納法が各入力に唯一の正しい値があることを示せます。
+<!--/-->
+
+<!--en-->
 The value function comes off the single-valuedness, with the fact an instance
 wants about it: it is the *only* thing that satisfies the graph. Uniqueness is
 what lets an instance identify the value it computed by hand with the one the
 table records.
 <!--zh-->
-这张表就是替换的像，故它是 `L` 的元素乃出于构造而非出于定理，而它的隶属规格就是那条字段自己的输出。规格的两个方向正是诸实例所用：某索引处的值属于该表，而该表的成员是某索引处的值。
-
 值函数从单值性中读出，连同实例想要的那条事实：它是**唯一**满足那个图的东西。唯一性正是使实例能把它手算出的值与表所记录的值认同起来的东西。
 <!--/-->
 
@@ -206,11 +218,7 @@ module Of (R : Recursion) where
 
 <!--en-->
 ## When the value function cannot be written down
-<!--zh-->
-## 当那个值函数写不出来的时候
-<!--/-->
 
-<!--en-->
 The form below asks an instance for a function on the whole model. That is the
 right thing to ask when the instance has one, and the wrong thing when its
 indices are *encoded*: a recursion over coded syntax knows what to do at a code,
@@ -218,7 +226,17 @@ and to say what it does at an arbitrary element of the model it would first have
 to decide whether that element is a code and, if so, recover the syntax it
 encodes. Nothing in the recursion needs that, and paying for it would be paying
 for a decoding the instance never uses.
+<!--zh-->
+## 无法直接写出取值函数时
 
+下面那张表格向实例索取一个定义在整个模型上的函数。当实例确实有一个时，这索取得对；而当它的索引是**编码**的时候，就索取错了：对编码语法的递归知道在一个码处该做什么，而要说出它在模型的任意元素处做什么，就得先判定那个元素是不是码，若是还得把它所编码的语法还原出来。递归本身不需要这些，而为它付账，等于为一次实例从不使用的解码付账。
+<!--ja-->
+## 値関数を直接書けない場合
+
+関係が各入力に一意な値を与えることだけが分かる場合、命題的切り詰めの外へ値関数を直接取り出せないことがあります。代わりに表の存在と関数性を命題として組み立て、必要な箇所で一意性を使います。
+<!--/-->
+
+<!--en-->
 Single-valuedness does not need it either, and the reason is worth naming.
 Contractibility is a proposition. So an instance may decide by cases, and may
 take apart a truncated witness, on the way to proving it: what has to be produced
@@ -226,8 +244,6 @@ is a value, and it only has to be produced *merely*. The lemma below is that
 observation, and it is what a recursion over an encoded index uses in place of
 the form below.
 <!--zh-->
-下面那张表格向实例索取一个定义在整个模型上的函数。当实例确实有一个时，这索取得对；而当它的索引是**编码**的时候，就索取错了：对编码语法的递归知道在一个码处该做什么，而要说出它在模型的任意元素处做什么，就得先判定那个元素是不是码，若是还得把它所编码的语法还原出来。递归本身不需要这些，而为它付账，等于为一次实例从不使用的解码付账。
-
 单值性同样不需要它，而这个理由值得点名。可缩性是命题。故实例可以在通往它的证明途中分情形判定，也可以拆开一个截断的见证：要拿出来的是一个取值，而它只需**仅仅**被拿出来。下面这条引理就是这个观察，也是「对编码索引的递归」用来代替下面那张表格的东西。
 <!--/-->
 
@@ -244,18 +260,24 @@ mereFunct graph x = PT.rec isPropIsContr
 
 <!--en-->
 ## Defining a function, rather than a relation
-<!--zh-->
-## 定义一个函数，而非一个关系
-<!--/-->
 
-<!--en-->
 Asking an instance for single-valuedness is asking the wrong thing, because an
 instance never has a relation to start with. It has a **function**, written in
 the meta-language by ordinary recursion, and what it wants is that function's
 table. The recursion itself is Agda's business, not the object language's: the
 step, the well-founded descent, the pattern match on the constructors, all of
 that happens outside and none of it needs internalizing. Only the *graph* does.
+<!--zh-->
+## 定义函数而非关系
 
+向实例索取单值性是索取错了东西，因为实例手上从来就没有关系。它手上有的是一个**函数**，以寻常递归写在元语言里，而它想要的是那个函数的表。递归本身是 Agda 的事，不是对象语言的事：步进、良基下降、对构造子的模式匹配，全都发生在外面，无一需要内化。要内化的只有那个**图**。
+<!--ja-->
+## 関係ではなく関数を定義する
+
+値を明示的な関数として与えられる定義は、等号でそのグラフを表す再帰へ変換できます。`asRecursion`{.Agda} はこの変換を行い、一般の内部化定理を通常の再帰的関数へ適用します。
+<!--/-->
+
+<!--en-->
 So the form to fill is a function together with a formula that defines it, and
 defining it is two implications. One says the formula holds of the function's own
 value, the other that nothing else satisfies it. Single-valuedness then comes for
@@ -267,8 +289,6 @@ internalizable when its graph is expressible, and nothing about the recursion's
 shape, its depth, its order of descent, or the complexity of its clauses appears
 in the condition.
 <!--zh-->
-向实例索取单值性是索取错了东西，因为实例手上从来就没有关系。它手上有的是一个**函数**，以寻常递归写在元语言里，而它想要的是那个函数的表。递归本身是 Agda 的事，不是对象语言的事：步进、良基下降、对构造子的模式匹配，全都发生在外面，无一需要内化。要内化的只有那个**图**。
-
 于是要填的表格是「一个函数，连同一条定义它的公式」，而「定义它」就是两条蕴含。一条说该公式在函数自己的取值处成立，另一条说别无他物满足它。单值性随之白得，因为「与给定之物相等者」构成的类型可缩，而全部推导仅此而已。
 
 本章的标题在此处挣得。一个递归定义可内化，当它的图可表达；而递归的形状、它的深度、它下降的次序、它诸子句的复杂度，都不出现在这个条件里。
@@ -317,16 +337,22 @@ module Image (D : Definition) where
 
 <!--en-->
 ## What this does and does not say
-<!--zh-->
-## 这说了什么、没说什么
-<!--/-->
 
-<!--en-->
 It says: a function on a set of `L` whose graph is expressible has its table in
 `L`. Every recursion whose values are determined by a formula is covered,
 whatever the formula's complexity and wherever its constants live, and the
 recursion itself stays in the meta-language where it was written.
+<!--zh-->
+## 定理所述的范围
 
+它说：`L` 的集合上，图可表达的函数，其表在 `L` 中。凡取值由一条公式所决定的递归都被涵盖，无论那条公式多复杂，也无论它的常元住在哪里，而递归本身留在它被写下的元语言里。
+<!--ja-->
+## 定理が述べる範囲
+
+内部化定理は、指定した集合領域上で再帰のグラフが `L` に属することを示します。クラス全体の関数を一度に集合にするのではなく、後の議論に必要な各集合サイズの切片を与えます。
+<!--/-->
+
+<!--en-->
 It does not say that any particular recursion *has* such a formula. Writing the
 graph of a recursion in the object language is the work, and it is the same work
 whether or not this chapter exists; what this chapter removes is the second job
@@ -340,8 +366,6 @@ a stage, and a stage is a set of `L`. What an instance supplies is that its
 indices are elements of `L`, one at a time, which for coded syntax is pairing and
 the numerals.
 <!--zh-->
-它说：`L` 的集合上，图可表达的函数，其表在 `L` 中。凡取值由一条公式所决定的递归都被涵盖，无论那条公式多复杂，也无论它的常元住在哪里，而递归本身留在它被写下的元语言里。
-
 它没有说任何特定的递归**拥有**这样一条公式。把一个递归的图写进对象语言是实打实的活，而无论本章存在与否，那份活都一样；本章免去的是通常与之同行的第二份活：把那条公式弄成有界的、把它的常元弄成阶段局部的，好让某个阶段能读它。那份活没有了，而它是两者中较大的一份。
 
 它也没有把定义域留作债务。`smallDom`{.Agda} 一举为所有实例偿清：`L` 的小族被包含在某个阶段里，而阶段是 `L` 的集合。实例要供给的是「它的诸索引逐个都是 `L` 的元素」，而对编码后的语法，那就是配对与数码。
@@ -349,11 +373,7 @@ the numerals.
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 `Definition`{.Agda} is the form an instance fills when it has a function on the
 whole model to offer: a domain in `L`, that function, and a formula that defines
 its graph, in the two directions. An instance whose indices are encoded has no
@@ -363,15 +383,23 @@ because contractibility is a proposition. `smallDom`{.Agda} fills the domain for
 of `L`, and single-valuedness is derived, so **the defining formula and its
 adequacy are the entire obligation**. `Image`{.Agda} reads off the table and its
 two membership directions.
+<!--zh-->
+## 小结
 
+`Definition`{.Agda} 是实例在「手上有一个定义于整个模型的函数」时要填的表格：`L` 中的定义域、那个函数，以及一条按两个方向定义其图的公式。索引为编码的实例没有那样的函数，除非另配一个它本不需要的解码器；这类实例改经 `mereFunct`{.Agda} 直接填 `Recursion`{.Agda}，而那是可靠的，因为可缩性是命题。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的充分性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
+<!--ja-->
+## まとめ
+
+`Definition`{.Agda} は `L` 内の定義域、周囲の関数、そのグラフを定義する論理式と妥当性をまとめます。値関数を直接持たない符号化された場合は `mereFunct`{.Agda} から `Recursion`{.Agda} を与えられ、`smallDom`{.Agda} が小さな族の定義域を作り、`Image`{.Agda} が内部化された表を読み出します。
+<!--/-->
+
+<!--en-->
 The chapter is a wrapper around `hasReplacementL`{.Agda}, and that is the point.
 The general-formula comprehension fields were the expensive thing; once they are
 paid, internalizing a recursion is not a theorem but a corollary, and the
 per-clause absoluteness discipline that the bounded setting forces never has to
 be entered.
 <!--zh-->
-`Definition`{.Agda} 是实例在「手上有一个定义于整个模型的函数」时要填的表格：`L` 中的定义域、那个函数，以及一条按两个方向定义其图的公式。索引为编码的实例没有那样的函数，除非另配一个它本不需要的解码器；这类实例改经 `mereFunct`{.Agda} 直接填 `Recursion`{.Agda}，而那是可靠的，因为可缩性是命题。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的充分性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
-
 本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是要点。任意公式的概括字段才是贵的东西；一旦付清，内化一个递归就不是定理而是推论，而有界情形所强加的逐子句绝对性纪律，压根无须踏入。
 <!--/-->
 
@@ -384,6 +412,10 @@ both their membership reading and the single-valuedness and domain of the graph.
 ## 作为有序对集合的图
 
 替换也收集索引与取值的有序对。同一个递归给出这些对的隶属读式，以及图的单值性和定义域。
+<!--ja-->
+## 順序対の集合としてのグラフ
+
+内部化された表の要素を順序対として読むと、再帰的関数のグラフが得られます。対の単射性と表の関数性が、各入力に対応する出力の一意性を保証します。
 <!--/-->
 
 Renaming uses the model's satisfaction relation.

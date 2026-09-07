@@ -133,9 +133,9 @@ ja = "マントル"
 category = "Set theory"
 en = "generic absoluteness"
 zh = "脱殊绝对性"
-ja = "ジェネリック絶対性"
+ja = "強制法での絶対性"
 presence = true
-notes = "zh 脱殊 (translate) vs ja ジェネリック (transliterate)"
+notes = "Reviewed 2026-09-07: Fuchino explicitly pairs 強制法での絶対性 with generic absoluteness in his final lecture, https://researchmap.jp/read0078210/presentations/40151061/attachment_file.pdf . Chinese 脱殊 is directly attested in the set-theory context by https://logic.fudan.edu.cn/doc/_yrz/multi.pdf ; the full Chinese compound here follows that pattern. Japanese transliteration remains an intelligible variant but the canonical wording now follows the author’s explicit label."
 
 [[term]]
 category = "Set theory"
@@ -176,7 +176,7 @@ en = "constructible hierarchy"
 zh = "可构造层级"
 ja = "構成可能階層"
 presence = true
-notes = "the L hierarchy"
+notes = "The whole ordinal-indexed family {L_α | α ∈ On}, not an individual L_α or its ordinal index. Japanese L-階層 is directly attested in a Kobe-hosted set-theory lecture, which defines L_0, L_{α+1}, and L_λ: https://www2.kobe-u.ac.jp/~tk/jp/workshop/slides/wakate2021_yasuda.pdf . Chinese 可构造层级 is a pattern-based compound from the established mathematical use of 层级 for a transfinite hierarchy; no claim of a direct L_α source is made here."
 
 [[term]]
 category = "Set theory"
@@ -327,7 +327,7 @@ category = "Type theory"
 en = "reflection"
 zh = "反射"
 ja = "反射"
-notes = "drives reification"
+notes = "Proof-engineering reflection, used with reification. This is not set-theoretic reflection; see the separate entry for that mathematical sense."
 
 [[term]]
 category = "Type theory"
@@ -343,7 +343,7 @@ zh = "充分性"
 ja = "妥当性"
 presence = true
 avoid = ["zh:适足性"]
-notes = "Owner ruling 2026-08-05 on the glossary review. 适足性 appears in Chinese only as the finance term 资本适足性; PLFA's Chinese edition titles the chapter 充分性. The sufficiency homonym is accepted."
+notes = "Owner ruling 2026-08-05 on the glossary review. PLFA's Chinese edition titles the chapter 充分性: https://agda-zh.github.io/PLFA-zh/Adequacy/ . This supports the chosen semantic term; it does not establish that other renderings are confined to finance. The sufficiency homonym is accepted. Japanese 妥当性 is directly paired with adequacy in semantic proofs by Sanada: https://www.kurims.kyoto-u.ac.jp/~tsanada/comments-on-papers.html ."
 
 [[term]]
 category = "Type theory"
@@ -388,7 +388,7 @@ category = "Logic and philosophy"
 en = "abstraction"
 zh = "抽象"
 ja = "抽象"
-notes = "of parameters: replacing a formula's constants by fresh variables, so a formula with parameters becomes a parameter-free (无参) formula of higher arity plus a vector of the constants; owner ruling 2026-07-30, first used in FOL.Manipulation.Parameters"
+notes = "of parameters: replacing a formula's constants by fresh variables, so a formula with parameters becomes a parameter-free (无参) formula of higher arity plus a vector of the constants; owner ruling 2026-07-30, first used in FOL.Manipulation.ParameterAbstraction"
 
 [[term]]
 category = "Logic and philosophy"
@@ -402,14 +402,14 @@ category = "Logic and philosophy"
 en = "placement"
 zh = "安置"
 ja = "配置"
-notes = "the map sending each constant occurrence to the variable slot that will carry it; owner ruling 2026-07-30, FOL.Manipulation.Parameters"
+notes = "the map sending each constant occurrence to the variable slot that will carry it; owner ruling 2026-07-30, FOL.Manipulation.ParameterAbstraction"
 
 [[term]]
 category = "Logic and philosophy"
-en = "Levy hierarchy"
+en = "Lévy hierarchy"
 zh = "Lévy 层级"
 ja = "Lévy 階層"
-avoid = ["zh:列维层级", "zh:分级证书", "zh:Levy 层级"]
+avoid = ["en:Levy hierarchy", "zh:列维层级", "zh:分级证书", "zh:Levy 层级"]
 notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18); witness/见证 is not a standalone name: always write it anchored, the Δ₀ witness / Δ₀ 见证, Levy witnesses / Lévy 见证, smallness witness / 小性见证 (owner ruling 2026-07-19)"
 
 [[term]]
@@ -493,7 +493,10 @@ notes = "of V's structure"
 category = "Logic and philosophy"
 en = "canonical"
 zh = "典范"
-ja = "典範"
+ja = "正準"
+
+avoid = ["ja:典範"]
+notes = "2026-09-07 literature review: Japanese mathematical canonical is 正準, with 正準的 in attributive prose. https://www.ms.u-tokyo.ac.jp/~kazushi/course/hms.pdf (p. 23)."
 
 [[term]]
 category = "Logic and philosophy"
@@ -565,9 +568,10 @@ notes = "无参公式, formulas with constant domain ⊥*; like sentences, no na
 [[term]]
 category = "Logic and philosophy"
 en = "constant domain"
-zh = "常量域"
+zh = "常元域"
 ja = "定数域"
-notes = "the K parameter of the syntax; ja tentative"
+avoid = ["zh:常量域"]
+notes = "The K parameter indexing constant symbols in syntax. Chinese 常元 follows Wang Wei, first-order languages and expansion by parameters: https://logic.fudan.edu.cn/doc/Event/2024/summer/FMOA0727.pdf . Japanese 定数 is attested in https://www.jaist.ac.jp/~y-keita/I211-2020/I211-lecnote.pdf ; the domain compounds are descriptive, not claimed as fixed literature headwords."
 
 [[term]]
 category = "Logic and philosophy"
@@ -722,7 +726,7 @@ category = "Set theory"
 en = "numeral"
 zh = "数码"
 ja = "数項"
-notes = "the von Neumann naturals inside a model; ZF field numeral, class isNumeral"
+notes = "The von Neumann naturals inside a model; ZF field numeral, class isNumeral. Japanese 数項 (numeral) is directly attested for arithmetic syntax in Terui’s notes, https://www.kurims.kyoto-u.ac.jp/~terui/cs2012ch1.pdf . Here the finite ordinal supplies the set-theoretic interpretation of that numeral."
 
 [[term]]
 category = "Set theory"
@@ -813,7 +817,7 @@ category = "Set theory"
 en = "birth stage"
 zh = "诞生阶段"
 ja = "誕生段階"
-notes = "L.Choice.Step: the ordinal a constructible set is carved over, one below the least stage containing it; owner delegated the rendering 2026-07-30. zh 阶段 / ja 段階 follow the prose's existing rendering of stage, against 階層 which is reserved for hierarchy"
+notes = "L.Choice.StageOrders: the ordinal over which a constructible set is carved, one below the least stage containing it. This is a stage index rather than the set L_α itself. zh 阶段 / ja 段階 are descriptive renderings; 階層 is reserved for the whole hierarchy."
 
 [[term]]
 category = "Set theory"
@@ -861,10 +865,10 @@ notes = "the Impredicativity packing (Resizing + HPropSmallness); impredicative 
 [[term]]
 category = "Logic and philosophy"
 en = "relabelling"
-zh = "常量改名"
+zh = "常元改名"
 ja = "定数の改名"
-avoid = ["zh:常量变换"]
-notes = "Owner ruling 2026-08-05. No literature either way; paired with renaming by analogy so the 2026-07-18 pairing stays visible."
+avoid = ["zh:常量改名", "zh:常量变换"]
+notes = "Relabelling changes constant symbols and transports their interpretation. The compound uses the attested 常元 / 定数 stems; the particular operation name is descriptive. Chinese source: https://logic.fudan.edu.cn/doc/Event/2024/summer/FMOA0727.pdf . Keep distinct from variable renaming."
 
 # ---- Added 2026-08-05 by owner ruling on the terminology dossier ----
 # Dossier with sources, candidates and the explicit guessing list:
@@ -875,7 +879,7 @@ category = "Logic"
 en = "face"
 zh = "面孔"
 ja = "顔"
-notes = "The side an object presents to a consumer, as in the satisfaction face of Def. Metaphor: no Chinese or Japanese source found (terms-2026-08 section 1), adopted on use in seven sites. 接口 collides with interface, 面 alone with a polytope's face."
+notes = "Historical explanatory metaphor for one interpretation or use of an object, for example its satisfaction reading. 面孔 / 顔 are ordinary contextual translations, not cubical faces. Prefer a mathematical description of the interpretation in new chapter headings."
 
 [[term]]
 category = "Set theory"
@@ -883,14 +887,14 @@ en = "initial segment"
 zh = "初始段"
 ja = "始切片"
 avoid = ["zh:初段"]
-notes = "Established: 数学辞海 vol. 1 p. 624; the Chinese translation of Natanson's real-analysis text. 初段 is REJECTED: it was the drift minority here and it is the Go rank."
+notes = "Canonical book labels for the segment below an element of an ordered set. Japanese 始切片 is used in Tsuboi’s model-theory notes, https://www.math.tsukuba.ac.jp/~tsuboi/gra/lecturenote%2812%29.pdf . The historical review cites 数学辞海 vol. 1 p. 624 for Chinese; that printed page was not independently inspected in this web review. 初段 remains an excluded house variant, not a word declared mathematically meaningless."
 
 [[term]]
 category = "Type theory"
 en = "presentation"
 zh = "呈现"
 ja = "提示"
-notes = "A set given as an index type plus an indexing map, the HIT sense. No source for that sense (terms-2026-08 section 3); 表示 is rejected because the glossary already spends it on representation."
+notes = "A set presented by an index type and an indexing map, as in the cumulative-hierarchy HIT. Retain 呈现 / 提示 as editorial contextual renderings distinct from representation. Exact CJK usage for this particular HIT data was not established by the searches; no claim of direct attestation is made."
 
 [[term]]
 category = "Logic"
@@ -927,7 +931,7 @@ en = "square law"
 zh = "平方律"
 ja = "平方律"
 avoid = ["zh:平方定理"]
-notes = "The cardinal identity that an infinite ordinal's product is equinumerous with it. No Chinese source names it; the fact is stated as 无穷基数的平方等于自身. Cited here as a bound rather than proved, so 律 rather than 定理. Distinct by one character from 平方配对, deliberately."
+notes = "The cardinal identity that an infinite ordinal is equinumerous with its square. The project proves it in L.Ordinal.SquareLaw. 平方律 is a descriptive short title, not claimed to be a standard Chinese theorem name; distinguish the separate square-pairing function."
 
 [[term]]
 category = "Set theory"
@@ -935,7 +939,7 @@ en = "equinumerous"
 zh = "等势"
 ja = "対等"
 avoid = ["zh:等数"]
-notes = "Established: 数学辞海 vol. 4. 等数 is REJECTED: it was live drift in the cardinal predicates chapter and has no source."
+notes = "Sets admitting a bijection. Japanese 対等 is directly used with this definition in https://hosho.ees.hokudai.ac.jp/tsuyu/top/dct/math-j.html . The historical review cites 数学辞海 vol. 4 for 等势; that printed volume was not independently inspected here. Retain 等势 as the house label without claiming that competing terms have no source."
 
 [[term]]
 category = "Set theory"
@@ -956,14 +960,14 @@ category = "Logic"
 en = "shape count"
 zh = "形状计数"
 ja = "形状の数え上げ"
-notes = "The count of constant-free formulas per arity. No source; compounds 形状 and 计数."
+notes = "Counting constant-free formula shapes at a fixed arity. This is a project compound of shape and counting; exact-phrase searches did not establish a named theorem with this title."
 
 [[term]]
 category = "Logic"
 en = "square pairing"
 zh = "平方配对"
 ja = "平方対関数"
-notes = "The pairing function on the naturals used by the shape count. No source for the scheme; 配对函数 is the established generic. One character from 平方律, and the two must stay visibly distinct: one is a function, the other a cardinal law."
+notes = "The pairing function on natural numbers used to count formula shapes. The title is a descriptive compound for this implementation, distinct from the infinite-cardinal square law. It names a function, not the identity itself."
 
 [[term]]
 category = "Logic"
@@ -971,7 +975,7 @@ en = "pair atom"
 zh = "对原子"
 ja = "対原子"
 avoid = ["zh:对子原子"]
-notes = "The singleton, pair and ordered-pair atoms of a formula over a carrier. 原子公式 is established; 对原子 is unanimous in the chapters. 对子原子 is REJECTED: it appeared only in the catalog, written by the orchestrator."
+notes = "An object-language formula recognizing singleton, unordered-pair or ordered-pair structure. 对原子 / 対原子 are local compounds based on atomic-formula vocabulary; no claim of a standard theorem name. 对子原子 is excluded for consistency."
 
 [[term]]
 category = "Logic"
@@ -1016,7 +1020,7 @@ en = "membership formula"
 zh = "隶属公式"
 ja = "帰属論理式"
 avoid = ["ja:所属式"]
-notes = "Owner-delegated ruling 2026-08-07 (T152/T153). ja per the attested 帰属 (ja Wikipedia 元(数学), six instances) plus the ruled formula = 論理式; 所属 is attested nowhere in the cited pages. zh 隶属 rides the standard 隶属函数 pattern of the fuzzy-set literature."
+notes = "A formula expressing membership. Japanese is a composed label based on 帰属関係を表す論理式 in https://dspace.jaist.ac.jp/dspace/bitstream/10119/17662/5/paper.pdf . The shortened compound 帰属論理式 is editorial, not claimed verbatim. 所属 is valid ordinary membership prose; 所属式 remains an excluded rival label for this particular formula."
 
 [[term]]
 category = "Logic"
@@ -1030,15 +1034,14 @@ category = "Set theory"
 en = "transitive carrier"
 zh = "传递载体"
 ja = "推移的台"
-avoid = ["ja:推移的な台"]
-notes = "Owner-delegated ruling 2026-08-07 (T152/T153). Composition follows the ruled siblings 推移的集合 and 推移的クラス: no な. The compound is pure composition of ruled heads."
+notes = "A carrier closed under membership. 推移的台 is the compact compound; 推移的な台 is also allowed in a sentence. The grammatical pattern 推移的な集合 is explicitly used in https://www.math.is.tohoku.ac.jp/~obata/student/subject/TaikeiBook/Taikei-Book_14.pdf . The carrier compound remains pattern-derived; terminology checks must not ban a natural adjectival construction."
 
 [[term]]
 category = "Logic"
 en = "read lemma"
 zh = "读引理"
 ja = "読み補題"
-notes = "Owner-delegated ruling 2026-08-07 (T152/T153). A project coinage pair for P-k's read-lemma concept; the literature is silent. zh has 18 lines in 8 files of standing; ja is coined to match and marked as a coinage."
+notes = "Project expression for a lemma recovering the mathematical meaning of a coded formula. 读引理 / 読み補題 are editorial compounds. Targeted searches did not identify a primary source naming this local lemma family; that is not a claim that literature is silent."
 
 [[term]]
 category = "Other"
@@ -1062,4 +1065,124 @@ en = "wing"
 zh = "GCH 侧"
 ja = "GCH 側"
 avoid = ["zh:机翼"]
-notes = "Owner-ruled DIRECTLY 2026-08-10, so it did NOT go through DD19's two-agent pipeline; the pipeline settles terms nobody has ruled. Project vocabulary: the GCH half of the double-trophy endpoint. THE ENGLISH IS UNCHANGED and stays wing, by the same ruling: about 160 occurrences across dev/ and scripts/ stand, and the ledger key gch_wing is NOT renamed. So this entry records a RENDERING, not a rename. zh 机翼 is banned and the ban is safe: the word had never entered the repo, so it can never fire on an innocent use. ja tentative, formed on the zh by the same 側 reading, pending a literature check."
+notes = "Historical project metaphor for the GCH part of the development. GCH 侧 / GCH 側 are transparent contextual renderings, not technical mathematical terms. Prefer the actual mathematical topic in new learner-facing headings. The English entry does not require renaming internal identifiers."
+
+[[term]]
+category = "Teaching terminology"
+en = "set-theoretic reflection"
+zh = "集合论反射"
+ja = "集合論的反映"
+avoid = ["ja:集合論的反射"]
+notes = "Set-theoretic reflection is 反映 in Japanese; the principle is 反映原理, unlike programming reflection. Fuchino, footnote 4: https://math.cs.kitami-it.ac.jp/~fuchino/shizuoka/lss07_fuchinox0902.pdf ; https://elecello.com/doc/set/set0000.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "Skolem hull"
+zh = "Skolem 壳"
+ja = "Skolem 包"
+avoid = ["zh:Skolem 包", "ja:Skolem 殻"]
+notes = "Direct terminology: Chinese 壳 (personal name may be kept Latin) https://studiesinlogic.sysu.edu.cn/sites/default/files/2023-09/1674-3202%282020%29-04-0012-19.pdf ; Japanese Skolem 包 https://konn-san.com/2024-forcing-seminar-notes/01-basic-mathematical-logic.pdf . Chinese Skolem 闭包 is also attested (Fudan summer notes), but 壳 is the selected house form."
+
+[[term]]
+category = "Teaching terminology"
+en = "Mostowski collapse"
+zh = "Mostowski 塌缩"
+ja = "Mostowski 崩壊"
+avoid = ["zh:Mostowski 坍缩"]
+notes = "Japanese theorem name directly attested: https://math.cs.kitami-it.ac.jp/~fuchino/shizuoka/lss07_fuchinox0902.pdf . Queries Mostowski 塌缩 / Mostowski 坍缩 site:edu.cn did not establish a primary Chinese hit; 塌缩 is retained as a contextual rendering of the standard English construction, not claimed directly attested here."
+
+[[term]]
+category = "Teaching terminology"
+en = "adequate stage"
+zh = "充分阶段"
+ja = "十分な段階"
+avoid = ["zh:适足阶段", "zh:適足階段"]
+notes = "Local predicate collecting the closure conditions in L.GCH.AdequateStages, not an admissible ordinal. Queries constructibility adequate Devlin and superadequate set theory did not establish this predicate as a standard named notion. Translations are descriptive compounds; distinguish semantic adequacy (充分性/妥当性). Concept context: https://onlinelibrary.wiley.com/doi/abs/10.1002/malq.201500072 ."
+
+[[term]]
+category = "Teaching terminology"
+en = "superadequate stage"
+zh = "超充分阶段"
+ja = "強化された十分な段階"
+avoid = ["zh:超适足阶段", "ja:超十分"]
+notes = "Project-local strengthening of adequate stage. Japanese deliberately describes the strengthening rather than inventing 超十分. Same search and mathematical context as adequate stage; this phrase does not claim a literature theorem."
+
+[[term]]
+category = "Teaching terminology"
+en = "cardinal representative"
+zh = "基数代表"
+ja = "基数代表"
+notes = "Descriptive compound for the initial ordinal representing an ordinal cardinality. Not claimed as a separately named theorem. Pattern from cardinal and ordinal comparison: https://ocw.cds.tohoku.ac.jp/wp-content/uploads/2025/09/5_cardinal.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "coded injection"
+zh = "编码单射"
+ja = "符号化された単射"
+avoid = ["zh:符号化注入", "ja:コード化された単射"]
+notes = "Composed expression for a graph in the model representing an injective function. Searches coded injection set theory and 論理式 符号化 found no fixed three-language expression. Japanese 符号化 pattern: https://www.kurims.kyoto-u.ac.jp/~kenkyubu/kokai-koza/terui.pdf ; injection pattern: https://ocw.cds.tohoku.ac.jp/wp-content/uploads/2025/09/5_cardinal.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "successor cardinal"
+zh = "后继基数"
+ja = "後続基数"
+avoid = ["ja:後者基数"]
+notes = "Direct Japanese cardinal term: https://www.kurims.kyoto-u.ac.jp/~kyodo/kokyuroku/contents/pdf/2151-06.pdf . Distinguish the successor operation 後者, attested https://www.sw.it.aoyama.ac.jp/2019/Math1/lecture2.html ."
+
+[[term]]
+category = "Teaching terminology"
+en = "satisfaction table"
+zh = "满足关系表"
+ja = "充足関係表"
+notes = "Project compound from satisfaction relation plus table, not the propositional truth table. Japanese 充足関係: https://www.jaist.ac.jp/~y-keita/I211-2020/I211-lecnote.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "bounded subset theorem"
+zh = "有界子集定理"
+ja = "有界部分集合定理"
+notes = "Descriptive local theorem name for bounding a constructible subset by an ordinal stage. Pattern rather than a claimed standard title. Standard constructibility argument context: https://elecello.com/doc/set/set0006.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "h-set"
+zh = "h-集合"
+ja = "h-集合"
+notes = "A type whose identity types are propositions, also called a set or 0-type. English: https://homotopytypetheory.org/book/ section 3.1; Japanese 集合 (set / h-set): https://elpinal.gitlab.io/notes/bicat-of-adjunctions.pdf definition 1.3. The prefixed CJK forms distinguish this type from an element of V; the prefix is a composed notation, not a separately attested translation."
+
+[[term]]
+category = "Type theory"
+en = "propositional truncation"
+zh = "命题截断"
+ja = "命題的切り詰め"
+notes = "English: HoTT Book section 3.7, https://homotopytypetheory.org/book/ . Japanese compound follows Uemura’s attested n 切り詰め (n-truncation), section 4.3, https://uemurax.github.io/hott-ja/index.pdf ; searches for the exact compound found reading notes but no primary exact compound, so this is pattern-derived. Chinese compound is a descriptive rendering of proposition + truncation; exact-phrase searches did not yield a primary Chinese text. This is the (-1)-truncation, not the choice of an inhabitant."
+
+[[term]]
+category = "Logic"
+en = "arity"
+zh = "元数"
+ja = "アリティ"
+notes = "Japanese logical usage: Aoto, definition 10.4, https://www.nue.ie.niigata-u.ac.jp/~aoto/lecture/21Logic.done/lecture10.pdf . Chinese 元数 follows n 元 predicate/function terminology; searches for exact bilingual primary sources did not identify a stronger variant. For Formula K n in this project n counts available variable positions, not necessarily the number of variables occurring in a formula."
+
+[[term]]
+category = "Logic and philosophy"
+en = "constant"
+zh = "常元"
+ja = "定数"
+avoid = ["zh:常量符号", "zh:常量出现"]
+notes = "First-order syntax, not an arbitrary fixed quantity. Wang Wei uses 常元符号 throughout languages, interpretation and expansion by parameters: https://logic.fudan.edu.cn/doc/Event/2024/summer/FMOA0727.pdf . Japanese 定数記号: https://www.jaist.ac.jp/~y-keita/I211-2020/I211-lecnote.pdf . 常量符号 also occurs in teaching literature, for example https://basics.sjtu.edu.cn/~yangqizhe/pdf/dm2025w/slides/DMLec5-handout.pdf ; the chosen stem is a consistency decision, not a claim that the alternative is wrong. Do not apply this rendering to constant functions or fixed numerical quantities."
+
+[[term]]
+category = "Set theory"
+en = "stage"
+zh = "阶段"
+ja = "段階"
+notes = "An individual step L_α in the construction, distinguished from the whole constructible hierarchy and from its ordinal index α. The CJK forms are transparent descriptive renderings, not claimed here as directly attested names for L_α; Japanese literature often writes L_α within the directly attested L-階層. This entry does not ban contextual synonyms. See dev/literature/stage-level-hierarchy.md."
+
+[[term]]
+category = "Set theory"
+en = "stage index"
+zh = "阶段索引"
+ja = "段階の添字"
+notes = "The ordinal α indexing the stage L_α, not the set L_α and not the entire hierarchy. In L.Stage, stage x hx returns this ordinal, while stage-mem places x in Lset (stage x hx). The compound translations are descriptive and pattern-based; they are not claimed as fixed literature terms. See dev/literature/stage-level-hierarchy.md."

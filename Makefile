@@ -21,7 +21,7 @@ export GHCRTS ?= -A64m -I0 -M8g
 EVERYTHING := src/Everything.lagda.md
 HTML_DIR   := _build/html
 SITE_OUT   := _build/site
-LANGS      := en,zh
+LANGS      := en,zh,ja
 BASE_URL   :=
 PORT       := 8000
 CF_PROJECT := bedrock
@@ -43,6 +43,8 @@ lint:
 	$(PY) scripts/gate/check-glossary.py --check
 	$(PY) scripts/gate/check-fences.py --check
 	$(PY) scripts/gate/check-reading-order.py
+	$(PY) scripts/site/reading_routes.py --check
+	$(PY) scripts/gate/check-chapter-framework.py
 	$(PY) scripts/site/weave-i18n.py --check
 
 test:

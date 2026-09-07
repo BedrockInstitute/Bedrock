@@ -1,4 +1,16 @@
-# Which ordinals appear at which stage
+<!--en-->
+# Locating ordinals in the constructible hierarchy
+
+An ordinal's position in the constructible hierarchy is controlled by membership: it appears by its successor stage and cannot appear before its own rank. This chapter proves both directions and gives a bounded formula for recognizing ordinals inside a stage.
+<!--zh-->
+# 在可构造层级中定位序数
+
+序数在可构造层级中的位置由隶属关系控制：它会在自身的后继阶段出现，却不会早于自身的秩出现。本章证明两个方向，并给出在阶段内部识别序数的有界公式。
+<!--ja-->
+# 構成可能階層の中で順序数を位置付ける
+
+順序数が構成可能階層に現れる位置は所属によって制御される。順序数は自身の後者段階までに現れ、自身の階数より前には現れない。本章では両方向を示し、段階の内部で順序数を認識する有界論理式を与える。
+<!--/-->
 
 <!--en-->
 One question about the tower is still open, and it is the one the axiom of
@@ -46,7 +58,7 @@ module L.Ordinal.Stages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∀̇∈ )
 open import FOL.LevyHierarchy using ( Δ₀; δ-∈; δ-∧; δ-∀∈ )
-open import FOL.Manipulation.Mapping using ( mapFo )
+open import FOL.Manipulation.ConstantMapping using ( mapFo )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-irrefl )
 open import V.Model {ℓ} using ( ∈sucV-elim; ∈sucV-inl; self∈sucV )
 open import L.Definability {ℓ} using ( module DefOf )
@@ -75,6 +87,16 @@ open hPropStructure 𝒮ᵥ
 ## Comparison, twice
 <!--zh-->
 ## 两次比较
+<!--ja-->
+## 二つの比較原理
+<!--/-->
+
+<!--en-->
+Ordinal trichotomy compares both hierarchy indices and ordinal members. Combining the two comparisons turns stage membership facts into precise inequalities between the relevant ordinals.
+<!--zh-->
+序数三歧既比较层级指标，也比较序数成员。把两次比较结合起来，可将阶段成员事实化为相关序数之间的准确不等式。
+<!--ja-->
+順序数の三分性は、階層の添字と順序数の要素の双方を比較する。二つの比較を組み合わせると、段階への所属を関係する順序数間の正確な不等式へ変えられる。
 <!--/-->
 
 <!--en-->
@@ -172,6 +194,16 @@ Lset-cumul β α ordβ ordα β∈α β∈Lsβ =
 ## Nothing appears before its rank
 <!--zh-->
 ## 没有东西早于自身的秩现身
+<!--ja-->
+## 自身の階数より前に現れるものはない
+<!--/-->
+
+<!--en-->
+If a set belongs to `Lset α`, its rank is bounded by `α`. Applied to an ordinal, whose rank agrees with itself, this shows that the ordinal cannot occur at an earlier stage.
+<!--zh-->
+若一个集合属于 `Lset α`，其秩便以 `α` 为界。对于秩等于自身的序数，这说明它不能在更早阶段出现。
+<!--ja-->
+集合が `Lset α` に属すれば、その階数は `α` で抑えられる。階数が自身と一致する順序数に適用すると、その順序数がより早い段階には現れないことが分かる。
 <!--/-->
 
 <!--en-->
@@ -232,7 +264,17 @@ ord∈Lset→∈ α ordα x ordx x∈Lα =
 <!--en-->
 ## Being an ordinal, said with bounded quantifiers
 <!--zh-->
-## 用有界量词说「是序数」
+## 用有界量词表达序数性质
+<!--ja-->
+## 順序数であることを有界量化で表す
+<!--/-->
+
+<!--en-->
+Being a transitive set all of whose members are transitive can be expressed with bounded quantifiers. The formula therefore recognizes ordinals absolutely between a transitive stage and the ambient universe.
+<!--zh-->
+一个集合传递且其每个成员都传递，这一性质可以用有界量词表达。因此，该公式在传递阶段与外围宇宙之间绝对地识别序数。
+<!--ja-->
+集合が推移的で、そのすべての要素も推移的であることは、有界量化だけで表せる。したがって、この論理式は推移的段階と周囲の宇宙の間で絶対的に順序数を認識する。
 <!--/-->
 
 <!--en-->
@@ -267,6 +309,16 @@ is at index 2.
 ## The ordinals of a stage
 <!--zh-->
 ## 一个阶段中的序数
+<!--ja-->
+## 一つの段階に属する順序数
+<!--/-->
+
+<!--en-->
+Separation by the bounded ordinal formula collects exactly the ordinals belonging to a stage. Its membership specification is available both internally and in the ambient universe.
+<!--zh-->
+用有界序数公式作分离，恰好收集属于某个阶段的全部序数。其成员规格在内部与外围宇宙中都可使用。
+<!--ja-->
+有界な順序数論理式による分出は、ある段階に属する順序数をちょうど集める。その所属の仕様は内部と周囲の宇宙の両方で使える。
 <!--/-->
 
 <!--en-->
@@ -360,6 +412,16 @@ module OrdAt (α : S) (ordα : IsOrd α) where
 ## An ordinal appears at its successor
 <!--zh-->
 ## 序数现身于其后继
+<!--ja-->
+## 順序数は自身の後者段階に現れる
+<!--/-->
+
+<!--en-->
+Every ordinal is a definable subset of itself, selected by the bounded ordinal formula. Hence `α` belongs to the definable power set of `Lset α`, which is the successor stage.
+<!--zh-->
+每个序数都是自身的可定义子集，由有界序数公式选出。因此 `α` 属于 `Lset α` 的可定义幂集，也就是后继阶段。
+<!--ja-->
+各順序数は、有界な順序数論理式によって選ばれる自身の定義可能部分集合である。したがって `α` は `Lset α` の定義可能冪集合、すなわち後者段階に属する。
 <!--/-->
 
 <!--en-->
@@ -397,6 +459,16 @@ ord∈Lset-suc = ∈-induction
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+Ordinals now have exact stage bounds: `α` appears in `Lset (sucV α)`, and appearance in `Lset β` forces `α ∈ β`. The bounded ordinal formula makes these facts available to later internal arguments.
+<!--zh-->
+序数现在具有准确的阶段界：`α` 出现在 `Lset (sucV α)` 中，而若它出现在 `Lset β` 中，则必有 `α ∈ β`。有界序数公式使后续内部论证能够使用这些事实。
+<!--ja-->
+これで順序数の段階上界が正確になった。`α` は `Lset (sucV α)` に現れ、`Lset β` に現れるなら `α ∈ β` である。有界な順序数論理式により、後の内部議論でこれらの事実を利用できる。
 <!--/-->
 
 <!--en-->

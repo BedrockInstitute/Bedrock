@@ -1,15 +1,18 @@
-# The constructible universe
+<!--en-->
+# The constructible hierarchy and universe
+
+The constructible hierarchy starts from the empty set and repeatedly applies definable power set at ordinal stages, taking unions at limits. The resulting stages are transitive and monotone; their union forms the transitive class `L`{.Agda} and its restricted set-theoretic structure.
+<!--zh-->
+# 可构造层级与可构造宇宙
+
+可构造层级从空集开始，在序数阶段反复施加可定义幂集，并在极限处取并。所得阶段具有传递性与单调性；其并形成传递类 `L`{.Agda} 及其限制集合论结构。
+<!--ja-->
+# 構成可能階層と構成可能宇宙
+
+構成可能階層は空集合から始まり、順序数段階で定義可能冪集合を繰り返し、極限では和集合を取ります。各段階は推移的かつ単調であり、その合併が推移的クラス `L`{.Agda} とその制限された集合論的構造を与えます。
+<!--/-->
 
 <!--en-->
-The constructible-universe sequence opens on the book's protagonist. Gödel's **constructible universe** is
-what remains of a universe of sets when every appeal to arbitrary subsets is
-replaced by the previous chapter's operator: start from nothing, take definable
-subsets at every step, collect at every limit. The textbook writes it as a tower,
-`L₀ = ∅`, `L_{α+1} = Def(L_α)`, unions at limits, and `L` is everything that
-ever appears in the tower. This chapter builds the tower and the class `L`, and
-packages the result as a structure `𝒮ʟ`, the world the rest of this part
-studies.
-
 One design choice does most of the work. The tower is indexed not by a separate
 type of ordinals but by **sets themselves**, through the recursion on membership
 that regularity licensed: `Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`. This single
@@ -18,8 +21,6 @@ ordinals it is exactly Gödel's tower. Alongside it runs an inductive predicate
 `isLayer`{.Agda}, "being a stage", whose constructors are the tower's closure
 principles; the two views cooperate throughout.
 <!--zh-->
-可构造宇宙的学习阶段以本书的主角开幕。哥德尔的**可构造宇宙**，是把一个集合宇宙里对任意子集的每次诉求都换成上一章那个算子之后剩下的东西：从空无出发，每一步只取可定义子集，每个极限处收拢。教科书把它写成一座塔，`L₀ = ∅`、`L_{α+1} = Def(L_α)`、极限取并，`L` 就是塔中出现过的一切。本章建起这座塔与类 `L`，并把结果打包成结构 `𝒮ʟ`，供后续公理、内部编码与 GCH 章节共同研究。
-
 一个设计选择承担了大部分工作。塔的索引不是另立的序数类型，而是**集合自身**，凭借正则性所授权的沿成员关系的递归：`Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`。这一条方程同时覆盖零、后继与极限，而在冯·诺伊曼序数上它恰是哥德尔的塔。与之并行的是归纳谓词 `isLayer`{.Agda}，「是一个层」，其构造子就是塔的闭包原则；两个视角全章协作。
 <!--/-->
 
@@ -56,28 +57,23 @@ open hPropStructure 𝒮ᵥ
 ```
 
 <!--en-->
-(`𝒟` is the book's short glyph for the previous chapter's `Def`, matching the
-usual script letter for the operator.)
-
 ## Transitive sets
-<!--zh-->
-(`𝒟` 是上一章 `Def` 在本书中的短记号，对齐这个算子惯用的花体字母。)
 
+Every stage of the hierarchy is transitive: the empty set is transitive, definable power set preserves transitivity, and unions of transitive sets remain transitive. These closure facts match the constructors used to build layers.
+<!--zh-->
 ## 传递集
+
+层级的每个阶段都是传递的：空集传递，可定义幂集保持传递性，传递集之并仍然传递。这些封闭性事实与构造层所用的构造子逐一对应。
+<!--ja-->
+## 推移的集合
+
+階層の各段階は推移的です。空集合は推移的であり、定義可能冪集合は推移性を保存し、推移的集合の和も推移的です。これらの閉性は層を作る構成子に対応します。
 <!--/-->
 
 <!--en-->
-The tower's stages will all be transitive sets, and the closure lemmas for
-transitivity mirror, one for one, the layer constructors to come. A set is
-**transitive** when membership in it is a transitive class in the sense of the
-absoluteness chapter. The empty set is transitive vacuously; `𝒟` preserves
-transitivity, the two halves being exactly the previous chapter's refinement
-bounds (members of `𝒟 A` are subsets of `A`, and `A ⊆ 𝒟 A`); unions of
-transitive sets are transitive. Because transitivity is a proposition, the
-truncations in pair and family membership are harmless, giving the binary and
-small-indexed union cases.
+(`𝒟` is the book's short glyph for the previous chapter's `Def`, matching the usual script letter for the operator.)
 <!--zh-->
-塔的每个阶段都将是传递集，而传递性的闭包引理与稍后的层构造子一一镜像。集合是**传递的**，指属于它构成绝对性章意义下的传递类。空集真空传递；`𝒟` 保传递，两半恰是上一章的精化界线 (`𝒟 A` 的成员是 `A` 的子集，且 `A ⊆ 𝒟 A`)；传递集之并传递。由于传递性是命题，配对与族隶属里的截断无碍，二元并与小索引并两个情形随之而得。
+(`𝒟` 是上一章 `Def` 在本书中的短记号，对齐这个算子惯用的花体字母。)
 <!--/-->
 
 ```agda
@@ -122,11 +118,7 @@ setUnion-trans X f hf = ⋃-trans (sett X f)
 
 <!--en-->
 ## Ordinals, just the predicate
-<!--zh-->
-## 序数，仅取谓词
-<!--/-->
 
-<!--en-->
 The tower's honest indices are the von Neumann ordinals, and inside a
 well-founded, extensional universe the classical definition shrinks to almost
 nothing: an **ordinal** is a transitive set of transitive sets.
@@ -135,8 +127,16 @@ them globally, and linearity is a classical theorem for later, not part of the
 notion. This chapter needs only the predicate and its propositionality; the
 theory of ordinals gets its own chapters when the closure proofs need it.
 <!--zh-->
+## 序数，仅取谓词
+
 塔的诚实索引是冯·诺伊曼序数，而在良基、外延的宇宙里，经典定义缩得几乎不剩什么：**序数**就是由传递集组成的传递集。良基与外延无须写进定义，层级全局供应；线序是留待后文的经典定理，不属于概念本身。本章只需要这个谓词及其命题性；序数的理论等闭包证明用到时另章展开。
+<!--ja-->
+## 順序数の述語
+
+ここで順序数とは、推移的で、かつ各要素も推移的な集合です。この段階では順序関係の一般論を展開せず、構成可能階層の添字に必要な述語だけを用います。
 <!--/-->
+
+
 
 ```agda
 IsOrd : S → Type (ℓ-suc ℓ)
@@ -149,11 +149,7 @@ isPropIsOrd A = isProp× (isPropIsTransV A)
 
 <!--en-->
 ## Layers
-<!--zh-->
-## 层
-<!--/-->
 
-<!--en-->
 `isLayer A` says "A is a stage of the tower". Three ideas, five constructors:
 the base, closure under `𝒟`, and closure under unions in three strengths
 (members-all-layers, binary, small-indexed family). The binary and family forms
@@ -164,11 +160,19 @@ of the transitivity proof below. Registering them as constructors dissolves the
 dilemma, and does not change which sets are constructible, since a union's
 members were already members of the parts. The family form is what later makes
 limit stages like `L_ω` possible.
+<!--zh-->
+## 层
 
+`isLayer A` 说「A 是塔的一个阶段」。三个想法，五个构造子：基底、对 `𝒟` 封闭，以及三种力度的并封闭 (成员皆层、二元、小索引族)。二元与族形式不能从一般形式派生：`union-layer`{.Agda} 要求逐成员**不加截断**的层证明，配对隶属给不出；而把前提弱化为截断版又会破坏下文传递性证明的结构递归。把它们注册为构造子，两难俱解，且不改变哪些集合可构造，因为并的成员本就是各部分的成员。族形式正是日后极限阶段 (如 `L_ω`) 的来路。
+<!--ja-->
+## 層
+
+層は空集合、定義可能冪集合、または小さな族の和として得られる集合です。各構成子が推移性を保存するので、すべての層は推移的です。
+<!--/-->
+
+<!--en-->
 Every layer is transitive: one induction, each case the matching closure lemma.
 <!--zh-->
-`isLayer A` 说「A 是塔的一个阶段」。三个想法，五个构造子：基底、对 `𝒟` 封闭，以及三种力度的并封闭 (成员皆层、二元、小索引族)。二元与族形式不能从一般形式派生：`union-layer`{.Agda} 要求逐成员**不加截断**的层证明，配对隶属给不出；而把前提弱化为截断版又会破坏下文传递性证明的结构递归。把它们注册为构造子，两难俱解，且不改变哪些集合可构造，因为并的成员本就是各部分的成员。族形式正是日后极限阶段 (如 `L_ω`) 的来路。
-
 每个层都传递：一次归纳，各情形恰是对应的闭包引理。
 <!--/-->
 
@@ -191,11 +195,7 @@ layer-trans (setUnion-layer X f hf) = setUnion-trans X f (λ x → layer-trans (
 
 <!--en-->
 ## The tower
-<!--zh-->
-## 塔
-<!--/-->
 
-<!--en-->
 Now the tower itself, by recursion on membership. Two technical seals first:
 `𝒟` unfolds to a heavy `sett` over formulas, and the recursion machinery
 itself unfolds to the accessibility eliminator, so both would otherwise be
@@ -205,8 +205,16 @@ black boxes, unsealed only where a lemma genuinely needs the contents, with
 `α`, of `𝒟ₒ` applied to the recursive values, and the computation rule holds
 propositionally.
 <!--zh-->
+## 塔
+
 现在造塔本身，沿成员关系递归。先上两道技术封印：`𝒟` 展开是公式上沉重的 `sett`，递归机器自身又展开成可及性消去子，二者都会被拖进日后的每一次转换；`opaque`{.Agda} 让 `𝒟ₒ` 与塔成为黑箱，只在真正需要内容的引理处开封，`Lset-compute`{.Agda} 是塔的官方展开式。步进取 `α` 的成员 `β` 上 `𝒟ₒ` 作用于递归值的并，计算规则命题级成立。
+<!--ja-->
+## 階層
+
+`Lset α`{.Agda} は順序数 `α` の要素に対応する以前の定義可能段階を集めます。所属再帰がこの定義を与え、各 `Lset α`{.Agda} が層であり推移的であることを同時に示せます。
 <!--/-->
+
+
 
 ```agda
 opaque
@@ -258,14 +266,20 @@ Lset-layer = ∈-induction step
 
 <!--en-->
 ## Stages compared
+
+Two more facts about the tower carry every closure argument in the chapters
+ahead, and both are cheap once the seal is opened in the right place.
 <!--zh-->
 ## 阶段之间的比较
+
+关于塔还有两个事实，承载着后续诸章的每一个闭包论证，而只要在对的地方开封，二者都很廉价。
+<!--ja-->
+## 段階の比較
+
+`β ∈ α` なら、`β` の段階で定義可能な集合は `α` の段階に含まれます。所属の特徴付けからこの包含を得て、構成可能階層の狭義単調性を示します。
 <!--/-->
 
 <!--en-->
-Two more facts about the tower carry every closure argument in the chapters
-ahead, and both are cheap once the seal is opened in the right place.
-
 The first names the operator's membership. `𝒟ₒ A` was built as the set of
 definable subsets of `A`, so belonging to it is, by construction, "merely, is
 some `defSet φ`": exhibiting a formula together with an extensional equation is
@@ -287,8 +301,6 @@ union structure each time they need to walk down it. The seal opens once more,
 for the inclusion the other way: what the operator produces are subsets of what
 it was given, so a member of `𝒟ₒ A` never has a member outside `A`.
 <!--zh-->
-关于塔还有两个事实，承载着后续诸章的每一个闭包论证，而只要在对的地方开封，二者都很廉价。
-
 第一条给算子的隶属命名。`𝒟ₒ A` 造出来就是 `A` 的可定义子集之集，故属于它按构造即「仅仅是某个 `defSet φ`」：要把一个集合放进算子里，拿出一条公式连同一个外延等式恰好就够。封印开一行，随即合上。
 
 第二条把塔展开一次，再把那个并两头都读一遍。一个阶段是沿其索引的成员、对更早诸阶段的 `𝒟ₒ` 取的并；故属于一个阶段，恰是属于某个更早阶段的 `𝒟ₒ`，而这条等价按其两个方向给出，因为消费方正是这样用它的。进去是成为该并的成员，由其索引点名；出来是并公理，随后为纤维命名。
@@ -346,19 +358,23 @@ Lset-mono {α} {β} β∈α {x} x∈Lβ = Lset-in α β x β∈α (Lset⊆𝒟�
 
 <!--en-->
 ## The class L, and its structure
-<!--zh-->
-## 类 L，及其结构
-<!--/-->
 
-<!--en-->
 A set is **constructible** when some ordinal stage of the tower contains it.
 The ordinal bound is part of the definition on purpose: the later theory
 extracts stage ordinals, and this shape hands them over by construction. `L` is
 a transitive class: stages are transitive, and the witnessing ordinal does not
 move.
 <!--zh-->
+## 类 L，及其结构
+
 一个集合是**可构造的**，指塔的某个序数阶段包含它。序数界故意写进定义：后文的理论要提取阶段序数，这个形状按构造直接交货。`L` 是传递类：阶段传递，见证序数不动。
+<!--ja-->
+## クラス L とその構造
+
+集合が `L` に属するとは、ある順序数段階 `Lset α`{.Agda} に属することです。段階の推移性と単調性から `L` は推移的クラスとなり、周囲の構造を `L` に制限した構造 `𝒮ₗ`{.Agda} が得られます。
 <!--/-->
+
+
 
 ```agda
 isL : S → Ω
@@ -401,11 +417,7 @@ applies to it verbatim. The subscript is a small capital ʟ.
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 The tower `Lset`{.Agda} rises by membership recursion, one equation for zero,
 successors, and limits; `isLayer`{.Agda} names its closure principles and
 `layer-trans`{.Agda} makes every stage transitive. `isL`{.Agda} is containment
@@ -413,5 +425,11 @@ in some ordinal stage, transitive as a class, and `𝒮ʟ`{.Agda} packages the
 constructible sets as a structure. What the book must now prove is that this
 world satisfies ZFC; the next chapter takes stock of exactly what that demands.
 <!--zh-->
+## 小结
+
 塔 `Lset`{.Agda} 沿成员递归升起，一条方程通吃零、后继与极限；`isLayer`{.Agda} 点名其闭包原则，`layer-trans`{.Agda} 使每个阶段传递。`isL`{.Agda} 是「落在某个序数阶段中」，作为类传递，`𝒮ʟ`{.Agda} 把可构造集打包为结构。本书接下来要证的，是这个世界满足 ZFC；下一章先把这笔账目盘点清楚。
+<!--ja-->
+## まとめ
+
+順序数で添字付けた `Lset`{.Agda} は、定義可能冪集合と和集合を繰り返す推移的で単調な階層です。ある段階に現れる集合全体が構成可能クラス `L` と、その制限構造 `𝒮ₗ`{.Agda} を与えます。
 <!--/-->

@@ -1,4 +1,16 @@
+<!--en-->
 # Syntax as sets
+
+To reason about formulas inside a model, syntax itself must be represented by sets. Given injective codes for pairs and natural numbers, this chapter assigns set codes to terms and formulas, defines the coding relation, and proves that a formula is determined by its code.
+<!--zh-->
+# 作为集合的语法
+
+要在模型内部推理公式，语法本身必须由集合表示。给定序对与自然数的单射编码，本章为词项和公式赋予集合编码，定义编码关系，并证明编码唯一决定公式。
+<!--ja-->
+# 集合としての構文
+
+モデルの内部で論理式を扱うには、構文そのものを集合として表す必要があります。対と自然数の単射な符号が与えられたもとで、項と論理式に集合の符号を割り当て、符号化関係を定義し、符号が論理式を一意に定めることを証明します。
+<!--/-->
 
 <!--en-->
 Everything so far has kept formulas outside the sets they talk about: a formula
@@ -6,7 +18,11 @@ is host-level data, a set is a point of the structure, and satisfaction is the
 bridge. the internal coding development needs the other direction. To say inside a model that some set is
 definable, or to compare two formulas by an order that a model can see, the
 formulas themselves must be sets. This chapter injects them.
+<!--zh-->
+迄今为止的一切都把公式留在它们所谈论的集合之外：公式是宿主层的数据，集合是结构的点，满足关系是二者之间的桥。内部编码诸章需要相反的方向。要在模型内部说某个集合可定义，或者用模型看得见的序去比较两条公式，公式自身就必须是集合。本章把它们注入进去。
+<!--/-->
 
+<!--en-->
 The encoding is deliberately dull. There is no arithmetization, no Gödel
 numbering, no recursion trick: a formula's code is a tagged pair, the tag being
 the constructor's index and the payload the codes of its parts. Recursion stays
@@ -28,9 +44,7 @@ an equation between two of them forces a typechecker to unfold both. The
 relation makes the shape a constructor index instead, so matching is syntactic
 and the values are never normalized.
 <!--zh-->
-迄今为止的一切都把公式留在它们所谈论的集合之外：公式是宿主层的数据，集合是结构的点，满足关系是二者之间的桥。内部编码诸章需要相反的方向。要在模型内部说某个集合可定义，或者用模型看得见的序去比较两条公式，公式自身就必须是集合。本章把它们注入进去。
-
-这套编码刻意平淡。没有算术化，没有哥德尔编号，没有递归花招：公式的码是一个带标签的对，标签是构造子的序号，载荷是各部分的码。递归留在它该在的地方，即宿主的归纳类型 `Formula`{.Agda} 上，而码是一种边界格式。唯一的优雅之处是：集合常量本来就是集合，故常量即自身的码。
+这套编码刻意平淡。没有算术化，没有哥德尔编号，没有递归花招：公式的码是一个带标签的对，标签是构造子的序号，载荷是各部分的码。递归留在它该在的地方，即宿主的归纳类型 `Formula`{.Agda} 上，而码是一种边界格式。唯一的优雅之处是：集合常元本来就是集合，故常元即自身的码。
 
 本章取作参数的，恰是编码所需的东西：一个带单射性的配对运算，以及自然数的一个单射。关于结构的其余一切都无关紧要，故本章是泛型的，层级稍后才来实例化它。
 
@@ -63,17 +77,21 @@ open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 
 <!--en-->
 ## Tagged pairs
-<!--zh-->
-## 带标签的对
-<!--/-->
 
-<!--en-->
 The one construction: a constructor index paired with a payload. Injectivity
 comes straight from the two parameters, and the clash pattern packages the case
 that will recur whenever two different constructors are compared.
 <!--zh-->
+## 带标签的对
+
 唯一的构造：构造子序号与载荷配成对。单射性直接来自那两个参数，而冲突模式把「两个不同构造子相比较」时反复出现的情形打包起来。
+<!--ja-->
+## タグ付き対
+
+自然数のタグと集合のペイロードを符号化された対にまとめます。対と自然数の符号が単射なので、タグ付き対の等しさからタグとペイロードの等しさを別々に回収できます。
 <!--/-->
+
+
 
 ```agda
 mkTag : ℕ → S → S
@@ -88,17 +106,21 @@ clash ne p = Empty.rec (ne (mkTag-inj p .fst))
 
 <!--en-->
 ## Codes
-<!--zh-->
-## 码
-<!--/-->
 
-<!--en-->
 Terms first, where the promised elegance appears: a set constant needs no
 encoding, since it is already a set, and only the variable index has to be
 injected. Terms are separated enough that their injectivity is immediate.
 <!--zh-->
-先看项，承诺的那点优雅在此出现：集合常量无须编码，因为它本来就是集合，只有变元的序号要被注入。项的分隔足够清楚，其单射性立得。
+## 码
+
+先看项，承诺的那点优雅在此出现：集合常元无须编码，因为它本来就是集合，只有变元的序号要被注入。项的分隔足够清楚，其单射性立得。
+<!--ja-->
+## 項と論理式の符号
+
+項の符号は定数と変数を区別し、論理式の符号は十個の構文子ごとに異なるタグを使います。再帰的なペイロードにより、構文木全体を一つの集合に保存します。
 <!--/-->
+
+
 
 ```agda
 ⌜_⌝ᵗ : ∀ {n} → Term S n → S
@@ -135,19 +157,23 @@ two sub-codes, unary ones take the sub-code bare, and falsity takes a dummy payl
 
 <!--en-->
 ## The coding relation
-<!--zh-->
-## 编码关系
-<!--/-->
 
-<!--en-->
 And the chapter's real interface. `Codes s φ` says the set `s` codes the formula
 `φ`, as an indexed inductive family whose constructors carry sub-derivations
 exactly where the code function makes recursive calls. It is the same
 information as the code function, presented so that a proof can match on the
 *shape* of the coding rather than compute with the code.
 <!--zh-->
+## 编码关系
+
 然后是本章真正的接口。`Codes s φ` 说集合 `s` 编码公式 `φ`，是一个索引归纳族，其构造子恰在码函数作递归调用之处携带子推导。它与码函数携带同样的信息，只是呈现方式使得证明可以在编码的**形状**上匹配，而不必对码作计算。
+<!--ja-->
+## 符号化関係
+
+`Codes`{.Agda} は、集合がある論理式の再帰的な符号であることを命題として表します。計算で得た符号がこの関係を満たすことを構造帰納法で示します。
 <!--/-->
+
+
 
 ```agda
 data CodesT {n : ℕ} : S → Term S n → Type ℓ where
@@ -160,27 +186,27 @@ data Codes : {n : ℕ} → S → Formula S n → Type ℓ where
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 Formulas are now sets: `⌜_⌝`{.Agda} tags a constructor index onto the codes of
 the parts, constants coding themselves. The interface downstream is the relation
 `Codes`{.Agda}, which keeps code values out of the equations a typechecker has
 to normalize. Everything is generic in the structure, needing only an injective
 pairing and an injection of the naturals; the hierarchy supplies both.
 <!--zh-->
-公式如今是集合了：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上，而常量编码自身。下游的接口是关系 `Codes`{.Agda}，它使码值不出现在类型检查器必须归一化的等式里。一切都对结构泛型，只需一个单射的配对与自然数的一个单射；层级把二者都供上。
+## 小结
+
+公式如今是集合了：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上，而常元编码自身。下游的接口是关系 `Codes`{.Agda}，它使码值不出现在类型检查器必须归一化的等式里。一切都对结构泛型，只需一个单射的配对与自然数的一个单射；层级把二者都供上。
+<!--ja-->
+## まとめ
+
+項と論理式はタグ付き集合として符号化され、`Codes`{.Agda} が計算された符号を特徴付けます。残る仕事は、一つの集合符号が異なる論理式を表さないことです。
 <!--/-->
+
+
 
 <!--en-->
 ## Codes determine formulas
-<!--zh-->
-## 码决定公式
-<!--/-->
 
-<!--en-->
 Two formulas of the same arity with the same code are the same formula. The
 statement was dropped once, on the ground that its natural proof is a grid of
 ten by ten of which a ninety clauses carry no mathematics,
@@ -189,7 +215,17 @@ around. A consumer arrived that wants the equation rather than the relation, and
 it wants it for a reason no relation answers: a recursion's table is a **set**, so
 if two occurrences of different subformulas shared a code the table would be
 genuinely multi-valued, and its existence, not merely its proof, would fail.
+<!--zh-->
+## 码决定公式
 
+同一元数、同一码的两条公式是同一条公式。这条陈述曾被丢掉，理由是它的自然证明是一张十乘十的网格，其中九十条子句不含数学，而每个消费方当初都是围绕 `Codes`{.Agda} 关系设计的。如今来了一个要等式而非要关系的消费方，而它要的理由是任何关系都答不了的：递归的表是一个**集合**，故若两处不同子公式共用一个码，那张表就真的多值，垮掉的将是它的**存在性**，而不只是它的证明。
+<!--ja-->
+## 符号は論理式を一意に定める
+
+符号の最外タグから論理式の構文子を読み、ペイロードへ再帰的に進みます。異なるタグの衝突を排除することで、同じ集合符号を持つ二つの論理式が等しいと証明します。
+<!--/-->
+
+<!--en-->
 The grid does not have to be written. The constructor is recoverable from the
 tag, and the tag is a number, so what a formula's constructor *is* can be
 **computed** from it: one type family over the tag saying what having that tag
@@ -202,8 +238,6 @@ constructors against eight demands, and it is worth saying once in general: **wh
 a case analysis is indexed by two things that a tag already relates, compute one
 side from the tag instead of matching both.**
 <!--zh-->
-同一元数、同一码的两条公式是同一条公式。这条陈述曾被丢掉，理由是它的自然证明是一张十乘十的网格，其中九十条子句不含数学，而每个消费方当初都是围绕 `Codes`{.Agda} 关系设计的。如今来了一个要等式而非要关系的消费方，而它要的理由是任何关系都答不了的：递归的表是一个**集合**，故若两处不同子公式共用一个码，那张表就真的多值，垮掉的将是它的**存在性**，而不只是它的证明。
-
 那张网格不必写。构造子可从标签还原，而标签是一个数，故一条公式的构造子**是什么**可以从标签**算**出来：一个以标签为索引的类型族，说出「带那个标签」长什么样；一个函数把它造出来；而配对的单射性所给出的那条标签等式把后者搬到前者上。两者各十条子句，再加十条作情形分析，取代一百条。
 
 这与可构造性那一章「把十个构造子对上八项要求」所用的是同一个动作，而它值得一般地说一次：**当一次情形分析由两样东西索引、而某个标签已经把它们关联起来时，就从标签算出一侧，不要两侧都匹配。**

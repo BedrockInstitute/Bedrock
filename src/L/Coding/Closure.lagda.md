@@ -1,11 +1,15 @@
-# Domains closed under subcodes
-
 <!--en-->
-Recursion clauses determine values only after every compound code brings its
-subcodes into the same domain. This chapter states that closure condition, gives
-its semantic readers, and constructs the witnesses needed to satisfy it.
+# Subcode-closed domains
+
+A domain of formula codes is closed when it contains the immediate term and formula subcodes named by every constructor key it contains. The closure predicate is expressed in the object language and later supplies structural induction over codes stored inside `L`.
 <!--zh-->
-只有当每个复合码都把其子码带入同一定义域时，递归子句才会确定取值。本章陈述这项封闭条件，给出它的语义读式，并构造满足它所需的见证。
+# 对子码封闭的定义域
+
+公式码的定义域若对其中每个构造子键所指名的直接词项子码与公式子码封闭，就称为封闭。本章在对象语言中表达这一封闭谓词，供后续对 `L` 内存储的码作结构归纳。
+<!--ja-->
+# 部分符号に閉じた定義域
+
+論理式の符号の定義域が閉じているとは、そこに含まれる各構成子のキーが指定する直下の項と論理式の部分符号も含むことです。この閉性を対象言語で表し、後に `L` 内に保存された符号について構造帰納法を行うために使います。
 <!--/-->
 
 ```agda
@@ -46,11 +50,7 @@ open import L.Coding.Expressions {ℓ}
 
 <!--en-->
 ## A domain that is closed under subcodes
-<!--zh-->
-## 对子码封闭的定义域
-<!--/-->
 
-<!--en-->
 The clauses developed in `L.Coding.Expressions` constrain a table wherever both
 a code and its subcodes carry
 entries, and say nothing where the subcodes do not. That is the right reading,
@@ -63,7 +63,17 @@ the clauses alone do not pin a value, and what pins it is a further demand on th
 index set, that it contain the subcodes of everything in it. Compound matters:
 put the one entry at a constant's code instead and the clause for `⊥̇` pins the
 value outright, which is the shape of the whole argument in miniature.
+<!--zh-->
+## 对子码封闭的定义域
 
+`L.Coding.Expressions` 中展开的那些子句在「码与其诸子码都带有条目」之处约束一张表，在诸子码没有条目之处则什么也不说。那样读是对的，而这也正是「满足全部十条的表可以几乎为空」的原因：取索引集为单独一个**复合**码，取表为该处的一个条目，取值随便什么。查询子码的那七条空洞，因为诸子码没有条目；不查询子码的那三条 (两个原子与底) 也空洞，因为索引里没有它们那种形状的东西。故诸子句本身钉不住任何取值，而钉住它的是对索引集的一项进一步要求：它须含有其每个成员的诸子码。「复合」这一点要紧：把那个条目改放在底的码处，`⊥̇` 的子句立刻把取值钉死，而那正是整个论证的缩影。
+<!--ja-->
+## 部分符号に閉じた定義域
+
+`closedAt`{.Agda} は、定義域中の各構成子キーについて、そのキーが持つ直下の項符号と論理式符号も同じ定義域に属することを述べます。十個の構成子ごとに必要な部分符号だけを要求します。
+<!--/-->
+
+<!--en-->
 Stating that demand needs the same two frames as the clauses, minus the table.
 What is left is the shape reader and the implication: for every key in the set of
 that shape, such and such keys are in the set too. A key is an arity paired with
@@ -75,8 +85,6 @@ Seven of the ten say something. The two atoms have term codes below them and
 bottom has a numeral, and none of the three has a subformula, so their
 clauses would be empty and are not written.
 <!--zh-->
-`L.Coding.Expressions` 中展开的那些子句在「码与其诸子码都带有条目」之处约束一张表，在诸子码没有条目之处则什么也不说。那样读是对的，而这也正是「满足全部十条的表可以几乎为空」的原因：取索引集为单独一个**复合**码，取表为该处的一个条目，取值随便什么。查询子码的那七条空洞，因为诸子码没有条目；不查询子码的那三条 (两个原子与底) 也空洞，因为索引里没有它们那种形状的东西。故诸子句本身钉不住任何取值，而钉住它的是对索引集的一项进一步要求：它须含有其每个成员的诸子码。「复合」这一点要紧：把那个条目改放在底的码处，`⊥̇` 的子句立刻把取值钉死，而那正是整个论证的缩影。
-
 陈述这项要求所需的框架与诸子句相同，只是去掉了表。剩下的是形状读式与那个蕴含：对集合中每个那种形状的键，某某几个键也在该集合中。一个键是元数与码之对，故一个子键由同一个元数造出，或者对那四个绑定变元的构造子而言，由该元数的后继造出；而 `appAt`{.Agda} 早已是「这个对在那个集合中」的读式。
 
 十条里有七条说了话。两个原子之下是词项码，底之下是数码，而这三个都没有子公式，故它们的子句会是空的，不写。
@@ -346,15 +354,17 @@ successor as an element of the model, which the numeral chapter supplies.
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 `closedAt` requires every compound code in the domain to bring along the
 subformula codes its clause reads. Its elimination lemmas expose those subcodes,
 and its introduction lemmas build the same seven obligations from meta-level
 membership facts.
 <!--zh-->
+## 小结
+
 `closedAt` 要求定义域中的每个复合码都带上其子句将读取的子公式码。消去引理取出这些子码，引入引理则从元语言的隶属事实构造同样的七项义务。
+<!--ja-->
+## まとめ
+
+対象言語の閉性述語は、構成子キーからその直下の部分符号へ定義域の所属を伝えます。この局所的な条件が、内部の符号に対する帰納法を支える閉じた領域を与えます。
 <!--/-->

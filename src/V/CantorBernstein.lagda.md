@@ -1,4 +1,18 @@
-# Cantor-Schroeder-Bernstein, at the index types
+<!--en-->
+# Cantor–Schröder–Bernstein for small presentations
+
+Mutual injections between the small presentations of two sets determine a bijection. The proof first constructs the bijection for small types under excluded middle, then gives a generic form that turns any mutually available coded injections into such a bijection.
+<!--zh-->
+# 小呈现上的 Cantor–Schröder–Bernstein 定理
+
+两个集合的小呈现之间若有双向单射，便可得到双射。证明先在排中律下为小类型构造双射，再给出通用形式，把任意可双向读出的编码单射转成这类双射。
+<!--ja-->
+# 小さな提示に対する Cantor–Schröder–Bernstein の定理
+
+二つの集合の小さな提示の間に双方向の単射があれば、全単射が得られます。まず排中律の下で小さな型について全単射を構成し、さらに任意の相互に読み出せる符号化された単射からそのような全単射を得る一般的な形にまとめます。
+<!--/-->
+
+
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -21,11 +35,10 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪ )
 ```
 
-Two injections, one each way, give one bijection.  The installed
-library does not ship it, and both target theorems want it as a
-reading, so it is proved once here at two ARBITRARY types under one
-set-ness hypothesis.  The construction names no tower, no stage and
-no satisfaction relation.
+Two injections, one each way, give one bijection. The installed
+library does not supply the needed formulation, so it is proved here for two
+arbitrary types under one set-ness hypothesis. The construction names no tower,
+stage or satisfaction relation.
 
 The proof runs on the index level, which is why it transfers cheaply.
 The BAD elements of `A` are those reachable by a finite alternating

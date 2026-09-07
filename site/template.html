@@ -8,12 +8,14 @@
 %%HREFLANG%%
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="%%BASEURL%%/static/bedrock.css?v=%%CSSVER%%" />
+  <link rel="stylesheet" href="%%BASEURL%%/static/reading-routes.css?v=%%ROUTECSSVER%%" />
   <link rel="icon" href="%%BASEURL%%/static/assets/favicon.svg" />
   <script>
     window.bedrock = { baseUrl: "%%BASEURL%%", lang: "%%LANG%%", module: "%%MODULE%%" };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
   <script defer src="%%BASEURL%%/static/bedrock.js?v=%%JSVER%%"></script>
+  <script defer src="%%BASEURL%%/static/reading-routes.js?v=%%ROUTEJSVER%%"></script>
 </head>
 
 <body class="%%BODYCLASS%%">
@@ -36,7 +38,8 @@
 
   <div id="nav-backdrop" hidden></div>
 
-  <main>
+  <a class="skip-link" href="#main-content">%%S_CONTENT%%</a>
+  <main id="main-content" tabindex="-1">
     <div id="post-toc-container">
       <aside id="toc">
         <div id="toc-drawer-head">

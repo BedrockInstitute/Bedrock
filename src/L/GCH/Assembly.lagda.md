@@ -1,4 +1,16 @@
-# The assembly of GCH from four internal hypotheses
+<!--en-->
+# Assembling GCH from four internal bounds
+
+The final cardinal comparison becomes transparent once four facts inside `L` are available. This chapter states those facts, shows how they locate every subset of a cardinal below its successor, and derives GCH from them.
+<!--zh-->
+# 从四条内部界装配 GCH
+
+一旦在 `L` 内部取得四条事实，最终的基数比较便清晰可见。本章陈述这些事实，说明它们如何把基数的每个子集定位到其后继以下，并由此推出 GCH。
+<!--ja-->
+# 四つの内部上界から GCH を組み立てる
+
+`L` の内部で四つの事実が得られれば、最後の基数比較は明快になる。本章ではそれらを述べ、基数の各部分集合がその後続基数より下に現れることを示し、そこから GCH を導く。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -25,7 +37,7 @@ open import L.Cardinal {ℓ} lem
   using ( InjCode; IsCardinalL; module LeastCardInjL )
 open import L.CardinalAbove {ℓ} lem using ( CardAboveL )
 open import L.GCH {ℓ} lem using ( GCHStatement; SuccCardL; InjL )
-open import L.InjChain {ℓ} lem using ( module InclGraph; module Comp )
+open import L.InjectionComposition {ℓ} lem using ( module InclGraph; module Comp )
 
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -60,7 +72,19 @@ The instance src/L/GCH.lagda.md names, at the same 𝒮ʟ.
 module ModelL = FOL.ZFModel 𝒮ʟ
 ```
 
-## Section 1. The four hypotheses, all internal to L
+<!--en-->
+## Four internal estimates
+
+The assembly starts from four estimates stated wholly inside `L`: stages can be counted, subsets are bounded, successor cardinals reach power sets, and larger cardinals exist.
+<!--zh-->
+## 四条内部估计
+
+装配从四条完全在 `L` 内部陈述的估计开始：阶段可以计数，子集受到约束，后继基数可以到达幂集，并且更大的基数存在。
+<!--ja-->
+## 四つの内部評価
+
+組み立ては、すべて `L` の内部で述べられる四つの評価から始まる。段階を数えられること、部分集合が有界であること、後続基数から冪集合へ到達できること、そしてより大きな基数が存在することである。
+<!--/-->
 
 1.  The stage at an INFINITE ordinal δ is coded into δ.  The row is
     false at finite δ, so the infinity premise is part of the type.
@@ -108,7 +132,19 @@ SuccCardExists =
   → ∥ Σ[ δ ∈ SL.S ] SuccCardL δ κ ∥₁
 ```
 
-## Section 2. Hypothesis 4 is a theorem
+<!--en-->
+## Larger internal cardinals exist
+
+The fourth estimate follows from the earlier construction of a cardinal above any ordinal. Taking the least such cardinal supplies the exact successor-cardinal interface needed here.
+<!--zh-->
+## 更大的内部基数存在
+
+第四条估计来自此前在任意序数之上构造基数的结果。取其中最小者，便得到此处所需的后继基数接口。
+<!--ja-->
+## より大きな内部基数の存在
+
+第四の評価は、任意の順序数より上に基数を構成した先の結果から従う。そのうち最小のものを取れば、ここで必要な後続基数のインターフェースが得られる。
+<!--/-->
 
 `CardAboveL` (src/L/CardinalAbove.lagda.md) gives SOME ordinal L-cardinal above
 `κ`; the least one is selected along the ordinal well-order on the tower at
@@ -213,7 +249,19 @@ succCardExists κ oκ cκ κ∉ω = PT.map build (CardAboveL κ oκ cκ κ∉ω)
     where module R = Reduce κ oκ θ oθ cθ κ∈θ
 ```
 
-## Section 3. Three rows src/ pays
+<!--en-->
+## Discharging the structural estimates
+
+Earlier chapters already show that ordinal-indexed stages belong to `L`, that bounded subsets appear in controlled stages, and that infinite stages inject into their indices. We package those results in the precise shapes required by the assembly.
+<!--zh-->
+## 兑现结构性估计
+
+此前章节已经证明：以序数为指标的阶段属于 `L`，有界子集出现在受控阶段，并且无穷阶段单射到其指标。本节把这些结果封装成装配所需的准确形式。
+<!--ja-->
+## 構造に関する評価を満たす
+
+先の章で、順序数を添字とする段階が `L` に属すること、有界部分集合が制御された段階に現れること、無限段階がその添字へ単射することを示した。本節では、それらを組み立てに必要な形へまとめる。
+<!--/-->
 
 The stage at an ordinal is constructible (src/L/Axioms/Basic.lagda.md).
 
@@ -292,7 +340,19 @@ definition, so no transport is needed.
   z∈κ = y⊆κ (z , isLz) z∈y
 ```
 
-## Section 4. The landing: a subset of `κ` lies in the stage at `κ⁺`
+<!--en-->
+## Every subset lands before the successor
+
+Let `δ` be the successor cardinal of `κ`. The bounded-subset estimate first places a subset at some stage indexed by `β`; cardinal minimality then forces `β ∈ δ`, so monotonicity lifts the subset into the stage at `δ`.
+<!--zh-->
+## 每个子集都在后继之前落定
+
+令 `δ` 为 `κ` 的后继基数。有界子集估计先把一个子集放入某个以 `β` 为指标的阶段；随后基数的最小性迫使 `β ∈ δ`，故单调性把该子集提升到 `δ` 处的阶段。
+<!--ja-->
+## 各部分集合は後続基数までに現れる
+
+`δ` を `κ` の後続基数とする。有界部分集合の評価により、まず部分集合はある `β` を添字とする段階に入る。基数の最小性から `β ∈ δ` が従い、単調性によってその部分集合を `δ` の段階へ持ち上げられる。
+<!--/-->
 
 Hypothesis 2 places `y` at some stage `β` with `β` injecting into `κ`. By
 trichotomy `β ∈ δ`, since `β ≡ δ` or `δ ∈ β` would inject `δ` into `κ` against
@@ -337,7 +397,19 @@ a member of it.
       δ⊆β z z∈δ = ordβ .fst z∈δ δ∈β
 ```
 
-## Section 5. The power set injects into the successor
+<!--en-->
+## Coding the power set below the successor
+
+Since every subset of `κ` lies in the stage at its successor cardinal and that stage injects into its index, the model's power set of `κ` injects into the successor cardinal.
+<!--zh-->
+## 把幂集编码到后继以下
+
+因为 `κ` 的每个子集都属于其后继基数处的阶段，而该阶段单射到自身指标，所以模型中的 `κ` 之幂集单射到后继基数。
+<!--ja-->
+## 冪集合を後続基数の下へコード化する
+
+`κ` の各部分集合はその後続基数の段階に属し、その段階は添字自身へ単射する。したがって、モデルにおける `κ` の冪集合は後続基数へ単射する。
+<!--/-->
 
 ```agda
 power-into-succ :
@@ -371,7 +443,19 @@ and then it lands at δ by section 4.
     stage-landing zf ibs κ ordκ cardκ κ∉ω δ sc (z , isL-trans z∈ (snd (𝒫 κ))) z∈
 ```
 
-## Section 6. The theorem
+<!--en-->
+## The generalized continuum hypothesis
+
+The injection just obtained and the reverse injection supplied by the successor-cardinal construction identify the cardinality of the power set. This is GCH inside the model.
+<!--zh-->
+## 广义连续统假设
+
+刚得到的单射与后继基数构造给出的反向单射共同确定了幂集的基数。这正是模型内部的 GCH。
+<!--ja-->
+## 一般連続体仮説
+
+今得た単射と、後続基数の構成が与える逆向きの単射により、冪集合の基数が定まる。これがモデル内部の GCH である。
+<!--/-->
 
 ```agda
 gch-from-internal-bill :

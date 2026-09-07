@@ -1,4 +1,20 @@
+<!--en-->
 # Formula expressions for coded recursion
+<!--zh-->
+# 码化递归所用的公式表达式
+<!--ja-->
+# 符号化再帰のための論理式表現
+<!--/-->
+
+<!--en-->
+This chapter builds reusable object-language formulas for the set expressions,
+tags, environment operations, quantifiers, term evaluation, and atoms needed by
+the coded satisfaction recursion, together with their semantic readings.
+<!--zh-->
+本章为码化满足关系递归所需的集合表达式、标签、环境运算、量词、词项求值与原子构造可复用的对象语言公式，并给出其语义读式。
+<!--ja-->
+本章では、符号化された充足関係の再帰に必要な集合表現、タグ、環境演算、量化子、項の評価、原子のための再利用可能な対象言語の論理式を構成し、それぞれの意味論的な読みを与える。
+<!--/-->
 
 <!--en-->
 This chapter builds finite expressions from slots, literals, numerals, and pairs.
@@ -24,7 +40,7 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import FOL.Manipulation.Bounding using ( BoundedFo )
+open import FOL.Manipulation.ConstantBounding using ( BoundedFo )
 open import L.Absoluteness {ℓ} using ( InL; liftFo; transferFo )
 open import L.Coding.Environment {ℓ}
   using ( sucAt; Δ₀-sucAt; sucAt-adequate; consAt; Δ₀-consAt; consAt-adequate
@@ -178,6 +194,18 @@ tagPairAtL-adequate s k a b γ = PairExpression.adequate
 ## Sets by extension
 <!--zh-->
 ## 以外延给出集合
+<!--ja-->
+## 外延によって集合を定める
+<!--/-->
+
+<!--en-->
+`extAt`{.Agda} states that a set in one slot has exactly the members satisfying a
+unary formula, and its readers expose both directions of that membership
+equivalence.
+<!--zh-->
+`extAt`{.Agda} 断言某槽位中的集合，其成员恰为满足一元公式的对象；其读式暴露成员等价的两个方向。
+<!--ja-->
+`extAt`{.Agda} はあるスロットの集合が一変数論理式を満たす対象をちょうど要素にもつことを述べ、その読み補題が所属の同値の両方向を与える。
 <!--/-->
 
 <!--en-->
@@ -222,6 +250,17 @@ module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : S ^ n) where
 ## Reading a key in two layers
 <!--zh-->
 ## 分两层读一个键
+<!--ja-->
+## 二層の鍵を読む
+<!--/-->
+
+<!--en-->
+The arity-tag formulas recognize keys nested as an arity paired with a tagged
+payload, and their adequacy lemmas recover the three components exactly.
+<!--zh-->
+元数标签公式识别「元数与带标签载荷之对」这一嵌套键，而其充分性引理准确恢复三个分量。
+<!--ja-->
+アリティ付きタグの論理式は、アリティとタグ付きペイロードとの対として入れ子になった鍵を認識し、その妥当性補題が三つの成分を正確に復元する。
 <!--/-->
 
 <!--en-->
@@ -279,6 +318,17 @@ arityTagAtL-adequate c ar k a γ = PairExpression.adequate
 ## Looking a subcode up in the table
 <!--zh-->
 ## 在表中查一个子码
+<!--ja-->
+## 表から部分符号を引く
+<!--/-->
+
+<!--en-->
+The lookup formulas connect a subformula's code and its environment to the value
+recorded for that key in a satisfaction table.
+<!--zh-->
+查找公式把子公式的码及其环境，与满足关系表在该键处记录的取值联系起来。
+<!--ja-->
+参照の論理式は、部分論理式の符号とその環境を、充足関係表がその鍵に記録した値へ結びつける。
 <!--/-->
 
 <!--en-->
@@ -299,16 +349,28 @@ need the same thing with the arity bumped, which is this with one more layer.
 
 <!--en-->
 The following discussion explains the table clauses conceptually. Their active
-bounded formulas and semantic readers are defined in `L.Coding.Clauses`;
+bounded formulas and semantic readers are defined in `L.Coding.SatisfactionClauses`;
 the unused earlier clause formulas and frame indices have been removed here.
 <!--zh-->
-以下讨论从数学上解释表的子句。实际使用的有界公式与语义读式定义于 `L.Coding.Clauses`；本章不再保留未被使用的旧子句公式及其框架索引。
+以下讨论从数学上解释表的子句。实际使用的有界公式与语义读式定义于 `L.Coding.SatisfactionClauses`；本章不再保留未被使用的旧子句公式及其框架索引。
 <!--/-->
 
 <!--en-->
 ## The shape of a clause
 <!--zh-->
 ## 一条子句的形状
+<!--ja-->
+## 節の共通形
+<!--/-->
+
+<!--en-->
+The clause combinators bind a code and its assigned value, assert the required
+tagged syntax shape, and leave only the constructor-specific semantic condition
+to their caller.
+<!--zh-->
+子句组合器绑定一个码及其被指派的值，断言所需的带标签语法形状，并把构造器特有的语义条件留给调用方。
+<!--ja-->
+節の結合子は符号とその割り当て値を束縛し、必要なタグ付き構文形を述べ、構成子ごとの意味条件だけを呼び出し側に残す。
 <!--/-->
 
 <!--en-->
@@ -387,6 +449,17 @@ back the same way.
 ## The positive connectives
 <!--zh-->
 ## 正的联结词
+<!--ja-->
+## 正の結合子
+<!--/-->
+
+<!--en-->
+The conjunction and disjunction clauses look up both immediate subcodes and
+combine their recorded truth values with the corresponding positive connective.
+<!--zh-->
+合取与析取子句查找两个直接子码，并以相应正联结词组合其所记录的真值。
+<!--ja-->
+論理積と論理和の節は二つの直下の部分符号を参照し、記録された真理値を対応する正の結合子で組み合わせる。
 <!--/-->
 
 <!--en-->
@@ -417,6 +490,18 @@ implication.
 ## The ambient environment set
 <!--zh-->
 ## 周遭环境集
+<!--ja-->
+## 周囲の環境集合
+<!--/-->
+
+<!--en-->
+`envSetAt`{.Agda} retrieves from the environment tower the set of environments
+at the arity held in a slot, so later clauses can bound their environment
+quantifiers.
+<!--zh-->
+`envSetAt`{.Agda} 从环境塔中取出槽位所持元数处的环境集，使后续子句能界住其环境量词。
+<!--ja-->
+`envSetAt`{.Agda} は環境塔からスロットにあるアリティの環境集合を取り出し、後の節が環境についての量化子を有界にできるようにする。
 <!--/-->
 
 <!--en-->
@@ -440,6 +525,17 @@ envSetAt E ar B = extAt E (envOverAt zero (suc ar) (suc B))
 ## Implication and bottom
 <!--zh-->
 ## 蕴含与底
+<!--ja-->
+## 含意と偽
+<!--/-->
+
+<!--en-->
+The implication clause combines the two looked-up truth values with implication,
+while the bottom clause assigns the false truth value without subcodes.
+<!--zh-->
+蕴含子句以蕴含组合两个查得的真值，而底子句不含子码，直接指派假真值。
+<!--ja-->
+含意の節は参照した二つの真理値を含意で組み合わせ、偽の節は部分符号を使わず偽の真理値を割り当てる。
 <!--/-->
 
 <!--en-->
@@ -475,6 +571,17 @@ less, not because they are special.
 ## The next arity
 <!--zh-->
 ## 下一个元数
+<!--ja-->
+## 次のアリティ
+<!--/-->
+
+<!--en-->
+`sucAtL`{.Agda} is the internal formula saying that one numeral is the successor
+of another, with an adequacy lemma identifying the represented ordinals.
+<!--zh-->
+`sucAtL`{.Agda} 是断言一个数码为另一数码后继的内部公式，其充分性引理对应所表示的序数。
+<!--ja-->
+`sucAtL`{.Agda} は一つの数項が別の数項の後者であることを述べる内部論理式であり、その妥当性補題が表される順序数を同一視する。
 <!--/-->
 
 <!--en-->
@@ -510,6 +617,17 @@ sucAtL-adequate i j γ =
 ## Extending an environment
 <!--zh-->
 ## 扩展一个环境
+<!--ja-->
+## 環境を拡張する
+<!--/-->
+
+<!--en-->
+`consAtL`{.Agda} describes extending an environment by a new leading value, and
+its adequacy lemma identifies the resulting coded environment exactly.
+<!--zh-->
+`consAtL`{.Agda} 描述以一个新的首值扩展环境，其充分性引理准确对应所得的码化环境。
+<!--ja-->
+`consAtL`{.Agda} は新しい先頭値による環境の拡張を記述し、その妥当性補題が得られる符号化環境を正確に同一視する。
 <!--/-->
 
 <!--en-->
@@ -573,6 +691,17 @@ consAtL-adequate e' m e γ g hE =
 ## The unbounded quantifiers
 <!--zh-->
 ## 无界量词
+<!--ja-->
+## 非有界量化子
+<!--/-->
+
+<!--en-->
+The existential and universal clauses extend each environment by every carrier
+element, look up the subformula there, and aggregate the resulting truth values.
+<!--zh-->
+存在与全称子句以载体的每个元素扩展各环境，在扩展环境处查找子公式，并汇总所得真值。
+<!--ja-->
+存在量化子と全称量化子の節は、各環境を台のすべての要素で拡張し、その環境で部分論理式を参照して、得られた真理値を集約する。
 <!--/-->
 
 <!--en-->
@@ -619,6 +748,17 @@ up, which is the only difference from a same-arity lookup.
 ## Evaluating a term, and the atoms
 <!--zh-->
 ## 求一个词项的值，与两个原子
+<!--ja-->
+## 項の評価と二つの原子論理式
+<!--/-->
+
+<!--en-->
+The term-evaluation expression reads a coded term in an environment, and the
+membership and equality clauses compare the two evaluated values in the model.
+<!--zh-->
+词项求值表达式在环境中读取码化词项，而隶属与相等子句在模型内比较两个求得的值。
+<!--ja-->
+項評価の表現は環境内で符号化された項を読み、所属と等号の節はモデル内で二つの評価値を比較する。
 <!--/-->
 
 <!--en-->
@@ -662,6 +802,17 @@ At the innermost point: `w` = 0, `v` = 1, `e` = 2, `E` = 3, `yc` = 4, `b` = 5,
 ## The bounded quantifiers
 <!--zh-->
 ## 有界量词
+<!--ja-->
+## 有界量化子
+<!--/-->
+
+<!--en-->
+The bounded existential and universal clauses evaluate the bound term first,
+then aggregate subformula values only over members of that resulting set.
+<!--zh-->
+有界存在与全称子句先求界词项之值，再仅对所得集合的成员汇总子公式取值。
+<!--ja-->
+有界な存在量化子と全称量化子の節は、まず境界となる項を評価し、その結果の集合の要素だけについて部分論理式の値を集約する。
 <!--/-->
 
 <!--en-->
@@ -704,6 +855,17 @@ Inside the bound's quantifier, at depth 10: `m` = 0, `w` = 1.
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+These expressions give the coded recursion a common vocabulary for syntax
+shape, environments, lookup, term evaluation, and every logical constructor.
+<!--zh-->
+这些表达式为码化递归提供一套共用词汇，覆盖语法形状、环境、查找、词项求值与每个逻辑构造器。
+<!--ja-->
+これらの表現は、構文形、環境、参照、項評価、すべての論理構成子について、符号化再帰に共通の語彙を与える。
 <!--/-->
 
 <!--en-->

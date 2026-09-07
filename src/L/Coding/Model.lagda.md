@@ -1,26 +1,15 @@
-# The object language over the model
-
 <!--en-->
-The readers were written about the hierarchy and the bridge carries them into the
-model. This chapter takes the bridge across, once, and states what a quoted
-reader means on the far side.
+# Coding formulas over the constructible model
 
-There is one wrinkle and it is small. A reader's meaning was stated in terms of
-the value of a variable in a hierarchy environment; on the far side the
-environment holds elements of the model, and the hierarchy environment is the one
-obtained by taking underlying sets. Looking up in the projected environment is
-projecting the lookup, which is a two-line induction, and after it the quoted
-reader says exactly what the original said about the underlying sets.
-
-The first reader to cross is the one everything else is built from: the ordered
-pair. Nothing above it needs a new argument, because the bridge is generic and
-the readers' own characterizations were proved once already.
+This chapter gives object-language formulas for ordered pairs, graph application, single-valuedness, domains, and environments over the constructible model. It then instantiates syntax coding in `L` and proves that the internal codes agree with their ambient `V` codes.
 <!--zh-->
-诸读式写的是关于层级的事，而那座桥把它们运进模型。本章把桥走一遍，并陈述一条被引用的读式在彼岸说的是什么。
+# 可构造模型上的公式符号化
 
-有一处小小的皱褶。读式的含义当初是按「变元在层级环境中的取值」陈述的；而在彼岸，环境装的是模型的元素，那个层级环境是取底集得来的。在投影后的环境中查表就是把查表的结果投影，这是一次两行的归纳，之后被引用的读式所说的，恰是原读式关于诸底集所说的。
+本章给出可构造模型上有序对、图取值、单值性、定义域与环境的对象语言公式，随后在 `L` 中实例化语法符号化，并证明内部码与环境 `V` 码相符。
+<!--ja-->
+# 構成可能モデル上の論理式の符号化
 
-第一条过河的读式是此后一切所由构造的那条：有序对。它之上不再需要新的论证，因为那座桥是通用的，而诸读式自身的刻画早已证过一次。
+本章では、構成可能モデル上の順序対、グラフの適用、一価性、定義域、環境を表す対象言語の論理式を与えます。さらに `L` 内で構文の符号化を具体化し、内部の符号が周囲の `V` の符号と一致することを示します。
 <!--/-->
 
 ```agda
@@ -35,7 +24,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Term; Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇
         ; ∀̇_; ∀̇∈; ∃̇_; ∃̇∈ )
-open import FOL.Manipulation.Mapping using ( mapTm; mapFo )
+open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
 import FOL.Absoluteness
 import FOL.Coding
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -43,7 +32,7 @@ open import V.Coding {ℓ} using ( pr; pr-inj; #-inj′; module VCode )
 open import V.Model {ℓ} using ( pair-singleton )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Absoluteness {ℓ} using ( liftFo; transferFo )
-open import L.Coding.Base {ℓ}
+open import L.Coding.PairFormulas {ℓ}
   using ( prAt; Δ₀-prAt; prAt-adequate; ∈pair-introL; ∈pair-introR )
 open import L.Axioms.Numerals {ℓ}
   using ( numeralL; numeralL-fst; pairʟ; pairʟ-fst )
@@ -66,14 +55,16 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
 
 <!--en-->
 ## Looking up in a projected environment
-<!--zh-->
-## 在投影后的环境中查表
-<!--/-->
 
-<!--en-->
 Two lines, and the only bookkeeping the crossing costs.
 <!--zh-->
+## 在投影后的环境中查表
+
 两行，也是这次过河所付的全部记账。
+<!--ja-->
+## 射影した環境での参照
+
+`lookup-fst`{.Agda} は、`L` の要素からなる環境を第一射影で周囲の集合の環境へ移しても、変数の参照が対応することを示します。この補題が内部と外部の意味論を結びます。
 <!--/-->
 
 ```agda
@@ -85,23 +76,27 @@ lookup-fst (suc i) (x ∷ γ) = lookup-fst i γ
 
 <!--en-->
 ## The ordered pair
-<!--zh-->
-## 有序对
-<!--/-->
 
-<!--en-->
 The quoted reader is the original lifted along the bridge, and the lift asks for
 nothing: the reader names no constants, so there is nothing to be constructible
 and the admissibility witness is empty.
+<!--zh-->
+## 有序对
 
+被引用的读式就是原读式沿桥抬升，而抬升什么也不索取：该读式不点名任何常元，故没有东西需要可构造，合格性证书是空的。
+<!--ja-->
+## 順序対
+
+`prAtL`{.Agda} は三つの変数が Kuratowski 対の成分と結果を表すことを述べます。その妥当性定理は、充足関係を周囲の対の等式へ正確に変換します。
+<!--/-->
+
+<!--en-->
 Its meaning is three steps. The bridge equates satisfaction in the model with
 satisfaction in the hierarchy at the projected environment; the reader's own
 characterization says what that is; and the lookups are projected. What comes out
 is the statement a consumer wants: the value of one variable is the Kuratowski
 pair of the values of the other two, as sets.
 <!--zh-->
-被引用的读式就是原读式沿桥抬升，而抬升什么也不索取：该读式不点名任何常元，故没有东西需要可构造，合格性证书是空的。
-
 它的含义分三步。桥把「在模型中满足」等同于「在层级中、于投影后的环境处满足」；读式自家的刻画说出那是什么；诸查表被投影。出来的正是消费方想要的陈述：一个变元的取值，是另两个变元取值的 Kuratowski 对，作为集合而言。
 <!--/-->
 
@@ -125,17 +120,23 @@ prAtL-adequate q u v γ =
 
 <!--en-->
 ## Application
-<!--zh-->
-## 取值
-<!--/-->
 
-<!--en-->
 A function in the object language is a set of ordered pairs, so the one thing
 every use of one asks is whether a given pair belongs to it. The function can be
 given by any term. The common reader is a bounded existential over that term,
 with the pair reader inside, and its meaning is membership of the Kuratowski
 pair. The public forms below specialize it to a variable and a constant.
+<!--zh-->
+## 取值
 
+对象语言里的函数是有序对之集，故凡用到函数的地方，所问的唯一一件事就是某个给定的对是否属于它。函数可由任意词项给出。共用的读式是在该词项上的一个有界存在，里面装着对读式，而其含义是那个 Kuratowski 对的隶属关系。下文两个公开形式分别把它特化到变元与常元。
+<!--ja-->
+## グラフの適用
+
+`appAt`{.Agda} は、順序対 `(x,y)` がグラフ `f` に属することとして適用を表します。定数グラフ版 `appC`{.Agda} とそれぞれの妥当性定理が、対象言語と集合としてのグラフを対応させます。
+<!--/-->
+
+<!--en-->
 The backward direction is where the model earns its keep, and it is worth
 noticing. To satisfy the existential one must produce an *element of the model*
 whose underlying set is the pair; the hypothesis only supplies a set. It is
@@ -143,8 +144,6 @@ constructible because it belongs to something constructible, and the class is
 transitive. That is the whole argument, and the same step will recur wherever a
 witness has to be produced inside the model rather than merely in the hierarchy.
 <!--zh-->
-对象语言里的函数是有序对之集，故凡用到函数的地方，所问的唯一一件事就是某个给定的对是否属于它。函数可由任意词项给出。共用的读式是在该词项上的一个有界存在，里面装着对读式，而其含义是那个 Kuratowski 对的隶属关系。下文两个公开形式分别把它特化到变元与常量。
-
 反向是模型出力之处，值得留意。要满足那个存在量词，必须拿出一个**模型的元素**，其底集是那个对；而假设只给了一个集合。它可构造，因为它属于某个可构造之物，而这个类传递。全部论证仅此而已，而同一步将在此后每个「见证必须造在模型之内、而非仅在层级之内」的地方重现。
 <!--/-->
 
@@ -186,7 +185,7 @@ appAt-adequate f = appTerm-adequate (var f)
 ```
 
 The same reader with the function held as a CONSTANT rather than in a slot.
-`L.InjChain` and `L.Choice.Before` each wrote this out; it belongs beside
+`L.InjectionComposition` and `L.Choice.EarliestDisagreement` each wrote this out; it belongs beside
 `appAt`.
 
 ```agda
@@ -201,23 +200,27 @@ appC-adequate F = appTerm-adequate (con F)
 
 <!--en-->
 ## Single-valuedness
-<!--zh-->
-## 单值性
-<!--/-->
 
-<!--en-->
 The other half of being a function: a pair's first component determines its
 second. Three unbounded quantifiers, which cost nothing here, and two
 applications of the reader above.
+<!--zh-->
+## 单值性
 
+作为函数的另一半：一个对的第一分量决定它的第二分量。三个无界量词 (此处不费分文)，加上面那条读式的两次应用。
+<!--ja-->
+## 一価性
+
+`svAt`{.Agda} は、同じ入力に対するグラフの二つの出力が等しいことを対象言語で述べます。導入則と除去則により、この充足関係と外部の一価性を相互に移せます。
+<!--/-->
+
+<!--en-->
 Stated as two directions rather than a path, because that is how consumers use
 it and because building the right-hand side as a proposition would say the same
 thing at more length. Reading it out is the direction that matters: from the
 object-language claim, an actual proof that two values recorded against the same
 argument agree.
 <!--zh-->
-作为函数的另一半：一个对的第一分量决定它的第二分量。三个无界量词 (此处不费分文)，加上面那条读式的两次应用。
-
 陈述为两个方向而非一条道路，因为消费方就是这么用的，也因为把右侧造成一个命题只会把同一句话说得更长。读出来的那个方向才要紧：从对象语言的断言，得到「记在同一自变量下的两个取值相等」的一份真凭实据。
 <!--/-->
 
@@ -258,23 +261,27 @@ module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
 
 <!--en-->
 ## The domain
-<!--zh-->
-## 定义域
-<!--/-->
 
-<!--en-->
 Being in the domain is having a value: one unbounded existential over the reader
 above. The domain itself is then the set with exactly those members, said as two
 implications, since the object language has no biconditional of its own and
 spelling it out is shorter than adding one.
+<!--zh-->
+## 定义域
 
+落在定义域中就是有取值：在上面那条读式上作一个无界存在。定义域本身则是恰以那些东西为成员的集合，用两条蕴含说出，因为对象语言没有自带的双条件，而把它摊开来写比添一个更短。
+<!--ja-->
+## 定義域
+
+`domAt`{.Agda} は、集合 `D` の要素がちょうどグラフの入力であることを表します。`inDomAt`{.Agda} が値の存在を表し、導入・除去定理が集合の所属との同値を与えます。
+<!--/-->
+
+<!--en-->
 Both are used in one direction each, and only those directions are extracted. A
 consumer holding a table asks either "this argument has an entry, so it is in the
 domain" or "this argument is in the domain, so it has an entry"; nothing wants
 the statement as a proposition.
 <!--zh-->
-落在定义域中就是有取值：在上面那条读式上作一个无界存在。定义域本身则是恰以那些东西为成员的集合，用两条蕴含说出，因为对象语言没有自带的双条件，而把它摊开来写比添一个更短。
-
 两者各自只用一个方向，而被取出的也只有那两个方向。一个握着表的消费方，要么问「这个自变量有条目，故它在定义域中」，要么问「这个自变量在定义域中，故它有条目」；没有谁想要那句陈述本身作为命题。
 
 那两条都是消去，而名字没有说出这一点：`domAt-in`{.Agda} 朝「有条目」拆，`domAt-out`{.Agda} 朝「在定义域中」拆。引入 (那才是「必须**满足**这句陈述」的一张表所要的) 来得晚，于是取了第三个名字，而没有占用它们中的任何一个。
@@ -322,11 +329,7 @@ module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
 
 <!--en-->
 ## The pair, inside the model
-<!--zh-->
-## 模型之内的对
-<!--/-->
 
-<!--en-->
 Every code is built by pairing, so every construction below needs the ordered
 pair of two elements of `L` to be one. It is, three applications of the model's
 own pairing, and the projection equations of the numeral chapter say that reading
@@ -334,7 +337,13 @@ it through the underlying set gives the hierarchy's pair back. The singleton is
 the two-element pair with equal components, which is the one small identity the
 hierarchy supplies.
 <!--zh-->
+## 模型内的配对
+
 每个码都由配对造出，故下面每个构造都需要「`L` 两元素的有序对仍是 `L` 的元素」。确实如此，用模型自己的配对三次即可，而数码那一章的投影等式说：沿底层集合读出来就把层级的对还了回来。单点集是两分量相等的对，这是层级供给的那一条小小恒等式。
+<!--ja-->
+## モデル内部の対
+
+構成可能な二要素から Kuratowski 対を `L` 内に作り、その第一射影が周囲の対と一致することを示します。これにより内部グラフの要素を周囲の順序対として読めます。
 <!--/-->
 
 ```agda
@@ -349,11 +358,7 @@ prʟ-fst a b =
 
 <!--en-->
 ## The coding, at the model
-<!--zh-->
-## 编码，在模型处
-<!--/-->
 
-<!--en-->
 The pair and the numerals are injective, which is everything the coding chapter
 asks of a structure, so the object language codes into `L` itself. Two things
 follow and both are wanted. A code is an element of the model **by
@@ -361,15 +366,23 @@ construction**, with no constructibility certificate to carry or to prove. And
 the code equation is injective at this arity, by the chapter's own theorem, which
 is what a table indexed by codes needs: two occurrences of different subformulas
 must not share a key, or the table is multi-valued and its existence fails.
+<!--zh-->
+## 模型处的符号化
 
+对与诸数码是单射的，而这就是编码那一章向一个结构索取的全部，故对象语言可以编码进 `L` 自身。由此得到两件事，而两件都是想要的。一个码**按构造**就是模型的元素，没有可构造性证书要扛、也没有要证。而码等式在该元数处是单射的，由那一章自己的定理给出，而这正是「以码为索引的表」所需要的：两处不同子公式的出现不可共用一个键，否则表就多值，而它的存在性会垮。
+<!--ja-->
+## モデルにおける符号化
+
+`L` の数項と対を用いて一般の構文符号化を具体化します。橋渡し補題は、項と論理式の内部符号の第一射影が、定数を第一射影した周囲の `V` 符号に等しいことを示します。
+<!--/-->
+
+<!--en-->
 The bridge says the two codings agree: reading a code of the model through the
 underlying set gives the hierarchy's code of the relabelled formula. Ten
 clauses and two, each one tag equation over the clause below it. It is what lets
 the readers of this chapter, which are written on the hierarchy side, be applied
 to codes built on the model side.
 <!--zh-->
-对与诸数码是单射的，而这就是编码那一章向一个结构索取的全部，故对象语言可以编码进 `L` 自身。由此得到两件事，而两件都是想要的。一个码**按构造**就是模型的元素，没有可构造性证书要扛、也没有要证。而码等式在该元数处是单射的，由那一章自己的定理给出，而这正是「以码为索引的表」所需要的：两处不同子公式的出现不可共用一个键，否则表就多值，而它的存在性会垮。
-
 那座桥说两套编码一致：把模型的一个码沿底层集合读出来，得到的是层级为那条换名后的公式所给的码。十条子句加两条，每条都是「架在下面那条之上」的一条标签等式。正是它使本章那些写在层级一侧的读式，能施于造在模型一侧的诸码。
 <!--/-->
 
@@ -419,15 +432,21 @@ codeBridge (∃̇∈ t a) = tagBridge 9 _ ∙ cong (VCode.mkTag 9)
 
 <!--en-->
 ## Environments
-<!--zh-->
-## 环境
-<!--/-->
 
-<!--en-->
 An environment is a function whose values lie in a given set, so an environment
 over a set is the conjunction of four things: single-valued, with the given
 domain, with values where they belong, and *made of pairs*.
+<!--zh-->
+## 环境
 
+一个环境是取值落在给定集合中的函数，故「某集合之上的环境」是四者的合取：单值、定义域为给定者、取值落在该落的地方，以及**由诸对构成**。
+<!--ja-->
+## 環境
+
+環境グラフについて、値が指定した集合に入り、定義域が有限数項で、各添字と値の対を持つことを対象言語で表します。導入・除去定理がベクトル環境との対応を与えます。
+<!--/-->
+
+<!--en-->
 The fourth is easy to leave out and fatal to leave out. The other three all speak
 about the pairs in a set and say nothing whatever about a member that is not one,
 so without it a set could carry any amount of junk and still qualify. That costs
@@ -442,8 +461,6 @@ Whether a particular set *is* the set of all environments of a given length is a
 different question, and a harder one; this says only what it means for a single
 thing to be one.
 <!--zh-->
-一个环境是取值落在给定集合中的函数，故「某集合之上的环境」是四者的合取：单值、定义域为给定者、取值落在该落的地方，以及**由诸对构成**。
-
 第四条容易漏掉，而漏掉是致命的。另外三条谈的全是某集合中的诸对，对「不是对的成员」只字未提，故没有它，一个集合可以携带任意多的垃圾而仍然合格。若那条谓词只被检验，这不费分文；但「以成员描述集合」的那个框架断言双向，于是满足它的取值就得包含每一个带垃圾的集合：那是真类，是没有集合能兑现的假设。这一合取项把每个成员钉成「索引与取值之对」，从而使环境成为一个积的子集，而它们的全体成为一个集合。
 
 只给出四个投影，因为消费方想要的仅此而已。某个特定集合**是否就是**给定长度的全体环境之集，是另一个问题，而且更难；这里说的只是「单个东西是一个环境」是什么意思。
@@ -563,16 +580,18 @@ envOverAt-transport γ γ' e d B e' d' B' qe qd qb h =
 
 <!--en-->
 ## A container for pair components
-<!--zh-->
-## 容纳配对分量
-<!--/-->
 
-<!--en-->
 Reading a pair-shaped code will expose its two components as elements of one
 constructible set. `Container` packages that set and the three membership facts.
 The construction is opaque so later formula proofs use only this small interface.
 <!--zh-->
+## 容纳配对分量
+
 读取配对形状的码时，要把两个分量呈现为同一个可构造集合的元素。`Container` 把该集合与三项隶属事实打包起来。这个构造保持不透明，使后续公式证明只使用这份小接口。
+<!--ja-->
+## 対の成分を収める集合
+
+小さな族の順序対に現れる二つの成分を、一つの構成可能集合で抑えます。この容器により、対グラフを分出するときのすべての変数を共通の集合内に置けます。
 <!--/-->
 
 ```agda
@@ -592,12 +611,14 @@ opaque
 
 <!--en-->
 ## Recap
-<!--zh-->
-## 小结
-<!--/-->
 
-<!--en-->
 The hierarchy readers now speak directly about the constructible model. The chapter provides the object-language dictionary for pairs, functions, domains, and environments, together with the opaque container used to read compound codes. The next chapter composes these entries into finite code expressions.
 <!--zh-->
+## 小结
+
 层级读式现在直接陈述关于可构造模型的性质。本章给出配对、函数、定义域与环境的对象语言词典，并给出读取复合码所用的不透明容器。下一章把这些词条组合成有穷码表达式。
+<!--ja-->
+## まとめ
+
+順序対、適用、一価性、定義域、環境を表す対象言語の論理式と妥当性定理をそろえました。内部の構文符号化は第一射影の下で周囲の符号化と一致し、後の内部符号論を支えます。
 <!--/-->

@@ -1,4 +1,16 @@
-# Strict well-orders, and least elements
+<!--en-->
+# Strict well-orders and least-element search
+
+This chapter packages the order laws used later and proves the reusable search principle: an inhabited predicate on a strict well-order has a least witness. Natural numbers provide the first concrete instance.
+<!--zh-->
+# 严格良序与最小元搜索
+
+本章封装后续使用的序定律，并证明可复用的搜索原理：严格良序上的非空谓词有最小见证。自然数给出第一个具体实例。
+<!--ja-->
+# 狭義整列順序と最小要素の探索
+
+本章では後に使う順序法則をまとめ、再利用できる探索原理、すなわち狭義整列順序上で証人をもつ述語には最小の証人があることを示す。自然数が最初の具体例となる。
+<!--/-->
 
 <!--en-->
 Strict well-orders support a recurring mathematical operation: choose the least witness of an inhabited property. This chapter introduces the order bundle, proves existence and uniqueness of least elements, and then assembles the natural numbers as the foundational example used by later constructions.
@@ -36,6 +48,16 @@ open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 ## Trichotomy, as data
 <!--zh-->
 ## 作为数据的三歧
+<!--ja-->
+## データとしての三分性
+<!--/-->
+
+<!--en-->
+Trichotomy is represented by three explicit alternatives, carrying either a comparison proof or an equality. This data form lets later proofs inspect the comparison directly.
+<!--zh-->
+三歧由三个明确选项表示，分别携带比较证明或相等证明。这种数据形式使后续证明可以直接检查比较结果。
+<!--ja-->
+三分性を三つの明示的な選択肢として表し、比較の証明または等式をデータとしてもたせる。後の証明は比較結果を直接場合分けできる。
 <!--/-->
 
 <!--en-->
@@ -57,6 +79,16 @@ data Tri {ℓ₁ ℓ₂ ℓ₃ : Level} (A : Type ℓ₁) (B : Type ℓ₂) (C :
 ## The bundle
 <!--zh-->
 ## 束
+<!--ja-->
+## 狭義整列順序の構造
+<!--/-->
+
+<!--en-->
+A strict well-order bundles its relation with trichotomy, irreflexivity, transitivity, and well-foundedness. Naming this interface keeps later constructions independent of how a particular order is built.
+<!--zh-->
+严格良序把关系连同三歧性、非自反性、传递性与良基性封装在一起。为这个接口命名，使后续构造不依赖某个具体序的构造方式。
+<!--ja-->
+狭義整列順序は、関係と三分性、非反射性、推移性、整礎性をまとめた構造である。このインターフェースにより、後の構成は個々の順序の作り方に依存しない。
 <!--/-->
 
 <!--en-->
@@ -80,6 +112,16 @@ record SWO {ℓc : Level} (A : Type ℓc) : Type (ℓ-max ℓc (ℓ-suc ℓₚ))
 ## Least elements
 <!--zh-->
 ## 极小元
+<!--ja-->
+## 最小要素
+<!--/-->
+
+<!--en-->
+For a predicate `P`, a least witness satisfies `P` and lies below every other witness. Well-founded induction starts from any witness and descends whenever a smaller one exists.
+<!--zh-->
+对于谓词 `P`，最小见证既满足 `P`，又位于其他每个见证以下。良基归纳从任意见证出发，并在存在更小见证时继续下降。
+<!--ja-->
+述語 `P` の最小の証人は `P` を満たし、他のすべての証人以下にある。整礎帰納法により、任意の証人から始め、より小さい証人があればそこへ降下する。
 <!--/-->
 
 <!--en-->
@@ -145,6 +187,16 @@ arbitrary predicate, and that is where the excluded middle enters.
 ## The natural numbers, well-ordered
 <!--zh-->
 ## 自然数，良序化
+<!--ja-->
+## 自然数の整列順序
+<!--/-->
+
+<!--en-->
+The usual strict order on natural numbers satisfies all four laws. Its well-foundedness follows by induction on the upper number, giving the standard strict well-order used for arities and finite lengths.
+<!--zh-->
+自然数上的通常严格序满足全部四条定律。对上方自然数归纳即可证明其良基性，从而得到用于元数与有限长度的标准严格良序。
+<!--ja-->
+自然数上の通常の狭義順序は四つの法則をすべて満たす。上側の自然数について帰納すると整礎性が得られ、アリティと有限長に使う標準的な狭義整列順序となる。
 <!--/-->
 
 <!--en-->
@@ -187,6 +239,16 @@ natOrder = record
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+Strict well-orders can now be passed as one structure, compared by trichotomy, and searched for least witnesses. The natural-number instance supplies these operations for every finite index used later.
+<!--zh-->
+现在，严格良序可以作为一个结构传递，以三歧作比较，并搜索最小见证。自然数实例为后续每个有限指标提供这些运算。
+<!--ja-->
+これで狭義整列順序を一つの構造として渡し、三分性で比較し、最小の証人を探索できる。自然数の実例が、後に現れるすべての有限添字にこれらの操作を与える。
 <!--/-->
 
 <!--en-->

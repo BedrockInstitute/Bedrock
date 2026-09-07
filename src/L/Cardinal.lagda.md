@@ -1,4 +1,16 @@
-# The cardinal faces of the L-carrier
+<!--en-->
+# Cardinals and coded injections inside L
+
+Cardinality inside `L` is expressed through injection graphs that are themselves constructible sets. This chapter defines the ambient injection type, prepares the well-ordered site used to choose least cardinals, and states the four-part `InjCode`{.Agda} interface and internal cardinal predicate.
+<!--zh-->
+# L 内部的基数与编码单射
+
+`L` 内部的基数关系通过本身也是可构造集合的注入图来表达。本章定义环境注入类型，准备选择最小基数所用的良序位置，并陈述四部分的 `InjCode`{.Agda} 接口与内部基数谓词。
+<!--ja-->
+# L の内部における基数と符号化された単射
+
+`L` 内部の基数関係は、それ自身が構成可能集合である単射グラフによって表します。本章では周囲の単射型を定義し、最小基数を選ぶための整列された場所を用意し、四つの条件からなる `InjCode`{.Agda} と内部基数の述語を定めます。
+<!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
@@ -54,7 +66,7 @@ A1. The site at `sucV (fst α)`, for a least-cardinal selection.
 and the crossing `up` lifts a member of the tower at `sucV (fst α)` into the
 L-carrier. The lift is where the three delivered L-lemmas surface:
 `ord∈Lset-suc` and `Lset→isL` give level-hood of the stage, `isL-trans` pushes
-it down. The selection itself is the consumer's: `L.GCH.CardOf` runs
+it down. The selection itself is the consumer's: `L.GCH.CardinalRepresentative` runs
 `leastOf w`, and `L.GCH.Assembly` takes `up`, `self` and `self-eq`.
 
 ```agda

@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Glossary checker for Bedrock: flags off-glossary term renderings in the CJK docs.
+"""Glossary checker for Bedrock: flags off-glossary renderings in multilingual prose.
 
 The canonical glossary data is dev/glossary.toml (read here via tomllib); the prose that
 explains the checks and how to maintain entries is dev/GLOSSARY.md. Each entry gives a term's
-canonical Chinese and Japanese rendering plus an optional `avoid` list of known wrong
+canonical English, Chinese and Japanese renderings plus an optional `avoid` list of known wrong
 renderings. This script scans the trilingual docs and reports any avoided rendering, pointing
 at the canonical one.
 
 Language scoping: a `zh:`-tagged avoid term is only flagged in Chinese context, a `ja:`-tagged
 one only in Japanese context, and an untagged term in both. Chinese context is `docs/zh/**`
 and the `<!--zh-->` prose of `src/**.lagda.md` masters; Japanese context is `docs/ja/**` and
-`<!--ja-->` prose. English docs and shared/neutral prose are not checked.
+`<!--ja-->` prose. An `en:`-tagged alias is checked in English prose. Shared/neutral prose is not checked.
 
 Report-only (like the em-dash rule): there is no --fix, because the correct rendering is a
 translation judgement, not a mechanical substitution. Code spans, fenced blocks, link
@@ -19,17 +19,22 @@ on a line to suppress it, or `<!-- glossary-ignore: charter -->` to suppress one
 
 Usage:
   check-glossary.py [--check] [--staged] [FILE ...]
-  default mode is --check; with no FILE and no --staged, scans git-tracked *.md/*.lagda.md.
+  default mode is --check; with no FILE and no --staged, scans tracked and unignored new *.md/*.lagda.md.
   The archive (archive/) is never scanned: it is outside every gate
   (archived D20; the live home of that rule is DD13).
 Exit status: 0 clean, 1 violations, 2 usage error.
 """
 
 import importlib.util
+import json
 import os
 import re
 import subprocess
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "site"))
+from i18n_markers import parse
 
 if sys.version_info < (3, 11):
     sys.exit("check-glossary.py needs Python 3.11+ (tomllib); run `make venv` and use .venv/bin/python")
@@ -53,6 +58,7 @@ build_protected = _lp.build_protected          # reuse the exact protected-regio
 EXCLUDE_BASENAMES = _lp.EXCLUDE_BASENAMES       # reuse the LICENSE/NOTICE exclusions
 
 CJK_LANGS = ("zh", "ja")
+PROSE_LANGS = ("en", "zh", "ja")
 
 MARKER_RE = re.compile(r"^\s*<!--\s*(en|zh|ja|/)\s*-->\s*$")
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
@@ -64,7 +70,7 @@ IGNORE_RE = re.compile(r"<!--\s*glossary-ignore(?::([^>]*?))?\s*-->")
 def load_glossary(path):
     """Parse dev/glossary.toml into (term, zh, ja, avoid, presence) rows.
 
-    `avoid` is a list of known wrong renderings (each optionally `zh:`/`ja:`-tagged);
+    `avoid` is a list of known wrong renderings (each optionally `en:`/`zh:`/`ja:`-tagged);
     `presence` is the safety-net opt-in bool. Array order is preserved (tomllib keeps it).
     The `category` and `notes` fields are human-only and ignored here."""
     with open(path, "rb") as fh:
@@ -77,7 +83,7 @@ def build_checks(rows):
     """Expand rows into Avoid-check tuples: (forbidden, lang, term, canonical_rendering)."""
     checks = []
     for term, zh, ja, avoid, _presence in rows:
-        canon = {"zh": zh, "ja": ja}
+        canon = {"en": term, "zh": zh, "ja": ja}
         for item in avoid:
             item = item.strip()
             if not item:
@@ -85,7 +91,7 @@ def build_checks(rows):
             if ":" in item:
                 tag, _, forb = item.partition(":")
                 tag, forb = tag.strip(), forb.strip()
-                langs = [tag] if tag in CJK_LANGS else list(CJK_LANGS)
+                langs = [tag] if tag in PROSE_LANGS else list(CJK_LANGS)
             else:
                 forb, langs = item, list(CJK_LANGS)
             for lang in langs:
@@ -160,8 +166,6 @@ def parse_ignores(text):
 
 def check_file(path, checks):
     scope = scope_of(path)
-    if scope == "en":
-        return []  # English / developer docs carry no CJK renderings to enforce
     try:
         with open(path, encoding="utf-8") as fh:
             text = fh.read()
@@ -169,7 +173,7 @@ def check_file(path, checks):
         return []
 
     lines = text.split("\n")
-    if scope in CJK_LANGS:
+    if scope in PROSE_LANGS:
         line_lang = [scope] * len(lines)
     else:  # master
         line_lang = master_line_langs(text)
@@ -179,7 +183,8 @@ def check_file(path, checks):
 
     violations = []
     for forb, lang, term, canon in checks:
-        for m in re.finditer(re.escape(forb), text):
+        matches = _en_word_re(forb).finditer(text) if lang == "en" else re.finditer(re.escape(forb), text)
+        for m in matches:
             idx = m.start()
             if prot[idx]:
                 continue
@@ -194,11 +199,61 @@ def check_file(path, checks):
     return violations
 
 
+def master_presence_violations(path, text, terms):
+    """Check only explicitly translated groups; English fallback is not translation."""
+    hits = []
+    try:
+        segments = parse(text)
+    except ValueError:
+        return []  # Marker validity has its own gate and precise source locations.
+    for index, (kind, payload) in enumerate(segments, 1):
+        if kind != "group" or "en" not in payload:
+            continue
+        english = "\n".join(payload["en"])
+        for lang in CJK_LANGS:
+            if lang not in payload:
+                continue
+            for _, message in presence_violations(path, lang, english,
+                                                  "\n".join(payload[lang]), terms):
+                hits.append((path, f"language group {index}: {message}"))
+    return hits
+
+
+def route_metadata_violations(text, checks):
+    """The invisible annotation contains visible, language-tagged website copy."""
+    def translations(value):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if key in PROSE_LANGS and isinstance(item, str):
+                    yield key, item
+                else:
+                    yield from translations(item)
+        elif isinstance(value, list):
+            for item in value:
+                yield from translations(item)
+
+    hits = []
+    for match in _lp.ROUTE_METADATA_RE.finditer(text):
+        try:
+            metadata = json.loads(re.search(r"\{.*\}", match[0], re.S)[0])
+        except (ValueError, TypeError):
+            continue  # reading_routes validates the JSON/schema separately.
+        for language, prose in translations(metadata):
+            protected = build_protected(prose)
+            for forbidden, lang, term, canonical in checks:
+                if language != lang:
+                    continue
+                pattern = _en_word_re(forbidden) if lang == "en" else re.compile(re.escape(forbidden))
+                if _has_unprotected(prose, protected, pattern.finditer):
+                    hits.append(f"route metadata: {forbidden!r} must use {canonical} ({lang}; {term})")
+    return hits
+
+
 # ---- presence safety net -----------------------------------------------------
 # When an English term appears in a doc's English source but the canonical rendering is
 # absent from the parallel translation, the translator likely used an off-glossary rendering
 # the Avoid list does not enumerate. Opt-in per term (the Presence column), and only on
-# standalone parallel docs (docs/en/X vs docs/zh|ja/X, plus the root README), never masters.
+# standalone parallel docs and each explicitly translated group of a literate master.
 
 def _read(path):
     with open(path, encoding="utf-8") as fh:
@@ -283,7 +338,7 @@ def target_files(explicit, staged):
     elif staged:
         files = git_lines(["diff", "--cached", "--name-only", "--diff-filter=ACM"])
     else:
-        files = git_lines(["ls-files", "*.md", "*.lagda.md"])
+        files = sorted(set(git_lines(["ls-files", "--cached", "--others", "--exclude-standard", "*.md", "*.lagda.md"])))
     excluded = {os.path.normpath(GLOSSARY), os.path.normpath(GLOSSARY_DOC)}
     return [f for f in files
             if (f.endswith(".md") or f.endswith(".lagda.md"))
@@ -316,10 +371,19 @@ def main(argv):
     total = 0
     # Avoid check: known off-glossary renderings, on the requested file list.
     for path in target_files(paths, staged):
+        if not os.path.isfile(path):
+            continue
         violations = check_file(path, checks)
         for ln, _idx, msg in sorted(violations):
             print(f"{path}:{ln}: {msg}")
             total += 1
+        if path.endswith(".lagda.md"):
+            for _, message in master_presence_violations(path, _read(path), presence_terms):
+                print(f"{path}: {message}")
+                total += 1
+            for message in route_metadata_violations(_read(path), checks):
+                print(f"{path}: {message}")
+                total += 1
 
     # Presence check: opt-in safety net across parallel doc pairs (always the full tree, since
     # it compares a translation against its English source, which may not be in a staged subset).

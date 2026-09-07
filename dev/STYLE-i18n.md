@@ -25,12 +25,18 @@ English prose.
 - `<!--en-->`, `<!--zh-->`, `<!--ja-->` open a **language group** and switch the current
   prose language. `<!--/-->` closes the group.
 - Prose **outside** any group is **shared**: copied to every language verbatim. Use it for
-  anything language-neutral (often nothing, but headings or figures can be shared).
+  language-neutral notation, figures and code. Chapter and subsection headings
+  belong in matched language groups.
 - For language `L`, a tool keeps the shared prose plus only the `<!--L-->` sub-block of each
   group. If a group has no `<!--L-->` sub-block, the renderer falls back to English (or the
-  first present language) and flags the page as "not yet translated".
+  first present language). A page with no group in the requested language gets a
+  "not yet translated" banner. On the website, untranslated English narrative
+  remains available in closed, locally labelled disclosures; code and shared
+  mathematical notation stay visible. The plain-text weaver retains its original
+  fallback behavior.
 - Adding a language = adding a marker. The mechanism is N-language by construction. The
-  initial rollout is bilingual (`en` + `zh`); `ja` is pre-supported.
+  chapter framework uses all three languages. Untranslated later prose retains
+  the English fallback.
 
 ## Rules (enforced)
 
@@ -38,7 +44,9 @@ English prose.
    on the line.
 2. **Markers appear only in prose, never inside a ` ```agda ` fence.** Code is
    language-neutral and shared across all languages; conditionalising code per language is
-   forbidden (it would break cross-language anchor stability).
+   forbidden (it would break cross-language anchor stability). Close the language
+   group before opening any Agda fence: placing an entire code block inside one
+   language also hides the proof from the other editions. The marker linter rejects it.
 3. **Groups are balanced and non-overlapping:** every opener is eventually closed by
    `<!--/-->`; a new opener stays part of the same group until `<!--/-->`. Do not nest
    groups.
@@ -46,10 +54,17 @@ English prose.
 
 ## Prose conventions
 
+Titles and first introductory paragraphs are complete in `en`, `zh` and `ja`.
+Keep a translated opening in its own group when the rest of a passage remains
+untranslated; adding a short Japanese block to a long bilingual group would hide
+the rest of that passage in the Japanese book. The chapter-framework gate checks
+matching heading levels and an opening paragraph before code. The glossary gate
+also checks opt-in terms within each explicitly translated group.
+
 CJK prose (zh and ja) follows the repository's house style enforced by
 `scripts/gate/lint-prose.py`: full-width sentence punctuation `，；：！？`, corner-bracket quotes
 `「」`, half-width parentheses with English-style outer spacing, no em dash, no space between
-CJK characters. Agda code blocks are English-only. See the `scripts/` README.
+CJK characters. Agda code blocks are English-only. See the gate commands in `Makefile`.
 
 ## Inline Agda references in prose
 

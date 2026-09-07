@@ -1,4 +1,20 @@
+<!--en-->
 # The axiom of infinity in L
+<!--zh-->
+# L 中的无穷公理
+<!--ja-->
+# L における無限公理
+<!--/-->
+
+<!--en-->
+This chapter proves the axiom of infinity for the constructible universe by
+showing that the ambient set `ω` is constructible and has exactly the internal
+numeral chain as its members.
+<!--zh-->
+本章证明可构造宇宙中的无穷公理：环境集合 `ω` 是可构造的，且其成员恰为内部数码链。
+<!--ja-->
+本章では、周囲の集合 `ω` が構成可能であり、その要素が内部の数項列とちょうど一致することを示して、構成可能宇宙の無限公理を証明する。
+<!--/-->
 
 <!--en-->
 The chain of numerals was built in the previous chapter and cost nothing. What
@@ -43,6 +59,18 @@ open ModelL using ( SetOf )
 ## Collecting the chain
 <!--zh-->
 ## 收集这条链
+<!--ja-->
+## 数項列を集合に集める
+<!--/-->
+
+<!--en-->
+`isNumeralL`{.Agda} names the internal numeral predicate, and
+`hasInfinityL`{.Agda} realizes it with the constructible set `ω` using the two
+pinning equations from the numeral chapter.
+<!--zh-->
+`isNumeralL`{.Agda} 点名内部数码谓词，而 `hasInfinityL`{.Agda} 借助数码章的两条钉死方程，以可构造集合 `ω` 实现该谓词。
+<!--ja-->
+`isNumeralL`{.Agda} は内部の数項述語を名づけ、`hasInfinityL`{.Agda} は数項の章の二つの指定方程式を用いて、構成可能集合 `ω` によりその述語を実現する。
 <!--/-->
 
 <!--en-->
@@ -99,6 +127,17 @@ hasInfinityL = uniqueL isNumeralL (ωʟ , ω-specL)
 ## Recap
 <!--zh-->
 ## 小结
+<!--ja-->
+## まとめ
+<!--/-->
+
+<!--en-->
+The constructible set `ω` collects exactly `numeralL`{.Agda}, completing the
+model's infinity field under the chapter's excluded-middle parameter.
+<!--zh-->
+可构造集合 `ω` 恰好收集 `numeralL`{.Agda}，从而在本章的排中律参数下完成模型的无穷字段。
+<!--ja-->
+構成可能集合 `ω` が `numeralL`{.Agda} をちょうど集め、本章の排中律パラメータの下でモデルの無限フィールドを完成させる。
 <!--/-->
 
 <!--en-->
