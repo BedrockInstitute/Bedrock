@@ -45,14 +45,15 @@ open import L.Coding.Satisfaction {ℓ} lem using
 open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
 open import L.Coding.SatisfactionTable {ℓ} lem using
   ( keyʟ; slot; satTable; entry-out; inSlot; ent-slot ) renaming ( total to slotTotal )
-open import L.Coding.Quantification {ℓ} using ( sh; i0; i1; i2; i3; i4; i7; i8 ; fstS; sndS )
+open import L.Coding.Quantification {ℓ} using
+  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; sh; i0; i1; i2; i3; i4; i7; i8
+  ; fstS; sndS; bigAnd-in; bigAnd-out )
 open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; towerAt; module TowerRead )
-open import L.Coding.CodeDomain {ℓ} lem using
-  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; Tags
-  ; bigAnd-in; bigAnd-out; module Alphabet )
-open import L.Coding.SatisfactionClauses {ℓ} lem using
-  ( tmIs; extB-out; extB-in; ExtFact; ext-unique; tableAt
-  ; module Frame; module Clause; module Rel; module RelRead; module Bridge )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.Coding.SatisfactionClauses {ℓ} using ( tmIs; tableAt; module Clause; module Rel )
+open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using
+  ( extB-out; extB-in; ExtFact; ext-unique; module Frame; module RelRead; module Bridge )
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Vec using ( _∷_; lookup )
 open import Cubical.Data.Sigma using ( _×_ )
@@ -445,7 +446,7 @@ constructor bridges to prove `tableAt T w C E N`.
 `SatHoldsC` は、表の値が `SatW` と一致すること、符号の要素を復号できること、表が指定された領域上で全域的であることを仮定する。各枠組みを復号し、構成子の橋渡し補題を用いて `tableAt T w C E N` を証明する。
 <!--/-->
 
-Probe. `SatHolds` of src/L/GCH/SatDescribe.lagda.md, with the four places that
+Probe. `SatHolds` of src/L/GCH/SatisfactionDescription.lagda.md, with the four places that
 named the ALL-CODES objects taken as parameters: the value at a key, the decode
 of a member, and the two halves of the domain. Nothing else changes.
 
@@ -728,7 +729,7 @@ from the concrete slot and satisfaction table to obtain their `tableAt` witness.
 <!--/-->
 
 The slot instance. The four are supplied at `C` := the slot of one formula and
-`T` := its table, from src/L/Coding/Table.lagda.md.
+`T` := its table, from src/L/Coding/SatisfactionTable.lagda.md.
 
 ```agda
 module _ (W : S) where

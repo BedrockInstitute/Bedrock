@@ -289,7 +289,7 @@ arity-`k` environments by elements of `W`.
 <!--/-->
 
 What the environment sets are. Three facts about
-src/L/Coding/EnvSet.lagda.md `envSet`: at arity 0 it is `⁅ ∅ ⁆`, and at a
+src/L/Coding/EnvironmentSet.lagda.md `envSet`: at arity 0 it is `⁅ ∅ ⁆`, and at a
 successor arity it is the cons image of the arity below.
 
 ```agda

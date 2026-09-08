@@ -33,15 +33,13 @@ open import L.Constructible {ℓ}
 open import L.Ordinal {ℓ} using ( mem-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-open import L.Cardinal {ℓ} lem using ( InjCode )
-open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate; module Relation )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL; SuccCardL )
+open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate; inclusion-coded; injl-trans; module Relation )
 open import L.Coding.Model {ℓ} using ( svAt-out; domAt-in )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out )
-open import L.GCH {ℓ} lem using ( SuccCardL; InjL )
 open import L.GCH.BelowSuccessorCardinal {ℓ} lem using ( below-succ-injects )
-open import L.GCH.Assembly {ℓ} lem
-  using ( SuccIntoPower; inclusion-coded; injl-trans )
-open import L.GCH.DefinableInjection {ℓ} lem using ( module Inj )
+open import L.GCH.Assembly {ℓ} lem using ( SuccIntoPower )
+open import L.DefinableInjection {ℓ} lem using ( module Inj )
 open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
@@ -77,7 +75,7 @@ The instance src/L/GCH.lagda.md names, at the same 𝒮ʟ.
 module ModelL = FOL.ZFModel 𝒮ʟ using ( isZFModel; module isZFModel; ℩-spec )
 ```
 
-Satisfaction, read exactly as `L.GCH.DefinableInjection` reads it.
+Satisfaction, read exactly as `L.DefinableInjection` reads it.
 
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )

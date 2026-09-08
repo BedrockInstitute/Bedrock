@@ -36,7 +36,8 @@ open import L.Axioms.Basic {ℓ} using ( finSet; finSet-in; finSet-out; module F
 open import L.Axioms.Numerals {ℓ}
   using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to RecursionGraph )
 open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; prʟ; prʟ-fst )
 open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate; numL )
 

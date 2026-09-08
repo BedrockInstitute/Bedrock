@@ -24,7 +24,6 @@ module L.GCH.HullCounting {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr; pr-inj; #-inj )
@@ -41,26 +40,17 @@ open import L.Coding.Expressions {ℓ} using ( numL; tagAtL; tagAtL-adequate )
 open import L.Coding.CodeConstructibility {ℓ}
   using ( sglʟ; sglʟ-in; sglʟ-out; cupʟ; cupʟ-inl; cupʟ-inr; cupʟ-out )
 open import L.Coding.Injection {ℓ} lem using ( injAt-out; module Extract )
-open import L.Choice.StageOrders {ℓ} lem using ( relOf )
-open import L.Choice.InternalWellOrder {ℓ} lem using ( relL-fill )
-open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; lt; eq; gt ) renaming ( Tri to Tri∙ )
-open import L.Cardinal {ℓ} lem using ( InjCode )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Assembly {ℓ} lem using ( inclusion-coded; injl-trans )
-open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.LeastWitnessMap {ℓ} lem using ( module Least )
 open import L.GCH.CardinalSquareLaw {ℓ} lem using ( prodL; prodL-in; module Relation )
 open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
 open import L.Stage {ℓ} lem using ( LeastOrd; isPropLeastOrd; leastOrd; stage; stage-ord; stage-mem )
 open import L.Ordinal using ( boundingOrd )
-open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet; envSet-in; module Recover )
-open import L.Coding.Environment {ℓ} using ( env; cons )
-open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
-open import L.Choice.CanonicalNames {ℓ} lem using ( limitCode; numeral∈limit; pr∈limit )
-open import L.Choice.NameComparison {ℓ} lem using ( freeCode-out )
+open import L.Coding.EnvironmentSet {ℓ} lem using ( envSet; envSet-in )
 open import L.GCH.AdequateStages {ℓ} lem using ( Superadequate )
-open import L.GCH.SatisfactionFrame {ℓ} lem using ( module SatGraph )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
 open import L.GCH.SkolemHull {ℓ} lem using ( module Frame; module HullStage )
 open import L.GCH.ConstructibleHull {ℓ} lem using ( module Condense′; module Telescope )
 open import L.GCH.StageCountingTools {ℓ} lem
@@ -77,7 +67,6 @@ open import Cubical.Data.Nat.Properties using ( znots; snotz )
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Foundations.HLevels using ( isProp×; isSetΣSndProp )
-open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_; ω; sucV )
@@ -94,12 +83,6 @@ open SL using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-```
-
-Renaming, read at the same satisfaction as `_⊨_` (as `HullIn` does).
-
-```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
 "The pair `(x, y)` is a member of `F`", the shape every clause reads.
@@ -138,35 +121,6 @@ private
   i6 = suc i5
   i7 : ∀ {k} → Fin (suc (suc (suc (suc (suc (suc (suc (suc k))))))))
   i7 = suc i6
-```
-
-The renaming of section 4.1's body into its nine slots, and its agreement, at
-the top level. Measured: the same clauses cost 3.4 s and 5.3 s inside
-`Count.OneStep`, 0.5 s and 1.4 s here, and 13 ms and 36 ms in a probe file that
-imports only their context; the cost of a clause grows with what the module
-already holds. Slots, outermost first: `T` is 0, `e'` is 1, `k` is 2, `Z` is 3,
-`e` is 4, `s` is 5, `z` is 6, `p` is 7, `q` is 8; the body reads `(T ∷ e' ∷ e ∷
-s ∷ k ∷ z ∷ Z ∷ [])`.
-
-```agda
-  ρ₉ : Fin 7 → Fin 9
-  ρ₉ zero = i0
-  ρ₉ (suc zero) = i1
-  ρ₉ (suc (suc zero)) = i4
-  ρ₉ (suc (suc (suc zero))) = i5
-  ρ₉ (suc (suc (suc (suc zero)))) = i2
-  ρ₉ (suc (suc (suc (suc (suc zero))))) = i6
-  ρ₉ (suc (suc (suc (suc (suc (suc zero)))))) = i3
-
-  ag₉ : (T e' k Zv e s z p q : S)
-      → Ren.Agrees ρ₉ (T ∷ e' ∷ k ∷ Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []) (T ∷ e' ∷ e ∷ s ∷ k ∷ z ∷ Zv ∷ [])
-  ag₉ T e' k Zv e s z p q zero = refl
-  ag₉ T e' k Zv e s z p q (suc zero) = refl
-  ag₉ T e' k Zv e s z p q (suc (suc zero)) = refl
-  ag₉ T e' k Zv e s z p q (suc (suc (suc zero))) = refl
-  ag₉ T e' k Zv e s z p q (suc (suc (suc (suc zero)))) = refl
-  ag₉ T e' k Zv e s z p q (suc (suc (suc (suc (suc zero))))) = refl
-  ag₉ T e' k Zv e s z p q (suc (suc (suc (suc (suc (suc zero)))))) = refl
 ```
 
 Section 0. Two small facts.
@@ -478,13 +432,13 @@ Starting from an injection of `X` into an infinite cardinal `κ`, each hull step
 <!--/-->
 
 Section 4. The hull of a counted start. The telescope of
-src/L/GCH/HullIn.lagda.md `Condense′`, plus an infinite L-cardinal `κ` and an
+src/L/GCH/ConstructibleHull.lagda.md `Condense′`, plus an infinite L-cardinal `κ` and an
 internal injection of the start `X` into `κ`. Each iterate of the hull is
 counted by induction: the new members of a step are the least satisfiers of a
 key at a parameter environment over the last iterate, and `z ↦` the least such
 (key, environment) pair is a definable injection (section 2), while the pairs
 are counted by the limit stage and the finite sequences
-(src/L/GCH/Sequences.lagda.md).
+(src/L/GCH/FiniteSequenceCoding.lagda.md).
 
 ```agda
 module Count (lam : V ℓ) (ordλ : IsOrd lam)
@@ -498,15 +452,17 @@ module Count (lam : V ℓ) (ordλ : IsOrd lam)
   (base : InjL (X , X-isL) κ) where
 ```
 
-Every module application carries a `using` list (an unrestricted one copies the
-whole module into this interface); the step builder, the iteration and the hull
-stage are taken from src/L/GCH/HullIn.lagda.md `Telescope` directly, not through
-copies of `Condense′`'s copies.
+`Condense′` supplies the hull and its iterates together with their inclusion in
+the hull. The telescope's least-witness relation supplies the formula, parameter
+decoding and uniqueness needed to count each step.
 
 ```agda
-  module Cn = Condense′ lam ordλ succλ X X⊆L ∅∈λ elem sup X-isL using ( hullStep; hullL )
+  module Cn = Condense′ lam ordλ succλ X X⊆L ∅∈λ elem sup X-isL
+    using ( hullStep; hullL; hullStep⊆Hull )
   module B = Telescope.Build lam ordλ succλ X X⊆L ∅∈λ
-    using ( A; Body; module BodyRd; C₀; Env; module KeyIn; bodyFo; wL; witFo-out
+    using ( A; Body
+          ; LeastWitness; leastWitnessFo; leastWitness-in; leastWitness-out
+          ; LeastWitnessData; leastWitness-data; leastWitness-unique; witFo-leastWitness
           ; Φ; Φ-out; λ-isL; ω-num; pack )
   module SM = SatGraph B.A using ( pairs; pairs-out; valOf )
 ```
@@ -516,7 +472,6 @@ A member of the graph, read as a pair of a code and its value.
 ```agda
   module It = Telescope.HullIter.It lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack
     using ( Num; iter; iter-in; iter-out; iterUnion-out; ω-num )
-  module HI = Telescope.HullIter lam ordλ succλ X X⊆L ∅∈λ X-isL B.pack using ( hullStep⊆Hull )
   module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ using ( Hull⊆L )
   open Cn using ( hullStep; hullL )
 ```
@@ -528,7 +483,7 @@ Section 4.0. Facts about `κ`.
   num∈κ k = ω⊆ (fst κ) oκ κ∉ω (# k) (#∈ω k)
 ```
 
-The pairing at `κ` (src/L/GCH/Pairing.lagda.md's square law).
+The pairing at `κ` (src/L/GCH/CardinalSquareLaw.lagda.md's square law).
 
 ```agda
   pairκ : InjL (prodL κ) κ
@@ -644,7 +599,7 @@ The junk value is `0 ∈ κ`.
 THE WITNESS PAIRS. `p = (s, e)`: `s` the key of a parameter-free formula (a
 member of `L_ω`), `e` the parameter environment over `Z` (a member of `seqL Z`).
 `(p, z) ∈ G` when `z` is the least satisfier of `s` at `e`, in the words of
-src/L/GCH/HullIn.lagda.md `bodyFo`.
+src/L/GCH/ConstructibleHull.lagda.md `bodyFo`.
 
 The separating description, over `(q ∷ [])`: "`q = (p, z)`, `p ∈ PB`, `p = (s,
 e)`, and for `Z` pinned, some `k`, `e'`, `T` make `bodyFo` hold". Binders,
@@ -658,48 +613,6 @@ outermost first: `p`, `z`, `s`, `e`, `Z`, `k`, `e'`, `T`. Inside all of them:
     PB : S
     PB = prodL U₂.D
 
-    Γ : (T e' k Zv e s z p q : S) → S ^ 9
-    Γ T e' k Zv e s z p q = T ∷ e' ∷ k ∷ Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []
-```
-
-The body, renamed, sealed with its reading.
-
-```agda
-    opaque
-      body₉ : Formula S 9
-      body₉ = renameFo ρ₉ B.bodyFo
-
-      body₉-read : (T e' k Zv e s z p q : S)
-                 → ⟨ Γ T e' k Zv e s z p q ⊨ body₉ ⟩ ≡ ⟨ B.Env T e' e s k z Zv ⊨ B.bodyFo ⟩
-      body₉-read T e' k Zv e s z p q =
-        cong ⟨_⟩ (Ren.⊨-rename ρ₉ B.bodyFo (Γ T e' k Zv e s z p q) (B.Env T e' e s k z Zv)
-                    (ag₉ T e' k Zv e s z p q))
-```
-
-Three plain binders, sealed with their readings.
-
-```agda
-    opaque
-      wit₆ : Formula S 6
-      wit₆ = ∃̇ (∃̇ (∃̇ body₉))
-
-      wit₆-in : (Zv e s z p q T e' k : S) → ⟨ B.Env T e' e s k z Zv ⊨ B.bodyFo ⟩
-              → ⟨ (Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ wit₆ ⟩
-      wit₆-in Zv e s z p q T e' k h =
-        ∣ k , ∣ e' , ∣ T , transport (sym (body₉-read T e' k Zv e s z p q)) h ∣₁ ∣₁ ∣₁
-
-      wit₆-out : (Zv e s z p q : S) → ⟨ (Zv ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ wit₆ ⟩
-               → ∥ Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ k ∈ S ] ⟨ B.Env T e' e s k z Zv ⊨ B.bodyFo ⟩ ∥₁
-      wit₆-out Zv e s z p q = PT.rec squash₁ at₁
-        where
-        Out : Type (ℓ-suc ℓ)
-        Out = ∥ Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ k ∈ S ] ⟨ B.Env T e' e s k z Zv ⊨ B.bodyFo ⟩ ∥₁
-        at₃ : (k e' : S) → Σ[ T ∈ S ] ⟨ Γ T e' k Zv e s z p q ⊨ body₉ ⟩ → Out
-        at₃ k e' (T , h) = ∣ T , e' , k , transport (body₉-read T e' k Zv e s z p q) h ∣₁
-        at₂ : (k : S) → Σ[ e' ∈ S ] ∥ Σ[ T ∈ S ] ⟨ Γ T e' k Zv e s z p q ⊨ body₉ ⟩ ∥₁ → Out
-        at₂ k (e' , h) = PT.rec squash₁ (at₃ k e') h
-        at₁ : Σ[ k ∈ S ] ∥ Σ[ e' ∈ S ] ∥ Σ[ T ∈ S ] ⟨ Γ T e' k Zv e s z p q ⊨ body₉ ⟩ ∥₁ ∥₁ → Out
-        at₁ (k , h) = PT.rec squash₁ (at₂ k) h
 ```
 
 `Z` pinned, sealed.
@@ -707,24 +620,27 @@ Three plain binders, sealed with their readings.
 ```agda
     opaque
       pin₅ : Formula S 5
-      pin₅ = pinAt Z wit₆
+      pin₅ = pinAt Z B.leastWitnessFo
 
-      pin₅-in : (e s z p q T e' k : S) → ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩
+      pin₅-in : (e s z p q : S) → B.LeastWitness Z e s z
               → ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ pin₅ ⟩
-      pin₅-in e s z p q T e' k h =
-        pin-in Z wit₆ (e ∷ s ∷ z ∷ p ∷ q ∷ []) (wit₆-in Z e s z p q T e' k h)
+      pin₅-in e s z p q h =
+        pin-in Z B.leastWitnessFo (e ∷ s ∷ z ∷ p ∷ q ∷ [])
+          (B.leastWitness-in Z e s z p q h)
 
       pin₅-out : (e s z p q : S) → ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ pin₅ ⟩
-               → ∥ Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ k ∈ S ] ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩ ∥₁
-      pin₅-out e s z p q h = wit₆-out Z e s z p q (pin-out Z wit₆ (e ∷ s ∷ z ∷ p ∷ q ∷ []) h)
+               → B.LeastWitness Z e s z
+      pin₅-out e s z p q h =
+        B.leastWitness-out Z e s z p q
+          (pin-out Z B.leastWitnessFo (e ∷ s ∷ z ∷ p ∷ q ∷ []) h)
 ```
 
 The host reading of a witness pair.
 
 ```agda
     GW : (p z : S) → Type (ℓ-suc ℓ)
-    GW p z = ∥ Σ[ s ∈ S ] Σ[ e ∈ S ] Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ k ∈ S ]
-               ((fst p ≡ pr (fst s) (fst e)) × ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩) ∥₁
+    GW p z = ∥ Σ[ s ∈ S ] Σ[ e ∈ S ]
+               ((fst p ≡ pr (fst s) (fst e)) × B.LeastWitness Z e s z) ∥₁
 ```
 
 `s` and `e` bound, sealed.
@@ -734,21 +650,20 @@ The host reading of a witness pair.
       se₃ : Formula S 3
       se₃ = ∃̇ (∃̇ (prAtL i3 i1 i0 ∧̇ pin₅))
 
-      se₃-in : (z p q s e T e' k : S) → fst p ≡ pr (fst s) (fst e)
-             → ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩ → ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩
-      se₃-in z p q s e T e' k qp h =
+      se₃-in : (z p q s e : S) → fst p ≡ pr (fst s) (fst e)
+             → B.LeastWitness Z e s z → ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩
+      se₃-in z p q s e qp h =
         ∣ s , ∣ e , ( subst ⟨_⟩ (sym (prAtL-adequate i3 i1 i0 (e ∷ s ∷ z ∷ p ∷ q ∷ []))) qp
-                    , pin₅-in e s z p q T e' k h ) ∣₁ ∣₁
+                    , pin₅-in e s z p q h ) ∣₁ ∣₁
 
       se₃-out : (z p q : S) → ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩ → GW p z
       se₃-out z p q = PT.rec squash₁ at₁
         where
         at₂ : (s : S) → Σ[ e ∈ S ] ( ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ prAtL i3 i1 i0 ⟩
                                    × ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ pin₅ ⟩ ) → GW p z
-        at₂ s (e , (qp , h)) = PT.map
-          (λ { (T , e' , k , hb) → s , e , T , e' , k
-             , ( subst ⟨_⟩ (prAtL-adequate i3 i1 i0 (e ∷ s ∷ z ∷ p ∷ q ∷ [])) qp , hb ) })
-          (pin₅-out e s z p q h)
+        at₂ s (e , (qp , h)) = ∣ s , e
+          , ( subst ⟨_⟩ (prAtL-adequate i3 i1 i0 (e ∷ s ∷ z ∷ p ∷ q ∷ [])) qp
+            , pin₅-out e s z p q h ) ∣₁
         at₁ : Σ[ s ∈ S ] ∥ Σ[ e ∈ S ] ( ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ prAtL i3 i1 i0 ⟩
                                       × ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ pin₅ ⟩ ) ∥₁ → GW p z
         at₁ (s , h) = PT.rec squash₁ (at₂ s) h
@@ -762,16 +677,16 @@ The separating description, sealed.
         (λ p z → (fst p ∈ fst PB) ⊓ (GW p z , squash₁))
         (λ p z q h → h .fst , se₃-out z p q (h .snd))
         (λ p z q h → h .fst , PT.rec (snd ((z ∷ p ∷ q ∷ []) ⊨ se₃))
-          (λ { (s , e , T , e' , k , qp , hb) → se₃-in z p q s e T e' k qp hb }) (h .snd))
+          (λ { (s , e , qp , hw) → se₃-in z p q s e qp hw }) (h .snd))
 
     G : S
     G = WitnessGraph.rel
 
     G-in : (p z : S) → ⟨ fst p ∈ fst PB ⟩ → ⟨ fst z ∈ fst Dw ⟩
-         → (s e T e' k : S) → fst p ≡ pr (fst s) (fst e)
-         → ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩ → Holds G p z
-    G-in p z hp hz s e T e' k qp h =
-      WitnessGraph.into p z hp hz (hp , ∣ s , e , T , e' , k , qp , h ∣₁)
+         → (s e : S) → fst p ≡ pr (fst s) (fst e)
+         → B.LeastWitness Z e s z → Holds G p z
+    G-in p z hp hz s e qp h =
+      WitnessGraph.into p z hp hz (hp , ∣ s , e , qp , h ∣₁)
 
     G-out : (p z : S) → Holds G p z → ⟨ fst p ∈ fst PB ⟩ × GW p z
     G-out = WitnessGraph.pair-out
@@ -784,148 +699,63 @@ EXISTENCE: every witness has a pair. The key is a member of `L_ω` (it is the
 arity numeral paired with a hereditarily finite code), and the environment is a
 finite sequence over `Z`.
 
-The body is read through src/L/GCH/HullIn.lagda.md `BodyRd`, at this variable
-environment.
+The semantic reading supplies the formula key and the parameter environment;
+the counting layer only places those two objects in its product bound.
 
 ```agda
-    module AtBody (z T e' e s k : S) (hb : ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩) where
-
-      γ₇ : S ^ 7
-      γ₇ = B.Env T e' e s k z Z
-
-      module Rd = B.BodyRd T e' e s k z Z using ( b-num; b-key; b-env; b-cons; b-tab; b-mem; b-stage )
-
-      h1 : ⟨ fst k ∈ fst ωʟ ⟩
-      h1 = Rd.b-num hb
-
-      h6 : ⟨ fst e' ∈ fst T ⟩
-      h6 = Rd.b-mem hb
-
-      h7 : ⟨ fst z ∈ fst B.A ⟩
-      h7 = Rd.b-stage hb
-
-      module AtNum (n : ℕ) (qk : fst k ≡ # n) where
-
-        s∈Lω : ⟨ fst s ∈ Lset ω ⟩
-        s∈Lω = PT.rec (snd (fst s ∈ Lset ω)) read (kr .snd)
-          where
-          kr = B.KeyIn.keyIn-out i3 i4 γ₇ n qk (Rd.b-key hb)
-          read : Σ[ c ∈ V ℓ ] (fst s ≡ pr (# (suc n)) c) → ⟨ fst s ∈ Lset ω ⟩
-          read (c , qs) = PT.rec (snd (fst s ∈ Lset ω))
-            (λ { (χ , qc) → subst (λ w → ⟨ w ∈ Lset ω ⟩) (sym qs)
-                   (pr∈limit (# (suc n)) c (numeral∈limit (suc n))
-                     (subst (λ w → ⟨ w ∈ˢ Lset ω ⟩) (sym qc) (snd (limitCode χ)))) })
-            (freeCode-out (suc n) c (subst (λ u → ⟨ u ∈ fst B.C₀ ⟩) qs (kr .fst)))
-
-        module R = Recover Z n γ₇ i2 i4 i6 qk refl (Rd.b-env hb) using ( g; recovers )
-
-        g′ : Fin n → V ℓ
-        g′ i = ⟪ fst Z ⟫↪ (R.g i)
-
-        hE : fst e ≡ env g′
-        hE = R.recovers
-
-        e∈seq : ⟨ fst e ∈ fst (seqL Z) ⟩
-        e∈seq = seqL-in Z n e (subst (λ w → ⟨ w ∈ˢ fst (envSet Z n) ⟩) (sym R.recovers) (envSet-in Z R.g))
-
-        p∈PB : ⟨ pr (fst s) (fst e) ∈ fst PB ⟩
-        p∈PB = prodL-in U₂.D s e (U₂.in₁ s s∈Lω) (U₂.in₂ e e∈seq)
-
     have : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ∥ Σ[ p ∈ S ] Holds G p z ∥₁
     have z hz = PT.rec squash₁ body (B.Φ-out Z z (D₂-out z (Dw-out z hz .fst) .fst))
       where
       body : B.Body Z z → ∥ Σ[ p ∈ S ] Holds G p z ∥₁
       body (inl h) = Empty.rec (D₂-out z (Dw-out z hz .fst) .snd h)
       body (inr (inl e)) = Empty.rec (Dw-out z hz .snd e)
-      body (inr (inr hw)) = PT.rec squash₁ read (B.witFo-out z Z hw)
+      body (inr (inr hw)) = PT.rec squash₁ read (B.witFo-leastWitness z Z hw)
         where
-        read : Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ e ∈ S ] Σ[ s ∈ S ] Σ[ k ∈ S ]
-                 ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩
+        read : Σ[ e ∈ S ] Σ[ s ∈ S ] B.LeastWitness Z e s z
              → ∥ Σ[ p ∈ S ] Holds G p z ∥₁
-        read (T , e' , e , s , k , hb) = PT.map at (B.ω-num k (AB.h1))
+        read (e , s , hw') = PT.map at (B.leastWitness-data Z e s z hw')
           where
-          module AB = AtBody z T e' e s k hb using ( h1; module AtNum )
-          at : Σ[ n ∈ ℕ ] (fst k ≡ # n) → Σ[ p ∈ S ] Holds G p z
-          at (n , qk) = prʟ s e
-            , G-in (prʟ s e) z (subst (λ w → ⟨ w ∈ fst PB ⟩) (sym (prʟ-fst s e)) (AB.AtNum.p∈PB n qk))
-                hz s e T e' k (prʟ-fst s e) hb
+          at : B.LeastWitnessData Z e s → Σ[ p ∈ S ] Holds G p z
+          at (n , g , qe , hs) = prʟ s e
+            , G-in (prʟ s e) z
+                (subst (λ w → ⟨ w ∈ fst PB ⟩) (sym (prʟ-fst s e))
+                  (prodL-in U₂.D s e (U₂.in₁ s hs)
+                    (U₂.in₂ e (seqL-in Z n e
+                      (subst (λ w → ⟨ w ∈ˢ fst (envSet Z n) ⟩) (sym qe) (envSet-in Z g))))))
+                hz s e (prʟ-fst s e) hw'
 ```
 
-FUNCTIONALITY: one key and one environment have one least satisfier. The two
-satisfaction sets are the same table value, the two extended environments are
-the cons of each satisfier onto the one environment, and each minimality clause
-refutes the other satisfier being below.
+<!--en-->
+## Uniqueness for a witness key
+
+A formula key together with its parameter environment selects at most one least witness. Thus equal pair codes force equal witnesses, which makes the witness graph functional.
+<!--zh-->
+## 见证键的唯一性
+
+公式键与其参数环境至多选出一个最小见证。因此，相等的对编码迫使见证相等，从而使见证图成为函数图。
+<!--ja-->
+## 証人キーに対する一意性
+
+論理式のキーとそのパラメータ環境は、最小の証人を高々一つ選びます。したがって、対のコードが等しければ証人も等しくなり、証人グラフは関数的になります。
+<!--/-->
 
 ```agda
-    module Unique (z T e' e s k : S) (hb : ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩)
-                  (z' T₂ e'₂ k₂ : S) (hb₂ : ⟨ B.Env T₂ e'₂ e s k₂ z' Z ⊨ B.bodyFo ⟩)
-                  (n : ℕ) (qk : fst k ≡ # n) where
-
-      module A₁ = AtBody z T e' e s k hb using ( h6; h7; module Rd; module AtNum )
-      module A₂ = AtBody z' T₂ e'₂ e s k₂ hb₂ using ( h6; h7; module Rd )
-      module N = A₁.AtNum n qk using ( g′; hE )
-
-      zS z'S : Telescope.SL lam ordλ succλ X X⊆L ∅∈λ
-      zS  = fst z , A₁.h7
-      z'S = fst z' , A₂.h7
-
-      e'≡ : fst e' ≡ env (cons (fst z) N.g′)
-      e'≡ = A₁.Rd.b-cons N.g′ N.hE hb
-
-      e'₂≡ : fst e'₂ ≡ env (cons (fst z') N.g′)
-      e'₂≡ = A₂.Rd.b-cons N.g′ N.hE hb₂
-```
-
-The two satisfaction sets agree.
-
-```agda
-      T≡ : fst T ≡ fst T₂
-      T≡ =
-        let p = SM.pairs-out s T (A₁.Rd.b-tab hb)
-            q = SM.pairs-out s T₂ (A₂.Rd.b-tab hb₂)
-        in snd p ∙ cong (λ m → fst (SM.valOf s m))
-          (snd (fst s ∈ fst (AllCodes B.A)) (fst p) (fst q)) ∙ sym (snd q)
-
-```
-
-Neither satisfier is below the other.
-
-```agda
-      not-below : (a b : S) (ha : ⟨ fst a ∈ fst B.A ⟩) (hb' : ⟨ fst b ∈ fst B.A ⟩)
-                  (Ta e'a ka : S) (hba : ⟨ B.Env Ta e'a e s ka a Z ⊨ B.bodyFo ⟩)
-                  (e'b : S) → fst e'b ≡ env (cons (fst b) N.g′) → ⟨ fst e'b ∈ fst Ta ⟩
-                → relOf B.wL (fst b , hb') (fst a , ha) → Empty.⊥
-      not-below a b ha hb' Ta e'a ka hba e'b qe hm b<a =
-        B.BodyRd.b-min Ta e'a e s ka a Z N.g′ N.hE hba b hb' e'b qe hm
-          (relL-fill lam B.λ-isL ordλ (fst b , hb') (fst a , ha) b<a)
-
-      result : fst z ≡ fst z'
-      result = go (SWO.tri∙ B.wL zS z'S)
-        where
-        go : Tri∙ (relOf B.wL zS z'S) (zS ≡ z'S) (relOf B.wL z'S zS) → fst z ≡ fst z'
-        go (lt h) = Empty.rec (not-below z' z A₂.h7 A₁.h7 T₂ e'₂ k₂ hb₂ e' e'≡
-                      (subst (λ t → ⟨ fst e' ∈ t ⟩) T≡ A₁.h6) h)
-        go (eq q) = cong fst q
-        go (gt h) = Empty.rec (not-below z z' A₁.h7 A₂.h7 T e' k hb e'₂ e'₂≡
-                      (subst (λ t → ⟨ fst e'₂ ∈ t ⟩) (sym T≡) A₂.h6) h)
-
     funct : (p z z' : S) → Holds G p z → Holds G p z' → fst z ≡ fst z'
     funct p z z' h h' = PT.rec2 (setIsSet (fst z) (fst z')) read (G-out p z h .snd) (G-out p z' h' .snd)
       where
-      read : Σ[ s ∈ S ] Σ[ e ∈ S ] Σ[ T ∈ S ] Σ[ e' ∈ S ] Σ[ k ∈ S ]
-               ((fst p ≡ pr (fst s) (fst e)) × ⟨ B.Env T e' e s k z Z ⊨ B.bodyFo ⟩)
-           → Σ[ s₂ ∈ S ] Σ[ e₂ ∈ S ] Σ[ T₂ ∈ S ] Σ[ e'₂ ∈ S ] Σ[ k₂ ∈ S ]
-               ((fst p ≡ pr (fst s₂) (fst e₂)) × ⟨ B.Env T₂ e'₂ e₂ s₂ k₂ z' Z ⊨ B.bodyFo ⟩)
+      read : Σ[ s ∈ S ] Σ[ e ∈ S ]
+               ((fst p ≡ pr (fst s) (fst e)) × B.LeastWitness Z e s z)
+           → Σ[ s₂ ∈ S ] Σ[ e₂ ∈ S ]
+               ((fst p ≡ pr (fst s₂) (fst e₂)) × B.LeastWitness Z e₂ s₂ z')
            → fst z ≡ fst z'
-      read (s , e , T , e' , k , (q , hb)) (s₂ , e₂ , T₂ , e'₂ , k₂ , (q₂ , hb₂)) =
-        PT.rec (setIsSet (fst z) (fst z')) (λ { (n , qk) → Unique.result z T e' e s k hb z' T₂ e'₂ k₂ hb₂' n qk })
-          (B.ω-num k (B.BodyRd.b-num T e' e s k z Z hb))
+      read (s , e , q , hw) (s₂ , e₂ , q₂ , hw₂) =
+        B.leastWitness-unique Z e s z z' hw hw₂'
         where
         ee : (fst s₂ ≡ fst s) × (fst e₂ ≡ fst e)
         ee = pr-inj (sym q₂ ∙ q)
-        hb₂' : ⟨ B.Env T₂ e'₂ e s k₂ z' Z ⊨ B.bodyFo ⟩
-        hb₂' = subst2 (λ s' e'' → ⟨ B.Env T₂ e'₂ e'' s' k₂ z' Z ⊨ B.bodyFo ⟩)
-                 (S≡ {x = s₂} {y = s} (fst ee)) (S≡ {x = e₂} {y = e} (snd ee)) hb₂
+        hw₂' : B.LeastWitness Z e s z'
+        hw₂' = subst2 (λ e' s' → B.LeastWitness Z e' s' z')
+          (S≡ {x = e₂} {y = e} (snd ee)) (S≡ {x = s₂} {y = s} (fst ee)) hw₂
 ```
 
 THE STEP COUNT.
@@ -977,7 +807,7 @@ Every iterate is counted.
 
 ```agda
   iter⊆L : (n : ℕ) (z : V ℓ) → ⟨ z ∈ˢ fst (hullStep n) ⟩ → ⟨ z ∈ˢ Lset lam ⟩
-  iter⊆L n z hz = HSH.Hull⊆L z (HI.hullStep⊆Hull n z hz)
+  iter⊆L n z hz = HSH.Hull⊆L z (Cn.hullStep⊆Hull n z hz)
 
   counted : (n : ℕ) → InjL (hullStep n) κ
   counted zero    = base

@@ -1,15 +1,15 @@
 <!--en-->
-# Stating the generalized continuum hypothesis inside a model
+# The generalized continuum hypothesis inside L
 
-The generalized continuum hypothesis compares each infinite cardinal with its power set. This chapter packages that statement for an arbitrary model of set theory, so later chapters can concentrate on proving it for `L`.
+Inside `L`, the generalized continuum hypothesis says that the power set of every infinite internal cardinal has the size of its internal successor cardinal. This chapter states that comparison as coded injections in both directions; later chapters construct those injections.
 <!--zh-->
-# 在模型内部陈述广义连续统假设
+# L 内部的广义连续统假设
 
-广义连续统假设比较每个无穷基数及其幂集。本章先为任意集合论模型封装这一陈述，使后续章节可以专注于证明 `L` 满足它。
+在 `L` 内部，广义连续统假设断言每个无穷内部基数的幂集与其内部后继基数等势。本章用两个方向的编码单射陈述这一比较，后续章节将构造这些单射。
 <!--ja-->
-# モデルの内部で一般連続体仮説を述べる
+# L の内部における一般連続体仮説
 
-一般連続体仮説は、各無限基数とその冪集合を比較する。本章ではこの主張を任意の集合論モデルについて整え、後の章で `L` に対する証明へ集中できるようにする。
+`L` の内部における一般連続体仮説は、各無限な内部基数の冪集合が、その内部の後続基数と同じ濃度をもつことを述べます。本章ではこの比較を双方向の符号化された単射として定式化し、後の章でそれらを構成します。
 <!--/-->
 
 ```agda
@@ -25,7 +25,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL; InjCode )
+open import L.Cardinal {ℓ} lem using ( IsCardinalL; InjL; SuccCardL )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
@@ -39,35 +39,6 @@ open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 open hPropStructure 𝒮ʟ using ( S )
 
 module ModelL = FOL.ZFModel 𝒮ʟ
-open ModelL using ( _⊆ˢ_ )
-```
-
-The L-internal injection: the model's own truth value of the internal statement
-that some `F` in L is an injection of `a` into `b`. The model's `∃` is the
-truncated `Σ` over the carrier, and `InjCode`'s conjuncts are satisfaction facts
-(src/L/Cardinal.lagda.md:223-228). This is the refutand of `IsCardinalL`, reused
-positively.
-
-```agda
-InjL : S → S → Type (ℓ-suc ℓ)
-InjL a b = ∥ Σ[ F ∈ S ] InjCode F a b ∥₁
-```
-
-`δ` is THE successor cardinal of `κ` in the sense of L: an ordinal L-cardinal
-above `κ`, below or equal to every ordinal L-cardinal above `κ`. Leastness is
-the ordinal order: for ordinals, `δ ⊆ c` is `δ ≤ c`, and `_⊆ˢ_` is the model's
-own subset relation (src/FOL/ZFModel.lagda.md:141-142). Every component is an
-hProp, so the witness `δ` is unique and the truncation below is the classical
-`∃`.
-
-```agda
-SuccCardL : S → S → Type (ℓ-suc ℓ)
-SuccCardL δ κ =
-    IsOrd (fst δ)
-  × IsCardinalL δ
-  × ⟨ fst κ ∈ fst δ ⟩
-  × ((c : S) → IsOrd (fst c) → IsCardinalL c → ⟨ fst κ ∈ fst c ⟩
-             → ⟨ δ ⊆ˢ c ⟩)
 ```
 
 The statement. L satisfies the generalized continuum hypothesis: for every

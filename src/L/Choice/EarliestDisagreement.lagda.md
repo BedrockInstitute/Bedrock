@@ -1468,17 +1468,16 @@ frame, making the internal earliest-disagreement description unconditional.
 <!--zh-->
 已实现的族实例化极限序框架所要求的两个方向，使内部最先分歧描述不再带条件。
 <!--ja-->
-実現された族が極限順序フレームの要求する二方向を具体化し、内部の最初の相違の記述を無条件にする。
+`BeforeAt`{.Agda} とその二つの読みが前章の `Described`{.Agda} フレームを具体化します。そのインスタンスから再公開するのは、次章が実際に使う `codeOrder`{.Agda}、`codeOrder-fill`{.Agda}、`codeOrder-rep`{.Agda} だけです。
 <!--/-->
 
 <!--en-->
 
-One line, and it is what the whole chapter was for. With `BeforeAt`{.Agda} and
-its two readings supplied, the previous chapter's `Described`{.Agda} is no longer
-a frame: `LimitOrdAt`{.Agda}, its two readings, `codeOrder`{.Agda},
-`codeOrder-fill`{.Agda}, `codeOrder-rep`{.Agda} and `CodeKeys`{.Agda} are all
-available here **unconditionally**, and everything in this part that was stated
-"given the earliest-disagreement family" is now stated outright.
+This is what the whole chapter was for. Supplying `BeforeAt`{.Agda} and its two
+readings instantiates the previous chapter's `Described`{.Agda} frame. From that instance, this chapter re-exports only the resulting relation
+`codeOrder`{.Agda} and its two membership directions, `codeOrder-fill`{.Agda}
+and `codeOrder-rep`{.Agda}, which
+are the interface used by the internal well-order construction.
 
 What that closes and what it does not is worth saying precisely. The
 internalization chapter's key bundle takes two relation slots, one for the codes
@@ -1494,13 +1493,16 @@ its own induction. Closing it is a re-cut of where the step adequacy is supplied
 not another construction, and it is the one thing left on this chain.
 <!--zh-->
 
-一行，而这就是整章为之而写的东西。有了 `BeforeAt`{.Agda} 与它的两条读式，上一章的 `Described`{.Agda} 便不再是一个框架：`LimitOrdAt`{.Agda}、它的两条读式、`codeOrder`{.Agda}、`codeOrder-fill`{.Agda}、`codeOrder-rep`{.Agda} 与 `CodeKeys`{.Agda} 在此处**无条件**可用，而本部中一切以「给定最先分歧之序的那一族」为前提的陈述，如今都是径直的陈述。
+这正是整章的目标。有了 `BeforeAt`{.Agda} 与它的两条读式，上一章的 `Described`{.Agda} 框架便得到实例。本章从该实例只再导出所得的关系 `codeOrder`{.Agda} 及其两条隶属方向 `codeOrder-fill`{.Agda}、`codeOrder-rep`{.Agda}；内部整序构造实际只消费这三个名字。
 
 这兑现了什么、没兑现什么，值得说准。内化那一章的键之束取两个关系位，一个为诸码、一个为诸参数。为诸码所设的那一位如今被径直填上，故 `L.Choice.NameComparisonAdequacy`{.Agda} 的步进充分性只还差为诸参数所设的那一位，即「命名所依托的那个载体上的序」，连同它的两个隶属方向。那个序正是 `L.Choice.OrderTable`{.Agda} 在每个阶段处产出的东西，而它产在那场递归内部，而 `L.Choice.StageOrderAdequacy`{.Agda} 的 `Stp`{.Agda} 参数自身正在给那场递归供料。故 `Faithful`{.Agda} 的那个参数**并未**由本章兑现，而理由是结构性的、不是数学缺口：某个阶段处的步进条件要的是该阶段处已内化的序，而表只有在它自己的归纳内部才拥有它。把它闭合，是「步进充分性在何处供给」的一次重新裁切，而不是另一个构造；它是这条链上仅剩的那一件事。
 <!--/-->
 
 ```agda
-open Described BeforeAt BeforeAt-in BeforeAt-out public
+private
+  module CodeOrder = Described BeforeAt BeforeAt-in BeforeAt-out
+
+open CodeOrder public using ( codeOrder; codeOrder-fill; codeOrder-rep )
 ```
 
 <!--en-->
@@ -1513,13 +1515,14 @@ open Described BeforeAt BeforeAt-in BeforeAt-out public
 <!--/-->
 
 <!--en-->
-The finite relations are now sets in `L`, their numeral-indexed family is also
-an element of `L`, and `BeforeAt`{.Agda} reads that family as the original
-earliest-disagreement comparison.
+The finite relations and their numeral-indexed family are sets in `L`;
+`BeforeAt`{.Agda} reads the family as the original earliest-disagreement
+comparison, and the `Described`{.Agda} instance contributes exactly `codeOrder`{.Agda} with
+its fill and representation lemmas to the public interface.
 <!--zh-->
-有穷阶段关系现在都是 `L` 中的集合，其数码索引族也属于 `L`，而 `BeforeAt`{.Agda} 把该族读回原来的最先分歧比较。
+有穷阶段关系及其数码索引族都是 `L` 中的集合；`BeforeAt`{.Agda} 把该族读回原来的最先分歧比较，而 `Described`{.Agda} 实例恰好向公开接口贡献 `codeOrder`{.Agda} 及其填入与表示引理。
 <!--ja-->
-有限段階の関係は `L` 内の集合となり、その数項添字族も `L` の要素となった。`BeforeAt`{.Agda} はこの族を元の最初の相違による比較として読み戻す。
+有限段階の関係とその数項添字族は `L` 内の集合です。`BeforeAt`{.Agda} はこの族を元の最初の相違による比較として読み戻し、`Described`{.Agda} のインスタンスからは `codeOrder`{.Agda} とその二つの読みだけを再公開します。
 <!--/-->
 
 <!--en-->
@@ -1556,9 +1559,9 @@ numeral held in a slot, with `appC`{.Agda} for application at a constant and
 `appAt`{.Agda} for the pair the relation there holds, and the two compared sets
 arriving **confined to the stage at that numeral**, which is what lets each
 reading be one composition of `relAt-rep`{.Agda} or `relAt-fill`{.Agda} with the
-family's own direction. With its two readings, `Described`{.Agda} is
-instantiated, and `codeOrder`{.Agda} together with `CodeKeys`{.Agda} become
-unconditional.
+family's own direction. With its two readings, the `Described`{.Agda} frame is instantiated; only
+`codeOrder`{.Agda}, `codeOrder-fill`{.Agda} and `codeOrder-rep`{.Agda} are
+re-exported for the next chapter.
 
 One measurement, and it is the largest this part has recorded. The four
 descriptions of the recursion must be **sealed where they are built**: unsealed,
@@ -1575,7 +1578,7 @@ which no formula appears at all.
 
 `approx-val`{.Agda} 把逼近所记录的每个取值钉住，靠的是在数码上的一次良基归纳，任何地方都没有单值性假设，而 `rel-only`{.Agda} 是那个图的确定性。`approxSet`{.Agda} 是当场拿出来的那个逼近，而它**根本不花任何公式**：某个数码以下的逼近是有穷的，故只要 `smallStage`{.Agda} 把它的诸成员放进同一个阶段，`finSetL`{.Agda} 就把它张出来。`beforeFam`{.Agda} 是那一族本身，沿 `ωʟ`{.Agda} 的一次替换，在造出之处封印，而它的两个方向陈述成对着这场递归、而不对着任何公式。
 
-`BeforeAt`{.Agda} 就是上一章所索取的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appC`{.Agda}，那里的关系所持有的那个对用 `appAt`{.Agda}；而被比较的那两个集合以**被禁闭在该数码处的阶段之内**的身份到场，正是这一点使每条读式都只是 `relAt-rep`{.Agda} 或 `relAt-fill`{.Agda} 与那一族自己那个方向的一次复合。有了它的两条读式，`Described`{.Agda} 便被实例化，而 `codeOrder`{.Agda} 连同 `CodeKeys`{.Agda} 成为无条件的。
+`BeforeAt`{.Agda} 就是上一章所索取的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appC`{.Agda}，那里的关系所持有的那个对用 `appAt`{.Agda}；而被比较的那两个集合以**被禁闭在该数码处的阶段之内**的身份到场，正是这一点使每条读式都只是 `relAt-rep`{.Agda} 或 `relAt-fill`{.Agda} 与那一族自己那个方向的一次复合。有了它的两条读式，`Described`{.Agda} 框架便得到实例；该实例向下一章再导出的公开接口只有 `codeOrder`{.Agda}、`codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda}。
 
 一次实测，而它是本部记下的最大的一次。这场递归的四条描述必须**在造出之处封印**：不封印时，每一次在具体环境上的满足关系都要把一条内部装着两份完整层级描述的公式正规化，本章要花 376 秒；封印之后是 3.8 秒，九十九倍，而数学分毫未动。造出那一族的那个框架在高一层遵守同一条定律：它交回来的三元组中根本不出现任何公式。
 <!--/-->

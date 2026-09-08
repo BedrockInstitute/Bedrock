@@ -1,19 +1,20 @@
 <!--en-->
-# Quantifying over coded pairs
+# Quantifying over coded pairs and finite formula families
 <!--zh-->
-# 对码化有序对的分量量化
+# 对码化有序对分量与有穷公式族量化
 <!--ja-->
-# 符号化された順序対の成分を量化する
+# 符号化された順序対の成分と有限論理式族を量化する
 <!--/-->
 
 <!--en-->
-This chapter defines bounded formulas that unpack one or both components of a
-coded pair and proves reusable semantic readers that hide the container witnesses
-required by the set encoding.
+This chapter supplies the shared finite-slot machinery used by coded formulas.
+It names deeply nested slots, folds finite families into conjunctions and
+disjunctions, and defines bounded formulas that unpack coded pairs together with
+readers that hide their container witnesses.
 <!--zh-->
-本章定义有界公式，用来拆出一个码化有序对的一个或两个分量，并证明可复用的语义读式，以隐藏集合编码所需的容器见证。
+本章提供码化公式共用的有穷槽位工具：为深层嵌套的槽位命名，把有穷公式族折叠成合取与析取，并定义拆出码化有序对分量的有界公式及隐藏容器见证的读式。
 <!--ja-->
-本章では、符号化された順序対の一方または両方の成分を取り出す有界論理式を定義し、集合による符号化が要求する容器の証人を隠す再利用可能な意味論的読み補題を証明する。
+本章では、符号化された論理式が共有する有限スロットの道具を整備する。深く入れ子になったスロットに名前を付け、有限論理式族を連言と選言へ畳み込み、符号化された順序対の成分を取り出す有界論理式と、容器の証人を隠す読み補題を与える。
 <!--/-->
 
 <!--en-->
@@ -38,7 +39,7 @@ module L.Coding.Quantification {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using
-  ( Formula; var; _∧̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
+  ( Formula; var; _∧̇_; _∨̇_; _⇒̇_; ∃̇∈; ∀̇∈ )
 open import FOL.LevyHierarchy using
   ( Δ₀; δ-∧; δ-⇒; δ-∀∈; δ-∃∈ )
 import FOL.Absoluteness
@@ -57,6 +58,7 @@ module E = CodingExpressions.PairExpression
 open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Vec using ( _∷_; lookup )
 open import Cubical.Data.Sigma using ( _×_ )
+open import Cubical.Data.Sum using ( inl; inr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
@@ -160,6 +162,69 @@ i18 : ∀ {j} → Fin (19 + j)
 i18 = suc i17
 i19 : ∀ {j} → Fin (20 + j)
 i19 = suc i18
+```
+
+<!--en-->
+## Ten named slots and finite connective folds
+<!--zh-->
+## 十个具名槽位与有穷联结词折叠
+<!--ja-->
+## 十個の名前付きスロットと有限結合子の畳み込み
+<!--/-->
+
+<!--en-->
+The patterns `f0` through `f9` name the ten positions used by constructor
+families, while `bigOr` and `bigAnd` fold any nonempty finite family of formulas.
+Their readers select one disjunct or recover every conjunct without depending on
+any particular coding scheme.
+<!--zh-->
+模式 `f0` 至 `f9` 命名构造子族使用的十个位置，而 `bigOr` 与 `bigAnd` 把任意非空有穷公式族折叠起来。相应读式选出一个析取项或恢复每个合取项，并不依赖任何特定编码方案。
+<!--ja-->
+パターン `f0` から `f9` は構成子族が使う十個の位置を名付け、`bigOr` と `bigAnd` は任意の空でない有限論理式族を畳み込む。読み補題は、特定の符号化に依存せず、一つの選言肢を選び、またはすべての連言肢を復元する。
+<!--/-->
+
+```agda
+pattern f0 = zero
+pattern f1 = suc f0
+pattern f2 = suc f1
+pattern f3 = suc f2
+pattern f4 = suc f3
+pattern f5 = suc f4
+pattern f6 = suc f5
+pattern f7 = suc f6
+pattern f8 = suc f7
+pattern f9 = suc f8
+
+bigOr bigAnd : ∀ {m} (n : ℕ) → (Fin (suc n) → Formula S m) → Formula S m
+bigOr 0 φ = φ zero
+bigOr (suc n) φ = φ zero ∨̇ bigOr n (λ k → φ (suc k))
+bigAnd 0 φ = φ zero
+bigAnd (suc n) φ = φ zero ∧̇ bigAnd n (λ k → φ (suc k))
+
+module _ {m : ℕ} (γ : S ^ m) where
+  bigOr-in : (n : ℕ) (φ : Fin (suc n) → Formula S m) (k : Fin (suc n))
+           → ⟨ γ ⊨ φ k ⟩ → ⟨ γ ⊨ bigOr n φ ⟩
+  bigOr-in 0 φ zero h = h
+  bigOr-in (suc n) φ zero h = ∣ inl h ∣₁
+  bigOr-in (suc n) φ (suc k) h = ∣ inr (bigOr-in n (λ j → φ (suc j)) k h) ∣₁
+
+  bigOr-out : (n : ℕ) (φ : Fin (suc n) → Formula S m) → ⟨ γ ⊨ bigOr n φ ⟩
+            → ∥ Σ[ k ∈ Fin (suc n) ] ⟨ γ ⊨ φ k ⟩ ∥₁
+  bigOr-out 0 φ h = ∣ zero , h ∣₁
+  bigOr-out (suc n) φ = PT.rec squash₁
+    (λ { (inl h) → ∣ zero , h ∣₁
+       ; (inr h) → PT.map (λ { (k , hk) → suc k , hk }) (bigOr-out n (λ j → φ (suc j)) h) })
+
+  bigAnd-in : (n : ℕ) (φ : Fin (suc n) → Formula S m)
+            → ((k : Fin (suc n)) → ⟨ γ ⊨ φ k ⟩) → ⟨ γ ⊨ bigAnd n φ ⟩
+  bigAnd-in 0 φ h = h zero
+  bigAnd-in (suc n) φ h = h zero , bigAnd-in n (λ j → φ (suc j)) (λ k → h (suc k))
+
+  bigAnd-out : (n : ℕ) (φ : Fin (suc n) → Formula S m) → ⟨ γ ⊨ bigAnd n φ ⟩
+             → (k : Fin (suc n)) → ⟨ γ ⊨ φ k ⟩
+  bigAnd-out 0 φ h zero = h
+  bigAnd-out (suc n) φ h zero = h .fst
+  bigAnd-out (suc n) φ h (suc k) = bigAnd-out n (λ j → φ (suc j)) (h .snd) k
 ```
 
 <!--en-->
@@ -392,11 +457,12 @@ module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
 <!--/-->
 
 <!--en-->
-The bounded formulas in this chapter expose one or both components of a coded
-pair, their readers recover the component semantics, and the filling lemmas hide
-the container witnesses needed when those readers are reused in larger formulas.
+The named slots and finite connective folds organize repeated formula families.
+The bounded pair formulas expose one or both components of a coded pair, their
+readers recover the component semantics, and the filling lemmas hide the
+container witnesses needed when those readers are reused in larger formulas.
 <!--zh-->
-本章的有界公式揭示码化有序对的一个或两个分量，相应读式恢复这些分量的语义，而填充引理隐藏了在较大公式中复用这些读式时所需的容器见证。
+具名槽位与有穷联结词折叠组织反复出现的公式族。本章的有界配对公式揭示码化有序对的一个或两个分量，相应读式恢复这些分量的语义，而填充引理隐藏了在较大公式中复用这些读式时所需的容器见证。
 <!--ja-->
-本章の有界論理式は符号化された順序対の一方または両方の成分を取り出し、その読み補題が成分の意味を復元する。充填補題は、これらの読みを大きな論理式で再利用するときに必要な容器の証人を隠す。
+名前付きスロットと有限結合子の畳み込みが、繰り返し現れる論理式族を整理する。有界な対の論理式は符号化された順序対の一方または両方の成分を取り出し、その読み補題が成分の意味を復元する。充填補題は、これらの読みを大きな論理式で再利用するときに必要な容器の証人を隠す。
 <!--/-->

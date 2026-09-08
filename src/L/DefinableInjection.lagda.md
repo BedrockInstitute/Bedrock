@@ -19,7 +19,7 @@ open import Base.Prelude
 open import Base.Truth
 open import Base.Classical using ( LEM )
 
-module L.GCH.DefinableInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+module L.DefinableInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula )
@@ -27,10 +27,11 @@ import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-open import L.Recursion {ℓ} lem using ( Recursion ) renaming ( module Graph to RecursionGraph )
+open import L.Recursion {ℓ} lem using ( Recursion )
+open import L.Recursion.Graph {ℓ} lem
+  using () renaming ( module Graph to RecursionGraph )
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
-open import L.Cardinal {ℓ} lem using ( InjCode )
-open import L.GCH {ℓ} lem using ( InjL )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
 
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )

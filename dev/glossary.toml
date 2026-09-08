@@ -1186,3 +1186,10 @@ en = "stage index"
 zh = "阶段索引"
 ja = "段階の添字"
 notes = "The ordinal α indexing the stage L_α, not the set L_α and not the entire hierarchy. In L.Stage, stage x hx returns this ordinal, while stage-mem places x in Lset (stage x hx). The compound translations are descriptive and pattern-based; they are not claimed as fixed literature terms. See dev/literature/stage-level-hierarchy.md."
+
+[[term]]
+category = "Logic and philosophy"
+en = "alphabet"
+zh = "字母表"
+ja = "アルファベット"
+notes = "A set/type of symbols. English primary lecture usage: https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/lectures/02/Slides02.pdf ; Japanese primary teaching usage: https://hwb.ecc.u-tokyo.ac.jp/wp/applications-2/textprocessing/regexp/automaton/ ; Chinese publisher excerpt: https://www.tup.tsinghua.edu.cn/upload/books/yz/023232-01.pdf . These attest the terminology, not a finiteness assumption for this project. Alphabet W supplies the available constant symbols from members of W; it need not be finite and is not the ten constructor tags."

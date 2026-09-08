@@ -34,10 +34,10 @@ open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( SWO; IsLeast; leastOf; module SWO )
 open import L.Axioms.Basic {ℓ} using ( isL-Lset )
 open import L.Cardinal {ℓ} lem
-  using ( InjCode; IsCardinalL; module LeastCardInjL )
+  using ( InjL; SuccCardL; IsCardinalL; module LeastCardInjL )
 open import L.CardinalAbove {ℓ} lem using ( CardAboveL )
-open import L.GCH {ℓ} lem using ( GCHStatement; SuccCardL; InjL )
-open import L.InjectionComposition {ℓ} lem using ( module InclGraph; module Comp )
+open import L.GCH {ℓ} lem using ( GCHStatement )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -111,7 +111,7 @@ InternalBoundedSubset =
 3.  The successor cardinal injects into the power set, GIVEN the
     injection section 5 pays out of hypotheses 1 and 2.  The extra
     premise is what makes the row a theorem rather than an axiom:
-    src/L/GCH/SuccIntoPower.lagda.md inverts that injection through
+    src/L/GCH/SuccessorIntoPowerSet.lagda.md inverts that injection through
     an order type and refutes the remaining case by Cantor.
 
 ```agda
@@ -268,31 +268,6 @@ The stage at an ordinal is constructible (src/L/Axioms/Basic.lagda.md).
 ```agda
 stage-is-L : (δ : SL.S) → IsOrd (fst δ) → ⟨ isL (Lset (fst δ)) ⟩
 stage-is-L δ ordδ = isL-Lset (fst δ) ordδ
-```
-
-An inclusion is an internal injection (src/L/InjChain.lagda.md, row 3).
-
-```agda
-inclusion-coded : (a b : SL.S)
-                → ((z : SV.S) → ⟨ z ∈ˢ fst a ⟩ → ⟨ z ∈ˢ fst b ⟩)
-                → InjL a b
-inclusion-coded a b sub = ∣ I.G , I.code ∣₁
-  where module I = InclGraph a b sub
-```
-
-Internal injections compose (src/L/InjChain.lagda.md, row 1).
-
-```agda
-injl-trans : (a b c : SL.S) → InjL a b → InjL b c → InjL a c
-injl-trans a b c = PT.rec2 PT.squash₁ step
-  where
-  step : Σ[ F ∈ SL.S ] InjCode F a b
-       → Σ[ H ∈ SL.S ] InjCode H b c
-       → InjL a c
-  step (F , svF , dmF , ijF , ranF) (H , svH , dmH , ijH , ranH) =
-    ∣ K.K , (K.svK , K.dmK , K.ijK , K.ranK) ∣₁
-    where
-    module K = Comp a b c F H svF dmF ijF ranF svH dmH ijH ranH
 ```
 
 A member `z` of a member `y` of the internal power set of an ordinal `κ`: `z` is

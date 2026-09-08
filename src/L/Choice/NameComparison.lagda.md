@@ -80,8 +80,8 @@ open import L.Coding.SatisfactionGraph {ℓ} lem using
   ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
   ; Bi; Ti; Ci; Ei; NN; ev; numν; numTags )
 open import L.Coding.EnvironmentTower {ℓ} lem using ( towerAt; module Tower; module TowerHolds )
-open import L.Coding.CodeDomain {ℓ} lem using
-  ( Tags; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
+open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
 open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming; limitCode )
 open import L.Choice.FiniteStageOrders {ℓ} lem using ( Limit; limitOrder )

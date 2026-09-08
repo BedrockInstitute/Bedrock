@@ -27,11 +27,10 @@ open import V.Presentation {ℓ} using ( member; fiber )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; isL; isL-trans )
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL; module LeastCardInjL )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL; module LeastCardInjL )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( IsLeast; leastOf; module SWO )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Assembly {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions

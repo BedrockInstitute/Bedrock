@@ -1,15 +1,15 @@
 <!--en-->
 # Cardinals and coded injections inside L
 
-Cardinality inside `L` is expressed through injection graphs that are themselves constructible sets. This chapter defines the ambient injection type, prepares the well-ordered site used to choose least cardinals, and states the four-part `InjCode`{.Agda} interface and internal cardinal predicate.
+Cardinality inside `L` is expressed through injection graphs that are themselves constructible sets. This chapter defines when a graph codes an injection, states that such a graph exists without choosing one, uses the ordinal well-order to select least cardinal representatives, and characterizes successor cardinals.
 <!--zh-->
 # L 内部的基数与编码单射
 
-`L` 内部的基数关系通过本身也是可构造集合的注入图来表达。本章定义环境注入类型，准备选择最小基数所用的良序位置，并陈述四部分的 `InjCode`{.Agda} 接口与内部基数谓词。
+`L` 内部的基数关系通过本身也是可构造集合的单射图来表达。本章定义一个图何时编码单射，在不选定具体图的情况下陈述这种图的存在性，用序数的良序选取最小基数代表，并刻画后继基数。
 <!--ja-->
 # L の内部における基数と符号化された単射
 
-`L` 内部の基数関係は、それ自身が構成可能集合である単射グラフによって表します。本章では周囲の単射型を定義し、最小基数を選ぶための整列された場所を用意し、四つの条件からなる `InjCode`{.Agda} と内部基数の述語を定めます。
+`L` 内部の基数関係は、それ自身が構成可能集合である単射グラフによって表します。本章では、グラフが単射を符号化する条件を定め、具体的なグラフを選ばずにその存在を述べ、順序数の整列順序を用いて最小の基数代表を選び、後続基数を特徴付けます。
 <!--/-->
 
 ```agda
@@ -23,6 +23,7 @@ module L.Cardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 import FOL.Absoluteness
+import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( self∈sucV )
 open import V.Presentation {ℓ} using ( member; fiber )
@@ -48,6 +49,9 @@ open PT using ( ∥_∥₁ )
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 open hPropStructure 𝒮ʟ using ( S )
+
+module ModelL = FOL.ZFModel 𝒮ʟ
+open ModelL using ( _⊆ˢ_ )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
@@ -122,6 +126,20 @@ membership form, proved inside the seal. No exported type names `w`.
 
 ```
 
+<!--en-->
+## Internal injections and successor cardinals
+
+An injection inside `L` is witnessed by a constructible graph satisfying the four `InjCode`{.Agda} conditions. `InjL`{.Agda} says that some such graph exists without selecting one; these injections then define internal cardinals and the least internal cardinal strictly above a given one.
+<!--zh-->
+## 内部单射与后继基数
+
+`L` 内部的单射由一个满足 `InjCode`{.Agda} 四项条件的可构造图见证。`InjL`{.Agda} 断言某个这样的图存在，却不选定一个；这些单射进而定义内部基数，以及严格大于给定基数的最小内部基数。
+<!--ja-->
+## 内部の単射と後続基数
+
+`L` の内部の単射は、`InjCode`{.Agda} の四条件を満たす構成可能なグラフによって証されます。`InjL`{.Agda} は具体的なグラフを選ばずに、そのようなグラフが存在すると述べます。これらの単射を用いて内部の基数と、与えられた基数より真に大きい最小の内部基数を定義します。
+<!--/-->
+
 A4. The internal cardinal.
 
 `InjCode` is A2's three conjuncts plus the value-in-`b` clause, the four pieces
@@ -136,8 +154,19 @@ InjCode F a b =
   × ⟨ (F ∷ a ∷ []) ⊨ injAt zero ⟩
   × ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → ⟨ fst y ∈ fst b ⟩)
 
+InjL : S → S → Type (ℓ-suc ℓ)
+InjL a b = ∥ Σ[ F ∈ S ] InjCode F a b ∥₁
+
 IsCardinalL : S → Type (ℓ-suc ℓ)
 IsCardinalL κ =
   (δ : S) → ⟨ fst δ ∈ fst κ ⟩
           → (∥ Σ[ F ∈ S ] InjCode F κ δ ∥₁ → Empty.⊥)
+
+SuccCardL : S → S → Type (ℓ-suc ℓ)
+SuccCardL δ κ =
+    IsOrd (fst δ)
+  × IsCardinalL δ
+  × ⟨ fst κ ∈ fst δ ⟩
+  × ((c : S) → IsOrd (fst c) → IsCardinalL c → ⟨ fst κ ∈ fst c ⟩
+             → ⟨ δ ⊆ˢ c ⟩)
 ```

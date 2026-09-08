@@ -184,23 +184,7 @@ data Codes : {n : ℕ} → S → Formula S n → Type ℓ where
        → CodesT s t → CodesT s' u → Codes (mkTag 0 (pr s s')) (t ∈̇ u)
 ```
 
-<!--en-->
-## Recap
 
-Formulas are now sets: `⌜_⌝`{.Agda} tags a constructor index onto the codes of
-the parts, constants coding themselves. The interface downstream is the relation
-`Codes`{.Agda}, which keeps code values out of the equations a typechecker has
-to normalize. Everything is generic in the structure, needing only an injective
-pairing and an injection of the naturals; the hierarchy supplies both.
-<!--zh-->
-## 小结
-
-公式如今是集合了：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上，而常元编码自身。下游的接口是关系 `Codes`{.Agda}，它使码值不出现在类型检查器必须归一化的等式里。一切都对结构泛型，只需一个单射的配对与自然数的一个单射；层级把二者都供上。
-<!--ja-->
-## まとめ
-
-項と論理式はタグ付き集合として符号化され、`Codes`{.Agda} が計算された符号を特徴付けます。残る仕事は、一つの集合符号が異なる論理式を表さないことです。
-<!--/-->
 
 
 
@@ -339,3 +323,21 @@ private
   where
   tp = mkTag-inj (sym (shape φ) ∙ e ∙ shape ψ)
 ```
+
+<!--en-->
+## Recap
+
+Formulas are now sets: `⌜_⌝`{.Agda} tags a constructor index onto the codes of
+the parts, constants coding themselves. The relation `Codes`{.Agda} characterizes computed codes without requiring their
+equations to normalize, while `⌜⌝-inj`{.Agda} proves that one code determines at
+most one formula of a fixed arity. Everything is generic in the structure, needing only an injective
+pairing and an injection of the naturals; the hierarchy supplies both.
+<!--zh-->
+## 小结
+
+公式如今是集合了：`⌜_⌝`{.Agda} 把构造子序号贴在各部分的码上，而常元编码自身。`Codes`{.Agda} 关系刻画算出的码而无须让码等式归一化，`⌜⌝-inj`{.Agda} 则证明在固定元数下一个码至多决定一条公式。一切都对结构泛型，只需一个单射的配对与自然数的一个单射；层级把二者都供上。
+<!--ja-->
+## まとめ
+
+項と論理式はタグ付き集合として符号化され、`Codes`{.Agda} が計算された符号を特徴付けます。`⌜⌝-inj`{.Agda} は、固定したアリティでは一つの集合符号が高々一つの論理式を表すことを保証します。
+<!--/-->

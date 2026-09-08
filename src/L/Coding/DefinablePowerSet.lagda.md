@@ -75,8 +75,7 @@ open import L.Coding.SatisfactionGraph {ℓ} lem
   using ( satGraphAt; GraphWitAt; graphAt-in; graphAt-out
         ; Bi; Ti; Ci; Ei; NN; ev; numν )
 open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower )
-open import L.Coding.CodeDomain {ℓ} lem using
-  ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
+open import L.Coding.Quantification {ℓ} using ( f0; f1; f2; f3; f4; f5; f6; f7; f8; f9 )
 open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SlotHolds )
 open import L.Coding.SatisfactionTable {ℓ} lem
   using ( keyʟ; slot; satTable; entry-in )

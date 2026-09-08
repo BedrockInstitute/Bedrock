@@ -32,13 +32,14 @@ open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; Lset→isL )
 open import L.Ordinal {ℓ} using ( suc-ord )
 open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
-open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct ) renaming ( module Graph to RecursionGraph )
+open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
+open import L.Recursion.Graph {ℓ} lem
+  using () renaming ( module Graph to RecursionGraph )
 open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; appC; appC-adequate; prʟ; prʟ-fst; svAt; domAt )
 open import L.Coding.Expressions {ℓ} using ( module PairExpression )
 open import L.Coding.Injection {ℓ} lem using ( injAt; injAt-in )
-open import L.Cardinal {ℓ} lem using ( InjCode )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap ) renaming ( module Inj to DefinableInj )
 open import L.Mostowski {ℓ} using ( module Mostowski )
 
 open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
@@ -340,7 +341,7 @@ The pair form of a graph is the generic construction from `L.Recursion`.
 The compatibility export keeps its existing qualified name.
 
 ```agda
-open import L.Recursion {ℓ} lem public using ( module PairFo )
+open import L.Recursion.Graph {ℓ} lem public using ( module PairFo )
 ```
 
 <!--en-->

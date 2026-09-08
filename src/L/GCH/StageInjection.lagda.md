@@ -35,12 +35,11 @@ open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Assembly {ℓ} lem
-  using ( StageCountedCoded; inclusion-coded; injl-trans )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
+open import L.GCH.Assembly {ℓ} lem using ( StageCountedCoded )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
-open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.SkolemHull {ℓ} lem
   using ( module Frame; module HullStage; module HullElemDown )
 open import L.GCH.ConstructibleHull {ℓ} lem using ( module PiIn; module Condense′ )
@@ -76,7 +75,7 @@ Every module application below names what it takes.
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
-The hull site, without a target: the telescope of src/L/GCH/HullIn.lagda.md
+The hull site, without a target: the telescope of src/L/GCH/ConstructibleHull.lagda.md
 `Condense′`, a superadequate stage `λ`, a start `X` inside `L_λ` that is an
 element of L, and the elementarity of the hull. What comes out is the collapse
 stage `L_β` and the inverse collapse `L_β ↪ M`, a definable map on `L_β`. No
@@ -151,7 +150,7 @@ modules `Cn` copies from.
 
 5.2 The inverse collapse, `L_β ↪ M`, as a definable map: `v` ↦ the member of
 `M` collapsing to `v`. The graph, over `(x ∷ v ∷ [])`: "`x ∈ M` and the collapse
-graph holds at `(v, x)`", the latter being src/L/GCH/HullIn.lagda.md
+graph holds at `(v, x)`", the latter being src/L/GCH/ConstructibleHull.lagda.md
 `PiIn.piFo` read at `(v ∷ x ∷ [])`.
 
 ```agda
@@ -233,7 +232,7 @@ The collapse graph holds at `(π x, x)` for `x ∈ M`.
 The site at an infinite ordinal `δ`. The start is `X = δ+1`, transitive because
 it is an ordinal, and an element of L. `λ` is the superadequate stage above the
 stage of `δ`, so `δ ∈ λ` and `δ+1 ∈ λ`. The start is counted at `μ`, the
-internal cardinal of `δ`: `δ+1 ↪ δ` by src/L/GCH/Pairing.lagda.md `Shift`, then
+internal cardinal of `δ`: `δ+1 ↪ δ` by src/L/GCH/CardinalSquareLaw.lagda.md `Shift`, then
 `δ ↪ μ`. The collapse fixes `δ` pointwise, so `δ ∈ L_β`, hence `δ ∈ β`, hence
 `L_δ ⊆ L_β`; and the chain `L_δ ↪ L_β ↪ M ↪ μ ↪ δ` is the row.
 

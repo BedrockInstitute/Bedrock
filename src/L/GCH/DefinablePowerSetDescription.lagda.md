@@ -30,16 +30,18 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans; 𝒟ₒ; 𝒟ₒ-intro; 𝒟ₒ-inv )
 open import L.Definability {ℓ} using ( module DefOf )
-open import L.Coding.Model {ℓ} using ( prAtL )
+open import L.Coding.Model {ℓ} using ( prAtL; container )
 open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst; defSet-Sat )
 open import L.Coding.DefinablePowerSet {ℓ} lem using ( envOne )
 open import L.Coding.CodeSet {ℓ} lem using ( keyS; key∈AllCodes )
 open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table; val-at )
 open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
-open import L.GCH.SatisfactionFrame {ℓ} lem using
-  ( sh; i0; i1; i3; i6; f0; f1; Tags; down; container
+open import L.Coding.Quantification {ℓ} using
+  ( sh; i0; i1; i3; i6; f0; f1; down
   ; sndEx; sndAll; sndEx-out; sndAll-in; fillSnd; useSnd
-  ; pr-out; pr-in; module Alphabet ; sndS )
+  ; pr-out; pr-in; sndS )
+open import L.Coding.CodeDomain {ℓ} using ( Tags )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
 open import L.GCH.SatisfactionDescription {ℓ} lem using ( satAt; module SatRead; module Match )
 
 open import Cubical.Data.Nat using ( _+_ )

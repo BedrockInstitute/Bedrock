@@ -290,3 +290,76 @@ matching localized titles and identical proof code across languages; the site
 link checker reports no broken targets. Chrome checks cover tab history and
 language switching, retained route/map state, progress after reload, English
 disclosures, node selection, all 117 labels in each layout, and mobile/dark views.
+
+
+## Interface refinement before detailed exposition
+
+The definition-level review identified misplaced injection interfaces, broad
+re-exports and downstream dependence on hull implementation details. The accepted
+work is a sequence of focused changes, with trilingual headings and introductions
+and the reading catalog updated at every new boundary:
+
+1. Move general internal-injection vocabulary and composition laws out of the
+   GCH statement/assembly modules; give definable injections a general L home.
+2. Keep the earliest-disagreement construction together but expose its actual
+   three-result endpoint. Put chapter recaps after their substantive results.
+3. Separate reusable code-alphabet and table-specification interfaces from the
+   proofs that realize them. Remove SatisfactionFrame's unrelated re-exports.
+4. Separate recursion's graph representation when this removes real dependencies
+   from consumers of its replacement/image interface.
+5. Replace hull consumers' access to nested formula environments and collapse
+   implementations with explicit mathematical reading/transfer interfaces.
+
+Do not split Coding.Model into four chapters merely because consumers use
+different dictionary entries. Retain the existing reflection and axiom stages,
+whose boundaries express distinct mathematical obligations and assumptions.
+Preserve opacity around large formulas; exposing their reductions is not an
+acceptable price for a cosmetically smaller interface.
+
+Acceptance requires actual consumers to use the new interfaces, no compatibility
+forwarding modules, a valid parallel reading catalog, matched trilingual chapter
+and subsection openings, safe whole-tree typechecking and a checked site build.
+A numerical import reduction alone is not evidence of improved cohesion.
+
+The general injection interfaces now live in `L.Cardinal`,
+`L.DefinableInjection` and `L.InjectionComposition`. Six chapters no longer
+import GCH.Assembly just for inclusion or composition; its four remaining
+consumers use its GCH obligations or final assembly theorem.
+
+`L.Recursion.Graph` owns the ordered-pair representation of recursive values.
+`CodeAlphabet` supplies syntax constants, while `CodeDomain` and
+`SatisfactionClauses` describe formulas without assuming excluded middle.
+`CodeDomainAdequacy` and `SatisfactionClauseSemantics` own their semantic proofs.
+The former SatisfactionFrame is replaced by `L.Coding.SatisfactionGraphSet`,
+whose result is the internal graph of uniform satisfaction. Consumers import
+other coding tools directly from their owners.
+
+The catalog retains ten parallel routes. Its 121 chapters introduce the code
+alphabet immediately before semantic use, and postpone code-domain soundness
+and completeness until the GCH description branch. The latter proof is not an
+ancestor of UniformSatisfaction. All new chapter boundaries carry matched
+English, Chinese and Japanese headings and opening paragraphs. Existing code
+explanations remain outside the scope of this writing phase.
+
+The hull interface separates mathematical readings from counting: the telescope
+provides least-witness decoding and uniqueness, while HullCounting places the
+recovered parameters in its finite-sequence and product bounds. Collapse
+membership and inverse transfer belong to SkolemHull's Carry interface.
+Consumers no longer reconstruct collapse implementation fields or the nested
+satisfaction-table environment. Large describing formulas remain opaque.
+
+Validation on 2026-09-08: `make check` passes, including 79 tests and the
+122-page, 713-title trilingual framework. A fresh project typecheck with Cubical
+cache retained takes 212.06 seconds and reaches 1.62 GiB peak RSS; the tree has
+26,587 nonblank Agda code lines. The 121-chapter DAG has 1,605 direct edges,
+230 transitive-reduction edges and a longest chain of 31 modules. These costs
+are acceptable for the explicit ownership and semantic interfaces established
+here; reducing import count is not the acceptance criterion.
+
+`make site` completes with library type hints enabled. All 366 localized master
+pages have matching titles and identical rendered Agda code, and the site link
+checker finds no broken targets. Chrome verifies the reading-guide sidebar in
+three languages, mobile tab navigation and all 121 node labels in each of the
+three dependency-map layouts. Obsolete generated pages for the two renamed
+modules were removed before the final build. Generated logs and screenshots
+remain under ignored `_build/cohesion-refactor`.

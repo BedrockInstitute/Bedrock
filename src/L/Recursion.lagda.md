@@ -1,15 +1,15 @@
 <!--en-->
 # Internalizing recursive definitions in L
 
-A definable functional recursion on a set-sized well-founded domain can be represented inside `L` by a table of ordered pairs. The construction handles both explicitly definable value functions and relations known only to have unique values, producing the internal function needed by later hierarchy arguments.
+Replacement collects the values of a definable single-valued relation on a domain in `L` into a set of `L`. The interface accepts either an explicit value function or a relation known merely to have a unique value at each point, and returns the internal table used by later recursive constructions.
 <!--zh-->
 # L 中递归定义的内部化
 
-集合大小的良基域上的可定义函数递归，可由有序对组成的表在 `L` 内呈现。本章同时处理显式可定义的取值函数，以及仅知每处有唯一取值的关系，产生后续层级论证所需的内部函数。
+`L` 中的替换把定义域上可定义单值关系的诸取值收集成 `L` 的一个集合。本章既接受显式取值函数，也接受仅知每点有唯一取值的关系，并给出后续递归构造所用的内部表。
 <!--ja-->
 # L における再帰的定義の内部化
 
-集合の大きさを持つ整礎的な領域上の定義可能な関数的再帰は、順序対の表によって `L` の内部に提示できます。値関数を明示的に定義できる場合と、各点で一意な値があることだけが分かる関係の両方を扱い、後の階層の議論に必要な内部関数を作ります。
+`L` の置換公理は、`L` 内の定義域上にある定義可能な単値関係の値を `L` の集合へ集めます。明示的な値関数がある場合と、各点で値が一意に存在することだけが分かる場合の両方を扱い、後の再帰構成が使う内部表を与えます。
 <!--/-->
 
 <!--en-->
@@ -47,16 +47,10 @@ open import Base.Classical using ( LEM )
 module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
-open import FOL.Syntax using ( Formula; _∧̇_; ∃̇_ )
-open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+open import FOL.Syntax using ( Formula )
 import FOL.Absoluteness
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
-open import V.Coding {ℓ} using ( pr; pr-inj )
-open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; domAt; domAt-intro )
-open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-open import Cubical.Foundations.HLevels using ( isPropΣ )
-open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 open import L.Constructible {ℓ}
   using ( 𝒮ʟ; isL; isL-trans; IsOrd; Lset-mono )
 open import L.Ordinal {ℓ} using ( boundingOrd )
@@ -67,7 +61,7 @@ open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Foundations.Prelude using ( isPropIsContr )
 import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
+open PT using ( ∣_∣₁; ∥_∥₁ )
 
 open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
@@ -402,187 +396,3 @@ be entered.
 <!--zh-->
 本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是要点。任意公式的概括字段才是贵的东西；一旦付清，内化一个递归就不是定理而是推论，而有界情形所强加的逐子句绝对性纪律，压根无须踏入。
 <!--/-->
-
-<!--en-->
-## The graph as a set of ordered pairs
-
-Replacement also collects the argument-value pairs. The same recursion supplies
-both their membership reading and the single-valuedness and domain of the graph.
-<!--zh-->
-## 作为有序对集合的图
-
-替换也收集索引与取值的有序对。同一个递归给出这些对的隶属读式，以及图的单值性和定义域。
-<!--ja-->
-## 順序対の集合としてのグラフ
-
-内部化された表の要素を順序対として読むと、再帰的関数のグラフが得られます。対の単射性と表の関数性が、各入力に対応する出力の一意性を保証します。
-<!--/-->
-
-Renaming uses the model's satisfaction relation.
-
-```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
-```
-
-The pair form of a graph, over `(e ∷ p ∷ [])`: "`e` is the pair of `p` and some
-`z` with `φ z p`" (the shape src/L/Hierarchy.lagda.md pays for the hierarchy).
-Inside the binder `z` is 0, `e` is 1, `p` is 2.
-
-```agda
-module PairFo (φ : Formula S 2) where
-
-  ρ : Fin 2 → Fin 3
-  ρ zero       = zero
-  ρ (suc zero) = suc (suc zero)
-
-  opaque
-    pairFo : Formula S 2
-    pairFo = ∃̇ (prAtL (suc zero) (suc (suc zero)) zero ∧̇ renameFo ρ φ)
-
-    private
-      ag : (z e p : S) → Ren.Agrees ρ (z ∷ e ∷ p ∷ []) (z ∷ p ∷ [])
-      ag z e p zero       = refl
-      ag z e p (suc zero) = refl
-
-      at : (z e p : S)
-         → ⟨ (z ∷ e ∷ p ∷ []) ⊨ prAtL (suc zero) (suc (suc zero)) zero ⟩
-         ≡ (fst e ≡ pr (fst p) (fst z))
-      at z e p = cong ⟨_⟩ (prAtL-adequate (suc zero) (suc (suc zero)) zero (z ∷ e ∷ p ∷ []))
-
-      gr : (z e p : S)
-         → ⟨ (z ∷ e ∷ p ∷ []) ⊨ renameFo ρ φ ⟩ ≡ ⟨ (z ∷ p ∷ []) ⊨ φ ⟩
-      gr z e p = cong ⟨_⟩ (Ren.⊨-rename ρ φ (z ∷ e ∷ p ∷ []) (z ∷ p ∷ []) (ag z e p))
-
-    pair-out : (e p : S) → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
-             → ∥ Σ[ z ∈ S ] ((fst e ≡ pr (fst p) (fst z)) × ⟨ (z ∷ p ∷ []) ⊨ φ ⟩) ∥₁
-    pair-out e p = PT.map (λ { (z , (q , h)) →
-      z , (transport (at z e p) q , transport (gr z e p) h) })
-
-    pair-in : (e p z : S) → fst e ≡ pr (fst p) (fst z) → ⟨ (z ∷ p ∷ []) ⊨ φ ⟩
-            → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
-    pair-in e p z q h = ∣ z , (transport (sym (at z e p)) q , transport (sym (gr z e p)) h) ∣₁
-```
-
-The graph construction needs only a recursion; a codomain is not part of its
-input. The centre of the contractible fibre is its value function.
-
-```agda
-module Graph (R₀ : Recursion) where
-  open Of R₀ public using ( dom; graph; funct ) renaming ( val to fn )
-```
-
-Membership in the domain, as `fn` consumes it.
-
-```agda
-  Mem : S → Type (ℓ-suc ℓ)
-  Mem x = ⟨ fst x ∈ fst dom ⟩
-
-  isPropMem : (x : S) → isProp (Mem x)
-  isPropMem x = snd (fst x ∈ fst dom)
-
-  private
-    defines : (x : S) (m : Mem x) → ⟨ (fn x m ∷ x ∷ []) ⊨ graph ⟩
-    defines x m = funct x m .fst .snd
-
-    only : (x : S) (m : Mem x) (y : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x m
-    only x m y h = sym (cong fst (funct x m .snd (y , h)))
-
-    module Fo = PairFo graph renaming ( pairFo to fo; pair-out to out; pair-in to into )
-
-```
-
-The value does not depend on which membership proof was given.
-
-```agda
-    fn-irr : (x : S) (m m' : Mem x) → fn x m ≡ fn x m'
-    fn-irr x m m' = cong (fn x) (isPropMem x m m')
-```
-
-The pair, as an element of L.
-
-```agda
-    pairOf : (x : S) → Mem x → S
-    pairOf x m = prʟ x (fn x m)
-
-    uniq : (x : S) (m : Mem x) (p : S) → ⟨ (p ∷ x ∷ []) ⊨ Fo.fo ⟩ → p ≡ pairOf x m
-    uniq x m p h = PT.rec (isSetS p (pairOf x m))
-      (λ { (z , (e , g)) → Σ≡Prop (λ v → snd (isL v))
-        (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z g) ∙ sym (prʟ-fst x (fn x m))) })
-      (Fo.out p x h)
-
-    R : Recursion
-    R = record
-      { dom   = dom
-      ; graph = Fo.fo
-      ; funct = λ x m →
-          ( pairOf x m
-          , Fo.into (pairOf x m) x (fn x m) (prʟ-fst x (fn x m)) (defines x m) )
-        , λ { (p , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ Fo.fo)) (sym (uniq x m p h)) } }
-
-    module T = Of R using ( table; table-in; table-out )
-
-  F : S
-  F = T.table
-
-  F-in : (x : S) (m : Mem x) → ⟨ pr (fst x) (fst (fn x m)) ∈ fst F ⟩
-  F-in x m = subst (λ w → ⟨ w ∈ fst F ⟩) (prʟ-fst x (fn x m))
-    (T.table-in x (pairOf x m) m
-      (Fo.into (pairOf x m) x (fn x m) (prʟ-fst x (fn x m)) (defines x m)))
-
-  F-out : (p : V ℓ) → ⟨ p ∈ fst F ⟩
-        → ∥ Σ[ x ∈ S ] Σ[ m ∈ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
-  F-out p h = PT.rec squash₁ step (T.table-out pS h)
-    where
-    pS : S
-    pS = p , isL-trans {x = fst F} {y = p} h (snd F)
-
-    step : Σ[ x ∈ S ] (Mem x × ⟨ (pS ∷ x ∷ []) ⊨ Fo.fo ⟩)
-         → ∥ Σ[ x ∈ S ] Σ[ m ∈ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
-    step (x , (m , g)) = PT.map
-      (λ { (z , (e , gz)) →
-        x , m , (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z gz)) })
-      (Fo.out pS x g)
-```
-
-A pair in `F`, read as a value of `fn`. The target is a proposition, so the
-truncation comes off.
-
-```agda
-  Fib : S → S → Type (ℓ-suc ℓ)
-  Fib x y = Σ[ m ∈ Mem x ] (fst y ≡ fst (fn x m))
-
-  isPropFib : (x y : S) → isProp (Fib x y)
-  isPropFib x y = isPropΣ (isPropMem x) (λ m → setIsSet (fst y) (fst (fn x m)))
-
-  pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → Fib x y
-  pair-out x y h = PT.rec (isPropFib x y) step (F-out (pr (fst x) (fst y)) h)
-    where
-    step : Σ[ x' ∈ S ] Σ[ m' ∈ Mem x' ] (pr (fst x) (fst y) ≡ pr (fst x') (fst (fn x' m')))
-         → Fib x y
-    step (x' , m' , e) = subst (λ z → Fib z y)
-      (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj e .fst))) (m' , pr-inj e .snd)
-
-```
-
-THE CONJUNCTS.
-
-```agda
-  γ : S ^ 2
-  γ = F ∷ dom ∷ []
-
-  sv : ⟨ γ ⊨ svAt zero ⟩
-  sv = svAt-in zero γ (λ x y y' p q →
-    let (m , e)   = pair-out x y p
-        (m' , e') = pair-out x y' q
-    in e ∙ cong fst (fn-irr x m m') ∙ sym e')
-
-  dm : ⟨ γ ⊨ domAt zero (suc zero) ⟩
-  dm = domAt-intro zero (suc zero) γ (λ x → fwd x , bwd x)
-    where
-    fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩ → Mem x
-    fwd x = PT.rec (isPropMem x) (λ { (y , p) → fst (pair-out x y p) })
-
-    bwd : (x : S) → Mem x → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩
-    bwd x m = ∣ fn x m , F-in x m ∣₁
-
-```

@@ -1,15 +1,18 @@
 <!--en-->
-# A reusable frame for the satisfaction table
+# An internal graph of uniform satisfaction
 
-The uniform satisfaction recursion assigns one truth value to every formula and environment. This chapter characterizes its graph by formulas that state the assigned value and its uniqueness, so the satisfaction table can be recognized inside `L`.
+The uniform satisfaction table assigns one value to every formula code in
+`AllCodes W`. This chapter turns that internal value function into a set in `L`
+whose members are exactly the pairs of a code and its assigned value, and proves
+the two membership readers used by later constructions.
 <!--zh-->
-# 满足关系表的可复用框架
+# 统一满足关系的内部图
 
-统一满足递归为每条公式与每个环境指派唯一真值。本章用陈述该值及其唯一性的公式刻画它的图，使满足关系表能够在 `L` 内部被识别。
+统一满足关系表为 `AllCodes W` 中的每个公式码指派一个取值。本章把这个内部取值函数化为 `L` 中的集合，其成员恰好是公式码与相应取值组成的有序对，并证明后续构造所用的两个隶属关系读式。
 <!--ja-->
-# 充足関係表の再利用可能なフレーム
+# 一様な充足関係の内部グラフ
 
-一様な充足関係の再帰は、各論理式と環境に一つの真理値を割り当てる。本章では、その値と一意性を述べる論理式によってグラフを特徴付け、充足関係表を `L` の内部で認識できるようにする。
+一様な充足関係表は、`AllCodes W` の各論理式符号に一つの値を割り当てる。本章では、この内部の値関数を `L` の集合にし、その要素が論理式符号と対応する値の順序対にちょうどなることを示し、後続の構成が使う二つの所属関係の読み補題を証明する。
 <!--/-->
 
 ```agda
@@ -19,7 +22,7 @@ open import Base.Prelude
 open import Base.Truth
 open import Base.Classical using ( LEM )
 
-module L.GCH.SatisfactionFrame {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
+module L.Coding.SatisfactionGraphSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 import FOL.Absoluteness
@@ -27,19 +30,6 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
-open import L.Coding.Model {ℓ} using ( container ) public
-open import L.Coding.Quantification {ℓ} public
-  using ( bothAll; bothAll-in; down; fillSnd; i0; i1; i2; i3; i6; i8
-        ; sndS; pr-in; pr-out; sh; sndAll; sndAll-in; sndEx; sndEx-out; suc-in; suc-out
-        ; useBoth; useSnd; Δ₀-bothAll; Δ₀-prAtL; Δ₀-sndAll; Δ₀-sndEx; Δ₀-sucAtL )
-open import L.Coding.EnvironmentTower {ℓ} lem public
-  using ( nn; towerAt; Δ₀-towerAt; module Tower; module TowerHolds; module TowerRead )
-open import L.Coding.CodeDomain {ℓ} lem public
-  using ( Tags; codesAt; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9; shN
-        ; Δ₀-codesAt; module Alphabet; module CodesComplete; module CodesHolds
-        ; module CodesSound )
-open import L.Coding.SatisfactionClauses {ℓ} lem public
-  using ( tableAt; Δ₀-tableAt; module Bridge; module Frame )
 
 open import FOL.Syntax using ( Formula )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
@@ -57,19 +47,20 @@ open AbsSF using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 The graph of the uniform table, as a set. The value function of
-src/L/Coding/Uniform.lagda.md `Table` supplies a recursion, and
-src/L/Recursion.lagda.md `Graph` makes its graph a set. Sealed where it is
+src/L/Coding/UniformSatisfaction.lagda.md `Table` supplies a recursion, and
+src/L/Recursion/Graph.lagda.md `Graph` makes its graph a set. Sealed where it is
 built; its two readers are what the consumer holds.
 
 ```agda
 open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table )
-open import L.Recursion {ℓ} lem using ( Recursion ) renaming ( module Graph to MapGraph )
+open import L.Recursion {ℓ} lem using ( Recursion )
+open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to MapGraph )
 
 module SatGraph (W : S) where
 ```
 
 SEALED: the value at a member is a contractibility centre, and written out it
-does not elaborate (src/L/Coding/Uniform.lagda.md `val-at`'s measurement). Every
+does not elaborate (src/L/Coding/UniformSatisfaction.lagda.md `val-at`'s measurement). Every
 use below names it by this atom.
 
 ```agda

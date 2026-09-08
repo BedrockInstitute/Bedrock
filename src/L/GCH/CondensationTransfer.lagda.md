@@ -23,8 +23,6 @@ module L.GCH.CondensationTransfer {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; ∃̇_ )
-open import FOL.LevyHierarchy using
-  ( Δ₀ )
 open import FOL.Manipulation.ConstantMapping using ( mapFo; embed )
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -39,7 +37,7 @@ open import L.GCH.SkolemHull {ℓ} lem using
 open import L.GCH.HierarchyDescription {ℓ} lem using ( levelFo; Δ₀-levelFo; level-sound; level-complete )
 open import L.GCH.AdequateStages {ℓ} lem using ( Superadequate; Adequate; Lset∈suc )
 
-open import Cubical.Data.Vec using ( map; _∷_; [] )
+open import Cubical.Data.Vec using ( _∷_; [] )
 open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Foundations.HLevels using ( isProp× )
 import Cubical.HITs.PropositionalTruncation as PT
@@ -115,7 +113,7 @@ module Condense (lam : S) (ordλ : IsOrd lam)
   module A = F.A using (SM; module SemM; inL)
   module Mse = A.SemM.At A.SM id using (_⊨_)
   module HS = F.HS using (module ASt; module C; module Condense; module H; M)
-  module Cy = F.Carry elem using (module CIso; atL; atM; atπ; push)
+  module Cy = F.Carry elem using (atL; atM; member-push; push; pull)
 
   open HS.H using ( Hull⊆L )
 
@@ -136,20 +134,6 @@ module Condense (lam : S) (ordλ : IsOrd lam)
     Lset-mono {α = lam} {β = sucV d} (succλ d d∈λ) (ord∈Lset-suc d od)
 ```
 
-THE PULL: the mirror of `Carry.push`, by `iso-inv-bwd`.
-
-```agda
-  pull : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : F.A.SM ^ n)
-       → ⟨ map fst (map Cy.CIso.I.g δ) ⊨ₚ φ ⟩
-       → ⟨ map fst δ ⊨ₚ φ ⟩
-  pull {n} {φ} dφ δ h =
-    subst ⟨_⟩ (Cy.atM dφ δ)
-      (Cy.CIso.I.iso-inv-bwd n (embed φ) δ
-        (subst (λ ψ → ⟨ map Cy.CIso.I.g δ Cy.CIso.I.⊨ᵖᵐ ψ ⟩)
-               (sym (embed-map Cy.CIso.I.g φ))
-               (subst ⟨_⟩ (sym (Cy.atπ dφ (map Cy.CIso.I.g δ))) h)))
-```
-
 Ordinality crosses the collapse in both directions.
 
 ```agda
@@ -161,7 +145,7 @@ Ordinality crosses the collapse in both directions.
   ord-pull : (d : S) (d∈M : ⟨ d ∈ˢ M ⟩) → IsOrd (π d) → IsOrd d
   ord-pull d d∈M oπd =
     Amb.isOrdAt-out d
-      (pull Δ₀-isOrdAt ((d , d∈M) ∷ []) (Amb.isOrdAt-in (π d) oπd))
+      (Cy.pull Δ₀-isOrdAt ((d , d∈M) ∷ []) (Amb.isOrdAt-in (π d) oπd))
 ```
 
 THE STAGE EXISTENTIALS, from `level-complete` at an adequate stage. Each formula
@@ -397,7 +381,7 @@ THE TWO HYPOTHESES OF `HullStage.Condense`.
 
           πy∈ : ⟨ π y ∈ˢ Lset (π p′) ⟩
           πy∈ = subst (λ w → ⟨ π y ∈ˢ w ⟩) (cm .snd)
-                  (Cy.CIso.iso-fwd (Lset p′) y (cm .fst) y∈M y∈Lp′)
+                  (Cy.member-push (Lset p′) y (cm .fst) y∈M y∈Lp′)
 
         takeA : (z : A.SM)
               → Σ[ a ∈ A.SM ]

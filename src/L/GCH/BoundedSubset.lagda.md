@@ -30,10 +30,9 @@ open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset→∈ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ )
 open import L.Stage {ℓ} lem using ( stage; stage-ord; stage-mem )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Assembly {ℓ} lem
-  using ( InternalBoundedSubset; inclusion-coded; injl-trans )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
+open import L.GCH.Assembly {ℓ} lem using ( InternalBoundedSubset )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 open import L.GCH.SkolemHull {ℓ} lem
   using ( module UnionKit; module HullStage; module HullElemDown )
 open import L.GCH.CardinalSquareLaw {ℓ} lem using ( prodL; ω⊆; Goal; module Step )
@@ -65,9 +64,9 @@ open hPropStructure 𝒮ʟ using ( S )
 The site. An infinite L-cardinal `κ` and a subset `y` of `κ`, both elements of
 L. The start `X = L_κ ∪ {y}` is transitive and an element of L; `λ` is a
 superadequate stage above `κ` and above `y`; the Skolem hull `M` of `X` in
-`L_λ` collapses to a stage `L_β` (src/L/GCH/StageCounted.lagda.md `Site`); `y`
+`L_λ` collapses to a stage `L_β` (src/L/GCH/StageInjection.lagda.md `Site`); `y`
 is fixed by the collapse, so `y ∈ L_β`; and `β ⊆ L_β = πX ↪ M ↪ κ`, the last by
-src/L/GCH/HullCount.lagda.md.
+src/L/GCH/HullCounting.lagda.md.
 
 ```agda
 ```
@@ -191,7 +190,7 @@ superadequate stage above `α₀`. Sealed: every consumer wants `λ` as an atom.
 
 3. THE START IS COUNTED: `L_κ ↪ κ` and `{y} ↪ κ`, tagged, then paired.
 
-The pairing at `κ`: src/L/GCH/Pairing.lagda.md's square law.
+The pairing at `κ`: src/L/GCH/CardinalSquareLaw.lagda.md's square law.
 
 ```agda
   pairκ : InjL (prodL κ) κ
@@ -206,7 +205,7 @@ The pairing at `κ`: src/L/GCH/Pairing.lagda.md's square law.
 
 4. ELEMENTARITY OF THE HULL: the hull's Tarski-Vaught instance reads the code of
 each constant off the hull membership, so the start needs no ambient count here
-(src/L/GCH/Hull.lagda.md).
+(src/L/GCH/SkolemHull.lagda.md).
 
 ```agda
   elem = HullElemDown.elem lam ordλ X UK.X⊆Lλ UK.∅∈λ
@@ -222,7 +221,7 @@ of `Count` is copied.
 ```
 
 The collapse stage `L_β` and the inverse collapse `L_β ↪ M`, at the same
-telescope (src/L/GCH/StageCounted.lagda.md `Site`).
+telescope (src/L/GCH/StageInjection.lagda.md `Site`).
 
 ```agda
   module St = Site lam ordλ succλ X UK.X⊆Lλ UK.∅∈λ elem sup X-isL

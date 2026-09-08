@@ -39,8 +39,8 @@ open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; 
 open import L.Coding.Model {ℓ} using ( appC; appC-adequate ) public
 open import L.Coding.Injection {ℓ} lem
   using ( injAt; injAt-out; injAt-in; module Small )
-open import L.Cardinal {ℓ} lem using ( InjCode )
-open import L.GCH.DefinableInjection {ℓ} lem
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.DefinableInjection {ℓ} lem
   using ( DefinableMap ) renaming ( module Inj to DefinableInj )
 
 import Cubical.Data.Empty as Empty
@@ -495,6 +495,39 @@ an unsealed `Small` application at this site previously exhausted an 8g heap.
   opaque
     incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
     incl = Sm.small
+```
+
+<!--en-->
+## Inclusion and composition at the internal-existence level
+
+The graph constructions lift through propositional truncation to the internal injection relation. Thus every inclusion gives an internal coded injection, and two internal coded injections compose without choosing either graph globally.
+<!--zh-->
+## 内部存在层面的包含与复合
+
+图构造可穿过命题截断提升到内部单射关系。因此，每个包含都给出内部编码单射，而两个内部编码单射无需在全局选定各自的图便可复合。
+<!--ja-->
+## 内部存在の水準における包含と合成
+
+グラフの構成は命題的切り詰めを通して内部の単射関係へ持ち上がります。したがって、各包含から内部の符号化された単射が得られ、二つのグラフを大域的に選ぶことなく内部の符号化された単射を合成できます。
+<!--/-->
+
+```agda
+inclusion-coded : (a b : S)
+                → ((z : V ℓ) → ⟨ z ∈ fst a ⟩ → ⟨ z ∈ fst b ⟩)
+                → InjL a b
+inclusion-coded a b sub = ∣ I.G , I.code ∣₁
+  where module I = InclGraph a b sub
+
+injl-trans : (a b c : S) → InjL a b → InjL b c → InjL a c
+injl-trans a b c = PT.rec2 PT.squash₁ step
+  where
+  step : Σ[ F ∈ S ] InjCode F a b
+       → Σ[ H ∈ S ] InjCode H b c
+       → InjL a c
+  step (F , svF , dmF , ijF , ranF) (H , svH , dmH , ijH , ranH) =
+    ∣ K.K , (K.svK , K.dmK , K.ijK , K.ranK) ∣₁
+    where
+    module K = Comp a b c F H svF dmF ijF ranF svH dmH ijH ranH
 ```
 
 The ordinal inclusion, which is A5's row-3 object. The module is generic in the

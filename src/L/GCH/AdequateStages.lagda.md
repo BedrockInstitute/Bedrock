@@ -34,7 +34,8 @@ open import L.Hierarchy {ℓ} lem using ( hierL )
 open import L.Axioms.Basic {ℓ} using ( LsetS; Lset-suc )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
 open import L.Definability {ℓ} using ( module DefOf )
-open import L.GCH.SatisfactionFrame {ℓ} lem using ( module Tower; module SatGraph )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( module Tower )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
 
 open import Cubical.Data.Sigma using ( _×_ )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
@@ -71,7 +72,7 @@ At an ordinal `c`, the hierarchy description names four sets over `Lset c`: the 
 順序数 `c` において、階層の記述は `Lset c` 上の四つの集合、すなわち階層表、論理式コードの集合、一様な充足関係表のグラフ、環境の塔を指定する。十分な段階は後者について閉じ、`ω` を含み、各々のより小さい順序数についてこの四つの証人を含む。
 <!--/-->
 
-At an ordinal `c` the level description (src/L/GCH/HierDescribe.lagda.md) names
+At an ordinal `c` the level description (src/L/GCH/HierarchyDescription.lagda.md) names
 four sets over the carrier `w = Lset c`: the hierarchy table on `c`, the code
 set, the graph of the uniform satisfaction table and the environment tower.
 Every other set its rows bound is a member of one of these, a numeral, or a

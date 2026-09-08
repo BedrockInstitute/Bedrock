@@ -39,11 +39,10 @@ open import L.Coding.Environment {ℓ} using ( lookup-spec )
 open import L.Coding.EnvironmentSet {ℓ} lem
   using ( Ix; envS; envOver; envSet; envSet-in; envSet-out; module Recover )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct; smallDom )
-open import L.Cardinal {ℓ} lem using ( IsCardinalL )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Assembly {ℓ} lem using ( injl-trans )
+open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL )
+open import L.InjectionComposition {ℓ} lem using ( injl-trans )
 open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
-open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.CardinalSquareLaw {ℓ} lem
   using ( prodL; prodL-in; Goal; module Step; prod-inj; no-fin; ω⊆ )
 open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
@@ -790,9 +789,9 @@ Passing through the cardinal representative of `α` supplies the required coded 
 At an infinite ordinal `α`, the finite sequences over `α` inject into `α`,
 inside L.
 
-The pairing at `α` is the one src/L/GCH/SuccIntoPower.lagda.md builds:
+The pairing at `α` is the one src/L/GCH/SuccessorIntoPowerSet.lagda.md builds:
 `α ↪ μ` at the internal cardinal `μ` of `α`, so `prodL α ↪ prodL μ`; the square
-law of src/L/GCH/Pairing.lagda.md at `μ`, which is infinite because `α` is; and
+law of src/L/GCH/CardinalSquareLaw.lagda.md at `μ`, which is infinite because `α` is; and
 `μ ↪ α`.
 
 ```agda

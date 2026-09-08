@@ -51,18 +51,22 @@ branch. Local examples and applications still matter within each chosen route.
 
 前提となる章を読み終えれば，その先の主題に進めます。目次の番号は共通の時間割ではありません。各ルートに必要な前提を依存マップで確かめ，二つのルートが合流する章では両方の内容を揃えましょう。
 
-| Shared preparation | Topics that can proceed separately | Where they meet |
+| 共通の準備 | 別々に進められる主題 | 合流するところ |
 |---|---|---|
-| Foundations, first-order syntax and semantics | Constant/variable manipulation; the ambient hierarchy, smallness and model | `L.Definability` uses semantic relabelling and ambient smallness; `L.Constructible` also needs `V.Model`. Occurrence abstraction can continue separately until names need it. |
-| Constructible stages, ordinals and basic axioms | External canonical orders in `Choice.FiniteStageOrders`, `Choice.CanonicalNames`, `Choice.StageOrders`; internal satisfaction coding through `Coding.UniformSatisfaction` | `Choice.NameComparison` uses the names and uniform satisfaction; `Choice.OrderTable` also needs the step construction. Names need occurrence abstraction and syntax coding; the internal route needs the full schemes and numerals. |
-| The relevant constructibility and coding prerequisites | Complete the Choice proof; develop the ordinal/cardinal tools, coded injections, Cantor-Bernstein and `CardinalAbove` | The cardinal tools do not require `Choice.Transversal` or `L.Model`. The final `GCH.Theorem` requires `L.Model` together with the cardinal bounds. The intervening GCH proof has additional shared dependencies. |
-| The required coding and order interfaces | Satisfaction/hierarchy descriptions; Skolem hull construction | `GCH.CondensationTransfer` combines `GCH.SkolemHull`, `GCH.HierarchyDescription` and `GCH.AdequateStages`. The hull branch already needs `Choice.StageOrders`; it is not independent of all Choice material. |
+| 基礎，一階論理の構文と意味論 | 定数と変数の操作；周囲の階層，小ささ，モデル | `L.Definability` は定数の改名と周囲の小ささを使い，`L.Constructible` はさらに `V.Model` を使います。出現の抽象は，名前の構成で必要になるまで別に学べます |
+| 構成可能段階，順序数，基本公理 | `Choice.FiniteStageOrders`，`Choice.CanonicalNames`，`Choice.StageOrders` の外部の正準順序；`Coding.UniformSatisfaction` までの内部の充足関係の符号化 | `Choice.NameComparison` は名前と一様な充足関係を合わせ，`Choice.OrderTable` は一段階の順序構成も使います。名前には出現の抽象と構文の符号化，内部の符号化には完全な公理図式と数項が必要です |
+| 各主題に必要な構成可能性と符号化 | 選択公理の証明；順序数と基数，符号化された単射，Cantor-Bernstein，`CardinalAbove` | 基数の道具は `Choice.Transversal` や `L.Model` を必要としません。最終的な `GCH.Theorem` では `L.Model` と基数の上界を合わせます。途中の GCH の議論には別の共有前提もあります |
+| 必要な符号化と順序の結果 | 充足関係と階層の記述；Skolem 包の構成 | `GCH.CondensationTransfer` は `GCH.SkolemHull`，`GCH.HierarchyDescription`，`GCH.AdequateStages` を合わせます。包のルートも `Choice.StageOrders` を必要とするため，選択公理の全内容から独立ではありません |
 
-For example, `L.WellOrder.Base` can be read when the order route needs it,
-without first finishing the satisfaction route. Conversely, satisfaction coding
-does not require completing the canonical order. Long separation between two
-chapters on this example path therefore need not represent a wait on either
-branch. Local examples and applications still matter within each chosen route.
+例えば，順序のルートで必要になった時点で `L.WellOrder.Base` に進めます。充足関係のルートを先に終える必要はありません。逆に，充足関係の符号化も正準順序の完成を待つ必要はありません。この例示ルートで離れている二章が，各分岐でも長い待ち時間を生むとは限りません。
+<!--/-->
+
+<!--en-->
+The closed code domain is described before it is used in satisfaction formulas. Its soundness and completeness are proved in `L.Coding.CodeDomainAdequacy` when the GCH description route needs them; that proof is not a prerequisite for the whole internal-coding route.
+<!--zh-->
+封闭码定义域先被描述，再用于满足关系公式。其可靠性与完备性在 GCH 描述路线需要时，由 `L.Coding.CodeDomainAdequacy` 证明；整条内部编码路线不必以这份证明为先修。
+<!--ja-->
+閉じた符号の定義域を先に記述し，充足関係の論理式で使います。その健全性と完全性は，GCH の記述ルートで必要になるときに `L.Coding.CodeDomainAdequacy` で証明します。内部の符号化ルート全体の前提として先に読む必要はありません。
 <!--/-->
 
 <!-- bedrock-routes
@@ -220,10 +224,13 @@ branch. Local examples and applications still matter within each chosen route.
         "L.Coding.NumeralBound",
         "L.Coding.Quantification",
         "L.Recursion",
+        "L.Recursion.Graph",
         "L.Coding.EnvironmentTower",
         "L.Coding.CodeSet",
         "L.Coding.CodeDomain",
         "L.Coding.SatisfactionClauses",
+        "L.Coding.CodeAlphabet",
+        "L.Coding.SatisfactionClauseSemantics",
         "L.Coding.PinnedRecursion",
         "L.Coding.SatisfactionGraph",
         "L.Coding.UniformSatisfaction",
@@ -273,13 +280,13 @@ branch. Local examples and applications still matter within each chosen route.
         "L.Ordinal.SquareLaw",
         "L.Coding.Injection",
         "L.Cardinal",
+        "L.DefinableInjection",
+        "L.InjectionComposition",
         "L.GCH",
         "V.CantorBernstein",
         "L.CantorBernstein",
         "L.Mostowski",
         "L.CardinalAbove",
-        "L.GCH.DefinableInjection",
-        "L.InjectionComposition",
         "L.GCH.Assembly"
       ]
     },
@@ -296,7 +303,8 @@ branch. Local examples and applications still matter within each chosen route.
         "ja": "充足関係，定義可能性，十分な段階と階層を内部で記述します。"
       },
       "chapters": [
-        "L.GCH.SatisfactionFrame",
+        "L.Coding.SatisfactionGraphSet",
+        "L.Coding.CodeDomainAdequacy",
         "L.GCH.SatisfactionDescription",
         "L.GCH.DefinablePowerSetDescription",
         "L.GCH.AdequateStages",
@@ -440,7 +448,7 @@ ZFC 与 GCH 将在模型内部得到证明，故其语法与语义本身必须�
 - `FOL.Semantics`{.Agda}：语义
 - `FOL.LevyHierarchy`{.Agda}：莱维层级
 - `FOL.Absoluteness`{.Agda}：绝对性
-- `FOL.ZFModel`{.Agda}: ZF 与 ZFC 的模型
+- `FOL.ZFModel`{.Agda}：ZF 与 ZFC 的模型
 - `FOL.Manipulation.ConstantMapping`{.Agda}：映射常元
 - `FOL.Manipulation.Renaming`{.Agda}：变量改名
 - `FOL.Manipulation.Relabelling`{.Agda}：常元改名
@@ -459,7 +467,7 @@ ZFC 与 GCH 将在模型内部得到证明，故其语法与语义本身必须�
 - `FOL.Semantics`{.Agda}：意味論
 - `FOL.LevyHierarchy`{.Agda}：レヴィ階層
 - `FOL.Absoluteness`{.Agda}：絶対性
-- `FOL.ZFModel`{.Agda}: ZF と ZFC のモデル
+- `FOL.ZFModel`{.Agda}：ZF と ZFC のモデル
 - `FOL.Manipulation.ConstantMapping`{.Agda}：定数の写像
 - `FOL.Manipulation.Renaming`{.Agda}：変数の改名
 - `FOL.Manipulation.Relabelling`{.Agda}：定数の改名
@@ -552,7 +560,7 @@ where constructions live. Reflection then upgrades bounded closure facts to the 
 - `L.Definability`{.Agda}：集合的可定义子集
 - `L.Constructible`{.Agda}：可构造层级与可构造宇宙
 - `L.Ordinal`{.Agda}：序数的封闭性与有限序数
-- `L.Rank`{.Agda}: Von Neumann 秩
+- `L.Rank`{.Agda}：Von Neumann 秩
 - `L.Ordinal.Linear`{.Agda}：序数由隶属关系线性排序
 - `L.Ordinal.Stages`{.Agda}：在可构造层级中定位序数
 - `L.Stage`{.Agda}：最小可构造阶段的索引
@@ -561,10 +569,10 @@ where constructions live. Reflection then upgrades bounded closure facts to the 
 - `L.ExistentialReflection`{.Agda}：存在公式到可构造阶段的反射
 - `L.FormulaReflection`{.Agda}：任意公式的反射
 - `L.Axioms.Full`{.Agda}：完整的分离与替换
-- `L.Axioms.Power`{.Agda}: L 中的幂集
+- `L.Axioms.Power`{.Agda}：L 中的幂集
 - `L.Absoluteness`{.Agda}：环境公式到 L 上公式
 - `L.Axioms.Numerals`{.Agda}：数码链
-- `L.Axioms.Infinity`{.Agda}: L 中的无穷公理
+- `L.Axioms.Infinity`{.Agda}：L 中的无穷公理
 <!--ja-->
 ## 構成可能段階と公理
 
@@ -573,7 +581,7 @@ where constructions live. Reflection then upgrades bounded closure facts to the 
 - `L.Definability`{.Agda}：集合の定義可能な部分集合
 - `L.Constructible`{.Agda}：構成可能階層と構成可能宇宙
 - `L.Ordinal`{.Agda}：順序数の閉性と有限順序数
-- `L.Rank`{.Agda}: von Neumann ランク
+- `L.Rank`{.Agda}：von Neumann ランク
 - `L.Ordinal.Linear`{.Agda}：順序数は所属によって線形に順序付けられる
 - `L.Ordinal.Stages`{.Agda}：構成可能階層の中で順序数を位置付ける
 - `L.Stage`{.Agda}：最小の構成可能段階の添字
@@ -582,10 +590,10 @@ where constructions live. Reflection then upgrades bounded closure facts to the 
 - `L.ExistentialReflection`{.Agda}：存在論理式の構成可能段階への反映
 - `L.FormulaReflection`{.Agda}：任意の論理式に対する反映
 - `L.Axioms.Full`{.Agda}：完全な分出公理と置換公理
-- `L.Axioms.Power`{.Agda}: L における冪集合
+- `L.Axioms.Power`{.Agda}：L における冪集合
 - `L.Absoluteness`{.Agda}：周囲の論理式から L 上の論理式へ
 - `L.Axioms.Numerals`{.Agda}：数項列
-- `L.Axioms.Infinity`{.Agda}: L における無限公理
+- `L.Axioms.Infinity`{.Agda}：L における無限公理
 <!--/-->
 ```agda
 import L.Definability
@@ -673,12 +681,15 @@ bounded pair quantification and internal recursion for their uniform description
 - `L.Coding.CodeShape`{.Agda}: Recognizing well-formed constructor keys
 - `L.Coding.FormulaRecovery`{.Agda}: Recovering formulas from codes
 - `L.Coding.NumeralBound`{.Agda}: Numerals in a successor-closed ordinal stage
-- `L.Coding.Quantification`{.Agda}: Quantifying over coded pairs
+- `L.Coding.Quantification`{.Agda}: Quantifying over coded pairs and finite formula families
 - `L.Recursion`{.Agda}: Internalizing recursive definitions in L
+- `L.Recursion.Graph`{.Agda}: Graphs of recursive definitions
 - `L.Coding.EnvironmentTower`{.Agda}: The environment tower
 - `L.Coding.CodeSet`{.Agda}: The set of all formula codes
-- `L.Coding.CodeDomain`{.Agda}: The closed domain of formula codes
-- `L.Coding.SatisfactionClauses`{.Agda}: The satisfaction table: the frame, the clauses and their readers
+- `L.Coding.CodeDomain`{.Agda}: Describing the closed domain of formula codes
+- `L.Coding.SatisfactionClauses`{.Agda}: Describing the satisfaction table
+- `L.Coding.CodeAlphabet`{.Agda}: The alphabet of formula codes
+- `L.Coding.SatisfactionClauseSemantics`{.Agda}: Reading and validating the satisfaction clauses
 - `L.Coding.PinnedRecursion`{.Agda}: Recursion pinned to a subcode-closed index set
 - `L.Coding.SatisfactionGraph`{.Agda}: The satisfaction graph formula
 - `L.Coding.UniformSatisfaction`{.Agda}: Uniform satisfaction over all codes
@@ -699,18 +710,21 @@ bounded pair quantification and internal recursion for their uniform description
 - `L.Coding.CodeShape`{.Agda}：良构构造子键的识别
 - `L.Coding.FormulaRecovery`{.Agda}：从码恢复公式
 - `L.Coding.NumeralBound`{.Agda}：对后继封闭的序数阶段中的数码
-- `L.Coding.Quantification`{.Agda}：对码化有序对的分量量化
-- `L.Recursion`{.Agda}: L 中递归定义的内部化
+- `L.Coding.Quantification`{.Agda}：对码化有序对分量与有穷公式族量化
+- `L.Recursion`{.Agda}：L 中递归定义的内部化
+- `L.Recursion.Graph`{.Agda}：递归定义的图
 - `L.Coding.EnvironmentTower`{.Agda}：环境塔
 - `L.Coding.CodeSet`{.Agda}：全体公式码之集
-- `L.Coding.CodeDomain`{.Agda}：公式码的封闭定义域
-- `L.Coding.SatisfactionClauses`{.Agda}：满足关系表：框架、子句及其读式
+- `L.Coding.CodeDomain`{.Agda}：描述封闭的公式码定义域
+- `L.Coding.SatisfactionClauses`{.Agda}：描述满足关系表
+- `L.Coding.CodeAlphabet`{.Agda}：公式码的字母表
+- `L.Coding.SatisfactionClauseSemantics`{.Agda}：读取并验证满足关系子句
 - `L.Coding.PinnedRecursion`{.Agda}：固定在对子码封闭的索引集上的递归
 - `L.Coding.SatisfactionGraph`{.Agda}：满足关系图公式
 - `L.Coding.UniformSatisfaction`{.Agda}：全部编码上的一致满足关系
 - `L.Coding.DefinablePowerSet`{.Agda}：可定义幂集的公式
 - `L.Coding.HierarchySequence`{.Agda}：可构造层级的序列
-- `L.Hierarchy`{.Agda}: L 内部的可构造层级
+- `L.Hierarchy`{.Agda}：L 内部的可构造层级
 <!--ja-->
 ## 内部の符号化：表と一様な充足関係
 
@@ -725,18 +739,21 @@ bounded pair quantification and internal recursion for their uniform description
 - `L.Coding.CodeShape`{.Agda}：整形式な構成子キーの認識
 - `L.Coding.FormulaRecovery`{.Agda}：コードから論理式を復元する
 - `L.Coding.NumeralBound`{.Agda}：後者演算について閉じた順序数段階の数項
-- `L.Coding.Quantification`{.Agda}：符号化された順序対の成分を量化する
-- `L.Recursion`{.Agda}: L における再帰的定義の内部化
+- `L.Coding.Quantification`{.Agda}：符号化された順序対の成分と有限論理式族を量化する
+- `L.Recursion`{.Agda}：L における再帰的定義の内部化
+- `L.Recursion.Graph`{.Agda}：再帰的定義のグラフ
 - `L.Coding.EnvironmentTower`{.Agda}：環境の塔
 - `L.Coding.CodeSet`{.Agda}：すべての論理式の符号からなる集合
-- `L.Coding.CodeDomain`{.Agda}：論理式の符号の閉じた定義域
-- `L.Coding.SatisfactionClauses`{.Agda}：充足関係表：枠組み、節、読み補題
+- `L.Coding.CodeDomain`{.Agda}：閉じた論理式符号の定義域を記述する
+- `L.Coding.SatisfactionClauses`{.Agda}：充足関係表を記述する
+- `L.Coding.CodeAlphabet`{.Agda}：論理式符号のアルファベット
+- `L.Coding.SatisfactionClauseSemantics`{.Agda}：充足関係の節の読み取りと検証
 - `L.Coding.PinnedRecursion`{.Agda}：部分符号で閉じた添字集合に固定された再帰
 - `L.Coding.SatisfactionGraph`{.Agda}：充足関係のグラフを表す論理式
 - `L.Coding.UniformSatisfaction`{.Agda}：全コード上の一様な充足関係
 - `L.Coding.DefinablePowerSet`{.Agda}：定義可能な冪集合を表す論理式
 - `L.Coding.HierarchySequence`{.Agda}：構成可能階層を表す列
-- `L.Hierarchy`{.Agda}: L の内部における構成可能階層
+- `L.Hierarchy`{.Agda}：L の内部における構成可能階層
 <!--/-->
 ```agda
 import L.Coding.EnvironmentSet
@@ -750,10 +767,13 @@ import L.Coding.FormulaRecovery
 import L.Coding.NumeralBound
 import L.Coding.Quantification
 import L.Recursion
+import L.Recursion.Graph
 import L.Coding.EnvironmentTower
 import L.Coding.CodeSet
 import L.Coding.CodeDomain
 import L.Coding.SatisfactionClauses
+import L.Coding.CodeAlphabet
+import L.Coding.SatisfactionClauseSemantics
 import L.Coding.PinnedRecursion
 import L.Coding.SatisfactionGraph
 import L.Coding.UniformSatisfaction
@@ -796,7 +816,7 @@ Finite-stage orders grow into a global canonical order, whose least elements pro
 - `L.Choice.OrderTable`{.Agda}：阶段序的内部表
 - `L.Choice.StageOrderAdequacy`{.Agda}：阶段序描述的充分性
 - `L.Choice.NameComparisonAdequacy`{.Agda}：名字比较的充分性
-- `L.Choice.LimitStageOrder`{.Agda}: L 内部的极限阶段序
+- `L.Choice.LimitStageOrder`{.Agda}：L 内部的极限阶段序
 - `L.Choice.EarliestDisagreement`{.Agda}：最早分歧关系的内部族
 - `L.Choice.InternalWellOrder`{.Agda}：内部典范良序
 - `L.Choice.Transversal`{.Agda}：以横截集实现选择
@@ -815,7 +835,7 @@ Finite-stage orders grow into a global canonical order, whose least elements pro
 - `L.Choice.OrderTable`{.Agda}：段階順序の内部の表
 - `L.Choice.StageOrderAdequacy`{.Agda}：段階順序の記述の妥当性
 - `L.Choice.NameComparisonAdequacy`{.Agda}：名前の比較の妥当性
-- `L.Choice.LimitStageOrder`{.Agda}: L の内部にある極限段階の順序
+- `L.Choice.LimitStageOrder`{.Agda}：L の内部にある極限段階の順序
 - `L.Choice.EarliestDisagreement`{.Agda}：最初の相違の関係からなる内部の族
 - `L.Choice.InternalWellOrder`{.Agda}：内部の正準整列順序
 - `L.Choice.Transversal`{.Agda}：横断集合による選択
@@ -839,47 +859,51 @@ import L.Model
 ```
 
 <!--en-->
-## Ordinals and cardinals for GCH
+## Ordinals, injections and cardinals
 
-The example route has now established ZFC. These cardinal tools can also be
-studied alongside the Choice route once their own prerequisites are ready.
-These chapters first present hierarchy membership by small indices, then provide coded injections, order types, collapse, and larger cardinals before the final counting argument begins.
+We compare sets by representing injections inside L. Small presentations and ordinal orders lead to internal cardinality, definable injection graphs, and their composition. These tools support Cantor–Schröder–Bernstein, larger cardinals, and the later GCH bounds. They can be studied alongside the Choice route once their own prerequisites are ready.
 
 - `V.Presentation`{.Agda}: Small presentations of sets
 - `L.Ordinal.SquareLaw`{.Agda}: Ordinal indices, the Gödel pair order, and finite indices
 - `L.Coding.Injection`{.Agda}: Coded injections
 - `L.Cardinal`{.Agda}: Cardinals and coded injections inside L
-- `L.GCH`{.Agda}: Stating the generalized continuum hypothesis inside a model
+- `L.DefinableInjection`{.Agda}: Turning a definable injection into an internal code
+- `L.InjectionComposition`{.Agda}: Composition and inclusion of coded injections
+- `L.GCH`{.Agda}: The generalized continuum hypothesis inside L
 - `V.CantorBernstein`{.Agda}: Cantor–Schröder–Bernstein for small presentations
 - `L.CantorBernstein`{.Agda}: Cantor–Schröder–Bernstein inside L
 - `L.Mostowski`{.Agda}: Collapsing a transitive well-founded relation
 - `L.CardinalAbove`{.Agda}: An ordinal L-cardinal above every L-cardinal
 <!--zh-->
-## GCH 所需的序数与基数
+## 序数、单射与基数
 
-示例路线至此已建立 ZFC；这些基数工具也可以在自身先修就绪后，与 Choice 路线并行学习。本部先以小索引表示层级成员，再备齐编码单射、序型、塌缩与更大基数，最后进入计数论证。
+我们通过在 L 内部表示单射来比较集合。小呈现与序数上的序引出内部基数、可定义单射图及其复合。这些工具用于 Cantor–Schröder–Bernstein 定理、更大基数的构造和后续 GCH 的基数界；只要各自的先修就绪，就可以与选择公理路线并行学习。
 
 - `V.Presentation`{.Agda}：集合的小呈现
 - `L.Ordinal.SquareLaw`{.Agda}：序数指标、Gödel 对序与有穷指标
 - `L.Coding.Injection`{.Agda}：编码单射
-- `L.Cardinal`{.Agda}: L 内部的基数与编码单射
-- `L.GCH`{.Agda}：在模型内部陈述广义连续统假设
+- `L.Cardinal`{.Agda}：L 内部的基数与编码单射
+- `L.DefinableInjection`{.Agda}：把可定义单射化为内部编码
+- `L.InjectionComposition`{.Agda}：编码单射的复合与包含
+- `L.GCH`{.Agda}：L 内部的广义连续统假设
 - `V.CantorBernstein`{.Agda}：小呈现上的 Cantor–Schröder–Bernstein 定理
-- `L.CantorBernstein`{.Agda}: L 内部的 Cantor–Schröder–Bernstein 定理
+- `L.CantorBernstein`{.Agda}：L 内部的 Cantor–Schröder–Bernstein 定理
 - `L.Mostowski`{.Agda}：传递良基关系的塌缩
 - `L.CardinalAbove`{.Agda}：任意 L 基数之上的序数 L 基数
 <!--ja-->
-## GCH に向けた順序数と基数
+## 順序数，単射，基数
 
-集合の大きさを，単射と全単射によって比較します。小さな添字による集合の提示から始め，L の内部の単射，順序型，崩壊，より大きな基数を学びます。前提が揃えば，選択公理のルートと並行して読めます。
+L の内部で単射を表すことで集合の大きさを比較します。小さな提示と順序数上の順序から，内部の基数，定義可能な単射のグラフ，その合成へ進みます。これらの道具は Cantor–Schröder–Bernstein 定理，より大きな基数の構成，後の GCH の基数評価に使われます。各章の前提が揃えば，選択公理のルートと並行して読めます。
 
 - `V.Presentation`{.Agda}：集合の小さな提示
 - `L.Ordinal.SquareLaw`{.Agda}：順序数の添字、Gödel 対順序、有限添字
 - `L.Coding.Injection`{.Agda}：符号化された単射
-- `L.Cardinal`{.Agda}: L の内部における基数と符号化された単射
-- `L.GCH`{.Agda}：モデルの内部で一般連続体仮説を述べる
+- `L.Cardinal`{.Agda}：L の内部における基数と符号化された単射
+- `L.DefinableInjection`{.Agda}：定義可能な単射を内部コードにする
+- `L.InjectionComposition`{.Agda}：符号化された単射の合成と包含
+- `L.GCH`{.Agda}：L の内部における一般連続体仮説
 - `V.CantorBernstein`{.Agda}：小さな提示に対する Cantor–Schröder–Bernstein の定理
-- `L.CantorBernstein`{.Agda}: L の内部における Cantor–Schröder–Bernstein の定理
+- `L.CantorBernstein`{.Agda}：L の内部における Cantor–Schröder–Bernstein の定理
 - `L.Mostowski`{.Agda}：推移的な整礎関係の崩壊
 - `L.CardinalAbove`{.Agda}：任意の L 基数より大きい順序数 L 基数
 <!--/-->
@@ -888,6 +912,8 @@ import V.Presentation
 import L.Ordinal.SquareLaw
 import L.Coding.Injection
 import L.Cardinal
+import L.DefinableInjection
+import L.InjectionComposition
 import L.GCH
 import V.CantorBernstein
 import L.CantorBernstein
@@ -901,10 +927,9 @@ import L.CardinalAbove
 GCH reduces to bounding subsets by a sufficiently high constructible stage.
 The following route internalizes definability, builds and counts Skolem hulls, derives the two cardinal injections, and assembles the theorem.
 
-- `L.GCH.DefinableInjection`{.Agda}: Turning a definable injection into an internal code
-- `L.InjectionComposition`{.Agda}: Composition and inclusion of coded injections
 - `L.GCH.Assembly`{.Agda}: Assembling GCH from four internal bounds
-- `L.GCH.SatisfactionFrame`{.Agda}: A reusable frame for the satisfaction table
+- `L.Coding.SatisfactionGraphSet`{.Agda}: An internal graph of uniform satisfaction
+- `L.Coding.CodeDomainAdequacy`{.Agda}: Soundness and completeness of the closed code domain
 - `L.GCH.SatisfactionDescription`{.Agda}: A Δ₀ description of the satisfaction table
 - `L.GCH.DefinablePowerSetDescription`{.Agda}: A Δ₀ description of the definable power set
 - `L.GCH.AdequateStages`{.Agda}: Adequate stages for the GCH argument
@@ -931,22 +956,21 @@ The following route internalizes definability, builds and counts Skolem hulls, d
 
 GCH 归结为用足够高的可构造阶段界住各个子集。以下路线内部化可定义性，构造并计数 Skolem 壳，得到两向基数单射，最后组装定理。
 
-- `L.GCH.DefinableInjection`{.Agda}：把可定义单射化为内部编码
-- `L.InjectionComposition`{.Agda}：编码单射的复合与包含
 - `L.GCH.Assembly`{.Agda}：从四条内部界装配 GCH
-- `L.GCH.SatisfactionFrame`{.Agda}：满足关系表的可复用框架
+- `L.Coding.SatisfactionGraphSet`{.Agda}：统一满足关系的内部图
+- `L.Coding.CodeDomainAdequacy`{.Agda}：封闭码定义域的可靠性与完备性
 - `L.GCH.SatisfactionDescription`{.Agda}：满足表的 Δ₀ 描述
 - `L.GCH.DefinablePowerSetDescription`{.Agda}：可定义幂集的 Δ₀ 描述
-- `L.GCH.AdequateStages`{.Agda}: GCH 论证所需的充分阶段
+- `L.GCH.AdequateStages`{.Agda}：GCH 论证所需的充分阶段
 - `L.GCH.OmegaRecursion`{.Agda}：沿 ω 迭代可定义步骤
-- `V.Collapse`{.Agda}: Mostowski 塌缩
+- `V.Collapse`{.Agda}：Mostowski 塌缩
 - `L.GCH.SkolemHull`{.Agda}：构造并塌缩 Skolem 壳
 - `L.GCH.HierarchyDescription`{.Agda}：可构造层级的 Δ₀ 描述
 - `L.GCH.CondensationTransfer`{.Agda}：通过凝聚搬运结构
 - `L.GCH.BelowSuccessorCardinal`{.Agda}：后继基数以下的序数单射到其基数
 - `L.GCH.OrderType`{.Agda}：在 L 内部构造序型
 - `L.GCH.CardinalRepresentative`{.Agda}：为序数选取基数代表
-- `L.GCH.CardinalSquareLaw`{.Agda}: L 中无穷基数的平方律
+- `L.GCH.CardinalSquareLaw`{.Agda}：L 中无穷基数的平方律
 - `L.GCH.LeastWitnessMap`{.Agda}：最小见证构成可定义映射
 - `L.GCH.SuccessorIntoPowerSet`{.Agda}：把后继基数单射到幂集
 - `L.GCH.FiniteSequenceCoding`{.Agda}：在无穷序数以下编码有限序列
@@ -961,22 +985,21 @@ GCH 归结为用足够高的可构造阶段界住各个子集。以下路线内�
 
 一般連続体仮説の証明を，部分集合が現れる段階の上界と，その段階の大きさの評価に分けて学びます。充足関係と構成可能階層の内部記述を，Skolem 包とその崩壊に結び付け，冪集合と後続基数を比較する二方向の単射を得ます。
 
-- `L.GCH.DefinableInjection`{.Agda}：定義可能な単射を内部コードにする
-- `L.InjectionComposition`{.Agda}：符号化された単射の合成と包含
 - `L.GCH.Assembly`{.Agda}：四つの内部上界から GCH を組み立てる
-- `L.GCH.SatisfactionFrame`{.Agda}：充足関係表の再利用可能なフレーム
+- `L.Coding.SatisfactionGraphSet`{.Agda}：一様な充足関係の内部グラフ
+- `L.Coding.CodeDomainAdequacy`{.Agda}：閉じた符号の定義域の健全性と完全性
 - `L.GCH.SatisfactionDescription`{.Agda}：充足関係表の Δ₀ 記述
 - `L.GCH.DefinablePowerSetDescription`{.Agda}：定義可能冪集合の Δ₀ 記述
-- `L.GCH.AdequateStages`{.Agda}: GCH の議論に必要な十分な段階
+- `L.GCH.AdequateStages`{.Agda}：GCH の議論に必要な十分な段階
 - `L.GCH.OmegaRecursion`{.Agda}：定義可能な操作を ω に沿って反復する
-- `V.Collapse`{.Agda}: Mostowski 崩壊
-- `L.GCH.SkolemHull`{.Agda}: Skolem 包を構成して崩壊させる
+- `V.Collapse`{.Agda}：Mostowski 崩壊
+- `L.GCH.SkolemHull`{.Agda}：Skolem 包を構成して崩壊させる
 - `L.GCH.HierarchyDescription`{.Agda}：構成可能階層の Δ₀ 記述
 - `L.GCH.CondensationTransfer`{.Agda}：凝縮を通して構造を移す
 - `L.GCH.BelowSuccessorCardinal`{.Agda}：後続基数より小さい順序数をその基数へ単射する
-- `L.GCH.OrderType`{.Agda}: L の内部で順序型を構成する
+- `L.GCH.OrderType`{.Agda}：L の内部で順序型を構成する
 - `L.GCH.CardinalRepresentative`{.Agda}：順序数の基数代表を選ぶ
-- `L.GCH.CardinalSquareLaw`{.Agda}: L の無限基数における平方律
+- `L.GCH.CardinalSquareLaw`{.Agda}：L の無限基数における平方律
 - `L.GCH.LeastWitnessMap`{.Agda}：最小の証人が定義可能な写像をなす
 - `L.GCH.SuccessorIntoPowerSet`{.Agda}：後続基数を冪集合へ単射する
 - `L.GCH.FiniteSequenceCoding`{.Agda}：無限順序数の下で有限列をコード化する
@@ -988,10 +1011,9 @@ GCH 归结为用足够高的可构造阶段界住各个子集。以下路线内�
 - `L.GCH.Theorem`{.Agda}：構成可能宇宙は GCH を満たす
 <!--/-->
 ```agda
-import L.GCH.DefinableInjection
-import L.InjectionComposition
 import L.GCH.Assembly
-import L.GCH.SatisfactionFrame
+import L.Coding.SatisfactionGraphSet
+import L.Coding.CodeDomainAdequacy
 import L.GCH.SatisfactionDescription
 import L.GCH.DefinablePowerSetDescription
 import L.GCH.AdequateStages

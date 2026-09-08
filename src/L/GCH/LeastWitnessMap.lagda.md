@@ -33,7 +33,7 @@ open import L.Choice.StageOrders {ℓ} lem using ( orderAt; relOf ) renaming ( M
 open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-fill; relL-rep )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( SWO; leastOf; lt; eq; gt ) renaming ( Tri to Tri∙ )
-open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap; module Graph )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Graph )
 open import L.GCH.CardinalSquareLaw {ℓ} lem using ( isL-ord )
 open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
 
@@ -50,7 +50,7 @@ module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
-Renaming, read at the same satisfaction as `_⊨_` (as `L.GCH.DefinableInjection` does).
+Renaming, read at the same satisfaction as `_⊨_` (as `L.DefinableInjection` does).
 
 ```agda
 module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )

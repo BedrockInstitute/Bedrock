@@ -55,11 +55,10 @@ open import L.Axioms.Numerals {ℓ} using ( sucʟ; sucʟ-fst )
 open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-out; domAt )
 open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
 open import L.Coding.Injection {ℓ} lem using ( injAt; module Extract; module Small )
-open import L.Cardinal {ℓ} lem using ( InjCode; IsCardinalL; _↪_ )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Assembly {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL; IsCardinalL; _↪_ )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 open import L.GCH.CardinalRepresentative {ℓ} lem using ( cardOf )
-open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
 open import L.InjectionComposition {ℓ} lem
   using ( appC; appC-adequate; ω-limit; finite-excl-ω )
@@ -646,7 +645,7 @@ incl a b sub = ι , ι-inj
 ```
 
 A coded injection, read back as an ambient one.  Sealed at the
-definition, as `InclGraph.incl` is (src/L/InjChain.lagda.md).
+definition, as `InclGraph.incl` is (src/L/InjectionComposition.lagda.md).
 
 ```agda
 opaque

@@ -9,7 +9,12 @@ Requirements: Agda 2.8.0, cubical 0.9, Python 3.11 or later.
 the tree, checks code/prose boundaries, terminology, reading routes and the
 trilingual chapter framework, and runs the gate tests.
 
-## Current goal: a trilingual teaching framework
+## Current goal: cohesive trilingual chapters
+
+Before detailed code-block exposition, complete the targeted interface refinement
+in `dev/TEACHING.md`. Coordinate disjoint implementation batches, migrate real
+consumers, and update reading routes and all affected trilingual headings and
+opening paragraphs together. Keep the established glossary authoritative.
 
 First audit every existing glossary entry against literature, with particular
 attention to English and Japanese. Existing choices are revisable. Search the

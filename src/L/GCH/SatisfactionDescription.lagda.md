@@ -34,11 +34,16 @@ open import L.Coding.CodeSet {ℓ} lem using ( AllCodes; AllCodes-out; key∈All
 open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table; val-at )
 open import L.Coding.PinnedRecursion {ℓ} lem using ( module Match ) public
 open import L.Coding.PinnedRecursion {ℓ} lem using ( module SatSoundC; module SatHoldsC )
-open import L.GCH.SatisfactionFrame {ℓ} lem using
-  ( f0; Tags; down; towerAt; Δ₀-towerAt; codesAt; Δ₀-codesAt; tableAt; Δ₀-tableAt
-  ; module Tower; module TowerRead; module TowerHolds
-  ; module CodesSound; module CodesComplete; module CodesHolds
-  ; module Frame; module Alphabet; module Bridge; module SatGraph )
+open import L.Coding.Quantification {ℓ} using ( f0; down )
+open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
+open import L.Coding.CodeDomain {ℓ} using ( Tags; codesAt; Δ₀-codesAt )
+open import L.Coding.CodeDomainAdequacy {ℓ} lem
+  using ( module CodesSound; module CodesComplete; module CodesHolds )
+open import L.Coding.EnvironmentTower {ℓ} lem
+  using ( towerAt; Δ₀-towerAt; module Tower; module TowerRead; module TowerHolds )
+open import L.Coding.SatisfactionClauses {ℓ} using ( tableAt; Δ₀-tableAt )
+open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using ( module Frame; module Bridge )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
 
 open import Cubical.Data.Vec using ( lookup )
 open import Cubical.Data.Sigma using ( _×_ )
@@ -109,7 +114,7 @@ The value at a subformula's key, from totality.
 ```
 
 EVERY ENTRY IS PINNED. The recursion is the general one of
-src/L/Coding/Pinned.lagda.md, read at the code set: the shape clause supplies
+src/L/Coding/PinnedRecursion.lagda.md, read at the code set: the shape clause supplies
 the closure it asks of the index set, and completeness discharges the membership
 its statement carries.
 
@@ -175,7 +180,7 @@ decoded, the entries are read as the table's values, and the bridge supplies the
 body.
 
 A code's constructor and payload, from its tag, are read in
-src/L/Coding/Pinned.lagda.md.
+src/L/Coding/PinnedRecursion.lagda.md.
 
 ```agda
 ```
@@ -240,7 +245,7 @@ The two halves of the domain.
 ```
 
 THE DESCRIPTION IS SATISFIED. The general theorem of
-src/L/Coding/Pinned.lagda.md, at the four objects the all-codes reading names.
+src/L/Coding/PinnedRecursion.lagda.md, at the four objects the all-codes reading names.
 
 ```agda
   holds : ⟨ γ ⊨ tableAt T w C E N ⟩

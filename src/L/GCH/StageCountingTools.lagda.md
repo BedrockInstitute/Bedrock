@@ -53,10 +53,9 @@ open import L.Choice.InternalWellOrder {ℓ} lem using ( relL; relL-spec )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( SWO; lt; eq; gt ) renaming ( Tri to TriW )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
-open import L.Cardinal {ℓ} lem using ( InjCode )
-open import L.GCH {ℓ} lem using ( InjL )
-open import L.GCH.Assembly {ℓ} lem using ( inclusion-coded; injl-trans )
-open import L.GCH.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
+open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
+open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
+open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Inj )
 open import L.GCH.CardinalSquareLaw {ℓ} lem using ( isL-ord )
 open import L.GCH.FiniteSequenceCoding {ℓ} lem using ( seqL; seqL-in; seqL-out )
 open import L.Ordinal.SquareLaw {ℓ} lem using ( module FiniteBase )
@@ -150,7 +149,7 @@ An environment determines its finite domain, and two environments on that domain
 <!--/-->
 
 An environment determines its length (read off `domAt`, through the two readings
-src/L/Choice/Internal.lagda.md exports), and two environments of one length that
+src/L/Choice/InternalWellOrder.lagda.md exports), and two environments of one length that
 are equal agree entrywise.
 
 ```agda
@@ -509,7 +508,7 @@ The next injection formula needs to quantify over a value while requiring it to 
 <!--/-->
 
 The consumer is the injection formula of section 3, and through it the hull's
-own count (src/L/GCH/HullCount.lagda.md).
+own count (src/L/GCH/HullCounting.lagda.md).
 
 ```agda
 pinAt : ∀ {n} → S → Formula S (suc n) → Formula S n
@@ -540,7 +539,7 @@ The formula states that a graph is total and single-valued on a chosen domain, l
 <!--/-->
 
 A coded injection said inside the model at two slots against a constant target,
-with the readings src/L/GCH/HullCount.lagda.md fills and reads at the hull.
+with the readings src/L/GCH/HullCounting.lagda.md fills and reads at the hull.
 
 An injection code is a proposition, and it respects the index
 equations of its graph and its domain.
@@ -611,7 +610,7 @@ The general stage count consumes a base injection from `L_ω` into `ω`. This se
 <!--/-->
 
 The base of the count is `L_ω ↪ ω`, proved in section 6. The row at an infinite
-ordinal is src/L/GCH/StageCounted.lagda.md, which runs the hull at `δ+1` and
+ordinal is src/L/GCH/StageInjection.lagda.md, which runs the hull at `δ+1` and
 takes only this base from here.
 
 ```agda
@@ -664,7 +663,7 @@ A finite-stage tally turns any proposed injection from `ω` into that stage into
 有限段階の一覧は、`ω` からその段階への単射候補を有限添字型への単射へ変える。有限探索から矛盾が得られる。
 <!--/-->
 
-src/L/Choice/Finite.lagda.md tallies the finite stage `L_n`. Excluded middle
+src/L/Choice/FiniteStageOrders.lagda.md tallies the finite stage `L_n`. Excluded middle
 decides equality with each entry, and finite search chooses a tally index for
 every member. An injection of omega into `L_n` therefore composes to one into
 `# size`, which `finite-excl-ω` refutes.
@@ -728,7 +727,7 @@ The stage order at `ω` already belongs to `L`. Its membership reading identifie
 <!--/-->
 
 `relL ω` is the stage order at omega, realized as an element of L
-(src/L/Choice/Order.lagda.md). `Related` says what its members are: pairs of two
+(src/L/Choice/OrderTable.lagda.md). `Related` says what its members are: pairs of two
 members of the stage. That is the domain hypothesis `OrderType.Code` asks for.
 
 ```agda
@@ -815,7 +814,7 @@ The stage order compares birth stages first. Hence every predecessor of a member
 段階順序はまず誕生段階を比較する。したがって、`L_ω` の要素の各前者はその要素より遅く生まれることがなく、一つの共通な有限段階に属する。
 <!--/-->
 
-The stage order compares the BIRTH first (src/L/Choice/Step.lagda.md,
+The stage order compares the BIRTH first (src/L/Choice/StageOrders.lagda.md,
 `Family._≺_`), so a predecessor of `x` is born at or below the birth of `x`,
 hence belongs to the stage one above that birth. At omega that stage is finite.
 
@@ -886,7 +885,7 @@ A collapse value is the order type of one predecessor segment. Since that segmen
 The collapse value at `p` is the order type of the segment below `p`. That
 segment injects, ambiently, into the finite stage of section 3, so omega does
 not inject into it; and an ordinal that omega does not reach is a member of
-omega. This is the shape of `Step.col-fin` (src/L/GCH/Pairing.lagda.md:979).
+omega. This is the shape of `Step.col-fin` (src/L/GCH/CardinalSquareLaw.lagda.md:979).
 
 ```agda
 private

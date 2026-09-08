@@ -39,15 +39,16 @@ open import L.Axioms.Numerals {ℓ} using ( numeralL-fst )
 open import L.Coding.Expressions {ℓ} using ( sucAtL )
 open import L.Coding.NumeralBound {ℓ} lem using ( module Bound )
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
+open import L.Coding.Model {ℓ} using ( container )
+open import L.Coding.Quantification {ℓ} using
+  ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
+  ; down; suc-out; suc-in; sndEx; sndAll; bothAll
+  ; sndEx-out; sndAll-in; bothAll-in; fillSnd; useSnd; useBoth; sndS )
+open import L.Coding.CodeDomain {ℓ} using ( Tags; shN )
+open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; module Tower )
 open import L.Hierarchy {ℓ} lem using ( hierL-spec; IsHier; hier-out; hier-in; Values; Entries )
 open import L.GCH.SkolemHull {ℓ} lem using ( module Cnt; erase-Δ₀; isOrd-at-p; Δ₀-isOrd-at-p; _⊨ₚ_ )
-open import L.GCH.SatisfactionFrame {ℓ} lem using
-  ( sh; i0; i1; i2; i3; i8; f0; f1; f2; f3; f4; f5; f6; f7; f8; f9
-  ; Tags; shN; nn; down; container
-  ; suc-out; suc-in
-  ; sndEx; sndAll; bothAll
-  ; sndEx-out; sndAll-in; bothAll-in; fillSnd; useSnd; useBoth
-  ; module Tower; module SatGraph ; sndS )
+open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
 open import L.GCH.SatisfactionDescription {ℓ} lem using ( satAt; sat-complete )
 open import L.GCH.DefinablePowerSetDescription {ℓ} lem using ( defAt; def-sound; def-complete )
 open import L.GCH.AdequateStages {ℓ} lem using ( Adequate; module Adequate; module At; Lset∈suc )

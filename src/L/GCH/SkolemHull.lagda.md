@@ -1224,15 +1224,15 @@ hypothesis refutes it.
 <!--en-->
 ## Carrying bounded formulas across the collapse
 
-A bounded formula has the same truth value in a transitive substructure as in the ambient universe. Combining this absoluteness with collapse transfer gives the reading used by condensation.
+A bounded formula has the same truth value in a transitive substructure as in the ambient universe. The hull's collapse therefore carries such truths in both directions, while membership preservation carries atomic membership directly.
 <!--zh-->
 ## 沿塌缩搬运有界公式
 
-有界公式在传递子结构中与在外围宇宙中具有相同真值。把这一绝对性与塌缩搬运结合起来，就得到凝聚所需的读法。
+有界公式在传递子结构中与在外围宇宙中具有相同真值。因此，壳的塌缩能双向搬运这类真命题，而成员关系保持性直接搬运原子成员关系。
 <!--ja-->
 ## 崩壊を通して有界論理式を移す
 
-有界論理式は、推移的部分構造でも周囲の宇宙でも同じ真理値をもつ。この絶対性を崩壊による移送と組み合わせると、凝縮で使う読み方が得られる。
+有界論理式は、推移的部分構造でも周囲の宇宙でも同じ真理値をもちます。したがって包の崩壊はこの真理を双方向に移し、所属関係の保存は原子的な所属関係を直接移します。
 <!--/-->
 
 Delta-0 formulas can be read from any transitive substructure in the ambient
@@ -1282,6 +1282,10 @@ transitive range `πX`.
     module TL = Unpack (Lset lam) ASt.Ltr using (read)
     module Tπ = Unpack HS.C.πX HS.C.πX-trans using (module Ab; read)
 
+    member-push : (x y : S) → ⟨ x ∈ˢ HS.M ⟩ → ⟨ y ∈ˢ HS.M ⟩
+                → ⟨ y ∈ˢ x ⟩ → ⟨ HS.C.π y ∈ˢ HS.C.π x ⟩
+    member-push = CIso.iso-fwd
+
     atL : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : ASt.SL ^ n)
         → (δ ASt.AbsL.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
     atL dφ δ = TL.read dφ δ
@@ -1315,4 +1319,14 @@ The carry itself.
         (subst (λ ψ → ⟨ map CIso.I.g δ CIso.I.⊨ᵖᵐ ψ ⟩)
                (embed-map CIso.I.g φ)
                (CIso.I.iso-inv n (embed φ) δ (subst ⟨_⟩ (sym (atM dφ δ)) h)))
+
+    pull : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : A.SM ^ n)
+         → ⟨ map fst (map CIso.I.g δ) ⊨ₚ φ ⟩
+         → ⟨ map fst δ ⊨ₚ φ ⟩
+    pull {n} {φ} dφ δ h =
+      subst ⟨_⟩ (atM dφ δ)
+        (CIso.I.iso-inv-bwd n (embed φ) δ
+          (subst (λ ψ → ⟨ map CIso.I.g δ CIso.I.⊨ᵖᵐ ψ ⟩)
+                 (sym (embed-map CIso.I.g φ))
+                 (subst ⟨_⟩ (sym (atπ dφ (map CIso.I.g δ))) h)))
 ```
