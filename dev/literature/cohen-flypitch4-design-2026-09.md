@@ -43,7 +43,7 @@ There are four related but different endpoints:
 
 A Boolean-valued countermodel alone is not yet the trophy. Its ordinary quotient is the actual two-valued model. First-order completeness offers another route from consistency to a model, but is unnecessary for this direct semantic construction and does not supply a prescribed transitive ground and its generic extension.
 
-The target extra assumption is only `LEM` at the required universe level. Feasibility, extraction and universe levels remain explicit audits. The implementation may not silently assume host `Choice`, `SetChoice`, an ultrafilter, or a generic.
+The target extra assumption is only `LEM` at the required universe level. Feasibility, extraction and universe levels remain explicit audits. The implementation must not assume any host choice principle, including countable/dependent choice, Zorn or BPI, or leave an ultrafilter/generic as input to the final instance. The [no-host-choice audit](no-host-choice-audit-2026-09.md) is binding.
 
 For this task, proving ¬CH is sufficient: GCH includes its instance at ω. No requirement to calculate the continuum exactly as ω₂, and no requirement that the starting model already satisfy GCH, belongs in the minimal Cohen proof. Exact continuum values and control of GCH at other cardinals are separate, more expensive applications.
 

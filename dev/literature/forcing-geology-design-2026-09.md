@@ -26,6 +26,10 @@ T1-T3 will also be packaged as a semantic CH-independence headline: actual ordin
 
 The source scope of this design task is only the literature notes. Preserve `L⊨ZFC` and `L⊨GCH`, their statements and their single `LEM (ℓ-suc ℓ)` hypothesis. No new forcing, choice or class-recursion assumption may leak into these existing results.
 
+### Binding metatheory constraint
+
+No form of choice may be assumed in Agda: no host `SetChoice`, countable/dependent choice, Zorn, Boolean prime ideal/ultrafilter axiom, global selector, or equivalent capability. This is a hard owner requirement, not an optional hypothesis budget. Internal AC in a specified set-theoretic model remains allowed; L's instance is proved under existing LEM. Every data-valued selection must follow from actual supplied data, a proved unique/canonical construction, or an internal construction with a checked decoding proof. The [complete no-host-choice audit](no-host-choice-audit-2026-09.md) defines the stage contracts and unresolved proofs. It does not assert that K0 or the route is complete.
+
 ## 2. Long-term scope and model of reuse
 
 The framework has a permanent architecture and an incremental delivery schedule. A component can be scheduled later while its extension points and required relationships are designed now. Later work must extend the same framework rather than create parallel universes with incompatible syntax, names or model notions.
@@ -80,7 +84,7 @@ The shared semantic mathematics should state the joins it actually uses. Atomic 
 
 Ground Collection/Replacement, rather than the still-unproved extension axiom, must fund witness-rank bounds needed to define forcing. Do not use fullness to define a supremum whose existence fullness itself needs. The dependency graph of quantifier values, mixing, fullness, internal definability and axiom transfer must be checked before large proofs begin.
 
-Record host LEM, resizing, host set choice, internal model choice, genericity, transitivity and recursion hypotheses separately. Eliminate truncated existence only into an allowed target; data-valued selection needs uniqueness or actual selection data. Retain theorem variants with minimal hypotheses. The general name/forcing kernel must not assume AC solely because the first concrete extension targets ZFC.
+Record host LEM, resizing, internal model choice, genericity, transitivity and recursion hypotheses separately; host choice is forbidden, including weaker or disguised forms. Eliminate truncated existence only into an allowed target; data-valued selection needs uniqueness or actual selection data. Retain theorem variants with minimal hypotheses. The general name/forcing kernel must not assume AC solely because the first concrete extension targets ZFC.
 
 ## 4. Cohesive components and allowed dependencies
 
@@ -192,7 +196,7 @@ Separate completion existence, forcing-semantic equivalence, and preservation of
 
 In the choiceless API, keep three predicates separate: every maximal antichain is countable (CCC₁), every antichain is countable (CCC₂), and every predense set has a countable predense subset (CCC₃). Their ZFC equivalence must be an explicit theorem, not definitional equality. Corollary 6.5 shows the failure of a general CCC₂-preserving completion theorem in the choiceless setting. Section 7 extends the discussion to higher chain conditions; DC assumptions there must not be reinterpreted as prerequisites for completion itself. Preserve the original poset and record the exact direction and hypotheses of every chain-condition transfer. This refines the property bridge in the table above.
 
-Provide an automatic, proof-producing completion adapter: a model-coded forcing presentation is mapped to its model-internal regular-open algebra, its dense map and the structural correctness certificates. Name, formula and generic translations attach their own semantic certificates. Reverse name translation should investigate using all refining conditions, rather than choosing a representative below each nonzero Boolean value and silently introducing Choice. The mathematical completion is a symbolic construction over sets and predicates, not a promise of an executable procedure enumerating an arbitrary infinite powerset. Tactic or elaborator automation can later invoke these proved constructions; it must not automatically transfer chain conditions, closure, size or maximum-principle capabilities without the corresponding theorem.
+Provide an automatic, proof-producing completion adapter: a model-coded forcing presentation is mapped to its model-internal regular-open algebra, its dense map and the structural correctness certificates. Name, formula and generic translations attach their own semantic certificates. Reverse name translation must use a proved choice-free construction, with all refining conditions as the default design; a representative below each Boolean value may not be silently selected. The mathematical completion is a symbolic construction over sets and predicates, not a promise of an executable procedure enumerating an arbitrary infinite powerset. Tactic or elaborator automation can later invoke these proved constructions; it must not automatically transfer chain conditions, closure, size or maximum-principle capabilities without the corresponding theorem.
 
 ## 7. Farther extensions are designed now
 

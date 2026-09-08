@@ -60,8 +60,9 @@ need not preserve arbitrary joins.
 The target extra assumption is only host `LEM` at the required universe level.
 This remains an explicit feasibility audit: the implementation must justify
 extracting the internally proved ultrafilter into the host quotient and account
-for universe levels. It may not silently use host `Choice`, `SetChoice`, an
-assumed `U`, or an assumed `G`.
+for universe levels. It must not assume any host choice principle, including countable/dependent
+choice, Zorn or BPI, or leave `U` or `G` as a final-instance input. The
+[no-host-choice audit](no-host-choice-audit-2026-09.md) is binding.
 
 These endpoints do not determine a poset-only architecture. The project requires
 two complete usable public interfaces from the outset: a poset interface for
@@ -78,7 +79,7 @@ even though the finite-condition lemmas below remain Cohen-specific.
 | Deep first-order syntax, substitution, relativization, and evaluation | `FOL.Syntax`, `FOL.Manipulation.*`, `FOL.Semantics` | Direct | The syntax and evaluator already abstract over a truth algebra. They are the common language for ZFC preservation, CH, and later ground definitions. |
 | A law-bearing complete Boolean algebra semantics | `Base.Truth.TruthAlgebra`, `FOL.ZFStructure` | Required public interface | `TruthAlgebra` supplies operations but no order or Boolean laws. `ZFStructure` is suitably truth-valued, but forcing needs equality congruence, Boolean soundness and ground-indexed completeness with explicit size bounds. |
 | An ordinary ZFC model interface for extensions | `FOL.ZFModel.isZFModel`, `isZFCModel` | Generalize via a new profile | The current record is hProp-valued and requires host `WellFounded` membership and the exact host-indexed numeral chain. It is suitable for the concrete `V` and `L`, not arbitrary internal or externally ill-founded models. |
-| Fullness, ultrafilter existence and ordinary quotient | none | Missing and trophy-critical | K12-K14 must supply existential witnesses, construct `U`, define quotient equality and membership, and prove ordinary truth without silent host choice. |
+| Fullness, ultrafilter existence and ordinary quotient | none | Missing and trophy-critical | K12-K14 must supply existential witnesses, construct `U`, define quotient equality and membership, and prove ordinary truth without any host choice assumption. |
 | Small set presentations | `V.Hierarchy`, `V.Presentation` | Direct for ambient constructions | `⟪ a ⟫`, `member`, `fiber`, and `↪-inj` provide the existing small indexing pattern. They do not make all names, dense classes, or Boolean truth values small. |
 | Ordered pairs and graphs | `V.Coding`, `FOL.Coding`, `L.Coding.Injection` | Generalize | Ambient pairing and generic coding shapes are reusable. `L.Coding.Injection`, `InjCode`, and `InjL` are specialized to constructible graph witnesses and satisfaction in `𝒮ʟ`; extension cardinal comparisons need structure-relative versions. |
 | Injection composition and Cantor-Schroeder-Bernstein | `V.CantorBernstein`, `L.CantorBernstein`, `L.InjectionComposition` | Direct at type level; generalize internally | `V.CantorBernstein` is the reusable core. The `L.*` wrappers require constructible codes and should not become forcing prerequisites. |

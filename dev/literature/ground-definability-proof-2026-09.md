@@ -315,3 +315,7 @@ The geology obligations align with the master work packages by name:
 Later sources such as Usuba are relevant to downward directedness and mantle
 theorems, but they are not proof dependencies of the ground-model definability
 theorem audited here.
+
+## Host-choice audit constraint
+
+The [no-host-choice audit](no-host-choice-audit-2026-09.md) applies to this proof. All Choice/Replacement uses in simultaneous cover, ordinal coding and candidate comparison must occur in a specified object-level model with internally coded bounded parameters and relations, or use a proved canonical construction. The host Agda metatheory supplies no AC, countable choice, DC, Zorn or global ground-parameter selector. In particular, an alternating cover sequence cannot be built by silently iterating truncated existential choices. The precise rank-local construction remains a proof obligation; this note does not certify it already implemented. The total family of grounds is a definable predicate, not a host choice of a preferred forcing representation for every ground.
