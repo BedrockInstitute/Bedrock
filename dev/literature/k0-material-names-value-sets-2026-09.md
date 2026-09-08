@@ -2,6 +2,8 @@
 
 Date: 2026-09-08. Repository source baseline: `34e56691`. Status: eight safe probes checked; K0 remains open. These probes extend the [earlier extraction results](k0-bounded-extraction-probes-2026-09.md). They use copied sources in temporary directories and do not modify production modules. The [Cohen roadmap](cohen-implementation-roadmap-2026-09.md) remains subordinate to the [master architecture](forcing-geology-design-2026-09.md).
 
+Follow-up: the [internal-name probes](k0-internal-names-probes-2026-09.md) now close the L support and first-order recognition obligations left open at this baseline. The source snapshots below are unchanged; their original scope does not expand retroactively. Current K0 work targets internal atomic Boolean value tables and general-ground adapters.
+
 ## Checked results and exact assumptions
 
 | Probe | Result | Premises and limits |
@@ -62,7 +64,7 @@ The identity instance writes the actual formula `x ∈ B ∧ x ≈ b`, takes nam
 
 Design refinement: attained-value sets are the preferred first quantifier backend once subformula definability exists. Collection is still needed when a subsequent theorem needs a **set of name witnesses**, rank bounds, mixing or fullness. It is not necessary merely to form the attained subset of the already internal Boolean carrier. The earlier unique-value extraction remains applicable after existence/uniqueness is proved; it supplies neither graph definability nor internal completeness.
 
-## 3. Noncircular implementation order and K0 gate
+## 3. Baseline implementation order and K0 gate
 
 1. Generalize the checked L coordinate decoder/formula interface where needed; prove domains/supports are actual ground sets by actual Replacement on the coordinate formula. Retain the checked material carrier and unary recursion as the candidate representation.
 2. Give a fixed first-order name recognizer and prove it agrees with the host hereditary predicate. A proposed recognizer uses a ground set of names closed under subnames and bounded finite reachability; existence/adequacy are not yet checked.
