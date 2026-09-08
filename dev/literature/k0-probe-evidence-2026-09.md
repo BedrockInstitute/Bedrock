@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Current follow-up: the [partial-table and image probes](k0-partial-atomic-tables-2026-09.md) check semantic partial-table compatibility/union without Choice or LEM, and actual L image construction from a supplied internal table under the existing LEM. Internal candidate-family coding, totality and the expanded Boolean step remain unproved.
+
 Latest follow-up: [internal names and supports](k0-internal-names-probes-2026-09.md) now checks the complete L name-formula/host-predicate correspondence, actual internal supports, and entry decoding. These retire the L recognition/support items in the historical lists below. General-ground portability and atomic internal Boolean value tables remain the current K0 gate.
 
 The [material-name/value-set follow-up](k0-material-names-value-sets-2026-09.md) now checks real finite ground constructors, unary descent, a host hereditary-name h-set and its L instance, and conditional attained-value Separation. This supersedes the finite-closure obligation below for the named constructors. It also checks unique L coordinate decoding and its bridge to the material name encoding. It does not settle internal recognition, internally collected supports or fixed atomic graph existence. The following earlier list remains a record of the representation gate, with these local results now available.

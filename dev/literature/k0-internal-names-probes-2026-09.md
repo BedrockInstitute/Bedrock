@@ -74,6 +74,8 @@ The step is total even on malformed codes. Host IsName occurs only in the EXTERN
 
 This is actual deterministic, internally coded omega recursion. No host sequence is chosen from pointwise truncated existential steps. The construction does not require a separate general transitive-closure library first; that library may still be useful elsewhere.
 
+Subsequent evidence: the [partial-table and image probes](k0-partial-atomic-tables-2026-09.md) check semantic partial-table union and images of supplied internal tables. They refine the atomic obligation below without closing recursive graph existence.
+
 ## 5. Architecture decisions and remaining K0 work
 
 Retain material pair-code subtypes and their checked host entry/support presentations as the shared candidate for poset-weighted and Boolean-weighted names. The weight-carrier parameter is independent of Boolean laws. Reuse the same pair-reading, unique-coordinate and hereditary-recursion mathematics through proved ground adapters. The L implementation demonstrates the representation without licensing arbitrary host families in every ground.
