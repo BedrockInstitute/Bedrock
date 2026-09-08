@@ -7,13 +7,13 @@ This note records what the Cohen application demands from that design; it is
 not a competing implementation plan or a claim that forcing has been
 implemented in Bedrock. Source paths refer to the tree on the research date.
 
-The first headline is now Cohen, followed by ground definability. The [detailed implementation roadmap](cohen-implementation-roadmap-2026-09.md) specifies K0-K11, including certified automatic completion, semantic transport and separate chain-condition certificates. The master plan retains authority over long-term architecture.
+Bedrock's first two trophies are the existing `L⊨ZFC` and `L⊨GCH` theorems. The third trophy will construct an actual ordinary two-valued model `N` with `N⊨ZFC+¬CH`; ground-model definability remains the fourth trophy. The [detailed implementation roadmap](cohen-implementation-roadmap-2026-09.md) now specifies K0-K15, including the general forcing results and the ordinary quotient exit.
 
-Scope update: the owner selected the semantic Cohen generic-extension theorem and subsequent geology. Comparisons below with syntactic independence describe different endpoints, not required roadmap work. Proof systems, proof-system soundness and PRA relative consistency are outside the committed program. See the master plan and K0 evidence ledger for current scope and status.
+Scope update: the generic-extension theorem remains mandatory but is an intermediate result. The trophy-closing layer uses full Boolean names, a constructed ordinary ultrafilter and a quotient truth theorem to return `N` without a supplied generic or ultrafilter. Proof systems, completeness and PRA relative consistency remain outside the committed program.
 
-## 1. Recommended endpoint
+## 1. Reusable extension theorem and final endpoint
 
-The smallest useful Cohen application theorem is conditional on a ground model `W`, a
+The smallest reusable Cohen application theorem is conditional on a ground model `W`, a
 forcing notion in `W`, and a supplied generic filter. Take a ground cardinal
 `κ > ω₁`, use
 
@@ -40,20 +40,28 @@ assume GCH in the ground. If the project defines CH by equicardinality of
 `κ` into `ω₁`, contradicting preservation of `ω₁ < κ`. This also avoids proving
 that every real has a nice name.
 
-Distinguish the committed endpoint from an optional, out-of-scope endpoint:
+This theorem must be proved before closing trophy three; it may not be bypassed by a Cohen-specific host construction. Distinguish the following outputs:
 
-- a semantic extension theorem, conditional on `G` being generic over `W`;
-- a syntactic relative-consistency theorem, built with Boolean-valued soundness
-  or a formal proof translation, which does not assert an external generic over
-  the proper class `L`.
+- a reusable semantic extension theorem, conditional on `G` being generic over `W`;
+- the committed trophy, which constructs an ordinary two-valued `N` satisfying `ZFC+¬CH` by quotienting a full Boolean-valued model by a constructed ordinary ultrafilter;
+- an optional syntactic relative-consistency theorem, requiring a proof system and soundness or a proof translation.
 
 The distinction matters. The present `L` is a class predicate on the ambient
 cumulative hierarchy, not an externally countable transitive set. Ordinary
 Rasiowa-Sikorski construction only supplies a generic after the dense sets to
 be met have been countably enumerated. Thus Bedrock cannot derive an actual
-`L`-generic filter from `L⊨ZFC`. It must either assume a generic for a semantic
-extension theorem, restrict to an externally countable set model, or use the
-Boolean-valued/syntactic route for consistency.
+`L`-generic filter from `L⊨ZFC`. This blocks an unconditional actual `L[G]`,
+but it does not block the chosen trophy. The Boolean route constructs `B`, a
+full Boolean name universe and an ordinary ultrafilter `U`, then forms the
+ordinary two-valued quotient `N = BV/U`. Bell's Theorem 4.1 is the reference
+point for quotient truth. Fullness is needed because an arbitrary ultrafilter
+need not preserve arbitrary joins.
+
+The target extra assumption is only host `LEM` at the required universe level.
+This remains an explicit feasibility audit: the implementation must justify
+extracting the internally proved ultrafilter into the host quotient and account
+for universe levels. It may not silently use host `Choice`, `SetChoice`, an
+assumed `U`, or an assumed `G`.
 
 These endpoints do not determine a poset-only architecture. The project requires
 two complete usable public interfaces from the outset: a poset interface for
@@ -70,6 +78,7 @@ even though the finite-condition lemmas below remain Cohen-specific.
 | Deep first-order syntax, substitution, relativization, and evaluation | `FOL.Syntax`, `FOL.Manipulation.*`, `FOL.Semantics` | Direct | The syntax and evaluator already abstract over a truth algebra. They are the common language for ZFC preservation, CH, and later ground definitions. |
 | A law-bearing complete Boolean algebra semantics | `Base.Truth.TruthAlgebra`, `FOL.ZFStructure` | Required public interface | `TruthAlgebra` supplies operations but no order or Boolean laws. `ZFStructure` is suitably truth-valued, but forcing needs equality congruence, Boolean soundness and ground-indexed completeness with explicit size bounds. |
 | An ordinary ZFC model interface for extensions | `FOL.ZFModel.isZFModel`, `isZFCModel` | Generalize via a new profile | The current record is hProp-valued and requires host `WellFounded` membership and the exact host-indexed numeral chain. It is suitable for the concrete `V` and `L`, not arbitrary internal or externally ill-founded models. |
+| Fullness, ultrafilter existence and ordinary quotient | none | Missing and trophy-critical | K12-K14 must supply existential witnesses, construct `U`, define quotient equality and membership, and prove ordinary truth without silent host choice. |
 | Small set presentations | `V.Hierarchy`, `V.Presentation` | Direct for ambient constructions | `⟪ a ⟫`, `member`, `fiber`, and `↪-inj` provide the existing small indexing pattern. They do not make all names, dense classes, or Boolean truth values small. |
 | Ordered pairs and graphs | `V.Coding`, `FOL.Coding`, `L.Coding.Injection` | Generalize | Ambient pairing and generic coding shapes are reusable. `L.Coding.Injection`, `InjCode`, and `InjL` are specialized to constructible graph witnesses and satisfaction in `𝒮ʟ`; extension cardinal comparisons need structure-relative versions. |
 | Injection composition and Cantor-Schroeder-Bernstein | `V.CantorBernstein`, `L.CantorBernstein`, `L.InjectionComposition` | Direct at type level; generalize internally | `V.CantorBernstein` is the reusable core. The `L.*` wrappers require constructible codes and should not become forcing prerequisites. |
@@ -198,6 +207,12 @@ symmetry and class forcing remain later scoped work, while their required
 distinctions are anticipated in the initial contracts. In particular, class
 forcing is not silently covered by the set-forcing theorem.
 
+The quotient layer remains a client of the common Boolean kernel. It owns
+fullness, ordinary-ultrafilter construction, quotient equality and membership,
+and quotient truth. It must not absorb or replace the general poset
+generic-extension API, completion bridge, forcing theorem, preservation results
+or ground-relative name machinery.
+
 ## 6. Comparison with Flypitch
 
 Flypitch validates an informative Boolean proof decomposition. Han and van Doorn
@@ -226,6 +241,15 @@ routes should meet through systematic equivalence bridges, not independently
 duplicated logical machinery. Boolean semantics is the preferred initial proof
 home, not a requirement that every proof be repeated there and at the poset
 interface.
+
+The third trophy overlaps Flypitch most strongly in the complete Boolean
+algebra, Boolean names, fullness and Cohen `¬CH` calculation. Bedrock differs
+in its surrounding architecture and endpoint: it integrates the existing L
+model, exposes general ground-relative poset and generic-extension results
+before the trophy, constructs the ordinary ultrafilter, and returns an ordinary
+two-valued quotient model. Historical Flypitch evidence remains evidence for
+the decomposition, not evidence that these Bedrock-specific obligations are
+already discharged.
 
 ## 7. Exact source pointers
 
@@ -263,10 +287,10 @@ interface.
   extension. It is a primary formalization source for the generic-existence
   boundary that the Boolean-valued Flypitch route omits.
 
-## 8. Cohen application milestone
+## 8. Third trophy acceptance
 
 After the system design's shared contracts and initial equivalence bridge have
-been accepted, a credible first Cohen application milestone ends with one
+been accepted, the reusable Cohen application milestone first ends with one
 theorem of the following mathematical shape:
 
 > Given a transitive ground `W` satisfying ZFC, ground cardinals
@@ -275,11 +299,20 @@ theorem of the following mathematical shape:
 
 Its proof dependencies should expose ZFC preservation, ccc, preservation of
 `ω₁ < κ`, and the injection of `κ` into the extension power set of `ω`. The
-statement must not claim existence of `G` for the class `L`. A separate corollary
-may instantiate `W` with the existing constructible universe once the chosen
-semantic profile and generic hypothesis are made explicit. A later syntactic
-corollary may remove the external generic by proving relative consistency
-through Boolean-valued soundness or proof translation.
+statement must not claim existence of `G` for the class `L`. It is mandatory,
+but it does not yet close the trophy.
+
+K12-K14 then prove fullness, independently construct an ordinary ultrafilter,
+establish quotient truth, and return an ordinary two-valued structure `N` with
+`N⊨ZFC+¬CH`. The public statement has no `G` or `U` input. The exact `LEM`
+universe, extraction method and quotient universe must be reported; any
+stronger choice principle fails the intended assumption budget.
+
+K15 combines this model with the existing `L⊨ZFC` and `L⊨GCH` only after both
+sides use one ordinary first-order ZFC/CH interpretation. The result is a
+semantic CH-independence showcase, not syntactic independence or a
+PRA-calibrated relative-consistency claim. Ground-model definability remains
+trophy four and continues to use the general ground-relative forcing layer.
 
 This milestone proves only the lower bound needed for not-CH. It does not force
 an exact value of the continuum, and neither nice-name counting nor a ground

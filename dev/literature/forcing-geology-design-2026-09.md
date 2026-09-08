@@ -8,7 +8,19 @@ Build a general set-forcing framework with **two fully usable public interfaces,
 
 The preferred initial semantic proof home is Boolean-valued names and semantics, matching the existing truth-parameterized evaluator. The poset interface is equally first-class: applications must be able to reason directly about conditions, dense sets, supports, closure and iterations. Its users must not reconstruct Boolean translations at each call. Early probes may change the internal representation or proof home, but cannot remove either interface, weaken bridge obligations, or replace the general framework with a single-application construction.
 
-The purpose is a durable semantic route through Cohen forcing, ground definability, intermediate models, deeper geology, iterations, symmetric extensions and suitable class forcing. The first trophy is explicitly the Cohen generic-extension theorem, not syntactic CH independence or a PRA relative-consistency proof. Cohen is the first headline application and ground definability the second, as refined in the [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md). Both are initial applications of this architecture. They do not determine its abstraction boundaries. Neither theorem licenses calling an incomplete bridge or a specialized forcing engine the completed framework.
+The purpose is a durable semantic route through Cohen forcing, ground definability, intermediate models, deeper geology, iterations, symmetric extensions and suitable class forcing. Global trophy numbering is fixed: T1 is existing L⊨ZFC; T2 is existing L⊨GCH; T3 constructs an actual ordinary two-valued model N of ZFC + not CH; T4 is ground-model definability. T3 must first deliver the universal forcing results, both public interfaces and the required bridges, then instantiate a reusable ordinary-ultrafilter quotient construction. A supplied-generic theorem alone does not complete T3. Neither trophy licenses a specialized forcing engine or incomplete general API.
+
+The selected T3 instance constructs the Cohen poset and its completion B inside L, develops the Boolean model of L-names and top-value ZFC/not-CH proofs, constructs an ordinary ultrafilter U, and returns the quotient N with satisfaction proofs. The target additional assumption is the existing `LEM (ℓ-suc ℓ)`, with no supplied G, U or model-existence premise; this budget and its witness/universe obligations remain to be checked. N is an ordinary first-order model, not asserted externally well-founded or an actual generic extension of L. The generic-extension API remains independently mandatory.
+
+T1-T3 will also be packaged as a semantic CH-independence headline: actual ordinary models of one shared ZFC theory satisfy respectively CH and not CH. The positive side needs the existing L model/GCH-to-CH adapters. This aggregate is planned, not already proved, and is not syntactic or PRA relative consistency. The [Cohen roadmap](cohen-implementation-roadmap-2026-09.md) defines K0-K15 and the acceptance conditions.
+
+| Trophy | Public result | Status |
+|---|---|---|
+| T1 | L satisfies ZFC | Proved under the existing LEM hypothesis |
+| T2 | L satisfies GCH | Proved under the existing LEM hypothesis |
+| T3 | Construct N with ordinary N ⊨ ZFC + not CH | Planned; no supplied generic or ultrafilter at the final instance |
+| T1-T3 aggregate | Semantic CH independence: actual ordinary ZFC models on both sides of CH | Planned; requires shared theory/CH adapters and T3 |
+| T4 | Ground-model definability | Planned; theorem and scope unchanged |
 
 "Optimal" here means meeting explicit design criteria: cohesive mathematical units, low cross-layer coupling, reusable hypotheses, transparent assumption costs, complete public theorem contracts, and minimal mechanical proof duplication. There is no measured global optimum or reliable implementation-time percentage. A choice is justified by its consumers and proof obligations, then tested with meaningful prototypes.
 
@@ -27,6 +39,7 @@ The framework has a permanent architecture and an incremental delivery schedule.
 | Intermediate models and advanced geology | Complete subalgebras, quotient extensions, covering characterizations, model comparison | Required future clients |
 | Symmetric extensions and choiceless geology | Automorphisms, subgroup filters, hereditary symmetry, restricted-name truth | Required extension boundary; additional theorems scheduled separately |
 | Class forcing | Classes, class parameters, recursion and forcing-theorem capabilities | Separate required research/development track, with explicit hypotheses |
+| Ordinary model realization | Fullness, ordinary ultrafilter construction, set quotient and formula truth | Required generic component and actual T3 instance |
 | Proof systems, syntactic independence and PRA relative consistency | Not required by this semantic program | Outside the committed roadmap; reconsider only for an explicitly selected future theorem |
 
 "Complete public interfaces" does not mean formalizing every known forcing or preservation theorem before any application. It means that the declared general set-forcing API is mathematically complete in both presentations, including actual generic extensions, and that later layers have explicit homes and contracts. Long-support, symmetric and class-forcing capabilities each receive their own honest completion status.
@@ -78,9 +91,10 @@ The following are responsibility names, not final Agda module paths. Source plac
 | Logic and model foundations | Syntax, axiom schemas, satisfaction, equality laws, model profiles and semantic correctness | Existing generic foundations | A forcing presentation or an application |
 | Set mathematics and representation | Internal functions, ordinals, cardinals, rank, set satisfaction, coding adapters | Logic and models | L-specific condensation, Cohen or geology |
 | Poset structures | Preorders, compatibility, dense sets, filters, maps, closure/support vocabulary | Generic sets/order mathematics | Boolean axiom transfer or geology |
-| Boolean structures | Algebra laws, admitted joins, subalgebras, filters, algebraic maps | Generic sets/order mathematics | Cohen or a full poset forcing theorem |
+| Boolean structures | Algebra laws, admitted joins, subalgebras, filters, ordinary ultrafilter existence under named assumptions, algebraic maps | Generic sets/order mathematics | Cohen or a full poset forcing theorem |
 | Name representations | Raw names, support/subname recursion, check/generic names, code relations | Sets/models and appropriate labels | Fullness, extension ZFC or applications |
 | Boolean semantics | Atomic values, congruence, formula values, mixing/fullness under explicit hypotheses | Boolean structures, names, logic | A poset truth theorem used in its own proof |
+| Ordinary model realization | Quotient carrier, descended relations and formula truth for full Boolean models | Logic/models, Boolean structures, explicit ultrafilter and fullness capabilities | Cohen, geology or a genericity hypothesis |
 | Completion and representation bridge | Separative quotient, regular opens, maps, name translations, coherence | Poset/Boolean structures and names; semantics for formula bridge | Application-specific preservation |
 | Poset forcing API | Forcing clauses, monotonicity, density, formula compiler, public theorem wrappers | Shared names and proved semantic/completion bridges | Cohen-specific names or assumptions |
 | Generic extensions and axiom transfer | Valuation, extension, embedding, truth, ordinal and ZF/AC transfer | Models, names, semantics and relevant bridges | Ground definability or CH |
@@ -132,7 +146,7 @@ Preserve the condition representation for combinatorial proofs. Closure and supp
 
 Provide algebraic forcing over arbitrary appropriate nontrivial complete Boolean algebras, rather than only one Cohen regular-open algebra. Export weighted names, Boolean membership/equality, formula values, check names, and law-based reasoning. Explicit-family mixing, a unique-existence witness theorem, and general fullness/maximum principle are separate theorem packages with their required assumptions. Boolean uniqueness does not give unique raw names. Bell Problems 1.29-1.30 distinguish the no-AC unique-witness result from the maximum principle uniformly over all complete Boolean algebras, which is equivalent to AC.
 
-Provide model-relative generics, generic specialization and actual-extension correspondence, together with Boolean logical laws and semantic axiom validation. Proof-system soundness is not required. An arbitrary-ultrafilter quotient is a separately specified endpoint; it is not presumed externally well-founded or identified with a generic extension.
+Provide model-relative generics, generic specialization and actual-extension correspondence, together with Boolean logical laws and semantic axiom validation. Proof-system soundness is not required. An arbitrary-ultrafilter quotient is a required, separately specified ordinary-model endpoint for T3; it is not presumed externally well-founded or identified with a generic extension.
 
 The nonzero part B⁺ supplies a poset adapter. Direct algebraic applications must also be able to use B itself, including complete subalgebras, without constructing a redundant new regular-open universe at every step.
 
@@ -220,15 +234,15 @@ The architecture in sections 1-7 is fixed as the direction. The phases below ret
 | F3: Boolean semantics and internalization | F1, F2 | Atomic laws and formula values at valid sizes; ground-code closure and evaluator agreement on the stated admitted families and universes; canonical Boolean formula compilation; mixing/fullness under named assumptions; no circular use of extension ZFC |
 | F4: poset semantics and generic correspondence | F2, F3 | Standard forcing clauses and characterization; transported poset formula compiler and its correctness; generic transport and truth correspondence; extension isomorphism fixing the ground |
 | F5: full general set-forcing APIs | F3, F4 | ZF and separate AC transfer, ordinals, complete public theorem interfaces in both presentations, source/semantic axiom bridges and trivial-forcing identity; early general chain-condition/possible-value preservation slice needed by C2/G1 |
-| F6: first application completion | F5 for headline results; work-package prerequisites below | Complete Cohen C1-C3 first, then geology G1-G4; independent preparatory lemmas can start earlier |
+| F6: first application completion | F5 for headline results; work-package prerequisites below | Complete Cohen C1-C5 for T3, then geology G1-G4 for T4; independent preparatory lemmas can start earlier |
 | F7: extension calculus and mature bridges | F2-F5 | Products, nontrivial two-step iteration, quotients, intermediate models and compositional/property bridges; shared preservation interfaces |
 | F8: named advanced families | F7 and family-specific theory | Long-support iterations, symmetry, class forcing and deeper geology under explicit additional hypotheses |
 
 F1 is a sequence of motivated units, not a requirement to finish every future cardinal theorem before names. F2 and F3 can overlap on disjoint structural and semantic work. The abstract uniqueness part of G2 can proceed alongside forcing once its foundations are ready. The first application can be proved before all of F7/F8, but only after F2-F5 have exercised both interfaces and the core semantic bridge. F7/F8 remain required long-term work with stated scope, not features cancelled when an initial theorem passes.
 
-Within F3, first establish set-coded or bounded quantifier-value existence and independence of bounds, then formula values and compiler correctness; mixing and fullness/maximum-principle packages follow under their own assumptions. The general F4 generic-truth contract must not require fullness or the maximum principle. A separately scoped arbitrary-ultrafilter quotient theorem for full Boolean models may use them, as in Bell Theorem 4.1; it does not replace genericity or the actual-extension correspondence. F5 schema-transfer bounds use ground Collection/Replacement and F3/F4 definability, never extension ZFC as a premise. Agreement with the host evaluator is conditional on both evaluators admitting the relevant families; no theorem identifies ground completeness with unrestricted external completeness.
+Within F3, first establish set-coded or bounded quantifier-value existence and independence of bounds, then formula values and compiler correctness; mixing and fullness/maximum-principle packages follow under their own assumptions. The general F4 generic-truth contract must not require fullness or the maximum principle. The separately scoped ordinary-ultrafilter quotient theorem is now required for T3 and uses fullness, as in Bell Theorem 4.1; it does not replace genericity or the actual-extension correspondence. F5 schema-transfer bounds use ground Collection/Replacement and F3/F4 definability, never extension ZFC as a premise. Agreement with the host evaluator is conditional on both evaluators admitting the relevant families; no theorem identifies ground completeness with unrestricted external completeness.
 
-Cohen is the first headline result, followed by ground definability. Their independent infrastructure can still progress alongside one another. F0 is now in progress, concretized as K0 in the [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md); it is not a specialized proof of either headline theorem. K0-K11 refine delivery through the first trophy without replacing the F0-F8 architecture.
+T3 is the actual ordinary Cohen model, followed by T4 ground definability. Their independent infrastructure can still progress alongside one another. F0 is now in progress, concretized as K0 in the [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md); it is not a specialized proof of either headline theorem. K0-K15 refine delivery through trophy 3 without replacing the F0-F8 architecture.
 
 ### 8.1 Cohen work packages
 
@@ -236,7 +250,11 @@ C1 constructs Add(ω,κ) from finite partial functions inside a ground, proves c
 
 C1 can start after the relevant F1 finite-set and poset foundations. C2 requires C1, generic evaluation and the early general preservation slice delivered by F5; C3 additionally requires the complete extension/model and semantic bridges. This preservation slice lives in the general preservation component, not in the Cohen application; F7 extends it for iteration and quotient clients.
 
-Expose both the poset statement and its Boolean counterpart through the common bridge. Keep generic existence separate from the conditional extension theorem. Existing L provides the positive GCH branch after the appropriate adapters; do not add collapse forcing merely to duplicate it. Object-language CH/GCH correctness is retained for semantic statements; proof-system soundness and standalone independence are outside this roadmap. [Detailed Cohen obligations](cohen-infrastructure-overlap-2026-09.md).
+Expose both the poset statement and its Boolean counterpart through the common bridge. Keep generic existence separate from the conditional extension theorem. Existing L provides the positive GCH branch after the appropriate adapters; do not add collapse forcing merely to duplicate it. Object-language CH/GCH correctness is retained for semantic statements; proof-system soundness and syntactic independence are outside this roadmap; the actual-model semantic independence package is required. [Detailed Cohen obligations](cohen-infrastructure-overlap-2026-09.md).
+
+C4 adds generic fullness and ordinary-ultrafilter quotient truth, constructs the ultrafilter in the L instance, and produces the actual ordinary model of ZFC + not CH. C5 combines that model with the existing L results under shared first-order ZFC/CH interpretations to expose semantic CH independence. These refine K12-K15. Do not infer top-value Boolean validity from a potentially vacuous supplied-generic implication. The actual quotient is not required to satisfy the strong external-well-foundedness fields of the current model record.
+
+Ordinary ultrafilter existence and fullness must be established from the stated ground assumptions. In the L instance, internal Choice is available, but transferring witnesses to host data is an explicit construction obligation. Genericity is not required for this quotient theorem. Conversely, this theorem does not replace the general generic valuation and extension correspondence. F3 owns the shared Boolean semantics, F5 owns generic model realization and quotient truth, and the Cohen application owns only specialization and its headline theorem.
 
 ### 8.2 Ground-definability work packages
 
@@ -269,7 +287,7 @@ F0 must end with a concrete reviewable selection of representations and an assum
 
 [K0 probe evidence](k0-probe-evidence-2026-09.md) records checked finite cases, the raw-name h-level obstruction, and the still-open model-internal coding and quantifier obligations. It does not mark F0 complete.
 
-The [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md) refines the first application into K0-K11 with package prerequisites, automatic-conversion contracts and acceptance conditions. It is subordinate to the component boundaries in this master plan.
+The [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md) refines the first application into K0-K15 with package prerequisites, automatic-conversion contracts and acceptance conditions. It is subordinate to the component boundaries in this master plan.
 
 The [Bell 2005 reassessment](bell-2005-route-reassessment-2026-09.md) refines the compiler, witness, schema and morphism contracts using the [searchable textbook](bell-2005-boolean-valued-models.fulltext.md) and [retained PDF](bell-2005-boolean-valued-models.pdf).
 
@@ -353,4 +371,4 @@ The trilingual source chapter-framework gate and whole-tree typecheck were not r
 
 ### Detailed Cohen roadmap follow-up
 
-The follow-up adds the K0-K11 roadmap, selects Cohen before ground definability, and updates links in the two Cohen evidence notes. Its scoped document checks are recorded in the roadmap. No source, glossary or teaching files are changed.
+That earlier follow-up added the original K0-K11 roadmap and selected Cohen before ground definability, and updates links in the two Cohen evidence notes. Its scoped document checks are recorded in the roadmap. No source, glossary or teaching files are changed.

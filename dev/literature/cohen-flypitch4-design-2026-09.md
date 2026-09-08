@@ -2,9 +2,9 @@
 
 Research date: 2026-09-08. This is an application and evidence note for adding a Cohen extension that violates GCH to the existing L development and planned ground-definability project. The authoritative architecture and schedule are in [the forcing and geology system design](forcing-geology-design-2026-09.md); prescriptive language here describes Cohen obligations within that plan rather than a competing roadmap. Only research notes are changed. No source implementation, external project build, or new theorem is claimed.
 
-The first headline is now Cohen, followed by ground definability. The [detailed implementation roadmap](cohen-implementation-roadmap-2026-09.md) specifies K0-K11, including certified automatic completion, semantic transport and separate chain-condition certificates. The master plan retains authority over long-term architecture.
+Bedrock's first two trophies are the existing `L⊨ZFC` and `L⊨GCH` theorems. The third trophy will construct an actual ordinary two-valued model of `ZFC + ¬CH`; ground-model definability remains the fourth trophy. The [detailed implementation roadmap](cohen-implementation-roadmap-2026-09.md) now specifies K0-K15, including the general forcing results and the ordinary quotient exit. The master plan retains authority over long-term architecture.
 
-Scope update: the owner selected the semantic Cohen generic-extension theorem and subsequent geology. Comparisons below with syntactic independence describe different endpoints, not required roadmap work. Proof systems, proof-system soundness and PRA relative consistency are outside the committed program. See the master plan and K0 evidence ledger for current scope and status.
+Scope update: the generic-extension theorem remains mandatory but is an intermediate result. The third trophy adds full Boolean names, a constructed ordinary ultrafilter, and a quotient truth theorem to return a two-valued model with no supplied generic or ultrafilter. Proof systems, completeness and PRA relative consistency remain outside the required route.
 
 ## 1. Decision
 
@@ -14,9 +14,9 @@ This is not a measured claim that a new Agda implementation will be faster than 
 
 The earlier survey missed the 2026 Lean 4 port. It is real and must be distinguished from the original Lean 3 repository. The dedicated [Flypitch4 source audit](flypitch4-source-audit-2026-09.md) pins the source and separates inspected evidence from reported validation. The [infrastructure audit](cohen-infrastructure-overlap-2026-09.md) records current Bedrock definitions and the missing Cohen lemmas. The [system design](forcing-geology-design-2026-09.md) is the sole authoritative roadmap. Shared contracts and an initial working equivalence bridge precede the concrete Cohen and geology milestones. Complete developments of long iterations, symmetric forcing and class forcing do not precede those applications, but their needs constrain the public contracts from the outset.
 
-## 2. The theorem to target
+## 2. The reusable theorem and third trophy
 
-The user's stated result is an extension theorem. A useful precise first target is:
+The reusable generic-extension theorem remains a mandatory target:
 
     Given a transitive ZFC ground M, κ = (ω₂)^M,
     P = Fn(κ × ω, 2, finite)^M, and an M-generic G ⊆ P,
@@ -24,15 +24,26 @@ The user's stated result is an extension theorem. A useful precise first target 
 
 All cardinal symbols and finite-function collections are computed in M. Conditions are ordered by reverse inclusion. Existence of the supplied generic is a separate theorem or hypothesis, not part of what the displayed implication proves. For countable transitive set models, a generic-existence construction can supply G. It does not prove that a countable transitive ZFC model exists from ZFC alone.
 
-There are three related but different endpoints:
+It is not itself the third trophy. The final endpoint is:
+
+    Under the existing Bedrock foundations and only the stated host LEM,
+    construct an ordinary two-valued first-order structure N and prove
+    N ⊨ ZFC + ¬CH.
+
+The intended route starts from `L⊨ZFC`, constructs the Cohen poset and its complete Boolean algebra `B` internally relative to L, constructs the full Boolean name universe, proves Boolean value `⊤` for ZFC and `¬CH`, constructs an ordinary ultrafilter `U` on `B`, and forms `N = BV/U`. Bell's Theorem 4.1 is the reference point for quotient truth. Fullness supplies existential witnesses because an arbitrary ultrafilter need not preserve arbitrary joins. `U` is an output, not a theorem parameter.
+
+There are four related but different endpoints:
 
 | Endpoint | What must additionally be supplied |
 |---|---|
 | The displayed extension theorem | Names, genericity, forcing theorem, ZFC transfer, Cohen combinatorics and cardinal preservation |
 | Existence of such a concrete extension in the ambient setting | A suitable starting model and generic-existence argument in that setting |
+| The committed third trophy | Full Boolean names, a constructed ordinary ultrafilter, quotient structure and quotient truth theorem |
 | Syntactic nonprovability or independence over first-order ZFC | Object-language ZFC/CH/GCH, satisfaction bridges, proof system and soundness, plus a suitable semantic countermodel construction or a formal relative-consistency argument |
 
-A Boolean-valued countermodel plus Boolean soundness can establish nonprovability without producing an external generic. First-order completeness can turn consistency information into some ordinary model, but does not supply a prescribed transitive ground and its generic extension. These distinctions explain why a syntactic Flypitch endpoint is not automatically the endpoint requested here.
+A Boolean-valued countermodel alone is not yet the trophy. Its ordinary quotient is the actual two-valued model. First-order completeness offers another route from consistency to a model, but is unnecessary for this direct semantic construction and does not supply a prescribed transitive ground and its generic extension.
+
+The target extra assumption is only `LEM` at the required universe level. Feasibility, extraction and universe levels remain explicit audits. The implementation may not silently assume host `Choice`, `SetChoice`, an ultrafilter, or a generic.
 
 For this task, proving ¬CH is sufficient: GCH includes its instance at ω. No requirement to calculate the continuum exactly as ω₂, and no requirement that the starting model already satisfy GCH, belongs in the minimal Cohen proof. Exact continuum values and control of GCH at other cardinals are separate, more expensive applications.
 
@@ -92,14 +103,24 @@ flowchart TD
   B <-->|"completion and semantic transport"| P
   B --> C["Cohen forcing and ccc"]
   P --> C
-  C --> NC["M[G] satisfies ZFC + not CH"]
+  C --> GE["General M[G] theorem"]
+  B --> F["Full Boolean names"]
+  F --> Q["General ordinary quotient and truth"]
+  LG --> NC
+  C --> NC
+  GE -->|"required before acceptance"| NC
+  Q --> NC["Trophy 3: construct N satisfying ZFC + not CH"]
+  NC --> SI["Semantic CH independence"]
+  LG -->|"shared ZFC/CH adapters"| SI
   P --> S["Small forcing approximation and cover"]
   A --> U["Approximation-cover uniqueness and local formula"]
   S --> GD["Ground model definability"]
   U --> GD
 ```
 
-There is a compelling eventual combined example: start from a suitable constructible ground, form a Cohen extension, retain the ground's positive GCH theorem, prove the extension fails CH, and recover the ground by the uniform defining formula. Under the proper ambient/model hypotheses, this realizes all three themes in one example.
+Together, the existing `L⊨ZFC` and `L⊨GCH` and the constructed `N⊨ZFC+¬CH` give the advertised semantic CH-independence package. This requires a shared ordinary first-order interpretation of ZFC and CH and an adapter for the existing L theorems. It is not syntactic or PRA-calibrated independence, and `N` need not be `L[G]`.
+
+There is also a compelling eventual ground-relative example: start from a suitable constructible ground, form a Cohen extension, prove the extension fails CH, and recover the ground by the uniform defining formula. This connects all four trophies, but differs from the quotient model that closes trophy three.
 
 Three bridges must not be skipped in that example. First, the poset and Boolean presentations must agree through the systematic completion, name, value and forcing transports required by the public architecture. Second, the present universe-sized L is not automatically an externally countable transitive model with an available generic; instantiate the example in a setting where the generic-existence assumptions are actually supplied. Third, a claim about the extension's own constructible class L requires absoluteness/comparison of the L construction, not merely reuse of a theorem whose carrier is the old ground.
 
@@ -107,7 +128,7 @@ Ground relativity is independent of the representation split between host constr
 
 Cohen's ccc and geology's approximation parameter are different contracts. The generic small-forcing route can use δ = (|P|⁺)^M. For the chosen P of ground size ω₂, this gives δ = ω₃ of M. Ccc supplies cardinal preservation but does not by itself imply the ω₁-approximation property. A smaller parameter may follow from an additional theorem about the particular forcing; it must not be inferred just from ccc.
 
-For a future syntactic independence theorem, add a constant-free `GCH` formula and a correctness bridge to the existing `GCHStatement`. The positive side can then use L with soundness; the negative side uses the Cohen countermodel and the implication GCH → CH. Merely placing the two semantic theorem names together is not yet an object-language independence proof. The hypotheses of the countermodel construction and the host metatheory must remain explicit.
+The third trophy needs a constant-free CH formula and semantic correctness bridges, but no derivability relation. A future syntactic independence theorem would additionally require a proof system and soundness or a proof translation. The advertised K15 package must therefore be labelled semantic CH independence.
 
 ## 7. What to take from Flypitch4
 
@@ -119,13 +140,14 @@ For a future syntactic independence theorem, add a constant-free `GCH` formula a
 | Entire universe-indexed bSet construction | Use as evidence for proof decomposition; Bedrock may instead maximize existing host constructions with proved ground-coding adapters |
 | Complete Boolean algebra operations over host-indexed families | Keep distinct from completeness for families belonging to a ground model; neither form silently supplies the other |
 | Collapse forcing for CH | Omit from the initial roadmap; L already gives the positive GCH result |
-| Deep first-order proof system and soundness | Required if syntactic independence becomes an endpoint; adapt to existing Bedrock syntax |
-| First-order completeness | Useful for some model-existence endpoints, but unnecessary for the direct soundness-based nonprovability inference |
+| Deep first-order proof system and soundness | Outside the four-trophy route |
+| First-order completeness | Outside the direct Boolean quotient route |
+| Fullness and ordinary ultrafilter quotient | Add at K12-K14 to turn the Boolean Cohen result into the actual two-valued third trophy |
 | Lean tactics and mathlib interfaces | Treat as Lean-specific implementation, not directly portable Cubical Agda infrastructure |
 
 The practical choice is selective mathematical reuse inside the two-interface architecture. The forcing theorem and extension ZFC should have one canonical proof and be exposed at both interfaces through transport; Cohen and geology then consume the public face appropriate to each argument. Generic set-theoretic coding remains shared with L, while the specialized L proof stays intact. Copying the entire Flypitch arrangement would add its positive-CH machinery while still leaving the actual ground-extension and definability adapters to build.
 
-There is also a viable **ground-relative Boolean core**: construct weighted set-coded names and Boolean values inside M, then specialize at an M-generic ultrafilter. Boolean forcing is fully capable of supporting actual extensions and geology. The limitation just identified belongs to Flypitch's chosen implementation and exported endpoints, not to the mathematical Boolean method.
+There is also a viable **ground-relative Boolean core**: construct weighted set-coded names and Boolean values inside M, then support two specializations. An M-generic ultrafilter yields the ground-relative extension needed by geology; a constructed ordinary ultrafilter, together with fullness, yields the quotient needed by trophy three. These are separate contracts.
 
 | Whole-system option | Main advantage | Additional work for our combined goal |
 |---|---|---|

@@ -1,10 +1,30 @@
-# First trophy: the Cohen generic-extension theorem
+# Trophy 3: construct an ordinary model of ZFC + not CH
 
-Design date: 2026-09-08. Status: implementation roadmap with checked temporary K0 probes; no production forcing modules have been added. This refines the [long-term architecture](forcing-geology-design-2026-09.md), which remains authoritative for component boundaries. Cohen is now the first headline application; ground-model definability is the second. This ordering does not weaken either public interface, the required semantic bridges, or the future extension calculus. The owner requested this planning deliverable in `dev/literature`; source implementation and teaching integration require subsequent scoped briefs.
+Design date: 2026-09-08. Status: implementation roadmap with checked temporary K0 probes; no production forcing modules have been added. This refines the [long-term architecture](forcing-geology-design-2026-09.md), which remains authoritative for component boundaries. The global sequence is T1: L satisfies ZFC (proved), T2: L satisfies GCH (proved), T3: construct an ordinary model of ZFC + not CH, T4: ground-model definability. T3 follows the general forcing results and adds an actual model constructor; it does not replace those results. This ordering does not weaken either public interface, the required semantic bridges, or the future extension calculus. The owner requested this planning deliverable in `dev/literature`; source implementation and teaching integration require subsequent scoped briefs.
 
 The [Bell 2005 reassessment](bell-2005-route-reassessment-2026-09.md) supplies textbook theorem locators and refines the contracts below. The [full text](bell-2005-boolean-valued-models.fulltext.md) is a search artifact; exact mathematical expressions can be checked in the [local PDF](bell-2005-boolean-valued-models.pdf).
 
 ## 1. The result and its completion contract
+
+The final T3 constructor targets the existing host foundations plus `LEM (ℓ-suc ℓ)` and returns an inhabited ordinary first-order structure N, with equality and membership interpretation, and proofs of every ZFC axiom/schema and not CH. Neither a ground model, a generic G, nor an ultrafilter U may remain an unconstructed input of this final instance. This exact assumption budget is a target to validate, not a checked theorem: universe levels, internal witness extraction and quotient formation remain K0/K12-K15 obligations. An extra host-choice assumption requires an explicit scope decision, not a silent addition.
+
+Schematic public outputs, not existing Agda declarations:
+
+```text
+CohenModel(lem) = N
+CohenModel-ZFC(lem) : N ⊨ ZFC
+CohenModel-not-CH(lem) : N ⊨ ¬CH
+
+SemanticCHIndependence(lem) =
+  (positive model, proof of ZFC + CH,
+   negative model, proof of ZFC + ¬CH)
+```
+
+The positive model is the adapted existing L; the negative model is the constructed quotient. Exact carriers and universe annotations must be fixed by checked contracts. No `Con(ZFC)`, externally countable ground, G or U is an additional argument of these final instances.
+
+The selected instance uses existing L, internally constructs the Cohen completion B and its Boolean name model, proves the required sentences have value top, constructs an ordinary ultrafilter U, and forms the two-valued quotient N. It does not assert that N is externally well-founded, a transitive extension of the current L, or satisfies the existing strong `isZFCModel` record unchanged. Ordinary first-order Foundation and external accessibility must remain distinct.
+
+The following universal supplied-generic theorem remains a mandatory prerequisite of T3 acceptance, together with both public interfaces and their bridge. Completing only the quotient instance is insufficient.
 
 Given a transitive ground M satisfying first-order ZFC, let κ = (ω₂)^M and P = Fn(κ × ω, 2, finite)^M, ordered by reverse inclusion. For a supplied M-generic filter G, construct the actual extension and prove:
 
@@ -34,8 +54,12 @@ K labels are implementation work packages, not final Agda module names. F labels
 | K7: chain conditions and preservation | Early F5 preservation slice | K1-K5; K6 for extension cardinal interpretation | Distinct CCC predicates and ground-ZFC cardinal preservation |
 | K8: Cohen conditions and ccc | C1 | K1 and K2 structural posets | Internal finite maps, coordinate density, delta-system ccc |
 | K9: internal family of reals | C2 | K3-K6, K8 | Set-coded family, Boolean correspondence and distinctness |
-| K10: final Cohen theorem | C3 | K6-K9 | Both theorem presentations and their generic specialization |
-| K11: generic-existence constructor and release | F5/C3 integration | K2; K10 for final application | Countable-ground corollary, assumption audit and integration gates |
+| K10: general Cohen forcing theorem | C3 | K6-K9 | Both theorem presentations and their generic specialization |
+| K11: generic-existence constructor and general API integration | F5/C3 integration | K2; K10 for final application | Countable-ground corollary and validated general interfaces |
+| K12: fullness and ordinary-ultrafilter existence | F3/F5 model realization | K1-K4, ground ZFC | Reusable witness theorem; internally constructed ultrafilter with host interpretation |
+| K13: ordinary quotient and truth | F5 model realization | K4, K12 | General two-valued quotient, well-defined relations and formula truth theorem |
+| K14: actual Cohen model | F6/C4 | K10-K13 and L adapters | Construct N and prove ordinary ZFC + not CH without a supplied G or U |
+| K15: semantic CH independence and release | F6/C5 | K14, existing L theorems, K1 | Shared positive/negative model package, assumption audit and integration gates |
 
 K8 starts as soon as its set mathematics is ready; it need not wait for semantics. The generic-enumeration part of K11 can also start early. K7's possible-value arguments and K6's axiom proofs can progress separately after K5. K10 cannot bypass K6 or K5 because a host Boolean countermodel is already available.
 
@@ -54,10 +78,19 @@ flowchart TD
   K8 --> K9
   K7 --> K10["K10: Cohen theorem"]
   K9 --> K10
-  K10 --> K11["K11: release and existence corollary"]
+  K10 --> K11["K11: general APIs and generic existence"]
+  K4 --> K12["K12: fullness and ordinary ultrafilter"]
+  K12 --> K13["K13: quotient and truth"]
+  K4 --> K13
+  K10 --> K14["K14: actual ordinary Cohen model"]
+  K11 --> K14
+  K13 --> K14
+  K14 --> K15["K15: semantic CH independence"]
+  L["Existing L ZFC and GCH + K1 adapters"] --> K14
+  L --> K15
 ```
 
-The likely critical path is K0-K6, followed by joining preservation and the Cohen family. This is a dependency estimate, not a timing prediction. Ground-definability uniqueness and rank-local coding can develop independently after their own foundations exist; they are not prerequisites of Cohen.
+The general forcing critical path includes K0-K6 followed by preservation and the Cohen family. T3 additionally requires K12-K14; their witness, quotient and assumption obligations are substantive, not a final wrapper. This is a dependency estimate, not a timing prediction. Ground-definability uniqueness and rank-local coding can develop independently after their own foundations exist; they are not prerequisites of Cohen.
 
 ## 3. K0: resolve representation risks with real probes
 
@@ -105,7 +138,7 @@ Use recursion once where both representations genuinely share it. Boolean equali
 
 The first delivery is an ordinary proved construction callable without tactics. Its outputs are symbolic sets, predicates, maps and certificates; it does not enumerate an arbitrary infinite powerset. Reusing a certificate should not repeatedly rebuild independent completions in each application.
 
-The semantic adapter is layered onto the structural output after K4/K5. It supplies translated names and formulas, generic transport, and satisfaction agreement. An elaborator or tactic may later select this adapter automatically, but must generate terms checked by the same safe kernel. Such tooling is not a prerequisite for the first trophy. Mathematical automatic conversion is required; an elaborate interactive compiler product is not.
+The semantic adapter is layered onto the structural output after K4/K5. It supplies translated names and formulas, generic transport, and satisfaction agreement. An elaborator or tactic may later select this adapter automatically, but must generate terms checked by the same safe kernel. Such tooling is not a prerequisite for the third trophy. Mathematical automatic conversion is required; an elaborate interactive compiler product is not.
 
 Keep semantic certificates and property certificates distinct:
 
@@ -162,11 +195,21 @@ K10 combines that injection with K7's identification of extension ω₁ and pres
 
 The Boolean theorem uses checked ground cardinal parameters, whose interpretation is proved. Do not replace ground ω₂ by the ambient host ω₂. The final poset theorem should mention M, P and G and the needed model hypotheses, not expose every field of the completion construction to its user. A separate correspondence theorem documents the Boolean path.
 
-## 8. K11 and acceptance of the first trophy
+## 8. K11-K15 and acceptance of trophy 3
 
 For an externally countable transitive set ground, enumerate the coded dense subsets to be met and recursively choose descending conditions meeting them. Prefer a supplied enumeration of conditions to choose the least suitable next index, with the required host logic made explicit. Generate the filter with the correct stronger-condition convention and prove genericity. This construction proves existence conditional on the starting model; it does not produce that model from ZFC or provide a generic for the ambient proper-class L.
 
-The first trophy is accepted only after all of the following are checked:
+K12 has two independent subpackages: K12a owns fullness over K4, while K12b owns ordinary-ultrafilter existence over the K1/K2 Boolean and ground-choice interfaces. They must not be bundled into a monolithic record or made mutually dependent. K12 promotes the separate fullness/maximum-principle capability to a required theorem for the ordinary-quotient branch. Prove it over a stated ground ZFC profile and discharge the internal value-set/rank and selection obligations. Do not strengthen the generic-truth API with fullness. A uniform external selector for raw names is not automatically supplied by internal existential witnesses.
+
+Construct a proper ordinary ultrafilter on the nontrivial internally complete B. For the L instance, use L's internal Choice to prove internal ultrafilter existence and prove that its decoding is an ordinary ultrafilter on the interpreted Boolean algebra. L's internal well-ordering/canonical coding may supply a specific witness; the extraction method must be checked. A truncated existence proof alone is not permission to eliminate into arbitrary host data. The final model constructor must obtain its own U. U need not be L-generic and can belong to L. No claim of external completeness for U is made.
+
+K13 is a general model-theoretic component, not a Cohen-specific quotient. Define name equivalence by membership of the Boolean equality value in U; construct the set quotient, prove effectiveness/equality coherence as required, and descend Boolean membership to a proposition-valued relation on equivalence classes. Prove for every formula and parameter tuple that quotient satisfaction holds exactly when its Boolean value belongs to U. Fullness handles the existential step; do not assume an ordinary ultrafilter preserves arbitrary joins. The quotient may be externally ill-founded. Prove its ordinary first-order Foundation through truth transfer, not by asserting external accessibility. Bell Theorem 4.1 is the reference. No deduction system or logical completeness theorem is required.
+
+K14 specializes these general constructions to L and its Cohen algebra. It consumes Boolean top-value proofs of each ZFC axiom/schema and not CH, then transfers them using K13 to the constructed N. Conditional generic-extension truth by itself cannot establish these top values. Internal Choice must not become an undocumented host `SetChoice`. Return the structure and satisfaction proofs at the declared universe levels; do not report only a Boolean-valued structure, syntactic consistency, or a constructor requiring U as the completed trophy. K10/K11 and the general APIs remain required before acceptance even if the quotient branch can be developed independently.
+
+K15 combines the actual N with the ordinary-model interpretation of existing L. Prove that the existing GCH predicate implies the shared CH sentence in L, and that both models satisfy the same first-order ZFC theory and use the same CH sentence. Export a semantic CH-independence package containing an ordinary ZFC + CH model and an ordinary ZFC + not CH model. This is the combined headline result of T1-T3. State the host foundations and exact assumptions prominently; it is not a PRA relative-consistency theorem or a claim about the current ambient CH. Preserve both existing landmark statements and do not advertise this new aggregate as proved before the adapters and N are checked.
+
+Trophy 3 is accepted only after all of the following are checked:
 
 - K0 representation and assumption decisions are resolved, with source-level witnesses.
 - K2 automatic completion is general, model-internal and exercised on a nonseparative example; semantic certificates from K5 are reusable.
@@ -176,6 +219,9 @@ The first trophy is accepted only after all of the following are checked:
 - The real family and cardinal contradiction live inside the extension and match the object-language CH/GCH formulas.
 - The supplied-generic result and countable-ground existence corollary have distinct honest hypotheses.
 - No test or theorem silently grants a choiceless CCC transfer, an external-family join, an arbitrary witness selector or an L-generic.
+- K12/K13 are generic theorems, and K14 returns the actual ordinary model with no supplied G, U or unproved model-existence premise.
+- The LEM budget, witness extraction, quotient h-levels and object-language ZFC/CH bridges are verified; any unresolved item blocks acceptance.
+- K15 packages both ordinary models and labels the combined semantic independence result accurately.
 - The actual named source files typecheck with `--safe`; integration runs the repository's required gates and preserves both existing landmarks.
 
 Use meaningful boundary checks, not tests that merely repeat definitions. Inspect the public types to ensure absence of unwanted host-choice assumptions and to distinguish property certificates from semantic certificates. A full formal countermodel to choiceless CCC transfer is a later application, not a prerequisite; the initial API must already refuse to infer that transfer without a theorem.
@@ -184,7 +230,7 @@ Each source brief must name allowed files, prerequisite exports, theorem stateme
 
 ## 9. What follows, and evidence
 
-After K10/K11, ground definability consumes the extension, definability, cardinal and coding infrastructure. It adds small-forcing approximation/cover, model uniqueness, rank-local candidate recognition and the uniform ground formula. It does not depend on the not-CH conclusion. Products, iterations, quotients, intermediate models, symmetry and class forcing retain their phases and capability boundaries in the master plan; success here does not mark those phases complete.
+Trophy 4 is ground-model definability, unchanged. Its mathematics can use K10/K11 without depending on the quotient constructor or not-CH instance; public trophy numbering does not create an artificial proof dependency. Ground definability consumes the extension, definability, cardinal and coding infrastructure. It adds small-forcing approximation/cover, model uniqueness, rank-local candidate recognition and the uniform ground formula. It does not depend on the not-CH conclusion. Products, iterations, quotients, intermediate models, symmetry and class forcing retain their phases and capability boundaries in the master plan; success here does not mark those phases complete.
 
 Flypitch's weighted-name semantics, Boolean ZFC arguments and Cohen cardinal comparisons are proof-design references for K3/K4/K6/K7/K9. They are not a substitute for K2's ground-internal adapter, K5's actual generic-extension correspondence or K11. Avoid copying its collapse branch for a positive result already supplied by L. Consult the [pinned source audit](flypitch4-source-audit-2026-09.md), the [Cohen comparison](cohen-flypitch4-design-2026-09.md), and the [infrastructure/source ledger](cohen-infrastructure-overlap-2026-09.md). The port was source-audited, not rebuilt in this task.
 
@@ -200,8 +246,12 @@ No Agda probe or source implementation was run in this planning revision. The fu
 
 ### Bell textbook follow-up
 
-The follow-up refines K0-K6 contracts using the textbook without changing K0-K11 dependencies or the first trophy. The extraction and combined document checks are recorded in the Bell reassessment. No source implementation was added.
+That earlier follow-up refined K0-K6 contracts using the textbook while retaining the then-current K0-K11 conditional-extension roadmap. The actual-model decision below subsequently adds K12-K15. The extraction and combined document checks are recorded in the Bell reassessment. No source implementation was added.
 
 ### Semantic scope decision and K0 execution
 
-The owner selected forcing, actual model extensions and geology as the main program. No proof-system/PRA branch is required. K0 probes now run in isolated temporary trees; the evidence ledger separates their measured results from the earlier planning-only validation records above. The first trophy remains conditional on a transitive ground and a generic; generic existence is separately conditional on suitable countability. Neither Con(ZFC) nor existence of a transitive set model is inferred from that conditional theorem.
+The owner selected forcing, actual model extensions and geology as the main program. No proof-system/PRA branch is required. K0 probes now run in isolated temporary trees; the evidence ledger separates their measured results from the earlier planning-only validation records above. At that earlier stage the planned headline remained conditional on a transitive ground and a generic. The subsequent owner decision below supersedes that endpoint while retaining the theorem as a mandatory general result.
+
+### Actual-model trophy decision
+
+The owner selected global T1/T2 (existing L ZFC/GCH), T3 (actual ordinary non-CH model), T4 (ground definability), and an aggregate semantic CH-independence result. K12-K15 add the general quotient realization and concrete instance. K0 remains in progress; this revision proves no new mathematical result and modifies no source modules.
