@@ -22,6 +22,8 @@ Thus the construction of a bounded candidate family must not be confused with th
 
 This is a deliberate integration check, not the atomic recursion instance. Do not replace Good by functionality or assume that every collection of partial functions has a functional union.
 
+Subsequent evidence: the [Good-formula and extension probes](k0-good-table-extension-2026-09.md) implement parameterized complete Good reading and the finite extension below, and check a conditional totality driver. The internal/semantic union correspondence, Good(T) and actual Boolean step remain unproved. The proof-plan sections below are historical dependencies refined by that follow-up.
+
 ## Remaining bridge, with precise admission boundary
 
 The following is a source/mathematical audit and proof plan, not checked code. Retain the existing semantic partial-table kernel and instantiate its step relation through internally coded witnesses:

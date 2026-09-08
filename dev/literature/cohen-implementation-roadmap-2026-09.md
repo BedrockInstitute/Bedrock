@@ -109,7 +109,9 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [internal candidate-table probes](k0-internal-candidate-tables-2026-09.md) check actual L product bounds, candidate-family/union membership, concrete functionality syntax and unique readout, including their composed instance. Next prove the complete Good reading and coded-step/semantic bridge, then union goodness and extension totality. Weighted Boolean admission and atomic adequacy remain open; K0 is not complete.
+The latest [Good-formula and extension probes](k0-good-table-extension-2026-09.md) check full parameterized Good reading, one-entry preservation, actual candidate admission and conditional totality. K0 now needs recursive candidate compatibility/internal union goodness and actual Boolean step admission/adequacy, together with general-ground adapters. The totality driver explicitly assumes `Good(T)`; do not count that premise as proved.
+
+The [internal candidate-table probes](k0-internal-candidate-tables-2026-09.md) check actual L product bounds, candidate-family/union membership, concrete functionality syntax and unique readout, including their composed instance. Next prove the complete Good reading and coded-step/semantic bridge, then union goodness and extension totality. Weighted Boolean admission and atomic adequacy remain open; K0 is not complete.
 
 The [partial-table and image probes](k0-partial-atomic-tables-2026-09.md) check a reusable partial-table compatibility/union kernel and fixed-formula L table images. The remaining atomic gate is internal Good-table coding, union/extension totality, admitted weighted Boolean images and atomic adequacy. A local step relation with proved determinacy replaces any requirement for a globally total step on arbitrary host functions. K0 remains open.
 
