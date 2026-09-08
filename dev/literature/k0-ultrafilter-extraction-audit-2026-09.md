@@ -1,6 +1,8 @@
 # K0 audit: obtaining one ordinary ultrafilter from `L`
 
-Date: 2026-09-08. Baseline: `f61112d4`. This is a read-only source audit, reviewed against the named definitions by the coordinator. The proposed extraction is not yet a checked Agda probe. See the [ordinary-model probe ledger](k0-ordinary-model-probes-2026-09.md) and [Cohen roadmap](cohen-implementation-roadmap-2026-09.md).
+Date: 2026-09-08. Baseline: `f61112d4`. This is a read-only source audit, reviewed against the named definitions by the coordinator. At the audit baseline the proposed extraction was not yet a checked Agda probe; the follow-up below records its subsequent generic check. See the [ordinary-model probe ledger](k0-ordinary-model-probes-2026-09.md) and [Cohen roadmap](cohen-implementation-roadmap-2026-09.md).
+
+Follow-up: the [bounded extraction probe](k0-bounded-extraction-probes-2026-09.md) now checks the generic L-candidate extraction at exactly `LEM (ℓ-suc ℓ)`, using the smaller birth-stage order. The internal ultrafilter predicate/existence/decoding are still unproved. The unchecked discussion below is the prior audit, not a claim that the complete ultrafilter constructor now exists.
 
 ## Result
 
@@ -199,7 +201,7 @@ inferred universe must be compiled before the assumption ledger is closed.
 - Do not claim that this route preserves the LEM budget until the internal
   ultrafilter proof, candidate hProp, and decode theorem typecheck.
 
-Recommended next safe probe: in a temporary module, define only an abstract
+Historical probe recommendation (the follow-up generic probe above now settles the extraction plumbing using the smaller birth stage): in a temporary module, define only an abstract
 `InternalUltrafilter : LSet -> LSet -> hProp (ℓ-suc ℓ)` and assume the precise
 truncated theorem above.  Instantiate `PB`,
 `Bound (fst PB) (snd PB)`, map `fst U` into

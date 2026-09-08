@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Follow-up: [bounded L extraction and unique-value extraction](k0-bounded-extraction-probes-2026-09.md) are now checked. These resolve two local selection risks without host Choice, while the internal-name and formula/Collection obligations below remain open.
+
 The finite first batch does not settle the model-relative universe architecture. Do not declare K0 complete merely because the examples typecheck.
 
 - The finite material-set/order-graph example now passes. Still derive its finite closure capabilities from an actual ground profile; ambient V existence alone does not imply membership in an arbitrary ground M.

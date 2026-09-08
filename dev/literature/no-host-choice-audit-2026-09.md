@@ -10,13 +10,15 @@ The owner forbids assuming choice in the Agda metatheory in any form: full `SetC
 
 This does not ban functions constructively assembled from supplied data, induction/recursion with proved unique outputs, or unique-witness elimination justified in Cubical type theory. A theorem about a given ultrafilter or a given well-order is allowed; a theorem manufacturing one for every arbitrary host object cannot be silently assumed. Distinguish a local structure argument from an axiom asserting a choice of such structures universally.
 
+The subsequent [bounded extraction probes](k0-bounded-extraction-probes-2026-09.md) now verify generic stage-bounded L selection and choice-free unique-value extraction. They retire those local risks but do not prove internal ultrafilter existence or internal name/formula closure.
+
 ## Evidence already available
 
 - `src/Landmarks.lagda.md:84` and `src/L/Model.lagda.md:49,107` give L ZFC under `LEM (ℓ-suc ℓ)`; internal AC is proved through `L.Choice.Transversal.hasChoiceL`, not a supplied host `SetChoice`.
 - The repository also has the separate theorem `V⊨ZFC : SetChoice (ℓ-suc ℓ) → ...` (`src/Landmarks.lagda.md:61`, `src/V/Model.lagda.md:587`). That conditional theorem is not an axiom automatically activated by importing the file. Its choice-dependent branch cannot supply T3's ground under this policy. Use existing L ZFC and, where sufficient, the LEM-only V ZF theorem. Preserve the existing source landmarks unchanged.
 - `L.WellOrder.Base.leastOf` (`src/L/WellOrder/Base.lagda.md:169`) derives a unique least witness from a supplied strict well-order, suitable LEM and truncated inhabitation. Its elimination target is proposition-valued by `isPropLeastOf`; it does not derive arbitrary host choice.
 - The [ordinary quotient probes](k0-ordinary-model-probes-2026-09.md) already check quotient descent/effectiveness and a truncated-fullness existential step without Choice or LEM. They do not prove all-formula truth or construct the desired internal ultrafilter.
-- The [bounded extraction audit](k0-ultrafilter-extraction-audit-2026-09.md) finds stage-local orders for the L instance. Its final universe and candidate-predicate construction is still uncompiled.
+- The [bounded extraction audit](k0-ultrafilter-extraction-audit-2026-09.md) finds stage-local orders for the L instance. The subsequent generic extraction probe checks the claimed universe level; the actual internal ultrafilter predicate, existence and decoding remain open.
 
 A source search for `Choice` is only a locator, not a proof-dependency audit. A harmless explicit finite `chooseName` is not an axiom; conversely a record named `Witnesses` can hide choice. Acceptance must inspect full elaborated theorem types, imports actually used in proofs, and the construction of every selector.
 
@@ -34,7 +36,7 @@ A source search for `Choice` is only a locator, not a proof-dependency audit. A 
 | K7/K8 ccc, cardinal preservation, delta systems | External antichain choice/thinning/enumeration and host cardinal arithmetic | Prove the combinatorics in the specified ZFC model, with coded families/graphs and ordinary semantic interpretation | Ground-choice use permitted; proofs pending |
 | K11 generic existence | Iterate merely existing choices by host DC, or choose countably many enumerations | Concrete supplied enumeration of conditions and relevant dense sets; take least suitable natural index using LEM and recurse | Strengthened constructor contract; general supplied-generic theorem unchanged |
 | K12b ordinary ultrafilter existence | Host ultrafilter lemma/Zorn, even weaker than full AC | Prove the theorem internally for a coded nontrivial Boolean algebra using internal ZFC; completeness not needed for this existence theorem | Main missing internal set-theoretic proof |
-| K12b actual L witness | Remove truncation into arbitrary data; assume a global well-order of all L | Bound U in the internal power set PB, use an existing stage order and unique least candidate, then decode operations | Detailed source route; exact extraction still needs a probe |
+| K12b actual L witness | Remove truncation into arbitrary data; assume a global well-order of all L | Bound U in the internal power set PB, use an existing stage order and unique least candidate, then decode operations | Generic bounded extraction checked; internal ultrafilter existence and decoding still open |
 | K13 ordinary quotient | Choose one representative of each equivalence class; require a witness function for all existential statements | Set quotient, hProp descent, effectiveness and truncated witnesses; formula induction | Atomic/existential part checked; general syntax/universes open |
 | K14/K15 concrete models | Pass G/U/Choice to the final constructor; invoke unproved syntactic completeness | Construct U locally from L, use Boolean top values and quotient truth; adapt existing L to same ZFC/CH semantics | No new host-choice premise allowed; actual model still unimplemented |
 | T4 G1-G4 | Alternating covers and uniform ground parameters chosen externally; treat all ambient sets as satisfying AC | Internal/parameter-coded bounded construction in a named ZFC ambient model; propositional existence and unique definability | Needs explicit localization of simultaneous-cover sequence and coding |
@@ -87,7 +89,7 @@ For iterations, the iterator consumes actual iterand/embedding/support data or a
 
 ## Required next verification
 
-1. Compile the actual bounded L-candidate extraction at its claimed LEM level; record every premise and projection/transport.
+1. Generic bounded L-candidate extraction is now checked at the claimed LEM level in the linked probe ledger. Instantiate it with the actual internal ultrafilter predicate once its existence and decoding have been proved.
 2. Prove internal value-set/Collection and formula-indexed truncated fullness without external graph closure or a global selector.
 3. Implement internal ordinary-ultrafilter existence and its decoding, separately from quotient truth.
 4. Generalize the checked quotient lemma to shared formulas/universes without selecting representatives.

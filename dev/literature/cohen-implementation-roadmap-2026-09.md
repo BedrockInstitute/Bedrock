@@ -109,6 +109,8 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
+The [bounded extraction probes](k0-bounded-extraction-probes-2026-09.md) now check actual L-bounded candidate extraction at the existing LEM level and unique semantic-value extraction from merely existing adequate bounds. Internal name closure and fixed-formula internalization remain open; K0 is not complete.
+
 The [ordinary-model probes](k0-ordinary-model-probes-2026-09.md) exercise the new K12/K13 boundary: a real set quotient, atomic/equality descent, truncated-fullness existential transfer, and packaging into the existing ordinary structure interface. Internal ultrafilter existence and all-formula truth remain unproved.
 
 The [K0 evidence ledger](k0-probe-evidence-2026-09.md) records commands, limitations and source snapshots. It already rules out using the tested arbitrary-host-type W-name carrier as an h-set, and checks a code-indexed alternative at the carrier level. It also checks that existential bounds can be independent of their presentation and that a nonseparative completion map need not be injective. These results constrain the design; they do not implement internal name closure or the general completion theorem.
