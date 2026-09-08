@@ -109,6 +109,8 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
+The [ordinary-model probes](k0-ordinary-model-probes-2026-09.md) exercise the new K12/K13 boundary: a real set quotient, atomic/equality descent, truncated-fullness existential transfer, and packaging into the existing ordinary structure interface. Internal ultrafilter existence and all-formula truth remain unproved.
+
 The [K0 evidence ledger](k0-probe-evidence-2026-09.md) records commands, limitations and source snapshots. It already rules out using the tested arbitrary-host-type W-name carrier as an h-set, and checks a code-indexed alternative at the carrier level. It also checks that existential bounds can be independent of their presentation and that a nonseparative completion map need not be injective. These results constrain the design; they do not implement internal name closure or the general completion theorem.
 
 A successful typecheck validates the stated assumptions, not their adequacy for this project. In particular, an initial material-coding probe accidentally assumed closure under images indexed by every small host type. This would conceal precisely the model-relative set-existence obligation being tested. The corrected contract must restrict finite closure explicitly and connect the coded graph to the actual order. Production adapters must derive the required closures from the selected ground profile.

@@ -6,6 +6,8 @@ Date: 2026-09-08. Source baseline: `db40669b5787a5a38e0f0b1c3caa867fcee6784b`. S
 
 The owner subsequently selected an actual ordinary non-CH model as T3, with T1/T2 the existing L results and T4 ground definability. The general forcing program remains mandatory. In addition to the recorded probes, K0 must now audit the ordinary-model profile, the set quotient by Boolean equality modulo an ordinary ultrafilter, internal fullness witnesses, construction/interpretation of an L-internal ultrafilter, and the universe/extraction conditions for returning a model under the target LEM budget. None of the finite probes below checks these new obligations. See K12-K15 in the [roadmap](cohen-implementation-roadmap-2026-09.md).
 
+The [ordinary-model probe follow-up](k0-ordinary-model-probes-2026-09.md) now records actual quotient descent, an explicit-fullness existential step, a finite ordinary ultrafilter instance and integration with the existing structure interface. These do not discharge full formula truth, internal ultrafilter existence or the T3 model constructor.
+
 ## Checked first batch
 
 The dispatched agents ran the following checks with `GHCRTS="-A64m -I0 -M8g"`; the coordinator assigned compilation slots after checking machine process counts. Every probe has `--safe`; the installed checker reports Agda 2.8.0 and uses the project's cubical dependency. The root reviewed the source and reports; it has not rerun every check independently.
