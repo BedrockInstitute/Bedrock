@@ -2,6 +2,8 @@
 
 Date: 2026-09-08. Repository source baseline: `0c0bd900`. Status: checked temporary probes, not production forcing. This follows the [internal candidate-table probes](k0-internal-candidate-tables-2026-09.md). K0 remains open at recursive candidate compatibility/internal union goodness, totality, the actual Boolean step and general-ground portability.
 
+Subsequent evidence: the [bounded internal recursion probes](k0-bounded-table-recursion-2026-09.md) now discharge compatibility and Good(T) in the composed parameterized L kernel. The conditional theorem archived below remains unchanged; its formerly open union-goodness premise is proved by that follow-up. Actual Boolean step laws are still required.
+
 ## Internal one-entry extension
 
 `CodedTableExtension` constructs the actual L set H⁺ = H ∪ {pair(p,b)} for p ∈ D and b ∈ B. It proves the exact graph law: an entry belongs to H⁺ precisely when it belonged to H or its key/value equal p/b. It proves product boundedness, inclusion of the old domain, and that any new domain point was already present or equals p.

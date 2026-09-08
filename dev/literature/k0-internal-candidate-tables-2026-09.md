@@ -24,6 +24,8 @@ This is a deliberate integration check, not the atomic recursion instance. Do no
 
 Subsequent evidence: the [Good-formula and extension probes](k0-good-table-extension-2026-09.md) implement parameterized complete Good reading and the finite extension below, and check a conditional totality driver. The internal/semantic union correspondence, Good(T) and actual Boolean step remain unproved. The proof-plan sections below are historical dependencies refined by that follow-up.
 
+Current proof-placement decision: the [bounded internal recursion probes](k0-bounded-table-recursion-2026-09.md) select and check direct coded compatibility as the sole intended production induction, replacing the earlier semantic-wrapper preference below. They prove internal Good(T) and totality for supplied admitted step laws; the actual Boolean instance and semantic adapters remain pending.
+
 ## Remaining bridge, with precise admission boundary
 
 The following is a source/mathematical audit and proof plan, not checked code. Retain the existing semantic partial-table kernel and instantiate its step relation through internally coded witnesses:

@@ -109,7 +109,7 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [Good-formula and extension probes](k0-good-table-extension-2026-09.md) check full parameterized Good reading, one-entry preservation, actual candidate admission and conditional totality. K0 now needs recursive candidate compatibility/internal union goodness and actual Boolean step admission/adequacy, together with general-ground adapters. The totality driver explicitly assumes `Good(T)`; do not count that premise as proved.
+The latest [bounded internal recursion probes](k0-bounded-table-recursion-2026-09.md) prove compatibility and Good(T) internally and return an actual total L table, value function and equations. The generic bounded-table kernel now has no assumed Good(T) or compatibility input, and its full constant-step instance checks. K0 still needs the actual Boolean step/images, name-domain and general-ground adapters, and atomic adequacy. Direct coded compatibility is the single production proof home; semantic comparisons are transported through code/readout adapters.
 
 The [internal candidate-table probes](k0-internal-candidate-tables-2026-09.md) check actual L product bounds, candidate-family/union membership, concrete functionality syntax and unique readout, including their composed instance. Next prove the complete Good reading and coded-step/semantic bridge, then union goodness and extension totality. Weighted Boolean admission and atomic adequacy remain open; K0 is not complete.
 

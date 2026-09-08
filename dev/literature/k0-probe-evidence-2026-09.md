@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Current bounded-recursion evidence: the [bounded internal recursion probes](k0-bounded-table-recursion-2026-09.md) close compatibility, internal union goodness and the previously conditional totality composition. They construct actual L values/graphs and exercise a constant step. The actual Boolean atomic instance and general-ground portability remain open. The following earlier entries retain their historical scope.
+
 Current recursive-table evidence: the [Good-formula and extension probes](k0-good-table-extension-2026-09.md) check parameterized Good syntax, one-entry preservation and candidate admission. Conditional totality is checked for the actual union, with union goodness and internal step admission still explicit inputs. No full atomic recursion or K0 completion is claimed.
 
 Current internalization evidence: the [internal candidate-table probes](k0-internal-candidate-tables-2026-09.md) construct bounded internal families and unions and check concrete functionality/readout. The composed functional-candidate union equals the product; recursive compatibility and totality still require full Good and Step proofs.
