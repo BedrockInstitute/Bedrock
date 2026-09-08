@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Current internalization evidence: the [internal candidate-table probes](k0-internal-candidate-tables-2026-09.md) construct bounded internal families and unions and check concrete functionality/readout. The composed functional-candidate union equals the product; recursive compatibility and totality still require full Good and Step proofs.
+
 Current follow-up: the [partial-table and image probes](k0-partial-atomic-tables-2026-09.md) check semantic partial-table compatibility/union without Choice or LEM, and actual L image construction from a supplied internal table under the existing LEM. Internal candidate-family coding, totality and the expanded Boolean step remain unproved.
 
 Latest follow-up: [internal names and supports](k0-internal-names-probes-2026-09.md) now checks the complete L name-formula/host-predicate correspondence, actual internal supports, and entry decoding. These retire the L recognition/support items in the historical lists below. General-ground portability and atomic internal Boolean value tables remain the current K0 gate.

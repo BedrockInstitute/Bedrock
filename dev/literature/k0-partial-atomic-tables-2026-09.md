@@ -42,6 +42,8 @@ Each displayed image needs a concrete bounded formula and its membership theorem
 
 After total table existence, prove independence of the chosen closed family by compatibility on overlaps. Existential quantification over internal closed families and tables then yields fixed atomic formulas with adequate, unique values. Membership uses one more internal image of equality values and needs no separate well-founded recursion. Prefer deriving semantic equality from the actual tables and proving its computation law; do not compare it to an independently postulated host recursion whose image admission has never been proved.
 
+Subsequent evidence: the [internal candidate-table probes](k0-internal-candidate-tables-2026-09.md) discharge internal product construction, formula-parametric candidate-family/union construction and the functionality/readout part of the coding bridge. Full Good reading, recursive union goodness and totality below remain pending.
+
 ## Next acceptance gates
 
 1. Construct internal products and the fixed Good formula, with exact reading into the partial-table interface and an adapter for internal union. Prove the one-entry extension and WFI totality theorem. A concrete definable finite step can test this machinery without claiming the Boolean instance.
