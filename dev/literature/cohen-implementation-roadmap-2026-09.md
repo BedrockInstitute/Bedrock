@@ -1,6 +1,6 @@
-# First forcing milestone: a Cohen extension violating GCH
+# First trophy: the Cohen generic-extension theorem
 
-Design date: 2026-09-08. Status: implementation roadmap, with no new checked forcing code. This refines the [long-term architecture](forcing-geology-design-2026-09.md), which remains authoritative for component boundaries. Cohen is now the first headline application; ground-model definability is the second. This ordering does not weaken either public interface, the required semantic bridges, or the future extension calculus. The owner requested this planning deliverable in `dev/literature`; source implementation and teaching integration require subsequent scoped briefs.
+Design date: 2026-09-08. Status: implementation roadmap with checked temporary K0 probes; no production forcing modules have been added. This refines the [long-term architecture](forcing-geology-design-2026-09.md), which remains authoritative for component boundaries. Cohen is now the first headline application; ground-model definability is the second. This ordering does not weaken either public interface, the required semantic bridges, or the future extension calculus. The owner requested this planning deliverable in `dev/literature`; source implementation and teaching integration require subsequent scoped briefs.
 
 The [Bell 2005 reassessment](bell-2005-route-reassessment-2026-09.md) supplies textbook theorem locators and refines the contracts below. The [full text](bell-2005-boolean-valued-models.fulltext.md) is a search artifact; exact mathematical expressions can be checked in the [local PDF](bell-2005-boolean-valued-models.pdf).
 
@@ -16,7 +16,7 @@ Deliver three connected outputs: the poset theorem, the corresponding Boolean-na
 
 For proper-class ground instances, the ambient realization must explicitly support the ground predicate, recursion, names and extension interpretation being used. Do not manufacture an L-generic in the existing ambient universe from L⊨ZFC. An L specialization is conditional on the requisite realization and generic, and cannot be used to discharge the main theorem vacuously.
 
-The milestone requires neither exact continuum ω₂, nice-name counting nor ground GCH. It does not include a syntactic relative-consistency theorem, which has a distinct soundness/proof-translation interface. Preserve the existing L⊨ZFC and L⊨GCH unchanged.
+The milestone requires neither exact continuum ω₂, nice-name counting nor ground GCH. The committed semantic program excludes formal deduction systems, syntactic independence and PRA relative-consistency proofs. These are not mandatory follow-up work for this trophy. Formulas, semantic correctness and internal definability remain required. Preserve the existing L⊨ZFC and L⊨GCH unchanged.
 
 ## 2. Implementation sequence and dependency graph
 
@@ -72,7 +72,15 @@ Produce a short representation decision record accompanied by small `--safe` Agd
 | Internal completion | A small ground-coded example with completion membership and map correctness | Repair ground-code closure; an external RO(P) alone is insufficient |
 | Nonseparative presentation | Two distinct conditions identified by separative semantics, with the dense-map specification | Use semantic equality, not raw-condition injectivity |
 
-Record universe levels, LEM, resizing, truncation elimination, host choice, internal choice and genericity separately. If a required assumption is not available, report the exact obstruction; do not add it to existing landmarks. Record the safe recursion strategy and the proposed proof order for quantifier bounds. K0 is complete only when the risks have concrete evidence or an explicit unresolved blocking obligation. Failed probes are measured results, not completed interfaces.
+Record universe levels, LEM, resizing, truncation elimination, host choice, internal choice and genericity separately. If a required assumption is not available, report the exact obstruction; do not add it to existing landmarks. Record the safe recursion strategy and the proposed proof order for quantifier bounds. K0 reporting must distinguish checked cases from open obligations. Recording a blocking obligation is a valid probe result, but does not by itself complete K0 or authorize dependent K1 design choices. Failed probes are measured results, not completed interfaces.
+
+### Current K0 evidence and decision gate
+
+The [K0 evidence ledger](k0-probe-evidence-2026-09.md) records commands, limitations and source snapshots. It already rules out using the tested arbitrary-host-type W-name carrier as an h-set, and checks a code-indexed alternative at the carrier level. It also checks that existential bounds can be independent of their presentation and that a nonseparative completion map need not be injective. These results constrain the design; they do not implement internal name closure or the general completion theorem.
+
+A successful typecheck validates the stated assumptions, not their adequacy for this project. In particular, an initial material-coding probe accidentally assumed closure under images indexed by every small host type. This would conceal precisely the model-relative set-existence obligation being tested. The corrected contract must restrict finite closure explicitly and connect the coded graph to the actual order. Production adapters must derive the required closures from the selected ground profile.
+
+K0 exits through a representation decision, not a count of passing examples: choose the ground decoding contract, the universe and h-level of name codes, the admissible-family interface, and the ground-side proof order for quantified semantics. Keep any undecided item visible and block only the source work depending on it.
 
 ## 4. K1-K3: reusable foundations and the automatic adapter
 
@@ -180,7 +188,7 @@ After K10/K11, ground definability consumes the extension, definability, cardina
 
 Flypitch's weighted-name semantics, Boolean ZFC arguments and Cohen cardinal comparisons are proof-design references for K3/K4/K6/K7/K9. They are not a substitute for K2's ground-internal adapter, K5's actual generic-extension correspondence or K11. Avoid copying its collapse branch for a positive result already supplied by L. Consult the [pinned source audit](flypitch4-source-audit-2026-09.md), the [Cohen comparison](cohen-flypitch4-design-2026-09.md), and the [infrastructure/source ledger](cohen-infrastructure-overlap-2026-09.md). The port was source-audited, not rebuilt in this task.
 
-This schedule is a design inference from those audits and the master architecture. No implementation completion, performance estimate or mathematically optimal representation is asserted. The next actionable brief is K0. Its outcome selects representations within the architecture; it does not reopen the requirement for two usable interfaces and certified translations.
+This schedule is a design inference from those audits and the master architecture. No implementation completion, performance estimate or mathematically optimal representation is asserted. K0 has started; the [probe evidence ledger](k0-probe-evidence-2026-09.md) records actual checked cases and the next bounded probes. Its outcome selects representations within the architecture; it does not reopen the requirement for two usable interfaces and certified translations.
 
 ## 10. Validation records
 
@@ -193,3 +201,7 @@ No Agda probe or source implementation was run in this planning revision. The fu
 ### Bell textbook follow-up
 
 The follow-up refines K0-K6 contracts using the textbook without changing K0-K11 dependencies or the first trophy. The extraction and combined document checks are recorded in the Bell reassessment. No source implementation was added.
+
+### Semantic scope decision and K0 execution
+
+The owner selected forcing, actual model extensions and geology as the main program. No proof-system/PRA branch is required. K0 probes now run in isolated temporary trees; the evidence ledger separates their measured results from the earlier planning-only validation records above. The first trophy remains conditional on a transitive ground and a generic; generic existence is separately conditional on suitable countability. Neither Con(ZFC) nor existence of a transitive set model is inferred from that conditional theorem.

@@ -4,6 +4,8 @@ Research date: 2026-09-08. This is an application and evidence note for adding a
 
 The first headline is now Cohen, followed by ground definability. The [detailed implementation roadmap](cohen-implementation-roadmap-2026-09.md) specifies K0-K11, including certified automatic completion, semantic transport and separate chain-condition certificates. The master plan retains authority over long-term architecture.
 
+Scope update: the owner selected the semantic Cohen generic-extension theorem and subsequent geology. Comparisons below with syntactic independence describe different endpoints, not required roadmap work. Proof systems, proof-system soundness and PRA relative consistency are outside the committed program. See the master plan and K0 evidence ledger for current scope and status.
+
 ## 1. Decision
 
 The shared architecture must provide two complete usable public interfaces, one based on posets and one based on complete Boolean algebras, together with systematic equivalence bridges. Cohen forcing is an initial substantial application after the common contracts and an initial bridge slice have tested both faces. A shared mathematical fact should have one canonical proof, initially in the Boolean semantic kernel when that is its natural home, and reach the other public interface by proved transport. Independently duplicated forcing theorems, truth lemmas, substitution proofs or ZFC-transfer arguments would make the two interfaces drift.

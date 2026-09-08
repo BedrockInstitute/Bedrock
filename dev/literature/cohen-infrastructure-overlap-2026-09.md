@@ -9,6 +9,8 @@ implemented in Bedrock. Source paths refer to the tree on the research date.
 
 The first headline is now Cohen, followed by ground definability. The [detailed implementation roadmap](cohen-implementation-roadmap-2026-09.md) specifies K0-K11, including certified automatic completion, semantic transport and separate chain-condition certificates. The master plan retains authority over long-term architecture.
 
+Scope update: the owner selected the semantic Cohen generic-extension theorem and subsequent geology. Comparisons below with syntactic independence describe different endpoints, not required roadmap work. Proof systems, proof-system soundness and PRA relative consistency are outside the committed program. See the master plan and K0 evidence ledger for current scope and status.
+
 ## 1. Recommended endpoint
 
 The smallest useful Cohen application theorem is conditional on a ground model `W`, a
@@ -38,7 +40,7 @@ assume GCH in the ground. If the project defines CH by equicardinality of
 `κ` into `ω₁`, contradicting preservation of `ω₁ < κ`. This also avoids proving
 that every real has a nice name.
 
-This endpoint should be stated separately in two forms:
+Distinguish the committed endpoint from an optional, out-of-scope endpoint:
 
 - a semantic extension theorem, conditional on `G` being generic over `W`;
 - a syntactic relative-consistency theorem, built with Boolean-valued soundness
