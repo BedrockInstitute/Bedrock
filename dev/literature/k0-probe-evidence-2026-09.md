@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Current name-instance evidence: the [real-name-pair and weighted-image probes](k0-name-pair-weighted-images-2026-09.md) provide actual closed name-pair domains and WF without caller assumptions, their checked recursion adapter and the first weighted internal image. Full Boolean Step construction and atomic adequacy remain open.
+
 Current bounded-recursion evidence: the [bounded internal recursion probes](k0-bounded-table-recursion-2026-09.md) close compatibility, internal union goodness and the previously conditional totality composition. They construct actual L values/graphs and exercise a constant step. The actual Boolean atomic instance and general-ground portability remain open. The following earlier entries retain their historical scope.
 
 Current recursive-table evidence: the [Good-formula and extension probes](k0-good-table-extension-2026-09.md) check parameterized Good syntax, one-entry preservation and candidate admission. Conditional totality is checked for the actual union, with union goodness and internal step admission still explicit inputs. No full atomic recursion or K0 completion is claimed.

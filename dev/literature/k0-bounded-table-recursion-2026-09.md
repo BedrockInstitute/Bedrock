@@ -43,6 +43,8 @@ Host language use remains substantial: dependency induction, value functions, un
 
 This is an integration instance for the general contracts. The file does not explicitly select a nonempty D; if D is inhabited, the checked entry-in theorem immediately supplies an entry. Since dependencies are empty, the instance does not test the actual weighted Boolean recursion or constitute a Cohen theorem. The general compatibility and totality proofs themselves are genuinely parameterized by arbitrary supplied well-founded dependencies.
 
+Subsequent evidence: the [real-name-pair and weighted-image probes](k0-name-pair-weighted-images-2026-09.md) discharge the concrete L closed-name-domain/dependency/WF adapter below and construct the first weighted inner image. The Boolean operation/supremum instance, complete Step, domain independence and general-ground portability remain pending.
+
 ## Remaining K0 work
 
 1. Adapt a closed internal family of valid names to the internal key domain C × C, with the concrete dependency formula and its restricted well-foundedness. Preserve entry weights and the existing coordinate coding.
