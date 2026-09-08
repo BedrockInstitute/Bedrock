@@ -109,6 +109,8 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
+The [material-name and value-set probes](k0-material-names-value-sets-2026-09.md) now derive finite codes from the real ground operations, prove unary subname accessibility, construct a hereditary h-set name carrier with an actual L instance, and obtain attained-value sets from ground Separation conditional on a fixed graph's adequacy. The L instance also checks unique coordinate decoding, its fixed pair formula, the bridge to existing pair codes, and finite constructor closure. Internal name recognition, internally collected supports and atomic-table internalization remain open. Preserve the checked opacity boundary around the proved ground record; unsealed finite L instantiation exhausted the fixed compilation heap. Prefer attained-value sets for quantifier evaluation; retain Collection for later witness-set/rank/fullness obligations.
+
 The [bounded extraction probes](k0-bounded-extraction-probes-2026-09.md) now check actual L-bounded candidate extraction at the existing LEM level and unique semantic-value extraction from merely existing adequate bounds. Internal name closure and fixed-formula internalization remain open; K0 is not complete.
 
 The [ordinary-model probes](k0-ordinary-model-probes-2026-09.md) exercise the new K12/K13 boundary: a real set quotient, atomic/equality descent, truncated-fullness existential transfer, and packaging into the existing ordinary structure interface. Internal ultrafilter existence and all-formula truth remain unproved.

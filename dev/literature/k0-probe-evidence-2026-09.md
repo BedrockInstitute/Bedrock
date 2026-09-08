@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+The [material-name/value-set follow-up](k0-material-names-value-sets-2026-09.md) now checks real finite ground constructors, unary descent, a host hereditary-name h-set and its L instance, and conditional attained-value Separation. This supersedes the finite-closure obligation below for the named constructors. It also checks unique L coordinate decoding and its bridge to the material name encoding. It does not settle internal recognition, internally collected supports or fixed atomic graph existence. The following earlier list remains a record of the representation gate, with these local results now available.
+
 Follow-up: [bounded L extraction and unique-value extraction](k0-bounded-extraction-probes-2026-09.md) are now checked. These resolve two local selection risks without host Choice, while the internal-name and formula/Collection obligations below remain open.
 
 The finite first batch does not settle the model-relative universe architecture. Do not declare K0 complete merely because the examples typecheck.

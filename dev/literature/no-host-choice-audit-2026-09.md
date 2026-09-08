@@ -28,8 +28,8 @@ A source search for `Choice` is only a locator, not a proof-dependency audit. A 
 |---|---|---|---|
 | K1 ordinary theory/model adapters | Convert internal existential axioms to host functions, or use choice-dependent V ZFC | Preserve propositional satisfaction; use unique set constructions/equality adapters and L ZFC | Restriction/quotient equality adapters checked; full ordinary ZFC bridge open |
 | K2 completion and B+ | Select a representative of each separative class; external Zorn for completion | Build regular opens/quotients internally by set operations; use canonical maps and proved unique comparison | Mathematical no-choice completion route; general code implementation open |
-| K3 names and inverse translation | Treat arbitrary host branch/weight functions as M sets; choose a P-condition below each Boolean value | Material internal graph certificates; translate through all refining conditions with set bounds; round trips semantic, not chosen representatives | Raw-name obstruction checked; internal closure open |
-| K4 values and compiler | Choose a name for each attained value or each parameter tuple externally | Fixed-formula internal relation; Separation/Collection supplies value sets/bounds without a representative function | Finite bound independence checked; generic internal relation/Collection proof open |
+| K3 names and inverse translation | Treat arbitrary host branch/weight functions as M sets; choose a P-condition below each Boolean value | Material internal graph certificates; translate through all refining conditions with set bounds; round trips semantic, not chosen representatives | Material h-set carrier and descent checked; internal recognition/general closure open |
+| K4 values and compiler | Choose a name for each attained value or each parameter tuple externally | Fixed-formula internal relation; Separation supplies attained values, Collection supplies later witness bounds without a representative function | Conditional ground value-set Separation and bound independence checked; atomic graph/Collection proof open |
 | K4/K12a mixing and fullness | Uniform maximum principle for arbitrary host predicates/Boolean algebras; global raw-name selector | Explicit internally coded mixing families; formula-indexed truncated fullness derived from ground ZFC | Local truncated existential transfer checked; actual internal fullness open |
 | K5 bridges and generic truth | Select name representatives or generic conditions simultaneously | Define translations/valuation by recursion and quotient descent; eliminate existential witnesses into propositions or use proved unique constructions | General internal name and truth proofs open |
 | K6 ZFC/ordinal transfer | Choose witnesses for Replacement or a well-order of quotient values at host level | Internal Collection/Choice on bounded coded sets; prove axiom satisfaction propositionally; derive value-set well-order internally | Proof design only; no extension axiom used to justify its own ground construction |
@@ -89,8 +89,10 @@ For iterations, the iterator consumes actual iterand/embedding/support data or a
 
 ## Required next verification
 
+The [material-name/value-set probes](k0-material-names-value-sets-2026-09.md) now verify unary material accessibility and the host name carrier without Choice, plus ground attained-value Separation conditional on fixed-graph adequacy. The latter needs no Collection just to form values; Collection remains required for witness sets where later proofs use them. Internal recognition and atomic-graph adequacy are still major open obligations.
+
 1. Generic bounded L-candidate extraction is now checked at the claimed LEM level in the linked probe ledger. Instantiate it with the actual internal ultrafilter predicate once its existence and decoding have been proved.
-2. Prove internal value-set/Collection and formula-indexed truncated fullness without external graph closure or a global selector.
+2. Prove internal name recognition and atomic value graphs, then instantiate the checked attained-value Separation. Derive Collection where witness sets are needed and prove formula-indexed truncated fullness without external graph closure or a global selector.
 3. Implement internal ordinary-ultrafilter existence and its decoding, separately from quotient truth.
 4. Generalize the checked quotient lemma to shared formulas/universes without selecting representatives.
 5. Give K11 a concrete enumeration/least-index constructor; separate mere existence corollaries from data-returning constructors.
