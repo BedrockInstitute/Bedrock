@@ -82,7 +82,7 @@ Make completeness a law about a stated class of families. Distinguish host-index
 
 The shared semantic mathematics should state the joins it actually uses. Atomic name semantics uses support families; unbounded formula quantification needs a proved set of truth values or a sufficient rank/collection bound. Prove independence of the bound and internal definability. Only install an evaluator into the existing carrier-wide `TruthAlgebra` when its demanded joins are genuinely supplied. A restricted model-relative evaluator may instead share formula recursion lemmas with it through an explicit agreement theorem.
 
-The [material atomic examples](k0-material-atomic-example-2026-09.md) now close the representative E3 gate on the actual recursion tables, including weighted membership and an internally instantiated zero-weight substitution test. The earlier attained-value probe closes E4's concrete value-set/join subgate. Stop expanding these examples into the full atomic library; remaining K0 work is the real ground/completion adapters and integrated representation/assumption decision.
+The [ground/completion adapter probes](k0-ground-completion-adapters-2026-09.md) now supply E1/E5's real restriction and finite internal presentation evidence, alongside the completed representative atomic and attained-value probes. Remaining K0 work is the integrated representation/universe/assumption decision. General axiom bridges, regular-open completion and the full atomic/formula libraries keep their existing later owners.
 
 K0 completion is governed by the [six-item exit checklist](k0-exit-checklist-2026-09.md): representative checked instances and settled representation contracts, with full general implementations assigned to their existing later milestones.
 

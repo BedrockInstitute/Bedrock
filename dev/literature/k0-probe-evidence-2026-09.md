@@ -35,7 +35,7 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 The [fixed exit checklist](k0-exit-checklist-2026-09.md) is the current acceptance index. Historical open-item lists below do not expand K0 to include complete later implementations. No acceptance item is passed solely by recording its unresolved obstruction.
 
-Current representative-atomic evidence: the [material atomic examples](k0-material-atomic-example-2026-09.md) check actual weighted membership, empty equality and one zero-weight substitution context on an internally constructed domain. E3 passes at its example boundary; the E4 value-set/join subgate is already checked. The [exit checklist](k0-exit-checklist-2026-09.md) now directs remaining work to E1/E5 adapter/completion compositions and the integrated E2/E6 decision audit.
+Current adapter evidence: the [ground/completion probes](k0-ground-completion-adapters-2026-09.md) check an actual transitive restriction and L code/axiom instance, derive finite-image closure, and build the condition/Boolean carriers plus order/map graphs in L. E1/E5 pass at their bounded adapter/presentation contracts. E3 and E4's value-set/join subgate are checked; the [exit checklist](k0-exit-checklist-2026-09.md) retains E2/E6 as the final decision and assumption audit.
 
 The following checkpoint entries are historical. Their local remaining-work statements are superseded by the current status above when a later checked batch supplies the result.
 

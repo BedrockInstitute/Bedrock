@@ -57,6 +57,8 @@ No caller domain or table argument is required. This is a representative substit
 
 ## Acceptance boundary and assumptions
 
+Successor: the [ground/completion adapter probes](k0-ground-completion-adapters-2026-09.md) close E1/E5 at their bounded contracts. Their former open-item descriptions below are historical; the final E2/E6 decision audit remains.
+
 The pointwise construction and weighted singleton calculation exercise the chosen material representation, actual recursion and actual internal Boolean operations. They are not a second finite evaluator detached from the internal tables. General Boolean laws, all-name substitution, global membership-formula adequacy and arbitrary-formula induction remain K4 work. E3 is passed at its representative-example boundary. E1 and E5 retain their adapter/composition gaps, while E2/E6 still require the final representation and assumption decision. K0 as a whole is not complete.
 
 No host Choice, BPI, Zorn, resizing, ultrafilter selector or stronger LEM is introduced. Concrete L operations retain `LEM (ℓ-suc ℓ)`. The generic bounded-domain interfaces state their memberships and entry contracts explicitly; the actual example discharges them using the existing name-closure construction.

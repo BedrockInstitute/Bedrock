@@ -111,7 +111,7 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [material atomic examples](k0-material-atomic-example-2026-09.md) close E3 at its representative boundary: actual weighted membership, empty equality and a zero-weight substitution example on one internally constructed domain. E4 already has its actual attained-value/join instance. Follow the [exit checklist](k0-exit-checklist-2026-09.md) next for E1/E5 real adapter/completion compositions and the final E2/E6 decision audit. Full K2/K4 implementations remain later work; K0 is still open.
+The latest [ground/completion adapters](k0-ground-completion-adapters-2026-09.md) close E1/E5 at their concrete representation boundaries: a genuine transitive restriction with an L instance, proved finite ground images, and four actual L carrier/graph sets with completion-map certificates. E3 and the E4 value-set/join subgate are already checked. The [exit checklist](k0-exit-checklist-2026-09.md) now requires the integrated E2/E6 representation and assumption decision; K0 is still open. Full K1/K2/K4 implementations remain later work.
 
 Earlier checkpoint evidence follows. Instructions to perform a next step in these historical paragraphs apply only where the current status has not already discharged it.
 

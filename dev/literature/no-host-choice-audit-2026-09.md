@@ -119,6 +119,8 @@ The [attained atomic value-set probe](k0-atomic-value-set-2026-09.md) now suppli
 
 The [material atomic examples](k0-material-atomic-example-2026-09.md) use actual table entries, internal unions and validity-generated closed domains. The zero-weight example proves a raw distinction and a semantic coincidence without quotient representatives or selectors. Its concrete domain is constructed internally. E3 is closed as a representative test; the final E6 assumption audit remains open.
 
+The [ground/completion adapters](k0-ground-completion-adapters-2026-09.md) derive finite images from actual empty/pair/union operations and instantiate all finite carrier/map sets in L. The transitive restriction derives external accessibility from HIT-V, not from an assumed internal-to-external Foundation transfer. Its generic part is LEM-free; the concrete L part retains the existing LEM level. E2/E6 still require the integrated universe and ordinary-model extraction audit.
+
 ## Required next verification
 
 The [internal-name probes](k0-internal-names-probes-2026-09.md) now verify L supports, data-valued entry decoding and full first-order name recognition. Its converse uses a supplied deterministic definable step with a proved internal omega-iteration theorem, not host DC. Images of supplied coded tables are now checked; weighted recursive images, atomic graph adequacy and general-ground adapters remain open.
