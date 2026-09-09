@@ -109,7 +109,9 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [outer-image and powerset-expression probes](k0-outer-weighted-expression-2026-09.md) construct the complete concrete powerset expression through outer implications, infima and final meet, with branch graph locality and the empty-family infimum theorem. Next are the outer-set description, a single Step formula with exact/unique reading, and the actual predecessor/recursion hookup. Full Boolean validation and general RO completion remain separate.
+The latest [finite powerset Step probes](k0-powerset-step-formula-2026-09.md) close the raw-coordinate finite Step, uniqueness, admission and full predecessor-locality composition for the powerset instance. Next are the encoded pair-key formula/decoder adapter and direct instantiation of the existing bounded recursion engine. General Boolean/Cohen completion and atomic adequacy remain separate obligations.
+
+The [outer-image and powerset-expression probes](k0-outer-weighted-expression-2026-09.md) construct the complete concrete powerset expression through outer implications, infima and final meet, with branch graph locality and the empty-family infimum theorem. Next are the outer-set description, a single Step formula with exact/unique reading, and the actual predecessor/recursion hookup. Full Boolean validation and general RO completion remain separate.
 
 The [actual powerset weighted-join probes](k0-powerset-weighted-joins-2026-09.md) check actual P(X) meets and internal-family joins, the composed image/supremum formula and actual weighted values in both orientations. This is a concrete interface instance, not the Cohen/RO algebra. Continue with implication/infima and outer images toward full Step, while retaining general RO completion as a separate obligation.
 

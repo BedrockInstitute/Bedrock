@@ -2,6 +2,8 @@
 
 Date: 2026-09-09. Source baseline: `c45bc015`. Four safe temporary probes checked. This continues the [actual powerset weighted joins](k0-powerset-weighted-joins-2026-09.md). K0 remains open.
 
+Subsequent evidence: the [finite powerset Step probes](k0-powerset-step-formula-2026-09.md) now provide the shared outer-set description, one finite Step with exact and unique reading, explicit admission and full-expression predecessor locality. Pair-key adaptation to the recursion engine remains pending.
+
 ## Actual implication and relative infima
 
 `InternalPowersetImplication` constructs, by Separation from X, the set of w in X such that membership in c implies membership in d. It proves exact membership, closure in the previously constructed P(X), and the arbitrary-environment reading of `implicationAt X c d z` as literal equality of z with this set. Its adjunction theorem proves, for a ⊆ X:
