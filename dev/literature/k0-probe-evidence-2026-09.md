@@ -33,7 +33,7 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
-Current semantic-value evidence: the [arbitrary-good-table and semantic-value probes](k0-good-table-value-relation-2026-09.md) check arbitrary-good-table comparison, unique semantic witness values, general closed-container existence and its valid-name specialization. The finite closure formula has exact all-environment reading. The full fixed atomic graph formula, atomic semantic laws and general Boolean/ground adapters remain open.
+Current atomic-syntax evidence: the [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) check one finite three-variable formula and its exact reading to the previously proved unique semantic relation. Genuine variable-domain product, Step and Good interfaces compose through a shared Good proof. Internal membership/value images, atomic semantic laws and general Boolean/ground adapters remain open.
 
 The following checkpoint entries are historical. Their local remaining-work statements are superseded by the current status above when a later checked batch supplies the result.
 

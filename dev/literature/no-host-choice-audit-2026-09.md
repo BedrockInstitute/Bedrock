@@ -113,7 +113,7 @@ The [finite powerset Step probes](k0-powerset-step-formula-2026-09.md) discharge
 
 The [actual powerset recursion-table probes](k0-powerset-atomic-tables-2026-09.md) discharge the powerset encoded-key recursion instance without supplied Step laws, recursive graph or good-table premise. Existing unique decoding and proposition-valued locality transport are reused, and actual name closure supplies the domain. Domain independence, general Boolean/RO realization, global atomic adequacy and the later extraction obligations remain open.
 
-The [arbitrary-good-table and semantic-value probes](k0-good-table-value-relation-2026-09.md) extend the restriction comparison to arbitrary good H without assuming source boundedness or totality. The semantic relation eliminates table/domain witnesses only into equality, and its value is supplied by the existing canonical table on a closed container. Valid names provide that container through the existing closure theorem. The complete fixed first-order graph formula and later extraction obligations remain open.
+The [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) give the existing arbitrary-good-table witness relation one fixed first-order formula. C, H and the pair code are bound variables; generic membership and Step readings justify their variable-domain use. Shared Good semantics and its reading specialize to both interfaces. All witness eliminations in the graph reading target propositions, with no new host choice or LEM level. Internal atomic images/laws and later extraction obligations remain open.
 
 ## Required next verification
 

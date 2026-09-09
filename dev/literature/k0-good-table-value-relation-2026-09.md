@@ -53,6 +53,8 @@ The forward reading eliminates the merely existing child weight into the proposi
 
 ## Exact next syntax gate
 
+Successor: the [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) complete the four syntax APIs listed below. This section records the preceding batch's planned gate.
+
 The next fixed-formula implementation has four explicit steps. These are planned APIs, not checked declarations in this batch.
 
 | API | Required role | Existing proof to reuse |

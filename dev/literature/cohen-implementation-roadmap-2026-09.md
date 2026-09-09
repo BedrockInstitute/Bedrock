@@ -109,7 +109,7 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [arbitrary-good-table and semantic-value probes](k0-good-table-value-relation-2026-09.md) generalize table comparison to arbitrary good source tables and check a unique semantic value relation, first over any suitable closed container and then for valid names. Closure syntax is checked. Next implement uniform variable-domain product, encoded Step and Good readings, then the fixed graph formula and atomic laws. General Boolean/Cohen construction and general-ground adapters remain mandatory; K0 is still open.
+The latest [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) check variable-domain product, encoded Step and Good readings, then compose one fixed three-variable formula reading the existing unique semantic value relation. The old Good interface specializes the same generic syntax proof. Next establish internal membership/value images and atomic laws. General Boolean/Cohen construction and general-ground adapters remain mandatory; K0 is still open.
 
 Earlier checkpoint evidence follows. Instructions to perform a next step in these historical paragraphs apply only where the current status has not already discharged it.
 
