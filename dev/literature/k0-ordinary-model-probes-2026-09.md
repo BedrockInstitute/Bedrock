@@ -1,5 +1,7 @@
 # K0 ordinary-model realization probes
 
+Current acceptance update (2026-09-09): K0 is complete at its representation gate: all E1-E6 items pass with the [final representation decision](k0-representation-decision-2026-09.md). The final probes check quotient descent at the actual successor universe and fixed-formula bounded L witness extraction without host choice. Full forcing, internal ultrafilter existence, all-formula quotient truth and T3 remain later implementation obligations. The older checkpoint statements below retain their historical scope.
+
 Date: 2026-09-08. Baseline: `f61112d4`. Status: in progress; neither K0 nor trophy 3 is complete. This batch investigates the ordinary two-valued model endpoint introduced in K12-K15 of the [Cohen roadmap](cohen-implementation-roadmap-2026-09.md). It complements the [earlier probe ledger](k0-probe-evidence-2026-09.md). All new Agda files and dependency caches remain under `/tmp/bedrock-k0-probes`; no repository source modules are modified.
 
 ## Checked restriction equality adapter

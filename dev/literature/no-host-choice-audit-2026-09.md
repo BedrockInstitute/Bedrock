@@ -1,5 +1,7 @@
 # Audit: no choice axiom in the Agda metatheory
 
+Current acceptance update (2026-09-09): K0 is complete at its representation gate: all E1-E6 items pass with the [final representation decision](k0-representation-decision-2026-09.md). The final probes check quotient descent at the actual successor universe and fixed-formula bounded L witness extraction without host choice. Full forcing, internal ultrafilter existence, all-formula quotient truth and T3 remain later implementation obligations. The older checkpoint statements below retain their historical scope.
+
 Date: 2026-09-08. Baseline: `0900bc6b`. Scope: the F0-F8 architecture, K0-K15 trophy-3 roadmap, T4 ground definability, current choice interfaces and checked K0 sources. This is a design/source/literature audit, not a completed formal verification of the planned theorems. No source code was changed or new Agda compilation run for this audit.
 
 ## Verdict and binding policy

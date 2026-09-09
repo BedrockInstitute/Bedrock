@@ -82,7 +82,7 @@ Make completeness a law about a stated class of families. Distinguish host-index
 
 The shared semantic mathematics should state the joins it actually uses. Atomic name semantics uses support families; unbounded formula quantification needs a proved set of truth values or a sufficient rank/collection bound. Prove independence of the bound and internal definability. Only install an evaluator into the existing carrier-wide `TruthAlgebra` when its demanded joins are genuinely supplied. A restricted model-relative evaluator may instead share formula recursion lemmas with it through an explicit agreement theorem.
 
-The [ground/completion adapter probes](k0-ground-completion-adapters-2026-09.md) now supply E1/E5's real restriction and finite internal presentation evidence, alongside the completed representative atomic and attained-value probes. Remaining K0 work is the integrated representation/universe/assumption decision. General axiom bridges, regular-open completion and the full atomic/formula libraries keep their existing later owners.
+K0 is complete at its representation gate: all E1-E6 items pass with the [final representation decision](k0-representation-decision-2026-09.md). The final probes check quotient descent at the actual successor universe and fixed-formula bounded L witness extraction without host choice. Full forcing, internal ultrafilter existence, all-formula quotient truth and T3 remain later implementation obligations.
 
 K0 completion is governed by the [six-item exit checklist](k0-exit-checklist-2026-09.md): representative checked instances and settled representation contracts, with full general implementations assigned to their existing later milestones.
 
@@ -272,7 +272,7 @@ F1 is a sequence of motivated units, not a requirement to finish every future ca
 
 Within F3, first establish set-coded or bounded quantifier-value existence and independence of bounds, then formula values and compiler correctness; mixing and fullness/maximum-principle packages follow under their own assumptions. The general F4 generic-truth contract must not require fullness or the maximum principle. The separately scoped ordinary-ultrafilter quotient theorem is now required for T3 and uses fullness, as in Bell Theorem 4.1; it does not replace genericity or the actual-extension correspondence. F5 schema-transfer bounds use ground Collection/Replacement and F3/F4 definability, never extension ZFC as a premise. Agreement with the host evaluator is conditional on both evaluators admitting the relevant families; no theorem identifies ground completeness with unrestricted external completeness.
 
-T3 is the actual ordinary Cohen model, followed by T4 ground definability. Their independent infrastructure can still progress alongside one another. F0 is now in progress, concretized as K0 in the [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md); it is not a specialized proof of either headline theorem. K0-K15 refine delivery through trophy 3 without replacing the F0-F8 architecture.
+T3 is the actual ordinary Cohen model, followed by T4 ground definability. Their independent infrastructure can still progress alongside one another. F0 representation acceptance is now complete, concretized as K0 in the [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md); it is not a specialized proof of either headline theorem. K0-K15 refine delivery through trophy 3 without replacing the F0-F8 architecture.
 
 ### 8.1 Cohen work packages
 
@@ -315,7 +315,7 @@ F0 must end with a concrete reviewable selection of representations and an assum
 
 ## 10. Evidence notes and document authority
 
-[K0 probe evidence](k0-probe-evidence-2026-09.md) records checked finite cases, the raw-name h-level obstruction, and the still-open model-internal coding and quantifier obligations. It does not mark F0 complete.
+[K0 probe evidence](k0-probe-evidence-2026-09.md) records checked finite cases, the raw-name h-level obstruction, and the still-open model-internal coding and quantifier obligations. Its historical checkpoints are superseded by the final K0 representation decision above.
 
 The [Cohen implementation roadmap](cohen-implementation-roadmap-2026-09.md) refines the first application into K0-K15 with package prerequisites, automatic-conversion contracts and acceptance conditions. It is subordinate to the component boundaries in this master plan.
 

@@ -1,6 +1,6 @@
 # K0 probe evidence and remaining obligations
 
-Date: 2026-09-08. Source baseline: `db40669b5787a5a38e0f0b1c3caa867fcee6784b`. Status: K0 in progress, not complete. The owner selected semantic forcing, model extensions and geology; no deduction system or PRA development is part of these probes. All authored Agda files and dependency caches are under `/tmp/bedrock-k0-probes`; no repository `src` file was changed. Snapshots below preserve the checked probe text for later reproduction, not as production modules.
+Date: 2026-09-08. Source baseline: `db40669b5787a5a38e0f0b1c3caa867fcee6784b`. Status: K0 complete at the representation gate; historical checkpoints below retain their original scope. The owner selected semantic forcing, model extensions and geology; no deduction system or PRA development is part of these probes. All authored Agda files and dependency caches are under `/tmp/bedrock-k0-probes`; no repository `src` file was changed. Snapshots below preserve the checked probe text for later reproduction, not as production modules.
 
 ## Scope extension for trophy 3
 
@@ -35,7 +35,7 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 The [fixed exit checklist](k0-exit-checklist-2026-09.md) is the current acceptance index. Historical open-item lists below do not expand K0 to include complete later implementations. No acceptance item is passed solely by recording its unresolved obstruction.
 
-Current adapter evidence: the [ground/completion probes](k0-ground-completion-adapters-2026-09.md) check an actual transitive restriction and L code/axiom instance, derive finite-image closure, and build the condition/Boolean carriers plus order/map graphs in L. E1/E5 pass at their bounded adapter/presentation contracts. E3 and E4's value-set/join subgate are checked; the [exit checklist](k0-exit-checklist-2026-09.md) retains E2/E6 as the final decision and assumption audit.
+K0 is complete at its representation gate: all E1-E6 items pass with the [final representation decision](k0-representation-decision-2026-09.md). The final probes check quotient descent at the actual successor universe and fixed-formula bounded L witness extraction without host choice. Full forcing, internal ultrafilter existence, all-formula quotient truth and T3 remain later implementation obligations.
 
 The following checkpoint entries are historical. Their local remaining-work statements are superseded by the current status above when a later checked batch supplies the result.
 

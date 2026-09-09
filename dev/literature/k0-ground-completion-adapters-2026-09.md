@@ -42,7 +42,7 @@ The dense-map certificate retains the original finite Boolean order as an interp
 
 This is the E1/E5 probe evidence required to settle a real transitive realization and a finite internal completion presentation. It does not implement general regular-open completion, a generic filter, general axiom transfer or Cohen forcing. E1 and E5 pass at these adapter/presentation boundaries. The final acceptance decision must preserve the explicit axiom and code-domain contracts and the limitations of the legacy finite certificate.
 
-E2 and E6 still require the consolidated representation and assumption audit, including the ordinary quotient/fullness/ultrafilter extraction interfaces. The existing bounded L extraction theorem is relevant evidence for that audit, not an internal ultrafilter existence theorem. K0 remains open until that final decision is complete.
+At this checkpoint E2/E6 remained open. They are now closed by the [final representation decision](k0-representation-decision-2026-09.md). Bounded extraction remains distinct from the later internal ultrafilter existence theorem.
 
 ## Verification and assumptions
 

@@ -6,7 +6,7 @@ The [Bell 2005 reassessment](bell-2005-route-reassessment-2026-09.md) supplies t
 
 ## 1. The result and its completion contract
 
-The final T3 constructor targets the existing host foundations plus `LEM (ℓ-suc ℓ)` and returns an inhabited ordinary first-order structure N, with equality and membership interpretation, and proofs of every ZFC axiom/schema and not CH. Neither a ground model, a generic G, nor an ultrafilter U may remain an unconstructed input of this final instance. This exact assumption budget is a target to validate, not a checked theorem: universe levels, internal witness extraction and quotient formation remain K0/K12-K15 obligations. No extra host-choice assumption is permitted, including countable/dependent choice, host Zorn, BPI/ultrafilter axioms or equivalent selector records. Internal model AC remains separate. The [no-host-choice audit](no-host-choice-audit-2026-09.md) is binding.
+The final T3 constructor targets the existing host foundations plus `LEM (ℓ-suc ℓ)` and returns an inhabited ordinary first-order structure N, with equality and membership interpretation, and proofs of every ZFC axiom/schema and not CH. Neither a ground model, a generic G, nor an ultrafilter U may remain an unconstructed input of this final instance. This exact assumption budget is a target to validate, not a checked theorem: K0 has checked the selected universe, bounded-extraction and quotient interfaces; their full theorem instantiation remains K12-K15 work. No extra host-choice assumption is permitted, including countable/dependent choice, host Zorn, BPI/ultrafilter axioms or equivalent selector records. Internal model AC remains separate. The [no-host-choice audit](no-host-choice-audit-2026-09.md) is binding.
 
 Schematic public outputs, not existing Agda declarations:
 
@@ -111,7 +111,7 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [ground/completion adapters](k0-ground-completion-adapters-2026-09.md) close E1/E5 at their concrete representation boundaries: a genuine transitive restriction with an L instance, proved finite ground images, and four actual L carrier/graph sets with completion-map certificates. E3 and the E4 value-set/join subgate are already checked. The [exit checklist](k0-exit-checklist-2026-09.md) now requires the integrated E2/E6 representation and assumption decision; K0 is still open. Full K1/K2/K4 implementations remain later work.
+K0 is complete at its representation gate: all E1-E6 items pass with the [final representation decision](k0-representation-decision-2026-09.md). The final probes check quotient descent at the actual successor universe and fixed-formula bounded L witness extraction without host choice. Full forcing, internal ultrafilter existence, all-formula quotient truth and T3 remain later implementation obligations.
 
 Earlier checkpoint evidence follows. Instructions to perform a next step in these historical paragraphs apply only where the current status has not already discharged it.
 
