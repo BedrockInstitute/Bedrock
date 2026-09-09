@@ -117,6 +117,8 @@ The [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md
 
 The [attained atomic value-set probe](k0-atomic-value-set-2026-09.md) now supplies actual Separation of all valid-name values and the admitted powerset supremum. Representation, soundness and exact membership are proved; no name-per-value selector is assumed. The [K0 exit audit](k0-exit-checklist-2026-09.md) separately requires explicit universe, truncation and internal-witness extraction contracts before the ordinary-model route is accepted.
 
+The [material atomic examples](k0-material-atomic-example-2026-09.md) use actual table entries, internal unions and validity-generated closed domains. The zero-weight example proves a raw distinction and a semantic coincidence without quotient representatives or selectors. Its concrete domain is constructed internally. E3 is closed as a representative test; the final E6 assumption audit remains open.
+
 ## Required next verification
 
 The [internal-name probes](k0-internal-names-probes-2026-09.md) now verify L supports, data-valued entry decoding and full first-order name recognition. Its converse uses a supplied deterministic definable step with a proved internal omega-iteration theorem, not host DC. Images of supplied coded tables are now checked; weighted recursive images, atomic graph adequacy and general-ground adapters remain open.

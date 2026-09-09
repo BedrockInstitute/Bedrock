@@ -111,7 +111,7 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [attained atomic value-set probe](k0-atomic-value-set-2026-09.md) collects the constructed values over all valid material names into an actual L subset of B and proves an admitted supremum with upper-bound transfer. This discharges the concrete attained-value/join subgate of E4. Follow the [exit checklist](k0-exit-checklist-2026-09.md) for the remaining representative atomic example, real adapter/completion compositions and final decision audit. Full K2/K4 implementations remain later work; K0 is still open.
+The latest [material atomic examples](k0-material-atomic-example-2026-09.md) close E3 at its representative boundary: actual weighted membership, empty equality and a zero-weight substitution example on one internally constructed domain. E4 already has its actual attained-value/join instance. Follow the [exit checklist](k0-exit-checklist-2026-09.md) next for E1/E5 real adapter/completion compositions and the final E2/E6 decision audit. Full K2/K4 implementations remain later work; K0 is still open.
 
 Earlier checkpoint evidence follows. Instructions to perform a next step in these historical paragraphs apply only where the current status has not already discharged it.
 

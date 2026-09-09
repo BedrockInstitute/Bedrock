@@ -35,7 +35,7 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 The [fixed exit checklist](k0-exit-checklist-2026-09.md) is the current acceptance index. Historical open-item lists below do not expand K0 to include complete later implementations. No acceptance item is passed solely by recording its unresolved obstruction.
 
-Current attained-value evidence: the [atomic value-set probe](k0-atomic-value-set-2026-09.md) checks actual L collection of the values attained over every valid material name, exact membership and a real admitted supremum with upper-bound transfer. It composes the fixed graph, name recognition and existing generic Separation/LUB interfaces. The E4 value-set/join subgate is checked; the [exit checklist](k0-exit-checklist-2026-09.md) retains the other open K0 items.
+Current representative-atomic evidence: the [material atomic examples](k0-material-atomic-example-2026-09.md) check actual weighted membership, empty equality and one zero-weight substitution context on an internally constructed domain. E3 passes at its example boundary; the E4 value-set/join subgate is already checked. The [exit checklist](k0-exit-checklist-2026-09.md) now directs remaining work to E1/E5 adapter/completion compositions and the integrated E2/E6 decision audit.
 
 The following checkpoint entries are historical. Their local remaining-work statements are superseded by the current status above when a later checked batch supplies the result.
 

@@ -35,6 +35,8 @@ This checks an admitted existential join over the actual valid-name family for t
 
 ## What this closes, and what it does not
 
+Successor: the [material atomic examples](k0-material-atomic-example-2026-09.md) close the representative E3 test. The historical remaining-work description below is superseded at that boundary; full K4 laws remain later work.
+
 The attained-value collection and actual join portion of E4 now has a checked instance rather than a conditional graph-adequacy premise or a finite family example. The ground-side order is fixed recognition, fixed graph, Separation of attained values, then the admitted supremum and upper-bound transfer. Collection and witness rank bounds are later consumers when a set of witnesses is needed; they are not used to justify this value set.
 
 The [exit checklist](k0-exit-checklist-2026-09.md) still requires the concrete adapter/completion compositions, representative membership/equality/congruence evidence and final integrated representation/assumption record. This batch does not declare K0 complete or expand it to include all of K4.
