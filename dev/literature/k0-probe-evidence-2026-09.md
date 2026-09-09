@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Current expression evidence: the [outer-image and powerset-expression probes](k0-outer-weighted-expression-2026-09.md) check actual implication/infima, generic outer images and concrete two-branch expression construction, including graph-to-branch locality. Full finite Step/recursion integration and atomic adequacy remain open.
+
 Current concrete-algebra evidence: the [actual powerset weighted-join probes](k0-powerset-weighted-joins-2026-09.md) check actual internal powerset intersection/relative suprema and instantiate both weighted-image orientations, including finite result-formula satisfaction and value congruence. Full Boolean laws, RO completion and atomic Step remain open.
 
 Current internal-image evidence: the [uniform internal-image probes](k0-uniform-internal-images-2026-09.md) check generic parameter substitution, actual uniform image sets, their finite description, both predecessor-locality instances and equality with the earlier forward construction. Boolean completeness and full Step remain open.

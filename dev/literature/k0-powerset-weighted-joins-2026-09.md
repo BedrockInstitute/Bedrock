@@ -2,6 +2,8 @@
 
 Date: 2026-09-09. Source baseline: `995598f8`. Four safe temporary probes checked. This follows [uniform internal weighted images](k0-uniform-internal-images-2026-09.md). K0 remains open.
 
+Subsequent evidence: the [outer-image and powerset-expression probes](k0-outer-weighted-expression-2026-09.md) now add actual implication/infima, outer-image construction, both expression branches and final meet, and branch locality. The complete finite Step and recursion integration remain open.
+
 ## Concrete internal operations and relative suprema
 
 `InternalPowersetSupremum.For X` takes any actual L set X and constructs B = P(X) with actual internal subset order. Its variable-indexed order formula has an arbitrary-environment reading theorem. For every actual internal set A with A ⊆ B, the actual set union(A) is proved to belong to B, bound all elements of A, and lie below every competing upper bound in B. This is the complete relative-supremum specification from `IndexedSupremum`, not a presumed completeness field.
