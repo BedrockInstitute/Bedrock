@@ -2,6 +2,8 @@
 
 Date: 2026-09-09. Repository source baseline: `0177f9b3`. Status: four safe temporary probes checked. This follows the [real-name-pair and image probes](k0-name-pair-weighted-images-2026-09.md). The uniform inner-image syntax and predecessor-agreement adapter are now checked in both key orientations. A variable-indexed relative-supremum formula is also checked. K0 remains open; no actual Boolean operation/completeness instance or complete atomic Step has been proved.
 
+Subsequent evidence: the [uniform internal-image probes](k0-uniform-internal-images-2026-09.md) now realize the uniform template as actual internal sets, prove their variable-indexed description and both image-locality instances, and compare the forward image with its earlier construction. This discharges the uniform-image realization item below; actual Boolean completeness and full Step remain open.
+
 ## From predecessor values to graph membership
 
 `PredecessorValueAgreement` is a universe-polymorphic relational lemma. Given two graphs with proposition-valued membership, merely inhabited fibers at every relevant predecessor, and equality of all cross-graph values there, it proves both directions of graph membership at any fixed value. It requires neither a set-level Value carrier nor LEM or Choice.
