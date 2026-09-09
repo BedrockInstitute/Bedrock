@@ -2,6 +2,8 @@
 
 Date: 2026-09-09. Source baseline: `e699bdac`. Four safe temporary probes checked. This continues the [indexed image formulas](k0-indexed-images-suprema-2026-09.md). K0 remains open.
 
+Subsequent evidence: the [actual powerset weighted-join probes](k0-powerset-weighted-joins-2026-09.md) compose the image description with supremum syntax and realize the result using actual internal powerset meets/joins in both orientations. The full Boolean/RO instance and atomic Step remain open.
+
 ## Checked results
 
 `FormulaParameters` implements capture-avoiding substitution and parameter specialization for any supplied truth algebra and ZF structure. The proof follows all formula constructors, including bounded and unbounded quantifiers. Its public specialization takes n actual parameters and a formula with n + 1 variables, leaving one free variable. The reading theorem identifies its truth value with the original formula interpreted in the concatenated environment. It requires neither LEM nor Choice, and introduces no quantifiers. This is a semantics lemma, not a logical proof calculus or completeness theorem. The specialization does not remove the unbounded key existential already present in the weighted-image template.

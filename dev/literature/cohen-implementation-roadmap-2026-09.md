@@ -109,7 +109,9 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [uniform internal-image probes](k0-uniform-internal-images-2026-09.md) complete shared image-set realization and both orientations of actual image locality. They also provide an arbitrary-environment image-set description and a proved comparison with the earlier forward image. Next are the actual Boolean instance, image/supremum composition and full atomic Step/adequacy.
+The latest [actual powerset weighted-join probes](k0-powerset-weighted-joins-2026-09.md) check actual P(X) meets and internal-family joins, the composed image/supremum formula and actual weighted values in both orientations. This is a concrete interface instance, not the Cohen/RO algebra. Continue with implication/infima and outer images toward full Step, while retaining general RO completion as a separate obligation.
+
+The [uniform internal-image probes](k0-uniform-internal-images-2026-09.md) complete shared image-set realization and both orientations of actual image locality. They also provide an arbitrary-environment image-set description and a proved comparison with the earlier forward image. Next are the actual Boolean instance, image/supremum composition and full atomic Step/adequacy.
 
 The [indexed-image and supremum-syntax probes](k0-indexed-images-suprema-2026-09.md) check the two-orientation variable image template, coverage/value-agreement to graph/image locality, and B-relative supremum syntax. K0 still needs shared realization of those formulas as actual internal image sets, the actual Boolean operation/completeness instance and full atomic Step/adequacy. Syntax correctness does not establish supremum existence.
 
