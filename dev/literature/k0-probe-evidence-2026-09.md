@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Current image/compiler evidence: the [indexed-image and supremum-syntax probes](k0-indexed-images-suprema-2026-09.md) check uniform variable syntax for both weighted-image orientations, derive graph agreement from predecessor values/coverage, compose actual left-image equality and check a relative supremum formula. Actual Boolean operations/completeness and full Step remain open.
+
 Current name-instance evidence: the [real-name-pair and weighted-image probes](k0-name-pair-weighted-images-2026-09.md) provide actual closed name-pair domains and WF without caller assumptions, their checked recursion adapter and the first weighted internal image. Full Boolean Step construction and atomic adequacy remain open.
 
 Current bounded-recursion evidence: the [bounded internal recursion probes](k0-bounded-table-recursion-2026-09.md) close compatibility, internal union goodness and the previously conditional totality composition. They construct actual L values/graphs and exercise a constant step. The actual Boolean atomic instance and general-ground portability remain open. The following earlier entries retain their historical scope.

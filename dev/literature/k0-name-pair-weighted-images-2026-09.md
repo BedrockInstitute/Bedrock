@@ -41,6 +41,8 @@ Its locality result uses agreement of H and K on exactly those coded entries rel
 
 The present image formula specializes H,y,u as parameters. It does not by itself provide the single variable-indexed atomic Step formula in which the table, parent names and output vary. That uniform syntax and its adequacy still need construction. For the second inner image, preserve H(u,v): simply swapping u and v in this first image would read the wrong table entry before symmetry has been proved. A shared indexed key/operation image interface can factor common proof work, with separately checked adapters for the two orientations.
 
+Subsequent evidence: the [indexed-image and supremum-syntax probes](k0-indexed-images-suprema-2026-09.md) discharge the variable-indexed image template and the two-orientation predecessor-agreement adapter below, including actual left-image equality. They add relative-supremum syntax without proving existence. A shared uniform image-set realization and actual Boolean Step remain pending.
+
 ## Next proof work and boundaries
 
 1. Generalize the image template to the required variable-indexed key and operation graphs, preserving the two equality-clause orientations. Prove the predecessor-agreement adapter needed for its locality.
