@@ -2,6 +2,8 @@
 
 Date: 2026-09-09. Source baseline: `7eccc1f6`. Four new safe probes and a generalized parameter-substitution probe checked; the existing unique-value core is reused unchanged. This continues the [outer weighted expression](k0-outer-weighted-expression-2026-09.md). K0 remains open.
 
+Subsequent evidence: the [actual powerset recursion-table probes](k0-powerset-atomic-tables-2026-09.md) now supply the encoded pair-key adapter and fully solved actual recursion-table instance, including an actual closed-name-domain value and graph. Closed-domain independence and global atomic adequacy remain pending.
+
 ## Shared formula and uniqueness components
 
 `FormulaParameters` now supports `instantiate`: substitute n actual parameters while retaining any m free variables. Its reading theorem holds at any remaining environment. The former one-free-variable `specialize` API is derived from this implementation, so there is one substitution proof home. Substitution introduces neither quantifiers nor logical assumptions and remains parameterized by a general truth algebra and structure. The checked Step uses it to freeze X and B while retaining variable coordinates and table/output arguments.

@@ -109,7 +109,9 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [finite powerset Step probes](k0-powerset-step-formula-2026-09.md) close the raw-coordinate finite Step, uniqueness, admission and full predecessor-locality composition for the powerset instance. Next are the encoded pair-key formula/decoder adapter and direct instantiation of the existing bounded recursion engine. General Boolean/Cohen completion and atomic adequacy remain separate obligations.
+The latest [actual powerset recursion-table probes](k0-powerset-atomic-tables-2026-09.md) complete the pair-key adapter and actual solved recursion-table instance, with a closure-generated domain for valid names. The next gate is closed-domain independence and fixed atomic equality/membership formula adequacy. This local powerset table does not replace the Cohen algebra or general forcing construction.
+
+The [finite powerset Step probes](k0-powerset-step-formula-2026-09.md) close the raw-coordinate finite Step, uniqueness, admission and full predecessor-locality composition for the powerset instance. Next are the encoded pair-key formula/decoder adapter and direct instantiation of the existing bounded recursion engine. General Boolean/Cohen completion and atomic adequacy remain separate obligations.
 
 The [outer-image and powerset-expression probes](k0-outer-weighted-expression-2026-09.md) construct the complete concrete powerset expression through outer implications, infima and final meet, with branch graph locality and the empty-family infimum theorem. Next are the outer-set description, a single Step formula with exact/unique reading, and the actual predecessor/recursion hookup. Full Boolean validation and general RO completion remain separate.
 

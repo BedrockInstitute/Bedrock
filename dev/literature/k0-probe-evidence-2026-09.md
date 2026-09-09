@@ -33,6 +33,8 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
+Current actual-table evidence: the [actual powerset recursion-table probes](k0-powerset-atomic-tables-2026-09.md) check the all-environment pair-key Step reading, fully instantiated bounded recursion and actual table/value/graph/equation at valid names. Closed-domain independence and global atomic adequacy remain open.
+
 Current Step evidence: the [finite powerset Step probes](k0-powerset-step-formula-2026-09.md) check generic set-description reuse, relative-extremum uniqueness through the existing core, and one finite Step with exact reading, explicit admission and full predecessor locality. The encoded-key recursion adapter and actual table instance remain open.
 
 Current expression evidence: the [outer-image and powerset-expression probes](k0-outer-weighted-expression-2026-09.md) check actual implication/infima, generic outer images and concrete two-branch expression construction, including graph-to-branch locality. Full finite Step/recursion integration and atomic adequacy remain open.
