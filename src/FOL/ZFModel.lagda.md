@@ -5,7 +5,7 @@ A bare structure becomes a model of set theory by supplying witnesses for the ZF
 <!--zh-->
 # ZF 与 ZFC 的模型
 
-一个裸结构通过为 ZF 公理提供见证而成为集合论模型。本章把这些见证表述为 record 字段，建立由它们给出的集合描述运算，并通过加入选择公理把 ZF 模型扩展为 ZFC 模型。
+一个裸结构通过为 ZF 公理提供见证而成为集合论模型。本章将这些见证表述为 record 字段，构造由它们给出的集合描述运算，并加入选择公理，把 ZF 模型扩展为 ZFC 模型。
 <!--ja-->
 # ZF と ZFC のモデル
 
@@ -13,9 +13,9 @@ A bare structure becomes a model of set theory by supplying witnesses for the ZF
 <!--/-->
 
 <!--en-->
-the first-order logic chapters built a language, gave it worlds to talk about, and pinned down meaning. But
-nothing so far deserves the name set theory: a bare structure believes nothing. Its
-membership relation need not admit an empty set, need not pair two elements, need
+The first-order logic chapters built a language, gave it worlds to talk about, and pinned down meaning. But
+nothing so far deserves the name set theory: a bare structure asserts nothing. Its
+membership relation need not admit an empty set, need not pair two elements, and need
 not gather the subsets of anything. What a universe of sets must provide is exactly
 what the **axioms of ZF** say, and this chapter states them. Not as postulates,
 though: the book never extends its metatheory, and its structures are many, not one
@@ -23,7 +23,7 @@ chosen universe. A **model of ZF** is a record whose fields *are* the axioms, so
 "`𝒮` satisfies ZF" means nothing more mysterious than "this record has an
 inhabitant at `𝒮`".
 <!--zh-->
-一阶逻辑诸章造出了语言，给了它可谈论的世界，并钉下了含义。但至此还没有任何东西配得上「集合论」之名：裸结构什么都不信，它的成员关系未必容纳空集，未必能配对两个元素，未必聚得起谁的子集。一个集合宇宙必须供应什么，正是 **ZF 公理**要说的内容，本章把它们陈述出来。但不是作为公设：本书从不扩充自己的元理论，且本书的结构有许多个，而非某个钦定的宇宙。**ZF 模型**是一个以公理为字段的 record，于是「`𝒮` 满足 ZF」并无任何神秘之处：它只是说这个 record 在 `𝒮` 处有居民。
+前面几章建立了一阶逻辑：造出了语言，给出了它可谈论的世界，也确定了含义。但至此还没有任何东西配得上「集合论」之名：裸结构对一切都未作断言，它的成员关系未必容纳空集，未必能配对两个元素，也未必能聚出子集。一个集合宇宙必须提供什么，正是 **ZF 公理**所陈述的内容，本章把它们一一写出。但这不是把它们作为公设：本书从不扩充自己的元理论，而且书中的结构有许多个，并非只选定某一个宇宙。**ZF 模型**是一个以公理为字段的 record，因此「`𝒮` 满足 ZF」没有任何神秘之处：它只是说这个 record 在 `𝒮` 处有实例。
 <!--/-->
 
 
@@ -47,7 +47,7 @@ scope). And the constant interpretation is the canonical one from the semantics
 chapter: the constant domain is the carrier itself and the interpretation is
 `id`{.Agda}, so a parameter appearing in a formula simply *is* the set it names.
 <!--zh-->
-两项常设选择，都在前面章节宣布过，都在此第一次真正上场。真值代数取典范的 `hPropAlgebra`{.Agda}：公理断言事实，而本书数学的事实住在 `hProp`{.Agda} (按作用域纪律，逻辑符号恰经打开代数入场)。常元解释也取语义章的典范情形：常元域就是载体自身，解释就是 `id`{.Agda}，于是公式里出现的参数就**是**它指名的那个集合。
+两项常设选择都在前面章节宣布过，在此第一次真正派上用场。真值代数取典范的 `hPropAlgebra`{.Agda}：公理断言事实，而本书数学的事实就落在 `hProp`{.Agda} 中 (按作用域规则，打开该代数后逻辑符号即可使用)。常元解释也取语义章的典范情形：常元域就是载体自身，解释就是 `id`{.Agda}，于是公式里出现的参数就**是**它指名的那个集合。
 <!--/-->
 
 ```agda
@@ -79,7 +79,7 @@ proposition, and `SetOf Q`{.Agda} packages a realizer with its evidence.
 <!--zh-->
 ## 把类实现为集合
 
-接下来的公理几乎全是同一个形状：**存在一个集合，其成员恰好是如此这般者**。先把「如此这般」定准。**类**是载体上的命题值谓词 `S → Ω`：可以谈论隶属，却不许诺有集合把它收拢。(类其实早已亮过相：结构章的限制 `𝒮 ↾ M` 就是沿这样一个 `M` 裁剪。) 于是 `IsSetOf Q b`{.Agda} 说集合 `b` 逐成员地**实现**类 `Q`。实现是 `hProp` 中的逐点相等，故为命题；`SetOf Q`{.Agda} 把实现者与证据打包。
+接下来的公理几乎全是同一个形状：**存在一个集合，其成员恰好是如此这般者**。先把「如此这般」说清楚。**类**是载体上的命题值谓词 `S → Ω`：可以对它谈论隶属，却不保证有集合恰好收齐它的全部成员。(类在前面已经出现过：结构章的限制 `𝒮 ↾ M` 正是沿这样一个 `M` 进行的。) 于是 `IsSetOf Q b`{.Agda} 说集合 `b` 逐成员地**实现**类 `Q`。实现是 `hProp` 中的逐点相等，故为命题；`SetOf Q`{.Agda} 把实现者与其证据一并给出。
 <!--ja-->
 ## クラスを集合として実現する
 
@@ -106,7 +106,7 @@ one, in the strong, structural sense: any single realizer makes the whole type o
 realizers contractible. The lemma takes extensionality as an explicit input,
 because the record that will provide it has not been defined yet.
 <!--zh-->
-一个类能有几个实现者？在**外延公理** (成员相同的集合相等；它将是 record 的第一个字段) 之下，答案是至多一个，且是结构意义上的强「至多一」：任何一个实现者都让实现者的整个类型可缩。这条引理把外延性作为显式输入，因为供应它的 record 尚未定义。
+一个类能有几个实现者？在**外延公理** (成员相同的集合相等；它将是 record 的第一个字段) 之下，答案是至多一个，而且是结构意义上的强「至多一」：任何一个实现者都使实现者的整个类型可缩。这条引理把外延性作为显式输入，因为提供外延性的 record 此时还没有定义。
 <!--/-->
 
 ```agda
@@ -129,11 +129,11 @@ from unique existence to a term, here the passage is two `fst`{.Agda}s.
 <!--zh-->
 ## 摹状词算子
 
-`isContr`{.Agda} 是宿主的**唯一存在**，于是 `isContr (SetOf Q)` 读作：**恰有一个由 `Q` 者组成的集合**。下面的存在性公理全部取这个形态，而回报立竿见影：有了唯一存在，「那个满足条件的集合」就是一次投影。算子 `℩` (倒转的 iota，罗素的记号，读作「that」) 取出收缩中心，其规格是第二投影。经典处理要想从唯一存在走到一个词项，必须添一条描述公理；此处这段路只是两次 `fst`{.Agda}。
+`isContr`{.Agda} 是宿主的**唯一存在**，因此 `isContr (SetOf Q)` 读作：**恰有一个由 `Q` 者组成的集合**。后面的存在性公理都采用这一形式，其好处立即可见：有了唯一存在，「那个满足条件的集合」就是一次投影。算子 `℩` (倒转的 iota，罗素的记号，读作「that」) 取出收缩中心，其规格是第二投影。经典处理中，要从唯一存在得到一个词项，必须另加描述公理；这里则只需两次 `fst`{.Agda}。
 <!--ja-->
 ## 確定記述の演算子
 
-一意存在する集合を `the`{.Agda} で選び、その要素条件を `the-spec`{.Agda} で読み戻します。これは任意選択ではなく、一意性を証明した記述だけに使う演算です。
+一意存在する集合を `℩`{.Agda} で選び、その要素条件を `℩-spec`{.Agda} で読み戻します。これは任意選択ではなく、一意性を証明した記述だけに使う演算です。
 <!--/-->
 
 
@@ -154,11 +154,11 @@ is a member of `b`. The superscript is the structure-layer mark, as always.
 <!--zh-->
 ## 子集
 
-还差一个派生关系把词汇备齐：`a ⊆ˢ b` 谓 `a` 的每个成员都是 `b` 的成员。上标一如既往是结构层的层标记。
+还需要一个派生关系来补全词汇：`a ⊆ˢ b` 谓 `a` 的每个成员都是 `b` 的成员。上标一如既往是结构层的层标记。
 <!--ja-->
 ## 部分集合
 
-`A ⊆ B`{.Agda} は、`A` の各要素が `B` にも属することを表します。この関係は、分出や冪集合の公理を簡潔に述べるための基礎になります。
+`A ⊆ˢ B`{.Agda} は、`A` の各要素が `B` にも属することを表します。この関係は、分出や冪集合の公理を簡潔に述べるための基礎になります。
 <!--/-->
 
 
@@ -179,7 +179,7 @@ regularity, empty set, pairing, union, separation, replacement, power set
 <!--zh-->
 ## 公理，作为 record
 
-这里是本章的心脏。字段就是熟悉的那串清单：外延、正则、空集、配对、并、分离、替换、幂集 (无穷稍后加入)。看代码之前，有三处值得多看一眼。
+这里是本章的核心。字段就是熟悉的那串清单：外延、正则、空集、配对、并、分离、替换、幂集 (无穷稍后加入)。看代码之前，有三处值得多看一眼。
 <!--ja-->
 ## record としての ZF 公理
 
@@ -187,12 +187,12 @@ regularity, empty set, pairing, union, separation, replacement, power set
 <!--/-->
 
 <!--en-->
-**Separation and replacement consume the book's own formulas.** A textbook writes
+**Separation and replacement take the book's own formulas as input.** A textbook writes
 "for every formula `φ`"; these two fields take a `Formula S 1`{.Agda} or
 `Formula S 2`{.Agda} and interpret it with the satisfaction relation of the
-semantics chapter. The language built in the first-order logic chapters stops being an object of
-contemplation here and starts bearing weight. Why formulas, and not arbitrary host
-predicates `S → Ω`? Because that stronger schema is a different, second-order
+semantics chapter. The language built in the first-order logic chapters is no longer
+merely an object of study here; it now does real work. Why formulas, and not arbitrary host
+predicates `S → Ω`? Because that stronger schema belongs to a different, second-order
 theory: the point of ZF's separation is that only *first-order describable*
 properties are guaranteed to cut sets out of sets. The gap between "predicate" and
 "formula" is mathematical content, and the constructible universe lives inside exactly
@@ -203,14 +203,14 @@ membership relation is well-founded, with `WellFounded`{.Agda} taken from the ho
 library rather than from any object-language sentence. The next section explains
 why no sentence could do the job.
 
-Everything else takes the unique-existence form just prepared, and will hand its
-set over through `℩`.
+Everything else takes the unique-existence form just prepared, and each will obtain
+its set through `℩`.
 <!--zh-->
-**分离与替换消费本书自家的公式。**教科书写「对每条公式 `φ`」；这两个字段就收一条 `Formula S 1`{.Agda} 或 `Formula S 2`{.Agda}，并用语义章的满足关系解释它。一阶逻辑诸章造出的语言在此不再是观赏对象，而开始承重。为什么收公式，而不收任意宿主谓词 `S → Ω`？因为那个更强的模式是另一门二阶理论：ZF 分离公理的要义恰在于，只有**一阶可描述**的性质才保证能从集合中切出集合。「谓词」与「公式」之间的落差是数学内容，可构造宇宙就住在这道落差里。
+**分离与替换以本书自己的公式为输入。**教科书写「对每条公式 `φ`」；这两个字段则收一条 `Formula S 1`{.Agda} 或 `Formula S 2`{.Agda}，并用语义章的满足关系解释它。一阶逻辑诸章造出的语言在此不再只是被研究的对象，而真正派上了用场。为什么收公式，而不收任意宿主谓词 `S → Ω`？因为那个更强的模式属于另一门二阶理论：ZF 分离公理的要义恰在于，只有**一阶可描述**的性质才保证能从集合中切出集合。「谓词」与「公式」之间的落差是数学内容，可构造宇宙正处在这道落差之中。
 
 **正则公理陈述在元层面** (有些书称基础公理)：成员关系是良基的，其中 `WellFounded`{.Agda} 取自宿主库，而非任何对象语言的句子。为什么没有句子能胜任，下一节交代。
 
-其余字段全部取刚备好的唯一存在形态，届时经 `℩` 交出各自的集合。
+其余字段全部采用刚准备好的唯一存在形态，届时各自经 `℩` 得到相应的集合。
 <!--/-->
 
 ```agda
@@ -258,9 +258,9 @@ satisfying all of it at once: it satisfies the sentence, yet the constants trace
 infinite descending ∈-chain through it. So the sentence never captured
 well-foundedness in the first place.
 <!--zh-->
-## 正则公理为何住在元层面
+## 正则公理为何置于元层面
 
-其余公理说的要么是对象语言，要么是单纯的成员关系；唯独正则公理伸手去取宿主的良基概念。这是不得不然：**没有任何一阶句子能表达外部良基性**。这个经典论证值得讲一遍，尽管本书只讲不证；下文不依赖它，紧致性也不在本书展开。假设某句子恰好在良基结构中成立。给语言添上新常元 $a_0, a_1, a_2, \dots$ 与公理 $a_{n+1} \in a_n$。这些公理中的有限多条只要求一条有限长的下降链，良基结构供应得起；于是扩充理论的每个有限片段都有模型。经典模型论的**紧致性定理**随即给出一个一次满足全部公理的结构：它满足那个句子，常元却在其中划出一条无穷下降的 ∈-链。可见那个句子从头就没有抓住良基性。
+其余公理说的要么是对象语言，要么是单纯的成员关系；唯独正则公理要借助宿主的良基概念。这是不得不然：**没有任何一阶句子能表达外部良基性**。这个经典论证值得讲一遍，尽管本书只讲不证；下文不依赖它，紧致性也不在本书展开。假设某句子恰好在良基结构中成立。给语言添上新常元 $a_0, a_1, a_2, \dots$ 与公理 $a_{n+1} \in a_n$。这些公理中的有限多条只要求一条有限长的下降链，良基结构足以供应；于是扩充理论的每个有限片段都有模型。经典模型论的**紧致性定理**随即给出一个一次满足全部公理的结构：它满足那个句子，常元却在其中划出一条无穷下降的 ∈-链。可见那个句子从头就没有刻画良基性。
 <!--ja-->
 ## 正則性公理をメタレベルに置く理由
 
@@ -269,29 +269,31 @@ well-foundedness in the first place.
 
 <!--en-->
 Compactness is a property of first-order logic itself; no choice of host system
-moves this line, and a formalization can only choose where to be honest about it.
-Here the choice is: regularity lives at the meta level, as a field. The ceiling
-also has a productive face. It shows that the first-order shadow of a structure is
-strictly coarser than the structure, so restricting attention to "what first-order
-formulas can see" is a genuine restriction. the constructible-universe development builds its universe out of
-precisely that restriction; were the shadow lossless, the construction would
+changes that, and a formalization can only choose where to state it explicitly.
+Here the choice is: regularity lives at the meta level, as a field. This limitation
+also has a productive face: it shows that the first-order fragment of a
+structure captures strictly less than the whole structure, so restricting attention
+to "what first-order formulas can see" is a genuine restriction. The
+constructible-universe development builds its universe out of precisely this
+restriction; if the first-order fragment were lossless, the construction would
 return everything and prove nothing.
 <!--zh-->
-紧致性是一阶逻辑自身的性质；换任何宿主系统都动不了这条线，形式化能选择的只是在哪里对它诚实。此处的选择是：正则公理住在元层面，作为字段。这道天花板也有多产的一面。它表明结构的一阶影子严格粗于结构本身，于是把眼光限制到「一阶公式看得见的东西」是一次真正的限制。可构造宇宙诸章的宇宙恰恰用这次限制建成；影子若是无损的，那个构造将原样吐回一切，什么也证明不了。
+紧致性是一阶逻辑自身的性质，更换宿主系统不会改变这一事实；形式化只能明确选择在哪一层陈述正则公理。这里把正则公理作为元层面的字段。这个限制也说明，结构的一阶可表达信息严格少于结构的全部信息，因此只考虑一阶公式能够表达的性质确实缩小了范围。可构造宇宙各章正是利用这一限制来构造其宇宙；如果一阶表达保留了结构的全部信息，该构造只会得到原来的全部对象，无法证明所需结果。
 <!--/-->
 
 <!--en-->
 ## The derived operations
 
-Now `℩` discharges each unique existence into an operation, and `℩-spec`{.Agda}
-into its specification; every specification below is literally one projection. The
-union of a pair gives binary union, and binary union gives the **successor**
-`a ⁺ = a ∪ {a}` (the pair of `a` with itself is the singleton): von Neumann's step
-from a set to the next, the ladder the axiom of infinity will climb.
+Now `℩` turns each unique existence into an operation, and `℩-spec`{.Agda}
+turns it into its specification; every specification below is literally one
+projection. The union of a pair gives binary union, and binary union gives the
+**successor** `a ⁺ = a ∪ {a}` (the pair of `a` with itself is the
+singleton): this is von Neumann's step from one set to the next, the step the
+axiom of infinity will later use.
 <!--zh-->
 ## 派生运算
 
-现在让 `℩` 把每个唯一存在兑成运算，让 `℩-spec`{.Agda} 兑成规格；下面每条规格都不折不扣是一次投影。配对之并给出二元并，二元并给出**后继** `a ⁺ = a ∪ {a}` (`a` 与自身的配对即单点集)：冯·诺伊曼从一个集合迈向下一个的那一步，也是无穷公理稍后要攀的梯子。
+现在用 `℩` 把每个唯一存在实现为运算，并用 `℩-spec`{.Agda} 给出规格；下面每条规格都是一次投影。配对之并给出二元并，二元并又给出**后继** `a ⁺ = a ∪ {a}` (`a` 与自身的配对即单点集)：这是从一个集合到下一个集合的冯·诺伊曼后继步骤，也是无穷公理稍后所用的那一步。
 <!--ja-->
 ## 公理から得られる演算
 
@@ -331,15 +333,16 @@ from a set to the next, the ladder the axiom of infinity will climb.
 ## First dividend: intersection without an axiom
 
 Binary intersection is deliberately **not** a field. The two-symbol formula
-`var zero ∈̇ con b`{.Agda} says "the variable is a member of `b`"; hand it to
-`separate`{.Agda} at `a` and the axioms hand back `a ∩ b`. Better: its
-specification *is* the separation specification, verbatim, because satisfaction of
-that formula computes to `x ∈ˢ b` by the defining clauses of `⊨`. The faithfulness
-the semantics chapter promised is now paying out in sets, not just in logic.
+`var zero ∈̇ con b`{.Agda} says "the variable is a member of `b`"; pass it to
+`separate`{.Agda} at `a` and the axioms return `a ∩ b`. Its
+specification is exactly the separation specification, verbatim, because
+satisfaction of that formula computes to `x ∈ˢ b` by the defining
+clauses of `⊨`. The faithfulness proved in the semantics chapter can therefore be
+used directly to construct sets.
 <!--zh-->
 ## 第一笔红利：不设公理的交
 
-二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 说「该变量是 `b` 的成员」；把它递给 `separate`{.Agda}，作用在 `a` 上，公理便交回 `a ∩ b`。更妙的是：它的规格就**是**分离的规格，一字不差，因为按 `⊨` 的定义子句，那条公式的满足直接计算为 `x ∈ˢ b`。语义章许诺的忠实性，此刻开始以集合、而不只是以逻辑付账。
+二元交刻意**不设**为字段。两个符号的公式 `var zero ∈̇ con b`{.Agda} 表示「该变量是 `b` 的成员」；把它传给 `separate`{.Agda} 并作用于 `a`，分离公理就给出 `a ∩ b`。它的规格与分离的规格完全相同，因为按 `⊨` 的定义子句，该公式的满足直接计算为 `x ∈ˢ b`。这说明语义章证明的忠实性可以直接用于构造集合。
 <!--ja-->
 ## 第一の帰結：公理を使わない共通部分
 
@@ -347,16 +350,16 @@ the semantics chapter promised is now paying out in sets, not just in logic.
 <!--/-->
 
 <!--en-->
-This is also the chapter's honest confession. One formula was cheap to write by
+This is also a candid remark about the chapter. One formula was cheap to write by
 hand. But the book will need a formula for every predicate it ever wants to
 separate or replace along, each with a proof that the formula means that
 predicate, and hand-assembling syntax at that scale is out of the question.
-Turning host predicates into formulas, certificate included, is a craft of its
+Turning host predicates into formulas, certificate included, is a technique of its
 own, the *reification* framework catalogued at the book's tail; the witnesses
 it runs on, the Levy grades and their travel theorems, are already in hand from
 the close of the first-order logic chapters.
 <!--zh-->
-这也是本章的坦白。手写一条公式很便宜。可本书今后想沿着分离或替换使用的每个谓词都需要一条公式，每条还得配上「公式的含义恰是该谓词」的证明，那样的规模之下手工拼装语法绝无可能。把宿主谓词变成公式、随附保义证书，这门手艺自成一体，即编在书末的 reification 框架；它所依赖的见证，即 Lévy 分级与其旅行定理，绝对性定理完成时已然在手。
+这也是本章的坦白。手写一条公式很容易。可本书今后想沿着分离或替换使用的每个谓词都需要一条公式，每条还得配上「公式的含义恰是该谓词」的证明，那样的规模之下手工拼装语法绝无可能。把宿主谓词变成公式、随附保义证书，这套方法自成一体，即编在书末的 reification 框架；它所依赖的见证，即 Lévy 分级与其旅行定理，到绝对性定理完成时便可备齐。
 <!--/-->
 
 ```agda
@@ -375,16 +378,16 @@ The **numerals** are the von Neumann naturals: `∅`, `∅ ⁺`, `(∅ ⁺) ⁺`
 The record takes the chain itself as a field, pinned down by two propositional
 equations phrased in raw membership and equality: the zeroth numeral has no
 members, and the members of a successor numeral are exactly the previous numeral
-and its members. By extensionality the two equations say precisely
-`numeral zero ≡ ∅` and `numeral (suc n) ≡ numeral n ⁺`, so nothing is weaker than
-defining the chain outright. What is gained is room: the equations never mention
+and its members. By extensionality the two equations yield precisely
+`numeral zero ≡ ∅` and `numeral (suc n) ≡ numeral n ⁺`, so this is exactly as strong as
+defining the chain outright. What is gained is latitude: the equations never mention
 the derived `∅`{.Agda}, so a concrete model may present the chain in whatever
-form its carrier computes best and discharge them without ever unfolding the
+form is most convenient to compute with on its carrier and discharge them without ever unfolding the
 description operator.
 <!--zh-->
 ## 无穷
 
-只剩一条公理了，正是那条强迫一个真正无穷的集合存在的公理。**数码**就是冯·诺伊曼自然数：`∅`、`∅ ⁺`、`(∅ ⁺) ⁺`，如此下去。record 把这条链本身收作字段，用两条以裸成员与裸等词措辞的命题方程钉死：第零个数码没有成员，后继数码的成员恰是前一个数码及其成员。经外延公理，这两条方程说的正是 `numeral zero ≡ ∅` 与 `numeral (suc n) ≡ numeral n ⁺`，所以比起直接定义这条链，强度分毫未减。换来的是余地：方程从不提及派生的 `∅`{.Agda}，于是具体模型可以用其载体算起来最顺手的形式给出这条链，兑现方程时完全不必展开摹状词算子。
+只剩无穷公理，它要求一个真正无穷的集合存在。**数码**是冯·诺伊曼自然数：`∅`、`∅ ⁺`、`(∅ ⁺) ⁺`，如此继续。record 把数码链本身作为字段，并用两条以裸成员与裸等词表述的命题方程确定它：第零个数码没有成员，后继数码的成员恰是前一个数码及其成员。由外延公理，这两条方程分别给出 `numeral zero ≡ ∅` 与 `numeral (suc n) ≡ numeral n ⁺`，所以其强度与直接定义数码链相同。方程不提及派生的 `∅`{.Agda}，因此具体模型可以采用最便于载体计算的数码链定义，并在证明方程时避免展开摹状词算子。
 <!--ja-->
 ## 無限
 
@@ -403,7 +406,7 @@ description operator.
 ```
 
 <!--en-->
-`isNumeral`{.Agda} is the class this chain sweeps out: *equal to some numeral*.
+`isNumeral`{.Agda} determines the class of objects *equal to some numeral*.
 The quantification runs over `ℕ` lifted to the working level, since the book's
 indexing data lives at the bottom universe. The **axiom of infinity**, in the
 strong form this book uses, then says: that class is a set. Stated this way it is
@@ -411,7 +414,7 @@ strictly stronger than the usual "some set contains `∅` and is closed under
 successor", and it is the version that makes `ω` directly usable as *the* set of
 naturals: every member of `ω` is a numeral, not merely every numeral a member.
 <!--zh-->
-`isNumeral`{.Agda} 是这条链扫出的类：**与某个数码相等**。量化取提升到工作层级的 `ℕ`，因为本书的索引数据住在最底层宇宙。而**无穷公理**，取本书采用的强形式，说的就是：这个类是集合。如此陈述严格强于通常的「存在一个含 `∅` 且对后继封闭的集合」，而正是这个版本让 `ω` 可以直接当作**那个**自然数集来用：`ω` 的每个成员都是数码，而不只是每个数码都是成员。
+`isNumeral`{.Agda} 所定出的类，由**与某个数码相等**的对象组成。量化取提升到工作层级的 `ℕ`，因为本书的索引数据住在最底层宇宙。而**无穷公理**，取本书采用的强形式，说的就是：这个类是集合。如此陈述严格强于通常的「存在一个含 `∅` 且对后继封闭的集合」，而正是这个版本让 `ω` 可以直接当作**那个**自然数集来用：`ω` 的每个成员都是数码，而不只是每个数码都是成员。
 <!--/-->
 
 ```agda
@@ -434,7 +437,7 @@ realizer is the unique realizer.
 <!--zh-->
 ## 最初的定理
 
-外延公理把整套存在装置一次性升级。任何实现者都是唯一实现者。
+外延公理把整套存在机制一次性升级；由此，任何实现者都是唯一实现者。
 <!--ja-->
 ## 最初の定理
 
@@ -446,21 +449,20 @@ realizer is the unique realizer.
 <!--en-->
 ## ZFC: choice as an extension
 
-The line between ZF and ZFC is drawn as a record boundary, because the book's
-capstone lives on that line: the constructible-universe chapters constructs, inside any model of ZF, a
-sub-universe satisfying choice, and folding choice into the base record would
-erase the very distinction that construction is about. The **axiom of choice** is
-taken in choice-set form: given a set `a` whose members are nonempty and pairwise
-disjoint, some set meets each member of `a` in exactly one point. This form is
-stated with membership and the derived intersection alone; its equivalence with
-the other formulations is model-internal mathematics, deferred until needed. Note
-that the hypotheses and the conclusion all wear the truncation `∥_∥₁`{.Agda}:
-choice asserts bare existence, promising no canonical choice set, and that
-reticence is exactly its force.
+The distinction between ZF and ZFC is drawn as a record boundary: the constructible-universe chapters
+construct, inside any model of ZF, a sub-universe satisfying choice, and adding
+choice to the base record would make inexpressible the very distinction that
+construction is about. The **axiom of choice** is taken in choice-set form: given
+a set `a` whose members are nonempty and pairwise disjoint, some set meets each
+member of `a` in exactly one point. This form is stated with membership and the
+derived intersection alone; its equivalence with the other formulations is
+model-internal mathematics, deferred until needed. Note that the hypotheses and
+the conclusion all carry the truncation `∥_∥₁`{.Agda}: choice asserts that a choice set
+exists, but specifies no canonical one.
 <!--zh-->
 ## ZFC：作为扩展的选择公理
 
-ZF 与 ZFC 的分界线画成了 record 的边界，因为本书的压轴戏就住在这条线上：可构造宇宙诸章将在任意 ZF 模型内部构造一个满足选择公理的子宇宙，若把选择混入基础 record，恰恰抹掉了那个构造所要谈论的分界。**选择公理**取选择集形态：给定一个集合 `a`，其成员非空且两两不交，则存在一个集合与 `a` 的每个成员恰交于一点。这个形态仅用成员关系与派生的交即可陈述；它与其他表述的等价性属于模型内部的数学，留待需要时再证。留意各前提与结论都穿着截断 `∥_∥₁`{.Agda}：选择公理断言的是赤裸的存在，不许诺任何典范选择集，而这份缄默正是它的力量所在。
+ZF 与 ZFC 的区别对应 record 的边界，因为可构造宇宙诸章将在任意 ZF 模型内部构造一个满足选择公理的子宇宙。若把选择公理加入基础 record，就无法表达这个构造所研究的区别。这里采用选择集形式的**选择公理**：给定集合 `a`，若其成员非空且两两不交，则存在一个集合，与 `a` 的每个成员恰交于一点。该形式只用成员关系和派生的交即可陈述；它与其他形式的等价性属于模型内部的数学，留待需要时证明。各前提与结论都带有截断 `∥_∥₁`{.Agda}：选择公理断言选择集存在，但不指定典范的选择集。
 <!--ja-->
 ## ZFC：選択公理による拡張
 
@@ -488,18 +490,18 @@ record isZFCModel : Type (ℓ-suc ℓ) where
 ## Recap
 
 A model of ZF is a record: extensionality, meta-level regularity (the compactness
-ceiling makes any other placement dishonest), unique-existence fields for the
-constructions, separation and replacement consuming the book's own formulas, and
+ceiling rules out any other faithful placement), unique-existence fields for the
+constructions, separation and replacement using the book's own formulas, and
 strong infinity through the numeral chain. `℩` turns fields into operations whose
-specifications are projections; intersection fell out of separation and a
-two-symbol formula, the first set built by feeding the framework its own language.
-`isZFCModel`{.Agda} adds choice on top. Later coding chapters meet the record's
-appetite for formulas by representing syntax and satisfaction inside `L`; the
+specifications are projections; intersection was obtained from separation and a
+two-symbol formula, the first set the framework derives in its own language.
+`isZFCModel`{.Agda} adds choice on top. Later coding chapters satisfy the record's
+requirement on formulas by representing syntax and satisfaction inside `L`; the
 Lévy witnesses developed here control the bounded formulas used along the way.
 <!--zh-->
 ## 小结
 
-ZF 模型是一个 record：外延公理、元层面的正则公理 (紧致性天花板使其他任何安置都不诚实)、以唯一存在形态陈述的诸构造字段、消费本书自家公式的分离与替换，以及经数码链的强无穷。`℩` 把字段兑成运算，规格皆为投影；交由分离加一条两符号公式落袋，是框架吃自家语言造出的第一个集合。`isZFCModel`{.Agda} 在其上添加选择。后面的编码诸章把语法与满足关系表示在 `L` 内，从而满足 record 对公式的要求；这里建立的 Lévy 见证则控制途中使用的有界公式。
+ZF 模型是一个 record：包含外延公理、置于元层面的正则公理 (紧致性限制说明其他位置不能忠实表达预期含义)、以唯一存在形式陈述的构造字段、使用本书公式的分离与替换，以及由数码链给出的强无穷公理。`℩` 把构造字段转为运算，其规格都是投影。交由分离和一条双符号公式构造，是框架首次用自身语言得到集合。`isZFCModel`{.Agda} 在此基础上添加选择公理。后续编码诸章在 `L` 内表示语法与满足关系，以满足 record 对公式的要求；这里建立的 Lévy 见证则控制其中使用的有界公式。
 <!--ja-->
 ## まとめ
 

@@ -11,45 +11,45 @@ This chapter proves the power-set field for `L` by bounding all constructible
 subsets of a given set in one stage and separating that stage by the internal
 inclusion formula.
 <!--zh-->
-本章证明 `L` 的幂集字段：先把给定集合的全部可构造子集界在一个阶段内，再以内部包含公式在该阶段上分离。
+本章证明 `L` 的幂集字段：先把给定集合的全部可构造子集归入一个阶段之内，再以内部包含公式在该阶段上分离。
 <!--ja-->
-本章では、与えられた集合のすべての構成可能な部分集合を一つの段階で抑え、その段階を内部の包含論理式で分出して、`L` の冪集合フィールドを証明する。
+本章では、与えられた集合のすべての構成可能な部分集合を一つの段階で抑え、その段階を内部の包含論理式で分離して、`L` の冪集合フィールドを証明する。
 <!--/-->
 
 <!--en-->
 The power set of a set of `L`, taken inside `L`, is the set of its *constructible*
-subsets, and that is what the model's field asks for: the inclusion it quantifies
+subsets, and that is what the model's field requires: the inclusion it quantifies
 over ranges across the model's own carrier, so a subset that is not constructible
 is not a candidate. The task is to collect the ones that are.
 
-The argument is bounding and then carving, the same two moves the axioms before
-it used. Every subset of a set is a member of the hierarchy's power set, which is
-indexed by a small type; the constructible ones among them form a small family
-too, so their stages have a common bound, and every constructible subset appears
-below it. Carving that stage by the formula "every member of this is a member of
-`a`" gives exactly the constructible subsets, because the bound makes the
-membership half of the condition automatic.
+The argument again has two steps: first give a common bound, then separate
+against it, as with the axioms before. Every subset of a set is a member of the
+hierarchy's power set, which is indexed by a small type; the constructible ones among
+them form a small family too, so their stages have a common bound, and every
+constructible subset appears below it. Separating at that stage by the formula
+"every member of this is a member of `a`" gives exactly the constructible subsets,
+because the bound makes the membership half of the condition automatic.
 
-Two things make the proof short. Separation in `L` now accepts any formula, so
-the condition may be written as it reads. And the smallness that the hierarchy's
-power set needs, and that resizing an unbounded constructibility statement needs,
-are the two halves of the impredicativity package the book already redeems from
-the excluded middle: **no new principle enters, and no new level of it either**,
-which is worth checking rather than assuming, since the two halves live one
-universe apart.
+Two things make the proof short. First, Separation in `L` now accepts any formula,
+so the condition can be written as it literally reads. Second, the smallness that
+the hierarchy's power set needs and that resizing an unbounded constructibility
+statement needs are the two halves of the impredicativity the book already
+obtains from the excluded middle: **no new principle is introduced, and no
+new level of it either**, which needs checking rather than assumption, since the
+two uses lie one universe apart.
 
-Condensation is not part of this. It is the sharper statement that a subset of a
+Condensation is not part of this. It is the finer statement that a subset of a
 stage appears at a stage bounded in terms of that stage rather than in terms of
-the subsets themselves, and it is what a cardinal arithmetic would want. The
-axiom does not.
+the subsets themselves; this is what cardinal arithmetic needs, while the axiom
+does not.
 <!--zh-->
-`L` 的集合在 `L` 之内取的幂集，是它**可构造**子集之集，而这正是模型那个字段所索取的：它所量化的包含关系跑遍模型自己的载体，故不可构造的子集根本不是候选。任务是把可构造的那些收集起来。
+`L` 中的集合在 `L` 之内取的幂集，是它**可构造**子集之集，而这正是模型那个字段所要求的：它所量化的包含关系跑遍模型自己的载体，故不可构造的子集根本不是候选。剩下的工作就是把可构造的那些收集起来。
 
-论证是先界住、再雕出，与它之前诸公理所用的是同样两步。一个集合的每个子集都是层级幂集的成员，而后者由小类型索引；其中可构造的那些也构成小族，故它们的阶段有公共上界，而每个可构造子集都现身于其下。用「此物的每个成员都是 `a` 的成员」这条公式雕出那个阶段，得到的恰是诸可构造子集，因为那个上界使条件中隶属的那一半自动成立。
+论证仍分两步：先给出公共上界，再在其上作分离，与前几条公理的做法相同。一个集合的每个子集都是层级幂集的成员，而后者由小类型索引；其中可构造的那些也构成小族，故它们的阶段有公共上界，每个可构造子集都落在该上界之下。用「此物的每个成员都是 `a` 的成员」这条公式在该阶段上作分离，得到的恰是诸可构造子集，因为该上界使条件中关于隶属的那一半自动成立。
 
-有两件事使证明变短。`L` 中的分离如今接受任意公式，故那个条件可以照它读起来的样子写。而层级幂集所需的小性与「把一条无界的可构造性陈述降层」所需的小性，是本书早已从排中律赎回的那个非直谓性打包的两半：**没有新原则进场，也没有新层级的排中律进场**；后者值得核对而非假定，因为那两半相隔一个宇宙。
+有两点使证明变短。其一，`L` 中的分离如今接受任意公式，故那个条件可以按其字面直接写出。其二，层级幂集所需的小性与「把一条无界的可构造性陈述降层」所需的小性，正是本书早已由排中律获得的那个非直谓性的两个方面：**没有引入新原则，也没有在新的层级上使用排中律**；后者需要核对而不能径直假定，因为这两处使用相隔一个宇宙。
 
-凝聚不属于这里。它是更锐的陈述：某阶段的子集现身于一个「按该阶段而非按诸子集本身」界住的阶段，而那是基数算术会想要的东西。公理不想要。
+凝聚不属于这里。它是更精细的陈述：某阶段的子集出现在一个按该阶段而非按诸子集本身定出上界的阶段之中；这是基数算术所需要的，公理却并不需要。
 <!--/-->
 
 ```agda

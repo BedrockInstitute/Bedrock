@@ -5,7 +5,7 @@ Choice asserts that a simultaneous choice function merely exists for every famil
 <!--zh-->
 # 选择原理
 
-选择原理断言：对一个以集合为指标、每根纤维仅仅有元的族，同时选择函数也仅仅存在。本章逐宇宙层级陈述这条原理，证明它能下降到较低层级，并用 Diaconescu 定理由此推出排中律。
+选择原理断言：对一个以集合为指标、每根纤维都仅仅有元的族，也仅仅存在一个同时从所有纤维中取值的选择函数。本章逐宇宙层级陈述这条原理，证明它能下降到较低层级，并用 Diaconescu 定理由此推出排中律。
 <!--ja-->
 # 選択原理
 
@@ -20,20 +20,20 @@ it, one level at a time, in the same interface style as `LEM`{.Agda}.
 with the product: if every fiber is merely inhabited, then merely, every fiber
 is inhabited at once. This is the type-theoretic reading of "a family of
 nonempty sets has a choice function", and the h-set restriction on the index is
-what keeps it honest, since over arbitrary types the principle is simply false.
+exactly what makes the principle valid, since over arbitrary types the principle is simply false.
 Like the excluded middle, choice is never assumed globally: a chapter that needs
 it takes it as a parameter, and the first to do so is the cumulative-hierarchy model theorem.
 <!--zh-->
-经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，即逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法，而索引上的 h-集限制正是它诚实的关键，因为对任意类型而言这条原理干脆为假。与排中律一样，选择从不全局假设：需要它的章节以参数领取，而第一个领取者是累积层级的模型定理。
+经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，即逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法；索引上的 h-集限制正是这条原理成立的关键，因为对任意类型而言它干脆为假。与排中律一样，选择从不全局假设：需要它的章节以参数领取，而第一个领取者是累积层级的模型定理。
 <!--/-->
 
 <!--en-->
 The two interfaces are not peers, and this chapter proves it on the spot:
 **choice proves the excluded middle**. The observation is due to Diaconescu,
 with the type-theoretic form by Goodman and Myhill; it means that at each level
-the choice interface quietly carries the whole classical boundary with it.
+the choice interface already implies the whole classical boundary.
 <!--zh-->
-两个接口并非平级，本章当场证明这一点：**选择证明排中律**。这个观察出自 Diaconescu，类型论形式归于 Goodman 与 Myhill；它意味着在每个层级上，选择接口都悄悄把整条经典边界背在身上。
+两个接口并非平级，本章当场证明这一点：**选择证明排中律**。这个观察出自 Diaconescu，类型论形式归于 Goodman 与 Myhill；它意味着在每个层级上，选择接口都能推出整条经典边界。
 <!--/-->
 
 ```agda
@@ -67,7 +67,7 @@ function. A single higher instance therefore covers the levels below.
 <!--zh-->
 ## 原理
 
-与排中律一样，选择沿层级**向下**通行：把索引集与纤维抬升到高一层的宇宙，在那里选择，再把选择函数降回来。于是较高层级上的单个实例覆盖其下诸层。
+与排中律一样，选择沿层级**向下**通行：把索引集与纤维抬升到高一层的宇宙，在那里做选择，再把选择函数降回来。于是较高层级上的单个实例覆盖其下诸层。
 <!--ja-->
 ## 原理
 
@@ -96,15 +96,15 @@ lowerSetChoice sc X setX B inh =
 
 The theorem: given set-level choice, **any** proposition `P` can be decided,
 proved or refuted. On its face this is absurd, since a decision procedure has
-nothing to inspect: an arbitrary `P` offers no case to split on. The proof's
-idea is to make *geometry* do the inspecting. Build a little space whose very
+nothing to act on: an arbitrary `P` offers no case to split on. The proof
+instead proceeds *geometrically*. Build a little space whose very
 shape depends on `P`: it has one point if `P` holds and two points if it fails.
-Ask choice a single question about that space; the answer cannot help but leak
-the shape, and the shape is `P`.
+Put one question about that space to the choice principle; the answer necessarily
+reveals the shape, and the shape is `P`.
 <!--zh-->
 ## Diaconescu 定理
 
-定理说：给定集合层选择，**任何**命题 `P` 都可判定，即或证明或反驳。乍看这很荒谬，因为判定程序无从下手：任意的 `P` 没有可分情形的把手。证明的想法是让**几何**来下手。造一个形状依赖于 `P` 的小空间：`P` 成立时它只有一个点，不成立时有两个点。然后向选择原理问一个关于这个空间的问题；答案不可能不泄露形状，而形状就是 `P`。
+定理说：给定集合层选择，**任何**命题 `P` 都可判定，即或证明或反驳。乍看这很荒谬，因为判定程序无从下手：任意的 `P` 没有可供分情况处理的切入口。证明的想法是改从**几何**入手。造一个形状依赖于 `P` 的小空间：`P` 成立时它只有一个点，不成立时有两个点。然后用选择原理回答一个关于这个空间的问题；答案必然透露出形状，而形状就是 `P`。
 <!--ja-->
 ## ディアコネスクの定理
 
@@ -119,10 +119,10 @@ theorem's author. Take the two booleans and glue them together exactly when
 so, and the result is truncated to an h-set. The relation is best given as a
 four-entry table: trivially satisfied on the diagonal, and **literally `P`
 itself** in the two mixed squares, so that "the two points are related" and
-"`P` holds" are the same proposition by definition. That last clause is the
-whole trick, and it will pay twice below.
+"`P` holds" are the same proposition by definition. This last clause is the
+key to the whole argument, and it will be used twice below.
 <!--zh-->
-具体地，固定 `P`；以下一切都住在以定理作者命名的模块里。取两个布尔值，恰在 `P` 成立时把它们粘起来。「粘合」指**集合商**：点仍是 `true` 与 `false`，但凡粘合关系点头，两点之间就添一条路径，最后把结果截断为 h-集。粘合关系最好用一张四格表给出：对角线上平凡成立，混色的两格**就是 `P` 本身**，于是「这两点相关」与「`P` 成立」按定义是同一个命题。最后这一条是全部戏法所在，下文将两次兑付。
+具体地，固定 `P`；以下一切都设在以定理作者命名的模块里。取两个布尔值，恰在 `P` 成立时把它们粘起来。「粘合」指**集合商**：点仍是 `true` 与 `false`，但凡粘合关系在两点之间成立，就添一条路径，最后把结果截断为 h-集。粘合关系最好用一张四格表给出：对角线上平凡成立，混色的两格**就是 `P` 本身**，于是「这两点相关」与「`P` 成立」按定义是同一个命题。最后这一条是全部论证的关键，下文将用到两次。
 <!--/-->
 
 ```agda
@@ -140,14 +140,14 @@ module Diaconescu {ℓ} (P : hProp ℓ) where
 <!--en-->
 Because the relation is a table, its certificates are tables too: propositional
 in every square, reflexive on the diagonal, symmetric since the table is, and
-transitive by reading off whichever mixed square survives. The certificates are
-not bookkeeping: they are the ticket to the library's **effectivity** theorem,
-which says that a quotient by a propositional equivalence relation glues
-*honestly*: two points end up connected only if the relation actually related
-them, never by accident. In other words, a path in the quotient can be read
-backwards, recovering the relation that caused it.
+transitive by reading off whichever mixed square remains. The certificates are
+not bookkeeping: they are what lets us apply the library's **effectivity**
+theorem, which says that a quotient by a propositional equivalence relation
+glues *honestly*: two points end up connected only if the relation actually
+related them, never by accident. In other words, a path in the quotient can be
+read backwards, recovering the relation that caused it.
 <!--zh-->
-关系是表，它的证书也就是表：逐格皆命题，对角线自反，表格对称故关系对称，传递性则读出幸存的那个混色格。证书不是记账：它们是库的**有效性**定理的入场券。该定理说，按命题值等价关系取商，粘合是**诚实**的：两点最终连通，只可能因为关系确实关联过它们，绝无误伤。换句话说，商里的路径可以倒着读，读回引起它的那份关系。
+关系及其证书都由这张表给出：每个表项都是命题，对角线给出自反性，表的对称性给出关系的对称性，传递性则由剩余的混合表项证明。这些证书用于应用库的**有效性**定理。该定理说明，按命题值等价关系取商时，两点在商中相等必然来自原关系对它们的关联；因此，可以从商中的路径恢复对应的关系证明。
 <!--/-->
 
 ```agda
@@ -180,17 +180,17 @@ backwards, recovering the relation that caused it.
 ```
 
 <!--en-->
-The heart of the construction is a two-line dictionary: **the two points of the
+The core of the construction is a two-line statement: **the two points of the
 quotient coincide exactly when `P` holds**. One direction: if `P` holds, the
 table relates `true` to `false`, so the quotient identifies their classes; the
 space has collapsed to a single point. The other direction: if the two classes
-coincide, honesty of the gluing says the relation must have related `true` to
-`false`, and by the table that relation *is* `P`, so `P` holds. This is where
-the mixed square pays for the first time, twice over: a `P`-witness feeds the
-path constructor directly, and the effectivity theorem's output is already a
-proof of `P`, with no decoding and no impossible case to dismiss.
+coincide, effectivity of the gluing says the relation must have related `true` to
+`false`, and by the table that relation *is* `P`, so `P` holds. The mixed
+square is used in both directions: a `P`-witness feeds the path constructor
+directly, and the effectivity theorem's output is already a proof of `P`,
+with no decoding and no impossible case to dismiss.
 <!--zh-->
-构造的心脏是一部两行的词典：**商的两个点重合，当且仅当 `P` 成立**。一个方向：若 `P` 成立，表格便判 `true` 与 `false` 相关，商随之把两个等价类等同起来，空间坍缩为一个点。另一个方向：若两个类重合，粘合的诚实性说明关系必定关联过 `true` 与 `false`，而按表格那份关系**就是** `P`，故 `P` 成立。这正是混色格第一次付账之处，还一次付了两笔：`P` 的见证直接喂给路径构造子，有效性定理的输出本身就已是 `P` 的证明，无须解码，也没有不可能情形要驳。
+构造的核心是一个两行论断：**商的两个点重合，当且仅当 `P` 成立**。一个方向是：若 `P` 成立，表格判定 `true` 与 `false` 相关，商便把两个等价类等同，空间坍缩为一个点。另一个方向是：若两个类重合，粘合的有效性说明关系必定关联 `true` 与 `false`，而表中的这项关系**就是** `P`，所以 `P` 成立。混色格在这里用于两个方向：`P` 的见证直接传给路径构造子，有效性定理的输出本身就是 `P` 的证明，无需解码或排除其他情形。
 <!--/-->
 
 ```agda
@@ -213,7 +213,7 @@ it applies because the glued space is an h-set by construction. Note what the
 function cannot do: it was built with no access to `P`, so it answers the same
 way whether or not `P` holds; it merely, blindly, picks.
 <!--zh-->
-现在选择原理进场，我们只问它一个问题：*给粘合空间的每个点发一个布尔代表元。*某点处的一次**选取**，是一个布尔值，连同「其等价类就是该点」的保证。每个点单独看必有选取，但只是**仅仅**有：商记得自己的点各有来处，却不记得来处是谁。把「每点仅仅有代表元」变成一个一举在处处选取的**函数**，正是集合层选择的本领，而它之所以适用，是因为粘合空间按构造是 h-集。留意这个函数做不到的事：它的构造完全接触不到 `P`，故无论 `P` 成立与否它都同样作答；它只是盲目地选取。
+现在应用选择原理，要求为粘合空间的每个点选定一个布尔代表元。某点处的一次**选取**由一个布尔值及其等价类等于该点的证明组成。每个点都有这种选取，但只能证明其**仅仅**存在：商保留每个点来自某个代表元，却不指定该代表元。集合层选择把这些逐点的仅仅存在转化为一个选取函数的仅仅存在；它适用于此处，因为粘合空间按构造是 h-集。这个函数的构造不使用 `P`，所以无论 `P` 是否成立，都以同一方式给出选择。
 <!--/-->
 
 ```agda
@@ -226,9 +226,10 @@ way whether or not `P` holds; it merely, blindly, picks.
 
 <!--en-->
 The question deserves to be a lemma of its own, so that its type displays
-exactly what choice delivers: *merely*, a picking function, whole.
+exactly what choice delivers: the mere existence of a picking function defined
+on the whole space.
 <!--zh-->
-这个问题值得单独立为引理，好让类型原样展示选择交付的东西：**仅仅地**，一整个选取函数。
+这个问题值得单独立为引理，好让类型原样展示选择所给出之物：**仅仅地**存在的一整个选取函数。
 <!--/-->
 
 ```agda
@@ -237,20 +238,19 @@ exactly what choice delivers: *merely*, a picking function, whole.
 ```
 
 <!--en-->
-Suppose, then, that a picking function `g` is in hand. Apply it to the two
+Suppose, then, that a picking function `g` is given. Apply it to the two
 distinguished points, the class of `true` and the class of `false`, and name
-the two boolean representatives it selects, `b₀` and `b₁`. These two booleans
-are the leak. One lemma per direction ties them to `P`. **If the
-representatives agree**, walk the guarantees: the class of `true` connects to
-the class of `b₀`, which is the class of `b₁`, which connects to the class of
-`false`; so the two points coincide, and the dictionary's backward entry turns
-that coincidence into a proof of `P`. **If `P` holds**, the two points *are*
-one single point, and a function applied to one point yields one answer, so
-`b₀` and `b₁` are forced to be the same boolean. (Formally: project `g` along
-the gluing path; both endpoints of the projection are plain booleans, so no
-transport is even needed.)
+the two boolean representatives it selects, `b₀` and `b₁`. Two lemmas, one
+per direction, relate these values to `P`. **If the representatives agree**, their
+guarantees give a path from the class of `true` to the class of `b₀`, then
+to the class of `b₁`, and finally to the class of `false`; effectivity turns
+the equality of the endpoints into a proof of `P`. **If `P` holds**, the two
+distinguished points are equal, and the picking function respects that
+equality, so `b₀` and `b₁` are equal. (Formally, it suffices to project `g`
+along the gluing path; both endpoints are plain booleans, so no transport is
+needed.)
 <!--zh-->
-于是假设选取函数 `g` 已经在手。把它作用在两个特殊的点上，即 `true` 的类与 `false` 的类，把选出的两个布尔代表元记作 `b₀` 与 `b₁`。这两个布尔值就是泄密者。每个方向各有一条引理把它们与 `P` 绑在一起。**若代表元一致**，就沿保证走一遍：`true` 的类接到 `b₀` 的类，即 `b₁` 的类，再接到 `false` 的类；于是两点重合，词典的反向条目把这次重合翻译成 `P` 的证明。**若 `P` 成立**，则两点**本是**同一个点，而函数作用在同一个点上只能给出同一个答案，`b₀` 与 `b₁` 被迫是同一个布尔值。(形式化地：把 `g` 沿粘合路径投影，投影的两端都是普通布尔值，连搬运都不需要。)
+设选取函数为 `g`。将它分别作用于两个特殊点，即 `true` 的类和 `false` 的类，并把所得布尔代表元记作 `b₀` 与 `b₁`。两个方向的引理把这两个值与 `P` 联系起来。**若代表元一致**，它们各自的保证给出从 `true` 的类到 `b₀` 的类、再到 `b₁` 的类、最后到 `false` 的类的路径；有效性定理把两端相等转化为 `P` 的证明。**若 `P` 成立**，两个特殊点相等，选取函数尊重这条相等，因此 `b₀` 与 `b₁` 相等。(形式化地，只需把 `g` 沿粘合路径投影；两端都是普通布尔值，无需搬运。)
 <!--/-->
 
 ```agda
@@ -274,11 +274,11 @@ Now decide `P` by looking at the two booleans, which, unlike `P`, **can** be
 inspected: two booleans are equal or they are not, mechanically. If `b₀` and
 `b₁` agree, the first lemma proves `P`. If they differ, `P` must fail, for had
 it held, the second lemma would force them to agree. Either way `P` is
-decided, and note where the classical rabbit came out of the hat: the case
-split happened on finite data that the choice function was forced to commit to,
-not on `P` itself.
+decided, and note what carries the decision: the case split happened on the
+finite data that the choice function was forced to commit to, not on
+`P` itself.
 <!--zh-->
-现在改由那两个布尔值来判定 `P`。与 `P` 不同，它们**可以**被检视：两个布尔值要么相等要么不等，机械可判。若 `b₀` 与 `b₁` 一致，第一条引理证出 `P`。若二者相异，`P` 必不成立，因为它若成立，第二条引理将迫使二者一致。无论哪边 `P` 都被判定；请留意经典兔子从哪顶帽子里蹦出：分情形发生在选择函数被迫表态的有限数据上，从头到尾不在 `P` 自身上。
+现在改由那两个布尔值来判定 `P`。与 `P` 不同，它们**可以**被检视：两个布尔值要么相等要么不等，机械可判。若 `b₀` 与 `b₁` 一致，第一条引理证出 `P`。若二者相异，`P` 必不成立，因为它若成立，第二条引理将迫使二者一致。无论哪边 `P` 都被判定；经典性正是在此介入：分情形只发生在选择函数被迫取值的那点有限数据上，从头到尾不触及 `P` 自身。
 <!--/-->
 
 ```agda
@@ -297,7 +297,7 @@ itself a proposition: the two sides exclude each other, so between any two
 decisions there is nothing to distinguish. Into such a goal, mere existence
 eliminates as if it were actual, and the proof closes.
 <!--zh-->
-补上最后一道缺口，定理即告合拢。选择从不真正交出选取函数，只交出它的**仅仅**存在。但目标「`P` 或非 `P`」自身是命题：两侧互斥，任何两个判定之间无可区分。对这样的目标，仅仅存在可以当作真实存在来消去，证明就此闭合。
+补上最后一步，定理即告完成。选择并未真正交出选取函数，只交出它的**仅仅**存在。但目标「`P` 或非 `P`」自身是命题：两侧互斥，任何两个判定之间无可区分。对这样的目标，仅仅存在可以当作真实存在来消去，证明就此闭合。
 <!--/-->
 
 ```agda
@@ -316,14 +316,14 @@ choice→lem sc P = PT.rec decideIsProp decide (merePicker sc)
 same shape as `LEM`{.Agda}; and by `choice→lem`{.Agda} it is the stronger of the
 two: choice decides every proposition of its level, through the glued booleans,
 the `glue`{.Agda}/`unglue`{.Agda} dictionary, and one comparison of chosen
-representatives. The excluded middle does not return the favour, so the two
-interfaces remain distinct. The model chapter spends choice on its choice set,
-and closes by cashing this chapter's theorem: one instance of choice, one
-universe up, funds the entire classical bill.
+representatives. excluded middle does not in turn yield choice, so the two
+interfaces remain distinct. The model chapter applies choice to obtain its choice set,
+and closes by using this chapter's theorem: one instance of choice, one
+universe up, suffices for all the classical reasoning that follows.
 <!--zh-->
 ## 小结
 
-`SetChoice`{.Agda} 是本书的选择接口，逐层级陈述，与 `LEM`{.Agda} 同款形状；而经 `choice→lem`{.Agda}，它是两者中更强的那个：经由粘合布尔值、`glue`{.Agda}/`unglue`{.Agda} 词典与一次代表元比较，选择判定其层级的每个命题。排中律不回此礼，所以两个接口依然分立。模型章将把选择花在选择集上，并在收尾处兑现本章定理：高一层宇宙上的一份选择，就能付清全部经典账单。
+`SetChoice`{.Agda} 是本书的选择接口，逐层级陈述，形状与 `LEM`{.Agda} 相同；而经 `choice→lem`{.Agda}，它是两者中更强的一个：经由粘合布尔值、`glue`{.Agda}/`unglue`{.Agda} 词典与一次代表元比较，选择判定其层级的每个命题。排中律却推不出选择，所以两个接口依然分立。模型章将把选择用于选择集，并在收尾处应用本章定理：高一层宇宙上的一份选择，即可支持后文所需的全部经典推理。
 <!--ja-->
 ## まとめ
 

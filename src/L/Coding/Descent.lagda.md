@@ -5,7 +5,7 @@ Later well-founded recursions must move from a code to its immediate components.
 <!--zh-->
 # 沿编码对作秩下降
 
-后续良基递归需要从编码走向其直接部件。本章证明有序对的每个部件，特别是带标签编码的载荷，其秩都严格小于整个编码的秩。
+后续良基递归需要证明编码的直接部件具有更小的秩。本章证明有序对的每个部件，尤其是带标签编码的载荷，其秩都严格小于整个编码的秩。
 <!--ja-->
 # 符号化された対に沿う階数降下
 
@@ -68,7 +68,7 @@ open hPropStructure 𝒮ᵥ
 <!--en-->
 Membership in an unordered pair selects one of its two components. Combining that fact with rank monotonicity turns membership of a component into a strict decrease of ranks.
 <!--zh-->
-无序对中的隶属关系会选出两个部件之一。把这一事实与秩的单调性结合，即可把部件隶属化为严格的秩下降。
+无序对的成员必为它的两个分量之一。将这一事实与秩的单调性结合，即可从部件属于无序对推出部件的秩严格下降。
 <!--ja-->
 非順序対への所属から二つの成分の一方が選ばれる。この事実と階数の単調性を組み合わせると、成分への所属を階数の真の減少へ変えられる。
 <!--/-->
@@ -115,7 +115,7 @@ numeral. Both components pass through the unordered pair in a Kuratowski
 pair, so one two-step lemma handles either side. Applying it twice gives the
 four-step descents into a paired payload.
 <!--zh-->
-一条带标签的码是一个对，其第二分量即载荷；而载荷要么是一条码，要么是两条码构成的对。故要点名的下降有三条：进入载荷，以及进入「载荷是对」时的两侧。标签本身从不被下降进去，这也是它以任意集合而非以数码的形式出现的原因。两个分量都经由 Kuratowski 对中的无序对，故一条两步引理处理任一侧。施用两次，便得到进入成对载荷的四步下降。
+一条带标签的码是一个对，其第二分量即载荷；而载荷要么是一条码，要么是两条码构成的对。故需列出的下降有三条：进入载荷，以及进入「载荷是对」时的两侧。下降引理从不进入标签本身，这也是标签以任意集合而非数码的形式出现的原因。两个分量都经由 Kuratowski 对中的无序对，故一条两步引理可处理任一侧。施用两次，便得到进入成对载荷的四步下降。
 <!--/-->
 
 ```agda

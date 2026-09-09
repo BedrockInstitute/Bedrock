@@ -66,7 +66,7 @@ value outright, which is the shape of the whole argument in miniature.
 <!--zh-->
 ## 对子码封闭的定义域
 
-`L.Coding.Expressions` 中展开的那些子句在「码与其诸子码都带有条目」之处约束一张表，在诸子码没有条目之处则什么也不说。那样读是对的，而这也正是「满足全部十条的表可以几乎为空」的原因：取索引集为单独一个**复合**码，取表为该处的一个条目，取值随便什么。查询子码的那七条是空洞的，因为诸子码没有条目；不查询子码的那三条 (两个原子与底) 也是空洞的，因为索引里没有它们那种形状的东西。故诸子句本身钉不住任何取值，而钉住它的是对索引集的一项进一步要求：它须含有其每个成员的诸子码。「复合」这一点要紧：把那个条目改放在底的码处，`⊥̇` 的子句立刻把取值钉死，而那正是整个论证的缩影。
+`L.Coding.Expressions` 中展开的那些子句，只在码与其诸子码都带有条目之处约束一张表，在诸子码没有条目之处则什么也不说。这样读是对的，而这正是「满足全部十条的表可以几乎为空」的原因：取索引集为单独一个**复合**码，取表为该处的一个条目，取值则可以任取。查询子码的那七条是空洞的，因为诸子码没有条目；不查询子码的那三条 (两个原子与底) 也是空洞的，因为索引里没有那种形状的东西。故诸子句本身不能唯一确定任何取值，真正起决定作用的是对索引集的一项进一步要求：它须含有其每个成员的诸子码。「复合」这一点要紧：若把那个条目改放在底的码处，`⊥̇` 的子句便会立刻确定取值，而那正是整个论证的缩影。
 <!--ja-->
 ## 部分符号に閉じた定義域
 
@@ -142,12 +142,13 @@ module _ {n : ℕ} where
 
 <!--en-->
 Four generic relations cover the payload shapes. The seven active closure clauses
-use three of them: the three binary connectives want both components at the arity
-they were read at; the two unbounded quantifiers want their one
-component one arity up, which is an existential over the successor, and the two
-bounded ones want their *second* component there, the first being a term.
+use three of them: the three binary connectives require both components at the
+current arity; the two unbounded quantifiers require their single component one
+arity higher, with the successor supplied existentially; and the two bounded
+quantifiers require only their *second* component at that same higher level,
+because the first component is a term.
 <!--zh-->
-四条通用关系覆盖载荷形状。七条实际封闭性子句使用其中三条：三个二元联结词要它们的两个分量都在被读出的那个元数处；两个无界量词要它们的那一个分量高出一个元数，那是一个关于后继的存在；而两个有界量词要它们的**第二个**分量在那里，第一个是词项。
+四条通用关系描述各种载荷形状，七条封闭性子句使用其中三条。三个二元联结词要求两个分量都属于当前元数处的定义域；两个无界量词要求其唯一分量属于高一个元数处的定义域，这一后继元数通过存在量词给出；两个有界量词只要求**第二个**分量属于高一个元数处的定义域，因为第一个分量是词项。
 <!--/-->
 
 ```agda
@@ -171,7 +172,7 @@ the constructor demands are in the set. The two that change arity discharge a
 truncation on the way, which the target admits because membership is a
 proposition.
 <!--zh-->
-把它们读回来是消费方要做的事，故每一条都在子句处陈述，且已与其框架复合：给定集合中一个那种形状的键，该构造子所要的诸键也在集合中。改变元数的那两条在途中消掉一个截断，而目标允许这件事，因为隶属是命题。
+这些关系的反向读式由使用者调用，因此每条都直接在相应子句处陈述，并已与其框架复合：若集合中含有某种形状的键，那么相应构造子所需的子键也属于该集合。两条改变元数的读式途中消去一次截断；目标是隶属命题，因此允许该消去。
 <!--/-->
 
 ```agda
@@ -242,7 +243,7 @@ The seven clauses, and their conjunction. A consumer takes the conjunct it wants
 and hands it to the reader that goes with it; nothing else is needed, which is
 why the seven are written without a module around them.
 <!--zh-->
-七条子句，及其合取。消费方取它要的那个合取项，交给与之配套的读式；此外不需要别的，这也是为何那七条没有套一层模块。
+七条子句，及其合取。使用时按需选取其中一个合取项，交给与之配套的读式；此外不需要别的，这也是为何那七条没有套一层模块。
 <!--/-->
 
 ```agda
@@ -272,7 +273,7 @@ a bounded universal over the model is a function on members and the implication
 is a function on the reader's proof. The two arity-raising relations build the
 successor as an element of the model, which the numeral chapter supplies.
 <!--zh-->
-另一个方向，是第一个实例需要而任何子句都不需要的。递归的消费方读它的假设；而将要交给它的那个元语言层面的集合必须**满足**那些假设，故每个框架、每条关系都欠一条引入，正如它们欠一条消去。两个框架都以一个 λ 引入，因为模型上的有界全称就是成员上的函数，而那个蕴含是读式证明上的函数。两条抬升元数的关系要把后继造成模型的元素，而数码那一章供给它。
+另一个方向，是第一个实例需要而任何子句都不需要的。递归使用时要读取其假设；而将要交给递归的那个元语言层面的集合必须**满足**这些假设，故每个框架、每条关系都需要一条引入，正如它们也需要一条消去。两个框架都以一个 λ 引入，因为模型上的有界全称就是成员上的函数，而那个蕴含是读式证明上的函数。两条抬升元数的关系要把后继造成模型的元素，而这由数码那一章给出。
 <!--/-->
 
 ```agda

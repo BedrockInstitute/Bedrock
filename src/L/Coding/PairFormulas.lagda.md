@@ -26,12 +26,12 @@ set-theoretic characterizations.
 The discipline throughout: nothing ever compares two code *values*. Membership
 is transported along paths through the library's classification lemmas, and the
 shape of a code is carried by the first-order coding relation developed earlier. Comparing code
-values directly is what makes these proofs stop terminating, and the previous
+values directly is what prevents these proofs from terminating, and the previous
 chapters were arranged specifically so that it never has to happen.
 <!--zh-->
 本章提供**读式**：说「这个集合是那个的单点集」「这是无序对」「这是 Kuratowski 对」的对象公式。它们的量词都有界，de Bruijn 位置取作参数，故同一条公式在任何嵌套深度上都能用。组装后的对读式配有适足引理，把满足关系换成与 Kuratowski 对的相等；其中的单点集与无序对子句使用相应的集合论特征刻画。
 
-全程的纪律：任何时候都不比较两个码**值**。隶属关系经库的分类引理沿路径搬运，而码的形状由前面的一阶编码关系携带。直接比较码值，正是使这些证明停止终止的原因，而前几章的安排就是为了让这件事永远不必发生。
+全程的规则是：任何时候都不比较两个码**值**。隶属关系经库的分类引理沿路径改写，而码的形状由前面的一阶编码关系给出。直接比较码值，正是使这些证明无法终止的原因，而前几章的安排正是为了让这件事永远不必发生。
 <!--/-->
 
 ```agda
@@ -275,7 +275,7 @@ prAt q u v = (∃̇∈ (var q) (sglAt zero (suc u)))
 <!--en-->
 `prAt-adequate` proves that an assignment satisfies `prAt q u v` exactly when the value at `q` is the Kuratowski pair of the values at `u` and `v`. Its two directions apply the meta-level characterizations `prChar-fwd` and `prChar-bwd`.
 <!--zh-->
-`prAt-adequate` 证明一个赋值满足 `prAt q u v`，恰当 `q` 处的值是 `u` 与 `v` 处之值的 Kuratowski 对。两个方向分别应用元层特征刻画 `prChar-fwd` 与 `prChar-bwd`。
+`prAt-adequate` 证明一个赋值满足 `prAt q u v`，当且仅当 `q` 处的值是 `u` 与 `v` 处之值组成的 Kuratowski 对。两个方向分别应用元层特征刻画 `prChar-fwd` 与 `prChar-bwd`。
 <!--ja-->
 `prAt-adequate` は、割当てが `prAt q u v` を満たすことと、`q` での値が `u` と `v` での値の Kuratowski 対であることが同値だと示します。二方向にはメタレベルの特徴づけ `prChar-fwd` と `prChar-bwd` を使います。
 <!--/-->
@@ -305,7 +305,7 @@ in order to destructure a code is now available in bounded form, with no
 recursion and no comparison of code values. The chapters that follow build
 certificates on top of these.
 <!--zh-->
-`prAt`{.Agda} 从对象语言内部读出 Kuratowski 对，它是 Δ₀ 且适足。证书解构一个码所需的一切，如今都以有界形式就位，无递归，也无码值的比较。随后诸章在这些之上搭建证书。
+`prAt`{.Agda} 从对象语言内部读出 Kuratowski 对，它是 Δ₀ 且适足。解构一个码所需的全部证书信息，如今都已具有有界形式，既不使用递归，也不比较码值。随后诸章在这些信息的基础上构造证书。
 <!--ja-->
 この章で得た prAt は、モデル内部で Kuratowski 対を認識する Δ₀ 論理式であり、その充足は外側の対の等式と一致する。後の章はこれを使ってコードを分解し、コード値そのものの比較を避ける。
 <!--/-->

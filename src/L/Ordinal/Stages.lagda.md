@@ -19,7 +19,7 @@ The answer is as clean as it could be. The ordinals in `Lset α` are precisely
 the members of `α`, so the tower's index and its ordinal content agree, level
 for level, and an ordinal first appears at the stage after itself.
 
-Both halves are real work. One direction says an ordinal cannot appear early:
+Both directions require real work. One direction says an ordinal cannot appear early:
 if it is in `Lset α` then it is a member of `α`. That is the harder one, and it
 goes through rank, which is why the previous chapter built rank at all. A set in
 `Lset α` is a definable subset of some earlier stage, its members therefore have
@@ -35,15 +35,15 @@ for the members, and the members are the only thing needed.
 With both halves the ordinals of a stage are carved out of it by a single
 formula, "is an ordinal", which is Δ₀ because transitivity can be said with
 bounded quantifiers alone. So `α` is a definable subset of `Lset α`, and the
-previous chapter's closure engine finishes the job.
+closing step established in the previous chapter then applies.
 <!--zh-->
-关于塔还有一个问题悬而未决，而无穷公理正系于此：给定一个阶段，到那时为止究竟出现了哪些序数？答案再干净不过。`Lset α` 中的序数恰是 `α` 的成员，故塔的索引与它的序数内容逐层一致，而序数首次现身于自身之后的那个阶段。
+关于塔还有一个问题悬而未决，而无穷公理正系于此：给定一个阶段，到那时为止究竟出现了哪些序数？答案十分简洁。`Lset α` 中的序数恰是 `α` 的成员，故塔的索引与它的序数内容逐层一致，而序数首次现身于自身之后的那个阶段。
 
-两半都是真功夫。一个方向说序数不会提前现身：若它在 `Lset α` 中，则它是 `α` 的成员。这是较难的一半，要经过秩，而这正是上一章造出秩的原因。`Lset α` 中的集合是某个更早阶段的可定义子集，依归纳其成员的秩低于那个阶段，故它自身的秩有界；而作为序数，它就是自身的秩。
+两个方向都有实质难度。一个方向说序数不会提前现身：若它在 `Lset α` 中，则它是 `α` 的成员。这是较难的一半，要经过秩，而这正是上一章引入秩的原因。`Lset α` 中的集合是某个更早阶段的可定义子集，依归纳其成员的秩低于那个阶段，故它自身的秩有界；而作为序数，它就是自身的秩。
 
-另一个方向说序数不会迟到：`α` 的每个成员都已在 `Lset α` 中。那一半是直截的归纳，前提是序数现身于自身之后的阶段，而那正是正在证的定理。这个循环只是表象：归纳假设为诸成员提供该陈述，而所需的恰只是诸成员。
+另一个方向说明序数不会延迟出现：`α` 的每个成员都已经在 `Lset α` 中。这一半由直接归纳证明，所用陈述正是序数会在自身之后的阶段出现。这里没有循环：归纳假设为各个成员提供该陈述，而证明所需的也只有这些成员。
 
-两半齐备，一个阶段中的序数便由单一公式「是序数」从中刻出，该公式是 Δ₀ 的，因为传递性只用有界量词就说得出来。于是 `α` 是 `Lset α` 的可定义子集，上一章的收尾引擎随即收工。
+两半齐备，一个阶段中的序数便由单一公式「是序数」从中选出，该公式是 Δ₀ 的，因为传递性只用有界量词就能表述。于是 `α` 是 `Lset α` 的可定义子集，上一章建立的收尾步骤随即可以应用。
 <!--/-->
 
 ```agda
@@ -110,9 +110,9 @@ That is not decoration: the conclusion is a heavy membership type, and left
 inline in a case split it would be normalized in every branch. Naming it keeps
 it neutral. The same discipline governs every later case split in this chapter.
 <!--zh-->
-三歧的两个推论，都是关于后继的。其一，序数之间的包含把较小者放进较大者的后继里：比较二者，而第三种情形 (较大者属于较小者) 经「没有集合属于自身」与包含关系矛盾。
+三歧的两个推论，都关于后继。其一，序数之间的包含使较小者属于较大者的后继：将二者比较，第三种情形 (较大者属于较小者) 由「没有集合属于自身」与包含关系矛盾而排除。
 
-每个分支都抽成写明结论的具名辅助件。这不是装饰：结论是重型的隶属类型，若内联在分情形里，每个分支都会把它归一化。命名使它保持中性。本章此后每次分情形都遵守同一纪律。
+每个分支都抽成写明结论的具名辅助件。这样命名并非出于装饰：结论是规模较大的隶属类型，若在分情形中内联，每个分支都会将它归一化，而命名使它保持中性。本章此后每次分情形都遵循同一规则。
 <!--/-->
 
 ```agda
@@ -166,11 +166,11 @@ suc∈or≡ β α ordβ ordα β∈α = go (ord-tri (sucV β) (suc-ord ordβ) α
 ```
 
 <!--en-->
-And the cumulation lemma it exists for: an ordinal that has appeared at its own
+And the cumulation lemma it is used for: an ordinal that has appeared at its own
 successor stage has appeared at every later stage, where later means the index
 is above it.
 <!--zh-->
-以及它为之而生的累积引理：在自身后继阶段现身过的序数，在此后每个阶段都已现身，其中「此后」指索引在其之上。
+而它所服务的累积引理则是：在自身后继阶段现身过的序数，在此后每个阶段都已现身，其中「此后」指索引在其之上。
 <!--/-->
 
 ```agda
@@ -214,7 +214,7 @@ hypothesis; so its own rank, which is the union of the successors of those
 ranks, is included in `β`; comparison puts it inside the successor of `β`, and
 that is inside `α`.
 <!--zh-->
-较难的那一半。沿阶段索引归纳：`Lset α` 中的集合落在某个 `β ∈ α` 的 `Lset β` 的可定义子集里，故它是 `Lset β` 的子集；于是依归纳假设它的每个成员的秩都在 `β` 中；故它自身的秩，即那些秩的后继之并，包含于 `β`；比较把它放进 `β` 的后继里面，而那在 `α` 里面。
+这是较难的一半。沿阶段索引归纳：`Lset α` 中的集合落在某个 `β ∈ α` 的 `Lset β` 的可定义子集里，故它是 `Lset β` 的子集；于是依归纳假设它的每个成员的秩都在 `β` 中；故它自身的秩，即那些秩的后继之并，包含于`β`；三歧比较给出它属于 `β` 的后继，从而属于 `α`。
 <!--/-->
 
 ```agda
@@ -251,7 +251,7 @@ rank-Lset = ∈-induction
 For an ordinal the conclusion simplifies, because rank fixes it: an ordinal in
 `Lset α` is a member of `α`.
 <!--zh-->
-对序数，结论简化，因为秩固定它：`Lset α` 中的序数是 `α` 的成员。
+对序数，结论更简单，因为秩完全确定它：`Lset α` 中的序数是 `α` 的成员。
 <!--/-->
 
 ```agda
@@ -272,7 +272,7 @@ ord∈Lset→∈ α ordα x ordx x∈Lα =
 <!--en-->
 Being a transitive set all of whose members are transitive can be expressed with bounded quantifiers. The formula therefore recognizes ordinals absolutely between a transitive stage and the ambient universe.
 <!--zh-->
-一个集合传递且其每个成员都传递，这一性质可以用有界量词表达。因此，该公式在传递阶段与外围宇宙之间绝对地识别序数。
+一个集合是传递的，且其每个成员也都是传递的，这一性质可以用有界量词表达。因此，该公式在传递阶段与外围宇宙之间绝对地识别序数。
 <!--ja-->
 集合が推移的で、そのすべての要素も推移的であることは、有界量化だけで表せる。したがって、この論理式は推移的段階と周囲の宇宙の間で絶対的に順序数を認識する。
 <!--/-->
@@ -288,9 +288,9 @@ The indices are de Bruijn: each bounded quantifier binds a fresh variable `0`
 and pushes the earlier ones outward, so after two binders the candidate ordinal
 is at index 2.
 <!--zh-->
-这个谓词是两条子句，而两条都已有界：集合传递，指其成员之成员皆是其成员；成员皆传递，指同一条在低一层成立。没有无界量词出现，故公式是 Δ₀；也没有常元出现，这省掉了整套重标机器。
+这个谓词由两条子句构成，两条都已有界：集合传递，指其成员的成员也都是其成员；成员皆传递，指同一条性质在低一层成立。没有无界量词出现，故公式是 Δ₀；也没有常元出现，从而免去了一整套重标操作。
 
-索引采用 de Bruijn：每个有界量词约束一个新的变元 `0`，把先前的向外推，故两层约束之后，候选序数位于索引 2。
+索引采用 de Bruijn：每个有界量词约束一个新的变元 `0`，并把先前已有的变元向外推移一位，故两层约束之后，候选序数位于索引 2。
 <!--/-->
 
 ```agda
@@ -333,9 +333,9 @@ Cumulation needs, for each member of `α`, that it appears at its own successor
 stage. That is the theorem itself, so it enters here as a hypothesis, and the
 induction below is what supplies it.
 <!--zh-->
-固定一个阶段。经上一章那道桥读出来，公式在环境层级中的满足恰好展开成序数谓词的两条子句，故二者只需重排参数即可互换。然后它刻出的可定义子集就是 `α` 自身：其成员是该阶段的序数，故经秩那一半是 `α` 的成员；而 `α` 的成员是已经现身过的序数，经累积引理，它们满足该公式。
+固定一个阶段。经上一章建立的对应来读，公式在环境层级中的满足恰好展开成序数谓词的两条子句，故二者只需重排参数即可互换。于是它作分离所得的可定义子集就是 `α` 自身：其成员是该阶段的序数，故经秩那一半是 `α` 的成员；而 `α` 的成员是已经现身过的序数，经累积引理，它们满足该公式。
 
-累积引理需要 `α` 的每个成员都在自身的后继阶段现身。那正是本定理自身，故它在此作为假设进入，而下面的归纳正是供应它的东西。
+累积引理需要 `α` 的每个成员都在自身的后继阶段现身。这恰是本定理的结论本身，故在此把它作为假设引入，而下面的归纳正是给出这一假设的论证。
 <!--/-->
 
 ```agda
@@ -426,11 +426,12 @@ Every ordinal is a definable subset of itself, selected by the bounded ordinal f
 
 <!--en-->
 The induction. The hypothesis gives, for every member of `α`, that it appears at
-its own successor stage; cumulation raises each of them into `Lset α`, which is
-the inclusion the previous section asked for; the formula then carves `α` out of
-`Lset α`; and one branch of the union at the next stage delivers it.
+its own successor stage; cumulation raises each of them into `Lset α`, giving
+the inclusion needed in the previous section. The formula then carves `α` out of
+`Lset α`, and one branch of the union in the definition of the next stage
+contains it.
 <!--zh-->
-归纳。假设给出 `α` 的每个成员都在自身的后继阶段现身；累积引理把它们逐一抬进 `Lset α`，那正是上一节所索取的包含关系；公式随即从 `Lset α` 中刻出 `α`；而下一阶段那个并的一支把它交付。
+对成员关系作归纳。归纳假设说明 `α` 的每个成员都在自身的后继阶段出现；累积引理据此把它们逐一纳入 `Lset α`，得到上一节需要的包含关系。随后，该公式从 `Lset α` 中分离出 `α`，而下一阶段定义中的并包含这一项。
 <!--/-->
 
 ```agda
@@ -476,8 +477,8 @@ Ordinals now have exact stage bounds: `α` appears in `Lset (sucV α)`, and appe
 `ord∈Lset→∈`{.Agda} says it appears no earlier. Together the ordinals of
 `Lset α` are exactly the members of `α`. The chapter is classical, through the
 two comparisons of its first section, and everything else it uses was
-constructive. The next chapter spends the result once, on `ω`, and the axiom of
-infinity closes.
+constructive. The next chapter applies this result once, to `ω`, completing the
+proof of the axiom of infinity.
 <!--zh-->
-`ord∈Lset-suc`{.Agda} 说序数现身在自身之后的那个阶段中，`ord∈Lset→∈`{.Agda} 说它不会更早现身。二者合起来，`Lset α` 中的序数恰是 `α` 的成员。本章是经典的，经由第一节那两次比较，而它用到的其余一切都是构造性的。下一章把这个结果花掉一次，用在 `ω` 上，无穷公理随之合龙。
+`ord∈Lset-suc`{.Agda} 说序数现身在自身之后的那个阶段中，`ord∈Lset→∈`{.Agda} 说它不会更早现身。二者合起来，`Lset α` 中的序数恰是 `α` 的成员。经由第一节那两次比较，本章是经典的，而它用到的其余一切都是构造性的。下一章将把这一结果用到一次，即在 `ω` 上，无穷公理的证明随之完成。
 <!--/-->

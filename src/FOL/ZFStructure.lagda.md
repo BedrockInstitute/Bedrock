@@ -20,7 +20,7 @@ equality, taking values in a chosen truth algebra. This chapter defines these
 structures, the ways of cutting them down, and the environments that will feed
 their elements to formulas.
 <!--zh-->
-公式自身没有含义；它需要一个被谈论的世界。对上一章的语言而言，世界就是模型论意义上的**结构**：一个载体，连同两个谓词符号 (成员与等词) 的解释，取值于选定的真值代数。本章定义这些结构、裁剪它们的方式，以及将把结构元素喂给公式的环境。
+公式自身没有含义；它需要一个被谈论的世界。对上一章的语言而言，这个世界就是模型论意义上的**结构**：一个载体，以及两个谓词符号 (成员与等词) 在选定真值代数中的解释。本章定义这些结构、它们的裁剪方式，以及为公式解释指定结构元素的环境。
 <!--/-->
 
 
@@ -48,7 +48,7 @@ on the page, one glyph per layer: the library's `∈` (the host), this chapter's
 <!--zh-->
 ## 结构的 record
 
-仍先立约定，全书通用：花体 `𝒮` 代表结构，`S` 代表其载体，`x`、`y`、`z` 代表载体元素，即这门语言所谈的「集合」。两个关系字段上的上标 `ˢ` 是又一枚层标记：它宣告一个符号是**当前结构的字段**。至此 `∈` 家族在纸面上已有三员，一字一层：库的 `∈` (宿主)、本章的 `∈ˢ` (结构)、上一章的 `∈̇` (语法)。
+先立一条全书通用的约定：花体 `𝒮` 代表结构，`S` 代表其载体，`x`、`y`、`z` 代表载体元素，即这门语言所谈的「集合」。两个关系字段上的上标 `ˢ` 又是一枚层级标记：它标示一个符号是**当前结构的字段**。至此 `∈` 家族在纸面上已有三名成员，一字一层：库的 `∈` (宿主)、本章的 `∈ˢ` (结构)、上一章的 `∈̇` (语法)。
 <!--ja-->
 ## 構造の record
 
@@ -70,7 +70,7 @@ record ZFStructure {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') : Type (ℓ-max (�
 
 <!--en-->
 Two remarks on the fields. That the structure equality `≈ˢ` is a **field**, rather
-than being hard-wired to the host's path equality, is load-bearing: in the forcing
+than being identified with the host's path equality, is essential: in the forcing
 part of the book, equality and membership will be a mutually defined pair of graded
 relations, genuine content of the model that no meta-level equality could supply.
 On the propositional side nothing is lost: when the hierarchy chapter assembles
@@ -78,13 +78,13 @@ the book's instance, it simply takes paths for `≈ˢ`.
 
 And a remark on what is **not** here: no axioms. This record is the bare structure;
 well-foundedness, extensionality, and the rest belong to the model chapters, where they become
-the fields of a model. Everything this part builds consumes only the three
+the fields of a model. Everything this part builds uses only the three
 projections above, so any two isomorphic structures are, by the host's structure
 identity principle, simply equal, and the whole development transports across.
 <!--zh-->
-关于字段的两点。结构等词 `≈ˢ` 是**字段**而非硬连到宿主的路径相等，这一点是承重的：在本书的力迫部分，等词与成员将是一对互递归定义的分级关系，是模型的真实内容，任何元层相等都供应不了。命题侧则毫无损失，届时装配本书实例的层级章径直以路径充当 `≈ˢ`。
+关于字段有两点说明。第一，结构等词 `≈ˢ` 是**字段**，而不是直接取宿主的路径相等；这一点至关重要：在本书的力迫部分，等词与成员将是一对互递归定义的分级关系，是模型的实质内容，任何元层相等都替代不了。第二，命题一侧没有任何代价：届时装配本书实例的层级章径直以路径充当 `≈ˢ`。
 
-再说说这里**没有**的东西：公理。这个 record 是裸结构；良基、外延等等属于模型诸章，在那里它们将成为模型的字段。本部构建的一切只消费上面三个投影，于是任何两个同构的结构，按宿主的结构等同原理，干脆就相等，整个开发沿之搬运。
+再指出这里**没有**的东西：公理。这个 record 只是裸结构；良基、外延等等属于模型诸章，在那里它们将成为模型的字段。本部所构建的一切只使用上面三个投影，因此任何两个同构的结构，按宿主的结构等同原理，就直接相等，整个开发也随之直接沿用。
 <!--/-->
 
 <!--en-->
@@ -95,12 +95,11 @@ underlying **type** of `x ∈ˢ y`. The superscript `ᵗ` marks this Type-valued
 variant; statements of well-foundedness and proofs by membership induction will
 quantify over it. It lives in `hPropStructure`{.Agda}, the propositional side's
 way of opening a structure: the module re-exports the three projections and adds
-`∈ᵗ`, so one `open` later a chapter writes `y ∈ᵗ x` with no structure argument
-in sight.
+`∈ᵗ`, so one `open` later a chapter writes `y ∈ᵗ x` without writing any explicit structure argument.
 <!--zh-->
 ## 命题侧
 
-命题侧还有一种成员形式可用：把 `x ∈ˢ y` 的底层**类型**取出来。上标 `ᵗ` 标记这个 Type 值的变体；良基性的陈述与按成员归纳的证明都将对它量化。它住在 `hPropStructure`{.Agda} 里，即命题侧打开结构的方式：该模块公开再导出三个投影并添上 `∈ᵗ`，一次 `open` 之后，章节径直写 `y ∈ᵗ x`，不见任何结构参数。
+命题侧还可使用另一种成员形式：取出 `x ∈ˢ y` 的底层**类型**。上标 `ᵗ` 标记这个 Type 值的变体；良基性的陈述与按成员归纳的证明都对它量化。这一形式定义在 `hPropStructure`{.Agda} 中，也就是命题侧打开结构的方式：该模块公开再导出三个投影，并添加 `∈ᵗ`。一次 `open` 之后，各章可以直接写 `y ∈ᵗ x`，无需显式写出结构参数。
 <!--ja-->
 ## 命題として読む
 
@@ -123,13 +122,13 @@ module hPropStructure {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
 ## Transitive classes
 
 A class `M` over a carrier is **transitive** when members of its members stay in
-it. The absoluteness chapter's theorems consume exactly this hypothesis, and
-the constructible-universe development builds its world out of transitive stages; the name is minted here,
-beside the memberships it speaks.
+it. The absoluteness chapter's theorems use exactly this hypothesis, and
+the constructible-universe development builds its world out of transitive stages; the name is introduced here,
+beside the membership relation it concerns.
 <!--zh-->
 ## 传递类
 
-载体上的类 `M`，若成员的成员仍在其中，称为**传递**。绝对性一章的诸定理消费的恰是这一前提，可构造宇宙诸章的世界也由传递的阶段砌成；名字在此铸下，与它谈论的成员关系为邻。
+载体上的类 `M`，若其成员的成员仍在其中，就称为**传递**。绝对性一章的诸定理所用的正是这一前提，可构造宇宙诸章的世界也由传递的阶段构成；名称在此定义，紧邻它所谈论的成员关系。
 <!--ja-->
 ## 推移的クラス
 
@@ -151,16 +150,15 @@ Transitive 𝒮 M = ∀ {x y} → y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M
 `↾` reads "restriction": the textbook's passage from a universe to
 $(A, \in \restriction A)$. Given a propositional class `M`, the restricted
 structure `𝒮 ↾ M` takes as carrier the pairs of an element with a proof of
-membership in `M`, and inherits both relations along the first projection. The
-consequence worth savouring: instantiate the whole framework at `𝒮 ↾ M`, and the
+membership in `M`, and inherits both relations along the first projection. An
+important consequence: instantiate the whole framework at `𝒮 ↾ M`, and the
 constant domain of the syntax automatically contains only members of `M`. "The
-parameters may only come from this class" stops being a side condition to police
-and becomes the shape of a type; the constructible-universe development builds the constructible universe through
-exactly this channel.
+parameters may only come from this class" is no longer a side condition to be checked case by case; it is guaranteed by the shape of the type. The constructible-universe development builds the constructible universe along
+exactly this route.
 <!--zh-->
 ## 子结构
 
-`↾` 读作「限制」：教科书里从全宇宙过渡到 $(A, \in \restriction A)$ 的那一步。给定命题值的类 `M`，限制结构 `𝒮 ↾ M` 以「元素配上属于 `M` 的证明」的对为载体，两个关系沿第一投影继承。值得品味的后果是：在 `𝒮 ↾ M` 上实例化整个框架，语法的常元域就自动只含 `M` 的成员。「参数只能来自这个类」不再是需要巡查的附加条件，而成为类型的形状；可构造宇宙的开发正是经由这条通道构造可构造宇宙。
+`↾` 读作「限制」：教科书里从全宇宙过渡到 $(A, \in \restriction A)$ 的那一步。给定命题值的类 `M`，限制结构 `𝒮 ↾ M` 以「元素配上属于 `M` 的证明」的对为载体，两个关系沿第一投影继承。一个重要后果是：在 `𝒮 ↾ M` 上实例化整个框架，语法的常元域就自动只含 `M` 的成员。「参数只能来自这个类」不再是一条需要逐项检查的附加条件，而直接由类型保证；可构造宇宙的开发正是沿这条路构造可构造宇宙。
 <!--ja-->
 ## 部分構造
 
@@ -202,13 +200,13 @@ back to equality of the pairs, so nothing is lost.
 
 A structure is three projections, carrier, equality, membership, valued in a truth
 algebra and carrying no axioms; transitive classes name the condition the
-travelling chapters will keep consuming; `↾` cuts a structure down to a class
+later chapters will keep using; `↾` cuts a structure down to a class
 with nothing lost (`↾-reflects`{.Agda}).
 Syntax on one side, structures on the other: the next chapter joins them.
 <!--zh-->
 ## 小结
 
-结构就是三个投影：载体、等词、成员，取值于真值代数，不带公理；传递类为后文各章反复消费的条件命名；`↾` 把结构裁剪到一个类而毫无损失 (`↾-reflects`{.Agda})。一边是语法，一边是结构：下一章让它们相遇。
+结构就是三个投影：载体、等词、成员，取值于真值代数，不带公理；传递类为后文各章反复使用的条件命名；`↾` 把结构裁剪到一个类而毫无损失 (`↾-reflects`{.Agda})。一边是语法，一边是结构：下一章让它们相遇。
 <!--ja-->
 ## まとめ
 

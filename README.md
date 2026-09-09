@@ -60,12 +60,13 @@ definability, the mantle, and generic absoluteness, is groundwork in the literal
 sense.
 
 The one choice everything follows from is **host-language maximalism**: rather than
-transcribing the textbook ZF axioms and bending the proof assistant around them,
-every notion is reconstructed in type-theory-native idiom, so the host does the
-*speaking* and the deep-embedded `Formula` is what gets *studied*. This can look
-like the opposite of grounding, but a proof assistant offers rigor, not a reductive
-base, and rigor is independent of the metatheory's strength; maximalism is what
-makes the checking attainable, and its cost is declared openly.
+transcribing the textbook ZF axioms and adjusting the proof assistant around them,
+every notion is reconstructed in type-theory-native idiom. The host language is then used to
+express the mathematics, while the deep-embedded `Formula` is used only when it is itself
+the object of study. This can look like the opposite of grounding, but a proof assistant
+offers rigor, not a reductive base, and rigor is independent of the metatheory's
+strength; maximalism is what makes machine-checked verification possible, and its cost is
+declared openly.
 
 The groundwork is also neutral: set-theoretic geology gives both universism and
 multiversism the rigorous footing each has lacked, and parameterises the dispute by

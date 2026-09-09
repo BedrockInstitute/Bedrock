@@ -13,16 +13,17 @@ A proposition is small when it is equivalent to one in a lower universe. This ch
 <!--/-->
 
 <!--en-->
-The host's universes form a ladder, and the ladder poses one recurring question:
-does a thing living one floor up have a stand-in below? For **propositions** the
-question is the hallmark of *impredicativity*, the world of truth values refusing
-to grow with the universe. This chapter mints the vocabulary: what it is for one
-proposition to be small, the two sweeping interfaces that assert smallness
-wholesale, and their packing. Nothing is assumed and nothing is proven here;
-these are interfaces. The next chapter redeems them all from excluded middle,
-and the cumulative-hierarchy chapters prices concrete model fields in exactly this currency.
+The universes of the host language come in levels, so one question recurs:
+does an object in a higher universe have an equivalent object in a lower one?
+For **propositions** this is exactly the question *impredicativity* addresses: the
+range of truth values does not grow with the universe levels. This chapter
+defines what it means for a single proposition to be small, the two interfaces
+that uniformly assert smallness, and the record combining the two. Nothing is
+assumed here, and none of these interfaces is proven. The next chapter will
+construct them from excluded middle, and the cumulative-hierarchy chapters will
+use them for concrete model fields.
 <!--zh-->
-宿主的宇宙排成一架梯子，而梯子反复抛出同一个问题：住在高一层的东西，在低层有没有替身？对**命题**而言，这个问题正是**非直谓性**的标志：真值的世界拒绝随宇宙一起膨胀。本章铸下这套词汇：单个命题「是小的」是什么意思，一揽子断言小性的两个接口，以及它们的打包。此处无所假设、亦无所证明；这些是接口。下一章将用排中律把它们全部赎回，累积层级诸章则恰以这种货币为具体的模型字段标价。
+宿主语言的宇宙按层级排列，因此反复出现同一问题：较高层中的对象是否有较低层中的等价对象。对**命题**而言，这正是**非直谓性**所处理的问题：真值的范围不随宇宙层级扩大。本章定义单个命题「是小的」的含义、统一断言小性的两个接口，以及合并这两个接口的记录。此处不作假设，也不证明这些接口成立。下一章将从排中律构造这些接口，累积层级诸章则把它们作为具体的模型字段使用。
 <!--/-->
 
 
@@ -40,15 +41,15 @@ open import Cubical.Foundations.Equiv using ( _≃_ )
 ## Being small
 
 A proposition one universe up **is small** when it is equivalent to some
-proposition one universe down. The definition carries the witness: to hold an
+proposition one universe down. The definition carries its witness: to hold an
 inhabitant of `isSmall P`{.Agda} is to hold the small stand-in together with the
-equivalence. The smallness chapter of the cumulative-hierarchy chapters will make a whole gymnastics of
-passing such witnesses around, earning instances one atom at a time without any
-axiom.
+equivalence. The cumulative-hierarchy chapters will transport these smallness
+witnesses systematically, establishing the required instances one atom at a time
+without any axiom.
 <!--zh-->
 ## 何谓小
 
-高一层的命题**是小的**，指它与某个低一层的命题等价。定义随身携带见证：手握 `isSmall P`{.Agda} 的居民，就是手握小替身连同那份等价。累积层级诸章的小性一章将把传递这种见证做成一整套体操，逐原子地挣得实例，不花任何公理。
+高一层的命题**是小的**，指它与某个低一层的命题等价。这个定义自带见证：得到 `isSmall P`{.Agda} 的证明，就是得到小替身连同那份等价。累积层级诸章的小性一章将把传递这种见证系统地展开，逐原子地建立实例，不使用任何公理。
 <!--ja-->
 ## 小さいということ
 
@@ -72,7 +73,7 @@ one level at a time.
 <!--zh-->
 ## 两个接口
 
-**命题降层**是一揽子断言：高一层的**每个**命题都是小的。这正是经典集合论从不操心命题住在哪个宇宙的确切原因。与 `LEM` 同款，逐层级陈述。
+**命题降层**是一揽子断言：高一层的**每个**命题都是小的。这恰好解释了经典集合论为何从不过问命题处于哪个宇宙。与 `LEM` 形式相同，逐层级陈述。
 <!--ja-->
 ## 二つのインターフェース
 
@@ -92,7 +93,7 @@ type of truth values, which lives one universe up, is equivalent to a **small**
 type. `HPropSmallness ℓ`{.Agda} asks for a small type equivalent to
 `hProp ℓ`{.Agda}, a small classifier of propositions.
 <!--zh-->
-第二个接口谈的不是单个命题，而是它们的总体：真值类型本住在高一层宇宙，却等价于一个**小**类型。`HPropSmallness ℓ`{.Agda} 索要一个与 `hProp ℓ`{.Agda} 等价的小类型，即命题的小分类器。
+第二个接口针对的不是单个命题，而是它们的总体：真值类型本身处于高一层宇宙，却等价于一个**小**类型。`HPropSmallness ℓ`{.Agda} 要求一个与 `hProp ℓ`{.Agda} 等价的小类型，即命题的小分类器。
 <!--/-->
 
 ```agda
@@ -103,16 +104,15 @@ HPropSmallness ℓ = Σ[ Ω' ∈ Type ℓ ] (Ω' ≃ hProp ℓ)
 <!--en-->
 ## The packing
 
-The two instruments share one character, each saying in its own register that
-propositions refuse to grow with the universe, and they share their consumers,
-so they are packed into one interface, one level at a time. The packing is by
-co-consumption, not by implication: neither instrument derives the other (they
-descend from two of Voevodsky's separate resizing axioms). The interface says
-nothing about any particular structure; it is pure universe-level policy.
+The two results express distinct forms of smallness for propositions, and later
+chapters use them together, so they are packed into one interface, stated one level
+at a time. This packing reflects their joint use, not an implication: neither result
+derives the other (they descend from two of Voevodsky's separate resizing axioms). The
+interface involves no particular structure; it concerns only universe levels.
 <!--zh-->
 ## 打包
 
-两件器具共有一种品格，各自以各自的口吻说着「命题拒绝随宇宙膨胀」这一句话；它们也共享消费者，于是打包成一个接口，逐层级陈述。打包依据是共同消费而非相互蕴含：两件器具谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)。这个接口不谈任何特定结构，是纯粹的宇宙层级政策。
+两项结论从各自的角度表达同一句话：「命题不随宇宙膨胀」；它们也共享消费者，于是打包成一个接口，逐层级陈述。打包依据是共同消费而非相互蕴含：谁也推不出谁 (它们分别源自 Voevodsky 两条分立的 resizing 公理)。这个接口不涉及任何特定结构，是纯粹的宇宙层级政策。
 <!--ja-->
 ## 二つの仮定をまとめる
 

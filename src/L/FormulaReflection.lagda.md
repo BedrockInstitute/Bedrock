@@ -5,7 +5,7 @@ Reflection for a whole formula must answer the existential subformulas that appe
 <!--zh-->
 # 任意公式的反射
 
-整条公式的反射必须为其语法中各处出现的存在子公式提供答案。本章沿公式递归构造联合封闭条件与序数梯，得到一个阶段，使该公式在其中与整个可构造宇宙中具有相同真值。
+对整条公式的反射，必须为其语法中各处出现的存在子公式给出答案。本章沿公式递归构造联合封闭条件与序数梯，得到一个阶段，使该公式在其中与整个可构造宇宙中具有相同真值。
 <!--ja-->
 # 任意の論理式に対する反映
 
@@ -26,9 +26,9 @@ formula's structure, the single-matrix step of every matrix in it, together with
 the stage holding the constants. The limit then answers for every matrix, and the
 previous chapter's argument applies to each without being run again.
 <!--zh-->
-证明是结构归纳，它向那个阶段索取两样东西。在无界量词处，它索取上一章的闭包，针对该量词自己的矩阵。在有界量词处，它索取那个界落在该阶段里，好让界所准入的一切也落在其中；那正是分离那一章早已懂得如何满足的常元条件。
+证明是结构归纳，它需要该阶段具备两样东西。在无界量词处，需要上一章的闭包，针对该量词自己的矩阵。在有界量词处，需要那个界落在该阶段里，好让落在界内的一切也落在其中；那正是分离那一章早已会满足的常元条件。
 
-没有哪个单矩阵极限能同时服务全部矩阵，因为闭包不为更大的阶段所继承：把阶段扩大，就有更多环境等着它作答。故这架梯是联合造的。一级的步进沿公式的结构，把其中每个矩阵的单矩阵步进合并起来，连同装着常元的那个阶段。于是极限为每个矩阵作答，而上一章的论证施于每一个，都无须重跑。
+没有哪个针对单一矩阵的极限能同时覆盖全部矩阵，因为闭包不为更大的阶段所继承：把阶段扩大，就有更多环境需要它处理。因此这架梯要联合构造：每一级的步进沿公式的结构进行，把其中每个矩阵的单矩阵步进合并起来，连同包含常元的那个阶段。于是极限对每个矩阵都给出回答，上一章的论证施于其中每一个即可，无须重做。
 <!--/-->
 
 ```agda
@@ -83,14 +83,14 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ ; ⟦_⟧ᵐ to ⟦_⟧ )
 
 Relativization bounds the quantifiers by a constant, and the constant has to be
 an element of the model, so a stage must be shown constructible. It is, and
-cheaply: the formula "true" defines the whole of a set, so a stage is a definable
+the argument is direct: the formula "true" defines the whole of a set, so a stage is a definable
 subset of itself, hence a member of the operator applied to itself, hence
 constructible one stage later. With that, relativization to a stage is
 instantiated once and its bounded reading is available for the induction.
 <!--zh-->
 ## 作为元素的阶段
 
-相对化以一个常元界住诸量词，而该常元必须是模型的元素，故须证阶段可构造。确实可构造，而且很廉价：公式「真」定义出一个集合的全体，故阶段是它自身的可定义子集，因而属于施于自身的那个算子，因而在下一阶段可构造。有了这一条，到某阶段的相对化便可实例化一次，其有界读法随即供归纳取用。
+相对化以一个常元界住诸量词，而该常元必须是模型的元素，故须证阶段可构造。确实可构造，而且很直接：公式「真」定义出一个集合的全体，故阶段是它自身的可定义子集，因而属于施于自身的那个算子，因而在下一阶段可构造。有了这一条，到某阶段的相对化便可实例化一次，其有界读法随即供归纳取用。
 <!--ja-->
 ## 段階そのものを要素にする
 
@@ -107,7 +107,7 @@ so every consumer that mentions the constant in a type would carry that unfoldin
 along; a chapter that separates with a relativized formula takes minutes rather
 than seconds without this one line.
 <!--zh-->
-被封印的是那份证书，且仅有它：作为模型元素的阶段是「阶段与证书」的对，而第一分量必须继续规约，因为「落在界内」与「落在阶段内」是同一句话，恰恰倚仗它规约。证书则是另一回事。它经可定义性一路展开到小性机器，而它又坐在一个常元里，于是每个在类型中提到该常元的消费方都会把那次展开一并背上；一章若用相对化公式作分离，没有这一行就要以分钟而非秒计。
+被封存的只是那份证书：作为模型元素的阶段是「阶段与证书」的对，而第一分量必须继续规约，因为「落在界内」与「落在阶段内」是同一句话，规约恰恰依赖这一点。证书则是另一回事。它经可定义性一路展开到涉及小性的检查，而它又存放于一个常元之中，于是类型中每个提到该常元的部分都会连带承担那次展开的代价；一章若用相对化公式作分离，没有这一行就要以分钟而非秒计。
 <!--/-->
 
 ```agda
@@ -118,15 +118,15 @@ module Cor (β : V ℓ) (oβ : IsOrd β) =
 <!--en-->
 ## What a stage owes a formula
 
-Walking a formula, the unbounded quantifiers are the nodes that cost something:
+Walking a formula, the unbounded quantifiers are the nodes that require extra work:
 each carries a matrix, and the previous chapter's step function for that matrix
 has to land in the next rung. Collecting those memberships over the formula's
-structure gives the debt a rung owes, and it is a tree of the same shape as the
+structure gives the conditions a rung must satisfy; it is a tree of the same shape as the
 formula, empty at the atoms and at every node that binds nothing.
 <!--zh-->
 ## 阶段对公式的义务
 
-沿公式走下去，要付代价的节点是无界量词：每个带一个矩阵，而上一章为该矩阵所造的步进函数必须落在下一级里。沿公式的结构把这些隶属关系收集起来，就得到一级所欠的债，而它是与公式同形的一棵树，在原子处，以及在每个不绑定任何东西的节点处为空。
+沿公式走下去，需要额外处理的节点是无界量词：每个带一个矩阵，而上一章为该矩阵所造的步进函数必须落在下一级里。沿公式的结构把这些隶属关系收集起来，便得到该级必须满足的一组条件；它是一棵与公式同形的树，在原子处，以及在每个不绑定任何东西的节点处为空。
 <!--ja-->
 ## 段階が論理式に対して満たす条件
 
@@ -137,15 +137,15 @@ formula, empty at the atoms and at every node that binds nothing.
 A universal quantifier contributes the step for the *negated* matrix, because the
 argument for it is by contradiction: to know that everything in the stage
 satisfies the matrix is to know that nothing in L refutes it, and the refutation
-is what has to be caught inside the stage.
+is what has to be included in the stage.
 
-The debt only grows easier as the rung grows, since each entry is a membership
-and membership is inherited through an ordinal. That is what lets the merges
-below raise the pieces to their join.
+These conditions only grow easier to satisfy as the rung grows, since each entry
+is a membership and membership is inherited through an ordinal. That is what
+lets the merges below raise the pieces to their join.
 <!--zh-->
-全称量词贡献的是**否定后**矩阵的步进，因为对它的论证是反证：要知道阶段中的一切都满足该矩阵，就是要知道 L 中没有东西反驳它，而须被逮进阶段里的正是那个反驳。
+全称量词贡献的是**否定后**矩阵的步进，因为对它的论证是反证：要知道阶段中的一切都满足该矩阵，就是要知道 L 中没有东西反驳它，而须被纳入阶段里的正是那个反驳。
 
-这笔债只会随着级的增大而更易偿付，因为每一项都是一条隶属关系，而隶属关系经序数继承。正是这一点使下面的诸次合并能把各部分抬到它们的并处。
+这些条件只会随着级的增大而更易满足，因为每一项都是一条隶属关系，而隶属关系经序数继承。正是这一点使下面的诸次合并能把各部分提升到它们的并处。
 <!--/-->
 
 ```agda
@@ -185,15 +185,15 @@ Answers-mono h o (∃̇∈ t φ) σ oσ a        = Answers-mono h o φ σ oσ a
 <!--en-->
 ## The joint step
 
-Now the step that pays the debt. Recursion on the formula produces, from a rung,
-an ordinal above it carrying the whole tree of memberships. Three shapes cover
-every constructor: a node that owes nothing takes the rung's own bound; a node
-with two children merges its children's ordinals; a quantifier adds one step
-function to its child's.
+Now we construct the step that satisfies these conditions. Recursion on the formula
+produces, from a rung, an ordinal above it carrying the whole tree of memberships.
+Three shapes cover every constructor: a node with no extra conditions takes the
+rung's own bound; a node with two children merges its children's ordinals; a
+quantifier adds one step function to its child's.
 <!--zh-->
 ## 联合步骤
 
-接下来是偿债的那一步。沿公式递归，从一级出发造出它上方的一个序数，带着整棵隶属树。三种形状覆盖了全部构造子：不欠债的节点取该级自己的上界；有两个子节点的合并两个子序数；量词则在子节点之上再添一个步进函数。
+接下来构造满足这些条件的一步。沿公式递归，从当前一级出发构造位于其上的一个序数，并携带整棵隶属关系树。三种形状覆盖所有构造子：没有额外条件的节点取当前级自身的上界；有两个子节点时合并两个子序数；量词节点则在子节点之上再加入一个步进函数。
 <!--ja-->
 ## 共同の一段階
 
@@ -208,7 +208,7 @@ first, is three parallel recursions of ten clauses each computing the ordinal,
 its ordinality, and the rung's membership in it; they all traverse the same tree
 and project the same bounds.
 <!--zh-->
-每种形状只写一次，针对任意的负载与任意的抬升方式，于是递归本身是十条一行的子句，而序数的记账不必在每条里重述一遍。另一条路，也是人们最先写出的那条，是三套并行的、各含十条子句的递归，分别算那个序数、它的序数性、以及该级属于它；三者遍历同一棵树，投影同一批上界。
+每种形状只写一次，并对任意负载与任意提升方式适用，因此递归本身由十条各占一行的子句组成，不必在每条子句中重复序数的计算。另一种直接写法是三套并行递归，每套都有十条子句，分别计算该序数、它的序数性以及当前级属于它；三者遍历同一棵树，并投影同一批上界。
 <!--/-->
 
 ```agda
@@ -332,19 +332,19 @@ module Mk {n : ℕ} (φ₀ : Formula S n) (κ : V ℓ) (oκ : IsOrd κ)
 ```
 
 <!--en-->
-Reading the debt back off gives closure. At a rung, the tree says the matrix's
-step function is inside the next rung, and the previous chapter says the matrix's
+Reading these conditions back off gives closure. At a rung, the tree gives that the matrix's
+step function lies inside the next rung, and the previous chapter gives that the matrix's
 answering stage is inside its step function; ordinal transitivity composes them
 into the answering hypothesis, and the ladder's closure follows.
 
-Two small dictionaries and the induction can start: membership in a stage is
+Two auxiliary facts let the induction start: membership in a stage is
 inherited downward, since a stage is transitive, and a term's value lies in the
 stage, a constant because it was registered and a variable because the
 environment lies there.
 <!--zh-->
-把那笔债读回来就得到闭包。在某一级上，那棵树说该矩阵的步进函数落在下一级里，而上一章说该矩阵的作答阶段落在它的步进函数里；序数传递性把两者复合成那条作答假设，梯的闭包随之而来。
+把这组条件读回来就得到闭包。在某一级上，那棵树给出该矩阵的步进函数落在下一级里，而上一章给出该矩阵的作答阶段落在它的步进函数里；序数传递性把两者复合成那条作答假设，梯的闭包随之而来。
 
-再加两本小字典，归纳便可开始：属于一个阶段是向下继承的，因为阶段传递；而词项的取值落在该阶段里，常元是因为它被登记过，变元是因为环境落在那里。
+再补充两个辅助事实，归纳便可开始：属于一个阶段是向下继承的，因为阶段传递；而词项的取值落在该阶段里，常元是因为它被登记过，变元是因为环境落在那里。
 <!--/-->
 
 ```agda
@@ -386,7 +386,7 @@ applies to the extended environment.
 <!--zh-->
 ## 归纳
 
-原子与常元是 `refl`{.Agda}，因为相对化不碰它们；联结词是同余。有界量词是头一件实事：它的见证本就落在界里，界落在阶段里，而阶段传递，故见证落在阶段里，归纳假设遂适用于扩展后的环境。
+原子与常元是 `refl`{.Agda}，因为相对化不碰它们；联结词是同余。有界量词是第一个实质情形：它的见证本就落在界里，界落在阶段里，而阶段传递，故见证落在阶段里，归纳假设遂适用于扩展后的环境。
 <!--ja-->
 ## 帰納法
 
@@ -394,24 +394,24 @@ applies to the extended environment.
 <!--/-->
 
 <!--en-->
-The existential is the previous chapter. Downward, a witness from the stage is a
-witness in L, and the hypothesis converts it. Upward is closure: the truth of the
+The existential case is the one from the previous chapter. Downward, a witness from the stage is a
+witness in L, and the hypothesis transfers it. Upward is the case of closure: the truth of the
 existential in L is, by definition, the satisfiability the closure lemma consumes,
-so it hands back a witness already inside the stage, and the hypothesis applies to
+so closure returns a witness already inside the stage, and the hypothesis applies to
 that one instead. Note which witness is used: not the one L happened to supply,
-but the one closure chose. That is why nothing circular happens, and why the
+but the one closure chose. That is why no circularity arises here, and why the
 stage never has to be a fixed point of anything.
 
-The universal is the existential for the negated matrix, argued by contradiction.
-If some element of L failed the matrix, that failure is a witness for the negated
-matrix, so closure produces one inside the stage; but the hypothesis says
-everything in the stage satisfies the matrix, and the two collide. Deciding
+The universal case is the existential case for the negated matrix, argued by contradiction.
+If some element of L failed the matrix, that failure would be a witness for the negated
+matrix, so closure would produce one inside the stage; but the hypothesis asserts that
+everything in the stage satisfies the matrix, a contradiction. Deciding
 whether the element fails is where the excluded middle enters the induction, and
 it is the only place.
 <!--zh-->
-存在量词就是上一章。向下：来自阶段的见证本就是 L 中的见证，归纳假设把它转过去。向上是闭包：存在量词在 L 中为真，按定义就是闭包引理所消费的那种可满足性，于是它交还一个已在阶段之内的见证，而归纳假设改施于这一个。请注意用的是哪个见证：不是 L 恰好给出的那个，而是闭包选出的那个。这正是何以此处并不循环，也正是何以那个阶段永远不必是任何东西的不动点。
+存在量词的情形归结为上一章的论证。向下：来自阶段的见证本来就是 L 中的见证，归纳假设把它转移过去。向上是闭包的情形：存在量词在 L 中为真，按定义正是闭包引理所处理的那种可满足性，于是闭包返回一个已在阶段之内的见证，归纳假设转而适用于这一个见证。请注意用的是哪个见证：不是 L 恰好给出的那个，而是闭包选出的那个。这正是此处不产生循环的原因，也正是那个阶段永远不必成为任何东西的不动点的原因。
 
-全称量词就是否定后矩阵的存在量词，以反证论之。若 L 的某个元素不满足该矩阵，那次失败便是否定后矩阵的一个见证，于是闭包在阶段之内造出一个；然而假设说阶段中的一切都满足该矩阵，两者相撞。判定那个元素是否失败，正是排中律进入本次归纳之处，而且是唯一之处。
+全称量词的情形就是否定后矩阵的存在量词的情形，用反证法论证。若 L 的某个元素不满足该矩阵，那次失败便是否定后矩阵的一个见证，于是闭包会在阶段之内造出一个这样的见证；然而归纳假设断言阶段中的一切都满足该矩阵，两者矛盾。判定那个元素是否失败，正是排中律进入本次归纳之处，而且是唯一之处。
 <!--/-->
 
 ```agda
@@ -504,12 +504,12 @@ it is the only place.
 
 Composing the induction with the correctness of relativization turns the bounded
 reading back into an ordinary satisfaction, of the relativized formula. That is
-the usable form: the right-hand side is Δ₀, so a formula of any complexity has
-been traded for a bounded one and a named stage.
+the convenient form to use: the right-hand side is Δ₀, so a formula of any complexity has
+been replaced by a bounded one and a named stage.
 <!--zh-->
 ## 反射定理
 
-把这次归纳与相对化的正确性复合，就把有界读法变回一次寻常的满足，只不过对象是相对化后的公式。这是能用的形式：右侧是 Δ₀ 的，故任意复杂度的公式已被换成一条有界公式加一个被点名的阶段。
+把这次归纳与相对化的正确性复合，就把有界读法变回一次寻常的满足，只不过对象是相对化后的公式。这是便于使用的形式：右侧是 Δ₀ 的，故任意复杂度的公式已被换成一条有界公式加一个被明确指出的阶段。
 <!--ja-->
 ## 反映定理
 
@@ -531,9 +531,9 @@ conversion check, and the next chapter simply does not finish. Sealed, the stage
 is a name, and the four things a consumer needs of it are the four the package
 already states.
 <!--zh-->
-打包之后，定理接受那条公式与调用方想要落在阶段里的任意序数，交还一个包含它的阶段。那个额外的序数并非图个方便：证书不为更大的阶段所继承，故调用方事后无法把阶段扩大以容纳它手上的集合。它必须事先说清什么必须装得下，而联合步进把它带上。
+整理成定理后，它接受一条公式和调用方要求包含在阶段中的任意序数，并返回一个包含该序数的阶段。这个额外序数不可省略：证书不会由较大阶段继承，所以调用方不能事后扩大阶段，以容纳自己已有的集合。调用方必须预先说明需要包含什么，联合步进会把这一要求一同带入构造。
 
-这个包被封印，而这是本书至此最要紧的一道封印。若是透明的，它所命名的阶段会在每一级上一路展开到联合步进、界层引理与排中律；而凡在类型中提到该阶段的消费方，都会把那整次展开拖进每一回转换检查，两个消费方恰恰都在类型中提到它，于是下一章根本跑不完。封印之后，那个阶段是一个名字，而消费方向它索取的四样东西，正是这个包已然陈述的四样。
+这个包被封装起来，而这是本书至此最要紧的一次封装。若是透明的，它所命名的阶段会在每一级上一路展开到联合步进、界层引理与排中律；而凡在类型中提到该阶段的使用者，都会把那整次展开带进每一次转换检查，两个使用者恰恰都在类型中提到它，于是下一章根本无法完成。封装之后，那个阶段只是一个名字，使用者向它索取的四样东西，正是这个包已经陈述的四样。
 <!--/-->
 
 ```agda
@@ -566,14 +566,14 @@ opaque
 
 `mkReflect`{.Agda} produces, for any formula and any ordinal that must fit inside
 it, a stage at which the formula agrees with its relativization to that stage.
-Since a relativization is Δ₀, this is the bridge from the whole language to the
-bounded fragment the separation chapter can already carve with, and it is the
-last thing standing between that chapter's Δ₀ instruments and the two model
-fields stated for arbitrary formulas.
+Since a relativization is Δ₀, this is the route from the whole language to the
+bounded fragment that the separation chapter can already use to carve out sets, and it is the final
+link between that chapter's Δ₀ instruments and the two model fields stated for
+arbitrary formulas.
 <!--zh-->
 ## 小结
 
-`mkReflect`{.Agda} 对任意公式、以及任意必须装进去的序数，造出一个阶段，公式在其上与它到该阶段的相对化一致。相对化既是 Δ₀ 的，这便是从整个语言通往有界片段的桥，而分离那一章已能用有界片段来雕；它也是横在那一章的 Δ₀ 器械与两条以任意公式陈述的模型字段之间的最后一样东西。
+`mkReflect`{.Agda} 对任意公式以及任意必须装进去的序数，造出一个阶段，公式在其上与它到该阶段的相对化一致。相对化是 Δ₀ 的，这便是从整个语言通向有界片段的途径：分离那一章因此能用有界片段来表述；它也是那一章的 Δ₀ 工具与两条以任意公式陈述的模型字段之间的最后一环。
 <!--ja-->
 ## まとめ
 
@@ -585,5 +585,5 @@ The classical cost is unchanged: the excluded middle, in the descent, in decidin
 satisfiability, and once more in the universal case here. No choice, and no
 well-ordering of L.
 <!--zh-->
-经典的代价一如既往：排中律，用在下降处、判定可满足性处，以及此处全称情形再用一次。没有选择，也没有 L 的良序。
+经典的代价一如既往：排中律，用在下降处、判定可满足性处，以及此处全称情形再用一次。这里没有用到选择，也没有用到 L 的良序。
 <!--/-->

@@ -181,12 +181,12 @@ If two table entries have the same arity-code key, injectivity of pairing and of
 
 <!--en-->
 Two formulas with the same key have the same value, and that is where the code
-equation's injectivity is spent. The arities come out equal from the numeral
+equation's injectivity is used. The arities come out equal from the numeral
 half of the key, and the code equation from the other half; the first is then
 eliminated by path induction so that the second can be used at a single arity,
 which is the only arity at which it is true.
 <!--zh-->
-两条键相同的公式取值相同，而码等式的单射性正是花在这里。诸元数由键的数码那一半得出相等，码等式由另一半得出；随后前者由道路归纳消掉，好让后者在单一元数处使用，而那也是它唯一为真的地方。
+两条键相同的公式取值相同，而码等式的单射性正是用在这里。诸元数由键的数码那一半得出相等，码等式由另一半得出；随后前者由道路归纳消掉，好让后者在单一元数处使用，而那也是它唯一为真的地方。
 <!--/-->
 
 ```agda
@@ -270,16 +270,16 @@ verifications. A clause is stated at a tag and receives a key of that shape; the
 formula the key names is recovered by the inversion above, and then its
 constructor has to be matched against the tag. That match is the coding chapter's
 own device, exported rather than rebuilt: the constructor is recoverable from the
-tag, so what a formula of a given tag looks like is **computed** from the tag,
+tag, so the shape of a formula of a given tag is **computed** from the tag,
 and the tag equation carries the formula's own case to it.
 
-So one lemma serves all ten clauses, and it hands back three things: what the
+So one lemma serves all ten clauses, and it returns three things: what the
 formula's constructor is, that the arity read is the formula's, and that the
 payload read is the formula's.
 <!--zh-->
-子句所作的那次分派，也是十次验证之前的最后一块。一条子句在某个标签处陈述，收到一个那种形状的键；键所命名的公式由上面那次求逆恢复出来，随后它的构造子必须与那个标签对上。那次对上用的是编码那一章自己的装置，导出而非重造：构造子可从标签还原，故「带某个标签的公式长什么样」是从标签**算**出来的，而那条标签等式把公式自己的情形搬到它上面。
+子句所作的那次分派，是十次验证之前的最后一步。一条子句在某个标签处陈述，收到一个那种形状的键；由上面那次求逆恢复出该键所命名的公式，随后其构造子必须与那个标签一致。这一步使用编码一章已有的装置，只导出而不重造：构造子可从标签还原，故「带某个标签的公式是什么形状」可以从标签**算**出来，而那条标签等式处理的正是公式自身的情形。
 
-于是一条引理服务全部十条子句，而它交回三件东西：那条公式的构造子是什么、被读出的元数就是它的元数、被读出的载荷就是它的载荷。
+一条引理同时用于全部十条子句，它给出三件信息：那条公式的构造子是什么、被读出的元数就是它的元数、被读出的载荷就是它的载荷。
 <!--/-->
 
 ```agda

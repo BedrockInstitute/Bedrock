@@ -13,22 +13,22 @@ Ordinals are transitive sets whose members are transitive. This chapter proves c
 <!--/-->
 
 <!--en-->
-This chapter provides exactly that supply, and nothing else. Zero is an
+This chapter provides exactly these bounds, and nothing else. Zero is an
 ordinal; successors of ordinals are ordinals; a union of ordinals is an
-ordinal; and, the chapter's deliverable, every small family of ordinals lies
-below a single ordinal. That last statement is what turns "each ingredient has
-*some* stage" into "all of them share *one* stage", which is the move every
-closure proof in the next chapter makes.
+ordinal; and, as the chapter's main result, every small family of ordinals
+lies below a single ordinal. That last statement is what turns "each ingredient
+has *some* stage" into "all of them share *one* stage", which is what
+every closure proof in the next chapter does.
 
-Notably absent is comparison. One expects ordinals to be linearly ordered, and
-they are, but that fact is not constructive and it is not needed here: a common
-bound is cheaper than a comparison, and it is all the axioms ask for. The book
-takes the cheaper road, and the basic axioms of the constructible universe cost
-no classical logic as a result.
+This chapter does not give comparison of ordinals. Ordinals are indeed linearly
+ordered, but that fact is not constructive and it is not needed here: the axioms
+ask only for a common bound, so the book constructs a common bound directly.
+The basic axioms of the constructible universe thereby use no classical
+logic.
 <!--zh-->
-本章恰好提供这批上界，别无他物。零是序数；序数的后继是序数；序数之并是序数；以及本章的交付物：任一小族序数都落在单一序数之下。最后这条把「每份材料**各有**其阶段」变成「它们共处**同一**阶段」，而这正是下一章每个闭包证明所做的动作。
+本章恰好提供这批上界，别无其他。零是序数；序数的后继是序数；序数之并是序数；以及本章的主要结果：任一小族序数都落在单一序数之下。最后这条把「各份材料**各有**其阶段」变成「它们共处**同一**阶段」，而这正是下一章每个闭包证明所做的事。
 
-显眼地缺席的是比较。人们期望序数是线序的，它们确实是，但那个事实不构造，而且此处用不上：公共上界比比较廉价，而公理要的只是公共上界。本书取那条廉价的路，于是可构造宇宙的基本公理不花费任何经典逻辑。
+本章没有给出序数的比较。序数确实构成线序，但该事实不是构造性的，而且此处也不需要它：这些公理只要求公共上界，因此本书在这里直接构造公共上界。这样，可构造宇宙的基本公理不使用任何经典逻辑。
 <!--/-->
 
 ```agda
@@ -152,7 +152,7 @@ the union, which is what the closure arguments need. The result is a genuine
 pair, not a truncated existence: the consumers name the bound and form its
 stage.
 <!--zh-->
-然后是本章的交付物。给定一小族序数，有单一序数包含该族的每一个成员。朴素的尝试，取该族之并，只能给出包含关系：并吸收其成员的**元素**，而非成员本身，且没有集合以自身为成员。补救是一步后继：改取后继族之并。于是 `f x` 属于 `sucV (f x)`，后者属于被取并的那个族，故 `f x` 属于该并，这正是闭包论证所需。结果是货真价实的序对，而非截断的存在：消费方要点名那个上界，并造出它的阶段。
+然后是本章的主要结果。给定一小族序数，有单一序数包含该族的每一个成员。若直接取该族之并，只能得到包含关系：并包含其成员的**元素**，而非这些成员本身，并且没有集合以自身为成员。因此先取后继，再对后继族取并。于是 `f x` 属于 `sucV (f x)`，后者属于被取并的族，所以 `f x` 属于该并，这正是闭包论证所需。结果明确给出相应的序对，而不只是截断的存在；使用方可以指称这个上界，并构造它所在的阶段。
 <!--/-->
 
 ```agda
@@ -229,15 +229,15 @@ mem-ord {A} (Atr , Amem) x x∈A =
 ## The numerals, and their limit
 
 The hierarchy's numerals are the iterated successors of zero, so they are
-ordinals by the two facts above, one induction deep. Their limit `ω` is an
+ordinals by the two facts above, by a single induction. Their limit `ω` is an
 ordinal too, and that is the fact the collection step will need. Its second
-half is free from the numerals; its first half, transitivity, says that a
-member of a numeral is again a numeral, which is another induction, the
+half follows directly from the numeral lemmas; its first half, transitivity, says
+that a member of a numeral is again a numeral, which is another induction, the
 successor case splitting by the eliminator.
 <!--zh-->
 ## 数码，及其极限
 
-层级的数码是零的迭代后继，故由上面两个事实即为序数，一层归纳而已。它们的极限 `ω` 也是序数，而那正是收集步骤将要用到的事实。其第二半由数码免费给出；第一半即传递性，说的是数码的成员仍是数码，那是另一次归纳，后继情形按消去子分情形。
+层级的数码是零的迭代后继，故由上面两个事实即为序数，只需一层归纳。它们的极限 `ω` 也是序数，而那正是收集步骤将要用到的事实。其第二半由数码直接给出；第一半即传递性，说的是数码的成员仍是数码，那是另一次归纳，后继情形按消去子分情形。
 <!--ja-->
 ## 数項とその極限
 
@@ -288,7 +288,7 @@ a set, which is what a bound on a variable ultimately means.
 <!--zh-->
 ## 数码之下有什么
 
-数码不只是序数，它们还被序数**计数**：`n` 的数码的成员，恰是更小自然数的数码。前一半即消去，是一次沿后继消去子的归纳；后一半，即数码属于数码意味着序号可比，则由单射性得出。编码诸章将用它们从一个集合里读出序号，而那正是变元的界最终的含义。
+数码不只是序数，它们还被序数**计数**：`n` 的数码的成员，恰是更小自然数的数码。前一半说的是消去，它由一次沿后继消去子的归纳得到；后一半，即数码属于数码意味着序号可比，则由单射性得出。编码诸章将用这两件事实从一个集合里读出序号，而这正是变元的界最终的含义。
 <!--ja-->
 ## 数項の下にあるもの
 
@@ -319,14 +319,14 @@ Zero, successors and small unions of ordinals are ordinals, and
 `boundingOrd`{.Agda} bounds any small family by a single ordinal. That last
 result is the chapter's whole purpose: it is how "each of finitely many
 ingredients lives at some stage" becomes "all of them live at one stage", and
-the next chapter spends it three times over, once for each of the first
+the next chapter uses it three times, once for each of the first
 closure axioms. Downward closure, the absence of self-membership, and `ω`
-itself as an ordinal are the same theory continued; they wait here for the
-collection step of infinity, which is what first needs them.
+itself as an ordinal are the same theory continued; they are first used at the
+collection step of infinity, which is the first place that needs them.
 <!--zh-->
 ## 小结
 
-零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。最后这条就是本章的全部目的：它把「有穷多份材料各有其阶段」变成「它们同处一个阶段」，而下一章会把它花掉三次，头几条闭包公理各一次。向下封闭、无自环，以及 `ω` 自身是序数，都是同一套理论的续篇；它们在此等候无穷公理的收集那一步，那是最先需要它们的地方。
+零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。最后这条就是本章的全部目的：它把「有穷多份材料各有其阶段」变成「它们同处一个阶段」，而下一章会在三处用到它，头几条闭包公理各一处。向下封闭、无自环，以及 `ω` 自身是序数，都是同一套理论的续篇；它们要等到无穷公理的收集那一步才被首次使用，那里正是最先需要它们的地方。
 <!--ja-->
 ## まとめ
 

@@ -40,11 +40,11 @@ being built. So the induction carries **two** things at once, the table below an
 ordinal and the relation at it, and the second is cut out by the model's own
 separation from a bound the pairs cannot escape.
 <!--zh-->
-上一章用对象语言把那个序写了下来；本章把那条描述变成一个**对象**。公式不是模型量化得了的东西，而后续的选取需要一个它量化得了的关系：一个有序对之集，住在 `L` 之内，其成员恰是那个序所关联的诸对。本章造的就是那个集合，每个序数处一个。
+上一章用对象语言把那个序写了出来；本章把那条描述变成一个**对象**。公式不是模型量化得了的东西，而后续的选取需要一个它量化得了的关系：一个有序对之集，位于 `L` 之内，其成员恰是那个序所关联的诸对。本章构造的正是那个集合，每个序数处一个。
 
-形状取自层级那一章，并且亦步亦趋，因为是同一个问题。取值为集合的递归没法被一个图点名，故被描述的是**逼近**：一张表，在它定义域以下的每个序数处记录那里的关系。图对诸逼近作量化；值引理把逼近所记录的每个取值钉住；而 `L` 内部的替换把表收拢起来，函数性那笔债经 `mereFunct`{.Agda} 偿付，因为某个序数处的取值是一个构造、而不是一次判定。
+形状取自层级那一章，二者完全一致，因为处理的是同一个问题。取值为集合的递归无法由一个图直接给出，故被描述的是**逼近**：一张表，在它定义域以下的每个序数处记录那里的关系。图对诸逼近作量化；值引理逐点确定逼近所记录的每个取值；而 `L` 内部的替换把表聚合起来，函数性由 `mereFunct`{.Agda} 证得，因为某个序数处的取值是一个构造、而不是一次判定。
 
-此处有一样东西不是层级那一章的，而它正是本章需要两个构造而非一个的原因。塔有一个元语言的词项 `Lset`{.Agda}，故层级那场归纳总能把它即将记录的取值当场拿出来。阶段处的序没有这样的词项：被关联的诸对所成的集合正是要造的东西。于是那场归纳一次携带**两**样东西，即某个序数以下的表与它那里的关系，而后者由模型自家的分离从「诸对逃不出的一个界」上雕出来。
+此处有一样东西不是层级那一章所有的，而它正是本章需要两个构造而非一个的原因。塔有一个元语言的词项 `Lset`{.Agda}，故层级那场归纳总能当场给出它要记录的取值。阶段处的序没有这样的词项：被关联的诸对所成的集合正是要造的东西。于是那场归纳一次携带**两**样东西，即某个序数以下的表与它那里的关系，而后者由模型自身的分离从「诸对逃不出的那个界」中得出。
 <!--/-->
 
 ```agda
@@ -111,9 +111,9 @@ private
 `strict`{.Agda} removes the propositional truncation from a comparison belonging
 to a strict well-order, using trichotomy to show that only one branch can hold.
 <!--zh-->
-`strict`{.Agda} 从严格良序中的比较上消去命题截断，借助三歧性证明只能有一个分支成立。
+`strict`{.Agda} 从严格良序中的比较上消去命题截断，并借助三歧性证明只有一个分支能够成立。
 <!--ja-->
-`strict`{.Agda} は狭義整列順序の比較から命題的切り詰めを除き、三分性によって成立しうる分岐が一つだけであることを用いる。
+`strict`{.Agda} は狭義整列順序の比較から命題的切り詰めを除き、三分性により、成立しうる分岐は一つだけであることを示す。
 <!--/-->
 
 <!--en-->
@@ -121,7 +121,7 @@ A class of the model is a proposition-valued predicate, and the comparison at a
 stage is not known to be proposition-valued: it is a sum of two keys, and nothing
 so far says a set comes before another in only one way. So the class below carries
 the comparison **truncated**, and the truncation has to come off again, since the
-naming chapter's consumers take an honest comparison.
+naming chapter's consumers need the comparison itself, untruncated.
 
 It comes off for free, and for a reason that belongs to every strict well-order
 rather than to this one. Split on trichotomy first: in the strict case the
@@ -131,7 +131,7 @@ opened there. Irreflexivity closes the equal case and transitivity the reversed
 one. Two lines of mathematics, and the truncation never has to be avoided
 anywhere else in the chapter.
 <!--zh-->
-模型的一个类是命题值的谓词，而阶段处的比较并不已知是命题值的：它是两个键的和，而至此没有任何东西说一个集合只能以一种方式排在另一个之前。故下面那个类携带的是**截断**后的比较，而那层截断还得再脱下来，因为命名那一章的诸消费方取用的是诚实的比较。
+模型中的类是命题值谓词，而阶段处的比较尚未证明为命题值：它是两个键的和，目前没有结论保证一个集合只能以一种方式排在另一个之前。因此，下面的类携带**截断**后的比较；命名一章的使用者需要未截断的实际比较，所以随后还必须消去这层截断。
 
 它是白脱的，理由属于每一个严格良序，而非只属于这一个。先按三歧分情形：严格那一情形中比较早已在手，压根不消去任何截断；另外两种情形中目标是荒谬，而荒谬是命题，故截断可以在那里打开。非自反封住相等那一支，传递封住反向那一支。数学只有两行，而本章其余各处再不必绕开截断。
 <!--/-->
@@ -166,7 +166,7 @@ strict α oα a b h = decide (SWO.tri∙ W a b)
 meta comparison, and `Realizes`{.Agda} specifies a set with exactly that
 membership.
 <!--zh-->
-`Related`{.Agda} 是由元比较所关联的阶段成员有序对之类，而 `Realizes`{.Agda} 刻画成员恰为该类的集合。
+`Related`{.Agda} 是由元比较所关联的阶段成员有序对之类，而 `Realizes`{.Agda} 刻画其成员恰为该类的那些集合。
 <!--ja-->
 `Related`{.Agda} はメタな比較で関係づけられる段階要素の順序対からなるクラスであり、`Realizes`{.Agda} はその要素をちょうどもつ集合を指定する。
 <!--/-->
@@ -187,9 +187,9 @@ themselves, and this statement has to be a proposition of the model, because the
 table records it. The two forms are interchangeable, and where an equality is
 wanted `⇔toPath`{.Agda} supplies it.
 <!--zh-->
-`Related`{.Agda} 是那个对象所实现的类：阶段的两个成员所成的、被那里的序所关联的有序对。序数性绑定在类**之内**、而不是随身携带在旁，于是下文任何地方都不必沿「某个序数确是序数」的一份证明去搬运一次比较；唯一想要一份指定证明之处，即那条读式，用单次 `subst`{.Agda} 把它挪过去，因为「是序数」是命题。
+`Related`{.Agda} 是那个对象所实现的类：阶段的两个成员所成的、被那里的序所关联的有序对。序数性信息绑定在类**之内**，而不是另行随行携带，于是下文任何地方都不必随「某个序数确是序数」的一份证明去搬运一次比较；唯一需要一份指定证明之处，即那条读式，用单次 `subst`{.Agda} 把它传递过去，因为「是序数」是命题。
 
-`Realizes`{.Agda} 说模型的某个集合逐成员地实现那个类，而它写成两条蕴含的指标合取、而不是命题之间的逐点相等。这是层级约束、不是偏好：命题之间的相等住在诸命题自身之上的一个宇宙，而这条陈述必须是模型的一个命题，因为那张表要记录它。两种形式可以互换，而想要相等之处由 `⇔toPath`{.Agda} 供上。
+`Realizes`{.Agda} 说模型的某个集合逐成员地实现那个类，而它写成两条蕴含的合取，而不是命题之间的逐点相等。这是层级上的约束，不是偏好：命题之间的相等属于诸命题自身之上的一个宇宙，而这条陈述必须是模型内部的一个命题，因为那张表要把它记录下来。两种形式可以互相转换，需要相等之处由 `⇔toPath`{.Agda} 提供。
 <!--/-->
 
 ```agda
@@ -254,7 +254,7 @@ Four representation lemmas read any realizing set at raw pairs and at indexed
 stage members, in both the membership-to-comparison and comparison-to-membership
 directions.
 <!--zh-->
-四条表示引理在裸对与带索引阶段成员这两种形状上读取任意实现集合，并覆盖从隶属到比较、从比较到隶属两个方向。
+四条表示引理针对任意实现该类的集合，分别在裸有序对与带索引的阶段成员这两种形状上读取其成员关系，并覆盖从隶属到比较、从比较到隶属两个方向。
 <!--ja-->
 四つの表現補題は、任意の実現集合を生の順序対と添字つき段階要素の二つの形で読み、所属から比較へ、比較から所属への両方向を与える。
 <!--/-->
@@ -275,7 +275,7 @@ constructibility proof, `Related`{.Agda} is read at the pair the model builds
 rather than at the meta pair, and one congruence along `prʟ-fst`{.Agda} moves
 between them.
 <!--zh-->
-消费方所要的那两条读式，是「隶属于**某个**实现那个类的集合」，而它们陈述的对象是任何这样的集合、而不是本章所造的那一个。这不是为一般性而一般性。必须交到命名那套机器手上的，是「正在建造的那个阶段之下一级」处的关系，而在构造内部，那个集合是从表上来的，作为一个取值、带着「它在那里实现那个类」这条假设；而本章最终交回的那个集合，要等构造做完才存在。陈述为「任何实现该类的集合」，这两条读式便比构造早一个阶段可用，而那恰是它们被需要之处。
+所需的两条读式陈述「某个实现该类的集合的成员关系」，并适用于任何这样的集合，而不限于本章最终构造的那个集合。这种一般性有具体用途：命名构造需要正在建造阶段的前一阶段处的关系；在构造内部，该集合来自表的一个取值，并附带它在该处实现相应类的假设，而本章最终返回的集合要到构造结束后才存在。因此，对任意实现集合陈述读式，使它们能提前一个阶段使用。
 
 两条各两行。阶段的一个成员抵达模型时是一个对，携带它的可构造性证明；`Related`{.Agda} 读在模型所造的那个对上、而不是元层面那个对上，而沿 `prʟ-fst`{.Agda} 的一次同余在两者之间搬运。
 <!--/-->
@@ -350,7 +350,7 @@ merely so, which is all the step ever asks. `Domain`{.Agda} says nothing outside
 `B` is recorded, which the induction on an approximation cannot have and the
 finished table does.
 <!--zh-->
-三个条件，各一行；它们分开的理由与层级那一章把自己那三个分开的理由相同：两个消费方所需的子集不同。`Values`{.Agda} 说 `B` 以下所记录的取值实现那里的关系。`Entries`{.Agda} 说 `B` 以下的每个实参处都记录着某个取值，且只是「仅仅如此」，而那也正是那一步所索取的全部。`Domain`{.Agda} 说 `B` 以外的东西没有被记录，而这是对逼近的那场归纳不可能有、造完的表却有的。
+三个条件，各一行；把它们分开的理由与层级那一章分开自己那三个的理由相同：两个消费方所需的子集不同。`Values`{.Agda} 说 `B` 以下所记录的取值实现那里的关系。`Entries`{.Agda} 说 `B` 以下的每个实参处都记录着某个取值，且内容仅此而已，而这正是那一步所需的全部。`Domain`{.Agda} 说 `B` 以外的东西没有被记录；这是关于逼近的那场归纳所不可能给出、而造完的表却具有的性质。
 <!--/-->
 
 ```agda
@@ -471,14 +471,14 @@ Two conjuncts and no third: the table is defined on the argument, and every valu
 it records is the step at that argument from the table itself. The pair is a
 membership **equivalence**, which is what makes the existence claim below a
 proposition; single-valuedness is not a conjunct, because it is a corollary, and
-the corollary is collected two sections down.
+the corollary is established two sections down.
 
 The graph binds the table, and it has to: a graph may not name the object it
 defines, and the tower of relations is defined here. The value stands at the first
 slot and the argument at the second, which is the order the model's replacement
 field reads a graph in.
 <!--zh-->
-两个合取项，没有第三个：那张表定义在该实参上，且它所记录的每个取值都是「在那个实参处、由表自身算出的那一步」。这一对是一条隶属**等价**，正是它使下文那条存在性断言成为命题；单值性不是合取项，因为它是推论，而那条推论在两节之下收取。
+这里恰有两个合取项：该表定义在给定实参上；并且它记录的每个取值，都是在该实参处由表自身算出的那一步。二者组成一条隶属**等价**，从而使下文的存在性断言成为命题。单值性不另列为合取项，因为它是由这些条件推出的结论，该推论在下面两节取得。
 
 图把表绑住，而这是不得不然：一个图不可以点名它所定义的对象，而诸关系之塔正是在此处被定义的。取值站在第一位、实参站在第二位，这正是模型的替换字段读一个图所用的顺序。
 <!--/-->
@@ -586,9 +586,9 @@ instantiate them at two different concrete environments, and a statement made at
 either would have to be converted to the other through a satisfaction carrying the
 whole description inside it.
 <!--zh-->
-把图读出来，一切都已在手：拆开逼近，正确性取自 `approx-val`{.Agda}，完备性取自逼近自家的定义域投影，然后再读一次那一步。结论是图**确定**它的取值；而反方向是一张表：一张正确、完备且有界的表满足那个图，因为它同时满足「是一个逼近」的两个合取项以及外层的那一步。
+把图读出来，所需的一切都直接可得：拆开逼近，正确性取自 `approx-val`{.Agda}，完备性取自该逼近在本章所给的定义域投影，然后再读一次外层那一步。于是图**确定**它的取值；反方向则是一张表：一张正确、完备且有界的表满足那个图，因为它同时满足「是一个逼近」的两个合取项以及外层那一步。
 
-两条读式都站在变元位上，而这不是装饰。它们的消费方在两个不同的具体环境上把它们实例化，而要把陈述从其中任一处转换到另一处去，都得经由一个内部装着整条描述的满足关系。
+两条读式都出现在变元的位置上，这并非单纯的记号安排：它们各自在两个不同的具体环境中被实例化，而要把陈述从其中一处转换到另一处，都必须经过一个内部带有整条描述的满足关系。
 <!--/-->
 
 ```agda
@@ -654,22 +654,23 @@ whole description inside it.
 `PairGraphAt`{.Agda} packages the value at an ordinal as the ordered pair of that
 ordinal and its realized relation, in the graph form required by replacement.
 <!--zh-->
-`PairGraphAt`{.Agda} 把某序数处的取值封装为该序数与其已实现关系之有序对，形成替换所需的图。
+`PairGraphAt`{.Agda} 把某个序数处的关系取值封装成该序数与其已实现关系组成的有序对，由此得到替换所需的图。
 <!--ja-->
 `PairGraphAt`{.Agda} は順序数での値を、その順序数と実現された関係との順序対としてまとめ、置換公理が要求するグラフの形にする。
 <!--/-->
 
 <!--en-->
-The table has to be built, and the only builder is replacement, which asks for a
-graph. This is that graph, packaged: the value at an argument is the ordered pair
-of the argument with the relation there. Its two readings take the sentence as a
+The table has to be built, and the only construction available is replacement,
+which requires a graph. This is that graph in paired form: the value at an
+argument is the ordered pair of the argument with the relation there. Its two
+readings take the sentence as a
 **parameter**, with the sentence's own equation as a hypothesis, `refl`{.Agda} at
 the single call site. That is the shape rule the hierarchy chapter measured at
 eighty-five seconds, met here again: written directly against the closed sentence,
 Agda decides the equality of two spellings of one formula by normalizing a
 satisfaction that carries the entire description inside it.
 <!--zh-->
-表必须被造出来，唯一的建造者是替换，而替换索要一个图。这就是那个图的打包版：某个实参处的取值，是「该实参与那里的关系」所成的有序对。它的两种读法把那个句子取作**参数**，并把该句子自己的等式取作假设，在唯一的调用处是 `refl`{.Agda}。这就是层级那一章量到八十五秒的那条形状规矩，此处再度遇上：直接对着那个闭句子写，Agda 用来判定「同一条公式的两种写法」是否相等的办法，是把一个内部装着整条描述的满足关系正规化。
+表必须构造出来，而这里构造表所用的是替换；替换又需要一张图。这张图的成对形式规定：某个实参处的取值，是该实参与相应关系组成的有序对。两条读式把描述该图的句子作为**参数**，并假设该句子等于给定公式；唯一调用处以 `refl`{.Agda} 提供等式。这正是层级一章实测为八十五秒的形状规则：若直接对闭句子陈述，Agda 为判断同一公式的两种写法相等，会正规化内部含有整条描述的满足关系。
 <!--/-->
 
 <!--en-->
@@ -704,23 +705,23 @@ extensionality against the class it realizes and the relation by
 `rel-unique`{.Agda}, so the bundle is a proposition and the induction may be run
 against it.
 
-The construction is one membership induction. At `α` the pair graph is functional
-at every argument below: the induction hypothesis hands over both the table up to
-that argument and the relation at it, `graph-table`{.Agda} turns the pair into a
-satisfaction of the graph, and `graph-only`{.Agda} says nothing else satisfies it.
-Replacement collects the pairs. Then the relation at `α` itself is separated out of
-a bound, and the bound is the one thing here that is not the hierarchy chapter's:
-the pairs of two members of a stage are a **small** family of elements of `L`,
-indexed by the stage's own index type twice over, so one appeal to
-`smallDom`{.Agda} confines all of them at once. Ordinality of each argument is
-taken from `mem-ord`{.Agda} untruncated, and the whole construction is sealed where
-it is built.
+The construction proceeds by membership induction. At `α` the pair graph is
+functional at every argument below it: the induction hypothesis supplies the table
+up to that argument and the relation at it, `graph-table`{.Agda} turns the pair
+into a satisfaction of the graph, and `graph-only`{.Agda} says nothing else satisfies it.
+Replacement collects the pairs. The relation at `α` itself is then separated out
+of a bound, and this bound is the one construction this chapter adds beyond the
+hierarchy chapter: the pairs of two members of a stage form a **small** family of
+elements of `L`, indexed by the stage's own index type twice over, so a single
+appeal to `smallDom`{.Agda} gives a common bound for all of them. The ordinality of
+each argument is taken from `mem-ord`{.Agda} untruncated, and the whole construction
+is sealed where it is built.
 <!--zh-->
-`Recorded`{.Agda} 为那张表所实现的类命名：「`B` 以下的序数与那里的关系」所成的诸对，此外别无他物。`IsTable`{.Agda} 说模型的某个集合逐成员地实现它，而这是一条隶属等价，理由已在层级那一章记下：若反过来说，它就没有说这张表**只**持有那样的对，那条存在性断言因此不是命题，而归纳的动机也不是。
+`Recorded`{.Agda} 为那张表所实现的类命名：「`B` 以下的序数与那里的关系」所成的诸对，此外别无他物。`IsTable`{.Agda} 说模型的某个集合逐成员地实现它，而这是一条隶属等价；理由已在层级那一章记下：若反过来说，它便没有说这张表**只**含有那样的对，那条存在性断言因此不是命题，归纳的动机也不是。
 
-`Bundle`{.Agda} 是那场归纳所携带的东西，而它的第二个分量正是本章有、层级那一章不需要的：序数**处**的关系，而不只是它以下的。两个分量都唯一，表由外延性对着它所实现的类而唯一，关系由 `rel-unique`{.Agda} 而唯一，故这个束是命题，那场归纳可以对着它跑。
+`Bundle`{.Agda} 是那场归纳所携带的数据，其第二个分量正是本章有而层级那一章不需要的：序数**处**的关系，而不只是它以下的关系。两个分量都唯一：表由外延性相对于它所实现的类而唯一，关系由 `rel-unique`{.Agda} 而唯一；故这个束是命题，那场归纳可以依它进行。
 
-构造是一次沿成员的归纳。在 `α` 处，成对的那个图在以下的每个实参上都是函数性的：归纳假设交出「直到那个实参为止的表」与「它那里的关系」两样，`graph-table`{.Agda} 把这一对变成对图的满足，而 `graph-only`{.Agda} 说别的东西都不满足它。替换把那些对收拢起来。随后 `α` 从一个界上分离出自己那里的关系，而那个界是此处唯一不属于层级那一章的东西：一个阶段的两个成员所成的诸对，是 `L` 元素的一个**小**族，由该阶段自己的索引类型索引两遍，故单次诉诸 `smallDom`{.Agda} 就一举把它们全部禁闭。每个实参的序数性取自 `mem-ord`{.Agda} 且不加截断，而整个构造在它被造出之处封印。
+构造沿成员归纳。在 `α` 处，成对图对其下每个实参都是函数性的：归纳假设给出截至该实参的表及该处关系，`graph-table`{.Agda} 将二者变成图的一个取值，而 `graph-only`{.Agda} 排除其他取值。替换收集这些有序对。随后，`α` 从一个集合界中分离出该处关系；这个界是本章相较层级一章唯一新增的构造：阶段中两个成员组成的有序对构成由阶段索引类型两次索引的 `L` 元素**小**族，因此一次应用 `smallDom`{.Agda} 即可给出共同界。每个实参的序数性由 `mem-ord`{.Agda} 无截断地给出，整个构造在产生之处封装。
 <!--/-->
 
 ```agda
@@ -942,16 +943,16 @@ The final fill and representation lemmas specialize the generic readings to
 <!--/-->
 
 <!--en-->
-The last two statements are the chapter's deliverable, and each is one of the
-readings above at the set this chapter builds: the relation at the stage realizes
-the class, so it is a set the readings apply to. Nothing new is proved here; what
-is fixed is which realizing set is meant.
+The last two statements instantiate the readings above at the set this chapter
+builds: the relation at the stage realizes the class, so it is a set the
+readings apply to. Nothing new is proved here; what is fixed is which realizing
+set is meant.
 
 Nothing here is an approximation to the statement. The membership is an
 equivalence, so a separation that carves with this set carves with the order
 itself, and that is what the transversal chapter will do.
 <!--zh-->
-最后两条陈述是本章的交付物，而每一条都是上文那些读式读在本章所造的那个集合上：阶段处的关系实现那个类，故它是那些读式适用的一个集合。此处不证任何新东西；被定下来的是「所指的是哪一个实现该类的集合」。
+最后两条结论把上文的读式实例化到本章构造的集合上。阶段处的关系实现相应的类，因此该集合满足这些读式的适用条件。这里不证明新的数学事实，只确定所采用的是实现该类的哪一个集合。
 
 此处没有任何东西是对那条陈述的近似。隶属是一条等价，故拿这个集合去作的分离，就是拿那个序本身去作的分离，而这正是横截集那一章要做的事。
 <!--/-->
@@ -996,7 +997,7 @@ proposition of the model rather than an equality one universe up.
 `rel-fill`{.Agda}, `rel-rep`{.Agda}, `ixRel-fill`{.Agda} and `ixRel-rep`{.Agda}
 read the membership of **any** realizing set at the two shapes a member of a
 stage comes in, and they are stated of any such set on purpose: the naming
-machinery has to be handed the relation at the stage below the one being built,
+mechanism has to be given the relation at the stage below the one being built,
 and inside the construction that set arrives from the table with the hypothesis
 that it realizes the class there, a stage before the set this chapter returns
 exists.
@@ -1013,7 +1014,7 @@ anywhere, and `approx-uniq`{.Agda} is the corollary. `graph-only`{.Agda} and
 **two** things at every ordinal: the table of relations below it, collected by
 replacement through `mereFunct`{.Agda}, and the relation at it, separated out of a
 bound. The bound is the one piece with no counterpart in the hierarchy chapter,
-and it costs one appeal: the pairs of two members of a stage form a small family
+and one appeal suffices: the pairs of two members of a stage form a small family
 of elements of `L`, so `smallDom`{.Agda} confines them all at once. `relL`{.Agda} is
 the second component, and `relL-fill`{.Agda} and `relL-rep`{.Agda} are
 `rel-fill`{.Agda} and `rel-rep`{.Agda} instantiated at it.
@@ -1025,11 +1026,11 @@ stage described in the object language, which nothing describes yet, and the cod
 set at a carrier that moves with the birth. Together they are what stands between
 this construction and an unconditional theorem.
 <!--zh-->
-`Related`{.Agda} 是本章所实现的类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是截断着携带的，因为它并不已知是命题值的，而 `strict`{.Agda} 一举为每一个严格良序把截断脱下来，办法是在消去任何东西之前先按三歧分情形。`Realizes`{.Agda} 说模型的某个集合实现那个类，写成两条蕴含的指标合取，于是它是模型的一个命题，而不是高出一个宇宙的一条等式。`rel-fill`{.Agda}、`rel-rep`{.Agda}、`ixRel-fill`{.Agda} 与 `ixRel-rep`{.Agda} 把**任何**实现该类的集合的隶属，读在「阶段的成员到场时的两种形状」上；把它们陈述为「任何这样的集合」是有意为之：必须交到命名那套机器手上的，是「正在建造的那个阶段之下一级」处的关系，而在构造内部，那个集合是从表上来的、带着「它在那里实现那个类」这条假设，比本章交回的那个集合的存在早一个阶段。
+`Related`{.Agda} 是本章所实现的类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是带着截断陈述的，因为它并不已知是命题值的，而 `strict`{.Agda} 对每一个严格良序去掉这个截断，办法是在消去任何东西之前先按三歧分情形。`Realizes`{.Agda} 说模型的某个集合实现那个类，写成两条蕴含的指标合取，于是它是模型的一个命题，而不是高出一个宇宙的一条等式。`rel-fill`{.Agda}、`rel-rep`{.Agda}、`ixRel-fill`{.Agda} 与 `ixRel-rep`{.Agda} 把**任何**实现该类的集合的隶属，读在「阶段的成员出现时的两种形状」上；把它们陈述为「任何这样的集合」是有意为之：必须交给命名机制的，是「正在建造的那个阶段之下一级」处的关系，而在构造内部，那个集合来自表，并带着「它在那里实现那个类」这条假设，比本章交回的那个集合的存在早一个阶段。
 
-`ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，对那条步进条件保持通用，而该条件以参数身份取两种形式进场：为图取诸位，为分离取诸常元，各自带着「它是什么意思」那条假设。`approx-val`{.Agda} 靠一次在实参上沿成员进行的归纳，把逼近所记录的每个取值钉住，任何地方都没有单值性假设，而 `approx-uniq`{.Agda} 是那条推论。`graph-only`{.Agda} 与 `graph-table`{.Agda} 是图对着一张表的两个方向。
+`ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，二者对那条步进条件保持通用；该条件作为参数以两种形式出现：图的形式取诸位，分离的形式取诸常元，各自带有说明其含义的假设。`approx-val`{.Agda} 通过在实参上沿成员关系作归纳，逐一确立逼近所记录的每个取值，全程并未假设单值性；`approx-uniq`{.Agda} 是这一点的推论。`graph-only`{.Agda} 与 `graph-table`{.Agda} 是图与表之间相互转化的两个方向。
 
-`tableAt`{.Agda} 是那个构造，在它被造出之处封印，且它在每个序数处携带**两**样东西：其以下诸关系的表，经 `mereFunct`{.Agda} 由替换收拢；以及它那里的关系，从一个界上分离出来。那个界是层级那一章没有对应物的那一件，而它只花一次诉诸：一个阶段的两个成员所成的诸对构成 `L` 元素的一个小族，故 `smallDom`{.Agda} 一举把它们全部禁闭。`relL`{.Agda} 是第二个分量，而 `relL-fill`{.Agda} 与 `relL-rep`{.Agda} 是 `rel-fill`{.Agda} 与 `rel-rep`{.Agda} 在它处的实例。
+`tableAt`{.Agda} 是所需构造，并在构造处封印。它在每个序数处包含**两**项：由替换和 `mereFunct`{.Agda} 收集的较低索引关系表，以及从一个统一阶段界中分离出的当前关系。层级章没有提供这个界；这里只需证明一次：某阶段中任意两个成员组成的有序对形成 `L` 元素的小族，`smallDom`{.Agda} 因而给出包含所有这些对的单一阶段。`relL`{.Agda} 是第二个分量，`relL-fill`{.Agda} 与 `relL-rep`{.Agda} 分别是 `rel-fill`{.Agda} 与 `rel-rep`{.Agda} 在该分量上的实例。
 
-本章没有做的，是证明那条步进条件自身的充分性，此处以 `Described`{.Agda} 的两条假设之名点出。那不是一件事而是三件：`StepAt`{.Agda} 对着元层面那一步的充分性、诞生阶段在对象语言里的描述、以及在一个随诞生阶段移动的载体上的码集。它们合起来，是横在这个构造与一条无条件定理之间的东西。
+本章没有证明那条步进条件自身的充分性，而是以 `Described`{.Agda} 的两条假设的形式指出这一点。这不是一件事，而是三件事：`StepAt`{.Agda} 对应于元层面那一步的充分性、诞生阶段在对象语言里的描述、以及在一个随诞生阶段移动的载体上的码集。这三件事合起来，正是这个构造与一条无条件定理之间尚待补足的部分。
 <!--/-->

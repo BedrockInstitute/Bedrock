@@ -24,9 +24,9 @@ one and the same set: a name written over a single stage. What is still missing
 is a way to **compare** those names, and comparison is what this chapter builds,
 at the bottom of the tower.
 
-Two claims carry it. The first is that each stage indexed by a numeral is
+The chapter rests on two claims. The first is that each stage indexed by a numeral is
 finite, in the precise sense given below: it comes with a finite list of sets
-that hits all of its members. The second is that a finite stage carries a
+that includes all of its members. The second is that a finite stage carries a
 well-order, obtained by comparing two of its members at the earliest point where
 they disagree, and giving the larger place to whichever of the two contains that
 point.
@@ -37,34 +37,35 @@ recipe and there is an infinite descent: the set of all numbers, then all
 numbers from one on, then all from two on, and so forth, each step deleting the
 earliest surviving point and so landing strictly lower. Nothing about the recipe
 forbids this; what forbids it over a finite base is that a finite base has only
-finitely many subsets, so a search for a smallest one terminates. That is exactly
-how the well-foundedness proof below goes: a finite list plus a linear order
-yields a smallest member of any inhabited property, by scanning the list and
-keeping the best hit; and "every inhabited property has a smallest member" is,
-classically, well-foundedness.
+finitely many subsets, so a search for a smallest one terminates. The
+well-foundedness proof below goes exactly this way: a finite list plus a linear
+order yields a smallest member of any inhabited property, by scanning the list and
+keeping, at each step, the smallest candidate so far; and "every inhabited
+property has a smallest member" is, classically, well-foundedness.
 
-The finiteness climbs the tower because the definable subsets of a finite set
+Finiteness propagates up the tower because the definable subsets of a finite set
 are all of its subsets, and a set with a list has only finitely many subsets, one
 for each vector of bits over that list. So a list of the stage yields a list of
-the next stage, and the recursion needs nothing else.
+the next stage, and the recursion is enough to carry the whole construction
+through.
 
 The limit stage is then assembled without any further work about how the finite
 orders sit inside one another, because they do not: comparison at the earliest
 disagreement does not extend from one stage to the next. The floor number is the
 primary key instead. Two members of the limit that first appear at different
 finite stages are compared by those stage numbers alone; two that first appear at
-the same stage are compared by that stage's own order. Nothing else is needed,
-and nothing else is true.
+the same stage are compared by that stage's own order. No compatibility between the finite-stage orders is needed, and none is
+asserted.
 <!--zh-->
 先前的选择构造为一个族的每一格定位了该格首次拥有成员的阶段，并证明了它是一个后继。于是该格中恰在那里现身的每个成员，都是同一个集合的可定义子集：一个写在单一阶段之上的名字。尚缺的是**比较**这些名字的办法，而本章要在塔的底部造出的正是这种比较。
 
-两个论断撑起本章。第一，凡以数码为索引的阶段都是有穷的，其确切含义见下文：它附带一份有穷的集合清单，命中它的全部成员。第二，有穷阶段带有一个良序，其比较方式是看两个成员最先在何处出现分歧，并把较大的位置判给二者中含有该处的那一个。
+本章依赖两个论断。第一，凡以数码为索引的阶段都是有穷的，其确切含义见下文：它附带一份有穷的集合清单，清单包含它的全部成员。第二，有穷阶段带有一个良序：比较两个成员时，看它们最先在何处出现分歧，并把较大的位置判给含有该处的那一个。
 
-第二个论断是数学内容所在，而它在本质上是关于**有穷**集合的论断。若把同一套配方用到自然数的子集上，就会出现无穷下降：全体自然数，然后是从一开始的全体，再是从二开始的全体，如此下去，每一步删掉最先幸存的那一点，因而严格落到更低处。配方本身并不禁止这件事；在有穷基底上禁止它的，是有穷基底只有有穷多个子集，故寻找最小者的搜索会终止。下文良基性的证明走的正是这条路：一份有穷清单加上一个线序，就给出任何非空性质的最小成员，办法是扫过清单并留下最好的一次命中；而「每个非空性质都有最小成员」在经典意义下就是良基性。
+第二个论断才是数学内容所在，它本质上是关于**有穷**集合的论断。若把同一构造用于自然数的子集，就会出现无穷下降：先是全体自然数，然后是从一开始的全体，再是从二开始的全体，如此下去，每一步删去尚存者中最先的那一个，因而严格落到更低处。构造本身并不排除这种情形；在有穷基底上，只有有穷多个子集，因此寻找最小成员的过程会终止。下文据此证明良基性：一份有穷清单加上一个线序，可以为任何非空性质给出最小成员，方法是逐项检查清单，并在每一步保留截至该处最小的候选；而「每个非空性质都有最小成员」在经典意义下就是良基性。
 
-有穷性之所以能沿塔上爬，是因为有穷集合的可定义子集就是它的全部子集，而带清单的集合只有有穷多个子集，每个清单上的位向量对应一个。于是一个阶段的清单给出下一个阶段的清单，递归再无所求。
+有穷性能沿塔逐层推广，是因为有穷集合的可定义子集就是它的全部子集，而带清单的集合只有有穷多个子集，清单上的每个位向量对应其中一个。于是一个阶段的清单给出下一个阶段的清单，递归便足以推进整个构造。
 
-极限阶段随即装配起来，不必再为「有穷诸序如何互相嵌套」多费功夫，因为它们并不嵌套：按最先分歧处比较的序，并不从一个阶段延拓到下一个阶段。取而代之的主键是楼层号。极限中首次现身于不同有穷阶段的两个成员，仅凭那两个阶段号比较；首次现身于同一阶段的两个成员，则按那个阶段自己的序比较。别的都不需要，别的也都不成立。
+极限阶段随即可以构造出来，无须追问「有穷诸序如何互相嵌套」，因为它们并不嵌套：按最先分歧处比较的序，并不从一个阶段延拓到下一个阶段。这里改用先比所属阶段号、再比局部序的办法：首次现身于不同有穷阶段的两个成员，仅凭那两个阶段号分出先后；首次现身于同一阶段的两个成员，则按该阶段自己的序比较。此外不需要任何别的办法，此外也没有任何别的序成立。
 <!--/-->
 
 ```agda
@@ -128,19 +129,19 @@ allowing repetitions and requiring neither injectivity nor decidable equality.
 <!--en-->
 Finiteness enters as a **tally**: a number, a family of that many sets all
 belonging to `A`, and the statement that every member of `A` is merely one of
-them. `onto` reads "the family hits everyone".
+them. `onto` records that every member is merely represented in the family.
 
 Nothing is asked about repetitions and nothing is asked about deciding equality:
 a tally is a surjection from a finite index, not a bijection. That is deliberate.
 The two uses ahead are a scan (which does not mind seeing an element twice) and
-a bit vector (which does not mind either), and asking for less means the tally of
-the next stage is cheaper to build. The whole finiteness vocabulary of this
+a bit vector (which does not mind either), and asking for less makes the tally of
+the next stage easier to build. The whole finiteness vocabulary of this
 chapter is this record plus the index arithmetic that builds one tally out of
 another.
 <!--zh-->
-有穷性以**点名册**的身份入场：一个数、这么多个都属于 `A` 的集合所成的族，外加一句「`A` 的每个成员都仅仅是其中之一」。`onto` 读作「该族命中所有人」。
+有穷性以**点名册**的形式引入：取一个数和一个由相应多个集合组成的族，族中的每个集合都属于 `A`，并要求「`A` 的每个成员都仅仅等于其中某一个」。`onto` 表示该族列出了 `A` 的所有成员。
 
-对重复不作要求，对判定相等也不作要求：点名册是从有穷索引出发的满射，不是双射。这是有意为之。前方的两处用法是一次扫描 (看见同一个元素两次也无妨) 与一个位向量 (同样无妨)，而要求得越少，下一个阶段的点名册就越便宜。本章全部的有穷性词汇，就是这个 record 加上「由一份点名册造出另一份」的索引算术。
+对重复不作要求，对可判定相等也不作要求：点名册是从有穷索引出发的满射，而不是双射，这是有意的选择。本章稍后有两处用到它：一次扫描 (同一元素出现两次也无妨) 与一个位向量 (同样无妨)；要求得越少，构造下一个阶段的点名册就越容易。本章全部的有穷性词汇，就是这个 record 加上「由一份点名册造出另一份」的索引算术。
 <!--/-->
 
 ```agda
@@ -176,7 +177,7 @@ needed: an index below `a + b` is either an index below `a` or an index below
 `b`, and conversely. Only one of the two round trips is ever used, so only that
 one is proved; `bumpLeft` is the shift that makes the recursion on `a` type-check.
 <!--zh-->
-为幂集清点，意味着枚举位向量，而长度为 `n + 1` 的向量个数是长度为 `n` 的两倍。于是需要一小块索引算术：小于 `a + b` 的索引，要么是小于 `a` 的索引，要么是小于 `b` 的索引，反之亦然。两个来回中只有一个真正被用到，故只证那一个；`bumpLeft` 则是让沿 `a` 的递归通过类型检查的那次移位。
+为幂集清点需要枚举位向量，而长度为 `n + 1` 的向量个数是长度为 `n` 的两倍。因此需要一项索引算术：小于 `a + b` 的索引对应于小于 `a` 的索引或小于 `b` 的索引，反之亦然。后文只使用其中一个方向，所以这里只证明该方向；`bumpLeft` 是使沿 `a` 的递归通过类型检查所需的移位。
 <!--/-->
 
 ```agda
@@ -225,10 +226,10 @@ which entries to keep. There are `maskCount n` of them, that number being two to
 the `n` written as an iterated doubling, and `maskAt` reads an index as a mask:
 split the index in half, and the half it lands in supplies the leading bit while
 the rest supplies the tail. Every mask is read off some index, which is
-`mask-onto`, and that is the only property of the enumeration anyone needs. It is
-not injective on the nose and does not have to be.
+`mask-onto`, and that is the only property of the enumeration that is needed.
+No pointwise injectivity property is required.
 <!--zh-->
-长度为 `n` 的**掩码**是一个 `n` 位的向量；对一个已清点的集合，它说明保留哪些条目。掩码共有 `maskCount n` 个，这个数是二的 `n` 次幂，写成反复加倍的形式，而 `maskAt` 把一个索引读成一个掩码：把索引对半劈开，它落在哪一半就由哪一半供给首位，其余部分供给尾巴。每个掩码都从某个索引读得，这就是 `mask-onto`，而这也是人们使用这个枚举时唯一需要的性质。它并非逐点单射，也不必是。
+长度为 `n` 的**掩码**是一个 `n` 位向量；对已经清点的集合，它指明保留哪些条目。共有 `maskCount n` 个掩码，即二的 `n` 次幂，这里写成反复加倍的形式。`maskAt` 把索引解释为掩码：按索引属于两个加数中的哪一支确定首位，再由该支中的剩余索引确定尾部。每个掩码都由某个索引得到，这就是 `mask-onto`，也是后文使用该枚举所需的唯一性质；该枚举不要求逐点单射。
 <!--/-->
 
 ```agda
@@ -284,9 +285,9 @@ Two specifications say what the result contains, and both are untruncated,
 because each is read straight off the same recursion. `marks` runs in the other
 direction, turning a decision on the entries into the mask that records it.
 <!--zh-->
-`select` 把掩码作用到一个族上：它保留那些位为 `true` 的条目，并把它们重新归拢成一个族，连同族自身的长度。长度是**由递归产生**的，这正是关键：无须计数，也没有任何算术把答案与掩码联系起来。
+`select` 把掩码作用到一个族上：它保留那些位为 `true` 的条目，并把它们重新组成一个族，同时给出该族的长度。长度是**由递归产生**的，这正是关键：无须计数，也不需要任何算术把答案与掩码联系起来。
 
-两条规格说明结果含有什么，且二者都不带截断，因为它们都是从同一次递归上直接读出的。`marks` 走的是反方向，把对诸条目的一次判定变成记录该判定的掩码。
+两条规格说明各自刻画结果包含什么，且都不带截断，因为二者都是同一次递归的直接推论。`marks` 的方向相反：它把对诸条目的一次判定变成记录该判定的掩码。
 <!--/-->
 
 ```agda
@@ -367,13 +368,13 @@ the two specifications recover truth and falsity from that bit.
 <!--/-->
 
 <!--en-->
-The excluded middle hands over a disjunction, and a mask wants a bit, so the two
-have to be introduced to each other. The verdict is taken as an argument rather
-than looked up inside the definition: that is what lets the two round-trip lemmas
-be proved by matching on it, with the truth value itself given explicitly, since
+The excluded middle hands over a disjunction, while a mask requires a bit, so
+the two have to be connected. The verdict is taken as an argument rather than
+looked up inside the definition: that is what lets the two round-trip lemmas be
+proved by matching on it, with the truth value itself given explicitly, since
 an implicit argument buried under `⟨_⟩` is never inferred.
 <!--zh-->
-排中律交出的是一个析取，而掩码要的是一位，故须为二者引见。裁决作为实参收下，而不是在定义内部去查：正是这一点让两条来回引理能靠对它作模式匹配来证明；而真值本身显式给出，因为埋在 `⟨_⟩` 之下的隐式实参从来推不出来。
+排中律给出的是一个析取，而掩码需要的是一位，故须把二者衔接起来。裁决作为实参显式传入，而不是在定义内部求解：正是这一点使两条来回引理能靠对它作模式匹配来证明；真值本身也显式给出，因为隐藏在 `⟨_⟩` 之下的隐式实参从来推不出来。
 <!--/-->
 
 ```agda
@@ -408,25 +409,25 @@ definable subset by choosing a mask and forming the corresponding finite set.
 <!--/-->
 
 <!--en-->
-Here is the step that makes finiteness climb. Fix an ordinal `σ` and a tally of
-the stage `Lset σ`. Each entry of the tally is a member of that stage, so each
-has a name in the stage's small member type, which is what the basic-axioms
-chapter's finite disjunction wants; `part` applies a mask to those names and
-takes the finite set they span. That set is a definable subset of the stage, for
-the reason recorded there: the finite disjunction of "equals this one" carves it
-out.
+Here is the step that carries finiteness from one stage to the next. Fix an
+ordinal `σ` and a tally of the stage `Lset σ`. Each entry of the tally is a member of
+that stage, so each has a name in the stage's small member type, which is what
+the basic-axioms chapter's finite disjunction wants; `part` applies a mask to
+those names and takes the finite set they span. That set is a
+definable subset of the stage, for the reason recorded there: the finite
+disjunction of "equals this one" defines it.
 
 Two specifications relate membership in `part v` to the mask, in each direction.
 Then the converse: given any definable subset `x`, mark each entry of the tally
 according to whether it belongs to `x`, and `part` of that mask **is** `x`. One
 direction is immediate from the specification; the other needs that `x` stays
-inside the stage, so that every member of `x` is hit by the tally in the first
-place. So the masks tally the definable subsets, and a tally of a stage yields a
-tally of the next.
+inside the stage, so that every member of `x` is listed by the tally in the
+first place. So the masks tally the definable subsets, and a tally of a
+stage yields a tally of the next.
 <!--zh-->
-下面就是让有穷性上爬的那一步。固定一个序数 `σ` 与阶段 `Lset σ` 的一份点名册。点名册的每个条目都是该阶段的成员，故各自在该阶段的小成员类型中有一个名字，而这正是基本公理一章的有穷析取所要的；`part` 把掩码作用到这些名字上，取它们张成的有穷集合。该集合是这个阶段的可定义子集，理由已记在那里：「等于这一个」的有穷析取把它刻了出来。
+这一步使有穷性逐级传递。固定序数 `σ` 和阶段 `Lset σ` 的一份点名册。点名册的每个条目都是该阶段的成员，因此在该阶段的小成员类型中有相应元素，这正是基本公理一章的有穷析取所需的数据。`part` 把掩码作用于这些元素，并取它们组成的有穷集合。该集合是这一阶段的可定义子集，因为一个「等于给定条目」的有穷析取定义了它。
 
-两条规格把属于 `part v` 与掩码双向联系起来。然后是逆向：给定任一可定义子集 `x`，按点名册的每个条目是否属于 `x` 给它打上标记，则该掩码的 `part` **就是** `x`。一个方向由规格直接得到；另一个方向需要 `x` 不出该阶段，这样 `x` 的每个成员才会首先被点名册命中。于是诸掩码为可定义子集清了点，而一个阶段的点名册给出下一个阶段的点名册。
+两条规格把 `part v` 的成员关系与掩码双向联系起来。反方向从任一可定义子集 `x` 出发，按点名册中的每个条目是否属于 `x` 标记掩码，并证明该掩码对应的 `part` **就是** `x`。一个方向直接由规格得到；另一个方向需要 `x` 不超出该阶段，使 `x` 的每个成员都由点名册列出。因此，掩码给出可定义子集的点名册，而一个阶段的点名册进一步给出下一阶段的点名册。
 <!--/-->
 
 ```agda
@@ -689,7 +690,7 @@ one that has it.
 Irreflexivity is immediate and needs no hypothesis at all: a witness for `x`
 against itself would belong to `x` and not belong to `x`.
 <!--zh-->
-固定一个集合 `A` 与集合之上的一个关系 `R`，后者读作 `A` 的诸成员上的一个序。`A` 的两个子集，按它们在何处分歧来比较。「`x` 先于 `y`」的见证，是 `A` 的一个成员 `z`，它属于 `y` 而不属于 `x`，且 `x` 与 `y` 在 `z` 之下**一致**，意即 `A` 中被 `R` 排在 `z` 之前的每个成员，属于其中之一当且仅当属于另一个。倒过来读：`z` 就是最先的分歧点，而 `y` 是持有它的那一个。
+固定一个集合 `A` 与集合之上的一个关系 `R`，后者读作 `A` 的诸成员上的一个序。`A` 的两个子集，按它们在何处分歧来比较。「`x` 先于 `y`」的见证，是 `A` 的一个成员 `z`，它属于 `y` 而不属于 `x`，且 `x` 与 `y` 在 `z` 之下**一致**，意即 `A` 中被 `R` 排在 `z` 之前的每个成员，属于其中之一当且仅当属于另一个。倒过来读：`z` 就是最先的分歧点，而它属于 `y`。
 
 非自反性立刻成立，且完全不需要任何前提：`x` 对自己的见证会既属于 `x` 又不属于 `x`。
 <!--/-->
@@ -724,7 +725,7 @@ is on the right side, and that the agreement below it composes.
 <!--zh-->
 传递性与三歧确实需要关于基底序的前提，而二者所需不同，故一并收进一个模块：`R` 在 `A` 的诸成员上的三歧与传递，以及 `R` 在那些成员上的最小元原则。在塔中，这些都来自下面那个阶段。
 
-传递性是两个见证之间的比较。若 `x` 在 `p` 处先于 `y`，`y` 在 `q` 处先于 `z`，则 `p` 与 `q` 不可能相等，因为 `p` 属于 `y` 而 `q` 不属于；而二者中较小的那个就见证了 `x` 先于 `z`。两支要核对的是同样两件事：较小的那一点站对了边，以及它之下的一致性可以复合。
+传递性是两个见证之间的比较。若 `x` 在 `p` 处先于 `y`，`y` 在 `q` 处先于 `z`，则 `p` 与 `q` 不可能相等，因为 `p` 属于 `y` 而 `q` 不属于；而二者中较小的那个就见证了 `x` 先于 `z`。两支要核对的是同样的两件事：较小的那一点方向正确，以及它之下的一致性可以复合。
 <!--/-->
 
 ```agda
@@ -766,20 +767,20 @@ module Difference (R : S → S → Ω) (A : S)
 
 <!--en-->
 Trichotomy is where the excluded middle and the smallest-element principle are
-spent. Ask whether the two subsets disagree anywhere in `A`. If they do not, they
-agree everywhere in `A`; since both stay inside `A`, they agree everywhere at
-all, and extensionality identifies them. If they do, there is an earliest point
-of disagreement, and one further decision, whether that point belongs to the
-first subset, says which way the comparison goes. Agreement below the point is
-free in both branches: nothing below it disagrees, by the choice of the point.
+used. Ask whether the two subsets disagree anywhere in `A`. If they do not, they
+agree everywhere in `A`; since both stay inside `A`, they already agree
+everywhere, and extensionality identifies them. If they do, there is an earliest
+point of disagreement, and one further decision, whether that point belongs to
+the first subset, says which way the comparison goes. Agreement below the point
+holds automatically in both branches: nothing below it disagrees, by the choice
+of the point.
 
 The excluded middle is used a second time inside `agree`, to turn "not
-disagreeing" into "agreeing"; that step is exactly a double negation and cannot
-be had for less.
+disagreeing" into "agreeing"; that step is exactly a double negation elimination.
 <!--zh-->
-三歧正是花掉排中律与最小元原则的地方。先问这两个子集在 `A` 中是否有分歧之处。若没有，则它们在 `A` 中处处一致；又因二者都不出 `A`，故它们本就处处一致，外延性把它们认同。若有，则存在一个最先的分歧点，再作一次判定，即该点是否属于第一个子集，就说明比较朝哪个方向走。该点之下的一致性在两支中都是白得的：按该点的选法，它之下无一处分歧。
+三歧正是使用排中律与最小元原则的地方。先问这两个子集在 `A` 中是否有分歧之处。若没有，则它们在 `A` 中处处一致；又因二者都不超出 `A`，故它们本就处处一致，外延性把它们认同。若有，则存在一个最先的分歧点；再作一次判定，即该点是否属于第一个子集，就知道比较朝哪个方向走。该点之下的一致性在两支中都自动成立：按该点的选法，它之下无一处分歧。
 
-排中律在 `agree` 内部第二次被使用，用来把「没有分歧」变成「一致」；这一步恰是一次双重否定的消去，再便宜不了。
+排中律在 `agree` 内部第二次被使用，用来把「没有分歧」变成「一致」；这一步恰是一次双重否定的消去。
 <!--/-->
 
 ```agda
@@ -866,7 +867,7 @@ be had for less.
 Recursion over numerals carries both a tally and an earliest-disagreement
 well-order from each finite stage to the next.
 <!--zh-->
-沿数码的递归把点名册与最先分歧良序从每个有穷阶段一并带到下一阶段。
+沿数码的递归把点名册与最先分歧良序从每个有穷阶段传到下一阶段。
 <!--ja-->
 数項上の再帰により、数え上げと最初の相違による整列順序を各有限段階から次の段階へ同時に運ぶ。
 <!--/-->
@@ -879,7 +880,7 @@ order as the base. `before-irrefl` holds at every stage and needs no induction,
 since irreflexivity of the comparison needed no hypothesis and stage zero carries
 no comparison at all.
 <!--zh-->
-以数码为索引的阶段就是有穷的那些，而每个阶段上的序沿递归造出：零阶段是空的，而 `n` 之后那个阶段上的序，是在阶段 `n` 之上按最先分歧处的比较、以阶段 `n` 自己的序为基底造出的。`before-irrefl` 在每个阶段都成立且无须归纳，因为该比较的非自反性本就不要前提，而零阶段根本不带任何比较。
+以数码为索引的阶段正是有穷阶段，每个阶段上的序由递归构造：零阶段为空；`n` 的后继阶段上的序以阶段 `n` 自身的序为基础，并按最先分歧处比较阶段 `n` 的可定义子集。`before-irrefl` 在每个阶段都成立且无需归纳，因为该比较的非自反性不需要前提，而零阶段没有任何比较。
 <!--/-->
 
 ```agda
@@ -911,13 +912,14 @@ zero-empty x h = PT.rec Empty.isProp⊥ step (Lset-out (# zero) x h)
 
 <!--en-->
 What the recursion has to carry is a tally, trichotomy and transitivity, and
-nothing else: irreflexivity is free at every stage, and well-foundedness is
-derived where it is used rather than transported. A point of a stage is a set
-together with its membership, which is a proposition, so two points are equal as
-soon as their sets are; that is the only bookkeeping in passing between the
-statements about sets and the bundle, whose carrier must be a type.
+nothing else: irreflexivity holds automatically at every stage, and
+well-foundedness is derived where it is used rather than transported.
+A point of a stage is a set together with its membership, which is a
+proposition, so two points are equal as soon as their sets are; that is all the
+work involved in passing between the statements about sets and the bundle, whose
+carrier must be a type.
 <!--zh-->
-递归必须携带的是一份点名册、三歧与传递，别无其他：非自反性在每个阶段都是白得的，而良基性在用到之处现推而不搬运。阶段的一个点，是一个集合连同它的隶属证明，而隶属是命题，故两个点只要集合相等就相等；这就是在「关于集合的陈述」与「载体必须是类型的那个束」之间往返时，全部的记账工作。
+递归必须携带的数据只有一份对成员的清点、三歧与传递：非自反性在每个阶段都自动成立，而良基性只在用到之处当场推出，不必随身携带。阶段的一个点是一个集合连同它的隶属证明；由于隶属是命题，两个点只要集合相等就相等。在「关于集合的陈述」与「载体必须是类型的那个束」之间往返时，需要做的全部工作就在于此。
 <!--/-->
 
 ```agda
@@ -977,15 +979,16 @@ module Ordered (n : ℕ) (r : StageOrder n) where
 ```
 
 <!--en-->
-And the recursion itself. At zero everything is discharged by the stage being
-empty. At a successor the tally is the previous stage's tally raised through the
-definable power set, and the two order facts are the two theorems about the
-earliest disagreement, applied with the previous stage supplying its trichotomy,
-its transitivity and its smallest elements. The identification of a successor
-stage with the definable power set below it is used three times, once per field,
-and each time only to move a membership statement across it.
+And the recursion itself. At zero everything holds immediately because the
+stage is empty. At a successor the tally is the previous stage's tally
+lifted through the definable power set, and the two order facts are the two
+theorems about the earliest disagreement, applied with the previous stage
+supplying its trichotomy, its transitivity and its smallest elements. The
+identification of a successor stage with the definable power set below it
+is used three times, once per field, and each time only to convert a membership
+statement across it.
 <!--zh-->
-然后是递归本身。零处，一切都由该阶段为空而清账。后继处，点名册是上一个阶段的点名册经可定义幂集抬上来的，而两条序的事实就是关于最先分歧处的那两条定理，施用时由上一个阶段供给它的三歧、它的传递与它的最小元。「后继阶段与其下的可定义幂集相认同」这一点用了三次，每个字段一次，且每次都只用来把一句隶属陈述搬过去。
+然后是递归本身。零处，一切都因该阶段为空而直接成立。后继处，清点由上一个阶段的清点经可定义幂集提升而来；两条序的事实就是关于最先分歧处的那两条定理，使用时由上一个阶段提供其三歧、传递与最小元。「后继阶段与其下的可定义幂集相认同」这一点用了三次，每个字段一次，且每次都只用来转换一句隶属陈述。
 <!--/-->
 
 ```agda
@@ -1053,14 +1056,14 @@ first and the local stage order second gives the limit-stage well-order.
 <!--/-->
 
 <!--en-->
-A member of the limit stage appears at some finite stage, since the limit is the
-union of the stages below it and each of those is indexed by a numeral. Among
-the numerals at which it has appeared there is a smallest, and that number is
-its **level**. This is the one place where the well-order of the natural numbers
-is spent, and the smallest-element theorem of the well-order chapter is what
-spends it.
+A member of the limit stage appears at some finite stage, since the limit is
+the union of the stages below it and each of those is indexed by a numeral.
+Among the numerals at which it has appeared there is a smallest, and that number
+is its **level**. This is the one place where the well-order of the natural
+numbers is used, and the smallest-element theorem of the well-order chapter
+is what is applied there.
 <!--zh-->
-极限阶段的成员现身于某个有穷阶段，因为极限是其下诸阶段的并，而它们各自都以数码为索引。在它已现身的那些数码之中有一个最小者，那个数就是它的**层号**。这是本章唯一花掉自然数良序的地方，而花掉它的正是良序那一章的极小元定理。
+极限阶段的成员出现于某个有穷阶段，因为极限是其下诸阶段的并，而它们各自都以数码为索引。在它已出现的那些数码之中有一个最小者，那个数就是它的**层号**。本章只有此处用到自然数良序，所用的正是良序那一章的极小元定理。
 <!--/-->
 
 ```agda
@@ -1102,9 +1105,9 @@ Irreflexivity and transitivity are case analyses on that alternative, with the
 level equations moving the stage-order facts to the level where they are needed.
 Trichotomy compares levels first and defers to the stage only when they agree.
 <!--zh-->
-极限上的序以层号为主键：层号较低的成员排在前面，而同层的两个成员按该层自己的序比较。层号之间的等式由第二支携带，且携带的方向使得第二个成员可以在第一个成员的层上读出，正是这一点让定义中不出现任何搬运。
+极限上的序先按层号比较：层号较低的成员在前，同层的两个成员则按该层自己的序比较。第二支处理层号相等的情形，其方向使得第二个成员可以在第一个成员的层上读出；正因如此，定义中不出现任何跨层的转换。
 
-非自反与传递是对那一支的分情形，其中层号等式把阶段序的事实搬到需要它的那一层上。三歧先比较层号，只有层号相同时才交给阶段处理。
+非自反与传递是对那一支的分情形，层号等式的情形直接使用相应层上的阶段序事实。三歧先比较层号，仅当层号相同时才由阶段序判定。
 <!--/-->
 
 ```agda
@@ -1158,7 +1161,7 @@ to the outer hypothesis; a step within a level appeals to the inner one; and
 since the inner function recurses on nothing but its own accessibility argument,
 the two never have to be compared.
 <!--zh-->
-良基性是两层嵌套的归纳，而把它们分开是有意的。外层是对层号的归纳，取库封装好的形式，它交下一个覆盖所有更低层的假设。内层是沿有穷阶段本已具备的可及性作普通下降，而这之所以合法，恰恰是因为那个阶段有穷。降一层的一步诉诸外层假设；层内的一步诉诸内层假设；而由于内层函数除自己的可及性实参外不沿任何东西递归，二者从不需要放在一起比较。
+良基性的证明是两层嵌套的归纳，而把它们分开是有意的。外层是对层号的归纳，采用库中现成的封装，它提供一条覆盖所有更低层的归纳假设。内层沿有穷阶段已有的可及性作普通的下降，其合法性正来自该阶段的有穷性。跨层下降的一步使用外层假设，层内的一步使用内层假设；内层函数除自己的可及性实参外不沿任何东西递归，因此二者从不需要同时比较。
 <!--/-->
 
 ```agda

@@ -16,7 +16,7 @@ This chapter combines formula codes with uniform satisfaction to define a first-
 
 <!--en-->
 This is the step the whole route exists for. Every chapter before it built a
-piece of the machine at a carrier the caller *holds*: a set of `L`, named in a
+component at a carrier the caller *holds*: a set of `L`, named in a
 formula as a constant. The internal hierarchy cannot hold its stage that way. Its
 graph binds the stage, because a graph may not name the object it defines, and a
 set enters a formula only by being named. So the description of the definable
@@ -38,11 +38,11 @@ land at different environments, and the route would acquire a weakening lemma it
 otherwise never needs: the same formula, the same conjunct count, the same depth,
 and a lemma's worth of difference.
 <!--zh-->
-这就是整条路线为之存在的那一步。在它之前的每一章，造的都是这台机器在「调用方**握**着的载体」上的一个零件：`L` 的一个集合，在公式里被点名为常元。内部层级没法那样握住自己的阶段。它的图把阶段绑定起来，因为一个图不可以点名它所定义的那个对象，而集合进入公式的唯一方式是被点名。故可定义幂集的描述必须能**在那层绑定之下**说出口，其载体只占周遭环境的一位，别无其他。
+这就是整条路线为之存在的那一步。在它之前的每一章，构造的都是调用方**持有**的载体上的一个组件：`L` 的一个集合，在公式里被点名为常元。内部层级无法那样持有自己的阶段。它的图把阶段绑定起来，因为一个图不能点名它所定义的那个对象，而集合进入公式的唯一方式是被点名。故可定义幂集的描述必须能**在那层绑定之下**表述出来，其中载体只占周遭环境的一个位置，此外没有别的。
 
-那条描述所说的，就是这个算子本身。`u` 是载体的可定义幂集，其诸成员恰是「由一条公式从载体中刻出的那些集合」：仅仅存在载体之上的一个码 `c` 与一个取值 `v`，该取值就是满足关系那场递归在那个码处所记录的东西，而 `u` 的那个成员是「其单条目环境落在 `v` 中的载体诸成员」之集。三个合取项，而每一个都是一章早已交付的东西，只是读在一位上、不读在常元上。
+那条描述所说的，就是这个算子本身。`u` 是载体的可定义幂集，其诸成员恰是「由一条公式在载体中定义出的那些集合」：仅仅存在载体之上的一个码 `c` 与一个取值 `v`，该取值就是满足关系那场递归在那个码处所记录的东西，而 `u` 的那个成员是「其单条目环境落在 `v` 中的载体诸成员」之集。三个合取项，而每一个都是某章早已给出的东西，只是读在一位上、不读在常元上。
 
-有一处形状上的更正是被逼的，值得在公式出现之前先讲。码与取值由**相邻的**两个存在量词绑定，中间不隔任何合取项。若中间隔一个合取项而嵌套，那两条假设就落到不同的环境上，于是这条路线会平白背上一条它永远用不着的弱化引理：同一条公式、同样的合取项数目、同样的深度，差别恰好是一条引理。
+有一处形状上的修正是必须的，值得在公式出现之前先讲。码与取值由**相邻的**两个存在量词绑定，中间不隔任何合取项。若中间隔一个合取项再嵌套，那两条假设就会落在不同的环境上，于是这条路线将平白多出一条它永远用不着的弱化引理：同一条公式、同样的合取项数目、同样的深度，差别恰好是多出一条引理。
 <!--/-->
 
 ```agda
@@ -139,9 +139,9 @@ one does the same.
 <!--zh-->
 元数一处的可定义性，问的是一条公式对单个成员是否成立，而满足关系那场递归是在**环境**处作答的；把两者接起来的，正是「把那个成员指派给仅有的那一个变元」的环境。环境就是它的图，而长度为一的图只是一个对：数码零配上那个取值。
 
-于是读式只有一行。「这一位上的集合，其成员恰是诸对 `(0, y)`」就是 `extAt`{.Agda} 施于标签读式，而标签读式本来就交付底集之间的那条等式，故此处压根不必再证任何关于对的事。
+于是读式只有一行。「这一位上的集合，其成员恰是诸对 `(0, y)`」就是 `extAt`{.Agda} 施于标签读式，而标签读式本来就给出底集之间的那条等式，故这里完全不必再证任何关于对的事。
 
-它的两个方向手写在那个单元素索引类型上，而这是测量、不是口味。把「属于一个单条目集合」读回来，是一次两分支的情形分析，其中一支不可能；若走库里「有穷函数与向量」的往返，同一条陈述曾把某一章卡在八分钟以上，而遇上它的那一章改为手写两条子句。这一章照办。
+定义的两个方向都在那个单元素索引类型上手工写出，这是基于实测的取舍，而非风格偏好。把「属于一个单条目集合」解码回来，只需一次两分支的情形分析，其中一支不可能出现；若改走库里「有穷函数与向量」的路线，同一条陈述曾使某一章的处理耗时超过八分钟，遇到它的那一章于是改为手写两条子句。本章沿用这一做法。
 <!--/-->
 
 ```agda
@@ -233,11 +233,11 @@ Its two directions are `extAt`{.Agda}'s own two, and the existential inside the
 condition is read by the previous section. Nothing here inspects the value, which
 is why this section knows nothing about codes.
 <!--zh-->
-第三个合取项，单独拿出来，落在三个槽位上：那个成员、载体，以及满足关系那场递归所记录的取值。它说的是：那个成员就是「其单条目环境落在该取值之中」的那些载体成员之集，也就是把可定义子集逐字写出来、只是用那场递归顶替了满足关系。
+单独取出第三个合取项来看，它涉及三样东西：那个成员、载体，以及满足关系递归所记录的取值。它说的是：那个成员恰是「其单条目环境落在该取值之中」的那些载体成员之集，也就是把可定义子集逐字写出，只是用递归取值代替了满足关系。
 
-那个条件是一个合取而不是单独一条子句，因为「落在载体之内」这道界并不由其余部分蕴含。递归取值的成员是一个环境，不是载体的一个子集，故仅凭后半句，对「那个成员从哪里来」什么也没说；可定义子集是从载体中刻出来的，公式必须把这一点说出来。
+那个条件是一个合取而非单独一条子句，因为「属于载体」这一点不能由其余部分推出。递归取值的成员是一个环境，不是载体的子集，故仅凭后半句，对那个成员来自何处毫无说明；可定义子集本就取自载体，公式必须把这一点明确说出。
 
-它的两个方向就是 `extAt`{.Agda} 自己的那两个，而条件里面那个存在量词由上一节读出。此处没有任何东西去查看那个取值，这也是本节对码一无所知的原因。
+它的两个方向就是 `extAt`{.Agda} 自身的两个方向，条件中的存在量词由上一节读出。这里的任何步骤都不去查看那个取值，正因如此，本节无须涉及码的具体内容。
 <!--/-->
 
 ```agda
@@ -319,15 +319,15 @@ Two conjuncts, both already proved, and this is only where they meet: the
 argument is a key at arity one, and it has a closed, shaped witness at the
 carrier the slot holds. The first is what tells the decode which arity to answer
 at; the second is what the decode runs on. Neither names a set, so the pair can
-be spoken under any binder.
+be stated under any binder.
 
 The pinned predicate of the code-set chapter is this same pair with one binder on
 top, and that binder is the only thing separating a predicate a stage can hold
 from a predicate a bound variable can carry.
 <!--zh-->
-两个合取项，都早已证好，而此处只是它们会合之处：那个实参是元数一处的一个键，且它在「那一位所持有的载体」上有一个既封闭又成形的见证。前者告诉解码该在哪个元数上作答；后者是解码跑在其上的东西。两者都不点名任何集合，故这一对可以在任意绑定之下说出口。
+两个合取项都已证明，这里只把它们结合起来：其一说实参是元数一处的一个键，其二说该键在「该槽位所持载体」上具有一个既封闭又成形的见证。前者确定解码所用的元数，后者提供解码所依据的数据。二者都不点名具体集合，因此可以在任意绑定之下陈述。
 
-码集那一章那条被钉住的谓词，就是同一对再压上一层绑定，而那层绑定正是「一个阶段握得住的谓词」与「一个被绑定变元携带得了的谓词」之间唯一的差别。
+码集那一章所固定的那条谓词，就是这一对再加上一层绑定；而这层绑定正是「一个阶段所能支撑的谓词」与「一个被绑定变元所能携带的谓词」之间唯一的差别。
 <!--/-->
 
 ```agda
@@ -367,7 +367,7 @@ module _ (A : S) where
 <!--en-->
 Given a formula over members of the carrier stored at `w`, `graphAt-holds` supplies its formula key and uniform satisfaction value in the graph, while `graphAt-unique` proves that this value is unique.
 <!--zh-->
-给定一个常元取自槽位 `w` 所存载体成员的公式，`graphAt-holds` 在图中给出其公式键与一致满足关系值，而 `graphAt-unique` 证明该值唯一。
+给定一条公式，其常元取自槽位 `w` 中载体的成员，`graphAt-holds` 在图中给出该公式的键与一致满足关系的取值，`graphAt-unique` 则证明此取值唯一。
 <!--ja-->
 スロット `w` にある台の要素を定数とする論理式について、`graphAt-holds` はグラフ内の論理式の鍵と一様な充足関係の値を与え、`graphAt-unique` はその値の一意性を示します。
 <!--/-->
@@ -386,9 +386,9 @@ named, which is the law the value theorems were written under: naming a key puts
 its construction inside a satisfaction, and the same statement then costs minutes
 instead of seconds.
 <!--zh-->
-满足关系那场递归的图已被推广为把载体取作一位，而它的两半就是那场递归据以建立的存在性与唯一性，只是重新陈述在那一位上、并落在一个变元环境上。此处没有证明任何当时未证之事：存在性递出子公式槽、其上的那张表、以及十条子句，而这三样本来就把周遭环境取作实参；唯一性把图自己绑定的索引集与表读回来，再在图所绑定的那个载体上施用钉住定理。
+满足关系递归的图已被推广为把满足关系那场递归中的载体取作一个位，其两半正是该递归赖以建立的存在性与唯一性，只是重新陈述于这个位上，并落到一个变元环境上。这里没有证明任何此前未证的事：存在性给出子公式槽、其上的那张表，以及十条子句，而这三者本来就把周遭环境取作实参；唯一性把图自身绑定的索引集与表读出，再在图所绑定的那个载体上施用钉住定理。
 
-两者都以等式抵达码与取值、而不是点名，这正是诸取值定理据以写下的那条规矩：点名一个键，就把它的构造塞进了一个满足关系里面，同一条陈述于是从几秒变成几分钟。
+两者都以等式给出码与取值，而不是点名键；这正是诸取值定理写作时遵循的规则：一旦点名一个键，它的构造就会被并入一个满足关系，同一条陈述的验证时间于是从几秒变成几分钟。
 <!--/-->
 
 ```agda
@@ -485,9 +485,9 @@ would have needed is implied by its own hypothesis.
 <!--zh-->
 三个合取项，压在两个相邻的存在量词之下，再压在一次外延之下：`u` 恰是那些 `x` 之集，对它们仅仅存在载体之上的一个码 `c` 与一个取值 `v`，使得那场递归在 `c` 处记录的是 `v`，而 `x` 就是 `v` 所定义的东西。这就是可定义幂集，用对象语言说出来，而载体自始至终待在一位上。
 
-那个旁条件关乎对象语言的量词够得着什么。描述里的每个存在量词都在 `L` 上取值，故这条描述所挑出的集合只可能装着可构造集。若载体的某个可定义子集不可构造，这条描述仍会被满足，满足它的正是「诸可构造者之集」，而那样它就对一个并非可定义幂集的东西成立了。`DefOK`{.Agda} 恰是「这道缝不存在」。
+那个旁条件关乎对象语言的量词能取到哪些对象。描述里的每个存在量词都在 `L` 上取值，故这条描述所刻画的集合只能包含可构造集。若载体的某个可定义子集不可构造，这条描述仍会被满足，只是满足它的将是「诸可构造者之集」，于是它对一个并非可定义幂集的东西成立。`DefOK`{.Agda} 所说的正是这一缺口不会出现。
 
-调用方握着的载体无须**写出**这样的条件，因为握着载体的调用方也握着关于它的定理。一位上的载体则是周遭环境往那里放的任何东西，在那层绑定之下没有任何关于它的定理可用，故这件事必须作为假设一路旅行，并在那一位被填上之处解除。它只是消去那一半的假设：引入被给定 `u` **就是**可定义幂集，而 `u` 是 `L` 的元素，故它的诸成员本就可构造，它本会需要的那个条件由它自己的假设蕴含。
+能在调用处取得载体的调用方无须**写出**这样的条件，因为持有载体的调用方同时掌握关于它的定理。处于一位上的载体则是周遭环境放在那里的任何东西，在那层绑定之下没有关于它的定理可用，故这个条件必须作为假设随证明传递，并在该位被填上之处解除。这个条件只附加在消去那一半：引入方向被给定 `u` **就是**可定义幂集，且 `u` 是 `L` 的元素，故其成员本就可构造，它本会需要的那个条件由它自身的假设蕴含。
 <!--/-->
 
 ```agda
@@ -518,7 +518,7 @@ DefOK A = (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (fst A) ⟩ → ⟨ isL x ⟩
 <!--en-->
 For a fixed one-variable formula, `fill` builds witnesses showing that its definable subset satisfies `DefAt`, and `read` recovers from such witnesses equality with the corresponding definable subset.
 <!--zh-->
-对固定的单自由变元公式，`fill` 构造见证以证明其可定义子集满足 `DefAt`；`read` 则从这类见证恢复与相应可定义子集的相等。
+对固定的单自由变元公式，`fill` 为其可定义子集构造见证，证明它满足 `DefAt`；`read` 则从这类见证恢复出与相应可定义子集的相等。
 <!--ja-->
 固定した自由変数一つの論理式について、`fill` はその定義可能部分集合が `DefAt` を満たす証人を構成し、`read` はそのような証人から対応する定義可能部分集合との等式を復元します。
 <!--/-->
@@ -535,9 +535,9 @@ that is what keeps the stage out of the proof. The instantiation at a stage is a
 equation the caller supplies, and neither `Lset`{.Agda} nor an ordinal appears
 anywhere below.
 <!--zh-->
-描述的两半落在单独一条公式上，而充分性正是由它们装配起来的。为一条公式 `ψ` 供上那三个合取项，就是把它的键供给码，把递归的取值供给取值；把它们读回来，则是把码解码成一条公式，把取值钉在递归自己的取值上，然后把第三个合取项读作一条集合等式。
+描述的两半落在单独一条公式上，充分性正是由它们组合而成的。对一条公式 `ψ`，那三个合取项分别把它的键供给码、把递归的取值供给取值；反过来读取时，则把码解码成一条公式，把取值与递归自身的取值对上，再把第三个合取项读作一条集合等式。
 
-此处的一切都陈述在**变元**载体上、并经一条等式抵达，而正是这一点把阶段挡在证明之外。在某个阶段处的实例化是调用方供上的一条等式，而 `Lset`{.Agda} 与序数在下面任何地方都不出现。
+此处的一切都陈述在**变元**载体上，只经过一条等式，而正是这一点把阶段挡在证明之外。在某个阶段处的实例化只是调用方提供的一条等式，而 `Lset`{.Agda} 与序数在下文任何地方都不出现。
 <!--/-->
 
 ```agda
@@ -643,7 +643,7 @@ module _ (A : S) where
 <!--en-->
 The `describe` argument reads a `DefAt` witness through its satisfaction value, while `assemble` starts from an explicit defining formula. Together they prove the introduction and elimination specifications for the complete description.
 <!--zh-->
-`describe` 经由满足关系值读取 `DefAt` 见证，而 `assemble` 从显式定义公式出发。两者合起来证明完整描述的引入与消去规格。
+`describe` 按满足关系的值读取 `DefAt` 的见证，而 `assemble` 从显式定义的公式出发。两者合起来证明完整描述的引入与消去规格。
 <!--ja-->
 `describe` は充足関係の値を通して `DefAt` の証人を読み、`assemble` は明示的な定義論理式から出発します。両者を合わせて完全な記述の導入・除去仕様を証明します。
 <!--/-->
@@ -655,9 +655,10 @@ definable powerset satisfies the description: every member of it is a definable
 subset, and the three conjuncts are supplied for the formula that defines it.
 The elimination says that nothing else does, and it is the direction the side
 condition is for, since a set the description holds of has to be re-entered
-member by member and a member arrives as an element of `L` or not at all.
+member by member, and each member either is an element of `L` or is absent
+altogether.
 <!--zh-->
-装配与描述是逐成员的那两半，而两种读法就是它们置于 `extAt`{.Agda} 自己那两个方向之下。引入说的是可定义幂集满足这条描述：它的每个成员都是一个可定义子集，而那三个合取项为「定义它的那条公式」供上。消去说的是别的东西都不满足，而这正是那个旁条件起作用的方向，因为一个「描述对之成立」的集合要被逐成员地重新进入，而一个成员要么以 `L` 的元素的形式到场，要么根本不到场。
+装配与描述是处理逐成员情形的两半，两种读法就是把它们分别放到 `extAt`{.Agda} 自身的两个方向上。引入方向说：可定义幂集满足这条描述，即它的每个成员都是一个可定义子集，而那三个合取项由「定义它的那条公式」给出。消去方向说：别的东西都不满足；这里正是那个旁条件起作用的地方，因为一个满足描述的集合要逐成员地重新进入，而每个成员要么是 `L` 的元素，要么根本不在其中。
 <!--/-->
 
 ```agda
@@ -744,7 +745,7 @@ When the carrier is a constructible stage, its formula codes and uniform satisfa
 <!--/-->
 
 <!--en-->
-The instantiation, and the whole of it is one equation. A stage is an element of
+The instantiation is just one equation. A stage is an element of
 `L`, its definable subsets are constructible because a stage is constructible one
 stage later, and those two facts are what the successor identity delivers at
 every stage at once. So the side condition is discharged for good, and what is
@@ -757,9 +758,9 @@ is what the internal hierarchy needs: the description will be spoken under a
 binder, and the equation the caller supplies is the only thing that connects it
 to a stage at all.
 <!--zh-->
-那次实例化，其全部就是一条等式。阶段是 `L` 的元素，它的诸可定义子集可构造 (因为阶段在下一阶段可构造)，而这两件事正是后继恒等式在每个阶段处一并交付的。故那个旁条件一劳永逸地被解除，剩下的是一条真值之间的等价：在一个持有阶段的载体上，这条描述对某个集合成立，恰当那个集合**就是**该阶段的可定义幂集。它对 `𝒟ₒS`{.Agda} 成立，对别的什么都不成立。
+该实例化只需一条等式。阶段是 `L` 的元素，其可定义子集也可构造 (因为阶段在下一阶段可构造)；后继恒等式在每个阶段同时给出这两点。因此旁条件一次得到解除，剩下的是真值之间的等价：在持有该阶段的载体上，这条描述对某个集合成立，当且仅当该集合**就是**此阶段的可定义幂集。它对 `𝒟ₒS`{.Agda} 成立，对其他集合都不成立。
 
-两条陈述都只把那个阶段当作某一位的取值来提，而这正是内部层级所需要的：那条描述将在一层绑定之下被说出，而调用方供上的那条等式，是唯一把它与某个阶段联系起来的东西。
+两条陈述都只把那个阶段当作某一位的取值提到，而这正是内部层级所需要的：那条描述将在一层绑定之下被说出，而调用方提供的那条等式，是唯一把它与某个阶段联系起来的东西。
 <!--/-->
 
 ```agda
@@ -794,9 +795,9 @@ The chapter has produced a bounded formula whose extension over a constructible 
 `DefAt`{.Agda} is the definable powerset described in the object language at a
 carrier that is a slot, and `DefAt-in`{.Agda} and `DefAt-out`{.Agda} are its two
 readings: the operator satisfies the description, and under `DefOK`{.Agda}
-nothing else does. `DefAt-stage`{.Agda} spends both at a stage, where the side
-condition is discharged once and for all and the description becomes an equation
-between truth values.
+nothing else does. `DefAt-stage`{.Agda} instantiates both readings at a stage, where
+the side condition is discharged once and for all and the description becomes an
+equation between truth values.
 
 Three chapters meet here and not one of them is re-proved. The code predicate is
 read at a slot, the satisfaction graph is read at a slot, and the definable
@@ -805,18 +806,18 @@ over the carrier. What is new is only the joining: `envOneAt`{.Agda}, one line,
 because an environment of length one is a single pair, and `DefinesAt`{.Agda},
 which is `extAt`{.Agda} over a two-part condition.
 
-Two measurements are worth keeping. The adjacency correction was adopted before
+Two measurements are worth recording. The adjacency correction was adopted before
 the first line was written and it cost nothing, so no weakening lemma exists
-anywhere on this route. And the one wall met while writing was not in the
+anywhere on this route. And the one difficulty met while writing was not in the
 mathematics at all: the code predicate's elimination at a pinned carrier, with
-the truncation's payload left to inference, ran past 140 seconds and was killed
-there, while the same two lines with the payload type written out check in two.
-Every `PT.rec`{.Agda} here names its payload, and that is why this chapter checks
-in half a minute rather than not at all.
+the truncation's payload left to inference, ran past 140 seconds and was
+terminated there, while the same two lines with the payload type written out
+check in two seconds. Every `PT.rec`{.Agda} here names its payload, and that is
+why this chapter checks in half a minute rather than not at all.
 <!--zh-->
-`DefAt`{.Agda} 是可定义幂集在对象语言中、落在一个作为槽位的载体上的描述，而 `DefAt-in`{.Agda} 与 `DefAt-out`{.Agda} 是它的两种读法：这个算子满足那条描述，且在 `DefOK`{.Agda} 之下别的东西都不满足。`DefAt-stage`{.Agda} 把两者花在一个阶段上，在那里旁条件被一劳永逸地解除，而那条描述变成一条真值之间的等式。
+`DefAt`{.Agda} 是可定义幂集在对象语言中相对于槽位载体的描述，`DefAt-in`{.Agda} 与 `DefAt-out`{.Agda} 是它的两条读式：该算子满足描述；在 `DefOK`{.Agda} 条件下，其他对象都不满足。`DefAt-stage`{.Agda} 把两条读式实例化到一个阶段；在那里旁条件一次得到解除，描述也化为真值之间的等式。
 
-三章在此会合，而没有一章被重证。码谓词读在一位上，满足关系的图读在一位上，而可定义子集经那座桥读出，那座桥说的是「递归的取值就是载体之上的满足关系」。新的只有接合处：`envOneAt`{.Agda}，一行，因为长度为一的环境只是一个对；以及 `DefinesAt`{.Agda}，它就是 `extAt`{.Agda} 施于一个两部分的条件。
+三章在此汇合，没有一章需要重证。码谓词读在一个位置上，满足关系的图也读在一个位置上，而可定义子集经由那座桥读出，桥的内容是「递归的取值就是载体之上的满足关系」。新增的只有接合处：`envOneAt`{.Agda}，一行，因为长度为一的环境只是一个对；以及 `DefinesAt`{.Agda}，它就是 `extAt`{.Agda} 施于一个两部分的条件。
 
-有两次测量值得留存。相邻那处更正在第一行写下之前就已采纳，且分文未花，故这条路线上任何地方都不存在弱化引理。而写作期间遇上的唯一一堵墙，压根不在数学里：码谓词在被钉住的载体处的消去，若把截断的载荷交给推断，跑过 140 秒并在那里被杀掉；而同样两行，把载荷的类型写出来则两秒检查完毕。此处每一次 `PT.rec`{.Agda} 都为自己的载荷点名，而这正是本章能在半分钟内、而不是根本无法检查完的原因。
+有两处测量值得记录。相邻那处更正在第一行写下之前就已采纳，未付出额外代价，故这条路线上任何地方都不存在弱化引理。写作期间唯一的困难根本不在数学里：码谓词在固定载体处的消去，若把截断的载荷交给推断，要跑 140 秒并在那里被终止；而同样两行，把载荷的类型显式写出，两秒即检查完毕。此处每一次 `PT.rec`{.Agda} 都指明了自己的载荷，这正是本章能在半分钟内、而不是根本无法检查完的原因。
 <!--/-->

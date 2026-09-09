@@ -18,7 +18,7 @@ For formulas over members of `B`, this chapter proves that membership in `Sat B 
 <!--en-->
 The previous chapter built the value and characterized it by one membership
 equation per constructor. That is enough to check the internal clauses against
-it, and it is enough for nothing else: a recursion on formulas satisfying ten
+it, but it is enough only for that: a recursion on formulas satisfying ten
 equations of its own devising is an arbitrary recursion, and an internal `Def`
 read off one would provably agree with nothing. This chapter says what the value
 **is**. For an environment over the carrier, membership in `Sat B φ` is
@@ -26,29 +26,30 @@ satisfaction of `φ` in the world `(B, ∈)`, which is exactly the notion the
 definable powerset is defined by.
 
 The right-hand side is the **inner** semantics of the restricted structure, not
-the ambient reading of the relativized formula, and the difference sits exactly
-where the previous chapter's audit already looked. Relativization leaves a
+the ambient reading of the relativized formula, and the difference is exactly
+the case the previous chapter's audit examined. Relativization leaves a
 bounded quantifier alone, so it guards the bound variable once, by the bounding
 term. The condition guards it twice, by the carrier and by the term. The inner
 semantics also guards it twice, once by its own carrier and once by the clause,
 so it matches the condition constructor for constructor: no side condition on
 the bound, no transitivity of the carrier, and no Δ₀ anywhere. The relativized
-reading would have needed the bound contained in the carrier at every bounded
-quantifier, threaded through the whole induction. Reading inner also lands the
-theorem on the definable powerset's own notion instead of one step short of it.
+reading would require the bound to be contained in the carrier at every bounded
+quantifier, a requirement threaded through the whole induction. Reading the
+inner semantics also lets the theorem state the definable powerset's own notion
+directly, rather than one step removed from it.
 
 One consequence of that choice is a restriction, and it is the same restriction
-the code chapters already ruled: the formula's constants must be **members of
-the carrier**. A constant outside the carrier has no value in the inner world,
+the code chapters already established: the formula's constants must be **members of
+the carrier**. A constant outside the carrier has no value in the inner structure,
 so there is nothing for the two sides to agree about. The bridge therefore reads
 a formula over the carrier's members and relabels it into the meta-language,
 which is the alphabet the definable powerset indexes by anyway.
 <!--zh-->
-上一章造出了那个取值，并以「每个构造子一条成员等式」刻画了它。那足以拿内部诸子句去对照它，而除此之外什么也不够：一场沿公式的递归，若只满足十条自己拟定的等式，那就是一场任意的递归；从这样一场递归读出的内部 `Def`，可证地与任何东西都不相符。本章说出那个取值**是什么**。对载体之上的一个环境，「属于 `Sat B φ`」就是「`φ` 在世界 `(B, ∈)` 中被满足」，而后者恰是可定义幂集据以定义的那个概念。
+上一章造出了那个取值，并以「每个构造子一条成员等式」刻画了它。这足以拿内部诸子句去对照它，但也仅止于此：一场沿公式的递归，若只满足十条自己拟定的等式，那就是一场任意的递归；从这样一场递归读出的内部 `Def`，可证地与任何东西都不相符。本章说明那个取值**是什么**。对载体之上的一个环境，「属于 `Sat B φ`」就是「`φ` 在世界 `(B, ∈)` 中被满足」，而后者恰是可定义幂集据以定义的那个概念。
 
-右端取的是限制结构的**内层**语义，不是相对化后的公式在周遭的读法，而两者的差别恰好落在上一章那次审计已经看过的地方。相对化不动有界量词，故它对被绑变元只设一道防：由界项设防。而那个条件设两道：由载体、由界项。内层语义同样设两道：一道来自它自己的载体，一道来自那条子句；于是它与那个条件逐构造子相符：界上不加附加条件，不要载体的传递性，任何地方也不出现 Δ₀。若取相对化那种读法，则每个有界量词处都要求「界含于载体」，而这条要求就得穿过整场归纳。取内层读法还有一个好处：定理直接落在可定义幂集自己的概念上，而不是与它差一步。
+右端采用限制结构的**内层**语义，而不是相对化后的公式在周遭结构中的读法；两者的差别正是上一章审计所处理的情形。相对化不改变有界量词，因此只用界项约束被绑定的变元。那个条件则有两道约束，分别来自载体和界项。内层语义也有两道约束：一道来自它自己的载体，一道来自那条子句。因此，它与那个条件逐个构造子相符，并且无须对界添加条件，无须假设载体具有传递性，也不涉及 Δ₀。若采用相对化的读法，每个有界量词都会要求「界含于载体」，而这项要求必须贯穿整个归纳。采用内层读法还使定理直接对应可定义幂集自身所用的概念。
 
-这个选择带来一条限制，而它正是诸编码章早已裁定过的那条：公式的常元必须是**载体的成员**。载体之外的常元在内层世界里没有取值，两侧也就无从谈起相符。故这座桥读的是「载体诸成员之上的公式」，再把它重标进元语言，而那本来就是可定义幂集所用的字母表。
+这个选择带来一条限制，也就是诸编码章早已确立的那条：公式的常元必须是**载体的成员**。载体之外的常元在内层结构中没有取值，两侧也就谈不上相符。故这座桥读的是「载体诸成员之上的公式」，再把它重标进元语言，而那本来就是可定义幂集所用的字母表。
 <!--/-->
 
 ```agda
@@ -132,7 +133,7 @@ the class is transitive, which is how a member becomes a constant of the
 meta-language; and the definable powerset's own constant interpretation composes
 with it, which is how one of its formulas becomes one of ours.
 <!--zh-->
-载体是 `L` 的元素，故它是层级的一个集合，而可定义幂集那一章要的正是这样一个集合。在此把它实例化，是为了让两侧谈论**同一个**世界，而不是两个恰好描述得相像的世界：下面的限制结构、在其上打开的满足关系，以及本章终点处的 `defSet`{.Agda}，都出自**同一次模块施用**，不是重新推导一遍。
+载体是 `L` 的元素，故它是层级的一个集合，而可定义幂集那一章要的正是这样一个集合。在此把它实例化，是为了让两侧谈论**同一个**结构，而不是两个恰好描述得相像的结构：下面的限制结构、在其上打开的满足关系，以及本章终点处的 `defSet`{.Agda}，都出自**同一次模块施用**，不是重新推导一遍。
 
 满足关系以限制载体自身为常元域打开，因为这座桥量化的是「常元皆为成员」的那些公式。有两条包含跨越层次。`L` 的某集合的成员仍是 `L` 的元素，因为这个类传递，成员由此成为元语言的常元；而可定义幂集自己的常元解释与它复合，它的一条公式由此成为我们的一条公式。
 <!--/-->
@@ -260,13 +261,13 @@ three slots are parameters constrained by equations, and a clause supplies its
 own frame's slots at the call site, where nothing substitutes any longer.
 
 The term reading has one case per term constructor and the meta-language decides
-which, so each is one line of bookkeeping. A constant's reading is the equation
+which, so each case is a direct verification. A constant's reading is the equation
 itself. A variable's reading is the graph's functionality, which is the lemma the
-environment chapter exists for.
+environment chapter established.
 <!--zh-->
 那个条件经模型语言的两条公式去读「词项的取值」与「环境的扩张」，而下面诸子句必须把它们读回来。两条读式都按环境集那一章自己的恢复所用的方式陈述，理由也已记录在案：一次充分性代换必须在其自变量是**变元**之处交割，因为写在具体环境上，它会把整座绝对性之桥拖进归一化。故环境向量与三个槽位取作「由等式约束的参数」，而子句在调用点供上它自己那个框架的诸槽，那里已不再发生任何代换。
 
-词项那条读式对每个词项构造子各有一种情形，且由元语言决定是哪一种，故每种只是一行记账。常元的读法就是那条等式本身。变元的读法是那张图的函数性，而那正是环境那一章为之存在的引理。
+词项那条读式对每个词项构造子各有一种情形，且由元语言决定是哪一种，故每种情形只是一步直接的验证。常元的读法就是那条等式本身。变元的读法是那张图的函数性，而那正是环境那一章所建立的引理。
 <!--/-->
 
 ```agda
@@ -530,7 +531,7 @@ there would be one guard on the left and two on the right, and closing that gap
 needs the bound contained in the carrier: a hypothesis at every bounded
 quantifier, at every arity, all the way down.
 <!--zh-->
-这两条正是右端取内层语义的理由。那个条件先绑定界项的取值，再对被绑变元设两道防：由载体、由那个取值。内层语义同样设两道，且理由相同，故两处设防一一对齐，这条子句便是无界那条再加一次词项读式。若对着相对化那种读法，左边一道防、右边两道，而补上这道缺口需要「界含于载体」：那是每个有界量词、每个元数、一路到底的一条前提。
+右端取内层语义，正是由这两条保证的。那个条件先确定界项的取值，再对被绑变元施加两条限制：一条来自载体，一条来自该取值。内层语义同样有这两条限制，理由也相同，因此两处限制一一对应；这条子句就是无界那条再加上一次词项读式。若改用相对化那种读法，则左边只有一条限制、右边有两条，要补上这个缺口需要「界含于载体」：这是对每个有界量词、每个元数都要一路携带的前提。
 <!--/-->
 
 ```agda
@@ -603,7 +604,7 @@ The constructor cases assemble into `Sat-spec`, covering the atoms, propositiona
 <!--en-->
 Ten steps, one line each, and the recursion is the formula's own.
 <!--zh-->
-十步，一步一行，而那场递归就是公式自己的递归。
+整场定义共十步，一步一行，而那场递归就是公式自身的递归。
 <!--/-->
 
 ```agda
@@ -641,18 +642,18 @@ The bridge above reads membership at an environment named in advance. The other
 half of "is the set of the environments satisfying it" is that a member is
 nothing else: the value sits inside the ambient environment set, so any member is
 the graph of some function into the carrier's members, and turning that function
-into a vector puts it back in the bridge's hands. The recovery is truncated and
+into a vector lets the bridge apply once more. The recovery is truncated and
 stays so, which costs nothing here because the conclusion is an existence
 statement anyway.
 
 The vector is built by a recursion of two lines rather than by the library's
 conversion between finite functions and vectors. That is a measurement, not a
-preference: the library's round-trip identity walled the chapter at over eight
-minutes, and the same statement written by hand costs no measurable time.
+preference: the library's round-trip identity held the chapter above eight
+minutes, while the same statement written by hand shows no measurable cost.
 <!--zh-->
-上面那座桥读的是「在事先点名的环境处」的隶属。而「它就是满足它的诸环境的集合」的另一半是：一个成员再无别的可能。那个取值坐落在周遭环境集之内，故任一成员都是某个「到载体诸成员」的函数的图，而把那个函数变成向量，就又交回到桥的手里。那次恢复带截断，且保持带截断，此处不花代价，因为结论本来就是一句存在陈述。
+上一段的桥读出的是「在事先指定的环境处」的隶属。而「它就是满足它的诸环境的集合」这另一半说的是：一个成员没有别的取值可能。那个取值落在周边的环境集之内，因此任一成员都是某个「到载体诸成员」的函数的图；把这个函数转成向量，就能再交给该桥处理。那次恢复带截断，并保持带截断，在这里不付出额外代价，因为结论本来就只是一句存在陈述。
 
-那个向量由两行递归造出，而不是用库里「有穷函数与向量之间」的转换。这是一次测量而非偏好：库那条往返等式把本章卡在八分钟以上，而把同一条陈述手写出来则快到测不出。
+那个向量由两行递归造出，而不是调用库里「有穷函数与向量之间」的转换。这是实测结果而非个人偏好：使用库中的往返等式使本章检查超过八分钟，而把同一条陈述手写出来则快到测不出差别。
 <!--/-->
 
 ```agda
@@ -707,19 +708,19 @@ minutes, and the same statement written by hand costs no measurable time.
 And the statement the goal exists for. A subset definable in the world `(B, ∈)`
 by a formula with parameters from `B` collects exactly the members whose
 one-entry environment lies in the recursion's value at the same formula,
-relabelled into the meta-language. The proof is the three-step chain the definable
+relabelled into the meta-language. The proof follows the three-step chain the definable
 powerset chapter already runs for absoluteness, with this chapter's bridge in the
 place absoluteness held: the specification of `defSet`{.Agda}, then the
-relabelling, which moves meaning not at all, then the bridge.
+relabelling, which changes meaning not at all, then the bridge.
 
-Two pieces of bookkeeping, both syntactic. Relabelling twice in a row is
+Two checks, both syntactic. Relabelling twice in a row is
 relabelling along the composite, which the relabelling chapter proves once for
 every domain; and the one-entry environment named by a member is the graph of the
 one-entry vector, which is the same equation at length one.
 <!--zh-->
-以及本目标为之存在的那条陈述。在世界 `(B, ∈)` 中由一条带 `B` 中参数的公式可定义的子集，收集的恰是那些成员：它们的单条目环境落在「同一条公式重标进元语言后」的递归取值之中。证明就是可定义幂集那一章为绝对性已经跑过的三步链，只是把本章这座桥放在当初绝对性所在的位置：`defSet`{.Agda} 的规格、然后重标 (它分毫不动含义)、然后这座桥。
+以及本目标为之存在的那条陈述。在世界 `(B, ∈)` 中由一条带 `B` 中参数的公式可定义的子集，收集的恰是那些成员：它们的单条目环境落在「同一条公式重标进元语言后」的递归取值之中。证明沿用可定义幂集那一章为绝对性已经走过的三步链，只是把本章的桥放在当初绝对性所在的位置：先给出 `defSet`{.Agda} 的规格，然后重标 (含义分毫不改)，然后应用这座桥。
 
-两处记账，皆属句法。连续重标两次就是沿复合重标，而那件事，重标那一章已为所有常元域一次证清；而由一个成员点名的单条目环境，就是单条目向量的图，那是同一条等式落在长度一处。
+两处核对都只涉及句法。连续重标两次就是沿复合重标，这件事重标那一章已对全部常元域一次证清；由一个成员确定的单条目环境，就是单条目向量的图，那是同一条等式落在长度一处。
 <!--/-->
 
 ```agda
@@ -794,9 +795,9 @@ relativized semantics instead, where the two bounded-quantifier clauses acquire
 the hypothesis that the bound lies inside the carrier. No consumer wants that
 reading today.
 <!--zh-->
-`Sat-spec`{.Agda} 就是那场递归先前欠着的充分性：在载体之上的每个环境处，「属于那个取值」就是「在世界 `(B, ∈)` 中被满足」，且是一条真值之间的道路；`Sat-out`{.Agda} 再补上「一个成员再无别的可能」。`defSet-Sat`{.Agda} 把两者花在可定义幂集上，而那正是这条陈述被欠着的理由：如今从这场递归读出的内部可定义幂集，有了一个可证与之相符的对象。
+`Sat-spec`{.Agda} 正是那场递归先前缺失的充分性：在载体之上的每个环境处，「属于那个取值」就是「在世界 `(B, ∈)` 中被满足」，且是一条真值之间的道路；`Sat-out`{.Agda} 再补上「一个成员再无别的可能」。`defSet-Sat`{.Agda} 把两者用于可定义幂集，这正是这条陈述存在的理由：如今从这场递归读出的内部可定义幂集，有了一个可证与之相符的对象。
 
-有三次测量值得留存。登记在案的那份风险，即「环境的截断式恢复」与「四条子句所作的扩张」之间的相干性，**没有引爆，而理由是换了陈述**：把这座桥以内层环境向量为索引之后，扩张就是底族上的前置，于是相干性只是一次 `funExt`{.Agda} 之下的两条 `refl`{.Agda} 分支，四条量词子句共享，且不在任何元数上付账。恢复被关进那条推论里。整章十步加两条推论，约两秒检查完毕。而本章遇到的唯一一堵墙，既不来自那场递归，也不来自模型：用库里「有穷函数与向量」的往返等式去作转换，跑过了八分钟；而把同样两条陈述写成两行递归，则分文不花。
+有三次测量值得留存。登记在案的那份风险，即「环境的截断式恢复」与「四条子句所作的扩张」之间的相干性，**并未出问题，原因在于换了陈述方式**：把这座桥改为以内层环境向量为索引之后，扩张就是底族上的前置，于是相干性归结为一次 `funExt`{.Agda} 之下的两条 `refl`{.Agda} 分支，四条量词子句共享这一论证，且无需在任何元数上另行处理。恢复被封装进那条推论里。整章十步加两条推论，约两秒检查完毕。本章遇到的唯一障碍，既不来自那场递归，也不来自模型：用库里「有穷函数与向量」的往返等式去作转换，跑过了八分钟；而把同样两条陈述写成两行递归，则几乎不耗时间。
 
-这座桥**没有**说的，以及这笔账该记在哪个目标上：它是对「常元皆为载体成员」的那些公式陈述的，故它不比较「点名了 `L` 的任意元素」的公式处的取值。那不是证明的缺口，而是陈述的形状，因为载体之外的常元在内层世界里没有取值；读那样一条公式要改用周遭的相对化语义，而在那里，两条有界量词子句会背上「界落在载体之内」这条前提。今天没有任何消费者要那种读法。
+这座桥**没有**说的，以及这一限制应归到哪个目标上：它是对「常元皆为载体成员」的那些公式作陈述的，故它不比较「点名了 `L` 的任意元素」的公式处的取值。这不是证明的缺口，而是陈述的形状，因为载体之外的常元在内层世界里没有取值；读那样一条公式要改用周遭的相对化语义，而在那里，两条有界量词子句会附有「界落在载体之内」这条前提。目前没有任何后续使用需要那种读法。
 <!--/-->

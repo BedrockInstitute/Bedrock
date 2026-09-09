@@ -7,43 +7,43 @@
 <!--/-->
 
 <!--en-->
-This chapter proves Δ₀ separation and replacement in `L` by bounding all formula
-constants and functional images in ordinal stages, then carving the required
-sets with absoluteness and relabelling.
+This chapter proves Δ₀ separation and replacement in `L`. The proof has two
+steps: first bound all formula constants and functional images within ordinal
+stages, then construct the required sets using absoluteness and relabelling.
 <!--zh-->
-本章证明 `L` 中的 Δ₀ 分离与替换：先把公式的全部常元及函数像界在序数阶段内，再借助绝对性与常元改名雕出所需集合。
+本章证明 `L` 中的 Δ₀ 分离与替换。证明分两步：先把公式的全部常元与函数像界在序数阶段之内，再借助绝对性与常元改名构造出所需的集合。
 <!--ja-->
 本章では、論理式の全定数と関数的な像を順序数段階で抑え、絶対性と定数の改名を用いて必要な集合を切り出すことにより、`L` における Δ₀ 分出公理と置換公理を証明する。
 <!--/-->
 
 <!--en-->
 Separation asks: given a constructible set and a formula, is the subset it carves
-out again constructible? The machinery for answering that has been assembled over
-the last several chapters, and this one puts it together, for formulas without
+out again constructible? The tools needed to answer this were built up over the
+last several chapters, and this one assembles them, for formulas without
 unbounded quantifiers.
 
-The shape of the argument is the same one the basic axioms used, with one extra
+The argument follows the same pattern as the basic axioms, with one extra
 step. To place a set in `L` we exhibit it as a definable subset of a single
 stage. The target here is `{x ∈ a : φ}`, and the stage must hold both `a` and
-every constant `φ` mentions. Given such a stage, the definability operator wants a
+every constant `φ` mentions. Given such a stage, the definability operator requires a
 formula over *that stage's* members, while `φ` is a formula over the whole model,
-so the formula has to be relabelled down. That is what the bounding certificate
-was built for, and the extra step is checking that relabelling did not change what
+so the formula has to be relabelled down. This is what the bounding certificate
+is for, and the extra step is checking that relabelling did not change what
 the formula says.
 
-Checking it is a five-step path through three chapters, and each step is an
+The check is a five-step path through three chapters, and each step is an
 equation already proven: definable-subset membership is outer satisfaction of the
 relabelled formula; relabelling commutes with the two projections into the
 hierarchy; and outer satisfaction of a Δ₀ formula is inner satisfaction. The last
-is where Δ₀ is spent, and it is the only place. Formulas with unbounded
-quantifiers get this treatment too, but only after the next chapters buy them a
-stage that reflects them.
+is the only place where Δ₀ is used. Formulas with unbounded quantifiers get
+the same treatment, but only after the following chapters provide a stage
+that reflects them.
 <!--zh-->
-分离公理问的是：给定一个可构造集与一条公式，它刻出的子集是否仍可构造？回答这个问题的机器已在前几章陆续备齐，本章把它们装到一起，用于不含无界量词的公式。
+分离公理问的是：给定一个可构造集与一条公式，它刻出的子集是否仍可构造？回答这个问题所需的工具已在前几章逐步建立，本章将它们合在一起，用于不含无界量词的公式。
 
-论证的形状与基本公理用的是同一个，只多一步。要把一个集合放进 `L`，我们把它呈现为单一阶段的可定义子集。此处的目标是 `{x ∈ a : φ}`，而那个阶段必须同时装下 `a` 与 `φ` 提到的每个常元。给定这样一个阶段，可定义性算子要的是一条**该阶段**成员之上的公式，而 `φ` 是整个模型之上的公式，故公式必须重标下去。那正是界层证书的用途，而多出的那一步就是核对重标没有改变公式所说的内容。
+论证的框架与基本公理相同，只多出一步。要把一个集合放进 `L`，我们把它呈现为单一阶段的可定义子集。此处的目标是 `{x ∈ a : φ}`，而那个阶段必须同时容纳 `a` 与 `φ` 提到的每个常元。给定这样一个阶段，可定义性算子需要的是一条在**该阶段**成员之上的公式，而 `φ` 是在整个模型之上的公式，因此公式必须重标下去。这正是界层证书的用途；多出的那一步，就是核对重标没有改变公式所说的内容。
 
-核对它是一条穿过三章的五步路径，每一步都是已证的等式：可定义子集的隶属就是重标后公式的外层满足；重标与两个到层级的投影交换；而 Δ₀ 公式的外层满足就是内层满足。最后一条是花掉 Δ₀ 的地方，也是唯一的地方。含无界量词的公式也会受到同样的对待，但要等随后诸章为它们买到一个反射它们的阶段。
+整个核对是一条跨三章的五步路径，每一步都是已证的等式：可定义子集的隶属就是重标后公式的外层满足；重标与两个到层级的投影交换；而 Δ₀ 公式的外层满足就是内层满足。最后一条是唯一用上 Δ₀ 的地方。含无界量词的公式也会得到同样的处理，但要等到随后各章，才能为它们找到一个反射它们的阶段。
 <!--/-->
 
 ```agda
@@ -116,13 +116,13 @@ open AbsL using ( abs₀ ) renaming ( _⊨ᵐ_ to _⊨_ )
 <!--/-->
 
 <!--en-->
-Named once, because the engine below produces it and the model record consumes
+Named once, because the engine below produces it and the model record uses
 it: the image of `a` under `φ` is the class of things `φ` relates to some member
 of `a`. Here the source variable is at index zero and the image at index one; the
 model record states it the other way round, and the chapter that assembles the
 field applies a renaming to match.
 <!--zh-->
-先命名一次，因为下面的引擎产出它而模型 record 消费它：`a` 在 `φ` 下的像，是 `φ` 与 `a` 的某个成员相关联的那些东西构成的类。此处源变元在索引零、像在索引一；模型 record 的陈述次序相反，而装配那个字段的章节以改名调整次序使之相符。
+之所以先命名一次，是因为下面的引擎要产出它，而模型 record 要使用它：`a` 在 `φ` 下的像，就是由 `φ` 与 `a` 的某个成员相关联的那些东西构成的类。此处源变元在索引零、像在索引一；模型 record 的陈述次序相反，装配那个字段的章节则以改名调整次序，使之相符。
 <!--/-->
 
 ```agda
@@ -219,7 +219,7 @@ Inside one ordinal stage, `Below`{.Agda} supplies indices for its constructible
 members, and the satisfaction bridge relates formulas over the model carrier to
 their relabelled formulas over that stage.
 <!--zh-->
-在一个固定序数阶段内，`Below`{.Agda} 为其可构造成员供应索引，而满足关系之桥把模型载体上的公式与该阶段上经常元改名的公式联系起来。
+在一个固定的序数阶段内，`Below`{.Agda} 为其中的可构造成员提供索引；满足关系之桥则把模型载体上的公式与该阶段上经常元改名的公式联系起来。
 <!--ja-->
 一つの順序数段階の内部で、`Below`{.Agda} がその構成可能な要素の添字を与え、充足関係の橋がモデルの台上の論理式を、その段階上で定数の改名を施した論理式と結ぶ。
 <!--/-->
@@ -230,7 +230,7 @@ the model lies in that stage; the relabelling instance sends such a member to it
 index there, and the equation it needs is that the index names the member back,
 which is what a fiber of the membership gives.
 <!--zh-->
-下文一切都相对于一个阶段。谓词 `Below` 说模型的一个成员落在该阶段中；重标实例把这样的成员送到它在其中的索引，而它所需的那条等式是「索引把该成员命名回来」，那正是隶属关系的纤维所给出的。
+下文一切都相对于一个阶段。谓词 `Below` 表示模型的一个成员落在该阶段之中；重标实例把这样的成员送到它在其中的索引，而所需的那条等式是「索引把该成员命名回来」，这正由隶属关系的纤维给出。
 <!--/-->
 
 ```agda
@@ -261,7 +261,7 @@ absoluteness brings it back inside the model. Each link is an equation from an
 earlier chapter, and the composite is the only place this chapter does anything
 delicate.
 <!--zh-->
-那条五步路径。自上而下读：属于可定义子集，就是经该阶段的含入读出的、重标后公式的外层满足；两次重标律把它搬到层级自己的读法；部分重标的正确性把两种读法认同；而绝对性把它带回模型内部。每一环都是前面某章的等式，而这个复合是本章唯一做细致工作的地方。
+那条五步路径自上而下读来如下：属于可定义子集，就是经该阶段的含入读出的、重标后公式的外层满足；两次重标律把它转换为层级自身的读法；部分重标的正确性把两种读法等同起来；而绝对性把它带回模型内部。每一环都是前面某章已证的等式，这个复合则是本章唯一需要细致工作的地方。
 <!--/-->
 
 ```agda
@@ -294,7 +294,7 @@ mentioning the carved set would carry that unfolding into conversion; sealing it
 and exporting exactly what is needed keeps the rest of the chapter working with a
 black box.
 <!--zh-->
-刻出的集合被封印，而关于它的事实经封印证出。不封印的话，`defSet` 会展开成公式之上的一个集合，而此后每个提到该集合的类型都会把那次展开带进转换检查；封印它并只导出所需之物，使本章其余部分对着一个黑箱工作。
+刻出的集合被封装起来，而关于它的事实经这一封装证明。若不封装，`defSet` 会展开为公式之上的一个集合，此后每个提到该集合的类型都会把这次展开带进转换检查；封装起来并只导出所需内容，本章其余部分便可把它当作黑箱使用。
 <!--/-->
 
 ```agda
@@ -331,7 +331,7 @@ along an equation between underlying sets. Constructibility is propositional, so
 underlying equation gives an equation of model elements directly. The Δ₀
 parameters remain in the interfaces used by the callers.
 <!--zh-->
-还有一件小工具。满足关系只依赖底层集合，而不依赖随之携带的可构造性证明，故满足的事实可沿底层集合之间的等式搬运。可构造性是命题，故底层等式直接给出模型元素的等式。Δ₀ 参数保留在调用方使用的接口中。
+还有一个辅助结果。满足关系只依赖底层集合，而不依赖随之携带的可构造性证明，因此满足的事实可沿底层集合之间的等式转移。可构造性是命题，故底层集合的等式直接给出模型元素的等式。Δ₀ 参数保留在供调用方使用的接口中。
 <!--/-->
 
 ```agda
@@ -356,7 +356,7 @@ parameters remain in the interfaces used by the callers.
 stage into a constructible set, and `separateAt`{.Agda} specializes it to a
 subset of a given set.
 <!--zh-->
-`carveAt`{.Agda} 把见证留在阶段内的有界一元 Δ₀ 公式化为可构造集合，而 `separateAt`{.Agda} 将其专用于给定集合的子集。
+`carveAt`{.Agda} 把见证落在阶段内的有界一元 Δ₀ 公式化为可构造集合；`separateAt`{.Agda} 则把它专门用于给定集合的子集。
 <!--ja-->
 `carveAt`{.Agda} は証人が段階内に留まる有界な一変数 Δ₀ 論理式を構成可能集合へ変え、`separateAt`{.Agda} はそれを与えられた集合の部分集合へ特殊化する。
 <!--/-->
@@ -368,7 +368,7 @@ and transport identify its members with the formula's satisfaction predicate.
 Separation instantiates this construction with the conjunction of membership
 in `a` and `φ`. Transitivity supplies the stage cover from the membership conjunct.
 <!--zh-->
-共享构造雕刻一条有界一元公式，其满足者均落在该阶段中。刻出的集合可定义，故可构造；语义桥与搬运把它的成员关系认同为公式的满足谓词。分离将该构造实例化为「属于 `a`」与 `φ` 的合取。传递性从成员关系合取项提供阶段覆盖。
+共享的构造处理一条有界一元公式，其满足者均落在该阶段中。刻出的集合可定义，故可构造；语义桥与转移把它的成员关系等同于公式的满足谓词。分离则把该构造实例化为「属于 `a`」与 `φ` 的合取；传递性由成员关系这一合取项提供阶段覆盖。
 <!--/-->
 
 ```agda
@@ -439,18 +439,18 @@ every constant, merging branch bounds and transporting their boundedness proofs.
 <!--/-->
 
 <!--en-->
-The engine wants a stage holding every constant of the formula. Building one is a
-recursion on the formula that produces the stage and the certificate together. A
+The construction requires a stage holding every constant of the formula. It obtains one by
+recursion on the formula, producing the stage and certificate together. A
 constant contributes its own earliest stage, a variable contributes nothing, and
-at every branching node the two stages are merged by bounding them, with
-monotonicity raising both certificates to the merge.
+at each branching node the two stages are combined by taking a bound, with
+monotonicity raising both certificates to that bound.
 
-Merging two ordinals is `bound2`{.Agda} from the ordinal chapter, and it is the
-only thing this recursion needs from ordinal theory.
+The bound of two ordinals is supplied by `bound2`{.Agda} from the ordinal chapter. This is
+the only result the recursion needs from ordinal theory.
 <!--zh-->
 引擎要的是一个装下公式全部常元的阶段。造一个出来，就是沿公式的一次递归，同时产出阶段与证书。常元贡献它自己的最早阶段，变元什么也不贡献，而在每个分叉节点上，两个阶段经界住而合并，单调性把两份证书都抬到合并处。
 
-合并两个序数就是序数那一章的 `bound2`{.Agda}，而这也是这次递归从序数理论索取的全部。
+合并两个序数正是序数那一章的 `bound2`{.Agda}；这次递归对序数理论的全部需求，也到此为止。
 <!--/-->
 
 ```agda
@@ -513,19 +513,19 @@ mkBoundedFo (∃̇∈ t φ) = mkBounded (λ σ∈β → liftTmTo σ∈β t) (λ 
 `separateΔ₀`{.Agda} merges the bounds for the formula's constants and the source
 set, then invokes `separateAt`{.Agda} to realize the bounded separation instance.
 <!--zh-->
-`separateΔ₀`{.Agda} 合并公式常元与源集合的上界，再调用 `separateAt`{.Agda} 实现有界分离实例。
+`separateΔ₀`{.Agda} 先把公式常元与源集合的上界合并，再调用 `separateAt`{.Agda} 得到有界分离的实例。
 <!--ja-->
 `separateΔ₀`{.Agda} は論理式の定数と始集合の上界を併合し、`separateAt`{.Agda} を呼び出して有界な分出公理の事例を実現する。
 <!--/-->
 
 <!--en-->
-Everything is now in place. Merge the formula's stage with the argument's own
-earliest stage, raise the certificate to the merge, and hand the result to the
-engine. This is separation for the bounded fragment, unconditionally: no
-reflection, no frontier field, just the machinery of the last several chapters
-applied in order.
+Merge the formula's stage with the argument's own earliest stage,
+raise the certificate to the resulting bound, and use these data in the bounded
+separation construction. This proves separation for the bounded fragment
+unconditionally: it requires neither reflection nor a frontier field, and
+uses the results established in the preceding chapters in order.
 <!--zh-->
-一切就位。把公式的阶段与实参自身的最早阶段合并，把证书抬到合并处，再把结果交给引擎。这就是有界片段的分离公理，无条件成立：不需要反射，不需要前沿字段，只是把前几章的机器按顺序用一遍。
+步骤如下：把公式的阶段与实参自身的最早阶段合并，把证书抬升到合并后的阶段，再把结果交给引擎。这正是有界片段的分离公理，无条件成立：既不需要反射，也不需要前沿字段，只是依序使用前几章已经建立的工具。
 <!--/-->
 
 ```agda
@@ -571,9 +571,9 @@ bounded by the argument, so it stays Δ₀ and absoluteness applies to the whole
 it. The work is done by functionality, not by any reflection across structures,
 which is the clean line between this lemma and the unbounded case.
 <!--zh-->
-替换还多要一样：一个装下像的阶段。函数性给出上述公共像界。用一条有界存在公式「实参的某个成员与候选者相关」在该阶段上作分离；所得谓词恰好就是替换的像。
+替换还多需要一个条件：一个装得下像的阶段。函数性恰好给出上述公共像界。用一条有界存在公式「实参的某个成员与候选者相关」在该阶段上作分离，所得谓词正是替换的像。
 
-值得注意它**不**需要什么。定义公式唯一的量词被实参所界，故它保持 Δ₀，绝对性适用于整条公式。起作用的是函数性，而非任何跨结构的反射，这正是本引理与无界情形之间那条干净的分界。
+值得注意的是它**不**需要什么：定义公式唯一的量词被实参所界，故它保持 Δ₀，绝对性适用于整条公式。真正起作用的是函数性，而非任何跨结构的反射；这正是本引理与无界情形之间的清晰分界。
 <!--/-->
 
 ```agda

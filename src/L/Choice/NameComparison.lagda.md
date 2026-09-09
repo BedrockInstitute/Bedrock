@@ -38,11 +38,11 @@ code set at the empty alphabet, and neither is a recursion; and the order formul
 runs **no recursion of its own**. Both are explained where they are used, because
 both are the reason this chapter is short.
 <!--zh-->
-前几章造出了本部所系的那个序，而且全部造在元语言中：一族良序，每个序数处一个，先按两个集合的诞生阶段比较它们，诞生阶段相同时再按它们的最小名字比较。这一切在 `L` 内部都说不出来。后续论证所需的是一条**公式**：用对象语言把同一次比较描述出来，使模型自家的分离能把那个序雕成集合，也使选取得以在内部写下。
+前几章已经在元语言中构造出本部所依赖的一族良序，每个序数处一个：先比较两个集合的诞生阶段；诞生阶段相同时，再比较它们的最小名字。这些比较尚不能在 `L` 内部表达。后续论证需要一条对象语言的**公式**来描述同一比较，使模型中的分离能够把该序构造成集合，也使选择构造能够在内部写出。
 
-本章写下那条描述。它有三个部分，每一部分都是某个元层面部分的读法。**落在诸位上的名字**说清什么是骨架、什么是参数序列、什么是指称；**序公式**按命名那一章比较两个名字所用的三个键来比较它们；而**步进**说清这一族的一步做了什么。本章以「使描述成其为描述」的那两半收尾：在变元环境上，序公式对两个名字的数据成立，当且仅当命名那一章的比较对那两个名字成立。
+本章写下那条描述。它有三个部分，每一部分都对应元层面的某个部分。**落在诸位上的名字**说清什么是骨架、什么是参数序列、什么是指称；**序公式**按命名那一章比较两个名字所用的三个键来比较它们；**步进**则说清这一族的一步做了什么。本章以「使描述成其为描述」的那两条收尾：在变元环境上，序公式对两个名字的数据成立，当且仅当命名那一章的比较对那两个名字成立。
 
-有两项决定塑造了以下的一切。「一条公式是骨架」的那两个条件各是**一个隶属原子**，一个落在极限阶段、一个落在空字母表处的码集，两者都不是递归；而序公式**不跑自己的任何递归**。两者都在用到它们之处得到解释，因为两者正是本章短的原因。
+有两项决定贯穿以下内容。「一条公式是骨架」的那两个条件各是**一个隶属原子**，一个落在极限阶段处、一个落在空字母表处的码集，两者都不是递归；而序公式**不跑自己的任何递归**。两者都在用到之处得到解释，本章之所以简短，正因如此。
 <!--/-->
 
 ```agda
@@ -145,22 +145,22 @@ nothing, so its code over any carrier agrees with its empty-alphabet code.
 
 <!--en-->
 
-A name's formula carries no parameters: the parameters left the syntax two
-chapters ago and arrived as an environment. Saying so inside the model looks, at
-first, like a demand for a recursion, and it is not one. Membership in the limit
-stage will not say it: a member of the limit stage is a hereditarily finite set,
+A name's formula carries no parameters: the parameters were removed from the syntax two
+chapters earlier and appear instead as an environment. Saying so inside the model looks, at
+first, like a demand for a recursion, but it is not one. Membership in the limit
+stage does not express it: a member of the limit stage is a hereditarily finite set,
 and a hereditarily finite set can be the code of a formula whose constants are
 hereditarily finite; over a carrier containing the limit stage those constants
 are members of the carrier, so a stage condition alone admits skeletons the meta
 `Name`{.Agda} excludes, and a least name inside would not have to be a least
-name outside. The description says the thing itself: the skeleton carries **no**
+name outside. The description states the thing directly: the skeleton carries **no**
 constants.
 
-It costs one membership atom, and it reuses a set the coding chapters
+This needs one membership atom, and it reuses a set the coding chapters
 already build. `AllCodes A`{.Agda} holds exactly the keys of the formulas over
 the alphabet `⟪ A ⟫`{.Agda}; take the alphabet **empty** and it holds exactly
-the keys of the parameter-free formulas. So the second code set reaches the
-description as a slot, like the first, and the atom says that the key made from
+the keys of the parameter-free formulas. So the second code set enters the
+description as a slot, like the first, and the atom asserts that the key made from
 the arity and the skeleton lies in it.
 
 One thing had to be checked before writing that down, and it holds: a
@@ -168,21 +168,21 @@ parameter-free formula has the **same code at either alphabet**. Both readings
 of its constants are functions out of an empty type, any two such agree, and
 relabelling composes, so the two codes are the same set, four lines in each
 direction. Nothing has to be satisfied at the empty alphabet, because the
-conjunct is an atom and the separation the code set was cut out by was proved
+conjunct is an atom, and the separation from which the code set was cut out was proved
 generic in its carrier where it was built.
 
 The bridge is then the code set's own two directions read at that alphabet, with
-the arity moved along the equality of numerals by path induction, once, in the
+the arity moved along the equality of numerals by path induction, once, in a
 direction that leaves the code alone.
 <!--zh-->
 
-一个名字的公式不带参数：参数已在两章之前离开语法、以环境的身份到场。要在模型内部把这句话说出来，乍看像是在索要一场递归，其实不是。「属于极限阶段」说不出它：极限阶段的成员是遗传有穷集，而遗传有穷集可以是某条「常元为遗传有穷」的公式之码；在一个含有极限阶段的载体之上，那些常元正是载体的成员，故单凭阶段条件，这条描述放进了元层面 `Name`{.Agda} 所排除的骨架，于是内部的最小名字未必是外部的最小名字。这条描述直接说那件事本身：那个骨架**不带**常元。
+一个名字的公式不带参数：参数早在两章之前就已移出语法，改以环境的身份出现。要在模型内部把这句话说出来，乍看似乎需要一次递归，其实不需要。「属于极限阶段」表达不了它：极限阶段的成员是遗传有穷集，而遗传有穷集可以是某条「常元为遗传有穷」的公式之码；在一个含有极限阶段的载体之上，那些常元正是载体的成员，所以单凭阶段条件，这条描述就会包含元层面 `Name`{.Agda} 所排除的骨架，于是内部的最小名字未必是外部的最小名字。这条描述直接陈述这件事：那个骨架**不带**常元。
 
-代价是一个隶属原子，而它复用编码诸章早已造好的一个集合。`AllCodes A`{.Agda} 恰好持有字母表 `⟪ A ⟫`{.Agda} 之上诸公式的诸键；把字母表取作**空的**，它持有的就恰好是诸无参公式的诸键。于是第二个码集像第一个一样，以一个位的身份抵达这条描述，而那个原子说：由元数与骨架造出的那个键落在其中。
+这里需要一个隶属原子，它复用编码诸章已经构造的集合。`AllCodes A`{.Agda} 包含字母表 `⟪ A ⟫`{.Agda} 上所有公式的键；当字母表为空时，它包含的正是所有无参公式的键。因此，第二个码集与第一个一样作为一个槽位进入描述，而相应的隶属原子断言：由元数与骨架构造的键属于该码集。
 
-写下它之前有一件事必须核查，而它成立：一条无参公式在两个字母表上**有同一个码**。它的常元的两种读法都是从空类型出发的函数，任何两个这样的函数都相符，而变换又可复合，故那两个码是同一个集合，每个方向四行。空字母表处无须满足任何东西，因为那个合取项是原子，而码集据以切出的那次分离，在它被造出之处就已对它的载体证成通用。
+写下它之前必须核查一件事，而这件事成立：一条无参公式在两个字母表上**有同一个码**。它的常元的两种读法都是从空类型出发的函数，任意两个这样的函数都相同；又因变换可复合，那两个码便是同一个集合，每个方向四行。空字母表处无须满足任何东西，因为那个合取项是原子；而码集据以切分的那次分离，在构造之处就已对其载体证成通用。
 
-于是那座桥就是码集自家的两个方向，读在那个字母表上；其中元数经一次路径归纳沿数码的等式挪过去，只挪一次，且挪的方向不动那条码。
+于是那两个方向本就属于码集，读在那个字母表上；其中元数经一次路径归纳、沿数码的等式迁移过去，只迁移一次，且迁移的方向不改变那条码。
 <!--/-->
 
 ```agda
@@ -257,7 +257,7 @@ required arity by one membership atom into the empty-alphabet code set.
 <!--en-->
 
 The atom itself binds two values before it can be stated. The arity slot holds
-the name's arity, and the key a formula is filed under carries **one more**,
+the name's arity, and the key under which a formula is stored carries **one more**,
 because the formula is the one a subset is carved by; so the atom binds the
 successor of the arity, which the sequence chapter's reader already says, then
 the pair of that successor with the skeleton, and then asserts that pair to be a
@@ -268,15 +268,15 @@ the binders packed and unpacked with the two readers' adequacy equations
 discharged inside. With the slot filled, the two halves compose into the
 statement the gap asked for: the skeleton slot holds exactly the codes of the
 parameter-free formulas of one more variable than the arity, which is exactly
-what a meta name's formula is. The membership in the limit stage falls out of it
-for free, since a parameter-free code is hereditarily finite, so the skeleton
+what a meta name's formula is. Membership in the limit stage follows
+immediately from it, since a parameter-free code is hereditarily finite, so the skeleton
 condition of the previous section is derivable rather than assumed, and the
-description keeps both conjuncts until the derivable one is retired on purpose.
+description keeps both conjuncts until the derivable one is removed on purpose.
 <!--zh-->
 
-那个原子本身在能被说出之前，先要绑定两个取值。元数那一位持有名字的元数，而一条公式被归档所用的键携带的是**多一个**的元数，因为那条公式正是子集据以被雕出的那一条；故那个原子先绑定元数的后继，这一点早已由序列那一章的读式说清，再绑定那个后继与骨架之对，然后断言那个对是第二个码集的成员。
+那个原子在被说出之前，先要绑定两个取值。元数那一位持有名字的元数；而存放一条公式所用的键携带的元数要**多一个**，因为那条公式正是子集据以被切出的那一条。因此，该原子先绑定元数的后继，这一点序列那一章的读式早已说明，再绑定那个后继与骨架组成的对，最后断言这个对属于第二个码集。
 
-两条读法都落在经一条等式抵达的**变元**元数上，而两条都是把诸绑定装起来、又拆开来，两条读式的充分性等式在里面交付。那一位一经填上，两半便复合成那道缝所索取的陈述：骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。「属于极限阶段」由它白得，因为无参的码是遗传有穷的，故上一节那条骨架条件如今是可推出的、而非假设的，而在那条可推出的合取项被有意退役之前，这条描述两个合取项都留着。
+两条读法都落在经一条等式抵达的**变元**元数上，而且都把诸绑定装起来又拆开，两条读式的充分性等式在其中成立。那一位一经填上，两半便合成所需的陈述：骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而这正是元层面一个名字的公式。「属于极限阶段」也随之得到，因为无参的码是遗传有穷的；于是上一节那条骨架条件如今是可推出的而非假设的，在那条可推出的合取项被有意移除之前，这条描述把两个合取项都保留。
 <!--/-->
 
 ```agda
@@ -376,15 +376,15 @@ whose first component is the numeral of an index, and an index is smaller than
 the length. Backwards, a member of the numeral is the numeral of a smaller
 number, that number is an index, and the environment has an entry there.
 
-The statement stands at a **variable** environment reached by an equation saying
-which family it is the graph of, and the family's values are supplied with their
-constructibility, because an object-language function must hand back an element
+The statement is made at a **variable** environment specified by an equation saying
+which family it is the graph of, and each of the family's values comes with a proof
+of its constructibility, because an object-language function must return an element
 of the model when it is applied.
 <!--zh-->
 
 参数序列是一个函数，而它有多长，就是它的定义域所说的事。要用的事实只有一条，两个方向都要，且下文用它两次：长度为 `k` 的环境，其定义域是 `k` 的数码。正向：一个条目是一个对，其第一分量是某个序号的数码，而序号小于长度。反向：数码的成员是更小的数的数码，那个数是一个序号，而环境在那里有条目。
 
-这条陈述站在一个**变元**环境上，经一条「它是哪个族的图」的等式抵达；而该族的诸取值连同它们的可构造性一并供上，因为对象语言的函数被施用时必须交回模型的一个元素。
+这条陈述使用**变元**环境，并以一条等式指定该变元是哪一个族的图。该族的每个取值还附有其可构造性证明，因为对象语言函数的结果必须是模型中的元素。
 <!--/-->
 
 ```agda
@@ -489,17 +489,17 @@ in a slot** and at a variable ambient environment, because the description below
 puts the graph under five binders.
 
 Nothing is re-proved. The index set, the table, its closedness, its totality and
-the ten clauses are the chapters that built them, applied at this environment;
-the key is carried from the hierarchy's coding to the model's by the bridge
-written for exactly that. So the two readings are the existence and the
-uniqueness halves transplanted, and they say what a consumer wants: the value the
+the ten clauses are taken from the chapters that built them and applied at this
+environment; the key is carried from the hierarchy's coding to the model's by the bridge
+written for exactly that. The two readings are thus the existence and the
+uniqueness halves instantiated here, and they say what is needed: the value the
 graph assigns at the key of a formula is that formula's satisfaction set, and
 nothing else satisfies the graph there.
 <!--zh-->
 
-指称就是一个名字的公式所选中的东西，而在模型内部，作选中的是那张满足关系表。一致满足那一章把那张表造成一场递归，并对着模型自家的二元图证出了它的两半。此处所需的是同样两半，但落在**握在一位上的载体**上、落在变元的周遭环境上，因为下面那条描述把那个图放在五层绑定之下。
+一个名字的指称是其公式选中的对象；在模型内部，这一选择由满足关系表表达。一致满足一章把该表构造为一场递归，并针对模型中的二元图证明了两个方向。这里需要同样的两个方向，但载体由一个槽位给出，周围环境也以变元给出，因为下面的描述把该图置于五层绑定之下。
 
-此处没有重证任何东西。索引集、表、它的封闭性、它的全性以及那十条子句，都是造出它们的那几章的东西，施用在这个环境上；而那个键，由专为此写下的那座桥从层级的编码搬到模型的编码。故这两条读法就是存在性与唯一性两半的移植，而它们说出了消费方想要的话：图在某条公式之键处所指派的取值，就是该公式的满足集合，而在那里别无他物满足该图。
+这里不重新证明任何结果。索引集、满足关系表、它的封闭性与全性，以及十条递归子句，都直接取自构造它们的章节并实例化到当前环境；相应的键则通过专门的桥从层级编码转换到模型编码。因此，两条读式就是既有存在性与唯一性结论在此处的实例：图在某条公式的键处给出的取值正是该公式的满足集合，并且没有其他对象在该处满足这张图。
 <!--/-->
 
 ```agda
@@ -608,13 +608,13 @@ and unpacked, and every payload is named. The key equation is handed back
 decoded, because a consumer wants the equation and not the syntax that carries it.
 <!--zh-->
 
-一个名字是三样东西，而这条描述把它们携带在三个位上：**骨架**，即那条无参公式的码；**参数序列**，即载体之上的一个环境；以及**指称**，即该名字所命名的集合。第四个位持有元数，而元数并非第四个部分，它就是那个序列自己的定义域，由「该序列是载体之上的环境」这同一个合取项钉住。
+一个名字包含三项数据，这条描述分别用三个槽位记录它们：**骨架**，即无参公式的码；**参数序列**，即载体上的一个环境；以及**指称**，即该名字命名的集合。第四个槽位记录元数，但元数不是名字的第四个分量，而是该参数序列的定义域；「该序列是载体上的环境」这一合取项同时确定了它。
 
-指称是唯一装着数学的那个合取项，而它写成**一次**外延，理由与这条路线上每一条取值为集合的子句相同：一个取值恰是满足某条件的那些东西之集，而若写成一对包含，那个条件就要说两遍。载体的一个成员属于该指称，当且仅当「把该成员推到诸参数前面所得的环境」满足那个骨架，而「满足」是从图所指派的取值上读出的。故它的体依次绑定：扩展后的环境、它的长度、由那个长度与那个骨架造出的键，以及那个键处的取值。
+指称是唯一承载实质数学内容的合取项，并写成**一次**外延。理由与这条路线上其他取值为集合的子句相同：一个取值由满足某条件的所有对象组成；若改写成两边包含，该条件就要重复两次。载体的一个成员属于该指称，当且仅当把这个成员置于诸参数之前所得的环境满足那个骨架；这里的「满足」从图在相应键处给出的取值读取。因此，公式体依次绑定扩展后的环境、它的长度、由该长度与骨架组成的键，以及图在该键处的取值。
 
-有一个合取项容易漏掉，而没有它，这条描述什么也没说：那个键必须落在**码集**中。图把自己的表作存在绑定，故在「不是任何人的码」的键处，一张表爱记什么就记什么；码集才是使那个取值确定的东西，而它像载体一样，以一个位的身份抵达这条描述。
+有一个合取项容易漏掉，而缺少它，这条描述就什么也没说：那个键必须落在**码集**中。图把自己的表作存在绑定，所以在不是任何人的码的键处，一张表记录什么都可以；使那个取值确定的正是码集，而它像载体一样，以一个位的身份进入这条描述。
 
-两条读法就是那次外延自家的两个方向，把四层绑定装起来、又拆开来，而每一份载荷都被点名。键的等式是解码之后交回的，因为消费方要的是那条等式，不是承载它的语法。
+两条读法分别对应那次外延的两个方向：一条把四层绑定装配起来，另一条把它拆开，而每份载荷都显式写出。键的等式在解码之后交回，因为使用方需要的是那条等式本身，而不是承载它的语法。
 <!--/-->
 
 ```agda
@@ -695,7 +695,7 @@ module _ {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n) where
 and `≺At`{.Agda} combines code, arity, and parameter comparisons without
 performing the stage recursion itself.
 <!--zh-->
-`LexAt`{.Agda} 描述两个参数环境的最先相异，而 `≺At`{.Agda} 组合码、元数与参数比较，却不自行运行阶段递归。
+`LexAt`{.Agda} 描述两个参数环境首次相异的情形；`≺At`{.Agda} 组合码、元数与参数三种比较，但自身不运行阶段递归。
 <!--ja-->
 `LexAt`{.Agda} は二つのパラメータ環境の最初の相違を記述し、`≺At`{.Agda} は段階再帰そのものを実行せずに、符号、アリティ、パラメータの比較を組み合わせる。
 <!--/-->
@@ -725,13 +725,13 @@ universal saying the two sequences agree below. Nothing recurses, nothing is
 defined by cases on a code, and no second table is wanted.
 <!--zh-->
 
-命名那一章按三个键比较两个名字：码，按极限阶段的良序；元数，按诸数码的序；参数，则在它们首次相异之处。这三者在内部都无须递归即可得到，而这件事值得直说，因为第二场已内化的递归，是这条路线迄今付过的最大一笔代价。
+命名那一章按三个键比较两个名字：码，按极限阶段的良序；元数，按诸数码的序；参数，则在它们首次相异之处。这三者在内部都无须递归即可得到；这一点值得直说，因为第二部分中必须内化处理的递归，是这条路线迄今最大的负担。
 
-第一个键是一个**隶属原子**。诸码据以比较的那个序是一个关系，而关系是对之集，于是「这个码排在那个之前」就是「它们的对属于那个集合」。那个关系以一个位的身份抵达这条描述：描述是一个框架，而填那一位是调用方的事，这也正是此处无须知道那个序是怎么造出来的原因。
+第一个键是一个**隶属原子**。诸码据以比较的序是一个关系，而关系是对之集，因此「这个码排在那个之前」就是说「它们的对属于那个集合」。这条描述是一个框架，而那个关系正好占据其中一个关系位：填入哪个序由调用方决定，这正是此处无须知道那个序如何构造的原因。
 
 第二个键同样是一个隶属原子，因为元数是数码，而数码就是更小的诸数码之集。
 
-第三个键是一次**有界量化**，不是一次下降。同长的两个序列首次相异于某处，而在那个序号以下它们相符。写开了，那就是：对序号的一个有界存在、读出那里两个取值的两次取值、对着参数序的一个隶属原子，以及一个说「两个序列在以下相符」的有界全称。什么也不递归，什么也不按码分情形定义，也不需要第二张表。
+第三个键是一次**有界量化**，不是一次下降。长度相同的两个序列在某个位置首次相异，在该序号之下则处处相符。展开来写，它包括：对序号的一个有界存在量词、读出该位置上两个取值的两次读取、对照参数序的一个隶属原子，以及一个断言「两个序列在该序号之下相符」的有界全称量词。这里没有递归，没有按码分情形的定义，也不需要第二张表。
 <!--/-->
 
 ```agda
@@ -858,7 +858,7 @@ module _ {n : ℕ} (P a e₁ e₂ : Fin n) (γ : S ^ n) where
 The section supplies generic fill/read lemmas for lexicographic comparison,
 defines least names at slots, and packages two least names into `StepAt`{.Agda}.
 <!--zh-->
-本节为字典序比较供应通用的填充与读取引理，在诸位上定义最小名字，并把两个最小名字封装进 `StepAt`{.Agda}。
+本节为字典序比较提供通用的填充引理与读取引理，在诸位上定义最小名字，并把两个最小名字包装进 `StepAt`{.Agda}。
 <!--ja-->
 この節では辞書式比較の一般的な fill/read 補題を与え、スロット上で最小の名前を定義し、二つの最小の名前を `StepAt`{.Agda} にまとめる。
 <!--/-->
@@ -885,11 +885,11 @@ each. This is the same law the previous chapters met on a sentence and on a
 constructor, met again on a block of binders.
 <!--zh-->
 
-比较的读法就是把它的三种情形归类。对象语言的析取是截断的，故消去落在一个截断里、而引入不落，而载荷是写出来的、不是推断出来的。
+比较的读法就是把它的三种情形归类。对象语言的析取是截断的，因此消去落在截断之内，引入则不然；载荷是写出来的，而不是推断出来的。
 
-步进就是这一族自己的那一步，被描述出来。当第一个的最小名字排在第二个的最小名字之前时，新阶段的一个成员排在另一个之前；而「最小」按它一贯的含义说出：这是那个集合的一个名字，且那个集合的任何名字都不排在它之前。多余的那一支删除之后，元层面的步进只有**一支**，故这条描述也只有一支；计划当初想用来守卫第二支的最小差公式没有写下，因为没有第二支。
+步进就是这个族自己的那一步，此处把它描述出来。当第一个最小名字排在第二个最小名字之前时，新阶段的一个成员排在另一个之前；「最小」取其通常的含义：这是那个集合的一个名字，且该集合的任何名字都不排在它之前。删去多余的那一支后，元层面的步进只有**一支**，这条描述也随之只有一支；原本要用来守卫第二支的最小差公式因此没有写出，因为已无第二支。
 
-六层绑定承载那两个名字，而它们是一个对其下的体保持通用的**框架**。若直接读，装配或拆解一个六重存在会把它下面的整条描述化为正规形，而它下面那条描述够得到那座塔；对体保持通用则什么也不展开，两条读法各一行。这与前几章在一个句子上、在一个构造子上遇到的是同一条规矩，此番在一整块绑定上再度遇到。
+六层绑定承载那两个名字，构成的**框架**对其下的体保持通用。若直接读，装配或拆解一个六重存在会把其下整条描述化为正规形，而其下的描述又能触及那座塔；保持对体通用则什么也不展开，两条读法各占一行。这与前几章在单个句子上、在单个构造子上遇到的是同一条规则，只是这次出现在一整块绑定上。
 <!--/-->
 
 ```agda
@@ -1031,9 +1031,9 @@ They are the same relation, and saying so is an induction on the length, written
 once, in both directions.
 <!--zh-->
 
-一条描述唯有说出了它本该说的话，才成其为描述；而要说明这一点，就得把它与命名那一章自己的那次比较相比。那次比较的三个键里有两个，是由**交给**它的序来裁决的：诸码由极限阶段的序，诸参数由载体的序。那两个序正是这条描述的两个关系位所代表的东西，故充分性陈述时，每个位都带着「它持有的是哪个序」这条假设，且两个方向都带。此处什么也不造；持有这些关系 (作为模型的集合) 的那一章会供上它们。
+一条描述必须准确对应它所描述的关系，因此要把它与命名章中的比较对照。该比较的三个键中，有两个由外部提供的序决定：码使用极限阶段上的序，参数使用载体上的序。这两个序分别由描述的两个关系位表示，所以充分性的两个方向都为每个关系位假设其表示的具体序。本章不构造这些序；后续持有这些关系作为模型集合的章节将提供它们。
 
-参数的那两次比较之间有一道缝，而填平它就是接下来两节的全部。在内部，比较是一次**首次相异**：一个序号，在其以下两者相符。在外部，它是对两个向量的一场递归。两者是同一个关系，而把这句话说出来，就是对长度的一次归纳，写一遍，两个方向。
+内部参数比较与外部参数比较之间还需要建立对应，接下来两节处理这一问题。内部比较以**首次相异**描述：存在一个序号，两者在该序号以下相符；外部比较则由两个向量上的递归定义。两者表示同一关系。证明对长度作一次归纳，并在同一归纳中给出两个方向。
 <!--/-->
 
 ```agda
@@ -1104,9 +1104,9 @@ at the first's length, moved there by the equality of arities the second key has
 just pronounced, which is why the two sequences can be compared at all.
 <!--zh-->
 
-参数这个键是两种语言相隔最远之处，故它单独架桥。内部的序号是元数数码的成员；外部的序号是有穷索引类型的元素；数码那一章把两者互相转换。内部的取值靠取值读出，而环境那一章的查表等式说：读出的取值就是那个族在那里的取值。随后由参数序的那一位裁决比较，而序号以下的相符是同一次翻译再来一遍，并置于一个有界全称之下，并由载体索引映射的单射性把集合之间的等式换回成员之间的等式。
+参数这个键是两种语言相距最远之处，因此为它单独架桥。内部的序号是元数数码的成员；外部的序号是有穷索引类型的元素；数码那一章把两者互相转换。内部的取值靠取值操作读出，而环境那一章的查表等式说明：读出的取值就是那个族在该处的取值。随后比较由参数序的那一位判定；序号以下的相符是同一翻译再做一遍，置于一个有界全称之下，并借助载体索引映射的单射性把集合之间的等式换回成员之间的等式。
 
-两个方向都写，因为两个方向都要用：一个把两个向量之间的首次相异变成对那次有界量化的满足，另一个把满足变回首次相异。第二个向量到场时已在第一个的长度上，是由第二个键刚刚宣布的元数等式挪过去的，而这正是那两个序列根本谈得上比较的原因。
+两个方向都写，因为两个方向都要用：一个把两个向量之间的首次相异转换为对那次有界量化的满足，另一个把满足转换回首次相异。第二个向量出现时已在第一个的长度上，这是由第二个键刚刚给出的元数等式移过来的；正因如此，这两个序列才谈得上比较。
 <!--/-->
 
 ```agda
@@ -1249,7 +1249,7 @@ just pronounced, which is why the two sequences can be compared at all.
 cases to prove that the internal order formula holds exactly when the two meta
 names satisfy the naming comparison.
 <!--zh-->
-`order-in`{.Agda} 与 `order-out`{.Agda} 分理码、元数与参数三种情形，证明内部序公式成立当且仅当两个元层面名字满足名字比较。
+`order-in`{.Agda} 与 `order-out`{.Agda} 分情形处理码、元数与参数三种情形，证明内部序公式成立当且仅当两个元层面名字满足名字比较。
 <!--ja-->
 `order-in`{.Agda} と `order-out`{.Agda} は符号、アリティ、パラメータの三場合を整理し、内部の順序論理式が成り立つことと二つのメタ言語の名前が名前比較を満たすことが同値だと証明する。
 <!--/-->
@@ -1270,9 +1270,9 @@ it.
 
 <!--zh-->
 
-三个键架好桥之后，每一半都是把三种情形归类。诸码的等式是底集之间的等式，因为「属于极限阶段」是命题；诸元数的等式是数码之间的等式，而数码单射；诸参数则经首次相异那座桥通过，并由路径归纳沿元数的等式在每个方向各挪一次。
+三个键的桥都架好之后，每一半只剩对三种情形归类。诸码的等式是底集之间的等式，因为「属于极限阶段」是命题；诸元数的等式是数码之间的等式，而数码单射；诸参数则经首次相异的桥转换，并由路径归纳沿元数的等式在每个方向各移一步。
 
-出来的就是本章的定理，落在变元环境的**变元**位上，每个位都经一条等式抵达：序公式对两个名字的数据成立，当且仅当命名那一章的比较对那两个名字成立。描述成其为描述，而下一章可以拿它去作分离。
+所得即本章的定理，它落在变元环境的**变元**位上，且每个关系位都经一条等式到达：序公式对两个名字的数据成立，当且仅当命名那一章的比较对那两个名字成立。描述至此成其为描述，下一章便可以用它作分离。
 
 <!--/-->
 
@@ -1333,15 +1333,15 @@ least of the description's names identified with the least of the meta ones.
 Those are bookkeeping against chapters that already exist, and they are the next
 chapter's first job.
 <!--zh-->
-`FreeAt`{.Agda} 就是无参性，而它是一个隶属原子：由元数与骨架造出的那个键，落在**空字母表处**的码集中。`freeCode-in`{.Agda} 与 `freeCode-out`{.Agda} 是那个集合在那个字母表处的两个方向，所倚的事实是一条无参公式在两个字母表上有同一个码；`codeFree-in`{.Agda} 与 `codeFree-out`{.Agda} 把它们读在诸位上，于是骨架那一位所持有的，恰是「比元数多一个变量的诸无参公式」的诸码，而那正是元层面一个名字的公式。`domAt-numeral`{.Agda} 说清一个序列有多长，而 `graphAt-value`{.Agda} 与 `graphAt-only`{.Agda} 是满足关系表的两半，落在握于一位上的载体处。
+`FreeAt`{.Agda} 就是无参性，它是一个隶属原子：由元数与骨架造出的那个键落在**空字母表处**的码集中。`freeCode-in`{.Agda} 与 `freeCode-out`{.Agda} 给出该集合在那个字母表处的两个方向，依据是同一条无参公式在两个字母表上有同一个码。`codeFree-in`{.Agda} 与 `codeFree-out`{.Agda} 把这两读式搬到诸位上：骨架那一位所持有的，正是「比元数多一个变量的诸无参公式」的诸码，而这正是元层面一个名字的公式。`domAt-numeral`{.Agda} 说明一个序列有多长；`graphAt-value`{.Agda} 与 `graphAt-only`{.Agda} 则是满足关系表的两半，落在由一位持有的载体处。
 
-`NameAt`{.Agda} 是描述在诸位上的名字：一个不带常元的骨架、一个定义域为元数的载体之上的参数序列，以及一个写成单次 `extAt`{.Agda} 的指称，其条件读的是 `satGraphAt`{.Agda} 在「由元数与骨架造出的键」处所指派的取值。有两个码集以位的身份抵达它：载体处那一个，没有它，图的那张作存在绑定的表什么也钉不住；以及空字母表处那一个，没有它，那个骨架就不是元层面某个名字的骨架。
+`NameAt`{.Agda} 在各槽位上描述一个名字：不带常元的骨架、定义域为元数且取值于载体的参数序列，以及用一次 `extAt`{.Agda} 写出的指称；其条件读取 `satGraphAt`{.Agda} 在由元数与骨架构造的键处所指派的值。两个码集分别占据槽位。载体处的码集约束满足关系图所绑定的表；空字母表处的码集保证骨架对应元层面的无参名字公式。
 
-`≺At`{.Agda} 是那次比较，而它**不跑递归**：一个对着既有之序的隶属原子、一个数码之间的隶属原子作元数之用，以及一次为参数所设的有界字典序量化。`StepAt`{.Agda} 是这一族的一步，只有**一**支，按最小名字说出。
+`≺At`{.Agda} 就是那次比较，而它**不跑递归**：它由一个对着既有之序的隶属原子、一个充当元数之用的数码间隶属原子，以及一次为参数所设的有界字典序量化构成。`StepAt`{.Agda} 是这一族的一步，只有**一**支，按最小名字给出。
 
 `order-in`{.Agda} 与 `order-out`{.Agda} 是那两半充分性，落在变元环境的变元位上：只要每个关系位都带着「它持有的是哪个序」这条假设，那条公式对两个名字的数据成立，当且仅当 `_≺ₙ_`{.Agda} 对那两个名字成立。
 
-尚未在此的，是 `StepAt`{.Agda} 对着步进序本身的充分性。骨架钉住之后，在那道缝所关乎的那个键上，这条描述的诸名字就是元层面的诸名字；而一条完整的陈述还要：把参数序列读回成向量、把指称与元层面名字的指称认同，以及把这条描述的诸名字中的最小者与元层面诸名字中的最小者认同。那些是对着早已存在的诸章记账，而它们是下一章的头一件事。
+这里尚未证明 `StepAt`{.Agda} 对步进序本身的充分性。固定骨架后，在相关键处，这条描述中的名字就是元层面的名字；完整证明还需要把参数序列读回向量，认同描述中名字的指称与元层面名字的指称，并认同描述中名字的最小者与元层面名字的最小者。这些步骤需要调用已有章节的结果，并构成下一章的首项工作。
 <!--/-->
 
 ```agda

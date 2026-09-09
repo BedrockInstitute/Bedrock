@@ -97,7 +97,7 @@ codomain of the compression.)
 <!--zh-->
 ## 联结词保小
 
-六个命题运算逐个传递小性见证，每条证明都是双蕴含的机械搬运。(限定名 `Logic`{.Agda} 是库在**低**一层的联结词，即压缩的落点。)
+六个命题运算逐个传递小性见证，每条证明都按双蕴含逐步搬移。(限定名 `Logic`{.Agda} 是库在**低**一层取的联结词，也就是化归的落点。)
 <!--ja-->
 ## 結合子による保存
 
@@ -138,18 +138,11 @@ small⊥ = (⊥* , isProp⊥*) ,
 <!--en-->
 ## Bounded quantifiers preserve smallness
 
-Here is the load-bearing step, and the point where the syntax chapter's oldest
-promise pays off in the currency of universes. A quantifier over all of `V ℓ`
-ranges over a large type and has no reason to be small. A quantifier **bounded by
-a set `a`** can instead range over the library's small member type `⟪ a ⟫`, the
-index type of `a`'s family, and smallness survives. The two directions travel
-along `∈-asFiber`{.Agda}, whose fibers are **untruncated** because `⟪ a ⟫↪` is an
-embedding: passing from "a member of `a`" back to "an index of `⟪ a ⟫`" is a
-function, not a choice.
+The key step is as follows. A quantifier over all of `V ℓ` ranges over a large type and has no reason to be small. A quantifier **bounded by a set `a`** can instead range over the library's small member type `⟪ a ⟫`, the index type of `a`'s family, and smallness is preserved. Both directions use `∈-asFiber`{.Agda}, whose fibers are **untruncated** because `⟪ a ⟫↪` is an embedding: passing from "a member of `a`" back to "an index of `⟪ a ⟫`" is a function, not a choice.
 <!--zh-->
 ## 有界量词保小
 
-承重的一步到了，语法章最古老的那句许诺，在此以宇宙为通货兑付。取全 `V ℓ` 为范围的量词量化在大类型上，没有任何理由是小的。而**以集合 `a` 为界**的量词可以改在库的小成员类型 `⟪ a ⟫` 上量化，即 `a` 的族的索引类型，小性就此存活。往返两趟走 `∈-asFiber`{.Agda}，其纤维**不加截断**，因为 `⟪ a ⟫↪` 是嵌入：从「`a` 的成员」回到「`⟪ a ⟫` 的索引」是函数，不是选择。
+关键步骤如下。以整个 `V ℓ` 为范围的量词在大类型上量化，一般没有理由保持小性；**以集合 `a` 为界**的量词则可改在库的小成员类型 `⟪ a ⟫` 上量化，也就是在 `a` 的族的索引类型上量化，因此仍然小。两个方向都使用 `∈-asFiber`{.Agda}。其纤维**不加截断**，因为 `⟪ a ⟫↪` 是嵌入：从 `a` 的成员恢复 `⟪ a ⟫` 的索引是函数操作，不需要选择。
 <!--ja-->
 ## 有界量化子による保存
 
@@ -206,7 +199,7 @@ flows through this one pipe.
 <!--zh-->
 ## 分离的水管
 
-小性买到的东西：逐点小的谓词可以分离。库的 `SeparationSet`{.Agda} 只收小谓词，小性见证恰好是入场券；规格以模型 record 的字段形状交还。本部往后的每一次分离，无论小性由谁买单，都流经这一根水管。
+小性带来的能力：逐点小的谓词可以分离。库的 `SeparationSet`{.Agda} 只接受小谓词，小性见证正是所需的凭据；规格按模型 record 的字段形状交还。本部往后的每一次分离，不论小性来自何处，都经由这一途径。
 <!--ja-->
 ## 小ささから分出へ
 
@@ -248,7 +241,7 @@ accounting: Δ₀ means *free*, in the precise sense of universe levels.
 <!--zh-->
 ## Δ₀ 公式求值小
 
-Δ₀ 见证开始挣第二份薪水。对 `Δ₀` 见证做一次归纳，即知带见证的公式在任何环境下的真值都小：两个原子情形是库压缩，八个联结词情形是封闭性引理，两个有界量词情形消费 `small-∀∈`{.Agda} 与 `small-∃∈`{.Agda}。**没有无界量词的情形，因为见证压根没有那两个构造子**：缺席即分类。这是压在 Δ₀ 见证上的第二条承重归纳 (第一条是绝对性)，也是 Lévy 层级兼任成本账簿的原因：Δ₀ 意谓**免费**，在宇宙层级的精确意义上。
+Δ₀ 见证在此再得一条小性证明。对 `Δ₀` 见证做一次归纳，即知带见证的公式在任何环境下的真值都小：两个原子情形归结为库压缩，八个联结词情形归结为封闭性引理，两个有界量词情形分别用 `small-∀∈`{.Agda} 与 `small-∃∈`{.Agda}。**没有无界量词的情形，因为见证本就没有那两个构造子**：缺席即分类。这是关于 Δ₀ 见证的第二条归纳定理 (第一条是绝对性)，也说明为何 Lévy 层级能同时充当代价核算：Δ₀ 意谓**免费**，在宇宙层级的精确意义上。
 <!--ja-->
 ## Δ₀ 論理式の評価は小さい
 
@@ -284,15 +277,11 @@ module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 <!--en-->
 ## The theorem: Δ₀ separation is free
 
-Compose the induction with the pipe, at the canonical constant interpretation,
-and the flagship falls out: a formula carrying a Δ₀ witness can be separated
-with no resizing and no axiom, `--safe` all the way down. The model chapter will
-still owe *full* separation, but this theorem is the first hard evidence for a
-running theme: the Δ₀ witnesses are portable assets, and carrying them pays.
+Compose this induction with the separation of pointwise-small predicates, at the canonical constant interpretation, and the core theorem of this chapter follows: a formula carrying a Δ₀ witness can be separated with no resizing and no axiom, `--safe` all the way through. The model chapter must still prove *full* separation, but this theorem is the first explicit evidence for a running theme: the Δ₀ witnesses supply exactly the smallness needed for separation.
 <!--zh-->
 ## 定理：Δ₀ 分离免费
 
-把这条归纳与那根水管在典范常元解释处一经复合，招牌定理应声落地：携带 Δ₀ 见证的公式，其分离不需任何降层，不花任何公理，一路 `--safe`。模型章仍欠**全**分离，但这条定理是一个贯穿主题的第一份硬证据：Δ₀ 见证是可携资产，随身携带自有回报。
+把这条归纳定理与「小谓词可分离成集合」的转换在典范常元解释处复合，即得本章的核心定理：若公式带有 Δ₀ 见证，则其分离无需降层，也不使用任何公理，并保持 `--safe`。模型章仍需证明**全**分离；本定理则首次明确展示了 Δ₀ 见证同时提供分离所需的小性。
 <!--ja-->
 ## 定理：Δ₀ 分出に仮定は不要
 
@@ -322,7 +311,7 @@ over all of `V ℓ`; here the range is the carrier of a **restricted structure**
 <!--zh-->
 ## 本质小的世界
 
-小性还有一种买法，买单的不是 Δ₀ 见证而是**地段**。当量化范围自身等价于某个小类型时，连**无界**量词也保小：沿等价搬运量化即可。这与上文的成本账簿并不冲突，那里标价的是范围为全 `V ℓ` 的量词；此处的范围是**限制结构** `𝒮ᵥ ↾ M` 的载体，小性恰是「限制」二字买来的。
+小性还可来自量化范围本身。若量化范围等价于某个小类型，则即使是**无界**量词也保持小性，只需沿该等价转换量化。这与上文针对全 `V ℓ` 范围的分析并不冲突；这里的范围是**限制结构** `𝒮ᵥ ↾ M` 的载体，其小性来自该载体与小类型的等价。
 <!--ja-->
 ## 本質的に小さな世界
 
@@ -346,13 +335,9 @@ small-⋁ e sm = Logic.∃[]-syntax (λ m → sm (equivFun e m) .fst)
 ```
 
 <!--en-->
-The consequence: over an essentially small restricted structure, **every** formula
-evaluates small, no Δ₀ witness required. The quantifier clauses walk along the
-equivalence, the atoms drop back to `V`'s atomic smallness through the first
-projection. This is "spoken inside a small world, everything said is small", and
-it is the engine of the constructible hierarchy's definability step.
+The consequence: over an essentially small restricted structure, **every** formula evaluates small, no Δ₀ witness required. The quantifier clauses transfer along the equivalence, and the atoms reduce to `V`'s atomic smallness through the first projection. This is "spoken inside a small world, everything said is small", and it is the mechanism underlying the constructible hierarchy's definability step.
 <!--zh-->
-后果是：在本质小的限制结构上，**任何**公式求值皆小，无需 Δ₀ 见证。量词子句沿等价行走，原子经第一投影落回 `V` 的原子小性。这就是「在小世界里说话，说什么都小」，也是可构造层级的可定义性步骤的发动机。
+后果是：在本质小的限制结构上，**任何**公式求值皆小，无需 Δ₀ 见证。量词子句沿等价转移，原子经第一投影归结为 `V` 的原子小性。这就是「在小世界里说话，说什么都小」，也正是可构造层级可定义性步骤所依赖的机制。
 <!--/-->
 
 ```agda

@@ -41,11 +41,11 @@ because a slot takes a variable and those two are particular sets, not descripti
 The body at those seven slots is the internalized step. Then two readings, by
 unpacking and packing the six binders, and then **one line** opens the frame.
 <!--zh-->
-本部的每一章都把自己的余数交给了下一章，而余数如今只剩一条公式。把阶段处的序由描述变成对象的那个框架 (`L.Choice.OrderTable`{.Agda} 的 `Described`{.Agda}，经 `L.Choice.StageOrderAdequacy`{.Agda} 的 `Ordered`{.Agda} 施用) 索取一样它没有的东西：一条关于**那一步**的描述，它对一个阶段的可定义子集中的两个成员说，命名比较把前者排在后者之前。
+本部各章逐步提供下一章需要的结果，如今只剩一条公式。将阶段上的序由描述转成对象的框架，即 `L.Choice.OrderTable`{.Agda} 的 `Described`{.Agda} 经 `L.Choice.StageOrderAdequacy`{.Agda} 的 `Ordered`{.Agda} 使用后，还需要一项输入：一条描述**该步进**的公式。该公式对某阶段可定义子集中的两个成员断言，命名比较将前者排在后者之前。
 
-那条描述所需的一切都已造好。命名比较已在对象语言里描述出来，它对着元层面比较的充分性也已证出，且所站的框架为每个关系位都带上「它持有的是哪个序」这条假设。那个框架为诸码所设的位由极限阶段上的序无条件填上。载体那一位则由表自己的诸读式填上，而那些读式已被重述在「无论什么实现那个类」之处，那恰恰正是交予步进参数的东西。于是两端会合，本章只是装配：没有新想法，只有把它写下来。
+那条描述所需的一切都已备好。命名比较已在对象语言中描述出来，它对元层面比较的充分性也已证得，且所用的框架为每个关系位都附有「它持有的是哪个序」这条假设。框架为诸码设的那个位由极限阶段上的序无条件给出；载体那一位则由表自己的诸读式给出，而这些读式已被重述于「无论什么实现那个类」之处，那恰是交予步进参数的东西。至此两端相接，本章只做装配：没有新想法，只是把它写下来。
 
-那条描述绑定**六**个集合并钉住**两**个常元。六个是阶段处的塔、它的可定义子集、表在该阶段的取值、以及塔之上的码集，连同被钉住的那两个。用对象等词钉住的两个是诸码之上的序与空字母表处的码集，因为一个槽位取的是变元，而那两样是特定的集合、不是描述。落在那七个槽位上的主体就是已内化的那一步。随后是两条读式，靠拆开与装回那六个绑定给出，再随后，**一行**打开那个框架。
+那条描述绑定**六**个集合并固定**两**个常元。六个是阶段处的塔、它的可定义子集、表在该阶段的取值，以及塔之上的码集，连同被固定的那两个。用对象等词固定的两个是诸码之上的序与空字母表处的码集，因为一个槽位取的是变元，而那两样是特定的集合，不是描述。落在那七个槽位上的主体就是已内化的那一步。随后是两条读式，靠拆开与装回那六个绑定给出；再随后，**一行**打开那个框架。
 <!--/-->
 
 ```agda
@@ -128,7 +128,7 @@ private
 The sealed constructors package the tower, its definable powerset, the code set,
 and the two fixed code relations as elements that can occupy formula slots.
 <!--zh-->
-这些被封印的构造器把塔、其可定义幂集、码集与两个固定码关系封装成可占据公式槽位的元素。
+这些被封印的构造器把塔、其可定义幂集、码集与两个固定码关系封装起来，使之成为能填入公式槽位的元素。
 <!--ja-->
 不透明化された構成子は、塔、その定義可能冪集合、符号集合、二つの固定された符号関係を、論理式のスロットに置ける要素としてまとめる。
 <!--/-->
@@ -144,7 +144,7 @@ local to it: an element that reaches a slot inside a satisfaction is unfolded by
 conversion every time the satisfaction is read, and the seal is what stops that.
 <!--zh-->
 
-六个集合中有两个是从阶段算出来的：那里的塔，以及它的可定义子集。二者都是模型的元素，亦即一个集合与一份「它是可构造的」的证明所成的对，且二者都**在被造出之处封印**，各配一条读式说出它的集合那一半是什么。这正是诞生描述实测为 178 秒对 2 秒的那条定律，而那次实测没有任何一处是它自己所特有的：一个抵达满足关系内部某个槽位的元素，每次那个满足关系被读时都会被转换检查展开，而封印正是止住这件事的东西。
+六个集合中有两个是从阶段算出来的：那里的塔，以及它的可定义子集。二者都是模型的元素，亦即一个集合与一份「它是可构造的」的证明所成的对，且二者都**在被造出之处封印**，各配一条读式说出其集合那一半是什么。这正对应诞生描述实测为 178 秒对 2 秒的那条定律，而那次实测并非该处特有：一个进入满足关系内部某个槽位的元素，每次该满足关系被读时都会被转换检查展开，封印正是止住这件事的手段。
 <!--/-->
 
 Perf: the elements the step description binds are sealed where they are built, as
@@ -163,7 +163,7 @@ the birth description's were (measured there at 178 s against 2 s).
 `Stp`{.Agda} binds the tower, its definable subsets, a table value, and the code
 set, pins two fixed relations, and applies the internalized step to those slots.
 <!--zh-->
-`Stp`{.Agda} 绑定塔、其可定义子集、一个表值与码集，钉住两个固定关系，再把内化步进施于这些槽位。
+`Stp`{.Agda} 绑定塔、其可定义子集、一个表值与码集，固定两个关系，再把内化步进施于这些槽位。
 <!--ja-->
 `Stp`{.Agda} は塔、その定義可能部分集合、表の値、符号集合を束縛し、二つの固定関係を指定して、内部化したステップをそれらのスロットへ適用する。
 <!--/-->
@@ -194,9 +194,9 @@ law the family chapter measured at 376 s against 3.8 s.
 
 六个绑定，其次序恰是每一条条件能被陈述出来的次序。第一个绑定槽位 `d` 处的**塔**，抵达它的办法是抵达层级的唯一办法，即经序列那一章的图。第二个经幂集那一章的 `DefAt`{.Agda} 绑定它的**可定义子集**，并要求被比较的那两个集合落在其中：那一步的两个隶属分量正是这样得到的，因为下一个阶段的成员恰恰就是这一个阶段的可定义子集，无须另立引理。第三个绑定表在 `d` 处的**取值**，说成槽位 `f` 的一次应用，正是这一点使那条描述读在调用方所持的任意一张表上、而不是读在某张被点名的表上。第四个经上一章的 `CodesAt`{.Agda} 绑定塔之上的**码集**，而那条描述当初就是为这个槽位写的。
 
-最后两个绑定用对象等词钉住常元，因为已内化的那一步取七个**槽位**，而槽位持有的是变元：诸码之上的序，以及空字母表处的码集，后者正是说出一个骨架无参的那一个。二者都是模型的特定集合，二者在被造出之处都已封印，钉住它们各花一个合取项。
+最后两个绑定用对象等词固定常元，因为已内化的那一步取七个**槽位**，而槽位持有的是变元：诸码之上的序，以及空字母表处的码集，后者正是说出一个骨架无参的那一个。二者都是模型的特定集合，都在被造出之处封印，各用一个合取项固定。
 
-整条公式被封印。它在下游被读在诸常元上，而那正是族那一章实测为 376 秒对 3.8 秒的定律。
+整条公式被封印。它在下游被读在诸常元上；族那一章实测的 376 秒对 3.8 秒，正是这条定律的体现。
 <!--/-->
 
 Perf: the description is read at constants, so it is sealed where it is built.
@@ -254,9 +254,9 @@ same one the descriptions themselves obey, applied one level up: **the type a
 frame concludes in is sealed where it is built**.
 <!--zh-->
 
-合取之下的六个存在绑定展开成六层嵌套的截断，而那两条读式沿相反方向走这层嵌套。每一层都取一个名字，从 `One`{.Agda} 到 `Six`{.Agda}，于是两条读式都不必把嵌套写开，且每个截断载荷都有名字，而那是关于载荷的常设定律。
+合取之下的六个存在绑定展开为六层嵌套的截断，两条读式则沿相反方向穿过这层嵌套。每一层都取一个名字，从 `One`{.Agda} 到 `Six`{.Agda}；这样，两条读式都不必把嵌套展开写出，而每个截断的载荷也有了自己的名字，这正是那条关于载荷的常设定律。
 
-`StepHolds`{.Agda} 是最里面那一层，即已内化的那一步在那六个被绑定的元素处的满足关系，而它被**封印**。这是本章头一回实测出的一条定律，也正是本章跑得完与跑不完之别。那一步的充分性是在一个对那些元素保持通用的框架上证出的；把那个框架实例化到本描述所绑定的具体元素上，会迫使那个框架的结论类型被正规化，而不封印时它跑不完 (超过 200 秒，对全章封印后的 7 秒)。这条规矩与诸描述自身所守的是同一条，只是施用于高一层：**一个框架所结论于其中的类型，要在它被造出之处封印**。
+`StepHolds`{.Agda} 是最里面那一层，即已内化的那一步在那六个被绑定元素处的满足关系，而它被**封印**。这是本章头一回实测出的一条定律，也正是本章跑得完与跑不完之别。那一步的充分性是在一个对那些元素保持通用的框架上证出的；把那个框架实例化到本描述所绑定的具体元素上，会迫使那个框架的结论类型被正规化，而不封印时它跑不完 (超过 200 秒，对全章封印后的 7 秒)。这条规则与诸描述自身所守的是同一条，只是施用于高一层：**一个框架所结论于其中的类型，要在它被造出之处封印**。
 <!--/-->
 
 ```agda
@@ -345,7 +345,7 @@ one this part's family gives there; the code side is filled by the limit chapter
 order and its two representation lemmas, which the family chapter made
 unconditional; the parameter side is filled by the table's readings at the value
 the description binds, which is where the step parameter's own hypothesis is
-spent. The remaining five arguments are the equations pinning the five slots, and
+used. The remaining five arguments are the equations pinning the five slots, and
 nothing else is used.
 
 What comes out is two readings of the innermost layer and, on either side of them,
@@ -356,9 +356,9 @@ variable, and not at the call sites, where it is the value of the least-name
 search.
 <!--zh-->
 
-`Slots`{.Agda} 是供给那一步的充分性全部六个实参之处，而它对那六个集合保持通用，每一个都带着自己的定义方程作为假设。载体是阶段处的塔，其上的良序就是本部那一族在那里给出的那个；码那一侧由极限那一章的序连同它的两条表示引理填上，而那两条已被族那一章做成无条件的；参数那一侧由表在描述所绑定的那个取值处的诸读式填上，而这正是步进参数自己那条假设被花掉之处。其余五个实参是钉住五个槽位的那些等式，此外别无所用。
+`Slots`{.Agda} 是供给那一步的充分性全部六个实参之处，而它对那六个集合保持通用，每一个都带着自己的定义方程作为假设。载体是阶段处的塔，其上的良序就是本部那一族在那里给出的那个；码那一侧由极限那一章的序连同它的两条表示引理补足，而那两条已被族那一章做成无条件的；参数那一侧由表在描述所绑定的那个取值处的各条读式补足，而这正是步进参数自己那条假设被使用之处。其余五个实参是固定五个槽位的那些等式，此外别无所用。
 
-出来的是最里那一层的两条读式，以及在它们两侧、框架对「是最小名字」的写法与步进那一章所导出的谓词之间的两次翻译。那两次翻译不过是在两个分量上各作一次 `sym`{.Agda}，但它们被安置在**此处**，即名字仍是变元之处，而不是被安置在调用处，即名字是最小名字搜寻之取值之处。
+所得到的是最内一层的两条读式，以及在它们两侧、框架对「是最小名字」的写法与步进那一章所导出的谓词之间的两次翻译。那两次翻译不过是在两个分量上各作一次 `sym`{.Agda}，但它们被安置在**此处**，即名字仍是变元之处，而不是被安置在调用处，即名字已是最小名字搜寻之取值之处。
 <!--/-->
 
 ```agda
@@ -425,7 +425,7 @@ search.
 the concrete tower, powerset, table value, and code set, and returns the meta
 step comparison.
 <!--zh-->
-`atAll`{.Agda} 读取六个被绑定对象，把其定义公式转成具体的塔、幂集、表值与码集，并交回元层面的步进比较。
+`atAll`{.Agda} 读取六个被绑定对象，把它们的定义公式转换成具体的塔、幂集、表值与码集，并返回元层面的步进比较。
 <!--ja-->
 `atAll`{.Agda} は束縛された六対象を読み、それぞれの定義論理式を具体的な塔、冪集合、表の値、符号集合へ変換して、メタなステップ比較を返す。
 <!--/-->
@@ -438,7 +438,7 @@ subsets' description pins the second to the definable subsets of it, and those t
 equations together turn the two membership conjuncts into memberships of the next
 stage, which is what the meta step's two components are. The application at `f`
 turns into a pair in the table, which is what the step parameter's hypothesis
-consumes, and it is consumed at **whatever value the description bound**, not at
+uses, and it is used at **whatever value the description bound**, not at
 one the caller chose: that is why the hypothesis quantifies over every value the
 table records there. The code set reading pins the fourth, and the two pinned
 constants are already equations. Then the frame's reading gives two names, least
@@ -446,7 +446,7 @@ for the two sets, with the naming comparison between them, and the step chapter'
 own reading turns that into the comparison at the stage.
 <!--zh-->
 
-`atAll`{.Agda} 取那六个集合与六个绑定所持有的一切，交回元层面的那一步。塔的图把第一个集合钉在塔上，可定义子集那条描述把第二个钉在它的可定义子集上，而这两条等式合起来把两个隶属合取项变成对下一个阶段的隶属，那正是元层面那一步的两个分量。`f` 处的应用变成表中的一个对，那正是步进参数那条假设所消费的东西，且它是在**描述所绑定的那个取值**处被消费的，而不是在调用方所选的某个取值处：这正是那条假设为何要对表在该处记录的每一个取值作全称。码集那条读式钉住第四个，而被钉住的两个常元本身就是等式。随后，框架的读式给出两个名字，即那两个集合各自的最小名字，连同它们之间的命名比较，而步进那一章自己的读式把它变成阶段处的那次比较。
+`atAll`{.Agda} 取那六个集合与六个绑定所含的全部信息，返回元层面的那一步。塔的图把第一个集合固定在塔上，可定义子集那条描述把第二个固定在它的可定义子集上；这两条等式合起来，把两个隶属合取项变成对下一个阶段的隶属，那正是元层面那一步的两个分量。`f` 处的应用变成表中的一个对，这正是步进参数那条假设所使用的东西，而且它是在**描述所绑定的那个取值**处被使用的，而不是在调用方所选的某个取值处：这正是那条假设为何要对表在该处记录的每一个取值作全称。码集那条读式确定第四个集合，而确定下来的两个常元本身就是等式。随后，框架的读式给出两个名字，即那两个集合各自的最小名字，连同它们之间的命名比较；步进那一章自己的读式再把它变成阶段处的那次比较。
 <!--/-->
 
 ```agda
@@ -514,7 +514,7 @@ own reading turns that into the comparison at the stage.
 The converse construction chooses those six objects from a meta step witness
 and proves every bound condition, ending with the internal adequacy frame.
 <!--zh-->
-反向构造从元步进见证选定这六个对象，证明每条绑定条件，并以内部充分性框架收尾。
+反向构造从元步进见证出发选定这六个对象，证明每条绑定条件，并以内部充分性框架收尾。
 <!--ja-->
 逆向きの構成はメタなステップの証人から六対象を選び、各束縛条件を証明し、最後に内部の妥当性フレームを適用する。
 <!--/-->
@@ -526,14 +526,14 @@ tower and its definable subsets are the sealed elements, and their conditions ar
 the sequence chapter's "this is the tower" and the powerset chapter's "this is
 the definable subsets of it", each read off a single equation. The table's value
 is the one the caller hands over, and the code set is the one the previous
-chapter's description carves, so its condition is that description read at the
+chapter's description constructs, so its condition is that description read at the
 tower. The two constants are pinned by `refl`{.Agda}, because the element bound is
 the constant itself. The innermost conjunct is the frame's other reading, applied
 to the two least names the step chapter's search returns, and to the naming
 comparison the step chapter reads off the comparison at the stage.
 <!--zh-->
 
-另一个方向选定那六个集合并交付那六条条件。塔与它的可定义子集就是那两个被封印的元素，它们的条件是序列那一章的「这是那座塔」与幂集那一章的「这是它的可定义子集」，各由一条等式读出。表的取值是调用方交来的那一个，码集则是上一章那条描述所雕出的那一个，故它的条件就是那条描述读在那座塔上。两个常元由 `refl`{.Agda} 钉住，因为被绑定的元素就是那个常元本身。最里面那个合取项是框架的另一条读式，施于步进那一章的搜寻交回的两个最小名字，以及步进那一章由阶段处的比较读出的那次命名比较。
+另一个方向选定那六个集合并给出那六条条件。塔与它的可定义子集就是那两个被封印的元素，它们的条件分别是序列那一章的「这是那座塔」与幂集那一章的「这是它的可定义子集」，各由一条等式读出。表的取值是调用方交来的那一个；码集则是上一章那条描述所构造出的那一个，故它的条件就是那条描述读在那座塔上的结果。两个常元由 `refl`{.Agda} 确定，因为被绑定的元素就是那个常元本身。最里面那个合取项是框架的另一条读式，施于步进那一章的搜寻所交回的两个最小名字，以及步进那一章由阶段处的比较读出的那次命名比较。
 <!--/-->
 
 ```agda
@@ -629,19 +629,19 @@ table frame.
 
 <!--en-->
 
-Only here is the seal opened, and only for the two readings, which peel the six
-layers and pass their witnesses to `atAll`{.Agda}, whose conclusion is written
-down. No
-`with`{.Agda} appears: a case split concluding in a satisfaction is a named helper
-with its conclusion written down, and that is the law the faithfulness chapter
-measured past 300 s. The exported `stp-out`{.Agda} and `stp-in`{.Agda} are the two
-readings at the exact types the frame demands, and they carry the frame's own
-asymmetry: soundness quantifies over every value the table records at the carrier,
-because the description it reads may have bound a value of its own, while
-completeness takes the single value the caller realizes with.
+Only here is the seal opened, and only for the two readings, which unfold the six
+layers of truncation one by one and pass their witnesses to `atAll`{.Agda}, whose
+conclusion is written down. No
+`with`{.Agda} appears: a case split concluding in a satisfaction must be a named helper
+with its conclusion written down, and the faithfulness chapter's measurements
+show that other formulations exceed 300 s. The exported `stp-out`{.Agda} and `stp-in`{.Agda} are the
+two required readings, at exactly the types the frame demands, and they retain the frame's
+own asymmetry: soundness quantifies over every value the table records at the carrier,
+because the description it reads may bind a value of its own, while
+completeness uses the single value the caller realizes with.
 <!--zh-->
 
-只有到这里才打开那道封印，且只为那两条读式打开。它们按层剥开那六层，把见证交给已写明结论的 `atAll`{.Agda}。全篇不出现 `with`{.Agda}：一次结论落在满足关系上的分情形必须是把结论写下来的具名辅助，而那是忠实那一章实测超过 300 秒的定律。导出的 `stp-out`{.Agda} 与 `stp-in`{.Agda} 就是那两条读式，其类型正是框架所索取的，且它们承接了框架自身的那份不对称：可靠性对表在该载体处记录的每一个取值作全称，因为它所读的那条描述可能自己绑定了一个取值；而完备性取的是调用方据以实现的那单个取值。
+只在这里为两条读式打开封印。它们逐层展开六层截断，并把见证传给已经写明结论的 `atAll`{.Agda}。全篇不出现 `with`{.Agda}：当分情况的结论是满足关系时，必须使用明确写出结论的具名辅助定义；忠实性一章的实测表明，其他写法会超过 300 秒。导出的 `stp-out`{.Agda} 与 `stp-in`{.Agda} 就是所需的两条读式，其类型与框架要求一致。它们也保留框架的不对称：可靠性对表在该载体处记录的每个取值作全称，因为所读的描述可能自行绑定取值；完备性则使用调用方给出的单个实现取值。
 <!--/-->
 
 ```agda
@@ -720,12 +720,12 @@ bounding ordinal is an element of the model whose membership is irreflexive. The
 probe was then deleted.
 <!--zh-->
 
-一行。它供给那个框架的最后一个参数，随之，整张序表变成无条件的。说白了，以下诸条如今在本部那条常设假设 (排中律) 之外不带任何假设即成立：
+这一操作只有一行：为框架提供最后一个参数，序表由此不再带条件。也就是说，以下结果除本部的常设假设 (排中律) 外不需要其他假设：
 
 - 出自 `L.Choice.StageOrderAdequacy`{.Agda}：`CondCore`{.Agda} 连同它的两条读式、`Cond`{.Agda}、`Cond₀`{.Agda}、`cond-spec`{.Agda} 与 `cond₀-spec`{.Agda}，亦即阶段处的序被完整描述出来，且以表的构造所索取的两种形式给出；
 - 出自 `L.Choice.OrderTable`{.Agda}：步进条件 `StepAt`{.Agda} 连同 `step-rel`{.Agda} 与 `step-table`{.Agda}；逼近 `ApproxAt`{.Agda} 与图 `GraphAt`{.Agda} 连同它们的诸读式、`approx-val`{.Agda} 与 `approx-uniq`{.Agda}、`graph-only`{.Agda} 与 `graph-table`{.Agda}；`PairGraphAt`{.Agda}；`Recorded`{.Agda}、`IsTable`{.Agda}、`Bundle`{.Agda}、`table-out`{.Agda}、`table-in`{.Agda} 与 `bound`{.Agda}；构造 `tableAt`{.Agda} 自身；以及它在每个序数处所携带的那个关系，即 `relL`{.Agda} 与 `relL-spec`{.Agda}，连同表示引理 `relL-fill`{.Agda} 与 `relL-rep`{.Agda}。
 
-这一点是用重切的办法验证的，而重切验证的正是它自己那条主张：把诸结果引入一个除排中律外不假设任何东西的临时模块，逐条按手写出来的类型重述，再用它们推出「上界序数处的序是模型的一个元素，且其隶属是非自反的」。那个探针随后被删除。
+这一点是通过重新拆分来验证的，而重新拆分所检验的正是它自己的那条主张：把上述诸结果引入一个除排中律外不作任何假设的临时模块，逐条按手写的类型重述，再用它们推出「上界序数处的序是模型的一个元素，且其隶属是非自反的」。这个探针随后即被删除。
 <!--/-->
 
 ```agda
@@ -746,7 +746,7 @@ open Ordered Stp stp-out stp-in public
 given constructible set and exports the internal relation with both membership
 readings.
 <!--zh-->
-`Bound`{.Agda} 把无条件序表专用于界住给定可构造集合的序数，并导出内部关系及其两条隶属读式。
+`Bound`{.Agda} 把无条件序表专用到界住给定可构造集合的序数上，并由此导出内部关系及其两条隶属读式。
 <!--ja-->
 `Bound`{.Agda} は無条件の表を与えられた構成可能集合の上界順序数へ特殊化し、内部の関係と所属についての二つの読みを公開する。
 <!--/-->
@@ -763,7 +763,7 @@ that element against the meta comparison in both directions. That triple, the
 element and its two lemmas, is what a separation will be run against.
 <!--zh-->
 
-横截集那一章要的是一个特定的实例，而且要一个特定的形状。给定 `L` 的一个集合，阶段那一章的上界序数是一个高于该集合自身阶段的序数，从而高于它的成员及其成员，也高于 `ω`。它是可构造的，因为一个序数总现身于自身之后的那个阶段。于是那一族在那里的塔的诸成员上有一个序，而表把那个序作为**模型的一个元素**握在手里，两条表示引理则把对该元素的隶属与元层面的比较双向读通。这个三元组，即那个元素与它的两条引理，正是一次分离将要据以施行的东西。
+横截集那一章需要一个特定的实例，而且要求它取特定的形状。给定 `L` 的一个集合，阶段那一章的上界序数是一个高于该集合自身阶段的序数，因而也高于它的成员及其成员，并高于 `ω`。它是可构造的，因为一个序数总出现在它自身之后的那个阶段。于是，那一族在那里的塔的诸成员上有一个序，表把这个序作为**模型的一个元素**给出，两条表示引理则使对该元素的隶属与元层面的比较可以双向换算。这个三元组，即那个元素连同它的两条引理，正是随后一次分离所要依据的东西。
 <!--/-->
 
 ```agda
@@ -816,15 +816,15 @@ and its bound-stage relation are available under excluded middle alone.
 `Stp`{.Agda} is the step described: a **sealed** formula binding six sets and
 pinning two constants. The six are the tower at the stage, reached through the
 sequence chapter's graph; its definable subsets, reached through the powerset
-chapter's `DefAt`{.Agda}, with the two compared sets required to lie in it, which
-is how the step's two membership components arrive without a lemma nobody has; the
-table's value at the stage, reached as an application, which is what keeps the
-description reading against whatever table the caller holds; and the code set over
-the tower, reached through the previous chapter's `CodesAt`{.Agda}, which was
-written for this slot. The two pinned by an object equality are the order on the
-codes and the code set at the empty alphabet, because a slot holds a variable and
-those two are particular sets. The body at those seven slots is the internalized
-step.
+chapter's `DefAt`{.Agda}, with the two compared sets required to lie in it, so that
+the step's two membership components are obtained directly, without appeal to any
+further lemma; the table's value at the stage, reached as an application, which
+is what keeps the description reading against whatever table the caller holds;
+and the code set over the tower, reached through the previous chapter's
+`CodesAt`{.Agda}, which was written for this slot. The two pinned by an object
+equality are the order on the codes and the code set at the empty
+alphabet, because a slot holds a variable and those two are particular sets.
+The body at those seven slots is the internalized step.
 
 `Reading.read`{.Agda} and `Reading.fill`{.Agda} are unpack and pack over the six
 binders, and `stp-out`{.Agda} and `stp-in`{.Agda} are those two at the frame's
@@ -849,11 +849,11 @@ separates with: the bounding ordinal of a set of `L`, the order on the members o
 the tower there as an element of the model, and its two representation lemmas.
 <!--zh-->
 
-`Stp`{.Agda} 是被描述出来的那一步：一条**被封印**的公式，绑定六个集合并钉住两个常元。六个是：阶段处的塔，经序列那一章的图抵达；它的可定义子集，经幂集那一章的 `DefAt`{.Agda} 抵达，并要求被比较的那两个集合落在其中，那一步的两个隶属分量就是这样到场的，而不必动用谁也没有的一条引理；表在该阶段的取值被说成一次应用抵达，正是这一点使那条描述始终读在调用方所持的任意一张表上；以及塔之上的码集，经上一章的 `CodesAt`{.Agda} 抵达，而那条描述就是为这个槽位写的。用对象等词钉住的两个是诸码之上的序与空字母表处的码集，因为槽位持有变元，而那两样是特定的集合。落在那七个槽位上的主体就是已内化的那一步。
+`Stp`{.Agda} 描述阶段序的步进：它是一条**被封印**的公式，绑定六个集合，并用对象等词固定两个常元。六个集合包括：由序列章的图表示的阶段塔；由幂集章 `DefAt`{.Agda} 表示的该塔的可定义子集，其中被比较的两个集合都属于这个可定义子集，从而给出步进的两个隶属分量；表在该阶段的取值，以一次函数应用表示，使描述可以用于调用方持有的任意表；以及由上一章 `CodesAt`{.Agda} 表示的塔上码集。两个固定常元是码上的序和空字母表处的码集，因为相应槽位是变元，而这里需要指定两个具体集合。将这些内容代入七个槽位，就得到已内化的步进。
 
 `Reading.read`{.Agda} 与 `Reading.fill`{.Agda} 是对那六个绑定的拆开与装回，而 `stp-out`{.Agda} 与 `stp-in`{.Agda} 就是这两条落在框架所要类型上的样子。`Slots`{.Agda} 是那一步的充分性被供给六个实参之处，对那六个集合保持通用，以它们的等式为假设：码那一侧来自极限与族两章，无条件；载体那一侧来自表在所绑定取值处的诸读式，而那正是步进参数自己的假设，也是本章从外面取的唯一输入。
 
 一次实测，且是一条定律在新地方的现身：**一个框架在其处作结论的类型，要在它被造出之处封印**。`StepHolds`{.Agda} 就是那一步充分性的结论；把那个框架实例化到本描述所绑定的具体元素上会把它正规化，而不封印时那件事跑不完 (超过 200 秒，对全章的 7 秒)。另有两条承袭而来的定律无须新实测即被遵守：抵达诸槽位的元素被封印，而那条描述自身被封印，因为它是在诸常元上被读出的。
 
-`open Ordered`{.Agda} 就是那一行，随之，序之表变成无条件的：那个构造连同它的全部四条读式，以及两个框架所导出的一切。`Bound`{.Agda} 是横截集那一章据以分离的那个形状：`L` 的一个集合的上界序数、那里的塔的诸成员上的序作为模型的一个元素，以及它的两条表示引理。
+`open Ordered`{.Agda} 就是由这一行引入的；有了它，序之表便不再受条件限制：该构造、它的全部四条读式，以及两个框架所导出的一切都随之可用。`Bound`{.Agda} 则是横截集一章作分离时所用的形状：`L` 的一个集合的上界序数、该处塔的诸成员上的序作为模型的一个元素，以及它的两条表示引理。
 <!--/-->

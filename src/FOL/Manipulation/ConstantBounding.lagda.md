@@ -18,15 +18,15 @@ occurrence, that every constant appearing in `φ` satisfies `P`. It is defined b
 the same case analysis as the formula it inspects, so it splits automatically
 under pattern matching, and no proof ever has to reason about a list of the
 constants of a formula. Being pure syntax, the chapter mentions neither
-hierarchies nor stages, and costs nothing.
+hierarchies nor stages, and introduces no extra cost.
 
 The companion is monotonicity. A certificate for a narrower predicate is one for
 a wider predicate, which is how certificates written against different stages are
 brought to a common stage before being used together.
 <!--zh-->
-本章就是那份证书。`BoundedFo P φ` 逐次出现地记录：`φ` 中出现的每个常元都满足 `P`。它按被检查公式所用的同一套分情形定义，故在模式匹配下自动拆开，任何证明都不必对「公式的常元列表」作推理。由于是纯语法，本章既不提层级也不提阶段，且分文不花。
+本章就是那份证书。`BoundedFo P φ` 逐次出现地记录：`φ` 中出现的每个常元都满足 `P`。它按被检查公式所用的同一套分情形定义，故在模式匹配下自动拆开，任何证明都不必对「公式的常元列表」作推理。由于是纯语法，本章既不提层级也不提阶段，也不引入额外代价。
 
-配套的是单调性。窄谓词的证书就是宽谓词的证书，而这正是把针对不同阶段写下的证书带到公共阶段、以便一并使用的办法。
+配套的是单调性。窄谓词的证书同时就是宽谓词的证书；这正是把针对不同阶段写下的证书转到公共阶段、以便一并使用的办法。
 <!--/-->
 
 ```agda
@@ -53,7 +53,7 @@ open import Cubical.Data.Unit using ( Unit )
 <!--zh-->
 ## 证书
 
-`BoundedTm P`{.Agda} 与 `BoundedFo P`{.Agda} 映照语法：常元携带 `P` 的证明，变量携带平凡数据，复合公式则配对各部分的证书。因此，模式匹配会在每次常元出现处恰好给出所需证据。
+`BoundedTm P`{.Agda} 与 `BoundedFo P`{.Agda} 随语法结构而定：常元携带 `P` 的证明，变量携带平凡数据，复合公式则配有其各部分的证书。因此，模式匹配会在每次常元出现处恰好给出所需证据。
 <!--ja-->
 ## 証明書
 
@@ -139,7 +139,7 @@ the intended instance the source is the model's carrier, the target is a stage's
 member type, the world is the hierarchy, and the equation is the fact that a
 member of a stage, viewed as a set, is the set it was.
 <!--zh-->
-接口按其使用者所需的一般性陈述：两个域、它们共同映入的一个世界、源上的一个谓词、在该谓词之下有定义的一个部分映射，以及说明该部分映射与两个投影相符的等式。在预期的实例中，源是模型的载体，目标是某个阶段的成员类型，世界是层级，而那条等式就是「阶段的成员作为集合来看，仍是它原本那个集合」这一事实。
+接口按使用者所需的一般性陈述：给定两个域、它们共同映入的一个世界、源上的一个谓词，以及在该谓词之下有定义的一个部分映射，另有一条等式说明该部分映射与两个投影相符。在预期的实例中，源是模型的载体，目标是某个阶段的成员类型，世界是层级，而那条等式表达的是「阶段的成员作为集合来看，仍是它原本那个集合」这一事实。
 <!--/-->
 
 ```agda
@@ -175,14 +175,14 @@ module Relabel
 <!--en-->
 Correctness says the relabelling changed nothing that matters: pushing the result
 into the common world along one map gives the same formula as pushing the
-original along the other. That is the equation the two legs of an absoluteness
-argument meet at, and it holds occurrence by occurrence for the reason the
+original along the other. That is the equation at which the two branches of an absoluteness
+argument meet, and it holds occurrence by occurrence for the reason the
 interface demanded.
 
 The Levy witness survives too, since relabelling touches constants and the
 witness never looks at them.
 <!--zh-->
-正确性说这次重标没有改变任何要紧的东西：沿一个映射把结果推进那个共同世界，与沿另一个映射把原式推进去，得到的是同一条公式。那正是绝对性论证的两条腿会合之处的等式，而它逐次出现地成立，理由正是接口所索取的那一条。
+正确性说明这次重标没有改变任何要紧的东西：沿一个映射把结果推进那个共同世界，与沿另一个映射把原式推进去，得到的是同一条公式。那正是绝对性论证中两条途径会合时所需的等式，而它逐次出现地成立，理由正是接口所索取的那一条。
 
 Lévy 见证也存活下来，因为重标动的是常元，而见证从不看它们。
 <!--/-->
@@ -231,7 +231,7 @@ Constant-bounded syntax packages the hypotheses needed by a partial constant map
 <!--zh-->
 ## 小结
 
-常元有界语法封装部分常元映射所需的假设。单调性搬运这些假设，而 `mapFoPartial`{.Agda}、其相符定理与 Lévy 保持引理执行带证书的常元改名。
+常元有界语法封装部分常元映射所需的假设。单调性沿谓词之间的蕴含关系传递这些假设，而 `mapFoPartial`{.Agda}、其相符定理与 Lévy 保持引理执行带证书的常元改名。
 <!--ja-->
 ## まとめ
 

@@ -15,12 +15,12 @@ A map between finite variable contexts acts on terms and formulas by renaming fr
 <!--en-->
 The syntax chapter pointed out an absence: no substitution, no weakening. The
 quantifier clauses take bodies in an extended context directly, so the classical
-apparatus for moving variables around never has to exist. What little variable
+apparatus for moving variables around is unnecessary. What little variable
 motion the book does need is covered by one device: **renaming**, a map
 `ρ : Fin n → Fin m` pushed through a formula, with a single correctness theorem
 that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
-语法章提过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
+语法章提过一处缺席：没有替换，也没有弱化。量词子句直接取扩展语境中的公式体，因此经典的整套变量替换机制并无必要。本书确实需要的那一点变量调整，由一个操作完成：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，并配一条正确性定理，弱化、交换、收缩都由此得出。
 <!--/-->
 
 ```agda
@@ -113,7 +113,7 @@ case a congruence, the binder cases stepping through `agrees∷`{.Agda}. Weakeni
 (inserting an unused variable), exchange, and contraction are all instances,
 obtained by choosing `ρ`.
 <!--zh-->
-正确性定理：变换后的公式在大环境中的含义，与原公式在小环境中的相同。先处理词项，然后照例归纳，每个情形一条同余，约束子情形踩着 `agrees∷`{.Agda} 过河。弱化 (插入未用的变量)、交换、收缩全是特例，取相应的 `ρ` 即得。
+正确性定理：变换后的公式在大环境中的含义，与原公式在小环境中的相同。先处理词项，然后照例归纳，每个情形是一条同余，约束子情形依赖 `agrees∷`{.Agda}。弱化 (插入未用的变量)、交换、收缩都是特例，取相应的 `ρ` 即得。
 <!--/-->
 
 ```agda

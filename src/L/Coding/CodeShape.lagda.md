@@ -64,7 +64,7 @@ is the same division the closedness predicate makes, and for the same reason.
 <!--zh-->
 ## 两个载荷框架
 
-一类标签的载荷是一个对，另一类的载荷是单个码。十个标签，两种形状：标签取哪一种是唯一会变动的东西，而它对载荷的其余要求，是框架所携带的一条关系。这与封闭性谓词所作的划分相同，理由也相同。
+一类标签的载荷是一个对，另一类的载荷是单个码。十个标签，两种形状：其中变动的只有标签取哪一种，而载荷须满足的其余条件，是框架所携带的一条关系。这一划分与封闭性谓词所作的划分相同，理由也相同。
 <!--ja-->
 ## 二つのペイロード枠
 
@@ -90,7 +90,7 @@ part. Both alternatives are bounded, and by different things.
 <!--zh-->
 ## 词项码
 
-那四个载荷伸到公式码之外的标签，需要一条谓词，而它不是递归的：词项要么是常元，要么是变元，二者都没有部件。两支都有界，而界住它们的不是同一样东西。
+那四个载荷超出公式码范围的标签，需要一条谓词，而这条谓词不是递归的：词项要么是常元，要么是变元，二者都没有部件。两支各有一道界，但两道界的性质不同。
 <!--ja-->
 ## 項の符号
 
@@ -111,9 +111,9 @@ The carrier is a slot rather than a constant on purpose. A constant would pin
 every predicate below this line to one carrier, and everything indexed by them
 would be re-indexed at the pair; a slot is threaded, and threading is free.
 <!--zh-->
-变元的序号必须落在元数之下，正是这一点使那条公式成为**在该元数上**的词项之码，而非在某个更大的元数上。常元则必须是载体的成员，正是这一点使它成为**在该字母表之上**的词项之码，而非在整个模型之上。第二个合取项，正是码集当初被两条陈述夹住时所缺的那一个：常元一旦不受界，一个被读回作常元的载荷就是 `L` 的任意元素，而解码落进的那一类，就比引入出发的那一类更宽。
+变元的序号必须落在元数之下，正是这一点使那条公式成为**在该元数上**的词项之码，而非在某个更大的元数上。常元则必须是载体的成员，正是这一点使它成为**在该字母表之上**的词项之码，而非在整个模型之上。第二个合取项，正是当初以两条陈述界住码集时所缺的那一条：常元一旦不受界，一个被读回作常元的载荷就可能是 `L` 的任意元素，而解码所落进的那一类，便比引入时所出发的那一类更宽。
 
-两道界都是「某一位上的成员关系」，两位都由调用方点名。载体取一位而不取一个常元，是有意为之。常元会把这条线以下的每条谓词钉死在一个载体上，而以它们为索引的一切都将在那个对上重新索引；一位是被穿过去的，而穿过去不花钱。
+两道界都是「在某一位上的成员关系」，而这两位都由调用方指定。载体取一位而不取一个常元，是有意为之：常元会把这条线以下的每条谓词固定到一个载体上，而以它们为索引的一切也都要在那个对上重新索引；一位则只是被传递下去，传递本身不增加代价。
 <!--/-->
 
 ```agda
@@ -177,12 +177,12 @@ module _ {n : ℕ} where
 ## What a member is, read flat
 
 Ten alternatives. The two frames are read once each, generically in the
-relation they carry, so that the walk over the disjunction below is ten
+relation they carry, so that the reading along the disjunction below is ten
 applications of two readers rather than ten copies of the same unnesting.
 <!--zh-->
 ## 成员的平铺读取
 
-十个可能。两个框架各读一次，且对它们所携带的关系泛型，好让下面那趟走过析取的路是两条读式的十次施用，而不是同一段解嵌套的十份拷贝。
+共十种可能。两个框架各提供一条读式，且对它们所携带的关系是泛型的，这样，下文沿析取进行的读取便是两条读式的十次施用，而不是同一段解嵌套的十份拷贝。
 <!--ja-->
 ## 要素を平坦に読み出す
 
@@ -263,7 +263,7 @@ take them apart.
 <!--zh-->
 ## 同样十路的写入
 
-一条为了被消费而写下的谓词，在有东西满足它之前什么也没证明。解码把「成形的集合」作为假设收下，故供给那个集合的人欠着那条假设，而欠着它意味着要造：存在式的框架有它的诸见证要产出、一个析取支要选定，而消去那边只需把它们拆开。
+谓词只有在证明某个对象满足它之后才产生结论。解码以「集合成形」为假设，因此构造供解码使用的集合时，必须同时证明这一假设。对存在式框架，引入方向需要给出各个见证并选定一个析取分支；消去方向则从已有证明中取出这些数据。
 <!--ja-->
 ## 同じ十個の形を書き込む
 
@@ -278,7 +278,7 @@ all still variables. Discharged at a named tag instead, it would be ten
 unfoldings of a formula three quantifiers deep, and that is the difference
 between a second and an afternoon.
 <!--zh-->
-两个框架各引入一次，且对关系泛型，理由与决定消去的那个相同，另加一个。每个框架所携带的充分性等式在此处交付，其时标签、关系与环境都还是变元。若改在一个点了名的标签处交付，那就是把一条嵌套三层量词的公式展开十遍，而那是一秒与一下午的差别。
+两个框架各引入一次，且对关系泛型，理由与决定消去的那个相同，此外还有一个。每个框架所携带的充分性等式在此处给出，其时标签、关系与环境都还是变元。若改在标签已被具体指名的位置才给出，就等于把一条嵌套三层量词的公式展开十遍，那是一秒与一下午的差别。
 <!--/-->
 
 ```agda
@@ -333,13 +333,13 @@ shaped-in C A γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes A)) fill (g c c�
 The first decode, and the only one that needs no induction. A term is a constant
 or a variable: the constant case reads its payload back as a constant of the
 alphabet, and the variable case reads an index out of the arity numeral. Each
-case spends exactly the bound its disjunct carries, and neither could be written
-without one. Nothing here descends, which is why it is separable from the
-recursion that follows and why it is written first.
+case uses exactly the bound its disjunct carries, and neither could be written
+without one. No case here descends into a subcode, which is why this decode is
+separable from the recursion that follows and why it is written first.
 <!--zh-->
 ## 词项的恢复
 
-第一个解码，也是唯一一个不需要归纳的。词项要么是常元，要么是变元：常元那支把载荷读回作字母表的一个常元，变元那支从元数数码里读出一个序号。每一支恰好花掉它那个析取项所携带的那道界，而两支都不能在没有界的情况下写出来。此处没有任何东西下降，这既是它可以从随后那场递归里分离出来的原因，也是它先被写下来的原因。
+这是第一个解码，也是唯一不需要归纳的解码。词项分为常元与变元：常元分支把载荷解释为字母表中的常元，变元分支从元数数码中恢复序号。两个分支分别使用对应析取项携带的边界证明；没有这些边界，两个分支都无法构造。这里不递归进入任何子码，因此可以与后续递归分开并先行定义。
 <!--ja-->
 ## 項の復元
 
@@ -365,9 +365,9 @@ elaborator's, not the mathematics': a branch whose type is written is solved
 against that type, and a branch whose type is inferred is solved against the
 whole disjunction.
 <!--zh-->
-词项是**在什么之上**被造出来的，这是一个参数，而这正是本章的用处所在。字母表是任何带有到层级之嵌入的类型，而常元那支需要一样形状谓词供不出的东西：载体的诸成员就是字母表的像。那是一条假设，因为它是关于「字母表与载体」这一对的事实，而不是关于码的事实。在唯一要紧的那个实例处，字母表就是载体自己的成员类型，而这条假设就是「一个集合由其诸成员的呈现」，故它的代价是一次交付，而非一次构造。
+词项相对于哪个字母表构造，是本章的一个参数。字母表可以是任何带有到层级嵌入的类型；常元分支还需要一项形状谓词无法提供的假设：载体成员恰好是字母表嵌入的像。这是关于字母表与载体的假设，而不是关于码的性质。在后文所需的实例中，字母表取载体自身的成员类型，这项假设正是「一个集合由其成员呈现」。因此，该事实由调用方提供，无需在词项解码中重新构造。
 
-两个析取支由两条点了名的引理去读，而那条读式就是它们的分情形，这不是趣味问题。写成一个函数的两条子句时，每支各带一个截断，而它们所在的析取自己也带一个，本章十分钟内没跑完；把每支的读法各给一个写出来的类型之后，两秒不到就查完。这条规矩是归约器的，不是数学的：类型被写出来的分支对着那个类型求解，类型靠推断的分支对着整个析取求解。
+两个析取支由两条点了名的引理去读，那条读式就是它们的分情形，这里并无选择余地。写成一个函数的两条子句时，每支各带一个截断，而它们所在的析取自己也带一个，本章十分钟内没跑完；把每支的读法各给一个写出来的类型之后，两秒不到就查完。这条规矩是归约器的，不是数学的：类型被写出来的分支对着那个类型求解，类型靠推断的分支对着整个析取求解。
 <!--/-->
 
 ```agda
@@ -413,20 +413,20 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
 ## Terms, encoded
 
 The same two clauses read backwards, and the only place in the introduction half
-where anything has to be computed rather than repackaged. Each clause now owes
-its own bound as well as its tag equation, and the two are owed to different
-parties. A constant is its own code, so its tag equation is nothing at all, and
-what it owes is that the constant is a member of the carrier: a hypothesis here,
+where anything has to be computed rather than repackaged. Each clause now needs
+its own bound as well as its tag equation, and the two bounds are different.
+A constant is its own code, so its tag equation is nothing at all, and
+what it needs is that the constant is a member of the carrier: a hypothesis here,
 because only the caller knows which carrier it meant. A variable has to put its
 index *inside* the arity numeral, which is the other bound working in the
 direction it was designed for: the decode read an index out of a numeral, and
-here a numeral is shown to hold one. That second fact was already on hand, since
+here a numeral is shown to hold one. That second fact was already available, since
 a smaller numeral belonging to a larger one is exactly what made distinct
 numerals distinct.
 <!--zh-->
 ## 词项的符号化
 
-同样的两支反过来读，也是引入这一半里唯一需要算点什么，而不只是重新包装的地方。如今每一支除标签等式外还欠着自己那道界，而两笔债欠给不同的人。常元就是自己的码，故它的标签等式什么也不是，它所欠的是「该常元是载体的成员」：此处这是一条假设，因为只有调用方知道它指的是哪个载体。变元则要把它的序号放**进**元数数码里，这是另一道界朝着它被设计的方向出力：解码从一个数码里读出一个序号，此处则表明一个数码含有一个序号。第二件事早已在手，因为「较小的数码属于较大的」正是使相异的数码成其为相异的那件事。
+同样的两支反过来读，也是引入这一半里唯一需要真正计算、而不只是重新包装的地方。如今每一支除标签等式外还各需要一道界，而两支所需的界并不相同。常元就是自己的码，故它的标签等式没有内容，它真正需要的是「该常元是载体的成员」：在这里这是一条假设，因为只有调用方知道它指的是哪个载体。变元则要把它的序号放**进**元数数码里，这正是另一道界按其设计发挥功用之处：解码从一个数码里读出一个序号，而此处则表明一个数码里含有一个序号。至于第二件事，早已成立，因为「较小的数码属于较大的」正是使相异的数码彼此相异的那一点。
 <!--ja-->
 ## 項の符号化
 
@@ -467,7 +467,7 @@ give exactly one.
 <!--zh-->
 ## 剥去一层
 
-两半会合。形状说出一个成员是十者中的哪一个，并把它的部件交回；封闭性说那些部件也是成员，且在该标签所要求的元数上。两半各自都给不出递归的一步，合起来恰好给出一步。
+这里结合形状与封闭性。形状判定一个成员属于十种构造中的哪一种，并给出它的各个部件；封闭性证明这些部件也是成员，且位于该标签要求的元数处。任一性质单独都不足以建立递归步骤，二者合用则恰好满足该步骤的条件。
 <!--ja-->
 ## 一層分の部分符号
 
@@ -479,7 +479,7 @@ The equation shapedness produces is, letter for letter, the one closedness
 consumes, so the two compose with nothing in between. That is not luck: both
 were written against the same reading of an arity-tagged pair.
 <!--zh-->
-形状产出的那条等式，正是封闭性所消费的那一条，逐字相同，故二者之间无需任何东西即可复合。这不是运气：两者都是对着「带元数标签的对」的同一条读法写下的。
+形状所给出的那条等式，正是封闭性所需要的那一条，二者逐字相同，故中间无需任何东西即可衔接。这不是巧合：两者都是对「带元数标签的对」按同一条读法写下的。
 <!--/-->
 
 ```agda
@@ -561,7 +561,7 @@ dropped on the floor.
 <!--zh-->
 ## 闭包具有形状
 
-这条谓词是作什么用的。对码的递归收到一个索引集，而那个集合必须封闭，否则诸子句什么也约束不了；也必须成形，否则它们放垃圾进来。封闭性在一章之前已为闭包交付；这里是另一半，而且是较短的那一半，因为成形性对「一个成员随身拖进什么」不作任何要求。于是那个反演返回的东西有一半被丢在地上。
+这条谓词有什么用。对码的递归得到一个索引集，而那个集合必须封闭，否则诸子句什么也约束不了；也必须成形，否则它们会把垃圾放进来。封闭性已在一章之前为闭包给出；这里是另一半，而且较短，因为成形性对「一个成员含有哪些子成员」不作任何要求。于是那个反演所返回的东西有一半被弃置不用。
 <!--ja-->
 ## 閉じた領域の符号は整形式である
 
@@ -579,20 +579,20 @@ type asks for, and no transport is needed anywhere in the ten tuples.
 The one thing a tuple cannot compute is the term witness: a payload slot holding
 a term code must be certified as one, and the certificate is the encoder above
 applied to the term the constructor carries. That certificate now has a second
-half, and the caller pays it: every constant of the alphabet is a member of the
+half, supplied by the caller: every constant of the alphabet is a member of the
 carrier. It is one hypothesis, discharged once per call rather than once per
 constructor, because the alphabet is fixed before the formula is.
 
-The first half, on the other hand, got cheaper. The witness a term owes is that
+The first half, on the other hand, becomes easier. The witness a term owes is that
 its code is the code of *some* term, and over the alphabet the code of a term
 already is that: the encoder is the identity with `refl`{.Agda} beside it. On the
-model's own coding it had to bridge two codings first.
+model's own coding it must first establish a correspondence between the two codings.
 <!--zh-->
-分情形只对构造子进行。标签不是要与之对上的第二个索引：它由构造子算出，正如 `byTag`{.Agda} 从构造子算出封闭性的要求，故这张表是十行，而不是十乘十。此处也没有任何递归，因为一个点了名的构造子之键，已经算成了见证类型所索取的那个带元数标签的对，而那十个元组里任何地方都不需要搬运。
+这里只需按构造子分情形。标签不是另一个需要匹配的索引；它由构造子计算，正如 `byTag`{.Agda} 从构造子计算封闭性要求。因此，这张表只有十行，而非十乘十。这里也没有递归：指定构造子后，其键已经计算为见证类型要求的带元数标签的对，十个元组中都不需要任何搬运。
 
-元组唯一算不出来的是词项见证：载荷位上放着的词项码必须被认证为词项码，而那份认证就是上面那条编码式施于该构造子所携的词项。这份认证如今有了第二半，而由调用方支付：字母表的每个常元都是载体的成员。它是一条假设，每次调用交付一次，而不是每个构造子交付一次，因为字母表是在公式之前就固定下来的。
+元组唯一算不出来的是词项见证：载荷位上放着的词项码必须被认证为词项码，而那份认证正是上面的编码式施于该构造子所携的词项。这份认证如今有了第二半，由调用方提供：字母表的每个常元都是载体的成员。它是一条假设，每次调用提供一次，而不是每个构造子提供一次，因为字母表早在公式之前就已固定。
 
-另一方面，第一半变便宜了。一个词项所欠的见证是「它的码是**某个**词项的码」，而在字母表之上，一个词项的码本来就是这个：编码式就是恒等，旁边配一个 `refl`{.Agda}。在模型自己的编码上，它先得把两套编码搭起桥来。
+另一方面，第一半变得更容易了。一个词项所需的见证是「它的码是**某个**词项的码」，而在字母表之上，一个词项的码本来就是这个：编码式就是恒等，旁边配一个 `refl`{.Agda}。若在模型自己的编码上，则它还得先在两套编码之间建立对应。
 <!--/-->
 
 ```agda

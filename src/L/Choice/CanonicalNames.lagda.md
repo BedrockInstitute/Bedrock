@@ -32,7 +32,7 @@ its four laws in that generality, which is a larger theorem than the one wanted,
 for a single use. The three keys are named, and each is compared by an order that
 already exists.
 <!--zh-->
-后继阶段的成员就是下面那个阶段的可定义子集，而前几章已经把这句话说了两遍：一遍说成带参数的公式，参数取自那个阶段；另一遍在参数离开语法之后，说成**一条无参公式配上一个参数向量**。可比较的是后一种形式。它的公式是一段有穷的语法，故它的码是遗传有穷集，早已现身于塔的极限层，而上一章正是在那里把一切良序化了；它的参数是下面那个阶段的成员，而到那时后续构造已经把那个阶段良序化。**名字**就是这样一对，中间夹着元数；本章造出它，证明后继阶段的每个成员都有一个，并把诸名字良序化。
+后继阶段的成员就是下面那个阶段的可定义子集，而前几章已经把这句话说了两遍：一遍说成带参数的公式，参数取自那个阶段；另一遍在参数离开语法之后，说成**一条无参公式配上一个参数向量**。可比较的是后一种形式。它的公式是一段有穷的语法，故它的码是遗传有穷集，早已现身于塔的极限层，而上一章正是在那里把一切良序化了；它的参数是下面那个阶段的成员，而到那时，后续构造已经把该阶段良序化。**名字**就是这样一对，中间夹着元数；本章造出它，证明后继阶段的每个成员都有一个，并把诸名字良序化。
 
 那个序是一次写开了的三键字典序比较。此处没有任何东西是「依值和上的一般序」的实例，而这是有意为之：那样一件东西得携带一族以第一个键为索引的序，并在那种一般性下证出它的四条定律，而这比所要的定理更大，却只用一次。三个键各有其名，而每个键都由一个已然存在的序来比较。
 <!--/-->
@@ -123,13 +123,13 @@ and a parameter-free formula has no constants at all.
 So two closure facts suffice, and both are lifted rather than re-derived: the
 previous chapter's `inSome`{.Agda} says a member of `Lset ω`{.Agda} has appeared
 by some finite stage, and the basic-axioms chapter's `pr∈Lset-suc`{.Agda} says a
-Kuratowski pair of two members of a stage appears two stages later. Climbing from
-one finite stage to a later one is monotonicity applied along the numerals'
-successors, which is the only recursion this section runs.
+Kuratowski pair of two members of a stage appears two stages later. Advancing from
+one finite stage to a later one is monotonicity applied along the successors of
+the numerals, which is the only recursion in this section.
 <!--zh-->
 第一个键要把公式当作 `Lset ω`{.Agda} 的成员，故首先要立的就是「它的码是这样一个成员」。读一遍编码那一章的诸子句便知别无他物：一个数码作标签，一个数码作 de Bruijn 序号，以及装着各部分的 Kuratowski 对。唯一可能走出有穷世界的构造是常元那一条，它把一个任意集合放进码里，而无参公式压根没有常元。
 
-于是两条封闭性事实就够了，而两条都是搬来的、不是重推的：上一章的 `inSome`{.Agda} 说 `Lset ω`{.Agda} 的成员到某个有穷阶段为止已经现身，而基本公理那一章的 `pr∈Lset-suc`{.Agda} 说两个阶段成员的 Kuratowski 对在两阶之后现身。从一个有穷阶段爬到更晚的阶段，是单调性沿着数码的后继逐级施用，而这也是本节所跑的唯一一场递归。
+于是两条封闭性事实就够了，而两条都是引用既有结果、并非重新证明：上一章的 `inSome`{.Agda} 说 `Lset ω`{.Agda} 的成员到某个有穷阶段为止已经现身，而基本公理那一章的 `pr∈Lset-suc`{.Agda} 说两个阶段成员的 Kuratowski 对在两阶之后现身。至于从一个有穷阶段推进到更晚的阶段，只需沿数码的后继逐级施用单调性，这也是本节唯一的递归。
 <!--/-->
 
 ```agda
@@ -165,7 +165,7 @@ constructors and two for the terms, and the constant clause is discharged by the
 empty type's eliminator. Nothing about the tag numbers matters beyond their being
 numerals.
 <!--zh-->
-于是归纳本身是十二条一行的子句，十条对应公式的构造子，两条对应词项，而常元那一条由空类型的消去子打发。标签的编号除了「是数码」之外无关紧要。
+于是归纳本身是十二条一行的子句，十条对应公式的构造子，两条对应词项，而常元那一条由空类型的消去子处理。标签的编号除了「是数码」之外无关紧要。
 <!--/-->
 
 ```agda
@@ -189,12 +189,12 @@ code∈limit (∃̇∈ t φ) = tag∈limit 9 _ (pr∈limit _ _ (codeTm∈limit t
 
 <!--en-->
 The pair of the code with that membership is what the first key compares. One
-small fact travels with it, proved once by path induction: moving a formula from
-one arity to an equal one leaves its code alone. The trichotomy below needs
+auxiliary fact, proved once by path induction, is used alongside it: transporting a formula from
+one arity to an equal one leaves its code unchanged. The trichotomy below needs
 exactly this, at the point where two names have been found to have the same
 arity.
 <!--zh-->
-第一个键所比较的，是「码与那条隶属」之对。有一件小事随它同行，并由一次路径归纳证一遍：把一条公式从一个元数搬到与之相等的元数，不动它的码。下面的三歧恰在「两个名字被发现元数相同」之处需要这一条。
+第一个键比较「码与那条隶属」组成的对。还需一项辅助事实，并由一次路径归纳证明：把一条公式从一个元数搬到与之相等的元数，不改变它的码。下文的三歧恰在发现两个名字元数相同时使用这一事实。
 <!--/-->
 
 ```agda
@@ -226,7 +226,7 @@ Coding does not identify two different parameter-free formulas. Injectivity foll
 <!--/-->
 
 <!--en-->
-Two names with the same first key must turn out to be built from the same
+Two names with the same first key must be built from the same
 formula, or the comparison would rank two different names as neither below the
 other and equal to nothing. The coding chapter proved its own injectivity, but it
 proved it over the working syntax, whose constant domain is the carrier; what is
@@ -236,14 +236,14 @@ syntax through `embed`{.Agda}.
 The gap is closed by an **erasure** running the other way, and the erasure can be
 crude because it only has to be a left inverse on the parameter-free formulas. A
 constant is sent to the variable of index zero, which is available because every
-formula in sight has at least one free variable, and every other clause is the
-identity on the constructor. On a formula that had no constants to begin with the
+formula under consideration has at least one free variable, and every other clause is the
+identity on the constructor. On a formula with no constants the
 erasure changes nothing, one clause at a time, and injectivity is then three
 compositions.
 <!--zh-->
-第一个键相同的两个名字，必须结果由同一条公式造出，否则那次比较就会把两个不同的名字判为「互不更小、又不与任何东西相等」。编码那一章证过它自己的单射性，但它是对工作语法证的，那里的常元域是载体；此处所需的是无参公式的单射性，而无参公式经 `embed`{.Agda} 抵达那套语法。
+第一个键相同的两个名字，其结果必须由同一条公式造出，否则那次比较就会把两个不同的名字判为「互不更小、又不与任何东西相等」。编码那一章证过它自己的单射性，但它是对工作语法证的，那里的常元域是载体；此处所需的是无参公式的单射性，而无参公式经 `embed`{.Agda} 映入那套语法。
 
-这道缝由一场反向的**抹除**填平，而抹除可以粗糙，因为它只需在无参公式上作左逆。常元被送到序号为零的变量，那个变量总在，因为视野中的每条公式至少有一个自由变量；其余每条子句都是构造子上的恒等。对一条本来就没有常元的公式，抹除逐条子句什么也没改，于是单射性就是三次复合。
+上述缺口由一个反向的**抹除**补上，而抹除可以粗糙，因为它只需在无参公式上作左逆。常元被送到序号为零的变量，那个变量总在，因为视野中的每条公式至少有一个自由变量；其余每条子句都是构造子上的恒等。对一条本来就没有常元的公式，抹除逐条子句什么也没改，于是单射性就是三次复合。
 <!--/-->
 
 ```agda
@@ -299,7 +299,7 @@ code-inj χ ψ e = sym (eraseFo-embed χ)
 <!--en-->
 A name records an arity, a parameter-free formula with one output variable, and a parameter vector of that arity. Its denotation is the subset of the stage cut out by the formula under that environment.
 <!--zh-->
-一个名字记录元数、一条多出一个输出变量的无参公式，以及相应长度的参数向量。它所指称的是该公式在这个环境下从阶段中刻出的子集。
+一个名字记录元数、一条多出一个输出变量的无参公式，以及相应长度的参数向量。它所指称的，是该公式在这个环境下从阶段中界定出的子集。
 <!--ja-->
 名前は、アリティ、一つの出力変数を余分にもつパラメータなし論理式、そのアリティのパラメータ列を記録する。その指示対象は、この環境で論理式が段階から切り出す部分集合である。
 <!--/-->
@@ -313,7 +313,7 @@ more free variable than that, and a vector of that many parameters drawn from
 the rest receive the parameters, and the first key is read off the formula at
 once.
 <!--zh-->
-以下一切都相对于一个集合 `A`，即诸名字所据以写出的那个阶段，也相对于那个阶段的成员上的一个良序，故本章在模块 `Naming A w` 中工作。一个**名字**是一个元数、一条比该元数多一个自由变量的无参公式，以及一个由 `A` 的小成员类型取出的、长度为该元数的参数向量。多出来的那个变量正是子集被刻出时所用的那个；其余的接收诸参数，而第一个键当即从那条公式读出。
+以下一切都相对于一个集合 `A`，即诸名字据以写出的那个阶段，也相对于该阶段的成员上的一个良序，故本章在模块 `Naming A w` 中工作。一个**名字**由三部分组成：一个元数、一条比该元数多一个自由变量的无参公式，以及一个由 `A` 的小成员类型取出、长度等于该元数的参数向量。多出来的那个变量正是用于选出子集的变量；其余的变量接收诸参数，而第一个键当即从那条公式读出。
 <!--/-->
 
 Perf: the naming data are definitions of this module, not of another.
@@ -349,7 +349,7 @@ exactly the notion `Def A`{.Agda} was defined by. Smallness is inherited: the
 inner satisfaction at any formula and any environment is small, so the subset is
 a `sett`{.Agda} over a small index type with no resizing spent.
 <!--zh-->
-一个名字所**指称**的，是当参数由**环境**供给时、它的公式所选中的 `A` 的子集，而上一章正是把参数放在了那里。环境是一个成员后接诸参数，全部经可定义幂集自家的常元解释读进限制载体，而满足取内层那一个；于是指称就是由「`Def A`{.Agda} 据以定义的那个概念」刻出的 `A` 的子集，分毫不差。小性是继承来的：任何公式在任何环境处的内层满足皆小，故那个子集是小索引类型上的一个 `sett`{.Agda}，降层分文未花。
+一个名字所**指称**的，是当参数由**环境**给出时，它的公式所选中的 `A` 的子集；上一章正是把参数放在这里。环境由一个成员后接诸参数组成，全部经可定义幂集所用的常元解释读入限制载体，而满足关系取内层版本；因此，指称正是由「`Def A`{.Agda} 据以定义的那个概念」选出的 `A` 的子集，与定义完全一致。小性直接继承：任何公式在任何环境处的内层满足皆小，故该子集是小索引类型上的一个 `sett`{.Agda}，降至小索引类型无须额外工作。
 <!--/-->
 
 ```agda
@@ -379,7 +379,7 @@ the denotation exactly when the inner world satisfies the name's formula at the
 environment the name prescribes. The compression to a small proposition was only
 an encoding, and the equivalence carries it back.
 <!--zh-->
-规格把「指称」二字逐字兑现：`A` 的一个成员属于该指称，当且仅当内层世界在该名字所规定的环境处满足它的公式。压缩成小命题只是编码，而那个等价把它原样送回。
+下面把「指称」的规格逐字写出：`A` 的一个成员属于该指称，当且仅当内层世界在该名字所规定的环境处满足它的公式。压缩成小命题只是编码上的安排，而那个等价把它原样送回。
 <!--/-->
 
 ```agda
@@ -428,14 +428,15 @@ is the whole of naming, and it is a function.
 ```
 
 <!--en-->
-Its adequacy is the previous chapter's, spent here. Two readings of a
+Its adequacy is the previous chapter's, used directly here. Two readings of a
 parameter-free formula are in play and they have to be identified first: the
 name's denotation reads it inside the constant domain `⟪ A ⟫`{.Agda}, through
 `embed`{.Agda}, while the abstraction theorem reads it at the empty constant
 domain. The two interpretations are functions out of the empty type, so they
-agree, and saying so is the only bookkeeping the identification costs.
+agree, and stating this agreement is the only verification the identification
+requires.
 <!--zh-->
-它的充分性就是上一章的那一条，在此花掉。这里有两种读一条无参公式的方式，必须先把它们认同：名字的指称经 `embed`{.Agda} 在常元域 `⟪ A ⟫`{.Agda} 之内读它，而抽象定理在空常元域处读它。两个解释都是从空类型出发的函数，故它们相符，而把这句话说出来就是这次认同的全部记账。
+它的充分性就是上一章的那一条，在此直接使用。这里有两种读一条无参公式的方式，必须先把二者认同：名字的指称经 `embed`{.Agda} 在常元域 `⟪ A ⟫`{.Agda} 之内读它，而抽象定理在空常元域处读它。两个解释都是从空类型出发的函数，故它们相符；把这个相符说出来，便是这次认同所需的全部验证。
 <!--/-->
 
 ```agda
@@ -474,10 +475,10 @@ agree, and saying so is the only bookkeeping the identification costs.
 Both subsets are cut out of `A` by a small predicate on its members, so once the
 two predicates are equal the two sets are equal by a congruence, with no appeal
 to extensionality. Completeness follows by transporting along that equality, and
-it is stated truncated because that is how the definable powerset gives up a
+it is stated truncated because that is how the definable powerset yields a
 formula in the first place.
 <!--zh-->
-两个子集都是由 `A` 的成员上的一条小谓词从 `A` 中割出，故两条谓词一旦相等，两个集合便由一次同余而相等，无须援引外延性。完备性沿那条等式搬运即得，而它陈述为截断形式，因为可定义幂集本来就是这样交出一条公式的。
+两个子集都是由 `A` 的成员上的一条小谓词从 `A` 中选出的，故两条谓词一旦相等，两个集合便由一次同余而相等，无须援引外延性。完备性沿那条等式即可得到，而它陈述为截断形式，因为可定义幂集本来就是这样给出一条公式的。
 <!--/-->
 
 ```agda
@@ -504,27 +505,28 @@ formula in the first place.
 <!--en-->
 Parameter vectors are compared at their first differing position by the given well-order of the stage. Allowing the two vectors to carry separate lengths avoids transporting one vector after equality of arities has been proved.
 <!--zh-->
-参数向量在首次相异的位置由阶段上的既定良序比较。让两个向量各自保留长度，可避免在证明元数相等后搬运其中一个向量。
+参数向量在首次相异的位置由阶段上的既定良序比较。让两个向量各自保留自己的长度，可避免在证明元数相等后还要沿该等式转换其中一个向量。
 <!--ja-->
 パラメータ列は、最初に異なる位置で段階上の所与の整列順序によって比較する。二つの列が別々の長さをもてるようにすると、アリティの等しさを示した後で一方を移送せずに済む。
 <!--/-->
 
 <!--en-->
 The module's second parameter is the well-order of the stage's members, and the
-rest of the chapter spends it. The third key compares parameter vectors, and it
+rest of the chapter uses it. The third key compares parameter vectors, and it
 compares them in the obvious way: at the first position where they differ, the
 given order decides.
 
 The comparison is written across **two lengths**, and the two cases where a
-vector runs out are the empty type. That costs nothing where the lengths are
-equal, which is the only place the comparison is ever reached, and it buys the
-absence of a transport: the second key has already pronounced the arities equal
-by then, but the two vectors still have syntactically different lengths, and a
-comparison demanding one length would have to move one of them first.
+vector is exhausted are the empty type. Where the lengths are equal it involves
+no extra work, and that is the only case the comparison ever reaches; the gain
+is that no transport is needed: the second key has already established that the
+arities are equal by then, but the two vectors still have syntactically different
+lengths, and a comparison admitting only one length would have to transport one
+of them first.
 <!--zh-->
-模块的第二个参数就是该阶段成员上的那个良序，本章余下部分把它花掉。第三个键比较参数向量，而它的比较方式显而易见：在它们首次相异之处，由给定的序裁决。
+模块的第二个参数就是该阶段成员上的那个良序，本章余下部分将使用它。第三个键比较参数向量，其比较方式正如上文所述：在两者首次相异之处，由给定的序判定。
 
-这次比较跨**两个长度**书写，而向量走完的那两种情形取空类型。在长度相等处这分文不花，而那也是这次比较唯一会抵达之处；换来的则是「不必搬运」：那时第二个键已经宣布诸元数相等，可两个向量的长度在语法上仍然不同，而一个只认单一长度的比较，就得先把其中一个搬过去。
+这次比较跨**两个长度**书写，而向量走完的那两种情形取空类型。长度相等处的比较无须额外代价，而那也是这次比较唯一会抵达的情形；由此换来的是不必转换长度：那时第二个键已经宣布诸元数相等，可两个向量的长度在语法上仍然不同，而一个只认单一长度的比较，就得先把其中一个沿等式转换到另一长度。
 <!--/-->
 
 ```agda
@@ -686,12 +688,12 @@ nothing unfolds, and the three cases read off the shape.
 
 <!--en-->
 Irreflexivity and transitivity are then the three keys' own laws, sorted by case.
-The mixed cases of transitivity carry an equality of one key across the other's
-comparison, and that is all the bookkeeping there is; the parameter case appeals
+The mixed cases of transitivity substitute an equality of one key into the other's
+comparison, and that is all the verification required; the parameter case appeals
 to the vector comparison at three lengths, which is why that one was proved
 across lengths.
 <!--zh-->
-于是非自反与传递就是三个键各自的定律，按情形归类。传递性的混合情形把一个键的等式带过另一个键的比较，而全部记账仅此而已；参数那一情形援引三个长度上的向量比较，而这正是当初把那一条跨长度证出的原因。
+于是非自反与传递就是三个键各自的定律，按情形归类。传递性的混合情形把一个键上的等式代入另一个键的比较，所需的验证仅此而已；参数那一情形援引三个长度上的向量比较，而这正是当初把那一条跨长度证出的原因。
 <!--/-->
 
 ```agda
@@ -718,23 +720,23 @@ across lengths.
 ```
 
 <!--en-->
-Trichotomy descends the keys, each new one reached only when the previous one has
-pronounced equality. The last stop is the only one with work in it. There the
-arities are equal but not identical, so the first name's parameters are moved to
-the second's length before the vectors are compared, and the two strict verdicts
-are moved back; and when the vectors agree, the two names agree, because the
-first key's equality now says the formulas have the same code, and a code
-determines a parameter-free formula.
+Trichotomy descends the keys, each new one reached only when the previous one
+has declared equality. The last key is the only one that requires work. There the
+arities are equal but not identical, so the first name's parameters are
+transported to the second's length before the vectors are compared, and the two
+strict verdicts are transported back; and when the vectors agree, the two names
+agree, because the first key's equality now says the formulas have the same code,
+and a code determines a parameter-free formula.
 
 Everything here is stated at the two names themselves rather than at their
-components. That is the second measurement of the chapter: a statement made at a
-name's three projections is equal to one made at the name only up to eta, and
-matching the two forced the whole limit order open, at eighty-seven seconds for
-one lemma.
+components. That is the second measurement recorded in this chapter: a statement
+made at a name's three projections is equal to one made at the name only up to
+eta, and matching the two unfolds the whole limit order, at eighty-seven seconds
+for one lemma.
 <!--zh-->
-三歧沿诸键下行，每个新键唯有在前一个宣布相等时才被抵达。最后一站是唯一有活干的一站。在那里诸元数相等但并非同一，故先把第一个名字的参数搬到第二个的长度上，再比较两个向量，然后把两种严格判决搬回来；而当两个向量相符时，两个名字相符，因为第一个键的等式此刻说两条公式有相同的码，而一个码决定一条无参公式。
+三重比较沿诸键依次进行：只有当前一个键判为相等时，才继续考察下一个键。第三个键是唯一需要额外处理的地方：此时两个元数相等，但在类型上未必相同，因此先把第一个名字的参数转换到第二个名字的长度，再比较两个向量，并把两种严格判决转换回原来的类型。当两个向量相符时，两个名字也相符，因为第一个键的等式表明两条公式具有相同的码，而一个码决定一条无参公式。
 
-此处一切都陈述在两个名字自身上，而非陈述在它们的分量上。这是本章的第二次测量：在一个名字的三个投影上作的陈述，与在那个名字上作的陈述只在 eta 的意义下相等，而把两者对上会把整个极限序逼开，一条引理八十七秒。
+此处的一切陈述都针对两个名字自身，而非它们的分量。这是本章记录的第二项实测：在名字的三个投影上所作的陈述，与在名字自身上所作的陈述只在 eta 的意义下相等；对齐两者会展开整个极限序，使一条引理耗时八十七秒。
 <!--/-->
 
 ```agda
@@ -800,13 +802,14 @@ separate function taking the outer stages' induction hypotheses as arguments, so
 each recurses on exactly one accessibility proof and the recursion is structural
 everywhere.
 
-The name always arrives as a name, with equations saying where its keys sit. That
-is the same law as the trichotomy's, met again: an accessibility stated at a
-name's components would have to be matched against one stated at the name.
+What appears here is always a name itself, together with equations saying where
+its keys sit. That is the same law as the trichotomy's, encountered again: an
+accessibility stated at a name's components would have to be matched against one
+stated at the name.
 <!--zh-->
 良基性就是同一次下降读作递归，一个键一层。最内层，码与元数固定，诸参数下降，递减的实参是向量的可及性；中间一层，码固定，元数下降；最外层，码下降。每一层各是一个函数，把外层的诸归纳假设当实参收进来，于是每一层恰对一份可及性证明递归，处处都是结构递归。
 
-名字总是以名字的身份到场，外加若干说明它的诸键坐在哪里的等式。这与三歧那一条是同一条规矩，此番再度出现：陈述在一个名字的诸分量上的可及性，将不得不与陈述在那个名字上的可及性对上。
+这里出现的总是名字本身，连同若干说明它的诸键位置所在的等式。这与三歧处的规矩是同一条，此番再度出现：陈述在名字诸分量上的可及性，必须与陈述在名字自身上的可及性对上。
 <!--/-->
 
 ```agda
@@ -875,14 +878,14 @@ The three-key relation satisfies the four laws of a strict well-order. Applying 
 <!--/-->
 
 <!--en-->
-The four laws packaged are a strict well-order on the names, which is the
-interface the choosing device takes; and the least-element search of the
-well-order chapter, applied to it, turns a merely inhabited family of names into
-a definite one. This is the whole of what the names were built for: a family of
-sets over one stage becomes a family of names, and a family of names has a least
-member.
+The four laws together say that the names form a strict well-order, which is
+the prerequisite the selection mechanism requires; and the least-element search
+of the well-order chapter, applied to it, turns a merely inhabited family of names
+into a definite one. This is precisely the purpose for which the names were
+built: a family of sets over one stage becomes a family of names, and a family
+of names has a least member.
 <!--zh-->
-四条定律打成束，就是诸名字上的一个严格良序，而那正是选取装置取用的接口；而良序那一章的取极小元搜索施于其上，便把一族仅仅非空的名字变成一个确定的名字。这就是造出诸名字的全部目的：单一阶段之上的一族集合成为一族名字，而一族名字有极小元。
+这四条定律合在一起，就是说诸名字构成一个严格良序，而这正是选取手段所需要的前提；良序那一章的最小元搜索施于其上，便把一族仅仅非空的名字变成一个确定的名字。构造诸名字的目的正在于此：使单一阶段之上的一族集合成为一族名字，而一族名字有极小元。
 <!--/-->
 
 ```agda
@@ -920,26 +923,27 @@ A `Name`{.Agda} is an arity, a parameter-free formula of one more variable, and 
 vector of parameters from the stage; `denote`{.Agda} is the subset it carves, and
 `denote-mem`{.Agda} says so in the inner semantics the definable powerset is
 defined by. `names-complete`{.Agda} says every member of the successor stage is
-denoted, truncated, which is how the definable powerset gives up its formula.
+denoted, and the existence claim is truncated, since this is how the definable
+powerset gives its formula.
 
 `code∈limit`{.Agda} puts the first key where the previous chapter's order can
 reach it, and `code-inj`{.Agda} makes that key faithful; `_≺ᵥ_`{.Agda} orders the
 third key across lengths, and `_≺ₙ_`{.Agda} is the three-key comparison itself,
 with all four laws and `leastName`{.Agda}, the least name of a non-empty family.
 
-Three costs were measured, and every one of them is the same accident seen from
+Three costs were measured, and each of them is the same phenomenon seen from
 a different side: something forces the limit order open, and the limit order
 unfolds into a search for a least ordinal. An inductive declaration of the
 comparison forces it in the positivity check; a statement made at a name's
-projections rather than at the name forces it when the two are matched, at
-eighty-seven seconds a lemma; and naming data reached from **another** module
-forces it at every comparison of codes, which was the largest of the three.
-Written as a sum, stated at names throughout, and with the data defined where it
-is used, the chapter costs nothing.
+projections rather than at the name forces it when the two are matched, at the
+cost of a lemma and eighty-seven seconds; and naming data reached from
+**another** module forces it at every comparison of codes, which was the
+largest of the three. Written as a sum, stated at names throughout, and with
+the data defined where it is used, the chapter avoids these three sources of unwanted unfolding.
 <!--zh-->
-一个 `Name`{.Agda} 是一个元数、一条多一个变量的无参公式，以及一个取自该阶段的参数向量；`denote`{.Agda} 是它刻出的子集，而 `denote-mem`{.Agda} 在可定义幂集据以定义的那套内层语义中把这件事说出来。`names-complete`{.Agda} 说后继阶段的每个成员都被指称，且是截断的，因为可定义幂集本来就是这样交出它的公式的。
+一个 `Name`{.Agda} 由一个元数、一条多一个变量的无参公式，以及一个取自该阶段的参数向量组成；`denote`{.Agda} 是它所界定的子集，而 `denote-mem`{.Agda} 在可定义幂集所依据的内层语义中陈述这一点。`names-complete`{.Agda} 说明后继阶段的每个成员都由某个名字指称；该存在结论是截断的，因为可定义幂集正是以截断的方式给出相应公式。
 
-`code∈limit`{.Agda} 把第一个键放到上一章那个序够得着的地方，而 `code-inj`{.Agda} 使那个键忠实；`_≺ᵥ_`{.Agda} 跨长度地给第三个键排序，而 `_≺ₙ_`{.Agda} 就是那次三键比较本身，连同四条定律与 `leastName`{.Agda}，即非空族中最小的名字。
+`code∈limit`{.Agda} 使第一个键落在上一章那个序的适用范围之内，而 `code-inj`{.Agda} 保证那个键不产生歧义；`_≺ᵥ_`{.Agda} 跨长度地为第三个键排序，而 `_≺ₙ_`{.Agda} 就是那次三键比较本身，连同四条定律与 `leastName`{.Agda}，即非空族中最小的名字。
 
-三笔代价被量出，而每一笔都是同一次意外的不同侧面：某样东西把极限序逼开，而极限序展开就是一场「最小序数」的搜寻。把那次比较声明为归纳关系，会在正性检查中把它逼开；陈述在一个名字的诸投影上、而非陈述在那个名字上的东西，会在两者对上时把它逼开，一条引理八十七秒；而从**另一个**模块够到的命名数据，会在每一次码的比较处把它逼开，这是三者中最大的一笔。由于写成和类型、全程陈述在名字上、并把数据定义在它被使用之处，本章分文不花。
+本章量出了三处代价，而每一处都是同一现象的不同侧面：某样东西迫使极限序展开，而极限序的展开就是一场「最小序数」的搜寻。把那次比较声明为归纳关系，会在正性检查中迫使极限序展开；陈述在名字诸投影上而非名字自身上的内容，在两者对接时也会迫使它展开，其代价是一条引理八十七秒；而从**另一个**模块取得的命名数据，会在每一次码的比较处迫使它展开，这是三处中最大的一处。由于写成和类型、全程陈述在名字上、并把数据定义在使用它的地方，本章完全避免了这些代价。
 <!--/-->

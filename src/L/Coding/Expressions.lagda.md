@@ -11,7 +11,7 @@ This chapter builds reusable object-language formulas for the set expressions,
 tags, environment operations, quantifiers, term evaluation, and atoms needed by
 the coded satisfaction recursion, together with their semantic readings.
 <!--zh-->
-本章为码化满足关系递归所需的集合表达式、标签、环境运算、量词、词项求值与原子构造可复用的对象语言公式，并给出其语义读式。
+本章为码化满足关系递归所需的集合表达式、标签、环境运算、量词、词项求值与原子构造，给出可复用的对象语言公式及其语义读式。
 <!--ja-->
 本章では、符号化された充足関係の再帰に必要な集合表現、タグ、環境演算、量化子、項の評価、原子のための再利用可能な対象言語の論理式を構成し、それぞれの意味論的な読みを与える。
 <!--/-->
@@ -221,7 +221,7 @@ says, and that is where the mathematics of a particular recursion lives.
 <!--zh-->
 凡取值为集合的递归，其每一条子句说的都是同一句话：这个取值恰是满足某某条件的那些东西之集。把它一次写出来，条件留作参数，那就是一个量词之下的两条蕴含，而它的两种读法就是两个投影。什么也没有证，而这正是要点：此后一条递归子句的代价，只剩它的条件。
 
-诸集合运算随即而来，每个一条条件那么长，且含义都已在手。一条子句其余的内容全在它的条件里说，而那正是某个特定递归的数学之所在。
+诸集合运算随即逐一给出，每个运算只有一条条件，其含义也都已经明确。一条子句的其余内容全部写在它的条件里，而那正是某个特定递归的数学所在。
 <!--/-->
 
 ```agda
@@ -278,9 +278,9 @@ payload. The structural reader supplies the bounded component witnesses and
 its adequacy proves the whole shape. The arity is left as a variable, so a
 clause can speak of it, which the four constructors that change arity need.
 <!--zh-->
-递归所遍历的诸码携带自己的元数：一个条目是「元数的数码」与「码本身」之对，而码本身又是「标签」与「载荷」之对。故一条子句的假设必须读**两**层，不是一层；而只读外层比读得不完整更糟。配对是单射的，于是一层的读式会悄悄把元数与构造子标签匹配起来，并把载荷自己的标签当作子码绑定：那条子句于是在除一个元数外的所有元数上空洞，而在那一个上是错的。Agda 不会报告这件事，因为那条读式仍然为真；它只是无法被供给。
+递归所遍历的每个码都带有自己的元数：一个条目由「元数的数码」与「码本身」配成，而码本身又由「标签」与「载荷」配成。因此，一条子句的假设必须读取**两**层，不能只读一层。由于配对是单射的，只读一层会把元数与构造子标签对应起来，并把载荷自己的标签绑定为子码：这样得到的子句在除一个元数外的所有元数上都是空洞的，在剩下的那个元数上也是错的。Agda 不会报告这个问题，因为该读式仍然为真，只是无法为它提供所需的证明。
 
-配对表达式记录这两层：元数与带标签的载荷配成对。结构读式供给有界的分量见证，其充分性证明整个形状。元数留作变元，好让子句能谈论它，而四个改变元数的构造子正需要这一点。
+配对表达式表示这两层：元数与带标签的载荷配成对。结构读式给出有界的分量见证，其充分性证明整个形状。元数保留为变元，使子句可以谈论它，而四个改变元数的构造子正需要这一点。
 <!--/-->
 
 ```agda
@@ -326,24 +326,25 @@ arityTagAtL-adequate c ar k a γ = PairExpression.adequate
 The lookup formulas connect a subformula's code and its environment to the value
 recorded for that key in a satisfaction table.
 <!--zh-->
-查找公式把子公式的码及其环境，与满足关系表在该键处记录的取值联系起来。
+查找公式把子公式的码连同其环境，与满足关系表在该键处记录的取值联系起来。
 <!--ja-->
 参照の論理式は、部分論理式の符号とその環境を、充足関係表がその鍵に記録した値へ結びつける。
 <!--/-->
 
 <!--en-->
 The frames bind a code's payload but never look the table up at it, because a
-payload component may be a term code, at which the table has nothing. A relation
+payload component may be a term code, at which the table has no entry. A relation
 that does want the value must therefore build the key itself: pair the arity with
 the component, and read the table there.
 
-That is one existential over the key, and it is the piece four of the ten
-relations are built from. The two that speak of a subformula at the next arity
-need the same thing with the arity bumped, which is this with one more layer.
+That is one existential over the key, and four of the ten relations are
+built from it. The two that speak of a subformula at the next arity
+need the same thing with the arity bumped, namely this with one more layer
+of existential quantification.
 <!--zh-->
-诸框架绑定一个码的载荷，却从不在其上查表，因为载荷分量可能是词项码，而表在那里什么也没有。想要取值的关系于是必须自己造那个键：把元数与该分量配成对，再在那里读表。
+诸框架只绑定码的载荷，从不在其上查表，因为载荷分量可能是词项码，而表中在该处没有条目。需要取值的关系因此必须自行构造那个键：把元数与该分量配成对，再到表中读出该处的值。
 
-那是对该键的一个存在量词，也是十条关系中四条所由构造的部件。谈论下一元数处子公式的那两条，需要的是同一件事而元数加一，即此物再加一层。
+那是对该键的一个存在量词，十条关系中有四条由它构造。谈论下一元数处子公式的那两条，需要的是同一件事，只是元数加一，即再叠加一个这样的量词。
 <!--/-->
 
 
@@ -352,7 +353,7 @@ The following discussion explains the table clauses conceptually. Their active
 bounded formulas and semantic readers are defined in `L.Coding.SatisfactionClauses`;
 the unused earlier clause formulas and frame indices have been removed here.
 <!--zh-->
-以下讨论从数学上解释表的子句。实际使用的有界公式与语义读式定义于 `L.Coding.SatisfactionClauses`；本章不再保留未被使用的旧子句公式及其框架索引。
+以下从数学上解释表的诸子句。实际使用的有界公式与语义读式定义于 `L.Coding.SatisfactionClauses`；本章不再保留未被使用的旧子句公式及其框架索引。
 <!--/-->
 
 <!--en-->
@@ -368,7 +369,7 @@ The clause combinators bind a code and its assigned value, assert the required
 tagged syntax shape, and leave only the constructor-specific semantic condition
 to their caller.
 <!--zh-->
-子句组合器绑定一个码及其被指派的值，断言所需的带标签语法形状，并把构造器特有的语义条件留给调用方。
+子句组合器绑定一个码及其被指派的值，断言所需的带标签语法形状，并把该构造子特有的语义条件作为参数留给调用方。
 <!--ja-->
 節の結合子は符号とその割り当て値を束縛し、必要なタグ付き構文形を述べ、構成子ごとの意味条件だけを呼び出し側に残す。
 <!--/-->
@@ -397,9 +398,9 @@ holds.
 <!--zh-->
 对码的递归由子句陈述，而子句只有几种形状，不是十种。一个二元构造子的子句说：对索引中每个以此标签架在这两个子码之上的码，以及表在这三者处所记录的取值，某某成立。除了那个「某某」，其余全是固定的，故只写一次，把那条关系留作参数，而三个二元构造子只差交给它的是哪条关系。
 
-被绑定的有五样，按读者遇到的次序：那个码、它的元数、它的两个载荷分量以及表在该码处记录的取值。诸载荷分量处的取值**不**被绑定，而这正是使该框架通用之处。一个联结词的载荷是一对公式码，它的子句确实要它们；但一个原子的载荷是一对**词项**码，表在那里根本没有条目，而有界量词的载荷则两者混杂。故框架只绑定每个构造子都有的东西，把查表留给那条关系，由它自行执行。
+被绑定的有五样，按读者遇到的次序：那个码、它的元数、它的两个载荷分量以及表在该码处记录的取值。诸载荷分量处的取值**不**被绑定，而这正是使该框架通用之处。联结词的载荷是一对公式码，其子句确实要用到它们；原子的载荷却是一对**词项**码，表中在该处根本没有条目，而有界量词的载荷则两者混杂。故框架只绑定每个构造子都有的东西，查表则留给那条关系自行完成。
 
-把子句读回来是沿诸读式的充分性作一串代换，而它按可靠性证明所消费的方向陈述：给定索引中一个那种形状的码与三个被记录的取值，那条关系成立。
+把子句读回去，是沿诸读式的充分性作一串代换；它按可靠性证明所使用的方向陈述：给定索引中一个具有该形状的码与三个被记录的取值，那条关系成立。
 <!--/-->
 
 
@@ -411,7 +412,7 @@ introduce by a lambda, because a bounded universal over the model is a function
 on members and an implication is a function on the reader's proof, so the two are
 the same substitutions run backwards.
 <!--zh-->
-每个框架也向另一个方向读，而另一个方向才是实例要用的。消去是为「手上握着一个码」的消费方把子句拆开；引入是为「必须**满足**它」的一张表把子句装起来。两个框架都以一个 λ 引入，因为模型上的有界全称就是成员上的函数，而蕴含就是读式证明上的函数，故两者是同样的几次代换倒着跑。
+每个框架还可向另一个方向读，而实例要用的正是这个方向。消去面向手头已有码的消费方，把子句拆开；引入面向必须**满足**表项的情形，把子句组装起来。两个框架都以一个 λ 引入，因为模型上的有界全称就是成员上的函数，蕴含就是读式证明上的函数，所以两者只是把同样的几次代换反向进行。
 <!--/-->
 
 <!--en-->
@@ -425,20 +426,20 @@ connectives and the two bounded quantifiers, which is seven. The single-componen
 frame covers bottom and the two unbounded quantifiers, which is three. **Two**
 frames, then, and ten relations above them.
 
-What the frames must not distinguish is what the payload components *are*.
+What the frames do not distinguish is what the payload components *are*.
 Grouping by that gives five kinds of relation, not five frames: term against
 term, formula against formula, term against formula, one formula, and one
-formula at the next arity. That is where the ten actually divide, and it
-divides them in the relations, where the lookups live.
+formula at the next arity. That is where the ten actually divide, namely in
+the relations, where the lookups live.
 
 The single-component frame is the pair frame with one binder fewer, and reads
 back the same way.
 <!--zh-->
-数一数有几种形状是值得的，因为它说出那十条里真正存在多少，也因为数错很容易：这一段已经错过两次。
+数一数有几种形状是值得的：它表明那十条关系中真正存在几种，而且这也容易数错，本段此前已错过两次。
 
 诸框架只区分一件事：载荷是一个对，还是单个分量。对框架覆盖两个原子、三个二元联结词与两个有界量词，共七个；单分量框架覆盖底与两个无界量词，共三个。故是**两**个框架，其上有十条关系。
 
-诸框架不可区分的，是那些载荷分量究竟**是什么**。按那个分组得到的是五种关系而非五个框架：词项对词项、公式对公式、词项对公式、单个公式、以及处于下一元数的单个公式。那才是十条真正分开的地方，而它们分在诸关系里，也就是查表所在之处。
+诸框架无法区分的，是各载荷分量究竟**是什么**。按这一分组得到的是五种关系而非五个框架：词项对词项、公式对公式、词项对公式、单个公式、以及处于下一元数的单个公式。十条关系真正的区分正在这里，而这些区分落在诸关系之中，也就是查表所在之处。
 
 单分量框架就是少一个绑定的对框架，读回来的方式相同。
 <!--/-->
@@ -457,14 +458,14 @@ back the same way.
 The conjunction and disjunction clauses look up both immediate subcodes and
 combine their recorded truth values with the corresponding positive connective.
 <!--zh-->
-合取与析取子句查找两个直接子码，并以相应正联结词组合其所记录的真值。
+合取与析取子句查取两个直接子码，并以相应的正联结词组合所记录的真值。
 <!--ja-->
 論理積と論理和の節は二つの直下の部分符号を参照し、記録された真理値を対応する正の結合子で組み合わせる。
 <!--/-->
 
 <!--en-->
 Two of the ten can be written now, and they are the two that need nothing the
-chapter has not got. Conjunction and disjunction relate the value at a code to
+chapter does not yet have. Conjunction and disjunction relate the value at a code to
 the values at its two subcodes by intersection and union, at the same arity, and
 that is the whole of their content.
 
@@ -474,15 +475,15 @@ at the code and the two subvalues, at positions two, one and zero. So a
 propositional clause is one line above the shared part.
 
 Implication needs the set of all environments at the code's arity, which the
-chapter does not yet name, so it waits for that set. This is exactly the split
-between the two lattice operations and the function-space semantics of
-implication.
+chapter does not yet name, so it is deferred until that set is available. This is
+exactly the split between the two lattice operations and the function-space
+semantics of implication.
 <!--zh-->
-十条里有两条现在就能写，而它们正是不需要本章尚未拥有之物的那两条。合取与析取把某码处的取值与它两个子码处的取值以交、并相关联，元数相同，而这就是它们的全部内容。
+十条里有两条现在就能写出，它们正是不依赖本章尚未建立之物的两条。合取与析取把某码处的取值与它两个子码处的取值以交、并相关联，元数相同；这就是它们的全部内容。
 
-共用的部分是一条关系，它绑定两个子取值，并以查表为它们设防；剩下的就是那个运算，它谈论该码处的取值与两个子取值，位于位置二、一、零。故一条命题子句在共用部分之上只有一行。
+共用部分是一条关系：它绑定两个子取值，并用查表条件约束它们；其余部分就是相应运算，涉及该码处的取值与两个子取值，三者分别位于位置二、一、零。因此，一条命题子句在共用部分之外只需一行。
 
-蕴含需要该码元数处的全体环境之集，而本章尚未为它命名，故它在此等候。这条界线正是两个格运算与蕴含的函数空间语义之间的分界。
+蕴含需要该码元数处的全体环境之集，而本章尚未为它命名，故此处暂且留待下文。两个格运算与蕴含的函数空间语义之间的分界，正在这里。
 <!--/-->
 
 
@@ -499,7 +500,7 @@ implication.
 at the arity held in a slot, so later clauses can bound their environment
 quantifiers.
 <!--zh-->
-`envSetAt`{.Agda} 从环境塔中取出槽位所持元数处的环境集，使后续子句能界住其环境量词。
+`envSetAt`{.Agda} 从环境塔中取出槽位所在元数处的环境集，使后续子句得以界住其环境量词。
 <!--ja-->
 `envSetAt`{.Agda} は環境塔からスロットにあるアリティの環境集合を取り出し、後の節が環境についての量化子を有界にできるようにする。
 <!--/-->
@@ -511,7 +512,7 @@ therefore a variable too, constrained by the extension frame applied to the
 environment predicate. Inside a clause, the obligation is to describe that set;
 the table construction later supplies one.
 <!--zh-->
-蕴含在该码元数处的全体环境之集上解释，而那个元数是框架绑定的变元。故周遭集合也是一个变元，由施于环境谓词的外延框架约束。在子句里，义务只是描述这个集合；此后造表的章节会交出一个这样的集合。
+蕴含在该码元数处的全体环境之集上解释，而那个元数是框架绑定的变元，故周遭集合也是一个变元，由施于环境谓词的外延框架约束。子句中的义务只是描述这个集合；此后构造表的章节会给出这样一个集合。
 <!--/-->
 
 ```agda
@@ -587,7 +588,7 @@ of another, with an adequacy lemma identifying the represented ordinals.
 <!--en-->
 Four of the ten bind a variable, so their subformula sits one arity higher and
 the table has to be consulted there. The successor reader is already written on
-the hierarchy side and names no constants, so it crosses by quoting, and the
+the hierarchy side and names no constants, so it can be quoted directly here, and the
 lookup at the next arity is the lookup at a fresh arity constrained to be the
 successor of the one the frame bound.
 
@@ -595,7 +596,7 @@ The backward direction needs the successor as an element of the model, and the
 numeral chapter supplies it: the model's own successor, read through the
 underlying set, is the hierarchy's.
 <!--zh-->
-十条里有四条绑定一个变元，故它们的子公式高出一个元数，而表必须在那里被查询。后继读式在层级一侧已经写好，且不点名常元，故它经引用过河；而「下一元数处的查表」，就是「在一个新元数处的查表」加上「该元数是框架所绑元数的后继」这条约束。
+十条里有四条绑定一个变元，其子公式因此比原式高出一个元数，而表必须在该处被查询。后继读式已在层级一侧写好，且不点名常元，故此处可直接引用；而「下一元数处的查表」，就是「在一个新元数处的查表」再加上「该元数是框架所绑元数的后继」这条约束。
 
 反向需要那个后继作为模型的元素，而数码那一章供给它：模型自己的后继，沿底层集合读出来，就是层级的后继。
 <!--/-->
@@ -635,12 +636,13 @@ The other half of a quantifier clause: the environment the subformula is
 evaluated in is the one at hand with a value pushed on the front. That reader is
 already written on the hierarchy side, and its meaning there is stated against a
 meta-level family, which is exactly the form a soundness proof will want. So it
-is worth quoting rather than rewriting, and quoting is free here: the reader
+is worth quoting rather than rewriting, and quoting requires no extra conditions
+here: the reader
 names no numeral, because its tag is the empty set and emptiness needs no
 constant. The numeral's own constructibility comes from the numeral chapter,
 which is why it sits here rather than with the codes.
 <!--zh-->
-量词子句的另一半：子公式所在的环境，就是手上这个环境前面推入一个取值。那条读式在层级一侧已经写好，而它在那边的含义是按元层的族陈述的，恰是可靠性证明将要采用的形式。故它值得引用而非重写，而此处引用是免费的：读式不点名任何数码，因为它的标签是空集，而空不需要常元。数码自身的可构造性来自数码那一章，这也是它住在此处而非与诸码同处的原因。
+量词子句的另一半：子公式所在的环境，就是在手上这个环境前面推入一个取值所得的环境。那条读式在层级一侧已经写好，它在那边的含义按元层的族陈述，恰是可靠性证明将要采用的形式，故值得引用而非重写；而此处引用不需要额外条件：读式不点名任何数码，因为它的标签是空集，而空不需要常元。数码自身的可构造性来自数码那一章，这也是它放在此处、而不与诸码同处的原因。
 <!--/-->
 
 ```agda
@@ -728,9 +730,9 @@ could hold outside the ambient set would be asking for a value that is not a set
 <!--zh-->
 一个环境满足存在量词，恰在结构中的某个取值被推到它前面、所得的环境满足主体时，而主体的取值记录在高一个元数处。故该子句绑定下一元数处的取值，绑定它自己元数处的周遭集合，然后以外延描述自己的取值：周遭集合中那些能被扩展进主体取值里的环境。
 
-到最内处共有九样在作用域中，那是本章所及的最深处，而每一样都是必需的：来自框架的那个码与它的诸部分、两个取值、被分类的那个环境、被推入的取值、以及扩展后的环境。全称子句把最内两个量词调转，每个都带上其形式所要的联结词：存在之下是合取，全称之下是蕴含。
+到最内处共有九样在作用域中，这是本章所及的最深处，且每一样都是必需的：来自框架的那个码与它的诸部分、两个取值、被分类的那个环境、被推入的取值，以及扩展后的环境。全称子句把最内两个量词的次序调转，并各自配上其形式所需的联结词：存在情形用合取，全称情形用蕴含。
 
-除此之外别无变动，尤其是最外那个合取项不动。把环境放进周遭集合的那一项，在**两条**里都是合取，一如这个框架下写出的每一条子句；而这个理由值得说出来，因为弄错它得到的不是一条错的子句，而是一条无法满足的子句。`extAt`{.Agda} 使一个取值恰为「使那个条件成立的东西」之集；一个可能在周遭集合之外成立的条件，等于在索要一个并非集合的取值。
+除此之外别无变动，尤其是最外那个合取项保持不变。把环境放进周遭集合的那一项，在**两条**里都是合取，一如这个框架下写出的每一条子句；这个理由值得说明，因为弄错它得到的不是一条错误的子句，而是一条无法满足的子句。`extAt`{.Agda} 使一个取值恰为「使那个条件成立的东西」之集；一个可能在周遭集合之外成立的条件，等于要求一个并非集合的取值。
 <!--/-->
 
 
@@ -741,7 +743,7 @@ The quantifier clauses read the same way, and the tag and the body are what a
 caller supplies, so one pair of readers serves both. The subvalue sits an arity
 up, which is the only difference from a same-arity lookup.
 <!--zh-->
-两条量词子句读法相同，而标签与主体由调用方提供，故一对读式服务两者。子取值高一个元数，这也是它与同元数查表唯一的差别。
+两条量词子句读法相同，标签与主体由调用方提供，故一对读式可同时用于两者。子取值高一个元数，这也是它与同元数查表唯一的差别。
 <!--/-->
 
 <!--en-->
@@ -762,8 +764,8 @@ membership and equality clauses compare the two evaluated values in the model.
 <!--/-->
 
 <!--en-->
-The last thing the chapter lacked, and the place a wrong sentence sat for a day.
-A term is a variable **or a constant**, so a reader for its value has two cases,
+The last thing the chapter lacked, and the place where a wrong sentence had
+stood. A term is a variable **or a constant**, so a reader for its value has two cases,
 not one: a variable's code is the variable tag over a key and its value is what
 the environment records at that key; a constant's code is the constant tag over
 the constant itself, and its value is that, in any environment at all.
@@ -780,17 +782,17 @@ So the reader is stated with a characterization this time, in both directions,
 which is what makes the shape of the defect impossible to reintroduce silently.
 
 The atoms then read both sides and compare them. Their payload is a pair of
-*term* codes, at which the table has nothing, which is why the frame was made not
-to look there; here is where that pays. The two atoms differ in one atom of the
+*term* codes, at which the table has nothing; the frame was designed not to
+look there precisely for this case. The two atoms differ in one atom of the
 object language, membership against equality, so they share everything else.
 <!--zh-->
 本章尚缺的最后一件，也是一句错话待了一天的地方。一个词项是变元**或常元**，故读它取值的读式有两种情形，而不是一种：变元的码是「变元标签架在一个键之上」，取值是环境在该键处记录的东西；常元的码是「常元标签架在那个常元自己之上」，而它的取值就是那个常元，在任何环境中都一样。
 
 一情形的版本写于字母表为空之时，而为它开脱的那句话「无参公式的一个词项是变元」，对字母表仍为真，对本章已不再为真。使它成为**缺陷**而非空缺的，是这条读式坐在 `extAt`{.Agda} 之下，而后者断言**双向**：一个常元并未被放任不管，它的取值被钉成了空集。而这一情形是常态，而不是边角，因为相对化给每条有界量词都配一个常元界。
 
-故这次这条读式带着一份两个方向的刻画写出，而正是那份刻画使这种形状的缺陷不可能再悄悄回来。
+故这次这条读式带着一个双向的刻画写出，正是这个刻画使这种形状的缺陷不可能再悄然出现。
 
-两个原子随后读出两侧并加以比较。它们的载荷是一对**词项**码，而表在那里什么也没有，这正是当初把框架做成不往那里看的原因；此处便是它的回报。两个原子只差对象语言的一个原子，隶属对相等，其余全部共享。
+两个原子随后读出两侧并加以比较。它们的载荷是一对**词项**码，而表在那里没有任何内容；当初把框架设计成不查看那里，正是为了此处。两个原子只差对象语言的一个原子，隶属对相等，其余全部共享。
 <!--/-->
 
 
@@ -827,16 +829,17 @@ semantics quantifies over the carrier and guards by membership in the bound, and
 a bound may perfectly well have members outside the carrier; quantifying over the
 bound alone would then demand entries the table does not have.
 
-Every piece has appeared: the next-arity lookup for the body, the ambient set for
-the extension frame, term evaluation for the bound, and environment extension for
-the step. The two differ, as the unbounded pair did, only in which quantifier
-each of the three innermost binders carries.
+The four required constructions are already available: the next-arity lookup
+for the body, the ambient set for the extension frame, term evaluation
+for the bound, and environment extension for the step. These two formulas, like
+the corresponding pair in the unbounded case, differ only in which quantifier each
+of the three innermost binders carries.
 <!--zh-->
 最后两条，而它们不需要任何新东西。有界量词的载荷是「词项码与公式码的对」，故那个界在环境中求值，而主体的取值在高一个元数处读出；随后被推入的取值取自**载体与那个界之交**，再到主体的取值里去找扩展后的环境。
 
 同时遍历载体与那个界并非冗余。参照语义是在载体上作量化，再以「属于那个界」设防，而一个界完全可以有落在载体之外的成员；只在那个界上作量化，就会索要表所没有的条目。
 
-每一件都已登场：主体所需的下一元数查表、外延框架所需的周遭集合、界所需的词项求值、以及推入所需的环境扩展。两条之间的差别，与无界的那一对一样，只在最内三个绑定各自带的是哪个量词。
+所需的四项构造都已经具备：主体使用的下一元数查表、外延框架使用的周围集合、界使用的词项求值，以及推入使用的环境扩展。这两条公式与无界情形中的对应两条公式一样，差别只在最内侧三个绑定分别使用哪一种量词。
 <!--/-->
 
 

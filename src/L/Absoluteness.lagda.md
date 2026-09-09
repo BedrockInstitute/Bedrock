@@ -26,7 +26,7 @@ wants to say, in the object language of `L`, that one set is the pair of two
 others, or that a code has such-and-such a shape, gets to say it by quoting a
 reader and applying this.
 <!--zh-->
-两件事就够，且两件都已证毕。常元改名把公式的每个常元换成模型的元素，只要那个常元**确实是**一个；那是有界公式那套机器，此处所用的界是「可构造」而非「落在某阶段内」。而 Δ₀ 绝对性说：有界公式在传递类之内与之外含义相同，正是这一点使那次替换无害。
+两件事就够，且两件都已证毕。常元改名把公式的每个常元换成模型的元素，只要那个常元**确实是**一个；这一步依赖的是处理有界公式的那套论证，此处所用的界是「可构造」而非「落在某阶段内」。而 Δ₀ 绝对性说：有界公式在传递类之内与之外含义相同，正是这一点使那次替换无害。
 
 于是常元可构造的 Δ₀ 读式可以运过去，而这次搬运是一条四步的链，自身不含任何归纳。此后每一章想在 `L` 的对象语言里说「这个集合是那两个的对」，或「这个码具有某种形状」，都只需引用一条读式，再套用本章。
 <!--/-->
@@ -108,12 +108,12 @@ from satisfaction in `L` to satisfaction in the hierarchy at the projected
 environment. Then relabelling along the projection is undone, twice: once to
 recognize the lifted formula as the original with its constants replaced, and
 once, in the opposite direction, to see the original as itself. The middle step
-is where the relabelling's own correctness enters, and it is the only place the
+is where the relabelling's own correctness comes into play, and it is the only place the
 constants are looked at.
 <!--zh-->
 ## 搬运
 
-四步，自模型向外读。绝对性把抬升后的公式从「在 `L` 中满足」搬到「在层级中、于投影后的环境处满足」。随后沿投影的常元改名被撤销两次：一次是认出抬升后的公式就是原公式换掉常元的样子，一次是反方向地看出原公式就是它自己。中间那一步是常元改名自身的正确性登场之处，也是唯一需要看常元的地方。
+四步，自模型向外读。绝对性把抬升后的公式从「在 `L` 中满足」搬到「在层级中、于投影后的环境处满足」。随后沿投影的常元改名被撤销两次：一次是认出抬升后的公式就是原公式换掉常元的样子，一次是反方向地看出原公式就是它自己。中间那一步是常元改名自身的正确性发挥作用的地方，也是唯一需要看常元的地方。
 <!--ja-->
 ## 移送
 
@@ -161,9 +161,9 @@ it costs a chain of four steps rather than a re-statement.
 One thing this does *not* do, and should not be asked to. It is Δ₀ only, because
 absoluteness is. That is no longer a restriction on what can be *said* in `L`,
 since the comprehension fields there take formulas of any complexity; it is a
-restriction on what can be *imported* from the hierarchy for free. A predicate
+restriction on which conclusions can be drawn directly from the hierarchy. A predicate
 that is easier to write unbounded should be written unbounded, directly over the
-model, and never routed through here.
+model, and not through here.
 <!--zh-->
-有一件事它**不**做，也不该被要求去做。它只管 Δ₀，因为绝对性只管 Δ₀。这已不再是对「在 `L` 中能说什么」的限制，因为那边的概括字段接受任意复杂度的公式；它限制的是「能从层级白白进口什么」。一个写成无界形式更省事的谓词，就该无界地、直接在模型上写，绝不该绕经此处。
+有一件事它**不**做，也不该被要求去做。它只管 Δ₀，因为绝对性只管 Δ₀。这已不再是对「在 `L` 中能说什么」的限制，因为那边的概括字段接受任意复杂度的公式；它限制的是「能从层级直接得到哪些结论」。一个用无界形式写起来更简便的谓词，就应当无界地、直接在模型上写出，而不必经过此处。
 <!--/-->

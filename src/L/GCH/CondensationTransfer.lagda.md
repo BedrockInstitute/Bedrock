@@ -5,7 +5,7 @@ At a superadequate stage, an elementary hull collapses to a smaller constructibl
 <!--zh-->
 # 通过凝聚搬运结构
 
-在超充分阶段，一个初等 Skolem 壳会塌缩到更小的可构造阶段。本章找出搬运所需的公式，并把层级数据沿塌缩带到另一侧。
+在超充分阶段，一个初等 Skolem 壳会塌缩到更小的可构造阶段。本章找出搬运所需的公式，并沿塌缩把层级数据带到另一侧。
 <!--ja-->
 # 凝縮を通して構造を移す
 
@@ -56,15 +56,15 @@ open SemVᵃ using ( _^_ )
 <!--en-->
 ## Formulas that identify the level witnesses
 
-The transfer asks simultaneously for a level value, its ordinal index, and the proof that the value is the corresponding constructible stage. Packaging all three in one formula lets elementarity bring the complete witness into the hull.
+The transfer requires simultaneously a level value, its ordinal index, and the proof that the value is the corresponding constructible stage. Packaging all three in one formula lets elementarity bring the complete witness into the hull.
 <!--zh-->
 ## 识别层见证的公式
 
-搬运同时询问一个层值、它的序数指标，以及该值就是相应可构造阶段的证明。把三者装进同一条公式，初等性便能把完整见证带入 Skolem 壳。
+搬运需要同时给出一个层值、它的序数指标，以及该值就是相应可构造阶段的证明。三者合并进同一条公式后，初等性便能把完整见证带入 Skolem 壳。
 <!--ja-->
 ## 階層の証人を特定する論理式
 
-移送では、階層の値、その順序数添字、その値が対応する構成可能段階であることを同時に問う。三つを一つの論理式にまとめることで、初等性により完全な証人を Skolem 包へ取り込める。
+移送では、階層の値、その順序数添字、およびその値が対応する構成可能段階であることを同時に要求する。三つを一つの論理式にまとめることで、初等性により完全な証人を Skolem 包へ取り込める。
 <!--/-->
 
 Each query binds the level value, ordinal parameter, and level witness together.
@@ -84,7 +84,7 @@ At a strengthened adequate stage, elementarity places the required witnesses in 
 <!--zh-->
 ## 沿塌缩搬运层级信息
 
-在超充分阶段，初等性把所需见证放入 Skolem 壳，而塌缩把它们送进 `L`。随后两条闭合假设把塌缩像识别为它自身序数处的相应层级。
+在超充分阶段，初等性把所需见证放入 Skolem 壳，塌缩则把它们送进 `L`。随后两条闭合假设将塌缩像识别为它自身序数处的相应层级。
 <!--ja-->
 ## 崩壊を通して階層の情報を移す
 

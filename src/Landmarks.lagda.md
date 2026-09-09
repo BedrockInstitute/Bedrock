@@ -35,16 +35,16 @@ import L.GCH.Theorem
 <!--en-->
 ## The hierarchy models ZF(C)
 
-The headline is classical: granted one instance of the excluded middle, at the
+The main result is classical: granted one instance of the excluded middle at the
 model's own truth level, the cumulative hierarchy is a model of ZF (chapter
-`V.Model`{.Agda}). Its exact-price form carries the hypothesis as a suffix,
-charging only the foundational impredicativity package; and by Diaconescu's theorem
-(chapter `Base.Choice`{.Agda}), one instance of set-level choice funds the
-upgrade all the way to ZFC.
+`V.Model`{.Agda}). The precise version carries the hypothesis as a suffix
+and requires only the foundational impredicativity package; and by Diaconescu's theorem
+(chapter `Base.Choice`{.Agda}), one instance of set-level choice yields
+ZFC.
 <!--zh-->
 ## 层级满足 ZF(C)
 
-主打名是经典版：给定模型自身真值层上的一份排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。其精确价格版以后缀携带假设，只收基础章节给出的非直谓性打包；再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择就资助到 ZFC。
+主要结果采用经典形式：给定模型自身真值层上的排中律，累积层级是 ZF 的模型 (章节 `V.Model`{.Agda})。带假设后缀的精确版本只要求基础章节打包的非直谓性接口。再经 Diaconescu 定理 (章节 `Base.Choice`{.Agda})，一份集合层选择即可得到 ZFC。
 <!--ja-->
 ## 累積階層は ZF (C) のモデル
 
@@ -67,13 +67,13 @@ V⊨ZFC = V.Model.V⊨ZFC
 
 The book's main theorem (chapter `L.Model`{.Agda}): given one instance of the
 excluded middle at the model's truth level, the constructible structure models
-ZFC. One hypothesis, and it is the same one the previous landmark pays. Read with the previous landmark, it is the semantic form of
+ZFC. There is a single hypothesis, and it is the same one used in the previous landmark. Read with the previous landmark, it is the semantic form of
 the relative consistency of choice: a ZF universe carries a ZFC sub-universe
 inside it.
 <!--zh-->
 ## 可构造宇宙满足 ZFC
 
-本书的主定理 (章节 `L.Model`{.Agda})：给定模型真值层上的一份排中律，可构造结构满足 ZFC。一个假设，而它与上一座地标所付的是同一个。与上一座地标合读，这就是选择公理相对一致性的语义形式：ZF 宇宙的体内携带着一个 ZFC 子宇宙。
+本书的主定理 (章节 `L.Model`{.Agda}) 是：给定模型真值层上的排中律，可构造结构满足 ZFC。它只有这一个假设，并且与上一项结果使用同一假设。与上一项合看，这给出选择公理相对一致性的语义形式：ZF 宇宙内部包含一个 ZFC 子宇宙。
 <!--ja-->
 ## 構成可能宇宙は ZFC のモデル
 
@@ -88,7 +88,7 @@ L⊨ZFC = L.Model.L⊨ZFC
 <!--en-->
 ## The constructible universe models GCH
 
-The second trophy (chapter `L.GCH.Theorem`{.Agda}): under the same single
+The second result (chapter `L.GCH.Theorem`{.Agda}): under the same single
 hypothesis, the constructible structure satisfies the generalized continuum
 hypothesis, stated in L's own terms: for every infinite cardinal κ of L, the
 model's power set of κ and the successor cardinal of κ inject into each other by
@@ -96,7 +96,7 @@ injections that are themselves elements of L (chapter `L.GCH`{.Agda} states it).
 <!--zh-->
 ## 可构造宇宙满足 GCH
 
-第二座奖杯 (章节 `L.GCH.Theorem`{.Agda})：在同一个唯一假设下，可构造结构满足广义连续统假设，且以 L 自己的语言陈述：对 L 的每个无穷基数 κ，模型自身的 κ 的幂集与 κ 的后继基数之间存在互相的单射，而这些单射本身是 L 的元素 (章节 `L.GCH`{.Agda} 给出陈述)。
+第二个结果 (章节 `L.GCH.Theorem`{.Agda})：在同一唯一假设下，可构造结构满足广义连续统假设，且以 L 自己的语言陈述：对 L 的每个无穷基数 κ，模型自身的 κ 的幂集与 κ 的后继基数之间存在互相的单射，而这些单射本身是 L 的元素 (章节 `L.GCH`{.Agda} 给出陈述)。
 <!--ja-->
 ## 構成可能宇宙は GCH を満たす
 

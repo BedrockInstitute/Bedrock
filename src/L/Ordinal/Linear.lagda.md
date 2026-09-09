@@ -16,7 +16,7 @@ Two ordinals are always comparable: one belongs to the other or they are equal. 
 Of any two ordinals, one belongs to the other or the two are equal. This is the
 fact everyone expects from ordinals, and it is the last thing about them the
 book has left to prove. It is also the first place where the constructible
-universe costs classical logic, so it deserves to be said plainly why.
+universe uses classical logic, so it deserves to be said plainly why.
 
 Everything about ordinals up to now has been closure: zero is one, successors
 are, unions are, bounds exist. Closure statements build; they never have to
@@ -25,7 +25,7 @@ assumed between them, it returns which of three mutually exclusive cases holds,
 and there is no construction that could produce that answer from the data: the
 statement implies the excluded middle. So the chapter takes the excluded middle
 as a module parameter, using the level-indexed packaging fixed in the foundations, and every later chapter
-that consumes it inherits the parameter visibly, at every import site.
+that uses it inherits the parameter visibly, at every import site.
 
 Two ingredients from the ambient hierarchy make the proof shorter than the
 textbook version. Regularity gives a well-founded induction, and it is used
@@ -34,11 +34,11 @@ twice over, once in each argument. Extensionality means that mutual inclusion
 middle then supplies is exactly one thing: the decision whether one ordinal is
 included in the other, and, when it is not, a member witnessing the failure.
 <!--zh-->
-任两个序数，或一者属于另一者，或二者相等。这是人人对序数的期待，也是本书关于它们最后要证的东西。这里同时是可构造宇宙第一次花费经典逻辑的地方，所以值得把原因说清楚。
+任两个序数，或一者属于另一者，或二者相等。这是人人对序数的期待，也是本书关于它们最后要证的东西。这里同时是可构造宇宙第一次用到经典逻辑的地方，所以值得把原因说清楚。
 
-迄今关于序数的一切都是闭包：零是序数，后继是，并也是，上界存在。闭包陈述关乎建造；它们从不需要**判定**任何东西。三歧要判定。给定两个彼此之间不假设任何关系的序数，它要回答三种互斥情形中的哪一种成立，而没有任何构造能从这些数据产出那个答案：该陈述蕴含排中律。所以本章把排中律取作模块参数，采用基础阶段定下的逐层级打包形式，而此后每个消费它的章节都在每个导入处以可见的方式继承这个参数。
+迄今关于序数的一切都是闭包：零是序数，后继是，并也是，上界存在。闭包陈述关乎建造；它们从不需要**判定**任何东西。三歧要判定。给定两个彼此之间不假设任何关系的序数，它要回答三种互斥情形中的哪一种成立，而没有任何构造能从这些数据得出那个答案：该陈述蕴含排中律。所以本章把排中律取作模块参数，采用基础阶段定下的逐层级打包形式，而此后每个使用它的章节都在每个导入处以可见的方式继承这个参数。
 
-来自环境层级的两样材料使证明比教科书版本更短。正则性给出良基归纳，而且要用两次，两个自变量各一次。外延性意味着互相包含**就是**相等，故相等那一情形无须另行处理。于是排中律供应的恰好只有一件事：判定一个序数是否包含于另一个，以及在不包含时，取出一个见证失败的成员。
+来自环境层级的两样材料使证明比教科书版本更短。正则性给出良基归纳，而且要用两次，两个自变量各一次。外延性意味着互相包含**就是**相等，故相等那一情形无须另行处理。于是排中律所起的作用恰好只有一件事：判定一个序数是否包含于另一个，以及在不包含时，取出一个见证失败的成员。
 <!--/-->
 
 ```agda
@@ -77,18 +77,18 @@ open hPropStructure 𝒮ᵥ
 <!--en-->
 If one ordinal is not included in another, well-foundedness selects a least element witnessing the failure. Transitivity then shows that this witness contains exactly the common initial part of the two ordinals.
 <!--zh-->
-若一个序数不包含于另一个，良基性会选出见证这一失败的最小元素。传递性随后表明，这个见证恰好包含两个序数共有的初始部分。
+若一个序数不包含于另一个，良基性会选出见证这一失败的最小元素。随后由传递性可知，这个见证恰好包含两个序数共有的初始部分。
 <!--ja-->
 一方の順序数が他方に含まれないなら、整礎性によってその失敗を示す最小の要素を選べる。推移性から、この証人は二つの順序数に共通する最初の部分をちょうど含む。
 <!--/-->
 
 <!--en-->
 Inclusion is written pointwise, and packaged as a proposition so that the
-excluded middle can be applied to it directly: quantifying over a carrier that
-lives one universe up is why the foundational interface was stated levelwise.
+excluded middle can be applied to it directly: the carrier being
+quantified over sits one universe up, which is why the foundational interface was stated levelwise.
 Mutual inclusion gives equality, by the hierarchy's extensionality.
 <!--zh-->
-包含逐点写出，并打包成命题，好让排中律能直接施于其上：对住在高一层宇宙的载体量化，正是基础阶段把这个接口逐层级陈述的原因。互相包含给出相等，由层级的外延性。
+包含按元素逐点定义，并打包成命题，使排中律可以直接用于它。该定义量化的载体位于高一层宇宙，这正是基础阶段按层级陈述此接口的原因。由层级的外延性可知，互相包含蕴含相等。
 <!--/-->
 
 ```agda
@@ -153,12 +153,12 @@ A double induction on membership, once in each argument, with the excluded
 middle deciding the two inclusions at the leaves. If both hold, the ordinals are
 equal. If `A` is included in `B` but not conversely, take a member `b` of `B`
 outside `A`; the inner hypothesis compares `A` with `b`, and each of the three
-outcomes puts `A` inside `B`: below `b` and hence below `B` by transitivity,
+outcomes makes `A` a member of `B`: below `b` and hence below `B` by transitivity,
 equal to `b` and hence a member, or a member of `A`, which contradicts the
 choice of `b`. The remaining case is the mirror image, decided by the outer
 hypothesis.
 <!--zh-->
-沿成员关系的双重归纳，两个自变量各一次，叶子处由排中律判定两个包含关系。若二者都成立，两个序数相等。若 `A` 包含于 `B` 而反之不然，取 `B` 中一个在 `A` 之外的成员 `b`；内层假设比较 `A` 与 `b`，三种结果各自都把 `A` 放进 `B`：在 `b` 之下故经传递性在 `B` 之下、等于 `b` 故是成员、或属于 `A` 而与 `b` 的取法矛盾。余下那一情形是镜像，由外层假设判定。
+沿成员关系对两个自变量各作一次归纳，在叶子处由排中律判定两个包含关系。若二者都成立，则两个序数相等。若 `A` 包含于 `B` 而反之不然，取 `B` 中一个不在 `A` 内的成员 `b`；内层归纳假设比较 `A` 与 `b`，三种结果都使 `A` 属于 `B`：若 `A` 在 `b` 之下，则由传递性可知 `A` 在 `B` 之下；若 `A` 等于 `b`，则它是 `B` 的成员；若 `b` 属于 `A`，则与 `b` 的选取矛盾。余下情形与此对称，由外层归纳假设判定。
 <!--/-->
 
 ```agda
@@ -222,13 +222,13 @@ Ordinal membership now supplies trichotomy, irreflexivity, and transitivity. The
 <!--/-->
 
 <!--en-->
-`ord-tri`{.Agda} compares any two ordinals, and the book pays for it with one
-instance of the excluded middle, taken as a module parameter and therefore
+`ord-tri`{.Agda} compares any two ordinals, and the book supplies one
+instance of the excluded middle for it, taken as a module parameter and therefore
 visible in the type of every chapter downstream. This is the boundary the
 groundwork was built to make auditable: nothing is postulated, and a reader can
 tell whether a theorem is classical by reading its imports. The next chapter
-spends the comparison on the question it was needed for, which ordinals appear
+uses the comparison on the question it was needed for, which ordinals appear
 at which stage of the tower.
 <!--zh-->
-`ord-tri`{.Agda} 比较任意两个序数，而本书为它付出一份排中律实例，取作模块参数，因而在下游每一章的类型中可见。这正是奠基部分为使其可审计而搭建的那道边界：无一处 postulate，读者读导入即可判断一条定理是否经典。下一章把这个比较花在它被需要的那个问题上：哪些序数出现在塔的哪个阶段。
+`ord-tri`{.Agda} 比较任意两个序数，而本书为它提供一份排中律实例，取作模块参数，因而在下游每一章的类型中可见。这正是奠基部分为使其可审计而搭建的那道边界：无一处 postulate，读者读导入即可判断一条定理是否经典。下一章把这个比较用在它被需要的那个问题上：哪些序数出现在塔的哪个阶段。
 <!--/-->

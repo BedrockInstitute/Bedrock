@@ -11,7 +11,7 @@ This chapter constructs the natural-number chain inside `L` from the model's
 empty-set, pairing, and union operations, and proves that it projects to the
 ambient von Neumann numerals.
 <!--zh-->
-本章从模型自身的空集、配对与并运算，在 `L` 内构造自然数链，并证明它投影到环境中的冯·诺伊曼数码。
+本章从模型自身的空集、配对与并运算出发，在 `L` 内构造自然数链，并证明它投影到环境中的冯·诺伊曼数码。
 <!--ja-->
 本章ではモデル自身の空集合、対、和集合の演算から `L` 内部の自然数列を構成し、それが周囲のフォン・ノイマン数項へ射影されることを証明する。
 <!--/-->
@@ -21,8 +21,9 @@ Infinity is stated in this book in its strong form: the numerals form a set. Tha
 statement has two halves, and they are of very different difficulty. First the
 chain itself has to exist inside `L`, with zero at the bottom and each numeral
 the successor of the last; then that chain has to be *collected*, which is the
-axiom proper. This chapter does the first half, and it does it for free, because
-the previous chapter already built everything a successor is made of.
+axiom proper. This chapter does the first half, and the half is essentially
+immediate, because the previous chapter already built everything a successor
+is made of.
 
 The point worth watching is a mismatch. Inside the model, the successor of `a`
 is `a ∪ {a}`, spelled with the model's own pairing and union, and those are
@@ -36,9 +37,9 @@ set, are the hierarchy's operations. With those in hand the two chains coincide
 step by step, and the two pinning equations that the model record demands of a
 numeral chain follow by transporting the hierarchy's own facts along them.
 <!--zh-->
-本书的无穷公理取强形式：数码构成一个集合。这个陈述有两半，难度截然不同。首先，链本身必须存在于 `L` 之内，零在底，每个数码是前一个的后继；然后这条链必须被**收集**起来，那才是公理本身。本章做第一半，而且是白拿，因为上一章已经把后继所需的一切都造好了。
+本书的无穷公理取强形式：数码构成一个集合。这个陈述有两半，难度截然不同。首先，链本身必须存在于 `L` 之内，零在底，每个数码是前一个的后继；然后这条链必须被**收集**起来，那才是公理本身。本章做第一半，而这一半几乎没有难度，因为上一章已经把后继所需的一切都造好了。
 
-值得盯住的是一处错位。在模型内部，`a` 的后继是 `a ∪ {a}`，用模型自己的配对与并写出，而那两者是从唯一存在性证明中取出的 `℩` 投影，不是库的集合运算。在外部，环境层级有它自己的后继，以及由此造出的数码链。两条链理应一致，可迄今没有任何东西说它们一致：一条由可缩中心装配，另一条由构造子装配。所以本章真正的内容是一族**投影等式**，说的是模型的运算沿底层集合读出来就是层级的运算。有了它们，两条链逐步重合，而模型 record 向数码链索取的两条钉死方程，也就沿着它们搬运层级自己的事实而得。
+值得注意的是一处错位。在模型内部，`a` 的后继是 `a ∪ {a}`，用模型自己的配对与并写出，而那两者是从唯一存在性证明中取出的 `℩` 投影，不是库的集合运算。在外部，环境层级有它自己的后继，以及由此造出的数码链。两条链理应一致，可迄今没有任何东西说它们一致：一条由可缩中心构成，另一条由构造子构成。所以本章真正的内容是一族**投影等式**，说的是模型的运算沿底层集合读出来就是层级的运算。有了它们，两条链逐步重合，而模型 record 向数码链要求的两条方程，也就沿着它们由层级自己的事实推得。
 <!--/-->
 
 ```agda
@@ -97,24 +98,25 @@ it, as the union of a pair of pairs.
 <!--/-->
 
 <!--en-->
-The chain is **sealed**, and the seal is not tidiness. Everything below reads
-these through their projection equations and nothing reads them through their
-construction, so the seal costs nothing here; what it buys is one module
-application elsewhere. Instantiating the coding chapter at this model rather than
-at the hierarchy means every code is an element of `L` by construction, and the
-coding chapter proves its shape lemma by twelve `refl`s, each of which forces
-whatever a pair unfolds to through normalization. Unsealed, that application
-**does not finish in ten minutes**; sealed, it costs about a third of a second.
+The chain is **sealed**, and the seal is not mere tidiness. Everything below
+reads these through their projection equations and nothing reads them through
+their construction, so sealing is free here; it is what makes one module
+application elsewhere feasible. Instantiating the coding chapter at this model
+rather than at the hierarchy means every code is an element of `L` by
+construction, and the coding chapter proves its shape lemma by twelve `refl`s,
+each of which forces whatever a pair unfolds to through normalization. Unsealed,
+that application **does not finish in ten minutes**; sealed, it takes about a
+third of a second.
 
 The rule is the development's own, at a scale it had not been seen at: a
-constructibility certificate is expensive to carry through conversion, so seal it
-where the element is built. What is new is that a *module application* is a
+constructibility certificate is expensive to carry through conversion, so seal
+it where the element is built. What is new is that a *module application* is a
 conversion site too, and a large one, since it re-elaborates every definition in
 the chapter being applied.
 <!--zh-->
 这条链是**封住的**，而这道封印不是为了整洁。下面的一切都经诸投影等式读它们，没有谁经它们的构造去读，故封印在此处不花分文；它买到的是别处的一次模块实例化。把编码那一章实例化到这个模型上、而非实例化到层级上，意味着每个码按构造就是 `L` 的元素；而编码那一章用十二个 `refl` 证它的形状引理，每一个都会把「一个对展开成什么」推进归一化。不封，那次实例化**十分钟跑不完**；封了，它耗时约三分之一秒。
 
-这条规矩是本书自己的，只是出现在从未见过的尺度上：一份可构造性证书扛着穿过转换很贵，故要在元素被造出之处把它封住。新的一点是：**一次模块实例化也是一个转换现场**，而且是很大的一个，因为它把被实例化的那一章里每个定义都重新推导一遍。
+本书一贯在元素构造处封印其可构造性证书，以免转换检查反复展开证书；这里同一原则首次作用于更大的规模。新增的观察是：**模块实例化也会触发转换检查**，而且代价很高，因为实例化会重新推导该模块中每个定义。
 <!--/-->
 
 ```agda
@@ -181,7 +183,7 @@ identification of `{a, a}` with `{a}`: unfold the outer union, then the outer
 pair, then the inner pair, then collapse the doubled singleton, and what is left
 is the hierarchy's successor.
 <!--zh-->
-后继的等式就是这三条复合，再加上层级自己对 `{a, a}` 与 `{a}` 的认同：先展开外层的并，再展开外层的对，再展开内层的对，最后把重复的单点集塌掉，剩下的就是层级的后继。
+后继的等式就是这三条复合，再加上层级对 `{a, a}` 与 `{a}` 的认同：先展开外层的并，再展开外层的对，再展开内层的对，最后消去重复的单点集，剩下的就是层级的后继。
 <!--/-->
 
 ```agda
@@ -231,7 +233,7 @@ built in the previous chapter, whose projection is the empty set on the nose.
 <!--en-->
 ## The two pinning equations
 <!--zh-->
-## 两条钉死方程
+## 两条成员方程
 <!--ja-->
 ## 二つの指定方程式
 <!--/-->

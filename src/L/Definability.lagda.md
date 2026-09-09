@@ -17,11 +17,11 @@ Two design points carry the chapter. The formulas take `A`'s small member type
 `⟪ A ⟫` as their constant domain, so "parameters from `A`" is enforced by the
 type. And satisfaction is the **inner** semantics, on the restricted structure
 `𝒮ᵥ ↾ (∈ A)`: quantifiers range over members of `A` only, which is what
-"definable *in* `(A, ∈)`" means in the textbook, and which makes the essential
-smallness of the previous chapters bite: every formula evaluates small, so
-`Def A` is a set with no resizing spent at all.
+"definable *in* `(A, ∈)`" means in the textbook, and which lets the essential
+smallness of the previous chapters apply here: every formula evaluates small, so
+`Def A` is a set, with no resizing needed at all.
 <!--zh-->
-两个设计点撑起本章。公式以 `A` 的小成员类型 `⟪ A ⟫` 为常元域，于是「参数来自 `A`」由类型强制。满足取**内层**语义，在限制结构 `𝒮ᵥ ↾ (∈ A)` 上：量词只跑 `A` 的成员，这正是教科书里「在 `(A, ∈)` **中**可定义」的含义，也让前几章的本质小性咬合发力：任何公式求值皆小，`Def A` 是集合，降层分文未花。
+本章依赖两个设计点。公式以 `A` 的小成员类型 `⟪ A ⟫` 为常元域，因此类型本身保证参数来自 `A`。满足采用限制结构 `𝒮ᵥ ↾ (∈ A)` 上的**内层**语义，量词的范围只包括 `A` 的成员。这正是教科书中「在 `(A, ∈)` **中**可定义」的含义，也使前几章的本质小性在此适用：任何公式的求值都是小类型，因此 `Def A` 是集合，降层无需额外代价。
 <!--/-->
 
 ```agda
@@ -98,15 +98,13 @@ module DefOf (A : S) where
 ```
 
 <!--en-->
-With the inner satisfaction `⊨ᵐ` and its smallness in scope, the operator writes
-itself down. `smallSat φ m` is the truth value of `φ` at the member `m`,
-compressed one universe down; `defSet φ` is the subset `φ` carves out of `A`,
-a `sett` over the members `φ` selects; and `Def A` is the set of all of them,
+With the inner satisfaction `⊨ᵐ` and its smallness in scope, the operator can be defined directly. `smallSat φ m` is the truth value of `φ` at the member `m`,
+living one universe down; `defSet φ` is the subset `φ` defines out of `A`,
+a `sett` over the members `φ` selects; and `Def A` is the collection of all of them,
 indexed by the formulas themselves. A formula is a piece of inductive data in
-`Type ℓ`, so it is a legitimate small index: **syntax as index set** is the
-whole trick.
+`Type ℓ`, hence a legitimate small index: this is precisely **syntax as index set**.
 <!--zh-->
-内层满足 `⊨ᵐ` 与其小性就位后，算子自己写出了自己。`smallSat φ m` 是 `φ` 在成员 `m` 处的真值，压低一层宇宙；`defSet φ` 是 `φ` 从 `A` 中刻出的子集，在 `φ` 选中的成员上做 `sett`；`Def A` 则是它们的全体，以公式自身为索引。公式是 `Type ℓ` 里的归纳数据，恰是合法的小索引：**语法当索引集**，全部戏法尽在于此。
+内层满足 `⊨ᵐ` 与其小性就位后，算子可直接定义。`smallSat φ m` 是 `φ` 在成员 `m` 处的真值，位于低一层宇宙；`defSet φ` 是 `φ` 从 `A` 中定出的子集，在 `φ` 选中的成员上应用 `sett`；`Def A` 则是这些子集的全体，以公式自身为索引。公式是 `Type ℓ` 中的归纳数据，恰好构成合法的小索引；这里使用的正是**语法当索引集**。
 <!--/-->
 
 ```agda
@@ -125,15 +123,15 @@ whole trick.
 
 Both `Def` and each `defSet φ` are `sett`s, so their membership is
 *definitionally* "merely hit by the index family". For `Def` this needs no proof
-at all: a member of `Def` is merely a `defSet φ`. For the definable subsets, two
+at all: a member of `Def` is merely a `defSet φ`. For the definable subsets there are two
 specifications: their members stay inside `A`, and a member `⟪ A ⟫↪ m` belongs
-to `defSet φ` **exactly when the inner world satisfies `φ` at `m`**, which is
-the phrase "definable subset" cashed out literally (the compression `smallSat`
-was only an encoding, and the equivalence carries it back).
+to `defSet φ` **exactly when the inner world satisfies `φ` at `m`**; this is
+literally what "definable subset" means (the compression `smallSat`
+was only an encoding, and the equivalence preserves it).
 <!--zh-->
 ## 隶属，给出规格
 
-`Def` 与每个 `defSet φ` 都是 `sett`，故其隶属**按定义**就是「仅仅被索引族命中」。对 `Def` 这连证明都不必：`Def` 的成员仅仅就是某个 `defSet φ`。对可定义子集则有两条规格：其成员不出 `A`；而成员 `⟪ A ⟫↪ m` 属于 `defSet φ`，**当且仅当内层世界在 `m` 处满足 `φ`**，「可定义子集」这个词组在此被逐字兑现 (压缩 `smallSat` 只是编码，等价把它原样送回)。
+`Def` 与每个 `defSet φ` 都由 `sett` 构造，因此其隶属关系**按定义**表示相应索引的仅仅存在性。对 `Def` 无须另作证明：`Def` 的成员仅仅就是某个 `defSet φ`。可定义子集有两条规格：它的成员都属于 `A`；成员 `⟪ A ⟫↪ m` 属于 `defSet φ`，**当且仅当内层世界在 `m` 处满足 `φ`**。这两条规格直接给出「可定义子集」的含义；`smallSat` 的压缩只是编码，并不改变这个等价关系。
 <!--ja-->
 ## 所属の特徴付け
 
@@ -174,7 +172,7 @@ of `A` as an element and adds only subsets.
 <!--zh-->
 ## Def 只精化，不缩水
 
-`A` 自身可定义：公式「真」选中所有人，于是 `defSet ⊤̇ ≡ A`，从而 `A ∈ Def A`。对偶地，`Def A` 的每个成员都是 `A` 的子集。所以 `Def` 坐落在 `A` 与幂集之间：整个 `A` 保留为元素，添入的只有子集。
+`A` 自身可定义：公式「真」选中的是全部元素，于是 `defSet ⊤̇ ≡ A`，从而 `A ∈ Def A`。对偶地，`Def A` 的每个成员都是 `A` 的子集。所以 `Def` 介于 `A` 与幂集之间：整个 `A` 作为元素保留在内，添入的只有子集。
 <!--ja-->
 ## Def は細分するが要素を失わない
 
@@ -210,20 +208,20 @@ of `A` as an element and adds only subsets.
 ## Under transitivity, A ⊆ Def A
 
 When `A` is transitive, each **member** `a` of `A` is itself definable, by the
-same two-symbol move that built intersection in the model chapter: the atomic
+same two-symbol construction that built intersection in the model chapter: the atomic
 formula "the variable is a member of `a`". Separation's implicit "∈ A" clause is
 what transitivity discharges: members of `a` are already members of `A`, so the
-atom carves out exactly `a`. Hence `A ⊆ Def A`: the step loses no one. Combined
-with the previous section, iterating `Def` can only accumulate, which is the
-shape the constructible tower needs.
+atom carves out exactly `a`. Hence `A ⊆ Def A`: no element is omitted. Combined
+with the previous section, iterating `Def` can only accumulate, which is exactly
+what the constructible tower requires.
 <!--zh-->
 ## 传递性之下，A ⊆ Def A
 
-当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义，用的正是模型章造交集的那记两符号招式：原子公式「该变量属于 `a`」。分离暗含的「∈ A」条款恰由传递性兑清：`a` 的成员已是 `A` 的成员，于是原子公式刻出的恰好是 `a`。故 `A ⊆ Def A`：这一步不丢任何人。与上一节合观，迭代 `Def` 只进不出，正是可构造塔需要的形状。
+当 `A` 传递时，`A` 的每个**成员** `a` 自身也可定义：仍用模型章构造交集的那条两符号途径，即原子公式「该变量属于 `a`」。分离暗含的「∈ A」条件恰好由传递性保证：`a` 的成员已是 `A` 的成员，于是原子公式刻出的正是 `a`。故 `A ⊆ Def A`：没有任何元素被遗漏。与上一节合观，迭代 `Def` 只增不减，正合可构造塔的需要。
 <!--ja-->
 ## 推移性の下で A ⊆ Def A
 
-`A` が推移的なら、各 `x ∈ A` は「変数がパラメータ `x` に等しい」という論理式で `A` 上に定義できます。この定義により `x ∈ Def A` が得られ、`A` は次の定義可能段階に含まれます。
+`A` が推移的なら、各 `x ∈ A` は「変数がパラメータ `x` の要素である」という論理式で `A` 上に定義できます。この定義により `x ∈ Def A` が得られ、`A` は次の定義可能段階に含まれます。
 <!--/-->
 
 
@@ -281,7 +279,7 @@ relabelling of the formula, then absoluteness.
 <!--zh-->
 ### 从外部读可定义性
 
-有一条推论值得单独命名，因为可构造阶段的证明要反复倚重它。属于 `defSet φ` 是**内层**世界 `(A, ∈)` 的陈述，而接下来的论证都在环境层级中进行。对 Δ₀ 公式，两种读法一致，那就是绝对性定理；余下的是记账，因为绝对性对类的成员陈述，而 `defSet` 对小索引类型陈述。重标填平这道缝，整个证明是一条三步路径：`defSet` 的规格、公式的重标、然后绝对性。
+有一条推论值得单独命名，因为可构造阶段的证明要反复倚重它。属于 `defSet φ` 是**内层**世界 `(A, ∈)` 中的陈述，而接下来的论证都在环境层级进行。对 Δ₀ 公式，两种读法一致，这就是绝对性定理；其余的只是层级核对，因为绝对性对类的成员陈述，而 `defSet` 对小索引类型陈述。重标正是为了消除这道层级差异，整个证明分三步：`defSet` 的规格、公式的重标、然后绝对性。
 <!--ja-->
 ### 外部から読む定義可能性
 
@@ -292,7 +290,7 @@ relabelling of the formula, then absoluteness.
 `A` must be transitive for this, which is why the lemma lives in this
 submodule; every stage of the tower is.
 <!--zh-->
-这需要 `A` 传递，故本引理住在这个子模块里；塔的每个阶段都传递。
+这需要 `A` 传递，故本引理归入这个子模块；塔的每个阶段都传递。
 <!--/-->
 
 ```agda
@@ -312,15 +310,15 @@ submodule; every stage of the tower is.
 
 `Def A` is the set of subsets of `A` definable in the inner world `(A, ∈)` with
 parameters from `A`: syntax as index set, inner satisfaction for meaning,
-essential smallness footing the universe bill. The specification
-`defSet-mem`{.Agda} says "definable" literally, and the operator only refines:
-`A ⊆ Def A` under transitivity (`A⊆Def`{.Agda}), and members of `Def A` never
-leave `A`'s subsets (`Def∋⊆A`{.Agda}). The next chapter iterates this step
+and essential smallness supplying the required universe level. The specification
+`defSet-mem`{.Agda} states directly what "definable" means, and the operator only refines:
+`A ⊆ Def A` under transitivity (`A⊆Def`{.Agda}), and members of `Def A` are
+subsets of `A` (`Def∋⊆A`{.Agda}). The next chapter iterates this step
 into a universe.
 <!--zh-->
 ## 小结
 
-`Def A` 是内层世界 `(A, ∈)` 中带 `A` 中参数可定义的 `A` 的子集之集：语法当索引集，内层满足给含义，本质小性付清宇宙账单。规格 `defSet-mem`{.Agda} 把「可定义」逐字兑现，而算子只精化：传递性下 `A ⊆ Def A` (`A⊆Def`{.Agda})，且 `Def A` 的成员不出 `A` 的子集 (`Def∋⊆A`{.Agda})。下一章把这一步迭代成一个宇宙。
+`Def A` 是内层世界 `(A, ∈)` 中由带 `A` 中参数的公式定义出的 `A` 的子集之集：语法充作索引集，内层满足给出含义，本质小性保证所需的宇宙层级。规格 `defSet-mem`{.Agda} 直接陈述「可定义」的含义，而算子只作精化：传递性下 `A ⊆ Def A` (`A⊆Def`{.Agda})，且 `Def A` 的成员都是 `A` 的子集 (`Def∋⊆A`{.Agda})。下一章把这一步迭代成一个宇宙。
 <!--ja-->
 ## まとめ
 

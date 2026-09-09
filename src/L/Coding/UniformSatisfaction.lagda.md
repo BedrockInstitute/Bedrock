@@ -33,11 +33,11 @@ over a stage alphabet, whereas the recursive table uses the **model's** coding
 over the model language. This chapter identifies the two presentations and
 exports the uniform satisfaction table consumed by powerset and Choice.
 <!--zh-->
-内部满足关系的消费方到场时手里握着的是一个**码**，而不是该码所出自的公式。内部可定义幂集遍历某阶段处全部元数一的码，良序也可能比较不属于任何共同公式的两个子码。因此递归需要一张可见定义域为整个阶段码集的表；`AllCodes`{.Agda} 恰好在每个元数处供应这些键。
+内部满足关系的使用者直接面对的是一个**码**，而非该码所出自的公式。内部可定义幂集会遍历某阶段处全部元数一的码，良序也可能比较不属于任何共同公式的两个子码。因此递归需要一张定义域为整个阶段码集的表；`AllCodes`{.Agda} 恰好对每个元数都给出这些键。
 
-图把表与合格索引集作存在绑定。为了证明一个成员有图值，`funct`{.Agda} 可以取该成员自己的子公式槽；前面的编码章节已经证明那张槽表封闭、全且满足诸子句。统一性随后说明这些局部见证与从整个码集读出的取值相容。
+图以存在方式把表与合格的索引集绑定起来。为了证明某个成员有图值，`funct`{.Agda} 可以取该成员自己的子公式槽；前面的编码章节已经证明那张槽表封闭、全且满足诸子句。统一性随后说明这些局部见证与从整个码集读出的取值相容。
 
-还需另一座桥，因为码集使用**层级**在阶段字母表上的编码，而递归表使用**模型**在模型语言上的编码。本章认同这两种呈现，并导出供幂集与 Choice 消费的统一满足关系表。
+除此之外还需另一个衔接：码集使用**层级**在阶段字母表上的编码，而递归表使用**模型**在模型语言上的编码。本章认同这两种呈现，并导出供幂集与 Choice 使用的统一满足关系表。
 <!--/-->
 
 ```agda
@@ -93,7 +93,7 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 ## Naming a member of the code set
 <!--zh-->
-## 点名编码集的成员
+## 命名编码集的成员
 <!--ja-->
 ## コード集合の要素を名づける
 <!--/-->
@@ -107,22 +107,22 @@ The specification of `AllCodes A` turns any member into a formula over members o
 <!--/-->
 
 <!--en-->
-Three lines, and they are the chapter's one performance decision. A consumer that
+Three lines, and they are the only one-time decision in this chapter. A consumer that
 wants the value at a particular formula has to name the member the value is taken
 at, and the obvious name is the key itself; naming it that way does not
 elaborate, because the key unfolds into a pair of a numeral with a code and that
 construction then sits inside the recursion's domain and inside a satisfaction.
 
-So the name is sealed where it is made. Sealed, it is an element of `L` that a
-type can mention without unfolding, and the two facts a consumer needs come out
-with it: it lies in the domain, and it is the key of the formula it was made
-from. Everything below is stated at a variable member and reaches its key by an
-equation, so the seal is the only thing that has to be opened, and nothing opens
-it.
+So the name is made opaque where it is made. As an opaque definition, it is an
+element of `L` that a type can mention without unfolding, and the two facts a
+consumer needs come out with it: it lies in the domain, and it is the key of
+the formula it was made from. Everything below is stated at a variable member and
+reaches its key by an equation, so this opaque name is the only thing that
+would need unfolding, and no step unfolds it.
 <!--zh-->
-三行，而它们是本章唯一的一次性能决定。想要某条特定公式处的取值的消费方，必须为「取值所在的那个成员」点名，而显而易见的名字就是那个键本身；可是那样点名展开不了，因为键会展成「数码与码之对」，而那个构造随后就坐进了递归的定义域里，也坐进了一个满足关系里面。
+这三行是本章仅有的一次性决定。想要某条特定公式处取值的使用者，必须指明「取值所在的那个成员」，而显而易见的名字就是那个键本身；可是这样一来名字无法展开，因为键会展开成「数码与码之对」，而这个构造随后就进入了递归的定义域，也进入了一个满足关系。
 
-于是那个名字在它被造出之处封印。封印之后，它是 `L` 的一个元素，类型可以提它而不必展开，而消费方所需的两条事实随之出来：它落在定义域中，且它是「造它时所用的那条公式」的键。下面的一切都陈述在变元成员上并经一条等式抵达它的键，故需要被打开的只有这个封印，而没有任何东西打开它。
+因此，这个名字在构造处被封装为不透明定义。封装后，它是 `L` 的一个元素，类型可以提到它而不必展开；同时得到使用者需要的两项事实：它属于定义域，并且是构造它时所用公式的键。后续结论都先对变元成员陈述，再通过等式应用到这个键，因此不会展开这个不透明的名字。
 <!--/-->
 
 ```agda
@@ -149,7 +149,7 @@ module _ (A : S) where
 <!--en-->
 `keyBridge` proves that coding a formula over members of `A` directly gives the same underlying key as first translating its constants into `L` and then using the model-internal key. The accompanying frame fixes the numeral tags, tower, and code domain needed by the graph formula.
 <!--zh-->
-`keyBridge` 证明：直接编码一个常元取自 `A` 成员的公式，与先把常元翻译进 `L`，再取模型内部公式键，所得底层键相同。随后的框架固定图公式所需的数码标签、塔与编码域。
+`keyBridge` 证明：把一个常元取自 `A` 成员的公式直接编码，与先把常元翻译进 `L` 再取模型内部的公式键，两者所得的底层键相同。随后的框架固定图公式所需的数码标签、塔与编码域。
 <!--ja-->
 `keyBridge` は、`A` の要素を定数とする論理式を直接符号化した鍵と、定数を `L` へ移してからモデル内部で作った鍵の台が一致することを示します。続く枠組みはグラフ論理式に必要な数項タグ、塔、コード領域を固定します。
 <!--/-->
@@ -159,7 +159,7 @@ A key in the hierarchy's coding is the arity numeral paired with the code of the
 formula relabelled along the alphabet's embedding; a key in the model's coding is
 the numeral of `L` paired with the code taken in `L`. `codeBridge`{.Agda} equates
 the two codes, one clause per constructor. It was written in the model chapter
-and has had no consumer since, because this is the statement it was written for.
+and has not been used since, because this is the statement it was written for.
 
 What it does not supply is the relabelling. The set's formulas are over the
 alphabet `⟪ A ⟫`{.Agda} and the recursion's formulas are over `L`, so the two
@@ -177,7 +177,7 @@ over never appears in it, so it is stated one parameter short of the recursion
 below, and a later chapter that needs the two codings to agree at a carrier held
 in a slot can use it without supplying a second carrier it does not have.
 <!--zh-->
-层级编码里的一个键，是元数数码与「沿字母表的嵌入重标之后那条公式的码」之对；模型编码里的一个键，是 `L` 的数码与「在 `L` 里取的码」之对。`codeBridge`{.Agda} 把这两个码等同起来，一个构造子一条子句。它写在模型那一章，此后一直没有消费方，因为它当初就是为这条陈述而写的。
+层级编码里的一个键，是元数数码与「沿字母表的嵌入重标之后那条公式的码」之对；模型编码里的一个键，是 `L` 的数码与「在 `L` 里取的码」之对。`codeBridge`{.Agda} 把这两个码等同起来，一个构造子对应一条子句。它写在模型那一章，此后一直没有被使用，因为它当初就是为这条陈述而写的。
 
 它供不出的是那次重标。集合那边的公式在字母表 `⟪ A ⟫`{.Agda} 之上，递归这边的公式在 `L` 之上，故两侧经过的是两个不同的映射，而它们的复合必须被认作一个映射。那是重标的函子性，它归属于重标被定义之处，而如今就在那里；于是整座桥是四次改写，没有归纳。
 
@@ -223,20 +223,20 @@ module _ (A B : S) where
 <!--en-->
 For the formula named by a member of `AllCodes B`, its explicit satisfaction table supplies an output at the corresponding key. The table’s key-determinacy theorem proves that any two outputs there are equal, giving the two hypotheses required by recursion.
 <!--zh-->
-对 `AllCodes B` 的成员所命名的公式，其显式满足关系表在相应键处给出一个输出。满足关系表的键确定性定理证明该处任意两个输出相等，从而交付递归所需的存在性与唯一性。
+对 `AllCodes B` 的成员所命名的公式，其显式满足关系表在相应键处给出一个输出。满足关系表的键确定性定理证明该处任意两个输出相等，从而给出递归所需的存在性与唯一性。
 <!--ja-->
 `AllCodes B` の要素が名づける論理式について、明示的な充足関係表は対応する鍵での出力を与えます。表の鍵による決定性定理はその鍵での任意の二出力が等しいことを示し、再帰に必要な存在と一意性を与えます。
 <!--/-->
 
 <!--en-->
-Both are the previous chapters', applied at the formula the member is the key
-of rather than at an ambient formula, and the change makes existence *shorter*.
-The per-formula instance had to transport a subformula's entry along the
+Both halves come from the previous chapters, applied at the formula the member
+is the key of rather than at an ambient formula, and the change makes existence
+*shorter*. The per-formula instance had to transport a subformula's entry along the
 inclusion of its own subtree into the ambient table; here the recovered formula
 **is** the formula whose table is being handed over, so `entry-in`{.Agda} applies
 directly and the transport is gone.
 
-Uniqueness does not notice the change at all, and the reason is structural.
+The change does not affect uniqueness at all, and the reason is structural.
 `Pinned`{.Agda} speaks about the index set and the table the graph produced,
 which are bound variables of the caller's environment, never about the
 recursion's domain. The domain occurs nowhere in it, nor in the ten clauses,
@@ -247,11 +247,11 @@ out with it. Left to inference, the graph's three existentially bound slots
 determine nothing and six metavariables survive; naming the environment costs one
 line and is the difference between elaborating and not.
 <!--zh-->
-两半都是前几章的，只是施于「该成员是其键的那条公式」而非某条周遭公式，而这次更换使存在性**更短**。按公式索引的那个实例得把一条子公式的条目沿「它自己的子树到周遭表的包含」搬过去；此处被还原出来的那条公式**就是**其表正被递出的那条公式，故 `entry-in`{.Agda} 直接适用，那次搬运消失了。
+这两半都来自前几章，只是施于「该成员是其键的那条公式」而非某条周遭公式，而这一更换使存在性**更短**。按公式索引的那个实例，得把一条子公式的条目沿「它自己的子树到周遭表的包含」搬过去；此处还原出的那条公式**就是**正在取其表的那条公式，故 `entry-in`{.Agda} 直接适用，那一步搬运就消失了。
 
-唯一性压根察觉不到这次更换，而理由是结构性的。`Pinned`{.Agda} 谈的是「图所产出的索引集与表」，那是调用方环境里的被绑定变元，从不谈递归的定义域。定义域既不出现在它里面，也不出现在十条子句里，故更换递归的索引，够不着唯一性。
+这次更换完全不影响唯一性，理由是结构性的。`Pinned`{.Agda} 谈的是「图所产出的索引集与表」，那是调用方环境里的被绑定变元，从不涉及递归的定义域。定义域既不出现在它里面，也不出现在十条子句里，因此更换递归的索引触及不到唯一性。
 
-此处只把全性那条假设写出来，而它的环境也一并写出。若交给推断，图那三个存在绑定的槽位什么也决定不了，会剩下六个元变元；把环境点名只花一行，而那正是「能否被展开求解」的分水岭。
+此处把全性那条假设连同它的环境一并显式写出。若交由推断，图上三个存在绑定的槽位确定不了任何内容，会剩下六个元变元；而点名环境只需一行，那正是「能否被展开求解」的分水岭。
 <!--/-->
 
 ```agda
@@ -301,7 +301,7 @@ line and is the difference between elaborating and not.
 <!--en-->
 `satRec` instantiates the abstract recursion theorem with `AllCodes B`, the satisfaction graph, closure under subformulas, and the preceding existence-and-uniqueness proof. Its value function is the uniform satisfaction assignment used below.
 <!--zh-->
-`satRec` 以 `AllCodes B`、满足关系图、对子公式的封闭性以及上一节的存在唯一性证明实例化抽象递归定理。其取值函数就是下文使用的一致满足关系赋值。
+`satRec` 以 `AllCodes B`、满足关系图、对子公式的封闭性以及上一节的存在唯一性证明来实例化抽象递归定理；其取值函数就是下文使用的一致满足关系赋值。
 <!--ja-->
 `satRec` は `AllCodes B`、充足関係グラフ、部分式についての閉包性、前節の存在一意性の証明を用いて抽象的な再帰定理を具体化します。その値関数が以下で使う一様な充足関係の割当てです。
 <!--/-->
@@ -320,9 +320,9 @@ it does not use would be stating a weaker theorem. They are pinned together in
 the next section, and only there, because that is where satisfaction acquires a
 meaning.
 <!--zh-->
-定义域是该阶段处的码集，图是两章之前的那一个，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 交付，因为「仅仅存在的唯一解」就是可缩解。一个成员以「字母表之上某条公式的键」这种仅仅存在的形式到场，那座桥把它的等式变成一条关于模型之键的等式，而上面两半就施于那个键。
+定义域是该阶段处的码集，图是两章之前的那一个，而 `funct`{.Agda} 经 `mereFunct`{.Agda} 给出，因为「仅仅存在的唯一解」就是可缩解。一个成员以「字母表之上某条公式的键」这种仅仅存在的形式出现，该等式转换把它的等式变成一条关于模型之键的等式，上面两半便施于那个键。
 
-两个载体是彼此独立的参数，且保持如此。`A` 是诸码的常元所取自的字母表；`B` 是供诸环境落在其上的集合；递归里没有任何东西把它们联系起来，而为一个用不上的关系向递归收费，等于陈述一条更弱的定理。它们在下一节且只在那里被钉在一起，因为那才是满足关系获得含义的地方。
+两个载体是彼此独立的参数，且始终如此。`A` 是诸码的常元所取自的字母表；`B` 是诸环境所属的集合；递归中没有任何东西把它们联系起来，而要求递归带上一个用不上的关系，只会得到一条更弱的定理。两者在下一节、且只在下一节才被结合起来，因为只有在那里满足关系才获得含义。
 <!--/-->
 
 ```agda
@@ -350,7 +350,7 @@ meaning.
 <!--en-->
 `val-at` identifies the recursive value at a formula key with the explicit `Sat` value already known to satisfy the clauses. The theorem `val-sat` then reads membership in that value as satisfaction of the represented formula under its encoded environment.
 <!--zh-->
-`val-at` 把公式键处的递归取值等同于已经证明满足诸子句的显式 `Sat` 值。随后 `val-sat` 把属于该值读成：所表示的公式在其编码环境下得到满足。
+`val-at` 把公式键处的递归取值等同于已经证明满足诸子句的显式 `Sat` 值。随后，`val-sat` 把「属于该值」读成：所表示的公式在其编码环境下得到满足。
 <!--ja-->
 `val-at` は論理式の鍵での再帰値を、すでに各条件を満たすと分かっている明示的な `Sat` の値と同一視します。続く `val-sat` はその値への所属を、表された論理式が符号化環境の下で満たされることとして読みます。
 <!--/-->
@@ -380,13 +380,13 @@ member, with its key equation beside it; and a consumer that wants to *name* the
 member gets the convenient form back through the sealed name, at no cost, because
 what the type mentions there does not unfold.
 <!--zh-->
-一场与任何东西都不相连的递归什么也没定义，故那个取值陈述两遍。
+与任何东西都不相连的递归定义不了任何东西，故这个取值要陈述两遍。
 
-先对着递归自己的构造来读，而那是唯一性反过来花掉：在「是某条公式之键」的那个成员处，取值就是元语言递归在那条公式处造出的那个集合，因为存在性那一半把那个集合作为一个解拿了出来，而递归的取值是唯一的解。这就是消费方要从这张表里取出任何东西所需的读式，因为那个值函数来自一次可缩性，自身化简不出任何东西。
+先对照递归自身的构造来读，这里用到的正是唯一性：在「是某条公式之键」的那个成员处，取值就是元语言递归在那条公式处造出的那个集合，因为存在性那一半给出以该集合为一个解，而递归的取值是唯一的解。后续使用这张表的证明要从其中取出任何内容，所需的正是这条读式，因为那个值函数来自一次可缩性，自身化简不出任何东西。
 
-那个成员是**变元**，而它的键经一条等式抵达；这是一次测量，不是口味。若径直陈述在那个键上，值函数的实参就是一个具体的码构造，也就把那个构造塞进了「值据以定义的那个图的满足关系」里；在变元上花四秒的那条陈述，写在键上跑过了六分钟并被放弃，而把它写成变元版本的推论时同样如此，这说明代价在**陈述**里、不在证明里。唯一性那一章在它的第一个情形上记下了这条规矩，而它在此处原样成立。
+那个成员是**变元**，其键通过一条等式给出；这是测量所得的选择，而非表述偏好。若直接在该键上陈述，值函数的实参就是具体的码构造，该构造也会进入「定义该值的图的满足关系」中。同一陈述以变元书写时耗时四秒，直接写在键上则运行超过六分钟后被放弃；把它改写成变元版本的推论时结果相同。这说明代价来自**陈述**而非证明。唯一性一章在第一个情形中记录的规则，在此原样适用。
 
-两个方向都什么也没有失去。手里握着一个成员的消费方，握着的就是一个成员，外加它的键等式；而想把那个成员**点名**的消费方，可经那个封印过的名字把方便的形式拿回来，且分文不花，因为类型在那里所提的东西不会展开。
+两个方向都没有丢失内容。已经持有一个成员的使用者，同时持有该成员及其键等式；需要**点名**该成员时，则可通过前面封装的不透明名字取得方便的形式，而且无需展开，因为类型中提到该名字不会触发其定义。
 <!--/-->
 
 ```agda
@@ -414,9 +414,9 @@ itself. So the two theorems below are stated at the one carrier, which is the
 instantiation the consumer wants anyway: the codes at a stage, satisfied over
 that same stage.
 <!--zh-->
-再对着满足关系，而那是这个目标存在的理由。桥那一章证过：元语言那个取值的成员，就是在世界 `(B, ∈)` 中满足该公式的一个环境；把它与上面那条读式复合，同一句话便落到这场递归所产出的表上。在元数一处它特化为可定义幂集所指的那个可定义子集，故**在「是某条公式之键」的那个成员处读出的那张表，就是该公式的可定义子集**，而那正是内部层级将据以读出 `Def`{.Agda} 的陈述。
+再对照满足关系，这是本目标存在的理由。桥那一章证过：元语言那个取值的成员，就是在世界 `(B, ∈)` 中满足该公式的一个环境；把它与上面那条读式复合，同一句话便适用于这场递归所产出的表。在元数一处它特化为可定义幂集所指的那个可定义子集，故**在「是某条公式之键」的那个成员处读出的那张表，就是该公式的可定义子集**，而那正是内部层级将据以读出 `Def`{.Agda} 的陈述。
 
-两个载体在此会合，因为此处是它们非会合不可的地方。常元皆为载体成员的公式，内层世界读得了；点名了 `L` 的任意元素的公式则不然，而桥那一章对自己就是这么说的。故下面两条定理陈述在同一个载体上，而那本来也是消费方想要的实例化：某阶段处的诸码，在同一个阶段之上被满足。
+两个载体在此处合一，而且必须如此：常元皆为载体成员的公式，内层世界可以解读；点名了 `L` 的任意元素的公式则不然，而桥那一章对此已有说明。故下面两条定理陈述在同一个载体上，而这本来也是使用者所需要的实例化：某阶段处的诸码，在同一个阶段之上被满足。
 <!--/-->
 
 ```agda
@@ -487,11 +487,11 @@ first is the uniqueness chapter's law, met again where nothing is being proved b
 induction; the second is the law about a construction appearing in a goal, met at
 a goal that is a plain equation.
 <!--zh-->
-`satRec`{.Agda} 作为已内化递归的满足关系，跑在**某阶段处的诸码**之上，而非跑在一条公式的诸子公式之上，而 `Table`{.Agda} 是它产出的那张表。`val-at`{.Agda} 在一个以键的形式给出的成员处读出取值；`val-sat`{.Agda} 说那个取值**就是**载体之上的满足关系。
+`satRec`{.Agda} 作为已内化递归的满足关系，定义在**某阶段处的诸码**之上，而非定义在一条公式的诸子公式之上，而 `Table`{.Agda} 是它产出的那张表。`val-at`{.Agda} 在一个以键的形式给出的成员处读出取值；`val-sat`{.Agda} 说那个取值**就是**载体之上的满足关系。
 
-底下没有任何东西被重新索引，也没有任何东西被削弱。本目标登记在案的风险是：定义域或它的良构谓词会在某个不能取作槽位之处、把载体当作**常元**来要；那将把槽、表、全性与隶属重新索引在「载体与键」的对上，并为两半的十个情形各记一笔搬运。它没有引爆，而直接的证据是：`slot`{.Agda}、`satTable`{.Agda}、`total`{.Agda}、`inSlot`{.Agda}、`slotClosed`{.Agda}、`soundness`{.Agda} 与 `Good.pinned`{.Agda} 在上面全都是按它们既有的类型施用的。码载体压根到不了那个图：它在码集自己的谓词里被绑定、被钉住，而出来的是 `L` 的一个元素，而定义域无非就是这个。
+这里没有任何内容被重新索引或削弱。预先记录的风险是：定义域或其良构谓词可能在无法使用槽位的位置要求把载体作为**常元**；那样就必须在「载体与键」的对上重新索引槽、表、全性与隶属，并在两个方向的十个情形中逐一改写。该风险没有发生：`slot`{.Agda}、`satTable`{.Agda}、`total`{.Agda}、`inSlot`{.Agda}、`slotClosed`{.Agda}、`soundness`{.Agda} 与 `Good.pinned`{.Agda} 在上文都按原有类型直接使用。码载体不会进入那个图；它在码集自身的谓词中被绑定并固定，所得是 `L` 的一个元素，而这正是递归的定义域。
 
-使这一切便宜的是图里的那个存在量词，而这值得当作一项设计事实，而非一次偶然留存下来。一个把自己的表存在量化的图，允许一个取值由**任意**一张合格的表来担保，故实例可以在每个索引处用「够得着它的最小的表」作答。倘若那个图把自己的表点了名，定义域与表就得一起长大，而前面每一章都要动。
+这一切之所以便宜，靠的是图中的那个存在量词；这应当视为一项设计事实，而非侥幸留存的结果。一个以存在量词存放自己的表的图，允许取值由**任意**一张合格的表来担保，因此实例在每个索引处都能用可给出该取值的最小的表作答。倘若图中写明了具体的表，定义域与表就得一起扩大，而前面每一章都要随之修改。
 
-唯一没被预料到的代价落在诸陈述里，不落在诸证明里，而它就是本章的那次测量。在一个**写开了的**键处读出的取值，无论证明写多长都展开不了，因为那个键的构造落进了一个满足关系里面；在变元成员上花四秒的那条读式，写在键上跑过了六分钟，而把它写成变元版本的推论时同样如此。修好它的有两件事，恰是登记在案的两条规矩，一条对应一件：每条读式都把成员取作变元、并经一条等式抵达它的键；而消费方本会写下的那个名字，在它被造出之处封印。前者是唯一性那一章的规矩，此番出现在一个压根没有在作归纳证明的地方；后者是「关于出现在目标里的构造」的那条规矩，此番出现在一个只是一条等式的目标上。
+唯一未曾预料的代价出现在陈述中，而不在证明中；本章的测量说明了这一点。在一个**完全展开的**键处读取取值时，键的构造会进入满足关系，因此证明再长也无法使它顺利展开。同一读式在变元成员上检查需四秒，直接写在键上则运行超过六分钟；把它写成变元版本的推论时也有同样差别。解决办法正是两条既有规则：每条读式都以成员为变元，再通过等式转到它的键；调用方需要点名的名字则在构造处封装为不透明定义。前一规则来自唯一性一章，在这里虽无归纳证明仍然适用；后一规则针对出现在目标中的构造，在这里只有一条等式的目标上同样适用。
 <!--/-->

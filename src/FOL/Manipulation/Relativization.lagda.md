@@ -36,7 +36,7 @@ import FOL.Semantics
 <!--zh-->
 ## 算子
 
-`relativize c`{.Agda} 保持原子公式与已有界量词不变，同时把 `∃̇` 和 `∀̇` 替换为受 `con c`{.Agda} 约束的量词。由于界是常元，它无需移动变量便可进入约束子之下。
+`relativize c`{.Agda} 保持原子公式与已有的有界量词不变，同时把 `∃̇` 和 `∀̇` 替换为受 `con c`{.Agda} 约束的量词。由于界是常元，进入约束子时无须随变量移动而调整。
 <!--ja-->
 ## 演算子
 
@@ -64,7 +64,7 @@ Every unbounded quantifier became bounded and nothing else changed, so the resul
 has no `∃̇`/`∀̇` constructors at all: the Δ₀ witness assembles constructor by
 constructor.
 <!--zh-->
-每个无界量词都变有界，其余分毫未动，结果便不含任何 `∃̇`/`∀̇` 构造子：Δ₀ 见证逐构造子装配即得。
+每个无界量词都变为有界量词，其余部分保持不变，因此结果不含任何 `∃̇`/`∀̇` 构造子；逐构造子装配即可得到所需的 Δ₀ 见证。
 <!--/-->
 
 ```agda
@@ -126,11 +126,11 @@ module Correct {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure �
 <!--en-->
 Correctness is then one structural induction: the standard meaning of
 `relativize c φ` equals the `A`-bounded meaning of `φ`. The atoms are
-`refl`{.Agda}; the two clauses where the operator actually works are where the
-standard semantics of `∃̇∈ (con c) _` unfolds, by computation, to exactly the
+`refl`{.Agda}; the two clauses the operator actually changes are exactly where the
+standard semantics of `∃̇∈ (con c) _` unfolds, by computation, to the
 companion's clause, since `⟦ con c ⟧ γ` is `A`; everything else is congruence.
 <!--zh-->
-正确性于是就是一次结构归纳：`relativize c φ` 的标准含义等于 `φ` 的 `A`-有界含义。原子是 `refl`{.Agda}；算子真正动过手脚的两条子句，恰是标准语义按计算把 `∃̇∈ (con c) _` 展开成同伴子句之处，因为 `⟦ con c ⟧ γ` 就是 `A`；其余全是同余。
+正确性由结构归纳证明：`relativize c φ` 的标准含义等于 `φ` 的 `A`-有界含义。原子情形是 `refl`{.Agda}；算子实际改动的两个量词子句，正是标准语义按计算把 `∃̇∈ (con c) _` 展开为相应子句之处，因为 `⟦ con c ⟧ γ` 就是 `A`；其余情形都是同余。
 <!--/-->
 
 ```agda

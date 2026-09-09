@@ -238,16 +238,16 @@ Extending an environment does not only add an entry, it renumbers the ones
 already there: what was at index `i` is now at index `i + 1`. The formula below
 recognizes one such renumbering, relating an entry to its shifted counterpart.
 
-Five nested bounded quantifiers, which is what it costs to reach the components
-of two pairs at once: the entry, its index, its value, the shifted entry and its
-index. The body is then two Kuratowski readers and the successor reader from
-above, saying that the two entries share a value and that the indices are one
-apart. Everything the reader chapters built is spent here at once, which is why
-this is the last formula the coding stack needs.
+Five nested bounded quantifiers are needed to reach the components of two pairs
+at once: the entry, its index, its value, the shifted entry and its index. The
+body is then two Kuratowski readers and the successor reader from above,
+saying that the two entries share a value and that the indices are one apart.
+Everything the reader chapters built is used here at once, which is why this is
+the last formula the coding stack needs.
 <!--zh-->
 扩张环境不只是添一个条目，它还给已有的条目重新编号：原本在索引 `i` 处的，如今在 `i + 1` 处。下面这条公式认出一次这样的重编号，把一个条目与它移位后的对应物联系起来。
 
-五层嵌套的有界量词，那是一举抵达两个对的各个分量所需的代价：条目、它的索引、它的值、移位后的条目、以及后者的索引。主体随后是两条 Kuratowski 读式与上文那条后继读式，说这两个条目共享一个值，且两个索引相差一位。读式诸章造出的一切在此一次花光，这也是编码这一层所需的最后一条公式。
+五层嵌套的有界量词，是为了同时进入两个对的各分量所必需的：条目、它的索引、它的值、移位后的条目、以及后者的索引。主体随后是两条 Kuratowski 读式与上文那条后继读式，说明这两个条目共享一个值，且两个索引相差一位。此前读式诸章建立的工具在此一并投入使用，这也是编码这一层所需的最后一条公式。
 <!--/-->
 
 ```agda
@@ -356,7 +356,7 @@ shiftPairAt-adequate p' p γ = ⇔toPath fwd bwd
 <!--en-->
 The formulas `sgl0At`, `pair0At`, and `tag0At` recognize the singleton, Kuratowski pair, and tagged pair used for the new zeroth environment entry; their semantic lemmas recover each encoded component.
 <!--zh-->
-公式 `sgl0At`、`pair0At` 与 `tag0At` 识别新添的第零个环境条目所用的单点集、Kuratowski 对与带标签对；相应的充分阶段条件引理恢复各编码分量。
+公式 `sgl0At`、`pair0At` 与 `tag0At` 识别新添的第零个环境条目所用的单点集、Kuratowski 对与带标签对；相应的充分阶段条件引理可还原出各编码分量。
 <!--ja-->
 式 `sgl0At`、`pair0At`、`tag0At` は、新しい第 0 環境項目に使う一元集合、Kuratowski 対、タグ付き対を認識し、対応する十分な段階の条件を示す補題が各符号化成分を復元します。
 <!--/-->
@@ -370,7 +370,7 @@ set as first component. The singleton and unordered pair share the same
 empty-member witness. Mapping their two predicates together carries the whole
 pair characterization in either direction.
 <!--zh-->
-本章扩展读式所用的标签是 `# 0`，而 `# 0` 按定义就是空集。于是标签可以不借常元说出：一个成员是空的。下面几条读式就是空版的带标签版本。元层机制证明：满足空标签读式的集合，恰是以空集为第一分量的 Kuratowski 对。单点集与无序对共享同一个空成员见证。一起映射这两个谓词，就能在两个方向搬运整条有序对刻画。
+扩展读式所用的标签是 `# 0`，而 `# 0` 按定义就是空集，所以无需借助常元即可描述该标签：一个成员是空的。下面给出带空标签的几条读式。元层机制证明，满足空标签读式的集合恰为以空集作第一分量的 Kuratowski 对。单点集与无序对共享同一个空成员见证；同时映射这两个谓词，即可沿两个方向转换完整的有序对刻画。
 <!--/-->
 
 ```agda
@@ -501,9 +501,9 @@ consed on. The two sides match key by key, and the match is definitional at the
 index: the numeral for `suc k` is the successor of the numeral for `k`, and
 consing shifts indices by exactly that.
 <!--zh-->
-然后是量词子句所需的那条公式：扩张后的环境就是旧环境在索引零处添上一个新值。三条子句。键零处的条目持有新值；旧环境的每个条目在新环境中移位出现；而新环境的每个条目，或是那第一个条目，或是某个旧条目的移位。
+接下来给出量词子句所需的公式：扩张后的环境由旧环境在索引零处加入一个新值而成。公式包含三条子句：零键处的条目保存新值；旧环境的每个条目经移位后都出现在新环境中；新环境的每个条目，要么是新增的零键条目，要么来自某个旧条目的移位。
 
-充分性是对**编码后的**环境陈述的，因为那是诸证书所持有的形式。给定旧环境是 `g` 的图，该公式的满足恰好说新环境是 `g` 前置一个值之后的图。两侧逐键相符，而在索引上这个相符是定义性的：`suc k` 的数码就是 `k` 的数码的后继，而前置恰好把索引移那么多。
+充分性是对**编码后的**环境陈述的，因为证书采用的就是这种编码形式。设旧环境是 `g` 的图，则该公式的满足恰好说明：新环境是在 `g` 前置一个值之后的图。两侧逐键相符，而索引上的相符是定义性的：`suc k` 的数码就是 `k` 的数码的后继，前置操作恰好把索引移动这么多。
 <!--/-->
 
 ```agda
@@ -647,13 +647,13 @@ The chapter provides a set-coded environment with exact lookup and a bounded, se
 
 <!--en-->
 An environment is its graph (`env`{.Agda}), and the graph is functional
-(`lookup-spec`{.Agda}), which is what makes the encoding usable rather than
-merely definable. `sucAt`{.Agda} recognizes the index shift that going under a
-quantifier performs. `shiftPairAt`{.Agda} recognizes the renumbering that
-extension performs, and `consAt`{.Agda} puts it to work: the extended
+(`lookup-spec`{.Agda}), which is what makes the encoding usable for lookup rather
+than merely definable. `sucAt`{.Agda} characterizes the index shift made when
+going under a quantifier. `shiftPairAt`{.Agda} characterizes the renumbering
+performed by extension, and `consAt`{.Agda} applies it: the extended
 environment is the old one with a value consed on, stated against the encoded
-form the certificates actually hold. That is the last formula the coding stack
-owes the certificates.
+form the certificates actually hold. This is the last formula that the coding
+layer supplies to the certificates.
 <!--zh-->
-环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`sucAt`{.Agda} 认出下降到量词之下时所作的序号移位。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
+环境由它的图 `env`{.Agda} 给出，而图的函数性由 `lookup-spec`{.Agda} 保证；这使编码不仅可定义，而且可用于查询。`sucAt`{.Agda} 刻画进入量词时的序号移位，`shiftPairAt`{.Agda} 刻画环境扩张引起的重编号，`consAt`{.Agda} 则使用这些结果说明：扩张后的环境就是在旧环境前置一个值。该说明针对证书实际保存的编码形式，是编码层面为这些证书提供的最后一条公式。
 <!--/-->

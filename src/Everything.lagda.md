@@ -360,7 +360,7 @@ and which classical assumption each endpoint consumes.
 <!--zh-->
 ## 开篇预览
 
-先看终点。这些签名准确陈述全书证明了什么，以及每个终点花费哪项经典假设。
+先看终点。这些签名准确陈述全书证明了什么，以及每个终点用到了哪项经典假设。
 
 - `Landmarks`{.Agda}：主要定理
 <!--ja-->
@@ -507,7 +507,7 @@ codes are built. Its smallness, model theorems, and syntax coding provide the co
 <!--zh-->
 ## 环境层级
 
-累积层级是后面一切集合与码的环境宇宙。它的小性、模型定理与语法编码，为刚建立的抽象逻辑提供具体语义。
+累积层级是后面一切集合与码所处的环境宇宙。它的小性、模型定理与语法编码，为刚建立的抽象逻辑提供具体语义。
 
 - `V.Hierarchy`{.Agda}：累积层级
 - `V.Smallness`{.Agda}：累积层级中的小真值
@@ -555,7 +555,7 @@ where constructions live. Reflection then upgrades bounded closure facts to the 
 <!--zh-->
 ## 可构造阶段与公理
 
-可定义性现在生成可构造宇宙 `L` 的诸阶段，序数与秩则控制各种构造落在哪一层。反射随后把有界闭包提升为完整的 ZF 模式，使 ZFC 终点只余选择公理。
+可定义性在此生成可构造宇宙 `L` 的各个阶段，序数与秩控制各种构造所属的层级。反射随后把有界闭包提升为完整的 ZF 模式，使 ZFC 终点只余选择公理。
 
 - `L.Definability`{.Agda}：集合的可定义子集
 - `L.Constructible`{.Agda}：可构造层级与可构造宇宙
@@ -699,7 +699,7 @@ bounded pair quantification and internal recursion for their uniform description
 <!--zh-->
 ## 内部编码：表与统一满足关系
 
-本部先构造依子句计算语义值的表，再引入有界配对量化与内部递归，统一描述这些表。本部结束时，满足关系与可构造层级都能在 `L` 内统一描述，从而为选择公理与 GCH 同时备妥工具。
+本部先构造依子句计算语义值的表，再引入有界配对量化与内部递归，统一描述这些表。到本部结束时，满足关系与可构造层级都能在 `L` 内得到统一描述，从而为选择公理与 GCH 同时提供所需的工具。
 
 - `L.Coding.EnvironmentSet`{.Agda}：定长环境之集
 - `L.Coding.Satisfaction`{.Agda}：沿公式递归构造满足关系
@@ -877,7 +877,7 @@ We compare sets by representing injections inside L. Small presentations and ord
 <!--zh-->
 ## 序数、单射与基数
 
-我们通过在 L 内部表示单射来比较集合。小呈现与序数上的序引出内部基数、可定义单射图及其复合。这些工具用于 Cantor–Schröder–Bernstein 定理、更大基数的构造和后续 GCH 的基数界；只要各自的先修内容就绪，就可以与选择公理路线并行学习。
+我们通过在 L 内部表示单射来比较集合。借助小呈现与序数上的序，可以引出内部基数、可定义单射图及其复合。这些工具用于 Cantor–Schröder–Bernstein 定理、更大基数的构造以及后续 GCH 的基数界；只要各自的先修内容就绪，就可以与选择公理路线并行学习。
 
 - `V.Presentation`{.Agda}：集合的小呈现
 - `L.Ordinal.SquareLaw`{.Agda}：序数指标、Gödel 对序与有穷指标
@@ -954,7 +954,7 @@ The following route internalizes definability, builds and counts Skolem hulls, d
 <!--zh-->
 ## 证明 GCH
 
-GCH 归结为用足够高的可构造阶段界住各个子集。以下路线内部化可定义性，构造并计数 Skolem 壳，得到两向基数单射，最后组装定理。
+GCH 归结为用足够高的可构造阶段为各个子集提供上界。以下路线先内部化可定义性，再构造并计数 Skolem 壳，得到两个方向的基数单射，最后组装定理。
 
 - `L.GCH.Assembly`{.Agda}：从四条内部界装配 GCH
 - `L.Coding.SatisfactionGraphSet`{.Agda}：统一满足关系的内部图

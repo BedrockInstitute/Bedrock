@@ -60,7 +60,7 @@ Two lines, and the only bookkeeping the crossing costs.
 <!--zh-->
 ## 在投影后的环境中查表
 
-两行，也是这次过河所付的全部记账。
+所需的全部工作只有这两行。
 <!--ja-->
 ## 射影した環境での参照
 
@@ -77,13 +77,13 @@ lookup-fst (suc i) (x ∷ γ) = lookup-fst i γ
 <!--en-->
 ## The ordered pair
 
-The quoted reader is the original lifted along the bridge, and the lift asks for
-nothing: the reader names no constants, so there is nothing to be constructible
-and the admissibility witness is empty.
+The quoted reader is the original lifted along the bridge, and the lift imposes
+no further conditions: the reader names no constants, so no constructibility of
+constants needs to be proved, and the admissibility witness is empty.
 <!--zh-->
 ## 有序对
 
-被引用的读式就是原读式沿桥抬升，而抬升什么也不索取：该读式不点名任何常元，故没有东西需要可构造，合格性证书是空的。
+被引用的读式是原读式沿桥的抬升，而这种抬升不附加任何条件：该读式不提到任何常元，因此无需证明常元的可构造性，合格性证书为空。
 <!--ja-->
 ## 順序対
 
@@ -93,11 +93,11 @@ and the admissibility witness is empty.
 <!--en-->
 Its meaning is three steps. The bridge equates satisfaction in the model with
 satisfaction in the hierarchy at the projected environment; the reader's own
-characterization says what that is; and the lookups are projected. What comes out
-is the statement a consumer wants: the value of one variable is the Kuratowski
+characterization says what that is; and the lookups are projected. The result is
+exactly the desired statement: the value of one variable is the Kuratowski
 pair of the values of the other two, as sets.
 <!--zh-->
-它的含义分三步。桥把「在模型中满足」等同于「在层级中、于投影后的环境处满足」；读式自家的刻画说出那是什么；诸查表被投影。出来的正是消费方想要的陈述：一个变元的取值，是另两个变元取值的 Kuratowski 对，作为集合而言。
+它的含义分三步。桥把「在模型中满足」等同于「在层级中、于投影后的环境处满足」；读式自身的刻画给出其具体内容；各查表随后被投影。最终得到的正是所要的陈述：一个变元的取值，就集合而言，是另两个变元取值的 Kuratowski 对。
 <!--/-->
 
 ```agda
@@ -123,13 +123,14 @@ prAtL-adequate q u v γ =
 
 A function in the object language is a set of ordered pairs, so the one thing
 every use of one asks is whether a given pair belongs to it. The function can be
-given by any term. The common reader is a bounded existential over that term,
-with the pair reader inside, and its meaning is membership of the Kuratowski
-pair. The public forms below specialize it to a variable and a constant.
+given by any term. The shared reader is a bounded existential over that term,
+with the pair reader as its body, and its meaning is membership of the
+Kuratowski pair. The public forms below specialize it to a variable and a
+constant.
 <!--zh-->
 ## 取值
 
-对象语言里的函数是有序对的集合，故凡用到函数的地方，所问的唯一一件事就是某个给定的对是否属于它。函数可由任意词项给出。共用的读式是在该词项上的一个有界存在，里面装着对读式，而其含义是那个 Kuratowski 对的隶属关系。下文两个公开形式分别把它特化到变元与常元。
+对象语言里的函数是有序对的集合，故凡用到函数的地方，唯一要问的就是某个给定的对是否属于它。函数可由任意词项给出。共用的读式是在该词项上的一个有界存在，其主体为对读式，含义是那个 Kuratowski 对的隶属关系。下文给出两个公开形式，分别把它特化到变元与常元。
 <!--ja-->
 ## グラフの適用
 
@@ -137,14 +138,14 @@ pair. The public forms below specialize it to a variable and a constant.
 <!--/-->
 
 <!--en-->
-The backward direction is where the model earns its keep, and it is worth
+The backward direction is where the model does real work, and it is worth
 noticing. To satisfy the existential one must produce an *element of the model*
 whose underlying set is the pair; the hypothesis only supplies a set. It is
 constructible because it belongs to something constructible, and the class is
 transitive. That is the whole argument, and the same step will recur wherever a
 witness has to be produced inside the model rather than merely in the hierarchy.
 <!--zh-->
-反向是模型起作用之处，值得留意。要满足那个存在量词，必须拿出一个**模型的元素**，其底集是那个对；而假设只给了一个集合。它可构造，因为它属于某个可构造之物，而这个类传递。全部论证仅此而已，而同一步将在此后每个「见证必须造在模型之内、而非仅在层级之内」的地方重现。
+反方向才是模型发挥作用的地方，值得留意。要满足那个存在量词，必须给出一个**模型的元素**，其底集正是那个对；而假设只提供了一个集合。该元素可构造，因为它属于某个可构造之物，而这个类是传递的。论证到此为止；此后凡要求「见证必须造在模型之内、而非仅在层级之内」之处，都会重复这一步。
 <!--/-->
 
 ```agda
@@ -202,12 +203,12 @@ appC-adequate F = appTerm-adequate (con F)
 ## Single-valuedness
 
 The other half of being a function: a pair's first component determines its
-second. Three unbounded quantifiers, which cost nothing here, and two
-applications of the reader above.
+second. Three unbounded quantifiers, harmless here, and two applications of the
+reader above.
 <!--zh-->
 ## 单值性
 
-作为函数的另一半：一个对的第一分量决定它的第二分量。三个无界量词 (此处不费分文)，加上面那条读式的两次应用。
+这是函数性质的另一半：一个对的第一分量决定它的第二分量。证明用三个无界量词 (此处不带来额外代价)，再加上面那条读式的两次应用。
 <!--ja-->
 ## 一価性
 
@@ -221,7 +222,7 @@ thing at more length. Reading it out is the direction that matters: from the
 object-language claim, an actual proof that two values recorded against the same
 argument agree.
 <!--zh-->
-陈述为两个方向而非一条道路，因为消费方就是这么用的，也因为把右侧造成一个命题只会把同一句话说得更长。读出来的那个方向才要紧：从对象语言的断言，得到「记在同一自变量下的两个取值相等」的一份真凭实据。
+该性质陈述为两个方向而非一条双蕴含，因为使用它的论证正是这样引用的，也因为把右侧写成命题只会把同一句话说得更长。真正要紧的是读出的方向：从对象语言的断言，得到「记在同一自变量下的两个取值相等」这一确切结论。
 <!--/-->
 
 ```agda
@@ -269,7 +270,7 @@ spelling it out is shorter than adding one.
 <!--zh-->
 ## 定义域
 
-落在定义域中就是有取值：在上面那条读式上作一个无界存在。定义域本身则是恰以那些东西为成员的集合，用两条蕴含说出，因为对象语言没有自带的双条件，而把它摊开来写比添一个更短。
+落在定义域中就是有取值：在上面那条读式上作一次无界存在。定义域本身则是恰以那些东西为成员的集合，用两条蕴含来表达，因为对象语言没有自带的双条件，而把它摊开来写比引入一个更短。
 <!--ja-->
 ## 定義域
 
@@ -278,13 +279,13 @@ spelling it out is shorter than adding one.
 
 <!--en-->
 Both are used in one direction each, and only those directions are extracted. A
-consumer holding a table asks either "this argument has an entry, so it is in the
-domain" or "this argument is in the domain, so it has an entry"; nothing wants
-the statement as a proposition.
+use of the table asks either "this argument has an entry, so it is in the
+domain" or "this argument is in the domain, so it has an entry"; the statement
+itself is never needed as a proposition.
 <!--zh-->
-两者各自只用一个方向，而被取出的也只有那两个方向。一个握着表的消费方，要么问「这个自变量有条目，故它在定义域中」，要么问「这个自变量在定义域中，故它有条目」；没有谁想要那句陈述本身作为命题。
+两者各只用一个方向，而被使用的也正是这两个方向。使用该表的论证要么问「这个自变量有条目，故它在定义域中」，要么问「这个自变量在定义域中，故它有条目」；没有人需要把那句陈述本身当作命题。
 
-那两条都是消去，而名字没有说出这一点：`domAt-in`{.Agda} 朝「有条目」拆，`domAt-out`{.Agda} 朝「在定义域中」拆。引入 (那才是「必须**满足**这句陈述」的一张表所要的) 来得晚，于是取了第三个名字，而没有占用它们中的任何一个。
+这两条都是消去规则，而名字本身并未体现这一点：`domAt-in`{.Agda} 分解出「有条目」，`domAt-out`{.Agda} 分解出「在定义域中」。引入规则 (即把表当作「必须**满足**这句陈述」之物所需的那个方向) 出现较晚，因此另取了第三个名字，不占用前两者中的任何一个。
 <!--/-->
 
 ```agda
@@ -339,7 +340,7 @@ hierarchy supplies.
 <!--zh-->
 ## 模型内的配对
 
-每个码都由配对造出，故下面每个构造都需要「`L` 两元素的有序对仍是 `L` 的元素」。确实如此，用模型自己的配对三次即可，而数码那一章的投影等式说：沿底层集合读出来就把层级的对还了回来。单点集是两分量相等的对，这是层级供给的那一条小小恒等式。
+每个码都由配对造出，故下面每个构造都需要「`L` 中两元素的有序对仍是 `L` 的元素」。确实如此，只需用模型自身的配对三次即可；而数码那一章的投影等式表明：沿底层集合读出层级的对，就能把它还原。单点集是两分量相等的对，这条恒等式由层级给出。
 <!--ja-->
 ## モデル内部の対
 
@@ -369,7 +370,7 @@ must not share a key, or the table is multi-valued and its existence fails.
 <!--zh-->
 ## 模型处的符号化
 
-对与诸数码是单射的，而这就是编码那一章向一个结构索取的全部，故对象语言可以编码进 `L` 自身。由此得到两件事，而两件都是想要的。一个码**按构造**就是模型的元素，没有可构造性证书要扛，也没有要证。而码等式在该元数处是单射的，由那一章自己的定理给出，而这正是「以码为索引的表」所需要的：两处不同子公式的出现不可共用一个键，否则表就多值，而它的存在性会垮。
+对与诸数码是单射的，而这正是编码那一章对一个结构的全部要求，故对象语言可以编码进 `L` 自身。由此得到两件所需的事实。其一，一个码**按构造**就是模型的元素，无需可构造性证书，也没有额外要证的命题。其二，码等式在该元数处是单射的，这由那一章自己的定理给出，而这正是「以码为索引的表」所需要的：两处不同的子公式的出现不可共用同一个键，否则表会多值，其存在性便不成立。
 <!--ja-->
 ## モデルにおける符号化
 
@@ -383,7 +384,7 @@ clauses and two, each one tag equation over the clause below it. It is what lets
 the readers of this chapter, which are written on the hierarchy side, be applied
 to codes built on the model side.
 <!--zh-->
-那座桥说两套编码一致：把模型的一个码沿底层集合读出来，得到的是层级为那条换名后的公式所给的码。十条子句加两条，每条都是「架在下面那条之上」的一条标签等式。正是它使本章那些写在层级一侧的读式，能施于造在模型一侧的诸码。
+这座桥说明两套编码一致：把模型的一个码沿底层集合读出来，得到的正是层级为那条换名后的公式所给的码。十条子句再加两条，每条都是以下层子句为基础的一条标签等式。正是这一点使本章写在层级一侧的那些读式，能够施于造在模型一侧的诸码。
 <!--/-->
 
 ```agda
@@ -435,11 +436,11 @@ codeBridge (∃̇∈ t a) = tagBridge 9 _ ∙ cong (VCode.mkTag 9)
 
 An environment is a function whose values lie in a given set, so an environment
 over a set is the conjunction of four things: single-valued, with the given
-domain, with values where they belong, and *made of pairs*.
+domain, with values in that set, and *made of pairs*.
 <!--zh-->
 ## 环境
 
-一个环境是取值落在给定集合中的函数，故「某集合之上的环境」是四者的合取：单值、定义域为给定者、取值落在该落的地方，以及**由诸对构成**。
+一个环境是取值落在给定集合中的函数，故「某集合之上的环境」是四个条件的合取：单值、定义域为给定的集合、取值落在该集合中，以及**由诸对构成**。
 <!--ja-->
 ## 環境
 
@@ -447,23 +448,24 @@ domain, with values where they belong, and *made of pairs*.
 <!--/-->
 
 <!--en-->
-The fourth is easy to leave out and fatal to leave out. The other three all speak
+The fourth is easy to overlook, and overlooking it is serious. The other three all speak
 about the pairs in a set and say nothing whatever about a member that is not one,
-so without it a set could carry any amount of junk and still qualify. That costs
-nothing where the predicate is only tested, but the frame that describes a set by
+so without the fourth a set could contain arbitrarily many unwanted elements and
+still qualify. As a predicate tested element by element this is inexpensive, but
+the frame that describes a set by
 its members asserts both directions, so a value satisfying it would have to
-contain every such junk-bearing set: a proper class, and a hypothesis no set can
-discharge. The conjunct pins each member to a pair of an index and a value, which
-makes an environment a subset of a product and the collection of them a set.
+contain every such set with unwanted elements: a proper class, a hypothesis no set can
+satisfy. The conjunct requires each member to be a pair of an index and a value,
+which makes an environment a subset of a product and the collection of them a set.
 
-Only the four projections are given, because that is all a consumer wants.
+Only the four projections are given, because that is all later use requires.
 Whether a particular set *is* the set of all environments of a given length is a
 different question, and a harder one; this says only what it means for a single
 thing to be one.
 <!--zh-->
-第四条容易漏掉，而漏掉是致命的。另外三条谈的全是某集合中的诸对，对「不是对的成员」只字未提，故没有它，一个集合可以携带任意多的垃圾而仍然合格。若那条谓词只被检验，这不费分文；但「以成员描述集合」的那个框架断言双向，于是满足它的取值就得包含每一个带垃圾的集合：那是真类，是没有集合能兑现的假设。这一合取项把每个成员钉成「索引与取值的对」，从而使环境成为一个积的子集，而它们的全体成为一个集合。
+第四条容易被忽略，而忽略它后果严重。另外三条谈的都是某集合中的诸对，对「不是对的成员」只字未提；因此若没有第四条，一个集合即使含有许多不合要求的元素也仍然合格。作为一条逐个检验的谓词，它代价不大；但「以成员描述集合」的那个框架断言是双向的，于是满足它的取值就得包含所有含多余元素的集合：那是一个真类，没有集合能兑现这一假设。这条合取项要求每个成员都是「索引与取值的对」，从而使环境成为一个积的子集，其全体成为一个集合。
 
-只给出四个投影，因为消费方想要的仅此而已。某个特定集合**是否就是**给定长度的全体环境的集合，是另一个问题，而且更难；这里说的只是「单个东西是一个环境」是什么意思。
+只给出四个投影，因为后文的使用只需要这些。某个特定集合**是否就是**给定长度的全体环境的集合，是另一个问题，而且更难；这里说的只是「单个东西是一个环境」是什么意思。
 <!--/-->
 
 ```agda
@@ -527,11 +529,11 @@ module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B 
 A description reads the same in any frame that puts the same three sets where it
 looks. Every reader above is stated through `fst`{.Agda} of a lookup and nothing
 else, so moving the description from one environment to another is four
-transports and no thought. Seven of the ten clauses bind their own ambient
+transports and no further reasoning. Seven of the ten clauses bind their own ambient
 set, and this is what turns "the members of that set are the environments" back
 into a statement about the set a construction actually built.
 <!--zh-->
-一条描述在任何「把同样三个集合放在它所看之处」的框架里读起来都一样。上面每条读式都只经一次查表的 `fst`{.Agda} 陈述，别无其他，故把那条描述从一个环境搬到另一个环境是四次搬运，不必动脑。十条子句里有七条绑定自己的周遭集合，而这就是把「那个集合的成员就是诸环境」变回「关于某个构造真正造出的集合」的那句话。
+一条描述在任何「把同样三个集合放在它所看之处」的框架里读起来都一样。上面每条读式都只经一次查表的 `fst`{.Agda} 陈述，别无其他，故把那条描述从一个环境换到另一个环境只需四次替换，无需额外推理。十条子句中有七条自行绑定其周遭集合，而这就是把「那个集合的成员就是诸环境」变回「关于某个构造真正造出的集合」的那句话。
 <!--/-->
 
 ```agda
@@ -587,7 +589,7 @@ The construction is opaque so later formula proofs use only this small interface
 <!--zh-->
 ## 容纳配对分量
 
-读取配对形状的码时，要把两个分量呈现为同一个可构造集合的元素。`Container` 把该集合与三项隶属事实打包起来。这个构造保持不透明，使后续公式证明只使用这份小接口。
+读取配对形状的码时，要把两个分量呈现为同一个可构造集合的元素。`Container` 把这个集合与三项隶属事实组合在一起。该构造保持不透明，使后续公式证明只使用这一小接口。
 <!--ja-->
 ## 対の成分を収める集合
 

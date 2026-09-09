@@ -5,7 +5,7 @@ The rank of a set is the union of the successors of the ranks of its members. Me
 <!--zh-->
 # Von Neumann 秩
 
-集合的秩是其成员各自秩的后继之并。它由隶属递归定义；秩沿隶属关系严格增长，始终是序数，把每个集合界在足够大的序数之下，并固定序数。
+集合的秩是其成员各自秩的后继之并。秩由隶属递归定义；它沿隶属关系严格增长，始终是序数，把每个集合界在足够大的序数之下，并固定每个序数。
 <!--ja-->
 # von Neumann ランク
 
@@ -20,16 +20,16 @@ numbering. The second fact is what lets a question about stages be turned into
 a question about ranks and back again, and the collection step of infinity is
 exactly such a question.
 
-A remark on how the recursion is set up, because it is the same trick the tower
-used. Nothing here needs an external type of ordinals: rank takes values in the
+A remark on how the recursion is set up, because it uses the same device as
+the tower. Nothing here needs an external type of ordinals: rank takes values in the
 hierarchy itself, and the recursion runs on well-founded membership, which
-regularity supplied for free. So the whole chapter is constructive, and the
+regularity directly guarantees. So the whole chapter is constructive, and the
 classical assumption that the next chapter introduces is not needed for any of
 it.
 <!--zh-->
-有两个关于它的事实支撑本书这一部分。任何集合的秩都是序数，故秩确实是以序数进行的度量；而序数是自身的秩，故秩是**典范的**序数索引，不是另一套平行编号。第二个事实使得关于阶段的问题可以换成关于秩的问题，再换回来，而无穷公理的收集那一步恰是这样一个问题。
+本书这一部分要用到关于秩的两个事实。任何集合的秩都是序数，故秩确实是以序数进行的度量；而序数是自身的秩，故秩是**典范的**序数索引，不是另一套平行的编号。第二个事实使得关于阶段的问题可以换成关于秩的问题，再换回来，而无穷公理的收集那一步恰是这样一个问题。
 
-关于递归的架设方式说一句，因为它与塔用的是同一个手法。此处不需要任何外部的序数类型：秩取值于层级自身，而递归跑在良基的成员关系上，那是正则性免费供应的。所以整章是构造性的，下一章引入的经典假设在这里一处也用不上。
+关于递归的架设方式说一句，因为它与塔用的是同一个手法。此处不需要任何外部的序数类型：秩取值于层级自身，而递归跑在良基的成员关系上，这一点由正则性直接保证。所以整章是构造性的，下一章引入的经典假设在这里一处也用不上。
 <!--/-->
 
 ```agda
@@ -85,7 +85,7 @@ normalization. Measured, on a goal four constructions deep: **163 seconds
 without the seal, 1.4 with**. `rank-compute`{.Agda} is the official unfolding
 and lives inside the seal, so nothing downstream loses anything.
 <!--zh-->
-秩本身被封起来，理由与塔相同：它展开成一个可及性消去子，而任何提到「由嵌套造出的集合」之秩的目标，例如对子里的对里的对，都会把那个消去子拖进归一化。实测，在一个四层深的构造上：**不封 163 秒，封了 1.4 秒**。`rank-compute`{.Agda} 是官方展开式且住在封内，故下游不失去任何东西。
+秩本身定义为不透明，理由与塔相同：展开后会出现可及性消去子；任何涉及嵌套集合之秩的目标，例如对子中的对中的对，都会在归一化时展开该消去子。对四层嵌套构造的实测是：**透明时 163 秒，不透明时 1.4 秒**。`rank-compute`{.Agda} 是受控使用的展开定理，因此下游仍可取得秩的计算规则。
 <!--/-->
 
 ```agda
@@ -137,11 +137,12 @@ rank-mono x y x∈y = subst (λ w → ⟨ rank x ∈ˢ w ⟩) (sym (rank-compute
 
 One membership induction. Unfold once; the inductive hypothesis makes each
 member's rank an ordinal, successors of ordinals are ordinals, and the previous
-chapter's closure under small unions collects the family back into an ordinal.
+chapter's closure under small unions gives that the union of the family is
+again an ordinal.
 <!--zh-->
 ## 秩是序数
 
-一次成员归纳。展开一次；归纳假设使每个成员的秩是序数，序数的后继是序数，而上一章的小并封闭性把这一族收回成序数。
+一次成员归纳。展开一次；归纳假设给出每个成员的秩是序数，序数的后继是序数，而上一章的小并封闭性保证这一族的并仍是序数。
 <!--ja-->
 ## ランクは順序数
 
@@ -173,7 +174,7 @@ bounds on the ranks in a constructible stage use this argument.
 <!--zh-->
 ## 界住秩
 
-若一个集合的每个成员的秩都属于某序数，该集合的秩就包含于该序数。定义之并的每个成员落在某个成员之秩的后继中，传递性给出所需包含。序数的不动点性质与可构造阶段中的秩界都用到这条论证。
+若一个集合的每个成员的秩都属于某序数，则该集合的秩包含于该序数：定义之并的每个成员都落在某个成员之秩的后继中，传递性给出所需包含。序数的不动点性质与可构造阶段中的秩界都用这条论证。
 <!--ja-->
 ## ランクの上界
 
@@ -226,7 +227,7 @@ union to extensionality instead would force the checker to normalize a deeply
 nested set expression, which is the standard way these proofs become
 uncheckable.
 <!--zh-->
-论证的形状值得说一句：外延性直接施于 `rank A` 与 `A`，二者都是中性项，而那个嵌套的并只经计算规则以路径的形式被触及。若改把展开后的并喂给外延性，就会迫使检查器归一化一个深层嵌套的集合表达式，那正是这类证明变得不可检查的典型途径。
+这里的论证结构值得说明：外延性直接用于 `rank A` 与 `A`，二者都保持为中性项；嵌套的并只通过计算规则以路径形式出现。若把展开后的并直接交给外延性，检查器就必须归一化深层嵌套的集合表达式，这正是此类证明容易变得无法检查的原因。
 <!--/-->
 
 ```agda
@@ -253,14 +254,14 @@ rank-fix = ∈-induction {P = λ A → IsOrd A → rank A ≡ A} step
 `rank`{.Agda} measures every set by an ordinal (`rank-ord`{.Agda}) and fixes
 the ordinals themselves (`rank-fix`{.Agda}), which together certify it as the
 canonical index. Both proofs are membership inductions on regularity, so the
-chapter costs nothing in assumptions. What it buys is the ability to ask "how
-far up does this set appear" and get an ordinal answer, and the next two
-chapters spend that on the one remaining question about the tower: which
+chapter uses no additional assumptions. What it gives is the ability to ask
+"how far up does this set appear" and get an ordinal answer, and the next two
+chapters use that on the one remaining question about the tower: which
 ordinals appear at which stage.
 <!--zh-->
 ## 小结
 
-`rank`{.Agda} 以序数度量每个集合 (`rank-ord`{.Agda})，并固定序数自身 (`rank-fix`{.Agda})，二者合起来认证它为典范索引。两个证明都是正则性上的成员归纳，故本章在假设上分文不花。它买到的是「这个集合到多高才现身」这一问的序数答案，而接下来两章会把它花在关于塔的最后一个问题上：哪些序数出现在哪个阶段。
+`rank`{.Agda} 以序数度量每个集合 (`rank-ord`{.Agda})，并固定序数自身 (`rank-fix`{.Agda})，二者合起来认证它为典范索引。两个证明都是正则性上的成员归纳，故本章不引入任何额外假设。它给出「这个集合到多高才现身」这一问题的序数答案，而接下来两章将用它回答关于塔的最后一个问题：哪些序数出现在哪个阶段。
 <!--ja-->
 ## まとめ
 

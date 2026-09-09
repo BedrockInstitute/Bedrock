@@ -5,7 +5,7 @@ The preceding counting, condensation, and power-set arguments now meet. This cha
 <!--zh-->
 # 可构造宇宙满足 GCH
 
-此前的计数、凝聚与幂集论证在此汇合。本章提供装配定理所需的四条内部假设，并记录最终结果：`L` 满足 GCH。
+此前关于计数、凝聚与幂集的论证在此汇合。本章给出定理所需的四条内部假设，并陈述最终结果：`L` 满足 GCH。
 <!--ja-->
 # 構成可能宇宙は GCH を満たす
 

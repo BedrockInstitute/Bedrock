@@ -126,7 +126,7 @@ No coded injection sends the model's power set of `κ` into `κ`. Separation for
 <!--zh-->
 ## L 内部的 Cantor 对角论证
 
-不存在把模型中的 `κ` 的幂集送入 `κ` 的编码单射。分离在内部形成对角子集，而单射性在它自身的像处迫出通常的矛盾。
+不存在把模型中的 `κ` 的幂集送入 `κ` 的编码单射。分离在内部形成对角子集，而单射性在该子集自身的像处引出通常的矛盾。
 <!--ja-->
 ## L の内部での Cantor の対角線論法
 
@@ -468,7 +468,7 @@ Transitivity and trichotomy of the pullback order transfer across the collapse. 
 <!--zh-->
 ### 塌缩像是序数
 
-拉回序的传递性与三歧性沿塌缩搬运。因而这个传递的塌缩像是序数。
+拉回序的传递性与三歧性经塌缩保持不变，因而这个传递的塌缩像是序数。
 <!--ja-->
 ### 崩壊像は順序数である
 
@@ -572,7 +572,7 @@ Since `δ` lies below the order type `μ`, the collapse maps `δ` injectively in
 <!--zh-->
 ## 后继基数到达幂集
 
-因为 `δ` 位于序型 `μ` 以下，塌缩便把 `δ` 单射到幂集。这给出了 GCH 装配所需的第三条内部估计。
+因为 `δ` 位于序型 `μ` 以下，塌缩便给出从 `δ` 到幂集的单射。这是证明 GCH 所需的第三条内部估计。
 <!--ja-->
 ## 後続基数から冪集合へ到達する
 

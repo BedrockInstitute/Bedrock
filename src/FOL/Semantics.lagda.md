@@ -44,7 +44,7 @@ open ZFStructure 𝒮
 <!--en-->
 ## Environments
 
-One piece of kit first. To evaluate a formula
+To evaluate a formula
 with `n` free variables, each variable needs a value from the carrier: an
 **assignment**, or environment, written `γ` throughout the book. The book's
 notation for its type is `S ^ n`{.Agda}, a vector of length `n`, matching the
@@ -53,7 +53,7 @@ notation.
 <!--zh-->
 ## 环境
 
-先备一件行头。要对带 `n` 个自由变量的公式求值，每个变量都需要一个来自载体的取值：一份**赋值表**，即环境，全书写作 `γ`。其类型记为 `S ^ n`{.Agda}，长度为 `n` 的向量，对齐传统上标记号 $S^n$ (`_^_`{.Agda} 读作「幂」)；它只是记号。
+要对带 `n` 个自由变量的公式求值，每个变量都需要一个来自载体的取值；这样一份**赋值表**称为环境，全书写作 `γ`。其类型记为 `S ^ n`{.Agda}，即长度为 `n` 的向量，对应传统记号 $S^n$ (`_^_`{.Agda} 读作「幂」)；这只是记号。
 <!--ja-->
 ## 環境
 
@@ -80,7 +80,7 @@ of this chapter, uses qualified names.
 <!--zh-->
 ## 求值与满足
 
-剩下那样原料，常元解释 `ι : K → S`，由内部模块 `At`{.Agda} 一次固定：日常工作在一个固定的 `ι` 下进行 (典范情形以载体自身为常元域，`ι` 取恒等)，偶尔需要跨解释的引理，如本章末那几条，则以限定名访问。
+还需要常元解释 `ι : K → S`，它由内部模块 `At`{.Agda} 一次固定。通常在固定的 `ι` 下工作；典范情形以载体自身为常元域，并令 `ι` 为恒等函数。偶尔需要跨解释的引理，如本章末的几条，则通过限定名访问。
 <!--ja-->
 ## 評価と充足
 
@@ -129,18 +129,18 @@ corresponding operation, applied to the meanings of the subformulas. Object conj
 host conjunction, the object quantifiers mean `⋀` and `⋁` over the carrier; there
 is no translation layer in between. A formula with `n` free variables thus means a
 function `S ^ n → Ω`{.Agda}, deliberately the same shape as a **predicate** written
-directly in the host language; a bridge between the two is catalogued at the
-book's tail, and this faithfulness is what will make every plank of that bridge
-a one-line congruence.
+directly in the host language; the construction connecting the two is
+catalogued at the book's tail, and this shared shape is what will make each step
+there a one-line congruence.
 
-The two bounded clauses deserve a second look: their quantification is pinned to
-the members of `⟦ t ⟧ γ`. The syntax chapter promised that formulas whose
-quantifiers are all bounded behave tamely across structures; that behaviour lives
-physically in these two lines, and later chapters return to them again and again.
+The two bounded clauses deserve a second look: their quantification is limited
+to the members of `⟦ t ⟧ γ`. The syntax chapter promised that formulas whose
+quantifiers are all bounded behave well across structures; these two lines are
+what guarantee that property, and later chapters return to this point repeatedly.
 <!--zh-->
-看各子句的右端：每个原语构造子都采用真值代数的对应运算，作用在子公式的含义上。对象合取的含义就是宿主合取，对象量词的含义就是载体上的 `⋀` 与 `⋁`，中间没有任何翻译层。于是带 `n` 个自由变量的公式，含义是一个 `S ^ n → Ω`{.Agda} 型的函数，与宿主语言直接写出的**谓词**刻意同形；两者之间的桥编在书末，而这份忠实性将让那座桥的每一块板都归于一行同余。
+看各子句的右端：每个原语构造子都采用真值代数的对应运算，作用在子公式的含义上。对象合取的含义就是宿主合取，对象量词的含义就是载体上的 `⋀` 与 `⋁`，中间没有任何翻译层。于是带 `n` 个自由变量的公式，含义是一个 `S ^ n → Ω`{.Agda} 型的函数，与宿主语言直接写出的**谓词**刻意同形；连接两者的构造编在书末，这份同形将使那里的每一步都化为一行同余。
 
-两条有界子句值得再看一眼：它们的量化被钉在 `⟦ t ⟧ γ` 的成员上。语法章许诺过，全部量词皆有界的公式在结构之间表现驯良；那份驯良物理上就住在这两行里，后面的章节将一次次回到这里。
+两条有界子句值得再看一眼：它们的量化以 `⟦ t ⟧ γ` 的成员为限。语法章许诺过，全部量词皆有界的公式在结构之间表现良好；这一性质正由这两行保证，后面的章节将多次回到此处。
 <!--/-->
 
 <!--en-->
@@ -149,13 +149,12 @@ physically in these two lines, and later chapters return to them again and again
 Meaning is structural recursion: `⟦_⟧`{.Agda} evaluates terms, `γ ⊨ φ` lands in the
 truth algebra, and each clause is the corresponding algebra operation, nothing
 more. Formulas with `n` free variables mean functions `S ^ n → Ω`{.Agda}, the same
-shape as host predicates. The
-one bridge still missing between formulas and predicates is catalogued at the
-book's tail, waiting for the day the demand turns industrial.
+shape as host predicates. The construction connecting formulas and predicates
+is presented in the chapter that needs it, at the book's tail.
 <!--zh-->
 ## 小结
 
-含义就是结构递归：`⟦_⟧`{.Agda} 给词项取值，`γ ⊨ φ` 落进真值代数，每条子句恰是对应的代数运算，分毫不多。带 `n` 个自由变量的公式，含义是 `S ^ n → Ω`{.Agda} 型函数，与宿主谓词同形。公式与谓词之间尚缺一座桥；它编在书末，静候需求转入量产的那一天。
+含义由结构递归给出：`⟦_⟧`{.Agda} 为词项求值，`γ ⊨ φ` 在真值代数中求值，每条子句恰好采用对应的代数运算。带 `n` 个自由变量的公式，其含义是 `S ^ n → Ω`{.Agda} 型函数，与宿主谓词同形。连接公式与谓词的构造安排在书末需要它的章节中。
 <!--ja-->
 ## まとめ
 

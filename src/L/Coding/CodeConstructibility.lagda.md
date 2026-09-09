@@ -93,17 +93,13 @@ open hPropStructure 𝒮ʟ using ( S )
 <!--/-->
 
 <!--en-->
-A numeral is constructible for the same reason, and was needed a chapter earlier,
-so it lives there. A pair is
-constructible because the model has pairing and the same equation reads it back.
-A tag is a pair with a numeral on the left, so it is both.
+A numeral is constructible for the same reason, but the result was already used a chapter earlier, so its proof is given there. A pair is constructible because the model has pairing, and the same equation reads it back. A tag is a pair with a numeral on the left, so it is both.
 
-Both are the same two-line move: build the thing inside the model, then transport
-its membership along the equation saying that reading it out gives the thing.
+Both are the same two steps: build the thing inside the model, then transport its membership along the equation saying that reading it out gives the thing.
 <!--zh-->
-数码可构造同理，而它早一章就被需要，故住在那里。对可构造，因为模型有配对，而同一条等式把它读回来。标签是左边放数码的对，故两者兼得。
+数码的可构造性同理，但这一结果早一章就已被用到，故其证明放在那一章。有序对可构造，因为模型有配对，而同一条等式又把它读回来；标签是左边放数码的对，故两者兼得。
 
-两者都是同样的两行动作：先在模型内部把东西造出来，再沿「读出来就是那个东西」这条等式把它的隶属关系搬过去。
+两者都是同样的两步：先在模型内部把它构造出来，再沿「读出来就是那个东西」这条等式把它的隶属关系搬过去。
 <!--/-->
 
 ```agda
@@ -133,29 +129,17 @@ Assuming each constant denotes a constructible set, `codeTmL` and `codeL` prove 
 <!--/-->
 
 <!--en-->
-Terms first. A term is a variable or a constant, and the two are the two tags
-that terms carry: a numeral for the variable's index, and the constant's own set
-for a constant. So a code is constructible provided the constants it names are,
-and the induction takes that as its hypothesis rather than assuming there are
-none.
+Terms first. A term is a variable or a constant, and the two are the two tags that terms carry: a numeral for the variable's index, and the constant's own set for a constant. So a code is constructible provided the constants it names are, and the induction takes that as its hypothesis rather than assuming there are none.
 
-That generality costs one clause and buys the parameters. A formula whose
-constants are members of a stage codes to a set of `L` exactly as a
-parameter-free one does, which is what lets the recursion below range over the
-formulas the constructible hierarchy is actually built from. The parameter-free
-case is the instance at the empty type.
+That generality takes one extra clause and covers the parameters. A formula whose constants are members of a stage codes to a set of `L` exactly as a parameter-free one does, which is what lets the recursion below range over the formulas the constructible hierarchy is actually built from. The parameter-free case is the instance at the empty type.
 
-Then the formulas, ten clauses and no content: each constructor's code is a
-tag on either a pair of sub-codes, a single sub-code, or a numeral, and the three
-blocks above cover all three shapes. The induction is over the parameter-free
-formula rather than its embedding, which costs nothing because embedding is a
-relabelling and commutes with every constructor definitionally.
+Then the formulas: ten clauses with no real content. Each constructor's code is a tag on either a pair of sub-codes, a single sub-code, or a numeral, and the three blocks above cover all three shapes. The induction is over the parameter-free formula rather than its embedding, which requires no extra argument because embedding is a relabelling and commutes with every constructor definitionally.
 <!--zh-->
-先看词项。一个词项要么是变元、要么是常元，而两者正是词项所携带的两个标签：变元带它的索引数码，常元带它自己那个集合。故一个码可构造，只要它所点名的诸常元可构造，而这次归纳把那一条取作假设，而非假定根本没有常元。
+先看词项。一个词项要么是变元，要么是常元，而两者正是词项所携带的两种标签：变元带它的索引数码，常元带它自己那个集合。因此，只要一个码所涉及的诸常元都可构造，这个码就可构造；本次归纳把这一点取作归纳假设，而不是假定根本没有常元。
 
-这份一般性花掉一条子句，换来的是诸参数。常元取自某阶段成员的公式，其编码与无参公式一样是 `L` 的集合，而正是这一点，使下面的递归得以遍历可构造层级实际由之造出的那些公式。无参情形是空类型处的实例。
+这份一般性多花一条子句，换来的是对诸参数的处理。常元取自某阶段成员的公式，其编码与无参公式的编码一样是 `L` 的集合；正是这一点，使下面的递归得以遍历可构造层级实际由之造出的那些公式。无参情形是空类型处的实例。
 
-然后是诸公式，十条子句，毫无内容：每个构造子的码，都是「子码之对」「单个子码」或「数码」三者之一上的标签，而上面三块砖覆盖了这三种形状。归纳沿无参公式而非它的嵌入进行，这不费分文，因为嵌入是一次常元改名，按定义与每个构造子交换。
+然后是诸公式：十条子句，没有实质内容。每个构造子的码都是「子码之对」「单个子码」或「数码」三者之一的标签，而前面三个基础结果覆盖这三种形状。归纳沿无参公式而非它的嵌入进行，这一步不增加任何论证，因为嵌入是一次常元改名，按定义与每个构造子交换。
 <!--/-->
 
 ```agda
@@ -206,7 +190,7 @@ immediately: its entries are pairs of a numeral with a member of the stage, and
 both are in the stage after one step. No recursion on the length, and no
 replacement.
 <!--zh-->
-一个环境是一个有穷集：键是长度以下的诸数码，条目是诸对。事实上它**恰恰就是**那些对构成的有穷集，一分不差，因为两者是同一个被抬升的索引类型的同一个像。把这一点说出来只需一行，而正是这一行使有穷族引理无须任何进一步论证便可施于环境。
+一个环境是一个有穷集：键是长度以下的诸数码，条目是诸对。事实上它**恰恰就是**那些对构成的有穷集，不差分毫，因为两者是同一个被抬升的索引类型的同一个像。说明这一点只需一行，而正是这一行使有穷族引理无须任何进一步论证便可施于环境。
 
 由此，落在某阶段之上的环境立刻是 `L` 的元素：它的条目是「数码与该阶段的成员」之对，而两者在一步之后都落在该阶段里。不必沿长度递归，也不必用替换。
 <!--/-->
@@ -241,20 +225,13 @@ The singleton and binary-union constructors are implemented both for underlying 
 <!--/-->
 
 <!--en-->
-Two more shapes, and the model supplies both directly. A singleton is the pair of
-a thing with itself, and a binary union is the union of the pair, so each is the
-model's own operation read through the underlying set.
+Two more shapes, and the model supplies both directly. A singleton is the pair of a thing with itself, and a binary union is the union of the pair, so each is the model's own operation read through the underlying set.
 
-Each shape comes twice over. Once on the underlying set, with the two lemmas that
-read a member of a singleton or of a binary union back, and once on the model's
-own sets, where the constructibility certificate rides along and the same lemmas
-are restated through the equation that reads the underlying set out. The
-recursion below runs on the second, so a set it builds is an element of `L` by
-construction and not by a second induction.
+Each shape comes twice over. Once on the underlying set, with the two lemmas that read a member of a singleton or of a binary union back, and once on the model's own sets, where a proof of constructibility accompanies each step and the same lemmas are restated through the equation that reads the underlying set out. The recursion below runs on the second, so a set it builds is an element of `L` by construction and not by a second induction.
 <!--zh-->
-再来两种形状，而模型直接供给两者。单点集是一物与自身之对，二元并是那个对之并，故各是模型自家的运算沿底集读出。
+再来两种形状，而模型直接供给两者。单点集是一物与自身之对，二元并是那个对之并，故两者都是模型自身的运算，沿底集读出。
 
-每种形状都来两遍。一遍落在底集上，配两条把单元集或二元并的成员读回来的引理；一遍落在模型自己的集合上，此时一路上带着可构造性证书，而同样那些引理经由「读出底集」那条等式重述一次。下面那个递归跑在第二遍上，故它造出的集合按构造就是 `L` 的元素，而不必再来一次归纳。
+每种形状都做两遍。一遍在底集上进行，配两条把单元集或二元并的成员读回来的引理；另一遍在模型自己的集合上进行，此时每一步都附带可构造性的证明，而同样那些引理经由「读出底集」那条等式重述一次。下面的递归在第二遍上进行，因此它造出的集合按构造就是 `L` 的元素，无须再作归纳。
 <!--/-->
 
 ```agda
@@ -343,9 +320,9 @@ gathered at some subformula whose own set sits inside the one it came from.
 `tree-inv`{.Agda} proves it, and `Parts`{.Agda} carries the memberships the other
 direction needs, one for each shape a clause of the recursion produces.
 <!--zh-->
-沿十个构造子的一次递归，收集什么留作它的参数。它为每条子公式收集一样东西：给它键，得到下一节那个子公式闭包；给它条目，得到后续某章那张可满足性表。两者要的是同一次求逆，故那次求逆在此只证一次，再实例化两次。
+沿十个构造子作一次递归，收集什么由参数给出。它为每条子公式收集一样东西：给它键，得到下一节那个子公式闭包；给它条目，得到后续某章那张可满足性表。两者需要的是同一次求逆，故那次求逆在此只证一次，再实例化两次。
 
-`Of`{.Agda} 说出这种集合的成员是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合坐落于它所出自的那个之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 携带另一方向所需的诸隶属关系，递归的每条子句所产生的每种形状各一条。
+`Of`{.Agda} 说出这种集合的成员是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合包含于它所出自的那个集合之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 给出另一方向所需的诸隶属关系，递归的每条子句所产生的每种形状各一条。
 <!--/-->
 
 ```agda
@@ -482,24 +459,17 @@ Specializing the generic tree to formula keys produces `closure φ`, a construct
 <!--/-->
 
 <!--en-->
-A recursion on codes is stated against a *slot*: a set of codes closed under
-immediate subcodes, holding the one the recursion is asked about. The smallest
-such slot is the set of codes of a formula's own subformulas, and it is the
-recursion above taken at the key.
+A recursion on codes is stated against a *slot*: a set of codes closed under immediate subcodes, holding the one the recursion is asked about. The smallest such slot is the set of codes of a formula's own subformulas, and it is the recursion above taken at the key.
 
-Each entry carries its arity, because the recursion's own key does; a binder's
-subformula therefore enters at the successor. That is the only place the
-bookkeeping is visible, and it is visible because the arity is what the frames
-bind.
+Each entry carries its arity, because the recursion's own key does; a binder's subformula therefore enters at the successor. This is the only place where a change of arity appears explicitly, and it appears there because the arity is exactly what the frames bind.
 
-Constructibility is not a second proof. The recursion above runs on the model's
-own sets, so the certificate comes out of it together with the set.
+Constructibility is not a second proof. The recursion above runs on the model's own sets, so the certificate comes out of it together with the set.
 <!--zh-->
 对码的递归是相对某个**槽**陈述的：一个对直接子码封闭、且装着被问及的那个码的码集。最小的这种槽，就是一条公式自身诸子公式的码集，而它就是上面那个递归在键处的取值。
 
-每个条目都携带自己的元数，因为递归自己的键就携带；故绑定子的子公式在后继处进入。那是记账唯一可见之处，而它可见，是因为元数正是诸框架所绑定的东西。
+每个条目都携带元数，因为递归的键本身包含元数。因此，绑定子的子公式在后继元数处进入定义域。这是元数变化唯一显式出现的地方，因为各个框架正是按元数绑定相应数据。
 
-可构造性不是第二次证明。上面那个递归跑在模型自己的集合上，故证书随集合一并出来。
+可构造性无须另证：上面的递归在模型自身的集合上进行，证书随之一并给出。
 <!--/-->
 
 ```agda
@@ -586,9 +556,9 @@ its hypothesis is available where it wants to apply it.
 It and the membership of a key in its own closure are the recursion above read
 at the key, so neither is an induction here.
 <!--zh-->
-对码的递归必须知道自己定义域的元素是什么，而「这些单元集之并恰好含有的任何东西」不是一个回答。下面这条引理就是回答：闭包的每个元素都是某条公式的键，而那条公式自己的闭包坐落在它所出自的那个之内。后一半才是归纳所消费的，因为归纳正是靠它知道自己的假设在想用的地方可用。
+对码进行递归时，必须具体知道定义域中的元素来自哪些公式。下面的引理给出所需刻画：闭包的每个元素都是某条公式的键，并且该公式自身的闭包包含在原公式的闭包中。后一个包含关系正是归纳所需的条件，它保证归纳假设在处理相应子公式时可用。
 
-它与「键属于自己的闭包」都是上面那个递归在键处的读法，故此处两者都不是归纳。
+这条结论与「键属于自身闭包」都直接来自上面递归在键处的两条读式，因此这里都不需要新的归纳。
 <!--/-->
 
 ```agda
@@ -635,7 +605,7 @@ the successor, and a constructor with no subformula demands nothing.
 <!--zh-->
 封闭性谓词提的要求以构造子标签为索引，而它所谈论的公式以构造子为索引。把这两者对上，是第一个实例里唯一真正的活；而逐条去做会是十条公式乘七项要求。不必如此，因为那项要求可以从标签**算**出来：一个以标签为索引的类型族、一个以公式为索引的函数，而键的单射性所给出的那条标签等式把后者搬到前者上。
 
-标签之下，一个键是元数与码之对，两层都由配对的单射性钉住。得出的是：保持元数的构造子在被读出的元数处索取它的诸分量，抬升元数的在后继处索取，而没有子公式的构造子什么也不索取。
+在标签之下，一个键是元数与码之对，这两层都由配对的单射性确定。由此得出：保持元数的构造子在所读出的元数处要求其诸分量，抬升元数的在后继处要求分量，而没有子公式的构造子则不要求任何分量。
 <!--/-->
 
 ```agda

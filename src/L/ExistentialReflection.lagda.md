@@ -5,7 +5,7 @@ For one existential formula and parameters from a constructible stage, this chap
 <!--zh-->
 # 存在公式到可构造阶段的反射
 
-对一条存在公式以及来自某个可构造阶段的参数，本章构造一个更大的序数阶段，使环境可构造宇宙中存在见证时，该阶段也包含见证。迭代见证选择步骤并取序数极限，可使该阶段对这条公式的答案封闭。
+对一条存在公式以及来自某个可构造阶段的参数，本章构造一个更大的序数阶段：只要环境可构造宇宙中存在见证，该阶段也包含见证。迭代见证选择步骤并取序数极限，可使这个阶段包含该公式对其中参数所需的见证。
 <!--ja-->
 # 存在論理式の構成可能段階への反映
 
@@ -13,29 +13,29 @@ For one existential formula and parameters from a constructible stage, this chap
 <!--/-->
 
 <!--en-->
-It can be, and the argument is Montague's. Fix a matrix and an environment of
+It can be done, and the argument is Montague's. Fix a matrix and an environment of
 parameters. If a witness exists at all, there is a least stage containing one,
-and that stage is a set-sized answer to a class-sized question. Run over all
+and that stage is a set-sized answer to a class-sized question. Range over all
 tuples of parameters drawn from one stage, bound the answers, and the result is a
 single stage that answers for every tuple from the stage below. Iterate that step
 through the natural numbers and take the union: the limit answers for its own
 parameters, because any finite tuple from the limit already lies in some finite
 layer, whose answers were bounded at the next.
 
-Two things are done differently here than they usually are. The choice of witness
-is where a well-ordering of L is normally invoked, and it is not needed: what the
-argument wants is a canonical *ordinal*, not a canonical element, and the
+Two departures from the usual practice occur here. The choice of witness is where a
+well-ordering of L is normally invoked, and it is not needed: what the
+argument requires is a canonical *ordinal*, not a canonical element, and the
 ordinals are already well-ordered by membership. So the least stage that holds a
-witness is taken directly, by the descent of the stage chapter, and which witness
-lives there is never decided. And the parameters are a tuple from the start.
-Writing the one-parameter case first and generalizing later would mean writing
-the whole construction twice, since every step of it is indifferent to how many
-parameters there are; the only place the tuple is felt at all is in locating it,
-where finitely many layers have to be merged into one.
+witness is taken directly, by the descent of the stage chapter, without deciding
+which witness is there. And the parameters are a tuple from the start. Writing the
+one-parameter case first and generalizing later would mean writing the whole
+construction twice, since every step of it is indifferent to how many parameters
+there are; the only place the tuple matters is in locating it, where finitely many
+layers have to be merged into one.
 <!--zh-->
-回答得了，而论证出自 Montague。固定一个矩阵与一个参数环境。若见证根本存在，则有一个包含见证的最小阶段，而那个阶段是对真类大小之问题的集合大小的回答。取遍某一阶段中的全部参数元组，把诸回答界住，所得便是单一阶段，它为下方那个阶段的每个元组作答。沿自然数迭代这一步并取并：极限为它自己的参数作答，因为极限中的任何有穷元组早已落在某个有穷层里，而那一层的回答在下一层被界住。
+这一构造可以完成，其论证出自 Montague。固定一个矩阵与一个参数环境。若见证存在，就有一个包含见证的最小阶段，从而以一个集合大小的阶段控制原本涉及真类的搜索。取遍某一阶段中的全部参数元组，并为所得各阶段取一个共同上界，便得到单一阶段，其中包含下方阶段每个元组所需的见证。沿自然数迭代这一步并取并，所得极限也具有相同性质：极限中的任何有穷元组早已属于某个有穷层，而该层所需见证的阶段在下一层已被界住。
 
-此处有两件事与通常做法不同。见证的选取正是通常召唤 L 的良序之处，而它并不需要：论证想要的是典范的**序数**，而非典范的元素，而序数早已被成员关系良序化。故装有见证的最小阶段被直接取用，经阶段那一章的下降，而住在那里的究竟是哪个见证，从未被决定。此外，参数自始就是元组。先写单参数情形，日后再推广，等于把整个构造写两遍，因为它的每一步都对参数有几个漠不关心；元组唯一被感受到的地方是为它定位，那里有穷多个层要合并成一个。
+此处有两点与通常做法不同。通常会在选择见证时使用 L 的良序，而这里并不需要：论证所需的是典范的**序数**，而非典范的元素，并且序数已经由成员关系良序化。因此，可由阶段一章的下降论证直接取包含见证的最小阶段，而不指定其中究竟是哪一个见证。此外，参数从一开始就是元组。若先处理单参数情形再作推广，就要把整个构造写两遍，因为构造的每一步都不依赖参数的个数；只有在定位元组时需要考虑这一点，并把有穷多个层合并成一个。
 <!--/-->
 
 ```agda
@@ -90,7 +90,7 @@ vector over one.
 <!--zh-->
 ## 取自一个阶段的环境
 
-阶段的一个元素经塔的隶属判据成为类模型的一个元素，故阶段的索引集是参数的供给，而索引元组是环境的供给。正是这一点使下面的界层引理得以适用：诸元组构成周遭大小的类型，因为它正是其上的向量。
+参数取自阶段的索引集，索引元组则给出环境：阶段的一个元素经塔的隶属判据成为类模型的一个元素。正是这一点使下面的界层引理得以适用：诸元组构成周遭大小的类型，因为它正是其上的向量。
 <!--ja-->
 ## 環境を一つの段階から取る
 
@@ -105,7 +105,7 @@ environment it bounded is the one it was given. The equation is where
 constructibility being a proposition is used: two elements of the model agree as
 soon as their underlying sets do.
 <!--zh-->
-一个环境**落在**某阶段之下，指它的每一项都落在其下。从这样的环境把索引元组读回来是逆向的操作，而它连等式一并交还，因为构造需要知道：它界住的那个环境，正是交给它的那一个。等式正是用到「可构造性是命题」之处：模型的两个元素，只要底集相同就相等。
+一个环境**落在**某阶段之下，指它的每一项都落在其下。从这样的环境读回索引元组是逆向的操作，且同时给出等式，因为构造需要知道：它所界定的环境正是输入的那一个。等式正是用到「可构造性是命题」之处：模型的两个元素，只要底集相同就相等。
 <!--/-->
 
 ```agda
@@ -151,7 +151,7 @@ L, and an element of L lies in some stage by definition.
 <!--zh-->
 ## 作答阶段
 
-固定一个矩阵，其中含一个见证变元与 `k` 个参数。「这个环境的某个见证住在这个阶段里」是序数的一条性质，故阶段那一章的下降直接适用于它。它的前提是某个序数具有该性质，而这仅凭可满足性即得：见证是 L 的元素，而 L 的元素按定义落在某个阶段里。
+固定一个矩阵，其中含一个见证变元与 `k` 个参数。「这个环境的某个见证落在该阶段里」是序数的一条性质，故阶段那一章的下降直接适用于它。它的前提是某个序数具有该性质，而这仅凭可满足性即得：见证是 L 的元素，而 L 的元素按定义落在某个阶段里。
 <!--ja-->
 ## 解答を含む段階
 
@@ -307,7 +307,7 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
 <!--zh-->
 闭包论证要它的参数落在某一级上，而不只是落在极限之下。对单个参数，两次反演把它送到那里：极限中的序数属于被取并的集合之一，因而属于某一级；而极限之阶段中的集合，按塔的刻画，属于某个更小序数之阶段上的算子，故把那个序数定位，再走「进去」，就把该集合放进了那一级的阶段。
 
-对元组，为各项找到的诸级必须合并，而「够得着」引理合并其中两个：自级 `n` 与级 `m`，二者都够得着级 `suc (n + m)`，一个直接够到，另一个交换加法之后够到。沿元组递归把它们全部合并，而单调性把靠前的诸项抬上去。
+对元组，为各项找到的诸级必须合并，而「够得着」引理合并其中两个：自级 `n` 与级 `m` 都够得着级 `suc (n + m)`，一个直接够到，另一个在交换加法之后够到。沿元组递归把它们全部合并，而单调性把靠前的诸项抬高。
 <!--/-->
 
 ```agda
@@ -352,7 +352,7 @@ the next chapter each supply in their own way.
 <!--zh-->
 ## 封闭性
 
-一架梯对某矩阵**作答**，指凡由某级索引出的环境，其作答阶段都落在下一级上。关于梯是怎么造的，闭包论证用到的假设仅此一条，而下一节与下一章各以自己的方式供给它。
+一架梯对某矩阵**作答**，指凡由某级索引出的环境，其作答阶段都落在下一级上。关于梯如何构造，闭包论证用到的假设仅此一条，而下一节与下一章各以自己的方式给出它。
 <!--ja-->
 ## 閉性
 
@@ -367,7 +367,7 @@ answering stage is on the next rung, so whatever lives in the answering stage
 lives in that rung's stage, hence under the limit; two applications of
 monotonicity, and the equation transported back.
 <!--zh-->
-有了它，极限对该矩阵闭合。把环境定位到某一级，并在那里为它命名：它是那一级之阶段的某个索引元组的像，至多相差一个等式，而读取引理连同元组一并交还了它。它的作答阶段落在下一级上，故住在作答阶段里的东西便住在那一级的阶段里，因而落在极限之下；用两次单调性，再把那个等式搬回去。
+有了它，极限对该矩阵闭合。把环境定位到某一级：它是那一级之阶段的某个索引元组的像，至多相差一个等式，而读取引理把它连同元组一并给出。它的作答阶段落在下一级上，故落在作答阶段里的东西便落在那一级的阶段里，因而落在极限之下；再用两次单调性，把那个等式移回去。
 <!--/-->
 
 ```agda
@@ -398,7 +398,7 @@ monotonicity, and the equation transported back.
 ```
 
 <!--en-->
-Which gives the theorem the later chapters consume. For an environment under the
+This gives the theorem that later chapters use. For an environment under the
 limit, the class model satisfies the existential exactly when a witness lies in
 the limit's stage. Forwards is closure; backwards is forgetting where the witness
 lives.
@@ -406,12 +406,12 @@ lives.
 The forward direction needs no translation step, because the two sides are the
 same proposition already: the semantics of an existential quantifier is the
 truncated sum over the carrier, and that is what `SatEx`{.Agda} was defined to
-be. So the theorem is closure with its statement rewritten, and nothing is paid
-to cross between syntax and the meta-level.
+be. So the theorem is closure with its statement rewritten, and moving between
+syntax and the meta-level requires no further work.
 <!--zh-->
-于是有了后续诸章将要消费的定理。对落在极限之下的环境，类模型满足那个存在量词，恰当极限之阶段中有一个见证。正向是闭包，反向是忘掉见证住在哪里。
+于是有了后续诸章将要使用的定理。对落在极限之下的环境，类模型满足那个存在量词，恰当极限之阶段中有一个见证。正向就是闭包，反向则不再追问见证落在哪一级。
 
-正向不需要翻译的一步，因为两侧本已是同一个命题：存在量词的语义是沿载体的截断和，而 `SatEx`{.Agda} 当初就是照这个定义的。故定理就是闭包换了个说法，而在语法与元层之间往返，分文未付。
+正向不需要翻译的一步，因为两侧本已是同一个命题：存在量词的语义是沿载体的截断和，而 `SatEx`{.Agda} 当初正是照这个定义写的。故定理只是闭包换了个说法，在语法与元层之间往返不需任何额外代价。
 <!--/-->
 
 ```agda
@@ -505,12 +505,13 @@ and once inside the descent, and used the axiom of choice not at all. That is th
 point of taking the least *stage* rather than the least *witness*: the ordinals
 come well-ordered, and nothing here has to ask for a well-ordering of L.
 
-What is delivered is one quantifier, at any number of parameters. An arbitrary
-formula has many quantifiers, hence many matrices, and no single-matrix limit
-serves them all; the next chapter builds a ladder whose step closes all of them
-at once, and gets everything above for it without rerunning any of it.
+What this chapter achieves is one quantifier, with any number of parameters. An
+arbitrary formula may contain many quantifiers, hence many matrices, and no
+limit taken for a single matrix covers them all; the next chapter builds a
+ladder whose step closes all of them at once, and thereby obtains everything
+above directly, without redoing any of the individual arguments.
 <!--zh-->
-这个构造用了两次排中律，一次判定可满足性，一次在下降之内，而选择公理一次也没用。这正是取最小**阶段**而非最小**见证**的用意：序数自带良序，而此处没有任何东西需要索取 L 的良序。
+这个构造用了两次排中律，一次判定可满足性，一次在下降之内，而选择公理一次也没用。这正是取最小**阶段**而非最小**见证**的用意：序数自带良序，而此处无须用到 L 的良序。
 
-交付的是一个量词，参数任意多。任意公式有许多量词，因而有许多矩阵，而没有哪个单矩阵极限能同时服务全部；下一章将造一架梯，其步进一举闭合它们全部，并因此白得上面的一切，无须重跑其中任何一步。
+本章的成果是一个量词，可带任意多个参数。任意公式可以含有许多量词，因而有许多矩阵，而没有哪个针对单一矩阵的极限能同时覆盖全部；下一章将构造一架梯，其一次步进同时闭合所有矩阵，并随之直接得到上面的一切，无须对其中任何一步重做论证。
 <!--/-->

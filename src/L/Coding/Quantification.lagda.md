@@ -21,12 +21,12 @@ readers that hide their container witnesses.
 Coded syntax repeatedly quantifies over the components of a pair. Building on
 the coding vocabulary and pair expressions, this chapter develops the shared
 slot arithmetic, bounded formulas and semantic readers for those quantifiers.
-The tower specification is the first consumer; code-domain, satisfaction-clause
+The tower specification uses these readers first; code-domain, satisfaction-clause
 and coded-graph chapters then reuse the same readers. Each can state its
 mathematics in terms of components without repeating the container witnesses
 required by bounded syntax.
 <!--zh-->
-码化语法需要反复量化一个配对的分量。本章以码化词汇与配对表达式为基础，构造这些量词共用的槽位运算、有界公式与语义读式。塔规格首先消费这些读式，随后码域、满足子句与码化图的章节继续复用。它们都可以按分量陈述数学内容，无须重复有界语法所需的容器见证。
+码化语法需要反复量化一个配对的分量。本章以码化词汇与配对表达式为基础，构造这些量词共用的槽位运算、有界公式与语义读式。塔规格最先使用这些读式，随后码域、满足子句与码化图诸章继续复用。它们都能按分量陈述数学内容，无须重复有界语法所需的容器见证。
 <!--/-->
 
 ```agda
@@ -279,7 +279,7 @@ The four macros `sndEx`{.Agda}, `sndAll`{.Agda}, `bothEx`{.Agda}, and
 `bothAll`{.Agda} bind pair components through an internal container, in
 existential and universal forms that remain Δ₀.
 <!--zh-->
-四个宏 `sndEx`{.Agda}、`sndAll`{.Agda}、`bothEx`{.Agda} 与 `bothAll`{.Agda} 通过内部容器绑定有序对分量，并以保持为 Δ₀ 的存在与全称形式给出。
+四个宏 `sndEx`{.Agda}、`sndAll`{.Agda}、`bothEx`{.Agda} 与 `bothAll`{.Agda} 通过内部容器绑定有序对分量；它们给出的存在与全称形式均保持为 Δ₀。
 <!--ja-->
 四つのマクロ `sndEx`{.Agda}、`sndAll`{.Agda}、`bothEx`{.Agda}、`bothAll`{.Agda} は内部の容器を通して順序対の成分を束縛し、Δ₀ のままの存在形と全称形を与える。
 <!--/-->
@@ -343,7 +343,7 @@ data, recording that suitable components merely exist; the universal readers
 instead accept explicit components. The corresponding `in` lemmas rebuild
 satisfaction from explicit data, using pair injectivity to pin the values.
 <!--zh-->
-存在式的 `out` 引理从满足关系返回分量数据的命题截断，只记录合适分量的仅仅存在性；全称式读引理则接收明确分量。相应的 `in` 引理从明确数据重建满足关系，并用有序对的单射性钉住取值。
+存在式的 `out` 引理从满足关系返回分量数据的命题截断，只记录合适分量的仅仅存在性；全称式读引理则接收明确的分量。相应的 `in` 引理从明确的数据重建满足关系，并应用有序对的单射性得到相应的取值等式。
 <!--ja-->
 存在形の `out` 補題は充足関係から成分データの命題的切り詰めを返し、適切な成分が単に存在することだけを記録する。全称形の読み補題は明示された成分を受け取る。対応する `in` 補題は明示されたデータから充足関係を再構成し、順序対の単射性で値を確定する。
 <!--/-->

@@ -80,14 +80,14 @@ namely `ω`. What has to be shown is that `ω` is constructible, and the previou
 chapter gives it in one line: `ω` is an ordinal, and an ordinal appears at the
 stage after itself.
 
-This is the step that costs the excluded middle, and it is worth seeing where
-the cost went. Not into the chain, which was free; not into collecting a family,
-which no principle here does; but into knowing *which ordinals live at which
+This is the step that uses the excluded middle, and it is worth seeing where
+it is used. Not in the chain, which needs none; not in collecting a family,
+which no principle here does; but in knowing *which ordinals live at which
 stage*, and that is a comparison.
 <!--zh-->
 现在是公理本身。必须在 `L` 内拿出一个成员恰为诸数码的集合，而环境层级有现成的候选，即 `ω`。要证的是 `ω` 可构造，上一章一行给出：`ω` 是序数，而序数现身于自身之后的那个阶段。
 
-这就是花费排中律的那一步，值得看清代价花在了哪里。不在链上，链是免费的；不在收集一个族上，此处没有任何原则做那件事；而在于知道**哪些序数住在哪个阶段**，那是一次比较。
+此步使用排中律，具体用在判断各序数属于哪个阶段。数码链本身的构造不需要排中律；本章也没有使用一般的族收集原理。需要经典推理的是序数比较，由它确定收集数码链所需的阶段。
 <!--/-->
 
 ```agda
@@ -141,12 +141,13 @@ model's infinity field under the chapter's excluded-middle parameter.
 <!--/-->
 
 <!--en-->
-The axiom of infinity is paid in full: the chain `numeralL`{.Agda} with its two
-pinning equations, and `hasInfinityL`{.Agda} collecting it into a set. Four
+The axiom of infinity is fully established: the chain `numeralL`{.Agda} with its
+two pinning equations, and `hasInfinityL`{.Agda} collecting it into a set. Four
 fields leave the frontier, and the split between them is the chapter's lesson.
-Building the chain was free; collecting it cost one comparison of ordinals, and
-therefore the excluded middle. That is the whole classical content of infinity
-in `L`, and it is visible in this chapter's telescope.
+Building the chain required no classical assumption; collecting it required one
+comparison of ordinals, and therefore the excluded middle. That is the whole
+classical content of infinity in `L`, and it is visible in this chapter's
+telescope.
 <!--zh-->
-无穷公理已全额付清：链 `numeralL`{.Agda} 连同它的两条钉死方程，以及把它收集成集合的 `hasInfinityL`{.Agda}。四个字段离开前沿，而二者之间的分野正是本章的教益。造链是免费的；收集它花掉一次序数比较，从而花掉排中律。这就是 `L` 中无穷公理的全部经典内容，而它在本章的参数表里一望可见。
+无穷公理已经证明：包括数码链 `numeralL`{.Agda}、确定该链的两条方程，以及把它收集成集合的 `hasInfinityL`{.Agda}。前沿由此减少四个字段。本章区分了两个步骤：构造数码链不需要经典假设；把它收集成集合需要一次序数比较，因而使用排中律。这就是 `L` 中无穷公理所需的全部经典内容，并明确出现在本章的参数表中。
 <!--/-->

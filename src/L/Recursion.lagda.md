@@ -102,9 +102,9 @@ contractibility rather than as existence plus uniqueness, which is the same thin
 and is what the field consumes. Stated this way it also *is* the value function:
 the centre is the value, and the rest of the chapter reads it off.
 <!--zh-->
-**定义域**是索引集，且是模型的元素，故诸索引都是 `L` 的集合，而整个索引是一个集合。**图**是二元公式，值在前、索引在后，与模型的替换字段所陈述的顺序相同。它的常元可以是 `L` 的任意元素，故读取某张已内化的表的递归就在此处点名它，而对它别无进一步的条件：无复杂度上界，也不限定它的常元住在哪里。
+**定义域**是索引集，并且是模型中的元素；因此各个索引都是 `L` 的集合，整个索引集也是一个集合。**图**是二元公式，值在前、索引在后，与模型的替换字段采用相同顺序。公式的常元可以是 `L` 的任意元素，因此读取已内化表的递归可以在这里指定该表；除此之外没有额外条件，既无复杂度上界，也不限制常元所属的阶段。
 
-**单值性**是把关系变成定义的那样东西。它被陈述为可缩而非「存在加唯一」，二者是同一回事，而字段消费的正是前者。这样陈述它同时**就是**那个值函数：中心即是值，本章其余部分把它读出来。
+**单值性**使关系成为定义。这里把它陈述为可缩，而不是「存在且唯一」；二者等价，字段要求的是前一种形式。按这种形式陈述时，它同时给出值函数：可缩类型的中心就是该值，本章其余部分将使用这个中心。
 <!--/-->
 
 ```agda
@@ -125,16 +125,16 @@ all. It only has to be *contained* in one, and any small family of elements of
 `L` is contained in a single stage, by the bounding lemma applied to their
 earliest stages. A stage is a set of `L`, so it serves as the domain.
 
-The recursion is then defined on more than its intended indices, and that costs
-nothing: the graph is made total by giving the uninteresting elements a default
-value, and the intended table is recovered by separation, which is now available
-for arbitrary formulas. So the obligation "the index set is a set of `L`", which
-an instance would otherwise discharge by internalizing its own syntax, is
-discharged here once for every instance at once.
+The recursion is then defined on more than its intended indices, and this
+requires nothing extra: the graph is made total by giving the uninteresting
+elements a default value, and the intended table is recovered by separation,
+which is now available for arbitrary formulas. So the requirement that the index
+set be a set of `L`, which an instance would otherwise meet by internalizing its
+own syntax, is met here for every instance at once.
 <!--zh-->
 三者之中，看起来可能难办的是定义域，而它并不难。索引集通常以元语言中的族给出，由某个周遭大小的类型索引：闭公式、闭公式的对，或该递归所遍历的任何东西。这样的族根本不必被收集成一个集合。它只需被**包含**在某个集合里，而 `L` 的任何小族都被包含在单一阶段中，只需把界层引理施于它们的最早阶段。阶段是 `L` 的集合，故可充当定义域。
 
-于是递归定义在比其预期索引更多的东西上，而这不费分文：把无关的元素赋一个默认值，图便成为全函数，而预期的那张表经分离取回，而分离如今对任意公式可用。于是「索引集是 `L` 的集合」这笔债，本来要由实例自行内化其语法来偿付，此处一举为所有实例偿清。
+于是递归可以定义在比预期索引更大的域上，而不增加额外要求：给无关元素指定默认值，图就成为全函数；再用已适用于任意公式的分离取回预期的表。原本每个实例都要通过内化自身语法来满足「索引集是 `L` 的集合」这一要求，现在可以统一解决。
 <!--/-->
 
 ```agda
@@ -174,7 +174,7 @@ wants about it: it is the *only* thing that satisfies the graph. Uniqueness is
 what lets an instance identify the value it computed by hand with the one the
 table records.
 <!--zh-->
-值函数从单值性中读出，连同实例想要的那条事实：它是**唯一**满足那个图的东西。唯一性正是使实例能把它手算出的值与表所记录的值认同起来的东西。
+值函数从单值性中读出，连同实例所需的那条事实：它是**唯一**满足那个图的东西。正是唯一性让实例能把自行算出的值与表所记录的值等同起来。
 <!--/-->
 
 ```agda
@@ -272,20 +272,20 @@ that happens outside and none of it needs internalizing. Only the *graph* does.
 <!--/-->
 
 <!--en-->
-So the form to fill is a function together with a formula that defines it, and
+So the data to supply is a function together with a formula that defines it, and
 defining it is two implications. One says the formula holds of the function's own
-value, the other that nothing else satisfies it. Single-valuedness then comes for
-free, because a type of things equal to a given one is contractible, and that is
-the whole derivation.
+value, the other that nothing else satisfies it. Single-valuedness then follows
+immediately, because a type of things equal to a given one is contractible, and
+that is the whole derivation.
 
-This is where the chapter's title is earned. A recursive definition is
+This is where the chapter's central claim takes hold. A recursive definition is
 internalizable when its graph is expressible, and nothing about the recursion's
 shape, its depth, its order of descent, or the complexity of its clauses appears
 in the condition.
 <!--zh-->
-于是要填的表格是「一个函数，连同一条定义它的公式」，而「定义它」就是两条蕴含。一条说该公式在函数自己的取值处成立，另一条说别无他物满足它。单值性随之白得，因为「与给定之物相等者」构成的类型可缩，而全部推导仅此而已。
+于是需要给出的数据是「一个函数，连同一条定义它的公式」，而「定义它」就是两条蕴含：一条说该公式在函数自身的取值处成立，另一条说别无他物满足它。单值性由此直接得出，因为「与给定之物相等者」构成的类型可缩；全部推导仅此而已。
 
-本章的标题在此处挣得。一个递归定义当它的图可表达时便可内化；而递归的形状、它的深度、它下降的次序、它诸子句的复杂度，都不出现在这个条件里。
+本章的主张正是在此处成立的。一个递归定义只要其图可表达，便可被内化；而递归的形状、它的深度、它下降的次序、它诸子句的复杂度，都不出现在这个条件里。
 <!--/-->
 
 ```agda
@@ -315,7 +315,7 @@ backward one is truncated, because a member of the image is the value at *some*
 index and the index is not recoverable; every consumer so far only needs it
 truncated.
 <!--zh-->
-以及定理在实例所消费的那个形式：`L` 的集合上，可定义函数的像是 `L` 的集合，并附上其两个隶属方向。反向是截断的，因为像的成员是**某个**索引处的值，而那个索引取不回来；至此每个消费方也都只需要截断的形式。
+再陈述定理在实例中实际使用的形式：`L` 的集合上，可定义函数的像是 `L` 的集合，并附上其两个隶属方向。反向是截断的，因为像的成员是**某个**索引处的值，而那个索引无法取回；至此每个使用该定理的场合也只需要这个截断的形式。
 <!--/-->
 
 ```agda
@@ -339,7 +339,7 @@ recursion itself stays in the meta-language where it was written.
 <!--zh-->
 ## 定理所述的范围
 
-它说：`L` 的集合上，图可表达的函数，其表在 `L` 中。凡取值由一条公式所决定的递归都被涵盖，无论那条公式多复杂，也无论它的常元住在哪里，而递归本身留在它被写下的元语言里。
+定理断言：对于 `L` 中的集合，若一个函数的图可以由公式表达，则该函数的表属于 `L`。只要递归的取值由公式确定，定理就适用，不论公式的复杂度如何，也不限制其常元所属的阶段；递归本身仍在元语言中定义。
 <!--ja-->
 ## 定理が述べる範囲
 
@@ -348,21 +348,21 @@ recursion itself stays in the meta-language where it was written.
 
 <!--en-->
 It does not say that any particular recursion *has* such a formula. Writing the
-graph of a recursion in the object language is the work, and it is the same work
-whether or not this chapter exists; what this chapter removes is the second job
-that usually rides along with it, of making that formula bounded and its
-constants stage-local so that a stage can read it. That job is gone, and it was
-the larger of the two.
+graph of a recursion in the object language is work that has to be done
+regardless of whether this chapter exists; what this chapter removes is the
+second job that usually comes with it, of making that formula bounded and its
+constants stage-local so that a stage can read it. That job is removed here,
+and it is the larger of the two.
 
-It also does not leave the domain as an obligation. `smallDom`{.Agda} discharges
-it for every instance at once: a small family of elements of `L` is contained in
+It also does not leave the domain to the user. `smallDom`{.Agda} provides it for
+every instance at once: a small family of elements of `L` is contained in
 a stage, and a stage is a set of `L`. What an instance supplies is that its
 indices are elements of `L`, one at a time, which for coded syntax is pairing and
 the numerals.
 <!--zh-->
-它没有说任何特定的递归**拥有**这样一条公式。把一个递归的图写进对象语言是实打实的活，而无论本章存在与否，那份活都一样；本章免去的是通常与之同行的第二份活：把那条公式弄成有界的、把它的常元弄成阶段局部的，好让某个阶段能读它。那份活没有了，而它是两者中较大的一份。
+它没有说任何特定的递归**拥有**这样一条公式。把一个递归的图写进对象语言，这项工作无论如何都要做，与本章是否存在无关；本章免去的是通常随之而来的另一项工作：把那条公式弄成有界的、把它的常元弄成阶段局部的，好让某个阶段能读它。这项工作在此被免去了，而它是两项中较大的一项。
 
-它也没有把定义域留作债务。`smallDom`{.Agda} 一举为所有实例偿清：`L` 的小族被包含在某个阶段里，而阶段是 `L` 的集合。实例要供给的是「它的诸索引逐个都是 `L` 的元素」，而对编码后的语法，那就是配对与数码。
+它也没有把定义域的问题留给使用者。`smallDom`{.Agda} 一次性地为所有实例给出定义域：`L` 的小族被包含在某个阶段里，而阶段是 `L` 的集合。实例需要供给的是「它的诸索引逐个都是 `L` 的元素」，而对编码后的语法，那就是配对与数码。
 <!--/-->
 
 <!--en-->
@@ -380,7 +380,7 @@ two membership directions.
 <!--zh-->
 ## 小结
 
-`Definition`{.Agda} 是实例在「手上有一个定义于整个模型的函数」时要填的表格：`L` 中的定义域、那个函数，以及一条按两个方向定义其图的公式。索引为编码的实例没有那样的函数，除非另配一个它本不需要的解码器；这类实例改经 `mereFunct`{.Agda} 直接填 `Recursion`{.Agda}，而那是可靠的，因为可缩性是命题。`smallDom`{.Agda} 为 `L` 元素的任意小族填好定义域，而单值性是推导出来的，故**那条定义公式与它的充分性就是全部的债**。`Image`{.Agda} 把那张表与它的两个隶属方向读出来。
+`Definition`{.Agda} 是实例在「手上有一个定义于整个模型的函数」时需要给出的数据：`L` 中的定义域、那个函数，以及一条按两个方向定义其图的公式。索引为编码的实例没有那样的函数，除非另配一个它本不需要的解码器；这类实例改经 `mereFunct`{.Agda} 直接填 `Recursion`{.Agda}，而那是可靠的，因为可缩性是命题。`smallDom`{.Agda} 为 `L` 元素的任意小族给出定义域，而单值性是推导出来的，故**剩下需要验证的只有那条定义公式与它的充分性**。`Image`{.Agda} 把那张表连同它的两个隶属方向读出来。
 <!--ja-->
 ## まとめ
 
@@ -389,10 +389,10 @@ two membership directions.
 
 <!--en-->
 The chapter is a wrapper around `hasReplacementL`{.Agda}, and that is the point.
-The general-formula comprehension fields were the expensive thing; once they are
-paid, internalizing a recursion is not a theorem but a corollary, and the
-per-clause absoluteness discipline that the bounded setting forces never has to
-be entered.
+The general-formula comprehension fields are the expensive part; once they are in
+place, internalizing a recursion is a corollary, and the per-clause
+absoluteness discipline that the bounded setting imposes never has to be carried
+out.
 <!--zh-->
-本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是要点。任意公式的概括字段才是贵的东西；一旦付清，内化一个递归就不是定理而是推论，而有界情形所强加的逐子句绝对性纪律，压根无须踏入。
+本章是 `hasReplacementL`{.Agda} 的一层包装，而这正是关键。任意公式的概括字段是代价较高的部分；一旦具备该字段，内化递归就是一个推论，无须再处理有界情形要求的逐子句绝对性。
 <!--/-->

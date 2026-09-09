@@ -62,34 +62,35 @@ member of" and "for some member of". Binding is by de Bruijn: a quantifier takes
 body with one more free variable, and variable `0` is the one just bound.
 
 Two design decisions are visible in the constructor list. First, the binary
-connectives are primitive, and the reason is the semantics this language is
+connectives are primitive, and the reason lies in the semantics this language is
 headed for: each constructor will mean exactly one truth-algebra operation, and
 the algebra is constructive. A classical text can economize, spelling
 `φ ∨ ψ` as `¬ (¬ φ ∧ ¬ ψ)`, `∀` as `¬ ∃ ¬`, `φ ⇒ ψ` as `¬ φ ∨ ψ`, because
 classically the double negations cancel. Constructively they do not: `¬ ¬ P`
 is weaker than `P`, so every one of those spellings would assign the connective
-the **wrong meaning**. `∨`, `∀`, `⇒` therefore must be constructors. The
-Negation and truth are spelled honestly: `¬̇ φ` is `φ ⇒̇ ⊥̇`, and `⊤̇` is
+the **wrong meaning**. `∨`, `∀`, `⇒` therefore must be constructors.
+Negation and truth are defined by their meaning: `¬̇ φ` is `φ ⇒̇ ⊥̇`, and `⊤̇` is
 `⊥̇ ⇒̇ ⊥̇`.
 
-Second, the bounded quantifiers earn primitive seats even though `∀̇∈ t φ`
+Second, the bounded quantifiers are primitive in their own right even though `∀̇∈ t φ`
 could be spelled with `∀̇`. Had they been abbreviations, "every quantifier in
 `φ` is bounded" would be a fact about how `φ` happens to be spelled, invisible
 to anything that computes over `φ`'s shape. As constructors, boundedness is
-shape: later chapters classify formulas by a datatype over their constructors,
-and certify "all quantifiers bounded" by a datatype that simply has **no case**
-for `∃̇` and `∀̇`, an absence that can only speak if the bounded forms stand on
-their own. Formulas of that shape behave remarkably tamely across structures,
-a thread picked up once the model chapters' model is on the table and carried into
-the constructible-universe chapters. The fixity table here is the book's single declaration for the object
+part of the shape of a formula: later chapters classify formulas by a datatype
+over their constructors, and certify "all quantifiers bounded" by a datatype
+that simply has **no case** for `∃̇` and `∀̇`; expressing this absence
+requires the bounded forms to be given independently. Formulas of that shape
+behave well across structures, a thread taken up once the model chapters have
+established their model and carried into the constructible-universe chapters.
+The fixity table here is the book's single declaration for the object
 layer, each level chosen to match the truth-algebra operation it will be
 interpreted by.
 <!--zh-->
-公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：这是一枚层标记，见点即知这个符号是语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象等词，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词所取的公式体多出一个自由变量，变量 `0` 即刚被约束的那个。
+公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：这个点就是语法层的标记，见到点即可知道符号指语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象等词，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词所取的公式体多出一个自由变量，变量 `0` 即刚被约束的那个。
 
-构造子清单里可以看出两个设计决定。其一，二元联结词是原语，理由在这门语言即将奔赴的语义：每个构造子将恰好意指一个真值代数运算，而该代数是构造性的。经典教科书可以省笔墨，把 `φ ∨ ψ` 拼作 `¬ (¬ φ ∧ ¬ ψ)`、`∀` 拼作 `¬ ∃ ¬`、`φ ⇒ ψ` 拼作 `¬ φ ∨ ψ`，因为经典地看双重否定会互相抵消。构造性地看它们不抵消：`¬ ¬ P` 严格弱于 `P`，上述每一种拼写都会给联结词指派**错误的含义**。所以 `∨`、`∀`、`⇒` 必须是构造子。否定与真采用诚实的拼写：`¬̇ φ` 即 `φ ⇒̇ ⊥̇`，`⊤̇` 即 `⊥̇ ⇒̇ ⊥̇`。
+构造子清单体现两个设计决定。其一，二元联结词是原语，理由来自这门语言的语义：每个构造子恰好对应一个构造性真值代数运算。经典教科书可以把 `φ ∨ ψ` 写成 `¬ (¬ φ ∧ ¬ ψ)`、把 `∀` 写成 `¬ ∃ ¬`、把 `φ ⇒ ψ` 写成 `¬ φ ∨ ψ`，因为经典逻辑可以消去双重否定；构造逻辑中 `¬ ¬ P` 严格弱于 `P`，这些写法会赋予联结词错误的含义。因此，`∨`、`∀`、`⇒` 必须作为构造子。否定与真则按其含义定义：`¬̇ φ` 即 `φ ⇒̇ ⊥̇`，`⊤̇` 即 `⊥̇ ⇒̇ ⊥̇`。
 
-其二，有界量词虽然可用 `∀̇` 拼写，仍占有原语席位。倘若它们只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` **恰巧如何拼写**的事实，任何在 `φ` 的形状上计算的东西都看不见它。作为构造子，有界性就是形状：后面的章节按构造子给公式分类，用一个对 `∃̇` 与 `∀̇` **不设情形**的归纳数据来证明「量词皆有界」，而这种缺席要能开口说话，有界形式必须自立门户。这种形状的公式在不同结构之间表现格外驯良，这条线索将在模型诸章的模型落定后重新拾起并延伸进可构造宇宙诸章。此处的 fixity 表是对象层在全书的唯一一次集中声明，各级刻意与它将被解释成的真值代数运算对齐。
+其二，有界量词虽然可用 `∀̇` 拼写，仍单独作为原语。倘若它们只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` **恰巧如何拼写**的事实，任何按 `φ` 的形状计算的过程都无法识别它。作为构造子，有界性就是公式形状的一部分：后文按构造子给公式分类，并用对 `∃̇` 与 `∀̇` **不设情形**的归纳数据证明「量词皆有界」；要表达这种缺席，有界形式必须独立给出。这类公式在不同结构之间保持良好性质，模型诸章建立具体模型后将继续使用这一点。此处的 fixity 表集中声明全书对象层符号的优先级，并使各级与对应的真值代数运算一致。
 <!--/-->
 
 ```agda
@@ -126,7 +127,7 @@ The parameter `K` is where one syntax covers every use the book will make of it:
 | `K` 的取法 | 得到什么 |
 |---|---|
 | 某结构的载体 | 日常工作语法：任何集合都能以参数身份出现在公式里 |
-| `⊥*`{.Agda} (无常元) | **无参公式**：可数、可编码，理论与码的居所 |
+| `⊥*`{.Agda} (无常元) | **无参公式**：可数、可编码，理论与码所在之处 |
 | 受限制的载体 | 参数只许来自某个类；可构造宇宙诸章构造 `L` 用的正是这个形状 |
 <!--/-->
 
@@ -186,5 +187,5 @@ anywhere. The design will keep
 it that way, and the little variable machinery the book does need arrives later in
 the book. First, formulas need something to talk about.
 <!--zh-->
-对象语言是归纳族 `Formula K n`{.Agda}：常元域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全带点。围绕它的：无参公式，这条数据轴的进入映射随书末的常元改名工具组到来。留意缺席者：全篇没有替换算子、没有弱化算子。这个设计将一直保持下去，本书仅需的那一点变量机件在本书稍后登场。眼下，公式先得有可谈论的对象。
+对象语言是归纳族 `Formula K n`{.Agda}：常元域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全带点。与之配套的是无参公式，其进入映射由书末的常元改名工具组给出。值得注意的是，全篇没有替换算子，也没有弱化算子；这一设计将保持下去，本书所需的少量变量机件将在稍后引入。眼下，公式先得有可谈论的对象。
 <!--/-->

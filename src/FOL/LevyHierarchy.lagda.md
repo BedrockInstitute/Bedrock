@@ -54,7 +54,7 @@ that every quantifier in `φ` is bounded.
 <!--zh-->
 ## Δ₀ 见证
 
-每个获准的公式形状对应一个构造子，而 `∃̇` 与 `∀̇` 没有：**缺席即分类**。`Δ₀ φ`{.Agda} 的居民就是「`φ` 的每个量词都有界」的机器可查见证。
+每个获准的公式形状对应一个构造子，而 `∃̇` 与 `∀̇` 没有对应构造子：**缺席即分类**。`Δ₀ φ`{.Agda} 的每个元素都是一份机器可查的见证，证明 `φ` 的每个量词都有界。
 <!--ja-->
 ## Δ₀ の証拠
 
@@ -91,7 +91,7 @@ not affect the result.
 <!--zh-->
 ## 检查具体公式
 
-一次布尔遍历识别有界公式。可靠性证明构造的仍是手写构造子树所给出的 `Δ₀` 见证。对于具体的有界公式，`checkΔ₀ φ tt` 让归一化来核验分级；含变量的项不影响结果。
+一次布尔遍历即可识别有界公式。可靠性证明构造出的，仍是手写构造子树所对应的那个 `Δ₀` 见证。对具体的有界公式，`checkΔ₀ φ tt` 交由归一化来核验分级；含变量的项不影响结果。
 <!--ja-->
 ## 具体的な論理式を判定する
 
@@ -139,7 +139,7 @@ One unbounded quantifier kind each, stacked on a Δ₀ core.
 <!--zh-->
 ## Σ₁ 与 Π₁
 
-各在 Δ₀ 核心之上叠一种无界量词。
+二者各在 Δ₀ 核心之上叠加一种无界量词。
 <!--ja-->
 ## Σ₁ と Π₁
 
@@ -163,13 +163,13 @@ data Π₁ {ℓc} {K : Type ℓc} : ∀ {n} → Formula K n → Type ℓc where
 
 Σ₁ and Π₁ are the first floor of an alternating tower: Σₙ₊₁ stacks existential
 blocks on Πₙ, Πₙ₊₁ stacks universal blocks on Σₙ, and Δ₀ sits inside every level.
-the constructible-universe reflection arguments will climb this tower level by level; the
+The constructible-universe reflection arguments will climb this tower level by level; the
 constructors follow the same one-quantifier-per-step pattern, with `σ-Π` and
 `π-Σ` providing the alternation.
 <!--zh-->
 ## 一般层级
 
-Σ₁ 与 Π₁ 是一座交替之塔的第一层：Σₙ₊₁ 在 Πₙ 上叠存在块，Πₙ₊₁ 在 Σₙ 上叠全称块，Δ₀ 坐落于每一级之内。可构造宇宙的反射论证将沿这座塔逐级攀升；构造子沿用一步一量词的模式，`σ-Π` 与 `π-Σ` 提供交替升级。
+Σ₁ 与 Π₁ 是第一层，其上按量词交替逐级构造：Σₙ₊₁ 在 Πₙ 之上叠加存在量词块，Πₙ₊₁ 在 Σₙ 之上叠加全称量词块，Δ₀ 则包含在每一级之内。可构造宇宙的反射论证将逐级使用这些层级；构造子沿用一步一量词的模式，`σ-Π` 与 `π-Σ` 提供交替升级。
 <!--ja-->
 ## 一般のレヴィ階層
 
@@ -202,7 +202,7 @@ theorem that gives them their force is next.
 <!--zh-->
 ## 小结
 
-Lévy 层级以归纳见证的形态存在：Δ₀ 靠无界构造子的缺席，其上是 Σ₁/Π₁ 与交替的 Σₙ/Πₙ 之塔。这些见证是纯语法，且在常元改名下纹丝不动，这一事实编在书末的常元改名工具组里。赋予它们力量的定理在下一章给出。
+Lévy 层级以归纳见证的形态存在：Δ₀ 靠无界构造子的缺席界定，其上是 Σ₁/Π₁ 与逐层交替的 Σₙ/Πₙ。这些见证是纯语法，且在常元改名下保持不变，这一事实收录在书末的常元改名工具组里。使这些见证发挥作用的定理在下一章给出。
 <!--ja-->
 ## まとめ
 

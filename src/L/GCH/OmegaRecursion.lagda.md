@@ -5,7 +5,7 @@ Many later constructions close a set by repeating one definable operation finite
 <!--zh-->
 # 沿 ω 迭代可定义步骤
 
-后续许多构造通过有限次重复一个可定义运算来闭合一个集合。本章在 `L` 内部执行这场 ω 递归，并封装所得序列及其并集以供复用。
+后续许多构造通过有限次重复一个可定义运算来闭合一个集合。本章在 `L` 内部执行该 ω 递归，并封装所得序列及其并集以供复用。
 <!--ja-->
 # 定義可能な操作を ω に沿って反復する
 

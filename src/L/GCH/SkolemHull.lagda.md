@@ -347,7 +347,7 @@ For a carrier contained in `Lset α`, inclusion into the stage is elementary onc
 <!--zh-->
 ## 阶段内部的 Tarski-Vaught 判据
 
-对于包含在 `Lset α` 中的载体，只要存在见证总能从该载体中选出，载体到阶段的包含就是初等的。上一节的搬运恰好把这一见证性质化为初等性。
+设载体包含于 `Lset α` 之中；只要每当存在见证时都能从该载体内部选出见证，从载体到阶段的包含就是初等的。上一节的搬运恰好把这一见证性质化为初等性。
 <!--ja-->
 ## 段階内部の Tarski-Vaught 判定条件
 
@@ -873,7 +873,7 @@ At `Lset λ`, the hull, its Mostowski collapse, and the collapse image are assem
 <!--zh-->
 ## 凝聚所需的壳数据
 
-在 `Lset λ` 处，Skolem 壳、它的 Mostowski 塌缩与塌缩像被装入同一个接口。余下假设描述该像对层构造的闭合，以及每个壳成员如何被该像的序数以下的层覆盖。
+在 `Lset λ` 处，Skolem 壳、它的 Mostowski 塌缩与塌缩像由同一个接口统一组织。余下假设描述该像对层构造的闭合，以及每个壳成员如何被该像的序数以下的层覆盖。
 <!--ja-->
 ## 凝縮に必要な包のデータ
 

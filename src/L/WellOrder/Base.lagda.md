@@ -17,7 +17,7 @@ Strict well-orders support a recurring mathematical operation: choose the least 
 
 The carrier and relation may live at separate universe levels. Most of the vocabulary is constructive; excluded middle appears only in the descent that finds a least witness.
 <!--zh-->
-严格良序支撑一个反复出现的数学操作：从一个非空性质中选取最小见证。本章引入良序束，证明极小元的存在与唯一性，并把自然数装配成后续构造使用的基础例子。
+严格良序支持一个反复出现的数学操作：从一个非空性质中选取最小见证。本章引入良序束，证明极小元的存在与唯一性，并以自然数作为供后续构造使用的基础例子。
 
 载体与关系可以位于不同宇宙层级。大部分词汇都是构造性的；排中律只出现在寻找最小见证的下降过程里。
 <!--/-->
@@ -64,7 +64,7 @@ Trichotomy is represented by three explicit alternatives, carrying either a comp
 Three mutually exclusive alternatives, carried as an inductive type rather than
 a nested sum, so that a proof can name the case it is in.
 <!--zh-->
-三种互斥的可能，以归纳类型而非嵌套的和类型携带，好让证明能点名自己所处的情形。
+三个可能情形互斥，以归纳类型而非嵌套的和类型表示，使证明能明确指出自己处于哪个情形。
 <!--/-->
 
 ```agda
@@ -95,7 +95,7 @@ A strict well-order bundles its relation with trichotomy, irreflexivity, transit
 The four laws, packaged. Well-foundedness is the library's accessibility
 predicate, which is what makes the least-element search below terminate.
 <!--zh-->
-四条定律，打包起来。良基性取库的可及性谓词，正是它使下文取极小元的搜索得以终止。
+这四条定律合起来构成一个束。良基性取库中的可及性谓词，正是它使下文取极小元的搜索得以终止。
 <!--/-->
 
 ```agda
@@ -128,10 +128,10 @@ For a predicate `P`, a least witness satisfies `P` and lies below every other wi
 Being least for a predicate is satisfying it while nothing satisfying it is
 strictly smaller. That is a proposition, and so is being *a* least element:
 given two, trichotomy rules out both strict cases and leaves equality. This is
-what lets the search below deliver an honest element out of a merely truncated
+what lets the search below produce an actual element from a merely truncated
 non-emptiness, since a proposition-valued goal absorbs the truncation.
 <!--zh-->
-对谓词而言的极小，指自身满足它，且没有满足它者严格更小。这是一个命题，而「是一个极小元」也是：给定两个，三歧排除两个严格情形，只留下相等。正是这一点使下面的搜索能从仅仅截断的非空性中交出一个诚实的元素，因为命题值的目标吸收截断。
+对谓词而言的极小，指自身满足它，且没有满足它者严格更小。这是一个命题，「是一个极小元」也是：给定两个，三歧排除两个严格情形，只留下相等。正是这一点使下面的搜索能从仅仅截断的非空性中给出一个真正的元素，因为命题值的目标会吸收截断。
 <!--/-->
 
 ```agda
@@ -194,7 +194,7 @@ arbitrary predicate, and that is where the excluded middle enters.
 <!--en-->
 The usual strict order on natural numbers satisfies all four laws. Its well-foundedness follows by induction on the upper number, giving the standard strict well-order used for arities and finite lengths.
 <!--zh-->
-自然数上的通常严格序满足全部四条定律。对上方自然数归纳即可证明其良基性，从而得到用于元数与有限长度的标准严格良序。
+自然数上的通常严格序满足全部四条定律。对自然数作归纳即可证明其良基性，从而得到用于元数与有限长度的标准严格良序。
 <!--ja-->
 自然数上の通常の狭義順序は四つの法則をすべて満たす。上側の自然数について帰納すると整礎性が得られ、アリティと有限長に使う標準的な狭義整列順序となる。
 <!--/-->
@@ -209,9 +209,9 @@ The lift is bookkeeping and nothing more. A bundle carries its relation at a
 single universe level fixed once for the whole chapter, and the order on the
 natural numbers lives at the bottom, so it is raised to meet it. It also demonstrates how a low-level relation is used in a universe-polymorphic bundle.
 <!--zh-->
-自然数给出严格良序的基本无穷例子，随后也用来为构造阶段计数。关于自然数上通常的序，库已备齐一切，故这个束是装配出来的、而非证出来的：三歧取库的判定程序，把它的三路答案改个名；良基性则直接是库自己的。
+自然数给出严格良序的基本无穷例子，随后也用来为构造阶段计数。关于自然数上通常的序，库中已有全部所需结果，因此这个束只需组合而无需另行证明：三歧取库的判定程序，并对其三路答案按本节记号重新命名；良基性则直接取自库。
 
-提升只是记账，别无他意。一个束把它的关系带在为全章一次固定的单一宇宙层级上，而自然数上的序住在最底层，故把它抬上来相会。它也示范如何在宇宙多态的束中使用低层级关系。
+这里的提升并无深层含义。一个束的关系固定在为全章一次选定的单一宇宙层级上，而自然数上的序处在最底层，因此需将它提升到该层级。它也示范如何在宇宙多态的束中使用低层级关系。
 <!--/-->
 
 ```agda
@@ -246,14 +246,14 @@ natOrder = record
 <!--en-->
 Strict well-orders can now be passed as one structure, compared by trichotomy, and searched for least witnesses. The natural-number instance supplies these operations for every finite index used later.
 <!--zh-->
-现在，严格良序可以作为一个结构传递，以三歧作比较，并搜索最小见证。自然数实例为后续每个有限指标提供这些运算。
+现在，严格良序可以作为一个结构整体使用：以三歧作比较，并搜索最小见证。自然数实例为后续每个有限指标提供这些运算。
 <!--ja-->
 これで狭義整列順序を一つの構造として渡し、三分性で比較し、最小の証人を探索できる。自然数の実例が、後に現れるすべての有限添字にこれらの操作を与える。
 <!--/-->
 
 <!--en-->
 `SWO`{.Agda} bundles a strict well-order, and `leastOf`{.Agda} extracts the least
-element of any non-empty subset, uniquely (`isPropLeastOf`{.Agda}). The bundle is a generic interface for later constructions, while `natOrder`{.Agda} is its basic infinite instance. Excluded middle is spent once, on the decision at each descent step; the bundle and the natural-number order remain constructive.
+element of any non-empty subset, uniquely (`isPropLeastOf`{.Agda}). The bundle is a generic interface for later constructions, while `natOrder`{.Agda} is its basic infinite instance. Excluded middle is used only for the decision at each descent step; the bundle and the natural-number order remain constructive.
 <!--zh-->
-`SWO`{.Agda} 把严格良序打成束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是后续构造使用的泛型接口，而 `natOrder`{.Agda} 是它的基本无穷实例。排中律只花在每一步下降的判定上；良序束与自然数序本身仍是构造性的。
+`SWO`{.Agda} 把严格良序组织成一个束，`leastOf`{.Agda} 取出任一非空子集的极小元，且唯一 (`isPropLeastOf`{.Agda})。这个束是后续构造使用的泛型接口，而 `natOrder`{.Agda} 是它的基本无穷实例。排中律只用在每一步下降的判定上；良序束与自然数序本身仍是构造性的。
 <!--/-->

@@ -13,14 +13,15 @@ First-order semantics needs a type of truth values together with operations for 
 <!--/-->
 
 <!--en-->
-When a formula is evaluated, the result has to live somewhere: a type of truth
-values. This book travels to two places that want different answers. On the road to
-the constructible universe, propositions (`hProp`{.Agda}) serve as truth values; in
-the forcing part, truth values live in a complete Boolean algebra instead. So the
-answer is not hard-wired: the semantic codomain is a parameter, called a **truth
-algebra**, and everything built over it serves both journeys.
+When a formula is evaluated, the result must land in a type of truth
+values. The book proceeds in two directions that require different answers. In
+the part leading to the constructible universe, propositions
+(`hProp`{.Agda}) serve as truth values; in the forcing part, truth values are
+taken from a complete Boolean algebra instead. The choice is therefore left
+open: the semantic codomain is a parameter, called a **truth algebra**, and
+everything built over such a structure serves both parts.
 <!--zh-->
-公式求值的结果必须落脚在某处：一个真值类型。本书要去的两个地方想要的答案不同：通往可构造宇宙的旅程，以命题 (`hProp`{.Agda}) 作真值即可；力迫部分则要求真值住在完备布尔代数里。所以这个答案不被焊死：语义值域是一个参数，称为**真值代数**，其上构建的一切两程通用。
+公式求值的结果要落在一个真值类型上。本书后续两个方向对答案的要求不同：通往可构造宇宙的部分，以命题 (`hProp`{.Agda}) 作真值即可；力迫部分则要求真值取自完备布尔代数。因此这一选择不固定：语义值域是一个参数，称为**真值代数**，在这类结构上建立的一切结果对两种情形通用。
 <!--/-->
 
 
@@ -38,21 +39,21 @@ import Cubical.Functions.Logic as Logic
 <!--en-->
 ## The interface
 
-The record below is a **pure operation signature**: it asks for eight operations
-and not a single law about them (no associativity, no distributivity, no lattice
-axioms). A law in an interface is a debt every instance must pay, and here nobody
-would ever collect it: everything the framework core builds over `Ω` treats the
-operations as black boxes, needing only congruence (equal inputs give equal
-outputs: the `cong`{.Agda} of the Prelude), which holds for any operations
+The record below is a **pure operation signature**: it specifies eight operations
+and requires no laws about them (no associativity, no distributivity, no lattice
+axioms). A law placed in an interface would have to be proved separately by
+every instance; meanwhile, everything the framework core builds over `Ω`
+treats the operations as black boxes, needing only congruence (equal inputs give
+equal outputs: the `cong`{.Agda} of the Prelude), which holds for any operations
 whatsoever. Laws are needed only by later theorems about particular models, and
-those work at a concrete instance, where the laws are theorems rather than
-assumptions. Staying law-free therefore costs nothing, and buys a cheap ticket of
-admission: a semantics joins the book by handing over eight operations, owing no
-proofs.
+those are proved at a concrete instance, where the laws are theorems of the
+instance rather than assumptions of the interface. Leaving out laws therefore
+costs nothing: a semantics joins the book by providing eight operations, with no
+proofs required.
 <!--zh-->
 ## 接口
 
-下面的 record 是**纯运算签名**：只索要八个运算，对它们不要求任何定律 (不要结合律、分配律，也不要任何格公理)。接口里的每条定律都是每个实例必须偿付的债务，而这里根本无人收账：框架核心在 `Ω` 上构建的一切都把这些运算当作黑箱，只需要同余 (输入相等则输出相等，即序章的 `cong`{.Agda})，而同余对任意运算都成立。定律只有后面关于具体模型的定理才需要，而那些定理本来就在具体实例上证明，届时定律是实例上的定理而非接口上的假设。零定律因此毫无代价，换来的是廉价的入场券：一个语义要加入本书，交出八个运算即可，不欠任何证明。
+下面的 record 是**纯运算签名**：只规定八个运算，不要求它们满足任何定律 (不要结合律、分配律，也不要任何格公理)。定律若进入接口，每个实例都得另行证明；而框架核心在 `Ω` 上构建的一切都把这些运算当作黑箱，只用到同余 (输入相等则输出相等，即序章的 `cong`{.Agda})，同余对任意运算都成立。定律只有后面关于具体模型的定理才需要，而那些定理本来就在具体实例上证明，届时定律是实例上的定理而非接口上的假设。因此不带定律毫无代价：一个语义要加入本书，只需给出八个运算，不必附带任何证明。
 <!--ja-->
 ## インターフェース
 
@@ -85,7 +86,7 @@ the object-language connectives introduced later, so mixed expressions read the 
 across layers. Object negation and truth are later derived from implication and
 falsity; the independent fields here remain the metalanguage operations.
 
-Here the book's **scope discipline for logic** is laid down: these eight symbols are
+Here the book lays down its **scope discipline for logical symbols**: these eight symbols are
 the book's only logic notation, and the Prelude deliberately exports none of them,
 so the only way they enter scope is by opening a truth algebra
 (`open TruthAlgebra 𝕋`{.Agda}). Whichever algebra a chapter opens, that is what its logic
@@ -94,7 +95,7 @@ abstract `𝕋`; chapters on the propositional side open the canonical instance 
 <!--zh-->
 逐个符号：`⊓` 读「且」(交)，`⊔` 读「或」(并)，`⇒` 读「蕴含」，`¬` 读「非」，`⊤` 读「真」，`⊥` 读「假」；`⋀` 与其对偶 `⋁` 是按任意小类型索引的交与并，量词语义正由它们给出。这里的优先级刻意与之后引入的对象语言联结词同级，跨层的混合表达式因此读法一致。对象语言的否定与真随后由蕴涵和假派生；这里的独立字段仍是元语言运算。
 
-本书**逻辑符号的作用域纪律**在此立下：这八个符号是全书仅有的逻辑记号，序章刻意不导出其中任何一个，于是它们进入作用域的唯一方式就是打开某个真值代数 (`open TruthAlgebra 𝕋`{.Agda})。一章打开哪个代数，它的逻辑符号就是那个代数的运算：任一作用域中，没有符号会有两种读法。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
+本书在此立下**逻辑符号的作用域规则**：这八个符号是全书仅有的逻辑记号，序章刻意不导出其中任何一个，于是它们进入作用域的唯一方式就是打开某个真值代数 (`open TruthAlgebra 𝕋`{.Agda})。一章打开哪个代数，它的逻辑符号就是那个代数的运算：任一作用域中，没有符号会有两种读法。泛型章节打开抽象的 `𝕋`；命题侧的章节打开下面的典范实例。
 <!--/-->
 
 <!--en-->
@@ -106,7 +107,7 @@ are theorems of the cubical library, not assumptions.
 <!--zh-->
 ## 典范实例：hProp
 
-命题构成一个真值代数。这句话的全部内容都站在 univalence 上：`hProp`{.Agda} 是集合、下列运算在其上良定义，这些在 cubical 库里都是定理而非假设。
+命题构成一个真值代数。这一事实以 univalence 为依据：`hProp`{.Agda} 是集合，下列运算在其上良定义；这些在 cubical 库中都是定理而非假设。
 <!--ja-->
 ## 正準な実例：hProp
 
@@ -153,8 +154,8 @@ Three points worth keeping:
 三个值得记住的要点：
 
 1. **抽象零成本。**record 投影在具体实例上按定义计算，所以 `TruthAlgebra._⊓_ (hPropAlgebra ℓ)`{.Agda} 定义性地**就是**库的 `_⊓_`{.Agda}。在 hProp 实例上工作与从未抽象过完全一样：凡此前由 `refl`{.Agda} 成立的等式，如今照旧由 `refl`{.Agda} 成立。
-2. `⊥` 字段取层级多态的对 `(⊥* , isProp⊥*)`{.Agda}，因为库的假固定在最底层宇宙。这也是两个符号之间的全部关系：真值 `⊥` 就是宿主类型 `⊥*`{.Agda} 连同其命题性打包而成的，故 `⟨ ⊥ ⟩` **就是** `⊥*`{.Agda}。要真值的位置写 `⊥`，要类型的位置写 `⊥*`{.Agda}；两个位置不可互换，分工由类型检查器把守。
-3. `⋁` 是命题截断的存在量词，`⋀` 是货真价实的 Π 类型：这正是构造性语义的形态。hProp 侧的章节仍可直接从库中取用证明手段 (`∃[ x ] …` 糖衣、截断消去子)：它们与本实例的字段定义性相同，不构成第二套含义。
+2. `⊥` 字段取层级多态的对 `(⊥* , isProp⊥*)`{.Agda}，因为库的假固定在最底层宇宙。这也是两个符号之间的全部关系：真值 `⊥` 就是宿主类型 `⊥*`{.Agda} 连同其命题性一起构成的，故 `⟨ ⊥ ⟩` **就是** `⊥*`{.Agda}。要真值的位置写 `⊥`，要类型的位置写 `⊥*`{.Agda}；两个位置不可互换，由类型检查器负责区分。
+3. `⋁` 是命题截断的存在量词，`⋀` 就是真正的 Π 类型：这正是构造性语义的形态。hProp 侧的章节仍可直接从库中取用证明手段 (`∃[ x ] …` 糖衣、截断消去子)：它们与本实例的字段定义性相同，不构成第二套含义。
 <!--/-->
 
 <!--en-->
@@ -163,11 +164,11 @@ Three points worth keeping:
 The forcing part of this book will provide the second instance: the regular-open
 Boolean completion of a forcing poset, with `Ω` a complete Boolean algebra. The
 record above will carry it unchanged, and the symbol family `∈ᴮ ≈ᴮ` is already
-reserved for that day.
+reserved for that instance.
 <!--zh-->
 ## 为力迫预留的席位
 
-本书的力迫部分将给出第二个实例：力迫偏序的正则开代数布尔完备化，`Ω` 是完备布尔代数。上面的 record 届时原样承接，符号族 `∈ᴮ ≈ᴮ` 已为那一天预留。
+本书的力迫部分将给出第二个实例：力迫偏序的正则开代数布尔完备化，其中 `Ω` 是完备布尔代数。上面的 record 届时原样沿用，符号族 `∈ᴮ ≈ᴮ` 正是为该实例准备的。
 <!--ja-->
 ## 強制法のための余地
 
@@ -186,7 +187,7 @@ impredicativity, and then the one classical principle that redeems it.
 <!--zh-->
 ## 小结
 
-真值是一个参数：只含运算的 record `TruthAlgebra`{.Agda}，其八个符号就是全书的全部逻辑记号；`hPropAlgebra`{.Agda} 是典范且定义性透明的实例。接下来：非直谓性的尺寸词汇，与随后赎回它的那唯一经典原理。
+真值是一个参数：只含运算的 record `TruthAlgebra`{.Agda}，其八个符号就是全书的全部逻辑记号；`hPropAlgebra`{.Agda} 是典范且定义性透明的实例。接下来是非直谓性的尺寸词汇，以及随后处理它的那一条经典原理。
 <!--ja-->
 ## まとめ
 

@@ -54,12 +54,12 @@ needing a second pass. A conjunction's occurrences are its left operand's follow
 by its right operand's, so the two operands are abstracted under the placements
 `θ ∘ padRight` and `θ ∘ padLeft`, **composed before the traversal** rather than
 recovered afterwards by renaming the two halves into the joined context. One pass
-over the formula, no weakening lemma, and each of the ten clauses is the shape
-the corresponding clause of every other structural recursion in this part has.
-Under a binder the placement gains a `suc`, which is the parameter block riding one
-index higher, and nothing else happens at all.
+over the formula, no weakening lemma, and each of the ten clauses has the shape
+of the corresponding clause of every other structural recursion in this part.
+Under a binder the placement gains one `suc`, because the parameter block's
+indices all shift up by one, and nothing else changes.
 <!--zh-->
-此处的泛型不是装饰，而是让两部分的构造子免于第二趟遍历的关键。合取的诸次出现，是左合取项的诸次出现后接右合取项的诸次出现，于是两个合取项在安置 `θ ∘ padRight` 与 `θ ∘ padLeft` 之下被抽象，而这两件安置是在**遍历之前复合**的，不是事后把两半重标进合并语境再补回来。对公式只走一趟，不需要弱化引理，十条子句各自的形状就是本部其他每一场结构递归的对应子句的形状。约束子之下，安置多得一个 `suc`，那正是参数块整体高一个序号，除此之外什么也没发生。
+此处的泛型并非装饰，而是让两部分的构造子免于第二次遍历的关键。合取的诸次出现，是左合取项的诸次出现后接右合取项的诸次出现；于是两个合取项分别在安置 `θ ∘ padRight` 与 `θ ∘ padLeft` 之下被抽象，而这两个安置是在**遍历之前复合**的，不是事后把两半重标到合并语境中再调整回来。对公式只需遍历一次，不需要弱化引理；十条子句各自的形状，就是本部其他每次结构递归中对应子句的形状。在约束子之下，安置多出一个 `suc`，这正是参数块的序号整体加一，除此之外没有任何变化。
 <!--/-->
 
 ```agda
@@ -90,13 +90,13 @@ placeFo (∃̇∈ t φ) θ = ∃̇∈ (placeTm t (λ i → θ (padRight (countFo
 ```
 
 <!--en-->
-The instance is the one the rest of the book will name: take the budget to be
+The instance is the one the rest of the book will use: take the budget to be
 exactly the occurrence count and the placement to be the block that follows the
-variables. This is the abstraction proper, and its type is the chapter's headline:
+variables. This is the required abstraction, and its type states the chapter's main result:
 a formula over `K` with `n` free variables becomes a parameter-free formula with
 `n + countFo φ` of them.
 <!--zh-->
-实例就是本书余下部分要点名的那一个：预算取作恰好的出现次数，安置取作紧随变量之后的那一块。这才是名副其实的抽象，它的类型就是本章的标题句：`K` 上带 `n` 个自由变量的公式，变成带 `n + countFo φ` 个自由变量的无参公式。
+本书余下部分使用的实例取如下参数：参数位的数目恰好等于出现次数，安置则取紧随原变量之后的那一段。这就是所需的抽象，其类型可以概括为：`K` 上带 `n` 个自由变量的公式，变为带 `n + countFo φ` 个自由变量的无参公式。
 <!--/-->
 
 ```agda
@@ -111,7 +111,7 @@ Adequacy compares the original formula under a constant interpretation with its 
 <!--zh-->
 ## 充分性
 
-充分性比较常元解释下的原公式与扩展变量环境下的抽象公式。只要每个安置后的变量包含其所记录常元的解释，词项释义与公式满足关系就由结构归纳相符。
+充分性比较常元解释下的原公式与扩展变量环境下的抽象公式。只要安置后的每个变量都带有其所记录常元的解释，词项释义与公式满足关系便依结构归纳相符。
 <!--ja-->
 ## 妥当性
 
@@ -149,9 +149,9 @@ what keeps every clause from normalizing a vector.
 Splitting the hypothesis is the only bookkeeping the two-part constructors need,
 and each half is one composition with a pad law.
 <!--zh-->
-陈述对安置泛型，也必须如此，因为递归的诸安置是在递归调用处造出来的。它陈述在**变元**环境 `γ` 与**变元**参数环境 `σ` 处，受一条假设约束：在每次出现处，安置所点名的那个位装着收集在那里记下的常元的解释。这条假设就是「常元由环境供给」的全部内容，而把它取作假设、而不是代入一个具体环境，正是让每条子句都不必归一化一个向量的原因。
+这一陈述对安置是泛型的，也必须如此，因为递归中的诸安置是在递归调用处产生的。它陈述在**变元**环境 `γ` 与**变元**参数环境 `σ` 处，受一条假设约束：在每次出现处，安置所指名的那个位置存放着在该处记录的诸常元的解释。这条假设就是「常元由环境供给」的全部内容；把它取作假设、而不是代入一个具体环境，正是让每条子句都不必归一化一个向量的原因。
 
-拆分这条假设是两部分的构造子唯一需要的记账，每一半都是一次与补位定律的复合。
+对由两部分构成的构造子，唯一要做的处理就是拆分这条假设，拆出的每一半各与补位定律复合一次。
 <!--/-->
 
 ```agda
@@ -174,7 +174,7 @@ Terms first, two cases and both immediate. A constant's value is what the
 hypothesis says the slot holds; a variable's value is untouched, and the pad law
 finds it again in the extended environment.
 <!--zh-->
-先词项，两个情形，都是当即成立。常元的取值就是假设所说那个位装着的东西；变量的取值原封不动，而补位定律在扩张后的环境中重新找到它。
+先看词项，两个情形都立即成立。常元的取值正是假设所述那个位置上的解释；变量的取值不变，补位定律保证它在扩张后的环境中仍取原值。
 <!--/-->
 
 ```agda
@@ -197,7 +197,7 @@ consing on the left and shifting the placement by `suc` cancel each other by
 computation, so the binders need no lemma of their own. The two bounded clauses
 split, term on the left and body on the right, exactly as their constructors do.
 <!--zh-->
-然后是归纳的十二个情形，十个公式情形在此，两个词项情形刚刚交割。命题的每条原语子句都是同余，因为语义给每个构造子指派的恰是真值代数的对应运算，中间没有翻译层要跨。四条约束子句向环境压入一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**通行：左侧的前置与安置的 `suc` 移位靠计算互相抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
+然后是归纳的十二个情形：十个公式情形在此处理，两个词项情形刚刚证毕。命题的每条原语子句都是同余，因为语义为每个构造子指派的恰是真值代数的对应运算，中间无须任何转换。四条约束子句向环境添加一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**适用：左侧的前置与安置的 `suc` 移位由计算相互抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
 <!--/-->
 
 ```agda
@@ -251,10 +251,10 @@ split, term on the left and body on the right, exactly as their constructors do.
 The adequacy proper follows by choosing the placement the abstraction chose and
 the parameter environment the collection prescribes: the constants themselves,
 interpreted. Its hypothesis is then the two pad laws in sequence, and the theorem
-reads exactly as promised. Satisfaction of the original at `γ` is satisfaction of
+states exactly this. Satisfaction of the original at `γ` is satisfaction of
 the abstraction at `γ` extended by the collected constants.
 <!--zh-->
-名副其实的充分性随之而来：安置取抽象所取的那一件，参数环境取收集所规定的那一个，即诸常元自身经解释之后的样子。它的假设便是两条补位定律的接续，而定理读起来一如所许：原公式在 `γ` 处的满足，就是抽象在「`γ` 被收集来的诸常元扩张之后」的满足。
+名副其实的充分性随之而来：安置取抽象所取的那一个，参数环境取收集所规定的那一个，即诸常元自身经解释之后的样子。它的假设正是两条补位定律的延续，而定理的内容也一如所述：原公式在 `γ` 处的满足，就是抽象在「`γ` 被收集来的诸常元扩张之后」的满足。
 <!--/-->
 
 ```agda
@@ -275,7 +275,7 @@ Parameter abstraction isolates the data behind a definable subset: a parameter-f
 <!--zh-->
 ## 何谓可定义子集
 
-参数抽象分离出可定义子集背后的数据：一条无参公式、有限参数向量，以及检验成员关系的变量。充分性表明，这种呈现与原带常元公式具有完全相同的外延。
+参数抽象把可定义子集背后的数据拆开列出：一条无参公式、一个有限参数向量，以及用于检验成员关系的变量。充分性表明，这种呈现与原带常元公式具有完全相同的外延。
 <!--ja-->
 ## 定義可能な部分集合とは何か
 

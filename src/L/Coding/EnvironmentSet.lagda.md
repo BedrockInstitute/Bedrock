@@ -16,18 +16,18 @@ For a constructible set `B` and a natural number `n`, this chapter constructs an
 
 <!--en-->
 The chapter that wrote the ten clauses said what it means for one thing to be
-an environment over a set, and disowned the question of whether all of them
+an environment over a set, and set aside the question of whether all of them
 together form a set. This chapter answers it: the satisfaction predicates will
 be separated from this common set of environments.
 
-The route is the one the axioms already sell. Environments over a set of `L` at a
-fixed length are indexed by a small type, each is an element of `L`, so they all
-lie below one stage; carving that stage by the description gives exactly them.
-Nothing here needs replacement, and nothing here needs a recursion.
+The route is the one the axioms already provide. Environments over a set of `L` at a
+fixed length are indexed by a small type; each is an element of `L`, so they all
+lie below one stage, and separating that stage by the description gives exactly them.
+Nothing here needs replacement, and nothing here needs recursion.
 <!--zh-->
 写下十条子句的那一章说了「单个东西是某集合之上的环境」是什么意思，却把「它们全体是否构成一个集合」这个问题推开了。本章回答它：满足关系的谓词将从这个共同的环境集合中分离出来。
 
-路线是诸公理早已卖给我们的那条。给定长度、落在 `L` 的某集合之上的诸环境，由一个小类型索引，每个都是 `L` 的元素，故它们全部落在同一个阶段之下；用那条描述雕出那个阶段，得到的恰是它们。此处不需要替换，也不需要任何递归。
+这里使用的是诸公理已经给出的路线。给定一个长度，所有取值落在 `L` 的某个集合中的环境由一个小类型索引；每个环境都是 `L` 的元素，因此它们全都位于某个共同阶段之下。再按相应描述从该阶段中分离，所得集合恰好包含这些环境。此处不需要替换，也不需要递归。
 <!--/-->
 
 ```agda
@@ -98,10 +98,10 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 
 <!--en-->
 The move `smallDom`{.Agda} makes, with the ordinal kept rather than hidden,
-because what wants it here is a lemma stated about stages rather than about a set
+because what is needed here is a lemma stated about stages rather than about a set
 of the model.
 <!--zh-->
-`smallDom`{.Agda} 所作的那个动作，但把那个序数留着而非藏起，因为此处要它的是一条关于阶段、而非关于模型某集合的引理。
+它做的正是 `smallDom`{.Agda} 所做的事，但把那个序数保留下来而不隐藏，因为此处需要的是一条关于阶段、而非关于模型某集合的引理。
 <!--/-->
 
 ```agda
@@ -140,7 +140,7 @@ An environment over a set of `L` is a finite set of pairs of a numeral with a
 member, and a member of an element of `L` is an element of `L`, so the pairs are
 too and the stage lemma above closes it.
 <!--zh-->
-落在 `L` 的某集合之上的环境，是「数码与某成员」之对构成的有穷集；而 `L` 元素的成员是 `L` 的元素，故那些对也是，于是上面那条阶段引理把它封上。
+落在 `L` 的某集合之上的环境是由「数码与成员」之对组成的有穷集；而 `L` 之元素的成员仍是 `L` 的元素，故这些对也是，于是前一条阶段引理恰好适用于此。
 <!--/-->
 
 ```agda
@@ -202,7 +202,7 @@ The description takes three arguments and separation offers one variable, so the
 other two are bound and pinned to constants. That is three lines and it keeps the
 description as the chapter wrote it, which is worth more than saving them.
 <!--zh-->
-那条描述要三个自变量，而分离只给一个变元，故另外两个被绑定并钉在常元上。这花三行，而它让那条描述保持本章当初写下的样子，这比省下那三行值钱。
+那条描述需要三个自变量，而分离只提供一个变元，故另外两个被绑定到固定的常元上。这要花三行，却让那条描述保持本章当初写下的形式，比省下这三行更值得。
 <!--/-->
 
 ```agda
@@ -242,7 +242,7 @@ description as the chapter wrote it, which is worth more than saving them.
 <!--en-->
 For `g : Fin n → ⟪ B ⟫`, the proof checks that its graph is single-valued, has domain `n`, and contains exactly the required values and pairs, hence belongs to `envSet n`.
 <!--zh-->
-对 `g : Fin n → ⟪ B ⟫`，证明核对其图为单值、定义域为 `n`，且恰含所需的值与有序对，因而属于 `envSet n`。
+对 `g : Fin n → ⟪ B ⟫`，证明的核心是核对其图为单值、定义域为 `n`，且恰含所需的值与有序对，因而属于 `envSet n`。
 <!--ja-->
 `g : Fin n → ⟪ B ⟫` について、そのグラフが単値で定義域が `n` であり、必要な値と対をちょうど含むことを確認し、`envSet n` に属することを示します。
 <!--/-->
@@ -254,7 +254,7 @@ membership specification, which is `refl`{.Agda}; the domain is the only one tha
 does arithmetic, because saying the domain is the numeral `n` means saying that
 the indices below `n` are exactly the numerals below `n`.
 <!--zh-->
-四个合取项，而每一条都是把那条描述对着「环境究竟是什么」读一遍。单值性与那两条包含关系直接落自成员规格，而后者是 `refl`{.Agda}；只有定义域那一条要算术，因为「定义域是数码 `n`」这句话，说的就是「`n` 以下的诸序号恰是 `n` 以下的诸数码」。
+四个合取项，而每一条都只是把那条描述对着「环境究竟是什么」读一遍。单值性与那两条包含关系直接由成员规格得出，而后者是 `refl`{.Agda}；只有定义域那一条需要算术，因为「定义域是数码 `n`」说的正是「`n` 以下的诸序号恰是 `n` 以下的诸数码」。
 <!--/-->
 
 ```agda
@@ -347,25 +347,27 @@ Conversely, the four `envOverAt` clauses for a member `x` determine a function `
 <!--/-->
 
 <!--en-->
-The other direction, which is what four clauses want when they read a bound
-variable off an environment, and which seven want in a weaker form: a clause
+The other direction is what four clauses need when they read a bound variable
+off an environment, and seven further clauses use it in a weaker form: a clause
 binds its own ambient set and says only that its members are the environments,
-so a proof that consumes the clause has to turn that description back into
-**this** set. Both uses are the same recovery, which is why it takes the
+so a proof that consumes the clause has to recognize that description as
+**this** set. Both uses come from the same recovery, which is why it takes the
 environment and the three slots as parameters rather than fixing them: a clause
-puts them where its own frame puts them, not where this chapter would. A set that satisfies the description is the graph of
-a function, and recovering the function is the only place the four conjuncts have
-to work together: the domain conjunct says every index below the length has an
-entry, single-valuedness says at most one, so the entry is a **proposition** and
-the truncation the domain gives comes off. Membership then names the index, which
-is untruncated because the fibers of a set's own indexing are.
+places them where its own frame places them, not where this chapter would. A set satisfying the description is the graph of a function,
+and recovering that function is the only place the four conjuncts must work
+together: the domain conjunct says every index below the length has an entry,
+and single-valuedness says there is at most one, so the existence of that entry
+is a **proposition** and the truncation given by the domain conjunct can be
+eliminated. Membership then names the index, which is untruncated because the
+fibers of a set's own indexing are.
 
-Extensionality closes it, one direction from the entries and the other from the
-pairs conjunct, which is the conjunct whose absence would have let junk in.
+Extensionality completes the proof: one direction comes from the entries and
+the other from the pairs conjunct, which is the conjunct without which
+unwanted elements could enter.
 <!--zh-->
-另一个方向，也是四条子句在从环境读出被绑变元时所要的；另有七条以更弱的形式要它：一条子句绑定它自己的周遭集合，只说它的成员就是那些环境，故消费该子句的证明必须把那句描述变回**这个**集合。两种用法是同一次恢复，这也是它把环境与三个槽位取作参数、而非把它们钉死的原因：子句把它们放在自己框架所放之处，而不是本章会放之处。满足那条描述的集合是一个函数的图，而把那个函数恢复出来，是四个合取项唯一必须协同工作的地方：定义域那一条说「长度以下的每个序号都有条目」，单值性说「至多一个」，于是那个条目是**命题**，定义域给的那个截断就掉了下来。隶属关系随后点出索引，而那是不截断的，因为一个集合自身索引的纤维就是不截断的。
+另一个方向也是四条子句从环境中读出被绑定变元时所需的；另有七条子句以较弱的形式使用它：子句绑定自己的周遭集合，只断言其成员恰为这些环境，因此使用该子句时必须把这项描述识别为**这个**集合。两种用途来自同一个恢复过程。这也解释了为何环境和三个槽位作为参数给出，而不固定为特定对象：各子句可以把它们放在自身框架要求的位置。满足该描述的集合是一个函数图。恢复这个函数是四个合取项唯一需要共同作用之处：定义域条件说明长度以下的每个序号都有条目，单值性说明条目至多一个，所以「该条目存在」是**命题**，可以消去定义域条件给出的截断。随后由隶属关系取得索引；这里无需截断，因为集合自身索引的纤维本来就是不截断的。
 
-外延把它合上，一个方向来自诸条目，另一个来自「由诸对构成」那一条，而正是那一条的缺席会放垃圾进来。
+外延性补全证明：一个方向来自诸条目，另一个来自「由诸对构成」那一条，而若缺了那一条，不需要的元素就会混进来。
 <!--/-->
 
 ```agda
@@ -490,5 +492,5 @@ so that nothing substitutes underneath a satisfaction at a concrete environment.
 <!--zh-->
 `envSet`{.Agda} 是诸负子句取补集所在的那个周遭集合，而它双向可读：`envSet-in`{.Agda} 把载体之上的每个环境放进去，`envSet-out`{.Agda} 从任一成员恢复出「它是其图」的那个函数。后者正是四条子句在从环境读出被绑变元时所要的，也是唯一需要那条描述的四个合取项协同上阵的一条。
 
-两次测量，而第二次是本书早已有的一条规矩的更锐形式。把环境写死来证第四个合取项，**十分钟没跑完**；把同一件事证成一条「环境是**变元**」的引理再施用，则快到测不出来。沿充分性等式作的满足关系代换，必须在自变量是变元之处交割：写在具体元素上，它会把整座绝对性之桥拖进归一化，连同那些元素的可构造性证书。在构造点封住证书是必要而不充分的。恢复那一段按同样的方式写：把那条描述的两个常元槽留作「由等式约束的参数」，而不写死进去，于是没有任何代换发生在「具体环境上的满足关系」之下。
+这里记录两次测量，第二次把本书已有的一条规则说得更精确。把环境固定为具体值后证明第四个合取项，**十分钟仍未完成**；先在环境为**变元**时证明同一引理，再将其应用，耗时则几乎无法测出。沿充分性等式替换满足关系时，替换必须发生在自变量仍是变元之处；若写在具体元素上，归一化会展开整套绝对性结果以及这些元素的可构造性证书。只在构造处封装证书仍不足以避免这一点。恢复部分采用同样的写法：那条描述的两个常元槽保留为由等式约束的参数，而不固定为具体对象，因此不会在具体环境的满足关系之下发生替换。
 <!--/-->

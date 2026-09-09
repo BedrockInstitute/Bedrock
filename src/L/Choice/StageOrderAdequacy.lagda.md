@@ -38,11 +38,11 @@ What does not close is the step itself. The chapter says so with a named
 parameter carrying its own meaning as a hypothesis, and never with an
 approximation.
 <!--zh-->
-上一章把每个阶段处的序变成了 `L` 的一个对象，而那个构造是撑在两条假设上的，它们说清那条步进条件是什么意思。填它们不是一笔债而是三笔：步进描述对着元层面那一步的充分性；诞生阶段在对象语言里的说法，至今无人说过；以及在一个随诞生阶段移动的载体上的码集。本章了结第二笔与第三笔，并把那两条假设变成**一**条，即单个载体处的那一步。
+上一章把每个阶段处的序变成了 `L` 的一个对象，而那个构造依赖两条假设，它们说清那条步进条件是什么意思。补足它们需要三件事：步进描述对应于元层面那一步的充分性；诞生阶段在对象语言里的说法，此前尚未给出；以及在一个随诞生阶段移动的载体上的码集。本章完成其中第二件与第三件，并把那两条假设合并为**一**条，即单个载体处的那一步。
 
-这次归约正是本章的用意所在，故值得说准。序之族以诞生阶段为主键：一个阶段的两个成员，按它们各自被雕出的时刻比较，只有在同一时刻被雕出的两个，才由那个时刻的机器来比较。于是上一章所索取的那条条件裂开了，而诞生阶段那一半是较大的一半。写出来后，它不需要后继运算：一个集合的诞生阶段，是这样的序数，它的塔不装这个集合，而那座塔的可定义幂集装它；这两件事都是原子，且都架在早已存在的描述之上。
+这次归约是本章的目的。序之族以诞生阶段为主键：比较同一阶段的两个成员时，先比较它们各自被雕出的阶段；只有诞生阶段相同，才使用该阶段上的步进序。于是，上一章要求的条件分成两部分，其中诞生阶段部分较大。其对象语言描述不需要后继运算：一个序数是集合的诞生阶段，当且仅当该序数处的塔不包含这个集合，而该塔的可定义幂集包含它。这两项都是原子，并使用已有的塔与可定义幂集描述。
 
-不能了结的是那一步自身。本章以一个具名参数把这句话说出来，参数自带其含义作为假设，而绝不用近似物顶替。
+不能完成的是那一步自身。本章以一个具名参数表述这一点：该参数把自身的含义作为假设给出，而不以任何近似代替。
 <!--/-->
 
 ```agda
@@ -147,7 +147,7 @@ opaque
 ## The birth stage, said inside
 
 <!--zh-->
-## 诞生阶段，在内部说出
+## 诞生阶段的内部表述
 <!--ja-->
 ## 誕生段階を内部で述べる
 <!--/-->
@@ -168,31 +168,31 @@ The description binds two sets and names no constant. There is a `c` which is th
 tower at `b`; `x` does not belong to it; and there is a `d` which is the definable
 powerset of `c`, to which `x` does belong. `Lset-suc`{.Agda} is what makes those
 two conditions equivalent to "`b` is one below the least stage containing `x`",
-and it is spent only on the meta side. That is why the sentence needs no successor
+and it is used only on the meta side. That is why the sentence needs no successor
 operation of its own, and why the tower graph is used at the slot `b` itself
 rather than at a successor of it.
 
 Both readings stand at **variable** slots in a variable environment, with
 ordinality at the `b` slot as the only hypothesis. Soundness is a trichotomy
 against the least stage, and it is a named helper with its conclusion written
-down: the first branch is refuted by `stage-earliest`{.Agda}, the second is
-`ord-suc-inj`{.Agda} against `birth-suc`{.Agda}, and the third is
+down: the first branch is refuted by `stage-earliest`{.Agda}, the second uses
+`ord-suc-inj`{.Agda} with `birth-suc`{.Agda}, and the third is
 `∈sucV-elim`{.Agda} into two contradictions with the non-membership. Completeness
 is shorter, because `Lset-defines`{.Agda} and `DefAt-stage`{.Agda} each run one
 line the other way.
 
 The two elements the description is satisfied at are **sealed**, and the marker
-records the measurement rather than a preference: unsealed, this section alone
-runs 178 s where sealed it runs 2 s. `Lset`{.Agda} and `𝒟ₒ`{.Agda} are already
+records what the measurement gives rather than a preference: unsealed, this
+section alone runs 178 s where sealed it runs 2 s. `Lset`{.Agda} and `𝒟ₒ`{.Agda} are already
 sealed where they are built, but the pairs that carry their constructibility
-proofs are not, and it is the pair that reaches the slot.
+proofs are not, and it is the pair that reaches the formula slot.
 <!--zh-->
 
-这条描述绑定两个集合，且不点名任何常元。存在一个 `c`，它是 `b` 处的塔；`x` 不属于它；并且存在一个 `d`，它是 `c` 的可定义幂集，而 `x` 属于它。使这两条条件等价于「`b` 比包含 `x` 的最小阶段低一级」的，是 `Lset-suc`{.Agda}，而它只花在元层面这一侧。这正是那个句子不需要自备后继运算的原因，也是塔之图用在 `b` 那一位自身、而不是用在它的一个后继上的原因。
+这条描述绑定两个集合，不点名任何常元。存在 `c`，它是 `b` 处的塔，且 `x` 不属于它；还存在 `d`，它是 `c` 的可定义幂集，且 `x` 属于它。`Lset-suc`{.Agda} 在元层面证明这两个条件等价于「`b` 比包含 `x` 的最小阶段低一级」。因此，这个句子不需要后继运算，塔之图也取在 `b` 自身，而非它的后继处。
 
-两条读式都站在变元环境的**变元**位上，唯一的假设是 `b` 那一位的序数性。可靠性是一次对着最小阶段的三歧分情形，而它是一个把结论写出来的具名辅助：第一支由 `stage-earliest`{.Agda} 驳倒，第二支是 `ord-suc-inj`{.Agda} 对着 `birth-suc`{.Agda}，第三支是 `∈sucV-elim`{.Agda} 分成两条同非隶属相冲的矛盾。完备性更短，因为 `Lset-defines`{.Agda} 与 `DefAt-stage`{.Agda} 各自反着跑一行。
+两条读式都处于变元环境中的**变元**位置，唯一的假设是 `b` 处的序数性。可靠性证明是对最小阶段的三歧分情形，由一个把结论写出来的具名辅助完成：第一支由 `stage-earliest`{.Agda} 驳倒，第二支用 `ord-suc-inj`{.Agda} 配合 `birth-suc`{.Agda}，第三支由 `∈sucV-elim`{.Agda} 分成两个与非隶属相冲突的矛盾。完备性更短，因为 `Lset-defines`{.Agda} 与 `DefAt-stage`{.Agda} 各自反向应用一行即可。
 
-这条描述所满足于其上的那两个元素被**封印**，而那条标记记录的是实测、不是偏好：不封印，仅这一节就跑 178 秒，封印后是 2 秒。`Lset`{.Agda} 与 `𝒟ₒ`{.Agda} 在它们被造出之处早已封印，但携带它们可构造性证明的那两个对还没有，而抵达槽位的正是那个对。
+这条描述作用的两个元素在构造处被**封印**。这是实测决定的不透明边界：不封印时，仅本节就需要 178 秒；封印后需要 2 秒。`Lset`{.Agda} 与 `𝒟ₒ`{.Agda} 已在各自构造处封印，但包含它们及其可构造性证明的两个元素尚未封印，而进入公式槽位的正是这两个元素。
 <!--/-->
 
 ```agda
@@ -297,10 +297,10 @@ module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
 ```
 
 <!--en-->
-## The codes at any arity, at a carrier that is a slot
+## The codes at any arity, at a carrier held in a slot
 
 <!--zh-->
-## 任意元数处的诸码，落在一个作为槽位的载体上
+## 任意元数处的诸码，位于槽位所持的载体上
 <!--ja-->
 ## スロットにある台上の任意アリティの符号
 <!--/-->
@@ -309,7 +309,7 @@ module _ {n : ℕ} (b x : Fin n) (γ : S ^ n) where
 `isCodeAnyAt`{.Agda} lets a variable slot name the carrier while another slot
 holds a code, with fill/read lemmas for membership in the codes of any arity.
 <!--zh-->
-`isCodeAnyAt`{.Agda} 让一个变元位点名载体，另一位持有码，并以填充与读取引理刻画任意元数的码成员关系。
+`isCodeAnyAt`{.Agda} 为一个变元位点命名载体，让另一位持有码，并以填充与读取两条引理刻画任意元数处的码成员关系。
 <!--ja-->
 `isCodeAnyAt`{.Agda} では一つの変数スロットが台を、別のスロットが符号を保持し、任意アリティの符号への所属を fill/read 補題で特徴づける。
 <!--/-->
@@ -332,9 +332,9 @@ into a formula over the carrier. No new machinery, no new side condition, and th
 carrier is a slot throughout.
 <!--zh-->
 
-第三笔债索取的是「在一个随诞生阶段移动的载体上的码集」。它是**实例化、不是构造**，而把这句话说出来值这一段。幂集那一章早已把「载体握在一位上」的码谓词 `isCodeAt`{.Agda} 写成两个合取项：实参是元数一处的一个键，且它在那一位所持有的载体上有一个既封闭又成形的见证。码集那一章也早已写下第一个合取项的元数**绑定**变体 `arityNumAtL`{.Agda}，因为对诸子码的递归必须以每个元数处的诸键为索引。两者之间再无别的差异。
+本节要给出的是「在一个随诞生阶段移动的载体上的码集」。它是**实例化、不是构造**，这一点值得用整段说清楚。幂集一章早已把「载体握在一位上」的码谓词 `isCodeAt`{.Agda} 写成两个合取项：实参是元数一处的一个键，且它在那一位所持有的载体上有一个既封闭又成形的见证。码集一章也早已写下第一个合取项的元数**绑定**变体 `arityNumAtL`{.Agda}，因为对诸子码的递归必须以每个元数处的诸键为索引。两者之间再无别的差异。
 
-于是此处所要的谓词，就是第二个合取项接上元数绑定的第一个，而它的两条读式就是现成的那两条，读在一位上：元数那一项交出一个数码与一条码，见证那一项把这一对变成载体之上的一条公式。没有新机器，没有新的旁条件，而载体自始至终是一位。
+于是此处所需的谓词，就是把元数绑定的第一个合取项接到第二个合取项上；它的两条读式就是现成的那两条，读在一位上：元数那一项交出一个数码与一条码，见证那一项把这一对变成载体之上的一条公式。这里不引入任何新的机制或旁条件，而载体自始至终是一位。
 <!--/-->
 
 ```agda
@@ -376,7 +376,7 @@ module _ (A : S) where
 set over the carrier in a slot; extensionality turns its two membership readings
 into equality with `AllCodes`{.Agda}.
 <!--zh-->
-`CodesAt`{.Agda} 对全部元数量化，刻画槽位中载体上的完整码集；外延性把其两条成员读式化为与 `AllCodes`{.Agda} 的相等。
+`CodesAt`{.Agda} 对全部元数量化，刻画一位载体上的完整码集；外延性把它的两条成员读式化为与 `AllCodes`{.Agda} 的相等。
 <!--ja-->
 `CodesAt`{.Agda} はすべてのアリティを量化してスロット内の台上の全符号集合を特徴づけ、外延性により二つの所属の読みを `AllCodes`{.Agda} との等しさへ変える。
 <!--/-->
@@ -396,9 +396,9 @@ conjunct beside it the slot is pinned by the description instead, so a caller ma
 bind the carrier first and let the code set follow it.
 <!--zh-->
 
-那个集合是一次 `extAt`{.Agda}，理由与这条路线上每一条取值为集合的子句相同：一个取值恰是满足某条件的那些东西之集，而若写成一对包含，那个条件就要说两遍。它的两条读式把谓词那两条接到码集自家的隶属等价上，出来的是一条**元素之间**的等式：在一个经等式抵达的载体上，那一位所持有的就是该载体之上的码集而别无他物。
+那个集合由一次 `extAt`{.Agda} 给出，理由与这条路线中每一条取值为集合的子句相同：一个取值恰是满足某条件的那些东西之集，而若写成一对包含，那个条件就要说两遍。它的两条读式把谓词那两条接到码集一章的隶属等价上，得到一条**元素之间**的等式：在一个经等式抵达的载体上，那一位所持有的就是该载体之上的码集，此外没有别的。
 
-这正是「随诞生阶段移动」所索取的东西。命名那条描述把它的码集取作一位，由外部供来的一条等式钉住；有了这个合取项在旁，那一位改由描述自己钉住，于是调用方可以先绑定载体，再让码集跟着它走。
+这正是「随诞生阶段移动」所要求的东西。命名那条描述把它的码集取作一位，需要由外部提供的一条等式来确定；有了这个合取项之后，那一位改由描述自身确定，于是调用方可以先绑定载体，再让码集跟着它走。
 <!--/-->
 
 ```agda
@@ -474,7 +474,7 @@ one binder cheaper.
 Proof irrelevance extends that equality to the carriers paired with their
 ordinality proofs; transport along this single equality then moves the comparison.
 <!--zh-->
-三条元语言的定义，其中之一是本章的支点。`order-unfold`{.Agda} 是那一族的定义方程读在一个阶段处：两个成员的比较，就是它们诞生阶段之间的比较，或者，在同一诞生阶段处，就是那里的那一步。它是在递归的计算规则上作的一次 `cong`{.Agda}，而对象语言要对上的一切，如今都站在它的右边。
+三条元语言的定义，其中之一是本章的关键。`order-unfold`{.Agda} 是那一族的定义方程读在一个阶段处：两个成员的比较，就是它们诞生阶段之间的比较；或者，在同一诞生阶段处，就是那里的那一步。它是在递归的计算规则上作的一次 `cong`{.Agda}，而对象语言需要匹配的一切，如今都出现在它的右边。
 
 `bornIn`{.Agda} 是 `birth-in`{.Agda} 的逆：诞生阶段落在某个序数以下的集合，落在那个序数处的塔中。正是它使这条描述得以丢掉「被比较的两个集合都属于这个阶段」那条条件，只留下「两个诞生阶段都落在它以下」，而那是落在反正要绑定的两位上的两个隶属原子，还省下一层绑定。
 
@@ -530,7 +530,7 @@ description consumes: the underlying set of a member, the underlying set of a
 birth, and the one that says a birth **is** the birth of the member beside it, so
 that the birth description is discharged by `refl`{.Agda} at each call site.
 <!--zh-->
-另有四个元素抵达满足关系内部的诸位，它们出于同一条实测理由被封印。封印所暴露的诸等式，恰是这条描述要消费的那三条：一个成员的底集、一个诞生阶段的底集，以及那条说「某个诞生阶段**就是**它旁边那个成员的诞生阶段」的等式；于是诞生描述在每个调用点由 `refl`{.Agda} 解除。
+另有四个元素进入满足关系内部的槽位，并因前述实测原因在构造之处封装。封装后暴露的等式恰是描述所需的三条：成员的底层集合、诞生阶段的底层集合，以及「某个诞生阶段**就是**相邻成员的诞生阶段」这一等式。因此，每个调用点都可用 `refl`{.Agda} 解除诞生描述。
 <!--/-->
 
 Perf: the four elements the order description is satisfied at are sealed;
@@ -605,11 +605,11 @@ constants, and a term takes a constant without a binder, where a slot would cost
 one. Measured, that binder is the difference between 3 s and 160 s.
 <!--zh-->
 
-自此往下的一切都对那条步进条件保持通用，它以参数身份进场，含义在两个方向都说清：在一个经一位抵达的载体上，手里握着表在那里的取值时，该条件对两个集合成立，当且仅当那个载体处的步进序把它们关联起来。那个参数就是本章仍然欠着的全部，而它是有意做成一件事、而不是三件。
+自此往下的一切都对那条步进条件保持通用，它作为参数进入，其含义在两个方向都说清：在一个经一位抵达的载体上，给定表在那里记录的取值时，该条件对两个集合成立，当且仅当那个载体处的步进序把它们关联起来。这个参数就是本章尚待给出的全部内容，而且它是有意做成一件事、而不是三件。
 
-两个方向取用表在那个载体处的取值的方式不同，而这个不同不是装点。交到完备性手上的是**某一个**取值，附带「它实现那里的序」这条假设，因为那正是它要塞进那条条件里去的东西。可靠性被交到手上的，是对表在那里所记录的**每一个**取值都成立的那条假设，因为它所读的那条条件可能自己绑定了一个取值，而只有「无论找到哪一个都能证其实现」的供给方，才说得清那个取值是什么。两边都是上面那个框架交出来的东西，即 `Values`{.Agda} 读在单个实参上。
+两个方向取用表在那个载体处的取值的方式不同，而这个不同不是装点。完备性得到的是**某一个**取值，附带「它实现那里的序」这条假设，因为那正是它要填入那条条件的东西。可靠性得到的，则是对表在那里所记录的**每一个**取值都成立的那条假设，因为它所读的那条条件可能自己绑定一个取值，而只有「无论找到哪一个都能证其实现」的供给方，才说得清那个取值是什么。两边都是上面那个框架所提供的东西，即 `Values`{.Agda} 读在单个实参上。
 
-主体只绑定四个集合，不多。其中两个是被比较的成员，它们的对就是那个实参，另外两个是它们的诞生阶段。然后是五条条件：每个诞生阶段都是它那个成员的诞生阶段，每个诞生阶段都落在该阶段以下，以及比较自身，即两个诞生阶段之间的一个隶属原子，或者，在同一诞生阶段处，就是那一步。阶段是以**词项**、而不是以槽位的身份到场的，而这不是装饰：下一章要跑的那次分离，要的是整条条件落在诸常元上，而词项无须绑定就能接住一个常元，槽位则要花掉一层。实测下来，那一层绑定就是 3 秒与 160 秒之差。
+主体只绑定四个集合：其中两个是被比较的成员，它们构成那个实参；另外两个是它们的诞生阶段。接着是五条条件：每个诞生阶段都是其成员的诞生阶段；每个诞生阶段都落在该阶段以下；以及比较本身，即两个诞生阶段之间的一个隶属原子，或在同一诞生阶段处即那一步。阶段以**词项**而非槽位的身份出现，这不是单纯的表示选择：下一章要进行的分离要求整条条件落在诸常元上，而词项无须绑定便能容纳一个常元，槽位则要多出一层绑定。实测中，这一层绑定正是 3 秒与 160 秒的差别。
 <!--/-->
 
 ```agda
@@ -684,7 +684,7 @@ Uniqueness is never wanted, because the step condition is a proposition and a
 merely-existing value may be opened into it.
 <!--zh-->
 
-这条读式取用阶段的序数性，以及表在它以下的两条正确性条件，而那恰是它所供养的那个框架交出来的东西。二者是分开花掉的。可靠性只花正确性那一条，花在被比较成员的诞生阶段处，并原样把它递给步进参数。完备性经 `value`{.Agda} 把两条一并花掉：在阶段以下的一个诞生阶段处，表「仅仅」有一个取值，而那个取值实现那里的序，于是那个参数可以被填上。单值性自始至终用不上，因为步进条件是命题，而一个「仅仅存在」的取值可以在其中被打开。
+这条读式使用阶段的序数性，以及表在该阶段以下的两项正确性条件；这些正是它所依赖的框架提供的内容。可靠性只使用正确性条件，并在被比较成员的诞生阶段处将它传给步进参数。完备性通过 `value`{.Agda} 同时使用两项条件：在阶段以下的诞生阶段处，表仅仅存在一个取值，且该取值实现当地的序，因此可以提供步进参数。整个过程不使用单值性，因为步进条件是命题，可以在其中消去取值的仅仅存在。
 <!--/-->
 
 ```agda
@@ -719,7 +719,7 @@ in the stage, which is what the class quantifies over; and the comparison is the
 the family's own, along `order-unfold`{.Agda}. The description is sealed here, so
 nothing in this proof normalizes the sentence it is about.
 <!--zh-->
-可靠性把那四个被绑定的集合读回来。对的等式认定那个实参；两条诞生读式把两个被绑定的序数钉在两个成员的诞生阶段上；`bornIn`{.Agda} 把「落在该阶段以下」的两条隶属变成「属于该阶段」，而那正是那个类所量化的东西；随后那次比较就是那一族自家的比较，沿 `order-unfold`{.Agda} 而来。这条描述在此处是封印着的，故这份证明里没有任何东西去归一化它所谈论的那个句子。
+可靠性把那四个被绑定的集合读回来。那个对的等式认定那个实参；两条诞生读式把两个被绑定的序数分别对应到两个成员的诞生阶段；`bornIn`{.Agda} 把「落在该阶段以下」的两条隶属转换成「属于该阶段」，而后者正是那个类所量化的对象；随后的那次比较就是该族自身的比较，由 `order-unfold`{.Agda} 展开。这条描述在此处不作展开，因此这份证明中没有任何步骤去归一化它所谈论的那个句子。
 <!--/-->
 
 ```agda
@@ -810,7 +810,7 @@ on the comparison is a **named helper** and never a `with`{.Agda}: as a `with`{.
 this one split alone runs past 300 s, because the abstraction it performs is over
 a satisfaction and the satisfaction is the largest term in the chapter.
 <!--zh-->
-完备性把它们填回去。那个类被拆成一对成员加一次比较，比较由 `strict`{.Agda} 脱去截断，而那四个见证就是两个成员与它们的两个诞生阶段，各自封印。对那次比较的两路分情形是一个**具名辅助**，绝不是 `with`{.Agda}：写成 `with`{.Agda}，仅这一次分情形就跑过 300 秒，因为它所作的抽象是对着一个满足关系的，而那个满足关系是全章最大的词项。
+完备性把它们填回去。那个类被拆成一对成员加上一次比较；比较由 `strict`{.Agda} 去掉截断；那四个见证就是两个成员与它们的两个诞生阶段，各自以封存形式给出。对那次比较的两路分情形用一个**具名辅助**完成，而不是用 `with`{.Agda}：若写成 `with`{.Agda}，仅这一次分情形就超过 300 秒，因为它所作的抽象针对的是那个满足关系，而那个满足关系是全章最大的词项。
 <!--/-->
 
 ```agda
@@ -944,7 +944,7 @@ The code-set and birth-stage results instantiate the frame's fixed hypotheses,
 leaving only the two directions of the single-carrier step as parameters to the
 exported order description.
 <!--zh-->
-码集与诞生阶段结果实例化框架的固定假设，只留下单一载体处步进的两个方向，作为导出序描述的参数。
+码集与诞生阶段的结果实例化了框架的固定假设，只留下单一载体处步进的两个方向，作为导出序描述的参数。
 <!--ja-->
 符号集合と誕生段階の結果でフレームの固定仮定を具体化し、公開される順序記述のパラメータとして、一つの台でのステップの二方向だけを残す。
 <!--/-->
@@ -965,7 +965,7 @@ shapes a member of a stage comes in. All of it is **conditional on the step
 parameter**, and on nothing else.
 <!--zh-->
 
-上一章索取的是同一含义的两种形式：落在诸位上，因为图必须绑定它所查阅的那张表；以及落在诸常元上，因为分离是用单自由变量的公式去雕的。两者是同一个主体。落在诸位上时，阶段是词项 `var b`{.Agda}，什么也不绑定；落在诸常元上时，阶段是词项 `con B`{.Agda}，只有表被绑定，用一个存在量词，由那层绑定处的等式钉住。
+上一章要求同一含义的两种形式：落在诸位上，因为图必须绑定它所查阅的那张表；以及落在诸常元上，因为分离是用单自由变量的公式构造的。两者是同一个主体。落在诸位上时，阶段是词项 `var b`{.Agda}，不绑定任何东西；落在诸常元上时，阶段是词项 `con B`{.Agda}，只绑定表，用一个存在量词，并由那一层绑定处的等式确定。
 
 这两条一填上，`Described`{.Agda} 便可施用，而它所证的一切在此处都可取用：逼近、图、每个序数处的表、每个阶段处作为 `L` 之元素的那个关系，以及它的隶属读在「阶段的成员到场时的两种形状」上。这一切都**以那个步进参数为条件**，且再无其他条件。
 <!--/-->
@@ -1039,56 +1039,56 @@ is faithful whenever the one remaining step formula is adequate at its carrier.
 <!--en-->
 
 `BirthAt`{.Agda} is the birth stage described in the object language, with no
-successor operation and no constant named: the tower at the slot does not hold the
-set, and the definable powerset of that tower does. `BirthAt-out`{.Agda} and
-`BirthAt-in`{.Agda} are its two readings at variable slots, ordinality at the
-ordinal slot being the only hypothesis, and the two elements it is satisfied at
-are sealed, at a measured 178 s against 2 s.
+successor operation and no constant named: the tower at the specified slot does not
+contain the set, and the definable powerset of that tower does. `BirthAt-out`{.Agda} and
+`BirthAt-in`{.Agda} are its two directions at variable slots, ordinality at the
+ordinal slot being the only hypothesis. The two elements the description acts on
+are sealed at construction; the measured time drops from 178 s to 2 s.
 
-`isCodeAnyAt`{.Agda} is the code predicate at **any** arity over a carrier held in
-a slot, and it is an instantiation rather than a construction: the arity-bound
-conjunct and the witness conjunct both already existed, one in the code set
-chapter and one in the powerset chapter, and only their meeting is new.
-`CodesAt`{.Agda} is the set they cut out, one `extAt`{.Agda}, and
-`CodesAt-out`{.Agda} and `CodesAt-in`{.Agda} pin the slot to the code set over the
-carrier in both directions, so the naming description's code-set slot can be
-pinned by description instead of by an outside equation. That is the third
-obligation.
+`isCodeAnyAt`{.Agda} describes codes at **any** arity, relative to the carrier held at
+a slot, and it only instantiates and combines two existing constructions: the
+arity-bound conjunct was given in the code set chapter and the witness conjunct in
+the powerset chapter. `CodesAt`{.Agda} is the set constructed from this predicate by one
+`extAt`{.Agda}, and `CodesAt-out`{.Agda} and `CodesAt-in`{.Agda} show in both directions that the
+slot holds the code set over the carrier, so the naming description's code-set slot
+can be fixed by the description itself instead of by an outside equation. That
+completes the third obligation.
 
 `order-unfold`{.Agda} is the order family's defining equation at a stage, one
 `cong`{.Agda} over the recursion's computation rule; `bornIn`{.Agda} is the
-converse of `birth-in`{.Agda}, and it is what buys the description one binder less;
-`stepMoved`{.Agda} carries a step comparison along an equality of carriers, rebuilt
-here rather than reached for.
+converse of `birth-in`{.Agda}, and it is what saves the description one binder;
+`stepMoved`{.Agda} carries a step comparison along an equality of carriers. What is
+done here is to reconstruct that comparison rather than take it from an existing
+result.
 
-`CondCore`{.Agda} is the order at a stage described in full, birth-primary, generic
-in the step condition. It binds four sets, takes the stage as a **term** so that
-the constant form costs no binder, and it is **sealed where it is built**: unsealed,
-each of its two readings at constants runs 160 s. `CondCore-out`{.Agda} and
-`CondCore-in`{.Agda} are its two halves, and `Cond`{.Agda}, `Cond₀`{.Agda},
-`cond-spec`{.Agda} and `cond₀-spec`{.Agda} are the two forms the previous chapter's
-frame asked for, together with their meanings. With them, `Described`{.Agda}
-applies.
+`CondCore`{.Agda} describes the order at a stage in full, birth-primary, generic
+in the step condition. It binds four sets and takes the stage as a **term** so
+that the constant form needs no extra binder; the whole description is **sealed
+where it is built**: unsealed, each of its two readings at constants runs 160 s.
+`CondCore-out`{.Agda} and `CondCore-in`{.Agda} are its two directions, and `Cond`{.Agda},
+`Cond₀`{.Agda}, `cond-spec`{.Agda} and `cond₀-spec`{.Agda} provide the two forms the previous
+chapter's frame asked for, together with their meanings, so that `Described`{.Agda}
+can be constructed.
 
-What is not here is the step's own adequacy: `L.Choice.NameComparison`{.Agda}'s
-`StepAt`{.Agda} against `stepAt`{.Agda}. It enters as the parameter `Stp`{.Agda}
-with `stp-out`{.Agda} and `stp-in`{.Agda} as its meaning, the first taking the
-table's correctness at **every** value recorded at the carrier and the second a
-single value that realizes the order there, and it is a chapter of
-bookkeeping against chapters that exist: the parameter sequence read back as a
-vector, the denotation identified with the meta name's, the least of the
-description's names identified with the least of the meta ones. The frame's two
-hypotheses are gone; this one is what stands between the construction and an
-unconditional theorem.
+What is not supplied here is the step's own adequacy: `L.Choice.NameComparison`{.Agda}'s
+`StepAt`{.Agda} against `stepAt`{.Agda}. It is given as the parameter `Stp`{.Agda},
+with `stp-out`{.Agda} and `stp-in`{.Agda} as its two directions: the first assumes the
+table's correctness at **every** value recorded at the carrier, and the second uses a
+single value that realizes the order there. Establishing this parameter requires
+combining results from existing chapters: the parameter sequence is read back as a
+vector, the denotation is identified with the meta name's, and the least of the
+description's names is identified with the least of the meta ones. The frame's two
+hypotheses are eliminated; this parameter is the only remaining requirement before
+an unconditional theorem.
 <!--zh-->
 
-`BirthAt`{.Agda} 是诞生阶段在对象语言中的描述，不含后继运算，也不点名任何常元：那一位处的塔不装这个集合，而那座塔的可定义幂集装它。`BirthAt-out`{.Agda} 与 `BirthAt-in`{.Agda} 是它落在变元位上的两条读式，唯一的假设是序数位处的序数性，而它在其上成立的那两个元素被封印，实测为 178 秒对 2 秒。
+`BirthAt`{.Agda} 是诞生阶段在对象语言中的描述，不含后继运算，也不点名常元：指定槽位处的塔不包含该集合，而该塔的可定义幂集包含它。`BirthAt-out`{.Agda} 与 `BirthAt-in`{.Agda} 是它在变元槽位上的两个方向，唯一假设是序数槽位的序数性。描述作用的两个元素在构造处封印；实测用时由 178 秒降至 2 秒。
 
-`isCodeAnyAt`{.Agda} 是**任意**元数处、落在一位所持载体上的码谓词，而它是实例化、不是构造：元数绑定那个合取项与见证那个合取项都早已存在，一个在码集那一章、一个在幂集那一章，新的只是它们的会合。`CodesAt`{.Agda} 是它们雕出的那个集合，一次 `extAt`{.Agda}，而 `CodesAt-out`{.Agda} 与 `CodesAt-in`{.Agda} 在两个方向上把那一位钉在该载体之上的码集上，于是命名描述的码集那一位可以由描述钉住、而不必由外部的一条等式钉住。这就是第三笔债。
+`isCodeAnyAt`{.Agda} 描述**任意**元数处、相对于某槽位所持载体的码。它只是将两个已有构造实例化并结合：码集章已给出元数合取项，幂集章已给出见证合取项。`CodesAt`{.Agda} 是由该谓词经一次 `extAt`{.Agda} 构造的集合。`CodesAt-out`{.Agda} 与 `CodesAt-in`{.Agda} 在两个方向上说明该槽位持有相应载体上的码集，使命名描述能自行确定码集槽位，而不需要外部等式。这完成了第三项任务。
 
-`order-unfold`{.Agda} 是序之族在一个阶段处的定义方程，即在递归的计算规则上作的一次 `cong`{.Agda}；`bornIn`{.Agda} 是 `birth-in`{.Agda} 的逆，正是它为这条描述省下一层绑定；`stepMoved`{.Agda} 沿载体之间的一条等式搬运一次步进比较，此处是重建、而不是伸手去够。
+`order-unfold`{.Agda} 是序之族在一个阶段处的定义方程，即在递归的计算规则上作的一次 `cong`{.Agda}；`bornIn`{.Agda} 是 `birth-in`{.Agda} 的逆，正是它为这条描述省下一层绑定；`stepMoved`{.Agda} 沿载体之间的一条等式搬运一次步进比较。此处要做的是把这条比较重新构造出来，而不是从已有的结果中直接取用。
 
-`CondCore`{.Agda} 是阶段处的序的完整描述，以诞生阶段为主键，对步进条件保持通用。它绑定四个集合，把阶段取作**词项**，使得常元那一形式不花绑定；而它**在被造出之处封印**：不封印，它落在诸常元上的两条读式各跑 160 秒。`CondCore-out`{.Agda} 与 `CondCore-in`{.Agda} 是它的两半，而 `Cond`{.Agda}、`Cond₀`{.Agda}、`cond-spec`{.Agda} 与 `cond₀-spec`{.Agda} 是上一章那个框架所索取的两种形式连同它们的含义。有了它们，`Described`{.Agda} 便可施用。
+`CondCore`{.Agda} 完整描述阶段上的序，以诞生阶段为主键，并对步进条件保持通用。它绑定四个集合，将阶段作为**词项**，使常元形式无需额外绑定；整个描述在构造处**封印**，否则常元形式的两条读式各需 160 秒。`CondCore-out`{.Agda} 与 `CondCore-in`{.Agda} 是两个方向；`Cond`{.Agda}、`Cond₀`{.Agda}、`cond-spec`{.Agda} 与 `cond₀-spec`{.Agda} 提供上一章框架要求的两种形式及其含义，从而可以构造 `Described`{.Agda}。
 
-不在此处的，是那一步自身的充分性，即 `L.Choice.NameComparison`{.Agda} 的 `StepAt`{.Agda} 对着 `stepAt`{.Agda}。它以参数 `Stp`{.Agda} 的身份进场，`stp-out`{.Agda} 与 `stp-in`{.Agda} 是它的含义，前者取用表在该载体处所记录的**每一个**取值上的正确性，后者取用「实现那里的序」的单个取值；而它是对着早已存在的诸章记账的一整章：把参数序列读回成向量、把指称与元层面名字的指称认同、把这条描述诸名字中的最小者与元层面诸名字中的最小者认同。那个框架的两条假设已经没了；剩下这一条，就是横在这个构造与一条无条件定理之间的东西。
+这里尚未提供步进自身的充分性，即 `L.Choice.NameComparison`{.Agda} 的 `StepAt`{.Agda} 对 `stepAt`{.Agda} 的充分性。它以参数 `Stp`{.Agda} 给出，`stp-out`{.Agda} 与 `stp-in`{.Agda} 分别表示两个方向：前者假设表在该载体处记录的**每一个**取值都正确，后者使用实现当地序的单个取值。证明这一参数需要组合已有章节的结果：把参数序列读回向量，证明描述指称与元层名字指称相同，并证明两种表示中的最小名字相同。原框架的两个假设已经消除；这一个参数是得到无条件定理前仅余的要求。
 <!--/-->

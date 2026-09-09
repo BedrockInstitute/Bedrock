@@ -22,8 +22,8 @@ used by the model record: given a set whose members
 are inhabited and pairwise disjoint, merely a set meeting each member in exactly
 one point.
 
-The shape of the argument is the classical one, with its expensive step already
-paid. The textbook well-orders the universe and takes the least member of every
+The argument follows the classical proof, with its most laborious step already
+carried out earlier. The textbook well-orders the universe and takes the least member of every
 cell. A well-order of all of `L` is a relation on a proper class, and this book
 never built one; what the previous chapters built instead is a well-order of each
 **stage**, uniformly, and, at every ordinal, as an element of the model. That is
@@ -47,13 +47,13 @@ stated relative to a ZF model on this carrier, because the intersection it names
 is that model's derived operation; and the whole of that dependence is one
 transport along the intersection's specification.
 <!--zh-->
-本章证明选择公理在 `𝒮ʟ` 处的实例，采用模型 record 所用的**横截**形式：给定一个集合，其成员非空且两两不交，则仅仅存在一个与它每个成员恰交于一点的集合。
+本章证明选择公理在 `𝒮ʟ` 处的实例，采用模型 record 的**横截**形式：给定一个成员非空且两两不交的集合，则仅仅存在一个集合，与原集合的每个成员恰交于一点。
 
-论证的形状就是经典的那个，只是那昂贵的一步早已付讫。教科书把宇宙良序化，再取每一格中最小的成员。`L` 整体的良序是真类上的关系，本书从未造过一个；前几章造出来的，是每个**阶段**上的良序，一致地造出，且在每个序数处都作为模型的一个元素。这就够了，因为集合是小的。单个序数一举界住一个族、它的成员与它们的成员，而在那个序数处的塔之内，选取不过是一次普通的极小元搜索。
+论证与经典证法相同，只是其中最费力的那一步已经在此前完成：教科书把宇宙良序化，再取每一格中最小的成员。`L` 整体的良序是真类上的关系，本书从未构造过它；前几章构造出来的，是每个**阶段**上的良序，且是一致地构造的，并在每个序数处都作为模型的一个元素。这就够了，因为集合是小的：单个序数就能同时界住一个族、它的成员与它们的成员，而在该序数处的塔之内，选取不过是一次普通的极小元搜索。
 
-于是本章只有四步。**上界**：阶段那一章为该族给出的上界序数，在该族自身的阶段之上，从而在它每个成员的每个成员之上。**那里的序**：表在那个序数处的关系，作为模型的一个元素，配两条引理把对它的隶属与元层面的比较双向读通。**那条描述**：「该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前」，一条以那个序为常元的公式，模型自家的分离据以雕出一个集合。**计数**：那个集合与每个成员恰交于一点，存在性来自极小元，唯一性来自两两不交，而这正是不交性的用途，也是全书唯一用到它的地方。
+于是本章只有四步。**上界**：阶段一章为该族给出的上界序数高于该族自身的阶段，因而高于它每个成员的每个成员。**那里的序**：取该序数处表中的关系，它是模型的一个元素，另有两条引理把对它的隶属与元层面的比较双向读通。**那条描述**：「该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前」，这是以那个序为常元的公式，本章的模型据它用分离得到一个集合。**计数**：该集合与每个成员恰交于一点，存在性来自极小元，唯一性来自两两不交；这正是两两不交假设的用途，也是全书唯一用到它的地方。
 
-还有第五样东西，但它是一句观察、不是一步。选择相对于此载体上的一个 ZF 模型陈述，因为它所点名的交是那个模型的派生运算；而这份依赖的全部，不过是沿交的规格的一次搬运。
+本章除四步之外还有一句观察。选择是相对于此载体上的一个 ZF 模型陈述的，因为它所点名的交是该模型的派生运算；而这份依赖的全部内容，就是沿交的规格作一次改写。
 <!--/-->
 
 ```agda
@@ -134,7 +134,7 @@ a later reader of this description should not have to re-measure.
 
 一条公式，一个自由变元，两个常元。它对一个集合 `z` 说：该族的某个成员含有 `z`，且那个成员中没有任何东西在那个序下排在 `z` 之前。应用原子直接把那个序当作常元。族也直接点名，因为它只出现在一条隶属原子之下。
 
-那条公式被封印，依的是常设定律：读在常元上的描述要在被造出之处封印。但在此处这条定律是免费的、而非决定性的：封印与不封印都检查 2.3 秒，本章据实说出这一点，而不去借用别处的数字。理由值得写一行，因为它说清了此前那些实测究竟在测什么。那些描述内部装着已编码的语法，每次在具体环境上的满足关系都要把一整条层级描述正规化；而这一条装的是四条原子与一次应用，没有什么大东西可展开。封印仍然保留，因为它分文不花，也因为日后读这条描述的人不该被迫重测一遍。
+该公式仍在构造之处封装，因为常元上的描述原则上应在定义处保持不透明。不过，这一选择在本章不影响检查时间：封装与不封装都需 2.3 秒。原因是此前较慢的描述内部含有已编码语法，在具体环境中求满足关系会正规化完整的层级描述；这里的公式只包含四个原子和一次应用，没有大型定义可展开。封装仍予保留，以维持统一接口，并避免后续使用者重新评估这一边界。
 <!--/-->
 
 Perf: sealed by the standing law (a description read at constants), though
@@ -182,8 +182,8 @@ lets it be named by a constant in the description at all.
 `least`{.Agda} applies the generic search from `L.WellOrder.Base`{.Agda} to it.
 The same search serves finite-stage orders and name selection, and will serve
 later GCH constructions; here its role is specific: it turns the stage order
-into one chosen representative for each cell. This is where excluded middle
-buys the choice needed by the transversal.
+into one chosen representative for each cell. This is precisely the selection
+that excluded middle makes possible for the transversal.
 
 `pick-in`{.Agda} and `pick-out`{.Agda} are the description's two readings, and
 neither is a corollary of the other: one builds a satisfaction out of a least
@@ -198,8 +198,8 @@ Then the separation and the counting. `transversalSet`{.Agda} is the model's own
 separation, at the tower at `β`{.Agda}, by the description. `Cut`{.Agda} fixes a
 member of the family: the centre of the intersection is the least element, which
 is in the transversal because `pick-in`{.Agda} says so and in the member because
-being least includes being there. Uniqueness is where disjointness is spent.
-Another point of the intersection satisfies the description, so it is least in
+being least includes being there. Uniqueness is where pairwise disjointness is
+used. Another point of the intersection satisfies the description, so it is least in
 **some** member of the family; it also lies in this one; so the two members meet
 and are equal; so it is least in this member too, and least elements are unique
 by trichotomy alone. The generic uniqueness theorem
@@ -208,11 +208,11 @@ by trichotomy alone. The generic uniqueness theorem
 
 本模块固定下供应交运算的那个 ZF 模型、那个族，以及该族的两条假设。选择构造的阶段部分在该族自身处供应上界与序：`β`{.Agda} 是一个高于该族自身阶段的序数，从而高于它的成员及其成员，也高于诸名字所住的 `ω`；`W`{.Agda} 是 `β`{.Agda} 处塔的诸成员上的良序；而 `rel`{.Agda} 就是同一个序作为**模型的一个元素**，正是这一点才使它能在描述中被一个常元点名。
 
-`Cell x`{.Agda} 是那些成员之上「是 `x` 的成员」这条谓词，而 `least`{.Agda} 把 `L.WellOrder.Base`{.Agda} 的泛型搜索施于它。同一搜索此前已用于有穷阶段序与名字选取，后面还用于 GCH 构造；它在此处的具体职责，是把阶段序变成每一格的一个选定代表。这正是排中律为横截集买来的选取。
+`Cell x`{.Agda} 是那些成员之上「是 `x` 的成员」这条谓词，而 `least`{.Agda} 把 `L.WellOrder.Base`{.Agda} 的泛型搜索施于它。同一搜索此前已用于有穷阶段序与名字选取，后面还用于 GCH 构造；它在此处的具体职责，是把阶段序变成每一格的一个选定代表。这正是借助排中律才能为横截集完成的选取。
 
-`pick-in`{.Agda} 与 `pick-out`{.Agda} 是那条描述的两条读式，而两者互不为对方的推论：一条由极小元造出一个满足关系，另一条由满足关系取出一个极小元，且各自都要把一个集合在它可被呈现的两种形态之间搬动，即作为 `L` 的元素与作为 `β`{.Agda} 处塔的成员。两个截断载荷分别名为 `Two`{.Agda} 与 `Predecessor`{.Agda}，于是两条读式都不必把嵌套写开；否定式是唯一一处把截断消去到空类型的地方，而它是在一个具名辅助件里消去的。
+`pick-in`{.Agda} 与 `pick-out`{.Agda} 是那条描述的两条读式，而两者互不为对方的推论：一条由极小元造出一个满足关系，另一条由满足关系取出一个极小元，且各自都要把一个集合在它可被呈现的两种形态之间转换，即作为 `L` 的元素与作为 `β`{.Agda} 处塔的成员。两个截断载荷分别名为 `Two`{.Agda} 与 `Predecessor`{.Agda}，于是两条读式都不必把嵌套写开；否定式是唯一一处把截断消去到空类型的地方，而它是在一个具名辅助件里消去的。
 
-随后是分离与计数。`transversalSet`{.Agda} 就是模型自家的分离，施于 `β`{.Agda} 处的塔，依那条描述。`Cut`{.Agda} 固定该族的一个成员：交的收缩中心就是那个极小元，它在横截集中，因为 `pick-in`{.Agda} 如此说；它在那个成员中，因为「是极小的」本身就包含「在那里」。唯一性正是不交性被花掉之处。交的另一个点满足那条描述，故它在该族的**某个**成员中是极小的；它同时又落在眼前这个成员里；故那两个成员相交，从而相等；故它在这个成员中也是极小的，而极小元仅凭三歧就唯一。泛型唯一性定理 `isPropLeastOf`{.Agda} 恰好收束这最后一次比较。
+随后进行分离与计数。`transversalSet`{.Agda} 是模型中的分离，依照该描述施于 `β`{.Agda} 处的塔。`Cut`{.Agda} 固定族中的一个成员：交的收缩中心就是相应极小元；由 `pick-in`{.Agda}，它属于横截集，而极小性本身保证它属于该成员。唯一性在这里使用两两不交：交中的另一点满足描述，因而是族中某个成员的极小元，同时又属于当前成员；两个成员因此相交并相等，所以该点也是当前成员的极小元。极小元由三歧唯一，泛型定理 `isPropLeastOf`{.Agda} 完成最后这步比较。
 <!--/-->
 
 ```agda
@@ -401,20 +401,20 @@ field required by the ZF model record on `𝒮ʟ`.
 <!--en-->
 
 `ChoiceStatement`{.Agda} is the statement the frontier used to hold, moved here
-verbatim and no longer a debt: the model's choice field at `𝒮ʟ`, relative to a
+verbatim and proved here: the model's choice field at `𝒮ʟ`, relative to a
 ZF model on this carrier because the intersection is that model's derived
-operation. `hasChoiceL`{.Agda} proves it. The root chapter applies it to the very
+operation. `hasChoiceL`{.Agda} gives the proof. The root chapter applies it to the very
 model it is assembling, which is why the statement quantifies over the model in
 the first place.
 
-This line supplies the Choice field used by the root theorem. Its statement
+This line gives the Choice field used by the root theorem. Its statement
 remains relative to the ZF model being assembled because intersection is the
 derived operation of that model.
 <!--zh-->
 
-`ChoiceStatement`{.Agda} 就是前沿曾经持有的那条陈述，原样移到此处，且不再是一笔债：模型的选择字段在 `𝒮ʟ` 处的样子，是相对于此载体上的一个 ZF 模型而言的，因为那个交是那个模型的派生运算。`hasChoiceL`{.Agda} 证出它。根章把它施于正在装配的那个模型自身，而这正是这条陈述一开始就要对模型作全称的原因。
+`ChoiceStatement`{.Agda} 就是前沿先前持有的那条陈述，原样移到此处，并在此处被证出：模型的选择字段在 `𝒮ʟ` 处的样子，是相对于此载体上的一个 ZF 模型而言的，因为那个交是该模型的派生运算。`hasChoiceL`{.Agda} 给出证明。根章把它施于正在装配的那个模型自身，这正是这条陈述一开始就要对模型作全称的原因。
 
-这一行供应根定理所用的选择字段。它仍相对于正在装配的 ZF 模型陈述，因为交是该模型的派生运算。
+这一行给出根定理所用的选择字段。它仍相对于正在装配的 ZF 模型陈述，因为交是该模型的派生运算。
 <!--/-->
 
 ```agda
@@ -445,7 +445,7 @@ hasChoiceL zf a inh disj = ∣ T.transversalSet , T.transversal ∣₁
 `Pick`{.Agda}, the bounded stage order, and separation together produce the
 transversal whose exact-one-point property supplies `hasChoiceL`{.Agda}.
 <!--zh-->
-`Pick`{.Agda}、循阶的阶段序与分离共同产出横截集，其恰交于一点的性质供应 `hasChoiceL`{.Agda}。
+`Pick`{.Agda}、循阶的阶段序与分离共同造出横截集；它与每个成员恰交于一点，这一性质给出 `hasChoiceL`{.Agda}。
 <!--ja-->
 `Pick`{.Agda}、段階有界な順序、分出公理から横断集合が得られ、その各セルと一点だけで交わる性質が `hasChoiceL`{.Agda} を与える。
 <!--/-->
@@ -467,9 +467,9 @@ description carries no coded syntax. The seal stays, and the number is recorded
 so that the law keeps its true shape: it is about what a description **contains**,
 not about where it is read.
 <!--zh-->
-`Pick`{.Agda} 是那条描述：该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前。`pick-in`{.Agda} 与 `pick-out`{.Agda} 是它对着「是某个成员的极小元」的两条读式。`transversalSet`{.Agda} 是模型的分离据它而在该族的上界序数处的塔之上雕出的东西，而 `transversal`{.Agda} 数清它与每个成员之交：恰一点，存在性来自那场极小元搜索，唯一性来自两两不交。`hasChoiceL`{.Agda} 就是模型的选择字段，有了它，前沿即告清空并被删除。
+`Pick`{.Agda} 是那条描述：该族的某个成员含有这个集合，且那个成员中没有任何东西排在它之前。`pick-in`{.Agda} 与 `pick-out`{.Agda} 是它相对于「是某个成员的极小元」的两个方向的读式。`transversalSet`{.Agda} 是模型以它为据、用分离在该族上界序数处的塔上得到的集合；`transversal`{.Agda} 则算出它与每个成员之交：恰为一点，存在性来自那场极小元搜索，唯一性来自两两不交。`hasChoiceL`{.Agda} 就是模型的选择字段；有了它，前沿即告清空并被移除。
 
-一次实测，且是一条定律偏偏没有咬人。读在常元上的描述要在被造出之处封印，而这条定律在被发现之处值九十九倍；在此处它一文不值，封印与否都是 2.3 秒，因为这条描述不携带任何已编码的语法。封印仍然保留，而那个数字仍被记下来，好让这条定律保持它真正的形状：它关乎一条描述**装着什么**，而不关乎它被读在哪里。
+一次实测，结果是这条定律在此处没有发挥作用。读在常元上的描述要在被造出之处封印，这条定律在其被发现之处带来了九十九倍的差别；在此处则全无影响：封印与否都是 2.3 秒，因为这条描述不携带任何已编码的语法。封印仍然保留，那个数字也仍被记下，好让这条定律保持它本来的内容：它关乎一条描述**包含什么**，而不关乎它在哪里被读。
 <!--/-->
 
 <!--en-->
@@ -484,28 +484,28 @@ not about where it is read.
 The completed Choice chain supplies the missing model field, so under the single
 stated excluded-middle hypothesis the constructible universe satisfies ZFC.
 <!--zh-->
-完成的 Choice 构造链供应最后缺少的模型字段，故在唯一明示的排中律假设下，可构造宇宙满足 ZFC。
+完成的 Choice 构造链补上了最后缺少的模型字段，故在唯一明示的排中律假设下，可构造宇宙满足 ZFC。
 <!--ja-->
 完成した Choice の構成列が最後のモデル・フィールドを与えるので、明示された唯一の排中律の仮定の下で構成可能宇宙は ZFC を満たす。
 <!--/-->
 
 <!--en-->
-This is the end of the chain, so it is worth saying plainly what stands. **In
-cubical Agda, granted one instance of the excluded middle at the model's own
-truth level, the constructible universe is a model of ZFC.** Read with the
+This is the end of the chain, so it is worth stating plainly what has been
+established. **In cubical Agda, granted one instance of the excluded middle at the
+model's own truth level, the constructible universe is a model of ZFC.** Read with the
 ambient-hierarchy result that the hierarchy models ZF, that is Gödel's relative consistency of
 choice in semantic form: a universe satisfying ZF contains inside it a
 sub-universe satisfying ZFC, so an inconsistency of ZFC would already be an
 inconsistency of ZF.
 
-Every price is printed on the label. The host is cubical Agda with its universe
+The costs are stated explicitly. The host is cubical Agda with its universe
 tower, informally about as strong as ZFC plus an inaccessible; excluded middle
 is a module parameter rather than an axiom, and it is the only hypothesis the
 theorem carries; and the development has no postulates or holes. This chapter
 supplies the Choice field that `L.Model`{.Agda} combines with the earlier ZF
 structure.
 <!--zh-->
-这是 Choice 构造链的终点，故值得把立住的东西平白说一遍。**在 cubical Agda 之内，给定模型自身真值层级上的一份排中律，可构造宇宙是 ZFC 的模型。**与环境层级满足 ZF 的结果合读，这就是哥德尔的选择公理相对一致性的语义形式：满足 ZF 的宇宙内部含有一个满足 ZFC 的子宇宙，故 ZFC 的任何矛盾都早已是 ZF 的矛盾。
+这是 Choice 构造链的终点，故值得把已确立的结论平白说一遍。**在 cubical Agda 之内，给定模型自身真值层级上的一份排中律，可构造宇宙是 ZFC 的模型。**与环境层级满足 ZF 的结果合读，这就是哥德尔的选择公理相对一致性的语义形式：满足 ZF 的宇宙内部含有一个满足 ZFC 的子宇宙，故 ZFC 的任何矛盾都早已是 ZF 的矛盾。
 
-每一分价格都印在标签上。宿主是带宇宙塔的 cubical Agda，其强度非形式地约当于 ZFC 加一个不可达基数；排中律是模块参数而非公理，且是这条定理携带的唯一假设；本开发中处处没有公设、没有洞。本章交付选择公理字段，`L.Model`{.Agda} 再把它与此前的 ZF 结构装配起来。
+这里把代价明确写出。宿主是带宇宙塔的 cubical Agda，其强度非形式地约当于 ZFC 加一个不可达基数；排中律是模块参数而非公理，且是这条定理携带的唯一假设；本开发中处处没有公设、没有留空。本章给出选择公理字段，`L.Model`{.Agda} 再把它与此前的 ZF 结构装配起来。
 <!--/-->

@@ -14,7 +14,7 @@ the coding vocabulary for application, single-valuedness and domains, then adds
 the missing injectivity formula and proves both readback layers used by the
 Cantor-Bernstein and GCH constructions.
 <!--zh-->
-后续基数论证反复在单射的两种表示之间往返：一种是公式能够量化的图，另一种是集合的小成员类型之间的实际函数。本章连接这两种表示。它以应用、单值性与定义域的编码词汇为先修，再补上单射性公式，并证明 Cantor-Bernstein 与 GCH 构造所需的两层读回。
+后续的基数论证反复在单射的两种表示之间往返：一种是公式可以量化的图，另一种是集合的小成员类型之间的实际函数。本章在这两种表示之间建立联系。它以应用、单值性与定义域的编码词汇为先修，再补上单射性公式，并证明构造 Cantor-Bernstein 与 GCH 所需的两层读回。
 <!--ja-->
 後の基数論では、対象言語が量化できるグラフと、集合の小さな要素型の間の実際の単射を往復する。本章は、適用、一価性、定義域のコード化に単射性の論理式を加え、Cantor-Bernstein の定理と GCH の議論が使う二段階の読み戻しを証明する。
 <!--/-->
@@ -61,7 +61,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 An injective graph, in the object language: the second component
 determines the first.  The mirror of `svAt`.
 <!--zh-->
-对象语言中的单射图要求第二分量决定第一分量。这正是 `svAt`{.Agda} 的镜像：单值性固定输入后比较输出，而这里固定输出后比较输入。
+对象语言中的单射图要求第二分量决定第一分量。这与 `svAt`{.Agda} 所表达的单值性恰好对偶：单值性在输入固定后比较输出，而这里是在输出固定后比较输入。
 <!--ja-->
 対象言語でグラフが単射であるとは、第二成分が第一成分を決定することである。これは `svAt`{.Agda} の鏡像であり、一価性が同じ入力に対する出力を比較するのに対して、ここでは同じ出力に対する入力を比較する。
 <!--/-->
@@ -114,7 +114,7 @@ The readback, first half: from a member of the domain to its unique image
 under the graph, with injectivity. `Extract` keeps values as elements of `L`;
 this is the form used when later proofs still reason about the coded graph.
 <!--zh-->
-读回的第一层从定义域的一个成员取得它在图下的唯一像，并保留单射性。`Extract`{.Agda} 仍把取值保留为 `L` 的元素；后续证明仍需对编码图作推理时，使用的就是这种形式。
+读回的第一层从定义域的一个成员取得它在图下的唯一像，并保持单射性。`Extract`{.Agda} 仍把取值保留为 `L` 的元素；后续证明需要对编码图作推理时，使用的就是这一形式。
 <!--ja-->
 第一の読み戻しは、定義域の各要素からグラフ上の一意な像を選び、その写像が単射であることを示す。`Extract`{.Agda} は値を L の要素のまま保つので、後の証明がコード化されたグラフを引き続き参照するときに使える。
 <!--/-->
@@ -171,11 +171,12 @@ module Extract (F D : S)
 <!--/-->
 
 <!--en-->
-The readback, second half: the honest injection between the small index
-types, with the range supplied rather than assumed. This is the form consumed
-by the generic Cantor-Bernstein interface and by the counting arguments in GCH.
+The readback, second half: the actual injection between the small index
+types, with the range supplied by the caller rather than assumed in advance.
+This is the form used by the generic Cantor-Bernstein interface and by the
+counting arguments in GCH.
 <!--zh-->
-读回的第二层给出小索引类型之间的实际单射，其值域由调用方供应而非预先假定。泛型 Cantor-Bernstein 接口与 GCH 的计数论证使用的就是这种形式。
+读回的第二层给出小索引类型之间的实际单射，其值域由调用方提供而非预先假定。泛型 Cantor-Bernstein 接口与 GCH 的计数论证使用的就是这一形式。
 <!--ja-->
 第二の読み戻しは、L の要素として得た値を指定された値域の小さな台へ移し、二つの小さな添字型の間の単射を得る。この形を一般の Cantor-Bernstein インターフェースと GCH の濃度計算が直接使う。
 <!--/-->

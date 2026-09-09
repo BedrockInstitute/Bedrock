@@ -5,7 +5,7 @@ Using the closed code domain, this chapter separates one constructible set conta
 <!--zh-->
 # 全体公式码之集
 
-本章利用封闭码定义域分离出一个可构造集合，其中恰好包含所有元数上携带所需形状与封闭见证的公式码。其隶属定理在码、元数数码与解码公式之间往返。
+本章利用封闭码定义域分离出一个可构造集合，其中恰好包含所有元数上携带所需形状与封闭见证的公式码。其隶属定理给出码、元数数码与解码公式三者之间的相互转换。
 <!--ja-->
 # すべての論理式の符号からなる集合
 
@@ -72,7 +72,7 @@ the tag reader's adequacy equation discharged inside.
 <!--zh-->
 ## 是某个已言明元数处的键
 
-一条读式，也是本章所需的唯一一件新的对象语言。元数 `k` 处的键，是第一分量为数码 `k` 的对，而标签读式对一个**点了名的**第二分量所说的恰是这句话。此处想要的是第二分量不点名，故这条读式就是标签读式套在一个存在量词之下，而它的两个方向就是那个存在量词的两个方向，标签读式的充分性等式在里面交付。
+本节给出一条读式，也是本章唯一新增的对象语言陈述。元数 `k` 处的键是第一分量为数码 `k` 的对；已有的标签读式描述第二分量已被**点名**的情形。这里不指定第二分量，因此把标签读式置于一个存在量词之下。两个方向分别来自该存在量词的引入与消去，并在内部使用标签读式的充分性等式。
 <!--ja-->
 ## 指定したアリティのキー
 
@@ -81,9 +81,10 @@ the tag reader's adequacy equation discharged inside.
 
 <!--en-->
 The equation is discharged with the index, the numeral and the environment all
-still variables, because that is the only way it is cheap.
+still variables; keeping them as variables is what avoids the extra
+conversion-checking overhead that later instantiation would otherwise incur.
 <!--zh-->
-那条等式在索引、数码与环境都还是变元时交付，因为只有这样它才便宜。
+该等式在索引、数码与环境仍为变元时证明；保持这些参数为变元，才能避免后续实例化产生额外的转换检查开销。
 <!--/-->
 
 ```agda
@@ -110,12 +111,12 @@ keyArityAtL-in c k γ z e =
 The reader above names its arity as a metalevel numeral, which is what pins the
 arity to one; a set that has to hold subcodes cannot do that, because a
 quantifier's subformula lives one arity up. So the arity has to become a bound
-set, and something has to say of that set what `# k`{.Agda} said for free: that
+set, and something has to say of that set what `# k`{.Agda} gives directly: that
 it is a numeral.
 <!--zh-->
 ## 是某个元数处的键
 
-上面那条读式把元数点名为一个元语言的数码，而正是这一点把元数钉在一上；一个必须持有诸子码的集合做不到这件事，因为量词的子公式住在高一级的元数上。故元数必须变成一个被绑定的集合，而须有什么东西对那个集合说出 `# k`{.Agda} 白送的那句话：它是一个数码。
+上一条读式把元数指定为一个元语言的数码，而正是这一点把元数固定为一；一个必须容纳诸子码的集合无法做到这一点，因为量词的子公式位于高一级的元数上。因此元数必须变成一个被绑定的集合，而还须有某个东西向那个集合说明 `# k`{.Agda} 直接给出的事实：它是一个数码。
 <!--ja-->
 ## あるアリティのキー
 
@@ -123,21 +124,22 @@ it is a numeral.
 <!--/-->
 
 <!--en-->
-Saying it costs one constant. `ωʟ`{.Agda} is an element of `L` whose members are
+Stating it takes one constant. `ωʟ`{.Agda} is an element of `L` whose members are
 exactly the numerals, so "the arity component lies in `ωʟ`{.Agda}" *is* the
 condition, written with the same unbounded membership the second conjunct already
-uses. Two existentials, one for the arity and one for the payload, the pair reader
-between them, and the membership on the arity.
+uses. The whole formula has two existentials, one for the arity and one for the
+payload, the pair reader between them, and the membership on the arity.
 
-Reading it back is where the choice pays. `ω-specL`{.Agda} is an equation between
-propositions, not an implication, so a member of `ωʟ`{.Agda} *is* a truncated
-natural number, and one composition with the chain's projection equation turns it
-into the metalevel `# m`{.Agda} that `recover`{.Agda} takes as its arity argument.
-There is no induction in either direction; the numeral chapter did it.
+Reading it in the other direction is where the choice takes effect.
+`ω-specL`{.Agda} is an equation between propositions, not an implication, so a
+member of `ωʟ`{.Agda} *is* a truncated natural number, and one composition with the
+chain's projection equation turns it into the metalevel `# m`{.Agda} that
+`recover`{.Agda} takes as its arity argument. Neither direction needs induction;
+the numeral chapter already did that work.
 <!--zh-->
-说出它只花一个常元。`ωʟ`{.Agda} 是 `L` 的元素，其成员恰是诸数码，故「元数分量属于 `ωʟ`{.Agda}」**就是**那个条件，且写法与第二个合取项早已在用的那种无界隶属相同。两个存在量词，一个管元数、一个管载荷，中间是对读式，再加上落在元数上的那条隶属。
+表达它只需一个常元。`ωʟ`{.Agda} 是 `L` 的元素，其成员恰是诸数码，故「元数分量属于 `ωʟ`{.Agda}」**就是**那个条件，而且写法与第二个合取项已经在用的那种无界隶属相同。全式共有两个存在量词，分别约束元数与载荷，中间是对读式，再加上落在元数上的那条隶属。
 
-读回来的时候，这个选择才见分晓。`ω-specL`{.Agda} 是命题之间的等式，不是蕴含，故 `ωʟ`{.Agda} 的成员**就是**一个被截断的自然数，而与链的投影等式复合一次，就把它变成 `recover`{.Agda} 作为元数实参所收下的那个 `# m`{.Agda}。两个方向里都没有归纳；数码那一章已经做过了。
+从反方向读时，这一选择的作用才显现出来。`ω-specL`{.Agda} 是命题之间的等式而非蕴含，故 `ωʟ`{.Agda} 的成员**就是**一个被截断的自然数；与链的投影等式复合一次，就把它变成 `recover`{.Agda} 作为元数实参所接受的那个 `# m`{.Agda}。两个方向都不需要归纳；数码那一章已经完成了。
 <!--/-->
 
 ```agda
@@ -176,7 +178,7 @@ for the decode's two hypotheses: a set holding the argument, closed and shaped.
 <!--zh-->
 ## 谓词
 
-两个合取项，都落在一个自由变元上。第一项从外面钉住元数，而这正是上一章点名索取的那个合取项。第二项是解码那两条假设的见证：一个装着实参、既封闭又成形的集合。
+两个合取项都落在同一个自由变元上。第一项从外部固定元数，而这正是上一章明确要求的那一项。第二项是解码那两条假设的见证：一个装着实参、既封闭又成形的集合。
 <!--ja-->
 ## 符号を選ぶ述語
 
@@ -194,9 +196,9 @@ argument, and once with the carrier pinned to a constant. The general one is a
 single existential, for the set; the pinned one wraps it in the binder that names
 `A`, and that binder is the entire difference between them.
 <!--zh-->
-第二项里没有任何东西是有界的，也不需要有。那个见证在引入这边由一条公式自己的子公式闭包产出，在消去那边作为 `L` 的一个集合被消费，而两种读法都发生在类模型处。
+第二项里没有任何东西是有界的，也不需要有。引入一方由一条公式自己的子公式闭包给出该见证，消去一方则把它作为 `L` 的一个集合来使用，两种读法都发生在类模型处。
 
-第二个合取项写了两遍：一遍落在两个槽位上，即载体与实参；另一遍把载体钉在一个常元上。一般的那一遍只有一个存在量词，管那个集合；被钉住的那一遍把它裹进点名 `A` 的那层绑定，而那层绑定就是二者之间的全部差别。
+第二个合取项有两种写法：一般形式使用载体与实参两个槽位；常元形式则把载体固定为常元。一般形式只用一个存在量词绑定相应集合；常元形式在外层再加入一个以 `A` 命名的绑定。这个额外绑定是两种写法的全部差别。
 <!--/-->
 
 ```agda
@@ -223,7 +225,7 @@ in its own right.
 <!--zh-->
 ## 超集与集合
 
-载体是固定的，而消费方会把它固定在某个阶段上。它的诸成员就是字母表，恰如诸编码章的两个参数所期待：到层级的嵌入，以及「它落到的东西可构造」这份证书。后者要用一次 `L` 的传递性，而它所施于的那条隶属关系被单独命名，因为形状谓词如今按其自身的名义索取它。
+载体固定后，使用方会把它取为某个阶段。载体的成员构成字母表，正好提供编码章要求的两项参数：到层级的嵌入，以及该嵌入每个取值可构造的证明。后一项由 `L` 的传递性得到。相应的隶属关系单独命名，因为形状谓词直接以该关系为参数。
 <!--ja-->
 ## 上位集合と分出された集合
 
@@ -244,9 +246,9 @@ exported here are all any consumer needs. Only the ones that read a separation
 are inside a seal; the directions back and the equations they compose into are
 outside, since none of them needs to know what the set was cut out of.
 <!--zh-->
-然后是那个超集。`smallDom`{.Agda} 索取 `L` 元素的一个小族，返回一个装下它全部的阶段；那个族以「一个元数连同该元数处的一条公式」之对为索引。它是尺寸正确的类型，因为语法是在字母表自身层级上的归纳类型，而元数是自然数，压根不花层级。回来的东西含有每个键，也含有别的许多；而分离把「别的」去掉。
+接着构造所需超集。`smallDom`{.Agda} 接收 `L` 元素的小族，并返回包含该族所有元素的阶段。这里的小族以「一个元数及该元数处的一条公式」组成的对为索引。其尺寸满足要求，因为语法是字母表所在层级上的归纳类型，而自然数索引不会提高该尺寸。所得阶段含有每个键，也含有其他元素；最后用分离去除这些额外元素。
 
-这个集合在它被造出之处封印。不封印的话，此后每个提到它的类型都会把分离器械的展开带进转换检查，而此处导出的诸事实已是任何消费方所需的全部。封印之内只有读分离的那几条；回来的那些方向以及它们复合成的那些等式在封印之外，因为它们都不需要知道这个集合是从什么里切出来的。
+这个集合在构造处被封印。若不封印，此后每个提到它的类型都会把分离定义的展开带入转换检查，而这里导出的事实已经足够所有使用方使用。封印内部只保留读取分离结果所需的引理；由这些方向复合得到的等式放在封印外部，因为它们不依赖该集合从哪个超集中分离出来。
 <!--/-->
 
 ```agda
@@ -290,7 +292,7 @@ every lemma the two halves are built from already takes them so.
 <!--zh-->
 ## 见证的引入与消去
 
-第二个合取项的两半都在此处，在变元元数、变元载体位与变元环境上一次证完，而下面的一切只是把它们施用一遍。元数可以是变元，是因为那个合取项从不提它：引入为任意元数的一条公式产出一个既封闭又成形的集合，消去消费一个这样的集合并调用解码，而解码从一开始就把元数取作实参。载体与环境可以是变元，则是因为两半所倚的每条引理本来就是这样收它们的。
+第二个合取项的两半都在此处证明，且是在变元元数、变元载体位与变元环境上一次证成，下面的一切只是把它们再应用一遍。元数可以是变元，因为那个合取项根本不提及它：引入为任意元数的一条公式产出一个既封闭又成形的集合，消去则接受这样的集合并调用解码，而解码从一开始就把元数作为实参。载体与环境可以是变元，则是因为两半所依赖的每条引理本来就是这样陈述的。
 <!--ja-->
 ## 証人の導入と除去
 
@@ -298,7 +300,7 @@ every lemma the two halves are built from already takes them so.
 <!--/-->
 
 <!--en-->
-Introduction is the half with nothing in it. The witness is the subformula
+Introduction is the half that adds nothing beyond what is given. The witness is the subformula
 closure, whose three obligations are `key∈closure`{.Agda}, `closureClosed`{.Agda}
 and `closureShaped`{.Agda}, one chapter each and all already discharged. The last
 of them asks for one thing more, that every constant is a member of the carrier,
@@ -325,11 +327,11 @@ written out ran past 140 seconds without it and were killed there. This is the
 law the recursion's totality hypothesis recorded, met again in a different place:
 it is not about the graph, it is about `PT.rec`{.Agda} at a concrete environment.
 <!--zh-->
-引入是里面什么也没有的那一半。那个见证是子公式闭包，其三笔债 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各出一章，且都已偿清。其中最后一条多要一件东西，即每个常元都是载体的成员，而在这个字母表上，那正是字母表当初据以定义的那件事，沿那一位的等式搬过去即可。
+引入是其中不涉及额外内容的那一半。那个见证是子公式闭包，它的三个组成部分 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各有一章专门处理，且都已完成。其中最后一条还多需要一件东西，即每个常元都是载体的成员；在这个字母表上，这正是当初据以定义字母表的那件事，沿那一位的等式搬过去即可。
 
-消去是另一半，而它从「以某个已言明元数处的键的形式到场的那个成员」出发，那正是 `recover`{.Agda} 所索取的、也是第二个合取项供不出的。载体那一位的等式把「属于那一位所持有的东西」变成「属于 `A`」，而这正是解码那条假设得以交付的原因：`A` 的诸成员恰是 `⟪ A ⟫` 的像，凭的是「一个集合由其自身诸成员所呈现」。读出那个存在量词，一个既封闭又成形的集合便随之到场。随后解码开跑，而它的答案是载体之上、落在它被递交的那个元数处的一条公式。
+消去是另一半。它从一个成员出发，这个成员以某个已言明元数处的键的形式给出，这正是 `recover`{.Agda} 所要求的，也是第二个合取项无法直接提供的。载体那一位的等式把「属于那一位所持有的东西」变成「属于 `A`」，解码那条假设因此得以应用：`A` 的诸成员恰是 `⟪ A ⟫` 的像，依据是「一个集合由其自身诸成员所呈现」。读出那个存在量词，就得到一个既封闭又成形的集合。随后运行解码，其答案是载体之上、落在所给定的那个元数处的一条公式。
 
-被钉住的那一对，就是这两条落在「点名那层绑定所造出的环境」上，而钉住的全部代价也就在此：引入为那层绑定供上 `A`，为它的等式供上 `refl`{.Agda}，消去把那层绑定读出来，再把它所持有的东西交给一般的形式。**读出来的地方，正是载荷必须被点名之处。** 若交给推断，被钉住的载体处那个截断的载荷就是一个元变元，代表着「一条求解器尚未认定的公式的满足关系」；同样两行，把类型写出来时两秒检查完毕，不写则跑过 140 秒并在那里被杀掉。这就是递归那条全性假设所记下的规矩，此番在另一处再次遇上：它不关乎那个图，它关乎在具体环境处的 `PT.rec`{.Agda}。
+这两个方向都应用于由外层具名绑定构造的环境，其中载体由等式固定。引入方向为该绑定提供 `A`，并用 `refl`{.Agda} 证明等式；消去方向读出该绑定，再把其中的数据传给一般形式。**读取绑定之处必须显式写出载荷类型。** 若让类型检查器推断，载体处的截断载荷会成为一个元变元，表示尚未确定公式的满足关系。同样两行代码，显式写出类型时两秒完成，不写时超过 140 秒后终止。该现象来自具体环境处的 `PT.rec`{.Agda}，与图本身无关。
 <!--/-->
 
 ```agda
@@ -396,7 +398,7 @@ not contain it.
 <!--zh-->
 ## 每个元数上的集合
 
-出来的是载体之上诸公式**在任意元数处**的诸键之类，而那正是「对诸子码作递归」必须以之为索引的那一类，因为量词的子公式住在高一级的元数上，而一元那一类装不下它。
+得到的是载体之上诸公式**在任意元数处**的诸键之类，而「对诸子码作递归」必须以这一类为索引，因为量词的子公式位于高一级的元数上，一元那一类容纳不下它。
 <!--ja-->
 ## 各アリティでの符号集合
 
@@ -456,14 +458,14 @@ and shapedness together recognize the *shape* of a code and say nothing about th
 arity a key carries or the alphabet its constants come from, so a decode written
 against them has to be handed both, and a set built from them has to state both.
 `smallDom`{.Agda} and general-formula separation do the rest, and neither needed
-anything the earlier chapters had not already paid for.
+anything the earlier chapters had not already established.
 
 The set exists for the *class* it characterizes, not for a theorem about it. A
 recursion over codes has to answer at a code's subcodes, a quantifier's
 subformula lives one arity up, and the arity-one class does not contain it, so
 the domain has to be the keys at every arity.
 <!--zh-->
-全部内容在两个合取项里，而两者同类。封闭性与成形性合起来认出的是码的**形状**，对一个键所携带的元数以及它的诸常元出自哪个字母表，都只字未提，故一条对着它们写下的解码必须被递交这两样，而一个由它们造出的集合必须把这两样说出来。`smallDom`{.Agda} 与任意公式的分离做掉其余，而两者都没有索取前几章尚未付清的任何东西。
+全部内容都在两个合取项里，而两者同类。封闭性与成形性合起来刻画的是码的**形状**，对一个键所携带的元数以及它的诸常元出自哪个字母表则完全未提，故一条针对它们写下的解码必须被给予这两样，而一个由它们造出的集合必须说明这两样。`smallDom`{.Agda} 与任意公式的分离处理其余，而两者所依赖的都只是前几章已经建立的结果。
 
-这个集合的存在，是为了它所刻画的那**一类**，而不是为了某条关于它的定理。对码的递归必须在一个码的诸子码处作答，而量词的子公式住在高一级的元数上，一元那一类装不下它，故定义域只能是每个元数处的诸键。
+这个集合的存在，是为了它所刻画的那**一类**，而不是为了某条关于它的定理。对码的递归必须在一个码的诸子码处给出答案，而量词的子公式位于高一级的元数上，一元那一类容纳不下它，故定义域只能是每个元数处的诸键。
 <!--/-->

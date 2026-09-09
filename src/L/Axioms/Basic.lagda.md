@@ -111,14 +111,14 @@ belongs to `L`.
 <!--/-->
 
 <!--en-->
-The closing move of every construction below: a definable subset of a stage is
+The closing step of every construction below is the same: a definable subset of a stage is
 itself constructible. The stage `Lset σ` sits one level down in the tower from
 `Lset (sucV σ)`, whose defining union runs over the members of `sucV σ`; and `σ`
-is one of those members. So the operator applied to `Lset σ` is one branch of
-that union, and anything inside it lands in the next stage, which is a stage
+is one of those members. So the operator applied to `Lset σ` is one member of
+that union, and everything inside it belongs to the next stage, which is a stage
 because successors of ordinals are ordinals.
 <!--zh-->
-下文每个构造的收尾动作：阶段的可定义子集自身可构造。阶段 `Lset σ` 在塔中比 `Lset (sucV σ)` 低一级，而后者的定义中的并沿 `sucV σ` 的成员跑；`σ` 正是那些成员之一。于是算子作用于 `Lset σ` 所得，是那个并的一个成员，其中的任何东西都落进下一个阶段，而那是个阶段，因为序数的后继是序数。
+下文每个构造的最后一步都相同：阶段的可定义子集自身可构造。`Lset σ` 在塔中比 `Lset (sucV σ)` 低一级，而后者定义中的并遍取 `sucV σ` 的成员；`σ` 正是其中一个成员。因此，算子作用于 `Lset σ` 所得是该并的一个成员，其中的每个对象都属于下一阶段；序数的后继仍是序数，所以后者确实是一个阶段。
 <!--/-->
 
 ```agda
@@ -131,10 +131,10 @@ because successors of ordinals are ordinals.
 Composing that with the recognition principle for the operator gives the form
 every later construction actually uses, and it deserves a name of its own: to
 put a set in `L`, exhibit a stage, a formula, and an extensional equation saying
-the formula carves out exactly that set. Nothing else is ever required, and the
+the formula defines exactly that set. Nothing else is ever required, and the
 three constructions below are its first three instances.
 <!--zh-->
-把它与算子的识别原则复合，就得到日后每个构造实际使用的形式，值得单独命名：要把一个集合放进 `L`，拿出一个阶段、一条公式，以及一个说明该公式恰好刻出该集合的外延等式。此外别无要求，而下面三个构造正是它的头三个实例。
+把它与算子的识别原则复合，就得到日后每个构造实际使用的形式，值得单独命名：要把一个集合放进 `L`，需要一个阶段、一条公式，以及一条说明该公式的外延恰为该集合的等式。此外别无要求，而下面三个构造正是它的头三个实例。
 <!--/-->
 
 ```agda
@@ -150,16 +150,16 @@ a set, so a stage is a definable subset of itself, and constructible one stage
 later. It is what lets a stage be *named* by a formula, which every later chapter
 that bounds quantifiers by a stage needs.
 
-The certificate is sealed, and only it. The pairing has to keep reducing, since
+The certificate is sealed, and only the certificate. The pairing has to keep reducing, since
 "lies in this bound" and "lies in this stage" are the same statement only because
 it does; but the certificate unfolds through definability into the smallness
-machinery, and it rides inside every type that mentions the constant. A chapter
+machinery, and it is carried by every type that mentions the constant. A chapter
 that separates with a formula relativized to a stage takes minutes rather than
 seconds without this one line.
 <!--zh-->
 第零个实例是阶段自身。公式「真」定义出一个集合的全体，故阶段是它自身的可定义子集，而在下一阶段可构造。正是这一点使阶段可以被一条公式**点名**，而此后每个用阶段界住量词的章节都需要它。
 
-被封印的是那份证书，且仅有它。配对必须继续规约，因为「落在这个界内」与「落在这个阶段内」是同一句话，恰恰倚仗它的规约；而证书则经可定义性一路展开到小性机器，且坐在一个常元里，被每个提到该常元的类型一并背上。一章若用相对化到某阶段的公式作分离，没有这一行就要以分钟而非秒计。
+被固定下来的只是那份证书，且仅是证书本身。配对仍须继续规约，因为「落在这个界内」与「落在这个阶段内」是同一句话，而这正依赖于它的规约；证书则经可定义性一路展开到小性机器，并且出现在一个常元中，每个提到该常元的类型都要携带它。一章若用相对化到某阶段的公式作分离，缺少这一行，证明耗时便以分钟计而非以秒计。
 <!--/-->
 
 ```agda
@@ -193,15 +193,15 @@ definable powerset of the preceding stage, by establishing both inclusions.
 The tower's step is the definable powerset, and at a successor index the step is
 all there is: `Lset (sucV σ)` is `𝒟ₒ (Lset σ)` exactly. Both inclusions read off
 the stage characterization and use nothing else. For one, `σ` is a member of its
-own successor, so the operator applied to `Lset σ` is one branch of the union
+own successor, so the operator applied to `Lset σ` is one member of the union
 that the next stage is. For the other, a member of `Lset (sucV σ)` lies in
 `𝒟ₒ (Lset δ)` for some `δ` in `sucV σ`; either `δ` is a member of `σ`, and then
 the set is already in `Lset σ` and so among its definable subsets, or `δ` is `σ`
-and there is nothing to do. Neither half relativizes anything, and neither needs
+and the inclusion is immediate. Neither half relativizes anything, and neither needs
 the operator to be monotone. Ordinality is not needed either, and is carried only
 so that the three statements of this section take the same arguments.
 <!--zh-->
-塔的步进就是可定义幂集，而在后继索引处，步进就是全部：`Lset (sucV σ)` 恰是 `𝒟ₒ (Lset σ)`。两个包含都从阶段刻画上直接读出，此外不用别的。其一，`σ` 是自身后继的成员，故算子作用于 `Lset σ` 所得，是下一阶段那个并的一个成员。其二，`Lset (sucV σ)` 的成员落在某个 `δ ∈ sucV σ` 的 `𝒟ₒ (Lset δ)` 里；要么 `δ` 是 `σ` 的成员，那么该集合已在 `Lset σ` 中，从而在它的可定义子集之列，要么 `δ` 就是 `σ`，无事可做。两半都不相对化任何东西，也都不需要算子单调。序数性同样不需要，之所以带着它，只为本节三条陈述取同样的参数。
+塔的步进是可定义幂集；在后继索引处，`Lset (sucV σ)` 恰是 `𝒟ₒ (Lset σ)`。两个包含方向都可由阶段刻画直接得到。其一，`σ` 属于自身的后继，所以算子作用于 `Lset σ` 所得是下一阶段定义中那个并的成员。其二，`Lset (sucV σ)` 的成员属于某个 `δ ∈ sucV σ` 对应的 `𝒟ₒ (Lset δ)`；若 `δ` 是 `σ` 的成员，该集合已在 `Lset σ` 中，因而是它的可定义子集；若 `δ` 就是 `σ`，结论直接成立。两种情形都不使用相对化或算子单调性。这里也不需要序数性；保留该假设只是为了让本节三条陈述使用相同形式的参数。
 <!--/-->
 
 The identity asks nothing of `σ`{.Agda}. It was stated with an ordinality
@@ -211,7 +211,7 @@ is ordinal-free. The two statements below do need it, through the successor of a
 ordinal being one.
 
 <!--zh-->
-这条恒等式对 `σ`{.Agda} 一无所求。它当初带着一条序数性假设被陈述出来，而那条假设结果是死的：两个包含关系都不碰它，因为本可以碰它的那一个是由「阶段的传递性」承担的，而后者与序数无关。下面那两条陈述则确实需要它，经由「序数的后继是序数」。
+这条恒等式对 `σ`{.Agda} 没有任何要求。它当初带着一条序数性假设被陈述出来，而那条假设结果是多余的：两个包含关系都不用到它，因为本可能用到它的那一步由「阶段的传递性」承担，而后者与序数无关。下面那两条陈述则确实需要它，经由「序数的后继是序数」。
 <!--/-->
 
 ```agda
@@ -241,10 +241,10 @@ Lset-suc σ = extensionality (Lset (sucV σ)) (𝒟ₒ (Lset σ)) (sub₁ , sub�
 The identity turns a fact about the tower into a fact about the operator. A stage
 is constructible one stage later, so the definable powerset of a stage is
 constructible outright, and it packages as a set of `L`. Its certificate is
-sealed exactly as the stage's was, and for the same reason: it rides inside a
-constant.
+sealed exactly as the stage's was, and for the same reason: it is carried
+as part of the definition of a constant.
 <!--zh-->
-这条等式把关于塔的事实转成关于算子的事实。阶段在下一阶段可构造，故阶段的可定义幂集本身就可构造，并打包成 `L` 的一个集合。它的证书按与阶段那份证书同样的方式封印，理由也相同：它坐在一个常元里。
+这条等式把关于塔的事实转成关于算子的事实。阶段在下一阶段可构造，故阶段的可定义幂集本身就可构造，并打包成 `L` 的一个集合。它的可构造性证书与阶段的证书一样，在定义处保持不透明；理由也相同：该证书会作为常元定义的一部分被携带。
 <!--/-->
 
 ```agda
@@ -258,16 +258,16 @@ opaque
 ```
 
 <!--en-->
-That packaging is what a later chapter spends. A description of the definable
+That packaging is what a later chapter needs. A description of the definable
 powerset written at a carrier that is a bound *variable* is adequate only where
 that carrier's definable subsets are constructible, because the description
 quantifies over `L` and can name only what lives there. At a variable carrier
-that is a side condition travelling with every use of the description. At a stage
+that is a side condition carried along with every use of the description. At a stage
 it is discharged for good: the definable subsets of a stage are constructible by
 `𝒟ₒ→isL`{.Agda} above, and the set of them is `𝒟ₒS`{.Agda}. The successor
 identity is what makes both hold, at every stage at once.
 <!--zh-->
-这份打包正是后续某章要花掉的东西。若把可定义幂集的描述写在一个作为**约束变元**的载体上，则唯有该载体的可定义子集皆可构造时，那份描述才适足，因为描述对 `L` 量化，只点得出住在其中的东西。在变元载体上，这是一个随描述的每次使用一同旅行的旁条件。在阶段上，它一劳永逸地被解除：阶段的可定义子集经上面的 `𝒟ₒ→isL`{.Agda} 可构造，而它们所成的集合是 `𝒟ₒS`{.Agda}。后继等式正是使这两点在每个阶段同时成立的东西。
+这份打包正是后续章节需要的材料。若把可定义幂集的描述写在一个作为**约束变元**的载体上，那么只有当该载体的可定义子集都可构造时，描述才足够，因为它对 `L` 量化，只能涉及其中的元素。在变元载体上，这是每次使用描述时都要携带的条件；在阶段上，该条件一次得到证明便可反复使用：阶段的可定义子集经 `𝒟ₒ→isL`{.Agda} 可构造，而它们组成的集合是 `𝒟ₒS`{.Agda}。后继等式使这两点在每个阶段同时成立。
 <!--/-->
 
 <!--en-->
@@ -283,7 +283,7 @@ The finite-disjunction formula shows that any finite indexed family of members
 of one stage forms a constructible set, with exact membership lemmas
 `finSet-in`{.Agda} and `finSet-out`{.Agda}.
 <!--zh-->
-有穷析取公式证明，由同一阶段成员组成的任意有穷索引族都会形成可构造集合，并给出精确的 `finSet-in`{.Agda} 与 `finSet-out`{.Agda} 成员引理。
+有穷析取公式证明：由同一阶段成员组成的任意有穷索引族都形成一个可构造集合，并给出精确的 `finSet-in`{.Agda} 与 `finSet-out`{.Agda} 成员引理。
 <!--ja-->
 有限論理和の論理式により、一つの段階の要素からなる任意の有限添字族が構成可能集合をなすことを示し、正確な所属補題 `finSet-in`{.Agda} と `finSet-out`{.Agda} を得る。
 <!--/-->
@@ -308,11 +308,11 @@ so a member of the stage above it (`finSet∈𝒟ₒ`{.Agda}). Read from the oth
 that is the statement that a stage with finitely many members has no subsets
 beyond the definable ones.
 <!--zh-->
-第一个实例是通用的，也是后续诸章用得最多的那个：阶段的任何有穷成员族都是 `L` 的一个集合。公式是「等于这一个」的有穷析取，沿长度递归造出，在零处取假；而族的诸成员以常元命名，因为它们是该阶段的成员。
+第一个实例是通用的，也是后续诸章用得最多的：阶段的任何有穷成员族都是 `L` 的一个集合。所用的公式是「等于这一个」的有穷析取，沿长度递归构造，在零处取假；族的诸成员则以常元命名，因为它们是该阶段的成员。
 
-属于刻出的集合与被该族命中，是同一句话，而证明这一点的归纳就是全部内容。这个构造涵盖配对，配对是它的二元情形；它也正是把递归的取值表安置在单一阶段上的东西：取自某阶段的有穷表，无须任何进一步的论证就是 `L` 的集合。
+属于所定义的集合与被该族命中是同一回事，证明这一点的那次归纳就是全部内容。这个构造涵盖配对：配对是它的二元情形。它也说明，递归的取值表安置在单一阶段上时，取自某阶段的有穷表无须进一步论证就是 `L` 的集合。
 
-刻出的集合与那个族的认同 (`defSet≡`{.Agda}) 单独陈述，并随之给出后续某章真正消费的那种读法：取自某阶段的有穷族张成该阶段的一个**可定义子集**，从而是它上面那个阶段的成员 (`finSet∈𝒟ₒ`{.Agda})。从另一侧读，这句话说的是：只有有穷多个成员的阶段，除可定义子集之外再无别的子集。
+所定义的集合与那个族的等同 (`defSet≡`{.Agda}) 单独陈述，并同时给出后续某章实际使用的那种读法：取自某阶段的有穷族张成该阶段的一个**可定义子集**，从而是它上面那个阶段的成员 (`finSet∈𝒟ₒ`{.Agda})。从另一侧读，这句话说的是：只有有穷多个成员的阶段，除可定义子集之外再无别的子集。
 <!--/-->
 
 ```agda
@@ -506,7 +506,7 @@ regularityL (v , p) = accL v (regularityV v) p
 membership predicate is unique, so later axiom fields need only construct a
 merely existing witness.
 <!--zh-->
-`uniqueL`{.Agda} 用外延性证明，实现固定成员谓词的集合是唯一的，故后续公理字段只须构造一个仅仅存在的见证。
+`uniqueL`{.Agda} 用外延性证明，实现固定成员谓词的集合是唯一的，故后续公理字段只须构造一个「仅仅存在」层面的见证。
 <!--ja-->
 `uniqueL`{.Agda} は外延性により、固定された所属述語を実現する集合が一意であることを示すため、後の公理フィールドでは命題的切り詰められた存在の証人を構成するだけでよい。
 <!--/-->
@@ -515,10 +515,10 @@ merely existing witness.
 Every existence field of the model record demands *unique* existence, and
 extensionality has just made uniqueness automatic: a set realising a given
 membership condition is determined by that condition. So each construction below
-need only produce a witness, and may produce it merely, since being the unique
-such set is a proposition.
+need only produce a witness, and it suffices to produce it merely, since being
+the unique such set is a proposition.
 <!--zh-->
-模型 record 的每个存在字段要的都是**唯一**存在，而外延性刚刚使唯一性自动成立：实现给定隶属条件的集合由该条件决定。于是下文每个构造只需交出一个见证，而且交得出「仅仅存在」即可，因为「是那个唯一的集合」是命题。
+模型 record 的每个存在字段要求的都是**唯一**存在，而外延性恰好使唯一性自动成立：实现给定隶属条件的集合由该条件决定。于是下文每个构造只须给出一个见证，且给出「仅仅存在」的证明即可，因为「是那个唯一的集合」本身是命题。
 <!--/-->
 
 ```agda
@@ -542,7 +542,7 @@ The false object-language formula carves the ambient empty set as a definable
 subset, and `hasEmptyL`{.Agda} packages its constructibility and empty-membership
 specification.
 <!--zh-->
-对象语言中的假公式把环境空集雕成可定义子集，而 `hasEmptyL`{.Agda} 封装其可构造性与空成员规格。
+对象语言中的假公式把环境空集定义为可定义子集，而 `hasEmptyL`{.Agda} 封装其可构造性与空成员规格。
 <!--ja-->
 対象言語の偽な論理式が周囲の空集合を定義可能部分集合として切り出し、`hasEmptyL`{.Agda} がその構成可能性と要素をもたないという仕様をまとめる。
 <!--/-->
@@ -554,7 +554,7 @@ the empty set, one extensionality apart, and the empty set is therefore
 constructible. Its specification is inherited along the underlying set, since
 membership in `L` is membership in the hierarchy.
 <!--zh-->
-对象语言的假从任何阶段中都刻不出东西来：`defSet ⊥̇` 的成员会在其索引处携带一份假的证明。于是 `defSet ⊥̇` 就是空集，相隔一次外延，从而空集可构造。它的规格沿底层集合继承，因为 `L` 中的隶属就是层级中的隶属。
+对象语言的假在任何阶段中都定义不出元素：`defSet ⊥̇` 的成员会在其索引处包含一个假的证明。因此，`defSet ⊥̇` 经外延性等于空集，从而空集可构造。它的规格由底层集合继承，因为 `L` 中的隶属就是层级中的隶属。
 <!--/-->
 
 ```agda
@@ -594,7 +594,7 @@ hasEmptyL = uniqueL _ (∅ʟ , (λ x → empty-spec (fst x)))
 For two members of one stage, a two-constant disjunction carves their unordered
 pair as a definable subset and proves its membership specification.
 <!--zh-->
-对同一阶段的两个成员，一条含两个常元的析取公式把其无序对雕成可定义子集，并证明其成员规格。
+对同一阶段的两个成员，一条含两个常元的析取公式把其无序对定义为该可定义子集，并证明其成员规格。
 <!--ja-->
 一つの段階の二要素について、二定数の論理和がその非順序対を定義可能部分集合として切り出し、所属の仕様を証明する。
 <!--/-->
@@ -618,11 +618,11 @@ Ordinality is not asked for, exactly as the successor identity does not ask for
 it, and for the same reason: carving is not comparison. The singleton is the
 degenerate pair, and the ordered pair is the pair of a singleton with a pair.
 <!--zh-->
-一个阶段的两个成员，其无序对是该阶段的可定义子集：二者各是某个索引的 `⟪ Lset σ ⟫↪`，而点名那两个索引的公式恰好刻出这个对。验证它要对着层级自己的配对公理做一次双向外延：可定义子集的成员满足那个析取，故是二者之一；而二者各自满足它，故是成员。
+一个阶段的两个成员，其无序对是该阶段的可定义子集：二者各是某个索引的 `⟪ Lset σ ⟫↪`，而点名那两个索引的公式恰好定义出这个对。验证它要对照层级自己的配对公理做一次双向外延：可定义子集的成员满足那个析取，故是二者之一；而二者各自满足它，故是成员。
 
-论证里没有一处关乎模型。它说的是一件关于塔的事实，因而就照这样陈述，因为最需要它的构造并不是配对公理：Kuratowski 编码下的有序对深达两层无序对，故以有序对写成的图、表或序列，落在其条目之上两个阶段处，而这也是这类东西根本得以安置在某个阶段上的唯一理由。
+论证里没有一处关乎模型，说的是塔本身的一条事实，故照这样陈述：最需要它的构造并不是配对公理。Kuratowski 编码下的有序对嵌套了两层无序对，故以有序对写成的图、表或序列，落在其条目之上两个阶段处；这正是这类东西得以安置在某个阶段上的唯一理由。
 
-此处不索取序数性，正如后继恒等式也不索取，理由相同：雕刻不是比较。单点集是退化的对，而有序对是单点集与对所成的对。
+此处不涉及序数性，后继恒等式也不涉及，理由相同：这里做的是构造，而非比较。单点集是退化的对，而有序对是单点集与对所成的对。
 <!--/-->
 
 ```agda
@@ -700,10 +700,10 @@ then applies the bounded pair construction and the uniqueness principle.
 
 <!--en-->
 The axiom is then the lemma above at a common stage for the two arguments, with
-the closure engine putting the result in `L` and the specification inherited
+the closure lemma above putting the result in `L` and the specification inherited
 from the hierarchy along the underlying sets.
 <!--zh-->
-于是这条公理就是上面那条引理落在两个实参的公共阶段上，由收尾引擎把结果放进 `L`，规格则沿底层集合从层级继承。
+于是这条公理就是：对两个实参的公共阶段应用上面的引理，随后由收尾引擎把结果放进 `L`，其规格沿底层集合从层级继承。
 <!--/-->
 
 ```agda
@@ -747,15 +747,15 @@ the exact membership law.
 <!--/-->
 
 <!--en-->
-Union asks for no search: a stage containing the argument already contains every
+No search is required: a stage containing the argument already contains every
 member of every member of it, because stages are transitive. The formula is a
 bounded existential, "some member of the argument has me as a member", and its
 quantifier ranges over the stage, which is exactly why transitivity is what makes
-the argument go through. One last bridge closes the specification: the model
+the argument go through. The final step completes the specification: the model
 record quantifies over constructible witnesses while the hierarchy's union axiom
 quantifies over all of them, and transitivity of the class identifies the two.
 <!--zh-->
-并不需要搜索：装着实参的阶段已经装着实参的成员的每个成员，因为阶段传递。公式是一个有界存在，「实参的某个成员以我为成员」，其量词跑遍那个阶段，而这正是传递性使论证走通的原因。最后一道桥合上规格：模型 record 对可构造的见证量化，层级的并公理则对全部见证量化，而类的传递性把二者认同。
+这里不需要搜索：装着实参的阶段同时也装着实参的成员的每个成员，因为阶段是传递的。公式是一个有界存在：「实参的某个成员以我为成员」，其量词跑遍那个阶段；传递性正是论证得以走通的原因。最后一步补全规格：模型 record 对可构造的见证量化，层级的并公理对全部见证量化，而类的传递性使二者一致。
 <!--/-->
 
 ```agda
@@ -849,7 +849,7 @@ hasUnionL a = mere→uniqueL (UnionOf.Q a) (UnionOf.build a)
 The chapter supplies five ZF fields: extensionality and regularity by restriction,
 and empty set, pairing, and union by carving definable subsets of bounded stages.
 <!--zh-->
-本章供应五个 ZF 字段：外延公理与正则公理由限制得到，空集、配对与并则由有界阶段上的可定义子集雕出。
+本章确立五个 ZF 字段：外延公理与正则公理由限制得到，空集、配对与并则由有界阶段上的可定义子集构造出来。
 <!--ja-->
 本章は五つの ZF フィールドを与える。外延性公理と正則性公理は制限から、空集合、対、和集合は有界な段階の定義可能部分集合を切り出すことから得られる。
 <!--/-->
@@ -858,16 +858,16 @@ and empty set, pairing, and union by carving definable subsets of bounded stages
 Five model fields, none of them assumed. Extensionality and regularity came down
 from the hierarchy along transitivity, and with extensionality in hand every
 later field needs only a witness, since uniqueness follows. The empty set,
-pairing and union were each carved out of a single stage by a single formula,
+pairing and union were each obtained from a single stage by a single formula,
 with the bounding ordinal supplying that stage where two arguments had to meet.
-The frontier is three debts lighter, and the pattern established here, one
-stage, one formula, one extensionality, is the pattern the remaining
-constructions follow. Pairing's carving is also stated on its own, as a fact
-about the tower rather than about the model: `pair∈Lset-suc`{.Agda} puts the
+The remaining tasks at the frontier are thereby reduced by three, and the pattern
+established here, one stage, one formula, one extensionality, is the pattern
+the remaining constructions follow. The pairing construction is also stated on
+its own, as a fact about the tower rather than about the model: `pair∈Lset-suc`{.Agda} puts the
 unordered pair of two members of a stage in the next stage,
 `sgl∈Lset-suc`{.Agda} the singleton, and `pr∈Lset-suc`{.Agda} the ordered pair
 two stages up, which is what places anything written with ordered pairs at a
 stage at all.
 <!--zh-->
-五个模型字段，无一靠假设。外延与正则沿传递性从层级下降，而有了外延性，日后每个字段只需一个见证，唯一性随之而来。空集、配对与并各由单一公式从单一阶段中刻出，两个实参须会合之处，则由上界序数供应那个阶段。前沿轻了三笔债，而此处立下的套路，一个阶段、一条公式、一次外延，正是余下诸构造所遵循的套路。配对那次雕刻也单独陈述一遍，作为关于塔而非关于模型的事实：`pair∈Lset-suc`{.Agda} 把一个阶段的两个成员的无序对放进下一个阶段，`sgl∈Lset-suc`{.Agda} 放单点集，而 `pr∈Lset-suc`{.Agda} 把有序对放到高两个阶段处，而这也正是以有序对写成的任何东西根本得以安置在某个阶段上的原因。
+五个模型字段，无一靠假设。外延与正则沿传递性从层级下降；有了外延性，日后每个字段只需一个见证，唯一性随之而来。空集、配对与并各由单一公式从单一阶段中构造出来；两个实参须会合时，所需的阶段由上界序数提供。前沿余下的任务因此减少三项；此处确立的模式，即一个阶段、一条公式、一次外延，正是余下各构造所遵循的模式。配对那次构造也单独陈述一遍，作为关于塔而非关于模型的事实：`pair∈Lset-suc`{.Agda} 把一个阶段的两个成员的无序对放进下一个阶段，`sgl∈Lset-suc`{.Agda} 放单点集，`pr∈Lset-suc`{.Agda} 把有序对放到高两个阶段处；这也正是以有序对写成的任何东西得以安置在某个阶段上的原因。
 <!--/-->

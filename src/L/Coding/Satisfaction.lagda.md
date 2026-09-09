@@ -23,9 +23,9 @@ The atoms are shorter here than in the internal clauses for the same reason. A
 term of the meta-language is a variable or a constant and the recursion knows
 which, so the reader for its value is one case rather than two.
 <!--zh-->
-此处没有任何内部的东西。递归沿一条 Agda 看得见的公式进行，故每一步都可以把前几步产出的集合以常元点名，而对象语言始终不必对码作量化。正是这一点使每一步只是「在周遭集合上作一次分离」，也正是这一点使内部递归那十条子句到来时成为**等式**而非定义。
+这条递归没有任何发生在对象语言内部的一步。递归沿一条 Agda 看得见的公式进行，故每一步都可以用常元点名前几步产出的集合，而对象语言始终不必对码作量化。正是这一点使每一步只是「在周遭集合上作一次分离」，也正是这一点使内部递归那十条子句到来时成为**等式**而非定义。
 
-出于同样理由，此处的原子比内部子句短。元语言的一个词项要么是变元、要么是常元，而递归知道是哪个，故读它取值的读式只有一种情形，不是两种。
+出于同样的理由，此处的原子比内部子句短。元语言的一个词项要么是变元、要么是常元，而递归知道是哪一种，故读取其取值的情形只有一种，而不是两种。
 <!--/-->
 
 
@@ -134,7 +134,7 @@ caught it: a member of the bound need not be a member of the carrier, so the
 environment it would be consed onto would not be an environment, and the two
 sides would not agree.
 <!--zh-->
-两个量词把载体的一个成员接到环境头上，再问结果是否落在下面那个取值之中，而后者高一个元数。两个有界量词做同样的事，而那个成员**取自载体、由界项的取值设防**，不是单取自那个取值。单取自那个取值是错的，理由与它在内部诸子句里曾经错的理由相同 (那次由一次审计抓出)：界的成员未必是载体的成员，于是被接上去的环境根本不是环境，两侧也就对不上。
+两个量词把载体的一个成员添加到环境之前，再检验结果是否落在那个取值之中，而后者高一个元数。两个有界量词做同样的事，只是那个成员**取自载体、并由界项的取值加以约束**，不是单取自那个取值。单取自那个取值是错的，理由与它在内部诸子句中曾经出错的理由相同，那次错误正是一次审计发现的：界的成员未必是载体的成员，于是被接上去的环境根本不是环境，两侧也就对不上。
 <!--/-->
 
 
@@ -199,7 +199,7 @@ Unfolding separation yields a membership equation for each constructor. These eq
 <!--zh-->
 ## 十个构造子的隶属关系等式
 
-展开分离的刻画，就得到每个构造子对应的隶属关系等式。这些等式把一条公式的环境集与其子公式的环境集联系起来，从而为证明所构造的表满足内部语义子句提供精确的等式。
+展开分离的刻画，便得到每个构造子对应的隶属关系等式。这些等式把一条公式的环境集与其子公式的环境集联系起来，使所构造的表满足内部语义子句的证明有精确的等式可用。
 <!--ja-->
 ## 十の構成子に対する所属関係の等式
 
@@ -210,7 +210,7 @@ Unfolding separation yields a membership equation for each constructor. These eq
 Each is the separation's own specification with the constructor's condition
 already substituted, which is why they are one line apiece.
 <!--zh-->
-每一条都是那次分离自己的规格，且构造子的条件已代入，这就是它们一条一行的原因。
+每一条都是相应那次分离自身的规格，而且构造子的条件已经代入；这正是它们一条一行出现的原因。
 <!--/-->
 
 

@@ -61,20 +61,20 @@ decidable equality that would let two occurrences of one constant be recognized 
 one, and will not find it. There is none to find: the constant domain is an
 arbitrary type, nothing obliges its equality to be decidable, and on a carrier of
 sets it demonstrably is not. Counting by occurrence is what frees the whole
-chapter from that demand. The price is an abstraction of higher arity than
-strictly necessary, paid in variables that receive a value twice over, and nothing
+chapter from that demand. The cost is an abstraction of higher arity than
+strictly necessary, in the form of variables that receive a value twice over, and nothing
 downstream can tell the difference: a vector of parameters is a vector of
 parameters.
 
 The count is a structural recursion over the ten constructors, with a term's
-count feeding it: a constant is one occurrence, a variable is none. Where a
+count as its input: a constant is one occurrence, a variable is none. Where a
 constructor has two parts, the counts add, left part first.
 <!--zh-->
-本章的设计要点在此定下，先于任何语法上的挪动。一条公式的常元**按出现计数，而非按取值**：带 `k` 次常元出现的公式给出长度为 `k` 的向量，同一常元的两次出现就是该向量的两个条目，把同一个集合装了两遍。
+本章的设计要点在此定下，先于任何语法上的挪动。一条公式的常元**按出现计数，而非按取值**：带 `k` 次常元出现的公式给出长度为 `k` 的向量，同一常元的两次出现就是该向量的两个条目，两处写的是同一个集合。
 
-若读者期待的是公式所提及的常元之**集**，他会去找那个能把同一常元的两次出现认作一次的可判定相等，并且找不到。本就没有可找的：常元域是任意类型，没有任何东西迫使它的相等可判定，而在集合的载体上它显然不可判定。逐次出现地计数，正是让整章摆脱这项索求的关键。代价是抽象出来的元数高于严格必要的元数，以「同一取值被喂了两遍」的变量支付，而下游分辨不出差别：参数向量就是参数向量。
+若读者期待的是公式所提及的常元之**集**，他会寻找一个可判定的相等关系，把同一常元的两次出现认作一次，却找不到这样的相等。本来就没有可找的：常元域是任意类型，其相等未必可判定；而在集合的载体上，它显然不可判定。逐次出现地计数，正是使整章避开这一要求的关键。代价是抽象所得的元数高于严格必要的元数，多出的部分对应于同一取值被当作两个不同变量重复处理；下游分辨不出其中差别：参数向量仍是参数向量。
 
-计数是对十个构造子的一次结构递归，由词项的计数供料：常元算一次出现，变量算零次。构造子分两部分处的计数相加，左部在先。
+计数是对十个构造子的一次结构递归，其输入是词项各部分的计数：常元算作一次出现，变量算作零次。复合构造子的计数取其两部分之和，左部在先。
 <!--/-->
 
 ```agda
@@ -103,7 +103,7 @@ collection to be typeable at all. Every clause mirrors its counterpart above, wi
 `++` where the count had `+`, so the constants come out in the order the formula
 mentions them, left to right.
 <!--zh-->
-收集是同一场递归写第二遍，而且必须是第二场递归、而非一场同时交出两者：它所返回的向量的**长度**恰是第一场算出的东西，故计数必须先在，收集才有类型可言。每条子句都照抄上面的对应子句，只把 `+` 换成 `++`，于是常元按公式提及它们的次序、自左而右出列。
+收集是对同一结构进行的第二次递归，而且必须与计数分成两次，不能在一次递归中同时给出两个结果：返回向量的**长度**恰是第一次递归算出的数，因此必须先算出计数，收集函数的返回类型才得以确定。每条子句都对应上面的计数子句，只把 `+` 换成 `++`；于是常元按照公式提及它们的次序，自左向右依次排列。
 <!--/-->
 
 ```agda

@@ -49,7 +49,7 @@ The recursive function and its computation equation are kept opaque together.
 Consumers reason through `col-eq`; they never unfold a well-founded induction
 during conversion.
 <!--zh-->
-递归函数及其计算方程一同保持不透明。消费方经 `col-eq` 推理，绝不在转换时展开一场良基归纳。
+递归函数及其计算方程一同保持不透明。使用方经 `col-eq` 推理，绝不在转换时展开一场良基归纳。
 <!--/-->
 
 ```agda

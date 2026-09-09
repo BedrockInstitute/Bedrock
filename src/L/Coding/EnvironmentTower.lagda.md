@@ -262,7 +262,7 @@ Every quantifier in this description has a bound. The sound boundedness checker
 reads the constructed formula and supplies its Δ₀ witness; the same check will
 certify the descriptions of codes and tables below.
 <!--zh-->
-这个描述中的每个量词都有界。已证明可靠的有界性检查器读取构造出的公式，给出它的 Δ₀ 见证；下面对码与表的描述也由同一检查给出证书。
+这个描述中的每个量词都有界。有界性检查器的可靠性已获证明：它读取构造出的公式，给出其 Δ₀ 见证；下面对码与表的描述也由同一检查给出证书。
 <!--/-->
 
 ```agda

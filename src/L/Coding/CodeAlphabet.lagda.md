@@ -54,7 +54,7 @@ underlying set together with the proof `ι∈` that it lies in `W`. Mapping term
 and formulas along `ι` before applying the hierarchy coding gives `ct` and `cd`;
 `cd-subst` shows that transporting an arity does not change the resulting code.
 <!--zh-->
-`Ab` 是 `W` 的成员类型，`ι` 把每个成员送到它的底层集合，而 `ι∈` 证明该集合属于 `W`。先沿 `ι` 映射词项与公式，再施以层级编码，便得到 `ct` 与 `cd`；`cd-subst` 表明搬运元数不会改变所得公式码。
+`Ab` 是 `W` 的成员类型，`ι` 把每个成员送到它的底层集合，而 `ι∈` 证明该集合属于 `W`。先沿 `ι` 映射词项与公式，再施以层级编码，便得到 `ct` 与 `cd`；`cd-subst` 表明改变元数不会改变所得公式码。
 <!--ja-->
 `Ab` は `W` の要素の型であり、`ι` は各要素をその台となる集合へ送り、`ι∈` はその集合が `W` に属することを示す。項と論理式を `ι` に沿って写してから階層の符号化を施すことで `ct` と `cd` を得る。`cd-subst` はアリティを移送しても得られる論理式符号が変わらないことを示す。
 <!--/-->

@@ -25,7 +25,7 @@ which ones is computed from the shape's tag. So each of the seven clauses is the
 same four moves: take the element apart, read its tag, ask what that tag demands,
 and hand back what the formula's own closure already contains.
 <!--zh-->
-证明短，因为它所需的两半本就是为了在此处会合而造的。闭包的元素是某条公式的键，而它自带一个坐落于其内的闭包；一个给定构造子形状的键有已知的诸子键，而具体是哪几个由那个形状的标签算出。故七条子句里的每一条都是同样四步：把元素拆开、读出它的标签、问那个标签索取什么，再把该公式自己的闭包早已含有的东西交回去。
+证明之所以短，是因为它所需的两个部分本就是为在此处结合而构造的。闭包的元素是某条公式的键，而该公式自身带有含于其中的闭包；给定构造子形状的键有已知的诸子键，具体是哪几个由该形状的标签算出。故七条子句里的每一条都是同样四步：把元素拆开、读出它的标签、由该标签确定需要什么，再给出该公式自己的闭包早已含有的那些键。
 <!--/-->
 
 ```agda
@@ -257,10 +257,10 @@ any model element whose underlying set satisfies `Peel`; `closureClosed` supplie
 `closedOf`{.Agda} is the hypothesis a recursion over subcodes needs about its
 index set, discharged for any set that peels; `closureClosed`{.Agda} is that
 statement at a closure. Nothing in either is about satisfaction: the seven clauses
-say only which keys a key of a given shape drags in, and a set that peels holds
+say only which keys a key of a given shape brings in, and a set that peels holds
 exactly those.
 <!--zh-->
-`closedOf`{.Agda} 是「对诸子码作递归」关于其索引集所需的那条假设，对任何可剥开的集合交付；`closureClosed`{.Agda} 是那条陈述落在闭包处。两者里都没有任何关于满足关系的东西：七条子句只说一个给定形状的键会拖进哪些键，而一个可剥开的集合恰好持有那些。
+`closedOf`{.Agda} 给出对子码递归的索引集所需的假设，并适用于任何可剥开的集合；`closureClosed`{.Agda} 则将该结论用于闭包。两者都不涉及满足关系：七条子句只说明给定形状的键会引入哪些键，而可剥开的集合恰好包含这些键。
 <!--ja-->
 任意の Peel 性を持つ集合について closedOf が部分式閉包条件を証明し、closureClosed がそれを論理式の実際の閉包に適用する。内容は満足関係の値ではなく、各コード形が要求する部分鍵の包含である。
 <!--/-->

@@ -36,14 +36,14 @@ the tower there holds the set and no smaller numeral's tower does. The second is
 a recursion along the numerals whose values are relations, and a recursion whose
 values are sets cannot be named by a term, so what gets described is an
 **approximation**, exactly as the tower and the order table were described. The
-two keys are then joined by a disjunction, and the model's own separation carves
-the set out of a bound the pairs cannot escape.
+two keys are then joined by a disjunction, and the model's own separation
+extracts the order from a bound containing the relevant ordered pairs.
 <!--zh-->
 Choice 构造在每个阶段都把自己的债务归约成更小的一笔，而 `L.Choice.NameComparison`{.Agda} 点出了剩下的那笔：内化命名比较的那个框架持有一个**为诸码所设的关系位**，而那一位所要的，是极限阶段诸成员上的那个序 `limitOrder`{.Agda}，作为模型的一个集合。本章造出这个集合。
 
 那个序以层号为主键。极限阶段的成员首次现身于某个有穷阶段，最小的这种数码就是它的**层号**，而层号不同的两个成员仅凭层号比较。同层的两个成员按那一层自己的序比较，而后者是在**最先分歧处**的比较：两个集合总在某处相异，而在上一个阶段自己的序之下最小的那个相异点作出裁决，持有它的那个集合排在后面。
 
-于是有两个键，而每一个都得在对象语言里说出来。第一个很短，而为它准备的器械已经存在：一个数码是某集合的层号，当那里的塔装着这个集合，而没有更小数码的塔装它。第二个是沿诸数码的一场递归，其取值是关系，而取值为集合的递归没法被一个词项点名，故被描述的是**逼近**，与塔、与序之表被描述的方式一模一样。两个键随后由一个析取接合起来，而模型自家的分离把那个集合从「诸对逃不出的一个界」上雕出来。
+这里有两个键，而且都必须在对象语言中表达。第一个键较简单，所需构造已经具备：一个数码是某集合的层号，意思是该数码处的塔包含这个集合，而更小数码处的塔都不包含它。第二个键由沿诸数码的递归给出，其取值是关系。由于取值为集合的递归不能由一个词项直接命名，这里描述的是递归的**逼近**，方式与塔及序之表相同。随后以析取连接两个键，再由模型中的分离从包含所有相关有序对的集合界中取出所需关系。
 <!--/-->
 
 ```agda
@@ -170,7 +170,7 @@ site it takes 1.8 s, and the eighty-fold difference is the classical accessibili
 recursion that computes the level being forced open by conversion at a slot.
 <!--zh-->
 
-三个合取项，且除 `ω` 自身外不点名任何常元。位 `b` 持有 `ω` 的一个成员，故它持有一个数码；`b` 处有一座塔，而位 `x` 属于它；并且对 `b` 的每个成员、亦即每个更小的数码，那里的塔**不**装 `x`。塔经序列那一章的图抵达，而那是抵达它的唯一办法，因为层级是被描述的、不是被某个词项点名的。
+三个合取项，且除 `ω` 自身外不指称任何常元。位 `b` 持有 `ω` 的一个成员，故它持有一个数码；`b` 处有一座塔，而位 `x` 属于它；并且对 `b` 的每个成员、亦即每个更小的数码，那里的塔**不**包含 `x`。塔经由序列那一章的图得到，而这是得到它的唯一途径，因为层级是被描述的、不是被某个词项命名的。
 
 第三个合取项是本部任何地方头一次用上全称量词之处。它不花分文，而理由值得记下：指标合取是货真价实的乘积，对象蕴含是函数，故这笔债由一个 lambda 交割，没有任何截断要消去；而它之下的数码解码落在荒谬里，荒谬是命题，故那里的截断一行就被吸收。
 
@@ -314,9 +314,9 @@ chapter measured: it is the pair, not the set inside it, that reaches the slot.
 
 第二个键是有穷那一章那次比较的单独一步，而本节把这一步写下来，且**其中不含任何具体之物**：基底关系与基底阶段被握在槽位里，被比较的那两个集合也被握在槽位里。这种通用性不是花架子。那一步所查阅的关系是一场递归的取值，故在这一步被使用之处，它绝不可能是常元；它以变元身份到场，而整条描述必须站得住。
 
-那一步所说的，就是有穷那一章所说的。阶段中存在一个 `z`，它属于 `y` 而不属于 `x`，且阶段中凡被基底关系排在 `z` 之前的成员 `w`，属于 `x` 当且仅当属于 `y`。对象语言唯一无法逐字抄写元语言之处，是基底关系的那次隶属：`pr w z` 是一个对，而对是被描述的、不是被点名的，故那个原子是模型那一章的 `appAt`{.Agda}。
+那一步所说的，就是有穷那一章所说的。阶段中存在一个 `z`，它属于 `y` 而不属于 `x`，且阶段中凡被基底关系排在 `z` 之前的成员 `w`，属于 `x` 当且仅当属于 `y`。对象语言唯一无法逐字抄写元语言之处，是基底关系的那次隶属：`pr w z` 是一个对，而对是被描述的、不是被命名的，故那个原子是模型那一章的 `appAt`{.Agda}。
 
-两个方向只差一步记账。元语言在层级的诸集合上量化，对象语言在模型的诸元素上量化，故每一个过界的见证都得取得或卸下它的可构造性证明，而那份证明是有的，因为 `L` 的集合的成员就是 `L` 的元素。携带它的那个对在造出之处被**封印**，理由已在上一章实测过：抵达槽位的是那个对，而不是它里面的集合。
+两个方向只需多做一步核对。元语言量化层级中的集合，对象语言量化模型中的元素，因此每个跨越这层边界的见证都要补上或去掉可构造性证明；该证明存在，因为 `L` 的集合的成员就是 `L` 的元素。携带证明的那个对在构造之处被**封装**，理由已在上一章通过实测说明：进入槽位的是整个对，而不是其中的集合。
 <!--/-->
 
 Perf: a member of a set of the model, paired with the constructibility proof it
@@ -464,11 +464,11 @@ consulted first, the strict case hands the comparison over untouched, and the
 other two cases have absurdity for a goal, where the truncation may be opened.
 <!--zh-->
 
-两个键在此接合，而第二个以**具名假设**的身份进场、不是作为一个构造：一条公式，说「某个槽位所持有的数码处的关系把一个槽位排在另一个之前」，而被比较的那两个集合**被禁闭在该数码处的阶段之内**，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。自此往下的一切都对那条描述保持通用，而最后一节将说准：兑现它需要什么。那次禁闭对下面两个调用处不花分文，因为每一处都已经握着它所比较的两个集合的层号等式。
+两个键在此连接。第二个键以**具名假设**而非现成构造的形式给出：其中包括一条公式，表达「某个槽位所持数码处的关系把一个槽位排在另一个之前」；被比较的两个集合还须**限制在该数码处的阶段之内**，并配有相对于有穷一章 `before`{.Agda} 的两条读式。此后的论证都对这条描述保持通用，最后一节再说明实现它所需的条件。这项阶段限制不会增加下面两个使用处的工作，因为两处都已有被比较集合的层号等式。
 
 接合是一个析取，而它的两支所绑定的层号个数不同。第一支绑两个，每边一个，并按隶属比较它们，那就是数码上的序。第二支绑**一个**，断言它是两边的层号，并把比较交给那里的关系。绑一个数码而不是两个，正是把「层号之间的等式」挡在对象语言之外的办法；否则那个等式就得用对象等词写出、再换回来。
 
-反着读那个析取要花一条引理，而它正是序之表那一章早已为每一个严格良序一举隔离出来的那一条：对象析取是截断的，元层面的比较不是，故先请出三歧，严格那一情形原封不动交出比较，另外两种情形的目标是荒谬，而截断可以在那里打开。
+反向读取该析取需要一条引理，即序之表一章已经为每个严格良序隔离出的引理。对象语言的析取带有截断，而元层比较没有截断，因此先按三歧分情形：严格情形直接给出比较；另两种情形的目标是荒谬，所以可以在这些分支中消去截断。
 <!--/-->
 
 Perf: the limit stage and its members, sealed where they are built.
@@ -682,25 +682,25 @@ Separation over ordered pairs in `Lset ω`{.Agda} turns `Lim`{.Agda} into
 
 <!--en-->
 
-The pairs the order relates cannot escape a single set, because the members of the
+The pairs the order relates are contained in a single set: the members of the
 limit stage form a small family of elements of `L` and so do their pairs; the
 recursion chapter's bounding lemma confines them all at once. Separation with the
-condition below then carves out exactly the pairs wanted, and the condition is one
+condition below then yields exactly the pairs wanted. The condition is one
 existential pair binding the two components, with the pairing described rather
 than named, joined to the comparison.
 
-The two representation lemmas are the chapter's deliverable, and they are stated
-in the shape the internalization chapter's `Adequacy.Keys`{.Agda} consumes: the
+The two representation lemmas are the chapter's main results, and they are stated
+in the form the internalization chapter's `Adequacy.Keys`{.Agda} requires: the
 same two arguments, the same pairing on the left, and the bundle's own comparison
-on the right. Their proofs are the separation's specification read in each
-direction, with the components recovered by injectivity of the pairing one way and
-supplied by the model's own pairing the other. Reading back also spends the
-untruncation lemma, since a membership is a proposition and the comparison is not.
+on the right. Their proofs read the separation's specification in each direction:
+the components are recovered by injectivity of the pairing one way, and supplied
+by the model's own pairing the other. Reading back also uses the untruncation
+lemma, since a membership is a proposition and the comparison is not.
 <!--zh-->
 
-被那个序关联的诸对逃不出单一的一个集合，因为极限阶段的诸成员构成 `L` 元素的一个小族，它们的诸对也是；递归那一章的界层引理一举把它们全部禁闭。随后，用下面这条条件作分离，就恰好把想要的那些对雕出来，而那条条件是一对存在量词绑住两个分量，配对是被描述的而非被点名的，再接上那次比较。
+与那个序相关的诸对并没有超出单独一个集合：极限阶段的成员构成 `L` 元素的一个小族，它们的诸对也是；递归那一章的界层引理一举把它们全部限制在内。随后，用下面这条条件作分离，就恰好得到想要的那些对。这条条件由一对存在量词约束两个分量，配对是被描述的而非被点名的，再接上那次比较。
 
-两条表示引理是本章的交付物，而它们陈述成内化那一章的 `Adequacy.Keys`{.Agda} 所消费的形状：同样两个实参、左边同样的配对、右边那个束自己的比较。它们的证明就是把分离的规格分两个方向读出来，一个方向由配对的单射性取回两个分量，另一个方向由模型自家的配对供上它们。读回来还要花掉那条脱截断引理，因为隶属是命题而比较不是。
+两条表示引理是本章的主要结果，它们按内化那一章的 `Adequacy.Keys`{.Agda} 所要求的形式陈述：同样两个实参、左边同样的配对、右边那个束自己的比较。它们的证明就是把分离的条件分两个方向读出来：一个方向由配对的单射性取回两个分量，另一个方向由模型自身的配对给出它们。读回来还要用到那条脱截断引理，因为隶属是命题而比较不是。
 <!--/-->
 
 ```agda
@@ -806,7 +806,7 @@ sealed where it is built.
 The realized limit order now fills the code-relation slot in the internal name
 frame, and its representation lemmas discharge both required readings.
 <!--zh-->
-实现出的极限序现在填入内部名字框架的码关系位，其表示引理解除所需的两条读式。
+实现出的极限序现在用作内部名字框架中的码关系，其表示引理给出所需的两条读式。
 <!--ja-->
 実現された極限順序が内部の名前フレームにある符号関係のスロットを埋め、その表現補題が必要な二つの読みを満たす。
 <!--/-->
@@ -825,9 +825,9 @@ construction, and the previous part supplies it at every stage. What is filled
 here is exactly the half that had no supplier.
 <!--zh-->
 
-内化命名比较的那个框架取两个关系位，一个为诸码、一个为诸参数，各自带着「它持有什么」的两个方向。为诸码所设的那一位正是本章为之而写的东西，而它在此处被填上：集合是 `codeOrder`{.Agda}，两个方向就是刚证完的那两条引理，实参相同，中间不设任何转接。
+内化命名比较的那个框架取两个关系位，一个对应诸码、一个对应诸参数，各自带有关于「它持有什么」的两个方向。为诸码所设的那一位正是本章的目标：在此处它由 `codeOrder`{.Agda} 给出，两个方向就是刚证完的那两条引理，实参相同，中间不需要任何转换。
 
-为诸参数所设的那一位仍然敞着，而这不是遗漏。它是「命名所依托的那个载体上的序」，是整个构造的一个参数，而上一部在每个阶段处供给它。此处填上的，恰是那没有供给方的一半。
+为诸参数所设的那一位尚未确定，而这并非遗漏。它是「命名所依托的那个载体上的序」，是整个构造的一个参数，上一部在每个阶段处都已为它提供取值。本章此处确定的，正是先前没有供给来源的那一半。
 <!--/-->
 
 ```agda
@@ -877,25 +877,25 @@ to be described is an **approximation**, a set recording at each numeral below i
 domain the relation there, exactly as the tower and the order table are described:
 a graph quantifying over approximations, a value lemma pinning every value an
 approximation records, and the approximation at each numeral exhibited on the meta
-side. Two things make it cheaper here than either predecessor. The index is a
-member of `ωʟ`{.Agda}, a set, so the outer induction is on a natural number and
+side. Two things make it less laborious here than either earlier description. The
+index is a member of `ωʟ`{.Agda}, a set, so the outer induction is on a natural number and
 the class-collection half of the hierarchy chapter does not arise. And the step is
 already written: `PrecedesAt`{.Agda} is the recursion's step condition, generic in
 the slot the previous relation is held in, which is exactly the form a graph must
 consult it in.
 
-Two things make it dearer. The value at a numeral is a relation rather than a
+Two things make it more laborious. The value at a numeral is a relation rather than a
 stage, so each step is a separation over the pairs of a finite stage rather than a
-definable powerset; and the previous relation reaches a slot inside the step, so
-it must arrive as a variable with its defining equation and never as an
-application, on pain of the wall that Law 1 names.
+definable powerset; and the previous relation enters a slot inside the step, so
+it must appear as a variable together with its defining equation and never as an
+application, on pain of the restriction that Law 1 names.
 <!--zh-->
 
-`Described`{.Agda} 有一条假设仍然敞着，而它就是横在本章与一条无条件定理之间的全部：一条公式 `BeforeAt`{.Agda}，说「某个槽位所持有的数码处、按最先分歧处的那个序，把第二个槽位排在第三个之前」，其中被比较的两个集合被禁闭在该数码处的阶段之内，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。
+`Described`{.Agda} 还有一条假设未确定，而它就是本章与一条无条件定理之间仅剩的距离：一条公式 `BeforeAt`{.Agda}，说「某个槽位所持有的数码处、按最先分歧处的那个序，把第二个槽位排在第三个之前」，其中被比较的两个集合限制在该数码处的阶段之内；这对应有穷那一章的 `before`{.Agda} 的两条读式。
 
-兑现它是一件事、不是几件，而形状已经定了。某个数码处的关系是沿诸数码的一场递归的取值，故要被描述的是一个**逼近**：一个集合，在它定义域以下的每个数码处记录那里的关系；与塔、与序之表被描述的方式一模一样：一个对诸逼近作量化的图、一条把逼近所记录的每个取值钉住的值引理，以及在元层面把每个数码处的逼近当场拿出来。有两件事使它比两位前辈都更便宜。索引是 `ωʟ`{.Agda} 的成员，而 `ωʟ`{.Agda} 是个集合，故外层归纳是对一个自然数作的，层级那一章那半场真类收集根本不会出现。而那一步已经写好：`PrecedesAt`{.Agda} 就是这场递归的步进条件，且对「上一个关系被握在哪一位」保持通用，而那恰是一个图查阅它时必须采取的形式。
+兑现它是一件事而不是几件，其形式已经确定。某个数码处的关系是沿诸数码的一次递归的取值，故要被描述的是一个**逼近**：一个集合，在它定义域以下的每个数码处记录那里的关系；其方式与塔、与序之表被描述的方式完全相同：一个对诸逼近作量化的图、一条确认逼近所记录的每个取值的值引理，以及在元层面把每个数码处的逼近直接给出。有两件事使它比前两处描述都更省力。索引是 `ωʟ`{.Agda} 的成员，而 `ωʟ`{.Agda} 是个集合，故外层归纳是对一个自然数作的，层级那一章涉及真类收集的那部分论证根本不会出现。而那一步已经写好：`PrecedesAt`{.Agda} 就是这场递归的步进条件，且对「上一个关系被存放在哪一位」保持通用，而这正是一个图使用它时所要求的形式。
 
-也有两件事使它更贵。某个数码处的取值是关系而非阶段，故每一步是在一个有穷阶段的诸对之上作分离，而不是取可定义幂集；而上一个关系要抵达那一步内部的一个槽位，故它必须以变元身份携带自己的定义等式到场，绝不可以是一个应用，否则就撞上第一条定律所点名的那堵墙。
+也有两件事使它更费力。某个数码处的取值是关系而非阶段，故每一步是在一个有穷阶段的诸对之上作分离，而不是取可定义幂集；而且上一个关系要进入那一步内部的一个槽位，所以它必须以变元身份连同自己的定义等式一起出现，绝不可以是一个应用，否则就会违反第一条定律所指出的那条限制。
 <!--/-->
 
 <!--en-->
@@ -922,9 +922,9 @@ membership readings, and uses them to close the code-order side of the frame.
 constant but `ω`: the slot holds a member of `ω`, the tower there holds the set,
 and no smaller numeral's tower does. `LevelAt-in`{.Agda} and
 `LevelAt-out`{.Agda} are its two readings at variable slots in a variable
-environment, with the level itself arriving as a **variable numeral** carrying its
+environment, with the level itself appearing as a **variable numeral** carrying its
 defining equation, which is the difference between 145 s and 1.8 s: the level is a
-classical accessibility recursion, and conversion at a slot forces it open.
+classical accessibility recursion, and conversion at a slot exposes it.
 
 `PrecedesAt`{.Agda} is one step of the earliest-disagreement comparison with
 nothing concrete in it: the base relation and the base stage are held in slots, so
@@ -950,23 +950,23 @@ representation lemmas, and `CodeKeys.AtParams`{.Agda} is the internalization
 chapter's `Adequacy.Keys`{.Agda} with its **code slot filled by them**, at the
 same two arguments and with no adapter.
 
-Two measurements are recorded, and each is a law met in a new place. A case split
-whose scrutinee is a **bundle's** comparison and whose conclusion is a
+Two measurements are recorded, and each reflects the same law seen earlier.
+A case split whose scrutinee is a **bundle's** comparison and whose conclusion is a
 satisfaction does not finish; written on an explicit sum with the branches as
-named helpers it costs nothing (past 300 s against 2.4 s). And the composed
+named helpers its cost is negligible (past 300 s against 2.4 s). And the composed
 description must be **sealed where it is built**: the separation's condition
 unfolds it under two binders, and unsealed that reduction does not finish either
 (past 300 s against 2.7 s), which is the same law the previous chapter measured at
 160 s per reading.
 <!--zh-->
 
-`LevelAt`{.Agda} 是层号在对象语言中的说法，三个合取项，且除 `ω` 外不点名任何常元：那一位持有 `ω` 的一个成员、那里的塔装着这个集合、而没有更小数码的塔装它。`LevelAt-in`{.Agda} 与 `LevelAt-out`{.Agda} 是它落在变元环境的变元位上的两条读式，而层号自身以**变元数码**的身份到场，携带它的定义等式，这正是 145 秒与 1.8 秒之差：层号是一场经典可及性递归，而槽位处的转换检查把它撬开。
+`LevelAt`{.Agda} 是层号在对象语言中的说法，三个合取项，且除 `ω` 外不点名任何常元：该位置持有 `ω` 的一个成员、那里的塔含有这个集合、而没有更小数码的塔含有它。`LevelAt-in`{.Agda} 与 `LevelAt-out`{.Agda} 是它落在变元环境的变元位上的两条读式，而层号自身以**变元数码**的身份出现，并携带它的定义等式；这正是 145 秒与 1.8 秒之差的来源：层号是一场经典可及性递归，而槽位处的转换检查会把它揭示出来。
 
-`PrecedesAt`{.Agda} 是最先分歧处那次比较的单独一步，其中不含任何具体之物：基底关系与基底阶段被握在槽位里，故这条描述能站在「关系是某场递归之取值」的地方。`PrecedesAt-out`{.Agda} 与 `PrecedesAt-in`{.Agda} 是它对着 `precedes`{.Agda} 的两条读式，只差一步记账，因为在两种语言之间过界的见证要取得或卸下它的可构造性证明，而携带那份证明的对被封印。
+`PrecedesAt`{.Agda} 只描述最先分歧处的一步比较，本身不含任何具体对象：基底关系与基底阶段都保留为槽位参数，因此它也适用于「关系是某场递归之取值」的情形。`PrecedesAt-out`{.Agda} 与 `PrecedesAt-in`{.Agda} 是它相对于 `precedes`{.Agda} 的两条读式；二者只相差一步核对，因为在两种语言之间转换的见证需要补上或去掉可构造性证明，而携带该证明的对已经封装。
 
-`strictLimit`{.Agda} 把一次比较上的截断脱下来，办法是在消去任何东西之前先按三歧分情形。`Described`{.Agda} 是那个框架：`LimitOrdAt`{.Agda} 把两个键接成一个析取，第一支绑两个层号并按隶属比较它们，第二支绑**一个**，于是层号之间的等式根本不进对象语言；`Order.LimitOrdAt-in`{.Agda} 与 `Order.LimitOrdAt-out`{.Agda} 是它对着 `limitOrder`{.Agda} 自己那次比较的两条读式。
+`strictLimit`{.Agda} 消去一次比较上的截断，方法是在消去任何内容之前先按三歧分情形。`Described`{.Agda} 是所用框架：`LimitOrdAt`{.Agda} 以析取连接两个键，第一支绑定两个层号并按隶属比较，第二支只绑定**一个**层号，因此层号之间的等式不进入对象语言。`Order.LimitOrdAt-in`{.Agda} 与 `Order.LimitOrdAt-out`{.Agda} 是它相对于 `limitOrder`{.Agda} 自身比较的两条读式。
 
-`pairsBound`{.Agda} 把那个序可能关联的每一个对都禁闭起来，靠的是递归那一章的界层引理施于极限阶段诸成员的那个小族；而 `codeOrder`{.Agda} 是从它上面用 `Cond₀`{.Agda} 分离出来的，在造出之处封印。`codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda} 是两条表示引理，而 `CodeKeys.AtParams`{.Agda} 就是内化那一章的 `Adequacy.Keys`{.Agda}，其**为诸码所设的位由它们填上**，实参相同，中间不设转接。
+`pairsBound`{.Agda} 为该序可能关联的每一个对给出集合界，依据是将递归一章的界层引理用于极限阶段诸成员构成的小族。`codeOrder`{.Agda} 用 `Cond₀`{.Agda} 从这个界中分离出来，并在构造之处封装。`codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda} 是两条表示引理；`CodeKeys.AtParams`{.Agda} 就是内化一章的 `Adequacy.Keys`{.Agda}，其**为诸码所设的位由它们填上**，实参相同，中间无须转换。
 
-记下两次实测，每一次都是在新地方遇上的旧规矩。一次分情形，若其被检者是某个**束**的比较、而其结论是一个满足关系，就跑不完；写在一个显式的和上、诸支取作具名辅助，则不花分文 (超过 300 秒对 2.4 秒)。而那条接合起来的描述必须**在造出之处封印**：分离的那条条件会在两层绑定之下把它展开，而不封印时那次归约同样跑不完 (超过 300 秒对 2.7 秒)，这与上一章实测为每条读式 160 秒的是同一条定律。
+记录两次实测，二者都体现了前面已见过的同一条规律。一次分情形：若被检者是某个**束**的比较、而其结论是一个满足关系，就跑不完；把它写在一个显式的和上、诸支取作具名辅助，代价便可以忽略 (超过 300 秒对 2.4 秒)。而那条接合起来的描述必须**在造出之处封印**：分离的那条条件会在两层绑定之下把它展开，不封印时那次归约同样跑不完 (超过 300 秒对 2.7 秒)，与上一章实测的每条读式 160 秒是同一条规律。
 <!--/-->

@@ -25,20 +25,20 @@ recursion is what produces the table, so the graph that defines it must quantify
 over tables rather than point at one.
 
 The carrier is bound for a different reason, and that reason is why the chapter
-is one frame with two instances. Every clause takes the carrier as a slot and
-none takes it as a term, so something has to occupy that slot, and what may
-occupy it depends on the caller. A caller holding the carrier as a set of its own
-pins a bound variable to a constant. A caller whose carrier is itself a bound
+is one frame with two instances. Every clause treats the carrier as a slot and
+none treats it as a term, so the caller must decide what fills that slot.
+A caller that takes the carrier as one of its own sets fixes a bound
+variable with a constant. A caller whose carrier is itself a bound
 variable, which is exactly what a stage of the internal hierarchy is, has no
-constant to pin it to, because a set enters a formula only by being named. So the
-pinning clause is the frame's parameter, and the two instances are the two
-clauses that fit it.
+constant to fix it with, because a set enters a formula only by being named.
+So the clause that fixes the carrier is the frame's parameter, and the two
+instances are the two clauses that fill it.
 <!--zh-->
-递归的那个图说的是：存在一个含有其成员诸子码的索引集、一张在每个索引处作答且满足十条子句的表，而那个取值就是该表在此索引处记录的东西。
+递归的那个图说的是：存在一个含有其成员诸子码的索引集，以及一张在每个索引处给出取值且满足十条子句的表，而所取的值就是该表在此索引处记录的值。
 
 索引集与表被绑定，是因为**一个图不可以点名一张尚未交给它的表**，而那是内化定理唯一禁止的事：递归才是产出那张表的东西，故定义它的那个图必须对诸表作量化，而不能指着某一张。
 
-载体被绑定则出于另一个理由，而正是那个理由使本章成为「一个框架带两个实例」。每条子句都把载体当作一个槽位、没有一条把它当作词项，故必须有什么东西占住那一位，而什么占得住取决于调用方。手里把载体握作自己一个集合的调用方，用一个常元钉住一个被绑定的变元。而以载体本身为一个被绑定变元的调用方 (内部层级的一个阶段正是如此) 没有可供钉住的常元，因为集合进入公式的唯一方式是被点名。于是那条用来钉住的子句就是框架的参数，而两个实例就是能填进它的那两条子句。
+绑定载体还有另一个原因，也正因如此，本章采用「一个框架、两个实例」的结构。每条子句都把载体作为一个槽位，而不把它作为词项，因此必须由调用方决定用什么填入该槽位。若调用方把载体取为自己的一个集合，就用常元固定那个被绑定的变元；若调用方把载体本身作为被绑定变元 (内部层级的阶段正是这种情形)，则没有可用来固定它的常元，因为集合只能通过点名进入公式。因此，用来固定载体槽位的子句是框架的参数，两个实例分别代入对应的两条子句。
 <!--/-->
 
 ```agda
@@ -242,9 +242,9 @@ reading as a hypothesis, one direction per reading. At both instances the
 hypothesis is the identity, because a variable equated to a constant and a
 variable equated to a variable read as the same equation between underlying sets.
 <!--zh-->
-三层嵌套的存在，被摊平来读，落在一个变元环境上、也落在一个以元素形式递交的载体上。这条读法陈述在变元自变量上，而正是它使「递出或消费一个见证」的证明不必在具体集合上钻过三层绑定作代换；环境取作变元也出于同一理由：想把载体取作槽位的消费方，拿不出任何具体环境。
+三层嵌套的存在，经摊平来读，落在一个变元环境上，也落在一个以元素形式给出的载体上。这条读法针对变元自变量陈述，正是它使「给出或使用一个见证」的证明不必在具体集合上穿过三层绑定作代换；环境取作变元也出于同一理由：想把载体当作待填位置的调用方，拿不出任何具体环境。
 
-那条用来钉住的子句，是框架自己读不了的唯一一个分量，故它把那条读法取作假设，一个读法一个方向。在两个实例处那条假设都是恒等的，因为「变元等于常元」与「变元等于变元」读出来是底集之间的同一条等式。
+框架自己读不了的分量只有那条为取值指定载体的子句，故证明把这条读法取作假设，每个读法对应一个方向。在两个实例处这条假设都是恒等的，因为「变元等于常元」与「变元等于变元」读出来是底集之间的同一条等式。
 <!--/-->
 
 ```agda
@@ -340,7 +340,7 @@ at the given slot, and the witness says which set that is by looking the slot up
 Nothing here is a set the formula names, so a caller may put the graph under as
 many binders as it likes.
 <!--zh-->
-一般的那个实例，也是内部层级将要用的那一个。那条钉住的子句，把图自己绑定的载体等同于周遭环境在给定槽位处所持有的东西，而那个见证靠查那一位说出那是哪个集合。此处没有任何东西是公式点了名的集合，故调用方爱把这个图放在多少层绑定之下都可以。
+一般的那个实例，也是内部层级将要用的那一个。那条为取值指定载体的子句，把图自身绑定的载体等同于周遭环境在给定槽位处的取值，而见证通过查阅这一分量说出那是哪个集合。此处没有任何集合是公式明确提到的，故调用方可以把这个图放在任意多层绑定之下。
 <!--/-->
 
 ```agda
@@ -395,11 +395,11 @@ opaque
 <!--en-->
 The same frame with the constant in place of the slot, at two free variables, and
 this is the form the per-formula recursion and the recursion over a stage's codes
-both consume. It is delivered at the types it had before the frame existed, and
-its witness type is the same tuple in the same order at the same environment, so
-nothing that builds or reads one has anything to notice.
+both consume. It has the types it had before the frame was introduced, and its
+witness type is the same tuple in the same order at the same environment, so
+nothing that builds or reads one needs any adjustment.
 <!--zh-->
-同一个框架，只是把常元放到槽位的位置上，落在两个自由变元上；而这正是「按公式索引的那场递归」与「跑在某阶段诸码上的那场递归」共同消费的形式。它按框架尚未存在时的那些类型交付，其见证类型是同一个环境处、同样顺序的同一个元组，故凡是造它或读它的东西，都没有什么要留意的。
+这是同一个框架，只是把常元放到槽位的位置上，作用在两个自由变元上；而「按公式索引的那场递归」与「跑在某阶段诸码上的那场递归」使用的正是这一形式。它的类型与框架尚未引入时相同，其见证类型也是同一个环境处、同样顺序的同一个元组，因此构造它或使用它的地方都无需做任何调整。
 <!--/-->
 
 ```agda

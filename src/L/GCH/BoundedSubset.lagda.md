@@ -5,7 +5,7 @@ The bounded subset theorem locates a constructible subset once its elements and 
 <!--zh-->
 # 有界子集在受控阶段出现
 
-有界子集定理在元素与定义参数已有界时，确定一个可构造子集出现的位置。它的内部形式把可定义性连接到 GCH 论证所需的阶段估计。
+当元素与定义参数都有界时，有界子集定理确定一个可构造子集出现的位置。它的内部形式把可定义性连接到 GCH 论证所需的阶段估计。
 <!--ja-->
 # 有界部分集合が現れる段階を制御する
 

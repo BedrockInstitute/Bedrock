@@ -13,7 +13,7 @@ that every formula key enters the domain. It then applies both directions to
 the canonical set `AllCodes`; the constants used by its syntax come from
 `CodeAlphabet`, while the ten constructor tags come from `CodeDomain`.
 <!--zh-->
-假设一个集合满足形状与封闭公式 `codesAt`，本章把其中每个成员解码为其记录元数上的公式，并反向证明每条公式的键都进入该定义域。随后把两个方向施于典范集合 `AllCodes`；其语法所用的常元来自 `CodeAlphabet`，十个构造子标签则来自 `CodeDomain`。
+假设一个集合满足形状与封闭公式 `codesAt`，本章把其中每个成员解码为其记录元数上的公式，并反向证明每条公式的键都进入该定义域。随后将两个方向应用于典范集合 `AllCodes`；其语法所用的常元来自 `CodeAlphabet`，十个构造子标签则来自 `CodeDomain`。
 <!--ja-->
 集合が形と閉性の論理式 `codesAt` を満たすと仮定し、本章では各要素を記録されたアリティの論理式へ復号し、逆に各論理式のキーがその定義域へ入ることを示す。最後に両方向を正準集合 `AllCodes` へ適用する。構文が使う定数は `CodeAlphabet` から、十個の構成子タグは `CodeDomain` から得る。
 <!--/-->
@@ -592,7 +592,7 @@ Every member of a domain satisfying the description decodes to a formula over th
 <!--zh-->
 ## 可靠性：解码每个成员
 
-满足该描述的定义域中，每个成员都解码为选定常元集上的公式。证明读取其构造子形状，经封闭性递归解码所需子码，再重建对应词项或公式。
+满足该描述的定义域中，每个成员都解码为选定常元集上的公式。证明先读出其构造子形状，再由封闭性递归解码所需的子码，从而重建对应的词项或公式。
 <!--ja-->
 ## 健全性：各要素の復号
 
@@ -837,7 +837,7 @@ Conversely, structural induction on a formula shows that its key belongs to the 
 <!--zh-->
 ## 完备性：编码每条公式
 
-反过来，对公式作结构归纳可证其键属于封闭定义域。词项码经常元集或元数数码进入，而每个公式构造子都在其子公式进入后使用对应的封闭子句。
+反过来，对公式作结构归纳，可证其键属于封闭定义域。词项码经由常元集或元数数码得到，而每个公式构造子在其子公式已属于定义域之后，使用对应的封闭子句。
 <!--ja-->
 ## 完全性：各論理式の符号化
 
@@ -1141,7 +1141,7 @@ The readers expose the mathematical content of `codesAt`: soundness decodes ever
 <!--zh-->
 ## 小结
 
-这些读式揭示 `codesAt` 的数学内容：可靠性解码满足该谓词的定义域中每个成员，完备性加入每条公式的键，而 `AllCodes` 给出在每个元数上同时满足两项要求的典范可构造定义域。
+这些读式揭示 `codesAt` 的数学内容：可靠性将满足该谓词的定义域中的每个成员解码，完备性则补上每条公式的键，而 `AllCodes` 给出在每个元数上同时满足这两项要求的典范可构造定义域。
 <!--ja-->
 ## まとめ
 

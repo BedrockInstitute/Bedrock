@@ -17,25 +17,26 @@ constructions already available there.
 <!--/-->
 
 <!--en-->
-The separation chapter carved with bounded formulas, and the reflection chapters
-turned an arbitrary formula into a bounded one at the price of naming a stage.
-Putting the two together pays the two remaining comprehension fields of the
+The separation chapter works with bounded formulas, and the reflection chapters
+turn an arbitrary formula into a bounded one at the cost of choosing a stage.
+Combining the two completes the two remaining comprehension fields of the
 model, for formulas of any complexity.
 
-Separation names a stage that reflects the formula and contains its argument. It
-applies the bounded instrument to the relativized formula, then transports the
+Separation chooses a stage that reflects the formula and contains its argument. It
+applies the bounded tool to the relativized formula, then transports the
 answer along reflection inside that stage.
 
 Replacement takes a shorter route through separation. Functionality bounds all
-values of the relation in one stage. Full separation then carves from that stage
-the elements related to some member of the argument. The remaining work is only
-the exchange of the source and image variables required by the model field.
+values of the relation in one stage. Full separation then separates out from
+that stage the elements related to some member of the argument. The remaining
+work is only the exchange of the source and image variables required by the
+model field.
 <!--zh-->
-分离那一章用有界公式来雕，而反射诸章以点名一个阶段为代价，把任意公式变成有界公式。二者合于一处，就偿付了模型剩下的两条概括字段，且对任意复杂度的公式成立。
+分离那一章处理的是有界公式；反射诸章则以选定一个阶段为代价，把任意公式化成有界公式。二者结合，即可补全模型剩下的两条概括字段，且对任意复杂度的公式成立。
 
-分离点名一个反射公式且装下实参的阶段，把有界器械施于相对化后的公式，再在该阶段内沿反射搬运答案。
+分离选定一个反射公式和一个装得下实参的阶段，把有界工具用于相对化后的公式，再沿反射在该阶段内把结论转移到所需之处。
 
-替换则经分离走一条更短的路。函数性把关系的所有值界在同一个阶段中；完整分离随后从该阶段雕出那些与实参某个成员相关的元素。余下的工作只有交换模型字段所要求的来源变元与像变元。
+替换则经分离走一条更短的路：函数性把关系的所有值界在同一个阶段中，完整分离随即从该阶段分离出那些与实参某个成员相关的元素，剩下的工作只是交换模型字段所要求的来源变元与像变元。
 <!--/-->
 
 ```agda
@@ -92,7 +93,7 @@ module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
 Stage transitivity keeps members inside a chosen level, while the two-variable
 renaming swaps source and image positions to match the model record's convention.
 <!--zh-->
-阶段的传递性把成员留在选定层内，而二元改名交换源与像的位置，以匹配模型 record 的约定。
+阶段的传递性使成员留在所选的阶段之内，而二元改名交换源与像的位置，以符合模型 record 的约定。
 <!--ja-->
 段階の推移性により要素は選んだ層に留まり、二変数の改名が始域と像の位置を交換してモデルの record の規約に合わせる。
 <!--/-->
@@ -108,9 +109,9 @@ first. Exchanging two variables is an instance of renaming, and the correctness
 theorem says the environments agree, which for a transposition is two
 `refl`{.Agda}s.
 <!--zh-->
-阶段是传递集，故只要实参落在阶段里，属于实参的元素也就落在阶段里。这就是分离沿反射搬运时所用的那道防线。
+阶段是传递集，故只要实参落在阶段里，属于实参的元素也就落在阶段里；分离沿反射推理时依靠的正是这一点。
 
-此外，变量演算要用一次。模型陈述替换时像在前、源在后，而有界存在先绑定来源。交换两个变量是改名的一个特例，而正确性定理说两个环境彼此一致，对一次对换而言那就是两条 `refl`{.Agda}。
+此外，还需要用到一次变量演算。模型陈述替换时像在前、源在后，而有界存在先绑定来源。交换两个变量是改名的一个特例，而正确性定理说两个环境彼此一致，对一次对换而言那就是两条 `refl`{.Agda}。
 <!--/-->
 
 ```agda
@@ -161,12 +162,12 @@ so the element is in the stage, so the reflection applies and converts the secon
 conjunct; on the right the same, backwards.
 
 Predicates are what `SetOf`{.Agda} depends on, so the pointwise agreement is
-turned into a path of predicates by function extensionality and transported. The
-whole field is that transport applied to the bounded instrument.
+turned into a path of predicates by function extensionality and transported.
+The whole field is that transport applied to the bounded tool.
 <!--zh-->
 在一个包含实参自身最早阶段的阶段上反射那条公式，于是实参落在阶段里，而经传递性，它的每个元素也落在阶段里。用相对化后的公式作分离，那按构造是 Δ₀ 的。随后两个谓词逐点一致：左边那个隶属合取项在手，故元素落在阶段里，故反射适用，把第二个合取项转过去；右边同理，方向相反。
 
-`SetOf`{.Agda} 依赖的正是谓词，故逐点的一致经函数外延性变成谓词的一条道路，再搬运过去。整条字段就是这次搬运施于那件有界器械。
+`SetOf`{.Agda} 依赖的正是谓词，故逐点的一致经函数外延性给出谓词的相等，再据此搬运过去；整条字段就是把这次搬运施于那件有界工具。
 <!--/-->
 
 ```agda
@@ -200,7 +201,7 @@ hasSeparationL a φ =
 <!--en-->
 ## Where the images live
 <!--zh-->
-## 诸像住在哪里
+## 诸像所在的阶段
 <!--ja-->
 ## 像を収める段階
 <!--/-->
@@ -209,7 +210,7 @@ hasSeparationL a φ =
 Functionality chooses one image for each member of the source set, and the
 bounded-image construction supplies a single stage containing all those images.
 <!--zh-->
-函数性为源集合的每个成员选出唯一的像，而有界像构造供应一个包含全部这些像的单一阶段。
+函数性为源集合的每个成员选出唯一的像，而有界像构造给出一个包含全部这些像的单一阶段。
 <!--ja-->
 関数性により始集合の各要素に一つの像を選び、有界像の構成がそれらすべての像を含む一つの段階を与える。
 <!--/-->
@@ -227,7 +228,7 @@ used by the model field.
 <!--zh-->
 替换的阶段还须装下诸像，而使之可能的正是函数性：实参的每个成员恰有一个像，故诸像构成一个由实参的成员类型索引的族，而界层引理界住它们的阶段。
 
-分离一章的通用函数像模块完成选取、界住所选诸值，并以唯一性把每个相关值都置于同一个界下。本章只把它的关系特化为模型字段所用的变元顺序。
+分离一章的通用函数像模块完成选取，并界住所选的诸值；再由唯一性，每个相关值都落在同一个界之下。本章只把这个关系特化为模型字段所用的变元顺序。
 <!--/-->
 
 ```agda
@@ -333,15 +334,15 @@ Reflection upgrades the bounded separation and replacement engines to
 <!--en-->
 `hasSeparationL`{.Agda} and `hasReplacementL`{.Agda} are the model's two
 comprehension fields at `𝒮ʟ`, for arbitrary formulas, with no hypothesis beyond
-the excluded middle. The frontier loses two of its four debts, and what remains
-is the power set and choice.
+the excluded middle. Two of the four frontier fields are now established;
+the remaining fields are the power set and choice.
 
-Separation reflects an arbitrary formula and applies the bounded instrument.
+Separation reflects an arbitrary formula and applies bounded separation.
 Replacement first bounds the range of its functional relation, then applies full
-separation to the formula defining that image. Functionality is spent exactly in
+separation to the formula defining that image. Functionality is used exactly in
 the range bound; the final collection step is ordinary separation.
 <!--zh-->
-`hasSeparationL`{.Agda} 与 `hasReplacementL`{.Agda} 是模型在 `𝒮ʟ` 处的两条概括字段，对任意公式成立，除排中律外别无假设。前沿的四笔债去掉两笔，剩下的是幂集与选择。
+`hasSeparationL`{.Agda} 与 `hasReplacementL`{.Agda} 是模型在 `𝒮ʟ` 处的两条概括字段，对任意公式成立，除排中律外别无假设。前沿的四项至此完成两项，剩下的是幂集与选择。
 
-分离反射任意公式，再施以有界器械。替换先界住函数关系的值域，再对定义该像的公式施用完整分离。函数性恰好花在值域之界上；最后的收集步骤只是普通分离。
+分离反射任意公式，再施以有界手段。替换先界住函数关系的值域，再对定义该像的公式施用完整分离。函数性只用于给出值域之界；最后的收集步骤只是普通分离。
 <!--/-->

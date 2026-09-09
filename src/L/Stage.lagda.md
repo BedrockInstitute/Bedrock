@@ -34,7 +34,7 @@ the excluded middle enters the L-side machinery.
 
 两个论证都不看那条性质说了什么。故本章对任意的序数性质来证，再把阶段函数作为实例读出：此处不费分文，而日后有偿：序数的一个典范**选取**是若干构造都想要的东西，而每个由此获得它的构造，即一个无须 L 的良序即可得到它的构造。
 
-两件都是经典的，理由前面已经见过。下降在每一步问的是关于任意集合的问题，而唯一性是比较。于是最小序数加入经典锥，本章是排中律进入 L 侧机器的第三处、也是最后一处。
+两件都是经典的，理由前面已经见过。下降在每一步问的是关于任意集合的问题，而唯一性只是比较。于是最小序数加入经典锥，本章是排中律进入 L 一侧的第三处、也是最后一处。
 <!--/-->
 
 ```agda
@@ -70,7 +70,7 @@ For a property `P` of ordinals, `LeastOrd P`{.Agda} packages an ordinal α satis
 <!--zh-->
 ## 满足性质的最小序数
 
-对于序数性质 `P`，`LeastOrd P`{.Agda} 把满足 `P` 的序数 α 与「没有更小序数满足 `P`」的证明组成一包。这个定义谈的是序数索引本身；直到稍后取 `P σ = (x ∈ Lset σ)`，这样的索引才成为某个可构造阶段的索引。
+对于序数性质 `P`，`LeastOrd P`{.Agda} 由满足 `P` 的序数 α 和「没有更小序数满足 `P`」的证明组成。这个定义谈的是序数索引本身；直到稍后取 `P σ = (x ∈ Lset σ)`，这样的索引才成为某个可构造阶段的索引。
 <!--ja-->
 ## 性質を満たす最小の順序数
 
@@ -78,12 +78,12 @@ For a property `P` of ordinals, `LeastOrd P`{.Agda} packages an ordinal α satis
 <!--/-->
 
 <!--en-->
-Uniqueness is where the property's being an `hProp`{.Agda} earns its keep: the
-two candidates are compared by trichotomy, each strict direction is refuted by
-the other's minimality, and the remaining components are propositions, so the
-equality of the ordinals is the equality of the packages.
+Uniqueness uses the fact that the property takes values in an
+`hProp`{.Agda}: the two candidates are compared by trichotomy, each strict
+direction is refuted by the other's minimality, and the remaining components are
+propositions, so the equality of the ordinals is the equality of the packages.
 <!--zh-->
-唯一性正是那条性质取值于 `hProp`{.Agda} 的用武之处：两个候选由三歧比较，每个严格方向都被对方的极小性反驳，而其余分量都是命题，故序数相等即是整包相等。
+唯一性正用到该性质取值于 `hProp`{.Agda} 这一事实：两个候选经三歧比较，每个严格方向都被对方的极小性反驳，而其余分量都是命题，故序数相等即是二者作为整体相等。
 <!--/-->
 
 ```agda
@@ -130,7 +130,7 @@ The result being a proposition, the starting ordinal may be given truncated, and
 that is the form the callers have: they know a suitable ordinal exists without
 having chosen one.
 <!--zh-->
-结果既是命题，起始序数便可以截断的形式给出，而这正是诸调用方手上的形式：它们知道合用的序数存在，却未曾选定一个。
+结果既是命题，起始序数便可以截断的形式给出，而这正是各调用方实际具有的形式：它们知道合用的序数存在，却未曾选定一个。
 <!--/-->
 
 ```agda
@@ -176,7 +176,7 @@ mention the tower, and every later type mentioning a stage would otherwise drag
 that unfolding into conversion; the three projections open the seal exactly once
 each, and no consumer needs it open again.
 <!--zh-->
-这个函数被封印。它的展开是一次良基递归，其步进提到那座塔，而此后每个提到阶段的类型都会把那次展开拖进转换检查；三个投影各开封一次，而没有任何消费方需要再开封。
+这个函数被封印。它展开为一次良基递归，步进中提到可构造塔；若不封印，此后每个含有阶段的类型都会把这次展开带入转换检查。三个投影各自只开封一次，此后没有任何使用方需要再次开封。
 <!--/-->
 
 ```agda

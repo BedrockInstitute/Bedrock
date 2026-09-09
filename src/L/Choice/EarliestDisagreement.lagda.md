@@ -11,9 +11,9 @@ This chapter realizes every finite-stage earliest-disagreement relation as a set
 of `L`, assembles those relations into a definable family, and proves the
 object-language lookup at a numeral agrees with `before`{.Agda}.
 <!--zh-->
-本章把每个有穷阶段的最先分歧关系实现为 `L` 的集合，把这些关系装配成一个可定义族，并证明对象语言在数码处的查找与 `before`{.Agda} 相符。
+本章把每个有穷阶段的最先分歧关系实现为 `L` 的集合，把这些关系合起来组成一个可定义族，并证明对象语言在数码处的查找与 `before`{.Agda} 相符。
 <!--ja-->
-本章では各有限段階の最初の相違の関係を `L` の集合として実現し、それらを定義可能な族にまとめ、対象言語で数項における値を読むことが `before`{.Agda} と一致すると証明する。
+本章では各有限段階の最初の相違の関係を `L` の集合として実現し、それらを定義可能な族にまとめ、対象言語での数項における値の読み取りが `before`{.Agda} と一致することを証明する。
 <!--/-->
 
 <!--en-->
@@ -33,22 +33,22 @@ table were described: an approximation predicate, a graph quantifying over
 approximations, a value lemma pinning every value an approximation records, and
 the object itself sealed where it is built.
 
-Two things make this cheaper than the tower was. The index is a member of
+Two things make this simpler than the tower was. The index is a member of
 `ωʟ`{.Agda}, which is a **set**, so the outer induction is on a natural number
 and the class-collection half of the hierarchy chapter does not arise; and the
 step is already written, since the previous chapter's `PrecedesAt`{.Agda} holds
 the base relation and the base stage in slots precisely so it can stand where the
-relation is a recursion value. Two things make it dearer. The value at a numeral
-is a relation rather than a stage, so every step pays a separation over the pairs
+relation is a recursion value. Two things make it harder. The value at a numeral
+is a relation rather than a stage, so every step requires a separation over the pairs
 of a finite stage; and the previous relation reaches a slot **inside** the
-agreement clause, which is the shape that walls, so it arrives as a variable
-carrying its defining equation and never as an application.
+agreement clause, which is precisely the problematic shape, so it arrives as a
+variable carrying its defining equation and never as an application.
 <!--zh-->
-上一章留下一条敞着的假设，并把它点得很准：一条公式，说「在某个槽位所持有的数码处、按最先分歧处的那个序」把第二个槽位排在第三个之前，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。极限之序的其余部分早已是无条件的。本章兑现那条假设，并连带兑现它前面那一章。
+上一章留下一处待证的假设，并准确地指出了它的内容：一条公式，说「在某个槽位所持有的数码处、按最先分歧处的那个序」把第二个槽位排在第三个之前，连同它对着有穷那一章的 `before`{.Agda} 的两条读式。极限之序的其余部分早已是无条件的。本章证明那条假设，并连带补全它前面那一章。
 
-要造的是沿诸数码的一场递归，其取值是**关系**：零处是空关系，而 `n` 之后那个数码处，是在 `n` 处的阶段之上按最先分歧处的比较，以 `n` 处的关系为基底。取值为集合的递归没法被一个词项点名，故被描述的是逼近，与塔、与序之表被描述的方式一模一样：一个逼近谓词、一个对诸逼近作量化的图、一条把逼近所记录的每个取值钉住的值引理，以及那个对象自身在造出之处封印。
+要构造的是沿诸数码递归得到的一族**关系**：零处为空关系；在 `n` 之后的数码处，则以 `n` 处的关系为基底，在 `n` 处的阶段上按最先分歧进行比较。取值为集合的递归无法由一个词项直接给出，因此这里描述的是逼近，其方式与描述塔及序之表相同：给出一个逼近谓词、一个量化所有逼近的图、一条固定逼近所记录之每个取值的值引理，并在对象构造之处将它封装。
 
-有两件事使它比塔更便宜。索引是 `ωʟ`{.Agda} 的成员，而后者是个**集合**，故外层归纳是对一个自然数作的，层级那一章那半场真类收集根本不会出现；而那一步已经写好，因为上一章的 `PrecedesAt`{.Agda} 把基底关系与基底阶段握在槽位里，正是为了让它能站在「关系是某场递归之取值」的地方。也有两件事使它更贵。某个数码处的取值是关系而非阶段，故每一步都要在一个有穷阶段的诸对之上付一次分离；而上一个关系要抵达一致性子句**内部**的一个槽位，那正是会撞墙的形状，故它以变元身份携带自己的定义等式到场，绝不以应用的身份到场。
+有两点使它比塔更简便。索引是 `ωʟ`{.Agda} 的成员，而后者是个**集合**，故外层归纳是对一个自然数作的，层级那一章那半场真类收集根本不会出现；而那一步已经写好，因为上一章的 `PrecedesAt`{.Agda} 把基底关系与基底阶段存放在槽位里，正是为了使它能充当「关系是某场递归之取值」这一断言。也有两点使它更繁难。某个数码处的取值是关系而非阶段，故每一步都要在一个有穷阶段的诸对之上作一次分离；而上一个关系要出现在一致性子句**内部**的一个槽位上，那正是会出问题的形状，故它以变元的身份附带自己的定义等式，而不是以应用的身份出现。
 <!--/-->
 
 ```agda
@@ -171,7 +171,7 @@ For each numeral `n`, separation carves `relAt n`{.Agda} from a bounded set of
 pairs, and the two representation lemmas identify its members with
 `before n`{.Agda}.
 <!--zh-->
-对每个数码 `n`，分离从一组有界的对中雕出 `relAt n`{.Agda}，两条表示引理把其成员与 `before n`{.Agda} 对应起来。
+对每个数码 `n`，分离从一组有界的对出发给出 `relAt n`{.Agda}；两条表示引理把它的成员与 `before n`{.Agda} 对应起来。
 <!--ja-->
 各数項 `n` について、分出公理が有界な順序対の集合から `relAt n`{.Agda} を切り出し、二つの表現補題がその要素を `before n`{.Agda} と対応づける。
 <!--/-->
@@ -193,7 +193,7 @@ with no second copy written against constants: one formula, two consumers.
 
 `relAt-out`{.Agda} and `relAt-in`{.Agda} are the recursion's two readings, and
 they are proved together, by the ordinary induction on the numeral. Each direction
-spends the other at the predecessor, because the previous relation is consulted
+uses the other at the predecessor, because the previous relation is consulted
 only inside the agreement clause, and `precedes-map`{.Agda} is the one line that
 carries it across: agreement is contravariant in the base relation, so passing
 from the recorded relation to `before`{.Agda} needs the reading in the opposite
@@ -201,11 +201,11 @@ direction. `relAt-rep`{.Agda} and `relAt-fill`{.Agda} are the corollaries a
 consumer wants, at a pair rather than at a member.
 <!--zh-->
 
-某个阶段处的关系所能关联的诸对逃不出单一的一个集合：有穷阶段的诸成员是 `L` 元素的一个小族，它们的诸对也是，而递归那一章的界层引理一举把它们全部禁闭。把那个关系从那个界上雕出来的分离，正是超出塔的那笔额外开销之所在，而它每个数码付一次。
+某个阶段处的关系所能关联的对全部落在同一个集合里：有穷阶段的成员构成 `L` 元素的一个小族，它们的对也是如此，递归那一章的界层引理则一并给出这个界。把该关系限定到这个界上的分离，正是超出塔的那笔开销所在，而且每个数码都要付出一次。
 
-它据以雕刻的条件，就是上一章那条步进描述，别无其他。那条描述把基底关系与基底阶段握在**槽位**里，而分离是用单自由变量的公式去雕的，故这两样由存在量词绑定、并**用对象等词钉在诸常元上**。正是这一点，让那条步进描述能在此处按交付时的原样使用，无须再对着常元写第二份：一条公式，两个消费方。
+它据以构造的条件就是上一章那条步进描述，别无其他。那条描述把基底关系与基底阶段放在**槽位**里，而分离用带单个自由变量的公式表达，故这两样由存在量词绑定，并**用对象等词固定到诸常元上**。正因如此，那条步进描述能在此处按原样使用，无须再针对常元写第二份：一条公式，两处使用。
 
-`relAt-out`{.Agda} 与 `relAt-in`{.Agda} 是这场递归的两条读式，二者一并证出，用的是对数码的普通归纳。每个方向都在前趋处花掉另一个，因为上一个关系只在一致性子句内部被查阅，而 `precedes-map`{.Agda} 就是把它搬过去的那一行：一致性对基底关系是反变的，故从被记录的关系走到 `before`{.Agda}，需要的是反方向的那条读式。`relAt-rep`{.Agda} 与 `relAt-fill`{.Agda} 是消费方想要的推论，落在一个对上、而非一个成员上。
+`relAt-out`{.Agda} 与 `relAt-in`{.Agda} 是这场递归的两条读式，二者用对数码的普通归纳一并证出。每个方向的证明都要在前趋处用到另一个方向：上一个关系只在一致性子句内部被查阅，而 `precedes-map`{.Agda} 正是完成这一转换的那一行。一致性对基底关系是反变的，故从被记录的关系走到 `before`{.Agda}，需要的是反方向的那条读式。`relAt-rep`{.Agda} 与 `relAt-fill`{.Agda} 是使用者需要的推论，其对象是一个对，而不是一个成员。
 <!--/-->
 
 Every pair of members of a finite stage lies in one set of the model.
@@ -470,7 +470,7 @@ their only hypothesis.
 
 前趋不是对象语言的词项，也不必是。数码在隶属之下是一个有穷线序，故它的前趋就是它的 `∈`-**极大**成员，而那是两个原子：`c` 属于索引，且索引的任何成员都不以 `c` 为成员。这样写，任何地方都不需要对象等词；而在数码零处根本没有这样的 `c`，故那一步在那里是空的，而这正是这场递归想要的。
 
-两个阶段经序列那一章的图抵达，而那是抵达一个阶段的唯一办法；索引处的那个阶段则是禁闭取值的东西：没有它，那个外延就是一个真类，因为最先分歧处的比较从不提及被比较的两个集合住在哪里。`StepOf`{.Agda} 把载荷写了出来、不交给推断，而两条读式都站在变元环境的变元位上，唯一的假设是索引处的序数性。
+两个阶段由序列一章的图给出，这是确定相应阶段的唯一方式。索引处的阶段为关系取值提供集合界；若没有这个界，最先分歧比较并不限制被比较的两个集合所属的阶段，其外延会成为真类。`StepOf`{.Agda} 明确写出所携带的数据，不把它留给类型推断；两条读式都在以变元表示环境分量的形式下陈述，唯一假设是索引处的序数性。
 <!--/-->
 
 ```agda
@@ -698,9 +698,9 @@ takes 376 s; sealed, with each reading unfolding its own description and nothing
 else, it takes 3.8 s. That is a factor of ninety-nine, and no mathematics changed.
 <!--zh-->
 
-照着模板来，且比模板更短，因为定义域那套器械与外延那套器械都按交付时的原样使用。`RelStepAt`{.Agda} 是罩在体上的一次 `extAt`{.Agda}。`ApproxAt`{.Agda} 是两个合取项，即定义域与那条步进条件，且刻意没有单值性合取项：步进条件已经把某个实参处记录的每个取值钉住了，故单值性是一条推论。`RelGraphAt`{.Agda} 是在逼近上的一个存在量词，其下罩着那两个合取项。
+照模板来，且比模板更短，因为定义域与外延两套器械都按原样使用。`RelStepAt`{.Agda} 是对体作一次 `extAt`{.Agda}。`ApproxAt`{.Agda} 含两个合取项，即定义域与那条步进条件，且刻意不写单值性合取项：步进条件已经唯一确定每个实参处记录的取值，故单值性是一条推论。`RelGraphAt`{.Agda} 是对逼近的一个存在量词，其下是那两个合取项。
 
-两条描述**在造出之处封印**，而这是本章自己的实测、不是继承来的习惯。`RelStepAt`{.Agda} 包着那个体，而那个体携带序列那一章图的两份。不封印时，图在具体环境上的每一次满足关系，都要把一条内部装着两份完整层级描述的公式正规化，本章要跑 376 秒；封印之后，每条读式只展开它自己那条描述而别无其他，本章跑 3.8 秒。这是九十九倍，而数学分毫未改。
+两条描述都在构造之处封装，这是本章实测所得的选择，并非沿用既有习惯。`RelStepAt`{.Agda} 包含那个公式体，而公式体携带序列一章之图的两份副本。若不封装，图在具体环境上的每次满足关系都要正规化一条内部含有两份完整层级描述的公式，本章耗时 376 秒；封装后，每条读式只展开自身的描述，本章耗时 3.8 秒。两者相差九十九倍，而数学内容完全相同。
 <!--/-->
 
 ```agda
@@ -772,19 +772,19 @@ relation the meta-language computes there: `step-rel`{.Agda} reads a satisfied
 step and gets the relation back, `rel-step`{.Agda} writes the step from the
 relation.
 
-Both spend the predecessor analysis, and it is the only place trichotomy on the
-naturals is used in this chapter: a member of the index that is `∈`-maximal in it
-is its predecessor, because a numeral strictly between would contradict
-maximality on one side and the membership on the other. Once the index is known
-to be a successor the rest is bookkeeping: the recorded relation there is the
-recursion's value by correctness, the stage there is the tower's value by the
-sequence chapter's graph, and `precedes-map`{.Agda} carries the comparison between
-the two spellings of the base relation.
+Both proofs perform the predecessor analysis, and it is the only place
+trichotomy on the naturals is used in this chapter: a member of the index that
+is `∈`-maximal in it is its predecessor, because a numeral strictly between
+would contradict maximality on one side and the membership on the other. Once
+the index is known to be a successor the rest is bookkeeping: the recorded
+relation there is the recursion's value by correctness, the stage there is the
+tower's value by the sequence chapter's graph, and `precedes-map`{.Agda} carries
+the comparison between the two spellings of the base relation.
 <!--zh-->
 
-这是那座桥，而它的两半出自同样两行私有代码。给定索引以下的一张正确且完备的表，索引处的那一步恰是元语言在那里算出的那个关系：`step-rel`{.Agda} 读一个被满足的步进、把关系取回来，`rel-step`{.Agda} 则由关系写出那一步。
+这一联系由同样两行私有代码给出。给定索引以下的一张正确且完备的表，索引处的那一步恰是元语言在那里算出的那个关系：`step-rel`{.Agda} 从一个被满足的步进读出关系，`rel-step`{.Agda} 则由关系写出那一步。
 
-两者都要花掉前趋分析，而那是本章唯一用到自然数三歧的地方：索引中在其内 `∈`-极大的成员就是它的前趋，因为严格介于二者之间的数码，一边与极大性相抵触，另一边与隶属相抵触。一旦知道索引是后继，其余便是记账：那里被记录的关系因正确性而为这场递归的取值，那里的阶段因序列那一章的图而为塔的取值，而 `precedes-map`{.Agda} 在基底关系的两种写法之间搬运那次比较。
+两者的证明都要做前趋分析，而这是本章唯一用到自然数三歧的地方：索引中在 `∈` 下极大的成员就是它的前趋，因为严格介于二者之间的数码会一边违反极大性，一边违反隶属。一旦知道索引是后继，剩下的只是核对两件事：那里被记录的关系因正确性而是这场递归的取值，那里的阶段因序列那一章的图而是塔的取值，而 `precedes-map`{.Agda} 则在基底关系的两种写法之间转换那次比较。
 <!--/-->
 
 ```agda
@@ -965,7 +965,7 @@ whatever satisfies it at a numeral is the recursion's value there.
 
 一次归纳，在数码上，在元语言中，逼近与它的定义域保持固定。动机说：逼近在这个数码处所记录的任何取值，都是这场递归在那里的取值。它对**一切**被记录的取值作量化，故单值性在任何地方都不是假设，而上一节那条裁定在此处白白收取。
 
-这场归纳是良基的、不是结构的，因为某个数码处的那一步查阅的是逼近在它前趋处的取值，而实参是经定义域旅行、不是经构造子旅行。索引以下的完备性正是定义域那个合取项被花掉之处：索引以下的数码落在定义域中，故逼近在那里有取值，而归纳假设把它认同。`rel-only`{.Agda} 就是那个图为之而写的结论：凡在某个数码处满足它者，都是这场递归在那里的取值。
+这场归纳是良基的、不是结构的：在某个数码处的那一步查阅的是逼近在其前趋处的取值，因此实参沿定义域下降，而不是沿构造子分解。「索引以下的完备性」这一合取项正是在此被使用的：索引以下的数码落在定义域中，故逼近在那里有取值，而归纳假设把它认同。`rel-only`{.Agda} 就是那张图为之而写的结论：凡在某个数码处满足它者，都是这场递归在那里的取值。
 <!--/-->
 
 ```agda
@@ -1035,7 +1035,7 @@ module _ {n : ℕ} (v b : Fin n) (γ : S ^ n) (k : ℕ)
 ## The approximation, exhibited
 
 <!--zh-->
-## 那个逼近，当场拿出来
+## 那个逼近的显式构造
 <!--ja-->
 ## 近似を具体的に構成する
 <!--/-->
@@ -1044,7 +1044,7 @@ module _ {n : ℕ} (v b : Fin n) (γ : S ^ n) (k : ℕ)
 Finite replacement collects the pairs `(# j , relAt j)`{.Agda} below `k`,
 producing `approxSet k`{.Agda} with both the required values and complete domain.
 <!--zh-->
-有穷替换收集 `k` 以下的各对 `(# j , relAt j)`{.Agda}，产出既有正确取值又有完整定义域的 `approxSet k`{.Agda}。
+用一次有穷替换收集 `k` 以下的各对 `(# j , relAt j)`{.Agda}，得到既有正确取值又有完整定义域的 `approxSet k`{.Agda}。
 <!--ja-->
 有限な置換が `k` より下の対 `(# j , relAt j)`{.Agda} を集め、必要な値と完全な定義域を備えた `approxSet k`{.Agda} を構成する。
 <!--/-->
@@ -1067,7 +1067,7 @@ conjuncts of "is an approximation" against that family, and
 at a numeral satisfies the graph there.
 <!--zh-->
 
-图说仅仅存在一个逼近；消费方得拿出一个来。在数码 `k` 处，所要的逼近是有穷的，即 `k` 以下的诸数码与那里的关系所成的诸对，故它由 `L` 元素的一个**有穷族**张成，而基本那一章的 `finSetL`{.Agda} 只要那些成员共处一个阶段，就把这样的族变成模型的一个集合。`smallStage`{.Agda} 是把序数留在明面上的那条界层引理，也就是递归那一章的 `smallDom`{.Agda} 多出一个投影。
+图只断言逼近存在；下面把它具体构造出来。在数码 `k` 处，所需的逼近是有穷的，即由 `k` 以下的诸数码与相应关系所成的诸对。因此，它由 `L` 元素的一个**有穷族**张成；只要这些成员同处一个阶段，基本公理一章的 `finSetL`{.Agda} 就把这样的族变成模型中的一个集合。`smallStage`{.Agda} 是把序数保留在显式结果中的界层引理，也就是比递归一章的 `smallDom`{.Agda} 多出一个投影。
 
 此处不花任何公式，而这正是本章的索引所买来的那笔节省：逼近之所以有穷，是因为索引是数码，故它既不需要替换，也不需要自己的图。`approxSet-approx`{.Agda} 随后对着那个族核对「是一个逼近」的两个合取项，而 `relAt-graph`{.Agda} 是 `rel-only`{.Agda} 的逆：这场递归在某个数码处的取值满足那里的图。
 <!--/-->
@@ -1219,7 +1219,7 @@ relAt-graph v b γ k qb qv = RelGraph-in v b γ (approxSet k)
 Replacement over all numerals turns the pair graph into `beforeFam`{.Agda}, a
 set whose entry at `# k` is exactly the realized relation `relAt k`{.Agda}.
 <!--zh-->
-对全部数码施行替换，把成对图化为 `beforeFam`{.Agda}；它在 `# k` 处的条目恰是已实现关系 `relAt k`{.Agda}。
+对全部数码施行替换，把成对图化为 `beforeFam`{.Agda}；它在 `# k` 处的条目恰是已实现的关系 `relAt k`{.Agda}。
 <!--ja-->
 すべての数項に置換公理を適用して対グラフを `beforeFam`{.Agda} にし、その `# k` における値が実現された関係 `relAt k`{.Agda} とちょうど一致することを示す。
 <!--/-->
@@ -1234,16 +1234,16 @@ that is the whole construction. Functionality at a member of `ωʟ`{.Agda} is
 The frame takes the pair graph as a **variable carrying its own equation**, with
 `refl`{.Agda} at the one call site, and it hands back a triple in which **no
 formula appears at all**: the family, its two membership directions against the
-recursion. That last point is the load-bearing one. With the family's
+recursion. That last point is crucial. With the family's
 specification stated against the closed sentence, every consumer below has to
 decide a satisfaction of that sentence against a satisfaction of its expansion,
 and the chapter does not close. Stated against the recursion, there is nothing to
 decide.
 <!--zh-->
 
-沿 `ωʟ`{.Agda} 作替换，以成对的那个图为定义公式，整个构造仅此而已。在 `ωʟ`{.Agda} 的某个成员处的函数性，就是 `mereFunct`{.Agda} 施于它仅仅所是的那个数码：取值由 `relAt-graph`{.Agda} 当场拿出，而别的东西都不满足那个图，这由 `rel-only`{.Agda} 保证。
+沿 `ωʟ`{.Agda} 作替换、以成对的那个图为定义公式，整个构造仅此而已。在 `ωʟ`{.Agda} 的某个成员处的函数性，就是 `mereFunct`{.Agda} 施于它所是的那个数码：其取值由 `relAt-graph`{.Agda} 给出，而由 `rel-only`{.Agda} 保证，没有别的东西满足那个图。
 
-那个框架把成对的图取作**携带自己等式的变元**，在唯一的调用处填 `refl`{.Agda}；而它交回来的是一个三元组，其中**根本不出现任何公式**：那一族，以及它对着这场递归的两个隶属方向。最后这一点是承重的。若把那一族的规格陈述为对着那个闭句子，其下的每个消费方都得去判定「那个句子的满足关系」与「它展开式的满足关系」相等，而本章就跑不完。陈述为对着这场递归，就没有什么可判定的了。
+那个框架把成对的图取作**携带自己等式的变元**，在唯一的调用处填 `refl`{.Agda}；而它交回来的是一个三元组，其中**根本不出现任何公式**：那一族，以及它对着这场递归的两个隶属方向。最后这一点至关重要。若把那一族的规格陈述为对着那个闭句子，那么其下的每个消费方都得去判定「那个句子的满足关系」与「它展开式的满足关系」相等，本章便无法完成。陈述为对着这场递归，就没有什么可判定的了。
 <!--/-->
 
 ```agda
@@ -1381,21 +1381,21 @@ one pair reader, with the adequacy the model chapter proves for the slot version
 proved there for the constant version too. What the relation so read holds is
 then a single membership of a pair, which is `appAt`{.Agda} at that same slot.
 
-The two compared sets arrive **confined to the stage at that numeral**, and the
-confinement is what buys the shortness. Without it the step has to be re-expanded
+The two compared sets are **confined to the stage at that numeral**, and this
+confinement is what shortens the argument. Without it the step has to be re-expanded
 here, through the maximal predecessor of the numeral, the stage graph and the
 precedence formula; with it, the comparison at a stage against the relation
 recorded there is exactly what `relAt-rep`{.Agda} and `relAt-fill`{.Agda} already
 prove, so each reading is one composition of those with the family's own
 direction. `BeforeAt-out`{.Agda} and `BeforeAt-in`{.Agda} both stand at variable
-slots in a variable environment with the numeral arriving as a **variable
+slots in a variable environment with the numeral appearing as a **variable
 carrying its defining equation**, which is the law the level was measured under
 one chapter ago.
 <!--zh-->
 
-这就是上一章所索取的那条公式，而它只有**一层绑定**。那一族如今是个集合，可以被点名，故 `appC`{.Agda} 在那一位所持的数码处把它读出：在常元处的应用，一个有界存在量词加一次对读式，而模型那一章为槽位版所证的充分性，在那里也已为常元版证过。如此读出的那个关系所持有的东西，随后只是一个对的单次隶属，那就是同一位上的 `appAt`{.Agda}。
+这就是上一章所索取的那条公式，而且它只有**一层绑定**。那一族如今是一个集合，可以被命名，故 `appC`{.Agda} 在该槽位所持的数码处把它读出：这是在常元处的应用，由一个有界存在量词加一次对读式组成；而模型那一章为槽位版所证的充分性，在那里也已为常元版证过。如此读出的关系所持有的东西，随后只是一个对的单次隶属，即同一位上的 `appAt`{.Agda}。
 
-被比较的那两个集合以**被禁闭在该数码处的阶段之内**的身份到场，而这次禁闭正是短下来的本钱。没有它，那一步就得在此处重新展开一遍：经由该数码的极大前趋、阶段之图与那条先序公式；有了它，「在一个阶段上、对着那里所记录的关系」的那次比较，恰是 `relAt-rep`{.Agda} 与 `relAt-fill`{.Agda} 已经证过的东西，故每条读式都只是它们与那一族自己那个方向的一次复合。`BeforeAt-out`{.Agda} 与 `BeforeAt-in`{.Agda} 都站在变元环境的变元位上，而那个数码以**携带自己定义等式的变元**身份到场，那正是一章之前层号所据以实测的那条定律。
+被比较的那两个集合**被禁闭在该数码处的阶段之内**，而正是这一点使后续论证得以缩短。没有它，那一步就得在此处重新展开一遍：经由该数码的极大前趋、阶段之图与那条先序公式；有了它，「在一个阶段上、对着那里所记录的关系」的那次比较，恰是 `relAt-rep`{.Agda} 与 `relAt-fill`{.Agda} 已经证过的东西，故每条读式都只是它们与那一族自己那个方向的一次复合。`BeforeAt-out`{.Agda} 与 `BeforeAt-in`{.Agda} 都作用于变元环境的变元位，而那个数码以**携带自己定义等式的变元**的身份出现；这正是前一章层号所据以实测的那条定律。
 <!--/-->
 
 ```agda
@@ -1466,7 +1466,7 @@ module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
 The realized family instantiates both directions required by the limit-order
 frame, making the internal earliest-disagreement description unconditional.
 <!--zh-->
-已实现的族实例化极限序框架所要求的两个方向，使内部最先分歧描述不再带条件。
+已实现的族为极限序框架所要求的两个方向给出实例，使内部的最先分歧描述不再带条件。
 <!--ja-->
 `BeforeAt`{.Agda} とその二つの読みが前章の `Described`{.Agda} フレームを具体化します。そのインスタンスから再公開するのは、次章が実際に使う `codeOrder`{.Agda}、`codeOrder-fill`{.Agda}、`codeOrder-rep`{.Agda} だけです。
 <!--/-->
@@ -1493,9 +1493,9 @@ its own induction. Closing it is a re-cut of where the step adequacy is supplied
 not another construction, and it is the one thing left on this chain.
 <!--zh-->
 
-这正是整章的目标。有了 `BeforeAt`{.Agda} 与它的两条读式，上一章的 `Described`{.Agda} 框架便得到实例。本章从该实例只再导出所得的关系 `codeOrder`{.Agda} 及其两条隶属方向 `codeOrder-fill`{.Agda}、`codeOrder-rep`{.Agda}；内部整序构造实际只消费这三个名字。
+这正是整章的目标。`BeforeAt`{.Agda} 及其两条读式为上一章的 `Described`{.Agda} 框架提供了实例。本章只从该实例导出所得关系 `codeOrder`{.Agda}，以及它的两个隶属方向 `codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda}；后续的内部整序构造实际只使用这三个名字。
 
-这兑现了什么、没兑现什么，值得说准。内化那一章的键之束取两个关系位，一个为诸码、一个为诸参数。为诸码所设的那一位如今被径直填上，故 `L.Choice.NameComparisonAdequacy`{.Agda} 的步进充分性只差为诸参数所设的那一位，即「命名所依托的那个载体上的序」，连同它的两个隶属方向。那个序正是 `L.Choice.OrderTable`{.Agda} 在每个阶段处产出的东西，而它产生于那场递归内部，而 `L.Choice.StageOrderAdequacy`{.Agda} 的 `Stp`{.Agda} 参数自身正在给那场递归供料。故 `Faithful`{.Agda} 的那个参数**并未**由本章兑现，而理由是结构性的、不是数学缺口：某个阶段处的步进条件要的是该阶段处已内化的序，而表只有在它自己的归纳内部才拥有它。把它闭合，是「步进充分性在何处供给」的一次重新裁切，而不是另一个构造；它是这条链上仅剩的那一件事。
+需要明确本章已经提供和仍未提供的内容。内化章的键之束包含两个关系位，分别对应码与参数；本章已经提供码关系位。因此，`L.Choice.NameComparisonAdequacy`{.Agda} 的步进充分性还需要参数关系位，即命名所依托载体上的序及其两个隶属方向。这个序由 `L.Choice.OrderTable`{.Agda} 在每个阶段产生，但只存在于该表自身的递归内部；`L.Choice.StageOrderAdequacy`{.Agda} 的 `Stp`{.Agda} 参数正为该递归提供输入。因此，本章没有给出 `Faithful`{.Agda} 的这一参数。这是接口安排造成的缺项，不是数学上的缺口；剩余工作是重新安排步进充分性的提供位置。
 <!--/-->
 
 ```agda
@@ -1520,7 +1520,7 @@ The finite relations and their numeral-indexed family are sets in `L`;
 comparison, and the `Described`{.Agda} instance contributes exactly `codeOrder`{.Agda} with
 its fill and representation lemmas to the public interface.
 <!--zh-->
-有穷阶段关系及其数码索引族都是 `L` 中的集合；`BeforeAt`{.Agda} 把该族读回原来的最先分歧比较，而 `Described`{.Agda} 实例恰好向公开接口贡献 `codeOrder`{.Agda} 及其填入与表示引理。
+有穷阶段关系及其数码索引族都是 `L` 中的集合；`BeforeAt`{.Agda} 把该族读回原来的最先分歧比较，而 `Described`{.Agda} 实例恰好向公开接口提供 `codeOrder`{.Agda} 及其填入与表示引理。
 <!--ja-->
 有限段階の関係とその数項添字族は `L` 内の集合です。`BeforeAt`{.Agda} はこの族を元の最初の相違による比較として読み戻し、`Described`{.Agda} のインスタンスからは `codeOrder`{.Agda} とその二つの読みだけを再公開します。
 <!--/-->
@@ -1572,13 +1572,13 @@ builds the family obeys the same law one level up, by handing back a triple in
 which no formula appears at all.
 <!--zh-->
 
-`relAt`{.Agda} 是每个数码处最先分歧之序的那个关系，作为 `L` 的一个元素：在那个有穷阶段的诸对之上作一次分离，用上一章那条步进描述来雕，而那条描述的两个槽位被绑定、并**用对象等词钉在诸常元上**，于是一条描述同时服务于此处的分离与其下的那个图。`relAt-out`{.Agda} 与 `relAt-in`{.Agda} 是它的两条读式，对数码作归纳一并证出，每个方向都在前趋处花掉另一个，因为上一个关系只在一致性子句内部被查阅；`precedes-map`{.Agda} 就是在基底关系的两种写法之间搬运一次比较的那一行，而它是反变的。
+`relAt`{.Agda} 是每个数码处最先分歧之序的那个关系，作为 `L` 的一个元素：在那个有穷阶段的诸对之上作一次分离，依上一章那条步进描述写出，而那条描述的两个槽位被绑定、并**用对象等词固定在诸常元上**，于是一条描述同时服务于此处的分离与其下的那个图。`relAt-out`{.Agda} 与 `relAt-in`{.Agda} 是它的两条读式，对数码作归纳一并证出，每个方向都要在前趋处用到另一个，因为上一个关系只在一致性子句内部被查阅；`precedes-map`{.Agda} 则在基底关系的两种写法之间传递一次比较，且是反变的。
 
-`RelBodyAt`{.Agda} 是那一步，对成员、索引与逼近保持通用。前趋的说法**不用对象等词**：它是索引的 `∈`-极大成员，两个原子；而在零处没有这样的成员，这使那一步恰好在这场递归为空之处为空。`RelStepAt`{.Agda}、`ApproxAt`{.Agda} 与 `RelGraphAt`{.Agda} 照模板而来，不带单值性合取项，而 `step-rel`{.Agda} 与 `rel-step`{.Agda} 是通往元语言的那座桥，两者合计用了四次。
+`RelBodyAt`{.Agda} 是那一步，对成员、索引与逼近保持通用。前趋的说法**不用对象等词**：它是索引的 `∈`-极大成员，两个原子；而在零处没有这样的成员，这使那一步恰好在这场递归为空之处为空。`RelStepAt`{.Agda}、`ApproxAt`{.Agda} 与 `RelGraphAt`{.Agda} 按同一模板给出，不带单值性合取项；`step-rel`{.Agda} 与 `rel-step`{.Agda} 是通向元语言的两个引理，合计用了四次。
 
-`approx-val`{.Agda} 把逼近所记录的每个取值钉住，靠的是在数码上的一次良基归纳，任何地方都没有单值性假设，而 `rel-only`{.Agda} 是那个图的确定性。`approxSet`{.Agda} 是当场拿出来的那个逼近，而它**根本不花任何公式**：某个数码以下的逼近是有穷的，故只要 `smallStage`{.Agda} 把它的诸成员放进同一个阶段，`finSetL`{.Agda} 就把它张出来。`beforeFam`{.Agda} 是那一族本身，沿 `ωʟ`{.Agda} 的一次替换，在造出之处封印，而它的两个方向陈述成对着这场递归、而不对着任何公式。
+`approx-val`{.Agda} 把逼近所记录的每个取值固定下来，靠的是在数码上的一次良基归纳，任何地方都没有单值性假设；`rel-only`{.Agda} 则是那个图的确定性。`approxSet`{.Agda} 是直接给出的那个逼近，而它**根本不使用任何公式**：某个数码以下的逼近是有穷的，故只要 `smallStage`{.Agda} 把它的诸成员放进同一个阶段，`finSetL`{.Agda} 就把它构造为集合。`beforeFam`{.Agda} 是那一族本身，沿 `ωʟ`{.Agda} 作一次替换而得到，并在造出之处封印；它的两个方向都对着这场递归、而非对着任何公式来陈述。
 
-`BeforeAt`{.Agda} 就是上一章所索取的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appC`{.Agda}，那里的关系所持有的那个对用 `appAt`{.Agda}；而被比较的那两个集合以**被禁闭在该数码处的阶段之内**的身份到场，正是这一点使每条读式都只是 `relAt-rep`{.Agda} 或 `relAt-fill`{.Agda} 与那一族自己那个方向的一次复合。有了它的两条读式，`Described`{.Agda} 框架便得到实例；该实例向下一章再导出的公开接口只有 `codeOrder`{.Agda}、`codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda}。
+`BeforeAt`{.Agda} 就是上一章所要求的东西：那一族在某个槽位所持数码处被读出，其中在常元处的应用用 `appC`{.Agda}，那里的关系所持有的那个对用 `appAt`{.Agda}；而被比较的那两个集合**被限制在该数码处的阶段之内**，正是这一点使每条读式都只是 `relAt-rep`{.Agda} 或 `relAt-fill`{.Agda} 与那一族自己那个方向的一次复合。有了它的两条读式，`Described`{.Agda} 框架便得到实例；该实例向下一章再导出的公开接口只有 `codeOrder`{.Agda}、`codeOrder-fill`{.Agda} 与 `codeOrder-rep`{.Agda}。
 
-一次实测，而它是本部记下的最大的一次。这场递归的四条描述必须**在造出之处封印**：不封印时，每一次在具体环境上的满足关系都要把一条内部装着两份完整层级描述的公式正规化，本章要花 376 秒；封印之后是 3.8 秒，九十九倍，而数学分毫未动。造出那一族的那个框架在高一层遵守同一条定律：它交回来的三元组中根本不出现任何公式。
+这是一次实测，也是本部记录下差距最大的一次。这场递归的四条描述必须**在造出之处封印**：不封印时，每一次在具体环境上的满足关系都要把一条内部装着两份完整层级描述的公式正规化，本章要花 376 秒；封印之后是 3.8 秒，九十九倍，而数学内容分毫未变。造出那一族的那个框架在高一层遵守同一条定律：它交回来的三元组中根本不出现任何公式。
 <!--/-->

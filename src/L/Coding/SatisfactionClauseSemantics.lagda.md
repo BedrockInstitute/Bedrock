@@ -8,7 +8,7 @@ with the external satisfaction relation.
 <!--zh-->
 # 读取并验证满足关系子句
 
-为什么一张满足十条局部子句的表会给出词项与公式在每个环境中的正确解释？本章逐个构造子读出这些条件，并把内部表所记录的判断与外部满足关系连接起来。
+为什么一张满足十条局部子句的表会给出词项与公式在每个环境中的正确解释？本章逐个构造子读取这些条件，并把内部表所记录的判断与外部满足关系连接起来。
 <!--ja-->
 # 充足関係の節の読み取りと検証
 
@@ -82,7 +82,7 @@ read subformula values and term values from table entries, and expose the coded
 frame through `clause-out`, `total-out`, and `onC-out` together with converse
 constructors.
 <!--zh-->
-从 `extB-out` 开始的读式由子句主体恢复外延，读取表条目中的子公式值与词项值，并通过 `clause-out`、`total-out`、`onC-out` 及其逆向构造子揭示码化框架。
+从 `extB-out` 开始的读式由子句主体恢复外延，读取表条目中的子公式值与词项值，并借助 `clause-out`、`total-out`、`onC-out` 及其逆向构造子，揭示被码化的框架。
 <!--ja-->
 `extB-out` から始まる読み補題は、節の本体から外延を復元し、表の要素から部分論理式の値と項の値を読み出す。さらに `clause-out`、`total-out`、`onC-out` と逆向きの構成によって、符号化された枠組みを取り出す。
 <!--/-->

@@ -23,15 +23,15 @@ hobbling the development for "formal purity":
 - unique existence is `isContr`, so the definite-description operator `℩` is a
   *projection* rather than an axiom, and the description axiom dissolves;
 - extensional characterisations are path equalities, so propositional
-  extensionality is a *theorem* and structure transport is underwritten by the SIP;
+  extensionality is a *theorem* and structure transport is guaranteed by the SIP;
 - Regularity is the meta-level `WellFounded`, and Infinity makes a ZF-set
   *reflect* the meta-level inductive `Nat`, so that the ZF axiomatised in the host
   admits only **standard models** (no non-standard ω, no infinite descent);
 - satisfaction is structural recursion on the host inductive `Formula`, so the
   Tarski equations hold **by computation (`refl`)**, with no arithmetised syntax
-  (Gödel numbering, β-function coding) and nothing to prove;
-- the constructible hierarchy is not arithmetised into Δ₀ formulas (Jech §13, the
-  sharpest wall); instead `L` is an **inductive predicate**.
+  (Gödel numbering, β-function coding) and nothing further to prove;
+- the constructible hierarchy is not arithmetised into Δ₀ formulas (the hardest
+  point, treated at Jech §13); instead `L` is an **inductive predicate**.
 
 This is why the deeply embedded `Formula` is *not* an expressive device: the host
 language is strictly more expressive, and `Formula` appears only where first-order

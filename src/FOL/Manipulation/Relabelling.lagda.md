@@ -82,13 +82,13 @@ module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) whe
 ```
 
 <!--en-->
-The corollary the parameter-free formulas were waiting for: entering any
+The corollary for parameter-free formulas: entering any
 constant domain through `embed`{.Agda} keeps their meaning. The data axis and
-the working syntax share one semantics; nothing needs proving twice. (The
+the working syntax share one semantics, so nothing needs proving twice. (The
 `∅`-marked satisfaction reads the empty constant domain through
 `Empty.rec*`{.Agda}.)
 <!--zh-->
-无参公式等候的推论：经 `embed`{.Agda} 进入任何常元域，含义不变。数据轴与工作语法共享同一套语义，无一事需证两遍。(带 `∅` 标记的满足经 `Empty.rec*`{.Agda} 解读空常元域。)
+由此得到关于无参公式的推论：经 `embed`{.Agda} 进入任何常元域后，公式的含义不变。数据轴与工作语法共享同一套语义，因此无需把任何结论证明两遍。(带 `∅` 标记的满足经 `Empty.rec*`{.Agda} 解读空常元域。)
 <!--/-->
 
 ```agda
@@ -135,7 +135,7 @@ mapΔ₀ f (δ-∃∈ c) = δ-∃∈ (mapΔ₀ f c)
 The lemma extends to the whole alternating tower by mutual induction, reusing
 `mapΔ₀`{.Agda} at the leaves.
 <!--zh-->
-引理经互归纳延伸到整座交替之塔，叶位复用 `mapΔ₀`{.Agda}。
+引理经互归纳延伸到 Σ 与 Π 交替的各个层级，其中的叶情形复用 `mapΔ₀`{.Agda}。
 <!--/-->
 
 ```agda
@@ -160,7 +160,7 @@ The syntactic action `mapFo`{.Agda} commutes with satisfaction and preserves eve
 <!--zh-->
 ## 小结
 
-语法作用 `mapFo`{.Agda} 与满足关系可交换，并保持每个 Lévy 级别。因此，公式可在常元域之间移动，其含义与复杂度证书会一同移动。
+语法作用 `mapFo`{.Agda} 与满足关系可交换，并保持每个 Lévy 级别。因此，公式可以在常元域之间移动，其含义与复杂度见证也一同移动。
 <!--ja-->
 ## まとめ
 
