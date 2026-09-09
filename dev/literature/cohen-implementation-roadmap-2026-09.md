@@ -109,7 +109,11 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [actual powerset recursion-table probes](k0-powerset-atomic-tables-2026-09.md) complete the pair-key adapter and actual solved recursion-table instance, with a closure-generated domain for valid names. The next gate is closed-domain independence and fixed atomic equality/membership formula adequacy. This local powerset table does not replace the Cohen algebra or general forcing construction.
+The latest [closed-domain independence probes](k0-closed-domain-independence-2026-09.md) close actual-table independence across child-closed coordinate domains in the powerset instance. First restrict to the common domain, prove equation preservation, and reuse the existing partial-table comparison. Next construct fixed atomic equality/membership formulas with existence, unique reading and semantic adequacy. The general Boolean/Cohen framework and general-ground adapters remain mandatory; K0 is still open.
+
+Earlier checkpoint evidence follows. Instructions to perform a next step in these historical paragraphs apply only where the current status has not already discharged it.
+
+The [actual powerset recursion-table probes](k0-powerset-atomic-tables-2026-09.md) complete the pair-key adapter and actual solved recursion-table instance, with a closure-generated domain for valid names. The next gate is closed-domain independence and fixed atomic equality/membership formula adequacy. This local powerset table does not replace the Cohen algebra or general forcing construction.
 
 The [finite powerset Step probes](k0-powerset-step-formula-2026-09.md) close the raw-coordinate finite Step, uniqueness, admission and full predecessor-locality composition for the powerset instance. Next are the encoded pair-key formula/decoder adapter and direct instantiation of the existing bounded recursion engine. General Boolean/Cohen completion and atomic adequacy remain separate obligations.
 

@@ -44,6 +44,8 @@ Only X, the names and their validity proofs are supplied, in addition to the exi
 
 The construction order matters: first choose C, then instantiate the C-dependent Step and recursion engine. The earlier `NamePairRecursion` probe accepts a Step before choosing its name domain; its conditional wrapper is not an additional proof home. This concrete adapter reuses the closure and dependency components and the underlying solved bounded engine directly, avoiding a second closure construction or a duplicated recursion proof. Production interfaces should preserve that dependency order.
 
+Subsequent evidence: the [closed-domain independence probes](k0-closed-domain-independence-2026-09.md) implement the proposed common-domain restriction route and prove equality of the constructed powerset table values at shared coordinates. The remaining-work list below records this earlier checkpoint; its domain-independence item is now discharged. Global atomic formula adequacy and semantic laws remain open.
+
 ## Current boundary and next work
 
 This closes the actual powerset-instance recursion-table check, including a pair of genuine valid names. The resulting theorem is a local internal-table theorem for the expanded equations. It is not yet a global Boolean-valued equality definition, a forcing theorem, a Cohen algebra construction, or a non-CH model.
