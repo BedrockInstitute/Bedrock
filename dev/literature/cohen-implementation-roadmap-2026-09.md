@@ -109,7 +109,7 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [closed-domain independence probes](k0-closed-domain-independence-2026-09.md) close actual-table independence across child-closed coordinate domains in the powerset instance. First restrict to the common domain, prove equation preservation, and reuse the existing partial-table comparison. Next construct fixed atomic equality/membership formulas with existence, unique reading and semantic adequacy. The general Boolean/Cohen framework and general-ground adapters remain mandatory; K0 is still open.
+The latest [arbitrary-good-table and semantic-value probes](k0-good-table-value-relation-2026-09.md) generalize table comparison to arbitrary good source tables and check a unique semantic value relation, first over any suitable closed container and then for valid names. Closure syntax is checked. Next implement uniform variable-domain product, encoded Step and Good readings, then the fixed graph formula and atomic laws. General Boolean/Cohen construction and general-ground adapters remain mandatory; K0 is still open.
 
 Earlier checkpoint evidence follows. Instructions to perform a next step in these historical paragraphs apply only where the current status has not already discharged it.
 

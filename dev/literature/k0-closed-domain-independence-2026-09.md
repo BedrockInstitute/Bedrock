@@ -28,6 +28,8 @@ All additional sets are obtained from the existing L operations. Witnesses in im
 
 The additional field in the opaque realization record is implemented by the existing engine projection, rather than imposed as a caller premise. The concrete restriction and comparison supply their own graph equivalence and goodness proofs. No host AC, countable/dependent choice, BPI, ultrafilter selector, resizing or additional LEM level is added. This local audit does not establish the eventual T3 constructor's complete assumption budget.
 
+Subsequent evidence: the [arbitrary-good-table and semantic-value probes](k0-good-table-value-relation-2026-09.md) discharge the arbitrary-good-source extension, with no source boundedness premise, and prove unique semantic values with general closed-container existence and a valid-name instance. Closure syntax is checked. The remaining-work list below records this earlier checkpoint; its full fixed graph formula and atomic-law obligations remain open.
+
 ## Remaining work
 
 1. Extend the concrete restriction adapter from the constructed source table to an arbitrary bounded good source table, reusing the already generic restriction and expression transport kernels. This is needed to compare arbitrary witnesses of a global graph formula, not only the canonical table constructors. Then define a fixed finite atomic equality formula by quantifying an adequate internal domain and good table. Prove existence, unique-value reading, and agreement with the domain-independent local values. Construct and identify the corresponding membership image.

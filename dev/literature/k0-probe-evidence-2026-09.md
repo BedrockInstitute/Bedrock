@@ -33,7 +33,7 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
-Current domain-independence evidence: the [closed-domain independence probes](k0-closed-domain-independence-2026-09.md) check actual internal restriction, support-sensitive cross-domain images, preserved powerset Step/goodness, and equality of constructed table values on shared coordinates. A single existing comparison induction suffices. Fixed global atomic equality/membership adequacy, semantic laws and general-ground/Boolean adapters remain open.
+Current semantic-value evidence: the [arbitrary-good-table and semantic-value probes](k0-good-table-value-relation-2026-09.md) check arbitrary-good-table comparison, unique semantic witness values, general closed-container existence and its valid-name specialization. The finite closure formula has exact all-environment reading. The full fixed atomic graph formula, atomic semantic laws and general Boolean/ground adapters remain open.
 
 The following checkpoint entries are historical. Their local remaining-work statements are superseded by the current status above when a later checked batch supplies the result.
 
