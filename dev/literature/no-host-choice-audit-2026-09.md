@@ -115,6 +115,8 @@ The [actual powerset recursion-table probes](k0-powerset-atomic-tables-2026-09.m
 
 The [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) give the existing arbitrary-good-table witness relation one fixed first-order formula. C, H and the pair code are bound variables; generic membership and Step readings justify their variable-domain use. Shared Good semantics and its reading specialize to both interfaces. All witness eliminations in the graph reading target propositions, with no new host choice or LEM level. Internal atomic images/laws and later extraction obligations remain open.
 
+The [attained atomic value-set probe](k0-atomic-value-set-2026-09.md) now supplies actual Separation of all valid-name values and the admitted powerset supremum. Representation, soundness and exact membership are proved; no name-per-value selector is assumed. The [K0 exit audit](k0-exit-checklist-2026-09.md) separately requires explicit universe, truncation and internal-witness extraction contracts before the ordinary-model route is accepted.
+
 ## Required next verification
 
 The [internal-name probes](k0-internal-names-probes-2026-09.md) now verify L supports, data-valued entry decoding and full first-order name recognition. Its converse uses a supplied deterministic definable step with a proved internal omega-iteration theorem, not host DC. Images of supplied coded tables are now checked; weighted recursive images, atomic graph adequacy and general-ground adapters remain open.

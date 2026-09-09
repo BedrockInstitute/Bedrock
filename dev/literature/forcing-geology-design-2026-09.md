@@ -82,7 +82,9 @@ Make completeness a law about a stated class of families. Distinguish host-index
 
 The shared semantic mathematics should state the joins it actually uses. Atomic name semantics uses support families; unbounded formula quantification needs a proved set of truth values or a sufficient rank/collection bound. Prove independence of the bound and internal definability. Only install an evaluator into the existing carrier-wide `TruthAlgebra` when its demanded joins are genuinely supplied. A restricted model-relative evaluator may instead share formula recursion lemmas with it through an explicit agreement theorem.
 
-The [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) now provide one finite three-variable formula with exact all-environment reading to the unique semantic value relation. Product membership and encoded Step accept genuine variable domains. A shared parameterized Good template supplies both variable-domain and fixed-domain interfaces without a second comparison proof. The next atomic gate is internal membership/value images and atomic laws; general Boolean/ground adapters remain open.
+The [attained atomic value-set probe](k0-atomic-value-set-2026-09.md) connects the fixed graph to an actual internal set of values over all valid material names and to an admitted powerset supremum. It proves all representation/soundness arguments and reuses the generic upper-bound transfer, without selecting names for values. This closes the concrete value-set/join subgate; representative atomic laws and the remaining K0 adapter/decision checks stay explicit.
+
+K0 completion is governed by the [six-item exit checklist](k0-exit-checklist-2026-09.md): representative checked instances and settled representation contracts, with full general implementations assigned to their existing later milestones.
 
 The following linked batches record the evidence sequence. Their remaining-work statements describe their original checkpoints and are superseded by the current status above where later probes discharge them.
 

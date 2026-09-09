@@ -40,6 +40,8 @@ The old formula's syntax tree changes: explicit universal quantification with a 
 
 ## Assumptions and remaining work
 
+Successor: the [attained atomic value-set probe](k0-atomic-value-set-2026-09.md) realizes the fixed graph as an internal set of attained values and proves the corresponding admitted join. The [exit checklist](k0-exit-checklist-2026-09.md) bounds the remaining K0 work; full atomic laws still belong to K4.
+
 No host AC, countable/dependent choice, BPI, Zorn, ultrafilter selection, resizing or additional LEM level is added. `CodedGoodTables` itself has no LEM parameter; the concrete L/powerset constructions retain the existing `LEM (ℓ-suc ℓ)` parameter through their dependencies. Supplied formula readings and the semantic closed-container/name conditions remain explicit contracts. This local probe does not certify all eventual T3 assumptions.
 
 The next atomic task is the internally realized membership/value image and the atomic semantic laws, using this fixed graph formula and the previously constructed unique values. General-ground adapters, general Boolean/regular-open completion, quantified value bounds, Collection/fullness and ordinary-model extraction remain open. The broader plan is unchanged: reusable poset and Boolean interfaces and certified translations first, the actual ordinary non-CH model as T3, and ground definability as T4.

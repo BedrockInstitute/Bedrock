@@ -33,7 +33,9 @@ The completion warnings are Agda's unsupported indexed matches at the order-tran
 
 ## Remaining K0 obligations and next probes
 
-Current atomic-syntax evidence: the [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) check one finite three-variable formula and its exact reading to the previously proved unique semantic relation. Genuine variable-domain product, Step and Good interfaces compose through a shared Good proof. Internal membership/value images, atomic semantic laws and general Boolean/ground adapters remain open.
+The [fixed exit checklist](k0-exit-checklist-2026-09.md) is the current acceptance index. Historical open-item lists below do not expand K0 to include complete later implementations. No acceptance item is passed solely by recording its unresolved obstruction.
+
+Current attained-value evidence: the [atomic value-set probe](k0-atomic-value-set-2026-09.md) checks actual L collection of the values attained over every valid material name, exact membership and a real admitted supremum with upper-bound transfer. It composes the fixed graph, name recognition and existing generic Separation/LUB interfaces. The E4 value-set/join subgate is checked; the [exit checklist](k0-exit-checklist-2026-09.md) retains the other open K0 items.
 
 The following checkpoint entries are historical. Their local remaining-work statements are superseded by the current status above when a later checked batch supplies the result.
 

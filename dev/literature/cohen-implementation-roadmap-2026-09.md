@@ -96,6 +96,8 @@ The general forcing critical path includes K0-K6 followed by preservation and th
 
 Produce a short representation decision record accompanied by small `--safe` Agda probes in a task-specific temporary directory. Use actual existing interfaces where possible, not renamed empty records.
 
+The [K0 exit checklist](k0-exit-checklist-2026-09.md) fixes six acceptance items and their later implementation owners. K0 requires representative atomic and quantified instances plus real adapter contracts; it does not require the complete K2/K4 theorem libraries. Follow that checklist when deciding the next probe and declaring completion.
+
 | Probe | Required evidence | Failure response |
 |---|---|---|
 | Ground/profile adapter | A concrete structure with equality coherence and an interpreted axiom; inspect Foundation and Infinity separation | Split strong host model assumptions from first-order axioms |
@@ -109,7 +111,7 @@ Record universe levels, LEM, resizing, truncation elimination, host choice, inte
 
 ### Current K0 evidence and decision gate
 
-The latest [fixed atomic graph formula probes](k0-fixed-atomic-graph-formula-2026-09.md) check variable-domain product, encoded Step and Good readings, then compose one fixed three-variable formula reading the existing unique semantic value relation. The old Good interface specializes the same generic syntax proof. Next establish internal membership/value images and atomic laws. General Boolean/Cohen construction and general-ground adapters remain mandatory; K0 is still open.
+The latest [attained atomic value-set probe](k0-atomic-value-set-2026-09.md) collects the constructed values over all valid material names into an actual L subset of B and proves an admitted supremum with upper-bound transfer. This discharges the concrete attained-value/join subgate of E4. Follow the [exit checklist](k0-exit-checklist-2026-09.md) for the remaining representative atomic example, real adapter/completion compositions and final decision audit. Full K2/K4 implementations remain later work; K0 is still open.
 
 Earlier checkpoint evidence follows. Instructions to perform a next step in these historical paragraphs apply only where the current status has not already discharged it.
 
