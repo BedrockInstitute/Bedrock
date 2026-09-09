@@ -41,7 +41,7 @@ builds that ordinal and proves the two facts the rest of the part turns on: that
 it exists and is unique, and that one ordinal suffices to hold a set, its
 members and their members, together with the tower's limit level.
 <!--zh-->
-最后一笔债索取的，是一个与不交族的每一格恰交于一点的集合。教科书的偿付方式是把宇宙良序化，再取每一格中最小的成员，而这条路在此处代价高昂：`L` 整体的良序是一个真类上的关系，而迄今造出的东西没有一样谈得到它。
+最后一笔债索取的，是一个与不交族的每一格恰交于一点的集合。教科书的偿付方式是把宇宙良序化，再取每一格中最小的成员，而这条路在此处代价高昂：`L` 整体的良序是一个真类上的关系，而迄今造出的东西没有一样谈得上它。
 
 有一条更廉价的路，它从「一格的诸成员**在哪里**」问起。一格是 `L` 的一个集合，故它的每个成员都现身于塔中某处；于是存在一个最早的阶段，其中已经现身了它的某个成员。那个阶段既不能是极限，也不能是零：集合进入塔的唯一途径是从它下面那个阶段中被雕出，故与该格相交的最早阶段，是某个与它不相交的阶段的后继。于是这一格自带一个典范的序数，即它首次现身之前的那个阶段；而在那个序数处，该格中最先现身的每个成员，都是同一个集合的可定义子集。
 
@@ -96,7 +96,7 @@ open hPropStructure 𝒮ᵥ
 The question is whether a least ordinal stage at which an object appears must be
 a successor; the result constructs its unique predecessor from a carve below it.
 <!--zh-->
-这里问的是：一个对象现身的最小序数阶段是否必为后继；结论从其下的一次雕出构造出唯一的前一阶段。
+这里问的是：一个对象现身的最小序数阶段是否必为后继；结论由其下的一次雕出构造出唯一的前一阶段。
 <!--ja-->
 ここでは、対象が現れる最小の順序数段階が後者であるかを問い、その下での切り出しから一意な直前の段階を構成する。
 <!--/-->

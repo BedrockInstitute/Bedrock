@@ -197,7 +197,7 @@ consing on the left and shifting the placement by `suc` cancel each other by
 computation, so the binders need no lemma of their own. The two bounded clauses
 split, term on the left and body on the right, exactly as their constructors do.
 <!--zh-->
-然后是归纳的十二个情形，十个公式情形在此，两个词项情形刚已交割。命题的每条原语子句都是同余，因为语义给每个构造子指派的恰是真值代数的对应运算，中间没有翻译层要跨。四条约束子句向环境压入一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**通行：左侧的前置与安置的 `suc` 移位靠计算互相抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
+然后是归纳的十二个情形，十个公式情形在此，两个词项情形刚刚交割。命题的每条原语子句都是同余，因为语义给每个构造子指派的恰是真值代数的对应运算，中间没有翻译层要跨。四条约束子句向环境压入一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**通行：左侧的前置与安置的 `suc` 移位靠计算互相抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
 <!--/-->
 
 ```agda

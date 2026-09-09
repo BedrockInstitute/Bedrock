@@ -64,7 +64,7 @@ Trichotomy is represented by three explicit alternatives, carrying either a comp
 Three mutually exclusive alternatives, carried as an inductive type rather than
 a nested sum, so that a proof can name the case it is in.
 <!--zh-->
-三个互斥的可能，以归纳类型而非嵌套的和类型携带，好让证明能点名自己所处的情形。
+三种互斥的可能，以归纳类型而非嵌套的和类型携带，好让证明能点名自己所处的情形。
 <!--/-->
 
 ```agda
@@ -162,7 +162,7 @@ which terminates because the relation is well founded; if none does, the current
 element is least by definition. The question asked at each step is about an
 arbitrary predicate, and that is where the excluded middle enters.
 <!--zh-->
-然后是搜索。从子集中任意一点出发向下走：问是否有更小的元素仍满足该谓词；若有，就递归进去，而这会终止，因为关系良基；若无，当前元素按定义即为极小。每一步所问的问题关乎任意谓词，排中律正是从那里进入的。
+然后是搜索。从子集中任意一点出发向下走：问是否有更小的元素仍满足该谓词；若有，就递归进去，而这会终止，因为关系是良基的；若无，当前元素按定义即为极小。每一步所问的问题关乎任意谓词，排中律正是从那里进入的。
 <!--/-->
 
 ```agda

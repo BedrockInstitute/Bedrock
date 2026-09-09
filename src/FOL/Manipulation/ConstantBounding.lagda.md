@@ -5,7 +5,7 @@ A formula is bounded by a predicate when every constant occurrence satisfies tha
 <!--zh-->
 # 常元有界性
 
-当公式中每次出现的常元都满足一个谓词时，称该公式受此谓词约束。这些结构化证书可沿谓词蕴含放宽，并使部分定义的常元映射恰好能对其定义域内的公式作常元改名。
+当公式中每次出现的常元都满足一个谓词时，称该公式受此谓词约束。这些结构化证书可随谓词的蕴含而放宽，并使部分定义的常元映射恰好能对其定义域内的公式作常元改名。
 <!--ja-->
 # 定数の有界性
 
@@ -24,7 +24,7 @@ The companion is monotonicity. A certificate for a narrower predicate is one for
 a wider predicate, which is how certificates written against different stages are
 brought to a common stage before being used together.
 <!--zh-->
-本章就是那份证书。`BoundedFo P φ` 逐次出现地记录：`φ` 中出现的每个常元都满足 `P`。它按被检查公式的同一套分情形定义，故在模式匹配下自动拆开，任何证明都不必对「公式的常元列表」作推理。由于是纯语法，本章既不提层级也不提阶段，且分文不花。
+本章就是那份证书。`BoundedFo P φ` 逐次出现地记录：`φ` 中出现的每个常元都满足 `P`。它按被检查公式所用的同一套分情形定义，故在模式匹配下自动拆开，任何证明都不必对「公式的常元列表」作推理。由于是纯语法，本章既不提层级也不提阶段，且分文不花。
 
 配套的是单调性。窄谓词的证书就是宽谓词的证书，而这正是把针对不同阶段写下的证书带到公共阶段、以便一并使用的办法。
 <!--/-->
@@ -139,7 +139,7 @@ the intended instance the source is the model's carrier, the target is a stage's
 member type, the world is the hierarchy, and the equation is the fact that a
 member of a stage, viewed as a set, is the set it was.
 <!--zh-->
-接口以其使用者所需的一般性陈述：两个域、它们共同映入的一个世界、源上的一个谓词、在其之下有定义的一个部分映射，以及说明该部分映射与两个投影相符的等式。在预期的实例中，源是模型的载体，目标是某个阶段的成员类型，世界是层级，而那条等式就是「阶段的成员作为集合看，仍是它原本那个集合」这一事实。
+接口按其使用者所需的一般性陈述：两个域、它们共同映入的一个世界、源上的一个谓词、在该谓词之下有定义的一个部分映射，以及说明该部分映射与两个投影相符的等式。在预期的实例中，源是模型的载体，目标是某个阶段的成员类型，世界是层级，而那条等式就是「阶段的成员作为集合来看，仍是它原本那个集合」这一事实。
 <!--/-->
 
 ```agda

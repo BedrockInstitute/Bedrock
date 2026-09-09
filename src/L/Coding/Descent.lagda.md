@@ -115,7 +115,7 @@ numeral. Both components pass through the unordered pair in a Kuratowski
 pair, so one two-step lemma handles either side. Applying it twice gives the
 four-step descents into a paired payload.
 <!--zh-->
-一条带标签的码是一个对，其第二分量即载荷；而载荷要么是一条码、要么是两条码构成的对。故要点名的下降有三条：进入载荷，以及进入「载荷是对」时的两侧。标签本身从不被下降进去，这也是它以任意集合、而非以数码的形式出现的原因。两个分量都经由 Kuratowski 对中的无序对，故一条两步引理处理任一侧。施用两次，便得到进入成对载荷的四步下降。
+一条带标签的码是一个对，其第二分量即载荷；而载荷要么是一条码，要么是两条码构成的对。故要点名的下降有三条：进入载荷，以及进入「载荷是对」时的两侧。标签本身从不被下降进去，这也是它以任意集合而非以数码的形式出现的原因。两个分量都经由 Kuratowski 对中的无序对，故一条两步引理处理任一侧。施用两次，便得到进入成对载荷的四步下降。
 <!--/-->
 
 ```agda

@@ -183,7 +183,7 @@ For an ordinal `a`, separation collects the ordinals below a bound that inject i
 <!--zh-->
 ## 分出较小基数
 
-对序数 `a`，分出收集某个上界之下能够注入 `a` 的序数。这个集合将作为 Hartogs 构造的输入。
+对序数 `a`，分出收集某个上界之下能够注入 `a` 的序数的集合。这个集合将作为 Hartogs 构造的输入。
 <!--ja-->
 ## より小さい基数を分出する
 

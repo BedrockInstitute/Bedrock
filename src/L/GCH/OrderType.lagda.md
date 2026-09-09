@@ -355,7 +355,7 @@ open import L.Recursion.Graph {ℓ} lem public using ( module PairFo )
 <!--en-->
 Well-founded induction proves that any two correct tables agree on their common domain. Replacement constructs a correct table below each element, and uniqueness lets the local tables assemble into one collapse function.
 <!--zh-->
-良基归纳证明任意两张正确的表在公共定义域上一致。替换在每个元素以下构造正确表，而唯一性使这些局部表装配成一个塌缩函数。
+良基归纳证明任意两张正确的表在公共定义域上一致。替换在每个元素以下构造正确表，而唯一性使这些局部表得以装配成一个塌缩函数。
 <!--ja-->
 整礎帰納法により、任意の二つの正しい表は共通の定義域で一致する。置換が各要素より下に正しい表を構成し、一意性によって局所的な表を一つの崩壊関数へ組み立てられる。
 <!--/-->
@@ -728,7 +728,7 @@ has a unique value.
 <!--en-->
 The assembled table is total and single-valued on the relation's domain. When the relation is linear, distinct inputs have distinct collapse values, so the graph satisfies the internal coded-injection predicate.
 <!--zh-->
-装配后的表在关系的定义域上全域且单值。当关系是线性的，不同输入具有不同塌缩值，因此其图满足内部的编码单射谓词。
+装配后的表在关系的定义域上全域且单值。当关系为线性时，不同输入具有不同塌缩值，因此其图满足内部的编码单射谓词。
 <!--ja-->
 組み立てた表は、関係の定義域上で全域かつ一価である。関係が線形なら異なる入力は異なる崩壊値をもつので、グラフは内部の符号化された単射の述語を満たす。
 <!--/-->

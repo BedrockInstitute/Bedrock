@@ -95,7 +95,7 @@ degenerate branch, immediately; for the second half, the members of `sucV A`
 are members of `A` (transitive by assumption) or `A` itself (transitive by
 assumption again).
 <!--zh-->
-后继 `sucV A` 把 `A` 自身添作成员，而层级那一章留下了推理它的工具：`sucV A` 的成员要么是 `A` 的成员，要么就是 `A` 自身，这个分情形是命题级的消去子。序数谓词的两半都照着它走。传递性一半：`sucV A` 的成员之成员，或经 `A` 的传递性、或在退化支上直接地，落回 `A`；第二半：`sucV A` 的成员或是 `A` 的成员 (依假设传递)、或就是 `A` (仍依假设传递)。
+后继 `sucV A` 把 `A` 自身添作成员，而层级那一章留下了推理它的工具：`sucV A` 的成员要么是 `A` 的成员，要么就是 `A` 自身，这个分情形是命题级的消去子。序数谓词的两半都照着它走。传递性一半：`sucV A` 的成员之成员，或经 `A` 的传递性，或在退化支上直接落回 `A`；第二半：`sucV A` 的成员或是 `A` 的成员 (依假设传递)，或就是 `A` (仍依假设传递)。
 <!--/-->
 
 ```agda
@@ -176,7 +176,7 @@ merging two ordinals into one that contains both. The family is indexed by the
 booleans, lifted to the ambient universe so that the general lemma applies, and
 the two memberships are read off at the two indices.
 <!--zh-->
-二元情形值得单独命名，因为用得最多的正是它：把两个序数合并为一个同时包含二者的序数。族由布尔值索引，抬升到周遭宇宙以便通用引理适用，而两条隶属关系在两个索引处读出。
+二元情形值得单独命名，因为用得最多的正是它：把两个序数合并为一个同时包含二者的序数。族由布尔值索引，抬升到周遭宇宙以便通用引理得以适用，而两条隶属关系在两个索引处读出。
 <!--/-->
 
 ```agda
@@ -204,7 +204,7 @@ transitivity.
 <!--zh-->
 ## 成员
 
-序数向下封闭：序数的成员是序数。它自身的传递性就是假设的第二半；而其成员传递，则经传递性把它们拉回外层序数即得。
+序数向下封闭：序数的成员是序数。它自身的传递性就是假设的第二半；而成员的传递性，则经传递性把它们拉回外层序数即得。
 <!--ja-->
 ## 要素
 

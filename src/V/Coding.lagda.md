@@ -107,7 +107,7 @@ conclusion; a strictly smaller one would put a numeral inside itself once the
 two codes are identified, which irreflexivity forbids; and the remaining case is
 the mirror image.
 <!--zh-->
-单射性随即由序号上的三歧得出。序号相等即是结论；若严格更小，则把两个码认同之后会把某个数码放进它自身，而无自环性禁止这一点；余下的情形是镜像。
+单射性随即由序号上的三歧得出。序号相等即是结论；若严格更小，则在把两个码认同之后，会把某个数码放进它自身，而无自环性禁止这一点；余下的情形是镜像。
 <!--/-->
 
 ```agda
@@ -180,7 +180,7 @@ result. The first component is the easier one; the second needs the degenerate
 case, where the pair collapses because its two components coincide, and there
 the missing information is recovered by transporting in the other direction.
 <!--zh-->
-配对本身，以及本章为之存在的那条定理。两个分量都是把一个隶属关系沿假设的等式搬运过去、再对结果作分类而还原的。第一个分量较易；第二个需要处理退化情形，即两个分量重合使对塌陷的情形，那里缺失的信息靠向另一个方向搬运补回。
+配对本身，以及本章为之存在的那条定理。两个分量都是把一个隶属关系沿假设的等式搬运过去、再对结果作分类而还原的。第一个分量较易；第二个需要处理退化情形，即两个分量重合使对塌陷的情形，那里缺失的信息靠从另一个方向搬运来补回。
 <!--/-->
 
 ```agda

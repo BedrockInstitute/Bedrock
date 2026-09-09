@@ -39,9 +39,9 @@ is where Δ₀ is spent, and it is the only place. Formulas with unbounded
 quantifiers get this treatment too, but only after the next chapters buy them a
 stage that reflects them.
 <!--zh-->
-分离公理问的是：给定一个可构造集与一条公式，它刻出的子集是否仍可构造？回答这个问题的机器已在前几章陆续备齐，本章把它们装到一起，针对不含无界量词的公式。
+分离公理问的是：给定一个可构造集与一条公式，它刻出的子集是否仍可构造？回答这个问题的机器已在前几章陆续备齐，本章把它们装到一起，用于不含无界量词的公式。
 
-论证的形状与基本公理用的是同一个，只多一步。要把一个集合放进 `L`，我们把它呈现为单一阶段的可定义子集。此处的目标是 `{x ∈ a : φ}`，而那个阶段必须同时装下 `a` 与 `φ` 提到的每个常元。给定这样一个阶段，可定义性算子要的是一条**该阶段**成员之上的公式，而 `φ` 是整个模型之上的公式，故公式必须被重标下去。那正是界层证书的用途，而多出的那一步就是核对重标没有改变公式所说的内容。
+论证的形状与基本公理用的是同一个，只多一步。要把一个集合放进 `L`，我们把它呈现为单一阶段的可定义子集。此处的目标是 `{x ∈ a : φ}`，而那个阶段必须同时装下 `a` 与 `φ` 提到的每个常元。给定这样一个阶段，可定义性算子要的是一条**该阶段**成员之上的公式，而 `φ` 是整个模型之上的公式，故公式必须重标下去。那正是界层证书的用途，而多出的那一步就是核对重标没有改变公式所说的内容。
 
 核对它是一条穿过三章的五步路径，每一步都是已证的等式：可定义子集的隶属就是重标后公式的外层满足；重标与两个到层级的投影交换；而 Δ₀ 公式的外层满足就是内层满足。最后一条是花掉 Δ₀ 的地方，也是唯一的地方。含无界量词的公式也会受到同样的对待，但要等随后诸章为它们买到一个反射它们的阶段。
 <!--/-->
@@ -110,7 +110,7 @@ open AbsL using ( abs₀ ) renaming ( _⊨ᵐ_ to _⊨_ )
 `ReplImage a φ`{.Agda} names the class of values related by `φ` to some member of
 `a`, fixing the source-first variable convention used by the bounded engine.
 <!--zh-->
-`ReplImage a φ`{.Agda} 点名由 `φ` 与 `a` 的某个成员相关的诸取值之类，并固定有界引擎所用的源在前变元约定。
+`ReplImage a φ`{.Agda} 命名 `φ` 与 `a` 的某个成员相关联的诸取值之类，并固定有界引擎所用的源在前变元约定。
 <!--ja-->
 `ReplImage a φ`{.Agda} は `a` のある要素と `φ` で関係づけられる値のクラスを名づけ、有界な構成が使う始域変数を先に置く規約を固定する。
 <!--/-->
@@ -122,7 +122,7 @@ of `a`. Here the source variable is at index zero and the image at index one; th
 model record states it the other way round, and the chapter that assembles the
 field applies a renaming to match.
 <!--zh-->
-先命名一次，因为下面的引擎产出它而模型 record 消费它：`a` 在 `φ` 下的像，是 `φ` 与 `a` 的某个成员相关联的那些东西构成的类。此处源变元在索引零、像在索引一；模型 record 的陈述次序相反，而装配那个字段的章节以改名调整次序以相符。
+先命名一次，因为下面的引擎产出它而模型 record 消费它：`a` 在 `φ` 下的像，是 `φ` 与 `a` 的某个成员相关联的那些东西构成的类。此处源变元在索引零、像在索引一；模型 record 的陈述次序相反，而装配那个字段的章节以改名调整次序使之相符。
 <!--/-->
 
 ```agda
@@ -261,7 +261,7 @@ absoluteness brings it back inside the model. Each link is an equation from an
 earlier chapter, and the composite is the only place this chapter does anything
 delicate.
 <!--zh-->
-那条五步路径。自上而下读：属于可定义子集，就是经该阶段的含入读出的、重标后公式的外层满足；两次重标律把它搬到层级自己的读法；部分重标的正确性把两种读法认同；而绝对性把它带回模型内部。每一环都是前面某章的等式，而这个复合是本章唯一做细致事情的地方。
+那条五步路径。自上而下读：属于可定义子集，就是经该阶段的含入读出的、重标后公式的外层满足；两次重标律把它搬到层级自己的读法；部分重标的正确性把两种读法认同；而绝对性把它带回模型内部。每一环都是前面某章的等式，而这个复合是本章唯一做细致工作的地方。
 <!--/-->
 
 ```agda
@@ -448,7 +448,7 @@ monotonicity raising both certificates to the merge.
 Merging two ordinals is `bound2`{.Agda} from the ordinal chapter, and it is the
 only thing this recursion needs from ordinal theory.
 <!--zh-->
-引擎要的是一个装下公式全部常元的阶段。造一个出来，是沿公式的一次递归，同时产出阶段与证书。常元贡献它自己的最早阶段，变元什么也不贡献，而在每个分叉节点上，两个阶段经界住而合并，单调性把两份证书都抬到合并处。
+引擎要的是一个装下公式全部常元的阶段。造一个出来，就是沿公式的一次递归，同时产出阶段与证书。常元贡献它自己的最早阶段，变元什么也不贡献，而在每个分叉节点上，两个阶段经界住而合并，单调性把两份证书都抬到合并处。
 
 合并两个序数就是序数那一章的 `bound2`{.Agda}，而这也是这次递归从序数理论索取的全部。
 <!--/-->
@@ -571,9 +571,9 @@ bounded by the argument, so it stays Δ₀ and absoluteness applies to the whole
 it. The work is done by functionality, not by any reflection across structures,
 which is the clean line between this lemma and the unbounded case.
 <!--zh-->
-替换还多要一样：一个装下像的阶段。函数性给出上面的公共像界。用一条有界存在公式「实参的某个成员与候选者相关」在该阶段上作分离；所得谓词恰好就是替换的像。
+替换还多要一样：一个装下像的阶段。函数性给出上述公共像界。用一条有界存在公式「实参的某个成员与候选者相关」在该阶段上作分离；所得谓词恰好就是替换的像。
 
-值得注意它**不**需要什么。定义公式唯一的量词被实参所界，故它保持 Δ₀，绝对性适用于整条公式。出力的是函数性，而非任何跨结构的反射，这正是本引理与无界情形之间那条干净的分界。
+值得注意它**不**需要什么。定义公式唯一的量词被实参所界，故它保持 Δ₀，绝对性适用于整条公式。起作用的是函数性，而非任何跨结构的反射，这正是本引理与无界情形之间那条干净的分界。
 <!--/-->
 
 ```agda

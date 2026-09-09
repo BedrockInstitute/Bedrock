@@ -76,7 +76,7 @@ chapters, so the law belongs to the syntax-level interface rather than to any
 one application. Both term cases are `refl`{.Agda}, because a variable carries
 no constant and a constant is relabelled by application.
 <!--zh-->
-连着两次这样的映射就是一次映射。它第一次具体登场时，编码桥先把常元从载体的成员送入其内层结构，再送入 `L` 的语言；`mapFo-comp`{.Agda} 消去的正是这个中间常元域。后续编码、选择与 GCH 各章还会反复遇到同一需要，故这条法则属于句法层接口，而不属于任何一个应用。两个词项情形都是 `refl`{.Agda}，因为变元不携带常元，而常元的变换就是把映射施用上去。
+连着两次这样的映射就是一次映射。它第一次具体登场时，编码桥先把常元从载体的成员送入其内层结构，再送入 `L` 的语言；`mapFo-comp`{.Agda} 消去的正是这个中间常元域。后续编码、选择与 GCH 各章还会反复遇到同一需要，故这条法则属于句法层接口，而不属于任何一个应用。两个词项情形都是 `refl`{.Agda}，因为变元不携带常元，而常元的变换就是把映射施加上去。
 <!--/-->
 
 ```agda

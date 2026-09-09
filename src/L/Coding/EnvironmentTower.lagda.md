@@ -9,7 +9,7 @@
 <!--en-->
 The satisfaction construction needs one set recording the environment set at every arity. Its entries are the pairs `(# n, envSet W n)`. Starting from coded-pair quantification and the environment sets, this chapter builds that tower and proves its formula specification and readers.
 <!--zh-->
-满足关系的构造需要一个记录每个元数所对应环境集的集合，其条目是有序对 `(# n, envSet W n)`。本章从码化有序对量词与环境集出发，构造该塔并证明其公式刻画和读式。
+满足关系的构造需要一个记录每个元数所对应的环境集的集合，其条目是有序对 `(# n, envSet W n)`。本章从码化有序对量词与环境集出发，构造该塔并证明其公式刻画和读式。
 <!--ja-->
 充足関係の構成には、各アリティに対応する環境集合を記録する一つの集合が必要であり、その要素は順序対 `(# n, envSet W n)` である。本章では、符号化された順序対の量化と環境集合からこの塔を構成し、その論理式による特徴付けと読み補題を証明する。
 <!--/-->

@@ -19,7 +19,7 @@ variables. The first is a parameter of this whole chapter, along with the truth
 algebra it is valued in; the generic development speaks through the abstract `𝕋`,
 as the scope discipline prescribes.
 <!--zh-->
-把语法变成含义需要三样东西：被谈论的结构 `𝒮`、常元的解释，以及给自由变量赋值的环境。第一样连同它取值的真值代数是本章整体的参数；泛型开发按作用域纪律的安排，经抽象的 `𝕋` 说话。
+把语法变成含义需要三样东西：被谈论的结构 `𝒮`、常元的解释，以及给自由变量赋值的环境。第一样连同它赖以取值的真值代数是本章整体的参数；泛型开发按作用域纪律的安排，经抽象的 `𝕋` 说话。
 <!--/-->
 
 

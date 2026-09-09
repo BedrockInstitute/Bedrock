@@ -20,7 +20,7 @@ motion the book does need is covered by one device: **renaming**, a map
 `ρ : Fin n → Fin m` pushed through a formula, with a single correctness theorem
 that handles weakening, exchange, and contraction in one stroke.
 <!--zh-->
-语法章点过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
+语法章提过一处缺席：没有替换，没有弱化。量词子句直接取扩展语境中的公式体，经典的那套变量搬运装置根本无需存在。本书确实需要的那一点变量挪动，由一个机件包办：**改名**，即沿公式推送一个映射 `ρ : Fin n → Fin m`，配一条正确性定理，弱化、交换、收缩一并了断。
 <!--/-->
 
 ```agda
@@ -82,7 +82,7 @@ renameFo ρ (∃̇∈ t φ) = ∃̇∈ (renameTm ρ t) (renameFo (liftρ ρ) φ)
 <!--zh-->
 ## 语义层
 
-`Agrees ρ γ δ`{.Agda} 表示两个环境为经 `ρ` 对应的变量指派相等取值。该条件在约束子下扩展环境时仍保持，结构归纳遂证明改名后词项释义与公式满足关系相等。
+`Agrees ρ γ δ`{.Agda} 表示两个环境给经 `ρ` 对应的变量指派相等的取值。该条件在约束子下扩展环境时仍保持，结构归纳遂证明改名后词项释义与公式满足关系相等。
 <!--ja-->
 ## 意味論の水準
 
@@ -113,7 +113,7 @@ case a congruence, the binder cases stepping through `agrees∷`{.Agda}. Weakeni
 (inserting an unused variable), exchange, and contraction are all instances,
 obtained by choosing `ρ`.
 <!--zh-->
-正确性定理：变换后的公式在大环境中的含义，与原公式在小环境中的相同。先词项，然后照例归纳，每个情形一条同余，约束子情形踩着 `agrees∷`{.Agda} 过河。弱化 (插入未用的变量)、交换、收缩全是特例，取相应的 `ρ` 即得。
+正确性定理：变换后的公式在大环境中的含义，与原公式在小环境中的相同。先处理词项，然后照例归纳，每个情形一条同余，约束子情形踩着 `agrees∷`{.Agda} 过河。弱化 (插入未用的变量)、交换、收缩全是特例，取相应的 `ρ` 即得。
 <!--/-->
 
 ```agda

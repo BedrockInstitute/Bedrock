@@ -85,7 +85,7 @@ The shift operation and named inner slots organize deeply nested binders, while
 the pair and successor readers turn their atomic formulas back into set
 equalities.
 <!--zh-->
-移位运算与具名内部槽位组织深层嵌套的绑定，而有序对与后继读式把相应原子公式读回集合等式。
+移位运算与具名内部槽位组织深层嵌套的绑定，而有序对与后继读式把相应原子公式读回为集合等式。
 <!--ja-->
 シフト演算と名前の付いた内側のスロットが深く入れ子になった束縛子を整理し、順序対と後者の読み補題が対応する原子論理式を集合の等しさへ戻す。
 <!--/-->

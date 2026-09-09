@@ -165,7 +165,7 @@ constructors and two for the terms, and the constant clause is discharged by the
 empty type's eliminator. Nothing about the tag numbers matters beyond their being
 numerals.
 <!--zh-->
-归纳本身于是是十二条一行的子句，十条对应公式的构造子，两条对应词项，而常元那一条由空类型的消去子打发。标签的编号除了「是数码」之外无关紧要。
+于是归纳本身是十二条一行的子句，十条对应公式的构造子，两条对应词项，而常元那一条由空类型的消去子打发。标签的编号除了「是数码」之外无关紧要。
 <!--/-->
 
 ```agda
@@ -313,7 +313,7 @@ more free variable than that, and a vector of that many parameters drawn from
 the rest receive the parameters, and the first key is read off the formula at
 once.
 <!--zh-->
-以下一切都相对于一个集合 `A`，即诸名字所依据写出的那个阶段，也相对于那个阶段的成员上的一个良序，故本章在模块 `Naming A w` 中工作。一个**名字**是一个元数、一条比该元数多一个自由变量的无参公式，以及一个由 `A` 的小成员类型取出的、长度为该元数的参数向量。多出来的那个变量正是子集被刻出时所用的那个；其余的接收诸参数，而第一个键当即从那条公式读出。
+以下一切都相对于一个集合 `A`，即诸名字所据以写出的那个阶段，也相对于那个阶段的成员上的一个良序，故本章在模块 `Naming A w` 中工作。一个**名字**是一个元数、一条比该元数多一个自由变量的无参公式，以及一个由 `A` 的小成员类型取出的、长度为该元数的参数向量。多出来的那个变量正是子集被刻出时所用的那个；其余的接收诸参数，而第一个键当即从那条公式读出。
 <!--/-->
 
 Perf: the naming data are definitions of this module, not of another.
@@ -435,7 +435,7 @@ name's denotation reads it inside the constant domain `⟪ A ⟫`{.Agda}, throug
 domain. The two interpretations are functions out of the empty type, so they
 agree, and saying so is the only bookkeeping the identification costs.
 <!--zh-->
-它的充分性就是上一章的那一条，在此花掉。场上有两种读一条无参公式的方式，必须先把它们认同：名字的指称经 `embed`{.Agda} 在常元域 `⟪ A ⟫`{.Agda} 之内读它，而抽象定理在空常元域处读它。两个解释都是从空类型出发的函数，故它们相符，而把这句话说出来就是这次认同的全部记账。
+它的充分性就是上一章的那一条，在此花掉。这里有两种读一条无参公式的方式，必须先把它们认同：名字的指称经 `embed`{.Agda} 在常元域 `⟪ A ⟫`{.Agda} 之内读它，而抽象定理在空常元域处读它。两个解释都是从空类型出发的函数，故它们相符，而把这句话说出来就是这次认同的全部记账。
 <!--/-->
 
 ```agda
@@ -477,7 +477,7 @@ to extensionality. Completeness follows by transporting along that equality, and
 it is stated truncated because that is how the definable powerset gives up a
 formula in the first place.
 <!--zh-->
-两个子集都是由 `A` 的成员上的一条小谓词从 `A` 中割出，故两条谓词一旦相等，两个集合便由一次同余而相等，无须援引外延性。完备性沿那条等式搬运即得，而它陈述成截断的，因为可定义幂集本来就是这样交出一条公式的。
+两个子集都是由 `A` 的成员上的一条小谓词从 `A` 中割出，故两条谓词一旦相等，两个集合便由一次同余而相等，无须援引外延性。完备性沿那条等式搬运即得，而它陈述为截断形式，因为可定义幂集本来就是这样交出一条公式的。
 <!--/-->
 
 ```agda
@@ -524,7 +524,7 @@ comparison demanding one length would have to move one of them first.
 <!--zh-->
 模块的第二个参数就是该阶段成员上的那个良序，本章余下部分把它花掉。第三个键比较参数向量，而它的比较方式显而易见：在它们首次相异之处，由给定的序裁决。
 
-这次比较跨**两个长度**书写，而向量走完的那两种情形取空类型。在长度相等处这分文不花，而那也是这次比较唯一会被抵达之处；换来的则是「不必搬运」：那时第二个键已经宣布诸元数相等，可两个向量的长度在语法上仍然不同，而一个只认单一长度的比较，就得先把其中一个搬过去。
+这次比较跨**两个长度**书写，而向量走完的那两种情形取空类型。在长度相等处这分文不花，而那也是这次比较唯一会抵达之处；换来的则是「不必搬运」：那时第二个键已经宣布诸元数相等，可两个向量的长度在语法上仍然不同，而一个只认单一长度的比较，就得先把其中一个搬过去。
 <!--/-->
 
 ```agda
@@ -549,7 +549,7 @@ for equal lengths, since only there is a vector equal to another at all;
 transitivity does not, and gets three vectors of three lengths, with every case
 but the all-inhabited one refuted by the empty type.
 <!--zh-->
-四条定律里有三条是当即的归纳。非自反与三歧要求长度相等，因为只有在那里一个向量才谈得上与另一个相等；传递性则不要求，它拿到三个长度各异的向量，而除「三者皆非空」之外的每个情形都由空类型反驳。
+四条定律里有三条是当即的归纳。非自反与三歧要求长度相等，因为只有在那里，一个向量才谈得上与另一个相等；传递性则不要求，它拿到三个长度各异的向量，而除「三者皆非空」之外的每个情形都由空类型反驳。
 <!--/-->
 
 ```agda
@@ -596,7 +596,7 @@ on the length as well, and why the head's induction is taken as an induction
 principle rather than as a second recursive argument: with all three appetites
 served in one recursion the descent has no single decreasing measure to offer.
 <!--zh-->
-需要谋划的是良基性。从一个向量向下走，头部或者按给定的序下降，此时尾部被换成同长的任意一个；或者头部不动而尾部下降。故这次下降是两层嵌套的归纳：头部用给定序的良基性，尾部用尾部的可及性，而那些任意的尾部由「短一格的那条陈述」供给。正是这第三样配料使整件事也对长度递归，也正因如此，头部的归纳取作归纳原理、而非取作第二个递归实参：若三副胃口都在同一场递归里伺候，那次下降就交不出单一的递减尺度。
+需要谋划的是良基性。从一个向量向下走，头部或者按给定的序下降，此时尾部被换成同长的任意一个；或者头部不动而尾部下降。故这次下降是两层嵌套的归纳：头部用给定序的良基性，尾部用尾部的可及性，而那些任意的尾部由「短一格的那条陈述」供给。正是这第三样配料使整件事也对长度递归，也正因如此，头部的归纳取作归纳原理而非取作第二个递归实参：若三副胃口都在同一场递归里伺候，那次下降就交不出单一的递减尺度。
 <!--/-->
 
 ```agda
@@ -672,7 +672,7 @@ positivity checking normalizes the constructors' arguments, which here means
 unfolding the limit order down to the search it is defined by. Written as a sum
 nothing unfolds, and the three cases read off the shape.
 <!--zh-->
-名字之间的比较，就是这三个键上的字典序比较，写成和类型、而非声明为归纳关系。这是一次测量，不是口味：归纳声明要过正性检查，而正性检查会把诸构造子的实参归一化，在此就意味着把那个极限序展开到它据以定义的那场搜寻。写成和类型则什么也不展开，而三个情形从形状上直接读出。
+名字之间的比较，就是这三个键上的字典序比较，写成和类型而非声明为归纳关系。这是一次测量，不是口味：归纳声明要过正性检查，而正性检查会把诸构造子的实参归一化，在此就意味着把那个极限序展开到它据以定义的那场搜寻。写成和类型则什么也不展开，而三个情形从形状上直接读出。
 <!--/-->
 
 ```agda
@@ -941,5 +941,5 @@ is used, the chapter costs nothing.
 
 `code∈limit`{.Agda} 把第一个键放到上一章那个序够得着的地方，而 `code-inj`{.Agda} 使那个键忠实；`_≺ᵥ_`{.Agda} 跨长度地给第三个键排序，而 `_≺ₙ_`{.Agda} 就是那次三键比较本身，连同四条定律与 `leastName`{.Agda}，即非空族中最小的名字。
 
-三笔代价被量出，而每一笔都是同一次意外的不同侧面：某样东西把极限序逼开，而极限序展开就是一场「最小序数」的搜寻。把那次比较声明为归纳关系，会在正性检查中把它逼开；陈述在一个名字的诸投影上、而非陈述在那个名字上的东西，会在两者对上时把它逼开，一条引理八十七秒；而从**另一个**模块够到的命名数据，会在每一次码的比较处把它逼开，这是三者中最大的一笔。写成和类型、全程陈述在名字上、并把数据定义在它被使用之处，本章分文不花。
+三笔代价被量出，而每一笔都是同一次意外的不同侧面：某样东西把极限序逼开，而极限序展开就是一场「最小序数」的搜寻。把那次比较声明为归纳关系，会在正性检查中把它逼开；陈述在一个名字的诸投影上、而非陈述在那个名字上的东西，会在两者对上时把它逼开，一条引理八十七秒；而从**另一个**模块够到的命名数据，会在每一次码的比较处把它逼开，这是三者中最大的一笔。由于写成和类型、全程陈述在名字上、并把数据定义在它被使用之处，本章分文不花。
 <!--/-->

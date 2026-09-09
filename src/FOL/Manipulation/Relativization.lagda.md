@@ -130,7 +130,7 @@ Correctness is then one structural induction: the standard meaning of
 standard semantics of `∃̇∈ (con c) _` unfolds, by computation, to exactly the
 companion's clause, since `⟦ con c ⟧ γ` is `A`; everything else is congruence.
 <!--zh-->
-正确性于是就是一次结构归纳：`relativize c φ` 的标准含义等于 `φ` 的 `A`-有界含义。原子是 `refl`{.Agda}；算子真正动过手脚的两条子句，恰是标准语义对 `∃̇∈ (con c) _` 按计算展开成同伴子句之处，因为 `⟦ con c ⟧ γ` 就是 `A`；其余全是同余。
+正确性于是就是一次结构归纳：`relativize c φ` 的标准含义等于 `φ` 的 `A`-有界含义。原子是 `refl`{.Agda}；算子真正动过手脚的两条子句，恰是标准语义按计算把 `∃̇∈ (con c) _` 展开成同伴子句之处，因为 `⟦ con c ⟧ γ` 就是 `A`；其余全是同余。
 <!--/-->
 
 ```agda

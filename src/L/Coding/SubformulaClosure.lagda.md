@@ -25,7 +25,7 @@ which ones is computed from the shape's tag. So each of the seven clauses is the
 same four moves: take the element apart, read its tag, ask what that tag demands,
 and hand back what the formula's own closure already contains.
 <!--zh-->
-证明短，因为它所需的两半本就是为了在此处会合而造的。闭包的元素是某条公式的键，而它自带一个坐落于内的闭包；一个给定构造子形状的键有已知的诸子键，而是哪几个由那个形状的标签算出。故七条子句里的每一条都是同样四步：把元素拆开、读出它的标签、问那个标签索取什么，再把该公式自己的闭包早已含有的东西交回去。
+证明短，因为它所需的两半本就是为了在此处会合而造的。闭包的元素是某条公式的键，而它自带一个坐落于其内的闭包；一个给定构造子形状的键有已知的诸子键，而具体是哪几个由那个形状的标签算出。故七条子句里的每一条都是同样四步：把元素拆开、读出它的标签、问那个标签索取什么，再把该公式自己的闭包早已含有的东西交回去。
 <!--/-->
 
 ```agda
@@ -137,7 +137,7 @@ The helpers `same`, `one`, `up`, and `sndUp` turn a peeled formula key into the
 subkeys required by binary, unary, arity-raising, and bounded-quantifier
 constructors. Their seven tag instances prove the seven closure conditions.
 <!--zh-->
-辅助构造 `same`、`one`、`up` 与 `sndUp` 把剥出的公式键转成二元、一元、提升元数及有界量词构造子所需的子键；它们对七个标签的实例证明七条闭包条件。
+辅助构造 `same`、`one`、`up` 与 `sndUp` 把剥出的公式键转成二元、一元、提升元数及有界量词构造子所需的子键；它们在七个标签上的实例证明七条闭包条件。
 <!--ja-->
 補助構成 `same`、`one`、`up`、`sndUp` は、取り出した論理式の鍵を、二項、単項、アリティを増やす構成子、有界量化子が要求する部分鍵へ変換します。七つのタグへの適用が七つの閉包条件を証明します。
 <!--/-->

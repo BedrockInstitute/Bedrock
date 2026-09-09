@@ -41,7 +41,7 @@ previous chapter's closure engine finishes the job.
 
 两半都是真功夫。一个方向说序数不会提前现身：若它在 `Lset α` 中，则它是 `α` 的成员。这是较难的一半，要经过秩，而这正是上一章造出秩的原因。`Lset α` 中的集合是某个更早阶段的可定义子集，依归纳其成员的秩低于那个阶段，故它自身的秩有界；而作为序数，它就是自身的秩。
 
-另一个方向说序数不会迟到：`α` 的每个成员都已在 `Lset α` 中。那一半是直截的归纳，前提是序数现身于自身之后的阶段，而那正是正在证的定理。这个循环只是表象：归纳假设为诸成员供应该陈述，而所需的恰只是诸成员。
+另一个方向说序数不会迟到：`α` 的每个成员都已在 `Lset α` 中。那一半是直截的归纳，前提是序数现身于自身之后的阶段，而那正是正在证的定理。这个循环只是表象：归纳假设为诸成员提供该陈述，而所需的恰只是诸成员。
 
 两半齐备，一个阶段中的序数便由单一公式「是序数」从中刻出，该公式是 Δ₀ 的，因为传递性只用有界量词就说得出来。于是 `α` 是 `Lset α` 的可定义子集，上一章的收尾引擎随即收工。
 <!--/-->
@@ -94,7 +94,7 @@ open hPropStructure 𝒮ᵥ
 <!--en-->
 Ordinal trichotomy compares both hierarchy indices and ordinal members. Combining the two comparisons turns stage membership facts into precise inequalities between the relevant ordinals.
 <!--zh-->
-序数三歧既比较层级指标，也比较序数成员。把两次比较结合起来，可将阶段成员事实化为相关序数之间的准确不等式。
+序数三歧既比较层级指标，也比较序数成员。把两次比较结合起来，可将关于阶段成员的事实化为相关序数之间的准确不等式。
 <!--ja-->
 順序数の三分性は、階層の添字と順序数の要素の双方を比較する。二つの比較を組み合わせると、段階への所属を関係する順序数間の正確な不等式へ変えられる。
 <!--/-->
@@ -333,7 +333,7 @@ Cumulation needs, for each member of `α`, that it appears at its own successor
 stage. That is the theorem itself, so it enters here as a hypothesis, and the
 induction below is what supplies it.
 <!--zh-->
-固定一个阶段。经上一章那道桥读出来，公式在环境层级中的满足恰好展开成序数谓词的两条子句，故二者只需重排参数即可互换。然后它刻出的可定义子集就是 `α` 自身：其成员是该阶段的序数，故经秩那一半是 `α` 的成员；而 `α` 的成员是已经现身过的序数，经累积引理，故满足该公式。
+固定一个阶段。经上一章那道桥读出来，公式在环境层级中的满足恰好展开成序数谓词的两条子句，故二者只需重排参数即可互换。然后它刻出的可定义子集就是 `α` 自身：其成员是该阶段的序数，故经秩那一半是 `α` 的成员；而 `α` 的成员是已经现身过的序数，经累积引理，它们满足该公式。
 
 累积引理需要 `α` 的每个成员都在自身的后继阶段现身。那正是本定理自身，故它在此作为假设进入，而下面的归纳正是供应它的东西。
 <!--/-->
@@ -479,5 +479,5 @@ two comparisons of its first section, and everything else it uses was
 constructive. The next chapter spends the result once, on `ω`, and the axiom of
 infinity closes.
 <!--zh-->
-`ord∈Lset-suc`{.Agda} 说序数现身于自身之后的那个阶段，`ord∈Lset→∈`{.Agda} 说它不会更早现身。二者合起来，`Lset α` 中的序数恰是 `α` 的成员。本章是经典的，经由第一节那两次比较，而它用到的其余一切都是构造性的。下一章把这个结果花掉一次，用在 `ω` 上，无穷公理随之合龙。
+`ord∈Lset-suc`{.Agda} 说序数现身在自身之后的那个阶段中，`ord∈Lset→∈`{.Agda} 说它不会更早现身。二者合起来，`Lset α` 中的序数恰是 `α` 的成员。本章是经典的，经由第一节那两次比较，而它用到的其余一切都是构造性的。下一章把这个结果花掉一次，用在 `ω` 上，无穷公理随之合龙。
 <!--/-->

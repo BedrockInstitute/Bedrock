@@ -175,7 +175,7 @@ The readback, second half: the honest injection between the small index
 types, with the range supplied rather than assumed. This is the form consumed
 by the generic Cantor-Bernstein interface and by the counting arguments in GCH.
 <!--zh-->
-读回的第二层给出小索引类型之间的实际单射，其值域由调用者供应而非预先假定。泛型 Cantor-Bernstein 接口与 GCH 的计数论证使用的就是这种形式。
+读回的第二层给出小索引类型之间的实际单射，其值域由调用方供应而非预先假定。泛型 Cantor-Bernstein 接口与 GCH 的计数论证使用的就是这种形式。
 <!--ja-->
 第二の読み戻しは、L の要素として得た値を指定された値域の小さな台へ移し、二つの小さな添字型の間の単射を得る。この形を一般の Cantor-Bernstein インターフェースと GCH の濃度計算が直接使う。
 <!--/-->

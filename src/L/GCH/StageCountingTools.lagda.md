@@ -500,7 +500,7 @@ The next injection formula needs to quantify over a value while requiring it to 
 <!--zh-->
 ## 把量化变量固定为常元
 
-下一条单射公式需要量化一个值，同时要求它等于固定常元。本节一次证明这种绑定模式的内部读法与外围读法。
+下一条单射公式需要量化一个值，同时要求它等于固定常元。本节一并证明这种绑定模式的内部读法与外围读法。
 <!--ja-->
 ## 量化変数を定数に固定する
 

@@ -98,9 +98,9 @@ gives the table, with the key it gives the **slot** the table is indexed by. The
 recursion needs both and needs them to agree constructor for constructor, which
 is why they come from one recursion rather than two.
 <!--zh-->
-一个键是元数与码之对，而那正是内部递归每条子句所读的形状。一个条目是键与取值之对。
+一个键是元数与码的对，而那正是内部递归每条子句所读的形状。一个条目是键与取值的对。
 
-两者所在的形状相同，故只写一次，且写在别处。`tree`{.Agda} 就是闭包那一章的那次递归：它为每条子公式收集一样东西，而那样东西是什么是它的参数。给它条目，得到那张表；给它键，得到表所索引的那个**槽**。递归两者都要，且要它们逐个构造子地一致，故两者出自同一次递归而非两次。
+两者所处的形状相同，故只写一次，且写在别处。`tree`{.Agda} 就是闭包那一章的那次递归：它为每条子公式收集一样东西，而那样东西是什么是它的参数。给它条目，得到那张表；给它键，得到表所索引的那个**槽**。递归两者都要，且要它们逐个构造子地一致，故两者出自同一次递归而非两次。
 <!--/-->
 
 ```agda
@@ -259,7 +259,7 @@ which is the only arity at which it is true.
 <!--en-->
 For a key whose formula code has a specified constructor tag, the final case analysis identifies the immediate subformula keys in its slot. Binary, unary, and quantifier constructors each return the arity-adjusted keys required by the recursion clauses.
 <!--zh-->
-对于公式编码带有指定构造子标签的键，最后的分类讨论识别其槽位中的直接子公式键。二元、一元与量词构造子分别给出递归子句所需、元数经过相应调整的键。
+对于公式编码带有指定构造子标签的键，最后的分类讨论识别其槽位中的直接子公式键。二元、一元与量词构造子分别给出递归子句所需的、元数经过相应调整的键。
 <!--ja-->
 論理式コードが指定された構成子タグをもつ鍵について、最後の場合分けはそのスロットにある直接の部分式の鍵を特定します。二項、単項、量化子の各構成子は、再帰条件が要求するようにアリティを調整した鍵を返します。
 <!--/-->

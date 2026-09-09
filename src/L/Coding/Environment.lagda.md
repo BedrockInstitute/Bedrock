@@ -34,11 +34,11 @@ finite sequences over a given set, which is the canonical place an environment
 lives when a certificate has to quantify over environments rather than exhibit
 one.
 <!--zh-->
-谈论满足关系的证书必须谈论环境，而环境是从变元序号到集合的函数。函数不是层级中的集合，故本章把它们编码：环境成为它的图，即序号与该处取值配成的对之集。
+谈论满足关系的证书必须谈论环境，而环境是从变元序号到集合的函数。函数不是层级中的集合，故本章把它们编码：环境成为它的图，即序号与该处取值配成的对的集合。
 
 编码立刻有回报，因为序号那一侧是数码，而上一章已经使数码单射。于是这个图确实是函数图：在 `i` 的键处恰好坐着 `i` 处的值，别无他物。那条引理就是本章的全部要点，而满足证书的原子子句正是花掉它的地方。
 
-随后还有两条读式，对应证书对环境所做的两件事：查出一个值，以及在进入量词之下时扩张环境。扩张在序号一侧就是 von Neumann 后继，故第二条读式刻画后继。本章以「给定集合上全体有穷序列」之集收尾，那是证书需要对环境作量化 (而非拿出某一个) 时，环境的典范居所。
+随后还有两条读式，对应证书对环境所做的两件事：查出一个值，以及在下降到量词之下时扩张环境。扩张在序号一侧就是 von Neumann 后继，故第二条读式刻画后继。本章以「给定集合上全体有穷序列」的集合收尾，那是证书需要对环境作量化 (而非拿出某一个) 时，环境的典范居所。
 <!--/-->
 
 ```agda
@@ -152,7 +152,7 @@ lookup-spec {n} g i v = ⇔toPath fwd bwd
 <!--en-->
 `sucAt i j` is a bounded formula saying that the value at `j` is the von Neumann successor of the value at `i`; `sucAt-adequate` proves this semantic characterization.
 <!--zh-->
-有界公式 `sucAt i j` 表示 `j` 处的值是 `i` 处之值的 von Neumann 后继；`sucAt-adequate` 证明这一语义刻画。
+有界公式 `sucAt i j` 表示 `j` 处的值是 `i` 处的值的 von Neumann 后继；`sucAt-adequate` 证明这一语义刻画。
 <!--ja-->
 有界式 `sucAt i j` は `j` での値が `i` での値の von Neumann 後者であることを表し、`sucAt-adequate` がこの意味論的特徴づけを証明します。
 <!--/-->
@@ -164,7 +164,7 @@ say "this index is the successor of that one", which is three clauses: the
 smaller belongs to the larger, everything below the smaller is below the larger,
 and everything below the larger is below the smaller or equal to it.
 <!--zh-->
-扩张环境把每个序号上移一位，而在数码上那就是 von Neumann 后继。故下降到约束之下的证书需要说「这个序号是那个的后继」，即三条子句：小者属于大者；小者之下的一切都在大者之下；而大者之下的一切，或在小者之下、或与小者相等。
+扩张环境把每个序号上移一位，而在数码上那就是 von Neumann 后继。故下降到约束之下的证书需要说「这个序号是那个的后继」，即三条子句：小者属于大者；小者之下的一切都在大者之下；而大者之下的一切，或在小者之下，或与小者相等。
 <!--/-->
 
 ```agda
@@ -370,7 +370,7 @@ set as first component. The singleton and unordered pair share the same
 empty-member witness. Mapping their two predicates together carries the whole
 pair characterization in either direction.
 <!--zh-->
-本章扩展读式所用的标签是 `# 0`，而 `# 0` 按定义就是空集。于是标签可以不借常元说出：一个成员是空的。下面几条读式就是带标签版本的空版。元层机制证明：满足空标签读式的集合，恰是以空集为第一分量的 Kuratowski 对。单点集与无序对共享同一个空成员见证。一起映射这两个谓词，就能在两个方向搬运整条有序对刻画。
+本章扩展读式所用的标签是 `# 0`，而 `# 0` 按定义就是空集。于是标签可以不借常元说出：一个成员是空的。下面几条读式就是空版的带标签版本。元层机制证明：满足空标签读式的集合，恰是以空集为第一分量的 Kuratowski 对。单点集与无序对共享同一个空成员见证。一起映射这两个谓词，就能在两个方向搬运整条有序对刻画。
 <!--/-->
 
 ```agda
@@ -501,7 +501,7 @@ consed on. The two sides match key by key, and the match is definitional at the
 index: the numeral for `suc k` is the successor of the numeral for `k`, and
 consing shifts indices by exactly that.
 <!--zh-->
-然后是量词子句所需的那条公式：扩张后的环境就是旧环境在索引零处添上一个新值。三条子句。键零处的条目持有新值；旧环境的每个条目在新环境中移位出现；而新环境的每个条目，或是那第一个条目、或是某个旧条目的移位。
+然后是量词子句所需的那条公式：扩张后的环境就是旧环境在索引零处添上一个新值。三条子句。键零处的条目持有新值；旧环境的每个条目在新环境中移位出现；而新环境的每个条目，或是那第一个条目，或是某个旧条目的移位。
 
 充分性是对**编码后的**环境陈述的，因为那是诸证书所持有的形式。给定旧环境是 `g` 的图，该公式的满足恰好说新环境是 `g` 前置一个值之后的图。两侧逐键相符，而在索引上这个相符是定义性的：`suc k` 的数码就是 `k` 的数码的后继，而前置恰好把索引移那么多。
 <!--/-->
@@ -655,5 +655,5 @@ environment is the old one with a value consed on, stated against the encoded
 form the certificates actually hold. That is the last formula the coding stack
 owes the certificates.
 <!--zh-->
-环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`sucAt`{.Agda} 认出进入量词之下所作的序号移位。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
+环境就是它的图 (`env`{.Agda})，而图是函数性的 (`lookup-spec`{.Agda})，正是这一点使这套编码可用而不只是可定义。`sucAt`{.Agda} 认出下降到量词之下时所作的序号移位。`shiftPairAt`{.Agda} 认出扩张所作的重编号，而 `consAt`{.Agda} 把它用起来：扩张后的环境就是旧环境前置一个值，且是对诸证书实际持有的编码形式陈述的。那是编码这一层欠诸证书的最后一条公式。
 <!--/-->

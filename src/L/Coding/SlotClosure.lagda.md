@@ -5,7 +5,7 @@ A slot collects the codes available below one bound. To support structural recur
 <!--zh-->
 # 使编码槽位对七种构造闭合
 
-槽位收集某个界以下可用的编码。为了支持结构递归，本章证明：若一个编码位于槽位中，则七种构造形状所需的所有直接部件之键也位于其中。
+槽位收集某个界以下可用的编码。为了支持结构递归，本章证明：若一个编码位于槽位中，则七种构造形状所需的所有直接部件的键也位于其中。
 <!--ja-->
 # コードスロットを七つの構成子について閉じる
 
@@ -24,7 +24,7 @@ part's key back into the whole's slot, and carry it up the containment the
 inversion returned. The four constructors with no subformula have nothing to say
 and are not among the seven.
 <!--zh-->
-图将要对它的索引集陈述的那条假设，在「一条公式自己的递归所索引的那个槽」处交付。这是闭包那一章的定理再来一遍，只是落在模型自己的编码上、而非层级的编码上；而它在此处更短，因为它所需的部件是为那两半造的，不是为它造的。
+图将要对它的索引集陈述的那条假设，在「一条公式自己的递归所索引的那个槽」处交付。这是闭包那一章的定理再来一遍，只是落在模型自己的编码上，而非层级的编码上；而它在此处更短，因为它所需的部件是为那两半造的，不是为它造的。
 
 七条子句每一条都是四步：把索引求逆回「它是谁的键」的那条公式、从子句的标签算出那条公式的构造子、把部件的键放回整体的槽里，再沿求逆返回的那条包含关系抬上去。没有子公式的那四个构造子无话可说，也不在这七条之列。
 <!--/-->
@@ -76,7 +76,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 The descent lemmas place a component key below the enclosing code's key. Downward closure of the bound then returns that key to the same slot.
 <!--zh-->
-下降引理把部件之键置于外围编码之键以下。界的向下闭合性随后把该键放回同一槽位。
+下降引理把部件的键置于外围编码的键以下。界的向下闭合性随后把该键放回同一槽位。
 <!--ja-->
 降下補題により、成分の鍵は外側のコードの鍵より下にある。上界の下方閉性から、その鍵も同じスロットへ戻る。
 <!--/-->
@@ -87,7 +87,7 @@ own key, once the arity and the payload component are identified. The successor
 form is the same with the arity raised, which is the only difference the four
 binding constructors make.
 <!--zh-->
-唯一的那次计算，七条共用：一旦把元数与那个载荷分量认同起来，子句所读的那个对就是部件自己的键。后继的形式是同一件事、元数抬高一级，而那也是那四个绑定变元的构造子造成的唯一差别。
+唯一的那次计算，七条共用：一旦把元数与那个载荷分量认同起来，子句所读的那个对就是部件自己的键。后继的形式是同一件事，元数抬高一级，而那也是那四个绑定变元的构造子造成的唯一差别。
 <!--/-->
 
 ```agda
@@ -132,7 +132,7 @@ Two shared bodies, one per frame, and seven instantiations. What changes between
 two clauses of the same frame is the tag and which part the constructor hands
 back, and both are arguments.
 <!--zh-->
-两段共用主体，每个框架一段，再加七次实例化。同一框架下两条子句之间变的是标签、以及那个构造子交回哪个部件，而两者都是参数。
+两段共用主体，每个框架一段，再加七次实例化。同一框架下两条子句之间变的是标签，以及那个构造子交回哪个部件，而两者都是参数。
 <!--/-->
 
 ```agda

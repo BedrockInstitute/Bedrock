@@ -108,9 +108,9 @@ first. Exchanging two variables is an instance of renaming, and the correctness
 theorem says the environments agree, which for a transposition is two
 `refl`{.Agda}s.
 <!--zh-->
-阶段是传递集，故只要实参落在阶段里，属于实参的元素也就落在阶段里。这就是分离沿反射搬运时所用的那道防。
+阶段是传递集，故只要实参落在阶段里，属于实参的元素也就落在阶段里。这就是分离沿反射搬运时所用的那道防线。
 
-以及，变量演算要用一次。模型陈述替换时像在前、源在后，而有界存在先绑定来源。交换两个变量是改名的一个特例，而正确性定理说两个环境彼此一致，对一次对换而言那就是两条 `refl`{.Agda}。
+此外，变量演算要用一次。模型陈述替换时像在前、源在后，而有界存在先绑定来源。交换两个变量是改名的一个特例，而正确性定理说两个环境彼此一致，对一次对换而言那就是两条 `refl`{.Agda}。
 <!--/-->
 
 ```agda

@@ -25,9 +25,9 @@ recursion defined the value at a constructor by separating the ambient set by a
 condition naming the values below, so the identity is that condition read back,
 which is what the separation's own specification says.
 <!--zh-->
-每次验证都是同样四步，而其中三步已经造好。索引被求逆回「它是谁的键」的那条公式；该公式的构造子由子句的标签算出；被记录的诸取值与元语言递归造出的诸取值被认同起来。剩下的、也是唯一新的那一步，是一条集合等式：合取处的取值确实是它下面两个取值的交，其余十一条同理。
+每次验证都是同样四步，而其中三步已经造好。把索引求逆回「它是谁的键」的那条公式；该公式的构造子由子句的标签算出；被记录的诸取值与元语言递归造出的诸取值被认同起来。剩下的、也是唯一新的那一步，是一条集合等式：合取处的取值确实是它下面两个取值的交，其余十一条同理。
 
-那些等式便宜，而理由值得直说。元语言的递归是「用一条点名下层诸取值的条件雕出周遭集合」来定义某构造子处的取值的，故那条等式就是把那条条件读回来，而那正是那次分离自己的规格所说的话。
+那些等式便宜，而理由值得直说。元语言的递归以「用一条点名下层诸取值的条件雕出周遭集合」来定义某构造子处的取值，故那条等式就是把那条条件读回来，而那正是那次分离自己的规格所说的话。
 <!--/-->
 
 
@@ -137,7 +137,7 @@ ambient set has to be handed one, and the only candidate is the set the previous
 chapter built; this says it qualifies. The uniqueness half will want it at every
 clause that binds an ambient set, which is seven of the twelve.
 <!--zh-->
-以及同一份一致性的「产出」方向。一条**绑定**自己周遭集合的子句必须被递一个进来，而唯一的候选就是上一章造出的那个集合；这条说它合格。唯一性那一半会在每条绑定周遭集合的子句处要它，而那是十二条里的七条。
+以及同一份一致性的「产出」方向。一条**绑定**自己周遭集合的子句必须被递进来一个，而唯一的候选就是上一章造出的那个集合；这条说它合格。唯一性那一半会在每条绑定周遭集合的子句处要它，而那是十二条里的七条。
 <!--/-->
 
 

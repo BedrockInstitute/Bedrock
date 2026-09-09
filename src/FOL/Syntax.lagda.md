@@ -27,7 +27,7 @@ A term is either a named constant or one of the `n` free variables. Formulas com
 <!--zh-->
 ## 词项与公式
 
-词项是一个具名常元，或 `n` 个自由变量之一。公式由隶属与相等原子式、逻辑联结词以及有界和无界量词组成。
+词项是一个具名常元，或是 `n` 个自由变量之一。公式由隶属与相等原子式、逻辑联结词以及有界和无界量词组成。
 <!--ja-->
 ## 項と論理式
 
@@ -137,7 +137,7 @@ A sentence has no free variables, while a parameter-free formula has no constant
 <!--zh-->
 ## 句子与无参公式
 
-句子没有自由变量，无参公式没有常元。这是彼此独立的两项限制；当公式在模型内部被编码和求值时，这一区分至关重要。
+句子没有自由变量，无参公式没有常元。这是两项彼此独立的限制；当公式在模型内部被编码和求值时，这一区分至关重要。
 <!--ja-->
 ## 文とパラメータを持たない論理式
 

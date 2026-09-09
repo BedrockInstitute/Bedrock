@@ -64,7 +64,7 @@ and nothing else is true.
 
 有穷性之所以能沿塔上爬，是因为有穷集合的可定义子集就是它的全部子集，而带清单的集合只有有穷多个子集，每个清单上的位向量对应一个。于是一个阶段的清单给出下一个阶段的清单，递归再无所求。
 
-极限阶段随即装配起来，不必再为「有穷诸序如何互相嵌套」多费功夫，因为它们并不嵌套：按最先分歧处比较的序，并不从一个阶段延拓到下一个阶段。取而代之的主键是楼层号。极限中首次现身于不同有穷阶段的两个成员，仅凭那两个阶段号比较；首次现身于同一阶段的两个成员，则按那个阶段自己的序比较。别的都不需要，也别的都不成立。
+极限阶段随即装配起来，不必再为「有穷诸序如何互相嵌套」多费功夫，因为它们并不嵌套：按最先分歧处比较的序，并不从一个阶段延拓到下一个阶段。取而代之的主键是楼层号。极限中首次现身于不同有穷阶段的两个成员，仅凭那两个阶段号比较；首次现身于同一阶段的两个成员，则按那个阶段自己的序比较。别的都不需要，别的也都不成立。
 <!--/-->
 
 ```agda
@@ -164,7 +164,7 @@ record Tally (A : S) : Type (ℓ-suc ℓ) where
 The maps `splitFin`{.Agda} and `joinFin`{.Agda} identify an index below a sum
 with an index in one summand, supplying the arithmetic used to enumerate masks.
 <!--zh-->
-`splitFin`{.Agda} 与 `joinFin`{.Agda} 把和以下的索引与某个加数中的索引对应起来，供应枚举掩码所需的算术。
+`splitFin`{.Agda} 与 `joinFin`{.Agda} 把小于和数的索引与某个加数中的索引对应起来，提供枚举掩码所需的算术。
 <!--ja-->
 `splitFin`{.Agda} と `joinFin`{.Agda} は和より小さい添字を一方の加数の添字に対応させ、マスクの列挙に必要な算術を与える。
 <!--/-->
@@ -176,7 +176,7 @@ needed: an index below `a + b` is either an index below `a` or an index below
 `b`, and conversely. Only one of the two round trips is ever used, so only that
 one is proved; `bumpLeft` is the shift that makes the recursion on `a` type-check.
 <!--zh-->
-为幂集清点，意味着枚举位向量，而长度为 `n + 1` 的向量数是长度为 `n` 的两倍。于是需要一小块索引算术：小于 `a + b` 的索引，要么是小于 `a` 的索引，要么是小于 `b` 的索引，反之亦然。两个来回中只有一个真正被用到，故只证那一个；`bumpLeft` 则是让沿 `a` 的递归通过类型检查的那次移位。
+为幂集清点，意味着枚举位向量，而长度为 `n + 1` 的向量个数是长度为 `n` 的两倍。于是需要一小块索引算术：小于 `a + b` 的索引，要么是小于 `a` 的索引，要么是小于 `b` 的索引，反之亦然。两个来回中只有一个真正被用到，故只证那一个；`bumpLeft` 则是让沿 `a` 的递归通过类型检查的那次移位。
 <!--/-->
 
 ```agda
@@ -228,7 +228,7 @@ the rest supplies the tail. Every mask is read off some index, which is
 `mask-onto`, and that is the only property of the enumeration anyone needs. It is
 not injective on the nose and does not have to be.
 <!--zh-->
-长度为 `n` 的**掩码**是一个 `n` 位的向量；对一个已清点的集合，它说明保留哪些条目。掩码共有 `maskCount n` 个，这个数是二的 `n` 次幂，写成反复加倍的形式，而 `maskAt` 把一个索引读成一个掩码：把索引对半劈开，它落在哪一半就由哪一半供给首位，其余部分供给尾巴。每个掩码都从某个索引读得，这就是 `mask-onto`，而这也是任何人对这个枚举唯一需要的性质。它并非逐点单射，也不必是。
+长度为 `n` 的**掩码**是一个 `n` 位的向量；对一个已清点的集合，它说明保留哪些条目。掩码共有 `maskCount n` 个，这个数是二的 `n` 次幂，写成反复加倍的形式，而 `maskAt` 把一个索引读成一个掩码：把索引对半劈开，它落在哪一半就由哪一半供给首位，其余部分供给尾巴。每个掩码都从某个索引读得，这就是 `mask-onto`，而这也是人们使用这个枚举时唯一需要的性质。它并非逐点单射，也不必是。
 <!--/-->
 
 ```agda
@@ -284,7 +284,7 @@ Two specifications say what the result contains, and both are untruncated,
 because each is read straight off the same recursion. `marks` runs in the other
 direction, turning a decision on the entries into the mask that records it.
 <!--zh-->
-`select` 把掩码作用到一个族上：它保留那些位为 `true` 的条目，并把它们重新交回为一个族，连同族自身的长度。长度是**由递归产生**的，这正是关键：无须计数，也没有任何算术把答案与掩码联系起来。
+`select` 把掩码作用到一个族上：它保留那些位为 `true` 的条目，并把它们重新归拢成一个族，连同族自身的长度。长度是**由递归产生**的，这正是关键：无须计数，也没有任何算术把答案与掩码联系起来。
 
 两条规格说明结果含有什么，且二者都不带截断，因为它们都是从同一次递归上直接读出的。`marks` 走的是反方向，把对诸条目的一次判定变成记录该判定的掩码。
 <!--/-->
@@ -426,7 +426,7 @@ tally of the next.
 <!--zh-->
 下面就是让有穷性上爬的那一步。固定一个序数 `σ` 与阶段 `Lset σ` 的一份点名册。点名册的每个条目都是该阶段的成员，故各自在该阶段的小成员类型中有一个名字，而这正是基本公理一章的有穷析取所要的；`part` 把掩码作用到这些名字上，取它们张成的有穷集合。该集合是这个阶段的可定义子集，理由已记在那里：「等于这一个」的有穷析取把它刻了出来。
 
-两条规格把属于 `part v` 与掩码双向联系起来。然后是逆向：给定任一可定义子集 `x`，按点名册的每个条目是否属于 `x` 给它打上标记，则该掩码的 `part` **就是** `x`。一个方向由规格直接得到；另一个方向需要 `x` 不出该阶段，这样 `x` 的每个成员才首先会被点名册命中。于是诸掩码为可定义子集清了点，而一个阶段的点名册给出下一个阶段的点名册。
+两条规格把属于 `part v` 与掩码双向联系起来。然后是逆向：给定任一可定义子集 `x`，按点名册的每个条目是否属于 `x` 给它打上标记，则该掩码的 `part` **就是** `x`。一个方向由规格直接得到；另一个方向需要 `x` 不出该阶段，这样 `x` 的每个成员才会首先被点名册命中。于是诸掩码为可定义子集清了点，而一个阶段的点名册给出下一个阶段的点名册。
 <!--/-->
 
 ```agda
@@ -777,7 +777,7 @@ The excluded middle is used a second time inside `agree`, to turn "not
 disagreeing" into "agreeing"; that step is exactly a double negation and cannot
 be had for less.
 <!--zh-->
-三歧正是花掉排中律与最小元原则的地方。先问这两个子集在 `A` 中是否有分歧之处。若没有，则它们在 `A` 中处处一致；又因二者都不出 `A`，故它们根本就处处一致，外延性把它们认同。若有，则存在一个最先的分歧点，再作一次判定，即该点是否属于第一个子集，就说明比较朝哪个方向走。该点之下的一致性在两支中都是白得的：按该点的选法，它之下无一处分歧。
+三歧正是花掉排中律与最小元原则的地方。先问这两个子集在 `A` 中是否有分歧之处。若没有，则它们在 `A` 中处处一致；又因二者都不出 `A`，故它们本就处处一致，外延性把它们认同。若有，则存在一个最先的分歧点，再作一次判定，即该点是否属于第一个子集，就说明比较朝哪个方向走。该点之下的一致性在两支中都是白得的：按该点的选法，它之下无一处分歧。
 
 排中律在 `agree` 内部第二次被使用，用来把「没有分歧」变成「一致」；这一步恰是一次双重否定的消去，再便宜不了。
 <!--/-->
@@ -879,7 +879,7 @@ order as the base. `before-irrefl` holds at every stage and needs no induction,
 since irreflexivity of the comparison needed no hypothesis and stage zero carries
 no comparison at all.
 <!--zh-->
-以数码为索引的阶段就是有穷的那些，而每个阶段上的序沿递归造出：零阶段是空的，而 `n` 之后那个阶段上的序，是在阶段 `n` 之上按最先分歧处的比较，以阶段 `n` 自己的序为基底。`before-irrefl` 在每个阶段都成立且无须归纳，因为该比较的非自反性本就不要前提，而零阶段根本不带任何比较。
+以数码为索引的阶段就是有穷的那些，而每个阶段上的序沿递归造出：零阶段是空的，而 `n` 之后那个阶段上的序，是在阶段 `n` 之上按最先分歧处的比较、以阶段 `n` 自己的序为基底造出的。`before-irrefl` 在每个阶段都成立且无须归纳，因为该比较的非自反性本就不要前提，而零阶段根本不带任何比较。
 <!--/-->
 
 ```agda
@@ -917,7 +917,7 @@ together with its membership, which is a proposition, so two points are equal as
 soon as their sets are; that is the only bookkeeping in passing between the
 statements about sets and the bundle, whose carrier must be a type.
 <!--zh-->
-递归必须携带的是一份点名册、三歧与传递，别无其他：非自反性在每个阶段都是白得的，而良基性在用到之处现推、不搬运。阶段的一个点，是一个集合连同它的隶属证明，而隶属是命题，故两个点只要集合相等就相等；这就是在「关于集合的陈述」与「载体必须是类型的那个束」之间往返时，全部的记账工作。
+递归必须携带的是一份点名册、三歧与传递，别无其他：非自反性在每个阶段都是白得的，而良基性在用到之处现推而不搬运。阶段的一个点，是一个集合连同它的隶属证明，而隶属是命题，故两个点只要集合相等就相等；这就是在「关于集合的陈述」与「载体必须是类型的那个束」之间往返时，全部的记账工作。
 <!--/-->
 
 ```agda
@@ -1102,7 +1102,7 @@ Irreflexivity and transitivity are case analyses on that alternative, with the
 level equations moving the stage-order facts to the level where they are needed.
 Trichotomy compares levels first and defers to the stage only when they agree.
 <!--zh-->
-极限上的序以层号为主键：层号较低的成员排在前面，而同层的两个成员按该层自己的序比较。层号之间的等式携带在第二支中，且携带的方向使得第二个成员可以在第一个成员的层上读出，正是这一点让定义中不出现任何搬运。
+极限上的序以层号为主键：层号较低的成员排在前面，而同层的两个成员按该层自己的序比较。层号之间的等式由第二支携带，且携带的方向使得第二个成员可以在第一个成员的层上读出，正是这一点让定义中不出现任何搬运。
 
 非自反与传递是对那一支的分情形，其中层号等式把阶段序的事实搬到需要它的那一层上。三歧先比较层号，只有层号相同时才交给阶段处理。
 <!--/-->

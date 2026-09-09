@@ -23,7 +23,7 @@ The atoms are shorter here than in the internal clauses for the same reason. A
 term of the meta-language is a variable or a constant and the recursion knows
 which, so the reader for its value is one case rather than two.
 <!--zh-->
-此处没有任何内部的东西。递归沿一条 Agda 看得见的公式进行，故每一步都可以把前几步产出的集合以常元点名，而对象语言从不必对码作量化。正是这一点使每一步只是「在周遭集合上作一次分离」，也正是这一点使内部递归那十条子句到来时成为**等式**而非定义。
+此处没有任何内部的东西。递归沿一条 Agda 看得见的公式进行，故每一步都可以把前几步产出的集合以常元点名，而对象语言始终不必对码作量化。正是这一点使每一步只是「在周遭集合上作一次分离」，也正是这一点使内部递归那十条子句到来时成为**等式**而非定义。
 
 出于同样理由，此处的原子比内部子句短。元语言的一个词项要么是变元、要么是常元，而递归知道是哪个，故读它取值的读式只有一种情形，不是两种。
 <!--/-->
@@ -199,7 +199,7 @@ Unfolding separation yields a membership equation for each constructor. These eq
 <!--zh-->
 ## 十个构造子的隶属关系等式
 
-展开分离的刻画，就得到每个构造子对应的隶属关系等式。这些等式将满足一条公式的环境集与其子公式的环境集联系起来，从而为证明所构造的表满足内部语义子句提供精确的等式。
+展开分离的刻画，就得到每个构造子对应的隶属关系等式。这些等式把一条公式的环境集与其子公式的环境集联系起来，从而为证明所构造的表满足内部语义子句提供精确的等式。
 <!--ja-->
 ## 十の構成子に対する所属関係の等式
 

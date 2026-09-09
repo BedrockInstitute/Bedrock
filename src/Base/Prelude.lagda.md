@@ -75,7 +75,7 @@ at level `ℓ`, and it is itself a type one floor up, in `Type (ℓ-suc ℓ)`{.A
 the book surveys a totality ("all sets", "all propositions"), this level bookkeeping
 is what says how large a totality is being surveyed.
 <!--zh-->
-宿主把类型组织成一座塔斯基式宇宙塔，层级显式。`Level`{.Agda} 是层级本身的类型，配有层级算术 `ℓ-zero`{.Agda}、`ℓ-suc`{.Agda}、`ℓ-max`{.Agda}；`Type ℓ`{.Agda} 是第 `ℓ` 层宇宙，它自身又是高一层的类型，住在 `Type (ℓ-suc ℓ)`{.Agda} 里。本书凡检视某个总体 (「所有集合」「所有命题」)，都由这套层级记账精确说明检视的总体有多大。
+宿主把类型组织成一座塔斯基式宇宙塔，层级显式。`Level`{.Agda} 是层级本身的类型，配有层级算术 `ℓ-zero`{.Agda}、`ℓ-suc`{.Agda}、`ℓ-max`{.Agda}；`Type ℓ`{.Agda} 是第 `ℓ` 层宇宙，它自身又是高一层的类型，住在 `Type (ℓ-suc ℓ)`{.Agda} 里。本书凡检视某个总体 (「所有集合」「所有命题」)，都由这套层级记账精确说明所检视的总体有多大。
 <!--/-->
 
 ```agda
@@ -122,7 +122,7 @@ be copied upward, but there is no general way to move one down. (The exception i
 propositions: the classical boundary chapter will show that excluded middle buys
 exactly the downward direction.)
 <!--zh-->
-`Lift`{.Agda} 把一个类型复制到更高的宇宙层级：当某个东西住得低了一层，这就是标准补丁。`lift`{.Agda} 与 `lower`{.Agda} 在原类型与其副本之间搬运**元素**，两者互逆；不对称发生在类型层面，那里是单行道：类型总能向上复制，却一般没有办法把一个类型搬下来。(例外是命题：经典边界一章将看到，排中律恰好买得到这个向下方向。)
+`Lift`{.Agda} 把一个类型复制到更高的宇宙层级：当某个东西住得低了一层时，这就是标准补丁。`lift`{.Agda} 与 `lower`{.Agda} 在原类型与其副本之间搬运**元素**，两者互逆；不对称发生在类型层面，那里是单行道：类型总能向上复制，却一般没有办法把一个类型搬下来。(例外是命题：经典边界一章将看到，排中律恰好买得到这个向下方向。)
 <!--/-->
 
 ```agda
@@ -171,7 +171,7 @@ name. The superscript `ᶜ` says *class*, keeping the notation apart from the
 object-level memberships to come, which denote sets rather than host-level
 predicates.
 <!--zh-->
-随行的还有一个派生记号。载体 `A` 上的**类**是命题值谓词 `A → hProp ℓ`，而 `x ∈ᶜ M` (读作「x 属于类 M」) 恰是 `⟨ M x ⟩`：库的幂集成员关系，换上带标记的名字。上标 `ᶜ` 说的就是**类**，把这个记号与后文诸对象层成员关系区分开，后者指称集合，而非宿主层的谓词。
+随行的还有一个派生记号。载体 `A` 上的**类**是命题值谓词 `A → hProp ℓ`，而 `x ∈ᶜ M` (读作「x 属于类 M」) 恰是 `⟨ M x ⟩`：库的幂集成员关系，换上带标记的名字。上标 `ᶜ` 说的就是**类**，把这个记号与后文的诸对象层成员关系区分开，后者指称集合，而非宿主层的谓词。
 <!--/-->
 
 ```agda
@@ -222,7 +222,7 @@ open import Cubical.Data.Vec public
 variables of an `n`-variable formula. Its constructors overload `zero`{.Agda} and
 `suc`{.Agda}, and the type checker disambiguates.
 <!--zh-->
-`Fin n` 是恰有 `n` 个元素的类型；它将充当 `n` 元公式的变量类型。其构造子与自然数同名 `zero`{.Agda}、`suc`{.Agda}，由类型检查器消歧。
+`Fin n` 是恰有 `n` 个元素的类型；它将充当 `n` 元公式的变量类型。其构造子与自然数同名，即 `zero`{.Agda}、`suc`{.Agda}，由类型检查器消歧。
 <!--/-->
 
 ```agda
@@ -249,7 +249,7 @@ imaginable: the level-polymorphic identity function. It earns hub residence as
 the book's canonical constant interpretation: a constant standing for the very
 set it names is precisely `id`{.Agda}.
 <!--zh-->
-本章以唯一一个自家定义收尾，而且是能想象的最小的一个：层级多态的恒等函数。它凭一个身份落户枢纽：本书的典范常元解释。常元就代表它指名的那个集合，说的恰是 `id`{.Agda}。
+本章以唯一一个自家定义收尾，而且是所能想象的最小的一个：层级多态的恒等函数。它凭一个身份在枢纽落户：本书的典范常元解释。常元就代表它指名的那个集合，说的恰是 `id`{.Agda}。
 <!--/-->
 
 ```agda
@@ -269,7 +269,7 @@ arrives with the truth algebra, next.
 <!--zh-->
 ## 小结
 
-自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda} 及类隶属 `∈ᶜ`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}、`⊥*`{.Agda}，以及恒等 `id`{.Agda}。本章不证明任何东西，自家定义仅 `id`{.Agda} 一个，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
+自此进入作用域的有：宇宙、路径、h-层级、`hProp`{.Agda} 与 `⟨_⟩`{.Agda} 及类隶属 `∈ᶜ`{.Agda}、对与积、`ℕ`{.Agda}、`Vec`{.Agda}、`Fin`{.Agda}、`⊥*`{.Agda}，以及恒等 `id`{.Agda}。本章不证明任何东西，自家定义仅有 `id`{.Agda} 一个，逻辑符号也刻意缺席：本书的每个概念都在它初次派上用场的章节引入，而逻辑随下一章的真值代数登场。
 <!--ja-->
 ## まとめ
 

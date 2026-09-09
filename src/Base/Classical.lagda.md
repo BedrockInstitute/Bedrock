@@ -113,7 +113,7 @@ helpers below take a **decision** of a proposition (a proof, or a refutation) as
 an ordinary argument, and excluded middle enters only at the final assembly, to
 supply those decisions.
 <!--zh-->
-经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。先看分类器：上一章命名的 `HPropSmallness ℓ`{.Agda}，索要一个与 `hProp ℓ`{.Agda} 等价的小类型。经典地看它就是 `Lift Bool`{.Agda}，在**每一个**层级 `ℓ` 上皆然。构造被刻意安排为：全部实际工作都是构造性的，下面四个助手把命题的**判定** (一个证明，或一个反驳) 当作普通参数接收；排中律只在最后的总装处出场，负责供应这些判定。
+经典地看，命题只有两个可能的值，而这句不起眼的话在宇宙层级上有实实在在的后果。先看分类器：上一章命名的 `HPropSmallness ℓ`{.Agda}，索要一个与 `hProp ℓ`{.Agda} 等价的小类型。经典地看它就是 `Lift Bool`{.Agda}，在**每一个**层级 `ℓ` 上皆然。构造经过刻意安排：全部实际工作都是构造性的，下面四个助手把命题的**判定** (一个证明，或一个反驳) 当作普通参数接收；排中律只在最后的总装处出场，负责供应这些判定。
 <!--/-->
 
 <!--en-->
@@ -171,7 +171,7 @@ goal is `⊥ ≡ P`{.Agda}: out of `⊥*`{.Agda} nothing needs saying,
 which is what the absurd pattern `λ ()` says, and any alleged proof `p` of `P` is
 crushed by `np`, with `Empty.rec`{.Agda} eliminating the resulting absurdity.
 <!--zh-->
-第一趟往返：把 `P` 编码再解码，得回 `P` 自身。工具是 `⇔toPath`{.Agda}，即库的命题外延性：命题之间，两个方向的映射就足以给出一条路径 (在本书中，这条原理是定理而非公理)。若判定是证明 `p`，目标为 `⊤ ≡ P`{.Agda}，两个方向都平凡：从 `⊤`{.Agda} 到 `P`，答案 `p` 已在手上；反向则一切送到 `⊤`{.Agda} 的居民 `tt*`{.Agda}。若判定是反驳 `np`，目标为 `⊥ ≡ P`{.Agda}：从 `⊥*`{.Agda} 出发无话可说，荒谬模式 `λ ()` 说的正是这个；而任何声称的 `P` 之证明 `p` 都被 `np` 击碎，`Empty.rec`{.Agda} 消去随之而来的荒谬。
+第一趟往返：把 `P` 编码再解码，得回 `P` 自身。工具是 `⇔toPath`{.Agda}，即库的命题外延性：命题之间，两个方向的映射就足以给出一条路径 (在本书中，这条原理是定理而非公理)。若判定是证明 `p`，目标为 `⊤ ≡ P`{.Agda}，两个方向都平凡：从 `⊤`{.Agda} 到 `P`，答案 `p` 已在手上；反向则一切都送到 `⊤`{.Agda} 的居民 `tt*`{.Agda}。若判定是反驳 `np`，目标为 `⊥ ≡ P`{.Agda}：从 `⊥*`{.Agda} 出发无话可说，荒谬模式 `λ ()` 说的正是这个；而任何声称的 `P` 之证明 `p` 都被 `np` 击碎，`Empty.rec`{.Agda} 消去随之而来的荒谬。
 <!--/-->
 
 ```agda
@@ -338,5 +338,5 @@ whole (`lem→impredicativity`{.Agda}). the cumulative-hierarchy chapters
 will spend exactly this packing: it prices, for the cumulative hierarchy `V`,
 the smallness assumptions behind full separation and power set.
 <!--zh-->
-排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不全局假设；构造与经典数学的边界因此成为编译期事实。上一章的两个接口作为红利入账：小分类器经 `lem→hPropSmallness`{.Agda}，命题降层经 `lem→resizing`{.Agda}；打包 `Impredicativity`{.Agda} 整份赎回 (`lem→impredicativity`{.Agda})。累积层级诸章将恰好花掉这份打包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
+排中律以接口 `LEM`{.Agda} 的形式陈述，由章节作为参数领取，绝不作全局假设；构造与经典数学的边界因此成为编译期事实。上一章的两个接口作为红利入账：小分类器经 `lem→hPropSmallness`{.Agda}，命题降层经 `lem→resizing`{.Agda}；打包 `Impredicativity`{.Agda} 整份赎回 (`lem→impredicativity`{.Agda})。累积层级诸章将恰好花掉这份打包：它为累积层级 `V` 给全分离与幂集背后的小性假设标价。
 <!--/-->

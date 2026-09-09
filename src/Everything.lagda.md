@@ -45,7 +45,7 @@ branch. Local examples and applications still matter within each chosen route.
 | 各自所需的可构造性与编码基础 | 完成 Choice 证明；发展序数基数工具、编码单射、Cantor-Bernstein 与 `CardinalAbove` | 这些基数工具不依赖 `Choice.Transversal` 或 `L.Model`。最终 `GCH.Theorem` 需要 `L.Model` 与基数界共同就绪；中间的 GCH 证明另有共享依赖 |
 | 所需的编码与序接口 | 满足关系、层级的描述；Skolem 壳构造 | `GCH.CondensationTransfer` 汇合 `GCH.SkolemHull`、`GCH.HierarchyDescription` 与 `GCH.AdequateStages`。壳线已需要 `Choice.StageOrders`，不能说它独立于所有 Choice 内容 |
 
-例如，序构造线需要时就可以转入 `L.WellOrder.Base`，无须先读完满足关系线；反过来，满足编码也无须等待典范序全部完成。因此，这条示例路线中相隔很远的两章，不一定在任何一条分支上造成等待。每条选定路线内部，仍应关注本章实例与实际应用。
+例如，序构造线在需要时就可以转入 `L.WellOrder.Base`，无须先读完满足关系线；反过来，满足编码也无须等待典范序全部完成。因此，这条示例路线中相隔很远的两章，不一定在任何一条分支上造成等待。每条选定路线内部，仍应关注本章实例与实际应用。
 <!--ja-->
 ### 並行するルートと合流点
 
@@ -392,7 +392,7 @@ classical interfaces. This stage makes those assumptions explicit before any set
 <!--zh-->
 ## 基础
 
-全书先统一命题、宇宙大小与两项经典接口的语言。在任何集合模型出现之前，本部先把所用假设明写出来。
+全书先统一命题、宇宙大小与两项经典接口的语言。在任何集合模型出现之前，本部先把所用假设明确写出。
 
 - `Base.Prelude`{.Agda}：基础词汇
 - `Base.Truth`{.Agda}：真值
@@ -877,7 +877,7 @@ We compare sets by representing injections inside L. Small presentations and ord
 <!--zh-->
 ## 序数、单射与基数
 
-我们通过在 L 内部表示单射来比较集合。小呈现与序数上的序引出内部基数、可定义单射图及其复合。这些工具用于 Cantor–Schröder–Bernstein 定理、更大基数的构造和后续 GCH 的基数界；只要各自的先修就绪，就可以与选择公理路线并行学习。
+我们通过在 L 内部表示单射来比较集合。小呈现与序数上的序引出内部基数、可定义单射图及其复合。这些工具用于 Cantor–Schröder–Bernstein 定理、更大基数的构造和后续 GCH 的基数界；只要各自的先修内容就绪，就可以与选择公理路线并行学习。
 
 - `V.Presentation`{.Agda}：集合的小呈现
 - `L.Ordinal.SquareLaw`{.Agda}：序数指标、Gödel 对序与有穷指标
