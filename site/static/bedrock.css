@@ -343,8 +343,8 @@ html.theme-dark { --primary: #81b5eb; }
 article, html[lang="zh"] article, html[lang="ja"] article { line-height: 1.7; }
 article h1 { font-size: clamp(1.7rem, 3vw, 2.35rem); line-height: 1.28; text-wrap: balance; margin-bottom: 1rem; }
 article h2 { line-height: 1.35; }
+/* The content grid sets the reading width; paragraphs reflow within that column. */
 article p { text-wrap: pretty; }
-article > p { max-width: 72ch; }
 button, summary, a, select { -webkit-tap-highlight-color: transparent; }
 :where(button, a, summary, select, input):focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
 [hidden] { display: none !important; }
@@ -364,7 +364,6 @@ button, summary, a, select { -webkit-tap-highlight-color: transparent; }
 .book-panels > section { scroll-margin-top: 7rem; }
 .book-panels > section:focus-visible { outline-offset: 5px; }
 #recommended-reading { max-width: 66rem; }
-#recommended-reading > p, #recommended-reading > .localized-fallback { max-width: 72ch; }
 @media (max-width: 40rem) {
   .book-intro { padding-top: .4rem; padding-bottom: 1rem; }
   .book-tabs { gap: 0; justify-content: space-between; font-size: .87rem; }
