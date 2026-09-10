@@ -34,9 +34,9 @@ English prose.
   remains available in closed, locally labelled disclosures; code and shared
   mathematical notation stay visible. The plain-text weaver retains its original
   fallback behavior.
-- Adding a language = adding a marker. The mechanism is N-language by construction. The
-  chapter framework uses all three languages. Untranslated later prose retains
-  the English fallback.
+- Adding a language = adding a marker. The mechanism is N-language by construction.
+  The current writing phase completes all chapter prose in all three languages;
+  fallback remains available while unfinished passages are being migrated.
 
 ## Rules (enforced)
 
@@ -54,12 +54,37 @@ English prose.
 
 ## Prose conventions
 
-Titles and first introductory paragraphs are complete in `en`, `zh` and `ja`.
-Keep a translated opening in its own group when the rest of a passage remains
-untranslated; adding a short Japanese block to a long bilingual group would hide
-the rest of that passage in the Japanese book. The chapter-framework gate checks
-matching heading levels and an opening paragraph before code. The glossary gate
-also checks opt-in terms within each explicitly translated group.
+Write titles, introductions and detailed explanations in `en`, `zh` and `ja`.
+Each language must retain the mathematical substance of the whole passage;
+adding a short Japanese summary to a long bilingual group would hide the rest
+of that passage in the Japanese book. The chapter-framework gate checks matching
+heading levels and an opening paragraph before code. The glossary gate also
+checks opt-in terms within each explicitly translated group.
+
+Interleave a complete trilingual explanation before each group of one to five
+nonempty physical Agda lines. Split long definitions into meaningful steps,
+including within signatures and local blocks, while preserving every original
+code line and its indentation. Write a mathematics textbook: develop the chapter's
+question through definitions, intuition, useful examples and justified arguments.
+The paragraphs must form a continuous explanation even when the code is hidden;
+the code supplies the corresponding formal expression. Do not turn each chunk
+into an independent annotation of imports, declarations or implementation steps.
+Explain Agda syntax where the learner needs it, without repeating language-setup
+lessons in every chapter. Read the complete module and the actual definitions of relevant
+dependencies before writing; existing prose is not evidence that a mathematical
+claim is correct. Chapter introductions and local explanations should complement
+each other rather than repeat the same facts.
+
+Review the whole subsection before checking individual prose/code pairs. A
+reader should be able to identify the question, the relevant assumptions, the
+reasoning and the result. Hiding code is a test of this narrative structure,
+not a requirement to repeat every displayed formula in words. Reject a sequence
+of individually accurate annotations if it never develops that structure.
+
+Measure explicit prose relative to code separately for each language. A high
+ratio should reflect useful explanations, examples and mathematical connections,
+not repeated definitions, boilerplate or unsupported claims. The detailed
+exposition gate is `scripts/gate/check-literary-exposition.py --check`.
 
 CJK prose (zh and ja) follows the repository's house style enforced by
 `scripts/gate/lint-prose.py`: full-width sentence punctuation `，；：！？`, corner-bracket quotes

@@ -446,7 +446,7 @@ ZFC 与 GCH 将在模型内部得到证明，故其语法与语义本身必须�
 - `FOL.Syntax`{.Agda}：对象语言
 - `FOL.ZFStructure`{.Agda}：结构
 - `FOL.Semantics`{.Agda}：语义
-- `FOL.LevyHierarchy`{.Agda}：莱维层级
+- `FOL.LevyHierarchy`{.Agda}：Lévy 层级
 - `FOL.Absoluteness`{.Agda}：绝对性
 - `FOL.ZFModel`{.Agda}：ZF 与 ZFC 的模型
 - `FOL.Manipulation.ConstantMapping`{.Agda}：映射常元
@@ -465,7 +465,7 @@ ZFC 与 GCH 将在模型内部得到证明，故其语法与语义本身必须�
 - `FOL.Syntax`{.Agda}：対象言語
 - `FOL.ZFStructure`{.Agda}：構造
 - `FOL.Semantics`{.Agda}：意味論
-- `FOL.LevyHierarchy`{.Agda}：レヴィ階層
+- `FOL.LevyHierarchy`{.Agda}：Lévy 階層
 - `FOL.Absoluteness`{.Agda}：絶対性
 - `FOL.ZFModel`{.Agda}：ZF と ZFC のモデル
 - `FOL.Manipulation.ConstantMapping`{.Agda}：定数の写像

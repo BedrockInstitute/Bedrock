@@ -9,51 +9,62 @@ Requirements: Agda 2.8.0, cubical 0.9, Python 3.11 or later.
 the tree, checks code/prose boundaries, terminology, reading routes and the
 trilingual chapter framework, and runs the gate tests.
 
-## Current goal: cohesive trilingual chapters
+## Current goal: complete the trilingual mathematics textbook
 
-Before detailed code-block exposition, complete the targeted interface refinement
-in `dev/TEACHING.md`. Coordinate disjoint implementation batches, migrate real
-consumers, and update reading routes and all affected trilingual headings and
-opening paragraphs together. Keep the established glossary authoritative.
+The chapter framework, module organization, glossary audit and first prose review
+are complete. The current phase writes the full English, Chinese and Japanese
+literate exposition throughout the book, including later English-only scaffolding.
+Preserve the established chapter and subsection structure and parallel routes.
 
-First audit every existing glossary entry against literature, with particular
-attention to English and Japanese. Existing choices are revisable. Search the
-web before settling a new or revised term: use attested terminology when it
-fits the actual concept, otherwise form a term from attested patterns and label
-that decision honestly. The owner delegates terminology decisions to the
-coordinator. Centralize decisions and evidence in `dev/glossary.toml` before
-parallel authoring; agents must not invent competing translations.
+Use GLM 5.3 Flash through Herdr / pi for drafting. Drafting agents work read-only:
+they may freely inspect complete modules, relevant imports and real consumers,
+and return prose to the conversation. The coordinator mechanically validates and
+applies their output. Supply the project and technical background, the fixed
+glossary, the full chapter context and the exact code range in every task. When a
+claim depends on another definition, read that definition; a prose summary or a
+translation is not mathematical evidence. Use GPT 5.6 Sol for scoped verification
+and sampling; reserve GPT 6 Astra for difficult mathematical judgment.
 
-Then give every chapter and subsection a matched English, Chinese and Japanese
-title and first introductory paragraph. Assess English module names and section
-boundaries against their mathematical content. Write for learners: explain the
-question and result of this particular unit. Generic template paragraphs do not
-count. Keep later scaffold prose unchanged in this phase, preserve its English
-fallback, and do not translate or rewrite detailed code explanations yet.
+Aim for a substantive paragraph per 1–5 lines of code, splitting existing fences
+at readable token boundaries while preserving the complete Agda code-line stream.
+Write a mathematics textbook: organize prose around mathematical questions,
+intuition, definitions, examples and arguments. Adjacent paragraphs must develop
+a continuous explanation, with code providing the formal expression. Do not
+substitute an import inventory, file-order narration, or developer comments for
+teaching. Explain language syntax only where it helps the learner, and avoid
+repeating compiler-option or module-declaration lessons in later chapters.
+Review each subsection as a connected argument before reviewing individual
+paragraphs. Reading with code hidden should reveal that argument's structure;
+it does not require restating every displayed formula. Prose density and short
+code blocks measure presentation, not mathematical accuracy or teaching quality.
+The coordinator may mechanically move existing natural-language code comments
+into trilingual prose, recording each exact removed suffix and checking that no
+Agda token changes. Preserve the machine-readable `lint-agda: keep` directives
+explicitly allowed by `dev/STYLE-agda.md`.
+Explain local purpose, dependent types, proof steps and connections in context,
+not merely what the syntax spells. Long definitions can have several interleaved
+paragraphs. Do not compress code, repeat explanations, or add filler to inflate
+the literary proportion. Measure prose/code ratios separately in each language,
+not by adding three translations together; also measure short-block coverage and
+remaining untranslated prose. Document necessary indivisible-token exceptions.
 
-Preserve the agreed parallel reading architecture described below.
+The glossary remains authoritative. Search literature before introducing or
+revising terminology, centralize decisions and evidence in `dev/glossary.toml`,
+and never allow parallel authors to invent competing translations. Preserve all
+mathematical statements, hypotheses, code, safety and opacity boundaries. The
+finished prose is for learners; replace development scaffolding with accurate
+exposition rather than retaining a developer-facing voice.
 
-Reorganize the completed development so that each module is a coherent learning
-unit and the reading order introduces concepts before their substantive use.
-Good mathematical interfaces, cohesive modules and clear teaching should support
-one another. Preserve `L⊨ZFC`, `L⊨GCH`, their statements and their single
-`LEM (ℓ-suc ℓ)` hypothesis.
+Preserve the established parallel reading architecture in `dev/TEACHING.md`.
+The module and interface refinement is complete; this writing phase does not
+rename, split, merge or migrate code. Preserve `L⊨ZFC`, `L⊨GCH`, their statements
+and their single `LEM (ℓ-suc ℓ)` hypothesis.
 
 The former line-reduction run is closed. Code size, build time and peak memory
 are costs to measure, not optimization targets for this task. Modest increases
 are acceptable when a concrete improvement in comprehension or modularity
 justifies them. The coordinating agent is authorized to make these tradeoffs.
 Do not compress proofs or merge unrelated material to reduce the module count.
-
-A restructuring brief may rename, split or merge modules and definitions,
-change intermediate APIs, and migrate all real consumers. Keep necessary
-opacity boundaries. Avoid compatibility shells that leave the old conceptual
-fragmentation in place. Update chapter introductions, the reading catalog,
-namespace references and site navigation together.
-
-Use GPT 5.6 Sol for scoped audits, migrations and verification. Reserve GPT 6
-Astra for difficult mathematical design. Delegate disjoint concrete changes;
-the coordinating agent owns the overall architecture and final checks.
 
 The current architecture plan and acceptance criteria live in `dev/TEACHING.md`.
 The previous closed run's record remains in `dev/REFACTOR.md`.
@@ -68,7 +79,9 @@ The previous closed run's record remains in `dev/REFACTOR.md`.
 3. **Memory.** Run Agda only as `GHCRTS="-A64m -I0 -M8g" agda <file>`. Two Agda processes
    at most on this machine, so count them before you start one. Never typecheck
    `src/Everything.lagda.md` unless the brief says so.
-4. **Deliverable.** For a prose-only brief, preserve fenced Agda exactly, run the
+4. **Deliverable.** For a prose-only brief, preserve the concatenated Agda code lines exactly
+   (fences may be split; only the coordinator may perform the documented legacy
+   comment migration), run the
    scoped prose, glossary and chapter-framework gates, and report their exit codes;
    the coordinator runs the final whole-tree typecheck. For proof changes, either
    the named file typechecks with exit 0, or provide a stop report. A stop
