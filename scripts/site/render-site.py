@@ -109,6 +109,7 @@ def _slug(n):
 
 
 _PLACEHOLDER = re.compile(NUL + r'[A-Z]+\d+' + NUL)
+_BLOCK_PLACEHOLDER = re.compile(NUL + r'(?:CODE|DMATH)\d+' + NUL)
 
 
 def _inline(s):
@@ -143,7 +144,7 @@ def _is_block_start(line):
     return (not s or s.startswith("#") or s.startswith(">") or s.startswith("|")
             or re.match(r'^([-*+]|\d+\.)\s', s) or re.match(r'^(```|~~~)', s)
             or re.match(r'^([-*_])(\s*\1){2,}\s*$', s.strip())
-            or s.startswith("<") or re.match(r'^' + NUL, s))
+            or s.startswith("<") or _BLOCK_PLACEHOLDER.fullmatch(s.strip()))
 
 
 def _is_table_sep(line):
@@ -184,7 +185,7 @@ def md_to_html(text):
             out.append('<pre class="sourceCode"><code>'
                        + htmllib.escape("\n".join(body)) + "</code></pre>")
             continue
-        if line.strip().startswith(NUL) and line.strip().endswith(NUL):
+        if _BLOCK_PLACEHOLDER.fullmatch(line.strip()):
             out.append(line.strip()); i += 1; continue
         if line.lstrip().startswith("<"):
             block = []
