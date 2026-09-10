@@ -344,7 +344,7 @@ article, html[lang="zh"] article, html[lang="ja"] article { line-height: 1.7; }
 article h1 { font-size: clamp(1.7rem, 3vw, 2.35rem); line-height: 1.28; text-wrap: balance; margin-bottom: 1rem; }
 article h2 { line-height: 1.35; }
 /* The content grid sets the reading width; paragraphs reflow within that column. */
-article p { text-wrap: pretty; }
+article p { text-wrap: wrap; }
 button, summary, a, select { -webkit-tap-highlight-color: transparent; }
 :where(button, a, summary, select, input):focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
 [hidden] { display: none !important; }
