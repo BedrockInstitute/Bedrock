@@ -1,7 +1,7 @@
 <!--en-->
 # An internal table of stage orders
 <!--zh-->
-# 阶段序的内部表
+# 层序的内部表
 <!--ja-->
 # 段階順序の内部の表
 <!--/-->
@@ -11,7 +11,7 @@ This chapter turns the described stage comparison into a set-valued relation at
 every ordinal, by recursively building a table whose entries realize exactly the
 order at their stages.
 <!--zh-->
-本章把已描述的阶段比较化为每个序数处的集合值关系，办法是递归构造一张表，使其每个条目恰好实现相应阶段的序。
+本章把已描述的层比较化为每个序数处的集合值关系，办法是递归构造一张表，使其每个条目恰好实现相应层的序。
 <!--ja-->
 本章では記述された段階比較を各順序数で集合値の関係にするため、各項目がその段階の順序を正確に実現する表を再帰的に構成する。
 <!--/-->
@@ -44,7 +44,7 @@ separation from a bound the pairs cannot escape.
 
 形状取自层级那一章，二者完全一致，因为处理的是同一个问题。取值为集合的递归无法由一个图直接给出，故被描述的是**逼近**：一张表，在它定义域以下的每个序数处记录那里的关系。图对诸逼近作量化；值引理逐点确定逼近所记录的每个取值；而 `L` 内部的替换把表聚合起来，函数性由 `mereFunct`{.Agda} 证得，因为某个序数处的取值是一个构造、而不是一次判定。
 
-此处有一样东西不是层级那一章所有的，而它正是本章需要两个构造而非一个的原因。塔有一个元语言的词项 `Lset`{.Agda}，故层级那场归纳总能当场给出它要记录的取值。阶段处的序没有这样的词项：被关联的诸对所成的集合正是要造的东西。于是那场归纳一次携带**两**样东西，即某个序数以下的表与它那里的关系，而后者由模型自身的分离从「诸对逃不出的那个界」中得出。
+此处有一样东西不是层级那一章所有的，而它正是本章需要两个构造而非一个的原因。塔有一个元语言的词项 `Lset`{.Agda}，故层级那场归纳总能当场给出它要记录的取值。层处的序没有这样的词项：被关联的诸对所成的集合正是要造的东西。于是那场归纳一次携带**两**样东西，即某个序数以下的表与它那里的关系，而后者由模型自身的分离从「诸对逃不出的那个界」中得出。
 <!--/-->
 
 ```agda
@@ -131,7 +131,7 @@ opened there. Irreflexivity closes the equal case and transitivity the reversed
 one. Two lines of mathematics, and the truncation never has to be avoided
 anywhere else in the chapter.
 <!--zh-->
-模型中的类是命题值谓词，而阶段处的比较尚未证明为命题值：它是两个键的和，目前没有结论保证一个集合只能以一种方式排在另一个之前。因此，下面的类携带**截断**后的比较；命名一章的使用者需要未截断的实际比较，所以随后还必须消去这层截断。
+模型中的类是命题值谓词，而层处的比较尚未证明为命题值：它是两个键的和，目前没有结论保证一个集合只能以一种方式排在另一个之前。因此，下面的类携带**截断**后的比较；命名一章的使用者需要未截断的实际比较，所以随后还必须消去这层截断。
 
 它是白脱的，理由属于每一个严格良序，而非只属于这一个。先按三歧分情形：严格那一情形中比较早已在手，压根不消去任何截断；另外两种情形中目标是荒谬，而荒谬是命题，故截断可以在那里打开。非自反封住相等那一支，传递封住反向那一支。数学只有两行，而本章其余各处再不必绕开截断。
 <!--/-->
@@ -156,7 +156,7 @@ strict α oα a b h = decide (SWO.tri∙ W a b)
 <!--en-->
 ## What the relation at a stage is
 <!--zh-->
-## 阶段处的关系是什么
+## 层处的关系是什么
 <!--ja-->
 ## 段階における関係
 <!--/-->
@@ -166,7 +166,7 @@ strict α oα a b h = decide (SWO.tri∙ W a b)
 meta comparison, and `Realizes`{.Agda} specifies a set with exactly that
 membership.
 <!--zh-->
-`Related`{.Agda} 是由元比较所关联的阶段成员有序对之类，而 `Realizes`{.Agda} 刻画其成员恰为该类的那些集合。
+`Related`{.Agda} 是由元比较所关联的层成员有序对之类，而 `Realizes`{.Agda} 刻画其成员恰为该类的那些集合。
 <!--ja-->
 `Related`{.Agda} はメタな比較で関係づけられる段階要素の順序対からなるクラスであり、`Realizes`{.Agda} はその要素をちょうどもつ集合を指定する。
 <!--/-->
@@ -187,7 +187,7 @@ themselves, and this statement has to be a proposition of the model, because the
 table records it. The two forms are interchangeable, and where an equality is
 wanted `⇔toPath`{.Agda} supplies it.
 <!--zh-->
-`Related`{.Agda} 是那个对象所实现的类：阶段的两个成员所成的、被那里的序所关联的有序对。序数性信息绑定在类**之内**，而不是另行随行携带，于是下文任何地方都不必随「某个序数确是序数」的一份证明去搬运一次比较；唯一需要一份指定证明之处，即那条读式，用单次 `subst`{.Agda} 把它传递过去，因为「是序数」是命题。
+`Related`{.Agda} 是那个对象所实现的类：层的两个成员所成的、被那里的序所关联的有序对。序数性信息绑定在类**之内**，而不是另行随行携带，于是下文任何地方都不必随「某个序数确是序数」的一份证明去搬运一次比较；唯一需要一份指定证明之处，即那条读式，用单次 `subst`{.Agda} 把它传递过去，因为「是序数」是命题。
 
 `Realizes`{.Agda} 说模型的某个集合逐成员地实现那个类，而它写成两条蕴含的合取，而不是命题之间的逐点相等。这是层级上的约束，不是偏好：命题之间的相等属于诸命题自身之上的一个宇宙，而这条陈述必须是模型内部的一个命题，因为那张表要把它记录下来。两种形式可以互相转换，需要相等之处由 `⇔toPath`{.Agda} 提供。
 <!--/-->
@@ -254,7 +254,7 @@ Four representation lemmas read any realizing set at raw pairs and at indexed
 stage members, in both the membership-to-comparison and comparison-to-membership
 directions.
 <!--zh-->
-四条表示引理针对任意实现该类的集合，分别在裸有序对与带索引的阶段成员这两种形状上读取其成员关系，并覆盖从隶属到比较、从比较到隶属两个方向。
+四条表示引理针对任意实现该类的集合，分别在裸有序对与带索引的层成员这两种形状上读取其成员关系，并覆盖从隶属到比较、从比较到隶属两个方向。
 <!--ja-->
 四つの表現補題は、任意の実現集合を生の順序対と添字つき段階要素の二つの形で読み、所属から比較へ、比較から所属への両方向を与える。
 <!--/-->
@@ -275,9 +275,9 @@ constructibility proof, `Related`{.Agda} is read at the pair the model builds
 rather than at the meta pair, and one congruence along `prʟ-fst`{.Agda} moves
 between them.
 <!--zh-->
-所需的两条读式陈述「某个实现该类的集合的成员关系」，并适用于任何这样的集合，而不限于本章最终构造的那个集合。这种一般性有具体用途：命名构造需要正在建造阶段的前一阶段处的关系；在构造内部，该集合来自表的一个取值，并附带它在该处实现相应类的假设，而本章最终返回的集合要到构造结束后才存在。因此，对任意实现集合陈述读式，使它们能提前一个阶段使用。
+所需的两条读式陈述「某个实现该类的集合的成员关系」，并适用于任何这样的集合，而不限于本章最终构造的那个集合。这种一般性有具体用途：命名构造需要正在建造层的前一层处的关系；在构造内部，该集合来自表的一个取值，并附带它在该处实现相应类的假设，而本章最终返回的集合要到构造结束后才存在。因此，对任意实现集合陈述读式，使它们能提前一层使用。
 
-两条各两行。阶段的一个成员抵达模型时是一个对，携带它的可构造性证明；`Related`{.Agda} 读在模型所造的那个对上、而不是元层面那个对上，而沿 `prʟ-fst`{.Agda} 的一次同余在两者之间搬运。
+两条各两行。层的一个成员抵达模型时是一个对，携带它的可构造性证明；`Related`{.Agda} 读在模型所造的那个对上、而不是元层面那个对上，而沿 `prʟ-fst`{.Agda} 的一次同余在两者之间搬运。
 <!--/-->
 
 ```agda
@@ -379,7 +379,7 @@ The table construction assumes a formula for one stage step together with two
 adequacy directions, one at variable slots and one at constants used by
 separation.
 <!--zh-->
-序表构造假设一条描述单阶段步进的公式及其两个充分性方向，一种用于变元位，另一种用于分离所用的常元。
+序表构造假设一条描述单层步进的公式及其两个充分性方向，一种用于变元位，另一种用于分离所用的常元。
 <!--ja-->
 表の構成は一段階のステップを表す論理式と、その二つの妥当性方向を仮定する。一方は変数スロットで、他方は分出公理が使う定数で用いられる。
 <!--/-->
@@ -407,7 +407,7 @@ and writing that as a pair of inclusions would say the condition twice.
 <!--zh-->
 某个序数处的那一步说清：给定以下的表，那里的关系持有哪些对。本节之后的一切都对那个条件保持通用，而它以**参数**身份进场，取两种形式、只有一个含义：落在诸位上，因为图必须绑定它所查阅的那张表；以及落在常元上，因为分离是用单自由变量的公式去雕的，而它所查阅的那张表，在下刀的那一刻是模型的一个确定元素。含义就是那条假设，两种形式各说一遍：在某个序数以下一张正确且完备的表上，那个条件对某个集合成立，当且仅当该集合是那里的序所关联的一个对。
 
-这个接口包含三项：`StepAt`{.Agda} 的充分性、诞生阶段的对象语言描述，以及随诞生阶段变化的载体上的码集。后面的 `L.Choice.NameComparisonAdequacy`{.Agda}、`L.Choice.StageOrderAdequacy`{.Agda} 与 `L.Choice.InternalWellOrder`{.Agda} 供应并组装它们。本章的构造对这个接口保持通用：给定它，每个阶段处的关系都是 `L` 的一个元素，其成员恰是那些正确的对。
+这个接口包含三项：`StepAt`{.Agda} 的充分性、诞生层的对象语言描述，以及随诞生层变化的载体上的码集。后面的 `L.Choice.NameComparisonAdequacy`{.Agda}、`L.Choice.StageOrderAdequacy`{.Agda} 与 `L.Choice.InternalWellOrder`{.Agda} 供应并组装它们。本章的构造对这个接口保持通用：给定它，每层处的关系都是 `L` 的一个元素，其成员恰是那些正确的对。
 
 那一步自身是一次 `extAt`{.Agda}，理由与这条路线上每一条取值为集合的子句相同：一个取值恰是满足某条件的那些东西之集，而若写成一对包含，那个条件就要说两遍。
 <!--/-->
@@ -503,7 +503,7 @@ Ordinal induction proves every recorded value realizes the corresponding stage
 relation; extensionality then gives uniqueness without assuming the table is
 single-valued.
 <!--zh-->
-序数归纳证明每个所记录取值都实现相应阶段关系；外延性随后给出唯一性，而无须假设表为单值。
+序数归纳证明每个所记录取值都实现相应层关系；外延性随后给出唯一性，而无须假设表为单值。
 <!--ja-->
 順序数帰納法により各記録値が対応する段階関係を実現すると示し、表の単値性を仮定せずに外延性から一意性を得る。
 <!--/-->
@@ -721,7 +721,7 @@ is sealed where it is built.
 
 `Bundle`{.Agda} 是那场归纳所携带的数据，其第二个分量正是本章有而层级那一章不需要的：序数**处**的关系，而不只是它以下的关系。两个分量都唯一：表由外延性相对于它所实现的类而唯一，关系由 `rel-unique`{.Agda} 而唯一；故这个束是命题，那场归纳可以依它进行。
 
-构造沿成员归纳。在 `α` 处，成对图对其下每个实参都是函数性的：归纳假设给出截至该实参的表及该处关系，`graph-table`{.Agda} 将二者变成图的一个取值，而 `graph-only`{.Agda} 排除其他取值。替换收集这些有序对。随后，`α` 从一个集合界中分离出该处关系；这个界是本章相较层级一章唯一新增的构造：阶段中两个成员组成的有序对构成由阶段索引类型两次索引的 `L` 元素**小**族，因此一次应用 `smallDom`{.Agda} 即可给出共同界。每个实参的序数性由 `mem-ord`{.Agda} 无截断地给出，整个构造在产生之处封装。
+构造沿成员归纳。在 `α` 处，成对图对其下每个实参都是函数性的：归纳假设给出截至该实参的表及该处关系，`graph-table`{.Agda} 将二者变成图的一个取值，而 `graph-only`{.Agda} 排除其他取值。替换收集这些有序对。随后，`α` 从一个集合界中分离出该处关系；这个界是本章相较层级一章唯一新增的构造：层中两个成员组成的有序对构成由层索引类型两次索引的 `L` 元素**小**族，因此一次应用 `smallDom`{.Agda} 即可给出共同界。每个实参的序数性由 `mem-ord`{.Agda} 无截断地给出，整个构造在产生之处封装。
 <!--/-->
 
 ```agda
@@ -937,7 +937,7 @@ Perf: the pair graph enters as a variable with its own equation.
 The final fill and representation lemmas specialize the generic readings to
 `relL`{.Agda}, equating membership in this set with the stage comparison.
 <!--zh-->
-最后的填充与表示引理把通用读式专用于 `relL`{.Agda}，将对该集合的隶属与阶段比较等同起来。
+最后的填充与表示引理把通用读式专用于 `relL`{.Agda}，将对该集合的隶属与层比较等同起来。
 <!--ja-->
 最後の fill 補題と表現補題は一般的な読みを `relL`{.Agda} に特殊化し、この集合への所属を段階比較と同一視する。
 <!--/-->
@@ -952,7 +952,7 @@ Nothing here is an approximation to the statement. The membership is an
 equivalence, so a separation that carves with this set carves with the order
 itself, and that is what the transversal chapter will do.
 <!--zh-->
-最后两条结论把上文的读式实例化到本章构造的集合上。阶段处的关系实现相应的类，因此该集合满足这些读式的适用条件。这里不证明新的数学事实，只确定所采用的是实现该类的哪一个集合。
+最后两条结论把上文的读式实例化到本章构造的集合上。层处的关系实现相应的类，因此该集合满足这些读式的适用条件。这里不证明新的数学事实，只确定所采用的是实现该类的哪一个集合。
 
 此处没有任何东西是对那条陈述的近似。隶属是一条等价，故拿这个集合去作的分离，就是拿那个序本身去作的分离，而这正是横截集那一章要做的事。
 <!--/-->
@@ -981,7 +981,7 @@ itself, and that is what the transversal chapter will do.
 The table recursion realizes every stage order as a set in `L` and exports the
 four membership/comparison readings needed by later internal descriptions.
 <!--zh-->
-序表递归把每个阶段序实现为 `L` 中的集合，并导出后续内部描述所需的四条隶属与比较读式。
+序表递归把每层序实现为 `L` 中的集合，并导出后续内部描述所需的四条隶属与比较读式。
 <!--ja-->
 表の再帰は各段階順序を `L` 内の集合として実現し、後の内部記述が必要とする所属と比較の四つの読みを公開する。
 <!--/-->
@@ -1026,11 +1026,11 @@ stage described in the object language, which nothing describes yet, and the cod
 set at a carrier that moves with the birth. Together they are what stands between
 this construction and an unconditional theorem.
 <!--zh-->
-`Related`{.Agda} 是本章所实现的类，即一个阶段的两个成员所成的、被那里的序所关联的诸对；那次比较是带着截断陈述的，因为它并不已知是命题值的，而 `strict`{.Agda} 对每一个严格良序去掉这个截断，办法是在消去任何东西之前先按三歧分情形。`Realizes`{.Agda} 说模型的某个集合实现那个类，写成两条蕴含的指标合取，于是它是模型的一个命题，而不是高出一个宇宙的一条等式。`rel-fill`{.Agda}、`rel-rep`{.Agda}、`ixRel-fill`{.Agda} 与 `ixRel-rep`{.Agda} 把**任何**实现该类的集合的隶属，读在「阶段的成员出现时的两种形状」上；把它们陈述为「任何这样的集合」是有意为之：必须交给命名机制的，是「正在建造的那个阶段之下一级」处的关系，而在构造内部，那个集合来自表，并带着「它在那里实现那个类」这条假设，比本章交回的那个集合的存在早一个阶段。
+`Related`{.Agda} 是本章所实现的类，即一层的两个成员所成的、被那里的序所关联的诸对；那次比较是带着截断陈述的，因为它并不已知是命题值的，而 `strict`{.Agda} 对每一个严格良序去掉这个截断，办法是在消去任何东西之前先按三歧分情形。`Realizes`{.Agda} 说模型的某个集合实现那个类，写成两条蕴含的指标合取，于是它是模型的一个命题，而不是高出一个宇宙的一条等式。`rel-fill`{.Agda}、`rel-rep`{.Agda}、`ixRel-fill`{.Agda} 与 `ixRel-rep`{.Agda} 把**任何**实现该类的集合的隶属，读在「层的成员出现时的两种形状」上；把它们陈述为「任何这样的集合」是有意为之：必须交给命名机制的，是「正在建造的那一层之下一级」处的关系，而在构造内部，那个集合来自表，并带着「它在那里实现那个类」这条假设，比本章交回的那个集合的存在早一层。
 
 `ApproxAt`{.Agda} 与 `GraphAt`{.Agda} 是逼近与它的图，二者对那条步进条件保持通用；该条件作为参数以两种形式出现：图的形式取诸位，分离的形式取诸常元，各自带有说明其含义的假设。`approx-val`{.Agda} 通过在实参上沿成员关系作归纳，逐一确立逼近所记录的每个取值，全程并未假设单值性；`approx-uniq`{.Agda} 是这一点的推论。`graph-only`{.Agda} 与 `graph-table`{.Agda} 是图与表之间相互转化的两个方向。
 
-`tableAt`{.Agda} 是所需构造，并在构造处封印。它在每个序数处包含**两**项：由替换和 `mereFunct`{.Agda} 收集的较低索引关系表，以及从一个统一阶段界中分离出的当前关系。层级章没有提供这个界；这里只需证明一次：某阶段中任意两个成员组成的有序对形成 `L` 元素的小族，`smallDom`{.Agda} 因而给出包含所有这些对的单一阶段。`relL`{.Agda} 是第二个分量，`relL-fill`{.Agda} 与 `relL-rep`{.Agda} 分别是 `rel-fill`{.Agda} 与 `rel-rep`{.Agda} 在该分量上的实例。
+`tableAt`{.Agda} 是所需构造，并在构造处封印。它在每个序数处包含**两**项：由替换和 `mereFunct`{.Agda} 收集的较低索引关系表，以及从一个统一层界中分离出的当前关系。层级章没有提供这个界；这里只需证明一次：某层中任意两个成员组成的有序对形成 `L` 元素的小族，`smallDom`{.Agda} 因而给出包含所有这些对的单一层。`relL`{.Agda} 是第二个分量，`relL-fill`{.Agda} 与 `relL-rep`{.Agda} 分别是 `rel-fill`{.Agda} 与 `rel-rep`{.Agda} 在该分量上的实例。
 
-本章没有证明那条步进条件自身的充分性，而是以 `Described`{.Agda} 的两条假设的形式指出这一点。这不是一件事，而是三件事：`StepAt`{.Agda} 对应于元层面那一步的充分性、诞生阶段在对象语言里的描述、以及在一个随诞生阶段移动的载体上的码集。这三件事合起来，正是这个构造与一条无条件定理之间尚待补足的部分。
+本章没有证明那条步进条件自身的充分性，而是以 `Described`{.Agda} 的两条假设的形式指出这一点。这不是一件事，而是三件事：`StepAt`{.Agda} 对应于元层面那一步的充分性、诞生层在对象语言里的描述、以及在一个随诞生层移动的载体上的码集。这三件事合起来，正是这个构造与一条无条件定理之间尚待补足的部分。
 <!--/-->

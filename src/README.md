@@ -13,29 +13,20 @@ to Agda, so a master typechecks directly. Code is **English-only** inside ` ```a
 Nothing here is generated: the woven mono-lingual copies and the rendered site live under
 `_build/` (git-ignored).
 
-## `Everything.lagda.md`
+## `Milestones.lagda.md` and the reading catalog
 
-The aggregator and the book's **reading catalog** (the two-catalog doctrine of
-[dev/STYLE-agda.md](../dev/STYLE-agda.md)). It
-imports every module, so `agda src/Everything.lagda.md` typechecks the whole development
-(this is what `make typecheck` runs, and `make check` adds the linters). It is also rendered as the **site landing page**
-(`index.html`); its prose lists every module with a one-line bilingual description, its
-import order is the reading order, and each chapter page carries previous/next links along
-it. The sidebar's module tree is the **structure catalog**, derived from the namespace tree
-and never hand-maintained. **When you add a module, add its import here and its one-line
-entry in the reading catalog**, after its prerequisites and before its substantive
-consumers. `scripts/gate/check-reading-order.py` checks this order and exact
-coverage; Landmarks is the explicitly labelled preview exception.
+`Milestones.lagda.md` is the Agda and HTML build root. Its import closure reaches every
+other module, so `agda src/Milestones.lagda.md` typechecks the whole development. The
+machine-readable reading catalog lives in [`dev/reading-catalog.json`](../dev/reading-catalog.json):
+it stores the reading order, translated chapter labels, stages, descriptions and routes.
+The site renders the reading guide from that data, while the sidebar's module tree remains
+the derived **structure catalog**. When you add a module, add it to the reading catalog after
+its prerequisites and before its substantive consumers; `scripts/gate/check-reading-order.py`
+checks exact coverage and prerequisite order. Milestones is the explicitly labelled preview.
 
 ## Current modules
 
-`Everything.lagda.md` is the reading catalog and the ONE list of modules. It imports every
-master, in reading order, with a one-line description for each. Read it there. This file does
-not duplicate it, because a second list drifts: MEASURED 2026-08-17, this section described a
-20-master tree with `V/` and `L/` empty, while the tree held 99 tracked masters, 7 under
-`src/V/` and 71 under `src/L/`, and the repository held zero `.gitkeep` files.
-
-`Landmarks.lagda.md` is the trophy case and reads first in the catalog, by owner ruling: the
+`Milestones.lagda.md` is the trophy case and reads first in the catalog: the
 storefront, before the foundations stage. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC`, `L⊨ZFC` and
 `L⊨GCH`, each a self-contained signature naming its proving chapter. **Both `L` trophies are
 proved.** `L⊨GCH` was proved on 2026-09-05; its statement type is `GCHStatement` in

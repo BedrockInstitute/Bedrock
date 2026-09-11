@@ -1,13 +1,16 @@
 # AGENTS.md
 
 Bedrock proves, in Cubical Agda, that the constructible universe `L` satisfies ZFC and
-GCH. Both are proved and both are registered in `src/Landmarks.lagda.md`: `L⊨ZFC` and
+GCH. Both are proved and both are registered in `src/Milestones.lagda.md`: `L⊨ZFC` and
 `L⊨GCH`, each on `LEM (ℓ-suc ℓ)` and nothing else.
 
 Requirements: Agda 2.8.0, cubical 0.9, Python 3.11 or later.
-`src/Everything.lagda.md` imports every module. `make check` is the gate: it typechecks
-the tree, checks code/prose boundaries, terminology, reading routes and the
-trilingual chapter framework, and runs the gate tests.
+`src/Milestones.lagda.md` reaches every module, and `dev/reading-catalog.json` stores the
+reading order and multilingual chapter metadata. `make check` is the ordinary gate: it
+typechecks the tree, checks code/prose boundaries, terminology, reading routes and the
+trilingual chapter framework, and runs the gate tests. The push/CI-only
+`make milestone-lint` gate additionally verifies that every source definition outside
+`Milestones` lies in its transitive import closure.
 
 ## Current goal: complete the trilingual mathematics textbook
 
@@ -78,7 +81,7 @@ The previous closed run's record remains in `dev/REFACTOR.md`.
    done. If you cannot close a goal, leave the hole and say so.
 3. **Memory.** Run Agda only as `GHCRTS="-A64m -I0 -M8g" agda <file>`. Two Agda processes
    at most on this machine, so count them before you start one. Never typecheck
-   `src/Everything.lagda.md` unless the brief says so.
+   the full `src/Milestones.lagda.md` closure unless the brief says so.
 4. **Deliverable.** For a prose-only brief, preserve the concatenated Agda code lines exactly
    (fences may be split; only the coordinator may perform the documented legacy
    comment migration), run the

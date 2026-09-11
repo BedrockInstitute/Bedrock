@@ -3,9 +3,9 @@
 
 The internal descriptions used by condensation require four witness sets to be present together. This chapter defines an adequate stage, constructs one above any ordinal, and then builds a strengthened adequate stage in which every member lies inside a smaller adequate member.
 <!--zh-->
-# GCH 论证所需的充分阶段
+# GCH 论证所需的充分层
 
-凝聚所用的内部描述要求四个见证集合同时出现。本章定义充分阶段，在任意序数之上构造一个充分阶段，再构造一个强化版本，使其中每个成员都落在一个更小的充分成员之内。
+凝聚所用的内部描述要求四个见证集合同时出现。本章定义充分层，在任意序数之上构造一个充分层，再构造一个强化版本，使其中每个成员都落在一个更小的充分成员之内。
 <!--ja-->
 # GCH の議論に必要な十分な段階
 
@@ -63,9 +63,9 @@ module CS = hPropStructure 𝒮ʟ using (S)
 
 At an ordinal `c`, the hierarchy description names four sets over `Lset c`: the hierarchy table, the set of formula codes, the graph of the uniform satisfaction table, and the environment tower. An adequate stage is closed under successor, contains `ω`, and contains these four witnesses for every earlier ordinal.
 <!--zh-->
-## 充分阶段所容纳的四个见证
+## 充分层所容纳的四个见证
 
-在序数 `c` 处，层级描述为 `Lset c` 上的四个集合命名：层级表、公式码集合、统一满足关系表的图，以及环境塔。一个充分阶段对后继闭合，包含 `ω`，并为每个更早的序数备齐这四个见证。
+在序数 `c` 处，层级描述为 `Lset c` 上的四个集合命名：层级表、公式码集合、统一满足关系表的图，以及环境塔。一个充分层对后继闭合，包含 `ω`，并为每个更早的序数备齐这四个见证。
 <!--ja-->
 ## 十分な段階が含む四つの証人
 
@@ -140,9 +140,9 @@ module Adequate (γ : V ℓ) (ad : Adequate γ) where
 
 One bounding step collects the birth stages of all four witnesses, the successors of the current members, the current ordinal, and `ω`. Iterating that step through `ω` and taking the union produces an ordinal that contains the starting point and satisfies every condition for an adequate stage.
 <!--zh-->
-## 在任意序数之上构造充分阶段
+## 在任意序数之上构造充分层
 
-一次取界同时收集四个见证的诞生阶段、当前成员的后继、当前序数本身与 `ω`。沿 `ω` 迭代这一步并取并集，便得到一个包含起点且满足全部充分条件的序数。
+一次取界同时收集四个见证的诞生层、当前成员的后继、当前序数本身与 `ω`。沿 `ω` 迭代这一步并取并集，便得到一个包含起点且满足全部充分条件的序数。
 <!--ja-->
 ## 任意の順序数より上に十分な段階を構成する
 
@@ -366,9 +366,9 @@ adequate-above p op = Above.γ p op , ( Above.oγ p op , ( Above.p∈γ p op , A
 
 A strengthened adequate stage requires every member to lie in an adequate member of the same stage. Iterating `adequate-above` through `ω` supplies this local reservoir while ensuring that the union is itself an adequate stage.
 <!--zh-->
-## 在整个阶段中强化充分性
+## 在整个层中强化充分性
 
-一个超充分阶段要求每个成员都属于同一阶段中的某个充分成员。沿 `ω` 迭代 `adequate-above`，既为每个成员提供这样的充分阶段，又保持并集本身的充分性。
+一个超充分层要求每个成员都属于同一层中的某个充分成员。沿 `ω` 迭代 `adequate-above`，既为每个成员提供这样的充分层，又保持并集本身的充分性。
 <!--ja-->
 ## 段階全体で十分性を強化する
 
@@ -458,9 +458,9 @@ superadequate-above α oα =
 
 The whole stage `Lset β` is the subset of itself selected by the always-true formula. It is therefore definable over itself and belongs to `Lset (sucV β)`.
 <!--zh-->
-## 一个阶段属于其后继阶段
+## 一层属于其后继层
 
-整个阶段 `Lset β` 正是恒真公式从自身选出的子集。因此它在自身之上可定义，并属于 `Lset (sucV β)`。
+整个层 `Lset β` 正是恒真公式从自身选出的子集。因此它在自身之上可定义，并属于 `Lset (sucV β)`。
 <!--ja-->
 ## 段階はその後者段階に属する
 

@@ -29,7 +29,7 @@ The ordinal predicate is defined in the constructible-universe chapter as `IsOrd
 <!--zh-->
 序数谓词在可构造宇宙一章中定义为 `IsOrd A = isTransV A × ((x : S) → ⟨ x ∈ˢ A ⟩ → isTransV x)`：它是传递性证明与「`A` 的每个成员自身传递」之证明的序对。两个分量都是命题，`isPropIsOrd` 证明了这一点，因此 `IsOrd` 是真正的真值，而不是携带结构的数据。本模块固定周遭宇宙层级 `ℓ`，并在其上的累积层级载体 `S` 中工作。
 <!--ja-->
-順序数述語は構成可能宇宙の章で `IsOrd A = isTransV A × ((x : S) → ⟨ x ∈ˢ A ⟩ → isTransV x)` と定義されます。これは推移性の証明と「`A` の各要素がそれ自身推移的である」ことの証明との対です。両成分はともに命題であり、`isPropIsOrd` がそれを保証するので、`IsOrd` は構造を追加するデータではなく、命題値です。このモジュールは周囲の宇宙の階層 `ℓ` を固定し、その上の累積階層の台 `S` の中で働きます。
+順序数述語は構成可能宇宙の章で `IsOrd A = isTransV A × ((x : S) → ⟨ x ∈ˢ A ⟩ → isTransV x)` と定義されます。これは推移性の証明と「`A` の各要素がそれ自身推移的である」ことの証明との対です。両成分はともに命題であり、`isPropIsOrd` がそれを保証するので、`IsOrd` は構造を追加するデータではなく、命題値です。このモジュールは周囲の宇宙レベル `ℓ` を固定し、その上の累積階層の台 `S` の中で働きます。
 <!--/-->
 
 ```agda
@@ -232,7 +232,7 @@ For the remaining obligation, `union-family-out` states that `z ∈ˢ ⋃ (sett 
 <!--en-->
 And the chapter's deliverable. Given a small family of ordinals, a single ordinal contains every member of the family. The naive attempt, take the union of the family, gives only inclusion: a union absorbs its members' *elements*, not the members themselves, and no set contains itself. The repair is one step of successor: union the family of successors instead. The result is a genuine pair, not a truncated existence: the consumers name the bound and form its stage.
 <!--zh-->
-然后是本章的主要结果。给定一小族序数，有单一序数包含该族的每一个成员。若直接取该族之并，只能得到包含关系：并包含其成员的**元素**，而非这些成员本身，并且没有集合以自身为成员。因此改为对后继族取并。结果明确给出相应的序对，而不只是截断的存在；使用方可以指称这个上界，并构造它所在的阶段。
+然后是本章的主要结果。给定一小族序数，有单一序数包含该族的每一个成员。若直接取该族之并，只能得到包含关系：并包含其成员的**元素**，而非这些成员本身，并且没有集合以自身为成员。因此改为对后继族取并。结果明确给出相应的序对，而不只是截断的存在；使用方可以指称这个上界，并构造它所在的层。
 <!--ja-->
 そして本章の成果物です。小さな順序数の族が与えられると、族のすべての元を含む単一の順序数が得られます。素朴に族の和を取るだけでは包含関係しか得られません。和集合はその要素の**要素**を吸収するのであって、要素そのものを吸収するわけではなく、しかもどの集合も自分自身を含みません。そこで一段の後続を挟み、後続の族の和を取ります。結果は截断された存在ではなく実際の対として与えられ、利用者はこの上界を名指し、その段階を構成できます。
 <!--/-->
@@ -548,7 +548,7 @@ Zero, successors and small unions of ordinals are ordinals, and `boundingOrd`{.A
 <!--zh-->
 ## 小结
 
-零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。这一上界把任意小族的逐点序数界合并为一个严格公共界。后续各章分别使用这些结果：ZF 公理证明用序数界收集阶段，有限序数引理与 `ω-ord` 则用于无穷公理及后面的编码论证。
+零、后继与序数的小并都是序数，而 `boundingOrd`{.Agda} 以单一序数界住任一小族。这一上界把任意小族的逐点序数界合并为一个严格公共界。后续各章分别使用这些结果：ZF 公理证明用序数界收集层，有限序数引理与 `ω-ord` 则用于无穷公理及后面的编码论证。
 <!--ja-->
 ## まとめ
 

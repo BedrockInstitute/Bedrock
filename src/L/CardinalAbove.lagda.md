@@ -129,7 +129,7 @@ Every ordinal belongs to the constructible stage immediately after itself, so it
 <!--zh-->
 ## 序数作为 L 的元素
 
-每个序数都属于紧随自身之后的可构造阶段，因此在 `L` 的载体中有一个典范代表。
+每个序数都属于紧随自身之后的可构造层，因此在 `L` 的载体中有一个典范代表。
 <!--ja-->
 ## L の要素としての順序数
 

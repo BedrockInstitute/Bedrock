@@ -5,7 +5,7 @@ Later arguments must refer to the hierarchy from within the model. This chapter 
 <!--zh-->
 # 可构造层级的 Δ₀ 描述
 
-后续论证需要从模型内部指称可构造层级。本章为阶段表构造一个有界描述，并证明该公式恰好识别预期的层级。
+后续论证需要从模型内部指称可构造层级。本章为层表构造一个有界描述，并证明该公式恰好识别预期的层级。
 <!--ja-->
 # 構成可能階層の Δ₀ 記述
 
@@ -595,7 +595,7 @@ After abstracting the shared constants, `levelFo` says that one set is the const
 <!--zh-->
 ## 描述可构造层的无参公式
 
-抽象掉共享常元后，`levelFo` 陈述一个集合是给定序数处的可构造层。可靠性来自表的读法，而充分阶段的各项条件提供完备性所需的全部见证。
+抽象掉共享常元后，`levelFo` 陈述一个集合是给定序数处的可构造层。可靠性来自表的读法，而充分层的各项条件提供完备性所需的全部见证。
 <!--ja-->
 ## 構成可能な階層を表すパラメータなし論理式
 

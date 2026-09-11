@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 """Generate and embed the per-language dependency map from the masters.
 
-Everything about the page is derived, never hand-maintained (the two-catalog
-doctrine's third view): nodes and edges come from the `import` lines of the
-masters under src/, the reading order and the per-module one-line descriptions
-come from the Everything reading catalog (its import block and its bullet
-lists, per language), lanes mirror the sidebar's namespace grouping, and the
-default layout follows dependency depth vertically; an alternate view groups
-chapters by the learning stages in the reading catalog. The generated fragment
-is embedded into each language's index and also written separately for testing.
+The page is derived, never hand-maintained: nodes and edges
+come from the `import` lines of the masters under src/, while the reading order,
+descriptions and learning stages come from `dev/reading-catalog.json`. Lanes
+mirror the sidebar's namespace grouping, and the default layout follows
+dependency depth vertically. The generated fragment is embedded into each
+language's index and also written separately for testing.
 The former depmap.html route redirects to the dependency-map tab.
 
 Usage:
@@ -24,12 +22,11 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from i18n_markers import weave  # noqa: E402
+from reading_routes import build_reading_data  # noqa: E402
 
-AGGREGATOR = "Everything"
 HUBS = ["Base.Prelude", "Base.Truth"]   # the designated hub modules (STYLE-agda §2)
 FENCE_RE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
 IMPORT_RE = re.compile(r'^\s*(?:open\s+)?import\s+([A-Za-z][\w.]*)', re.M)
-BULLET_RE = re.compile(r'^- `([A-Za-z][\w.]*)`\{\.Agda\}[:：]\s*(.*)$')
 
 # lane colour slots, assigned by lane order of first appearance in the catalog
 SLOTS = [
@@ -47,7 +44,7 @@ UI = {
                 "Hover to trace prerequisites; click to pin."),
         "layout": "Layout:", "compact": "Compact", "teaching": "Learning stages", "namespace": "Namespaces",
         "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
-        "alledges": "all direct imports", "lmk": "include Landmarks' references",
+        "alledges": "all direct imports", "lmk": "include Milestones' references",
         "hint": "Select a chapter to trace its prerequisites",
         "hubnote": ("The widely used Base.Prelude and Base.Truth imports are omitted "
                     "from the drawing but retained in chapter details."),
@@ -56,11 +53,11 @@ UI = {
         "scrollhint": "Scroll the graph in both directions, or fit the whole graph for an overview.",
         "none": "None",
         "noscript": "The dependency map requires JavaScript. You can still use the",
-        "catalog": "chapter catalog",
+        "catalog": "reading routes",
         "footer": ("The skeleton preserves reachability, not every direct use of a definition. "
                    "An omitted edge is not permission to delete an import. Learning stages do not "
                    "make every chapter a serial step: finish the listed prerequisites before a "
-                   "converging chapter. Everything supplies one example route. Landmarks is the "
+                   "converging chapter. Milestones is the "
                    "opening preview and appears at the bottom here as the endpoint."),
     },
     "zh": {
@@ -68,26 +65,26 @@ UI = {
         "sub": ("{n} 个章节的依赖从上向下展开。A → B 表示 B 导入 A。各布局展示同一份先修偏序；没有依赖路径的主题可以穿插学习。悬停追踪先修关系，点击固定。"),
         "layout": "布局：", "compact": "紧凑总览", "teaching": "学习阶段", "namespace": "命名空间",
         "edgemode": "边：", "skeleton": "骨架 (传递约简)", "alledges": "全部直接边",
-        "lmk": "包含 Landmarks 的引用边", "hint": "选择章节以追踪先修关系",
+        "lmk": "包含 Milestones 的引用边", "hint": "选择章节以追踪先修关系",
         "hubnote": "图中省略广泛使用的 Base.Prelude 和 Base.Truth 导入边，章节详情仍保留它们。",
         "reading": "示例路线序号", "imports": "直接导入", "consumers": "直接消费者",
         "legend": "颜色图例", "fit": "适合全图", "readable": "可读字号",
         "scrollhint": "可向两个方向滚动图；也可切换为全图概览。", "none": "无",
-        "noscript": "依赖图需要 JavaScript。仍可改读同页的", "catalog": "章节目录",
-        "footer": ("骨架保留可达关系，并不展示每一次直接使用；省略一条边不表示可以删除对应导入。学习阶段不要求把所有章节依次通读；进入汇合章节前，应完成图中所列先修。Everything 给出一条示例路线。Landmarks 是开篇预览，在此作为终点置于底部。"),
+        "noscript": "依赖图需要 JavaScript。仍可改读同页的", "catalog": "阅读路线",
+        "footer": ("骨架保留可达关系，并不展示每一次直接使用；省略一条边不表示可以删除对应导入。学习阶段不要求把所有章节依次通读；进入汇合章节前，应完成图中所列先修。里程碑是开篇预览，在此作为终点置于底部。"),
     },
     "ja": {
         "title": "依存マップ", "back": "← Bedrock",
         "sub": "{n} 章の依存関係を上から下へ表示。A → B は B が A を import することを表します。どの配置も同じ前提関係の半順序を示し、依存経路のない主題は交互に学べます。",
         "layout": "配置：", "compact": "コンパクト", "teaching": "学習段階", "namespace": "名前空間",
         "edgemode": "辺：", "skeleton": "骨格 (推移簡約)", "alledges": "直接 import 全体",
-        "lmk": "Landmarks の参照を含める", "hint": "章を選択して前提を確認",
+        "lmk": "Milestones の参照を含める", "hint": "章を選択して前提を確認",
         "hubnote": "広く使われる Base.Prelude と Base.Truth の辺は図から省略し、章の詳細には残します。",
         "reading": "例示ルート順", "imports": "直接 import", "consumers": "直接の利用者",
         "legend": "色の凡例", "fit": "全体を表示", "readable": "読みやすい大きさ",
         "scrollhint": "図は縦横にスクロールできます。全体表示に切り替えると概観できます。", "none": "なし",
-        "noscript": "依存マップには JavaScript が必要です。同じページの", "catalog": "章の目次",
-        "footer": "骨格は到達関係を保ちます。省略された辺の import が不要とは限りません。学習段階は全章を直列に並べるものではありません。合流する章へ進む前に、表示された前提を終えてください。Everything は一例となるルートを示します。冒頭の予告 Landmarks は、この図では終点として下部に置きます。",
+        "noscript": "依存マップには JavaScript が必要です。同じページの", "catalog": "学習ルート",
+        "footer": "骨格は到達関係を保ちます。省略された辺の import が不要とは限りません。学習段階は全章を直列に並べるものではありません。合流する章へ進む前に、表示された前提を終えてください。冒頭の予告 Milestones は、この図では終点として下部に置きます。",
     },
 }
 
@@ -160,22 +157,35 @@ def packed_layout(nodes, edges, ranks, order, top=34):
             "positions": positions, "bands": []}
 
 
-def layouts(nodes, edges, order, depth, row, lanes, stages, membership):
+def layouts(nodes, edges, order, depth, lanes, stages, membership):
     skeleton = reduced_edges(nodes, [(a, b) for a, b in edges if a not in HUBS])
     compact = packed_layout(nodes, skeleton, depth, order)
     compact["bands"] = []
-    x, positions, bands = 4, {}, []
+    # Namespace layout stacks namespaces vertically. Within each namespace,
+    # dependency depth runs from left to right, so the visual direction agrees
+    # with the graph's prerequisite flow instead of creating one very wide strip.
+    namespace_rows, namespace_width = [], 0
     for lane in lanes:
         group = [n for n in nodes if lane_of(n) == lane]
-        width = max(row[n] + 1 for n in group) * 142 + 14
-        bands.append({"x": x, "y": 0, "width": width, "height": compact["height"], "label": lane})
-        for n in group:
-            positions[n] = {"x": x + 14 + row[n] * 142, "y": 34 + depth[n] * 66}
-        x += width
-    namespace = {"width": x + 4, "height": compact["height"], "positions": positions, "bands": bands}
-    # Landmarks is read as a preview but depends on the final results.
-    stage_order = [s for s in stages if s["key"] != membership.get("Landmarks")]
-    stage_order += [s for s in stages if s["key"] == membership.get("Landmarks")]
+        levels = {}
+        for n in sorted(group, key=lambda n: (depth[n], order[n])):
+            levels.setdefault(depth[n], []).append(n)
+        width = (max(levels, default=0) + 1) * 142 + 28
+        height = max((len(level) for level in levels.values()), default=1) * 66 + 42
+        namespace_rows.append((lane, levels, width, height))
+        namespace_width = max(namespace_width, width)
+    positions, bands, y = {}, [], 4
+    for lane, levels, width, height in namespace_rows:
+        bands.append({"x": 0, "y": y, "width": namespace_width, "height": height, "label": lane})
+        for rank, level in levels.items():
+            offset = (height - 42 - len(level) * 66) / 2 + 34
+            for i, n in enumerate(level):
+                positions[n] = {"x": 14 + rank * 142, "y": y + offset + i * 66}
+        y += height
+    namespace = {"width": namespace_width + 4, "height": y, "positions": positions, "bands": bands}
+    # Milestones is read as a preview but depends on the final results.
+    stage_order = [s for s in stages if s["key"] != membership.get("Milestones")]
+    stage_order += [s for s in stages if s["key"] == membership.get("Milestones")]
     teaching = {"width": 0, "height": 0, "positions": {}, "bands": []}
     for stage in stage_order:
         group = [n for n in nodes if membership[n] == stage["key"]]
@@ -212,40 +222,16 @@ def lane_of(mod):
     return parts[0]
 
 
-def descriptions(everything_text, lang, fallback):
-    """Per-module one-liners from the reading catalog's bullets (wrapped lines joined)."""
-    text = weave(everything_text, lang)
-    descs, cur = {}, None
-    for line in text.split("\n"):
-        m = BULLET_RE.match(line)
-        if m:
-            cur = m.group(1)
-            descs[cur] = m.group(2)
-        elif cur and re.match(r'^  \S', line):
-            descs[cur] += ("" if descs[cur].endswith("：") else " ") + line.strip()
-        else:
-            cur = None
-    clean = {}
-    for k, v in descs.items():
-        v = re.sub(r'`([^`]*)`\{\.Agda\}', r'\1', v)
-        v = v.replace("**", "").replace("`", "")
-        clean[k] = v
-    if fallback:
-        for k, v in fallback.items():
-            clean.setdefault(k, v)
-    return clean
-
-
 def build_graph(src):
+    reading = build_reading_data(src)
     mods = masters(src)
-    everything = mods.pop(AGGREGATOR)
     internal = set(mods)
     edges = []
     for mod, text in sorted(mods.items()):
         for imp in sorted(set(imports(text))):
             if imp in internal and imp != mod:
                 edges.append((imp, mod))
-    order = [m for m in imports(everything) if m in internal]
+    order = [node["id"] for node in reading["nodes"] if node["id"] in internal]
     ordnum = {m: i + 1 for i, m in enumerate(order)}
 
     # dependency depth: longest path over the full edge set
@@ -262,7 +248,7 @@ def build_graph(src):
     for m in internal:
         depth(m)
 
-    # lanes by first appearance in the reading order, rows packed per column
+    # Lanes follow first appearance in the reading order.
     lanes = []
     for m in order:
         ln = lane_of(m)
@@ -271,12 +257,7 @@ def build_graph(src):
     for m in sorted(internal):               # safety: modules outside the catalog
         if lane_of(m) not in lanes:
             lanes.append(lane_of(m))
-    row, used = {}, {}
-    for m in sorted(internal, key=lambda m: (ordnum.get(m, 999), m)):
-        key = (lane_of(m), col[m])
-        row[m] = used.get(key, 0)
-        used[key] = row[m] + 1
-    return everything, internal, edges, ordnum, col, row, lanes
+    return reading, internal, edges, ordnum, col, lanes
 
 
 TEMPLATE = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -352,31 +333,38 @@ def main(argv):
         sys.stderr.write("depmap: missing depmap-template.html\n")
         return 2
 
-    everything, internal, edges, ordnum, col, row, lanes = build_graph(src)
+    reading, internal, edges, ordnum, col, lanes = build_graph(src)
     slot = {ln: SLOTS[i % len(SLOTS)] for i, ln in enumerate(lanes)}
 
-    desc_en = descriptions(everything, "en", {})
+    nodes_by_id = {node["id"]: node for node in reading["nodes"]}
     embedded = 0
     errors = 0
     for lang in langs:
         ui = UI.get(lang, UI["en"])
-        descs = descriptions(everything, lang, desc_en)
+        descs = {module: node["description"][lang] for module, node in nodes_by_id.items()}
         nodes = [{
-            "id": m, "lane": lane_of(m), "col": col[m], "row": row[m],
+            "id": m, "lane": lane_of(m), "col": col[m],
             "ord": ordnum.get(m, 0), "desc": descs.get(m, ""),
         } for m in sorted(internal, key=lambda m: (ordnum.get(m, 999), m))]
-        stages, membership = teaching_stages(everything, lang)
+        stages, membership = [], {}
+        for node in reading["nodes"]:
+            label = node["stage"][lang]
+            key = next((stage["key"] for stage in stages if stage["label"] == label), None)
+            if key is None:
+                key = str(len(stages))
+                stages.append({"key": key, "label": label})
+            membership[node["id"]] = key
         stage_labels = {stage["key"]: stage["label"] for stage in stages}
         for node in nodes:
             node["stage"] = stage_labels[membership[node["id"]]]
         data = {
-            "layouts": layouts(internal, edges, ordnum, col, row, lanes, stages, membership),
+            "layouts": layouts(internal, edges, ordnum, col, lanes, stages, membership),
             "nodes": nodes,
             "edges": [list(e) for e in edges],
             "lanes": [{"key": ln, "light": slot[ln][0], "dark": slot[ln][1]}
                       for ln in lanes],
             "hubs": HUBS,
-            "landmark": "Landmarks",
+            "landmark": "Milestones",
         }
         fragment = render_fragment(data, lang, ui)
         lang_dir = os.path.join(out, lang)

@@ -51,7 +51,7 @@ open import FOL.Syntax using
 <!--zh-->
 ## Δ₀ 见证
 
-`Δ₀` 是以公式为下标的归纳族：`Δ₀ φ` 的一个元素就是一份显式数据的见证，证明 `φ` 中出现的每个量词都有界。定义对每个获准的公式形状给一个构造子，而不给 `∃̇` 与 `∀̇` 任何构造子；**缺席即分类**。该族除在某个宇宙层 `ℓc` 上以常元域 `K` 为参数外，只由语法决定，所以同一见证类型对任意常元域都可用。
+`Δ₀` 是以公式为下标的归纳族：`Δ₀ φ` 的一个元素就是一份显式数据的见证，证明 `φ` 中出现的每个量词都有界。定义对每个获准的公式形状给一个构造子，而不给 `∃̇` 与 `∀̇` 任何构造子；**缺席即分类**。该族除在某个宇宙层级 `ℓc` 上以常元域 `K` 为参数外，只由语法决定，所以同一见证类型对任意常元域都可用。
 <!--ja-->
 ## Δ₀ の証拠
 
@@ -61,7 +61,7 @@ open import FOL.Syntax using
 <!--en-->
 The guiding invariant of the Δ₀ family is: bounded quantifiers preserve boundedness, and unbounded quantifiers break it. The declaration realizes this as an inductive family `Δ₀` indexed by formulas of every arity `n`, living at the same universe level as `K`, so a witness is small data. An atomic formula such as `t ∈̇ u` is accepted outright: it contains no quantifier at all, so `δ-∈` (and its equality companion `δ-≐`) takes no argument. The class is then closed under the binary connectives, with `δ-∧` and `δ-∨` each demanding a witness for both components of the compound.
 <!--zh-->
-Δ₀ 族的指引性不变量是：有界量词保持有界性，无界量词破坏它。声明把它实现为以每个元数 `n` 的公式为下标的归纳族 `Δ₀`，与 `K` 同处一个宇宙层，故见证是小数据。像 `t ∈̇ u` 这样的原子公式被直接接受：它根本不含量词，所以 `δ-∈` (以及等式的同伴 `δ-≐`) 不带参数。该类随后对二元联结词封闭，`δ-∧` 与 `δ-∨` 各自要求复合公式两个成分都有见证。
+Δ₀ 族的指引性不变量是：有界量词保持有界性，无界量词破坏它。声明把它实现为以每个元数 `n` 的公式为下标的归纳族 `Δ₀`，与 `K` 同处一个宇宙层级，故见证是小数据。像 `t ∈̇ u` 这样的原子公式被直接接受：它根本不含量词，所以 `δ-∈` (以及等式的同伴 `δ-≐`) 不带参数。该类随后对二元联结词封闭，`δ-∧` 与 `δ-∨` 各自要求复合公式两个成分都有见证。
 <!--ja-->
 Δ₀ の族を導く不変量は次のとおりです。有界量化子は有界性を保ち、非有界量化子はこれを壊す。宣言はこれを、任意のアリティ `n` の論理式で添字付けられた帰納的族 `Δ₀` として実現します。`K` と同じ宇宙レベルに住むので、証拠は小さなデータです。`t ∈̇ u` のような原子論理式はそのまま受け入れられます。量化子をまったく含まないため、`δ-∈` (および等式版の `δ-≐`) は引数を取りません。次にこのクラスは二項結合子の下で閉じ、`δ-∧` と `δ-∨` はそれぞれ複合論理式の両成分に対する証拠を要求します。
 <!--/-->

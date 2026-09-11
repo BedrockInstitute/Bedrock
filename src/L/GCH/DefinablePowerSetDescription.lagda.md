@@ -5,7 +5,7 @@ The definable subsets of a stage must themselves be recognizable inside `L`. Thi
 <!--zh-->
 # 可定义幂集的 Δ₀ 描述
 
-一个阶段的可定义子集必须也能在 `L` 内部被识别。本章为这一集合给出有界公式，并证明其内部读法与外部定义相符。
+一层的可定义子集必须也能在 `L` 内部被识别。本章为这一集合给出有界公式，并证明其内部读法与外部定义相符。
 <!--ja-->
 # 定義可能冪集合の Δ₀ 記述
 

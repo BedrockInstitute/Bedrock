@@ -5,7 +5,7 @@ At a superadequate stage, an elementary hull collapses to a smaller constructibl
 <!--zh-->
 # 通过凝聚搬运结构
 
-在超充分阶段，一个初等 Skolem 壳会塌缩到更小的可构造阶段。本章找出搬运所需的公式，并沿塌缩把层级数据带到另一侧。
+在超充分层，一个初等 Skolem 壳会塌缩到更小的可构造层。本章找出搬运所需的公式，并沿塌缩把层级数据带到另一侧。
 <!--ja-->
 # 凝縮を通して構造を移す
 
@@ -60,7 +60,7 @@ The transfer requires simultaneously a level value, its ordinal index, and the p
 <!--zh-->
 ## 识别层见证的公式
 
-搬运需要同时给出一个层值、它的序数指标，以及该值就是相应可构造阶段的证明。三者合并进同一条公式后，初等性便能把完整见证带入 Skolem 壳。
+搬运需要同时给出一层值、它的序数指标，以及该值就是相应可构造层的证明。三者合并进同一条公式后，初等性便能把完整见证带入 Skolem 壳。
 <!--ja-->
 ## 階層の証人を特定する論理式
 
@@ -84,7 +84,7 @@ At a strengthened adequate stage, elementarity places the required witnesses in 
 <!--zh-->
 ## 沿塌缩搬运层级信息
 
-在超充分阶段，初等性把所需见证放入 Skolem 壳，塌缩则把它们送进 `L`。随后两条闭合假设将塌缩像识别为它自身序数处的相应层级。
+在超充分层，初等性把所需见证放入 Skolem 壳，塌缩则把它们送进 `L`。随后两条闭合假设将塌缩像识别为它自身序数处的相应层级。
 <!--ja-->
 ## 崩壊を通して階層の情報を移す
 

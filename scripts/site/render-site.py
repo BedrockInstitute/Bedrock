@@ -2,7 +2,7 @@
 """Render the multilingual, hyperlinked Bedrock site from the masters.
 
 Inputs (produced by the Makefile before this runs):
-  _build/html/<Module>.md   from `agda --html --html-highlight=code` on src/Everything
+  _build/html/<Module>.md   from `agda --html --html-highlight=code` on src/Milestones
   _build/types.json         from scripts/site/extract-types.py
   site/template.html        the page shell
   site/vendor/1lab/...      vendored front-end assets (M2c builds CSS/JS into the site)
@@ -22,6 +22,7 @@ Usage:
 import glob
 import hashlib
 import html as htmllib
+from html.parser import HTMLParser
 import json
 import os
 import re
@@ -31,6 +32,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from i18n_markers import weave_for_site, group_languages  # noqa: E402
 from reading_routes import build_reading_data  # noqa: E402
+from term_registry import TERM_MARK_RE, load_entries, reader_terms, schema_errors, localized_forms  # noqa: E402
 
 LANG_LABELS = {"en": "English", "zh": "中文", "ja": "日本語"}
 
@@ -41,6 +43,7 @@ UI = {
            "modules": "Modules", "source": "Source", "overview": "Overview",
            "depmap": "Dependency map", "routes": "Reading routes",
            "guide": "Reading guide", "catalog": "Chapter catalog",
+           "landmark": "Milestones", "terms": "Glossary",
            "prev": "Example route: previous", "next": "Example route: next",
            "license": "content licensed CC BY-NC-SA 4.0",
            "credit": 'Rendered with a generator adapted from '
@@ -53,6 +56,7 @@ UI = {
            "modules": "模块", "source": "源码", "overview": "概览",
            "depmap": "依赖地图", "routes": "阅读路线",
            "guide": "阅读指南", "catalog": "章节目录",
+           "landmark": "里程碑", "terms": "术语表",
            "prev": "示例路线：上一章", "next": "示例路线：下一章",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
            "credit": '使用改编自 <a href="https://1lab.dev">1lab</a> 的生成器渲染 '
@@ -65,6 +69,7 @@ UI = {
            "modules": "モジュール", "source": "ソース", "overview": "概要",
            "depmap": "依存マップ", "routes": "学習ルート",
            "guide": "読書案内", "catalog": "章の目次",
+           "landmark": "マイルストーン", "terms": "用語集",
            "prev": "例示ルート：前の章", "next": "例示ルート：次の章",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
            "credit": '<a href="https://1lab.dev">1lab</a> を改変した'
@@ -73,7 +78,7 @@ UI = {
            "back": "Bedrock に戻る"},
 }
 SOURCE_URL = "https://github.com/BedrockInstitute/Bedrock"
-LANDING = "Everything"  # the aggregator master; rendered as the site landing index.html
+LANDING = "Milestones"  # preview chapter also supplies the generated reading-guide index
 CHAPTER_TITLES = {}
 
 
@@ -117,6 +122,34 @@ def _inline(s):
     # them (`**bold with `code` inside**`); the emphasis regexes then run over the
     # whole string, in which placeholders are inert (no `*`, nothing escapable).
     stash = {}
+
+    # Store an annotation's rendered body on its inline target. This keeps the
+    # generated HTML valid even inside emphasis and list items; JavaScript moves
+    # the body into the article's margin-note layer after parsing.
+    def _annotation(m):
+        key = f"{NUL}A{len(stash)}{NUL}"
+        note_source = m.group("note")
+        note_links = []
+
+        def _note_link(link_match):
+            link_key = f"{NUL}H{len(note_links)}{NUL}"
+            note_links.append(link_match.group(0))
+            return link_key
+
+        note_source = re.sub(r'<a\b[^>]*>.*?</a>', _note_link, note_source,
+                             flags=re.DOTALL)
+        note_html = _inline(note_source)
+        for index, link in enumerate(note_links):
+            note_html = note_html.replace(f"{NUL}H{index}{NUL}", link)
+        stash[key] = (
+            '<span class="prose-annotation-target">' + m.group("target") + '</span>'
+            '<template class="prose-annotation-template">' + note_html + '</template>'
+        )
+        return key
+
+    s = re.sub(r'<span class="prose-annotation-target">(?P<target>.*?)</span>'
+               r'<aside class="prose-annotation-note">(?P<note>.*?)</aside>',
+               _annotation, s, flags=re.DOTALL)
 
     def _code(m):
         key = f"{NUL}C{len(stash)}{NUL}"
@@ -189,7 +222,8 @@ def md_to_html(text):
             out.append(line.strip()); i += 1; continue
         if line.lstrip().startswith("<"):
             block = []
-            while i < n and lines[i].strip():
+            while (i < n and lines[i].strip()
+                   and not re.match(r'^\s*#{1,6}\s+', lines[i])):
                 block.append(lines[i]); i += 1
             out.append("\n".join(block)); continue
         if re.match(r'^\s*([-*+]|\d+\.)\s+', line):
@@ -231,6 +265,16 @@ def md_to_html(text):
             para.append(lines[i]); i += 1
         out.append("<p>" + _inline(" ".join(s.strip() for s in para)) + "</p>")
     return "\n".join(out), toc
+
+
+def restore_toc_labels(toc, store):
+    """Replace protected inline markup in TOC labels with its visible plain text."""
+    clean = []
+    for level, anchor, title in toc:
+        for key, value in store.items():
+            title = title.replace(key, re.sub(r"<[^>]+>", "", value))
+        clean.append((level, anchor, htmllib.unescape(title)))
+    return clean
 
 
 # ---- code-block index (names, positions, types) ------------------------------
@@ -321,7 +365,11 @@ def modules_nav(current, mods, lang):
         children.append(group)
         insert(group[2], parts[1:], mod)
 
+    # Milestones is the reading-guide preview and has its own guide entry. Keep
+    # it out of the structural module list so the sidebar does not duplicate it.
     for m in mods:
+        if m == LANDING:
+            continue
         insert(root, m.split("."), m)
 
     def render(children, prefix):
@@ -347,7 +395,8 @@ def modules_nav(current, mods, lang):
         f'<li><a href="index.html#{target}">{UI[lang][key]}</a></li>'
         for target, key in (("reading-explorer", "routes"),
                             ("dependency-map", "depmap"),
-                            ("recommended-reading", "catalog")))
+                            ("milestones", "landmark"),
+                            ("term-glossary", "terms")))
     return (f'<details class="navsec reading-guide" open><summary class="nav-title">'
             f'{UI[lang]["guide"]}</summary><ul class="guide-nav">{guide}</ul></details>'
             f'<details class="navsec"><summary class="nav-title">'
@@ -355,23 +404,85 @@ def modules_nav(current, mods, lang):
             f'<ul class="modnav">{"".join(render(root, ""))}</ul></details>')
 
 
-def learning_home(body, mount, lang):
+def learning_home(body, mount, lang, terms):
     labels = {
-        "en": ("Explore the book", "Reading routes", "Dependency map", "Chapter catalog"),
-        "zh": ("浏览本书", "阅读路线", "依赖图", "章节目录"),
-        "ja": ("本書を読む", "学習ルート", "依存マップ", "章の目次"),
+        "en": ("Explore the book", "Reading routes", "Dependency map", "Milestones", "Glossary"),
+        "zh": ("浏览本书", "阅读路线", "依赖图", "里程碑", "术语表"),
+        "ja": ("本書を読む", "学習ルート", "依存マップ", "マイルストーン", "用語集"),
     }[lang]
-    intro = re.match(r"(.*?</h1>\s*<p>.*?</p>)(.*)", body, re.DOTALL)
-    heading, catalog = intro.groups() if intro else ("", body)
-    ids = ("reading-explorer", "dependency-map", "recommended-reading")
+    heading_match = re.search(r"<h1\b[^>]*>.*?</h1>", body, re.DOTALL)
+    heading = heading_match.group(0) if heading_match else ""
+    if heading:
+        heading = re.sub(r"(<h1\b[^>]*>).*?(</h1>)",
+                         rf"\1{htmllib.escape(UI[lang]['guide'])}\2",
+                         heading, count=1, flags=re.DOTALL)
+    milestone_body = re.sub(r"<h1\b[^>]*>.*?</h1>", "", body, count=1, flags=re.DOTALL)
+    intro_text = {
+        "en": "Choose a route, inspect the prerequisite structure, or review the book's main theorems and terminology.",
+        "zh": "选择一条阅读路线，查看先修关系，或集中回顾本书的里程碑与术语。",
+        "ja": "学習ルートを選び、前提関係を確認し、マイルストーンと用語を振り返ります。",
+    }[lang]
+    ids = ("reading-explorer", "dependency-map", "milestones", "term-glossary")
     tabs = ''.join(f'<a id="tab-{key}" href="#{key}" data-panel="{key}">{label}</a>'
                    for key, label in zip(ids, labels[1:]))
+    glossary_rows = []
+    glossary_copy = {
+        "en": "The terms are ordered by their first appearance in the book. Select a term to revisit its introduction.",
+        "zh": "术语按它们在全书中的首次出现顺序排列。选择术语即可回到首次引入的位置。",
+        "ja": "用語は本書で最初に現れる順に並んでいます。用語を選ぶと、最初の導入箇所を振り返れます。",
+    }[lang]
+    glossary_search = {
+        "en": "Filter terms",
+        "zh": "筛选术语",
+        "ja": "用語を絞り込む",
+    }[lang]
+    glossary_empty = {
+        "en": "No matching terms.",
+        "zh": "没有匹配的术语。",
+        "ja": "一致する用語がありません。",
+    }[lang]
+    for index, entry in enumerate(terms, 1):
+        label = htmllib.escape(entry[lang])
+        recap = htmllib.escape(entry[f"recap_{lang}"])
+        href = f'{entry["introduced_in"]}.html#term-{entry["id"]}'
+        search_text = htmllib.escape(f'{entry[lang]} {entry[f"recap_{lang}"]}', quote=True)
+        glossary_rows.append(
+            f'<div class="term-entry" data-term-entry data-term-search="{search_text}">'
+            f'<span class="term-index" aria-hidden="true">{index}</span>'
+            f'<dt><a href="{href}">{label}</a></dt><dd>{recap}</dd></div>')
+    glossary = ''.join(glossary_rows)
     return (f'<header class="book-intro">{heading}</header>'
+            f'<p class="book-intro-lead">{intro_text}</p>'
             f'<nav class="book-tabs" aria-label="{labels[0]}">{tabs}</nav>'
             f'<div class="book-panels">{mount}'
             f'<section id="dependency-map" class="book-panel">'
             '<!-- DEPENDENCY_MAP --></section>'
-            f'<section id="recommended-reading" class="book-panel">{catalog}</section></div>')
+            f'<section id="milestones" class="book-panel guide-landmark"><h2>{labels[3]}</h2>'
+            f'{milestone_body}</section>'
+            f'<section id="term-glossary" class="book-panel term-glossary-panel"><h2>{labels[4]}</h2>'
+            f'<div class="term-glossary-head"><p>{glossary_copy}</p>'
+            f'<label class="term-glossary-search"><span class="sr-only">{glossary_search}</span>'
+            f'<input type="search" data-term-search-input aria-controls="term-glossary-list" '
+            f'placeholder="{glossary_search}" autocomplete="off"></label></div>'
+            f'<dl id="term-glossary-list" class="term-glossary-list">{glossary}</dl>'
+            f'<p class="term-glossary-empty" data-term-empty hidden>{glossary_empty}</p></section></div>')
+
+
+def sort_reader_terms(terms, reading_data, src):
+    """Order terms by their first marked introduction in the reading order."""
+    chapter_order = {node["id"]: node["order"] for node in reading_data["nodes"]}
+    positions = {}
+    for entry in terms:
+        path = os.path.join(src, entry["introduced_in"].replace(".", os.sep) + ".lagda.md")
+        try:
+            text = open(path, encoding="utf-8").read()
+        except OSError:
+            text = ""
+        match = next((m for m in TERM_MARK_RE.finditer(text)
+                      if m.group(2) == "intro" and m.group(3) == entry["id"]), None)
+        positions[entry["id"]] = (chapter_order.get(entry["introduced_in"], 10**9),
+                                   match.start() if match else 10**9)
+    return sorted(terms, key=lambda entry: positions[entry["id"]])
 
 
 def ext_banner(lang):
@@ -397,13 +508,98 @@ def rewrite_links(body, rendered, types_global):
     `types_global` is {module: {pos: type-html}} across ALL rendered modules."""
     def repl(m):
         idpart, mod, anchor, rest = m.group(1) or "", m.group(2), m.group(3) or "", m.group(4)
+        if "://" in mod:
+            return m.group(0)
         if mod in rendered:
             pos = anchor[1:] if anchor else ""
             extra = f' data-type="{mod}#{pos}"' if pos and pos in types_global.get(mod, {}) else ""
-            target = "index.html" if mod == LANDING else f"{mod}.html"  # landing -> index.html
+            target = f"{mod}.html"
             return f'<a {idpart}href="{target}{anchor}"{rest}{extra}>'
         return f'<a{rest}>'                          # not rendered: drop the dead href
     return LINK_RE.sub(repl, body)
+
+
+class _TermLinker(HTMLParser):
+    """Add term links to text nodes without entering code, math, or existing links."""
+
+    EXCLUDED_TAGS = {"a", "code", "dfn", "pre", "script", "style", "textarea"}
+    VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link",
+                 "meta", "param", "source", "track", "wbr"}
+
+    def __init__(self, annotate):
+        super().__init__(convert_charrefs=False)
+        self.annotate = annotate
+        self.parts = []
+        self.excluded = []
+
+    def handle_starttag(self, tag, attrs):
+        raw = self.get_starttag_text()
+        classes = next((value for name, value in attrs if name == "class"), "") or ""
+        blocked = tag in self.EXCLUDED_TAGS or "math" in classes.split() or "Agda" in classes.split()
+        if tag not in self.VOID_TAGS:
+            self.excluded.append(blocked or any(self.excluded))
+        self.parts.append(raw)
+
+    def handle_startendtag(self, tag, attrs):
+        self.parts.append(self.get_starttag_text())
+
+    def handle_endtag(self, tag):
+        self.parts.append(f"</{tag}>")
+        if self.excluded:
+            self.excluded.pop()
+
+    def handle_data(self, data):
+        self.parts.append(data if any(self.excluded) else self.annotate(data))
+
+    def handle_entityref(self, name):
+        self.parts.append(f"&{name};")
+
+    def handle_charref(self, name):
+        self.parts.append(f"&#{name};")
+
+    def handle_comment(self, data):
+        self.parts.append(f"<!--{data}-->")
+
+    def handle_decl(self, decl):
+        self.parts.append(f"<!{decl}>")
+
+
+def auto_link_terms(body, lang, module, terms):
+    """Link audited unambiguous glossary forms in rendered prose, longest first."""
+    forms = {}
+    for entry in terms:
+        if entry.get("matching", "explicit") != "auto":
+            continue
+        for form in localized_forms(entry, lang):
+            key = form.casefold() if lang == "en" else form
+            if key in forms and forms[key]["id"] != entry["id"]:
+                raise ValueError(f"ambiguous automatic term form {form!r} ({lang})")
+            forms[key] = entry
+    if not forms:
+        return body
+    haystack = body.casefold() if lang == "en" else body
+    if not any(form in haystack for form in forms):
+        return body
+    alternatives = sorted((re.escape(form) for form in forms), key=len, reverse=True)
+    if lang == "en":
+        pattern = re.compile(r"(?<![A-Za-z])(?:" + "|".join(alternatives) + r")(?![A-Za-z])", re.I)
+    else:
+        pattern = re.compile("|".join(alternatives))
+
+    def annotate(text):
+        def replace(match):
+            shown = match.group(0)
+            key = shown.casefold() if lang == "en" else shown
+            entry = forms[key]
+            href = f'{entry["introduced_in"]}.html#term-{entry["id"]}'
+            return (f'<a class="term-ref" data-term="{entry["id"]}" '
+                    f'href="{href}">{shown}</a>')
+        return pattern.sub(replace, text)
+
+    parser = _TermLinker(annotate)
+    parser.feed(body)
+    parser.close()
+    return "".join(parser.parts)
 
 
 def build_types(modules, name2pos, types_raw, internal_q):
@@ -426,7 +622,7 @@ def fill_template(tpl, **kw):
 
 
 def render_module(module, html_dir, langs, internal, rendered, modnav_list,
-                  name2pos, types_global, tpl, out_dir, base, site):
+                  name2pos, types_global, terms, tpl, out_dir, base, site):
     path, literate = source_file(html_dir, module)
     raw = open(path, encoding="utf-8").read()
 
@@ -468,6 +664,20 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             key = f"{NUL}{kind}{len(store)}{NUL}"
             store[key] = payload
             return key
+        term_by_id = {entry["id"]: entry for entry in terms}
+        def term_marker(match):
+            label, kind, term_id = match.groups()
+            entry = term_by_id.get(term_id)
+            if not entry:
+                raise ValueError(f"unknown term id {term_id!r} in {module}")
+            shown = htmllib.escape(label)
+            if kind == "intro":
+                return stash("TERM", f'<dfn id="term-{term_id}" class="term-intro" '
+                             f'data-term="{term_id}" tabindex="0">{shown}</dfn>')
+            href = f'{entry["introduced_in"]}.html#term-{term_id}'
+            return stash("TERM", f'<a class="term-ref" data-term="{term_id}" '
+                         f'href="{href}">{shown}</a>')
+        woven = TERM_MARK_RE.sub(term_marker, woven)
         woven = re.sub(r'\$\$(.+?)\$\$',
                        lambda m: stash("DMATH", '<div class="math display">$$'
                                        + htmllib.escape(m.group(1)) + '$$</div>'),
@@ -483,38 +693,49 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         body = re.sub(r'<p>\s*(' + NUL + r'DMATH\d+' + NUL + r')\s*</p>', r'\1', body)
         for key, val in store.items():
             body = body.replace(key, val)
+        # A formal introduction may live in a section title. The HTML body keeps
+        # the interactive marker, while the sidebar needs only its plain label.
+        toc = restore_toc_labels(toc, store)
         for j, blk in enumerate(code_blocks):
             body = body.replace(f"{NUL}CODE{j}{NUL}", blk)
-        return rewrite_links(body, rendered, types_global), toc
+        body = rewrite_links(body, rendered, types_global)
+        return auto_link_terms(body, lang, module, terms), toc
 
     for lang in langs:
         body, toc = page_body(lang)
+        chapter_body = body
 
         if not is_external:
             fallback = {
-                "en": "Choose a topic, compare routes, or continue from completed prerequisites. The full catalog below remains available without interactive navigation.",
-                "zh": "按主题阅读、并排比较路线，或从已完成的先修继续。下方完整目录也可直接阅读，无须使用交互导航。",
-                "ja": "主題を選び、ルートを比較し、修了した前提から進めます。下の目次は対話機能なしでも読めます。",
+                "en": "Choose a topic, compare routes, or continue from completed prerequisites.",
+                "zh": "按主题阅读、并排比较路线，或从已完成的先修继续。",
+                "ja": "主題を選び、ルートを比較し、修了した前提から進めます。",
             }
             if not is_landing:
                 fallback = {
-                    "en": "Read this chapter directly, or use the catalog and dependency map to choose another route.",
-                    "zh": "可以直接阅读本章，也可以通过目录和依赖地图选择其他路线。",
-                    "ja": "この章を読むか、目次と依存マップで別のルートを選べます。",
+                    "en": "Read this chapter directly, or use the reading guide and dependency map to choose another route.",
+                    "zh": "可以直接阅读本章，也可以通过阅读指南和依赖地图选择其他路线。",
+                    "ja": "この章を読むか、読書案内と依存マップで別のルートを選べます。",
                 }
-            mount = (f'<section id="reading-explorer" data-current="{module}" '
+            route_current = "" if is_landing else module
+            mount = (f'<section id="reading-explorer" data-current="{route_current}" '
                      f'data-lang="{lang}" data-source="reading-routes.json" '
                      f'aria-label="{UI[lang]["routes"]}">'
                      f'<p>{fallback.get(lang, fallback["en"])}</p>'
-                     f'<a href="index.html#recommended-reading">{UI[lang]["overview"]}</a>'
+                     f'<a href="index.html#reading-explorer">{UI[lang]["guide"]}</a>'
                      f' · <a href="index.html#dependency-map">{UI[lang]["depmap"]}</a></section>')
             if is_landing:
-                body = learning_home(body, mount, lang)
-            else:
-                opening = re.search(r'</h1>\s*<p>.*?</p>', body, re.DOTALL)
-                heading_end = opening.end() if opening else body.find('</h1>')
+                body = learning_home(body, mount, lang, terms)
+                heading_end = chapter_body.find('</h1>')
                 if heading_end >= 0:
-                    split = heading_end if opening else heading_end + len('</h1>')
+                    split = heading_end + len('</h1>')
+                    chapter_body = chapter_body[:split] + mount + chapter_body[split:]
+                else:
+                    chapter_body = mount + chapter_body
+            else:
+                heading_end = body.find('</h1>')
+                if heading_end >= 0:
+                    split = heading_end + len('</h1>')
                     body = body[:split] + mount + body[split:]
                 else:
                     body = mount + body
@@ -538,7 +759,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         title = UI[lang]["overview"] if is_landing else chapter_title(module, lang)
         page = fill_template(
             tpl, LANG=lang, TITLE=htmllib.escape(title), SITE=site, DESC=site,
-            BASEURL=base, MODULE=module,
+            BASEURL=base, MODULE=("guide" if is_landing else module),
             BODYCLASS=("text-page external" if is_external else
                        "text-page learning-home" if is_landing else "text-page"),
             EXTBANNER=ext_banner(lang) if is_external else "",
@@ -553,6 +774,20 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         dest = os.path.join(out_dir, lang, out_name)
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         open(dest, "w", encoding="utf-8").write(page)
+
+        if is_landing:
+            chapter_page = fill_template(
+                tpl, LANG=lang, TITLE=htmllib.escape(chapter_title(module, lang)), SITE=site,
+                DESC=site, BASEURL=base, MODULE=module,
+                BODYCLASS="text-page", EXTBANNER="",
+                HREFLANG=hreflang_links(module + ".html", langs, base),
+                LANGNAV=lang_nav(module + ".html", lang, langs),
+                MODNAV=modules_nav(module, modnav_list, lang), TOC=toc_html(toc, lang),
+                BANNER=banner, BODY=chapter_body, FOOTER=footer_html(lang),
+                S_SEARCH=UI[lang]["search"], S_THEME=UI[lang]["theme"],
+                S_MENU=UI[lang]["menu"], S_CLOSE=UI[lang]["close"],
+                S_CONTENT=UI[lang]["contents"])
+            open(os.path.join(out_dir, lang, module + ".html"), "w", encoding="utf-8").write(chapter_page)
 
     # per-module type sidecar (keyed by the real module name; hover fetches types/<mod>.json)
     sidecar = json.dumps(types_global.get(module, {}), ensure_ascii=False)
@@ -620,6 +855,20 @@ def write_search(out_dir, lang, modules, name2pos, pos_aspect, types_by_module):
         json.dumps(entries, ensure_ascii=False))
 
 
+def write_terms(out_dir, lang, terms):
+    payload = {}
+    for entry in terms:
+        module = entry["introduced_in"]
+        payload[entry["id"]] = {
+            "label": entry[lang],
+            "recap": entry[f"recap_{lang}"],
+            "chapter": chapter_title(module, lang),
+            "href": f'{module}.html#term-{entry["id"]}',
+        }
+    with open(os.path.join(out_dir, lang, "terms.json"), "w", encoding="utf-8") as target:
+        json.dump(payload, target, ensure_ascii=False)
+
+
 def write_root(out_dir, langs, base):
     default = langs[0]
     redirect = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
@@ -667,21 +916,17 @@ def main(argv):
     if not rendered:
         sys.stderr.write(f"no highlighted output in {html_dir}; run `agda --html` first\n")
         return 1
-    # Modules sidebar (home excluded): the order is the reading order, i.e. the
-    # import order of the Everything master, never the alphabet
-    order = {}
-    try:
-        landing_src = open(os.path.join(src, LANDING + ".lagda.md"), encoding="utf-8").read()
-        order = {m: i for i, m in enumerate(re.findall(r"^import\s+(\S+)", landing_src, re.M))}
-    except OSError:
-        pass
-    modnav_list = sorted((m for m in internal if m != LANDING),
-                         key=lambda m: (order.get(m, len(order)), m))
-
     # Validate author-maintained routes before producing any reader-facing pages.
     reading_data = build_reading_data(src)
+    order = {node["id"]: node["order"] for node in reading_data["nodes"]}
+    modnav_list = sorted(internal, key=lambda m: (order.get(m, len(order) + 1), m))
     CHAPTER_TITLES.clear()
     CHAPTER_TITLES.update({node["id"]: node["title"] for node in reading_data["nodes"]})
+    glossary_entries = load_entries()
+    term_errors = schema_errors(glossary_entries)
+    if term_errors:
+        raise ValueError("\n".join(term_errors))
+    terms = sort_reader_terms(reader_terms(glossary_entries), reading_data, src)
     types_raw = json.load(open(types_path, encoding="utf-8")) if os.path.exists(types_path) else {}
     tpl = open(tpl_path, encoding="utf-8").read()
     # cache-bust: stamp ?v=<hash> on the CSS/JS so browsers always pick up changes
@@ -710,15 +955,16 @@ def main(argv):
     types_by_module = build_types(rendered, name2pos, types_raw, internal_q)
 
     # second pass: render every reachable module (externals get the "left Bedrock" banner;
-    # the Everything aggregator renders to index.html)
+    # the Milestones preview also supplies the generated reading-guide index)
     for m in rendered:
         render_module(m, html_dir, langs, internal, rendered_set, modnav_list,
-                      name2pos, types_by_module, tpl, out_dir, base, site)
+                      name2pos, types_by_module, terms, tpl, out_dir, base, site)
 
     search_mods = sorted(internal)                   # search indexes Bedrock identifiers only
     for lang in langs:
         os.makedirs(os.path.join(out_dir, lang), exist_ok=True)
         write_search(out_dir, lang, search_mods, name2pos, pos_aspect, types_by_module)
+        write_terms(out_dir, lang, terms)
         with open(os.path.join(out_dir, lang, "reading-routes.json"), "w", encoding="utf-8") as route_file:
             json.dump(reading_data, route_file, ensure_ascii=False)
     write_root(out_dir, langs, base)

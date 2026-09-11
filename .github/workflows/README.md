@@ -12,8 +12,11 @@ documented one level down instead.
 push to `main`:
 
 - `typecheck.yml`: the **proof gate**. It typechecks the masters with an interface cache, then
-  runs `make lint` (the four gates plus the i18n marker check) and `make test` (their unit
-  tests). Together those are `make check`, split so the typecheck can use its cache.
+  runs `make lint` (the source, prose and chapter gates) and `make test` (their unit tests).
+  It then runs `make milestone-lint`, which verifies that every source definition is in the
+  transitive import closure of `Milestones`. This final-tree check is deliberately separate
+  from the commit-time gates. Together the ordinary checks are `make check`, split so the
+  typecheck can use its cache.
 - `cloudflare.yml`: builds the site (root base URL) and deploys to **Cloudflare Pages**, the
   primary host ([bedrock.institute](https://bedrock.institute)).
 - `pages.yml`: builds the site (base URL `/Bedrock`) and deploys the **GitHub Pages** mirror.

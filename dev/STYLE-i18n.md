@@ -102,6 +102,33 @@ the addition `_+_`{.Agda} is associative
 The renderer renders `` `_+_`{.Agda} `` highlighted and hyperlinked to the identifier's
 definition, the same way it appears in a code block.
 
+## Reader-facing terminology
+
+Every technical concept named for textbook readers is registered with
+`audience = "reader"` in `dev/glossary.toml`. Its first formal introduction uses
+`[rendering]{.term-intro #stable-id}` in each language. Later occurrences are linked
+automatically only when the glossary entry sets `matching = "auto"`; ambiguous entries use
+`[rendering]{.term-ref #stable-id}`. The stable identifier and localized hover recap live in
+`dev/glossary.toml`. Do not duplicate that metadata in chapter-local HTML or JavaScript.
+
+## Centered single-line code
+
+For a short expression that should look like code but must not enter the Agda code
+stream, use one complete line. Add a localized `data-note` annotation when the
+expression needs an expandable explanation:
+
+```html
+<div class="single-line-code" data-note="说明这行记号的形式化程度"><code>Type ℓ : Type (ℓ-suc ℓ)</code></div>
+```
+
+Without an annotation, use the same element without `data-note`. The `data-note`
+value is a reader-facing comment attached to the notation. On wide
+screens it appears outside the right edge of the prose block, aligned with the
+centered expression; on narrow screens the reader can tap or focus the expression to
+open the note as a toast. Keep the note in the language block where it appears. The
+`lint-prose.py` gate enforces this one-line form. Do not replace such displays with
+LaTeX.
+
 ## Math
 
 Use bare Unicode for single symbols where possible. Reserve LaTeX for real expressions:

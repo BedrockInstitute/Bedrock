@@ -1,8 +1,9 @@
 # Bedrock. Three jobs: typecheck the tree, lint it, build the site.
 #
 #   make check       the full gate: typecheck, lint, test
-#   make typecheck   typecheck src/Everything.lagda.md
+#   make typecheck   typecheck the complete Bedrock import closure
 #   make lint        run source and reading-order gates over the whole tree
+#   make milestone-lint  verify every source definition reaches Milestones
 #   make test        run the gate unit tests
 #   make hooks       install scripts/git-hooks into .git/hooks
 #   make site        render the HTML site into _build/site
@@ -18,7 +19,7 @@ PY        ?= $(VENV)/bin/python
 # at most, so one run gets 8 GB. Override per run: GHCRTS="-M12g" make typecheck.
 export GHCRTS ?= -A64m -I0 -M8g
 
-EVERYTHING := src/Everything.lagda.md
+AGDA_ROOT  := src/Milestones.lagda.md
 HTML_DIR   := _build/html
 SITE_OUT   := _build/site
 LANGS      := en,zh,ja
@@ -26,13 +27,13 @@ BASE_URL   :=
 PORT       := 8000
 CF_PROJECT := bedrock
 
-.PHONY: check typecheck lint test hooks venv gen html types site serve deploy clean
+.PHONY: check typecheck lint milestone-lint test hooks venv gen html types site serve deploy clean
 
 # The gate every document names. CI runs it, the hook runs its cheap half.
 check: typecheck lint test
 
 typecheck:
-	$(AGDA) $(EVERYTHING)
+	$(AGDA) $(AGDA_ROOT)
 
 # Source and reading-order gates. lint-prose and lint-agda take --staged; here they
 # sweep the tree. check-glossary needs tomllib, so it wants the venv's 3.11.
@@ -41,18 +42,24 @@ lint:
 	$(PY) scripts/gate/lint-prose.py --check
 	$(PY) scripts/gate/lint-agda.py --check
 	$(PY) scripts/gate/check-glossary.py --check
+	$(PY) scripts/gate/check-term-introductions.py
 	$(PY) scripts/gate/check-fences.py --check
 	$(PY) scripts/gate/check-reading-order.py
 	$(PY) scripts/site/reading_routes.py --check
 	$(PY) scripts/gate/check-chapter-framework.py
 	$(PY) scripts/site/weave-i18n.py --check
 
+# Final-tree gate: run by pre-push and CI, not by the pre-commit hook or make lint.
+milestone-lint:
+	$(PY) scripts/gate/check-milestone-consumption.py
+
 test:
 	$(PY) -m unittest discover -s scripts/tests -p "test_*.py" -t scripts/tests -v
 
 hooks:
 	install -m 755 scripts/git-hooks/pre-commit .git/hooks/pre-commit
-	@echo "pre-commit installed; bypass one commit with --no-verify"
+	install -m 755 scripts/git-hooks/pre-push .git/hooks/pre-push
+	@echo "pre-commit and pre-push hooks installed; bypass a commit with --no-verify"
 
 venv:
 	$(PYTHON) -m venv $(VENV)
@@ -62,7 +69,7 @@ gen:
 	$(PY) scripts/site/weave-i18n.py --gen --out _build/woven
 
 html:
-	$(AGDA) --html --html-highlight=code --html-dir=$(HTML_DIR) $(EVERYTHING)
+	$(AGDA) --html --html-highlight=code --html-dir=$(HTML_DIR) $(AGDA_ROOT)
 
 types:
 	$(PY) scripts/site/extract-types.py --html-dir $(HTML_DIR) --out _build/types.json

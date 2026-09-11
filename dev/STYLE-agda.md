@@ -85,7 +85,7 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   whose closed constant domain it serves; neither belongs to `Base.Prelude`).
 - **Hub admission** (owner question, 2026-07-17): a name enters `Base.Prelude` only
   if it is **statement-ambient**, needed to read definitions and theorem statements
-  throughout the book (universes, paths, h-levels, `hProp` with `⟨_⟩`, pairs, the
+  throughout the book (universes, paths, homotopy levels, `hProp` with `⟨_⟩`, pairs, the
   indexing data `ℕ`/`Vec`/`Fin`, `⊥*`), and its statement-level role is not already
   played by one of the book's own abstractions (logic connectives belong to the
   truth algebra; truncated existence reaches statements as its `⋁`, which is why
@@ -97,21 +97,19 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   chapter.
 - `open import` always carries a `using`/`renaming` list (audit-friendly), and every
   imported name must actually be used: imports are **necessary** (the linter checks
-  this) as well as sufficient (the typechecker checks that). Exceptions: `Everything`,
-  whose bare import block is the site's module list, and the designated **hub
+  this) as well as sufficient (the typechecker checks that). The designated **hub
   modules** `Base.Prelude` and `Base.Truth`, curated re-export preludes designed to
   be opened wholesale (the hubs' own `public` re-exports stay curated with `using`
   lists). A genuine exception the linter cannot see (an instance-only import) is
   marked `-- lint-agda: keep`.
-- Every module is imported by `Everything` in reading order (enforced by the
+- Every module appears in `dev/reading-catalog.json` in reading order (enforced by the
   `check-reading-order.py` gate; no master may be absent from the catalog). Its
   reading position introduces its concepts before their substantive use. **The book keeps two
-  catalogs** (owner ruling, 2026-07-18, archived from PLAN §5): the **reading
-  catalog** is `Everything.lagda.md`, hand-maintained, with import order =
-  reading order; the **structure catalog** is the namespace tree, derived
+  catalogs**: the **reading catalog** is the machine-readable `dev/reading-catalog.json`;
+  the **structure catalog** is the namespace tree, derived
   automatically and never hand-maintained. Namespace membership is decided by
   subject; reading order follows mathematical prerequisites and coherent learning
-  units. An explicit preview such as Landmarks may precede its proof chapters,
+  units. An explicit preview such as Milestones may precede its proof chapters,
   but the instructional sequence must not silently rely on unread chapters.
 
 ## 3. Naming

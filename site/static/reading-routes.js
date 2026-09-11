@@ -5,7 +5,7 @@
   if (!host) return;
 
   const lang = ["en", "zh", "ja"].includes(host.dataset.lang) ? host.dataset.lang : "en";
-  const current = host.dataset.current || "Everything";
+  const current = host.dataset.current || "";
   const copy = {
     en: {
       title: "Choose a way through Bedrock",
@@ -25,7 +25,7 @@
       prerequisites: "Direct prerequisites", noPrerequisites: "No direct prerequisites",
       onward: "Possible next chapters", noOnward: "No direct continuation is listed yet.",
       allRoutes: "Explore all routes", loadError: "The interactive routes could not be loaded. The catalog and chapter links remain available.",
-      recommended: "Recommended directory", depmap: "Dependency map",
+      recommended: "Reading guide", depmap: "Dependency map",
       of: "of", routes: "Routes", needs: "Needs", module: "Module",
       allComplete: "All non-preview chapters are marked complete.", saved: "chapters complete"
     },
@@ -47,7 +47,7 @@
       prerequisites: "直接の前提", noPrerequisites: "直接の前提はありません",
       onward: "次に進める章", noOnward: "直接続く章はありません。",
       allRoutes: "全ルートを見る", loadError: "ルートを読み込めませんでした。目次と章へのリンクは使えます。",
-      recommended: "読書例の目次", depmap: "依存マップ",
+      recommended: "読書案内", depmap: "依存マップ",
       of: "/", routes: "ルート", needs: "必要", module: "モジュール",
       allComplete: "展望を除く全章を完了しました。", saved: "章を完了"
     },
@@ -69,7 +69,7 @@
       prerequisites: "直接先修", noPrerequisites: "没有直接先修",
       onward: "可选后续章节", noOnward: "目前没有列出直接后续。",
       allRoutes: "查看全部路线", loadError: "交互路线暂时无法载入，原目录与章节链接仍可使用。",
-      recommended: "推荐目录", depmap: "依赖地图",
+      recommended: "阅读指南", depmap: "依赖地图",
       of: "/", routes: "路线", needs: "需补", module: "模块",
       allComplete: "所有非预览章节均已标记完成。", saved: "章已完成"
     }
@@ -89,7 +89,7 @@
     return node;
   };
   const local = value => value && (value[lang] || value.en || value.zh) || "";
-  const chapterHref = id => id === "Everything" ? "index.html" : `${encodeURIComponent(id)}.html`;
+  const chapterHref = id => `${encodeURIComponent(id)}.html`;
 
   let completed = new Set();
   try {
@@ -141,7 +141,7 @@
 
     host.replaceChildren();
     host.classList.add("reading-explorer-ready");
-    if (current !== "Everything") {
+    if (current) {
       renderCompact(nodes.get(current), nodes, routes, prerequisites, missing, ready);
       return;
     }

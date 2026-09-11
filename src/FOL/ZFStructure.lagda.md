@@ -108,11 +108,11 @@ record ZFStructure {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') : Type (ℓ-max (�
 ```
 
 <!--en-->
-The two relation fields give the structure's equality `≈ˢ` and membership `∈ˢ`, each a function `S → S → Ω`{.Agda} into the truth algebra's carrier. So a statement like `x ∈ˢ y` evaluates to a truth value, not to a host proposition or a boolean; what that truth value can do depends entirely on which algebra `𝕋` supplies. The record ends here: four fields, with the carrier and two relations as data and sethood as a constraint, and no axiom.
+The two relation fields give the structure's equality `≈ˢ` and membership `∈ˢ`, each a function `S → S → Ω`{.Agda} into the truth algebra's carrier. Thus `x ∈ˢ y` takes a value in `Ω`. The record itself does not require `Ω` to consist of proposition types or of booleans; the concrete interpretation depends on the chosen truth algebra `𝕋`. The record ends here: the carrier and two relations are data, sethood is a constraint, and no set-theoretic axiom is imposed.
 <!--zh-->
-两个关系字段给出结构的等词 `≈ˢ` 与隶属 `∈ˢ`，都是 `S → S → Ω`{.Agda} 型的函数，取值于真值代数的载体。因此像 `x ∈ˢ y` 这样的陈述求值后是一个真值，而不是宿主命题或布尔值；这个真值能做什么，完全取决于 `𝕋` 提供的是哪个代数。record 到此为止：四个字段，其中载体与两个关系是数据，集合性是约束，再无公理。
+两个关系字段给出结构的等词 `≈ˢ` 与隶属 `∈ˢ`，都是 `S → S → Ω`{.Agda} 型的函数，取值于真值代数的载体。因此 `x ∈ˢ y` 取 `Ω` 中的一个值。这个 record 本身不要求 `Ω` 由命题类型或布尔值组成；具体解释取决于所选的真值代数 `𝕋`。record 到此为止：载体与两个关系是数据，集合性是约束，并未施加集合论公理。
 <!--ja-->
-二つの関係フィールドは、構造の等号 `≈ˢ` と所属 `∈ˢ` を与えます。いずれも真理値代数の担体への関数 `S → S → Ω`{.Agda} です。したがって `x ∈ˢ y` のような文は、評価すると真理値になります。ホスト言語の命題でもブール値でもありません。その真理値に何ができるかは、`𝕋` がどの代数を与えるかに完全に左右されます。レコードはここで終わりです。四つのフィールドからなり、台と二つの関係がデータ、集合性が制約で、公理はありません。
+二つの関係フィールドは構造の等号 `≈ˢ` と所属 `∈ˢ` を与え、いずれも真理値代数の担体への関数 `S → S → Ω`{.Agda} です。したがって `x ∈ˢ y` は `Ω` の値をとります。このレコード自身は、`Ω` が命題の型またはブール値からなることを要求しません。具体的な解釈は選ばれた真理値代数 `𝕋` に依存します。レコードはここで終わり、台と二つの関係がデータ、集合性が制約であり、集合論の公理は課されません。
 <!--/-->
 
 ```agda

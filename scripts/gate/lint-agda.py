@@ -18,8 +18,6 @@ Report-only checks (prose is lint-prose.py's business; STYLE-agda.md is the law)
                     interaction holes (`{!...!}` or a bare `?`)           (STYLE-agda §1)
 
 Exemptions:
-  - `Everything.lagda.md` skips B and C: its bare import block is the site's
-    module list, and its imports are intentionally "unused".
   - The designated hub modules (BARE_OPEN_HUBS: curated re-export preludes,
     designed to be opened wholesale) may be opened bare, skipping B.
   - An import whose lines (or the line just above it) contain `lint-agda: keep`
@@ -53,7 +51,6 @@ from pathlib import Path   # cutover step 7: check_spdx() needs it
 ROOT = Path(__file__).resolve().parent.parent.parent
 
 OPTIONS_EXPECTED = ["--cubical", "--safe", "--guardedness"]
-EXEMPT_BASENAME = "Everything.lagda.md"
 BARE_OPEN_HUBS = {"Base.Prelude", "Base.Truth"}   # STYLE-agda §2
 KEEP_MARK = "lint-agda: keep"
 FORBIDDEN_PRAGMAS = ("TERMINATING", "NON_TERMINATING",
@@ -268,7 +265,6 @@ def lint_file(path):
     code = "\n".join(l for _, l in lines)
     masked, pragmas, holes = mask_code(code)
     mlines = list(zip((ln for ln, _ in lines), masked.splitlines()))
-    exempt = path.split("/")[-1] == EXEMPT_BASENAME
     findings = []
 
     def report(idx_or_lineno, rule, msg, by_index=True):
@@ -311,7 +307,7 @@ def lint_file(path):
 
     # B. using-list discipline
     for st in stmts:
-        if exempt or st.keep or st.kind != "open-import":
+        if st.keep or st.kind != "open-import":
             continue
         if st.module in BARE_OPEN_HUBS:
             continue
@@ -354,7 +350,7 @@ def lint_file(path):
         return any(t == handle or t.startswith(dotted) for t in tokset)
 
     for st in stmts:
-        if exempt or st.keep or st.public:
+        if st.keep or st.public:
             continue
         if st.kind == "import":
             handle = st.as_name or st.module

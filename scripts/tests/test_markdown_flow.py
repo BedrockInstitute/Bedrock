@@ -45,6 +45,18 @@ class MarkdownFlowTests(unittest.TestCase):
         actual, _ = renderer.md_to_html("Before.\n\n\x00REF0\x00 after.")
         self.assertEqual(actual, "<p>Before.</p>\n<p>\x00REF0\x00 after.</p>")
 
+    def test_annotation_in_list_item_stays_inline_and_stores_its_note(self):
+        source = ('- **`isSet A`: A is <span class="prose-annotation-target">set</span>'
+                  '<aside class="prose-annotation-note">A type satisfying `isSet`; '
+                  '<a href="terms.html">details</a>.</aside>.**')
+        actual, _ = renderer.md_to_html(source)
+        self.assertIn('<li><strong><code>isSet A</code>: A is ', actual)
+        self.assertIn('class="prose-annotation-target"', actual)
+        self.assertIn('<template class="prose-annotation-template">A type satisfying <code>isSet</code>; '
+                      '<a href="terms.html">details</a>.</template>', actual)
+        self.assertNotIn("<aside", actual)
+        self.assertNotIn("has-prose-annotation", actual)
+
 
 if __name__ == "__main__":
     unittest.main()

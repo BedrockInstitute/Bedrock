@@ -7,17 +7,14 @@ We drive Agda's batch interaction protocol (`agda --interaction-json`,
 
 To also cover the cubical / Agda library identifiers Bedrock references (so cubical defs get
 hover too), we extract types for the WHOLE reachable module graph, i.e. every module that
-`agda --html` emitted. A transitively-imported module is not in scope from `Everything`, so
-we generate a small build-only loader that `import`s every reachable module directly, load it
-once, then query each module. If that loader fails to typecheck (e.g. an unusual primitive
-module), we fall back to loading `src/Everything.lagda.md` and extracting the internal
-modules only (external hover is then simply absent, logged).
+`agda --html` emitted. We generate a small build-only loader that `import`s every reachable
+module directly, load it once, then query each module.
 
 Output (JSON, to --out or stdout): { "<Module>": { "<bare-name>": "<type string>" } }.
 
 Usage:
   extract-types.py [--html-dir _build/html] [--src src]
-                   [--everything src/Everything.lagda.md] [--out FILE]
+                   [--out FILE]
 """
 
 import glob
@@ -26,19 +23,11 @@ import os
 import subprocess
 import sys
 
-AGGREGATOR = "Everything"   # no own definitions; never queried
-
-
 def reachable_modules(html_dir):
     # agda --html emits <Module>.md for literate sources and <Module>.html for library
     # (non-literate) modules; both are reachable modules we want types for.
     files = glob.glob(os.path.join(html_dir, "*.md")) + glob.glob(os.path.join(html_dir, "*.html"))
     return sorted(set(os.path.basename(p).rsplit(".", 1)[0] for p in files))
-
-
-def internal_modules(src):
-    return set(os.path.relpath(p, src)[:-len(".lagda.md")].replace(os.sep, ".")
-               for p in glob.glob(os.path.join(src, "**", "*.lagda.md"), recursive=True))
 
 
 def run_agda(commands):
@@ -99,9 +88,9 @@ def write_loader(typeext_dir, src_abs, modules):
     return os.path.abspath(path)
 
 
-def extract(html_dir, src, everything):
+def extract(html_dir, src):
     reachable = reachable_modules(html_dir)
-    queryable = [m for m in reachable if m != AGGREGATOR]
+    queryable = reachable
     if not queryable:
         return {}
 
@@ -109,31 +98,23 @@ def extract(html_dir, src, everything):
     typeext = os.path.join(os.path.dirname(html_dir) or ".", "typeext")
     loader = write_loader(typeext, os.path.abspath(src), reachable)
     result, hits = query(loader, queryable)
-    if hits:
-        return result
-
-    # Fallback: internal modules only, via the committed aggregator.
-    sys.stderr.write("warning: reachable-set loader yielded no types; "
-                     "falling back to internal modules only (no external hover)\n")
-    internal = internal_modules(src)
-    internal_q = [m for m in queryable if m in internal]
-    result, _ = query(os.path.abspath(everything), internal_q)
+    if not hits:
+        sys.stderr.write("warning: reachable-set loader yielded no type responses\n")
     return result
 
 
 def main(argv):
-    html_dir, src, everything, out = "_build/html", "src", "src/Everything.lagda.md", None
+    html_dir, src, out = "_build/html", "src", None
     i = 0
     while i < len(argv):
         a = argv[i]
         if a == "--html-dir": i += 1; html_dir = argv[i]
         elif a == "--src": i += 1; src = argv[i]
-        elif a == "--everything": i += 1; everything = argv[i]
         elif a == "--out": i += 1; out = argv[i]
         else: sys.stderr.write(f"unknown option: {a}\n"); return 2
         i += 1
 
-    data = extract(html_dir, src, everything)
+    data = extract(html_dir, src)
     text = json.dumps(data, ensure_ascii=False, indent=2)
     if out:
         os.makedirs(os.path.dirname(out) or ".", exist_ok=True)

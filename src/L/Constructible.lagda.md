@@ -7,7 +7,7 @@ One design choice does most of the work. The tower is indexed not by a separate 
 <!--zh-->
 # 可构造层级与可构造宇宙
 
-可构造层级从空集开始，反复施加可定义幂集，并在极限点处取并。所得阶段都是传递集，而塔沿指标之间的隶属关系保持单调；出现在某个阶段中的集合构成类 `L`{.Agda}，连同把环境结构限制到其上所得的集合论结构。
+可构造层级从空集开始，反复施加可定义幂集，并在极限点处取并。所得层都是传递集，而塔沿指标之间的隶属关系保持单调；出现在某一层中的集合构成类 `L`{.Agda}，连同把环境结构限制到其上所得的集合论结构。
 
 一个设计选择承担了大部分工作。塔的索引不是另立的序数类型，而是**集合自身**，凭借正则性所授权的沿成员关系的递归：`Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`。这一条方程同时覆盖零、后继与极限，而在冯·诺伊曼序数上它恰是哥德尔的塔；定义本身接受任意集合作为索引，索引须为序数的要求留到定义类 `L` 时才施加。与之并行的是归纳谓词 `isLayer`{.Agda}，「是一个层」，其构造子就是塔的闭包原则；两个视角在全章配合使用。
 <!--ja-->
@@ -40,7 +40,7 @@ open import FOL.ZFStructure using ( ZFStructure; _↾_; module hPropStructure; T
 <!--en-->
 Three mathematical ingredients drive the construction. First, well-founded recursion on membership: the hierarchy chapter's principle `∈-induction` lets a function on sets be defined by recursion along `∈ˢ`, which is what the tower itself will be. Second, unions of indexed families, with the two model lemmas that read membership in such a union in each direction. Third, the definability chapter's operator `Def A`, which collects the subsets of `A` definable in the inner world `(A, ∈)` with parameters from `A`; applied stage by stage, it is what pushes the hierarchy upward. The syntax of first-order formulas, in particular the type `Formula`, is carried over from the syntax chapter for exactly this operator.
 <!--zh-->
-推动构造的数学素材有三。其一是沿成员关系的良基递归：层级章的原理 `∈-induction` 允许沿 `∈ˢ` 递归地定义集合上的函数，塔本身正是这样定义的。其二是索引族的并，以及从两个方向读取这种并中隶属关系的两条模型引理。其三是可定义性章的算子 `Def A`，它收集在内层世界 `(A, ∈)` 中、由 `A` 中参数定义出的 `A` 的子集；逐阶段施加它，正是层级向上生长的动力。一阶公式的语法，尤其是类型 `Formula`，正是为这个算子而从语法章沿用的。
+推动构造的数学素材有三。其一是沿成员关系的良基递归：层级章的原理 `∈-induction` 允许沿 `∈ˢ` 递归地定义集合上的函数，塔本身正是这样定义的。其二是索引族的并，以及从两个方向读取这种并中隶属关系的两条模型引理。其三是可定义性章的算子 `Def A`，它收集在内层世界 `(A, ∈)` 中、由 `A` 中参数定义出的 `A` 的子集；逐层施加它，正是层级向上生长的动力。一阶公式的语法，尤其是类型 `Formula`，正是为这个算子而从语法章沿用的。
 <!--ja-->
 構成を進める数学的な材料は三つあります。第一に、所属に沿った整礎再帰です。階層の章の原理 `∈-induction` は、`∈ˢ` に沿った再帰で集合上の関数を定義することを可能にし、塔そのものがまさにこれで定義されます。第二に、添字族の和集合と、その和への所属を両方向に読む二つのモデル補題です。第三に、定義可能性の章の演算子 `Def A` であり、内側の世界 `(A, ∈)` で `A` のパラメータによって定義される `A` の部分集合を集めるもので、これを段階ごとに施すことが階層を上へ伸ばす原動力になります。一階述語論理式の構文、とりわけ型 `Formula` は、まさにこの演算子のために構文の章から引き継がれます。
 <!--/-->
@@ -111,7 +111,7 @@ Every stage of the hierarchy is transitive: the empty set is transitive, definab
 <!--zh-->
 ## 传递集
 
-层级的每个阶段都是传递的：空集传递，可定义幂集保持传递性，传递集之并仍然传递。这些封闭性事实与构造层所用的构造子逐一对应。
+层级的每层都是传递的：空集传递，可定义幂集保持传递性，传递集之并仍然传递。这些封闭性事实与构造层所用的构造子逐一对应。
 
 (`𝒟` 是上一章 `Def` 在本书中的短记号，沿用这个算子惯用的花体字母。)
 <!--ja-->
@@ -253,7 +253,7 @@ The indices that matter for the constructible hierarchy are the von Neumann ordi
 <!--en-->
 Thus `IsOrd A` is the conjunction of two propositions: `A` is transitive, and every member of `A` is transitive. The proof `isPropIsOrd A` combines the propositionality of these two components using closure under products and dependent functions. This certificate is used explicitly in the definition of `isL`, where `(IsOrd α , isPropIsOrd α)` supplies the truth value asserting that the stage index is an ordinal.
 <!--zh-->
-因此，`IsOrd A` 是两个命题的合取：`A` 是传递集，而且 `A` 的每个成员都是传递集。证明 `isPropIsOrd A` 利用命题在积与依值函数下的封闭性，把两个分量的命题性合并起来。`isL` 的定义会显式使用这份证书，其中 `(IsOrd α , isPropIsOrd α)` 给出「阶段指标是序数」这一真值。
+因此，`IsOrd A` 是两个命题的合取：`A` 是传递集，而且 `A` 的每个成员都是传递集。证明 `isPropIsOrd A` 利用命题在积与依值函数下的封闭性，把两个分量的命题性合并起来。`isL` 的定义会显式使用这份证书，其中 `(IsOrd α , isPropIsOrd α)` 给出「层指标是序数」这一真值。
 <!--ja-->
 したがって `IsOrd A` は二つの命題の積です。`A` が推移的であり、かつ `A` の各要素が推移的である、という二つです。`isPropIsOrd A` は、命題が積と依存関数に関して閉じていることを使い、両成分の命題性を合わせます。この証明書は `isL` の定義で明示的に使われ、`(IsOrd α , isPropIsOrd α)` が「段階の添字は順序数である」という真理値を与えます。
 <!--/-->
@@ -284,7 +284,7 @@ isPropIsOrd A = isProp× (isPropIsTransV A)
 <!--en-->
 The predicate is an inductive family indexed by the carrier, and the constructors are read as generation rules for stages. The base case says the empty set is a stage. Closure under `𝒟` says that if `A` is a stage then so is its definable power set, mirroring the successor step. The general union constructor mirrors the limit step: if `x` is a set whose members are all, untruncatedly, stages, then `⋃ x` is a stage. The binary union constructor covers `A ∪ B` directly from stage witnesses for `A` and `B`. Each constructor mirrors one of the transitivity lemmas of the previous section, with `isTransV` replaced by `isLayer`; this parallelism is what makes the next proof immediate.
 <!--zh-->
-这个谓词是以载体为索引的归纳族，其构造子被读作阶段的生成规则。基底说空集是阶段。对 `𝒟` 的闭包说：若 `A` 是阶段，则其可定义幂集也是阶段，对应后继步骤。一般并构造子对应极限步骤：若 `x` 的成员全部、以不加截断的方式是阶段，则 `⋃ x` 是阶段。二元并构造子直接从 `A` 与 `B` 的阶段见证覆盖 `A ∪ B`。每个构造子对应上一节的一条传递性引理，只是把 `isTransV` 换成 `isLayer`；正是这种平行性使下一条证明变得直接。
+这个谓词是以载体为索引的归纳族，其构造子被读作层的生成规则。基底说空集是层。对 `𝒟` 的闭包说：若 `A` 是层，则其可定义幂集也是层，对应后继步骤。一般并构造子对应极限步骤：若 `x` 的成员全部、以不加截断的方式是层，则 `⋃ x` 是层。二元并构造子直接从 `A` 与 `B` 的层见证覆盖 `A ∪ B`。每个构造子对应上一节的一条传递性引理，只是把 `isTransV` 换成 `isLayer`；正是这种平行性使下一条证明变得直接。
 <!--ja-->
 この述語は台を添字とする帰納的な族であり、構成子は段階の生成規則として読めます。基底の場合は、空集合が段階であること。`𝒟` による閉包は、`A` が段階ならその定義可能冪集合も段階であることで、後者ステップに対応します。一般の和の構成子は極限ステップに対応します。`x` の要素がすべて、切り詰めなしに層であるなら、`⋃ x` も層です。二項和の構成子は、`A` と `B` の層の証明から直接 `A ∪ B` を扱います。各構成子は、前節の推移性の補題の一つを `isTransV` を `isLayer` に置き換えた形に対応し、この平行性こそが次の証明を即座にします。
 <!--/-->
@@ -300,7 +300,7 @@ data isLayer : S → Type (ℓ-suc ℓ) where
 <!--en-->
 The small-indexed family constructor completes the picture: for a type `X : Type ℓ` and a family `f : X → S` all of whose values are stages, the union `⋃ (sett X f)` is a stage. This is the constructor through which a limit stage can be assembled from the family of earlier stages. Now the induction: to prove `layer-trans`, that every layer is transitive, one receives the layer as an inductive argument, so the case is determined by its constructor. The empty case is `∅-trans` verbatim. The `𝒟` case applies `𝒟-trans`, whose premise is the induction hypothesis `layer-trans lA` for the sublayer.
 <!--zh-->
-小索引族构造子补全全图：对类型 `X : Type ℓ` 与族 `f : X → S`，若所有取值都是阶段，则并 `⋃ (sett X f)` 是阶段。极限阶段正是经由这个构造子从更早阶段的族组装出来。接下来是归纳：要证 `layer-trans`，即每个层都传递，层以归纳参数的形式给出，情形由其构造子决定。空集情形逐字就是 `∅-trans`。`𝒟` 情形应用 `𝒟-trans`，其前提正是对子层的归纳假设 `layer-trans lA`。
+小索引族构造子补全全图：对类型 `X : Type ℓ` 与族 `f : X → S`，若所有取值都是层，则并 `⋃ (sett X f)` 是层。极限层正是经由这个构造子从更早层的族组装出来。接下来是归纳：要证 `layer-trans`，即每层都传递，层以归纳参数的形式给出，情形由其构造子决定。空集情形逐字就是 `∅-trans`。`𝒟` 情形应用 `𝒟-trans`，其前提正是对子层的归纳假设 `layer-trans lA`。
 <!--ja-->
 小さな添字族の構成子が全体を完成させます。型 `X : Type ℓ` と族 `f : X → S` に対し、すべての値が層なら、和 `⋃ (sett X f)` も層です。極限段階は、まさにこの構成子を通して前段階の族から組み立てられます。次に帰納です。`layer-trans`、すなわちすべての層が推移的であることを示すには、層を帰納的な引数として受け取るので、場合はその構成子で定まります。空集合の場合はそのまま `∅-trans` です。`𝒟` の場合は `𝒟-trans` を適用し、その前提は下の層に対する帰納仮定 `layer-trans lA` です。
 <!--/-->
@@ -317,7 +317,7 @@ layer-trans (𝒟-layer {A} lA) = 𝒟-trans {A} (layer-trans lA)
 <!--en-->
 The three union cases dispatch just as directly. The general union case hands the memberwise induction hypothesis to `⋃-trans`: the lemma wants, for each member `y` of `x`, a transitivity proof for `y`, and the constructor premise `mem` supplies exactly that, untruncated, so no elimination of truncation is needed. The binary case is `∪-trans` on the two induction hypotheses. The family case is `setUnion-trans` with the pointwise induction hypothesis. The section thus establishes, by structural recursion alone, that every stage of the tower is a transitive set, the fact used by the transitivity of the class `L` later in this chapter.
 <!--zh-->
-三种并的情形同样直接分发。一般并情形把逐成员的归纳假设交给 `⋃-trans`：该引理要求对 `x` 的每个成员 `y` 给出 `y` 的传递性证明，而构造子前提 `mem` 恰好不加截断地供给，故无需消去截断。二元情形是对两个归纳假设应用 `∪-trans`。族情形是带逐点归纳假设的 `setUnion-trans`。于是本节仅凭结构递归就确立了塔的每个阶段都是传递集，本章稍后证明类 `L` 的传递性时正要用到这一事实。
+三种并的情形同样直接分发。一般并情形把逐成员的归纳假设交给 `⋃-trans`：该引理要求对 `x` 的每个成员 `y` 给出 `y` 的传递性证明，而构造子前提 `mem` 恰好不加截断地供给，故无需消去截断。二元情形是对两个归纳假设应用 `∪-trans`。族情形是带逐点归纳假设的 `setUnion-trans`。于是本节仅凭结构递归就确立了塔的每层都是传递集，本章稍后证明类 `L` 的传递性时正要用到这一事实。
 <!--ja-->
 三つの和の場合も同じように直接に振り分けられます。一般の和の場合は、要素ごとの帰納仮定を `⋃-trans` に渡します。この補題は `x` の各要素 `y` に対する `y` の推移性の証明を要求しますが、構成子の前提 `mem` がまさにそれを切り詰めなしで供給するため、命題的切り詰めの消去は必要ありません。二項の場合は二つの帰納仮定に対する `∪-trans` です。族の場合は各点の帰納仮定を伴う `setUnion-trans` です。こうしてこの節は、構造的再帰だけで塔のすべての段階が推移的集合であることを確立します。本章の後半でクラス `L` の推移性を示す際に用いられる事実です。
 <!--/-->
@@ -345,7 +345,7 @@ Now the tower itself, defined by recursion on membership. Two technical measures
 <!--en-->
 The operator is first repackaged as `𝒟ₒ` inside an `opaque` block, so that the elaborate definition of `Def` stays hidden unless a lemma explicitly asks to unfold it. The step function `LsetStep` receives an index set `α` and, for each member `β` of `α`, the recursive value `rec β`; membership here appears through `∈ᵗ`, the type-valued reading of the structural membership proposition. The body forms the family that sends a small index `m : ⟪ α ⟫` to `𝒟ₒ` applied to the recursive value at the member `⟪ α ⟫↪ m` named by `m`, and takes its union. Unfolding the union over the index type, the intended reading is exactly `⋃ { 𝒟ₒ (Lset β) ∣ β ∈ α }`, one equation serving zero, successors, and limits alike: for `α` empty the union is empty, for a successor it repeats the classical next step, and for a limit it collects all earlier stages at once.
 <!--zh-->
-算子先在 `opaque` 块内被重新包装为 `𝒟ₒ`，使 `Def` 精细的定义保持隐藏，除非某条引理显式要求展开。步进函数 `LsetStep` 接收索引集 `α`，以及对 `α` 的每个成员 `β` 的递归值 `rec β`；这里的成员关系经由 `∈ᵗ`，即结构成员命题的取类型读法出现。函数体构造一个族：把小索引 `m : ⟪ α ⟫` 映到 `𝒟ₒ` 作用于 `m` 所指名成员 `⟪ α ⟫↪ m` 处递归值的结果，再取其并。沿索引类型展开这个并，其意读恰好是 `⋃ { 𝒟ₒ (Lset β) ∣ β ∈ α }`，一条方程同时服务零、后继与极限：`α` 为空时并为空，后继时重复经典的下一步，极限时一次收齐所有更早阶段。
+算子先在 `opaque` 块内被重新包装为 `𝒟ₒ`，使 `Def` 精细的定义保持隐藏，除非某条引理显式要求展开。步进函数 `LsetStep` 接收索引集 `α`，以及对 `α` 的每个成员 `β` 的递归值 `rec β`；这里的成员关系经由 `∈ᵗ`，即结构成员命题的取类型读法出现。函数体构造一个族：把小索引 `m : ⟪ α ⟫` 映到 `𝒟ₒ` 作用于 `m` 所指名成员 `⟪ α ⟫↪ m` 处递归值的结果，再取其并。沿索引类型展开这个并，其意读恰好是 `⋃ { 𝒟ₒ (Lset β) ∣ β ∈ α }`，一条方程同时服务零、后继与极限：`α` 为空时并为空，后继时重复经典的下一步，极限时一次收齐所有更早层。
 <!--ja-->
 まず演算子を `opaque` ブロックの内側で `𝒟ₒ` として包み直し、`Def` の込み入った定義が、補題が明示的に展開を求めない限り姿を現さないようにします。ステップ関数 `LsetStep` は添字集合 `α` と、`α` の各要素 `β` に対する再帰値 `rec β` を受け取ります。ここでの所属は、構造的な所属の命題を型として読む `∈ᵗ` を通して現れます。本体は、小さな添字 `m : ⟪ α ⟫` を、`m` の指す要素 `⟪ α ⟫↪ m` での再帰値に `𝒟ₒ` を施したものへ写す族を作り、その和集合を取ります。この和を添字型にわたって展開すれば、意図された読みはまさに `⋃ { 𝒟ₒ (Lset β) ∣ β ∈ α }` であり、一本の等式が零・後者・極限を等しく扱います。`α` が空なら和は空、後者なら古典的な次のステップを繰り返し、極限ならすべての前段階を一度に集めます。
 <!--/-->
@@ -404,7 +404,7 @@ Every value of the tower is a layer: unfold once with `Lset-compute`{.Agda}, app
 <!--en-->
 The bridge from the operator to the predicate costs one line. Inside a block that unfolds `𝒟ₒ`, the statement `𝒟ₒ-layer` is literally the constructor `𝒟-layer`, since `𝒟ₒ A` computes to `𝒟 A`; this is the only place in the chapter that needs to look inside the opaque wrapper, and afterwards every use of the operator can stay abstract. The goal `Lset-layer` then says that the tower lands entirely inside the inductive predicate: every stage `Lset α` is a layer. Its proof is itself an application of membership induction, the same principle that defined the tower.
 <!--zh-->
-从算子到谓词的桥只花一行。在展开 `𝒟ₒ` 的块内，陈述 `𝒟ₒ-layer` 字面上就是构造子 `𝒟-layer`，因为 `𝒟ₒ A` 化归为 `𝒟 A`；这是全章唯一需要查看不透明包装内部之处，此后对算子的每个使用都可保持抽象。目标 `Lset-layer` 随之说塔完全落在归纳谓词之内：每个阶段 `Lset α` 都是层。其证明本身又是一次成员归纳的应用，即定义塔的那条同一原理。
+从算子到谓词的桥只花一行。在展开 `𝒟ₒ` 的块内，陈述 `𝒟ₒ-layer` 字面上就是构造子 `𝒟-layer`，因为 `𝒟ₒ A` 化归为 `𝒟 A`；这是全章唯一需要查看不透明包装内部之处，此后对算子的每个使用都可保持抽象。目标 `Lset-layer` 随之说塔完全落在归纳谓词之内：每层 `Lset α` 都是层。其证明本身又是一次成员归纳的应用，即定义塔的那条同一原理。
 <!--ja-->
 演算子から述語への橋渡しは一行で済みます。`𝒟ₒ` を展開するブロックの内側では、`𝒟ₒ-layer` という主張は文字どおり構成子 `𝒟-layer` です。`𝒟ₒ A` は `𝒟 A` へ簡約されるからです。本章で不透明な包みの内側を見る必要があるのはここだけで、これ以後は演算子のすべての使用が抽象的なままで済みます。目標 `Lset-layer` は、塔がまるごと帰納的述語の内側に落ちること、すなわちすべての段階 `Lset α` が層であることを言います。その証明自体が、塔を定義したのと同じ原理である所属帰納の適用です。
 <!--/-->
@@ -437,7 +437,7 @@ Lset-layer = ∈-induction step
 <!--en-->
 The remaining obligation fits the family constructor exactly: `setUnion-layer` wants the family and a layer proof for each of its values. For an index `m`, the value is `𝒟ₒ` at `Lset (⟪ α ⟫↪ m)`, and the induction hypothesis `IH` applied at that member, converted to type-valued membership by the local `mem` helper, gives `isLayer (Lset (⟪ α ⟫↪ m))`; `𝒟ₒ-layer` raises it one definable-power-set step. The opaque wrapper of `Lset` opens only through the declared equation, and the opaque wrapper of `𝒟ₒ` only inside `𝒟ₒ-layer`, so the whole induction runs at the level of the intended reading of the tower. Combining this with the previous section, every stage is a transitive layer.
 <!--zh-->
-剩余义务与族构造子严丝合缝：`setUnion-layer` 要求族以及每个取值的层证明。对索引 `m`，取值是 `𝒟ₒ` 作用于 `Lset (⟪ α ⟫↪ m)` 的结果，而归纳假设 `IH` 在该成员处应用、经局部辅助 `mem` 转换为取类型成员关系后，给出 `isLayer (Lset (⟪ α ⟫↪ m))`；`𝒟ₒ-layer` 再把它提升一个可定义幂集步。`Lset` 的不透明包装只经由被声明的等式打开，`𝒟ₒ` 的不透明包装只在 `𝒟ₒ-layer` 内部打开，故整个归纳都在塔的意读层面运行。结合上一节，每个阶段都是传递的层。
+剩余义务与族构造子严丝合缝：`setUnion-layer` 要求族以及每个取值的层证明。对索引 `m`，取值是 `𝒟ₒ` 作用于 `Lset (⟪ α ⟫↪ m)` 的结果，而归纳假设 `IH` 在该成员处应用、经局部辅助 `mem` 转换为取类型成员关系后，给出 `isLayer (Lset (⟪ α ⟫↪ m))`；`𝒟ₒ-layer` 再把它提升一个可定义幂集步。`Lset` 的不透明包装只经由被声明的等式打开，`𝒟ₒ` 的不透明包装只在 `𝒟ₒ-layer` 内部打开，故整个归纳都在塔的意读层面运行。结合上一节，每层都是传递的层。
 <!--ja-->
 残りの義務は族の構成子に正確にはまります。`setUnion-layer` は族と、その各値に対する層の証明を要求します。添字 `m` に対する値は `Lset (⟪ α ⟫↪ m)` での `𝒟ₒ` であり、局所的な補助 `mem` によって型としての所属へ変換されたうえでその要素に適用した帰納仮定 `IH` が `isLayer (Lset (⟪ α ⟫↪ m))` を与え、`𝒟ₒ-layer` がそれを定義可能冪集合の一段へ引き上げます。`Lset` の不透明な包みは宣言された等式を通してのみ開かれ、`𝒟ₒ` の包みは `𝒟ₒ-layer` の内側でのみ開かれるので、帰納全体が塔の意図された読みのレベルで進みます。前節と合わせれば、すべての段階は推移的な層です。
 <!--/-->
@@ -454,9 +454,9 @@ The remaining obligation fits the family constructor exactly: `setUnion-layer` w
 
 Two more facts about the tower. The first names the operator's membership: `𝒟ₒ A` is the set of definable subsets of `A`, so belonging to it is, by construction, "merely, is some `defSet φ`", and exhibiting a formula together with an extensional equation is exactly what it takes to place a set inside the operator. The second unfolds the tower once and reads the union both ways: a stage is the union, over the members of its index, of `𝒟ₒ` of the earlier stages, so belonging to a stage is exactly belonging to `𝒟ₒ` of some earlier stage, stated as two independent directions. Monotonicity then follows as a corollary rather than a separate construction.
 <!--zh-->
-## 阶段之间的比较
+## 层之间的比较
 
-关于塔还有两个事实。第一条给算子的隶属命名：`𝒟ₒ A` 就是 `A` 的可定义子集之集，故属于它按构造即「仅仅是某个 `defSet φ`」；要把一个集合放进算子里，拿出一条公式连同一个外延等式恰好就够。第二条把塔展开一次，从两个方向读那个并：一个阶段是其索引的成员对更早诸阶段的 `𝒟ₒ` 取的并，故属于一个阶段恰是属于某个更早阶段的 `𝒟ₒ`；这条刻画按两个独立方向给出。单调性随之作为推论得到，而非另行构造。
+关于塔还有两个事实。第一条给算子的隶属命名：`𝒟ₒ A` 就是 `A` 的可定义子集之集，故属于它按构造即「仅仅是某个 `defSet φ`」；要把一个集合放进算子里，拿出一条公式连同一个外延等式恰好就够。第二条把塔展开一次，从两个方向读那个并：一层是其索引的成员对更早诸层的 `𝒟ₒ` 取的并，故属于一层恰是属于某个更早层的 `𝒟ₒ`；这条刻画按两个独立方向给出。单调性随之作为推论得到，而非另行构造。
 <!--ja-->
 ## 段階の比較
 
@@ -482,7 +482,7 @@ opaque
 <!--en-->
 The proof body is the identity in both directions: once `𝒟ₒ` is unfolded, an element of the truncated defining data already is a member, and conversely the inversion lemma `𝒟ₒ-inv` returns a membership as the same truncated data. So the pair `𝒟ₒ-intro` and `𝒟ₒ-inv` is exactly the interface described just above: reading `DefOf.defSet` at a stage as a map from formulas, and recovering a member's defining formula by inversion. Both work at the level of mere existence, so no canonical formula is ever chosen; a member of `𝒟ₒ A` merely *is* some definable subset, and that is all these two directions say.
 <!--zh-->
-证明在两个方向上都是恒等：`𝒟ₒ` 一旦展开，截断定义数据的一个元素本来就是成员，反之，反演引理 `𝒟ₒ-inv` 把一个隶属作为同样的截断数据返回。于是 `𝒟ₒ-intro` 与 `𝒟ₒ-inv` 这一对恰是上文描述的接口：把一个阶段处的 `DefOf.defSet` 读作从公式出发的映射，用反演恢复成员的定义公式。二者都在「仅仅存在」的层面工作，因此从不选定任何典范公式；`𝒟ₒ A` 的成员仅仅是某个可定义子集，这两条方向所说的也仅止于此。
+证明在两个方向上都是恒等：`𝒟ₒ` 一旦展开，截断定义数据的一个元素本来就是成员，反之，反演引理 `𝒟ₒ-inv` 把一个隶属作为同样的截断数据返回。于是 `𝒟ₒ-intro` 与 `𝒟ₒ-inv` 这一对恰是上文描述的接口：把一层处的 `DefOf.defSet` 读作从公式出发的映射，用反演恢复成员的定义公式。二者都在「仅仅存在」的层面工作，因此从不选定任何典范公式；`𝒟ₒ A` 的成员仅仅是某个可定义子集，这两条方向所说的也仅止于此。
 <!--ja-->
 証明の本体は両方向とも恒等写像です。`𝒟ₒ` を展開すれば、命題的に切り詰められた定義データの要素はもともと要素であり、逆に反転の補題 `𝒟ₒ-inv` は所属を同じ切り詰められたデータとして返します。したがって `𝒟ₒ-intro` と `𝒟ₒ-inv` の対は、直前述べたインターフェイスそのものです。段階における `DefOf.defSet` を論理式からの写像として読み、反転によって要素の定義論理式を取り戻します。どちらも「単に存在する」のレベルで働くため、標準的な論理式が選ばれることはありません。`𝒟ₒ A` の要素は単に何らかの定義可能部分集合であるだけであり、この二方向が言うのはそれだけです。
 <!--/-->
@@ -498,7 +498,7 @@ The proof body is the identity in both directions: once `𝒟ₒ` is unfolded, a
 <!--en-->
 Two further facts make the tower usable in later arguments. The first names the operator's membership: `𝒟ₒ A` is the set of definable subsets of `A`, so belonging to it is, by construction, "merely, is some `defSet φ`", and exhibiting a formula together with an extensional equation is exactly what it takes to place a set inside the operator. The second unfolds the tower once and reads the union both ways: a stage is the union, over the members of its index, of `𝒟ₒ` of the earlier stages, so belonging to a stage is exactly belonging to `𝒟ₒ` of some earlier stage, stated as two independent directions since that is how proofs consume it. Monotonicity then follows as a corollary rather than a separate construction.
 <!--zh-->
-关于塔还有两个事实，承载着后续诸章的每一个闭包论证，而只要在对的地方开封，二者都很廉价。第一条给算子的隶属命名：`𝒟ₒ A` 就是 `A` 的可定义子集之集，故属于它按构造即「仅仅是某个 `defSet φ`」；要把一个集合放进算子里，拿出一条公式连同一个外延等式恰好就够。第二条把塔展开一次，从两个方向读那个并：一个阶段是其索引的成员对更早诸阶段的 `𝒟ₒ` 取的并，故属于一个阶段恰是属于某个更早阶段的 `𝒟ₒ`；这条刻画按两个独立方向给出，因为证明正是这样使用它。单调性随之作为推论得到，而非另行构造。
+关于塔还有两个事实，承载着后续诸章的每一个闭包论证，而只要在对的地方开封，二者都很廉价。第一条给算子的隶属命名：`𝒟ₒ A` 就是 `A` 的可定义子集之集，故属于它按构造即「仅仅是某个 `defSet φ`」；要把一个集合放进算子里，拿出一条公式连同一个外延等式恰好就够。第二条把塔展开一次，从两个方向读那个并：一层是其索引的成员对更早诸层的 `𝒟ₒ` 取的并，故属于一层恰是属于某个更早层的 `𝒟ₒ`；这条刻画按两个独立方向给出，因为证明正是这样使用它。单调性随之作为推论得到，而非另行构造。
 <!--ja-->
 塔を後の議論で使うために、さらに二つの事実を示します。第一は演算子の所属に名前を与えます。`𝒟ₒ A` は `A` の定義可能部分集合の集合なので、それに属することは構成上「ある `defSet φ` である、と単に」であり、論理式を一つ、外延的な等式とともに示せば、集合を演算子の中へ置くのにちょうど十分です。第二は塔を一度展開し、和集合を両方向から読みます。段階とは、添字の要素にわたる前段階の `𝒟ₒ` の和集合であり、したがって段階に属することは、ある前段階の `𝒟ₒ` に属することに他なりません。これは、証明がそう使うために、二つの独立な方向として述べられます。単調性はその後、別個の構成ではなく帰結として従います。
 <!--/-->
@@ -506,7 +506,7 @@ Two further facts make the tower usable in later arguments. The first names the 
 <!--en-->
 The first lemma is the inclusion of a stage in its own definable power set: since `Lset-layer β` says the stage `Lset β` is a layer and `layer-trans` makes it transitive, the refinement bound `A⊆Def` of the definability chapter applies verbatim, giving `x ∈ Lset β ⟹ x ∈ 𝒟ₒ (Lset β)`. Its dual `𝒟ₒ∋⊆` restates that the operator only refines: every member of `𝒟ₒ A` is a subset of `A`, so a member of a member is still in `A`. Finally `stageFam` names the family underlying the tower's step: for an index `m` in the small presentation of `α`, the corresponding stage is `𝒟ₒ` at `Lset` of the member named by `m`.
 <!--zh-->
-第一条引理是阶段包含于其自身的可定义幂集：由于 `Lset-layer β` 说阶段 `Lset β` 是层，而 `layer-trans` 使其传递，可定义性章的精化界 `A⊆Def` 逐字适用，给出 `x ∈ Lset β ⟹ x ∈ 𝒟ₒ (Lset β)`。其对偶 `𝒟ₒ∋⊆` 重申算子只精化不扩缩：`𝒟ₒ A` 的每个成员都是 `A` 的子集，故成员的成员仍在 `A` 中。最后 `stageFam` 为塔的步进下的族命名：对 `α` 的小表示中的索引 `m`，对应的阶段是 `𝒟ₒ` 作用于 `m` 所指名成员处的 `Lset`。
+第一条引理是层包含于其自身的可定义幂集：由于 `Lset-layer β` 说层 `Lset β` 是层，而 `layer-trans` 使其传递，可定义性章的精化界 `A⊆Def` 逐字适用，给出 `x ∈ Lset β ⟹ x ∈ 𝒟ₒ (Lset β)`。其对偶 `𝒟ₒ∋⊆` 重申算子只精化不扩缩：`𝒟ₒ A` 的每个成员都是 `A` 的子集，故成员的成员仍在 `A` 中。最后 `stageFam` 为塔的步进下的族命名：对 `α` 的小表示中的索引 `m`，对应的层是 `𝒟ₒ` 作用于 `m` 所指名成员处的 `Lset`。
 <!--ja-->
 最初の補題は、段階がその固有の定義可能冪集合に含まれるという包含です。`Lset-layer β` が段階 `Lset β` が層であることを言い、`layer-trans` がそれを推移的にするので、定義可能性の章の細分の評価 `A⊆Def` がそのまま適用され、`x ∈ Lset β ⟹ x ∈ 𝒟ₒ (Lset β)` が得られます。双対の `𝒟ₒ∋⊆` は、演算子が細分するだけで要素を失わないことを再確認します。`𝒟ₒ A` の各要素は `A` の部分集合なので、その要素の要素も依然 `A` にあります。最後に `stageFam` が、塔のステップの下にある族に名前を与えます。`α` の小さな表現の添字 `m` に対して、対応する段階は `m` の指す要素での `Lset` に `𝒟ₒ` を施したものです。
 <!--/-->
@@ -524,7 +524,7 @@ stageFam : (α : S) → ⟪ α ⟫ → S
 <!--en-->
 Now the characterization of stage membership from above. `Lset-in` says: if `δ` is a member of `α` and `x` lies in `𝒟ₒ (Lset δ)`, then `x` already lies in `Lset α`. The proof rewrites `Lset α` once by its computation rule, so the goal becomes membership in the union `⋃ (sett ⟪ α ⟫ (stageFam α))`, and then invokes `union-family-in`, the model lemma which takes an index `i` and a member `x` of `f i` and returns a member of the indexed union. The index supplied is `fib .fst`, an element of `⟪ α ⟫` naming the member `δ`.
 <!--zh-->
-现在从上方刻画阶段隶属。`Lset-in` 说：若 `δ` 是 `α` 的成员且 `x` 落在 `𝒟ₒ (Lset δ)` 中，则 `x` 已经落在 `Lset α` 中。证明先用计算规则改写 `Lset α` 一次，使目标变为并 `⋃ (sett ⟪ α ⟫ (stageFam α))` 的隶属，然后调用 `union-family-in`，即模型章的引理：它接收索引 `i` 与 `f i` 的成员 `x`，返回索引并的成员。所供索引是 `fib .fst`，即 `⟪ α ⟫` 中指名成员 `δ` 的元素。
+现在从上方刻画层隶属。`Lset-in` 说：若 `δ` 是 `α` 的成员且 `x` 落在 `𝒟ₒ (Lset δ)` 中，则 `x` 已经落在 `Lset α` 中。证明先用计算规则改写 `Lset α` 一次，使目标变为并 `⋃ (sett ⟪ α ⟫ (stageFam α))` 的隶属，然后调用 `union-family-in`，即模型章的引理：它接收索引 `i` 与 `f i` 的成员 `x`，返回索引并的成员。所供索引是 `fib .fst`，即 `⟪ α ⟫` 中指名成员 `δ` 的元素。
 <!--ja-->
 次に、段階への所属を上から特徴づけます。`Lset-in` の主張は、`δ` が `α` の要素であり `x` が `𝒟ₒ (Lset δ)` に属するなら、`x` はすでに `Lset α` に属する、ということです。証明はまず計算規則で `Lset α` を一度書き換え、目標を和集合 `⋃ (sett ⟪ α ⟫ (stageFam α))` への所属に変えます。そして `union-family-in` を呼びます。これはモデル章の補題で、添字 `i` と `f i` の要素 `x` を受け取り、添字付きの和の要素を返します。供給される添字は `fib .fst`、すなわち `⟪ α ⟫` のうち要素 `δ` を名指す元です。
 <!--/-->
@@ -558,7 +558,7 @@ Lset-out : (α x : S) → ⟨ x ∈ˢ Lset α ⟩
 <!--en-->
 The downward direction `Lset-out` cannot avoid truncation, and states it honestly: a member `x` of `Lset α` merely comes from some predecessor, that is, merely there is a `δ` with `δ ∈ α` and `x ∈ 𝒟ₒ (Lset δ)`. The proof again rewrites `Lset α` by the computation rule, applies `union-family-out` to get merely an index `m` of `⟪ α ⟫` with `x` in the family value at `m`, and maps inside the truncation: the pair `(m , hx)` becomes the stage `⟪ α ⟫↪ m`, its structural membership in `α` via `∈∈ₛ`, and `hx`. The result is a truncated witness precisely because the union axiom names no canonical predecessor; the construction of one inside the branch is local data, not a chosen function.
 <!--zh-->
-向下的方向 `Lset-out` 无法避开截断，并如实陈述：`Lset α` 的成员 `x` 仅仅来自某个前驱，即仅仅存在 `δ` 满足 `δ ∈ α` 与 `x ∈ 𝒟ₒ (Lset δ)`。证明同样先用计算规则改写 `Lset α`，对 `union-family-out` 的应用得到「仅仅」有 `⟪ α ⟫` 的索引 `m` 使 `x` 落在该索引处的族值中，再在截断内部做映射：对 `(m , hx)` 变为阶段 `⟪ α ⟫↪ m`、经 `∈∈ₛ` 的它在 `α` 中的结构隶属、以及 `hx`。结果是截断的见证，正是因为并公理不指名任何典范前驱；分支内构造出的那一个只是局部数据，而非选定的函数。
+向下的方向 `Lset-out` 无法避开截断，并如实陈述：`Lset α` 的成员 `x` 仅仅来自某个前驱，即仅仅存在 `δ` 满足 `δ ∈ α` 与 `x ∈ 𝒟ₒ (Lset δ)`。证明同样先用计算规则改写 `Lset α`，对 `union-family-out` 的应用得到「仅仅」有 `⟪ α ⟫` 的索引 `m` 使 `x` 落在该索引处的族值中，再在截断内部做映射：对 `(m , hx)` 变为层 `⟪ α ⟫↪ m`、经 `∈∈ₛ` 的它在 `α` 中的结构隶属、以及 `hx`。结果是截断的见证，正是因为并公理不指名任何典范前驱；分支内构造出的那一个只是局部数据，而非选定的函数。
 <!--ja-->
 下向きの方向 `Lset-out` は命題的切り詰めを避けられず、それを率直に述べます。`Lset α` の要素 `x` は、ある前駆から単に来ています。すなわち `δ ∈ α` かつ `x ∈ 𝒟ₒ (Lset δ)` なる `δ` が単に存在するということです。証明はここでも計算規則で `Lset α` を書き換え、`union-family-out` を適用して、`⟪ α ⟫` の添字 `m` でその位置の族の値に `x` が属することが単に成り立つことを得ます。そして切り詰めの内部で写像を行います。対 `(m , hx)` は、段階 `⟪ α ⟫↪ m`、`∈∈ₛ` による `α` への構造的な所属、そして `hx` になります。結果が切り詰められた証人になるのは、和集合の公理が標準的な前駆を名指さないからにほかなりません。分岐の内側で構成した一つは局所的なデータであって、選ばれた関数ではありません。
 <!--/-->
@@ -574,7 +574,7 @@ Lset-out α x x∈Lα = PT.map
 <!--en-->
 Monotonicity is now a two-line corollary of the characterization rather than a separate construction. If `β ∈ α` and `x ∈ Lset β`, then `Lset⊆𝒟ₒ` first lifts `x` into `𝒟ₒ (Lset β)`, using that stages are transitive, and `Lset-in` with the inclusion `β ∈ α` carries it into `Lset α`. Note the strict form: what monotonicity requires is that `β` is a member of `α`, not merely a subset, matching how the tower grows by taking the union over members.
 <!--zh-->
-单调性由此成为刻画的不到三行的推论，而非另行构造。若 `β ∈ α` 且 `x ∈ Lset β`，先用 `Lset⊆𝒟ₒ` 把 `x` 提升到 `𝒟ₒ (Lset β)`，用到阶段传递；再以包含 `β ∈ α` 应用 `Lset-in`，把 `x` 送入 `Lset α`。注意其严格形式：单调性要求 `β` 是 `α` 的成员，而不仅是子集，这与塔沿成员取并的生长方式一致。
+单调性由此成为刻画的不到三行的推论，而非另行构造。若 `β ∈ α` 且 `x ∈ Lset β`，先用 `Lset⊆𝒟ₒ` 把 `x` 提升到 `𝒟ₒ (Lset β)`，用到层传递；再以包含 `β ∈ α` 应用 `Lset-in`，把 `x` 送入 `Lset α`。注意其严格形式：单调性要求 `β` 是 `α` 的成员，而不仅是子集，这与塔沿成员取并的生长方式一致。
 <!--ja-->
 単調性はこれで、別個の構成ではなく特徴づけの短い帰結になります。`β ∈ α` かつ `x ∈ Lset β` なら、まず `Lset⊆𝒟ₒ` が `x` を `𝒟ₒ (Lset β)` へ引き上げます。段階が推移的であることを使います。次に包含 `β ∈ α` とともに `Lset-in` を適用して、`x` を `Lset α` へ運びます。厳密な形に注意してください。単調性が要求するのは `β` が `α` の部分集合であることではなく要素であることであり、これは塔が要素にわたる和集合を取って伸びる仕方と一致します。
 <!--/-->
@@ -592,7 +592,7 @@ A set is **constructible** when some ordinal stage of the tower contains it. The
 <!--zh-->
 ## 类 L，及其结构
 
-一个集合是**可构造的**，指塔的某个序数阶段包含它。序数界故意写进定义：后文的理论要提取阶段序数，这个形状按构造直接给出。注意序数性正是在定义之处施加的；塔 `Lset` 本身接受任意集合作为索引。`L` 是传递类：阶段传递，见证序数不动。
+一个集合是**可构造的**，指塔的某个序数层包含它。序数界故意写进定义：后文的理论要提取层序数，这个形状按构造直接给出。注意序数性正是在定义之处施加的；塔 `Lset` 本身接受任意集合作为索引。`L` 是传递类：层传递，见证序数不动。
 <!--ja-->
 ## クラス L とその構造
 
@@ -602,7 +602,7 @@ A set is **constructible** when some ordinal stage of the tower contains it. The
 <!--en-->
 The class is a truth value, not a subtype: `isL x` is defined in the chosen truth algebra as the indexed disjunction `⋁` over all sets `α` of the conjunction of `IsOrd α` with `x ∈ˢ Lset α`. So an element of `isL x` is, by the algebra's meaning of the quantifier, merely a pair of an ordinal `α` and a membership of `x` in stage `α`; no canonical stage is attached to a constructible set. The quantifier ranges over the whole carrier, so a witness is available only in this merely-exists form; treating the class as a proposition-valued predicate is what allows it to be restricted into a structure shortly.
 <!--zh-->
-这个类是一个真值，而非子类型：`isL x` 在所选真值代数中定义为对全体集合 `α` 的索引析取 `⋁`，其各项是 `IsOrd α` 与 `x ∈ˢ Lset α` 的合取。故按该代数量词的含义，`isL x` 的一个元素仅仅是一个对：序数 `α` 与 `x` 属于阶段 `α` 的证据；可构造集并不附带一个典范阶段。量词遍历整个载体，故见证只以「仅仅存在」的形式可得；把类当作命题值谓词，正是稍后能把它限制成结构的原因。
+这个类是一个真值，而非子类型：`isL x` 在所选真值代数中定义为对全体集合 `α` 的索引析取 `⋁`，其各项是 `IsOrd α` 与 `x ∈ˢ Lset α` 的合取。故按该代数量词的含义，`isL x` 的一个元素仅仅是一个对：序数 `α` 与 `x` 属于层 `α` 的证据；可构造集并不附带一个典范层。量词遍历整个载体，故见证只以「仅仅存在」的形式可得；把类当作命题值谓词，正是稍后能把它限制成结构的原因。
 <!--ja-->
 このクラスは部分型ではなく真理値です。`isL x` は、選ばれた真理値代数において、すべての集合 `α` にわたる索引付きの選言 `⋁` として定義され、その各項は `IsOrd α` と `x ∈ˢ Lset α` の連言です。したがって代数の量詞の意味により、`isL x` の要素は単に、順序数 `α` と段階 `α` への `x` の所属の対です。構成可能集合に標準的な段階が付属することはありません。量詞は台全体にわたるため、証人はこの「単に存在する」の形でしか得られません。クラスを命題値の述語として扱うことが、まもなくそれを構造へ制限できる理由です。
 <!--/-->
@@ -619,7 +619,7 @@ isL-trans {x} {y} y∈x x∈L = PT.rec (snd (isL y))
 <!--en-->
 Transitivity of the class is now immediate from the closure of the stages. Given `y ∈ x` and an element of `isL x`, eliminate the truncation into the proposition `isL y`: the witness is a pair `(α , ordα , x∈Lα)`, and since the stage `Lset α` is a transitive set by `layer-trans (Lset-layer α)`, the two hypotheses `y∈x` and `x∈Lα` yield `y ∈ Lset α`. The same ordinal `α` re-certifies the conclusion, so the class is closed under members of members. The conclusion is re-truncated with `∣ _ ∣₁` because the target `isL y` is itself a truncated existential, not because any choice had to be undone.
 <!--zh-->
-类的传递性现在由阶段的闭包立即可得。给定 `y ∈ x` 与 `isL x` 的一个元素，向命题 `isL y` 消去截断：见证是对 `(α , ordα , x∈Lα)`，而阶段 `Lset α` 经 `layer-trans (Lset-layer α)` 是传递集，故两条假设 `y∈x` 与 `x∈Lα` 给出 `y ∈ Lset α`。同一个序数 `α` 重新为结论作证，故类对成员的成员封闭。结论再用 `∣ _ ∣₁` 重新截断，是因为目标 `isL y` 本身就是截断的存在式，而不是因为任何选择需要撤销。
+类的传递性现在由层的闭包立即可得。给定 `y ∈ x` 与 `isL x` 的一个元素，向命题 `isL y` 消去截断：见证是对 `(α , ordα , x∈Lα)`，而层 `Lset α` 经 `layer-trans (Lset-layer α)` 是传递集，故两条假设 `y∈x` 与 `x∈Lα` 给出 `y ∈ Lset α`。同一个序数 `α` 重新为结论作证，故类对成员的成员封闭。结论再用 `∣ _ ∣₁` 重新截断，是因为目标 `isL y` 本身就是截断的存在式，而不是因为任何选择需要撤销。
 <!--ja-->
 クラスの推移性は、段階の閉性からただちに従います。`y ∈ x` と `isL x` の要素が与えられ、命題的に切り詰められたものを命題 `isL y` へ消去します。証人は対 `(α , ordα , x∈Lα)` であり、段階 `Lset α` は `layer-trans (Lset-layer α)` により推移的集合なので、二つの仮定 `y∈x` と `x∈Lα` から `y ∈ Lset α` が得られます。同じ順序数 `α` が結論を改めて証明するので、クラスは要素の要素について閉じています。結論を `∣ _ ∣₁` で改めて切り詰めるのは、目標 `isL y` それ自体が切り詰められた存在式だからであって、どの選択を取り消す必要があったからではありません。
 <!--/-->
@@ -632,7 +632,7 @@ Transitivity of the class is now immediate from the closure of the stages. Given
 <!--en-->
 Sitting in an ordinal stage *is* the definition, so the bridge in that direction is the constructor itself. Giving the bridge a name simply makes it convenient to cite.
 <!--zh-->
-落在某个序数阶段中**就是**定义，故这个方向的桥就是构造子本身。给它一个名字，只是便于日后引用。
+落在某个序数层中**就是**定义，故这个方向的桥就是构造子本身。给它一个名字，只是便于日后引用。
 <!--ja-->
 ある順序数段階に属すること**こそ**定義そのものなので、この方向の橋は構成子そのものです。この橋に名前を与えるのは、引用しやすくするためです。
 <!--/-->
@@ -640,7 +640,7 @@ Sitting in an ordinal stage *is* the definition, so the bridge in that direction
 <!--en-->
 Given an ordinal witness `oα` for the stage `α` and a membership `x∈Lα`, the proof packages the three components, the ordinal, its ordinality, and the membership, into a single propositionally truncated pair. Nothing is computed; the content of the lemma is that the existential in the definition of `isL x` is witnessed by exactly the data at hand. Note the direction of trust: the lemma takes the ordinality of `α` as a hypothesis, since `Lset` as defined accepts arbitrary sets as indices and it is the caller who must know that the chosen index really is an ordinal.
 <!--zh-->
-给定阶段 `α` 的序数见证 `oα` 与隶属 `x∈Lα`，证明把三个分量，序数、其序数性、隶属，打包成单个经命题截断的对。没有任何计算；该引理的内容在于：`isL x` 定义中的存在式恰好由手头的数据见证。注意信任的方向：引理把 `α` 的序数性作为假设接收，因为按定义 `Lset` 接受任意集合作为索引，所选索引确实是序数这一点必须由调用方知道。
+给定层 `α` 的序数见证 `oα` 与隶属 `x∈Lα`，证明把三个分量，序数、其序数性、隶属，打包成单个经命题截断的对。没有任何计算；该引理的内容在于：`isL x` 定义中的存在式恰好由手头的数据见证。注意信任的方向：引理把 `α` 的序数性作为假设接收，因为按定义 `Lset` 接受任意集合作为索引，所选索引确实是序数这一点必须由调用方知道。
 <!--ja-->
 段階 `α` の順序数の証人 `oα` と所属 `x∈Lα` が与えられれば、証明は三つの成分、順序数、その順序数性、所属、を一つの命題的に切り詰められた対へまとめます。計算されるものは何もありません。この補題の内容は、`isL x` の定義にある存在式が、まさに手元のデータによって証明されるということです。信頼の向きに注意してください。この補題は `α` の順序数性を仮定として受け取ります。定義上の `Lset` は任意の集合を添字として受け付けるため、選んだ添字が本当に順序数であることは呼び出し側が知っていなければならないからです。
 <!--/-->
@@ -678,7 +678,7 @@ The tower `Lset`{.Agda} is defined by membership recursion, and `isLayer`{.Agda}
 <!--zh-->
 ## 小结
 
-塔 `Lset`{.Agda} 由成员递归定义，`isLayer`{.Agda} 记录它对可定义性运算和三种并集构造的封闭性。对层见证作结构递归，并使用相应引理，便得到 `layer-trans`{.Agda}。一个集合属于 `isL`{.Agda}，是指它仅仅地属于某个序数 `α` 的阶段 `Lset α`；这个类是传递的，把环境结构限制到该类上便得到 `𝒮ʟ`{.Agda}。余下任务是逐条公理证明这个结构满足 ZFC。
+塔 `Lset`{.Agda} 由成员递归定义，`isLayer`{.Agda} 记录它对可定义性运算和三种并集构造的封闭性。对层见证作结构递归，并使用相应引理，便得到 `layer-trans`{.Agda}。一个集合属于 `isL`{.Agda}，是指它仅仅地属于某个序数 `α` 的层 `Lset α`；这个类是传递的，把环境结构限制到该类上便得到 `𝒮ʟ`{.Agda}。余下任务是逐条公理证明这个结构满足 ZFC。
 <!--ja-->
 ## まとめ
 

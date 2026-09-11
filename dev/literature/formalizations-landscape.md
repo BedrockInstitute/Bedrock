@@ -1,7 +1,7 @@
 # Formalization landscape sweep: L, V=L, condensation, AC-in-L, GCH-in-L, rud (2026-08-02 survey)
 
 Current Bedrock status (2026-09-06): `L⊨ZFC` and `L⊨GCH` are proved and
-registered in [Landmarks](../../src/Landmarks.lagda.md). The research and route
+registered in [Milestones](../../src/Milestones.lagda.md). The research and route
 assessments below are historical; they do not describe open Bedrock proof goals.
 
 Developer notes for the rud-route formalization. This file closes digest.md

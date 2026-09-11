@@ -11,7 +11,7 @@ Two ingredients from the ambient hierarchy make the proof shorter than the textb
 
 任两个序数，或一者属于另一者，或二者相等。本章把这种比较所需的经典步骤单独列出，并说明为何需要显式假设。
 
-迄今关于序数的一切都是闭包：零是序数，后继是，并也是，上界存在。闭包陈述关乎建造；它们从不需要**判定**任何东西。三歧要判定。给定两个彼此之间不假设任何关系的序数，它要回答三种互斥情形中的哪一种成立，本章从显式的排中律参数取得这一判定。所以本章把排中律取作模块参数，采用基础阶段定下的逐层级打包形式，使用 `ord-tri` 的模块都显式接收这个参数。
+迄今关于序数的一切都是闭包：零是序数，后继是，并也是，上界存在。闭包陈述关乎建造；它们从不需要**判定**任何东西。三歧要判定。给定两个彼此之间不假设任何关系的序数，它要回答三种互斥情形中的哪一种成立，本章从显式的排中律参数取得这一判定。所以本章把排中律取作模块参数，采用基础层定下的逐层级打包形式，使用 `ord-tri` 的模块都显式接收这个参数。
 
 来自环境层级的两样材料使证明比教科书版本更短。正则性给出良基归纳，而且要用两次，两个自变量各一次。外延性意味着互相包含**就是**相等，故相等那一情形无须另行处理。排中律既判定两个方向的包含，也判定把包含失败转成截断反例时所需的成员关系命题。
 <!--ja-->
@@ -27,7 +27,7 @@ Two ingredients from the ambient hierarchy make the proof shorter than the textb
 <!--en-->
 The chapter runs under a single classical hypothesis, stated once as a module parameter: an instance of `LEM (ℓ-suc ℓ)`. Recall its shape from the foundations: for each proposition `P : hProp (ℓ-suc ℓ)`, it returns either a proof of `⟨ P ⟩` or a refutation, a map from `⟨ P ⟩` into the empty type. This level matches `⊆ᵇ-prop A B : hProp (ℓ-suc ℓ)` and the membership propositions decided inside the counterexample argument. Keeping the assumption as an explicit module parameter records the classical input at each use of this module.
 <!--zh-->
-全章只在模块参数的形式下使用一条经典假设：`LEM (ℓ-suc ℓ)` 的一个实例。回顾基础阶段的形状：对每个命题 `P : hProp (ℓ-suc ℓ)`，它返回 `⟨ P ⟩` 的证明，或一个反驳，即从 `⟨ P ⟩` 映入空类型的映射。这个层级恰好匹配 `⊆ᵇ-prop A B : hProp (ℓ-suc ℓ)` 以及反例论证中被判定的成员关系命题。把假设保留为显式模块参数，会在每次使用本模块时记录经典输入。
+全章只在模块参数的形式下使用一条经典假设：`LEM (ℓ-suc ℓ)` 的一个实例。回顾基础层的形状：对每个命题 `P : hProp (ℓ-suc ℓ)`，它返回 `⟨ P ⟩` 的证明，或一个反驳，即从 `⟨ P ⟩` 映入空类型的映射。这个层级恰好匹配 `⊆ᵇ-prop A B : hProp (ℓ-suc ℓ)` 以及反例论证中被判定的成员关系命题。把假设保留为显式模块参数，会在每次使用本模块时记录经典输入。
 <!--ja-->
 本章はただ一つの古典的仮定の下で進みます。それはモジュールパラメータとして一度だけ宣言される `LEM (ℓ-suc ℓ)` の実例です。基礎の章で確めた形を思い出してください。各命題 `P : hProp (ℓ-suc ℓ)` に対し、`⟨ P ⟩` の証明か、あるいは `⟨ P ⟩` を空型へ写す反証を返します。このレベルは `⊆ᵇ-prop A B : hProp (ℓ-suc ℓ)` と、反例の議論で判定する所属命題に一致します。仮定を明示的なモジュールパラメータとして保つことで、このモジュールを使うたびに古典的入力が記録されます。
 <!--/-->
@@ -336,7 +336,7 @@ With the two converters in hand, the four verdict combinations sort into the thr
 <!--en-->
 The last combination covers failure of `A ⊆ᵇ B`, whatever the second verdict is, and the mirrored converter delivers `B ∈ˢ A`. Together with the two cases above, every leaf now returns an inhabitant of `Tri A B`, so the double induction closes and `ord-tri` stands as a theorem about arbitrary ordinals `A` and `B`. Later chapters on stage orders and on cardinals, for example `L.GCH.CardinalSquareLaw`, take it as their comparison primitive.
 <!--zh-->
-最后一种组合覆盖 `A ⊆ᵇ B` 的失败，无论第二个裁决如何，镜像转换器交付 `B ∈ˢ A`。与上面两种情形合并，每个叶子现在都返回 `Tri A B` 的一个元素，于是双层归纳闭合，`ord-tri` 成为关于任意序数 `A` 与 `B` 的定理。后续关于阶段序与基数的章节，例如 `L.GCH.CardinalSquareLaw`，把它当作自己的比较原语。
+最后一种组合覆盖 `A ⊆ᵇ B` 的失败，无论第二个裁决如何，镜像转换器交付 `B ∈ˢ A`。与上面两种情形合并，每个叶子现在都返回 `Tri A B` 的一个元素，于是双层归纳闭合，`ord-tri` 成为关于任意序数 `A` 与 `B` 的定理。后续关于层序与基数的章节，例如 `L.GCH.CardinalSquareLaw`，把它当作自己的比较原语。
 <!--ja-->
 最後の組み合わせは、二番目の判定がどうであれ `A ⊆ᵇ B` の失敗を扱い、鏡像の変換器が `B ∈ˢ A` を届けます。上の二つの場合と合わせて、各葉は今や `Tri A B` の元を返し、二重の帰納は閉じて、`ord-tri` は任意の順序数 `A` と `B` についての定理として立ちます。段階順序や基数に関する後の章、たとえば `L.GCH.CardinalSquareLaw` は、これを比較の原始部品として使います。
 <!--/-->
@@ -355,9 +355,9 @@ Together with the previously available irreflexivity of hierarchy membership and
 <!--zh-->
 ## 小结
 
-结合层级成员关系已有的非自反性和 `IsOrd` 所含的传递性，`ord-tri` 现在给出任意两个序数的比较。这些比较定律构成后续阶段单调性与基数论证的序论基础。
+结合层级成员关系已有的非自反性和 `IsOrd` 所含的传递性，`ord-tri` 现在给出任意两个序数的比较。这些比较定律构成后续层单调性与基数论证的序论基础。
 
-`ord-tri` 比较任意两个序数，而本书为它提供一份排中律实例，并把它取作模块参数。这正是奠基部分为使其可审计而搭建的那道边界：无一处 postulate，使用 `ord-tri` 时必须提供本模块的排中律参数。随后的章节把这个比较用在它被需要的那个问题上：哪些序数出现在可构造层级的哪个阶段。
+`ord-tri` 比较任意两个序数，而本书为它提供一份排中律实例，并把它取作模块参数。这正是奠基部分为使其可审计而搭建的那道边界：无一处 postulate，使用 `ord-tri` 时必须提供本模块的排中律参数。随后的章节把这个比较用在它被需要的那个问题上：哪些序数出现在可构造层级的哪个层。
 <!--ja-->
 ## まとめ
 

@@ -2,7 +2,7 @@
 
 The current goal is to simplify the completed development while preserving the
 statements and assumptions of `L⊨ZFC` and `L⊨GCH`. Both are registered in
-`src/Landmarks.lagda.md`. This work does not reopen either theorem.
+`src/Milestones.lagda.md`. This work does not reopen either theorem.
 
 ## Baseline and acceptance
 
@@ -56,10 +56,10 @@ caches. Do not infer build improvement from line counts alone.
 
 ## Measurements and accepted batches
 
-- Initial cached `src/Landmarks.lagda.md` check: exit 0, 3.78 s wall time.
+- Initial cached `src/Milestones.lagda.md` check: exit 0, 3.78 s wall time.
   Existing warnings: a nonexistent `SatGraph` re-export in `L.GCH.SatisfactionFrame`,
   three nonexistent exports and a useless opaque block in `L.GCH.SkolemHull`.
-- Fresh project-interface baseline, `src/Landmarks.lagda.md`: exit 0,
+- Fresh project-interface baseline, `src/Milestones.lagda.md`: exit 0,
   246.90 s wall, 245.73 s user, 1.02 s system. Project interfaces started empty;
   the installed cubical dependency retained its existing interfaces.
 - First batch: 28,921 nonblank code lines, a net reduction of 52; 2,948 remain
@@ -68,12 +68,12 @@ caches. Do not infer build improvement from line counts alone.
   removing an unconsumed stage-specific least-search chain; the actual closure
   proof continues to use `TermAlgebra.closed`. Removed invalid re-exports in
   `L.GCH.SkolemHull` and `L.GCH.SatisfactionFrame`.
-- Workspace theorem check after the code changes: `src/Landmarks.lagda.md`,
+- Workspace theorem check after the code changes: `src/Milestones.lagda.md`,
   exit 0, no warnings, 86.13 s with mixed cached/rebuilt project interfaces.
   This is an integration check, not a comparison to the cold baseline.
 - `make lint test`: exit 0, all lint gates and 34 unittest tests passed, along
   with the existing lint-agda standalone checks.
-- Same-condition fresh-interface check after the batch: `src/Landmarks.lagda.md`,
+- Same-condition fresh-interface check after the batch: `src/Milestones.lagda.md`,
   exit 0, no warnings, 244.43 s wall, 243.40 s user, 0.97 s system. The source
   copy includes the final documentation changes. The observed wall-time change
   is -2.47 s (about -1.0%); one pair of runs does not establish a stable speedup.
@@ -121,7 +121,7 @@ copy of `/private/tmp/bedrock-dispatch-baseline`, overlaying only its own master
 so a concurrently edited dependency cannot invalidate another agent's experiment.
 The coordinator grants one exclusive Agda slot at a time. After the three batches,
 integrate their checked sources, inspect theorem signatures and imports, and run
-the project-wide gate, including `src/Everything.lagda.md`, in an explicitly
+the project-wide gate, including `src/dev/reading-catalog.json`, in an explicitly
 assigned verification brief. Use fresh project interfaces for final timing.
 Continue batches and reassign scopes until the 25,973-line milestone is met;
 acceptance of one batch is not completion of that milestone.
@@ -174,13 +174,13 @@ integration check is still required before milestone acceptance.
 | Sol hull extensionality: reflect one symmetric-difference witness | 32 | GCH/Hull | Exit 0; file gates clean |
 | Sol replacement cleanup: retire unused stage-image branch | 9 | Axioms/Separation, Axioms/Full | Exit 0; proof-description consistency restored |
 | Sol replacement boundary: prevent downstream proof expansion | -1 | Axioms/Full, GCH/HullCount | Exit 0 under the same 8 GB limit; no warnings |
-| Sol satisfaction graph boundary: use semantic readers downstream | -3 | Coding/Graph, Coding/Uniform, Landmarks | Exit 0; no warnings; profiled downstream savings |
+| Sol satisfaction graph boundary: use semantic readers downstream | -3 | Coding/Graph, Coding/Uniform, Milestones | Exit 0; no warnings; profiled downstream savings |
 | Sol finite iteration table: finite image with one global stage bound | 14 | GCH/OmegaRec, GCH/HullCount | Exit 0; no warnings; independent readability review passed |
-| Sol hull set operations: reuse constructible union and singleton readers | 11 | GCH/HullCount, GCH/HullIn, GCH/OmegaRec | Named checks and Landmarks exit 0; file gates clean |
-| Sol transversal: use the constant relation directly in Pick | 11 | Choice/Transversal | Named check and Landmarks exit 0; file gates clean |
-| Sol pair expressions: literal leaves and term carriers remove named slots | 17 | Coding/Model, Coding/Clauses, GCH/OrderType | Named checks and Landmarks exit 0; file lint clean |
-| Sol collapse descriptions: pass the fixed relation through the existing reader chain | 8 | GCH/OrderType, GCH/HullIn | Named checks and Landmarks exit 0; file gates clean |
-| Sol sequence membership: transport the final proposition once | 3 | GCH/Sequences | Named check and Landmarks exit 0; file lint clean |
+| Sol hull set operations: reuse constructible union and singleton readers | 11 | GCH/HullCount, GCH/HullIn, GCH/OmegaRec | Named checks and Milestones exit 0; file gates clean |
+| Sol transversal: use the constant relation directly in Pick | 11 | Choice/Transversal | Named check and Milestones exit 0; file gates clean |
+| Sol pair expressions: literal leaves and term carriers remove named slots | 17 | Coding/Model, Coding/Clauses, GCH/OrderType | Named checks and Milestones exit 0; file lint clean |
+| Sol collapse descriptions: pass the fixed relation through the existing reader chain | 8 | GCH/OrderType, GCH/HullIn | Named checks and Milestones exit 0; file gates clean |
+| Sol sequence membership: transport the final proposition once | 3 | GCH/Sequences | Named check and Milestones exit 0; file lint clean |
 | Sol inclusion graph: reuse DefinableMap/Inj and migrate the certificate consumer | 10 | InjChain, GCH/Assembly, GCH/Definable | Full guarded make check exit 0; no warnings |
 
 Together with the initial 52 lines, these locally checked batches account for
@@ -192,7 +192,7 @@ source checkpoints are retained under `_build/refactor/2026-09-06/`.
 After accepting 602 lines of local reductions, the coordinator prepared
 `/private/tmp/bedrock-integration-1` from the dispatch snapshot and accepted
 checkpoints. The Choice agent received an explicit read-only verification brief for
-`src/Everything.lagda.md` in that snapshot. Its interface cache is mixed, so this
+`src/dev/reading-catalog.json` in that snapshot. Its interface cache is mixed, so this
 check is not a fresh-build timing comparison.
 
 The Coding agent was assigned the coding semantic pipeline (Model, Sat, Clauses,
@@ -204,7 +204,7 @@ to extract a common recursion graph construction. These implementation scopes
 were disjoint. Previously checked Choice masters were frozen during integration.
 
 Integration of the accepted 602-line reduction passed:
-`GHCRTS="-A64m -I0 -M8g" agda src/Everything.lagda.md` in the isolated snapshot
+`GHCRTS="-A64m -I0 -M8g" agda src/dev/reading-catalog.json` in the isolated snapshot
 exited 0 with no warnings. The count is 28,371 nonblank code lines. Both landmark
 statements retain their original single LEM assumption. Completion was observed
 within 230 seconds, including polling, with mixed project interfaces; this is
@@ -214,21 +214,21 @@ not a comparable cold-build measurement. A concurrent repository-wide
 
 Second integration passed: the isolated accepted source snapshot
 `/private/tmp/bedrock-integration-2` has 28,061 nonblank code lines, a net reduction
-of 912. `GHCRTS="-A64m -I0 -M8g" agda src/Everything.lagda.md` exited 0 with no
+of 912. `GHCRTS="-A64m -I0 -M8g" agda src/dev/reading-catalog.json` exited 0 with no
 warnings, including the final theorem consumers. Project interfaces were mixed;
 this verifies combined correctness, not a cold-build speed improvement.
 
 Fresh-interface paired measurement at the 1,121-line checkpoint (27,852 remaining):
-original baseline Landmarks exited 0 in 261.215863 s wall (260.116089 s user,
-1.051829 s system); refactored Landmarks exited 0 in 251.713377 s wall
+original baseline Milestones exited 0 in 261.215863 s wall (260.116089 s user,
+1.051829 s system); refactored Milestones exited 0 in 251.713377 s wall
 (250.652045 s user, 0.989125 s system), with no warnings. The observed reduction
 is 9.502486 s, or 3.64%. Both source copies started without project interfaces
 and reused the same installed cubical cache, with one Agda process. The baseline
 ran first. This is one paired observation, not repeated statistical evidence.
-Logs and JSON are retained in `_build/refactor/2026-09-06/timing-*-Landmarks.*`.
+Logs and JSON are retained in `_build/refactor/2026-09-06/timing-*-Milestones.*`.
 
 Half-milestone integration passed: 1,505 fewer nonblank code lines, 27,468
-remaining. The prescribed `agda src/Everything.lagda.md` command with the heap
+remaining. The prescribed `agda src/dev/reading-catalog.json` command with the heap
 guard exited 0 without warnings in `/private/tmp/bedrock-integration-4`.
 The final ZFC and GCH statements retain their original sole LEM hypothesis.
 This mixed-interface run verifies integration; it is not a cold benchmark.
@@ -345,7 +345,7 @@ nonblank code lines. The 3,000-line milestone remains 1,047 lines away.
 The source-frozen 27,020-line checkpoint was measured against the original
 baseline with empty project interface caches and the same installed Cubical
 cache. The original ran first; each run used one guarded Agda process and
-`src/Landmarks.lagda.md`.
+`src/Milestones.lagda.md`.
 
 | Snapshot | Wall seconds | User seconds | System seconds | Result |
 |---|---:|---:|---:|---|
@@ -371,7 +371,7 @@ modules. No formatting-only reduction is credited.
 ### Profiling the verified 1,953-line checkpoint
 
 A fresh project-interface run of guarded Agda with `--profile=modules` on
-Landmarks exited 0 in 254.62 seconds. The top four modules account for 41.83%
+Milestones exited 0 in 254.62 seconds. The top four modules account for 41.83%
 of profiled time: Choice.InternalWellOrder 36.134 s, Coding.UniformSatisfaction 30.348 s,
 Coding.SatisfactionGraph 20.792 s, and Coding.SatisfactionClauses 19.228 s. Raw evidence is retained in
 `profile-1953-modules.log`, `profile-1953-modules.json`, and
@@ -391,7 +391,7 @@ so a wholesale semantic-framework migration was not started.
 
 The constant-carrier `satGraph` now has the same opacity boundary as `satGraphAt`;
 its existing readers explicitly unfold it. Public types are preserved. Graph,
-Uniform, and downstream Landmarks checks exited 0 without warnings, and file
+Uniform, and downstream Milestones checks exited 0 without warnings, and file
 linters passed. The three added code lines reduce the net count to 1,950
 (27,023 remaining). This is an intentional build-cost improvement, not a
 line-reduction claim. Graph's own module cost stayed roughly flat; Uniform's
@@ -413,13 +413,13 @@ construction. No Order change was applied.
 The workspace passed guarded `make check` with exit 0 and no warnings, including
 Everything, all lint/weave gates, 34 Python tests and the lint-agda fixture suite.
 The successful log is `full-gate-graph-opacity.log`.
-A new source-frozen copy with zero project interfaces checked Landmarks in
+A new source-frozen copy with zero project interfaces checked Milestones in
 218.23 s wall, 217.26 s user and 0.88 s system, exit 0 without warnings, using
 the same installed Cubical cache and 8 GB heap guard. This is 26.60 s (10.86%)
 faster than the recent original baseline at 244.825816 s, and 34.13 s (13.52%)
 faster than the 1,953-line pre-boundary snapshot. These are single-run observations;
 the earlier negative speed result does not describe this new source.
-Timing evidence: `timing-graph-opacity-Landmarks.{log,json}`.
+Timing evidence: `timing-graph-opacity-Milestones.{log,json}`.
 
 Current verified source: 112 modules, 27,023 nonblank code lines; 1,950 removed
 and 1,050 still needed to reach 25,973. A semantic-description pilot is isolated
@@ -508,7 +508,7 @@ remain required; scaffolding alone is not a successful endpoint.
 
 
 The isolated parameter/outer-witness phase passed all eight named consumer
-checks and guarded Landmarks with exit0 and no warnings; both file linters
+checks and guarded Milestones with exit0 and no warnings; both file linters
 passed. The verified scratch snapshot is `checkpoint-phase-a-full/src`, at
 27,167 lines, +158 over the accepted 27,009-line source. This added cost is NOT
 integrated or credited. It verifies constructible bound existence and preserves
@@ -536,7 +536,7 @@ container helpers can also be retired from the remaining GCH descriptions;
 all such consumer costs remain part of the whole-route acceptance calculation.
 
 
-Pinned's six-slot migration also typechecks with exit0. Landmarks and the exact
+Pinned's six-slot migration also typechecks with exit0. Milestones and the exact
 whole-tree cost are being checked before proceeding. A read-only audit found
 that retiring every old pair/container reader requires additional Tower and
 tmIs migrations as well as DefDescribe/HierDescribe. The removable helper body
@@ -560,7 +560,7 @@ Phase B is a measured negative for the line-reduction goal. After deleting
 zero-consumer sndExK/sndAllK, fstAll and legacy subAt/subSucAt reader families,
 Clauses is 2052→2141 (+89) and Pinned 580→601 (+21). Frozen consumers add70,
 so the checked trial totals 27,189, a net increase of180. Clauses, Pinned and
-Landmarks all exited0. The estimated phase-C reduction of80–130 does not cover
+Milestones all exited0. The estimated phase-C reduction of80–130 does not cover
 this cost; even the optimistic additional helper-retirement estimate is not
 enough. This route is frozen outside the workspace, with no savings credited
 and no phase-C implementation authorized. The accepted tree stays27,009.
@@ -591,7 +591,7 @@ including the finite-image OmegaRec change. Original6da70f2:244.31s wall,
 same installed cubical interfaces and run one guarded Agda process. The
 observed wall reduction is26.71s,10.93%; this is one paired observation, not
 a statistical performance guarantee. Logs and machine-readable measurements:
-`timing27009-{original,current}-Landmarks.{log,json}`.
+`timing27009-{original,current}-Milestones.{log,json}`.
 
 
 The shared-set-operation batch replaces HullCount's independent binary-union
@@ -599,7 +599,7 @@ elimination and singleton decoding with the existing Coding.CodeConstructibility
 also uses that union API. This retires the last consumers of OmegaRec.pairʟ-out,
 so that reader was removed; pairʟ-in remains used by BoundedSubset and both union
 readers remain used inside OmegaRec. No public theorem or hypothesis changed.
-The three named modules and Landmarks exited 0, and all applicable static gates
+The three named modules and Milestones exited 0, and all applicable static gates
 passed. The accepted source now has 26,998 nonblank Agda lines, a net reduction
 of 1,975; 1,025 remain to the 3,000-line milestone. Guarded full make check
 exited 0: Everything, all lint/weave gates, 34 Python tests and 7 lint-agda
@@ -612,7 +612,7 @@ belongs to the 27,009-line predecessor, not this new source.
 Transversal.Pick now uses appC for its fixed relation, removing the relation
 existential, object equality, one truncated payload and its transport. The
 remaining predecessor witness keeps an explicit type and a descriptive name.
-The public Pick and reader meanings are unchanged. Transversal and Landmarks
+The public Pick and reader meanings are unchanged. Transversal and Milestones
 exited 0 without warnings; file gates passed. The accepted source has 26,987
 nonblank Agda lines, net 1,986 fewer. Full integration gate will follow the
 next disjoint batch. Checkpoint: `sol-transversal-appc`.
@@ -624,7 +624,7 @@ in place; all variable consumers in Clauses explicitly pass var, avoiding
 duplicate compatibility wrappers. OrderType.Approx retains the same Body
 and pair-graph semantics while eliminating two constant-naming quantifiers,
 renaming environments and their transport proofs. Model adds 7 lines, Clauses
-adds none, and OrderType removes 24: net 17. All three modules and Landmarks
+adds none, and OrderType removes 24: net 17. All three modules and Milestones
 exited 0 without warnings. Model's bilingual description was updated and
 prose-checked after the code checks. Checkpoint: `sol-pair-expression-literals`.
 The integrated source is 26,970 nonblank Agda lines, net 2,003 fewer; 997 remain.
@@ -637,11 +637,11 @@ fixed relation. It uses appC and keeps table/argument variables in their origina
 roles, removing both consumers' relation-naming binders and associated transport
 proofs. The original APIs were migrated in place, with no parallel descriptions.
 OrderType removes 2 lines and HullIn removes 6, a measured net 8, below the
-19–29 estimate. Both modules and Landmarks exited 0 with no warnings, and file
+19–29 estimate. Both modules and Milestones exited 0 with no warnings, and file
 gates passed. Checkpoint: `sol-correct-constant`. The source is now 26,962
 nonblank Agda lines, net 2,011 fewer; 989 remain. Guarded full make check
 for the three combined constant-description batches exited 0. Everything and
-Landmarks passed without Agda warnings; all lint/glossary/fence/weave gates,
+Milestones passed without Agda warnings; all lint/glossary/fence/weave gates,
 34 Python tests and 7 lint-agda fixtures passed. git diff --check exited 0.
 Log: `full-gate-constant-descriptions.log`.
 
@@ -665,16 +665,16 @@ Sequences.seqL-in first proves membership for the canonical envS A g, then
 transports that final proposition along the representation equality. It no
 longer transports the ambient membership and the environment formula separately.
 The named canonical proof preserves readability. Net reduction: 3 lines;
-Sequences and Landmarks exited 0 without warnings, and file lint passed.
+Sequences and Milestones exited 0 without warnings, and file lint passed.
 Checkpoint: `sol-sequence-transport`. Current source: 26,959 nonblank Agda lines,
 net 2,014 fewer; 986 remain. Guarded full make check exited 0: Everything,
 all lint/weave checks, 34 Python tests and 7 lint-agda fixtures passed without
 Agda warnings. git diff --check exited 0. Log: `full-gate-sequence-transport.log`.
-A fresh project-interface Landmarks run exited 0 without warnings in 214.08 s
+A fresh project-interface Milestones run exited 0 without warnings in 214.08 s
 wall, 212.46 s user and 1.23 s system; installed cubical interfaces were retained.
 The difference from the earlier original 244.31 s sample is 30.23 s (12.37%),
 but this is a noncontemporaneous reference, not a new paired measurement.
-Record: `timing26959-Landmarks.{log,json}`.
+Record: `timing26959-Milestones.{log,json}`.
 
 A bounded Astra mathematical audit found no defensible 100-line reduction in
 HullCount from a finite-sequence evaluator or flattening of Skolem terms.
@@ -709,7 +709,7 @@ explicitly permits intermediate API migration while preserving mathematical
 statements and necessary opacity, so artificial compatibility costs do not
 preclude structural refactoring.
 
-All changed modules and Landmarks passed, followed by guarded full make check:
+All changed modules and Milestones passed, followed by guarded full make check:
 Everything, every lint/glossary/fence/weave gate, 34 Python tests and the
 lint-agda fixtures passed without warnings. git diff --check exited 0.
 Repository-counter totals: 112 modules, 26,949 nonblank Agda lines, 30,973
@@ -737,7 +737,7 @@ recovers component membership from the original injection's domain field;
 Relation.out alone does not supply it. The complete estimated reduction is
 20–40 lines, including all four InjCode fields. An isolated implementation in
 `/private/tmp/bedrock-sol-product-map` is authorized for Pairing only, followed
-by Pairing and Landmarks checks. No saving is credited before verification.
+by Pairing and Milestones checks. No saving is credited before verification.
 The first readable draft measured 26,951 total lines, two more than the
 accepted tree; earlier draft counts are not acceptance figures. Its Pairing
 check alone exceeded nine minutes and reached about 6.95 GB RSS, without
@@ -745,7 +745,7 @@ dependency rebuild output. This is a measured performance regression. The
 next isolated check separates the graph construction's opaque block from the
 four property proofs so those consumers cannot unfold the graph internals.
 The final version also uses typed coordinate proofs and an image helper.
-It passed Pairing (9.41 s), Landmarks (29.09 s), and all applicable linters,
+It passed Pairing (9.41 s), Milestones (29.09 s), and all applicable linters,
 without warnings. A same-condition old Pairing check took 9.53 s. The final
 authoritative count is 26,948, only one line below the accepted tree. The four
 explicit InjCode proofs offset almost all removed function-selection code.
@@ -754,7 +754,7 @@ time establishes a worthwhile return. Both checked versions and the log remain
 in the isolated directory (`verification-product-map.log`). Main stays 26,949.
 
 A source import-closure check found every module except Everything reachable
-from Landmarks. It identifies no whole unused module to remove; it is not a
+from Milestones. It identifies no whole unused module to remove; it is not a
 claim that every declaration inside those modules is essential.
 
 A bounded follow-up on Pairing.Shift rejected the analogous direct-relation
@@ -774,13 +774,13 @@ mapTm-rename, mapTm-close, and mapFo-close together, plus the two consumers'
 syntax-equality scaffolding. The complete estimate is 38–48 lines after new
 typed semantic paths and imports. Implementation is isolated in
 `/private/tmp/bedrock-sol-hull-close-semantic`, restricted to Hull; Hull and
-Landmarks verification is required before credit. Main remains 26,949.
+Milestones verification is required before credit. Main remains 26,949.
 The reviewed implementation removes the three syntactic commutation helpers
 and, after their consumers migrate, the unused CloseSem.map-id proof. Only
 Hull differs from the isolated baseline. Root verified all 112 source files
 and the checked Hull hash before integration. Net reduction: 52 lines;
 current source 26,897, cumulative reduction 2,076, with 924 still required.
-Hull passed in 4.91 s and Landmarks in 28.10 s, both without warnings;
+Hull passed in 4.91 s and Milestones in 28.10 s, both without warnings;
 applicable file linters passed. These are verification timings, not a new
 paired build-speed claim. Immutable checkpoint: `sol-hull-close-semantic`.
 The integrated guarded make check exited 0: Everything, all lint/weave gates,
@@ -818,14 +818,14 @@ Superadequacy and level-complete still supply the stage witnesses, and
 level-sound still identifies the level value. The conservative estimate is
 110–172 lines. Implementation is isolated in
 `/private/tmp/bedrock-sol-condense-elementarity`, restricted to Hull and
-Condense, with their named checks and Landmarks required. No gain is credited
+Condense, with their named checks and Milestones required. No gain is credited
 before verification; main stays 26,897.
 The final joint-existential version uses levelFo directly in both queries,
 so the old variable permutations and their adequacy proofs also disappear.
 HullElemDown reuses its returned hull member instead of recovering a code just
 to reconstruct that member. The checked and reviewed batch removes 213 lines:
 26,684 remain, cumulative reduction 2,289, with 711 still required.
-Hull, Condense and Landmarks exited 0 without warnings; file linters, weaving
+Hull, Condense and Milestones exited 0 without warnings; file linters, weaving
 and fence checks passed. Root compared all 112 masters, verified both v2
 hashes, and integrated only Hull and Condense. Immutable checkpoint:
 `sol-condense-elementarity`. The guarded main make check exited 0: Everything,
@@ -845,7 +845,7 @@ The reviewed implementation removes 75 lines, reaching 26,609: cumulative
 reduction 2,364, with 636 still required. Code.wit and its evaluator stay the
 same; closed concatenates the free-parameter and constant-code vectors and
 uses the existing parameter abstraction theorem. Tarski–Vaught retains typed
-environment equalities and its original conclusion. Hull and Landmarks passed
+environment equalities and its original conclusion. Hull and Milestones passed
 without warnings, as did all applicable linters, weaving and fence checks.
 Root verified the checked hash and that only Hull changed among 112 masters
 before integrating. Checkpoint: `sol-hull-arity`. The guarded main make check
@@ -866,7 +866,7 @@ The checked implementation removes 52 lines, reaching 26,557: cumulative
 reduction 2,416, with 584 still required. Formula abstraction now happens
 before the finite environment is coded. The bare search closure and a shared
 typed body-path replace the formula-preimage recursion and stage adapter.
-Hull and Landmarks passed without warnings; all file linters, weaving and
+Hull and Milestones passed without warnings; all file linters, weaving and
 fence checks passed. Root verified the file hash and all 112 masters before
 integrating the sole Hull change. Checkpoint: `sol-hull-abstract-first`.
 The guarded main make check exited 0: Everything, all linters and 34 tests
@@ -882,7 +882,7 @@ only Hull; main remains 26,557 until verification and review.
 The verified version retains typed covered/go and liftStage proofs, yielding
 13 lines saved rather than the estimate. It removes the successor-closure
 detour and shares coverage without compressing the remaining steps. Hull and
-Landmarks passed without warnings, as did file linters, weaving and fences.
+Milestones passed without warnings, as did file linters, weaving and fences.
 Root checked the source hash and the 112-master diff before integrating Hull.
 Current count: 26,544, cumulative reduction 2,429, with 571 still required.
 Checkpoint: `sol-condense-limit`. The guarded main make check exited 0:
@@ -928,7 +928,7 @@ reconstruction before compilation; the draft is frozen and was never
 integrated. Diff: `/private/tmp/bedrock-sol-hullcount-tagged/logs/draft.diff`.
 Main remains 26,544, cumulative reduction 2,429, with 571 still required.
 
-A fresh paired Landmarks measurement on the checked 26,544-line source and
+A fresh paired Milestones measurement on the checked 26,544-line source and
 original revision 6da70f2e43fcfb7617bdf00d6bc5b758850846f7 completed with exit 0
 for both. All scratch project interfaces were deleted before each run;
 installed cubical interfaces were retained. Both used the prescribed GHC
@@ -1047,7 +1047,7 @@ The separation regression is resolved. Each partition set is sealed with its
 hProp membership equation before its introduction/elimination readers are
 checked. A normal full HullCount run after removing only its interface passed
 in 12.17 s; the typed-local-only version exceeded 120 s. The complete source
-was restored before validation, and no prefix was counted. Landmarks then
+was restored before validation, and no prefix was counted. Milestones then
 passed without warnings; the warm closure time is not a build benchmark.
 
 Root verified all 112 scratch hashes and checked main against the previous
@@ -1059,7 +1059,7 @@ Git metadata after Everything passed; no marker was fabricated. In the real
 main repository, the guarded make check exited 0: no warnings, all linters,
 112-master fence check, 34 unit tests and linter fixtures passed. git diff
 --check exited 0. Log: `full-gate-derived-connectives.log`; result:
-`full-gate-derived-connectives-result.json`. A fresh normal-option Landmarks
+`full-gate-derived-connectives-result.json`. A fresh normal-option Milestones
 timing on the identical frozen scratch source is now running.
 
 A separate read-only operator-enum audit is negative. Factoring atoms, binary

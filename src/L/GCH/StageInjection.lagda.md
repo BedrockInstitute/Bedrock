@@ -3,9 +3,9 @@
 
 This chapter proves the main stage estimate used by GCH: at an infinite ordinal, the corresponding constructible stage injects into that ordinal inside `L`.
 <!--zh-->
-# 把无穷可构造阶段单射到其指标
+# 把无穷可构造层单射到其指标
 
-本章证明 GCH 所用的主要阶段估计：在一个无穷序数处，相应的可构造阶段在 `L` 内部单射到该序数。
+本章证明 GCH 所用的主要层估计：在一个无穷序数处，相应的可构造层在 `L` 内部单射到该序数。
 <!--ja-->
 # 無限構成可能段階をその添字へ単射する
 
@@ -89,9 +89,9 @@ count of `X` appears here, so the same site serves both consumers of the hull.
 
 At a strengthened adequate stage above `δ`, start the Skolem hull from `Lset δ` together with the witnesses needed by the hierarchy description. The hull-count theorem keeps this enlarged set injectable into `δ`.
 <!--zh-->
-## 在超充分阶段计数 Skolem 壳
+## 在超充分层计数 Skolem 壳
 
-在 `δ` 之上的超充分阶段，以 `Lset δ` 连同层级描述所需的见证为起点构造 Skolem 壳。壳计数定理保证这个扩大的集合仍可单射到 `δ`。
+在 `δ` 之上的超充分层，以 `Lset δ` 连同层级描述所需的见证为起点构造 Skolem 壳。壳计数定理保证这个扩大的集合仍可单射到 `δ`。
 <!--ja-->
 ## 強化された十分な段階で Skolem 包を数える
 
@@ -244,9 +244,9 @@ internal cardinal of `δ`: `δ+1 ↪ δ` by src/L/GCH/CardinalSquareLaw.lagda.md
 
 Condensation identifies the counted hull with a lower constructible stage. Because the hull contains `Lset δ` and `δ` is an infinite cardinal index, ordinal comparison forces that lower stage to be no larger than `δ`, yielding the coded stage injection.
 <!--zh-->
-## 把 Skolem 壳塌缩回原阶段
+## 把 Skolem 壳塌缩回原层
 
-凝聚把已计数的 Skolem 壳识别为一个更低的可构造阶段。因为该壳包含 `Lset δ`，且 `δ` 是无穷基数指标，序数比较迫使较低阶段不超过 `δ`，从而得到阶段的编码单射。
+凝聚把已计数的 Skolem 壳识别为一个更低的可构造层。因为该壳包含 `Lset δ`，且 `δ` 是无穷基数指标，序数比较迫使较低层不超过 `δ`，从而得到层的编码单射。
 <!--ja-->
 ## Skolem 包を元の段階へ崩壊して戻す
 

@@ -209,7 +209,7 @@ def weave_for_site(text, lang):
     fallback, shared English prose, and English-only blocks accidentally embedded in a
     localized branch are folded. Shared code and mathematical notation remain visible.
     """
-    out = []
+    chunks = []
     for kind, payload in parse(text):
         if kind == "shared":
             chosen = payload
@@ -219,8 +219,10 @@ def weave_for_site(text, lang):
                 chosen = payload.get(FALLBACK)
             if chosen is None:
                 chosen = next((payload[k] for k in LANGS if k in payload), [])
-        out.extend(_fold_english(chosen, lang))
-    woven = re.sub(r"\n{3,}", "\n\n", "\n".join(out)).strip("\n")
+        chunk = "\n".join(_fold_english(chosen, lang)).strip("\n")
+        if chunk:
+            chunks.append(chunk)
+    woven = re.sub(r"\n{3,}", "\n\n", "\n\n".join(chunks)).strip("\n")
     return woven + "\n" if woven else ""
 
 

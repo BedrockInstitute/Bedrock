@@ -19,6 +19,8 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      <!--en|zh|ja--> block, because that text reaches the English book verbatim
      (C-8). This one reads all masters and not the FILE list, so it runs only
      when the caller names no file.                                              [report only]
+  8. A centered single-line code display must use one complete
+     `<div class="single-line-code"><code>...</code></div>` line.                 [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -71,6 +73,8 @@ SKIP = set(" \t\r*_~()[]")        # whitespace, markdown emphasis, transparent b
 # CJK reflow never merges prose across (or into) a language switch.
 MARKER_RE = re.compile(r"^\s*<!--\s*(en|zh|ja|/)\s*-->\s*$")
 ROUTE_METADATA_RE = re.compile(r"<!--\s*bedrock-routes\s*\{.*?\}\s*-->", re.S)
+SINGLE_LINE_CODE_RE = re.compile(
+    r"^\s*<div class=\"single-line-code\"(?: data-note=\"[^\"]+\")?><code>(?:[^<\n]+|<[^>\n]+>)+</code></div>\s*$")
 
 
 def strip_route_metadata(text):
@@ -128,6 +132,7 @@ def build_protected(text):
     mask(r"[A-Za-z][A-Za-z0-9+.\-]*://[^\s)]+")  # bare URLs
     mask(r"\$\$[^$]*\$\$")                    # display math $$...$$ (may span lines)
     mask(r"\$[^$\n]+\$")                      # inline math $...$
+    mask(r"<[^>\n]*>")                          # raw HTML tags and attributes
     return prot
 
 
@@ -156,7 +161,7 @@ def cjk_adjacent(text, prot, i):
 
 # ---- line reflow (a soft wrap between two CJK chars renders as a space) -------
 
-_BLOCK_START = re.compile(r"^\s*([-*+]\s|\d+\.\s|#{1,6}\s|```|~~~|\||>)")
+_BLOCK_START = re.compile(r"^\s*([-*+]\s|\d+\.\s|#{1,6}\s|```|~~~|\||>|<)")
 
 
 def _strip_trailing_md(s):
@@ -275,6 +280,17 @@ def agda_block_violations(text):
                 out.append(Violation(off + col,
                                      f"Agda code must be English-only; translate {uniq!r} to English", False))
         off += len(line) + 1
+    return out
+
+
+def single_line_code_violations(text):
+    """Keep centered code displays as one safe, non-Agda HTML line."""
+    out = []
+    for match in re.finditer(r"[^\n]*single-line-code[^\n]*", text):
+        if not SINGLE_LINE_CODE_RE.fullmatch(match.group(0)):
+            out.append(Violation(match.start(),
+                                 "single-line-code must be one centered <div> with one inline <code>",
+                                 False))
     return out
 
 
@@ -414,6 +430,9 @@ def analyze(text):
 
     # Rule 6: Agda code blocks must be English-only (no Chinese / full-width)
     manual.extend(agda_block_violations(text))
+
+    # Rule 8: centered single-line code displays have one canonical form.
+    manual.extend(single_line_code_violations(text))
 
     char_fixed = "".join(edits.get(i, c) for i, c in enumerate(text)) if edits else text
 

@@ -11,7 +11,7 @@ This chapter derives separation and replacement for arbitrary formulas by
 reflecting them to a suitable constructible stage and applying the bounded
 constructions already available there.
 <!--zh-->
-本章把任意公式反射到合适的可构造阶段，再施用已有的有界构造，从而导出任意公式的分离与替换。
+本章把任意公式反射到合适的可构造层，再施用已有的有界构造，从而导出任意公式的分离与替换。
 <!--ja-->
 本章では任意の論理式を適切な構成可能段階へ反映し、そこで既に得られている有界な構成を適用して、任意の論理式に対する分出公理と置換公理を導く。
 <!--/-->
@@ -32,11 +32,11 @@ that stage the elements related to some member of the argument. The remaining
 work is only the exchange of the source and image variables required by the
 model field.
 <!--zh-->
-分离那一章处理的是有界公式；反射诸章则以选定一个阶段为代价，把任意公式化成有界公式。二者结合，即可补全模型剩下的两条概括字段，且对任意复杂度的公式成立。
+分离那一章处理的是有界公式；反射诸章则以选定一层为代价，把任意公式化成有界公式。二者结合，即可补全模型剩下的两条概括字段，且对任意复杂度的公式成立。
 
-分离选定一个反射公式和一个装得下实参的阶段，把有界工具用于相对化后的公式，再沿反射在该阶段内把结论转移到所需之处。
+分离选定一个反射公式和一个装得下实参的层，把有界工具用于相对化后的公式，再沿反射在该层内把结论转移到所需之处。
 
-替换则经分离走一条更短的路：函数性把关系的所有值界在同一个阶段中，完整分离随即从该阶段分离出那些与实参某个成员相关的元素，剩下的工作只是交换模型字段所要求的来源变元与像变元。
+替换则经分离走一条更短的路：函数性把关系的所有值界在同一层中，完整分离随即从该层分离出那些与实参某个成员相关的元素，剩下的工作只是交换模型字段所要求的来源变元与像变元。
 <!--/-->
 
 ```agda
@@ -93,7 +93,7 @@ module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
 Stage transitivity keeps members inside a chosen level, while the two-variable
 renaming swaps source and image positions to match the model record's convention.
 <!--zh-->
-阶段的传递性使成员留在所选的阶段之内，而二元改名交换源与像的位置，以符合模型 record 的约定。
+层的传递性使成员留在所选的层之内，而二元改名交换源与像的位置，以符合模型 record 的约定。
 <!--ja-->
 段階の推移性により要素は選んだ層に留まり、二変数の改名が始域と像の位置を交換してモデルの record の規約に合わせる。
 <!--/-->
@@ -109,7 +109,7 @@ first. Exchanging two variables is an instance of renaming, and the correctness
 theorem says the environments agree, which for a transposition is two
 `refl`{.Agda}s.
 <!--zh-->
-阶段是传递集，故只要实参落在阶段里，属于实参的元素也就落在阶段里；分离沿反射推理时依靠的正是这一点。
+层是传递集，故只要实参落在层里，属于实参的元素也就落在层里；分离沿反射推理时依靠的正是这一点。
 
 此外，还需要用到一次变量演算。模型陈述替换时像在前、源在后，而有界存在先绑定来源。交换两个变量是改名的一个特例，而正确性定理说两个环境彼此一致，对一次对换而言那就是两条 `refl`{.Agda}。
 <!--/-->
@@ -148,7 +148,7 @@ private
 its argument, separates with the relativized Δ₀ formula, and transports the
 result back to the original satisfaction predicate.
 <!--zh-->
-`hasSeparationL`{.Agda} 在包含其实参的阶段反射任意一元公式，以相对化后的 Δ₀ 公式分离，再把结果搬回原满足关系谓词。
+`hasSeparationL`{.Agda} 在包含其实参的层反射任意一元公式，以相对化后的 Δ₀ 公式分离，再把结果搬回原满足关系谓词。
 <!--ja-->
 `hasSeparationL`{.Agda} は任意の一変数論理式をその引数を含む段階で反映し、相対化された Δ₀ 論理式で分出した後、結果を元の充足関係の述語へ戻す。
 <!--/-->
@@ -165,7 +165,7 @@ Predicates are what `SetOf`{.Agda} depends on, so the pointwise agreement is
 turned into a path of predicates by function extensionality and transported.
 The whole field is that transport applied to the bounded tool.
 <!--zh-->
-在一个包含实参自身最早阶段的阶段上反射那条公式，于是实参落在阶段里，而经传递性，它的每个元素也落在阶段里。用相对化后的公式作分离，那按构造是 Δ₀ 的。随后两个谓词逐点一致：左边那个隶属合取项在手，故元素落在阶段里，故反射适用，把第二个合取项转过去；右边同理，方向相反。
+在一个包含实参自身最早层的层上反射那条公式，于是实参落在层里，而经传递性，它的每个元素也落在层里。用相对化后的公式作分离，那按构造是 Δ₀ 的。随后两个谓词逐点一致：左边那个隶属合取项在手，故元素落在层里，故反射适用，把第二个合取项转过去；右边同理，方向相反。
 
 `SetOf`{.Agda} 依赖的正是谓词，故逐点的一致经函数外延性给出谓词的相等，再据此搬运过去；整条字段就是把这次搬运施于那件有界工具。
 <!--/-->
@@ -201,7 +201,7 @@ hasSeparationL a φ =
 <!--en-->
 ## Where the images live
 <!--zh-->
-## 诸像所在的阶段
+## 诸像所在的层
 <!--ja-->
 ## 像を収める段階
 <!--/-->
@@ -210,7 +210,7 @@ hasSeparationL a φ =
 Functionality chooses one image for each member of the source set, and the
 bounded-image construction supplies a single stage containing all those images.
 <!--zh-->
-函数性为源集合的每个成员选出唯一的像，而有界像构造给出一个包含全部这些像的单一阶段。
+函数性为源集合的每个成员选出唯一的像，而有界像构造给出一个包含全部这些像的单一层。
 <!--ja-->
 関数性により始集合の各要素に一つの像を選び、有界像の構成がそれらすべての像を含む一つの段階を与える。
 <!--/-->
@@ -226,7 +226,7 @@ choice, bounds the chosen values, and uses uniqueness to put every related value
 under that same bound. This chapter specializes its relation to the variable order
 used by the model field.
 <!--zh-->
-替换的阶段还须装下诸像，而使之可能的正是函数性：实参的每个成员恰有一个像，故诸像构成一个由实参的成员类型索引的族，而界层引理界住它们的阶段。
+替换的层还须装下诸像，而使之可能的正是函数性：实参的每个成员恰有一个像，故诸像构成一个由实参的成员类型索引的族，而界层引理界住它们的层。
 
 分离一章的通用函数像模块完成选取，并界住所选的诸值；再由唯一性，每个相关值都落在同一个界之下。本章只把这个关系特化为模型字段所用的变元顺序。
 <!--/-->
@@ -251,7 +251,7 @@ module Images (a : S) (φ : Formula S 2)
 existential over the source set and uses the variable swap to match the required
 image-first relation.
 <!--zh-->
-`hasReplacementL`{.Agda} 以源集合上的有界存在式在公共像阶段上分离，并用变元交换匹配所需的像在前关系。
+`hasReplacementL`{.Agda} 以源集合上的有界存在式在公共像层上分离，并用变元交换匹配所需的像在前关系。
 <!--ja-->
 `hasReplacementL`{.Agda} は始集合上の有界存在量化で共通の像段階を分出し、変数交換によって要求される像を先に置く関係へ合わせる。
 <!--/-->
@@ -273,9 +273,9 @@ The theorem is sealed at this boundary. Downstream uses need only the replacemen
 field; unfolding its range bound and nested separation during conversion exhausts
 the build's 8 GB heap without exposing any additional mathematical content.
 <!--zh-->
-由上面的界可知，函数像落在同一个阶段。用一元公式「`a` 的某个成员与候选者相关」在该阶段上作分离。因为受约束变元在环境中居首，公式使用转置后的矩阵；改名的正确性再把它换回模型字段所用的「像在前」次序。
+由上面的界可知，函数像落在同一层。用一元公式「`a` 的某个成员与候选者相关」在该层上作分离。因为受约束变元在环境中居首，公式使用转置后的矩阵；改名的正确性再把它换回模型字段所用的「像在前」次序。
 
-两个谓词直接相等。分离所得的成员丢开阶段合取项后，就给出它的来源见证；反过来，一个真正的像落在那个界层中，而同一个来源也见证那条一元公式。因此，完整替换是完整分离与「集合的函数像受一个阶段所界」这条数学事实的推论。
+两个谓词直接相等。分离所得的成员丢开层合取项后，就给出它的来源见证；反过来，一个真正的像落在那个界层中，而同一个来源也见证那条一元公式。因此，完整替换是完整分离与「集合的函数像受一层所界」这条数学事实的推论。
 
 这条定理在此边界封印。下游只需要替换字段；若在转换检查中展开其值域之界与嵌套的分离，会耗尽构建所限的 8 GB 堆，却不显露更多数学内容。
 <!--/-->

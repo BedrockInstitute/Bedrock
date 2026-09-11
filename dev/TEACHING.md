@@ -7,7 +7,7 @@ properties; chapter count and source line count are not objectives.
 
 ## Reading contract
 
-- Landmarks is an explicitly labelled preview of the final theorem statements.
+- Milestones is an explicitly labelled preview of the final theorem statements.
 - All other chapters introduce their direct prerequisites before using them.
 - Each chapter names its mathematical question, required concepts and endpoint.
 - The reading catalog offers one valid linear extension of the prerequisite
@@ -73,14 +73,14 @@ These choices favor coherent lessons over maximizing either splits or merges.
 - Each moved definition has exactly one substantive home and all real consumers
   import it there; no accidental cycles or compatibility shells.
 - The catalog contains every master exactly once, with no prerequisite inversion
-  except the explicitly marked Landmarks preview. The reading-order gate checks
+  except the explicitly marked Milestones preview. The reading-order gate checks
   fenced imports and runs with `make check`; its tests cover the preview, backward
   prerequisites, exact coverage and prose that resembles imports.
 - English, Chinese and Japanese introductions, catalog descriptions, symbols and rendered
   navigation agree with the final module paths and order.
 - `make check` passes; the site build and its internal links are checked after
   moves because Agda alone does not validate reader navigation.
-- Compare fresh project-interface Landmarks time and peak RSS with the last
+- Compare fresh project-interface Milestones time and peak RSS with the last
   verified 201.38 s / 1,865,891,840-byte observation. Keep Cubical interfaces and
   the same memory guard; record costs honestly without treating one run as an
   average. README retains only the compact current figures requested by the user.
@@ -100,7 +100,7 @@ graph. The compact view is 1,164 pixels wide, compared with the previous
 vertically to separate lessons. Every view preserves all nodes and downward
 edge direction. Reading stages are derived from the bilingual catalog, and
 imports are parsed only inside Agda fences. The page explains transitive
-reduction, the omitted hub edges and Landmarks' position as a dependency endpoint.
+reduction, the omitted hub edges and Milestones' position as a dependency endpoint.
 
 Introductions, closing summaries and order references were reviewed across all
 118 masters. Obsolete part numbers, retired-design narratives and false endpoint
@@ -112,8 +112,8 @@ the relocation and relation-level generalization of the natural-number order.
 
 The final tree has 118 masters and 117 reading chapters in ten stages, including
 the opening preview. Both catalog languages cover all chapters. All 118 masters
-retain `--safe`; the two Landmarks endpoint statements and their code are unchanged.
-The Landmarks dependency closure reaches every master except Everything.
+retain `--safe`; the two Milestones endpoint statements and their code are unchanged.
+The Milestones dependency closure reaches every master with no aggregator exception.
 
 `make check` passed with 42 tests. All masters, including every new chapter,
 also passed explicit Agda/prose lint. The site built successfully into fresh
@@ -126,7 +126,7 @@ The source contains 26,458 nonblank Agda lines, 150 more than before (+0.57%).
 This pays for explicit module boundaries and direct consumer imports; it does not
 change the syntax constructors, mathematical statements or classical assumptions.
 
-Fresh project-interface typechecking of Landmarks passed in 206.23 s with
+Fresh project-interface typechecking of Milestones passed in 206.23 s with
 peak RSS 1,675,280,384 bytes (1.56 GiB), retaining installed Cubical
 interfaces and using `GHCRTS="-A64m -I0 -M8g"`. All source hashes remained
 identical before and after the measurement. Relative to the pre-reorganization observation,
@@ -174,7 +174,7 @@ example-route positions in all three UI languages.
 
 ## Reader-facing route explorer
 
-Everything remains a complete example ordering. A `bedrock-routes` HTML comment
+The reading catalog remains a complete example ordering. A `bedrock-routes` HTML comment
 in its source carries versioned route metadata: stable route IDs, bilingual
 titles/descriptions and chapter membership. Shared chapters may belong to more
 than one route. Dependencies are not duplicated in the annotation: the build
@@ -197,8 +197,8 @@ metadata and the source-derived prerequisite rules.
 ### Route explorer verification (2026-09-07)
 
 `make check` passed with 50 tests, including 8 route metadata tests. Source
-comparison confirms that all Agda fences outside Everything are unchanged;
-Everything only changes import order. The proof tree remains at 26,458 nonblank
+comparison confirms that all Agda fences outside the reading catalog are unchanged;
+the catalog only changes reading metadata. The proof tree remains at 26,458 nonblank
 Agda lines and 117 reading chapters. Seven optional topics moved within the
 example route; this does not change their actual dependency graph.
 

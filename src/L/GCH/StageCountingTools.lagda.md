@@ -3,9 +3,9 @@
 
 The count of an infinite stage rests on coding finite environments and on the base case `L_ω ↪ ω`. This chapter proves the base injection and the formulas that lift injections through finite environments, preparing the proof that `Lset δ ↪ δ` for every infinite ordinal `δ`.
 <!--zh-->
-# 计数无穷可构造阶段的工具
+# 计数无穷可构造层的工具
 
-无穷阶段的计数依赖有限环境的编码与基础情形 `L_ω ↪ ω`。本章证明这一基础单射，以及把单射逐项提升到有限环境的公式，为证明每个无穷序数 `δ` 都有 `Lset δ ↪ δ` 作准备。
+无穷层的计数依赖有限环境的编码与基础情形 `L_ω ↪ ω`。本章证明这一基础单射，以及把单射逐项提升到有限环境的公式，为证明每个无穷序数 `δ` 都有 `Lset δ ↪ δ` 作准备。
 <!--ja-->
 # 無限な構成可能段階を数える道具
 
@@ -600,9 +600,9 @@ module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
 
 The general stage count consumes a base injection from `L_ω` into `ω`. This section isolates that premise and records how an injection can be transported when its source carriers are equal.
 <!--zh-->
-## 把无穷阶段计数归约到 `L_ω`
+## 把无穷层计数归约到 `L_ω`
 
-一般的阶段计数使用从 `L_ω` 到 `ω` 的基础单射。本节提取这一前提，并记录在源载体相等时如何搬运单射。
+一般的层计数使用从 `L_ω` 到 `ω` 的基础单射。本节提取这一前提，并记录在源载体相等时如何搬运单射。
 <!--ja-->
 ## 無限段階の計数を `L_ω` に帰着する
 
@@ -637,7 +637,7 @@ The canonical order on `L_ω` is collapsed to an ordinal. Every initial segment 
 <!--zh-->
 ## 基础计数：`L_ω` 单射到 `ω`
 
-把 `L_ω` 上的典范序塌缩为一个序数。该序的每个初始段都装进某个有穷阶段，因此每个塌缩值都是有穷的，而塌缩序数位于 `ω` 之内。
+把 `L_ω` 上的典范序塌缩为一个序数。该序的每个初始段都装进某个有穷层，因此每个塌缩值都是有穷的，而塌缩序数位于 `ω` 之内。
 <!--ja-->
 ## 基底の計数：`L_ω` を `ω` へ単射する
 
@@ -654,9 +654,9 @@ inject into a finite stage.
 
 A finite-stage tally turns any proposed injection from `ω` into that stage into an injection into a finite index type. Finite search then supplies the contradiction.
 <!--zh-->
-### 不存在从 omega 到有穷阶段的单射
+### 不存在从 omega 到有穷层的单射
 
-由于该阶段是有穷的，任何从 `ω` 到该阶段的候选单射都可归结为到有穷索引类型的单射；随后的有限搜索给出矛盾。
+由于该层是有穷的，任何从 `ω` 到该层的候选单射都可归结为到有穷索引类型的单射；随后的有限搜索给出矛盾。
 <!--ja-->
 ### omega から有限段階への単射は存在しない
 
@@ -719,7 +719,7 @@ The stage order at `ω` already belongs to `L`. Its membership reading identifie
 <!--zh-->
 ### 作为 L 中集合的 `L_ω` 典范序
 
-`ω` 处的阶段序已经属于 `L`。其成员读法把图识别为阶段成员的有序对，从而给出序型构造所需的定义域条件。
+`ω` 处的层序已经属于 `L`。其成员读法把图识别为层成员的有序对，从而给出序型构造所需的定义域条件。
 <!--ja-->
 ### L の集合としての `L_ω` 上の正準的順序
 
@@ -805,9 +805,9 @@ module I = C.Inj triω using ( code; col-inj )
 
 The stage order compares birth stages first. Hence every predecessor of a member of `L_ω` is born no later than that member and belongs to one common finite stage.
 <!--zh-->
-### 每个前驱段都位于一个有穷阶段
+### 每个前驱段都位于一个有穷层
 
-阶段序首先比较诞生阶段。因此，`L_ω` 中一个成员的每个前驱都不晚于该成员诞生，并共同属于某个有穷阶段。
+层序首先比较诞生层。因此，`L_ω` 中一个成员的每个前驱都不晚于该成员诞生，并共同属于某个有穷层。
 <!--ja-->
 ### 各前者区間は一つの有限段階に入る
 
@@ -875,7 +875,7 @@ A collapse value is the order type of one predecessor segment. Since that segmen
 <!--zh-->
 ### 塌缩序型位于 omega 之内
 
-一个塌缩值是某个前驱段的序型。由于该段单射到有穷阶段，`ω` 不能单射到其中；序数比较遂把该值置于 `ω` 以下。
+一个塌缩值是某个前驱段的序型。由于该段单射到有穷层，`ω` 不能单射到其中；序数比较遂把该值置于 `ω` 以下。
 <!--ja-->
 ### 崩壊の順序型は omega の内部にある
 
@@ -939,9 +939,9 @@ otL⊆ω z h = PT.rec (snd (z ∈ˢ ω))
 
 Restricting the collapse to its ordinal image gives the coded injection `L_ω ↪ ω`. This is the base premise consumed by the general theorem that every infinite constructible stage injects into its index.
 <!--zh-->
-### 基础单射与无穷阶段接口
+### 基础单射与无穷层接口
 
-把塌缩限制到其序数像，即得编码单射 `L_ω ↪ ω`。这正是一般定理所需的基础前提；该定理断言每个无穷可构造阶段都单射到其指标。
+把塌缩限制到其序数像，即得编码单射 `L_ω ↪ ω`。这正是一般定理所需的基础前提；该定理断言每个无穷可构造层都单射到其指标。
 <!--ja-->
 ### 基底単射と無限段階のインターフェース
 

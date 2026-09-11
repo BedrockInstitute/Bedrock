@@ -23,4 +23,12 @@ A paper in *逻辑学研究* uses Chinese **层级** for a transfinite recursive
 
 - *逻辑学研究* 2025(4), discussion of the Kleene hierarchy: https://studiesinlogic.sysu.edu.cn/sites/default/files/2025-08/1674-3202%282025%29-04-0088-18.pdf
 
-Accordingly，**可构造层级** is recorded as a pattern-based Chinese compound. The renderings **阶段 / 段階** for an individual stage and **阶段索引 / 段階の添字** for its ordinal index are also descriptive compounds. The sources above do not directly attest those CJK expressions as names for \(L_α\) or \(α\).
+Accordingly，**可构造层级** is recorded as a pattern-based Chinese compound. Japanese **段階** and **段階の添字** remain descriptive renderings; the sources above do not directly attest them as names for L_α or α.
+
+## Chinese revision approved on 2026-09-10
+
+Yang Ruizhi，*多宇宙观幻觉*，PDF p. 2, calls L_α「每一层结构」：https://logic.fudan.edu.cn/doc/_yrz/multi.pdf . This directly supports **层** for an individual constructible stage, without claiming a unique translation of the English word in every context.
+
+The approved convention is **stage = 层**，while **universe level = 宇宙层级**. Use 第 α 层，后继层 and 极限层 for the mathematical objects. The associated compounds are 层索引，诞生层，充分层 and 超充分层；these are composed renderings, not separately attested terms. In the birth-stage and stage-index entries, the referent is still an ordinal, as specified there. **阶段** remains available when emphasizing the construction process itself, so a blanket lexical prohibition would be inappropriate. The Japanese terms are unchanged.
+
+The shared Chinese rendering 层 for stage and layer does not identify their formal definitions: isLayer is a predicate, whereas stage returns an ordinal index. Use the qualified mathematical context or the identifier where that distinction matters.

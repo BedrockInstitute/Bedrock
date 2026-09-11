@@ -5,7 +5,7 @@ A Skolem hull closes a chosen set under least witnesses, making an elementary pa
 <!--zh-->
 # 构造并塌缩 Skolem 壳
 
-Skolem 壳把给定集合对最小见证闭合，从而得到可构造阶段的一个初等部分。本章构造该壳，证明其初等性，把它塌缩为传递集，并记录满足关系与有界公式如何跨过这次塌缩。
+Skolem 壳把给定集合对最小见证闭合，从而得到可构造层的一个初等部分。本章构造该壳，证明其初等性，把它塌缩为传递集，并记录满足关系与有界公式如何跨过这次塌缩。
 <!--ja-->
 # Skolem 包を構成して崩壊させる
 
@@ -345,9 +345,9 @@ The side condition of a bounded quantifier, read across the map.
 
 For a carrier contained in `Lset α`, inclusion into the stage is elementary once existential witnesses can always be chosen from the carrier. The preceding transfer turns exactly this witness property into elementarity.
 <!--zh-->
-## 阶段内部的 Tarski-Vaught 判据
+## 层内部的 Tarski-Vaught 判据
 
-设载体包含于 `Lset α` 之中；只要每当存在见证时都能从该载体内部选出见证，从载体到阶段的包含就是初等的。上一节的搬运恰好把这一见证性质化为初等性。
+设载体包含于 `Lset α` 之中；只要每当存在见证时都能从该载体内部选出见证，从载体到层的包含就是初等的。上一节的搬运恰好把这一见证性质化为初等性。
 <!--ja-->
 ## 段階内部の Tarski-Vaught 判定条件
 
@@ -644,7 +644,7 @@ Every finite environment in the hull has term-algebra codes. If the surrounding 
 <!--zh-->
 ## Skolem 壳是初等的
 
-壳中的每个有限环境都有项代数的码。若外围阶段在该环境下满足一个存在公式，对最小见证的闭合便在壳中给出见证，于是 Tarski-Vaught 判据推出初等性。
+壳中的每个有限环境都有项代数的码。若外围层在该环境下满足一个存在公式，对最小见证的闭合便在壳中给出见证，于是 Tarski-Vaught 判据推出初等性。
 <!--ja-->
 ## Skolem 包は初等的である
 

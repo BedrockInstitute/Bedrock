@@ -271,7 +271,7 @@ hierarchy, the V hierarchy) is the standard Chinese rendering (Bohrium keyword
 pages：「这种被称为累积层级的构造」in the 遗传有限集 entry and「累积层级 (V)」in
 the 超限递归 entry); Japanese 累積階層 is the standard compound (累積的階層).
 **CONFIRMED.** Note the entry says the zh rendering is already in use in
-Everything.lagda.md, consistent with the hierarchy entries.
+dev/reading-catalog.json, consistent with the hierarchy entries.
 
 #### condensation
 
@@ -414,12 +414,12 @@ compound; no Japanese source found, kept tentative.
 
 #### birth stage
 
-zh 诞生阶段 / ja 誕生段階. The ordinal a constructible set is carved over
-(L.Choice.Step). No literature; the book's own metaphor. **IDIOM, NO
-LITERATURE.** Internally consistent: zh 阶段/ja 段階 match the prose's rendering
-of "stage", against 階層 reserved for hierarchy (the note says this; it
-matches the constructible/cumulative hierarchy entries, which use 层级/階層).
-Fine as a guess; the note's owner delegation is recorded.
+zh 诞生层 / ja 誕生段階. The ordinal a constructible set is carved over.
+The compound is project-specific, not a claimed standard term. Updated after
+owner approval on 2026-09-10: Chinese stage is 层，with direct evidence for L_α
+from Yang Ruizhi; universe level remains 宇宙层级 and the whole hierarchy 层级.
+See [stage-level-hierarchy.md](stage-level-hierarchy.md) for the evidence and
+index/object distinction. Japanese 誕生段階 is unchanged.
 
 #### end extension
 

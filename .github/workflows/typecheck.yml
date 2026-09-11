@@ -66,3 +66,9 @@ jobs:
           make test PY=python
           # `make check` is typecheck + lint + test; the typecheck ran above
           # with its interface cache, so the two halves are split here.
+
+      - name: Check milestone consumption
+        shell: bash
+        run: |
+          set -euo pipefail
+          make milestone-lint PY=python

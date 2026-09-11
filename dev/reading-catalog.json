@@ -1,0 +1,2458 @@
+{
+  "version": 1,
+  "routes": [
+    {
+      "id": "common-foundations",
+      "title": {
+        "en": "Common foundations",
+        "zh": "共同基础",
+        "ja": "共通の基礎"
+      },
+      "description": {
+        "en": "Shared propositions, first-order syntax, semantics, and model interfaces.",
+        "zh": "共用的命题、一阶语法、语义与模型接口。",
+        "ja": "命題，一階論理の構文と意味，集合論の構造を学びます。"
+      },
+      "chapters": [
+        "Base.Prelude",
+        "Base.Truth",
+        "Base.Impredicativity",
+        "Base.Classical",
+        "Base.Choice",
+        "FOL.Syntax",
+        "FOL.ZFStructure",
+        "FOL.Semantics",
+        "FOL.LevyHierarchy",
+        "FOL.Absoluteness",
+        "FOL.ZFModel",
+        "FOL.Coding"
+      ]
+    },
+    {
+      "id": "fol-operations",
+      "title": {
+        "en": "Operations on formulas",
+        "zh": "公式操作",
+        "ja": "論理式の操作"
+      },
+      "description": {
+        "en": "Mapping, renaming, relabelling, bounds, occurrences, and parameters.",
+        "zh": "公式的映射、改名、重标、有界化、出现与参数抽象。",
+        "ja": "定数の写像，変数の改名，有界化，出現とパラメータの抽象を学びます。"
+      },
+      "chapters": [
+        "FOL.Manipulation.ConstantMapping",
+        "FOL.Manipulation.Renaming",
+        "FOL.Manipulation.Relabelling",
+        "FOL.Manipulation.Relativization",
+        "FOL.Manipulation.ConstantBounding",
+        "FOL.Manipulation.ConstantOccurrences",
+        "FOL.Manipulation.ParameterAbstraction"
+      ]
+    },
+    {
+      "id": "ambient-model",
+      "title": {
+        "en": "The ambient model",
+        "zh": "环境模型",
+        "ja": "周囲のモデル"
+      },
+      "description": {
+        "en": "The cumulative hierarchy, small truth values, model, and concrete codes.",
+        "zh": "累积层级、小真值、模型与具体编码。",
+        "ja": "累積階層，真理値の大きさ，モデル，具体的な符号を学びます。"
+      },
+      "chapters": [
+        "V.Hierarchy",
+        "V.Smallness",
+        "V.Model",
+        "V.Coding"
+      ]
+    },
+    {
+      "id": "constructible-axioms",
+      "title": {
+        "en": "Constructible stages and axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Definability, stages, ordinals, reflection, and the axioms before Choice.",
+        "zh": "可定义性、层、序数、反射与选择之前的公理。",
+        "ja": "定義可能性，段階，順序数，反映から，選択以外の公理を証明します。"
+      },
+      "chapters": [
+        "L.Definability",
+        "L.Constructible",
+        "L.Ordinal",
+        "L.Rank",
+        "L.Ordinal.Linear",
+        "L.Ordinal.Stages",
+        "L.Stage",
+        "L.Axioms.Basic",
+        "L.Axioms.Separation",
+        "L.ExistentialReflection",
+        "L.FormulaReflection",
+        "L.Axioms.Full",
+        "L.Axioms.Power",
+        "L.Absoluteness",
+        "L.Axioms.Numerals",
+        "L.Axioms.Infinity"
+      ]
+    },
+    {
+      "id": "canonical-order",
+      "title": {
+        "en": "The external canonical order",
+        "zh": "外部典范序",
+        "ja": "外部の正準順序"
+      },
+      "description": {
+        "en": "Well-orders, finite stages, names, and the external order step.",
+        "zh": "良序、有限层、名字与外部序步骤。",
+        "ja": "整列順序，有限段階，名前，段階ごとの順序を学びます。"
+      },
+      "chapters": [
+        "L.Choice.FirstIntersectionStage",
+        "L.WellOrder.Base",
+        "L.Choice.FiniteStageOrders",
+        "L.Choice.CanonicalNames",
+        "L.Choice.StageOrders"
+      ]
+    },
+    {
+      "id": "internal-satisfaction",
+      "title": {
+        "en": "Internal coding and satisfaction",
+        "zh": "内部编码与满足关系",
+        "ja": "内部の符号化と充足関係"
+      },
+      "description": {
+        "en": "Readers, code domains, recursion tables, uniform satisfaction, and hierarchy.",
+        "zh": "读式、码域、递归表、统一满足关系与层级。",
+        "ja": "符号の読み取り，閉じた定義域，再帰表，一様な充足関係と階層を学びます。"
+      },
+      "chapters": [
+        "L.Coding.PairFormulas",
+        "L.Coding.Environment",
+        "L.Coding.Model",
+        "L.Coding.Expressions",
+        "L.Coding.Closure",
+        "L.Coding.Descent",
+        "L.Coding.CodeConstructibility",
+        "L.Coding.SubformulaClosure",
+        "L.Coding.EnvironmentSet",
+        "L.Coding.Satisfaction",
+        "L.Coding.SatisfactionBridge",
+        "L.Coding.SatisfactionTable",
+        "L.Coding.EnvironmentAgreement",
+        "L.Coding.SlotClosure",
+        "L.Coding.CodeShape",
+        "L.Coding.FormulaRecovery",
+        "L.Coding.NumeralBound",
+        "L.Coding.Quantification",
+        "L.Recursion",
+        "L.Recursion.Graph",
+        "L.Coding.EnvironmentTower",
+        "L.Coding.CodeSet",
+        "L.Coding.CodeDomain",
+        "L.Coding.SatisfactionClauses",
+        "L.Coding.CodeAlphabet",
+        "L.Coding.SatisfactionClauseSemantics",
+        "L.Coding.PinnedRecursion",
+        "L.Coding.SatisfactionGraph",
+        "L.Coding.UniformSatisfaction",
+        "L.Coding.DefinablePowerSet",
+        "L.Coding.HierarchySequence",
+        "L.Hierarchy"
+      ]
+    },
+    {
+      "id": "choice-completion",
+      "title": {
+        "en": "Internal order and Choice",
+        "zh": "内部典范序与选择",
+        "ja": "内部の順序と選択公理"
+      },
+      "description": {
+        "en": "The external order and uniform coding meet to prove Choice and ZFC.",
+        "zh": "外部序与统一编码汇合，证明选择公理与 ZFC。",
+        "ja": "外部の順序と一様な符号化を合わせ，選択公理と ZFC を証明します。"
+      },
+      "chapters": [
+        "L.Choice.NameComparison",
+        "L.Choice.OrderTable",
+        "L.Choice.StageOrderAdequacy",
+        "L.Choice.NameComparisonAdequacy",
+        "L.Choice.LimitStageOrder",
+        "L.Choice.EarliestDisagreement",
+        "L.Choice.InternalWellOrder",
+        "L.Choice.Transversal",
+        "L.Model"
+      ]
+    },
+    {
+      "id": "cardinal-tools",
+      "title": {
+        "en": "Ordinal and cardinal tools",
+        "zh": "序数与基数工具",
+        "ja": "順序数と基数"
+      },
+      "description": {
+        "en": "Presentations, square laws, coded injections, cardinals, and GCH assembly.",
+        "zh": "呈现、平方律、编码单射、基数与 GCH 组装。",
+        "ja": "集合の提示，平方律，符号化された単射と基数を学び，GCH の証明を組み立てます。"
+      },
+      "chapters": [
+        "V.Presentation",
+        "L.Ordinal.SquareLaw",
+        "L.Coding.Injection",
+        "L.Cardinal",
+        "L.DefinableInjection",
+        "L.InjectionComposition",
+        "L.GCH",
+        "V.CantorBernstein",
+        "L.CantorBernstein",
+        "L.Mostowski",
+        "L.CardinalAbove",
+        "L.GCH.Assembly"
+      ]
+    },
+    {
+      "id": "gch-descriptions",
+      "title": {
+        "en": "Descriptions for GCH",
+        "zh": "GCH 的内部描述",
+        "ja": "GCH の内部記述"
+      },
+      "description": {
+        "en": "Descriptions of satisfaction, definability, adequate stages, and hierarchy.",
+        "zh": "满足关系、可定义性、充分层与层级的内部描述。",
+        "ja": "充足関係，定義可能性，十分な段階と階層を内部で記述します。"
+      },
+      "chapters": [
+        "L.Coding.SatisfactionGraphSet",
+        "L.Coding.CodeDomainAdequacy",
+        "L.GCH.SatisfactionDescription",
+        "L.GCH.DefinablePowerSetDescription",
+        "L.GCH.AdequateStages",
+        "L.GCH.OmegaRecursion",
+        "L.GCH.HierarchyDescription"
+      ]
+    },
+    {
+      "id": "hulls-and-counting",
+      "title": {
+        "en": "Hulls, collapse, and counting",
+        "zh": "壳、塌缩与计数",
+        "ja": "包，崩壊と数え上げ"
+      },
+      "description": {
+        "en": "The hull branch meets order and description branches to prove the bounds.",
+        "zh": "壳分支与序及描述分支汇合，证明基数界。",
+        "ja": "包の構成を順序と内部記述に結び付け，基数の上界を証明します。"
+      },
+      "chapters": [
+        "L.Choice.StageOrders",
+        "L.Coding.CodeConstructibility",
+        "V.Collapse",
+        "L.GCH.SkolemHull",
+        "L.GCH.HierarchyDescription",
+        "L.GCH.CondensationTransfer",
+        "L.GCH.BelowSuccessorCardinal",
+        "L.GCH.OrderType",
+        "L.GCH.CardinalRepresentative",
+        "L.GCH.CardinalSquareLaw",
+        "L.GCH.LeastWitnessMap",
+        "L.GCH.SuccessorIntoPowerSet",
+        "L.GCH.FiniteSequenceCoding",
+        "L.GCH.StageCountingTools",
+        "L.GCH.ConstructibleHull",
+        "L.GCH.HullCounting",
+        "L.GCH.StageInjection",
+        "L.GCH.BoundedSubset",
+        "L.GCH.Theorem"
+      ]
+    }
+  ],
+  "chapters": [
+    {
+      "id": "Milestones",
+      "title": {
+        "en": "Milestones",
+        "zh": "里程碑",
+        "ja": "マイルストーン"
+      },
+      "stage": {
+        "en": "Preview",
+        "zh": "开篇预览",
+        "ja": "最終定理の展望"
+      },
+      "description": {
+        "en": "The book's proved endpoint results, with routes leading to each theorem.",
+        "zh": "全书已经证明的最终成果，以及通往各项定理的阅读路线。",
+        "ja": "本書で証明された到達点と、各定理へ至る読書ルート。"
+      }
+    },
+    {
+      "id": "Base.Prelude",
+      "title": {
+        "en": "Prelude",
+        "zh": "基础词汇",
+        "ja": "基礎語彙"
+      },
+      "stage": {
+        "en": "Foundations",
+        "zh": "基础",
+        "ja": "基礎"
+      },
+      "description": {
+        "en": "Prelude",
+        "zh": "基础词汇",
+        "ja": "基礎語彙"
+      }
+    },
+    {
+      "id": "Base.Truth",
+      "title": {
+        "en": "Truth values",
+        "zh": "真值",
+        "ja": "真理値"
+      },
+      "stage": {
+        "en": "Foundations",
+        "zh": "基础",
+        "ja": "基礎"
+      },
+      "description": {
+        "en": "Truth values",
+        "zh": "真值",
+        "ja": "真理値"
+      }
+    },
+    {
+      "id": "Base.Impredicativity",
+      "title": {
+        "en": "Impredicativity",
+        "zh": "非直谓性",
+        "ja": "非可述性"
+      },
+      "stage": {
+        "en": "Foundations",
+        "zh": "基础",
+        "ja": "基礎"
+      },
+      "description": {
+        "en": "Impredicativity",
+        "zh": "非直谓性",
+        "ja": "非可述性"
+      }
+    },
+    {
+      "id": "Base.Classical",
+      "title": {
+        "en": "The classical boundary",
+        "zh": "经典逻辑的边界",
+        "ja": "古典論理との境界"
+      },
+      "stage": {
+        "en": "Foundations",
+        "zh": "基础",
+        "ja": "基礎"
+      },
+      "description": {
+        "en": "The classical boundary",
+        "zh": "经典逻辑的边界",
+        "ja": "古典論理との境界"
+      }
+    },
+    {
+      "id": "Base.Choice",
+      "title": {
+        "en": "Choice",
+        "zh": "选择原理",
+        "ja": "選択原理"
+      },
+      "stage": {
+        "en": "Foundations",
+        "zh": "基础",
+        "ja": "基礎"
+      },
+      "description": {
+        "en": "Choice",
+        "zh": "选择原理",
+        "ja": "選択原理"
+      }
+    },
+    {
+      "id": "FOL.Syntax",
+      "title": {
+        "en": "The object language",
+        "zh": "对象语言",
+        "ja": "対象言語"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "The object language",
+        "zh": "对象语言",
+        "ja": "対象言語"
+      }
+    },
+    {
+      "id": "FOL.ZFStructure",
+      "title": {
+        "en": "Structures",
+        "zh": "结构",
+        "ja": "構造"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Structures",
+        "zh": "结构",
+        "ja": "構造"
+      }
+    },
+    {
+      "id": "FOL.Semantics",
+      "title": {
+        "en": "Semantics",
+        "zh": "语义",
+        "ja": "意味論"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Semantics",
+        "zh": "语义",
+        "ja": "意味論"
+      }
+    },
+    {
+      "id": "FOL.LevyHierarchy",
+      "title": {
+        "en": "The Lévy hierarchy",
+        "zh": "Lévy 层级",
+        "ja": "Lévy 階層"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "The Lévy hierarchy",
+        "zh": "Lévy 层级",
+        "ja": "Lévy 階層"
+      }
+    },
+    {
+      "id": "FOL.Absoluteness",
+      "title": {
+        "en": "Absoluteness",
+        "zh": "绝对性",
+        "ja": "絶対性"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Absoluteness",
+        "zh": "绝对性",
+        "ja": "絶対性"
+      }
+    },
+    {
+      "id": "FOL.ZFModel",
+      "title": {
+        "en": "Models of ZF and ZFC",
+        "zh": "ZF 与 ZFC 的模型",
+        "ja": "ZF と ZFC のモデル"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Models of ZF and ZFC",
+        "zh": "ZF 与 ZFC 的模型",
+        "ja": "ZF と ZFC のモデル"
+      }
+    },
+    {
+      "id": "FOL.Manipulation.ConstantMapping",
+      "title": {
+        "en": "Mapping constants",
+        "zh": "映射常元",
+        "ja": "定数の写像"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Mapping constants",
+        "zh": "映射常元",
+        "ja": "定数の写像"
+      }
+    },
+    {
+      "id": "FOL.Manipulation.Renaming",
+      "title": {
+        "en": "Variable renaming",
+        "zh": "变量改名",
+        "ja": "変数の改名"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Variable renaming",
+        "zh": "变量改名",
+        "ja": "変数の改名"
+      }
+    },
+    {
+      "id": "FOL.Manipulation.Relabelling",
+      "title": {
+        "en": "Constant relabelling",
+        "zh": "常元改名",
+        "ja": "定数の改名"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Constant relabelling",
+        "zh": "常元改名",
+        "ja": "定数の改名"
+      }
+    },
+    {
+      "id": "FOL.Manipulation.Relativization",
+      "title": {
+        "en": "Relativization",
+        "zh": "相对化",
+        "ja": "相対化"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Relativization",
+        "zh": "相对化",
+        "ja": "相対化"
+      }
+    },
+    {
+      "id": "FOL.Manipulation.ConstantBounding",
+      "title": {
+        "en": "Constant bounding",
+        "zh": "常元有界性",
+        "ja": "定数の有界性"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Constant bounding",
+        "zh": "常元有界性",
+        "ja": "定数の有界性"
+      }
+    },
+    {
+      "id": "FOL.Manipulation.ConstantOccurrences",
+      "title": {
+        "en": "Constants by occurrence",
+        "zh": "逐次出现地处理常元",
+        "ja": "出現ごとに扱う定数"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Constants by occurrence",
+        "zh": "逐次出现地处理常元",
+        "ja": "出現ごとに扱う定数"
+      }
+    },
+    {
+      "id": "FOL.Manipulation.ParameterAbstraction",
+      "title": {
+        "en": "Parameter abstraction",
+        "zh": "参数抽象",
+        "ja": "パラメータ抽象"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Parameter abstraction",
+        "zh": "参数抽象",
+        "ja": "パラメータ抽象"
+      }
+    },
+    {
+      "id": "FOL.Coding",
+      "title": {
+        "en": "Syntax as sets",
+        "zh": "作为集合的语法",
+        "ja": "集合としての構文"
+      },
+      "stage": {
+        "en": "First-order logic",
+        "zh": "一阶逻辑",
+        "ja": "一階論理"
+      },
+      "description": {
+        "en": "Syntax as sets",
+        "zh": "作为集合的语法",
+        "ja": "集合としての構文"
+      }
+    },
+    {
+      "id": "V.Hierarchy",
+      "title": {
+        "en": "The cumulative hierarchy",
+        "zh": "累积层级",
+        "ja": "累積階層"
+      },
+      "stage": {
+        "en": "The ambient hierarchy",
+        "zh": "环境层级",
+        "ja": "周囲の累積階層"
+      },
+      "description": {
+        "en": "The cumulative hierarchy",
+        "zh": "累积层级",
+        "ja": "累積階層"
+      }
+    },
+    {
+      "id": "V.Smallness",
+      "title": {
+        "en": "Small truth values in the cumulative hierarchy",
+        "zh": "累积层级中的小真值",
+        "ja": "累積階層における小さな真理値"
+      },
+      "stage": {
+        "en": "The ambient hierarchy",
+        "zh": "环境层级",
+        "ja": "周囲の累積階層"
+      },
+      "description": {
+        "en": "Small truth values in the cumulative hierarchy",
+        "zh": "累积层级中的小真值",
+        "ja": "累積階層における小さな真理値"
+      }
+    },
+    {
+      "id": "V.Model",
+      "title": {
+        "en": "The cumulative hierarchy models ZF and ZFC",
+        "zh": "累积层级是 ZF 与 ZFC 的模型",
+        "ja": "累積階層は ZF と ZFC のモデル"
+      },
+      "stage": {
+        "en": "The ambient hierarchy",
+        "zh": "环境层级",
+        "ja": "周囲の累積階層"
+      },
+      "description": {
+        "en": "The cumulative hierarchy models ZF and ZFC",
+        "zh": "累积层级是 ZF 与 ZFC 的模型",
+        "ja": "累積階層は ZF と ZFC のモデル"
+      }
+    },
+    {
+      "id": "V.Coding",
+      "title": {
+        "en": "Coding inside the cumulative hierarchy",
+        "zh": "累积层级内的符号化",
+        "ja": "累積階層の内部での符号化"
+      },
+      "stage": {
+        "en": "The ambient hierarchy",
+        "zh": "环境层级",
+        "ja": "周囲の累積階層"
+      },
+      "description": {
+        "en": "Coding inside the cumulative hierarchy",
+        "zh": "累积层级内的符号化",
+        "ja": "累積階層の内部での符号化"
+      }
+    },
+    {
+      "id": "L.Definability",
+      "title": {
+        "en": "Definable subsets of a set",
+        "zh": "集合的可定义子集",
+        "ja": "集合の定義可能な部分集合"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Definable subsets of a set",
+        "zh": "集合的可定义子集",
+        "ja": "集合の定義可能な部分集合"
+      }
+    },
+    {
+      "id": "L.Constructible",
+      "title": {
+        "en": "The constructible hierarchy and universe",
+        "zh": "可构造层级与可构造宇宙",
+        "ja": "構成可能階層と構成可能宇宙"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "The constructible hierarchy and universe",
+        "zh": "可构造层级与可构造宇宙",
+        "ja": "構成可能階層と構成可能宇宙"
+      }
+    },
+    {
+      "id": "L.Ordinal",
+      "title": {
+        "en": "Ordinal closure and finite ordinals",
+        "zh": "序数的封闭性与有限序数",
+        "ja": "順序数の閉性と有限順序数"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Ordinal closure and finite ordinals",
+        "zh": "序数的封闭性与有限序数",
+        "ja": "順序数の閉性と有限順序数"
+      }
+    },
+    {
+      "id": "L.Rank",
+      "title": {
+        "en": "Von Neumann rank",
+        "zh": "Von Neumann 秩",
+        "ja": "von Neumann ランク"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Von Neumann rank",
+        "zh": "Von Neumann 秩",
+        "ja": "von Neumann ランク"
+      }
+    },
+    {
+      "id": "L.Ordinal.Linear",
+      "title": {
+        "en": "Ordinals are linearly ordered by membership",
+        "zh": "序数由隶属关系线性排序",
+        "ja": "順序数は所属によって線形に順序付けられる"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Ordinals are linearly ordered by membership",
+        "zh": "序数由隶属关系线性排序",
+        "ja": "順序数は所属によって線形に順序付けられる"
+      }
+    },
+    {
+      "id": "L.Ordinal.Stages",
+      "title": {
+        "en": "Locating ordinals in the constructible hierarchy",
+        "zh": "在可构造层级中定位序数",
+        "ja": "構成可能階層の中で順序数を位置付ける"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Locating ordinals in the constructible hierarchy",
+        "zh": "在可构造层级中定位序数",
+        "ja": "構成可能階層の中で順序数を位置付ける"
+      }
+    },
+    {
+      "id": "L.Stage",
+      "title": {
+        "en": "The index of the least constructible stage",
+        "zh": "最小可构造层的索引",
+        "ja": "最小の構成可能段階の添字"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "The index of the least constructible stage",
+        "zh": "最小可构造层的索引",
+        "ja": "最小の構成可能段階の添字"
+      }
+    },
+    {
+      "id": "L.Axioms.Basic",
+      "title": {
+        "en": "The basic axioms",
+        "zh": "基本公理",
+        "ja": "基本公理"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "The basic axioms",
+        "zh": "基本公理",
+        "ja": "基本公理"
+      }
+    },
+    {
+      "id": "L.Axioms.Separation",
+      "title": {
+        "en": "Separation and replacement, bounded",
+        "zh": "有界分离与替换",
+        "ja": "有界な分出公理と置換公理"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Separation and replacement, bounded",
+        "zh": "有界分离与替换",
+        "ja": "有界な分出公理と置換公理"
+      }
+    },
+    {
+      "id": "L.ExistentialReflection",
+      "title": {
+        "en": "Existential reflection into a constructible stage",
+        "zh": "存在公式到可构造层的反射",
+        "ja": "存在論理式の構成可能段階への反映"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Existential reflection into a constructible stage",
+        "zh": "存在公式到可构造层的反射",
+        "ja": "存在論理式の構成可能段階への反映"
+      }
+    },
+    {
+      "id": "L.FormulaReflection",
+      "title": {
+        "en": "Reflection for an arbitrary formula",
+        "zh": "任意公式的反射",
+        "ja": "任意の論理式に対する反映"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Reflection for an arbitrary formula",
+        "zh": "任意公式的反射",
+        "ja": "任意の論理式に対する反映"
+      }
+    },
+    {
+      "id": "L.Axioms.Full",
+      "title": {
+        "en": "Separation and replacement, in full",
+        "zh": "完整的分离与替换",
+        "ja": "完全な分出公理と置換公理"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "Separation and replacement, in full",
+        "zh": "完整的分离与替换",
+        "ja": "完全な分出公理と置換公理"
+      }
+    },
+    {
+      "id": "L.Axioms.Power",
+      "title": {
+        "en": "The power set in L",
+        "zh": "L 中的幂集",
+        "ja": "L における冪集合"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "The power set in L",
+        "zh": "L 中的幂集",
+        "ja": "L における冪集合"
+      }
+    },
+    {
+      "id": "L.Absoluteness",
+      "title": {
+        "en": "From ambient formulas to formulas over L",
+        "zh": "环境公式到 L 上公式",
+        "ja": "周囲の論理式から L 上の論理式へ"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "From ambient formulas to formulas over L",
+        "zh": "环境公式到 L 上公式",
+        "ja": "周囲の論理式から L 上の論理式へ"
+      }
+    },
+    {
+      "id": "L.Axioms.Numerals",
+      "title": {
+        "en": "The numeral chain",
+        "zh": "数码链",
+        "ja": "数項列"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "The numeral chain",
+        "zh": "数码链",
+        "ja": "数項列"
+      }
+    },
+    {
+      "id": "L.Axioms.Infinity",
+      "title": {
+        "en": "The axiom of infinity in L",
+        "zh": "L 中的无穷公理",
+        "ja": "L における無限公理"
+      },
+      "stage": {
+        "en": "Constructible stages and the axioms",
+        "zh": "可构造层与公理",
+        "ja": "構成可能段階と公理"
+      },
+      "description": {
+        "en": "The axiom of infinity in L",
+        "zh": "L 中的无穷公理",
+        "ja": "L における無限公理"
+      }
+    },
+    {
+      "id": "L.Coding.PairFormulas",
+      "title": {
+        "en": "Formulas for singletons and pairs",
+        "zh": "单点集与有序对的公式",
+        "ja": "単集合と対を表す論理式"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Formulas for singletons and pairs",
+        "zh": "单点集与有序对的公式",
+        "ja": "単集合と対を表す論理式"
+      }
+    },
+    {
+      "id": "L.Coding.Environment",
+      "title": {
+        "en": "Finite environments as set-coded graphs",
+        "zh": "作为集合编码图的有穷环境",
+        "ja": "集合で符号化した有限環境"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Finite environments as set-coded graphs",
+        "zh": "作为集合编码图的有穷环境",
+        "ja": "集合で符号化した有限環境"
+      }
+    },
+    {
+      "id": "L.Coding.Model",
+      "title": {
+        "en": "Coding formulas over the constructible model",
+        "zh": "可构造模型上的公式符号化",
+        "ja": "構成可能モデル上の論理式の符号化"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Coding formulas over the constructible model",
+        "zh": "可构造模型上的公式符号化",
+        "ja": "構成可能モデル上の論理式の符号化"
+      }
+    },
+    {
+      "id": "L.Coding.Expressions",
+      "title": {
+        "en": "Formula expressions for coded recursion",
+        "zh": "码化递归所用的公式表达式",
+        "ja": "符号化再帰のための論理式表現"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Formula expressions for coded recursion",
+        "zh": "码化递归所用的公式表达式",
+        "ja": "符号化再帰のための論理式表現"
+      }
+    },
+    {
+      "id": "L.Coding.Closure",
+      "title": {
+        "en": "Subcode-closed domains",
+        "zh": "对子码封闭的定义域",
+        "ja": "部分符号に閉じた定義域"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Subcode-closed domains",
+        "zh": "对子码封闭的定义域",
+        "ja": "部分符号に閉じた定義域"
+      }
+    },
+    {
+      "id": "L.Coding.Descent",
+      "title": {
+        "en": "Rank descent through coded pairs",
+        "zh": "沿编码对作秩下降",
+        "ja": "符号化された対に沿う階数降下"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Rank descent through coded pairs",
+        "zh": "沿编码对作秩下降",
+        "ja": "符号化された対に沿う階数降下"
+      }
+    },
+    {
+      "id": "L.Coding.CodeConstructibility",
+      "title": {
+        "en": "Constructible codes and subformula trees",
+        "zh": "可构造编码与子公式树",
+        "ja": "構成可能なコードと部分式の木"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Constructible codes and subformula trees",
+        "zh": "可构造编码与子公式树",
+        "ja": "構成可能なコードと部分式の木"
+      }
+    },
+    {
+      "id": "L.Coding.SubformulaClosure",
+      "title": {
+        "en": "Closure under subformulas",
+        "zh": "对子公式封闭",
+        "ja": "部分式についての閉包"
+      },
+      "stage": {
+        "en": "Internal coding: expressions and domains",
+        "zh": "内部编码：表达式与定义域",
+        "ja": "内部の符号化：式と定義域"
+      },
+      "description": {
+        "en": "Closure under subformulas",
+        "zh": "对子公式封闭",
+        "ja": "部分式についての閉包"
+      }
+    },
+    {
+      "id": "L.Coding.EnvironmentSet",
+      "title": {
+        "en": "The set of fixed-length environments",
+        "zh": "定长环境之集",
+        "ja": "固定長環境の集合"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "The set of fixed-length environments",
+        "zh": "定长环境之集",
+        "ja": "固定長環境の集合"
+      }
+    },
+    {
+      "id": "L.Coding.Satisfaction",
+      "title": {
+        "en": "Satisfaction by recursion on formulas",
+        "zh": "沿公式递归构造满足关系",
+        "ja": "論理式上の再帰による充足関係"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Satisfaction by recursion on formulas",
+        "zh": "沿公式递归构造满足关系",
+        "ja": "論理式上の再帰による充足関係"
+      }
+    },
+    {
+      "id": "L.Coding.SatisfactionBridge",
+      "title": {
+        "en": "Satisfaction and the recursion value",
+        "zh": "满足关系与递归取值",
+        "ja": "充足関係と再帰の値"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Satisfaction and the recursion value",
+        "zh": "满足关系与递归取值",
+        "ja": "充足関係と再帰の値"
+      }
+    },
+    {
+      "id": "L.Coding.SatisfactionTable",
+      "title": {
+        "en": "Satisfaction tables over subformulas",
+        "zh": "子公式上的满足关系表",
+        "ja": "部分式上の充足関係表"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Satisfaction tables over subformulas",
+        "zh": "子公式上的满足关系表",
+        "ja": "部分式上の充足関係表"
+      }
+    },
+    {
+      "id": "L.Coding.EnvironmentAgreement",
+      "title": {
+        "en": "Agreement of environment sets",
+        "zh": "环境集的一致性",
+        "ja": "環境の集合の一致"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Agreement of environment sets",
+        "zh": "环境集的一致性",
+        "ja": "環境の集合の一致"
+      }
+    },
+    {
+      "id": "L.Coding.SlotClosure",
+      "title": {
+        "en": "Closing a code slot under its seven constructors",
+        "zh": "使编码槽位对七种构造闭合",
+        "ja": "コードスロットを七つの構成子について閉じる"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Closing a code slot under its seven constructors",
+        "zh": "使编码槽位对七种构造闭合",
+        "ja": "コードスロットを七つの構成子について閉じる"
+      }
+    },
+    {
+      "id": "L.Coding.CodeShape",
+      "title": {
+        "en": "Recognizing well-formed constructor keys",
+        "zh": "良构构造子键的识别",
+        "ja": "整形式な構成子キーの認識"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Recognizing well-formed constructor keys",
+        "zh": "良构构造子键的识别",
+        "ja": "整形式な構成子キーの認識"
+      }
+    },
+    {
+      "id": "L.Coding.FormulaRecovery",
+      "title": {
+        "en": "Recovering formulas from codes",
+        "zh": "从码恢复公式",
+        "ja": "コードから論理式を復元する"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Recovering formulas from codes",
+        "zh": "从码恢复公式",
+        "ja": "コードから論理式を復元する"
+      }
+    },
+    {
+      "id": "L.Coding.NumeralBound",
+      "title": {
+        "en": "Numerals in a successor-closed ordinal stage",
+        "zh": "对后继封闭的序数层中的数码",
+        "ja": "後者演算について閉じた順序数段階の数項"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Numerals in a successor-closed ordinal stage",
+        "zh": "对后继封闭的序数层中的数码",
+        "ja": "後者演算について閉じた順序数段階の数項"
+      }
+    },
+    {
+      "id": "L.Coding.Quantification",
+      "title": {
+        "en": "Quantifying over coded pairs and finite formula families",
+        "zh": "对码化有序对分量与有穷公式族量化",
+        "ja": "符号化された順序対の成分と有限論理式族を量化する"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Quantifying over coded pairs and finite formula families",
+        "zh": "对码化有序对分量与有穷公式族量化",
+        "ja": "符号化された順序対の成分と有限論理式族を量化する"
+      }
+    },
+    {
+      "id": "L.Recursion",
+      "title": {
+        "en": "Internalizing recursive definitions in L",
+        "zh": "L 中递归定义的内部化",
+        "ja": "L における再帰的定義の内部化"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Internalizing recursive definitions in L",
+        "zh": "L 中递归定义的内部化",
+        "ja": "L における再帰的定義の内部化"
+      }
+    },
+    {
+      "id": "L.Recursion.Graph",
+      "title": {
+        "en": "Graphs of recursive definitions",
+        "zh": "递归定义的图",
+        "ja": "再帰的定義のグラフ"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Graphs of recursive definitions",
+        "zh": "递归定义的图",
+        "ja": "再帰的定義のグラフ"
+      }
+    },
+    {
+      "id": "L.Coding.EnvironmentTower",
+      "title": {
+        "en": "The environment tower",
+        "zh": "环境塔",
+        "ja": "環境の塔"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "The environment tower",
+        "zh": "环境塔",
+        "ja": "環境の塔"
+      }
+    },
+    {
+      "id": "L.Coding.CodeSet",
+      "title": {
+        "en": "The set of all formula codes",
+        "zh": "全体公式码之集",
+        "ja": "すべての論理式の符号からなる集合"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "The set of all formula codes",
+        "zh": "全体公式码之集",
+        "ja": "すべての論理式の符号からなる集合"
+      }
+    },
+    {
+      "id": "L.Coding.CodeDomain",
+      "title": {
+        "en": "Describing the closed domain of formula codes",
+        "zh": "描述封闭的公式码定义域",
+        "ja": "閉じた論理式符号の定義域を記述する"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Describing the closed domain of formula codes",
+        "zh": "描述封闭的公式码定义域",
+        "ja": "閉じた論理式符号の定義域を記述する"
+      }
+    },
+    {
+      "id": "L.Coding.SatisfactionClauses",
+      "title": {
+        "en": "Describing the satisfaction table",
+        "zh": "描述满足关系表",
+        "ja": "充足関係表を記述する"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Describing the satisfaction table",
+        "zh": "描述满足关系表",
+        "ja": "充足関係表を記述する"
+      }
+    },
+    {
+      "id": "L.Coding.CodeAlphabet",
+      "title": {
+        "en": "The alphabet of formula codes",
+        "zh": "公式码的字母表",
+        "ja": "論理式符号のアルファベット"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "The alphabet of formula codes",
+        "zh": "公式码的字母表",
+        "ja": "論理式符号のアルファベット"
+      }
+    },
+    {
+      "id": "L.Coding.SatisfactionClauseSemantics",
+      "title": {
+        "en": "Reading and validating the satisfaction clauses",
+        "zh": "读取并验证满足关系子句",
+        "ja": "充足関係の節の読み取りと検証"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Reading and validating the satisfaction clauses",
+        "zh": "读取并验证满足关系子句",
+        "ja": "充足関係の節の読み取りと検証"
+      }
+    },
+    {
+      "id": "L.Coding.PinnedRecursion",
+      "title": {
+        "en": "Recursion pinned to a subcode-closed index set",
+        "zh": "固定在对子码封闭的索引集上的递归",
+        "ja": "部分符号で閉じた添字集合に固定された再帰"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Recursion pinned to a subcode-closed index set",
+        "zh": "固定在对子码封闭的索引集上的递归",
+        "ja": "部分符号で閉じた添字集合に固定された再帰"
+      }
+    },
+    {
+      "id": "L.Coding.SatisfactionGraph",
+      "title": {
+        "en": "The satisfaction graph formula",
+        "zh": "满足关系图公式",
+        "ja": "充足関係のグラフを表す論理式"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "The satisfaction graph formula",
+        "zh": "满足关系图公式",
+        "ja": "充足関係のグラフを表す論理式"
+      }
+    },
+    {
+      "id": "L.Coding.UniformSatisfaction",
+      "title": {
+        "en": "Uniform satisfaction over all codes",
+        "zh": "全部编码上的一致满足关系",
+        "ja": "全コード上の一様な充足関係"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "Uniform satisfaction over all codes",
+        "zh": "全部编码上的一致满足关系",
+        "ja": "全コード上の一様な充足関係"
+      }
+    },
+    {
+      "id": "L.Coding.DefinablePowerSet",
+      "title": {
+        "en": "A formula for the definable power set",
+        "zh": "可定义幂集的公式",
+        "ja": "定義可能な冪集合を表す論理式"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "A formula for the definable power set",
+        "zh": "可定义幂集的公式",
+        "ja": "定義可能な冪集合を表す論理式"
+      }
+    },
+    {
+      "id": "L.Coding.HierarchySequence",
+      "title": {
+        "en": "A sequence for the constructible hierarchy",
+        "zh": "可构造层级的序列",
+        "ja": "構成可能階層を表す列"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "A sequence for the constructible hierarchy",
+        "zh": "可构造层级的序列",
+        "ja": "構成可能階層を表す列"
+      }
+    },
+    {
+      "id": "L.Hierarchy",
+      "title": {
+        "en": "The constructible hierarchy inside L",
+        "zh": "L 内部的可构造层级",
+        "ja": "L の内部における構成可能階層"
+      },
+      "stage": {
+        "en": "Internal coding: tables and uniform satisfaction",
+        "zh": "内部编码：表与统一满足关系",
+        "ja": "内部の符号化：表と一様な充足関係"
+      },
+      "description": {
+        "en": "The constructible hierarchy inside L",
+        "zh": "L 内部的可构造层级",
+        "ja": "L の内部における構成可能階層"
+      }
+    },
+    {
+      "id": "L.Choice.FirstIntersectionStage",
+      "title": {
+        "en": "The first stage meeting a set",
+        "zh": "首次与集合相交的层",
+        "ja": "集合と交わる最初の段階"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "The first stage meeting a set",
+        "zh": "首次与集合相交的层",
+        "ja": "集合と交わる最初の段階"
+      }
+    },
+    {
+      "id": "L.WellOrder.Base",
+      "title": {
+        "en": "Strict well-orders and least-element search",
+        "zh": "严格良序与最小元搜索",
+        "ja": "狭義整列順序と最小要素の探索"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Strict well-orders and least-element search",
+        "zh": "严格良序与最小元搜索",
+        "ja": "狭義整列順序と最小要素の探索"
+      }
+    },
+    {
+      "id": "L.Choice.FiniteStageOrders",
+      "title": {
+        "en": "Well-orders on finite stages",
+        "zh": "有限层上的良序",
+        "ja": "有限段階上の整列順序"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Well-orders on finite stages",
+        "zh": "有限层上的良序",
+        "ja": "有限段階上の整列順序"
+      }
+    },
+    {
+      "id": "L.Choice.CanonicalNames",
+      "title": {
+        "en": "Canonical names for successor-stage members",
+        "zh": "后继层成员的典范名字",
+        "ja": "後者段階の要素の正準な名前"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Canonical names for successor-stage members",
+        "zh": "后继层成员的典范名字",
+        "ja": "後者段階の要素の正準な名前"
+      }
+    },
+    {
+      "id": "L.Choice.StageOrders",
+      "title": {
+        "en": "Well-orders on all stages",
+        "zh": "各层上的良序",
+        "ja": "各段階上の整列順序"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Well-orders on all stages",
+        "zh": "各层上的良序",
+        "ja": "各段階上の整列順序"
+      }
+    },
+    {
+      "id": "L.Choice.NameComparison",
+      "title": {
+        "en": "Formulas for name comparison",
+        "zh": "名字比较的公式",
+        "ja": "名前の比較を表す論理式"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Formulas for name comparison",
+        "zh": "名字比较的公式",
+        "ja": "名前の比較を表す論理式"
+      }
+    },
+    {
+      "id": "L.Choice.OrderTable",
+      "title": {
+        "en": "An internal table of stage orders",
+        "zh": "层序的内部表",
+        "ja": "段階順序の内部の表"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "An internal table of stage orders",
+        "zh": "层序的内部表",
+        "ja": "段階順序の内部の表"
+      }
+    },
+    {
+      "id": "L.Choice.StageOrderAdequacy",
+      "title": {
+        "en": "Adequacy of the stage-order description",
+        "zh": "层序描述的充分性",
+        "ja": "段階順序の記述の妥当性"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Adequacy of the stage-order description",
+        "zh": "层序描述的充分性",
+        "ja": "段階順序の記述の妥当性"
+      }
+    },
+    {
+      "id": "L.Choice.NameComparisonAdequacy",
+      "title": {
+        "en": "Adequacy of name comparison",
+        "zh": "名字比较的充分性",
+        "ja": "名前の比較の妥当性"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Adequacy of name comparison",
+        "zh": "名字比较的充分性",
+        "ja": "名前の比較の妥当性"
+      }
+    },
+    {
+      "id": "L.Choice.LimitStageOrder",
+      "title": {
+        "en": "The limit-stage order inside L",
+        "zh": "L 内部的极限层序",
+        "ja": "L の内部にある極限段階の順序"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "The limit-stage order inside L",
+        "zh": "L 内部的极限层序",
+        "ja": "L の内部にある極限段階の順序"
+      }
+    },
+    {
+      "id": "L.Choice.EarliestDisagreement",
+      "title": {
+        "en": "An internal family of earliest-disagreement relations",
+        "zh": "最早分歧关系的内部族",
+        "ja": "最初の相違の関係からなる内部の族"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "An internal family of earliest-disagreement relations",
+        "zh": "最早分歧关系的内部族",
+        "ja": "最初の相違の関係からなる内部の族"
+      }
+    },
+    {
+      "id": "L.Choice.InternalWellOrder",
+      "title": {
+        "en": "The internal canonical well-order",
+        "zh": "内部典范良序",
+        "ja": "内部の正準整列順序"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "The internal canonical well-order",
+        "zh": "内部典范良序",
+        "ja": "内部の正準整列順序"
+      }
+    },
+    {
+      "id": "L.Choice.Transversal",
+      "title": {
+        "en": "Choice by a transversal",
+        "zh": "以横截集实现选择",
+        "ja": "横断集合による選択"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "Choice by a transversal",
+        "zh": "以横截集实现选择",
+        "ja": "横断集合による選択"
+      }
+    },
+    {
+      "id": "L.Model",
+      "title": {
+        "en": "The constructible universe models ZFC",
+        "zh": "可构造宇宙是 ZFC 的模型",
+        "ja": "構成可能宇宙は ZFC のモデル"
+      },
+      "stage": {
+        "en": "The canonical well-order and Choice",
+        "zh": "典范良序与选择公理",
+        "ja": "正準整列順序と選択公理"
+      },
+      "description": {
+        "en": "The constructible universe models ZFC",
+        "zh": "可构造宇宙是 ZFC 的模型",
+        "ja": "構成可能宇宙は ZFC のモデル"
+      }
+    },
+    {
+      "id": "V.Presentation",
+      "title": {
+        "en": "Small presentations of sets",
+        "zh": "集合的小呈现",
+        "ja": "集合の小さな提示"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Small presentations of sets",
+        "zh": "集合的小呈现",
+        "ja": "集合の小さな提示"
+      }
+    },
+    {
+      "id": "L.Ordinal.SquareLaw",
+      "title": {
+        "en": "Ordinal indices, the Gödel pair order, and finite indices",
+        "zh": "序数指标、Gödel 对序与有穷指标",
+        "ja": "順序数の添字、Gödel 対順序、有限添字"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Ordinal indices, the Gödel pair order, and finite indices",
+        "zh": "序数指标、Gödel 对序与有穷指标",
+        "ja": "順序数の添字、Gödel 対順序、有限添字"
+      }
+    },
+    {
+      "id": "L.Coding.Injection",
+      "title": {
+        "en": "Coded injections",
+        "zh": "编码单射",
+        "ja": "符号化された単射"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Coded injections",
+        "zh": "编码单射",
+        "ja": "符号化された単射"
+      }
+    },
+    {
+      "id": "L.Cardinal",
+      "title": {
+        "en": "Cardinals and coded injections inside L",
+        "zh": "L 内部的基数与编码单射",
+        "ja": "L の内部における基数と符号化された単射"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Cardinals and coded injections inside L",
+        "zh": "L 内部的基数与编码单射",
+        "ja": "L の内部における基数と符号化された単射"
+      }
+    },
+    {
+      "id": "L.DefinableInjection",
+      "title": {
+        "en": "Turning a definable injection into an internal code",
+        "zh": "把可定义单射化为内部编码",
+        "ja": "定義可能な単射を内部コードにする"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Turning a definable injection into an internal code",
+        "zh": "把可定义单射化为内部编码",
+        "ja": "定義可能な単射を内部コードにする"
+      }
+    },
+    {
+      "id": "L.InjectionComposition",
+      "title": {
+        "en": "Composition and inclusion of coded injections",
+        "zh": "编码单射的复合与包含",
+        "ja": "符号化された単射の合成と包含"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Composition and inclusion of coded injections",
+        "zh": "编码单射的复合与包含",
+        "ja": "符号化された単射の合成と包含"
+      }
+    },
+    {
+      "id": "L.GCH",
+      "title": {
+        "en": "The generalized continuum hypothesis inside L",
+        "zh": "L 内部的广义连续统假设",
+        "ja": "L の内部における一般連続体仮説"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "The generalized continuum hypothesis inside L",
+        "zh": "L 内部的广义连续统假设",
+        "ja": "L の内部における一般連続体仮説"
+      }
+    },
+    {
+      "id": "V.CantorBernstein",
+      "title": {
+        "en": "Cantor–Schröder–Bernstein for small presentations",
+        "zh": "小呈现上的 Cantor–Schröder–Bernstein 定理",
+        "ja": "小さな提示に対する Cantor–Schröder–Bernstein の定理"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Cantor–Schröder–Bernstein for small presentations",
+        "zh": "小呈现上的 Cantor–Schröder–Bernstein 定理",
+        "ja": "小さな提示に対する Cantor–Schröder–Bernstein の定理"
+      }
+    },
+    {
+      "id": "L.CantorBernstein",
+      "title": {
+        "en": "Cantor–Schröder–Bernstein inside L",
+        "zh": "L 内部的 Cantor–Schröder–Bernstein 定理",
+        "ja": "L の内部における Cantor–Schröder–Bernstein の定理"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Cantor–Schröder–Bernstein inside L",
+        "zh": "L 内部的 Cantor–Schröder–Bernstein 定理",
+        "ja": "L の内部における Cantor–Schröder–Bernstein の定理"
+      }
+    },
+    {
+      "id": "L.Mostowski",
+      "title": {
+        "en": "Collapsing a transitive well-founded relation",
+        "zh": "传递良基关系的塌缩",
+        "ja": "推移的な整礎関係の崩壊"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "Collapsing a transitive well-founded relation",
+        "zh": "传递良基关系的塌缩",
+        "ja": "推移的な整礎関係の崩壊"
+      }
+    },
+    {
+      "id": "L.CardinalAbove",
+      "title": {
+        "en": "An ordinal L-cardinal above every L-cardinal",
+        "zh": "任意 L 基数之上的序数 L 基数",
+        "ja": "任意の L 基数より大きい順序数 L 基数"
+      },
+      "stage": {
+        "en": "Ordinals, injections and cardinals",
+        "zh": "序数、单射与基数",
+        "ja": "順序数，単射，基数"
+      },
+      "description": {
+        "en": "An ordinal L-cardinal above every L-cardinal",
+        "zh": "任意 L 基数之上的序数 L 基数",
+        "ja": "任意の L 基数より大きい順序数 L 基数"
+      }
+    },
+    {
+      "id": "L.GCH.Assembly",
+      "title": {
+        "en": "Assembling GCH from four internal bounds",
+        "zh": "从四条内部界装配 GCH",
+        "ja": "四つの内部上界から GCH を組み立てる"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Assembling GCH from four internal bounds",
+        "zh": "从四条内部界装配 GCH",
+        "ja": "四つの内部上界から GCH を組み立てる"
+      }
+    },
+    {
+      "id": "L.Coding.SatisfactionGraphSet",
+      "title": {
+        "en": "An internal graph of uniform satisfaction",
+        "zh": "统一满足关系的内部图",
+        "ja": "一様な充足関係の内部グラフ"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "An internal graph of uniform satisfaction",
+        "zh": "统一满足关系的内部图",
+        "ja": "一様な充足関係の内部グラフ"
+      }
+    },
+    {
+      "id": "L.Coding.CodeDomainAdequacy",
+      "title": {
+        "en": "Soundness and completeness of the closed code domain",
+        "zh": "封闭码定义域的可靠性与完备性",
+        "ja": "閉じた符号の定義域の健全性と完全性"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Soundness and completeness of the closed code domain",
+        "zh": "封闭码定义域的可靠性与完备性",
+        "ja": "閉じた符号の定義域の健全性と完全性"
+      }
+    },
+    {
+      "id": "L.GCH.SatisfactionDescription",
+      "title": {
+        "en": "A Δ₀ description of the satisfaction table",
+        "zh": "满足表的 Δ₀ 描述",
+        "ja": "充足関係表の Δ₀ 記述"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "A Δ₀ description of the satisfaction table",
+        "zh": "满足表的 Δ₀ 描述",
+        "ja": "充足関係表の Δ₀ 記述"
+      }
+    },
+    {
+      "id": "L.GCH.DefinablePowerSetDescription",
+      "title": {
+        "en": "A Δ₀ description of the definable power set",
+        "zh": "可定义幂集的 Δ₀ 描述",
+        "ja": "定義可能冪集合の Δ₀ 記述"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "A Δ₀ description of the definable power set",
+        "zh": "可定义幂集的 Δ₀ 描述",
+        "ja": "定義可能冪集合の Δ₀ 記述"
+      }
+    },
+    {
+      "id": "L.GCH.AdequateStages",
+      "title": {
+        "en": "Adequate stages for the GCH argument",
+        "zh": "GCH 论证所需的充分层",
+        "ja": "GCH の議論に必要な十分な段階"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Adequate stages for the GCH argument",
+        "zh": "GCH 论证所需的充分层",
+        "ja": "GCH の議論に必要な十分な段階"
+      }
+    },
+    {
+      "id": "L.GCH.OmegaRecursion",
+      "title": {
+        "en": "Iterating a definable step through ω",
+        "zh": "沿 ω 迭代可定义步骤",
+        "ja": "定義可能な操作を ω に沿って反復する"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Iterating a definable step through ω",
+        "zh": "沿 ω 迭代可定义步骤",
+        "ja": "定義可能な操作を ω に沿って反復する"
+      }
+    },
+    {
+      "id": "V.Collapse",
+      "title": {
+        "en": "The Mostowski collapse",
+        "zh": "Mostowski 塌缩",
+        "ja": "Mostowski 崩壊"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "The Mostowski collapse",
+        "zh": "Mostowski 塌缩",
+        "ja": "Mostowski 崩壊"
+      }
+    },
+    {
+      "id": "L.GCH.SkolemHull",
+      "title": {
+        "en": "Building and collapsing a Skolem hull",
+        "zh": "构造并塌缩 Skolem 壳",
+        "ja": "Skolem 包を構成して崩壊させる"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Building and collapsing a Skolem hull",
+        "zh": "构造并塌缩 Skolem 壳",
+        "ja": "Skolem 包を構成して崩壊させる"
+      }
+    },
+    {
+      "id": "L.GCH.HierarchyDescription",
+      "title": {
+        "en": "A Δ₀ description of the constructible hierarchy",
+        "zh": "可构造层级的 Δ₀ 描述",
+        "ja": "構成可能階層の Δ₀ 記述"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "A Δ₀ description of the constructible hierarchy",
+        "zh": "可构造层级的 Δ₀ 描述",
+        "ja": "構成可能階層の Δ₀ 記述"
+      }
+    },
+    {
+      "id": "L.GCH.CondensationTransfer",
+      "title": {
+        "en": "Transferring structure through condensation",
+        "zh": "通过凝聚搬运结构",
+        "ja": "凝縮を通して構造を移す"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Transferring structure through condensation",
+        "zh": "通过凝聚搬运结构",
+        "ja": "凝縮を通して構造を移す"
+      }
+    },
+    {
+      "id": "L.GCH.BelowSuccessorCardinal",
+      "title": {
+        "en": "Ordinals below a successor cardinal inject into its base",
+        "zh": "后继基数以下的序数单射到其基数",
+        "ja": "後続基数より小さい順序数をその基数へ単射する"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Ordinals below a successor cardinal inject into its base",
+        "zh": "后继基数以下的序数单射到其基数",
+        "ja": "後続基数より小さい順序数をその基数へ単射する"
+      }
+    },
+    {
+      "id": "L.GCH.OrderType",
+      "title": {
+        "en": "Constructing order types inside L",
+        "zh": "在 L 内部构造序型",
+        "ja": "L の内部で順序型を構成する"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Constructing order types inside L",
+        "zh": "在 L 内部构造序型",
+        "ja": "L の内部で順序型を構成する"
+      }
+    },
+    {
+      "id": "L.GCH.CardinalRepresentative",
+      "title": {
+        "en": "Choosing a cardinal representative for an ordinal",
+        "zh": "为序数选取基数代表",
+        "ja": "順序数の基数代表を選ぶ"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Choosing a cardinal representative for an ordinal",
+        "zh": "为序数选取基数代表",
+        "ja": "順序数の基数代表を選ぶ"
+      }
+    },
+    {
+      "id": "L.GCH.CardinalSquareLaw",
+      "title": {
+        "en": "The square law for infinite L-cardinals",
+        "zh": "L 中无穷基数的平方律",
+        "ja": "L の無限基数における平方律"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "The square law for infinite L-cardinals",
+        "zh": "L 中无穷基数的平方律",
+        "ja": "L の無限基数における平方律"
+      }
+    },
+    {
+      "id": "L.GCH.LeastWitnessMap",
+      "title": {
+        "en": "Least witnesses form a definable map",
+        "zh": "最小见证构成可定义映射",
+        "ja": "最小の証人が定義可能な写像をなす"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Least witnesses form a definable map",
+        "zh": "最小见证构成可定义映射",
+        "ja": "最小の証人が定義可能な写像をなす"
+      }
+    },
+    {
+      "id": "L.GCH.SuccessorIntoPowerSet",
+      "title": {
+        "en": "Injecting the successor cardinal into the power set",
+        "zh": "把后继基数单射到幂集",
+        "ja": "後続基数を冪集合へ単射する"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Injecting the successor cardinal into the power set",
+        "zh": "把后继基数单射到幂集",
+        "ja": "後続基数を冪集合へ単射する"
+      }
+    },
+    {
+      "id": "L.GCH.FiniteSequenceCoding",
+      "title": {
+        "en": "Coding finite sequences below an infinite ordinal",
+        "zh": "在无穷序数以下编码有限序列",
+        "ja": "無限順序数の下で有限列をコード化する"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Coding finite sequences below an infinite ordinal",
+        "zh": "在无穷序数以下编码有限序列",
+        "ja": "無限順序数の下で有限列をコード化する"
+      }
+    },
+    {
+      "id": "L.GCH.StageCountingTools",
+      "title": {
+        "en": "The counting tools for infinite constructible stages",
+        "zh": "计数无穷可构造层的工具",
+        "ja": "無限な構成可能段階を数える道具"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "The counting tools for infinite constructible stages",
+        "zh": "计数无穷可构造层的工具",
+        "ja": "無限な構成可能段階を数える道具"
+      }
+    },
+    {
+      "id": "L.GCH.ConstructibleHull",
+      "title": {
+        "en": "Locating the hull and its collapse inside L",
+        "zh": "在 L 中定位 Skolem 壳及其塌缩",
+        "ja": "包とその崩壊を L の内部に置く"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Locating the hull and its collapse inside L",
+        "zh": "在 L 中定位 Skolem 壳及其塌缩",
+        "ja": "包とその崩壊を L の内部に置く"
+      }
+    },
+    {
+      "id": "L.GCH.HullCounting",
+      "title": {
+        "en": "Counting a Skolem hull from a counted start",
+        "zh": "从已计数的起点计数 Skolem 壳",
+        "ja": "数えられた始集合から Skolem 包を数える"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Counting a Skolem hull from a counted start",
+        "zh": "从已计数的起点计数 Skolem 壳",
+        "ja": "数えられた始集合から Skolem 包を数える"
+      }
+    },
+    {
+      "id": "L.GCH.StageInjection",
+      "title": {
+        "en": "Injecting an infinite constructible stage into its index",
+        "zh": "把无穷可构造层单射到其指标",
+        "ja": "無限構成可能段階をその添字へ単射する"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Injecting an infinite constructible stage into its index",
+        "zh": "把无穷可构造层单射到其指标",
+        "ja": "無限構成可能段階をその添字へ単射する"
+      }
+    },
+    {
+      "id": "L.GCH.BoundedSubset",
+      "title": {
+        "en": "Bounded subsets appear at controlled stages",
+        "zh": "有界子集在受控层出现",
+        "ja": "有界部分集合が現れる段階を制御する"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "Bounded subsets appear at controlled stages",
+        "zh": "有界子集在受控层出现",
+        "ja": "有界部分集合が現れる段階を制御する"
+      }
+    },
+    {
+      "id": "L.GCH.Theorem",
+      "title": {
+        "en": "The constructible universe satisfies GCH",
+        "zh": "可构造宇宙满足 GCH",
+        "ja": "構成可能宇宙は GCH を満たす"
+      },
+      "stage": {
+        "en": "Proving GCH",
+        "zh": "证明 GCH",
+        "ja": "GCH の証明"
+      },
+      "description": {
+        "en": "The constructible universe satisfies GCH",
+        "zh": "可构造宇宙满足 GCH",
+        "ja": "構成可能宇宙は GCH を満たす"
+      }
+    }
+  ]
+}

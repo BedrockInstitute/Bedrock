@@ -1,26 +1,30 @@
 #!/usr/bin/env python3
-"""Check catalog coverage and chapter prerequisites in literate Agda sources."""
+"""Check the external reading catalog against literate Agda sources."""
 
 import argparse
 from collections import Counter
+import json
 from pathlib import Path
 import re
 
 
 FENCE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
 IMPORT = re.compile(r"^\s*(?:open\s+)?import\s+([\w.]+)", re.M)
-PREVIEWS = frozenset({"Landmarks"})
+PREVIEWS = frozenset({"Milestones"})
+CATALOG = Path(__file__).resolve().parents[2] / "dev" / "reading-catalog.json"
 
 
 def imports(text):
     return [name for block in FENCE.findall(text) for name in IMPORT.findall(block)]
 
 
-def defects(sources):
-    if "Everything" not in sources:
-        return ["missing Everything catalog"]
-    order = imports(sources["Everything"])
-    expected = set(sources) - {"Everything"}
+def defects(sources, catalog_path=CATALOG):
+    try:
+        catalog = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
+        order = [entry["id"] for entry in catalog["chapters"]]
+    except (OSError, KeyError, TypeError, json.JSONDecodeError):
+        return ["missing or invalid reading catalog"]
+    expected = set(sources)
     actual = set(order)
     errors = [f"missing chapter: {name}" for name in sorted(expected - actual)]
     errors += [f"unknown catalog chapter: {name}" for name in sorted(actual - expected)]
@@ -51,7 +55,7 @@ def main():
         print(f"check-reading-order: {error}")
     if errors:
         return 1
-    print(f"check-reading-order: clean ({len(sources) - 1} chapters; Landmarks preview)")
+    print(f"check-reading-order: clean ({len(sources)} chapters; Milestones preview)")
     return 0
 
 

@@ -427,7 +427,7 @@ cantor-bernstein : (a b : V ℓ) (f : ⟪ a ⟫ → ⟪ b ⟫)
 <!--en-->
 The result type is an explicit dependent triple rather than a record: a function h from ⟪ a ⟫ to ⟪ b ⟫, its injectivity as a proposition-valued component, and mere surjectivity, asserting for each y of ⟪ b ⟫ a truncated preimage. The asymmetry between the two side conditions is deliberate and mirrors the abstract theorem: injectivity is stated as honest data, surjectivity only as mere existence. Nothing in the statement quantifies over stages or membership of the hierarchy; everything happens inside the two member types.
 <!--zh-->
-结果类型是显式的依赖三元组而非记录：从 ⟪ a ⟫ 到 ⟪ b ⟫ 的函数 h，其单射性作为命题值分量，以及仅仅存在的满射性，即对 ⟪ b ⟫ 的每个 y 断言一个命题截断的原像。两侧条件之间的不对称是刻意的，与抽象定理一致：单射性作为真正的数据陈述，满射性只作为单纯存在陈述。陈述中没有任何对层级的阶段或属于关系的量化；一切都发生在两个成员类型内部。
+结果类型是显式的依赖三元组而非记录：从 ⟪ a ⟫ 到 ⟪ b ⟫ 的函数 h，其单射性作为命题值分量，以及仅仅存在的满射性，即对 ⟪ b ⟫ 的每个 y 断言一个命题截断的原像。两侧条件之间的不对称是刻意的，与抽象定理一致：单射性作为真正的数据陈述，满射性只作为单纯存在陈述。陈述中没有任何对层级的层或属于关系的量化；一切都发生在两个成员类型内部。
 <!--ja-->
 結果の型はレコードではなく明示的な依存する三つ組です。⟪ a ⟫ から ⟪ b ⟫ への関数 h、その単射性を命題値の成分として、そして単なる全射性、すなわち ⟪ b ⟫ の各 y に対する命題的切り詰めされた原像の主張です。二つの側条件の非対称性は意図的なもので、抽象定理と呼応します。単射性は正味のデータとして、全射性は単なる存在として述べられます。主張のどこにも階層の段や所属についての量化はなく、すべては二つのメンバー型の内部で起こります。
 <!--/-->

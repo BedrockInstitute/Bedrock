@@ -1,7 +1,7 @@
 # Digest: the orthodox form of the rud route, pinned from the collected literature
 
 Current Bedrock status (2026-09-06): `L⊨ZFC` and `L⊨GCH` are proved and
-registered in [Landmarks](../../src/Landmarks.lagda.md). The research and route
+registered in [Milestones](../../src/Milestones.lagda.md). The research and route
 assessments below are historical; they do not describe open Bedrock proof goals.
 
 Task `[L3.30-D1]`. Authored by the orchestrator directly (per the owner's

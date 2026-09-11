@@ -3,9 +3,9 @@
 
 The bounded subset theorem locates a constructible subset once its elements and defining parameters are bounded. This internal form is the bridge from definability to the stage estimate used in the GCH argument.
 <!--zh-->
-# 有界子集在受控阶段出现
+# 有界子集在受控层出现
 
-当元素与定义参数都有界时，有界子集定理确定一个可构造子集出现的位置。它的内部形式把可定义性连接到 GCH 论证所需的阶段估计。
+当元素与定义参数都有界时，有界子集定理确定一个可构造子集出现的位置。它的内部形式把可定义性连接到 GCH 论证所需的层估计。
 <!--ja-->
 # 有界部分集合が現れる段階を制御する
 
@@ -78,7 +78,7 @@ Fix an internal cardinal `κ` and a subset `y` of it. A defining formula for `y`
 <!--zh-->
 ## 为基数的可构造子集取界
 
-固定内部基数 `κ` 及其子集 `y`。定义 `y` 的公式只使用有限多个参数；收集这些参数的诞生阶段，便得到一个同时容纳参数与相关满足关系数据的序数 `β`。
+固定内部基数 `κ` 及其子集 `y`。定义 `y` 的公式只使用有限多个参数；收集这些参数的诞生层，便得到一个同时容纳参数与相关满足关系数据的序数 `β`。
 <!--ja-->
 ## 基数の構成可能な部分集合を有界化する
 

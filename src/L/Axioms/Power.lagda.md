@@ -11,7 +11,7 @@ This chapter proves the power-set field for `L` by bounding all constructible
 subsets of a given set in one stage and separating that stage by the internal
 inclusion formula.
 <!--zh-->
-本章证明 `L` 的幂集字段：先把给定集合的全部可构造子集归入一个阶段之内，再以内部包含公式在该阶段上分离。
+本章证明 `L` 的幂集字段：先把给定集合的全部可构造子集归入一层之内，再以内部包含公式在该层上分离。
 <!--ja-->
 本章では、与えられた集合のすべての構成可能な部分集合を一つの段階で抑え、その段階を内部の包含論理式で分離して、`L` の冪集合フィールドを証明する。
 <!--/-->
@@ -45,11 +45,11 @@ does not.
 <!--zh-->
 `L` 中的集合在 `L` 之内取的幂集，是它**可构造**子集之集，而这正是模型那个字段所要求的：它所量化的包含关系跑遍模型自己的载体，故不可构造的子集根本不是候选。剩下的工作就是把可构造的那些收集起来。
 
-论证仍分两步：先给出公共上界，再在其上作分离，与前几条公理的做法相同。一个集合的每个子集都是层级幂集的成员，而后者由小类型索引；其中可构造的那些也构成小族，故它们的阶段有公共上界，每个可构造子集都落在该上界之下。用「此物的每个成员都是 `a` 的成员」这条公式在该阶段上作分离，得到的恰是诸可构造子集，因为该上界使条件中关于隶属的那一半自动成立。
+论证仍分两步：先给出公共上界，再在其上作分离，与前几条公理的做法相同。一个集合的每个子集都是层级幂集的成员，而后者由小类型索引；其中可构造的那些也构成小族，故它们的层有公共上界，每个可构造子集都落在该上界之下。用「此物的每个成员都是 `a` 的成员」这条公式在该层上作分离，得到的恰是诸可构造子集，因为该上界使条件中关于隶属的那一半自动成立。
 
 有两点使证明变短。其一，`L` 中的分离如今接受任意公式，故那个条件可以按其字面直接写出。其二，层级幂集所需的小性与「把一条无界的可构造性陈述降层」所需的小性，正是本书早已由排中律获得的那个非直谓性的两个方面：**没有引入新原则，也没有在新的层级上使用排中律**；后者需要核对而不能径直假定，因为这两处使用相隔一个宇宙。
 
-凝聚不属于这里。它是更精细的陈述：某阶段的子集出现在一个按该阶段而非按诸子集本身定出上界的阶段之中；这是基数算术所需要的，公理却并不需要。
+凝聚不属于这里。它是更精细的陈述：某层的子集出现在一个按该层而非按诸子集本身定出上界的层之中；这是基数算术所需要的，公理却并不需要。
 <!--/-->
 
 ```agda
@@ -140,7 +140,7 @@ Propositional resizing makes the type of constructible members of the ambient
 power set small, so their stages admit one bounding ordinal containing every
 constructible subset of `a`.
 <!--zh-->
-命题降层把环境幂集中可构造成员的类型缩小，于是其诸阶段有一个上界序数，包含 `a` 的每个可构造子集。
+命题降层把环境幂集中可构造成员的类型缩小，于是其诸层有一个上界序数，包含 `a` 的每个可构造子集。
 <!--ja-->
 命題リサイズにより周囲の冪集合の構成可能な要素の型を小さくし、それらの段階を一つの上界順序数で抑えて、`a` の全構成可能部分集合を収める。
 <!--/-->
@@ -158,9 +158,9 @@ of a constructible set is constructible and so is covered by the model's own
 inclusion; the hierarchy's power set therefore contains it, its index gives a
 point of the small family, and its own earliest stage lies below the bound.
 <!--zh-->
-层级的幂集由小类型索引，而其中可构造的成员由一条可构造性陈述切出，那条陈述高出一个宇宙，无法使索引保持为小。降层把它拉回来，而降层正是排中律早已买下的东西。索引一小，诸阶段便构成小族，界层引理随即适用。
+层级的幂集由小类型索引，而其中可构造的成员由一条可构造性陈述切出，那条陈述高出一个宇宙，无法使索引保持为小。降层把它拉回来，而降层正是排中律早已买下的东西。索引一小，诸层便构成小族，界层引理随即适用。
 
-然后是满射性：每个可构造子集确实现身于那个上界之下。它的底集在层级的意义上是子集，因为可构造集的成员可构造，故被模型自己的包含关系覆盖；层级的幂集因而含有它，它的索引给出小族的一个点，而它自己的最早阶段落在上界之下。
+然后是满射性：每个可构造子集确实现身于那个上界之下。它的底集在层级的意义上是子集，因为可构造集的成员可构造，故被模型自己的包含关系覆盖；层级的幂集因而含有它，它的索引给出小族的一个点，而它自己的最早层落在上界之下。
 <!--/-->
 
 ```agda
@@ -220,7 +220,7 @@ module Bound (a : S) where
 `hasPowerL`{.Agda} separates the bounding stage with `subFo`{.Agda} and proves
 that the resulting constructible set contains exactly the subsets of `a` in `L`.
 <!--zh-->
-`hasPowerL`{.Agda} 以 `subFo`{.Agda} 在上界阶段上分离，并证明所得可构造集合恰好包含 `L` 中 `a` 的诸子集。
+`hasPowerL`{.Agda} 以 `subFo`{.Agda} 在上界层上分离，并证明所得可构造集合恰好包含 `L` 中 `a` 的诸子集。
 <!--ja-->
 `hasPowerL`{.Agda} は上界段階を `subFo`{.Agda} で分出し、得られた構成可能集合が `L` における `a` の部分集合をちょうど含むことを証明する。
 <!--/-->
@@ -230,7 +230,7 @@ Separate the bounding stage by the condition. What comes out is indexed by the
 conjunction "in the stage, and included in `a`", and the second conjunct implies
 the first, so the two predicates agree pointwise and the answer transports across.
 <!--zh-->
-用那个条件雕出界层阶段。出来的东西以「在该阶段中，且包含于 `a`」这一合取为索引，而第二个合取项蕴含第一个，故两个谓词逐点一致，答案随之搬运过去。
+用那个条件雕出作为界的层。出来的东西以「在该层中，且包含于 `a`」这一合取为索引，而第二个合取项蕴含第一个，故两个谓词逐点一致，答案随之搬运过去。
 <!--/-->
 
 ```agda
@@ -274,7 +274,7 @@ an arbitrary formula, which the previous part paid for. It did not use
 condensation, and did not need to: the axiom asks for the constructible subsets
 to form a set, not for them to appear early.
 <!--zh-->
-`hasPowerL`{.Agda} 是模型的幂集字段，经「界住诸可构造子集、雕出一个阶段」证得。前沿只剩选择。
+`hasPowerL`{.Agda} 是模型的幂集字段，经「界住诸可构造子集、雕出一层」证得。前沿只剩选择。
 
 这个证明用了什么、没用什么，才是该带走的那一点。它两次使用了那个经典接口，一次为把无界的可构造性陈述降层，一次为层级自己的幂集；它还用了任意公式的分离，那是上一部付过的账。它**没有**用凝聚，也不需要：公理索取的是「诸可构造子集构成一个集合」，而非「它们现身得早」。
 <!--/-->

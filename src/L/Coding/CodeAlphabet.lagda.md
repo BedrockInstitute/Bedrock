@@ -21,7 +21,7 @@ This chapter builds that bridge for a fixed `W`. The alphabet is the type of mem
 <!--en-->
 Everything in this chapter takes place at a single type-theoretic universe level `ℓ`, fixed once and used throughout. The hierarchy `V ℓ` of sets at this level is the target of the eventual coding, and the first-order language is the setting in which parameters live. The plan is uniform: given a constructible set `W`, read its members as constant symbols, name them by abstract indices, and transport each name to the set it denotes in `V ℓ`. Nothing in that plan depends on which `W` is chosen, so it is carried out for an arbitrary `W`.
 <!--zh-->
-本章的一切都在唯一一个类型论宇宙层次 `ℓ` 上进行，它只固定一次并贯穿全章。该层次上的集合层级 `V ℓ` 是最终编码的目标，而一阶语言则是参数所处的舞台。方案是统一的：给定可构造集合 `W`，把其成员读作常元符号，用抽象索引为它们命名，再把每个名字传输到它在 `V ℓ` 中指称的集合。这一方案不依赖于所选的 `W`，因此对任意的 `W` 通用。
+本章的一切都在唯一一个类型论宇宙层级 `ℓ` 上进行，它只固定一次并贯穿全章。该层级上的集合层级 `V ℓ` 是最终编码的目标，而一阶语言则是参数所处的舞台。方案是统一的：给定可构造集合 `W`，把其成员读作常元符号，用抽象索引为它们命名，再把每个名字传输到它在 `V ℓ` 中指称的集合。这一方案不依赖于所选的 `W`，因此对任意的 `W` 通用。
 <!--ja-->
 この章のすべては、ただ一度だけ固定され章全体を通じて用いられる単一の型論的宇宙レベル `ℓ` の上で行われます。このレベルの集合の階層 `V ℓ` が最終的な符号化の目標であり、一階言語はパラメータが置かれる舞台です。方針は一様です。構成可能集合 `W` が与えられれば、その要素を定数記号として読み、抽象的なインデックスで名前を付け、各名前を `V ℓ` の中でそれが指す集合へ輸送します。この方針はどの `W` を選ぶかに依存しないので、任意の `W` に対して通用します。
 <!--/-->

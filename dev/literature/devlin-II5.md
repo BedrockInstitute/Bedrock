@@ -1,7 +1,7 @@
 # Devlin II.5: the Condensation Lemma and the GCH in L
 
 Current Bedrock status (2026-09-06): `L⊨ZFC` and `L⊨GCH` are proved and
-registered in [Landmarks](../../src/Landmarks.lagda.md). The research and route
+registered in [Milestones](../../src/Milestones.lagda.md). The research and route
 assessments below are historical; they do not describe open Bedrock proof goals.
 
 Task `[LJ-0.7]`. Primary source: `_build/literature/dev2.txt`, the OCR of

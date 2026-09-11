@@ -93,21 +93,7 @@ check("seeded violations", rules(run(bad)),
        (9, "unused-import"), (11, "forbidden"), (14, "forbidden"),
        (16, "forbidden"), (17, "forbidden")])
 
-# 3. Everything is exempt from B and C (but not A).
-everything = f"""# E
-
-```agda
-{OPTS}
-module Everything where
-
-import A.B
-import A.C
-```
-"""
-
-check("Everything exempt", rules(run(everything, name="Everything.lagda.md")), [])
-
-# 4. keep marker: on the import's own line, and on the preceding line.
+# 3. keep marker: on the import's own line, and on the preceding line.
 kept = f"""# T
 
 ```agda

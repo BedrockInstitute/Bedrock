@@ -5,7 +5,7 @@ A first-order graph inside `L` records the external constructible hierarchy up t
 <!--zh-->
 # L 内部的可构造层级
 
-`L` 内的一阶图记录外部的可构造层级，直至给定序数。表中的值与外部层级逐一比较，并被证明具有函数性且精确；随后这些表被收集成一个可构造集合，其成员恰是此前各阶段。
+`L` 内的一阶图记录外部的可构造层级，直至给定序数。表中的值与外部层级逐一比较，并被证明具有函数性且精确；随后这些表被收集成一个可构造集合，其成员恰是此前各层。
 <!--ja-->
 # L の内部における構成可能階層
 
@@ -17,7 +17,7 @@ The last of the three states the purpose of the construction. `hierL`{.Agda} is 
 
 One pattern repeats throughout the chapter. A **table** is a set of ordered pairs; it is *correct* on a set when every value it records below that set is the meta tower there, and *complete* when it records a value at every argument below. Correct and complete tables are exactly what the graph's step condition reads and what it can be written from, so one pair of lemmas serves elimination and introduction, and the rest of the chapter applies those two lemmas at four places.
 <!--zh-->
-三项结果中的最后一项说明了这一构造的目的。`hierL`{.Agda} 是**内部层级**，即由序数及塔在该序数处的取值组成的有序对集合；它是模型**内部**的对象。这个集合为 `L` 的内部定义提供材料，`L` 的内部良序也由它定义。两个集合的先后次序由它们最早出现的阶段决定，而只有把塔表示成模型中的对象，才能在模型内部表达这些阶段。本节尚不定义良序，只提供后续定义良序所需的数据。
+三项结果中的最后一项说明了这一构造的目的。`hierL`{.Agda} 是**内部层级**，即由序数及塔在该序数处的取值组成的有序对集合；它是模型**内部**的对象。这个集合为 `L` 的内部定义提供材料，`L` 的内部良序也由它定义。两个集合的先后次序由它们最早出现的层决定，而只有把塔表示成模型中的对象，才能在模型内部表达这些层。本节尚不定义良序，只提供后续定义良序所需的数据。
 
 全章重复同一个模式。**表**是有序对之集；说它在某个集合上**正确**，指它在该集合以下所记录的每个取值都是元层面的塔在那里的取值；说它**完备**，指它在以下的每个实参处都记录了一个取值。正确且完备的表，恰是图的步进条件所读出的内容，也恰是步进条件据以写下的内容；因此一对引理同时服务于消去与引入，而本章其余部分就是这两条引理在四处情形的应用。
 <!--/-->
@@ -153,7 +153,7 @@ definable powerset of a recorded value sitting inside the tower at `B`, which is
 `Lset-out`{.Agda}, followed by naming the ordinal it produces as an element of
 the model, which transitivity of the class supplies for free.
 <!--zh-->
-上一章的那个旁条件在此处一次性地、为两个方向一并解除。`PowOK`{.Agda} 要求的是：每个被记录的取值，其可定义幂集是 `L` 的元素；而被记录的取值是塔在 `B` 以下某个实参处的值，该实参因 `B` 是序数而是序数，而阶段的可定义幂集可构造。故那一步所需的全部，就是正确性加上单独一条序数性假设，而两种读法的陈述里都不带那个条件。
+上一章的那个旁条件在此处一次性地、为两个方向一并解除。`PowOK`{.Agda} 要求的是：每个被记录的取值，其可定义幂集是 `L` 的元素；而被记录的取值是塔在 `B` 以下某个实参处的值，该实参因 `B` 是序数而是序数，而层的可定义幂集可构造。故那一步所需的全部，就是正确性加上单独一条序数性假设，而两种读法的陈述里都不带那个条件。
 
 两个方向分开命名，因为它们分开使用。向上是「被记录取值的可定义幂集落在 `B` 处的塔里面」，那就是 `Lset-in`{.Agda}。向下是塔本身的分解 `Lset-out`{.Agda}，随后把它产出的那个序数记为模型的元素，而这一步由类的传递性直接给出。
 <!--/-->
@@ -725,5 +725,5 @@ earlier formula. The first half of that is now sayable inside the model.
 
 有两次耗时值得记录，都与一个命名有关、与数学无关。把成对的那个图以**变元**身份引入，让它随身携带自己的等式，而不写成「它将被实例化成的那个闭句子」，可节省 85 秒；其机制正是前两章遇到的那一个：同一条公式的两种写法，靠把一个内部装有整条可定义幂集描述的满足关系正规化来比较。另外，`mem-ord`{.Agda} 的那个集合实参必须在每次使用时**显式**给出：`IsOrd`{.Agda} 展开成一条带量词的隶属关系，因此那条假设里没有任何东西能确定它所谈的集合；若留作隐式，本章根本检查不完。
 
-本章给出下一部分将使用的那个对象。`L` 如今有了一个指称它自己那座塔的名字，而 `L` 的良序正是从这座塔上读出来的：当它出现在更早的阶段，或在同一阶段而由更早的公式给出时，一个集合排在另一个之前。这句话的前半，如今在模型内部说得出口了。
+本章给出下一部分将使用的那个对象。`L` 如今有了一个指称它自己那座塔的名字，而 `L` 的良序正是从这座塔上读出来的：当它出现在更早的层，或在同一层而由更早的公式给出时，一个集合排在另一个之前。这句话的前半，如今在模型内部说得出口了。
 <!--/-->

@@ -27,7 +27,7 @@ Nothing here needs replacement, and nothing here needs recursion.
 <!--zh-->
 写下十条子句的那一章说了「单个东西是某集合之上的环境」是什么意思，却把「它们全体是否构成一个集合」这个问题推开了。本章回答它：满足关系的谓词将从这个共同的环境集合中分离出来。
 
-这里使用的是诸公理已经给出的路线。给定一个长度，所有取值落在 `L` 的某个集合中的环境由一个小类型索引；每个环境都是 `L` 的元素，因此它们全都位于某个共同阶段之下。再按相应描述从该阶段中分离，所得集合恰好包含这些环境。此处不需要替换，也不需要递归。
+这里使用的是诸公理已经给出的路线。给定一个长度，所有取值落在 `L` 的某个集合中的环境由一个小类型索引；每个环境都是 `L` 的元素，因此它们全都位于某个共同层之下。再按相应描述从该层中分离，所得集合恰好包含这些环境。此处不需要替换，也不需要递归。
 <!--/-->
 
 ```agda
@@ -83,7 +83,7 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 ## A stage under a small family
 <!--zh-->
-## 小族之下的一个阶段
+## 小族之下的一层
 <!--ja-->
 ## 小さい族を覆う段階
 <!--/-->
@@ -91,7 +91,7 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 <!--en-->
 `stageFor` finds one ordinal stage containing every member of any small family of constructible sets, providing the common ambient stage needed by separation.
 <!--zh-->
-`stageFor` 找到一个包含任意可构造集合小族所有成员的序数阶段，从而提供分离所需的共同外围阶段。
+`stageFor` 找到一个包含任意可构造集合小族所有成员的序数层，从而提供分离所需的共同外围层。
 <!--ja-->
 `stageFor` は構成可能集合からなる任意の小さい族の全要素を含む一つの順序数段階を見つけ、分出に必要な共通の周囲の段階を与えます。
 <!--/-->
@@ -101,7 +101,7 @@ The move `smallDom`{.Agda} makes, with the ordinal kept rather than hidden,
 because what is needed here is a lemma stated about stages rather than about a set
 of the model.
 <!--zh-->
-它做的正是 `smallDom`{.Agda} 所做的事，但把那个序数保留下来而不隐藏，因为此处需要的是一条关于阶段、而非关于模型某集合的引理。
+它做的正是 `smallDom`{.Agda} 所做的事，但把那个序数保留下来而不隐藏，因为此处需要的是一条关于层、而非关于模型某集合的引理。
 <!--/-->
 
 ```agda
@@ -140,7 +140,7 @@ An environment over a set of `L` is a finite set of pairs of a numeral with a
 member, and a member of an element of `L` is an element of `L`, so the pairs are
 too and the stage lemma above closes it.
 <!--zh-->
-落在 `L` 的某集合之上的环境是由「数码与成员」之对组成的有穷集；而 `L` 之元素的成员仍是 `L` 的元素，故这些对也是，于是前一条阶段引理恰好适用于此。
+落在 `L` 的某集合之上的环境是由「数码与成员」之对组成的有穷集；而 `L` 之元素的成员仍是 `L` 的元素，故这些对也是，于是前一条层引理恰好适用于此。
 <!--/-->
 
 ```agda
@@ -192,7 +192,7 @@ module _ (B : S) where
 <!--en-->
 `envFo n` specializes `envOverAt` to the fixed length `n` and base set `B`; separation in the common stage defines `envSet n` and its membership equation.
 <!--zh-->
-`envFo n` 把 `envOverAt` 特化到固定长度 `n` 与基集合 `B`；在共同阶段中的分离定义 `envSet n` 及其成员等式。
+`envFo n` 把 `envOverAt` 特化到固定长度 `n` 与基集合 `B`；在共同层中的分离定义 `envSet n` 及其成员等式。
 <!--ja-->
 `envFo n` は `envOverAt` を固定された長さ `n` と基礎集合 `B` に特殊化し、共通の段階での分出が `envSet n` とその要素条件を定義します。
 <!--/-->

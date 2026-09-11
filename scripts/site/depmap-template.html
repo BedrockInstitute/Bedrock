@@ -11,29 +11,41 @@
 #dependency-map .depmap-head h2 { margin: 0 0 .25rem; font-size: clamp(1.35rem, 3vw, 1.8rem); text-wrap: balance; }
 #dependency-map .depmap-sub { margin: 0; max-width: 68ch; color: var(--fg-alt); font-size: .85rem; line-height: 1.5; }
 #dependency-map .depmap-controls {
-  display: flex; flex-wrap: wrap; gap: .55rem 1rem; align-items: center;
-  margin: 1rem 0 .55rem; font-size: .82rem; color: var(--fg-alt);
+  display: flex; flex-wrap: wrap; gap: .55rem; align-items: center;
+  margin: 1rem 0 .7rem; padding: .6rem; border: 1px solid var(--depmap-line);
+  border-radius: 13px; background: color-mix(in srgb, var(--depmap-soft) 78%, var(--depmap-panel));
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--text-fg) 6%, transparent);
+  font-size: .82rem; color: var(--fg-alt);
 }
-#dependency-map .depmap-controls label { display: inline-flex; gap: .35rem; align-items: center; cursor: pointer; }
+#dependency-map .depmap-controls > label:not(.depmap-landmark) { display: inline-flex; gap: .4rem; align-items: center; padding: .25rem .45rem; border-radius: 8px; }
+#dependency-map .depmap-controls > label:not(.depmap-landmark) b { color: var(--text-fg); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
 #dependency-map .depmap-controls input { accent-color: var(--primary); }
 #dependency-map .depmap-radio {
-  display: inline-flex; flex-wrap: wrap; gap: .45rem .75rem; align-items: center;
-  padding: .28rem .55rem; border: 1px solid var(--depmap-line); border-radius: 7px;
-  background: var(--depmap-panel);
+  display: inline-flex; flex-wrap: wrap; gap: .25rem; align-items: center;
+  padding: .22rem; border: 1px solid var(--depmap-line); border-radius: 10px;
+  background: color-mix(in srgb, var(--depmap-panel) 80%, var(--depmap-soft));
 }
-#dependency-map .depmap-control-label { font-weight: 700; }
+#dependency-map .depmap-control-label { padding: .28rem .42rem; color: var(--text-fg); font-size: .72rem; font-weight: 700; letter-spacing: .03em; }
+#dependency-map .depmap-radio label { position: relative; display: inline-flex; align-items: center; min-height: 1.8rem; padding: .28rem .52rem; border: 1px solid transparent; border-radius: 7px; cursor: pointer; transition: background .15s, border-color .15s, color .15s; }
+#dependency-map .depmap-radio label:has(input:checked) { border-color: color-mix(in srgb, var(--primary) 42%, var(--depmap-line)); background: var(--depmap-panel); color: var(--primary); font-weight: 700; box-shadow: 0 2px 7px color-mix(in srgb, var(--text-fg) 8%, transparent); }
+#dependency-map .depmap-radio label:has(input:focus-visible) { outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent); outline-offset: 2px; }
+#dependency-map .depmap-radio input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+#dependency-map .depmap-landmark { display: inline-flex; align-items: center; gap: .42rem; min-height: 2.3rem; padding: .25rem .65rem; border: 1px solid var(--depmap-line); border-radius: 999px; background: var(--depmap-panel); cursor: pointer; }
+#dependency-map .depmap-landmark:has(input:checked) { border-color: color-mix(in srgb, var(--primary) 42%, var(--depmap-line)); color: var(--primary); }
 #dependency-map select, #dependency-map .depmap-zoom {
-  border: 1px solid var(--input-border); border-radius: 6px; background: var(--text-bg);
-  color: var(--text-fg); font: inherit; padding: .36rem .55rem;
+  appearance: none; border: 1px solid var(--input-border); border-radius: 8px; background: var(--text-bg);
+  color: var(--text-fg); font: inherit; padding: .42rem .62rem; min-height: 2.3rem;
 }
-#dependency-map .depmap-zoom { cursor: pointer; }
+#dependency-map select { padding-right: 1.8rem; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - .85rem) .95rem, calc(100% - .6rem) .95rem; background-size: .25rem .25rem, .25rem .25rem; background-repeat: no-repeat; }
+#dependency-map .depmap-zoom { cursor: pointer; font-weight: 700; }
 #dependency-map .depmap-zoom:hover { border-color: var(--primary); background: var(--button-hover); }
+#dependency-map .depmap-controls select:hover { border-color: var(--primary); }
 #dependency-map select:focus-visible, #dependency-map input:focus-visible,
 #dependency-map .depmap-zoom:focus-visible, #dependency-map .depmap-node:focus-visible {
   outline: 3px solid color-mix(in srgb, var(--primary) 45%, transparent); outline-offset: 2px;
 }
-#dependency-map .depmap-legend { margin: .45rem 0 .7rem; color: var(--fg-alt); font-size: .76rem; }
-#dependency-map .depmap-legend summary { cursor: pointer; font-weight: 700; }
+#dependency-map .depmap-legend { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .8rem; margin: .45rem 0 .7rem; color: var(--fg-alt); font-size: .76rem; }
+#dependency-map .depmap-legend-title { color: var(--text-fg); font-weight: 700; }
 #dependency-map .depmap-legend-list { display: flex; flex-wrap: wrap; gap: .35rem .85rem; margin-top: .4rem; }
 #dependency-map .depmap-chip { display: inline-flex; align-items: center; gap: .32rem; }
 #dependency-map .depmap-dot { width: .58rem; height: .58rem; border-radius: 2px; display: inline-block; }
@@ -59,6 +71,8 @@
   border: 1px solid var(--depmap-line); border-radius: 9px; background: var(--depmap-panel);
   scrollbar-gutter: stable both-edges;
 }
+#dependency-map .depmap-scroll.is-fit { display: grid; place-items: center; }
+#dependency-map .depmap-scroll.is-fit svg { margin: auto; }
 #dependency-map svg { display: block; }
 #dependency-map .depmap-lane-label { font: 600 .72rem/1 var(--sans); letter-spacing: .09em; fill: var(--fg-alt); }
 #dependency-map .depmap-node rect {
@@ -74,10 +88,10 @@
 #dependency-map .depmap-noscript { color: var(--fg-alt); font-size: .82rem; }
 #dependency-map .depmap-noscript a { color: var(--primary); }
 @media (max-width: 44rem) {
-  #dependency-map .depmap-controls { align-items: stretch; gap: .45rem; }
-  #dependency-map .depmap-radio { flex: 1 0 100%; }
-  #dependency-map .depmap-landmark { flex: 1 0 auto; }
-  #dependency-map .depmap-zoom { min-height: 2.5rem; }
+  #dependency-map .depmap-controls { align-items: stretch; gap: .4rem; }
+  #dependency-map .depmap-controls > label:not(.depmap-landmark), #dependency-map .depmap-radio { flex: 1 0 100%; }
+  #dependency-map .depmap-controls > label:not(.depmap-landmark) { justify-content: space-between; }
+  #dependency-map .depmap-landmark, #dependency-map .depmap-zoom { flex: 1 0 auto; min-height: 2.5rem; }
   #dependency-map .depmap-scroll { max-height: 62vh; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -100,9 +114,9 @@
     <label class="depmap-landmark"><input type="checkbox" data-depmap-landmark checked> __LMK__</label>
     <button class="depmap-zoom" type="button" data-depmap-zoom aria-pressed="false">__FIT__</button>
   </div>
-  <details class="depmap-legend"><summary>__LEGEND__</summary>
-    <span class="depmap-legend-list" data-depmap-legend></span></details>
-  <noscript><p class="depmap-noscript">__NOSCRIPT__ <a href="#recommended-reading">__CATALOG__</a>.</p></noscript>
+  <div class="depmap-legend"><span class="depmap-legend-title">__LEGEND__</span>
+    <span class="depmap-legend-list" data-depmap-legend></span></div>
+  <noscript><p class="depmap-noscript">__NOSCRIPT__ <a href="#reading-explorer">__CATALOG__</a>.</p></noscript>
   <section class="depmap-info" data-depmap-card aria-live="polite">
     <h3><a data-depmap-name>__HINT__</a></h3><div class="depmap-meta" data-depmap-meta hidden></div>
     <p data-depmap-desc hidden></p><div class="depmap-deps" data-depmap-deps hidden></div>
@@ -155,8 +169,15 @@
     }
     return seen;
   }
+  function allEdgesMode() {
+    return root.querySelector('input[name="depmap-edgemode"]:checked').value === "all";
+  }
+  function syncLandmarkControl() {
+    const visible = allEdgesMode();
+    landmarkControl.closest(".depmap-landmark").hidden = !visible;
+  }
   function visibleEdges() {
-    const showLandmark = landmarkControl.checked;
+    const showLandmark = allEdgesMode() && landmarkControl.checked;
     let edges = DATA.edges.filter(([a, b]) => !hubs.has(a) && (showLandmark || b !== DATA.landmark));
     if (root.querySelector('input[name="depmap-edgemode"]:checked').value === "skeleton") {
       const adjacency = {}; edges.forEach(([a, b]) => (adjacency[a] = adjacency[a] || []).push(b));
@@ -230,7 +251,10 @@
       const scale = Math.min(1, (scroll.clientWidth - 4) / width, (scroll.clientHeight - 4) / height);
       shownWidth *= scale; shownHeight *= scale;
     }
-    svg.setAttribute("width", shownWidth); svg.setAttribute("height", shownHeight); svg.style.minWidth = `${shownWidth}px`;
+    scroll.classList.toggle("is-fit", fitWhole);
+    svg.setAttribute("width", shownWidth); svg.setAttribute("height", shownHeight);
+    const canvasWidth = fitWhole ? shownWidth : Math.max(shownWidth, scroll.clientWidth - 4);
+    svg.style.minWidth = `${canvasWidth}px`;
     scroll.replaceChildren(svg);
     layout.bands.forEach((band, i) => {
       const rect = document.createElementNS(svgNS, "rect");
@@ -333,13 +357,14 @@
   }
 
   root.querySelectorAll('input[name="depmap-edgemode"]').forEach(control =>
-    control.addEventListener("change", () => render(true)));
+    control.addEventListener("change", () => { syncLandmarkControl(); render(true); }));
   layoutControl.addEventListener("change", () => render());
   landmarkControl.addEventListener("change", () => render(true));
   zoomControl.addEventListener("click", () => {
     fitWhole = !fitWhole; zoomControl.textContent = fitWhole ? STR.readable : STR.fit;
     zoomControl.setAttribute("aria-pressed", String(fitWhole)); render();
   });
+  syncLandmarkControl();
   if (root.getClientRects().length) render();
   if (document.fonts) document.fonts.ready.then(() => { if (root.getClientRects().length) render(true); });
   document.addEventListener("bedrock:tabchange", event => {

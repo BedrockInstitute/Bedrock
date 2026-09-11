@@ -192,7 +192,7 @@ en = "cumulative hierarchy"
 zh = "累积层级"
 ja = "累積階層"
 presence = true
-notes = "V; the zh rendering is already in use in Everything.lagda.md"
+notes = "V; the zh rendering is already in use in dev/reading-catalog.json"
 
 [[term]]
 category = "Set theory"
@@ -243,6 +243,83 @@ notes = "the zh rendering is already in use in the README trio"
 
 [[term]]
 category = "Type theory"
+id = "pi-type"
+audience = "reader"
+en = "Π type"
+zh = "Π 类型"
+ja = "Π 型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["Π types"]
+recap_en = "A dependent function type whose result type may vary with its input."
+recap_zh = "结果类型可以随输入变化的依值函数类型。"
+recap_ja = "結果の型が入力に応じて変わりうる依存関数型。"
+notes = "The dependent function type; explicitly introduced in Base.Prelude."
+
+[[term]]
+category = "Type theory"
+id = "sigma-type"
+audience = "reader"
+en = "Σ type"
+zh = "Σ 类型"
+ja = "Σ 型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["Σ types"]
+recap_en = "A dependent pair type whose second component's type may depend on its first component."
+recap_zh = "第二分量的类型可以依赖第一分量的依值对类型。"
+recap_ja = "第二成分の型が第一成分に依存しうる依存対型。"
+notes = "The dependent pair type; explicitly introduced in Base.Prelude."
+
+[[term]]
+category = "Type theory"
+id = "universe-level"
+audience = "reader"
+en = "universe level"
+zh = "宇宙层级"
+ja = "宇宙レベル"
+presence = true
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["universe levels", "universe-level"]
+recap_en = "The size index ℓ of a type universe Type ℓ; it is distinct from a homotopy level and from a layer of the constructible hierarchy."
+recap_zh = "类型宇宙 Type ℓ 的大小指标 ℓ；它不同于同伦层级，也不同于可构造层级中的一层。"
+recap_ja = "型宇宙 Type ℓ の大きさを表す添字 ℓ。ホモトピーレベルや構成可能階層の一つの層とは異なる。"
+notes = "The size index of Type; owner ruling 2026-09-11. Keep distinct from homotopy level and from a layer L_α of the constructible hierarchy."
+
+[[term]]
+category = "Type theory"
+id = "homotopy-level"
+audience = "reader"
+en = "homotopy level"
+zh = "同伦层级"
+ja = "ホモトピーレベル"
+presence = true
+avoid = ["zh:h-层级", "ja:h-レベル"]
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["homotopy levels", "homotopy-level"]
+recap_en = "A classification of types by how much distinguishable structure remains among their elements and equality proofs."
+recap_zh = "按照元素及其相等证明中还保留多少可区分结构而形成的类型分类。"
+recap_ja = "要素とその等しさの証明に区別できる構造がどれだけ残るかによる型の分類。"
+notes = "The hierarchy measured by isContr, isProp and isSet; owner ruling 2026-09-11. The full name replaces the abbreviation h-level in textbook prose."
+
+[[term]]
+category = "Type theory"
+id = "host-environment"
+audience = "reader"
+en = "host"
+zh = "宿主"
+ja = "ホスト"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The Cubical Agda environment that supports the formalisation of the object theory."
+recap_zh = "承载对象理论形式化的 Cubical Agda 环境。"
+recap_ja = "対象理論の形式化を支える Cubical Agda の環境。"
+notes = "Project-relative term for the metatheoretic environment, introduced explicitly in Base.Prelude and approved by the owner on 2026-09-11. It is broader than Agda alone and is not a synonym for cubical type theory."
+
+[[term]]
+category = "Type theory"
 en = "host language"
 zh = "宿主语言"
 ja = "ホスト言語"
@@ -258,10 +335,17 @@ notes = "zh 最大化 vs ja 最大主義 (deliberate)"
 
 [[term]]
 category = "Type theory"
+id = "unique-existence"
+audience = "reader"
 en = "unique existence"
 zh = "唯一存在"
 ja = "一意存在"
-notes = "the isContr notion"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "Existence together with uniqueness; here it is represented by a contractible type whose centre supplies the witness."
+recap_zh = "存在性与唯一性合在一起；本书以可缩类型表示，类型的中心给出所需的见证。"
+recap_ja = "存在と一意性を合わせた概念。本書では可縮型で表し、その中心が必要な証人を与える。"
+notes = "The isContr notion; explicitly introduced in Base.Prelude."
 
 [[term]]
 category = "Type theory"
@@ -469,9 +553,31 @@ notes = "LEM, AC"
 
 [[term]]
 category = "Logic and philosophy"
+id = "object-theory"
+audience = "reader"
+en = "object theory"
+zh = "对象理论"
+ja = "対象理論"
+presence = true
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The theory being represented and studied inside the metatheory; in this book, set theory."
+recap_zh = "在元理论中得到表示和研究的理论；在本书中指集合论。"
+recap_ja = "メタ理論の中で表現され研究される理論。本書では集合論を指す。"
+notes = "Paired with metatheory; user-approved distinction for the Prelude, 2026-09-10. Japanese usage explicitly contrasts set theory as 対象理論 with its consistency theory as メタ理論: https://www.jstage.jst.go.jp/article/sbp/21/0/21_1998_005/_pdf/-char/ja"
+
+[[term]]
+category = "Logic and philosophy"
+id = "metatheory"
+audience = "reader"
 en = "metatheory"
 zh = "元理论"
 ja = "メタ理論"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The theory in which the object theory is represented and studied; here, cubical type theory."
+recap_zh = "用来表示和研究对象理论的理论；在本书中指立方类型论。"
+recap_ja = "対象理論を表現し研究するための理論。本書では立方型理論を指す。"
 notes = "meta-level is 元层 / メタレベル"
 
 [[term]]
@@ -595,10 +701,18 @@ notes = "model-theoretic structure, ZFStructure"
 
 [[term]]
 category = "Logic and philosophy"
+id = "carrier"
+audience = "reader"
 en = "carrier"
 zh = "载体"
 ja = "台"
-notes = "of a structure; ja 台 as in 台集合"
+introduced_in = "Base.Prelude"
+matching = "explicit"
+forms_en = ["carriers"]
+recap_en = "The underlying type of objects on which the relations and operations of a structure are defined."
+recap_zh = "承载一个结构的对象，并供该结构的关系与运算在其上定义的底层类型。"
+recap_ja = "構造の対象を担い、その関係や演算が定義される基礎の型。"
+notes = "Of a structure; ja 台 as in 台集合. Explicit matching avoids treating every occurrence of the single Japanese character 台 as this term."
 
 [[term]]
 category = "Logic and philosophy"
@@ -737,10 +851,18 @@ notes = "the form of hasChoice: one point in each member of a disjoint family"
 
 [[term]]
 category = "Set theory"
+id = "class"
+audience = "reader"
 en = "class"
 zh = "类"
 ja = "クラス"
-notes = "propositional predicate on a carrier; proper class = 真类 / 真クラス"
+introduced_in = "Base.Prelude"
+matching = "explicit"
+forms_en = ["classes"]
+recap_en = "A predicate on a given domain, represented here as a function from that domain to the universe of propositions."
+recap_zh = "给定论域上的谓词；本书将它表示为从该论域到命题宇宙的函数。"
+recap_ja = "与えられた論域上の述語。本書では、その論域から命題の宇宙への関数として表す。"
+notes = "Propositional predicate on a domain; proper class = 真类 / 真クラス. Explicitly introduced in Base.Prelude."
 
 [[term]]
 category = "Set theory"
@@ -815,9 +937,9 @@ notes = "the Def operator's output; V.Definability"
 [[term]]
 category = "Set theory"
 en = "birth stage"
-zh = "诞生阶段"
+zh = "诞生层"
 ja = "誕生段階"
-notes = "L.Choice.StageOrders: the ordinal over which a constructible set is carved, one below the least stage containing it. This is a stage index rather than the set L_α itself. zh 阶段 / ja 段階 are descriptive renderings; 階層 is reserved for the whole hierarchy."
+notes = "L.Choice.StageOrders: the ordinal over which a constructible set is carved, one below the least stage containing it. This is a stage index rather than the set L_α itself. Chinese 诞生层 follows the owner-approved stage = 层 convention (2026-09-10); it denotes an ordinal index here, not the set L_α. Japanese 段階 is descriptive; 階層 is reserved for the whole hierarchy."
 
 [[term]]
 category = "Set theory"
@@ -832,7 +954,7 @@ category = "Set theory"
 en = "layer"
 zh = "层"
 ja = "層"
-notes = "a stage of the L tower; isLayer"
+notes = "The isLayer predicate. Chinese 层 is also used for stage; this shared rendering does not identify isLayer with the ordinal returned by stage. See dev/literature/stage-level-hierarchy.md."
 
 [[term]]
 category = "Other"
@@ -1094,17 +1216,17 @@ notes = "Japanese theorem name directly attested: https://math.cs.kitami-it.ac.j
 [[term]]
 category = "Teaching terminology"
 en = "adequate stage"
-zh = "充分阶段"
+zh = "充分层"
 ja = "十分な段階"
-avoid = ["zh:适足阶段", "zh:適足階段"]
+avoid = ["zh:适足阶段", "zh:適足階段", "zh:适足层"]
 notes = "Local predicate collecting the closure conditions in L.GCH.AdequateStages, not an admissible ordinal. Queries constructibility adequate Devlin and superadequate set theory did not establish this predicate as a standard named notion. Translations are descriptive compounds; distinguish semantic adequacy (充分性/妥当性). Concept context: https://onlinelibrary.wiley.com/doi/abs/10.1002/malq.201500072 ."
 
 [[term]]
 category = "Teaching terminology"
 en = "superadequate stage"
-zh = "超充分阶段"
+zh = "超充分层"
 ja = "強化された十分な段階"
-avoid = ["zh:超适足阶段", "ja:超十分"]
+avoid = ["zh:超适足阶段", "zh:超适足层", "ja:超十分"]
 notes = "Project-local strengthening of adequate stage. Japanese deliberately describes the strengthening rather than inventing 超十分. Same search and mathematical context as adequate stage; this phrase does not claim a literature theorem."
 
 [[term]]
@@ -1176,16 +1298,16 @@ notes = "First-order syntax, not an arbitrary fixed quantity. Wang Wei uses 常�
 [[term]]
 category = "Set theory"
 en = "stage"
-zh = "阶段"
+zh = "层"
 ja = "段階"
-notes = "An individual step L_α in the construction, distinguished from the whole constructible hierarchy and from its ordinal index α. The CJK forms are transparent descriptive renderings, not claimed here as directly attested names for L_α; Japanese literature often writes L_α within the directly attested L-階層. This entry does not ban contextual synonyms. See dev/literature/stage-level-hierarchy.md."
+notes = "An individual step L_α in the construction, distinguished from the whole constructible hierarchy and from its ordinal index α. Chinese 层 approved by the owner on 2026-09-10: Yang Ruizhi calls L_α 每一层结构 in 多宇宙观幻觉, PDF p. 2, https://logic.fudan.edu.cn/doc/_yrz/multi.pdf . Use 第 α 层, 后继层, 极限层; keep universe level as 宇宙层级. 阶段 remains appropriate when describing a phase of the construction rather than naming L_α, so it is not globally banned. Japanese 段階 is unchanged; Japanese literature often writes L_α within the directly attested L-階層. See dev/literature/stage-level-hierarchy.md."
 
 [[term]]
 category = "Set theory"
 en = "stage index"
-zh = "阶段索引"
+zh = "层索引"
 ja = "段階の添字"
-notes = "The ordinal α indexing the stage L_α, not the set L_α and not the entire hierarchy. In L.Stage, stage x hx returns this ordinal, while stage-mem places x in Lset (stage x hx). The compound translations are descriptive and pattern-based; they are not claimed as fixed literature terms. See dev/literature/stage-level-hierarchy.md."
+notes = "The ordinal α indexing the stage L_α, not the set L_α and not the entire hierarchy. In L.Stage, stage x hx returns this ordinal, while stage-mem places x in Lset (stage x hx). The compound translations are descriptive and pattern-based; Chinese 层索引 follows stage = 层 (owner approval, 2026-09-10). They are not claimed as fixed literature terms. See dev/literature/stage-level-hierarchy.md."
 
 [[term]]
 category = "Logic and philosophy"

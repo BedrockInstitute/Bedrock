@@ -1,9 +1,10 @@
 """Build multilingual route data for the teaching site.
 
-Schema 1 is a ``bedrock-routes`` JSON comment in ``Everything.lagda.md`` with
-``version`` and translated routes. Routes may overlap and do not claim
-independence. Direct prerequisites come only from Agda fenced imports.
-``Landmarks`` is a preview and therefore has no readiness prerequisites.
+The machine-readable catalog in ``dev/reading-catalog.json`` stores the
+authoritative reading order, translated chapter labels, stages and routes.
+Routes may overlap and do not claim independence. Direct prerequisites come
+only from Agda fenced imports. ``Milestones`` is a preview and therefore has
+no readiness prerequisites.
 """
 
 from collections import Counter
@@ -20,7 +21,8 @@ FENCE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
 IMPORT = re.compile(r"^\s*(?:open\s+)?import\s+([\w.]+)", re.M)
 MARKER = re.compile(r"<!--\s*bedrock-routes\s*(\{.*?\})\s*-->", re.S)
 HEADING = re.compile(r"^##\s+(.+?)\s*$", re.M)
-PREVIEWS = frozenset({"Landmarks"})
+PREVIEWS = frozenset({"Milestones"})
+CATALOG_PATH = Path(__file__).resolve().parents[2] / "dev" / "reading-catalog.json"
 ROUTE_ID = re.compile(r"^[a-z][a-z0-9-]*$")
 
 
@@ -79,6 +81,30 @@ def _catalog(text):
     if any(set(node["title"]) != set(LANGS) for node in catalog.values()):
         raise ValueError("catalog entries require matching language headings and entries")
     return catalog
+
+
+def _load_catalog(path=CATALOG_PATH):
+    with open(path, encoding="utf-8") as source:
+        data = json.load(source)
+    if not isinstance(data, dict) or data.get("version") != 1:
+        raise ValueError("reading catalog must be a version 1 object")
+    chapters = data.get("chapters")
+    if not isinstance(chapters, list) or not chapters:
+        raise ValueError("reading catalog chapters must be a non-empty list")
+    catalog = {}
+    for entry in chapters:
+        if not isinstance(entry, dict) or not isinstance(entry.get("id"), str):
+            raise ValueError("reading catalog chapters require string ids")
+        module = entry["id"]
+        if module in catalog:
+            raise ValueError(f"duplicate catalog chapter: {module}")
+        for field in ("title", "stage", "description"):
+            value = entry.get(field)
+            if not isinstance(value, dict) or any(not isinstance(value.get(lang), str)
+                                                  or not value[lang].strip() for lang in LANGS):
+                raise ValueError(f"catalog chapter {module} requires translated {field}")
+        catalog[module] = {field: dict(entry[field]) for field in ("title", "stage", "description")}
+    return data, catalog
 
 
 def _cycle(graph):
@@ -160,21 +186,16 @@ def validate_metadata(metadata, chapter_ids, graph=None):
         raise ValueError("\n".join(errors))
 
 
-def build_reading_data(src="src"):
+def build_reading_data(src="src", catalog_path=CATALOG_PATH):
     """Return ``version``, route metadata, and dependency-backed catalog nodes."""
     sources = _sources(src)
-    if "Everything" not in sources:
-        raise ValueError("missing Everything catalog")
-    everything, chapters = sources["Everything"], set(sources) - {"Everything"}
-    order = imports(everything)
+    metadata, catalog = _load_catalog(catalog_path)
+    chapters = set(sources)
+    order = [entry["id"] for entry in metadata["chapters"]]
     if len(order) != len(set(order)) or set(order) != chapters:
-        raise ValueError("Everything imports must cover every chapter exactly once")
-    catalog = _catalog(everything)
-    if set(catalog) != chapters:
-        raise ValueError("multilingual catalog descriptions must cover every chapter")
+        raise ValueError("reading catalog must cover every chapter exactly once")
     graph = {module: list(dict.fromkeys(d for d in imports(sources[module]) if d in chapters))
              for module in chapters}
-    metadata = _metadata(everything)
     validate_metadata(metadata, chapters, graph)
     memberships = {module: [] for module in chapters}
     for route in metadata["routes"]:
@@ -188,7 +209,7 @@ def build_reading_data(src="src"):
             heading = re.search(r"^# (.+)$", weave(sources[module], lang), re.M)
             if heading:
                 titles[lang] = plain_title(heading.group(1))
-        nodes.append({"id": module, "title": titles, "description": catalog[module]["title"], "order": position,
+        nodes.append({"id": module, "title": titles, "description": catalog[module]["description"], "order": position,
                       "stage": catalog[module]["stage"],
                       "prerequisites": [] if preview else graph[module],
                       "routes": memberships[module], "preview": preview})

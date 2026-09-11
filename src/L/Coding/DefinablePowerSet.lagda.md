@@ -38,7 +38,7 @@ land at different environments, and the route would acquire a weakening lemma it
 otherwise never needs: the same formula, the same conjunct count, the same depth,
 and a lemma's worth of difference.
 <!--zh-->
-这就是整条路线为之存在的那一步。在它之前的每一章，构造的都是调用方**持有**的载体上的一个组件：`L` 的一个集合，在公式里被点名为常元。内部层级无法那样持有自己的阶段。它的图把阶段绑定起来，因为一个图不能点名它所定义的那个对象，而集合进入公式的唯一方式是被点名。故可定义幂集的描述必须能**在那层绑定之下**表述出来，其中载体只占周遭环境的一个位置，此外没有别的。
+这就是整条路线为之存在的那一步。在它之前的每一章，构造的都是调用方**持有**的载体上的一个组件：`L` 的一个集合，在公式里被点名为常元。内部层级无法那样持有自己的层。它的图把层绑定起来，因为一个图不能点名它所定义的那个对象，而集合进入公式的唯一方式是被点名。故可定义幂集的描述必须能**在那层绑定之下**表述出来，其中载体只占周遭环境的一个位置，此外没有别的。
 
 那条描述所说的，就是这个算子本身。`u` 是载体的可定义幂集，其诸成员恰是「由一条公式在载体中定义出的那些集合」：仅仅存在载体之上的一个码 `c` 与一个取值 `v`，该取值就是满足关系那场递归在那个码处所记录的东西，而 `u` 的那个成员是「其单条目环境落在 `v` 中的载体诸成员」之集。三个合取项，而每一个都是某章早已给出的东西，只是读在一位上、不读在常元上。
 
@@ -327,7 +327,7 @@ from a predicate a bound variable can carry.
 <!--zh-->
 两个合取项都已证明，这里只把它们结合起来：其一说实参是元数一处的一个键，其二说该键在「该槽位所持载体」上具有一个既封闭又成形的见证。前者确定解码所用的元数，后者提供解码所依据的数据。二者都不点名具体集合，因此可以在任意绑定之下陈述。
 
-码集那一章所固定的那条谓词，就是这一对再加上一层绑定；而这层绑定正是「一个阶段所能支撑的谓词」与「一个被绑定变元所能携带的谓词」之间唯一的差别。
+码集那一章所固定的那条谓词，就是这一对再加上一层绑定；而这层绑定正是「一层所能支撑的谓词」与「一个被绑定变元所能携带的谓词」之间唯一的差别。
 <!--/-->
 
 ```agda
@@ -537,7 +537,7 @@ anywhere below.
 <!--zh-->
 描述的两半落在单独一条公式上，充分性正是由它们组合而成的。对一条公式 `ψ`，那三个合取项分别把它的键供给码、把递归的取值供给取值；反过来读取时，则把码解码成一条公式，把取值与递归自身的取值对上，再把第三个合取项读作一条集合等式。
 
-此处的一切都陈述在**变元**载体上，只经过一条等式，而正是这一点把阶段挡在证明之外。在某个阶段处的实例化只是调用方提供的一条等式，而 `Lset`{.Agda} 与序数在下文任何地方都不出现。
+此处的一切都陈述在**变元**载体上，只经过一条等式，而正是这一点把层挡在证明之外。在某一层处的实例化只是调用方提供的一条等式，而 `Lset`{.Agda} 与序数在下文任何地方都不出现。
 <!--/-->
 
 ```agda
@@ -731,7 +731,7 @@ altogether.
 <!--en-->
 ## Definable power sets at constructible stages
 <!--zh-->
-## 可构造阶段上的可定义幂集
+## 可构造层上的可定义幂集
 <!--ja-->
 ## 構成可能段階での定義可能な冪集合
 <!--/-->
@@ -739,7 +739,7 @@ altogether.
 <!--en-->
 When the carrier is a constructible stage, its formula codes and uniform satisfaction objects already belong to `L`, so `DefOK` is discharged. The resulting specialization says directly that `DefAt` defines the stage’s definable power set.
 <!--zh-->
-当载体为可构造阶段时，其公式编码与一致满足关系对象已经属于 `L`，因此 `DefOK` 自动成立。所得特化直接表明 `DefAt` 定义该阶段的可定义幂集。
+当载体为可构造层时，其公式编码与一致满足关系对象已经属于 `L`，因此 `DefOK` 自动成立。所得特化直接表明 `DefAt` 定义该层的可定义幂集。
 <!--ja-->
 台が構成可能段階であるとき、その論理式コードと一様な充足関係の対象はすでに `L` に属するので、`DefOK` が従います。得られた特殊化は `DefAt` がその段階の定義可能な冪集合を直接定義することを示します。
 <!--/-->
@@ -758,9 +758,9 @@ is what the internal hierarchy needs: the description will be spoken under a
 binder, and the equation the caller supplies is the only thing that connects it
 to a stage at all.
 <!--zh-->
-该实例化只需一条等式。阶段是 `L` 的元素，其可定义子集也可构造 (因为阶段在下一阶段可构造)；后继恒等式在每个阶段同时给出这两点。因此旁条件一次得到解除，剩下的是真值之间的等价：在持有该阶段的载体上，这条描述对某个集合成立，当且仅当该集合**就是**此阶段的可定义幂集。它对 `𝒟ₒS`{.Agda} 成立，对其他集合都不成立。
+该实例化只需一条等式。层是 `L` 的元素，其可定义子集也可构造 (因为层在下一层可构造)；后继恒等式在每层同时给出这两点。因此旁条件一次得到解除，剩下的是真值之间的等价：在持有该层的载体上，这条描述对某个集合成立，当且仅当该集合**就是**此层的可定义幂集。它对 `𝒟ₒS`{.Agda} 成立，对其他集合都不成立。
 
-两条陈述都只把那个阶段当作某一位的取值提到，而这正是内部层级所需要的：那条描述将在一层绑定之下被说出，而调用方提供的那条等式，是唯一把它与某个阶段联系起来的东西。
+两条陈述都只把那一层当作某一位的取值提到，而这正是内部层级所需要的：那条描述将在一层绑定之下被说出，而调用方提供的那条等式，是唯一把它与某一层联系起来的东西。
 <!--/-->
 
 ```agda
@@ -786,7 +786,7 @@ DefAt-stage β oβ u w γ qw = ⇔toPath
 <!--en-->
 The chapter has produced a bounded formula whose extension over a constructible stage is exactly the collection of subsets definable over that stage with parameters from it.
 <!--zh-->
-本章得到一个有界公式；在可构造阶段上，其外延恰为可用该阶段中的参数在该阶段上定义的子集全体。
+本章得到一个有界公式；在可构造层上，其外延恰为可用该层中的参数在该层上定义的子集全体。
 <!--ja-->
 本章で得た有界論理式は、構成可能段階上で、その段階の要素をパラメータとしてその段階上で定義できる部分集合全体をちょうど外延とします。
 <!--/-->
@@ -815,7 +815,7 @@ terminated there, while the same two lines with the payload type written out
 check in two seconds. Every `PT.rec`{.Agda} here names its payload, and that is
 why this chapter checks in half a minute rather than not at all.
 <!--zh-->
-`DefAt`{.Agda} 是可定义幂集在对象语言中相对于槽位载体的描述，`DefAt-in`{.Agda} 与 `DefAt-out`{.Agda} 是它的两条读式：该算子满足描述；在 `DefOK`{.Agda} 条件下，其他对象都不满足。`DefAt-stage`{.Agda} 把两条读式实例化到一个阶段；在那里旁条件一次得到解除，描述也化为真值之间的等式。
+`DefAt`{.Agda} 是可定义幂集在对象语言中相对于槽位载体的描述，`DefAt-in`{.Agda} 与 `DefAt-out`{.Agda} 是它的两条读式：该算子满足描述；在 `DefOK`{.Agda} 条件下，其他对象都不满足。`DefAt-stage`{.Agda} 把两条读式实例化到一层；在那里旁条件一次得到解除，描述也化为真值之间的等式。
 
 三章在此汇合，没有一章需要重证。码谓词读在一个位置上，满足关系的图也读在一个位置上，而可定义子集经由那座桥读出，桥的内容是「递归的取值就是载体之上的满足关系」。新增的只有接合处：`envOneAt`{.Agda}，一行，因为长度为一的环境只是一个对；以及 `DefinesAt`{.Agda}，它就是 `extAt`{.Agda} 施于一个两部分的条件。
 

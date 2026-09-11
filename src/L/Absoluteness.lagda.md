@@ -11,7 +11,7 @@ Putting the two together gives the transfer theorem: a Δ₀ formula whose const
 
 设编码诸章交给我们一条关于层级的有界公式，而我们要在 `L` 内部说出同样的话。这里有两重障碍：公式的常元是层级的集合，不是 `L` 的元素；而且它的满足是在环境结构中算出的，不是在限制结构中。本章就消去这两重障碍。
 
-消去依赖两个事实，各自都在自己的章中证得。其一，有界公式的那套机制可以给公式的常元改名，只要每个常元带着满足某个界的证据；此处取的界是可构造性而非「落在某阶段内」，证据就是可构造性证书。其二，Δ₀ 绝对性说：有界公式在传递类之内与之外含义相同，正是这一点使「把常元换成它与证书的对」这一替换无害。
+消去依赖两个事实，各自都在自己的章中证得。其一，有界公式的那套机制可以给公式的常元改名，只要每个常元带着满足某个界的证据；此处取的界是可构造性而非「落在某层内」，证据就是可构造性证书。其二，Δ₀ 绝对性说：有界公式在传递类之内与之外含义相同，正是这一点使「把常元换成它与证书的对」这一替换无害。
 
 两者合起来便是搬运定理：常元全部可构造的 Δ₀ 公式可以在 `L` 的对象语言中读出，且两种读法一致，由一条四步的路径链作证，自身不含任何归纳。
 <!--ja-->
@@ -27,7 +27,7 @@ Putting the two together gives the transfer theorem: a Δ₀ formula whose const
 <!--en-->
 The whole chapter takes place at a single universe level `ℓ`. Both structures that will interpret the language are built over the truth algebra of propositions at level `ℓ-suc ℓ`, so a satisfaction statement is a proposition, and two such statements can be compared by a path. The ambient world is the cumulative hierarchy `V` at this level; the inner world is `L`, obtained from it by restricting to the constructible sets.
 <!--zh-->
-本章的全部工作都在同一个宇宙层 `ℓ` 上进行。解释语言的两个结构都建立在层 `ℓ-suc ℓ` 的命题真值代数之上，因此一条满足陈述是一个命题，两条这样的陈述可以由一条路径来比较。外层世界是该层上的累积层级 `V`；内层世界则是 `L`，即在 `V` 中限制到可构造集所得。
+本章的全部工作都在同一个宇宙层级 `ℓ` 上进行。解释语言的两个结构都建立在层级 `ℓ-suc ℓ` 的命题真值代数之上，因此一条满足陈述是一个命题，两条这样的陈述可以由一条路径来比较。外层世界是该层级上的累积层级 `V`；内层世界则是 `L`，即在 `V` 中限制到可构造集所得。
 <!--ja-->
 この章の作業はすべて、単一の宇宙レベル `ℓ` の上で行われます。言語を解釈する二つの構造はどちらもレベル `ℓ-suc ℓ` の命題からなる真理値代数の上に築かれるため、充足の主張は命題であり、二つの主張はパスで比較できます。外側の世界はこのレベルの累積階層 `V` であり、内側の世界は `L`、つまり構成可能な集合への制限として得られるものです。
 <!--/-->
@@ -131,7 +131,7 @@ A reader with no constants at all is admissible for free, which is worth naming,
 <!--en-->
 The bound predicate is the whole choice of this section. A constant `c` of the hierarchy is admissible precisely when the proposition `isL c` holds, that is, when `c` lies in some ordinal stage of the constructible tower; `InL` just unpacks the underlying type of that proposition-valued class. Note where the level lives: `isL c` is a proposition at level `ℓ-suc ℓ`, so `InL` is a predicate valued in types of that level, not a decidable property of sets.
 <!--zh-->
-界谓词就是本节的全部选择。层级的一个常元 `c` 合格，恰指命题 `isL c` 成立，即 `c` 落在可构造塔的某个序数阶段中；`InL` 只是取出这个命题值类的底层类型。注意层级落在何处：`isL c` 是层 `ℓ-suc ℓ` 上的命题，因此 `InL` 是取值于该层类型的谓词，而不是集合的可判定性质。
+界谓词就是本节的全部选择。层级的一个常元 `c` 合格，恰指命题 `isL c` 成立，即 `c` 落在可构造塔的某个序数层中；`InL` 只是取出这个命题值类的底层类型。注意层级落在何处：`isL c` 是层 `ℓ-suc ℓ` 上的命题，因此 `InL` 是取值于该层类型的谓词，而不是集合的可判定性质。
 <!--ja-->
 界の述語こそ、この節の選択のすべてです。階層の定数 `c` が適格であるのは、命題 `isL c` が成り立つとき、すなわち `c` が構成可能な塔のある序数の段階に属するときに限ります。`InL` はこの命題値のクラスの基礎型を取り出すだけです。レベルがどこにあるかにも注意してください。`isL c` はレベル `ℓ-suc ℓ` の命題なので、`InL` はそのレベルの型に値を取る述語であり、集合の決定可能な性質ではありません。
 <!--/-->

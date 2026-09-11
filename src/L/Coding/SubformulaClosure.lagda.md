@@ -114,7 +114,7 @@ keys, and `Peel`{.Agda} is what a characterization turns into. So the seven
 clauses are proved once, for any set that peels, and the closure is the first of
 the two instances rather than the subject.
 <!--zh-->
-把它单独陈述出来不是为了整洁。后面有一章从一个阶段里切出一个码集，须为它证同一条封闭性，而那个集合不是任何东西的闭包；它手上有的是「其诸成员即诸键」这条刻画，而 `Peel`{.Agda} 正是一条刻画所化成的东西。故七条子句只证一次，对任何可剥开的集合成立，而闭包是那两个实例中的头一个，不是主角。
+把它单独陈述出来不是为了整洁。后面有一章从一层里切出一个码集，须为它证同一条封闭性，而那个集合不是任何东西的闭包；它手上有的是「其诸成员即诸键」这条刻画，而 `Peel`{.Agda} 正是一条刻画所化成的东西。故七条子句只证一次，对任何可剥开的集合成立，而闭包是那两个实例中的头一个，不是主角。
 <!--/-->
 
 ```agda

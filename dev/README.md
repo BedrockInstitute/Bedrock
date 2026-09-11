@@ -19,6 +19,9 @@ is trilingual and lives in [docs/](../docs/). The rule set is [AGENTS.md](../AGE
   rendering and the renderings to avoid. `scripts/gate/check-glossary.py` reads it and
   reports off-glossary renderings, scoped by language. It never auto-fixes: the right
   rendering is a translation judgement.
+- `scripts/gate/check-milestone-consumption.py`: the final-tree gate run by the pre-push hook
+  and CI. It checks that every source definition, except the `Milestones` root itself, lies in
+  its transitive local-import closure. It is intentionally absent from pre-commit and `make lint`.
 - `literature/`: reading notes and source digests. Working material, not specification.
 
 ## What is not here any more

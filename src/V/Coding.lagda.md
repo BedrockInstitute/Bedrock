@@ -405,7 +405,7 @@ Note the level: `VCode`{.Agda} is taken at `ℓ-suc ℓ`{.Agda}, the level of th
 
 有了两个单射字母表，FOL.Coding 的通用编码构造即可施于层级：单射的配对与单射的数码映射是它的两个参数。得到的 `VCode`{.Agda} 给层级载体上的词项与公式指派本身仍是层级集合的码。它并不把每个集合都变成码；它为被编码的语法提供取值为集合的码。
 
-注意层级：`VCode`{.Agda} 取在 `ℓ-suc ℓ`{.Agda} 上，即结构 `𝒮ᵥ`{.Agda} 作为 `ZFStructure`{.Agda} 所处的真值代数的层级。这个宇宙指标是类型论意义上的层级，不是层级的阶段。
+注意层级：`VCode`{.Agda} 取在 `ℓ-suc ℓ`{.Agda} 上，即结构 `𝒮ᵥ`{.Agda} 作为 `ZFStructure`{.Agda} 所处的真值代数的层级。这个宇宙指标是类型论意义上的层级，不是层级的层。
 <!--ja-->
 ## 具体化
 

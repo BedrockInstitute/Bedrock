@@ -3,9 +3,9 @@
 
 For one existential formula and parameters from a constructible stage, this chapter builds a larger ordinal stage that contains witnesses whenever the ambient constructible universe does. Iterating the witness-selection step and taking an ordinal limit makes the stage closed under answers to that formula.
 <!--zh-->
-# 存在公式到可构造阶段的反射
+# 存在公式到可构造层的反射
 
-对一条存在公式以及来自某个可构造阶段的参数，本章构造一个更大的序数阶段：只要环境可构造宇宙中存在见证，该阶段也包含见证。迭代见证选择步骤并取序数极限，可使这个阶段包含该公式对其中参数所需的见证。
+对一条存在公式以及来自某个可构造层的参数，本章构造一个更大的序数层：只要环境可构造宇宙中存在见证，该层也包含见证。迭代见证选择步骤并取序数极限，可使这一层包含该公式对其中参数所需的见证。
 <!--ja-->
 # 存在論理式の構成可能段階への反映
 
@@ -33,9 +33,9 @@ construction twice, since every step of it is indifferent to how many parameters
 there are; the only place the tuple matters is in locating it, where finitely many
 layers have to be merged into one.
 <!--zh-->
-这一构造可以完成，其论证出自 Montague。固定一个矩阵与一个参数环境。若见证存在，就有一个包含见证的最小阶段，从而以一个集合大小的阶段控制原本涉及真类的搜索。取遍某一阶段中的全部参数元组，并为所得各阶段取一个共同上界，便得到单一阶段，其中包含下方阶段每个元组所需的见证。沿自然数迭代这一步并取并，所得极限也具有相同性质：极限中的任何有穷元组早已属于某个有穷层，而该层所需见证的阶段在下一层已被界住。
+这一构造可以完成，其论证出自 Montague。固定一个矩阵与一个参数环境。若见证存在，就有一个包含见证的最小层，从而以一个集合大小的层控制原本涉及真类的搜索。取遍某一层中的全部参数元组，并为所得各层取一个共同上界，便得到单一层，其中包含下方层每个元组所需的见证。沿自然数迭代这一步并取并，所得极限也具有相同性质：极限中的任何有穷元组早已属于某个有穷层，而该层所需见证的层在下一层已被界住。
 
-此处有两点与通常做法不同。通常会在选择见证时使用 L 的良序，而这里并不需要：论证所需的是典范的**序数**，而非典范的元素，并且序数已经由成员关系良序化。因此，可由阶段一章的下降论证直接取包含见证的最小阶段，而不指定其中究竟是哪一个见证。此外，参数从一开始就是元组。若先处理单参数情形再作推广，就要把整个构造写两遍，因为构造的每一步都不依赖参数的个数；只有在定位元组时需要考虑这一点，并把有穷多个层合并成一个。
+此处有两点与通常做法不同。通常会在选择见证时使用 L 的良序，而这里并不需要：论证所需的是典范的**序数**，而非典范的元素，并且序数已经由成员关系良序化。因此，可由讨论层的一章的下降论证直接取包含见证的最小层，而不指定其中究竟是哪一个见证。此外，参数从一开始就是元组。若先处理单参数情形再作推广，就要把整个构造写两遍，因为构造的每一步都不依赖参数的个数；只有在定位元组时需要考虑这一点，并把有穷多个层合并成一个。
 <!--/-->
 
 ```agda
@@ -88,9 +88,9 @@ tuple of indices is a supply of environments. That is what makes the bounding
 lemma applicable below: the tuples form a type of the ambient size, being a
 vector over one.
 <!--zh-->
-## 取自一个阶段的环境
+## 取自一层的环境
 
-参数取自阶段的索引集，索引元组则给出环境：阶段的一个元素经塔的隶属判据成为类模型的一个元素。正是这一点使下面的界层引理得以适用：诸元组构成周遭大小的类型，因为它正是其上的向量。
+参数取自层的索引集，索引元组则给出环境：层的一个元素经塔的隶属判据成为类模型的一个元素。正是这一点使下面的界层引理得以适用：诸元组构成周遭大小的类型，因为它正是其上的向量。
 <!--ja-->
 ## 環境を一つの段階から取る
 
@@ -105,7 +105,7 @@ environment it bounded is the one it was given. The equation is where
 constructibility being a proposition is used: two elements of the model agree as
 soon as their underlying sets do.
 <!--zh-->
-一个环境**落在**某阶段之下，指它的每一项都落在其下。从这样的环境读回索引元组是逆向的操作，且同时给出等式，因为构造需要知道：它所界定的环境正是输入的那一个。等式正是用到「可构造性是命题」之处：模型的两个元素，只要底集相同就相等。
+一个环境**落在**某层之下，指它的每一项都落在其下。从这样的环境读回索引元组是逆向的操作，且同时给出等式，因为构造需要知道：它所界定的环境正是输入的那一个。等式正是用到「可构造性是命题」之处：模型的两个元素，只要底集相同就相等。
 <!--/-->
 
 ```agda
@@ -149,9 +149,9 @@ chapter's descent applies to it directly. Its premise is that some ordinal has
 the property, which follows from satisfiability alone: a witness is an element of
 L, and an element of L lies in some stage by definition.
 <!--zh-->
-## 作答阶段
+## 作答层
 
-固定一个矩阵，其中含一个见证变元与 `k` 个参数。「这个环境的某个见证落在该阶段里」是序数的一条性质，故阶段那一章的下降直接适用于它。它的前提是某个序数具有该性质，而这仅凭可满足性即得：见证是 L 的元素，而 L 的元素按定义落在某个阶段里。
+固定一个矩阵，其中含一个见证变元与 `k` 个参数。「这个环境的某个见证落在该层里」是序数的一条性质，故讨论层的那一章的下降直接适用于它。它的前提是某个序数具有该性质，而这仅凭可满足性即得：见证是 L 的元素，而 L 的元素按定义落在某一层里。
 <!--ja-->
 ## 解答を含む段階
 
@@ -164,7 +164,7 @@ supplies the case distinction. As in the stage chapter, the distinction is made
 by an explicit auxiliary rather than by a `with`, because the load-bearing lemma
 below has to name the very same decision value and match on it.
 <!--zh-->
-其次，全函数性要求即便见证不存在也得有个值，而排中律给出分情形。一如阶段那一章，分情形由显式的辅助函数而非 `with` 作出，因为下面那条承重引理必须点名同一个判定值并在其上匹配。
+其次，全函数性要求即便见证不存在也得有个值，而排中律给出分情形。一如讨论层的那一章，分情形由显式的辅助函数而非 `with` 作出，因为下面那条承重引理必须点名同一个判定值并在其上匹配。
 <!--/-->
 
 ```agda
@@ -216,7 +216,7 @@ standard thing: quantify over the branch, remember the equation that the branch
 *is* the decision, and transport along it. In the false branch the hypothesis
 refutes itself.
 <!--zh-->
-最后是整个构造所倚赖的那条性质：若环境根本可满足，则它的作答阶段确实装着一个见证。证明必须知道判定走的是哪一支，而它问不出来，因为判定是排中律的一个值，没有东西算得出它。于是它做那件标准的事：对分支作量化，记住「该分支**就是**那个判定」这条等式，并沿之搬运。在假分支上，假设自我反驳。
+最后是整个构造所倚赖的那条性质：若环境根本可满足，则它的作答层确实装着一个见证。证明必须知道判定走的是哪一支，而它问不出来，因为判定是排中律的一个值，没有东西算得出它。于是它做那件标准的事：对分支作量化，记住「该分支**就是**那个判定」这条等式，并沿之搬运。在假分支上，假设自我反驳。
 <!--/-->
 
 ```agda
@@ -305,7 +305,7 @@ lemma merges two of them: from rungs `n` and `m`, both reach rung `suc (n + m)`,
 one of them directly and the other after commuting the sum. Recursion on the
 tuple merges all of them, and monotonicity carries the earlier entries up.
 <!--zh-->
-闭包论证要它的参数落在某一级上，而不只是落在极限之下。对单个参数，两次反演把它送到那里：极限中的序数属于被取并的集合之一，因而属于某一级；而极限之阶段中的集合，按塔的刻画，属于某个更小序数之阶段上的算子，故把那个序数定位，再走「进去」，就把该集合放进了那一级的阶段。
+闭包论证要它的参数落在某一级上，而不只是落在极限之下。对单个参数，两次反演把它送到那里：极限中的序数属于被取并的集合之一，因而属于某一级；而极限之层中的集合，按塔的刻画，属于某个更小序数之层上的算子，故把那个序数定位，再走「进去」，就把该集合放进了那一级的层。
 
 对元组，为各项找到的诸级必须合并，而「够得着」引理合并其中两个：自级 `n` 与级 `m` 都够得着级 `suc (n + m)`，一个直接够到，另一个在交换加法之后够到。沿元组递归把它们全部合并，而单调性把靠前的诸项抬高。
 <!--/-->
@@ -352,7 +352,7 @@ the next chapter each supply in their own way.
 <!--zh-->
 ## 封闭性
 
-一架梯对某矩阵**作答**，指凡由某级索引出的环境，其作答阶段都落在下一级上。关于梯如何构造，闭包论证用到的假设仅此一条，而下一节与下一章各以自己的方式给出它。
+一架梯对某矩阵**作答**，指凡由某级索引出的环境，其作答层都落在下一级上。关于梯如何构造，闭包论证用到的假设仅此一条，而下一节与下一章各以自己的方式给出它。
 <!--ja-->
 ## 閉性
 
@@ -367,7 +367,7 @@ answering stage is on the next rung, so whatever lives in the answering stage
 lives in that rung's stage, hence under the limit; two applications of
 monotonicity, and the equation transported back.
 <!--zh-->
-有了它，极限对该矩阵闭合。把环境定位到某一级：它是那一级之阶段的某个索引元组的像，至多相差一个等式，而读取引理把它连同元组一并给出。它的作答阶段落在下一级上，故落在作答阶段里的东西便落在那一级的阶段里，因而落在极限之下；再用两次单调性，把那个等式移回去。
+有了它，极限对该矩阵闭合。把环境定位到某一级：它是那一级之层的某个索引元组的像，至多相差一个等式，而读取引理把它连同元组一并给出。它的作答层落在下一级上，故落在作答层里的东西便落在那一级的层里，因而落在极限之下；再用两次单调性，把那个等式移回去。
 <!--/-->
 
 ```agda
@@ -409,7 +409,7 @@ truncated sum over the carrier, and that is what `SatEx`{.Agda} was defined to
 be. So the theorem is closure with its statement rewritten, and moving between
 syntax and the meta-level requires no further work.
 <!--zh-->
-于是有了后续诸章将要使用的定理。对落在极限之下的环境，类模型满足那个存在量词，恰当极限之阶段中有一个见证。正向就是闭包，反向则不再追问见证落在哪一级。
+于是有了后续诸章将要使用的定理。对落在极限之下的环境，类模型满足那个存在量词，恰当极限之层中有一个见证。正向就是闭包，反向则不再追问见证落在哪一级。
 
 正向不需要翻译的一步，因为两侧本已是同一个命题：存在量词的语义是沿载体的截断和，而 `SatEx`{.Agda} 当初正是照这个定义写的。故定理只是闭包换了个说法，在语法与元层之间往返不需任何额外代价。
 <!--/-->
@@ -434,7 +434,7 @@ environments, which is exactly the answering hypothesis.
 <!--zh-->
 ## 单个母式的步骤
 
-最后是那一步。阶段的索引集是周遭大小的类型，其上的元组也是，故界层引理适用：取自同一阶段的全部环境，其作答阶段有公共上界。把那个上界与该阶段本身合并，就得到步进，它因而既包含自己的自变量而使迭代得以攀升，又包含自变量的诸环境的每个回答，而后者恰是那条作答假设。
+最后是那一步。层的索引集是周遭大小的类型，其上的元组也是，故界层引理适用：取自同一层的全部环境，其作答层有公共上界。把那个上界与该层本身合并，就得到步进，它因而既包含自己的自变量而使迭代得以攀升，又包含自变量的诸环境的每个回答，而后者恰是那条作答假设。
 <!--ja-->
 ## 一つの母式に対する段階
 
@@ -492,7 +492,7 @@ matrix, by bounding a stage's answers and merging with the stage.
 <!--zh-->
 ## 小结
 
-一架**梯**是上升的序数链；它对某矩阵**作答**，指每一级的环境，其作答阶段都落在下一级上；而当它作答时，它的极限对该矩阵闭合，`reflect`{.Agda} 把这一点重述为存在量词的反射。`Single`{.Agda} 造出单矩阵的步进，办法是界住一个阶段的诸回答，再与该阶段合并。
+一架**梯**是上升的序数链；它对某矩阵**作答**，指每一级的环境，其作答层都落在下一级上；而当它作答时，它的极限对该矩阵闭合，`reflect`{.Agda} 把这一点重述为存在量词的反射。`Single`{.Agda} 造出单矩阵的步进，办法是界住一层的诸回答，再与该层合并。
 <!--ja-->
 ## まとめ
 
@@ -511,7 +511,7 @@ limit taken for a single matrix covers them all; the next chapter builds a
 ladder whose step closes all of them at once, and thereby obtains everything
 above directly, without redoing any of the individual arguments.
 <!--zh-->
-这个构造用了两次排中律，一次判定可满足性，一次在下降之内，而选择公理一次也没用。这正是取最小**阶段**而非最小**见证**的用意：序数自带良序，而此处无须用到 L 的良序。
+这个构造用了两次排中律，一次判定可满足性，一次在下降之内，而选择公理一次也没用。这正是取最小**层**而非最小**见证**的用意：序数自带良序，而此处无须用到 L 的良序。
 
 本章的成果是一个量词，可带任意多个参数。任意公式可以含有许多量词，因而有许多矩阵，而没有哪个针对单一矩阵的极限能同时覆盖全部；下一章将构造一架梯，其一次步进同时闭合所有矩阵，并随之直接得到上面的一切，无须对其中任何一步重做论证。
 <!--/-->
