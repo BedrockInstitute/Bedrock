@@ -34,7 +34,7 @@ open import Base.Impredicativity using ( HPropSmallness; Impredicativity )
 <!--en-->
 Formally, what does it mean for the hierarchy to satisfy an axiom? The first-order logic chapters supply the vocabulary. A structure is a carrier that is an h-set, whose equality and membership take truth values, not booleans of some fixed two-element algebra. A formula is an element of the object language's syntax, and the axiom schemas quantify over its free-variable slots. Satisfaction is a relation that reads a formula at an environment of carrier elements and returns a truth value. The ZF axioms are re-derived one by one in exactly these terms below.
 <!--zh-->
-「层级满足一条公理」在形式上是什么意思？一阶逻辑诸章供给了术语。一个结构是作为 h-集的载体，其等词与成员关系取真值，而非某个固定二元代数的布尔值。公式是对象语言语法的元素，公理模式对它的自由变元槽量化。满足关系在载体元素的环境下读出公式，返回一个真值。下面将逐一按这些术语重新导出 ZF 的公理。
+「层级满足一条公理」在形式上是什么意思？一阶逻辑诸章供给了术语。一个结构是作为 h-集合的载体，其等词与成员关系取真值，而非某个固定二元代数的布尔值。公式是对象语言语法的元素，公理模式对它的自由变元槽量化。满足关系在载体元素的环境下读出公式，返回一个真值。下面将逐一按这些术语重新导出 ZF 的公理。
 <!--ja-->
 「階層が公理を満たす」とは形式的にはどういう意味でしょうか。一階論理の諸章が語彙を供給します。構造とは h-集合である台のことであり、その等号と所属は、固定された二元代数のブール値ではなく真理値を取ります。論理式は対象言語の構文の要素であり、公理のスキーマはその自由変数の枠を量化します。充足は、台の要素からなる環境のもとで論理式を読み、真理値を返す関係です。以下では ZF の公理を、まさにこの言葉で一つずつ導き直します。
 <!--/-->
@@ -83,7 +83,7 @@ import Cubical.Data.Empty as Empty
 <!--en-->
 The central construction is the set former `sett`{.Agda}: from a small index type `X` and a family `X → S` it forms the image set, and `y ∈ sett X ix` holds exactly when some index presents `y`, merely. Replacement is read directly off this membership rule. That the hierarchy is an h-set, recorded by `setIsSet`{.Agda}, is what makes the path type `x ≡ y` a proposition and hence a legitimate truth value for the structure's equality.
 <!--zh-->
-核心构造是集合构造子 `sett`{.Agda}：从小索引类型 `X` 与族 `X → S` 造出像集，而 `y ∈ sett X ix` 恰在纯粹地存在某个索引呈现 `y` 时成立。替换直接从这条成员规则读出。层级是 h-集这一点 (由 `setIsSet`{.Agda} 记录) 使路径类型 `x ≡ y` 成为命题，从而成为结构等词的合法真值。
+核心构造是集合构造子 `sett`{.Agda}：从小索引类型 `X` 与族 `X → S` 造出像集，而 `y ∈ sett X ix` 恰在纯粹地存在某个索引呈现 `y` 时成立。替换直接从这条成员规则读出。层级是 h-集合这一点 (由 `setIsSet`{.Agda} 记录) 使路径类型 `x ≡ y` 成为命题，从而成为结构等词的合法真值。
 <!--ja-->
 中心となる構成は集合の構成子 `sett`{.Agda} です。小さな添字の型 `X` と族 `X → S` から像の集合を作り、所属 `y ∈ sett X ix` は、ある添字が `y` を呈示することが純粋に存在するとき、そのときに限り成ります。置換はこの所属の規則から直接読み取ります。階層が h-集合であること (`setIsSet`{.Agda} が記録します) により、パス型 `x ≡ y` は命題となり、構造の等号の正当な真理値になります。
 <!--/-->
@@ -392,7 +392,7 @@ pair-singleton a = extensionality ⁅ a , a ⁆ ⁅ a ⁆s (s1 , s2)
 <!--en-->
 Both disjuncts ask for the same thing, membership in `⁅ a ⁆s`, so after the truncated disjunction is eliminated into the proposition `x ≡ a`, whose propositionhood follows from the hierarchy being an h-set, each branch supplies its path and the results agree by that very propositionhood. What is consumed here is the backward direction of the singleton's classification, running from the path `x ≡ a` to the small membership `x ∈ₛ ⁅ a ⁆s`; note that it is the opposite direction from the one the reverse inclusion will use.
 <!--zh-->
-两个析取支要求的是同一件事：属于 `⁅ a ⁆s`。于是先把截断的析取消入命题 `x ≡ a` (其命题性来自层级是 h-集)，每个分支给出自己的路径，而两个结果恰由该命题性等同。这里消耗的是单点集分类的反向：从路径 `x ≡ a` 走到小隶属 `x ∈ₛ ⁅ a ⁆s`；注意它与反向包含将要使用的方向恰好相反。
+两个析取支要求的是同一件事：属于 `⁅ a ⁆s`。于是先把截断的析取消入命题 `x ≡ a` (其命题性来自层级是 h-集合)，每个分支给出自己的路径，而两个结果恰由该命题性等同。这里消耗的是单点集分类的反向：从路径 `x ≡ a` 走到小隶属 `x ∈ₛ ⁅ a ⁆s`；注意它与反向包含将要使用的方向恰好相反。
 <!--ja-->
 どちらの選言支も同じこと、`⁅ a ⁆s` への所属を要求します。そこでまず切り詰められた選言を命題 `x ≡ a` (その命題性は階層が h-集合であることから従います) へ消去し、各分岐が自らのパスを与えれば、二つの結果はまさにその命題性によって同一視されます。ここで使うのは一元集合の分類の逆向きで、パス `x ≡ a` から小さな所属 `x ∈ₛ ⁅ a ⁆s` へ進む方向です。これが後の逆包含で使う向きと逆であることに注意してください。
 <!--/-->
@@ -939,7 +939,7 @@ Excluded middle does not yield choice, so the last axiom of ZFC is taken as a se
 <!--zh-->
 ## 另行假设选择公理
 
-排中律推不出选择，因此 ZFC 的最后一条公理被另立为假设，选择集公理由它证明。接口是 `SetChoice`{.Agda}：对 h-集 `X : Type ℓ` 与族 `B : X → Type ℓ`，若每个纤维仅仅居有，则整个 `X` 上存在选择函数，以截断的形式给出。下面的引理假设该接口在层级 `ℓ` 的一个实例，连同固定层级结构 `𝒮ᵥ` 上的一个 `isZFModel`，并从中使用交 `∩` 及其规格。被施加选择的族是一个小呈现：索引类型是 `⟪ a ⟫`，它是一个 h-集；索引 `m` 上的纤维是 `m` 所呈现的集合 `⟪ ⟪ a ⟫↪ m ⟫`。因此选择选出的是呈现索引，而非集合的元素。由被选索引经一次 `sett` 造出集合 `c`；再由两两不交前提 `disj`，经由模型的交证明 `c` 与 `a` 的每个成员的交是可缩从而唯一的点集。截断在设计上是不对称的：选择集本身仅仅是存在，而每个交都携带显式的 `isContr` 数据。最终定理把一个 `SetChoice (ℓ-suc ℓ)` 实例用两次：`choice→lem` 把它转为 `LEM (ℓ-suc ℓ)` 供 ZF 部分使用，`lowerSetChoice` 把它降到 `SetChoice ℓ` 供选择引理使用。所以 `V⊨ZFC` 单凭选择而证；排中律由选择经 Diaconescu 定理回收，而非相反。
+排中律推不出选择，因此 ZFC 的最后一条公理被另立为假设，选择集公理由它证明。接口是 `SetChoice`{.Agda}：对 h-集合 `X : Type ℓ` 与族 `B : X → Type ℓ`，若每个纤维仅仅居有，则整个 `X` 上存在选择函数，以截断的形式给出。下面的引理假设该接口在层级 `ℓ` 的一个实例，连同固定层级结构 `𝒮ᵥ` 上的一个 `isZFModel`，并从中使用交 `∩` 及其规格。被施加选择的族是一个小呈现：索引类型是 `⟪ a ⟫`，它是一个 h-集合；索引 `m` 上的纤维是 `m` 所呈现的集合 `⟪ ⟪ a ⟫↪ m ⟫`。因此选择选出的是呈现索引，而非集合的元素。由被选索引经一次 `sett` 造出集合 `c`；再由两两不交前提 `disj`，经由模型的交证明 `c` 与 `a` 的每个成员的交是可缩从而唯一的点集。截断在设计上是不对称的：选择集本身仅仅是存在，而每个交都携带显式的 `isContr` 数据。最终定理把一个 `SetChoice (ℓ-suc ℓ)` 实例用两次：`choice→lem` 把它转为 `LEM (ℓ-suc ℓ)` 供 ZF 部分使用，`lowerSetChoice` 把它降到 `SetChoice ℓ` 供选择引理使用。所以 `V⊨ZFC` 单凭选择而证；排中律由选择经 Diaconescu 定理回收，而非相反。
 <!--ja-->
 ## 選択公理を別に仮定する
 
@@ -949,7 +949,7 @@ Excluded middle does not yield choice, so the last axiom of ZFC is taken as a se
 <!--en-->
 Two preliminary facts feed the choice-set construction. The first concerns the index type at which choice will be applied. Each presentation type `⟪ a ⟫` is an h-set: it embeds into the hierarchy through `⟪ a ⟫↪`, whose embedding property `isEmb⟪ a ⟫↪` was recorded when the presentation was introduced, and the hierarchy itself is an h-set by `setIsSet`. A general cubical result, `Embedding-into-isSet→isSet`, transfers h-setness back along an embedding, so `isSet⟪ a ⟫` holds for every set `a`. Equality types between indices are therefore propositions, which is precisely the condition `SetChoice` places on the type it chooses from.
 <!--zh-->
-选择集构造要用到两条预备事实。第一条关乎施加选择的索引类型。每个呈现类型 `⟪ a ⟫` 都是 h-集：它经 `⟪ a ⟫↪` 嵌入层级，而嵌入性质 `isEmb⟪ a ⟫↪` 在引入该呈现时已记录；层级本身由 `setIsSet` 是 h-集。cubical 的一般结果 `Embedding-into-isSet→isSet` 沿嵌入把 h-集性传回，于是对每个集合 `a` 都有 `isSet⟪ a ⟫`。索引之间的相等类型因此都是命题，这正是 `SetChoice` 对其选择对象类型所要求的条件。
+选择集构造要用到两条预备事实。第一条关乎施加选择的索引类型。每个呈现类型 `⟪ a ⟫` 都是 h-集合：它经 `⟪ a ⟫↪` 嵌入层级，而嵌入性质 `isEmb⟪ a ⟫↪` 在引入该呈现时已记录；层级本身由 `setIsSet` 是 h-集合。cubical 的一般结果 `Embedding-into-isSet→isSet` 沿嵌入把 h-集合性传回，于是对每个集合 `a` 都有 `isSet⟪ a ⟫`。索引之间的相等类型因此都是命题，这正是 `SetChoice` 对其选择对象类型所要求的条件。
 <!--ja-->
 選択集合の構成には二つの準備的事実が使われます。第一は、選択を適用する添字の型に関するものです。各提示の型 `⟪ a ⟫` は h-集合です。`⟪ a ⟫↪` を通して階層へ埋め込まれ、その埋め込みの性質 `isEmb⟪ a ⟫↪` は提示の導入時に記録済みであり、階層自身は `setIsSet` により h-集合だからです。cubical の一般結果 `Embedding-into-isSet→isSet` が埋め込みに沿って h-集合性を引き戻すので、任意の集合 `a` に対して `isSet⟪ a ⟫` が成ります。したがって添字の間の等号の型はすべて命題であり、これがまさに `SetChoice` が選択の対象とする型に課す条件です。
 <!--/-->
@@ -1000,7 +1000,7 @@ The lemma `choice` states the classical choice-set situation. Its hypotheses: `i
 <!--en-->
 The proof applies the choice instance at the small presentation of the family, not at the family itself. The index type is `⟪ a ⟫`, an h-set by the first preliminary fact; the family is `λ m → ⟪ ⟪ a ⟫↪ m ⟫`, the set presented by each index. What remains is to show each fiber merely inhabited, which is the role of `pick`: for each index `m`, a member of the presented set `⟪ a ⟫↪ m` merely exists by `inh` at the member that `memb a m` certifies, and `∈-asFiber` extracts from that membership an actual index into the presentation of `⟪ a ⟫↪ m`. The truncation on the input is preserved throughout, so `pick` never claims to choose a point inside a member of `a`; it only re-indexes the mere existence.
 <!--zh-->
-证明把选择实例施加在族的小呈现上，而非族本身。索引类型是 `⟪ a ⟫`，由第一条预备事实它是 h-集；族是 `λ m → ⟪ ⟪ a ⟫↪ m ⟫`，即每个索引所呈现的集合。剩下的只需让每个纤维仅仅居有，这正是 `pick` 的作用：对每个索引 `m`，由 `inh` 在 `memb a m` 所证明的成员处得到所呈现集合 `⟪ a ⟫↪ m` 的成员仅仅存在，`∈-asFiber` 再从该成员资格提取指向 `⟪ a ⟫↪ m` 之呈现的实际索引。输入上的截断全程保持，所以 `pick` 从不宣称在 `a` 的成员内部选了点；它只是给单纯的存在重新编号。
+证明把选择实例施加在族的小呈现上，而非族本身。索引类型是 `⟪ a ⟫`，由第一条预备事实它是 h-集合；族是 `λ m → ⟪ ⟪ a ⟫↪ m ⟫`，即每个索引所呈现的集合。剩下的只需让每个纤维仅仅居有，这正是 `pick` 的作用：对每个索引 `m`，由 `inh` 在 `memb a m` 所证明的成员处得到所呈现集合 `⟪ a ⟫↪ m` 的成员仅仅存在，`∈-asFiber` 再从该成员资格提取指向 `⟪ a ⟫↪ m` 之呈现的实际索引。输入上的截断全程保持，所以 `pick` 从不宣称在 `a` 的成员内部选了点；它只是给单纯的存在重新编号。
 <!--ja-->
 証明は、族そのものではなく族の小さな提示の上で選択の実例を適用します。添字の型は `⟪ a ⟫` で、第一の準備事実により h-集合です。族は `λ m → ⟪ ⟪ a ⟫↪ m ⟫`、つまり各添字が提示する集合です。残るのは各ファイバーを単に居住させることで、それが `pick` の役目です。各添字 `m` に対し、`memb a m` が確かめる要素のところで `inh` が、提示された集合 `⟪ a ⟫↪ m` の要素の単なる存在を与え、`∈-asFiber` がその所属から `⟪ a ⟫↪ m` の提示への実際の添字を取り出します。入力の切り詰めは終始保存されるので、`pick` が `a` の要素の内部で点を選ぶと主張することはなく、単なる存在に添字を付け直すだけです。
 <!--/-->
@@ -1016,7 +1016,7 @@ The proof applies the choice instance at the small presentation of the family, n
 <!--en-->
 The choice function then returns, for each index `m`, an actual element `g m` of the presented set: choice on the h-set of indices yields untruncated data, an element of the presentation of `⟪ a ⟫↪ m`. The remainder `mk` packages this into the conclusion: a set `c` together with, for each member `x` of `a`, contractibility data for the type of points meeting `c ∩ x`. Because the choice function already produced untruncated data at the index level, `mk` is an ordinary function; the truncation reappears only when the whole package is wrapped by `PT.map`. This is exactly why the choice set itself is merely existential while each intersection carries explicit `isContr` data.
 <!--zh-->
-选择函数随后对每个索引 `m` 返回所呈现集合的一个实际元素 `g m`：对索引之 h-集的选择给出不加截断的数据，即 `⟪ a ⟫↪ m` 之呈现的一个元素。其余部分 `mk` 把它打包成结论：集合 `c`，加上对 `a` 的每个成员 `x`，与 `c ∩ x` 相交的点类型的紧缩数据。由于选择函数在索引层产生的已是不加截断的数据，`mk` 是普通函数；截断只在整体被 `PT.map` 包装时重新出现。这正是选择集本身只是纯粹存在、而每个交都携带显式 `isContr` 数据的原因。
+选择函数随后对每个索引 `m` 返回所呈现集合的一个实际元素 `g m`：对索引之 h-集合的选择给出不加截断的数据，即 `⟪ a ⟫↪ m` 之呈现的一个元素。其余部分 `mk` 把它打包成结论：集合 `c`，加上对 `a` 的每个成员 `x`，与 `c ∩ x` 相交的点类型的紧缩数据。由于选择函数在索引层产生的已是不加截断的数据，`mk` 是普通函数；截断只在整体被 `PT.map` 包装时重新出现。这正是选择集本身只是纯粹存在、而每个交都携带显式 `isContr` 数据的原因。
 <!--ja-->
 選択関数はその後、各添字 `m` に対して提示された集合の実際の要素 `g m` を返します。添字の h-集合上の選択は切り詰められていないデータ、すなわち `⟪ a ⟫↪ m` の提示の要素を与えます。残りの `mk` はこれを結論へ包装します。集合 `c` と、`a` の各元 `x` に対する、交 `c ∩ x` の点の型の緊縮データです。選択関数が添字の水準で既に切り詰められていないデータを生んでいるため、`mk` は普通の関数であり、切り詰めが再び現れるのは全体が `PT.map` で包まれるときだけです。選択集合そのものが単なる存在でありながら、各交わりが明示的な `isContr` のデータを持つのはまさにこのためです。
 <!--/-->
@@ -1098,7 +1098,7 @@ The contraction is the delicate half. Take any `z` meeting `c ∩ x`; membership
 
 The accounting of the chapter's final theorem is exact. One instance of `SetChoice (ℓ-suc ℓ)` is used twice: `choice→lem` converts it into `LEM (ℓ-suc ℓ)`, which drives the ZF part through `V⊨ZF`, and `lowerSetChoice` lowers the same instance to `SetChoice ℓ`, which feeds `ChoiceLemma` for the choice-set part. The choice set exists merely, while each intersection is uniquely determined by explicit contractibility data.
 <!--zh-->
-紧缩是较精巧的一半。取交 `c ∩ x` 中的任意 `z`；交中的成员资格经 `∩-spec` 搬运为截断的合取 `zcx`。第一分量仅仅说 `z` 居于某个被选集合：即索引 `m` 加上从 `z` 到 `chosen m` 的作为 `c` 成员的路径 `q`。由 `chosen∈`，`chosen m` 是 `⟪ a ⟫↪ m` 的成员，沿 `q` 搬运便知 `z` 也是该成员的成员。于是 `z` 是 `a` 的成员 `x` 与 `⟪ a ⟫↪ m` 的公共元素，不交性随即适用：`disj` 给出路径 `x ≡ ⟪ a ⟫↪ m`。两个成员呈现同一集合，所以它们的呈现索引一致：呈现是嵌入，从而在索引上单射，把复合后的路径交给 `isEmbedding→Inj` 即得 `m ≡ m₀`。因此 `chosen m ≡ chosen m₀ = z₀`，与 `q` 复合即得紧缩路径 `z₀ ≡ z`。目标是 h-集的元素之间的路径，因而是命题，这正允许在此消去截断。
+紧缩是较精巧的一半。取交 `c ∩ x` 中的任意 `z`；交中的成员资格经 `∩-spec` 搬运为截断的合取 `zcx`。第一分量仅仅说 `z` 居于某个被选集合：即索引 `m` 加上从 `z` 到 `chosen m` 的作为 `c` 成员的路径 `q`。由 `chosen∈`，`chosen m` 是 `⟪ a ⟫↪ m` 的成员，沿 `q` 搬运便知 `z` 也是该成员的成员。于是 `z` 是 `a` 的成员 `x` 与 `⟪ a ⟫↪ m` 的公共元素，不交性随即适用：`disj` 给出路径 `x ≡ ⟪ a ⟫↪ m`。两个成员呈现同一集合，所以它们的呈现索引一致：呈现是嵌入，从而在索引上单射，把复合后的路径交给 `isEmbedding→Inj` 即得 `m ≡ m₀`。因此 `chosen m ≡ chosen m₀ = z₀`，与 `q` 复合即得紧缩路径 `z₀ ≡ z`。目标是 h-集合的元素之间的路径，因而是命题，这正允许在此消去截断。
 
 本章最终定理的记账是精确的。`SetChoice (ℓ-suc ℓ)` 的一个实例被使用两次：`choice→lem` 把它转为 `LEM (ℓ-suc ℓ)`，经 `V⊨ZF` 驱动 ZF 部分；`lowerSetChoice` 把同一实例降到 `SetChoice ℓ`，供给 `ChoiceLemma` 作选择集部分。选择集只是纯粹地存在，而每个交由显式的紧缩数据唯一确定。
 <!--ja-->
@@ -1118,7 +1118,7 @@ The accounting of the chapter's final theorem is exact. One instance of `SetChoi
 <!--en-->
 Disjointness is applied to the two members `x` and `⟪ a ⟫↪ m` of `a`, with the shared element `z` as the witness of their overlap; the hypothesis `disj` returns the path `x ≡ ⟪ a ⟫↪ m`. The two indices therefore present the same member, and the presentation `⟪ a ⟫↪` is an embedding, hence injective on indices: `isEmbedding→Inj`, applied to the composition `sym x≡m ∙ sym (mf .snd)`, yields `m ≡ m₀`. Applying `chosen` to that path and composing with `q` produces `z₀ ≡ z`, the path the contraction requires. The target `z₀ ≡ z` is a path between elements of the h-set V, hence a proposition, which licenses eliminating the truncation of the case analysis here.
 <!--zh-->
-把不交性用于 `a` 的两个成员 `x` 与 `⟪ a ⟫↪ m`，以公共元素 `z` 为重叠的见证；前提 `disj` 返回路径 `x ≡ ⟪ a ⟫↪ m`。于是两个索引呈现同一成员，而呈现 `⟪ a ⟫↪` 是嵌入，从而在索引上单射：把复合 `sym x≡m ∙ sym (mf .snd)` 交给 `isEmbedding→Inj`，便得 `m ≡ m₀`。对该路径施加 `chosen` 并与 `q` 复合，即产生紧缩所需的路径 `z₀ ≡ z`。目标 `z₀ ≡ z` 是 h-集 V 的元素之间的路径，因而是命题，这正允许在此消去分情形的截断。
+把不交性用于 `a` 的两个成员 `x` 与 `⟪ a ⟫↪ m`，以公共元素 `z` 为重叠的见证；前提 `disj` 返回路径 `x ≡ ⟪ a ⟫↪ m`。于是两个索引呈现同一成员，而呈现 `⟪ a ⟫↪` 是嵌入，从而在索引上单射：把复合 `sym x≡m ∙ sym (mf .snd)` 交给 `isEmbedding→Inj`，便得 `m ≡ m₀`。对该路径施加 `chosen` 并与 `q` 复合，即产生紧缩所需的路径 `z₀ ≡ z`。目标 `z₀ ≡ z` 是 h-集合 V 的元素之间的路径，因而是命题，这正允许在此消去分情形的截断。
 <!--ja-->
 非交性を `a` の二つの要素 `x` と `⟪ a ⟫↪ m` に適用し、重なりの証人として共通の要素 `z` を渡すと、仮定 `disj` はパス `x ≡ ⟪ a ⟫↪ m` を返します。したがって二つの添字は同じ要素を提示します。提示 `⟪ a ⟫↪` は埋め込みであり、添字の上で単射なので、合成 `sym x≡m ∙ sym (mf .snd)` に `isEmbedding→Inj` を適用すれば `m ≡ m₀` が得られます。このパスに `chosen` を施し `q` と合成すれば、緊縮の要求するパス `z₀ ≡ z` が生まれます。目標 `z₀ ≡ z` は h-集合 V の要素の間のパス、つまり命題であり、これがここで場合分けの切り詰めを消去することを正当化します。
 <!--/-->
@@ -1154,7 +1154,7 @@ The lemma of the previous section and the ZF theorem meet here. The construction
 <!--zh-->
 ## V ⊨ ZFC：单凭选择
 
-上一节的引理与 ZF 定理在此会合。构造 `ChoiceLemma.choice` 是对固定层级结构、在两条明示前提下证明的：该结构上任意一个 `isZFModel`，以及 `SetChoice ℓ` 的一个实例。其索引类型是小呈现 `⟪ a ⟫`，是一个 h-集，因此选择选出的是族的呈现索引；随后不交性证明每个交可缩。于是选择集仅仅存在，而每个交点作为显式 `isContr` 数据唯一。定理 `V⊨ZFC` 陈述的正是合并后的精确代价：`SetChoice (ℓ-suc ℓ)` 经 `choice→lem` 为 ZF 部分给出 `LEM (ℓ-suc ℓ)`，同一实例经 `lowerSetChoice` 降为 `SetChoice ℓ`，驱动选择集引理。所证的是所述假设下的模型构造，而非无条件的证明。
+上一节的引理与 ZF 定理在此会合。构造 `ChoiceLemma.choice` 是对固定层级结构、在两条明示前提下证明的：该结构上任意一个 `isZFModel`，以及 `SetChoice ℓ` 的一个实例。其索引类型是小呈现 `⟪ a ⟫`，是一个 h-集合，因此选择选出的是族的呈现索引；随后不交性证明每个交可缩。于是选择集仅仅存在，而每个交点作为显式 `isContr` 数据唯一。定理 `V⊨ZFC` 陈述的正是合并后的精确代价：`SetChoice (ℓ-suc ℓ)` 经 `choice→lem` 为 ZF 部分给出 `LEM (ℓ-suc ℓ)`，同一实例经 `lowerSetChoice` 降为 `SetChoice ℓ`，驱动选择集引理。所证的是所述假设下的模型构造，而非无条件的证明。
 <!--ja-->
 ## 選択だけから V ⊨ ZFC
 

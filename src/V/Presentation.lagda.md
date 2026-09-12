@@ -71,7 +71,7 @@ fiber a {x} x∈ = ∈-asFiber {a = x} {b = a} x∈
 <!--en-->
 Two short facts complete the picture. The embedding property is exactly injectivity on indices: an embedding into an h-set has proposition-valued fibers, and the standard lemma `isEmbedding→Inj` turns that into the statement that equal values have equal indices, which `↪-inj` records. Finally `∈ₛ↪` states small membership directly: for every index `m`, the element `⟪ a ⟫↪ m` belongs to `a` in the small relation, with certificate `∈ₛ⟪ a ⟫↪ m`. Together with `member`, this shows the canonical presentation is faithful in both the native and the small membership, and that its indexing map neither loses nor duplicates elements.
 <!--zh-->
-两条简短的事实补全全貌。嵌入性质正是索引上的单射性：到 h-集的嵌入有命题值的原像，标准引理 `isEmbedding→Inj` 由此得出「值相等则索引相等」，`↪-inj` 记录了这一点。最后 `∈ₛ↪` 直接陈述小隶属：对每个索引 `m`，元素 `⟪ a ⟫↪ m` 以证书 `∈ₛ⟪ a ⟫↪ m` 按小关系属于 `a`。与 `member` 合看，这表明典范呈现对原生隶属与小隶属都是忠实的，且其索引映射既不丢失也不重复元素。
+两条简短的事实补全全貌。嵌入性质正是索引上的单射性：到 h-集合的嵌入有命题值的原像，标准引理 `isEmbedding→Inj` 由此得出「值相等则索引相等」，`↪-inj` 记录了这一点。最后 `∈ₛ↪` 直接陈述小隶属：对每个索引 `m`，元素 `⟪ a ⟫↪ m` 以证书 `∈ₛ⟪ a ⟫↪ m` 按小关系属于 `a`。与 `member` 合看，这表明典范呈现对原生隶属与小隶属都是忠实的，且其索引映射既不丢失也不重复元素。
 <!--ja-->
 短い二つの事実が全体を完成させます。埋め込みの性質とは、インデックス上の単射性のことです。h-集合への埋め込みは命題値のファイバーを持ち、標準補題 `isEmbedding→Inj` はそこから「値が等しければインデックスも等しい」を導きます。これを `↪-inj` が記録します。最後に `∈ₛ↪` は小所属を直接述べます。各インデックス `m` に対し、要素 `⟪ a ⟫↪ m` は証明 `∈ₛ⟪ a ⟫↪ m` とともに小所属の意味で `a` に属します。`member` と併せて、標準的な提示が本来の所属と小所属のどちらに対しても忠実であり、そのインデックス写像が要素を失わず複製しないことが示されます。
 <!--/-->

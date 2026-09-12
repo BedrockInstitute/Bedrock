@@ -56,7 +56,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 <!--en-->
 Two kinds of propositions dominate the chapter: membership in the image of g, and reachability by a finite alternating chain. Both are stored as elements of `hProp ℓ`, which packages an underlying type with a proof that it is a proposition; `⟨ P ⟩`{.Agda} projects the underlying type, while the propositionhood proof stays in the second component. The remaining imports supply the machinery around them: disjoint sums for the bad/good case split, `isProp⊥` for the refutation side, `Σ≡Prop` for identifying pairs whose second components are proposition-valued, and the cumulative hierarchy together with the fact that a member type `⟪ a ⟫`{.Agda} of a set embeds into a set, which will later certify that the member types are h-sets.
 <!--zh-->
-本章由两类命题主导：属于 g 的像，以及经由有限交错链可达。二者都存为 `hProp ℓ` 的元素，它把底层类型与「它是命题」的证明打包在一起；`⟨ P ⟩`{.Agda} 投影出底层类型，而命题性证明留在第二个分量。其余导入提供围绕它们的机制：坏/好情形分裂用的不交和、反驳一侧的 `isProp⊥`、对第二分量为命题值的序对作识别的 `Σ≡Prop`，以及累积层级本身与「集合的成员类型 `⟪ a ⟫`{.Agda} 嵌入到一个集合、因而它是 h-集」这一事实。
+本章由两类命题主导：属于 g 的像，以及经由有限交错链可达。二者都存为 `hProp ℓ` 的元素，它把底层类型与「它是命题」的证明打包在一起；`⟨ P ⟩`{.Agda} 投影出底层类型，而命题性证明留在第二个分量。其余导入提供围绕它们的机制：坏/好情形分裂用的不交和、反驳一侧的 `isProp⊥`、对第二分量为命题值的序对作识别的 `Σ≡Prop`，以及累积层级本身与「集合的成员类型 `⟪ a ⟫`{.Agda} 嵌入到一个集合、因而它是 h-集合」这一事实。
 <!--ja-->
 この章を支配するのは二種類の命題です。g の像への所属と、有限の交互の鎖で到達できることです。どちらも `hProp ℓ` の要素として保存されます。`hProp ℓ` は基礎型と、それが命題であることの証明をひとまとめにするもので、`⟨ P ⟩`{.Agda} が基礎型を取り出し、命題性の証明は第 2 成分に残ります。残りの import はその周辺の機構を供給します。良し悪しの場合分けのための非交和、反証側のための `isProp⊥`、第 2 成分が命題値であるような対を同一視するための `Σ≡Prop`、そして累積階層と、集合のメンバー型 `⟪ a ⟫`{.Agda} がある集合へ埋め込めるため h-集合であるという事実です。
 <!--/-->
@@ -72,7 +72,7 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 <!--en-->
 Two injections, one each way, give one bijection. This section proves that for two types $A$ and $B$ at the same universe level, with $A$ an h-set, under excluded middle at that level. The construction classifies each element of $A$ as bad or good: the bad elements are those reachable by a finite alternating preimage chain that starts outside the image of $g$. A bad element is sent forward through $f$, a good element back along a chosen inverse of $g$. Excluded middle enters twice, once to decide the badness proposition `C` and once to extract a chosen preimage from the truncated image statement; the chain itself is the predicate family `Cₙ`, and the only structural fact it needs is that $x ↦ g (f x)$ preserves badness.
 <!--zh-->
-两个方向各一条单射，给出一个双射。本节在层级 ℓ 的排中律下，对同一宇宙层级的两个类型 $A$ 与 $B$(其中 $A$ 是 h-集) 证明这一点。构造把 $A$ 的每个元素分为坏的或好的：坏元素是那些可由一条从 g 的像之外出发的有限交错原像链到达的元素。坏元素经 $f$ 向前送，好元素沿 g 的选定逆像送回。排中律进入两次：一次判定坏性命题 `C`，一次从命题截断的像陈述中提取选定的原像；链本身是谓词族 `Cₙ`，它唯一需要的结构事实是 $x ↦ g (f x)$ 保持坏性。
+两个方向各一条单射，给出一个双射。本节在层级 ℓ 的排中律下，对同一宇宙层级的两个类型 $A$ 与 $B$(其中 $A$ 是 h-集合) 证明这一点。构造把 $A$ 的每个元素分为坏的或好的：坏元素是那些可由一条从 g 的像之外出发的有限交错原像链到达的元素。坏元素经 $f$ 向前送，好元素沿 g 的选定逆像送回。排中律进入两次：一次判定坏性命题 `C`，一次从命题截断的像陈述中提取选定的原像；链本身是谓词族 `Cₙ`，它唯一需要的结构事实是 $x ↦ g (f x)$ 保持坏性。
 <!--ja-->
 互いに逆向きの二つの単射から、ひとつの全単射が得られます。この節は、同一の宇宙レベルにある二つの型 $A$ と $B$($A$ は h-集合) について、そのレベルの排中律の下でこれを証明します。構成は $A$ の各元を悪いか良いかに分類します。悪い元とは、g の像の外から始まる有限の交互の原像の鎖で到達できる元のことです。悪い元は f で前へ送り、良い元は g の選ばれた逆像に沿って送り戻します。排中律は二度使われます。一度は悪さの命題 `C` を判定するため、もう一度は命題的切り詰めされた像の主張から選ばれた原像を取り出すためです。鎖そのものは述語族 `Cₙ` であり、必要な構造的事実は $x ↦ g (f x)$ が悪さを保つことだけです。
 <!--/-->
@@ -80,7 +80,7 @@ Two injections, one each way, give one bijection. This section proves that for t
 <!--en-->
 The construction is packaged in a module `Bernstein`{.Agda} taking exactly the classical data: the two types, the h-set structure of $A$, and the two injections, each given as a function together with its injectivity proof. Its first ingredient is the image predicate `imG x`, which asserts merely that some $y ∈ B$ satisfies $g y ≡ x$. No preimage is chosen here; the truncation ∥ ⋯ ∥₁ erases the witness and leaves a proposition, and `squash₁` is the certificate of that propositionhood.
 <!--zh-->
-整个构造被打包进模块 `Bernstein`{.Agda}，它恰好接受经典的数据：两个类型、$A$ 的 h-集结构，以及两条单射，每条由函数与其单射性证明共同给出。第一个成分是像谓词 `imG x`，它仅仅断言存在某个 $y ∈ B$ 使 $g y ≡ x$。这里不选定任何原像；命题截断 ∥ ⋯ ∥₁ 抹去见证而留下一个命题，`squash₁` 就是该命题性的证书。
+整个构造被打包进模块 `Bernstein`{.Agda}，它恰好接受经典的数据：两个类型、$A$ 的 h-集合结构，以及两条单射，每条由函数与其单射性证明共同给出。第一个成分是像谓词 `imG x`，它仅仅断言存在某个 $y ∈ B$ 使 $g y ≡ x$。这里不选定任何原像；命题截断 ∥ ⋯ ∥₁ 抹去见证而留下一个命题，`squash₁` 就是该命题性的证书。
 <!--ja-->
 構成はモジュール `Bernstein`{.Agda} にまとめられ、受け取るのはまさに古典的なデータです。二つの型、$A$ の h-集合としての構造、そして二つの単射で、各々は関数とその単射性の証明の組として与えられます。最初の材料は像の述語 `imG x` で、ある $y ∈ B$ が $g y ≡ x$ を満たすことを単に (単に) 主張します。ここで原像は選ばれません。命題的切り詰め ∥ ⋯ ∥₁ が証人を消して命題だけを残し、`squash₁` がその命題性の証明書になります。
 <!--/-->
@@ -210,7 +210,7 @@ The second use of excluded middle converts goodness into image membership. Suppo
 <!--en-->
 To turn the mere image membership into a chosen preimage, we may eliminate the truncation into the fiber type Σ[ y ∈ B ] (g y ≡ x) itself, provided that type is a proposition. This is where the hypotheses on g and A earn their keep: injectivity of g shows any two preimages y and y' are equal, using the paths p and p' to g x, and the h-set structure of A makes the resulting equality in A a proposition, which `Σ≡Prop` then extends to the whole pair. Note that the h-set assumption is needed exactly here and nowhere else in the construction.
 <!--zh-->
-为了把单纯的像属于变成选定的原像，可以把命题截断直接消去到纤维类型 Σ[ y ∈ B ] (g y ≡ x) 本身，只要该类型是命题。这正是 g 与 A 上的假设发挥作用之处：g 的单射性利用到 g x 的两条路径 p 与 p′ 证明任意两个原像 y 与 y′ 相等，而 A 的 h-集结构使 A 中所得的相等成为命题，`Σ≡Prop` 再把这一点扩展到整个序对。注意 h-集假设恰好只在这里、构造中的其他地方都不需要。
+为了把单纯的像属于变成选定的原像，可以把命题截断直接消去到纤维类型 Σ[ y ∈ B ] (g y ≡ x) 本身，只要该类型是命题。这正是 g 与 A 上的假设发挥作用之处：g 的单射性利用到 g x 的两条路径 p 与 p′ 证明任意两个原像 y 与 y′ 相等，而 A 的 h-集合结构使 A 中所得的相等成为命题，`Σ≡Prop` 再把这一点扩展到整个序对。注意 h-集合假设恰好只在这里、构造中的其他地方都不需要。
 <!--ja-->
 単なる像への所属を選ばれた原像に変えるには、その繊維型 Σ[ y ∈ B ] (g y ≡ x) 自身が命題である限り、命題的切り詰めをその型へ直接消去できます。ここで g と A に関する仮定が効きます。g の単射性は、g x へのパス p と p′ を使って任意の二つの原像 y と y′ が等しいことを示し、A の h-集合としての構造が A における等式を命題にするので、`Σ≡Prop` がこれを対全体へ拡げます。h-集合の仮定が必要なのはまさにこの一点だけで、構成の他のどこでもありません。
 <!--/-->
@@ -225,7 +225,7 @@ To turn the mere image membership into a chosen preimage, we may eliminate the t
 <!--en-->
 With fiber propositionhood in hand, `fiberG` is the elimination of the truncated image statement into the fiber type: since the target is a proposition, `PT.rec` applies with the identity on fibers as the action. This is the first point in the argument where a chosen preimage exists as data rather than merely, and it was unlocked by excluded middle plus the h-set structure, not by any property of the truncation alone.
 <!--zh-->
-有了纤维的命题性，`fiberG` 就是把命题截断的像陈述消去到纤维类型：由于目标是命题，`PT.rec` 以纤维上的恒等映射为作用即可应用。这是论证中第一个选定原像作为数据而非仅仅存在的位置，而打开它的正是排中律加 h-集结构，不是命题截断自身的任何性质。
+有了纤维的命题性，`fiberG` 就是把命题截断的像陈述消去到纤维类型：由于目标是命题，`PT.rec` 以纤维上的恒等映射为作用即可应用。这是论证中第一个选定原像作为数据而非仅仅存在的位置，而打开它的正是排中律加 h-集合结构，不是命题截断自身的任何性质。
 <!--ja-->
 繊維の命題性が手に入れば、`fiberG` は命題的切り詰めされた像の主張を繊維型へ消去するものです。対象が命題なので、`PT.rec` は繊維上の恒等写像を作用として適用できます。これは議論の中で、選ばれた原像が単にではなくデータとして存在する最初の地点です。それを開いたのは排中律と h-集合としての構造であって、命題的切り詰めそのものの性質ではありません。
 <!--/-->
@@ -288,7 +288,7 @@ h の単射性は判定の対について四つの場合で証明します。両
 <!--en-->
 The mirror case, x good and x' bad, is symmetric: the transport runs along the reversed path and kills x instead. In the final case both sides are good, so h is ginv on both and the equation reads ginv x ≡ ginv x'. Applying g turns it into g (ginv x) ≡ g (ginv x'), and chaining the two specs of ginv around it yields x ≡ x' directly. No h-set assumption is used anywhere in this lemma; injectivity is pure case analysis on verdicts.
 <!--zh-->
-镜像情形，x 好 x′ 坏，是对称的：搬运沿反向路径进行，被消灭的是 x。最后一种情形两侧都好，h 两侧都是 ginv，等式读作 ginv x ≡ ginv x′。施加 g 把它变成 g (ginv x) ≡ g (ginv x′)，两侧串上 ginv 的两条规格便直接得 x ≡ x′。这条引理处处未用 h-集假设；单射性纯粹是对裁决的情形分析。
+镜像情形，x 好 x′ 坏，是对称的：搬运沿反向路径进行，被消灭的是 x。最后一种情形两侧都好，h 两侧都是 ginv，等式读作 ginv x ≡ ginv x′。施加 g 把它变成 g (ginv x) ≡ g (ginv x′)，两侧串上 ginv 的两条规格便直接得 x ≡ x′。这条引理处处未用 h-集合假设；单射性纯粹是对裁决的情形分析。
 <!--ja-->
 鏡像の場合、x が良く x′ が悪いのときは対称です。輸送は逆向きのパスに沿って行われ、消されるのは x の方です。最後の場合は両側が良く、h は両側で ginv となり、等式は ginv x ≡ ginv x′ と読めます。g を施せば g (ginv x) ≡ g (ginv x′) となり、その前後で ginv の二つの仕様をつなげば x ≡ x′ が直接得られます。この補題では h-集合の仮定はどこにも使われず、単射性は判定についての純粋なケース分析です。
 <!--/-->
@@ -402,7 +402,7 @@ Surjectivity needs one extra step. The relative lemma `h-surj` applied at the ca
 <!--en-->
 The abstract construction now applies to the cumulative hierarchy itself. Each element a of V comes with a member type ⟪ a ⟫, the type of its members. The Bernstein construction asks for an h-set structure on its first type, so the first step is to certify that ⟪ a ⟫ is one. The embedding ⟪ a ⟫↪ sends each member index to the member it indexes inside V; since V is a set and the embedding is an embedding, its domain inherits set-ness. With that single fact, two mutual injections between ⟪ a ⟫ and ⟪ b ⟫ produce a bijection packaged as a dependent triple.
 <!--zh-->
-抽象构造现在应用于累积层级本身。V 的每个元素 a 都带有成员类型 ⟪ a ⟫，即其成员的类型。Bernstein 构造要求第一个类型具有 h-集结构，所以第一步是证明 ⟪ a ⟫ 是 h-集。嵌入 ⟪ a ⟫↪ 把每个成员指标送到它在 V 内所指标的成员；由于 V 是集合且该映射是嵌入，其定义域继承了集合性。有了这一条事实，⟪ a ⟫ 与 ⟪ b ⟫ 之间的两条互逆单射便产生一个打包成依赖三元组的双射。
+抽象构造现在应用于累积层级本身。V 的每个元素 a 都带有成员类型 ⟪ a ⟫，即其成员的类型。Bernstein 构造要求第一个类型具有 h-集合结构，所以第一步是证明 ⟪ a ⟫ 是 h-集合。嵌入 ⟪ a ⟫↪ 把每个成员指标送到它在 V 内所指标的成员；由于 V 是集合且该映射是嵌入，其定义域继承了集合性。有了这一条事实，⟪ a ⟫ 与 ⟪ b ⟫ 之间的两条互逆单射便产生一个打包成依赖三元组的双射。
 <!--ja-->
 抽象的な構成を、いよいよ累積階層そのものに適用します。V の各元 a はメンバー型 ⟪ a ⟫、すなわちそのメンバーの型を伴います。Bernstein の構成は第一の型が h-集合であることを要求するので、最初の一歩は ⟪ a ⟫ がそうであることの証明です。埋め込み ⟪ a ⟫↪ は各メンバーの指標を、V の中でそれが指すメンバーへ送ります。V は集合であり、この写像は埋め込みなので、その定義域は集合性を受け継ぎます。この一事実があれば、⟪ a ⟫ と ⟪ b ⟫ の間の相互の単射から、依存する三つ組としてまとめられた全単射が得られます。
 <!--/-->
@@ -463,7 +463,7 @@ The corollary above hard-wires the member types of V. A more reusable form keeps
 <!--en-->
 The parameters spell out the exact strength required. The carrier C lives at its own level ℓ₁ and the relation R at ℓ₂, so codes and their relations need not be small; what must be small is each P a, at the fixed level ℓ where excluded middle is available. For every a, P a is assumed an h-set, mirroring the set-ness hypothesis of the Bernstein module. The relation R itself is left completely arbitrary as a type: nothing about it is assumed beyond the readback, which from an inhabitant of R a b returns a pair whose first component is a function P a → P b and whose second is that function's injectivity proof. In particular, the extracted injection is honest data, not a truncated existence.
 <!--zh-->
-参数恰好列出所需的强度。载体 C 住在自己的层级 ℓ₁，关系 R 在 ℓ₂，因此码及其关系不必是小的；必须小的是每个 P a，它住在排中律可用的固定层级 ℓ。对每个 a，假设 P a 是 h-集，对应 Bernstein 模块的集合性假设。关系 R 本身作为类型完全任意：除读回外对它不作任何假设，读回从 R a b 的元返回一个序对，第一分量是函数 P a → P b，第二分量是该函数的单射性证明。特别地，提取出的单射是真正的数据，不是命题截断的存在。
+参数恰好列出所需的强度。载体 C 住在自己的层级 ℓ₁，关系 R 在 ℓ₂，因此码及其关系不必是小的；必须小的是每个 P a，它住在排中律可用的固定层级 ℓ。对每个 a，假设 P a 是 h-集合，对应 Bernstein 模块的集合性假设。关系 R 本身作为类型完全任意：除读回外对它不作任何假设，读回从 R a b 的元返回一个序对，第一分量是函数 P a → P b，第二分量是该函数的单射性证明。特别地，提取出的单射是真正的数据，不是命题截断的存在。
 <!--ja-->
 パラメータは必要な強さを正確に列挙します。台 C はそれ自身のレベル ℓ₁ に、関係 R は ℓ₂ に住むので、符号やその関係は小さくなくて構いません。小さくなければならないのは各 P a で、排中律が使える固定レベル ℓ に住みます。各 a について P a は h-集合だと仮定され、Bernstein モジュールの集合性の仮定に対応します。関係 R 自身は型としてまったく任意です。読み戻し以外には何も仮定しません。読み戻しは R a b の元から、第 1 成分が関数 P a → P b、第 2 成分がその関数の単射性の証明である対を返します。特に、取り出された単射は正味のデータであり、命題的切り詰めされた存在ではありません。
 <!--/-->

@@ -134,7 +134,7 @@ Given a type `A` and a type `B x` for each `x : A`, we form the Π type:
 
 <div class="single-line-code"><code>(x : A) → B x</code></div>
 
-An element of a Π type is called a **dependent function**. Given a dependent function `f`, it assigns to every `x : A` an element `f x` of `B x`. Because the type of the result depends on the input `x`, only after fixing the input do we know the type in which the corresponding output must lie.
+An element of a Π type is called a **[dependent function]{.term-intro #dependent-function}**. Given a dependent function `f`, it assigns to every `x : A` an element `f x` of `B x`. Because the type of the result depends on the input `x`, only after fixing the input do we know the type in which the corresponding output must lie.
 
 When `B` does not depend on `x`, every output lies in the same type, and the dependent function specialises to an ordinary function:
 
@@ -151,7 +151,7 @@ An ordinary function gives an output in the same type for every input; a Π type
 
 <div class="single-line-code"><code>(x : A) → B x</code></div>
 
-Π 类型的元素称为**依值函数**。给定一个依值函数 `f`，它为每个 `x : A` 给出一个属于 `B x` 的元素 `f x`。由于结果所在的类型取决于输入 `x`，只有确定输入以后，才能确定相应输出应当属于哪个类型。
+Π 类型的元素称为**[依值函数]{.term-intro #dependent-function}**。给定一个依值函数 `f`，它为每个 `x : A` 给出一个属于 `B x` 的元素 `f x`。由于结果所在的类型取决于输入 `x`，只有确定输入以后，才能确定相应输出应当属于哪个类型。
 
 当 `B` 不依赖 `x` 时，所有输出都属于同一个类型，依值函数便特化为普通函数：
 
@@ -168,7 +168,7 @@ An ordinary function gives an output in the same type for every input; a Π type
 
 <div class="single-line-code"><code>(x : A) → B x</code></div>
 
-Π 型の元を**依存関数**と呼びます。依存関数 `f` は、各 `x : A` に対して `B x` の元 `f x` を与えます。結果が属すべき型は入力 `x` に依存するため、入力を定めて初めて対応する出力の型が定まります。
+Π 型の元を**[依存関数]{.term-intro #dependent-function}**と呼びます。依存関数 `f` は、各 `x : A` に対して `B x` の元 `f x` を与えます。結果が属すべき型は入力 `x` に依存するため、入力を定めて初めて対応する出力の型が定まります。
 
 `B` が `x` に依存しない場合、すべての出力は同じ型に属し、依存関数は通常の関数に特化します。
 
@@ -187,7 +187,7 @@ Given a type `A` and a type `B x` for each `x : A`, we form the Σ type:
 
 <div class="single-line-code"><code>`Σ`{.Agda} (x : A) B x</code></div>
 
-An element of a Σ type is called a **dependent pair**. It is built in two steps: choose `a : A`, then choose an element `b` of `B a`; the resulting pair is written `(a , b)`. We call `a` the **first component** and `b` the **second component**. Because the type of the second component depends on `a`, only after fixing the first component do we know the type in which the second must lie.
+An element of a Σ type is called a **[dependent pair]{.term-intro #dependent-pair}**. It is built in two steps: choose `a : A`, then choose an element `b` of `B a`; the resulting pair is written `(a , b)`. We call `a` the **[first component]{.term-intro #first-component}** and `b` the **[second component]{.term-intro #second-component}**. Because the type of the second component depends on `a`, only after fixing the first component do we know the type in which the second must lie.
 
 When `B` does not depend on `x`, every second component lies in the same type, and the dependent pair specialises to an ordinary product:
 
@@ -197,7 +197,7 @@ An ordinary product places two independent elements together; a Σ type places a
 
 A Π type handles "for every `x`, give data depending on `x`"; a Σ type handles "choose an `x`, and keep it together with data depending on it".
 
-The second component may itself be a proof of a property of the first. This book calls a proof carried together with an object so that later reasoning may use the property a **certificate**. A certificate remains an ordinary Agda proof; the name emphasizes its role in the dependent pair.
+The second component may itself be a proof of a property of the first. This book calls a proof carried together with an object so that later reasoning may use the property a **[certificate]{.term-intro #certificate}**. A certificate remains an ordinary Agda proof; the name emphasizes its role in the dependent pair.
 
 <!--zh-->
 ## [Σ 类型]{.term-intro #sigma-type}
@@ -208,7 +208,7 @@ The second component may itself be a proof of a property of the first. This book
 
 <div class="single-line-code"><code>`Σ`{.Agda} (x : A) B x</code></div>
 
-Σ 类型的元素称为**依值对**。它先给出一个 `a : A`，再给出一个属于 `B a` 的元素 `b`，所得的对写作 `(a , b)`。我们把 `a` 称为**第一分量**，把 `b` 称为**第二分量**。由于第二分量的类型取决于 `a`，只有确定第一分量以后，才能确定第二分量应当属于哪个类型。
+Σ 类型的元素称为**[依值对]{.term-intro #dependent-pair}**。它先给出一个 `a : A`，再给出一个属于 `B a` 的元素 `b`，所得的对写作 `(a , b)`。我们把 `a` 称为**[第一分量]{.term-intro #first-component}**，把 `b` 称为**[第二分量]{.term-intro #second-component}**。由于第二分量的类型取决于 `a`，只有确定第一分量以后，才能确定第二分量应当属于哪个类型。
 
 当 `B` 不依赖 `x` 时，所有第二分量都属于同一个类型，依值对便特化为普通的积：
 
@@ -218,7 +218,7 @@ The second component may itself be a proof of a property of the first. This book
 
 Π 类型处理的是「对每个 `x`，给出依赖于 `x` 的数据」；Σ 类型处理的是「选定某个 `x`，并将依赖于它的数据与它放在一起」。
 
-第二分量也可以是关于第一分量的性质证明。本书把这种随对象一同携带、使后续论证能够使用相应性质的证明称为**证书**。证书仍然是普通的 Agda 证明；这个名称强调的是它在依值对中所起的作用。
+第二分量也可以是关于第一分量的性质证明。本书把这种随对象一同携带、使后续论证能够使用相应性质的证明称为**[证书]{.term-intro #certificate}**。证书仍然是普通的 Agda 证明；这个名称强调的是它在依值对中所起的作用。
 
 <!--ja-->
 ## [Σ 型]{.term-intro #sigma-type}
@@ -229,7 +229,7 @@ The second component may itself be a proof of a property of the first. This book
 
 <div class="single-line-code"><code>`Σ`{.Agda} (x : A) B x</code></div>
 
-Σ 型の元を**依存対**と呼びます。まず `a : A` を選び、次に `B a` の元 `b` を選びます。得られた対を `(a , b)` と書きます。`a` を**第一成分**、`b` を**第二成分**と呼びます。第二成分の型は `a` に依存するため、第一成分を定めて初めて、第二成分がどの型に属すべきかが決まります。
+Σ 型の元を**[依存対]{.term-intro #dependent-pair}**と呼びます。まず `a : A` を選び、次に `B a` の元 `b` を選びます。得られた対を `(a , b)` と書きます。`a` を**[第一成分]{.term-intro #first-component}**、`b` を**[第二成分]{.term-intro #second-component}**と呼びます。第二成分の型は `a` に依存するため、第一成分を定めて初めて、第二成分がどの型に属すべきかが決まります。
 
 `B` が `x` に依存しない場合、すべての第二成分は同じ型に属し、依存対は通常の積に特化します。
 
@@ -239,7 +239,7 @@ The second component may itself be a proof of a property of the first. This book
 
 Π 型が扱うのは「すべての `x` に対して、`x` に依存するデータを与えること」です。Σ 型が扱うのは「一つの `x` を選び、それに依存するデータと一緒に収めること」です。
 
-第二成分を、第一成分の性質を示す証明にすることもできます。本書では、後の議論でその性質を使えるよう対象とともに携える証明を**証明書**と呼びます。証明書は通常の Agda の証明であり、この名前は依存対の中で果たす役割を強調しています。
+第二成分を、第一成分の性質を示す証明にすることもできます。本書では、後の議論でその性質を使えるよう対象とともに携える証明を**[証明書]{.term-intro #certificate}**と呼びます。証明書は通常の Agda の証明であり、この名前は依存対の中で果たす役割を強調しています。
 
 <!--/-->
 
@@ -265,11 +265,11 @@ Its elements have the shape:
 
 <div class="single-line-code"><code>(a , (b , c))</code></div>
 
-In Agda, the keyword `record` begins the declaration of such a type, after which its components are given field names. Constructing an element of the record requires a value for every field. A record declaration may also use the keyword `constructor` to name this operation; that name is the record type's **constructor**. The constructor accepts the field values in dependency order and assembles them into one record. If three fields correspond to `a`, `b` and `c`, a constructor named `mkR` can present the construction in the flat form:
+In Agda, the keyword `record` begins the declaration of such a type, after which its components are given [field]{.term-intro #record-field} names. Constructing an element of the record requires a value for every field. A record declaration may also use the keyword `constructor` to name this operation; that name is the record type's **[constructor]{.term-intro #constructor}**. The constructor accepts the field values in dependency order and assembles them into one record. If three fields correspond to `a`, `b` and `c`, a constructor named `mkR` can present the construction in the flat form:
 
 <div class="single-line-code"><code>mkR a b c</code></div>
 
-This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, without exposing the nesting. Field names act as projections that retrieve the corresponding components directly. One therefore need not remember the depth of a component or repeatedly compose `fst`{.Agda} and `snd`{.Agda}. Records preserve the dependent structure of nested Σ types while presenting larger packages through a clearer, flat interface. The [Agda documentation on record types](https://agda.readthedocs.io/en/v2.8.0/language/record-types.html) describes their declaration, construction and projections in detail.
+This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, without exposing the nesting. Field names act as [projections]{.term-intro #projection} that retrieve the corresponding components directly. One therefore need not remember the depth of a component or repeatedly compose `fst`{.Agda} and `snd`{.Agda}. Records preserve the dependent structure of nested Σ types while presenting larger packages through a clearer, flat interface. The [Agda documentation on record types](https://agda.readthedocs.io/en/v2.8.0/language/record-types.html) describes their declaration, construction and projections in detail.
 <!--zh-->
 记录类型可以看作多重嵌套的 Σ 类型的语法糖。例如，要把一个元素 `a : A`、一个依赖于 `a` 的元素 `b : B a`，以及一个依赖于前两者的证明 `c : C a b` 放在一起，可以使用类型：
 
@@ -279,11 +279,11 @@ This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, withou
 
 <div class="single-line-code"><code>(a , (b , c))</code></div>
 
-在 Agda 中，关键字 `record` 开始一个记录类型的声明，随后为其中的各个分量指定字段名。要构造这个记录类型的元素，就必须为各个字段提供相应的值。记录声明还可以用关键字 `constructor` 为这种构造方式命名；这个名字称为记录类型的**构造子**。构造子按照字段之间的依赖关系接收各字段的值，再把它们组装成一个记录。例如，若三个字段依次对应 `a`、`b` 和 `c`，构造子 `mkR` 便可以把构造过程展平地写成：
+在 Agda 中，关键字 `record` 开始一个记录类型的声明，随后为其中的各个分量指定[字段]{.term-intro #record-field}名。要构造这个记录类型的元素，就必须为各个字段提供相应的值。记录声明还可以用关键字 `constructor` 为这种构造方式命名；这个名字称为记录类型的**[构造子]{.term-intro #constructor}**。构造子按照字段之间的依赖关系接收各字段的值，再把它们组装成一个记录。例如，若三个字段依次对应 `a`、`b` 和 `c`，构造子 `mkR` 便可以把构造过程展平地写成：
 
 <div class="single-line-code"><code>mkR a b c</code></div>
 
-这与嵌套 Σ 类型的 `(a , (b , c))`{.Agda} 表示同样的数据，只是省去了层层嵌套。字段名则充当投影，可以直接从记录中取出相应分量。因此，使用者不必记忆每个分量位于第几层，也不必反复组合 `fst`{.Agda} 与 `snd`{.Agda}。记录类型既保留了多重 Σ 类型的依赖结构，又通过具名字段和构造子提供了更清楚的平面接口。关于记录的声明、构造和投影，可进一步参阅 [Agda 的记录类型文档](https://agda.readthedocs.io/en/v2.8.0/language/record-types.html)。
+这与嵌套 Σ 类型的 `(a , (b , c))`{.Agda} 表示同样的数据，只是省去了层层嵌套。字段名则充当[投影]{.term-intro #projection}，可以直接从记录中取出相应分量。因此，使用者不必记忆每个分量位于第几层，也不必反复组合 `fst`{.Agda} 与 `snd`{.Agda}。记录类型既保留了多重 Σ 类型的依赖结构，又通过具名字段和构造子提供了更清楚的平面接口。关于记录的声明、构造和投影，可进一步参阅 [Agda 的记录类型文档](https://agda.readthedocs.io/en/v2.8.0/language/record-types.html)。
 <!--ja-->
 レコード型は、複数の Σ 型を入れ子にしたものに対する構文糖と考えられます。たとえば、元 `a : A`、`a` に依存する元 `b : B a`、さらにその両方に依存する証明 `c : C a b` を一緒にまとめるとします。対応する入れ子の型は次のものです。
 
@@ -293,11 +293,11 @@ This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, withou
 
 <div class="single-line-code"><code>(a , (b , c))</code></div>
 
-Agda では、キーワード `record` がレコード型の宣言を開始し、続いて各成分にフィールド名を与えます。レコード型の元を構成するには、すべてのフィールドに対応する値を与えなければなりません。レコード宣言では、キーワード `constructor` を使ってこの構成操作に名前を付けることもできます。この名前をレコード型の**コンストラクタ**と呼びます。コンストラクタは依存関係の順にフィールドの値を受け取り、一つのレコードへ組み立てます。三つのフィールドが順に `a`、`b`、`c` に対応するなら、`mkR` というコンストラクタによる構成は平らに次のように書けます。
+Agda では、キーワード `record` がレコード型の宣言を開始し、続いて各成分に[フィールド]{.term-intro #record-field}名を与えます。レコード型の元を構成するには、すべてのフィールドに対応する値を与えなければなりません。レコード宣言では、キーワード `constructor` を使ってこの構成操作に名前を付けることもできます。この名前をレコード型の**[構成子]{.term-intro #constructor}**と呼びます。構成子は依存関係の順にフィールドの値を受け取り、一つのレコードへ組み立てます。三つのフィールドが順に `a`、`b`、`c` に対応するなら、`mkR` という構成子による構成は平らに次のように書けます。
 
 <div class="single-line-code"><code>mkR a b c</code></div>
 
-これは入れ子の Σ 型の値 `(a , (b , c))`{.Agda} と同じデータを表しますが、入れ子を表面に出しません。フィールド名は対応する成分を直接取り出す射影として働きます。そのため、成分が何段目にあるかを覚えたり、`fst`{.Agda} と `snd`{.Agda} を何度も組み合わせたりする必要がありません。レコード型は入れ子になった Σ 型の依存構造を保ちながら、名前付きフィールドとコンストラクタによって大きなデータのまとまりを明瞭な平面インターフェースとして提示します。宣言、構成、射影の詳細は [Agda のレコード型の文書](https://agda.readthedocs.io/en/v2.8.0/language/record-types.html)を参照してください。
+これは入れ子の Σ 型の値 `(a , (b , c))`{.Agda} と同じデータを表しますが、入れ子を表面に出しません。フィールド名は対応する成分を直接取り出す[射影]{.term-intro #projection}として働きます。そのため、成分が何段目にあるかを覚えたり、`fst`{.Agda} と `snd`{.Agda} を何度も組み合わせたりする必要がありません。レコード型は入れ子になった Σ 型の依存構造を保ちながら、名前付きフィールドと構成子によって大きなデータのまとまりを明瞭な平面インターフェースとして提示します。宣言、構成、射影の詳細は [Agda のレコード型の文書](https://agda.readthedocs.io/en/v2.8.0/language/record-types.html)を参照してください。
 <!--/-->
 
 <!--en-->
@@ -343,7 +343,7 @@ A type can always be copied upward in this way, but <span class="prose-annotatio
 <!--ja-->
 ここで使う Agda の型宇宙は累積的ではありません。`Type ℓ`{.Agda} の要素が自動的に `Type (ℓ-suc ℓ)`{.Agda} の要素になるわけではありません。レベル間で型を移すには、明示的な演算 `Lift`{.Agda} が必要です。
 
-`Lift ℓ A`{.Agda} はそれ自身がレコード型です。フィールドは元の型 `A` の元を保存する `lower : A`{.Agda} 一つだけで、コンストラクタは `lift`{.Agda} です。`a : A`{.Agda} を与えると、コンストラクタは `lift a : Lift ℓ A`{.Agda} を作ります。逆に `b : Lift ℓ A`{.Agda} があれば、フィールド射影 `lower b`{.Agda} が保存された `A` の元を取り出します。
+`Lift ℓ A`{.Agda} はそれ自身がレコード型です。フィールドは元の型 `A` の元を保存する `lower : A`{.Agda} 一つだけで、構成子は `lift`{.Agda} です。`a : A`{.Agda} を与えると、構成子は `lift a : Lift ℓ A`{.Agda} を作ります。逆に `b : Lift ℓ A`{.Agda} があれば、フィールド射影 `lower b`{.Agda} が保存された `A` の元を取り出します。
 
 `lift`{.Agda} と `lower`{.Agda} は `A` と `Lift ℓ A`{.Agda} の間で互いに逆です。その二つの向きを別々の等式が表します。
 
@@ -364,11 +364,11 @@ open import Cubical.Foundations.Prelude public
 ```
 
 <!--en-->
-## Equality and paths
+## Equality and [paths]{.term-intro #path}
 <!--zh-->
-## 相等与路径
+## 相等与[路径]{.term-intro #path}
 <!--ja-->
-## 等式とパス
+## 等式と[パス]{.term-intro #path}
 <!--/-->
 
 <!--en-->
@@ -452,24 +452,24 @@ open import Cubical.Foundations.Prelude public
 <!--en-->
 Paths are themselves elements of types, so new paths can in turn relate paths. Homotopy levels classify types by how much distinguishable structure remains in these equality proofs. They do not measure the size of a type: universe levels handle size, whereas homotopy levels concern how elements and their equality proofs can be distinguished.
 
-- **`isContr A`{.Agda}: `A` is contractible.** This requires a chosen centre in `A` and, for every `x : A`{.Agda}, a path from the centre to `x`. Thus `A` must be inhabited, and every element is equal to the chosen centre, so no two elements can be distinguished by equality. This book reads the data carried by `isContr`{.Agda} as **[unique existence]{.term-intro #unique-existence}**: the centre supplies existence, and the paths from the centre to every element supply uniqueness.
-- **`isProp A`{.Agda}: `A` is a proposition.** This requires any two elements of `A` to be equal. It neither chooses a centre nor requires `A` to be inhabited; it says only that if proofs of `A` exist, no distinction remains between them. A proposition may therefore have no proof or have a proof, but it cannot have two distinguishable proofs.
-- **`isSet A`{.Agda}: `A` is <span class="prose-annotation-target">set</span><aside class="prose-annotation-note">Here "set" means a set in the host, namely a type satisfying `isSet`{.Agda}; it does not mean a set in the object theory of set theory.</aside>.** This does not require every two elements of `A` to be equal. Instead, it requires the path type between any two elements to be a proposition. Elements of `A` may differ, and paths may connect some of them; but once the same source and target are fixed, any two such paths are equal. Distinctions may remain among elements, while no further distinguishable structure remains among their equality proofs.
-- **`isProp→isSet`{.Agda}: every proposition is a set.** If `A` satisfies `isProp`{.Agda}, then it also satisfies `isSet`{.Agda}. This is an upward movement in homotopy level: it leaves `A` unchanged and derives the weaker condition that any two equality paths are equal from the stronger condition that any two elements are equal. It resembles the universe-level movement performed by `Lift`{.Agda}, since both let the same mathematical object meet a requirement at a higher level. They act on different axes, however. `Lift`{.Agda} changes the universe in which a type is presented and produces an equivalent record copy; `isProp→isSet`{.Agda} changes neither the type nor its universe, but derives one equality property from another.
+- **`isContr A`{.Agda}: `A` is [contractible]{.term-intro #contractible}.** This requires a chosen centre in `A` and, for every `x : A`{.Agda}, a path from the centre to `x`. Thus `A` must be inhabited, and every element is equal to the chosen centre, so no two elements can be distinguished by equality. This book reads the data carried by `isContr`{.Agda} as **[unique existence]{.term-intro #unique-existence}**: the centre supplies existence, and the paths from the centre to every element supply uniqueness.
+- **`isProp A`{.Agda}: `A` is a [proposition]{.term-intro #proposition}.** This requires any two elements of `A` to be equal. It neither chooses a centre nor requires `A` to be inhabited; it says only that if proofs of `A` exist, no distinction remains between them. A proposition may therefore have no proof or have a proof, but it cannot have two distinguishable proofs.
+- **`isSet A`{.Agda}: `A` is an [h-set]{.term-intro #h-set}.** The prefix marks a notion of the host: an h-set is a type satisfying `isSet`{.Agda}, not a set of the set theory being modelled. The condition does not require every two elements of `A` to be equal. Instead, it requires the path type between any two elements to be a proposition. Elements of `A` may differ, and paths may connect some of them; but once the same source and target are fixed, any two such paths are equal. Distinctions may remain among elements, while no further distinguishable structure remains among their equality proofs.
+- **`isProp→isSet`{.Agda}: every proposition is an h-set.** If `A` satisfies `isProp`{.Agda}, then it also satisfies `isSet`{.Agda}. This is an upward movement in homotopy level: it leaves `A` unchanged and derives the weaker condition that any two equality paths are equal from the stronger condition that any two elements are equal. It resembles the universe-level movement performed by `Lift`{.Agda}, since both let the same mathematical object meet a requirement at a higher level. They act on different axes, however. `Lift`{.Agda} changes the universe in which a type is presented and produces an equivalent record copy; `isProp→isSet`{.Agda} changes neither the type nor its universe, but derives one equality property from another.
 <!--zh-->
 路径本身也是类型中的元素，所以路径之间还可以形成新的路径。同伦层级按照这些相等证明还能保留多少可区分的结构，对类型进行分类。这里衡量的不是类型的大小；类型的大小由宇宙层级处理，同伦层级关心的是元素及其相等证明如何彼此区分。
 
-- **`isContr A`{.Agda}：`A` 是可缩的。** 这要求在 `A` 中选定一个中心，并为每个 `x : A`{.Agda} 给出一条从中心到 `x` 的路径。因此，`A` 不仅必须有元素，而且所有元素都与选定的中心相等，彼此之间也就无法通过相等加以区分。本书把 `isContr`{.Agda} 携带的这组数据读作**[唯一存在]{.term-intro #unique-existence}**：中心给出存在性，所有元素都等于中心则给出唯一性。
-- **`isProp A`{.Agda}：`A` 是命题。** 这要求 `A` 中任意两个元素都相等。它不要求预先选定中心，甚至不要求 `A` 一定有元素；它只说明，一旦 `A` 有证明，这些证明之间便没有可区分的差别。因此，一个命题可以没有证明，也可以有证明，但不能有两个彼此不同的证明。
-- **`isSet A`{.Agda}：`A` 是<span class="prose-annotation-target">集合</span><aside class="prose-annotation-note">这里的「集合」指宿主层的集合，也就是满足 `isSet`{.Agda} 的类型；它不是对象理论的集合论中的集合。</aside>。** 这不要求 `A` 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A` 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
-- **`isProp→isSet`{.Agda}：命题都是集合。** 如果 `A` 满足 `isProp`{.Agda}，那么它也满足 `isSet`{.Agda}。这可以看成一次同伦层级的向上搬移：我们不改变 `A`，而是从较强的条件「任意两个元素相等」推出较弱的条件「任意两条相等路径彼此相等」。它与 `Lift`{.Agda} 所做的宇宙层级搬移有一点相似：二者都使同一个数学对象满足较高层级的要求。不过，两者作用于不同的层级轴。`Lift`{.Agda} 改变类型所在的宇宙，并产生一个与原类型等价的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质。
+- **`isContr A`{.Agda}：`A` 是[可缩]{.term-intro #contractible}的。** 这要求在 `A` 中选定一个中心，并为每个 `x : A`{.Agda} 给出一条从中心到 `x` 的路径。因此，`A` 不仅必须有元素，而且所有元素都与选定的中心相等，彼此之间也就无法通过相等加以区分。本书把 `isContr`{.Agda} 携带的这组数据读作**[唯一存在]{.term-intro #unique-existence}**：中心给出存在性，所有元素都等于中心则给出唯一性。
+- **`isProp A`{.Agda}：`A` 是[命题]{.term-intro #proposition}。** 这要求 `A` 中任意两个元素都相等。它不要求预先选定中心，甚至不要求 `A` 一定有元素；它只说明，一旦 `A` 有证明，这些证明之间便没有可区分的差别。因此，一个命题可以没有证明，也可以有证明，但不能有两个彼此不同的证明。
+- **`isSet A`{.Agda}：`A` 是 [h-集合]{.term-intro #h-set}。** 前缀标明这是宿主层的概念：h-集合指满足 `isSet`{.Agda} 的类型，而不是所建模的集合论中的集合。这不要求 `A` 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A` 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
+- **`isProp→isSet`{.Agda}：命题都是 h-集合。** 如果 `A` 满足 `isProp`{.Agda}，那么它也满足 `isSet`{.Agda}。这可以看成一次同伦层级的向上搬移：我们不改变 `A`，而是从较强的条件「任意两个元素相等」推出较弱的条件「任意两条相等路径彼此相等」。它与 `Lift`{.Agda} 所做的宇宙层级搬移有一点相似：二者都使同一个数学对象满足较高层级的要求。不过，两者作用于不同的层级轴。`Lift`{.Agda} 改变类型所在的宇宙，并产生一个与原类型等价的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质。
 <!--ja-->
 パス自身も型の要素なので、パスどうしの間にさらにパスを作れます。ホモトピーレベルは、このような等しさの証明に区別できる構造がどれだけ残るかによって型を分類します。型の大きさを測るものではありません。大きさを扱うのは宇宙レベルであり、ホモトピーレベルが扱うのは要素とその等しさの証明をどこまで区別できるかです。
 
-- **`isContr A`{.Agda}：`A` は可縮である。** これは `A` の中に中心を一つ選び、すべての `x : A`{.Agda} に対して中心から `x` へのパスを与えることを要求します。したがって `A` には要素が存在し、すべての要素が選ばれた中心と等しいので、等しさによって要素を区別できません。本書では `isContr`{.Agda} が持つこのデータを**[一意存在]{.term-intro #unique-existence}**と読みます。中心が存在を与え、すべての要素へのパスが一意性を与えます。
-- **`isProp A`{.Agda}：`A` は命題である。** これは `A` の任意の二要素が等しいことを要求します。中心を選ぶ必要はなく、`A` に要素が存在することさえ要求しません。`A` の証明が存在するなら、それらの間に区別が残らないことだけを述べます。したがって命題には証明がないことも、証明があることもありますが、互いに区別できる二つの証明はあり得ません。
-- **`isSet A`{.Agda}：`A` は<span class="prose-annotation-target">集合</span><aside class="prose-annotation-note">ここでいう「集合」はホストレベルの集合、つまり `isSet`{.Agda} を満たす型です。対象理論である集合論の集合を指してはいません。</aside>である。** これは `A` の任意の二要素が等しいことを要求するのではなく、任意の二要素の間のパス型が命題であることを要求します。`A` の要素は互いに異なっていてよく、その一部を結ぶパスが存在してもかまいません。しかし始点と終点を同じものに固定すれば、その間の任意の二つのパスは等しくなります。要素の間には区別が残り得ますが、等しさの証明の間には、それ以上区別できる構造が残りません。
-- **`isProp→isSet`{.Agda}：すべての命題は集合である。** `A` が `isProp`{.Agda} を満たせば、`isSet`{.Agda} も満たします。これはホモトピーレベルを上向きに移す操作と見なせます。`A` を変えず、「任意の二要素が等しい」という強い条件から「任意の二つの等しさのパスが等しい」という弱い条件を導きます。この点は `Lift`{.Agda} による宇宙レベルの移動と似ています。どちらも同じ数学的対象を、より高いレベルの要件のもとで扱えるようにするからです。ただし、作用する軸は異なります。`Lift`{.Agda} は型を提示する宇宙を変え、元の型と同値なレコードのコピーを作ります。`isProp→isSet`{.Agda} は型もその宇宙も変えず、一つの等しさの性質から別の性質を導くだけです。
+- **`isContr A`{.Agda}：`A` は[可縮]{.term-intro #contractible}である。** これは `A` の中に中心を一つ選び、すべての `x : A`{.Agda} に対して中心から `x` へのパスを与えることを要求します。したがって `A` には要素が存在し、すべての要素が選ばれた中心と等しいので、等しさによって要素を区別できません。本書では `isContr`{.Agda} が持つこのデータを**[一意存在]{.term-intro #unique-existence}**と読みます。中心が存在を与え、すべての要素へのパスが一意性を与えます。
+- **`isProp A`{.Agda}：`A` は[命題]{.term-intro #proposition}である。** これは `A` の任意の二要素が等しいことを要求します。中心を選ぶ必要はなく、`A` に要素が存在することさえ要求しません。`A` の証明が存在するなら、それらの間に区別が残らないことだけを述べます。したがって命題には証明がないことも、証明があることもありますが、互いに区別できる二つの証明はあり得ません。
+- **`isSet A`{.Agda}：`A` は [h-集合]{.term-intro #h-set}である。** 接頭辞はホストレベルの概念であることを示します。h-集合とは `isSet`{.Agda} を満たす型であり、モデル化される集合論の集合ではありません。これは `A` の任意の二要素が等しいことを要求するのではなく、任意の二要素の間のパス型が命題であることを要求します。`A` の要素は互いに異なっていてよく、その一部を結ぶパスが存在してもかまいません。しかし始点と終点を同じものに固定すれば、その間の任意の二つのパスは等しくなります。要素の間には区別が残り得ますが、等しさの証明の間には、それ以上区別できる構造が残りません。
+- **`isProp→isSet`{.Agda}：すべての命題は h-集合である。** `A` が `isProp`{.Agda} を満たせば、`isSet`{.Agda} も満たします。これはホモトピーレベルを上向きに移す操作と見なせます。`A` を変えず、「任意の二要素が等しい」という強い条件から「任意の二つの等しさのパスが等しい」という弱い条件を導きます。この点は `Lift`{.Agda} による宇宙レベルの移動と似ています。どちらも同じ数学的対象を、より高いレベルの要件のもとで扱えるようにするからです。ただし、作用する軸は異なります。`Lift`{.Agda} は型を提示する宇宙を変え、元の型と同値なレコードのコピーを作ります。`isProp→isSet`{.Agda} は型もその宇宙も変えず、一つの等しさの性質から別の性質を導くだけです。
 <!--/-->
 
 ```agda
@@ -517,17 +517,17 @@ Thus `P : hProp ℓ`{.Agda} represents a proposition, but does not say that the 
 <!--en-->
 Two basic properties of the proposition universe recur later in the book:
 
-- `isSetHProp`{.Agda} says that `hProp ℓ`{.Agda} is itself a set. Propositions may still differ, but equality proofs between propositions contain no distinguishable higher structure.
+- `isSetHProp`{.Agda} says that `hProp ℓ`{.Agda} is itself an h-set. Propositions may still differ, but equality proofs between propositions contain no distinguishable higher structure.
 - `isPropΠ`{.Agda} says that propositions are closed under Π types. If every `B x` is a proposition, then `(x : A) → B x` is also a proposition. Universally quantifying a family of propositions therefore produces another proposition.
 <!--zh-->
 关于命题宇宙，后文会反复使用两项基本性质：
 
-- `isSetHProp`{.Agda} 表明 `hProp ℓ`{.Agda} 本身是集合。不同命题仍然可以彼此区分，但命题之间的相等证明不再含有可区分的更高结构。
+- `isSetHProp`{.Agda} 表明 `hProp ℓ`{.Agda} 本身是 h-集合。不同命题仍然可以彼此区分，但命题之间的相等证明不再含有可区分的更高结构。
 - `isPropΠ`{.Agda} 表明命题对 Π 类型封闭。若每个 `B x` 都是命题，那么 `(x : A) → B x` 也是命题。因此，对一族命题作全称量化，所得结果仍然是命题。
 <!--ja-->
 命題の宇宙について、後の章で繰り返し使う基本性質が二つあります。
 
-- `isSetHProp`{.Agda} は `hProp ℓ`{.Agda} 自身が集合であることを示します。異なる命題は区別できますが、命題間の等しさの証明には、区別できる高次の構造が残りません。
+- `isSetHProp`{.Agda} は `hProp ℓ`{.Agda} 自身が h-集合であることを示します。異なる命題は区別できますが、命題間の等しさの証明には、区別できる高次の構造が残りません。
 - `isPropΠ`{.Agda} は、命題が Π 型に対して閉じていることを示します。すべての `B x` が命題なら、`(x : A) → B x` も命題です。したがって、命題の族を全称量化して得られる結果も命題です。
 <!--/-->
 
@@ -742,11 +742,11 @@ open import Cubical.Data.Vec public
 ```
 
 <!--en-->
-## The empty type
+## The [empty type]{.term-intro #empty-type}
 <!--zh-->
-## 空类型
+## [空类型]{.term-intro #empty-type}
 <!--ja-->
-## 空型
+## [空型]{.term-intro #empty-type}
 <!--/-->
 
 <!--en-->

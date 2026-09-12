@@ -9,7 +9,7 @@ Both arguments face one constraint from the type theory. Small membership in a h
 
 FOL.Coding 中的通用编码构造只需要载体上的两个单射操作：单射的配对，以及从自然数出发的单射映射。要为累积层级上的语法编码，二者都必须在集合中找到，而层级本身提供了它们。自然数方面，层级自身的 von Neumann 数码即可胜任。较小的数码属于较大的，因为每个数码都在自己的后继之内，而没有集合属于自身；于是经自然数三歧性比较的相异序号给出相异的集合。配对方面，Kuratowski 编码即可胜任：`a`{.Agda} 与 `b`{.Agda} 的对，是以单点集 `⁅ a ⁆s`{.Agda} 与无序对 `⁅ a , b ⁆`{.Agda} 为成员的那个集合。于是第一分量可作为公共元素还原，第二分量则作为另一个 (可能相等的) 元素还原。
 
-两个论证都受类型论的一条约束。层级集合中的小隶属是命题截断的，所以对它的分情形只能消去到命题。由于 `V`{.Agda} 是 h-集，`V`{.Agda} 中的等式是命题性的，而由这些等式构成的路径命题恰好是下文推理所需的目标。在这一消去限制下，每一步都取值于命题，从不从截断中提取任何见证。
+两个论证都受类型论的一条约束。层级集合中的小隶属是命题截断的，所以对它的分情形只能消去到命题。由于 `V`{.Agda} 是 h-集合，`V`{.Agda} 中的等式是命题性的，而由这些等式构成的路径命题恰好是下文推理所需的目标。在这一消去限制下，每一步都取值于命题，从不从截断中提取任何见证。
 <!--ja-->
 # 累積階層の内部での符号化
 
@@ -57,7 +57,7 @@ import Cubical.Data.Empty as Empty
 <!--en-->
 Here is the elimination restriction in its precise form. The small membership statement `⟨ x ∈ₛ s ⟩`{.Agda} is a proposition by truncation, so when a hypothesis gives a truncated disjunction of memberships, the eliminator must target a proposition. Because `V`{.Agda} is an h-set, certified by `setIsSet`{.Agda}, the path type `x ≡ y`{.Agda} between hierarchy sets is propositional; every case split below may therefore eliminate into such an equality path.
 <!--zh-->
-这一消去限制的精确形式如下。小隶属陈述 `⟨ x ∈ₛ s ⟩`{.Agda} 经截断后是命题，因此当假设给出隶属的截断析取时，消去的目标必须是命题。由于 `V`{.Agda} 是 h-集 (`setIsSet`{.Agda} 所证)，层级集合之间的路径类型 `x ≡ y`{.Agda} 是命题性的，所以下文每个分情形都可以消去到这种等式路径。
+这一消去限制的精确形式如下。小隶属陈述 `⟨ x ∈ₛ s ⟩`{.Agda} 经截断后是命题，因此当假设给出隶属的截断析取时，消去的目标必须是命题。由于 `V`{.Agda} 是 h-集合 (`setIsSet`{.Agda} 所证)，层级集合之间的路径类型 `x ≡ y`{.Agda} 是命题性的，所以下文每个分情形都可以消去到这种等式路径。
 <!--ja-->
 この消去制限を正確に述べます。小さい所属の主張 `⟨ x ∈ₛ s ⟩`{.Agda} は切り詰めによって命題なので、仮定が所属の切り詰められた選言を与えるとき、消去の行き先は命題でなければなりません。`V`{.Agda} は h-集合であり (`setIsSet`{.Agda} が証明します)、階層の集合の間のパス型 `x ≡ y`{.Agda} は命題的です。したがって以下のすべての場合分けはそのような等式パスへ消去できます。
 <!--/-->
@@ -239,7 +239,7 @@ For unordered pairs, the classification has the shape of a truncated disjunction
 <!--en-->
 A singleton determines its element: if `⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda}, transport the membership `a ∈ ⁅ a ⁆s`{.Agda} along this path and classify the result; it must equal `c`{.Agda}. The elimination is into the path proposition `a ≡ c`{.Agda}, which is allowed since `V`{.Agda} is an h-set.
 <!--zh-->
-单点集决定其元素：若 `⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda}，沿这条路径传输隶属 `a ∈ ⁅ a ⁆s`{.Agda} 并对结果分类，结果必等于 `c`{.Agda}。消去指向路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集，这是允许的。
+单点集决定其元素：若 `⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda}，沿这条路径传输隶属 `a ∈ ⁅ a ⁆s`{.Agda} 并对结果分类，结果必等于 `c`{.Agda}。消去指向路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集合，这是允许的。
 <!--ja-->
 一元集合はその元を決定します。`⁅ a ⁆s ≡ ⁅ c ⁆s`{.Agda} なら、所属 `a ∈ ⁅ a ⁆s`{.Agda} をこのパスに沿って輸送し、結果を分類すれば、それは `c`{.Agda} と等しくなければなりません。消去はパス命題 `a ≡ c`{.Agda} へ向かい、`V`{.Agda} が h-集合なのでこれは許されます。
 <!--/-->
@@ -273,7 +273,7 @@ A singleton that happens to equal an unordered pair forces both components down 
 <!--en-->
 The injectivity proof of the pair is now assembled from the four comparison lemmas. Given `p : pr a b ≡ pr c d`{.Agda}, the singleton part of the code is a member of both sides, so transporting its membership forward along `p` and classifying yields, merely, `⁅ a ⁆s ≡ ⁅ c ⁆s` or `⁅ a ⁆s ≡ ⁅ c , d ⁆`; the first disjunct gives `a ≡ c` immediately and the second through the reversal of `singl≡pair`. The unordered-pair part is harder because its membership alone may not determine the second component: when the code collapses, `⁅ a , b ⁆`{.Agda} has matched a singleton on the left or the right, and knowing which side it matched is not enough. So two truncated records are kept, one transported forward along `p` from membership of `⁅ a , b ⁆`{.Agda} in `pr a b`{.Agda}, and one transported backward along the reversal of `p` from membership of `⁅ c , d ⁆`{.Agda} in `pr c d`{.Agda}. The backward record supplies exactly the information the degenerate branches lack, and under the temporary hypothesis `a ≡ b`{.Agda}, the case where the whole code collapses to a singleton of singletons, it converts a recovered `a ≡ b`{.Agda} into `d ≡ b`{.Agda}. Every elimination of a truncated disjunction in this proof targets a proposition built from paths in the h-set `V`{.Agda}, so no witness is ever chosen.
 <!--zh-->
-配对的单射性证明现在由四条比较引理组装而成。给定 `p : pr a b ≡ pr c d`{.Agda}，码的单点集部分同时属于两侧，于是沿 `p` 向前传输其隶属再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆`；第一支立即给出 `a ≡ c`，第二支经 `singl≡pair` 的逆向给出。无序对部分更难，因为仅凭其隶属未必能确定第二分量：当码退化时，`⁅ a , b ⁆`{.Agda} 在左或右与一个单点集相配，而知道它配的是哪一侧并不够。于是保留两条截断记录：一条是 `⁅ a , b ⁆`{.Agda} 在 `pr a b`{.Agda} 中的隶属沿 `p` 向前传输所得，另一条是 `⁅ c , d ⁆`{.Agda} 在 `pr c d`{.Agda} 中的隶属沿 `p` 的逆向传输所得。向后那条记录恰好补上退化分支所缺的信息；在临时假设 `a ≡ b`{.Agda} 之下，即整个码退化为「单点集的单点集」的情形，它把还原出的 `a ≡ b`{.Agda} 转换为 `d ≡ b`{.Agda}。本证明中对截断析取的每次消去都指向由 h-集 `V`{.Agda} 中路径构成的命题，因此从不选出任何见证。
+配对的单射性证明现在由四条比较引理组装而成。给定 `p : pr a b ≡ pr c d`{.Agda}，码的单点集部分同时属于两侧，于是沿 `p` 向前传输其隶属再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆`；第一支立即给出 `a ≡ c`，第二支经 `singl≡pair` 的逆向给出。无序对部分更难，因为仅凭其隶属未必能确定第二分量：当码退化时，`⁅ a , b ⁆`{.Agda} 在左或右与一个单点集相配，而知道它配的是哪一侧并不够。于是保留两条截断记录：一条是 `⁅ a , b ⁆`{.Agda} 在 `pr a b`{.Agda} 中的隶属沿 `p` 向前传输所得，另一条是 `⁅ c , d ⁆`{.Agda} 在 `pr c d`{.Agda} 中的隶属沿 `p` 的逆向传输所得。向后那条记录恰好补上退化分支所缺的信息；在临时假设 `a ≡ b`{.Agda} 之下，即整个码退化为「单点集的单点集」的情形，它把还原出的 `a ≡ b`{.Agda} 转换为 `d ≡ b`{.Agda}。本证明中对截断析取的每次消去都指向由 h-集合 `V`{.Agda} 中路径构成的命题，因此从不选出任何见证。
 <!--ja-->
 対の単射性の証明は、4 つの比較補題から組み上げられます。`p : pr a b ≡ pr c d`{.Agda} が与えられると、符号の一元集合の部分は両側に属するので、その所属を `p` に沿って前向きに輸送して分類すれば、切り詰められた意味で `⁅ a ⁆s ≡ ⁅ c ⁆s` か `⁅ a ⁆s ≡ ⁅ c , d ⁆` が得られます。第 1 の選言支は直ちに `a ≡ c` を与え、第 2 の選言支は `singl≡pair` の逆向きを通して与えます。非順序対の部分はより難しく、所属だけでは第 2 成分が決まらないことがあります。符号が潰れるとき、`⁅ a , b ⁆`{.Agda} は左か右で一元集合と一致しますが、どちら側と一致したかを知るだけでは足りません。そこで 2 つの切り詰められた記録を取っておきます。1 つは `⁅ a , b ⁆`{.Agda} が `pr a b`{.Agda} に属することから `p` に沿って前向きに輸送したもの、もう 1 つは `⁅ c , d ⁆`{.Agda} が `pr c d`{.Agda} に属することから `p` の逆向きに輸送したものです。後ろ向きの記録が、退化した枝に欠ける情報をまさに補います。一時的な仮定 `a ≡ b`{.Agda} のもと、すなわち符号全体が一元集合の一元集合に潰れる場合には、復元した `a ≡ b`{.Agda} を `d ≡ b`{.Agda} に変換します。この証明での切り詰められた選言の消去はすべて、h-集合 `V`{.Agda} のパスからできる命題をターゲットにするので、証拠が選び出されることはありません。
 <!--/-->
@@ -298,7 +298,7 @@ pr-inj {a} {b} {c} {d} p = a≡c , b≡d
 <!--en-->
 First component. The singleton part `⁅ a ⁆s`{.Agda} belongs to `pr a b`{.Agda} by its right disjunct. Transporting this membership along `p` and classifying gives, merely, `⁅ a ⁆s ≡ ⁅ c ⁆s` or `⁅ a ⁆s ≡ ⁅ c , d ⁆` (this is `H₁`). In the first disjunct `singl-inj` yields `a ≡ c` directly. In the second, the comparison `singl≡pair` forces `c ≡ a`, and its reversal is what is wanted. The truncated disjunction is eliminated into the path proposition `a ≡ c`{.Agda}, which is permitted since `V`{.Agda} is an h-set.
 <!--zh-->
-第一分量。单点集部分 `⁅ a ⁆s` 经其右析取支属于 `pr a b`{.Agda}。把这个隶属沿 `p` 传输再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆` (这就是 `H₁`)。第一支由 `singl-inj` 直接给出 `a ≡ c`。第二支中比较 `singl≡pair` 迫使 `c ≡ a`，取其逆向即所求。截断析取消去到路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集，这是允许的。
+第一分量。单点集部分 `⁅ a ⁆s` 经其右析取支属于 `pr a b`{.Agda}。把这个隶属沿 `p` 传输再分类，仅仅得到 `⁅ a ⁆s ≡ ⁅ c ⁆s` 或 `⁅ a ⁆s ≡ ⁅ c , d ⁆` (这就是 `H₁`)。第一支由 `singl-inj` 直接给出 `a ≡ c`。第二支中比较 `singl≡pair` 迫使 `c ≡ a`，取其逆向即所求。截断析取消去到路径命题 `a ≡ c`{.Agda}，由于 `V`{.Agda} 是 h-集合，这是允许的。
 <!--ja-->
 第 1 成分。一元集合の部分 `⁅ a ⁆s` は右の選言支によって `pr a b`{.Agda} に属するので、この所属を `p` に沿って輸送して分類すると、切り詰められた意味で `⁅ a ⁆s ≡ ⁅ c ⁆s` か `⁅ a ⁆s ≡ ⁅ c , d ⁆` が得られます (これが `H₁` です)。第 1 の選言支では `singl-inj` が直接 `a ≡ c` を与えます。第 2 の選言支では比較 `singl≡pair` が `c ≡ a` を強制し、その逆向きが求めるものです。切り詰められた選言はパス命題 `a ≡ c`{.Agda} へ消去され、`V`{.Agda} が h-集合なのでこれは許されます。
 <!--/-->
@@ -383,7 +383,7 @@ In the second disjunct of `H₂`, the two inner unordered pairs coincide, `⁅ a
 <!--en-->
 The two branches combine into `b ≡ d`, completing `pr-inj`: both components of the Kuratowski code are recoverable from an equality of codes. Every branch eliminated a truncated disjunction into a proposition built from paths in the h-set `V`{.Agda}; no witness was ever chosen from a truncation.
 <!--zh-->
-两个分支合成为 `b ≡ d`，完成 `pr-inj`：Kuratowski 码的两个分量都可从码的等式中还原。每个分支都把一个截断析取消去到由 h-集 `V`{.Agda} 中路径构成的命题；从未从截断中选出任何见证。
+两个分支合成为 `b ≡ d`，完成 `pr-inj`：Kuratowski 码的两个分量都可从码的等式中还原。每个分支都把一个截断析取消去到由 h-集合 `V`{.Agda} 中路径构成的命题；从未从截断中选出任何见证。
 <!--ja-->
 2 つの枝が合わさって `b ≡ d` となり、`pr-inj` が完結します。Kuratowski 符号の両成分は符号の等式から復元できるということです。どの枝も、切り詰められた選言を h-集合 `V`{.Agda} のパスからできる命題へ消去したものであり、切り詰めから証拠を選び出した箇所はありません。
 <!--/-->

@@ -5,7 +5,7 @@ The cumulative hierarchy `V`{.Agda} is a higher inductive type with a strikingly
 <!--zh-->
 # 累积层级
 
-累积层级 `V`{.Agda} 是一个高阶归纳类型，其想法极为经济：集合就是某个小族的像，而属于它只需纯粹地存在一个命中该元素的索引。相等性由构造直接外延，因为类型的路径构造子把像相同的族视为同一个集合。本章把这个载体变成集合论结构 `𝒮ᵥ`{.Agda}：等词取路径类型，由于 `V`{.Agda} 是 h-集而成为命题值；成员关系取层级原生的 `∈`。在该结构上，本章证明外延性，通过为每个集合构造可及性证据说明成员关系良基，从良基性导出不可反性，最后给出沿成员关系的依赖递归及其命题级计算法则。
+累积层级 `V`{.Agda} 是一个高阶归纳类型，其想法极为经济：集合就是某个小族的像，而属于它只需纯粹地存在一个命中该元素的索引。相等性由构造直接外延，因为类型的路径构造子把像相同的族视为同一个集合。本章把这个载体变成集合论结构 `𝒮ᵥ`{.Agda}：等词取路径类型，由于 `V`{.Agda} 是 h-集合而成为命题值；成员关系取层级原生的 `∈`。在该结构上，本章证明外延性，通过为每个集合构造可及性证据说明成员关系良基，从良基性导出不可反性，最后给出沿成员关系的依赖递归及其命题级计算法则。
 <!--ja-->
 # 累積階層
 
@@ -15,7 +15,7 @@ The cumulative hierarchy `V`{.Agda} is a higher inductive type with a strikingly
 <!--en-->
 A carrier alone does not interpret the first-order language; one needs a carrier together with equality and membership as proposition-valued relations. The chapter fixes a universe level `ℓ` once, and every construction below is stated at that level. For the hierarchy the chosen pairing is native rather than adapted: equality will be the path type, made proposition-valued by the fact that `V`{.Agda} is an h-set, and membership will be the hierarchy's own `∈`, which already lands in `hProp`{.Agda}.
 <!--zh-->
-仅有一个载体还不足以解释一阶语言；需要载体配上作为命题值关系的等词与成员关系。本章一次性固定宇宙层级 `ℓ`，下文所有构造都在该层级上陈述。对层级而言，所选的配对是原生的而非适配的：等词取路径类型，由于 `V`{.Agda} 是 h-集而成为命题值；成员关系取层级自身的 `∈`，它本就落在 `hProp`{.Agda} 中。
+仅有一个载体还不足以解释一阶语言；需要载体配上作为命题值关系的等词与成员关系。本章一次性固定宇宙层级 `ℓ`，下文所有构造都在该层级上陈述。对层级而言，所选的配对是原生的而非适配的：等词取路径类型，由于 `V`{.Agda} 是 h-集合而成为命题值；成员关系取层级自身的 `∈`，它本就落在 `hProp`{.Agda} 中。
 <!--ja-->
 台だけでは一階の言語を解釈できません。台に、命題値の関係としての等号と所属関係を対にする必要があります。本章は宇宙レベル `ℓ` を一度固定し、以下の構成はすべてこのレベルで述べられます。階層にとって選ばれる対は、適合の作業ではなく本来の形です。等号はパス型であり、`V`{.Agda} が h-集合であることにより命題値になり、所属関係は階層自身の `∈` で、はじめから `hProp`{.Agda} に落ち着きます。
 <!--/-->
@@ -75,11 +75,11 @@ The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y
 <!--zh-->
 ## 高阶归纳类型
 
-其基本思想是集合论中最古老的表述：集合由其成员汇集而成。构造子 `sett`{.Agda} 接受小索引类型 `X : Type ℓ` 和族 `ix : X → V ℓ`，形成以 `ix` 的像为成员的集合。因此，`y ∈ sett X ix` 表示「存在 `i : X` 使 `ix i ≡ y`」的截断。像相同的两个族给出**同一个**集合，因为路径构造子把成员一致的 `sett` 表示视为相等，而整个类型又被 `setIsSet`{.Agda} 截断为 h-集。
+其基本思想是集合论中最古老的表述：集合由其成员汇集而成。构造子 `sett`{.Agda} 接受小索引类型 `X : Type ℓ` 和族 `ix : X → V ℓ`，形成以 `ix` 的像为成员的集合。因此，`y ∈ sett X ix` 表示「存在 `i : X` 使 `ix i ≡ y`」的截断。像相同的两个族给出**同一个**集合，因为路径构造子把成员一致的 `sett` 表示视为相等，而整个类型又被 `setIsSet`{.Agda} 截断为 h-集合。
 
 ## 结构
 
-所选的打包刻意保持极简。等词是路径类型 `x ≡ y`，连同「该类型是命题」的证书 `setIsSet x y` 配成一对；正是 `V`{.Agda} 的 h-集性使其元素间的路径成为命题值。成员关系是层级自身的 `∈`，其在每一点上的值本就落在 `hProp`{.Agda} 中。这些字段组装成 `hProp`{.Agda} 真值代数上的结构 `𝒮ᵥ`{.Agda}，一阶语言就在这个结构上解释。下标就是普通的 `v`，指层级。
+所选的打包刻意保持极简。等词是路径类型 `x ≡ y`，连同「该类型是命题」的证书 `setIsSet x y` 配成一对；正是 `V`{.Agda} 的 h-集合性使其元素间的路径成为命题值。成员关系是层级自身的 `∈`，其在每一点上的值本就落在 `hProp`{.Agda} 中。这些字段组装成 `hProp`{.Agda} 真值代数上的结构 `𝒮ᵥ`{.Agda}，一阶语言就在这个结构上解释。下标就是普通的 `v`，指层级。
 <!--ja-->
 ## 高階帰納型
 
@@ -93,7 +93,7 @@ The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y
 <!--en-->
 The carrier field is `V ℓ`, and its set-hood certificate `setIsSet` is recorded as `isSetS`. The equality field makes the choice explicit: `_≈ˢ_` sends `x` and `y` to the pair of the path type `x ≡ y` and the proof `setIsSet x y` that this path type is a proposition. This is the one place where h-set-ness does real work in the packaging. It is not that paths need to be changed into something proposition-valued; for an h-set, the type `x ≡ y` of paths between two elements already is a proposition, and the field simply records that fact alongside the type it certifies.
 <!--zh-->
-载体字段是 `V ℓ`，其 h-集性证书 `setIsSet` 记录在 `isSetS` 中。等词字段把这个选择写得很明确：`_≈ˢ_` 把 `x` 与 `y` 送往由路径类型 `x ≡ y` 与「该路径类型是命题」的证明 `setIsSet x y` 组成的对。这是打包过程中 h-集性真正发挥作用的地方。并不是要把路径改造成某种命题值的东西；对 h-集而言，两个元素之间的路径类型 `x ≡ y` 本来就是命题，该字段只是把这一事实连同它所认证的类型一起记录下来。
+载体字段是 `V ℓ`，其 h-集合性证书 `setIsSet` 记录在 `isSetS` 中。等词字段把这个选择写得很明确：`_≈ˢ_` 把 `x` 与 `y` 送往由路径类型 `x ≡ y` 与「该路径类型是命题」的证明 `setIsSet x y` 组成的对。这是打包过程中 h-集合性真正发挥作用的地方。并不是要把路径改造成某种命题值的东西；对 h-集合而言，两个元素之间的路径类型 `x ≡ y` 本来就是命题，该字段只是把这一事实连同它所认证的类型一起记录下来。
 <!--ja-->
 台のフィールドは `V ℓ` であり、その h-集合性の証明 `setIsSet` が `isSetS` として記録されます。等号のフィールドはこの選択を明示します。`_≈ˢ_` は `x` と `y` を、パス型 `x ≡ y` と「このパス型が命題である」ことの証明 `setIsSet x y` の対へ送ります。h-集合性がこの構成で実際に働くのはここです。パスを命題値の何かに作り変える必要があるのではありません。h-集合に対しては、二つの要素の間のパス型 `x ≡ y` はもともと命題であり、フィールドはその事実を、証明の対象となる型とともに記録しているだけです。
 <!--/-->
@@ -283,7 +283,7 @@ The hierarchy `V`{.Agda}, received from the library as a higher inductive type i
 <!--zh-->
 ## 小结
 
-作为高阶归纳类型的层级 `V`{.Agda}，其中集合是小族的像、整个类型是 h-集，已被打包为结构 `𝒮ᵥ`{.Agda}：路径为等词，由 h-集性使其为命题值，成员关系取原生的 `∈`。外延 (`extensionalV`{.Agda}) 经小成员关系桥从外延路径构造子得到，成员关系的良基性 (`regularityV`{.Agda}) 由消去到可及性得到。良基性又给出不可反性以及递归原理 `∈-induction` 及其计算法则 `∈-induction-compute`。「集合的小呈现」一章讨论小成员关系 `∈ₛ` 及其与 `∈` 的桥接，这是它要处理的具体问题。
+作为高阶归纳类型的层级 `V`{.Agda}，其中集合是小族的像、整个类型是 h-集合，已被打包为结构 `𝒮ᵥ`{.Agda}：路径为等词，由 h-集合性使其为命题值，成员关系取原生的 `∈`。外延 (`extensionalV`{.Agda}) 经小成员关系桥从外延路径构造子得到，成员关系的良基性 (`regularityV`{.Agda}) 由消去到可及性得到。良基性又给出不可反性以及递归原理 `∈-induction` 及其计算法则 `∈-induction-compute`。「集合的小呈现」一章讨论小成员关系 `∈ₛ` 及其与 `∈` 的桥接，这是它要处理的具体问题。
 <!--ja-->
 ## まとめ
 

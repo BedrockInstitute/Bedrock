@@ -11,7 +11,7 @@ The two interfaces are not peers, and this chapter proves it on the spot by Diac
 
 选择原理断言：对一个以集合为指标、每根纤维都仅仅有元的族，也仅仅存在一个同时从所有纤维中取值的选择函数。本章逐宇宙层级陈述这条原理，证明它能下降到较低层级，并用 Diaconescu 定理由此推出排中律。
 
-经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，即逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法。索引上的 h-集限制是原理陈述的一部分，下文的证明将在理论需要之处用到它。与排中律一样，选择从不全局假设：需要它的章节以参数领取，累积层级的模型章正是如此。
+经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，即逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集合索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法。索引上的 h-集合限制是原理陈述的一部分，下文的证明将在理论需要之处用到它。与排中律一样，选择从不全局假设：需要它的章节以参数领取，累积层级的模型章正是如此。
 
 两个接口并非平级，本章当场用 Diaconescu 定理证明这一点：**选择证明排中律**。在每个层级上，选择接口都能推出整条经典边界。
 <!--ja-->
@@ -62,7 +62,7 @@ import Cubical.Data.Sum as Sum
 <!--en-->
 Two further tools carry the Diaconescu argument. One is propositional truncation `∥_∥₁`{.Agda}: it turns a statement into the weaker claim that the statement merely holds, so from it one obtains mere existence, never a chosen witness. The other is the set quotient construction: from a type and a relation it builds the type of classes `[ b ]`{.Agda}, adds a path `[ b ] ≡ [ b' ]`{.Agda} whenever `eq/`{.Agda} is given a certificate that the relation relates `b` and `b'`, and truncates the result to an h-set by `squash/`{.Agda}. Two theorems about quotients do the argument's decisive work: `[]surjective`{.Agda} says every point of a quotient merely arises as the class of some representative, and `effective`{.Agda} says a path in the quotient can be read backwards as a proof that the relation related the endpoints.
 <!--zh-->
-还有两件工具承担 Diaconescu 论证的关键。其一是命题截断 `∥_∥₁`{.Agda}：它把一个陈述变为「该陈述仅仅成立」的较弱主张，因此从它得到的是仅仅存在，绝非选定的见证。其二是集合商构造：从类型与关系出发，它构造出类 `[ b ]`{.Agda} 所成的类型；只要给 `eq/`{.Agda} 一份「关系关联 `b` 与 `b'`」的证书，就添加一条 `[ b ] ≡ [ b' ]`{.Agda} 的路径，并由 `squash/`{.Agda} 把结果截断为 h-集。关于商的两条定理完成论证的决定性工作：`[]surjective`{.Agda} 说商的每个点都仅仅来自某个代表元的类，`effective`{.Agda} 说商中的路径可以倒读为「关系确实关联两端」的证明。
+还有两件工具承担 Diaconescu 论证的关键。其一是命题截断 `∥_∥₁`{.Agda}：它把一个陈述变为「该陈述仅仅成立」的较弱主张，因此从它得到的是仅仅存在，绝非选定的见证。其二是集合商构造：从类型与关系出发，它构造出类 `[ b ]`{.Agda} 所成的类型；只要给 `eq/`{.Agda} 一份「关系关联 `b` 与 `b'`」的证书，就添加一条 `[ b ] ≡ [ b' ]`{.Agda} 的路径，并由 `squash/`{.Agda} 把结果截断为 h-集合。关于商的两条定理完成论证的决定性工作：`[]surjective`{.Agda} 说商的每个点都仅仅来自某个代表元的类，`effective`{.Agda} 说商中的路径可以倒读为「关系确实关联两端」的证明。
 <!--ja-->
 Diaconescu の議論の要を担う道具がさらに二つあります。一つは命題的切り詰め `∥_∥₁`{.Agda} です。これは主張を「その主張が単に成り立つ」というより弱い主張に変えるので、そこから得られるのは単なる存在であって、選ばれた証拠では決してありません。もう一つは集合商の構成です。型と関係から、類 `[ b ]`{.Agda} からなる型を作り、`eq/`{.Agda} に関係が `b` と `b'` を結ぶことの証拠が与えられれば道 `[ b ] ≡ [ b' ]`{.Agda} を加え、`squash/`{.Agda} によって結果を h-集合へ切り詰めます。商についての二つの定理が議論の決定的な仕事をします。`[]surjective`{.Agda} は商の各点が単に何らかの代表元の類として現れると述べ、`effective`{.Agda} は商の中の道を「関係が実際に両端を結んでいた」ことの証明として逆読みできると述べます。
 <!--/-->
@@ -104,7 +104,7 @@ Like the excluded middle, choice passes **downward** through the levels: lift th
 <!--en-->
 The definition takes a level `ℓ` and packages four inputs. First an index type `X` in `Type ℓ`, together with the proof that it is an h-set: the principle is stated for set-indexed families. Then a family `B` of fibers over `X`, all in the same universe. The hypothesis is that each fiber is merely inhabited, and the conclusion is that merely, there is a single function choosing an inhabitant in every fiber at once. The word merely appears on both sides, and that is the honest strength: choice produces no actual function, only the truncated statement that one exists. Since the statement quantifies over all of `Type ℓ`, it lives one level up, at `Type (ℓ-suc ℓ)`, exactly like `LEM`{.Agda}.
 <!--zh-->
-定义取层级 `ℓ`，打包四个输入。第一是 `Type ℓ` 中的指标类型 `X`，并附其是 h-集的证明：原理是对以集合为指标的族陈述的。其次是以 `X` 为指标、同在 `Type ℓ` 中的纤维族 `B`。假设是每根纤维都仅仅有元；结论是仅仅地，存在一个同时在每根纤维中取元的函数。「仅仅」出现在两侧，这正是诚实的强度：选择给出的不是真实的函数，只是「存在其一」的截断陈述。由于该陈述量化了整个 `Type ℓ`，它居于高一层级的 `Type (ℓ-suc ℓ)`，与 `LEM`{.Agda} 一致。
+定义取层级 `ℓ`，打包四个输入。第一是 `Type ℓ` 中的指标类型 `X`，并附其是 h-集合的证明：原理是对以集合为指标的族陈述的。其次是以 `X` 为指标、同在 `Type ℓ` 中的纤维族 `B`。假设是每根纤维都仅仅有元；结论是仅仅地，存在一个同时在每根纤维中取元的函数。「仅仅」出现在两侧，这正是诚实的强度：选择给出的不是真实的函数，只是「存在其一」的截断陈述。由于该陈述量化了整个 `Type ℓ`，它居于高一层级的 `Type (ℓ-suc ℓ)`，与 `LEM`{.Agda} 一致。
 <!--ja-->
 定義はレベル `ℓ` を受け、四つの入力をまとめます。第一に `Type ℓ` の添字型 `X` と、それが h-集合であることの証明です。原理は集合で添字付けられた族に対して述べられます。次に `X` の上のファイバーの族 `B` で、これも同じ `Type ℓ` に住みます。仮定は各ファイバーが単に要素を持つことであり、結論は、単に、すべてのファイバーから同時に要素を選ぶ一つの関数が存在する、というものです。「単に」が両側に現れるのが誠実な強さで、選択が実際の関数ではなく「存在する」という命題的切り詰められた主張だけを与えることを示しています。この主張は `Type ℓ` 全体を量化するため、`LEM`{.Agda} と同じく一つ上の `Type (ℓ-suc ℓ)` に住みます。
 <!--/-->
@@ -126,7 +126,7 @@ Downward transfer mirrors `lowerLEM`{.Agda} from `Base.Classical`{.Agda}: assume
 <!--en-->
 Given data at level `ℓ`, the proof rehouses it at level `ℓ-suc ℓ` where the stronger hypothesis `sc` applies. The index `X` becomes `Lift X`, whose h-setness follows from `X`'s by `isOfHLevelLift`{.Agda}. The family `B x` becomes `λ x → Lift (B (lower x))`: a fiber over the lifted index is the lifted fiber over the original index underneath, so the lifted family carries exactly the same information as the original.
 <!--zh-->
-给定 `ℓ` 层级的数据，证明把它安置到 `ℓ-suc ℓ` 层级，使更强的假设 `sc` 得以适用。指标 `X` 变为 `Lift X`，其 h-集性经 `isOfHLevelLift`{.Agda} 从 `X` 的 h-集性得到。纤维族 `B x` 变为 `λ x → Lift (B (lower x))`：抬升指标上的纤维就是底下原指标上纤维的抬升，因此抬升后的族与原来的族携带完全相同的信息。
+给定 `ℓ` 层级的数据，证明把它安置到 `ℓ-suc ℓ` 层级，使更强的假设 `sc` 得以适用。指标 `X` 变为 `Lift X`，其 h-集合性经 `isOfHLevelLift`{.Agda} 从 `X` 的 h-集合性得到。纤维族 `B x` 变为 `λ x → Lift (B (lower x))`：抬升指标上的纤维就是底下原指标上纤维的抬升，因此抬升后的族与原来的族携带完全相同的信息。
 <!--ja-->
 レベル `ℓ` のデータが与えられると、証明はそれを `ℓ-suc ℓ` のレベルに置き直し、より強い仮定 `sc` を適用できるようにします。添字 `X` は `Lift X` となり、その h-集合性は `isOfHLevelLift`{.Agda} によって `X` のものから従います。ファイバーの族 `B x` は `λ x → Lift (B (lower x))` となります。持ち上げた添字の上のファイバーは、その下にある元の添字の上のファイバーを持ち上げたものであり、持ち上げられた族は元の族とまったく同じ情報を運びます。
 <!--/-->
@@ -162,7 +162,7 @@ Concretely, fix `P`; everything below lives in a module dedicated to the theorem
 
 定理说：给定集合层选择，**任何**命题 `P` 都可判定，即或证明或反驳。乍看这很荒谬，因为判定程序无从下手：任意的 `P` 没有可供分情况处理的切入口。证明的想法是改从**几何**入手。造一个形状依赖于 `P` 的小空间：其中的两个类，即 `true` 的类与 `false` 的类，恰在 `P` 成立时重合。然后用选择原理回答一个关于这个空间的问题；答案必然透露出形状，而形状就是 `P`。
 
-具体地，固定 `P`；以下一切都设在一个专属于该定理的模块里。取两个布尔值，恰在 `P` 成立时把它们粘起来。「粘合」指**集合商**：点仍是 `true` 与 `false`，但凡粘合关系在两点之间成立，就添一条路径，最后把结果做成 h-集。粘合关系最好用一张四格表给出：对角线上平凡成立，混色的两格**就是 `P` 本身**，于是「这两点相关」与「`P` 成立」按定义是同一个命题。最后这一条是全部论证的关键，下文将用到两次。
+具体地，固定 `P`；以下一切都设在一个专属于该定理的模块里。取两个布尔值，恰在 `P` 成立时把它们粘起来。「粘合」指**集合商**：点仍是 `true` 与 `false`，但凡粘合关系在两点之间成立，就添一条路径，最后把结果做成 h-集合。粘合关系最好用一张四格表给出：对角线上平凡成立，混色的两格**就是 `P` 本身**，于是「这两点相关」与「`P` 成立」按定义是同一个命题。最后这一条是全部论证的关键，下文将用到两次。
 <!--ja-->
 ## ディアコネスクの定理
 
@@ -191,7 +191,7 @@ module Diaconescu {ℓ} (P : hProp ℓ) where
 <!--en-->
 The space itself, `Glued`, is the set quotient `Bool / _~_`: the type of classes `[ b ]`{.Agda} of booleans under the relation, with `eq/`{.Agda} adding a path `[ true ] ≡ [ false ]` whenever a certificate of `true ~ false` is supplied, and `squash/`{.Agda} making the result an h-set. Its two distinguished points are the classes of `true` and `false`. When `P` holds, the quotient supplies the path between them; when `P` fails, effectivity will show that the two distinguished classes are distinct.
 <!--zh-->
-空间本身 `Glued` 是集合商 `Bool / _~_`：即布尔值在此关系下的类 `[ b ]`{.Agda} 所成的类型；只要给出 `true ~ false` 的证书，`eq/`{.Agda} 就添加一条 `[ true ] ≡ [ false ]` 的路径，而 `squash/`{.Agda} 把结果做成 h-集。它的两个特殊点是 `true` 的类与 `false` 的类。`P` 成立时，商在两点之间提供路径；`P` 不成立时，有效性将表明这两个特殊类相异。
+空间本身 `Glued` 是集合商 `Bool / _~_`：即布尔值在此关系下的类 `[ b ]`{.Agda} 所成的类型；只要给出 `true ~ false` 的证书，`eq/`{.Agda} 就添加一条 `[ true ] ≡ [ false ]` 的路径，而 `squash/`{.Agda} 把结果做成 h-集合。它的两个特殊点是 `true` 的类与 `false` 的类。`P` 成立时，商在两点之间提供路径；`P` 不成立时，有效性将表明这两个特殊类相异。
 <!--ja-->
 空間そのものである `Glued` は集合商 `Bool / _~_` です。すなわち、この関係に関するブール値の類 `[ b ]`{.Agda} からなる型であり、`true ~ false` の証拠が与えられると `eq/`{.Agda} が道 `[ true ] ≡ [ false ]` を加え、`squash/`{.Agda} が結果を h-集合にします。二つの注目すべき点は `true` の類と `false` の類です。`P` が成り立てば商が両者の間の道を供給し、`P` が成り立たなければ、有効性がこの二つの類の相異を示します。
 <!--/-->
@@ -318,7 +318,7 @@ The two directions are packaged as named functions. Forward, `glue`{.Agda} turns
 <!--en-->
 Now the choice principle enters, and here is the single question we ask it: *hand every point of the glued space a boolean representative.* A **pick** at a point is a boolean together with the guarantee that its class is that point. Each point separately is sure to have one, but only *merely* so: a quotient remembers that its points came from somewhere without remembering from where. Turning "each point merely has a representative" into the mere existence of one **function** choosing representatives everywhere at once is what set-level choice states, and it applies here because the glued space is an h-set by construction. The chooser supplies representatives uniformly over `Glued`; the later argument extracts a decision by comparing only its values at the two distinguished classes.
 <!--zh-->
-现在应用选择原理，要求为粘合空间的每个点选出一个布尔代表元。某点处的一次**选取**由一个布尔值及其等价类等于该点的证明组成。每个点单独地都必有一次选取，但只能证明其**仅仅**存在：商保留每个点来自某个代表元，却不指定该代表元。把「每个点都仅仅有代表元」转化为一个同时处处选代表元的函数的**仅仅**存在，正是集合层选择所陈述的内容；它在此处适用，因为粘合空间按构造是 h-集。这个选择函数在整个 `Glued` 上一致地给出代表元；后面的论证只比较它在两个特殊等价类上的取值，由此提取判定。
+现在应用选择原理，要求为粘合空间的每个点选出一个布尔代表元。某点处的一次**选取**由一个布尔值及其等价类等于该点的证明组成。每个点单独地都必有一次选取，但只能证明其**仅仅**存在：商保留每个点来自某个代表元，却不指定该代表元。把「每个点都仅仅有代表元」转化为一个同时处处选代表元的函数的**仅仅**存在，正是集合层选择所陈述的内容；它在此处适用，因为粘合空间按构造是 h-集合。这个选择函数在整个 `Glued` 上一致地给出代表元；后面的论证只比较它在两个特殊等价类上的取值，由此提取判定。
 <!--ja-->
 ここで選択原理が登場し、これに問う質問はただ一つです。*貼り合わせの空間のすべての点に、ブール値の代表元を一つずつ渡せ*、というものです。ある点での**選択 (pick)**とは、一つのブール値と、その類がその点に等しいという保証の組です。点ごとには必ず選択が存在しますが、それは**単に**存在するだけです。商は、自分の点がどこかから来たことを覚えていても、どこから来たかは覚えていないからです。「各点が単に代表元を持つ」ことを、あらゆる点で一度に代表元を選ぶ一つの**関数**の単なる存在へ変える、これが集合レベルの選択原理の述べるところであり、貼り合わせの空間が構成上 h-集合であるためここに適用できます。選択関数は `Glued` 全体で一様に代表元を与えます。後の議論は二つの特別な同値類での値だけを比較し、そこから判定を取り出します。
 <!--/-->
@@ -350,7 +350,7 @@ The question deserves to be a lemma of its own, so that its type displays exactl
 <!--en-->
 The lemma takes `SetChoice ℓ` as an explicit hypothesis and instantiates it with the data assembled above: index `Glued`, its h-setness from `squash/`{.Agda}, the fiber family `Pick`, and the pointwise mere inhabitation `pickable`{.Agda}. The hypothesis `sc` is itself a function; what is truncated is its output. The conclusion is the propositionally truncated existence of a function defined on all of `Glued` at once: choice never produces the function itself, only the statement that one merely exists, and this limitation will shape the final step of the theorem.
 <!--zh-->
-引理把 `SetChoice ℓ` 取为显式假设，并用上文备好的数据例示它：指标 `Glued`、来自 `squash/`{.Agda} 的 h-集性、纤维族 `Pick`、逐点的仅仅有元 `pickable`{.Agda}。假设 `sc` 本身是一个函数；被命题截断的是它的输出。结论是定义在整个 `Glued` 上的函数的命题截断存在：选择从不给出函数本身，只给出「有一个函数」的截断陈述，这一限制将塑造定理的最后一步。
+引理把 `SetChoice ℓ` 取为显式假设，并用上文备好的数据例示它：指标 `Glued`、来自 `squash/`{.Agda} 的 h-集合性、纤维族 `Pick`、逐点的仅仅有元 `pickable`{.Agda}。假设 `sc` 本身是一个函数；被命题截断的是它的输出。结论是定义在整个 `Glued` 上的函数的命题截断存在：选择从不给出函数本身，只给出「有一个函数」的截断陈述，这一限制将塑造定理的最后一步。
 <!--ja-->
 補題は `SetChoice ℓ` を明示的な仮定として受け、上で揃えたデータで具体化します。添字 `Glued`、`squash/`{.Agda} による h-集合性、ファイバーの族 `Pick`、各点での単なる非空性 `pickable`{.Agda} です。仮定 `sc` はそれ自身関数であり、命題的切り詰めが施されるのはその出力の側です。結論は `Glued` 全体で定義された関数の命題的切り詰めされた存在です。選択原理は関数そのものではなく「関数が単に存在する」という主張しか与えず、この制限が定理の最終段階の形を決めます。
 <!--/-->

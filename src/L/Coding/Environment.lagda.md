@@ -188,7 +188,7 @@ The argument reads off the three layers of the key. The witnessing entry is a Ku
 <!--en-->
 The statement is an equality of propositions: membership of the pair at key `i` in the graph is the proposition `v ≡ g i`, packaged with its proof of propositionhood, which comes from the fact that `V ℓ` is an h-set. An equivalence between propositions converts into a path of truth values, so the lemma is proved from two implications, one in each direction.
 <!--zh-->
-陈述是命题的等式：键 `i` 处的对属于图，这一命题恰为 `v ≡ g i`，并附有其命题性的证明，它来自 `V ℓ` 是 h-集这一事实。命题之间的等价可转换为真值之间的路径，故引理由两个方向各一的蕴含拼成。
+陈述是命题的等式：键 `i` 处的对属于图，这一命题恰为 `v ≡ g i`，并附有其命题性的证明，它来自 `V ℓ` 是 h-集合这一事实。命题之间的等价可转换为真值之间的路径，故引理由两个方向各一的蕴含拼成。
 <!--ja-->
 主張は命題の等式です。鍵 `i` の対がグラフに属するという命題は、ちょうど `v ≡ g i` であり、その命題性の証明を伴います。これは `V ℓ` が h-集合であることから来ます。命題の間の同値は真理値の間のパスに変換できるので、補題は各方向一つずつの二つの含意から組み立てられます。
 <!--/-->
@@ -974,7 +974,7 @@ prChar∅-bwd : (Q W : V ℓ) → Q ≡ pr ∅ W
 <!--en-->
 The adequacy lemma is stated as a path between truth values, in the same form the earlier readers used. On the left is the satisfaction of `tag0At s x`; on the right, the proposition that the value at slot `s` equals `pr ∅ (⟦ var x ⟧ γ)`, the Kuratowski pair whose tag is the empty set and whose second component is the value at slot `x`, packaged with the proof that the equality type is a proposition because `V ℓ` is an h-set. This says exactly that the encoded zeroth entry is the pair of the empty tag with the new value.
 <!--zh-->
-充分性引理与前面各读式一样，被陈述为真值之间的一条路径。左侧是 `tag0At s x` 的满足关系；右侧是命题「槽位 `s` 处的值等于 `pr ∅ (⟦ var x ⟧ γ)`」，即标签为空集、第二分量为槽位 `x` 处之值的 Kuratowski 对，并附上该相等类型为命题的证明，因为 `V ℓ` 是 h-集。这恰好说明：编码后的第零个条目就是空标签与新值组成的对。
+充分性引理与前面各读式一样，被陈述为真值之间的一条路径。左侧是 `tag0At s x` 的满足关系；右侧是命题「槽位 `s` 处的值等于 `pr ∅ (⟦ var x ⟧ γ)`」，即标签为空集、第二分量为槽位 `x` 处之值的 Kuratowski 对，并附上该相等类型为命题的证明，因为 `V ℓ` 是 h-集合。这恰好说明：编码后的第零个条目就是空标签与新值组成的对。
 <!--ja-->
 妥当性補題は、これまでの読み取りと同じ形式で、真理値の間のパスとして述べられます。左辺は `tag0At s x` の充足であり、右辺は「スロット `s` の値が `pr ∅ (⟦ var x ⟧ γ)` と等しい」という命題です。これは空集合をタグとし第二成分にスロット `x` の値を持つ Kuratowski 対であり、`V ℓ` が h-集合であることから等号の型が命題である証明とともに包まれています。これはまさに、符号化された第 0 項目が空のタグと新しい値の対であることを言っています。
 <!--/-->
@@ -1075,7 +1075,7 @@ consAt-adequate : ∀ {n} (e' m e : Fin n) (γ : (V ℓ) ^ n)
 <!--en-->
 The conclusion is the analogous identification for the new slot: the value at `e'` equals the graph of `cons M g`, where `M` is the value at `m`. As with the earlier readers, the statement is a path of truth values, with the h-set property of `V ℓ` supplying the propositionhood of the equality. The abbreviations `M`, `E`, `E'` name the values at the three slots, and `⇔toPath` reduces the claim to the two inclusions.
 <!--zh-->
-结论是对新槽位的同类指认：`e'` 处的值等于 `cons M g` 的图，其中 `M` 是 `m` 处的值。与前面的读式一样，陈述是真值之间的一条路径，等式的命题性由 `V ℓ` 的 h-集性质提供。缩写 `M`、`E`、`E'` 命名三个槽位处的值，`⇔toPath` 把论断归约为两个包含。
+结论是对新槽位的同类指认：`e'` 处的值等于 `cons M g` 的图，其中 `M` 是 `m` 处的值。与前面的读式一样，陈述是真值之间的一条路径，等式的命题性由 `V ℓ` 的 h-集合性质提供。缩写 `M`、`E`、`E'` 命名三个槽位处的值，`⇔toPath` 把论断归约为两个包含。
 <!--ja-->
 結論は新しいスロットに対する同種の同一視です。`e'` の値は `cons M g` のグラフと等しく、ここで `M` は `m` の値です。これまでの読み取りと同様に、主張は真理値の間のパスであり、等式の型の命題性は `V ℓ` の h-集合性から供給されます。略称 `M`、`E`、`E'` が三つのスロットの値を名指しし、`⇔toPath` が主張を二つの包含へ帰着させます。
 <!--/-->

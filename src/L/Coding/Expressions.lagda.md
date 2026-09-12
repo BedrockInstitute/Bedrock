@@ -95,7 +95,7 @@ open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
 <!--en-->
 The ambient hierarchy `V ℓ` is an h-set, so the equality of two of its sets is a proposition and can sit inside a truth value; this is what makes the packaged equations below legitimate. The natural numbers enter as sets: `# k` is the von Neumann numeral in the hierarchy and `sucV` its successor operation, a notion distinct from any universe level and from the arity indices the codes carry. Propositional truncation gives mere existence, and eliminating it is legitimate only into a proposition-valued target, a restriction the pair reader's outward proof honors explicitly.
 <!--zh-->
-周遭层级 `V ℓ` 是一个 h-集，故其中两个集合的相等是命题，可以放进真值之内；这正是下文打包等式得以成立的原因。自然数以集合身份进入：`# k` 是层级中的冯·诺伊曼数码，`sucV` 是其后继运算，它既不同于任何宇宙层级，也不同于码所带的元数指标。命题截断给出单纯存在，其消去只在取值为命题的目标中合法；配对读式的向外证明将显式遵守这一限制。
+周遭层级 `V ℓ` 是一个 h-集合，故其中两个集合的相等是命题，可以放进真值之内；这正是下文打包等式得以成立的原因。自然数以集合身份进入：`# k` 是层级中的冯·诺伊曼数码，`sucV` 是其后继运算，它既不同于任何宇宙层级，也不同于码所带的元数指标。命题截断给出单纯存在，其消去只在取值为命题的目标中合法；配对读式的向外证明将显式遵守这一限制。
 <!--ja-->
 周囲の階層 `V ℓ` は h-集合なので、その二つの集合の等しさは命題であり、真理値の中に置けます。これが後の梱包された等式を正当化するものです。自然数は集合として現れます。`# k` は階層におけるフォン・ノイマンの数項、`sucV` はその後者演算であり、宇宙レベルとも、符号が持つアリティの指標とも別の概念です。命題的切り捨ては単なる存在を与え、その消去が正当なのは命題値の対象に限られます。対の読みの外向きの証明はこの制限を明示的に守ります。
 <!--/-->
@@ -151,7 +151,7 @@ A bounded quantifier in the model ranges over elements of `S`, so any compound v
 <!--en-->
 Two small preparations open the section. `PairIs a p` packages the statement that the ambient value `a` equals `p` as a truth value: since the hierarchy is an h-set, that equality type is a proposition, and the pairing with `setIsSet` makes it an inhabitant of `Ω`. Adequacy statements will compare satisfaction judgments with these packaged equalities along paths. The expression language itself is indexed by a natural number `n` that fixes how many free-variable slots are available; a slot may well go unused.
 <!--zh-->
-本节以两件小准备开篇。`PairIs a p` 把「周遭取值 `a` 等于 `p`」这一陈述打包成真值：由于层级是 h-集，该相等类型是命题，与 `setIsSet` 配对后便是 `Ω` 的元素。此后充分性陈述都将沿路径把满足判断与这些打包的等式相比较。表达式语言本身以自然数 `n` 为指标，确定可用的自由变元槽位数；某个槽位完全可以不被使用。
+本节以两件小准备开篇。`PairIs a p` 把「周遭取值 `a` 等于 `p`」这一陈述打包成真值：由于层级是 h-集合，该相等类型是命题，与 `setIsSet` 配对后便是 `Ω` 的元素。此后充分性陈述都将沿路径把满足判断与这些打包的等式相比较。表达式语言本身以自然数 `n` 为指标，确定可用的自由变元槽位数；某个槽位完全可以不被使用。
 <!--ja-->
 本節は小さな二つの準備から始まります。`PairIs a p` は「周囲の値 `a` が `p` に等しい」という主張を真理値として梱包します。階層は h-集合なので、その等式の型は命題であり、`setIsSet` との対によって `Ω` の要素になります。以後の妥当性の主張は、充足の判断とこれらの梱包された等式をパスに沿って比較することになります。式の言語そのものは自然数 `n` を指標とし、利用できる自由変数スロットの数を確定します。ひとつのスロットが使われないままであっても構いません。
 <!--/-->
@@ -286,7 +286,7 @@ Adequacy has two directions, and `out`{.Agda} is the one a soundness proof consu
 <!--en-->
 The hypothesis of the pair case is a truncated bounded existential with three layers, so the proof eliminates them one at a time, and each elimination needs a proposition-valued target. This is where `setIsSet`{.Agda} enters: the conclusion is a path in the hierarchy, which is an h-set, hence the target is a proposition and the eliminations are legitimate. What truncation gives and what it does not should be stated plainly. The witnesses `s`, `u`, `v` arrive as elements, so the mathematics can use them, but the hypothesis asserts only their mere existence: no uniqueness, and no chosen representatives.
 <!--zh-->
-配对情形的前提是一个具有三层的截断有界存在，故证明逐层消去它们，而每次消去都需要取值为命题的目标。这正是 `setIsSet`{.Agda} 进入之处：结论是层级 (一个 h-集) 中的一条路径，因此目标是命题，消去合法。截断给了什么、没给什么，值得直说：见证 `s`、`u`、`v` 作为元素到达，数学可以继续使用它们，但前提断言的只是它们的单纯存在：没有唯一性，也没有被选出的代表。
+配对情形的前提是一个具有三层的截断有界存在，故证明逐层消去它们，而每次消去都需要取值为命题的目标。这正是 `setIsSet`{.Agda} 进入之处：结论是层级 (一个 h-集合) 中的一条路径，因此目标是命题，消去合法。截断给了什么、没给什么，值得直说：见证 `s`、`u`、`v` 作为元素到达，数学可以继续使用它们，但前提断言的只是它们的单纯存在：没有唯一性，也没有被选出的代表。
 <!--ja-->
 対の場合の前提は三層に重なった截断された有界存在なので、証明はそれを一度にひとつずつ消去し、各消去には命題値の対象が必要です。ここで `setIsSet`{.Agda} が登場します。結論は階層 (h-集合) における道であり、したがって対象は命題なので、消去は正当です。截断が何を与え、何を与えないかは率直に述べるべきです。証人 `s`、`u`、`v` は要素として現れるので数学はそれを使えますが、前提が主張するのはそれらの単なる存在にすぎません。一意性も、選ばれた代表もありません。
 <!--/-->

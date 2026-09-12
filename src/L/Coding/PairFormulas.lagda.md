@@ -521,7 +521,7 @@ The final theorem connects the object-language reader with its external meaning.
 <!--zh-->
 ## 充分性
 
-最后的定理把对象语言的读式与其外部含义连接起来。由于满足关系取值于 `hProp`，这条陈述本身就是真值之间的一条路径：命题 `γ ⊨ prAt q u v` 被等同于「`q` 处的值等于 `u` 与 `v` 处之值的 Kuratowski 对」这一命题，并附上该相等类型为命题的证明，因为 `V ℓ` 是 h-集。展开三条联结词与有界量词的满足关系后，左边恰好变成 `prChar-fwd` 与 `prChar-bwd` 所消耗的三条假设，于是充分性证明只是把两个已有论证组合起来，而不需证明任何新东西。
+最后的定理把对象语言的读式与其外部含义连接起来。由于满足关系取值于 `hProp`，这条陈述本身就是真值之间的一条路径：命题 `γ ⊨ prAt q u v` 被等同于「`q` 处的值等于 `u` 与 `v` 处之值的 Kuratowski 对」这一命题，并附上该相等类型为命题的证明，因为 `V ℓ` 是 h-集合。展开三条联结词与有界量词的满足关系后，左边恰好变成 `prChar-fwd` 与 `prChar-bwd` 所消耗的三条假设，于是充分性证明只是把两个已有论证组合起来，而不需证明任何新东西。
 <!--ja-->
 ## 妥当性
 
@@ -531,7 +531,7 @@ The final theorem connects the object-language reader with its external meaning.
 <!--en-->
 Both sides of the displayed path are truth values. On the right, the equality type `⟦ var q ⟧ γ ≡ pr (⟦ var u ⟧ γ) (⟦ var v ⟧ γ)` is paired with `setIsSet _ _`, the witness that equality of two h-set elements is a proposition; this pairing is exactly how an `hProp` is built. The proof then supplies the two directions of the underlying iff, and `⇔toPath` promotes them to the path of propositions.
 <!--zh-->
-所展示的路径两侧都是真值。右边把相等类型 `⟦ var q ⟧ γ ≡ pr (⟦ var u ⟧ γ) (⟦ var v ⟧ γ)` 与 `setIsSet _ _` 配对，后者是「两个 h-集元素的相等是命题」的证明；这种配对正是构造 `hProp` 的方式。证明随后给出底层当且仅当的两个方向，`⇔toPath` 把它们提升为命题间的路径。
+所展示的路径两侧都是真值。右边把相等类型 `⟦ var q ⟧ γ ≡ pr (⟦ var u ⟧ γ) (⟦ var v ⟧ γ)` 与 `setIsSet _ _` 配对，后者是「两个 h-集合元素的相等是命题」的证明；这种配对正是构造 `hProp` 的方式。证明随后给出底层当且仅当的两个方向，`⇔toPath` 把它们提升为命题间的路径。
 <!--ja-->
 示されたパスの両辺はともに真理値です。右辺では、等号の型 `⟦ var q ⟧ γ ≡ pr (⟦ var u ⟧ γ) (⟦ var v ⟧ γ)` に `setIsSet _ _` が組にされます。後者は、h-集合の二つの要素の等号が命題であることの証明です。この組がまさに `hProp` の作り方です。証明はその後、根底にある同値の二方向を与え、`⇔toPath` がそれらを命題の間のパスへ引き上げます。
 <!--/-->

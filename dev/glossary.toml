@@ -349,6 +349,203 @@ notes = "The isContr notion; explicitly introduced in Base.Prelude."
 
 [[term]]
 category = "Type theory"
+id = "dependent-function"
+audience = "reader"
+en = "dependent function"
+zh = "依值函数"
+ja = "依存関数"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["dependent functions"]
+recap_en = "An element of a Π type: it assigns to every input an element of the type corresponding to that input."
+recap_zh = "Π 类型的元素：它为每个输入给出相应类型中的一个元素。"
+recap_ja = "Π 型の元。各入力に対し、その入力に対応する型の元を与える。"
+notes = "The element of a Π type, named in Base.Prelude. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "dependent-pair"
+audience = "reader"
+en = "dependent pair"
+zh = "依值对"
+ja = "依存対"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["dependent pairs"]
+recap_en = "An element of a Σ type: a chosen first component together with data belonging to the corresponding type."
+recap_zh = "Σ 类型的元素：选定的第一分量，连同属于相应类型的数据。"
+recap_ja = "Σ 型の元。選ばれた第一成分と、対応する型に属するデータの組。"
+notes = "The element of a Σ type, named in Base.Prelude. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "first-component"
+audience = "reader"
+en = "first component"
+zh = "第一分量"
+ja = "第一成分"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["first components"]
+recap_en = "The element chosen first in a dependent pair, extracted by fst."
+recap_zh = "依值对中先给出的那个元素，用 fst 取出。"
+recap_ja = "依存対で先に選ばれる元であり、fst で取り出す。"
+notes = "Owner ruling 2026-09-12. Paired with second component; both are named together in Base.Prelude."
+
+[[term]]
+category = "Type theory"
+id = "second-component"
+audience = "reader"
+en = "second component"
+zh = "第二分量"
+ja = "第二成分"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["second components"]
+recap_en = "The element of a dependent pair whose type may depend on the first component, extracted by snd."
+recap_zh = "依值对中类型可以依赖第一分量的那个元素，用 snd 取出。"
+recap_ja = "型が第一成分に依存しうる依存対のもう一方の元であり、snd で取り出す。"
+notes = "Owner ruling 2026-09-12. Paired with first component."
+
+[[term]]
+category = "Type theory"
+id = "certificate"
+audience = "reader"
+en = "certificate"
+zh = "证书"
+ja = "証明書"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["certificates"]
+recap_en = "A proof carried together with an object so that later reasoning may use the property it establishes."
+recap_zh = "随对象一同携带的证明，使后续论证可以使用它所确立的性质。"
+recap_ja = "後の議論でその性質を使えるよう、対象とともに携える証明。"
+notes = "Book-local name for the second component of a dependent pair in its proof-carrying role; named in Base.Prelude. It is an ordinary Agda proof, not a cryptographic certificate. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "record-field"
+audience = "reader"
+en = "field"
+zh = "字段"
+ja = "フィールド"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["fields"]
+recap_en = "A named component of a record type, retrieved by the projection of the same name."
+recap_zh = "记录类型中具名的分量，可用同名投影取出。"
+recap_ja = "レコード型の名前付きの成分であり、同名の射影で取り出せる。"
+notes = "The record component, named in Base.Prelude. This development has no algebraic field, so the English word is unambiguous here. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "constructor"
+audience = "reader"
+en = "constructor"
+zh = "构造子"
+ja = "構成子"
+avoid = ["ja:コンストラクタ"]
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["constructors"]
+recap_en = "A primitive operation that builds an element of an inductive type or a record type."
+recap_zh = "直接生成归纳类型或记录类型元素的基本操作。"
+recap_ja = "帰納型やレコード型の元を直接作り出す基本の操作。"
+notes = "Owner ruling 2026-09-12 unified the Japanese rendering on 構成子: the tree carried 構成子 219 times against コンストラクタ 64 times, and the 64 katakana occurrences were converted the same day."
+
+[[term]]
+category = "Type theory"
+id = "projection"
+audience = "reader"
+en = "projection"
+zh = "投影"
+ja = "射影"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["projections"]
+recap_en = "An operation that retrieves one component from a pair or one field from a record."
+recap_zh = "从对中取出某个分量、或从记录中取出某个字段的运算。"
+recap_ja = "対から成分を、レコードからフィールドを取り出す操作。"
+notes = "Named in Base.Prelude with fst, snd and the field names. ja 射影, not 投影. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "path"
+audience = "reader"
+en = "path"
+zh = "路径"
+ja = "パス"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["paths"]
+recap_en = "An equality proof between two elements of a type; it has a source and a target, and can be reversed and composed."
+recap_zh = "类型中两个元素之间的相等证明，它有起点与终点，可以反转，也可以首尾相接。"
+recap_ja = "型の二つの元の間の等しさの証明。始点と終点を持ち、逆向きにも、つなぎ合わせることもできる。"
+notes = "The cubical equality proof; the path type is how this book represents equality. Owner ruling 2026-09-12. Compounds such as 路径类型 and パス等式 keep the term as their head, so automatic matching links the head correctly."
+
+[[term]]
+category = "Type theory"
+id = "contractible"
+audience = "reader"
+en = "contractible"
+zh = "可缩"
+ja = "可縮"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["contractibility"]
+forms_zh = ["可缩性"]
+forms_ja = ["可縮性"]
+recap_en = "A type with a chosen centre to which every element is joined by a path."
+recap_zh = "带有选定中心、且每个元素都有路径与中心相连的类型。"
+recap_ja = "選ばれた中心を持ち、すべての元が中心とパスで結ばれる型。"
+notes = "The isContr notion, read in this book as unique existence. The nominal forms 可缩性 and 可縮性 are audited so that automatic matching links the whole word. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "proposition"
+audience = "reader"
+en = "proposition"
+zh = "命题"
+ja = "命題"
+introduced_in = "Base.Prelude"
+matching = "explicit"
+forms_en = ["propositions"]
+recap_en = "A type any two of whose elements are equal, so that it retains only whether a proof exists."
+recap_zh = "任意两个元素都相等的类型，因此只保留是否存在证明这一信息。"
+recap_ja = "任意の二つの元が等しい型であり、証明が存在するかどうかだけを保つ。"
+notes = "The isProp notion. Explicit matching, measured 2026-09-12: in Chinese 246 of 950 occurrences (26%) and in Japanese 291 of 973 (30%) sit inside a different term, chiefly 命题截断 / 命題的切り詰め, 命题值 / 命題値, 命题性 / 命題性 and 命题降层. English is unaffected because the word boundary excludes propositional, but matching is one decision for all three languages."
+
+[[term]]
+category = "Type theory"
+id = "h-set"
+audience = "reader"
+en = "h-set"
+zh = "h-集合"
+ja = "h-集合"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["h-sets"]
+presence = true
+recap_en = "A type whose equality types are propositions: elements may differ, but any two proofs that they are equal agree."
+recap_zh = "相等类型都是命题的类型：元素之间可以有差别，但同一对元素的任意两个相等证明彼此相等。"
+recap_ja = "等しさの型がすべて命題である型。元は互いに異なりうるが、同じ二元が等しいことの証明は互いに一致する。"
+notes = "A type whose identity types are propositions, also called a set or 0-type. English: https://homotopytypetheory.org/book/ section 3.1; Japanese 集合 (set / h-set): https://elpinal.gitlab.io/notes/bicat-of-adjunctions.pdf definition 1.3. The prefixed CJK forms distinguish this type from an element of V; the prefix is a composed notation, not a separately attested translation. Owner ruling 2026-09-12 unified the Chinese rendering on h-集合: the tree carried h-集 60 times, h-集合 twice and the bare Latin h-set 3 times, and all were converted the same day. Presence is enabled to keep the three editions parallel."
+
+[[term]]
+category = "Type theory"
+id = "empty-type"
+audience = "reader"
+en = "empty type"
+zh = "空类型"
+ja = "空型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The type with no constructors; since it has no element, it eliminates into any type."
+recap_zh = "没有任何构造子的类型；因为它没有元素，可以从它消去到任意类型。"
+recap_ja = "構成子を持たない型。元が存在しないので、任意の型へ消去できる。"
+notes = "The type ⊥*, named in Base.Prelude. Owner ruling 2026-09-12."
+[[term]]
+category = "Type theory"
 en = "definite-description operator"
 zh = "摹状词算子"
 ja = "確定記述の演算子"
@@ -1266,12 +1463,6 @@ zh = "有界子集定理"
 ja = "有界部分集合定理"
 notes = "Descriptive local theorem name for bounding a constructible subset by an ordinal stage. Pattern rather than a claimed standard title. Standard constructibility argument context: https://elecello.com/doc/set/set0006.pdf ."
 
-[[term]]
-category = "Teaching terminology"
-en = "h-set"
-zh = "h-集合"
-ja = "h-集合"
-notes = "A type whose identity types are propositions, also called a set or 0-type. English: https://homotopytypetheory.org/book/ section 3.1; Japanese 集合 (set / h-set): https://elpinal.gitlab.io/notes/bicat-of-adjunctions.pdf definition 1.3. The prefixed CJK forms distinguish this type from an element of V; the prefix is a composed notation, not a separately attested translation."
 
 [[term]]
 category = "Type theory"

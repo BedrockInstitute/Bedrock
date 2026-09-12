@@ -39,7 +39,7 @@ Three features of the setting shape everything that follows. First, `A` and each
 <!--en-->
 The collapse lands in the set-level carrier of the cumulative hierarchy, so its output is made of genuine sets rather than of points of `A`. That carrier, written `SV.S` below, is a type whose equality types are propositions, and its membership `_∈ˢ_` packages each membership statement as an `hProp`: an underlying type `⟨ b ∈ˢ a ⟩` together with a proof that this type is a proposition. Working against this fixed vocabulary, the chapter's theorems can state membership and transitivity with the hierarchy's own relation rather than with a new one.
 <!--zh-->
-塌缩落在累积层级的集合层载体中，因此其输出由真正的集合构成，而非 `A` 的点。该载体在下文记作 `SV.S`；它是 h-集，也就是任意两元素之间的相等类型都是命题。其成员关系 `_∈ˢ_` 把每条隶属陈述打包成一个 `hProp`：底层类型 `⟨ b ∈ˢ a ⟩` 连同该类型为命题的证明。因此，隶属与传递性都可以直接用层级自身的关系陈述。
+塌缩落在累积层级的集合层载体中，因此其输出由真正的集合构成，而非 `A` 的点。该载体在下文记作 `SV.S`；它是 h-集合，也就是任意两元素之间的相等类型都是命题。其成员关系 `_∈ˢ_` 把每条隶属陈述打包成一个 `hProp`：底层类型 `⟨ b ∈ˢ a ⟩` 连同该类型为命题的证明。因此，隶属与传递性都可以直接用层级自身的关系陈述。
 <!--ja-->
 崩壊は累積階層の集合レベルの台に着地します。したがって出力は `A` の点ではなく集合です。この台を以下では `SV.S` と書きます。これは h-集合、すなわち任意の二要素の間の等式型が命題となる型です。所属関係 `_∈ˢ_` は各所属の主張を `hProp`、つまり根底の型 `⟨ b ∈ˢ a ⟩` とその型が命題である証明の対として与えます。したがって所属と推移性は階層本来の関係で直接述べられます。
 <!--/-->

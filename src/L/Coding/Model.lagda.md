@@ -52,7 +52,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 <!--en-->
 Adequacy statements compare truth values, so the ambient facts are packaged as propositions. In particular, equality of two sets in the hierarchy is a proposition because the hierarchy is an h-set. Paths and congruence then align these packaged equalities with the projected lookups, while the substantive set-theoretic inputs, absoluteness, pairing, and numeral facts, enter in their own lemmas.
 <!--zh-->
-充分性陈述比较的是真值，故周遭事实被打包成命题。特别地，层级中两个集合的相等是命题，因为层级是 h-集。路径与同余负责把这些包装后的等式同投影查值对齐；绝对性、配对与数码等实质集合论事实则由各自的引理提供。
+充分性陈述比较的是真值，故周遭事实被打包成命题。特别地，层级中两个集合的相等是命题，因为层级是 h-集合。路径与同余负责把这些包装后的等式同投影查值对齐；绝对性、配对与数码等实质集合论事实则由各自的引理提供。
 <!--ja-->
 妥当性の主張は真理値を比較するので、周囲の事実は命題としてまとめられます。特に階層の二集合の等しさは、階層が h-集合であるため命題です。パスと合同性がこの等しさを射影された参照とそろえ、絶対性、対、数項に関する集合論的内容はそれぞれの補題から入ります。
 <!--/-->
@@ -191,7 +191,7 @@ The bridge this chapter builds runs in two directions. Forward, a satisfaction j
 <!--en-->
 The statement compares truth values, so its right-hand side must be a truth value too. Equality of two sets of the hierarchy is a proposition because the hierarchy is an h-set, and `PairIs` packages such a path type with exactly that propositionhood proof. The lifted reader `prAtL q u v` is `prAt q u v` itself with each constant relabelled into the carrier `S`; here there are no constants to relabel, but the boundedness certificate `Δ₀-prAt` still travels with the formula, since the transfer lemma demands one.
 <!--zh-->
-该陈述比较的是真值，故右边本身也必须是一个真值。层级中两个集合的相等是命题，因为层级是 h-集；`PairIs` 把这样的路径类型连同「它是命题」的证明包装起来。抬升后的读式 `prAtL q u v` 就是 `prAt q u v` 本身，只是把每个常元改名进载体 `S`；这里没有可改名的常元，但有界性证书 `Δ₀-prAt` 仍随公式携带，因为转换引理要求一份这样的见证。
+该陈述比较的是真值，故右边本身也必须是一个真值。层级中两个集合的相等是命题，因为层级是 h-集合；`PairIs` 把这样的路径类型连同「它是命题」的证明包装起来。抬升后的读式 `prAtL q u v` 就是 `prAt q u v` 本身，只是把每个常元改名进载体 `S`；这里没有可改名的常元，但有界性证书 `Δ₀-prAt` 仍随公式携带，因为转换引理要求一份这样的见证。
 <!--ja-->
 この主張は真理値を比較するので、右辺も真理値でなければなりません。階層の二つの集合の等式は、階層が h-集合であるため命題であり、`PairIs` はそのようなパスの型にちょうどその命題性の証明を包んで記録します。持ち上げられた読解式 `prAtL q u v` は、各定数を台 `S` へ改名した `prAt q u v` そのものです。ここには改名すべき定数がありませんが、有界性の証明書 `Δ₀-prAt` は依然として公式に伴われます。転送の補題がそれを要求するからです。
 <!--/-->
