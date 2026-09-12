@@ -31,7 +31,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from i18n_markers import weave_for_site, group_languages  # noqa: E402
-from reading_routes import build_reading_data  # noqa: E402
+from reading_routes import GUIDE_PANEL, build_reading_data, own_page, twin_of  # noqa: E402
 from term_registry import TERM_MARK_RE, load_entries, reader_terms, schema_errors, localized_forms  # noqa: E402
 
 LANG_LABELS = {"en": "English", "zh": "中文", "ja": "日本語"}
@@ -101,6 +101,25 @@ CHAPTER_META = {}
 def chapter_title(module, lang):
     titles = CHAPTER_TITLES.get(module, {})
     return titles.get(lang, titles.get("en", module))
+
+
+def chapter_href(module, anchor=""):
+    """Where a chapter is read, as the reading catalog says.
+
+    `scripts/site/reading_routes.py` decides a chapter's address and puts it on the
+    node as `page` and `anchor`; this function only assembles them, so the renderer,
+    the route explorer and the dependency map cannot disagree about where a chapter
+    lives. A preview chapter has no page of its own and resolves to a panel of the
+    reading guide, which embeds its whole body, so an anchor the chapter defines still
+    resolves; an explicit anchor therefore wins over the panel's own.
+
+    A module with no catalog entry is a library page rendered for reference, not a
+    chapter, and is addressed by its own name.
+    """
+    meta = CHAPTER_META.get(module)
+    if not meta:
+        return own_page(module) + anchor
+    return meta["page"] + (anchor or meta["anchor"])
 
 
 def chapter_field(module, field, lang, default=""):
@@ -444,7 +463,8 @@ def modules_nav(current, mods, lang):
                 cur = ' class="modleaf cur"' if m == current else ' class="modleaf"'
                 label = htmllib.escape(chapter_title(m, lang))
                 active = ' aria-current="page"' if m == current else ""
-                out.append(f'<li{cur}><a href="{m}.html" title="{m}"{active}>{label}</a></li>')
+                out.append(f'<li{cur}><a href="{chapter_href(m)}" title="{m}"{active}>'
+                           f'{label}</a></li>')
             else:
                 name = entry[1]
                 path = f"{prefix}{name}."
@@ -459,7 +479,7 @@ def modules_nav(current, mods, lang):
         f'<li><a href="index.html#{target}">{UI[lang][key]}</a></li>'
         for target, key in (("reading-explorer", "routes"),
                             ("dependency-map", "depmap"),
-                            ("milestones", "landmark"),
+                            (GUIDE_PANEL, "landmark"),
                             ("term-glossary", "terms")))
     return (f'<details class="navsec reading-guide" open><summary class="nav-title">'
             f'{UI[lang]["guide"]}</summary><ul class="guide-nav">{guide}</ul></details>'
@@ -486,7 +506,7 @@ def learning_home(body, mount, lang, terms):
         "zh": "选择一条阅读路线，查看先修关系，或集中回顾本书的里程碑与术语。",
         "ja": "学習ルートを選び、前提関係を確認し、マイルストーンと用語を振り返ります。",
     }[lang]
-    ids = ("reading-explorer", "dependency-map", "milestones", "term-glossary")
+    ids = ("reading-explorer", "dependency-map", GUIDE_PANEL, "term-glossary")
     tabs = ''.join(f'<a id="tab-{key}" href="#{key}" data-panel="{key}">{label}</a>'
                    for key, label in zip(ids, labels[1:]))
     glossary_rows = []
@@ -508,7 +528,7 @@ def learning_home(body, mount, lang, terms):
     for index, entry in enumerate(terms, 1):
         label = htmllib.escape(entry[lang])
         recap = htmllib.escape(entry[f"recap_{lang}"])
-        href = f'{entry["introduced_in"]}.html#term-{entry["id"]}'
+        href = chapter_href(entry["introduced_in"], f'#term-{entry["id"]}')
         search_text = htmllib.escape(f'{entry[lang]} {entry[f"recap_{lang}"]}', quote=True)
         glossary_rows.append(
             f'<div class="term-entry" data-term-entry data-term-search="{search_text}">'
@@ -521,7 +541,7 @@ def learning_home(body, mount, lang, terms):
             f'<div class="book-panels">{mount}'
             f'<section id="dependency-map" class="book-panel">'
             '<!-- DEPENDENCY_MAP --></section>'
-            f'<section id="milestones" class="book-panel guide-landmark"><h2>{labels[3]}</h2>'
+            f'<section id="{GUIDE_PANEL}" class="book-panel guide-landmark"><h2>{labels[3]}</h2>'
             f'{milestone_body}</section>'
             f'<section id="term-glossary" class="book-panel term-glossary-panel"><h2>{labels[4]}</h2>'
             f'<div class="term-glossary-head"><p>{glossary_copy}</p>'
@@ -589,8 +609,7 @@ def rewrite_links(body, rendered, types_global):
         if mod in rendered:
             pos = anchor[1:] if anchor else ""
             extra = f' data-type="{mod}#{pos}"' if pos and pos in types_global.get(mod, {}) else ""
-            target = f"{mod}.html"
-            return f'<a {idpart}href="{target}{anchor}"{rest}{extra}>'
+            return f'<a {idpart}href="{chapter_href(mod, anchor)}"{rest}{extra}>'
         return f'<a{rest}>'                          # not rendered: drop the dead href
     return LINK_RE.sub(repl, body)
 
@@ -823,10 +842,10 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             i = modnav_list.index(module)
             parts = []
             if i > 0:
-                parts.append(f'<a class="chapnav-prev" href="{modnav_list[i - 1]}.html">'
+                parts.append(f'<a class="chapnav-prev" href="{chapter_href(modnav_list[i - 1])}">'
                              f'&larr; {UI[lang]["prev"]} · {htmllib.escape(chapter_title(modnav_list[i - 1], lang))}</a>')
             if i + 1 < len(modnav_list):
-                parts.append(f'<a class="chapnav-next" href="{modnav_list[i + 1]}.html">'
+                parts.append(f'<a class="chapnav-next" href="{chapter_href(modnav_list[i + 1])}">'
                              f'{UI[lang]["next"]} · {htmllib.escape(chapter_title(modnav_list[i + 1], lang))} &rarr;</a>')
             body += '<nav class="chapnav">' + "".join(parts) + "</nav>"
 
@@ -839,7 +858,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
 
         def shell(page_name, page_title, page_body_html, page_toc, body_class, module_slot):
             """One rendered page, with everything a machine reads about it filled in."""
-            md_name = (page_name[:-len(".html")] + ".md") if has_mirror else ""
+            md_name = twin_of(page_name) if has_mirror else ""
             return fill_template(
                 tpl, LANG=lang, TITLE=htmllib.escape(page_title), SITE=site,
                 DESC=htmllib.escape(page_description(module, lang, is_landing, is_external),
@@ -873,18 +892,10 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         open(dest, "w", encoding="utf-8").write(page)
 
-        if is_landing:
-            chapter_page = shell(module + ".html", chapter_title(module, lang), chapter_body,
-                                 toc_html(toc, lang), "text-page", module)
-            open(os.path.join(out_dir, lang, module + ".html"), "w", encoding="utf-8").write(chapter_page)
-
-        # The landing page and the chapter page show the same master, so each gets a
-        # twin under its own name; a `.md` beside any page URL then always resolves.
         if has_mirror:
-            for page_name in [out_name] + ([module + ".html"] if is_landing else []):
-                twin = markdown_mirror(mirror, code_blocks, module, lang, page_name, langs)
-                md_path = os.path.join(out_dir, lang, page_name[:-len(".html")] + ".md")
-                open(md_path, "w", encoding="utf-8").write(twin)
+            twin = markdown_mirror(mirror, code_blocks, module, lang, out_name, langs)
+            md_path = os.path.join(out_dir, lang, twin_of(out_name))
+            open(md_path, "w", encoding="utf-8").write(twin)
 
     # per-module type sidecar (keyed by the real module name; hover fetches types/<mod>.json)
     sidecar = json.dumps(types_global.get(module, {}), ensure_ascii=False)
@@ -1013,12 +1024,13 @@ def markdown_mirror(woven, code_blocks, module, lang, out_name, langs):
         f"stage: {quote(chapter_field(module, 'stage', lang))}",
         f"reading_order: {meta.get('order', 0)}",
         f"canonical: {SITE_URL}/{lang}/{out_name}",
-        f"html: {out_name}",
+        f"html: {chapter_href(module)}",
         f"agda_source: {SOURCE_TREE}/{module.replace('.', '/')}.lagda.md",
         "prerequisites: [" + ", ".join(meta.get("prerequisites", [])) + "]",
         "routes: [" + ", ".join(meta.get("routes", [])) + "]",
         "translations: [" + ", ".join(
-            f"{SITE_URL}/{other}/{module}.md" for other in langs if other != lang) + "]",
+            f"{SITE_URL}/{other}/{twin_of(out_name)}"
+            for other in langs if other != lang) + "]",
         "agent_guide: /llms.txt",
         "license: CC-BY-NC-SA-4.0",
         "---",
@@ -1064,8 +1076,9 @@ def json_ld(module, lang, out_name, langs, is_landing, is_external, has_mirror):
             page["position"] = position
         page["codeRepository"] = f"{SOURCE_TREE}/{module.replace('.', '/')}.lagda.md"
     if has_mirror:
+        # the twin of this page, which for a preview chapter is the guide's twin
         page["encoding"] = {"@type": "MediaObject", "encodingFormat": "text/markdown",
-                            "contentUrl": f"{SITE_URL}/{lang}/{module}.md"}
+                            "contentUrl": f"{SITE_URL}/{lang}/{twin_of(out_name)}"}
     graph = {"@context": "https://schema.org", "@graph": [page, book]}
     payload = json.dumps(graph, ensure_ascii=False, separators=(",", ":"))
     return ('  <script type="application/ld+json">'
@@ -1099,11 +1112,14 @@ order is a dependency order: a chapter's prerequisites are the modules it import
 
 - Every chapter is at `/<lang>/<Module>.html`, with `<lang>` one of `en`, `zh`, `ja`.
   The three editions share filenames, so swapping the language segment of any URL
-  reaches the same chapter in another language.
-- **Every chapter page has a plain-Markdown twin at `/<lang>/<Module>.md`.** It carries
-  the same prose and the same Agda in fenced blocks, with the chapter's stage,
-  prerequisites and source in YAML front matter, and it is a fraction of the size of
-  the HTML. Prefer it. Each HTML page advertises its own mirror with
+  reaches the same chapter in another language. The one exception is the preview
+  chapter `Milestones`, which has no page of its own: the reading guide embeds its
+  whole body, so it is read at `/<lang>/index.html#milestones`. The chapter list below
+  gives every chapter's address, and `/<lang>/reading-routes.json` gives it as data.
+- **Every chapter page has a plain-Markdown twin at the same path with a `.md`
+  extension.** It carries the same prose and the same Agda in fenced blocks, with the
+  chapter's stage, prerequisites and source in YAML front matter, and it is a fraction
+  of the size of the HTML. Prefer it. Each HTML page advertises its own mirror with
   `<link rel="alternate" type="text/markdown">`.
 - Pages are static HTML and need no JavaScript: the prose and the Agda are both in the
   initial response.
@@ -1163,7 +1179,9 @@ def agent_guide(langs, modnav_list):
     endpoints = [
         (f"/{lang}/reading-routes.json",
          "the chapter graph: every chapter's localized title, learning stage, "
-         "prerequisites, reading-order position and route memberships."),
+         "prerequisites, reading-order position, route memberships, and the `page` and "
+         "`anchor` it is read at. This file decides those addresses; every link on the "
+         "site is built from it."),
         (f"/{lang}/terms.json",
          "the reader-facing glossary: each term's label in this language, a one-sentence "
          "recap, and the chapter that introduces it."),
@@ -1194,7 +1212,8 @@ def agent_guide(langs, modnav_list):
     lines.append("")
     lines.append("Links point at the Markdown mirrors. Replace `/en/` with `/zh/` or `/ja/` "
                  "for the Chinese or Japanese edition, and `.md` with `.html` for the page a "
-                 "human reads.")
+                 "human reads. A chapter that is not read at the page its own name gives "
+                 "says where it is read.")
     lines.append("")
     for module in modnav_list:
         meta = CHAPTER_META.get(module, {})
@@ -1202,8 +1221,13 @@ def agent_guide(langs, modnav_list):
         title = chapter_title(module, lang)
         desc = chapter_field(module, "description", lang)
         position = meta.get("order", 0)
-        entry = (f"- [{position}. {title}]({SITE_URL}/{lang}/{module}.md) "
+        page = meta["page"]
+        entry = (f"- [{position}. {title}]({SITE_URL}/{lang}/{twin_of(page)}) "
                  f"(`{module}`, {stage})")
+        # Nearly every chapter is read at the page its own name gives, and saying so
+        # 121 times would be noise. A chapter that is read somewhere else says where.
+        if page != own_page(module):
+            entry += f", read at {SITE_URL}/{lang}/{chapter_href(module)}"
         if desc.rstrip(".") != title.rstrip("."):
             entry += f": {desc}"
         lines.append(entry)
@@ -1234,7 +1258,11 @@ def write_agent_files(out_dir, langs, base, modnav_list):
         "\n"
         f"Sitemap: {SITE_URL}/sitemap.xml\n")
 
-    pages = ["index.html"] + [f"{m}.html" for m in modnav_list]
+    # One entry per page that exists, in reading order after the guide. A preview
+    # chapter shares the guide's page and is not a second URL for a crawler to weigh
+    # against it, so the dedupe is what keeps it out.
+    pages = list(dict.fromkeys(
+        ["index.html"] + [CHAPTER_META[m]["page"] for m in modnav_list]))
     urls = []
     for lang in langs:
         for page in pages:
@@ -1275,7 +1303,7 @@ def write_search(out_dir, lang, modules, name2pos, pos_aspect, types_by_module):
             entries.append({"name": name, "module": m, "anchor": pos,
                             "aspect": pos_aspect.get(m, {}).get(pos, ""),
                             "type": re.sub(r"<[^>]+>", "", t),
-                            "href": f"{m}.html#{pos}"})
+                            "href": chapter_href(m, f"#{pos}")})
     open(os.path.join(out_dir, lang, "search.json"), "w", encoding="utf-8").write(
         json.dumps(entries, ensure_ascii=False))
 
@@ -1288,7 +1316,7 @@ def write_terms(out_dir, lang, terms):
             "label": entry[lang],
             "recap": entry[f"recap_{lang}"],
             "chapter": chapter_title(module, lang),
-            "href": f'{module}.html#term-{entry["id"]}',
+            "href": chapter_href(module, f'#term-{entry["id"]}'),
         }
     with open(os.path.join(out_dir, lang, "terms.json"), "w", encoding="utf-8") as target:
         json.dump(payload, target, ensure_ascii=False)
@@ -1385,7 +1413,8 @@ def main(argv):
     CHAPTER_META.update({
         node["id"]: {"description": node["description"], "stage": node["stage"],
                      "order": node["order"], "prerequisites": node["prerequisites"],
-                     "routes": node["routes"]}
+                     "routes": node["routes"], "page": node["page"],
+                     "anchor": node["anchor"]}
         for node in reading_data["nodes"]})
     glossary_entries = load_entries()
     term_errors = schema_errors(glossary_entries)

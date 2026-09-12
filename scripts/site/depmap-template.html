@@ -226,7 +226,10 @@
   }
   function showCard(id) {
     const node = byId[id], link = root.querySelector("[data-depmap-name]");
-    link.textContent = id; link.href = `${encodeURIComponent(id)}.html`;
+    /* The address travels with the node, from scripts/site/reading_routes.py. A
+       preview chapter has no page of its own, so a filename built from the id here
+       would point at nothing. */
+    link.textContent = id; link.href = node.page + node.anchor;
     root.querySelector("[data-depmap-card]").style.borderLeftColor = laneColor[node.lane];
     const meta = root.querySelector("[data-depmap-meta]");
     meta.textContent = `${node.stage} · ${node.lane} · ${STR.reading} ${String(node.ord).padStart(2, "0")}`;

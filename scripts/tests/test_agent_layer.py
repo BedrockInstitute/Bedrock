@@ -18,6 +18,22 @@ spec = importlib.util.spec_from_file_location(
 renderer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(renderer)
 
+import reading_routes  # noqa: E402  (the renderer put scripts/site on the path)
+
+
+def catalog_entry(module, preview=False, **fields):
+    """A catalog entry shaped the way `build_reading_data` shapes one.
+
+    The address is not restated here. It is read from the same constants the catalog
+    builds it from, so a test cannot quietly disagree with the site about where a
+    chapter lives.
+    """
+    entry = {"page": reading_routes.GUIDE_PAGE if preview else f"{module}.html",
+             "anchor": f"#{reading_routes.GUIDE_PANEL}" if preview else "",
+             "prerequisites": [], "routes": [], "order": 0}
+    entry.update(fields)
+    return entry
+
 
 class ProseAnchorTests(unittest.TestCase):
     def test_paragraphs_are_numbered_in_document_order(self):
@@ -63,6 +79,59 @@ class ProseAnchorTests(unittest.TestCase):
         self.assertEqual(len(counts), 1, counts)
 
 
+class ChapterAddressTests(unittest.TestCase):
+    """One rule decides where a chapter is read, and every consumer reads it.
+
+    The rule lives on the catalog node as `page` and `anchor`. These tests hold the
+    renderer to it, so a second opinion about a chapter's URL cannot be introduced
+    without failing here.
+    """
+
+    def setUp(self):
+        renderer.CHAPTER_META.clear()
+        renderer.CHAPTER_META.update({
+            "Milestones": catalog_entry("Milestones", preview=True),
+            "Base.Prelude": catalog_entry("Base.Prelude")})
+
+    def test_the_catalog_gives_a_preview_chapter_the_guide_panel(self):
+        data = reading_routes.build_reading_data("src")
+        node = next(n for n in data["nodes"] if n["id"] == "Milestones")
+        self.assertTrue(node["preview"])
+        self.assertEqual(node["page"], reading_routes.GUIDE_PAGE)
+        self.assertEqual(node["anchor"], f"#{reading_routes.GUIDE_PANEL}")
+
+    def test_the_catalog_gives_every_other_chapter_its_own_page(self):
+        data = reading_routes.build_reading_data("src")
+        for node in data["nodes"]:
+            if node["preview"]:
+                continue
+            with self.subTest(chapter=node["id"]):
+                self.assertEqual(node["page"], f"{node['id']}.html")
+                self.assertEqual(node["anchor"], "")
+
+    def test_a_plain_link_to_a_preview_chapter_goes_to_the_panel(self):
+        self.assertEqual(renderer.chapter_href("Milestones"), "index.html#milestones")
+        self.assertEqual(renderer.chapter_href("Base.Prelude"), "Base.Prelude.html")
+
+    def test_an_explicit_anchor_wins_over_the_panel(self):
+        """The guide embeds the chapter's whole body, so an anchor the chapter defines
+        resolves there; a reader who asked for it must land on it, not on the panel."""
+        self.assertEqual(renderer.chapter_href("Milestones", "#1354"), "index.html#1354")
+        self.assertEqual(renderer.chapter_href("Milestones", "#term-transitive-set"),
+                         "index.html#term-transitive-set")
+
+    def test_a_library_page_is_addressed_by_its_own_name(self):
+        """A module with no catalog entry is rendered for reference, not as a chapter."""
+        self.assertEqual(renderer.chapter_href("Cubical.Data.Nat.Base", "#973"),
+                         "Cubical.Data.Nat.Base.html#973")
+
+    def test_the_guide_panel_id_is_the_anchor_the_catalog_hands_out(self):
+        body, _ = renderer.md_to_html("# Milestones\n\nThe endpoints.")
+        home = renderer.learning_home(body, "", "en", [])
+        self.assertIn(f'<section id="{reading_routes.GUIDE_PANEL}"', home)
+        self.assertIn(renderer.chapter_href("Milestones").split("#")[1], home)
+
+
 class PlainCodeTests(unittest.TestCase):
     def test_highlighting_is_stripped_back_to_the_agda_source(self):
         block = ('<pre class="Agda"><a id="1" class="Keyword">open</a> '
@@ -80,10 +149,11 @@ class MarkdownTwinTests(unittest.TestCase):
         renderer.CHAPTER_TITLES.clear()
         renderer.CHAPTER_TITLES.update({"V.Hierarchy": {"en": "The cumulative hierarchy"}})
         renderer.CHAPTER_META.clear()
-        renderer.CHAPTER_META.update({"V.Hierarchy": {
-            "description": {"en": "The ambient hierarchy V as a higher inductive type."},
-            "stage": {"en": "The ambient hierarchy"}, "order": 21,
-            "prerequisites": ["Base.Prelude"], "routes": ["common-foundations"]}})
+        renderer.CHAPTER_META.update({"V.Hierarchy": catalog_entry(
+            "V.Hierarchy",
+            description={"en": "The ambient hierarchy V as a higher inductive type."},
+            stage={"en": "The ambient hierarchy"}, order=21,
+            prerequisites=["Base.Prelude"], routes=["common-foundations"])})
 
     def twin(self, woven, blocks):
         return renderer.markdown_mirror(woven, blocks, "V.Hierarchy", "en",
@@ -129,15 +199,15 @@ class AgentGuideTests(unittest.TestCase):
                                         "Base.Prelude": {"en": "Prelude"}})
         renderer.CHAPTER_META.clear()
         renderer.CHAPTER_META.update({
-            "Milestones": {"description": {"en": "The proved endpoints."},
-                           "stage": {"en": "Preview"}, "order": 1,
-                           "prerequisites": [], "routes": []},
-            "Base.Prelude": {"description": {"en": "Prelude"}, "stage": {"en": "Foundations"},
-                             "order": 2, "prerequisites": [], "routes": []}})
+            "Milestones": catalog_entry("Milestones", preview=True,
+                                        description={"en": "The proved endpoints."},
+                                        stage={"en": "Preview"}, order=1),
+            "Base.Prelude": catalog_entry("Base.Prelude",
+                                          description={"en": "Prelude"},
+                                          stage={"en": "Foundations"}, order=2)})
 
     def test_the_guide_names_every_chapter_and_its_markdown_twin(self):
         guide = renderer.agent_guide(["en", "zh", "ja"], ["Milestones", "Base.Prelude"])
-        self.assertIn("(https://bedrock.institute/en/Milestones.md)", guide)
         self.assertIn("(https://bedrock.institute/en/Base.Prelude.md)", guide)
         self.assertIn("/en/reading-routes.json", guide)
         self.assertIn("/en/search.json", guide)
@@ -149,7 +219,18 @@ class AgentGuideTests(unittest.TestCase):
         guide = renderer.agent_guide(["en"], ["Milestones", "Base.Prelude"])
         self.assertIn("2. Prelude](https://bedrock.institute/en/Base.Prelude.md) "
                       "(`Base.Prelude`, Foundations)\n", guide)
-        self.assertIn("(`Milestones`, Preview): The proved endpoints.", guide)
+        self.assertIn("The proved endpoints.", guide)
+
+    def test_a_chapter_read_elsewhere_says_where(self):
+        """The preview chapter has no page of its own, so the index gives the guide
+        panel it is read at rather than a filename that would 404."""
+        guide = renderer.agent_guide(["en"], ["Milestones", "Base.Prelude"])
+        self.assertIn("[1. Milestones](https://bedrock.institute/en/index.md)", guide)
+        self.assertIn("read at https://bedrock.institute/en/index.html#milestones", guide)
+        self.assertNotIn("Milestones.md", guide)
+        self.assertNotIn("Milestones.html", guide)
+        # a chapter that is read where its name says stays quiet about it
+        self.assertNotIn("read at https://bedrock.institute/en/Base.Prelude.html", guide)
 
     def test_the_page_description_places_a_chapter_the_catalog_does_not_describe(self):
         described = renderer.page_description("Base.Prelude", "en", False, False)

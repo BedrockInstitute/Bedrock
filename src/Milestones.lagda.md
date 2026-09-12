@@ -57,7 +57,7 @@ open import L.Model public using ( L⊨ZFC )
 <!--en-->
 **Theorem 4.** Under the same excluded-middle assumption, the constructible universe `L` satisfies the generalized continuum hypothesis internally.
 <!--zh-->
-**定理4** 在同一个排中律假设下，可构造宇宙 `L` 在内部满足广义连续统假设。
+**定理4** 在排中律假设下，可构造宇宙 `L` 在内部满足广义连续统假设。
 <!--ja-->
 **定理4** 同じ排中律の仮定のもとで、構成可能宇宙 `L` は内部的に一般連続体仮説を満たします。
 <!--/-->

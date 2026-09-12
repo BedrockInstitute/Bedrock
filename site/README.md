@@ -60,6 +60,23 @@ displayed Agda block, Agda's own highlighter has already named every token by ch
 offset and every definition by its identifier, so code needs no scheme of Bedrock's.
 `scripts/tests/test_agent_layer.py` pins all of this.
 
+## Where a chapter lives
+
+**One rule, in one place.** [scripts/site/reading_routes.py](../scripts/site/reading_routes.py)
+decides a chapter's address and puts it on the catalog node as `page` and `anchor`. Every
+consumer links through those two fields and none of them builds a filename from a module
+name: the renderer (`chapter_href`), the reading-route explorer, the dependency map, the
+search index, the glossary, the sitemap, the Markdown twins and llms.txt.
+
+The rule exists because a preview chapter has **no page of its own**. The reading guide
+embeds its entire body, so `Milestones` is read at `index.html#milestones` and no
+`Milestones.html` is written. Because the guide embeds the whole chapter, every anchor
+the chapter defines still resolves there, which is why an explicit anchor beats the
+panel's own: `chapter_href("Milestones", "#1354")` is `index.html#1354`.
+
+A module with no catalog entry is a Cubical library page rendered for reference, not a
+chapter, and keeps its own filename.
+
 The ask-an-assistant dialog is built entirely in the browser from `window.bedrock` and
 the selection. It sends nothing anywhere: it produces text the reader copies into
 whatever assistant they already use. Its three language editions live in `ask-ai.js`,

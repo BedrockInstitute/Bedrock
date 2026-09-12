@@ -89,7 +89,12 @@
     return node;
   };
   const local = value => value && (value[lang] || value.en || value.zh) || "";
-  const chapterHref = id => `${encodeURIComponent(id)}.html`;
+  /* A chapter's address is decided once, in scripts/site/reading_routes.py, and reaches
+     the browser on the node as `page` and `anchor`. Reassembling it from the id here
+     would be a second opinion, and a preview chapter, which has no page of its own,
+     is where the two would part. */
+  let addresses = new Map();
+  const chapterHref = id => addresses.get(id) || "";
 
   let completed = new Set();
   try {
@@ -120,6 +125,7 @@
 
   function initialise(data) {
     const nodes = new Map(data.nodes.map(node => [node.id, node]));
+    addresses = new Map(data.nodes.map(node => [node.id, node.page + node.anchor]));
     const routes = new Map(data.routes.map(route => [route.id, route]));
     const validCompleted = [...completed].filter(id => nodes.has(id));
     completed = new Set(validCompleted);

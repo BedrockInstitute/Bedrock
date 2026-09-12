@@ -5,6 +5,13 @@ authoritative reading order, translated chapter labels, stages and routes.
 Routes may overlap and do not claim independence. Direct prerequisites come
 only from Agda fenced imports. ``Milestones`` is a preview and therefore has
 no readiness prerequisites.
+
+This module is also where a chapter's address is decided, once. Every node carries
+``page`` and ``anchor``, and every consumer links through them rather than assembling
+a filename of its own: the renderer, the reading-route explorer, the dependency map,
+the search index, the glossary and the sitemap. A preview chapter has no page to
+itself, because the reading guide embeds its whole body, so it is addressed as a panel
+of the guide. Nothing else in the tree may hard-code that.
 """
 
 from collections import Counter
@@ -22,6 +29,18 @@ IMPORT = re.compile(r"^\s*(?:open\s+)?import\s+([\w.]+)", re.M)
 MARKER = re.compile(r"<!--\s*bedrock-routes\s*(\{.*?\})\s*-->", re.S)
 HEADING = re.compile(r"^##\s+(.+?)\s*$", re.M)
 PREVIEWS = frozenset({"Milestones"})
+GUIDE_PAGE = "index.html"     # the reading guide, which embeds every preview chapter
+GUIDE_PANEL = "milestones"    # the guide panel that shows them, and its element id
+
+
+def own_page(module):
+    """The page a module would be given if it had one of its own."""
+    return f"{module}.html"
+
+
+def twin_of(page):
+    """The plain-Markdown twin of a page."""
+    return page[:-len(".html")] + ".md"
 CATALOG_PATH = Path(__file__).resolve().parents[2] / "dev" / "reading-catalog.json"
 ROUTE_ID = re.compile(r"^[a-z][a-z0-9-]*$")
 
@@ -212,7 +231,9 @@ def build_reading_data(src="src", catalog_path=CATALOG_PATH):
         nodes.append({"id": module, "title": titles, "description": catalog[module]["description"], "order": position,
                       "stage": catalog[module]["stage"],
                       "prerequisites": [] if preview else graph[module],
-                      "routes": memberships[module], "preview": preview})
+                      "routes": memberships[module], "preview": preview,
+                      "page": GUIDE_PAGE if preview else own_page(module),
+                      "anchor": f"#{GUIDE_PANEL}" if preview else ""})
     return {"version": 1, "routes": metadata["routes"], "nodes": nodes}
 
 

@@ -345,6 +345,8 @@ def main(argv):
         nodes = [{
             "id": m, "lane": lane_of(m), "col": col[m],
             "ord": ordnum.get(m, 0), "desc": descs.get(m, ""),
+            # carried through, never recomputed: reading_routes.py owns the address
+            "page": nodes_by_id[m]["page"], "anchor": nodes_by_id[m]["anchor"],
         } for m in sorted(internal, key=lambda m: (ordnum.get(m, 999), m))]
         stages, membership = [], {}
         for node in reading["nodes"]:
