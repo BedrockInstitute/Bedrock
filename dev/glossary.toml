@@ -642,18 +642,34 @@ notes = "the explicit-level universe tower of the host (Base.Prelude)"
 
 [[term]]
 category = "Type theory"
+id = "truth-value"
+audience = "reader"
 en = "truth value"
 zh = "真值"
 ja = "真理値"
-notes = "zh 真值 vs ja 真理値"
+introduced_in = "Base.Truth"
+matching = "explicit"
+forms_en = ["truth values"]
+recap_en = "The value a formula is assigned when it is evaluated; in this book it is an element of the carrier of a truth algebra."
+recap_zh = "公式求值所得到的值；本书中它是某个真值代数的载体的元素。"
+recap_ja = "論理式を評価したときに割り当てられる値。本書では真理値代数の台の要素である。"
+notes = "zh 真值 vs ja 真理値. Explicit matching, measured 2026-09-12: 83 of 313 Chinese occurrences (27%) and 78 of 298 Japanese ones (26%) sit inside the longer terms 真值代数 / 真理値代数 and 真值表 / 真理値表."
 
 [[term]]
 category = "Type theory"
+id = "truth-algebra"
+audience = "reader"
 en = "truth algebra"
 zh = "真值代数"
 ja = "真理値代数"
+introduced_in = "Base.Truth"
+matching = "explicit"
+forms_en = ["truth algebras"]
 presence = true
-notes = "the TruthAlgebra record, Base.Truth"
+recap_en = "A carrier of truth values together with operations interpreting the connectives and quantifiers, and no laws relating them."
+recap_zh = "真值的载体，连同解释联结词与量词的运算；这些运算之间不附带任何定律。"
+recap_ja = "真理値の台と、結合子および量化子を解釈する演算の組。演算どうしを結ぶ法則は付かない。"
+notes = "the TruthAlgebra record, Base.Truth. Explicit matching because FOL.Syntax discusses the notion in its Chinese and Japanese prose while importing only Base.Prelude, so Base.Truth is not in its prerequisite closure and automatic matching would be rejected."
 
 [[term]]
 category = "Type theory"
@@ -1467,9 +1483,16 @@ notes = "Descriptive local theorem name for bounding a constructible subset by a
 
 [[term]]
 category = "Type theory"
+id = "propositional-truncation"
+audience = "reader"
 en = "propositional truncation"
 zh = "命题截断"
 ja = "命題的切り詰め"
+introduced_in = "Base.Truth"
+matching = "auto"
+recap_en = "The operation sending a type to a proposition with the same inhabitedness, keeping that an element exists and forgetting which one."
+recap_zh = "把一个类型送到有元性相同的命题的运算：保留「有元素」这一事实，忘去究竟是哪一个。"
+recap_ja = "型を、要素の有無が同じ命題へ送る操作。要素があることは保ち、それがどれであったかは忘れる。"
 notes = "English: HoTT Book section 3.7, https://homotopytypetheory.org/book/ . Japanese compound follows Uemura’s attested n 切り詰め (n-truncation), section 4.3, https://uemurax.github.io/hott-ja/index.pdf ; searches for the exact compound found reading notes but no primary exact compound, so this is pattern-derived. Chinese compound is a descriptive rendering of proposition + truncation; exact-phrase searches did not yield a primary Chinese text. This is the (-1)-truncation, not the choice of an inhabitant."
 
 [[term]]
