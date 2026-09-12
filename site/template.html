@@ -5,17 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>%%TITLE%% · %%SITE%%</title>
   <meta name="description" content="%%DESC%%" />
+%%CANONICAL%%
 %%HREFLANG%%
+%%ALTMD%%
+  <link rel="help" type="text/markdown" href="%%BASEURL%%/llms.txt" title="Site guide for AI agents" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
   <link rel="stylesheet" href="%%BASEURL%%/static/bedrock.css?v=%%CSSVER%%" />
   <link rel="stylesheet" href="%%BASEURL%%/static/reading-routes.css?v=%%ROUTECSSVER%%" />
+  <link rel="stylesheet" href="%%BASEURL%%/static/ask-ai.css?v=%%ASKCSSVER%%" />
   <link rel="icon" href="%%BASEURL%%/static/assets/favicon.svg" />
+%%JSONLD%%
   <script>
-    window.bedrock = { baseUrl: "%%BASEURL%%", lang: "%%LANG%%", module: "%%MODULE%%" };
+    window.bedrock = %%CONFIG%%;
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
   <script defer src="%%BASEURL%%/static/bedrock.js?v=%%JSVER%%"></script>
   <script defer src="%%BASEURL%%/static/reading-routes.js?v=%%ROUTEJSVER%%"></script>
+  <script defer src="%%BASEURL%%/static/ask-ai.js?v=%%ASKJSVER%%"></script>
 </head>
 
 <body class="%%BODYCLASS%%">
@@ -41,7 +47,7 @@
   <a class="skip-link" href="#main-content">%%S_CONTENT%%</a>
   <main id="main-content" tabindex="-1">
     <div id="post-toc-container">
-      <aside id="toc">
+      <aside id="toc" role="navigation" aria-label="%%S_MENU%%">
         <div id="toc-drawer-head">
           <span class="drawer-title">%%S_MENU%%</span>
           <button id="nav-close" type="button" title="%%S_CLOSE%%" aria-label="%%S_CLOSE%%">✕</button>

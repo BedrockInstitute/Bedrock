@@ -46,6 +46,9 @@ UI = {
            "landmark": "Milestones", "terms": "Glossary",
            "prev": "Example route: previous", "next": "Example route: next",
            "license": "content licensed CC BY-NC-SA 4.0",
+           "markdown": "Markdown", "agents": "llms.txt",
+           "mdtitle": "This page as plain Markdown, for AI agents and scripts",
+           "agentstitle": "How an AI agent should read this site",
            "credit": 'Rendered with a generator adapted from '
                      '<a href="https://1lab.dev">the 1lab</a> (AGPL-3.0).',
            "external": "You are viewing the Cubical library.",
@@ -59,6 +62,9 @@ UI = {
            "landmark": "里程碑", "terms": "术语表",
            "prev": "示例路线：上一章", "next": "示例路线：下一章",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
+           "markdown": "Markdown", "agents": "llms.txt",
+           "mdtitle": "本页的纯 Markdown 版本，供 AI 与脚本读取",
+           "agentstitle": "AI 应当如何阅读本站",
            "credit": '使用改编自 <a href="https://1lab.dev">1lab</a> 的生成器渲染 '
                      '(AGPL-3.0)。',
            "external": "您正在浏览 Cubical 库。",
@@ -72,19 +78,77 @@ UI = {
            "landmark": "マイルストーン", "terms": "用語集",
            "prev": "例示ルート：前の章", "next": "例示ルート：次の章",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
+           "markdown": "Markdown", "agents": "llms.txt",
+           "mdtitle": "このページの純 Markdown 版。AI とスクリプト向け",
+           "agentstitle": "AI エージェントのための読み方",
            "credit": '<a href="https://1lab.dev">1lab</a> を改変した'
                      'ジェネレータでレンダリング (AGPL-3.0)。',
            "external": "Cubical ライブラリを閲覧しています。",
            "back": "Bedrock に戻る"},
 }
 SOURCE_URL = "https://github.com/BedrockInstitute/Bedrock"
+SOURCE_TREE = SOURCE_URL + "/blob/main/src"   # a chapter's master, for a reader who wants the source
+SITE_URL = "https://bedrock.institute"        # the canonical deployment (.github/workflows/cloudflare.yml)
 LANDING = "Milestones"  # preview chapter also supplies the generated reading-guide index
 CHAPTER_TITLES = {}
+# module -> {"description": {lang: str}, "stage": {lang: str}, "order": int,
+#            "prerequisites": [module], "routes": [route id]}. Filled from the reading
+# catalog, and read by the per-page description, the JSON-LD graph, the Markdown mirror
+# and llms.txt, so all four say the same thing about a chapter.
+CHAPTER_META = {}
 
 
 def chapter_title(module, lang):
     titles = CHAPTER_TITLES.get(module, {})
     return titles.get(lang, titles.get("en", module))
+
+
+def chapter_field(module, field, lang, default=""):
+    """One localized field of a chapter's catalog entry ('description' or 'stage')."""
+    values = CHAPTER_META.get(module, {}).get(field, {})
+    return values.get(lang, values.get("en", default))
+
+
+SITE_BLURB = {
+    "en": "A machine-checked development of set theory in Cubical Agda. The constructible "
+          "universe L is proved to model ZFC and to satisfy GCH.",
+    "zh": "用 Cubical Agda 完成的机器验证集合论。已经证明可构造宇宙 L 是 ZFC 的模型并满足 GCH。",
+    "ja": "Cubical Agda による機械検証された集合論。構成可能宇宙 L が ZFC のモデルであり "
+          "GCH を満たすことを証明済みです。",
+}
+
+
+def page_description(module, lang, is_landing, is_external):
+    """The page's own <meta name=description>, never the bare site name."""
+    if is_external:
+        return {
+            "en": f"{module}, a module of the Cubical standard library, rendered for reference "
+                  "inside the Bedrock textbook.",
+            "zh": f"{module}：Cubical 标准库的一个模块，在 Bedrock 教科书中渲染以供查阅。",
+            "ja": f"{module}：Cubical 標準ライブラリのモジュール。Bedrock の教科書内に参照用として"
+                  "描画したものです。",
+        }[lang]
+    if is_landing:
+        return SITE_BLURB[lang]
+    title = chapter_title(module, lang)
+    described = chapter_field(module, "description", lang, title)
+    if described.rstrip(".") != title.rstrip("."):
+        return described
+    # Several catalog entries describe a chapter by restating its title. Repeating that
+    # as the page description would leave a search engine and an agent with one fact
+    # twice over, so place the chapter instead.
+    meta = CHAPTER_META.get(module, {})
+    stage = chapter_field(module, "stage", lang)
+    position, total = meta.get("order", 0), len(CHAPTER_META)
+    shape = {
+        "en": f"{title}. Chapter {position} of {total} of the Bedrock textbook, in the "
+              f"{stage} stage, developed as the Agda module {module}.",
+        "zh": f"{title}。Bedrock 教科书第 {position} 章，全书共 {total} 章，"
+              f"属于{stage}阶段，对应 Agda 模块 {module}。",
+        "ja": f"{title}。Bedrock 教科書の第 {position} 章（全 {total} 章）、{stage}段階、"
+              f"Agda モジュール {module} として展開します。",
+    }
+    return shape.get(lang, shape["en"])
 
 PRE_RE = re.compile(r'<pre class="Agda">.*?</pre>', re.DOTALL)
 # Definition site: <a id="NAME"></a><a id="POS" ... class="ASPECT" ...>token</a>
@@ -492,11 +556,23 @@ def ext_banner(lang):
             f'<a href="index.html">{htmllib.escape(s["back"])}</a></div>')
 
 
-def footer_html(lang):
+def footer_html(lang, base, md_href):
+    """The footer also publishes the page's machine-readable forms.
+
+    The Vercel agent-readability measurements found that agents reach a resource by
+    following a link from a page they already have, far more often than by guessing a
+    path, so the Markdown twin and llms.txt are linked and not merely declared in the
+    head."""
     s = UI[lang]
     source = f'<a href="{SOURCE_URL}">{s["source"]}</a>'
     copyright_ = f'© 2026 Bedrock Institute · {s["license"]} · {source}'
+    formats = [f'<a href="{base}/llms.txt" title="{htmllib.escape(s["agentstitle"])}">'
+               f'{s["agents"]}</a>']
+    if md_href:
+        formats.insert(0, f'<a href="{md_href}" title="{htmllib.escape(s["mdtitle"])}" '
+                          f'type="text/markdown">{s["markdown"]}</a>')
     return (f'<div class="footer-credit">{s["credit"]}</div>'
+            f'<div class="footer-formats">{" · ".join(formats)}</div>'
             f'<div class="footer-copyright">{copyright_}</div>')
 
 
@@ -657,8 +733,9 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         if not literate:
             # a library page is bare highlighted code: wrap it and resolve its links
             code = rewrite_links('<pre class="Agda">' + raw + '</pre>', rendered, types_global)
-            return code, []
+            return code, [], None
         woven = weave_for_site(text, lang)
+        mirror = woven
         store = {}
         def stash(kind, payload):
             key = f"{NUL}{kind}{len(store)}{NUL}"
@@ -691,6 +768,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         body, toc = md_to_html(woven)
         body = re.sub(r'<p>\s*(' + NUL + r'CODE\d+' + NUL + r')\s*</p>', r'\1', body)
         body = re.sub(r'<p>\s*(' + NUL + r'DMATH\d+' + NUL + r')\s*</p>', r'\1', body)
+        body = anchor_prose_blocks(body)
         for key, val in store.items():
             body = body.replace(key, val)
         # A formal introduction may live in a section title. The HTML body keeps
@@ -699,10 +777,10 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         for j, blk in enumerate(code_blocks):
             body = body.replace(f"{NUL}CODE{j}{NUL}", blk)
         body = rewrite_links(body, rendered, types_global)
-        return auto_link_terms(body, lang, module, terms), toc
+        return auto_link_terms(body, lang, module, terms), toc, mirror
 
     for lang in langs:
-        body, toc = page_body(lang)
+        body, toc, mirror = page_body(lang)
         chapter_body = body
 
         if not is_external:
@@ -757,37 +835,56 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             banner = f'<div class="banner">{UI[lang]["untranslated"]}</div>'
 
         title = UI[lang]["overview"] if is_landing else chapter_title(module, lang)
-        page = fill_template(
-            tpl, LANG=lang, TITLE=htmllib.escape(title), SITE=site, DESC=site,
-            BASEURL=base, MODULE=("guide" if is_landing else module),
-            BODYCLASS=("text-page external" if is_external else
-                       "text-page learning-home" if is_landing else "text-page"),
-            EXTBANNER=ext_banner(lang) if is_external else "",
-            HREFLANG=hreflang_links(out_name, langs, base),
-            LANGNAV=lang_nav(out_name, lang, langs),
-            MODNAV=modules_nav(current, modnav_list, lang),
-            TOC="" if is_landing else toc_html(toc, lang),
-            BANNER=banner, BODY=body, FOOTER=footer_html(lang),
-            S_SEARCH=UI[lang]["search"], S_THEME=UI[lang]["theme"],
-            S_MENU=UI[lang]["menu"], S_CLOSE=UI[lang]["close"],
-            S_CONTENT=UI[lang]["contents"])
+        has_mirror = mirror is not None
+
+        def shell(page_name, page_title, page_body_html, page_toc, body_class, module_slot):
+            """One rendered page, with everything a machine reads about it filled in."""
+            md_name = (page_name[:-len(".html")] + ".md") if has_mirror else ""
+            return fill_template(
+                tpl, LANG=lang, TITLE=htmllib.escape(page_title), SITE=site,
+                DESC=htmllib.escape(page_description(module, lang, is_landing, is_external),
+                                    quote=True),
+                BASEURL=base, MODULE=module_slot,
+                CANONICAL=f'  <link rel="canonical" href="{SITE_URL}/{lang}/{page_name}" />',
+                ALTMD=(f'  <link rel="alternate" type="text/markdown" href="{md_name}" />'
+                       if has_mirror else ""),
+                JSONLD=json_ld(module, lang, page_name, langs, is_landing, is_external,
+                               has_mirror),
+                CONFIG=page_config(module, lang, page_name, md_name, base, site,
+                                   is_landing, is_external),
+                BODYCLASS=body_class,
+                EXTBANNER=ext_banner(lang) if is_external else "",
+                HREFLANG=hreflang_links(page_name, langs, base),
+                LANGNAV=lang_nav(page_name, lang, langs),
+                MODNAV=modules_nav(current if page_name == out_name else module,
+                                   modnav_list, lang),
+                TOC=page_toc, BANNER=banner, BODY=page_body_html,
+                FOOTER=footer_html(lang, base, md_name),
+                S_SEARCH=UI[lang]["search"], S_THEME=UI[lang]["theme"],
+                S_MENU=UI[lang]["menu"], S_CLOSE=UI[lang]["close"],
+                S_CONTENT=UI[lang]["contents"])
+
+        page = shell(out_name, title, body,
+                     "" if is_landing else toc_html(toc, lang),
+                     "text-page external" if is_external else
+                     "text-page learning-home" if is_landing else "text-page",
+                     "guide" if is_landing else module)
         dest = os.path.join(out_dir, lang, out_name)
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         open(dest, "w", encoding="utf-8").write(page)
 
         if is_landing:
-            chapter_page = fill_template(
-                tpl, LANG=lang, TITLE=htmllib.escape(chapter_title(module, lang)), SITE=site,
-                DESC=site, BASEURL=base, MODULE=module,
-                BODYCLASS="text-page", EXTBANNER="",
-                HREFLANG=hreflang_links(module + ".html", langs, base),
-                LANGNAV=lang_nav(module + ".html", lang, langs),
-                MODNAV=modules_nav(module, modnav_list, lang), TOC=toc_html(toc, lang),
-                BANNER=banner, BODY=chapter_body, FOOTER=footer_html(lang),
-                S_SEARCH=UI[lang]["search"], S_THEME=UI[lang]["theme"],
-                S_MENU=UI[lang]["menu"], S_CLOSE=UI[lang]["close"],
-                S_CONTENT=UI[lang]["contents"])
+            chapter_page = shell(module + ".html", chapter_title(module, lang), chapter_body,
+                                 toc_html(toc, lang), "text-page", module)
             open(os.path.join(out_dir, lang, module + ".html"), "w", encoding="utf-8").write(chapter_page)
+
+        # The landing page and the chapter page show the same master, so each gets a
+        # twin under its own name; a `.md` beside any page URL then always resolves.
+        if has_mirror:
+            for page_name in [out_name] + ([module + ".html"] if is_landing else []):
+                twin = markdown_mirror(mirror, code_blocks, module, lang, page_name, langs)
+                md_path = os.path.join(out_dir, lang, page_name[:-len(".html")] + ".md")
+                open(md_path, "w", encoding="utf-8").write(twin)
 
     # per-module type sidecar (keyed by the real module name; hover fetches types/<mod>.json)
     sidecar = json.dumps(types_global.get(module, {}), ensure_ascii=False)
@@ -840,6 +937,334 @@ def inline_ref(name, internal, name2pos, local_refs):
     return f'<code class="Agda inline-ref">{label}</code>'
 
 
+# ---- agent-readable layer ----------------------------------------------------
+# A passage on this site has to be addressable. A reader who selects a sentence and
+# asks an assistant about it, and an agent that follows the resulting link, both need
+# a stable name for the block they are looking at; a heading anchor alone is too
+# coarse for a chapter whose sections run to a dozen paragraphs. So every prose block
+# gets an id, every page gets a plain-Markdown twin, and the site gets one index that
+# tells an agent what is fetchable. See site/README.md.
+
+BLOCK_RE = re.compile(r'<(/?)(p|li|blockquote|table)\b')
+
+
+def anchor_prose_blocks(body):
+    """Give every top-level prose block a stable id (`p-1`, `p-2`, ...).
+
+    Numbering follows document order and counts paragraphs, list items, block quotes
+    and tables alike, so one anchor names one block of prose whatever markup carries
+    it. A block nested inside another (a paragraph inside a block quote, a paragraph
+    inside a list item) is not numbered separately: the outermost block is the
+    addressable unit. `pre` is absent because the renderer escapes everything inside a
+    code block, so no prose tag can occur there; a displayed Agda block is addressed
+    instead by the token anchors Agda's own highlighter emits.
+    """
+    out = []
+    index = 0
+    depth = 0
+    pos = 0
+    for match in BLOCK_RE.finditer(body):
+        if match.group(1):
+            depth = max(0, depth - 1)
+            continue
+        if depth == 0:
+            index += 1
+            out.append(body[pos:match.end()])
+            out.append(f' id="p-{index}"')
+            pos = match.end()
+        depth += 1
+    out.append(body[pos:])
+    return "".join(out)
+
+
+def plain_code(block):
+    """Recover the Agda source from one highlighted `<pre class="Agda">` block."""
+    inner = re.sub(r'^<pre class="Agda">', "", block.strip())
+    inner = re.sub(r"</pre>$", "", inner)
+    return htmllib.unescape(re.sub(r"<[^>]+>", "", inner)).strip("\n")
+
+
+def markdown_mirror(woven, code_blocks, module, lang, out_name, langs):
+    """The same chapter as plain Markdown: front matter, prose, fenced Agda.
+
+    An agent that follows a link from this site pays for the page it fetches. The HTML
+    carries a navigation sidebar, a type sidecar hook and a highlighted token per
+    identifier; the Markdown carries the chapter. Both are generated from one master,
+    so the mirror cannot drift from the page it mirrors.
+    """
+    meta = CHAPTER_META.get(module, {})
+    text = TERM_MARK_RE.sub(lambda m: m.group(1), woven)
+    text = INLINE_AGDA_RE.sub(lambda m: "`" + m.group(1) + "`", text)
+    for index, block in enumerate(code_blocks):
+        text = text.replace(f"{NUL}CODE{index}{NUL}",
+                            "\n\n```agda\n" + plain_code(block) + "\n```\n\n")
+    text = re.sub(r"\n{3,}", "\n\n", text)
+
+    def quote(value):
+        return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+    front = [
+        "---",
+        f"title: {quote(chapter_title(module, lang))}",
+        f"module: {module}",
+        f"lang: {lang}",
+        f"site: {quote('Bedrock')}",
+        f"description: {quote(chapter_field(module, 'description', lang))}",
+        f"stage: {quote(chapter_field(module, 'stage', lang))}",
+        f"reading_order: {meta.get('order', 0)}",
+        f"canonical: {SITE_URL}/{lang}/{out_name}",
+        f"html: {out_name}",
+        f"agda_source: {SOURCE_TREE}/{module.replace('.', '/')}.lagda.md",
+        "prerequisites: [" + ", ".join(meta.get("prerequisites", [])) + "]",
+        "routes: [" + ", ".join(meta.get("routes", [])) + "]",
+        "translations: [" + ", ".join(
+            f"{SITE_URL}/{other}/{module}.md" for other in langs if other != lang) + "]",
+        "agent_guide: /llms.txt",
+        "license: CC-BY-NC-SA-4.0",
+        "---",
+        "",
+    ]
+    return "\n".join(front) + text.rstrip("\n") + "\n"
+
+
+def json_ld(module, lang, out_name, langs, is_landing, is_external, has_mirror):
+    """One schema.org graph per page: this chapter, and the book it is a chapter of."""
+    url = f"{SITE_URL}/{lang}/{out_name}"
+    book = {
+        "@type": "Book",
+        "@id": f"{SITE_URL}/#book",
+        "name": "Bedrock",
+        "url": SITE_URL + "/",
+        "inLanguage": list(langs),
+        "description": SITE_BLURB.get(lang, SITE_BLURB["en"]),
+        "about": ["Set theory", "Constructible universe", "Generalized continuum hypothesis",
+                  "Cubical type theory", "Formalized mathematics"],
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "author": {"@type": "Organization", "name": "Bedrock Institute", "url": SOURCE_URL},
+        "isAccessibleForFree": True,
+    }
+    page = {
+        "@type": "TechArticle",
+        "@id": url,
+        "url": url,
+        "name": chapter_title(module, lang) if not is_landing else "Bedrock",
+        "headline": chapter_title(module, lang),
+        "description": page_description(module, lang, is_landing, is_external),
+        "inLanguage": lang,
+        "isPartOf": {"@id": f"{SITE_URL}/#book"},
+        "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+        "programmingLanguage": {"@type": "ComputerLanguage", "name": "Cubical Agda",
+                                "url": "https://github.com/agda/cubical"},
+        "isAccessibleForFree": True,
+    }
+    if not is_external:
+        page["identifier"] = module
+        position = CHAPTER_META.get(module, {}).get("order")
+        if position:
+            page["position"] = position
+        page["codeRepository"] = f"{SOURCE_TREE}/{module.replace('.', '/')}.lagda.md"
+    if has_mirror:
+        page["encoding"] = {"@type": "MediaObject", "encodingFormat": "text/markdown",
+                            "contentUrl": f"{SITE_URL}/{lang}/{module}.md"}
+    graph = {"@context": "https://schema.org", "@graph": [page, book]}
+    payload = json.dumps(graph, ensure_ascii=False, separators=(",", ":"))
+    return ('  <script type="application/ld+json">'
+            + payload.replace("<", "\\u003c") + "</script>")
+
+
+AGENT_GUIDE_HEAD = """# Bedrock
+
+> {blurb}
+
+Bedrock is a machine-checked development, in Cubical Agda, of the set theory behind
+contemporary questions about the universe of sets. Two results are proved and both are
+stated in the chapter `Milestones`: `L⊨ZFC` and `L⊨GCH`, the constructible universe
+as a model of ZFC and as a model in which the generalized continuum hypothesis holds.
+Each rests on one hypothesis, excluded middle at `LEM (ℓ-suc ℓ)`, and on nothing else.
+The long-term aim is forcing, set-theoretic geology, the definability of ground models
+and the mantle.
+
+The project is host-language maximalist: every set-theoretic notion is rebuilt in
+type-theory-native idiom rather than transcribed from the textbook ZF axioms, and the
+deeply embedded first-order `Formula` is used only where syntax is itself the object of
+study. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the
+`--safe` flag, so nothing here is postulated.
+
+This site is the development published as a trilingual mathematics textbook. One chapter
+is one Agda module. The displayed Agda is the formal content; the prose around it is the
+exposition, written in English, Chinese and Japanese from a single master. The reading
+order is a dependency order: a chapter's prerequisites are the modules it imports.
+
+## How to read this site
+
+- Every chapter is at `/<lang>/<Module>.html`, with `<lang>` one of `en`, `zh`, `ja`.
+  The three editions share filenames, so swapping the language segment of any URL
+  reaches the same chapter in another language.
+- **Every chapter page has a plain-Markdown twin at `/<lang>/<Module>.md`.** It carries
+  the same prose and the same Agda in fenced blocks, with the chapter's stage,
+  prerequisites and source in YAML front matter, and it is a fraction of the size of
+  the HTML. Prefer it. Each HTML page advertises its own mirror with
+  `<link rel="alternate" type="text/markdown">`.
+- Pages are static HTML and need no JavaScript: the prose and the Agda are both in the
+  initial response.
+- Anchors are stable and are the way to cite a passage. `#sec-0` is a chapter's title
+  and `#sec-1`, `#sec-2`, ... its headings in document order. `#p-1`, `#p-2`, ... name
+  its prose blocks, paragraphs and list items alike, in document order, so `#p-7` is
+  the seventh block of prose on the page whatever section it falls in. Inside a
+  displayed Agda block every
+  token carries the character offset Agda's highlighter assigned it, as `#1234`, and
+  every definition additionally carries its own Agda identifier as a named anchor, so
+  `/<lang>/V.Model.html#V⊨ZF` opens the page at that definition.
+- `/<lang>/index.html` is the reading guide: routes, the dependency map, the milestone
+  theorems and the glossary.
+
+## Machine-readable endpoints
+
+Every one of these is static JSON, served with `Access-Control-Allow-Origin: *`.
+
+"""
+
+
+def page_config(module, lang, page_name, md_name, base, site, is_landing, is_external):
+    """`window.bedrock`: what the page's own scripts are allowed to assume about it.
+
+    The ask-an-assistant handover is assembled in the browser from these fields, so
+    whatever it says about a chapter (its title, its stage, its place in the reading
+    order, where its Agda master lives) is the same thing llms.txt and the Markdown
+    twin say. Nothing here is derived from the DOM."""
+    meta = CHAPTER_META.get(module, {})
+    config = {
+        "baseUrl": base,
+        "lang": lang,
+        "module": "guide" if is_landing else module,
+        "site": site,
+        "canonical": f"{SITE_URL}/{lang}/{page_name}",
+        "chapter": module,
+        "title": chapter_title(module, lang),
+        "stage": chapter_field(module, "stage", lang),
+        "order": meta.get("order", 0),
+        "chapters": len(CHAPTER_META),
+        "prerequisites": meta.get("prerequisites", []),
+        "markdown": md_name,
+        "guide": f"{base}/llms.txt",
+        "repository": SOURCE_URL,
+        "external": is_external,
+    }
+    if not is_external:
+        config["agdaSource"] = f"{SOURCE_TREE}/{module.replace('.', '/')}.lagda.md"
+    payload = json.dumps(config, ensure_ascii=False, separators=(",", ":"))
+    return payload.replace("<", "\\u003c")
+
+
+def agent_guide(langs, modnav_list):
+    """llms.txt: what the site is, how it is addressed, and what an agent can fetch."""
+    lang = langs[0]
+    lines = [AGENT_GUIDE_HEAD.format(blurb=SITE_BLURB["en"])]
+    endpoints = [
+        (f"/{lang}/reading-routes.json",
+         "the chapter graph: every chapter's localized title, learning stage, "
+         "prerequisites, reading-order position and route memberships."),
+        (f"/{lang}/terms.json",
+         "the reader-facing glossary: each term's label in this language, a one-sentence "
+         "recap, and the chapter that introduces it."),
+        (f"/{lang}/search.json",
+         "every Agda identifier Bedrock defines, with its module, its anchor on that "
+         "module's page, its syntactic aspect and its type."),
+        (f"/{lang}/types/<Module>.json",
+         "the elaborated type of every token of one chapter, keyed by the anchor that "
+         "token carries in that chapter's URL."),
+        ("/sitemap.xml", "every page, in every language, with hreflang alternates."),
+        ("/robots.txt", "crawl policy. Nothing on this site is disallowed."),
+    ]
+    for path, what in endpoints:
+        lines.append(f"- [{path}]({SITE_URL}{path}): {what}")
+    lines.append("")
+    lines.append("## Source")
+    lines.append("")
+    lines.append(f"- [{SOURCE_URL}]({SOURCE_URL}): the repository. A chapter is one literate "
+                 "Agda master at `src/<Module path>.lagda.md`, and the site is generated "
+                 "from those masters by `scripts/site/render-site.py`.")
+    lines.append(f"- [{SOURCE_URL}/blob/main/README.md]({SOURCE_URL}/blob/main/README.md): "
+                 "the project README, with the current measured size and build figures.")
+    lines.append(f"- [{SOURCE_URL}/blob/main/docs/en/CHARTER.md]"
+                 f"({SOURCE_URL}/blob/main/docs/en/CHARTER.md): the charter, the full "
+                 "methodological statement behind host-language maximalism.")
+    lines.append("")
+    lines.append("## Chapters, in reading order")
+    lines.append("")
+    lines.append("Links point at the Markdown mirrors. Replace `/en/` with `/zh/` or `/ja/` "
+                 "for the Chinese or Japanese edition, and `.md` with `.html` for the page a "
+                 "human reads.")
+    lines.append("")
+    for module in modnav_list:
+        meta = CHAPTER_META.get(module, {})
+        stage = chapter_field(module, "stage", lang)
+        title = chapter_title(module, lang)
+        desc = chapter_field(module, "description", lang)
+        position = meta.get("order", 0)
+        entry = (f"- [{position}. {title}]({SITE_URL}/{lang}/{module}.md) "
+                 f"(`{module}`, {stage})")
+        if desc.rstrip(".") != title.rstrip("."):
+            entry += f": {desc}"
+        lines.append(entry)
+    lines.append("")
+    lines.append("## Other editions")
+    lines.append("")
+    for other in langs[1:]:
+        lines.append(f"- [{LANG_LABELS[other]}]({SITE_URL}/{other}/index.html): the same "
+                     f"book. Chapter mirrors are at `/{other}/<Module>.md`.")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def write_agent_files(out_dir, langs, base, modnav_list):
+    """robots.txt, sitemap.xml, llms.txt and the Cloudflare header rules."""
+    guide = agent_guide(langs, modnav_list)
+    open(os.path.join(out_dir, "llms.txt"), "w", encoding="utf-8").write(guide)
+    well_known = os.path.join(out_dir, ".well-known")
+    os.makedirs(well_known, exist_ok=True)
+    open(os.path.join(well_known, "llms.txt"), "w", encoding="utf-8").write(guide)
+
+    open(os.path.join(out_dir, "robots.txt"), "w", encoding="utf-8").write(
+        "# Bedrock. Everything here is public and nothing is disallowed, to crawlers and\n"
+        "# to AI agents alike. /llms.txt is the guide written for an agent; every chapter\n"
+        "# page also has a plain-Markdown twin at the same path with a .md extension.\n"
+        "User-agent: *\n"
+        "Allow: /\n"
+        "\n"
+        f"Sitemap: {SITE_URL}/sitemap.xml\n")
+
+    pages = ["index.html"] + [f"{m}.html" for m in modnav_list]
+    urls = []
+    for lang in langs:
+        for page in pages:
+            alternates = "".join(
+                f'\n    <xhtml:link rel="alternate" hreflang="{other}" '
+                f'href="{SITE_URL}/{other}/{page}" />' for other in langs)
+            urls.append(f"  <url>\n    <loc>{SITE_URL}/{lang}/{page}</loc>{alternates}\n  </url>")
+    open(os.path.join(out_dir, "sitemap.xml"), "w", encoding="utf-8").write(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+        '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+        + "\n".join(urls) + "\n</urlset>\n")
+
+    # Cloudflare Pages reads `_headers` from the deployed root. Without it a .md twin
+    # arrives as a download rather than as text an agent can read, and a fetch from
+    # another origin cannot reach the JSON endpoints at all.
+    open(os.path.join(out_dir, "_headers"), "w", encoding="utf-8").write(
+        "/*.md\n"
+        "  Content-Type: text/markdown; charset=utf-8\n"
+        "  Access-Control-Allow-Origin: *\n"
+        "/llms.txt\n"
+        "  Content-Type: text/markdown; charset=utf-8\n"
+        "  Access-Control-Allow-Origin: *\n"
+        "/.well-known/llms.txt\n"
+        "  Content-Type: text/markdown; charset=utf-8\n"
+        "  Access-Control-Allow-Origin: *\n"
+        "/*.json\n"
+        "  Access-Control-Allow-Origin: *\n")
+
+
 # ---- site-level outputs ------------------------------------------------------
 
 def write_search(out_dir, lang, modules, name2pos, pos_aspect, types_by_module):
@@ -870,17 +1295,51 @@ def write_terms(out_dir, lang, terms):
 
 
 def write_root(out_dir, langs, base):
+    """The site root and the 404 page.
+
+    A browser is sent straight to its own language. A fetch-only client that runs no
+    JavaScript, which is what an agent usually is, still gets a page that says what this
+    is and links every edition and the agent guide, rather than an empty redirect shell.
+    """
     default = langs[0]
-    redirect = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
-<title>Bedrock</title><script>
-var ls = {json.dumps(langs)};
-var want = (navigator.language||"en").slice(0,2);
-var to = ls.indexOf(want) >= 0 ? want : "{default}";
-location.replace("{base}/" + to + "/index.html");
-</script><meta http-equiv="refresh" content="0; url={base}/{default}/index.html"></head>
-<body><a href="{base}/{default}/index.html">Enter</a></body></html>"""
-    open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8").write(redirect)
-    open(os.path.join(out_dir, "404.html"), "w", encoding="utf-8").write(redirect)
+    links = "\n".join(
+        f'    <li><a lang="{L}" hreflang="{L}" href="{base}/{L}/index.html">'
+        f'{LANG_LABELS[L]}</a>: {htmllib.escape(SITE_BLURB[L])}</li>' for L in langs)
+    page = f"""<!DOCTYPE html>
+<html lang="{default}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bedrock</title>
+  <meta name="description" content="{htmllib.escape(SITE_BLURB[default], quote=True)}" />
+  <link rel="canonical" href="{SITE_URL}/" />
+  <link rel="help" type="text/markdown" href="{base}/llms.txt" title="Site guide for AI agents" />
+{hreflang_links("index.html", langs, base)}
+  <link rel="icon" href="{base}/static/assets/favicon.svg" />
+  <script>
+    var ls = {json.dumps(langs)};
+    var want = (navigator.language || "en").slice(0, 2);
+    var to = ls.indexOf(want) >= 0 ? want : "{default}";
+    location.replace("{base}/" + to + "/index.html");
+  </script>
+  <meta http-equiv="refresh" content="0; url={base}/{default}/index.html" />
+</head>
+<body>
+  <main>
+    <h1>Bedrock</h1>
+    <p>{htmllib.escape(SITE_BLURB[default])}</p>
+    <ul>
+{links}
+    </ul>
+    <p>Reading this as a program? <a href="{base}/llms.txt">/llms.txt</a> is the guide
+    written for you: it lists every chapter, every machine-readable endpoint, and the
+    plain-Markdown twin each chapter page carries.</p>
+  </main>
+</body>
+</html>
+"""
+    open(os.path.join(out_dir, "index.html"), "w", encoding="utf-8").write(page)
+    open(os.path.join(out_dir, "404.html"), "w", encoding="utf-8").write(page)
 
 
 def main(argv):
@@ -922,6 +1381,12 @@ def main(argv):
     modnav_list = sorted(internal, key=lambda m: (order.get(m, len(order) + 1), m))
     CHAPTER_TITLES.clear()
     CHAPTER_TITLES.update({node["id"]: node["title"] for node in reading_data["nodes"]})
+    CHAPTER_META.clear()
+    CHAPTER_META.update({
+        node["id"]: {"description": node["description"], "stage": node["stage"],
+                     "order": node["order"], "prerequisites": node["prerequisites"],
+                     "routes": node["routes"]}
+        for node in reading_data["nodes"]})
     glossary_entries = load_entries()
     term_errors = schema_errors(glossary_entries)
     if term_errors:
@@ -940,6 +1405,8 @@ def main(argv):
 
     tpl = tpl.replace("%%ROUTECSSVER%%", _ver("reading-routes.css")).replace(
         "%%ROUTEJSVER%%", _ver("reading-routes.js"))
+    tpl = tpl.replace("%%ASKCSSVER%%", _ver("ask-ai.css")).replace(
+        "%%ASKJSVER%%", _ver("ask-ai.js"))
 
     # first pass: index every definition (names, positions, aspects) across ALL rendered modules
     name2pos, pos_aspect = {}, {}
@@ -968,12 +1435,15 @@ def main(argv):
         with open(os.path.join(out_dir, lang, "reading-routes.json"), "w", encoding="utf-8") as route_file:
             json.dump(reading_data, route_file, ensure_ascii=False)
     write_root(out_dir, langs, base)
+    write_agent_files(out_dir, langs, base, modnav_list)
 
     if os.path.isdir(static_dir):                    # committed CSS/JS/favicon
         shutil.copytree(static_dir, os.path.join(out_dir, "static"), dirs_exist_ok=True)
 
     print(f"rendered {len(rendered)} module(s) ({len(internal)} internal) "
           f"x {len(langs)} language(s) -> {out_dir}", file=sys.stderr)
+    print(f"agent layer: {len(internal) * len(langs)} Markdown twin(s), llms.txt, "
+          f"sitemap.xml, robots.txt, _headers", file=sys.stderr)
     return 0
 
 

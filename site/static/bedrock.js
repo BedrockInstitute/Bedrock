@@ -343,6 +343,8 @@
     });
   }
 
+  var SHOW_NOTE = ({ en: "Show note", zh: "显示注释", ja: "注釈を表示" })[cfg.lang] || "Show note";
+
   function initCodeNotes() {
     var article = document.querySelector("article");
     if (!article) return;
@@ -438,7 +440,7 @@
       el.appendChild(note);
       target.setAttribute("tabindex", "0");
       target.setAttribute("role", "button");
-      target.setAttribute("aria-label", "Show note");
+      target.setAttribute("aria-label", SHOW_NOTE);
       target.setAttribute("aria-expanded", "false");
       target.addEventListener("click", function () {
         show(target, function (content) { content.textContent = el.getAttribute("data-note"); });
@@ -465,7 +467,7 @@
       note.addEventListener("mouseleave", function () { setActive(false); });
       target.setAttribute("tabindex", "0");
       target.setAttribute("role", "button");
-      target.setAttribute("aria-label", "Show note");
+      target.setAttribute("aria-label", SHOW_NOTE);
       target.setAttribute("aria-expanded", "false");
       function showProseNote() {
         show(target, function (content) { content.innerHTML = note.innerHTML; });

@@ -1,0 +1,107 @@
+/* Ask an assistant about a selected passage: the floating trigger and the handover dialog.
+ *
+ * Palette, radii and shadows follow bedrock.css; this file adds no variable of its own.
+ * AGPL-3.0-only, like the rest of Bedrock's first-party front end. See NOTICE.
+ */
+
+/* ---- the trigger beside the selection ---- */
+/* Fixed, and repositioned from the live selection on scroll and resize, the way the
+   term popup and the code-note toast are: the article reflows after a selection is made
+   (KaTeX, the margin notes), so a position measured once would drift. */
+.ask-ai-trigger { position: fixed; z-index: 80; display: inline-flex; gap: .3rem;
+  align-items: center; margin: 0; padding: .34rem .6rem;
+  color: var(--text-bg); background: var(--primary);
+  border: 1px solid color-mix(in srgb, var(--primary) 70%, #000);
+  border-radius: 7px; box-shadow: 0 4px 14px rgba(0,0,0,.28);
+  font: 700 .8rem/1.1 var(--sans); white-space: nowrap; cursor: pointer; }
+/* An author `display` beats the user-agent rule for [hidden], so restate it. */
+.ask-ai-trigger[hidden] { display: none; }
+.ask-ai-trigger:hover { background: color-mix(in srgb, var(--primary) 85%, #000); }
+.ask-ai-trigger:focus-visible { outline: 2px solid var(--text-fg); outline-offset: 2px; }
+.ask-ai-trigger .ask-ai-glyph { font-size: .95em; }
+
+/* ---- the handover dialog ---- */
+/* The dialog is as tall as its handover and no taller, up to what the screen allows,
+   so a short selection does not open a full-height panel and a long one still fits.
+
+   `height: fit-content` is load-bearing and is stated rather than inherited from the
+   user-agent sheet. A modal dialog is an absolutely positioned box that the user agent
+   pins at both block edges; `height: auto` on such a box is solved by stretching it to
+   fill that gap, which would peg the dialog at the cap whatever it holds. `fit-content`
+   asks for the content height instead, and the cap below trims it.
+
+   `dvh` keeps a phone's collapsing toolbar from cutting the footer off, with `vh`
+   behind it for older engines. */
+.ask-ai-dialog { width: min(56rem, calc(100vw - 2rem)); max-width: none;
+  height: fit-content; max-height: min(90vh, 54rem);
+  max-height: min(90dvh, 54rem); padding: 0; color: var(--text-fg);
+  background: var(--popup-bg); border: 1px solid var(--ruler); border-radius: 11px;
+  box-shadow: 0 18px 48px rgba(0,0,0,.4); font-family: var(--sans); }
+.ask-ai-dialog::backdrop { background: rgba(12, 15, 22, .58); }
+
+.ask-ai-dialog[open] { display: flex; flex-direction: column; }
+/* The frame keeps its size; the text area is the one part that gives. */
+.ask-ai-head, .ask-ai-hint, .ask-ai-foot { flex: none; }
+
+.ask-ai-head { display: flex; gap: .75rem; align-items: baseline;
+  padding: .95rem 1.1rem .6rem; border-bottom: 1px solid var(--code-border); }
+.ask-ai-head h2 { flex: 1; margin: 0; color: var(--text-fg);
+  font: 700 1.05rem/1.3 var(--sans); }
+.ask-ai-close { display: grid; place-items: center; width: 2rem; height: 2rem;
+  padding: 0; color: var(--fg-alt); background: transparent; border: 0;
+  border-radius: 5px; font: 1.25rem/1 var(--sans); cursor: pointer; }
+.ask-ai-close:hover, .ask-ai-close:focus-visible { color: var(--text-fg);
+  background: var(--button-hover); }
+
+.ask-ai-hint { margin: 0; padding: .65rem 1.1rem; color: var(--fg-alt);
+  background: var(--code-bg); border-bottom: 1px solid var(--code-border);
+  font-size: .84rem; line-height: 1.5; }
+
+/* The whole text is one copy target: a click anywhere in it copies the handover.
+   Two declarations carry the sizing, and both matter.
+
+   `flex: 1 1 auto` makes the base size the text's own height, so the dialog is as tall
+   as its handover and the cap does the rest. The shorthand `flex: 1` sets that base
+   size to zero instead, and an auto-height column flex container has no free space to
+   grow it back from; Safari takes that literally and the text area collapses, which is
+   the one-line dialog this replaces. Chromium happens to size the container from its
+   content and hides the mistake.
+
+   The explicit `min-height` does two jobs. It overrides `min-height: auto`, which an
+   `overflow: auto` flex item resolves to zero, and it puts a floor under the area so
+   the reader always sees a passage of the handover rather than a sliver of it. The
+   floor stays below the cap on a short screen, so the footer is never pushed out. */
+.ask-ai-copy { flex: 1 1 auto; min-height: min(9rem, 40vh);
+  margin: 0; padding: .9rem 1.1rem;
+  overflow: auto; overscroll-behavior: contain;
+  background: var(--text-bg); cursor: pointer; }
+.ask-ai-copy:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
+.ask-ai-copy:hover { background: color-mix(in srgb, var(--primary) 5%, var(--text-bg)); }
+.ask-ai-copy pre { margin: 0; color: var(--code-fg); font: .8rem/1.55 var(--mono);
+  white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.ask-ai-foot { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center;
+  padding: .7rem 1.1rem .85rem; border-top: 1px solid var(--code-border); }
+.ask-ai-status { flex: 1; min-width: 8rem; color: var(--fg-alt); font-size: .82rem; }
+.ask-ai-status[data-done="yes"] { color: var(--code-constructor); font-weight: 700; }
+.ask-ai-button { padding: .42rem .85rem; color: var(--text-bg); background: var(--primary);
+  border: 0; border-radius: 7px; font: 700 .85rem/1.2 var(--sans); cursor: pointer; }
+.ask-ai-button:hover { background: color-mix(in srgb, var(--primary) 85%, #000); }
+.ask-ai-button.secondary { color: var(--text-fg); background: transparent;
+  border: 1px solid var(--input-border); font-weight: 400; }
+.ask-ai-button.secondary:hover { background: var(--button-hover); }
+
+/* Without `showModal` the dialog is an ordinary block at the end of the body, which
+   would leave it below the footer. Place it and paint a backdrop by hand. */
+.ask-ai-dialog[open]:not(:modal) { position: fixed; z-index: 90;
+  top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+@media (max-width: 40rem) {
+  .ask-ai-dialog { width: 100vw; max-height: 92vh; max-height: 92dvh;
+    border-radius: 11px 11px 0 0; }
+  .ask-ai-copy pre { font-size: .74rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ask-ai-trigger { animation: ask-ai-appear .12s ease-out; }
+  @keyframes ask-ai-appear { from { opacity: 0; transform: translateY(-2px); } }
+}
