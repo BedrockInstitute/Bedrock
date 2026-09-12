@@ -150,11 +150,11 @@ The two directions differ in strength. That a member of `⁅ u ⁆s` equals `u` 
 <!--/-->
 
 <!--en-->
-Membership in a singleton is completely described by the classification of `SingletonPackage`: `y` belongs to `⁅ u ⁆s` precisely when `y` equals `u`. The bridge `∈∈ₛ` moves between the ambient membership of the hierarchy and this small membership, so `∈sgl-elim` chains the bridge's forward leg with the classification to extract an actual path `y ≡ u` from a mere membership proof, and `∈sgl-intro` runs the same two steps backwards. No truncation is involved: the equality path is available directly and, since `V ℓ` is a set, remains a proposition.
+Membership in a singleton is completely described by the classification of `SingletonPackage`: `y` belongs to `⁅ u ⁆s` precisely when `y` equals `u`. The bridge `∈∈ₛ` moves between the ambient membership of the hierarchy and this small membership, so `∈sgl-elim` chains the bridge's forward leg with the classification to extract an actual path `y ≡ u` from a mere membership proof, and `∈sgl-intro` runs the same two steps backwards. No truncation is involved: the equality path is available directly and, since `V ℓ` is an h-set, remains a proposition.
 <!--zh-->
-对单点集的隶属被 `SingletonPackage` 的分类完全刻画：`y` 属于 `⁅ u ⁆s`，恰好当 `y` 等于 `u`。桥 `∈∈ₛ` 在层级的原生隶属与这一小隶属之间转换，于是 `∈sgl-elim` 把桥的前半段与分类串联起来，从仅仅一条隶属证明中提取出直接的路径 `y ≡ u`；`∈sgl-intro` 把同样的两步反向执行。这里没有任何截断：相等路径可直接使用；由于 `V ℓ` 是集合，这仍是命题。
+对单点集的隶属被 `SingletonPackage` 的分类完全刻画：`y` 属于 `⁅ u ⁆s`，恰好当 `y` 等于 `u`。桥 `∈∈ₛ` 在层级的原生隶属与这一小隶属之间转换，于是 `∈sgl-elim` 把桥的前半段与分类串联起来，从仅仅一条隶属证明中提取出直接的路径 `y ≡ u`；`∈sgl-intro` 把同样的两步反向执行。这里没有任何截断：相等路径可直接使用；由于 `V ℓ` 是 h-集合，这仍是命题。
 <!--ja-->
-単集合への所属は `SingletonPackage` の分類によって完全に記述されます。`y` が `⁅ u ⁆s` に属するのは、`y` が `u` と等しいとき、かつそのときに限ります。橋 `∈∈ₛ` が階層本来の所属とこの小さい所属の間を行き来するので、`∈sgl-elim` は橋の前半と分類をつなげ、単なる所属の証明から実際のパス `y ≡ u` を取り出します。`∈sgl-intro` は同じ二段階を逆向きに進めます。ここに丸めは一切なく、等号は明示的なデータです。
+単集合への所属は `SingletonPackage` の分類によって完全に記述されます。`y` が `⁅ u ⁆s` に属するのは、`y` が `u` と等しいとき、かつそのときに限ります。橋 `∈∈ₛ` が階層本来の所属とこの小さい所属の間を行き来するので、`∈sgl-elim` は橋の前半と分類をつなげ、単なる所属の証明から実際のパス `y ≡ u` を取り出します。`∈sgl-intro` は同じ二段階を逆向きに進めます。ここに丸めは一切ありません。等号のパスはそのまま使え、`V ℓ` が h-集合であるため命題のままです。
 <!--/-->
 
 ```agda

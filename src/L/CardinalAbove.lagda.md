@@ -464,7 +464,7 @@ THE CANDIDATE: the sup of every order type this family reaches.
 
 ```
 
-`⟪ x ⟫` is a set: it embeds into `V ℓ`, which is one.
+`⟪ x ⟫` is an h-set: it embeds into `V ℓ`, which is one.
 
 ```agda
   isSet⟪⟫ : (x : SV.S) → isSet ⟪ x ⟫

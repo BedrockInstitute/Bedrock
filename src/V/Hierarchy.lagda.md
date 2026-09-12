@@ -71,7 +71,7 @@ The generating idea is the oldest one in set theory: a set is no more than the c
 
 ## The structure
 
-The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y`, paired with the certificate `setIsSet x y` that this type is a proposition; set-hood of `V`{.Agda} is what makes paths between its elements proposition-valued. Membership is the hierarchy's own `∈`, whose value at each pair already lives in `hProp`{.Agda}. These fields assemble into the structure `𝒮ᵥ`{.Agda} over the `hProp`{.Agda} truth-value algebra, the structure on which the first-order language is interpreted. The subscript is a plain `v`, for the hierarchy.
+The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y`, paired with the certificate `setIsSet x y` that this type is a proposition; `V`{.Agda} being an h-set is what makes paths between its elements proposition-valued. Membership is the hierarchy's own `∈`, whose value at each pair already lives in `hProp`{.Agda}. These fields assemble into the structure `𝒮ᵥ`{.Agda} over the `hProp`{.Agda} truth-value algebra, the structure on which the first-order language is interpreted. The subscript is a plain `v`, for the hierarchy.
 <!--zh-->
 ## 高阶归纳类型
 
@@ -91,7 +91,7 @@ The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y
 <!--/-->
 
 <!--en-->
-The carrier field is `V ℓ`, and its set-hood certificate `setIsSet` is recorded as `isSetS`. The equality field makes the choice explicit: `_≈ˢ_` sends `x` and `y` to the pair of the path type `x ≡ y` and the proof `setIsSet x y` that this path type is a proposition. This is the one place where h-set-ness does real work in the packaging. It is not that paths need to be changed into something proposition-valued; for an h-set, the type `x ≡ y` of paths between two elements already is a proposition, and the field simply records that fact alongside the type it certifies.
+The carrier field is `V ℓ`, and its h-set certificate `setIsSet` is recorded as `isSetS`. The equality field makes the choice explicit: `_≈ˢ_` sends `x` and `y` to the pair of the path type `x ≡ y` and the proof `setIsSet x y` that this path type is a proposition. This is the one place where the h-set condition does real work in the packaging. It is not that paths need to be changed into something proposition-valued; for an h-set, the type `x ≡ y` of paths between two elements already is a proposition, and the field simply records that fact alongside the type it certifies.
 <!--zh-->
 载体字段是 `V ℓ`，其 h-集合性证书 `setIsSet` 记录在 `isSetS` 中。等词字段把这个选择写得很明确：`_≈ˢ_` 把 `x` 与 `y` 送往由路径类型 `x ≡ y` 与「该路径类型是命题」的证明 `setIsSet x y` 组成的对。这是打包过程中 h-集合性真正发挥作用的地方。并不是要把路径改造成某种命题值的东西；对 h-集合而言，两个元素之间的路径类型 `x ≡ y` 本来就是命题，该字段只是把这一事实连同它所认证的类型一起记录下来。
 <!--ja-->
@@ -279,7 +279,7 @@ The computation law exposes the recursive call at each member as an equation rat
 <!--en-->
 ## Recap
 
-The hierarchy `V`{.Agda}, received from the library as a higher inductive type in which sets are images of small families and the whole type is an h-set, has been packaged as the structure `𝒮ᵥ`{.Agda}: paths as equality, proposition-valued by set-hood, and the native membership. Extensionality (`extensionalV`{.Agda}) follows from the extensional path constructor via the small-membership bridge, and well-foundedness of membership (`regularityV`{.Agda}) follows by elimination into accessibility. Well-foundedness in turn yields irreflexivity and the recursion principle `∈-induction` with its computation law `∈-induction-compute`. The chapter "Small presentations of sets" takes up the small membership `∈ₛ` and its bridge to `∈`, which is the specific question it addresses.
+The hierarchy `V`{.Agda}, received from the library as a higher inductive type in which sets are images of small families and the whole type is an h-set, has been packaged as the structure `𝒮ᵥ`{.Agda}: paths as equality, proposition-valued because the hierarchy is an h-set, and the native membership. Extensionality (`extensionalV`{.Agda}) follows from the extensional path constructor via the small-membership bridge, and well-foundedness of membership (`regularityV`{.Agda}) follows by elimination into accessibility. Well-foundedness in turn yields irreflexivity and the recursion principle `∈-induction` with its computation law `∈-induction-compute`. The chapter "Small presentations of sets" takes up the small membership `∈ₛ` and its bridge to `∈`, which is the specific question it addresses.
 <!--zh-->
 ## 小结
 

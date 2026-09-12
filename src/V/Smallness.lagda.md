@@ -653,11 +653,11 @@ module InnerSmall (M : S → hProp (ℓ-suc ℓ))
 ```
 
 <!--en-->
-Two abbreviations fix notation. `SM` names the restricted carrier itself, and `𝒮M` is the structure restricted to `M`, built by `_↾_`: its carrier is `SM`, its sethood is inherited, and its two relations pull back along the first projection, so equality and membership inside the world are decided by the underlying sets of `V`. The semantics module is instantiated at `𝒮M`, and the satisfaction and term-evaluation notations are renamed with a superscript to mark that formulas are being read **inside** the world. The renaming is exported public, so other chapters can read restricted satisfaction under these names.
+Two abbreviations fix notation. `SM` names the restricted carrier itself, and `𝒮M` is the structure restricted to `M`, built by `_↾_`: its carrier is `SM`, its h-set certificate is inherited, and its two relations pull back along the first projection, so equality and membership inside the world are decided by the underlying sets of `V`. The semantics module is instantiated at `𝒮M`, and the satisfaction and term-evaluation notations are renamed with a superscript to mark that formulas are being read **inside** the world. The renaming is exported public, so other chapters can read restricted satisfaction under these names.
 <!--zh-->
-两个缩写固定记号。`SM` 命名限制载体本身；`𝒮M` 是限制到 `M` 的结构，由 `_↾_` 构造：其载体是 `SM`，集合性被继承，两个关系沿第一投影拉回，因此世界内部的相等与隶属由 `V` 的底层集合决定。语义模块在 `𝒮M` 处实例化，满足与词项求值记号以上标记号改名，标示公式是在世界**内部**读取的。该改名以 public 导出，其他章节可在这些名字下读取限制后的满足关系。
+两个缩写固定记号。`SM` 命名限制载体本身；`𝒮M` 是限制到 `M` 的结构，由 `_↾_` 构造：其载体是 `SM`，h-集合性被继承，两个关系沿第一投影拉回，因此世界内部的相等与隶属由 `V` 的底层集合决定。语义模块在 `𝒮M` 处实例化，满足与词项求值记号以上标记号改名，标示公式是在世界**内部**读取的。该改名以 public 导出，其他章节可在这些名字下读取限制后的满足关系。
 <!--ja-->
-二つの略記が記法を固定します。`SM` は制限された台そのものの名前であり、`𝒮M` は `_↾_` によって `M` に制限された構造です。その台は `SM` であり、集合性は受け継がれ、二つの関係は第一射影に沿って引き戻されるので、世界の中の等号と所属は `V` の基礎となる集合で決まります。意味論のモジュールは `𝒮M` で具体化され、充足と項の評価の記法は上付き添え字に改名されて、論理式が世界の**内側**で読まれていることを示します。この改名は public にエクスポートされ、他の章ではこれらの名前で制限された充足を読めます。
+二つの略記が記法を固定します。`SM` は制限された台そのものの名前であり、`𝒮M` は `_↾_` によって `M` に制限された構造です。その台は `SM` であり、h-集合性は受け継がれ、二つの関係は第一射影に沿って引き戻されるので、世界の中の等号と所属は `V` の基礎となる集合で決まります。意味論のモジュールは `𝒮M` で具体化され、充足と項の評価の記法は上付き添え字に改名されて、論理式が世界の**内側**で読まれていることを示します。この改名は public にエクスポートされ、他の章ではこれらの名前で制限された充足を読めます。
 <!--/-->
 
 ```agda

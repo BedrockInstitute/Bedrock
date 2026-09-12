@@ -947,7 +947,7 @@ Excluded middle does not yield choice, so the last axiom of ZFC is taken as a se
 <!--/-->
 
 <!--en-->
-Two preliminary facts feed the choice-set construction. The first concerns the index type at which choice will be applied. Each presentation type `⟪ a ⟫` is an h-set: it embeds into the hierarchy through `⟪ a ⟫↪`, whose embedding property `isEmb⟪ a ⟫↪` was recorded when the presentation was introduced, and the hierarchy itself is an h-set by `setIsSet`. A general cubical result, `Embedding-into-isSet→isSet`, transfers h-setness back along an embedding, so `isSet⟪ a ⟫` holds for every set `a`. Equality types between indices are therefore propositions, which is precisely the condition `SetChoice` places on the type it chooses from.
+Two preliminary facts feed the choice-set construction. The first concerns the index type at which choice will be applied. Each presentation type `⟪ a ⟫` is an h-set: it embeds into the hierarchy through `⟪ a ⟫↪`, whose embedding property `isEmb⟪ a ⟫↪` was recorded when the presentation was introduced, and the hierarchy itself is an h-set by `setIsSet`. A general cubical result, `Embedding-into-isSet→isSet`, transfers the h-set condition back along an embedding, so `isSet⟪ a ⟫` holds for every set `a`. Equality types between indices are therefore propositions, which is precisely the condition `SetChoice` places on the type it chooses from.
 <!--zh-->
 选择集构造要用到两条预备事实。第一条关乎施加选择的索引类型。每个呈现类型 `⟪ a ⟫` 都是 h-集合：它经 `⟪ a ⟫↪` 嵌入层级，而嵌入性质 `isEmb⟪ a ⟫↪` 在引入该呈现时已记录；层级本身由 `setIsSet` 是 h-集合。cubical 的一般结果 `Embedding-into-isSet→isSet` 沿嵌入把 h-集合性传回，于是对每个集合 `a` 都有 `isSet⟪ a ⟫`。索引之间的相等类型因此都是命题，这正是 `SetChoice` 对其选择对象类型所要求的条件。
 <!--ja-->

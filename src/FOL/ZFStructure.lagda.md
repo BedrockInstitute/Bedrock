@@ -3,7 +3,7 @@
 
 A first-order language about sets has two primitive predicates: equality and membership. To interpret it, we must choose what its variables range over and what those two predicates mean there. A `ZFStructure`{.Agda} packages exactly this data: a carrier of "sets", together with two relations valued in a chosen truth algebra, so that an atomic statement about the carrier yields a truth value rather than a bare yes-or-no. The record demands that the carrier be an h-set and nothing more; no ZF axiom is built in.
 
-The chapter then works in the proposition-valued setting, where the truth algebra is `hPropAlgebra`{.Agda} and a truth value has an underlying type. There a class over the carrier becomes something we can quantify into: `Transitive`{.Agda} expresses that members of members of a class stay in the class, and the restriction `𝒮 ↾ M` turns the class into the carrier of a new structure of dependent pairs. Since the membership fibers are propositions, that pair carrier is again a set, and equality of first projections already determines equality of the pairs.
+The chapter then works in the proposition-valued setting, where the truth algebra is `hPropAlgebra`{.Agda} and a truth value has an underlying type. There a class over the carrier becomes something we can quantify into: `Transitive`{.Agda} expresses that members of members of a class stay in the class, and the restriction `𝒮 ↾ M` turns the class into the carrier of a new structure of dependent pairs. Since the membership fibers are propositions, that pair carrier is again an h-set, and equality of first projections already determines equality of the pairs.
 
 Three membership notations must be kept apart throughout: the host-level class membership `∈ᶜ`{.Agda}, which tests whether a carrier element satisfies a predicate `M`; the structure membership `∈ˢ`{.Agda}, a field valued in the truth algebra; and the object-language membership symbol `∈̇`{.Agda} introduced in "The object language", which is only given meaning once a structure interprets it.
 <!--zh-->
@@ -11,7 +11,7 @@ Three membership notations must be kept apart throughout: the host-level class m
 
 关于集合的一阶语言有两个初始谓词：等词与隶属。要解释它，就必须选定变量的取值范围，以及这两个谓词在那里分别指什么。`ZFStructure`{.Agda} 正是打包这些数据：一个由「集合」组成的载体，加上两个取值于选定真值代数的关系，使得关于载体的原子陈述得到一个真值，而不是简单的真假二选一。这个 record 只要求载体是 h-集合，别无其他；其中不内置任何 ZF 公理。
 
-本章随后转入命题值设定：真值代数取为 `hPropAlgebra`{.Agda}，每个真值都有底层类型。此时载体上的类成为可以量入的对象：`Transitive`{.Agda} 表达类的元素之元素仍留在类中，而限制 `𝒮 ↾ M` 把类变成一个由依值对组成的新结构的载体。由于各隶属纤维都是命题，这个对载体仍是集合，且第一投影的相等已经决定整个对的相等。
+本章随后转入命题值设定：真值代数取为 `hPropAlgebra`{.Agda}，每个真值都有底层类型。此时载体上的类成为可以量入的对象：`Transitive`{.Agda} 表达类的元素之元素仍留在类中，而限制 `𝒮 ↾ M` 把类变成一个由依值对组成的新结构的载体。由于各隶属纤维都是命题，这个对载体仍是 h-集合，且第一投影的相等已经决定整个对的相等。
 
 全章要区分三种隶属记号：宿主层的类隶属 `∈ᶜ`{.Agda}，检验载体元素是否满足谓词 `M`；结构隶属 `∈ˢ`{.Agda}，是取值于真值代数的字段；以及「对象语言」一章的语法中的对象语言隶属符号 `∈̇`{.Agda}，只有在结构给出解释之后它才有意义。
 <!--ja-->
@@ -19,7 +19,7 @@ Three membership notations must be kept apart throughout: the host-level class m
 
 集合についての一階言語には、等号と所属という二つの原始述語があります。これを解釈するには、変数が何を渡り歩くかを定め、その二つの述語がそこで何を意味するかを指定しなければなりません。`ZFStructure`{.Agda} はまさにこのデータをまとめます。すなわち「集合」からなる台と、選んだ真理値代数に値を持つ二つの関係であり、台についての原子文が真偽の二者択一ではなく真理値を返すようにします。レコードが要求するのは台が h-集合であることだけで、ZF の公理は組み込まれていません。
 
-本章は続いて命題値の設定に移ります。真理値代数を `hPropAlgebra`{.Agda} とすると、各真理値に基礎型があります。そこでは台の上のクラスを量化できる対象になります。`Transitive`{.Agda} は、クラスの要素の要素が再びそのクラスに属することを表し、制限 `𝒮 ↾ M` はクラスを依存対からなる新しい構造の台に変えます。所属の各ファイバーが命題であるため、この対の台は再び集合であり、第一射影の等しさだけで対全体の等しさが定まります。
+本章は続いて命題値の設定に移ります。真理値代数を `hPropAlgebra`{.Agda} とすると、各真理値に基礎型があります。そこでは台の上のクラスを量化できる対象になります。`Transitive`{.Agda} は、クラスの要素の要素が再びそのクラスに属することを表し、制限 `𝒮 ↾ M` はクラスを依存対からなる新しい構造の台に変えます。所属の各ファイバーが命題であるため、この対の台は再び h-集合であり、第一射影の等しさだけで対全体の等しさが定まります。
 
 全章を通して三つの所属の記法を区別しなければなりません。ホストレベルのクラス所属 `∈ᶜ`{.Agda} は、台の要素が述語 `M` を満たすかを調べます。構造の所属 `∈ˢ`{.Agda} は真理値代数に値を持つフィールドです。そして「対象言語」の章の構文にある対象言語の所属記号 `∈̇`{.Agda} は、構造が解釈を与えて初めて意味を持ちます。
 <!--/-->
@@ -41,11 +41,11 @@ open import Base.Prelude
 ```
 
 <!--en-->
-The general record leaves the truth algebra arbitrary, so the same definition serves algebras whose truth values are not propositions. The proposition-valued case is where sets and classes become concrete. If the truth values are propositions, then `x ∈ᶜ M` is not merely formal: it is an actual type we may inhabit, and gathering the elements that inhabit it forms a dependent pair type. The carrier `S` being a set does not automatically make such a pair type a set; what saves it is that each fiber, the membership evidence at a fixed element, is a proposition, so no two distinct proofs can separate otherwise equal pairs.
+The general record leaves the truth algebra arbitrary, so the same definition serves algebras whose truth values are not propositions. The proposition-valued case is where sets and classes become concrete. If the truth values are propositions, then `x ∈ᶜ M` is not merely formal: it is an actual type we may inhabit, and gathering the elements that inhabit it forms a dependent pair type. The carrier `S` being an h-set does not automatically make such a pair type an h-set; what saves it is that each fiber, the membership evidence at a fixed element, is a proposition, so no two distinct proofs can separate otherwise equal pairs.
 <!--zh-->
-一般的 record 不固定真值代数，因此同一个定义也适用于真值不是命题的代数。命题值的情形才使集合与类变得具体。若真值是命题，`x ∈ᶜ M` 就不只是形式记号：它是一个可以真正具有元素的类型，把所有居留其中的元素收集起来便得到一个依值对类型。载体 `S` 是集合并不自动保证这样的对类型也是集合；救场的是每个纤维，即固定元素处的隶属证据，都是命题，因此不会有两组不同的证明把本应相等的对拆开。
+一般的 record 不固定真值代数，因此同一个定义也适用于真值不是命题的代数。命题值的情形才使集合与类变得具体。若真值是命题，`x ∈ᶜ M` 就不只是形式记号：它是一个可以真正具有元素的类型，把所有居留其中的元素收集起来便得到一个依值对类型。载体 `S` 是 h-集合并不自动保证这样的对类型也是 h-集合；救场的是每个纤维，即固定元素处的隶属证据，都是命题，因此不会有两组不同的证明把本应相等的对拆开。
 <!--ja-->
-一般のレコードは真理値代数を固定しないので、真理値が命題でない代数にも同じ定義が使えます。集合とクラスが具体的になるのは、命題値の場合です。真理値が命題なら `x ∈ᶜ M` は単なる形式的な記号ではなく、実際に要素を持つ型であり、それを満たす要素を集めると依存対の型が得られます。台 `S` が集合でも、そのような対の型が集合になるとは限りません。これを救うのは、各ファイバー、すなわち固定した要素での所属の証拠が命題であることで、異なる二組の証拠が本来等しいはずの対を引き裂くことはありません。
+一般のレコードは真理値代数を固定しないので、真理値が命題でない代数にも同じ定義が使えます。集合とクラスが具体的になるのは、命題値の場合です。真理値が命題なら `x ∈ᶜ M` は単なる形式的な記号ではなく、実際に要素を持つ型であり、それを満たす要素を集めると依存対の型が得られます。台 `S` が h-集合でも、そのような対の型が h-集合になるとは限りません。これを救うのは、各ファイバー、すなわち固定した要素での所属の証拠が命題であることで、異なる二組の証拠が本来等しいはずの対を引き裂くことはありません。
 <!--/-->
 
 ```agda
@@ -72,7 +72,7 @@ Why should equality of sets be a field rather than a fixed relation? Because the
 
 The conventions are book-wide: script `𝒮` stands for a structure, `S` for its carrier, and `x`, `y`, `z` for carrier elements, the "sets" the language speaks of. The superscript `ˢ` marks a symbol as a **field of the structure at hand**, and the membership family on the page now has one glyph per layer: the library's `∈` for the host, `∈ˢ` for the structure, and the object-language symbol `∈̇` for the syntax.
 
-The record is deliberately bare model-theoretic data. It requires the carrier to be a set and gives the two truth-valued relations; it asserts no extensionality, well-foundedness, or any other ZF axiom. Those belong to the later model chapters, where they appear as further fields.
+The record is deliberately bare model-theoretic data. It requires the carrier to be an h-set and gives the two truth-valued relations; it asserts no extensionality, well-foundedness, or any other ZF axiom. Those belong to the later model chapters, where they appear as further fields.
 <!--zh-->
 ## 结构的 record
 
@@ -80,15 +80,15 @@ The record is deliberately bare model-theoretic data. It requires the carrier to
 
 约定全书通用：花体 `𝒮` 代表结构，`S` 代表其载体，`x`、`y`、`z` 代表载体元素，即这门语言所谈的「集合」。上标 `ˢ` 标示一个符号是**当前结构的字段**，纸面上的隶属记号一族已一字一层：库的 `∈` 表示宿主，`∈ˢ` 表示结构，对象语言中的 `∈̇` 表示语法。
 
-这个 record 刻意只记录裸的模型论数据：要求载体是集合，并给出两个真值关系；不主张外延性、良基性或任何其他 ZF 公理。那些属于后文的模型诸章，在那里成为模型的进一步字段。
+这个 record 刻意只记录裸的模型论数据：要求载体是 h-集合，并给出两个真值关系；不主张外延性、良基性或任何其他 ZF 公理。那些属于后文的模型诸章，在那里成为模型的进一步字段。
 <!--ja-->
 ## 構造の record
 
-集合の等号は、固定された関係ではなくフィールドであるべきでしょうか。集合論の言語は `=` と `∈` を原始記号として扱い、構造とはそれらの意味の選択にほかなりません。二つの台の要素は、ホスト型の要素としては異なっていても、構造には等しいとされうるし、弱い真理値代数上の構造は等号をまったく判定しないかもしれません。`≈ˢ` と `∈ˢ` を真理値代数の担体 `Ω` に値を持つフィールドにすることで、構造が実際に何を与えているのかを意味論が正直に示します。このレコードは二つの関係の間にいかなる整合性の法則も課しません。
+集合の等号は、固定された関係ではなくフィールドであるべきでしょうか。集合論の言語は `=` と `∈` を原始記号として扱い、構造とはそれらの意味の選択にほかなりません。二つの台の要素は、ホスト型の要素としては異なっていても、構造には等しいとされうるし、弱い真理値代数上の構造は等号をまったく判定しないかもしれません。`≈ˢ` と `∈ˢ` を真理値代数の台 `Ω` に値を持つフィールドにすることで、構造が実際に何を与えているのかを意味論が正直に示します。このレコードは二つの関係の間にいかなる整合性の法則も課しません。
 
 約束は本書全体で共通です。筆記体の `𝒮` は構造を、`S` はその台を、`x`、`y`、`z` は台の要素、すなわちこの言語が語る「集合」を表します。上付きの `ˢ` は、その記号が**当該構造のフィールド**であることの印で、紙面上の所属記号の族はすでに一字一層に分かれています。ライブラリの `∈` がホストを、`∈ˢ` が構造を、対象言語の `∈̇` が構文を表します。
 
-このレコードは、あえて素のモデル論的データだけを記録します。台が集合であることを要求し、二つの真理値関係を与えますが、外延性や正則性、その他の ZF 公理は一切主張しません。それらは後のモデル諸章に属し、そこでモデルのさらなるフィールドとして現れます。
+このレコードは、あえて素のモデル論的データだけを記録します。台が h-集合であることを要求し、二つの真理値関係を与えますが、外延性や正則性、その他の ZF 公理は一切主張しません。それらは後のモデル諸章に属し、そこでモデルのさらなるフィールドとして現れます。
 <!--/-->
 
 <!--en-->
@@ -96,7 +96,7 @@ The carrier `S` is an ordinary type at level `ℓ`, and the field `isSetS` asks 
 <!--zh-->
 载体 `S` 是层级 `ℓ` 上的普通类型，字段 `isSetS` 要求它是 h-集合：其相等类型都是命题。这是对语言中「集合」可以是什么的唯一约束。它连同 `S` 自身的类型，把整个 record 放在层级 `ℓ-max (ℓ-suc ℓ) ℓ'`{.Agda}，因为 `S : Type ℓ`{.Agda} 本身高一层；第二个层级 `ℓ'` 属于真值代数 `𝕋 : TruthAlgebra ℓ ℓ'`{.Agda}，其载体 `Ω` 将被关系字段使用。
 <!--ja-->
-台 `S` はレベル `ℓ` の通常の型で、フィールド `isSetS` はそれが h-集合であること、つまり等式の型がすべて命題であることを要求します。これが、この言語の「集合」となりうるものに対する唯一の制約です。これと `S` 自身の型を合わせると、レコード全体は `ℓ-max (ℓ-suc ℓ) ℓ'`{.Agda} のレベルに属します。`S : Type ℓ`{.Agda} 自体が一段上に住むためです。第二のレベル `ℓ'` は真理値代数 `𝕋 : TruthAlgebra ℓ ℓ'`{.Agda} のもので、その担体 `Ω` をこれから関係のフィールドが使います。
+台 `S` はレベル `ℓ` の通常の型で、フィールド `isSetS` はそれが h-集合であること、つまり等式の型がすべて命題であることを要求します。これが、この言語の「集合」となりうるものに対する唯一の制約です。これと `S` 自身の型を合わせると、レコード全体は `ℓ-max (ℓ-suc ℓ) ℓ'`{.Agda} のレベルに属します。`S : Type ℓ`{.Agda} 自体が一段上に住むためです。第二のレベル `ℓ'` は真理値代数 `𝕋 : TruthAlgebra ℓ ℓ'`{.Agda} のもので、その台 `Ω` をこれから関係のフィールドが使います。
 <!--/-->
 
 ```agda
@@ -108,11 +108,11 @@ record ZFStructure {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') : Type (ℓ-max (�
 ```
 
 <!--en-->
-The two relation fields give the structure's equality `≈ˢ` and membership `∈ˢ`, each a function `S → S → Ω`{.Agda} into the truth algebra's carrier. Thus `x ∈ˢ y` takes a value in `Ω`. The record itself does not require `Ω` to consist of proposition types or of booleans; the concrete interpretation depends on the chosen truth algebra `𝕋`. The record ends here: the carrier and two relations are data, sethood is a constraint, and no set-theoretic axiom is imposed.
+The two relation fields give the structure's equality `≈ˢ` and membership `∈ˢ`, each a function `S → S → Ω`{.Agda} into the truth algebra's carrier. Thus `x ∈ˢ y` takes a value in `Ω`. The record itself does not require `Ω` to consist of proposition types or of booleans; the concrete interpretation depends on the chosen truth algebra `𝕋`. The record ends here: the carrier and two relations are data, the h-set condition is a constraint, and no set-theoretic axiom is imposed.
 <!--zh-->
-两个关系字段给出结构的等词 `≈ˢ` 与隶属 `∈ˢ`，都是 `S → S → Ω`{.Agda} 型的函数，取值于真值代数的载体。因此 `x ∈ˢ y` 取 `Ω` 中的一个值。这个 record 本身不要求 `Ω` 由命题类型或布尔值组成；具体解释取决于所选的真值代数 `𝕋`。record 到此为止：载体与两个关系是数据，集合性是约束，并未施加集合论公理。
+两个关系字段给出结构的等词 `≈ˢ` 与隶属 `∈ˢ`，都是 `S → S → Ω`{.Agda} 型的函数，取值于真值代数的载体。因此 `x ∈ˢ y` 取 `Ω` 中的一个值。这个 record 本身不要求 `Ω` 由命题类型或布尔值组成；具体解释取决于所选的真值代数 `𝕋`。record 到此为止：载体与两个关系是数据，h-集合性是约束，并未施加集合论公理。
 <!--ja-->
-二つの関係フィールドは構造の等号 `≈ˢ` と所属 `∈ˢ` を与え、いずれも真理値代数の担体への関数 `S → S → Ω`{.Agda} です。したがって `x ∈ˢ y` は `Ω` の値をとります。このレコード自身は、`Ω` が命題の型またはブール値からなることを要求しません。具体的な解釈は選ばれた真理値代数 `𝕋` に依存します。レコードはここで終わり、台と二つの関係がデータ、集合性が制約であり、集合論の公理は課されません。
+二つの関係フィールドは構造の等号 `≈ˢ` と所属 `∈ˢ` を与え、いずれも真理値代数の台への関数 `S → S → Ω`{.Agda} です。したがって `x ∈ˢ y` は `Ω` の値をとります。このレコード自身は、`Ω` が命題の型またはブール値からなることを要求しません。具体的な解釈は選ばれた真理値代数 `𝕋` に依存します。レコードはここで終わり、台と二つの関係がデータ、h-集合性が制約であり、集合論の公理は課されません。
 <!--/-->
 
 ```agda
@@ -214,11 +214,11 @@ Given a proposition-valued class `M`, we can now cut a structure down to the par
 <!--/-->
 
 <!--en-->
-The new carrier is the Σ-type `Σ[ x ∈ S ] (x ∈ᶜ M)`: an inhabitant is a pair of an underlying carrier element and membership evidence in `M`, so restricting does not collect `M` into a set, it only changes which pairs count as elements. The record's `isSetS` field still must be filled, and here the fiber-wise fact from the chapter opening does the work: since each `M x` is a proposition by its second component, `isSetΣSndProp`{.Agda} applied to `isSetS` proves that this pair type is again a set.
+The new carrier is the Σ-type `Σ[ x ∈ S ] (x ∈ᶜ M)`: an inhabitant is a pair of an underlying carrier element and membership evidence in `M`, so restricting does not collect `M` into a set, it only changes which pairs count as elements. The record's `isSetS` field still must be filled, and here the fiber-wise fact from the chapter opening does the work: since each `M x` is a proposition by its second component, `isSetΣSndProp`{.Agda} applied to `isSetS` proves that this pair type is again an h-set.
 <!--zh-->
-新载体是 Σ 类型 `Σ[ x ∈ S ] (x ∈ᶜ M)`：其元素是「底层载体元素配上 `M` 的成员证据」的对，因此限制并不把 `M` 收集成一个集合，只是改变哪些对算作元素。record 的 `isSetS` 字段仍须填写，这里正是章首那条逐纤维的事实起作用：由于每个 `M x` 凭第二分量是命题，把 `isSetΣSndProp`{.Agda} 作用于 `isSetS` 便证明这个对类型仍是集合。
+新载体是 Σ 类型 `Σ[ x ∈ S ] (x ∈ᶜ M)`：其元素是「底层载体元素配上 `M` 的成员证据」的对，因此限制并不把 `M` 收集成一个集合，只是改变哪些对算作元素。record 的 `isSetS` 字段仍须填写，这里正是章首那条逐纤维的事实起作用：由于每个 `M x` 凭第二分量是命题，把 `isSetΣSndProp`{.Agda} 作用于 `isSetS` 便证明这个对类型仍是 h-集合。
 <!--ja-->
-新しい台は Σ 型 `Σ[ x ∈ S ] (x ∈ᶜ M)` です。その要素は「元となる台の要素と `M` への所属の証拠」の対であり、したがって制限は `M` を集合に集めるのではなく、どの対を要素とみなすかを変えるだけです。レコードの `isSetS` フィールドは依然として埋める必要があり、ここで章の冒頭のファイバーごとの事実が働きます。各 `M x` は第二成分によって命題なので、`isSetS` に `isSetΣSndProp`{.Agda} を適用すれば、この対の型が再び集合であることが示されます。
+新しい台は Σ 型 `Σ[ x ∈ S ] (x ∈ᶜ M)` です。その要素は「元となる台の要素と `M` への所属の証拠」の対であり、したがって制限は `M` を集合に集めるのではなく、どの対を要素とみなすかを変えるだけです。レコードの `isSetS` フィールドは依然として埋める必要があり、ここで章の冒頭のファイバーごとの事実が働きます。各 `M x` は第二成分によって命題なので、`isSetS` に `isSetΣSndProp`{.Agda} を適用すれば、この対の型が再び h-集合であることが示されます。
 <!--/-->
 
 ```agda
@@ -271,13 +271,13 @@ The relations of `𝒮 ↾ M` ignore the second components, so one might ask whe
 <!--en-->
 ## Recap
 
-A `ZFStructure`{.Agda} records four fields: a carrier, its sethood proof, and truth-valued interpretations of equality and membership. It includes no ZF axioms. For proposition-valued structures, `∈ᵗ` exposes the underlying membership type, `Transitive` states closure under members of members, and `𝒮 ↾ M` restricts the carrier to a class of dependent pairs. The lemma `↾-reflects`{.Agda} lifts equality of first projections to equality in that restricted carrier. The next step is to interpret the object-language formulas themselves inside such a structure.
+A `ZFStructure`{.Agda} records four fields: a carrier, its h-set proof, and truth-valued interpretations of equality and membership. It includes no ZF axioms. For proposition-valued structures, `∈ᵗ` exposes the underlying membership type, `Transitive` states closure under members of members, and `𝒮 ↾ M` restricts the carrier to a class of dependent pairs. The lemma `↾-reflects`{.Agda} lifts equality of first projections to equality in that restricted carrier. The next step is to interpret the object-language formulas themselves inside such a structure.
 <!--zh-->
 ## 小结
 
-`ZFStructure`{.Agda} 记录四个字段：载体、载体的集合性证明，以及等词与成员关系的真值解释；其中不包含 ZF 公理。对命题值结构，`∈ᵗ` 给出成员真值的底层类型，`Transitive` 陈述对元素之元素的闭合，`𝒮 ↾ M` 把载体限制到一个由依值对组成的类。引理 `↾-reflects`{.Agda} 把第一投影的相等提升为限制载体中的相等。下一步是在这样的结构中解释对象语言的公式本身。
+`ZFStructure`{.Agda} 记录四个字段：载体、载体的 h-集合性证明，以及等词与成员关系的真值解释；其中不包含 ZF 公理。对命题值结构，`∈ᵗ` 给出成员真值的底层类型，`Transitive` 陈述对元素之元素的闭合，`𝒮 ↾ M` 把载体限制到一个由依值对组成的类。引理 `↾-reflects`{.Agda} 把第一投影的相等提升为限制载体中的相等。下一步是在这样的结构中解释对象语言的公式本身。
 <!--ja-->
 ## まとめ
 
-`ZFStructure`{.Agda} は、台、その集合性の証明、等号と所属の真理値による解釈という四つのフィールドを記録し、ZF の公理は含みません。命題値の構造では、`∈ᵗ` が所属の基礎型を与え、`Transitive` が要素の要素についての閉性を述べ、`𝒮 ↾ M` が台を依存対からなるクラスへ制限します。`↾-reflects`{.Agda} は、第一射影の等しさを制限された台の等しさへ持ち上げます。次の段階は、このような構造の中で対象言語の論理式そのものを解釈することです。
+`ZFStructure`{.Agda} は、台、その h-集合性の証明、等号と所属の真理値による解釈という四つのフィールドを記録し、ZF の公理は含みません。命題値の構造では、`∈ᵗ` が所属の基礎型を与え、`Transitive` が要素の要素についての閉性を述べ、`𝒮 ↾ M` が台を依存対からなるクラスへ制限します。`↾-reflects`{.Agda} は、第一射影の等しさを制限された台の等しさへ持ち上げます。次の段階は、このような構造の中で対象言語の論理式そのものを解釈することです。
 <!--/-->

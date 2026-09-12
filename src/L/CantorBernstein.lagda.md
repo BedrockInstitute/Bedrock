@@ -33,7 +33,7 @@ open PT using ( ∥_∥₁ )
 open hPropStructure 𝒮ʟ using ( S )
 ```
 
-Set-ness of the small member type, delegated: `small-set` is stated
+The h-set condition on the small member type, delegated: `small-set` is stated
 at `V ℓ`, and `fst a` is a `V ℓ` for every `a : S`.
 
 ```agda

@@ -67,11 +67,11 @@ import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
-Three openings put the names into scope. Opening the truth algebra `hPropAlgebra ℓ` names its carrier `Ω`, which is `hProp ℓ`, and its operations `⊓`{.Agda}, `⊔`{.Agda}, `⇒`{.Agda}, `⋀`{.Agda}, `⋁`{.Agda} and the falsity `⊥`{.Agda}: these are exactly the connectives and quantifiers with which the axiom statements below are phrased. Opening `hPropStructure 𝒮` brings the structure's carrier `S`, its sethood evidence, and the two truth-valued relations `≈ˢ` and `∈ˢ`, together with the Type-valued reading `∈ᵗ`{.Agda} of membership. Finally, opening `At S id`{.Agda} instantiates the satisfaction relation `_⊨_`{.Agda} at the canonical constant interpretation, where a constant denotes itself, so a free variable slot in a formula is read as membership of a specific set.
+Three openings put the names into scope. Opening the truth algebra `hPropAlgebra ℓ` names its carrier `Ω`, which is `hProp ℓ`, and its operations `⊓`{.Agda}, `⊔`{.Agda}, `⇒`{.Agda}, `⋀`{.Agda}, `⋁`{.Agda} and the falsity `⊥`{.Agda}: these are exactly the connectives and quantifiers with which the axiom statements below are phrased. Opening `hPropStructure 𝒮` brings the structure's carrier `S`, its h-set certificate, and the two truth-valued relations `≈ˢ` and `∈ˢ`, together with the Type-valued reading `∈ᵗ`{.Agda} of membership. Finally, opening `At S id`{.Agda} instantiates the satisfaction relation `_⊨_`{.Agda} at the canonical constant interpretation, where a constant denotes itself, so a free variable slot in a formula is read as membership of a specific set.
 <!--zh-->
-三个 open 把名字带入作用域。打开真值代数 `hPropAlgebra ℓ` 得到其载体 `Ω` (即 `hProp ℓ`) 与运算 `⊓`{.Agda}、`⊔`{.Agda}、`⇒`{.Agda}、`⋀`{.Agda}、`⋁`{.Agda} 和假值 `⊥`{.Agda}：下面的公理陈述正是用这些联结词与量词表述的。打开 `hPropStructure 𝒮` 得到结构的载体 `S`、其集合性证据，以及两个真值关系 `≈ˢ` 与 `∈ˢ`，连同成员的 Type 值读法 `∈ᵗ`{.Agda}。最后，打开 `At S id`{.Agda} 在典范常元解释下实例化满足关系 `_⊨_`{.Agda}，其中常元指自身，于是公式中的自由变元槽就被读作对某个具体集合的隶属。
+三个 open 把名字带入作用域。打开真值代数 `hPropAlgebra ℓ` 得到其载体 `Ω` (即 `hProp ℓ`) 与运算 `⊓`{.Agda}、`⊔`{.Agda}、`⇒`{.Agda}、`⋀`{.Agda}、`⋁`{.Agda} 和假值 `⊥`{.Agda}：下面的公理陈述正是用这些联结词与量词表述的。打开 `hPropStructure 𝒮` 得到结构的载体 `S`、其 h-集合性证据，以及两个真值关系 `≈ˢ` 与 `∈ˢ`，连同成员的 Type 值读法 `∈ᵗ`{.Agda}。最后，打开 `At S id`{.Agda} 在典范常元解释下实例化满足关系 `_⊨_`{.Agda}，其中常元指自身，于是公式中的自由变元槽就被读作对某个具体集合的隶属。
 <!--ja-->
-三つの open が名前をスコープに入れます。真理値代数 `hPropAlgebra ℓ` を開くと、担体 `Ω` (すなわち `hProp ℓ`) と、演算 `⊓`{.Agda}、`⊔`{.Agda}、`⇒`{.Agda}、`⋀`{.Agda}、`⋁`{.Agda}、偽 `⊥`{.Agda} の名前が得られます。これらはまさに、以下の公理の言明が述べられるのに使う結合子と量化子です。`hPropStructure 𝒮` を開くと、構造の台 `S`、その集合性の証拠、真理値を返す二つの関係 `≈ˢ` と `∈ˢ`、さらに所属の Type 値の読み `∈ᵗ`{.Agda} が得られます。最後に `At S id`{.Agda} を開くと、充足関係 `_⊨_`{.Agda} が正準な定数解釈で具体化されます。そこでは定数が自分自身を指すので、論理式の自由変数の枠は、特定の集合への所属として読まれます。
+三つの open が名前をスコープに入れます。真理値代数 `hPropAlgebra ℓ` を開くと、台 `Ω` (すなわち `hProp ℓ`) と、演算 `⊓`{.Agda}、`⊔`{.Agda}、`⇒`{.Agda}、`⋀`{.Agda}、`⋁`{.Agda}、偽 `⊥`{.Agda} の名前が得られます。これらはまさに、以下の公理の言明が述べられるのに使う結合子と量化子です。`hPropStructure 𝒮` を開くと、構造の台 `S`、その h-集合性の証拠、真理値を返す二つの関係 `≈ˢ` と `∈ˢ`、さらに所属の Type 値の読み `∈ᵗ`{.Agda} が得られます。最後に `At S id`{.Agda} を開くと、充足関係 `_⊨_`{.Agda} が正準な定数解釈で具体化されます。そこでは定数が自分自身を指すので、論理式の自由変数の枠は、特定の集合への所属として読まれます。
 <!--/-->
 
 ```agda
@@ -117,11 +117,11 @@ SetOf : (S → Ω) → Type (ℓ-suc ℓ)
 ```
 
 <!--en-->
-That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each fiber is: `Ω` is `hProp ℓ`, and `isSetHProp` says the type of paths between two propositions packed in `hProp` is a set, so its identity types are propositions; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
+That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each fiber is: `Ω` is `hProp ℓ`, and `isSetHProp` says the type of paths between two propositions packed in `hProp` is an h-set, so its identity types are propositions; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
 <!--zh-->
-实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因每个纤维都是命题：`Ω` 即 `hProp ℓ`，`isSetHProp` 说明 `hProp` 中两个命题之间的路径类型是集合，其恒等类型因此是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
+实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因每个纤维都是命题：`Ω` 即 `hProp ℓ`，`isSetHProp` 说明 `hProp` 中两个命题之间的路径类型是 h-集合，其恒等类型因此是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
 <!--ja-->
-実現がより重いデータではなく命題であることを、ここで確かめます。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、各繊維が命題だからです。`Ω` は `hProp ℓ` であり、`isSetHProp` は `hProp` に包まれた二つの命題の間のパス型が集合であることを述べるので、その恒等型は命題になります。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げます。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままです。この事実は後で繰り返し使われます。
+実現がより重いデータではなく命題であることを、ここで確かめます。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、各繊維が命題だからです。`Ω` は `hProp ℓ` であり、`isSetHProp` は `hProp` に包まれた二つの命題の間のパス型が h-集合であることを述べるので、その恒等型は命題になります。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げます。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままです。この事実は後で繰り返し使われます。
 <!--/-->
 
 ```agda
@@ -477,7 +477,7 @@ The class `isNumeral` is an existential written in the truth algebra: `⋁`{.Agd
 <!--zh-->
 类 `isNumeral` 是用真值代数写出的存在式：`⋁`{.Agda} 在一个载体类型上量化，析取命题族 `x ≈ˢ numeral (lower n)`。载体必须具有类型 `Type ℓ` 才能应用 `⋁`{.Agda}，而 `ℕ` 住在 `Type ℓ-zero`；`Lift {ℓ-zero} {ℓ} ℕ` 把它提升到工作层级，`lower` 取回普通索引交给 `numeral`。这是层级的调整，不是数学内容的改变：被提升的类型恰有同样的元素。字段 `hasInfinity` 随即以熟悉的形式断言：实现该类的集合唯一存在。
 <!--ja-->
-クラス `isNumeral` は真理値代数で書かれた存在式です。`⋁`{.Agda} は担体の型の上で量化し、命題の族 `x ≈ˢ numeral (lower n)` を選言します。`⋁`{.Agda} を適用するには担体の型が `Type ℓ` である必要がありますが、`ℕ` は `Type ℓ-zero` に住みます。そこで `Lift {ℓ-zero} {ℓ} ℕ` が作業レベルへ持ち上げ、`lower` が普通の添字を取り戻して `numeral` に渡します。これは宇宙レベルの調整であって数学的な変更ではありません。lift された型はまったく同じ要素を持ちます。フィールド `hasInfinity` は、おなじみの形で、このクラスを実現する集合の一意存在を主張します。
+クラス `isNumeral` は真理値代数で書かれた存在式です。`⋁`{.Agda} は台の型の上で量化し、命題の族 `x ≈ˢ numeral (lower n)` を選言します。`⋁`{.Agda} を適用するには台の型が `Type ℓ` である必要がありますが、`ℕ` は `Type ℓ-zero` に住みます。そこで `Lift {ℓ-zero} {ℓ} ℕ` が作業レベルへ持ち上げ、`lower` が普通の添字を取り戻して `numeral` に渡します。これは宇宙レベルの調整であって数学的な変更ではありません。lift された型はまったく同じ要素を持ちます。フィールド `hasInfinity` は、おなじみの形で、このクラスを実現する集合の一意存在を主張します。
 <!--/-->
 
 ```agda

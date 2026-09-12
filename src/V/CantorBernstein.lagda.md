@@ -54,7 +54,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
-Two kinds of propositions dominate the chapter: membership in the image of g, and reachability by a finite alternating chain. Both are stored as elements of `hProp ℓ`, which packages an underlying type with a proof that it is a proposition; `⟨ P ⟩`{.Agda} projects the underlying type, while the propositionhood proof stays in the second component. The remaining imports supply the machinery around them: disjoint sums for the bad/good case split, `isProp⊥` for the refutation side, `Σ≡Prop` for identifying pairs whose second components are proposition-valued, and the cumulative hierarchy together with the fact that a member type `⟪ a ⟫`{.Agda} of a set embeds into a set, which will later certify that the member types are h-sets.
+Two kinds of propositions dominate the chapter: membership in the image of g, and reachability by a finite alternating chain. Both are stored as elements of `hProp ℓ`, which packages an underlying type with a proof that it is a proposition; `⟨ P ⟩`{.Agda} projects the underlying type, while the propositionhood proof stays in the second component. The remaining imports supply the machinery around them: disjoint sums for the bad/good case split, `isProp⊥` for the refutation side, `Σ≡Prop` for identifying pairs whose second components are proposition-valued, and the cumulative hierarchy together with the fact that a member type `⟪ a ⟫`{.Agda} of a set embeds into an h-set, which will later certify that the member types are h-sets.
 <!--zh-->
 本章由两类命题主导：属于 g 的像，以及经由有限交错链可达。二者都存为 `hProp ℓ` 的元素，它把底层类型与「它是命题」的证明打包在一起；`⟨ P ⟩`{.Agda} 投影出底层类型，而命题性证明留在第二个分量。其余导入提供围绕它们的机制：坏/好情形分裂用的不交和、反驳一侧的 `isProp⊥`、对第二分量为命题值的序对作识别的 `Σ≡Prop`，以及累积层级本身与「集合的成员类型 `⟪ a ⟫`{.Agda} 嵌入到一个集合、因而它是 h-集合」这一事实。
 <!--ja-->
@@ -400,19 +400,19 @@ Surjectivity needs one extra step. The relative lemma `h-surj` applied at the ca
 ```
 
 <!--en-->
-The abstract construction now applies to the cumulative hierarchy itself. Each element a of V comes with a member type ⟪ a ⟫, the type of its members. The Bernstein construction asks for an h-set structure on its first type, so the first step is to certify that ⟪ a ⟫ is one. The embedding ⟪ a ⟫↪ sends each member index to the member it indexes inside V; since V is a set and the embedding is an embedding, its domain inherits set-ness. With that single fact, two mutual injections between ⟪ a ⟫ and ⟪ b ⟫ produce a bijection packaged as a dependent triple.
+The abstract construction now applies to the cumulative hierarchy itself. Each element a of V comes with a member type ⟪ a ⟫, the type of its members. The Bernstein construction asks for an h-set structure on its first type, so the first step is to certify that ⟪ a ⟫ is one. The embedding ⟪ a ⟫↪ sends each member index to the member it indexes inside V; since V is an h-set and the embedding is an embedding, its domain inherits the h-set condition. With that single fact, two mutual injections between ⟪ a ⟫ and ⟪ b ⟫ produce a bijection packaged as a dependent triple.
 <!--zh-->
-抽象构造现在应用于累积层级本身。V 的每个元素 a 都带有成员类型 ⟪ a ⟫，即其成员的类型。Bernstein 构造要求第一个类型具有 h-集合结构，所以第一步是证明 ⟪ a ⟫ 是 h-集合。嵌入 ⟪ a ⟫↪ 把每个成员指标送到它在 V 内所指标的成员；由于 V 是集合且该映射是嵌入，其定义域继承了集合性。有了这一条事实，⟪ a ⟫ 与 ⟪ b ⟫ 之间的两条互逆单射便产生一个打包成依赖三元组的双射。
+抽象构造现在应用于累积层级本身。V 的每个元素 a 都带有成员类型 ⟪ a ⟫，即其成员的类型。Bernstein 构造要求第一个类型具有 h-集合结构，所以第一步是证明 ⟪ a ⟫ 是 h-集合。嵌入 ⟪ a ⟫↪ 把每个成员指标送到它在 V 内所指标的成员；由于 V 是 h-集合且该映射是嵌入，其定义域继承了 h-集合性。有了这一条事实，⟪ a ⟫ 与 ⟪ b ⟫ 之间的两条互逆单射便产生一个打包成依赖三元组的双射。
 <!--ja-->
-抽象的な構成を、いよいよ累積階層そのものに適用します。V の各元 a はメンバー型 ⟪ a ⟫、すなわちそのメンバーの型を伴います。Bernstein の構成は第一の型が h-集合であることを要求するので、最初の一歩は ⟪ a ⟫ がそうであることの証明です。埋め込み ⟪ a ⟫↪ は各メンバーの指標を、V の中でそれが指すメンバーへ送ります。V は集合であり、この写像は埋め込みなので、その定義域は集合性を受け継ぎます。この一事実があれば、⟪ a ⟫ と ⟪ b ⟫ の間の相互の単射から、依存する三つ組としてまとめられた全単射が得られます。
+抽象的な構成を、いよいよ累積階層そのものに適用します。V の各元 a はメンバー型 ⟪ a ⟫、すなわちそのメンバーの型を伴います。Bernstein の構成は第一の型が h-集合であることを要求するので、最初の一歩は ⟪ a ⟫ がそうであることの証明です。埋め込み ⟪ a ⟫↪ は各メンバーの指標を、V の中でそれが指すメンバーへ送ります。V は h-集合であり、この写像は埋め込みなので、その定義域は h-集合性を受け継ぎます。この一事実があれば、⟪ a ⟫ と ⟪ b ⟫ の間の相互の単射から、依存する三つ組としてまとめられた全単射が得られます。
 <!--/-->
 
 <!--en-->
-The set-ness certificate composes two imported facts. The map ⟪ a ⟫↪ is an embedding into V, meaning all its fibers are propositions, and the hierarchy V is a set by its constructor setIsSet. A type that embeds into a set is itself a set, since equality in the domain can be compared after applying the embedding. The signature that follows then states the set-theoretic corollary in the same shape as the abstract theorem: injections f from ⟪ a ⟫ to ⟪ b ⟫ and g back, each with its injectivity proof, taken as explicit hypotheses.
+The h-set certificate composes two imported facts. The map ⟪ a ⟫↪ is an embedding into V, meaning all its fibers are propositions, and the hierarchy V is an h-set by its constructor setIsSet. A type that embeds into an h-set is itself an h-set, since equality in the domain can be compared after applying the embedding. The signature that follows then states the set-theoretic corollary in the same shape as the abstract theorem: injections f from ⟪ a ⟫ to ⟪ b ⟫ and g back, each with its injectivity proof, taken as explicit hypotheses.
 <!--zh-->
-集合性证书由两条已导入的事实复合而成。映射 ⟪ a ⟫↪ 是到 V 的嵌入，即其所有纤维都是命题；而层级 V 经其构造子 setIsSet 是集合。嵌入到集合中的类型自身是集合，因为定义域中的相等可以在施加该映射之后比较。随后的签名以与抽象定理相同的形状陈述集合论推论：从 ⟪ a ⟫ 到 ⟪ b ⟫ 的单射 f 与返回的单射 g，连同各自的单射性证明，作为显式假设。
+h-集合性证书由两条已导入的事实复合而成。映射 ⟪ a ⟫↪ 是到 V 的嵌入，即其所有纤维都是命题；而层级 V 经其构造子 setIsSet 是 h-集合。嵌入到 h-集合中的类型自身是 h-集合，因为定义域中的相等可以在施加该映射之后比较。随后的签名以与抽象定理相同的形状陈述集合论推论：从 ⟪ a ⟫ 到 ⟪ b ⟫ 的单射 f 与返回的单射 g，连同各自的单射性证明，作为显式假设。
 <!--ja-->
-集合性の証明書は、取り込まれた二つの事実を合成したものです。写像 ⟪ a ⟫↪ は V への埋め込み、つまりすべての繊維が命題であるような写像であり、階層 V はその構成子 setIsSet により集合です。集合へ埋め込まれる型はそれ自身集合になります。定義域の等式は埋め込みを施した後に比較できるからです。続くシグニチャは、抽象定理と同じ形で集合論的な帰結を述べます。⟪ a ⟫ から ⟪ b ⟫ への単射 f と戻りの単射 g、それぞれの単射性の証明とともに、明示的な仮定として取られます。
+h-集合性の証明書は、取り込まれた二つの事実を合成したものです。写像 ⟪ a ⟫↪ は V への埋め込み、つまりすべての繊維が命題であるような写像であり、階層 V はその構成子 setIsSet により h-集合です。h-集合へ埋め込まれる型はそれ自身 h-集合になります。定義域の等式は埋め込みを施した後に比較できるからです。続くシグニチャは、抽象定理と同じ形で集合論的な帰結を述べます。⟪ a ⟫ から ⟪ b ⟫ への単射 f と戻りの単射 g、それぞれの単射性の証明とともに、明示的な仮定として取られます。
 <!--/-->
 
 ```agda
@@ -441,11 +441,11 @@ cantor-bernstein a b f fi g gi = M.ĥ , ( M.ĥ-inj , M.ĥ-surj )
 ```
 
 <!--en-->
-The proof is a single instantiation. Instantiating the module `Bernstein` at A = ⟪ a ⟫ and B = ⟪ b ⟫, with the set-ness certificate supplied for A and the two injections passed through unchanged, exposes the components ĥ, ĥ-inj and ĥ-surj; the definition assembles them into the triple. All the work of the previous section is reused without modification.
+The proof is a single instantiation. Instantiating the module `Bernstein` at A = ⟪ a ⟫ and B = ⟪ b ⟫, with the h-set certificate supplied for A and the two injections passed through unchanged, exposes the components ĥ, ĥ-inj and ĥ-surj; the definition assembles them into the triple. All the work of the previous section is reused without modification.
 <!--zh-->
-证明是一次单独的实例化。把模块 `Bernstein` 在 A = ⟪ a ⟫、B = ⟪ b ⟫ 处实例化，为 A 提供集合性证书，两条单射原样传入，即暴露出分量 ĥ、ĥ-inj 与 ĥ-surj；定义把它们组装成三元组。上一节的全部工作未经修改地被复用。
+证明是一次单独的实例化。把模块 `Bernstein` 在 A = ⟪ a ⟫、B = ⟪ b ⟫ 处实例化，为 A 提供 h-集合性证书，两条单射原样传入，即暴露出分量 ĥ、ĥ-inj 与 ĥ-surj；定义把它们组装成三元组。上一节的全部工作未经修改地被复用。
 <!--ja-->
-証明は一回のインスタンス化だけです。モジュール `Bernstein` を A = ⟪ a ⟫、B = ⟪ b ⟫ で実例化し、A に集合性の証明書を供給し、二つの単射をそのまま渡せば、成分 ĥ、ĥ-inj、ĥ-surj が現れます。定義はそれらを三つ組に組み立てます。前節の仕事のすべてが、変更なしに再利用されるのです。
+証明は一回のインスタンス化だけです。モジュール `Bernstein` を A = ⟪ a ⟫、B = ⟪ b ⟫ で実例化し、A に h-集合性の証明書を供給し、二つの単射をそのまま渡せば、成分 ĥ、ĥ-inj、ĥ-surj が現れます。定義はそれらを三つ組に組み立てます。前節の仕事のすべてが、変更なしに再利用されるのです。
 <!--/-->
 
 ```agda
@@ -461,11 +461,11 @@ The corollary above hard-wires the member types of V. A more reusable form keeps
 <!--/-->
 
 <!--en-->
-The parameters spell out the exact strength required. The carrier C lives at its own level ℓ₁ and the relation R at ℓ₂, so codes and their relations need not be small; what must be small is each P a, at the fixed level ℓ where excluded middle is available. For every a, P a is assumed an h-set, mirroring the set-ness hypothesis of the Bernstein module. The relation R itself is left completely arbitrary as a type: nothing about it is assumed beyond the readback, which from an inhabitant of R a b returns a pair whose first component is a function P a → P b and whose second is that function's injectivity proof. In particular, the extracted injection is honest data, not a truncated existence.
+The parameters spell out the exact strength required. The carrier C lives at its own level ℓ₁ and the relation R at ℓ₂, so codes and their relations need not be small; what must be small is each P a, at the fixed level ℓ where excluded middle is available. For every a, P a is assumed an h-set, mirroring the h-set hypothesis of the Bernstein module. The relation R itself is left completely arbitrary as a type: nothing about it is assumed beyond the readback, which from an inhabitant of R a b returns a pair whose first component is a function P a → P b and whose second is that function's injectivity proof. In particular, the extracted injection is honest data, not a truncated existence.
 <!--zh-->
-参数恰好列出所需的强度。载体 C 住在自己的层级 ℓ₁，关系 R 在 ℓ₂，因此码及其关系不必是小的；必须小的是每个 P a，它住在排中律可用的固定层级 ℓ。对每个 a，假设 P a 是 h-集合，对应 Bernstein 模块的集合性假设。关系 R 本身作为类型完全任意：除读回外对它不作任何假设，读回从 R a b 的元返回一个序对，第一分量是函数 P a → P b，第二分量是该函数的单射性证明。特别地，提取出的单射是真正的数据，不是命题截断的存在。
+参数恰好列出所需的强度。载体 C 住在自己的层级 ℓ₁，关系 R 在 ℓ₂，因此码及其关系不必是小的；必须小的是每个 P a，它住在排中律可用的固定层级 ℓ。对每个 a，假设 P a 是 h-集合，对应 Bernstein 模块的 h-集合性假设。关系 R 本身作为类型完全任意：除读回外对它不作任何假设，读回从 R a b 的元返回一个序对，第一分量是函数 P a → P b，第二分量是该函数的单射性证明。特别地，提取出的单射是真正的数据，不是命题截断的存在。
 <!--ja-->
-パラメータは必要な強さを正確に列挙します。台 C はそれ自身のレベル ℓ₁ に、関係 R は ℓ₂ に住むので、符号やその関係は小さくなくて構いません。小さくなければならないのは各 P a で、排中律が使える固定レベル ℓ に住みます。各 a について P a は h-集合だと仮定され、Bernstein モジュールの集合性の仮定に対応します。関係 R 自身は型としてまったく任意です。読み戻し以外には何も仮定しません。読み戻しは R a b の元から、第 1 成分が関数 P a → P b、第 2 成分がその関数の単射性の証明である対を返します。特に、取り出された単射は正味のデータであり、命題的切り詰めされた存在ではありません。
+パラメータは必要な強さを正確に列挙します。台 C はそれ自身のレベル ℓ₁ に、関係 R は ℓ₂ に住むので、符号やその関係は小さくなくて構いません。小さくなければならないのは各 P a で、排中律が使える固定レベル ℓ に住みます。各 a について P a は h-集合だと仮定され、Bernstein モジュールの h-集合性の仮定に対応します。関係 R 自身は型としてまったく任意です。読み戻し以外には何も仮定しません。読み戻しは R a b の元から、第 1 成分が関数 P a → P b、第 2 成分がその関数の単射性の証明である対を返します。特に、取り出された単射は正味のデータであり、命題的切り詰めされた存在ではありません。
 <!--/-->
 
 ```agda
@@ -494,11 +494,11 @@ The first entry point states the transfer with the two coded injections as expli
 ```
 
 <!--en-->
-The definition instantiates the Bernstein module at A = P a and B = P b, and this is where the readback is spent. The forward code fwd is unpacked by `read a b` into its function and injectivity components, and the backward code likewise with the arguments of R and read reversed; each projection is selected with the first and second component accessors. The set-ness field receives `setP a`. What reaches the Bernstein module are therefore genuine injections, and everything proved there applies unchanged.
+The definition instantiates the Bernstein module at A = P a and B = P b, and this is where the readback is spent. The forward code fwd is unpacked by `read a b` into its function and injectivity components, and the backward code likewise with the arguments of R and read reversed; each projection is selected with the first and second component accessors. The h-set field receives `setP a`. What reaches the Bernstein module are therefore genuine injections, and everything proved there applies unchanged.
 <!--zh-->
-定义在 A = P a、B = P b 处实例化 Bernstein 模块，读回正是在此被消耗。前向码 fwd 经 `read a b` 拆解为函数与单射性分量，后向码同理，只是 R 与 read 的参数对调；每个分量由第一、第二分量的投影选取。集合性字段接受 `setP a`。于是到达 Bernstein 模块的是真正的单射，那里证明的一切原样适用。
+定义在 A = P a、B = P b 处实例化 Bernstein 模块，读回正是在此被消耗。前向码 fwd 经 `read a b` 拆解为函数与单射性分量，后向码同理，只是 R 与 read 的参数对调；每个分量由第一、第二分量的投影选取。h-集合性字段接受 `setP a`。于是到达 Bernstein 模块的是真正的单射，那里证明的一切原样适用。
 <!--ja-->
-定義は Bernstein モジュールを A = P a、B = P b で実例化します。読み戻しが使われるのはまさにここです。前向きの符号 fwd は `read a b` によって関数と単射性の成分にほどかれ、後ろ向きの符号も同様ですが、R と read の引数の向きが逆になります。各成分は第 1、第 2 成分の射影で取り出されます。集合性の欄には `setP a` が渡ります。したがって Bernstein モジュールに届くのは正味の単射であり、そこで証明されたことはすべてそのまま適用されます。
+定義は Bernstein モジュールを A = P a、B = P b で実例化します。読み戻しが使われるのはまさにここです。前向きの符号 fwd は `read a b` によって関数と単射性の成分にほどかれ、後ろ向きの符号も同様ですが、R と read の引数の向きが逆になります。各成分は第 1、第 2 成分の射影で取り出されます。h-集合性の欄には `setP a` が渡ります。したがって Bernstein モジュールに届くのは正味の単射であり、そこで証明されたことはすべてそのまま適用されます。
 <!--/-->
 
 ```agda

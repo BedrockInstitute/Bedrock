@@ -124,7 +124,7 @@ Downward transfer mirrors `lowerLEM`{.Agda} from `Base.Classical`{.Agda}: assume
 <!--/-->
 
 <!--en-->
-Given data at level `ℓ`, the proof rehouses it at level `ℓ-suc ℓ` where the stronger hypothesis `sc` applies. The index `X` becomes `Lift X`, whose h-setness follows from `X`'s by `isOfHLevelLift`{.Agda}. The family `B x` becomes `λ x → Lift (B (lower x))`: a fiber over the lifted index is the lifted fiber over the original index underneath, so the lifted family carries exactly the same information as the original.
+Given data at level `ℓ`, the proof rehouses it at level `ℓ-suc ℓ` where the stronger hypothesis `sc` applies. The index `X` becomes `Lift X`, whose h-set condition follows from `X`'s by `isOfHLevelLift`{.Agda}. The family `B x` becomes `λ x → Lift (B (lower x))`: a fiber over the lifted index is the lifted fiber over the original index underneath, so the lifted family carries exactly the same information as the original.
 <!--zh-->
 给定 `ℓ` 层级的数据，证明把它安置到 `ℓ-suc ℓ` 层级，使更强的假设 `sc` 得以适用。指标 `X` 变为 `Lift X`，其 h-集合性经 `isOfHLevelLift`{.Agda} 从 `X` 的 h-集合性得到。纤维族 `B x` 变为 `λ x → Lift (B (lower x))`：抬升指标上的纤维就是底下原指标上纤维的抬升，因此抬升后的族与原来的族携带完全相同的信息。
 <!--ja-->
@@ -348,7 +348,7 @@ The question deserves to be a lemma of its own, so that its type displays exactl
 <!--/-->
 
 <!--en-->
-The lemma takes `SetChoice ℓ` as an explicit hypothesis and instantiates it with the data assembled above: index `Glued`, its h-setness from `squash/`{.Agda}, the fiber family `Pick`, and the pointwise mere inhabitation `pickable`{.Agda}. The hypothesis `sc` is itself a function; what is truncated is its output. The conclusion is the propositionally truncated existence of a function defined on all of `Glued` at once: choice never produces the function itself, only the statement that one merely exists, and this limitation will shape the final step of the theorem.
+The lemma takes `SetChoice ℓ` as an explicit hypothesis and instantiates it with the data assembled above: index `Glued`, its h-set certificate from `squash/`{.Agda}, the fiber family `Pick`, and the pointwise mere inhabitation `pickable`{.Agda}. The hypothesis `sc` is itself a function; what is truncated is its output. The conclusion is the propositionally truncated existence of a function defined on all of `Glued` at once: choice never produces the function itself, only the statement that one merely exists, and this limitation will shape the final step of the theorem.
 <!--zh-->
 引理把 `SetChoice ℓ` 取为显式假设，并用上文备好的数据例示它：指标 `Glued`、来自 `squash/`{.Agda} 的 h-集合性、纤维族 `Pick`、逐点的仅仅有元 `pickable`{.Agda}。假设 `sc` 本身是一个函数；被命题截断的是它的输出。结论是定义在整个 `Glued` 上的函数的命题截断存在：选择从不给出函数本身，只给出「有一个函数」的截断陈述，这一限制将塑造定理的最后一步。
 <!--ja-->

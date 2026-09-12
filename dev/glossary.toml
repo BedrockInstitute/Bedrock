@@ -903,13 +903,14 @@ audience = "reader"
 en = "carrier"
 zh = "载体"
 ja = "台"
+avoid = ["ja:担体", "ja:キャリア"]
 introduced_in = "Base.Prelude"
 matching = "explicit"
 forms_en = ["carriers"]
 recap_en = "The underlying type of objects on which the relations and operations of a structure are defined."
 recap_zh = "承载一个结构的对象，并供该结构的关系与运算在其上定义的底层类型。"
 recap_ja = "構造の対象を担い、その関係や演算が定義される基礎の型。"
-notes = "Of a structure; ja 台 as in 台集合. Explicit matching avoids treating every occurrence of the single Japanese character 台 as this term."
+notes = "Of a structure; ja 台 as in 台集合. Explicit matching avoids treating every occurrence of the single Japanese character 台 as this term. Owner ruling 2026-09-12 unified the Japanese rendering on 台: 24 occurrences of 担体 and one of キャリア were converted the same day, and the avoid list keeps them out."
 
 [[term]]
 category = "Logic and philosophy"
