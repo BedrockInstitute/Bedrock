@@ -36,18 +36,17 @@ The chapter runs under a single classical hypothesis, stated once as a module pa
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Ordinal.Linear {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 ```
 
 <!--en-->
-The proof works directly in the ambient hierarchy V rather than through the object language. The carrier and the structure membership `∈ˢ` come from the ZF structure packaged over `𝒮ᵥ`, so `⟨ x ∈ˢ A ⟩` is the underlying proposition of a truth value in the hProp truth algebra. Two principles of V carry the mathematical weight: `extensionalV`, which converts a family of membership biconditionals into a path of equality, and `regularityV`, which makes membership well-founded and thus supports induction on it. The remaining import from the L-side, `mem-ord`, matters at every recursive call: it shows that any member of an ordinal is itself an ordinal, which is what lets the induction hypothesis apply below.
+The proof works directly in the ambient hierarchy V rather than through the object language. The carrier and the structure membership `∈ˢ` come from the ZF structure packaged over `𝒮ᵥ`, so `⟨ x ∈ˢ A ⟩` is the underlying proposition of an `hProp` truth value. Two principles of V carry the mathematical weight: `extensionalV`, which converts a family of membership biconditionals into a path of equality, and `regularityV`, which makes membership well-founded and thus supports induction on it. The remaining import from the L-side, `mem-ord`, matters at every recursive call: it shows that any member of an ordinal is itself an ordinal, which is what lets the induction hypothesis apply below.
 <!--zh-->
-证明直接在环境层级 V 中进行，而不经由对象语言。载体与结构隶属 `∈ˢ` 来自打包在 `𝒮ᵥ` 上的 ZF 结构，因此 `⟨ x ∈ˢ A ⟩` 是 hProp 真值代数中一个真值的底层命题。V 的两条原理承担数学重任：`extensionalV` 把一族成员关系的双向蕴含转换为相等的路径；`regularityV` 使隶属关系良基，从而支持其上的归纳。L 侧其余的导入 `mem-ord` 在每次递归调用处起作用：它表明序数的任何成员自身也是序数，这正是归纳假设能在下层使用的原因。
+证明直接在环境层级 V 中进行，而不经由对象语言。载体与结构隶属 `∈ˢ` 来自打包在 `𝒮ᵥ` 上的 ZF 结构，因此 `⟨ x ∈ˢ A ⟩` 是一个 `hProp` 真值的底层命题。V 的两条原理承担数学重任：`extensionalV` 把一族成员关系的双向蕴含转换为相等的路径；`regularityV` 使隶属关系良基，从而支持其上的归纳。L 侧其余的导入 `mem-ord` 在每次递归调用处起作用：它表明序数的任何成员自身也是序数，这正是归纳假设能在下层使用的原因。
 <!--ja-->
-証明は対象言語を経由せず、周囲の階層 V の中で直接行われます。台と構造の所属 `∈ˢ` は `𝒮ᵥ` の上にパッケージされた ZF 構造から来るので、`⟨ x ∈ˢ A ⟩` は hProp 真理値代数における真理値の基底命題です。V の二つの原理が数学的な重みを担います。`extensionalV` は所属関係の双条件の族を等号のパスへ変え、`regularityV` は所属関係を整礎にしてその上の帰納を可能にします。L 側のもう一つの輸入 `mem-ord` は再帰呼び出しのたびに効きます。順序数の任意の要素がそれ自身順序数であることを示すもので、これが帰納仮説を下の層で使えるようにする理由です。
+証明は対象言語を経由せず、周囲の階層 V の中で直接行われます。台と構造の所属 `∈ˢ` は `𝒮ᵥ` の上にパッケージされた ZF 構造から来るので、`⟨ x ∈ˢ A ⟩` は `hProp` 真理値の基礎命題です。V の二つの原理が数学的な重みを担います。`extensionalV` は所属関係の双条件の族を等号のパスへ変え、`regularityV` は所属関係を整礎にしてその上の帰納を可能にします。L 側のもう一つの輸入 `mem-ord` は再帰呼び出しのたびに効きます。順序数の任意の要素がそれ自身順序数であることを示すもので、これが帰納仮説を下の層で使えるようにする理由です。
 <!--/-->
 
 ```agda
@@ -77,16 +76,15 @@ import Cubical.Induction.WellFounded as WF
 ```
 
 <!--en-->
-Two final conventions are opened for the whole file. The truth algebra interface supplies the propositional connectives used inside membership statements, and the structure vocabulary fixes `S` as the carrier and `∈ˢ` as its membership, so the code reads as set theory rather than as logic plumbing. These conventions let the proof track membership, equality, and well-founded recursion for ordinal elements directly.
+Two final conventions are opened for the whole file. The direct operations on `hProp` supply the propositional connectives used inside membership statements, and the structure vocabulary fixes `S` as the carrier and `∈ˢ` as its membership, so the code reads as set theory rather than as logic plumbing. These conventions let the proof track membership, equality, and well-founded recursion for ordinal elements directly.
 <!--zh-->
-最后为整个文件打开两项约定。真值代数接口提供成员关系陈述内部使用的命题联结词，结构词汇把 `S` 固定为载体、`∈ˢ` 固定为其隶属关系，于是代码读起来是集合论而非逻辑管道。这些约定让后面的论证能直接追踪序数元素的隶属、相等与良基递归。
+最后为整个文件打开两项约定。`hProp` 上的直接运算提供成员关系陈述所用的命题联结词，结构词汇把 `S` 固定为载体、`∈ˢ` 固定为其隶属关系，于是代码读起来是集合论而非逻辑管道。这些约定让后面的论证能直接追踪序数元素的隶属、相等与良基递归。
 <!--ja-->
-最後に、ファイル全体に対して二つの約束を開きます。真理値代数のインターフェースは所属の記述の中で使われる命題結合子を供給し、構造の語彙は `S` を台、`∈ˢ` をその所属として固定します。これでコードは論理の配管ではなく集合論として読めます。この設定に新しい数学はありません。前の章々の順序数が階層 V と出会うインターフェースです。
+最後に、ファイル全体に対して二つの約束を開きます。`hProp` 上の直接の演算が所属の記述で使う命題結合子を供給し、構造の語彙は `S` を台、`∈ˢ` をその所属として固定します。これでコードは論理の配管ではなく集合論として読めます。この設定に新しい数学はありません。前の章々の順序数が階層 V と出会うインターフェースです。
 <!--/-->
 
 ```agda
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -105,11 +103,11 @@ The proof pivots on one relation: pointwise inclusion. If it holds both ways, ex
 <!--/-->
 
 <!--en-->
-Inclusion of `A` in `B` is not a primitive here but a defined notion: every member `x` of `A`, in the structure sense, must be a member of `B`. Each membership `x ∈ˢ A` is a proposition in the hProp truth algebra, so the definition quantifies over the carrier `S` and over propositions at level `ℓ`, which places the whole relation in `Type (ℓ-suc ℓ)`. The matching hProp packaging attaches the propositionhood proof: a dependent function into a proposition is again a proposition, applied twice to the two nested function types. This matters because the excluded middle is decided per hProp, and it is exactly this packaged statement that the proof will hand to `lem`.
+Inclusion of `A` in `B` is not a primitive here but a defined notion: every member `x` of `A`, in the structure sense, must be a member of `B`. Each membership `x ∈ˢ A` is an `hProp` proposition, so the definition quantifies over the carrier `S` and over propositions at level `ℓ`, which places the whole relation in `Type (ℓ-suc ℓ)`. The matching hProp packaging attaches the propositionhood proof: a dependent function into a proposition is again a proposition, applied twice to the two nested function types. This matters because the excluded middle is decided per hProp, and it is exactly this packaged statement that the proof will hand to `lem`.
 <!--zh-->
-`A` 包含于 `B` 在这里不是初始概念而是定义出来的：`A` 的每个成员 `x`，在结构意义下，必须是 `B` 的成员。每个成员关系 `x ∈ˢ A` 是 hProp 真值代数中的命题，因此定义量化了载体 `S` 与 `ℓ` 层的命题，把整个关系放进 `Type (ℓ-suc ℓ)`。配套的 hProp 打包附上命题性的证明：到命题的依赖函数仍是命题，把这一点对两层嵌套的函数类型各用一次。这很重要，因为排中律是逐 hProp 判定的，而证明交给 `lem` 的正是这个打包后的陈述。
+`A` 包含于 `B` 在这里不是初始概念而是定义出来的：`A` 的每个成员 `x`，在结构意义下，必须是 `B` 的成员。每个成员关系 `x ∈ˢ A` 是 `hProp` 中的命题，因此定义量化了载体 `S` 与 `ℓ` 层的命题，把整个关系放进 `Type (ℓ-suc ℓ)`。配套的 hProp 打包附上命题性的证明：到命题的依赖函数仍是命题，把这一点对两层嵌套的函数类型各用一次。这很重要，因为排中律是逐 hProp 判定的，而证明交给 `lem` 的正是这个打包后的陈述。
 <!--ja-->
-`A` が `B` に含まれることはここでは原始概念ではなく定義された概念です。`A` の各要素 `x` は、構造の意味で、`B` の要素でなければならない。各所属 `x ∈ˢ A` は hProp 真理値代数の命題なので、この定義は台 `S` とレベル `ℓ` の命題を量化し、関係全体を `Type (ℓ-suc ℓ)` に置きます。対応する hProp のパッケージングは命題性の証明を添えます。命題への依存関数は再び命題であり、これを入れ子になった二つの関数型にそれぞれ適用します。これが重要なのは、排中律が hProp ごとに判定されるからであり、証明が `lem` に渡すのはまさにこのパッケージされた命題です。
+`A` が `B` に含まれることはここでは原始概念ではなく定義された概念です。`A` の各要素 `x` は、構造の意味で、`B` の要素でなければならない。各所属 `x ∈ˢ A` は `hProp` の命題なので、この定義は台 `S` とレベル `ℓ` の命題を量化し、関係全体を `Type (ℓ-suc ℓ)` に置きます。対応する hProp のパッケージングは命題性の証明を添えます。命題への依存関数は再び命題であり、これを入れ子になった二つの関数型にそれぞれ適用します。これが重要なのは、排中律が hProp ごとに判定されるからであり、証明が `lem` に渡すのはまさにこのパッケージされた命題です。
 <!--/-->
 
 ```agda

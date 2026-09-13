@@ -24,7 +24,6 @@ A set in the hierarchy is an image: the higher inductive constructor `sett`{.Agd
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module V.Presentation {ℓ : Level} where
 

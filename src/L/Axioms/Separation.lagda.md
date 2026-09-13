@@ -24,7 +24,6 @@ The module works at a fixed universe level `ℓ` and receives `lem : LEM (ℓ-su
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Axioms.Separation {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -126,7 +125,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
 
 <!--en-->
@@ -143,7 +141,7 @@ open hPropStructure 𝒮ʟ
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
 
-module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module SemV = FOL.Semantics 𝒮ᵥ
 open SemV.At (V ℓ) id using () renaming ( _⊨_ to _⊨v_ )
 ```
 
@@ -183,7 +181,7 @@ The indexed disjunction `⋁ S` gives a propositionally truncated existential ov
 <!--/-->
 
 ```agda
-ReplImage : (a : S) (φ : Formula S 2) → S → Ω
+ReplImage : (a : S) (φ : Formula S 2) → S → hProp (ℓ-suc ℓ)
 ReplImage a φ z = ⋁ S (λ x → (x ∈ˢ a) ⊓ ((x ∷ z ∷ []) ⊨ φ))
 ```
 
@@ -215,7 +213,7 @@ variable order used by a particular formula.
 <!--/-->
 
 ```agda
-module FunctionalImage (a : S) (R : S → S → Ω)
+module FunctionalImage (a : S) (R : S → S → hProp (ℓ-suc ℓ))
                        (fc : (x : S) → ⟨ x ∈ˢ a ⟩
                            → isContr (Σ[ y ∈ S ] ⟨ R x y ⟩)) where
 
@@ -327,12 +325,12 @@ delicate.
             → ((⟪ Lset σ ⟫↪ m ∷ []) ⊨σ (mapFo DefC.ι (RL.liftFo φ h)))
               ≡ (((⟪ Lset σ ⟫↪ m , xL) ∷ []) ⊨ φ)
   satBridge φ h dφ m xL =
-      ⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ DefC.ι fst (RL.liftFo φ h)
+      ⊨-map 𝒮ᵥ DefC.ι fst (RL.liftFo φ h)
         (⟪ Lset σ ⟫↪ m ∷ [])
-    ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ ⟪ Lset σ ⟫↪ id (RL.liftFo φ h)
+    ∙ sym (⊨-map 𝒮ᵥ ⟪ Lset σ ⟫↪ id (RL.liftFo φ h)
              (⟪ Lset σ ⟫↪ m ∷ []))
     ∙ cong (λ ψ → (⟪ Lset σ ⟫↪ m ∷ []) ⊨v ψ) (RL.liftFo-correct φ h)
-    ∙ ⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id φ (⟪ Lset σ ⟫↪ m ∷ [])
+    ∙ ⊨-map 𝒮ᵥ fst id φ (⟪ Lset σ ⟫↪ m ∷ [])
     ∙ sym (abs₀ dφ ((⟪ Lset σ ⟫↪ m , xL) ∷ []))
 
   carveSat : (φ : Formula S 1) (h : BoundedFo Below φ) (dφ : Δ₀ φ)
@@ -647,7 +645,7 @@ replaceΔ₀ a φ dφ fc =
   imageFo : Formula S 1
   imageFo = ∃̇∈ (con a) φ
 
-  BoundedImage : S → Ω
+  BoundedImage : S → hProp (ℓ-suc ℓ)
   BoundedImage y = (y ∈ˢ LsetS βimg βimg-ord) ⊓ ((y ∷ []) ⊨ imageFo)
 
   Q≡ : ReplImage a φ ≡ BoundedImage

@@ -42,7 +42,6 @@ two things at one key would not be a function at all.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.SatisfactionTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -67,7 +66,6 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 ```
 

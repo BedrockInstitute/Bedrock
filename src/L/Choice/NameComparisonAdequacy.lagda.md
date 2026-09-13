@@ -39,7 +39,6 @@ Six pieces, each feeding the next, and none of them a new idea.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.NameComparisonAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -88,7 +87,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans

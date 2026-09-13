@@ -34,7 +34,6 @@ Nothing here needs replacement, and nothing here needs recursion.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.EnvironmentSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -71,7 +70,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ

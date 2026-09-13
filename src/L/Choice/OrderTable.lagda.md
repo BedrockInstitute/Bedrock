@@ -51,7 +51,6 @@ separation from a bound the pairs cannot escape.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.OrderTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -85,7 +84,6 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; ∈-asFiber )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -137,7 +135,7 @@ anywhere else in the chapter.
 <!--/-->
 
 ```agda
-Ordering : (α : V ℓ) → IsOrd α → Mem (Lset α) → Mem (Lset α) → Ω
+Ordering : (α : V ℓ) → IsOrd α → Mem (Lset α) → Mem (Lset α) → hProp (ℓ-suc ℓ)
 Ordering α oα a b = ∥ relOf (orderAt α oα) a b ∥₁ , squash₁
 
 strict : (α : V ℓ) (oα : IsOrd α) (a b : Mem (Lset α))
@@ -193,11 +191,11 @@ wanted `⇔toPath`{.Agda} supplies it.
 <!--/-->
 
 ```agda
-Related : V ℓ → V ℓ → Ω
+Related : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Related α z = ⋁ (IsOrd α) (λ oα → ⋁ (Mem (Lset α)) (λ a → ⋁ (Mem (Lset α)) (λ b →
   ((z ≡ pr (fst a) (fst b)) , setIsSet z (pr (fst a) (fst b))) ⊓ Ordering α oα a b)))
 
-Realizes : V ℓ → S → Ω
+Realizes : V ℓ → S → hProp (ℓ-suc ℓ)
 Realizes α r = ⋀ S (λ z → ((fst z ∈ fst r) ⇒ Related α (fst z))
                         ⊓ (Related α (fst z) ⇒ (fst z ∈ fst r)))
 
@@ -725,7 +723,7 @@ is sealed where it is built.
 <!--/-->
 
 ```agda
-  Recorded : V ℓ → V ℓ → Ω
+  Recorded : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
   Recorded B z = ⋁ S (λ c → (fst c ∈ B) ⊓ ⋁ S (λ r →
     ((z ≡ pr (fst c) (fst r)) , setIsSet z (pr (fst c) (fst r)))
     ⊓ Realizes (fst c) r))

@@ -54,7 +54,6 @@ The setting is the constructible universe built over the ambient cumulative hier
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.FiniteStageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -153,7 +152,6 @@ Membership statements below are proposition-valued. Thus `⟨ x ∈ˢ A ⟩` is 
 ```agda
 open InfinitySet using ( #_; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -639,11 +637,11 @@ This conversion is one concrete use of excluded middle in the tally construction
 <!--/-->
 
 ```agda
-decideOf : (P : Ω) → (⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → Bool
+decideOf : (P : hProp (ℓ-suc ℓ)) → (⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → Bool
 decideOf P (inl _) = true
 decideOf P (inr _) = false
 
-decide-true : (P : Ω) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → ⟨ P ⟩ → decideOf P s ≡ true
+decide-true : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → ⟨ P ⟩ → decideOf P s ≡ true
 decide-true P (inl _)  p = refl
 ```
 
@@ -658,7 +656,7 @@ The two round trips connect the bit back to the truth value. `decide-true` says 
 ```agda
 decide-true P (inr np) p = Empty.rec (np p)
 
-decide-sound : (P : Ω) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → decideOf P s ≡ true → ⟨ P ⟩
+decide-sound : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → decideOf P s ≡ true → ⟨ P ⟩
 decide-sound P (inl p) _ = p
 decide-sound P (inr _) e = Empty.rec (false≢true e)
 ```
@@ -952,7 +950,7 @@ module Search {A : Type (ℓ-suc ℓ)} (_≺_ : A → A → Type (ℓ-suc ℓ))
               (irr : (a : A) → a ≺ a → Empty.⊥)
               (trans : (a b c : A) → a ≺ b → b ≺ c → a ≺ c) where
 
-  Least : (P : A → Ω) → A → Type (ℓ-suc ℓ)
+  Least : (P : A → hProp (ℓ-suc ℓ)) → A → Type (ℓ-suc ℓ)
 ```
 
 <!--en-->
@@ -966,7 +964,7 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 ```agda
   Least P m = ⟨ P m ⟩ × ((b : A) → ⟨ P b ⟩ → b ≺ m → Empty.⊥)
 
-  Found : (P : A → Ω) (n : ℕ) (f : Fin n → A) → Type (ℓ-suc ℓ)
+  Found : (P : A → hProp (ℓ-suc ℓ)) (n : ℕ) (f : Fin n → A) → Type (ℓ-suc ℓ)
   Found P n f =
     (Σ[ i ∈ Fin n ] (⟨ P (f i) ⟩ × ((j : Fin n) → ⟨ P (f j) ⟩ → f j ≺ f i → Empty.⊥)))
     ⊎ ((i : Fin n) → ⟨ P (f i) ⟩ → Empty.⊥)
@@ -982,7 +980,7 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 
 ```agda
 
-  scan : (P : A → Ω) (n : ℕ) (f : Fin n → A) → Found P n f
+  scan : (P : A → hProp (ℓ-suc ℓ)) (n : ℕ) (f : Fin n → A) → Found P n f
   scan P zero    f = inr (λ ())
   scan P (suc n) f = combine (scan P n (λ i → f (suc i))) (lem (P (f zero)))
     where
@@ -1114,7 +1112,7 @@ The sub-module `Over` adds the one premise that turns a finite family into a tal
   module Over (n : ℕ) (f : Fin n → A)
               (cov : (a : A) → ∥ Σ[ i ∈ Fin n ] (f i ≡ a) ∥₁) where
 
-    least : (P : A → Ω) → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∈ A ] Least P m
+    least : (P : A → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∈ A ] Least P m
     least P h = decide (scan P n f)
       where
 ```
@@ -1194,7 +1192,7 @@ The property to be minimized is `NotAcc`, non-accessibility. Its underlying stat
 
 ```agda
         where
-        NotAcc : A → Ω
+        NotAcc : A → hProp (ℓ-suc ℓ)
         NotAcc b = (Acc _≺_ b → Empty.⊥) , isProp¬ _
         found : Σ[ m ∈ A ] Least NotAcc m
         found = least NotAcc ∣ a , nh ∣₁
@@ -1251,11 +1249,11 @@ The two ingredients are stated separately. `Agrees R A x y z` says that membersh
 <!--/-->
 
 ```agda
-Agrees : (R : S → S → Ω) (A x y z : S) → Type (ℓ-suc ℓ)
+Agrees : (R : S → S → hProp (ℓ-suc ℓ)) (A x y z : S) → Type (ℓ-suc ℓ)
 Agrees R A x y z = (w : S) → ⟨ w ∈ˢ A ⟩ → ⟨ R w z ⟩
                  → (⟨ w ∈ˢ x ⟩ → ⟨ w ∈ˢ y ⟩) × (⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ x ⟩)
 
-Witness : (R : S → S → Ω) (A x y z : S) → Type (ℓ-suc ℓ)
+Witness : (R : S → S → hProp (ℓ-suc ℓ)) (A x y z : S) → Type (ℓ-suc ℓ)
 Witness R A x y z =
 ```
 
@@ -1270,10 +1268,10 @@ Witness R A x y z =
 ```agda
   ⟨ z ∈ˢ A ⟩ × ⟨ z ∈ˢ y ⟩ × (⟨ z ∈ˢ x ⟩ → Empty.⊥) × Agrees R A x y z
 
-precedes : (R : S → S → Ω) (A : S) → S → S → Ω
+precedes : (R : S → S → hProp (ℓ-suc ℓ)) (A : S) → S → S → hProp (ℓ-suc ℓ)
 precedes R A x y = ∥ Σ[ z ∈ S ] Witness R A x y z ∥₁ , PT.squash₁
 
-precedes-irrefl : (R : S → S → Ω) (A x : S) → ⟨ precedes R A x x ⟩ → Empty.⊥
+precedes-irrefl : (R : S → S → hProp (ℓ-suc ℓ)) (A x : S) → ⟨ precedes R A x x ⟩ → Empty.⊥
 precedes-irrefl R A x = PT.rec Empty.isProp⊥ (λ { (z , _ , z∈ , z∉ , _) → z∉ z∈ })
 ```
 
@@ -1300,10 +1298,10 @@ The module collects the three premises the earliest-disagreement order will inhe
 <!--/-->
 
 ```agda
-module Difference (R : S → S → Ω) (A : S)
+module Difference (R : S → S → hProp (ℓ-suc ℓ)) (A : S)
   (baseTri : (a b : S) → ⟨ a ∈ˢ A ⟩ → ⟨ b ∈ˢ A ⟩ → Tri ⟨ R a b ⟩ (a ≡ b) ⟨ R b a ⟩)
   (baseTrans : (a b c : S) → ⟨ R a b ⟩ → ⟨ R b c ⟩ → ⟨ R a c ⟩)
-  (baseLeast : (P : S → Ω) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ P a ⟩) ∥₁
+  (baseLeast : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ P a ⟩) ∥₁
              → Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ P m ⟩
 ```
 
@@ -1441,7 +1439,7 @@ Two truncations organise the question. The predicate `Apart w` says, merely, tha
 <!--/-->
 
 ```agda
-    Apart : S → Ω
+    Apart : S → hProp (ℓ-suc ℓ)
     Apart w = ∥ (⟨ w ∈ˢ x ⟩ × (⟨ w ∈ˢ y ⟩ → Empty.⊥))
               ⊎ ((⟨ w ∈ˢ x ⟩ → Empty.⊥) × ⟨ w ∈ˢ y ⟩) ∥₁ , PT.squash₁
     Some : Type (ℓ-suc ℓ)
@@ -1696,7 +1694,7 @@ Tri-map f g h (gt c) = gt (h c)
 finiteStage : ℕ → S
 finiteStage n = Lset (# n)
 
-before : ℕ → S → S → Ω
+before : ℕ → S → S → hProp (ℓ-suc ℓ)
 ```
 
 <!--en-->
@@ -1862,7 +1860,7 @@ The last lemma packages least elements in the shape the next stage needs. `least
 ```agda
     ; wf∙    = wellFounded }
 
-  leastMem : (P : S → Ω) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ finiteStage n ⟩ × ⟨ P a ⟩) ∥₁
+  leastMem : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ finiteStage n ⟩ × ⟨ P a ⟩) ∥₁
            → Σ[ m ∈ S ] (⟨ m ∈ˢ finiteStage n ⟩ × ⟨ P m ⟩
                × ((b : S) → ⟨ b ∈ˢ finiteStage n ⟩ → ⟨ P b ⟩
                           → ⟨ before n b m ⟩ → Empty.⊥))
@@ -1893,7 +1891,7 @@ Only the glue remains visible: `Q` reads the set-level predicate at the underlyi
 <!--/-->
 
 ```agda
-    Q : Point n → Ω
+    Q : Point n → hProp (ℓ-suc ℓ)
     Q a = P (a .fst)
     found : Σ[ m ∈ Point n ] Least Q m
     found = least Q (PT.map (λ { (a , a∈ , pa) → (a , a∈) , pa }) h)

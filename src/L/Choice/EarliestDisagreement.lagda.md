@@ -55,7 +55,6 @@ variable carrying its defining equation and never as an application.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.EarliestDisagreement {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -105,7 +104,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; module InfinitySet )
 open InfinitySet using ( #_; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -240,7 +238,7 @@ pairsAt n = d .fst , onPair
 The base relation transferred across the agreement clause.
 
 ```agda
-precedes-map : (R R' : V ℓ → V ℓ → Ω) (A x y : V ℓ)
+precedes-map : (R R' : V ℓ → V ℓ → hProp (ℓ-suc ℓ)) (A x y : V ℓ)
              → ((w z : V ℓ) → ⟨ w ∈ A ⟩ → ⟨ z ∈ A ⟩ → ⟨ R' w z ⟩ → ⟨ R w z ⟩)
              → ⟨ precedes R A x y ⟩ → ⟨ precedes R' A x y ⟩
 precedes-map R R' A x y f = PT.map step
@@ -284,7 +282,7 @@ opaque
     hasSeparationL (pairsAt (suc n) .fst)
       (RelCond (relAt n) (stageS n) (stageS (suc n))) .fst .snd
 
-Rel : ℕ → V ℓ → V ℓ → Ω
+Rel : ℕ → V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Rel n a b = pr a b ∈ fst (relAt n)
 
 private
@@ -474,7 +472,7 @@ their only hypothesis.
 <!--/-->
 
 ```agda
-Held : S → V ℓ → V ℓ → Ω
+Held : S → V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Held r a b = pr a b ∈ fst r
 
 opaque

@@ -48,7 +48,6 @@ The collapse lands in the set-level carrier of the cumulative hierarchy, so its 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Mostowski {ℓ : Level} where
 
@@ -73,17 +72,16 @@ import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
-The hierarchy structure uses the hProp truth-value algebra at level `ℓ-suc ℓ`. Independently, `A` and every fiber `x ≺ y` lie in `Type ℓ`, so each predecessor cone is a small index type to which `sett`{.Agda} applies. These size facts are all the construction needs; no excluded-middle hypothesis occurs.
+The hierarchy structure has equality and membership valued in `hProp` at level `ℓ-suc ℓ`. Independently, `A` and every fiber `x ≺ y` lie in `Type ℓ`, so each predecessor cone is a small index type to which `sett`{.Agda} applies. These size facts are all the construction needs; no excluded-middle hypothesis occurs.
 <!--zh-->
-层级结构使用层级 `ℓ-suc ℓ` 的 hProp 真值代数。另一方面，`A` 与每个纤维 `x ≺ y` 都在 `Type ℓ` 中，所以每个前驱锥都是可供 `sett`{.Agda} 使用的小索引类型。构造只需要这些大小事实，不需要排中律。
+层级结构的等词与隶属关系取值于层级 `ℓ-suc ℓ` 的 `hProp`。另一方面，`A` 与每个纤维 `x ≺ y` 都在 `Type ℓ` 中，所以每个前驱锥都是可供 `sett`{.Agda} 使用的小索引类型。构造只需要这些大小事实，不需要排中律。
 <!--ja-->
-階層構造はレベル `ℓ-suc ℓ` の hProp 真理値代数を使います。一方、`A` と各繊維 `x ≺ y` は `Type ℓ` にあるので、各前者の錐は `sett`{.Agda} を適用できる小さな添字型です。構成に必要な大きさの事実はこれだけで、排中律は仮定しません。
+階層構造は等号と所属がレベル `ℓ-suc ℓ` の `hProp` に値を取ります。一方、`A` と各繊維 `x ≺ y` は `Type ℓ` にあるので、各前者の錐は `sett`{.Agda} を適用できる小さな添字型です。構成に必要な大きさの事実はこれだけで、排中律は仮定しません。
 <!--/-->
 
 ```agda
 open PT using ( ∣_∣₁; ∥_∥₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 module SV = hPropStructure 𝒮ᵥ
 open SV using ( _∈ˢ_ )
 ```

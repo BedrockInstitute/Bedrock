@@ -43,7 +43,6 @@ the definable powerset construction.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.CodeConstructibility {ℓ : Level} where
 
@@ -72,7 +71,6 @@ open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import V.Model {ℓ} using ( pair-singleton; pair-spec; union-spec )
 open InfinitySet using ( #_; sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 ```
 

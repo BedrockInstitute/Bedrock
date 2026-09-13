@@ -36,7 +36,6 @@ The external target has a specific membership shape: `pr U W = ⁅ ⁅ U ⁆s , 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.PairFormulas {ℓ : Level} where
 
@@ -83,11 +82,11 @@ open PT using ( ∥_∥₁; ∣_∣₁ )
 ```
 
 <!--en-->
-The semantics takes its truth values in `hProp` at level `ℓ-suc ℓ`. A formula does not evaluate to a bare boolean: its value is a proposition, and satisfaction of a formula under an environment is itself a proposition rather than a decision. The truth algebra supplies conjunction and disjunction of these truth values for reading compound formulas. This propositional setting matters for the goal: it allows satisfaction of a bounded formula to be identified, path-for-path, with an external condition such as equality of a set with its coded pair.
+The semantics takes its truth values in `hProp` at level `ℓ-suc ℓ`. A formula does not evaluate to a bare boolean: its value is a proposition, and satisfaction of a formula under an environment is itself a proposition rather than a decision. Conjunction and disjunction act directly on these `hProp` truth values when reading compound formulas. This propositional setting matters for the goal: it allows satisfaction of a bounded formula to be identified, path-for-path, with an external condition such as equality of a set with its coded pair.
 <!--zh-->
-语义以层级 `ℓ-suc ℓ` 上的 `hProp` 为真值。公式不取值为一个裸的布尔值：其值是一个命题，而一个赋值下公式的满足关系本身就是一个命题，而非一个判定。真值代数供给这些真值的合取与析取，用以解读复合公式。这一命题化设定对目标至关重要：它使一条有界公式的满足关系能够逐路径地等同于一个外部条件，例如某集合与其编码对相等。
+语义以层级 `ℓ-suc ℓ` 上的 `hProp` 为真值。公式不取值为一个裸的布尔值：其值是一个命题，而一个赋值下公式的满足关系本身就是一个命题，而非一个判定。解读复合公式时，合取与析取直接作用于这些 `hProp` 真值。这一命题化设定对目标至关重要：它使一条有界公式的满足关系能够逐路径地等同于一个外部条件，例如某集合与其编码对相等。
 <!--ja-->
-意味論は、レベル `ℓ-suc ℓ` の `hProp` を真理値として取ります。論理式は裸のブール値に評価されるのではなく、その値は命題であり、環境のもとでの論理式の充足それ自体が判定ではなく命題です。真理値代数は、複合した論理式を読むために、これらの真理値の連言と選言を供給します。この命題的な設定が目標にとって重要です。有界論理式の充足を、集合とその符号化された対の等号のような外側の条件と、パスとして同一視できるからです。
+意味論は、レベル `ℓ-suc ℓ` の `hProp` を真理値として取ります。論理式は裸のブール値に評価されるのではなく、その値は命題であり、環境のもとでの論理式の充足それ自体が判定ではなく命題です。複合した論理式を読むとき、連言と選言はこれらの `hProp` 真理値に直接作用します。この命題的な設定が目標にとって重要です。有界論理式の充足を、集合とその符号化された対の等号のような外側の条件と、パスとして同一視できるからです。
 <!--/-->
 
 ```agda
@@ -112,7 +111,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( SetPackage )  -- lint-agda: keep (used qualified: SetPackage.classification)
 open InfinitySet using ( #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
 
 <!--en-->
@@ -124,7 +122,7 @@ This is what makes the adequacy statement below meaningful: satisfaction of the 
 <!--/-->
 
 ```agda
-module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module Sem = FOL.Semantics 𝒮ᵥ
 open Sem using ( _^_ )
 open Sem.At (V ℓ) id using ( _⊨_; ⟦_⟧ )
 ```

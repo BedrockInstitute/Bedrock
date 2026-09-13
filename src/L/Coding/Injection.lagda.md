@@ -24,7 +24,6 @@ The construction is valid constructively. Although the ambient development carri
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.Injection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -64,11 +63,11 @@ open import Cubical.Data.Sigma using ( Σ≡Prop )
 ```
 
 <!--en-->
-Truth values here are propositions with their proofs of propositionhood, and the truth algebra packages the logical connectives the satisfaction relation uses. The satisfaction judgment `_⊨_` is then stated for the constructible structure `𝒮ʟ`, so a judgment such as `γ ⊨ svAt zero` is a claim about the projected sets via the adequacy identifications, not about bare satisfaction in an ambient structure.
+Truth values here are propositions with their proofs of propositionhood, and the satisfaction relation uses the logical connectives directly on `hProp`. The satisfaction judgment `_⊨_` is then stated for the constructible structure `𝒮ʟ`, so a judgment such as `γ ⊨ svAt zero` is a claim about the projected sets via the adequacy identifications, not about bare satisfaction in an ambient structure.
 <!--zh-->
-这里的真值是带着「其为命题」证明的命题，真值代数把满足关系用到的逻辑连接词打包起来。满足判断 `_⊨_` 是对可构造结构 `𝒮ʟ` 陈述的，因此像 `γ ⊨ svAt zero` 这样的判断经充分性等同化后谈的是投影后的集合，而非对某个周遭结构的裸满足。
+这里的真值是带着「其为命题」证明的命题，满足关系直接使用 `hProp` 上的逻辑联结词。满足判断 `_⊨_` 是对可构造结构 `𝒮ʟ` 陈述的，因此像 `γ ⊨ svAt zero` 这样的判断经充分性等同化后谈的是投影后的集合，而非对某个周遭结构的裸满足。
 <!--ja-->
-ここでの真理値は、命題であることの証明を添えた命題であり、真理値代数が充足関係の使う論理結合子をまとめます。充足の判断 `_⊨_` は構成可能な構造 `𝒮ʟ` に対して述べられるので、`γ ⊨ svAt zero` のような判断は、妥当性の同一視を通して射影された集合についての主張になります。
+ここでの真理値は、命題であることの証明を添えた命題であり、充足関係は `hProp` 上の論理結合子を直接使います。充足の判断 `_⊨_` は構成可能な構造 `𝒮ʟ` に対して述べられるので、`γ ⊨ svAt zero` のような判断は、妥当性の同一視を通して射影された集合についての主張になります。
 <!--/-->
 
 ```agda
@@ -76,7 +75,6 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 ```
 

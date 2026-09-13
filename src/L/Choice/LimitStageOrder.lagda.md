@@ -50,7 +50,6 @@ Choice 构造在每层都把自己的债务归约成更小的一笔，而 `L.Cho
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.LimitStageOrder {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -91,7 +90,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -341,7 +339,7 @@ PrecedesAt r A x y =
                ∧̇ ((var zero ∈̇ var (sh2 y)) ⇒̇ (var zero ∈̇ var (sh2 x))) ) ) ) ) )
 
 module Precedes {n : ℕ} (r A x y : Fin n) (γ : S ^ n)
-                (R : V ℓ → V ℓ → Ω)
+                (R : V ℓ → V ℓ → hProp (ℓ-suc ℓ))
                 (Rrep : (u v : S) → ⟨ pr (fst u) (fst v) ∈ fst (lookup r γ) ⟩
                       → ⟨ R (fst u) (fst v) ⟩)
                 (Rfill : (u v : S) → ⟨ R (fst u) (fst v) ⟩

@@ -49,7 +49,6 @@ both are the reason this chapter is short.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.NameComparison {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -108,7 +107,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; module InfinitySet )
 open InfinitySet using ( #_; ω; sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans

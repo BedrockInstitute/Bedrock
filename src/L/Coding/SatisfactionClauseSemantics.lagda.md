@@ -19,7 +19,6 @@ with the external satisfaction relation.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.SatisfactionClauseSemantics {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -519,7 +518,6 @@ open import Cubical.Data.Nat using ( znots; snotz )
 
 module Bridge (W : S) where
   open Alphabet W
-  open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ( _⊓_; _⊔_; _⇒_ )
   private
     module DB = Semantic.DB W
     module Sem = Semantic.SemB W

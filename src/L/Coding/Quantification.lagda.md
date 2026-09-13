@@ -33,7 +33,6 @@ required by bounded syntax.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.Quantification {ℓ : Level} where
 

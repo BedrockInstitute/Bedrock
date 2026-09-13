@@ -24,7 +24,6 @@ The chapter begins with a defect in what the coding clauses already say. In `L.C
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 ```
 
 <!--en-->
@@ -121,7 +120,6 @@ The formulas are evaluated over the carrier `S` of `L`, in an environment `γ : 
 
 ```agda
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 ```
 

@@ -30,7 +30,6 @@ Everything in this chapter takes place at a single type-theoretic universe level
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.CodeAlphabet {ℓ : Level} where
 

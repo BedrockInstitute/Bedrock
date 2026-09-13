@@ -32,16 +32,15 @@ Suppose a formula has its free variables indexed by `n` slots, and we want to vi
 module FOL.Manipulation.Renaming where
 
 open import Base.Prelude
-open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 ```
 
 <!--en-->
-One correctness theorem then measures renaming: under a suitable relation between the old and new environments, the renamed formula denotes the same truth value as the original. Since the truth value is computed in an arbitrary truth algebra over an arbitrary set-theoretic structure, the theorem has exactly the generality of satisfaction itself, and the usual structural rules of sequent practice, weakening, exchange, and contraction, all fall out as particular choices of `ρ`.
+One correctness theorem then measures renaming: under a suitable relation between the old and new environments, the renamed formula denotes the same proposition as the original. Since the proposition is computed in an arbitrary proposition-valued set-theoretic structure, the theorem has exactly the generality of satisfaction itself, and the usual structural rules of sequent practice, weakening, exchange, and contraction, all fall out as particular choices of `ρ`.
 <!--zh-->
-随后由一条正确性定理来衡量改名：在旧环境与新环境之间一个合适的关系之下，改名后的公式与原公式指称相同的真值。由于该真值是在任意真值代数与任意集合论结构中计算的，定理与满足关系本身具有完全相同的普遍性；而序列演算惯用的结构规则，弱化、交换、收缩，都作为 `ρ` 的特定选取由此得出。
+随后由一条正确性定理来衡量改名：在旧环境与新环境之间一个合适的关系之下，改名后的公式与原公式指称相同的命题。由于该命题是在任意命题值集合论结构中计算的，定理与满足关系本身具有完全相同的普遍性；而序列演算惯用的结构规则，弱化、交换、收缩，都作为 `ρ` 的特定选取由此得出。
 <!--ja-->
-そして改名は一つの正しさの定理で測られます。旧環境と新環境の間の適切な関係のもとで、改名された公式は元の公式と同じ真理値を表します。真理値は任意の真理値代数と任意の集合論的構造の上で計算されるので、定理は充足関係そのものとまったく同じ一般性を持ち、シーケント計算で慣用される構造規則、すなわち弱化、交換、縮約は、すべて `ρ` の特定の選択として得られます。
+そして改名は一つの正しさの定理で測られます。旧環境と新環境の間の適切な関係のもとで、改名された公式は元の公式と同じ命題を表します。命題は任意の命題値をとる任意の集合論的構造の上で計算されるので、定理は充足関係そのものとまったく同じ一般性を持ち、シーケント計算で慣用される構造規則、すなわち弱化、交換、縮約は、すべて `ρ` の特定の選択として得られます。
 <!--/-->
 
 ```agda
@@ -162,13 +161,12 @@ Syntax alone cannot say whether a renaming preserves meaning; we need to compare
 <!--/-->
 
 ```agda
-module Sat {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋)
+module Sat {ℓ} (𝒮 : ZFStructure ℓ)
            {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) where
 
-  open TruthAlgebra 𝕋
   open ZFStructure 𝒮
 
-  private module Sem = FOL.Semantics 𝕋 𝒮
+  private module Sem = FOL.Semantics 𝒮
 ```
 
 <!--en-->
@@ -211,11 +209,11 @@ The theorem will go by induction on the formula, so agreement must survive the s
 ```
 
 <!--en-->
-Everything now rests on the two theorems. For terms: evaluating `renameTm ρ t` in the big environment `γ` gives a path to evaluating `t` in the small environment `δ`, provided `γ` and `δ` agree under `ρ`. For formulas the analogous statement compares truth values of satisfaction. The hypothesis `Agrees ρ γ δ` is what makes the claim substantive: without any relation between the environments, no equality of denotations could hold.
+Everything now rests on the two theorems. For terms: evaluating `renameTm ρ t` in the big environment `γ` gives a path to evaluating `t` in the small environment `δ`, provided `γ` and `δ` agree under `ρ`. For formulas the analogous statement compares propositions of satisfaction. The hypothesis `Agrees ρ γ δ` is what makes the claim substantive: without any relation between the environments, no equality of denotations could hold.
 <!--zh-->
-一切都落在两条定理上。对词项：在环境 `γ` 与 `δ` 于 `ρ` 之下相符的前提下，在大环境中求值 `renameTm ρ t` 得到一条到在小环境中求值 `t` 的路径。对公式，类似的陈述比较满足关系的真值。前提 `Agrees ρ γ δ` 正是使断言有实质内容的条件：环境之间没有任何关系时，指称的相等无从谈起。
+一切都落在两条定理上。对词项：在环境 `γ` 与 `δ` 于 `ρ` 之下相符的前提下，在大环境中求值 `renameTm ρ t` 得到一条到在小环境中求值 `t` 的路径。对公式，类似的陈述比较满足关系的命题。前提 `Agrees ρ γ δ` 正是使断言有实质内容的条件：环境之间没有任何关系时，指称的相等无从谈起。
 <!--ja-->
-すべては二つの定理にかかっています。項については、`γ` と `δ` が `ρ` の下で一致するという仮定のもとで、大きい環境 `γ` で `renameTm ρ t` を評価したものは、小さい環境 `δ` で `t` を評価したものへのパスになります。公式では同様の主張が充足の真理値を比較します。仮定 `Agrees ρ γ δ` が主張に実質を与えます。環境の間に何の関係もなければ、表示の等しいことは成り立ちようがありません。
+すべては二つの定理にかかっています。項については、`γ` と `δ` が `ρ` の下で一致するという仮定のもとで、大きい環境 `γ` で `renameTm ρ t` を評価したものは、小さい環境 `δ` で `t` を評価したものへのパスになります。公式では同様の主張が充足の命題を比較します。仮定 `Agrees ρ γ δ` が主張に実質を与えます。環境の間に何の関係もなければ、表示の等しいことは成り立ちようがありません。
 <!--/-->
 
 ```agda
@@ -241,11 +239,11 @@ The term proof is short because there is so little to a term. A constant denotes
 ```
 
 <!--en-->
-The formula theorem states a path between two truth values: `γ ⊨ renameFo ρ φ` on the big side, `δ ⊨ φ` on the small side. Consider first the bounded quantifier of our example, whose body contains no further binder; the other cases follow the same two patterns, congruence or recursion, which we describe here. For an atomic formula, the term theorem gives paths between the denotations of the renamed and original terms, and `cong₂` transports those paths through membership or equality of sets. Likewise each connective case applies `cong₂` to the corresponding truth-algebra operation, and falsity needs only `refl`.
+The formula theorem states a path between two propositions: `γ ⊨ renameFo ρ φ` on the big side, `δ ⊨ φ` on the small side. Consider first the bounded quantifier of our example, whose body contains no further binder; the other cases follow the same two patterns, congruence or recursion, which we describe here. For an atomic formula, the term theorem gives paths between the denotations of the renamed and original terms, and `cong₂` transports those paths through membership or equality of sets. Likewise each connective case applies `cong₂` to the corresponding logical operation, and falsity needs only `refl`.
 <!--zh-->
-公式定理陈述两个真值之间的路径：大侧的 `γ ⊨ renameFo ρ φ`，小侧的 `δ ⊨ φ`。先看我们例子中的有界量词，其公式体不含更深的约束子；其余情形遵循同样的两种模式，同余或递归，在此一并描述。对原子公式，词项定理给出改名词项与原词项释义之间的路径，`cong₂` 把这些路径经过集合的属于或相等传输过去。联结词情形同样对相应的真值代数运算用 `cong₂`，假值只需 `refl`。
+公式定理陈述两个命题之间的路径：大侧的 `γ ⊨ renameFo ρ φ`，小侧的 `δ ⊨ φ`。先看我们例子中的有界量词，其公式体不含更深的约束子；其余情形遵循同样的两种模式，同余或递归，在此一并描述。对原子公式，词项定理给出改名词项与原词项释义之间的路径，`cong₂` 把这些路径经过集合的属于或相等传输过去。联结词情形同样对相应的逻辑运算用 `cong₂`，假值只需 `refl`。
 <!--ja-->
-公式の定理は二つの真理値の間のパスを述べます。大きい側の `γ ⊨ renameFo ρ φ` と、小さい側の `δ ⊨ φ` です。まず例の有界量詞を考えます。その本体にはさらに束縛子がありません。残りの場合はここで述べる同余と再帰という二つの型のどちらかに従います。原子公式では、項の定理が改名された項と元の項の表示の間のパスを与え、`cong₂` がそのパスを集合の所属関係や等号を通して運びます。結合子の場合も対応する真理値代数の演算に `cong₂` を使い、偽は `refl` で足ります。
+公式の定理は二つの命題の間のパスを述べます。大きい側の `γ ⊨ renameFo ρ φ` と、小さい側の `δ ⊨ φ` です。まず例の有界量詞を考えます。その本体にはさらに束縛子がありません。残りの場合はここで述べる同余と再帰という二つの型のどちらかに従います。原子公式では、項の定理が改名された項と元の項の表示の間のパスを与え、`cong₂` がそのパスを集合の所属関係や等号を通して運びます。結合子の場合も対応する論理演算に `cong₂` を使い、偽は `refl` で足ります。
 <!--/-->
 
 ```agda

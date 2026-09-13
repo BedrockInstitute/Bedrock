@@ -1,19 +1,19 @@
 <!--en-->
 # Impredicativity
 
-In a predicative foundation, propositions form a hierarchy: for each universe level ℓ the type `hProp ℓ` of level-ℓ propositions sits in the next universe up, so the range of truth values grows as the universes grow. Nontrivial propositions may therefore be stranded at higher levels with no equivalent among the low ones. This chapter studies two precise ways to control this growth: representing each higher-level proposition by a lower one, and presenting the whole type of level-ℓ propositions by one small classifier.
+In a predicative foundation, propositions form a hierarchy: for each universe level ℓ the type `hProp ℓ` of level-ℓ propositions sits in the next universe up, so the range of **[truth values]{.term-intro #truth-value}** grows as the universes grow. In this book a truth value is a proposition in `hProp`: it records whether a statement is inhabited, rather than supplying a separate Boolean datatype. Nontrivial propositions may therefore be stranded at higher levels with no equivalent among the low ones. This chapter studies two precise ways to control this growth: representing each higher-level proposition by a lower one, and presenting the whole type of level-ℓ propositions by one small classifier.
 
 This chapter develops the vocabulary for that principle precisely. First, a single proposition of level `ℓ-suc ℓ` **is small** when its underlying type is equivalent to the underlying type of some proposition `Q : hProp ℓ`; the equivalence, not a path or a rewrite, is what certifies that `Q` represents the same truth content. Second, two uniform interfaces assert smallness across all propositions at once: **propositional resizing** chooses, proposition by proposition, a lower-level representative for each higher-level proposition, while a small classifier presents the entire type `hProp ℓ` by a single small carrier. Finally a record packages the two interfaces. Nothing here is assumed, and this chapter does not yet construct either interface: the chapter "The classical boundary" constructs both from excluded middle, and the cumulative-hierarchy chapters use them as concrete model fields.
 <!--zh-->
 # 非直谓性
 
-在直谓式的基础中，命题构成一个层级：对每个宇宙层级 ℓ，`hProp ℓ` 中的层级 ℓ 命题都位于其上一层的宇宙，于是真值的范围随宇宙一起增长，不平凡的命题可能被搁置在高层，在低层没有等价的对应物。本章研究控制这种增长的两种精确方式：逐个用低层命题表示高层命题，以及用一个小分类器呈现整个 ℓ 层命题类型。
+在直谓式的基础中，命题构成一个层级：对每个宇宙层级 ℓ，`hProp ℓ` 中的层级 ℓ 命题都位于其上一层的宇宙，于是**[真值]{.term-intro #truth-value}**的范围随宇宙一起增长。本书的真值就是 `hProp` 中的命题：它记录一个陈述是否有元，而不是另设一个布尔数据类型。不平凡的命题可能被搁置在高层，在低层没有等价的对应物。本章研究控制这种增长的两种精确方式：逐个用低层命题表示高层命题，以及用一个小分类器呈现整个 ℓ 层命题类型。
 
 本章把这条原理的词汇表述得精确。首先，一个层级为 `ℓ-suc ℓ` 的命题**是小的**，当且仅当其底层类型等价于某个命题 `Q : hProp ℓ` 的底层类型；正是等价 (而非路径或重写) 证明 `Q` 代表相同的真值内容。其次，两个接口一齐对所有命题一致地断言小性：**命题降层**逐命题为每个高层命题选取低层代表；而小分类器则用单个小的载体呈现整个类型 `hProp ℓ`。最后用一个 record 把两个接口打包。这里不作任何假设，本章尚未给出这两个接口的构造：「经典逻辑的边界」一章将从排中律构造二者，累积层级诸章把它们用作具体的模型字段。
 <!--ja-->
 # 非可述性
 
-直謂的な基礎では命題は階層をなします。宇宙レベル ℓ ごとに、レベル ℓ の命題の型 `hProp ℓ` はその一つ上の宇宙に住むため、真理値の範囲は宇宙とともに増え、自明でない命題が高いレベルに取り残され、低いレベルに同値な対応物を持たない可能性が生じます。本章では、この増大を制御する二つの正確な方法を扱います。上位の命題を一つずつ下位の命題で表すことと、レベル ℓ の命題の型全体を一つの小分類子で提示することです。
+直謂的な基礎では命題は階層をなします。宇宙レベル ℓ ごとに、レベル ℓ の命題の型 `hProp ℓ` はその一つ上の宇宙に住むため、**[真理値]{.term-intro #truth-value}**の範囲は宇宙とともに増えます。本書の真理値は `hProp` の命題そのものです。これは文に要素があるかどうかを記録するもので、別のブール型を設けるものではありません。自明でない命題が高いレベルに取り残され、低いレベルに同値な対応物を持たない可能性が生じます。本章では、この増大を制御する二つの正確な方法を扱います。上位の命題を一つずつ下位の命題で表すことと、レベル ℓ の命題の型全体を一つの小分類子で提示することです。
 
 本章ではこの原理の語彙を正確に整えます。まず、レベル `ℓ-suc ℓ` の一つの命題が**小さい**とは、その基礎型が何らかの命題 `Q : hProp ℓ` の基礎型と同値であることです。`Q` が同じ真理内容を代表することを証するのは、パスでも書き換えでもなく、この同値です。次に、小ささをすべての命題に一様に主張する二つのインターフェースを示します。**命題リサイズ**は命題ごとに上位命題の下位レベル代表を選ぶ原理であり、小分類子は型 `hProp ℓ` 全体を一つの小さな台で提示する原理です。最後に、両者を一つの record にまとめます。ここでは何も仮定せず、本章ではまだ、どちらのインターフェースの構成も与えません。次の章が排中律から両者を構成し、累積階層の諸章が具体的なモデルの構成要素として利用します。
 <!--/-->

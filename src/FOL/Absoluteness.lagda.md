@@ -19,11 +19,11 @@ The chapter proves by induction that every Δ₀ formula has equal inner and out
 <!--/-->
 
 <!--en-->
-Structures here are proposition-valued: a `ZFStructure`{.Agda} over the truth algebra `hPropAlgebra ℓ` has a carrier with equality and membership valued in `hProp ℓ`, so a satisfaction statement is a proposition with an underlying type, and two satisfaction statements can be compared by path equality. Two further notions carry the mathematics. `Transitive`{.Agda} is the closure condition `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`: a member of an element of `M` is again in `M`. And `_↾_`{.Agda} restricts a structure to a class, taking as its new carrier the pairs of an element with evidence that it lies in the class; what changes is what counts as an element, while the relations are inherited along the first projection.
+Structures here are proposition-valued: a `ZFStructure`{.Agda} has a carrier whose equality and membership take values in `hProp ℓ`, so a satisfaction statement is a proposition with an underlying type, and two satisfaction statements can be compared by path equality. Two further notions carry the mathematics. `Transitive`{.Agda} is the closure condition `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`: a member of an element of `M` is again in `M`. And `_↾_`{.Agda} restricts a structure to a class, taking as its new carrier the pairs of an element with evidence that it lies in the class; what changes is what counts as an element, while the relations are inherited along the first projection.
 <!--zh-->
-这里的结构是命题值的：真值代数 `hPropAlgebra ℓ` 上的 `ZFStructure`{.Agda} 带有一个载体，其等词与成员关系都取值于 `hProp ℓ`，因此一条满足陈述是带有底层类型的命题，两条满足陈述可以用路径相等来比较。另有两个概念承载数学内容。其一是 `Transitive`{.Agda}，即闭合条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`：`M` 中元素的成员仍属于 `M`。其二是 `_↾_`{.Agda}，它把结构限制到一个类，新载体由「元素配上其属于该类的证据」的对组成；改变的是什么算作元素，而各关系沿第一投影继承。
+这里的结构是命题值的：`ZFStructure`{.Agda} 的载体带有取值于 `hProp ℓ` 的等词与成员关系，因此一条满足陈述是带有底层类型的命题，两条满足陈述可以用路径相等来比较。另有两个概念承载数学内容。其一是 `Transitive`{.Agda}，即闭合条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`：`M` 中元素的成员仍属于 `M`。其二是 `_↾_`{.Agda}，它把结构限制到一个类，新载体由「元素配上其属于该类的证据」的对组成；改变的是什么算作元素，而各关系沿第一投影继承。
 <!--ja-->
-ここでの構造は命題値です。真理値代数 `hPropAlgebra ℓ` 上の `ZFStructure`{.Agda} は台をひとつ持ち、その等号と所属は `hProp ℓ` に値を取るので、充足の主張は基礎型をもつ命題になり、二つの充足の主張はパスとしての等しさで比較できます。数学的内容を担う概念がさらに二つあります。第一は `Transitive`{.Agda} で、閉性の条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`、すなわち `M` の要素の要素も `M` に属することを述べます。第二は `_↾_`{.Agda} で、構造をクラスへ制限し、「要素と、それがクラスに属する証拠」の対を新しい台とします。変わるのは何を要素とみなすかだけで、関係は第一射影に沿って引き継がれます。
+ここでの構造は命題値です。`ZFStructure`{.Agda} の台の等号と所属は `hProp ℓ` に値を取るので、充足の主張は基礎型をもつ命題になり、二つの充足の主張はパスとしての等しさで比較できます。数学的内容を担う概念がさらに二つあります。第一は `Transitive`{.Agda} で、閉性の条件 `y ∈ᵗ x → x ∈ᶜ M → y ∈ᶜ M`、すなわち `M` の要素の要素も `M` に属することを述べます。第二は `_↾_`{.Agda} で、構造をクラスへ制限し、「要素と、それがクラスに属する証拠」の対を新しい台とします。変わるのは何を要素とみなすかだけで、関係は第一射影に沿って引き継がれます。
 <!--/-->
 
 ```agda
@@ -32,7 +32,6 @@ Structures here are proposition-valued: a `ZFStructure`{.Agda} over the truth al
 module FOL.Absoluteness where
 
 open import Base.Prelude
-open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure; Transitive; _↾_ )
 ```
 
@@ -81,19 +80,18 @@ Fix an ambient structure `𝒮` and a transitive class `M`; the inner world is t
 <!--/-->
 
 <!--en-->
-The section works under three fixed parameters: a structure `𝒮`, a class `M` valued in `hProp ℓ` on its carrier, and a proof `trans` of transitivity. The carrier `S` and the truth-valued relations `_∈ˢ_`, `_≈ˢ_` belong to `𝒮`; the truth-algebra operations `⊓`, `⊔`, `⇒` interpret the connectives. Nothing about `M` is used yet except that it is a class; transitivity enters the proof of the theorem, not the definitions that state it.
+The section works under three fixed parameters: a structure `𝒮`, a class `M` valued in `hProp ℓ` on its carrier, and a proof `trans` of transitivity. The carrier `S` and the truth-valued relations `_∈ˢ_`, `_≈ˢ_` belong to `𝒮`; the hProp operations `⊓`, `⊔`, `⇒` interpret the connectives. Nothing about `M` is used yet except that it is a class; transitivity enters the proof of the theorem, not the definitions that state it.
 <!--zh-->
-本节在三个固定参数下工作：结构 `𝒮`、其载体上取值于 `hProp ℓ` 的类 `M`、以及传递性的证明 `trans`。载体 `S` 与真值关系 `_∈ˢ_`、`_≈ˢ_` 属于 `𝒮`；真值代数运算 `⊓`、`⊔`、`⇒` 解释各联结词。目前只用到 `M` 是一个类这一事实；传递性进入的是定理的证明，而不是陈述定理的定义。
+本节在三个固定参数下工作：结构 `𝒮`、其载体上取值于 `hProp ℓ` 的类 `M`、以及传递性的证明 `trans`。载体 `S` 与真值关系 `_∈ˢ_`、`_≈ˢ_` 属于 `𝒮`；`hProp` 上的直接运算 `⊓`、`⊔`、`⇒` 解释各联结词。目前只用到 `M` 是一个类这一事实；传递性进入的是定理的证明，而不是陈述定理的定义。
 <!--ja-->
-この節は三つの固定パラメータのもとで進みます。構造 `𝒮`、その台上で `hProp ℓ` に値を取るクラス `M`、そして推移性の証明 `trans` です。台 `S` と真理値の関係 `_∈ˢ_`、`_≈ˢ_` は `𝒮` に属し、真理値代数の演算 `⊓`、`⊔`、`⇒` が結合子を解釈します。現時点で `M` について使うのはそれがクラスであることだけです。推移性が現れるのは定理の証明であり、それを述べる定義ではありません。
+この節は三つの固定パラメータのもとで進みます。構造 `𝒮`、その台上で `hProp ℓ` に値を取るクラス `M`、そして推移性の証明 `trans` です。台 `S` と真理値の関係 `_∈ˢ_`、`_≈ˢ_` は `𝒮` に属し、`hProp` 上の直接の演算 `⊓`、`⊔`、`⇒` が結合子を解釈します。現時点で `M` について使うのはそれがクラスであることだけです。推移性が現れるのは定理の証明であり、それを述べる定義ではありません。
 <!--/-->
 
 ```agda
-module Single {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+module Single {ℓ} (𝒮 : ZFStructure ℓ)
               (M : ZFStructure.S 𝒮 → hProp ℓ)
               (trans : Transitive 𝒮 M) where
 
-  open TruthAlgebra (hPropAlgebra ℓ)
   open ZFStructure 𝒮
 ```
 
@@ -110,10 +108,10 @@ The carrier of the inner world is the Σ-type `SM`: a pair of an element of `S` 
   SM : Type ℓ
   SM = Σ[ x ∈ S ] (x ∈ᶜ M)
 
-  𝒮M : ZFStructure (hPropAlgebra ℓ)
+  𝒮M : ZFStructure ℓ
   𝒮M = 𝒮 ↾ M
 
-  module SemV = FOL.Semantics (hPropAlgebra ℓ) 𝒮
+  module SemV = FOL.Semantics 𝒮
 ```
 
 <!--en-->
@@ -125,7 +123,7 @@ The outer reading uses the constant interpretation `ι := fst`{.Agda}: a constan
 <!--/-->
 
 ```agda
-  module SemM = FOL.Semantics (hPropAlgebra ℓ) 𝒮M
+  module SemM = FOL.Semantics 𝒮M
 
   open SemV using ( _^_ ) public
 
@@ -201,11 +199,11 @@ Absoluteness for Δ₀ is proved by structural induction on the Δ₀ witness. T
 <!--/-->
 
 <!--en-->
-The statement is a path of truth values, not a mere implication: for every Δ₀ witness `d` certifying `φ` and every environment `δ` into `SM`, inner satisfaction `δ ⊨ᵐ φ` is equal, as a type, to outer satisfaction under the projected environment. In the atomic cases the term lemma evaluates both sides: `∈` reads the structure field `_∈ˢ_`, `≐` reads `_≈ˢ_`, and `cong₂` moves the equality of the two term values through the relation. On the connectives `∧`, `∨` and `⇒` the semantics is by `⊓`, `⊔` and `⇒`, so `abs₀` on the two subwitnesses, fed to `cong₂`, is the whole case: the algebra operations are functions, hence preserve equality.
+The statement is a path of truth values, not a mere implication: for every Δ₀ witness `d` certifying `φ` and every environment `δ` into `SM`, inner satisfaction `δ ⊨ᵐ φ` is equal, as a type, to outer satisfaction under the projected environment. In the atomic cases the term lemma evaluates both sides: `∈` reads the structure field `_∈ˢ_`, `≐` reads `_≈ˢ_`, and `cong₂` moves the equality of the two term values through the relation. On the connectives `∧`, `∨` and `⇒` the semantics is by `⊓`, `⊔` and `⇒`, so `abs₀` on the two subwitnesses, fed to `cong₂`, is the whole case: these operations are functions, hence preserve equality.
 <!--zh-->
-定理陈述的是真值的路径，而不仅是蕴涵：对每条证明 `φ` 是 Δ₀ 的见证 `d` 及指向 `SM` 的每个环境 `δ`，内层满足 `δ ⊨ᵐ φ` 作为类型等于投影后环境下的外层满足。原子情形中，词项引理对两侧求值：`∈` 读结构字段 `_∈ˢ_`，`≐` 读 `_≈ˢ_`，`cong₂` 把两个词项值的相等沿关系搬运。联结词 `∧`、`∨`、`⇒` 的语义分别是 `⊓`、`⊔`、`⇒`，因此把 `abs₀` 作用于两个子见证、再交给 `cong₂`，即是整个情形：代数运算是函数，因而保持相等。
+定理陈述的是真值的路径，而不仅是蕴涵：对每条证明 `φ` 是 Δ₀ 的见证 `d` 及指向 `SM` 的每个环境 `δ`，内层满足 `δ ⊨ᵐ φ` 作为类型等于投影后环境下的外层满足。原子情形中，词项引理对两侧求值：`∈` 读结构字段 `_∈ˢ_`，`≐` 读 `_≈ˢ_`，`cong₂` 把两个词项值的相等沿关系搬运。联结词 `∧`、`∨`、`⇒` 的语义分别是 `⊓`、`⊔`、`⇒`，因此把 `abs₀` 作用于两个子见证、再交给 `cong₂`，即是整个情形：这些运算是函数，因而保持相等。
 <!--ja-->
-定理の主張は、単なる含意ではなく真理値のパスです。`φ` が Δ₀ であることを証明する証拠 `d` と `SM` への環境 `δ` のそれぞれに対して、内側の充足 `δ ⊨ᵐ φ` は、型として、射影後の環境での外側の充足と等しくなります。原子の場合、項の補題が両辺を評価します。`∈` は構造のフィールド `_∈ˢ_` を読み、`≐` は `_≈ˢ_` を読み、`cong₂` が二つの項の値の等しさを関係に沿って運びます。結合子 `∧`、`∨`、`⇒` の意味論は `⊓`、`⊔`、`⇒` なので、二つの部分証拠に `abs₀` を適用して `cong₂` に渡すことが場合全体になります。代数の演算は関数であり、等しさを保つからです。
+定理の主張は、単なる含意ではなく真理値のパスです。`φ` が Δ₀ であることを証明する証拠 `d` と `SM` への環境 `δ` のそれぞれに対して、内側の充足 `δ ⊨ᵐ φ` は、型として、射影後の環境での外側の充足と等しくなります。原子の場合、項の補題が両辺を評価します。`∈` は構造のフィールド `_∈ˢ_` を読み、`≐` は `_≈ˢ_` を読み、`cong₂` が二つの項の値の等しさを関係に沿って運びます。結合子 `∧`、`∨`、`⇒` の意味論は `⊓`、`⊔`、`⇒` なので、二つの部分証拠に `abs₀` を適用して `cong₂` に渡すことが場合全体になります。これらの演算は関数であり、等しさを保つからです。
 <!--/-->
 
 ```agda

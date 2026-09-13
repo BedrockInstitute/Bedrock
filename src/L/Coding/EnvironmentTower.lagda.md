@@ -18,7 +18,6 @@ The satisfaction construction needs one set recording the environment set at eve
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.EnvironmentTower {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -65,7 +64,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ( _⊓_ )
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )

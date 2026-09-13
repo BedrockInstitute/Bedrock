@@ -36,7 +36,6 @@ The setting fixes one universe level `ℓ` and works in the cumulative hierarchy
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Axioms.Basic {ℓ : Level} where
 
@@ -137,7 +136,6 @@ The ambient sets this chapter needs come with their exact membership characteriz
         ; module InfinitySet )
 open InfinitySet using ( sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 ```
 
@@ -788,10 +786,10 @@ Uniqueness of a realizer is contractibility data: a center, namely any realizing
 <!--/-->
 
 ```agda
-uniqueL : (Q : S → Ω) → SetOf Q → isContr (SetOf Q)
+uniqueL : (Q : S → hProp (ℓ-suc ℓ)) → SetOf Q → isContr (SetOf Q)
 uniqueL = setOf-unique extensionalL
 
-mere→uniqueL : (Q : S → Ω) → ∥ SetOf Q ∥₁ → isContr (SetOf Q)
+mere→uniqueL : (Q : S → hProp (ℓ-suc ℓ)) → ∥ SetOf Q ∥₁ → isContr (SetOf Q)
 mere→uniqueL Q = PT.rec isPropIsContr (uniqueL Q)
 ```
 
@@ -1106,7 +1104,7 @@ The pairing field is stated over two arguments. Its predicate `Q x` says that an
 
 ```agda
 module PairOf (a b : S) where
-  Q : S → Ω
+  Q : S → hProp (ℓ-suc ℓ)
   Q x = (x ≈ˢ a) ⊔ (x ≈ˢ b)
 
   mkPair : (σ : V ℓ) → IsOrd σ → ⟨ fst a ∈ Lset σ ⟩ → ⟨ fst b ∈ Lset σ ⟩
@@ -1189,7 +1187,7 @@ The membership condition `Q` is an indexed disjunction inside the model's truth 
 
 ```agda
 module UnionOf (a : S) where
-  Q : S → Ω
+  Q : S → hProp (ℓ-suc ℓ)
   Q x = ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))
 
   mkUnion : (σ : V ℓ) → IsOrd σ → ⟨ fst a ∈ Lset σ ⟩ → SetOf Q

@@ -5,7 +5,7 @@ A bare structure becomes a model of set theory by supplying witnesses for the ZF
 
 Nothing in a bare structure yet deserves the name set theory. Its membership relation need not admit an empty set, need not pair two elements, and need not gather the subsets of anything. What a universe of sets must provide is exactly what the **axioms of ZF** say, and this chapter states them. A **model of ZF** is a structure whose fields supply the axioms, so "`𝒮` satisfies ZF" means precisely that such a witness exists at `𝒮`.
 
-The setting is fixed once here: `𝒮` is a structure over the truth algebra `hPropAlgebra ℓ`, so every equality and membership assertion in it is a proposition, and the module runs entirely at one universe level `ℓ` with its axioms living in `Type (ℓ-suc ℓ)`.
+The setting is fixed once here: equality and membership in `𝒮` take values in `hProp ℓ`, so every such assertion is a proposition, and the module runs entirely at one universe level `ℓ` with its axioms living in `Type (ℓ-suc ℓ)`.
 <!--zh-->
 # ZF 与 ZFC 的模型
 
@@ -13,7 +13,7 @@ The setting is fixed once here: `𝒮` is a structure over the truth algebra `hP
 
 裸结构中还没有任何东西配得上「集合论」之名。它的成员关系未必容纳空集，未必能配对两个元素，也未必能聚出子集。一个集合宇宙必须提供什么，正是 **ZF 公理**所陈述的内容，本章把它们一一写出。**ZF 模型**是其字段供给这些公理的结构，因此「`𝒮` 满足 ZF」恰是说：这样的见证在 `𝒮` 处存在。
 
-设定在此一次确定：`𝒮` 是真值代数 `hPropAlgebra ℓ` 上的结构，其中每条等词与成员断言都是命题；整个模块在同一个宇宙层级 `ℓ` 上运行，而它的公理住在 `Type (ℓ-suc ℓ)` 中。
+设定在此一次确定：`𝒮` 的等词与成员关系取值于 `hProp ℓ`，所以每条这样的断言都是命题；整个模块在同一个宇宙层级 `ℓ` 上运行，而它的公理住在 `Type (ℓ-suc ℓ)` 中。
 <!--ja-->
 # ZF と ZFC のモデル
 
@@ -21,33 +21,32 @@ The setting is fixed once here: `𝒮` is a structure over the truth algebra `hP
 
 裸の構造には、集合論の名に値するものはまだ何もありません。その所属関係が空集合を許すとは限らず、二つの要素を対にできるとも、何かの部分集合を集められるとも限りません。集合の宇宙が何を提供しなければならないかは、まさに **ZF 公理**の述べる通りであり、本章はそれを書き下ろします。**ZF モデル**とは、そのフィールドが公理を供給する構造であり、「`𝒮` が ZF を満たす」とは、そのような証拠が `𝒮` で存在することを意味するにすぎません。
 
-設定はここで一度だけ確定します。`𝒮` は真理値代数 `hPropAlgebra ℓ` の上の構造であり、その中の等号と所属の主張はすべて命題です。モジュール全体が同じ宇宙レベル `ℓ` で動作し、公理は `Type (ℓ-suc ℓ)` に住みます。
+設定はここで一度だけ確定します。`𝒮` の等号と所属は `hProp ℓ` に値を取るので、その主張はすべて命題です。モジュール全体が同じ宇宙レベル `ℓ` で動作し、公理は `Type (ℓ-suc ℓ)` に住みます。
 <!--/-->
 
 <!--en-->
-The module signature says what kind of thing will be studied: `𝒮` is a `ZFStructure` whose truth values are propositions, that is, a structure over `hPropAlgebra ℓ`. Two consequences follow immediately. First, the structure's equality `≈ˢ` and membership `∈ˢ` return propositions with underlying types, so membership claims in this chapter are things one can inhabit with proofs. Second, the parameter `{ℓ}` is a universe level, and it stays fixed throughout: the carrier `S` lives in `Type ℓ`, while statements quantifying over all subsets of `S`, such as the axioms themselves, will land in `Type (ℓ-suc ℓ)`.
+The module signature says what kind of thing will be studied: `𝒮` is a `ZFStructure` whose truth values are propositions, that is, a structure over `hProp ℓ`. Two consequences follow immediately. First, the structure's equality `≈ˢ` and membership `∈ˢ` return propositions with underlying types, so membership claims in this chapter are things one can inhabit with proofs. Second, the parameter `{ℓ}` is a universe level, and it stays fixed throughout: the carrier `S` lives in `Type ℓ`, while statements quantifying over all subsets of `S`, such as the axioms themselves, will land in `Type (ℓ-suc ℓ)`.
 <!--zh-->
-模块签名说明了要研究的对象类型：`𝒮` 是一个 `ZFStructure`，其真值为命题，即 `hPropAlgebra ℓ` 上的结构。由此立刻得到两点。其一，结构的等词 `≈ˢ` 与成员 `∈ˢ` 返回带有底层类型的命题，因此本章的成员断言都是可以用证明占据的东西。其二，参数 `{ℓ}` 是宇宙层级，全程固定：载体 `S` 住在 `Type ℓ`，而量化 `S` 全部子集的陈述，即公理本身，则落在 `Type (ℓ-suc ℓ)`。
+模块签名说明了要研究的对象类型：`𝒮` 是一个 `ZFStructure`，其真值为命题，即 `hProp ℓ` 上的结构。由此立刻得到两点。其一，结构的等词 `≈ˢ` 与成员 `∈ˢ` 返回带有底层类型的命题，因此本章的成员断言都是可以用证明占据的东西。其二，参数 `{ℓ}` 是宇宙层级，全程固定：载体 `S` 住在 `Type ℓ`，而量化 `S` 全部子集的陈述，即公理本身，则落在 `Type (ℓ-suc ℓ)`。
 <!--ja-->
-モジュールのシグネチャは、調べる対象の種類を示します。`𝒮` は真理値が命題である `ZFStructure`、すなわち `hPropAlgebra ℓ` の上の構造です。ここから二つのことがすぐに従います。第一に、構造の等号 `≈ˢ` と所属 `∈ˢ` は基礎型をもつ命題を返すので、本章の所属の主張は証拠で満たせるものになります。第二に、パラメータ `{ℓ}` は宇宙レベルであり、全体を通して固定されます。台 `S` は `Type ℓ` に住み、`S` のすべての部分集合を量化する命題、つまり公理そのものは `Type (ℓ-suc ℓ)` に置かれます。
+モジュールのシグネチャは、調べる対象の種類を示します。`𝒮` は真理値が命題である `ZFStructure`、すなわち `hProp ℓ` の上の構造です。ここから二つのことがすぐに従います。第一に、構造の等号 `≈ˢ` と所属 `∈ˢ` は基礎型をもつ命題を返すので、本章の所属の主張は証拠で満たせるものになります。第二に、パラメータ `{ℓ}` は宇宙レベルであり、全体を通して固定されます。台 `S` は `Type ℓ` に住み、`S` のすべての部分集合を量化する命題、つまり公理そのものは `Type (ℓ-suc ℓ)` に置かれます。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure; module hPropStructure )
 
-module FOL.ZFModel {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+module FOL.ZFModel {ℓ} (𝒮 : ZFStructure ℓ) where
 ```
 
 <!--en-->
-Two standing choices, both exercised here. The truth algebra is the canonical `hPropAlgebra`{.Agda}: the axioms assert facts, and the book's mathematical facts live in `hProp`{.Agda}. And the constant interpretation is the canonical one from the semantics chapter: the constant domain is the carrier itself and the interpretation is `id`{.Agda}, so a constant appearing in a formula simply *is* the set it names.
+The axioms assert facts directly in `hProp`{.Agda}. Their constant interpretation is the canonical one from the semantics chapter: the constant domain is the carrier itself and the interpretation is `id`{.Agda}, so a constant appearing in a formula simply *is* the set it names.
 <!--zh-->
-两项常设选择在此启用。真值代数取典范的 `hPropAlgebra`{.Agda}：公理断言事实，而本书数学的事实就落在 `hProp`{.Agda} 中。常元解释也取语义章的典范情形：常元域就是载体自身，解释就是 `id`{.Agda}，于是公式里出现的常元就**是**它指名的那个集合。
+这些公理直接在 `hProp`{.Agda} 中断言事实。常元解释取语义章的典范情形：常元域就是载体自身，解释就是 `id`{.Agda}，于是公式里出现的常元就**是**它指名的那个集合。
 <!--ja-->
-ここで二つの常設の選択が使われます。真理値代数は正準な `hPropAlgebra`{.Agda} です。公理は事実を主張し、本書の数学的事実は `hProp`{.Agda} に住みます。定数の解釈も意味論の章の正準なものを採ります。定数域は台そのものであり、解釈は `id`{.Agda} なので、論理式に現れる定数は、まさにその名が指す集合**そのもの**です。
+これらの公理は事実を `hProp`{.Agda} で直接主張します。定数の解釈には意味論の章の正準なものを採ります。定数域は台そのものであり、解釈は `id`{.Agda} なので、論理式に現れる定数は、まさにその名が指す集合**そのもの**です。
 <!--/-->
 
 <!--en-->
@@ -60,25 +59,24 @@ The working vocabulary for the axioms is assembled here. The syntax chapter supp
 
 ```agda
 open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
-open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At )
+open import FOL.Semantics 𝒮 using ( module At )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Induction.WellFounded using ( WellFounded )
 import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
-Three openings put the names into scope. Opening the truth algebra `hPropAlgebra ℓ` names its carrier `Ω`, which is `hProp ℓ`, and its operations `⊓`{.Agda}, `⊔`{.Agda}, `⇒`{.Agda}, `⋀`{.Agda}, `⋁`{.Agda} and the falsity `⊥`{.Agda}: these are exactly the connectives and quantifiers with which the axiom statements below are phrased. Opening `hPropStructure 𝒮` brings the structure's carrier `S`, its h-set certificate, and the two truth-valued relations `≈ˢ` and `∈ˢ`, together with the Type-valued reading `∈ᵗ`{.Agda} of membership. Finally, opening `At S id`{.Agda} instantiates the satisfaction relation `_⊨_`{.Agda} at the canonical constant interpretation, where a constant denotes itself, so a free variable slot in a formula is read as membership of a specific set.
+Two openings put the structure and satisfaction names into scope; the direct `hProp` operations are already supplied by the prelude. Opening `hPropStructure 𝒮` brings the structure's carrier `S`, its h-set certificate, and the two truth-valued relations `≈ˢ` and `∈ˢ`, together with the Type-valued reading `∈ᵗ`{.Agda} of membership. Finally, opening `At S id`{.Agda} instantiates the satisfaction relation `_⊨_`{.Agda} at the canonical constant interpretation, where a constant denotes itself, so a free variable slot in a formula is read as membership of a specific set.
 <!--zh-->
-三个 open 把名字带入作用域。打开真值代数 `hPropAlgebra ℓ` 得到其载体 `Ω` (即 `hProp ℓ`) 与运算 `⊓`{.Agda}、`⊔`{.Agda}、`⇒`{.Agda}、`⋀`{.Agda}、`⋁`{.Agda} 和假值 `⊥`{.Agda}：下面的公理陈述正是用这些联结词与量词表述的。打开 `hPropStructure 𝒮` 得到结构的载体 `S`、其 h-集合性证据，以及两个真值关系 `≈ˢ` 与 `∈ˢ`，连同成员的 Type 值读法 `∈ᵗ`{.Agda}。最后，打开 `At S id`{.Agda} 在典范常元解释下实例化满足关系 `_⊨_`{.Agda}，其中常元指自身，于是公式中的自由变元槽就被读作对某个具体集合的隶属。
+两个 open 把结构与满足关系的名字带入作用域；`hProp` 上的直接逻辑运算已由基础词汇提供。打开 `hPropStructure 𝒮` 得到结构的载体 `S`、其 h-集合性证据，以及两个真值关系 `≈ˢ` 与 `∈ˢ`，连同成员的 Type 值读法 `∈ᵗ`{.Agda}。最后，打开 `At S id`{.Agda} 在典范常元解释下实例化满足关系 `_⊨_`{.Agda}，其中常元指自身，于是公式中的自由变元槽就被读作对某个具体集合的隶属。
 <!--ja-->
-三つの open が名前をスコープに入れます。真理値代数 `hPropAlgebra ℓ` を開くと、台 `Ω` (すなわち `hProp ℓ`) と、演算 `⊓`{.Agda}、`⊔`{.Agda}、`⇒`{.Agda}、`⋀`{.Agda}、`⋁`{.Agda}、偽 `⊥`{.Agda} の名前が得られます。これらはまさに、以下の公理の言明が述べられるのに使う結合子と量化子です。`hPropStructure 𝒮` を開くと、構造の台 `S`、その h-集合性の証拠、真理値を返す二つの関係 `≈ˢ` と `∈ˢ`、さらに所属の Type 値の読み `∈ᵗ`{.Agda} が得られます。最後に `At S id`{.Agda} を開くと、充足関係 `_⊨_`{.Agda} が正準な定数解釈で具体化されます。そこでは定数が自分自身を指すので、論理式の自由変数の枠は、特定の集合への所属として読まれます。
+二つの open が構造と充足関係の名前をスコープに入れます。`hProp` 上の直接の論理演算は基礎語彙からすでに得られています。`hPropStructure 𝒮` を開くと、構造の台 `S`、その h-集合性の証拠、真理値を返す二つの関係 `≈ˢ` と `∈ˢ`、さらに所属の Type 値の読み `∈ᵗ`{.Agda} が得られます。最後に `At S id`{.Agda} を開くと、充足関係 `_⊨_`{.Agda} が正準な定数解釈で具体化されます。そこでは定数が自分自身を指すので、論理式の自由変数の枠は、特定の集合への所属として読まれます。
 <!--/-->
 
 ```agda
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 
-open TruthAlgebra (hPropAlgebra ℓ)
 open hPropStructure 𝒮
 
 open At S id using ( _⊨_ )
@@ -87,41 +85,41 @@ open At S id using ( _⊨_ )
 <!--en-->
 ## Realizing a class as a set
 
-Nearly every axiom to come has the same shape: *there is a set whose members are exactly the so-and-so*. Pin down the "so-and-so" first. A **class** is a propositional predicate on the carrier, `S → Ω`: something whose membership can be stated, with no promise that any set collects it. (Classes have already appeared in disguise: the restriction `𝒮 ↾ M` of the structure chapter cuts along exactly such an `M`.) This section defines when a set realizes a class, observes that realization is itself a proposition, and packages the two together.
+Nearly every axiom to come has the same shape: *there is a set whose members are exactly the so-and-so*. Pin down the "so-and-so" first. A **class** is a propositional predicate on the carrier, `S → hProp ℓ`: something whose membership can be stated, with no promise that any set collects it. (Classes have already appeared in disguise: the restriction `𝒮 ↾ M` of the structure chapter cuts along exactly such an `M`.) This section defines when a set realizes a class, observes that realization is itself a proposition, and packages the two together.
 <!--zh-->
 ## 把类实现为集合
 
-接下来的公理几乎全是同一个形状：**存在一个集合，其成员恰好是如此这般者**。先把「如此这般」说清楚。**类**是载体上的命题值谓词 `S → Ω`：可以对它谈论隶属，却不保证有集合恰好收齐它的全部成员。(类在前面已经出现过：结构章的限制 `𝒮 ↾ M` 正是沿这样一个 `M` 进行的。) 本节定义集合何时实现一个类，指出实现本身是命题，并把两者打包在一起。
+接下来的公理几乎全是同一个形状：**存在一个集合，其成员恰好是如此这般者**。先把「如此这般」说清楚。**类**是载体上的命题值谓词 `S → hProp ℓ`：可以对它谈论隶属，却不保证有集合恰好收齐它的全部成员。(类在前面已经出现过：结构章的限制 `𝒮 ↾ M` 正是沿这样一个 `M` 进行的。) 本节定义集合何时实现一个类，指出实现本身是命题，并把两者打包在一起。
 <!--ja-->
 ## クラスを集合として実現する
 
-これから出てくる公理はほとんどすべて同じ形をしています。**ある集合が存在して、その要素がちょうどかくかくしかじかである**。まず「かくかくしかじか」をはっきりさせましょう。**クラス**とは台の上の命題値の述語 `S → Ω` のことです。所属を語ることはできますが、それを集める集合があるとは限りません。(クラスはすでに別の姿で現れています。構造の章の制限 `𝒮 ↾ M` は、まさにこのような `M` に沿って切り取る操作でした。) 本節では、集合がいつクラスを実現するかを定義し、実現そのものが命題であることを見て、両者を一つにまとめます。
+これから出てくる公理はほとんどすべて同じ形をしています。**ある集合が存在して、その要素がちょうどかくかくしかじかである**。まず「かくかくしかじか」をはっきりさせましょう。**クラス**とは台の上の命題値の述語 `S → hProp ℓ` のことです。所属を語ることはできますが、それを集める集合があるとは限りません。(クラスはすでに別の姿で現れています。構造の章の制限 `𝒮 ↾ M` は、まさにこのような `M` に沿って切り取る操作でした。) 本節では、集合がいつクラスを実現するかを定義し、実現そのものが命題であることを見て、両者を一つにまとめます。
 <!--/-->
 
 <!--en-->
-The definition of realization is deliberately pointwise. `IsSetOf Q b` holds when for *every* element `x` of the carrier, the proposition `x ∈ˢ b` is equal, as an element of `Ω`, to the class value `Q x`. There is no formula, no syntax, and no reduction here: the comparison is direct equality of truth values. This type lives in `Type (ℓ-suc ℓ)` because it quantifies over all of `S`, matching where the axioms themselves will live.
+The definition of realization is deliberately pointwise. `IsSetOf Q b` holds when for *every* element `x` of the carrier, the proposition `x ∈ˢ b` is equal, as an element of `hProp ℓ`, to the class value `Q x`. There is no formula, no syntax, and no reduction here: the comparison is direct equality of truth values. This type lives in `Type (ℓ-suc ℓ)` because it quantifies over all of `S`, matching where the axioms themselves will live.
 <!--zh-->
-实现的定义刻意采取逐点形式。`IsSetOf Q b` 说：对载体的**每个**元素 `x`，命题 `x ∈ˢ b` 作为 `Ω` 的元素等于类的值 `Q x`。这里没有公式、没有语法、也没有化归：比较就是真值之间的直接相等。该类型住在 `Type (ℓ-suc ℓ)`，因为它量化了整个 `S`，与公理本身所在的位置一致。
+实现的定义刻意采取逐点形式。`IsSetOf Q b` 说：对载体的**每个**元素 `x`，命题 `x ∈ˢ b` 作为 `hProp ℓ` 的元素等于类的值 `Q x`。这里没有公式、没有语法、也没有化归：比较就是真值之间的直接相等。该类型住在 `Type (ℓ-suc ℓ)`，因为它量化了整个 `S`，与公理本身所在的位置一致。
 <!--ja-->
-実現の定義は意図的に各点ごとの形をしています。`IsSetOf Q b` は、台の**すべての**要素 `x` について、命題 `x ∈ˢ b` が `Ω` の要素としてクラスの値 `Q x` に等しいときに成ります。ここに公式も構文も簡約もなく、比較は真理値の直接的な等式です。この型は `S` 全体を量化するため `Type (ℓ-suc ℓ)` に住み、公理そのものの住処と一致します。
+実現の定義は意図的に各点ごとの形をしています。`IsSetOf Q b` は、台の**すべての**要素 `x` について、命題 `x ∈ˢ b` が `hProp ℓ` の要素としてクラスの値 `Q x` に等しいときに成ります。ここに公式も構文も簡約もなく、比較は真理値の直接的な等式です。この型は `S` 全体を量化するため `Type (ℓ-suc ℓ)` に住み、公理そのものの住処と一致します。
 <!--/-->
 
 ```agda
-IsSetOf : (S → Ω) → S → Type (ℓ-suc ℓ)
+IsSetOf : (S → hProp ℓ) → S → Type (ℓ-suc ℓ)
 IsSetOf Q b = (x : S) → (x ∈ˢ b) ≡ Q x
 
-isPropIsSetOf : (Q : S → Ω) (b : S) → isProp (IsSetOf Q b)
+isPropIsSetOf : (Q : S → hProp ℓ) (b : S) → isProp (IsSetOf Q b)
 isPropIsSetOf Q b = isPropΠ (λ x → isSetHProp _ _)
 
-SetOf : (S → Ω) → Type (ℓ-suc ℓ)
+SetOf : (S → hProp ℓ) → Type (ℓ-suc ℓ)
 ```
 
 <!--en-->
-That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each fiber is: `Ω` is `hProp ℓ`, and `isSetHProp` says the type of paths between two propositions packed in `hProp` is an h-set, so its identity types are propositions; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
+That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each fiber is: `hProp ℓ` is `hProp ℓ`, and `isSetHProp` says the type of paths between two propositions packed in `hProp` is an h-set, so its identity types are propositions; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
 <!--zh-->
-实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因每个纤维都是命题：`Ω` 即 `hProp ℓ`，`isSetHProp` 说明 `hProp` 中两个命题之间的路径类型是 h-集合，其恒等类型因此是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
+实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因每个纤维都是命题：`hProp ℓ` 即 `hProp ℓ`，`isSetHProp` 说明 `hProp` 中两个命题之间的路径类型是 h-集合，其恒等类型因此是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
 <!--ja-->
-実現がより重いデータではなく命題であることを、ここで確かめます。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、各繊維が命題だからです。`Ω` は `hProp ℓ` であり、`isSetHProp` は `hProp` に包まれた二つの命題の間のパス型が h-集合であることを述べるので、その恒等型は命題になります。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げます。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままです。この事実は後で繰り返し使われます。
+実現がより重いデータではなく命題であることを、ここで確かめます。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、各繊維が命題だからです。`hProp ℓ` は `hProp ℓ` であり、`isSetHProp` は `hProp` に包まれた二つの命題の間のパス型が h-集合であることを述べるので、その恒等型は命題になります。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げます。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままです。この事実は後で繰り返し使われます。
 <!--/-->
 
 ```agda
@@ -146,7 +144,7 @@ Given a realizer `(b , sp)`{.Agda} of the class `Q`, the contraction sends any o
 
 ```agda
 setOf-unique : ({a b : S} → ((x : S) → (x ∈ˢ a) ≡ (x ∈ˢ b)) → a ≡ b)
-             → (Q : S → Ω) → SetOf Q → isContr (SetOf Q)
+             → (Q : S → hProp ℓ) → SetOf Q → isContr (SetOf Q)
 setOf-unique ext Q (b , sp) = (b , sp) , λ { (b' , sp') →
   Σ≡Prop (isPropIsSetOf Q) (ext (λ x → sp x ∙ sym (sp' x))) }
 ```
@@ -174,7 +172,7 @@ The operator `℩` takes a contraction proof of `SetOf Q` and returns its center
 <!--/-->
 
 ```agda
-℩ : {Q : S → Ω} → isContr (SetOf Q) → S
+℩ : {Q : S → hProp ℓ} → isContr (SetOf Q) → S
 ℩ c = c .fst .fst
 ```
 
@@ -188,34 +186,34 @@ The extracted set would be useless without a way to read back what its members a
 
 ```agda
 
-℩-spec : {Q : S → Ω} (c : isContr (SetOf Q)) → IsSetOf Q (℩ c)
+℩-spec : {Q : S → hProp ℓ} (c : isContr (SetOf Q)) → IsSetOf Q (℩ c)
 ℩-spec c = c .fst .snd
 ```
 
 <!--en-->
 ## Subsets
 
-One derived relation completes the vocabulary: `a ⊆ˢ b` when every member of `a` is a member of `b`. This is extensionality's defining comparison, read as a truth value rather than as a hypothesis of a theorem. Unlike the axioms, which will return sets, it lives in `Ω`, and it is stated with the truth algebra's universal quantifier rather than a host function type. The power set field and the choice-set form of the axiom of choice are phrased with it.
+One derived relation completes the vocabulary: `a ⊆ˢ b` when every member of `a` is a member of `b`. This is extensionality's defining comparison, read as a truth value rather than as a hypothesis of a theorem. Unlike the axioms, which will return sets, it lives in `hProp ℓ`, and it is stated with the direct `hProp` universal quantifier rather than a host function type. The power set field and the choice-set form of the axiom of choice are phrased with it.
 <!--zh-->
 ## 子集
 
-还需要一个派生关系来补全词汇：`a ⊆ˢ b` 谓 `a` 的每个成员都是 `b` 的成员。这正是外延公理所比较的关系，只不过作为真值而非定理前提来读。与将要返回集合的公理不同，它住在 `Ω` 中，并且用真值代数的全称量词而非宿主函数类型来陈述。幂集字段与选择公理的选择集形式都将用它表述。
+还需要一个派生关系来补全词汇：`a ⊆ˢ b` 谓 `a` 的每个成员都是 `b` 的成员。这正是外延公理所比较的关系，只不过作为真值而非定理前提来读。与将要返回集合的公理不同，它住在 `hProp ℓ` 中，并且用 `hProp` 上直接的全称量词而非宿主函数类型来陈述。幂集字段与选择公理的选择集形式都将用它表述。
 <!--ja-->
 ## 部分集合
 
-語彙を完成させるために、派生関係がもう一つ必要です。`a ⊆ˢ b` は、`a` の各要素が `b` にも属することを表します。これは外延性が比較する関係を、定理の仮定ではなく真理値として読んだものです。集合を返すこれからの公理と違って `Ω` に住み、ホストの関数型ではなく真理値代数の全称量化子で述べられます。冪集合のフィールドも、選択公理の選択集合の形も、これを用いて述べられます。
+語彙を完成させるために、派生関係がもう一つ必要です。`a ⊆ˢ b` は、`a` の各要素が `b` にも属することを表します。これは外延性が比較する関係を、定理の仮定ではなく真理値として読んだものです。集合を返すこれからの公理と違って `hProp ℓ` に住み、ホストの関数型ではなく `hProp` 上の直接の全称量化子で述べられます。冪集合のフィールドも、選択公理の選択集合の形も、これを用いて述べられます。
 <!--/-->
 
 <!--en-->
-The definition uses `⋀`{.Agda}, the truth algebra's universal quantification, to conjoin the implications `x ∈ˢ a ⇒ x ∈ˢ b` over all `x` in the carrier. Staying inside `Ω` matters: the result is a truth value of the structure, comparable and combinable with the other connectives, whereas a metalevel function type would not be. The Type-valued underlying implication is available too, since each `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} in `hProp` has an underlying type, but the definition keeps everything truth-valued.
+The definition uses the direct `hProp` quantifier `⋀`{.Agda}, to conjoin the implications `x ∈ˢ a ⇒ x ∈ˢ b` over all `x` in the carrier. Staying inside `hProp ℓ` matters: the result is a truth value of the structure, comparable and combinable with the other connectives, whereas a metalevel function type would not be. The Type-valued underlying implication is available too, since each `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} in `hProp` has an underlying type, but the definition keeps everything truth-valued.
 <!--zh-->
-定义使用 `⋀`{.Agda}，即真值代数的全称量化，把对所有载体元素 `x` 的蕴涵 `x ∈ˢ a ⇒ x ∈ˢ b` 合取起来。留在 `Ω` 内很重要：结果是一个真值，可以与其他联结词比较与组合，而元层的函数类型做不到这一点。Type 值的蕴涵也可用，因为 `hProp` 中每个 `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} 都有底层类型，但定义把一切都保持为真值。
+定义使用 `hProp` 上直接的全称量词 `⋀`{.Agda}，把对所有载体元素 `x` 的蕴涵 `x ∈ˢ a ⇒ x ∈ˢ b` 合取起来。留在 `hProp ℓ` 内很重要：结果是一个真值，可以与其他联结词比较与组合，而元层的函数类型做不到这一点。Type 值的蕴涵也可用，因为 `hProp` 中每个 `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} 都有底层类型，但定义把一切都保持为真值。
 <!--ja-->
-定義は `⋀`{.Agda}、すなわち真理値代数の全称量化を用いて、台のすべての `x` にわたる含意 `x ∈ˢ a ⇒ x ∈ˢ b` を連言します。`Ω` の中に留まることが重要です。結果は構造の真理値であり、他の結合子と比較・結合できます。メタレベルの関数型にはそれができません。Type 値の含意も使えます。`hProp` の `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} には基礎型があるからです。しかし定義はすべてを真理値のまま保ちます。
+定義は `hProp` 上の直接の全称量化子 `⋀`{.Agda} を用いて、台のすべての `x` にわたる含意 `x ∈ˢ a ⇒ x ∈ˢ b` を連言します。`hProp ℓ` の中に留まることが重要です。結果は構造の真理値であり、他の結合子と比較・結合できます。メタレベルの関数型にはそれができません。Type 値の含意も使えます。`hProp` の `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} には基礎型があるからです。しかし定義はすべてを真理値のまま保ちます。
 <!--/-->
 
 ```agda
-_⊆ˢ_ : S → S → Ω
+_⊆ˢ_ : S → S → hProp ℓ
 a ⊆ˢ b = ⋀ S (λ x → (x ∈ˢ a) ⇒ (x ∈ˢ b))
 ```
 
@@ -235,15 +233,15 @@ infix 20 _⊆ˢ_
 <!--en-->
 ## The axioms, as a record
 
-Here is the heart of the chapter. The fields group into three kinds. First, extensionality and the existence axioms: empty set, pairing, union, separation, replacement, power set, each in the unique-existence form just prepared, so each yields its set through `℩` (infinity joins later). Second, the two formula schemas: separation and replacement take a `Formula S 1`{.Agda} or `Formula S 2`{.Agda} and interpret it with the satisfaction relation of the semantics chapter, so the language built in the first-order logic chapters does real work here. The restriction is explicit: these fields range over encoded first-order formulas, rather than arbitrary host predicates `S → Ω`. Thus every instance used here comes with object-language syntax and is interpreted by the satisfaction relation. Third, regularity: well-foundedness of the Type-valued membership relation, recorded as `WellFounded _∈ᵗ_` from the host library. The next section explains why this axiom is stated at the meta level while the others live inside the structure.
+Here is the heart of the chapter. The fields group into three kinds. First, extensionality and the existence axioms: empty set, pairing, union, separation, replacement, power set, each in the unique-existence form just prepared, so each yields its set through `℩` (infinity joins later). Second, the two formula schemas: separation and replacement take a `Formula S 1`{.Agda} or `Formula S 2`{.Agda} and interpret it with the satisfaction relation of the semantics chapter, so the language built in the first-order logic chapters does real work here. The restriction is explicit: these fields range over encoded first-order formulas, rather than arbitrary host predicates `S → hProp ℓ`. Thus every instance used here comes with object-language syntax and is interpreted by the satisfaction relation. Third, regularity: well-foundedness of the Type-valued membership relation, recorded as `WellFounded _∈ᵗ_` from the host library. The next section explains why this axiom is stated at the meta level while the others live inside the structure.
 <!--zh-->
 ## 公理，作为 record
 
-这里是本章的核心。字段分三类。第一类是外延性与存在性公理：空集、配对、并、分离、替换、幂集，全部采取刚准备好的唯一存在形式，因此各自经 `℩` 得到相应的集合 (无穷稍后加入)。第二类是两条公式模式：分离与替换各收一条 `Formula S 1`{.Agda} 或 `Formula S 2`{.Agda}，并用语义章的满足关系解释它，于是一阶逻辑诸章造出的语言在此真正派上用场。这里的限制是明确的：这些字段量化编码后的一阶公式，而非任意宿主谓词 `S → Ω`。因此每个实例都带有对象语言语法，并由满足关系解释。第三类是正则公理：Type 值成员关系的良基性，以宿主库的 `WellFounded _∈ᵗ_` 记录。下一节解释为何这条公理陈述在元层面，而其余公理住在结构内部。
+这里是本章的核心。字段分三类。第一类是外延性与存在性公理：空集、配对、并、分离、替换、幂集，全部采取刚准备好的唯一存在形式，因此各自经 `℩` 得到相应的集合 (无穷稍后加入)。第二类是两条公式模式：分离与替换各收一条 `Formula S 1`{.Agda} 或 `Formula S 2`{.Agda}，并用语义章的满足关系解释它，于是一阶逻辑诸章造出的语言在此真正派上用场。这里的限制是明确的：这些字段量化编码后的一阶公式，而非任意宿主谓词 `S → hProp ℓ`。因此每个实例都带有对象语言语法，并由满足关系解释。第三类是正则公理：Type 值成员关系的良基性，以宿主库的 `WellFounded _∈ᵗ_` 记录。下一节解释为何这条公理陈述在元层面，而其余公理住在结构内部。
 <!--ja-->
 ## record としての ZF 公理
 
-ここが本章の中心です。フィールドは三種に分けられます。第一は外延性と存在の公理、すなわち空集合、対、和集合、分出、置換、冪集合で、いずれも直前に用意した一意存在の形を取り、それぞれ `℩` を通して集合を得ます (無限は後に加わります)。第二は二つの論理式のスキーマです。分出と置換は `Formula S 1`{.Agda} または `Formula S 2`{.Agda} を受け取り、意味論の章の充足関係で解釈するので、一階論理の諸章で作られた言語がここで実際の仕事をします。ここでの制限は明示的です。これらのフィールドが量化するのは符号化された一階論理式であり、任意のホスト述語 `S → Ω` ではありません。したがって各実例は対象言語の構文を伴い、充足関係によって解釈されます。第三は正則性です。Type 値の所属関係の整礎性として、ホストのライブラリの `WellFounded _∈ᵗ_` で記録します。次の節で、なぜこの公理だけがメタレベルで述べられ、他が構造の内部に住むのかを説明します。
+ここが本章の中心です。フィールドは三種に分けられます。第一は外延性と存在の公理、すなわち空集合、対、和集合、分出、置換、冪集合で、いずれも直前に用意した一意存在の形を取り、それぞれ `℩` を通して集合を得ます (無限は後に加わります)。第二は二つの論理式のスキーマです。分出と置換は `Formula S 1`{.Agda} または `Formula S 2`{.Agda} を受け取り、意味論の章の充足関係で解釈するので、一階論理の諸章で作られた言語がここで実際の仕事をします。ここでの制限は明示的です。これらのフィールドが量化するのは符号化された一階論理式であり、任意のホスト述語 `S → hProp ℓ` ではありません。したがって各実例は対象言語の構文を伴い、充足関係によって解釈されます。第三は正則性です。Type 値の所属関係の整礎性として、ホストのライブラリの `WellFounded _∈ᵗ_` で記録します。次の節で、なぜこの公理だけがメタレベルで述べられ、他が構造の内部に住むのかを説明します。
 <!--/-->
 
 <!--en-->
@@ -263,11 +261,11 @@ record isZFModel : Type (ℓ-suc ℓ) where
 ```
 
 <!--en-->
-Reading each class back into words recovers the textbook statements. Nothing realizes `⊥`, so the empty set is the unique set realizing the constantly-false class. The pair of `a` and `b` realizes the class of sets structurally equal to `a` or to `b`, joined by the truth algebra's disjunction `⊔`{.Agda}. The union of `a` realizes the class of sets `x` that are members of some member `y` of `a`, conjoined by `⊓`{.Agda} and existentially gathered by `⋁`{.Agda}. Separation, the first formula-consuming field, keeps exactly those members `x` of `a` satisfying `φ`: the class is the conjunction of membership in `a` with the satisfaction of `φ` at the one-element environment `x ∷ []`, whose single entry fills the only free-variable slot of a `Formula S 1`.
+Reading each class back into words recovers the textbook statements. Nothing realizes `⊥`, so the empty set is the unique set realizing the constantly-false class. The pair of `a` and `b` realizes the class of sets structurally equal to `a` or to `b`, joined by the direct `hProp` disjunction `⊔`{.Agda}. The union of `a` realizes the class of sets `x` that are members of some member `y` of `a`, conjoined by `⊓`{.Agda} and existentially gathered by `⋁`{.Agda}. Separation, the first formula-consuming field, keeps exactly those members `x` of `a` satisfying `φ`: the class is the conjunction of membership in `a` with the satisfaction of `φ` at the one-element environment `x ∷ []`, whose single entry fills the only free-variable slot of a `Formula S 1`.
 <!--zh-->
-把每个类读回自然语言，教科书的陈述一一重现。没有谁实现 `⊥`，所以空集就是实现恒假类的唯一集合。`a` 与 `b` 的配对实现「与 `a` 结构相等或与 `b` 结构相等」的类，用真值代数的析取 `⊔`{.Agda} 连接。`a` 的并实现那些 `x`：存在 `a` 的成员 `y` 使 `x` 属于 `y`，用 `⊓`{.Agda} 合取、`⋁`{.Agda} 存在聚合。分离是第一个消费公式的字段，恰好留下 `a` 中满足 `φ` 的成员 `x`：该类是「属于 `a`」与「`φ` 在单元素环境 `x ∷ []` 下满足」的合取，这个环境的唯一一项填入 `Formula S 1` 唯一的自由变元槽。
+把每个类读回自然语言，教科书的陈述一一重现。没有谁实现 `⊥`，所以空集就是实现恒假类的唯一集合。`a` 与 `b` 的配对实现「与 `a` 结构相等或与 `b` 结构相等」的类，用 `hProp` 上直接的析取 `⊔`{.Agda} 连接。`a` 的并实现那些 `x`：存在 `a` 的成员 `y` 使 `x` 属于 `y`，用 `⊓`{.Agda} 合取、`⋁`{.Agda} 存在聚合。分离是第一个消费公式的字段，恰好留下 `a` 中满足 `φ` 的成员 `x`：该类是「属于 `a`」与「`φ` 在单元素环境 `x ∷ []` 下满足」的合取，这个环境的唯一一项填入 `Formula S 1` 唯一的自由变元槽。
 <!--ja-->
-それぞれのクラスを自然言語に読み戻すと、教科書の言明がそのまま現れます。`⊥` を実現するものはないので、空集合とは恒偽のクラスを実現する一意な集合です。`a` と `b` の対は、「`a` と構造的に等しいか `b` と構造的に等しい」というクラスを実現し、真理値代数の選言 `⊔`{.Agda} で結ばれます。`a` の和集合は、「`a` のある要素 `y` に属する」という形の `x` のクラスを実現し、`⊓`{.Agda} で連言し、`⋁`{.Agda} で存在的に集めます。分出は最初の論理式を受け取るフィールドで、`a` の要素のうち `φ` を満たすものをちょうど残します。クラスは「`a` への所属」と「論理式 `φ` が一要素の環境 `x ∷ []` で充足されること」の連言であり、この環境の唯一の項が `Formula S 1` の唯一の自由変数の枠を埋めます。
+それぞれのクラスを自然言語に読み戻すと、教科書の言明がそのまま現れます。`⊥` を実現するものはないので、空集合とは恒偽のクラスを実現する一意な集合です。`a` と `b` の対は、「`a` と構造的に等しいか `b` と構造的に等しい」というクラスを実現し、`hProp` 上の直接の選言 `⊔`{.Agda} で結ばれます。`a` の和集合は、「`a` のある要素 `y` に属する」という形の `x` のクラスを実現し、`⊓`{.Agda} で連言し、`⋁`{.Agda} で存在的に集めます。分出は最初の論理式を受け取るフィールドで、`a` の要素のうち `φ` を満たすものをちょうど残します。クラスは「`a` への所属」と「論理式 `φ` が一要素の環境 `x ∷ []` で充足されること」の連言であり、この環境の唯一の項が `Formula S 1` の唯一の自由変数の枠を埋めます。
 <!--/-->
 
 ```agda
@@ -437,11 +435,11 @@ One axiom remains, the one that forces a genuinely infinite set into existence. 
 <!--/-->
 
 <!--en-->
-The chain is a function `numeral : ℕ → S`, so indexing by the host's natural numbers is explicit data. The zero case is a negative condition: any inhabitant `z` of the Type-valued membership `z ∈ˢ numeral zero` yields a contradiction, witnessed in the empty host type `Empty.⊥`. Note the reading: `∈ˢ` returns a proposition in `Ω`, `⟨_⟩` takes its underlying type, and from an inhabitant of that type the field derives absurdity. This says the zeroth numeral has no members, without mentioning the derived empty set.
+The chain is a function `numeral : ℕ → S`, so indexing by the host's natural numbers is explicit data. The zero case is a negative condition: any inhabitant `z` of the Type-valued membership `z ∈ˢ numeral zero` yields a contradiction, witnessed in the empty host type `Empty.⊥`. Note the reading: `∈ˢ` returns a proposition in `hProp ℓ`, `⟨_⟩` takes its underlying type, and from an inhabitant of that type the field derives absurdity. This says the zeroth numeral has no members, without mentioning the derived empty set.
 <!--zh-->
-数码链是函数 `numeral : ℕ → S`，用宿主自然数作索引是显式数据。零的情形是否定条件：`z ∈ˢ numeral zero` 这个 Type 值隶属的任何居民都导出矛盾，见证落在空宿主类型 `Empty.⊥` 中。注意读法：`∈ˢ` 返回 `Ω` 中的命题，`⟨_⟩` 取其底层类型，从该类型的居民出发，字段导出荒谬。这说明第零个数码没有成员，却完全未提及派生的空集。
+数码链是函数 `numeral : ℕ → S`，用宿主自然数作索引是显式数据。零的情形是否定条件：`z ∈ˢ numeral zero` 这个 Type 值隶属的任何居民都导出矛盾，见证落在空宿主类型 `Empty.⊥` 中。注意读法：`∈ˢ` 返回 `hProp ℓ` 中的命题，`⟨_⟩` 取其底层类型，从该类型的居民出发，字段导出荒谬。这说明第零个数码没有成员，却完全未提及派生的空集。
 <!--ja-->
-数項の列は関数 `numeral : ℕ → S` であり、ホストの自然数による添字付けが明示的なデータになっています。零の場合は否定の条件です。Type 値の所属 `z ∈ˢ numeral zero` の任意の inhabitant は矛盾を導き、その証拠は空のホスト型 `Empty.⊥` に落ちます。読み方に注意してください。`∈ˢ` は `Ω` の命題を返し、`⟨_⟩` がその基礎型を取り、その型の inhabitant からフィールドは荒謬を導きます。これは第零の数項が要素をもたないことを述べるものであり、派生した空集合には一言も触れません。
+数項の列は関数 `numeral : ℕ → S` であり、ホストの自然数による添字付けが明示的なデータになっています。零の場合は否定の条件です。Type 値の所属 `z ∈ˢ numeral zero` の任意の inhabitant は矛盾を導き、その証拠は空のホスト型 `Empty.⊥` に落ちます。読み方に注意してください。`∈ˢ` は `hProp ℓ` の命題を返し、`⟨_⟩` がその基礎型を取り、その型の inhabitant からフィールドは荒謬を導きます。これは第零の数項が要素をもたないことを述べるものであり、派生した空集合には一言も触れません。
 <!--/-->
 
 ```agda
@@ -453,11 +451,11 @@ The chain is a function `numeral : ℕ → S`, so indexing by the host's natural
 ```
 
 <!--en-->
-The successor case is a pair of implications, both inside the truncated-free propositional reading. The first says a member `z` of `numeral (suc n)` is a member of `numeral n` or structurally equal to it, the disjunction being the truth-algebra `⊔`{.Agda}; the second says every such member of the previous numeral, or thing equal to it, is a member of the successor. Together the two directions say the members of a successor numeral are exactly the previous numeral together with its members, which is exactly the von Neumann step, stated only with `∈ˢ` and `≈ˢ`.
+The successor case is a pair of implications, both inside the truncated-free propositional reading. The first says a member `z` of `numeral (suc n)` is a member of `numeral n` or structurally equal to it, the disjunction being the hProp `⊔`{.Agda}; the second says every such member of the previous numeral, or thing equal to it, is a member of the successor. Together the two directions say the members of a successor numeral are exactly the previous numeral together with its members, which is exactly the von Neumann step, stated only with `∈ˢ` and `≈ˢ`.
 <!--zh-->
-后继情形是一对蕴涵，都处于无截断的命题读法之内。第一条说 `numeral (suc n)` 的成员 `z` 属于 `numeral n` 或与之结构相等，析取用真值代数的 `⊔`{.Agda}；第二条说前一个数码的每个这样的成员、以及与之相等者，都属于后继。两个方向合起来说：后继数码的成员恰是前一个数码连同其成员，这正是冯·诺伊曼步骤，仅用 `∈ˢ` 与 `≈ˢ` 陈述。
+后继情形是一对蕴涵，都处于无截断的命题读法之内。第一条说 `numeral (suc n)` 的成员 `z` 属于 `numeral n` 或与之结构相等，析取直接使用 `hProp` 上的 `⊔`{.Agda}；第二条说前一个数码的每个这样的成员、以及与之相等者，都属于后继。两个方向合起来说：后继数码的成员恰是前一个数码连同其成员，这正是冯·诺伊曼步骤，仅用 `∈ˢ` 与 `≈ˢ` 陈述。
 <!--ja-->
-後者の場合は二つの含意の組で、どちらも截断を含まない命題の読みの中にあります。第一は、`numeral (suc n)` の要素 `z` が `numeral n` の要素であるか、それと構造的に等しいことを述べ、選言は真理値代数の `⊔`{.Agda} です。第二は、直前の数項のそのような要素、およびそれと等しいものが、後者の要素であることを述べます。両方向を合わせると、後者の数項の要素はちょうど直前の数項とその要素であり、これがまさにフォン・ノイマンの一歩で、`∈ˢ` と `≈ˢ` だけで述べられています。
+後者の場合は二つの含意の組で、どちらも截断を含まない命題の読みの中にあります。第一は、`numeral (suc n)` の要素 `z` が `numeral n` の要素であるか、それと構造的に等しいことを述べ、選言には `hProp` 上の `⊔`{.Agda} です。第二は、直前の数項のそのような要素、およびそれと等しいものが、後者の要素であることを述べます。両方向を合わせると、後者の数項の要素はちょうど直前の数項とその要素であり、これがまさにフォン・ノイマンの一歩で、`∈ˢ` と `≈ˢ` だけで述べられています。
 <!--/-->
 
 ```agda
@@ -473,15 +471,15 @@ The successor case is a pair of implications, both inside the truncated-free pro
 <!--/-->
 
 <!--en-->
-The class `isNumeral` is an existential written in the truth algebra: `⋁`{.Agda} quantifies over a carrier type and disjoins the family of propositions `x ≈ˢ numeral (lower n)`. The carrier must have type `Type ℓ` for `⋁`{.Agda} to apply, but `ℕ` lives at `Type ℓ-zero`; `Lift {ℓ-zero} {ℓ} ℕ` raises it to the working level, and `lower` recovers the plain index to feed to `numeral`. This is a level adjustment, not a mathematical change: the lifted type carries exactly the same elements. The field `hasInfinity` then asserts, in the now-familiar form, unique existence of a set realizing this class.
+The class `isNumeral` is an existential written directly in `hProp`: `⋁`{.Agda} quantifies over a carrier type and disjoins the family of propositions `x ≈ˢ numeral (lower n)`. The carrier must have type `Type ℓ` for `⋁`{.Agda} to apply, but `ℕ` lives at `Type ℓ-zero`; `Lift {ℓ-zero} {ℓ} ℕ` raises it to the working level, and `lower` recovers the plain index to feed to `numeral`. This is a level adjustment, not a mathematical change: the lifted type carries exactly the same elements. The field `hasInfinity` then asserts, in the now-familiar form, unique existence of a set realizing this class.
 <!--zh-->
-类 `isNumeral` 是用真值代数写出的存在式：`⋁`{.Agda} 在一个载体类型上量化，析取命题族 `x ≈ˢ numeral (lower n)`。载体必须具有类型 `Type ℓ` 才能应用 `⋁`{.Agda}，而 `ℕ` 住在 `Type ℓ-zero`；`Lift {ℓ-zero} {ℓ} ℕ` 把它提升到工作层级，`lower` 取回普通索引交给 `numeral`。这是层级的调整，不是数学内容的改变：被提升的类型恰有同样的元素。字段 `hasInfinity` 随即以熟悉的形式断言：实现该类的集合唯一存在。
+类 `isNumeral` 是直接在 `hProp` 中写出的存在式：`⋁`{.Agda} 在一个载体类型上量化，析取命题族 `x ≈ˢ numeral (lower n)`。载体必须具有类型 `Type ℓ` 才能应用 `⋁`{.Agda}，而 `ℕ` 住在 `Type ℓ-zero`；`Lift {ℓ-zero} {ℓ} ℕ` 把它提升到工作层级，`lower` 取回普通索引交给 `numeral`。这是层级的调整，不是数学内容的改变：被提升的类型恰有同样的元素。字段 `hasInfinity` 随即以熟悉的形式断言：实现该类的集合唯一存在。
 <!--ja-->
-クラス `isNumeral` は真理値代数で書かれた存在式です。`⋁`{.Agda} は台の型の上で量化し、命題の族 `x ≈ˢ numeral (lower n)` を選言します。`⋁`{.Agda} を適用するには台の型が `Type ℓ` である必要がありますが、`ℕ` は `Type ℓ-zero` に住みます。そこで `Lift {ℓ-zero} {ℓ} ℕ` が作業レベルへ持ち上げ、`lower` が普通の添字を取り戻して `numeral` に渡します。これは宇宙レベルの調整であって数学的な変更ではありません。lift された型はまったく同じ要素を持ちます。フィールド `hasInfinity` は、おなじみの形で、このクラスを実現する集合の一意存在を主張します。
+クラス `isNumeral` は `hProp` で直接書かれた存在式です。`⋁`{.Agda} は台の型の上で量化し、命題の族 `x ≈ˢ numeral (lower n)` を選言します。`⋁`{.Agda} を適用するには台の型が `Type ℓ` である必要がありますが、`ℕ` は `Type ℓ-zero` に住みます。そこで `Lift {ℓ-zero} {ℓ} ℕ` が作業レベルへ持ち上げ、`lower` が普通の添字を取り戻して `numeral` に渡します。これは宇宙レベルの調整であって数学的な変更ではありません。lift された型はまったく同じ要素を持ちます。フィールド `hasInfinity` は、おなじみの形で、このクラスを実現する集合の一意存在を主張します。
 <!--/-->
 
 ```agda
-  isNumeral : S → Ω
+  isNumeral : S → hProp ℓ
   isNumeral x = ⋁ (Lift {ℓ-zero} {ℓ} ℕ) (λ n → x ≈ˢ numeral (lower n))
 
   field

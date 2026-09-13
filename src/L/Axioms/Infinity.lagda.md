@@ -24,7 +24,6 @@ The module takes a single assumption, `lem : LEM (ℓ-suc ℓ)`, a decision proc
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Axioms.Infinity {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -77,7 +76,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( sucV; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 ```
 
@@ -142,7 +140,7 @@ The class `isNumeralL` disjoins, over the carrier `Lift ℕ`, the family of prop
 <!--/-->
 
 ```agda
-isNumeralL : S → Ω
+isNumeralL : S → hProp (ℓ-suc ℓ)
 isNumeralL x = ⋁ (Lift {ℓ-zero} {ℓ-suc ℓ} ℕ) (λ n → x ≈ˢ numeralL (lower n))
 
 ω-specL : (x : S) → (x ∈ˢ ωʟ) ≡ isNumeralL x

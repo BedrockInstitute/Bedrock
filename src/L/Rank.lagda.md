@@ -30,7 +30,6 @@ Rank is defined inside the cumulative hierarchy `V ℓ`, with carrier `S`. A mem
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Rank {ℓ : Level} where
 
@@ -83,7 +82,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⋃_; module InfinitySet )
 open InfinitySet using ( sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 

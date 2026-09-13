@@ -16,7 +16,6 @@ At a superadequate stage, an elementary hull collapses to a smaller constructibl
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.CondensationTransfer {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -46,10 +45,9 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; module InfinitySet )
 open InfinitySet {ℓ} using ( sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 
-module SemVᵃ = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module SemVᵃ = FOL.Semantics 𝒮ᵥ
 open SemVᵃ using ( _^_ )
 ```
 

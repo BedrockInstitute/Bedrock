@@ -25,18 +25,17 @@ The same reader then specializes in several directions. Membership of an express
 <!--/-->
 
 <!--en-->
-To keep a first-order description of a compound value in the bounded fragment, fixed pieces are named by constants and each witness is bounded. Everything here takes place at one fixed level `ℓ`: the ambient hierarchy is `V ℓ`, and the model whose elements the bounded quantifiers range over is the constructible one sitting inside it. Since a satisfaction judgment compares truth values, the facts the formulas assert are propositions of the truth algebra at level `ℓ-suc ℓ`.
+To keep a first-order description of a compound value in the bounded fragment, fixed pieces are named by constants and each witness is bounded. Everything here takes place at one fixed level `ℓ`: the ambient hierarchy is `V ℓ`, and the model whose elements the bounded quantifiers range over is the constructible one sitting inside it. Since a satisfaction judgment compares truth values, the facts the formulas assert are propositions in `hProp (ℓ-suc ℓ)`.
 <!--zh-->
-要让复合集合取值的一阶描述留在有界片段中，固定部件由常元命名，每个见证都受集合界定。这里的一切都固定在一个层 `ℓ` 上：周遭层级是 `V ℓ`，有界量词所遍历其元素的模型，是栖身于其中的可构造模型。由于满足判断比较的是真值，这些公式所断言的事实便是层 `ℓ-suc ℓ` 的真值代数中的命题。
+要让复合集合取值的一阶描述留在有界片段中，固定部件由常元命名，每个见证都受集合界定。这里的一切都固定在一个层 `ℓ` 上：周遭层级是 `V ℓ`，有界量词所遍历其元素的模型，是栖身于其中的可构造模型。由于满足判断比较的是真值，这些公式所断言的事实便是`hProp (ℓ-suc ℓ)` 中的命题。
 <!--ja-->
-複合的な集合の値を一階の有界論理式で記述するには、固定された部分を定数で名指し、各証人を集合で限界づけます。ここでのすべては、ひとつの固定されたレベル `ℓ` の上で行われます。周囲の階層は `V ℓ` であり、有界量化子がその要素を渡る模型は、その中に置かれた構成可能模型です。充足の判断は真理値を比較するものなので、これらの論理式が主張する事実は、レベル `ℓ-suc ℓ` の真理値代数の命題になります。
+複合的な集合の値を一階の有界論理式で記述するには、固定された部分を定数で名指し、各証人を集合で限界づけます。ここでのすべては、ひとつの固定されたレベル `ℓ` の上で行われます。周囲の階層は `V ℓ` であり、有界量化子がその要素を渡る模型は、その中に置かれた構成可能模型です。充足の判断は真理値を比較するものなので、これらの論理式が主張する事実は、`hProp (ℓ-suc ℓ)` の命題になります。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.Expressions {ℓ : Level} where
 
@@ -109,16 +108,15 @@ open InfinitySet using ( #_; sucV )
 ```
 
 <!--en-->
-The truth values at work are the propositions of `hProp` at level `ℓ-suc ℓ`, each packaged with its own proof of propositionhood, and the connective and quantifier operations of the truth algebra act on these packages. The model's carrier `S` consists of the pairs of an ambient set and a constructibility certificate. The absoluteness machinery is set up once for this situation: the structure being relativized is the hierarchy `𝒮ᵥ`, the class selecting the submodel is `isL`, transitivity is what keeps Δ₀ formulas absolute, satisfaction is written `⊨`, term interpretation `⟦_⟧`, and an environment is a vector of model elements.
+The truth values at work are the propositions of `hProp` at level `ℓ-suc ℓ`, each packaged with its own proof of propositionhood, and the connectives and quantifiers act directly on these propositions. The model's carrier `S` consists of the pairs of an ambient set and a constructibility certificate. The absoluteness machinery is set up once for this situation: the structure being relativized is the hierarchy `𝒮ᵥ`, the class selecting the submodel is `isL`, transitivity is what keeps Δ₀ formulas absolute, satisfaction is written `⊨`, term interpretation `⟦_⟧`, and an environment is a vector of model elements.
 <!--zh-->
-这里使用的真值是层 `ℓ-suc ℓ` 的 `hProp` 命题，每个都连同「它是命题」的证明打包，真值代数的联结与量化运算都作用在这些包裹上。模型的载体 `S` 由「周遭集合配可构造性证书」的对组成。绝对性机制针对这一情形一次性设立：被相对化的结构是层级 `𝒮ᵥ`，挑选子模型的类是 `isL`，传递性使 Δ₀ 公式保持绝对；满足记作 `⊨`，词项解释记作 `⟦_⟧`，环境是模型元素的向量。
+这里使用的真值是层 `ℓ-suc ℓ` 的 `hProp` 命题，每个都连同「它是命题」的证明打包，联结词与量词直接作用在这些命题上。模型的载体 `S` 由「周遭集合配可构造性证书」的对组成。绝对性机制针对这一情形一次性设立：被相对化的结构是层级 `𝒮ᵥ`，挑选子模型的类是 `isL`，传递性使 Δ₀ 公式保持绝对；满足记作 `⊨`，词项解释记作 `⟦_⟧`，环境是模型元素的向量。
 <!--ja-->
-ここで使う真理値はレベル `ℓ-suc ℓ` の `hProp` の命題であり、それぞれ「それが命題である証明」とともに梱包され、真理値代数の連言と量化の演算はこの梱包に作用します。模型の台 `S` は、周囲の集合と構成可能性の証明の対からなります。絶対性の仕組みはこの状況に対して一度だけ設けられます。相対化される構造は階層 `𝒮ᵥ`、部分模型を選ぶクラスは `isL`、Δ₀ 論理式を絶対的に保つのが推移性です。充足は `⊨`、項の解釈は `⟦_⟧` と書き、環境は模型の要素からなるベクトルです。
+ここで使う真理値はレベル `ℓ-suc ℓ` の `hProp` の命題であり、それぞれ「それが命題である証明」とともに梱包され、結合子と量化子はこれらの命題に直接作用します。模型の台 `S` は、周囲の集合と構成可能性の証明の対からなります。絶対性の仕組みはこの状況に対して一度だけ設けられます。相対化される構造は階層 `𝒮ᵥ`、部分模型を選ぶクラスは `isL`、Δ₀ 論理式を絶対的に保つのが推移性です。充足は `⊨`、項の解釈は `⟦_⟧` と書き、環境は模型の要素からなるベクトルです。
 <!--/-->
 
 ```agda
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -149,16 +147,16 @@ A bounded quantifier in the model ranges over elements of `S`, so any compound v
 <!--/-->
 
 <!--en-->
-Two small preparations open the section. `PairIs a p` packages the statement that the ambient value `a` equals `p` as a truth value: since the hierarchy is an h-set, that equality type is a proposition, and the pairing with `setIsSet` makes it an inhabitant of `Ω`. Adequacy statements will compare satisfaction judgments with these packaged equalities along paths. The expression language itself is indexed by a natural number `n` that fixes how many free-variable slots are available; a slot may well go unused.
+Two small preparations open the section. `PairIs a p` packages the statement that the ambient value `a` equals `p` as a truth value: since the hierarchy is an h-set, that equality type is a proposition, and the pairing with `setIsSet` makes it an inhabitant of `hProp (ℓ-suc ℓ)`. Adequacy statements will compare satisfaction judgments with these packaged equalities along paths. The expression language itself is indexed by a natural number `n` that fixes how many free-variable slots are available; a slot may well go unused.
 <!--zh-->
-本节以两件小准备开篇。`PairIs a p` 把「周遭取值 `a` 等于 `p`」这一陈述打包成真值：由于层级是 h-集合，该相等类型是命题，与 `setIsSet` 配对后便是 `Ω` 的元素。此后充分性陈述都将沿路径把满足判断与这些打包的等式相比较。表达式语言本身以自然数 `n` 为指标，确定可用的自由变元槽位数；某个槽位完全可以不被使用。
+本节以两件小准备开篇。`PairIs a p` 把「周遭取值 `a` 等于 `p`」这一陈述打包成真值：由于层级是 h-集合，该相等类型是命题，与 `setIsSet` 配对后便是 `hProp (ℓ-suc ℓ)` 的元素。此后充分性陈述都将沿路径把满足判断与这些打包的等式相比较。表达式语言本身以自然数 `n` 为指标，确定可用的自由变元槽位数；某个槽位完全可以不被使用。
 <!--ja-->
-本節は小さな二つの準備から始まります。`PairIs a p` は「周囲の値 `a` が `p` に等しい」という主張を真理値として梱包します。階層は h-集合なので、その等式の型は命題であり、`setIsSet` との対によって `Ω` の要素になります。以後の妥当性の主張は、充足の判断とこれらの梱包された等式をパスに沿って比較することになります。式の言語そのものは自然数 `n` を指標とし、利用できる自由変数スロットの数を確定します。ひとつのスロットが使われないままであっても構いません。
+本節は小さな二つの準備から始まります。`PairIs a p` は「周囲の値 `a` が `p` に等しい」という主張を真理値として梱包します。階層は h-集合なので、その等式の型は命題であり、`setIsSet` との対によって `hProp (ℓ-suc ℓ)` の要素になります。以後の妥当性の主張は、充足の判断とこれらの梱包された等式をパスに沿って比較することになります。式の言語そのものは自然数 `n` を指標とし、利用できる自由変数スロットの数を確定します。ひとつのスロットが使われないままであっても構いません。
 <!--/-->
 
 ```agda
 private
-  PairIs : V ℓ → V ℓ → Ω
+  PairIs : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
   PairIs a p = (a ≡ p) , setIsSet a p
 
 module PairExpression where
@@ -763,7 +761,7 @@ envSetAt E ar B = extAt E (envOverAt zero (suc ar) (suc B))
 <!--en-->
 ## Implication and bottom
 
-Among the logical clauses, implication and bottom stand apart from the positive connectives in the shape of their values. Bottom has no subcodes and its condition inside the common extension frame is false, so its value is empty; it still uses the frame's ambient environment set. Implication is interpreted over the set of all environments at the code's arity, so its clause must name that ambient set and constrain it extensionally; this is why the environment set of the previous section exists. A clause stated as an implication, and not as the join of a complement with the consequent, matches the truth algebra's function-space arrow; the direct implication matches the constructive semantics without invoking excluded middle.
+Among the logical clauses, implication and bottom stand apart from the positive connectives in the shape of their values. Bottom has no subcodes and its condition inside the common extension frame is false, so its value is empty; it still uses the frame's ambient environment set. Implication is interpreted over the set of all environments at the code's arity, so its clause must name that ambient set and constrain it extensionally; this is why the environment set of the previous section exists. A clause stated as an implication, and not as the join of a complement with the consequent, matches the function-space implication on `hProp`; the direct implication matches the constructive semantics without invoking excluded middle.
 
 ## The next arity
 
@@ -773,7 +771,7 @@ A clause whose subformula sits one arity higher must consult the table at an ari
 <!--zh-->
 ## 蕴含与底
 
-在诸逻辑子句之中，蕴含与底在取值形状上不同于正的联结词。底没有子码，并在共同的外延框架中以假为条件，故其取值为空；它仍使用框架所绑定的周遭环境集。蕴含则在该码元数处的全体环境之集上解释，故其子句必须点名那个周遭集合，并以外延方式约束它；这也正是上一节的环境之集存在的原因。蕴含写成蕴含式，而非「前件之补与后件之并」，才与真值代数的函数空间箭头相合；直接使用蕴含正合构造性语义，并不调用排中律。
+在诸逻辑子句之中，蕴含与底在取值形状上不同于正的联结词。底没有子码，并在共同的外延框架中以假为条件，故其取值为空；它仍使用框架所绑定的周遭环境集。蕴含则在该码元数处的全体环境之集上解释，故其子句必须点名那个周遭集合，并以外延方式约束它；这也正是上一节的环境之集存在的原因。蕴含写成蕴含式，而非「前件之补与后件之并」，才与`hProp` 上的函数空间蕴涵相合；直接使用蕴含正合构造性语义，并不调用排中律。
 
 ## 下一个元数
 
@@ -783,7 +781,7 @@ A clause whose subformula sits one arity higher must consult the table at an ari
 <!--ja-->
 ## 含意と偽
 
-論理の節のうち、含意と偽は、その値の形において正の結合子と一線を画します。偽には部分符号がなく、共通の外延の枠組みの中で条件が偽なので、その値は空です。ただし枠組みが束縛する周囲の環境集合は使います。含意は、符号のアリティにおけるすべての環境の集合の上で解釈されるため、その節はその周囲の集合を名指し、外延的に制約しなければなりません。前節の環境の集合が存在するのはまさにこのためです。含意は「補集合と後件の結び」ではなく含意として述べられるとき、真理値代数の関数空間の矢印と一致します。含意を直接用いれば、排中律を呼び出さずに構成的な意味論と一致します。
+論理の節のうち、含意と偽は、その値の形において正の結合子と一線を画します。偽には部分符号がなく、共通の外延の枠組みの中で条件が偽なので、その値は空です。ただし枠組みが束縛する周囲の環境集合は使います。含意は、符号のアリティにおけるすべての環境の集合の上で解釈されるため、その節はその周囲の集合を名指し、外延的に制約しなければなりません。前節の環境の集合が存在するのはまさにこのためです。含意は「補集合と後件の結び」ではなく含意として述べられるとき、`hProp` 上の関数空間の含意と一致します。含意を直接用いれば、排中律を呼び出さずに構成的な意味論と一致します。
 
 ## 次のアリティ
 

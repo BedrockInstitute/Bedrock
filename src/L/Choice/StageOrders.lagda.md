@@ -54,7 +54,6 @@ own births, and those do not move.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.StageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -89,7 +88,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 

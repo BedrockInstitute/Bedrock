@@ -43,7 +43,6 @@ classical hypothesis.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Model {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where

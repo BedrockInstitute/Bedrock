@@ -30,7 +30,6 @@ The question of this chapter: for a set `A`, which subsets of `A` can be singled
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Definability {ℓ : Level} where
 
@@ -87,11 +86,11 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 ```
 
 <!--en-->
-Finally, the vocabulary of truth values. The truth algebra over `hProp (ℓ-suc ℓ)` interprets connectives and quantifiers as operations on propositions, so satisfaction takes values in `hProp (ℓ-suc ℓ)`, with `⟨ p ⟩` projecting the underlying proposition of an `hProp`. Equality of such propositions is a path, so specifications about membership will be stated as paths of propositions and proved by chains of them. With this setup, the next section fixes one set `A` and defines its definable subsets.
+Finally, the vocabulary of truth values. The connectives and quantifiers act directly on propositions in `hProp (ℓ-suc ℓ)`, so satisfaction takes values in `hProp (ℓ-suc ℓ)`, with `⟨ p ⟩` projecting the underlying proposition of an `hProp`. Equality of such propositions is a path, so specifications about membership will be stated as paths of propositions and proved by chains of them. With this setup, the next section fixes one set `A` and defines its definable subsets.
 <!--zh-->
-最后是真值的词汇。以 `hProp (ℓ-suc ℓ)` 为载的真值代数把联结词与量词解释为命题上的操作，因此满足关系取值于 `hProp (ℓ-suc ℓ)`，其中 `⟨ p ⟩` 取出 `hProp` 的底层命题。这类命题的相等是路径，因此关于隶属的规格将陈述为命题之间的路径，并用路径链来证明。就位之后，下一节固定一个集合 `A` 并定义其可定义子集。
+最后是真值的词汇。联结词与量词直接作用于 `hProp (ℓ-suc ℓ)` 中的命题，因此满足关系取值于 `hProp (ℓ-suc ℓ)`，其中 `⟨ p ⟩` 取出 `hProp` 的底层命题。这类命题的相等是路径，因此关于隶属的规格将陈述为命题之间的路径，并用路径链来证明。就位之后，下一节固定一个集合 `A` 并定义其可定义子集。
 <!--ja-->
-最後に、真理値の語彙です。`hProp (ℓ-suc ℓ)` の上の真理値代数は結合子と量化子を命題に対する操作として解釈するので、充足は `hProp (ℓ-suc ℓ)` に値を取ります。`⟨ p ⟩` は `hProp` の根底にある命題を取り出します。この種の命題の相等は経路なので、所属についての仕様は命題としての経路で述べられ、経路の連結によって証明されます。これが整えば、次の節は一つの集合 `A` を固定し、その定義可能部分集合を定義します。
+最後に、真理値の語彙です。結合子と量化子は `hProp (ℓ-suc ℓ)` の命題に直接作用するので、充足は `hProp (ℓ-suc ℓ)` に値を取ります。`⟨ p ⟩` は `hProp` の根底にある命題を取り出します。この種の命題の相等は経路なので、所属についての仕様は命題としての経路で述べられ、経路の連結によって証明されます。これが整えば、次の節は一つの集合 `A` を固定し、その定義可能部分集合を定義します。
 <!--/-->
 
 ```agda
@@ -99,7 +98,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber; presentation
         ; isEmb⟪_⟫↪; _⊆_; extensionality )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ᵥ
 ```
 
@@ -532,7 +530,7 @@ The proof concatenates three paths. First, `defSet-mem` reads membership in the 
 
 ```agda
         defSet-mem φ m
-      ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) Abs.𝒮M ι id φ (ι m ∷ []))
+      ∙ sym (⊨-map Abs.𝒮M ι id φ (ι m ∷ []))
       ∙ Abs.abs₀ (mapΔ₀ ι d) (ι m ∷ [])
 ```
 

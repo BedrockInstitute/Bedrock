@@ -42,7 +42,6 @@ The two worlds sit at one universe level `ℓ`. An assignment for the inner lang
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.Model {ℓ : Level} where
 
@@ -127,7 +126,6 @@ open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ⁅_,_⁆ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 ```
 
@@ -198,7 +196,7 @@ The statement compares truth values, so its right-hand side must be a truth valu
 
 ```agda
 private
-  PairIs : V ℓ → V ℓ → Ω
+  PairIs : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
   PairIs a p = (a ≡ p) , setIsSet a p
 
 prAtL : ∀ {n} → Fin n → Fin n → Fin n → Formula S n

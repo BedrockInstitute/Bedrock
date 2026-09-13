@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from i18n_markers import weave  # noqa: E402
 from reading_routes import build_reading_data  # noqa: E402
 
-HUBS = ["Base.Prelude", "Base.Truth"]   # the designated hub modules (STYLE-agda §2)
+HUBS = ["Base.Prelude"]   # the designated hub module (STYLE-agda §2)
 FENCE_RE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
 IMPORT_RE = re.compile(r'^\s*(?:open\s+)?import\s+([A-Za-z][\w.]*)', re.M)
 
@@ -46,8 +46,8 @@ UI = {
         "edgemode": "Edges:", "skeleton": "skeleton (transitive reduction)",
         "alledges": "all direct imports", "lmk": "include Milestones' references",
         "hint": "Select a chapter to trace its prerequisites",
-        "hubnote": ("The widely used Base.Prelude and Base.Truth imports are omitted "
-                    "from the drawing but retained in chapter details."),
+        "hubnote": ("The widely used Base.Prelude imports are omitted from the "
+                    "drawing but retained in chapter details."),
         "reading": "example route position", "imports": "direct imports", "consumers": "direct consumers",
         "legend": "Color key", "fit": "Fit whole graph", "readable": "Readable size",
         "scrollhint": "Scroll the graph in both directions, or fit the whole graph for an overview.",
@@ -66,7 +66,7 @@ UI = {
         "layout": "布局：", "compact": "紧凑总览", "teaching": "学习阶段", "namespace": "命名空间",
         "edgemode": "边：", "skeleton": "骨架 (传递约简)", "alledges": "全部直接边",
         "lmk": "包含 Milestones 的引用边", "hint": "选择章节以追踪先修关系",
-        "hubnote": "图中省略广泛使用的 Base.Prelude 和 Base.Truth 导入边，章节详情仍保留它们。",
+        "hubnote": "图中省略广泛使用的 Base.Prelude 导入边，章节详情仍保留它们。",
         "reading": "示例路线序号", "imports": "直接导入", "consumers": "直接消费者",
         "legend": "颜色图例", "fit": "适合全图", "readable": "可读字号",
         "scrollhint": "可向两个方向滚动图；也可切换为全图概览。", "none": "无",
@@ -79,7 +79,7 @@ UI = {
         "layout": "配置：", "compact": "コンパクト", "teaching": "学習段階", "namespace": "名前空間",
         "edgemode": "辺：", "skeleton": "骨格 (推移簡約)", "alledges": "直接 import 全体",
         "lmk": "Milestones の参照を含める", "hint": "章を選択して前提を確認",
-        "hubnote": "広く使われる Base.Prelude と Base.Truth の辺は図から省略し、章の詳細には残します。",
+        "hubnote": "広く使われる Base.Prelude の辺は図から省略し、章の詳細には残します。",
         "reading": "例示ルート順", "imports": "直接 import", "consumers": "直接の利用者",
         "legend": "色の凡例", "fit": "全体を表示", "readable": "読みやすい大きさ",
         "scrollhint": "図は縦横にスクロールできます。全体表示に切り替えると概観できます。", "none": "なし",

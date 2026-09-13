@@ -30,7 +30,6 @@ The chapter works at a fixed universe level ℓ, and it takes one classical assu
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Ordinal.SquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -119,18 +118,17 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 ```
 
 <!--en-->
-Well-foundedness is carried by the accessibility predicate: Acc R x holds when every R-predecessor of x is again accessible, acc packages this data, and WellFounded R asks for accessibility of every element. Accessibility certificates are handed downward in the descent arguments of this chapter. Finally, the truth algebra of hProps at level ℓ-suc ℓ is opened, making conjunction and the other logical operations on propositions available to the structure machinery used in the ordinal section.
+Well-foundedness is carried by the accessibility predicate: Acc R x holds when every R-predecessor of x is again accessible, acc packages this data, and WellFounded R asks for accessibility of every element. Accessibility certificates are handed downward in the descent arguments of this chapter. Finally, the direct operations on `hProp (ℓ-suc ℓ)` are available, making conjunction and the other logical operations on propositions available to the structure machinery used in the ordinal section.
 <!--zh-->
-良基性由可及性谓词承载：当 x 的每个 R-前驱都可及时，Acc R x 成立；acc 打包这一数据；WellFounded R 要求每个元素都可及。本章的下降论证正是逐层向下传递这些可及性证书。最后打开层级 ℓ-suc ℓ 上 hProp 的真值代数，使命题上的合取等逻辑运算可供序数一节使用的结构机制调用。
+良基性由可及性谓词承载：当 x 的每个 R-前驱都可及时，Acc R x 成立；acc 打包这一数据；WellFounded R 要求每个元素都可及。本章的下降论证正是逐层向下传递这些可及性证书。最后，层级 `ℓ-suc ℓ` 的 `hProp` 直接运算在此可用，使命题上的合取等逻辑运算可供序数一节使用的结构机制调用。
 <!--ja-->
-整礎性は到達可能性の述語によって運ばれます。x のすべての R-先行者が再び到達可能なとき Acc R x が成り立ち、acc がこのデータを包み、WellFounded R はすべての要素の到達可能性を要求します。本章の降下の議論は、この到達可能性の証明書を下へ下へと受け渡してゆきます。最後に、レベル ℓ-suc ℓ の hProp の真理値代数を開き、命題上の連言などの論理演算を、順序数の節で使う構造の仕組みから利用できるようにします。
+整礎性は到達可能性の述語によって運ばれます。x のすべての R-先行者が再び到達可能なとき Acc R x が成り立ち、acc がこのデータを包み、WellFounded R はすべての要素の到達可能性を要求します。本章の降下の議論は、この到達可能性の証明書を下へ下へと受け渡してゆきます。最後に、レベル `ℓ-suc ℓ` の `hProp` 上の直接の演算を利用し、命題上の連言などの論理演算を、順序数の節で使う構造の仕組みから利用できるようにします。
 <!--/-->
 
 ```agda
 open InfinitySet using ( #_; ω )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 

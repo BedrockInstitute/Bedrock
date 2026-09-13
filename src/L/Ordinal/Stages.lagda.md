@@ -48,7 +48,6 @@ The chapter works inside a fixed universe level ℓ, and everything that follows
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Ordinal.Stages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -121,18 +120,17 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 ```
 
 <!--en-->
-To connect ambient membership with formulas over a stage, a set A has a chosen presentation ⟪ A ⟫, and `∈-asFiber` passes from membership in A to an index naming that member. Mutual inclusion gives equality through `extensionality`. Formula satisfaction is interpreted in an hProp-valued truth algebra: each formula denotes an hProp, which is itself a truth value in that algebra. These identifications let the argument pass between sets, their indices and bounded formulas.
+To connect ambient membership with formulas over a stage, a set A has a chosen presentation ⟪ A ⟫, and `∈-asFiber` passes from membership in A to an index naming that member. Mutual inclusion gives equality through `extensionality`. Formula satisfaction is interpreted directly in `hProp`: each formula denotes an hProp. These identifications let the argument pass between sets, their indices and bounded formulas.
 <!--zh-->
-为了把外围隶属与层上的公式联系起来，集合 A 有一个选定的呈现 ⟪ A ⟫，`∈-asFiber` 把 A 中的成员转为指名该成员的指标。互相包含则通过 `extensionality` 给出集合相等。公式的满足解释在以 hProp 为载体的真值代数中：每个公式表示一个 hProp，而这个 hProp 本身就是该代数中的真值。这些对应使论证可以在集合、其指标与有界公式之间转换。
+为了把外围隶属与层上的公式联系起来，集合 A 有一个选定的呈现 ⟪ A ⟫，`∈-asFiber` 把 A 中的成员转为指名该成员的指标。互相包含则通过 `extensionality` 给出集合相等。公式的满足解释直接在 `hProp` 中：每个公式表示一个 hProp。这些对应使论证可以在集合、其指标与有界公式之间转换。
 <!--ja-->
-周囲での所属と段階上の論理式を結ぶために、集合 A には選ばれた提示 ⟪ A ⟫ があり、`∈-asFiber` は A への所属から、その要素を指す添字を与えます。相互包含からは `extensionality` によって集合の等号が得られます。論理式の充足は hProp を台とする真理値代数で解釈され、各論理式が表す hProp 自身がその代数の真理値です。これらの対応により、集合、その添字、有界論理式の間を行き来できます。
+周囲での所属と段階上の論理式を結ぶために、集合 A には選ばれた提示 ⟪ A ⟫ があり、`∈-asFiber` は A への所属から、その要素を指す添字を与えます。相互包含からは `extensionality` によって集合の等号が得られます。論理式の充足は `hProp` で直接解釈され、各論理式が表す hProp です。これらの対応により、集合、その添字、有界論理式の間を行き来できます。
 <!--/-->
 
 ```agda
   using ( module InfinitySet )
 open InfinitySet using ( sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 

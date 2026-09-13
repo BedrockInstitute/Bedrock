@@ -789,6 +789,64 @@ open import Cubical.Data.Empty public
 ```
 
 <!--en-->
+## Logical operations on propositions
+
+The proposition universe is closed under the usual logical operations. For propositions `P` and `Q`, the values `P ⊓ Q`, `P ⊔ Q`, `P ⇒ Q` and `¬ P` express conjunction, disjunction, implication and negation. The constants `⊤` and `⊥` express truth and falsity. The indexed operations `⋀ A P` and `⋁ A P` express universal and existential quantification over a type `A`.
+
+Conjunction and universal quantification are already propositions because products and dependent function types preserve propositionhood. Disjunction and existential quantification begin instead with a sum or a dependent pair, whose elements may retain more information than a proposition permits. **[Propositional truncation]{.term-intro #propositional-truncation}** discards that extra information while preserving whether an element exists; applying it makes these two constructions propositions as well.
+
+These names come directly from the operations on `hProp`{.Agda}. Only falsity needs a small level adjustment: the library's empty proposition lives at the bottom universe level, whereas the lifted empty type `⊥*`{.Agda} lets us form an empty proposition at any level. The explicit argument `A` in `⋀ A P` and `⋁ A P` keeps the domain of quantification visible.
+<!--zh-->
+## 命题的逻辑运算
+
+命题宇宙对通常的逻辑运算封闭。对命题 `P` 与 `Q`，`P ⊓ Q`、`P ⊔ Q`、`P ⇒ Q` 与 `¬ P` 分别表示合取、析取、蕴涵与否定，常量 `⊤` 与 `⊥` 分别表示真与假。带索引的运算 `⋀ A P` 与 `⋁ A P` 则表示在类型 `A` 上作全称量化与存在量化。
+
+积与依值函数类型保持命题性，所以合取与全称量化的结果仍是命题。析取与存在量化却分别从和类型与依值对开始，其中的元素可能保留命题所不需要的额外信息。**[命题截断]{.term-intro #propositional-truncation}**会抹去这些信息，同时保留类型是否有元素；经过截断，这两种构造也成为命题。
+
+这些名称直接取自 `hProp`{.Agda} 上的逻辑运算。只有假命题需要调整宇宙层级：库中的空命题位于最低层宇宙，而提升后的空类型 `⊥*`{.Agda} 可以在任意层级构造空命题。`⋀ A P` 与 `⋁ A P` 显式写出参数 `A`，是为了让量词的论域直接呈现在表达式中。
+<!--ja-->
+## 命題の論理演算
+
+命題の宇宙は通常の論理演算について閉じています。命題 `P` と `Q` に対して、`P ⊓ Q`、`P ⊔ Q`、`P ⇒ Q`、`¬ P` はそれぞれ連言、選言、含意、否定を表し、定数 `⊤` と `⊥` は真と偽を表します。添字付きの演算 `⋀ A P` と `⋁ A P` は、型 `A` にわたる全称量化と存在量化を表します。
+
+積と依存関数型は命題性を保つので、連言と全称量化の結果はふたたび命題になります。一方、選言と存在量化は直和と依存対から始まり、その要素は命題には不要な情報を残すことがあります。**[命題的切り詰め]{.term-intro #propositional-truncation}**は、要素が存在するかどうかを保ったまま、その余分な情報を捨てます。切り詰めを施せば、この二つの構成も命題になります。
+
+これらの名前は `hProp`{.Agda} 上の論理演算から直接取られます。偽だけには宇宙レベルの小さな調整が必要です。ライブラリの空命題は最下位の宇宙レベルにありますが、持ち上げられた空型 `⊥*`{.Agda} を使えば任意のレベルで空命題を作れます。`⋀ A P` と `⋁ A P` で引数 `A` を明示するのは、量化の領域を式の中に見える形で残すためです。
+<!--/-->
+
+```agda
+import Cubical.Functions.Logic as Logic
+
+_⊓_ : ∀ {ℓ ℓ'} → hProp ℓ → hProp ℓ' → hProp (ℓ-max ℓ ℓ')
+_⊓_ = Logic._⊓_
+
+_⊔_ : ∀ {ℓ ℓ'} → hProp ℓ → hProp ℓ' → hProp (ℓ-max ℓ ℓ')
+_⊔_ = Logic._⊔_
+
+_⇒_ : ∀ {ℓ ℓ'} → hProp ℓ → hProp ℓ' → hProp (ℓ-max ℓ ℓ')
+_⇒_ = Logic._⇒_
+
+¬_ : ∀ {ℓ} → hProp ℓ → hProp ℓ
+¬_ = Logic.¬_
+
+⊤ : ∀ {ℓ} → hProp ℓ
+⊤ = Logic.⊤
+
+⊥ : ∀ {ℓ} → hProp ℓ
+⊥ = ⊥* , isProp⊥*
+
+⋀ : ∀ {ℓ ℓ'} (A : Type ℓ) → (A → hProp ℓ') → hProp (ℓ-max ℓ ℓ')
+⋀ A P = Logic.∀[]-syntax P
+
+⋁ : ∀ {ℓ ℓ'} (A : Type ℓ) → (A → hProp ℓ') → hProp (ℓ-max ℓ ℓ')
+⋁ A P = Logic.∃[]-syntax P
+
+infixr 12 _⊓_ _⊔_
+infixr 10 _⇒_
+infix 3 ¬_
+```
+
+<!--en-->
 ## The identity function
 <!--zh-->
 ## 恒等函数

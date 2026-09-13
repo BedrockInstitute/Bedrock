@@ -16,7 +16,6 @@ Injection graphs inside `L` can be composed by separating the pairs connected th
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.InjectionComposition {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -61,7 +60,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans

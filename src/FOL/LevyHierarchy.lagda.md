@@ -26,7 +26,6 @@ The chapter relies on one bridge between computation and proof. The type `Bool` 
 module FOL.LevyHierarchy where
 
 open import Base.Prelude
-open import Base.Truth
 open import Cubical.Data.Bool using ( Bool; true; false; _and_; Bool→Type )
 ```
 

@@ -86,7 +86,7 @@ PROSE_HEAD = ("-", "*", "|", ">", "#", "<!--", "`")
 # reason this checker can be quiet. This repository's prose names Agda
 # identifiers as `foo`{.Agda}, so a backtick is a certain sign of prose. The
 # first draft checked only the FIRST character of a line and fired on wrapped
-# paragraphs in `src/Base/Truth.lagda.md` and the former catalog master.
+# paragraphs in a literate master and the former catalog master.
 PROSE_ANYWHERE = ("`", "**", "{.Agda}", "<!--")
 
 DEFAULT_RUN = 3

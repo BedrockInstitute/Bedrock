@@ -52,7 +52,6 @@ members and their members, together with the tower's limit level.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.FirstIntersectionStage {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -80,7 +79,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( sucV; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -169,7 +167,7 @@ isPropPredOf σ (δ , (ordδ , e)) (δ' , (ordδ' , e')) =
   Σ≡Prop (λ d → isProp× (isPropIsOrd d) (setIsSet (sucV d) σ))
     (ord-suc-inj δ δ' ordδ (e ∙ sym e'))
 
-module _ (P : S → Ω) where
+module _ (P : S → hProp (ℓ-suc ℓ)) where
 
   Carved : S → Type (ℓ-suc ℓ)
   Carved σ = Σ[ δ ∈ S ] (⟨ δ ∈ˢ σ ⟩ × ⟨ P (sucV δ) ⟩)

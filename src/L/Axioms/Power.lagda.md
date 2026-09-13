@@ -56,7 +56,6 @@ does not.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM; lem→resizing; lem→impredicativity )
 open import Base.Impredicativity using ( module Impredicativity )
 
@@ -81,7 +80,6 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -114,11 +112,11 @@ candidate belongs to `a`, and its satisfaction is exactly internal inclusion.
 <!--en-->
 "Everything in this is in `a`", with `a` named as a constant, which it may be
 because it is an element of the model. Its meaning is the model's own inclusion,
-on the nose: the object language's bounded universal is the truth algebra's
-meet over the carrier guarded by membership, and that is how inclusion was
+on the nose: the object language's bounded universal computes the indexed
+`hProp` meet over the carrier guarded by membership, and that is how inclusion was
 defined.
 <!--zh-->
-「此物之中的一切都在 `a` 之中」，其中 `a` 以常元点名，而它可以这样做，因为它是模型的元素。它的含义恰是模型自己的包含关系，一分不差：对象语言的有界全称就是真值代数在载体上由隶属设防的交，而包含关系当初正是这么定义的。
+「此物之中的一切都在 `a` 之中」，其中 `a` 以常元点名，而它可以这样做，因为它是模型的元素。它的含义恰是模型自己的包含关系，一分不差：对象语言的有界全称直接计算载体上由隶属设防的 `hProp` 索引交，而包含关系当初正是这么定义的。
 <!--/-->
 
 ```agda

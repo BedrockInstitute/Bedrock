@@ -3,7 +3,7 @@
 
 Choice asserts that a simultaneous choice function merely exists for every family of merely inhabited fibers indexed by a set. This chapter states that principle level by level, proves that it descends to smaller universes, and derives excluded middle from it by Diaconescu's theorem.
 
-The classical boundary has a second interface. Alongside the excluded middle, classical mathematics runs on choice, and this chapter states the book's form of it, one level at a time, in the same interface style as `LEM`{.Agda}. **Set-level choice** says that over an h-set of indices, truncation commutes with the product: if every fiber is merely inhabited, then merely, every fiber is inhabited at once. This is the type-theoretic reading of "a family of nonempty sets has a choice function". The h-set restriction on the index is part of the principle's statement, and the proof below will use it where the theory demands it. Like the excluded middle, choice is never assumed globally: a chapter that needs it takes it as a parameter, as the cumulative-hierarchy model chapter does.
+The classical boundary has a second interface. Alongside the excluded middle, classical mathematics runs on choice, and this chapter states the book's form of it, one level at a time, in the same interface style as `LEM`{.Agda}. **Set-level choice** says that over an h-set of indices, propositional truncation commutes with the product: if every fiber is merely inhabited, then merely, every fiber is inhabited at once. This is the type-theoretic reading of "a family of nonempty sets has a choice function". The h-set restriction on the index is part of the principle's statement, and the proof below will use it where the theory demands it. Like the excluded middle, choice is never assumed globally: a chapter that needs it takes it as a parameter, as the cumulative-hierarchy model chapter does.
 
 The two interfaces are not peers, and this chapter proves it on the spot by Diaconescu's theorem: **choice proves the excluded middle**. At each level, the choice interface already implies the whole classical boundary.
 <!--zh-->
@@ -11,7 +11,7 @@ The two interfaces are not peers, and this chapter proves it on the spot by Diac
 
 选择原理断言：对一个以集合为指标、每根纤维都仅仅有元的族，也仅仅存在一个同时从所有纤维中取值的选择函数。本章逐宇宙层级陈述这条原理，证明它能下降到较低层级，并用 Diaconescu 定理由此推出排中律。
 
-经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，即逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集合索引之上，截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法。索引上的 h-集合限制是原理陈述的一部分，下文的证明将在理论需要之处用到它。与排中律一样，选择从不全局假设：需要它的章节以参数领取，累积层级的模型章正是如此。
+经典边界还有第二个接口。经典数学除排中律外还依靠选择运转，本章陈述本书采用的形式，即逐层级、与 `LEM`{.Agda} 同款的接口风格。**集合层选择**说：在 h-集合索引之上，命题截断与乘积交换：若每根纤维都仅仅有元，则仅仅地，全体纤维一齐有元。这是「非空集族有选择函数」的类型论读法。索引上的 h-集合限制是原理陈述的一部分，下文的证明将在理论需要之处用到它。与排中律一样，选择从不全局假设：需要它的章节以参数领取，累积层级的模型章正是如此。
 
 两个接口并非平级，本章当场用 Diaconescu 定理证明这一点：**选择证明排中律**。在每个层级上，选择接口都能推出整条经典边界。
 <!--ja-->

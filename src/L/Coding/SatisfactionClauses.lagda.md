@@ -18,7 +18,6 @@ This chapter specifies a satisfaction table by one bounded formula over a common
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 module L.Coding.SatisfactionClauses {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )

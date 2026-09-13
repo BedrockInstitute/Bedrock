@@ -16,7 +16,6 @@ Many later constructions close a set by repeating one definable operation finite
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.OmegaRecursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -56,7 +55,6 @@ open InfinitySet {ℓ} using ( sucV; #_ )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -66,7 +64,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 Renaming, read at the same satisfaction as `_⊨_` (as `OrderType` does).
 
 ```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
+module Ren = Sat 𝒮ʟ id
 
 isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))

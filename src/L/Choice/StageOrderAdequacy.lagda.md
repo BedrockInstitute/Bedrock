@@ -49,7 +49,6 @@ approximation.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.StageOrderAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -99,7 +98,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( sucV; #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -699,7 +697,7 @@ merely-existing value may be opened into it.
       shift : (u v du dv : S) → ⟦ tm4 tb ⟧ (dv ∷ du ∷ v ∷ u ∷ γ) ≡ ⟦ tb ⟧ γ
       shift u v du dv = tm4-val tb u v du dv γ
 
-      value : (d : S) → ⟨ fst d ∈ α ⟩ → (P : Ω)
+      value : (d : S) → ⟨ fst d ∈ α ⟩ → (P : hProp (ℓ-suc ℓ))
             → ((r : S) → ⟨ pr (fst d) (fst r) ∈ fst (lookup f γ) ⟩
                → IsRel (fst d) r → ⟨ P ⟩)
             → ⟨ P ⟩

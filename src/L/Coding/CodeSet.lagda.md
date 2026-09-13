@@ -16,7 +16,6 @@ Using the closed code domain, this chapter separates one constructible set conta
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.CodeSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -50,7 +49,6 @@ open InfinitySet using ( #_ )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -406,7 +404,7 @@ not contain it.
 <!--/-->
 
 ```agda
-  IsKeyOverAny : S → Ω
+  IsKeyOverAny : S → hProp (ℓ-suc ℓ)
   IsKeyOverAny x =
     ∥ (Σ[ n ∈ ℕ ] Σ[ ψ ∈ Formula ⟪ fst A ⟫ n ] (fst x ≡ fst (keyS ψ))) ∥₁
     , squash₁

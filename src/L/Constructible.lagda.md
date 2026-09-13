@@ -30,7 +30,6 @@ The chapter works at a fixed universe level `ℓ` inside the cumulative hierarch
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Constructible {ℓ : Level} where
 
@@ -71,11 +70,11 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 ```
 
 <!--en-->
-The basic constructions are available with membership characterizations: the empty set with `∅-empty`, unordered pairing with `pairing-ax`, and binary and indexed unions with `union-ax`. The truth algebra is then fixed once and for all: propositions at level `ℓ-suc ℓ` form a `TruthAlgebra` via `hPropAlgebra`, and reading the ambient structure `𝒮ᵥ` through `hPropStructure` yields the notations `⟨ _ ⟩` for the type underlying a proposition and `∈ˢ` for structural membership. Every statement of this chapter is phrased in this proposition-valued setting.
+The basic constructions are available with membership characterizations: the empty set with `∅-empty`, unordered pairing with `pairing-ax`, and binary and indexed unions with `union-ax`. Propositions at level `ℓ-suc ℓ` supply the truth values directly, and reading the ambient structure `𝒮ᵥ` through `hPropStructure` yields the notations `⟨ _ ⟩` for the type underlying a proposition and `∈ˢ` for structural membership. Every statement of this chapter is phrased in this proposition-valued setting.
 <!--zh-->
-基本构造连同隶属刻画一并可用：空集配 `∅-empty`，无序配对配 `pairing-ax`，二元并与索引族并配 `union-ax`。真值代数随之一次性选定：层级 `ℓ-suc ℓ` 上的命题经 `hPropAlgebra` 组成 `TruthAlgebra`，而把环境结构 `𝒮ᵥ` 经 `hPropStructure` 展开，便得到记号 `⟨ _ ⟩` 取命题的底层类型、`∈ˢ` 表示结构成员关系。本章的每个陈述都在这个命题值设定中表述。
+基本构造连同隶属刻画一并可用：空集配 `∅-empty`，无序配对配 `pairing-ax`，二元并与索引族并配 `union-ax`。层级 `ℓ-suc ℓ` 上的命题直接充当真值，而把环境结构 `𝒮ᵥ` 经 `hPropStructure` 展开，便得到记号 `⟨ _ ⟩` 取命题的底层类型、`∈ˢ` 表示结构成员关系。本章的每个陈述都在这个命题值设定中表述。
 <!--ja-->
-基本の構成は所属の特徴づけとともに使えます。空集合には `∅-empty`、非順序対には `pairing-ax`、二項和と添字族の和には `union-ax` が対応します。真理値代数はここで一度に選ばれます。レベル `ℓ-suc ℓ` の命題は `hPropAlgebra` によって `TruthAlgebra` をなし、周囲の構造 `𝒮ᵥ` を `hPropStructure` を通じて読むことで、命題の基礎型を取る記法 `⟨ _ ⟩` と構造的な所属を表す `∈ˢ` が使えるようになります。本章のすべての主張はこの命題値の設定のなかで述べられます。
+基本の構成は所属の特徴づけとともに使えます。空集合には `∅-empty`、非順序対には `pairing-ax`、二項和と添字族の和には `union-ax` が対応します。レベル `ℓ-suc ℓ` の命題が真理値を直接与え、周囲の構造 `𝒮ᵥ` を `hPropStructure` を通じて読むことで、命題の基礎型を取る記法 `⟨ _ ⟩` と構造的な所属を表す `∈ˢ` が使えるようになります。本章のすべての主張はこの命題値の設定のなかで述べられます。
 <!--/-->
 
 ```agda
@@ -84,7 +83,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ∅-empty; ⁅_,_⁆; pairing-ax; ⋃_; union-ax; _∪_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
 
 <!--en-->
@@ -600,15 +598,15 @@ A set is **constructible** when some ordinal stage of the tower contains it. The
 <!--/-->
 
 <!--en-->
-The class is a truth value, not a subtype: `isL x` is defined in the chosen truth algebra as the indexed disjunction `⋁` over all sets `α` of the conjunction of `IsOrd α` with `x ∈ˢ Lset α`. So an element of `isL x` is, by the algebra's meaning of the quantifier, merely a pair of an ordinal `α` and a membership of `x` in stage `α`; no canonical stage is attached to a constructible set. The quantifier ranges over the whole carrier, so a witness is available only in this merely-exists form; treating the class as a proposition-valued predicate is what allows it to be restricted into a structure shortly.
+The class is a truth value, not a subtype: `isL x` is defined as the indexed disjunction `⋁` over all sets `α` of the conjunction of `IsOrd α` with `x ∈ˢ Lset α`. So an element of `isL x` is, by the meaning of indexed disjunction, merely a pair of an ordinal `α` and a membership of `x` in stage `α`; no canonical stage is attached to a constructible set. The quantifier ranges over the whole carrier, so a witness is available only in this merely-exists form; treating the class as a proposition-valued predicate is what allows it to be restricted into a structure shortly.
 <!--zh-->
-这个类是一个真值，而非子类型：`isL x` 在所选真值代数中定义为对全体集合 `α` 的索引析取 `⋁`，其各项是 `IsOrd α` 与 `x ∈ˢ Lset α` 的合取。故按该代数量词的含义，`isL x` 的一个元素仅仅是一个对：序数 `α` 与 `x` 属于层 `α` 的证据；可构造集并不附带一个典范层。量词遍历整个载体，故见证只以「仅仅存在」的形式可得；把类当作命题值谓词，正是稍后能把它限制成结构的原因。
+这个类是一个真值，而非子类型：`isL x` 定义为对全体集合 `α` 的索引析取 `⋁`，其各项是 `IsOrd α` 与 `x ∈ˢ Lset α` 的合取。故按索引析取的含义，`isL x` 的一个元素仅仅是一个对：序数 `α` 与 `x` 属于层 `α` 的证据；可构造集并不附带一个典范层。量词遍历整个载体，故见证只以「仅仅存在」的形式可得；把类当作命题值谓词，正是稍后能把它限制成结构的原因。
 <!--ja-->
-このクラスは部分型ではなく真理値です。`isL x` は、選ばれた真理値代数において、すべての集合 `α` にわたる索引付きの選言 `⋁` として定義され、その各項は `IsOrd α` と `x ∈ˢ Lset α` の連言です。したがって代数の量詞の意味により、`isL x` の要素は単に、順序数 `α` と段階 `α` への `x` の所属の対です。構成可能集合に標準的な段階が付属することはありません。量詞は台全体にわたるため、証人はこの「単に存在する」の形でしか得られません。クラスを命題値の述語として扱うことが、まもなくそれを構造へ制限できる理由です。
+このクラスは部分型ではなく真理値です。`isL x` は、すべての集合 `α` にわたる索引付きの選言 `⋁` として定義され、その各項は `IsOrd α` と `x ∈ˢ Lset α` の連言です。したがって添字付き選言の意味により、`isL x` の要素は単に、順序数 `α` と段階 `α` への `x` の所属の対です。構成可能集合に標準的な段階が付属することはありません。量詞は台全体にわたるため、証人はこの「単に存在する」の形でしか得られません。クラスを命題値の述語として扱うことが、まもなくそれを構造へ制限できる理由です。
 <!--/-->
 
 ```agda
-isL : S → Ω
+isL : S → hProp (ℓ-suc ℓ)
 isL x = ⋁ S (λ α → ((IsOrd α , isPropIsOrd α) ⊓ (x ∈ˢ Lset α)))
 
 isL-trans : Transitive 𝒮ᵥ isL
@@ -659,15 +657,15 @@ The final construction views the constructible class as a structure. Restricting
 <!--/-->
 
 <!--en-->
-One line suffices. The restriction `_↾_` takes the ambient structure and the class `isL`, and forms the structure whose elements are pairs of a set with a proof that it satisfies `isL`; equality and membership are read along the first projection, so they agree with the ambient ones. Since `isL` is a truth value in the same algebra and the class was proved transitive, the restricted structure is well-defined in the same framework. What remains open, and is the subject of the following chapters, is whether this structure satisfies the ZF and ZFC axioms; the restriction itself asserts nothing about that.
+One line suffices. The restriction `_↾_` takes the ambient structure and the class `isL`, and forms the structure whose elements are pairs of a set with a proof that it satisfies `isL`; equality and membership are read along the first projection, so they agree with the ambient ones. Since `isL` is an `hProp` truth value and the class was proved transitive, the restricted structure is well-defined in the same framework. What remains open, and is the subject of the following chapters, is whether this structure satisfies the ZF and ZFC axioms; the restriction itself asserts nothing about that.
 <!--zh-->
-一行足矣。限制 `_↾_` 接收环境结构与类 `isL`，构成这样的结构：其元素是集合配上其满足 `isL` 的证明的对；等词与隶属沿第一投影读取，故与环境一致。由于 `isL` 是同一代数中的真值、且该类已被证明传递，限制结构在同一框架中良定义。尚待解决、也是后续各章主题的，是这个结构是否满足 ZF 与 ZFC 公理；限制本身对此不作任何断言。
+一行足矣。限制 `_↾_` 接收环境结构与类 `isL`，构成这样的结构：其元素是集合配上其满足 `isL` 的证明的对；等词与隶属沿第一投影读取，故与环境一致。由于 `isL` 是 `hProp` 中的真值、且该类已被证明传递，限制结构在同一框架中良定义。尚待解决、也是后续各章主题的，是这个结构是否满足 ZF 与 ZFC 公理；限制本身对此不作任何断言。
 <!--ja-->
-一行で十分です。制限 `_↾_` は周囲の構造とクラス `isL` を受け取り、`isL` を満たす証拠と対になった集合を要素とする構造を作ります。等号と所属は第一射影に沿って読まれるため、周囲のものと一致します。`isL` は同じ代数における真理値であり、クラスは推移的であると証明済みなので、制限された構造は同じ枠組みのなかで問題なく定義されます。まだ開いている問題、すなわち後の章の主題は、この構造が ZF と ZFC の公理を満たすかどうかです。制限そのものはそれについて何も主張しません。
+一行で十分です。制限 `_↾_` は周囲の構造とクラス `isL` を受け取り、`isL` を満たす証拠と対になった集合を要素とする構造を作ります。等号と所属は第一射影に沿って読まれるため、周囲のものと一致します。`isL` は `hProp` の真理値であり、クラスは推移的であると証明済みなので、制限された構造は同じ枠組みのなかで問題なく定義されます。まだ開いている問題、すなわち後の章の主題は、この構造が ZF と ZFC の公理を満たすかどうかです。制限そのものはそれについて何も主張しません。
 <!--/-->
 
 ```agda
-𝒮ʟ : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
+𝒮ʟ : ZFStructure (ℓ-suc ℓ)
 𝒮ʟ = 𝒮ᵥ ↾ isL
 ```
 

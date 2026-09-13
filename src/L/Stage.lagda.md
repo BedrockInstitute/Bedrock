@@ -36,7 +36,6 @@ Work at a fixed universe level ℓ and assume excluded middle at level ℓ-suc �
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Stage {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -87,7 +86,6 @@ A property P is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its u
 ```agda
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -120,7 +118,7 @@ Leastness is stated as a refutation: `isLeastOrd α` is the assertion, for every
 <!--/-->
 
 ```agda
-module _ (P : S → Ω) where
+module _ (P : S → hProp (ℓ-suc ℓ)) where
 
   isLeastOrd : S → Type (ℓ-suc ℓ)
   isLeastOrd α = (γ : S) → IsOrd γ → ⟨ P γ ⟩ → ⟨ γ ∈ˢ α ⟩ → Empty.⊥

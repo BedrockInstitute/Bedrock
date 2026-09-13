@@ -24,7 +24,6 @@ The chapter fixes a universe level ℓ and takes excluded middle at level ℓ-su
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.NumeralBound {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -48,11 +47,11 @@ open import L.Ordinal {ℓ} using ( numeral-ord )
 ```
 
 <!--en-->
-The ambient numerals live in the cumulative hierarchy itself: `∅` is its empty set, `# k` is the finite von Neumann ordinal with k members, and `sucV` is the successor step a ↦ a ∪ {a}. Note that `# (suc k)` is definitionally `sucV (# k)`, so closing λ under `sucV` automatically covers every numeral after zero. The truth values here are propositions at level ℓ-suc ℓ, supplied by the hProp algebra, so each membership claim is a proposition.
+The ambient numerals live in the cumulative hierarchy itself: `∅` is its empty set, `# k` is the finite von Neumann ordinal with k members, and `sucV` is the successor step a ↦ a ∪ {a}. Note that `# (suc k)` is definitionally `sucV (# k)`, so closing λ under `sucV` automatically covers every numeral after zero. The truth values here are propositions at level ℓ-suc ℓ, packaged directly in `hProp`, so each membership claim is a proposition.
 <!--zh-->
-周遭数码就生活在累积层级自身之中：`∅` 是其中的空集，`# k` 是有 k 个成员的有限冯·诺伊曼序数，`sucV` 是后继步骤 a ↦ a ∪ {a}。注意 `# (suc k)` 定义地就是 `sucV (# k)`，因此 λ 对 `sucV` 封闭就自动覆盖零之后的每个数码。这里的真值是层级 ℓ-suc ℓ 上的命题，由 hProp 代数提供，所以每条隶属断言都是命题。
+周遭数码就生活在累积层级自身之中：`∅` 是其中的空集，`# k` 是有 k 个成员的有限冯·诺伊曼序数，`sucV` 是后继步骤 a ↦ a ∪ {a}。注意 `# (suc k)` 定义地就是 `sucV (# k)`，因此 λ 对 `sucV` 封闭就自动覆盖零之后的每个数码。这里的真值是层级 ℓ-suc ℓ 上的命题，直接打包在 `hProp` 中，所以每条隶属断言都是命题。
 <!--ja-->
-周囲の数項は累積階層そのものの中に住んでいます。`∅` はその空集合、`# k` は要素を k 個持つ有限のフォン・ノイマン順序数、`sucV` は a ↦ a ∪ {a} という後者の操作です。`# (suc k)` は定義上 `sucV (# k)` に等しいので、λ が `sucV` について閉じていれば零以降のすべての数項が自動的に覆われます。ここでの真理値は hProp 代数が与えるレベル ℓ-suc ℓ の命題であり、各所属の主張は命題です。
+周囲の数項は累積階層そのものの中に住んでいます。`∅` はその空集合、`# k` は要素を k 個持つ有限のフォン・ノイマン順序数、`sucV` は a ↦ a ∪ {a} という後者の操作です。`# (suc k)` は定義上 `sucV (# k)` に等しいので、λ が `sucV` について閉じていれば零以降のすべての数項が自動的に覆われます。ここでの真理値は `hProp` に直接まとめられたレベル ℓ-suc ℓ の命題であり、各所属の主張は命題です。
 <!--/-->
 
 ```agda
@@ -62,7 +61,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; module InfinitySet )
 open InfinitySet using ( #_; sucV )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
 
 <!--en-->

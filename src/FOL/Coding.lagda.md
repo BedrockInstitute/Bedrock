@@ -19,21 +19,20 @@ The construction assumes an injective pairing operation and an injective map fro
 <!--/-->
 
 <!--en-->
-To encode syntax as sets, two operations on the carrier would suffice on their own, but injectivity is what makes decoding possible: if two pieces of syntax received the same set, the coding could not be inverted. This chapter therefore works over a structure `𝒮`{.Agda} of type `ZFStructure`{.Agda} sitting on the hProp algebra at level `ℓ`, and takes the encoding data as explicit module parameters. Every definition below is stated for an arbitrary structure with such data; the cumulative hierarchy will supply an instance in a later chapter.
+To encode syntax as sets, two operations on the carrier would suffice on their own, but injectivity is what makes decoding possible: if two pieces of syntax received the same set, the coding could not be inverted. This chapter therefore works over a structure `𝒮`{.Agda} of type `ZFStructure`{.Agda}, whose equality and membership take values in `hProp ℓ`, and takes the encoding data as explicit module parameters. Every definition below is stated for an arbitrary structure with such data; the cumulative hierarchy will supply an instance in a later chapter.
 <!--zh-->
-要把语法编码为集合，载体上的两个操作本身就够了，但真正让「解码」成为可能的是单射性：若两段语法得到同一个集合，编码就无法还原。因此本章在层级 `ℓ` 上 hProp 代数上的一个 `ZFStructure`{.Agda} 结构 `𝒮`{.Agda} 中工作，并把编码所需的数据取作显式的模块参数。下面每个定义都对任意一个带这类数据的结构成立；累积层级会在后面的章节中给出实例。
+要把语法编码为集合，载体上的两个操作本身就够了，但真正让「解码」成为可能的是单射性：若两段语法得到同一个集合，编码就无法还原。因此本章在一个 `ZFStructure`{.Agda} 结构 `𝒮`{.Agda} 中工作；其等词与隶属关系取值于 `hProp ℓ`，编码所需的数据则取作显式的模块参数。下面每个定义都对任意一个带这类数据的结构成立；累积层级会在后面的章节中给出实例。
 <!--ja-->
-構文を集合として符号化するには、台の上の 2 つの操作があれば足りますが、復号を可能にするのは単射性です。もし 2 つの構文が同じ集合に対応してしまったら、符号化を逆にたどれません。そこで本章は、レベル `ℓ` の hProp 代数上の `ZFStructure`{.Agda} である構造 `𝒮`{.Agda} のもとで作業し、符号化に必要なデータを明示的なモジュール引数として取ります。以下の定義はすべて、そのようなデータを持つ任意の構造に対して述べられ、累積階層が後の章で実例を供給します。
+構文を集合として符号化するには、台の上の 2 つの操作があれば足りますが、復号を可能にするのは単射性です。もし 2 つの構文が同じ集合に対応してしまったら、符号化を逆にたどれません。そこで本章は、等号と所属が `hProp ℓ` に値を取る `ZFStructure`{.Agda}、すなわち構造 `𝒮`{.Agda} のもとで作業し、符号化に必要なデータを明示的なモジュール引数として取ります。以下の定義はすべて、そのようなデータを持つ任意の構造に対して述べられ、累積階層が後の章で実例を供給します。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 
-module FOL.Coding {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+module FOL.Coding {ℓ} (𝒮 : ZFStructure ℓ)
 ```
 
 <!--en-->

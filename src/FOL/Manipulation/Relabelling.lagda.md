@@ -26,7 +26,6 @@ Take a formula over a constant domain `K` and rename its constants along a funct
 module FOL.Manipulation.Relabelling where
 
 open import Base.Prelude
-open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 ```
 
@@ -63,31 +62,30 @@ import Cubical.Data.Empty as Empty
 <!--en-->
 ## Meaning level
 
-Renaming constants is a purely syntactic operation, so one must check that it does not disturb meaning. The precise statement is a commutation: for any map of constant domains `f : K → K'` and any interpretation `ι : K' → S` of the target domain, evaluating a relabelled formula under `ι` gives the same truth value as evaluating the original formula under the composite interpretation `ι ∘ f`. The proof runs by structural induction, with the base case supplied by term evaluation and the congruence lemmas of the truth algebra doing the rest.
+Renaming constants is a purely syntactic operation, so one must check that it does not disturb meaning. The precise statement is a commutation: for any map of constant domains `f : K → K'` and any interpretation `ι : K' → S` of the target domain, evaluating a relabelled formula under `ι` gives the same proposition as evaluating the original formula under the composite interpretation `ι ∘ f`. The proof runs by structural induction, with the base case supplied by term evaluation and the congruence lemmas of the proposition universe doing the rest.
 <!--zh-->
 ## 含义层
 
-常元改名是纯语法操作，因此必须检查它不扰动含义。精确的陈述是一条交换律：对任意常元域映射 `f : K → K'` 与目标域的任意解释 `ι : K' → S`，改名后的公式在 `ι` 下的求值，与原公式在复合解释 `ι ∘ f` 下的求值给出相同的真值。证明按结构归纳进行：基底情形由词项求值提供，其余由真值代数的同余引理完成。
+常元改名是纯语法操作，因此必须检查它不扰动含义。精确的陈述是一条交换律：对任意常元域映射 `f : K → K'` 与目标域的任意解释 `ι : K' → S`，改名后的公式在 `ι` 下的求值，与原公式在复合解释 `ι ∘ f` 下的求值给出相同的命题。证明按结构归纳进行：基底情形由词项求值提供，其余由逻辑运算的同余性完成。
 <!--ja-->
 ## 意味の水準
 
-定数の改名は純粋に構文的な操作なので、意味を乱さないことを確認しなければなりません。正確な主張は可換性です。任意の定数域の写像 `f : K → K'` と対象域の任意の解釈 `ι : K' → S` に対し、改名後の論理式を `ι` の下で評価した真理値は、元の論理式を合成解釈 `ι ∘ f` の下で評価した真理値と一致します。証明は構造帰納法で進み、基底の場合は項の評価が担い、残りは真理値代数の合同補題が担います。
+定数の改名は純粋に構文的な操作なので、意味を乱さないことを確認しなければなりません。正確な主張は可換性です。任意の定数域の写像 `f : K → K'` と対象域の任意の解釈 `ι : K' → S` に対し、改名後の論理式を `ι` の下で評価した命題は、元の論理式を合成解釈 `ι ∘ f` の下で評価した命題と一致します。証明は構造帰納法で進み、基底の場合は項の評価が担い、残りは論理演算の合同性が担います。
 <!--/-->
 
 <!--en-->
-Fix a truth algebra `𝕋`, a ZF structure `𝒮` over it with carrier `S`, a relabelling `f : K → K'`, and an interpretation `ι : K' → S` of the target domain. The composite `ι ∘ f` is an equally good interpretation of the source domain, so we have two readings of the same formulas: the renamed formula under `ι`, and the original under `ι ∘ f`. The commutation problem is whether these readings give equal truth values.
+Fix a proposition-valued ZF structure `𝒮` with domain `S`, a relabelling `f : K → K'`, and an interpretation `ι : K' → S` of the target domain. The composite `ι ∘ f` is an equally good interpretation of the source domain, so we have two readings of the same formulas: the renamed formula under `ι`, and the original under `ι ∘ f`. The commutation problem is whether these readings give equal propositions.
 <!--zh-->
-固定一个真值代数 `𝕋`、其上带载体 `S` 的 ZF 结构 `𝒮`、一个改名 `f : K → K'`，以及目标域的解释 `ι : K' → S`。复合 `ι ∘ f` 同样是源域的一个合格解释，于是同一批公式有了两种读法：改名后的公式在 `ι` 下，原公式在 `ι ∘ f` 下。交换问题就是问这两种读法是否给出相等的真值。
+固定一个论域为 `S` 的命题值 ZF 结构 `𝒮`、一个改名 `f : K → K'`，以及目标域的解释 `ι : K' → S`。复合 `ι ∘ f` 同样是源域的一个合格解释，于是同一批公式有了两种读法：改名后的公式在 `ι` 下，原公式在 `ι ∘ f` 下。交换问题就是问这两种读法是否给出相等的命题。
 <!--ja-->
-真理値代数 `𝕋`、その上の台 `S` を持つ ZF 構造 `𝒮`、改名 `f : K → K'`、そして対象域の解釈 `ι : K' → S` を固定します。合成 `ι ∘ f` は源の域の正当な解釈でもあるので、同じ論理式に二つの読み方が得られます。改名後の論理式を `ι` の下で読むか、元の論理式を `ι ∘ f` の下で読むかです。可換の問題とは、この二つの読み方が等しい真理値を与えるかを問うことです。
+台 `S` をもつ命題値の ZF 構造 `𝒮`、改名 `f : K → K'`、そして対象域の解釈 `ι : K' → S` を固定します。合成 `ι ∘ f` は源の域の正当な解釈でもあるので、同じ論理式に二つの読み方が得られます。改名後の論理式を `ι` の下で読むか、元の論理式を `ι ∘ f` の下で読むかです。可換の問題とは、この二つの読み方が等しい命題を与えるかを問うことです。
 <!--/-->
 
 ```agda
-module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
+module _ {ℓ} (𝒮 : ZFStructure ℓ) where
 
-  open TruthAlgebra 𝕋
   open ZFStructure 𝒮
-  open FOL.Semantics 𝕋 𝒮 using ( module At; _^_ )
+  open FOL.Semantics 𝒮 using ( module At; _^_ )
 
   module _ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S) where
 ```
@@ -111,11 +109,11 @@ The atomic case already shows why the two readings must agree. Consider the form
 ```
 
 <!--en-->
-The satisfaction lemma `⊨-map` lifts this agreement from terms to formulas, as paths in the truth algebra: `(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)`. For the atomic case `t ∈̇ u`, the two term paths from `⟦⟧-map` are fed into the membership relation by `cong₂ _∈ˢ_`, producing the path between the two readings of the statement. Equality atoms work identically through `≈ˢ`.
+The satisfaction lemma `⊨-map` lifts this agreement from terms to formulas, as paths in the proposition universe: `(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)`. For the atomic case `t ∈̇ u`, the two term paths from `⟦⟧-map` are fed into the membership relation by `cong₂ _∈ˢ_`, producing the path between the two readings of the statement. Equality atoms work identically through `≈ˢ`.
 <!--zh-->
-满足引理 `⊨-map` 把这一一致从词项提升到公式，得到真值代数中的路径：`(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)`。对原子情形 `t ∈̇ u`，来自 `⟦⟧-map` 的两条词项路径经 `cong₂ _∈ˢ_` 送入属于关系，产生该命题两种读法之间的路径。等号原子经 `≈ˢ` 完全同样地处理。
+满足引理 `⊨-map` 把这一一致从词项提升到公式，得到命题之间的路径：`(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)`。对原子情形 `t ∈̇ u`，来自 `⟦⟧-map` 的两条词项路径经 `cong₂ _∈ˢ_` 送入属于关系，产生该命题两种读法之间的路径。等号原子经 `≈ˢ` 完全同样地处理。
 <!--ja-->
-充足の補題 `⊨-map` はこの一致を項から論理式へ持ち上げ、真理値代数における経路 `(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)` を与えます。原子論理式 `t ∈̇ u` の場合は、`⟦⟧-map` からの二つの項の経路を `cong₂ _∈ˢ_` によって所属関係に入れ、この主張の二つの読み方の間の経路を作ります。等号の原子も `≈ˢ` を通じてまったく同様に扱われます。
+充足の補題 `⊨-map` はこの一致を項から論理式へ持ち上げ、命題の間の経路 `(γ ⊨ mapFo f φ) ≡ (γ ⊨∘ φ)` を与えます。原子論理式 `t ∈̇ u` の場合は、`⟦⟧-map` からの二つの項の経路を `cong₂ _∈ˢ_` によって所属関係に入れ、この主張の二つの読み方の間の経路を作ります。等号の原子も `≈ˢ` を通じてまったく同様に扱われます。
 <!--/-->
 
 ```agda
@@ -128,11 +126,11 @@ The satisfaction lemma `⊨-map` lifts this agreement from terms to formulas, as
 ```
 
 <!--en-->
-The propositional connectives are handled by congruence as well, because the structure interprets them by the truth algebra's own operations: a path between the two readings of `φ` and one between the readings of `ψ` combine into a path for `φ ∧̇ ψ` through `⊓`, and similarly for disjunction and implication. Falsity `⊥̇` contains no constants at all, so its two readings are the same value and the path is `refl`.
+The propositional connectives are handled by congruence as well, because the structure interprets them by the corresponding logical operations: a path between the two readings of `φ` and one between the readings of `ψ` combine into a path for `φ ∧̇ ψ` through `⊓`, and similarly for disjunction and implication. Falsity `⊥̇` contains no constants at all, so its two readings are the same value and the path is `refl`.
 <!--zh-->
-命题联结词同样由同余处理，因为结构用真值代数自身的运算来解释它们：`φ` 的两种读法之间的一条路径与 `ψ` 的两条读法之间的一条路径，经 `⊓` 合成 `φ ∧̇ ψ` 的一条路径；析取与蕴涵同理。假 `⊥̇` 完全不含常元，其两种读法是同一个值，路径即 `refl`。
+命题联结词同样由同余处理，因为结构用相应的逻辑运算来解释它们：`φ` 的两种读法之间的一条路径与 `ψ` 的两条读法之间的一条路径，经 `⊓` 合成 `φ ∧̇ ψ` 的一条路径；析取与蕴涵同理。假 `⊥̇` 完全不含常元，其两种读法是同一个值，路径即 `refl`。
 <!--ja-->
-命題結合子も同様に合同で処理されます。構造はこれらを真理値代数自身の演算で解釈するからです。`φ` の二つの読み方の間の経路と `ψ` のそれとが、`⊓` を通して `φ ∧̇ ψ` の経路に合成され、選言や含意も同様です。偽 `⊥̇` は定数をまったく含まないので、二つの読み方は同じ値となり、経路は `refl` です。
+命題結合子も同様に合同で処理されます。構造はこれらを対応する論理演算で解釈するからです。`φ` の二つの読み方の間の経路と `ψ` のそれとが、`⊓` を通して `φ ∧̇ ψ` の経路に合成され、選言や含意も同様です。偽 `⊥̇` は定数をまったく含まないので、二つの読み方は同じ値となり、経路は `refl` です。
 <!--/-->
 
 ```agda

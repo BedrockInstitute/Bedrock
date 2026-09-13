@@ -16,7 +16,6 @@ Skolem 包は選んだ集合を最小の証人について閉じ、構成可能�
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.SkolemHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -69,10 +68,9 @@ open InfinitySet using ( ω; sucV )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; extensionality )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 
-module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ using ( _^_; module At )
+module SemV = FOL.Semantics 𝒮ᵥ using ( _^_; module At )
 open SemV using ( _^_ )
 ```
 
@@ -90,7 +88,7 @@ module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → E
 J tower instantiates the same core (DD4).
 
 ```agda
-module TermAlgebra (𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ)))
+module TermAlgebra (𝒮 : ZFStructure (ℓ-suc ℓ))
                    (toSet : ZFStructure.S 𝒮 → V ℓ)
                    (wo : SWO (ZFStructure.S 𝒮))
                    (junk : ZFStructure.S 𝒮)
@@ -98,7 +96,7 @@ module TermAlgebra (𝒮 : ZFStructure (hPropAlgebra (ℓ-suc ℓ)))
 
   open ZFStructure 𝒮 hiding ( _∈ˢ_ ) renaming ( S to S𝒮 )
 
-  private module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮
+  private module Sem = FOL.Semantics 𝒮
   open Sem using () renaming ( _^_ to _^𝒮_ )
   module At0 = Sem.At (⊥* {ℓ}) Empty.rec* using ( _⊨_ )
   _⊨₀_ : {n : ℕ} → S𝒮 ^𝒮 n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
@@ -199,9 +197,9 @@ module SatTransfer (MA MB : S → hProp (ℓ-suc ℓ)) where
   SB : Type (ℓ-suc ℓ)
   SB = Σ[ x ∈ S ] ⟨ MB x ⟩
 
-  module SemA = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ MA)
+  module SemA = FOL.Semantics (𝒮ᵥ ↾ MA)
     using ( module At )
-  module SemB = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ MB)
+  module SemB = FOL.Semantics (𝒮ᵥ ↾ MB)
     using ( module At )
   open SemA.At SA id renaming ( _⊨_ to _⊨ᴬ_ ; ⟦_⟧ to ⟦_⟧ᴬ )
   open SemB.At SB id renaming ( _⊨_ to _⊨ᴮ_ ; ⟦_⟧ to ⟦_⟧ᴮ )
@@ -379,7 +377,7 @@ structure, and the bounded cases route through the criterion (Devlin 5.1).
     SM : Type (ℓ-suc ℓ)
     SM = Σ[ x ∈ S ] ⟨ x ∈ˢ M ⟩
 
-    module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
+    module SemM = FOL.Semantics (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
       using ( module At )
     open SemM.At SM id renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
 
@@ -524,9 +522,9 @@ module IsoInv (M : S) (PM : S)
   g : SM → SPM
   g m = p (fst m) , p∈ (fst m) (snd m)
 
-  module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
+  module SemM = FOL.Semantics (𝒮ᵥ ↾ (λ x → x ∈ˢ M))
     using ( module At )
-  module SemPM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) (𝒮ᵥ ↾ (λ x → x ∈ˢ PM))
+  module SemPM = FOL.Semantics (𝒮ᵥ ↾ (λ x → x ∈ˢ PM))
     using ( module At )
   open module Mse = SemM.At SM id public renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ )
   open module Pse = SemPM.At SPM id public renaming ( _⊨_ to _⊨ᵖᵐ_ ; ⟦_⟧ to ⟦_⟧ᵖᵐ )
@@ -734,9 +732,9 @@ search closure.
                 ≡ ((b ∷ map A.inL δ) ASt.AbsL.⊨ᵐ mapFo A.inL ψ)
       body-path b =
           cong (λ ε → ε H.T.⊨₀ bodyFo) (cong (b ∷_) vals-env)
-        ∙ sym (⊨-abs (hPropAlgebra (ℓ-suc ℓ)) ASt.AbsL.𝒮M A.inL ψ
+        ∙ sym (⊨-abs ASt.AbsL.𝒮M A.inL ψ
                  (b ∷ map A.inL δ))
-        ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) ASt.AbsL.𝒮M A.inL id ψ
+        ∙ sym (⊨-map ASt.AbsL.𝒮M A.inL id ψ
                  (b ∷ map A.inL δ))
 
       witness : H.T.Sat (n + countFo ψ) bodyFo (H.T.vals ds)
@@ -1247,7 +1245,7 @@ module Unpack (U : S) (Utr : isTrans U) where
        → (δ Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
   read {n} {φ} dφ δ =
       Ab.abs₀ (mapΔ₀ Empty.rec* dφ) δ
-    ∙ embed-⊨ (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ {K = Ab.SM} fst φ (map fst δ)
+    ∙ embed-⊨ 𝒮ᵥ {K = Ab.SM} fst φ (map fst δ)
     ∙ cong (λ ι → SemV.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
            (funExt (λ b → Empty.rec* b))
 ```

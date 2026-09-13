@@ -16,7 +16,6 @@ The internal descriptions used by condensation require four witness sets to be p
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.AdequateStages {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -48,7 +47,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⋃_; module InfinitySet )
 open InfinitySet {ℓ} using ( sucV; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 

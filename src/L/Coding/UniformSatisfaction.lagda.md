@@ -44,7 +44,6 @@ exports the uniform satisfaction table consumed by powerset and Choice.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.UniformSatisfaction {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -83,7 +82,6 @@ open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -432,7 +430,7 @@ module _ (A : S) where
       cong (z ∈ˢ_)
         (val-at A A ψ x x∈ q ∙ cong (Sat A) (sym (mapFo-comp DA.ι (intoL A) ψ)))
     ∙ Sat-spec A (mapFo DA.ι ψ) δ z qz
-    ∙ ⊨-map (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M DA.ι id ψ δ
+    ∙ ⊨-map DA.𝒮M DA.ι id ψ δ
 ```
 
 <!--en-->

@@ -16,7 +16,6 @@ The condensation argument needs more than an external hull: both the hull and th
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.ConstructibleHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -92,7 +91,6 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -108,7 +106,7 @@ open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 Renaming, read at the same satisfaction as `_⊨_` (as `OmegaRec` does).
 
 ```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
+module Ren = Sat 𝒮ʟ id using ( Agrees; ⊨-rename )
 
 private
   i0 : ∀ {k} → Fin (suc k)
@@ -858,9 +856,9 @@ constants relabelled into the stage's alphabet.
     sat-bridge : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) (δ : SL ^ k)
                → (δ ⊨₀ χ) ≡ (δ DA.⊨ᵐ mapFo ε′ χ)
     sat-bridge k χ δ =
-        cong (λ κ → FOL.Semantics.At._⊨_ (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M (⊥* {ℓ}) κ δ χ)
+        cong (λ κ → FOL.Semantics.At._⊨_ DA.𝒮M (⊥* {ℓ}) κ δ χ)
           (funExt (λ b → Empty.rec* b))
-      ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M ε′ DA.ι χ δ)
+      ∙ sym (⊨-map DA.𝒮M ε′ DA.ι χ δ)
 ```
 
 THE KEY OF A PARAMETER-FREE FORMULA AT THE STAGE, sealed

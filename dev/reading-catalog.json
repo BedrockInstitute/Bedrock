@@ -15,7 +15,6 @@
       },
       "chapters": [
         "Base.Prelude",
-        "Base.Truth",
         "Base.Impredicativity",
         "Base.Classical",
         "Base.Choice",
@@ -310,24 +309,6 @@
         "en": "Prelude",
         "zh": "基础词汇",
         "ja": "基礎語彙"
-      }
-    },
-    {
-      "id": "Base.Truth",
-      "title": {
-        "en": "Truth values",
-        "zh": "真值",
-        "ja": "真理値"
-      },
-      "stage": {
-        "en": "Foundations",
-        "zh": "基础",
-        "ja": "基礎"
-      },
-      "description": {
-        "en": "Truth values",
-        "zh": "真值",
-        "ja": "真理値"
       }
     },
     {

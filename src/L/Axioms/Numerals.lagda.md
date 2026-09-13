@@ -42,7 +42,6 @@ The key notion is unique realization. For pairing, the specification is `λ x �
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 module L.Axioms.Numerals {ℓ : Level} where
 
 open import FOL.ZFStructure using ( module hPropStructure )
@@ -92,7 +91,6 @@ Two conventions make the code readable. The structure `𝒮ʟ` is the constructi
 ```agda
 open InfinitySet using ( sucV; #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ

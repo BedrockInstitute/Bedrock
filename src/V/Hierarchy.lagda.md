@@ -24,7 +24,6 @@ A carrier alone does not interpret the first-order language; one needs a carrier
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module V.Hierarchy {ℓ : Level} where
 
@@ -71,7 +70,7 @@ The generating idea is the oldest one in set theory: a set is no more than the c
 
 ## The structure
 
-The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y`, paired with the certificate `setIsSet x y` that this type is a proposition; `V`{.Agda} being an h-set is what makes paths between its elements proposition-valued. Membership is the hierarchy's own `∈`, whose value at each pair already lives in `hProp`{.Agda}. These fields assemble into the structure `𝒮ᵥ`{.Agda} over the `hProp`{.Agda} truth-value algebra, the structure on which the first-order language is interpreted. The subscript is a plain `v`, for the hierarchy.
+The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y`, paired with the certificate `setIsSet x y` that this type is a proposition; `V`{.Agda} being an h-set is what makes paths between its elements proposition-valued. Membership is the hierarchy's own `∈`, whose value at each pair already lives in `hProp`{.Agda}. These fields assemble into the structure `𝒮ᵥ`{.Agda} whose relations take values in `hProp`{.Agda}, the structure on which the first-order language is interpreted. The subscript is a plain `v`, for the hierarchy.
 <!--zh-->
 ## 高阶归纳类型
 
@@ -79,7 +78,7 @@ The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y
 
 ## 结构
 
-所选的打包刻意保持极简。等词是路径类型 `x ≡ y`，连同「该类型是命题」的证书 `setIsSet x y` 配成一对；正是 `V`{.Agda} 的 h-集合性使其元素间的路径成为命题值。成员关系是层级自身的 `∈`，其在每一点上的值本就落在 `hProp`{.Agda} 中。这些字段组装成 `hProp`{.Agda} 真值代数上的结构 `𝒮ᵥ`{.Agda}，一阶语言就在这个结构上解释。下标就是普通的 `v`，指层级。
+所选的打包刻意保持极简。等词是路径类型 `x ≡ y`，连同「该类型是命题」的证书 `setIsSet x y` 配成一对；正是 `V`{.Agda} 的 h-集合性使其元素间的路径成为命题值。成员关系是层级自身的 `∈`，其在每一点上的值本就落在 `hProp`{.Agda} 中。这些字段组装成关系取值于 `hProp`{.Agda} 的结构 `𝒮ᵥ`{.Agda}，一阶语言就在这个结构上解释。下标就是普通的 `v`，指层级。
 <!--ja-->
 ## 高階帰納型
 
@@ -87,7 +86,7 @@ The chosen packaging is deliberately minimal. Equality is the path type `x ≡ y
 
 ## 構造
 
-選ばれる構成は意図的に最小限です。等号はパス型 `x ≡ y` であり、この型が命題であることの証明 `setIsSet x y` と対にされます。`V`{.Agda} の h-集合性こそが、その要素間のパスを命題値にするのです。所属関係は階層自身の `∈` で、各対での値ははじめから `hProp`{.Agda} に住みます。これらのフィールドが、`hProp`{.Agda} の真理値代数上の構造 `𝒮ᵥ`{.Agda} に組み上がります。一階の言語はこの構造の上で解釈されます。添字は階層を指す普通の `v` です。
+選ばれる構成は意図的に最小限です。等号はパス型 `x ≡ y` であり、この型が命題であることの証明 `setIsSet x y` と対にされます。`V`{.Agda} の h-集合性こそが、その要素間のパスを命題値にするのです。所属関係は階層自身の `∈` で、各対での値ははじめから `hProp`{.Agda} に住みます。これらのフィールドが、関係が `hProp`{.Agda} に値を取る構造 `𝒮ᵥ`{.Agda} に組み上がります。一階の言語はこの構造の上で解釈されます。添字は階層を指す普通の `v` です。
 <!--/-->
 
 <!--en-->
@@ -99,7 +98,7 @@ The carrier field is `V ℓ`, and its h-set certificate `setIsSet` is recorded a
 <!--/-->
 
 ```agda
-𝒮ᵥ : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
+𝒮ᵥ : ZFStructure (ℓ-suc ℓ)
 𝒮ᵥ = record
   { S      = V ℓ
   ; isSetS = setIsSet

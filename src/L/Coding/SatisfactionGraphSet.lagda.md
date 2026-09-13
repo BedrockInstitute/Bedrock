@@ -19,7 +19,6 @@ the two membership readers used by later constructions.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.SatisfactionGraphSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -38,7 +37,6 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsSF = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )

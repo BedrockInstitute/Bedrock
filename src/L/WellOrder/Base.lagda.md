@@ -42,7 +42,6 @@ Two mathematical notions then do the work. Well-foundedness is phrased through t
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.WellOrder.Base {ℓₚ : Level} where
@@ -77,7 +76,7 @@ This logical situation fixes the order of the proof. Before eliminating either t
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
-open import Cubical.Relation.Nullary using ( ¬_; isProp¬ )
+open import Cubical.Relation.Nullary using ( isProp¬ ) renaming ( ¬_ to ¬ᵗ_ )
 import Cubical.Data.Empty as Empty
 ```
 
@@ -150,7 +149,7 @@ record SWO {ℓc : Level} (A : Type ℓc) : Type (ℓ-max ℓc (ℓ-suc ℓₚ))
   field
     _<∙_   : A → A → Type ℓₚ
     tri∙   : (a b : A) → Tri (a <∙ b) (a ≡ b) (b <∙ a)
-    irr∙   : (a : A) → ¬ a <∙ a
+    irr∙   : (a : A) → ¬ᵗ a <∙ a
 ```
 
 <!--en-->
@@ -193,7 +192,7 @@ module _ {ℓc : Level} {A : Type ℓc} (w : SWO {ℓc} A) where
   open SWO w
 
   IsLeast : {ℓ'' : Level} → (A → hProp ℓ'') → A → Type (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
-  IsLeast P a = ⟨ P a ⟩ × ((b : A) → ⟨ P b ⟩ → ¬ b <∙ a)
+  IsLeast P a = ⟨ P a ⟩ × ((b : A) → ⟨ P b ⟩ → ¬ᵗ b <∙ a)
 
   isPropIsLeast : {ℓ'' : Level} (P : A → hProp ℓ'') (a : A) → isProp (IsLeast P a)
 ```

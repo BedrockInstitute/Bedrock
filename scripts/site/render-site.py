@@ -1375,6 +1375,7 @@ def main(argv):
     tpl_path, out_dir = "site/template.html", "_build/site"
     static_dir = "site/static"
     langs, base, site = ["en", "zh", "ja"], "", "Bedrock"
+    selected_modules = set()
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -1387,6 +1388,9 @@ def main(argv):
         elif a == "--langs": i += 1; langs = [x for x in argv[i].split(",") if x]
         elif a == "--base-url": i += 1; base = argv[i].rstrip("/")
         elif a == "--site": i += 1; site = argv[i]
+        elif a == "--module":
+            i += 1
+            selected_modules.update(x for x in argv[i].split(",") if x)
         else: sys.stderr.write(f"unknown option: {a}\n"); return 2
         i += 1
 
@@ -1450,11 +1454,25 @@ def main(argv):
     internal_q = {f"{m}.{n}": (m, p) for m in name2pos for n, p in name2pos[m].items()}
     types_by_module = build_types(rendered, name2pos, types_raw, internal_q)
 
+    if selected_modules:
+        unknown = selected_modules - rendered_set
+        if unknown:
+            sys.stderr.write(f"unknown rendered module(s): {', '.join(sorted(unknown))}\n")
+            return 2
+        modules_to_render = [m for m in rendered if m in selected_modules]
+    else:
+        modules_to_render = rendered
+
     # second pass: render every reachable module (externals get the "left Bedrock" banner;
     # the Milestones preview also supplies the generated reading-guide index)
-    for m in rendered:
+    for m in modules_to_render:
         render_module(m, html_dir, langs, internal, rendered_set, modnav_list,
                       name2pos, types_by_module, terms, tpl, out_dir, base, site)
+
+    if selected_modules:
+        print(f"rendered {len(modules_to_render)} selected module(s) x {len(langs)} "
+              f"language(s) -> {out_dir}", file=sys.stderr)
+        return 0
 
     search_mods = sorted(internal)                   # search indexes Bedrock identifiers only
     for lang in langs:

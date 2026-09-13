@@ -36,7 +36,6 @@ Everything in this chapter takes place at one fixed universe level `ℓ`: the se
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.Environment {ℓ : Level} where
 
@@ -121,8 +120,7 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_⁆s; ∅; ∅-empty; module InfinitySet )
 open InfinitySet using ( sucV; #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
-module Sem = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module Sem = FOL.Semantics 𝒮ᵥ
 ```
 
 <!--en-->

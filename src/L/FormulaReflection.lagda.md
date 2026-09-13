@@ -35,7 +35,6 @@ previous chapter's argument applies to each without being run again.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.FormulaReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -71,7 +70,6 @@ open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -112,7 +110,7 @@ than seconds without this one line.
 
 ```agda
 module Cor (β : V ℓ) (oβ : IsOrd β) =
-  Correct (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id (LsetS β oβ)
+  Correct 𝒮ʟ id (LsetS β oβ)
 ```
 
 <!--en-->

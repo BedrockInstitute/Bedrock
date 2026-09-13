@@ -1,47 +1,46 @@
 <!--en-->
 # Semantics
 
-Syntax distinguishes constants, variables, relations, connectives, and quantifiers, but these symbols do not yet denote anything. An interpretation supplies a truth algebra `𝕋`{.Agda}, a structure `𝒮`{.Agda}, and meanings for the constant symbols. An environment supplies the values of the currently available variables. With these data fixed, structural recursion assigns a carrier element to every term and a truth value to every formula.
+Syntax distinguishes constants, variables, relations, connectives, and quantifiers, but these symbols do not yet denote anything. An interpretation supplies a structure `𝒮`{.Agda} and meanings for the constant symbols; an environment supplies values for the currently available variables. With these data fixed, structural recursion assigns a carrier element to every term and a proposition to every formula.
 
-The central distinction is between a symbol and its denotation. A constant symbol is sent to the carrier by its interpretation; a variable position is read from the environment; object-language membership and equality are sent to the corresponding relations of the structure. Connectives and quantifiers are interpreted by the operations of the chosen truth algebra.
+The central distinction is between a symbol and its denotation. A constant symbol is sent to the carrier by its interpretation; a variable position is read from the environment; object-language membership and equality are sent to the corresponding relations of the structure. Connectives and quantifiers are interpreted by the logical operations on propositions introduced in the Prelude.
 <!--zh-->
 # 语义
 
-语法区分常元、变量、关系、联结词与量词，但这些符号本身尚无指称。解释给出真值代数 `𝕋`{.Agda}、结构 `𝒮`{.Agda} 以及常元符号的含义；环境则给出当前可用变量的取值。确定这些数据后，结构递归为每个词项指定载体元素，并为每条公式指定真值。
+语法区分常元、变量、关系、联结词与量词，但这些符号本身尚无指称。解释给出结构 `𝒮`{.Agda} 以及常元符号的含义，环境则给出当前可用变量的取值。确定这些数据后，结构递归为每个词项指定载体元素，并为每条公式指定一个命题。
 
-关键区别在于符号与其指称。常元符号由解释送入载体，变量位置从环境读取，对象语言的成员与等词由结构中的相应关系解释，联结词与量词则由所选真值代数的运算解释。
+关键区别在于符号与其指称。常元符号由解释送入载体，变量位置从环境读取，对象语言的成员与等词由结构中的相应关系解释，联结词与量词则由《基础词汇》已经引入的命题逻辑运算解释。
 <!--ja-->
 # 意味論
 
-構文は定数、変数、関係、結合子、量化子を区別しますが、これらの記号だけではまだ表示がありません。解釈は真理値代数 `𝕋`{.Agda}、構造 `𝒮`{.Agda}、定数記号の意味を与え、環境は現在利用できる変数の値を与えます。これらのデータを固定すると、構造的再帰によって各項に台の要素を、各論理式に真理値を割り当てられます。
+構文は定数、変数、関係、結合子、量化子を区別しますが、これらの記号だけではまだ表示がありません。解釈は構造 `𝒮`{.Agda} と定数記号の意味を与え、環境は現在利用できる変数の値を与えます。これらのデータを固定すると、構造的再帰によって各項に台の要素を、各論理式に命題を割り当てられます。
 
-中心となる区別は、記号とその表示の違いです。定数記号は解釈によって台へ送られ、変数の位置は環境から読み出されます。対象言語の所属と等号は構造の対応する関係で、結合子と量化子は選んだ真理値代数の演算で解釈されます。
+中心となる区別は、記号とその表示の違いです。定数記号は解釈によって台へ送られ、変数の位置は環境から読み出されます。対象言語の所属と等号は構造の対応する関係で、結合子と量化子は「基礎語彙」で導入した命題の論理演算で解釈されます。
 <!--/-->
 
 <!--en-->
-Fix a truth algebra `𝕋 : TruthAlgebra ℓ ℓ'`{.Agda} and a structure `𝒮 : ZFStructure 𝕋`{.Agda}. Formula values then lie in the carrier `Ω` of `𝕋`, while atomic equality and membership use the truth-valued relations supplied by `𝒮`. At this stage no particular proposition-valued instance or set-theoretic axiom is needed.
+Fix a structure `𝒮 : ZFStructure ℓ`{.Agda}. Its equality and membership relations take values in `hProp ℓ`{.Agda}, and every formula will be interpreted in that same proposition universe. No set-theoretic axiom is needed to define this interpretation.
 <!--zh-->
-固定真值代数 `𝕋 : TruthAlgebra ℓ ℓ'`{.Agda} 以及取值于它的结构 `𝒮 : ZFStructure 𝕋`{.Agda}。公式的值落在 `𝕋` 的载体 `Ω` 中，原子的等词与成员则使用 `𝒮` 提供的真值关系。此处不需要指定命题值实例，也不需要假设集合论公理。
+固定结构 `𝒮 : ZFStructure ℓ`{.Agda}。它的等词与成员关系都取值于 `hProp ℓ`{.Agda}，每条公式也将在同一个命题宇宙中解释。定义这种解释不需要任何集合论公理。
 <!--ja-->
-真理値代数 `𝕋 : TruthAlgebra ℓ ℓ'`{.Agda} と、そこに値をもつ構造 `𝒮 : ZFStructure 𝕋`{.Agda} を固定します。論理式の値は `𝕋` の台 `Ω` に属し、原子的な等号と所属には `𝒮` が与える真理値関係を用います。この段階では、特定の命題値の実例も集合論の公理も必要ありません。
+構造 `𝒮 : ZFStructure ℓ`{.Agda} を固定します。その等号と所属は `hProp ℓ`{.Agda} に値を取り、各論理式も同じ命題の宇宙で解釈されます。この解釈の定義に集合論の公理は必要ありません。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 
-module FOL.Semantics {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
+module FOL.Semantics {ℓ} (𝒮 : ZFStructure ℓ) where
 ```
 
 <!--en-->
-Each syntactic primitive then asks for exactly one semantic ingredient. A term is either a constant, answered by the interpretation, or a variable, answered by the environment. An atomic formula is answered by a relation of the structure. A connective or quantifier is answered by an operation of the truth algebra `𝕋`{.Agda}. With this division of labor the same syntax is interpretable in any structure valued in the chosen truth algebra, and the definition to come simply follows the shape of the formula.
+Each syntactic primitive then asks for exactly one semantic ingredient. A term is either a constant, answered by the interpretation, or a variable, answered by the environment. An atomic formula is answered by a relation of the structure. A connective or quantifier is answered by the corresponding operation on propositions. With this division of labor, the definition to come simply follows the shape of the formula.
 <!--zh-->
-此后每个语法原语恰好要一种语义成分来回答：词项要么是常元，由解释作答；要么是变量，由环境作答。原子公式由结构的关系作答。联结词与量词则由真值代数 `𝕋`{.Agda} 的运算作答。有了这个分工，同一套语法便可在取值于所选真值代数的任意结构中解释，接下来的定义也只是顺着公式的形状进行。
+此后每个语法原语恰好要一种语义成分来回答：词项要么是常元，由解释作答；要么是变量，由环境作答。原子公式由结构的关系作答，联结词与量词则由命题上的相应运算作答。有了这个分工，接下来的定义只需顺着公式的形状进行。
 <!--ja-->
-その後の各構文の primitive には、それぞれ一つの意味的成分が対応します。項は定数なら解釈が、変数なら環境が答えます。原子論理式は構造の関係が答えます。結合子と量化子は真理値代数 `𝕋`{.Agda} の演算が答えます。この分担により、同じ構文は選ばれた真理値代数に値を持つ任意の構造で解釈でき、これから定義するものは公式の形に沿って進むだけです。
+その後の各構文の primitive には、それぞれ一つの意味的成分が対応します。項は定数なら解釈が、変数なら環境が答えます。原子論理式は構造の関係が答え、結合子と量化子には命題上の対応する演算が答えます。この分担により、これからの定義は論理式の形に沿って進むだけです。
 <!--/-->
 
 ```agda
@@ -50,7 +49,6 @@ open import FOL.Syntax using
   ( Term; con; var
   ; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 
-open TruthAlgebra 𝕋
 open ZFStructure 𝒮
 ```
 
@@ -110,19 +108,19 @@ module At {ℓc} (K : Type ℓc) (ι : K → S) where
 ```
 
 <!--en-->
-Evaluation of a term either asks `ι` (a constant) or looks up the environment (a variable). Satisfaction is a single structural recursion over the ten constructors: each primitive clause is the truth algebra's corresponding operation applied to the meanings of the subformulas, and each quantifier extends the environment by the freshly bound value. In both bounded clauses, the bound term is evaluated in the original environment `γ`, while the body is evaluated in the extended environment `x ∷ γ`.
+Evaluation of a term either asks `ι` (a constant) or looks up the environment (a variable). Satisfaction is a single structural recursion over the ten constructors: each propositional constructor is interpreted by its corresponding logical operation, and each quantifier extends the environment by the freshly bound value. In both bounded clauses, the bound term is evaluated in the original environment `γ`, while the body is evaluated in the extended environment `x ∷ γ`.
 <!--zh-->
-词项求值要么问 `ι` (常元)，要么查环境 (变量)。满足关系是对十个构造子的一次结构递归：每个原语子句都是真值代数的对应运算作用在子公式的含义上，每个量词都用新绑定的值扩展环境。两条有界子句都在原环境 `γ` 中求值界限词项，而在扩展环境 `x ∷ γ` 中求值主体。
+词项求值要么问 `ι` (常元)，要么查环境 (变量)。满足关系是对十个构造子的一次结构递归：每个命题构造子都由相应的逻辑运算解释，每个量词都用新绑定的值扩展环境。两条有界子句都在原环境 `γ` 中求值界限词项，而在扩展环境 `x ∷ γ` 中求值主体。
 <!--ja-->
-項の評価は、定数なら `ι` に、変数なら環境を尋ねます。充足関係は十個の構成子に対する一回の構造的再帰です。各 primitive の節は部分公式の意味に対する真理値代数の対応する演算であり、各量化子は新しく束縛した値で環境を拡張します。二つの有界量化の節では、限界の項を元の環境 `γ` で評価し、本体を拡張した環境 `x ∷ γ` で評価します。
+項の評価は、定数なら `ι` に、変数なら環境を尋ねます。充足関係は十個の構成子に対する一回の構造的再帰です。命題を組み立てる各構成子は対応する論理演算で解釈し、各量化子は新しく束縛した値で環境を拡張します。二つの有界量化の節では、限界の項を元の環境 `γ` で評価し、本体を拡張した環境 `x ∷ γ` で評価します。
 <!--/-->
 
 <!--en-->
-Satisfaction takes an environment and a formula to a truth value in `Ω`. Atomic membership and equality first evaluate their two terms and then apply the structure relations `∈ˢ` and `≈ˢ`. For compound formulas, the object-language symbols `∧̇`, `∨̇`, and `⇒̇` are interpreted by the selected operations `⊓`, `⊔`, and `⇒` of the truth algebra. These operations need not be the host-language connectives unless the chosen truth algebra makes them so.
+Satisfaction takes an environment and a formula to a proposition in `hProp ℓ`{.Agda}. Atomic membership and equality first evaluate their two terms and then apply the structure relations `∈ˢ` and `≈ˢ`. For compound formulas, the object-language symbols `∧̇`, `∨̇`, and `⇒̇` are interpreted by the host-level operations `⊓`, `⊔`, and `⇒` on propositions.
 <!--zh-->
-满足关系把环境与公式送到 `Ω` 中的真值。原子的成员与等词先对两个词项求值，再应用结构关系 `∈ˢ` 与 `≈ˢ`。对于复合公式，对象语言符号 `∧̇`、`∨̇`、`⇒̇` 分别由真值代数中选定的运算 `⊓`、`⊔`、`⇒` 解释。除非所选真值代数如此规定，这些运算并不等同于宿主语言的联结词。
+满足关系把环境与公式送到 `hProp ℓ`{.Agda} 中的命题。原子的成员与等词先对两个词项求值，再应用结构关系 `∈ˢ` 与 `≈ˢ`。对于复合公式，对象语言符号 `∧̇`、`∨̇`、`⇒̇` 分别由命题上的宿主层运算 `⊓`、`⊔`、`⇒` 解释。
 <!--ja-->
-充足関係は、環境と論理式を `Ω` の真理値へ送ります。原子的な所属と等号では、まず二つの項を評価し、それから構造の関係 `∈ˢ` と `≈ˢ` を適用します。複合式では、対象言語の記号 `∧̇`、`∨̇`、`⇒̇` を、真理値代数で選んだ演算 `⊓`、`⊔`、`⇒` によって解釈します。選んだ真理値代数がそう定める場合を除き、これらはホスト言語の結合子そのものではありません。
+充足関係は、環境と論理式を `hProp ℓ`{.Agda} の命題へ送ります。原子的な所属と等号では、まず二つの項を評価し、それから構造の関係 `∈ˢ` と `≈ˢ` を適用します。複合式では、対象言語の記号 `∧̇`、`∨̇`、`⇒̇` を、命題上のホストレベルの演算 `⊓`、`⊔`、`⇒` によって解釈します。
 <!--/-->
 
 ```agda
@@ -132,7 +130,7 @@ Satisfaction takes an environment and a formula to a truth value in `Ω`. Atomic
 
   infix 6 _⊨_
 
-  _⊨_ : ∀ {n} → S ^ n → Formula K n → Ω
+  _⊨_ : ∀ {n} → S ^ n → Formula K n → hProp ℓ
 ```
 
 <!--en-->
@@ -170,13 +168,13 @@ The bounded clauses combine membership in the denotation of `t` with the body. T
 <!--en-->
 ## Recap
 
-Meaning is compositional. A term denotes a carrier element determined by its constant interpretation and environment. A formula of arity `n` determines a function `S ^ n → Ω`{.Agda}, whether or not it uses every available variable position. Atomic formulas use the structure relations; compound formulas use the truth-algebra operations. Quantifiers vary a new position at the front of the environment, and bounded quantifiers evaluate their bound outside that extension and their body inside it.
+Meaning is compositional. A term denotes a carrier element determined by its constant interpretation and environment. A formula of arity `n` determines a function `S ^ n → hProp ℓ`{.Agda}, whether or not it uses every available variable position. Atomic formulas use the structure relations; compound formulas use the logical operations on propositions. Quantifiers vary a new position at the front of the environment, and bounded quantifiers evaluate their bound outside that extension and their body inside it.
 <!--zh-->
 ## 小结
 
-语义按组成给出。词项的指称是由常元解释与环境确定的载体元素。元数为 `n` 的公式确定一个 `S ^ n → Ω`{.Agda} 型函数，无论它是否使用了每个可用变量位置。原子公式使用结构关系，复合公式使用真值代数运算。量词在环境前端改变一个新位置；有界量词在扩展之外求值界限，在扩展之内求值主体。
+语义按组成给出。词项的指称是由常元解释与环境确定的载体元素。元数为 `n` 的公式确定一个 `S ^ n → hProp ℓ`{.Agda} 型函数，无论它是否使用了每个可用变量位置。原子公式使用结构关系，复合公式使用命题上的逻辑运算。量词在环境前端改变一个新位置；有界量词在扩展之外求值界限，在扩展之内求值主体。
 <!--ja-->
 ## まとめ
 
-意味は合成的に与えられます。項は、定数解釈と環境によって定まる台の要素を表示します。アリティ `n` の論理式は、利用可能な変数位置をすべて使うかどうかにかかわらず、`S ^ n → Ω`{.Agda} 型の関数を定めます。原子式には構造の関係を、複合式には真理値代数の演算を用います。量化子は環境の先頭に新しい位置を加えてその値を動かし、有界量化子はその拡張の外で限界を、内で本体を評価します。
+意味は合成的に与えられます。項は、定数解釈と環境によって定まる台の要素を表示します。アリティ `n` の論理式は、利用可能な変数位置をすべて使うかどうかにかかわらず、`S ^ n → hProp ℓ`{.Agda} 型の関数を定めます。原子式には構造の関係を、複合式には命題上の論理演算を用います。量化子は環境の先頭に新しい位置を加えてその値を動かし、有界量化子はその拡張の外で限界を、内で本体を評価します。
 <!--/-->

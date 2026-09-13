@@ -51,7 +51,7 @@ from pathlib import Path   # cutover step 7: check_spdx() needs it
 ROOT = Path(__file__).resolve().parent.parent.parent
 
 OPTIONS_EXPECTED = ["--cubical", "--safe", "--guardedness"]
-BARE_OPEN_HUBS = {"Base.Prelude", "Base.Truth"}   # STYLE-agda §2
+BARE_OPEN_HUBS = {"Base.Prelude"}   # STYLE-agda §2
 KEEP_MARK = "lint-agda: keep"
 FORBIDDEN_PRAGMAS = ("TERMINATING", "NON_TERMINATING",
                      "NO_TERMINATION_CHECK", "NO_POSITIVITY_CHECK")

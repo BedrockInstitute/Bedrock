@@ -30,7 +30,6 @@ Everything in this chapter takes place at one fixed universe level `ℓ`, fixed 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module V.Smallness {ℓ : Level} where
 
@@ -71,11 +70,11 @@ import Cubical.Functions.Logic as Logic
 ```
 
 <!--en-->
-Closing smallness under the connectives needs the library's proposition operations at the lower level `ℓ`, which is the target universe of every compression. These are kept under the qualified name `Logic`{.Agda}, so `Logic.⊓`{.Agda} and its siblings always denote operations on `hProp ℓ` and never collide with the truth-algebra operations on `hProp (ℓ-suc ℓ)` opened later. The remaining pieces support specific equivalence constructions: `Σ-cong-equiv` builds an equivalence of pair types from componentwise equivalences, `Sum.⊎-equiv` handles coproducts, `tt*` is the unit element, and the propositional truncation module `PT`{.Agda} provides a map operation that transports merely-exists statements along a function without ever choosing a witness.
+Closing smallness under the connectives needs proposition operations at the lower level `ℓ`, the target universe of every compression. They remain under the qualified name `Logic`{.Agda}, so `Logic.⊓`{.Agda} and its siblings visibly act on `hProp ℓ`, while the unqualified operations used below act on `hProp (ℓ-suc ℓ)`. The remaining pieces support specific equivalence constructions: `Σ-cong-equiv` builds an equivalence of pair types from componentwise equivalences, `Sum.⊎-equiv` handles coproducts, `tt*` is the unit element, and the propositional truncation module `PT`{.Agda} provides a map operation that transports merely-exists statements along a function without ever choosing a witness.
 <!--zh-->
-要证联结词保小，需要库在低层 `ℓ`，即每次化归的目标宇宙，上的命题运算。它们以限定名 `Logic`{.Agda} 保存，因此 `Logic.⊓`{.Agda} 等名字总是 `hProp ℓ` 上的运算，不会与稍后打开的 `hProp (ℓ-suc ℓ)` 上的真值代数运算冲突。其余部分服务于具体的等价构造：`Σ-cong-equiv` 由逐分量的等价构造对子类型间的等价；`Sum.⊎-equiv` 处理余积；`tt*` 是单元元素；命题截断模块 `PT`{.Agda} 的 map 运算沿函数搬运「仅仅存在」式陈述，而不选取任何见证。
+要证联结词保小，需要低层 `ℓ`，即每次化归的目标宇宙，上的命题运算。它们保留限定名 `Logic`{.Agda}，因此 `Logic.⊓`{.Agda} 等名字显然作用于 `hProp ℓ`，而下文不加限定的运算作用于 `hProp (ℓ-suc ℓ)`。其余部分服务于具体的等价构造：`Σ-cong-equiv` 由逐分量的等价构造对子类型间的等价；`Sum.⊎-equiv` 处理余积；`tt*` 是单元元素；命题截断模块 `PT`{.Agda} 的 map 运算沿函数搬运「仅仅存在」式陈述，而不选取任何见证。
 <!--ja-->
-結合子による保存を示すには、低いレベル `ℓ`、すなわち圧縮の到達点となる宇宙における、ライブラリの命題演算が必要です。これらは限定名 `Logic`{.Agda} のもとに置かれ、`Logic.⊓`{.Agda} などの名前はつねに `hProp ℓ` 上の演算を指し、後で開く `hProp (ℓ-suc ℓ)` 上の真理値代数の演算と衝突しません。残りの部品は個々の同値の構成に役立ちます。`Σ-cong-equiv` は成分ごとの同値から対の型の間の同値を作り、`Sum.⊎-equiv` は直和を扱い、`tt*` は単一元であり、命題的切り詰めのモジュール `PT`{.Agda} は、証人を選ばずに関数に沿って「存在するだけ」の主張を運ぶ map を与えます。
+結合子による保存を示すには、低いレベル `ℓ`、すなわち圧縮の到達点となる宇宙の命題演算が必要です。これらは限定名 `Logic`{.Agda} のもとに置かれるので、`Logic.⊓`{.Agda} などは明らかに `hProp ℓ` 上で働き、以下の無修飾の演算は `hProp (ℓ-suc ℓ)` 上で働きます。残りの部品は個々の同値の構成に役立ちます。`Σ-cong-equiv` は成分ごとの同値から対の型の間の同値を作り、`Sum.⊎-equiv` は直和を扱い、`tt*` は単一元であり、命題的切り詰めのモジュール `PT`{.Agda} は、証人を選ばずに関数に沿って「存在するだけ」の主張を運ぶ map を与えます。
 <!--/-->
 
 ```agda
@@ -87,11 +86,11 @@ import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
-The hierarchy itself supplies the atomic data. Each set `a` comes with a monic presentation: a small index type `⟪ a ⟫` with an embedding `⟪ a ⟫↪` into `V ℓ`. Membership in a set therefore has a small twin `_∈ₛ_`, defined as the type of pairs `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)`, which lives in `hProp ℓ`; the conversion `∈∈ₛ` links the two memberships in both directions, and `identityPrinciple`{.Agda} identifies bisimilarity `∼` with actual paths. The operation `∈-asFiber` turns an (untruncated) membership into an actual fiber of the embedding. `SeparationSet`{.Agda} is the library's separation construction, which only accepts predicates already valued in the lower universe. Finally the truth algebra `hPropAlgebra (ℓ-suc ℓ)` is opened, bringing the connectives `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and the quantifiers `⋀ ⋁` on `hProp (ℓ-suc ℓ)` into scope.
+The hierarchy itself supplies the atomic data. Each set `a` comes with a monic presentation: a small index type `⟪ a ⟫` with an embedding `⟪ a ⟫↪` into `V ℓ`. Membership in a set therefore has a small twin `_∈ₛ_`, defined as the type of pairs `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)`, which lives in `hProp ℓ`; the conversion `∈∈ₛ` links the two memberships in both directions, and `identityPrinciple`{.Agda} identifies bisimilarity `∼` with actual paths. The operation `∈-asFiber` turns an (untruncated) membership into an actual fiber of the embedding. `SeparationSet`{.Agda} is the library's separation construction, which only accepts predicates already valued in the lower universe. The unqualified connectives `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and quantifiers `⋀ ⋁` act directly on `hProp (ℓ-suc ℓ)`.
 <!--zh-->
-层级本身提供原子数据。每个集合 `a` 都有一个单射呈现：小索引类型 `⟪ a ⟫` 与到 `V ℓ` 的嵌入 `⟪ a ⟫↪`。于是隶属有一个小的孪生 `_∈ₛ_`，定义为所有对 `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)` 的类型，落在 `hProp ℓ` 中；转换 `∈∈ₛ` 双向联结两种隶属，`identityPrinciple`{.Agda} 把双相似 `∼` 与真正的路径等同。运算 `∈-asFiber` 把 (不加截断的) 隶属变成嵌入的一个真正的纤维。`SeparationSet`{.Agda} 是库的分离构造，只接受已经在低宇宙取值的谓词。最后打开真值代数 `hPropAlgebra (ℓ-suc ℓ)`，把 `hProp (ℓ-suc ℓ)` 上的联结词 `⊓ ⊔ ⇒ ¬ ⊤ ⊥` 与量词 `⋀ ⋁` 带入作用域。
+层级本身提供原子数据。每个集合 `a` 都有一个单射呈现：小索引类型 `⟪ a ⟫` 与到 `V ℓ` 的嵌入 `⟪ a ⟫↪`。于是隶属有一个小的孪生 `_∈ₛ_`，定义为所有对 `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)` 的类型，落在 `hProp ℓ` 中；转换 `∈∈ₛ` 双向联结两种隶属，`identityPrinciple`{.Agda} 把双相似 `∼` 与真正的路径等同。运算 `∈-asFiber` 把 (不加截断的) 隶属变成嵌入的一个真正的纤维。`SeparationSet`{.Agda} 是库的分离构造，只接受已经在低宇宙取值的谓词。不加限定的联结词 `⊓ ⊔ ⇒ ¬ ⊤ ⊥` 与量词 `⋀ ⋁` 直接作用于 `hProp (ℓ-suc ℓ)`。
 <!--ja-->
-階層そのものが原子的なデータを供給します。各集合 `a` は単射表示をもち、小さな添字の型 `⟪ a ⟫` と `V ℓ` への埋め込み `⟪ a ⟫↪` です。すると所属には小さい双子 `_∈ₛ_` が伴います。これは対 `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)` 全体の型として定義され、`hProp ℓ` に住みます。変換 `∈∈ₛ` が二つの所属を双方向に結び、`identityPrinciple`{.Agda} は双相似 `∼` を実際のパスと同一視します。演算 `∈-asFiber` は (切り詰められていない) 所属を埋め込みの実際のファイバーに変えます。`SeparationSet`{.Agda} はライブラリの分出構成であり、すでに低い宇宙に値をもつ述語だけを受け付けます。最後に真理値代数 `hPropAlgebra (ℓ-suc ℓ)` を開き、`hProp (ℓ-suc ℓ)` 上の結合子 `⊓ ⊔ ⇒ ¬ ⊤ ⊥` と量化子 `⋀ ⋁` をスコープに入れます。
+階層そのものが原子的なデータを供給します。各集合 `a` は単射表示をもち、小さな添字の型 `⟪ a ⟫` と `V ℓ` への埋め込み `⟪ a ⟫↪` です。すると所属には小さい双子 `_∈ₛ_` が伴います。これは対 `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)` 全体の型として定義され、`hProp ℓ` に住みます。変換 `∈∈ₛ` が二つの所属を双方向に結び、`identityPrinciple`{.Agda} は双相似 `∼` を実際のパスと同一視します。演算 `∈-asFiber` は (切り詰められていない) 所属を埋め込みの実際のファイバーに変えます。`SeparationSet`{.Agda} はライブラリの分出構成であり、すでに低い宇宙に値をもつ述語だけを受け付けます。無修飾の結合子 `⊓ ⊔ ⇒ ¬ ⊤ ⊥` と量化子 `⋀ ⋁` は `hProp (ℓ-suc ℓ)` 上で直接働きます。
 <!--/-->
 
 ```agda
@@ -100,7 +99,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module SeparationSet )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
 
 <!--en-->
@@ -237,11 +235,11 @@ small⊤ : isSmall ⊤
 ```
 
 <!--en-->
-The two constants close the section. Truth is small because both sides are inhabited propositions: the compressed proposition is `Logic.⊤`, and in each direction the function discards its argument and returns the unit element `tt*`. Falsity begins slightly differently: the truth value `⊥` of the algebra was defined as the hProp pair `(⊥* , isProp⊥*)`, so its underlying type is the empty type `⊥*` itself, and the compressed proposition is that same empty type packaged as an hProp. Both functions are then defined by absurdity: an argument of an empty type admits no cases.
+The two constants close the section. Truth is small because both sides are inhabited propositions: the compressed proposition is `Logic.⊤`, and in each direction the function discards its argument and returns the unit element `tt*`. Falsity begins slightly differently: the truth value `⊥` was defined as the hProp pair `(⊥* , isProp⊥*)`, so its underlying type is the empty type `⊥*` itself, and the compressed proposition is that same empty type packaged as an hProp. Both functions are then defined by absurdity: an argument of an empty type admits no cases.
 <!--zh-->
-两个常量收尾本节。真是小的，因为两端都是有元素的命题：压缩命题取 `Logic.⊤`，两个方向的函数都丢弃参数、返回单元元素 `tt*`。假的起点略有不同：代数的真值 `⊥` 本就定义为 hProp 对 `(⊥* , isProp⊥*)`，故其底层类型恰是空类型 `⊥*`，压缩命题也就是打包成 hProp 的同一个空类型。于是两个函数都用荒谬来定义：空类型的参数没有任何情形可分。
+两个常量收尾本节。真是小的，因为两端都是有元素的命题：压缩命题取 `Logic.⊤`，两个方向的函数都丢弃参数、返回单元元素 `tt*`。假的起点略有不同：真值 `⊥` 本就定义为 hProp 对 `(⊥* , isProp⊥*)`，故其底层类型恰是空类型 `⊥*`，压缩命题也就是打包成 hProp 的同一个空类型。于是两个函数都用荒谬来定义：空类型的参数没有任何情形可分。
 <!--ja-->
-最後の二つの定数でこの節を閉じます。真が小さいのは、両側とも要素をもつ命題だからです。圧縮された命題は `Logic.⊤` であり、どちらの方向の関数も引数を捨てて単一元 `tt*` を返します。偽は少し違う始まり方をします。代数の真理値 `⊥` はもともと hProp の対 `(⊥* , isProp⊥*)` として定義されているので、その基礎の型は空な型 `⊥*` そのものであり、圧縮された命題も同じ空な型を hProp にまとめたものです。したがって両方の関数は背理で定義されます。空な型の引数には場合分けが存在しないのです。
+最後の二つの定数でこの節を閉じます。真が小さいのは、両側とも要素をもつ命題だからです。圧縮された命題は `Logic.⊤` であり、どちらの方向の関数も引数を捨てて単一元 `tt*` を返します。偽は少し違う始まり方をします。真理値 `⊥` はもともと hProp の対 `(⊥* , isProp⊥*)` として定義されているので、その基礎の型は空な型 `⊥*` そのものであり、圧縮された命題も同じ空な型を hProp にまとめたものです。したがって両方の関数は背理で定義されます。空な型の引数には場合分けが存在しないのです。
 <!--/-->
 
 ```agda
@@ -249,7 +247,7 @@ small⊤ = Logic.⊤ ,
   propBiimpl→Equiv (⊤ .snd) (snd (Logic.⊤ {ℓ}))
     (λ _ → tt*) (λ _ → tt*)
 
-small⊥ : isSmall ⊥
+small⊥ : isSmall (⊥ {ℓ = ℓ-suc ℓ})
 small⊥ = (⊥* , isProp⊥*) ,
 ```
 
@@ -493,7 +491,7 @@ The setup instantiates the semantics once and for all: `SemanticsV` is the satis
 <!--/-->
 
 ```agda
-module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module SemanticsV = FOL.Semantics 𝒮ᵥ
 open SemanticsV using ( _^_ )
 
 module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
@@ -663,10 +661,10 @@ Two abbreviations fix notation. `SM` names the restricted carrier itself, and `�
 ```agda
   SM = Σ[ x ∈ S ] (x ∈ᶜ M)
 
-  𝒮M : ZFStructure (hPropAlgebra (ℓ-suc ℓ))
+  𝒮M : ZFStructure (ℓ-suc ℓ)
   𝒮M = 𝒮ᵥ ↾ M
 
-  module SemanticsM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮M
+  module SemanticsM = FOL.Semantics 𝒮M
   open SemanticsM.At K ι renaming ( _⊨_ to _⊨ᵐ_ ; ⟦_⟧ to ⟦_⟧ᵐ ) public
 ```
 

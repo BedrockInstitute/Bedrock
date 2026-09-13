@@ -24,7 +24,6 @@ The universe accounting is exact and should be read once. The carrier of the mod
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module V.Model {ℓ : Level} where
 
@@ -32,11 +31,11 @@ open import Base.Impredicativity using ( HPropSmallness; Impredicativity )
 ```
 
 <!--en-->
-Formally, what does it mean for the hierarchy to satisfy an axiom? The first-order logic chapters supply the vocabulary. A structure is a carrier that is an h-set, whose equality and membership take truth values, not booleans of some fixed two-element algebra. A formula is an element of the object language's syntax, and the axiom schemas quantify over its free-variable slots. Satisfaction is a relation that reads a formula at an environment of carrier elements and returns a truth value. The ZF axioms are re-derived one by one in exactly these terms below.
+Formally, what does it mean for the hierarchy to satisfy an axiom? The first-order logic chapters supply the vocabulary. A structure is a carrier that is an h-set, whose equality and membership take truth values, not booleans of a fixed two-element type. A formula is an element of the object language's syntax, and the axiom schemas quantify over its free-variable slots. Satisfaction is a relation that reads a formula at an environment of carrier elements and returns a truth value. The ZF axioms are re-derived one by one in exactly these terms below.
 <!--zh-->
-「层级满足一条公理」在形式上是什么意思？一阶逻辑诸章供给了术语。一个结构是作为 h-集合的载体，其等词与成员关系取真值，而非某个固定二元代数的布尔值。公式是对象语言语法的元素，公理模式对它的自由变元槽量化。满足关系在载体元素的环境下读出公式，返回一个真值。下面将逐一按这些术语重新导出 ZF 的公理。
+「层级满足一条公理」在形式上是什么意思？一阶逻辑诸章供给了术语。一个结构是作为 h-集合的载体，其等词与成员关系取真值，而非某个固定二元类型中的布尔值。公式是对象语言语法的元素，公理模式对它的自由变元槽量化。满足关系在载体元素的环境下读出公式，返回一个真值。下面将逐一按这些术语重新导出 ZF 的公理。
 <!--ja-->
-「階層が公理を満たす」とは形式的にはどういう意味でしょうか。一階論理の諸章が語彙を供給します。構造とは h-集合である台のことであり、その等号と所属は、固定された二元代数のブール値ではなく真理値を取ります。論理式は対象言語の構文の要素であり、公理のスキーマはその自由変数の枠を量化します。充足は、台の要素からなる環境のもとで論理式を読み、真理値を返す関係です。以下では ZF の公理を、まさにこの言葉で一つずつ導き直します。
+「階層が公理を満たす」とは形式的にはどういう意味でしょうか。一階論理の諸章が語彙を供給します。構造とは h-集合である台のことであり、その等号と所属は、固定された二元型のブール値ではなく真理値を取ります。論理式は対象言語の構文の要素であり、公理のスキーマはその自由変数の枠を量化します。充足は、台の要素からなる環境のもとで論理式を読み、真理値を返す関係です。以下では ZF の公理を、まさにこの言葉で一つずつ導き直します。
 <!--/-->
 
 ```agda
@@ -125,7 +124,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( SetPackage )  -- lint-agda: keep (used qualified: SetPackage.classification)
 open InfinitySet using ( sucV; #_; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open ZFStructure 𝒮ᵥ
 ```
 
@@ -142,7 +140,7 @@ The target of all these conversions is the record `isZFModel`{.Agda}, whose fiel
 module Model = FOL.ZFModel 𝒮ᵥ
 open Model using ( SetOf; _⊆ˢ_; setOf-unique; isZFModel; isZFCModel )
 
-module SemanticsV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module SemanticsV = FOL.Semantics 𝒮ᵥ
 open SemanticsV.At S id using ( _⊨_ )
 ```
 
@@ -195,11 +193,11 @@ union-spec a x = ⇔toPath
 ```
 
 <!--en-->
-Union is the first specification with an existential shape: membership in `⋃ a` should equal the truncated statement that some `y` lies in `a` with `x` in `y`. Forward, `union-ax` yields such a truncated triple `(v , v in a , x in v)`, but with both memberships in small form. The rewriting happens inside a propositional truncation with a propositional target, so `PT.map` transforms the witness in place: `∈∈ₛ` turns `v ∈ₛ a` into an ordinary member of `a`, and `x ∈ₛ v` into an ordinary member of `v`. The outcome is a witness of the indexed disjunction `⋁ S`, the truth algebra's mere-existence statement over the carrier, and no member is chosen.
+Union is the first specification with an existential shape: membership in `⋃ a` should equal the truncated statement that some `y` lies in `a` with `x` in `y`. Forward, `union-ax` yields such a truncated triple `(v , v in a , x in v)`, but with both memberships in small form. The rewriting happens inside a propositional truncation with a propositional target, so `PT.map` transforms the witness in place: `∈∈ₛ` turns `v ∈ₛ a` into an ordinary member of `a`, and `x ∈ₛ v` into an ordinary member of `v`. The outcome is a witness of the indexed disjunction `⋁ S`, the direct `hProp` mere-existence statement over the carrier, and no member is chosen.
 <!--zh-->
-并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员资格都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `PT.map` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通成员，把 `x ∈ₛ v` 变成 `v` 的普通成员。结果是带索引析取 `⋁ S` 的一个见证，即真值代数在载体上的纯粹存在陈述，并且不选出任何成员。
+并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员资格都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `PT.map` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通成员，把 `x ∈ₛ v` 变成 `v` 的普通成员。结果是带索引析取 `⋁ S` 的一个见证，即`hProp` 上对载体的纯粹存在陈述，并且不选出任何成员。
 <!--ja-->
-和は存在の形をもつ最初の仕様です。`⋃ a` への所属は、「ある `y` が `a` に属し `x` が `y` に属する」という切り詰められた主張に等しいはずです。順方向では、`union-ax` がまさにそのような切り詰められた三つ組 `(v , v ∈ a , x ∈ v)` を与えますが、二つの所属がともに小形式です。書き換えは命題の截断の内部で行われ、目標も命題なので、`PT.map` が証人をその場で変えます。`∈∈ₛ` が `v ∈ₛ a` を `a` の通常の要素へ、`x ∈ₛ v` を `v` の通常の要素へ変えます。結果は添字付き選言 `⋁ S` の証人、すなわち真理値代数の台の上の単なる存在の主張であり、どの元も選ばれません。
+和は存在の形をもつ最初の仕様です。`⋃ a` への所属は、「ある `y` が `a` に属し `x` が `y` に属する」という切り詰められた主張に等しいはずです。順方向では、`union-ax` がまさにそのような切り詰められた三つ組 `(v , v ∈ a , x ∈ v)` を与えますが、二つの所属がともに小形式です。書き換えは命題の截断の内部で行われ、目標も命題なので、`PT.map` が証人をその場で変えます。`∈∈ₛ` が `v ∈ₛ a` を `a` の通常の要素へ、`x ∈ₛ v` を `v` の通常の要素へ変えます。結果は添字付き選言 `⋁ S` の証人、すなわち`hProp` 上で台を量化する単なる存在の主張であり、どの元も選ばれません。
 <!--/-->
 
 ```agda

@@ -36,7 +36,6 @@ The explicit classical input is `lem : LEM (ℓ-suc ℓ)`. It supplies the finit
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Choice.CanonicalNames {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -173,11 +172,11 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 ```
 
 <!--en-->
-The last group fixes the concrete interpretation the names will be read in. `#` turns a natural number into the corresponding numeral inside the universe, and `ω` is the infinite set, so numeral membership certificates like those in the limit stage can be produced. Then the truth values are pinned to propositions: opening the truth algebra at `hPropAlgebra (ℓ-suc ℓ)` makes the logical connectives act on `hProp`, and opening the `ZFStructure` semantics at the structure `𝒮ᵥ` fixes what a formula means inside `V`. Every satisfaction judgment below is this inner one, and that is what ties a name's denotation to the definable powerset's own notion of definability.
+The last group fixes the concrete interpretation the names will be read in. `#` turns a natural number into the corresponding numeral inside the universe, and `ω` is the infinite set, so numeral membership certificates like those in the limit stage can be produced. The direct logical operations on `hProp (ℓ-suc ℓ)` provide the truth values and connectives used here, and opening the `ZFStructure` semantics at the structure `𝒮ᵥ` fixes what a formula means inside `V`. Every satisfaction judgment below is this inner one, and that is what ties a name's denotation to the definable powerset's own notion of definability.
 <!--zh-->
-最后一组固定了诸名字被解读于其中的具体解释。`#` 把自然数变成宇宙之内对应的数码，而 `ω` 是无穷集，于是极限层那类数码隶属凭证便可制造。随后真值被固定在命题上：在 `hPropAlgebra (ℓ-suc ℓ)` 处打开真值代数，使诸逻辑联结词作用于 `hProp`；再在结构 `𝒮ᵥ` 处打开 `ZFStructure` 的语义，便固定了一条公式在 `V` 之内意味着什么。下文的每一个满足判断都是这个内层判断，而正是它把名字的指称与可定义幂集自己的可定义性概念扣在一起。
+最后一组固定了诸名字被解读于其中的具体解释。`#` 把自然数变成宇宙之内对应的数码，而 `ω` 是无穷集，于是极限层那类数码隶属凭证便可制造。这里的真值与联结词直接取自 `hProp (ℓ-suc ℓ)` 上的逻辑运算；再在结构 `𝒮ᵥ` 处打开 `ZFStructure` 的语义，便固定了一条公式在 `V` 之内意味着什么。下文的每一个满足判断都是这个内层判断，而正是它把名字的指称与可定义幂集自己的可定义性概念扣在一起。
 <!--ja-->
-最後のグループは、名前が読まれる具体的な解釈を固定する。`#` は自然数を宇宙の中の対応する数項へ変え、`ω` は無限集合である。したがって極限段階で用いた種類の数項の所属証明書が作れる。次に真値は命題に固定される。真理値代数を `hPropAlgebra (ℓ-suc ℓ)` で開けば論理結合子が `hProp` の上に働き、構造 `𝒮ᵥ` のもとで `ZFStructure` の意味論を開けば、論理式が `V` の中で何を意味するかが定まる。以下のすべての充足判断はこの内側の判断であり、名前の指示対象を定義可能冪集合自身の定義可能性の概念に結びつけるのはこれである。
+最後のグループは、名前が読まれる具体的な解釈を固定する。`#` は自然数を宇宙の中の対応する数項へ変え、`ω` は無限集合である。したがって極限段階で用いた種類の数項の所属証明書が作れる。ここで使う真理値と結合子は、`hProp (ℓ-suc ℓ)` 上の論理演算から直接得られ、構造 `𝒮ᵥ` のもとで `ZFStructure` の意味論を開けば、論理式が `V` の中で何を意味するかが定まる。以下のすべての充足判断はこの内側の判断であり、名前の指示対象を定義可能冪集合自身の定義可能性の概念に結びつけるのはこれである。
 <!--/-->
 
 ```agda
@@ -197,7 +196,6 @@ These final declarations fix the interpretation used throughout the chapter: for
 <!--/-->
 
 ```agda
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -622,7 +620,7 @@ A subset of `A` carved by a predicate is presented directly: `subsetOf` takes a 
 
 ```agda
   private
-    module SemM = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M
+    module SemM = FOL.Semantics DA.𝒮M
     open SemM using ( _^_ )
 
     subsetOf : (⟪ A ⟫ → hProp ℓ) → S
@@ -767,7 +765,7 @@ The abstraction theorem `⊨-abs₁` speaks of satisfaction over the empty const
 ```agda
   private
     emptySat : (f : ⊥* {ℓ} → DA.SM) {n : ℕ}
-             → DA.SM ^ n → Formula (⊥* {ℓ}) n → Ω
+             → DA.SM ^ n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
     emptySat f γ χ = γ ⊨ᶠ χ
       where open SemM.At (⊥* {ℓ}) f using () renaming ( _⊨_ to _⊨ᶠ_ )
 ```
@@ -800,10 +798,10 @@ The proof is a three-step path. The relabelling lemma `embed-⊨` says that embe
 
 ```agda
     absSat φ m =
-        embed-⊨ (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M DA.ι (absFo φ)
+        embed-⊨ DA.𝒮M DA.ι (absFo φ)
           (environment (nameOf φ) m)
       ∙ cong (λ f → emptySat f (environment (nameOf φ) m) (absFo φ)) sameReading
-      ∙ sym (⊨-abs₁ (hPropAlgebra (ℓ-suc ℓ)) DA.𝒮M DA.ι φ (DA.ι m))
+      ∙ sym (⊨-abs₁ DA.𝒮M DA.ι φ (DA.ι m))
 ```
 
 <!--en-->

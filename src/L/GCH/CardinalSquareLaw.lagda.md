@@ -27,7 +27,6 @@ Measured: this master checks in about 14 s at 1.5 GB peak (2026-09-05,
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.CardinalSquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -79,7 +78,6 @@ import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 ```
 

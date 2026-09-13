@@ -38,7 +38,6 @@ The replacement works occurrence by occurrence, not constant by constant. If the
 module FOL.Manipulation.ParameterAbstraction where
 
 open import Base.Prelude
-open import Base.Truth
 open import FOL.ZFStructure using ( ZFStructure )
 ```
 
@@ -227,20 +226,19 @@ The comparison is stated inside a structure `𝒮` with carrier `S`, under one i
 <!--/-->
 
 <!--en-->
-Adequacy is the statement that the abstraction does not change meaning. It compares two evaluations of the same formula: the original syntax over `K` with its constants interpreted by a map `ι : K → S`, against the translated syntax over the empty alphabet evaluated in the concatenated environment `γ ++ σ`, where `γ` holds the values of the original free variables and `σ` holds the interpretations of the recorded constants. Here `S` is the carrier of a structure `𝒮` over a truth algebra `𝕋`, and `S ^ n` is the type of environments of length `n`.
+Adequacy is the statement that the abstraction does not change meaning. It compares two evaluations of the same formula: the original syntax over `K` with its constants interpreted by a map `ι : K → S`, against the translated syntax over the empty alphabet evaluated in the concatenated environment `γ ++ σ`, where `γ` holds the values of the original free variables and `σ` holds the interpretations of the recorded constants. Here `S` is the carrier of a proposition-valued structure `𝒮`, and `S ^ n` is the type of environments of length `n`.
 <!--zh-->
-充分性是说抽象不改变意义。它比较同一公式的两种求值：`K` 上的原语法、其常元由映射 `ι : K → S` 解释；对空字母表上的翻译语法，在拼接环境 `γ ++ σ` 中求值，其中 `γ` 存放原自由变量的值，`σ` 存放所记录常元的解释。这里 `S` 是真值代数 `𝕋` 上结构 `𝒮` 的载体，`S ^ n` 是长度为 `n` 的环境的类型。
+充分性是说抽象不改变意义。它比较同一公式的两种求值：`K` 上的原语法、其常元由映射 `ι : K → S` 解释；对空字母表上的翻译语法，在拼接环境 `γ ++ σ` 中求值，其中 `γ` 存放原自由变量的值，`σ` 存放所记录常元的解释。这里 `S` 是命题值结构 `𝒮` 的载体，`S ^ n` 是长度为 `n` 的环境的类型。
 <!--ja-->
-妥当性とは、抽象化が意味を変えないという主張です。同じ論理式の二つの評価を比較します。一方は `K` 上の元の構文で、定数は写像 `ι : K → S` によって解釈されます。他方は空のアルファベット上の翻訳後の構文で、連結された環境 `γ ++ σ` の中で評価されます。`γ` は元の自由変数の値を、`σ` は記録された定数の解釈を保持します。ここで `S` は真理値代数 `𝕋` の上の構造 `𝒮` の台であり、`S ^ n` は長さ `n` の環境の型です。
+妥当性とは、抽象化が意味を変えないという主張です。同じ論理式の二つの評価を比較します。一方は `K` 上の元の構文で、定数は写像 `ι : K → S` によって解釈されます。他方は空のアルファベット上の翻訳後の構文で、連結された環境 `γ ++ σ` の中で評価されます。`γ` は元の自由変数の値を、`σ` は記録された定数の解釈を保持します。ここで `S` は命題値の構造 `𝒮` の台であり、`S ^ n` は長さ `n` の環境の型です。
 <!--/-->
 
 ```agda
-module _ {ℓ ℓ'} (𝕋 : TruthAlgebra ℓ ℓ') (𝒮 : ZFStructure 𝕋) where
+module _ {ℓ} (𝒮 : ZFStructure ℓ) where
 
-  open TruthAlgebra 𝕋
   open ZFStructure 𝒮
 
-  private module Sem = FOL.Semantics 𝕋 𝒮
+  private module Sem = FOL.Semantics 𝒮
   open Sem using ( _^_ )
 ```
 
@@ -357,11 +355,11 @@ For a variable `var i` nothing was replaced, only re-indexed: the translation mo
 ```
 
 <!--en-->
-Then the twelve cases of the induction, ten formula cases here and the two term cases just discharged. Every primitive propositional clause is a congruence, because the semantics assigns its constructor exactly the truth algebra's operation and there is no translation layer to cross. The four binding clauses push a value onto the environment and appeal to the induction hypothesis at the extended one, and the hypothesis about the parameter slots travels **unchanged**: consing on the left and shifting the placement by `suc` cancel each other by computation, so the binders need no lemma of their own. The two bounded clauses split, term on the left and body on the right, exactly as their constructors do.
+Then the twelve cases of the induction, ten formula cases here and the two term cases just discharged. Every primitive propositional clause is a congruence, because the semantics assigns its constructor exactly the corresponding logical operation and there is no translation layer to cross. The four binding clauses push a value onto the environment and appeal to the induction hypothesis at the extended one, and the hypothesis about the parameter slots travels **unchanged**: consing on the left and shifting the placement by `suc` cancel each other by computation, so the binders need no lemma of their own. The two bounded clauses split, term on the left and body on the right, exactly as their constructors do.
 <!--zh-->
-然后是归纳的十二个情形：十个公式情形在此处理，两个词项情形刚刚证毕。命题的每条原语子句都是同余，因为语义为每个构造子指派的恰是真值代数的对应运算，中间无须任何转换。四条约束子句向环境添加一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**适用：左侧的前置与安置的 `suc` 移位由计算相互抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
+然后是归纳的十二个情形：十个公式情形在此处理，两个词项情形刚刚证毕。命题的每条原语子句都是同余，因为语义为每个构造子指派的恰是相应的逻辑运算，中间无须任何转换。四条约束子句向环境添加一个取值，并在扩张后的环境处援引归纳假设，而关于诸参数位的那条假设**原样**适用：左侧的前置与安置的 `suc` 移位由计算相互抵消，于是约束子不需要自己的引理。两条有界子句照它们的构造子那样一分为二，词项在左，公式体在右。
 <!--ja-->
-続いて帰納法の十二の場合です。ここで十個の論理式の場合を扱い、二つの項の場合は先ほど証明済みです。命題の各原始節はすべて合同です。意味論が各構成子に割り当てるのは真理値代数の対応する演算そのものであり、間に変換の層がないからです。四つの束縛節は環境に値を一つ追加し、拡張後の環境で帰納法の仮定を用いますが、パラメータ位置に関する仮定は**そのまま**通用します。左側への要素の追加と配置の `suc` による移し替えは計算によって打ち消し合うので、束縛子は固有の補題を必要としません。二つの有界節は、その構成子と同じく左に項、右に本体という形で二分割されます。
+続いて帰納法の十二の場合です。ここで十個の論理式の場合を扱い、二つの項の場合は先ほど証明済みです。命題の各原始節はすべて合同です。意味論が各構成子に割り当てるのは対応する論理演算そのものであり、間に変換の層がないからです。四つの束縛節は環境に値を一つ追加し、拡張後の環境で帰納法の仮定を用いますが、パラメータ位置に関する仮定は**そのまま**通用します。左側への要素の追加と配置の `suc` による移し替えは計算によって打ち消し合うので、束縛子は固有の補題を必要としません。二つの有界節は、その構成子と同じく左に項、右に本体という形で二分割されます。
 <!--/-->
 
 <!--en-->
@@ -397,11 +395,11 @@ The per-operand hypothesis is precisely what the splitting invariant supplies: t
 ```
 
 <!--en-->
-Conjunction is the first purely propositional clause. The semantics defines satisfaction of `φ ∧̇ ψ` by applying the truth algebra's conjunction operation `_⊓_` to the two satisfaction values, so the clause is `cong₂ _⊓_` under the two induction hypotheses, with `h` split between `constantsFo φ` and `constantsFo ψ`. The proof treats `(γ ⊨ φ) ⊓ (γ ⊨ ψ)` simply as a value of `Ω`: it uses congruence alone, without assuming or decomposing any pair representation.
+Conjunction is the first purely propositional clause. The semantics defines satisfaction of `φ ∧̇ ψ` by applying propositional conjunction `_⊓_` to the two satisfaction values, so the clause is `cong₂ _⊓_` under the two induction hypotheses, with `h` split between `constantsFo φ` and `constantsFo ψ`. The proof treats `(γ ⊨ φ) ⊓ (γ ⊨ ψ)` simply as a proposition in `hProp ℓ`: it uses congruence alone, without assuming or decomposing any pair representation.
 <!--zh-->
-合取是第一条纯命题子句。语义把 `φ ∧̇ ψ` 的满足定义为将真值代数的合取运算 `_⊓_` 施于两个满足值，故该子句是在两条归纳假设之下的 `cong₂ _⊓_`，其中 `h` 在 `constantsFo φ` 与 `constantsFo ψ` 之间拆分。证明只把 `(γ ⊨ φ) ⊓ (γ ⊨ ψ)` 当作 `Ω` 中的值，并且只使用同余，不假定它具有对的表示，也不将其拆解。
+合取是第一条纯命题子句。语义把 `φ ∧̇ ψ` 的满足定义为将命题合取 `_⊓_` 施于两个满足值，故该子句是在两条归纳假设之下的 `cong₂ _⊓_`，其中 `h` 在 `constantsFo φ` 与 `constantsFo ψ` 之间拆分。证明只把 `(γ ⊨ φ) ⊓ (γ ⊨ ψ)` 当作 `hProp ℓ` 中的命题，并且只使用同余，不假定它具有对的表示，也不将其拆解。
 <!--ja-->
-連言が最初の純粋に命題的な節です。意味論は `φ ∧̇ ψ` の充足を、二つの充足値に真理値代数の連言の演算 `_⊓_` を施したものとして定義するので、この節は二つの帰納法の仮定の下での `cong₂ _⊓_` になり、`h` は `constantsFo φ` と `constantsFo ψ` の間で分割されます。証明は `(γ ⊨ φ) ⊓ (γ ⊨ ψ)` を単に `Ω` の値として扱い、合同だけを用います。対による表現を仮定することも、それを分解することもありません。
+連言が最初の純粋に命題的な節です。意味論は `φ ∧̇ ψ` の充足を、二つの充足値に命題の連言 `_⊓_` を施したものとして定義するので、この節は二つの帰納法の仮定の下での `cong₂ _⊓_` になり、`h` は `constantsFo φ` と `constantsFo ψ` の間で分割されます。証明は `(γ ⊨ φ) ⊓ (γ ⊨ ψ)` を単に `hProp ℓ` の命題として扱い、合同だけを用います。対による表現を仮定することも、それを分解することもありません。
 <!--/-->
 
 ```agda
@@ -413,11 +411,11 @@ Conjunction is the first purely propositional clause. The semantics defines sati
 ```
 
 <!--en-->
-Disjunction repeats the pattern with the truth algebra's disjunction operation `⊔`, and implication with its implication operation `⇒`. The three propositional clauses differ only in which truth algebra operation `cong₂` is applied to; everything else, including the split hypothesis, is identical.
+Disjunction repeats the pattern with propositional disjunction `⊔`, and implication with propositional implication `⇒`. The three propositional clauses differ only in which logical operation `cong₂` is applied to; everything else, including the split hypothesis, is identical.
 <!--zh-->
-析取以真值代数的析取运算 `⊔` 重复同一模式，蕴涵则使用其蕴涵运算 `⇒`。三条命题子句只在 `cong₂` 所施加的真值代数运算上不同；包括拆分后的假设在内，其余完全一致。
+析取以命题析取 `⊔` 重复同一模式，蕴涵则使用其蕴涵运算 `⇒`。三条命题子句只在 `cong₂` 所施加的逻辑运算上不同；包括拆分后的假设在内，其余完全一致。
 <!--ja-->
-選言は真理値代数の選言の演算 `⊔` で、含意はその含意の演算 `⇒` で同じパターンを繰り返します。三つの命題的な節が違うのは、`cong₂` が施される真理値代数の演算だけです。分割された仮定を含め、その他の部分はまったく同じです。
+選言は命題の選言 `⊔` で、含意はその含意の演算 `⇒` で同じパターンを繰り返します。三つの命題的な節が違うのは、`cong₂` が施される論理演算だけです。分割された仮定を含め、その他の部分はまったく同じです。
 <!--/-->
 
 ```agda
@@ -429,11 +427,11 @@ Disjunction repeats the pattern with the truth algebra's disjunction operation `
 ```
 
 <!--en-->
-At this point the pattern is worth stating once: every remaining clause either applies a congruence at the truth algebra operation the semantics chose for its constructor, or pushes a value onto the environment and recurses. No clause needs a new idea.
+At this point the pattern is worth stating once: every remaining clause either applies a congruence at the logical operation the semantics chose for its constructor, or pushes a value onto the environment and recurses. No clause needs a new idea.
 <!--zh-->
-至此值得把这个模式一次性说清：余下的每条子句，要么在其构造子所对应的真值代数运算处施加同余，要么向环境添加一个取值后递归。没有哪条子句需要新的想法。
+至此值得把这个模式一次性说清：余下的每条子句，要么在其构造子所对应的逻辑运算处施加同余，要么向环境添加一个取值后递归。没有哪条子句需要新的想法。
 <!--ja-->
-ここでパターンを一度まとめておきます。残りの各節は、その構成子に意味論が割り当てた真理値代数の演算で合同を取るか、環境に値を一つ追加して再帰するかのどちらかであり、新しい発想を必要とする節はありません。
+ここでパターンを一度まとめておきます。残りの各節は、その構成子に意味論が割り当てた論理演算で合同を取るか、環境に値を一つ追加して再帰するかのどちらかであり、新しい発想を必要とする節はありません。
 <!--/-->
 
 ```agda
@@ -445,11 +443,11 @@ At this point the pattern is worth stating once: every remaining clause either a
 ```
 
 <!--en-->
-Falsity confirms this. Both sides of the equation are the truth algebra's bottom whatever the environment or placement may be, so the clause is `refl`. It is also the one constructor whose translation never mentions the parameter block.
+Falsity confirms this. Both sides of the equation are the false proposition whatever the environment or placement may be, so the clause is `refl`. It is also the one constructor whose translation never mentions the parameter block.
 <!--zh-->
-假值印证了这一点。无论环境或安置如何，等式两边都是真值代数的底，故该子句就是 `refl`。它也是唯一一个翻译后根本不提及参数块的构造子。
+假值印证了这一点。无论环境或安置如何，等式两边都是假命题 `⊥`，故该子句就是 `refl`。它也是唯一一个翻译后根本不提及参数块的构造子。
 <!--ja-->
-偽がこれを裏付けます。環境や配置がどうであれ、等式の両辺は真理値代数の底なので、この節は `refl` で済みます。翻訳がパラメータ領域にまったく言及しない唯一の構成子でもあります。
+偽がこれを裏付けます。環境や配置がどうであれ、等式の両辺は偽命題 `⊥`なので、この節は `refl` で済みます。翻訳がパラメータ領域にまったく言及しない唯一の構成子でもあります。
 <!--/-->
 
 ```agda

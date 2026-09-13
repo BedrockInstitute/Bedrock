@@ -16,7 +16,6 @@ The preceding counting, condensation, and power-set arguments now meet. This cha
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.Theorem {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where

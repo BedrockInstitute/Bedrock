@@ -16,7 +16,6 @@ This chapter proves the main stage estimate used by GCH: at an infinite ordinal,
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.StageInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -61,7 +60,6 @@ import Cubical.Data.Empty as Empty
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( squash₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 
 open hPropStructure 𝒮ʟ using ( S )
@@ -72,7 +70,7 @@ open FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using () renaming ( _⊨ᵐ_ 
 Every module application below names what it takes.
 
 ```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
+module Ren = Sat 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
 The hull site, without a target: the telescope of src/L/GCH/ConstructibleHull.lagda.md

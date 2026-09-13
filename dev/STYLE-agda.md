@@ -87,9 +87,9 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   if it is **statement-ambient**, needed to read definitions and theorem statements
   throughout the book (universes, paths, homotopy levels, `hProp` with `⟨_⟩`, pairs, the
   indexing data `ℕ`/`Vec`/`Fin`, `⊥*`), and its statement-level role is not already
-  played by one of the book's own abstractions (logic connectives belong to the
-  truth algebra; truncated existence reaches statements as its `⋁`, which is why
-  even the near-ubiquitous propositional truncation stays chapter-local).
+  played by one of the book's own abstractions. The direct logical operations on
+  `hProp` are statement-ambient; the underlying propositional-truncation machinery
+  remains chapter-local even where truncated existence appears in statements.
   Proof-side machinery stays chapter-local however common (`⊎` decisions,
   `Empty.⊥` refutations, equivalence assembly, `⇔toPath`): every admission enlarges
   the set of untraceable names, and a local import line is information. When in
@@ -98,9 +98,9 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
 - `open import` always carries a `using`/`renaming` list (audit-friendly), and every
   imported name must actually be used: imports are **necessary** (the linter checks
   this) as well as sufficient (the typechecker checks that). The designated **hub
-  modules** `Base.Prelude` and `Base.Truth`, curated re-export preludes designed to
-  be opened wholesale (the hubs' own `public` re-exports stay curated with `using`
-  lists). A genuine exception the linter cannot see (an instance-only import) is
+  module** `Base.Prelude` is a curated re-export prelude designed to be opened
+  wholesale (its own `public` re-exports stay curated with `using` lists). A
+  genuine exception the linter cannot see (an instance-only import) is
   marked `-- lint-agda: keep`.
 - Every module appears in `dev/reading-catalog.json` in reading order (enforced by the
   `check-reading-order.py` gate; no master may be absent from the catalog). Its
@@ -118,7 +118,7 @@ Decision tree (in order):
 
 ```
 Type / record / module / chapter?
-  → full English word, PascalCase (Formula, ZFStructure, TruthAlgebra).
+  → full English word, PascalCase (Formula, ZFStructure, Impredicativity).
 Theorem / axiom / lemma / property name?
   → kebab phrase, topic symbols allowed (encode-inj, Δ₀-absolute, ∩-spec).
 Operation or relation (returns data / Ω / Type)?
@@ -182,24 +182,22 @@ Fixed variable conventions:
 | `M` | class (`S → hProp`) |
 
 Locals and bound variables are single letters, matching mathematical text. Module
-parameters for structures use script/blackboard single letters (`𝕋`, `𝒮`, `ℳ`);
-top-level named instances use searchable English words (`hPropAlgebra`) or subscripted
-symbols mirroring the mathematical object (`𝒮ᵥ`, `𝒮ʟ`).
+parameters for structures use script/blackboard single letters (`𝒮`, `ℳ`);
+top-level named instances use searchable English words or subscripted symbols
+mirroring the mathematical object (`𝒮ᵥ`, `𝒮ʟ`).
 
 ## 4. The layer-marking system
 
-Four semantic layers, one marking each:
+Three semantic layers, one marking each:
 
 | Layer | Marking | Examples |
 |---|---|---|
-| ① host/meta (Agda, cubical) | none (library names) | `≡` (path), `Σ ×`, `isSet`, library `_∈_` |
-| ② truth algebra Ω | none + scope discipline | `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` |
+| ① host/meta (Agda, cubical) | none (library names) | `≡` (path), `Σ ×`, `isSet`, library `_∈_`, `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` on `hProp` |
 | ③ structure fields | `ˢ` superscript | `_∈ˢ_ _≈ˢ_` |
 | ④ object syntax | dot mark | `_∈̇_ _≐_ ∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇ ∃̇ ∀̇ ∀̇∈ ∃̇∈` |
 
-- **Scope discipline for layer ②:** `Base.Prelude` re-exports no logic operations;
-  the symbols `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` come only from opening a truth algebra, so each
-  logic symbol has exactly one meaning in any scope.
+- `Base.Prelude` re-exports the direct `hProp` operations
+  `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁`, so each logic symbol has one meaning throughout the book.
 - Object-language constructors always carry exactly one dot; the dot marks the
   token, not its components (`∀̇∈`, not `∀̇∈̇`).
 - Superscript = layer marker (`ˢ ᶜ ᵗ`); subscript = variant or index (`∈ₛ`, `Δ₀`,
@@ -207,7 +205,7 @@ Four semantic layers, one marking each:
 - Orientation families, quoted in the syntax chapter's prose: membership
   `∈` (① V) / `∈ₛ` (① small) / `∈ˢ` (③) / `∈̇` (④) / `∈ᶜ` (class) / `∈ᵗ`
   (Type-valued); equality `≡` (①) / `≈ˢ` (③) / `≐` (④); implication `→` (①) /
-  `⇒` (②) / `⇒̇` (④).
+  `⇒` (① hProp) / `⇒̇` (④).
 
 Reserved symbols (future milestones; do not occupy): `_[_]` substitution, `⊢` proof
 systems, `⊩` forcing, `∈ᴮ ≈ᴮ` and the `ᴮ` family for Boolean-valued structures,

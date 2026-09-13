@@ -16,7 +16,6 @@ A successor cardinal is the first cardinal beyond its base. This chapter turns t
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.BelowSuccessorCardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -36,7 +35,6 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 import Cubical.Induction.WellFounded as WF
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 ```
 

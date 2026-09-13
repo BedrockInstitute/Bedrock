@@ -42,7 +42,6 @@ layers have to be merged into one.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -72,7 +71,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; ⋃_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -168,13 +166,13 @@ below has to name the very same decision value and match on it.
 <!--/-->
 
 ```agda
-Sat : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → S → Ω
+Sat : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → S → hProp (ℓ-suc ℓ)
 Sat ψ ρ q = (q ∷ ρ) ⊨ ψ
 
-SatEx : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → Ω
+SatEx : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → hProp (ℓ-suc ℓ)
 SatEx ψ ρ = ∃[ q ∶ S ] Sat ψ ρ q
 
-Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ → Ω
+Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ → hProp (ℓ-suc ℓ)
 Wit ψ ρ σ = ∃[ q ∶ S ] ((fst q ∈ Lset σ) ⊓ Sat ψ ρ q)
 
 witnessed : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩

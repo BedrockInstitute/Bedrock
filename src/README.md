@@ -42,22 +42,22 @@ mirroring the paths the files had here.
 ## Symbol master table
 
 Required by [dev/STYLE-agda.md](../dev/STYLE-agda.md) §5: one row per symbol introduced
-so far. Layers are the marking system of STYLE-agda §4 (① host, ② truth algebra,
-③ structure fields, ④ object syntax).
+so far. Layers are the marking system of STYLE-agda §4 (① host, ③ structure fields,
+④ object syntax).
 
 | Symbol | Reading | Layer | Chapter | Input |
 |---|---|---|---|---|
 | `⟨_⟩` | the underlying type of | ① | `Base.Prelude` (re-export) | `\<` `\>` |
 | `⊥*` | lifted empty type | ① | `Base.Prelude` (re-export) | `\bot` `*` |
 | `∈ᶜ` | class membership | ① | `Base.Prelude` (re-export) | `\in` `\^c` |
-| `⊓` | and (meet) | ② | `Base.Truth` | `\glb` |
-| `⊔` | or (join) | ② | `Base.Truth` | `\lub` |
-| `⇒` | implies | ② | `Base.Truth` | `\=>` |
-| `¬` | not | ② | `Base.Truth` | `\neg` |
-| `⊤` | true | ② | `Base.Truth` | `\top` |
-| `⊥` | false | ② | `Base.Truth` | `\bot` |
-| `⋀` | indexed meet (universal) | ② | `Base.Truth` | `\bigwedge` |
-| `⋁` | indexed join (existential) | ② | `Base.Truth` | `\bigvee` |
+| `⊓` | and (meet) | ① | `Base.Prelude` (re-export) | `\glb` |
+| `⊔` | or (join) | ① | `Base.Prelude` (re-export) | `\lub` |
+| `⇒` | implies | ① | `Base.Prelude` (re-export) | `\=>` |
+| `¬` | not | ① | `Base.Prelude` (re-export) | `\neg` |
+| `⊤` | true | ① | `Base.Prelude` (re-export) | `\top` |
+| `⊥` | false | ① | `Base.Prelude` (re-export) | `\bot` |
+| `⋀` | indexed meet (universal) | ① | `Base.Prelude` (re-export) | `\bigwedge` |
+| `⋁` | indexed join (existential) | ① | `Base.Prelude` (re-export) | `\bigvee` |
 | `∈̇` | object membership | ④ | `FOL.Syntax` | `\in` `\^.` |
 | `≐` | object equality | ④ | `FOL.Syntax` | `\.=` |
 | `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` | dotted connectives | ④ | `FOL.Syntax` | base symbol + `\^.` |

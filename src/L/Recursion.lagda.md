@@ -41,7 +41,6 @@ of whatever is being defined.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -63,7 +62,6 @@ open import Cubical.Foundations.Prelude using ( isPropIsContr )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -182,7 +180,7 @@ module Of (R : Recursion) where
   open Recursion R public
 
   private
-    Image : S → Ω
+    Image : S → hProp (ℓ-suc ℓ)
     Image y = ⋁ S (λ x → (x ∈ˢ dom) ⊓ ((y ∷ x ∷ []) ⊨ graph))
 
     r : SetOf Image

@@ -22,7 +22,6 @@ the canonical set `AllCodes`; the constants used by its syntax come from
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.CodeDomainAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where

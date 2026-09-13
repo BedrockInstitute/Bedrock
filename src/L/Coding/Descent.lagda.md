@@ -30,7 +30,6 @@ The mathematical setting is the cumulative hierarchy: its carrier `S`, its propo
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.Descent {ℓ : Level} where
 
@@ -68,7 +67,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; pairing-ax; ⁅_⁆s )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 ```
 
 <!--en-->

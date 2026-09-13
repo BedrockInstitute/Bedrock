@@ -16,7 +16,6 @@ The uniform satisfaction table is useful only after the model can recognize it. 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.SatisfactionDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -54,7 +53,6 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )

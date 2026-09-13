@@ -19,18 +19,17 @@ FOL.Coding の一般的な符号化構成が要求するのは、台の上の 2 
 <!--/-->
 
 <!--en-->
-The chapter is stated at a fixed universe level `ℓ`{.Agda}: the hierarchy's own structure `𝒮ᵥ`{.Agda} is the carrier that the codes will live over, and its membership relation is the one being analyzed. The truth values for the eventual coding instance come from the hProp truth algebra at level `ℓ-suc ℓ`{.Agda}, one level up; that is where the instance at the end of the chapter will be taken.
+The chapter is stated at a fixed universe level `ℓ`{.Agda}: the hierarchy's own structure `𝒮ᵥ`{.Agda} is the carrier that the codes will live over, and its membership relation is the one being analyzed. The eventual coding instance uses truth values in `hProp (ℓ-suc ℓ)`, one level up.
 <!--zh-->
-本章在固定的宇宙层级 `ℓ`{.Agda} 上陈述：层级的结构 `𝒮ᵥ`{.Agda} 是码所寄居的载体，其隶属关系正是被分析的对象。编码实例最终所用真值取自高一层级 `ℓ-suc ℓ`{.Agda} 的 hProp 真值代数；章末的实例即取在这一层级上。
+本章在固定的宇宙层级 `ℓ`{.Agda} 上陈述：层级的结构 `𝒮ᵥ`{.Agda} 是码所寄居的载体，其隶属关系正是被分析的对象。最终的编码实例使用高一层级 `hProp (ℓ-suc ℓ)` 中的真值。
 <!--ja-->
-この章は固定された宇宙レベル `ℓ`{.Agda} で述べられます。階層の構造 `𝒮ᵥ`{.Agda} が符号の載る台であり、その所属関係こそ分析の対象です。最終的な符号化インスタンスの真理値は、1 つ上のレベル `ℓ-suc ℓ`{.Agda} の hProp 真理値代数から取られ、章末のインスタンスはそのレベルで取られます。
+この章は固定された宇宙レベル `ℓ`{.Agda} で述べられます。階層の構造 `𝒮ᵥ`{.Agda} が符号の載る台であり、その所属関係こそ分析の対象です。最終的な符号化インスタンスは、一つ上のレベル `hProp (ℓ-suc ℓ)` の真理値を使います。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module V.Coding {ℓ : Level} where
 
@@ -87,17 +86,16 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
 ```
 
 <!--en-->
-The numeral `# n`{.Agda}, written using `#_`{.Agda}, is the von Neumann ordinal representing the natural number `n`{.Agda} inside the hierarchy. With the two alphabets in hand, the truth algebra at level `ℓ-suc ℓ`{.Agda} and the hProp structure `𝒮ᵥ`{.Agda} are what the coding instance at the end will interpret the encoded syntax in; the injectivity proofs of this chapter use only the successor facts and the classifications just described.
+The numeral `# n`{.Agda}, written using `#_`{.Agda}, is the von Neumann ordinal representing the natural number `n`{.Agda} inside the hierarchy. With the two alphabets in hand, the direct operations on `hProp (ℓ-suc ℓ)`{.Agda} and the structure `𝒮ᵥ`{.Agda} are what the coding instance at the end will interpret the encoded syntax in; the injectivity proofs of this chapter use only the successor facts and the classifications just described.
 <!--zh-->
-数码 `# n`{.Agda} 以 `#_`{.Agda} 记之，是在层级中表示自然数 `n`{.Agda} 的 von Neumann 序数。两个字母表在手之后，层级 `ℓ-suc ℓ`{.Agda} 的真值代数与 hProp 结构 `𝒮ᵥ`{.Agda} 就是章末编码实例解释被编码语法之处；本章的单射性证明只使用前述的后继事实与分类。
+数码 `# n`{.Agda} 以 `#_`{.Agda} 记之，是在层级中表示自然数 `n`{.Agda} 的 von Neumann 序数。两个字母表在手之后，`hProp (ℓ-suc ℓ)`{.Agda} 上的直接运算与结构 `𝒮ᵥ`{.Agda} 就是章末编码实例解释被编码语法之处；本章的单射性证明只使用前述的后继事实与分类。
 <!--ja-->
-数項 `# n`{.Agda} は `#_`{.Agda} と書かれ、階層の中で自然数 `n`{.Agda} を表す von Neumann 順序数です。2 つの字母が揃えば、レベル `ℓ-suc ℓ`{.Agda} の真理値代数と hProp 構造 `𝒮ᵥ`{.Agda} が、章末の符号化インスタンスが符号化された構文を解釈する場になります。この章の単射性証明は、前述の後続の事実と分類だけを使います。
+数項 `# n`{.Agda} は `#_`{.Agda} と書かれ、階層の中で自然数 `n`{.Agda} を表す von Neumann 順序数です。2 つの字母が揃えば、`hProp (ℓ-suc ℓ)`{.Agda} 上の直接の演算と構造 `𝒮ᵥ`{.Agda} が、章末の符号化インスタンスが符号化された構文を解釈する場になります。この章の単射性証明は、前述の後続の事実と分類だけを使います。
 <!--/-->
 
 ```agda
 open InfinitySet using ( #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 
@@ -399,19 +397,19 @@ The two branches combine into `b ≡ d`, completing `pr-inj`: both components of
 
 With both injective alphabets in hand, the generic coding construction of FOL.Coding can be applied to the hierarchy: an injective pairing and an injective numeral map are its two parameters. The resulting `VCode`{.Agda} assigns to terms and formulas over the hierarchy's carrier codes that are themselves sets of the hierarchy. It does not make every set a code; it gives set-valued codes for the coded syntax.
 
-Note the level: `VCode`{.Agda} is taken at `ℓ-suc ℓ`{.Agda}, the level of the truth algebra over which the structure `𝒮ᵥ`{.Agda} is a `ZFStructure`{.Agda}. This universe index is a type-theoretic level, not a stage of the hierarchy.
+Note the level: `VCode`{.Agda} is taken at `ℓ-suc ℓ`{.Agda}, the level at which the relations of the `ZFStructure`{.Agda} `𝒮ᵥ`{.Agda} take values. This universe index is a type-theoretic level, not a stage of the hierarchy.
 <!--zh-->
 ## 实例
 
 有了两个单射字母表，FOL.Coding 的通用编码构造即可施于层级：单射的配对与单射的数码映射是它的两个参数。得到的 `VCode`{.Agda} 给层级载体上的词项与公式指派本身仍是层级集合的码。它并不把每个集合都变成码；它为被编码的语法提供取值为集合的码。
 
-注意层级：`VCode`{.Agda} 取在 `ℓ-suc ℓ`{.Agda} 上，即结构 `𝒮ᵥ`{.Agda} 作为 `ZFStructure`{.Agda} 所处的真值代数的层级。这个宇宙指标是类型论意义上的层级，不是层级的层。
+注意层级：`VCode`{.Agda} 取在 `ℓ-suc ℓ`{.Agda} 上，即`ZFStructure`{.Agda} `𝒮ᵥ`{.Agda} 的关系取值所在的层级。这个宇宙指标是类型论意义上的层级，不是层级的层。
 <!--ja-->
 ## 具体化
 
 2 つの単射な字母がそろったので、FOL.Coding の一般的な符号化構成を階層に適用できます。単射な対の操作と単射な数項写像がその 2 つのパラメータです。得られる `VCode`{.Agda} は、階層の台の上の項と論理式に対して、それ自身が階層の集合である符号を割り当てます。すべての集合を符号にするのではなく、符号化された構文に対して集合値の符号を与えるものです。
 
-レベルに注意してください。`VCode`{.Agda} はレベル `ℓ-suc ℓ`{.Agda} で取られます。これは、構造 `𝒮ᵥ`{.Agda} が `ZFStructure`{.Agda} となっている真理値代数のレベルです。この宇宙の指標は型理論のレベルであって、階層の段階ではありません。
+レベルに注意してください。`VCode`{.Agda} はレベル `ℓ-suc ℓ`{.Agda} で取られます。これは、`ZFStructure`{.Agda} `𝒮ᵥ`{.Agda} の関係が値を取るレベルです。この宇宙の指標は型理論のレベルであって、階層の段階ではありません。
 <!--/-->
 
 <!--en-->

@@ -20,7 +20,6 @@ constants is supplied separately by `CodeAlphabet`.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Coding.CodeDomain {ℓ : Level} where
 

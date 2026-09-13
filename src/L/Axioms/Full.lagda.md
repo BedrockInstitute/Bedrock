@@ -43,7 +43,6 @@ model field.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Axioms.Full {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -69,7 +68,6 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -78,7 +76,7 @@ open ModelL using ( SetOf )
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id
+module Ren = Sat 𝒮ʟ id
 ```
 
 <!--en-->
@@ -292,13 +290,13 @@ opaque
     where
     open Images a φ fc
 
-    Image : S → Ω
+    Image : S → hProp (ℓ-suc ℓ)
     Image y = ⋁ S (λ x → (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ))
 
     imageFo : Formula S 1
     imageFo = ∃̇∈ (con a) (swapFo φ)
 
-    BoundedImage : S → Ω
+    BoundedImage : S → hProp (ℓ-suc ℓ)
     BoundedImage y = (y ∈ˢ LsetS βimg βimg-ord) ⊓ ((y ∷ []) ⊨ imageFo)
 
     Q≡ : Image ≡ BoundedImage

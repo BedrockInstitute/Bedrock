@@ -36,7 +36,6 @@ The ordinal predicate is defined in the constructible-universe chapter as `IsOrd
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Ordinal {ℓ : Level} where
 
@@ -93,16 +92,15 @@ open InfinitySet using ( sucV; #_; ω; #-in-ω )
 ```
 
 <!--en-->
-One last convention: the truth algebra is opened once and for all, so the notation `⟨ P ⟩` for the underlying type of a proposition `P` and the indexed connectives of the hProp algebra are available throughout. The propositions here, such as `isTransV A` and `IsOrd A`, live one level above `ℓ`, which is exactly the level at which the later axioms will quantify.
+One last convention: the direct `hProp` operations are available throughout, so the notation `⟨ P ⟩` for the underlying type of a proposition `P` and the indexed connectives act directly on propositions. The propositions here, such as `isTransV A` and `IsOrd A`, live one level above `ℓ`, which is exactly the level at which the later axioms will quantify.
 <!--zh-->
-最后一个约定：真值代数在此一次性打开，于是「命题 `P` 的底类型」的记号 `⟨ P ⟩` 与 hProp 代数的索引连接词在全章可用。这里的命题，如 `isTransV A` 与 `IsOrd A`，位于 `ℓ` 之上一层，而这正是稍后公理进行量化的层级。
+最后一个约定：`hProp` 上的直接运算在全章可用，于是「命题 `P` 的底类型」的记号 `⟨ P ⟩`，而索引联结词直接作用于命题。这里的命题，如 `isTransV A` 与 `IsOrd A`，位于 `ℓ` 之上一层，而这正是稍后公理进行量化的层级。
 <!--ja-->
-最後の約束として、真理値代数はここで一度だけ開かれ、命題 `P` の台の型を表す記法 `⟨ P ⟩` と hProp 代数の索引付き連結詞が全章を通して使えます。`isTransV A` や `IsOrd A` のようなここでの命題は `ℓ` の一つ上の階層に住み、それはのちの公理が量化を行う階層とちょうど一致します。
+最後の約束として、`hProp` 上の直接の演算が全章で利用でき、命題 `P` の台の型を表す記法 `⟨ P ⟩`、添字付き連結詞は命題に直接作用します。`isTransV A` や `IsOrd A` のようなここでの命題は `ℓ` の一つ上の階層に住み、それはのちの公理が量化を行う階層とちょうど一致します。
 <!--/-->
 
 ```agda
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ᵥ
 ```
 

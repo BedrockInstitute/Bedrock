@@ -26,7 +26,6 @@ One pattern repeats throughout the chapter. A **table** is a set of ordered pair
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Hierarchy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -57,7 +56,6 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
@@ -507,7 +505,7 @@ its specification, and no induction is ever unfolded into a conversion.
 <!--/-->
 
 ```agda
-Recorded : V ℓ → V ℓ → Ω
+Recorded : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Recorded B z = ⋁ S (λ c → (fst c ∈ B)
   ⊓ ((z ≡ pr (fst c) (Lset (fst c))) , setIsSet z (pr (fst c) (Lset (fst c)))))
 

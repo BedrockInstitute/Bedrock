@@ -25,18 +25,17 @@ Putting the two together gives the transfer theorem: a Δ₀ formula whose const
 <!--/-->
 
 <!--en-->
-The whole chapter takes place at a single universe level `ℓ`. Both structures that will interpret the language are built over the truth algebra of propositions at level `ℓ-suc ℓ`, so a satisfaction statement is a proposition, and two such statements can be compared by a path. The ambient world is the cumulative hierarchy `V` at this level; the inner world is `L`, obtained from it by restricting to the constructible sets.
+The whole chapter takes place at a single universe level `ℓ`. Both structures that interpret the language have equality and membership valued in `hProp (ℓ-suc ℓ)`, so a satisfaction statement is a proposition, and two such statements can be compared by a path. The ambient world is the cumulative hierarchy `V` at this level; the inner world is `L`, obtained from it by restricting to the constructible sets.
 <!--zh-->
-本章的全部工作都在同一个宇宙层级 `ℓ` 上进行。解释语言的两个结构都建立在层级 `ℓ-suc ℓ` 的命题真值代数之上，因此一条满足陈述是一个命题，两条这样的陈述可以由一条路径来比较。外层世界是该层级上的累积层级 `V`；内层世界则是 `L`，即在 `V` 中限制到可构造集所得。
+本章的全部工作都在同一个宇宙层级 `ℓ` 上进行。解释语言的两个结构，其等词与隶属关系都取值于 `hProp (ℓ-suc ℓ)`，因此一条满足陈述是一个命题，两条这样的陈述可以由一条路径来比较。外层世界是该层级上的累积层级 `V`；内层世界则是 `L`，即在 `V` 中限制到可构造集所得。
 <!--ja-->
-この章の作業はすべて、単一の宇宙レベル `ℓ` の上で行われます。言語を解釈する二つの構造はどちらもレベル `ℓ-suc ℓ` の命題からなる真理値代数の上に築かれるため、充足の主張は命題であり、二つの主張はパスで比較できます。外側の世界はこのレベルの累積階層 `V` であり、内側の世界は `L`、つまり構成可能な集合への制限として得られるものです。
+この章の作業はすべて、単一の宇宙レベル `ℓ` の上で行われます。言語を解釈する二つの構造では、等号と所属がともに `hProp (ℓ-suc ℓ)` に値を取るため、充足の主張は命題であり、二つの主張はパスで比較できます。外側の世界はこのレベルの累積階層 `V` であり、内側の世界は `L`、つまり構成可能な集合への制限として得られるものです。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 
 module L.Absoluteness {ℓ : Level} where
 
@@ -77,19 +76,18 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
 ```
 
 <!--en-->
-Both satisfaction relations take values in the same truth algebra `hPropAlgebra (ℓ-suc ℓ)`. The restricted carrier `S` consists of an ambient set paired with evidence that it is constructible. Ambient constants denote themselves through `id`, whereas an inner constant is already such a pair; projecting it with `fst` recovers the ambient set. These two interpretations are the endpoints compared by the transfer proof.
+Both satisfaction relations take values in the same type `hProp (ℓ-suc ℓ)`. The restricted carrier `S` consists of an ambient set paired with evidence that it is constructible. Ambient constants denote themselves through `id`, whereas an inner constant is already such a pair; projecting it with `fst` recovers the ambient set. These two interpretations are the endpoints compared by the transfer proof.
 <!--zh-->
-两条满足关系都取值于同一个真值代数 `hPropAlgebra (ℓ-suc ℓ)`。限制后的载体 `S` 由环境集合及其可构造性证明组成。环境常元通过 `id` 指称自身；内层常元已经是这样的对，用 `fst` 投影即可取回环境集合。这两个解释正是搬运证明所比较的两端。
+两条满足关系都取值于同一个类型 `hProp (ℓ-suc ℓ)`。限制后的载体 `S` 由环境集合及其可构造性证明组成。环境常元通过 `id` 指称自身；内层常元已经是这样的对，用 `fst` 投影即可取回环境集合。这两个解释正是搬运证明所比较的两端。
 <!--ja-->
-二つの充足関係は同じ真理値代数 `hPropAlgebra (ℓ-suc ℓ)` に値を取ります。制限された台 `S` の元は、周囲の集合とその構成可能性の証明の対です。周囲の定数は `id` により自分自身を表し、内側の定数はすでにそのような対なので、`fst` で周囲の集合を取り出せます。この二つの解釈が移送証明の両端です。
+二つの充足関係は同じ型 `hProp (ℓ-suc ℓ)` に値を取ります。制限された台 `S` の元は、周囲の集合とその構成可能性の証明の対です。周囲の定数は `id` により自分自身を表し、内側の定数はすでにそのような対なので、`fst` で周囲の集合を取り出せます。この二つの解釈が移送証明の両端です。
 <!--/-->
 
 ```agda
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ using ( S )
 
-module SemV = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module SemV = FOL.Semantics 𝒮ᵥ
 open SemV using ( _^_ )
 open SemV.At (V ℓ) id using () renaming ( _⊨_ to _⊨v_ )
 ```
@@ -189,11 +187,11 @@ The identity relabelling in the last step is not idle. A formula is not definiti
 <!--/-->
 
 <!--en-->
-The statement equates two satisfaction judgments that a priori live in different worlds. On the left, the environment `γ` consists of elements of `S`, each a set with a constructibility certificate, and `γ ⊨ liftFo φ h` is satisfaction inside `L`, of the formula whose constants have been relabelled into `L`. On the right, the same environment is projected entrywise by `map fst`, and the original formula `φ` is evaluated in the ambient hierarchy. Both sides are propositions over the same truth algebra, so the claimed agreement is a single path, not an implication.
+The statement equates two satisfaction judgments that a priori live in different worlds. On the left, the environment `γ` consists of elements of `S`, each a set with a constructibility certificate, and `γ ⊨ liftFo φ h` is satisfaction inside `L`, of the formula whose constants have been relabelled into `L`. On the right, the same environment is projected entrywise by `map fst`, and the original formula `φ` is evaluated in the ambient hierarchy. Both sides are propositions in the same `hProp`, so the claimed agreement is a single path, not an implication.
 <!--zh-->
-陈述等式的是两条先验地处于不同世界中的满足判断。左边，环境 `γ` 由 `S` 的元素组成，每个元素是带可构造证书的集合，`γ ⊨ liftFo φ h` 是常元已被改名进 `L` 的公式在 `L` 内的满足。右边，同一环境被 `map fst` 逐项投影，原公式 `φ` 在环境层级中求值。两边都是同一真值代数上的命题，因此所断言的一致是一条路径，而非蕴涵。
+陈述等式的是两条先验地处于不同世界中的满足判断。左边，环境 `γ` 由 `S` 的元素组成，每个元素是带可构造证书的集合，`γ ⊨ liftFo φ h` 是常元已被改名进 `L` 的公式在 `L` 内的满足。右边，同一环境被 `map fst` 逐项投影，原公式 `φ` 在环境层级中求值。两边都是同一个 `hProp` 中的命题，因此所断言的一致是一条路径，而非蕴涵。
 <!--ja-->
-この主張が等しいと置くのは、先験的には異なる世界に住む二つの充足の判断です。左辺では環境 `γ` は `S` の要素、すなわち構成可能性の証明書を伴う集合からなり、`γ ⊨ liftFo φ h` は定数が `L` へと改名された論理式の `L` 内での充足です。右辺では同じ環境が `map fst` で項ごとに射影され、元の論理式 `φ` が周囲の階層の中で評価されます。両辺とも同じ真理値代数上の命題なので、主張される一致は単一のパスであって、含意ではありません。
+この主張が等しいと置くのは、先験的には異なる世界に住む二つの充足の判断です。左辺では環境 `γ` は `S` の要素、すなわち構成可能性の証明書を伴う集合からなり、`γ ⊨ liftFo φ h` は定数が `L` へと改名された論理式の `L` 内での充足です。右辺では同じ環境が `map fst` で項ごとに射影され、元の論理式 `φ` が周囲の階層の中で評価されます。両辺とも同じ `hProp` の命題なので、主張される一致は単一のパスであって、含意ではありません。
 <!--/-->
 
 ```agda
@@ -212,7 +210,7 @@ The first two steps leave the constants alone. Absoluteness is applied with the 
 ```agda
 transferFo φ h dφ γ =
     abs₀ (Δ₀-liftFo h dφ) γ
-  ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ fst id (liftFo φ h) (map fst γ))
+  ∙ sym (⊨-map 𝒮ᵥ fst id (liftFo φ h) (map fst γ))
 ```
 
 <!--en-->
@@ -225,7 +223,7 @@ The remaining two steps involve the constants, and together they say that relabe
 
 ```agda
   ∙ cong (λ ψ → (map fst γ) ⊨v ψ) (ToL.liftFo-correct φ h)
-  ∙ ⊨-map (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ id id φ (map fst γ)
+  ∙ ⊨-map 𝒮ᵥ id id φ (map fst γ)
 ```
 
 <!--en-->

@@ -16,7 +16,6 @@ A recursion internalized as a value table also has a graph in `L`: replacement c
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Recursion.Graph {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -39,7 +38,6 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -63,7 +61,7 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 Renaming uses the model's satisfaction relation.
 
 ```agda
-module Ren = Sat (hPropAlgebra (ℓ-suc ℓ)) 𝒮ʟ id using ( Agrees; ⊨-rename )
+module Ren = Sat 𝒮ʟ id using ( Agrees; ⊨-rename )
 ```
 
 The pair form of a graph, over `(e ∷ p ∷ [])`: "`e` is the pair of `p` and some

@@ -334,7 +334,7 @@ The former SatisfactionFrame is replaced by `L.Coding.SatisfactionGraphSet`,
 whose result is the internal graph of uniform satisfaction. Consumers import
 other coding tools directly from their owners.
 
-The catalog retains ten parallel routes. Its 121 chapters introduce the code
+The catalog retains ten parallel routes. Its 120 chapters introduce the code
 alphabet immediately before semantic use, and postpone code-domain soundness
 and completeness until the GCH description branch. The latter proof is not an
 ancestor of UniformSatisfaction. All new chapter boundaries carry matched
@@ -349,17 +349,17 @@ Consumers no longer reconstruct collapse implementation fields or the nested
 satisfaction-table environment. Large describing formulas remain opaque.
 
 Validation on 2026-09-08: `make check` passes, including 79 tests and the
-122-page, 713-title trilingual framework. A fresh project typecheck with Cubical
+120-page, 707-title trilingual framework. A fresh project typecheck with Cubical
 cache retained takes 212.06 seconds and reaches 1.62 GiB peak RSS; the tree has
-26,587 nonblank Agda code lines. The 121-chapter DAG has 1,605 direct edges,
-230 transitive-reduction edges and a longest chain of 31 modules. These costs
+26,587 nonblank Agda code lines. The 120-chapter DAG has 1,487 direct edges,
+224 transitive-reduction edges and a longest chain of 30 modules. These costs
 are acceptable for the explicit ownership and semantic interfaces established
 here; reducing import count is not the acceptance criterion.
 
 `make site` completes with library type hints enabled. All 366 localized master
 pages have matching titles and identical rendered Agda code, and the site link
 checker finds no broken targets. Chrome verifies the reading-guide sidebar in
-three languages, mobile tab navigation and all 121 node labels in each of the
+three languages, mobile tab navigation and all 120 node labels in each of the
 three dependency-map layouts. Obsolete generated pages for the two renamed
 modules were removed before the final build. Generated logs and screenshots
 remain under ignored `_build/cohesion-refactor`.

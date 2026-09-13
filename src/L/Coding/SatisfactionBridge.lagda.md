@@ -56,7 +56,6 @@ which is the alphabet the definable powerset indexes by anyway.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.Coding.SatisfactionBridge {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -95,7 +94,6 @@ open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ))
 open hPropStructure 𝒮ʟ
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
@@ -141,7 +139,7 @@ with it, which is how one of its formulas becomes one of ours.
 ```agda
 module _ (B : S) where
   module DB = DefOf (fst B)
-  module SemB = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) DB.𝒮M
+  module SemB = FOL.Semantics DB.𝒮M
   open SemB.At DB.SM id using () renaming ( _⊨_ to _⊨ᴮ_ ; ⟦_⟧ to ⟦_⟧ᴮ )
 
   intoL : DB.SM → S
@@ -340,11 +338,11 @@ The ten clauses are then one step each, and taking each as a lemma over the
 subformulas' properties rather than as a clause of the induction costs nothing
 and lets each be measured on its own. The four propositional cases are congruences: the
 condition names the subvalues as constants, and the object language's connective
-is the truth algebra's, so there is no translation layer to cross.
+is the corresponding direct `hProp` connective, so there is no translation layer to cross.
 <!--zh-->
 陈述只写一次，作为一条公式的一项具名性质：在每个内层环境处，以及在每个「底集是该环境的图」的 `L` 的元素处，「属于那个取值」就是「满足」。它是一条**真值之间的道路**，不是类型之间的等价，也不是集合之间的等同。道路正是两侧本来就采用的通货，故这一条向左与那个取值的成员等式、向右与可定义幂集的规格，仅凭传递性即可接合。集合等同不能充当原语，因为另一侧那个集合并非独立造出：造它正是这场递归所做的事。
 
-于是十条子句各是一步；把每一步取作「关于诸子公式性质的引理」而非「归纳的一条子句」，不花任何代价，却让每一步都能被单独测量。命题的那四条是同余：那个条件把诸子取值以常元点名，而对象语言的联结词就是真值代数的联结词，中间没有翻译层要跨。
+于是十条子句各是一步；把每一步取作「关于诸子公式性质的引理」而非「归纳的一条子句」，不花任何代价，却让每一步都能被单独测量。命题的那四条是同余：那个条件把诸子取值以常元点名，而对象语言的联结词就是 `hProp` 上相应的直接联结词，中间没有翻译层要跨。
 <!--/-->
 
 ```agda
@@ -744,7 +742,7 @@ one-entry vector, which is the same equation at length one.
              ≡ (envS B (λ _ → m) ∈ˢ Sat B (mapFo asConst ψ))
   defSet-Sat ψ m =
       DB.defSet-mem ψ m
-    ∙ sym (⊨-map (hPropAlgebra (ℓ-suc ℓ)) DB.𝒮M DB.ι id ψ (DB.ι m ∷ []))
+    ∙ sym (⊨-map DB.𝒮M DB.ι id ψ (DB.ι m ∷ []))
     ∙ sym (Sat-spec (mapFo DB.ι ψ) (DB.ι m ∷ []) (envS B (λ _ → m))
              (graph-single m))
     ∙ cong (λ χ → envS B (λ _ → m) ∈ˢ Sat B χ) (mapFo-fuse ψ)

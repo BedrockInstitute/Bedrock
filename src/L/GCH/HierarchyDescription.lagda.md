@@ -16,7 +16,6 @@ Later arguments must refer to the hierarchy from within the model. This chapter 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Classical using ( LEM )
 
 module L.GCH.HierarchyDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -67,12 +66,11 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅; ∅-empty; module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV; ω )
 
-open TruthAlgebra (hPropAlgebra (ℓ-suc ℓ)) using ()
 open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_; abs₀ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-module SemVᵃ = FOL.Semantics (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ
+module SemVᵃ = FOL.Semantics 𝒮ᵥ
 ```
 
 The rows. A hierarchy table `f` on the ordinal `p`: every `c ∈ p` has an entry,
@@ -619,7 +617,7 @@ read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : S 
      → (δ ⊨ embed φ) ≡ (map fst δ ⊨ₚ φ)
 read {n} {φ} dφ δ =
     AbsL.abs₀ (mapΔ₀ Empty.rec* dφ) δ
-  ∙ embed-⊨ (hPropAlgebra (ℓ-suc ℓ)) 𝒮ᵥ {K = S} fst φ (map fst δ)
+  ∙ embed-⊨ 𝒮ᵥ {K = S} fst φ (map fst δ)
   ∙ cong (λ ι → SemVᵃ.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
          (funExt (λ b → Empty.rec* b))
 

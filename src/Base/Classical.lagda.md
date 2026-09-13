@@ -43,7 +43,6 @@ The two smallness questions are given exact shapes in Base.Impredicativity, and 
 ```agda
 
 open import Base.Prelude
-open import Base.Truth
 open import Base.Impredicativity
   using ( isSmall; Resizing; HPropSmallness; Impredicativity )
 ```
@@ -174,15 +173,14 @@ The construction splits cleanly. Decoding sends each Boolean to its representati
 <!--/-->
 
 <!--en-->
-The two representative propositions come from the canonical truth algebra of `hProp`: its top value `⊤`{.Agda} and bottom value `⊥`{.Agda}. The latter is definitionally the pair `(⊥* , isProp⊥*)`{.Agda}, so its underlying type is the empty type `⊥*`{.Agda}. These two are exactly what the Boolean labels will denote.
+The two representative propositions are the canonical top proposition `⊤`{.Agda} and bottom proposition `⊥`{.Agda}. The latter is definitionally the pair `(⊥* , isProp⊥*)`{.Agda}, so its underlying type is the empty type `⊥*`{.Agda}. These two are exactly what the Boolean labels will denote.
 <!--zh-->
-两个代表命题取自 `hProp` 的典范真值代数：顶值 `⊤`{.Agda} 与底值 `⊥`{.Agda}。后者按定义就是对 `(⊥* , isProp⊥*)`{.Agda}，因此其底层类型是空类型 `⊥*`{.Agda}。布尔标签要指称的正是这两个命题。
+两个代表命题是 `hProp` 中典范的顶命题 `⊤`{.Agda} 与底命题 `⊥`{.Agda}。后者按定义就是对 `(⊥* , isProp⊥*)`{.Agda}，因此其底层类型是空类型 `⊥*`{.Agda}。布尔标签要指称的正是这两个命题。
 <!--ja-->
-二つの代表命題は `hProp` の正準な真理値代数から取ります。すなわち頂の値 `⊤`{.Agda} と底の値 `⊥`{.Agda} です。後者は定義上、対 `(⊥* , isProp⊥*)`{.Agda} そのものであり、その基礎型は空型 `⊥*`{.Agda} です。ブールのラベルが指すのはまさにこの二つの命題です。
+二つの代表命題は、`hProp` における正準な頂命題 `⊤`{.Agda} と底命題 `⊥`{.Agda} です。後者は定義上、対 `(⊥* , isProp⊥*)`{.Agda} そのものであり、その基礎型は空型 `⊥*`{.Agda} です。ブールのラベルが指すのはまさにこの二つの命題です。
 <!--/-->
 
 ```agda
-open module Canonical {ℓ : Level} = TruthAlgebra (hPropAlgebra ℓ) using ( ⊤; ⊥ )
 
 private
   decodeB : ∀ {ℓ} → Lift {ℓ-zero} {ℓ} Bool → hProp ℓ
