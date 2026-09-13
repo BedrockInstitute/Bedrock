@@ -1,23 +1,15 @@
 <!--en-->
 # The object language
 
-First-order set theory needs a language whose expressions can later be interpreted, coded, and manipulated inside a model. This chapter defines that raw syntax with its scope built into the types: terms and formulas are indexed by a constant domain and by the length of the available free-variable context. That indexing will let later semantic constructions rule out ill-scoped expressions before interpretation begins.
+Set theory talks about sets, but to prove theorems about set theory itself, its statements must first become mathematical objects in their own right: expressions put together by explicit rules rather than informal convention. This chapter defines that object language by fixing the available constant names, the variable positions that may be referred to, and the rules for forming terms and formulas. The central decision concerns scope. The length of an expression's free-variable context is part of its type, so a reference beyond that context is impossible to write, not merely forbidden.
 <!--zh-->
 # 对象语言
 
-一阶集合论需要一套语言，使其中的表达式随后能够在模型内得到解释、编码和变换。本章定义这套原始语法，并把作用域直接纳入类型：词项与公式都以常元域和可用自由变量上下文的长度为索引。借助这些索引，后续语义构造在开始解释之前便能排除作用域不合法的表达式。
+集合论谈论集合，而要证明关于集合论本身的定理，它的语句必须先成为独立的数学对象，即按明确规则构造的表达式，而不是只靠约定形成的记号。本章定义这个对象语言，确定有哪些常元名、可以指涉哪些变量位置，以及词项与公式的形成规则。全章的中心决定关乎作用域：表达式的自由变量语境长度属于其自身类型，超出该语境的引用根本无法写出，而不只是不被允许。
 <!--ja-->
 # 対象言語
 
-一階集合論には、後でモデルの内部に解釈し、符号化し、変形できる言語が必要です。この章では、その生の構文を、作用域を型に組み込んだ形で定義します。項と論理式は、定数域と利用可能な自由変数文脈の長さで添字づけられます。この添字づけにより、後の意味論的構成は、解釈を始める前に作用域の正しくない式を排除できます。
-<!--/-->
-
-<!--en-->
-To reason about first-order set theory inside type theory, we first need its language as a mathematical object: not truth, not models, just the raw strings that formulas are built from. This chapter fixes that syntax once and for all. The one structural commitment worth stating up front is about variables: each formula is built against a finite context of exactly `n` free-variable slots, and a variable is an element of `Fin n`{.Agda}, the type of valid positions `0` through `n - 1`.
-<!--zh-->
-要在类型论内部讨论一阶集合论，首先需要把它的语言变成一个数学对象：不是真值，不是模型，只是构造公式的原始字符串。本章一次性地固定这套语法。值得先说明的结构性约定只有一条，关于变量：每个公式都建立在恰好 `n` 个自由变量槽位的有限上下文之上，变量是 `Fin n`{.Agda} 的元素，即合法位置 `0` 到 `n - 1`。
-<!--ja-->
-型理論の内部で一階集合論を論じるには、まずその言語を数学的な対象として持つ必要があります。真理値でもモデルでもなく、論理式が組み立てられる生の記号列だけです。この章はその構文を一度に固定します。最初に述べるべき構造的な約束は変数についての一つだけです。各論理式はちょうど `n` 個の自由変数スロットからなる有限の文脈の上に組み立てられ、変数は `Fin n`{.Agda} の元、つまり `0` から `n - 1` までの有効な位置です。
+集合論は集合について語ります。しかし集合論そのものについて定理を証明するには、その文が、明示的な規則で組み立てられる式として、それ自体の数学的対象でなければなりません。この章ではその対象言語を定義し、利用できる定数名、参照できる変数位置、そして項と論理式の形成規則を定めます。本章の中心となる決定は作用域をめぐるものです。式の自由変数文脈の長さはその式自身の型の一部であり、その文脈を超える参照は、禁じられているというより、そもそも書けません。
 <!--/-->
 
 ```agda
@@ -25,11 +17,11 @@ To reason about first-order set theory inside type theory, we first need its lan
 ```
 
 <!--en-->
-Fixing `n` in advance is what makes scoping a property of the type itself rather than a side condition to check. When a formula is later quantified, its context grows from `n` to `suc n`; the syntax will track that growth, and no term will ever be able to name a variable outside its declared supply.
+Each formula is written against a finite context of free variables, and the length of that context, a natural number `n`, belongs to the formula's type. A variable is an element of `Fin n`{.Agda}, the type of positions `0` through `n - 1`. The point becomes visible when a quantifier is formed: its body has one more available variable position than the quantified formula itself, so the index grows from `n` to `suc n`. A term therefore cannot mention a variable outside its context, because no such position exists.
 <!--zh-->
-事先固定 `n`，使得作用域成为类型本身的性质，而不是需要另加检查的附加条件。公式随后被量化时，其上下文从 `n` 增长到 `suc n`；语法会记录这一增长，任何词项都无法指涉其声明供给之外的变量。
+每条公式都写在一个有限的自由变量语境上，语境的长度，即自然数 `n`，属于公式自身的类型。变量是 `Fin n`{.Agda} 的元素，即位置 `0` 到 `n - 1`。形成量词时，这个设计便直接显现出来：量词的公式体比量化所得的公式多一个可用变量位置，指标随之从 `n` 增到 `suc n`。词项因此不可能提到语境之外的变量，因为那样的位置并不存在。
 <!--ja-->
-`n` をあらかじめ固定することで、作用域が確認すべき追加条件ではなく型そのものの性質になります。論理式が後に量化されると、その文脈は `n` から `suc n` へと増えます。構文はこの増加を追跡し、宣言された供給の外にある変数を項が名指すことは決してできません。
+各論理式は有限の自由変数文脈の上に書かれ、その長さにあたる自然数 `n` は論理式自身の型の一部です。変数は `Fin n`{.Agda} の元、つまり位置 `0` から `n - 1` までです。量化子を形成すると、この設計がそのまま現れます。量化子の本体には、量化して得られる論理式より利用できる変数位置が一つ多いため、添字は `n` から `suc n` へ進みます。したがって項は文脈の外の変数に言及できません。そのような位置は存在しないからです。
 <!--/-->
 
 ```agda
@@ -38,11 +30,11 @@ module FOL.Syntax where
 ```
 
 <!--en-->
-Alongside variables, formulas may mention constants. The syntax leaves their collection open by taking an arbitrary type `K` of constant names, fixed uniformly throughout a given formula. Thus `K` records which parameters may be named, while `n` records which free-variable slots may be used; the definitions of terms and formulas now combine these two independent resources.
+Variables determine what a formula may refer to; constants determine what it may name. Besides the context length `n`, a formula is formulated over an arbitrary type `K` of constant symbols, the **constant domain**. The type `K` is chosen once for the whole language, so the names available within a formula never change. These two choices are independent: `K` determines which parameters may be named, while `n` determines how many variable positions may be used. Enlarging one leaves the other unchanged.
 <!--zh-->
-除变量外，公式还可以提到常元。语法以任意类型 `K` 作为常元名的类型，并在一条给定公式中统一固定它，从而不预先限定可用常元的集合。因此，`K` 记录可以指名哪些参数，`n` 则记录可以使用哪些自由变量槽位；接下来对词项与公式的定义将结合这两种彼此独立的资源。
+变量决定公式可以指涉什么，常元决定公式可以指名什么。除语境长度 `n` 外，公式还建立在任意的常元符号类型 `K` 上，`K` 即**常元域**。`K` 对整个语言只取定一次，因此一条公式内部可用的名字不会改变。这两个选取彼此独立：`K` 决定可以指名哪些参数，`n` 决定可以使用多少个变量位置；扩大其一不会影响另一者。
 <!--ja-->
-変数のほかに、論理式は定数を言及できます。構文は定数名の型として任意の `K` を取り、一つの論理式を通じてそれを一様に固定することで、利用できる定数の集まりをあらかじめ限定しません。したがって `K` はどのパラメータを名指せるかを記録し、`n` はどの自由変数スロットを使えるかを記録します。これから定める項と論理式は、この独立な二つの資源を組み合わせます。
+変数は論理式が何を参照できるかを決め、定数は何を名指せるかを決めます。文脈の長さ `n` のほかに、論理式は任意の定数記号の型 `K`、すなわち**定数域**の上で述べられます。`K` は言語全体に対して一度だけ選ばれるため、一つの論理式の中で使える名前が変わることはありません。この二つの選択は独立です。`K` は名指せるパラメータを、`n` は使える変数位置の個数を定め、一方を広げても他方は変わりません。
 <!--/-->
 
 ```agda
@@ -53,29 +45,29 @@ open import Base.Prelude
 <!--en-->
 ## Terms and formulas
 
-A term is either a named constant or a variable selected from `n` available slots. Formulas combine membership and equality atoms with logical connectives and bounded or unbounded quantifiers.
+Terms name the objects a formula can talk about, and formulas then assert things about those objects, so terms come first. A term is either a **constant**, a name drawn from `K`, or a **variable**, a position drawn from the `n` available positions. Formulas are built from such terms. They begin with the two atomic forms, membership and equality, and continue through the propositional connectives and the bounded and unbounded quantifiers.
 
-Some conventions used through the book: `t`, `u` stand for terms, `φ`, `ψ` for formulas, `n`, `m` for free-variable context lengths, and `i`, `j` for variable indices. A term is either a **constant** or a **variable**. The type parameter `K`, the **constant domain**, determines which constants are available; a variable is an element of `Fin n`{.Agda}, so its index lies between `0` and `n - 1`. A term need not mention every available slot. Scoping is intrinsic: an out-of-scope variable is unrepresentable.
+Throughout the book, `t` and `u` range over terms, `φ` and `ψ` over formulas, `n` and `m` over context lengths, and `i` and `j` over variable indices.
 <!--zh-->
 ## 词项与公式
 
-词项是一个具名常元，或从 `n` 个可用槽位中选出的变量。公式由隶属与相等原子式、逻辑联结词以及有界或无界量词组成。
+词项指称公式所谈论的对象，公式再对这些对象作出断言，所以先讲词项。词项要么是**常元**，即从 `K` 中取出的名字；要么是**变量**，即从 `n` 个可用位置中取出的一个位置。公式由这样的词项构造而成，起点是词项之间的隶属与相等这两个原子式，再由命题联结词以及有界、无界量词组合。
 
-先立几个贯穿全书的变量约定：`t`、`u` 代表词项，`φ`、`ψ` 代表公式，`n`、`m` 代表自由变量上下文的长度，`i`、`j` 代表变量索引。词项要么是**常元**，要么是**变量**。类型参数 `K` 称为**常元域**，决定可用的常元；变量是 `Fin n`{.Agda} 的元素，故其索引介于 `0` 与 `n - 1` 之间。词项无需用到每个可用槽位。作用域由此内蕴：越界变量不可表示。
+全书约定：`t`、`u` 表示词项，`φ`、`ψ` 表示公式，`n`、`m` 表示语境长度，`i`、`j` 表示变量索引。
 <!--ja-->
 ## 項と論理式
 
-項は名前を持つ定数か、`n` 個の利用可能なスロットから選ばれた変数です。論理式は所属と等号の原子式を、論理結合子、有界量化子、非有界量化子で組み立てます。
+項は論理式が語る対象を名指し、論理式はその対象について断言します。そこでまず項から始めます。項は、`K` から取った名前である**定数**か、利用可能な `n` 個の位置から取った**変数**のいずれかです。論理式はこのような項から組み立てられます。出発点は項の間の所属と等号という二つの原子式で、そこへ命題結合子と、有界・非有界の量化子が加わります。
 
-まず本書を通して使う約束を述べます。`t`、`u` は項、`φ`、`ψ` は論理式、`n`、`m` は自由変数文脈の長さ、`i`、`j` は変数の添字を表します。項は**定数**か**変数**です。型パラメータ `K`、すなわち**定数域**が利用可能な定数を定めます。変数は `Fin n`{.Agda} の元なので、その添字は `0` から `n - 1` の範囲にあります。項が利用可能なすべてのスロットを使う必要はありません。したがってスコープは内在的であり、範囲外の変数は表現できません。
+本書を通して、`t` と `u` は項を、`φ` と `ψ` は論理式を、`n` と `m` は文脈の長さを、`i` と `j` は変数の添字を表します。
 <!--/-->
 
 <!--en-->
-A term lives in `Term K n`: against a constant domain `K` and a context of `n` free-variable slots, it is either a constant name or a slot index. With `n = 2`, say, `var 0`, `var 1`, and `con c` are terms in `Term K 2`. What is not available is `var 2`: there is no element of `Fin 2`{.Agda} named `2`, so that expression is not merely rejected after formation; it cannot be formed at all.
+Here `Term` is a family of types: choosing a type `K` and a number `n` yields a type `Term K n`, and a term never comes without both. Since a term is nothing more than a name from `K` or a number below `n`, the whole family lives at the same universe level `ℓ` as `K` itself.
 <!--zh-->
-词项居于 `Term K n`：在常元域 `K` 与 `n` 个自由变量槽位的上下文下，它要么是一个常元名，要么是一个槽位索引。例如取 `n = 2`，`var 0`、`var 1` 与 `con c` 都是 `Term K 2` 中的词项。不可用的是 `var 2`：`Fin 2`{.Agda} 中没有名为 `2` 的元素，所以这个表达式并非先形成再遭拒绝，而是根本无法形成。
+这里 `Term` 是一个类型族：选定类型 `K` 与数 `n`，便得到类型 `Term K n`，词项从不脱离这二者而存在。词项无非是 `K` 中的一个名字或小于 `n` 的一个数，因此整个族与 `K` 同居宇宙层级 `ℓ`。
 <!--ja-->
-項は `Term K n` に属します。定数域 `K` と `n` 個の自由変数スロットからなる文脈のもとで、項は定数名かスロットの添字です。たとえば `n = 2` なら、`var 0`、`var 1`、`con c` はいずれも `Term K 2` の項です。使えないのは `var 2` です。`Fin 2`{.Agda} に `2` という元は存在しないため、この式は構成された後で退けられるのではなく、そもそも構成できません。
+ここで `Term` は型の族です。型 `K` と数 `n` を選ぶと型 `Term K n` が得られ、項がこの二つなしに現れることはありません。項は `K` の元である名前か `n` 未満の数にすぎないので、族全体は `K` と同じ宇宙レベル `ℓ` に置かれます。
 <!--/-->
 
 ```agda
@@ -83,11 +75,17 @@ data Term {ℓ} (K : Type ℓ) (n : ℕ) : Type ℓ where
 ```
 
 <!--en-->
-The two displayed constructors give exactly these cases: `con` wraps any inhabitant of `K`, treated purely as a name with no meaning attached yet, and `var` wraps an element of `Fin n`. Note what `n` does not measure: it is not a count of variable occurrences. `con c` and `var 0` both have type `Term K 2` even though neither mentions two slots; `n` bounds which slots may be named, not how often slots are used. For the same reason `n` does not touch the constants, and `Term K n` sits at the universe level of `K` itself.
+The constructor `con` takes an element `c : K` and treats it purely as a name. It has no meaning yet; only an interpretation can determine what it denotes. The constructor `var i` selects the position `i` from `Fin n`. With `n = 2`, the expressions `var 0`, `var 1`, and `con c` are terms of `Term K 2`, while `var 2` is unavailable: `Fin 2`{.Agda} has no element named `2`, so this is an expression that cannot be formed, rather than a term rejected by a later check.
+
+The number `n` determines which positions may be named, not how often they are used. The terms `con c` and `var 0` both have type `Term K 2` although neither mentions two variables, and a formula may use a single position more than once. Formulas will be built from terms of just this kind.
 <!--zh-->
-给出的两个构造子恰好就是这两种情形：`con` 包装 `K` 的任意元素，只当作名字，暂不附义；`var` 包装 `Fin n` 的一个元素。注意 `n` 度量的不是什么：它不是变量出现次数的计数。`con c` 与 `var 0` 的类型都是 `Term K 2`，尽管二者都没有提到两个槽位；`n` 约束的是哪些槽位可被指名，而不是槽位被使用的频次。同理，`n` 也不触及常元，`Term K n` 就居于 `K` 本身所在的宇宙层级。
+构造子 `con` 取 `K` 的一个元素 `c`，只把它当作名字。这个名字暂时没有含义，要等解释给出以后才知道它指称什么。构造子 `var i` 从 `Fin n` 中选出位置 `i`。取 `n = 2` 时，`var 0`、`var 1` 与 `con c` 都是 `Term K 2` 中的词项，而 `var 2` 无法写出：`Fin 2`{.Agda} 中没有名为 `2` 的元素，所以它不是会被事后检查退回的词项，而是根本无法形成的表达式。
+
+自然数 `n` 决定哪些位置可以被指名，而不是它们被使用的次数。`con c` 与 `var 0` 的类型都是 `Term K 2`，尽管二者都没有提到两个变量；一条公式也可以多次使用同一个位置。公式正是由这样的词项构造而成。
 <!--ja-->
-示されている 2 つの構成子がちょうどこの場合に対応します。`con` は `K` の任意の元を包み、それをまだ意味の付いていない純粋な名前として扱い、`var` は `Fin n` の元を包みます。`n` が測っていないものに注意してください。`n` は変数の出現回数の計数ではありません。`con c` も `var 0` も、2 つのスロットに言及していないにもかかわらず型は `Term K 2` です。`n` が制約するのはどのスロットを名指せるかであって、スロットの使用頻度ではありません。同様に `n` は定数には関わらないため、`Term K n` は `K` 自身の宇宙レベルに置かれます。
+構成子 `con` は `K` の元 `c` を受け取り、それを純粋に名前として扱います。名前はまだ何も意味しておらず、何を指示するかが分かるのは解釈が与えられてからです。構成子 `var i` は `Fin n` から位置 `i` を選びます。`n = 2` のとき、`var 0`、`var 1`、`con c` はいずれも `Term K 2` の項ですが、`var 2` は書けません。`Fin 2`{.Agda} に `2` という名の元は存在しないので、これは後の検査で退けられる項ではなく、形成できない式です。
+
+自然数 `n` が定めるのは、どの位置を名指せるかであって、位置が何回使われるかではありません。`con c` も `var 0` も二つの変数に言及しないまま型 `Term K 2` を持ち、論理式が一つの位置を何度も使ってもかまいません。論理式はこの種の項から組み立てられます。
 <!--/-->
 
 ```agda
