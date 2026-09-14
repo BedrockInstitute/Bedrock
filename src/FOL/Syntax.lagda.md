@@ -94,37 +94,25 @@ The number `n` determines which positions may be named, not how often they are u
 ```
 
 <!--en-->
-Formulas follow, indexed the same way. Every constructor of the object language carries an **upper dot**: a layer mark, and seeing it tells you at once that a symbol is syntax, not meaning. Reading them: `∈̇` is object membership, `≐` object equality, `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` the connectives, `∃̇ ∀̇` the quantifiers, and `∀̇∈`, `∃̇∈` the **bounded** quantifiers, read "for every member of" and "for some member of". Binding is by de Bruijn: a quantifier takes a body with one more free variable, and variable `0` is the one just bound.
+Formulas are the assertions, as terms were the names. The smallest assertions are the atoms `_∈̇_` and `_≐_`: that one term is a member of another, or that two terms are equal. From atoms, the connectives `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` build compound statements, and the quantifiers `∃̇ ∀̇` range over all objects. Alongside them, `∀̇∈` and `∃̇∈` are the **bounded** quantifiers, read 'for every member of' and 'for some member of'. Every one of these symbols carries a small upper dot. The dot is a layer mark: `∈̇` speaks of membership as the object language states it, one layer removed from the membership relation of the surrounding theory, and a dotted symbol is always syntax rather than meaning.
 
-Two design decisions are visible in the constructor list. First, the binary connectives are primitive, and the semantics can interpret each one by its corresponding direct operation on `hProp`, in a constructive semantics where double-negation elimination is not available in general. A classical text can economize, spelling `φ ∨ ψ` as `¬ (¬ φ ∧ ¬ ψ)`, `∀` as `¬ ∃ ¬`, `φ ⇒ ψ` as `¬ φ ∨ ψ`, because classically the double negations cancel; constructively that argument is not available, so these spellings would not deliver the intended constructive meanings. This development therefore takes `∨`, `∀`, `⇒` as constructors. Negation and truth are defined: `¬̇ φ` is `φ ⇒̇ ⊥̇`, and `⊤̇` is `⊥̇ ⇒̇ ⊥̇`.
-
-Second, the bounded quantifiers are primitive in their own right even though `∀̇∈ t φ` could be spelled with `∀̇`. Had they been abbreviations, "every quantifier in `φ` is bounded" would be a fact about how `φ` happens to be spelled, invisible to anything that computes over `φ`'s shape. As constructors, boundedness is part of the shape of a formula: later chapters classify formulas by a datatype over their constructors, and certify "all quantifiers bounded" by a datatype that simply has **no case** for `∃̇` and `∀̇`; expressing this absence requires the bounded forms to be given independently. Formulas of that shape behave well across structures, a thread taken up once the model chapters have established their model and carried into the constructible-universe chapters.
-
-The block begins with a fixity table: the book's single declaration of the notation levels for the object layer.
+A quantifier binds a variable, and the syntax records this in the index. Its body has one more available variable position than the quantified formula, and position `0` in the body is the variable just bound. Which occurrences fall under the quantifier is thereby fixed by position alone, in the de Bruijn manner; no name is stored in the formula, so these formation rules need no convention for α-renaming or for distinguishing identically named variables. Nothing in the formula marks whether that extra position is actually used.
 <!--zh-->
-公式随后，以同样的方式索引。对象语言的每个构造子都带一个**上点**：这个点就是语法层的标记，见到点即可知道符号指语法而非含义。读法：`∈̇` 是对象成员，`≐` 是对象相等，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 是联结词，`∃̇ ∀̇` 是量词，`∀̇∈`、`∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。约束采用 de Bruijn 方式：量词所取的公式体多出一个自由变量，变量 `0` 即刚被约束的那个。
+词项是名字，公式则是断言。最小的断言是原子式 `_∈̇_` 与 `_≐_`：一个词项属于另一个词项，或者两个词项相等。联结词 `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` 由原子式构成复合的陈述，量词 `∃̇ ∀̇` 则遍及一切对象。与之并列，`∀̇∈` 与 `∃̇∈` 是**有界**量词，读作「对……的每个成员」与「对……的某个成员」。这些符号都带一个小小的上点。点是层标记：`∈̇` 说的是对象语言所述的隶属，与周围理论的隶属关系相隔一层；带点的符号永远是语法，而不是含义。
 
-构造子清单体现两个设计决定。其一，二元联结词是原语，因此语义可以直接用 `hProp` 上相应的运算解释每一个联结词，而其所在的构造性语义中双重否定消去并非一般可得。经典教科书可以把 `φ ∨ ψ` 写成 `¬ (¬ φ ∧ ¬ ψ)`、把 `∀` 写成 `¬ ∃ ¬`、把 `φ ⇒ ψ` 写成 `¬ φ ∨ ψ`，因为经典逻辑可以消去双重否定；构造逻辑中这一论证不可用，这些写法无法给出想要的构造性含义。因此本开发将 `∨`、`∀`、`⇒` 取为构造子。否定与真则是定义出来的：`¬̇ φ` 即 `φ ⇒̇ ⊥̇`，`⊤̇` 即 `⊥̇ ⇒̇ ⊥̇`。
-
-其二，有界量词虽然可用 `∀̇` 拼写，仍单独作为原语。倘若它们只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` **恰巧如何拼写**的事实，任何按 `φ` 的形状计算的过程都无法识别它。作为构造子，有界性就是公式形状的一部分：后文按构造子给公式分类，并用对 `∃̇` 与 `∀̇` **不设情形**的归纳数据证明「量词皆有界」；要表达这种缺席，有界形式必须独立给出。这类公式在不同结构之间保持良好性质，模型诸章建立具体模型后将继续使用这一点，并延伸到可构造宇宙诸章。
-
-本块以 fixity 表开头：这是全书对象层记号层级的唯一集中声明。
+量词约束变量，语法把这个事实记进指标。其公式体比量化后的公式多一个可用变量位置，公式体中的位置 `0` 就是刚被约束的那个变量。哪些出现落在量词的管辖之下，由此仅凭位置确定，这就是 de Bruijn 方式；公式内部不存放名字，因此这些形成规则无需约定 α 改名，也无需区分同名变量。公式本身并不标记那个多出的位置是否真的被使用。
 <!--ja-->
-論理式が続きます。同じように添字づけられています。対象言語の各構成子は**上付きの点**を持ちます。これは層の印であり、点を見ればその記号が意味ではなく構文だとただちに分かります。読み方は次のとおりです。`∈̇` は対象の所属，`≐` は対象言語の等号，`∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` は結合子，`∃̇ ∀̇` は量化子，`∀̇∈` と `∃̇∈` は**有界**量化子で、それぞれ「…のすべての元について」「…のある元について」と読みます。束縛は de Bruijn 方式で、量化子は自由変数が 1 つ多い本体を取り、変数 `0` がまさに今束縛されたものです。
+項が名前であるのに対し、論理式は断言です。最小の断言が原子式 `_∈̇_` と `_≐_` です。ある項が別の項に属すること、あるいは二つの項が等しいことを述べます。結合子 `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` は原子式から複合的な主張を組み立て、量化子 `∃̇ ∀̇` はすべての対象にわたります。並んで、`∀̇∈` と `∃̇∈` は**有界**量化子で、それぞれ「…のすべての元について」「…のある元について」と読みます。これらの記号はみな小さな上付きの点を帯びます。点は層の印です。`∈̇` が述べるのは対象言語のいう所属であり、周囲の理論の所属関係から一層だけ離れています。点付きの記号はつねに構文であって、意味ではありません。
 
-構成子の一覧には 2 つの設計決定が現れています。第一に、二項結合子が原始的なのは、意味論がそれぞれを `hProp` 上の対応する演算によって直接解釈できるからです。その意味論は構成的であり、二重否定の消去は一般には使えません。古典的な教科書は二重否定が消えることを利用して、`φ ∨ ψ` を `¬ (¬ φ ∧ ¬ ψ)`、`∀` を `¬ ∃ ¬`、`φ ⇒ ψ` を `¬ φ ∨ ψ` と省略できますが、構成的にはこの論法が使えず、これらの書き方は望まれる構成的な意味を与えられません。そこでこの開発は `∨`、`∀`、`⇒` を構成子として採ります。否定と真は定義されます。`¬̇ φ` は `φ ⇒̇ ⊥̇`、`⊤̇` は `⊥̇ ⇒̇ ⊥̇` です。
-
-第二に、有界量化子は `∀̇` で書き表せるにもかかわらず、それ自身の権利で原始的です。もし省略形なら、「`φ` のすべての量化子が有界である」は `φ` が**たまたまどう書かれているか**についての事実となり、`φ` の形の上を計算する何物にも見えません。構成子としてなら、有界性は論理式の形の一部です。後の章では構成子の上のデータ型で論理式を分類し、`∃̇` と `∀̇` に対して**場合を持たない**データ型によって「量化子はすべて有界」を証明します。この不在を表現するには、有界の形が独立に与えられている必要があります。その形の論理式は構造を越えてよく振る舞い、この系はモデル諸章でモデルが確立されたのち、構成可能宇宙の章へと引き継がれます。
-
-このブロックは結合の優先順位の表から始まります。対象レイヤーの記法の水準に関する本書で唯一の宣言です。
+量化子は変数を束縛します。構文はこの事実を添字に記録します。本体には、量化して得られる論理式より一つ多い利用可能な変数位置があり、本体における位置 `0` が今束縛された変数です。どの出現が量化子の支配下にあるかは、位置だけで定まります。これが de Bruijn 方式です。論理式の内部に名前は保存されないので、この形成規則には α 改名や同名の変数を区別する約束が要りません。その余分な位置が実際に使われるかどうかを、論理式は記録しません。
 <!--/-->
 
 <!--en-->
-These four lines fix how compound formulas parse. Atoms and negation bind tightest (18 and 13), the conjunctive and disjunctive pairs sit in the middle (12, right-associative), and implication is weakest (10, right-associative so that `φ ⇒̇ ψ ⇒̇ θ` groups as `φ ⇒̇ (ψ ⇒̇ θ)`). These are parser declarations about nesting and grouping; with them, well-formed nested formulas read without extra parentheses.
+Written inline, compound formulas need an agreed reading order, and these four lines settle it once for the whole object layer. Atoms and negation bind tightest, at levels 18 and 13. Conjunction and disjunction sit in the middle at level 12 and implication weakest at level 10, both pairs right-associative, so a chain `φ ⇒̇ ψ ⇒̇ θ` reads as `φ ⇒̇ (ψ ⇒̇ θ)`, the customary grouping for iterated implication. These are conventions of parsing, not additions to the language; with them, a nested formula reads the way ordinary mathematical prose does, and parentheses appear only where a different grouping is meant. This is the book's single declaration of the object layer's reading levels.
 <!--zh-->
-这四行确定复合公式的解析方式。原子式与否定结合得最紧 (18 与 13)，合取与析取居中 (12，右结合)，蕴涵最弱 (10，右结合，故 `φ ⇒̇ ψ ⇒̇ θ` 读作 `φ ⇒̇ (ψ ⇒̇ θ)`)。这些是关于嵌套与分组的解析器声明；有了它们，良构的嵌套公式无需额外括号即可读清。
+复合公式写成一行时，需要商定阅读的次序，这四行把它一次定下，对整个对象层有效。原子式与否定结合得最紧，层级 18 与 13。合取与析取居中，层级 12；蕴涵最弱，层级 10；两对都右结合，于是 `φ ⇒̇ ψ ⇒̇ θ` 读作 `φ ⇒̇ (ψ ⇒̇ θ)`，正是迭代蕴涵的通常分组。这些是解析上的约定，不给语言增添任何东西；有了它们，嵌套公式按普通数学行文的样子即可读清，只有想要的分组不同时才需要括号。这是全书对对象层读取层级的唯一一次宣告。
 <!--ja-->
-この 4 行は複合論理式の構文解析を固定します。原子式と否定が最も強く結合し (18 と 13)、連言と選言がその次 (12、右結合)、含意が最も弱く (10、右結合)、したがって `φ ⇒̇ ψ ⇒̇ θ` は `φ ⇒̇ (ψ ⇒̇ θ)` とグループ化されます。これらは入れ子とグループ化についての構文解析上の宣言であり、これにより整形式の入れ子になった式は余分な括弧なしで読めます。
+複合論理式を一行に書けば、読む順序を取り決めておく必要があります。この 4 行がそれを一度に定め、対象レイヤー全体に及びます。原子式と否定が最も強く結合し、その水準は 18 と 13 です。連言と選言は中央の水準 12、含意は最も弱い水準 10 で、二組の対はいずれも右結合です。したがって `φ ⇒̇ ψ ⇒̇ θ` は `φ ⇒̇ (ψ ⇒̇ θ)` と読まれ、これは反復含意の通常のグループ化です。これらは構文解析上の約束であって、言語への追加ではありません。おかげで入れ子の論理式は普通の数学の文章と同じように読め、括弧は異なるグループ化を意図するときにだけ現れます。対象レイヤーの読みの水準を宣言するのは、本書でここ一度きりです。
 <!--/-->
 
 ```agda
@@ -135,11 +123,17 @@ infix  13 ¬̇_
 ```
 
 <!--en-->
-The `Formula` family is indexed exactly like `Term`: by a constant domain `K` and a free-variable count `n`. Its constructors split into three groups. The atoms `_∈̇_` and `_≐_` take two terms and assert object membership or equality between them. The propositional constructors `_∧̇_`, `_∨̇_`, `_⇒̇_` and `⊥̇` build compound formulas recursively; the index `n` is preserved because connectives neither bind nor release variables.
+The family `Formula` is indexed exactly like `Term`, by a constant domain `K` and a count `n` of available variable positions. The atoms `_∈̇_` and `_≐_` take two terms of `Term K n` and assert membership or equality between them. The propositional constructors go from formulas to formulas: `_∧̇_`, `_∨̇_` and `_⇒̇_` form conjunction, disjunction and implication, and `⊥̇` is falsity itself. None of them binds or releases a variable, which is why the index stays at `n`; quantifiers change it only when they bind a variable.
+
+That the connectives are constructors rather than abbreviations is a deliberate choice with a semantic reason. Formulas will eventually be read in the host's proposition type `hProp`, and each connective is interpreted by its corresponding direct operation there, not by reduction to other symbols. A classical text can economize, spelling `φ ∨̇ ψ` as `¬̇ (¬̇ φ ∧̇ ¬̇ ψ)`, `∀̇` as `¬̇ ∃̇ ¬̇`, or `φ ⇒̇ ψ` as `¬̇ φ ∨̇ ψ`, because classically double negations cancel. Constructively no such cancellation is generally available, and the substitutions would not deliver the intended meanings. This book therefore keeps `∨̇`, `⇒̇` and the quantifiers as constructors in their own right.
 <!--zh-->
-`Formula` 族与 `Term` 的索引方式完全相同：常元域 `K` 与自由变量个数 `n`。构造子分三组。原子式 `_∈̇_` 与 `_≐_` 接受两个词项，断言它们之间的对象隶属或相等。命题构造子 `_∧̇_`、`_∨̇_`、`_⇒̇_` 与 `⊥̇` 递归地构造复合公式；联结词既不约束也不释放变量，所以索引 `n` 保持不变。
+`Formula` 族与 `Term` 的索引方式完全相同：常元域 `K` 与可用变量位置的个数 `n`。原子式 `_∈̇_` 与 `_≐_` 取 `Term K n` 中的两个词项，断言它们之间的隶属或相等。命题构造子由公式得到公式：`_∧̇_`、`_∨̇_`、`_⇒̇_` 构成合取、析取与蕴涵，`⊥̇` 就是假本身。它们都不约束也不释放变量，所以指标始终停在 `n`；只有量词在约束变量时才会改变它。
+
+联结词取作构造子而非缩写，是带有语义理由的决定。公式最终要在宿主的命题类型 `hProp` 中被解读，每个联结词都由那里相应的直接运算解释，而不化归为别的符号。经典教科书可以省事，把 `φ ∨̇ ψ` 拼成 `¬̇ (¬̇ φ ∧̇ ¬̇ ψ)`、把 `∀̇` 拼成 `¬̇ ∃̇ ¬̇`、把 `φ ⇒̇ ψ` 拼成 `¬̇ φ ∨̇ ψ`，因为经典逻辑里双重否定会消去。构造性地看，这种消去并非一般可得，替换后的写法给不出想要的含义。因此本书将 `∨̇`、`⇒̇` 与量词直接取为构造子。
 <!--ja-->
-`Formula` 族は `Term` とまったく同じように、定数域 `K` と自由変数の個数 `n` で添字づけられます。構成子は 3 つのグループに分かれます。原子式 `_∈̇_` と `_≐_` は 2 つの項を受け取り、それらの間の対象の所属か等号を主張します。命題的構成子 `_∧̇_`、`_∨̇_`、`_⇒̇_` と `⊥̇` は再帰的に複合論理式を組み立てます。結合子は変数を束縛も解放もしないため、インデックス `n` は保たれます。
+`Formula` 族は `Term` とまったく同じやり方で、定数域 `K` と利用可能な変数位置の個数 `n` で添字づけられます。原子式 `_∈̇_` と `_≐_` は `Term K n` の二つの項を受け取り、それらの間の所属か等号を断言します。命題的な構成子は、論理式から論理式を作ります。`_∧̇_`、`_∨̇_`、`_⇒̇_` は連言、選言、含意を構成し、`⊥̇` は偽そのものです。どれも変数を束縛も解放もしません。だから添字はずっと `n` のままであり、量化子が変数を束縛するときにだけ、この添字が変わります。
+
+結合子を略語ではなく構成子とするのは、意味論的な理由のある決定です。論理式は最終的にホストの命題の型 `hProp` の中で読まれ、各結合子はそこで対応する直接的な演算によって解釈されます。他の記号への還元ではありません。古典的な教科書は `φ ∨̇ ψ` を `¬̇ (¬̇ φ ∧̇ ¬̇ ψ)`、`∀̇` を `¬̇ ∃̇ ¬̇`、`φ ⇒̇ ψ` を `¬̇ φ ∨̇ ψ` と書き替えて済ませられます。古典論理では二重否定が消えるからです。構成的にはこの消去は一般には使えないので、書き替えた形は望ましい意味を持ちません。そこで本書は `∨̇`、`⇒̇`、そして量化子を、そのまま構成子として採ります。
 <!--/-->
 
 ```agda
@@ -151,11 +145,17 @@ data Formula {ℓ} (K : Type ℓ) (n : ℕ) : Type ℓ where
 ```
 
 <!--en-->
-The quantifiers close the list, and their types encode de Bruijn binding precisely. `∃̇_` and `∀̇_` take a body of type `Formula K (suc n)` and return a formula over `n` free variables: the body may additionally refer to variable `0`, the one just bound. The bounded forms `∀̇∈` and `∃̇∈` additionally take a term `t` from the outer scope, ranging over the members of `t`; the body is again `Formula K (suc n)`. Because the bounded quantifiers are constructors in their own right, boundedness is readable off the shape of a formula, not off its spelling.
+The types of the quantifiers state binding precisely. `∃̇_` and `∀̇_` take a body of type `Formula K (suc n)` and return a formula over `n` positions: the body has one more position at its disposal, position `0`, and that is the variable the quantifier binds. The extra position is available, not obliged; a body that never mentions it is a legitimate formula. The bounded forms `∀̇∈` and `∃̇∈` read as 'for every member of' and 'for some member of'. Their bound `t` is a term of the outer context, from `Term K n`, and quantification ranges over the members of `t`; the body is again `Formula K (suc n)`.
+
+The bounded quantifiers could have been spelled with the plain ones, and keeping them as constructors is a second deliberate choice, this time for a reason about syntax itself. Had `∀̇∈ t φ` been an abbreviation, the statement that every quantifier in `φ` is bounded would be a fact about how `φ` happens to be written, invisible to anything that computes over `φ`'s shape. As constructors, boundedness belongs to the shape. Later chapters classify formulas by a datatype with one case per constructor, and certify that all quantifiers are bounded by a datatype having no case for `∃̇` and `∀̇` at all; such a certificate is possible only because the bounded forms are given independently. Formulas of this shape behave well across structures, a thread the model chapters take up and the chapters on the constructible universe carry on.
 <!--zh-->
-量词补全了构造子清单，其类型精确编码了 de Bruijn 约束。`∃̇_` 与 `∀̇_` 取类型为 `Formula K (suc n)` 的公式体，返回带 `n` 个自由变量的公式：公式体可以额外指涉变量 `0`，即刚被约束的那个。有界形式 `∀̇∈` 与 `∃̇∈` 还从外层取一个词项 `t`，遍历 `t` 的成员；公式体同样是 `Formula K (suc n)`。由于有界量词本身就是构造子，有界性可以直接从公式的形状读出，而无需看其拼写。
+量词的类型精确陈述了约束。`∃̇_` 与 `∀̇_` 取类型为 `Formula K (suc n)` 的公式体，返回 `n` 个位置上的公式：公式体多出一个可支配的位置，即位置 `0`，这正是量词约束的变量。多出的位置只是可用，并非必须；从不提及它的公式体也是合法的公式。有界形式 `∀̇∈` 与 `∃̇∈` 读作「对……的每个成员」与「对……的某个成员」。它们的界限 `t` 是外层语境中的词项，即 `Term K n` 的词项，量化遍及 `t` 的成员；公式体同样是 `Formula K (suc n)`。
+
+有界量词本可用普通量词拼出，仍将其保留为构造子是第二个刻意的决定，这次的理由关乎语法本身。倘若 `∀̇∈ t φ` 只是缩写，「`φ` 的每个量词都有界」就成了关于 `φ` 恰巧如何拼写的事实，任何按 `φ` 形状进行计算的过程都看不见它。作为构造子，有界性属于形状。后续章节将用一个对每个构造子恰设一个情形的数据类型给公式分类，并以一个对 `∃̇` 与 `∀̇` 全然不设情形的数据类型证明所有量词皆有界；这样的证书之所以可能，正因为有界形式是独立给出的。这种形状的公式在不同结构之间表现良好，模型诸章将接手这条线索，可构造宇宙诸章会把它继续下去。
 <!--ja-->
-量化子が一覧を締めくくります。その型は de Bruijn 束縛を正確に符号化しています。`∃̇_` と `∀̇_` は型 `Formula K (suc n)` の本体を受け取り、自由変数 `n` 個の論理式を返します。本体はさらに変数 `0`、すなわち今束縛されたものを参照できます。有界の形 `∀̇∈` と `∃̇∈` はさらに外側のスコープから項 `t` を受け取り、`t` の元にわたって動きます。本体はやはり `Formula K (suc n)` です。有界量化子がそれ自体構成子であるため、有界性は論理式の形から直接読み取れ、綴りから読む必要はありません。
+量化子の型は、束縛を正確に述べています。`∃̇_` と `∀̇_` は型 `Formula K (suc n)` の本体を受け取り、`n` 個の位置の上の論理式を返します。本体にはもう一つの利用できる位置、すなわち位置 `0` があり、これこそ量化子が束縛する変数です。この余分な位置は利用できるだけで、使う義務はありません。それに触れない本体も正当な論理式です。有界の形 `∀̇∈` と `∃̇∈` は、それぞれ「…のすべての元について」「…のある元について」と読みます。限界 `t` は外側の文脈の項、すなわち `Term K n` の項であり、量化は `t` の元にわたって行われます。本体はやはり `Formula K (suc n)` です。
+
+有界量化子は普通の量化子で書き表せるのに、構成子として保つのは第二の決定です。今度の理由は構文そのものに関わります。もし `∀̇∈ t φ` が略語なら、「`φ` のすべての量化子が有界である」は `φ` がたまたまどう書かれているかについての事実となり、`φ` の形の上を計算する何物からも見えません。構成子としてなら、有界性は形に属します。後の章では、構成子ごとに場合を一つ持つデータ型で論理式を分類し、`∃̇` と `∀̇` には場合をまったく持たないデータ型によって「量化子はすべて有界」を証明します。そのような証明が可能なのは、有界の形が独立に与えられているからです。この形の論理式は構造を越えてよく振る舞い、この系はモデルの章が受け取り、構成可能宇宙の章へと引き継がれます。
 <!--/-->
 
 ```agda
@@ -164,11 +164,11 @@ The quantifiers close the list, and their types encode de Bruijn binding precise
 ```
 
 <!--en-->
-Negation is not a constructor but a defined symbol: `¬̇ φ` is definitionally `φ ⇒̇ ⊥̇`. Any function matching on a `¬̇_` therefore sees an implication to absurdity. The other derived symbols are defined in the same style.
+Negation is not a constructor but a defined symbol: `¬̇ φ` is, by definition, `φ ⇒̇ ⊥̇`. The definition has a visible consequence for computation. A function matching on formulas never encounters a negation as such; it encounters an implication whose consequent is `⊥̇`, and the clause prepared for `_⇒̇_` already covers the case. No separate clause for negation will ever be needed, not even in the semantics.
 <!--zh-->
-否定不是构造子，而是定义出来的符号：`¬̇ φ` 定义上就是 `φ ⇒̇ ⊥̇`。因此任何对 `¬̇_` 做匹配的函数看到的都是指向荒谬的蕴涵。其余的导出符号也以同样方式定义。
+否定不是构造子，而是定义出来的符号：`¬̇ φ` 按定义就是 `φ ⇒̇ ⊥̇`。这个定义有一个可见的计算后果。对公式做匹配的函数遇到的并非否定本身，而是后件为 `⊥̇` 的蕴涵，为 `_⇒̇_` 准备的子句已经覆盖了它。因此永远不必为否定单写子句，语义也不例外。
 <!--ja-->
-否定は構成子ではなく定義された記号です。`¬̇ φ` は定義上 `φ ⇒̇ ⊥̇` です。したがって、`¬̇_` に対してマッチする関数が見るのは後件が `⊥̇` である含意です。その他の導出記号も同じやり方で定義されます。
+否定は構成子ではなく、定義された記号です。`¬̇ φ` とは定義により `φ ⇒̇ ⊥̇` のことです。この定義には計算上の帰結があります。論理式に対して場合分けする関数が出会うのは否定そのものではなく、後件が `⊥̇` である含意です。`_⇒̇_` のために用意した場合がすでにこれを取り扱います。したがって否定のための独立した場合が今後必要になることはなく、意味論においても同様です。
 <!--/-->
 
 ```agda
@@ -178,11 +178,11 @@ Negation is not a constructor but a defined symbol: `¬̇ φ` is definitionally 
 ```
 
 <!--en-->
-Truth is defined in the same style: `⊤̇` is `⊥̇ ⇒̇ ⊥̇`, implication from absurdity to absurdity. This chapter fixes that syntactic definition without imposing laws on a later truth-value interpretation. Both `¬̇_` and `⊤̇` are level-polymorphic in the same implicit way as the constructors, so they apply uniformly at every constant domain and every variable count.
+Truth is defined in the same style: `⊤̇` is `⊥̇ ⇒̇ ⊥̇`, the implication from absurdity to absurdity. Beyond the syntax, nothing is assumed, and the chapter imposes no law on how these symbols will later be read. Since the definitions unfold into constructors, an interpretation handles them by its existing clauses for `_⇒̇_`, with nothing special to arrange. Like the constructors, `¬̇_` and `⊤̇` take the universe level and `K` as implicit arguments, so the same two symbols serve at every constant domain and every variable count.
 <!--zh-->
-真也以同样方式定义：`⊤̇` 即 `⊥̇ ⇒̇ ⊥̇`，从荒谬到荒谬的蕴涵。本章只固定这一语法定义，并不对后续的真值解释施加定律。`¬̇_` 与 `⊤̇` 和构造子一样对层级多态，在任何常元域与任何变量个数下都统一可用。
+真以同样方式定义：`⊤̇` 即 `⊥̇ ⇒̇ ⊥̇`，从荒谬到荒谬的蕴涵。语法之外别无假设，本章也不为这些符号日后的解读施加任何定律。既然定义会展开为构造子，解释只需用它处理 `_⇒̇_` 的既有子句来对待它们，无须任何特别安排。与构造子一样，`¬̇_` 与 `⊤̇` 把宇宙层级与 `K` 作为隐式参数，同一对符号因此在每个常元域、每个变量个数下都可用。
 <!--ja-->
-真も同じ仕方で定義されます。`⊤̇` は `⊥̇ ⇒̇ ⊥̇`、すなわち矛盾から矛盾への含意です。この章で定めるのはこの構文上の定義だけであり、後の真理値による解釈に法則を課すものではありません。`¬̇_` と `⊤̇` は構成子と同じくレベル多態的なので、任意の定数域と任意の変数の個数に対して一様に使えます。
+真も同じ仕方で定義されます。`⊤̇` とは `⊥̇ ⇒̇ ⊥̇`、すなわち矛盾から矛盾への含意です。構文のほかには何も仮定せず、本章はこれらの記号の今後の読み方に法則を課しません。定義は構成子へと展開されるので、解釈は `_⇒̇_` のための既存の場合によってそれらを扱い、特別な用意は要りません。構成子と同じく、`¬̇_` と `⊤̇` は宇宙レベルと `K` を暗黙の引数として受け取り、同じ二つの記号がすべての定数域とすべての変数の個数で働きます。
 <!--/-->
 
 ```agda
@@ -192,63 +192,59 @@ Truth is defined in the same style: `⊤̇` is `⊥̇ ⇒̇ ⊥̇`, implication 
 ```
 
 <!--en-->
-The parameter `K` is where one syntax covers every use the book will make of it:
+A single syntax serves every use the book will make of it; the freedom lies in the choice of the constant domain `K`:
 
 | choice of `K` | what it gives |
 |---|---|
 | the carrier of a structure | the working syntax: any set may appear in a formula as a parameter |
-| `⊥*`{.Agda} (no constants) | the **parameter-free formulas**: countable and codable, where theories and codes will live |
+| `⊥*`{.Agda} (no constants) | the **parameter-free formulas**: countable and codable independently of ambient parameters |
 | a restricted carrier | parameters confined to a class; the shape the constructible-universe development builds `L` with |
 
 ## Sentences and parameter-free formulas
 
-A sentence has no free variables, while a parameter-free formula has no constants. These are independent restrictions, and the distinction becomes essential when formulas are coded and evaluated inside a model.
+A sentence has no free variables; a parameter-free formula has no constants. The two restrictions are independent, and the difference matters as soon as formulas are coded and evaluated inside a model.
 
-A **sentence** is a formula with no free variables; with intrinsic scoping this is a type, `Formula K 0`, not a side condition, and the book gives it no separate name. **Parameter-free formulas** restrict along a different, orthogonal axis. A constant is how an ambient set enters a formula as a parameter; here the constant domain is the empty type `⊥*`{.Agda}, so there are no parameters at all, while free variables remain; like sentences, this is just a type, `Formula ⊥* n`, with no separate name. From the empty type anything follows, so a parameter-free formula can enter the syntax over any domain whatsoever; the map that performs the entry lives with the constant-transformation kit at the book's tail. Parameter-free formulas are no rivals of the working syntax but its companions: a syntax whose constants are all sets is too big to be counted or coded, so whenever a later part needs formulas *as data*, theories as sets of formulas, codes of formulas inside a model, it is the parameter-free formulas that get collected, their parameters fed through environments instead.
+A **sentence** is a formula with no free variables. Intrinsic scoping makes this a type, `Formula K 0`, rather than a side condition, and the book gives it no separate name. **Parameter-free formulas** restrict along the other axis: the constant domain is the empty type `⊥*`{.Agda}, so no parameter can be named, while free variables remain. This too is simply a type, `Formula ⊥* n`, with no separate name of its own. Because a function out of the empty type exists for every `K`, a parameter-free formula can be read over any constant domain, and the relabelling kit supplies exactly that map. Parameter-free formulas are useful when syntax must be enumerated without first enumerating the surrounding sets; parameters can then be supplied through an environment. They are not the only formulas that can be coded. The coding developed later also treats `Formula S n` directly, including constants drawn from the carrier `S`.
 
 ## Recap
 
-The inductive syntax records constants, free-variable arity, and quantifier scope in its types. Later chapters can therefore transform formulas while Agda checks that variables remain well scoped.
+The inductive syntax records the constant domain, the length of the free-variable context, and quantifier scope in its types, so later chapters can transform formulas while Agda checks that variables stay in scope.
 
-The object language is an inductive family `Formula K n`{.Agda}: constant domain as a parameter, scoping intrinsic through `Fin`{.Agda}, each constructor dotted. Around it: the parameter-free formulas, the data axis whose entry map arrives with the relabelling kit at the book's tail. Note what is absent: no substitution and no weakening operators anywhere. The design will keep it that way, and the little variable machinery the book does need arrives later in the book. First, formulas need something to talk about.
+The object language is the inductive family `Formula K n`{.Agda}: the constant domain as a parameter, scoping intrinsic through `Fin`{.Agda}, every constructor dotted. Alongside it stand the parameter-free formulas, with their entry map in the relabelling kit. Note what is absent: no substitution and no weakening appear anywhere. The design will keep it that way, and what little the book needs for handling variables arrives in later chapters. First, formulas need objects to talk about.
 <!--zh-->
-参数 `K` 让一族语法覆盖全书的所有用途：
+一套语法服务全书的每一种用途；自由度在于常元域 `K` 的取法：
 
 | `K` 的取法 | 得到什么 |
 |---|---|
 | 某结构的载体 | 日常工作语法：任何集合都能以参数身份出现在公式里 |
-| `⊥*`{.Agda} (无常元) | **无参公式**：可数、可编码，理论与码所在之处 |
+| `⊥*`{.Agda} (无常元) | **无参公式**：不依赖周围的集合参数即可计数和编码 |
 | 受限制的载体 | 参数只许来自某个类；可构造宇宙诸章构造 `L` 用的正是这个形状 |
 
 ## 句子与无参公式
 
-句子没有自由变量，无参公式没有常元。这是两项彼此独立的限制；当公式在模型内部被编码和求值时，这一区分至关重要。
+句子没有自由变量，无参公式没有常元。两项限制彼此独立；一旦公式要在模型内部被编码和求值，这个区分就变得关键。
 
-**句子**是没有自由变量的公式；作用域既然内蕴，这是一个类型 `Formula K 0`，而非附加条件，本书不为它另设名字。**无参公式**限制的是另一条正交的轴。常元是外部集合以参数身份进入公式的通道；这里常元域取空类型 `⊥*`{.Agda}，参数于是全然没有，而自由变量照旧；与句子一样，这只是一个类型 `Formula ⊥* n`，本书不为它另设名字。从空类型可以推出一切，所以无参公式可以进入任意常元域上的语法；执行这次进入的映射编在书末的常元改名章里。无参公式不是工作语法的对手，而是它的同伴：常元囊括一切集合的语法太大，数不得也编不得码，因此后面各部凡需要把公式**当数据**用，理论作为公式的集合、模型内部的公式码，收集的都是无参公式，参数改经环境喂入。
+**句子**是没有自由变量的公式。作用域既然内蕴，这就是一个类型 `Formula K 0`，而非附加条件，本书不为它另设名字。**无参公式**则沿另一条轴限制：常元域取空类型 `⊥*`{.Agda}，任何参数都无从指名，而自由变量照旧。它同样只是一个类型 `Formula ⊥* n`，没有单独的名字。从空类型出发的函数对任何 `K` 都存在，所以无参公式可以在任何常元域上被解读，常元改名工具组给出的正是这个映射。当语法需要在不先枚举周围集合的前提下被枚举时，无参公式尤其有用，参数可以改由环境提供。但可编码的并不只有无参公式；后面的编码也直接处理 `Formula S n`，其中包括取自载体 `S` 的常元。
 
 ## 小结
 
-归纳语法在类型中记录常元、自由变量元数与量词作用域。因此后续章节变换公式时，Agda 能检查变量始终处于正确作用域。
-
-对象语言是归纳族 `Formula K n`{.Agda}：常元域作参数，作用域经 `Fin`{.Agda} 内蕴，构造子全带点。与之配套的是无参公式，其进入映射由书末的常元改名工具组给出。值得注意的是，全篇没有替换算子，也没有弱化算子；这一设计将保持下去，本书所需的少量变量机件将在稍后引入。眼下，公式先得有可谈论的对象。
+词项与公式共同把作用域纳入形成规则本身。常元域 `K` 决定可以指名哪些参数，`n` 决定可以使用哪些自由变量位置；二者都不表示名字实际出现的次数。量词只改变公式体的语境长度，de Bruijn 位置则无需变量名便能确定被约束的变量。分别令 `n` 或 `K` 取空的情形，就得到句子或无参公式，两项限制因而始终清楚地彼此独立。
 <!--ja-->
-パラメータ `K` の選択により、一つの構文が本書で必要とされるすべての用途を覆います：
+一つの構文が本書のあらゆる用途に仕えます。自由度は、定数域 `K` の選び方にあります：
 
 | `K` の選び方 | 得られるもの |
 |---|---|
 | 構造の台 | 日常の作業用構文：任意の集合がパラメータとして論理式に現れ得る |
-| `⊥*`{.Agda} (定数なし) | **パラメータを持たない論理式**：可数で符号化可能であり、理論と符号がここに住む |
+| `⊥*`{.Agda} (定数なし) | **パラメータを持たない論理式**：周囲のパラメータに依存せず可算で符号化できる |
 | 制限された台 | パラメータをあるクラスに限定する。構成可能宇宙の章で `L` を構成するときの形 |
 
 ## 文とパラメータを持たない論理式
 
-文には自由変数がなく、パラメータを持たない論理式には定数がありません。この二つの条件は独立であり、モデル内部で論理式を符号化して評価するときに重要になります。
+文には自由変数がなく、パラメータを持たない論理式には定数がありません。この二つの制限は独立であり、論理式をモデルの内部で符号化して評価する段階になると、この違いが決定的になります。
 
-**文**とは自由変数を持たない論理式のことです。作用域が内在的であるため、これは追加の条件ではなく型 `Formula K 0` そのものであり、本書はこれに別の名前を与えません。**パラメータを持たない論理式**は、これとは直交する別の軸に沿った制限です。定数とは、周囲の集合がパラメータとして論理式に入り込むための通路です。ここでは定数域を空型 `⊥*`{.Agda} とするので、パラメータはまったくなく、自由変数はそのまま残ります。文と同様、これも単なる型 `Formula ⊥* n` であり、別の名前は持ちません。空型からは何でも導けるので、パラメータを持たない論理式は任意の定数域上の構文へ入り込むことができます。この入り込みを実行する写像は、本書末尾の定数の改名の道具立てとともに置かれます。パラメータを持たない論理式は作業用構文の競合相手ではなく、その仲間です。定数としてすべての集合を許す構文は大きすぎて、数え上げることも符号化することもできません。それゆえ、後の部分で論理式を**データとして**扱うとき、つまり理論を論理式の集合として、あるいはモデル内部の論理式の符号として扱うとき、集められるのは常にパラメータを持たない論理式であり、そのパラメータは代わりに環境を通じて供給されます。
+**文**とは、自由変数を持たない論理式のことです。作用域が内在的であるため、これは追加条件ではなく型 `Formula K 0` そのものであり、本書は別の名前を与えません。**パラメータを持たない論理式**は、別の軸に沿った制限です。定数域を空型 `⊥*`{.Agda} とすれば、名指せるパラメータは一つもなく、自由変数はそのまま残ります。これも単なる型 `Formula ⊥* n` であって、独自の名前は持ちません。空型からの関数は任意の `K` に対して存在するので、パラメータを持たない論理式はどんな定数域の上でも読むことができ、その映射を与えるのが定数の改名の道具立てです。周囲の集合を先に列挙せず構文を列挙したいとき、パラメータを持たない論理式が役立ち、パラメータは環境から与えられます。ただし、符号化できる論理式がこれだけというわけではありません。後の符号化は、台 `S` から取る定数を含む `Formula S n` も直接扱います。
 
 ## まとめ
 
-帰納的な構文は、定数、自由変数の個数、量化子の作用域を型に記録します。そのため後の章で論理式を変換するとき、変数の作用域が正しいことを Agda が検査できます。
-
-対象言語は帰納的な族 `Formula K n`{.Agda} です。定数域をパラメータとし、作用域は `Fin`{.Agda} によって内在的に記録され、各構成子は点付きです。これを支えるのがパラメータを持たない論理式であり、その入り込みの写像は本書末尾の定数の改名の道具立てとともに現れます。注目すべきは、ここに置かれていないものです。代入も弱化も、どの演算子も本書のどこにもありません。この設計はそのまま保たれ、本書が実際に必要とするわずかな変数の機構は後の章で導入されます。まずは、論理式が語るべき対象が必要です。
+項と論理式は、作用域を形成規則そのものに組み込みます。定数域 `K` は名指せるパラメータを定め、`n` は利用できる自由変数位置を定めます。どちらも名前が実際に現れる回数を表すものではありません。量化子が変えるのは本体の文脈の長さだけであり、de Bruijn 位置によって、名前を使わずに束縛される変数が定まります。`n` と `K` のどちらを空の場合にするかによって、文とパラメータを持たない論理式がそれぞれ得られ、二つの制限は明確に独立したままです。
 <!--/-->

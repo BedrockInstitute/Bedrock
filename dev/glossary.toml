@@ -513,7 +513,7 @@ forms_en = ["propositions"]
 recap_en = "A type any two of whose elements are equal, so that it retains only whether a proof exists."
 recap_zh = "任意两个元素都相等的类型，因此只保留是否存在证明这一信息。"
 recap_ja = "任意の二つの元が等しい型であり、証明が存在するかどうかだけを保つ。"
-notes = "The isProp notion. Explicit matching, measured 2026-09-12: in Chinese 246 of 950 occurrences (26%) and in Japanese 291 of 973 (30%) sit inside a different term, chiefly 命题截断 / 命題的切り詰め, 命题值 / 命題値, 命题性 / 命題性 and 命题降层. English is unaffected because the word boundary excludes propositional, but matching is one decision for all three languages."
+notes = "The isProp notion. Explicit matching, measured 2026-09-12: in Chinese 246 of 950 occurrences (26%) and in Japanese 291 of 973 (30%) sit inside a different term, chiefly 命题截断 / 命題的切り詰め, 命题值 / 命題値, 命题性 / 命題性 and 命题降级. English is unaffected because the word boundary excludes propositional, but matching is one decision for all three languages."
 
 [[term]]
 category = "Type theory"
@@ -642,25 +642,92 @@ notes = "the explicit-level universe tower of the host (Base.Prelude)"
 
 [[term]]
 category = "Type theory"
-id = "truth-value"
+id = "underlying-type"
 audience = "reader"
+en = "underlying type"
+zh = "底层类型"
+ja = "基礎型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["underlying types"]
+recap_en = "The type obtained by forgetting the additional property or structure packaged with it; for P : hProp ℓ, this is the first component ⟨ P ⟩."
+recap_zh = "忘掉与一个类型一同打包的性质或结构后所得的类型；对于 P : hProp ℓ，它就是第一分量 ⟨ P ⟩。"
+recap_ja = "型とともに収められた性質や構造を忘れて得られる型。P : hProp ℓ については第一成分 ⟨ P ⟩ である。"
+notes = "Cubical Agda defines hProp ℓ as TypeOfHLevel ℓ 1, a dependent pair whose first projection is the type: https://github.com/agda/cubical/blob/master/Cubical/Foundations/HLevels.agda ."
+
+[[term]]
+category = "Type theory"
 en = "truth value"
 zh = "真值"
 ja = "真理値"
+notes = "zh 真值 vs ja 真理値. Kept as an authoring term rather than introduced as reader vocabulary; the textbook explains propositions and hProp directly."
+
+[[term]]
+category = "Type theory"
+id = "type-equivalence"
+audience = "reader"
+en = "type equivalence"
+zh = "类型等价"
+ja = "型同値"
 introduced_in = "Base.Impredicativity"
 matching = "explicit"
-forms_en = ["truth values"]
-recap_en = "The value assigned when a proposition or formula is evaluated; in this book truth values are propositions in hProp."
-recap_zh = "命题或公式求值所得到的值；本书的真值是 hProp 中的命题。"
-recap_ja = "命題や論理式を評価したときに割り当てられる値。本書の真理値は hProp の命題である。"
-notes = "zh 真值 vs ja 真理値. Explicit matching because the terms also occur inside longer compounds such as 真值表 / 真理値表."
+forms_en = ["equivalence", "equivalences"]
+recap_en = "An equivalence A ≃ B is a map with contractible fibres; an inverse and both round-trip paths follow from this condition."
+recap_zh = "类型等价 A ≃ B 是纤维皆可缩的映射；逆向映射与两条往返路径可由这个条件导出。"
+recap_ja = "型同値 A ≃ B は、各ファイバーが可縮である写像であり、逆写像と二つの往復パスはこの条件から導かれる。"
+notes = "Cubical Agda's _≃_ is Σ of a map and isEquiv, where isEquiv means contractible fibres: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda . Explicit matching avoids treating every generic use of equivalence as a glossary reference."
+
+[[term]]
+category = "Type theory"
+id = "fiber"
+audience = "reader"
+en = "fibre"
+zh = "纤维"
+ja = "ファイバー"
+introduced_in = "Base.Impredicativity"
+matching = "explicit"
+forms_en = ["fiber", "fibres", "fibers"]
+recap_en = "The fibre of f : A → B over b : B is the dependent pair type Σ (a : A) (f a ≡ b), whose elements are preimages together with paths witnessing their images."
+recap_zh = "映射 f : A → B 在 b : B 上的纤维是依值对类型 Σ (a : A) (f a ≡ b)；它的元素由原像及其确实映到 b 的路径组成。"
+recap_ja = "写像 f : A → B の b : B 上のファイバーは依存対型 Σ (a : A) (f a ≡ b) であり、その要素は原像と、それが b へ写ることを示すパスからなる。"
+notes = "Cubical Agda defines the fibre of f at y as Σ[ x ∈ A ] f x ≡ y and defines isEquiv by contractibility of every fibre: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda ."
+
+[[term]]
+category = "Type theory"
+id = "type-isomorphism"
+audience = "reader"
+en = "isomorphism"
+zh = "同构"
+ja = "同型"
+introduced_in = "Base.Impredicativity"
+matching = "explicit"
+recap_en = "An isomorphism explicitly supplies forward and inverse maps together with the two inverse laws."
+recap_zh = "同构显式给出正向映射、逆向映射以及两条逆律。"
+recap_ja = "同型は順写像、逆写像、および二つの逆法則を明示的に与える。"
+notes = "Cubical Agda's Iso record has fun, inv, rightInv and leftInv fields and converts to an equivalence: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Isomorphism.agda ."
+
+[[term]]
+category = "Logic and philosophy"
+id = "logical-equivalence"
+audience = "reader"
+en = "logical equivalence"
+zh = "逻辑等价"
+ja = "論理的同値"
+introduced_in = "Base.Impredicativity"
+matching = "auto"
+forms_en = ["logically equivalent"]
+recap_en = "Logical equivalence gives implications in both directions; for propositions, isProp promotes these maps to a type equivalence."
+recap_zh = "逻辑等价给出两个方向的蕴含；对于命题，isProp 可将这两个映射提升为类型等价。"
+recap_ja = "論理的同値は両方向の含意を与え、命題については isProp によってそれらの写像を型同値へ高められる。"
+notes = "The HoTT Book distinguishes equivalence of types from mere maps in both directions and proves that logically equivalent mere propositions are equivalent: https://homotopytypetheory.org/book/ ."
 
 [[term]]
 category = "Type theory"
 en = "propositional resizing"
-zh = "命题降层"
+zh = "命题降级"
 ja = "命題リサイズ"
-notes = "tentative (owner review): zh renders by meaning (drop a universe level); ja transliterates"
+avoid = ["zh:命题降层", "zh:命题降成"]
+notes = "Owner ruling 2026-09-13: zh 命题降级 renders lowering to a smaller universe level; ja retains the established transliteration."
 
 # ---- Logic and philosophy ----------------------------------------------------
 
@@ -895,6 +962,21 @@ en = "structure"
 zh = "结构"
 ja = "構造"
 notes = "model-theoretic structure, ZFStructure"
+
+[[term]]
+category = "Logic and philosophy"
+id = "domain"
+audience = "reader"
+en = "domain"
+zh = "论域"
+ja = "論域"
+introduced_in = "Base.Prelude"
+matching = "explicit"
+forms_en = ["domains"]
+recap_en = "The type over which variables range; calling it a domain adds no relation, operation or other structure."
+recap_zh = "变量在其中取值的类型；称它为论域，并不为它添加关系、运算或其他结构。"
+recap_ja = "変数が動く型。論域と呼ぶだけでは、関係、演算、その他の構造は加わらない。"
+notes = "Model-theoretic use. The Stanford Encyclopedia of Philosophy calls the common range of all quantifiers the domain or universe of a structure: https://plato.stanford.edu/entries/model-theory/ . Explicit matching avoids unrelated uses such as function domain and code domain."
 
 [[term]]
 category = "Logic and philosophy"
@@ -1475,7 +1557,7 @@ ja = "命題的切り詰め"
 introduced_in = "Base.Prelude"
 matching = "auto"
 recap_en = "The operation sending a type to a proposition with the same inhabitedness, keeping that an element exists and forgetting which one."
-recap_zh = "把一个类型送到有元性相同的命题的运算：保留「有元素」这一事实，忘去究竟是哪一个。"
+recap_zh = "把一个类型变成命题的运算：它保留该类型是否有元素的信息，却忘去具体是哪一个元素。"
 recap_ja = "型を、要素の有無が同じ命題へ送る操作。要素があることは保ち、それがどれであったかは忘れる。"
 notes = "English: HoTT Book section 3.7, https://homotopytypetheory.org/book/ . Japanese compound follows Uemura’s attested n 切り詰め (n-truncation), section 4.3, https://uemurax.github.io/hott-ja/index.pdf ; searches for the exact compound found reading notes but no primary exact compound, so this is pattern-derived. Chinese compound is a descriptive rendering of proposition + truncation; exact-phrase searches did not yield a primary Chinese text. This is the (-1)-truncation, not the choice of an inhabitant."
 

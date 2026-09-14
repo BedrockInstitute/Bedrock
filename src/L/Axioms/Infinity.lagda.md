@@ -64,11 +64,11 @@ open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
 
 <!--en-->
-Truth values here are `hProp` packages, and their indexed disjunction `⋁`{.Agda} expresses mere existence over a carrier. For the constructible structure `𝒮ʟ`, `∈ˢ`{.Agda} denotes membership and `≈ˢ`{.Agda} denotes structural equality, whose underlying equality is equality of the ambient sets.
+Truth values here are `hProp` packages, and their indexed disjunction `∃[ x ] P x`{.Agda} expresses mere existence over a carrier. For the constructible structure `𝒮ʟ`, `∈ˢ`{.Agda} denotes membership and `≈ˢ`{.Agda} denotes structural equality, whose underlying equality is equality of the ambient sets.
 <!--zh-->
-这里的真值是 `hProp` 封装；其索引析取 `⋁`{.Agda} 表达沿某个载体的单纯存在。对可构造结构 `𝒮ʟ`，`∈ˢ`{.Agda} 表示属于，`≈ˢ`{.Agda} 表示结构相等，其底层等式是周遭集合之间的等式。
+这里的真值是 `hProp` 封装；其索引析取 `∃[ x ] P x`{.Agda} 表达沿某个载体的单纯存在。对可构造结构 `𝒮ʟ`，`∈ˢ`{.Agda} 表示属于，`≈ˢ`{.Agda} 表示结构相等，其底层等式是周遭集合之间的等式。
 <!--ja-->
-ここでの真理値は `hProp` の組であり、その添字付き選言 `⋁`{.Agda} は、ある台にわたる単なる存在を表します。構成可能構造 `𝒮ʟ` では、`∈ˢ`{.Agda} は所属を、`≈ˢ`{.Agda} は構造の等しさを表し、その基礎にある等式は周囲の集合の等式です。
+ここでの真理値は `hProp` の組であり、その添字付き選言 `∃[ x ] P x`{.Agda} は、ある台にわたる単なる存在を表します。構成可能構造 `𝒮ʟ` では、`∈ˢ`{.Agda} は所属を、`≈ˢ`{.Agda} は構造の等しさを表し、その基礎にある等式は周囲の集合の等式です。
 <!--/-->
 
 ```agda
@@ -132,16 +132,16 @@ It remains to verify that the members of `ωʟ` are exactly the internal numeral
 <!--/-->
 
 <!--en-->
-The class `isNumeralL` disjoins, over the carrier `Lift ℕ`, the family of propositions `x ≈ˢ numeralL (lower n)`. The `Lift` deserves a word: `⋁`{.Agda} requires its carrier to live at the working level, while `ℕ` lives at `ℓ-zero`, and lifting is a pure level adjustment carrying exactly the same elements, with `lower` recovering the plain index. The specification `ω-specL` states the goal as a path between truth values, `(x ∈ˢ ωʟ) ≡ isNumeralL x`, and `⇔toPath` reduces proving that path to proving the two implications.
+The class `isNumeralL` disjoins, over the carrier `Lift ℕ`, the family of propositions `x ≈ˢ numeralL (lower n)`. The `Lift` deserves a word: `∃[ x ] P x` requires its carrier to live at the working level, while `ℕ` lives at `ℓ-zero`, and lifting is a pure level adjustment carrying exactly the same elements, with `lower` recovering the plain index. The specification `ω-specL` states the goal as a path between truth values, `(x ∈ˢ ωʟ) ≡ isNumeralL x`, and `⇔toPath` reduces proving that path to proving the two implications.
 <!--zh-->
-类 `isNumeralL` 沿载体 `Lift ℕ` 析取命题族 `x ≈ˢ numeralL (lower n)`。这里的 `Lift` 值得一提：`⋁`{.Agda} 要求载体住在工作层级，而 `ℕ` 住在 `ℓ-zero`；提升是纯粹的对齐层级的调整，恰带同样的元素，`lower` 取回普通下标。规格 `ω-specL` 把目标写成真值之间的一条路径 `(x ∈ˢ ωʟ) ≡ isNumeralL x`，而 `⇔toPath` 把这条路径的证明化归为两个蕴涵的证明。
+类 `isNumeralL` 沿载体 `Lift ℕ` 析取命题族 `x ≈ˢ numeralL (lower n)`。这里的 `Lift` 值得一提：`∃[ x ] P x` 要求载体住在工作层级，而 `ℕ` 住在 `ℓ-zero`；提升是纯粹的对齐层级的调整，恰带同样的元素，`lower` 取回普通下标。规格 `ω-specL` 把目标写成真值之间的一条路径 `(x ∈ˢ ωʟ) ≡ isNumeralL x`，而 `⇔toPath` 把这条路径的证明化归为两个蕴涵的证明。
 <!--ja-->
-クラス `isNumeralL` は、台 `Lift ℕ` の上で、命題の族 `x ≈ˢ numeralL (lower n)` を選言します。`Lift` に一言ふれておきます。`⋁`{.Agda} は台が作業レベルに住むことを要求しますが、`ℕ` は `ℓ-zero` に住みます。lift はまったく同じ要素を持つ純粋なレベル調整であり、`lower` が普通の添字を取り戻します。仕様 `ω-specL` は目標を真理値の間のパス `(x ∈ˢ ωʟ) ≡ isNumeralL x` として述べ、`⇔toPath` はこのパスの証明を二つの含意の証明に帰着させます。
+クラス `isNumeralL` は、台 `Lift ℕ` の上で、命題の族 `x ≈ˢ numeralL (lower n)` を選言します。`Lift` に一言ふれておきます。`∃[ x ] P x` は台が作業レベルに住むことを要求しますが、`ℕ` は `ℓ-zero` に住みます。lift はまったく同じ要素を持つ純粋なレベル調整であり、`lower` が普通の添字を取り戻します。仕様 `ω-specL` は目標を真理値の間のパス `(x ∈ˢ ωʟ) ≡ isNumeralL x` として述べ、`⇔toPath` はこのパスの証明を二つの含意の証明に帰着させます。
 <!--/-->
 
 ```agda
 isNumeralL : S → hProp (ℓ-suc ℓ)
-isNumeralL x = ⋁ (Lift {ℓ-zero} {ℓ-suc ℓ} ℕ) (λ n → x ≈ˢ numeralL (lower n))
+isNumeralL x = ∃[ n ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] x ≈ˢ numeralL (lower n)
 
 ω-specL : (x : S) → (x ∈ˢ ωʟ) ≡ isNumeralL x
 ω-specL x = ⇔toPath

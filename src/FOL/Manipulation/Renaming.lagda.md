@@ -266,36 +266,36 @@ Under the unbounded existential `∃̇ φ`, satisfaction quantifies over all can
   ⊨-rename ρ (φ ∨̇ ψ)  γ δ ag = cong₂ _⊔_ (⊨-rename ρ φ γ δ ag) (⊨-rename ρ ψ γ δ ag)
   ⊨-rename ρ (φ ⇒̇ ψ)  γ δ ag = cong₂ _⇒_ (⊨-rename ρ φ γ δ ag) (⊨-rename ρ ψ γ δ ag)
   ⊨-rename ρ ⊥̇        γ δ ag = refl
-  ⊨-rename ρ (∃̇ φ)    γ δ ag = cong (⋁ S) (funExt (λ x →
+  ⊨-rename ρ (∃̇ φ)    γ δ ag = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x →
     ⊨-rename (liftρ ρ) φ (x ∷ γ) (x ∷ δ) (agrees∷ x ag)))
 ```
 
 <!--en-->
-The unbounded universal `∀̇ φ` is the dual, using `⋀` in place of `⋁` with the same `funExt` and `agrees∷` steps. The bounded universal `∀̇∈ t φ` combines the two ingredients: satisfaction is `⋀` over `x` of the implication from `x ∈ˢ ⟦ t ⟧ γ` to the body's satisfaction. The bound contributes a `cong` through `x ∈ˢ_` fed by the term theorem, and the body contributes the recursive call at `liftρ ρ`; `cong₂ _⇒_` welds them into the required path between implications.
+The unbounded universal `∀̇ φ` is the dual, using `∀[ x ] P x` in place of `∃[ x ] P x` with the same `funExt` and `agrees∷` steps. The bounded universal `∀̇∈ t φ` combines the two ingredients: satisfaction is `∀[ x ] P x` over `x` of the implication from `x ∈ˢ ⟦ t ⟧ γ` to the body's satisfaction. The bound contributes a `cong` through `x ∈ˢ_` fed by the term theorem, and the body contributes the recursive call at `liftρ ρ`; `cong₂ _⇒_` welds them into the required path between implications.
 <!--zh-->
-无界全称量词 `∀̇ φ` 是对偶情形，用 `⋀` 替代 `⋁`，`funExt` 与 `agrees∷` 的步骤相同。有界全称量词 `∀̇∈ t φ` 把两种成分结合起来：其满足是对 `x` 的 `⋀`，从 `x ∈ˢ ⟦ t ⟧ γ` 到公式体满足的蕴涵。界限贡献一个经 `x ∈ˢ_` 的 `cong`，由词项定理提供；公式体贡献在 `liftρ ρ` 处的递归调用；`cong₂ _⇒_` 把二者焊成蕴涵之间所需的路径。
+无界全称量词 `∀̇ φ` 是对偶情形，用 `∀[ x ] P x` 替代 `∃[ x ] P x`，`funExt` 与 `agrees∷` 的步骤相同。有界全称量词 `∀̇∈ t φ` 把两种成分结合起来：其满足是对 `x` 的 `∀[ x ] P x`，从 `x ∈ˢ ⟦ t ⟧ γ` 到公式体满足的蕴涵。界限贡献一个经 `x ∈ˢ_` 的 `cong`，由词项定理提供；公式体贡献在 `liftρ ρ` 处的递归调用；`cong₂ _⇒_` 把二者焊成蕴涵之间所需的路径。
 <!--ja-->
-非有界な全称量化子 `∀̇ φ` は双対で、`⋁` の代わりに `⋀` を使い、`funExt` と `agrees∷` の手順は同じです。有界全称量詞 `∀̇∈ t φ` は二つの材料を組み合わせます。その充足は、`x ∈ˢ ⟦ t ⟧ γ` から本体の充足への含意についての `x` に対する `⋀` です。限界は項の定理が供給する `x ∈ˢ_` を通る `cong` を寄与し、本体は `liftρ ρ` での再帰呼び出しを寄与し、`cong₂ _⇒_` が両者を含意の間の求めるパスへ接合します。
+非有界な全称量化子 `∀̇ φ` は双対で、`∃[ x ] P x` の代わりに `∀[ x ] P x` を使い、`funExt` と `agrees∷` の手順は同じです。有界全称量詞 `∀̇∈ t φ` は二つの材料を組み合わせます。その充足は、`x ∈ˢ ⟦ t ⟧ γ` から本体の充足への含意についての `x` に対する `∀[ x ] P x` です。限界は項の定理が供給する `x ∈ˢ_` を通る `cong` を寄与し、本体は `liftρ ρ` での再帰呼び出しを寄与し、`cong₂ _⇒_` が両者を含意の間の求めるパスへ接合します。
 <!--/-->
 
 ```agda
-  ⊨-rename ρ (∀̇ φ)    γ δ ag = cong (⋀ S) (funExt (λ x →
+  ⊨-rename ρ (∀̇ φ)    γ δ ag = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x →
     ⊨-rename (liftρ ρ) φ (x ∷ γ) (x ∷ δ) (agrees∷ x ag)))
-  ⊨-rename ρ (∀̇∈ t φ) γ δ ag = cong (⋀ S) (funExt (λ x →
+  ⊨-rename ρ (∀̇∈ t φ) γ δ ag = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x →
     cong₂ _⇒_ (cong (x ∈ˢ_) (⟦⟧-rename ρ t γ δ ag))
               (⊨-rename (liftρ ρ) φ (x ∷ γ) (x ∷ δ) (agrees∷ x ag))))
 ```
 
 <!--en-->
-The bounded existential `∃̇∈ t φ` closes the induction in the mirror image: `⋁ S` over `x`, the renamed bound `x ∈ˢ ⟦ t ⟧ γ` joined to the body satisfaction by `⊓`, and the same recursive call through `agrees∷`. Notice what was never used: injectivity of `ρ`. The theorem is stated for an arbitrary map `Fin n → Fin m`, so collapsing two variables onto one, as in contraction, is as admissible as spacing them out, as in weakening, or reordering them, as in exchange.
+The bounded existential `∃̇∈ t φ` closes the induction in the mirror image: `∃[ x ] P x over `x`, the renamed bound `x ∈ˢ ⟦ t ⟧ γ` joined to the body satisfaction by `⊓`, and the same recursive call through `agrees∷`. Notice what was never used: injectivity of `ρ`. The theorem is stated for an arbitrary map `Fin n → Fin m`, so collapsing two variables onto one, as in contraction, is as admissible as spacing them out, as in weakening, or reordering them, as in exchange.
 <!--zh-->
-有界存在量词 `∃̇∈ t φ` 以镜像结束归纳：对 `x` 的 `⋁ S`，改名后的界限 `x ∈ˢ ⟦ t ⟧ γ` 经 `⊓` 与公式体满足相接，以及经 `agrees∷` 的同一递归调用。注意什么从未被用到：`ρ` 的单射性。定理对任意映射 `Fin n → Fin m` 陈述，因此把两个变量收缩到一处，如收缩；把变量拉开间距，如弱化；或调换次序，如交换；都是同样可采纳的。
+有界存在量词 `∃̇∈ t φ` 以镜像结束归纳：对 `x` 的 `∃[ x ] P x，改名后的界限 `x ∈ˢ ⟦ t ⟧ γ` 经 `⊓` 与公式体满足相接，以及经 `agrees∷` 的同一递归调用。注意什么从未被用到：`ρ` 的单射性。定理对任意映射 `Fin n → Fin m` 陈述，因此把两个变量收缩到一处，如收缩；把变量拉开间距，如弱化；或调换次序，如交换；都是同样可采纳的。
 <!--ja-->
-有界存在量詞 `∃̇∈ t φ` が鏡像の形で帰納を閉じます。`x` に対する `⋁ S`、改名された限界 `x ∈ˢ ⟦ t ⟧ γ` を `⊓` で本体の充足に結び、`agrees∷` を経る同じ再帰呼び出しです。決して使われなかったものに注目してください。`ρ` の単射性です。定理は任意の写像 `Fin n → Fin m` に対して述べられているので、二つの変数を一つへ畳み込むこと (縮約) も、変数を間隔を空けて並べること (弱化) も、順序を入れ替えること (交換) も、同じく許されます。
+有界存在量詞 `∃̇∈ t φ` が鏡像の形で帰納を閉じます。`x` に対する `∃[ x ] P x、改名された限界 `x ∈ˢ ⟦ t ⟧ γ` を `⊓` で本体の充足に結び、`agrees∷` を経る同じ再帰呼び出しです。決して使われなかったものに注目してください。`ρ` の単射性です。定理は任意の写像 `Fin n → Fin m` に対して述べられているので、二つの変数を一つへ畳み込むこと (縮約) も、変数を間隔を空けて並べること (弱化) も、順序を入れ替えること (交換) も、同じく許されます。
 <!--/-->
 
 ```agda
-  ⊨-rename ρ (∃̇∈ t φ) γ δ ag = cong (⋁ S) (funExt (λ x →
+  ⊨-rename ρ (∃̇∈ t φ) γ δ ag = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x →
     cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-rename ρ t γ δ ag))
               (⊨-rename (liftρ ρ) φ (x ∷ γ) (x ∷ δ) (agrees∷ x ag))))
 ```

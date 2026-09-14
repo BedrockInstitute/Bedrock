@@ -490,7 +490,7 @@ In cubical type theory, a proposition is a type satisfying `isProp`{.Agda}. This
 
 To keep a proposition together with the fact that it is a proposition, the Cubical library uses `hProp ℓ`{.Agda}. This is the type of all propositions at universe level `ℓ`: in other words, `hProp ℓ`{.Agda} is the **universe of propositions** at that level. A `P : hProp ℓ`{.Agda} has two components:
 
-- The first component is the type expressing the proposition, namely the statement of the proposition itself.
+- The first component is the [underlying type]{.term-intro #underlying-type}: the type expressing the proposition, namely the statement of the proposition itself.
 - The second component is the certificate that this type satisfies `isProp`{.Agda}.
 
 Thus `P : hProp ℓ`{.Agda} represents a proposition, but does not say that the proposition has already been proved. Its certificate says only that the first component is a proposition; it does not say that the first component has an element.
@@ -499,7 +499,7 @@ Thus `P : hProp ℓ`{.Agda} represents a proposition, but does not say that the 
 
 为了把一个命题连同它具有命题性这一事实放在一起，Cubical 库使用 `hProp ℓ`{.Agda}。它是宇宙层级 `ℓ` 上所有命题组成的类型；换言之，`hProp ℓ`{.Agda} 就是该层级上的**命题宇宙**。一个 `P : hProp ℓ`{.Agda} 包含两个分量：
 
-- 第一分量是表达命题的类型，即命题的表述本身；
+- 第一分量是命题的[底层类型]{.term-intro #underlying-type}，也就是表达命题的类型，即命题的表述本身；
 - 第二分量是该类型确实满足 `isProp`{.Agda} 的证书。
 
 因此，`P : hProp ℓ`{.Agda} 表示一个命题，却不表示这个命题已经得到证明。它携带的证书只说明第一分量具有命题性，并不说明第一分量中存在元素。
@@ -508,7 +508,7 @@ Thus `P : hProp ℓ`{.Agda} represents a proposition, but does not say that the 
 
 命題を、それが命題であるという事実と一緒に収めるため、Cubical ライブラリでは `hProp ℓ`{.Agda} を使います。これは宇宙レベル `ℓ` にあるすべての命題の型です。言い換えれば、`hProp ℓ`{.Agda} はそのレベルの**命題の宇宙**です。`P : hProp ℓ`{.Agda} は二つの成分を含みます。
 
-- 第一成分は命題を表す型、すなわち命題の記述そのものです。
+- 第一成分は命題の[基礎型]{.term-intro #underlying-type}、すなわち命題を表す型であり、命題の記述そのものです。
 - 第二成分は、その型が確かに `isProp`{.Agda} を満たすという証明書です。
 
 したがって、`P : hProp ℓ`{.Agda} は命題を表しますが、その命題がすでに証明されているとは主張しません。`P` が持つ証明書は、第一成分が命題であることだけを示し、第一成分に元が存在するとは主張しません。
@@ -558,6 +558,136 @@ open import Cubical.Foundations.Structure public
 ```
 
 <!--en-->
+## Logical operations
+<!--zh-->
+## 逻辑运算
+<!--ja-->
+## 論理演算
+<!--/-->
+
+<!--en-->
+The proposition universe is closed under the usual logical operations. The two logical constants are truth and falsity. Truth `⊤` is the proposition that always has an element; the library supplies it polymorphically at every universe level.
+<!--zh-->
+命题宇宙对通常的逻辑运算封闭。两个逻辑常量分别是真与假。真命题 `⊤` 始终具有元素，库把它定义为可用于任意宇宙层级的命题。
+<!--ja-->
+命題の宇宙は通常の論理演算について閉じています。二つの論理定数は真と偽です。真 `⊤` は常に要素をもつ命題であり、ライブラリはこれを任意の宇宙レベルで使える命題として与えます。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( ⊤ )
+```
+
+<!--en-->
+Falsity is built from a type representing impossibility. The [empty type]{.term-intro #empty-type} `⊥*`{.Agda} has no elements and no constructors. If a branch of an argument nevertheless yields `x : ⊥*`{.Agda}, that branch's assumptions cannot hold, and `x` may be eliminated into any type:
+
+<div class="single-line-code"><code>⊥* → A</code></div>
+
+This principle does not compute an element of `A` from actual data. It says that there is no constructor case to handle. The certificate `isProp⊥*`{.Agda} is immediate for the same reason: there are no two elements whose equality would have to be proved.
+<!--zh-->
+假命题由一个表示不可能性的类型构成。[空类型]{.term-intro #empty-type} `⊥*`{.Agda} 没有元素，也没有构造子。如果某个论证分支中仍然得到 `x : ⊥*`{.Agda}，该分支的前提便不可能成立，因而可以把 `x` 消去到任意类型：
+
+<div class="single-line-code"><code>⊥* → A</code></div>
+
+这条原则并非从实际数据中计算出 `A` 的元素，而是说根本没有需要处理的构造分支。`isProp⊥*`{.Agda} 证明空类型是命题，理由相同：其中不存在两个需要证明为相等的元素。
+<!--ja-->
+偽命題は、不可能性を表す型から作られます。[空型]{.term-intro #empty-type} `⊥*`{.Agda} には要素も構成子もありません。それでも論証のある分岐で `x : ⊥*`{.Agda} が得られたなら、その分岐の仮定は成立しえず、`x` を任意の型へ消去できます。
+
+<div class="single-line-code"><code>⊥* → A</code></div>
+
+この原理は、実際のデータから `A` の要素を計算するものではありません。処理すべき構成子の場合が一つもないことを述べています。`isProp⊥*`{.Agda} が空型の命題性を示せる理由も同じで、等しさを証明すべき二要素が存在しません。
+<!--/-->
+
+```agda
+open import Cubical.Data.Empty public
+  using ( ⊥*; isProp⊥* )
+```
+
+<!--en-->
+The false proposition `⊥` and the empty type express the same impossibility at two different levels of structure. The empty type is the underlying type of `⊥`; pairing `⊥*`{.Agda} with its propositionhood certificate `isProp⊥*`{.Agda} packages it as a proposition at any required universe level.
+<!--zh-->
+空类型与假命题表达的是同一种不可能性，只是所处的结构层次不同。空类型是 `⊥` 的底层类型；把 `⊥*`{.Agda} 与它的命题性证书 `isProp⊥*`{.Agda} 配成一对，便得到所需宇宙层级上的假命题。
+<!--ja-->
+空型と偽命題は、同じ不可能性を異なる構造のレベルで表します。空型は `⊥` の基礎型です。`⊥*`{.Agda} とその命題性の証明 `isProp⊥*`{.Agda} を対にすれば、必要な宇宙レベルの偽命題としてまとめられます。
+<!--/-->
+
+```agda
+⊥ : ∀ {ℓ} → hProp ℓ
+⊥ = ⊥* , isProp⊥*
+```
+
+<!--en-->
+For propositions `P` and `Q`, `P ⊓ Q` is their conjunction. Its certificates contain a proof of each proposition, and its universe level is the maximum of the two input levels.
+<!--zh-->
+对命题 `P` 与 `Q`，`P ⊓ Q` 表示二者的合取。它的证书同时包含 `P` 与 `Q` 的证明，所在宇宙层级取两个输入层级的最大值。
+<!--ja-->
+命題 `P` と `Q` に対して、`P ⊓ Q` はその連言を表します。その証明は `P` と `Q` の証明をともに含み、宇宙レベルは二つの入力レベルの最大値になります。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( _⊓_ )
+```
+
+<!--en-->
+`P ⊔ Q` is disjunction. A sum would remember which side supplied the proof, so the library applies **[propositional truncation]{.term-intro #propositional-truncation}** and retains only that at least one side holds.
+<!--zh-->
+`P ⊔ Q` 表示析取。和类型会保留证明来自哪一侧的信息，因此库对它作**[命题截断]{.term-intro #propositional-truncation}**，只保留两侧至少有一侧成立的信息。
+<!--ja-->
+`P ⊔ Q` は選言を表します。直和型はどちら側から証明が得られたかを記憶するため、ライブラリはそれを**[命題的切り詰め]{.term-intro #propositional-truncation}**、少なくとも一方が成り立つという情報だけを残します。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( _⊔_ )
+```
+
+<!--en-->
+`P ⇒ Q` is implication. A certificate is a function taking every proof of `P` to a proof of `Q`; because `Q` is a proposition, this function type is a proposition as well.
+<!--zh-->
+`P ⇒ Q` 表示蕴涵。它的证书是一个函数，把 `P` 的任意证明变成 `Q` 的证明；由于 `Q` 是命题，这个函数类型也具有命题性。
+<!--ja-->
+`P ⇒ Q` は含意を表します。その証明は `P` の任意の証明を `Q` の証明へ送る関数です。`Q` が命題なので、この関数型も命題になります。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( _⇒_ )
+```
+
+<!--en-->
+`¬ P` is negation: it says that a proof of `P` would entail the false proposition `⊥`. Its meaning therefore combines implication with falsity. Unlike binary implication, negation remains at the universe level of `P`.
+<!--zh-->
+`¬ P` 表示否定：它断言 `P` 的证明会导出假命题 `⊥`，因此其含义由蕴涵与假共同构成。与一般的二元蕴涵不同，否定仍位于 `P` 所在的宇宙层级。
+<!--ja-->
+`¬ P` は否定を表し、`P` の証明から偽命題 `⊥` が導かれることを述べます。したがって、その意味は含意と偽から成ります。一般の二項含意とは異なり、否定は `P` と同じ宇宙レベルにあります。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( ¬_ )
+```
+
+<!--en-->
+For a family of propositions `P : A → hProp ℓ'`, `∀[ x ∶ A ] P x` is universal quantification: a certificate supplies a proof of `P x` for every `x : A`. Writing the type after `∶` keeps the domain of quantification visible.
+<!--zh-->
+对命题族 `P : A → hProp ℓ'`，`∀[ x ∶ A ] P x` 表示全称量化：它的证书为每个 `x : A` 给出 `P x` 的证明。把类型写在 `∶` 之后，使量词的论域直接呈现在表达式中。
+<!--ja-->
+命題族 `P : A → hProp ℓ'` に対して、`∀[ x ∶ A ] P x` は全称量化を表します。その証明は各 `x : A` に `P x` の証明を与えます。型を `∶` の後に書くことで、量化の論域が式に現れます。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( ∀[]-syntax; ∀[∶]-syntax )
+```
+
+<!--en-->
+`∃[ x ] P x` is existential quantification. A dependent pair would retain both a witness `x : A` and its proof of `P x`; propositional truncation forgets which witness was chosen and retains only that one exists.
+<!--zh-->
+`∃[ x ] P x` 表示存在量化。依值对会同时保留见证 `x : A` 及其满足 `P x` 的证明；命题截断忘去具体选择了哪个见证，只保留某个见证确实存在的信息。
+<!--ja-->
+`∃[ x ] P x` は存在量化を表します。依存対は証人 `x : A` と `P x` の証明をともに保持しますが、命題的切り詰めによって、どの証人が選ばれたかを忘れ、証人が存在することだけを残します。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( ∃[]-syntax; ∃[∶]-syntax )
+```
+
+<!--en-->
 The next section considers propositions that vary with an object.
 <!--zh-->
 下一节讨论随对象变化的命题。
@@ -576,7 +706,7 @@ The next section considers propositions that vary with an object.
 <!--en-->
 Here **class** means a class in the sense of set theory, not a type in type theory. Throughout this book, *class* refers to the former and *type* to the latter. The two are closely related in the formalization, but they are not the same notion. A type determines which terms may be its elements; a class selects, by a property, the objects that satisfy it from a domain already given.
 
-This collection of objects under consideration is the class's **domain**. When it is written `A`, the domain is a type `A` whose elements are all the objects currently being classified. Calling `A` a domain says only that a variable `x : A` may range over these objects; it does not equip `A` with membership, operations or any other structure. Later, when we construct a model of set theory, we add a set-theoretic membership relation to `A`. It then also becomes the [carrier]{.term-intro #carrier} of the model, and its elements play the role of sets in that model.
+This collection of objects under consideration is the class's **[domain]{.term-intro #domain}**. When it is written `A`, the domain is a type `A` whose elements are all the objects currently being classified. Calling `A` a domain says only that a variable `x : A` may range over these objects; it does not equip `A` with membership, operations or any other structure. Later, when we construct a model of set theory, we add a set-theoretic membership relation to `A`. It then also becomes the [carrier]{.term-intro #carrier} of the model, and its elements play the role of sets in that model.
 
 A class over a domain `A` is represented by a function:
 
@@ -594,7 +724,7 @@ To prove `x ∈ᶜ M` is therefore to construct a proof of `⟨ M x ⟩`{.Agda}.
 <!--zh-->
 这里的「类」是集合论中的 **class**，不是类型论中的 **type**。本书以后约定：**类**专指 class，**类型**专指 type。二者在形式化中关系密切，但不是同一个概念。类型规定哪些项可以作为它的元素；类则在已经给定的一批对象中，用一个性质挑出满足它的对象。
 
-类所考察的这批对象称为它的**论域**。写作 `A` 时，论域就是一个类型 `A`，它的元素是当前接受分类的全部对象。称 `A` 为论域，只说明变量 `x : A` 可以在这些对象中取值，并不表示 `A` 已经具有成员关系、运算或其他结构。后文构造集合论模型时，我们会在 `A` 上加入集合论的成员关系；此时，`A` 也将成为该模型的[载体]{.term-intro #carrier}，它的元素则充当模型中的集合。
+类所考察的这批对象称为它的**[论域]{.term-intro #domain}**。写作 `A` 时，论域就是一个类型 `A`，它的元素是当前接受分类的全部对象。称 `A` 为论域，只说明变量 `x : A` 可以在这些对象中取值，并不表示 `A` 已经具有成员关系、运算或其他结构。后文构造集合论模型时，我们会在 `A` 上加入集合论的成员关系；此时，`A` 也将成为该模型的[载体]{.term-intro #carrier}，它的元素则充当模型中的集合。
 
 论域 `A` 上的类由一个函数表示：
 
@@ -612,7 +742,7 @@ To prove `x ∈ᶜ M` is therefore to construct a proof of `⟨ M x ⟩`{.Agda}.
 <!--ja-->
 ここでいう**クラス**は集合論における class であり、型理論における type ではありません。本書では以後、前者を**クラス**、後者を**型**と呼び分けます。形式化の中で両者は密接に関係しますが、同じ概念ではありません。型はどの項がその要素になれるかを定め、クラスは、すでに与えられた対象の中から、ある性質を満たすものを選び出します。
 
-クラスが考察する対象の範囲を、そのクラスの**論域**と呼びます。`A` と書くとき、論域は型 `A` であり、その要素が現在分類されるすべての対象です。`A` を論域と呼ぶことは、変数 `x : A` がこれらの対象を動くということだけを表し、`A` に所属関係や演算などの構造がすでに備わっていることを意味しません。後に集合論のモデルを構成するとき、`A` に集合論的な所属関係を加えます。そのとき `A` はモデルの[台]{.term-intro #carrier}にもなり、その要素がモデル内の集合の役割を果たします。
+クラスが考察する対象の範囲を、そのクラスの**[論域]{.term-intro #domain}**と呼びます。`A` と書くとき、論域は型 `A` であり、その要素が現在分類されるすべての対象です。`A` を論域と呼ぶことは、変数 `x : A` がこれらの対象を動くということだけを表し、`A` に所属関係や演算などの構造がすでに備わっていることを意味しません。後に集合論のモデルを構成するとき、`A` に集合論的な所属関係を加えます。そのとき `A` はモデルの[台]{.term-intro #carrier}にもなり、その要素がモデル内の集合の役割を果たします。
 
 論域 `A` 上のクラスは関数で表されます。
 
@@ -742,111 +872,6 @@ open import Cubical.Data.Vec public
 ```
 
 <!--en-->
-## The [empty type]{.term-intro #empty-type}
-<!--zh-->
-## [空类型]{.term-intro #empty-type}
-<!--ja-->
-## [空型]{.term-intro #empty-type}
-<!--/-->
-
-<!--en-->
-The empty type `⊥*`{.Agda} is a type with no elements. It has no constructors, so an element of `⊥*`{.Agda} cannot be constructed directly.
-
-If some branch of an argument yields `x : ⊥*`{.Agda}, the assumptions of that branch cannot hold. Since no such `x` exists, it can be eliminated into any type. This is the elimination principle of the empty type:
-
-<div class="single-line-code"><code>⊥* → A</code></div>
-
-This does not compute an element of `A` from actual data. It says that the case needed to supply an input cannot occur, so there is no constructor case to define.
-<!--zh-->
-空类型 `⊥*`{.Agda} 是没有任何元素的类型。它没有构造子，因此无法直接构造 `⊥*`{.Agda} 的元素。
-
-如果在某个论证分支中得到 `x : ⊥*`{.Agda}，就意味着该分支的前提不可能成立。由于不存在这样的 `x`，我们可以从它消去到任意类型。这就是空类型的消去原理：
-
-<div class="single-line-code"><code>⊥* → A</code></div>
-
-这里并不是从某项实际数据中计算出 `A` 的元素，而是说明：产生输入所需的情形根本不会发生，所以无需给出任何构造分支。
-<!--ja-->
-空型 `⊥*`{.Agda} は要素を一つももたない型です。構成子がないため、`⊥*`{.Agda} の要素を直接構成することはできません。
-
-ある論証の分岐で `x : ⊥*`{.Agda} が得られたなら、その分岐の仮定は成立しえません。そのような `x` は存在しないので、そこから任意の型へ消去できます。これが空型の消去原理です。
-
-<div class="single-line-code"><code>⊥* → A</code></div>
-
-これは実際のデータから `A` の要素を計算するものではありません。入力を与えるために必要な場合そのものが起こらないため、構成子に対する場合を定義する必要がないことを述べています。
-<!--/-->
-
-<!--en-->
-`isProp⊥*`{.Agda} states that `⊥*`{.Agda} is a proposition. By definition, this requires any two of its elements to be equal. Since the empty type has no elements, there is no case to compare.
-<!--zh-->
-`isProp⊥*`{.Agda} 表明 `⊥*`{.Agda} 是命题。按照命题的定义，需要证明其中任意两个元素都相等；但空类型中没有元素，因此不存在需要比较的情形。
-<!--ja-->
-`isProp⊥*`{.Agda} は、`⊥*`{.Agda} が命題であることを示します。命題の定義に従えば、その任意の二要素が等しいことを示す必要があります。しかし空型には要素がないので、比較すべき場合は存在しません。
-<!--/-->
-
-```agda
-open import Cubical.Data.Empty public
-  using ( ⊥*; isProp⊥* )
-```
-
-<!--en-->
-## Logical operations on propositions
-
-The proposition universe is closed under the usual logical operations. For propositions `P` and `Q`, the values `P ⊓ Q`, `P ⊔ Q`, `P ⇒ Q` and `¬ P` express conjunction, disjunction, implication and negation. The constants `⊤` and `⊥` express truth and falsity. The indexed operations `⋀ A P` and `⋁ A P` express universal and existential quantification over a type `A`.
-
-Conjunction and universal quantification are already propositions because products and dependent function types preserve propositionhood. Disjunction and existential quantification begin instead with a sum or a dependent pair, whose elements may retain more information than a proposition permits. **[Propositional truncation]{.term-intro #propositional-truncation}** discards that extra information while preserving whether an element exists; applying it makes these two constructions propositions as well.
-
-These names come directly from the operations on `hProp`{.Agda}. Only falsity needs a small level adjustment: the library's empty proposition lives at the bottom universe level, whereas the lifted empty type `⊥*`{.Agda} lets us form an empty proposition at any level. The explicit argument `A` in `⋀ A P` and `⋁ A P` keeps the domain of quantification visible.
-<!--zh-->
-## 命题的逻辑运算
-
-命题宇宙对通常的逻辑运算封闭。对命题 `P` 与 `Q`，`P ⊓ Q`、`P ⊔ Q`、`P ⇒ Q` 与 `¬ P` 分别表示合取、析取、蕴涵与否定，常量 `⊤` 与 `⊥` 分别表示真与假。带索引的运算 `⋀ A P` 与 `⋁ A P` 则表示在类型 `A` 上作全称量化与存在量化。
-
-积与依值函数类型保持命题性，所以合取与全称量化的结果仍是命题。析取与存在量化却分别从和类型与依值对开始，其中的元素可能保留命题所不需要的额外信息。**[命题截断]{.term-intro #propositional-truncation}**会抹去这些信息，同时保留类型是否有元素；经过截断，这两种构造也成为命题。
-
-这些名称直接取自 `hProp`{.Agda} 上的逻辑运算。只有假命题需要调整宇宙层级：库中的空命题位于最低层宇宙，而提升后的空类型 `⊥*`{.Agda} 可以在任意层级构造空命题。`⋀ A P` 与 `⋁ A P` 显式写出参数 `A`，是为了让量词的论域直接呈现在表达式中。
-<!--ja-->
-## 命題の論理演算
-
-命題の宇宙は通常の論理演算について閉じています。命題 `P` と `Q` に対して、`P ⊓ Q`、`P ⊔ Q`、`P ⇒ Q`、`¬ P` はそれぞれ連言、選言、含意、否定を表し、定数 `⊤` と `⊥` は真と偽を表します。添字付きの演算 `⋀ A P` と `⋁ A P` は、型 `A` にわたる全称量化と存在量化を表します。
-
-積と依存関数型は命題性を保つので、連言と全称量化の結果はふたたび命題になります。一方、選言と存在量化は直和と依存対から始まり、その要素は命題には不要な情報を残すことがあります。**[命題的切り詰め]{.term-intro #propositional-truncation}**は、要素が存在するかどうかを保ったまま、その余分な情報を捨てます。切り詰めを施せば、この二つの構成も命題になります。
-
-これらの名前は `hProp`{.Agda} 上の論理演算から直接取られます。偽だけには宇宙レベルの小さな調整が必要です。ライブラリの空命題は最下位の宇宙レベルにありますが、持ち上げられた空型 `⊥*`{.Agda} を使えば任意のレベルで空命題を作れます。`⋀ A P` と `⋁ A P` で引数 `A` を明示するのは、量化の領域を式の中に見える形で残すためです。
-<!--/-->
-
-```agda
-import Cubical.Functions.Logic as Logic
-
-_⊓_ : ∀ {ℓ ℓ'} → hProp ℓ → hProp ℓ' → hProp (ℓ-max ℓ ℓ')
-_⊓_ = Logic._⊓_
-
-_⊔_ : ∀ {ℓ ℓ'} → hProp ℓ → hProp ℓ' → hProp (ℓ-max ℓ ℓ')
-_⊔_ = Logic._⊔_
-
-_⇒_ : ∀ {ℓ ℓ'} → hProp ℓ → hProp ℓ' → hProp (ℓ-max ℓ ℓ')
-_⇒_ = Logic._⇒_
-
-¬_ : ∀ {ℓ} → hProp ℓ → hProp ℓ
-¬_ = Logic.¬_
-
-⊤ : ∀ {ℓ} → hProp ℓ
-⊤ = Logic.⊤
-
-⊥ : ∀ {ℓ} → hProp ℓ
-⊥ = ⊥* , isProp⊥*
-
-⋀ : ∀ {ℓ ℓ'} (A : Type ℓ) → (A → hProp ℓ') → hProp (ℓ-max ℓ ℓ')
-⋀ A P = Logic.∀[]-syntax P
-
-⋁ : ∀ {ℓ ℓ'} (A : Type ℓ) → (A → hProp ℓ') → hProp (ℓ-max ℓ ℓ')
-⋁ A P = Logic.∃[]-syntax P
-
-infixr 12 _⊓_ _⊔_
-infixr 10 _⇒_
-infix 3 ¬_
-```
-
-<!--en-->
 ## The identity function
 <!--zh-->
 ## 恒等函数
@@ -897,6 +922,7 @@ This chapter introduced the host-level vocabulary used throughout the book:
 - `Lift`{.Agda} moves types between universe levels;
 - path types represent equality, and homotopy levels describe the equality structure retained by a type;
 - `hProp`{.Agda} is the universe of propositions, and `⟨_⟩`{.Agda} extracts the statement of a proposition;
+- truth and falsity, conjunction and disjunction, implication and negation, and universal and existential quantification provide the logical operations on the proposition universe;
 - a class is a predicate valued in the universe of propositions, and `_∈ᶜ_`{.Agda} expresses class membership;
 - `ℕ`{.Agda}, `Fin`{.Agda} and `Vec`{.Agda} are respectively an inductive type and two families indexed by natural numbers;
 - `⊥*`{.Agda} is the empty type, and `id`{.Agda} is the identity function.
@@ -913,6 +939,7 @@ Together these notions form the basic formal language adopted in this book.
 - `Lift`{.Agda} 在宇宙层级之间搬移类型；
 - 路径类型表示相等，同伦层级描述类型所保留的相等结构；
 - `hProp`{.Agda} 是命题宇宙，`⟨_⟩`{.Agda} 取出命题的表述；
+- 真与假、合取与析取、蕴涵与否定、全称量化与存在量化，构成命题宇宙上的逻辑运算；
 - 类是取值于命题宇宙的谓词，`_∈ᶜ_`{.Agda} 表示类的成员关系；
 - `ℕ`{.Agda}、`Fin`{.Agda} 与 `Vec`{.Agda} 分别是归纳类型和以自然数为索引的类型族；
 - `⊥*`{.Agda} 是空类型，`id`{.Agda} 是恒等函数。
@@ -929,6 +956,7 @@ Together these notions form the basic formal language adopted in this book.
 - `Lift`{.Agda} は型を宇宙レベル間で移します。
 - パス型は等しさを表し、ホモトピーレベルは型に残る等しさの構造を記述します。
 - `hProp`{.Agda} は命題の宇宙であり、`⟨_⟩`{.Agda} は命題の記述を取り出します。
+- 真と偽、連言と選言、含意と否定、全称量化と存在量化が、命題の宇宙における論理演算を与えます。
 - クラスは命題の宇宙に値をとる述語であり、`_∈ᶜ_`{.Agda} はクラスへの所属を表します。
 - `ℕ`{.Agda}、`Fin`{.Agda}、`Vec`{.Agda} は、それぞれ帰納型と、自然数を添字とする二つの型族です。
 - `⊥*`{.Agda} は空型であり、`id`{.Agda} は恒等関数です。

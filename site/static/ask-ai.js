@@ -495,6 +495,7 @@
   var region = null;
   var status = null;
   var pending = "";
+  var selecting = false;
 
   function buildTrigger() {
     trigger = document.createElement("button");
@@ -650,8 +651,9 @@
     var root = article();
     if (!root) return null;
     var start = elementOf(range.startContainer);
-    if (!start || !root.contains(start)) return null;
-    if (dialog && dialog.contains(start)) return null;
+    var end = elementOf(range.endContainer);
+    if (!start || !end || !root.contains(start) || !root.contains(end)) return null;
+    if (dialog && (dialog.contains(start) || dialog.contains(end))) return null;
     if (range.toString().trim().length < 2) return null;
     return range;
   }
@@ -676,15 +678,10 @@
   }
 
   function refresh() {
+    if (selecting) return hideTrigger();
     var range = currentRange();
     if (!range) return hideTrigger();
     placeTrigger(range);
-    /* One more pass once the browser has laid the button out, so its own width and
-       height are the measured ones rather than zero on the first appearance. */
-    requestAnimationFrame(function () {
-      var again = currentRange();
-      if (again) placeTrigger(again);
-    });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -696,8 +693,17 @@
       if (timer) window.clearTimeout(timer);
       timer = window.setTimeout(refresh, 60);
     }
-    document.addEventListener("selectionchange", schedule);
-    document.addEventListener("pointerup", schedule);
+    document.addEventListener("selectionchange", function () {
+      if (!selecting) schedule();
+    });
+    document.addEventListener("pointerup", function () {
+      selecting = false;
+      schedule();
+    });
+    document.addEventListener("pointercancel", function () {
+      selecting = false;
+      schedule();
+    });
     document.addEventListener("keyup", function (event) {
       if (event.shiftKey || event.key === "Shift") schedule();
     });
@@ -710,6 +716,10 @@
       }
     });
     document.addEventListener("pointerdown", function (event) {
+      if (article().contains(event.target) && (!trigger || !trigger.contains(event.target))) {
+        selecting = true;
+        hideTrigger();
+      }
       if (trigger && !trigger.contains(event.target)) hideTrigger();
     });
     window.addEventListener("scroll", function () {

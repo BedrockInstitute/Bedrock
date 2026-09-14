@@ -598,16 +598,16 @@ A set is **constructible** when some ordinal stage of the tower contains it. The
 <!--/-->
 
 <!--en-->
-The class is a truth value, not a subtype: `isL x` is defined as the indexed disjunction `⋁` over all sets `α` of the conjunction of `IsOrd α` with `x ∈ˢ Lset α`. So an element of `isL x` is, by the meaning of indexed disjunction, merely a pair of an ordinal `α` and a membership of `x` in stage `α`; no canonical stage is attached to a constructible set. The quantifier ranges over the whole carrier, so a witness is available only in this merely-exists form; treating the class as a proposition-valued predicate is what allows it to be restricted into a structure shortly.
+The class is a truth value, not a subtype: `isL x` is defined as the indexed disjunction `∃[ x ] P x` over all sets `α` of the conjunction of `IsOrd α` with `x ∈ˢ Lset α`. So an element of `isL x` is, by the meaning of indexed disjunction, merely a pair of an ordinal `α` and a membership of `x` in stage `α`; no canonical stage is attached to a constructible set. The quantifier ranges over the whole carrier, so a witness is available only in this merely-exists form; treating the class as a proposition-valued predicate is what allows it to be restricted into a structure shortly.
 <!--zh-->
-这个类是一个真值，而非子类型：`isL x` 定义为对全体集合 `α` 的索引析取 `⋁`，其各项是 `IsOrd α` 与 `x ∈ˢ Lset α` 的合取。故按索引析取的含义，`isL x` 的一个元素仅仅是一个对：序数 `α` 与 `x` 属于层 `α` 的证据；可构造集并不附带一个典范层。量词遍历整个载体，故见证只以「仅仅存在」的形式可得；把类当作命题值谓词，正是稍后能把它限制成结构的原因。
+这个类是一个真值，而非子类型：`isL x` 定义为对全体集合 `α` 的索引析取 `∃[ x ] P x`，其各项是 `IsOrd α` 与 `x ∈ˢ Lset α` 的合取。故按索引析取的含义，`isL x` 的一个元素仅仅是一个对：序数 `α` 与 `x` 属于层 `α` 的证据；可构造集并不附带一个典范层。量词遍历整个载体，故见证只以「仅仅存在」的形式可得；把类当作命题值谓词，正是稍后能把它限制成结构的原因。
 <!--ja-->
-このクラスは部分型ではなく真理値です。`isL x` は、すべての集合 `α` にわたる索引付きの選言 `⋁` として定義され、その各項は `IsOrd α` と `x ∈ˢ Lset α` の連言です。したがって添字付き選言の意味により、`isL x` の要素は単に、順序数 `α` と段階 `α` への `x` の所属の対です。構成可能集合に標準的な段階が付属することはありません。量詞は台全体にわたるため、証人はこの「単に存在する」の形でしか得られません。クラスを命題値の述語として扱うことが、まもなくそれを構造へ制限できる理由です。
+このクラスは部分型ではなく真理値です。`isL x` は、すべての集合 `α` にわたる索引付きの選言 `∃[ x ] P x` として定義され、その各項は `IsOrd α` と `x ∈ˢ Lset α` の連言です。したがって添字付き選言の意味により、`isL x` の要素は単に、順序数 `α` と段階 `α` への `x` の所属の対です。構成可能集合に標準的な段階が付属することはありません。量詞は台全体にわたるため、証人はこの「単に存在する」の形でしか得られません。クラスを命題値の述語として扱うことが、まもなくそれを構造へ制限できる理由です。
 <!--/-->
 
 ```agda
 isL : S → hProp (ℓ-suc ℓ)
-isL x = ⋁ S (λ α → ((IsOrd α , isPropIsOrd α) ⊓ (x ∈ˢ Lset α)))
+isL x = ∃[ α ∶ S ] ((IsOrd α , isPropIsOrd α) ⊓ (x ∈ˢ Lset α))
 
 isL-trans : Transitive 𝒮ᵥ isL
 isL-trans {x} {y} y∈x x∈L = PT.rec (snd (isL y))

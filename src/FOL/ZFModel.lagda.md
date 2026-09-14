@@ -205,16 +205,16 @@ One derived relation completes the vocabulary: `a ⊆ˢ b` when every member of 
 <!--/-->
 
 <!--en-->
-The definition uses the direct `hProp` quantifier `⋀`{.Agda}, to conjoin the implications `x ∈ˢ a ⇒ x ∈ˢ b` over all `x` in the carrier. Staying inside `hProp ℓ` matters: the result is a truth value of the structure, comparable and combinable with the other connectives, whereas a metalevel function type would not be. The Type-valued underlying implication is available too, since each `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} in `hProp` has an underlying type, but the definition keeps everything truth-valued.
+The definition uses the direct `hProp` quantifier `∀[ x ] P x`, to conjoin the implications `x ∈ˢ a ⇒ x ∈ˢ b` over all `x` in the carrier. Staying inside `hProp ℓ` matters: the result is a truth value of the structure, comparable and combinable with the other connectives, whereas a metalevel function type would not be. The Type-valued underlying implication is available too, since each `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} in `hProp` has an underlying type, but the definition keeps everything truth-valued.
 <!--zh-->
-定义使用 `hProp` 上直接的全称量词 `⋀`{.Agda}，把对所有载体元素 `x` 的蕴涵 `x ∈ˢ a ⇒ x ∈ˢ b` 合取起来。留在 `hProp ℓ` 内很重要：结果是一个真值，可以与其他联结词比较与组合，而元层的函数类型做不到这一点。Type 值的蕴涵也可用，因为 `hProp` 中每个 `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} 都有底层类型，但定义把一切都保持为真值。
+定义使用 `hProp` 上直接的全称量词 `∀[ x ] P x`，把对所有载体元素 `x` 的蕴涵 `x ∈ˢ a ⇒ x ∈ˢ b` 合取起来。留在 `hProp ℓ` 内很重要：结果是一个真值，可以与其他联结词比较与组合，而元层的函数类型做不到这一点。Type 值的蕴涵也可用，因为 `hProp` 中每个 `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} 都有底层类型，但定义把一切都保持为真值。
 <!--ja-->
-定義は `hProp` 上の直接の全称量化子 `⋀`{.Agda} を用いて、台のすべての `x` にわたる含意 `x ∈ˢ a ⇒ x ∈ˢ b` を連言します。`hProp ℓ` の中に留まることが重要です。結果は構造の真理値であり、他の結合子と比較・結合できます。メタレベルの関数型にはそれができません。Type 値の含意も使えます。`hProp` の `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} には基礎型があるからです。しかし定義はすべてを真理値のまま保ちます。
+定義は `hProp` 上の直接の全称量化子 `∀[ x ] P x` を用いて、台のすべての `x` にわたる含意 `x ∈ˢ a ⇒ x ∈ˢ b` を連言します。`hProp ℓ` の中に留まることが重要です。結果は構造の真理値であり、他の結合子と比較・結合できます。メタレベルの関数型にはそれができません。Type 値の含意も使えます。`hProp` の `(x ∈ˢ a) ⇒ (x ∈ˢ b)`{.Agda} には基礎型があるからです。しかし定義はすべてを真理値のまま保ちます。
 <!--/-->
 
 ```agda
 _⊆ˢ_ : S → S → hProp ℓ
-a ⊆ˢ b = ⋀ S (λ x → (x ∈ˢ a) ⇒ (x ∈ˢ b))
+a ⊆ˢ b = ∀[ x ∶ S ] (x ∈ˢ a) ⇒ (x ∈ˢ b)
 ```
 
 <!--en-->
@@ -261,16 +261,16 @@ record isZFModel : Type (ℓ-suc ℓ) where
 ```
 
 <!--en-->
-Reading each class back into words recovers the textbook statements. Nothing realizes `⊥`, so the empty set is the unique set realizing the constantly-false class. The pair of `a` and `b` realizes the class of sets structurally equal to `a` or to `b`, joined by the direct `hProp` disjunction `⊔`{.Agda}. The union of `a` realizes the class of sets `x` that are members of some member `y` of `a`, conjoined by `⊓`{.Agda} and existentially gathered by `⋁`{.Agda}. Separation, the first formula-consuming field, keeps exactly those members `x` of `a` satisfying `φ`: the class is the conjunction of membership in `a` with the satisfaction of `φ` at the one-element environment `x ∷ []`, whose single entry fills the only free-variable slot of a `Formula S 1`.
+Reading each class back into words recovers the textbook statements. Nothing realizes `⊥`, so the empty set is the unique set realizing the constantly-false class. The pair of `a` and `b` realizes the class of sets structurally equal to `a` or to `b`, joined by the direct `hProp` disjunction `⊔`{.Agda}. The union of `a` realizes the class of sets `x` that are members of some member `y` of `a`, conjoined by `⊓`{.Agda} and existentially gathered by `∃[ x ] P x`{.Agda}. Separation, the first formula-consuming field, keeps exactly those members `x` of `a` satisfying `φ`: the class is the conjunction of membership in `a` with the satisfaction of `φ` at the one-element environment `x ∷ []`, whose single entry fills the only free-variable slot of a `Formula S 1`.
 <!--zh-->
-把每个类读回自然语言，教科书的陈述一一重现。没有谁实现 `⊥`，所以空集就是实现恒假类的唯一集合。`a` 与 `b` 的配对实现「与 `a` 结构相等或与 `b` 结构相等」的类，用 `hProp` 上直接的析取 `⊔`{.Agda} 连接。`a` 的并实现那些 `x`：存在 `a` 的成员 `y` 使 `x` 属于 `y`，用 `⊓`{.Agda} 合取、`⋁`{.Agda} 存在聚合。分离是第一个消费公式的字段，恰好留下 `a` 中满足 `φ` 的成员 `x`：该类是「属于 `a`」与「`φ` 在单元素环境 `x ∷ []` 下满足」的合取，这个环境的唯一一项填入 `Formula S 1` 唯一的自由变元槽。
+把每个类读回自然语言，教科书的陈述一一重现。没有谁实现 `⊥`，所以空集就是实现恒假类的唯一集合。`a` 与 `b` 的配对实现「与 `a` 结构相等或与 `b` 结构相等」的类，用 `hProp` 上直接的析取 `⊔`{.Agda} 连接。`a` 的并实现那些 `x`：存在 `a` 的成员 `y` 使 `x` 属于 `y`，用 `⊓`{.Agda} 合取、`∃[ x ] P x`{.Agda} 存在聚合。分离是第一个消费公式的字段，恰好留下 `a` 中满足 `φ` 的成员 `x`：该类是「属于 `a`」与「`φ` 在单元素环境 `x ∷ []` 下满足」的合取，这个环境的唯一一项填入 `Formula S 1` 唯一的自由变元槽。
 <!--ja-->
-それぞれのクラスを自然言語に読み戻すと、教科書の言明がそのまま現れます。`⊥` を実現するものはないので、空集合とは恒偽のクラスを実現する一意な集合です。`a` と `b` の対は、「`a` と構造的に等しいか `b` と構造的に等しい」というクラスを実現し、`hProp` 上の直接の選言 `⊔`{.Agda} で結ばれます。`a` の和集合は、「`a` のある要素 `y` に属する」という形の `x` のクラスを実現し、`⊓`{.Agda} で連言し、`⋁`{.Agda} で存在的に集めます。分出は最初の論理式を受け取るフィールドで、`a` の要素のうち `φ` を満たすものをちょうど残します。クラスは「`a` への所属」と「論理式 `φ` が一要素の環境 `x ∷ []` で充足されること」の連言であり、この環境の唯一の項が `Formula S 1` の唯一の自由変数の枠を埋めます。
+それぞれのクラスを自然言語に読み戻すと、教科書の言明がそのまま現れます。`⊥` を実現するものはないので、空集合とは恒偽のクラスを実現する一意な集合です。`a` と `b` の対は、「`a` と構造的に等しいか `b` と構造的に等しい」というクラスを実現し、`hProp` 上の直接の選言 `⊔`{.Agda} で結ばれます。`a` の和集合は、「`a` のある要素 `y` に属する」という形の `x` のクラスを実現し、`⊓`{.Agda} で連言し、`∃[ x ] P x`{.Agda} で存在的に集めます。分出は最初の論理式を受け取るフィールドで、`a` の要素のうち `φ` を満たすものをちょうど残します。クラスは「`a` への所属」と「論理式 `φ` が一要素の環境 `x ∷ []` で充足されること」の連言であり、この環境の唯一の項が `Formula S 1` の唯一の自由変数の枠を埋めます。
 <!--/-->
 
 ```agda
     hasPair        : (a b : S) → isContr (SetOf (λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)))
-    hasUnion       : (a : S) → isContr (SetOf (λ x → ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))))
+    hasUnion       : (a : S) → isContr (SetOf (λ x → ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)))
     hasSeparation  : (a : S) (φ : Formula S 1)
                    → isContr (SetOf (λ x → (x ∈ˢ a) ⊓ ((x ∷ []) ⊨ φ)))
     hasReplacement : (a : S) (φ : Formula S 2)
@@ -286,7 +286,7 @@ Replacement is the longest field and carries a hypothesis of its own. It takes a
 
 ```agda
                    → ((x : S) → ⟨ x ∈ˢ a ⟩ → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩))
-                   → isContr (SetOf (λ y → ⋁ S (λ x → (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ))))
+                   → isContr (SetOf (λ y → ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)))
     hasPower       : (a : S) → isContr (SetOf (λ x → x ⊆ˢ a))
 ```
 
@@ -471,16 +471,16 @@ The successor case is a pair of implications, both inside the truncated-free pro
 <!--/-->
 
 <!--en-->
-The class `isNumeral` is an existential written directly in `hProp`: `⋁`{.Agda} quantifies over a carrier type and disjoins the family of propositions `x ≈ˢ numeral (lower n)`. The carrier must have type `Type ℓ` for `⋁`{.Agda} to apply, but `ℕ` lives at `Type ℓ-zero`; `Lift {ℓ-zero} {ℓ} ℕ` raises it to the working level, and `lower` recovers the plain index to feed to `numeral`. This is a level adjustment, not a mathematical change: the lifted type carries exactly the same elements. The field `hasInfinity` then asserts, in the now-familiar form, unique existence of a set realizing this class.
+The class `isNumeral` is an existential written directly in `hProp`: `∃[ x ] P x` quantifies over a carrier type and disjoins the family of propositions `x ≈ˢ numeral (lower n)`. The carrier must have type `Type ℓ` for `∃[ x ] P x` to apply, but `ℕ` lives at `Type ℓ-zero`; `Lift {ℓ-zero} {ℓ} ℕ` raises it to the working level, and `lower` recovers the plain index to feed to `numeral`. This is a level adjustment, not a mathematical change: the lifted type carries exactly the same elements. The field `hasInfinity` then asserts, in the now-familiar form, unique existence of a set realizing this class.
 <!--zh-->
-类 `isNumeral` 是直接在 `hProp` 中写出的存在式：`⋁`{.Agda} 在一个载体类型上量化，析取命题族 `x ≈ˢ numeral (lower n)`。载体必须具有类型 `Type ℓ` 才能应用 `⋁`{.Agda}，而 `ℕ` 住在 `Type ℓ-zero`；`Lift {ℓ-zero} {ℓ} ℕ` 把它提升到工作层级，`lower` 取回普通索引交给 `numeral`。这是层级的调整，不是数学内容的改变：被提升的类型恰有同样的元素。字段 `hasInfinity` 随即以熟悉的形式断言：实现该类的集合唯一存在。
+类 `isNumeral` 是直接在 `hProp` 中写出的存在式：`∃[ x ] P x` 在一个载体类型上量化，析取命题族 `x ≈ˢ numeral (lower n)`。载体必须具有类型 `Type ℓ` 才能应用 `∃[ x ] P x`，而 `ℕ` 住在 `Type ℓ-zero`；`Lift {ℓ-zero} {ℓ} ℕ` 把它提升到工作层级，`lower` 取回普通索引交给 `numeral`。这是层级的调整，不是数学内容的改变：被提升的类型恰有同样的元素。字段 `hasInfinity` 随即以熟悉的形式断言：实现该类的集合唯一存在。
 <!--ja-->
-クラス `isNumeral` は `hProp` で直接書かれた存在式です。`⋁`{.Agda} は台の型の上で量化し、命題の族 `x ≈ˢ numeral (lower n)` を選言します。`⋁`{.Agda} を適用するには台の型が `Type ℓ` である必要がありますが、`ℕ` は `Type ℓ-zero` に住みます。そこで `Lift {ℓ-zero} {ℓ} ℕ` が作業レベルへ持ち上げ、`lower` が普通の添字を取り戻して `numeral` に渡します。これは宇宙レベルの調整であって数学的な変更ではありません。lift された型はまったく同じ要素を持ちます。フィールド `hasInfinity` は、おなじみの形で、このクラスを実現する集合の一意存在を主張します。
+クラス `isNumeral` は `hProp` で直接書かれた存在式です。`∃[ x ] P x` は台の型の上で量化し、命題の族 `x ≈ˢ numeral (lower n)` を選言します。`∃[ x ] P x` を適用するには台の型が `Type ℓ` である必要がありますが、`ℕ` は `Type ℓ-zero` に住みます。そこで `Lift {ℓ-zero} {ℓ} ℕ` が作業レベルへ持ち上げ、`lower` が普通の添字を取り戻して `numeral` に渡します。これは宇宙レベルの調整であって数学的な変更ではありません。lift された型はまったく同じ要素を持ちます。フィールド `hasInfinity` は、おなじみの形で、このクラスを実現する集合の一意存在を主張します。
 <!--/-->
 
 ```agda
   isNumeral : S → hProp ℓ
-  isNumeral x = ⋁ (Lift {ℓ-zero} {ℓ} ℕ) (λ n → x ≈ˢ numeral (lower n))
+  isNumeral x = ∃[ n ∶ Lift {ℓ-zero} {ℓ} ℕ ] x ≈ˢ numeral (lower n)
 
   field
     hasInfinity : isContr (SetOf isNumeral)

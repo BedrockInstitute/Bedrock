@@ -220,19 +220,19 @@ The first five clauses copy the standard semantics verbatim: atoms become the st
 ```
 
 <!--en-->
-The quantifier clauses are where the two semantics differ. For the unbounded existential, `γ ⊨ᴬ (∃̇ φ)` is the indexed join `⋁ S (λ x → (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ))`: it ranges over all carrier elements x and conjoins the proposition-valued guard `x ∈ˢ A`. Dually, the unbounded universal uses `⋀` with the implication guard `x ∈ˢ A ⇒ _`. The bounded clauses already restrict their quantifier to a term, evaluated in the original environment `γ`; their guards use `⟦ t ⟧ γ` rather than `A`, and otherwise match the standard reading exactly.
+The quantifier clauses are where the two semantics differ. For the unbounded existential, `γ ⊨ᴬ (∃̇ φ)` is the indexed join `∃[ x ] (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ)`: it ranges over all carrier elements x and conjoins the proposition-valued guard `x ∈ˢ A`. Dually, the unbounded universal uses `∀[ x ] P x` with the implication guard `x ∈ˢ A ⇒ _`. The bounded clauses already restrict their quantifier to a term, evaluated in the original environment `γ`; their guards use `⟦ t ⟧ γ` rather than `A`, and otherwise match the standard reading exactly.
 <!--zh-->
-量词子句是两种语义分岔之处。无界存在量词的 `γ ⊨ᴬ (∃̇ φ)` 是带下标的并 `⋁ S (λ x → (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ))`：它遍历所有载体元素 x，并合取命题卫式 `x ∈ˢ A`。对偶地，无界全称量词用 `⋀` 配蕴涵卫式 `x ∈ˢ A ⇒ _`。有界子句本就把量词限制到一个词项，该词项在原环境 `γ` 中求值；其卫式用的是 `⟦ t ⟧ γ` 而非 `A`，其余与标准读法完全一致。这里仅陈述定义所用的运算；抽象命题运算并未假设使卫式成为二值判定的定律。
+量词子句是两种语义分岔之处。无界存在量词的 `γ ⊨ᴬ (∃̇ φ)` 是带下标的并 `∃[ x ] (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ)`：它遍历所有载体元素 x，并合取命题卫式 `x ∈ˢ A`。对偶地，无界全称量词用 `∀[ x ] P x` 配蕴涵卫式 `x ∈ˢ A ⇒ _`。有界子句本就把量词限制到一个词项，该词项在原环境 `γ` 中求值；其卫式用的是 `⟦ t ⟧ γ` 而非 `A`，其余与标准读法完全一致。这里仅陈述定义所用的运算；抽象命题运算并未假设使卫式成为二值判定的定律。
 <!--ja-->
-量化子の節が二つの意味論が分かれる場所です。非有界な存在量化子に対する `γ ⊨ᴬ (∃̇ φ)` は、添字付きの結合 `⋁ S (λ x → (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ))` です。すべての台の要素 x をわたり、命題であるガード `x ∈ˢ A` を連言します。双対に、非有界な全称量化子は含意のガード `x ∈ˢ A ⇒ _` を伴う `⋀` を使います。有界な節はもともと量化子を項に制限しており、その項は元の環境 `γ` で評価されます。ガードは `A` ではなく `⟦ t ⟧ γ` を用い、それ以外は標準の読みと正確に一致します。ここでは定義に現れる演算だけを述べています。抽象的な命題演算は、ガードを二値判定にする法則を仮定していません。
+量化子の節が二つの意味論が分かれる場所です。非有界な存在量化子に対する `γ ⊨ᴬ (∃̇ φ)` は、添字付きの結合 `∃[ x ] (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ)` です。すべての台の要素 x をわたり、命題であるガード `x ∈ˢ A` を連言します。双対に、非有界な全称量化子は含意のガード `x ∈ˢ A ⇒ _` を伴う `∀[ x ] P x` を使います。有界な節はもともと量化子を項に制限しており、その項は元の環境 `γ` で評価されます。ガードは `A` ではなく `⟦ t ⟧ γ` を用い、それ以外は標準の読みと正確に一致します。ここでは定義に現れる演算だけを述べています。抽象的な命題演算は、ガードを二値判定にする法則を仮定していません。
 <!--/-->
 
 ```agda
   γ ⊨ᴬ ⊥̇        = ⊥
-  γ ⊨ᴬ (∃̇ φ)    = ⋁ S (λ x → (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ))
-  γ ⊨ᴬ (∀̇ φ)    = ⋀ S (λ x → (x ∈ˢ A) ⇒ ((x ∷ γ) ⊨ᴬ φ))
-  γ ⊨ᴬ (∀̇∈ t φ) = ⋀ S (λ x → (x ∈ˢ ⟦ t ⟧ γ) ⇒ ((x ∷ γ) ⊨ᴬ φ))
-  γ ⊨ᴬ (∃̇∈ t φ) = ⋁ S (λ x → (x ∈ˢ ⟦ t ⟧ γ) ⊓ ((x ∷ γ) ⊨ᴬ φ))
+  γ ⊨ᴬ (∃̇ φ)    = ∃[ x ∶ S ] (x ∈ˢ A) ⊓ ((x ∷ γ) ⊨ᴬ φ)
+  γ ⊨ᴬ (∀̇ φ)    = ∀[ x ∶ S ] (x ∈ˢ A) ⇒ ((x ∷ γ) ⊨ᴬ φ)
+  γ ⊨ᴬ (∀̇∈ t φ) = ∀[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⇒ ((x ∷ γ) ⊨ᴬ φ)
+  γ ⊨ᴬ (∃̇∈ t φ) = ∃[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⊓ ((x ∷ γ) ⊨ᴬ φ)
 ```
 
 <!--en-->
@@ -260,35 +260,35 @@ The statement quantifies over both the formula φ and the environment γ, and as
 ```
 
 <!--en-->
-The existential case is the crux. On the left, `relativize c (∃̇ φ)` is `∃̇∈ (con c) φ′`, and the standard semantics of a bounded existential is `⋁ S (λ x → (x ∈ˢ ⟦ con c ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ′))`. But `⟦ con c ⟧ γ` computes to `A = ι c`, so this expression is definitionally the ᴬ-clause for `∃̇ φ`, once the inner satisfaction `⊨ φ′` is replaced by `⊨ᴬ φ` using the induction hypothesis at the extended environment `x ∷ γ`. Formally, `funExt` converts the pointwise agreement over every x into agreement of the indexed families, `cong` transports it through the guard `x ∈ˢ A ⊓ _`, and the outer `cong (⋁ S)` lifts the agreement of families to agreement of their joins. The universal case is the dual with `⋀` and `⇒`.
+The existential case is the crux. On the left, `relativize c (∃̇ φ)` is `∃̇∈ (con c) φ′`, and the standard semantics of a bounded existential is `∃[ x ] (x ∈ˢ ⟦ con c ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ′)`. But `⟦ con c ⟧ γ` computes to `A = ι c`, so this expression is definitionally the ᴬ-clause for `∃̇ φ`, once the inner satisfaction `⊨ φ′` is replaced by `⊨ᴬ φ` using the induction hypothesis at the extended environment `x ∷ γ`. Formally, `funExt` converts the pointwise agreement over every x into agreement of the indexed families, `cong` transports it through the guard `x ∈ˢ A ⊓ _`, and the outer `cong (λ P → ∃[ x ] P x)` lifts the agreement of families to agreement of their joins. The universal case is the dual with `∀[ x ] P x` and `⇒`.
 <!--zh-->
-存在情形是关键。左边 `relativize c (∃̇ φ)` 是 `∃̇∈ (con c) φ′`，有界存在的标准语义是 `⋁ S (λ x → (x ∈ˢ ⟦ con c ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ′))`。但 `⟦ con c ⟧ γ` 计算到 `A = ι c`，于是一旦用扩展环境 `x ∷ γ` 处的归纳假设把内部的 `⊨ φ′` 换成 `⊨ᴬ φ`，该表达式就定义性地成为 `∃̇ φ` 的 ᴬ 子句。形式上，`funExt` 把对每个 x 的逐点一致转为两个下标族的一致，`cong` 把它穿过卫式 `x ∈ˢ A ⊓ _` 传输，外层 `cong (⋁ S)` 再把族的一致提升为并的一致。全称情形是取 `⋀` 与 `⇒` 的对偶版本。
+存在情形是关键。左边 `relativize c (∃̇ φ)` 是 `∃̇∈ (con c) φ′`，有界存在的标准语义是 `∃[ x ] (x ∈ˢ ⟦ con c ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ′)`。但 `⟦ con c ⟧ γ` 计算到 `A = ι c`，于是一旦用扩展环境 `x ∷ γ` 处的归纳假设把内部的 `⊨ φ′` 换成 `⊨ᴬ φ`，该表达式就定义性地成为 `∃̇ φ` 的 ᴬ 子句。形式上，`funExt` 把对每个 x 的逐点一致转为两个下标族的一致，`cong` 把它穿过卫式 `x ∈ˢ A ⊓ _` 传输，外层 `cong (λ P → ∃[ x ] P x)` 再把族的一致提升为并的一致。全称情形是取 `∀[ x ] P x` 与 `⇒` 的对偶版本。
 <!--ja-->
-存在量化のケースが核心です。左辺の `relativize c (∃̇ φ)` は `∃̇∈ (con c) φ′` であり、有界な存在量化の標準的意味論は `⋁ S (λ x → (x ∈ˢ ⟦ con c ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ′))` です。しかし `⟦ con c ⟧ γ` は `A = ι c` に計算されるため、拡張環境 `x ∷ γ` での帰納法の仮定により内部の `⊨ φ′` を `⊨ᴬ φ` に置き換えると、この式は定義的に `∃̇ φ` の ᴬ 節になります。形式的には、`funExt` がすべての x にわたる各点ごとの一致を添字族の一致に変え、`cong` がそれをガード `x ∈ˢ A ⊓ _` を通して輸送し、外側の `cong (⋁ S)` が族の一致をその結合の一致へ持ち上げます。全称量化のケースは `⋀` と `⇒` を用いた双対です。
+存在量化のケースが核心です。左辺の `relativize c (∃̇ φ)` は `∃̇∈ (con c) φ′` であり、有界な存在量化の標準的意味論は `∃[ x ] (x ∈ˢ ⟦ con c ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ′)` です。しかし `⟦ con c ⟧ γ` は `A = ι c` に計算されるため、拡張環境 `x ∷ γ` での帰納法の仮定により内部の `⊨ φ′` を `⊨ᴬ φ` に置き換えると、この式は定義的に `∃̇ φ` の ᴬ 節になります。形式的には、`funExt` がすべての x にわたる各点ごとの一致を添字族の一致に変え、`cong` がそれをガード `x ∈ˢ A ⊓ _` を通して輸送し、外側の `cong (λ P → ∃[ x ] P x)` が族の一致をその結合の一致へ持ち上げます。全称量化のケースは `∀[ x ] P x` と `⇒` を用いた双対です。
 <!--/-->
 
 ```agda
   relativize-correct (φ ∨̇ ψ)  γ = cong₂ _⊔_ (relativize-correct φ γ) (relativize-correct ψ γ)
   relativize-correct (φ ⇒̇ ψ)  γ = cong₂ _⇒_ (relativize-correct φ γ) (relativize-correct ψ γ)
   relativize-correct ⊥̇        γ = refl
-  relativize-correct (∃̇ φ)    γ = cong (⋁ S) (funExt (λ x →
+  relativize-correct (∃̇ φ)    γ = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x →
     cong (λ q → (x ∈ˢ A) ⊓ q) (relativize-correct φ (x ∷ γ))))
 ```
 
 <!--en-->
-The two already bounded clauses mirror the previous pair. Here `relativize c` kept the original bound term `t`, and `⊨ᴬ` also guards the quantifier by `⟦ t ⟧ γ`, so the guard never changes; only the body's satisfaction must be converted via the induction hypothesis at `x ∷ γ`, and the same `funExt`, inner `cong`, and outer `cong (⋁ S)` or `cong (⋀ S)` pattern applies. Note that the bound term is still evaluated in the original environment γ, matching the standard semantics of bounded quantification exactly.
+The two already bounded clauses mirror the previous pair. Here `relativize c` kept the original bound term `t`, and `⊨ᴬ` also guards the quantifier by `⟦ t ⟧ γ`, so the guard never changes; only the body's satisfaction must be converted via the induction hypothesis at `x ∷ γ`, and the same `funExt`, inner `cong`, and outer `cong (λ P → ∃[ x ] P x)` or `cong (λ P → ∀[ x ] P x)` pattern applies. Note that the bound term is still evaluated in the original environment γ, matching the standard semantics of bounded quantification exactly.
 <!--zh-->
-两条本就有界的子句与上一对互为镜像。这里 `relativize c` 保留了原界限词项 `t`，而 `⊨ᴬ` 也用 `⟦ t ⟧ γ` 为量词加卫，所以卫式从不改变；只需通过 `x ∷ γ` 处的归纳假设转换主体的满足关系，同样的 `funExt`、内层 `cong` 与外层 `cong (⋁ S)` 或 `cong (⋀ S)` 模式即可套用。注意界限词项仍在原环境 γ 中求值，与有界量化的标准语义完全一致。
+两条本就有界的子句与上一对互为镜像。这里 `relativize c` 保留了原界限词项 `t`，而 `⊨ᴬ` 也用 `⟦ t ⟧ γ` 为量词加卫，所以卫式从不改变；只需通过 `x ∷ γ` 处的归纳假设转换主体的满足关系，同样的 `funExt`、内层 `cong` 与外层 `cong (λ P → ∃[ x ] P x)` 或 `cong (λ P → ∀[ x ] P x)` 模式即可套用。注意界限词项仍在原环境 γ 中求值，与有界量化的标准语义完全一致。
 <!--ja-->
-既に有界な二つの節は、前の組と鏡像の関係にあります。ここでは `relativize c` が元の境界の項 `t` を保持し、`⊨ᴬ` も量化子を `⟦ t ⟧ γ` でガードするため、ガードは決して変わりません。`x ∷ γ` での帰納法の仮定を通して本体の充足を変換するだけで、同じ `funExt`、内側の `cong`、外側の `cong (⋁ S)` か `cong (⋀ S)` というパターンがそのまま使えます。境界の項は依然として元の環境 γ で評価され、有界量化の標準的意味論と正確に一致します。
+既に有界な二つの節は、前の組と鏡像の関係にあります。ここでは `relativize c` が元の境界の項 `t` を保持し、`⊨ᴬ` も量化子を `⟦ t ⟧ γ` でガードするため、ガードは決して変わりません。`x ∷ γ` での帰納法の仮定を通して本体の充足を変換するだけで、同じ `funExt`、内側の `cong`、外側の `cong (λ P → ∃[ x ] P x)` か `cong (λ P → ∀[ x ] P x)` というパターンがそのまま使えます。境界の項は依然として元の環境 γ で評価され、有界量化の標準的意味論と正確に一致します。
 <!--/-->
 
 ```agda
-  relativize-correct (∀̇ φ)    γ = cong (⋀ S) (funExt (λ x →
+  relativize-correct (∀̇ φ)    γ = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x →
     cong (λ q → (x ∈ˢ A) ⇒ q) (relativize-correct φ (x ∷ γ))))
-  relativize-correct (∀̇∈ t φ) γ = cong (⋀ S) (funExt (λ x →
+  relativize-correct (∀̇∈ t φ) γ = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x →
     cong (λ q → (x ∈ˢ ⟦ t ⟧ γ) ⇒ q) (relativize-correct φ (x ∷ γ))))
-  relativize-correct (∃̇∈ t φ) γ = cong (⋁ S) (funExt (λ x →
+  relativize-correct (∃̇∈ t φ) γ = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x →
 ```
 
 <!--en-->

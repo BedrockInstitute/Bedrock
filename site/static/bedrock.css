@@ -155,8 +155,7 @@ body.nav-layout-changing { overflow-anchor: none; }
 #nav-close:hover { background: var(--button-hover); }
 #nav-backdrop { display: none; }
 
-/* ---- layout (matches 1lab: centered up to 80rem; a full-width sidebar | content | gutter
-   grid that uses ultra-wide screens at >=95rem) ---- */
+/* ---- layout (centered up to 80rem; ultra-wide screens use symmetric side columns) ---- */
 main { max-width: 80rem; width: 100%; margin: 0 auto; padding: 0 1rem; box-sizing: border-box; }
 #post-toc-container {
   display: grid; gap: 1.5rem 2.5rem; align-items: start;
@@ -166,11 +165,11 @@ main { max-width: 80rem; width: 100%; margin: 0 auto; padding: 0 1rem; box-sizin
 article { position: relative; grid-area: content; }
 #sidenote-container { grid-area: gutter; display: none; }
 
-@media (min-width: 95rem) {                  /* ultra-wide: span the screen, 1lab-style */
+@media (min-width: 95rem) {
   main { max-width: 100%; }
   #post-toc-container {
-    grid-template-columns: 0.1fr 1fr 0.1fr minmax(0, 3fr) 1fr 0.1fr;
-    grid-template-areas: ". sidebar . content gutter .";
+    grid-template-columns: minmax(14rem, 1fr) minmax(0, 3fr) minmax(14rem, 1fr);
+    grid-template-areas: "sidebar content gutter";
   }
   #sidenote-container { display: block; }
 }
@@ -490,8 +489,9 @@ span.inline-ref { color: var(--code-fg); }
   body.nav-collapsed #nav-toggle { display: inline-flex; align-items: center; }
   body.nav-collapsed #toc { display: none; }
   body.nav-collapsed #post-toc-container {
-    grid-template-columns: .1fr minmax(0, 3fr) 1fr .1fr;
-    grid-template-areas: ". content gutter .";
+    /* Keep the empty left track opposite the note gutter. This preserves the
+       article's centre line and prevents a horizontal jump when the TOC hides. */
+    grid-template-areas: ". content gutter";
   }
 }
 

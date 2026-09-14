@@ -138,22 +138,33 @@ The propositional connectives are handled by congruence as well, because the str
     ⊨-map (φ ∨̇ ψ)  γ = cong₂ _⊔_ (⊨-map φ γ) (⊨-map ψ γ)
     ⊨-map (φ ⇒̇ ψ)  γ = cong₂ _⇒_ (⊨-map φ γ) (⊨-map ψ γ)
     ⊨-map ⊥̇        γ = refl
-    ⊨-map (∃̇ φ)    γ = cong (⋁ S) (funExt (λ x → ⊨-map φ (x ∷ γ)))
 ```
 
 <!--en-->
-The quantifier cases are the only places where the environment changes, and it changes identically on both sides. Reading `∃̇ φ` under either interpretation joins over the carrier: for each element `x`, the bound variable is given the value `x` by extending the same environment to `x ∷ γ`. Since the environment extension is the same in both readings, the induction hypothesis `⊨-map φ (x ∷ γ)` applies unchanged, and `funExt` assembles these into a path between the joins. The bounded quantifiers combine this with the atomic pattern: each also produces a path in `x ∈ˢ ⟦ t ⟧ γ` from `⟦⟧-map`, fed through `⇒` or `⊓` by congruence. With these cases the commutation holds for every formula constructor, and the induction is complete.
+Quantifiers add one element `x` at the front of the environment. For an unbounded quantifier, the induction hypothesis gives a path for every `x : S`; function extensionality combines these pointwise paths, and `cong` transports the corresponding existential or universal quantification.
 <!--zh-->
-量词情形是唯一环境发生变化的地方，而且两侧的变化完全相同。无论在哪个解释下读 `∃̇ φ`，都是在载体上取并：对每个元素 `x`，被约束变量通过把同一个环境扩张为 `x ∷ γ` 而取值 `x`。由于两种读法中的环境扩张一致，归纳假设 `⊨-map φ (x ∷ γ)` 原样适用，`funExt` 再把这些拼成并运算之间的路径。有界量词把这一点与原子模式结合：它们还要从 `⟦⟧-map` 产生 `x ∈ˢ ⟦ t ⟧ γ` 中的一条路径，经同余送入 `⇒` 或 `⊓`。补齐这些情形后，交换律对每个公式构造子都成立，归纳完成。
+量词会把一个元素 `x` 加到环境的最前端。对无界量词，归纳假设对每个 `x : S` 给出一条路径；函数外延性把这些逐点路径合成一条函数路径，`cong` 再将存在量化或全称量化沿它搬运。
 <!--ja-->
-量化子の場合だけが環境が変わる箇所であり、しかも両側でまったく同じように変わります。どちらの解釈で `∃̇ φ` を読んでも、台の上の結びを取ることになります。各元 `x` に対し、束縛変数は同じ環境を `x ∷ γ` へ拡張することで値 `x` を得ます。環境の拡張が両読み方で一致するため、帰納法の仮定 `⊨-map φ (x ∷ γ)` がそのまま適用でき、`funExt` がこれらを結びの間の経路へ組み立てます。有界量化子はこれを原子論理式の型と結び付けます。`⟦⟧-map` から `x ∈ˢ ⟦ t ⟧ γ` 内の経路も作り、合同を通して `⇒` か `⊓` に入れます。これらの場合で、可換性はすべての論理式の構成子について成り立ち、帰納法は完了です。
+量化子は、環境の先頭に一つの要素 `x` を加えます。非有界量化子では、帰納法の仮定がすべての `x : S` に対して経路を与えます。関数外延性がそれらの各点での経路を関数の経路にまとめ、`cong` がそれに沿って存在量化または全称量化を移します。
 <!--/-->
 
 ```agda
-    ⊨-map (∀̇ φ)    γ = cong (⋀ S) (funExt (λ x → ⊨-map φ (x ∷ γ)))
-    ⊨-map (∀̇∈ t φ) γ = cong (⋀ S) (funExt (λ x →
+    ⊨-map (∃̇ φ)    γ = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x → ⊨-map φ (x ∷ γ)))
+    ⊨-map (∀̇ φ)    γ = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x → ⊨-map φ (x ∷ γ)))
+```
+
+<!--en-->
+A bounded quantifier has one further component: `⟦⟧-map` identifies the interpretation of its bounding term, while the induction hypothesis identifies the body. Congruence for implication or conjunction then combines the bound with the body before the outer quantifier is transported.
+<!--zh-->
+有界量词还多一个成分：`⟦⟧-map` 识别界定词项的两种解释，归纳假设识别量词作用域的两种解释。对蕴含或合取使用同余后，再搬运最外层的量化。
+<!--ja-->
+有界量化子には、さらに一つの成分があります。`⟦⟧-map` が限定項の二つの解釈を同一視し、帰納法の仮定が量化子の本体の二つの解釈を同一視します。含意または連言の合同性で両者を組み合わせた後、外側の量化を移します。
+<!--/-->
+
+```agda
+    ⊨-map (∀̇∈ t φ) γ = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x →
       cong₂ _⇒_ (cong (x ∈ˢ_) (⟦⟧-map t γ)) (⊨-map φ (x ∷ γ))))
-    ⊨-map (∃̇∈ t φ) γ = cong (⋁ S) (funExt (λ x →
+    ⊨-map (∃̇∈ t φ) γ = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x →
       cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-map t γ)) (⊨-map φ (x ∷ γ))))
 ```
 

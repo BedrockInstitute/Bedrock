@@ -392,16 +392,18 @@
     if (!node.preview) top.append(doneControl);
     const details = el("div", "compact-details");
     const prereq = prerequisites(node);
-    details.append(compactList(copy.prerequisites, prereq, item => completed.has(item.id)));
+    details.append(compactList(copy.prerequisites, prereq,
+      item => completed.has(item.id) ? "is-complete" : "is-pending"));
     const successors = [...nodes.values()].filter(item => (item.prerequisites || []).includes(node.id)).slice(0, 5);
-    details.append(compactList(copy.onward, successors, item => ready(item)));
+    details.append(compactList(copy.onward, successors,
+      item => ready(item) ? "is-available" : "is-pending"));
     const all = el("a", "compact-all", copy.allRoutes);
     all.href = "index.html#reading-explorer";
     wrap.append(summary, top, details, all, el("p", "compact-storage", copy.intro));
     host.replaceChildren(wrap);
   }
 
-  function compactList(label, items, positive) {
+  function compactList(label, items, stateFor) {
     const group = el("div", "compact-group");
     group.append(el("h3", "compact-label", label));
     if (!items.length) {
@@ -410,7 +412,7 @@
     }
     const list = el("ul", "compact-list");
     for (const item of items) {
-      const li = el("li", positive(item) ? "is-positive" : "is-pending");
+      const li = el("li", stateFor(item));
       const link = el("a", "", local(item.title));
       link.href = chapterHref(item.id);
       li.append(link);

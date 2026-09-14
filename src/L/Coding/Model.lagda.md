@@ -556,7 +556,7 @@ The proof needs no new argument: satisfaction of an unbounded existential is the
 
 ```agda
 inDomAt-adequate f x γ =
-  cong (⋁ S) (funExt (λ y → appAt-adequate (suc f) (suc x) zero (y ∷ γ)))
+  cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ y → appAt-adequate (suc f) (suc x) zero (y ∷ γ)))
 
 domAt : ∀ {n} → Fin n → Fin n → Formula S n
 domAt f d = ∀̇ ( (inDomAt (suc f) zero ⇒̇ (var zero ∈̇ var (suc d)))

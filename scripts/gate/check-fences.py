@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-"""Two rules about the boundary between code and prose in a `.lagda.md` master.
+"""Three rules about the boundary between code and prose in a `.lagda.md` master.
 
 RULE 1, [unfenced-agda]: no Agda outside a fence. Agda reads only fenced code.
 RULE 2, [fenced-comment]: no comment inside a fence. A comment is prose, and
 prose belongs between the fences, where the site renders it and the size ledger
 does not count it as code.
+RULE 3, [fence-language-boundary]: leave a blank line between a closing fence
+and a language marker. Agda's Markdown renderer otherwise escapes the marker
+as visible source text and breaks the site's language grouping.
 
 WHY THIS EXISTS, and it is one measured failure rather than a tidiness wish.
 On 2026-08-11 `[LJ-1.41]` reported two condensation row agreements CLOSED and
@@ -96,6 +99,7 @@ DEFAULT_RUN = 3
 LINE_COMMENT = re.compile(r"^\s*--(\s|$|-)")
 BLOCK_OPEN = re.compile(r"^\s*\{-(?!#)")
 BLOCK_CLOSE = re.compile(r"-\}")
+LANGUAGE_MARKER = re.compile(r"<!--(?:en|zh|ja|/)-->")
 
 REMEDY = """    HOW TO FIX ONE. Do not delete the sentence: split the fence where the
     comment is, and write it as prose between the two halves.
@@ -144,6 +148,16 @@ def fenced_comments(path: pathlib.Path) -> list[tuple[int, str]]:
         if LINE_COMMENT.match(line):
             hits.append((i, line))
     return hits
+
+
+def tight_language_boundaries(path: pathlib.Path) -> list[int]:
+    """Closing fences immediately followed by a language marker."""
+    lines = path.read_text().splitlines()
+    return [
+        i + 2
+        for i, (line, following) in enumerate(zip(lines, lines[1:]))
+        if line == "```" and LANGUAGE_MARKER.fullmatch(following)
+    ]
 
 
 
@@ -237,15 +251,31 @@ def main() -> int:
         if len(hits) > 6:
             print(f"    ... and {len(hits) - 6} more")
 
+    tight = 0
+    for m in masters:
+        hits = tight_language_boundaries(m)
+        if not hits:
+            continue
+        tight += 1
+        rel = m.relative_to(ROOT)
+        print(f"  DEFECT [fence-language-boundary]: {rel} has {len(hits)} "
+              "language marker(s) immediately after a closing fence. Add a "
+              "blank line so the marker remains hidden metadata.")
+        for i in hits[:6]:
+            print(f"    {rel}:{i}")
+
     if defects:
         print(f"\ncheck-fences: {defects} master(s) with unfenced Agda. "
               f"[LJ-1.41] reported two theorems CLOSED that sat outside a "
               f"fence and had four defects; every other gate passed.")
+    if tight:
+        print(f"\ncheck-fences: {tight} master(s) with an unsafe fence/language "
+              "marker boundary.")
     if commented:
         print(f"\ncheck-fences: {comment_lines} comment line(s) inside a fence "
               f"in {commented} master(s).")
         print(REMEDY)
-    if defects or commented:
+    if defects or commented or tight:
         return 1 if args.check else 0
 
     print(f"check-fences: clean ({len(masters)} masters, run threshold "

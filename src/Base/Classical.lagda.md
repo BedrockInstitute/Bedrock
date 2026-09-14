@@ -3,27 +3,19 @@
 
 In a universe-leveled type theory, propositions raise two distinct smallness questions. First, fixing a proposition `P : hProp (ℓ-suc ℓ)`{.Agda}, can we find an equivalent proposition one level down? That is propositional resizing: it speaks proposition by proposition. Second, the type `hProp ℓ`{.Agda} of all level-`ℓ` propositions itself lives in `Type (ℓ-suc ℓ)`{.Agda}; can the whole totality be presented by one small type? That is the small classifier. The two claims have different shapes, and this chapter proves both from one explicit hypothesis.
 
-The hypothesis is excluded middle: every proposition is either true or false. Cubical type theory does not assume it, so each classical proof here receives it as an explicit parameter and records exactly which level instance it uses.
+The hypothesis is excluded middle: every proposition of a given level is either true or false. Cubical type theory does not assume it, so each classical proof here receives it as an explicit parameter, and each result records exactly which level instance it uses. Constructive definitions and classical steps stay separate throughout: the constructions decide nothing on their own, and the hypothesis enters only where decisions are consumed.
 <!--zh-->
 # 经典逻辑的边界
 
-在带宇宙层级的类型论中，命题引出两个不同的小性问题。第一，固定命题 `P : hProp (ℓ-suc ℓ)`{.Agda}，能否找到低一层宇宙中与之等价的命题？这就是命题降层：它逐个命题发言。第二，全体 `ℓ` 层命题的类型 `hProp ℓ`{.Agda} 本身住在 `Type (ℓ-suc ℓ)`{.Agda} 中；能否用一个小类型呈现整个总体？这就是小分类器。两项断言形状不同，本章由一条显式假设同时证明二者。
+在带宇宙层级的类型论中，命题引出两个不同的小性问题。第一，固定命题 `P : hProp (ℓ-suc ℓ)`{.Agda}，能否找到低一层宇宙中与之等价的命题？这就是命题降级：它逐个命题发言。第二，全体 `ℓ` 层命题的类型 `hProp ℓ`{.Agda} 本身住在 `Type (ℓ-suc ℓ)`{.Agda} 中；能否用一个小类型呈现整个总体？这就是小分类器。两项断言形状不同，本章由一条显式假设同时证明二者。
 
-这条假设是排中律：每个命题要么真要么假。Cubical 类型论并不预设它，因此这里的每个经典证明都把它作为显式参数接收，并准确记录使用的是哪个层级的实例。
+这条假设是排中律：给定层级的每个命题要么真要么假。Cubical 类型论并不预设它，因此这里的每个经典证明都把它作为显式参数接收，每项结果也准确记录所用的是哪个层级的实例。构造性定义与经典步骤全程分开：构造自身不作任何判定，假设只在消耗判定之处进入。
 <!--ja-->
 # 古典論理との境界
 
 宇宙レベルをもつ型理論では、命題について二つの異なる小ささの問題が生じます。第一に、命題 `P : hProp (ℓ-suc ℓ)`{.Agda} を固定したとき、一つ下のレベルに同値な命題を見つけられるか。これが命題リサイズで、命題ごとに語る主張です。第二に、レベル `ℓ` の命題全体の型 `hProp ℓ`{.Agda} 自身が `Type (ℓ-suc ℓ)`{.Agda} に住んでいます。この全体を一つの小さな型で提示できるか。これが小分類子です。二つの主張は形が異なりますが、本章は一つの明示的な仮定から両方を証明します。
 
-その仮定が排中律、つまりすべての命題は真か偽かのどちらかだという原理です。Cubical 型理論は排中律を仮定しないため、ここでの古典的な証明はそれぞれそれを明示的な引数として受け取り、どのレベルの実例を使ったかを正確に記録します。
-<!--/-->
-
-<!--en-->
-Excluded middle is not built into the surrounding type theory. Here it is an explicit hypothesis at a specified universe level, so each result states exactly which family of propositions it can decide. This keeps the constructive definitions separate from the classical step that later supplies their decisions.
-<!--zh-->
-排中律并未内置于周围的类型论中。这里把它作为指定宇宙层级上的显式假设，因此每项结果都准确表明自己能够判定哪一族命题。这样，构造性的定义便与稍后为其提供判定的经典步骤清楚分开。
-<!--ja-->
-排中律は周囲の型理論に組み込まれていません。ここでは指定した宇宙レベルの明示的な仮定として受け取るので、各結果はどの命題の族を判定できるかを正確に示します。これにより、構成的な定義と、後でその判定を与える古典的な段階とが分かれます。
+その仮定が排中律です。所定のレベルのすべての命題は、真か偽かのどちらかだという原理です。Cubical 型理論は排中律を仮定しないため、ここでの古典的な証明はそれぞれそれを明示的な引数として受け取り、各結果はどのレベルの実例を使ったかを正確に記録します。構成的な定義と古典的な段階は終始分かれています。構成そのものは何も判定せず、仮定が現れるのは判定を消費する場所だけです。
 <!--/-->
 
 ```agda
@@ -33,11 +25,11 @@ module Base.Classical where
 ```
 
 <!--en-->
-The two smallness questions are given exact shapes in Base.Impredicativity, and this chapter uses that vocabulary unchanged. For a single proposition, `isSmall P` packages a lower-level proposition `Q : hProp ℓ`{.Agda} together with an equivalence of underlying types `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}. The uniform statements then differ in what they quantify over: `Resizing ℓ` asks that every `P : hProp (ℓ-suc ℓ)`{.Agda} carry such data, while `HPropSmallness ℓ` asks for a single type `Ω' : Type ℓ`{.Agda} equivalent to the whole `hProp ℓ`{.Agda} at once. One is a family of per-proposition witnesses, the other one carrier for the totality; this chapter derives each from excluded middle without claiming that either entails the other.
+The two smallness questions received their exact shapes in the Impredicativity chapter, and this chapter uses that vocabulary unchanged. For a single proposition, `isSmall P` consists of a lower-level proposition `Q : hProp ℓ`{.Agda} together with an equivalence of underlying types `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}. The uniform statements differ in what they quantify over: `Resizing ℓ` asks that every `P : hProp (ℓ-suc ℓ)`{.Agda} carry such data, while `HPropSmallness ℓ` asks for a single type `Ω' : Type ℓ`{.Agda} equivalent to the whole `hProp ℓ`{.Agda} at once. One is a family of per-proposition witnesses, the other one carrier for the totality; this chapter derives each from excluded middle and claims no implication between them.
 <!--zh-->
-两个小性问题在 Base.Impredicativity 中被赋予精确形状，本章原样使用那套词汇。对单个命题，`isSmall P` 打包一个低层命题 `Q : hProp ℓ`{.Agda} 与底层类型间的等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}。两个统一陈述的区别在于量化的对象：`Resizing ℓ` 要求每个 `P : hProp (ℓ-suc ℓ)`{.Agda} 都带有这样的数据，而 `HPropSmallness ℓ` 要求一个与整个 `hProp ℓ`{.Agda} 同时等价的类型 `Ω' : Type ℓ`{.Agda}。前者是逐命题见证的族，后者是呈现总体的单一载体；本章从排中律分别导出二者，而不声称其中一项蕴含另一项。
+两个小性问题已在「非直谓性」一章获得精确形状，本章原样使用那套词汇。对单个命题，`isSmall P` 由一个低层命题 `Q : hProp ℓ`{.Agda} 与底层类型间的等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda} 组成。两个统一陈述的区别在于量化的对象：`Resizing ℓ` 要求每个 `P : hProp (ℓ-suc ℓ)`{.Agda} 都带有这样的数据，而 `HPropSmallness ℓ` 要求一个与整个 `hProp ℓ`{.Agda} 同时等价的类型 `Ω' : Type ℓ`{.Agda}。前者是逐命题见证的族，后者是呈现总体的单一载体；本章从排中律分别导出二者，并且不断言二者之间有蕴含关系。
 <!--ja-->
-二つの小ささの問題は Base.Impredicativity で正確な形を与えられ、本章はその語彙をそのまま使います。単一の命題に対して `isSmall P` は、低いレベルの命題 `Q : hProp ℓ`{.Agda} と基礎型の間の同値 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda} をまとめて持ちます。一様な主張は何を量化するかで異なります。`Resizing ℓ` はすべての `P : hProp (ℓ-suc ℓ)`{.Agda} がそのようなデータを持つことを要求し、`HPropSmallness ℓ` は全体の `hProp ℓ`{.Agda} と一度に同値な型 `Ω' : Type ℓ`{.Agda} を一つ要求します。前者は命題ごとの証拠の族、後者は全体を提示する単一の台です。本章は排中律から両者をそれぞれ導きますが、一方が他方を含意するとは主張しません。
+二つの小ささの問題は「非可述性」の章で正確な形を与えられており、本章はその語彙をそのまま使います。単一の命題に対して `isSmall P` は、低いレベルの命題 `Q : hProp ℓ`{.Agda} と基礎型の間の同値 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda} からなります。一様な主張は何を量化するかで異なります。`Resizing ℓ` はすべての `P : hProp (ℓ-suc ℓ)`{.Agda} がそのようなデータを持つことを要求し、`HPropSmallness ℓ` は全体の `hProp ℓ`{.Agda} と一度に同値な型 `Ω' : Type ℓ`{.Agda} を一つ要求します。前者は命題ごとの証拠の族、後者は全体を提示する単一の台です。本章は排中律から両者をそれぞれ導き、両者の間の含意については何も主張しません。
 <!--/-->
 
 ```agda
@@ -48,11 +40,11 @@ open import Base.Impredicativity
 ```
 
 <!--en-->
-A decision is small data with a precise type: it is either an inhabitant of the proposition, or a map from the proposition into the empty type, which refutes it. The coproduct `_⊎_`{.Agda} with its two constructors carries exactly this either-or. The Boolean type `Bool`{.Agda} with `true`{.Agda} and `false`{.Agda} will label the two possible truth values, and `tt*`{.Agda} is the lone inhabitant of the unit type that underlies the truth value true.
+What it means to decide a proposition must be fixed before anything is proved. To decide `P` is to produce either a proof of `⟨ P ⟩`{.Agda}, or a map from `⟨ P ⟩`{.Agda} into the empty type, which refutes `P` by turning any proof into an absurdity. The coproduct `_⊎_`{.Agda} with its two constructors carries exactly this either-or, and the disjunction is genuine data: an element knows which side it came from, so a decision can be used in a case analysis. The booleans `Bool`{.Agda} with `true`{.Agda} and `false`{.Agda} will label the two outcomes, and `tt*`{.Agda} is the lone inhabitant of the unit type underlying the proposition true.
 <!--zh-->
-判定是类型精确的小数据：它要么是命题的一个元素，要么是把命题映入空类型从而反驳它的映射。余积 `_⊎_`{.Agda} 及其两个构造子承载的正是这种二选一。布尔类型 `Bool`{.Agda} 与 `true`{.Agda}、`false`{.Agda} 将为两个可能的真值贴标签，而 `tt*`{.Agda} 是真值「真」底层单元类型的唯一元素。
+判定一个命题意味着什么，必须先于一切证明固定下来。判定 `P`，就是给出 `⟨ P ⟩`{.Agda} 的一个证明，或给出从 `⟨ P ⟩`{.Agda} 到空类型的映射：后者把任何证明都变成荒谬，从而反驳 `P`。余积 `_⊎_`{.Agda} 及其两个构造子承载的正是这种二选一，而且这个析取是真实的数据：元素知道自己来自哪一支，因此判定能够逐情形使用。布尔值 `Bool`{.Agda} 与 `true`{.Agda}、`false`{.Agda} 将为两种结果贴标签，`tt*`{.Agda} 则是「真」命题底层单元类型的唯一元素。
 <!--ja-->
-判定は型が正確な小さなデータです。命題の元であるか、命題を空型へ写すことで反証する写像であるか、のどちらかです。直和 `_⊎_`{.Agda} とその二つの構成子が担うのはまさにこの二者択一です。ブール型 `Bool`{.Agda} と `true`{.Agda}、`false`{.Agda} は二つの可能な真理値にラベルを付け、`tt*`{.Agda} は真の真理値の底にある単元型の唯一の元です。
+命題を判定するとは何かを、証明に先立って固定しておきます。`P` を判定するとは、`⟨ P ⟩`{.Agda} の証明を与えるか、`⟨ P ⟩`{.Agda} から空型への写像を与えるかのどちらかです。後者は任意の証明を不条理に変えることで `P` を反証します。直和 `_⊎_`{.Agda} とその二つの構成子が担うのはまさにこの二者択一であり、この選言は本物のデータです。元は自分がどちらの直和項から来たかを知っているので、判定は場合分けで使えます。ブール値 `Bool`{.Agda} と `true`{.Agda}、`false`{.Agda} は二つの結果にラベルを付け、`tt*`{.Agda} は「真」の命題の底にある単元型の唯一の元です。
 <!--/-->
 
 ```agda
@@ -63,11 +55,11 @@ open import Cubical.Data.Unit using ( tt* )
 ```
 
 <!--en-->
-Building the smallness witnesses needs one more thing: how maps between propositions become identities and equivalences. Between two propositions, a pair of maps in both directions can be turned into a path `⇔toPath`{.Agda} (propositional extensionality) or into an equivalence of underlying types `propBiimpl→Equiv`{.Agda}. An isomorphism `iso`{.Agda} packages two maps with the two inverse laws, and `isoToEquiv`{.Agda} reads it as an equivalence. These are the forms of sameness used in the constructions below.
+Smallness compares propositions through sameness, and two forms of sameness appear below. Between two propositions, a pair of maps in both directions yields a path between the `hProp` values, by propositional extensionality `⇔toPath`{.Agda}; it also yields an equivalence of underlying types, by `propBiimpl→Equiv`{.Agda}. An isomorphism `iso`{.Agda} records two maps together with the two inverse laws, and `isoToEquiv`{.Agda} reads it as an equivalence. The classifier will identify propositions, so it builds paths of `hProp`{.Agda}; resizing must deliver equivalences of underlying types.
 <!--zh-->
-构造小性见证还需要一件事：命题之间的映射如何变成同一性与等价。在两个命题之间，双向的一对映射既可以变成路径 `⇔toPath`{.Agda} (命题外延性)，也可以变成底层类型间的等价 `propBiimpl→Equiv`{.Agda}。同构 `iso`{.Agda} 把两个映射与两条逆律打包在一起，`isoToEquiv`{.Agda} 再把它读作等价。下面的构造使用这些形式的「相同」。
+小性通过「相同」来比较命题，下文会出现两种形式的相同。在两个命题之间，双向的一对映射既能经命题外延性 `⇔toPath`{.Agda} 给出 `hProp` 值之间的路径，也能经 `propBiimpl→Equiv`{.Agda} 给出底层类型间的等价。同构 `iso`{.Agda} 把两个映射与两条逆律一并记录，`isoToEquiv`{.Agda} 把它读作等价。分类器要等同命题，所以构造 `hProp`{.Agda} 的路径；命题降级要交付底层类型间的等价。
 <!--ja-->
-小ささの証拠を作るにはもう一つ必要なものがあります。命題の間の写像がどう同一性や同値になるかです。二つの命題の間では、両方向の写像の組はパス `⇔toPath`{.Agda} (命題外延性) にも、基礎型の間の同値 `propBiimpl→Equiv`{.Agda} にもなります。同型 `iso`{.Agda} は二つの写像と二つの逆法則を束ね、`isoToEquiv`{.Agda} がそれを同値として読みます。以下の構成では、このような形の「同じである」を用います。
+小ささは「同じである」を通して命題を比較します。以下には、その二つの形が現れます。二つの命題の間では、両方向の写像の組は、命題外延性 `⇔toPath`{.Agda} によって `hProp` 値の間のパスを与え、`propBiimpl→Equiv`{.Agda} によって基礎型の間の同値を与えます。同型 `iso`{.Agda} は二つの写像と二つの逆法則をまとめて記録し、`isoToEquiv`{.Agda} がそれを同値として読みます。分類子は命題を同一視するので `hProp`{.Agda} のパスを作り、命題リサイズは基礎型の同値を届けなければなりません。
 <!--/-->
 
 ```agda
@@ -91,11 +83,11 @@ Before proving anything, the assumption must be stated with its universe level p
 <!--/-->
 
 <!--en-->
-For each universe level `ℓ`, `LEM ℓ`{.Agda} is a function taking a proposition `P : hProp ℓ`{.Agda} and returning either a proof of `⟨ P ⟩`{.Agda} or a refutation, that is, a map from `⟨ P ⟩`{.Agda} into the empty type. Because it quantifies over all propositions of `hProp ℓ`{.Agda}, its type lives one universe up, in `Type (ℓ-suc ℓ)`{.Agda}. So the statement itself is large, even though each decision it delivers is a single small piece of data, and `LEM ℓ` is asserted one level at a time rather than for all levels at once.
+For each universe level `ℓ`, `LEM ℓ`{.Agda} is a function taking a proposition `P : hProp ℓ`{.Agda} and returning either a proof of `⟨ P ⟩`{.Agda} or a refutation, that is, a map from `⟨ P ⟩`{.Agda} into the empty type. Because it quantifies over all propositions of `hProp ℓ`{.Agda}, its type lives one universe up, in `Type (ℓ-suc ℓ)`{.Agda}. The statement is therefore large, although each decision it delivers is one small piece of data, and `LEM ℓ` is asserted one level at a time rather than for all levels at once. Note the strength this shape provides: a decision is data, not a proposition, so a hypothesis of excluded middle permits case analysis between a proof and a refutation, rather than merely asserting that one of them exists.
 <!--zh-->
-对每个宇宙层级 `ℓ`，`LEM ℓ`{.Agda} 是一个函数：取命题 `P : hProp ℓ`{.Agda}，返回 `⟨ P ⟩`{.Agda} 的证明，或一个反驳，即从 `⟨ P ⟩`{.Agda} 映入空类型的映射。由于它量化了 `hProp ℓ`{.Agda} 的所有命题，其类型位于高一层宇宙 `Type (ℓ-suc ℓ)`{.Agda}。因此这个陈述本身是大的，尽管它产出的每个判定都只是一小段数据；而且 `LEM ℓ` 是逐层陈述的，不是同时对所有层级断言。
+对每个宇宙层级 `ℓ`，`LEM ℓ`{.Agda} 是一个函数：取命题 `P : hProp ℓ`{.Agda}，返回 `⟨ P ⟩`{.Agda} 的证明，或一个反驳，即从 `⟨ P ⟩`{.Agda} 映入空类型的映射。由于它量化了 `hProp ℓ`{.Agda} 的所有命题，其类型位于高一层宇宙 `Type (ℓ-suc ℓ)`{.Agda}。因此这个陈述本身是大的，尽管它产出的每个判定都只是一小段数据；而且 `LEM ℓ` 是逐层陈述的，不是同时对所有层级断言。注意这种形状给出的强度：判定是数据而非命题，所以从排中律假设出发，可以在证明与反驳两种情形之间作分支推理，而不只是断言二者之一存在。
 <!--ja-->
-各宇宙レベル `ℓ` に対して `LEM ℓ`{.Agda} は、命題 `P : hProp ℓ`{.Agda} を受け取り、`⟨ P ⟩`{.Agda} の証明か、あるいは `⟨ P ⟩`{.Agda} を空型へ写す反証のどちらかを返す関数です。`hProp ℓ`{.Agda} のすべての命題を量化するため、その型は一つ上の宇宙 `Type (ℓ-suc ℓ)`{.Agda} に住みます。つまり主張そのものは大きくても、生み出される個々の判定は小さなデータのひと塊にすぎず、さらに `LEM ℓ` は全レベル一度にではなく一レベルずつ主張されます。
+各宇宙レベル `ℓ` に対して `LEM ℓ`{.Agda} は、命題 `P : hProp ℓ`{.Agda} を受け取り、`⟨ P ⟩`{.Agda} の証明か、あるいは `⟨ P ⟩`{.Agda} を空型へ写す反証のどちらかを返す関数です。`hProp ℓ`{.Agda} のすべての命題を量化するため、その型は一つ上の宇宙 `Type (ℓ-suc ℓ)`{.Agda} に住みます。主張そのものは大きくても、生み出される個々の判定は小さなデータのひと塊にすぎず、さらに `LEM ℓ` は全レベル一度にではなく一レベルずつ主張されます。この形がもたらす強さに注意してください。判定は命題ではなくデータなので、排中律の仮定から、証明の場合と反証の場合に分けて推論できます。どちらかが存在すると主張するだけではありません。
 <!--/-->
 
 ```agda
@@ -104,11 +96,11 @@ LEM ℓ = (P : hProp ℓ) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)
 ```
 
 <!--en-->
-The applications will need excluded middle at two different levels, but a proof is often handed only the higher instance `LEM (ℓ-suc ℓ)`{.Agda}. One descent lemma bridges the gap. It is a one-step result, exactly `LEM (ℓ-suc ℓ) → LEM ℓ`{.Agda}: to decide a proposition `P : hProp ℓ`{.Agda}, move its underlying type up one universe, decide the moved proposition there, and bring the verdict back down. Nothing here claims that decisions descend through arbitrarily many levels at once.
+Applications need excluded middle at more than one level, yet a proof is usually handed only the higher instance `LEM (ℓ-suc ℓ)`{.Agda}. One descent lemma bridges the gap. It is a one-step result, exactly `LEM (ℓ-suc ℓ) → LEM ℓ`{.Agda}: to decide `P : hProp ℓ`{.Agda}, decide a lifted copy of `P` one universe up and bring the verdict back. Nothing here claims that decisions descend through arbitrarily many levels at once.
 <!--zh-->
-后面的应用需要在两个不同层级上的排中律，而证明往往只拿到高层实例 `LEM (ℓ-suc ℓ)`{.Agda}。一条降层引理正好补上这个缺口。它是恰好一步的结果，即 `LEM (ℓ-suc ℓ) → LEM ℓ`{.Agda}：要判定命题 `P : hProp ℓ`{.Agda}，把其底层类型抬高一层宇宙，对移动后的命题判定，再把裁决降回来。这里不声称判定可以一次跨越任意多层下降。
+应用需要在不止一个层级上的排中律，而证明拿到的往往只有高层实例 `LEM (ℓ-suc ℓ)`{.Agda}。一条下降引理补上这个缺口。它是恰好一步的结果，即 `LEM (ℓ-suc ℓ) → LEM ℓ`{.Agda}：要判定 `P : hProp ℓ`{.Agda}，在上一层宇宙判定 `P` 的抬升副本，再把裁决带回。这里不声称判定可以一次跨越任意多层下降。
 <!--ja-->
-この後の応用には二つの異なるレベルの排中律が必要になりますが、証明に渡されるのはしばしば高い方の実例 `LEM (ℓ-suc ℓ)`{.Agda} だけです。一段の降下補題がその差を埋めます。結果は正確に一段分、すなわち `LEM (ℓ-suc ℓ) → LEM ℓ`{.Agda} です。命題 `P : hProp ℓ`{.Agda} を判定するには、その基礎型を一つ上の宇宙へ動かし、動かした命題をそこで判定し、判定結果を降ろしてきます。判定が一度に任意の段数を降りるとは主張しません。
+応用では排中律が複数のレベルで要りますが、証明に渡されるのはしばしば高い方の実例 `LEM (ℓ-suc ℓ)`{.Agda} だけです。一段の下降補題がその差を埋めます。結果は正確に一段分、すなわち `LEM (ℓ-suc ℓ) → LEM ℓ`{.Agda} です。`P : hProp ℓ`{.Agda} を判定するには、一つ上の宇宙で `P` の持ち上げられたコピーを判定し、その結果を持ち帰ります。判定が一度に任意の段数を降りるとは主張しません。
 <!--/-->
 
 <!--en-->
@@ -173,11 +165,11 @@ The construction splits cleanly. Decoding sends each Boolean to its representati
 <!--/-->
 
 <!--en-->
-The two representative propositions are the canonical top proposition `⊤`{.Agda} and bottom proposition `⊥`{.Agda}. The latter is definitionally the pair `(⊥* , isProp⊥*)`{.Agda}, so its underlying type is the empty type `⊥*`{.Agda}. These two are exactly what the Boolean labels will denote.
+The two representative propositions are the canonical top proposition `⊤`{.Agda} and bottom proposition `⊥`{.Agda} of the Prelude's logical operations. The latter is definitionally the pair `(⊥* , isProp⊥*)`{.Agda}, so its underlying type is the empty type `⊥*`{.Agda}. Both are available at every level `ℓ`, which is exactly what lets them serve as representatives inside `hProp ℓ`{.Agda}; the Boolean labels below will denote precisely these two.
 <!--zh-->
-两个代表命题是 `hProp` 中典范的顶命题 `⊤`{.Agda} 与底命题 `⊥`{.Agda}。后者按定义就是对 `(⊥* , isProp⊥*)`{.Agda}，因此其底层类型是空类型 `⊥*`{.Agda}。布尔标签要指称的正是这两个命题。
+两个代表命题是《基础词汇》逻辑运算中典范的顶命题 `⊤`{.Agda} 与底命题 `⊥`{.Agda}。后者按定义就是对 `(⊥* , isProp⊥*)`{.Agda}，因此其底层类型是空类型 `⊥*`{.Agda}。二者在任意层级 `ℓ` 都可用，这正是它们能在 `hProp ℓ`{.Agda} 内部充任代表的原因；下面的布尔标签指称的恰是这两个命题。
 <!--ja-->
-二つの代表命題は、`hProp` における正準な頂命題 `⊤`{.Agda} と底命題 `⊥`{.Agda} です。後者は定義上、対 `(⊥* , isProp⊥*)`{.Agda} そのものであり、その基礎型は空型 `⊥*`{.Agda} です。ブールのラベルが指すのはまさにこの二つの命題です。
+二つの代表命題は、「基礎語彙」の論理演算における正準な頂命題 `⊤`{.Agda} と底命題 `⊥`{.Agda} です。後者は定義上、対 `(⊥* , isProp⊥*)`{.Agda} そのものであり、その基礎型は空型 `⊥*`{.Agda} です。両者は任意のレベル `ℓ` で使えるので、`hProp ℓ`{.Agda} の中で代表を務められます。後のブールのラベルが指すのはまさにこの二つの命題です。
 <!--/-->
 
 ```agda
@@ -208,11 +200,11 @@ Encoding is the converse assignment: given `P` and a decision of `P`, return the
 <!--/-->
 
 <!--en-->
-The match is on the decision, not on `P`: an inhabitant of the left summand yields `lift true`{.Agda}, one of the right yields `lift false`{.Agda}. The proof or refutation itself is discarded, because the label records only which case held, not a witness. The result type is `Lift {ℓ-zero} {ℓ} Bool`{.Agda}, matching `decodeB`'s domain exactly.
+The match is on the decision, not on `P`: an inhabitant of the left summand yields `lift true`{.Agda}, one of the right yields `lift false`{.Agda}. The proof or refutation itself is discarded, because the label records only which case held, not a witness. The result type is `Lift {ℓ-zero} {ℓ} Bool`{.Agda}, matching `decodeB`{.Agda}'s domain exactly.
 <!--zh-->
-匹配对象是判定而非 `P`：左支的元素给出 `lift true`{.Agda}，右支的元素给出 `lift false`{.Agda}。证明或反驳本身被丢弃，因为标签只记录出现的是哪种情形，而不是见证。结果类型是 `Lift {ℓ-zero} {ℓ} Bool`{.Agda}，与 `decodeB` 的定义域严格相配。
+匹配对象是判定而非 `P`：左支的元素给出 `lift true`{.Agda}，右支的元素给出 `lift false`{.Agda}。证明或反驳本身被丢弃，因为标签只记录出现的是哪种情形，而不是见证。结果类型是 `Lift {ℓ-zero} {ℓ} Bool`{.Agda}，与 `decodeB`{.Agda} 的定义域严格相配。
 <!--ja-->
-マッチの対象は `P` ではなく判定です。左の直和項の元なら `lift true`{.Agda} を、右の元なら `lift false`{.Agda} を返します。証明や反証そのものは捨てられます。ラベルが記録するのはどちらの場合だったかだけで、証拠ではないからです。結果の型は `Lift {ℓ-zero} {ℓ} Bool`{.Agda} で、`decodeB` の定義域と正確に一致します。
+マッチの対象は `P` ではなく判定です。左の直和項の元なら `lift true`{.Agda} を、右の元なら `lift false`{.Agda} を返します。証明や反証そのものは捨てられます。ラベルが記録するのはどちらの場合だったかだけで、証拠ではないからです。結果の型は `Lift {ℓ-zero} {ℓ} Bool`{.Agda} で、`decodeB`{.Agda} の定義域と正確に一致します。
 <!--/-->
 
 ```agda
@@ -290,11 +282,11 @@ Now the pieces assemble into the classifier promised by `HPropSmallness ℓ`{.Ag
 <!--/-->
 
 <!--en-->
-The pair `(Lift Bool , ...)` witnesses `HPropSmallness ℓ`{.Agda}: its first component has type `Type ℓ`{.Agda} and its second is an equivalence `Lift Bool ≃ hProp ℓ`{.Agda}. The level placement is the point: `Lift Bool`{.Agda} : `Type ℓ`{.Agda} while `hProp ℓ`{.Agda} : `Type (ℓ-suc ℓ)`{.Agda}, so a type one universe up acquires a small representative. This is a size statement about levels, not a claim that both sides share a universe; and the equivalence itself rests on the two inverse laws, so a Boolean label and its proposition are identified only up to the paths that `secB` and `retrB` certify.
+The pair `(Lift Bool , ...)` witnesses `HPropSmallness ℓ`{.Agda}: its first component has type `Type ℓ`{.Agda} and its second is an equivalence `Lift Bool ≃ hProp ℓ`{.Agda}. The level placement is the point: `Lift Bool`{.Agda} : `Type ℓ`{.Agda} while `hProp ℓ`{.Agda} : `Type (ℓ-suc ℓ)`{.Agda}, so a type one universe up acquires a small representative. This is a size statement about levels, not a claim that both sides share a universe; and the equivalence itself rests on the two inverse laws, so a Boolean label and its proposition are identified only up to the paths that `secB`{.Agda} and `retrB`{.Agda} certify.
 <!--zh-->
-对子 `(Lift Bool , ...)` 是 `HPropSmallness ℓ`{.Agda} 的见证：第一分量类型为 `Type ℓ`{.Agda}，第二分量是等价 `Lift Bool ≃ hProp ℓ`{.Agda}。层级安排正是要点：`Lift Bool`{.Agda} : `Type ℓ`{.Agda} 而 `hProp ℓ`{.Agda} : `Type (ℓ-suc ℓ)`{.Agda}，于是高一宇宙的类型获得了一个小代表。这是关于宇宙层级的尺寸陈述，不是声称两端共享同一个宇宙；而且等价本身依赖两条逆律，因此布尔标签与其命题只是在 `secB` 与 `retrB` 所认证的路径之下被等同。
+对子 `(Lift Bool , ...)` 是 `HPropSmallness ℓ`{.Agda} 的见证：第一分量类型为 `Type ℓ`{.Agda}，第二分量是等价 `Lift Bool ≃ hProp ℓ`{.Agda}。层级安排正是要点：`Lift Bool`{.Agda} : `Type ℓ`{.Agda} 而 `hProp ℓ`{.Agda} : `Type (ℓ-suc ℓ)`{.Agda}，于是高一宇宙的类型获得了一个小代表。这是关于宇宙层级的尺寸陈述，不是声称两端共享同一个宇宙；而且等价本身依赖两条逆律，因此布尔标签与其命题只是在 `secB`{.Agda} 与 `retrB`{.Agda} 所认证的路径之下被等同。
 <!--ja-->
-対 `(Lift Bool , ...)` が `HPropSmallness ℓ`{.Agda} の証拠です。第一成分は `Type ℓ`{.Agda} の型で、第二成分は同値 `Lift Bool ≃ hProp ℓ`{.Agda} です。ポイントはレベルの配置にあります。`Lift Bool`{.Agda} : `Type ℓ`{.Agda}、`hProp ℓ`{.Agda} : `Type (ℓ-suc ℓ)`{.Agda} なので、一つ上の宇宙の型が小さな代表を得るのです。これはレベルについてのサイズの主張であって、両端が同じ宇宙に属するとの主張ではありません。さらに同値そのものは二つの逆法則に依存するため、ブールのラベルとその命題が同一視されるのは `secB` と `retrB` が認証するパスに関してだけです。
+対 `(Lift Bool , ...)` が `HPropSmallness ℓ`{.Agda} の証拠です。第一成分は `Type ℓ`{.Agda} の型で、第二成分は同値 `Lift Bool ≃ hProp ℓ`{.Agda} です。ポイントはレベルの配置にあります。`Lift Bool`{.Agda} : `Type ℓ`{.Agda}、`hProp ℓ`{.Agda} : `Type (ℓ-suc ℓ)`{.Agda} なので、一つ上の宇宙の型が小さな代表を得るのです。これはレベルについてのサイズの主張であって、両端が同じ宇宙に属するとの主張ではありません。さらに同値そのものは二つの逆法則に依存するため、ブールのラベルとその命題が同一視されるのは `secB`{.Agda} と `retrB`{.Agda} が認証するパスに関してだけです。
 <!--/-->
 
 ```agda
@@ -310,19 +302,19 @@ lem→hPropSmallness lem = Lift Bool , isoToEquiv (iso decodeB
 
 The second smallness question is per-proposition. Fix `P : hProp (ℓ-suc ℓ)`{.Agda}; resizing produces a proposition `Q : hProp ℓ`{.Agda} together with an equivalence of underlying types `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}. The same two representatives serve again: if `P` is true, take `⊤`{.Agda}; if false, take `⊥`{.Agda}, both at level `ℓ`. Note the shape of the result: it is an equivalence of the underlying types, not a path between the packaged propositions `P` and `Q`.
 
-Mechanically, the difference from the classifier shows in which tool assembles the sameness: `⇔toPath`{.Agda} built paths of `hProp`; here `propBiimpl→Equiv`{.Agda} takes the two propositionality proofs `P .snd`{.Agda} and `Q .snd`{.Agda} together with the two maps and produces the equivalence.
+The two constructions differ in what they assemble. The classifier identifies propositions, so its sameness was assembled as paths between `hProp` values, by propositional extensionality. Resizing must instead deliver an equivalence of underlying types, and `propBiimpl→Equiv`{.Agda} produces exactly that: fed the propositionhood proofs `P .snd`{.Agda} and `Q .snd`{.Agda} together with the two maps, it returns `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}.
 <!--zh-->
-## 由排中律得到命题降层
+## 由排中律得到命题降级
 
-第二个小性问题是逐命题的。固定 `P : hProp (ℓ-suc ℓ)`{.Agda}，命题降层产出命题 `Q : hProp ℓ`{.Agda} 以及底层类型间的等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}。同样的两个代表再次可用：若 `P` 为真取 `⊤`{.Agda}，若为假取 `⊥`{.Agda}，二者都在 `ℓ` 层。注意结果的形状：它是底层类型间的等价，而不是打包命题 `P` 与 `Q` 之间的路径。
+第二个小性问题是逐命题的。固定 `P : hProp (ℓ-suc ℓ)`{.Agda}，命题降级产出命题 `Q : hProp ℓ`{.Agda} 以及底层类型间的等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}。同样的两个代表再次可用：若 `P` 为真取 `⊤`{.Agda}，若为假取 `⊥`{.Agda}，二者都在 `ℓ` 层。注意结果的形状：它是底层类型间的等价，而不是打包命题 `P` 与 `Q` 之间的路径。
 
-在机制上，与分类器的差别体现在用什么工具组装「相同」：`⇔toPath`{.Agda} 构造的是 `hProp` 的路径；这里则由 `propBiimpl→Equiv`{.Agda} 接收两侧的命题性证明 `P .snd`{.Agda} 与 `Q .snd`{.Agda} 连同两个映射，产出等价。
+两个构造的差别在于所组装的「相同」是什么。分类器要等同命题，所以它的相同由命题外延性组装为 `hProp` 值之间的路径。命题降级要交付的则是底层类型间的等价，`propBiimpl→Equiv`{.Agda} 恰好产出它：输入两侧的命题性证明 `P .snd`{.Agda} 与 `Q .snd`{.Agda} 连同两个映射，返回 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}。
 <!--ja-->
 ## 排中律から得られる命題リサイズ
 
 第二の小ささの問題は命題ごとのものです。`P : hProp (ℓ-suc ℓ)`{.Agda} を固定すると、リサイズは命題 `Q : hProp ℓ`{.Agda} と基礎型の間の同値 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda} を産み出します。同じ二つの代表が再び使えます。`P` が真なら `⊤`{.Agda} を、偽なら `⊥`{.Agda} を取ります。どちらもレベル `ℓ` に住みます。結果の形に注意してください。基礎となる型の間の同値であって、まとめられた命題 `P` と `Q` の間のパスではありません。
 
-仕組みの上では、分類子との違いは「同じである」を組み立てる道具に現れます。`⇔toPath`{.Agda} は `hProp` のパスを作りましたが、ここでは `propBiimpl→Equiv`{.Agda} が両側の命題性の証明 `P .snd`{.Agda} と `Q .snd`{.Agda} と二つの写像を受け取り、同値を産み出します。
+二つの構成が違うのは、組み立てる「同じである」の種類です。分類子は命題を同一視するので、その「同じである」は命題外延性によって `hProp` 値の間のパスとして組み立てられました。命題リサイズが届けるべきは基礎型の間の同値であり、`propBiimpl→Equiv`{.Agda} はまさにそれを産み出します。両側の命題性の証明 `P .snd`{.Agda} と `Q .snd`{.Agda} と二つの写像を与えれば、`⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda} が返ります。
 <!--/-->
 
 <!--en-->
@@ -354,19 +346,17 @@ In the false case the witness is `(⊥ , equivalence)`, with the same absurd map
 ```
 
 <!--en-->
-Assembling resizing needs only to feed `resizeDec` the decisions it asks for. The hypothesis is one instance of excluded middle at level `ℓ-suc ℓ`, matching the statement's quantification over `hProp (ℓ-suc ℓ)`{.Agda}.
-<!--zh-->
-组装命题降层只需要把 `resizeDec` 所要的判定喂给它。假设是 `ℓ-suc ℓ` 层级上排中律的一个实例，与陈述对 `hProp (ℓ-suc ℓ)`{.Agda} 的量化相匹配。
-<!--ja-->
-リサイズの組み立てに必要なのは、`resizeDec` が要求する判定を渡すことだけです。仮定はレベル `ℓ-suc ℓ` の排中律の一つの実例であり、`hProp (ℓ-suc ℓ)`{.Agda} に対する主張の量化と一致します。
-<!--/-->
+Resizing now follows from a single instance of excluded middle at level `ℓ-suc ℓ`, and the level is forced by the statement itself: `Resizing ℓ` quantifies over `hProp (ℓ-suc ℓ)`{.Agda}, so the decisions it consumes are precisely decisions of propositions one universe up.
 
-<!--en-->
-`lem→resizing` turns `LEM (ℓ-suc ℓ)`{.Agda} into `Resizing ℓ`{.Agda} in one line: for each `P : hProp (ℓ-suc ℓ)`{.Agda}, decide it with `lem` and hand the verdict to `resizeDec`. The level flow is worth reading off the signature: resizing at level `ℓ` consumes a classical decision at `ℓ-suc ℓ`, because the propositions being resized are precisely those one universe up.
+`lem→resizing` turns `LEM (ℓ-suc ℓ)`{.Agda} into `Resizing ℓ`{.Agda} in one line: for each `P : hProp (ℓ-suc ℓ)`{.Agda}, decide it with `lem` and hand the verdict to `resizeDec`. Everything lies in the direction of the levels: resizing at `ℓ` consumes a classical decision at `ℓ-suc ℓ`, because the propositions receiving lower-universe representatives are precisely those one universe up.
 <!--zh-->
-`lem→resizing` 用一行把 `LEM (ℓ-suc ℓ)`{.Agda} 变为 `Resizing ℓ`{.Agda}：对每个 `P : hProp (ℓ-suc ℓ)`{.Agda}，用 `lem` 判定它，把裁决交给 `resizeDec`。层级流向从签名即可读出：`ℓ` 层的命题降层消耗 `ℓ-suc ℓ` 层的经典判定，因为被降层的命题恰好是高一宇宙的那些。
+命题降级由此从 `ℓ-suc ℓ` 层级上排中律的一个实例得到，而这个层级是陈述自身规定的：`Resizing ℓ` 量化 `hProp (ℓ-suc ℓ)`{.Agda}，它消耗的判定恰是高一宇宙命题的判定。
+
+`lem→resizing` 用一行把 `LEM (ℓ-suc ℓ)`{.Agda} 变为 `Resizing ℓ`{.Agda}：对每个 `P : hProp (ℓ-suc ℓ)`{.Agda}，用 `lem` 判定它，把裁决交给 `resizeDec`。关键全在层级的方向：`ℓ` 层的命题降级消耗 `ℓ-suc ℓ` 层的经典判定，因为获得低层等价代表的命题恰好是高一宇宙中的那些。
 <!--ja-->
-`lem→resizing` は `LEM (ℓ-suc ℓ)`{.Agda} を一行で `Resizing ℓ`{.Agda} に変えます。各 `P : hProp (ℓ-suc ℓ)`{.Agda} に対し、`lem` で判定し、その結果を `resizeDec` に渡すだけです。レベルの流れはシグネチャから読み取れます。レベル `ℓ` の命題リサイズが消費するのは `ℓ-suc ℓ` の古典的判定です。リサイズされる命題がちょうど一つ上の宇宙のものだからです。
+命題リサイズはこれで、レベル `ℓ-suc ℓ` の排中律の一つの実例から従います。レベルがこう定まるのは主張そのものによるものです。`Resizing ℓ` は `hProp (ℓ-suc ℓ)`{.Agda} 上で量化するので、消費する判定はちょうど一つ上の宇宙の命題の判定です。
+
+`lem→resizing` は `LEM (ℓ-suc ℓ)`{.Agda} を一行で `Resizing ℓ`{.Agda} に変えます。各 `P : hProp (ℓ-suc ℓ)`{.Agda} に対し、`lem` で判定し、その結果を `resizeDec` に渡すだけです。要点はすべてレベルの向きにあります。レベル `ℓ` の命題リサイズが消費するのは `ℓ-suc ℓ` の古典的判定です。下の宇宙に同値な代表を得る命題が、ちょうど一つ上の宇宙のものだからです。
 <!--/-->
 
 ```agda
@@ -381,7 +371,7 @@ The two size controls now come from one hypothesis. A single instance of `LEM (�
 <!--zh-->
 ## 合并两项结论
 
-两项尺寸控制现在来自同一条假设。`LEM (ℓ-suc ℓ)`{.Agda} 的一个实例直接给出命题降层，又经 `lowerLEM`{.Agda} 下降一步给出小分类器。两条原理仍是不同的陈述：本章从同一假设证明二者，但对其中一条是否蕴含另一条不作断言。
+两项尺寸控制现在来自同一条假设。`LEM (ℓ-suc ℓ)`{.Agda} 的一个实例直接给出命题降级，又经 `lowerLEM`{.Agda} 下降一步给出小分类器。两条原理仍是不同的陈述：本章从同一假设证明二者，但对其中一条是否蕴含另一条不作断言。
 <!--ja-->
 ## 二つの帰結をまとめる
 
@@ -391,7 +381,7 @@ The two size controls now come from one hypothesis. A single instance of `LEM (�
 <!--en-->
 The record `Impredicativity ℓ`{.Agda} introduced in "Impredicativity" has two fields, one per principle, and `lem→impredicativity` fills both from a single `lem`. The resizing field is `lem→resizing lem`{.Agda}, which uses the given instance at its own level. The classifier field is `lem→hPropSmallness (lowerLEM lem)`{.Agda}, which first descends to `LEM ℓ` and then builds `Lift Bool ≃ hProp ℓ`{.Agda}. The sharing is a fact about this derivation: both consequences were provable from the same higher-level instance, not a claim that the principles imply each other.
 <!--zh-->
-「非直谓性」一章中的记录 `Impredicativity ℓ`{.Agda} 有两个字段，每条原理各一个，而 `lem→impredicativity` 用同一个 `lem` 填满两者。降层字段是 `lem→resizing lem`{.Agda}，在该实例自身的层级上使用它。分类器字段是 `lem→hPropSmallness (lowerLEM lem)`{.Agda}，先降到 `LEM ℓ`，再构造 `Lift Bool ≃ hProp ℓ`{.Agda}。共享是关于这个推导的事实：两项结论都从同一个高层实例可证，而不是宣称两条原理相互蕴含。
+「非直谓性」一章中的记录 `Impredicativity ℓ`{.Agda} 有两个字段，每条原理各一个，而 `lem→impredicativity` 用同一个 `lem` 填满两者。命题降级字段是 `lem→resizing lem`{.Agda}，在该实例自身的层级上使用它。分类器字段是 `lem→hPropSmallness (lowerLEM lem)`{.Agda}，先降到 `LEM ℓ`，再构造 `Lift Bool ≃ hProp ℓ`{.Agda}。共享是关于这个推导的事实：两项结论都从同一个高层实例可证，而不是宣称两条原理相互蕴含。
 <!--ja-->
 「非可述性」の章のレコード `Impredicativity ℓ`{.Agda} は原理ごとに一つずつ、二つのフィールドを持ち、`lem→impredicativity` は単一の `lem` から両方を満たします。リサイズのフィールドは `lem→resizing lem`{.Agda} で、与えられた実例をそのレベルでそのまま使います。分類子のフィールドは `lem→hPropSmallness (lowerLEM lem)`{.Agda} で、まず `LEM ℓ` まで降りてから `Lift Bool ≃ hProp ℓ`{.Agda} を構成します。この共有はこの導出についての事実、つまり二つの帰結が同じ上位実例から証明できたことであり、原理同士が相互に含意するという主張ではありません。
 <!--/-->
@@ -406,19 +396,13 @@ lem→impredicativity lem = record
 <!--en-->
 ## Recap
 
-Excluded middle is the ability to decide every proposition at a stated level, and in this development it always travels as an explicit hypothesis. From one higher-level instance, this chapter obtained both size controls that the vocabulary chapter left unpopulated.
-
-The statements are worth keeping apart. `LEM ℓ`{.Agda} returns, for each `P : hProp ℓ`{.Agda}, a proof or a refutation, and its type sits in `Type (ℓ-suc ℓ)`{.Agda}; `lowerLEM`{.Agda} descends it exactly one successor step. Propositional resizing is per-proposition: `lem→resizing`{.Agda} gives each `P : hProp (ℓ-suc ℓ)`{.Agda} a small `Q : hProp ℓ`{.Agda} with an equivalence `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda} of underlying types. The classifier concerns the totality: `lem→hPropSmallness`{.Agda} presents all of `hProp ℓ`{.Agda} by `Lift Bool`{.Agda} with `Lift Bool ≃ hProp ℓ`{.Agda}, the equivalence resting on the two inverse laws `secB`{.Agda} and `retrB`{.Agda}. `lem→impredicativity`{.Agda} packages both; the cumulative-hierarchy chapters consume this interface to meet the smallness demands behind full separation and the power set of `V`.
+Excluded middle here is one thing: the ability to decide every proposition at a stated level, carried always as an explicit hypothesis. One instance at `ℓ-suc ℓ` supplied the decisions for the whole chapter. It decided each lifted proposition for `lowerLEM`{.Agda}, decided each `P : hProp (ℓ-suc ℓ)`{.Agda} for resizing, and, after one step of descent, decided every `P : hProp ℓ`{.Agda} for the classifier. The two consequences remain distinct principles, and nothing here compares them; `lem→impredicativity`{.Agda} holds both because the same hypothesis happened to yield both. The cumulative-hierarchy chapters take this interface and use it where smallness is demanded, behind full separation and the power set of `V`{.Agda}.
 <!--zh-->
 ## 小结
 
-排中律是在给定层级上判定每个命题的能力；在本发展中，它始终作为显式假设传递。从一个高层实例出发，本章填满了词汇章留下的两项尺寸控制。
-
-这些陈述值得分开记忆。`LEM ℓ`{.Agda} 对每个 `P : hProp ℓ`{.Agda} 返回证明或反驳，其类型位于 `Type (ℓ-suc ℓ)`{.Agda}；`lowerLEM`{.Agda} 恰好把它下降一个后继步。命题降层是逐命题的：`lem→resizing`{.Agda} 给每个 `P : hProp (ℓ-suc ℓ)`{.Agda} 一个小的 `Q : hProp ℓ`{.Agda} 及底层类型间的等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda}。分类器针对总体：`lem→hPropSmallness`{.Agda} 用 `Lift Bool`{.Agda} 呈现整个 `hProp ℓ`{.Agda}，并给出 `Lift Bool ≃ hProp ℓ`{.Agda}，该等价依赖两条逆律 `secB`{.Agda} 与 `retrB`{.Agda}。`lem→impredicativity`{.Agda} 把二者打包；累积层级诸章将使用这一接口，以满足全分离与 `V` 的幂集背后的小性需求。
+本章中的排中律只有一件事：在给定层级上判定每个命题的能力，且始终作为显式假设传递。一个 `ℓ-suc ℓ` 实例供给了全章所需的判定。它为 `lowerLEM`{.Agda} 判定各个抬升命题，为命题降级判定各个 `P : hProp (ℓ-suc ℓ)`{.Agda}，又经一步下降，为小分类器判定每个 `P : hProp ℓ`{.Agda}。两项推论仍是不同的原理，本章未对二者作任何比较；`lem→impredicativity`{.Agda} 同时持有二者，是因为同一条假设恰好给出了二者。累积层级诸章将接过这一接口，在全分离与 `V`{.Agda} 的幂集背后需要小性的地方加以使用。
 <!--ja-->
 ## まとめ
 
-排中律とは、明示したレベルのすべての命題を判定する能力であり、この発展の中ではつねに明示的な仮定として渡されます。一つの上位実例から、本章は語彙の章で空のままだった二つのサイズの制御を満たしました。
-
-これらの主張は区別して覚える価値があります。`LEM ℓ`{.Agda} は各 `P : hProp ℓ`{.Agda} に対して証明か反証かを返し、その型は `Type (ℓ-suc ℓ)`{.Agda} にあります。`lowerLEM`{.Agda} はこれを正確に後続一段だけ降ろします。命題リサイズは命題ごとの主張で、`lem→resizing`{.Agda} は各 `P : hProp (ℓ-suc ℓ)`{.Agda} に小さな `Q : hProp ℓ`{.Agda} と基礎型の間の同値 `⟨ P ⟩ ≃ ⟨ Q ⟩`{.Agda} を与えます。分類子は全体に関する主張で、`lem→hPropSmallness`{.Agda} は `hProp ℓ`{.Agda} 全体を `Lift Bool`{.Agda} で提示し、`Lift Bool ≃ hProp ℓ`{.Agda} を与えます。この同値は二つの逆法則 `secB`{.Agda} と `retrB`{.Agda} に支えられています。`lem→impredicativity`{.Agda} が両者をまとめ、累積階層の諸章はこのインターフェースを使って、全分離と `V` の冪集合の背後にある小ささの要求を満たします。
+本章における排中律はただ一つのものです。明示したレベルのすべての命題を判定する能力であり、つねに明示的な仮定として渡されます。`ℓ-suc ℓ` の一つの実例が、章全体に必要な判定を供給しました。`lowerLEM`{.Agda} のために持ち上げられた各命題を判定し、命題リサイズのために各 `P : hProp (ℓ-suc ℓ)`{.Agda} を判定し、さらに一段の下降を経て、小分類子のために各 `P : hProp ℓ`{.Agda} を判定します。二つの帰結は依然として異なる原理であり、本章は両者を比べることをしません。`lem→impredicativity`{.Agda} が両者を同時に持つのは、同じ仮定がたまたま両方を与えたからです。累積階層の諸章はこのインターフェースを受け取り、全分離と `V`{.Agda} の冪集合の背後で小ささが求められる場所で用います。
 <!--/-->

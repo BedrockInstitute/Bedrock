@@ -119,7 +119,8 @@ html.theme-dark #reading-explorer { --route-good: #2fcb8f; }
 .compact-list { display: flex; flex-wrap: wrap; gap: .3rem .7rem; list-style: none; margin: 0; padding: 0; }
 .compact-list li { margin: 0; font-size: .74rem; }
 .compact-list li::before { content: "○"; margin-right: .28rem; color: var(--ruler); }
-.compact-list li.is-positive::before { content: "●"; color: var(--route-good); }
+.compact-list li.is-complete::before { content: "✓"; color: var(--route-good); font-weight: 800; }
+.compact-list li.is-available::before { content: "→"; color: var(--primary); font-weight: 800; }
 .compact-list a, .compact-all { color: var(--primary); text-decoration: none; }
 .compact-empty, .compact-storage { margin: 0; color: var(--fg-alt); font-size: .72rem; }
 .compact-all { display: inline-block; margin-top: .7rem; font-size: .78rem; font-weight: 700; }

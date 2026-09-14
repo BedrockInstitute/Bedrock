@@ -1188,7 +1188,7 @@ The membership condition `Q` is an indexed disjunction inside the model's truth 
 ```agda
 module UnionOf (a : S) where
   Q : S → hProp (ℓ-suc ℓ)
-  Q x = ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))
+  Q x = ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)
 
   mkUnion : (σ : V ℓ) → IsOrd σ → ⟨ fst a ∈ Lset σ ⟩ → SetOf Q
   mkUnion σ oσ fa∈ = unionElt , spec
@@ -1372,7 +1372,7 @@ The specification is a path of truth values, and it is composed from two pieces.
     spec : (z : S) → (z ∈ˢ unionElt) ≡ Q z
     spec z = union-spec (fst a) (fst z) ∙ bridge
       where
-      bridge : ⋁ (V ℓ) (λ y → (y ∈ fst a) ⊓ (fst z ∈ y)) ≡ Q z
+      bridge : (∃[ y ∶ (V ℓ) ] (y ∈ fst a) ⊓ (fst z ∈ y)) ≡ Q z
 ```
 
 <!--en-->
@@ -1403,7 +1403,7 @@ The assembly mirrors the pairing field. The argument's own certificate `a .snd` 
 ```agda
   build = PT.rec squash₁ (λ { (σ , (oσ , fa∈)) → ∣ mkUnion σ oσ fa∈ ∣₁ }) (a .snd)
 
-hasUnionL : (a : S) → isContr (SetOf (λ x → ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))))
+hasUnionL : (a : S) → isContr (SetOf (λ x → ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)))
 hasUnionL a = mere→uniqueL (UnionOf.Q a) (UnionOf.build a)
 ```
 

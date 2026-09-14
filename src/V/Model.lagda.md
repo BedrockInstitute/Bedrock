@@ -5,7 +5,7 @@ This chapter realizes each axiom of ZF inside the cumulative hierarchy at one fi
 <!--zh-->
 # 累积层级是 ZF 与 ZFC 的模型
 
-本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的成员规则读出。全分离需要命题降层，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的小分类器，即 `HPropSmallness`{.Agda}。降层与分类器打包为 `Impredicativity`{.Agda}，装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `LEM (ℓ-suc ℓ)`{.Agda}，打包由它导出。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合层选择为假设；由 Diaconescu 定理，它蕴含 ZF 部分所用的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这两个定理。
+本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的成员规则读出。全分离需要命题降级，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的小分类器，即 `HPropSmallness`{.Agda}。降层与分类器打包为 `Impredicativity`{.Agda}，装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `LEM (ℓ-suc ℓ)`{.Agda}，打包由它导出。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合层选择为假设；由 Diaconescu 定理，它蕴含 ZF 部分所用的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这两个定理。
 <!--ja-->
 # 累積階層は ZF と ZFC のモデル
 
@@ -188,16 +188,16 @@ pair-spec a b x = ⇔toPath
   (λ x∈ → pairing-ax a b x .fst (∈∈ₛ {a = x} {b = ⁅ a , b ⁆} .fst x∈))
   (λ h → ∈∈ₛ {a = x} {b = ⁅ a , b ⁆} .snd (pairing-ax a b x .snd h))
 
-union-spec : (a x : S) → (x ∈ˢ (⋃ a)) ≡ ⋁ S (λ y → (y ∈ˢ a) ⊓ (x ∈ˢ y))
+union-spec : (a x : S) → (x ∈ˢ (⋃ a)) ≡ (∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y))
 union-spec a x = ⇔toPath
 ```
 
 <!--en-->
-Union is the first specification with an existential shape: membership in `⋃ a` should equal the truncated statement that some `y` lies in `a` with `x` in `y`. Forward, `union-ax` yields such a truncated triple `(v , v in a , x in v)`, but with both memberships in small form. The rewriting happens inside a propositional truncation with a propositional target, so `PT.map` transforms the witness in place: `∈∈ₛ` turns `v ∈ₛ a` into an ordinary member of `a`, and `x ∈ₛ v` into an ordinary member of `v`. The outcome is a witness of the indexed disjunction `⋁ S`, the direct `hProp` mere-existence statement over the carrier, and no member is chosen.
+Union is the first specification with an existential shape: membership in `⋃ a` should equal the truncated statement that some `y` lies in `a` with `x` in `y`. Forward, `union-ax` yields such a truncated triple `(v , v in a , x in v)`, but with both memberships in small form. The rewriting happens inside a propositional truncation with a propositional target, so `PT.map` transforms the witness in place: `∈∈ₛ` turns `v ∈ₛ a` into an ordinary member of `a`, and `x ∈ₛ v` into an ordinary member of `v`. The outcome is a witness of the indexed disjunction `∃[ x ] P x, the direct `hProp` mere-existence statement over the carrier, and no member is chosen.
 <!--zh-->
-并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员资格都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `PT.map` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通成员，把 `x ∈ₛ v` 变成 `v` 的普通成员。结果是带索引析取 `⋁ S` 的一个见证，即`hProp` 上对载体的纯粹存在陈述，并且不选出任何成员。
+并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员资格都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `PT.map` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通成员，把 `x ∈ₛ v` 变成 `v` 的普通成员。结果是带索引析取 `∃[ x ] P x 的一个见证，即`hProp` 上对载体的纯粹存在陈述，并且不选出任何成员。
 <!--ja-->
-和は存在の形をもつ最初の仕様です。`⋃ a` への所属は、「ある `y` が `a` に属し `x` が `y` に属する」という切り詰められた主張に等しいはずです。順方向では、`union-ax` がまさにそのような切り詰められた三つ組 `(v , v ∈ a , x ∈ v)` を与えますが、二つの所属がともに小形式です。書き換えは命題の截断の内部で行われ、目標も命題なので、`PT.map` が証人をその場で変えます。`∈∈ₛ` が `v ∈ₛ a` を `a` の通常の要素へ、`x ∈ₛ v` を `v` の通常の要素へ変えます。結果は添字付き選言 `⋁ S` の証人、すなわち`hProp` 上で台を量化する単なる存在の主張であり、どの元も選ばれません。
+和は存在の形をもつ最初の仕様です。`⋃ a` への所属は、「ある `y` が `a` に属し `x` が `y` に属する」という切り詰められた主張に等しいはずです。順方向では、`union-ax` がまさにそのような切り詰められた三つ組 `(v , v ∈ a , x ∈ v)` を与えますが、二つの所属がともに小形式です。書き換えは命題の截断の内部で行われ、目標も命題なので、`PT.map` が証人をその場で変えます。`∈∈ₛ` が `v ∈ₛ a` を `a` の通常の要素へ、`x ∈ₛ v` を `v` の通常の要素へ変えます。結果は添字付き選言 `∃[ x ] P x の証人、すなわち`hProp` 上で台を量化する単なる存在の主張であり、どの元も選ばれません。
 <!--/-->
 
 ```agda
@@ -225,7 +225,7 @@ Backward runs the same exchange in reverse. From a truncated witness of the inde
 <!--en-->
 The goal of this chapter is to realize each axiom of ZF inside the cumulative hierarchy, at one fixed universe level `ℓ`: the structure `𝒮ᵥ`{.Agda} has a carrier `S` with truth-valued equality and membership, and a model record demands, for each axiom, a set whose membership is path-equal to the prescribed description. The assumptions are uneven, and it pays to separate them. The stock constructions, namely the empty set, pair, union, and infinity, and the whole replacement argument need no extra assumption at all. Full separation needs propositional resizing, so that the satisfaction of each formula becomes a small proposition pointwise. Power set needs a small classifier `HPropSmallness`, a small type equivalent to all of `hProp ℓ`. The packaged corollaries record the combined cost: `V⊨ZF` assumes exactly `LEM (ℓ-suc ℓ)`, and `V⊨ZFC` assumes exactly `SetChoice (ℓ-suc ℓ)`. This section stays on the assumption-free side. It develops the basic membership specifications for the union of a set and then for the union of an indexed family `f : X → S`. The set `⋃ (sett X f)` collects the values of the family through an intermediate set, and it is worth reading membership in that union directly as membership in some family member. Unfolding `union-spec` gives a truncated existential over members `v` of the union, and since each such `v` is itself presented by an index of the `sett`, a second truncated layer sits on top. The two lemmas below compose the layers into one, in each direction.
 <!--zh-->
-本章的目标是在累积层级内部实现 ZF 的每条公理，全程固定在同一个宇宙层级 `ℓ` 上：结构 `𝒮ᵥ`{.Agda} 带有取真值的等词与成员关系的载体 `S`，模型 record 对每条公理都要求一个集合，其成员关系按路径等于所规定的描述。各部分所需假设并不均匀，值得分开列出。层级中已有的构造，即空集、配对、并与无穷，以及整个替换论证，完全不需要额外假设。全分离需要命题降层，使每条公式的满足逐点成为小命题。幂集需要小分类器 `HPropSmallness`，一个与整个 `hProp ℓ` 等价的小类型。打包的推论记录合并后的代价：`V⊨ZF` 恰假设 `LEM (ℓ-suc ℓ)`，`V⊨ZFC` 恰假设 `SetChoice (ℓ-suc ℓ)`。本节停留在无需假设的一侧，先为一个集合的并、再为索引族 `f : X → S` 的并展开基本成员规格。集合 `⋃ (sett X f)` 经由一个中间集合收拢族的取值，值得把属于这个并直接读作属于某个族元。展开 `union-spec` 得到对并的成员 `v` 的截断存在式，而每个这样的 `v` 又由 `sett` 的一个索引呈现，于是上面还叠着第二层截断。下面两条引理在两个方向上把各层合而为一。
+本章的目标是在累积层级内部实现 ZF 的每条公理，全程固定在同一个宇宙层级 `ℓ` 上：结构 `𝒮ᵥ`{.Agda} 带有取真值的等词与成员关系的载体 `S`，模型 record 对每条公理都要求一个集合，其成员关系按路径等于所规定的描述。各部分所需假设并不均匀，值得分开列出。层级中已有的构造，即空集、配对、并与无穷，以及整个替换论证，完全不需要额外假设。全分离需要命题降级，使每条公式的满足逐点成为小命题。幂集需要小分类器 `HPropSmallness`，一个与整个 `hProp ℓ` 等价的小类型。打包的推论记录合并后的代价：`V⊨ZF` 恰假设 `LEM (ℓ-suc ℓ)`，`V⊨ZFC` 恰假设 `SetChoice (ℓ-suc ℓ)`。本节停留在无需假设的一侧，先为一个集合的并、再为索引族 `f : X → S` 的并展开基本成员规格。集合 `⋃ (sett X f)` 经由一个中间集合收拢族的取值，值得把属于这个并直接读作属于某个族元。展开 `union-spec` 得到对并的成员 `v` 的截断存在式，而每个这样的 `v` 又由 `sett` 的一个索引呈现，于是上面还叠着第二层截断。下面两条引理在两个方向上把各层合而为一。
 <!--ja-->
 本章の目標は、一つの固定した宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現することです。構造 `𝒮ᵥ`{.Agda} は真理値を返す等号と所属を備えた台 `S` を持ち、モデルの record は各公理について、その所属がパスとして定められた記述に等しい集合を要求します。仮定は部分によって異なるので、分けて述べる価値があります。基本的な構成、すなわち空集合、対、和、無限と、置換の議論全体には、追加の仮定はまったく要りません。完全な分出には命題リサイズが必要で、各論理式の充足が点ごとに小さな命題になります。冪集合には小分類子 `HPropSmallness`、つまり `hProp ℓ` 全体と同値な小さな型が必要です。まとめられた帰結は合算のコストを記録します。`V⊨ZF` はちょうど `LEM (ℓ-suc ℓ)` を仮定し、`V⊨ZFC` はちょうど `SetChoice (ℓ-suc ℓ)` を仮定します。この節は仮定の不要な側にとどまり、まず一つの集合の和、次に添字付きの族 `f : X → S` の和について、基本的な所属の仕様を展開します。集合 `⋃ (sett X f)` は中間の集合を通して族の値を集めますが、この和への所属をある族の元への所属として直接読めることは有益です。`union-spec` を展開すると和の元 `v` にわたる切り詰められた存在式が得られ、そのような `v` はそれぞれ `sett` の添字で呈示されるため、その上に第二の切り詰めの層が乗ります。以下の二つの補題は、各方向でこの層を一つへまとめます。
 <!--/-->
@@ -308,7 +308,7 @@ The image is then a direct assembly: `replaceImage` is `sett` over the index typ
   replaceImage = sett ⟪ a ⟫ (λ m → fc (⟪ a ⟫↪ m) (memb a m) .fst .fst)
 
   replaceImage-spec : ∀ y → (y ∈ˢ replaceImage)
-                    ≡ ⋁ S (λ x → (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ))
+                    ≡ (∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ))
   replaceImage-spec y = ⇔toPath fwd bwd
 ```
 
@@ -322,7 +322,7 @@ The forward direction of the specification starts from a membership in the image
 
 ```agda
     where
-    fwd : ⟨ y ∈ˢ replaceImage ⟩ → ⟨ ⋁ S (λ x → (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)) ⟩
+    fwd : ⟨ y ∈ˢ replaceImage ⟩ → ⟨ ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ) ⟩
     fwd = PT.map λ { (m , q) →
         ⟪ a ⟫↪ m , memb a m
       , subst (λ v → ⟨ (v ∷ ⟪ a ⟫↪ m ∷ []) ⊨ φ ⟩) q
@@ -338,7 +338,7 @@ The backward direction is where a choice principle would seem unavoidable. It re
 
 ```agda
               (fc (⟪ a ⟫↪ m) (memb a m) .fst .snd) }
-    bwd : ⟨ ⋁ S (λ x → (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)) ⟩ → ⟨ y ∈ˢ replaceImage ⟩
+    bwd : ⟨ ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ) ⟩ → ⟨ y ∈ˢ replaceImage ⟩
     bwd = PT.map λ { (x , x∈a , hφ) →
       let mf = ∈-asFiber {a = x} {b = a} x∈a
           hφ' = subst (λ v → ⟨ (y ∷ v ∷ []) ⊨ φ ⟩) (sym (mf .snd)) hφ
@@ -435,7 +435,7 @@ numeralV≡# (suc n) = cong₂ (λ u v → ⋃ ⁅ u , v ⁆) (numeralV≡# n)
   (cong (λ u → ⁅ u , u ⁆) (numeralV≡# n) ∙ pair-singleton (# n))
 
 ω-specV : (x : S)
-        → (x ∈ˢ ω) ≡ ⋁ (Lift {ℓ-zero} {ℓ-suc ℓ} ℕ) (λ n → x ≈ˢ numeralV (lower n))
+        → (x ∈ˢ ω) ≡ (∃[ n ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] x ≈ˢ numeralV (lower n))
 ```
 
 <!--en-->

@@ -467,19 +467,19 @@ The unbounded quantifier `∃̇ φ` is the binder case, and its content is that 
 <!--/-->
 
 ```agda
-    ⊨-place (∃̇ φ)   θ γ σ h = cong (⋁ S) (funExt (λ x →
+    ⊨-place (∃̇ φ)   θ γ σ h = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x →
       ⊨-place φ (λ j → suc (θ j)) (x ∷ γ) σ h))
-    ⊨-place (∀̇ φ)   θ γ σ h = cong (⋀ S) (funExt (λ x →
+    ⊨-place (∀̇ φ)   θ γ σ h = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x →
       ⊨-place φ (λ j → suc (θ j)) (x ∷ γ) σ h))
-    ⊨-place (∀̇∈ t φ) θ γ σ h = cong (⋀ S) (funExt (λ x → cong₂ _⇒_
+    ⊨-place (∀̇∈ t φ) θ γ σ h = cong (λ P → ∀[ x ∶ S ] P x) (funExt (λ x → cong₂ _⇒_
 ```
 
 <!--en-->
-The universal quantifier `∀̇` is the same argument with the algebra's universal-quantification operation `⋀` in place of its existential-quantification operation `⋁`; the outer `cong` is the only place the operation is named, and the induction underneath is identical.
+The universal quantifier `∀̇` is the same argument with the algebra's universal-quantification operation `∀[ x ] P x` in place of its existential-quantification operation `∃[ x ] P x`; the outer `cong` is the only place the operation is named, and the induction underneath is identical.
 <!--zh-->
-全称量词 `∀̇` 的论证相同，只是以代数的全称量化运算 `⋀` 代替存在量化运算 `⋁`；外层的 `cong` 是唯一指名该运算之处，其下的归纳毫无二致。
+全称量词 `∀̇` 的论证相同，只是以代数的全称量化运算 `∀[ x ] P x` 代替存在量化运算 `∃[ x ] P x`；外层的 `cong` 是唯一指名该运算之处，其下的归纳毫无二致。
 <!--ja-->
-全称量化子 `∀̇` の議論も同じで、代数の存在量化の演算 `⋁` の代わりに全称量化の演算 `⋀` が現れるだけです。演算が名指しされるのは外側の `cong` の一点だけで、その下の帰納は同一です。
+全称量化子 `∀̇` の議論も同じで、代数の存在量化の演算 `∃[ x ] P x` の代わりに全称量化の演算 `∀[ x ] P x` が現れるだけです。演算が名指しされるのは外側の `cong` の一点だけで、その下の帰納は同一です。
 <!--/-->
 
 ```agda
@@ -487,7 +487,7 @@ The universal quantifier `∀̇` is the same argument with the algebra's univers
         (leftHalf θ γ σ (constantsTm t) (constantsFo φ) h)))
       (⊨-place φ (λ j → suc (θ (padLeft (countTm t) j))) (x ∷ γ) σ
         (rightHalf (countTm t) θ γ σ (constantsTm t) (constantsFo φ) h))))
-    ⊨-place (∃̇∈ t φ) θ γ σ h = cong (⋁ S) (funExt (λ x → cong₂ _⊓_
+    ⊨-place (∃̇∈ t φ) θ γ σ h = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x → cong₂ _⊓_
 ```
 
 <!--en-->

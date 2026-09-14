@@ -72,6 +72,19 @@ Do not compress proofs or merge unrelated material to reduce the module count.
 The current architecture plan and acceptance criteria live in `dev/TEACHING.md`.
 The previous closed run's record remains in `dev/REFACTOR.md`.
 
+### Restart point
+
+The literary pass is paused after `L.Axioms.Separation`: 106 of 120 modules
+(88.3%) satisfy the literary-exposition gate. Resume with
+`L.Coding.SubformulaClosure`, then `L.Coding.SatisfactionTable`. The remaining
+chapters are `L.Choice.Transversal`, `L.Coding.CodeConstructibility`,
+`L.Coding.CodeSet`, `L.Coding.CodeShape`, `L.Coding.DefinablePowerSet`,
+`L.Coding.EnvironmentSet`, `L.Coding.FormulaRecovery`,
+`L.Coding.HierarchySequence`, `L.Coding.Quantification`,
+`L.Coding.SatisfactionTable`, `L.Coding.SubformulaClosure`,
+`L.Coding.UniformSatisfaction`, `L.ExistentialReflection`, and
+`L.FormulaReflection`.
+
 ## Rules for a dispatched agent
 
 1. **Write only the files your brief names.** Do not touch any other file. Never commit,

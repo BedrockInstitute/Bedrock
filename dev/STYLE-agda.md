@@ -159,7 +159,7 @@ with no unprimed partner in sight is a naming failure even locally. Ported sourc
 names like `isL'` are renamed on entry (archived D7, and it is still live here;
 DD7 is a different code and it is revoked).
 
-Record fields: **operation fields are symbols** (`_∈ˢ_`, `_≈ˢ_`, `⊓`, `⋁`),
+Record fields: **operation fields are symbols** (`_∈ˢ_`, `_≈ˢ_`),
 **property/axiom fields are words**; property-shaped fields are bare
 adjectives/nouns (`extensional`, `foundation`), existence-shaped fields take `has-`
 (`hasEmpty`, `hasPair`, `hasSep`, `hasPower`).
@@ -192,12 +192,13 @@ Three semantic layers, one marking each:
 
 | Layer | Marking | Examples |
 |---|---|---|
-| ① host/meta (Agda, cubical) | none (library names) | `≡` (path), `Σ ×`, `isSet`, library `_∈_`, `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁` on `hProp` |
+| ① host/meta (Agda, cubical) | none (library names) | `≡` (path), `Σ ×`, `isSet`, library `_∈_`, `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and `∀[ x ] …` / `∃[ x ] …` on `hProp` |
 | ③ structure fields | `ˢ` superscript | `_∈ˢ_ _≈ˢ_` |
 | ④ object syntax | dot mark | `_∈̇_ _≐_ ∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇ ∃̇ ∀̇ ∀̇∈ ∃̇∈` |
 
 - `Base.Prelude` re-exports the direct `hProp` operations
-  `⊓ ⊔ ⇒ ¬ ⊤ ⊥ ⋀ ⋁`, so each logic symbol has one meaning throughout the book.
+  `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and the `∀[]-syntax` / `∃[]-syntax` forms
+  `∀[ x ] …` / `∃[ x ] …`, so each logic symbol has one meaning throughout the book.
 - Object-language constructors always carry exactly one dot; the dot marks the
   token, not its components (`∀̇∈`, not `∀̇∈̇`).
 - Superscript = layer marker (`ˢ ᶜ ᵗ`); subscript = variant or index (`∈ₛ`, `Δ₀`,

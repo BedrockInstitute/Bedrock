@@ -111,7 +111,7 @@ matching is a measured collision. Because Chinese and Japanese have no word boun
 rendering can be the prefix of a longer, different term, and automatic matching would then link
 only that prefix. Measure the share before choosing: `proposition` was registered explicit
 because 246 of 950 Chinese occurrences (26%) and 291 of 973 Japanese ones (30%) sit inside a
-longer term: `命题截断` / `命题降层` / `命题值` / `命题性` and their Japanese counterparts. `path`
+longer term: `命题截断` / `命题降级` / `命题值` / `命题性` and their Japanese counterparts. `path`
 (3%) and `projection` (8%) stayed automatic, since their compounds `路径类型` / `投影等式` /
 `射影方程` keep the term as their head, so the link lands on the right concept. A morphological derivative such as 可缩性 belongs
 in `forms_zh` instead, so that automatic matching links the whole word.

@@ -13,7 +13,8 @@
   color: var(--text-bg); background: var(--primary);
   border: 1px solid color-mix(in srgb, var(--primary) 70%, #000);
   border-radius: 7px; box-shadow: 0 4px 14px rgba(0,0,0,.28);
-  font: 700 .8rem/1.1 var(--sans); white-space: nowrap; cursor: pointer; }
+  font: 700 .8rem/1.1 var(--sans); white-space: nowrap; cursor: pointer;
+  user-select: none; -webkit-user-select: none; }
 /* An author `display` beats the user-agent rule for [hidden], so restate it. */
 .ask-ai-trigger[hidden] { display: none; }
 .ask-ai-trigger:hover { background: color-mix(in srgb, var(--primary) 85%, #000); }

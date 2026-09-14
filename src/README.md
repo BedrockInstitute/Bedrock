@@ -56,8 +56,8 @@ so far. Layers are the marking system of STYLE-agda §4 (① host, ③ structure
 | `¬` | not | ① | `Base.Prelude` (re-export) | `\neg` |
 | `⊤` | true | ① | `Base.Prelude` (re-export) | `\top` |
 | `⊥` | false | ① | `Base.Prelude` (re-export) | `\bot` |
-| `⋀` | indexed meet (universal) | ① | `Base.Prelude` (re-export) | `\bigwedge` |
-| `⋁` | indexed join (existential) | ① | `Base.Prelude` (re-export) | `\bigvee` |
+| `∀[ x ] P x` | universal quantification (`∀[]-syntax`) | ① | `Base.Prelude` (re-export) | `\all` |
+| `∃[ x ] P x` | existential quantification (`∃[]-syntax`) | ① | `Base.Prelude` (re-export) | `\ex` |
 | `∈̇` | object membership | ④ | `FOL.Syntax` | `\in` `\^.` |
 | `≐` | object equality | ④ | `FOL.Syntax` | `\.=` |
 | `∧̇ ∨̇ ⇒̇ ¬̇ ⊤̇ ⊥̇` | dotted connectives | ④ | `FOL.Syntax` | base symbol + `\^.` |
