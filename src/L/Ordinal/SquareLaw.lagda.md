@@ -9,7 +9,7 @@ The first construction compares two indices of an ordinal by membership of the o
 
 本章为后续计数论证提供三项具体工具：序数指标上的隶属良序、指标对上的 Gödel 序，以及有穷序数成员与 `Fin` 之间的对应。
 
-第一个构造通过指标所指名的序数元素之间的隶属关系来比较两个指标；序数的三歧性与正则性把这个比较变成指标类型上的严格良序。第二个构造用该序下坐标的最大值为指标对分级，并对共享最大坐标的对按字典序排列；三歧性、非自反性与传递性直接证明，而良基性则通过把下降嵌入两层字典序乘积得到。第三个构造把无穷序数 ω 的每个成员读作数码，并在有穷序数 # n 的指标与 `Fin n` 之间作双向转换。随后它把一个准确的不可能性归约为有穷鸽笼原理：若一个类型容纳任意大小的有穷类型的单射像，它就不能单射到某个固定有穷类型的平方中。
+第一个构造通过指标所指名的序数元素之间的隶属关系来比较两个指标；序数的三歧性与正则公理把这个比较变成指标类型上的严格良序。第二个构造用该序下坐标的最大值为指标对分级，并对共享最大坐标的对按字典序排列；三歧性、非自反性与传递性直接证明，而良基性则通过把下降嵌入两层字典序乘积得到。第三个构造把无穷序数 ω 的每个成员读作数码，并在有穷序数 # n 的指标与 `Fin n` 之间作双向转换。随后它把一个准确的不可能性归约为有穷鸽笼原理：若一个类型容纳任意大小的有穷类型的单射像，它就不能单射到某个固定有穷类型的平方中。
 <!--ja-->
 # 順序数の添字、Gödel 対順序、有限添字
 
@@ -326,7 +326,7 @@ Irreflexivity and transitivity are inherited from the named elements. No set is 
 <!--en-->
 Well-foundedness of ≺₁ is now one step away: regularity on the ambient hierarchy hands an accessibility certificate for membership to every set, so every named element ⟪ α ⟫↪ m is accessible, and acc₁ lifts that to accessibility of the index m. This is wf₁, the well-foundedness the search in the finite section will reuse. The record ordSWO then packages the relation with its four laws into the interface SWO, the same five fields the natural-number instance of the strict well-order chapter supplies.
 <!--zh-->
-≺₁ 的良基性只差一步：环境层级上的正则性把隶属下的可及性证书交给每个集合，故每个被指名元素 ⟪ α ⟫↪ m 可及，而 acc₁ 把它提升为指标 m 的可及性。这就是 wf₁，有穷一节的搜索将复用的良基性。随后记录 ordSWO 把关系与其四条定律打包进接口 SWO，与严格良序一章的自然数实例供给的是同样的五个字段。
+≺₁ 的良基性只差一步：环境层级上的正则公理把隶属下的可及性证书交给每个集合，故每个被指名元素 ⟪ α ⟫↪ m 可及，而 acc₁ 把它提升为指标 m 的可及性。这就是 wf₁，有穷一节的搜索将复用的良基性。随后记录 ordSWO 把关系与其四条定律打包进接口 SWO，与严格良序一章的自然数实例供给的是同样的五个字段。
 <!--ja-->
 ≺₁ の整礎性まであと一歩です。周囲の階層での正則性が、所属のもとでの到達可能性の証明書をすべての集合に渡すので、指名された要素 ⟪ α ⟫↪ m はそれぞれ到達可能であり、acc₁ がそれを添字 m の到達可能性へと持ち上げます。これが wf₁ であり、有限の節の探索が再利用する整礎性です。そしてレコード ordSWO が関係とその四つの法則をインターフェース SWO にまとめます。狭義整列順序の章の自然数の実例が供給するのと同じ五つのフィールドです。
 <!--/-->
@@ -344,7 +344,7 @@ Well-foundedness of ≺₁ is now one step away: regularity on the ambient hiera
 <!--en-->
 Assembling ordSWO is the point of the section: an instance, not new mathematics. Every later construction that takes a SWO can now run on the index of any ordinal, and the pair order of the next section consumes exactly this instance. Nothing about ω or finite ordinals is special here; the argument used only transitivity of α, the embedding, classical trichotomy and regularity.
 <!--zh-->
-组装 ordSWO 正是本节的要点：这是一个实例，而非新的数学。此后任何以 SWO 为输入的构造都能运行在任意序数的指标上，下一节的对序消耗的正是这个实例。这里对 ω 或有穷序数没有任何特殊处理；论证只用到了 α 的传递性、嵌入、经典三歧与正则性。
+组装 ordSWO 正是本节的要点：这是一个实例，而非新的数学。此后任何以 SWO 为输入的构造都能运行在任意序数的指标上，下一节的对序消耗的正是这个实例。这里对 ω 或有穷序数没有任何特殊处理；论证只用到了 α 的传递性、嵌入、经典三歧与正则公理。
 <!--ja-->
 ordSWO の組み立てこそがこの節の要点です。これは実例であって新しい数学ではありません。SWO を入力とする以後の構成はどれも、任意の順序数の添字の上で動くようになり、次の節の対順序が消費するのはまさにこの実例です。ここで ω や有限順序数が特別扱いされることはありません。議論に使ったのは α の推移性、埋め込み、古典的な三分法、そして正則性だけです。
 <!--/-->

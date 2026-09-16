@@ -46,15 +46,14 @@ problems and should not be confused: resizing will make constructibility fit
 inside a small index type, whereas the classifier builds the ambient power set
 that supplies the indices.
 <!--zh-->
-构造需要两种小性。命题降级把模型真值层级上的命题换成小索引层级上的等价命题；非直谓性包还为小命题提供一个小分类器，使外围层级能够构成幂集。两者都由排中律推出，却解决不同的大小问题：命题降级使可构造性能够进入小索引类型，分类器则构造提供这些索引的外围幂集。
+构造需要两种宇宙大小控制。命题换级把模型真值层级上的命题换成小索引层级上的等价命题；非直谓性包还为小命题提供一个命题宇宙换级，使外围层级能够构成幂集。两者都由排中律推出，却解决不同的大小问题：命题换级使可构造性能够进入小索引类型，分类器则构造提供这些索引的外围幂集。
 <!--ja-->
 構成には二種類の小ささが必要です。命題リサイズは、モデルの真理値のレベルにある命題を、小さな添字のレベルにある同値な命題へ置き換えます。非可述性のパッケージはさらに、小さな命題のための小さな分類子を与え、周囲の階層で冪集合を作れるようにします。どちらも排中律から導かれますが、解決する大きさの問題は異なります。命題リサイズは構成可能性を小さな添字型に収め、分類子はその添字を供給する周囲の冪集合を構成します。
 <!--/-->
 
 ```agda
 open import Base.Prelude
-open import Base.Classical using ( LEM; lem→resizing; lem→impredicativity )
-open import Base.Impredicativity using ( module Impredicativity )
+open import Base.Classical using ( LEM; lem→resizing; lem→ΩResizing )
 
 ```
 
@@ -65,11 +64,11 @@ whose members are exactly the model elements internally included in `a`.
 Uniqueness is packaged by the host type `isContr`; the object-theoretic content
 is the power-set axiom, and extensionality supplies its uniqueness. The same
 single `lem` reaches the proof through four routes: propositional resizing, the
-small classifier for the ambient power set, the canonical stage function, and
+Ω-resizing for the ambient power set, the canonical stage function, and
 the reflection used by full Separation. No further classical assumption is
 introduced.
 <!--zh-->
-固定宇宙层级 `ℓ` 与唯一的假设 `lem : LEM (ℓ-suc ℓ)`。目标模型字段断言：对 `L` 中每个 `a`，恰有一个模型元素，其成员正是内部包含于 `a` 的模型元素。唯一性由宿主类型 `isContr` 打包；对象理论内容是幂集公理，而唯一性来自外延性。同一个 `lem` 经四条路径进入证明：命题降级、外围幂集所需的小分类器、典范层函数，以及完整分离所用的反射。这里没有引入其他经典假设。
+固定宇宙层级 `ℓ` 与唯一的假设 `lem : LEM (ℓ-suc ℓ)`。目标模型字段断言：对 `L` 中每个 `a`，恰有一个模型元素，其成员正是内部包含于 `a` 的模型元素。唯一性由宿主类型 `isContr` 打包；对象理论内容是幂集公理，而唯一性来自外延性。同一个 `lem` 经四条路径进入证明：命题换级、外围幂集所需的命题宇宙换级、典范层函数，以及完整分离所用的反射。这里没有引入其他经典假设。
 <!--ja-->
 宇宙レベル `ℓ` と、ただ一つの仮定 `lem : LEM (ℓ-suc ℓ)` を固定します。目標のモデルフィールドは、`L` の各 `a` に対して、`a` に内部的に含まれるモデル要素をちょうど要素とするモデル要素が一意に存在する、と述べます。一意性はホスト型 `isContr` にまとめられます。対象理論での内容は冪集合公理であり、その一意性は外延性から従います。同じ一つの `lem` が、命題リサイズ、周囲の冪集合のための小さな分類子、正準な段階の関数、完全な分出で用いる反映という四つの経路を通って証明に入ります。別の古典的仮定は加わりません。
 <!--/-->
@@ -230,21 +229,21 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 ```
 
 <!--en-->
-The ambient power-set construction is instantiated with the small classifier
-obtained from `lem→impredicativity lem`. This construction uses only the
-`hPropSmallness` component: it represents a characteristic function by a
+The ambient power-set construction is instantiated with Ω-resizing
+obtained from `lem→ΩResizing lem`. This construction uses only the
+classifier derived from `ΩResizing`: it represents a characteristic function by a
 function into a small type of truth-value codes and forms the corresponding
 hierarchy set. Propositional resizing of `isL` is a separate operation and does
 not enter this instantiation. Keeping these roles distinct will make the later
 index construction transparent.
 <!--zh-->
-外围幂集构造以 `lem→impredicativity lem` 给出的小分类器实例化。这里仅使用 `hPropSmallness` 分量：特征函数被表示为一个取值于小真值码类型的函数，再由此形成层级中的集合。对 `isL` 作命题降级是另一项独立操作，并不进入这次实例化。区分这两种作用，才能看清稍后的小索引是怎样形成的。
+外围幂集构造以 `lem→ΩResizing lem` 给出的命题宇宙换级实例化。这里仅使用由 `ΩResizing` 导出的分类器：特征函数被表示为一个取值于小真值码类型的函数，再由此形成层级中的集合。对 `isL` 作命题换级是另一项独立操作，并不进入这次实例化。区分这两种作用，才能看清稍后的小索引是怎样形成的。
 <!--ja-->
-周囲の冪集合の構成には、`lem→impredicativity lem` から得られる小さな分類子を与えます。ここで使うのは `hPropSmallness` 成分だけです。特性関数を小さな真理値コードの型への関数として表し、それに対応する階層の集合を作ります。`isL` の命題リサイズは別の操作であり、この具体化には入りません。二つの役割を分けることで、後の小さな添字の構成が明確になります。
+周囲の冪集合の構成には、`lem→ΩResizing lem` から得られる小さな分類子を与えます。ここで使うのは `ΩResizing` から導かれる分類子だけです。特性関数を小さな真理値コードの型への関数として表し、それに対応する階層の集合を作ります。`isL` の命題リサイズは別の操作であり、この具体化には入りません。二つの役割を分けることで、後の小さな添字の構成が明確になります。
 <!--/-->
 
 ```agda
-module Pow = Power (Impredicativity.hPropSmallness (lem→impredicativity lem))
+module Pow = Power (lem→ΩResizing lem)
 ```
 
 <!--en-->
@@ -350,7 +349,7 @@ ordinal bounding lemma can quantify over it. `Ix` is only a host-level index
 type. It is neither an element of `L` nor a class defined by an object-language
 formula, and it will not become the final power set.
 <!--zh-->
-宿主类型 `Ix` 恰好索引外围幂集中的可构造成员。它的元素由两部分组成：一个索引 `m : ⟪P⟫`，呈现 `A` 的某个外围子集；以及该被呈现集合之降级后可构造性命题的证明。两个分量都是小的，所以 `Ix : Type ℓ`，序数上界引理可以对它量化。`Ix` 只是宿主层的索引类型，既不是 `L` 的元素，也不是对象语言公式定义的类，更不会成为最终的幂集。
+宿主类型 `Ix` 恰好索引外围幂集中的可构造成员。它的元素由两部分组成：一个索引 `m : ⟪P⟫`，呈现 `A` 的某个外围子集；以及该被呈现集合之降级后可构造性命题的证明。两个分量都属于目标层级，所以 `Ix : Type ℓ`，序数上界引理可以对它量化。`Ix` 只是宿主层的索引类型，既不是 `L` 的元素，也不是对象语言公式定义的类，更不会成为最终的幂集。
 <!--ja-->
 ホスト型 `Ix` は、周囲の冪集合のうち構成可能な要素をちょうど添字づけます。その要素は、`A` の周囲での部分集合を呈示する添字 `m : ⟪P⟫` と、呈示された集合についてリサイズされた構成可能性命題の証明との対です。両成分が小さいため `Ix : Type ℓ` となり、順序数の上界補題がその上で量化できます。`Ix` はホスト側の添字型にすぎません。`L` の要素でも、対象言語の論理式で定義されたクラスでもなく、最終的な冪集合にもなりません。
 <!--/-->
@@ -393,7 +392,7 @@ remaining evidence. The result is therefore a definite ordinal index without a
 general rule for extracting arbitrary truncated witnesses. Only `stage-ord` and
 `stage-mem`, not minimality, are used here.
 <!--zh-->
-函数 `stg` 为 `Ix` 的每个条目指定典范层索引，即使被呈现集合属于 `Lset σ` 的最小序数 `σ`。这是与命题降级不同的另一处经典步骤。在内部，`stage` 作良基下降，并用排中律判定是否存在更小的见证。命题截断只被消去到 `LeastOrd`；该类型的命题性由序数三歧与其余证据的唯一性证明。因此，所得结果是一个确定的序数索引，却没有提供从任意截断见证中抽取数据的一般规则。本章只使用 `stage-ord` 与 `stage-mem`，不用其最小性。
+函数 `stg` 为 `Ix` 的每个条目指定典范层索引，即使被呈现集合属于 `Lset σ` 的最小序数 `σ`。这是与命题换级不同的另一处经典步骤。在内部，`stage` 作良基下降，并用排中律判定是否存在更小的见证。命题截断只被消去到 `LeastOrd`；该类型的命题性由序数三歧与其余证据的唯一性证明。因此，所得结果是一个确定的序数索引，却没有提供从任意截断见证中抽取数据的一般规则。本章只使用 `stage-ord` 与 `stage-mem`，不用其最小性。
 <!--ja-->
 関数 `stg` は `Ix` の各項に正準な段階の添字を割り当てます。これは、呈示された集合が `Lset σ` に属するような最小の順序数 `σ` です。この古典的な段階は命題リサイズとは別です。内部で `stage` は整礎的な降下を行い、より小さな証人が存在するかを排中律で判定します。命題的切り詰めを除去する先は `LeastOrd` だけであり、その型が命題であることは順序数の三分律と残りの証拠の一意性から示されます。したがって確定した順序数添字は得られますが、任意の切り詰められた証人からデータを取り出す一般則は得られません。本章で使うのは `stage-ord` と `stage-mem` だけで、最小性は使いません。
 <!--/-->
@@ -592,13 +591,13 @@ statement `x ⊆ˢ a`. Both `p` and every candidate `x` range over the carrier o
 the constructible model. The ambient power set used earlier only provides a
 small index of candidates and is not the set produced here. The single
 assumption `LEM (ℓ-suc ℓ)` reaches this construction through propositional
-resizing, the small classifier, the choice of a canonical stage from
+resizing, Ω-resizing, the choice of a canonical stage from
 propositionally truncated constructibility, and the reflection used by full
 separation.
 <!--zh-->
 余下的等式比较分离切出的类与幂集字段要求的类。左端说 `x` 属于作为上界的层，并且 `x` 满足 `subFo a`；后一个满足命题化为内部包含 `x ⊆ˢ a`。正向证明因而舍去层成员这一分量。反向证明则由 `x ⊆ˢ a` 应用 `Bound.below` 补出该分量。命题外延性把两个方向的蕴含变成每个 `x` 处的路径，函数外延性再把这些路径合成为谓词等式 `Q≡`。最外层的 `subst` 沿这个等式运输分离所得的可缩实现者类型。`Q≡` 本身不使用集合外延性；分离所打包的一意性已经用过集合外延性。
 
-因此，`hasPowerL a` 以精确的模型论形式证明对象理论的幂集公理。它给出由元素 `p : S` 组成的可缩类型，并且对每个 `x : S`，成员命题 `x ∈ˢ p` 恰与内部陈述 `x ⊆ˢ a` 等价。`p` 与每个候选 `x` 都量化于可构造模型的载体。此前使用的宿主层幂集只提供候选者的小索引，并不是此处得到的集合。唯一的假设 `LEM (ℓ-suc ℓ)` 经命题降级、小分类器、从命题截断的可构造性中选出典范层，以及完整分离所用的反射，传递到这一构造。
+因此，`hasPowerL a` 以精确的模型论形式证明对象理论的幂集公理。它给出由元素 `p : S` 组成的可缩类型，并且对每个 `x : S`，成员命题 `x ∈ˢ p` 恰与内部陈述 `x ⊆ˢ a` 等价。`p` 与每个候选 `x` 都量化于可构造模型的载体。此前使用的宿主层幂集只提供候选者的小索引，并不是此处得到的集合。唯一的假设 `LEM (ℓ-suc ℓ)` 经命题换级、命题宇宙换级、从命题截断的可构造性中选出典范层，以及完整分离所用的反射，传递到这一构造。
 <!--ja-->
 残る等式は、分出によって切り出されたクラスと、冪集合フィールドが要求するクラスを比較します。左辺は、`x` が上界となる段階に属し、かつ `subFo a` を満たすと述べます。後半の充足命題は、内部の包含 `x ⊆ˢ a` に簡約されます。したがって順方向の証明は、段階への所属を表す成分を捨てます。逆方向では、`x ⊆ˢ a` に `Bound.below` を適用してその成分を補います。命題外延性は二方向の含意を各 `x` におけるパスへ変え、関数外延性はそれらのパスを述語の等式 `Q≡` にまとめます。最外側の `subst` は、この等式に沿って、分出が与えた実現者の可縮な型を輸送します。`Q≡` 自体は集合の外延性を使いません。分出がまとめた一意性の中ですでに使われています。
 
@@ -631,13 +630,13 @@ operation and the specification `℩-spec (hasPower κ)` to pass between members
 and internal inclusion; they never use the auxiliary ambient `Pow.𝒫V`.
 
 The logical account is equally specific. The one assumption
-`LEM (ℓ-suc ℓ)` supplies the small classifier, propositional resizing, the
+`LEM (ℓ-suc ℓ)` supplies Ω-resizing, propositional resizing, the
 canonical stage construction, and formula reflection for full Separation. No
 form of Choice, the Replacement field, or condensation is used in this proof.
 <!--zh-->
 这个构造中的三种作用彼此分明：外围幂集提供小表现，宿主理论界住其可构造成员的诸层，内部分离则从该上界中切出所求集合。`L.Model` 把 `hasPowerL` 装入 `L⊨ZF` 的 `hasPower`字段，随后由这个 record 定义内部运算 `𝒫`。后续 GCH 论证使用此运算与规格`℩-spec (hasPower κ)`，在成员关系与内部包含之间往返；它们从不使用辅助的外围 `Pow.𝒫V`。
 
-逻辑依赖也可以精确列清。唯一的假设 `LEM (ℓ-suc ℓ)` 分别支持小分类器、命题降级、典范层构造与完整分离所用的公式反射。本证明不使用任何形式的选择、替换字段或凝聚。
+逻辑依赖也可以精确列清。唯一的假设 `LEM (ℓ-suc ℓ)` 分别支持命题宇宙换级、命题换级、典范层构造与完整分离所用的公式反射。本证明不使用任何形式的选择、替换字段或凝聚。
 <!--ja-->
 この構成には、明確に異なる三つの役割があります。周囲の冪集合が小さな表示を供給し、ホスト理論がその構成可能な要素の段階を抑え、内部の分出がその上界から求める集合を切り出します。`L.Model` は `hasPowerL` を `L⊨ZF` の `hasPower` フィールドに組み込み、その後レコードが内部演算 `𝒫` を定義します。後の GCH の議論は、この演算と仕様 `℩-spec (hasPower κ)` を使って所属と内部の包含の間を往復します。補助的な周囲の `Pow.𝒫V` を使うことはありません。
 

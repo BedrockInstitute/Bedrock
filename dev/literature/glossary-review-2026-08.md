@@ -635,7 +635,7 @@ LITERATURE** (project vocabulary, internally consistent).
 
 #### propositional resizing
 
-zh 命题降级 / ja 命題リサイズ. The note marks this tentative (owner review).
+zh 命题换级 / ja 命題リサイズ. The note marks this tentative (owner review).
 No established Chinese rendering found for propositional resizing (Chinese
 HoTT materials leave it in English；命题分阶 in Russell's ramified type theory
 is a different concept, order not universe level). **IDIOM, NO LITERATURE** , 

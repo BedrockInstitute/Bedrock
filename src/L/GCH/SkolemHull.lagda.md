@@ -1488,7 +1488,7 @@ Surjectivity promotes to the paired carriers: every element of the target `PM` i
 ```agda
   surj' : (p' : SPM) → ∥ Σ[ q ∈ SM ] (g q ≡ p') ∥₁
   surj' (z , z∈) = PT.map (λ { (y , y∈ , e) →
-    (y , y∈) , Σ≡Prop (λ w → (w ∈ˢ PM) .snd) e }) (surj z z∈)
+    (y , y∈) , Σ≡Prop (λ w → ⟨ w ∈ˢ PM ⟩isProp) e }) (surj z z∈)
 
 ```
 
@@ -1868,7 +1868,7 @@ The substructure machinery is instantiated at the hull, and its formulas receive
   module A = ASt.AtM M H.Hull⊆L using ( Elementary; SM; module SemM; TV→elem; inL )
   module Mse = A.SemM.At A.SM id using ( _⊨_ )
   codeOf : (q : A.SM) → ∥ Σ[ c ∈ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
-  codeOf q = PT.map (λ { (c , e) → c , Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) e })
+  codeOf q = PT.map (λ { (c , e) → c , Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) e })
     (H.hull-member (fst q) (snd q))
 ```
 
@@ -2085,7 +2085,7 @@ The inclusion of the witness into the stage is the witness itself: the two carri
 
 ```agda
         q≡a : A.inL q ≡ a
-        q≡a = Σ≡Prop (λ z → (z ∈ˢ Lset α) .snd) refl
+        q≡a = Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) refl
 
 ```
 

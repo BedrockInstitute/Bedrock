@@ -168,7 +168,7 @@ Regularity, in this development, is the statement that membership is well-founde
 
 (经 `∈∈ₛ`{.Agda} 现身的 `∈ₛ` 是库的**小**成员关系，「集合的小呈现」一章将细说；此处它只起衔接作用。)
 
-在本书中，正则性即是「成员关系良基」这一陈述：载体的每个元素在 `∈ᵗ` 下都可及，含义即上文引入的可及性数据 `Acc`。证明把该高阶归纳类型消去到族 `λ s → Acc _∈ᵗ_ s`。向任意族的消去并非总是可用；使这里合法的，是每个 `Acc _∈ᵗ_ s` 都是命题，而 `isPropAcc s` 恰好给出这份证书。在 `sett` 情形中，分支拿到族 `ix`，以及对每个索引给出 `rec i : Acc _∈ᵗ_ (ix i)` 的归纳假设。它要组装 `Acc _∈ᵗ_ (sett X ix)`；按 `acc` 的形状，这就是要对集合的任意成员 `y` 给出可及性。
+在本书中，正则公理即是「成员关系良基」这一陈述：载体的每个元素在 `∈ᵗ` 下都可及，含义即上文引入的可及性数据 `Acc`。证明把该高阶归纳类型消去到族 `λ s → Acc _∈ᵗ_ s`。向任意族的消去并非总是可用；使这里合法的，是每个 `Acc _∈ᵗ_ s` 都是命题，而 `isPropAcc s` 恰好给出这份证书。在 `sett` 情形中，分支拿到族 `ix`，以及对每个索引给出 `rec i : Acc _∈ᵗ_ (ix i)` 的归纳假设。它要组装 `Acc _∈ᵗ_ (sett X ix)`；按 `acc` 的形状，这就是要对集合的任意成员 `y` 给出可及性。
 <!--ja-->
 第二の成分は、同じ橋を逆向きに通るものです。`x` の `b` への小所属関係を大へ変換し、`sym (h x)` に沿って逆方向へ輸送し、`x` の `a` への小所属関係へ戻します。二つの成分が合わさって相互包含が得られ、`extensionality` はそこから `a ≡ b` を作ります。これが `extensionalV` が返すパスです。
 
@@ -202,7 +202,7 @@ The first consequence of regularity is irreflexivity: no set belongs to itself. 
 
 The hypothesis `⟨ A ∈ˢ A ⟩` is an inhabitant of the underlying type of the membership proposition, which is precisely the relation `∈ᵗ` on which `regularityV` was proved. For any well-founded relation, no element can stand in the relation to itself: this is the library's irreflexivity theorem `wf→x≮x`, applied here with `regularityV` as its well-foundedness input. The result is a contradiction, witnessed by the empty type `Empty.⊥`.
 <!--zh-->
-正则性的第一个推论是不可反性：没有集合属于自身。用可及性的语言看，这是直接的。与自身处于良基关系中的元素会同可及性数据矛盾，因为可及性要求每一步下降都落在可及的元素上。这里的推导使用的是上文证明的 `Acc` 陈述；本章不宣称它涵盖 Foundation 的每一个经典表述。
+正则公理的第一个推论是不可反性：没有集合属于自身。用可及性的语言看，这是直接的。与自身处于良基关系中的元素会同可及性数据矛盾，因为可及性要求每一步下降都落在可及的元素上。这里的推导使用的是上文证明的 `Acc` 陈述；本章不宣称它涵盖 Foundation 的每一个经典表述。
 
 假设 `⟨ A ∈ˢ A ⟩` 是成员命题底层类型的一个元素，而这正是 `regularityV` 所针对的关系 `∈ᵗ`。对任何良基关系，元素都不能与自身处于该关系中：这就是库的不可反性定理 `wf→x≮x`，此处以 `regularityV` 作为其良基性输入。结果是矛盾，以空类型 `Empty.⊥` 呈现。
 <!--ja-->

@@ -310,7 +310,7 @@ The equality is produced by extensionality, split into two inclusions. The first
 <!--/-->
 
 ```agda
-    sub₁ z z∈ₛJ = PT.rec ((z ∈ₛ sucV I) .snd)
+    sub₁ z z∈ₛJ = PT.rec (⟨ z ∈ₛ sucV I ⟩isProp)
       (Sum.rec
         (λ h → ∈∈ₛ {a = z} {b = sucV I} .fst (∈sucV-inl {A = I} {x = z} h))
         (λ e → subst (λ w → ⟨ w ∈ₛ sucV I ⟩) (sym e)
@@ -329,7 +329,7 @@ The second inclusion reads members of `sucV I` back into `J`. Membership in a su
       (cover z (∈∈ₛ {a = z} {b = J} .snd z∈ₛJ))
     sub₂ : ⟨ sucV I ⊆ J ⟩
     sub₂ z z∈ₛs = ∈∈ₛ {a = z} {b = J} .fst
-      (∈sucV-elim {A = I} {x = z} {P = ⟨ z ∈ J ⟩} ((z ∈ J) .snd)
+      (∈sucV-elim {A = I} {x = z} {P = ⟨ z ∈ J ⟩} (⟨ z ∈ J ⟩isProp)
         (∈∈ₛ {a = z} {b = sucV I} .snd z∈ₛs)
 ```
 
@@ -703,7 +703,7 @@ The backward direction closes the adequacy theorem. Its input is the truncated e
 ```agda
 
   bwd : Tgt → ⟨ γ ⊨ shiftPairAt p' p ⟩
-  bwd = PT.rec ((γ ⊨ shiftPairAt p' p) .snd)
+  bwd = PT.rec (⟨ γ ⊨ shiftPairAt p' p ⟩isProp)
     (λ { (i , v , eP , eP') → build i v eP eP' })
 ```
 
@@ -843,7 +843,7 @@ The forward conversion turns the truncated existence of an empty member into the
 ```agda
 
   empty-member : (w : V ℓ) → ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁ → ⟨ ∅ ∈ w ⟩
-  empty-member w = PT.rec ((∅ ∈ w) .snd)
+  empty-member w = PT.rec (⟨ ∅ ∈ w ⟩isProp)
     (λ { (z , hz , ez) → subst (λ u → ⟨ u ∈ w ⟩) (empty'→∅ z ez) hz })
 
   EmptySgl→SglOf∅ : (w : V ℓ) → EmptySgl w → SglOf∅ w
@@ -1131,7 +1131,7 @@ The truncated disjunction can be eliminated only into a proposition-valued targe
 ```agda
                  ⊎ ⟨ (y ∷ γ) ⊨ ∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero) ⟩ ∥₁)
            → (y : V ℓ) → ⟨ y ∈ E' ⟩ → ⟨ y ∈ env G' ⟩
-  classify h₃ y y∈E' = PT.rec ((y ∈ env G') .snd)
+  classify h₃ y y∈E' = PT.rec (⟨ y ∈ env G' ⟩isProp)
     (Sum.rec
       (λ tsat →
 ```
@@ -1147,9 +1147,9 @@ In the first branch, the member `y` satisfies `tag0At zero (suc m)` in `y ∷ γ
 ```agda
         ∣ lift zero
         , sym (subst ⟨_⟩ (tag0At-adequate zero (suc m) (y ∷ γ)) tsat) ∣₁)
-      (λ ssat → PT.rec ((y ∈ env G') .snd)
-        (λ { (p , p∈E , sh) → PT.rec ((y ∈ env G') .snd)
-          (λ { (li , peq) → PT.rec ((y ∈ env G') .snd)
+      (λ ssat → PT.rec (⟨ y ∈ env G' ⟩isProp)
+        (λ { (p , p∈E , sh) → PT.rec (⟨ y ∈ env G' ⟩isProp)
+          (λ { (li , peq) → PT.rec (⟨ y ∈ env G' ⟩isProp)
 ```
 
 <!--en-->
@@ -1196,7 +1196,7 @@ One step of the shift case remains. The entry `p` was found as a member of `E`, 
 ```agda
               → ⟨ (p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero)) ⟩)
           → (y : V ℓ) → ⟨ y ∈ env G' ⟩ → ⟨ y ∈ E' ⟩
-  covered h₁ h₂ y y∈G' = PT.rec ((y ∈ E') .snd)
+  covered h₁ h₂ y y∈G' = PT.rec (⟨ y ∈ E' ⟩isProp)
     (λ { (lj , eq) → byKey (lower lj) eq })
     y∈G'
 ```
@@ -1212,7 +1212,7 @@ The reverse inclusion must show that every member of the graph of the extended a
 ```agda
     where
     byKey : (j : Fin (suc k)) → pr (# (toℕ j)) (G' j) ≡ y → ⟨ y ∈ E' ⟩
-    byKey zero eq = PT.rec ((y ∈ E') .snd)
+    byKey zero eq = PT.rec (⟨ y ∈ E' ⟩isProp)
       (λ { (q , q∈E' , tsat) →
         subst (λ z → ⟨ z ∈ E' ⟩)
 ```
@@ -1229,8 +1229,8 @@ In the zero case the entry equation computes to the statement that the entry wit
           (subst ⟨_⟩ (tag0At-adequate zero (suc m) (q ∷ γ)) tsat ∙ eq)
           q∈E' })
       h₁
-    byKey (suc i₀) eq = PT.rec ((y ∈ E') .snd)
-      (λ { (p' , p'∈E' , sh) → PT.rec ((y ∈ E') .snd)
+    byKey (suc i₀) eq = PT.rec (⟨ y ∈ E' ⟩isProp)
+      (λ { (p' , p'∈E' , sh) → PT.rec (⟨ y ∈ E' ⟩isProp)
 ```
 
 <!--en-->
@@ -1296,7 +1296,7 @@ The backward direction starts from a path identifying the new set with the graph
       , subst (λ z → ⟨ pr (# 0) M ∈ z ⟩) (sym e'eq) ∣ lift zero , refl ∣₁
       , subst ⟨_⟩ (sym (tag0At-adequate zero (suc m) (pr (# 0) M ∷ γ))) refl ∣₁
     , (λ p p∈E → PT.rec
-        (((p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero))) .snd)
+        ⟨ (p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero)) ⟩isProp
 ```
 
 <!--en-->

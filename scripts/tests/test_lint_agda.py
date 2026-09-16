@@ -125,6 +125,24 @@ open import A.B hiding ( foo )
 
 check("hiding is bare", rules(run(hiding)), [(7, "bare-open")])
 
+# Propositionhood is exposed through the reader-facing projection, while
+# ordinary dependent-pair projections remain available.
+hprop_snd = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+bad = P .snd
+also-bad = (x ∈ˢ A) .snd
+ordinary = pair .snd
+good = ⟨ P ⟩isProp
+```
+"""
+
+check("hProp snd projection", rules(run(hprop_snd)),
+      [(7, "hprop-snd")])
+
 # 7. Comments and strings never count as usage.
 ghost = f"""# T
 

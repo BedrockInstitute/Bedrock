@@ -193,19 +193,19 @@ Everything now rests on one theorem about set quotients, the library's effectivi
 <!--/-->
 
 <!--en-->
-The first condition is proposition-valuedness: for each pair of inputs, the type of proofs of `a ~ b` must be a proposition. On the diagonal that type is `Unit*`{.Agda}, a proposition by `isPropUnit*`{.Agda}; in the mixed squares it is `⟨ P ⟩` itself, and its propositionhood is exactly the second component `P .snd`{.Agda} of the pair `P`. Were proofs allowed to differ, a path in the quotient would not determine a well-defined statement to read back.
+The first condition is proposition-valuedness: for each pair of inputs, the type of proofs of `a ~ b` must be a proposition. On the diagonal that type is `Unit*`{.Agda}, a proposition by `isPropUnit*`{.Agda}; in the mixed squares it is `⟨ P ⟩` itself, and its propositionhood is exactly the certificate `⟨ P ⟩isProp`{.Agda}. Were proofs allowed to differ, a path in the quotient would not determine a well-defined statement to read back.
 <!--zh-->
-第一个条件是命题值性：对每对输入，`a ~ b` 的证明类型必须是命题。对角线上该类型是 `Unit*`{.Agda}，由 `isPropUnit*`{.Agda} 知其为命题；混色两格中它就是 `⟨ P ⟩` 自身，其命题性恰是 `P` 的第二分量 `P .snd`{.Agda}。若证明可以彼此不同，商中的路径就无法确定一个良定义的陈述供倒读。
+第一个条件是命题值性：对每对输入，`a ~ b` 的证明类型必须是命题。对角线上该类型是 `Unit*`{.Agda}，由 `isPropUnit*`{.Agda} 知其为命题；混色两格中它就是 `⟨ P ⟩` 自身，其命题性恰是 `P` 的证书 `⟨ P ⟩isProp`{.Agda}。若证明可以彼此不同，商中的路径就无法确定一个良定义的陈述供倒读。
 <!--ja-->
-第一の条件は命題値性です。入力の各組に対して、`a ~ b` の証明の型が命題でなければなりません。対角ではこの型は `Unit*`{.Agda} であり、`isPropUnit*`{.Agda} が命題であることを示します。混色の項では `⟨ P ⟩` そのものであり、その命題性は `P` の第二成分 `P .snd`{.Agda} にほかなりません。証明が異なり得るなら、商の道は逆読みのための well-defined な主張を定められません。
+第一の条件は命題値性です。入力の各組に対して、`a ~ b` の証明の型が命題でなければなりません。対角ではこの型は `Unit*`{.Agda} であり、`isPropUnit*`{.Agda} が命題であることを示します。混色の項では `⟨ P ⟩` そのものであり、その命題性は `P` の証明書 `⟨ P ⟩isProp`{.Agda} にほかなりません。証明が異なり得るなら、商の道は逆読みのための well-defined な主張を定められません。
 <!--/-->
 
 ```agda
   ~-prop : BinaryRelation.isPropValued _~_
   ~-prop true  true  = isPropUnit*
   ~-prop false false = isPropUnit*
-  ~-prop true  false = P .snd
-  ~-prop false true  = P .snd
+  ~-prop true  false = ⟨ P ⟩isProp
+  ~-prop false true  = ⟨ P ⟩isProp
 ```
 
 <!--en-->
@@ -414,16 +414,16 @@ One gap remains before the theorem assembles. Choice delivers no picking functio
 <!--/-->
 
 <!--en-->
-That the goal is a proposition is proved explicitly: `Sum.isProp⊎`{.Agda} asks for the propositionhood of each side and for the impossibility of inhabiting both. The first side is `⟨ P ⟩`, propositional by `P .snd`. The second is the function type `⟨ P ⟩ → Empty.⊥`, whose propositionhood follows pointwise from `Empty.isProp⊥` by `isPropΠ`. Finally, `λ p np → np p` proves that the two sides cannot be inhabited at once. The theorem `choice→lem`{.Agda} then has type `SetChoice ℓ → LEM ℓ`. Given `sc` and a proposition `P`, it works inside the Diaconescu module at `P`, obtains the mere picker by `merePicker sc`, and eliminates the truncation with `PT.rec`{.Agda} into the now-certified propositional goal, returning `decide`. The order of ideas matters: the case split inside `decide` is genuine data, and the truncation is discharged only because the target cannot distinguish its answers.
+That the goal is a proposition is proved explicitly: `Sum.isProp⊎`{.Agda} asks for the propositionhood of each side and for the impossibility of inhabiting both. The first side is `⟨ P ⟩`, propositional by `⟨ P ⟩isProp`. The second is the function type `⟨ P ⟩ → Empty.⊥`, whose propositionhood follows pointwise from `Empty.isProp⊥` by `isPropΠ`. Finally, `λ p np → np p` proves that the two sides cannot be inhabited at once. The theorem `choice→lem`{.Agda} then has type `SetChoice ℓ → LEM ℓ`. Given `sc` and a proposition `P`, it works inside the Diaconescu module at `P`, obtains the mere picker by `merePicker sc`, and eliminates the truncation with `PT.rec`{.Agda} into the now-certified propositional goal, returning `decide`. The order of ideas matters: the case split inside `decide` is genuine data, and the truncation is discharged only because the target cannot distinguish its answers.
 <!--zh-->
-「目标是命题」这一点被显式证明：`Sum.isProp⊎`{.Agda} 要求两侧各自的命题性，以及两侧不能同时有元的证明。第一侧是 `⟨ P ⟩`，由 `P .snd` 得其命题性。第二侧是函数类型 `⟨ P ⟩ → Empty.⊥`，`isPropΠ` 利用 `Empty.isProp⊥` 逐点证明它是命题。最后，`λ p np → np p` 证明两侧不能同时有元。定理 `choice→lem`{.Agda} 的类型随之是 `SetChoice ℓ → LEM ℓ`。给定 `sc` 与命题 `P`，它在 `P` 处进入 Diaconescu 模块，用 `merePicker sc` 得到仅仅的选取函数，再以 `PT.rec`{.Agda} 把截断消去到已证为命题的目标中，返回 `decide`。想法的次序重要：`decide` 内部的分情形是真实数据，截断之所以能消去，只因目标无法区分其答案。
+「目标是命题」这一点被显式证明：`Sum.isProp⊎`{.Agda} 要求两侧各自的命题性，以及两侧不能同时有元的证明。第一侧是 `⟨ P ⟩`，由 `⟨ P ⟩isProp` 得其命题性。第二侧是函数类型 `⟨ P ⟩ → Empty.⊥`，`isPropΠ` 利用 `Empty.isProp⊥` 逐点证明它是命题。最后，`λ p np → np p` 证明两侧不能同时有元。定理 `choice→lem`{.Agda} 的类型随之是 `SetChoice ℓ → LEM ℓ`。给定 `sc` 与命题 `P`，它在 `P` 处进入 Diaconescu 模块，用 `merePicker sc` 得到仅仅的选取函数，再以 `PT.rec`{.Agda} 把截断消去到已证为命题的目标中，返回 `decide`。想法的次序重要：`decide` 内部的分情形是真实数据，截断之所以能消去，只因目标无法区分其答案。
 <!--ja-->
-目標が命題であることは明示的に証明されます。`Sum.isProp⊎`{.Agda} は両側それぞれの命題性と、両方の元が同時に存在しないことの証明を要求します。第一側は `⟨ P ⟩` で、`P .snd` により命題です。第二側は関数型 `⟨ P ⟩ → Empty.⊥` であり、`isPropΠ` が `Empty.isProp⊥` を各点で用いて、その命題性を証明します。最後に `λ p np → np p` が、両側に同時に要素が存在しないことを証明します。定理 `choice→lem`{.Agda} の型はしたがって `SetChoice ℓ → LEM ℓ` です。`sc` と命題 `P` が与えられると、`P` について Diaconescu モジュールの中で働き、`merePicker sc` で単なる選択関数の存在を得て、`PT.rec`{.Agda} によって証明済みの命題である目標へ切り詰めを消去し、`decide` を返します。考えの順序が重要です。`decide` の中の場合分けは本物のデータであり、切り詰めが消去できるのは、目標がその答えたちを区別できないからです。
+目標が命題であることは明示的に証明されます。`Sum.isProp⊎`{.Agda} は両側それぞれの命題性と、両方の元が同時に存在しないことの証明を要求します。第一側は `⟨ P ⟩` で、`⟨ P ⟩isProp` により命題です。第二側は関数型 `⟨ P ⟩ → Empty.⊥` であり、`isPropΠ` が `Empty.isProp⊥` を各点で用いて、その命題性を証明します。最後に `λ p np → np p` が、両側に同時に要素が存在しないことを証明します。定理 `choice→lem`{.Agda} の型はしたがって `SetChoice ℓ → LEM ℓ` です。`sc` と命題 `P` が与えられると、`P` について Diaconescu モジュールの中で働き、`merePicker sc` で単なる選択関数の存在を得て、`PT.rec`{.Agda} によって証明済みの命題である目標へ切り詰めを消去し、`decide` を返します。考えの順序が重要です。`decide` の中の場合分けは本物のデータであり、切り詰めが消去できるのは、目標がその答えたちを区別できないからです。
 <!--/-->
 
 ```agda
   decideIsProp : isProp (⟨ P ⟩ Sum.⊎ (⟨ P ⟩ → Empty.⊥))
-  decideIsProp = Sum.isProp⊎ (P .snd) (isPropΠ (λ _ → Empty.isProp⊥)) (λ p np → np p)
+  decideIsProp = Sum.isProp⊎ ⟨ P ⟩isProp (isPropΠ (λ _ → Empty.isProp⊥)) (λ p np → np p)
 
 choice→lem : ∀ {ℓ} → SetChoice ℓ → LEM ℓ
 choice→lem sc P = PT.rec decideIsProp decide (merePicker sc)

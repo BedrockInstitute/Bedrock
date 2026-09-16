@@ -21,6 +21,11 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      when the caller names no file.                                              [report only]
   8. A centered single-line code display must use one complete
      `<div class="single-line-code"><code>...</code></div>` line.                 [report only]
+  9. Standalone theorem-style labels use a bold label followed by a space, never a
+     period. Lemma and theorem labels must immediately name an Agda declaration:
+     `**Lemma** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).        [report only]
+ 10. A construction or lemma developed through prose and code ends with a standalone
+     `∎` immediately after its final code block.                                [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -133,6 +138,7 @@ def build_protected(text):
     mask(r"\$\$[^$]*\$\$")                    # display math $$...$$ (may span lines)
     mask(r"\$[^$\n]+\$")                      # inline math $...$
     mask(r"<[^>\n]*>")                          # raw HTML tags and attributes
+    mask(r"&(?:#[0-9]+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9]+);")  # HTML entities
     return prot
 
 
@@ -294,6 +300,74 @@ def single_line_code_violations(text):
     return out
 
 
+_STATEMENT_LABELS = {"Construction", "Lemma", "Theorem",
+                     "构造", "引理", "定理", "構成", "補題"}
+_PROOF_LABELS = {"Proof", "证明", "証明", "Definition", "定义", "定義"}
+_THEOREM_LABEL_RE = re.compile(
+    r"^\s*\*\*(Construction|Lemma|Theorem|Proof|Definition|构造|引理|定理|证明|定义|構成|補題|証明|定義)(?:[.。])?\*\*")
+
+
+def theorem_label_violations(text):
+    """Enforce the reader-facing lemma/theorem/proof label convention."""
+    out = []
+    fenced = False
+    offset = 0
+    for line in text.split("\n"):
+        if line.lstrip().startswith(("```", "~~~")):
+            fenced = not fenced
+            offset += len(line) + 1
+            continue
+        if fenced:
+            offset += len(line) + 1
+            continue
+        for match in _THEOREM_LABEL_RE.finditer(line):
+            label = match.group(1)
+            label_start = line.index("**", match.start())
+            rest = line[label_start:]
+            if label in _STATEMENT_LABELS:
+                valid = re.match(
+                    rf"\*\*{re.escape(label)}\*\* \(`[^`\n]+`\{{\.Agda\}}\) ",
+                    rest)
+                message = ("lemma/theorem label must have no period and must use "
+                           f"**{label}** (`name`{{.Agda}}) Text")
+            else:
+                valid = rest.startswith(f"**{label}** ")
+                message = ("proof/definition label must have no period and must use "
+                           f"**{label}** Text")
+            if not valid:
+                out.append(Violation(offset + label_start, message, False))
+        offset += len(line) + 1
+    return out
+
+
+_QED_START_RE = re.compile(r"(?m)^\*\*(Construction|Lemma)\*\* ")
+_QED_BOUNDARY_RE = re.compile(
+    r"(?m)^(?:\*\*(?:Construction|Lemma|Theorem)\*\* |##\s|</details>\s*$)")
+
+
+def qed_violations(text):
+    """Require ∎ immediately after the final code block of constructions/lemmas.
+
+    English labels identify each trilingual statement once; the parallel Chinese and
+    Japanese labels lie in the same i18n block and therefore need no duplicate mark.
+    """
+    out = []
+    for start in _QED_START_RE.finditer(text):
+        boundary = _QED_BOUNDARY_RE.search(text, start.end())
+        end = boundary.start() if boundary else len(text)
+        segment = text[start.start():end]
+        fences = list(re.finditer(r"(?m)^```\s*$", segment))
+        if not fences:
+            continue
+        tail = segment[fences[-1].end():]
+        tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
+        if not re.match(r"^\n\s*∎\s*$", tail):
+            out.append(Violation(start.start(),
+                                 "construction/lemma must end with standalone `∎` "
+                                 "immediately after its final code block", False))
+    return out
+
+
 # ---- analysis ----------------------------------------------------------------
 
 class Violation:
@@ -433,6 +507,11 @@ def analyze(text):
 
     # Rule 8: centered single-line code displays have one canonical form.
     manual.extend(single_line_code_violations(text))
+
+    # Rule 9: theorem-style labels have one named, punctuation-free form.
+    manual.extend(theorem_label_violations(text))
+    # Rule 10: completed constructions and lemmas visibly close after their code.
+    manual.extend(qed_violations(text))
 
     char_fixed = "".join(edits.get(i, c) for i, c in enumerate(text)) if edits else text
 

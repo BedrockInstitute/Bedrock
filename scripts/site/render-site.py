@@ -175,6 +175,7 @@ DEF_RE = re.compile(r'<a id="([^"]+)"></a><a id="(\d+)"[^>]*class="([^"]*)"')
 # Any cross-reference link inside highlighted code (optional self-id, optional #position).
 LINK_RE = re.compile(r'<a (id="\d+" )?href="([^"#]+)\.html(#\d+)?"([^>]*)>')
 INLINE_AGDA_RE = re.compile(r'`([^`]+)`\{\.Agda\}')
+SUMMARY_RE = re.compile(r'<summary([^>]*)>(.*?)</summary>', re.DOTALL)
 A_TAG_RE  = re.compile(r'<a\b([^>]*)>([^<]+)</a>')
 HREF_RE   = re.compile(r'\bhref="([^"]+\.html(?:#\d+)?)"')
 CLASS_RE  = re.compile(r'\bclass="([^"]*)"')
@@ -253,6 +254,20 @@ def _inline(s):
     for key, val in stash.items():
         p = p.replace(key, val)
     return p
+
+
+def render_summary_inline(text):
+    """Render Markdown inline syntax in summaries that contain Agda references."""
+    ref_placeholder = re.compile(NUL + r"REF\d+" + NUL)
+
+    def render(match):
+        attrs, inner = match.groups()
+        if not ref_placeholder.search(inner):
+            return match.group(0)
+        inline = " ".join(part.strip() for part in inner.splitlines() if part.strip())
+        return f"<summary{attrs}>{_inline(inline)}</summary>"
+
+    return SUMMARY_RE.sub(render, text)
 
 
 def _is_block_start(line):
@@ -784,6 +799,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                        woven)
         woven = INLINE_AGDA_RE.sub(lambda m: stash("REF", inline_ref(m.group(1),
                                    internal, name2pos, local_refs)), woven)
+        woven = render_summary_inline(woven)
         body, toc = md_to_html(woven)
         body = re.sub(r'<p>\s*(' + NUL + r'CODE\d+' + NUL + r')\s*</p>', r'\1', body)
         body = re.sub(r'<p>\s*(' + NUL + r'DMATH\d+' + NUL + r')\s*</p>', r'\1', body)

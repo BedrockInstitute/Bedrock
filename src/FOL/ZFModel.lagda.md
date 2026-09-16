@@ -247,7 +247,7 @@ Here is the heart of the chapter. The fields group into three kinds. First, exte
 <!--en-->
 The record is a proposition-valued structure plus the guarantees the axioms demand, and it itself lives in `Type (ℓ-suc ℓ)` because its fields quantify over all of `S`. The first two fields are not of the unique-existence form. Extensionality is the implication from pointwise agreement of membership truth values to a path `a ≡ b`, exactly the hypothesis that made `setOf-unique` work. Regularity takes `WellFounded _∈ᵗ_`, well-foundedness of the Type-valued membership: this supplies `Acc` data for every element and thereby supports recursion and induction along membership. The remaining fields each assert `isContr (SetOf Q)` for a class `Q`.
 <!--zh-->
-这个 record 是命题值结构加上公理所要求的保证；由于字段量化了整个 `S`，它自身住在 `Type (ℓ-suc ℓ)`。头两个字段不是唯一存在形态。外延性是从成员真值逐点相等得到路径 `a ≡ b` 的蕴涵，正是让 `setOf-unique` 得以成立的那个假设。正则性取 `WellFounded _∈ᵗ_`，即 Type 值成员关系的良基性：它为每个元素提供 `Acc` 数据，从而支持沿成员关系的递归与归纳。其余字段各自对某个类 `Q` 断言 `isContr (SetOf Q)`。
+这个 record 是命题值结构加上公理所要求的保证；由于字段量化了整个 `S`，它自身住在 `Type (ℓ-suc ℓ)`。头两个字段不是唯一存在形态。外延性是从成员真值逐点相等得到路径 `a ≡ b` 的蕴涵，正是让 `setOf-unique` 得以成立的那个假设。正则公理取 `WellFounded _∈ᵗ_`，即 Type 值成员关系的良基性：它为每个元素提供 `Acc` 数据，从而支持沿成员关系的递归与归纳。其余字段各自对某个类 `Q` 断言 `isContr (SetOf Q)`。
 <!--ja-->
 この record は、命題値の構造に公理が要求する保証を加えたものです。フィールドが `S` 全体を量化するため、record 自身は `Type (ℓ-suc ℓ)` に住みます。最初の二つのフィールドは一意存在の形ではありません。外延性は、所属の真理値が各点で一致することからパス `a ≡ b` を得る含意であり、`setOf-unique` を成立させた仮定そのものです。正則性は `WellFounded _∈ᵗ_`、つまり Type 値の所属関係の整礎性です。これは各要素に `Acc` のデータを与え、所属に沿った再帰と帰納を可能にします。残りのフィールドはそれぞれ、あるクラス `Q` に対して `isContr (SetOf Q)` を主張します。
 <!--/-->
@@ -579,7 +579,7 @@ A model of ZF is a record with three kinds of fields: extensionality, which make
 <!--zh-->
 ## 小结
 
-ZF 模型是一个含三类字段的 record：外延性，它使实现者唯一；空集、配对、并、分离、替换、幂集的唯一存在字段，其中分离与替换限于本书自己的公式；以及正则性，作为宿主对成员关系的良基性陈述在元层面，从而沿成员关系的递归与归纳可用。`℩` 把字段转为运算，其规格都是投影；二元并与后继是复合，交则由分离加一条满足关系直接计算的双符号公式得到。无穷以数码链进入，即由裸成员方程确定的函数 `ℕ → S`；强形式使 `ω` 成为成员全为数码的集合。`isZFCModel`{.Agda} 在此之上添加选择公理，其中非空性与公共点证据截断，结论也截断，而每个所选交集的 `isContr` 不截断。
+ZF 模型是一个含三类字段的 record：外延性，它使实现者唯一；空集、配对、并、分离、替换、幂集的唯一存在字段，其中分离与替换限于本书自己的公式；以及正则公理，作为宿主对成员关系的良基性陈述在元层面，从而沿成员关系的递归与归纳可用。`℩` 把字段转为运算，其规格都是投影；二元并与后继是复合，交则由分离加一条满足关系直接计算的双符号公式得到。无穷以数码链进入，即由裸成员方程确定的函数 `ℕ → S`；强形式使 `ω` 成为成员全为数码的集合。`isZFCModel`{.Agda} 在此之上添加选择公理，其中非空性与公共点证据截断，结论也截断，而每个所选交集的 `isContr` 不截断。
 <!--ja-->
 ## まとめ
 

@@ -81,7 +81,7 @@ open import L.Ordinal {ℓ} using ( suc-ord )
 <!--en-->
 The bounded search will use the strict well-order induced by ordinal membership on a presentation. Its trichotomy ultimately uses `lem`, while its well-foundedness comes from regularity of ambient membership. The other ingredients describe graphs inside the object language: single-valuedness, exact domain, and injectivity. Keeping these order-theoretic and logical ingredients distinct will matter when a concrete graph code is later hidden by propositional truncation.
 <!--zh-->
-有界搜索将使用序数隶属关系在呈现上诱导的严格良序。它的三歧性最终使用 `lem`，良基性则来自外围隶属关系的正则性。另一些材料在对象语言中描述图的性质：单值性、恰当定义域与单射性。稍后用命题截断隐藏具体图码时，区分这些序论材料与逻辑材料十分重要。
+有界搜索将使用序数隶属关系在呈现上诱导的严格良序。它的三歧性最终使用 `lem`，良基性则来自外围隶属关系满足正则公理。另一些材料在对象语言中描述图的性质：单值性、恰当定义域与单射性。稍后用命题截断隐藏具体图码时，区分这些序论材料与逻辑材料十分重要。
 <!--ja-->
 有界な探索には、順序数の所属が提示上に誘導する狭義の整列順序を使います。その三分性は最終的に `lem` を用い、整礎性は周囲の所属の正則性から得られます。ほかの材料は、一価性、正確な定義域、単射性というグラフの性質を対象言語で記述します。後で具体的なグラフの符号を命題的切り詰めによって隠すとき、順序に関する材料と論理式に関する材料を区別することが重要になります。
 <!--/-->
@@ -237,7 +237,7 @@ Every index `m` in the presentation names a member of `sucV (fst α)`. Since tha
 <!--en-->
 Ordinal membership orders these indices. Applying `ordSWO` to the ordinal `sucV (fst α)` gives a strict well-order `w` on `⟪ sucV (fst α) ⟫`: its comparison follows membership between the named sets, its trichotomy depends on `lem`, and its well-foundedness follows from regularity. Declaring the value opaque controls later unfolding without changing the relation, its laws, or the assumptions on which they rest.
 <!--zh-->
-序数的隶属关系为这些索引排序。把 `ordSWO` 应用于序数 `sucV (fst α)`，便在 `⟪ sucV (fst α) ⟫` 上得到严格良序 `w`：它依照所指集合之间的隶属关系作比较，三歧性依赖 `lem`，良基性则来自正则性。把这个值声明为不透明，只控制它在后续证明中是否展开，并不改变该关系、它的定律或这些定律所依赖的假设。
+序数的隶属关系为这些索引排序。把 `ordSWO` 应用于序数 `sucV (fst α)`，便在 `⟪ sucV (fst α) ⟫` 上得到严格良序 `w`：它依照所指集合之间的隶属关系作比较，三歧性依赖 `lem`，良基性则来自正则公理。把这个值声明为不透明，只控制它在后续证明中是否展开，并不改变该关系、它的定律或这些定律所依赖的假设。
 <!--ja-->
 順序数の所属によって、これらのインデックスを順序付けます。順序数 `sucV (fst α)` に `ordSWO` を適用すると、`⟪ sucV (fst α) ⟫` 上の狭義の整列順序 `w` が得られます。この比較は名指された集合どうしの所属に従い、三分性は `lem` に依存し、整礎性は正則性から従います。この値を不透明にする指定は、後の証明での展開を制御するだけであり、関係、その法則、あるいは法則が依存する仮定を変えません。
 <!--/-->

@@ -199,6 +199,9 @@ Three semantic layers, one marking each:
 - `Base.Prelude` re-exports the direct `hProp` operations
   `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and the `∀[]-syntax` / `∃[]-syntax` forms
   `∀[ x ] …` / `∃[ x ] …`, so each logic symbol has one meaning throughout the book.
+- For `P : hProp ℓ`, write `⟨ P ⟩isProp` for the propositionhood certificate.
+  The representation-level projection `P .snd` is forbidden for this purpose;
+  `.snd` remains available for ordinary dependent pairs.
 - Object-language constructors always carry exactly one dot; the dot marks the
   token, not its components (`∀̇∈`, not `∀̇∈̇`).
 - Superscript = layer marker (`ˢ ᶜ ᵗ`); subscript = variant or index (`∈ₛ`, `Δ₀`,

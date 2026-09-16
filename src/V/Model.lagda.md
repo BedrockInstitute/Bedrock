@@ -1,23 +1,23 @@
 <!--en-->
 # The cumulative hierarchy models ZF and ZFC
 
-This chapter realizes each axiom of ZF inside the cumulative hierarchy at one fixed universe level `ℓ`. For each axiom asserting the existence of a set, the task is to exhibit that set together with a proof that its membership relation is, as a path of truth values, exactly the required description. The assumptions involved are worth separating at the outset. The stock constructions, namely the empty set, pairing, and union, cost nothing beyond the hierarchy's own set former, and the same is true of replacement, which is read directly off the membership rule of that former. Full separation needs propositional resizing, so that each satisfaction proposition gets a representative one universe down. Power set needs a small classifier for propositions, `HPropSmallness`{.Agda}. Resizing and the classifier are packaged together as `Impredicativity`{.Agda}, and the assembled ZF theorem `V⊨ZF`{.Agda} assumes exactly `LEM (ℓ-suc ℓ)`{.Agda}, from which the package follows. For its ZFC part, the theorem `V⊨ZFC`{.Agda} separately assumes set-level choice at `ℓ-suc ℓ`{.Agda}; by Diaconescu's theorem it implies the excluded middle used for the ZF part, and, lowered one universe, it supplies the choice-set axiom. The chapter builds up to these two theorems by converting, one axiom at a time, the constructions the hierarchy already provides into the exact shape the axioms demand.
+This chapter realizes each axiom of ZF inside the cumulative hierarchy at one fixed universe level `ℓ`. For each axiom asserting the existence of a set, the task is to exhibit that set together with a proof that its membership relation is, as a path of truth values, exactly the required description. The assumptions involved are worth separating at the outset. The stock constructions, namely the empty set, pairing, and union, cost nothing beyond the hierarchy's own set former, and the same is true of replacement, which is read directly off the membership rule of that former. Full separation needs propositional resizing, so that each satisfaction proposition gets a representative one universe down. Power set needs Ω-resizing for propositions, `ΩResizing`{.Agda}. `ΩResizing`{.Agda} presents the higher proposition universe by a low-level type and implies resizing, and the assembled ZF theorem `V⊨ZF`{.Agda} assumes exactly `LEM (ℓ-suc ℓ)`{.Agda}, from which the package follows. For its ZFC part, the theorem `V⊨ZFC`{.Agda} separately assumes set-level choice at `ℓ-suc ℓ`{.Agda}; by Diaconescu's theorem it implies the excluded middle used for the ZF part, and, lowered one universe, it supplies the choice-set axiom. The chapter builds up to these two theorems by converting, one axiom at a time, the constructions the hierarchy already provides into the exact shape the axioms demand.
 <!--zh-->
 # 累积层级是 ZF 与 ZFC 的模型
 
-本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的成员规则读出。全分离需要命题降级，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的小分类器，即 `HPropSmallness`{.Agda}。降层与分类器打包为 `Impredicativity`{.Agda}，装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `LEM (ℓ-suc ℓ)`{.Agda}，打包由它导出。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合层选择为假设；由 Diaconescu 定理，它蕴含 ZF 部分所用的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这两个定理。
+本章在固定的一个宇宙层级 `ℓ` 上，于累积层级内部逐条实现 ZF 的公理。对于要求集合存在的公理，任务是构造这样的集合，并证明其成员关系作为真值的路径恰是该公理所要求的描述。所涉假设值得先分开陈述。层级中已有的构造，即空集、配对与并，只花层级自身集合构造子的代价；替换同样如此，它直接从该构造子的成员规则读出。全分离需要命题换级，使每个满足命题获得低一层宇宙的代表。幂集需要一个命题的命题宇宙换级，即 `ΩResizing`{.Agda}。`ΩResizing`{.Agda} 用低层类型呈现高层命题宇宙，并蕴含命题换级；装配出的 ZF 定理 `V⊨ZF`{.Agda} 恰假设 `LEM (ℓ-suc ℓ)`{.Agda}，打包由它导出。ZFC 部分另以 `ℓ-suc ℓ`{.Agda} 层的集合层选择为假设；由 Diaconescu 定理，它蕴含 ZF 部分所用的排中律，而降低一层宇宙后又供给选择集公理。本章的工作就是把层级已有的构造逐一转换成公理所要求的精确形状，直至得出这两个定理。
 <!--ja-->
 # 累積階層は ZF と ZFC のモデル
 
-本章は、固定した一つの宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現します。集合の存在を要求する各公理については、その集合を構成し、所属関係が真理値のパスとして要求された記述にちょうど等しいことを証明します。関係する仮定は初めに区別しておく価値があります。基本的な構成、すなわち空集合、対、和集合は、階層自身の集合構成子の代償しか要らず、置換も同様で、その構成子の所属規則から直接読み取れます。完全な分出には命題リサイズが必要で、各充足命題に一段低い宇宙の代表を与えます。冪集合には命題の小分類子 `HPropSmallness`{.Agda} が必要です。リサイズと分類子は `Impredicativity`{.Agda} としてひとまとめにされ、組み立てられた ZF の定理 `V⊨ZF`{.Agda} はちょうど `LEM (ℓ-suc ℓ)`{.Agda} を仮定し、パッキングはそこから従います。ZFC の部分では、定理 `V⊨ZFC`{.Agda} がレベル `ℓ-suc ℓ`{.Agda} の集合レベルの選択を別に仮定します。ディアコネスクの定理により、これは ZF の部分に使う排中律を含意し、一段下げれば選択集合の公理を供給します。本章は、階層がすでに持つ構成を公理の要求する正確な形へ一公理ずつ変換し、この二つの定理へ至ります。
+本章は、固定した一つの宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現します。集合の存在を要求する各公理については、その集合を構成し、所属関係が真理値のパスとして要求された記述にちょうど等しいことを証明します。関係する仮定は初めに区別しておく価値があります。基本的な構成、すなわち空集合、対、和集合は、階層自身の集合構成子の代償しか要らず、置換も同様で、その構成子の所属規則から直接読み取れます。完全な分出には命題リサイズが必要で、各充足命題に一段低い宇宙の代表を与えます。冪集合には命題の命題宇宙リサイズ `ΩResizing`{.Agda} が必要です。`ΩResizing`{.Agda} は上位の命題宇宙を低いレベルの型で提示し、命題リサイズを含意します。組み立てられた ZF の定理 `V⊨ZF`{.Agda} はちょうど `LEM (ℓ-suc ℓ)`{.Agda} を仮定し、`Ω`-Resizing の仮定はそこから従います。ZFC の部分では、定理 `V⊨ZFC`{.Agda} がレベル `ℓ-suc ℓ`{.Agda} の集合レベルの選択を別に仮定します。ディアコネスクの定理により、これは ZF の部分に使う排中律を含意し、一段下げれば選択集合の公理を供給します。本章は、階層がすでに持つ構成を公理の要求する正確な形へ一公理ずつ変換し、この二つの定理へ至ります。
 <!--/-->
 
 <!--en-->
-The universe accounting is exact and should be read once. The carrier of the model is the hierarchy `S` at level `ℓ`, itself an inhabitant of `Type (ℓ-suc ℓ)`. The truth values serving as the model's equality and membership live in `hProp (ℓ-suc ℓ)`. The package `Impredicativity ℓ` couples the two smallness principles used below: `resizing` at that truth level, and the small classifier `HPropSmallness ℓ`, a small type equivalent to all of `hProp ℓ`. The choice lemma consumes set-level choice at level `ℓ`, and the final corollaries assume `LEM (ℓ-suc ℓ)` and `SetChoice (ℓ-suc ℓ)` respectively. So no single uniform level governs every assumption; each principle is taken exactly where its statement makes sense.
+The universe accounting is exact and should be read once. The carrier of the model is the hierarchy `S` at level `ℓ`, itself an inhabitant of `Type (ℓ-suc ℓ)`. The truth values serving as the model's equality and membership live in `hProp (ℓ-suc ℓ)`. The assumption `ΩResizing (ℓ-suc ℓ) ℓ` supplies the two forms of size control used below: resizing at that truth level, and a small carrier into which every proposition in `hProp ℓ` can be encoded and recovered. The choice lemma consumes set-level choice at level `ℓ`, and the final corollaries assume `LEM (ℓ-suc ℓ)` and `SetChoice (ℓ-suc ℓ)` respectively. So no single uniform level governs every assumption; each principle is taken exactly where its statement makes sense.
 <!--zh-->
-宇宙层级的账目是精确的，值得读一遍。模型的载体是层级 `ℓ` 上的 `S`，它本身居于 `Type (ℓ-suc ℓ)`。充当模型等词与成员关系的真值住在 `hProp (ℓ-suc ℓ)`。打包 `Impredicativity ℓ` 联结下文用到的两个小性原理：该真值层上的 `resizing`，以及小分类器 `HPropSmallness ℓ`，即与整个 `hProp ℓ` 等价的一个小类型。选择引理消耗层级 `ℓ` 上的集合层选择，而最终两条推论分别假设 `LEM (ℓ-suc ℓ)` 与 `SetChoice (ℓ-suc ℓ)`。因此没有哪一层统一层级支配所有假设；每条原理都恰在其陈述有意义之处取用。
+宇宙层级的账目是精确的，值得读一遍。模型的载体是层级 `ℓ` 上的 `S`，它本身居于 `Type (ℓ-suc ℓ)`。充当模型等词与成员关系的真值住在 `hProp (ℓ-suc ℓ)`。假设 `ΩResizing (ℓ-suc ℓ) ℓ` 供给下文两种尺寸控制：该真值层上的命题换级，以及一个可以编码并恢复 `hProp ℓ` 中每个命题的小载体。选择引理消耗层级 `ℓ` 上的集合层选择，而最终两条推论分别假设 `LEM (ℓ-suc ℓ)` 与 `SetChoice (ℓ-suc ℓ)`。因此没有哪一层统一层级支配所有假设；每条原理都恰在其陈述有意义之处取用。
 <!--ja-->
-宇宙レベルの計算は正確で、一度読んでおくべきものです。モデルの台はレベル `ℓ` の階層 `S` であり、それ自身 `Type (ℓ-suc ℓ)` の要素です。モデルの等号と所属を担う真理値は `hProp (ℓ-suc ℓ)` に住みます。パッキング `Impredicativity ℓ` は、以下で使う二つの小ささの原理、すなわちこの真理値レベルでの `resizing` と、`hProp ℓ` 全体と同値な小さな型である小分類子 `HPropSmallness ℓ` を結び付けます。選択の補題はレベル `ℓ` の集合レベルの選択を消費し、最後の二つの帰結はそれぞれ `LEM (ℓ-suc ℓ)` と `SetChoice (ℓ-suc ℓ)` を仮定します。したがってすべての仮定を支配する単一の一律のレベルはなく、各原理はその主張が意味を持つちょうどその場所で取られます。
+宇宙レベルの計算は正確で、一度読んでおくべきものです。モデルの台はレベル `ℓ` の階層 `S` であり、それ自身 `Type (ℓ-suc ℓ)` の要素です。モデルの等号と所属を担う真理値は `hProp (ℓ-suc ℓ)` に住みます。仮定 `ΩResizing (ℓ-suc ℓ) ℓ` は、以下で使う二つの大きさの制御、すなわちこの真理値レベルでの命題リサイズと、`hProp ℓ` の各命題を符号化して復元できる小さな台を与えます。選択の補題はレベル `ℓ` の集合レベルの選択を消費し、最後の二つの帰結はそれぞれ `LEM (ℓ-suc ℓ)` と `SetChoice (ℓ-suc ℓ)` を仮定します。したがってすべての仮定を支配する単一の一律のレベルはなく、各原理はその主張が意味を持つちょうどその場所で取られます。
 <!--/-->
 
 ```agda
@@ -27,7 +27,8 @@ open import Base.Prelude
 
 module V.Model {ℓ : Level} where
 
-open import Base.Impredicativity using ( HPropSmallness; Impredicativity )
+open import Base.Impredicativity
+  using ( Resizing; ΩResizing; ΩResizing→Resizing )
 ```
 
 <!--en-->
@@ -39,7 +40,7 @@ Formally, what does it mean for the hierarchy to satisfy an axiom? The first-ord
 <!--/-->
 
 ```agda
-open import Base.Classical using ( LEM; lem→impredicativity )
+open import Base.Classical using ( LEM; lem→ΩResizing )
 open import Base.Choice using ( SetChoice; choice→lem; lowerSetChoice )
 open import FOL.ZFStructure using ( ZFStructure )
 open import FOL.Syntax using ( Formula )
@@ -49,7 +50,7 @@ import FOL.Semantics
 <!--en-->
 The hierarchy contributes the structure `𝒮ᵥ`{.Agda}: its equality is the path type of the higher inductive type `V ℓ`{.Agda}, and its membership is the hierarchy's native `∈`. Extensionality and regularity for this structure were proved in the chapter on the hierarchy itself and are quoted here rather than reproved. One further tool is carried over from the smallness chapter: the adapter that builds a set from a predicate each of whose values is small. It becomes full separation as soon as resizing supplies the smallness. Throughout, a bi-implication of propositions is converted into the path between their truth values by the standard rewriting `⇔toPath`{.Agda}; almost every specification below ends with that step.
 <!--zh-->
-层级给出结构 `𝒮ᵥ`{.Agda}：其等词是高阶归纳类型 `V ℓ`{.Agda} 的路径类型，其成员关系是层级原生的 `∈`。该结构的外延性与正则性已在层级一章证明，此处引用而非重证。另有一个从小性一章带来的工具：从「每个取值都小」的谓词构造集合的适配器；一旦降层供给小性，它就成为全分离。全文中，命题之间的双向蕴含经标准改写 `⇔toPath`{.Agda} 变成真值之间的路径；下文几乎每条规格都以这一步收尾。
+层级给出结构 `𝒮ᵥ`{.Agda}：其等词是高阶归纳类型 `V ℓ`{.Agda} 的路径类型，其成员关系是层级原生的 `∈`。该结构满足外延公理与正则公理，这两条已在层级一章证明，此处引用而非重证。另有一个从小性一章带来的工具：从「每个取值都小」的谓词构造集合的适配器；一旦命题换级给出低层代表，它就成为全分离。全文中，命题之间的双向蕴含经标准改写 `⇔toPath`{.Agda} 变成真值之间的路径；下文几乎每条规格都以这一步收尾。
 <!--ja-->
 階層が提供するのは構造 `𝒮ᵥ`{.Agda} です。その等号は高次帰納型 `V ℓ`{.Agda} のパス型であり、所属は階層本来の `∈` です。この構造の外延性と正則性は階層そのものの章で証明済みで、ここでは再証明せずに引用します。さらに小ささの章から一つの道具を持ち越します。各値が小さい述語から集合を作る適合装置で、リサイズが小ささを供給しだい完全な分出になります。全体を通じて、命題の間の双条件は標準の書き換え `⇔toPath`{.Agda} で真理値の間のパスに変えられます。以下の仕様のほとんどすべてがこの一手で終わります。
 <!--/-->
@@ -59,7 +60,7 @@ import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Smallness {ℓ} using ( separateFromSmall )
 
-open import Cubical.Foundations.Equiv using ( equivFun; invEq; secEq )
+open import Cubical.Foundations.Equiv using ( equivFun )
 open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
 
@@ -130,7 +131,7 @@ open ZFStructure 𝒮ᵥ
 <!--en-->
 The target of all these conversions is the record `isZFModel`{.Agda}, whose fields are the ZF axioms: extensionality, regularity, empty set, pairing, union, separation, replacement, power set, and strong infinity through a numeral chain with two pinning equations. Each existence field asks for an `isContr (SetOf Q)`{.Agda}: a set realizing the class `Q` together with uniqueness data, which extensionality supplies; `isZFCModel`{.Agda} adds the choice-set field. Satisfaction for the deep-embedded formulas is instantiated at this structure: `(y ∷ x ∷ []) ⊨ φ`{.Agda} reads a formula `φ` of arity two at the environment that assigns `y` to the first free-variable slot and `x` to the second. The axiom schemas are each supplied as functions of their parameters, so every instance, for every formula, holds at once.
 <!--zh-->
-所有这些转换的目标是 record `isZFModel`{.Agda}，其字段即 ZF 公理：外延性、正则性、空集、配对、并、分离、替换、幂集，以及经数码链及其两条固定方程表述的强无穷。每个存在性字段要求 `isContr (SetOf Q)`{.Agda}：实现类 `Q` 的集合加上唯一性数据，唯一性由外延性提供；`isZFCModel`{.Agda} 再加选择集字段。深嵌入公式的满足关系在此结构上实例化：`(y ∷ x ∷ []) ⊨ φ`{.Agda} 表示在把 `y` 赋给第一个自由变元槽、`x` 赋给第二个的环境下读出元数为 2 的公式 `φ`。各公理模式都作为其参数的函数给出，因此对每个公式的每个实例都一次成立。
+所有这些转换的目标是 record `isZFModel`{.Agda}，其字段即 ZF 公理：外延性、正则公理、空集、配对、并、分离、替换、幂集，以及经数码链及其两条固定方程表述的强无穷。每个存在性字段要求 `isContr (SetOf Q)`{.Agda}：实现类 `Q` 的集合加上唯一性数据，唯一性由外延性提供；`isZFCModel`{.Agda} 再加选择集字段。深嵌入公式的满足关系在此结构上实例化：`(y ∷ x ∷ []) ⊨ φ`{.Agda} 表示在把 `y` 赋给第一个自由变元槽、`x` 赋给第二个的环境下读出元数为 2 的公式 `φ`。各公理模式都作为其参数的函数给出，因此对每个公式的每个实例都一次成立。
 <!--ja-->
 これらの変換の目標は record `isZFModel`{.Agda} で、その欄は ZF の公理そのものです。外延性、正則性、空集合、対、和、分出、置換、冪集合、そして数項の列と二つの固定方程式で表される強い無限です。各存在の欄は `isContr (SetOf Q)`{.Agda}、すなわちクラス `Q` を実現する集合と一意性のデータを要求し、一意性は外延性が供給します。`isZFCModel`{.Agda} は選択集合の欄を加えます。深く埋め込まれた論理式の充足はこの構造上で具体化されます。`(y ∷ x ∷ []) ⊨ φ`{.Agda} は、アリティ 2 の論理式 `φ` を、最初の自由変数の枠に `y` を、次の枠に `x` を割り当てる環境のもとで読むことを意味します。各公理のスキーマはパラメータの関数として与えられるので、すべての論理式に対するすべての実例が一度に成ります。
 <!--/-->
@@ -223,11 +224,11 @@ Backward runs the same exchange in reverse. From a truncated witness of the inde
 ```
 
 <!--en-->
-The goal of this chapter is to realize each axiom of ZF inside the cumulative hierarchy, at one fixed universe level `ℓ`: the structure `𝒮ᵥ`{.Agda} has a carrier `S` with truth-valued equality and membership, and a model record demands, for each axiom, a set whose membership is path-equal to the prescribed description. The assumptions are uneven, and it pays to separate them. The stock constructions, namely the empty set, pair, union, and infinity, and the whole replacement argument need no extra assumption at all. Full separation needs propositional resizing, so that the satisfaction of each formula becomes a small proposition pointwise. Power set needs a small classifier `HPropSmallness`, a small type equivalent to all of `hProp ℓ`. The packaged corollaries record the combined cost: `V⊨ZF` assumes exactly `LEM (ℓ-suc ℓ)`, and `V⊨ZFC` assumes exactly `SetChoice (ℓ-suc ℓ)`. This section stays on the assumption-free side. It develops the basic membership specifications for the union of a set and then for the union of an indexed family `f : X → S`. The set `⋃ (sett X f)` collects the values of the family through an intermediate set, and it is worth reading membership in that union directly as membership in some family member. Unfolding `union-spec` gives a truncated existential over members `v` of the union, and since each such `v` is itself presented by an index of the `sett`, a second truncated layer sits on top. The two lemmas below compose the layers into one, in each direction.
+The goal of this chapter is to realize each axiom of ZF inside the cumulative hierarchy, at one fixed universe level `ℓ`: the structure `𝒮ᵥ`{.Agda} has a carrier `S` with truth-valued equality and membership, and a model record demands, for each axiom, a set whose membership is path-equal to the prescribed description. The assumptions are uneven, and it pays to separate them. The stock constructions, namely the empty set, pair, union, and infinity, and the whole replacement argument need no extra assumption at all. Full separation needs propositional resizing, so that the satisfaction of each formula becomes a small proposition pointwise. Power set needs Ω-resizing derived from `ΩResizing`, whose carrier can encode and recover every proposition in `hProp ℓ`. The packaged corollaries record the combined cost: `V⊨ZF` assumes exactly `LEM (ℓ-suc ℓ)`, and `V⊨ZFC` assumes exactly `SetChoice (ℓ-suc ℓ)`. This section stays on the assumption-free side. It develops the basic membership specifications for the union of a set and then for the union of an indexed family `f : X → S`. The set `⋃ (sett X f)` collects the values of the family through an intermediate set, and it is worth reading membership in that union directly as membership in some family member. Unfolding `union-spec` gives a truncated existential over members `v` of the union, and since each such `v` is itself presented by an index of the `sett`, a second truncated layer sits on top. The two lemmas below compose the layers into one, in each direction.
 <!--zh-->
-本章的目标是在累积层级内部实现 ZF 的每条公理，全程固定在同一个宇宙层级 `ℓ` 上：结构 `𝒮ᵥ`{.Agda} 带有取真值的等词与成员关系的载体 `S`，模型 record 对每条公理都要求一个集合，其成员关系按路径等于所规定的描述。各部分所需假设并不均匀，值得分开列出。层级中已有的构造，即空集、配对、并与无穷，以及整个替换论证，完全不需要额外假设。全分离需要命题降级，使每条公式的满足逐点成为小命题。幂集需要小分类器 `HPropSmallness`，一个与整个 `hProp ℓ` 等价的小类型。打包的推论记录合并后的代价：`V⊨ZF` 恰假设 `LEM (ℓ-suc ℓ)`，`V⊨ZFC` 恰假设 `SetChoice (ℓ-suc ℓ)`。本节停留在无需假设的一侧，先为一个集合的并、再为索引族 `f : X → S` 的并展开基本成员规格。集合 `⋃ (sett X f)` 经由一个中间集合收拢族的取值，值得把属于这个并直接读作属于某个族元。展开 `union-spec` 得到对并的成员 `v` 的截断存在式，而每个这样的 `v` 又由 `sett` 的一个索引呈现，于是上面还叠着第二层截断。下面两条引理在两个方向上把各层合而为一。
+本章的目标是在累积层级内部实现 ZF 的每条公理，全程固定在同一个宇宙层级 `ℓ` 上：结构 `𝒮ᵥ`{.Agda} 带有取真值的等词与成员关系的载体 `S`，模型 record 对每条公理都要求一个集合，其成员关系按路径等于所规定的描述。各部分所需假设并不均匀，值得分开列出。层级中已有的构造，即空集、配对、并与无穷，以及整个替换论证，完全不需要额外假设。全分离需要命题换级，使每条公式的满足逐点获得索引层级中的等价代表。幂集需要由 `ΩResizing` 导出的命题宇宙换级，其小载体可以编码并恢复 `hProp ℓ` 中的每个命题。打包的推论记录合并后的代价：`V⊨ZF` 恰假设 `LEM (ℓ-suc ℓ)`，`V⊨ZFC` 恰假设 `SetChoice (ℓ-suc ℓ)`。本节停留在无需假设的一侧，先为一个集合的并、再为索引族 `f : X → S` 的并展开基本成员规格。集合 `⋃ (sett X f)` 经由一个中间集合收拢族的取值，值得把属于这个并直接读作属于某个族元。展开 `union-spec` 得到对并的成员 `v` 的截断存在式，而每个这样的 `v` 又由 `sett` 的一个索引呈现，于是上面还叠着第二层截断。下面两条引理在两个方向上把各层合而为一。
 <!--ja-->
-本章の目標は、一つの固定した宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現することです。構造 `𝒮ᵥ`{.Agda} は真理値を返す等号と所属を備えた台 `S` を持ち、モデルの record は各公理について、その所属がパスとして定められた記述に等しい集合を要求します。仮定は部分によって異なるので、分けて述べる価値があります。基本的な構成、すなわち空集合、対、和、無限と、置換の議論全体には、追加の仮定はまったく要りません。完全な分出には命題リサイズが必要で、各論理式の充足が点ごとに小さな命題になります。冪集合には小分類子 `HPropSmallness`、つまり `hProp ℓ` 全体と同値な小さな型が必要です。まとめられた帰結は合算のコストを記録します。`V⊨ZF` はちょうど `LEM (ℓ-suc ℓ)` を仮定し、`V⊨ZFC` はちょうど `SetChoice (ℓ-suc ℓ)` を仮定します。この節は仮定の不要な側にとどまり、まず一つの集合の和、次に添字付きの族 `f : X → S` の和について、基本的な所属の仕様を展開します。集合 `⋃ (sett X f)` は中間の集合を通して族の値を集めますが、この和への所属をある族の元への所属として直接読めることは有益です。`union-spec` を展開すると和の元 `v` にわたる切り詰められた存在式が得られ、そのような `v` はそれぞれ `sett` の添字で呈示されるため、その上に第二の切り詰めの層が乗ります。以下の二つの補題は、各方向でこの層を一つへまとめます。
+本章の目標は、一つの固定した宇宙レベル `ℓ` の上で、累積階層の内側に ZF の各公理を実現することです。構造 `𝒮ᵥ`{.Agda} は真理値を返す等号と所属を備えた台 `S` を持ち、モデルの record は各公理について、その所属がパスとして定められた記述に等しい集合を要求します。仮定は部分によって異なるので、分けて述べる価値があります。基本的な構成、すなわち空集合、対、和、無限と、置換の議論全体には、追加の仮定はまったく要りません。完全な分出には命題リサイズが必要で、各論理式の充足が点ごとに小さな命題になります。冪集合には `ΩResizing` から導かれる命題宇宙リサイズが必要で、その小さな台は `hProp ℓ` の各命題を符号化して復元できます。まとめられた帰結は合算のコストを記録します。`V⊨ZF` はちょうど `LEM (ℓ-suc ℓ)` を仮定し、`V⊨ZFC` はちょうど `SetChoice (ℓ-suc ℓ)` を仮定します。この節は仮定の不要な側にとどまり、まず一つの集合の和、次に添字付きの族 `f : X → S` の和について、基本的な所属の仕様を展開します。集合 `⋃ (sett X f)` は中間の集合を通して族の値を集めますが、この和への所属をある族の元への所属として直接読めることは有益です。`union-spec` を展開すると和の元 `v` にわたる切り詰められた存在式が得られ、そのような `v` はそれぞれ `sett` の添字で呈示されるため、その上に第二の切り詰めの層が乗ります。以下の二つの補題は、各方向でこの層を一つへまとめます。
 <!--/-->
 
 <!--en-->
@@ -633,81 +634,145 @@ The second case handles the right disjunct, and this is where the fact that a su
 <!--en-->
 ## Assumptions for the remaining axioms
 
-Two fields remain, full separation and power set, and they pose two different smallness problems. Full separation must turn an arbitrary satisfaction proposition `(y ∷ []) ⊨ φ`, which lives in `Type (ℓ-suc ℓ)`, into a small one, and no Δ₀ witness is available to do this by hand; what is needed is the `resizing` component of impredicativity, which produces a small representative for each such proposition pointwise, so that the smallness adapter `separateFromSmall` applies. Power set poses the other problem: a candidate subset of `a` is a family of membership propositions indexed by `⟪ a ⟫`, and to form a set from it, each proposition must be encoded in one fixed small type. The `hPropSmallness` component supplies exactly this: a small type `Ω'` equivalent to all of `hProp ℓ`, serving as a classifier for propositions. Neither construction uses the whole `Impredicativity` packing; each consumes one of its two components, and the later assembly takes the packing as a parameter, deriving it in the classical case through `lem→impredicativity`.
+Two fields remain, full separation and power set, and they pose two different smallness problems. Full separation must turn an arbitrary satisfaction proposition `(y ∷ []) ⊨ φ`, which lives in `Type (ℓ-suc ℓ)`, into a small one, and no Δ₀ witness is available to do this by hand; what is needed is resizing, which produces a small representative for each such proposition pointwise, so that the smallness adapter `separateFromSmall` applies. Power set poses the other problem: a candidate subset of `a` is a family of membership propositions indexed by `⟪ a ⟫`, and to form a set from it, each proposition must be encoded in one fixed small type. `ΩResizing` supplies exactly such a low-level type; its equivalence with the proposition universe yields the decoding, encoding and required round trip locally. The later assembly takes Ω-resizing as its single parameter and derives it in the classical case through `lem→ΩResizing`.
 
 ## Power set
 
-The power set is the one construction the library's own header disclaims, and the small classifier is what builds it. A candidate subset of `a` is described by a characteristic function `⟪ a ⟫ → Ω'` into the classifier's small carrier; decoding each value `χ m` yields a proposition on the index `m`, and the elements presented by indices where that proposition holds are gathered into a set by `sett`. The proof establishes two inclusions: everything the function selects lies in the given subset, and every member of the subset is selected, the second direction using the round trip decode after encode on propositions, together with extensionality.
+The power set is the one construction the library's own header disclaims, and Ω-resizing is what builds it. A candidate subset of `a` is described by a characteristic function `⟪ a ⟫ → Ω` into the low-level type `Ω`; decoding each value `χ m` yields a proposition on the index `m`, and the elements presented by indices where that proposition holds are gathered into a set by `sett`. The proof establishes two inclusions: everything the function selects lies in the given subset, and every member of the subset is selected, the second direction using the round trip decode after encode on propositions, together with extensionality.
 <!--zh-->
 ## 其余公理所需的假设
 
-还剩两个字段，全分离与幂集，它们提出的是两个不同的小性问题。全分离要把任意的满足命题 `(y ∷ []) ⊨ φ` (住在 `Type (ℓ-suc ℓ)`) 变小，而没有 Δ₀ 见证可以徒手完成；所需的是非直谓性中的 `resizing` 分量，它逐点地为每个这样的命题给出小代表，从而使小性适配器 `separateFromSmall` 得以应用。幂集提出的是另一类问题：`a` 的候选子集是以 `⟪ a ⟫` 为索引的成员命题族，要从它造出集合，每条命题必须编码进一个固定的小类型。`hPropSmallness` 分量恰好供给这一点：一个与整个 `hProp ℓ` 等价的小类型 `Ω'`，充当命题的分类器。两个构造都不使用整个 `Impredicativity` 打包；各自只消耗它的一个分量，后面的装配把该打包作为参数，经典情形经 `lem→impredicativity` 得到。
+还剩两个字段，全分离与幂集，它们提出的是两个不同的宇宙大小问题。全分离要把任意的满足命题 `(y ∷ []) ⊨ φ` (住在 `Type (ℓ-suc ℓ)`) 变小，而没有 Δ₀ 见证可以徒手完成；所需的命题换级逐点为每个这样的命题给出小代表，从而使小性适配器 `separateFromSmall` 得以应用。幂集提出的是另一类问题：`a` 的候选子集是以 `⟪ a ⟫` 为索引的成员命题族，要从它造出集合，每条命题必须编码进一个固定的小类型。`ΩResizing` 恰好给出可从中提取这些编码、解码及所需往返律的低层类型。后面的装配只以命题宇宙换级为参数，经典情形经 `lem→ΩResizing` 得到它。
 
 ## 幂集
 
-幂集是库文件头明确声明不提供的那一件构造，而小分类器正是构造它的材料。`a` 的候选子集由进入分类器小载体的特征函数 `⟪ a ⟫ → Ω'` 描述；解码每个值 `χ m` 便得到索引 `m` 上的命题，凡该命题成立的索引所呈现的元素由 `sett` 收集成集合。证明建立两个收纳：函数选中的都落在给定子集内，子集的每个成员都被选中；第二个方向使用命题上「先编码再解码」的往返，再由外延性收尾。
+幂集是库文件头明确声明不提供的那一件构造，而命题宇宙换级正是构造它的材料。`a` 的候选子集由进入低层类型 `Ω` 的特征函数 `⟪ a ⟫ → Ω` 描述；解码每个值 `χ m` 便得到索引 `m` 上的命题，凡该命题成立的索引所呈现的元素由 `sett` 收集成集合。证明建立两个收纳：函数选中的都落在给定子集内，子集的每个成员都被选中；第二个方向使用命题上「先编码再解码」的往返，再由外延性收尾。
 <!--ja-->
 ## 残る公理に必要な仮定
 
-残る欄は完全な分出と冪集合の二つですが、両者は異なる小ささの問題を提示します。完全な分出は、`Type (ℓ-suc ℓ)` に住む任意の充足命題 `(y ∷ []) ⊨ φ` を小さくしなければなりませんが、手作業でこれを行う Δ₀ の証人はありません。必要なのは非可述性の `resizing` の成分で、そのような各命題に点ごとに小さな代表を与え、小ささの適合装置 `separateFromSmall` を適用できるようにします。冪集合が提示するのは別の問題です。`a` の候補となる部分集合は `⟪ a ⟫` で添字付けられた所属の命題の族であり、そこから集合を作るには、各命題を一つの固定された小さな型へ符号化しなければなりません。`hPropSmallness` の成分はまさにこれを供給します。すなわち `hProp ℓ` 全体と同値な小さな型 `Ω'` で、命題の分類子として働きます。どちらの構成も `Impredicativity` のパッキング全体を使うのではなく、その二つの成分の一方だけを消費します。後の組み立てはパッキングをパラメータとして受け取り、古典的な場合は `lem→impredicativity` から導かれます。
+残る欄は完全な分出と冪集合の二つですが、両者は異なる小ささの問題を提示します。完全な分出は、`Type (ℓ-suc ℓ)` に住む任意の充足命題 `(y ∷ []) ⊨ φ` を小さくしなければなりませんが、手作業でこれを行う Δ₀ の証人はありません。必要な命題リサイズは、そのような各命題に点ごとに小さな代表を与え、小ささの適合装置 `separateFromSmall` を適用できるようにします。冪集合が提示するのは別の問題です。`a` の候補となる部分集合は `⟪ a ⟫` で添字付けられた所属の命題の族であり、そこから集合を作るには、各命題を一つの固定された小さな型へ符号化しなければなりません。`ΩResizing` は、これらの符号化、復号、および必要な往復法則を取り出せる低いレベルの型を与えます。後の組み立ては命題宇宙リサイズだけをパラメータとして受け取り、古典的な場合は `lem→ΩResizing` から導かれます。
 
 ## 冪集合
 
-冪集合は、ライブラリのヘッダ自身が提供しないと明言する唯一の構成であり、小分類子こそがそれを作る材料です。`a` の候補となる部分集合は、分類子の小さな台への特性関数 `⟪ a ⟫ → Ω'` で記述します。各値 `χ m` を復号すれば添字 `m` 上の命題が得られ、その命題が成り立つ添字が呈示する要素は `sett` で一つの集合に集められます。証明は二つの包含を確立します。関数が選んだものはすべて与えられた部分集合に含まれ、部分集合のすべての元が選ばれる、というものです。第二の方向は、命題に対する復号してから符号化する往復と、外延性を用います。
+冪集合は、ライブラリのヘッダ自身が提供しないと明言する唯一の構成であり、命題宇宙リサイズこそがそれを作る材料です。`a` の候補となる部分集合は、低いレベルの型 `Ω` への特性関数 `⟪ a ⟫ → Ω` で記述します。各値 `χ m` を復号すれば添字 `m` 上の命題が得られ、その命題が成り立つ添字が呈示する要素は `sett` で一つの集合に集められます。証明は二つの包含を確立します。関数が選んだものはすべて与えられた部分集合に含まれ、部分集合のすべての元が選ばれる、というものです。第二の方向は、命題に対する復号してから符号化する往復と、外延性を用います。
 <!--/-->
 
 <!--en-->
-The power-set construction assumes exactly one component of the packing: a witness `sΩ` of `HPropSmallness ℓ`, that is, a small type `Ω'` in `Type ℓ` together with an equivalence onto `hProp ℓ`. Nothing else is assumed. From the equivalence two readings are extracted. The forward map `decode` turns a small truth value into an ordinary proposition packaged in `hProp ℓ`; this is the direction that lets a characteristic function be read as a predicate on indices.
+The power-set construction now extracts what it needs directly from `ωr`{.Agda}. Write `Ω` for its low-level type and `e` for the [type equivalence]{.term-ref #type-equivalence} from the higher proposition universe to `Ω`. The forward map of `e` encodes higher propositions as elements of `Ω`.
 <!--zh-->
-幂集构造恰以该打包的一个成分为前提：`HPropSmallness ℓ` 的见证 `sΩ`，即 `Type ℓ` 中的小类型 `Ω'` 连同到 `hProp ℓ` 的等价。此外不假设任何东西。由该等价提取两个读法。正向映射 `decode` 把小真值变成打包在 `hProp ℓ` 中的普通命题；正是这个方向使特征函数可被读作索引上的谓词。
+幂集构造现在直接从 `ωr`{.Agda} 中提取所需数据。记它给出的低层类型为 `Ω`，记从高层命题宇宙到 `Ω` 的[类型等价]{.term-ref #type-equivalence}为 `e`。`e` 的正向映射把高层命题编码为 `Ω` 的元素。
 <!--ja-->
-冪集合の構成は、パッキングの成分のうちちょうど一つを前提とします。すなわち `HPropSmallness ℓ` の証人 `sΩ`、つまり `Type ℓ` の小さな型 `Ω'` と `hProp ℓ` 全体への同値です。それ以外は何も仮定しません。この同値から二つの読み方を取り出します。順方向の写像 `decode` は小さな真理値を、`hProp ℓ` に包装された通常の命題へ変えます。特性関数を添字上の述語として読めるのはこの方向です。
+冪集合の構成は、必要なデータを `ωr`{.Agda} から直接取り出します。それが与える低いレベルの型を `Ω`、上位の命題宇宙から `Ω` への[型同値]{.term-ref #type-equivalence}を `e` と書きます。`e` の順写像は上位の命題を `Ω` の要素へ符号化します。
 <!--/-->
 
 ```agda
-module Power (sΩ : HPropSmallness ℓ) where
+module Power (ωr : ΩResizing (ℓ-suc ℓ) ℓ) where
 
   private
-    decode : sΩ .fst → hProp ℓ
-    decode = equivFun (sΩ .snd)
+    open import Cubical.Data.Unit using ( tt* )
+    open import Cubical.Foundations.Equiv using ( _≃_; equivFun; invEq )
+```
 
-    encode : hProp ℓ → sΩ .fst
+```agda
+    open import Cubical.Foundations.Equiv.Properties using ( congEquiv )
+    open import Cubical.Foundations.HLevels
+      using ( isOfHLevelLift; isOfHLevelRespectEquiv )
+
+    Ω : Type ℓ
+    Ω = ωr .fst
+```
+
+```agda
+    e : hProp (ℓ-suc ℓ) ≃ Ω
+    e = ωr .snd
+
+    code : hProp (ℓ-suc ℓ) → Ω
+    code = equivFun e
 ```
 
 <!--en-->
-The backward map `encode` sends an `hProp ℓ` proposition into the small carrier, and the round trip `decode∘encode` is the `secEq` leg of the equivalence: decoding the encoding of a proposition returns a path to exactly that proposition. With the classifier in place, the realizing family `F` is direct. For a characteristic function `χ`, take the pairs of an index `m` with a proof that `decode (χ m)` holds, and form the `sett` of the elements they present. The selected members are exactly those whose encoded truth value decodes to a proposition with a proof.
+A proposition at level `ℓ` is first lifted into the higher proposition universe and then encoded. Truth is encoded in the same way and serves as the reference value.
 <!--zh-->
-反向映射 `encode` 把 `hProp ℓ` 的命题送入小载体，而往返 `decode∘encode` 是等价的 `secEq` 一侧：把命题的编码再解码，得到指向恰该命题的路径。分类器就位后，实现族 `F` 是直接的：对特征函数 `χ`，取「索引 `m` 加上 `decode (χ m)` 成立的证明」的对，把所呈现的元素作成 `sett`。被选中的成员恰是其编码真值解码出带证明命题的那些。
+先把 `ℓ` 层的命题抬升到高层命题宇宙，再对它编码。真命题也以同样方式编码，并作为参照值。
 <!--ja-->
-逆方向の写像 `encode` は `hProp ℓ` の命題を小さな台へ送り、往復 `decode∘encode` は同値の `secEq` の側です。命題の符号を復号すれば、もとの命題そのものへのパスが返ります。分類子が揃うと、実現する族 `F` は直接的です。特性関数 `χ` に対し、添字 `m` と「`decode (χ m)` が成り立つ」ことの証明の対を集め、それが呈示する要素の `sett` を作ります。選ばれる元は、符号化された真理値を復号すると証明付きの命題になるものにちょうど一致します。
+レベル `ℓ` の命題をまず上位の命題宇宙へ持ち上げ、それから符号化します。真の命題も同じように符号化し、基準値とします。
 <!--/-->
 
 ```agda
-    encode = invEq (sΩ .snd)
+    up : hProp ℓ → hProp (ℓ-suc ℓ)
+    up P = Lift {j = ℓ-suc ℓ} ⟨ P ⟩ ,
+      isOfHLevelLift 1 ⟨ P ⟩isProp
 
+    top : Ω
+    top = code ⊤
+```
+
+<!--en-->
+To decode `x : Ω`{.Agda}, take the proposition that `x` equals the code of truth. Since `e` identifies `Ω` with a proposition universe, it also transfers the h-set structure needed to make this equality proposition-valued.
+<!--zh-->
+为了解码 `x : Ω`{.Agda}，取命题「真命题的编码等于 `x`」。由于 `e` 把 `Ω` 与命题宇宙联系起来，它也传递了使该等式成为命题所需的 h-集合结构。
+<!--ja-->
+`x : Ω`{.Agda} を復号するには、真の命題の符号が `x` に等しいという命題を取ります。`e` は `Ω` を命題宇宙と結ぶので、この等式を命題にするための h-集合構造も運びます。
+<!--/-->
+
+```agda
+    setΩ : isSet Ω
+    setΩ = isOfHLevelRespectEquiv 2 e isSetHProp
+
+    decode : Ω → hProp ℓ
+    decode x = (top ≡ x) , setΩ top x
+```
+
+```agda
+    encode : hProp ℓ → Ω
+    encode P = code (up P)
+```
+
+<!--en-->
+The only law needed by the power-set proof says that decoding an encoded proposition returns that proposition. In one direction, an equality of codes is reflected back through the equivalence and yields a proof of `P`; in the other, a proof of `P` identifies its lifted form with truth and hence identifies their codes. Propositional extensionality packages these two maps as the required equality of propositions.
+<!--zh-->
+幂集证明只需要一条规律：命题经过编码再解码后返回原命题。一个方向把编码的等式经类型等价反射回去，从而得到 `P` 的证明；另一个方向用 `P` 的证明把它的抬升与真命题等同，进而等同二者的编码。命题外延性把这两个映射组成所需的命题等式。
+<!--ja-->
+冪集合の証明に必要な法則は一つだけです。命題を符号化して復号すると元の命題に戻ります。一方では符号の等式を型同値によって反映し、`P` の証明を得ます。他方では `P` の証明によってその持ち上げを真の命題と同一視し、両者の符号を同一視します。命題外延性がこの二つの写像を必要な命題の等式にまとめます。
+<!--/-->
+
+```agda
     decode∘encode : (P : hProp ℓ) → decode (encode P) ≡ P
-    decode∘encode = secEq (sΩ .snd)
+    decode∘encode P = ⇔toPath
+      (λ q → lower (subst ⟨_⟩
+        (invEq (congEquiv e) q) tt*))
+      (λ p → cong code (⇔toPath (λ _ → lift p) (λ _ → tt*)))
+```
 
-    F : (a : S) → (⟪ a ⟫ → sΩ .fst) → S
+<!--en-->
+A characteristic function `χ : ⟪ a ⟫ → Ω`{.Agda} now selects the indices at which `decode (χ m)` holds. The family `F` gathers the elements presented by those indices.
+<!--zh-->
+于是，特征函数 `χ : ⟪ a ⟫ → Ω`{.Agda} 选出满足 `decode (χ m)` 的索引，族 `F` 再收集这些索引所呈现的元素。
+<!--ja-->
+これで特性関数 `χ : ⟪ a ⟫ → Ω`{.Agda} は `decode (χ m)` が成り立つ添字を選び、族 `F` はそれらの添字が呈示する要素を集めます。
+<!--/-->
+
+```agda
+    F : (a : S) → (⟪ a ⟫ → Ω) → S
     F a χ = sett (Σ[ m ∈ ⟪ a ⟫ ] ⟨ decode (χ m) ⟩) (λ p → ⟪ a ⟫↪ (p .fst))
 ```
 
 <!--en-->
-The power set operation is itself a `sett`: the index type is the function type from `⟪ a ⟫` into the small carrier `Ω'`, and the family realizes each characteristic function as the set selected above. Membership in `𝒫V a` is therefore, merely, membership in one of the realized sets: a member arrives as a truncated pair of a characteristic function and a path from the set it selects to `x`. The forward direction of the specification shows that such an `x` is a subset of `a` in the ambient sense, the inclusion `⊆` of the hierarchy library rather than the structure's relation `⊆ˢ`; the passage between the two is kept separate and handled at the end.
+The power set operation is itself a `sett`: the index type is the function type from `⟪ a ⟫` into `Ω`, and the family realizes each characteristic function as the set selected above. Membership in `𝒫V a` is therefore, merely, membership in one of the realized sets: a member arrives as a truncated pair of a characteristic function and a path from the set it selects to `x`. The forward direction of the specification shows that such an `x` is a subset of `a` in the ambient sense, the inclusion `⊆` of the hierarchy library rather than the structure's relation `⊆ˢ`; the passage between the two is kept separate and handled at the end.
 <!--zh-->
-幂集运算本身就是一次 `sett`：索引类型是从 `⟪ a ⟫` 到小载体 `Ω'` 的函数类型，族把每个特征函数实现为上文选出的集合。于是属于 `𝒫V a` 仅仅是属于某个实现的集合：成员以「特征函数加一条从它所选集合到 `x` 的路径」的截断对出现。规格的正向表明这样的 `x` 在环境意义下是 `a` 的子集，即层级库的包含 `⊆`，而非结构的关系 `⊆ˢ`；两者的换算被分开处理，留到最后。
+幂集运算本身就是一次 `sett`：索引类型是从 `⟪ a ⟫` 到 `Ω` 的函数类型，族把每个特征函数实现为上文选出的集合。于是属于 `𝒫V a` 仅仅是属于某个实现的集合：成员以「特征函数加一条从它所选集合到 `x` 的路径」的截断对出现。规格的正向表明这样的 `x` 在环境意义下是 `a` 的子集，即层级库的包含 `⊆`，而非结构的关系 `⊆ˢ`；两者的换算被分开处理，留到最后。
 <!--ja-->
-冪集合の操作そのものも `sett` です。添字型は `⟪ a ⟫` から小さな台 `Ω'` への関数型であり、族が各特性関数を上で選ばれた集合として実現します。したがって `𝒫V a` への所属とは、切り詰められた意味で、実現された集合のどれかへの所属です。すなわち、特性関数と、それが選ぶ集合から `x` へのパスの切り詰められた対として元が現れます。仕様の順方向は、そのような `x` が周辺の意味で `a` の部分集合であること、つまり階層のライブラリの包含 `⊆` であって構造の関係 `⊆ˢ` ではないことを示します。両者の仲立ちには別の段階を設け、最後に扱います。
+冪集合の操作そのものも `sett` です。添字型は `⟪ a ⟫` から `Ω` への関数型であり、族が各特性関数を上で選ばれた集合として実現します。したがって `𝒫V a` への所属とは、切り詰められた意味で、実現された集合のどれかへの所属です。すなわち、特性関数と、それが選ぶ集合から `x` へのパスの切り詰められた対として元が現れます。仕様の順方向は、そのような `x` が周辺の意味で `a` の部分集合であること、つまり階層のライブラリの包含 `⊆` であって構造の関係 `⊆ˢ` ではないことを示します。両者の仲立ちには別の段階を設け、最後に扱います。
 <!--/-->
 
 ```agda
 
   𝒫V : S → S
-  𝒫V a = sett (⟪ a ⟫ → sΩ .fst) (F a)
+  𝒫V a = sett (⟪ a ⟫ → Ω) (F a)
 
   private
     fwd : (a x : S) → ⟨ x ∈ˢ 𝒫V a ⟩ → ⟨ x ⊆ a ⟩
-    fwd a x = PT.rec ((x ⊆ a) .snd) λ { (χ , p) y y∈ₛx →
+    fwd a x = PT.rec (⟨ x ⊆ a ⟩isProp) λ { (χ , p) y y∈ₛx →
 ```
 
 <!--en-->
@@ -719,7 +784,7 @@ The proof of `x ⊆ a` proceeds member by member, first eliminating the truncate
 <!--/-->
 
 ```agda
-      PT.rec ((y ∈ₛ a) .snd)
+      PT.rec (⟨ y ∈ₛ a ⟩isProp)
              (λ { ((m , _) , q) → subst (λ v → ⟨ v ∈ₛ a ⟩) q (∈ₛ⟪ a ⟫↪ m) })
              (∈∈ₛ {a = y} {b = F a χ} .snd
                (subst (λ v → ⟨ y ∈ₛ v ⟩) (sym p) y∈ₛx)) }
@@ -744,7 +809,7 @@ Backward builds the witness for membership in the power set, and it needs no cho
 ```agda
     bwd a x sub = ∣ χₓ , extensionality (F a χₓ) x (s1 , s2) ∣₁
       where
-      χₓ : ⟪ a ⟫ → sΩ .fst
+      χₓ : ⟪ a ⟫ → Ω
       χₓ m = encode (⟪ a ⟫↪ m ∈ₛ x)
       s1 : ⟨ F a χₓ ⊆ x ⟩
 ```
@@ -758,7 +823,7 @@ The first inclusion shows that the set selected by `χₓ` adds nothing beyond `
 <!--/-->
 
 ```agda
-      s1 y y∈ₛF = PT.rec ((y ∈ₛ x) .snd)
+      s1 y y∈ₛF = PT.rec (⟨ y ∈ₛ x ⟩isProp)
         (λ { ((m , h) , q) →
           subst (λ v → ⟨ v ∈ₛ x ⟩) q
             (subst ⟨_⟩ (decode∘encode (⟪ a ⟫↪ m ∈ₛ x)) h) })
@@ -799,11 +864,11 @@ The path `q` is obtained by applying `identityPrinciple` to the equal-members da
 ```
 
 <!--en-->
-The specification `power-spec` composes two equalities of truth values. The first is the equivalence just proved: membership in `𝒫V a` equals the ambient inclusion `x ⊆ a`, which quantifies over actual members and is not truncated. The second converts the ambient inclusion into the structure's own subset relation `x ⊆ˢ a`, stated through the structure's membership `∈ˢ`: given a function sending each ordinary member of `x` to an ordinary member of `a`, the two directions of `∈∈ₛ` exchange the membership notations pointwise in both directions. The composite is the power-set field's data: a set `𝒫V a` whose membership, as a truth value, is exactly the subset relation the record states. Note where each smallness input entered: separation consumed `resizing` pointwise, while the power set was built from `hPropSmallness` alone.
+The specification `power-spec` composes two equalities of truth values. The first is the equivalence just proved: membership in `𝒫V a` equals the ambient inclusion `x ⊆ a`, which quantifies over actual members and is not truncated. The second converts the ambient inclusion into the structure's own subset relation `x ⊆ˢ a`, stated through the structure's membership `∈ˢ`: given a function sending each ordinary member of `x` to an ordinary member of `a`, the two directions of `∈∈ₛ` exchange the membership notations pointwise in both directions. The composite is the power-set field's data: a set `𝒫V a` whose membership, as a truth value, is exactly the subset relation the record states. Note where each smallness input entered: separation consumed `resizing` pointwise, while the power set was built from the low-level type extracted from `ΩResizing`.
 <!--zh-->
-规格 `power-spec` 复合两个真值等式。第一个是刚证的主等价：属于 `𝒫V a` 等于环境意义下的包含 `x ⊆ a`，后者量化于实际成员之上，不加截断。第二个把环境包含转换成结构自己的子集关系 `x ⊆ˢ a`，它经由结构的成员关系 `∈ˢ` 陈述：给定把 `x` 的每个普通成员送到 `a` 的普通成员的函数，`∈∈ₛ` 的两个方向逐点互换两种隶属记号。复合所得正是幂集字段收到的数据：集合 `𝒫V a` 的隶属作为真值恰是 record 所述的子集关系。也请注意各小性输入进入之处：分离逐点消耗 `resizing`，而幂集仅由 `hPropSmallness` 构成。
+规格 `power-spec` 复合两个真值等式。第一个是刚证的主等价：属于 `𝒫V a` 等于环境意义下的包含 `x ⊆ a`，后者量化于实际成员之上，不加截断。第二个把环境包含转换成结构自己的子集关系 `x ⊆ˢ a`，它经由结构的成员关系 `∈ˢ` 陈述：给定把 `x` 的每个普通成员送到 `a` 的普通成员的函数，`∈∈ₛ` 的两个方向逐点互换两种隶属记号。复合所得正是幂集字段收到的数据：集合 `𝒫V a` 的隶属作为真值恰是 record 所述的子集关系。也请注意各种大小控制进入之处：分离逐点消耗 `resizing`，而幂集直接使用 `ΩResizing` 给出的低层呈现。
 <!--ja-->
-仕様 `power-spec` は二つの真理値の等式を合成します。一つ目は今示した本質的な同値、すなわち `𝒫V a` への所属と、実際の元の上で量化され切り詰められていない包含 `x ⊆ a` との一致です。二つ目は、その包含を構造自身の部分集合の関係 `x ⊆ˢ a`、つまり構造の所属 `∈ˢ` を通して述べた形へ変換します。`x` の各通常の元を `a` の通常の元へ送る関数が与えられれば、`∈∈ₛ` の両方向が二つの所属の記法を各点で取り替えます。その合成こそ、冪集合のフィールドが受け取るデータです。集合 `𝒫V a` の所属が、真理値として、record の述べる部分集合の関係にちょうど等しいということです。それぞれの小ささの入力が入った場所にも注意してください。分出は点ごとに `resizing` を消費し、冪集合は `hPropSmallness` だけで組み立てられました。
+仕様 `power-spec` は二つの真理値の等式を合成します。一つ目は今示した本質的な同値、すなわち `𝒫V a` への所属と、実際の元の上で量化され切り詰められていない包含 `x ⊆ a` との一致です。二つ目は、その包含を構造自身の部分集合の関係 `x ⊆ˢ a`、つまり構造の所属 `∈ˢ` を通して述べた形へ変換します。`x` の各通常の元を `a` の通常の元へ送る関数が与えられれば、`∈∈ₛ` の両方向が二つの所属の記法を各点で取り替えます。その合成こそ、冪集合のフィールドが受け取るデータです。集合 `𝒫V a` の所属が、真理値として、record の述べる部分集合の関係にちょうど等しいということです。それぞれの小ささの入力が入った場所にも注意してください。分出は点ごとに `resizing` を消費し、冪集合は `ΩResizing` から取り出した低いレベルの型だけで組み立てられました。
 <!--/-->
 
 ```agda
@@ -817,29 +882,32 @@ The specification `power-spec` composes two equalities of truth values. The firs
 <!--en-->
 ## Establishing V ⊨ ZF
 
-Every field of the model record now has its witness, and this section assembles them into a single mathematical theorem: the cumulative hierarchy satisfies ZF. The axioms group by how they were obtained. Empty set, pairing, and union are the stock sets converted at the start of the chapter. Full separation and power set are the two smallness results, each consuming one component of the impredicativity packing: separation uses `resizing` to make each satisfaction proposition small so that `separateFromSmall` applies, and power set uses the small classifier alone. Replacement is the image built from untruncated fibers, and infinity is the library's `ω` together with the numeral alignment. What remains is a packaging step with one genuine mathematical input. A field of `isZFModel` asks for `isContr (SetOf Q)`: a realizing set together with a contraction of all realizers to it, and extensionality supplies exactly that contraction, via `setOf-unique`. The theorem `V⊨ZF-impredicative` assumes the packing `Impredicativity ℓ`; the theorem `V⊨ZF` assumes instead `LEM (ℓ-suc ℓ)` and derives the packing through `lem→impredicativity`.
+Every field of the model record now has its witness, and this section assembles them into a single mathematical theorem: the cumulative hierarchy satisfies ZF. The axioms group by how they were obtained. Empty set, pairing, and union are the stock sets converted at the start of the chapter. Full separation and power set are the two smallness results, both obtained from the same Ω-resizing assumption: separation uses the derived `resizing` to make each satisfaction proposition small so that `separateFromSmall` applies, and power set uses Ω-resizing alone. Replacement is the image built from untruncated fibers, and infinity is the library's `ω` together with the numeral alignment. What remains is a packaging step with one genuine mathematical input. A field of `isZFModel` asks for `isContr (SetOf Q)`: a realizing set together with a contraction of all realizers to it, and extensionality supplies exactly that contraction, via `setOf-unique`. The theorem `V⊨ZF-impredicative` assumes the Ω-resizing assumption `ΩResizing (ℓ-suc ℓ) ℓ`; the theorem `V⊨ZF` assumes instead `LEM (ℓ-suc ℓ)` and derives the Ω-resizing assumption through `lem→ΩResizing`.
 <!--zh-->
 ## 证明 V ⊨ ZF
 
-模型 record 的每个字段如今都有了见证；本节把它们组装成单个数学定理：累积层级满足 ZF。公理按其来源分组。空集、配对与并是章首转换过的所需的基本集合。全分离与幂集是两个小性结果，各自消耗非直谓性打包的一个分量：分离用 `resizing` 使每个满足命题变小，从而 `separateFromSmall` 得以应用；幂集只用小分类器。替换是由不加截断的纤维造出的像；无穷是库中的 `ω` 连同数码对齐。剩下的是一步打包，但其中有一个真正的数学输入：`isZFModel` 的每个字段要求 `isContr (SetOf Q)`，即实现集合连同把一切实现者收缩到它的紧缩，而外延性经 `setOf-unique` 恰好给出这个紧缩。定理 `V⊨ZF-impredicative` 假设打包 `Impredicativity ℓ`；定理 `V⊨ZF` 改为假设 `LEM (ℓ-suc ℓ)`，并经 `lem→impredicativity` 导出该打包。
+模型 record 的每个字段如今都有了见证；本节把它们组装成单个数学定理：累积层级满足 ZF。公理按其来源分组。空集、配对与并是章首转换过的所需的基本集合。全分离与幂集是两个大小控制结果，都来自同一个命题宇宙换级假设：分离用导出的 `resizing` 使每个满足命题变小，从而 `separateFromSmall` 得以应用；幂集只用命题宇宙换级。替换是由不加截断的纤维造出的像；无穷是库中的 `ω` 连同数码对齐。剩下的是一步打包，但其中有一个真正的数学输入：`isZFModel` 的每个字段要求 `isContr (SetOf Q)`，即实现集合连同把一切实现者收缩到它的紧缩，而外延性经 `setOf-unique` 恰好给出这个紧缩。定理 `V⊨ZF-impredicative` 假设 `ΩResizing (ℓ-suc ℓ) ℓ`；定理 `V⊨ZF` 改为假设 `LEM (ℓ-suc ℓ)`，并经 `lem→ΩResizing` 导出该命题宇宙换级假设。
 <!--ja-->
 ## V ⊨ ZF の証明
 
-モデルの record の各フィールドにはすでに証拠が揃っており、この節はそれらを一つの数学的定理へ組み立てます。累積階層は ZF を満たす、という定理です。公理はその導出の仕方ごとに分類できます。空集合、対、和集合は章の冒頭で変換した基本的な集合です。完全な分出と冪集合は二つの小ささの結果で、それぞれ非可述性のパッキングの成分を一つずつ消費します。分出は `resizing` で各充足命題を小さくして `separateFromSmall` を適用できようにし、冪集合は小分類子だけを使います。置換は切り詰められていないファイバーから作った像であり、無限はライブラリの `ω` と数項の整列です。残るのは梱包の一段階ですが、そこには本物の数学的入力が一つあります。`isZFModel` の各フィールドは `isContr (SetOf Q)`、すなわち実現する集合と、すべての実現者をそこへ収縮させるデータを要求します。外延性がまさにその収縮を `setOf-unique` を通して与えます。定理 `V⊨ZF-impredicative` はパッキング `Impredicativity ℓ` を仮定し、定理 `V⊨ZF` は代わりに `LEM (ℓ-suc ℓ)` を仮定して、`lem→impredicativity` によりパッキングを導きます。
+モデルの record の各フィールドにはすでに証拠が揃っており、この節はそれらを一つの数学的定理へ組み立てます。累積階層は ZF を満たす、という定理です。公理はその導出の仕方ごとに分類できます。空集合、対、和集合は章の冒頭で変換した基本的な集合です。完全な分出と冪集合は二つの小ささの結果で、どちらも同じ命題宇宙リサイズの仮定から得られます。分出は導かれた `resizing` で各充足命題を小さくして `separateFromSmall` を適用できようにし、冪集合は命題宇宙リサイズだけを使います。置換は切り詰められていないファイバーから作った像であり、無限はライブラリの `ω` と数項の整列です。残るのは梱包の一段階ですが、そこには本物の数学的入力が一つあります。`isZFModel` の各フィールドは `isContr (SetOf Q)`、すなわち実現する集合と、すべての実現者をそこへ収縮させるデータを要求します。外延性がまさにその収縮を `setOf-unique` を通して与えます。定理 `V⊨ZF-impredicative` は`Ω`-Resizing の仮定 `ΩResizing (ℓ-suc ℓ) ℓ` を仮定し、定理 `V⊨ZF` は代わりに `LEM (ℓ-suc ℓ)` を仮定して、`lem→ΩResizing` により`Ω`-Resizing の仮定を導きます。
 <!--/-->
 
 <!--en-->
-The assembly takes the packing `Impredicativity ℓ` as a parameter, and its two fields feed the two smallness constructions separately: `hPropSmallness` goes to the power-set construction of the previous section, which uses the classifier alone, and `resizing` is what separation uses. Full separation is stated directly: given a set `a` and a formula `φ` with one free-variable slot, produce a set `s` such that, for every `y`, the truth value `y ∈ˢ s` is the path equal to the conjunction of `y ∈ˢ a` and the satisfaction of `φ` at the one-point environment `y ∷ []`. This is precisely the shape of the separation specification the model record demands.
+The assembly takes `ΩResizing (ℓ-suc ℓ) ℓ` as its single parameter. The power-set construction uses its low-level type and equivalence directly, while separation uses the propositional resizing derived by `ΩResizing→Resizing`. Full separation is stated directly: given a set `a` and a formula `φ` with one free-variable slot, produce a set `s` such that, for every `y`, the truth value `y ∈ˢ s` is the path equal to the conjunction of `y ∈ˢ a` and the satisfaction of `φ` at the one-point environment `y ∷ []`. This is precisely the shape of the separation specification the model record demands.
 <!--zh-->
-组装以打包 `Impredicativity ℓ` 为参数，其两个字段分别供给两个小性构造：`hPropSmallness` 交给上一节的幂集构造，那里只用分类器；`resizing` 则是分离所用的。全分离直接陈述：给定集合 `a` 与带一个自由变元槽的公式 `φ`，给出集合 `s`，使得对每个 `y`，真值 `y ∈ˢ s` 按路径等于「`y ∈ˢ a`」与「`φ` 在单元环境 `y ∷ []` 下满足」的合取。这正是模型 record 所要求分离规格的形状。
+组装以 `ΩResizing (ℓ-suc ℓ) ℓ` 为单一参数。幂集构造直接使用其中的低层类型与类型等价；分离则使用 `ΩResizing→Resizing` 从中导出的命题换级。全分离直接陈述：给定集合 `a` 与带一个自由变元槽的公式 `φ`，给出集合 `s`，使得对每个 `y`，真值 `y ∈ˢ s` 按路径等于「`y ∈ˢ a`」与「`φ` 在单元环境 `y ∷ []` 下满足」的合取。这正是模型 record 所要求分离规格的形状。
 <!--ja-->
-組み立てはパッキング `Impredicativity ℓ` をパラメータとして受け、その二つのフィールドは二つの小ささの構成に別々に供給されます。`hPropSmallness` は前節の冪集合の構成に渡され、そこでは分類子だけが使われます。`resizing` は分出で使うものです。完全な分出は直接に述べられます。集合 `a` と自由変数の枠を一つ持つ論理式 `φ` が与えられたとき、各 `y` について真理値 `y ∈ˢ s` が「`y ∈ˢ a`」と「一点環境 `y ∷ []` での `φ` の充足」の連言にパスとして等しい集合 `s` を作ります。これはモデルの record が要求する分出の仕様の形そのものです。
+組み立ては `ΩResizing (ℓ-suc ℓ) ℓ` を単一のパラメータとして受け取ります。冪集合の構成はその低いレベルの型と型同値を直接使い、分出は `ΩResizing→Resizing` から導かれる命題リサイズを使います。完全な分出は直接に述べられます。集合 `a` と自由変数の枠を一つ持つ論理式 `φ` が与えられたとき、各 `y` について真理値 `y ∈ˢ s` が「`y ∈ˢ a`」と「一点環境 `y ∷ []` での `φ` の充足」の連言にパスとして等しい集合 `s` を作ります。これはモデルの record が要求する分出の仕様の形そのものです。
 <!--/-->
 
 ```agda
-module VModel (imp : Impredicativity ℓ) where
-  open Impredicativity imp
-  open Power hPropSmallness public
+module VModel (ωr : ΩResizing (ℓ-suc ℓ) ℓ) where
+  open Power ωr public
+
+  private
+    resizing : Resizing (ℓ-suc ℓ) ℓ
+    resizing = ΩResizing→Resizing ωr
 
   separateFull : (a : S) (φ : Formula S 1)
                → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ ((y ∷ []) ⊨ φ)))
@@ -848,7 +916,7 @@ module VModel (imp : Impredicativity ℓ) where
 <!--en-->
 Separation is one application of the adapter from the smallness chapter. `separateFromSmall` takes a predicate `P : S → hProp (ℓ-suc ℓ)` on `a`, a smallness witness for each value, and returns a set `s` with the path specification `y ∈ˢ s ≡ (y ∈ˢ a) ⊓ P y`. Here the predicate is `λ y → (y ∷ []) ⊨ φ`, the satisfaction of `φ` at each one-point environment, and its smallness at each point is `resizing` applied there. No hypothesis on the shape of `φ` is needed: resizing assigns a small representative to every satisfaction proposition, whatever formula produces it. With `separateFull` in hand, the theorem `V⊨ZF-impredicative` of type `isZFModel` can be assembled from the witnesses already proved.
 <!--zh-->
-分离是小性一章的适配器的一次应用。`separateFromSmall` 取 `a` 上的谓词 `P : S → hProp (ℓ-suc ℓ)` 与每个取值的小性见证，返回带路径规格 `y ∈ˢ s ≡ (y ∈ˢ a) ⊓ P y` 的集合 `s`。这里的谓词是 `λ y → (y ∷ []) ⊨ φ`，即 `φ` 在每个单元环境下的满足；其在各点的小性就是在该点应用的 `resizing`。对 `φ` 的形状无需任何前提：无论公式是什么，降层都为每个满足命题指派一个小代表。有了 `separateFull`，便可从已证的见证组装出类型为 `isZFModel` 的定理 `V⊨ZF-impredicative`。
+分离是小性一章中适配器的一次应用。`separateFromSmall` 取 `a` 上的谓词 `P : S → hProp (ℓ-suc ℓ)` 与每个取值的 `hasSize` 见证，返回带路径规格 `y ∈ˢ s ≡ (y ∈ˢ a) ⊓ P y` 的集合 `s`。这里的谓词是 `λ y → (y ∷ []) ⊨ φ`，即 `φ` 在每个单元环境下的满足；其在各点的 `hasSize` 见证就是在该点应用的 `resizing`。对 `φ` 的形状无需任何前提：无论公式是什么，降层都为每个满足命题指派一个小代表。有了 `separateFull`，便可从已证的见证组装出类型为 `isZFModel` 的定理 `V⊨ZF-impredicative`。
 <!--ja-->
 分出は、小ささの章の適合装置の一度の適用です。`separateFromSmall` は、`a` の上の述語 `P : S → hProp (ℓ-suc ℓ)` と各値への小ささの証明を受け取り、パスの仕様 `y ∈ˢ s ≡ (y ∈ˢ a) ⊓ P y` をもつ集合 `s` を返します。ここでの述語は `λ y → (y ∷ []) ⊨ φ`、つまり各一点環境での `φ` の充足であり、各点での小ささはそこで適用される `resizing` です。`φ` の形状についての前提は一切要りません。どのような論理式から生じたものであれ、リサイズは各充足命題に小さな代表を割り当てます。`separateFull` が揃えば、すでに示した証拠から型 `isZFModel` の定理 `V⊨ZF-impredicative` を組み立てられます。
 <!--/-->
@@ -879,11 +947,11 @@ The first group of entries reuses the chapter's opening conversions. For the emp
 ```
 
 <!--en-->
-The next two entries consume the middle constructions. The replacement field receives the functionality hypothesis `fc` and takes as realizer the image `replaceImage` with its specification; the power-set field takes `𝒫V a` with `power-spec`, the construction built from the small classifier alone. The numeral chain then occupies three entries: the operation `numeralV` itself, and the two pinning equations, `numeral-zero` saying that nothing inhabits `numeralV zero`, and `numeral-suc` giving the member-or-predecessor dichotomy for `numeralV (suc n)`. Both equations come from the `NumPin` lemmas applied to the alignment `numeralV≡#`, so they carry exactly the content of that alignment plus the `sucV` case analysis.
+The next two entries consume the middle constructions. The replacement field receives the functionality hypothesis `fc` and takes as realizer the image `replaceImage` with its specification; the power-set field takes `𝒫V a` with `power-spec`, the construction built from Ω-resizing alone. The numeral chain then occupies three entries: the operation `numeralV` itself, and the two pinning equations, `numeral-zero` saying that nothing inhabits `numeralV zero`, and `numeral-suc` giving the member-or-predecessor dichotomy for `numeralV (suc n)`. Both equations come from the `NumPin` lemmas applied to the alignment `numeralV≡#`, so they carry exactly the content of that alignment plus the `sucV` case analysis.
 <!--zh-->
-接下来两个条目消费中段的构造。替换字段接收函数性前提 `fc`，以像 `replaceImage` 及其规格为实现者；幂集字段取 `𝒫V a` 及 `power-spec`，即仅由小分类器造出的构造。数码链占据三项：运算 `numeralV` 本身，以及两条固定方程，`numeral-zero` 说没有元素居于 `numeralV zero`，`numeral-suc` 给出 `numeralV (suc n)` 的「成员或前驱」二分。两条方程都来自把 `NumPin` 引理应用于对齐 `numeralV≡#`，因此其内容恰是该对齐加上 `sucV` 分情形分析。
+接下来两个条目消费中段的构造。替换字段接收函数性前提 `fc`，以像 `replaceImage` 及其规格为实现者；幂集字段取 `𝒫V a` 及 `power-spec`，即仅由命题宇宙换级造出的构造。数码链占据三项：运算 `numeralV` 本身，以及两条固定方程，`numeral-zero` 说没有元素居于 `numeralV zero`，`numeral-suc` 给出 `numeralV (suc n)` 的「成员或前驱」二分。两条方程都来自把 `NumPin` 引理应用于对齐 `numeralV≡#`，因此其内容恰是该对齐加上 `sucV` 分情形分析。
 <!--ja-->
-続く二つの項目は、中盤の構成を使います。置換のフィールドは関数性の仮定 `fc` を受け取り、像 `replaceImage` とその仕様を実現者とします。冪集合のフィールドは `𝒫V a` と `power-spec`、つまり小分類子だけから作った構成を取ります。数項の列は三つの項目を占めます。演算 `numeralV` 自身と、二つの固定方程式です。`numeral-zero` は `numeralV zero` には元が住まないことを、`numeral-suc` は `numeralV (suc n)` の元が前者の元か前者と等しいかの二分であることを述べます。どちらの方程式も、整列 `numeralV≡#` に対する `NumPin` の補題の適用から来るため、その内容はちょうどこの整列と `sucV` の場合分けです。
+続く二つの項目は、中盤の構成を使います。置換のフィールドは関数性の仮定 `fc` を受け取り、像 `replaceImage` とその仕様を実現者とします。冪集合のフィールドは `𝒫V a` と `power-spec`、つまり命題宇宙リサイズだけから作った構成を取ります。数項の列は三つの項目を占めます。演算 `numeralV` 自身と、二つの固定方程式です。`numeral-zero` は `numeralV zero` には元が住まないことを、`numeral-suc` は `numeralV (suc n)` の元が前者の元か前者と等しいかの二分であることを述べます。どちらの方程式も、整列 `numeralV≡#` に対する `NumPin` の補題の適用から来るため、その内容はちょうどこの整列と `sucV` の場合分けです。
 <!--/-->
 
 ```agda
@@ -910,24 +978,24 @@ The last field is strong infinity, realized by `ω` with its specification: ever
 ```
 
 <!--en-->
-The theorem `V⊨ZF-impredicative` states that the cumulative hierarchy satisfies ZF under the single hypothesis `Impredicativity ℓ`. Both schema fields are functions that accept every formula, so separation and replacement hold for all formulas at once, through the deep embedding of the object language in the first-order logic chapters. The second theorem replaces the packing with the standard classical assumption: `V⊨ZF` takes `LEM (ℓ-suc ℓ)` and derives the packing from it. What is proved is a model construction under the stated hypothesis, not an unconditional consistency claim.
+The theorem `V⊨ZF-impredicative` states that the cumulative hierarchy satisfies ZF under the single hypothesis `ΩResizing (ℓ-suc ℓ) ℓ`. Both schema fields are functions that accept every formula, so separation and replacement hold for all formulas at once, through the deep embedding of the object language in the first-order logic chapters. The second theorem replaces the Ω-resizing assumption with the standard classical assumption: `V⊨ZF` takes `LEM (ℓ-suc ℓ)` and derives the Ω-resizing assumption from it. What is proved is a model construction under the stated hypothesis, not an unconditional consistency claim.
 <!--zh-->
-定理 `V⊨ZF-impredicative` 陈述：在单一假设 `Impredicativity ℓ` 下，累积层级满足 ZF。两个模式字段都是接受一切公式的函数，因此分离与替换对所有公式一次成立，其中用到一阶逻辑诸章对对象语言的深嵌入。第二个定理把打包换成标准经典假设：`V⊨ZF` 取 `LEM (ℓ-suc ℓ)`，并从中导出该打包。所证的是在所述假设下的模型构造，而非无条件的无矛盾性断言。
+定理 `V⊨ZF-impredicative` 陈述：在单一假设 `ΩResizing (ℓ-suc ℓ) ℓ` 下，累积层级满足 ZF。两个模式字段都是接受一切公式的函数，因此分离与替换对所有公式一次成立，其中用到一阶逻辑诸章对对象语言的深嵌入。第二个定理把命题宇宙换级换成标准经典假设：`V⊨ZF` 取 `LEM (ℓ-suc ℓ)`，并从中导出该命题宇宙换级假设。所证的是在所述假设下的模型构造，而非无条件的无矛盾性断言。
 <!--ja-->
-定理 `V⊨ZF-impredicative` は、単一の仮定 `Impredicativity ℓ` の下で累積階層が ZF を満たすことを述べます。二つの図式のフィールドはどちらもすべての論理式を受け取る関数なので、分出と置換はすべての論理式に対して一度に成り立ちます。そこでは一階論理の諸章による対象言語の深い埋め込みが働きます。第二の定理は、このパッキングを標準的な古典的仮定に置き換えます。`V⊨ZF` は `LEM (ℓ-suc ℓ)` を受け取り、そこからパッキングを導きます。証明されるのは、明示された仮定の下でのモデルの構成であり、無条件の無矛盾性の主張ではありません。
+定理 `V⊨ZF-impredicative` は、単一の仮定 `ΩResizing (ℓ-suc ℓ) ℓ` の下で累積階層が ZF を満たすことを述べます。二つの図式のフィールドはどちらもすべての論理式を受け取る関数なので、分出と置換はすべての論理式に対して一度に成り立ちます。そこでは一階論理の諸章による対象言語の深い埋め込みが働きます。第二の定理は、この`Ω`-Resizing の仮定を標準的な古典的仮定に置き換えます。`V⊨ZF` は `LEM (ℓ-suc ℓ)` を受け取り、そこから`Ω`-Resizing の仮定を導きます。証明されるのは、明示された仮定の下でのモデルの構成であり、無条件の無矛盾性の主張ではありません。
 <!--/-->
 
 <!--en-->
-The definition of `V⊨ZF` is one composition: the excluded middle instance is converted into the packing by `lem→impredicativity`, and the result is fed to `VModel.V⊨ZF-impredicative`. In that conversion, from the classical chapter, the resizing field uses `lem` at its own level, while the classifier field first lowers the instance one successor step with `lowerLEM` and then builds the equivalence presenting `hProp ℓ` by `Lift Bool`. One assumption at the successor level therefore reaches both fields the model consumes: separation through resizing, power set through the classifier.
+The definition of `V⊨ZF` is one composition: `lem→ΩResizing` uses excluded middle to present the higher proposition universe by the low-level type `Lift Bool`, and the result is fed to `VModel.V⊨ZF-impredicative`. The power-set construction uses this presentation directly, while `ΩResizing→Resizing` derives the pointwise representatives needed by separation. Thus the one successor-level assumption supplies both size controls.
 <!--zh-->
-`V⊨ZF` 的定义是一次复合：排中律实例经 `lem→impredicativity` 转为打包，其结果交给 `VModel.V⊨ZF-impredicative`。在该转换 (来自经典一章) 中，降层字段在其自身层级使用 `lem`，而分类器字段先用 `lowerLEM` 把实例下降一个后继步，再构造以 `Lift Bool` 呈现 `hProp ℓ` 的等价。于是后继层上的一条假设同时到达模型消耗的两个字段：分离经由降层，幂集经由分类器。
+`V⊨ZF` 的定义是一次复合：`lem→ΩResizing` 借助排中律，以低层类型 `Lift Bool` 呈现高层命题宇宙，再把结果交给 `VModel.V⊨ZF-impredicative`。幂集构造直接使用这一呈现，`ΩResizing→Resizing` 则从中导出分离所需的逐点代表。因此，后继层上的一条假设同时供给两种大小控制。
 <!--ja-->
-`V⊨ZF` の定義は一度の合成です。排中律の実例を `lem→impredicativity` がパッキングへ変換し、その結果が `VModel.V⊨ZF-impredicative` に渡されます。この変換、古典の章で示されたものでは、リサイズのフィールドは `lem` をそのレベルでそのまま使い、分類子のフィールドはまず `lowerLEM` で実例を後続一段下げてから、`hProp ℓ` を `Lift Bool` で提示する同値を構成します。したがって後続レベルでの一つの仮定が、モデルが消費する両方のフィールドに届きます。分出はリサイズを通して、冪集合は分類子を通してです。
+`V⊨ZF` の定義は一度の合成です。`lem→ΩResizing` は排中律を用い、上位の命題宇宙を低いレベルの型 `Lift Bool` で提示し、その結果を `VModel.V⊨ZF-impredicative` に渡します。冪集合の構成はこの提示を直接使い、`ΩResizing→Resizing` は分出に必要な各命題の代表を導きます。したがって後続レベルでの一つの仮定が二つの大きさの制御をともに供給します。
 <!--/-->
 
 ```agda
 V⊨ZF : LEM (ℓ-suc ℓ) → isZFModel
-V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→impredicativity lem)
+V⊨ZF lem = VModel.V⊨ZF-impredicative (lem→ΩResizing lem)
 ```
 
 <!--en-->
@@ -1198,5 +1266,5 @@ The chapter's accounting is now complete. Empty set, pair, and union were conver
 <!--ja-->
 ## まとめ
 
-本章の勘定はこれで完結します。空集合、対、和集合は既存の構成を `∈∈ₛ` と `⇔toPath`{.Agda} で変換したものです。置換は切り詰められていないファイバーの上の `sett` を通して直接従い、強い無限は `ω` の定義に一つの列の整列 (`numeralV≡#`{.Agda}) を加えたものです。残る二つの欄、完全な分出と冪集合に必要なのは、`Base.Impredicativity` がまとめた `Impredicativity`{.Agda} のパッキングそのものです。組み立てはその正確なコストで `V⊨ZF-impredicative`{.Agda} を与え、排中律がそれを主たる `V⊨ZF`{.Agda} へ引き上げます。最後の定理には、さらに独立な集合レベルの選択の実例が一つ要ります。`SetChoice (ℓ-suc ℓ)` は ZF の部分に `LEM (ℓ-suc ℓ)` を与え、同じ実例を一段下げた `SetChoice ℓ` が選択集合の補題を駆動し、`V⊨ZFC`{.Agda} が得られます。構成可能宇宙の諸章が内側から調べることになる宇宙が、ここに存在するようになりました。
+本章の勘定はこれで完結します。空集合、対、和集合は既存の構成を `∈∈ₛ` と `⇔toPath`{.Agda} で変換したものです。置換は切り詰められていないファイバーの上の `sett` を通して直接従い、強い無限は `ω` の定義に一つの列の整列 (`numeralV≡#`{.Agda}) を加えたものです。残る二つの欄、完全な分出と冪集合に必要なのは、`Base.Impredicativity` がまとめた `Impredicativity`{.Agda} の`Ω`-Resizing の仮定そのものです。組み立てはその正確なコストで `V⊨ZF-impredicative`{.Agda} を与え、排中律がそれを主たる `V⊨ZF`{.Agda} へ引き上げます。最後の定理には、さらに独立な集合レベルの選択の実例が一つ要ります。`SetChoice (ℓ-suc ℓ)` は ZF の部分に `LEM (ℓ-suc ℓ)` を与え、同じ実例を一段下げた `SetChoice ℓ` が選択集合の補題を駆動し、`V⊨ZFC`{.Agda} が得られます。構成可能宇宙の諸章が内側から調べることになる宇宙が、ここに存在するようになりました。
 <!--/-->

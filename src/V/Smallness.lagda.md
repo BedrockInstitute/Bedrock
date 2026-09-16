@@ -7,9 +7,9 @@ This chapter lowers large truth values to small ones in stages. The atomic membe
 <!--zh-->
 # 累积层级中的小真值
 
-在累积层级 `V ℓ` 上工作会不断产生形如 `x ∈ˢ a` 或 `a ≈ˢ b` 的陈述：它们是打包成 `hProp (ℓ-suc ℓ)` 元素的命题，比集合自身所在的层级 `ℓ` 高一个宇宙。这样的上宇宙命题不便使用：期望 `ℓ` 层数据的构造，例如库中的分离集合，无法接受它们。于是，若命题 `P : hProp (ℓ-suc ℓ)` 作为证明的类型等价于某个低宇宙命题 `Q : hProp ℓ`，就称它是**小的**。小性不是把 `P` 本身化简，而是一份证书：另一个更低的命题说的恰是同一件事。
+在累积层级 `V ℓ` 上工作会不断产生形如 `x ∈ˢ a` 或 `a ≈ˢ b` 的陈述：它们是打包成 `hProp (ℓ-suc ℓ)` 元素的命题，比集合自身所在的层级 `ℓ` 高一个宇宙。这样的上宇宙命题不便使用：期望 `ℓ` 层数据的构造，例如库中的分离集合，无法接受它们。于是，若命题 `P : hProp (ℓ-suc ℓ)` 作为证明的类型等价于某个低宇宙命题 `Q : hProp ℓ`，就称它是**小的**。`hasSize ℓ P` 不是把 `P` 本身化简，而是一份证书：另一个更低的命题说的恰是同一件事。
 
-本章分阶段把大真值降到小真值。`V`{.Agda} 的原子隶属关系与相等关系直接是小，因为每个集合都配有呈现其成员的小索引类型。小性随后经一切联结词传播，也经有界量词传播，因为后者的量化范围恰是这种索引类型。对无界量词，本章证明了量化范围本身本质小，即等价于层级 `ℓ` 的某个类型时，小性仍然保持。两项成果是：无需命题降级的 Δ₀ 分离，以及载体本质小的限制结构上全体公式真值的小性。
+本章分阶段把大真值降到小真值。`V`{.Agda} 的原子隶属关系与相等关系直接是小，因为每个集合都配有呈现其成员的小索引类型。这种见证随后经一切联结词传播，也经有界量词传播，因为后者的量化范围恰是这种索引类型。对无界量词，本章证明了量化范围本身本质小，即等价于层级 `ℓ` 的某个类型时，仍能得到这种见证。两项成果是：无需命题换级的 Δ₀ 分离，以及载体本质小的限制结构上全体公式真值的 `hasSize` 见证。
 <!--ja-->
 # 累積階層における小さな真理値
 
@@ -19,11 +19,11 @@ This chapter lowers large truth values to small ones in stages. The atomic membe
 <!--/-->
 
 <!--en-->
-Everything in this chapter takes place at one fixed universe level `ℓ`, fixed once and for all by the module parameter. The ambient object is the cumulative hierarchy `V ℓ` from the chapter V.Hierarchy, whose sets are images of `Type ℓ`-indexed families. The one definition that organizes everything is `isSmall`{.Agda}: for `P : hProp (ℓ-suc ℓ)`, an inhabitant of `isSmall P` is a pair consisting of a lower-universe proposition `Q : hProp ℓ` and an equivalence of underlying types `⟨ P ⟩ ≃ ⟨ Q ⟩`. The chapter's task is to manufacture such pairs. Its setting is the `ZFStructure`{.Agda} record, which packages a carrier with truth-valued equality and membership relations; the restriction `_↾_`{.Agda} of such a record to a class is used in the final section.
+Everything in this chapter takes place at one fixed universe level `ℓ`, fixed once and for all by the module parameter. The ambient object is the cumulative hierarchy `V ℓ` from the chapter V.Hierarchy, whose sets are images of `Type ℓ`-indexed families. The one definition that organizes everything is `hasSize`{.Agda}: for `P : hProp (ℓ-suc ℓ)`, an inhabitant of `hasSize ℓ P` is a pair consisting of a lower-universe proposition `Q : hProp ℓ` and an equivalence of underlying types `⟨ P ⟩ ≃ ⟨ Q ⟩`. The chapter's task is to manufacture such pairs. Its setting is the `ZFStructure`{.Agda} record, which packages a carrier with truth-valued equality and membership relations; the restriction `_↾_`{.Agda} of such a record to a class is used in the final section.
 <!--zh-->
-本章的一切都在一个固定的宇宙层级 `ℓ` 上进行，它由模块参数一次性确定。环境对象是 V.Hierarchy 章引入的累积层级 `V ℓ`，其集合是 `Type ℓ` 索引族的像。统摄全章的定义是 `isSmall`{.Agda}：对 `P : hProp (ℓ-suc ℓ)`，`isSmall P` 的元素是一个对子，第一分量是低宇宙命题 `Q : hProp ℓ`，第二分量是底层类型间的等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`。本章的任务就是制造这样的对子。工作环境是 `ZFStructure`{.Agda} record，它把载体与取真值的等词、隶属关系打包在一起；把这样的 record 限制到一个类上的运算 `_↾_`{.Agda} 将在最后一节用到。
+本章的一切都在一个固定的宇宙层级 `ℓ` 上进行，它由模块参数一次性确定。环境对象是 V.Hierarchy 章引入的累积层级 `V ℓ`，其集合是 `Type ℓ` 索引族的像。统摄全章的定义是 `hasSize`{.Agda}：对 `P : hProp (ℓ-suc ℓ)`，`hasSize ℓ P` 的元素是一个对子，第一分量是低宇宙命题 `Q : hProp ℓ`，第二分量是底层类型间的等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`。本章的任务就是制造这样的对子。工作环境是 `ZFStructure`{.Agda} record，它把载体与取真值的等词、隶属关系打包在一起；把这样的 record 限制到一个类上的运算 `_↾_`{.Agda} 将在最后一节用到。
 <!--ja-->
-本章のすべては、モジュール引数によって一度だけ固定される宇宙レベル `ℓ` のもとで行われます。対象となるのは V.Hierarchy 章の累積階層 `V ℓ` で、その集合は `Type ℓ` で添字付けられた族の像です。全体を貫く定義は `isSmall`{.Agda} です。`P : hProp (ℓ-suc ℓ)` に対し、`isSmall P` の要素は、低い宇宙の命題 `Q : hProp ℓ` と基礎型の間の同値 `⟨ P ⟩ ≃ ⟨ Q ⟩` からなる対です。本章の課題はこのような対を作ることです。舞台となるのは `ZFStructure`{.Agda} レコード、すなわち台と、真理値を返す等号と所属の関係をひとまとめにしたものです。このレコードをクラスに制限する演算 `_↾_`{.Agda} は最終節で使います。
+本章のすべては、モジュール引数によって一度だけ固定される宇宙レベル `ℓ` のもとで行われます。対象となるのは V.Hierarchy 章の累積階層 `V ℓ` で、その集合は `Type ℓ` で添字付けられた族の像です。全体を貫く定義は `hasSize`{.Agda} です。`P : hProp (ℓ-suc ℓ)` に対し、`hasSize ℓ P` の要素は、低い宇宙の命題 `Q : hProp ℓ` と基礎型の間の同値 `⟨ P ⟩ ≃ ⟨ Q ⟩` からなる対です。本章の課題はこのような対を作ることです。舞台となるのは `ZFStructure`{.Agda} レコード、すなわち台と、真理値を返す等号と所属の関係をひとまとめにしたものです。このレコードをクラスに制限する演算 `_↾_`{.Agda} は最終節で使います。
 <!--/-->
 
 ```agda
@@ -33,7 +33,7 @@ open import Base.Prelude
 
 module V.Smallness {ℓ : Level} where
 
-open import Base.Impredicativity using ( isSmall )
+open import Base.Impredicativity using ( hasSize )
 ```
 
 <!--en-->
@@ -53,11 +53,11 @@ open import FOL.LevyHierarchy
 ```
 
 <!--en-->
-A formula's meaning is given by the semantics module, instantiated here at the structure `𝒮ᵥ`{.Agda} from V.Hierarchy: the cumulative hierarchy equipped as a structure whose relations take values in `hProp (ℓ-suc ℓ)`. So the truth values this chapter studies are exactly propositions one universe up, the kind `isSmall` speaks about. The proofs all rest on a small toolkit for equivalences: the type `_≃_` with its evaluation `equivFun` and preimages `invEq`, `equivΠ` for lifting equivalences through function types, and `propBiimpl→Equiv`, which turns two proofs of propositionhood and a bi-implication into an equivalence. Since both sides of the equivalences below are propositions, this last constructor carries most of the weight.
+A formula's meaning is given by the semantics module, instantiated here at the structure `𝒮ᵥ`{.Agda} from V.Hierarchy: the cumulative hierarchy equipped as a structure whose relations take values in `hProp (ℓ-suc ℓ)`. So the truth values this chapter studies are exactly propositions one universe up, the kind `hasSize` speaks about. The proofs all rest on a small toolkit for equivalences: the type `_≃_` with its evaluation `equivFun` and preimages `invEq`, `equivΠ` for lifting equivalences through function types, and `propBiimpl→Equiv`, which turns two proofs of propositionhood and a bi-implication into an equivalence. Since both sides of the equivalences below are propositions, this last constructor carries most of the weight.
 <!--zh-->
-公式的意义由语义模块给出，这里在 V.Hierarchy 的结构 `𝒮ᵥ`{.Agda} 上实例化：即装备成结构的累积层级，其关系取值于 `hProp (ℓ-suc ℓ)`。因此本章研究的真值恰是高一层的命题，正是 `isSmall` 所谈的那类。所有证明都建立在一套等价工具之上：等价类型 `_≃_` 及其求值 `equivFun` 与原像 `invEq`，穿越函数类型的 `equivΠ`，以及 `propBiimpl→Equiv`，它把两个命题性证明加一条双向蕴含变成等价。由于下面各等价的两端都是命题，最后这个构造子承担了大部分工作。
+公式的意义由语义模块给出，这里在 V.Hierarchy 的结构 `𝒮ᵥ`{.Agda} 上实例化：即装备成结构的累积层级，其关系取值于 `hProp (ℓ-suc ℓ)`。因此本章研究的真值恰是高一层的命题，正是 `hasSize` 所谈的那类。所有证明都建立在一套等价工具之上：等价类型 `_≃_` 及其求值 `equivFun` 与原像 `invEq`，穿越函数类型的 `equivΠ`，以及 `propBiimpl→Equiv`，它把两个命题性证明加一条双向蕴含变成等价。由于下面各等价的两端都是命题，最后这个构造子承担了大部分工作。
 <!--ja-->
-論理式の意味は意味論のモジュールが与え、ここでは V.Hierarchy の構造 `𝒮ᵥ`{.Agda} で具体化します。つまり、構造としての装備を施した累積階層で、その関係は `hProp (ℓ-suc ℓ)` に値をとります。したがって本章が扱う真理値は一段上の宇宙の命題であり、まさに `isSmall` が語る種類のものです。証明はすべて同値の小さな道具立てに依拠します。同値の型 `_≃_` とその適用 `equivFun`、原像 `invEq`、関数型を通して同値を運ぶ `equivΠ`、そして二つの命題性の証明と双条件から同値を作る `propBiimpl→Equiv`。以下の同値はどちらの側も命題なので、この構成子がほとんどの仕事を担います。
+論理式の意味は意味論のモジュールが与え、ここでは V.Hierarchy の構造 `𝒮ᵥ`{.Agda} で具体化します。つまり、構造としての装備を施した累積階層で、その関係は `hProp (ℓ-suc ℓ)` に値をとります。したがって本章が扱う真理値は一段上の宇宙の命題であり、まさに `hasSize` が語る種類のものです。証明はすべて同値の小さな道具立てに依拠します。同値の型 `_≃_` とその適用 `equivFun`、原像 `invEq`、関数型を通して同値を運ぶ `equivΠ`、そして二つの命題性の証明と双条件から同値を作る `propBiimpl→Equiv`。以下の同値はどちらの側も命題なので、この構成子がほとんどの仕事を担います。
 <!--/-->
 
 ```agda
@@ -116,46 +116,46 @@ open ZFStructure 𝒮ᵥ
 <!--en-->
 ## Being small
 
-A proposition `P : hProp (ℓ-suc ℓ)` is small, written `isSmall P`, when it comes with a lower-universe proposition `Q : hProp ℓ` and an equivalence `⟨ P ⟩ ≃ ⟨ Q ⟩`. The definition was introduced in `Base.Impredicativity`, where the resizing interface asserts smallness of every proposition at once. This chapter assumes no such interface. It earns smallness for individual propositions, beginning with the two atomic relations of the structure, and the rest of the chapter passes these witnesses through connectives and quantifiers.
+A proposition `P : hProp (ℓ-suc ℓ)` is small, written `hasSize ℓ P`, when it comes with a lower-universe proposition `Q : hProp ℓ` and an equivalence `⟨ P ⟩ ≃ ⟨ Q ⟩`. The definition was introduced in `Base.Impredicativity`, where the resizing interface asserts smallness of every proposition at once. This chapter assumes no such interface. It earns smallness for individual propositions, beginning with the two atomic relations of the structure, and the rest of the chapter passes these witnesses through connectives and quantifiers.
 
 Why should the atoms be small at all? Because of how a set in `V ℓ` is built: as the image of a family indexed by some `⟪ a ⟫ : Type ℓ`. To say `x` is a member of `a` is to say some index presents a member equal to `x`, and that statement quantifies over a small type. Membership therefore has a small twin `a ∈ₛ b`, and `∈∈ₛ` converts between the two relations in both directions. Equality likewise compresses to bisimilarity `a ∼ b` via the identity principle.
 <!--zh-->
-## 何谓小
+## 低层等价代表
 
-命题 `P : hProp (ℓ-suc ℓ)` 是小的 (记作 `isSmall P`)，指它配有低宇宙命题 `Q : hProp ℓ` 以及等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`。该定义来自 `Base.Impredicativity`，那里的降层接口对每个命题一次性断言小性。本章不作这种假设，而是对个别的命题挣得小性，从结构的两个原子关系开始，再把这些见证经联结词与量词传递下去。
+命题 `P : hProp (ℓ-suc ℓ)` 满足 `hasSize ℓ P`，指它配有低宇宙命题 `Q : hProp ℓ` 以及等价 `⟨ P ⟩ ≃ ⟨ Q ⟩`。该定义来自 `Base.Impredicativity`，那里的降层接口对每个命题一次性给出这样的低层代表。本章不作这种假设，而是逐个构造 `hasSize` 见证，从结构的两个原子关系开始，再把这些见证经联结词与量词传递下去。
 
-原子为何会是小的？因为 `V ℓ` 中集合的构造方式：它是某个 `⟪ a ⟫ : Type ℓ` 索引的族的像。「`x` 是 `a` 的成员」即是说某个索引呈现的成员等于 `x`，而这个陈述在小类型上量化。隶属因此有小孪生 `a ∈ₛ b`，`∈∈ₛ` 在两个方向上转换这两种关系。相等同样经恒等原理压缩为双相似 `a ∼ b`。
+原子为何会有目标层级中的等价代表？因为 `V ℓ` 中集合的构造方式：它是某个 `⟪ a ⟫ : Type ℓ` 索引的族的像。「`x` 是 `a` 的成员」即是说某个索引呈现的成员等于 `x`，而这个陈述在小类型上量化。隶属因此有小孪生 `a ∈ₛ b`，`∈∈ₛ` 在两个方向上转换这两种关系。相等同样经恒等原理压缩为双相似 `a ∼ b`。
 <!--ja-->
 ## 小さい命題
 
-命題 `P : hProp (ℓ-suc ℓ)` が小さい、つまり `isSmall P` が成り立つとは、低い宇宙の命題 `Q : hProp ℓ` と同値 `⟨ P ⟩ ≃ ⟨ Q ⟩` を備えることです。この定義は `Base.Impredicativity` で導入され、そこではリサイズのインターフェースがすべての命題について小ささを一括して断言します。本章はそのような仮定を置きません。個々の命題について小ささを獲得し、まず構造の二つの原子関係から始めて、その証人を結合子と量化子を通して運んでいきます。
+命題 `P : hProp (ℓ-suc ℓ)` が小さい、つまり `hasSize ℓ P` が成り立つとは、低い宇宙の命題 `Q : hProp ℓ` と同値 `⟨ P ⟩ ≃ ⟨ Q ⟩` を備えることです。この定義は `Base.Impredicativity` で導入され、そこではリサイズのインターフェースがすべての命題について小ささを一括して断言します。本章はそのような仮定を置きません。個々の命題について小ささを獲得し、まず構造の二つの原子関係から始めて、その証人を結合子と量化子を通して運んでいきます。
 
 原子がなぜ小さいのでしょうか。`V ℓ` の集合は、ある `⟪ a ⟫ : Type ℓ` で添字付けられた族の像として作られているからです。「`x` は `a` の要素である」とは、ある添字が提示する要素が `x` と等しいことであり、その主張は小さな型の上で量化します。したがって所属には小さな双子 `a ∈ₛ b` が伴い、`∈∈ₛ` が双方向に変換します。等号も同様に、同一性原理を経て双相似 `a ∼ b` へ圧縮されます。
 <!--/-->
 
 <!--en-->
-The first lemma packages the small membership relation as a smallness witness. To show `isSmall (a ∈ˢ b)` we must exhibit a lower-universe proposition with an equivalence to `⟨ a ∈ˢ b ⟩`; the witness is `a ∈ₛ b`, and since both underlying types are propositions, `propBiimpl→Equiv` builds the equivalence from the two directions of `∈∈ₛ` alone. No content about `a` or `b` is used: whatever the sets are, membership between them is small. Note what the lemma does not say: it does not identify the two relations by a path, and it does not make `∈ˢ` itself land in the lower universe; it supplies a compressed equivalent.
+The first lemma packages the small membership relation as a smallness witness. To show `hasSize ℓ (a ∈ˢ b)` we must exhibit a lower-universe proposition with an equivalence to `⟨ a ∈ˢ b ⟩`; the witness is `a ∈ₛ b`, and since both underlying types are propositions, `propBiimpl→Equiv` builds the equivalence from the two directions of `∈∈ₛ` alone. No content about `a` or `b` is used: whatever the sets are, membership between them is small. Note what the lemma does not say: it does not identify the two relations by a path, and it does not make `∈ˢ` itself land in the lower universe; it supplies a compressed equivalent.
 <!--zh-->
-第一条引理把小的隶属关系打包成小性见证。要证 `isSmall (a ∈ˢ b)`，须给出一个低宇宙命题以及它与 `⟨ a ∈ˢ b ⟩` 的等价；见证取 `a ∈ₛ b`。由于两个底层类型都是命题，`propBiimpl→Equiv` 仅凭 `∈∈ₛ` 的两个方向即可造出等价。这里没有用到关于 `a`、`b` 的任何内容：无论这两个集合是什么，它们之间的隶属都是小的。注意引理没有说的内容：它不以路径等同两个关系，也不让 `∈ˢ` 本身落在低宇宙；它提供的是一个被压缩的等价物。
+第一条引理把小的隶属关系打包成 `hasSize` 见证。要证 `hasSize ℓ (a ∈ˢ b)`，须给出一个低宇宙命题以及它与 `⟨ a ∈ˢ b ⟩` 的等价；见证取 `a ∈ₛ b`。由于两个底层类型都是命题，`propBiimpl→Equiv` 仅凭 `∈∈ₛ` 的两个方向即可造出等价。这里没有用到关于 `a`、`b` 的任何内容：无论这两个集合是什么，它们之间的隶属都有目标层级中的等价代表。注意引理没有说的内容：它不以路径等同两个关系，也不让 `∈ˢ` 本身落在低宇宙；它提供的是一个被压缩的等价物。
 <!--ja-->
-最初の補題は、小さな所属関係を小ささの証人としてまとめます。`isSmall (a ∈ˢ b)` を示すには、低い宇宙の命題と `⟨ a ∈ˢ b ⟩` との同値を示す必要があります。証人としては `a ∈ₛ b` をとります。両方の基礎型が命題なので、`propBiimpl→Equiv` によって `∈∈ₛ` の二つの方向だけで同値が得られます。`a` や `b` についての情報は一切使っていません。集合が何であれ、それらの間の所属は小さいのです。この補題が主張しないことも重要です。二つの関係をパスで同一視するのでも、`∈ˢ` 自身を低い宇宙に落とすのでもなく、圧縮された同値物を供給するだけです。
+最初の補題は、小さな所属関係を小ささの証人としてまとめます。`hasSize ℓ (a ∈ˢ b)` を示すには、低い宇宙の命題と `⟨ a ∈ˢ b ⟩` との同値を示す必要があります。証人としては `a ∈ₛ b` をとります。両方の基礎型が命題なので、`propBiimpl→Equiv` によって `∈∈ₛ` の二つの方向だけで同値が得られます。`a` や `b` についての情報は一切使っていません。集合が何であれ、それらの間の所属は小さいのです。この補題が主張しないことも重要です。二つの関係をパスで同一視するのでも、`∈ˢ` 自身を低い宇宙に落とすのでもなく、圧縮された同値物を供給するだけです。
 <!--/-->
 
 ```agda
-small-∈ : (a b : S) → isSmall (a ∈ˢ b)
+small-∈ : (a b : S) → hasSize ℓ (a ∈ˢ b)
 small-∈ a b = (a ∈ₛ b) ,
   propBiimpl→Equiv (snd (a ∈ˢ b)) (snd (a ∈ₛ b))
     (∈∈ₛ {a = a} {b = b} .fst) (∈∈ₛ {a = a} {b = b} .snd)
 
-small-≡ : (a b : S) → isSmall (a ≈ˢ b)
+small-≡ : (a b : S) → hasSize ℓ (a ≈ˢ b)
 ```
 
 <!--en-->
-The equality atom follows the same pattern with a different small twin. The structure's equality `a ≈ˢ b` is compressed to bisimilarity `a ∼ b`, the statement that the two sets have the same members; the library's identity principle is an equivalence between `⟨ a ∼ b ⟩` and the path type `a ≡ b`, and `invEquiv` orients it in the direction required by `isSmall`, from the large equality type `⟨ a ≈ˢ b ⟩` to the lower-universe bisimilarity proposition. Together with `small-∈` this exhausts the atomic cases of the language.
+The equality atom follows the same pattern with a different small twin. The structure's equality `a ≈ˢ b` is compressed to bisimilarity `a ∼ b`, the statement that the two sets have the same members; the library's identity principle is an equivalence between `⟨ a ∼ b ⟩` and the path type `a ≡ b`, and `invEquiv` orients it in the direction required by `hasSize`, from the large equality type `⟨ a ≈ˢ b ⟩` to the lower-universe bisimilarity proposition. Together with `small-∈` this exhausts the atomic cases of the language.
 <!--zh-->
-相等原子遵循同一模式，但用不同的小孪生。结构的相等 `a ≈ˢ b` 压缩为双相似 `a ∼ b`，即两集合有相同成员的陈述；库的恒等原理是 `⟨ a ∼ b ⟩` 与路径类型 `a ≡ b` 之间的等价，`invEquiv` 把它转向 `isSmall` 所需的方向，即从大宇宙的相等类型 `⟨ a ≈ˢ b ⟩` 到低宇宙的双相似命题。与 `small-∈` 合起来，语言的原子情形就此穷尽。
+相等原子遵循同一模式，但用不同的小孪生。结构的相等 `a ≈ˢ b` 压缩为双相似 `a ∼ b`，即两集合有相同成员的陈述；库的恒等原理是 `⟨ a ∼ b ⟩` 与路径类型 `a ≡ b` 之间的等价，`invEquiv` 把它转向 `hasSize` 所需的方向，即从大宇宙的相等类型 `⟨ a ≈ˢ b ⟩` 到低宇宙的双相似命题。与 `small-∈` 合起来，语言的原子情形就此穷尽。
 <!--ja-->
-等号の原子は同じ形をしつつ、別の小さな双子を用います。構造の等号 `a ≈ˢ b` は双相似 `a ∼ b`、すなわち二つの集合が同じ要素をもつという主張へ圧縮されます。ライブラリの同一性原理は `⟨ a ∼ b ⟩` とパスの型 `a ≡ b` との間の同値であり、`invEquiv` がそれを `isSmall` に必要な方向、すなわち大きな宇宙の等号型 `⟨ a ≈ˢ b ⟩` から低い宇宙の双相似の命題へ向け直します。`small-∈` と合わせて、言語の原子の場合はこれで尽くされます。
+等号の原子は同じ形をしつつ、別の小さな双子を用います。構造の等号 `a ≈ˢ b` は双相似 `a ∼ b`、すなわち二つの集合が同じ要素をもつという主張へ圧縮されます。ライブラリの同一性原理は `⟨ a ∼ b ⟩` とパスの型 `a ≡ b` との間の同値であり、`invEquiv` がそれを `hasSize` に必要な方向、すなわち大きな宇宙の等号型 `⟨ a ≈ˢ b ⟩` から低い宇宙の双相似の命題へ向け直します。`small-∈` と合わせて、言語の原子の場合はこれで尽くされます。
 <!--/-->
 
 ```agda
@@ -171,9 +171,9 @@ Each proof takes two smallness witnesses `(P' , eP)` and `(Q' , eQ)`, where `eP 
 <!--zh-->
 ## 联结词保小
 
-有了原子之后，下一个问题是小性能否在逻辑组合下存活。答案是肯定的：四个联结词与两个常量逐一传递小性见证；本节完成后，凡由小原子经联结词构成的真值都是小的。这也为日后对 Δ₀ 见证的归纳一次性封闭所有联结词情形铺平了道路。
+有了原子之后，下一个问题是这种构造能否在逻辑组合下存活。答案是肯定的：四个联结词与两个常量逐一传递 `hasSize` 见证；本节完成后，凡由小原子经联结词构成的真值都有目标层级中的等价代表。这也为日后对 Δ₀ 见证的归纳一次性封闭所有联结词情形铺平了道路。
 
-每个证明取两个小性见证 `(P' , eP)` 与 `(Q' , eQ)`，其中 `eP : ⟨ P ⟩ ≃ ⟨ P' ⟩`、`eQ : ⟨ Q ⟩ ≃ ⟨ Q' ⟩`，再返回复合命题的小性见证。低宇宙分量由 `P'`、`Q'` 经层级 `ℓ` 上对应的 `Logic`{.Agda} 运算构成；等价分量则沿 `eP`、`eQ` 传输复合命题的证明。
+每个证明取两个 `hasSize` 见证 `(P' , eP)` 与 `(Q' , eQ)`，其中 `eP : ⟨ P ⟩ ≃ ⟨ P' ⟩`、`eQ : ⟨ Q ⟩ ≃ ⟨ Q' ⟩`，再返回复合命题的 `hasSize` 见证。低宇宙分量由 `P'`、`Q'` 经层级 `ℓ` 上对应的 `Logic`{.Agda} 运算构成；等价分量则沿 `eP`、`eQ` 传输复合命题的证明。
 <!--ja-->
 ## 結合子による保存
 
@@ -191,11 +191,11 @@ Conjunction is the simplest case because the underlying type of `P ⊓ Q` is a p
 <!--/-->
 
 ```agda
-small⊓ : {P Q : hProp (ℓ-suc ℓ)} → isSmall P → isSmall Q → isSmall (P ⊓ Q)
+small⊓ : {P Q : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ Q → hasSize ℓ (P ⊓ Q)
 small⊓ {P} {Q} (P' , eP) (Q' , eQ) =
   (P' Logic.⊓ Q') , Σ-cong-equiv eP (λ _ → eQ)
 
-small⊔ : {P Q : hProp (ℓ-suc ℓ)} → isSmall P → isSmall Q → isSmall (P ⊔ Q)
+small⊔ : {P Q : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ Q → hasSize ℓ (P ⊔ Q)
 small⊔ {P} {Q} (P' , eP) (Q' , eQ) =
 ```
 
@@ -210,11 +210,11 @@ Disjunction and implication need one idea each. For disjunction, `⟨ P ⊔ Q �
 ```agda
   (P' Logic.⊔ Q') , PT.propTrunc≃ (Sum.⊎-equiv eP eQ)
 
-small⇒ : {P Q : hProp (ℓ-suc ℓ)} → isSmall P → isSmall Q → isSmall (P ⇒ Q)
+small⇒ : {P Q : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ Q → hasSize ℓ (P ⇒ Q)
 small⇒ {P} {Q} (P' , eP) (Q' , eQ) =
   (P' Logic.⇒ Q') , equivΠ eP (λ _ → eQ)
 
-small¬ : {P : hProp (ℓ-suc ℓ)} → isSmall P → isSmall (¬ P)
+small¬ : {P : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ (¬ P)
 ```
 
 <!--en-->
@@ -231,13 +231,13 @@ small¬ {P} (P' , eP) = (Logic.¬ P') ,
     (λ np p' → np (invEq eP p'))
     (λ np' p → np' (equivFun eP p))
 
-small⊤ : isSmall ⊤
+small⊤ : hasSize ℓ (⊤ {ℓ = ℓ-suc ℓ})
 ```
 
 <!--en-->
 The two constants close the section. Truth is small because both sides are inhabited propositions: the compressed proposition is `Logic.⊤`, and in each direction the function discards its argument and returns the unit element `tt*`. Falsity begins slightly differently: the truth value `⊥` was defined as the hProp pair `(⊥* , isProp⊥*)`, so its underlying type is the empty type `⊥*` itself, and the compressed proposition is that same empty type packaged as an hProp. Both functions are then defined by absurdity: an argument of an empty type admits no cases.
 <!--zh-->
-两个常量收尾本节。真是小的，因为两端都是有元素的命题：压缩命题取 `Logic.⊤`，两个方向的函数都丢弃参数、返回单元元素 `tt*`。假的起点略有不同：真值 `⊥` 本就定义为 hProp 对 `(⊥* , isProp⊥*)`，故其底层类型恰是空类型 `⊥*`，压缩命题也就是打包成 hProp 的同一个空类型。于是两个函数都用荒谬来定义：空类型的参数没有任何情形可分。
+两个常量收尾本节。真有目标层级中的等价代表，因为两端都是有元素的命题：压缩命题取 `Logic.⊤`，两个方向的函数都丢弃参数、返回单元元素 `tt*`。假的起点略有不同：真值 `⊥` 本就定义为 hProp 对 `(⊥* , isProp⊥*)`，故其底层类型恰是空类型 `⊥*`，压缩命题也就是打包成 hProp 的同一个空类型。于是两个函数都用荒谬来定义：空类型的参数没有任何情形可分。
 <!--ja-->
 最後の二つの定数でこの節を閉じます。真が小さいのは、両側とも要素をもつ命題だからです。圧縮された命題は `Logic.⊤` であり、どちらの方向の関数も引数を捨てて単一元 `tt*` を返します。偽は少し違う始まり方をします。真理値 `⊥` はもともと hProp の対 `(⊥* , isProp⊥*)` として定義されているので、その基礎の型は空な型 `⊥*` そのものであり、圧縮された命題も同じ空な型を hProp にまとめたものです。したがって両方の関数は背理で定義されます。空な型の引数には場合分けが存在しないのです。
 <!--/-->
@@ -247,7 +247,7 @@ small⊤ = Logic.⊤ ,
   propBiimpl→Equiv (⊤ .snd) (snd (Logic.⊤ {ℓ}))
     (λ _ → tt*) (λ _ → tt*)
 
-small⊥ : isSmall (⊥ {ℓ = ℓ-suc ℓ})
+small⊥ : hasSize ℓ (⊥ {ℓ = ℓ-suc ℓ})
 small⊥ = (⊥* , isProp⊥*) ,
 ```
 
@@ -293,8 +293,8 @@ The universal bounded quantifier states: for every member `x` of `a`, the propos
 
 ```agda
 small-∀∈ : (a : S) {B : S → hProp (ℓ-suc ℓ)}
-         → (∀ x → isSmall (B x))
-         → isSmall (∀[ x ∶ S ] (x ∈ˢ a) ⇒ B x)
+         → (∀ x → hasSize ℓ (B x))
+         → hasSize ℓ (∀[ x ∶ S ] (x ∈ˢ a) ⇒ B x)
 small-∀∈ a {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
   where
 ```
@@ -342,8 +342,8 @@ The existential bounded quantifier states: some member `x` of `a` has `B x`. Its
 ```agda
 
 small-∃∈ : (a : S) {B : S → hProp (ℓ-suc ℓ)}
-         → (∀ x → isSmall (B x))
-         → isSmall (∃[ x ∶ S ] (x ∈ˢ a) ⊓ B x)
+         → (∀ x → hasSize ℓ (B x))
+         → hasSize ℓ (∃[ x ∶ S ] (x ∈ˢ a) ⊓ B x)
 small-∃∈ a {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
   where
 ```
@@ -401,11 +401,11 @@ This section is where smallness pays off. The library's separation construction 
 
 This is also where the pieces assemble into a plan. Whatever first supplies smallness of a predicate, whether the bounded quantifiers of the last section or the essentially small worlds of the last, this lemma converts the small predicate into a set, once and in the same way.
 <!--zh-->
-## 从小性到分离
+## 从低层代表到分离
 
-本节是小性兑现之处。库的分离构造 `SeparationSet`{.Agda} 对集合 `a` 与取值于**低**宇宙的谓词 `ϕ : V ℓ → hProp ℓ`，构造一个集合，其成员恰是 `a` 中满足 `ϕ` 的成员。对上宇宙谓词这种构造不可能：其内部索引类型必须落在层级 `ℓ`。下面的引理是适配器：给定 `S` 上逐点带小性见证的谓词 `P`，它产出结构中的集合 `s`，并附上成员规格「`y ∈ˢ s` 当且仅当 `y ∈ˢ a` 且 `P y`」，以模型 record 分离字段风格的路径表述。
+本节把前面构造的低层代表用于分离。库的分离构造 `SeparationSet`{.Agda} 对集合 `a` 与取值于**低**宇宙的谓词 `ϕ : V ℓ → hProp ℓ`，构造一个集合，其成员恰是 `a` 中满足 `ϕ` 的成员。对上宇宙谓词这种构造不可能：其内部索引类型必须落在层级 `ℓ`。下面的引理是适配器：给定 `S` 上逐点带 `hasSize` 见证的谓词 `P`，它产出结构中的集合 `s`，并附上成员规格「`y ∈ˢ s` 当且仅当 `y ∈ˢ a` 且 `P y`」，以模型 record 分离字段风格的路径表述。
 
-这里也是各部件汇成计划之处。无论谓词的小性最先来自何处，是上一节的有界量词，还是最后的本质小世界，本引理都把小谓词一次性、以同一方式变成集合。
+这里也是各部件汇成计划之处。无论谓词的 `hasSize` 见证最先来自何处，是上一节的有界量词，还是最后的本质小世界，本引理都把小谓词一次性、以同一方式变成集合。
 <!--ja-->
 ## 小ささから分出へ
 
@@ -424,7 +424,7 @@ The statement deserves a close reading. The result is a dependent pair: a set `s
 
 ```agda
 separateFromSmall : (a : S) (P : S → hProp (ℓ-suc ℓ))
-                  → (∀ y → isSmall (P y))
+                  → (∀ y → hasSize ℓ (P y))
                   → Σ[ s ∈ S ] (∀ y → (y ∈ˢ s) ≡ ((y ∈ˢ a) ⊓ P y))
 separateFromSmall a P sm = Sep.SEPAREE , λ y → ⇔toPath (fwd y) (bwd y)
   where
@@ -433,7 +433,7 @@ separateFromSmall a P sm = Sep.SEPAREE , λ y → ⇔toPath (fwd y) (bwd y)
 <!--en-->
 The compressed predicate is assembled first: `ϕₛ y` is by definition the lower-universe stand-in `sm y .fst` extracted from the pointwise smallness witness. The library module `Sep` is then instantiated at `a` and `ϕₛ`, and its resulting set is named `Sep.SEPAREE`. This is the only place in the chapter where the library's separation runs; anything else this part separates goes through this lemma.
 <!--zh-->
-先组装压缩谓词：`ϕₛ y` 按定义就是从逐点小性见证中取出的低宇宙替身 `sm y .fst`。随后库模块 `Sep` 在 `a` 与 `ϕₛ` 处实例化，其结果集合名为 `Sep.SEPAREE`。这是本章唯一一处运行库分离的地方；本部分其余的分离都要经过这条引理。
+先组装压缩谓词：`ϕₛ y` 按定义就是从逐点 `hasSize` 见证中取出的低宇宙替身 `sm y .fst`。随后库模块 `Sep` 在 `a` 与 `ϕₛ` 处实例化，其结果集合名为 `Sep.SEPAREE`。这是本章唯一一处运行库分离的地方；本部分其余的分离都要经过这条引理。
 <!--ja-->
 まず圧縮された述語を組み立てます。`ϕₛ y` は定義により、各点の小ささの証人から取り出した低い宇宙の代替物 `sm y .fst` です。次にライブラリのモジュール `Sep` を `a` と `ϕₛ` で具体化し、その結果の集合を `Sep.SEPAREE` とします。本章でライブラリの分出が使われるのはここだけです。この部でほかに分出するものはすべてこの補題を通ります。
 <!--/-->
@@ -471,7 +471,7 @@ The case analysis has an instructive omission: there are no cases for the unboun
 <!--zh-->
 ## Δ₀ 公式求值小
 
-前几节积累了小性见证的库存：两个原子、四个联结词、两个常量与两个有界量词。本节通过对 `Δ₀` 见证本身的归纳把库存变成定理。回顾 Lévy 层级一章，`Δ₀`{.Agda} 是归纳定义的见证，每个公式至多一个，其构造子证明该公式仅由原子经联结词与有界量词构成。定理陈述：凡带有这种见证的公式，在任何环境下的真值都小。由于见证是归纳定义的，证明就是每个构造子一个情形的归纳，而每个情形恰好就是库存中的一条引理。
+前几节积累了 `hasSize` 见证的库存：两个原子、四个联结词、两个常量与两个有界量词。本节通过对 `Δ₀` 见证本身的归纳把库存变成定理。回顾 Lévy 层级一章，`Δ₀`{.Agda} 是归纳定义的见证，每个公式至多一个，其构造子证明该公式仅由原子经联结词与有界量词构成。定理陈述：凡带有这种见证的公式，在任何环境下的真值都小。由于见证是归纳定义的，证明就是每个构造子一个情形的归纳，而每个情形恰好就是库存中的一条引理。
 
 情形分析有一个富有教益的省略：无界量词 `∀̇` 与 `∃̇_` 没有对应情形，因为见证类型本就没有它们的构造子。构造子的缺席正是分类的实现方式；带无界量词的公式根本无法携带 Δ₀ 见证，归纳也就永远不必面对它。Lévy 层级由此充任宇宙代价的核算：Δ₀ 恰是真值无需付出这一代价的片段。
 <!--ja-->
@@ -485,7 +485,7 @@ The case analysis has an instructive omission: there are no cases for the unboun
 <!--en-->
 The setup instantiates the semantics once and for all: `SemanticsV` is the satisfaction relation over `𝒮ᵥ`{.Agda} with truth values in `hProp (ℓ-suc ℓ)`, so a formula's truth value is exactly a proposition of the kind the whole chapter has been compressing. The environment type `S ^ n` is the length-`n` vector notation. The module is parameterized by a constant interpretation `ι : K → S`, so the theorem holds for any choice of constants; the canonical case `ι` the identity is taken at the end of the chapter. Inside, `open SemanticsV.At K ι` brings the term evaluation `⟦_⟧` and satisfaction `_⊨_` into scope. The goal type deserves attention: `Δ₀-small` is a function from a Δ₀ witness to, for each environment `γ`, a smallness witness of `γ ⊨ φ`. The induction is over the witness, with the formula and environment universally quantified around it.
 <!--zh-->
-准备工作一次性实例化语义：`SemanticsV` 是 `𝒮ᵥ`{.Agda} 上、真值取于 `hProp (ℓ-suc ℓ)` 的满足关系，因此公式的真值恰是全章一直在压缩的那类命题。环境类型 `S ^ n` 是长度 `n` 的向量记法。模块由常元解释 `ι : K → S` 参数化，故定理对常元的任意选取成立；恒等函数这一典范情形在本章末取用。模块内 `open SemanticsV.At K ι` 把词项求值 `⟦_⟧` 与满足 `_⊨_` 带入作用域。目标类型值得注意：`Δ₀-small` 是从 Δ₀ 见证到「对每个环境 `γ`，`γ ⊨ φ` 的小性见证」的函数。归纳针对见证进行，公式与环境在其外围被全称量化。
+准备工作一次性实例化语义：`SemanticsV` 是 `𝒮ᵥ`{.Agda} 上、真值取于 `hProp (ℓ-suc ℓ)` 的满足关系，因此公式的真值恰是全章一直在压缩的那类命题。环境类型 `S ^ n` 是长度 `n` 的向量记法。模块由常元解释 `ι : K → S` 参数化，故定理对常元的任意选取成立；恒等函数这一典范情形在本章末取用。模块内 `open SemanticsV.At K ι` 把词项求值 `⟦_⟧` 与满足 `_⊨_` 带入作用域。目标类型值得注意：`Δ₀-small` 是从 Δ₀ 见证到「对每个环境 `γ`，`γ ⊨ φ` 的 `hasSize` 见证」的函数。归纳针对见证进行，公式与环境在其外围被全称量化。
 <!--ja-->
 準備として、意味論を一度だけ具体化します。`SemanticsV` は `𝒮ᵥ`{.Agda} 上の、真理値を `hProp (ℓ-suc ℓ)` にとる充足関係であり、したがって論理式の真理値は、この章がずっと圧縮してきた種類の命題そのものです。環境の型 `S ^ n` は長さ `n` のベクトルの記法です。モジュールは定数解釈 `ι : K → S` でパラメータ化されるので、定理は定数のどんな選び方に対しても成り立ちます。恒等写像という正準な場合は章の末尾で取られます。内部の `open SemanticsV.At K ι` は、項の評価 `⟦_⟧` と充足 `_⊨_` をスコープに入れます。目標の型に注意してください。`Δ₀-small` は、Δ₀ の証人から、各環境 `γ` に対する `γ ⊨ φ` の小ささの証人への関数です。帰納法は証人に対して行われ、論理式と環境はその周りで全称化されています。
 <!--/-->
@@ -498,13 +498,13 @@ module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
 
   open SemanticsV.At K ι
 
-  Δ₀-small : ∀ {n} {φ : Formula K n} → Δ₀ φ → (γ : S ^ n) → isSmall (γ ⊨ φ)
+  Δ₀-small : ∀ {n} {φ : Formula K n} → Δ₀ φ → (γ : S ^ n) → hasSize ℓ (γ ⊨ φ)
 ```
 
 <!--en-->
 The atom cases invoke the first two stock lemmas directly, after evaluating the two terms in the environment `γ`: membership becomes `small-∈` applied to the values of `t` and `u`, equality becomes `small-≡`. The three binary connective cases are equally direct: the induction hypotheses `Δ₀-small c γ` and `Δ₀-small d γ` are smallness witnesses for the subformulas' truth values, and the closure lemma of the corresponding connective combines them. The explicit instantiation `{P = γ ⊨ φ}` merely records which propositions the witnesses compress; Agda could infer them, but writing them out documents the shape of the case.
 <!--zh-->
-原子情形在环境 `γ` 中求值两个词项后，直接调用前两条库存引理：隶属变为对 `t`、`u` 的值应用 `small-∈`，相等变为 `small-≡`。三个二元联结词情形同样直接：归纳假设 `Δ₀-small c γ` 与 `Δ₀-small d γ` 是子公式真值的小性见证，对应联结词的封闭引理把它们组合起来。显式实例化 `{P = γ ⊨ φ}` 只是记录见证所压缩的是哪些命题；Agda 本可推断，但写出来记录了该情形的形状。
+原子情形在环境 `γ` 中求值两个词项后，直接调用前两条库存引理：隶属变为对 `t`、`u` 的值应用 `small-∈`，相等变为 `small-≡`。三个二元联结词情形同样直接：归纳假设 `Δ₀-small c γ` 与 `Δ₀-small d γ` 是子公式真值的 `hasSize` 见证，对应联结词的封闭引理把它们组合起来。显式实例化 `{P = γ ⊨ φ}` 只是记录见证所压缩的是哪些命题；Agda 本可推断，但写出来记录了该情形的形状。
 <!--ja-->
 原子の場合は、環境 `γ` で二つの項を評価したうえで、備えられた最初の二つの補題を直接呼びます。所属は `t` と `u` の値への `small-∈` の適用に、等号は `small-≡` になります。三つの二項結合子の場合も同じく直接です。帰納法の仮定 `Δ₀-small c γ` と `Δ₀-small d γ` が部分論理式の真理値の小ささの証人であり、対応する結合子の閉包補題がそれらを組み合わせます。明示的な具体化 `{P = γ ⊨ φ}` は、証人がどの命題を圧縮するかを記録するだけです。Agda は推論できますが、書き出すことで場合の形が文書化されます。
 <!--/-->
@@ -552,9 +552,9 @@ The existential bounded case mirrors the universal one exactly, with `small-∃�
 
 Compose the induction of the last section with the adapter of the section before it, and the chapter's central theorem appears. Take the canonical constant interpretation, in which the constants of the language are the sets of the structure themselves and `ι` is the identity. Then a Δ₀ formula `φ` with one free variable defines a pointwise-small predicate on `S`, and `separateFromSmall` turns it into a set. The result is a full instance of the separation axiom schema restricted to Δ₀ formulas, proved with no resizing principle, no classical axiom, and no choice: the smallness is supplied by the induction, and the library construction does the rest. The model chapter still owes the unrestricted separation axiom; this theorem shows that the Δ₀ tier of the Lévy hierarchy needs nothing beyond the representation of `V`.
 <!--zh-->
-## 无需命题降级的 Δ₀ 分离
+## 无需命题换级的 Δ₀ 分离
 
-把上一节的归纳与之前的适配器复合，本章的核心定理便出现了。取典范常元解释：语言的常元就是结构中的集合本身，`ι` 为恒等函数。此时带一个自由变量的 Δ₀ 公式 `φ` 在 `S` 上定义一个逐点小的谓词，`separateFromSmall` 把它变成集合。结果是分离公理模式限制到 Δ₀ 公式的完整实例，证明中既无命题降级原则，也无任何经典公理或选择：小性由归纳供给，其余交给库构造。模型章仍欠无限制的分离公理；本定理说明，Lévy 层级中的 Δ₀ 档无需 `V` 的表示之外的任何东西。
+把上一节的归纳与之前的适配器复合，本章的核心定理便出现了。取典范常元解释：语言的常元就是结构中的集合本身，`ι` 为恒等函数。此时带一个自由变量的 Δ₀ 公式 `φ` 在 `S` 上定义一个逐点小的谓词，`separateFromSmall` 把它变成集合。结果是分离公理模式限制到 Δ₀ 公式的完整实例，证明中既无命题换级原则，也无任何经典公理或选择：`hasSize` 见证由归纳供给，其余交给库构造。模型章仍欠无限制的分离公理；本定理说明，Lévy 层级中的 Δ₀ 档无需 `V` 的表示之外的任何东西。
 <!--ja-->
 ## 命題リサイズを要しない Δ₀ 分出
 
@@ -564,7 +564,7 @@ Compose the induction of the last section with the adapter of the section before
 <!--en-->
 The two opening lines fix the canonical interpretation: `Δ₀Small id` instantiates the induction at the identity, and the satisfaction relation for one free variable is re-exported as `_⊨_`. The theorem's type is the separation specification with `φ` in place of an arbitrary predicate: a set `s` such that, for every `y`, membership in `s` is equal, as truth values, to membership in `a` conjoined with `y` satisfying `φ` at the one-point environment `y ∷ []`. The proof is a single application of `separateFromSmall`, passing the predicate `λ y → (y ∷ []) ⊨ φ` together with its pointwise smallness, which is `Δ₀-small c` applied at every one-point environment. Nothing else intervenes: the Δ₀ witness `c` is consumed exactly once, by the induction.
 <!--zh-->
-开头两行固定典范解释：`Δ₀Small id` 在恒等处实例化归纳，单自由变量的满足关系再导出为 `_⊨_`。定理的类型是以 `φ` 替换任意谓词的分离规格：一个集合 `s`，使得对每个 `y`，`s` 中的隶属作为真值等于 `a` 中的隶属与「`y` 在单元环境 `y ∷ []` 下满足 `φ`」的合取。证明是 `separateFromSmall` 的一次应用：传入谓词 `λ y → (y ∷ []) ⊨ φ` 及其逐点小性，后者是 `Δ₀-small c` 在每个单元环境处的应用。此外别无他物：Δ₀ 见证 `c` 恰好被归纳消费一次。
+开头两行固定典范解释：`Δ₀Small id` 在恒等处实例化归纳，单自由变量的满足关系再导出为 `_⊨_`。定理的类型是以 `φ` 替换任意谓词的分离规格：一个集合 `s`，使得对每个 `y`，`s` 中的隶属作为真值等于 `a` 中的隶属与「`y` 在单元环境 `y ∷ []` 下满足 `φ`」的合取。证明是 `separateFromSmall` 的一次应用：传入谓词 `λ y → (y ∷ []) ⊨ φ` 及其逐点 `hasSize` 见证，后者是 `Δ₀-small c` 在每个单元环境处的应用。此外别无他物：Δ₀ 见证 `c` 恰好被归纳消费一次。
 <!--ja-->
 冒頭の二行は正準な解釈を固定します。`Δ₀Small id` が恒等写像で帰納法を具体化し、自由変数一つの充足関係が `_⊨_` として再エクスポートされます。定理の型は、任意の述語の代わりに `φ` を入れた分出の仕様です。すなわち集合 `s` で、各 `y` に対して `s` への所属が、真理値として、`a` への所属と「一点環境 `y ∷ []` で `y` が `φ` を満たす」との連言に等しいもの。証明は `separateFromSmall` の一度の適用であり、述語 `λ y → (y ∷ []) ⊨ φ` とその各点の小ささ、すなわちすべての一点環境での `Δ₀-small c` の適用を渡すだけです。ほかに何も介在しません。Δ₀ の証人 `c` は帰納法によってちょうど一度消費されるのです。
 <!--/-->
@@ -585,7 +585,7 @@ The Δ₀ theorem prices every quantifier as if it ranged over all of `V ℓ`. T
 <!--zh-->
 ## 本质小的世界
 
-Δ₀ 定理把每个量词都按「在全 `V ℓ` 上量化」计价。最后这一层小性通过改变量化的位置连这个代价也免除了。设上层类型 `A` 配有从小类型 `X : Type ℓ` 出发的等价 `e : X ≃ A`。那么对 `A` 的量化可以逐步替换为对 `X` 的量化：关于 `A` 中元素 `a` 的陈述，在其原像 `equivFun e m` 处读取。有界量词引理是相关但不同的现象：那里量化范围是呈现某个集合的索引类型，隶属充当过滤器；这里不再留下任何有界性假设。于是小性不是由公式的形状承载，而是由说出它的世界的形状承载。注意假设的方向：它断言的是从 `X` 到 `A` 的等价 `e` 存在；`A` 本身仍住在上层宇宙。
+Δ₀ 定理把每个量词都按「在全 `V ℓ` 上量化」计价。最后这一层低层代表通过改变量化的位置连这个代价也免除了。设上层类型 `A` 配有从小类型 `X : Type ℓ` 出发的等价 `e : X ≃ A`。那么对 `A` 的量化可以逐步替换为对 `X` 的量化：关于 `A` 中元素 `a` 的陈述，在其原像 `equivFun e m` 处读取。有界量词引理是相关但不同的现象：那里量化范围是呈现某个集合的索引类型，隶属充当过滤器；这里不再留下任何有界性假设。于是 `hasSize` 见证不再由公式的形状给出，而是由说出它的世界的形状承载。注意假设的方向：它断言的是从 `X` 到 `A` 的等价 `e` 存在；`A` 本身仍住在上层宇宙。
 <!--ja-->
 ## 本質的に小さな世界
 
@@ -602,8 +602,8 @@ The universal version first. The statement `∀[ x ] P x B` quantifies over all 
 
 ```agda
 small-∀ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
-        → (∀ a → isSmall (B a))
-        → isSmall (∀[ a ∶ A ] B a)
+        → (∀ a → hasSize ℓ (B a))
+        → hasSize ℓ (∀[ a ∶ A ] B a)
 small-∀ {X = X} e sm = (∀[ m ∶ X ] sm (equivFun e m) .fst)
   , invEquiv (equivΠ e (λ m → invEquiv (sm (equivFun e m) .snd)))
 ```
@@ -611,7 +611,7 @@ small-∀ {X = X} e sm = (∀[ m ∶ X ] sm (equivFun e m) .fst)
 <!--en-->
 The existential version follows the same plan with truncations in place of function types. The compressed proposition is the truncated Σ over `X` of the small witnesses; the equivalence is obtained from the truncated Σ over `A` of the large witnesses by `Σ-cong-equiv`, which changes the base of the pair from `A` to `X` along `e` and each fiber along the inverse pointwise equivalence, and `PT.propTrunc≃` then lifts the pair equivalence to the truncations. Again `invEquiv` supplies the required orientation. Together the two lemmas say: quantification over any essentially small type preserves smallness, and essentially small means, in the next block, equivalent to a type at level `ℓ`.
 <!--zh-->
-存在版本沿用同一方案，只是以截断替换函数类型。压缩命题是对 `X` 的小性见证的截断 Σ；等价从对 `A` 的大见证的截断 Σ 出发：`Σ-cong-equiv` 沿 `e` 把对子的基底从 `A` 换成 `X`，各纤维沿逆的逐点等价变换，`PT.propTrunc≃` 再把对子等价提升到截断上。`invEquiv` 同样提供所需朝向。两条引理合起来说：对任何本质小类型的量化保持小性；而「本质小」在下一块代码中将指等价于层级 `ℓ` 的某个类型。
+存在版本沿用同一方案，只是以截断替换函数类型。压缩命题是对 `X` 的 `hasSize` 见证的截断 Σ；等价从对 `A` 的大见证的截断 Σ 出发：`Σ-cong-equiv` 沿 `e` 把对子的基底从 `A` 换成 `X`，各纤维沿逆的逐点等价变换，`PT.propTrunc≃` 再把对子等价提升到截断上。`invEquiv` 同样提供所需朝向。两条引理合起来说：对任何本质小类型的量化仍有低层等价代表；而「本质小」在下一块代码中将指等价于层级 `ℓ` 的某个类型。
 <!--ja-->
 存在の方も同じ計画に従いますが、関数型の代わりに切り詰めが現れます。圧縮された命題は、`X` の上の小さな証人の切り詰められた Σ です。同値は、`A` の上の大きな証人の切り詰められた Σ から、`Σ-cong-equiv` によって得られます。これは対の基底を `e` に沿って `A` から `X` へ変え、各ファイバーを逆向きの各点の同値に沿って変え、`PT.propTrunc≃` がさらにその対の同値を切り詰めへ引き上げます。ここでも `invEquiv` が必要な向きを与えます。二つの補題を合わせると、本質的に小さな型の上での量化は小ささを保存する、ということになります。そして次のコード塊で、本質的に小さいとはレベル `ℓ` の型と同値であることを意味します。
 <!--/-->
@@ -619,8 +619,8 @@ The existential version follows the same plan with truncations in place of funct
 ```agda
 
 small-∃ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hProp (ℓ-suc ℓ)}
-        → (∀ a → isSmall (B a))
-        → isSmall (∃[ a ∶ A ] B a)
+        → (∀ a → hasSize ℓ (B a))
+        → hasSize ℓ (∃[ a ∶ A ] B a)
 small-∃ {X = X} e sm = (∃[ m ∶ X ] sm (equivFun e m) .fst)
   , invEquiv (PT.propTrunc≃ (Σ-cong-equiv e (λ m → invEquiv (sm (equivFun e m) .snd))))
 ```
@@ -628,7 +628,7 @@ small-∃ {X = X} e sm = (∃[ m ∶ X ] sm (equivFun e m) .fst)
 <!--en-->
 The consequence: over an essentially small restricted structure, **every** formula evaluates small, no Δ₀ witness required. Fix a class `M` on the structure and suppose its restricted carrier is essentially small, in the precise form of an equivalence `e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))` with `X : Type ℓ`. Inside the structure `𝒮ᵥ ↾ M`, the quantifiers range over that restricted carrier, so the two lemmas of the last block apply to every quantifier, bounded or not, and the atoms reduce to `V`'s atomic smallness through the first projection. Boundedness is a syntactic restriction on a formula, whereas essential smallness is a property of the quantifier range. Once that hypothesis is available, the structural induction covers unbounded as well as bounded quantifiers. This smallness of inner satisfaction is what lets a definability step, such as the one the constructible hierarchy takes at each stage, operate with predicates at the lower universe.
 <!--zh-->
-后果是：在本质小的限制结构上，**任何**公式求值皆小，无需 Δ₀ 见证。固定结构上的类 `M`，并设其限制载体本质小，精确形式是等价 `e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))`，其中 `X : Type ℓ`。在结构 `𝒮ᵥ ↾ M` 内，量词在该限制载体上量化，于是上一块代码的两条引理对每个量词都适用，无论有界与否；原子则经第一投影归结为 `V` 的原子小性。有界性是公式的句法限制，而本质小是量化范围的性质。有了后一项假设，结构归纳便同时覆盖无界与有界量词。内部满足的这一小性，正是让可定义性步骤 (例如可构造层级在每层所做的那一步) 能以低宇宙的谓词运作的原因。
+后果是：在本质小的限制结构上，**任何**公式求值都有目标层级中的等价代表，无需 Δ₀ 见证。固定结构上的类 `M`，并设其限制载体本质小，精确形式是等价 `e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))`，其中 `X : Type ℓ`。在结构 `𝒮ᵥ ↾ M` 内，量词在该限制载体上量化，于是上一块代码的两条引理对每个量词都适用，无论有界与否；原子则经第一投影归结为 `V` 的原子命题的 `hasSize` 见证。有界性是公式的句法限制，而本质小是量化范围的性质。有了后一项假设，结构归纳便同时覆盖无界与有界量词。内部满足的这一`hasSize` 见证，正是让可定义性步骤 (例如可构造层级在每层所做的那一步) 能以低宇宙的谓词运作的原因。
 <!--ja-->
 帰結は次のとおりです。本質的に小さな制限された構造の上では、Δ₀ の証人がなくても、**すべての**論理式の評価が小さくなります。構造の上のクラス `M` を固定し、その制限された台が本質的に小さい、すなわち `X : Type ℓ` を用いた同値 `e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M))` の形で仮定します。構造 `𝒮ᵥ ↾ M` の中では、量化子はその制限された台の上で量化するので、前のコード塊の二つの補題は、有界かどうかにかかわらず、すべての量化子に適用できます。原子は第一射影を通して `V` の原子的な小ささに帰着します。有界性は論理式に対する構文上の制限であり、本質的な小ささは量化範囲の性質です。後者の仮定があれば、構造帰納法は非有界量化子と有界量化子の両方を扱えます。この内部充足の小ささこそ、可定義性の段階、たとえば構成可能階層が各段階で踏む那段階が、低い宇宙の述語で動けるようにするものです。
 <!--/-->
@@ -671,14 +671,14 @@ Two abbreviations fix notation. `SM` names the restricted carrier itself, and `�
 <!--en-->
 The theorem's statement is deliberately parallel to `Δ₀-small`: for every formula `φ` of any arity `n` and every environment `δ : SM ^ n` of restricted elements, the truth value `δ ⊨ᵐ φ` is small. There is no inductive witness in sight, because none is needed: the induction here is on the formula itself, and the essential smallness of the carrier replaces the Δ₀ restriction. The two atom cases evaluate the terms inside the world, obtaining restricted elements, and apply the atomic smallness lemmas to their first projections: the world's membership `(fst xm) ∈ˢ (fst ym)` is exactly a proposition of the ambient structure, already known small.
 <!--zh-->
-定理的陈述刻意与 `Δ₀-small` 平行：对任意元数 `n` 的公式 `φ` 与任意限制元素环境 `δ : SM ^ n`，真值 `δ ⊨ᵐ φ` 是小的。这里看不到任何归纳见证，因为不需要：此处的归纳直接针对公式，载体的本质小性取代了 Δ₀ 限制。两个原子情形在世界内求值词项，得到限制元素，再对其第一投影应用原子小性引理：世界内的隶属 `(fst xm) ∈ˢ (fst ym)` 恰是环境结构的命题，其小性已知。
+定理的陈述刻意与 `Δ₀-small` 平行：对任意元数 `n` 的公式 `φ` 与任意限制元素环境 `δ : SM ^ n`，真值 `δ ⊨ᵐ φ` 有目标层级中的等价代表。这里看不到任何归纳见证，因为不需要：此处的归纳直接针对公式，载体本质小这一条件取代了 Δ₀ 限制。两个原子情形在世界内求值词项，得到限制元素，再对其第一投影应用原子的 `hasSize` 引理：世界内的隶属 `(fst xm) ∈ˢ (fst ym)` 恰是环境结构的命题，其 `hasSize` 见证已知。
 <!--ja-->
 定理の主張は、意図的に `Δ₀-small` と並行しています。任意のアリティ `n` の論理式 `φ` と、制限された要素の任意の環境 `δ : SM ^ n` に対して、真理値 `δ ⊨ᵐ φ` は小さい。ここに帰納的な証人は姿を見せません。必要ないからです。ここの帰納法は論理式そのものに対して行われ、台の本質的な小ささが Δ₀ の制限の代わりをします。原子の二つの場合は、世界の中で項を評価して制限された要素を得て、その第一射影に原子的な小ささの補題を適用します。世界の中の所属 `(fst xm) ∈ˢ (fst ym)` は、周囲の構造の命題そのものであり、その小ささはすでに知られています。
 <!--/-->
 
 ```agda
 
-  ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → isSmall (δ ⊨ᵐ φ)
+  ⊨ᵐ-small : ∀ {n} (φ : Formula K n) (δ : SM ^ n) → hasSize ℓ (δ ⊨ᵐ φ)
   ⊨ᵐ-small (t ∈̇ u)  δ = small-∈ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
   ⊨ᵐ-small (t ≐ u)  δ = small-≡ (fst (⟦ t ⟧ᵐ δ)) (fst (⟦ u ⟧ᵐ δ))
   ⊨ᵐ-small (φ ∧̇ ψ)  δ =
@@ -704,7 +704,7 @@ The three binary connectives and falsity pass through exactly as before: the clo
 <!--en-->
 Now the quantifiers, where the two world lemmas enter. The unbounded existential `∃̇ φ` has truth value `∃[ xm ] (xm ∷ δ) ⊨ᵐ φ` over the restricted carrier, and the induction hypothesis supplies smallness of each fiber `(xm ∷ δ) ⊨ᵐ φ`. This is precisely the shape of `small-∃`, with `A` the restricted carrier and `e` its smallness equivalence, so the case closes by direct application. The universal case is the mirror image with `small-∀`. Note how the quantification is genuinely over the restricted world: an element of `SM` is a pair, so the extended environment `xm ∷ δ` extends by whole restricted elements, and the body is read at them.
 <!--zh-->
-现在轮到量词，两个世界引理在此登场。无界存在量词 `∃̇ φ` 的真值是限制载体上的 `∃[ xm ] (xm ∷ δ) ⊨ᵐ φ`，归纳假设给出每个纤维 `(xm ∷ δ) ⊨ᵐ φ` 的小性。这恰是 `small-∃` 的形状，`A` 取限制载体、`e` 取其小性等价，该情形由直接应用闭合。全称情形是 `small-∀` 的镜像。注意量化确实是对限制世界进行的：`SM` 的元素是对子，因此扩展环境 `xm ∷ δ` 是以完整的限制元素扩展，体公式在这些元素处读取。
+现在轮到量词，两个世界引理在此登场。无界存在量词 `∃̇ φ` 的真值是限制载体上的 `∃[ xm ] (xm ∷ δ) ⊨ᵐ φ`，归纳假设给出每个纤维 `(xm ∷ δ) ⊨ᵐ φ` 的 `hasSize` 见证。这恰是 `small-∃` 的形状，`A` 取限制载体、`e` 取其与小类型的等价，该情形由直接应用闭合。全称情形是 `small-∀` 的镜像。注意量化确实是对限制世界进行的：`SM` 的元素是对子，因此扩展环境 `xm ∷ δ` 是以完整的限制元素扩展，体公式在这些元素处读取。
 <!--ja-->
 次に量化子で、世界の二つの補題が登場します。非有界の存在量化子 `∃̇ φ` の真理値は、制限された台の上の `∃[ xm ] (xm ∷ δ) ⊨ᵐ φ` であり、帰納法の仮定が各ファイバー `(xm ∷ δ) ⊨ᵐ φ` の小ささを与えます。これは `small-∃` の形状そのものであり、`A` に制限された台を、`e` にその小ささの同値を入れれば、この場合は直接の適用で閉じます。全称の場合は `small-∀` を用いた鏡像です。量化が本当に制限された世界の上で行われていることに注意してください。`SM` の要素は対なので、拡張された環境 `xm ∷ δ` は制限された要素全体による拡張であり、本体はそれらの上で読まれます。
 <!--/-->
@@ -720,7 +720,7 @@ Now the quantifiers, where the two world lemmas enter. The unbounded existential
 <!--en-->
 The bounded quantifiers combine the two sources of smallness in one case each. For `∀̇∈ t φ`, the truth value is an implication, bounded over the restricted carrier: `∀[ xm ] (fst xm ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)`. Smallness of the antecedent comes from the atomic lemma, smallness of the consequent from the induction hypothesis, and `small⇒` assembles the implication; the whole statement is then small by `small-∀` along `e`. The interesting detail is the first projection `fst xm`: boundedness is a statement about the underlying set of the restricted element, since the membership relation of the world is the pullback of `V`'s.
 <!--zh-->
-有界量词在每个情形中把两个小性来源合并。对 `∀̇∈ t φ`，真值是限制载体上有界的蕴涵：`∀[ xm ] (fst xm ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)`。前件的小性来自原子引理，后件的小性来自归纳假设，`small⇒` 组装蕴涵；整个陈述再经 `small-∀` 沿 `e` 而小。有趣的细节是第一投影 `fst xm`：有界性是关于限制元素底层集合的陈述，因为世界的隶属关系本就是 `V` 的拉回。
+有界量词在每个情形中把两种 `hasSize` 见证的来源合并。对 `∀̇∈ t φ`，真值是限制载体上有界的蕴涵：`∀[ xm ] (fst xm ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)`。前件的 `hasSize` 见证来自原子引理，后件的 `hasSize` 见证来自归纳假设，`small⇒` 组装蕴涵；整个陈述再经 `small-∀` 沿 `e` 而小。有趣的细节是第一投影 `fst xm`：有界性是关于限制元素底层集合的陈述，因为世界的隶属关系本就是 `V` 的拉回。
 <!--ja-->
 有界量化子は、それぞれの場合で小ささの二つの源泉を結合します。`∀̇∈ t φ` の真理値は、制限された台の上で有界な含意 `∀[ xm ] (fst xm ∈ˢ ⟦ t ⟧ᵐ δ) ⇒ ((xm ∷ δ) ⊨ᵐ φ)` です。前件の小ささは原子的な補題から、後件の小ささは帰納法の仮定から得られ、`small⇒` が含意を組み立てます。主張全体は、さらに `e` に沿う `small-∀` によって小さくなります。興味深い細部は第一射影 `fst xm` です。有界性は、制限された要素の基礎となる集合についての主張です。世界の所属関係は `V` のそれの引き戻しだからです。
 <!--/-->
@@ -736,7 +736,7 @@ The bounded quantifiers combine the two sources of smallness in one case each. F
 <!--en-->
 The existential bounded case is the dual composition: the truth value pairs boundedness with the body under a truncated Σ, `small⊓` combines the two smallness witnesses, and `small-∃` moves the whole statement to the small index type. With this case the induction is complete, and the chapter's second headline result stands: inside an essentially small world, every formula, unbounded quantifiers included, has a small truth value. Where Δ₀-smallness was carried by the shape of the formula, essential smallness is carried by the range of the quantifiers; either way, once a small predicate is in hand, the separation of the previous section applies.
 <!--zh-->
-存在有界情形是对偶的复合：真值是在截断 Σ 下把有界与体公式配对，`small⊓` 组合两个小性见证，`small-∃` 把整个陈述搬到小索引类型上。此情形完成归纳，本章的第二项主结果就此成立：在本质小的世界内，包括无界量词在内的每个公式都有小的真值。Δ₀ 小性由公式的形状承载，本质小性由量词的范围承载；无论哪种方式，一旦拿到小谓词，前一节的分离都照常适用。
+存在有界情形是对偶的复合：真值是在截断 Σ 下把有界与体公式配对，`small⊓` 组合两个 `hasSize` 见证，`small-∃` 把整个陈述搬到小索引类型上。此情形完成归纳，本章的第二项主结果就此成立：在本质小的世界内，包括无界量词在内的每个公式都有小的真值。Δ₀ 命题的 `hasSize` 见证由公式的形状承载，载体本质小这一条件由量词的范围承载；无论哪种方式，一旦拿到小谓词，前一节的分离都照常适用。
 <!--ja-->
 存在の有界量化の場合は双対の合成です。真理値は切り詰められた Σ の下で有界性と本体を対にし、`small⊓` が二つの小ささの証人を組み合わせ、`small-∃` が主張全体を小さな添字の型の上へ移します。この場合で帰納法は完了し、本章のもう一つの主要な結果が立ちます。本質的に小さな世界の中では、非有界量化子を含むすべての論理式が小さな真理値をもつのです。Δ₀ の小ささは論理式の形が担い、本質的な小ささは量化子の範囲が担います。どちらであっても、小さな述語が手もとにあれば、前節の分出がそのまま適用されます。
 <!--/-->
@@ -749,13 +749,13 @@ The existential bounded case is the dual composition: the truth value pairs boun
 <!--en-->
 ## Recap
 
-Smallness is equivalence to a proposition one universe down (`isSmall`{.Agda}). The atomic membership and equality of `V` compress through the library's monic presentation; the four connectives and two constants pass smallness witnesses through their corresponding lower-level operations; and the bounded quantifiers compress by quantifying over a set's small index type, using the untruncated fibers of the embedding. The adapter `separateFromSmall`{.Agda} converts any pointwise-small predicate into a set with the separation specification. The induction `Δ₀-small`{.Agda} then gives the Δ₀ tier of the Lévy hierarchy outright, and `separateΔ₀`{.Agda} turns it into Δ₀ separation with no propositional resizing, no classical axiom, and no choice. Formulas outside Δ₀ need more, and the model chapter supplies it under the name of propositional resizing. The final section added a second route: over a world whose carrier is essentially small, that is, equivalent to a type at level `ℓ`, every formula evaluates small, which is what lets a definability step work with lower-universe predicates.
+Smallness is equivalence to a proposition one universe down (`hasSize`{.Agda}). The atomic membership and equality of `V` compress through the library's monic presentation; the four connectives and two constants pass smallness witnesses through their corresponding lower-level operations; and the bounded quantifiers compress by quantifying over a set's small index type, using the untruncated fibers of the embedding. The adapter `separateFromSmall`{.Agda} converts any pointwise-small predicate into a set with the separation specification. The induction `Δ₀-small`{.Agda} then gives the Δ₀ tier of the Lévy hierarchy outright, and `separateΔ₀`{.Agda} turns it into Δ₀ separation with no propositional resizing, no classical axiom, and no choice. Formulas outside Δ₀ need more, and the model chapter supplies it under the name of propositional resizing. The final section added a second route: over a world whose carrier is essentially small, that is, equivalent to a type at level `ℓ`, every formula evaluates small, which is what lets a definability step work with lower-universe predicates.
 <!--zh-->
 ## 小结
 
-小性即与低一层命题的等价 (`isSmall`{.Agda})。`V` 的原子隶属与相等经库的单射呈现压缩；四个联结词与两个常量经对应的低层运算传递小性见证；有界量词通过在集合的小索引类型上量化而压缩，其间用到嵌入的非截断纤维。适配器 `separateFromSmall`{.Agda} 把任何逐点小的谓词变成带有分离规格的集合。归纳 `Δ₀-small`{.Agda} 直接给出 Lévy 层级的 Δ₀ 档，`separateΔ₀`{.Agda} 把它变成无需命题降级、无需任何经典公理或选择的 Δ₀ 分离。Δ₀ 之外的公式需要更多，模型章以命题降级的名义供给。最后一节引入了第二条路径：在载体本质小，即等价于 `ℓ` 层某类型的世界里，每个公式求值皆小，这正是让可定义性步骤能以低宇宙谓词运作的原因。
+`hasSize` 要求与低一层命题类型等价 (`hasSize`{.Agda})。`V` 的原子隶属与相等经库的单射呈现压缩；四个联结词与两个常量经对应的低层运算传递 `hasSize` 见证；有界量词通过在集合的小索引类型上量化而压缩，其间用到嵌入的非截断纤维。适配器 `separateFromSmall`{.Agda} 把任何逐点小的谓词变成带有分离规格的集合。归纳 `Δ₀-small`{.Agda} 直接给出 Lévy 层级的 Δ₀ 档，`separateΔ₀`{.Agda} 把它变成无需命题换级、无需任何经典公理或选择的 Δ₀ 分离。Δ₀ 之外的公式需要更多，模型章以命题换级的名义供给。最后一节引入了第二条路径：在载体本质小，即等价于 `ℓ` 层某类型的世界里，每个公式求值都有目标层级中的等价代表，这正是让可定义性步骤能以低宇宙谓词运作的原因。
 <!--ja-->
 ## まとめ
 
-小ささとは、一段低い宇宙の命題との同値です (`isSmall`{.Agda})。`V` の原子的な所属と等号は、ライブラリの単射表示を通して圧縮されます。四つの結合子と二つの定数は、対応する低いレベルの演算を通して小ささの証人を運び、有界量化子は、集合の小さな添字の型の上での量化によって圧縮されます。その際に使われるのは、埋め込みの切り詰められていないファイバーです。適合装置 `separateFromSmall`{.Agda} は、各点で小さいどんな述語も、分出の仕様を備えた集合へ変えます。帰納法 `Δ₀-small`{.Agda} は Lévy 階層の Δ₀ の階層をそのまま与え、`separateΔ₀`{.Agda} は命題リサイズも古典的な公理も選択も要らない Δ₀ 分出へ変えます。Δ₀ の外の論理式にはさらに多くが要り、モデルの章が命題リサイズという名のもとでそれを供給します。最後の節は第二の道を加えました。台が本質的に小さい、つまりレベル `ℓ` の型と同値である世界の中ではすべての論理式の評価が小さく、これが可定義性の段階を低い宇宙の述語で動かせるようにする理由です。
+小ささとは、一段低い宇宙の命題との同値です (`hasSize`{.Agda})。`V` の原子的な所属と等号は、ライブラリの単射表示を通して圧縮されます。四つの結合子と二つの定数は、対応する低いレベルの演算を通して小ささの証人を運び、有界量化子は、集合の小さな添字の型の上での量化によって圧縮されます。その際に使われるのは、埋め込みの切り詰められていないファイバーです。適合装置 `separateFromSmall`{.Agda} は、各点で小さいどんな述語も、分出の仕様を備えた集合へ変えます。帰納法 `Δ₀-small`{.Agda} は Lévy 階層の Δ₀ の階層をそのまま与え、`separateΔ₀`{.Agda} は命題リサイズも古典的な公理も選択も要らない Δ₀ 分出へ変えます。Δ₀ の外の論理式にはさらに多くが要り、モデルの章が命題リサイズという名のもとでそれを供給します。最後の節は第二の道を加えました。台が本質的に小さい、つまりレベル `ℓ` の型と同値である世界の中ではすべての論理式の評価が小さく、これが可定義性の段階を低い宇宙の述語で動かせるようにする理由です。
 <!--/-->

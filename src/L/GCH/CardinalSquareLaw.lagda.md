@@ -2530,7 +2530,7 @@ The adequacy of the successor clause is recorded once: satisfaction of the succe
 <!--en-->
 Reading the formula outward eliminates the truncated disjunction into the propositional witness type. The successor clause is converted by adequacy, while propositional resizing lowers the refutation in the middle clause from its lifted universe; the top clause already has the required form.
 <!--zh-->
-向外读取公式时，将命题截断下的析取消去到同为命题的见证类型中。后继子句由充分性转换；中间子句中的反驳则通过命题降级从提升后的宇宙降回所需层级；顶端子句已经具有所需形式。
+向外读取公式时，将命题截断下的析取消去到同为命题的见证类型中。后继子句由充分性转换；中间子句中的反驳则通过命题换级从提升后的宇宙降回所需层级；顶端子句已经具有所需形式。
 <!--ja-->
 論理式を外向きに読むと、命題的切り詰めの下の論理和を、やはり命題である証人型へ除去します。後続の節は妥当性によって変換し、中間の節の反証は命題リサイズによって持ち上げられた宇宙から必要なレベルへ戻します。頂点の節はすでに必要な形です。
 <!--/-->

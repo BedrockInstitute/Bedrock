@@ -245,7 +245,7 @@ The proof of `pair-char` follows the same plan, with one new feature: the every-
 ```agda
   where
   sub₁ : (y : V ℓ) → ⟨ y ∈ x ⟩ → ⟨ y ∈ ⁅ u , v ⁆ ⟩
-  sub₁ y hy = PT.rec ((y ∈ ⁅ u , v ⁆) .snd)
+  sub₁ y hy = PT.rec (⟨ y ∈ ⁅ u , v ⁆ ⟩isProp)
     (Sum.rec (∈pair-introL {u = u} {v = v}) (∈pair-introR {u = u} {v = v})) (hall y hy)
   sub₂ : (y : V ℓ) → ⟨ y ∈ ⁅ u , v ⁆ ⟩ → ⟨ y ∈ x ⟩
 ```
@@ -259,7 +259,7 @@ The backward direction `sub₂` mirrors this: from membership in `⁅ u , v ⁆`
 <!--/-->
 
 ```agda
-  sub₂ y hy = PT.rec ((y ∈ x) .snd)
+  sub₂ y hy = PT.rec (⟨ y ∈ x ⟩isProp)
     (Sum.rec (λ e → subst (λ z → ⟨ z ∈ x ⟩) (sym e) hu)
              (λ e → subst (λ z → ⟨ z ∈ x ⟩) (sym e) hv)) (∈pair-elim hy)
 ```
@@ -363,7 +363,7 @@ The first two hypotheses each provide, merely, a member of `Q` together with a p
   → ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ SglOf U y ⊎ PairOf U W y ∥₁)
   → Q ≡ pr U W
 prChar-fwd Q U W h₁ h₂ h₃ = pair-char Q ⁅ U ⁆s ⁅ U , W ⁆
-  (PT.rec ((⁅ U ⁆s ∈ Q) .snd)
+  (PT.rec (⟨ ⁅ U ⁆s ∈ Q ⟩isProp)
 ```
 
 <!--en-->
@@ -376,7 +376,7 @@ The universal clause needs no elimination at all: for each member `y` of `Q`, th
 
 ```agda
     (λ { (w , hw , h) → subst (λ z → ⟨ z ∈ Q ⟩) (sglOf→≡ h) hw }) h₁)
-  (PT.rec ((⁅ U , W ⁆ ∈ Q) .snd)
+  (PT.rec (⟨ ⁅ U , W ⁆ ∈ Q ⟩isProp)
     (λ { (w , hw , h) → subst (λ z → ⟨ z ∈ Q ⟩) (pairOf→≡ h) hw }) h₂)
   (λ y hy → PT.map (Sum.map sglOf→≡ pairOf→≡) (h₃ y hy))
 

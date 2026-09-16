@@ -343,7 +343,7 @@ module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
 <!--en-->
 The separating predicate asks whether a set embeds into `a`, and is stated as a truncated existence. Since it lives in `hProp ℓ` by construction, it can be handed to separation directly, with no resizing step in between.
 <!--zh-->
-分离谓词问：一个集合是否嵌入 `a`；它被陈述为截断的存在。由于它按构造居于 `hProp ℓ`，可直接交给分离，中间无需任何命题降级。
+分离谓词问：一个集合是否嵌入 `a`；它被陈述为截断的存在。由于它按构造居于 `hProp ℓ`，可直接交给分离，中间无需任何命题换级。
 <!--ja-->
 分出の述語は、ある集合が `a` へ埋め込めるかを問い、切り詰められた存在として述べられます。それは構成によって `hProp ℓ` に住むので、中間の命題リサイズなしに、そのまま分出に渡せます。
 <!--/-->
@@ -1221,7 +1221,7 @@ Well-foundedness is transported along the injection from the ambient hierarchy's
 
 The auxiliary proof constructs accessibility for each predecessor of the given member.
 <!--zh-->
-良基性由环境层级的正则性沿嵌入搬运。辅助引理处理目标已知等于特定层级元素的情形。
+良基性由环境层级中正则公理所给的良基性沿嵌入搬运。辅助引理处理目标已知等于特定层级元素的情形。
 
 辅助证明为给定成员的每个前驱构造可达性。
 <!--ja-->
@@ -1289,7 +1289,7 @@ The two fibre witnesses over `F m` are equal because that fibre is a proposition
 <!--en-->
 Well-foundedness of the pulled-back relation follows from the regularity of the ambient hierarchy: each predecessor of any member lies strictly below some hierarchy element, and the auxiliary lemma produces accessibility there.
 <!--zh-->
-拉回关系的良基性来自环境层级的正则性：任何成员的每个前驱都严格低于某个层级元素，辅助引理在该处产出可达性。
+拉回关系的良基性来自环境层级的正则公理：任何成员的每个前驱都严格低于某个层级元素，辅助引理在该处产出可达性。
 <!--ja-->
 引き戻された関係の整礎性は、周囲の階層の正則性から従います。ある要素のそれぞれの前者は、ある階層の要素より厳密に下にあり、補助の補題がそこでアクセス可能性を作ります。
 <!--/-->
@@ -1305,7 +1305,7 @@ Well-foundedness of the pulled-back relation follows from the regularity of the 
 <!--en-->
 For an arbitrary predecessor `r` of `x`, decoding the relation supplies a fibre witness `p` over `r`. Regularity gives accessibility of the hierarchy element represented by its index, and `wfAux` transfers that accessibility back to the point `F (fst p)`. The fibre equation identifies this point with `r`, completing the required accessibility proof.
 <!--zh-->
-对 `x` 的任意前驱 `r`，解读该关系会给出 `r` 上的纤维见证 `p`。正则性给出其索引所表示的层级元素的可达性，`wfAux` 再把这份可达性传回点 `F (fst p)`。纤维等式把该点与 `r` 认同，从而完成所需的可达性证明。
+对 `x` 的任意前驱 `r`，解读该关系会给出 `r` 上的纤维见证 `p`。正则公理给出其索引所表示的层级元素的可达性，`wfAux` 再把这份可达性传回点 `F (fst p)`。纤维等式把该点与 `r` 认同，从而完成所需的可达性证明。
 <!--ja-->
 `x` の任意の先行要素 `r` に対して、関係を読み取ると `r` 上のファイバーの証人 `p` が得られます。正則性は、その添字が表す階層の要素の到達可能性を与え、`wfAux` がその到達可能性を点 `F (fst p)` へ移します。ファイバーの等式がこの点を `r` と同定し、必要な到達可能性の証明が完成します。
 <!--/-->
@@ -1525,7 +1525,7 @@ The recursive hypothesis gives `col (F k) ≡ ⟪ μ ⟫↪ k`. Composing this w
 <!--en-->
 Regularity supplies the accessibility proof needed to specialize the induction to every index `m` of `μ`. Thus `key'` identifies `col (F m)` with the member represented by `m`. The next part of the proof will use these pointwise equalities to establish the inclusion `μ ⊆ Col.ot w`; that inclusion has not yet been asserted here.
 <!--zh-->
-正则性为 `μ` 的每个索引 `m` 提供专门化该归纳所需的可及性证明。因此，`key'` 把 `col (F m)` 与 `m` 所表示的成员认同。证明的下一部分才会用这些逐点等式建立包含 `μ ⊆ Col.ot w`；此处尚未断言该包含。
+正则公理为 `μ` 的每个索引 `m` 提供专门化该归纳所需的可及性证明。因此，`key'` 把 `col (F m)` 与 `m` 所表示的成员认同。证明的下一部分才会用这些逐点等式建立包含 `μ ⊆ Col.ot w`；此处尚未断言该包含。
 <!--ja-->
 正則性は、`μ` の各添字 `m` で帰納を特殊化するための到達可能性の証明を与えます。したがって `key'` は `col (F m)` を `m` が表す要素と同一視します。証明の次の部分で、これらの各点の等式から包含 `μ ⊆ Col.ot w` を導きます。この時点ではまだその包含を主張していません。
 <!--/-->

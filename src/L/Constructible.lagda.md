@@ -9,7 +9,7 @@ One design choice does most of the work. The tower is indexed not by a separate 
 
 可构造层级从空集开始，反复施加可定义幂集，并在极限点处取并。所得层都是传递集，而塔沿指标之间的隶属关系保持单调；出现在某一层中的集合构成类 `L`{.Agda}，连同把环境结构限制到其上所得的集合论结构。
 
-一个设计选择承担了大部分工作。塔的索引不是另立的序数类型，而是**集合自身**，凭借正则性所授权的沿成员关系的递归：`Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`。这一条方程同时覆盖零、后继与极限，而在冯·诺伊曼序数上它恰是哥德尔的塔；定义本身接受任意集合作为索引，索引须为序数的要求留到定义类 `L` 时才施加。与之并行的是归纳谓词 `isLayer`{.Agda}，「是一个层」，其构造子就是塔的闭包原则；两个视角在全章配合使用。
+一个设计选择承担了大部分工作。塔的索引不是另立的序数类型，而是**集合自身**，凭借正则公理所授权的沿成员关系的递归：`Lset α = ⋃ { Def (Lset β) ∣ β ∈ α }`。这一条方程同时覆盖零、后继与极限，而在冯·诺伊曼序数上它恰是哥德尔的塔；定义本身接受任意集合作为索引，索引须为序数的要求留到定义类 `L` 时才施加。与之并行的是归纳谓词 `isLayer`{.Agda}，「是一个层」，其构造子就是塔的闭包原则；两个视角在全章配合使用。
 <!--ja-->
 # 構成可能階層と構成可能宇宙
 
@@ -133,7 +133,7 @@ isTransV : S → Type (ℓ-suc ℓ)
 isTransV A = Transitive 𝒮ᵥ (λ x → x ∈ˢ A)
 
 isPropIsTransV : (A : S) → isProp (isTransV A)
-isPropIsTransV A p q i {x} {y} y∈x x∈A = (y ∈ˢ A) .snd (p y∈x x∈A) (q y∈x x∈A) i
+isPropIsTransV A p q i {x} {y} y∈x x∈A = ⟨ y ∈ˢ A ⟩isProp (p y∈x x∈A) (q y∈x x∈A) i
 
 ∅-trans : isTransV ∅
 ```
@@ -360,7 +360,7 @@ LsetStep α rec = ⋃ (sett ⟪ α ⟫ (λ m → 𝒟ₒ (rec (⟪ α ⟫↪ m) 
 <!--en-->
 The helper `mem` supplies the conversion the body needs: the member of `α` named by an index `m` is `⟪ α ⟫↪ m`, and `∈ₛ⟪ α ⟫↪ m` certifies that this set belongs to `α` in the small presentation; `∈∈ₛ` converts that into the type-valued membership `∈ᵗ` that `rec` expects. The tower itself is then a single call: `Lset` is defined as `∈-induction` applied to the step. This is well-founded recursion on membership, justified once and for all by the regularity theorem of the hierarchy chapter; the recursion index is the set `α` itself, and ordinalhood of the index is not required by the raw definition, it will be imposed where the hierarchy is used.
 <!--zh-->
-辅助引理 `mem` 提供函数体所需的转换：索引 `m` 指名的 `α` 的成员是 `⟪ α ⟫↪ m`，`∈ₛ⟪ α ⟫↪ m` 证明这个集合在小表示中属于 `α`；`∈∈ₛ` 再把它转换为 `rec` 所期望的取类型成员关系 `∈ᵗ`。塔本身随之只是一次调用：`Lset` 定义为 `∈-induction` 作用于步进函数。这是沿成员关系的良基递归，其正当性由层级章的正则性定理一次性给出；递归索引就是集合 `α` 自身，原始定义不要求索引是序数，序数性只在使用层级之处施加。
+辅助引理 `mem` 提供函数体所需的转换：索引 `m` 指名的 `α` 的成员是 `⟪ α ⟫↪ m`，`∈ₛ⟪ α ⟫↪ m` 证明这个集合在小表示中属于 `α`；`∈∈ₛ` 再把它转换为 `rec` 所期望的取类型成员关系 `∈ᵗ`。塔本身随之只是一次调用：`Lset` 定义为 `∈-induction` 作用于步进函数。这是沿成员关系的良基递归，其正当性由层级章对正则公理的证明一次性给出；递归索引就是集合 `α` 自身，原始定义不要求索引是序数，序数性只在使用层级之处施加。
 <!--ja-->
 補助関数 `mem` が本体に必要な変換を供給します。添字 `m` の指す `α` の要素は `⟪ α ⟫↪ m` であり、`∈ₛ⟪ α ⟫↪ m` がこの集合が小さな表現で `α` に属することを証明します。そして `∈∈ₛ` がそれを、`rec` が期待する型としての所属 `∈ᵗ` へ変換します。塔そのものはただ一度の呼び出しです。`Lset` はステップ関数に `∈-induction` を適用したものとして定義されます。これは所属に沿った整礎再帰であり、その正当性は階層の章の正則性の定理が一度に与えます。再帰の添字は集合 `α` そのものであり、素の定義は添字の順序数性を要求しません。順序数性が課されるのは、この階層を使う場所においてです。
 <!--/-->

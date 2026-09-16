@@ -91,6 +91,13 @@ CJK prose (zh and ja) follows the repository's house style enforced by
 `「」`, half-width parentheses with English-style outer spacing, no em dash, no space between
 CJK characters. Agda code blocks are English-only. See the gate commands in `Makefile`.
 
+Standalone construction, lemma and theorem labels name the corresponding Agda declaration and
+contain no period: `**Lemma** (`name`{.Agda}) Text`, with `引理` or `補題` in the
+parallel routes. Construction labels use the same form with `Construction`, `构造` or `構成`.
+Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`. A construction or
+lemma developed through prose and code ends with a standalone `∎` on the first line after its
+final code block.
+
 ## Inline Agda references in prose
 
 Inside prose you may reference an Agda identifier with a Pandoc attribute span:

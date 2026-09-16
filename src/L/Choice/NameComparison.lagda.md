@@ -203,7 +203,7 @@ open import Cubical.Foundations.Prelude using ( subst2 )
 <!--en-->
 Existential and disjunctive satisfaction is propositionally truncated: it preserves that a witness exists while forgetting which witness was supplied. Consequently, outward readings such as those for formula codes and name comparison return truncated existence, and elimination is used only into propositions. This is propositional truncation; propositional resizing does not occur here. The cumulative hierarchy supplies set-valued membership and the extensional equality principles needed after such readings.
 <!--zh-->
-存在式与析取式的满足语义带有命题截断：它保留「见证存在」，却忘掉给出的是哪个见证。因此，从公式码或名字比较向外读取时，结论仍是经过命题截断的存在性，而消去也只进入命题。这里发生的是命题截断；命题降级并未在此出现。累积层级则供给集合值的隶属关系，以及这些读式之后所需的外延相等原则。
+存在式与析取式的满足语义带有命题截断：它保留「见证存在」，却忘掉给出的是哪个见证。因此，从公式码或名字比较向外读取时，结论仍是经过命题截断的存在性，而消去也只进入命题。这里发生的是命题截断；命题换级并未在此出现。累积层级则供给集合值的隶属关系，以及这些读式之后所需的外延相等原则。
 <!--ja-->
 存在式と選言式の充足意味論は命題的に切り詰められています。証人が存在することは保ちますが、どの証人が与えられたかは忘れます。そのため、論理式の符号や名前比較を外向きに読むと、結論にも切り詰められた存在が残り、消去先は命題に限られます。ここで使われるのは命題的切り詰めであり、命題のリサイズではありません。累積階層は集合値の所属関係と、その読みの後で必要となる外延的な等しさの原理を与えます。
 <!--/-->

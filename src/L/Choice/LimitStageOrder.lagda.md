@@ -193,7 +193,7 @@ operations only reconcile universe levels; they do not remove propositional
 truncation.
 <!--zh-->
 极限比较具有后文所需的字典序形状。第一支说第一个成员的层号更小；第二支说双方层号相同，并在共同层号处用 `before`{.Agda} 比较底层集合。自然数的三歧分析第一把键，`subst2`{.Agda} 则在等式识别出编码层号或端点时运输二元关系。与之相伴的
-`Lift`{.Agda} 与 `lower`{.Agda} 只处理宇宙层级，其中 `lower` 对应命题降级；它们都不消除命题截断。
+`Lift`{.Agda} 与 `lower`{.Agda} 只处理宇宙层级，其中 `lower` 对应命题换级；它们都不消除命题截断。
 <!--ja-->
 極限の比較は、後で必要となる辞書式の形をしています。第一の選択肢は、最初の要素のレベルが小さいことを述べます。第二の選択肢は、二つのレベルが一致し、その共通レベルの
 `before`{.Agda} によって基礎集合を比較します。自然数の三分性が第一の鍵を分析し、`subst2`{.Agda} は等式が符号化されたレベルや端点を同定するとき、二項関係を運びます。付随する `Lift`{.Agda} と `lower`{.Agda} は宇宙レベルをそろえるだけであり、命題的な切り詰めを取り除く操作ではありません。
@@ -749,7 +749,7 @@ of propositional resizing rather than propositional truncation.
 先排除解码所得索引 `m` 高于真实层号的情形，即假设 `k < m`，且 `b` 的值是
 `# m`{.Agda}。由 `#mono`{.Agda}，`# k`{.Agda} 属于 `# m`{.Agda}；于是包装
 `numS k`{.Agda} 与 `towerS k`{.Agda} 让我们能在真正的有穷层
-`Lset (# k)`{.Agda} 处使用 `LevelAt`{.Agda} 的最小性子句。该子句说 `x` 的值不在那里，与 `aIn`{.Agda} 矛盾。它返回抬升后的矛盾，`lower`{.Agda} 只移除这个宇宙抬升；这是命题降级，而不是命题截断。
+`Lset (# k)`{.Agda} 处使用 `LevelAt`{.Agda} 的最小性子句。该子句说 `x` 的值不在那里，与 `aIn`{.Agda} 矛盾。它返回抬升后的矛盾，`lower`{.Agda} 只移除这个宇宙抬升；这是命题换级，而不是命题截断。
 <!--ja-->
 まず、復号された添字 `m` が真のレベルより上にある場合を排除します。つまり`k < m` であり、`b` の値が `# m`{.Agda} だと仮定します。`#mono`{.Agda} により `# k`{.Agda} は `# m`{.Agda} に属するので、包装
 `numS k`{.Agda} と `towerS k`{.Agda} を使えば、`LevelAt`{.Agda} の最小性の節を実際の有限段階 `Lset (# k)`{.Agda} で適用できます。この節は`x` の値がそこにないと述べますが、これは `aIn`{.Agda} と矛盾します。節が返す矛盾は持ち上げられており、`lower`{.Agda} はこの宇宙の持ち上げだけを除きます。これは命題リサイズであって、命題的切り詰めではありません。
@@ -1856,7 +1856,7 @@ If the levels agree, a single numeral `# ku` certifies both `LevelAt` statements
 <!--en-->
 The external limit comparison presents exactly these alternatives. In its first branch, `Lift` only raises the universe of the proposition; `lower` removes that resizing and reveals the ordinary inequality of natural numbers. After the defining equations for `ku` and `kv` align the indices, the different-level constructor applies.
 <!--zh-->
-外部极限比较恰好给出这两个选项。在第一支中，`Lift` 只把命题放入更高的宇宙；`lower` 所做的是命题降级，从中取回普通的自然数不等式。再用 `ku` 与 `kv` 的定义等式对齐索引，便可应用异层支的构造。
+外部极限比较恰好给出这两个选项。在第一支中，`Lift` 只把命题放入更高的宇宙；`lower` 所做的是命题换级，从中取回普通的自然数不等式。再用 `ku` 与 `kv` 的定义等式对齐索引，便可应用异层支的构造。
 <!--ja-->
 外部の極限比較は、ちょうどこの二つの選択肢からなります。第一の枝にある `Lift` は命題の宇宙だけを持ち上げており、`lower` はそのリサイズを戻して通常の自然数の不等式を取り出します。`ku` と `kv` の定義等式で添字をそろえれば、異なる段階の枝を構成できます。
 <!--/-->

@@ -13,7 +13,7 @@ This method constructs the empty set, unordered pairs, and unions inside `L`. Ex
 
 闭包引理 `defSet→isL` 完成这一过程。给定序数 `σ`，若仅仅存在一条外延为 `x` 的一元公式，`𝒟ₒ-intro` 便认出 `x` 是 `Lset σ` 的可定义子集，`𝒟ₒ→isL` 再把它放入 `L`。恒等式 `Lset (sucV σ) ≡ 𝒟ₒ (Lset σ)` 说明了层计算：下一层恰由当前层的可定义子集组成。打包后的集合 `LsetS` 与 `𝒟ₒS` 把这两个集合给成载体 `S` 的元素。
 
-本章以此在 `L` 中构造空集、无序对与并。外延性利用传递性，把关于可构造成员的一致性推广到所有周遭成员；正则性则递归限制层级的可及性证明。若两个输入需要公共层，`bound2` 会给出共同的严格上界，而无须比较原来的两层。
+本章以此在 `L` 中构造空集、无序对与并。外延性利用传递性，把关于可构造成员的一致性推广到所有周遭成员；正则公理则递归限制层级的可及性证明。若两个输入需要公共层，`bound2` 会给出共同的严格上界，而无须比较原来的两层。
 <!--ja-->
 # 基本公理
 
@@ -688,7 +688,7 @@ Extensionality and regularity both restrict from the ambient hierarchy, but by d
 <!--zh-->
 ## 继承来的两条公理
 
-外延性与正则性都从周遭集合层级限制而来，但论证不同。对外延性，`isL-trans` 把任一可构造集合的周遭成员变成载体元素，从而可以应用关于载体成员的一致性假设；周遭集合层级的外延性随后等同底层集合，限制反射再给出载体路径。正则性不使用 `isL-trans`：只需把周遭可及性递归地限制到已经自带可构造性证书的对子上。
+外延性与正则公理都从周遭集合层级限制而来，但论证不同。对外延性，`isL-trans` 把任一可构造集合的周遭成员变成载体元素，从而可以应用关于载体成员的一致性假设；周遭集合层级的外延性随后等同底层集合，限制反射再给出载体路径。正则公理不使用 `isL-trans`：只需把周遭可及性递归地限制到已经自带可构造性证书的对子上。
 <!--ja-->
 ## 継承される二つの公理
 
@@ -730,7 +730,7 @@ The hypothesis `h` only speaks about carrier elements, that is, about constructi
 <!--en-->
 The backward direction is the same argument read from `b`, with `sym` because `h` points from `a` to `b`. This closes `extensionalL`. Regularity asks for something else: well-foundedness of the carrier's membership relation, as explicit accessibility data. For a pair `(v , p)`, meaning the set `v` together with its constructibility certificate, the ambient hierarchy already provides `Acc` for `v`; the task is to lift that data through the certificate.
 <!--zh-->
-反向是从 `b` 出发读同一个论证，因 `h` 的方向是从 `a` 指向 `b` 而加 `sym`。至此 `extensionalL` 完成。正则性要的是另一件事：把载体的成员关系的良基性作为显式的可及性数据。对对子 `(v , p)`，即集合 `v` 连同它的可构造性证书，周遭集合层级已经为 `v` 提供了 `Acc`；任务是把这份数据沿着证书抬上去。
+反向是从 `b` 出发读同一个论证，因 `h` 的方向是从 `a` 指向 `b` 而加 `sym`。至此 `extensionalL` 完成。正则公理要的是另一件事：把载体的成员关系的良基性作为显式的可及性数据。对对子 `(v , p)`，即集合 `v` 连同它的可构造性证书，周遭集合层级已经为 `v` 提供了 `Acc`；任务是把这份数据沿着证书抬上去。
 <!--ja-->
 逆向きは同じ議論を `b` から読んだもので、`h` の向きが `a` から `b` へ向くことに応じて `sym` が付きます。これで `extensionalL` が閉じます。正則性が求めるのは別のもの、すなわち台の所属関係の整礎性を明示的な可到達性データとして得ることです。対 `(v , p)`、つまり集合 `v` とその構成可能性の証明書に対しては、周囲の階層がすでに `v` の `Acc` を提供しています。課題はそのデータを証明書を通して持ち上げることです。
 <!--/-->
@@ -1414,7 +1414,7 @@ This chapter supplies five axioms for the constructible universe. Extensionality
 <!--zh-->
 ## 小结
 
-本章为可构造宇宙供给五条公理。外延公理与正则公理是继承来的：外延性用传递性处理周遭成员，而正则性直接限制周遭可及性；而一旦载体内部有了外延性，余下每条公理都化归为出示一个见证，因为实现固定隶属条件的集合是唯一的。空集、配对与并是构造出来的：各由一条公式从单一层中刻出；两个实参须会合时，所需的层由上界序数提供。并的规格还第二次展示了传递性的作用：周遭并中的隶属见证，其可构造性证书恰由 `isL-trans` 给出，正是它把模型的限制见证与周遭并的全部见证等同起来。与公理并行，本章还记录了关于塔自身的相应安置事实：`pair∈Lset-suc`{.Agda} 把一层的两个成员的无序对放进下一层，`sgl∈Lset-suc`{.Agda} 放单点集，`pr∈Lset-suc`{.Agda} 把有序对放到高两层处；这正是以有序对写成的任何东西得以安置在某一层上的原因。
+本章为可构造宇宙供给五条公理。外延公理与正则公理是继承来的：外延性用传递性处理周遭成员，而正则公理直接限制周遭可及性；而一旦载体内部有了外延性，余下每条公理都化归为出示一个见证，因为实现固定隶属条件的集合是唯一的。空集、配对与并是构造出来的：各由一条公式从单一层中刻出；两个实参须会合时，所需的层由上界序数提供。并的规格还第二次展示了传递性的作用：周遭并中的隶属见证，其可构造性证书恰由 `isL-trans` 给出，正是它把模型的限制见证与周遭并的全部见证等同起来。与公理并行，本章还记录了关于塔自身的相应安置事实：`pair∈Lset-suc`{.Agda} 把一层的两个成员的无序对放进下一层，`sgl∈Lset-suc`{.Agda} 放单点集，`pr∈Lset-suc`{.Agda} 把有序对放到高两层处；这正是以有序对写成的任何东西得以安置在某一层上的原因。
 <!--ja-->
 ## まとめ
 

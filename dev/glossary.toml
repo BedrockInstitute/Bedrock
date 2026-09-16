@@ -155,7 +155,7 @@ category = "Set theory"
 en = "regularity"
 zh = "正则公理"
 ja = "正則性公理"
-notes = "zh also 正则性; also called foundation in some books, a name this book does not use; ZF field name regularity ([L1.4])"
+notes = "Always 正则公理 when regularity names the set-theoretic axiom; distinguish regularity of an ordinal or cardinal. Also called foundation in some books, a name this book does not use; ZF field name regularity ([L1.4])"
 
 [[term]]
 category = "Set theory"
@@ -513,7 +513,7 @@ forms_en = ["propositions"]
 recap_en = "A type any two of whose elements are equal, so that it retains only whether a proof exists."
 recap_zh = "任意两个元素都相等的类型，因此只保留是否存在证明这一信息。"
 recap_ja = "任意の二つの元が等しい型であり、証明が存在するかどうかだけを保つ。"
-notes = "The isProp notion. Explicit matching, measured 2026-09-12: in Chinese 246 of 950 occurrences (26%) and in Japanese 291 of 973 (30%) sit inside a different term, chiefly 命题截断 / 命題的切り詰め, 命题值 / 命題値, 命题性 / 命題性 and 命题降级. English is unaffected because the word boundary excludes propositional, but matching is one decision for all three languages."
+notes = "The isProp notion. Explicit matching, measured 2026-09-12: in Chinese 246 of 950 occurrences (26%) and in Japanese 291 of 973 (30%) sit inside a different term, chiefly 命题截断 / 命題的切り詰め, 命题值 / 命題値, 命题性 / 命題性 and 命题换级. English is unaffected because the word boundary excludes propositional, but matching is one decision for all three languages."
 
 [[term]]
 category = "Type theory"
@@ -670,12 +670,11 @@ en = "type equivalence"
 zh = "类型等价"
 ja = "型同値"
 introduced_in = "Base.Impredicativity"
-matching = "explicit"
-forms_en = ["equivalence", "equivalences"]
+matching = "auto"
 recap_en = "An equivalence A ≃ B is a map with contractible fibres; an inverse and both round-trip paths follow from this condition."
 recap_zh = "类型等价 A ≃ B 是纤维皆可缩的映射；逆向映射与两条往返路径可由这个条件导出。"
 recap_ja = "型同値 A ≃ B は、各ファイバーが可縮である写像であり、逆写像と二つの往復パスはこの条件から導かれる。"
-notes = "Cubical Agda's _≃_ is Σ of a map and isEquiv, where isEquiv means contractible fibres: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda . Explicit matching avoids treating every generic use of equivalence as a glossary reference."
+notes = "Cubical Agda's _≃_ is Σ of a map and isEquiv, where isEquiv means contractible fibres: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda . Automatic matching covers the full trilingual term; generic English equivalence is omitted because it can refer to other notions."
 
 [[term]]
 category = "Type theory"
@@ -685,7 +684,7 @@ en = "fibre"
 zh = "纤维"
 ja = "ファイバー"
 introduced_in = "Base.Impredicativity"
-matching = "explicit"
+matching = "auto"
 forms_en = ["fiber", "fibres", "fibers"]
 recap_en = "The fibre of f : A → B over b : B is the dependent pair type Σ (a : A) (f a ≡ b), whose elements are preimages together with paths witnessing their images."
 recap_zh = "映射 f : A → B 在 b : B 上的纤维是依值对类型 Σ (a : A) (f a ≡ b)；它的元素由原像及其确实映到 b 的路径组成。"
@@ -700,7 +699,7 @@ en = "isomorphism"
 zh = "同构"
 ja = "同型"
 introduced_in = "Base.Impredicativity"
-matching = "explicit"
+matching = "auto"
 recap_en = "An isomorphism explicitly supplies forward and inverse maps together with the two inverse laws."
 recap_zh = "同构显式给出正向映射、逆向映射以及两条逆律。"
 recap_ja = "同型は順写像、逆写像、および二つの逆法則を明示的に与える。"
@@ -723,11 +722,34 @@ notes = "The HoTT Book distinguishes equivalence of types from mere maps in both
 
 [[term]]
 category = "Type theory"
+id = "propositional-resizing"
+audience = "reader"
 en = "propositional resizing"
-zh = "命题降级"
+zh = "命题换级"
 ja = "命題リサイズ"
-avoid = ["zh:命题降层", "zh:命题降成"]
-notes = "Owner ruling 2026-09-13: zh 命题降级 renders lowering to a smaller universe level; ja retains the established transliteration."
+introduced_in = "Base.Impredicativity"
+matching = "auto"
+recap_en = "Propositional resizing replaces each proposition by a type-equivalent representative at a chosen universe level."
+recap_zh = "命题换级为每个命题在指定宇宙层级选取一个类型等价的代表。"
+recap_ja = "命題リサイズは、各命題を指定した宇宙レベルにある型同値な代表で置き換える。"
+avoid = ["zh:命题降级", "zh:命题降层", "zh:命题降成"]
+notes = "Owner ruling 2026-09-16: zh 命题换级 reflects that Resizing permits arbitrary source and target levels; ja retains the established transliteration."
+
+[[term]]
+category = "Type theory"
+id = "proposition-universe-resizing"
+audience = "reader"
+en = "Ω-resizing"
+zh = "命题宇宙换级"
+ja = "命題宇宙リサイズ"
+introduced_in = "Base.Impredicativity"
+matching = "auto"
+forms_en = ["proposition-universe resizing"]
+recap_en = "Ω-resizing presents an entire proposition universe by a type in a chosen universe level."
+recap_zh = "命题宇宙换级用指定宇宙层级中的一个类型呈现整个命题宇宙。"
+recap_ja = "命題宇宙リサイズは、命題宇宙全体を指定した宇宙レベルの型で提示する。"
+avoid = ["zh:命题宇宙降级"]
+notes = "Owner ruling 2026-09-16: this is the reader-facing name of ΩResizing."
 
 # ---- Logic and philosophy ----------------------------------------------------
 
@@ -758,7 +780,7 @@ en = "Lévy hierarchy"
 zh = "Lévy 层级"
 ja = "Lévy 階層"
 avoid = ["en:Levy hierarchy", "zh:列维层级", "zh:分级证书", "zh:Levy 层级"]
-notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18); witness/见证 is not a standalone name: always write it anchored, the Δ₀ witness / Δ₀ 见证, Levy witnesses / Lévy 见证, smallness witness / 小性见证 (owner ruling 2026-07-19)"
+notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18); witness/见证 is not a standalone name: always write it anchored, the Δ₀ witness / Δ₀ 见证, Levy witnesses / Lévy 见证"
 
 [[term]]
 category = "Logic and philosophy"
@@ -971,12 +993,12 @@ en = "domain"
 zh = "论域"
 ja = "論域"
 introduced_in = "Base.Prelude"
-matching = "explicit"
+matching = "auto"
 forms_en = ["domains"]
 recap_en = "The type over which variables range; calling it a domain adds no relation, operation or other structure."
 recap_zh = "变量在其中取值的类型；称它为论域，并不为它添加关系、运算或其他结构。"
 recap_ja = "変数が動く型。論域と呼ぶだけでは、関係、演算、その他の構造は加わらない。"
-notes = "Model-theoretic use. The Stanford Encyclopedia of Philosophy calls the common range of all quantifiers the domain or universe of a structure: https://plato.stanford.edu/entries/model-theory/ . Explicit matching avoids unrelated uses such as function domain and code domain."
+notes = "Model-theoretic use. The Stanford Encyclopedia of Philosophy calls the common range of all quantifiers the domain or universe of a structure: https://plato.stanford.edu/entries/model-theory/ . Automatic matching also covers the same English word in other contexts, such as function domain and code domain."
 
 [[term]]
 category = "Logic and philosophy"
@@ -987,12 +1009,12 @@ zh = "载体"
 ja = "台"
 avoid = ["ja:担体", "ja:キャリア"]
 introduced_in = "Base.Prelude"
-matching = "explicit"
+matching = "auto"
 forms_en = ["carriers"]
 recap_en = "The underlying type of objects on which the relations and operations of a structure are defined."
 recap_zh = "承载一个结构的对象，并供该结构的关系与运算在其上定义的底层类型。"
 recap_ja = "構造の対象を担い、その関係や演算が定義される基礎の型。"
-notes = "Of a structure; ja 台 as in 台集合. Explicit matching avoids treating every occurrence of the single Japanese character 台 as this term. Owner ruling 2026-09-12 unified the Japanese rendering on 台: 24 occurrences of 担体 and one of キャリア were converted the same day, and the avoid list keeps them out."
+notes = "Of a structure; ja 台 as in 台集合. Automatic matching of the single Japanese character 台 can also mark unrelated compounds. Owner ruling 2026-09-12 unified the Japanese rendering on 台: 24 occurrences of 担体 and one of キャリア were converted the same day, and the avoid list keeps them out."
 
 [[term]]
 category = "Logic and philosophy"
@@ -1169,14 +1191,7 @@ category = "Type theory"
 en = "smallness"
 zh = "小性"
 ja = "小ささ"
-notes = "isSmall: equivalence to a proposition one universe down; small = 小"
-
-[[term]]
-category = "Type theory"
-en = "small classifier"
-zh = "小分类器"
-ja = "小分類子"
-notes = "HPropSmallness: a small type equivalent to hProp"
+notes = "Smallness remains appropriate for types known equivalent to types in a genuinely lower or fixed small universe."
 
 [[term]]
 category = "Set theory"
@@ -1262,7 +1277,7 @@ category = "Type theory"
 en = "impredicativity"
 zh = "非直谓性"
 ja = "非可述性"
-notes = "the Impredicativity packing (Resizing + HPropSmallness); impredicative = 非直谓 / 非可述"
+notes = "Ω-resizing is the main principle; propositional resizing follows from it"
 
 [[term]]
 category = "Logic and philosophy"

@@ -13,6 +13,21 @@ spec.loader.exec_module(renderer)
 
 
 class MarkdownFlowTests(unittest.TestCase):
+    def test_summary_with_agda_reference_is_rendered_inline(self):
+        source = "<summary>Construction of \x00REF0\x00</summary>"
+        self.assertEqual(renderer.render_summary_inline(source), source)
+
+    def test_multiline_summary_with_agda_reference_is_collapsed_inline(self):
+        source = "<summary>\nConstruction of \x00REF0\x00\n</summary>"
+        self.assertEqual(
+            renderer.render_summary_inline(source),
+            "<summary>Construction of \x00REF0\x00</summary>",
+        )
+
+    def test_summary_without_agda_reference_is_unchanged(self):
+        source = "<summary><code>Plain raw HTML</code></summary>"
+        self.assertEqual(renderer.render_summary_inline(source), source)
+
     def test_soft_wraps_around_inline_content_stay_in_one_paragraph(self):
         for kind in ("REF", "IMATH"):
             token = f"\x00{kind}0\x00"

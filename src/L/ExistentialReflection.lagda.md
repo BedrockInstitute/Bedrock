@@ -134,7 +134,7 @@ indexEnv σ oσ (p ∷ ρ) (h , hs) = (m ∷ fst rest) , cong₂ _∷_ eltEq (sn
   fib = ∈-asFiber {a = fst p} {b = Lset σ} h
   m   = fib .fst
   eltEq : LsetElt σ oσ m ≡ p
-  eltEq = Σ≡Prop (λ x → (isL x) .snd) (fib .snd)
+  eltEq = Σ≡Prop (λ x → ⟨ isL x ⟩isProp) (fib .snd)
   rest = indexEnv σ oσ ρ hs
 ```
 

@@ -9,7 +9,7 @@ Nothing here needs an external type of ordinals: rank takes values in the hierar
 
 集合的秩是其所有成员之秩的后继的并；用记号说，计算定理 `rank-compute` 把 `rank x` 等同于 `rankStep x (λ y _ → rank y)`。本章证明秩的四条性质：`rank-mono` 说秩沿隶属关系严格增长，`rank-ord` 说秩总是序数，`rank-upper` 给出秩包含于某序数的有条件结论，`rank-fix` 说秩固定每个序数。
 
-此处不需要任何外部的序数类型：秩取值于层级自身，而递归依据正则性所保证的成员关系良基性进行。因此本章每条定理都不需要排中律参数。
+此处不需要任何外部的序数类型：秩取值于层级自身，而递归依据正则公理所保证的成员关系良基性进行。因此本章每条定理都不需要排中律参数。
 <!--ja-->
 # von Neumann ランク
 
@@ -21,7 +21,7 @@ Nothing here needs an external type of ordinals: rank takes values in the hierar
 <!--en-->
 Rank is defined inside the cumulative hierarchy `V ℓ`, with carrier `S`. A membership statement `x ∈ˢ y` is proposition-valued, and regularity makes this membership relation well-founded. The induction principle `∈-induction` can therefore define a value in `S` from values already defined for every member.
 <!--zh-->
-秩直接定义在累积层级 `V ℓ` 的载体 `S` 中。成员关系 `x ∈ˢ y` 是命题值的，而正则性保证这条成员关系良基。因此，成员归纳原理 `∈-induction` 可以利用每个成员处已经定义的值，在当前集合处定义一个 `S` 中的值。
+秩直接定义在累积层级 `V ℓ` 的载体 `S` 中。成员关系 `x ∈ˢ y` 是命题值的，而正则公理保证这条成员关系良基。因此，成员归纳原理 `∈-induction` 可以利用每个成员处已经定义的值，在当前集合处定义一个 `S` 中的值。
 <!--ja-->
 ランクは累積階層 `V ℓ` の台 `S` の中で直接定義されます。所属 `x ∈ˢ y` は命題値をとり、正則性によりこの所属関係は整礎です。したがって所属帰納 `∈-induction` は、各要素ですでに定義された値から、現在の集合に対する `S` の値を定義できます。
 <!--/-->
@@ -352,7 +352,7 @@ Both bounding directions lean on the same fact, `mem-ord`: a member of the ordin
 <!--zh-->
 ## 小结
 
-`rank`{.Agda} 以序数度量每个集合 (`rank-ord`{.Agda})，并固定序数自身 (`rank-fix`{.Agda})，二者表明它是与每个序数一致的序数值度量。两个证明都是正则性上的成员归纳，故本章不引入任何额外假设。它给出沿成员关系严格增长的序数值度量，以及被测集合本身为序数时所需的不动点律。
+`rank`{.Agda} 以序数度量每个集合 (`rank-ord`{.Agda})，并固定序数自身 (`rank-fix`{.Agda})，二者表明它是与每个序数一致的序数值度量。两个证明都是正则公理所给的成员归纳，故本章不引入任何额外假设。它给出沿成员关系严格增长的序数值度量，以及被测集合本身为序数时所需的不动点律。
 <!--ja-->
 ## まとめ
 

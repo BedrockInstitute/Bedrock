@@ -16,6 +16,8 @@ Report-only checks (prose is lint-prose.py's business; STYLE-agda.md is the law)
   D [forbidden]     no `postulate`, no TERMINATING/NON_TERMINATING/
                     NO_TERMINATION_CHECK/NO_POSITIVITY_CHECK pragma, no
                     interaction holes (`{!...!}` or a bare `?`)           (STYLE-agda §1)
+  E [hprop-snd]     propositionhood certificates use `⟨ P ⟩isProp`, not
+                    the representation-level projection `P .snd`
 
 Exemptions:
   - The designated hub modules (BARE_OPEN_HUBS: curated re-export preludes,
@@ -55,6 +57,7 @@ BARE_OPEN_HUBS = {"Base.Prelude"}   # STYLE-agda §2
 KEEP_MARK = "lint-agda: keep"
 FORBIDDEN_PRAGMAS = ("TERMINATING", "NON_TERMINATING",
                      "NO_TERMINATION_CHECK", "NO_POSITIVITY_CHECK")
+HPROP_SND_RE = re.compile(r"\b[PQ]\b\s*\.snd\b")
 # Agda token delimiters (note: [ ] , are identifier characters in Agda).
 DELIMS = " \t\r\n(){};@"
 TOKEN_SPLIT = re.compile("[" + re.escape(DELIMS) + "]+")
@@ -295,6 +298,9 @@ def lint_file(path):
                    "use a module parameter)")
         if "?" in toks:
             report(idx, "forbidden", "interaction hole `?` is banned (STYLE-agda §1)")
+        if HPROP_SND_RE.search(mtext) and "⟨ P ⟩isProp = P .snd" not in mtext:
+            report(idx, "hprop-snd",
+                   "use `⟨ P ⟩isProp` instead of the representation-level `.snd`")
 
     # Parse statements; collect keep-marks from the raw (unmasked) lines.
     stmts = parse_statements(mlines)

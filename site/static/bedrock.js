@@ -381,7 +381,7 @@
     toast.hidden = true;
     document.body.appendChild(toast);
     var activeTarget = null;
-    var compactNotes = window.matchMedia("(max-width: 72rem)");
+    var compactNotes = window.matchMedia("(max-width: 78.999rem)");
     function hide() {
       toast.hidden = true;
       toast.classList.remove("visible");

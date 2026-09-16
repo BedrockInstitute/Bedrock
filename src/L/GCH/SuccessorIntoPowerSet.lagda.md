@@ -63,7 +63,7 @@ import FOL.Absoluteness
 <!--en-->
 The pullback order will be proved well-founded by sending every descending step to a membership step in the ambient cumulative hierarchy and applying regularity there. Facts about constructible ordinals then turn membership below an ordinal into the ordinal structure needed for comparison.
 <!--zh-->
-为证明拉回序良基，证明把它的每个下降步骤送到外围累积层级中的一个隶属步骤，再在那里应用正则性。关于可构造序数的事实随后把序数以下的隶属转化为比较所需的序数结构。
+为证明拉回序良基，证明把它的每个下降步骤送到外围累积层级中的一个隶属步骤，再在那里应用正则公理。关于可构造序数的事实随后把序数以下的隶属转化为比较所需的序数结构。
 <!--ja-->
 引き戻し順序の整礎性は、その下降の各段階を周囲の累積階層における所属の一段階へ移し、そこで正則性を適用して証明します。続いて、構成可能な順序数についての事実により、順序数の下への所属から比較に必要な順序数構造を得ます。
 <!--/-->
@@ -144,7 +144,7 @@ open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 <!--en-->
 Membership of underlying sets is read in the ambient hierarchy when regularity and transitivity are applied. This ambient relation must be distinguished from membership between elements packaged with their constructibility proofs.
 <!--zh-->
-应用正则性与传递性时，底层集合的隶属在外围层级中读取。这个外围关系必须与「连同可构造性证明打包的元素」之间的隶属相区分。
+应用正则公理与传递性时，底层集合的隶属在外围层级中读取。这个外围关系必须与「连同可构造性证明打包的元素」之间的隶属相区分。
 <!--ja-->
 正則性と推移性を適用するとき、底の集合の所属は周囲の階層で読みます。この周囲の関係は、構成可能性の証明と組にされた要素どうしの所属とは区別しなければなりません。
 <!--/-->
@@ -1071,7 +1071,7 @@ The induction step constructs accessibility for a predecessor whose representati
 <!--en-->
 Accessibility at every hierarchy element is proved by the regularity induction of the ambient hierarchy, which is the well-foundedness of its membership.
 <!--zh-->
-每个层级元素处的可达性由环境层级的正则性归纳证明，后者即其隶属的良基性。
+每个层级元素处的可达性由环境层级中正则公理所给的良基归纳证明，后者即其隶属的良基性。
 <!--ja-->
 すべての階層の要素でのアクセス可能性は、周囲の階層の正則性の帰納で証明されます。それは、所属の整礎性です。
 <!--/-->

@@ -537,11 +537,11 @@ open import Cubical.Foundations.HLevels public
 ```
 
 <!--en-->
-The projection `⟨_⟩`{.Agda} extracts the statement of a proposition. For `P : hProp ℓ`{.Agda}, `⟨ P ⟩`{.Agda} is its first component; to prove the proposition expressed by `P`, we must construct an element of `⟨ P ⟩`{.Agda}. The propositionhood certificate remains in the second component `P .snd`{.Agda}.
+The projection `⟨_⟩`{.Agda} extracts the statement of a proposition. For `P : hProp ℓ`{.Agda}, `⟨ P ⟩`{.Agda} is its first component; to prove the proposition expressed by `P`, we must construct an element of `⟨ P ⟩`{.Agda}. The notation `⟨ P ⟩isProp`{.Agda} extracts the certificate that this underlying type satisfies `isProp`{.Agda}.
 <!--zh-->
-投影 `⟨_⟩`{.Agda} 用来取出命题的表述。对于 `P : hProp ℓ`{.Agda}，`⟨ P ⟩`{.Agda} 就是它的第一分量；若要证明 `P` 所表达的命题成立，则须构造 `⟨ P ⟩`{.Agda} 的元素。命题性证书仍保存在第二分量 `P .snd`{.Agda} 中。
+投影 `⟨_⟩`{.Agda} 用来取出命题的表述。对于 `P : hProp ℓ`{.Agda}，`⟨ P ⟩`{.Agda} 就是它的第一分量；若要证明 `P` 所表达的命题成立，则须构造 `⟨ P ⟩`{.Agda} 的元素。记号 `⟨ P ⟩isProp`{.Agda} 则取出该底层类型满足 `isProp`{.Agda} 的证书。
 <!--ja-->
-射影 `⟨_⟩`{.Agda} は命題の記述を取り出します。`P : hProp ℓ`{.Agda} に対して、`⟨ P ⟩`{.Agda} はその第一成分です。`P` が表す命題を証明するには、`⟨ P ⟩`{.Agda} の元を構成しなければなりません。命題性の証明書は第二成分 `P .snd`{.Agda} に残ります。
+射影 `⟨_⟩`{.Agda} は命題の記述を取り出します。`P : hProp ℓ`{.Agda} に対して、`⟨ P ⟩`{.Agda} はその第一成分です。`P` が表す命題を証明するには、`⟨ P ⟩`{.Agda} の元を構成しなければなりません。記法 `⟨ P ⟩isProp`{.Agda} は、この基礎型が `isProp`{.Agda} を満たすことの証明を取り出します。
 <!--/-->
 
 <!--en-->
@@ -555,6 +555,9 @@ An object `P` packages the statement of a proposition together with its proposit
 ```agda
 open import Cubical.Foundations.Structure public
   using ( ⟨_⟩ )
+
+⟨_⟩isProp : ∀ {ℓ} (P : hProp ℓ) → isProp ⟨ P ⟩
+⟨ P ⟩isProp = P .snd
 ```
 
 <!--en-->

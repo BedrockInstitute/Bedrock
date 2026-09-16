@@ -47,7 +47,7 @@ module L.GCH.FiniteSequenceCoding {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 <!--en-->
 Two descriptions of the same objects will be used throughout. At the object-language level, equality, conjunction, and bounded or unbounded quantification describe sequence graphs and recursive traces inside `L`. At the host level, presentations turn membership in a set into small indices, while regularity later supports the well-founded argument behind the square law.
 <!--zh-->
-下文始终交替使用同一对象的两种描述。在对象语言层面，相等、合取以及有界或无界量化描述 `L` 内部的序列图与递归轨迹。在宿主层面，呈现把集合成员化为小索引，而正则性稍后支撑平方律背后的良基论证。
+下文始终交替使用同一对象的两种描述。在对象语言层面，相等、合取以及有界或无界量化描述 `L` 内部的序列图与递归轨迹。在宿主层面，呈现把集合成员化为小索引，而正则公理稍后支撑平方律背后的良基论证。
 <!--ja-->
 以下では、同じ対象について二つの記述を行き来します。対象言語の水準では、等号、連言、有界および非有界の量化によって、`L` の内部の列のグラフと再帰の軌跡を記述します。ホストの水準では、提示によって集合の要素を小さな添字として扱い、正則性は後で平方律を支える整礎的な議論に用いられます。
 <!--/-->

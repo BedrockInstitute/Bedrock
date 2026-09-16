@@ -224,7 +224,7 @@ _↾_ : ∀ {ℓ} (𝒮 : ZFStructure ℓ)
     → (ZFStructure.S 𝒮 → hProp ℓ) → ZFStructure ℓ
 _↾_ {ℓ} 𝒮 M = record
   { S      = Σ[ x ∈ S ] (x ∈ᶜ M)
-  ; isSetS = isSetΣSndProp isSetS (λ x → (M x) .snd)
+  ; isSetS = isSetΣSndProp isSetS (λ x → ⟨ M x ⟩isProp)
 ```
 
 <!--en-->
@@ -252,18 +252,18 @@ The relations of `𝒮 ↾ M` ignore the second components, so one might ask whe
 <!--/-->
 
 <!--en-->
-`↾-reflects`{.Agda} has type `fst a ≡ fst b → a ≡ b`{.Agda}. It applies `Σ≡Prop`{.Agda} with the family `λ x → (M x) .snd`, whose value proves pointwise that the membership evidence at `x` is proposition-valued; the resulting path between pairs is then built from the path between first projections alone. The lemma states this one direction only: it reflects equality of the underlying elements up to equality of the restricted elements, and says nothing about a converse.
+`↾-reflects`{.Agda} has type `fst a ≡ fst b → a ≡ b`{.Agda}. It applies `Σ≡Prop`{.Agda} with the family `λ x → ⟨ M x ⟩isProp`, whose value proves pointwise that the membership evidence at `x` is proposition-valued; the resulting path between pairs is then built from the path between first projections alone. The lemma states this one direction only: it reflects equality of the underlying elements up to equality of the restricted elements, and says nothing about a converse.
 <!--zh-->
-`↾-reflects`{.Agda} 的类型是 `fst a ≡ fst b → a ≡ b`{.Agda}。它把 `Σ≡Prop`{.Agda} 用于族 `λ x → (M x) .snd`，该族逐点证明 `x` 处的成员证据是命题；于是对之间的路径仅由第一投影之间的路径构成。该引理只陈述这一个方向：底层元素的相等被反映为限制元素的相等，不另行陈述逆向命题。
+`↾-reflects`{.Agda} 的类型是 `fst a ≡ fst b → a ≡ b`{.Agda}。它把 `Σ≡Prop`{.Agda} 用于族 `λ x → ⟨ M x ⟩isProp`，该族逐点证明 `x` 处的成员证据是命题；于是对之间的路径仅由第一投影之间的路径构成。该引理只陈述这一个方向：底层元素的相等被反映为限制元素的相等，不另行陈述逆向命题。
 <!--ja-->
-`↾-reflects`{.Agda} の型は `fst a ≡ fst b → a ≡ b`{.Agda} です。族 `λ x → (M x) .snd` とともに `Σ≡Prop`{.Agda} を適用します。この族は各点で、`x` での所属の証拠が命題値であることを示すものであり、対の間のパスは第一射影の間のパスだけから組み立てられます。補題が述べるのはこの一方向だけです。基底の要素の等しさが制限された要素の等しさとして反映されることであり、逆については何も主張しません。
+`↾-reflects`{.Agda} の型は `fst a ≡ fst b → a ≡ b`{.Agda} です。族 `λ x → ⟨ M x ⟩isProp` とともに `Σ≡Prop`{.Agda} を適用します。この族は各点で、`x` での所属の証拠が命題値であることを示すものであり、対の間のパスは第一射影の間のパスだけから組み立てられます。補題が述べるのはこの一方向だけです。基底の要素の等しさが制限された要素の等しさとして反映されることであり、逆については何も主張しません。
 <!--/-->
 
 ```agda
 ↾-reflects : ∀ {ℓ} {𝒮 : ZFStructure ℓ} {M : ZFStructure.S 𝒮 → hProp ℓ}
              {a b : ZFStructure.S (𝒮 ↾ M)}
            → fst a ≡ fst b → a ≡ b
-↾-reflects {M = M} = Σ≡Prop (λ x → (M x) .snd)
+↾-reflects {M = M} = Σ≡Prop (λ x → ⟨ M x ⟩isProp)
 ```
 
 <!--en-->

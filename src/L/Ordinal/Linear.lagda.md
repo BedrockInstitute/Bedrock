@@ -13,7 +13,7 @@ Two ingredients from the ambient hierarchy make the proof shorter than the textb
 
 迄今关于序数的一切都是闭包：零是序数，后继是，并也是，上界存在。闭包陈述关乎建造；它们从不需要**判定**任何东西。三歧要判定。给定两个彼此之间不假设任何关系的序数，它要回答三种互斥情形中的哪一种成立，本章从显式的排中律参数取得这一判定。所以本章把排中律取作模块参数，采用基础层定下的逐层级打包形式，使用 `ord-tri` 的模块都显式接收这个参数。
 
-来自环境层级的两样材料使证明比教科书版本更短。正则性给出良基归纳，而且要用两次，两个自变量各一次。外延性意味着互相包含**就是**相等，故相等那一情形无须另行处理。排中律既判定两个方向的包含，也判定把包含失败转成截断反例时所需的成员关系命题。
+来自环境层级的两样材料使证明比教科书版本更短。正则公理给出良基归纳，而且要用两次，两个自变量各一次。外延性意味着互相包含**就是**相等，故相等那一情形无须另行处理。排中律既判定两个方向的包含，也判定把包含失败转成截断反例时所需的成员关系命题。
 <!--ja-->
 # 順序数は所属によって線形に順序付けられる
 
@@ -235,7 +235,7 @@ ord-tri = WF.WFI.induction regularityV {P = P} stepA
 <!--en-->
 The theorem's shape is a well-founded induction supplied by regularity. The predicate being proven, `P A`, says that `A` behaves correctly for every ordinal `B` it is compared with, taking the two ordinality certificates as hypotheses. Regularity thus provides induction on the first argument: to prove `P A`, it suffices to prove `P A'` for every member `A'` of `A`. This is the first of the two nested inductions; the second, on `B`, will appear inside the step.
 <!--zh-->
-定理的形状是正则性供给的良基归纳。被证的谓词 `P A` 说的是：`A` 与任何与之比较的序数 `B` 都表现正确，并把两个序数性证明当作假设。于是正则性给出对第一个自变量的归纳：要证 `P A`，只需对 `A` 的每个成员 `A'` 证 `P A'`。这是两层嵌套归纳中的第一层；第二层对 `B`，将出现在步内。
+定理的形状是正则公理供给的良基归纳。被证的谓词 `P A` 说的是：`A` 与任何与之比较的序数 `B` 都表现正确，并把两个序数性证明当作假设。于是正则公理给出对第一个自变量的归纳：要证 `P A`，只需对 `A` 的每个成员 `A'` 证 `P A'`。这是两层嵌套归纳中的第一层；第二层对 `B`，将出现在步内。
 <!--ja-->
 定理の形は、正則性公理が供給する整礎帰納です。証明される述語 `P A` は、比較される任意の順序数 `B` に対して `A` が正しく振る舞うこと、二つの順序数性の証明を仮定として取ることを述べます。これにより正則性は第一引数上の帰納を与えます。`P A` を証明するには、`A` の各要素 `A'` について `P A'` を証明すれば十分です。これは入れ子になった二つの帰納の第一で、第二の `B` 上の帰納はステップの中に現れます。
 <!--/-->

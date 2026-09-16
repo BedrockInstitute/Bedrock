@@ -155,20 +155,20 @@ body.nav-layout-changing { overflow-anchor: none; }
 #nav-close:hover { background: var(--button-hover); }
 #nav-backdrop { display: none; }
 
-/* ---- layout (centered up to 80rem; ultra-wide screens use symmetric side columns) ---- */
+/* ---- layout (the reading column stays centered at every viewport width) ---- */
 main { max-width: 80rem; width: 100%; margin: 0 auto; padding: 0 1rem; box-sizing: border-box; }
 #post-toc-container {
   display: grid; gap: 1.5rem 2.5rem; align-items: start;
-  grid-template-columns: 14rem minmax(0, 1fr);
-  grid-template-areas: "sidebar content";
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "content";
 }
-article { position: relative; grid-area: content; }
+article { position: relative; grid-area: content; width: 100%; max-width: 56rem; justify-self: center; }
 #sidenote-container { grid-area: gutter; display: none; }
 
 @media (min-width: 95rem) {
   main { max-width: 100%; }
   #post-toc-container {
-    grid-template-columns: minmax(14rem, 1fr) minmax(0, 3fr) minmax(14rem, 1fr);
+    grid-template-columns: minmax(14rem, 1fr) minmax(0, 56rem) minmax(14rem, 1fr);
     grid-template-areas: "sidebar content gutter";
   }
   #sidenote-container { display: block; }
@@ -434,21 +434,17 @@ span.inline-ref { color: var(--code-fg); }
 #term-popup .term-popup-close:hover, #term-popup .term-popup-close:focus-visible {
   color: var(--text-fg); background: var(--button-hover); }
 
-/* ---- narrow screens ---- */
-/* The sidebar can no longer sit beside the content, so it becomes an off-canvas drawer that
-   slides in from the left over a dimmed backdrop, opened by the topbar hamburger. */
-@media (max-width: 72rem) {
+/* ---- layouts without room for both centered text and margin notes ---- */
+@media (max-width: 78.999rem) {
   .single-line-code { display: block; text-align: center; }
   .single-line-code[data-note]::before, .single-line-code-note,
   .prose-annotation-connector, .prose-annotation-note { display: none; }
   .single-line-code[data-note] code, .prose-annotation-target { cursor: pointer; }
 }
 
-/* Below the full three-column width, the contents becomes a drawer. From 72rem
-   upward that saved width belongs to the margin notes; on smaller screens notes
-   use the tap-to-open toast. */
+/* Below the full three-column width, navigation becomes a drawer. Notes remain
+   in the right margin where space allows, then open in a toast on narrower screens. */
 @media (max-width: 94.999rem) {
-  #post-toc-container { grid-template-columns: minmax(0, 1fr); grid-template-areas: "content"; }
   #search-box { width: 8rem; }
 
   #nav-toggle { display: inline-flex; align-items: center; }
@@ -474,14 +470,6 @@ span.inline-ref { color: var(--code-fg); }
     transition: opacity 0.22s ease;
   }
   body.nav-open #nav-backdrop { opacity: 1; pointer-events: auto; }
-}
-
-@media (min-width: 72.001rem) and (max-width: 94.999rem) {
-  #post-toc-container {
-    grid-template-columns: minmax(0, 3fr) minmax(16rem, 1fr);
-    grid-template-areas: "content gutter";
-  }
-  #sidenote-container { display: block; }
 }
 
 @media (min-width: 95rem) {
