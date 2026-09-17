@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Normalize bedrock-agda's type trace and verify hover coverage.
 
-The compiler produces every type in one ordinary checking/HTML traversal.  This
-script never starts Agda and never modifies source: it keeps the newest trace
-run for each module, joins binding occurrences with Agda's HTML links, rejects
-unresolved types, and writes the compact renderer input.
+The compiler produces every type while checking, either in one combined
+checking/HTML traversal or in independently buffered parallel module checks.
+This script never starts Agda and never modifies source: it keeps the newest
+trace run for each module, joins binding occurrences with Agda's HTML links,
+rejects unresolved types, and writes the compact renderer input.
 """
 
 from __future__ import annotations

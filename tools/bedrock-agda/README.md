@@ -1,10 +1,12 @@
 # bedrock-agda
 
-Bedrock records elaborated Agda expression types while Agda performs the same
-traversal that writes `.agdai` files and HTML. The official backend API runs
-after type checking and exposes modules and definitions, so it cannot observe
-the local application and binder nodes required by the site. A small source
-adapter is therefore still necessary.
+Bedrock records elaborated Agda expression types while Agda writes `.agdai`
+files. The single-process mode runs the HTML backend in that same invocation;
+the parallel mode buffers one trace per checking process and runs the official
+HTML backend over the completed interfaces. The official backend API itself
+runs after type checking and exposes modules and definitions, so it cannot
+observe the local application and binder nodes required by the site. A small
+source adapter is therefore still necessary.
 
 The implementation is divided at a deliberate compatibility boundary:
 
@@ -49,7 +51,7 @@ adapter for rollback and `git bisect`.
 Supported environments are macOS, Linux, and WSL2. Install these host tools:
 
 - Python 3.11 or later;
-- GHC and Cabal, with GHC 9.4.8 as the currently tested version;
+- GHC 9.4.8 and Cabal 3.12.1.0, the versions used by CI;
 - `make`, `patch`, a C toolchain, and standard system development libraries.
 
 The recommended GHC and Cabal installer is
@@ -82,11 +84,13 @@ Agda modes:
 
 ```sh
 make typecheck       # pure incremental type checking
-make typecheck-cold  # timed pure check with cold Bedrock interfaces
+make typecheck-cold  # timed single-process pure check; stable benchmark
+make typecheck-cold-parallel AGDA_JOBS=2
 make html            # cached interfaces + HTML + expression trace
-make html-cold       # timed cold combined traversal
+make html-cold       # timed single-process combined traversal
+make html-cold-parallel AGDA_JOBS=2
 make site            # cached combined traversal, then render the site
-make site-cold       # cold combined traversal, then render the site
+make site-cold       # parallel cold backend, then render the site
 ```
 
 Pure checks run from `_build/typecheck`, which has its own Agda interface tree.
@@ -94,18 +98,29 @@ The source files copied there preserve their timestamps. This isolation matters:
 loading an interface made by a prior pure check would skip the elaboration events
 from which the website records local expression types. Both cold targets retain
 the pinned cubical interfaces, so their times measure the Bedrock closure rather
-than dependency installation. `/usr/bin/time -p` reports real, user and system
-seconds for the Agda process; source staging and final site rendering are outside
-that timed region. The same timing output is retained in
-`_build/benchmarks/typecheck-cold.time` or
-`_build/benchmarks/html-cold.time` for later comparison.
+than dependency installation. `typecheck-cold` deliberately uses one Agda
+process and remains the comparable baseline even when the operational builds are
+parallel. `/usr/bin/time -p` reports real, user and system seconds; source
+staging and final site rendering are outside that timed region. Timing output is
+retained in `_build/benchmarks/typecheck-cold.time` or
+`_build/benchmarks/html-cold.time`; parallel variants use the corresponding
+`*-parallel.time` names.
 
 `html-cold` is the direct benchmark for the optimized backend path requested by
 the site: one Agda invocation checks the Bedrock closure, writes `.agdai`, runs
 the official HTML backend, and writes the expression-type trace. `site-cold`
-uses those products and then runs the Python normalizers and renderer. Run
-`typecheck-cold` and `html-cold` independently when comparing their costs; each
-clears only its own Bedrock cache.
+uses `html-cold-parallel`: `scripts/agda-parallel.py` schedules modules along the
+actual import DAG, gives every worker its own trace part, merges those parts, and
+then runs the official HTML backend over the completed interfaces. No project
+module is elaborated twice. Agda 2.8.0 has no native module-level jobs option,
+so separate processes provide the parallelism. The default `AGDA_JOBS=2` follows
+the repository's 16 GiB memory budget; raise it only when the machine can support
+the per-process `GHCRTS` limit.
+
+`typecheck-ci` and `site-ci` choose automatically: a restored cache uses the
+ordinary incremental path, while a missing cache uses the parallel cold path.
+Run `typecheck-cold` and `html-cold` independently when comparing single-process
+costs; each clears only its own Bedrock cache.
 
 ## CI and website deployment
 

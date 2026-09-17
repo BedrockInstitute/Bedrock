@@ -68,7 +68,7 @@ UI = {
            "mdtitle": "本页的纯 Markdown 版本，供 AI 与脚本读取",
            "agentstitle": "AI 应当如何阅读本站",
            "credit": '使用改编自 <a href="https://1lab.dev">1lab</a> 的生成器渲染 '
-                     '(AGPL-3.0)。',
+                     '(AGPL-3.0)',
            "external": "您正在浏览 Cubical 库。",
            "back": "返回 Bedrock"},
     "ja": {"search": "検索…", "theme": "テーマ切替", "contents": "このページの内容",
@@ -611,14 +611,14 @@ def footer_html(lang, base, md_href):
     head."""
     s = UI[lang]
     source = f'<a href="{SOURCE_URL}">{s["source"]}</a>'
-    copyright_ = f'© 2026 Bedrock Institute · {s["license"]} · {source}'
     formats = [f'<a href="{base}/llms.txt" title="{htmllib.escape(s["agentstitle"])}">'
                f'{s["agents"]}</a>']
     if md_href:
         formats.insert(0, f'<a href="{md_href}" title="{htmllib.escape(s["mdtitle"])}" '
                           f'type="text/markdown">{s["markdown"]}</a>')
+    links = " · ".join([source, *formats])
+    copyright_ = f'© 2026 Bedrock Institute · {s["license"]} · {links}'
     return (f'<div class="footer-credit">{s["credit"]}</div>'
-            f'<div class="footer-formats">{" · ".join(formats)}</div>'
             f'<div class="footer-copyright">{copyright_}</div>')
 
 

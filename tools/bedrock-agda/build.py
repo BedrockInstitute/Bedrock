@@ -109,6 +109,11 @@ def main() -> int:
     command = [
         "cabal", "build", "exe:agda", "--builddir=dist-bedrock", "-j2",
     ]
+    happy = shutil.which("happy")
+    if happy:
+        # Cabal 3.12 can fail to identify the version of a packaged Happy
+        # executable even though invoking that executable directly succeeds.
+        command.append(f"--with-happy={happy}")
     if allow_newer:
         command.append(f"--allow-newer={allow_newer}")
     command.extend(macos_ghc_options())

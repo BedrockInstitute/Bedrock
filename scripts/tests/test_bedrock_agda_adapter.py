@@ -22,6 +22,8 @@ class BedrockAgdaAdapterTests(unittest.TestCase):
     def test_environment_lock_pins_cubical_and_host_versions(self):
         self.assertEqual(self.environment["cubical_version"], "0.9")
         self.assertEqual(len(self.environment["cubical_sha256"]), 64)
+        self.assertEqual(self.environment["tested_ghc_version"], "9.4.8")
+        self.assertEqual(self.environment["tested_cabal_version"], "3.12.1.0")
         self.assertEqual(self.environment["minimum_python_version"], "3.11")
 
     def test_adapter_only_touches_declared_semantic_hook_files(self):

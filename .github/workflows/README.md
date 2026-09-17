@@ -17,12 +17,17 @@ push to `main`:
   It then runs `make milestone-lint`, which verifies that every source definition is in the
   transitive import closure of `Milestones`. This final-tree check is deliberately separate
   from the commit-time gates. Together the ordinary checks are `make check`, split so the
-  typecheck can use its cache.
+  typecheck can use its cache. A cache miss schedules modules in parallel; a hit uses the
+  ordinary incremental Agda traversal.
 - `cloudflare.yml`: restores the combined Agda/HTML/type-trace cache, builds the site (root
   base URL), and deploys to **Cloudflare Pages**, the
   primary host ([bedrock.institute](https://bedrock.institute)).
 - `pages.yml`: uses the same combined backend cache, builds the site with base URL `/Bedrock`,
   and deploys the **GitHub Pages** mirror.
+
+Both deployment workflows run the parallel module scheduler on a cold backend
+cache and retain the single-process official HTML backend after interfaces and
+expression traces have been produced. Restored caches keep the incremental path.
 
 ## Secrets
 

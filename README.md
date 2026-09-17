@@ -121,10 +121,12 @@ configuration. See [tools/bedrock-agda/README.md](tools/bedrock-agda/README.md)
 for versioning, deployment, verification, and upgrade instructions.
 
 The build keeps formal-check and website measurements distinct. Use
-`make typecheck-cold` for a timed pure Agda check with cold Bedrock interfaces,
-or `make html-cold` for a timed single traversal that creates `.agdai`, HTML,
-and expression-type data together. `make site-cold` follows the latter with the
-site renderer. The two Agda modes use separate project-interface caches.
+`make typecheck-cold` for the timed single-process pure Agda baseline, or
+`make typecheck-cold-parallel AGDA_JOBS=2` for the operational multi-core check.
+`make html-cold` benchmarks one traversal that creates `.agdai`, HTML, and
+expression-type data together; `make site-cold` uses parallel module checking
+before the HTML backend and renderer. The proof and site modes use separate
+project-interface caches.
 
 `make check` (typecheck, the four linters, reading-order validation and gate tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual

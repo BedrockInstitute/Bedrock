@@ -2,15 +2,19 @@
 #
 #   make check       the full gate: typecheck, lint, test
 #   make typecheck   pure incremental Agda check of the complete import closure
-#   make typecheck-cold  benchmark a pure check with cold project interfaces
+#   make typecheck-cold  benchmark a single-process pure cold check
+#   make typecheck-cold-parallel  build cold interfaces with AGDA_JOBS workers
+#   make typecheck-ci  use the cache, or parallelize a cold CI check
 #   make lint        run source and reading-order gates over the whole tree
 #   make milestone-lint  verify every source definition reaches Milestones
 #   make test        run the gate unit tests
 #   make hooks       install scripts/git-hooks into .git/hooks
 #   make html        one Agda traversal producing interfaces, HTML and type data
-#   make html-cold   benchmark that traversal with cold project/site caches
+#   make html-cold   benchmark that single-process combined traversal
+#   make html-cold-parallel  parallel check/trace, then run the HTML backend
 #   make site        render the HTML site into _build/site
 #   make site-cold   rebuild the cold Agda/HTML cache, then render the site
+#   make site-ci     use the cache, or parallelize a cold CI site build
 #   make serve       serve _build/site locally
 #   make deploy      push _build/site to Cloudflare Pages (owner only)
 
@@ -19,6 +23,7 @@ AGDA         := $(BEDROCK_AGDA)
 VENV      := .venv
 PYTHON    ?= python3.11
 PY        ?= $(VENV)/bin/python
+AGDA_JOBS ?= 2
 AGDA_DIR  ?= $(abspath _build/agda-home)
 export AGDA_DIR
 
@@ -30,12 +35,16 @@ AGDA_ROOT  := src/Milestones.lagda.md
 SITE_IFACES := _build/2.8.0/agda/src
 TYPECHECK_ROOT := _build/typecheck
 TYPECHECK_LIB := $(TYPECHECK_ROOT)/bedrock.agda-lib
+TYPECHECK_STAMP := $(TYPECHECK_ROOT)/_build/2.8.0/agda/src/Milestones.agdai
 HTML_DIR   := _build/html
 AGDA_TRACE := _build/bedrock-agda-types.jsonl
 AGDA_STAMP := $(HTML_DIR)/.bedrock-checked
 BENCHMARK_DIR := _build/benchmarks
 TYPECHECK_TIME := $(BENCHMARK_DIR)/typecheck-cold.time
+TYPECHECK_PARALLEL_TIME := $(BENCHMARK_DIR)/typecheck-cold-parallel.time
 HTML_TIME := $(BENCHMARK_DIR)/html-cold.time
+HTML_PARALLEL_TIME := $(BENCHMARK_DIR)/html-cold-parallel.time
+AGDA_PARALLEL := scripts/agda-parallel.py
 SITE_OUT   := _build/site
 LANGS      := en,zh,ja
 BASE_URL   :=
@@ -44,7 +53,7 @@ CF_PROJECT := bedrock
 AGDA_SOURCES := $(shell find src -type f -name '*.lagda.md' | sort)
 TYPECHECK_SOURCES := $(patsubst src/%,$(TYPECHECK_ROOT)/src/%,$(AGDA_SOURCES))
 
-.PHONY: bootstrap toolchain check bedrock-agda typecheck-stage typecheck typecheck-cold lint milestone-lint test hooks venv gen html html-cold types types-refresh site site-cold serve deploy clean distclean
+.PHONY: bootstrap toolchain check bedrock-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types types-refresh site site-cold site-ci serve deploy clean distclean
 
 # One command for a fresh clone after GHC/Cabal, patch, make and Python exist.
 bootstrap: venv toolchain
@@ -91,6 +100,26 @@ typecheck-cold: $(BEDROCK_AGDA) typecheck-stage
 	cd $(TYPECHECK_ROOT) && /usr/bin/time -p -o $(abspath $(TYPECHECK_TIME)) \
 		$(abspath $(AGDA)) $(AGDA_ROOT)
 	@cat $(TYPECHECK_TIME)
+
+# Operational cold check: schedule project modules along their import DAG. The
+# single-process target above remains the stable benchmark baseline.
+typecheck-cold-parallel: $(BEDROCK_AGDA) typecheck-stage $(AGDA_PARALLEL)
+	rm -rf $(TYPECHECK_ROOT)/_build
+	@mkdir -p $(BENCHMARK_DIR)
+	@echo "Cold parallel Agda typecheck ($(AGDA_JOBS) workers; cubical interfaces retained)"
+	/usr/bin/time -p -o $(abspath $(TYPECHECK_PARALLEL_TIME)) \
+		$(PYTHON) $(AGDA_PARALLEL) --project-root $(TYPECHECK_ROOT) \
+		--agda $(abspath $(AGDA)) --root Milestones --jobs $(AGDA_JOBS)
+	@cat $(TYPECHECK_PARALLEL_TIME)
+
+# CI restores this target's isolated interface tree. Preserve the cheap normal
+# incremental path on a hit and use the DAG scheduler only on a cold runner.
+typecheck-ci: $(BEDROCK_AGDA) typecheck-stage $(AGDA_PARALLEL)
+	@if [ -f $(TYPECHECK_STAMP) ]; then \
+		$(MAKE) typecheck; \
+	else \
+		$(MAKE) typecheck-cold-parallel; \
+	fi
 
 # A separate official Agda traversal writes fresh .agdai interfaces, emits HTML,
 # and records expression types for the renderer. It is the cached site-build path.
@@ -156,6 +185,21 @@ html-cold: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES)
 	@cat $(HTML_TIME)
 	@touch $(AGDA_STAMP)
 
+# Fast cold site backend: elaborate independent modules concurrently and record
+# one trace part per process, then merge the trace and let the official HTML
+# backend read the completed interfaces. No source module is checked twice.
+html-cold-parallel: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES) $(AGDA_PARALLEL)
+	rm -rf $(SITE_IFACES) $(HTML_DIR)
+	rm -f $(AGDA_TRACE)
+	@mkdir -p $(HTML_DIR) $(BENCHMARK_DIR)
+	@echo "Cold parallel Agda + HTML + type-trace build ($(AGDA_JOBS) workers)"
+	/usr/bin/time -p -o $(abspath $(HTML_PARALLEL_TIME)) \
+		$(PYTHON) $(AGDA_PARALLEL) --project-root . \
+		--agda $(abspath $(AGDA)) --root Milestones --jobs $(AGDA_JOBS) \
+		--trace-out $(AGDA_TRACE) --html-dir $(HTML_DIR)
+	@cat $(HTML_PARALLEL_TIME)
+	@touch $(AGDA_STAMP)
+
 types: html
 	$(PY) scripts/site/extract-types.py --html-dir $(HTML_DIR) --out _build/types.json
 	$(PY) scripts/site/extract-expression-types.py --html-dir $(HTML_DIR) \
@@ -171,8 +215,16 @@ site: types
 		--langs $(LANGS) --base-url "$(BASE_URL)"
 	$(PY) scripts/site/gen-depmap.py --src src --out $(SITE_OUT) --langs $(LANGS)
 
-site-cold: html-cold
+site-cold: html-cold-parallel
 	$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"
+
+site-ci: $(BEDROCK_AGDA)
+	@if [ -f $(AGDA_STAMP) ]; then \
+		$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"; \
+	else \
+		$(MAKE) site-cold PY="$(PY)" PYTHON="$(PYTHON)" AGDA_JOBS="$(AGDA_JOBS)" \
+			LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"; \
+	fi
 
 serve:
 	$(PY) -m http.server $(PORT) --directory $(SITE_OUT)
@@ -182,7 +234,8 @@ deploy: site
 
 clean:
 	rm -rf $(HTML_DIR) $(SITE_OUT) _build/woven _build/types.json \
-		_build/expression-types.json $(AGDA_TRACE) _build/expression-probe
+		_build/expression-types.json $(AGDA_TRACE) $(AGDA_TRACE).parts \
+		_build/expression-probe
 
 distclean: clean
 	rm -rf _build/bedrock-agda _build/bin/bedrock-agda \

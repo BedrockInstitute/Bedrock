@@ -35,6 +35,21 @@ def catalog_entry(module, preview=False, **fields):
     return entry
 
 
+class FooterTests(unittest.TestCase):
+    def test_machine_links_follow_source_on_the_second_line(self):
+        footer = renderer.footer_html("zh", "", "Base.Impredicativity.md")
+        self.assertEqual(footer.count("<div"), 2)
+        self.assertIn("(AGPL-3.0)</div>", footer)
+        self.assertNotIn("(AGPL-3.0)。", footer)
+        source = footer.index(">源码</a>")
+        markdown = footer.index(">Markdown</a>")
+        agents = footer.index(">llms.txt</a>")
+        self.assertLess(source, markdown)
+        self.assertLess(markdown, agents)
+        self.assertIn(">源码</a> · <a", footer)
+        self.assertIn(">Markdown</a> · <a", footer)
+
+
 class ProseAnchorTests(unittest.TestCase):
     def test_paragraphs_are_numbered_in_document_order(self):
         body, _ = renderer.md_to_html("First one.\n\nSecond one.\n\nThird one.")
