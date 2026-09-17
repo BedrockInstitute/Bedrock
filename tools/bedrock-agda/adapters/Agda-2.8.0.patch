@@ -1,0 +1,91 @@
+--- a/Agda.cabal
++++ b/Agda.cabal
+@@ -953,0 +954 @@
++      Bedrock.Agda.TypeTrace
+--- a/src/full/Agda/Main.hs
++++ b/src/full/Agda/Main.hs
+@@ -37,0 +38 @@
++import Bedrock.Agda.TypeTrace (flushTypeTrace)
+@@ -426,0 +428 @@
++  flushTypeTrace
+--- a/src/full/Agda/Interaction/Imports.hs
++++ b/src/full/Agda/Interaction/Imports.hs
+@@ -80,0 +81 @@
++import Bedrock.Agda.TypeTrace (flushPendingTypes)
+@@ -1196 +1197,3 @@
+-        Bench.billTo [Bench.Typing] $ mapM_ checkDeclCached ds `finally_` cacheCurrentLog
++        Bench.billTo [Bench.Typing] $
++          mapM_ (\ declaration -> checkDeclCached declaration >> flushPendingTypes) ds
++            `finally_` cacheCurrentLog
+--- a/src/full/Agda/TypeChecking/Rules/Application.hs
++++ b/src/full/Agda/TypeChecking/Rules/Application.hs
+@@ -38,0 +39 @@
++import qualified Bedrock.Agda.TypeTrace as Bedrock
+@@ -301 +302 @@
+-  case e of
++  result@(_, t) <- case e of
+@@ -359,0 +361,6 @@
++  case e of
++    A.Var x
++      | A.nameBindingSite x == noRange -> Bedrock.traceType "name" e t
++      | otherwise -> Bedrock.traceType "binding" (A.nameBindingSite x) t
++    _ -> pure ()
++  pure result
+@@ -806,0 +814,2 @@
++                let resultType = absApp b u
++                lift $ Bedrock.traceType "application" (fuseRange sFun e) resultType
+@@ -808 +817 @@
+-                  checkArgumentsE' s{ sFunType = absApp b u }
++                  checkArgumentsE' s{ sFunType = resultType }
+--- a/src/full/Agda/TypeChecking/Rules/LHS.hs
++++ b/src/full/Agda/TypeChecking/Rules/LHS.hs
+@@ -47,0 +48 @@
++import qualified Bedrock.Agda.TypeTrace as Bedrock
+@@ -683,0 +685,3 @@
++          forM_ eqs $ \case
++            ProblemEq (A.VarP x) _ a -> Bedrock.traceType "binding" (A.unBind x) (unDom a)
++            _                        -> pure ()
+--- a/src/full/Agda/TypeChecking/Rules/Term.hs
++++ b/src/full/Agda/TypeChecking/Rules/Term.hs
+@@ -37,0 +38 @@
++import qualified Bedrock.Agda.TypeTrace as Bedrock
+@@ -345,0 +347 @@
++    mapM_ (\ xp -> Bedrock.traceType "binding" (A.unBind $ A.binderName $ namedArg xp) t) xps
+@@ -521,0 +524 @@
++      mapM_ (\ xp -> Bedrock.traceType "binding" (A.unBind $ A.binderName $ namedArg xp) argsT) xps
+@@ -581,0 +585,2 @@
++        mapM_ (\ xp -> Bedrock.traceType "binding"
++          (A.unBind $ A.binderName $ namedArg xp) argT) xps
+@@ -1174,0 +1180,5 @@
++recordApplicationType :: A.Expr -> Type -> TCM a -> TCM a
++recordApplicationType e t action = case appView e of
++  Application _ (_ : _) -> Bedrock.traceCheckedType "application" e t action
++  _                     -> action
++
+@@ -1183,0 +1194 @@
++  recordApplicationType e t $
+@@ -1244,2 +1255,9 @@
+-          | isNothing (nameOf $ unArg x) && isNothing (A.binderPattern $ namedArg x) ->
+-              checkExpr' cmp (A.Lam i (domainFree (getArgInfo x) $ A.unBind <$> namedArg x) e0) t
++          | isNothing (nameOf $ unArg x) && isNothing (A.binderPattern $ namedArg x) -> do
++              result <- checkExpr' cmp
++                (A.Lam i (domainFree (getArgInfo x) $ A.unBind <$> namedArg x) e0) t
++              TelV tel _ <- telViewUpTo 1 t
++              case tel of
++                ExtendTel dom _ -> Bedrock.traceType "binding"
++                  (A.unBind $ A.binderName $ namedArg x) (unDom dom)
++                EmptyTel -> pure ()
++              pure result
+@@ -1587 +1605,5 @@
+-  inferApplication exh hd args e
++  result@(_, t) <- inferApplication exh hd args e
++  case appView e of
++    Application _ (_ : _) -> Bedrock.traceType "application" e t
++    _                     -> pure ()
++  pure result
+@@ -1670,0 +1693 @@
++  Bedrock.traceType "binding" (A.unBind x) t
+@@ -1675,0 +1699 @@
++  Bedrock.traceType "binding" (A.unBind x) t
+@@ -1748,0 +1773 @@
++        mapM_ (uncurry $ Bedrock.traceType "binding") $ List.zip xs ts

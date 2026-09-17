@@ -462,7 +462,7 @@ Paths are themselves elements of types, so new paths can in turn relate paths. H
 - **`isContr A`{.Agda}：`A` 是[可缩]{.term-intro #contractible}的。** 这要求在 `A` 中选定一个中心，并为每个 `x : A`{.Agda} 给出一条从中心到 `x` 的路径。因此，`A` 不仅必须有元素，而且所有元素都与选定的中心相等，彼此之间也就无法通过相等加以区分。本书把 `isContr`{.Agda} 携带的这组数据读作**[唯一存在]{.term-intro #unique-existence}**：中心给出存在性，所有元素都等于中心则给出唯一性。
 - **`isProp A`{.Agda}：`A` 是[命题]{.term-intro #proposition}。** 这要求 `A` 中任意两个元素都相等。它不要求预先选定中心，甚至不要求 `A` 一定有元素；它只说明，一旦 `A` 有证明，这些证明之间便没有可区分的差别。因此，一个命题可以没有证明，也可以有证明，但不能有两个彼此不同的证明。
 - **`isSet A`{.Agda}：`A` 是 [h-集合]{.term-intro #h-set}。** 前缀标明这是宿主层的概念：h-集合指满足 `isSet`{.Agda} 的类型，而不是所建模的集合论中的集合。这不要求 `A` 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A` 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
-- **`isProp→isSet`{.Agda}：命题都是 h-集合。** 如果 `A` 满足 `isProp`{.Agda}，那么它也满足 `isSet`{.Agda}。这可以看成一次同伦层级的向上搬移：我们不改变 `A`，而是从较强的条件「任意两个元素相等」推出较弱的条件「任意两条相等路径彼此相等」。它与 `Lift`{.Agda} 所做的宇宙层级搬移有一点相似：二者都使同一个数学对象满足较高层级的要求。不过，两者作用于不同的层级轴。`Lift`{.Agda} 改变类型所在的宇宙，并产生一个与原类型等价的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质。
+- **`isProp→isSet`{.Agda}：命题都是 h-集合。** 如果 `A` 满足 `isProp`{.Agda}，那么它也满足 `isSet`{.Agda}。这可以看成一次同伦层级的向上搬移：我们不改变 `A`，而是从较强的条件「任意两个元素相等」推出较弱的条件「任意两条相等路径彼此相等」。它与 `Lift`{.Agda} 所做的宇宙层级搬移有一点相似：二者都使同一个数学对象满足较高层级的要求。不过，两者作用于不同的层级轴。`Lift`{.Agda} 改变类型所在的宇宙，并产生一个等价于原类型的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质。
 <!--ja-->
 パス自身も型の要素なので、パスどうしの間にさらにパスを作れます。ホモトピーレベルは、このような等しさの証明に区別できる構造がどれだけ残るかによって型を分類します。型の大きさを測るものではありません。大きさを扱うのは宇宙レベルであり、ホモトピーレベルが扱うのは要素とその等しさの証明をどこまで区別できるかです。
 
@@ -476,6 +476,14 @@ Paths are themselves elements of types, so new paths can in turn relate paths. H
 open import Cubical.Foundations.Prelude public
   using ( isProp; isSet; isContr; isProp→isSet )
 ```
+
+<!--en-->
+Three related notions will recur throughout the book. Given `f : A → B`{.Agda} and `b : B`{.Agda}, the **[fibre]{.term-intro #fiber}** of `f` over `b` is the dependent pair type `Σ (a : A) (f a ≡ b)`{.Agda}: it contains a preimage together with a path showing where that preimage is sent. A **[type equivalence]{.term-intro #type-equivalence}** `A ≃ B`{.Agda} consists of a map `A → B`{.Agda} whose every fibre is contractible. An **[isomorphism]{.term-intro #type-isomorphism}** instead explicitly supplies forward and inverse maps together with both inverse laws. An isomorphism therefore gives a convenient way to construct a type equivalence, while type equivalence is the standard interface for transporting structure between types.
+<!--zh-->
+全书会反复使用三个相互关联的概念。给定 `f : A → B`{.Agda} 与 `b : B`{.Agda}，`f` 在 `b` 上的**[纤维]{.term-intro #fiber}**是依值对类型 `Σ (a : A) (f a ≡ b)`{.Agda}：其中包含一个原像，以及说明该原像确实映到 `b` 的路径。**[类型等价]{.term-intro #type-equivalence}** `A ≃ B`{.Agda} 由一个映射 `A → B`{.Agda} 及其每条纤维均可缩的证书组成。**[同构]{.term-intro #type-isomorphism}**则显式给出正向映射、逆向映射和两条逆律。因此，同构为构造类型等价提供了便利，而类型等价是类型之间搬运结构的标准接口。
+<!--ja-->
+本書では、相互に関係する三つの概念を繰り返し使います。`f : A → B`{.Agda} と `b : B`{.Agda} が与えられたとき、`b` 上の `f` の**[ファイバー]{.term-intro #fiber}**は依存対型 `Σ (a : A) (f a ≡ b)`{.Agda} です。これは原像と、その原像が確かに `b` へ写ることを示すパスを含みます。**[型同値]{.term-intro #type-equivalence}** `A ≃ B`{.Agda} は、写像 `A → B`{.Agda} と、そのすべてのファイバーが可縮であるという証明書からなります。これに対して**[同型]{.term-intro #type-isomorphism}**は、順写像、逆写像、二つの逆法則を明示的に与えます。したがって同型は型同値を構成する便利な方法となり、型同値は型の間で構造を運ぶための標準的なインターフェースとなります。
+<!--/-->
 
 <!--en-->
 ## The universe of propositions
@@ -667,11 +675,11 @@ open import Cubical.Functions.Logic public using ( ¬_ )
 ```
 
 <!--en-->
-For a family of propositions `P : A → hProp ℓ'`, `∀[ x ∶ A ] P x` is universal quantification: a certificate supplies a proof of `P x` for every `x : A`. Writing the type after `∶` keeps the domain of quantification visible.
+For a family of propositions `P : A → hProp ℓ'`, `∀[ x ∶ A ] P x` is universal quantification: a certificate supplies a proof of `P x` for every `x : A`. Writing the type after `∶` keeps the type over which `x` ranges visible.
 <!--zh-->
-对命题族 `P : A → hProp ℓ'`，`∀[ x ∶ A ] P x` 表示全称量化：它的证书为每个 `x : A` 给出 `P x` 的证明。把类型写在 `∶` 之后，使量词的论域直接呈现在表达式中。
+对命题族 `P : A → hProp ℓ'`，`∀[ x ∶ A ] P x` 表示全称量化：它的证书为每个 `x : A` 给出 `P x` 的证明。把类型写在 `∶` 之后，使 `x` 的取值类型直接呈现在表达式中。
 <!--ja-->
-命題族 `P : A → hProp ℓ'` に対して、`∀[ x ∶ A ] P x` は全称量化を表します。その証明は各 `x : A` に `P x` の証明を与えます。型を `∶` の後に書くことで、量化の論域が式に現れます。
+命題族 `P : A → hProp ℓ'` に対して、`∀[ x ∶ A ] P x` は全称量化を表します。その証明は各 `x : A` に `P x` の証明を与えます。型を `∶` の後に書くことで、`x` が動く型を式に明示できます。
 <!--/-->
 
 ```agda
@@ -707,7 +715,7 @@ The next section considers propositions that vary with an object.
 <!--/-->
 
 <!--en-->
-Here **class** means a class in the sense of set theory, not a type in type theory. Throughout this book, *class* refers to the former and *type* to the latter. The two are closely related in the formalization, but they are not the same notion. A type determines which terms may be its elements; a class selects, by a property, the objects that satisfy it from a domain already given.
+Here **class** means a class in the sense of set theory, not a type in type theory. Throughout this book, *class* refers to the former and *type* to the latter. The two are closely related in the formalization, but they are not the same notion. A type determines which terms may be its elements; a class selects, by a property, the objects that satisfy it from an already specified type.
 
 This collection of objects under consideration is the class's **[domain]{.term-intro #domain}**. When it is written `A`, the domain is a type `A` whose elements are all the objects currently being classified. Calling `A` a domain says only that a variable `x : A` may range over these objects; it does not equip `A` with membership, operations or any other structure. Later, when we construct a model of set theory, we add a set-theoretic membership relation to `A`. It then also becomes the [carrier]{.term-intro #carrier} of the model, and its elements play the role of sets in that model.
 

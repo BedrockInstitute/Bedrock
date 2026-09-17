@@ -4,6 +4,7 @@
 Inputs (produced by the Makefile before this runs):
   _build/html/<Module>.md   from `agda --html --html-highlight=code` on src/Milestones
   _build/types.json         from scripts/site/extract-types.py
+  _build/expression-types.json from scripts/site/extract-expression-types.py
   site/template.html        the page shell
   site/vendor/1lab/...      vendored front-end assets (M2c builds CSS/JS into the site)
 
@@ -15,6 +16,7 @@ per-language search.json, a per-language index, and a root language-redirect + 4
 
 Usage:
   render-site.py [--html-dir _build/html] [--types _build/types.json] [--src src]
+                 [--expression-types _build/expression-types.json]
                  [--template site/template.html] [--out _build/site]
                  [--langs en,zh,ja] [--base-url ""] [--site Bedrock]
 """
@@ -177,6 +179,7 @@ LINK_RE = re.compile(r'<a (id="\d+" )?href="([^"#]+)\.html(#\d+)?"([^>]*)>')
 INLINE_AGDA_RE = re.compile(r'`([^`]+)`\{\.Agda\}')
 SUMMARY_RE = re.compile(r'<summary([^>]*)>(.*?)</summary>', re.DOTALL)
 A_TAG_RE  = re.compile(r'<a\b([^>]*)>([^<]+)</a>')
+TOKEN_RE = re.compile(r'<a\b[^>]*\bid="(\d+)"[^>]*>(.*?)</a>', re.DOTALL)
 HREF_RE   = re.compile(r'\bhref="([^"]+\.html(?:#\d+)?)"')
 CLASS_RE  = re.compile(r'\bclass="([^"]*)"')
 
@@ -394,17 +397,25 @@ def index_definitions(code_html, module, name2pos, pos_aspect):
         pos_aspect.setdefault(module, {})[pos] = aspect.split()[-1] if aspect else ""
 
 
-def render_type(term, internal_q):
+def qualified_name_pattern(internal_q):
+    """Compile one longest-first matcher instead of scanning every known name."""
+    alternatives = sorted(internal_q, key=len, reverse=True)
+    return re.compile("|".join(map(re.escape, alternatives))) if alternatives else None
+
+
+def render_type(term, internal_q, name_pattern=None):
     """Abbreviate module qualifiers and hyperlink internal identifiers in a type string."""
     s = htmllib.escape(term.replace("\n", " "), quote=False)
     links = []
-    for q in sorted(internal_q, key=len, reverse=True):
-        if q in s:
+    if name_pattern:
+        def protect_link(match):
+            q = match.group(0)
             mod, pos = internal_q[q]
             tok = f"{NUL}L{len(links)}{NUL}"
             last = q.split(".")[-1]
             links.append(f'<a href="{mod}.html#{pos}">{htmllib.escape(last)}</a>')
-            s = s.replace(q, tok)
+            return tok
+        s = name_pattern.sub(protect_link, s)
     s = re.sub(r"(?:[A-Za-z][\w']*\.)+", "", s)        # strip remaining (external) qualifiers
     s = re.sub(r"\bSet\b", "Type", s)                  # cubical display
     for i, link in enumerate(links):
@@ -611,7 +622,7 @@ def footer_html(lang, base, md_href):
             f'<div class="footer-copyright">{copyright_}</div>')
 
 
-def rewrite_links(body, rendered, types_global):
+def rewrite_links(body, rendered, types_global, canonical_names=None):
     """Keep links to any rendered module (internal or external), tagging data-type when the
     TARGET has a type (drives hover, including on cubical identifiers). Links to a module we
     did not render lose their dead href (the <a> element stays so the </a> still matches).
@@ -624,6 +635,9 @@ def rewrite_links(body, rendered, types_global):
         if mod in rendered:
             pos = anchor[1:] if anchor else ""
             extra = f' data-type="{mod}#{pos}"' if pos and pos in types_global.get(mod, {}) else ""
+            canonical = (canonical_names or {}).get(mod, {}).get(pos, "")
+            if canonical:
+                extra += f' data-name="{htmllib.escape(canonical, quote=True)}"'
             return f'<a {idpart}href="{chapter_href(mod, anchor)}"{rest}{extra}>'
         return f'<a{rest}>'                          # not rendered: drop the dead href
     return LINK_RE.sub(repl, body)
@@ -715,13 +729,142 @@ def auto_link_terms(body, lang, module, terms):
 def build_types(modules, name2pos, types_raw, internal_q):
     """Global {module: {pos: abbreviated/hyperlinked type-html}} for hover + sidecars."""
     g = {}
+    name_pattern = qualified_name_pattern(internal_q)
     for m in modules:
         g[m] = {}
         for name, pos in name2pos.get(m, {}).items():
             t = types_raw.get(m, {}).get(name.split(".")[-1])
             if t:
-                g[m][pos] = render_type(t, internal_q)
+                g[m][pos] = render_type(t, internal_q, name_pattern)
     return g
+
+
+def build_expression_types(raw, internal_q):
+    """Render application and local-definition types with their source ranges."""
+    result = {}
+    name_pattern = qualified_name_pattern(internal_q)
+    type_cache = {}
+    for module, nodes in raw.items():
+        rendered = []
+        for node in nodes:
+            if not node.get("type"):
+                continue
+            type_ = node["type"]
+            if type_ not in type_cache:
+                type_cache[type_] = render_type(type_, internal_q, name_pattern)
+            rendered.append({**node, "type": type_cache[type_]})
+        result[module] = rendered
+    return result
+
+
+def names_by_position(module, name2pos):
+    """Invert Agda's definition anchors for canonical hover labels."""
+    return {str(position): name
+            for name, position in name2pos.get(module, {}).items()}
+
+
+def annotate_expression_nodes(block, nodes):
+    """Wrap source-range application nodes around Agda's highlighted token anchors."""
+    boundaries = {node[position] for node in nodes for position in ("start", "end")}
+
+    def split_token(match):
+        start = int(match.group(1))
+        inner = match.group(2)
+        label = htmllib.unescape(inner)
+        cuts = sorted(boundary - start for boundary in boundaries
+                      if start < boundary < start + len(label))
+        if not cuts:
+            return match.group(0)
+        opening = match.group(0)[:match.group(0).find(">") + 1]
+        pieces = []
+        offsets = [0, *cuts, len(label)]
+        for left, right in zip(offsets, offsets[1:]):
+            piece_opening = re.sub(
+                r'\bid="\d+"', f'id="{start + left}"', opening, count=1
+            )
+            pieces.append(piece_opening + htmllib.escape(label[left:right], quote=False)
+                          + "</a>")
+        return "".join(pieces)
+
+    # Agda may highlight adjacent punctuation as one anchor, for example `_))`.
+    # Split such an anchor when an AST node ends between the two closing
+    # parentheses, so expression spans can remain properly nested HTML.
+    block = TOKEN_RE.sub(split_token, block)
+    tokens = []
+    for match in TOKEN_RE.finditer(block):
+        start = int(match.group(1))
+        label = htmllib.unescape(re.sub(r"<[^>]+>", "", match.group(2)))
+        tokens.append((start, start + len(label), match.start(), match.end()))
+    by_start = {start: html_start for start, _, html_start, _ in tokens}
+    by_end = {end: html_end for _, end, _, html_end in tokens}
+    usable = [node for node in nodes
+              if node["start"] in by_start and node["end"] in by_end]
+    if not usable:
+        return block
+
+    # Count containing ranges in O(n log n).  The former pairwise scan made
+    # large generated proof blocks quadratic in their number of AST nodes.
+    unique_ranges = sorted(
+        {(node["start"], node["end"]) for node in usable},
+        key=lambda interval: (interval[0], -interval[1]),
+    )
+    ends = sorted({end for _, end in unique_ranges})
+    end_index = {end: index + 1 for index, end in enumerate(ends)}
+    tree = [0] * (len(ends) + 1)
+
+    def add(index):
+        while index < len(tree):
+            tree[index] += 1
+            index += index & -index
+
+    def prefix(index):
+        total = 0
+        while index:
+            total += tree[index]
+            index -= index & -index
+        return total
+
+    depth_by_range = {}
+    inserted = 0
+    for start, end in unique_ranges:
+        before_end = prefix(end_index[end] - 1)
+        depth_by_range[(start, end)] = inserted - before_end
+        add(end_index[end])
+        inserted += 1
+
+    openings, closings = {}, {}
+    for node in usable:
+        start, end = node["start"], node["end"]
+        depth = depth_by_range[(start, end)]
+        opening = (f'<span class="expr-node" data-expr-id="{node["id"]}" '
+                   f'data-expr-start="{start}" data-expr-end="{end}" '
+                   f'style="--expr-level:{depth % 6}">')
+        openings.setdefault(by_start[start], []).append((end, opening))
+        closings.setdefault(by_end[end], []).append((start, "</span>"))
+    events = {}
+    for position in set(openings) | set(closings):
+        closing = "".join(text for _, text in sorted(closings.get(position, []), reverse=True))
+        opening = "".join(text for _, text in sorted(openings.get(position, []), reverse=True))
+        events[position] = closing + opening
+    for position in sorted(events, reverse=True):
+        block = block[:position] + events[position] + block[position:]
+    return block
+
+
+def annotate_unlinked_bound_types(block, module, module_types):
+    """Attach occurrence types to Bound tokens for which Agda emitted no href."""
+    def annotate(match):
+        token = match.group(0)
+        position = match.group(1)
+        opening_end = token.find(">")
+        opening = token[:opening_end]
+        if ("href=" in opening or "data-type=" in opening
+                or not re.search(r'\bclass="[^"]*\bBound\b', opening)
+                or position not in module_types):
+            return token
+        return (opening + f' data-type="{module}#{position}"'
+                + token[opening_end:])
+    return TOKEN_RE.sub(annotate, block)
 
 
 def fill_template(tpl, **kw):
@@ -732,7 +875,8 @@ def fill_template(tpl, **kw):
 
 
 def render_module(module, html_dir, langs, internal, rendered, modnav_list,
-                  name2pos, types_global, terms, tpl, out_dir, base, site):
+                  name2pos, canonical_names, types_global, expression_types, terms,
+                  tpl, out_dir, base, site):
     path, literate = source_file(html_dir, module)
     raw = open(path, encoding="utf-8").read()
 
@@ -762,11 +906,19 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                 cls = CLASS_RE.search(attrs)
                 local_refs.setdefault(htmllib.unescape(txt),
                                       (href.group(1), cls.group(1) if cls else ""))
+        application_nodes = [node for node in expression_types.get(module, [])
+                             if node.get("kind") not in ("definition", "binding", "variable", "binder")]
+        code_blocks = [annotate_expression_nodes(blk, application_nodes)
+                       for blk in code_blocks]
+        code_blocks = [annotate_unlinked_bound_types(
+            blk, module, types_global.get(module, {})
+        ) for blk in code_blocks]
 
     def page_body(lang):
         if not literate:
             # a library page is bare highlighted code: wrap it and resolve its links
-            code = rewrite_links('<pre class="Agda">' + raw + '</pre>', rendered, types_global)
+            code = rewrite_links('<pre class="Agda">' + raw + '</pre>', rendered,
+                                 types_global, canonical_names)
             return code, [], None
         woven = weave_for_site(text, lang)
         mirror = woven
@@ -811,7 +963,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         toc = restore_toc_labels(toc, store)
         for j, blk in enumerate(code_blocks):
             body = body.replace(f"{NUL}CODE{j}{NUL}", blk)
-        body = rewrite_links(body, rendered, types_global)
+        body = rewrite_links(body, rendered, types_global, canonical_names)
         return auto_link_terms(body, lang, module, terms), toc, mirror
 
     for lang in langs:
@@ -914,7 +1066,15 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             open(md_path, "w", encoding="utf-8").write(twin)
 
     # per-module type sidecar (keyed by the real module name; hover fetches types/<mod>.json)
-    sidecar = json.dumps(types_global.get(module, {}), ensure_ascii=False)
+    sidecar_data = dict(types_global.get(module, {}))
+    sidecar_data["$names"] = names_by_position(module, name2pos)
+    sidecar_data["$expressions"] = {
+        str(node["id"]): {key: node[key]
+                          for key in ("type", "source", "start", "end", "kind")}
+        for node in expression_types.get(module, [])
+        if node.get("kind") not in ("definition", "binding", "variable", "binder")
+    }
+    sidecar = json.dumps(sidecar_data, ensure_ascii=False)
     for lang in langs:
         tdir = os.path.join(out_dir, lang, "types")
         os.makedirs(tdir, exist_ok=True)
@@ -1388,6 +1548,7 @@ def write_root(out_dir, langs, base):
 
 def main(argv):
     html_dir, types_path, src = "_build/html", "_build/types.json", "src"
+    expression_types_path = "_build/expression-types.json"
     tpl_path, out_dir = "site/template.html", "_build/site"
     static_dir = "site/static"
     langs, base, site = ["en", "zh", "ja"], "", "Bedrock"
@@ -1397,6 +1558,7 @@ def main(argv):
         a = argv[i]
         if a == "--html-dir": i += 1; html_dir = argv[i]
         elif a == "--types": i += 1; types_path = argv[i]
+        elif a == "--expression-types": i += 1; expression_types_path = argv[i]
         elif a == "--src": i += 1; src = argv[i]
         elif a == "--template": i += 1; tpl_path = argv[i]
         elif a == "--out": i += 1; out_dir = argv[i]
@@ -1442,6 +1604,8 @@ def main(argv):
         raise ValueError("\n".join(term_errors))
     terms = sort_reader_terms(reader_terms(glossary_entries), reading_data, src)
     types_raw = json.load(open(types_path, encoding="utf-8")) if os.path.exists(types_path) else {}
+    expression_types_raw = (json.load(open(expression_types_path, encoding="utf-8"))
+                            if os.path.exists(expression_types_path) else {})
     tpl = open(tpl_path, encoding="utf-8").read()
     # cache-bust: stamp ?v=<hash> on the CSS/JS so browsers always pick up changes
     def _ver(name):
@@ -1469,6 +1633,19 @@ def main(argv):
             index_definitions(content, m, name2pos, pos_aspect)   # whole .html is code
     internal_q = {f"{m}.{n}": (m, p) for m in name2pos for n, p in name2pos[m].items()}
     types_by_module = build_types(rendered, name2pos, types_raw, internal_q)
+    canonical_names = {module: names_by_position(module, name2pos)
+                       for module in rendered}
+    expression_types = build_expression_types(expression_types_raw, internal_q)
+    for module, nodes in expression_types.items():
+        for node in nodes:
+            if node.get("kind") == "definition":
+                types_by_module.setdefault(module, {}).setdefault(
+                    str(node["start"]), node["type"]
+                )
+            elif node.get("kind") in ("binding", "variable", "binder"):
+                types_by_module.setdefault(node["targetModule"], {}).setdefault(
+                    str(node["target"]), node["type"]
+                )
 
     if selected_modules:
         unknown = selected_modules - rendered_set
@@ -1483,7 +1660,14 @@ def main(argv):
     # the Milestones preview also supplies the generated reading-guide index)
     for m in modules_to_render:
         render_module(m, html_dir, langs, internal, rendered_set, modnav_list,
-                      name2pos, types_by_module, terms, tpl, out_dir, base, site)
+                      name2pos, canonical_names, types_by_module, expression_types,
+                      terms, tpl, out_dir, base, site)
+
+    # A selected-module rebuild is also the fast preview path used while the
+    # renderer is being refined.  Publish changed CSS/JS before returning so
+    # the cache-busted URL in the rebuilt page always names the served asset.
+    if os.path.isdir(static_dir):
+        shutil.copytree(static_dir, os.path.join(out_dir, "static"), dirs_exist_ok=True)
 
     if selected_modules:
         print(f"rendered {len(modules_to_render)} selected module(s) x {len(langs)} "
@@ -1499,9 +1683,6 @@ def main(argv):
             json.dump(reading_data, route_file, ensure_ascii=False)
     write_root(out_dir, langs, base)
     write_agent_files(out_dir, langs, base, modnav_list)
-
-    if os.path.isdir(static_dir):                    # committed CSS/JS/favicon
-        shutil.copytree(static_dir, os.path.join(out_dir, "static"), dirs_exist_ok=True)
 
     print(f"rendered {len(rendered)} module(s) ({len(internal)} internal) "
           f"x {len(langs)} language(s) -> {out_dir}", file=sys.stderr)

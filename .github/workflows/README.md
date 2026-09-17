@@ -11,15 +11,18 @@ documented one level down instead.
 `typecheck.yml` runs on every push and every pull request; the two deploy workflows run on
 push to `main`:
 
-- `typecheck.yml`: the **proof gate**. It typechecks the masters with an interface cache, then
+- `typecheck.yml`: the **proof gate**. It typechecks the masters with a pure-check interface
+  cache isolated from all HTML and expression-type products, then
   runs `make lint` (the source, prose and chapter gates) and `make test` (their unit tests).
   It then runs `make milestone-lint`, which verifies that every source definition is in the
   transitive import closure of `Milestones`. This final-tree check is deliberately separate
   from the commit-time gates. Together the ordinary checks are `make check`, split so the
   typecheck can use its cache.
-- `cloudflare.yml`: builds the site (root base URL) and deploys to **Cloudflare Pages**, the
+- `cloudflare.yml`: restores the combined Agda/HTML/type-trace cache, builds the site (root
+  base URL), and deploys to **Cloudflare Pages**, the
   primary host ([bedrock.institute](https://bedrock.institute)).
-- `pages.yml`: builds the site (base URL `/Bedrock`) and deploys the **GitHub Pages** mirror.
+- `pages.yml`: uses the same combined backend cache, builds the site with base URL `/Bedrock`,
+  and deploys the **GitHub Pages** mirror.
 
 ## Secrets
 

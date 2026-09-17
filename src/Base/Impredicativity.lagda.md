@@ -41,11 +41,11 @@ For example, suppose we define a proposition `R` by saying that every `Q : hProp
 <!--/-->
 
 <!--en-->
-A path cannot directly express this connection, because its endpoints must belong to a common ambient type, while the higher and lower propositions inhabit different universes. [Logical equivalence]{.term-intro #logical-equivalence} can express mutual implication between propositions. Sometimes, however, we must connect an entire higher proposition universe with a type in a lower universe. This is no longer a connection between two propositions. We therefore need a notion that connects arbitrary types: **[type equivalence]{.term-intro #type-equivalence}**.
+A path cannot directly express this connection, because its endpoints must belong to a common ambient type, while the higher and lower propositions inhabit different universes. [Logical equivalence]{.term-intro #logical-equivalence} can express mutual implication between propositions. Sometimes, however, we must connect an entire higher proposition universe with a type in a lower universe. This is no longer a connection between two propositions. We therefore need a notion that connects arbitrary types: **[type equivalence]{.term-ref #type-equivalence}**.
 <!--zh-->
-路径不能直接表达这种联系，因为路径的两端必须属于同一个环境类型，而高层命题与低层命题位于不同的宇宙。[逻辑等价]{.term-intro #logical-equivalence}可以说明两个命题互相蕴含。不过，我们有时还需要把整个高层命题宇宙与低层宇宙中的一个类型联系起来；这已经不是两个命题之间的联系。因此，我们需要一种能联系任意类型的概念，这就是**[类型等价]{.term-intro #type-equivalence}**。
+路径不能直接表达这种联系，因为路径的两端必须属于同一个环境类型，而高层命题与低层命题位于不同的宇宙。[逻辑等价]{.term-intro #logical-equivalence}可以说明两个命题互相蕴含。不过，我们有时还需要把整个高层命题宇宙与低层宇宙中的一个类型联系起来；这已经不是两个命题之间的联系。因此，我们需要一种能联系任意类型的概念，这就是**[类型等价]{.term-ref #type-equivalence}**。
 <!--ja-->
-パスはこの結び付きを直接には表せません。パスの両端は共通の型に属する必要がありますが、上位と下位の命題は異なる宇宙に属するからです。[論理的同値]{.term-intro #logical-equivalence}は命題間の両方向の含意を表せます。しかし、命題の上位宇宙全体を下位宇宙の一つの型と結び付ける必要もあります。これはもはや二つの命題の間の結び付きではありません。そこで、任意の型を結び付けられる概念として**[型同値]{.term-intro #type-equivalence}**を用います。
+パスはこの結び付きを直接には表せません。パスの両端は共通の型に属する必要がありますが、上位と下位の命題は異なる宇宙に属するからです。[論理的同値]{.term-intro #logical-equivalence}は命題間の両方向の含意を表せます。しかし、命題の上位宇宙全体を下位宇宙の一つの型と結び付ける必要もあります。これはもはや二つの命題の間の結び付きではありません。そこで、任意の型を結び付けられる概念として**[型同値]{.term-ref #type-equivalence}**を用います。
 <!--/-->
 
 <!--en-->
@@ -63,7 +63,7 @@ For types `A` and `B`, `A ≃ B`{.Agda} is a [dependent pair]{.term-ref #depende
 <!--/-->
 
 <!--en-->
-For a fixed `b : B`{.Agda}, the **[fibre]{.term-intro #fiber}** of `f` over `b` is the dependent pair type:
+For a fixed `b : B`{.Agda}, the **[fibre]{.term-ref #fiber}** of `f` over `b` is the dependent pair type:
 
 <div class="single-line-code"><code>Σ (a : A) (f a ≡ b)</code></div>
 
@@ -77,7 +77,7 @@ The second supplies a path for every `b : B`:
 
 <div class="single-line-code"><code>f (g b) ≡ b</code></div>
 <!--zh-->
-对固定的 `b : B`{.Agda}，`f` 在 `b` 上的**[纤维]{.term-intro #fiber}**是下面这个依值对类型：
+对固定的 `b : B`{.Agda}，`f` 在 `b` 上的**[纤维]{.term-ref #fiber}**是下面这个依值对类型：
 
 <div class="single-line-code"><code>Σ (a : A) (f a ≡ b)</code></div>
 
@@ -91,7 +91,7 @@ The second supplies a path for every `b : B`:
 
 <div class="single-line-code"><code>f (g b) ≡ b</code></div>
 <!--ja-->
-固定した `b : B`{.Agda} 上の `f` の**[ファイバー]{.term-intro #fiber}**は、次の依存対型です。
+固定した `b : B`{.Agda} 上の `f` の**[ファイバー]{.term-ref #fiber}**は、次の依存対型です。
 
 <div class="single-line-code"><code>Σ (a : A) (f a ≡ b)</code></div>
 
@@ -112,11 +112,11 @@ open import Cubical.Foundations.Equiv using ( _≃_ )
 ```
 
 <!--en-->
-This notion should be distinguished from an [isomorphism]{.term-intro #type-isomorphism}, which explicitly presents a forward map, a chosen inverse map and the two inverse laws. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure. For propositions, `⇔toPath`{.Agda} performs a different conversion, turning two implications into a path between the corresponding `hProp`{.Agda} values.
+This notion should be distinguished from an [isomorphism]{.term-ref #type-isomorphism}, which explicitly presents a forward map, a chosen inverse map and the two inverse laws. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure. For propositions, `⇔toPath`{.Agda} performs a different conversion, turning two implications into a path between the corresponding `hProp`{.Agda} values.
 <!--zh-->
-这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-intro #type-isomorphism}区分：同构显式给出正向映射、选定的逆向映射和两条逆律。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。对于命题，`⇔toPath`{.Agda} 完成另一种转换，把两个方向的蕴含变成相应 `hProp`{.Agda} 值之间的路径。
+这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-ref #type-isomorphism}区分：同构显式给出正向映射、选定的逆向映射和两条逆律。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。对于命题，`⇔toPath`{.Agda} 完成另一种转换，把两个方向的蕴含变成相应 `hProp`{.Agda} 值之间的路径。
 <!--ja-->
-この[型同値]{.term-ref #type-equivalence}は[同型]{.term-intro #type-isomorphism}と区別する必要があります。同型は順写像、選ばれた逆写像、二つの逆法則を明示的に与えます。以下で導入する定義は両者の関係を表します。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換します。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用います。命題については、`⇔toPath`{.Agda} が別の変換を行い、両方向の含意を対応する `hProp`{.Agda} の値の間のパスへ変えます。
+この[型同値]{.term-ref #type-equivalence}は[同型]{.term-ref #type-isomorphism}と区別する必要があります。同型は順写像、選ばれた逆写像、二つの逆法則を明示的に与えます。以下で導入する定義は両者の関係を表します。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換します。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用います。命題については、`⇔toPath`{.Agda} が別の変換を行い、両方向の含意を対応する `hProp`{.Agda} の値の間のパスへ変えます。
 <!--/-->
 
 ```agda

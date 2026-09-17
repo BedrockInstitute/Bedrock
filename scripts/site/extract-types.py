@@ -20,14 +20,27 @@ Usage:
 import glob
 import json
 import os
+import re
 import subprocess
 import sys
 
 def reachable_modules(html_dir):
-    # agda --html emits <Module>.md for literate sources and <Module>.html for library
-    # (non-literate) modules; both are reachable modules we want types for.
+    """Follow generated module links from Milestones, ignoring stale build files."""
     files = glob.glob(os.path.join(html_dir, "*.md")) + glob.glob(os.path.join(html_dir, "*.html"))
-    return sorted(set(os.path.basename(p).rsplit(".", 1)[0] for p in files))
+    available = {os.path.basename(path).rsplit(".", 1)[0]: path for path in files}
+    if "Milestones" not in available:
+        return sorted(available)
+    seen, pending = set(), ["Milestones"]
+    link = re.compile(r'href="([^"#]+)\.html(?:#[^"]*)?"')
+    while pending:
+        module = pending.pop()
+        if module in seen or module not in available:
+            continue
+        seen.add(module)
+        text = open(available[module], encoding="utf-8").read()
+        pending.extend(target for target in link.findall(text)
+                       if target in available and target not in seen)
+    return sorted(seen)
 
 
 def run_agda(commands):

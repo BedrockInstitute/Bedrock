@@ -1,0 +1,7 @@
+{
+  "cubical_version": "0.9",
+  "cubical_url": "https://github.com/agda/cubical/archive/refs/tags/v0.9.tar.gz",
+  "cubical_sha256": "3dde4c1936e8b5583a5adda429de7a6a6e14295d09434591d65ad52c7009cf9a",
+  "tested_ghc_version": "9.4.8",
+  "minimum_python_version": "3.11"
+}

@@ -23,14 +23,34 @@ jobs:
         with:
           agda-version: '2.8.0'
 
-      - name: Install and register cubical 0.9
+      - name: Cache bedrock-agda
+        uses: actions/cache@v4
+        with:
+          path: |
+            _build/bedrock-agda
+            _build/bin/bedrock-agda
+          key: bedrock-agda-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}
+
+      - name: Cache cubical interfaces
+        uses: actions/cache@v4
+        with:
+          path: _build/dependencies/cubical-0.9
+          key: cubical-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
+
+      - name: Set up Bedrock toolchain
         shell: bash
-        run: |
-          set -euo pipefail
-          curl -fL https://github.com/agda/cubical/archive/refs/tags/v0.9.tar.gz -o cubical.tar.gz
-          mkdir -p "${AGDA_DIR}/libraries.d"
-          tar xf cubical.tar.gz -C "${AGDA_DIR}/libraries.d/"
-          echo "${AGDA_DIR}/libraries.d/cubical-0.9/cubical.agda-lib" >> "${AGDA_DIR}/libraries"
+        run: make toolchain PYTHON=python3
+
+      - name: Cache combined site backend
+        uses: actions/cache@v4
+        with:
+          path: |
+            _build/2.8.0/agda/src
+            _build/html
+            _build/bedrock-agda-types.jsonl
+          key: bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'src/**/*.lagda.md', 'bedrock.agda-lib') }}
+          restore-keys: |
+            bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}-
 
       - name: Build site (domain root)
         shell: bash

@@ -108,6 +108,24 @@ The development typechecks against the following pinned toolchain:
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
+For a fresh clone, install GHC/Cabal, `make`, `patch`, and Python 3.11+, then run:
+
+```sh
+make bootstrap
+make check
+```
+
+`make bootstrap` builds the repository's patched Agda and installs the pinned
+cubical library under `_build`; it does not modify the user's global Agda
+configuration. See [tools/bedrock-agda/README.md](tools/bedrock-agda/README.md)
+for versioning, deployment, verification, and upgrade instructions.
+
+The build keeps formal-check and website measurements distinct. Use
+`make typecheck-cold` for a timed pure Agda check with cold Bedrock interfaces,
+or `make html-cold` for a timed single traversal that creates `.agdai`, HTML,
+and expression-type data together. `make site-cold` follows the latter with the
+site renderer. The two Agda modes use separate project-interface caches.
+
 `make check` (typecheck, the four linters, reading-order validation and gate tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
 environment by `make venv` (run once per clone). Every push is typechecked against these versions
