@@ -185,9 +185,10 @@ html-cold: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES)
 	@cat $(HTML_TIME)
 	@touch $(AGDA_STAMP)
 
-# Fast cold site backend: elaborate independent modules concurrently and record
-# one trace part per process, then merge the trace and let the official HTML
-# backend read the completed interfaces. No source module is checked twice.
+# Fast cold site backend: build shared external dependencies once, elaborate
+# independent project modules concurrently, and record one trace part per
+# process. Then merge the trace and let the official HTML backend read the
+# completed interfaces. No project module is checked twice.
 html-cold-parallel: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES) $(AGDA_PARALLEL)
 	rm -rf $(SITE_IFACES) $(HTML_DIR)
 	rm -f $(AGDA_TRACE)

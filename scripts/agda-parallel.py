@@ -3,9 +3,10 @@
 
 Agda 2.8 has no module-level jobs option.  This driver starts one Agda process
 per project module, but only after every project-local import has completed.
-Each process therefore owns one interface output while sharing read-only
-dependency interfaces.  Optional Bedrock traces are written per process and
-merged only after all writers have exited.
+Before starting workers, one serial Agda invocation builds the transitive
+closure of every external import.  Each worker therefore owns one project
+interface output while sharing read-only dependency interfaces.  Optional
+Bedrock traces are written per process and merged only after all writers exit.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 
@@ -31,6 +33,13 @@ def module_name(path: Path, source_root: Path) -> str:
     return relative.removesuffix(".lagda.md").replace("/", ".")
 
 
+def source_imports(path: Path) -> set[str]:
+    text = path.read_text(encoding="utf-8")
+    return {
+        name for block in FENCE.findall(text) for name in IMPORT.findall(block)
+    }
+
+
 def local_graph(source_root: Path) -> tuple[dict[str, Path], dict[str, set[str]]]:
     paths = {
         module_name(path, source_root): path
@@ -38,13 +47,51 @@ def local_graph(source_root: Path) -> tuple[dict[str, Path], dict[str, set[str]]
     }
     graph = {}
     for module, path in paths.items():
-        text = path.read_text(encoding="utf-8")
-        imported = {
-            name for block in FENCE.findall(text) for name in IMPORT.findall(block)
-            if name in paths
-        }
-        graph[module] = imported
+        graph[module] = source_imports(path) & paths.keys()
     return paths, graph
+
+
+def external_dependencies(paths: dict[str, Path], modules: set[str]) -> set[str]:
+    project_modules = paths.keys()
+    return {
+        dependency
+        for module in modules
+        for dependency in source_imports(paths[module])
+        if dependency not in project_modules
+    }
+
+
+def precompile_external_dependencies(
+    *,
+    project_root: Path,
+    agda: Path,
+    dependencies: set[str],
+) -> None:
+    """Build shared library interfaces once before project workers start."""
+    if not dependencies:
+        return
+    environment = os.environ.copy()
+    environment.pop("BEDROCK_AGDA_TYPES", None)
+    environment.pop("BEDROCK_AGDA_RUN", None)
+    with tempfile.TemporaryDirectory(prefix="bedrock-agda-dependencies-") as directory:
+        seed = Path(directory) / "BedrockExternalDependencies.agda"
+        imports = "\n".join(f"import {module}" for module in sorted(dependencies))
+        seed.write_text(
+            "{-# OPTIONS --cubical --safe --guardedness #-}\n"
+            "module BedrockExternalDependencies where\n\n"
+            f"{imports}\n",
+            encoding="utf-8",
+        )
+        print(
+            f"parallel Agda: precompiling {len(dependencies)} external dependencies",
+            file=sys.stderr,
+        )
+        subprocess.run(
+            [str(agda), "-i", directory, str(seed)],
+            cwd=project_root,
+            env=environment,
+            check=True,
+        )
 
 
 def closure(graph: dict[str, set[str]], root: str) -> set[str]:
@@ -109,6 +156,11 @@ def parallel_check(
 ) -> list[str]:
     paths, complete_graph = local_graph(source_root)
     modules = closure(complete_graph, root)
+    precompile_external_dependencies(
+        project_root=project_root,
+        agda=agda,
+        dependencies=external_dependencies(paths, modules),
+    )
     graph = {module: complete_graph[module] & modules for module in modules}
     dependants = {module: set() for module in modules}
     remaining = {module: len(graph[module]) for module in modules}

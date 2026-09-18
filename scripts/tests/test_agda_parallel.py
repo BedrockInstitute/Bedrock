@@ -34,7 +34,8 @@ class ParallelAgdaTests(unittest.TestCase):
             src = root / "src"
             src.mkdir()
             for name, dependencies in {
-                "A": (), "B": ("A",), "C": ("A",), "Root": ("B", "C")
+                "A": ("External.X",), "B": ("A",), "C": ("A",),
+                "Root": ("B", "C")
             }.items():
                 (src / f"{name}.lagda.md").write_text(module(*dependencies))
 
@@ -46,9 +47,14 @@ class ParallelAgdaTests(unittest.TestCase):
                 import sys, time
 
                 source = Path(sys.argv[-1])
-                name = source.name.removesuffix('.lagda.md')
                 state = Path(os.environ['FAKE_AGDA_STATE'])
                 state.mkdir(exist_ok=True)
+                if source.suffix == '.agda':
+                    (state / 'external').write_text(source.read_text())
+                    raise SystemExit(0)
+                if not (state / 'external').exists():
+                    raise SystemExit(5)
+                name = source.name.removesuffix('.lagda.md')
                 dependencies = {'A': [], 'B': ['A'], 'C': ['A'], 'Root': ['B', 'C']}
                 if any(not (state / dependency).exists() for dependency in dependencies[name]):
                     raise SystemExit(3)
@@ -86,6 +92,9 @@ class ParallelAgdaTests(unittest.TestCase):
                     os.environ["FAKE_AGDA_STATE"] = old_state
 
             self.assertEqual(set(completed), {"A", "B", "C", "Root"})
+            self.assertIn(
+                "import External.X", (root / "state" / "external").read_text()
+            )
             self.assertLess(completed.index("A"), completed.index("B"))
             self.assertLess(completed.index("A"), completed.index("C"))
             self.assertEqual(completed[-1], "Root")
