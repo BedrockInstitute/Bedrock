@@ -20,6 +20,22 @@ extractor = load("bedrock_expression_extractor", "site/extract-expression-types.
 
 
 class ExpressionHoverTests(unittest.TestCase):
+    def test_mobile_expression_interactions_keep_highlights_exclusive(self):
+        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        stylesheet = (ROOT / "site" / "static" / "bedrock.css").read_text()
+        self.assertIn('option.nameNode.classList.add("name-active")', javascript)
+        self.assertIn('option.node.classList.add("expr-active")', javascript)
+        self.assertNotIn('var activeOption = option.node ? option', javascript)
+        self.assertIn('function choose(index, withHapticFeedback)', javascript)
+        self.assertIn('function vibrateSelection()', javascript)
+        self.assertIn('withHapticFeedback && previous !== option) vibrateSelection()', javascript)
+        self.assertIn('if (usesInspector(event.target)) {\n        vibrateSelection();', javascript)
+        self.assertIn('choose(next, true)', javascript)
+        self.assertIn('pre.Agda .expr-node, pre.Agda .expr-node * {', stylesheet)
+        self.assertIn('user-select: none; -webkit-user-select: none;', stylesheet)
+        self.assertIn('document.addEventListener("selectstart"', javascript)
+        self.assertIn('if (expression) event.preventDefault()', javascript)
+
     def test_nested_source_ranges_wrap_highlighted_tokens(self):
         block = ('<pre class="Agda"><a id="10">f</a> '
                  '<a id="12">g</a> <a id="14">x</a></pre>')

@@ -739,8 +739,8 @@
       return expressionAncestors(target).length > 0;
     }
     function clearHighlight() {
-      document.querySelectorAll(".expr-active").forEach(function (node) {
-        node.classList.remove("expr-active");
+      document.querySelectorAll(".expr-active, .name-active").forEach(function (node) {
+        node.classList.remove("expr-active", "name-active");
       });
     }
     function position() {
@@ -756,10 +756,15 @@
       popup.style.left = left + "px";
       popup.style.top = top + "px";
     }
-    function choose(index) {
+    function vibrateSelection() {
+      if (navigator.vibrate) navigator.vibrate(8);
+    }
+    function choose(index, withHapticFeedback) {
       if (!options.length) return;
       var option = options[Math.max(0, Math.min(index, options.length - 1))];
+      var previous = selected;
       selected = option;
+      if (withHapticFeedback && previous !== option) vibrateSelection();
       value.innerHTML = option.type;
       if (compactPointer.matches && option.href) {
         definitionLink.href = option.href;
@@ -772,10 +777,13 @@
       }
       setPopupWidth(option);
       clearHighlight();
-      var activeOption = option.node ? option : options.find(function (item) {
-        return item.node;
+      document.querySelectorAll(".occ").forEach(function (node) {
+        node.classList.remove("occ");
       });
-      if (activeOption) activeOption.node.classList.add("expr-active");
+      if (option.kind === "name" && option.nameNode)
+        option.nameNode.classList.add("name-active");
+      else if (option.node)
+        option.node.classList.add("expr-active");
       requestAnimationFrame(position);
     }
     function gestureIndex(deltaX) {
@@ -788,13 +796,15 @@
       if (!levelGesture || levelGesture.axis !== "horizontal" || !options.length
           || levelGesture.request !== request
           || levelGesture.request !== renderedRequest) return;
-      if (levelGesture.baseIndex === null)
+      if (levelGesture.baseIndex === null) {
         levelGesture.baseIndex = Math.max(0, options.indexOf(selected));
+        levelGesture.lastIndex = levelGesture.baseIndex;
+      }
       var next = Math.max(0, Math.min(options.length - 1,
         levelGesture.baseIndex + gestureIndex(levelGesture.deltaX)));
       if (next === levelGesture.lastIndex) return;
       levelGesture.lastIndex = next;
-      choose(next);
+      choose(next, true);
       if (levelGesture && levelGesture.released) levelGesture = null;
     }
     function setPopupWidth(item) {
@@ -853,7 +863,7 @@
              preferred. Width follows the displayed type: reserving space for
              every enclosing application leaves short variable types in a large,
              mostly empty popup now that node selection happens in the source. */
-          items.unshift({ kind: "name", node: null,
+          items.unshift({ kind: "name", node: null, nameNode: name,
                           source: canonicalName || name.textContent.trim(),
                           type: loaded[1][nameSpec[1]], href: name.href,
                           start: Number(name.id),
@@ -944,6 +954,7 @@
         return;
       }
       if (usesInspector(event.target)) {
+        vibrateSelection();
         hideName(); pinned = true; show(event.target);
       } else if (target.matches("a[data-type]")) {
         levelGesture = null;
@@ -967,6 +978,11 @@
         baseIndex: null,
         lastIndex: null
       };
+    });
+    document.addEventListener("selectstart", function (event) {
+      if (!compactPointer.matches) return;
+      var expression = event.target.closest && event.target.closest(".expr-node");
+      if (expression) event.preventDefault();
     });
     document.addEventListener("touchmove", function (event) {
       if (!compactPointer.matches || !levelGesture || event.touches.length !== 1) return;

@@ -349,6 +349,7 @@ span.inline-ref { color: var(--code-fg); }
 .inline-ref a:hover[href] { text-decoration: underline; }
 /* same-definition occurrence highlight (hover any occurrence, all light up) */
 .Agda a.occ { background: var(--occ-bg); border-radius: 3px; }
+pre.Agda a.name-active { background: var(--occ-bg); border-radius: 3px; }
 
 /* ---- chapter prev/next navigation (the reading order, on every page) ---- */
 .chapnav { display: flex; justify-content: space-between; gap: 1rem;
@@ -437,6 +438,8 @@ pre.Agda .expr-node.expr-active {
   .type-definition-link:active { color: var(--text-fg) !important;
     background: color-mix(in srgb, var(--primary) 12%, transparent); }
   .expr-node { padding: .07rem .08rem .17rem; }
+  pre.Agda .expr-node, pre.Agda .expr-node * {
+    user-select: none; -webkit-user-select: none; }
   pre.Agda :is(.expr-node, a[data-type]) { touch-action: pan-y;
     -webkit-touch-callout: none; }
   pre.Agda.ast-level-gesture { user-select: none; -webkit-user-select: none; }
