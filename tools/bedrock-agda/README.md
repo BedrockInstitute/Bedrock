@@ -128,16 +128,17 @@ costs; each clears only its own Bedrock cache.
 
 ## CI and website deployment
 
-The typecheck, GitHub Pages, and Cloudflare workflows all call `make toolchain`,
-the non-virtualenv subset of `make bootstrap`. Their cache keys include
-`tools/bedrock-agda/**`, so a manifest, overlay, adapter, or environment change
-invalidates the relevant cache. The typecheck workflow caches only the isolated
-pure-check interfaces. The deployment workflows cache the combined HTML and
-type-trace products.
+The unified `.github/workflows/ci.yml` workflow builds the toolchain in its
+`typecheck` job. Its cache keys include `tools/bedrock-agda/**`, so a manifest,
+overlay, adapter, or environment change invalidates the relevant cache. The
+subsequent `site-backend` job restores that exact toolchain instead of installing
+GHC or compiling Agda again. Pure-check interfaces remain isolated from the
+combined HTML and type-trace cache.
 
-Pushing `main` runs the formal checks and builds both hosted sites. GitHub Pages
-uses `.github/workflows/pages.yml`. The canonical Cloudflare deployment uses
-`.github/workflows/cloudflare.yml` and requires `CLOUDFLARE_API_TOKEN` and
+Pushing `main` runs the formal checks, generates the host-neutral site backend
+once, then fans out into independent GitHub Pages and Cloudflare jobs. Each job
+renders and checks its own base URL, so one host cannot block the other. The
+canonical Cloudflare deployment requires `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID`; its Pages project is named `bedrock`. An owner can also
 deploy an already configured checkout with `make deploy`.
 

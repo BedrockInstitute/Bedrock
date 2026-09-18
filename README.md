@@ -4,7 +4,7 @@
 
 **English** · [中文](docs/zh/README.md) · [日本語](docs/ja/README.md)
 
-[![Typecheck](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml)
+[![CI](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml)
 ![Status: first goal proved](https://img.shields.io/badge/first%20goal-L%20%E2%8A%A8%20GCH%20proved-brightgreen)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
@@ -131,7 +131,7 @@ project-interface caches.
 `make check` (typecheck, the four linters, reading-order validation and gate tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
 environment by `make venv` (run once per clone). Every push is typechecked against these versions
-by [GitHub Actions](.github/workflows/typecheck.yml).
+by [GitHub Actions](.github/workflows/ci.yml).
 
 ## Contributing
 

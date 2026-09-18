@@ -90,7 +90,7 @@ UI = {
 }
 SOURCE_URL = "https://github.com/BedrockInstitute/Bedrock"
 SOURCE_TREE = SOURCE_URL + "/blob/main/src"   # a chapter's master, for a reader who wants the source
-SITE_URL = "https://bedrock.institute"        # the canonical deployment (.github/workflows/cloudflare.yml)
+SITE_URL = "https://bedrock.institute"        # canonical deployment (.github/workflows/ci.yml)
 LANDING = "Milestones"  # preview chapter also supplies the generated reading-guide index
 CHAPTER_TITLES = {}
 # module -> {"description": {lang: str}, "stage": {lang: str}, "order": int,

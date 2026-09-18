@@ -4,7 +4,7 @@
 
 [English](../../README.md) · [中文](../zh/README.md) · **日本語**
 
-[![Typecheck](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml)
+[![CI](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml)
 ![Status: early](https://img.shields.io/badge/status-early-orange)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
@@ -70,7 +70,7 @@ Cubical 型理論は現代型理論の最前線であり、いままさに書か
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (型検査、四つのリンター、読書順序の検査およびゲートの単体テスト) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される (クローンごとに一度実行すればよい)。プッシュのたびに、[GitHub Actions](../../.github/workflows/typecheck.yml) によって上記のバージョンに対して型検査される。
+`make check` (型検査、四つのリンター、読書順序の検査およびゲートの単体テスト) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される (クローンごとに一度実行すればよい)。プッシュのたびに、[GitHub Actions](../../.github/workflows/ci.yml) によって上記のバージョンに対して型検査される。
 
 ## 貢献
 

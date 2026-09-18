@@ -15,6 +15,7 @@
 #   make site        render the HTML site into _build/site
 #   make site-cold   rebuild the cold Agda/HTML cache, then render the site
 #   make site-ci     use the cache, or parallelize a cold CI site build
+#   make site-backend-ci  build the shared HTML/type-data deployment artifact
 #   make serve       serve _build/site locally
 #   make deploy      push _build/site to Cloudflare Pages (owner only)
 
@@ -53,7 +54,7 @@ CF_PROJECT := bedrock
 AGDA_SOURCES := $(shell find src -type f -name '*.lagda.md' | sort)
 TYPECHECK_SOURCES := $(patsubst src/%,$(TYPECHECK_ROOT)/src/%,$(AGDA_SOURCES))
 
-.PHONY: bootstrap toolchain check bedrock-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types types-refresh site site-cold site-ci serve deploy clean distclean
+.PHONY: bootstrap toolchain check bedrock-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types types-refresh site-render site site-cold site-ci site-backend-ci serve deploy clean distclean
 
 # One command for a fresh clone after GHC/Cabal, patch, make and Python exist.
 bootstrap: venv toolchain
@@ -213,10 +214,16 @@ types-refresh: html
 	$(PY) scripts/site/extract-expression-types.py --html-dir $(HTML_DIR) \
 		--trace $(AGDA_TRACE) --out _build/expression-types.json
 
-site: types
+# Host-specific jobs can render from an unpacked HTML/type-data artifact without
+# Agda or its interfaces. The ordinary site target first produces that backend.
+site-render:
 	$(PY) scripts/site/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \
 		--langs $(LANGS) --base-url "$(BASE_URL)"
 	$(PY) scripts/site/gen-depmap.py --src src --out $(SITE_OUT) --langs $(LANGS)
+
+site: types
+	$(MAKE) site-render PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)" \
+		SITE_OUT="$(SITE_OUT)"
 
 site-cold: html-cold-parallel
 	$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"
@@ -227,6 +234,15 @@ site-ci: $(BEDROCK_AGDA)
 	else \
 		$(MAKE) site-cold PY="$(PY)" PYTHON="$(PYTHON)" AGDA_JOBS="$(AGDA_JOBS)" \
 			LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"; \
+	fi
+
+site-backend-ci: $(BEDROCK_AGDA)
+	@if [ -f $(AGDA_STAMP) ]; then \
+		$(MAKE) types PY="$(PY)"; \
+	else \
+		$(MAKE) html-cold-parallel PY="$(PY)" PYTHON="$(PYTHON)" \
+			AGDA_JOBS="$(AGDA_JOBS)"; \
+		$(MAKE) types PY="$(PY)"; \
 	fi
 
 serve:

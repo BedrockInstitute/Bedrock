@@ -4,7 +4,7 @@
 
 [English](../../README.md) · **中文** · [日本語](../ja/README.md)
 
-[![Typecheck](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/typecheck.yml)
+[![CI](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml/badge.svg)](https://github.com/BedrockInstitute/Bedrock/actions/workflows/ci.yml)
 ![Status: early](https://img.shields.io/badge/status-early-orange)
 [![Agda](https://img.shields.io/badge/Agda-2.8.0-blue)](https://github.com/agda/agda)
 [![cubical](https://img.shields.io/badge/cubical-0.9-blue)](https://github.com/agda/cubical)
@@ -70,7 +70,7 @@ Cubical 类型论是当代类型论的前沿，是当下正被书写的数学基
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (类型检查、四个检查器、阅读顺序检查及门禁单元测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境，每个克隆运行一次即可。每次推送都会经 [GitHub Actions](../../.github/workflows/typecheck.yml) 针对上述版本进行类型检查。
+`make check` (类型检查、四个检查器、阅读顺序检查及门禁单元测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境，每个克隆运行一次即可。每次推送都会经 [GitHub Actions](../../.github/workflows/ci.yml) 针对上述版本进行类型检查。
 
 ## 贡献
 

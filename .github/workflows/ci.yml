@@ -1,0 +1,230 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# Start with the proof gate alone. A main-branch backend build starts only after
+# that job has completed successfully, and the two independent site jobs then
+# fan out from one shared HTML/type-data artifact.
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up pinned Haskell toolchain
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.4.8'
+          cabal-version: '3.12.1.0'
+          cabal-update: true
+
+      # This is the only job that builds and saves the patched Agda toolchain.
+      # site-backend starts after the post-job cache save and restores the exact
+      # same key, so a cold workflow compiles Agda only once.
+      - name: Cache bedrock-agda
+        uses: actions/cache@v4
+        with:
+          path: |
+            _build/bedrock-agda
+            _build/bin/bedrock-agda
+          key: bedrock-agda-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}
+
+      - name: Cache cubical dependency
+        uses: actions/cache@v4
+        with:
+          path: _build/dependencies
+          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
+
+      - name: Set up Bedrock toolchain
+        shell: bash
+        run: make toolchain PYTHON=python3
+
+      # Pure-check interfaces remain isolated from the HTML/type-trace cache.
+      - name: Cache tree interfaces
+        uses: actions/cache@v4
+        with:
+          path: _build/typecheck/_build/2.8.0/agda/src
+          key: bedrock-ifaces-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'src/**/*.lagda.md', 'bedrock.agda-lib') }}
+          restore-keys: |
+            bedrock-ifaces-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}-
+
+      - name: Typecheck
+        shell: bash
+        run: |
+          set -euo pipefail
+          make typecheck-ci PYTHON=python3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Lint and test
+        shell: bash
+        run: |
+          set -euo pipefail
+          make lint PY=python
+          make test PY=python
+
+      - name: Check milestone consumption
+        shell: bash
+        run: |
+          set -euo pipefail
+          make milestone-lint PY=python
+
+  site-backend:
+    needs: typecheck
+    if: >-
+      success() &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # These exact caches were restored or created by typecheck. Restore-only
+      # actions make the handoff explicit and prevent a second toolchain build.
+      - name: Restore bedrock-agda
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            _build/bedrock-agda
+            _build/bin/bedrock-agda
+          key: bedrock-agda-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}
+          fail-on-cache-miss: true
+
+      - name: Restore cubical dependency
+        uses: actions/cache/restore@v4
+        with:
+          path: _build/dependencies
+          key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
+          fail-on-cache-miss: true
+
+      - name: Configure Bedrock toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x _build/bin/bedrock-agda
+          _build/bin/bedrock-agda --bedrock-version
+          # Checkout timestamps are newer than a restored cache. Mark the
+          # verified wrapper current so Make does not mistake that for a source
+          # change and invoke Cabal on this deliberately Haskell-free runner.
+          touch _build/bin/bedrock-agda
+          python3 tools/bedrock-agda/setup.py
+
+      - name: Cache combined site backend
+        uses: actions/cache@v4
+        with:
+          path: |
+            _build/2.8.0/agda/src
+            _build/html
+            _build/bedrock-agda-types.jsonl
+          key: bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'src/**/*.lagda.md', 'bedrock.agda-lib') }}
+          restore-keys: |
+            bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}-
+
+      - name: Build shared site backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          make site-backend-ci PY=python3 PYTHON=python3
+
+      # This artifact contains only host-neutral highlighted HTML and normalized
+      # type data. Each peer job renders, checks and deploys its own URL layout.
+      - name: Upload site backend
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-backend
+          path: |
+            _build/html
+            _build/types.json
+            _build/expression-types.json
+          include-hidden-files: true
+          retention-days: 1
+
+  pages:
+    needs: site-backend
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download site backend
+        uses: actions/download-artifact@v4
+        with:
+          name: site-backend
+          path: _build
+
+      - name: Render Pages site
+        shell: bash
+        run: |
+          set -euo pipefail
+          make site-render BASE_URL=/${GITHUB_REPOSITORY#*/} PY=python3
+
+      - name: Link check
+        shell: bash
+        run: python3 scripts/site/link-check.py _build/site
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _build/site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  cloudflare:
+    needs: site-backend
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cloudflare
+      cancel-in-progress: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Download site backend
+        uses: actions/download-artifact@v4
+        with:
+          name: site-backend
+          path: _build
+
+      - name: Render Cloudflare site
+        shell: bash
+        run: |
+          set -euo pipefail
+          make site-render BASE_URL= PY=python3
+
+      - name: Link check
+        shell: bash
+        run: python3 scripts/site/link-check.py _build/site
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _build/site --project-name=bedrock
