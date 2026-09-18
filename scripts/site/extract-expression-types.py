@@ -114,6 +114,23 @@ def prefer_record(old: dict | None, new: dict) -> dict:
     return new if new_score >= old_score else old
 
 
+def include_closing_parentheses(source: str, start: int, end: int) -> int:
+    """Include closing parentheses which only finish this application range.
+
+    Agda sometimes reports a parenthesised application both immediately before
+    and immediately after its closing delimiter.  The former is an elaboration
+    boundary, not a second source node.  Extending only while the recorded
+    fragment has unmatched opening parentheses preserves genuinely larger
+    applications and lets the normal range deduplication merge both reports.
+    """
+    fragment = source[start - 1:end - 1]
+    balance = fragment.count("(") - fragment.count(")")
+    while balance > 0 and end <= len(source) and source[end - 1] == ")":
+        end += 1
+        balance -= 1
+    return end
+
+
 def highlighted_source(html_dir: Path, module: str) -> str:
     for suffix in (".md", ".html"):
         candidate = html_dir / f"{module}{suffix}"
@@ -177,6 +194,9 @@ def normalize(source_root: Path, html_dir: Path, trace_path: Path,
             start, end = record["start"], record["end"]
             if record["kind"] == "binding" and start in labels:
                 end = start + len(labels[start])
+                record = {**record, "end": end}
+            elif record["kind"] == "application":
+                end = include_closing_parentheses(source, start, end)
                 record = {**record, "end": end}
             if not (1 <= start < end <= len(source) + 1):
                 continue

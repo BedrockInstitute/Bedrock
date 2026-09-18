@@ -41,14 +41,31 @@
 +++ b/src/full/Agda/TypeChecking/Rules/LHS.hs
 @@ -47,0 +48 @@
 +import qualified Bedrock.Agda.TypeTrace as Bedrock
-@@ -683,0 +685,3 @@
+@@ -197,0 +199,4 @@
++    recordPatternApplication p a action = case p of
++      A.ConP{} -> Bedrock.traceCheckedType "application" p (unDom a) action
++      _        -> action
++
+@@ -203 +209 @@
+-    update eq@(ProblemEq p v a) = reduce v >>= constructorForm >>= \case
++    update eq@(ProblemEq p v a) = recordPatternApplication p a $ reduce v >>= constructorForm >>= \case
+@@ -684 +691,4 @@
+-          mapM_ noShadowingOfConstructors eqs
 +          forM_ eqs $ \case
 +            ProblemEq (A.VarP x) _ a -> Bedrock.traceType "binding" (A.unBind x) (unDom a)
 +            _                        -> pure ()
++          mapM_ noShadowingOfConstructors eqs
 --- a/src/full/Agda/TypeChecking/Rules/Term.hs
 +++ b/src/full/Agda/TypeChecking/Rules/Term.hs
 @@ -37,0 +38 @@
 +import qualified Bedrock.Agda.TypeTrace as Bedrock
+@@ -157,2 +158,5 @@
+-      applyRelevanceToContext shapeIrrelevant $
+-        sort . Univ u <$> checkLevel arg
++      applyRelevanceToContext shapeIrrelevant $ do
++        type_ <- sort . Univ u <$> checkLevel arg
++        Bedrock.traceType "application" e (sort $ getSort type_)
++        pure type_
 @@ -345,0 +347 @@
 +    mapM_ (\ xp -> Bedrock.traceType "binding" (A.unBind $ A.binderName $ namedArg xp) t) xps
 @@ -521,0 +524 @@

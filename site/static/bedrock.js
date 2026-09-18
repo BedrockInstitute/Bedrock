@@ -605,23 +605,35 @@
     return typeCache[mod];
   }
   function initHover() {
-    var namePopup = null;
+    var compactPointer = window.matchMedia("(hover: none), (pointer: coarse)");
+    var namePopup = null, nameAnchor = null, nameRequest = 0;
     function hideName() {
-      if (namePopup) { namePopup.remove(); namePopup = null; }
+      nameRequest += 1;
+      if (namePopup) namePopup.remove();
+      namePopup = null; nameAnchor = null;
+    }
+    function positionName() {
+      if (!namePopup || !nameAnchor) return;
+      var rect = nameAnchor.getBoundingClientRect();
+      var width = Math.min(namePopup.offsetWidth, window.innerWidth - 16);
+      namePopup.style.left = (window.scrollX + Math.max(8,
+        Math.min(rect.left, window.innerWidth - width - 8))) + "px";
+      namePopup.style.top = (window.scrollY + rect.bottom) + "px";
     }
     function showName(name) {
+      var serial = ++nameRequest;
       var spec = name.getAttribute("data-type").split("#");
       fetchTypes(spec[0]).then(function (types) {
         var html = types[spec[1]];
-        if (!html || !name.isConnected) return;
+        if (serial !== nameRequest || !html || !name.isConnected) return;
         hideName();
+        nameAnchor = name;
         namePopup = document.createElement("div");
-        namePopup.className = "hover-popup name-hover-popup";
+        namePopup.className = "hover-popup name-hover-popup Agda";
         namePopup.innerHTML = html;
         document.body.appendChild(namePopup);
-        var rect = name.getBoundingClientRect();
-        namePopup.style.left = (window.scrollX + rect.left) + "px";
-        namePopup.style.top = (window.scrollY + rect.bottom + 4) + "px";
+        namePopup.addEventListener("mouseleave", hideName);
+        positionName();
       });
     }
 
@@ -629,22 +641,12 @@
     popup.className = "hover-popup type-inspector";
     popup.setAttribute("role", "dialog");
     popup.hidden = true;
-    popup.innerHTML = '<div class="type-node-tabs" role="tablist"></div>' +
-      '<div class="type-expression"></div><div class="type-value"></div>';
+    popup.innerHTML = '<div class="type-value Agda"></div>';
     document.body.appendChild(popup);
-    var tabs = popup.querySelector(".type-node-tabs");
-    var expression = popup.querySelector(".type-expression");
     var value = popup.querySelector(".type-value");
-    var labels = {
-      en: { expression: "Expression", name: "Name",
-            kinds: { application: "App", mixfixApplication: "Mixfix", pair: "Pair" } },
-      zh: { expression: "表达式", name: "名称",
-            kinds: { application: "应用", mixfixApplication: "混缀", pair: "配对" } },
-      ja: { expression: "式", name: "名前",
-            kinds: { application: "適用", mixfixApplication: "ミックスフィックス", pair: "対" } }
-    }[cfg.lang] || { expression: "Expression", name: "Name",
-      kinds: { application: "App", mixfixApplication: "Mixfix", pair: "Pair" } };
-    var options = [], selected = 0, anchor = null, pinned = false, closeTimer = null, request = 0;
+    var options = [], anchor = null, rangeBlock = null, pinnedRangeBlock = null;
+    var pinned = false;
+    var request = 0, touchArmed = null, suppressedTouchClick = null;
 
     function expressionAncestors(target) {
       var node = target.closest && target.closest(".expr-node");
@@ -662,8 +664,8 @@
       return expressionAncestors(target).length > 0;
     }
     function clearHighlight() {
-      document.querySelectorAll(".expr-active,.expr-context").forEach(function (node) {
-        node.classList.remove("expr-active", "expr-context");
+      document.querySelectorAll(".expr-active").forEach(function (node) {
+        node.classList.remove("expr-active");
       });
     }
     function position() {
@@ -671,68 +673,58 @@
       var rect = anchor.getBoundingClientRect();
       var width = Math.min(popup.offsetWidth, window.innerWidth - 16);
       var left = Math.max(8, Math.min(rect.left, window.innerWidth - width - 8));
-      var below = rect.bottom + 7;
-      var top = below + popup.offsetHeight <= window.innerHeight - 8
-        ? below : Math.max(8, rect.top - popup.offsetHeight - 7);
+      var below = rect.bottom;
+      var desiredTop = below + popup.offsetHeight <= window.innerHeight - 8
+        ? below : rect.top - popup.offsetHeight;
+      var top = Math.max(8, Math.min(desiredTop,
+        Math.max(8, window.innerHeight - popup.offsetHeight - 8)));
       popup.style.left = left + "px";
       popup.style.top = top + "px";
     }
     function choose(index) {
       if (!options.length) return;
-      selected = Math.max(0, Math.min(index, options.length - 1));
-      var option = options[selected];
-      tabs.querySelectorAll("button").forEach(function (button, i) {
-        button.setAttribute("aria-selected", String(i === selected));
-      });
-      expression.textContent = option.source || "";
-      expression.hidden = !option.source;
+      var option = options[Math.max(0, Math.min(index, options.length - 1))];
       value.innerHTML = option.type;
       clearHighlight();
-      options.filter(function (item) { return item.node; }).forEach(function (item) {
-        item.node.classList.add(item === option ? "expr-active" : "expr-context");
-      });
+      if (option.node) option.node.classList.add("expr-active");
       requestAnimationFrame(position);
     }
-    function render(items, target) {
+    function setStableWidth(items) {
+      var measure = document.createElement("div");
+      measure.className = "hover-popup type-inspector type-inspector-measure";
+      items.forEach(function (item) {
+        var sample = document.createElement("div");
+        sample.className = "type-value Agda";
+        sample.innerHTML = item.type;
+        measure.appendChild(sample);
+      });
+      document.body.appendChild(measure);
+      popup.style.width = Math.ceil(measure.getBoundingClientRect().width) + "px";
+      measure.remove();
+    }
+    function render(items, target, preferred) {
       options = items;
       anchor = target;
-      tabs.innerHTML = "";
-      items.forEach(function (item, index) {
-        if (index) {
-          var arrow = document.createElement("span");
-          arrow.className = "type-node-arrow";
-          arrow.setAttribute("aria-hidden", "true");
-          arrow.textContent = "›";
-          tabs.appendChild(arrow);
-        }
-        var button = document.createElement("button");
-        button.type = "button";
-        button.setAttribute("role", "tab");
-        var sourceLabel = (item.source || "").replace(/\s+/g, " ").trim();
-        var kindLabel = item.kind === "name" ? labels.name :
-          (labels.kinds[item.astKind] || labels.expression);
-        var kind = document.createElement("span");
-        kind.className = "type-node-kind";
-        kind.textContent = kindLabel;
-        var source = document.createElement("code");
-        source.className = "type-node-source";
-        source.textContent = sourceLabel;
-        button.appendChild(kind);
-        button.appendChild(source);
-        button.title = kindLabel + ": " + sourceLabel;
-        button.setAttribute("aria-label", kindLabel + ": " + sourceLabel);
-        button.addEventListener("click", function () { pinned = true; choose(index); });
-        tabs.appendChild(button);
-      });
+      var nextRangeBlock = target.closest && target.closest("pre.Agda");
+      if (rangeBlock && rangeBlock !== nextRangeBlock)
+        rangeBlock.classList.remove("ast-ranges-visible");
+      if (pinnedRangeBlock && pinnedRangeBlock !== nextRangeBlock) {
+        pinnedRangeBlock.classList.remove("ast-ranges-pinned");
+        pinnedRangeBlock = null;
+      }
+      rangeBlock = nextRangeBlock;
+      if (rangeBlock) rangeBlock.classList.add("ast-ranges-visible");
+      setStableWidth(items);
       popup.hidden = false;
-      choose(0);
+      choose(Math.max(0, items.indexOf(preferred)));
     }
     function show(target) {
       hideName();
-      clearTimeout(closeTimer);
       var serial = ++request;
       var spans = expressionAncestors(target);
       var name = target.closest && target.closest("a[data-type]");
+      var directNode = name ? null
+        : target.closest && target.closest(".expr-node");
       var pageRequest = spans.length ? fetchTypes(cfg.chapter || cfg.module) : Promise.resolve({});
       var nameSpec = name ? name.getAttribute("data-type").split("#") : null;
       var nameRequest = nameSpec ? fetchTypes(nameSpec[0]) : Promise.resolve({});
@@ -748,12 +740,14 @@
         if (nameSpec && loaded[1][nameSpec[1]]) {
           var canonicalName = name.getAttribute("data-name") ||
             (loaded[1].$names || {})[nameSpec[1]];
-          /* The pointer is directly over this identifier, so show its type
-             first.  Enclosing application nodes remain available as the
-             following expression tabs. */
+          /* The pointer is directly over this identifier, so its name type is
+             preferred.  The surrounding expression types are still measured
+             together so moving between source boundaries cannot resize the popup. */
           items.unshift({ kind: "name", node: null,
                           source: canonicalName || name.textContent.trim(),
-                          type: loaded[1][nameSpec[1]] });
+                          type: loaded[1][nameSpec[1]],
+                          start: Number(name.id),
+                          end: Number(name.id) + Array.from(name.textContent).length });
         }
         items.sort(function (left, right) {
           if (left.kind === "name") return right.kind === "name" ? 0 : -1;
@@ -762,62 +756,136 @@
           var rightWidth = right.end - right.start;
           return leftWidth - rightWidth || right.start - left.start;
         });
-        if (items.length) render(items, target);
+        var preferred = name
+          ? items.find(function (item) { return item.kind === "name"; })
+          : items.find(function (item) { return item.node === directNode; });
+        if (items.length) render(items, name || directNode || target,
+                                 preferred || items[0]);
       });
     }
     function hide() {
       if (pinned) return;
+      request += 1;
       popup.hidden = true; options = []; anchor = null; clearHighlight();
+      if (rangeBlock) rangeBlock.classList.remove("ast-ranges-visible");
+      rangeBlock = null;
     }
-    function laterHide() { clearTimeout(closeTimer); closeTimer = setTimeout(hide, 120); }
+    function laterHide() {
+      if (compactPointer.matches) return;
+      hide();
+    }
 
     document.addEventListener("mouseover", function (event) {
+      if (compactPointer.matches) return;
       if (!usesInspector(event.target)) return;
       var target = event.target.closest && event.target.closest(".expr-node, a[data-type]");
       if (!target || popup.contains(target)) return;
-      if (event.relatedTarget && target.contains(event.relatedTarget)) return;
-      pinned = false; show(event.target);
+      var hovered = event.target;
+      if (!hovered.isConnected || !hovered.matches(":hover")) return;
+      pinned = false; show(hovered);
     });
     document.addEventListener("mouseout", function (event) {
+      if (compactPointer.matches) return;
       if (!usesInspector(event.target)) return;
       var target = event.target.closest && event.target.closest(".expr-node, a[data-type]");
+      var currentRoots = expressionAncestors(event.target);
+      var relatedRoots = event.relatedTarget ? expressionAncestors(event.relatedTarget) : [];
+      var currentRoot = currentRoots[currentRoots.length - 1];
+      var relatedRoot = relatedRoots[relatedRoots.length - 1];
+      if (currentRoot && currentRoot === relatedRoot) return;
       if (target && (!event.relatedTarget || (!target.contains(event.relatedTarget)
           && !popup.contains(event.relatedTarget)))) laterHide();
     });
     document.addEventListener("click", function (event) {
+      if (compactPointer.matches) {
+        var touched = event.target.closest && event.target.closest("a[data-type], .expr-node");
+        if (touched && suppressedTouchClick === touched) {
+          event.preventDefault();
+          suppressedTouchClick = null;
+          return;
+        }
+        if (touched && touched.matches("a[href]")) return;
+      }
       if (!usesInspector(event.target)) return;
       var node = event.target.closest && event.target.closest(".expr-node");
       if (!node || popup.contains(event.target)) return;
       pinned = true;
-      if (options.length && anchor && node.contains(anchor)) choose((selected + 1) % options.length);
-      else show(event.target);
+      show(event.target);
     });
-    popup.addEventListener("mouseenter", function () { clearTimeout(closeTimer); });
     popup.addEventListener("mouseleave", laterHide);
     document.addEventListener("pointerdown", function (event) {
-      if (!popup.hidden && !popup.contains(event.target)
-          && !(event.target.closest && event.target.closest(".expr-node"))) {
-        pinned = false; hide();
+      if (!compactPointer.matches) {
+        if (!popup.hidden && !popup.contains(event.target)
+            && !(event.target.closest && event.target.closest(".expr-node, a[data-type]"))) {
+          pinned = false; hide();
+        }
+        return;
+      }
+      var codeBlock = event.target.closest && event.target.closest("pre.Agda");
+      var target = event.target.closest && event.target.closest("a[data-type], .expr-node");
+      if (codeBlock && !target) {
+        event.preventDefault();
+        pinned = false;
+        hide(); hideName(); touchArmed = null; suppressedTouchClick = null;
+        if (pinnedRangeBlock === codeBlock) {
+          codeBlock.classList.remove("ast-ranges-pinned");
+          pinnedRangeBlock = null;
+        } else {
+          if (pinnedRangeBlock) pinnedRangeBlock.classList.remove("ast-ranges-pinned");
+          pinnedRangeBlock = codeBlock;
+          pinnedRangeBlock.classList.add("ast-ranges-pinned");
+        }
+        return;
+      }
+      if ((popup.contains(event.target) || (namePopup && namePopup.contains(event.target)))
+          && !(target && target.matches("a[data-type]"))) return;
+      if (!target) {
+        pinned = false; hide(); hideName(); touchArmed = null; suppressedTouchClick = null;
+        return;
+      }
+      if (touchArmed === target) {
+        touchArmed = null; suppressedTouchClick = null;
+        return;
+      }
+      event.preventDefault();
+      touchArmed = target;
+      suppressedTouchClick = target;
+      if (usesInspector(event.target)) {
+        hideName(); pinned = true; show(event.target);
+      } else if (target.matches("a[data-type]")) {
+        pinned = false;
+        if (!popup.hidden) hide();
+        showName(target);
       }
     });
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") { pinned = false; hide(); hideName(); }
     });
     document.addEventListener("mouseover", function (event) {
+      if (compactPointer.matches) return;
       var name = event.target.closest && event.target.closest("a[data-type]");
       if (!name || usesInspector(event.target)
           || (event.relatedTarget && name.contains(event.relatedTarget))) return;
-      pinned = false;
-      if (!popup.hidden) hide();
+      /* A type rendered inside the inspector can itself be inspected. */
+      if (!popup.contains(name)) {
+        pinned = false;
+        if (!popup.hidden) hide();
+      }
+      if (!name.isConnected || !name.matches(":hover")) return;
       showName(name);
     });
     document.addEventListener("mouseout", function (event) {
+      if (compactPointer.matches) return;
       var name = event.target.closest && event.target.closest("a[data-type]");
       if (name && !usesInspector(event.target)
-          && (!event.relatedTarget || !name.contains(event.relatedTarget))) hideName();
+          && (!event.relatedTarget || (!name.contains(event.relatedTarget)
+              && !(namePopup && namePopup.contains(event.relatedTarget))))) hideName();
     });
-    window.addEventListener("scroll", position, { passive: true });
-    window.addEventListener("resize", position);
+    window.addEventListener("scroll", function () { position(); positionName(); }, { passive: true });
+    window.addEventListener("resize", function () {
+      if (!popup.hidden && options.length) setStableWidth(options);
+      position(); positionName();
+    });
   }
 
   /* ---- same-definition occurrence highlight: hovering any identifier lights

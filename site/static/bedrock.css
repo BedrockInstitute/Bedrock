@@ -38,6 +38,7 @@
   --popup-bg: #fff;        --banner-bg: #FEF3C7;    --banner-fg: #92400E;
   --button-hover: #e5e7eb; --input-border: #cbd5e1;
   --occ-bg: #F5DEB3;       /* same-definition occurrence highlight */
+  --ast-node-lightness: 56%; --ast-node-chroma: .17;
   /* CJK glyphs fall through to a rounded system sans (PingFang on macOS). Latin uses the
      fonts before it (EB Garamond / Inria Sans) via per-glyph fallback. ja is overridden
      below to prefer Hiragino. */
@@ -68,6 +69,7 @@ html[lang="ja"] {
   --popup-bg: #1B1E24;     --banner-bg: #3f2d12;    --banner-fg: #FCD34D;
   --button-hover: #3B4454; --input-border: #475569;
   --occ-bg: #EAD16E2E;     /* same-definition occurrence highlight */
+  --ast-node-lightness: 76%; --ast-node-chroma: .14;
 }
 @media (prefers-color-scheme: dark) {
   :root:not(.theme-light) {
@@ -80,7 +82,8 @@ html[lang="ja"] {
     --code-macro: #e6c96f;   --code-constructor: #65d6ad; --code-identifier: #7dcfff;
     --popup-bg: #1B1E24;     --banner-bg: #3f2d12;    --banner-fg: #FCD34D;
     --button-hover: #3B4454; --input-border: #475569;
-  --occ-bg: #EAD16E2E;     /* same-definition occurrence highlight */
+    --occ-bg: #EAD16E2E;     /* same-definition occurrence highlight */
+    --ast-node-lightness: 76%; --ast-node-chroma: .14;
   }
 }
 
@@ -355,15 +358,32 @@ span.inline-ref { color: var(--code-fg); }
 .chapnav .chapnav-next { margin-left: auto; text-align: right; }
 
 /* ---- type-on-hover popup ---- */
-.expr-node { border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+.expr-node { --ast-node-level: var(--expr-level);
+  /* Wide hue steps keep adjacent nesting levels distinct. OKLCH holds their
+     perceived brightness steady; HSL remains as a compatibility fallback. */
+  --ast-node-color: hsl(calc(210 - var(--ast-node-level) * 55) 76% 43%);
+  --ast-node-color: oklch(var(--ast-node-lightness) var(--ast-node-chroma)
+    calc(250 - var(--ast-node-level) * 55));
+  margin-inline: .015rem; padding: .03rem .055rem .13rem;
+  border-radius: .28rem .28rem .14rem .14rem;
+  background: transparent;
+  box-shadow: none;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  cursor: default;
   transition: background-color .1s ease, box-shadow .1s ease; }
-.expr-node:hover, .expr-node.expr-context {
-  background: hsl(calc(205 + var(--expr-level) * 31) 82% 52% / .08);
-  box-shadow: inset 0 -1px hsl(calc(205 + var(--expr-level) * 31) 82% 52% / .45);
+pre.Agda:hover .expr-node,
+pre.Agda.ast-ranges-visible .expr-node,
+pre.Agda.ast-ranges-pinned .expr-node {
+  background: color-mix(in srgb, var(--ast-node-color) 4%, transparent);
+  box-shadow: inset 1px 0 color-mix(in srgb, var(--ast-node-color) 52%, transparent),
+    inset -1px 0 color-mix(in srgb, var(--ast-node-color) 52%, transparent),
+    inset 0 -1px color-mix(in srgb, var(--ast-node-color) 52%, transparent);
 }
 .expr-node.expr-active {
-  background: hsl(calc(205 + var(--expr-level) * 31) 88% 52% / .18);
-  box-shadow: inset 0 -2px hsl(calc(205 + var(--expr-level) * 31) 88% 48% / .9);
+  background: color-mix(in srgb, var(--ast-node-color) 14%, transparent);
+  box-shadow: inset 2px 0 color-mix(in srgb, var(--ast-node-color) 95%, transparent),
+    inset -2px 0 color-mix(in srgb, var(--ast-node-color) 95%, transparent),
+    inset 0 -2px color-mix(in srgb, var(--ast-node-color) 95%, transparent);
 }
 .hover-popup {
   position: absolute; z-index: 70; max-width: 40rem;
@@ -374,24 +394,18 @@ span.inline-ref { color: var(--code-fg); }
 }
 .hover-popup a { color: var(--code-identifier); text-decoration: none; }
 .type-inspector { position: fixed; max-width: min(42rem, calc(100vw - 1rem));
-  pointer-events: auto; }
-.type-node-tabs { display: flex; align-items: center; gap: .22rem; margin: 0 0 .4rem;
-  padding-bottom: .15rem; overflow-x: auto; font-family: var(--sans); }
-.type-node-tabs button { padding: .18rem .45rem; border: 1px solid var(--input-border);
-  border-radius: 999px; color: var(--fg-alt); background: transparent;
-  display: inline-flex; align-items: baseline; gap: .35rem; min-width: 0; flex: 0 0 auto;
-  font: inherit; font-size: .72rem; cursor: pointer; }
-.type-node-kind { color: var(--fg-alt); font-weight: 650; }
-.type-node-source { display: block; max-width: min(16rem, 42vw); overflow: hidden;
-  color: inherit; font: inherit; font-family: var(--mono); text-overflow: ellipsis;
-  white-space: nowrap; }
-.type-node-arrow { flex: 0 0 auto; color: var(--fg-alt); font-size: .9rem; }
-.type-node-tabs button[aria-selected="true"] { color: var(--text-bg); background: var(--primary);
-  border-color: var(--primary); }
-.type-node-tabs button[aria-selected="true"] .type-node-kind { color: inherit; }
-.type-expression { max-width: 100%; margin-bottom: .3rem; padding-bottom: .3rem;
-  overflow-x: auto; color: var(--fg-alt); border-bottom: 1px solid var(--ruler); }
-.type-value { overflow-x: auto; }
+  box-sizing: border-box; color: var(--code-fg); background: var(--code-bg);
+  border-color: var(--code-border); pointer-events: auto; }
+.type-inspector-measure { left: -10000px; top: 0; width: max-content;
+  max-height: none !important; overflow: visible !important;
+  visibility: hidden; pointer-events: none; }
+.type-value { padding-inline: .15rem; overflow-x: auto; }
+
+@media (hover: none), (pointer: coarse) {
+  .name-hover-popup { pointer-events: auto; }
+  .type-inspector { max-height: calc(100vh - 1rem); overflow-y: auto; }
+  .expr-node { padding: .07rem .08rem .17rem; }
+}
 
 /* ---- math ---- */
 .math.display { display: block; overflow-x: auto; margin: 1rem 0; text-align: center; }

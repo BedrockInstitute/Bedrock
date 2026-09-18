@@ -45,7 +45,7 @@ class TheoremLabelTests(unittest.TestCase):
 
 
 class QedTests(unittest.TestCase):
-    def test_construction_and_lemma_end_after_final_code_block(self):
+    def test_top_level_construction_and_lemma_end_after_final_code_block(self):
         text = """**Construction** (`make`{.Agda}) Text.
 <!--zh-->
 **构造** (`make`{.Agda}) 正文。
@@ -70,9 +70,45 @@ law = proof
 ```
 
 ∎
-</details>
 """
         self.assertEqual(lint_prose.qed_violations(text), [])
+
+    def test_only_outer_theorem_needs_qed_when_helpers_are_nested(self):
+        text = """## Result
+**Theorem** (`result`{.Agda}) Text.
+```agda
+result = helper
+```
+<details>
+**Construction** (`value`{.Agda}) Text.
+```agda
+value = item
+```
+**Lemma** (`helper`{.Agda}) Text.
+```agda
+helper = proof
+```
+</details>
+
+∎
+"""
+        self.assertEqual(lint_prose.qed_violations(text), [])
+
+    def test_missing_outer_qed_is_rejected_despite_nested_statements(self):
+        text = """## Result
+**Theorem** (`result`{.Agda}) Text.
+```agda
+result = helper
+```
+<details>
+**Lemma** (`helper`{.Agda}) Text.
+```agda
+helper = proof
+```
+</details>
+"""
+        violations = lint_prose.qed_violations(text)
+        self.assertEqual(len(violations), 1)
 
     def test_missing_qed_is_rejected(self):
         text = """**Lemma** (`law`{.Agda}) Text.

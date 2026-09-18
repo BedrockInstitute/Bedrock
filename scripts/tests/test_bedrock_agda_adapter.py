@@ -53,6 +53,12 @@ class BedrockAgdaAdapterTests(unittest.TestCase):
         self.assertNotIn("x-revision:", self.patch)
         self.assertNotIn("aeson                >=", self.patch)
 
+    def test_universe_application_records_its_inferred_sort(self):
+        self.assertIn(
+            'Bedrock.traceType "application" e (sort $ getSort type_)',
+            self.patch,
+        )
+
     def test_build_bootstraps_the_pinned_happy_executable(self):
         build = (TOOL / "build.py").read_text()
         self.assertIn('manifest["happy_version"]', build)

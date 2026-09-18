@@ -253,8 +253,6 @@ It remains to construct the representative and the isomorphism used in the proof
     where open import Cubical.Foundations.HLevels using ( isOfHLevelRespectEquiv )
 ```
 
-∎
-
 <!--en-->
 **Lemma** (`codedTruthIso`{.Agda}) The underlying type of `P` is isomorphic to the underlying type of `codedTruth P`{.Agda}. Thus the representative constructed above really has the same truth content as `P`.
 <!--zh-->
@@ -312,9 +310,9 @@ It remains only to construct `to`{.Agda} and `from`{.Agda}.
     from q = subst ⟨_⟩ (invEq (congEquiv e) q) _
 ```
 
-∎
-
 </details>
+
+∎
 
 <!--en-->
 ## Recap

@@ -174,6 +174,15 @@ def page_description(module, lang, is_landing, is_external):
 PRE_RE = re.compile(r'<pre class="Agda">.*?</pre>', re.DOTALL)
 # Definition site: <a id="NAME"></a><a id="POS" ... class="ASPECT" ...>token</a>
 DEF_RE = re.compile(r'<a id="([^"]+)"></a><a id="(\d+)"[^>]*class="([^"]*)"')
+# Agda does not expose declarations nested in a `where` block through
+# Cmd_show_module_contents_toplevel. Its checked HTML still identifies the
+# declaration site and renders the declared type on the same line.
+LOCAL_SIGNATURE_RE = re.compile(
+    r'(?m)^(?:<pre\b[^>]*>)?[ \t]*(?:<a id="[^"]+"></a>)?'
+    r'<a id="(?P<pos>\d+)" href="(?P<module>[^"]+)\.html#(?P=pos)" '
+    r'class="(?P<aspect>[^"]*)">(?P<name>[^<]+)</a>[ \t]*'
+    r'<a id="\d+" class="Symbol">:</a>[ \t]*(?P<type>[^\n]+)'
+)
 # Any cross-reference link inside highlighted code (optional self-id, optional #position).
 LINK_RE = re.compile(r'<a (id="\d+" )?href="([^"#]+)\.html(#\d+)?"([^>]*)>')
 INLINE_AGDA_RE = re.compile(r'`([^`]+)`\{\.Agda\}')
@@ -403,21 +412,33 @@ def qualified_name_pattern(internal_q):
     return re.compile("|".join(map(re.escape, alternatives))) if alternatives else None
 
 
-def render_type(term, internal_q, name_pattern=None):
+def render_type(term, internal_q, name_pattern=None, pos_aspect=None):
     """Abbreviate module qualifiers and hyperlink internal identifiers in a type string."""
     s = htmllib.escape(term.replace("\n", " "), quote=False)
-    links = []
+    links, level_names = [], []
+    def protect_level_name(match):
+        token = f"{NUL}V{len(level_names)}{NUL}"
+        level_names.append(match.group(0))
+        return token
+    # Agda disambiguates independently quantified universe levels as A.ℓ and
+    # B.ℓ. They are binder names rather than module qualification and must
+    # survive the qualifier abbreviation below.
+    s = re.sub(r"\b[A-Z][A-Za-z0-9_']*\.ℓ[\w']*\b", protect_level_name, s)
     if name_pattern:
         def protect_link(match):
             q = match.group(0)
             mod, pos = internal_q[q]
             tok = f"{NUL}L{len(links)}{NUL}"
             last = q.split(".")[-1]
-            links.append(f'<a href="{mod}.html#{pos}">{htmllib.escape(last)}</a>')
+            aspect = (pos_aspect or {}).get(mod, {}).get(pos, "")
+            class_ = f' class="{aspect}"' if aspect else ""
+            links.append(f'<a href="{mod}.html#{pos}"{class_}>{htmllib.escape(last)}</a>')
             return tok
         s = name_pattern.sub(protect_link, s)
     s = re.sub(r"(?:[A-Za-z][\w']*\.)+", "", s)        # strip remaining (external) qualifiers
     s = re.sub(r"\bSet\b", "Type", s)                  # cubical display
+    for i, level_name in enumerate(level_names):
+        s = s.replace(f"{NUL}V{i}{NUL}", level_name)
     for i, link in enumerate(links):
         s = s.replace(f"{NUL}L{i}{NUL}", link)
     return s
@@ -726,7 +747,7 @@ def auto_link_terms(body, lang, module, terms):
     return "".join(parser.parts)
 
 
-def build_types(modules, name2pos, types_raw, internal_q):
+def build_types(modules, name2pos, types_raw, internal_q, pos_aspect):
     """Global {module: {pos: abbreviated/hyperlinked type-html}} for hover + sidecars."""
     g = {}
     name_pattern = qualified_name_pattern(internal_q)
@@ -735,11 +756,33 @@ def build_types(modules, name2pos, types_raw, internal_q):
         for name, pos in name2pos.get(m, {}).items():
             t = types_raw.get(m, {}).get(name.split(".")[-1])
             if t:
-                g[m][pos] = render_type(t, internal_q, name_pattern)
+                g[m][pos] = render_type(t, internal_q, name_pattern,
+                                        pos_aspect)
     return g
 
 
-def build_expression_types(raw, internal_q):
+def local_signature_types(code_html, module):
+    """Names and checked signatures at declaration sites without named anchors."""
+    result = {}
+    declaration_aspects = {
+        "Function", "Record", "Datatype", "Postulate", "Primitive",
+    }
+    for match in LOCAL_SIGNATURE_RE.finditer(code_html):
+        if match.group("module") != module:
+            continue
+        if not declaration_aspects.intersection(match.group("aspect").split()):
+            continue
+        # Sidecars are inserted into the live page, so source-position ids from
+        # the highlighted declaration must not be duplicated in the popup.
+        type_html = re.sub(r'\s+id="\d+"', "", match.group("type")).strip()
+        result[match.group("pos")] = {
+            "name": htmllib.unescape(match.group("name")),
+            "type": type_html,
+        }
+    return result
+
+
+def build_expression_types(raw, internal_q, pos_aspect):
     """Render application and local-definition types with their source ranges."""
     result = {}
     name_pattern = qualified_name_pattern(internal_q)
@@ -751,7 +794,8 @@ def build_expression_types(raw, internal_q):
                 continue
             type_ = node["type"]
             if type_ not in type_cache:
-                type_cache[type_] = render_type(type_, internal_q, name_pattern)
+                type_cache[type_] = render_type(type_, internal_q, name_pattern,
+                                                pos_aspect)
             rendered.append({**node, "type": type_cache[type_]})
         result[module] = rendered
     return result
@@ -865,6 +909,33 @@ def annotate_unlinked_bound_types(block, module, module_types):
         return (opening + f' data-type="{module}#{position}"'
                 + token[opening_end:])
     return TOKEN_RE.sub(annotate, block)
+
+
+def write_type_sidecar(module, langs, out_dir, types_global, name2pos,
+                       expression_types):
+    """Write the hover payload independently of rendering the module page."""
+    sidecar_data = dict(types_global.get(module, {}))
+    sidecar_data["$names"] = names_by_position(module, name2pos)
+    sidecar_data["$expressions"] = {
+        str(node["id"]): {key: node[key]
+                          for key in ("type", "source", "start", "end", "kind")}
+        for node in expression_types.get(module, [])
+        if node.get("kind") not in ("definition", "binding", "variable", "binder")
+    }
+    sidecar = json.dumps(sidecar_data, ensure_ascii=False)
+    for lang in langs:
+        tdir = os.path.join(out_dir, lang, "types")
+        os.makedirs(tdir, exist_ok=True)
+        with open(os.path.join(tdir, module + ".json"), "w", encoding="utf-8") as output:
+            output.write(sidecar)
+
+
+def referenced_type_modules(path, rendered):
+    """Rendered modules whose sidecars a selected-page preview can fetch."""
+    with open(path, encoding="utf-8") as source:
+        html = source.read()
+    referenced = set(re.findall(r'href="([^"#]+)\.html(?:#[^"]*)?"', html))
+    return referenced.intersection(rendered)
 
 
 def fill_template(tpl, **kw):
@@ -1065,20 +1136,9 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             md_path = os.path.join(out_dir, lang, twin_of(out_name))
             open(md_path, "w", encoding="utf-8").write(twin)
 
-    # per-module type sidecar (keyed by the real module name; hover fetches types/<mod>.json)
-    sidecar_data = dict(types_global.get(module, {}))
-    sidecar_data["$names"] = names_by_position(module, name2pos)
-    sidecar_data["$expressions"] = {
-        str(node["id"]): {key: node[key]
-                          for key in ("type", "source", "start", "end", "kind")}
-        for node in expression_types.get(module, [])
-        if node.get("kind") not in ("definition", "binding", "variable", "binder")
-    }
-    sidecar = json.dumps(sidecar_data, ensure_ascii=False)
-    for lang in langs:
-        tdir = os.path.join(out_dir, lang, "types")
-        os.makedirs(tdir, exist_ok=True)
-        open(os.path.join(tdir, module + ".json"), "w", encoding="utf-8").write(sidecar)
+    # Per-module hover payload. Selected-page builds also refresh dependency
+    # sidecars below without paying the cost of rendering their full pages.
+    write_type_sidecar(module, langs, out_dir, types_global, name2pos, expression_types)
 
 
 def inline_ref(name, internal, name2pos, local_refs):
@@ -1622,20 +1682,32 @@ def main(argv):
         "%%ASKJSVER%%", _ver("ask-ai.js"))
 
     # first pass: index every definition (names, positions, aspects) across ALL rendered modules
-    name2pos, pos_aspect = {}, {}
+    name2pos, pos_aspect, local_types = {}, {}, {}
     for m in rendered:
         path, literate = source_file(html_dir, m)
         content = open(path, encoding="utf-8").read()
         if literate:
             for blk in PRE_RE.findall(content):
                 index_definitions(blk, m, name2pos, pos_aspect)
+                local_types.setdefault(m, {}).update(local_signature_types(blk, m))
         else:
             index_definitions(content, m, name2pos, pos_aspect)   # whole .html is code
+            local_types[m] = local_signature_types(content, m)
     internal_q = {f"{m}.{n}": (m, p) for m in name2pos for n, p in name2pos[m].items()}
-    types_by_module = build_types(rendered, name2pos, types_raw, internal_q)
+    types_by_module = build_types(rendered, name2pos, types_raw, internal_q,
+                                  pos_aspect)
+    name_pattern = qualified_name_pattern(internal_q)
+    for module, declarations in local_types.items():
+        for position, declaration in declarations.items():
+            full_type = types_raw.get(module, {}).get(declaration["name"])
+            type_html = (render_type(full_type, internal_q, name_pattern,
+                                     pos_aspect)
+                         if full_type else declaration["type"])
+            types_by_module.setdefault(module, {}).setdefault(position, type_html)
     canonical_names = {module: names_by_position(module, name2pos)
                        for module in rendered}
-    expression_types = build_expression_types(expression_types_raw, internal_q)
+    expression_types = build_expression_types(expression_types_raw, internal_q,
+                                              pos_aspect)
     for module, nodes in expression_types.items():
         for node in nodes:
             if node.get("kind") == "definition":
@@ -1662,6 +1734,15 @@ def main(argv):
         render_module(m, html_dir, langs, internal, rendered_set, modnav_list,
                       name2pos, canonical_names, types_by_module, expression_types,
                       terms, tpl, out_dir, base, site)
+
+    if selected_modules:
+        dependencies = set()
+        for module in selected_modules:
+            path, _ = source_file(html_dir, module)
+            dependencies.update(referenced_type_modules(path, rendered_set))
+        for module in sorted(dependencies - selected_modules):
+            write_type_sidecar(module, langs, out_dir, types_by_module,
+                               name2pos, expression_types)
 
     # A selected-module rebuild is also the fast preview path used while the
     # renderer is being refined.  Publish changed CSS/JS before returning so

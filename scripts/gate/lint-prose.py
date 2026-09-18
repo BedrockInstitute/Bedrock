@@ -24,8 +24,9 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
   9. Standalone theorem-style labels use a bold label followed by a space, never a
      period. Lemma and theorem labels must immediately name an Agda declaration:
      `**Lemma** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).        [report only]
- 10. A construction or lemma developed through prose and code ends with a standalone
-     `∎` immediately after its final code block.                                [report only]
+ 10. An outermost construction, lemma or theorem developed through prose and code
+     ends with a standalone `∎` after its complete proof. Nested statements inside
+     a disclosure belong to that proof and need no separate mark.               [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -340,31 +341,66 @@ def theorem_label_violations(text):
     return out
 
 
-_QED_START_RE = re.compile(r"(?m)^\*\*(Construction|Lemma)\*\* ")
-_QED_BOUNDARY_RE = re.compile(
-    r"(?m)^(?:\*\*(?:Construction|Lemma|Theorem)\*\* |##\s|</details>\s*$)")
+_QED_START_RE = re.compile(r"^\*\*(Construction|Lemma|Theorem)\*\* ")
+_QED_HEADING_RE = re.compile(r"^#{1,2}\s")
+
+
+def _qed_structure(text):
+    """Return English statement labels and section boundaries with disclosure depth."""
+    labels = []
+    headings = [0]
+    depth = 0
+    fenced = False
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        stripped = line.strip()
+        if stripped.startswith(("```", "~~~")):
+            fenced = not fenced
+        elif not fenced:
+            if _QED_HEADING_RE.match(line):
+                headings.append(offset)
+            label = _QED_START_RE.match(line)
+            if label:
+                labels.append((offset, depth))
+            depth += len(re.findall(r"<details\b", line))
+            depth -= len(re.findall(r"</details>", line))
+        offset += len(line)
+    headings.append(len(text))
+    return labels, sorted(set(headings))
 
 
 def qed_violations(text):
-    """Require ∎ immediately after the final code block of constructions/lemmas.
+    """Require one ∎ for each outermost theorem-style proof.
 
     English labels identify each trilingual statement once; the parallel Chinese and
     Japanese labels lie in the same i18n block and therefore need no duplicate mark.
+    Within a section, labels at the shallowest disclosure depth are the outer proofs;
+    labels nested in their disclosure are explanatory proof steps.
     """
     out = []
-    for start in _QED_START_RE.finditer(text):
-        boundary = _QED_BOUNDARY_RE.search(text, start.end())
-        end = boundary.start() if boundary else len(text)
-        segment = text[start.start():end]
-        fences = list(re.finditer(r"(?m)^```\s*$", segment))
-        if not fences:
+    labels, headings = _qed_structure(text)
+    for section_start, section_end in zip(headings, headings[1:]):
+        section_labels = [(position, depth) for position, depth in labels
+                          if section_start <= position < section_end]
+        if not section_labels:
             continue
-        tail = segment[fences[-1].end():]
-        tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
-        if not re.match(r"^\n\s*∎\s*$", tail):
-            out.append(Violation(start.start(),
-                                 "construction/lemma must end with standalone `∎` "
-                                 "immediately after its final code block", False))
+        outer_depth = min(depth for _, depth in section_labels)
+        outer = [position for position, depth in section_labels if depth == outer_depth]
+        for index, start in enumerate(outer):
+            end = outer[index + 1] if index + 1 < len(outer) else section_end
+            segment = text[start:end]
+            fences = list(re.finditer(r"(?m)^```\s*$", segment))
+            if not fences:
+                continue
+            tail = segment[fences[-1].end():]
+            tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
+            if not re.fullmatch(r"\s*(?:</details>\s*)*∎\s*", tail):
+                out.append(Violation(
+                    start,
+                    "outermost construction/lemma/theorem must end with standalone "
+                    "`∎` after its complete proof",
+                    False,
+                ))
     return out
 
 

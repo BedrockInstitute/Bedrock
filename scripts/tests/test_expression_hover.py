@@ -59,6 +59,54 @@ class ExpressionHoverTests(unittest.TestCase):
         )
         self.assertIn('data-name="⟨_⟩"', rendered)
 
+    def test_checked_local_signature_supplies_missing_name_type(self):
+        block = ('<pre class="Agda">  '
+                 '<a id="40" href="Demo.html#40" class="Function">local</a> '
+                 '<a id="46" class="Symbol">:</a> '
+                 '<a id="48" href="Demo.html#10" class="Function">A</a> '
+                 '<a id="50" class="Symbol">→</a> '
+                 '<a id="52" href="Demo.html#20" class="Function">B</a>\n'
+                 '  <a id="60" href="Demo.html#60" class="Bound">x</a> '
+                 '<a id="62" class="Symbol">:</a> ignored\n</pre>')
+        types = renderer.local_signature_types(block, "Demo")
+        self.assertEqual(set(types), {"40"})
+        self.assertEqual(types["40"]["name"], "local")
+        self.assertNotIn('id="', types["40"]["type"])
+        self.assertIn('href="Demo.html#10"', types["40"]["type"])
+        self.assertIn('A</a> <a class="Symbol">→</a>', types["40"]["type"])
+
+    def test_selected_preview_finds_referenced_type_sidecars(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "Demo.md"
+            path.write_text('<a href="Library.One.html#10">x</a>'
+                            '<a href="Missing.html#20">y</a>')
+            referenced = renderer.referenced_type_modules(
+                path, {"Demo", "Library.One"}
+            )
+        self.assertEqual(referenced, {"Library.One"})
+
+    def test_type_rendering_preserves_disambiguated_level_binders(self):
+        rendered = renderer.render_type(
+            "{A.ℓ : Agda.Primitive.Level} {B.ℓ : Agda.Primitive.Level} → Set A.ℓ",
+            {},
+        )
+        self.assertEqual(
+            rendered,
+            "{A.ℓ : Level} {B.ℓ : Level} → Type A.ℓ",
+        )
+
+    def test_type_links_reuse_agda_syntax_aspects(self):
+        rendered = renderer.render_type(
+            "Demo.f",
+            {"Demo.f": ("Demo", "10")},
+            renderer.qualified_name_pattern({"Demo.f": ("Demo", "10")}),
+            {"Demo": {"10": "Function"}},
+        )
+        self.assertEqual(
+            rendered,
+            '<a href="Demo.html#10" class="Function">f</a>',
+        )
+
     def test_boundary_inside_highlight_token_is_split(self):
         block = ('<pre class="Agda"><a id="10">f</a> '
                  '<a id="12" class="Symbol">_))</a></pre>')
@@ -92,6 +140,44 @@ class ExpressionHoverTests(unittest.TestCase):
         self.assertIs(extractor.prefer_record(old, new), new)
         self.assertTrue(extractor.imprecise_type("_42"))
         self.assertFalse(extractor.imprecise_type("⟨_⟩isProp P"))
+
+    def test_application_range_absorbs_its_closing_parenthesis(self):
+        source = "f (g x) y"
+        start = source.index("f") + 1
+        before_close = source.index(")") + 1
+        self.assertEqual(
+            extractor.include_closing_parentheses(source, start, before_close),
+            before_close + 1,
+        )
+
+    def test_closing_parenthesis_deduplicates_the_same_application(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            src = root / "src"
+            html_dir = root / "html"
+            src.mkdir()
+            html_dir.mkdir()
+            source = "module Demo where\n\n```agda\nf x = h (g x)\n```\n"
+            path = src / "Demo.lagda.md"
+            path.write_text(source)
+            start = source.index("h (g x") + 1
+            before_close = source.index(")", start - 1) + 1
+            (html_dir / "Demo.md").write_text("")
+            trace = root / "trace.jsonl"
+            base = {
+                "version": 1, "run": "one", "kind": "application",
+                "path": str(path.resolve()),
+                "sourceHash": extractor.source_hash(path), "start": start,
+                "type": "A",
+            }
+            trace.write_text("".join(json.dumps(item) + "\n" for item in [
+                {**base, "end": before_close},
+                {**base, "end": before_close + 1},
+            ]))
+            data, _ = extractor.normalize(src.resolve(), html_dir.resolve(), trace)
+        applications = [node for node in data["Demo"] if node["kind"] == "application"]
+        self.assertEqual(len(applications), 1)
+        self.assertEqual(applications[0]["source"], "h (g x)")
 
     def test_trace_normalization_maps_bindings_and_applications(self):
         with tempfile.TemporaryDirectory() as directory:
