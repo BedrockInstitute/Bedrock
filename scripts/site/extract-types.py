@@ -13,7 +13,7 @@ module directly, load it once, then query each module.
 Output (JSON, to --out or stdout): { "<Module>": { "<bare-name>": "<type string>" } }.
 
 Usage:
-  extract-types.py [--html-dir _build/html] [--src src]
+  extract-types.py [--agda PATH] [--html-dir _build/html] [--src src]
                    [--out FILE]
 """
 
@@ -43,8 +43,8 @@ def reachable_modules(html_dir):
     return sorted(seen)
 
 
-def run_agda(commands):
-    proc = subprocess.run(["agda", "--interaction-json"], input=commands,
+def run_agda(commands, agda):
+    proc = subprocess.run([agda, "--interaction-json"], input=commands,
                           capture_output=True, text=True)
     if proc.returncode != 0 and not proc.stdout:
         sys.stderr.write(proc.stderr)
@@ -75,12 +75,12 @@ def parse_contents(stdout):
     return out
 
 
-def query(loader_abs, modules):
+def query(loader_abs, modules, agda):
     cmds = f'IOTCM "{loader_abs}" NonInteractive Direct (Cmd_load "{loader_abs}" [])\n'
     for m in modules:
         cmds += (f'IOTCM "{loader_abs}" None Direct '
                  f'(Cmd_show_module_contents_toplevel Simplified "{m}")\n')
-    responses = parse_contents(run_agda(cmds))
+    responses = parse_contents(run_agda(cmds, agda))
     result = {}
     for i, m in enumerate(modules):
         contents = responses[i] if i < len(responses) else None
@@ -101,7 +101,7 @@ def write_loader(typeext_dir, src_abs, modules):
     return os.path.abspath(path)
 
 
-def extract(html_dir, src):
+def extract(html_dir, src, agda="agda"):
     reachable = reachable_modules(html_dir)
     queryable = reachable
     if not queryable:
@@ -110,24 +110,25 @@ def extract(html_dir, src):
     # Preferred path: a loader importing every reachable module, so all are in scope.
     typeext = os.path.join(os.path.dirname(html_dir) or ".", "typeext")
     loader = write_loader(typeext, os.path.abspath(src), reachable)
-    result, hits = query(loader, queryable)
+    result, hits = query(loader, queryable, agda)
     if not hits:
         sys.stderr.write("warning: reachable-set loader yielded no type responses\n")
     return result
 
 
 def main(argv):
-    html_dir, src, out = "_build/html", "src", None
+    agda, html_dir, src, out = "agda", "_build/html", "src", None
     i = 0
     while i < len(argv):
         a = argv[i]
-        if a == "--html-dir": i += 1; html_dir = argv[i]
+        if a == "--agda": i += 1; agda = argv[i]
+        elif a == "--html-dir": i += 1; html_dir = argv[i]
         elif a == "--src": i += 1; src = argv[i]
         elif a == "--out": i += 1; out = argv[i]
         else: sys.stderr.write(f"unknown option: {a}\n"); return 2
         i += 1
 
-    data = extract(html_dir, src)
+    data = extract(html_dir, src, agda)
     text = json.dumps(data, ensure_ascii=False, indent=2)
     if out:
         os.makedirs(os.path.dirname(out) or ".", exist_ok=True)

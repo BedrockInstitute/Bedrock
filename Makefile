@@ -202,12 +202,14 @@ html-cold-parallel: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES) $(AGDA_PARA
 	@touch $(AGDA_STAMP)
 
 types: html
-	$(PY) scripts/site/extract-types.py --html-dir $(HTML_DIR) --out _build/types.json
+	$(PY) scripts/site/extract-types.py --agda $(abspath $(AGDA)) \
+		--html-dir $(HTML_DIR) --out _build/types.json
 	$(PY) scripts/site/extract-expression-types.py --html-dir $(HTML_DIR) \
 		--trace $(AGDA_TRACE) --out _build/expression-types.json
 
 types-refresh: html
-	$(PY) scripts/site/extract-types.py --html-dir $(HTML_DIR) --out _build/types.json
+	$(PY) scripts/site/extract-types.py --agda $(abspath $(AGDA)) \
+		--html-dir $(HTML_DIR) --out _build/types.json
 	$(PY) scripts/site/extract-expression-types.py --html-dir $(HTML_DIR) \
 		--trace $(AGDA_TRACE) --out _build/expression-types.json
 
