@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import platform
 import shutil
@@ -35,6 +36,58 @@ def tree_hash(root: Path) -> str:
 def run(command: list[str], *, cwd: Path | None = None) -> None:
     print("+", " ".join(command), file=sys.stderr)
     subprocess.run(command, cwd=cwd, check=True)
+
+
+def ensure_happy(build_root: Path, version: str) -> Path:
+    """Install the pinned parser generator outside Cabal's opaque store path."""
+    directory = build_root / "build-tools" / f"happy-{version}"
+    executable = directory / "happy"
+    wrapper = directory / "bedrock-happy"
+    happy_environment = os.environ.copy()
+    happy_environment.pop("GHCRTS", None)
+    if executable.is_file():
+        actual = subprocess.check_output(
+            [str(executable), "--numeric-version"], text=True,
+            env=happy_environment,
+        ).strip()
+        if actual != version:
+            executable.unlink()
+
+    if not executable.is_file():
+        directory.mkdir(parents=True, exist_ok=True)
+        run([
+            "cabal", "install", f"happy-{version}",
+            f"--installdir={directory}", "--install-method=copy",
+            "--overwrite-policy=always", "-j2",
+        ], cwd=build_root)
+        actual = subprocess.check_output(
+            [str(executable), "--numeric-version"], text=True,
+            env=happy_environment,
+        ).strip()
+        if actual != version:
+            raise RuntimeError(
+                f"Happy version mismatch: expected {version}, got {actual}"
+            )
+
+    # The Makefile's GHCRTS heap guard is intended for Agda. Happy is not
+    # linked with -rtsopts, so isolate it without weakening Agda's limit.
+    wrapper.write_text(
+        "#!/bin/sh\n"
+        "set -eu\n"
+        "tool_dir=$(CDPATH= cd -- \"$(dirname -- \"$0\")\" && pwd)\n"
+        "unset GHCRTS\n"
+        "exec \"$tool_dir/happy\" \"$@\"\n",
+        encoding="utf-8",
+    )
+    wrapper.chmod(0o755)
+    actual = subprocess.check_output(
+        [str(wrapper), "--numeric-version"], text=True,
+    ).strip()
+    if actual != version:
+        raise RuntimeError(
+            f"Happy wrapper version mismatch: expected {version}, got {actual}"
+        )
+    return wrapper
 
 
 def macos_ghc_options() -> list[str]:
@@ -68,6 +121,7 @@ def main() -> int:
     manifest_path = tool_root / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     version = manifest["agda_version"]
+    happy_version = manifest["happy_version"]
     source_url = manifest["source_url"]
     source_sha256 = manifest["source_sha256"]
     adapter = tool_root / manifest["adapter"]
@@ -104,16 +158,15 @@ def main() -> int:
         marker.write_text(expected_marker, encoding="utf-8")
 
     allow_newer = ",".join(manifest.get("cabal_allow_newer", []))
+    happy = ensure_happy(build_root, happy_version)
     # Cabal 3.12 resolves Agda's packaged build tools incorrectly when this
     # local build directory is expressed as an absolute path.
     command = [
         "cabal", "build", "exe:agda", "--builddir=dist-bedrock", "-j2",
     ]
-    happy = shutil.which("happy")
-    if happy:
-        # Cabal 3.12 can fail to identify the version of a packaged Happy
-        # executable even though invoking that executable directly succeeds.
-        command.append(f"--with-happy={happy}")
+    # Cabal 3.12 cannot reliably determine the version of a Happy executable
+    # stored under its hashed package path. Use the pinned project-local copy.
+    command.append(f"--with-happy={happy}")
     if allow_newer:
         command.append(f"--allow-newer={allow_newer}")
     command.extend(macos_ghc_options())

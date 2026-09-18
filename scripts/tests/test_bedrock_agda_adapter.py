@@ -16,6 +16,7 @@ class BedrockAgdaAdapterTests(unittest.TestCase):
 
     def test_version_lock_names_an_existing_thin_adapter(self):
         self.assertEqual(self.manifest["agda_version"], "2.8.0")
+        self.assertEqual(self.manifest["happy_version"], "2.2")
         self.assertTrue(self.adapter.is_file())
         self.assertTrue((TOOL / "src/Bedrock/Agda/TypeTrace.hs").is_file())
 
@@ -51,6 +52,13 @@ class BedrockAgdaAdapterTests(unittest.TestCase):
         self.assertNotIn("module Bedrock.", self.patch)
         self.assertNotIn("x-revision:", self.patch)
         self.assertNotIn("aeson                >=", self.patch)
+
+    def test_build_bootstraps_the_pinned_happy_executable(self):
+        build = (TOOL / "build.py").read_text()
+        self.assertIn('manifest["happy_version"]', build)
+        self.assertIn('"--install-method=copy"', build)
+        self.assertIn('"unset GHCRTS\\n"', build)
+        self.assertIn('command.append(f"--with-happy={happy}")', build)
 
 
 if __name__ == "__main__":

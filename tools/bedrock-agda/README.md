@@ -16,9 +16,9 @@ The implementation is divided at a deliberate compatibility boundary:
 - `adapters/Agda-2.8.0.patch` is the version-specific adapter. It registers the
   overlay as one Cabal module and adds calls at five semantic sites in upstream
   Agda. It contains no tracing policy or output implementation.
-- `manifest.json` is the complete version lock: source URL and checksum,
-  adapter path, and temporary Cabal bound overrides. The build fingerprint
-  covers the manifest, adapter and entire overlay.
+- `manifest.json` is the complete compiler-build lock: source URL and checksum,
+  adapter path, Happy version, and temporary Cabal bound overrides. The build
+  fingerprint covers the manifest, adapter and entire overlay.
 - `environment.json` pins the cubical release, its checksum, the tested GHC
   version and the minimum Python version without changing the compiler identity.
 
@@ -67,8 +67,12 @@ make check
 `make bootstrap` creates `.venv`, builds the patched compiler, downloads the
 checksummed cubical release from `environment.json`, and writes a project-local
 Agda library registry under `_build/agda-home`. It never writes to `~/.agda`.
-Re-running it is safe and uses the local caches. `make distclean` removes the
-generated compiler and library environment for a clean deployment rehearsal.
+The build bootstraps the pinned Happy parser generator into
+`_build/bedrock-agda/build-tools`, avoiding any dependency on a globally
+installed Happy or Cabal's hashed executable wrappers. A local wrapper removes
+the Agda-specific `GHCRTS` heap settings before invoking Happy. Re-running the
+setup is safe and uses the local caches. `make distclean` removes the generated
+compiler and library environment for a clean deployment rehearsal.
 
 Build and preview the website with:
 
