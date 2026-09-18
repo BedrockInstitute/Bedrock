@@ -647,6 +647,53 @@
     var options = [], anchor = null, rangeBlock = null, pinnedRangeBlock = null;
     var pinned = false;
     var request = 0, touchArmed = null, suppressedTouchClick = null;
+    var rangeCopy = {
+      en: { show: "Show ranges", hide: "Hide ranges" },
+      zh: { show: "显示层级", hide: "隐藏层级" },
+      ja: { show: "階層を表示", hide: "階層を隠す" }
+    }[cfg.lang] || { show: "Show ranges", hide: "Hide ranges" };
+    var rangeButtons = new Map();
+
+    function updateRangeButton(block, active) {
+      var button = rangeButtons.get(block);
+      if (!button) return;
+      var label = active ? rangeCopy.hide : rangeCopy.show;
+      button.setAttribute("aria-pressed", String(active));
+      button.setAttribute("aria-label", label);
+      button.title = label;
+      button.querySelector("span").textContent = label;
+    }
+    function setPinnedRangeBlock(block) {
+      if (pinnedRangeBlock && pinnedRangeBlock !== block) {
+        pinnedRangeBlock.classList.remove("ast-ranges-pinned");
+        updateRangeButton(pinnedRangeBlock, false);
+      }
+      pinnedRangeBlock = block;
+      if (block) {
+        block.classList.add("ast-ranges-pinned");
+        updateRangeButton(block, true);
+      }
+    }
+    document.querySelectorAll("pre.Agda").forEach(function (block) {
+      if (!block.querySelector(".expr-node")) return;
+      var shell = document.createElement("div");
+      shell.className = "agda-block-shell";
+      block.parentNode.insertBefore(shell, block);
+      shell.appendChild(block);
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "ast-range-toggle";
+      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M4 5.5h16v13H4zM8 9h8v6H8z"/></svg><span></span>';
+      shell.appendChild(button);
+      rangeButtons.set(block, button);
+      updateRangeButton(block, false);
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        setPinnedRangeBlock(pinnedRangeBlock === block ? null : block);
+      });
+    });
 
     function expressionAncestors(target) {
       var node = target.closest && target.closest(".expr-node");
@@ -686,7 +733,10 @@
       var option = options[Math.max(0, Math.min(index, options.length - 1))];
       value.innerHTML = option.type;
       clearHighlight();
-      if (option.node) option.node.classList.add("expr-active");
+      var activeOption = option.node ? option : options.find(function (item) {
+        return item.node;
+      });
+      if (activeOption) activeOption.node.classList.add("expr-active");
       requestAnimationFrame(position);
     }
     function setStableWidth(items) {
@@ -708,10 +758,8 @@
       var nextRangeBlock = target.closest && target.closest("pre.Agda");
       if (rangeBlock && rangeBlock !== nextRangeBlock)
         rangeBlock.classList.remove("ast-ranges-visible");
-      if (pinnedRangeBlock && pinnedRangeBlock !== nextRangeBlock) {
-        pinnedRangeBlock.classList.remove("ast-ranges-pinned");
-        pinnedRangeBlock = null;
-      }
+      if (pinnedRangeBlock && pinnedRangeBlock !== nextRangeBlock)
+        setPinnedRangeBlock(null);
       rangeBlock = nextRangeBlock;
       if (rangeBlock) rangeBlock.classList.add("ast-ranges-visible");
       setStableWidth(items);
@@ -824,17 +872,8 @@
       var codeBlock = event.target.closest && event.target.closest("pre.Agda");
       var target = event.target.closest && event.target.closest("a[data-type], .expr-node");
       if (codeBlock && !target) {
-        event.preventDefault();
         pinned = false;
         hide(); hideName(); touchArmed = null; suppressedTouchClick = null;
-        if (pinnedRangeBlock === codeBlock) {
-          codeBlock.classList.remove("ast-ranges-pinned");
-          pinnedRangeBlock = null;
-        } else {
-          if (pinnedRangeBlock) pinnedRangeBlock.classList.remove("ast-ranges-pinned");
-          pinnedRangeBlock = codeBlock;
-          pinnedRangeBlock.classList.add("ast-ranges-pinned");
-        }
         return;
       }
       if ((popup.contains(event.target) || (namePopup && namePopup.contains(event.target)))

@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import re
 import unittest
 
 
@@ -58,6 +59,26 @@ class BedrockAgdaAdapterTests(unittest.TestCase):
             'Bedrock.traceType "application" e (sort $ getSort type_)',
             self.patch,
         )
+
+    def test_adapter_hunk_headers_match_their_bodies(self):
+        lines = self.patch.splitlines()
+        header = re.compile(
+            r"^@@ -\d+(?:,(\d+))? \+\d+(?:,(\d+))? @@"
+        )
+        for index, line in enumerate(lines):
+            match = header.match(line)
+            if not match:
+                continue
+            old_expected = int(match.group(1) or 1)
+            new_expected = int(match.group(2) or 1)
+            old_actual = new_actual = 0
+            for body in lines[index + 1:]:
+                if body.startswith("@@ ") or body.startswith("--- a/"):
+                    break
+                old_actual += body.startswith((" ", "-"))
+                new_actual += body.startswith((" ", "+"))
+            self.assertEqual(old_actual, old_expected, line)
+            self.assertEqual(new_actual, new_expected, line)
 
     def test_build_bootstraps_the_pinned_happy_executable(self):
         build = (TOOL / "build.py").read_text()
