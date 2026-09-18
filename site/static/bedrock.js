@@ -606,6 +606,21 @@
   }
   function initHover() {
     var compactPointer = window.matchMedia("(hover: none), (pointer: coarse)");
+    var definitionCopy = {
+      en: "Go to definition",
+      zh: "跳转到定义",
+      ja: "定義へ移動"
+    }[cfg.lang] || "Go to definition";
+    function definitionAction(href) {
+      var link = document.createElement("a");
+      link.className = "type-definition-link";
+      link.href = href;
+      link.setAttribute("aria-label", definitionCopy);
+      link.title = definitionCopy;
+      link.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M4 12h13m-5-5 5 5-5 5M20 5v14"/></svg>';
+      return link;
+    }
     var namePopup = null, nameAnchor = null, nameRequest = 0;
     function hideName() {
       nameRequest += 1;
@@ -629,8 +644,12 @@
         hideName();
         nameAnchor = name;
         namePopup = document.createElement("div");
-        namePopup.className = "hover-popup name-hover-popup Agda";
-        namePopup.innerHTML = html;
+        namePopup.className = "hover-popup name-hover-popup has-definition-link Agda";
+        var nameValue = document.createElement("div");
+        nameValue.className = "type-value Agda";
+        nameValue.innerHTML = html;
+        namePopup.appendChild(nameValue);
+        namePopup.appendChild(definitionAction(name.href));
         document.body.appendChild(namePopup);
         namePopup.addEventListener("mouseleave", hideName);
         positionName();
@@ -641,12 +660,20 @@
     popup.className = "hover-popup type-inspector";
     popup.setAttribute("role", "dialog");
     popup.hidden = true;
-    popup.innerHTML = '<div class="type-value Agda"></div>';
+    popup.innerHTML = '<div class="type-value Agda"></div>' +
+      '<a class="type-definition-link" hidden></a>';
     document.body.appendChild(popup);
     var value = popup.querySelector(".type-value");
-    var options = [], anchor = null, rangeBlock = null, pinnedRangeBlock = null;
+    var definitionLink = popup.querySelector(".type-definition-link");
+    definitionLink.setAttribute("aria-label", definitionCopy);
+    definitionLink.title = definitionCopy;
+    definitionLink.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path d="M4 12h13m-5-5 5 5-5 5M20 5v14"/></svg>';
+    var options = [], selected = null, anchor = null, renderedRequest = 0;
+    var levelGesture = null;
+    var rangeBlock = null, pinnedRangeBlock = null;
     var pinned = false;
-    var request = 0, touchArmed = null, suppressedTouchClick = null;
+    var request = 0;
     var rangeCopy = {
       en: { show: "Show ranges", hide: "Hide ranges" },
       zh: { show: "显示层级", hide: "隐藏层级" },
@@ -684,7 +711,8 @@
       button.type = "button";
       button.className = "ast-range-toggle";
       button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-        '<path d="M4 5.5h16v13H4zM8 9h8v6H8z"/></svg><span></span>';
+        '<path d="M4 5.5h16v13H4zM8 9h8v6H8z"/></svg>' +
+        '<span class="sr-only"></span>';
       shell.appendChild(button);
       rangeButtons.set(block, button);
       updateRangeButton(block, false);
@@ -731,7 +759,18 @@
     function choose(index) {
       if (!options.length) return;
       var option = options[Math.max(0, Math.min(index, options.length - 1))];
+      selected = option;
       value.innerHTML = option.type;
+      if (compactPointer.matches && option.href) {
+        definitionLink.href = option.href;
+        definitionLink.hidden = false;
+        popup.classList.add("has-definition-link");
+      } else {
+        definitionLink.removeAttribute("href");
+        definitionLink.hidden = true;
+        popup.classList.remove("has-definition-link");
+      }
+      setPopupWidth(option);
       clearHighlight();
       var activeOption = option.node ? option : options.find(function (item) {
         return item.node;
@@ -739,15 +778,36 @@
       if (activeOption) activeOption.node.classList.add("expr-active");
       requestAnimationFrame(position);
     }
-    function setStableWidth(items) {
+    function gestureIndex(deltaX) {
+      var distance = Math.abs(deltaX);
+      if (distance < 12) return 0;
+      return (deltaX < 0 ? -1 : 1) *
+        (1 + Math.floor((distance - 12) / 28));
+    }
+    function applyLevelGesture() {
+      if (!levelGesture || levelGesture.axis !== "horizontal" || !options.length
+          || levelGesture.request !== request
+          || levelGesture.request !== renderedRequest) return;
+      if (levelGesture.baseIndex === null)
+        levelGesture.baseIndex = Math.max(0, options.indexOf(selected));
+      var next = Math.max(0, Math.min(options.length - 1,
+        levelGesture.baseIndex + gestureIndex(levelGesture.deltaX)));
+      if (next === levelGesture.lastIndex) return;
+      levelGesture.lastIndex = next;
+      choose(next);
+      if (levelGesture && levelGesture.released) levelGesture = null;
+    }
+    function setPopupWidth(item) {
       var measure = document.createElement("div");
       measure.className = "hover-popup type-inspector type-inspector-measure";
-      items.forEach(function (item) {
-        var sample = document.createElement("div");
-        sample.className = "type-value Agda";
-        sample.innerHTML = item.type;
-        measure.appendChild(sample);
-      });
+      var sample = document.createElement("div");
+      sample.className = "type-value Agda";
+      sample.innerHTML = item.type;
+      measure.appendChild(sample);
+      if (compactPointer.matches && item.href) {
+        measure.classList.add("has-definition-link");
+        measure.appendChild(definitionAction(item.href));
+      }
       document.body.appendChild(measure);
       popup.style.width = Math.ceil(measure.getBoundingClientRect().width) + "px";
       measure.remove();
@@ -762,9 +822,10 @@
         setPinnedRangeBlock(null);
       rangeBlock = nextRangeBlock;
       if (rangeBlock) rangeBlock.classList.add("ast-ranges-visible");
-      setStableWidth(items);
+      renderedRequest = request;
       popup.hidden = false;
       choose(Math.max(0, items.indexOf(preferred)));
+      applyLevelGesture();
     }
     function show(target) {
       hideName();
@@ -789,11 +850,12 @@
           var canonicalName = name.getAttribute("data-name") ||
             (loaded[1].$names || {})[nameSpec[1]];
           /* The pointer is directly over this identifier, so its name type is
-             preferred.  The surrounding expression types are still measured
-             together so moving between source boundaries cannot resize the popup. */
+             preferred. Width follows the displayed type: reserving space for
+             every enclosing application leaves short variable types in a large,
+             mostly empty popup now that node selection happens in the source. */
           items.unshift({ kind: "name", node: null,
                           source: canonicalName || name.textContent.trim(),
-                          type: loaded[1][nameSpec[1]],
+                          type: loaded[1][nameSpec[1]], href: name.href,
                           start: Number(name.id),
                           end: Number(name.id) + Array.from(name.textContent).length });
         }
@@ -814,7 +876,7 @@
     function hide() {
       if (pinned) return;
       request += 1;
-      popup.hidden = true; options = []; anchor = null; clearHighlight();
+      popup.hidden = true; options = []; selected = null; anchor = null; clearHighlight();
       if (rangeBlock) rangeBlock.classList.remove("ast-ranges-visible");
       rangeBlock = null;
     }
@@ -847,12 +909,11 @@
     document.addEventListener("click", function (event) {
       if (compactPointer.matches) {
         var touched = event.target.closest && event.target.closest("a[data-type], .expr-node");
-        if (touched && suppressedTouchClick === touched) {
+        if (touched) {
           event.preventDefault();
-          suppressedTouchClick = null;
+          event.stopPropagation();
           return;
         }
-        if (touched && touched.matches("a[href]")) return;
       }
       if (!usesInspector(event.target)) return;
       var node = event.target.closest && event.target.closest(".expr-node");
@@ -873,30 +934,68 @@
       var target = event.target.closest && event.target.closest("a[data-type], .expr-node");
       if (codeBlock && !target) {
         pinned = false;
-        hide(); hideName(); touchArmed = null; suppressedTouchClick = null;
+        hide(); hideName();
         return;
       }
       if ((popup.contains(event.target) || (namePopup && namePopup.contains(event.target)))
           && !(target && target.matches("a[data-type]"))) return;
       if (!target) {
-        pinned = false; hide(); hideName(); touchArmed = null; suppressedTouchClick = null;
+        pinned = false; hide(); hideName();
         return;
       }
-      if (touchArmed === target) {
-        touchArmed = null; suppressedTouchClick = null;
-        return;
-      }
-      event.preventDefault();
-      touchArmed = target;
-      suppressedTouchClick = target;
       if (usesInspector(event.target)) {
         hideName(); pinned = true; show(event.target);
       } else if (target.matches("a[data-type]")) {
+        levelGesture = null;
         pinned = false;
         if (!popup.hidden) hide();
         showName(target);
       }
     });
+    document.addEventListener("touchstart", function (event) {
+      if (!compactPointer.matches || event.touches.length !== 1
+          || !usesInspector(event.target)) return;
+      var touch = event.touches[0];
+      levelGesture = {
+        target: event.target,
+        block: event.target.closest && event.target.closest("pre.Agda"),
+        request: request,
+        startX: touch.clientX,
+        startY: touch.clientY,
+        deltaX: 0,
+        axis: null,
+        baseIndex: null,
+        lastIndex: null
+      };
+    });
+    document.addEventListener("touchmove", function (event) {
+      if (!compactPointer.matches || !levelGesture || event.touches.length !== 1) return;
+      var touch = event.touches[0];
+      var deltaX = touch.clientX - levelGesture.startX;
+      var deltaY = touch.clientY - levelGesture.startY;
+      if (!levelGesture.axis) {
+        if (Math.abs(deltaY) >= 10 && Math.abs(deltaY) > Math.abs(deltaX)) {
+          levelGesture.axis = "vertical";
+          return;
+        }
+        if (Math.abs(deltaX) < 12 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.15)
+          return;
+        levelGesture.axis = "horizontal";
+        if (levelGesture.block) levelGesture.block.classList.add("ast-level-gesture");
+      }
+      if (levelGesture.axis !== "horizontal") return;
+      levelGesture.deltaX = deltaX;
+      applyLevelGesture();
+    });
+    function finishLevelGesture(event) {
+      if (!levelGesture) return;
+      if (levelGesture.block) levelGesture.block.classList.remove("ast-level-gesture");
+      if (event.type === "touchcancel" || levelGesture.axis !== "horizontal"
+          || levelGesture.request === renderedRequest) levelGesture = null;
+      else levelGesture.released = true;
+    }
+    document.addEventListener("touchend", finishLevelGesture);
+    document.addEventListener("touchcancel", finishLevelGesture);
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape") { pinned = false; hide(); hideName(); }
     });
@@ -922,7 +1021,7 @@
     });
     window.addEventListener("scroll", function () { position(); positionName(); }, { passive: true });
     window.addEventListener("resize", function () {
-      if (!popup.hidden && options.length) setStableWidth(options);
+      if (!popup.hidden && selected) setPopupWidth(selected);
       position(); positionName();
     });
   }

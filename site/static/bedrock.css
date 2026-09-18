@@ -403,21 +403,20 @@ pre.Agda .expr-node.expr-active {
   max-height: none !important; overflow: visible !important;
   visibility: hidden; pointer-events: none; }
 .type-value { padding-inline: .15rem; overflow-x: auto; }
+.type-definition-link { display: none; }
 
 @media (hover: none), (pointer: coarse) {
   .name-hover-popup { pointer-events: auto; }
   .type-inspector { max-height: calc(100vh - 1rem); overflow-y: auto; }
-  .agda-block-shell > pre.Agda { padding-top: 3.65rem; }
-  .ast-range-toggle { position: absolute; z-index: 4; top: .45rem; right: .5rem;
-    display: inline-flex; align-items: center; justify-content: center; gap: .38rem;
-    min-height: 44px; max-width: calc(100% - 1rem); padding: 0 .75rem;
-    color: var(--fg-alt); background: color-mix(in srgb, var(--code-bg) 92%, transparent);
-    border: 1px solid var(--code-border); border-radius: .55rem;
+  .ast-range-toggle { position: absolute; z-index: 4; top: .3rem; right: .3rem;
+    display: inline-grid; width: 44px; height: 44px; padding: 0; place-items: center;
+    color: var(--fg-alt); background: color-mix(in srgb, var(--code-bg) 88%, transparent);
+    border: 1px solid var(--code-border); border-radius: 50%;
     box-shadow: 0 1px 5px color-mix(in srgb, var(--fg) 12%, transparent);
-    font: 600 .78rem/1 var(--sans); white-space: nowrap; touch-action: manipulation;
+    backdrop-filter: blur(4px); touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     transition: color .12s ease, background-color .12s ease, border-color .12s ease; }
-  .ast-range-toggle svg { width: 1.15rem; height: 1.15rem; fill: none;
+  .ast-range-toggle svg { width: 1.25rem; height: 1.25rem; fill: none;
     stroke: currentColor; stroke-width: 1.7; vector-effect: non-scaling-stroke; }
   .ast-range-toggle[aria-pressed="true"] { color: var(--primary);
     background: color-mix(in srgb, var(--primary) 13%, var(--code-bg));
@@ -425,7 +424,22 @@ pre.Agda .expr-node.expr-active {
   .ast-range-toggle:active { background: color-mix(in srgb, var(--primary) 21%, var(--code-bg)); }
   .ast-range-toggle:focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 38%, transparent);
     outline-offset: 2px; }
+  .hover-popup.has-definition-link { min-height: 52px; padding-right: 3.35rem; }
+  .type-definition-link { position: absolute; top: 50%; right: .25rem; display: grid;
+    width: 44px; height: 44px; padding: 0; place-items: center;
+    color: var(--primary) !important; border-left: 1px solid var(--code-border);
+    border-radius: 0 .45rem .45rem 0; transform: translateY(-50%); text-decoration: none;
+    touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .type-definition-link svg { width: 1.25rem; height: 1.25rem; fill: none;
+    stroke: currentColor; stroke-width: 1.8; stroke-linecap: round;
+    stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .type-definition-link[hidden] { display: none; }
+  .type-definition-link:active { color: var(--text-fg) !important;
+    background: color-mix(in srgb, var(--primary) 12%, transparent); }
   .expr-node { padding: .07rem .08rem .17rem; }
+  pre.Agda :is(.expr-node, a[data-type]) { touch-action: pan-y;
+    -webkit-touch-callout: none; }
+  pre.Agda.ast-level-gesture { user-select: none; -webkit-user-select: none; }
 }
 
 /* ---- math ---- */
