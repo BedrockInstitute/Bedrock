@@ -671,57 +671,9 @@
       '<path d="M4 12h13m-5-5 5 5-5 5M20 5v14"/></svg>';
     var options = [], selected = null, anchor = null, renderedRequest = 0;
     var levelGesture = null;
-    var rangeBlock = null, pinnedRangeBlock = null;
+    var rangeBlock = null;
     var pinned = false;
     var request = 0;
-    var rangeCopy = {
-      en: { show: "Show ranges", hide: "Hide ranges" },
-      zh: { show: "显示层级", hide: "隐藏层级" },
-      ja: { show: "階層を表示", hide: "階層を隠す" }
-    }[cfg.lang] || { show: "Show ranges", hide: "Hide ranges" };
-    var rangeButtons = new Map();
-
-    function updateRangeButton(block, active) {
-      var button = rangeButtons.get(block);
-      if (!button) return;
-      var label = active ? rangeCopy.hide : rangeCopy.show;
-      button.setAttribute("aria-pressed", String(active));
-      button.setAttribute("aria-label", label);
-      button.title = label;
-      button.querySelector("span").textContent = label;
-    }
-    function setPinnedRangeBlock(block) {
-      if (pinnedRangeBlock && pinnedRangeBlock !== block) {
-        pinnedRangeBlock.classList.remove("ast-ranges-pinned");
-        updateRangeButton(pinnedRangeBlock, false);
-      }
-      pinnedRangeBlock = block;
-      if (block) {
-        block.classList.add("ast-ranges-pinned");
-        updateRangeButton(block, true);
-      }
-    }
-    document.querySelectorAll("pre.Agda").forEach(function (block) {
-      if (!block.querySelector(".expr-node")) return;
-      var shell = document.createElement("div");
-      shell.className = "agda-block-shell";
-      block.parentNode.insertBefore(shell, block);
-      shell.appendChild(block);
-      var button = document.createElement("button");
-      button.type = "button";
-      button.className = "ast-range-toggle";
-      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-        '<path d="M4 5.5h16v13H4zM8 9h8v6H8z"/></svg>' +
-        '<span class="sr-only"></span>';
-      shell.appendChild(button);
-      rangeButtons.set(block, button);
-      updateRangeButton(block, false);
-      button.addEventListener("click", function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        setPinnedRangeBlock(pinnedRangeBlock === block ? null : block);
-      });
-    });
 
     function expressionAncestors(target) {
       var node = target.closest && target.closest(".expr-node");
@@ -793,7 +745,7 @@
         (1 + Math.floor((distance - 12) / 28));
     }
     function applyLevelGesture() {
-      if (!levelGesture || levelGesture.axis !== "horizontal" || !options.length
+      if (!levelGesture || !levelGesture.activated || !options.length
           || levelGesture.request !== request
           || levelGesture.request !== renderedRequest) return;
       if (levelGesture.baseIndex === null) {
@@ -828,8 +780,6 @@
       var nextRangeBlock = target.closest && target.closest("pre.Agda");
       if (rangeBlock && rangeBlock !== nextRangeBlock)
         rangeBlock.classList.remove("ast-ranges-visible");
-      if (pinnedRangeBlock && pinnedRangeBlock !== nextRangeBlock)
-        setPinnedRangeBlock(null);
       rangeBlock = nextRangeBlock;
       if (rangeBlock) rangeBlock.classList.add("ast-ranges-visible");
       renderedRequest = request;
@@ -954,8 +904,7 @@
         return;
       }
       if (usesInspector(event.target)) {
-        vibrateSelection();
-        hideName(); pinned = true; show(event.target);
+        return;
       } else if (target.matches("a[data-type]")) {
         levelGesture = null;
         pinned = false;
@@ -967,17 +916,25 @@
       if (!compactPointer.matches || event.touches.length !== 1
           || !usesInspector(event.target)) return;
       var touch = event.touches[0];
-      levelGesture = {
+      var gesture = {
         target: event.target,
         block: event.target.closest && event.target.closest("pre.Agda"),
-        request: request,
         startX: touch.clientX,
         startY: touch.clientY,
         deltaX: 0,
-        axis: null,
+        activated: false,
         baseIndex: null,
         lastIndex: null
       };
+      levelGesture = gesture;
+      gesture.timer = window.setTimeout(function () {
+        if (levelGesture !== gesture) return;
+        gesture.activated = true;
+        if (gesture.block) gesture.block.classList.add("ast-level-gesture");
+        vibrateSelection();
+        hideName(); pinned = true; show(gesture.target);
+        gesture.request = request;
+      }, 300);
     });
     document.addEventListener("selectstart", function (event) {
       if (!compactPointer.matches) return;
@@ -989,24 +946,33 @@
       var touch = event.touches[0];
       var deltaX = touch.clientX - levelGesture.startX;
       var deltaY = touch.clientY - levelGesture.startY;
-      if (!levelGesture.axis) {
-        if (Math.abs(deltaY) >= 10 && Math.abs(deltaY) > Math.abs(deltaX)) {
-          levelGesture.axis = "vertical";
-          return;
+      if (!levelGesture.activated) {
+        if (Math.hypot(deltaX, deltaY) >= 10) {
+          window.clearTimeout(levelGesture.timer);
+          levelGesture = null;
         }
-        if (Math.abs(deltaX) < 12 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.15)
-          return;
-        levelGesture.axis = "horizontal";
-        if (levelGesture.block) levelGesture.block.classList.add("ast-level-gesture");
+        return;
       }
-      if (levelGesture.axis !== "horizontal") return;
+      /* A completed hold owns the gesture. Suppress vertical page movement and
+         interpret only its horizontal component as AST-level selection. */
+      event.preventDefault();
       levelGesture.deltaX = deltaX;
       applyLevelGesture();
-    });
+    }, { passive: false });
     function finishLevelGesture(event) {
       if (!levelGesture) return;
+      window.clearTimeout(levelGesture.timer);
+      if (!levelGesture.activated) {
+        var target = levelGesture.target;
+        levelGesture = null;
+        if (event.type === "touchend") {
+          vibrateSelection();
+          hideName(); pinned = true; show(target);
+        }
+        return;
+      }
       if (levelGesture.block) levelGesture.block.classList.remove("ast-level-gesture");
-      if (event.type === "touchcancel" || levelGesture.axis !== "horizontal"
+      if (event.type === "touchcancel"
           || levelGesture.request === renderedRequest) levelGesture = null;
       else levelGesture.released = true;
     }

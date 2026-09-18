@@ -359,9 +359,6 @@ pre.Agda a.name-active { background: var(--occ-bg); border-radius: 3px; }
 .chapnav .chapnav-next { margin-left: auto; text-align: right; }
 
 /* ---- type-on-hover popup ---- */
-.agda-block-shell { position: relative; margin: 1.2rem 0; }
-.agda-block-shell > pre.Agda { margin: 0; }
-.ast-range-toggle { display: none; }
 .expr-node { --ast-node-level: var(--expr-level);
   /* Wide hue steps keep adjacent nesting levels distinct. OKLCH holds their
      perceived brightness steady; HSL remains as a compatibility fallback. */
@@ -376,8 +373,7 @@ pre.Agda a.name-active { background: var(--occ-bg); border-radius: 3px; }
   cursor: default;
   transition: background-color .1s ease, box-shadow .1s ease; }
 pre.Agda:hover .expr-node,
-pre.Agda.ast-ranges-visible .expr-node,
-pre.Agda.ast-ranges-pinned .expr-node {
+pre.Agda.ast-ranges-visible .expr-node {
   background: color-mix(in srgb, var(--ast-node-color) 4%, transparent);
   box-shadow: inset 1px 0 color-mix(in srgb, var(--ast-node-color) 52%, transparent),
     inset -1px 0 color-mix(in srgb, var(--ast-node-color) 52%, transparent),
@@ -409,22 +405,6 @@ pre.Agda .expr-node.expr-active {
 @media (hover: none), (pointer: coarse) {
   .name-hover-popup { pointer-events: auto; }
   .type-inspector { max-height: calc(100vh - 1rem); overflow-y: auto; }
-  .ast-range-toggle { position: absolute; z-index: 4; top: .3rem; right: .3rem;
-    display: inline-grid; width: 44px; height: 44px; padding: 0; place-items: center;
-    color: var(--fg-alt); background: color-mix(in srgb, var(--code-bg) 88%, transparent);
-    border: 1px solid var(--code-border); border-radius: 50%;
-    box-shadow: 0 1px 5px color-mix(in srgb, var(--fg) 12%, transparent);
-    backdrop-filter: blur(4px); touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    transition: color .12s ease, background-color .12s ease, border-color .12s ease; }
-  .ast-range-toggle svg { width: 1.25rem; height: 1.25rem; fill: none;
-    stroke: currentColor; stroke-width: 1.7; vector-effect: non-scaling-stroke; }
-  .ast-range-toggle[aria-pressed="true"] { color: var(--primary);
-    background: color-mix(in srgb, var(--primary) 13%, var(--code-bg));
-    border-color: color-mix(in srgb, var(--primary) 72%, var(--code-border)); }
-  .ast-range-toggle:active { background: color-mix(in srgb, var(--primary) 21%, var(--code-bg)); }
-  .ast-range-toggle:focus-visible { outline: 3px solid color-mix(in srgb, var(--primary) 38%, transparent);
-    outline-offset: 2px; }
   .hover-popup.has-definition-link { min-height: 52px; padding-right: 3.35rem; }
   .type-definition-link { position: absolute; top: 50%; right: .25rem; display: grid;
     width: 44px; height: 44px; padding: 0; place-items: center;
