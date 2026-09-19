@@ -33,6 +33,13 @@ class ExpressionHoverTests(unittest.TestCase):
         self.assertIn('gesture.activated = true;\n        if (gesture.block) gesture.block.classList.add("ast-level-gesture");\n        vibrateSelection();', javascript)
         self.assertIn('if (event.type === "touchend") {\n          vibrateSelection();', javascript)
         self.assertIn('choose(next, true)', javascript)
+        self.assertIn('zh: "按住色块左右滑动以切换AST节点"', javascript)
+        self.assertIn('swipeHint.hidden = !(compactPointer.matches && option.kind === "expression")',
+                      javascript)
+        self.assertIn('return (deltaX < 0 ? 1 : -1)', javascript)
+        self.assertIn('.ast-swipe-hint { position: fixed;', stylesheet)
+        self.assertNotIn('.hover-popup.has-definition-link { min-height:', stylesheet)
+        self.assertIn('top: 0; right: .25rem; bottom: 0; display: grid;', stylesheet)
         self.assertIn('pre.Agda .expr-node, pre.Agda .expr-node * {', stylesheet)
         self.assertIn('user-select: none; -webkit-user-select: none;', stylesheet)
         self.assertIn('document.addEventListener("selectstart"', javascript)
