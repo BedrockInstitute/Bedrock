@@ -611,6 +611,11 @@
       zh: "跳转到定义",
       ja: "定義へ移動"
     }[cfg.lang] || "Go to definition";
+    var swipeHintCopy = {
+      en: "Hold a highlighted range and swipe sideways to switch AST nodes",
+      zh: "按住色块左右滑动以切换AST节点",
+      ja: "色付き範囲を長押しして左右にスワイプするとASTノードを切り替えられます"
+    }[cfg.lang] || "Hold a highlighted range and swipe sideways to switch AST nodes";
     function definitionAction(href) {
       var link = document.createElement("a");
       link.className = "type-definition-link";
@@ -663,6 +668,12 @@
     popup.innerHTML = '<div class="type-value Agda"></div>' +
       '<a class="type-definition-link" hidden></a>';
     document.body.appendChild(popup);
+    var swipeHint = document.createElement("div");
+    swipeHint.className = "ast-swipe-hint";
+    swipeHint.setAttribute("role", "status");
+    swipeHint.textContent = swipeHintCopy;
+    swipeHint.hidden = true;
+    document.body.appendChild(swipeHint);
     var value = popup.querySelector(".type-value");
     var definitionLink = popup.querySelector(".type-definition-link");
     definitionLink.setAttribute("aria-label", definitionCopy);
@@ -736,12 +747,15 @@
         option.nameNode.classList.add("name-active");
       else if (option.node)
         option.node.classList.add("expr-active");
+      swipeHint.hidden = !(compactPointer.matches && option.kind === "expression");
       requestAnimationFrame(position);
     }
     function gestureIndex(deltaX) {
       var distance = Math.abs(deltaX);
       if (distance < 12) return 0;
-      return (deltaX < 0 ? -1 : 1) *
+      /* Ranges are ordered from the innermost node to its ancestors. Moving
+         left therefore advances toward the enclosing expression. */
+      return (deltaX < 0 ? 1 : -1) *
         (1 + Math.floor((distance - 12) / 28));
     }
     function applyLevelGesture() {
@@ -837,6 +851,7 @@
       if (pinned) return;
       request += 1;
       popup.hidden = true; options = []; selected = null; anchor = null; clearHighlight();
+      swipeHint.hidden = true;
       if (rangeBlock) rangeBlock.classList.remove("ast-ranges-visible");
       rangeBlock = null;
     }
