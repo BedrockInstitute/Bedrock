@@ -9,14 +9,11 @@ import OrdinaryProfile
 import CodedCompletion
 import K11.CohenGeneric
 import K11.GenericFilter
-import K9.NameGround
 import K8.Cohen
 
 module K11.Corollary
   {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
   (families : NameKernel.Families 𝒮)
-  (accessible : NameKernel.Accessibility 𝒮)
-  (images : NameKernel.MemberImage 𝒮)
   (pow : OrdinaryProfile.PowerSet 𝒮)
   (κ w : ZFStructure.S 𝒮)
   (lem : LEM ℓ)
@@ -28,18 +25,19 @@ open PT using ( ∣_∣₁ ; ∥_∥₁ )
 
 open hPropStructure 𝒮
 
-module NG = K9.NameGround 𝒮 families accessible images pow κ w
-  using ( extensional ; ≈ˢ-paths ; hasSeparation ; hasPair ; hasUnion )
-module C = K8.Cohen 𝒮 NG.extensional NG.≈ˢ-paths NG.hasPair NG.hasUnion
-  pow NG.hasSeparation κ w
+module NF = NameKernel.Families families
+module NS = NameKernel.Sets NF.sets
+module NG = NameKernel.Core NS.core
+module C = K8.Cohen 𝒮 NG.extensional NG.≈ˢ-paths NG.hasPair NS.hasUnion
+  pow NS.hasSeparation κ w
   using ( presentation ; laws )
-module Core = CodedCompletion.Core 𝒮 NG.extensional pow NG.hasSeparation
+module Core = CodedCompletion.Core 𝒮 NG.extensional pow NS.hasSeparation
   NG.≈ˢ-paths C.presentation C.laws
 module FS = Core.FS
 open FS using ( Cond ; Sub )
 
-module Exists = K11.CohenGeneric 𝒮 families accessible images pow κ w lem
-module Enumerated = K11.GenericFilter 𝒮 NG.extensional pow NG.hasSeparation
+module Exists = K11.CohenGeneric 𝒮 families pow κ w lem
+module Enumerated = K11.GenericFilter 𝒮 NG.extensional pow NS.hasSeparation
   NG.≈ˢ-paths C.presentation C.laws lem
 
 from-carrier :

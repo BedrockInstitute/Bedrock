@@ -1,0 +1,8 @@
+Checking K10.CohenPairUnion (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenPairUnion.agda).
+ Checking K6.NameBuildAtGround (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/NameBuildAtGround.agda).
+  Checking K6.NameBuild (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/NameBuild.agda).
+  Checking K6.NameValid (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/NameValid.agda).
+ Checking K6.ElementaryAtNames (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/ElementaryAtNames.agda).
+  Checking K6.Elementary (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/Elementary.agda).
+
+EXIT=0

@@ -1,0 +1,11 @@
+Checking K10.CohenTheorem (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenTheorem.agda).
+ Checking K10.GenericContradiction (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/GenericContradiction.agda).
+  Checking K9.RealValues (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/RealValues.agda).
+   Checking K9.GenericBits (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/GenericBits.agda).
+  Checking K9.Theorem (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/Theorem.agda).
+   Checking K9.GraphInjection (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/GraphInjection.agda).
+  Checking K10.CheckedOmega (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CheckedOmega.agda).
+  Checking K10.CheckedInjection (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CheckedInjection.agda).
+  Checking K10.CardinalContradiction (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CardinalContradiction.agda).
+
+EXIT=0

@@ -1,0 +1,11 @@
+Checking K10.CohenCorrespondence (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenCorrespondence.agda).
+ Checking K10.CohenAgreementSeam (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenAgreementSeam.agda).
+  Checking K5.Generic (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K5/Generic.agda).
+  Checking K5.ExtensionSat (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K5/ExtensionSat.agda).
+  Checking K10.CohenAgreement (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenAgreement.agda).
+   Checking K5.Agreement (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K5/Agreement.agda).
+  Checking K10.CohenReverse (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenReverse.agda).
+   Checking TranslateReverse (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/TranslateReverse.agda).
+   Checking K5.RoundTrip (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K5/RoundTrip.agda).
+
+EXIT=0

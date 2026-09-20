@@ -1,0 +1,10 @@
+Checking Controls.Negative.MissingCheckReading (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/Controls/Negative/MissingCheckReading.agda).
+ Checking K7.CheckIndexedFamilies (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K7/CheckIndexedFamilies.agda).
+  Checking K7.DefinableFamilies (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K7/DefinableFamilies.agda).
+/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/Controls/Negative/MissingCheckReading.agda:42.17-21: error: [UnequalTerms]
+(u ∷ ξ ∷ []) ⊨ chkFo != u ≈ˢ chk ξ of type
+Σ (Type ℓ) (Cubical.Foundations.HLevels.isOfHLevel 1)
+when checking that the expression refl has type
+(u ∷ ξ ∷ []) ⊨ chkFo ≡ u ≈ˢ chk ξ
+
+EXIT=42

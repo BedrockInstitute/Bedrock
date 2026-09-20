@@ -24,6 +24,10 @@ count=0
 for source in \
   CheckRecursion.agda \
   InternalCheck.agda \
+  WeightedCheckRecursion.agda \
+  InternalWeightedCheck.agda \
+  K9/NameGround.agda \
+  K11/CohenGeneric.agda \
   K9/BooleanSupport.agda \
   K10/CohenCompile.agda \
   K10/CohenValSeam.agda \

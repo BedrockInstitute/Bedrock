@@ -88,13 +88,14 @@ and source hashes are recorded separately in `VALIDATION.md` and `checks.json`.
 
 ## Next mathematical obligations
 
-The all-condition poset check needs an analogous recursion equation with the
-additional bounded weight quantifier. Its stage must construct the entire
-set of weighted entries, not falsely treat multiple weights as the output of
-a single-valued entry formula. The present agreement and table-construction
-argument provides a pattern, but this generalization remains to be proved.
+The all-condition poset check obligation described at this checkpoint has now
+been discharged by `WeightedCheckRecursion` and `InternalWeightedCheck`.
+Its actual stage uses the definable image of recorded child values followed
+by the Cartesian product with the full weight set. `K9.NameGround.Check`
+uses the constructed supplier. The generic-name map is also now defined by
+an actual diagonal graph; see `WEIGHTED-CHECK.md`.
 
-After that, the generic-name map, recursive name translations, and the actual
+Recursive name translations and the actual
 Boolean value families each need their own definable graphs and adequacy
 proofs. Neither `MemberImage` nor `ValueSets.attain` for arbitrary host functions
 is a consequence supplied by this result. The endpoint extension axioms,

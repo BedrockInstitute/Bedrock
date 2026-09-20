@@ -22,6 +22,7 @@ import Cubical.HITs.PropositionalTruncation as PT
 open PT using ( ∣_∣₁ )
 import GroundDescription
 import StandardNames
+import InternalWeightedCheck
 import CodedCompletion
 import ForcingNotion
 import K5.Structures
@@ -60,17 +61,10 @@ open Valid public using ( entries-name )
 module Image = Standard.Weighted accessible
   (NameKernel.MemberImage.image images) (NameKernel.MemberImage.image-spec images)
   Union.bigUnion Union.bigUnion-spec using ( imageOn; imageOn-spec; module Over )
-module Check = Image.Over C.carrier using ( chk; chk-spec; spread; spread-spec; module Valid )
-private module CheckValid = Check.Valid C.carrier K.IsName entries-name (λ p hp → hp)
-open CheckValid public using ( chk-name )
-
-opaque
-  genericName : S
-  genericName = Image.imageOn C.carrier (λ p → K.entry (Check.chk p) p)
-
-  generic-spec : (e : S) → (e ∈ˢ genericName)
-    ≡ ⋁ S (λ p → (p ∈ˢ C.carrier) ⊓ (e ≈ˢ K.entry (Check.chk p) p))
-  generic-spec = Image.imageOn-spec C.carrier (λ p → K.entry (Check.chk p) p)
+module Check where
+  open InternalWeightedCheck 𝒮 families accessible pow C.carrier public
+    using ( chk; chk-spec; chk-name; genericName; generic-spec; spread; spread-spec )
+open Check public using ( chk-name; genericName; generic-spec )
 
 empty-spec : (z : S) → (z ∈ˢ GS.empty) ≡ ⊥
 empty-spec z = ⇔toPath (GS.empty-out z) Empty.rec*

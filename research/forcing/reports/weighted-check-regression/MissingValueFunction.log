@@ -1,0 +1,8 @@
+Checking Controls.Negative.MissingValueFunction (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/Controls/Negative/MissingValueFunction.agda).
+ Checking K7.ForcedFunctionValues (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K7/ForcedFunctionValues.agda).
+/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/Controls/Negative/MissingValueFunction.agda:49.47-49: error: [UnequalTerms]
+3 != 1 of type ℕ
+when checking that the expression hy has type
+⟨ R p Proof.functionFo (f ∷ []) ⟩
+
+EXIT=42

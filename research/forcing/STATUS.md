@@ -5,7 +5,7 @@ gates, often with explicit capabilities. They do not establish the complete
 ordinary-model constructor. None of K0-K11 has been integrated into the current
 trilingual production tree by this preservation operation.
 
-The final continuation regression passes 72 positive endpoint modules and
+The final continuation regression passes 76 positive endpoint modules and
 four expected-failure controls. This is verified component progress, not
 completion of K10 or the full K11 integration contract.
 
@@ -21,7 +21,7 @@ completion of K10 or the full K11 integration contract.
 | K7 | Possible-value bounds and cardinal-preservation components | Local interface repair checked historically; consumers must supply the required functions/readings |
 | K8 | Internal Cohen finite maps, density and ccc | Historical isolated gate closed, 62 modules reported |
 | K9 | Set-coded family of distinct Cohen reals | Historical isolated gate closed, 19 modules reported; MemberImage and extension PowerSet remain explicit |
-| K10 | Internal check recursion, compiler, atomic agreement, reverse translation, Boolean subset/powerset components, conditional theorem | OPEN: final assumptions listed below |
+| K10 | Singleton and full-weight internal check recursion, definable generic name, compiler, atomic agreement, reverse translation, Boolean subset/powerset components, conditional theorem | OPEN: final assumptions listed below |
 | K11 | Least-index construction, enumerated generic filter and carrier-enumeration corollaries | Generic construction exists; full K10 application/general API acceptance remains OPEN |
 | K12-K15 | Roadmap only in this inventory | No completion claimed |
 
@@ -50,10 +50,11 @@ obligations and their current partial suppliers are recorded in
 module assembly.
 
 The K11 enumeration is an appropriate explicit hypothesis. No assertion is made
-that an externally countable transitive ground exists. Its old Cohen wrappers
-also take `NameKernel.MemberImage` through `K9.NameGround`, although the actual
-generic construction in `K11.CountableGround` does not need this capability.
-The new `K11.CountableCohen` interface removes that routing dependency and also
+that an externally countable transitive ground exists. Its legacy `CohenGeneric` and `Corollary` wrappers now also omit
+`NameKernel.MemberImage` and Accessibility, projecting ordinary operations
+directly from Families. The actual generic construction in
+`K11.CountableGround` does not need either capability.
+The standalone `K11.CountableCohen` interface removes that routing dependency and also
 avoids Families and Accessibility. It uses the actual K8 empty condition and
 the checked enumeration-to-generic constructor. Both the new interface and
 the original `Corollary` consumer pass named Agda checks.
@@ -96,12 +97,17 @@ MemberImage for other constructions; the parameter has not been removed
 from the complete K10 interface. See `reports/CHECK-RECURSION.md` for the proof
 argument and exact scope.
 
-The next check obligation is the all-condition poset variant consumed by
-`K9.NameGround`: each member contributes entries at every condition. Its
-stage must construct that full set and prove the corresponding recursive
-equation. A singleton-weight check cannot silently replace this different
-operation. The generic-name map and name translations then need actual
-narrow image suppliers of their own.
+The all-condition poset variant is now constructed in `WeightedCheckRecursion`
+and `InternalWeightedCheck`. Its stage forms the product of the definable set
+of child values with the full weight set. `K9.NameGround.Check` uses this
+supplier, and its generic name now uses the proved graph of
+`p ↦ ordered (chk p) p`. Spreading uses a singleton Cartesian product.
+These three operations no longer need MemberImage; the broader module still
+exposes it for the other arbitrary-image consumers. See
+`reports/WEIGHTED-CHECK.md` for the exact assumptions and proof argument.
+
+The next image obligations concern recursive name translations and the actual
+indexed/real-name families. Their graphs must be constructed individually.
 
 The Boolean side has a separate issue: `K4.ValueSets.ValueSets.attain` covers
 every host function, whereas `ValueGraph` and `graph→valueSet` close one

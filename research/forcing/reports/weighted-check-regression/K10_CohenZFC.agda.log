@@ -1,0 +1,7 @@
+Checking K10.CohenZFC (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenZFC.agda).
+ Checking K6.FoundationAtStructures (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/FoundationAtStructures.agda).
+  Checking K6.Foundation (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/Foundation.agda).
+ Checking K6.GroundTransferAtStructures (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/GroundTransferAtStructures.agda).
+  Checking K6.GroundTransfer (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K6/GroundTransfer.agda).
+
+EXIT=0

@@ -147,3 +147,32 @@ Final `make lint`: exit 0, with the complete output in
 hashes and log exits against the final files. Both new proof modules retain
 `--safe` and contain no MemberImage parameter, postulate, unsafe termination
 pragma, trust primitive, or hole.
+
+## Full-weight check and K11 narrowing continuation
+
+* `sh active/verify-k10-k11.sh`: exit 0, 76 positive modules each exit 0;
+  four expected-failure controls each exit 42 with the required UnequalTerms
+  diagnostic and fixture-specific pattern. Agda ran serially with the existing
+  `GHCRTS="-A64m -I0 -M8g"` limit and machine-wide process guard.
+* Fresh logs: `weighted-check-regression/`; `checks.json` records all 80 source
+  hashes, exit statuses and log paths. This is incremental validation; changed
+  dependencies were rechecked, not a cold benchmark.
+* `make lint PY=/opt/homebrew/bin/python3.11`: exit 0. The first plain invocation
+  failed because the relocated historical worktree has no `.venv/bin/python`;
+  explicitly selecting installed Python 3.11 ran all lint targets successfully.
+* Named checks of `WeightedCheckRecursion`, `InternalWeightedCheck`, and
+  `K9.NameGround` passed before the full regression. The first development check
+  of WeightedCheckRecursion reported an out-of-scope composition operator;
+  spelling the application explicitly fixed it without changing the proof.
+* Scoped read-only mathematical review verified the weighted formulas, stage
+  functionality and Cartesian product, table compatibility, recursive graph,
+  unique-existence extraction and diagonal generic-name graph. The final full
+  regression includes the subsequent spread construction and actual consumer.
+* No production `src/` file changed. The earlier production-tree validation
+  above remains historical evidence, not a fresh production check on this branch.
+
+`K9.NameGround` now consumes the new internal poset check, spreading and generic
+name. `K11.CohenGeneric` and `K11.Corollary` omit Accessibility and MemberImage.
+Remaining arbitrary-image consumers and all open endpoint hypotheses are
+listed in `STATUS.md` and `WEIGHTED-CHECK.md`; none is claimed discharged by
+this regression.

@@ -1,0 +1,16 @@
+Checking K9.BooleanSupport (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/BooleanSupport.agda).
+ Checking TranslateForward (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/TranslateForward.agda).
+ Checking K4.Atomic (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K4/Atomic.agda).
+  Checking K4.Implication (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K4/Implication.agda).
+ Checking K4.AtomicLaws (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K4/AtomicLaws.agda).
+  Checking K4.Infinitary (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K4/Infinitary.agda).
+ Checking K4.CheckValues (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K4/CheckValues.agda).
+ Checking K4.ValueSets (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K4/ValueSets.agda).
+ Checking K4.InstanceCoded (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K4/InstanceCoded.agda).
+ Checking K5.InstanceBase (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K5/InstanceBase.agda).
+  Checking K5.Frame (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K5/Frame.agda).
+  Checking K5.Dense (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K5/Dense.agda).
+ Checking K9.TranslatedCheck (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/TranslatedCheck.agda).
+  Checking K9.BooleanSeparation (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/BooleanSeparation.agda).
+
+EXIT=0
