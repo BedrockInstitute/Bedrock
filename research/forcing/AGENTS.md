@@ -1,6 +1,6 @@
 # Forcing continuation
 
-This directory is the forcing research workspace on branch `research/forcing-cohen-k0`. Read
+This directory is the forcing research workspace on branch `research/forcing`. Read
 `STATUS.md`, `reports/VALIDATION.md`, and `notes/cohen-implementation-roadmap-2026-09.md`
 before making completion claims. K10 and the full K11 integration remain open.
 

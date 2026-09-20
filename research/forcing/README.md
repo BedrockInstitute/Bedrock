@@ -1,6 +1,6 @@
 # Forcing research
 
-The working branch is `research/forcing-cohen-k0`, checked out inside the
+The working branch is `research/forcing`, checked out inside the
 repository at `.worktrees/forcing-cohen-k0`. Its original research checkpoint is
 `cbd1510efd048c77a7c3e7af972166f44f7b9338`. The continuation was transferred from
 the temporary `forcing` branch, which has been deleted. Its older production
