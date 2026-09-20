@@ -50,10 +50,14 @@
           "SF Mono", Menlo, Consolas, monospace;
   --font-size: 1.3rem;                      /* 1lab's default (sans-serif mode) body size */
   --code-font-size: calc(0.92 * var(--font-size));
+  --reading-width: 48rem;
 }
+
+html[lang="zh"] { --reading-width: 52rem; }
 
 /* Japanese prefers Hiragino (Mac) over PingFang to avoid Han-unification glyph mismatch. */
 html[lang="ja"] {
+  --reading-width: 50rem;
   --cjk-font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic",
               "Noto Sans CJK JP", sans-serif;
 }
@@ -102,7 +106,7 @@ body.nav-layout-changing { overflow-anchor: none; }
 
 /* ---- top bar ---- */
 /* Banner (if any) + topbar pin to the top together; the external warning stays on scroll. */
-#site-header { position: sticky; top: 0; z-index: 20; background: var(--text-bg); }
+#site-header { position: sticky; top: 0; z-index: 50; background: var(--text-bg); }
 #topbar {
   display: flex; align-items: center; gap: 0.75rem;
   padding: 0.5rem 1rem; background: var(--text-bg);
@@ -138,9 +142,9 @@ body.nav-layout-changing { overflow-anchor: none; }
 #theme-toggle { font-size: 1.1rem; background: none; border: none; cursor: pointer;
   color: var(--text-fg); padding: 0.2rem 0.4rem; border-radius: 6px; }
 #theme-toggle:hover { background: var(--button-hover); }
-/* Hamburger + drawer close + backdrop: inert on wide screens (the sidebar is always shown);
-   the narrow-screen block below turns them on and makes #toc an off-canvas drawer. */
-#nav-toggle { display: none; font-size: 1.3rem; line-height: 1; background: none; border: none;
+/* Keep the hamburger in one stable place so it can both open and close navigation. */
+#nav-toggle { display: inline-flex; align-items: center; justify-content: center;
+  min-width: 2rem; min-height: 2rem; font-size: 1.3rem; line-height: 1; background: none; border: none;
   cursor: pointer; color: var(--text-fg); padding: 0.2rem 0.45rem; border-radius: 6px;
   margin-left: -0.25rem; }
 #nav-toggle:hover { background: var(--button-hover); }
@@ -165,19 +169,20 @@ main { max-width: 80rem; width: 100%; margin: 0 auto; padding: 0 1rem; box-sizin
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas: "content";
 }
-article { position: relative; grid-area: content; width: 100%; max-width: 56rem; justify-self: center; }
+article { position: relative; grid-area: content; width: 100%; max-width: var(--reading-width); justify-self: center; }
 #sidenote-container { grid-area: gutter; display: none; }
 
 @media (min-width: 95rem) {
   main { max-width: 100%; }
   #post-toc-container {
-    grid-template-columns: minmax(14rem, 1fr) minmax(0, 56rem) minmax(14rem, 1fr);
+    grid-template-columns: minmax(14rem, 1fr) minmax(0, var(--reading-width)) minmax(14rem, 1fr);
     grid-template-areas: "sidebar content gutter";
   }
   #sidenote-container { display: block; }
 }
 
-#toc { grid-area: sidebar; position: sticky; top: calc(var(--site-header-height, 3.5rem) + .5rem); font-family: var(--sans);
+#toc { grid-area: sidebar; position: sticky; top: calc(var(--site-header-height, 3.5rem) + .5rem);
+  width: 100%; max-width: 20rem; justify-self: start; font-family: var(--sans);
   font-size: .85rem; max-height: calc(100dvh - var(--site-header-height, 3.5rem) - 1rem); overflow-y: auto;
   scrollbar-width: thin; scrollbar-color: var(--input-border) transparent; }
 #toc-container { padding: .25rem .65rem .75rem .1rem; }
@@ -517,12 +522,11 @@ pre.Agda .expr-node.expr-active {
 @media (max-width: 94.999rem) {
   #search-box { width: 8rem; }
 
-  #nav-toggle { display: inline-flex; align-items: center; }
   #toc-drawer-head { display: flex; }
 
   #toc {
-    display: block; position: fixed; top: 0; left: 0; bottom: 0;
-    width: min(20rem, 82vw); max-height: none;
+    display: block; position: fixed; top: var(--site-header-height, 3.5rem); left: 0; bottom: 0;
+    width: min(20rem, 82vw); max-width: 20rem; max-height: none; justify-self: auto;
     padding: 0.85rem 1.1rem 1.5rem; background: var(--text-bg);
     box-shadow: 2px 0 18px rgba(0, 0, 0, 0.22);
     overflow-y: auto; -webkit-overflow-scrolling: touch; z-index: 40;
@@ -535,7 +539,8 @@ pre.Agda .expr-node.expr-active {
   }
 
   #nav-backdrop {
-    display: block; position: fixed; inset: 0; z-index: 30;
+    display: block; position: fixed; top: var(--site-header-height, 3.5rem);
+    right: 0; bottom: 0; left: 0; z-index: 30;
     background: rgba(0, 0, 0, 0.4); opacity: 0; pointer-events: none;
     transition: opacity 0.22s ease;
   }
@@ -544,7 +549,6 @@ pre.Agda .expr-node.expr-active {
 
 @media (min-width: 95rem) {
   #toc-collapse { display: inline-flex; }
-  body.nav-collapsed #nav-toggle { display: inline-flex; align-items: center; }
   body.nav-collapsed #toc { display: none; }
   body.nav-collapsed #post-toc-container {
     /* Keep the empty left track opposite the note gutter. This preserves the
@@ -629,7 +633,7 @@ button, summary, a, select { -webkit-tap-highlight-color: transparent; }
 }
 
 @media (max-width: 60rem) {
-  #toc { width: min(22rem, 88vw); padding: 1rem .8rem 1.5rem; }
+  #toc { width: min(20rem, 88vw); padding: 1rem .8rem 1.5rem; }
   #toc-drawer-head { padding: 0 .5rem .8rem; margin-bottom: .8rem; border-bottom: 1px solid var(--ruler); }
   #toc-drawer-head .drawer-title { font-size: .9rem; color: var(--text-fg); }
   #toc :is(a, summary) { min-height: 44px; box-sizing: border-box; }

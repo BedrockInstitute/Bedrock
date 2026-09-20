@@ -183,6 +183,13 @@
     var backdrop = document.getElementById("nav-backdrop");
     var close = document.getElementById("nav-close");
     var fullLayout = window.matchMedia("(min-width: 95rem)");
+    var menuLabel = toggle.getAttribute("aria-label");
+    var closeLabel = close ? close.getAttribute("aria-label") : menuLabel;
+    function setToggleState(open) {
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? closeLabel : menuLabel);
+      toggle.title = open ? closeLabel : menuLabel;
+    }
     var collapse = document.createElement("button");
     collapse.id = "toc-collapse";
     collapse.type = "button";
@@ -193,7 +200,9 @@
     try {
       if (localStorage.getItem("bedrock-toc-collapsed") === "true") body.classList.add("nav-collapsed");
     } catch (_) {}
+    setToggleState(fullLayout.matches && !body.classList.contains("nav-collapsed"));
     function setCollapsed(collapsed) {
+      setToggleState(!collapsed);
       if (body.classList.contains("nav-collapsed") === collapsed) return;
       var headerHeight = parseFloat(getComputedStyle(document.documentElement)
         .getPropertyValue("--site-header-height")) || 0;
@@ -253,14 +262,13 @@
     function setOpen(open, preserveScroll) {
       if (fullLayout.matches) {
         setCollapsed(!open);
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
         return;
       }
       if (preserveScroll === undefined) preserveScroll = true;
       var savedX = window.scrollX;
       var savedY = window.scrollY;
       body.classList.toggle("nav-open", open);
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      setToggleState(open);
       if (backdrop) backdrop.hidden = !open;
       if (preserveScroll) {
         window.scrollTo(savedX, savedY);
@@ -297,6 +305,7 @@
       body.classList.remove("nav-open");
       if (backdrop) backdrop.hidden = true;
       if (!e.matches) body.classList.remove("nav-collapsed");
+      setToggleState(e.matches && !body.classList.contains("nav-collapsed"));
       window.dispatchEvent(new Event("resize"));
     });
   }
