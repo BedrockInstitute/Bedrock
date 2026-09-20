@@ -756,19 +756,21 @@
     }
     function gestureCandidates(items, base, deltaX) {
       if (!base) return [];
-      var sameStart = [];
+      var sameStartByEnd = new Map();
       var outerByStart = new Map();
       items.forEach(function (item) {
         if (item.kind !== "expression"
             || item.start > base.start || item.end < base.end) return;
         if (item.start === base.start) {
-          if (deltaX > 0 && item.end > base.end) sameStart.push(item);
+          if (deltaX > 0 && item.end > base.end) sameStartByEnd.set(item.end, item);
           return;
         }
         if (!outerByStart.has(item.start)) outerByStart.set(item.start, []);
         outerByStart.get(item.start).push(item);
       });
-      sameStart.sort(function (left, right) { return left.end - right.end; });
+      var sameStart = Array.from(sameStartByEnd.values()).sort(function (left, right) {
+        return left.end - right.end;
+      });
       var outerGroups = Array.from(outerByStart.entries()).sort(function (left, right) {
         return right[0] - left[0];
       });

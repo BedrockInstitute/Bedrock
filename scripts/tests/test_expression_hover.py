@@ -23,13 +23,19 @@ extractor = load("bedrock_expression_extractor", "site/extract-expression-types.
 
 
 class ExpressionHoverTests(unittest.TestCase):
-    @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
-    def test_mobile_gesture_candidates_follow_touched_name_geometry(self):
+    def run_gesture_scenario(self, scenario):
         javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
         helper = re.search(
             r"    function gestureCandidates\(items, base, deltaX\) \{.*?"
             r"(?=    function applyLevelGesture)", javascript, re.DOTALL)
         self.assertIsNotNone(helper)
+        completed = subprocess.run(
+            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            check=True, capture_output=True, text=True, timeout=5)
+        return json.loads(completed.stdout)
+
+    @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
+    def test_mobile_gesture_candidates_follow_touched_name_geometry(self):
         scenario = r'''
 var options = [
   {kind: "expression", source: "subst ⟨_⟩ (invEq (congEquiv e) q)", start: 80, end: 115},
@@ -44,10 +50,7 @@ console.log(JSON.stringify({
   left: gestureCandidates(options, base, -40).map(function (item) { return item.source; })
 }));
 '''
-        completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
-            check=True, capture_output=True, text=True, timeout=5)
-        self.assertEqual(json.loads(completed.stdout), {
+        self.assertEqual(self.run_gesture_scenario(scenario), {
             "right": [
                 "congEquiv e",
                 "invEq (congEquiv e) q",
@@ -57,6 +60,46 @@ console.log(JSON.stringify({
             "left": [
                 "invEq (congEquiv e) q",
                 "subst ⟨_⟩ (invEq (congEquiv e) q) _",
+            ],
+        })
+
+    @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
+    def test_mobile_gesture_candidates_keep_every_reachable_boundary(self):
+        scenario = r'''
+var options = [
+  {kind: "expression", source: "root partial", start: 70, end: 118},
+  {kind: "expression", source: "far blocked", start: 80, end: 114},
+  {kind: "expression", source: "focus a", start: 100, end: 110},
+  {kind: "expression", source: "near partial", start: 90, end: 113},
+  {kind: "expression", source: "far partial", start: 80, end: 116},
+  {kind: "expression", source: "focus a duplicate", start: 100, end: 110},
+  {kind: "expression", source: "root full", start: 70, end: 120},
+  {kind: "expression", source: "near full", start: 90, end: 115},
+  {kind: "expression", source: "focus a b", start: 100, end: 112},
+  {kind: "expression", source: "far full", start: 80, end: 118}
+];
+var base = {kind: "name", source: "focus", start: 100, end: 105};
+function spans(deltaX) {
+  return gestureCandidates(options, base, deltaX).map(function (item) {
+    return [item.start, item.end];
+  });
+}
+console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
+'''
+        self.assertEqual(self.run_gesture_scenario(scenario), {
+            "right": [
+                [100, 110],
+                [100, 112],
+                [90, 115],
+                [80, 116],
+                [80, 118],
+                [70, 118],
+                [70, 120],
+            ],
+            "left": [
+                [90, 115],
+                [80, 118],
+                [70, 120],
             ],
         })
 
@@ -83,7 +126,10 @@ console.log(JSON.stringify({
         self.assertIn('else if (!touched && !popup.contains(event.target)', javascript)
         self.assertIn('if (codeBlock && !rangeCapableBlock) {', javascript)
         self.assertIn('function gestureCandidates(items, base, deltaX)', javascript)
-        self.assertIn('if (deltaX > 0 && item.end > base.end) sameStart.push(item);', javascript)
+        self.assertIn(
+            'if (deltaX > 0 && item.end > base.end) sameStartByEnd.set(item.end, item);',
+            javascript,
+        )
         self.assertIn('if (levelGesture.released) clearLevelGesture();', javascript)
         self.assertIn('var continuesActiveBlock = block && block === rangeBlock && options.length;',
                       javascript)
