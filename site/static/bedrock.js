@@ -747,31 +747,56 @@
         option.nameNode.classList.add("name-active");
       else if (option.node)
         option.node.classList.add("expr-active");
-      swipeHint.hidden = !(compactPointer.matches && option.kind === "expression");
       requestAnimationFrame(position);
     }
     function gestureIndex(deltaX) {
       var distance = Math.abs(deltaX);
-      if (distance < 12) return 0;
-      /* Ranges are ordered from the innermost node to its ancestors. Moving
-         left therefore advances toward the enclosing expression. */
-      return (deltaX < 0 ? 1 : -1) *
-        (1 + Math.floor((distance - 12) / 28));
+      if (distance < 12) return -1;
+      return Math.floor((distance - 12) / 28);
+    }
+    function gestureCandidates(items, base, deltaX) {
+      if (!base) return [];
+      var sameStart = [];
+      var outerByStart = new Map();
+      items.forEach(function (item) {
+        if (item.kind !== "expression"
+            || item.start > base.start || item.end < base.end) return;
+        if (item.start === base.start) {
+          if (deltaX > 0 && item.end > base.end) sameStart.push(item);
+          return;
+        }
+        /* Nested application spines share their left edge. Once the gesture
+           enters an outer spine, expose its complete node rather than each
+           partially applied prefix. */
+        var current = outerByStart.get(item.start);
+        if (!current || item.end > current.end) outerByStart.set(item.start, item);
+      });
+      sameStart.sort(function (left, right) { return left.end - right.end; });
+      var outer = Array.from(outerByStart.values()).sort(function (left, right) {
+        return right.start - left.start || left.end - right.end;
+      });
+      return sameStart.concat(outer);
     }
     function applyLevelGesture() {
       if (!levelGesture || !levelGesture.activated || !options.length
           || levelGesture.request !== request
           || levelGesture.request !== renderedRequest) return;
-      if (levelGesture.baseIndex === null) {
-        levelGesture.baseIndex = Math.max(0, options.indexOf(selected));
-        levelGesture.lastIndex = levelGesture.baseIndex;
+      if (!levelGesture.baseOption) {
+        levelGesture.baseOption = selected;
+        levelGesture.lastOption = selected;
       }
-      var next = Math.max(0, Math.min(options.length - 1,
-        levelGesture.baseIndex + gestureIndex(levelGesture.deltaX)));
-      if (next === levelGesture.lastIndex) return;
-      levelGesture.lastIndex = next;
-      choose(next, true);
-      if (levelGesture && levelGesture.released) levelGesture = null;
+      var base = levelGesture.baseOption;
+      var step = gestureIndex(levelGesture.deltaX);
+      var candidates = gestureCandidates(options, base, levelGesture.deltaX);
+      var next = step < 0 || !candidates.length
+        ? base : candidates[Math.min(step, candidates.length - 1)];
+      if (!next || next === levelGesture.lastOption) {
+        if (levelGesture.released) clearLevelGesture();
+        return;
+      }
+      levelGesture.lastOption = next;
+      choose(options.indexOf(next), true);
+      if (levelGesture && levelGesture.released) clearLevelGesture();
     }
     function setPopupWidth(item) {
       var measure = document.createElement("div");
@@ -788,14 +813,26 @@
       popup.style.width = Math.ceil(measure.getBoundingClientRect().width) + "px";
       measure.remove();
     }
+    function setRangeBlock(block) {
+      var next = block && block.querySelector(".expr-node") ? block : null;
+      if (rangeBlock && rangeBlock !== next)
+        rangeBlock.classList.remove("ast-ranges-visible");
+      rangeBlock = next;
+      if (rangeBlock) rangeBlock.classList.add("ast-ranges-visible");
+      swipeHint.hidden = !(compactPointer.matches && rangeBlock);
+      return Boolean(rangeBlock);
+    }
+    function clearLevelGesture() {
+      if (!levelGesture) return;
+      window.clearTimeout(levelGesture.timer);
+      if (levelGesture.block) levelGesture.block.classList.remove("ast-level-gesture");
+      levelGesture = null;
+    }
     function render(items, target, preferred) {
       options = items;
       anchor = target;
       var nextRangeBlock = target.closest && target.closest("pre.Agda");
-      if (rangeBlock && rangeBlock !== nextRangeBlock)
-        rangeBlock.classList.remove("ast-ranges-visible");
-      rangeBlock = nextRangeBlock;
-      if (rangeBlock) rangeBlock.classList.add("ast-ranges-visible");
+      setRangeBlock(nextRangeBlock);
       renderedRequest = request;
       popup.hidden = false;
       choose(Math.max(0, items.indexOf(preferred)));
@@ -806,8 +843,7 @@
       var serial = ++request;
       var spans = expressionAncestors(target);
       var name = target.closest && target.closest("a[data-type]");
-      var directNode = name ? null
-        : target.closest && target.closest(".expr-node");
+      var directNode = target.closest && target.closest(".expr-node");
       var pageRequest = spans.length ? fetchTypes(cfg.chapter || cfg.module) : Promise.resolve({});
       var nameSpec = name ? name.getAttribute("data-type").split("#") : null;
       var nameRequest = nameSpec ? fetchTypes(nameSpec[0]) : Promise.resolve({});
@@ -845,15 +881,16 @@
           : items.find(function (item) { return item.node === directNode; });
         if (items.length) render(items, name || directNode || target,
                                  preferred || items[0]);
+        else if (levelGesture && levelGesture.request === serial
+                 && levelGesture.released) clearLevelGesture();
       });
     }
     function hide() {
       if (pinned) return;
+      clearLevelGesture();
       request += 1;
       popup.hidden = true; options = []; selected = null; anchor = null; clearHighlight();
-      swipeHint.hidden = true;
-      if (rangeBlock) rangeBlock.classList.remove("ast-ranges-visible");
-      rangeBlock = null;
+      setRangeBlock(null);
     }
     function laterHide() {
       if (compactPointer.matches) return;
@@ -883,7 +920,16 @@
     });
     document.addEventListener("click", function (event) {
       if (compactPointer.matches) {
+        /* Touch browsers normally activate on pointerdown. Keep click as a
+           fallback for keyboard and synthetic activation. */
+        var compactBlock = event.target.closest && event.target.closest("pre.Agda");
         var touched = event.target.closest && event.target.closest("a[data-type], .expr-node");
+        if (compactBlock && setRangeBlock(compactBlock)) pinned = true;
+        else if (!touched && !popup.contains(event.target)
+                 && !(namePopup && namePopup.contains(event.target))) {
+          pinned = false;
+          hide(); hideName();
+        }
         if (touched) {
           event.preventDefault();
           event.stopPropagation();
@@ -907,9 +953,19 @@
       }
       var codeBlock = event.target.closest && event.target.closest("pre.Agda");
       var target = event.target.closest && event.target.closest("a[data-type], .expr-node");
-      if (codeBlock && !target) {
+      var rangeCapableBlock = codeBlock && codeBlock.querySelector(".expr-node")
+        ? codeBlock : null;
+      if (codeBlock && !rangeCapableBlock) {
         pinned = false;
         hide(); hideName();
+        return;
+      }
+      if (rangeCapableBlock && rangeCapableBlock !== rangeBlock) {
+        pinned = false;
+        hide(); hideName();
+      }
+      if (rangeCapableBlock && setRangeBlock(rangeCapableBlock)) pinned = true;
+      if (codeBlock && !target) {
         return;
       }
       if ((popup.contains(event.target) || (namePopup && namePopup.contains(event.target)))
@@ -921,34 +977,48 @@
       if (usesInspector(event.target)) {
         return;
       } else if (target.matches("a[data-type]")) {
-        levelGesture = null;
+        clearLevelGesture();
         pinned = false;
         if (!popup.hidden) hide();
         showName(target);
       }
     });
     document.addEventListener("touchstart", function (event) {
-      if (!compactPointer.matches || event.touches.length !== 1
-          || !usesInspector(event.target)) return;
+      if (!compactPointer.matches || event.touches.length !== 1) return;
+      var block = event.target.closest && event.target.closest("pre.Agda");
+      var continuesActiveBlock = block && block === rangeBlock && options.length;
+      var touchesExpression = usesInspector(event.target);
+      if (!continuesActiveBlock && !touchesExpression) return;
       var touch = event.touches[0];
       var gesture = {
         target: event.target,
-        block: event.target.closest && event.target.closest("pre.Agda"),
+        block: block,
         startX: touch.clientX,
         startY: touch.clientY,
         deltaX: 0,
         activated: false,
-        baseIndex: null,
-        lastIndex: null
+        touchesExpression: touchesExpression,
+        baseOption: null,
+        lastOption: null
       };
+      clearLevelGesture();
       levelGesture = gesture;
       gesture.timer = window.setTimeout(function () {
         if (levelGesture !== gesture) return;
         gesture.activated = true;
         if (gesture.block) gesture.block.classList.add("ast-level-gesture");
         vibrateSelection();
-        hideName(); pinned = true; show(gesture.target);
-        gesture.request = request;
+        hideName(); pinned = true;
+        if (gesture.touchesExpression) {
+          show(gesture.target);
+          gesture.request = request;
+        } else if (gesture.block === rangeBlock && options.length) {
+          gesture.request = request;
+          applyLevelGesture();
+        } else {
+          show(gesture.target);
+          gesture.request = request;
+        }
       }, 300);
     });
     document.addEventListener("selectstart", function (event) {
@@ -963,8 +1033,7 @@
       var deltaY = touch.clientY - levelGesture.startY;
       if (!levelGesture.activated) {
         if (Math.hypot(deltaX, deltaY) >= 10) {
-          window.clearTimeout(levelGesture.timer);
-          levelGesture = null;
+          clearLevelGesture();
         }
         return;
       }
@@ -976,20 +1045,21 @@
     }, { passive: false });
     function finishLevelGesture(event) {
       if (!levelGesture) return;
-      window.clearTimeout(levelGesture.timer);
-      if (!levelGesture.activated) {
-        var target = levelGesture.target;
-        levelGesture = null;
+      var gesture = levelGesture;
+      window.clearTimeout(gesture.timer);
+      if (!gesture.activated) {
+        var target = gesture.target;
+        clearLevelGesture();
         if (event.type === "touchend") {
           vibrateSelection();
           hideName(); pinned = true; show(target);
         }
         return;
       }
-      if (levelGesture.block) levelGesture.block.classList.remove("ast-level-gesture");
+      if (gesture.block) gesture.block.classList.remove("ast-level-gesture");
       if (event.type === "touchcancel"
-          || levelGesture.request === renderedRequest) levelGesture = null;
-      else levelGesture.released = true;
+          || gesture.request === renderedRequest) clearLevelGesture();
+      else gesture.released = true;
     }
     document.addEventListener("touchend", finishLevelGesture);
     document.addEventListener("touchcancel", finishLevelGesture);

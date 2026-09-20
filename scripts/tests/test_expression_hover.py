@@ -1,8 +1,11 @@
 import importlib.util
 import json
-from pathlib import Path
+import re
+import shutil
+import subprocess
 import tempfile
 import unittest
+from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -20,6 +23,42 @@ extractor = load("bedrock_expression_extractor", "site/extract-expression-types.
 
 
 class ExpressionHoverTests(unittest.TestCase):
+    @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
+    def test_mobile_gesture_candidates_follow_touched_name_geometry(self):
+        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        helper = re.search(
+            r"    function gestureCandidates\(items, base, deltaX\) \{.*?"
+            r"(?=    function applyLevelGesture)", javascript, re.DOTALL)
+        self.assertIsNotNone(helper)
+        scenario = r'''
+var options = [
+  {kind: "expression", source: "subst ⟨_⟩ (invEq (congEquiv e) q)", start: 80, end: 115},
+  {kind: "expression", source: "invEq (congEquiv e) q", start: 90, end: 114},
+  {kind: "expression", source: "congEquiv e", start: 100, end: 111},
+  {kind: "expression", source: "subst ⟨_⟩ (invEq (congEquiv e) q) _", start: 80, end: 117},
+  {kind: "expression", source: "invEq (congEquiv e)", start: 90, end: 112}
+];
+var base = {kind: "name", source: "congEquiv", start: 100, end: 109};
+console.log(JSON.stringify({
+  right: gestureCandidates(options, base, 40).map(function (item) { return item.source; }),
+  left: gestureCandidates(options, base, -40).map(function (item) { return item.source; })
+}));
+'''
+        completed = subprocess.run(
+            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            check=True, capture_output=True, text=True, timeout=5)
+        self.assertEqual(json.loads(completed.stdout), {
+            "right": [
+                "congEquiv e",
+                "invEq (congEquiv e) q",
+                "subst ⟨_⟩ (invEq (congEquiv e) q) _",
+            ],
+            "left": [
+                "invEq (congEquiv e) q",
+                "subst ⟨_⟩ (invEq (congEquiv e) q) _",
+            ],
+        })
+
     def test_mobile_expression_interactions_keep_highlights_exclusive(self):
         javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
         stylesheet = (ROOT / "site" / "static" / "bedrock.css").read_text()
@@ -32,12 +71,30 @@ class ExpressionHoverTests(unittest.TestCase):
         self.assertIn('if (usesInspector(event.target)) {\n        return;', javascript)
         self.assertIn('gesture.activated = true;\n        if (gesture.block) gesture.block.classList.add("ast-level-gesture");\n        vibrateSelection();', javascript)
         self.assertIn('if (event.type === "touchend") {\n          vibrateSelection();', javascript)
-        self.assertIn('choose(next, true)', javascript)
+        self.assertIn('choose(options.indexOf(next), true)', javascript)
         self.assertIn('zh: "按住色块左右滑动以切换AST节点"', javascript)
-        self.assertIn('swipeHint.hidden = !(compactPointer.matches && option.kind === "expression")',
+        self.assertIn('function setRangeBlock(block)', javascript)
+        self.assertIn('swipeHint.hidden = !(compactPointer.matches && rangeBlock);', javascript)
+        self.assertIn('if (rangeCapableBlock && setRangeBlock(rangeCapableBlock)) pinned = true;',
                       javascript)
-        self.assertIn('return (deltaX < 0 ? 1 : -1)', javascript)
+        self.assertIn('if (compactBlock && setRangeBlock(compactBlock)) pinned = true;',
+                      javascript)
+        self.assertIn('else if (!touched && !popup.contains(event.target)', javascript)
+        self.assertIn('if (codeBlock && !rangeCapableBlock) {', javascript)
+        self.assertIn('function gestureCandidates(items, base, deltaX)', javascript)
+        self.assertIn('if (deltaX > 0 && item.end > base.end) sameStart.push(item);', javascript)
+        self.assertIn('if (!current || item.end > current.end) outerByStart.set(item.start, item);',
+                      javascript)
+        self.assertIn('if (levelGesture.released) clearLevelGesture();', javascript)
+        self.assertIn('var continuesActiveBlock = block && block === rangeBlock && options.length;',
+                      javascript)
+        self.assertIn('if (!continuesActiveBlock && !touchesExpression) return;',
+                      javascript)
+        self.assertIn('if (gesture.block === rangeBlock && options.length)', javascript)
+        self.assertIn('if (gesture.touchesExpression) {\n          show(gesture.target);', javascript)
         self.assertIn('.ast-swipe-hint { position: fixed;', stylesheet)
+        self.assertIn('min-height: 3.75rem;', stylesheet)
+        self.assertIn('font: 700 1rem/1.35 var(--sans);', stylesheet)
         self.assertNotIn('.hover-popup.has-definition-link { min-height:', stylesheet)
         self.assertIn('top: 0; right: .25rem; bottom: 0; display: grid;', stylesheet)
         self.assertIn('pre.Agda .expr-node, pre.Agda .expr-node * {', stylesheet)

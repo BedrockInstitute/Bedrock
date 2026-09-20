@@ -423,12 +423,14 @@ pre.Agda .expr-node.expr-active {
   pre.Agda :is(.expr-node, a[data-type]) { touch-action: pan-y;
     -webkit-touch-callout: none; }
   pre.Agda.ast-level-gesture { user-select: none; -webkit-user-select: none; }
-  .ast-swipe-hint { position: fixed; z-index: 80; top: max(.5rem, env(safe-area-inset-top));
+  .ast-swipe-hint { position: fixed; z-index: 80;
+    top: max(1.25rem, calc(env(safe-area-inset-top) + .75rem));
     left: 50%; width: max-content; max-width: calc(100vw - 1rem); box-sizing: border-box;
-    padding: .45rem .7rem; color: var(--text-fg); background: var(--popup-bg);
-    border: 1px solid var(--primary); border-radius: 999px;
-    box-shadow: 0 3px 14px rgba(0,0,0,.2); transform: translateX(-50%);
-    font: 600 .78rem/1.25 var(--sans); text-align: center; pointer-events: none; }
+    min-height: 3.75rem; padding: .7rem 1rem; color: var(--text-fg); background: var(--popup-bg);
+    border: 2px solid var(--primary); border-radius: 1rem;
+    box-shadow: 0 6px 24px rgba(0,0,0,.3); transform: translateX(-50%);
+    font: 700 1rem/1.35 var(--sans); text-align: center; pointer-events: none;
+    display: grid; place-items: center; }
   .ast-swipe-hint[hidden] { display: none; }
 }
 
