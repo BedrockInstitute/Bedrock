@@ -765,15 +765,38 @@
           if (deltaX > 0 && item.end > base.end) sameStart.push(item);
           return;
         }
-        /* Nested application spines share their left edge. Once the gesture
-           enters an outer spine, expose its complete node rather than each
-           partially applied prefix. */
-        var current = outerByStart.get(item.start);
-        if (!current || item.end > current.end) outerByStart.set(item.start, item);
+        if (!outerByStart.has(item.start)) outerByStart.set(item.start, []);
+        outerByStart.get(item.start).push(item);
       });
       sameStart.sort(function (left, right) { return left.end - right.end; });
-      var outer = Array.from(outerByStart.values()).sort(function (left, right) {
-        return right.start - left.start || left.end - right.end;
+      var outerGroups = Array.from(outerByStart.entries()).sort(function (left, right) {
+        return right[0] - left[0];
+      });
+      var outer = [];
+      var rightEdge = sameStart.length
+        ? sameStart[sameStart.length - 1].end : base.end;
+      var enteredOuter = false;
+      outerGroups.forEach(function (entry) {
+        var byEnd = new Map();
+        entry[1].forEach(function (item) {
+          if (item.end >= rightEdge) byEnd.set(item.end, item);
+        });
+        var enclosing = Array.from(byEnd.values()).sort(function (left, right) {
+          return left.end - right.end;
+        });
+        if (!enclosing.length) return;
+        /* The nearest outer application completes the call containing the
+           touched name. Farther out, a rightward gesture follows every new
+           right edge, including intermediate applications such as
+           `subst P path` before `subst P path value`. A leftward gesture keeps
+           selecting the completed spine at each new left edge. */
+        var additions = deltaX > 0 && enteredOuter
+          ? enclosing : [enclosing[enclosing.length - 1]];
+        additions.forEach(function (item) {
+          outer.push(item);
+          rightEdge = item.end;
+        });
+        enteredOuter = true;
       });
       return sameStart.concat(outer);
     }

@@ -51,6 +51,7 @@ console.log(JSON.stringify({
             "right": [
                 "congEquiv e",
                 "invEq (congEquiv e) q",
+                "subst ⟨_⟩ (invEq (congEquiv e) q)",
                 "subst ⟨_⟩ (invEq (congEquiv e) q) _",
             ],
             "left": [
@@ -83,8 +84,6 @@ console.log(JSON.stringify({
         self.assertIn('if (codeBlock && !rangeCapableBlock) {', javascript)
         self.assertIn('function gestureCandidates(items, base, deltaX)', javascript)
         self.assertIn('if (deltaX > 0 && item.end > base.end) sameStart.push(item);', javascript)
-        self.assertIn('if (!current || item.end > current.end) outerByStart.set(item.start, item);',
-                      javascript)
         self.assertIn('if (levelGesture.released) clearLevelGesture();', javascript)
         self.assertIn('var continuesActiveBlock = block && block === rangeBlock && options.length;',
                       javascript)
