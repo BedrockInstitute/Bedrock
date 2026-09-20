@@ -22,6 +22,9 @@ check_slots() {
 
 count=0
 for source in \
+  CheckRecursion.agda \
+  InternalCheck.agda \
+  K9/BooleanSupport.agda \
   K10/CohenCompile.agda \
   K10/CohenValSeam.agda \
   K10/CohenPairUnion.agda \

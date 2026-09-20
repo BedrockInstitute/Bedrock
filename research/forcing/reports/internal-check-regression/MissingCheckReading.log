@@ -1,0 +1,8 @@
+Checking Controls.Negative.MissingCheckReading (/Users/alsg/Agentic/Bedrock/research/forcing/active/Controls/Negative/MissingCheckReading.agda).
+/Users/alsg/Agentic/Bedrock/research/forcing/active/Controls/Negative/MissingCheckReading.agda:42.17-21: error: [UnequalTerms]
+(u ∷ ξ ∷ []) ⊨ chkFo != u ≈ˢ chk ξ of type
+Σ (Type ℓ) (Cubical.Foundations.HLevels.isOfHLevel 1)
+when checking that the expression refl has type
+(u ∷ ξ ∷ []) ⊨ chkFo ≡ u ≈ˢ chk ξ
+
+EXIT=42

@@ -43,12 +43,13 @@ open WFI using ( Acc ; acc )
 import CardinalBridge
 
 module NG = K9.NameGround 𝒮 families accessible images pow κ w
+  using ( extensional; hasPair; hasUnion; hasSeparation; chk-name )
 module Su = K10.CohenBooleanLeastSucc 𝒮 families accessible images pow
-  κ w lem hw paths
+  κ w lem hw paths using ( module Ap; contains-check-succ-clause )
 module OI = K8.OmegaInduction 𝒮 NG.extensional paths NG.hasPair NG.hasUnion
-  pow NG.hasSeparation κ
-module FV = K8.FiniteVocabulary 𝒮
-module CB = CardinalBridge 𝒮
+  pow NG.hasSeparation κ using ( omega-predecessor )
+module FV = K8.FiniteVocabulary 𝒮 using ( emptyPred )
+module CB = CardinalBridge 𝒮 using ( wk1; isSuccOf )
 
 open K4.Algebra 𝒮 using ( Pt ; _≤ᴮ_ ; ⊆ˢ-trans )
 open K4.Algebra.Lattice Su.Ap.Ind.BAT.IC.codedLattice

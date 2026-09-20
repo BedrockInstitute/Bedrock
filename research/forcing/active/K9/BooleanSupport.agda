@@ -22,11 +22,9 @@ import Cubical.Induction.WellFounded as WFI
 import Cubical.HITs.PropositionalTruncation as PT
 import Cubical.Data.Empty as Empty
 open import Cubical.Data.Sum using ( inl; inr )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 import CodedVocabulary
-import GroundDescription
 import NameSupport
-import StandardNames
+import InternalCheck
 import TranslateForward
 import K4.Algebra
 import K4.Atomic
@@ -61,7 +59,6 @@ B = CO.B
 open K4.Algebra.Lattice IC.codedLattice using ( ⊤ᴮ; ⊥ᴮ )
 open K4.Algebra.CodedComplete IC.codedComplete
   using ( supᴮ; sup-ub; sup-lub )
-private module GD = GroundDescription 𝒮 extensional ≈ˢ-paths using ( ext-path )
 
 module Support (W : S) where
   module K = NameKernel.Kernel 𝒮 core accessible W
@@ -152,39 +149,18 @@ opaque
   weight-least n x v upper = sup-lub (BSupport.weightsAt n x) (BSupport.weightsAt-sub n x)
     v (λ b hb → upper b (BSupport.weight-out n x (fst b) hb))
 
-private
-  module Standard = StandardNames.Kernel 𝒮 BK.entry BK.entry-inj
-    BK.singleOf BK.singleOf-spec BK.singleOf-member BK.Child
-    (λ x n Q h f → PT.rec (snd Q) (λ { (b , hb) → f b hb }) h)
-    ≈ˢ-paths GD.ext-path
-    using ( module Validity; module Weighted )
-  module Valid = Standard.Validity B BK.Shape (λ n h → h) BK.IsName BK.name-intro
-    using ( entries-name )
-  module Weighted = Standard.Weighted accessible
-    (NameKernel.MemberImage.image images) (NameKernel.MemberImage.image-spec images)
-    NG.Union.bigUnion NG.Union.bigUnion-spec
-    using ( module Over )
-
 module Checked where
   private
-    module OneCheck = Weighted.Over (BK.singleOf (fst ⊤ᴮ))
-      using ( chk; chk-spec; module Valid )
-    module CheckValid = OneCheck.Valid B BK.IsName Valid.entries-name
-      (λ p hp → subst (λ z → ⟨ z ∈ˢ B ⟩) (sym (BK.singleOf-spec (fst ⊤ᴮ) p hp)) (snd ⊤ᴮ))
-      using ( chk-name )
+    module Internal = InternalCheck 𝒮 families accessible pow B (fst ⊤ᴮ) (snd ⊤ᴮ)
+      using ( entry-agrees; check-name; module C )
+
   check : S → S
-  check = OneCheck.chk
+  check = Internal.C.chk
 
   check-name : (a : S) → ⟨ BK.IsName (check a) ⟩
-  check-name = CheckValid.chk-name
+  check-name = Internal.check-name
 
   check-spec : (a e : S) → (e ∈ˢ check a)
     ≡ ⋁ S (λ y → (y ∈ˢ a) ⊓ (e ≈ˢ BK.entry (check y) (fst ⊤ᴮ)))
-  check-spec a e = OneCheck.chk-spec a e ∙ cong (⋁ S) (funExt (λ y →
-    cong ((y ∈ˢ a) ⊓_) (⇔toPath
-      {P = ⋁ S (λ p → (p ∈ˢ BK.singleOf (fst ⊤ᴮ)) ⊓ (e ≈ˢ BK.entry (check y) p))}
-      {Q = e ≈ˢ BK.entry (check y) (fst ⊤ᴮ)}
-      (PT.rec (snd (e ≈ˢ BK.entry (check y) (fst ⊤ᴮ)))
-        (λ { (p , hp , eq) → subst (λ z → ⟨ e ≈ˢ BK.entry (check y) z ⟩)
-          (BK.singleOf-spec (fst ⊤ᴮ) p hp) eq }))
-      (λ eq → ∣ fst ⊤ᴮ , BK.singleOf-member (fst ⊤ᴮ) , eq ∣₁))))
+  check-spec a e = Internal.C.chk-spec a e ∙ cong (⋁ S) (funExt λ y →
+    cong ((y ∈ˢ a) ⊓_) (cong (e ≈ˢ_) (Internal.entry-agrees (check y) (fst ⊤ᴮ))))

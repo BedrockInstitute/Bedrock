@@ -1,0 +1,6 @@
+Checking K10.CohenBooleanOmegaTop (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenBooleanOmegaTop.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.
+
+EXIT=251

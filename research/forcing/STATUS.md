@@ -5,7 +5,7 @@ gates, often with explicit capabilities. They do not establish the complete
 ordinary-model constructor. None of K0-K11 has been integrated into the current
 trilingual production tree by this preservation operation.
 
-The final continuation regression passes 69 positive endpoint modules and
+The final continuation regression passes 72 positive endpoint modules and
 four expected-failure controls. This is verified component progress, not
 completion of K10 or the full K11 integration contract.
 
@@ -21,7 +21,7 @@ completion of K10 or the full K11 integration contract.
 | K7 | Possible-value bounds and cardinal-preservation components | Local interface repair checked historically; consumers must supply the required functions/readings |
 | K8 | Internal Cohen finite maps, density and ccc | Historical isolated gate closed, 62 modules reported |
 | K9 | Set-coded family of distinct Cohen reals | Historical isolated gate closed, 19 modules reported; MemberImage and extension PowerSet remain explicit |
-| K10 | Compiler, atomic agreement, reverse translation, Boolean subset/powerset components, conditional theorem | OPEN: final assumptions listed below |
+| K10 | Internal check recursion, compiler, atomic agreement, reverse translation, Boolean subset/powerset components, conditional theorem | OPEN: final assumptions listed below |
 | K11 | Least-index construction, enumerated generic filter and carrier-enumeration corollaries | Generic construction exists; full K10 application/general API acceptance remains OPEN |
 | K12-K15 | Roadmap only in this inventory | No completion claimed |
 
@@ -44,7 +44,10 @@ suppliers for the first two and removes them from `FromParts`; only `inner-bot`
 remains an input there. This closes the CH formula's omega and powerset-at-omega
 clauses, not the general extension PowerSet axiom. The injection/cardinal
 argument producing `inner-bot` still needs closure. Compiling a sentence does
-not by itself prove that its value is top.
+not by itself prove that its value is top. The exact four injection-value
+obligations and their current partial suppliers are recorded in
+`reports/INNER-BOT-AUDIT.md`; this is a mathematical supply gap, not just
+module assembly.
 
 The K11 enumeration is an appropriate explicit hypothesis. No assertion is made
 that an externally countable transitive ground exists. Its old Cohen wrappers
@@ -72,23 +75,33 @@ silently changing the intended ground contract to include it, would not complete
 the roadmap. The source-level replacement must realize the particular definable
 images needed by the construction, or prove an adequate narrower interface.
 
-## First concrete continuation obligation
+## Internal check recursion now constructed
 
-`NameImage.CheckDischarge.Stage` already derives one checked-name image from
-Collection and Separation, provided an internal stage table `F` exists with
-these two properties:
+`active/CheckRecursion.agda` constructs good partial recursion tables, proves
+compatibility by membership induction, and uses ordinary Collection and
+Separation to collect and merge them. The resulting first-order value relation
+is total and single-valued. Unique existence yields the actual `chk`, its
+`check-graph`, and its recursive membership equation `chk-spec`, with no
+MemberImage or supplied recursive graph.
 
-```
-F-mem  : (x : S) → ⟨ x ∈ˢ a ⟩ → ⟨ entry x (chk x) ∈ˢ F ⟩
-F-only : (e u v : S) → ⟨ u ∈ˢ a ⟩ → ⟨ e ∈ˢ F ⟩
-         → ⟨ isKPairΔ e u v ⟩ → v ≡ chk u
-```
+The constructed canonical `table a`, `table-mem`, and `table-only` now discharge
+`NameImage.CheckDischarge.Stage`. `active/InternalCheck.agda` additionally
+proves actual NameKernel name validity and injectivity. These modules retain
+explicit host membership accessibility and ordinary ground axioms. They do
+not claim that ordinary Foundation supplies host accessibility.
 
-Construct these approximation tables and their compatible recursion before
-trying to replace the `MemberImage` input to `K9.NameGround`. Merely assuming
-`F` or a definable graph for the already constructed host recursion would move
-the missing obligation. The resulting fixed-point specification is exactly
-`NameImage.CheckDischarge.CheckSpec`.
+`K9.BooleanSupport.Checked` now uses this new singleton-weight construction.
+Its public check specification is preserved. The broader module still needs
+MemberImage for other constructions; the parameter has not been removed
+from the complete K10 interface. See `reports/CHECK-RECURSION.md` for the proof
+argument and exact scope.
+
+The next check obligation is the all-condition poset variant consumed by
+`K9.NameGround`: each member contributes entries at every condition. Its
+stage must construct that full set and prove the corresponding recursive
+equation. A singleton-weight check cannot silently replace this different
+operation. The generic-name map and name translations then need actual
+narrow image suppliers of their own.
 
 The Boolean side has a separate issue: `K4.ValueSets.ValueSets.attain` covers
 every host function, whereas `ValueGraph` and `graph→valueSet` close one

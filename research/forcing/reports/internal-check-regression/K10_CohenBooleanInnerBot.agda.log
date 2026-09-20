@@ -1,0 +1,7 @@
+   Checking K10.BooleanPairs (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/BooleanPairs.agda).
+   Checking K9.BooleanReals (/Users/alsg/Agentic/Bedrock/research/forcing/active/K9/BooleanReals.agda).
+  Checking K10.BooleanGraph (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/BooleanGraph.agda).
+ Checking K10.CohenBooleanNotCH (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenBooleanNotCH.agda).
+Checking K10.CohenBooleanInnerBot (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenBooleanInnerBot.agda).
+
+EXIT=0

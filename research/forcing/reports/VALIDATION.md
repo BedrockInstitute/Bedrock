@@ -98,3 +98,52 @@ as listed in `../STATUS.md`, not a claim of completed K10/K11 acceptance.
 
 The final pre-commit run of the installed-Agda `make check` command above also
 returned exit 0; its complete log is `final-main-check.log`.
+
+## Internal check recursion continuation
+
+The new `CheckRecursion.agda` and `InternalCheck.agda` modules, and the changed
+`K9/BooleanSupport.agda`, each pass named Agda checks with exit 0 under the same
+8 GB runtime limit. The runner waits when two machine-wide Agda processes are
+already active. The first attempted launch returned 75 at this guard and did
+not start a third process.
+
+Two development diagnostics were corrected before acceptance: an extra closing
+parenthesis in `good-reading`, and importing `isPropIsContr` from `HLevels`
+instead of `Cubical.Foundations.Prelude`. Neither was an unclosed mathematical
+goal. The accepted sources contain no holes or unsafe constructs.
+
+The Boolean check supplier is now connected to the existing `Checked` API.
+The new proof and its actual stage-table discharge are described in
+`CHECK-RECURSION.md`. Independent read-only Sol verification found no circular
+use of MemberImage or hidden choice and confirmed the remaining poset-side
+routing dependency. The expanded endpoint regression includes the two new
+modules and `K9.BooleanSupport` in addition to its original 69 endpoints.
+
+`make lint`: exit 0 after the new proof report and status update.
+`sh -n active/verify-k10-k11.sh` and `git diff --check -- research/forcing`:
+exit 0. No production `src/` file is changed by this continuation.
+
+The first expanded regression passed its first 25 positive endpoints, then
+`K10/CohenBooleanOmegaTop.agda` exhausted the fixed 8 GB heap (exit 251).
+The diagnostic is preserved in `internal-check-omega-top-heap.log`. Its five
+broad module aliases were narrowed to the definitions/submodules actually
+used. This changes no theorem statement, proof step, axiom, or memory limit.
+The complete runner was then restarted against the narrowed source.
+
+The narrowed `CohenBooleanOmegaTop` then returned exit 0 under the same 8 GB
+limit, and the runner continued. No proof-body rewrite or opacity change was
+needed for this repair.
+
+
+The completed expanded runner returned exit 0: all 72 positive modules passed,
+and all four negative controls returned the required exit 42 with their
+expected type mismatch. The final logs are in `internal-check-regression/`;
+`checks.json` records all 76 source hashes, log paths, and exit codes. The
+previous 69-module logs remain in `endpoint-regression/` as historical evidence.
+This is an incremental source/dependency recheck, not a full cold benchmark.
+
+Final `make lint`: exit 0, with the complete output in
+`internal-check-lint.log`. A separate audit verified all 76 recorded source
+hashes and log exits against the final files. Both new proof modules retain
+`--safe` and contain no MemberImage parameter, postulate, unsafe termination
+pragma, trust primitive, or hole.

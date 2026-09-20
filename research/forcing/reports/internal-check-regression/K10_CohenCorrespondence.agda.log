@@ -1,0 +1,6 @@
+   Checking K10.CohenAgreement (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenAgreement.agda).
+  Checking K10.CohenReverse (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenReverse.agda).
+ Checking K10.CohenAgreementSeam (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenAgreementSeam.agda).
+Checking K10.CohenCorrespondence (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenCorrespondence.agda).
+
+EXIT=0
