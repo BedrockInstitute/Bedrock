@@ -1,0 +1,68 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track C, NEGATIVE CONTROL 5, AND IT IS THE VALUABLE KIND.
+-- EXPECTED EXIT 0, AND THE EXIT 0 IS THE FINDING.
+--
+-- The PARAMETER reading of Track D's Type ℓ report. Nothing here mentions Ω
+-- in a position the sort checker can see: GroundWellOrder is an ABSTRACT type
+-- at Type ℓ and every use of it is through a projection whose own type is
+-- large. Agda has no reason to complain, so the module elaborates, and the
+-- order theory inside it elaborates too.
+--
+-- IT CAN NEVER BE INSTANTIATED. Anything with these three projections is a
+-- Type (ℓ-suc ℓ), because ltOf wo : S → S → Ω already is. So this module has
+-- no application anywhere, ever, and nothing in this file says so.
+-- K7/breaks/GWOParamAtTypeLApplied.agda-break is the same module with one
+-- application added, and it exits 42.
+--
+-- That is rule 15 one level down: the telescope discriminates nothing, the
+-- body is fine, and the file is empty of content in the only sense that
+-- matters. The audit question is inhabitation and no grep asks it.
+--
+-- AND ONE CORRECTION, RULE 14. The brief says a RECORD at Type ℓ "typechecked
+-- and could never have been instantiated". Measured here in both spellings:
+-- the record spelling does NOT typecheck (K7/breaks/GWORecordAtTypeL.agda-break,
+-- exit 42, [ConstructorDoesNotFitInData], and the message names S → S → Ω as
+-- the offending argument). Only the PARAMETER spelling has the silent shape.
+-- K7/CCCEquivalence.agda declares the record at Type (ℓ-suc ℓ), which is
+-- right either way, but the hazard a K7 reader should carry is the parameter
+-- one and not the record one.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+open import Cubical.Data.Sigma using ( Σ≡Prop )
+open import Cubical.Data.Sum using ( _⊎_ ) renaming ( inl to inl⊎ ; inr to inr⊎ )
+import Cubical.Data.Empty as Empty
+
+module K7.breaks.GWOParamAtTypeL
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module WellSmall
+  (GroundWellOrder : Type ℓ)
+  (ltOf  : GroundWellOrder → S → S → Ω)
+  (triOf : (wo : GroundWellOrder) (z z' : S)
+         → ∥ ⟨ ltOf wo z z' ⟩ ⊎ ((z ≡ z') ⊎ ⟨ ltOf wo z' z ⟩) ∥₁)
+  (leastOf : (wo : GroundWellOrder) (d : S) → ⟨ ⋁ S (λ z → z ∈ˢ d) ⟩
+           → ⟨ ⋁ S (λ z → (z ∈ˢ d)
+                 ⊓ ⋀ S (λ z' → (z' ∈ˢ d) ⇒ ((ltOf wo z' z) ⇒ ⊥))) ⟩)
+  where
+
+  leastIn : GroundWellOrder → S → S → Ω
+  leastIn wo d z = (z ∈ˢ d) ⊓ ⋀ S (λ z' → (z' ∈ˢ d) ⇒ ((ltOf wo z' z) ⇒ ⊥))
+
+  least-unique : (wo : GroundWellOrder) (d z z' : S)
+               → ⟨ leastIn wo d z ⟩ → ⟨ leastIn wo d z' ⟩ → z ≡ z'
+  least-unique wo d z z' hz hz' = PT.rec (isSetS z z') step (triOf wo z z')
+    where
+      step : ⟨ ltOf wo z z' ⟩ ⊎ ((z ≡ z') ⊎ ⟨ ltOf wo z' z ⟩) → z ≡ z'
+      step (inl⊎ l)        = Empty.rec* (snd hz' z (fst hz) l)
+      step (inr⊎ (inl⊎ e)) = e
+      step (inr⊎ (inr⊎ l)) = Empty.rec* (snd hz z' (fst hz') l)

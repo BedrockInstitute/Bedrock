@@ -1,0 +1,92 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track H, NEGATIVE CONTROL 2, AND IT IS THIS TRACK'S OWN. EXPECTED EXIT 0,
+-- AND THE EXIT 0 IS THE RESULT.
+--
+-- This is the K1 IsOrdinalφ vacuity defect at the cofinality formula. K7's
+-- brief names it: "isRegular and cofinality have nested bounded quantifiers
+-- and are exactly where K1's IsOrdinalφ vacuity defect occurred", and
+-- K6/Ordinals.agda:11-18 records the same shape, "the inner bounded quantifier
+-- ranging over the outer bound variable, which collapses the predicate to
+-- transitivity alone".
+--
+-- The poison is one de Bruijn index: the inner ∃̇∈ is bounded by α instead of
+-- by a. Everything mechanical still passes.
+--
+--   * the formula is a well scoped Formula S 2;
+--   * checkΔ₀ certifies it;
+--   * it HAS a reading theorem, by refl, against the host predicate that is
+--     its literal unfolding. A track that writes the reading by unfolding the
+--     formula it has just written will not notice.
+--
+-- AND IT IS VACUOUS. The second conjunct of the poisoned predicate holds of
+-- EVERY a and α whatsoever, witnessed by µ := η, so the poisoned "cofinal"
+-- says exactly "a ⊆ α" and the whole of cofinality has evaporated. The proof
+-- is `vacuous` below and it takes only reflexivity of ≈ˢ.
+--
+-- CONCLUSION, and it is the reason this file exists. A reading theorem is
+-- necessary and is NOT sufficient. What discriminates is a reading theorem
+-- whose host side is written FIRST, from the mathematics, and only then
+-- matched against the formula; plus a vacuity probe of exactly this shape.
+-- K7/Cofinality.agda carries both, and its isCofinal is not vacuous because
+-- the inner join is bounded by a.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax
+  using ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
+import FOL.Semantics
+import CardinalBridge
+import Cubical.HITs.PropositionalTruncation as PT
+import Cubical.Functions.Logic as Logic
+
+module K7.breaks.CofinalBound {ℓ} (𝒯 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import Cubical.Data.Unit using ( tt )
+open PT using ( ∣_∣₁ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒯
+
+module CB = CardinalBridge 𝒯
+open CB using ( isSubset )
+
+private module Sem = FOL.Semantics (hPropAlgebra ℓ) 𝒯
+open Sem.At S id using ( _⊨_ )
+
+SubsetBφ : Formula S 2
+SubsetBφ = ∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero)))
+
+-- POISON. var (suc zero) is a and var (suc (suc zero)) is α at this depth.
+-- K7/Cofinality.agda writes the first; this writes the second.
+
+IsCofinalφ-misbound : Formula S 2
+IsCofinalφ-misbound =
+  SubsetBφ
+  ∧̇ (∀̇∈ (var (suc zero))
+       (∃̇∈ (var (suc (suc zero)))
+         ((var (suc zero) ∈̇ var zero) ∨̇ (var (suc zero) ≐ var zero))))
+
+Δ₀-misbound : Δ₀ IsCofinalφ-misbound
+Δ₀-misbound = checkΔ₀ IsCofinalφ-misbound tt
+
+isCofinal-misbound : S → S → Ω
+isCofinal-misbound a α =
+  (isSubset a α)
+  ⊓ (⋀ S (λ η → (η ∈ˢ α) ⇒
+      (⋁ S (λ µ → (µ ∈ˢ α) ⊓ ((η ∈ˢ µ) ⊔ (η ≈ˢ µ))))))
+
+-- THE READING THEOREM PASSES. This is the whole point.
+
+misbound-bridge : (a α : S)
+                → ((a ∷ α ∷ []) ⊨ IsCofinalφ-misbound) ≡ isCofinal-misbound a α
+misbound-bridge a α = refl
+
+-- AND THE PREDICATE IS VACUOUS BEYOND ITS SUBSET CLAUSE.
+
+vacuous : ((x : S) → ⟨ x ≈ˢ x ⟩) → (a α : S) → ⟨ isSubset a α ⟩
+        → ⟨ isCofinal-misbound a α ⟩
+vacuous rfl a α sub = sub , λ η hη → ∣ η , hη , Logic.inr (rfl η) ∣₁

@@ -1,0 +1,6 @@
+Checking K7.breaks.CofinalSwap (/private/tmp/bedrock-k7-probes/K7/breaks/CofinalSwap.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CofinalSwap.agda:71.24-28: error: [UnequalTerms]
+x != x₁ of type S
+when checking that the expression refl has type
+(a ∷ α ∷ []) ⊨ IsCofinalφ-swapped ≡ isCofinal a α
+EXIT=42

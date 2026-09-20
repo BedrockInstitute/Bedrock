@@ -1,0 +1,12 @@
+Checking Controls.Negative.MissingFunction (/Users/alsg/Agentic/Bedrock/research/forcing/active/Controls/Negative/MissingFunction.agda).
+/Users/alsg/Agentic/Bedrock/research/forcing/active/Controls/Negative/MissingFunction.agda:310.40-62: error: [UnequalTerms]
+S !=< fst (forces p COᴱ.IsFunctionφ (f ∷ []))
+when checking that the expression PB.countable-from-ccc₂ has type
+PB.ValueAntichain →
+Collection →
+(w : S) →
+⟨ CA.CCC₂ᴵ c o w ⟩ →
+(sep : Separation) (p : Cond) (f : N.Nm) (ξ : S) →
+⟨ CBᴳ.injectable (EB.valuesOf sep p f ξ) w ⟩
+
+EXIT=42

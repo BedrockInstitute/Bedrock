@@ -1,0 +1,30 @@
+python3.11 tools/bedrock-agda/build.py
+downloading https://hackage.haskell.org/package/Agda-2.8.0/Agda-2.8.0.tar.gz
++ patch -p1 --forward --batch -i /Users/alsg/Agentic/Bedrock/tools/bedrock-agda/adapters/Agda-2.8.0.patch
+patching file Agda.cabal
+patching file 'src/full/Agda/Main.hs'
+patching file 'src/full/Agda/Interaction/Imports.hs'
+patching file 'src/full/Agda/TypeChecking/Rules/Application.hs'
+patching file 'src/full/Agda/TypeChecking/Rules/LHS.hs'
+patching file 'src/full/Agda/TypeChecking/Rules/Term.hs'
++ cabal install happy-2.2 --installdir=/Users/alsg/Agentic/Bedrock/_build/bedrock-agda/build-tools/happy-2.2 --install-method=copy --overwrite-policy=always -j2
+Traceback (most recent call last):
+  File "/Users/alsg/Agentic/Bedrock/tools/bedrock-agda/build.py", line 222, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/alsg/Agentic/Bedrock/tools/bedrock-agda/build.py", line 161, in main
+    happy = ensure_happy(build_root, happy_version)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/alsg/Agentic/Bedrock/tools/bedrock-agda/build.py", line 58, in ensure_happy
+    run([
+  File "/Users/alsg/Agentic/Bedrock/tools/bedrock-agda/build.py", line 38, in run
+    subprocess.run(command, cwd=cwd, check=True)
+  File "/opt/homebrew/Cellar/python@3.11/3.11.16/Frameworks/Python.framework/Versions/3.11/lib/python3.11/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.16/Frameworks/Python.framework/Versions/3.11/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/homebrew/Cellar/python@3.11/3.11.16/Frameworks/Python.framework/Versions/3.11/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'cabal'
+make: *** [_build/bin/bedrock-agda] Error 1

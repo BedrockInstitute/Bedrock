@@ -1,0 +1,71 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track H, NEGATIVE CONTROL 1. EXPECTED EXIT 42.
+--
+-- Rule 6: a pure off-by-one is caught by intrinsic scoping, but a
+-- UNIFORM-DEPTH formula gets protection ONLY from its reading theorem. K5's
+-- Track C swapped two entries of an instantiation vector and got a well formed
+-- formula whose reading was a sentence about the wrong set.
+--
+-- This is that swap at IsCofinalφ. The body of the inner bounded quantifier is
+-- written µ ∈ η instead of η ∈ µ, which is the DUAL order and says "every
+-- member of α has a member of a below it", a statement about downward density
+-- and not about cofinality. The formula is a well scoped Formula S 2 and
+-- checkΔ₀ still certifies it as bounded, so neither the scope checker nor the
+-- Levy classifier notices anything.
+--
+-- The reading theorem below is K7/Cofinality.agda's, unchanged. It must fail.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax
+  using ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈; ∃̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
+import FOL.Semantics
+import CardinalBridge
+
+module K7.breaks.CofinalSwap {ℓ} (𝒯 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import Cubical.Data.Unit using ( tt )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒯
+
+module CB = CardinalBridge 𝒯
+open CB using ( isSubset )
+
+private module Sem = FOL.Semantics (hPropAlgebra ℓ) 𝒯
+open Sem.At S id using ( _⊨_ )
+
+SubsetBφ : Formula S 2
+SubsetBφ = ∀̇∈ (var zero) (var zero ∈̇ var (suc (suc zero)))
+
+-- POISON. var (suc zero) is η and var zero is µ at this depth; the two are
+-- exchanged in both disjuncts.
+
+IsCofinalφ-swapped : Formula S 2
+IsCofinalφ-swapped =
+  SubsetBφ
+  ∧̇ (∀̇∈ (var (suc zero))
+       (∃̇∈ (var (suc zero))
+         ((var zero ∈̇ var (suc zero)) ∨̇ (var zero ≐ var (suc zero)))))
+
+-- The Δ₀ certificate still goes through, which is the first half of the
+-- finding: a bounded formula stays bounded under an index swap.
+
+Δ₀-swapped : Δ₀ IsCofinalφ-swapped
+Δ₀-swapped = checkΔ₀ IsCofinalφ-swapped tt
+
+isCofinal : S → S → Ω
+isCofinal a α =
+  (isSubset a α)
+  ⊓ (⋀ S (λ η → (η ∈ˢ α) ⇒
+      (⋁ S (λ µ → (µ ∈ˢ a) ⊓ ((η ∈ˢ µ) ⊔ (η ≈ˢ µ))))))
+
+-- EXPECTED TO FAIL HERE, AND THIS IS THE ONLY LINE THAT CAN FAIL.
+
+IsCofinal-bridge : (a α : S)
+                 → ((a ∷ α ∷ []) ⊨ IsCofinalφ-swapped) ≡ isCofinal a α
+IsCofinal-bridge a α = refl

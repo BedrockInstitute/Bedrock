@@ -1,0 +1,46 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track A, NEGATIVE CONTROL 2b. EXPECTED EXIT 42, AND THE COMPANION TO
+-- AntichainSwapIsDelta0.agda-break, which exits 0 on the SAME two formulas.
+--
+-- The pair is the whole content of rule 6 for this track. The Δ₀ certificate
+-- accepts both mutilations; the reading theorem accepts neither. So for a
+-- uniform-depth formula the reading theorem is not one check among several,
+-- it is the only one, and a track that ships a formula without one has
+-- shipped an unchecked sentence.
+--
+-- Each of the two theorems below is the reading theorem
+-- K7/ChainConditions.agda proves by refl, with the mutilated formula
+-- substituted for the correct one and nothing else changed.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.AntichainSwapReading
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At; _^_ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+open At S id using ( _⊨_ )
+
+open import K7.ChainConditions 𝒮 ext paths using ( antichainΔ )
+open import K7.breaks.AntichainSwapIsDelta0 𝒮 using ( swapGuard; swapCompat )
+
+swapGuard-reading : ∀ {n} (c o d : Fin n) (γ : S ^ n)
+                  → (γ ⊨ swapGuard c o d)
+                    ≡ antichainΔ (lookup c γ) (lookup o γ) (lookup d γ)
+swapGuard-reading c o d γ = refl
+
+swapCompat-reading : ∀ {n} (c o d : Fin n) (γ : S ^ n)
+                   → (γ ⊨ swapCompat c o d)
+                     ≡ antichainΔ (lookup c γ) (lookup o γ) (lookup d γ)
+swapCompat-reading c o d γ = refl

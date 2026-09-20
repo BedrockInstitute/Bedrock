@@ -1,0 +1,47 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK J, CONTROL 1. EXPECTED NON-ZERO EXIT, AND THE ERROR IS THE RESULT.
+--
+-- Architecture 2.1 displays antichainΔ with both memberships packed into a
+-- nested ⊓ under one implication. Track A landed the CURRIED form
+-- (K7/ChainConditions.agda:125-130), because that is the form whose reading
+-- theorem against the object-language formula is refl. The two are logically
+-- equivalent, and K7/Refuted.agda's arch-is-tracka proves it by ⇔toPath.
+--
+-- This file asks whether they are DEFINITIONALLY equal, which is the question a
+-- later track will implicitly ask when it transcribes the architecture's
+-- display and then expects refl against Track A's export. They are not, and the
+-- error below is what such a track will see.
+--
+-- This control exists for a second reason: a harness whose breaks all report
+-- the same exit code is a broken harness. K6 shipped forty breaks with zero
+-- logs and the coordinator's first re-run harness returned a uniform exit 42
+-- across all forty. This file and CCCAtEmptyFree.agda-break are Track J's two
+-- FIRING controls, beside four that pass, so the spread itself is evidence that
+-- the harness discriminates.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.ArchAntichainRefl
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext   : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import K7.ChainConditions
+import K7.Refuted
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CC = K7.ChainConditions 𝒮 ext paths
+module RF = K7.Refuted 𝒮 ext paths
+
+arch-is-tracka-by-refl :
+  (c o d : S) → RF.antichainΔ-arch c o d ≡ CC.antichainΔ c o d
+arch-is-tracka-by-refl c o d = refl

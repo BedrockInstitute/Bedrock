@@ -1,0 +1,6 @@
+Checking K7.breaks.RegularBound (/private/tmp/bedrock-k7-probes/K7/breaks/RegularBound.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/RegularBound.agda:60.22-26: error: [UnequalTerms]
+α != x of type V.S
+when checking that the expression refl has type
+(α ∷ []) ⊨ IsRegularφ-misbound ≡ isRegular α
+EXIT=42

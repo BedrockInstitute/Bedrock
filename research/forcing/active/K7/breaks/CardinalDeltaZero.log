@@ -1,0 +1,7 @@
+Checking K7.breaks.CardinalDeltaZero (/private/tmp/bedrock-k7-probes/K7/breaks/CardinalDeltaZero.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CardinalDeltaZero.agda:31.41-43: error: [UnequalTerms]
+Cubical.Data.Unit.Unit !=< Cubical.Data.Empty.Base.⊥
+when checking that the expression tt has type
+Cubical.Data.Bool.Base.Bool→Type
+(FOL.LevyHierarchy.bounded CB.IsCardinalφ)
+exit=42

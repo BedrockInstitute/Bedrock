@@ -1,0 +1,60 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track D, NEGATIVE CONTROL 1. EXPECTED EXIT 0, AND THE EXIT 0 IS THE
+-- RESULT.
+--
+-- PropertyTransfer (Certificate.agda:1542-1545) has an unconstrained
+-- hypotheses : Type ℓ. This file inhabits it twice with hypotheses that carry
+-- no mathematics at all, and both inhabitants typecheck. A checker that closes
+-- an exit item by observing "a PropertyTransfer was delivered" therefore
+-- closes it on nothing, in the exact form of K6 Track H's OrdViaOnto. The
+-- discriminating construction is a NAMED record of the actual obligations plus
+-- an inhabitation lemma beside it, which is what K7/CompletionTransfer.agda
+-- ships as CCCHypotheses and hyp-from-ground.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+import Certificate
+import Cubical.Data.Empty as Empty
+
+module K7.breaks.TransferVacuous
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module OP = OrdinaryProfile 𝒮
+module G  = Certificate 𝒮 ext paths
+
+module Vacuous
+  (𝔓   : G.Presentation)
+  (cert : G.Over.CertifiedCompletion 𝔓)
+  (sep : OP.Separation)
+  (Φ Ψ : G.Presentation → Ω)
+  where
+
+  module Pr = G.Property 𝔓 cert sep Φ Ψ
+
+  -- One. The hypotheses are false, so the transfer is vacuous.
+
+  fromFalse : Pr.PropertyTransfer
+  fromFalse = record
+    { hypotheses = ⟨ ⊥ ⟩
+    ; transfer   = λ h → Empty.rec* h }
+
+  -- Two. The hypotheses ARE the conclusion, so the transfer is the identity.
+  -- This is the one that matters: it has the same type as a real transfer,
+  -- it mentions Φ and Ψ, and it proves nothing.
+
+  fromItself : Pr.PropertyTransfer
+  fromItself = record
+    { hypotheses = ⟨ Φ 𝔓 ⟩ → ⟨ Ψ (G.Nonzero.B⁺ 𝔓 cert sep) ⟩
+    ; transfer   = λ h → h }

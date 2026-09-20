@@ -1,0 +1,33 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track D, NEGATIVE CONTROL 3. EXPECTED NON-ZERO EXIT, AND THE ERROR IS THE
+-- RESULT.
+--
+-- Architecture 2.4 sketches CCCHypotheses as a record at Type ℓ, which
+-- PropertyTransfer.hypotheses : Type ℓ (Certificate.agda:1544) requires. This
+-- file transcribes the sketch's shape with a PREDICATE field and records what
+-- the compiler says, because it is not what the sketch assumes.
+--
+-- Ω is hProp ℓ, which is Type (ℓ-suc ℓ). So S → S → Ω is Type (ℓ-suc ℓ) and no
+-- record at Type ℓ can carry it, and neither can a record carry a path between
+-- truth values. K7/CompletionTransfer.agda therefore puts the selection
+-- relation and every reading in the TELESCOPE and lets the record carry only
+-- proofs. Rule 14: the measurement wins, and rule 15 is better served, since
+-- the telescope is where the audit reads a predicate anyway.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+
+module K7.breaks.PredicateField
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+record PredicateCarrier : Type ℓ where
+  field
+    selRel : S → S → Ω

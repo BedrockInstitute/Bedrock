@@ -1,0 +1,84 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track A, NEGATIVE CONTROL 1. EXPECTED EXIT 0, AND THE EXIT 0 IS THE
+-- FINDING.
+--
+-- The architecture names this control (4.1) and 3.9 states the reason:
+-- "An empty coded set is not dense, because the carrier is inhabited … the
+-- antichain condition at the same empty set holds, which is why no K5
+-- statement routes genericity through one" (K5/Dense.agda:520-527,
+-- empty-not-dense at :525-527, read at source). This file measures the
+-- asymmetry inside K7's own three predicates rather than reasoning about it.
+--
+-- WHAT IS PROVED, AND WHAT IT COSTS. antichain-empty spends NOTHING: not the
+-- carrier's inhabitedness, not the order, not extensionality, not paths. The
+-- empty coded set is an antichain of every coded notion whatever, and the
+-- proof discharges the conclusion without looking at the compatibility
+-- hypothesis. So CCC₁'s and CCC₂'s universally quantified hypothesis is
+-- witnessed at the empty set by a term with no content, and a consumer who
+-- reads "every antichain is countable" as saying something about the notion
+-- gets nothing from that witness.
+--
+-- WHAT DOES NOT FOLLOW, AND IT IS THE OTHER HALF OF THE FINDING.
+-- empty-not-predense shows the empty set is never MAXIMAL, by the same
+-- argument that makes it never dense, and it does spend the carrier's
+-- inhabitedness. So the empty set sits inside CCC₂'s hypothesis and outside
+-- CCC₁'s and CCC₃'s. That is the precise sense in which CCC₃ is the variant
+-- a consumer should prefer, and it is why the two FREE arrows both land in
+-- CCC₁ rather than running out of it.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.AntichainAtEmpty
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import Cubical.Data.Empty as Empty
+import Cubical.HITs.PropositionalTruncation as PT
+import CodedVocabulary
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CV = CodedVocabulary 𝒮
+open CV using ( predenseΔ )
+
+open import K7.ChainConditions 𝒮 ext paths
+  using ( antichainΔ; antichain-intro; maximalΔ; maximal-predense )
+
+-- The empty coded set is an antichain, at every carrier and every order,
+-- with no hypothesis at all. The two membership arguments in d are absurd
+-- and the compatibility argument is never inspected.
+
+antichain-empty : (c o d : S) → ((x : S) → ⟨ x ∈ˢ d ⟩ → ⟨ ⊥ ⟩)
+                → ⟨ antichainΔ c o d ⟩
+antichain-empty c o d no =
+  antichain-intro c o d
+    (λ p q _ hpd _ _ _ → Empty.rec* (no p hpd))
+
+-- And it is never maximal, for exactly the reason it is never dense: some
+-- condition of the inhabited carrier would have to meet a member it has not
+-- got. This is K5/Dense.agda's empty-not-dense with refinement weakened to
+-- compatibility, which is the only change predensity makes.
+
+empty-not-predense : (c o d : S) → ⟨ ⋁ S (λ p → p ∈ˢ c) ⟩
+                   → ((x : S) → ⟨ x ∈ˢ d ⟩ → ⟨ ⊥ ⟩)
+                   → ⟨ predenseΔ c o d ⟩ → ⟨ ⊥ ⟩
+empty-not-predense c o d inh no pd =
+  PT.rec (snd ⊥)
+    (λ { (q , hq) →
+         PT.rec (snd ⊥) (λ { (p , hpd , _) → no p hpd }) (pd q hq) })
+    inh
+
+empty-not-maximal : (c o d : S) → ⟨ ⋁ S (λ p → p ∈ˢ c) ⟩
+                  → ((x : S) → ⟨ x ∈ˢ d ⟩ → ⟨ ⊥ ⟩)
+                  → ⟨ maximalΔ c o d ⟩ → ⟨ ⊥ ⟩
+empty-not-maximal c o d inh no mx =
+  empty-not-predense c o d inh no (maximal-predense c o d mx)

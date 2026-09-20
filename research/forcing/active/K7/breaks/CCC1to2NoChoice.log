@@ -1,0 +1,16 @@
+Checking K7.breaks.CCC1to2NoChoice (/private/tmp/bedrock-k7-probes/K7/breaks/CCC1to2NoChoice.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CCC1to2NoChoice.agda:52.60-63: error: [UnequalTerms]
+((x : S) →
+ ⟨
+ x ∈ˢ carrier ⇒
+ x ∈ˢ d ⇒
+ ⋀ S
+ (λ q →
+    q ∈ˢ carrier ⇒ q ∈ˢ d ⇒ CV.compatibleΔ carrier order x q ⇒ x ≈ˢ q)
+ ⟩)
+!=<
+(Σ ⟨ antichainΔ carrier order d ⟩
+ (λ _ → ⟨ CV.predenseΔ carrier order d ⟩))
+when checking that the expression dac has type
+⟨ K7.ChainConditions.maximalΔ 𝒮 ext paths carrier order d ⟩
+EXIT=42

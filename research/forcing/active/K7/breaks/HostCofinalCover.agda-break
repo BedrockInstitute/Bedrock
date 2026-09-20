@@ -1,0 +1,81 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track H, NEGATIVE CONTROL 4, AND IT IS THIS TRACK'S OWN, AIMED AT THE
+-- ONE OPEN TYPE THE FILE SHIPS. EXPECTED EXIT 0, AND THE EXIT 0 IS THE RESULT.
+--
+-- Part 0d of the K7 architecture measured that a field's type cannot tell a
+-- legitimate proof from a poisoned one, on the ledger's own central claim:
+-- K7/breaks/HostSelector.agda-break fills all three WithSelection parameters
+-- from a bare host pick : S → S. This file asks the same question of
+-- K7/Cofinality.agda's GroundCover, the single named prerequisite of the whole
+-- stop report. THE ANSWER IS THE SAME.
+--
+-- A bare host function pick : Nm → S, chosen outside the model and total on
+-- the whole of Nm, with two pointwise proofs about its values, fills
+-- GroundCover in ONE line. No possible-value set, no chain condition, no
+-- ground Collection, no counting.
+--
+-- So the honest statement of what would protect a real supplier of
+-- GroundCover is NOT its type. It is that the cover must be CONSTRUCTED:
+-- u is a ground set obtained by ground Collection and Union out of the
+-- possible-value sets valuesOf of the injecting name, indexed by the ground
+-- members of b, and every step of that construction quantifies over (d : S),
+-- a ground SET, never over a host predicate on S. That is the three-part test
+-- of shared preamble 1.3 quoted from K6/Choice.agda:411-413, and it is carried
+-- by where the inhabitant comes from, not by the type it inhabits.
+--
+-- A consumer of GroundCover therefore states, in its own report, which of the
+-- two Track D protections it relies on. This track relies on NEITHER, because
+-- it ships no inhabitant: GroundCover is open and is declared open. The
+-- warning is for whoever closes it.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import K7.Cofinality
+import Cubical.HITs.PropositionalTruncation as PT
+
+module K7.breaks.HostCofinalCover
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open PT using ( ∣_∣₁ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module C = K7.Cofinality 𝒮
+
+module At (IsNm : S → Ω) (_≈[G]_ _∈[G]_ : S → S → Ω) where
+
+  module N = C.Names IsNm
+  module A = N.AtG _≈[G]_ _∈[G]_
+
+  module Sub (chk : S → N.Nm) where
+
+    module St = A.Statements chk
+
+    -- The host filler. pick is a function on the HOST type Nm, so it is
+    -- exactly what shared preamble 1.3(a) calls a host quantification, and
+    -- 1.3(b)'s test fires too: nothing here is a ⋁ over a ground set.
+
+    host→cover :
+        (pick : N.Nm → S)
+      → ((α : S) (A : N.Nm) → ⟨ C.Vᴳ.isCofinal (pick A) α ⟩)
+      → ((α : S) (A : N.Nm)
+           → ⟨ ⋁ S (λ β → (β ∈ˢ α) ⊓ (C.Vᴳ.injectable (pick A) β)) ⟩)
+      → St.GroundCover
+    host→cover pick cof inj α A hA b hb hinj =
+      ∣ pick A , cof α A , inj α A ∣₁
+
+    -- And the composition runs: a host cover gives the shipped theorem's
+    -- bounded form with nothing else in scope.
+
+    host→bounded :
+        (pick : N.Nm → S)
+      → ((α : S) (A : N.Nm) → ⟨ C.Vᴳ.isCofinal (pick A) α ⟩)
+      → ((α : S) (A : N.Nm)
+           → ⟨ ⋁ S (λ β → (β ∈ˢ α) ⊓ (C.Vᴳ.injectable (pick A) β)) ⟩)
+      → St.NoShortCofinal
+    host→bounded pick cof inj =
+      St.cover→bounded (host→cover pick cof inj)

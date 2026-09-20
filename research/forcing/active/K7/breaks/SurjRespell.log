@@ -1,0 +1,11 @@
+Checking K7.breaks.SurjRespell (/private/tmp/bedrock-k7-probes/K7/breaks/SurjRespell.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/SurjRespell.agda:49.20-38: error: [UnequalTerms]
+a != b of type S
+when checking that the expression CO.SurjOnto-bridge has type
+(f a b : S) →
+(f ∷ a ∷ b ∷ []) ⊨ SurjOntoφ-poisoned ≡
+⋀ S
+(λ v →
+   v ∈ˢ b ⇒
+   ⋁ S (λ x → ⋁ S (λ p → x ∈ˢ a ⊓ p ∈ˢ f ⊓ CB.isKPair p x v)))
+exit=42

@@ -1,0 +1,76 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track B, NEGATIVE CONTROL 3. EXPECTED EXIT 0, AND THE EXIT 0 IS THE
+-- FINDING. This is the break of the kind that passes.
+--
+-- THE TRAP, TRANSCRIBED. K6/Ordinals.agda:13-18 records K1's measured
+-- linearity bug: the inner bounded quantifier of IsOrdinalφ ranging over the
+-- OUTER BOUND VARIABLE instead of over the ordinal. The correct formula
+-- (CardinalBridge.agda:525-529, verified at source) has
+-- ∀̇∈ (var (suc zero)) for the inner bound, which is α. The poisoned one has
+-- ∀̇∈ (var zero), which is x.
+--
+-- TWO THINGS THIS FILE MEASURES.
+--
+-- 1. The Δ₀ certificate does NOT discriminate. checkΔ₀ passes on the poisoned
+--    formula exactly as it passes on the correct one, because both have all
+--    quantifiers bounded and the scanner reads nothing else. So
+--    K7/CardinalOrder.agda's Δ₀-IsOrdinalφ is a complexity certificate and
+--    NOT a correctness check, and a track that reads it as one has no
+--    protection at all.
+--
+-- 2. The poisoned predicate says NOTHING BEYOND TRANSITIVITY. Its second
+--    conjunct reads ⋀ x, (x ∈ α) ⇒ ⋀ y, (y ∈ x) ⇒ ((x ∈ y) ⊔ ((x ≈ y) ⊔
+--    (y ∈ x))), whose third disjunct IS the hypothesis, so the whole conjunct
+--    is inhabited in one line for EVERY α. The witness below is that line.
+--    Only the reading theorem separates the two formulas, which is negative
+--    control 4.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import CardinalBridge
+
+module K7.breaks.OrdinalDeltaBlind
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈ )
+open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
+open import Cubical.Data.Unit using ( tt )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁ )
+open import Cubical.Data.Sum using ( inl; inr )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+open At S id using ( _⊨_ )
+
+module CB = CardinalBridge 𝒮
+
+-- The poisoned formula. One de Bruijn index differs from
+-- CardinalBridge.agda:526, and nothing syntactic objects.
+
+IsOrdinalφ-poisoned : Formula S 1
+IsOrdinalφ-poisoned =
+  CB.IsTransitiveφ
+  ∧̇ (∀̇∈ (var zero)
+       (∀̇∈ (var zero)
+         (((var (suc zero)) ∈̇ (var zero))
+          ∨̇ (((var (suc zero)) ≐ (var zero))
+           ∨̇ ((var zero) ∈̇ (var (suc zero)))))))
+
+-- Finding 1. The certificate is blind.
+
+Δ₀-poisoned : Δ₀ IsOrdinalφ-poisoned
+Δ₀-poisoned = checkΔ₀ IsOrdinalφ-poisoned tt
+
+-- Finding 2. The predicate is transitivity, and the third disjunct is the
+-- hypothesis.
+
+poisoned-is-transitivity : (α : S) → ⟨ CB.isTransitiveSet α ⟩
+                         → ⟨ (α ∷ []) ⊨ IsOrdinalφ-poisoned ⟩
+poisoned-is-transitivity α tr =
+  tr , λ x x∈α y y∈x → ∣ inr ∣ inr y∈x ∣₁ ∣₁

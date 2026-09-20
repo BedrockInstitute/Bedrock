@@ -1,0 +1,103 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK E, NEGATIVE CONTROL 3, THE PROPER CLASS TRAP.
+-- EXPECTED EXIT 42, AND THE PRINTED INEQUALITY IS THE RESULT.
+--
+-- roadmap:205 forbids collecting a proper class of names by host fiat, and a
+-- bound that is not a ground set is exactly that: it would make Track F's
+-- preservation theorem well typed and worthless. This file is the mechanical
+-- check a reviewer runs. It is byte for byte K7/breaks/ConstantCheck.agda with
+-- ONE substitution: the ground bound β is replaced by a host predicate
+-- `S → Ω`, which is the shape section 1.3(a) of the architecture names as the
+-- host side of the ledger's mechanical test.
+--
+-- WHY IT CANNOT TYPE, and the reason is upstream of this track. Module AtBound
+-- declares `(β : S)`; valuesOf is `mk sep β (valuesFo f ξ)`; mk's second
+-- argument is `(bound : S)` (K6/NameBuild.agda:348); and mk is one application
+-- of ground Separation, whose own type is
+--
+--   Separation = (a : S) (φ : Formula S 1) → ⟨ ⋁ S (λ s → ⋀ S (λ x → iff …)) ⟩
+--
+-- at OrdinaryProfile.agda:88-91. Every set former on the route takes an
+-- ELEMENT of S and a Formula S 1 and returns an element of S, so a class can
+-- be substituted at no slot and no host predicate can reach the construction.
+-- This is the same measurement K6 Track A's ColClassAsSet.agda-break records
+-- one layer down.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using ( Formula; Term; con; var; _≐_ )
+import OrdinaryProfile
+import FOL.Semantics
+import K7.PossibleValues
+
+module K7.breaks.ClassBound
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+open OrdinaryProfile 𝒮 using ( Separation )
+
+private module SemG = FOL.Semantics (hPropAlgebra ℓ) 𝒮
+open SemG.At S id using () renaming ( _⊨_ to _⊨ᴳ_ )
+
+module PV = K7.PossibleValues 𝒮 paths
+
+module Poison (IsNm : S → Ω) where
+
+  module NM = PV.Names IsNm
+
+  module At
+    (carrierᶠ      : S)
+    (Cond          : Type ℓ)
+    (cnd           : Cond → S)
+    (cnd-carrier   : (r : Cond) → ⟨ cnd r ∈ˢ carrierᶠ ⟩)
+    (cndOf         : (q : S) → ⟨ q ∈ˢ carrierᶠ ⟩ → Cond)
+    (cnd-cndOf     : (q : S) (hq : ⟨ q ∈ˢ carrierᶠ ⟩) → cnd (cndOf q hq) ≡ q)
+    (G∈            : Cond → Ω)
+    (_≈[G]_ _∈[G]_ : S → S → Ω)
+    (n₀            : NM.Nm)
+    where
+
+    module VA = NM.AtG carrierᶠ Cond cnd cnd-carrier cndOf cnd-cndOf
+                  G∈ _≈[G]_ _∈[G]_ (λ _ → n₀)
+
+    module Cut
+      (forces   : ∀ {k} → Cond → Formula NM.Nm k → Vec NM.Nm k → Ω)
+      (truth-at : ∀ {k} (φ : Formula NM.Nm k) (ν : Vec NM.Nm k)
+                → (ν VA.⊨ φ) ≡ ⋁ Cond (λ r → G∈ r ⊓ forces r φ ν))
+      (forcesΔ         : ∀ {k} → Formula NM.Nm k → Formula S (suc k))
+      (forcesΔ-reading : ∀ {k} (φ : Formula NM.Nm k) (ν : Vec NM.Nm k) (r : Cond)
+                       → ((cnd r ∷ NM.codesOf ν) ⊨ᴳ forcesΔ φ) ≡ forces r φ ν)
+      (mk : Separation → (bound : S) → Formula S 1 → S)
+      (mk-in : (sep : Separation) (bound : S) (θ : Formula S 1) (e : S)
+             → ⟨ e ∈ˢ bound ⟩ → ⟨ (e ∷ []) ⊨ᴳ θ ⟩ → ⟨ e ∈ˢ mk sep bound θ ⟩)
+      (mk-bound : (sep : Separation) (bound : S) (θ : Formula S 1) (e : S)
+                → ⟨ e ∈ˢ mk sep bound θ ⟩ → ⟨ e ∈ˢ bound ⟩)
+      (mk-sat : (sep : Separation) (bound : S) (θ : Formula S 1) (e : S)
+              → ⟨ e ∈ˢ mk sep bound θ ⟩ → ⟨ (e ∷ []) ⊨ᴳ θ ⟩)
+      -- A well formed instance of the bound and its graph, so that the ONLY
+      -- defect in this file is the class substituted at the application below.
+      (β₀            : S)
+      (chkFo         : Formula S 2)
+      (chkFo-reading : (u a : S) → ⟨ a ∈ˢ β₀ ⟩
+                     → ((u ∷ a ∷ []) ⊨ᴳ chkFo) ≡ (u ≈ˢ fst n₀))
+      where
+
+      module VS = VA.Values forces truth-at forcesΔ forcesΔ-reading
+                    mk mk-in mk-bound mk-sat
+
+      -- THE ONE SUBSTITUTION. A host predicate on the ground, which is a
+      -- CLASS, where a ground SET is required.
+
+      classBound : S → Ω
+      classBound x = x ∈ˢ x
+
+      module BAD = VS.AtBound classBound chkFo chkFo-reading

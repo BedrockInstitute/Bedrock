@@ -1,0 +1,48 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK F, NEGATIVE CONTROL 1. EXPECTED NON-ZERO EXIT.
+--
+-- Architecture 4.6 names it: delete the CCC₂ᴵ argument, expect exit 42. This
+-- file is K7/NoCollapse.agda's countable-values with the CCC₂ᴵ and ccc-use
+-- slots removed from the telescope and the body asked to close the gap with
+-- the antichain proof it already has. It cannot: an antichain proof is not a
+-- countability proof, and the chain condition is the only thing in the whole
+-- argument that turns one into the other.
+--
+-- What the exit code measures is that CCC₂ᴵ is LOAD-BEARING in Track F rather
+-- than decorative. That matters because Track F's protection against trap T3
+-- is precisely that the chain condition arrives as a hypothesis; a hypothesis
+-- the proof never uses would be the same defect wearing the opposite mask.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import CardinalBridge
+import Cubical.HITs.PropositionalTruncation as PT
+
+module K7.breaks.NoCCC {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CBᴳ = CardinalBridge 𝒮
+
+module Try
+  (c o : S)
+  (subsetΔ    : S → S → Ω)
+  (antichainΔ : S → S → S → Ω)
+  (injectable-trans : (a b d : S) → ⟨ CBᴳ.injectable a b ⟩
+                    → ⟨ CBᴳ.injectable b d ⟩ → ⟨ CBᴳ.injectable a d ⟩)
+  (A  : S → S)
+  (va : (ξ : S) → ⟨ ⋁ S (λ d → ((subsetΔ d c) ⊓ antichainΔ c o d)
+          ⊓ CBᴳ.injectable (A ξ) d) ⟩)
+  where
+
+  countable-values : (w ξ : S) → ⟨ CBᴳ.injectable (A ξ) w ⟩
+  countable-values w ξ =
+    PT.rec (snd (CBᴳ.injectable (A ξ) w))
+      (λ { (d , (hsub , hac) , hinj) →
+           injectable-trans (A ξ) d w hinj hac })
+      (va ξ)

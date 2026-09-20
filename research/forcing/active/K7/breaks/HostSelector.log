@@ -1,0 +1,3 @@
+$ GHCRTS="-A64m -I0 -M8g" agda K7/breaks/HostSelector.agda
+Checking K7.breaks.HostSelector (/private/tmp/bedrock-k7-probes/K7/breaks/HostSelector.agda).
+EXIT=0

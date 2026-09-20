@@ -1,0 +1,116 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track A, NEGATIVE CONTROL 5, AND IT IS THIS TRACK'S OWN, AIMED AT THE
+-- TRAP THE BRIEF NAMES. EXPECTED EXIT 0, AND THE EXIT 0 IS THE FINDING.
+--
+-- THE TRAP. K5's Track J measured a theorem about atomless notions in a
+-- programme that contained none, so K2's no-host-generic was an implication
+-- whose hypothesis had never been witnessed. K7's three chain conditions are
+-- predicates on a forcing notion, and the only inhabitant of
+-- CodedCompletion.Presentation in this programme is K6's one-point notion
+-- (K6/OnePoint.agda:158, verified at source). So the question a reader must
+-- be able to answer is whether any inhabitant makes any of the three
+-- non-trivially true or non-trivially false. This file answers it by proof.
+--
+-- THE ARCHITECTURE'S ANSWER IS IMPRECISE AND THIS FILE CORRECTS IT. Section
+-- 3.9 says that at the one-point notion "every Sub is an antichain and all
+-- three chain conditions hold vacuously". The first clause is right and is
+-- proved below. The second is wrong for K7's predicates, and the difference
+-- matters. What one-point (K6/OnePoint.agda:200-201) discharges is the
+-- CONCLUSION of the host-side antichain predicate, p ≡ q
+-- (ForcingNotion.agda:153-155). K7's CCC₂ᴵ does not conclude p ≡ q; it
+-- concludes injectable d w. one-point says nothing whatever about that, so
+-- CCC₂ᴵ at the one-point notion is neither vacuously true nor false.
+--
+-- WHAT IS TRUE INSTEAD, AND IT IS WORSE THAN VACUITY. At a carrier with at
+-- most one member the antichain hypothesis is discharged for every coded
+-- subset, so CCC₂ᴵ collapses to "every coded subset of the carrier injects
+-- into w", a pure counting statement in which the ORDER DOES NOT OCCUR. The
+-- last theorem is the sharp form: at such a carrier CCC₂ᴵ is invariant
+-- under replacing the order by an arbitrary other set of the model. A
+-- predicate invariant under arbitrary change of the order is not a chain
+-- condition. So the programme's one inhabitant discriminates nothing, in a
+-- stronger sense than "holds vacuously": it cannot even see the order.
+--
+-- CONSEQUENCE, AND IT IS NOT K7's TO FIX. No hypothesis of the form
+-- ⟨ CCC₂ᴵ c o w ⟩ can be shown load-bearing by instance in this tree, only
+-- by break. The owner is K8, which builds the Cohen poset as a coded
+-- presentation and proves CCC₂(P) (roadmap:219), and Track J, which built
+-- the binary tree to witness atomlessness on the host side. This file is
+-- the measured negative, stated so it cannot be mistaken for a gap in
+-- Track A.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.OnePointDiscriminates
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import CodedVocabulary
+import CardinalBridge
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module OP = OrdinaryProfile 𝒮
+module CV = CodedVocabulary 𝒮
+module CB = CardinalBridge 𝒮
+
+open OP.PathRealization paths using ( path-to-≈ˢ )
+open CV using ( subsetΔ )
+open CB using ( injectable )
+
+open import K7.ChainConditions 𝒮 ext paths
+  using ( antichainΔ; antichain-intro; CCC₂ᴵ; ccc-use; ccc-intro )
+
+-- The hypothesis, in exactly the strength K6's one-point notion supplies it.
+-- carrier-one-point (K6/OnePoint.agda:190-191) reads
+-- (x : S) → ⟨ x ∈ˢ carrierOP ⟩ → x ≡ p₀, from which this follows by
+-- composing one direction with the inverse of the other.
+
+AtMostOne : S → Type ℓ
+AtMostOne c = (x y : S) → ⟨ x ∈ˢ c ⟩ → ⟨ y ∈ˢ c ⟩ → x ≡ y
+
+-- Clause one of 3.9, and it does hold. Every coded subset is an antichain,
+-- and the compatibility hypothesis is never inspected. paths is spent, which
+-- is the only cost: antichainΔ concludes the structure equality and the
+-- one-point fact is a host path.
+
+one-point-antichain : (c : S) → AtMostOne c → (o d : S)
+                    → ⟨ antichainΔ c o d ⟩
+one-point-antichain c only o d =
+  antichain-intro c o d
+    (λ p q hpc _ hqc _ _ → path-to-≈ˢ p q (only p q hpc hqc))
+
+-- Clause two of 3.9 is false as stated, and this is what replaces it. The
+-- forward direction is free and holds at every carrier whatever; the reverse
+-- is where AtMostOne is spent.
+
+degenerate→ : (c o w : S) → ⟨ CCC₂ᴵ c o w ⟩
+            → (d : S) → ⟨ subsetΔ d c ⟩ → ⟨ antichainΔ c o d ⟩
+            → ⟨ injectable d w ⟩
+degenerate→ c o w h d sub ac = ccc-use c o w d h sub ac
+
+degenerate← : (c : S) → AtMostOne c → (o w : S)
+            → ((d : S) → ⟨ subsetΔ d c ⟩ → ⟨ injectable d w ⟩)
+            → ⟨ CCC₂ᴵ c o w ⟩
+degenerate← c only o w f =
+  ccc-intro c o w (λ d sub _ → f d sub)
+
+-- THE SHARP FORM. At a carrier with at most one member, CCC₂ᴵ cannot see the
+-- order at all: any two orders give the same truth value, and o' is an
+-- arbitrary set of the model, not a second forcing order. Nothing about the
+-- one-point notion's own order is used.
+
+order-irrelevant : (c : S) → AtMostOne c → (o o' w : S)
+                 → ⟨ CCC₂ᴵ c o w ⟩ → ⟨ CCC₂ᴵ c o' w ⟩
+order-irrelevant c only o o' w h =
+  degenerate← c only o' w
+    (λ d sub → degenerate→ c o w h d sub (one-point-antichain c only o d))

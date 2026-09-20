@@ -1,0 +1,15 @@
+Checking K7.breaks.InjectableTransNoSep (/private/tmp/bedrock-k7-probes/K7/breaks/InjectableTransNoSep.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/InjectableTransNoSep.agda:51.36-64: error: [UnequalTerms]
+S !=<
+(a b : S) →
+⟨ ⋁ S (λ p → ⋀ S (λ x → CO.OP.iff (x ∈ˢ p) (x ≈ˢ a ⊔ x ≈ˢ b))) ⟩
+when checking that the inferred type of an application
+  CO.OP.Pairing →
+  (a b d : S) →
+  ⟨ CO.injectable a b ⟩ →
+  ⟨ CO.injectable b d ⟩ → ⟨ CO.injectable a d ⟩
+matches the expected type
+  (a b d : S) →
+  ⟨ CO.injectable a b ⟩ →
+  ⟨ CO.injectable b d ⟩ → ⟨ CO.injectable a d ⟩
+exit=42

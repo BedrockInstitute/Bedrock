@@ -1,0 +1,14 @@
+Checking K7.breaks.GreedyNoLEM (/private/tmp/bedrock-k7-probes/K7/breaks/GreedyNoLEM.agda).
+ Checking CodedVocabulary (/private/tmp/bedrock-k7-probes/CodedVocabulary.agda).
+ Checking K7.ChainConditions (/private/tmp/bedrock-k7-probes/K7/ChainConditions.agda).
+ Checking K7.CCCEquivalence (/private/tmp/bedrock-k7-probes/K7/CCCEquivalence.agda).
+  Checking GroundDescription (/private/tmp/bedrock-k7-probes/GroundDescription.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/GreedyNoLEM.agda:67.27-44: error: [UnequalTerms]
+S !=<
+(P : hProp ℓ) →
+⟨ P ⟩ Cubical.Data.Sum.Base.⊎ (⟨ P ⟩ → Cubical.Data.Empty.Base.⊥)
+when checking that the expression G.greedy-predense has type
+(d e : S) →
+⟨ subsetΔ d carrier ⟩ →
+⟨ G.GreedySpec d e ⟩ → ⟨ predenseΔ carrier order e ⟩
+EXIT=42

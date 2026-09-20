@@ -1,0 +1,40 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track C, NEGATIVE CONTROL 4. EXPECTED EXIT 42.
+--
+-- Track D reported that its first draft of the ground well ordering "at
+-- Type ℓ TYPECHECKED and could never have been instantiated", and called that
+-- rule 15's shape one level down that no grep finds. Rule 14 says check every
+-- citation, so this track measured the claim in both of its two possible
+-- readings rather than inheriting it. This file is the RECORD reading.
+--
+-- lt : S → S → Ω and Ω = hProp ℓ is Type (ℓ-suc ℓ), so a record collecting
+-- that field lives one universe up. Declared at Type ℓ the record is rejected
+-- outright at the constructor, so the RECORD reading of the claim is FALSE:
+-- this spelling does not typecheck and there is no silent uninhabitable
+-- record to find. The reading that IS true is the parameter one, measured at
+-- K7/breaks/GWOParamAtTypeL.agda-break, exit 0.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+open import Cubical.Data.Sum using ( _⊎_ )
+
+module K7.breaks.GWORecordAtTypeL
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+record GroundWellOrderSmall : Type ℓ where
+  field
+    lt       : S → S → Ω
+    lt-tri   : (z z' : S) → ∥ ⟨ lt z z' ⟩ ⊎ ((z ≡ z') ⊎ ⟨ lt z' z ⟩) ∥₁
+    wo-least : (d : S) → ⟨ ⋁ S (λ z → z ∈ˢ d) ⟩
+             → ⟨ ⋁ S (λ z → (z ∈ˢ d)
+                   ⊓ ⋀ S (λ z' → (z' ∈ˢ d) ⇒ ((lt z' z) ⇒ ⊥))) ⟩

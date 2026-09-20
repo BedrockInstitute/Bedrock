@@ -1,0 +1,7 @@
+Checking Controls.Negative.MissingOnto (/Users/alsg/Agentic/Bedrock/research/forcing/active/Controls/Negative/MissingOnto.agda).
+/Users/alsg/Agentic/Bedrock/research/forcing/active/Controls/Negative/MissingOnto.agda:30.31-40: error: [UnequalTerms]
+A != a of type S
+when checking that the expression preserves has type
+⟨ OrderType.Onto f a A ⟩
+
+EXIT=42

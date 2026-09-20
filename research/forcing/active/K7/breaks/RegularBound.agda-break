@@ -1,0 +1,60 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track H, NEGATIVE CONTROL 3. EXPECTED EXIT 42.
+--
+-- The same defect as CofinalBound, moved one layer out, to the bounded
+-- quantifier of IsRegularφ. Under the unbounded ∀̇ that binds the candidate
+-- cofinal set a, the environment is (a ∷ α ∷ []), so var zero is a and
+-- var (suc zero) is α. K7/Cofinality.agda bounds the ordinal β by α. This
+-- file bounds it by a.
+--
+-- The result is a well scoped Formula S 1 whose reading is
+-- "no cofinal subset of α injects into one of ITS OWN members", a statement
+-- about the cofinal set and not about α, and it is strictly weaker: it is
+-- implied by regularity and does not imply it.
+--
+-- The reading theorem is K7/Cofinality.agda's, unchanged, and it must fail.
+-- Note what the failure is NOT: it is not a scope error and not a Δ₀ error.
+-- Both indices are in range and the formula is not Δ₀ either way, because the
+-- outer ∀̇ is unbounded in both versions.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax
+  using ( Formula; var; _∧̇_; _⇒̇_; ¬̇_; ∀̇_; ∀̇∈ )
+open import FOL.Manipulation.Renaming using ( renameFo )
+import FOL.Semantics
+import CardinalBridge
+import K7.Cofinality
+
+module K7.breaks.RegularBound {ℓ} (𝒯 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒯
+
+module C = K7.Cofinality 𝒯
+module V = C.Vocabulary 𝒯
+open V using ( IsCofinalφ ; isCofinal ; IsOrdinalφ ; isOrdinal
+             ; Injectableφ ; injectable ; reg-inj ; _⊨_ )
+
+-- POISON. var zero is a; K7/Cofinality.agda writes var (suc zero), which is α.
+
+IsRegularφ-misbound : Formula S 1
+IsRegularφ-misbound =
+  IsOrdinalφ
+  ∧̇ (∀̇ (IsCofinalφ
+        ⇒̇ (∀̇∈ (var zero) (¬̇ (renameFo reg-inj Injectableφ)))))
+
+isRegular : S → Ω
+isRegular α =
+  (isOrdinal α)
+  ⊓ (⋀ S (λ a → (isCofinal a α) ⇒
+      (⋀ S (λ β → (β ∈ˢ α) ⇒ ¬ (injectable a β)))))
+
+-- EXPECTED TO FAIL HERE.
+
+IsRegular-bridge : (α : S) → ((α ∷ []) ⊨ IsRegularφ-misbound) ≡ isRegular α
+IsRegular-bridge α = refl

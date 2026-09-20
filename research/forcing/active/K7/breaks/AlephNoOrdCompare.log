@@ -1,0 +1,9 @@
+# K7 Track G break: AlephNoOrdCompare
+# run from /tmp/bedrock-k7-probes as:
+#   cp AlephNoOrdCompare.agda-break AlephNoOrdCompare.agda && GHCRTS="-A64m -I0 -M8g" agda K7/breaks/AlephNoOrdCompare.agda
+# confirmed by running the file, not attributed.
+Checking K7.breaks.AlephNoOrdCompare (/private/tmp/bedrock-k7-probes/K7/breaks/AlephNoOrdCompare.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/AlephNoOrdCompare.agda:114.37-38: error: [UnsolvedInteractionMetas]
+Unsolved interaction metas at the following locations:
+  /private/tmp/bedrock-k7-probes/K7/breaks/AlephNoOrdCompare.agda:114.37-38
+EXIT=42

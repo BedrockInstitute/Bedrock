@@ -1,0 +1,5 @@
+Checking K7.breaks.CCCOverHostSub (/private/tmp/bedrock-k7-probes/K7/breaks/CCCOverHostSub.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CCCOverHostSub.agda:64.5-8: error: [UnequalSorts]
+(Type (ℓ-suc ℓ)) != (Type ℓ)
+when checking that the expression Sub has type Type ℓ
+EXIT=42

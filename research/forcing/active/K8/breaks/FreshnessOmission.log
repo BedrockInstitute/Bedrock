@@ -1,0 +1,12 @@
+Checking K8.breaks.FreshnessOmission (/private/tmp/bedrock-k8-probes.3vlTiP/K8/breaks/FreshnessOmission.agda).
+/private/tmp/bedrock-k8-probes.3vlTiP/K8/breaks/FreshnessOmission.agda:29.31-66: error: [UnequalTerms]
+(⟨ x ∈ˢ MO.PM.domain p ⟩ → ⟨ hPropAlgebra ℓ .TruthAlgebra.⊥ ⟩) →
+⟨ MO.insert p x y ∈ˢ MO.PM.carrier ⟩
+!=< fst (MO.insert p x y ∈ˢ PM.carrier)
+when checking that the inferred type of an application
+  (⟨ x ∈ˢ MO.PM.domain p ⟩ → ⟨ hPropAlgebra ℓ .TruthAlgebra.⊥ ⟩) →
+  ⟨ MO.insert p x y ∈ˢ MO.PM.carrier ⟩
+matches the expected type
+  fst (MO.insert p x y ∈ˢ PM.carrier)
+
+EXIT=42

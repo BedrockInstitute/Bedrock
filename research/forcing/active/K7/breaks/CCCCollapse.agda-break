@@ -1,0 +1,50 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track A, NEGATIVE CONTROL 4. EXPECTED EXIT 42. TRAP T10, THE THREE
+-- CONDITIONS COLLAPSED DEFINITIONALLY.
+--
+-- The design document requires the three to be kept separate and their
+-- equivalence to be "an explicit theorem, not definitional equality"
+-- (forcing-geology-design-2026-09.md:223). A file that defined them so that
+-- one reduced to another would satisfy every grep, ship three names, prove
+-- the arrows by refl, and prove nothing: Track C's equivalence would be
+-- vacuous and Corollary 6.5's choiceless counterexample would have nothing
+-- to contradict.
+--
+-- Three claims are made below and all three are expected to fail. The first
+-- two say the predicates are the same truth value; the third is the one that
+-- matters, because it is the paid arrow ccc₁→ccc₂ asserted as the identity,
+-- which is what a collapse would buy. K7/ChainConditions.agda proves the two
+-- arrows that ARE free (ccc₂→ccc₁ and ccc₃→ccc₁) and neither of them has
+-- body λ x → x: both discard or rebuild structure.
+--
+-- Only the first error is reported per run; the log records one run per
+-- claim, so all three exit codes are confirmed rather than attributed.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.CCCCollapse
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+open import K7.ChainConditions 𝒮 ext paths using ( CCC₁ᴵ; CCC₂ᴵ; CCC₃ᴵ )
+
+claim-1-2 : (c o w : S) → CCC₁ᴵ c o w ≡ CCC₂ᴵ c o w
+claim-1-2 c o w = refl
+
+claim-2-3 : (c o w : S) → CCC₂ᴵ c o w ≡ CCC₃ᴵ c o w
+claim-2-3 c o w = refl
+
+claim-arrow : (c o w : S) → ⟨ CCC₁ᴵ c o w ⟩ → ⟨ CCC₂ᴵ c o w ⟩
+claim-arrow c o w h = h

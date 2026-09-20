@@ -1,0 +1,12 @@
+$ GHCRTS="-A64m -I0 -M8g" agda K7/breaks/CCCAtEmptyFree.agda
+Checking K7.breaks.CCCAtEmptyFree (/private/tmp/bedrock-k7-probes/K7/breaks/CCCAtEmptyFree.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CCCAtEmptyFree.agda:64.62-65: error: [UnequalTerms]
+Lift _A_47 !=<
+Cubical.HITs.PropositionalTruncation.Base.∥
+Σ S (λ x → ⟨ RF.CC.CB.isInjection x d w ⟩) ∥₁
+when checking that the inferred type of an application
+  Lift _A_47
+matches the expected type
+  Cubical.HITs.PropositionalTruncation.Base.∥
+  Σ S (λ x → ⟨ RF.CC.CB.isInjection x d w ⟩) ∥₁
+EXIT=42

@@ -1,0 +1,130 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track D, NEGATIVE CONTROL 2, AND IT IS THIS TRACK'S OWN, AIMED AT THE
+-- CHOICELESS-TRANSFER TRAP. EXPECTED EXIT 0, AND THE EXIT 0 IS THE RESULT.
+--
+-- Section 8 of the K7 architecture forbids by name any test or theorem that
+-- "silently grants a choiceless CCC transfer". This file asks whether
+-- K7/CompletionTransfer.agda's own types refuse one. THEY DO NOT.
+--
+-- A bare host function pick : S → S, chosen outside the model and total on the
+-- whole of S, is turned into a selection RELATION by taking its graph. All
+-- three of module WithSelection's parameters are then satisfied, both
+-- structural lemmas of the transfer become available at it, and SelTotal, the
+-- one field of CCCHypotheses that M's choice was supposed to pay for, is
+-- filled by one line with no well ordering anywhere.
+--
+-- So the honest statement of what protects the ledger in this track is NOT a
+-- type and NOT a token census. It is exactly two things:
+--
+--   1. module Well is a SIBLING of module Structural, so the well ordering is
+--      not in scope where the transfer's mathematics is proved, and nothing
+--      inside Structural can manufacture a selection at all: it must be handed
+--      one. That is K6/Choice.agda:31-38's arrangement and it survives edits.
+--   2. hyp-from-ground takes GroundWellOrder as an OPAQUE Type (ℓ-suc ℓ), so
+--      the assembly cannot look inside it, and the composition is made in
+--      K7/TransferAtCertificate.agda where it can be read in one place.
+--
+-- This is rule 15 at its sharpest: the spelling of selRel carries NO
+-- information, and only where the inhabitant comes from does.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+import CodedVocabulary
+import K7.CompletionTransfer
+import Cubical.HITs.PropositionalTruncation as PT
+
+module K7.breaks.HostSelector
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open PT using ( ∣_∣₁ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CV = CodedVocabulary 𝒮
+module CT = K7.CompletionTransfer 𝒮 ext paths
+
+open CV using ( refinesΔ; compatibleΔ; subsetΔ )
+
+module Poison
+  (carrier order  : S)
+  (B⁺set  order⁺  : S)
+  (img       : S → S)
+  (img-in    : (p : S) → ⟨ p ∈ˢ carrier ⟩ → ⟨ img p ∈ˢ B⁺set ⟩)
+  (img-mono  : (r p : S) → ⟨ r ∈ˢ carrier ⟩ → ⟨ p ∈ˢ carrier ⟩
+             → ⟨ refinesΔ order r p ⟩ → ⟨ refinesΔ order⁺ (img r) (img p) ⟩)
+  (below         : S → S)
+  (below-sub     : (b p : S) → ⟨ p ∈ˢ below b ⟩ → ⟨ p ∈ˢ carrier ⟩)
+  (below-refines : (b p : S) → ⟨ p ∈ˢ below b ⟩ → ⟨ refinesΔ order⁺ (img p) b ⟩)
+  (refines⁺-trans : (u v z : S) → ⟨ refinesΔ order⁺ u v ⟩
+                  → ⟨ refinesΔ order⁺ v z ⟩ → ⟨ refinesΔ order⁺ u z ⟩)
+  (antichainΔ : S → S → S → Ω)
+  (antichain-use : (c o d p q : S) → ⟨ antichainΔ c o d ⟩
+                 → ⟨ p ∈ˢ c ⟩ → ⟨ p ∈ˢ d ⟩ → ⟨ q ∈ˢ c ⟩ → ⟨ q ∈ˢ d ⟩
+                 → ⟨ compatibleΔ c o p q ⟩ → ⟨ p ≈ˢ q ⟩)
+  (antichain-intro : (c o d : S)
+                   → ((p q : S) → ⟨ p ∈ˢ c ⟩ → ⟨ p ∈ˢ d ⟩ → ⟨ q ∈ˢ c ⟩
+                      → ⟨ q ∈ˢ d ⟩ → ⟨ compatibleΔ c o p q ⟩ → ⟨ p ≈ˢ q ⟩)
+                   → ⟨ antichainΔ c o d ⟩)
+  -- THE POISON. A host function on the whole of S, with no uniqueness demanded
+  -- of it and nothing internal to the model naming it. This is roadmap:213's
+  -- "unmentioned choice function on external families", written down.
+  (pick    : S → S)
+  (pick-in : (u : S) → ⟨ pick u ∈ˢ below u ⟩)
+  where
+
+  module St = CT.Structural carrier order B⁺set order⁺ img img-in img-mono
+                below below-sub below-refines refines⁺-trans
+                antichainΔ antichain-use antichain-intro
+
+  -- The graph of the host function, dressed as an internal relation. Nothing
+  -- in the type of hostRel distinguishes it from leastIn under M's well
+  -- ordering.
+
+  hostRel : S → S → Ω
+  hostRel u p = ((pick u ≡ p) , isSetS (pick u) p)
+
+  host-below : (u p : S) → ⟨ hostRel u p ⟩ → ⟨ p ∈ˢ below u ⟩
+  host-below u p e = subst (λ z → ⟨ z ∈ˢ below u ⟩) e (pick-in u)
+
+  host-unique : (u p q : S) → ⟨ hostRel u p ⟩ → ⟨ hostRel u q ⟩ → p ≡ q
+  host-unique u p q e e' = sym e ∙ e'
+
+  -- Both structural lemmas of the transfer are now available at a selection
+  -- that is not the model's.
+
+  module WS = St.WithSelection hostRel host-below host-unique
+
+  module Tr
+    (HostPresentation : Type (ℓ-suc ℓ))
+    (𝔓ᴴ B⁺ : HostPresentation)
+    (Φ Ψ   : HostPresentation → Ω)
+    (CCC₂ᴵ      : S → S → S → Ω)
+    (injectable : S → S → Ω)
+    (w : S)
+    (ccc-use   : (c o v d : S) → ⟨ CCC₂ᴵ c o v ⟩ → ⟨ subsetΔ d c ⟩
+               → ⟨ antichainΔ c o d ⟩ → ⟨ injectable d v ⟩)
+    (ccc-intro : (c o v : S)
+               → ((d : S) → ⟨ subsetΔ d c ⟩ → ⟨ antichainΔ c o d ⟩
+                  → ⟨ injectable d v ⟩)
+               → ⟨ CCC₂ᴵ c o v ⟩)
+    (Φ-reading : Φ 𝔓ᴴ ≡ CCC₂ᴵ carrier order  w)
+    (Ψ-reading : Ψ B⁺  ≡ CCC₂ᴵ B⁺set  order⁺ w)
+    where
+
+    module T = WS.Transfer HostPresentation 𝔓ᴴ B⁺ Φ Ψ CCC₂ᴵ injectable w
+                 ccc-use ccc-intro Φ-reading Ψ-reading
+
+    -- THE FINDING. The field M's choice was supposed to pay for, filled with
+    -- no well ordering, no ChoiceSet, no internal least element, one line.
+
+    host-total : T.SelTotal
+    host-total u _ = ∣ pick u , refl ∣₁

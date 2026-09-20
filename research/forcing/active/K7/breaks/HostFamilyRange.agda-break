@@ -1,0 +1,66 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK F, NEGATIVE CONTROL 3, AND IT IS TRACK F'S OWN. EXPECTED EXIT 0,
+-- AND THE EXIT 0 IS THE FINDING. THE TYPE DOES NOT SEE THE PROPER-CLASS TRAP.
+--
+-- roadmap:205 forbids collecting a proper class of names by host fiat, and
+-- K7/NoCollapse.agda answers it by making ProvedRange quantify over a ground
+-- set F and by naming FamilySet as the hypothesis that Collection supplies it.
+-- The question rule 15 asks is whether the TYPE enforces any of that.
+--
+-- It does not, and this file measures it. ProvedRangeHost below is the same
+-- predicate with the family quantified as a HOST function S → S. It is
+-- perfectly well formed: ⋀ takes any A : Type ℓ and S → S is one, so the whole
+-- thing still lands in Ω and no level diagnostic fires. With it, the
+-- contradiction needs NO set-hood hypothesis at all: collapse-host is one line
+-- and FamilySet has vanished, together with the Collection that pays for it.
+--
+-- So the host-family version is SHORTER, typechecks, and is a strictly stronger
+-- and far more doubtful assumption about M, since it quantifies over a proper
+-- class of families rather than over the ground sets M has. Nothing in the type
+-- distinguishes it from the honest one; only reading the quantifier does. That
+-- is exactly rule 15's shape, and it is why K7/NoCollapse.agda states the check
+-- as "read the binder of F" and names Collection through hasImage′ as the
+-- supplier.
+--
+-- The mechanical reviewer test, so a later reader can run it: in a K7
+-- preservation file, every binder inside a predicate of type Ω must be S, Nm,
+-- or the notion's Cond. A binder of type (S → S), (S → Ω) or Type ℓ inside an
+-- Ω-valued predicate is host fiat, whatever the predicate is called.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import CardinalBridge
+
+module K7.breaks.HostFamilyRange {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CBᴳ = CardinalBridge 𝒮
+
+-- The poisoned range predicate. Compare K7/NoCollapse.agda's ProvedRange, whose
+-- third binder is ⋀ S (λ F → …) and whose covering clause is stated through
+-- membership in that ground set.
+
+ProvedRangeHost : S → S → Ω
+ProvedRangeHost w κ =
+  ⋀ S (λ β → (β ∈ˢ κ) ⇒
+  ⋀ (S → S) (λ F →
+       (  (⋀ S (λ ξ → (ξ ∈ˢ β) ⇒ CBᴳ.injectable (F ξ) w))
+        ⊓ (⋀ S (λ a → (a ∈ˢ κ) ⇒ ⋁ S (λ ξ → (ξ ∈ˢ β) ⊓ (a ∈ˢ F ξ)))))
+     ⇒ ⊥))
+
+-- And the one-line consequence, with no FamilySet, no Collection and no
+-- Separation anywhere in the telescope.
+
+collapse-host :
+    (w κ β : S) → ⟨ β ∈ˢ κ ⟩ → ⟨ ProvedRangeHost w κ ⟩
+  → (A : S → S)
+  → ((ξ : S) → ⟨ ξ ∈ˢ β ⟩ → ⟨ CBᴳ.injectable (A ξ) w ⟩)
+  → ((a : S) → ⟨ a ∈ˢ κ ⟩ → ⟨ ⋁ S (λ ξ → (ξ ∈ˢ β) ⊓ (a ∈ˢ A ξ)) ⟩)
+  → ⟨ ⊥ ⟩
+collapse-host w κ β hβ hpr A hc hcov = hpr β hβ A (hc , hcov)

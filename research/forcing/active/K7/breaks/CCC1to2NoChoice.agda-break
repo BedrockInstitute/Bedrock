@@ -1,0 +1,52 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track C, NEGATIVE CONTROL 1. EXPECTED EXIT 42.
+--
+-- The architecture names this control: ccc₁→ccc₂ with the MaximalExtension
+-- argument removed. The question it settles is whether the arrow is really
+-- paid, or whether the author simply wrote a hypothesis nobody needs.
+--
+-- With the extension operator gone, the only thing in hand at the point where
+-- CCC₁ is applied is the antichain proof itself, and CCC₁ demands maximality.
+-- maximalΔ c o d is antichainΔ c o d ⊓ predenseΔ c o d
+-- (K7/ChainConditions.agda:244-245), so the antichain proof is exactly half of
+-- what is wanted and the missing half is predensity, which is what an
+-- extension supplies. A type error here is the measurement that the arrow is
+-- not free.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.CCC1to2NoChoice
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import CodedVocabulary
+import CardinalBridge
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CV = CodedVocabulary 𝒮
+module CB = CardinalBridge 𝒮
+open CV using ( subsetΔ )
+open CB using ( injectable )
+
+open import K7.ChainConditions 𝒮 ext paths
+  using ( antichainΔ; CCC₁ᴵ; CCC₂ᴵ; ccc₁-use; ccc-intro )
+
+module Attempt (carrier order : S) where
+
+  ccc₁→ccc₂-nochoice : (w : S)
+                     → ⟨ CCC₁ᴵ carrier order w ⟩ → ⟨ CCC₂ᴵ carrier order w ⟩
+  ccc₁→ccc₂-nochoice w h₁ = ccc-intro carrier order w step
+    where
+      step : (d : S) → ⟨ subsetΔ d carrier ⟩ → ⟨ antichainΔ carrier order d ⟩
+           → ⟨ injectable d w ⟩
+      step d dsub dac = ccc₁-use carrier order w d h₁ dsub dac

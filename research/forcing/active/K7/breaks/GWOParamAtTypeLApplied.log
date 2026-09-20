@@ -1,0 +1,5 @@
+Checking K7.breaks.GWOParamAtTypeLApplied (/private/tmp/bedrock-k7-probes/K7/breaks/GWOParamAtTypeLApplied.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/GWOParamAtTypeLApplied.agda:78.11-20: error: [UnequalSorts]
+Type (ℓ-suc ℓ) != Type ℓ
+when checking that the expression S → S → Ω has type Type ℓ
+EXIT=42

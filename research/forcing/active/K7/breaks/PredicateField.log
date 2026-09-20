@@ -1,0 +1,11 @@
+$ GHCRTS="-A64m -I0 -M8g" agda K7/breaks/PredicateField.agda
+Checking K7.breaks.PredicateField (/private/tmp/bedrock-k7-probes/K7/breaks/PredicateField.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/PredicateField.agda:31.8-24: error: [ConstructorDoesNotFitInData]
+Constructor PredicateCarrier.constructor
+of inferred sort Type (ℓ-suc ℓ)
+does not fit into record type of sort Type ℓ.
+(Reason: Type (ℓ-suc ℓ) is not less or equal than Type ℓ)
+when checking that the type S → S → Ω of an argument to the
+constructor PredicateCarrier.constructor fits in the sort Type ℓ of
+the datatype.
+EXIT=42

@@ -1,0 +1,8 @@
+Checking K8.breaks.AdjoinSwap (/private/tmp/bedrock-k8-probes.3vlTiP/K8/breaks/AdjoinSwap.agda).
+/private/tmp/bedrock-k8-probes.3vlTiP/K8/breaks/AdjoinSwap.agda:18.25-29: error: [UnequalTerms]
+a != x of type Fin n
+when checking that the expression refl has type
+γ ⊨ adjoinAt b x a ≡
+adjoinPred (lookup b γ) (lookup a γ) (lookup x γ)
+
+EXIT=42

@@ -1,0 +1,7 @@
+Checking K7.breaks.NoCCC (/private/tmp/bedrock-k7-probes/K7/breaks/NoCCC.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/NoCCC.agda:47.44-47: error: [UnequalTerms]
+(fst (antichainΔ c o d)) !=<
+PT.∥ Σ S (λ x → ⟨ CBᴳ.isInjection x d w ⟩) ∥₁
+when checking that the expression hac has type
+⟨ CBᴳ.injectable d w ⟩
+EXIT=42

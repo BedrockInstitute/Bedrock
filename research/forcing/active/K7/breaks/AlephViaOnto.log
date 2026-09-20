@@ -1,0 +1,5 @@
+# K7 Track G break: AlephViaOnto
+# run from /tmp/bedrock-k7-probes as:
+#   cp AlephViaOnto.agda-break AlephViaOnto.agda && GHCRTS="-A64m -I0 -M8g" agda K7/breaks/AlephViaOnto.agda
+# confirmed by running the file, not attributed.
+EXIT=0

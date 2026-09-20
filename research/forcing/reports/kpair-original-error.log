@@ -1,0 +1,15 @@
+Checking K10.CohenBooleanInjKPairFwd (/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenBooleanInjKPairFwd.agda).
+/Users/alsg/Agentic/Bedrock/research/forcing/active/K10/CohenBooleanInjKPairFwd.agda:308.26-45: error: [UnequalTerms]
+4 != 2 of type ℕ
+when checking that the expression sgl-unique s x σ hs has type
+⟨
+val
+(var (suc (suc zero)) ∈̇ var zero ∧̇
+ ∀̇∈ (var zero) (var zero ≐ var (suc (suc (suc zero)))))
+(env4 σ p x y)
+≤ᴮ
+(fst σ Cong.Sub.VS.CC.CD.CMP.CGP.CIV.BAT.Atomic.≈ᴮ
+ Cong.Sgl.CM.BNG.Checked.check s)
+⟩
+
+EXIT=42

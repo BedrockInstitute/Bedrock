@@ -1,0 +1,135 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track G, NEGATIVE CONTROL 1, AND IT IS THIS TRACK'S OWN.
+-- EXPECTED EXIT 0, AND THE EXIT 0 IS THE RESULT.
+--
+-- The K7 architecture's Track G brief names one class (iii) danger for this
+-- track, K5's Onto, and asks for a break that derives ω₁-identified from it.
+-- Measured negative, reported in this track's report: Onto does NOT reach
+-- ω₁-identified cheaply, for the same reason the honest proof is expensive,
+-- namely that IsInjectionφ is not Δ₀ in either direction. THE POISONED
+-- HYPOTHESIS THIS TRACK IS ACTUALLY EXPOSED TO IS A DIFFERENT ONE, and it is
+-- the one that lands. This file is it.
+--
+-- THE SHAPE. K7/Aleph.agda takes, as its one parameter with no owner,
+--
+--   chk-injectable : (a b : S) → ⟨ injectableᴳ a b ⟩
+--                  → ⟨ injectableᴱ (chk a) (chk b) ⟩
+--
+-- "a ground injection is an extension injection". True at every extension. The
+-- statement below is that arrow REVERSED,
+--
+--   inj-down : (a b : S) → ⟨ injectableᴱ (chk a) (chk b) ⟩
+--            → ⟨ injectableᴳ a b ⟩
+--
+-- "the extension adds no injection between copies of ground sets". Read at
+-- a := ω₁ and b := ω it says the extension does not collapse ω₁, which is what
+-- a collapsing forcing does, so it is FALSE at exactly the extensions the
+-- theorem is interesting at. It is also one substitution away from the true
+-- arrow: nothing in either type says which way the implication runs, and a
+-- telescope that lists it beside the true one reads identically.
+--
+-- WHAT IT BUYS. Cardinal preservation for ω₁, with
+--
+--     no-collapse REMOVED, CCC₂ᴵ REMOVED, PossibleValues REMOVED,
+--     ProvedRange REMOVED, ord-compare REMOVED, chk-injectable REMOVED,
+--     ω₁-members-countable REMOVED and ω even REMOVED
+--
+-- from scope. Track F's entire theorem, the chain condition it rests on and
+-- the possible-value bound underneath that, are all bypassed. What remains is
+-- K6's copy-members, K1's own unfolding, and this one arrow.
+--
+-- SO WHAT PROTECTS TRACK G IS NOT A TYPE. It is that chk-injectable is written
+-- in the telescope of K7/Aleph.agda with its direction visible, that its
+-- reversal is transcribed and NOT inhabited in module Boundary, and that
+-- Boundary is a SIBLING of module Aleph so no theorem of the file can reach
+-- it. That arrangement is K6/Choice.agda:415-beside-:772 and it survives an
+-- edit; a grep for "injectable" does not, because both arrows contain it.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using ( Formula )
+import CardinalBridge
+import K7.Aleph
+import Cubical.HITs.PropositionalTruncation as PT
+
+module K7.breaks.AlephViaDownward {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import Cubical.Data.Empty as Empty
+open PT using ( ∥_∥₁ ; ∣_∣₁ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module A   = K7.Aleph 𝒮
+module CBᴳ = CardinalBridge 𝒮
+
+module Poison (IsNm : S → Ω) where
+
+  module AN = A.Names IsNm
+  open AN using ( Nm )
+
+  module AtG (_≈[G]_ _∈[G]_ : S → S → Ω) where
+
+    module AL = AN.AtG _≈[G]_ _∈[G]_
+    open AL using ( _≈ᴱ_ ; _∈ᴱ_ ; _⊨_ ; Agree ; ordinal-reading
+                  ; injectable-reading ; module CBᴱ )
+
+    module At
+      -- Exactly the landed slots of K7/Aleph.agda's telescope, no more.
+      (sat-cong : ∀ {k} (ψ : Formula Nm k) (ν μ : Vec Nm k) → Agree ν μ
+                → (ν ⊨ ψ) ≡ (μ ⊨ ψ))
+      (≈-refl : (x : S) → ⟨ x ≈[G] x ⟩)
+      (chk : S → Nm)
+      (positiveᴾ : Ω)
+      (copy-members : ⟨ positiveᴾ ⟩ → (a : S) (τ : Nm) → ⟨ τ ∈ᴱ chk a ⟩
+                    → ⟨ ⋁ S (λ y → (y ∈ˢ a) ⊓ (fst τ ≈[G] fst (chk y))) ⟩)
+      (chk-ordinal : (a : S) → ((chk a ∷ []) ⊨ CBᴱ.IsOrdinalφ)
+                             ≡ A._⊨ᴳ_ (a ∷ []) CBᴳ.IsOrdinalφ)
+      -- THE POISON, and it is the only slot below that K7/Aleph.agda does not
+      -- have. Everything Track F and Track B supply is gone.
+      (inj-down : (a b : S) → ⟨ CBᴱ.injectable (chk a) (chk b) ⟩
+                → ⟨ CBᴳ.injectable a b ⟩)
+      (ω₁ : S)
+      (ω₁-card : ⟨ CBᴳ.isCardinal ω₁ ⟩)
+      (pos : ⟨ positiveᴾ ⟩)
+      where
+
+      -- Free, and identical to K7/Aleph.agda's own.
+
+      chk-ordinal-up : (κ : S) → ⟨ CBᴳ.isOrdinal κ ⟩ → ⟨ CBᴱ.isOrdinal (chk κ) ⟩
+      chk-ordinal-up κ h =
+        subst ⟨_⟩ (ordinal-reading (chk κ))
+          (subst ⟨_⟩ (sym (chk-ordinal κ))
+            (subst ⟨_⟩ (sym (CBᴳ.IsOrdinal-bridge κ)) h))
+
+      -- Congruence in the TARGET slot this time, by the same sat-cong.
+
+      injectable-cong-ranᴱ : (σ τ ζ : Nm) → ⟨ τ ≈ᴱ ζ ⟩
+                           → ⟨ CBᴱ.injectable σ τ ⟩ → ⟨ CBᴱ.injectable σ ζ ⟩
+      injectable-cong-ranᴱ σ τ ζ e h =
+        subst ⟨_⟩ (injectable-reading σ ζ)
+          (subst ⟨_⟩ (sat-cong CBᴱ.Injectableφ (σ ∷ τ ∷ []) (σ ∷ ζ ∷ []) agr)
+            (subst ⟨_⟩ (sym (injectable-reading σ τ)) h))
+        where
+          agr : Agree (σ ∷ τ ∷ []) (σ ∷ ζ ∷ [])
+          agr zero       = ≈-refl (fst σ)
+          agr (suc zero) = e
+
+      -- AND THE THEOREM, with Track F's entire hypothesis column absent.
+
+      ω₁-is-cardinal-poisoned : ⟨ CBᴱ.isCardinal (chk ω₁) ⟩
+      ω₁-is-cardinal-poisoned = chk-ordinal-up ω₁ (fst ω₁-card) , minimal
+        where
+          minimal : (β : Nm) → ⟨ β ∈ᴱ chk ω₁ ⟩
+                  → ⟨ CBᴱ.injectable (chk ω₁) β ⟩ → Empty.⊥
+          minimal β hβ hinj =
+            PT.rec Empty.isProp⊥ step (copy-members pos ω₁ β hβ)
+            where
+              step : Σ[ y ∈ S ] ⟨ (y ∈ˢ ω₁) ⊓ (fst β ≈[G] fst (chk y)) ⟩
+                   → Empty.⊥
+              step (y , hy , e) =
+                snd ω₁-card y hy
+                  (inj-down ω₁ y (injectable-cong-ranᴱ (chk ω₁) β (chk y) e hinj))

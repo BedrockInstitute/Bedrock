@@ -1,0 +1,14 @@
+.venv/bin/python scripts/gate/lint-prose.py --check
+.venv/bin/python scripts/gate/lint-agda.py --check
+.venv/bin/python scripts/gate/check-glossary.py --check
+.venv/bin/python scripts/gate/check-term-introductions.py
+term introductions: clean (32 reader terms)
+.venv/bin/python scripts/gate/check-fences.py --check
+check-fences: clean (120 masters, run threshold 3)
+.venv/bin/python scripts/gate/check-reading-order.py
+check-reading-order: clean (120 chapters; Milestones preview)
+.venv/bin/python scripts/site/reading_routes.py --check
+reading-routes: clean (10 routes; 120 chapters)
+.venv/bin/python scripts/gate/check-chapter-framework.py
+chapter-framework: 120 chapters, 686 titles, 0 errors
+.venv/bin/python scripts/site/weave-i18n.py --check

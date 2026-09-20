@@ -1,0 +1,6 @@
+Checking K7.breaks.OrdinalRespellReading (/private/tmp/bedrock-k7-probes/K7/breaks/OrdinalRespellReading.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/OrdinalRespellReading.agda:46.22-26: error: [UnequalTerms]
+α != x of type S
+when checking that the expression refl has type
+(α ∷ []) ⊨ IsOrdinalφ-poisoned ≡ CB.isOrdinal α
+exit=42

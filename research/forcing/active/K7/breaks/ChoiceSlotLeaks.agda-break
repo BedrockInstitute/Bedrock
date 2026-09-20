@@ -1,0 +1,147 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK J, CONTROL 3. EXPECTED EXIT 0, AND THE EXIT 0 IS THE RESULT.
+--
+-- Three leaks at once, all at a COMPLETELY ARBITRARY instance of
+-- K7/CompletionTransfer.agda's module Structural, so none of them is an
+-- artefact of a degenerate choice of parameters.
+--
+--  1. host-in-the-slot. A bare host function S → S with its graph condition,
+--     packaged as a type at Type (ℓ-suc ℓ), fills the GroundWellOrder argument
+--     of hyp-from-ground (K7/CompletionTransfer.agda:634). The architecture's
+--     Part 0d says of exactly that line that "no host function can be passed
+--     where it is expected". It can.
+--  2. eliminable. The same three arguments collapse to one SelTotal, by refl.
+--  3. refused-from-M. ChoicelessTransfer (:699-702), transcribed in that file
+--     under rule 14 as the statement K7 refuses, follows from module Well, that
+--     is from M's OWN well ordering, plus the hypothesis that below u is
+--     inhabited. Track D's HostSelector.agda-break runs the implication the
+--     other way. The two together say the host/internal boundary is porous in
+--     both directions and is carried by module structure alone.
+--
+-- WHAT THIS FILE DOES NOT REFUTE, and it is the load-bearing half of Track D's
+-- own defence: the SIBLING ARRANGEMENT. module Well (:100) and module
+-- Structural (:251) are top-level siblings, ltOf is out of scope inside
+-- Structural, and nothing below changes that. Track J relies on the sibling
+-- arrangement and reports the opacity clause refuted.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.ChoiceSlotLeaks
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext   : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import Cubical.Data.Sum using ( _⊎_ )
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∥_∥₁ )
+import CodedVocabulary
+import K7.ChainConditions
+import K7.Refuted
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CV = CodedVocabulary 𝒮
+module CC = K7.ChainConditions 𝒮 ext paths
+module RF = K7.Refuted 𝒮 ext paths
+
+open CV using ( refinesΔ )
+
+module At
+  (carrier order B⁺set order⁺ : S)
+  (img : S → S)
+  (img-in : (p : S) → ⟨ p ∈ˢ carrier ⟩ → ⟨ img p ∈ˢ B⁺set ⟩)
+  (img-mono : (r p : S) → ⟨ r ∈ˢ carrier ⟩ → ⟨ p ∈ˢ carrier ⟩
+            → ⟨ refinesΔ order r p ⟩ → ⟨ refinesΔ order⁺ (img r) (img p) ⟩)
+  (below : S → S)
+  (below-sub : (b p : S) → ⟨ p ∈ˢ below b ⟩ → ⟨ p ∈ˢ carrier ⟩)
+  (below-refines : (b p : S) → ⟨ p ∈ˢ below b ⟩
+                 → ⟨ refinesΔ order⁺ (img p) b ⟩)
+  (refines⁺-trans : (u v z : S) → ⟨ refinesΔ order⁺ u v ⟩
+                  → ⟨ refinesΔ order⁺ v z ⟩ → ⟨ refinesΔ order⁺ u z ⟩)
+  where
+
+  module A = RF.Audit carrier order B⁺set order⁺ img img-in img-mono
+               below below-sub below-refines refines⁺-trans
+
+  -- LEAK 1 AND LEAK 2, at an arbitrary selection relation.
+
+  module Abstract
+    (selRel : S → S → Ω)
+    (sel-below : (u p : S) → ⟨ selRel u p ⟩ → ⟨ p ∈ˢ below u ⟩)
+    (sel-unique : (u p q : S) → ⟨ selRel u p ⟩ → ⟨ selRel u q ⟩ → p ≡ q)
+    where
+
+    module AS = A.AtSelection selRel sel-below sel-unique
+
+    module Run
+      (HostPresentation : Type (ℓ-suc ℓ))
+      (𝔓ᴴ B⁺ : HostPresentation)
+      (Φ Ψ : HostPresentation → Ω)
+      (CCC₂ᴵ : S → S → S → Ω) (injectable : S → S → Ω) (w : S)
+      (ccc-use : (c o v d : S) → ⟨ CCC₂ᴵ c o v ⟩ → ⟨ CV.subsetΔ d c ⟩
+               → ⟨ CC.antichainΔ c o d ⟩ → ⟨ injectable d v ⟩)
+      (ccc-intro : (c o v : S)
+                 → ((d : S) → ⟨ CV.subsetΔ d c ⟩ → ⟨ CC.antichainΔ c o d ⟩
+                    → ⟨ injectable d v ⟩)
+                 → ⟨ CCC₂ᴵ c o v ⟩)
+      (Φ-reading : Φ 𝔓ᴴ ≡ CCC₂ᴵ carrier order w)
+      (Ψ-reading : Ψ B⁺ ≡ CCC₂ᴵ B⁺set order⁺ w)
+      where
+
+      module R = AS.AtTransfer HostPresentation 𝔓ᴴ B⁺ Φ Ψ CCC₂ᴵ injectable w
+                   ccc-use ccc-intro Φ-reading Ψ-reading
+
+      host-in-the-slot : R.HostChoiceFunction → R.Rest → R.T.CCCHypotheses
+      host-in-the-slot = R.host-fills-the-choice-slot
+
+      eliminable :
+          (GWO : Type (ℓ-suc ℓ)) (wo : GWO) (supply : GWO → R.T.SelTotal)
+          (rest : R.Rest)
+        → R.from-ground GWO wo supply rest
+          ≡ R.without-choice (supply wo) rest
+      eliminable = R.choice-slot-eliminable
+
+  -- LEAK 3, at M's own well ordering.
+
+  module FromM
+    (GroundWellOrder : Type (ℓ-suc ℓ))
+    (ltOf : GroundWellOrder → S → S → Ω)
+    (triOf : (wo : GroundWellOrder) (z z' : S)
+           → ∥ ⟨ ltOf wo z z' ⟩ ⊎ ((z ≡ z') ⊎ ⟨ ltOf wo z' z ⟩) ∥₁)
+    (leastOf : (wo : GroundWellOrder) (d : S) → ⟨ ⋁ S (λ z → z ∈ˢ d) ⟩
+             → ⟨ ⋁ S (λ z → (z ∈ˢ d)
+                   ⊓ ⋀ S (λ z' → (z' ∈ˢ d) ⇒ ((ltOf wo z' z) ⇒ ⊥))) ⟩)
+    (wo : GroundWellOrder)
+    where
+
+    module M = A.AtMChoice GroundWellOrder ltOf triOf leastOf wo
+
+    module Run
+      (HostPresentation : Type (ℓ-suc ℓ))
+      (𝔓ᴴ B⁺ : HostPresentation)
+      (Φ Ψ : HostPresentation → Ω)
+      (CCC₂ᴵ : S → S → S → Ω) (injectable : S → S → Ω) (w : S)
+      (ccc-use : (c o v d : S) → ⟨ CCC₂ᴵ c o v ⟩ → ⟨ CV.subsetΔ d c ⟩
+               → ⟨ CC.antichainΔ c o d ⟩ → ⟨ injectable d v ⟩)
+      (ccc-intro : (c o v : S)
+                 → ((d : S) → ⟨ CV.subsetΔ d c ⟩ → ⟨ CC.antichainΔ c o d ⟩
+                    → ⟨ injectable d v ⟩)
+                 → ⟨ CCC₂ᴵ c o v ⟩)
+      (Φ-reading : Φ 𝔓ᴴ ≡ CCC₂ᴵ carrier order w)
+      (Ψ-reading : Ψ B⁺ ≡ CCC₂ᴵ B⁺set order⁺ w)
+      where
+
+      module R = M.AtTransfer HostPresentation 𝔓ᴴ B⁺ Φ Ψ CCC₂ᴵ injectable w
+                   ccc-use ccc-intro Φ-reading Ψ-reading
+
+      refused-from-M :
+          ((u : S) → ⟨ ⋁ S (λ z → z ∈ˢ below u) ⟩) → R.T.ChoicelessTransfer
+      refused-from-M = R.choiceless-from-M

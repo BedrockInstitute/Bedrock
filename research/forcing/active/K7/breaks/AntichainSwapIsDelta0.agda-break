@@ -1,0 +1,78 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track A, NEGATIVE CONTROL 2a. EXPECTED EXIT 0, AND THE EXIT 0 IS THE
+-- FINDING. Read it together with AntichainSwapReading.agda-break, which is
+-- the same two formulas with the reading theorems added and which exits 42.
+--
+-- RULE 6 AT ITS SHARPEST, AND K7 HAS THE SHARPEST INSTANCE. A pure
+-- off-by-one in a de Bruijn index is caught by intrinsic scoping: the
+-- Formula S n type will not hold a Fin that points past the environment.
+-- antichainAtˢ is not protected that way, because its two quantifiers sit at
+-- UNIFORM DEPTH: every slot inside the inner body is a Fin (2 + n), so any
+-- permutation of the slots is still well scoped. K5's Track C swapped two
+-- entries of an instantiation vector and got a perfectly well formed Formula
+-- whose reading was a sentence about the wrong set.
+--
+-- This file measures that the Δ₀ certificate does not discriminate either.
+-- Both mutilations below are accepted by checkΔ₀ … tt, exactly as the
+-- correct formula is, because bounded (FOL/LevyHierarchy.lagda.md:101-113)
+-- recurses on the CONNECTIVES and never inspects a slot.
+--
+--   * swapGuard replaces the guard "p is in the coded subset d" by "p is in
+--     the carrier c", which is already the bound. The resulting sentence is
+--     about the carrier and not about d at all, and it is strictly weaker
+--     than an antichain condition on d.
+--   * swapCompat exchanges the two condition slots inside compatAtˢ. That
+--     one is semantically harmless, since compatibility is symmetric
+--     (CodedVocabulary.agda:186-191), and it is the more dangerous of the
+--     two for exactly that reason: a reviewer checking the mathematics would
+--     wave it through, and only the reading theorem objects, because
+--     compatibleΔ-sym is a PATH and not a definitional equality.
+--
+-- So the Δ₀ certificate is not a check on the formula's content. Only the
+-- reading theorem is, and K7/ChainConditions.agda ships one.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+
+module K7.breaks.AntichainSwapIsDelta0
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _≐_; _⇒̇_; ∀̇∈ )
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
+open import Cubical.Data.Unit using ( tt )
+import CodedVocabulary
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CV = CodedVocabulary 𝒮
+open CV using ( compatAtˢ )
+
+swapGuard : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+swapGuard c o d =
+  ∀̇∈ (var c)
+     ((var zero ∈̇ var (suc c))
+       ⇒̇ (∀̇∈ (var (suc c))
+             ((var zero ∈̇ var (suc (suc c)))
+               ⇒̇ (compatAtˢ (suc (suc c)) (suc (suc o)) (suc zero) zero
+                   ⇒̇ (var (suc zero) ≐ var zero)))))
+
+swapCompat : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
+swapCompat c o d =
+  ∀̇∈ (var c)
+     ((var zero ∈̇ var (suc d))
+       ⇒̇ (∀̇∈ (var (suc c))
+             ((var zero ∈̇ var (suc (suc d)))
+               ⇒̇ (compatAtˢ (suc (suc c)) (suc (suc o)) zero (suc zero)
+                   ⇒̇ (var (suc zero) ≐ var zero)))))
+
+-- Both accepted, by the same one-line idiom the correct formula uses.
+
+Δ₀-swapGuard : ∀ {n} (c o d : Fin n) → Δ₀ (swapGuard c o d)
+Δ₀-swapGuard c o d = checkΔ₀ (swapGuard c o d) tt
+
+Δ₀-swapCompat : ∀ {n} (c o d : Fin n) → Δ₀ (swapCompat c o d)
+Δ₀-swapCompat c o d = checkΔ₀ (swapCompat c o d) tt

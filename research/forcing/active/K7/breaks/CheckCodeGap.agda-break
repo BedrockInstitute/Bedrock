@@ -1,0 +1,73 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK E, NEGATIVE CONTROL 1, AND IT IS THIS TRACK'S OWN.
+-- EXPECTED EXIT 42, AND THE PRINTED INEQUALITY IS THE RESULT.
+--
+-- WHAT IS BEING MEASURED. The coordinator's brief says that O7's valΔ is the
+-- ENTIRE residue of Track E, and the architecture's section 4.5 writes the
+-- Track E datum as a fourth projection whose reading is
+--
+--   ((entry (chk a) (cnd r) ∷ []) ⊨ᴳ valΔ f φ) ≡ forces r φ (chk ξ ∷ chk a ∷ [])
+--
+-- with the candidate value `a` appearing on the LEFT as a ground set. That is
+-- the step this file tries to take, in its smallest form and with O7's general
+-- datum in hand: fill O7's second name slot with the ground element `a` rather
+-- than with the CODE of the check name of a, and read off the forcing fact.
+--
+-- IT DOES NOT TYPE. O7's reading exposes `codesOf (chk ξ ∷ chk a ∷ [])`, whose
+-- second entry is `fst (chk a)`. A check name is a set of ENTRIES and a ground
+-- set is not, which K5/Structures.agda:540-545 states in the tree's own words
+-- and forbids by name as exit item X6. So the gap between `a` and `fst (chk a)`
+-- is real, it is not closed by any renaming of forcesΔ, and an internal graph
+-- of the check map is a SECOND residue. K7/PossibleValues.agda names it and
+-- module FromTable discharges it from a ground set.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using ( Formula )
+import FOL.Semantics
+import K7.PossibleValues
+
+module K7.breaks.CheckCodeGap
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+private module SemG = FOL.Semantics (hPropAlgebra ℓ) 𝒮
+open SemG.At S id using () renaming ( _⊨_ to _⊨ᴳ_ )
+
+module PV = K7.PossibleValues 𝒮 paths
+
+module Try
+  (IsNm   : S → Ω)
+  where
+
+  module NM = PV.Names IsNm
+
+  module At
+    (Cond   : Type ℓ)
+    (cnd    : Cond → S)
+    (chk    : S → NM.Nm)
+    (forces : ∀ {k} → Cond → Formula NM.Nm k → Vec NM.Nm k → Ω)
+    -- O7 IN FULL, exactly as O7/Definability.agda:97-99 declares it. Nothing
+    -- is weakened here: the datum is the landed general one.
+    (forcesΔ         : ∀ {k} → Formula NM.Nm k → Formula S (suc k))
+    (forcesΔ-reading : ∀ {k} (φ : Formula NM.Nm k) (ν : Vec NM.Nm k) (r : Cond)
+                     → ((cnd r ∷ NM.codesOf ν) ⊨ᴳ forcesΔ φ) ≡ forces r φ ν)
+    (f : NM.Nm) (ξ : S)
+    where
+
+    -- The one step the sketch needs and O7 does not give.
+
+    gap : (a : S) (r : Cond)
+        → ⟨ (cnd r ∷ fst (chk ξ) ∷ a ∷ []) ⊨ᴳ forcesΔ (NM.valueFo f) ⟩
+        → ⟨ forces r (NM.valueFo f) (chk ξ ∷ chk a ∷ []) ⟩
+    gap a r hv =
+      subst ⟨_⟩ (forcesΔ-reading (NM.valueFo f) (chk ξ ∷ chk a ∷ []) r) hv

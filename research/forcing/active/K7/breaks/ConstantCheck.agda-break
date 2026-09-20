@@ -1,0 +1,132 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK E, NEGATIVE CONTROL 2. EXPECTED EXIT 0, AND THE EXIT 0 IS THE
+-- RESULT. This is Track E's instance of rule 15, and it is the same shape as
+-- Track D's HostSelector: a field's TYPE does not discriminate a legitimate
+-- proof from a poisoned one, and the telescope is the only protection.
+--
+-- THE POISON. The check map is replaced by a CONSTANT: every ground set is
+-- sent to one and the same name n₀, chosen by the host. Everything else in the
+-- track's telescope is left abstract and untouched.
+--
+-- WHAT HAPPENS. The internal graph of that constant map is `var 0 ≐ con (fst
+-- n₀)`, whose reading theorem is refl, so module AtBound applies with no
+-- complaint at all. valuesOf, valuesOf-spec, values-bounded and values-covers
+-- are all inhabited, all true, and all worthless: the "set of possible values
+-- at ξ" is either the whole of β or empty, uniformly in ξ, and it bounds
+-- nothing. NOTHING IN ANY SHIPPED TYPE REJECTS THIS.
+--
+-- WHAT ACTUALLY PROTECTS THE TRACK, and it is structural rather than typed.
+-- `chk` is a parameter of module AtG, and at the landed instance it is filled
+-- by K5's Copy.groundName (K5/Structures.agda:588-589), whose specification
+-- chk-spec (:570-572) is the check recursion. K7/ValuesAtNames.agda makes that
+-- filling and checks it, at `chk-agrees`. A track that ships the theorem
+-- without the seam probe ships this file.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using ( Formula; Term; con; var; _≐_ )
+open import OrdinaryProfile using ()
+import OrdinaryProfile
+import FOL.Semantics
+import CodedVocabulary
+import K7.PossibleValues
+
+module K7.breaks.ConstantCheck
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+open OrdinaryProfile 𝒮 using ( Separation )
+
+private module SemG = FOL.Semantics (hPropAlgebra ℓ) 𝒮
+open SemG.At S id using () renaming ( _⊨_ to _⊨ᴳ_ )
+
+open CodedVocabulary 𝒮 using ( subsetΔ )
+
+module PV = K7.PossibleValues 𝒮 paths
+
+module Poison (IsNm : S → Ω) where
+
+  module NM = PV.Names IsNm
+
+  module At
+    (carrierᶠ      : S)
+    (Cond          : Type ℓ)
+    (cnd           : Cond → S)
+    (cnd-carrier   : (r : Cond) → ⟨ cnd r ∈ˢ carrierᶠ ⟩)
+    (cndOf         : (q : S) → ⟨ q ∈ˢ carrierᶠ ⟩ → Cond)
+    (cnd-cndOf     : (q : S) (hq : ⟨ q ∈ˢ carrierᶠ ⟩) → cnd (cndOf q hq) ≡ q)
+    (G∈            : Cond → Ω)
+    (_≈[G]_ _∈[G]_ : S → S → Ω)
+    -- THE HOST'S ONE NAME, and the constant map built from it.
+    (n₀            : NM.Nm)
+    where
+
+    module VA = NM.AtG carrierᶠ Cond cnd cnd-carrier cndOf cnd-cndOf
+                  G∈ _≈[G]_ _∈[G]_ (λ _ → n₀)
+
+    module Cut
+      (forces   : ∀ {k} → Cond → Formula NM.Nm k → Vec NM.Nm k → Ω)
+      (truth-at : ∀ {k} (φ : Formula NM.Nm k) (ν : Vec NM.Nm k)
+                → (ν VA.⊨ φ) ≡ ⋁ Cond (λ r → G∈ r ⊓ forces r φ ν))
+      (forcesΔ         : ∀ {k} → Formula NM.Nm k → Formula S (suc k))
+      (forcesΔ-reading : ∀ {k} (φ : Formula NM.Nm k) (ν : Vec NM.Nm k) (r : Cond)
+                       → ((cnd r ∷ NM.codesOf ν) ⊨ᴳ forcesΔ φ) ≡ forces r φ ν)
+      (mk : Separation → (bound : S) → Formula S 1 → S)
+      (mk-in : (sep : Separation) (bound : S) (θ : Formula S 1) (e : S)
+             → ⟨ e ∈ˢ bound ⟩ → ⟨ (e ∷ []) ⊨ᴳ θ ⟩ → ⟨ e ∈ˢ mk sep bound θ ⟩)
+      (mk-bound : (sep : Separation) (bound : S) (θ : Formula S 1) (e : S)
+                → ⟨ e ∈ˢ mk sep bound θ ⟩ → ⟨ e ∈ˢ bound ⟩)
+      (mk-sat : (sep : Separation) (bound : S) (θ : Formula S 1) (e : S)
+              → ⟨ e ∈ˢ mk sep bound θ ⟩ → ⟨ (e ∷ []) ⊨ᴳ θ ⟩)
+      where
+
+      module VS = VA.Values forces truth-at forcesΔ forcesΔ-reading
+                    mk mk-in mk-bound mk-sat
+
+      -- The internal graph of a constant map is one atomic formula and its
+      -- reading is refl. No table, no recursion, no residue.
+
+      chkFo : Formula S 2
+      chkFo = var zero ≐ con (fst n₀)
+
+      module AtB (β : S) where
+
+        chkFo-reading : (u a : S) → ⟨ a ∈ˢ β ⟩
+                      → ((u ∷ a ∷ []) ⊨ᴳ chkFo) ≡ (u ≈ˢ fst n₀)
+        chkFo-reading u a ha = refl
+
+        module BAD = VS.AtBound β chkFo chkFo-reading
+
+        -- All four shipped theorems, at the poisoned instance, with their
+        -- types written out. Every one of them elaborates.
+
+        poisoned-values : Separation → (f : NM.Nm) (ξ : S) → S
+        poisoned-values = BAD.valuesOf
+
+        poisoned-spec
+          : (sep : Separation) (f : NM.Nm) (ξ a : S)
+          → (a ∈ˢ poisoned-values sep f ξ)
+            ≡ ((a ∈ˢ β)
+               ⊓ ⋁ Cond (λ r → forces r (NM.valueFo f) (n₀ ∷ n₀ ∷ [])))
+        poisoned-spec = BAD.valuesOf-spec
+
+        poisoned-bounded : (sep : Separation) (f : NM.Nm) (ξ : S)
+                         → ⟨ subsetΔ (poisoned-values sep f ξ) β ⟩
+        poisoned-bounded = BAD.values-bounded
+
+        -- And the sentence that says what is wrong with it: the bound does not
+        -- depend on the coordinate at all, which is exactly what "coordinate by
+        -- coordinate" was supposed to mean.
+
+        no-coordinate : (sep : Separation) (f : NM.Nm) (ξ η : S)
+                      → poisoned-values sep f ξ ≡ poisoned-values sep f η
+        no-coordinate sep f ξ η = refl

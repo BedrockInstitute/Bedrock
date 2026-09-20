@@ -1,0 +1,46 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track B, NEGATIVE CONTROL 4. EXPECTED NON-ZERO EXIT.
+--
+-- The other half of control 3. The poisoned ordinal formula passes checkΔ₀
+-- and is inhabited by transitivity alone; the READING THEOREM is the only
+-- thing in the tree that rejects it. This file asks for that reading theorem
+-- against CardinalBridge's host predicate isOrdinal (:531-535) and records
+-- the compiler's refusal. Rule 6: uniform-depth formulas get protection ONLY
+-- from their reading theorems, and this is that rule measured on the
+-- programme's own cardinal vocabulary.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import CardinalBridge
+
+module K7.breaks.OrdinalRespellReading
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _≐_; _∧̇_; _∨̇_; ∀̇∈ )
+open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+open At S id using ( _⊨_ )
+
+module CB = CardinalBridge 𝒮
+
+IsOrdinalφ-poisoned : Formula S 1
+IsOrdinalφ-poisoned =
+  CB.IsTransitiveφ
+  ∧̇ (∀̇∈ (var zero)
+       (∀̇∈ (var zero)
+         (((var (suc zero)) ∈̇ (var zero))
+          ∨̇ (((var (suc zero)) ≐ (var zero))
+           ∨̇ ((var zero) ∈̇ (var (suc zero)))))))
+
+-- The correct formula's reading theorem is CardinalBridge.agda:537-539 and it
+-- is refl. The same line at the poisoned formula is the break.
+
+poisoned-reading : (α : S)
+  → ((α ∷ []) ⊨ IsOrdinalφ-poisoned) ≡ (CB.isOrdinal α)
+poisoned-reading α = refl

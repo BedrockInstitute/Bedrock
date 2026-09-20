@@ -1,0 +1,18 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+
+module K8.breaks.AdjoinSwap {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At; _^_ )
+open import K8.FiniteVocabulary 𝒮 using ( adjoinAt; adjoinPred )
+open hPropStructure 𝒮
+open At S id using ( _⊨_ )
+
+wrong-reading : ∀ {n} (b a x : Fin n) (γ : S ^ n)
+  → (γ ⊨ adjoinAt b x a)
+    ≡ adjoinPred (lookup b γ) (lookup a γ) (lookup x γ)
+wrong-reading b a x γ = refl

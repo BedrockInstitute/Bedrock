@@ -1,0 +1,67 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track C, NEGATIVE CONTROL 3. EXPECTED EXIT 42.
+--
+-- Rule 13's device: remove a hypothesis and see whether anything breaks, on
+-- the ground that a removal that does NOT break is the measurement. K6's
+-- tracks cut a five-axiom list to three twice this way.
+--
+-- greedy→maximal has three conclusions and only ONE of them spends excluded
+-- middle. The antichain half is constructive: it reads both greedy equations,
+-- takes four cases, and settles the hard one by the well ordering's own
+-- trichotomy. Predensity is not, and the reason is visible in the statement:
+-- it must produce a member of e meeting an arbitrary condition q, and the
+-- greedy equation only says what putting q into e would REQUIRE. Turning that
+-- requirement into a member is a case split on a truth value that carries no
+-- witness, which is exactly LEM ℓ.
+--
+-- This file removes the argument and asks the shipped proof to fill the
+-- weakened statement. It cannot, and the error names LEM ℓ as the gap.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.GreedyNoLEM
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import CodedVocabulary
+import CardinalBridge
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CV = CodedVocabulary 𝒮
+module CB = CardinalBridge 𝒮
+open CV using ( compatibleΔ; subsetΔ; predenseΔ )
+open CB using ( injectable )
+
+open import K7.ChainConditions 𝒮 ext paths
+  using ( antichainΔ; antichain-use; antichain-intro
+        ; maximalΔ; maximal-intro; injectable-mono-dom )
+
+import K7.CCCEquivalence
+module K7C = K7.CCCEquivalence 𝒮 ext paths
+
+module Attempt
+  (carrier order : S)
+  (compat-refl : (p : S) → ⟨ p ∈ˢ carrier ⟩ → ⟨ compatibleΔ carrier order p p ⟩)
+  (wo : K7C.GroundWellOrder)
+  where
+
+  module P = K7C.Presented carrier order compat-refl
+               antichainΔ antichain-use antichain-intro
+               maximalΔ maximal-intro
+               injectable injectable-mono-dom
+
+  module G = P.FromChoice wo
+
+  greedy-predense-noLEM : (d e : S) → ⟨ subsetΔ d carrier ⟩
+                        → ⟨ G.GreedySpec d e ⟩ → ⟨ predenseΔ carrier order e ⟩
+  greedy-predense-noLEM = G.greedy-predense

@@ -1,0 +1,21 @@
+RUN 1: the file as parked, both theorems present. Agda reports the first
+error only, which is swapGuard-reading.
+
+Checking K7.breaks.AntichainSwapReading (/private/tmp/bedrock-k7-probes/K7/breaks/AntichainSwapReading.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/AntichainSwapReading.agda:41.29-33: error: [UnequalTerms]
+d != c of type Fin n
+when checking that the expression refl has type
+γ ⊨ swapGuard c o d ≡
+antichainΔ (lookup c γ) (lookup o γ) (lookup d γ)
+EXIT=42
+
+RUN 2: the same file with swapGuard-reading deleted so that swapCompat-reading
+is reached. Module renamed to ...ReadingB for the run; nothing else changed.
+
+Checking K7.breaks.AntichainSwapReadingB (/private/tmp/bedrock-k7-probes/K7/breaks/AntichainSwapReadingB.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/AntichainSwapReadingB.agda:41.30-34: error: [UnequalTerms]
+x != x₁ of type S
+when checking that the expression refl has type
+γ ⊨ swapCompat c o d ≡
+antichainΔ (lookup c γ) (lookup o γ) (lookup d γ)
+EXIT=42

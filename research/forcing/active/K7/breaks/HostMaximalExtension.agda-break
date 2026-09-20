@@ -1,0 +1,65 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track C, NEGATIVE CONTROL 2, AND IT IS THE VALUABLE KIND.
+-- EXPECTED EXIT 0, AND THE EXIT 0 IS THE FINDING.
+--
+-- RULE 15 AT TRACK C. Track D proved on the ledger's central claim that the
+-- type does not protect it (K7/breaks/HostSelector.agda-break, exit 0): a bare
+-- host pick : S → S fills all three WithSelection parameters. This file asks
+-- the same question of Track C's own obligation and gets the same answer.
+--
+-- MaximalExtension's conclusion is ⟨ ⋁ S (λ e → …) ⟩, a TRUNCATED existential
+-- of the model. A truncated existential is introduced by ∣_∣₁ applied to a
+-- pair, and nothing in the type of ∣_∣₁ asks where the first component came
+-- from. So a HOST function S → S, chosen outside the model and carrying its
+-- three specifications as host hypotheses, fills MaximalExtension in one line,
+-- and Track C's paid arrow then runs on it and delivers CCC₂ from CCC₁.
+--
+-- THAT IS A CHOICELESS CCC TRANSFER IN EVERYTHING BUT NAME, and nothing in the
+-- type rejects it. What rejects it is the two structural facts Part 0d names
+-- and this track preserves: module Free, where the arrows are proved, has no
+-- GroundWellOrder in scope at all, so it cannot manufacture the operator and
+-- must be handed one; and GroundWellOrder's own fields are a relation on
+-- ground CODES and two proofs about ground SETS, never a function S → S.
+-- A reader auditing the ledger reads the module structure, not the arrow type.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+import Cubical.HITs.PropositionalTruncation as PT
+open PT using ( ∣_∣₁ )
+
+module K7.breaks.HostMaximalExtension
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import CodedVocabulary
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CV = CodedVocabulary 𝒮
+open CV using ( subsetΔ )
+
+open import K7.ChainConditions 𝒮 ext paths
+  using ( maximalΔ; MaximalExtension; CCC₁ᴵ; CCC₂ᴵ )
+
+module HostFiat
+  (carrier order : S)
+  -- A HOST function on ground codes, chosen outside the model. This is the
+  -- "unmentioned choice function on external families" that roadmap:213
+  -- forbids by name, written as plainly as it can be written.
+  (hostExtend     : S → S)
+  (hostExtend-⊇   : (d : S) → ⟨ subsetΔ d (hostExtend d) ⟩)
+  (hostExtend-⊆   : (d : S) → ⟨ subsetΔ (hostExtend d) carrier ⟩)
+  (hostExtend-max : (d : S) → ⟨ maximalΔ carrier order (hostExtend d) ⟩)
+  where
+
+  host-fills : MaximalExtension carrier order
+  host-fills d dsub dac =
+    ∣ hostExtend d , (hostExtend-⊇ d , hostExtend-⊆ d) , hostExtend-max d ∣₁

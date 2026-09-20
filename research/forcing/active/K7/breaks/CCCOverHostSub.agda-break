@@ -1,0 +1,64 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track A, NEGATIVE CONTROL 3. EXPECTED EXIT 42, AND THE ERROR IS A SORT
+-- ERROR RATHER THAN A TYPE ERROR, WHICH IS THE POINT.
+--
+-- THE DISTINCTION THE WHOLE PROGRAMME TURNS ON, SINCE K2. A coded subset of
+-- a forcing notion is a SET OF THE MODEL, d : S. A host subset is an
+-- Ω-valued predicate on conditions, Sub = Cond → Ω, and
+-- ForcingNotion.agda:88-89 records that this is large: Ω = hProp ℓ lives in
+-- Type (ℓ-suc ℓ), so Sub does too. The two are not two spellings of one
+-- notion. There are host subsets of the conditions that the model cannot
+-- see, so "every host antichain is countable" constrains objects M has no
+-- access to and is a strictly stronger sentence than "every coded antichain
+-- is countable". It is also not a sentence OF M at all, which is what makes
+-- it useless to a transfer certificate whose conclusion must be a truth
+-- value of the model.
+--
+-- K7/ChainConditions.agda's three conditions quantify over d : S. This file
+-- asks whether anything but the author's discipline keeps them there. It
+-- does: the algebra's own meet and join are indexed by a SMALL type,
+-- ⋀ ⋁ : (A : Type ℓ) → (A → Ω) → Ω (Base/Truth.lagda.md:72), so the
+-- host-quantified draft cannot be written down as an Ω. It is not rejected
+-- by a convention or by a lint rule; it fails to elaborate.
+--
+-- That is the same diagnostic CodedCompletion.agda:987-993 states in its own
+-- words, "a host-quantified draft lands at Type (ℓ-suc ℓ), which is the
+-- diagnostic", run here at K7's predicate instead of K2's.
+--
+-- Cond arrives as a bare Type ℓ parameter rather than through a
+-- ForcingNotion, so that nothing about the failure depends on which notion
+-- is chosen.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.CCCOverHostSub
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  (Cond : Type ℓ)
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+open import K7.ChainConditions 𝒮 ext paths using ( countableΔ )
+
+-- ForcingNotion.agda:88-89, verbatim in shape.
+
+Sub : Type (ℓ-suc ℓ)
+Sub = Cond → Ω
+
+-- The host-quantified draft of CCC₂, with the antichain clause abbreviated
+-- to a parameter so that the failure is about the QUANTIFIER and not about
+-- anything inside it.
+
+CCC₂ᴴᵒˢᵗ : (Sub → Ω) → (Sub → S) → S → Ω
+CCC₂ᴴᵒˢᵗ isAntichain code w =
+  ⋀ Sub (λ D → isAntichain D ⇒ countableΔ w (code D))

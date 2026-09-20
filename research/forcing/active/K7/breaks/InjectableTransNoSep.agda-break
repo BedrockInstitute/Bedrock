@@ -1,0 +1,51 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track B, NEGATIVE CONTROL 1, the one the brief names.
+-- EXPECTED NON-ZERO EXIT, AND THE ERROR IS THE RESULT.
+--
+-- The brief says: delete Separation from injectable-trans, expected exit 42,
+-- and a removal that does not break is the measurement (rule 13).
+--
+-- Where the Separation goes, measured: K7/CardinalOrder.agda's graphOf spends
+-- it exactly once, at `sep B θ`, to cut the composite graph out of the bound
+-- Collection produces. Collection alone returns a set B that CONTAINS a pair
+-- for every x ∈ a and may contain anything else besides, so the forward half
+-- of GraphSpec, "every member of the graph is a composite pair", has no proof
+-- and the four clauses of isInjection all fail at once. Nothing else in the
+-- hypothesis list has type Separation, so the removal cannot be repaired by
+-- reordering the remaining arguments, and that is what this file records.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+import K7.CardinalOrder
+
+module K7.breaks.InjectableTransNoSep
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext : OrdinaryProfile.Extensionality 𝒮)
+  (mem-congˡ : (x y z : ZFStructure.S 𝒮)
+             → ⟨ ZFStructure._≈ˢ_ 𝒮 x y ⟩
+             → (ZFStructure._∈ˢ_ 𝒮 x z) ≡ (ZFStructure._∈ˢ_ 𝒮 y z))
+  (mem-congʳ : (x y z : ZFStructure.S 𝒮)
+             → ⟨ ZFStructure._≈ˢ_ 𝒮 y z ⟩
+             → (ZFStructure._∈ˢ_ 𝒮 x y) ≡ (ZFStructure._∈ˢ_ 𝒮 x z))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module OP = OrdinaryProfile 𝒮
+module CO = K7.CardinalOrder 𝒮
+module O  = CO.Order ext mem-congˡ mem-congʳ
+
+open OP using ( Separation; Collection; Pairing )
+
+-- The deletion. Every remaining hypothesis is supplied.
+
+injectable-trans-noSep : Collection → Pairing → (a b d : S)
+                       → ⟨ CO.injectable a b ⟩ → ⟨ CO.injectable b d ⟩
+                       → ⟨ CO.injectable a d ⟩
+injectable-trans-noSep coll pair = O.injectable-trans coll pair

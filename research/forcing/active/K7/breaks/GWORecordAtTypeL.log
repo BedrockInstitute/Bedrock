@@ -1,0 +1,10 @@
+Checking K7.breaks.GWORecordAtTypeL (/private/tmp/bedrock-k7-probes/K7/breaks/GWORecordAtTypeL.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/GWORecordAtTypeL.agda:34.8-28: error: [ConstructorDoesNotFitInData]
+Constructor GroundWellOrderSmall.constructor
+of inferred sort Type (ℓ-suc ℓ)
+does not fit into record type of sort Type ℓ.
+(Reason: Type (ℓ-suc ℓ) is not less or equal than Type ℓ)
+when checking that the type S → S → Ω of an argument to the
+constructor GroundWellOrderSmall.constructor fits in the sort
+Type ℓ of the datatype.
+EXIT=42

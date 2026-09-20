@@ -1,0 +1,38 @@
+{
+  "captured": "2026-09-20",
+  "branch": "forcing",
+  "main_base": "4cb54fa4",
+  "worktree_path": "/Users/alsg/Agentic/bedrock-forcing-cohen-k0",
+  "worktree_head": "cbd1510efd048c77a7c3e7af972166f44f7b9338",
+  "worktree_status": [
+    "M dev/literature/cohen-implementation-roadmap-2026-09.md",
+    "?? dev/literature/k1-ordinary-profile-cardinal-bridges-2026-09.md",
+    "?? dev/literature/k10-atomic-graph-2026-09.md",
+    "?? dev/literature/k10-cover-2026-09.md",
+    "?? dev/literature/k10-forced-values-2026-09.md",
+    "?? dev/literature/k10-order-2026-09.md",
+    "?? dev/literature/k10-preservation-obstruction-2026-09.md",
+    "?? dev/literature/k10-progress-2026-09.md",
+    "?? dev/literature/k10-rank-2026-09.md",
+    "?? dev/literature/k11-generic-2026-09.md",
+    "?? dev/literature/k2-forcing-notions-and-completion-2026-09.md",
+    "?? dev/literature/k3-names-and-structural-evaluation-2026-09.md",
+    "?? dev/literature/k4-boolean-semantics-and-compiler-2026-09.md",
+    "?? dev/literature/k5-forcing-relation-and-truth-lemma-2026-09.md",
+    "?? dev/literature/k6-axiom-transfer-to-the-extension-2026-09.md",
+    "?? dev/literature/k7-local-preservation-repair-2026-09.md",
+    "?? dev/literature/k8-cohen-conditions-and-ccc-2026-09.md",
+    "?? dev/literature/k9-internal-cohen-family-2026-09.md",
+    "?? dev/literature/terminology-compatible-2026-09.md"
+  ],
+  "archive_path": "/Users/alsg/Agentic/bedrock-proofs-archive",
+  "active_checkpoint": "k10-k11-resume-2026-09-18",
+  "excluded": [
+    "Agda interfaces",
+    "_build",
+    "Git metadata",
+    "macOS resource forks"
+  ],
+  "source_hash": "SHA-256",
+  "object_encoding": "gzip mtime=0"
+}

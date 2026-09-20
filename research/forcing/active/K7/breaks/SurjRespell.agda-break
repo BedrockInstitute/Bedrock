@@ -1,0 +1,49 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track B, NEGATIVE CONTROL 5. EXPECTED NON-ZERO EXIT.
+--
+-- The new vocabulary gets its own respelling control, because a formula this
+-- track writes for the first time has no prior reading theorem to lean on.
+-- SurjOntoφ bounds its outer quantifier by b, the CODOMAIN: "every member of
+-- b is hit". This file bounds it by a, the DOMAIN, which is the drift that
+-- turns a surjection onto b into a statement about a and still elaborates,
+-- still has the right arity and still has three bound variables in the right
+-- order. The reading theorem against isSurjection's fourth conjunct is what
+-- rejects it.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import CardinalBridge
+import K7.CardinalOrder
+
+module K7.breaks.SurjRespell
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_; ∀̇∈ )
+open import FOL.Semantics (hPropAlgebra ℓ) 𝒮 using ( module At )
+open import FOL.Manipulation.Renaming using ( renameFo )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+open At S id using ( _⊨_ )
+
+module CB = CardinalBridge 𝒮
+module CO = K7.CardinalOrder 𝒮
+
+-- One index shifted: var (suc (suc zero)) is b, var (suc zero) is a.
+
+SurjOntoφ-poisoned : Formula S 3
+SurjOntoφ-poisoned =
+  ∀̇∈ (var (suc zero))
+       (∃̇ (∃̇ ((var (suc zero) ∈̇ var (suc (suc (suc (suc zero)))))
+            ∧̇ ((var zero ∈̇ var (suc (suc (suc zero))))
+            ∧̇ (renameFo CO.surj-pair CB.PairφK)))))
+
+poisoned-reading : (f a b : S)
+  → ((f ∷ a ∷ b ∷ []) ⊨ SurjOntoφ-poisoned)
+    ≡ (⋀ S (λ v → (v ∈ˢ b) ⇒ (⋁ S (λ x → ⋁ S (λ p →
+         (x ∈ˢ a) ⊓ ((p ∈ˢ f) ⊓ (CB.isKPair p x v)))))))
+poisoned-reading = CO.SurjOnto-bridge

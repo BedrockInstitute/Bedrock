@@ -1,0 +1,8 @@
+Checking K7.breaks.CheckCodeGap (/private/tmp/bedrock-k7-probes/K7/breaks/CheckCodeGap.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CheckCodeGap.agda:73.73-75: error: [UnequalTerms]
+a != (fst (chk a)) of type S
+when checking that the expression hv has type
+⟨
+(cnd r ∷ NM.codesOf (chk ξ ∷ chk a ∷ [])) ⊨ᴳ forcesΔ (NM.valueFo f)
+⟩
+EXIT=42

@@ -1,0 +1,48 @@
+Checking K7.breaks.CCCCollapse1 (/private/tmp/bedrock-k7-probes/K7/breaks/CCCCollapse1.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CCCCollapse1.agda:44.19-23: error: [UnequalTerms]
+(x : S) →
+⟨
+x ∈ˢ c ⇒
+x ∈ˢ x₁ ⇒
+⋀ S
+(λ q →
+   q ∈ˢ c ⇒ q ∈ˢ x₁ ⇒ CodedVocabulary.compatibleΔ 𝒮 c o x q ⇒ x ≈ˢ q)
+⟩
+!=
+Σ ⟨ K7.ChainConditions.antichainΔ 𝒮 ext paths c o x₁ ⟩
+(λ _ → ⟨ CodedVocabulary.predenseΔ 𝒮 c o x₁ ⟩)
+of type Type ℓ
+when checking that the expression refl has type
+CCC₁ᴵ c o w ≡ CCC₂ᴵ c o w
+EXIT=42
+Checking K7.breaks.CCCCollapse2 (/private/tmp/bedrock-k7-probes/K7/breaks/CCCCollapse2.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CCCCollapse2.agda:44.19-23: error: [UnequalTerms]
+Cubical.HITs.PropositionalTruncation.Base.∥
+Σ S (λ x → ⟨ x ∈ˢ x₁ ⊓ CodedVocabulary.compatibleΔ 𝒮 c o x x₂ ⟩) ∥₁
+!=
+⟨ x₂ ∈ˢ x₁ ⟩ →
+⟨
+⋀ S
+(λ q →
+   q ∈ˢ c ⇒
+   q ∈ˢ x₁ ⇒ CodedVocabulary.compatibleΔ 𝒮 c o x₂ q ⇒ x₂ ≈ˢ q)
+⟩
+when checking that the expression refl has type
+CCC₂ᴵ c o w ≡ CCC₃ᴵ c o w
+EXIT=42
+Checking K7.breaks.CCCCollapse3 (/private/tmp/bedrock-k7-probes/K7/breaks/CCCCollapse3.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/CCCCollapse3.agda:44.23-24: error: [UnequalTerms]
+(x : S) →
+⟨
+x ∈ˢ c ⇒
+x ∈ˢ x₁ ⇒
+⋀ S
+(λ q →
+   q ∈ˢ c ⇒ q ∈ˢ x₁ ⇒ CodedVocabulary.compatibleΔ 𝒮 c o x q ⇒ x ≈ˢ q)
+⟩
+!=<
+Σ ⟨ K7.ChainConditions.antichainΔ 𝒮 ext paths c o x₁ ⟩
+(λ _ → ⟨ CodedVocabulary.predenseΔ 𝒮 c o x₁ ⟩)
+of type Type ℓ
+when checking that the expression h has type ⟨ CCC₂ᴵ c o w ⟩
+EXIT=42

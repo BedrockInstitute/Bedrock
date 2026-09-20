@@ -1,0 +1,76 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK F, NEGATIVE CONTROL 2. EXPECTED EXIT 0, AND THE EXIT 0 IS THE
+-- FINDING. THE ONE-POINT INSTANCE DISCRIMINATES NOTHING.
+--
+-- Architecture 4.6 asks for a control at K6/OnePoint.agda:158, the ONLY
+-- inhabitant of CodedCompletion.Presentation in the compile root, with the
+-- sentence "the one-point instance discriminates nothing" beside it so that
+-- nobody may cite it as an acceptance example for Track F.
+--
+-- This is that control in its sharpest form. At the one-point presentation
+-- EVERY ground set is an antichain, unconditionally, because both quantifiers
+-- of antichainΔ (K7/ChainConditions.agda:125-129) are bounded by the carrier
+-- and the carrier is a singleton (K6/OnePoint.agda:113-114, :196-197). The
+-- compatibility antecedent is never read.
+--
+-- The consequence, and it is trap T2 in machine-checked form: at this notion
+-- CCC₂ᴵ carries no information about chains at all. ccc₂-from-countability
+-- below closes it from bare countability of every subset of the carrier, with
+-- the antichain argument discarded. So a Track F theorem instantiated here
+-- would be true for a reason that has nothing to do with the chain condition,
+-- and the instantiation proves nothing about the theorem.
+--
+-- Whether anything in this programme makes CCC₂ NON-trivially true is Track A's
+-- measurement and K8's obligation; this file measures that the one witness on
+-- disk does not.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+import CodedVocabulary
+import CardinalBridge
+import K6.OnePoint
+import K7.ChainConditions
+
+module K7.breaks.AntichainAtOnePoint
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext   : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  (pair  : OrdinaryProfile.Pairing 𝒮)
+  (p₀    : ZFStructure.S 𝒮)
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module OP  = OrdinaryProfile 𝒮
+module CV  = CodedVocabulary 𝒮
+module CBᴳ = CardinalBridge 𝒮
+module CA  = K7.ChainConditions 𝒮 ext paths
+module OPT = K6.OnePoint 𝒮 ext paths pair p₀
+
+open OP.PathRealization paths using ( path-to-≈ˢ )
+
+-- Every ground set is an antichain of the one-point notion. No hypothesis on
+-- d, no compatibility, no order.
+
+antichain-everywhere : (d : S) → ⟨ CA.antichainΔ OPT.carrierOP OPT.orderOP d ⟩
+antichain-everywhere d p hp _ q hq _ _ =
+  path-to-≈ˢ p q
+    (OPT.carrier-one-point p hp ∙ sym (OPT.carrier-one-point q hq))
+
+-- And therefore CCC₂ at the one-point notion says only "every subset of the
+-- carrier is countable". The antichain proof supplied by ccc-intro is thrown
+-- away in the body below, which is the whole of the finding.
+
+ccc₂-from-countability :
+    (w : S)
+  → ((d : S) → ⟨ CV.subsetΔ d OPT.carrierOP ⟩ → ⟨ CBᴳ.injectable d w ⟩)
+  → ⟨ CA.CCC₂ᴵ OPT.carrierOP OPT.orderOP w ⟩
+ccc₂-from-countability w f =
+  CA.ccc-intro OPT.carrierOP OPT.orderOP w (λ d sub _ → f d sub)

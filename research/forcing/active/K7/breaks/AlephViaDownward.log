@@ -1,0 +1,5 @@
+# K7 Track G break: AlephViaDownward
+# run from /tmp/bedrock-k7-probes as:
+#   cp AlephViaDownward.agda-break AlephViaDownward.agda && GHCRTS="-A64m -I0 -M8g" agda K7/breaks/AlephViaDownward.agda
+# confirmed by running the file, not attributed.
+EXIT=0

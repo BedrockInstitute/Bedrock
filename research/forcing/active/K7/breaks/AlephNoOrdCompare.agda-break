@@ -1,0 +1,114 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track G, NEGATIVE CONTROL 3, THE REMOVAL. EXPECTED EXIT 42, AND THE
+-- PRINTED GOAL IS THE RESULT.
+--
+-- Rule 13 says derive permitted hypotheses from what the layers EXPORT, and a
+-- removal that does NOT break is the measurement. This file removes exactly
+-- one slot from K7/Aleph.agda's module Aleph, ord-compare, and leaves every
+-- other slot in place: copy-members, chk-mem, chk-ordinal, sat-cong, the two
+-- value-relation laws, chk-injectable, ω₁-members-countable and the three
+-- cardinal hypotheses are all still there. The body of ω₁-minimal is then a
+-- hole, so that Agda prints the obligation that is actually left open rather
+-- than a scope error about a name that is no longer bound.
+--
+-- WHAT THE PRINTED GOAL SHOWS. The remaining obligation is a disjunction
+-- between two names of the EXTENSION, with a hypothesis that is a cardinality
+-- statement of the extension, and NOTHING in scope reduces the quantifier that
+-- produced it. copy-members reduces a quantifier guarded by membership in a
+-- check name (K6/GroundTransfer.agda:427-429) and the guard here is
+-- isCardinalᴱ μ ⊓ (chk w ∈ᴱ μ), which is not of that shape. That is the whole
+-- content of the claim that the minimality conjunct of isSuccCardinal
+-- (CardinalBridge.agda:592-597) is UNBOUNDED where the conjunct of isCardinal
+-- (CardinalBridge.agda:553-556) is not, and it is why this track needs
+-- extension ordinal comparability and not no-new-ordinals.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using ( Formula )
+import CardinalBridge
+import K7.Aleph
+import Cubical.HITs.PropositionalTruncation as PT
+
+module K7.breaks.AlephNoOrdCompare {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+import Cubical.Data.Empty as Empty
+open PT using ( ∥_∥₁ ; ∣_∣₁ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module A   = K7.Aleph 𝒮
+module CBᴳ = CardinalBridge 𝒮
+
+module Removed (IsNm : S → Ω) where
+
+  module AN = A.Names IsNm
+  open AN using ( Nm )
+
+  module AtG (_≈[G]_ _∈[G]_ : S → S → Ω) where
+
+    module AL = AN.AtG _≈[G]_ _∈[G]_
+    open AL using ( _≈ᴱ_ ; _∈ᴱ_ ; _⊨_ ; Agree ; ordinal-reading
+                  ; injectable-reading ; module CBᴱ )
+
+    module At
+      (sat-cong : ∀ {k} (ψ : Formula Nm k) (ν μ : Vec Nm k) → Agree ν μ
+                → (ν ⊨ ψ) ≡ (μ ⊨ ψ))
+      (≈-refl : (x : S) → ⟨ x ≈[G] x ⟩)
+      (≈-sym  : {x y : S} → ⟨ x ≈[G] y ⟩ → ⟨ y ≈[G] x ⟩)
+      (chk : S → Nm)
+      (positiveᴾ : Ω)
+      (copy-members : ⟨ positiveᴾ ⟩ → (a : S) (τ : Nm) → ⟨ τ ∈ᴱ chk a ⟩
+                    → ⟨ ⋁ S (λ y → (y ∈ˢ a) ⊓ (fst τ ≈[G] fst (chk y))) ⟩)
+      (chk-mem : ⟨ positiveᴾ ⟩ → (m n : S) → (chk m ∈ᴱ chk n) ≡ (m ∈ˢ n))
+      (chk-ordinal : (a : S) → ((chk a ∷ []) ⊨ CBᴱ.IsOrdinalφ)
+                             ≡ A._⊨ᴳ_ (a ∷ []) CBᴳ.IsOrdinalφ)
+      -- ord-compare REMOVED HERE, and nothing else is.
+      (chk-injectable : (a b : S) → ⟨ CBᴳ.injectable a b ⟩
+                      → ⟨ CBᴱ.injectable (chk a) (chk b) ⟩)
+      (w ω₁ : S)
+      (ω₁-succ : ⟨ CBᴳ.isSuccCardinal ω₁ w ⟩)
+      (ω₁-members-countable : (b : S) → ⟨ b ∈ˢ ω₁ ⟩ → ⟨ CBᴳ.injectable b w ⟩)
+      (pos : ⟨ positiveᴾ ⟩)
+      where
+
+      chk-ordinal-up : (κ : S) → ⟨ CBᴳ.isOrdinal κ ⟩ → ⟨ CBᴱ.isOrdinal (chk κ) ⟩
+      chk-ordinal-up κ h =
+        subst ⟨_⟩ (ordinal-reading (chk κ))
+          (subst ⟨_⟩ (sym (chk-ordinal κ))
+            (subst ⟨_⟩ (sym (CBᴳ.IsOrdinal-bridge κ)) h))
+
+      injectable-congᴱ : (σ τ ζ : Nm) → ⟨ σ ≈ᴱ τ ⟩
+                       → ⟨ CBᴱ.injectable σ ζ ⟩ → ⟨ CBᴱ.injectable τ ζ ⟩
+      injectable-congᴱ σ τ ζ e h =
+        subst ⟨_⟩ (injectable-reading τ ζ)
+          (subst ⟨_⟩ (sat-cong CBᴱ.Injectableφ (σ ∷ ζ ∷ []) (τ ∷ ζ ∷ []) agr)
+            (subst ⟨_⟩ (sym (injectable-reading σ ζ)) h))
+        where
+          agr : Agree (σ ∷ ζ ∷ []) (τ ∷ ζ ∷ [])
+          agr zero       = e
+          agr (suc zero) = ≈-refl (fst ζ)
+
+      -- Still provable without ord-compare, which is the control on the
+      -- control: only the third conjunct is at issue.
+
+      below-ω₁-absurd : (μ : Nm) → ⟨ CBᴱ.isCardinal μ ⟩ → ⟨ chk w ∈ᴱ μ ⟩
+                      → ⟨ μ ∈ᴱ chk ω₁ ⟩ → Empty.⊥
+      below-ω₁-absurd μ hcard hmem hbelow =
+        PT.rec Empty.isProp⊥ step (copy-members pos ω₁ μ hbelow)
+        where
+          step : Σ[ y ∈ S ] ⟨ (y ∈ˢ ω₁) ⊓ (fst μ ≈[G] fst (chk y)) ⟩ → Empty.⊥
+          step (y , hy , e) =
+            snd hcard (chk w) hmem
+              (injectable-congᴱ (chk y) μ (chk w) (≈-sym e)
+                (chk-injectable y w (ω₁-members-countable y hy)))
+
+      -- THE OPEN GOAL. Everything K7/Aleph.agda has except ord-compare is in
+      -- scope above this line.
+
+      ω₁-minimal : (μ : Nm) → ⟨ (CBᴱ.isCardinal μ) ⊓ (chk w ∈ᴱ μ) ⟩
+                 → ⟨ (chk ω₁ ≈ᴱ μ) ⊔ (chk ω₁ ∈ᴱ μ) ⟩
+      ω₁-minimal μ (hcard , hmem) = ?

@@ -1,0 +1,31 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track B, NEGATIVE CONTROL 2. EXPECTED NON-ZERO EXIT.
+--
+-- G3 of the architecture says IsCardinalφ is NOT Δ₀ and gives the reason:
+-- its second conjunct renames Injectableφ = ∃̇ IsInjectionφ
+-- (CardinalBridge.agda:379-380, :551), whose existential is unbounded, and
+-- IsFunctionφ (:176-182) and InjDomφ (:257-262) carry unbounded quantifiers
+-- of their own. That claim was UNVERIFIED in the architecture, which says so.
+-- This file verifies it mechanically: `bounded IsCardinalφ` is false, so
+-- Bool→Type of it is empty and `tt` does not inhabit it.
+--
+-- The contrast is the point. The same line with IsOrdinalφ in place of
+-- IsCardinalφ is K7/CardinalOrder.agda's Δ₀-IsOrdinalφ and exits 0.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import CardinalBridge
+
+module K7.breaks.CardinalDeltaZero
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  where
+
+open import FOL.LevyHierarchy using ( Δ₀; checkΔ₀ )
+open import Cubical.Data.Unit using ( tt )
+
+module CB = CardinalBridge 𝒮
+
+Δ₀-IsCardinalφ : Δ₀ CB.IsCardinalφ
+Δ₀-IsCardinalφ = checkΔ₀ CB.IsCardinalφ tt

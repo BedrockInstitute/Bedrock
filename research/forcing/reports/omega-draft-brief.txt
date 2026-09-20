@@ -1,0 +1,2715 @@
+Read-only drafting brief. Do not write any files, run compilers, invoke shell, commit, or change state. Return proposed Agda text only, plus a brief explanation. Project: Bedrock, Cubical Agda 2.8.0/cubical 0.9, safe ZFC/GCH in L. This task extends isolated Cohen forcing research K10, preserving all theorem assumptions and --safe. K10 general non-CH theorem remains open; do not claim completion. Fixed glossary is supplied below; no terminology changes. Full chapter context and exact complete code of the relevant modules follows. Task: propose the smallest addition to K10/CohenBooleanOmegaPart.agda deriving omega-part-top for every pω using existing omega-part-val, actual CohenBooleanOmegaTop.omega-at-omega, CohenBooleanOmegaEq.omegaSrc-eq and source erase equality. Then propose removing the omega-top parameter of CohenBooleanCHBot.FromParts using that proved supplier. Preserve power-top and inner-bot as explicit pending hypotheses. You can read actual referenced definitions with read/grep/find/ls when necessary. Return an exact patch as text. Do not introduce postulates, unsolved holes, unsafe pragmas or extra assumptions. Never assume a prose claim is evidence.
+
+FULL FILE K10/CohenBooleanOmegaPart.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+open import FOL.ZFStructure using ( ZFStructure )
+import NameKernel
+import OrdinaryProfile
+import CardinalBridge
+import K10.CohenBooleanNotCH
+import K10.CohenBooleanRename
+
+module K10.CohenBooleanOmegaPart
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (families : NameKernel.Families 𝒮)
+  (accessible : NameKernel.Accessibility 𝒮)
+  (images : NameKernel.MemberImage 𝒮)
+  (pow : OrdinaryProfile.PowerSet 𝒮)
+  (find : OrdinaryProfile.FoundationInduction 𝒮)
+  (κ w : ZFStructure.S 𝒮)
+  (lem : LEM ℓ)
+  (hw : ⟨ CardinalBridge.isOmega 𝒮 w ⟩)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.Manipulation.ConstantOccurrences using ( module ZeroOccurrences )
+open import FOL.Manipulation.Renaming using ( renameFo )
+import CardinalBridge
+
+module CH = K10.CohenBooleanNotCH 𝒮 families accessible images pow find
+  κ w lem hw paths
+module RN = K10.CohenBooleanRename 𝒮 families accessible images pow κ w lem paths
+module CB = CardinalBridge 𝒮
+module ZO = ZeroOccurrences (ZFStructure.S 𝒮)
+
+omegaSrc1 : CH.VS.Src 1
+omegaSrc1 = ZO.erase CB.IsOmegaφ refl
+
+erase-rename : CH.CH-omega-part ≡ renameFo CH.CH.om-w omegaSrc1
+erase-rename = refl
+
+om-w-env : (pω : CH.VS.Nameᴮ)
+  → RN.renameEnv CH.CH.om-w (CH.at2 pω) ≡ (CH.omegaNm ∷ CH.emptyEnv)
+om-w-env pω = refl
+
+omega-part-val : (pω : CH.VS.Nameᴮ)
+  → CH.VS.val CH.CH-omega-part (CH.at2 pω)
+    ≡ CH.VS.val omegaSrc1 (CH.omegaNm ∷ CH.emptyEnv)
+omega-part-val pω =
+  cong (λ φ → CH.VS.val φ (CH.at2 pω)) erase-rename
+  ∙ RN.val-rename CH.CH.om-w omegaSrc1 (CH.at2 pω)
+  ∙ cong (CH.VS.val omegaSrc1) (om-w-env pω)
+
+FULL FILE K10/CohenBooleanOmegaTop.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+open import FOL.ZFStructure using ( ZFStructure )
+import NameKernel
+import OrdinaryProfile
+import CardinalBridge
+import Cubical.HITs.PropositionalTruncation as PT
+import Cubical.Data.Sum as Sum
+import Cubical.Data.Empty as Empty
+import Cubical.Induction.WellFounded as WFI
+import K4.Algebra
+import K4.Implication
+import K8.FiniteVocabulary
+import K8.OmegaInduction
+import K9.NameGround
+import K10.CohenBooleanLeastSucc
+
+module K10.CohenBooleanOmegaTop
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (families : NameKernel.Families 𝒮)
+  (accessible : NameKernel.Accessibility 𝒮)
+  (images : NameKernel.MemberImage 𝒮)
+  (pow : OrdinaryProfile.PowerSet 𝒮)
+  (κ w : ZFStructure.S 𝒮)
+  (lem : LEM ℓ)
+  (hw : ⟨ CardinalBridge.isOmega 𝒮 w ⟩)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( var ; ∃̇∈ ; ∀̇∈ ; _∧̇_ ; _∈̇_ ; _≐_ ; _∨̇_ ; ⊥̇
+                             ; _⇒̇_ ; ∀̇_ )
+open import FOL.Manipulation.Renaming using ( renameFo ; liftρ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+open PT using ( ∣_∣₁ )
+open WFI using ( Acc ; acc )
+import CardinalBridge
+
+module NG = K9.NameGround 𝒮 families accessible images pow κ w
+module Su = K10.CohenBooleanLeastSucc 𝒮 families accessible images pow
+  κ w lem hw paths
+module OI = K8.OmegaInduction 𝒮 NG.extensional paths NG.hasPair NG.hasUnion
+  pow NG.hasSeparation κ
+module FV = K8.FiniteVocabulary 𝒮
+module CB = CardinalBridge 𝒮
+
+open K4.Algebra 𝒮 using ( Pt ; _≤ᴮ_ ; ⊆ˢ-trans )
+open K4.Algebra.Lattice Su.Ap.Ind.BAT.IC.codedLattice
+  using ( _⊓ᴮ_ ; _⊔ᴮ_ ; ⊤ᴮ ; ⊥ᴮ ; ⊓-lb₁ ; ⊓-lb₂ ; ⊓-glb )
+open K4.Implication 𝒮 Su.Ap.Ind.NG.extensional Su.Ap.Ind.NG.≈ˢ-paths
+  Su.Ap.Ind.BAT.B Su.Ap.Ind.BAT.IC.codedLattice Su.Ap.Ind.BAT.IC.codedComplement
+  using ( ≤ᴮ-antisym ; ⊤-greatest ; ⊓-⊤ ; ⊓-comm ; ⇒ᴮ-curry ; ⇒ᴮ-mp ; _⇒ᴮ_ )
+
+open Su.Ap.Ind using ( checkNm ; emptyEnv ; emptyClause ; emptyBody
+                     ; empty-mem-bot ; support-empty )
+open Su.Ap using ( succInner ; succExists ; succClause ; indSrc
+                 ; memberR ; upR ; downR ; inner-shape
+                 ; up-body₃ ; down-body₃ )
+open Su.Ap.Ind.BAT.Atomic using () renaming ( _∈ᴮ_ to mem ; _≈ᴮ_ to eq )
+
+emptyBody₃ : Su.Ap.Ind.VS.Src 3
+emptyBody₃ = ∀̇∈ (var zero) ⊥̇
+
+emptyR : Su.Ap.Ind.VS.Src 2
+emptyR = renameFo CB.wk1 emptyClause
+
+emptyR-shape : emptyR ≡ ∃̇∈ (var zero) emptyBody₃
+emptyR-shape = refl
+
+empty-body-wk1 : (τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val emptyBody₃ (τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)
+empty-body-wk1 τ σ ρ = ≤ᴮ-antisym le ge
+  where
+  le : ⟨ Su.Ap.Ind.VS.val emptyBody₃ (τ ∷ σ ∷ ρ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv) ⟩
+  le = Su.Ap.Ind.VS.law-∀∈-glb zero ⊥̇ (τ ∷ σ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val emptyBody₃ (τ ∷ σ ∷ ρ ∷ emptyEnv)) λ ν →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val emptyBody₃ (τ ∷ σ ∷ ρ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst ν) (fst τ) ⇒ᴮ b) ⟩)
+        (Su.Ap.Ind.VS.law-⊥ (ν ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+          ∙ sym (Su.Ap.Ind.VS.law-⊥ (ν ∷ τ ∷ σ ∷ emptyEnv)))
+        (Su.Ap.Ind.VS.law-∀∈-lb zero ⊥̇ (τ ∷ σ ∷ ρ ∷ emptyEnv) ν)
+  ge : ⟨ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val emptyBody₃ (τ ∷ σ ∷ ρ ∷ emptyEnv) ⟩
+  ge = Su.Ap.Ind.VS.law-∀∈-glb zero ⊥̇ (τ ∷ σ ∷ ρ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)) λ ν →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst ν) (fst τ) ⇒ᴮ b) ⟩)
+        (Su.Ap.Ind.VS.law-⊥ (ν ∷ τ ∷ σ ∷ emptyEnv)
+          ∙ sym (Su.Ap.Ind.VS.law-⊥ (ν ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)))
+        (Su.Ap.Ind.VS.law-∀∈-lb zero ⊥̇ (τ ∷ σ ∷ emptyEnv) ν)
+
+empty-wk1 : (σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val emptyR (σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv)
+empty-wk1 σ ρ =
+  cong (λ φ → Su.Ap.Ind.VS.val φ (σ ∷ ρ ∷ emptyEnv)) emptyR-shape
+  ∙ ≤ᴮ-antisym le ge
+  where
+  le : ⟨ Su.Ap.Ind.VS.val (∃̇∈ (var zero) emptyBody₃) (σ ∷ ρ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv) ⟩
+  le = Su.Ap.Ind.VS.law-∃∈-lub zero emptyBody₃ (σ ∷ ρ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv)) λ τ →
+      subst (λ b → ⟨ (mem (fst τ) (fst σ) ⊓ᴮ b)
+                     ≤ᴮ Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv) ⟩)
+        (sym (empty-body-wk1 τ σ ρ))
+        (Su.Ap.Ind.VS.law-∃∈-ub zero emptyBody (σ ∷ emptyEnv) τ)
+  ge : ⟨ Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val (∃̇∈ (var zero) emptyBody₃) (σ ∷ ρ ∷ emptyEnv) ⟩
+  ge = Su.Ap.Ind.VS.law-∃∈-lub zero emptyBody (σ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val (∃̇∈ (var zero) emptyBody₃) (σ ∷ ρ ∷ emptyEnv)) λ τ →
+      subst (λ b → ⟨ (mem (fst τ) (fst σ) ⊓ᴮ b)
+                     ≤ᴮ Su.Ap.Ind.VS.val (∃̇∈ (var zero) emptyBody₃)
+                          (σ ∷ ρ ∷ emptyEnv) ⟩)
+        (empty-body-wk1 τ σ ρ)
+        (Su.Ap.Ind.VS.law-∃∈-ub zero emptyBody₃ (σ ∷ ρ ∷ emptyEnv) τ)
+
+succInnerR : Su.Ap.Ind.VS.Src 4
+succInnerR = renameFo (liftρ (liftρ CB.wk1)) succInner
+
+memberRR : Su.Ap.Ind.VS.Src 4
+memberRR = renameFo (liftρ (liftρ CB.wk1)) memberR
+
+upRR : Su.Ap.Ind.VS.Src 4
+upRR = renameFo (liftρ (liftρ CB.wk1)) upR
+
+downRR : Su.Ap.Ind.VS.Src 4
+downRR = renameFo (liftρ (liftρ CB.wk1)) downR
+
+up-body₄ : Su.Ap.Ind.VS.Src 5
+up-body₄ = var zero ∈̇ var (suc zero)
+
+down-body₄ : Su.Ap.Ind.VS.Src 5
+down-body₄ =
+  (var zero ∈̇ var (suc (suc zero))) ∨̇ (var zero ≐ var (suc (suc zero)))
+
+member-wk1 : (υ τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val memberRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val memberR (υ ∷ τ ∷ σ ∷ emptyEnv)
+member-wk1 υ τ σ ρ =
+  Su.Ap.Ind.VS.law-∈ (suc zero) zero (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+  ∙ sym (Su.Ap.Ind.VS.law-∈ (suc zero) zero (υ ∷ τ ∷ σ ∷ emptyEnv))
+
+up-body-wk1 : (ν υ τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val up-body₄ (ν ∷ υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val up-body₃ (ν ∷ υ ∷ τ ∷ σ ∷ emptyEnv)
+up-body-wk1 ν υ τ σ ρ =
+  Su.Ap.Ind.VS.law-∈ zero (suc zero) (ν ∷ υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+  ∙ sym (Su.Ap.Ind.VS.law-∈ zero (suc zero) (ν ∷ υ ∷ τ ∷ σ ∷ emptyEnv))
+
+up-wk1 : (υ τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val upRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val upR (υ ∷ τ ∷ σ ∷ emptyEnv)
+up-wk1 υ τ σ ρ = ≤ᴮ-antisym le ge
+  where
+  le : ⟨ Su.Ap.Ind.VS.val upRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val upR (υ ∷ τ ∷ σ ∷ emptyEnv) ⟩
+  le = Su.Ap.Ind.VS.law-∀∈-glb (suc zero) up-body₃ (υ ∷ τ ∷ σ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val upRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)) λ ν →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val upRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst ν) (fst τ) ⇒ᴮ b) ⟩)
+        (up-body-wk1 ν υ τ σ ρ)
+        (Su.Ap.Ind.VS.law-∀∈-lb (suc zero) up-body₄
+          (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv) ν)
+  ge : ⟨ Su.Ap.Ind.VS.val upR (υ ∷ τ ∷ σ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val upRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv) ⟩
+  ge = Su.Ap.Ind.VS.law-∀∈-glb (suc zero) up-body₄
+    (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val upR (υ ∷ τ ∷ σ ∷ emptyEnv)) λ ν →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val upR (υ ∷ τ ∷ σ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst ν) (fst τ) ⇒ᴮ b) ⟩)
+        (sym (up-body-wk1 ν υ τ σ ρ))
+        (Su.Ap.Ind.VS.law-∀∈-lb (suc zero) up-body₃
+          (υ ∷ τ ∷ σ ∷ emptyEnv) ν)
+
+down-body-wk1 : (ν υ τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val down-body₄ (ν ∷ υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val down-body₃ (ν ∷ υ ∷ τ ∷ σ ∷ emptyEnv)
+down-body-wk1 ν υ τ σ ρ =
+  Su.Ap.Ind.VS.law-∨ (var zero ∈̇ var (suc (suc zero)))
+    (var zero ≐ var (suc (suc zero))) (ν ∷ υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+  ∙ cong₂ _⊔ᴮ_
+      (Su.Ap.Ind.VS.law-∈ zero (suc (suc zero))
+        (ν ∷ υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+        ∙ sym (Su.Ap.Ind.VS.law-∈ zero (suc (suc zero))
+            (ν ∷ υ ∷ τ ∷ σ ∷ emptyEnv)))
+      (Su.Ap.Ind.VS.law-≐ zero (suc (suc zero))
+        (ν ∷ υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+        ∙ sym (Su.Ap.Ind.VS.law-≐ zero (suc (suc zero))
+            (ν ∷ υ ∷ τ ∷ σ ∷ emptyEnv)))
+  ∙ sym (Su.Ap.Ind.VS.law-∨ (var zero ∈̇ var (suc (suc zero)))
+      (var zero ≐ var (suc (suc zero))) (ν ∷ υ ∷ τ ∷ σ ∷ emptyEnv))
+
+down-wk1 : (υ τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val downRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val downR (υ ∷ τ ∷ σ ∷ emptyEnv)
+down-wk1 υ τ σ ρ = ≤ᴮ-antisym le ge
+  where
+  le : ⟨ Su.Ap.Ind.VS.val downRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val downR (υ ∷ τ ∷ σ ∷ emptyEnv) ⟩
+  le = Su.Ap.Ind.VS.law-∀∈-glb zero down-body₃ (υ ∷ τ ∷ σ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val downRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)) λ ν →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val downRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst ν) (fst υ) ⇒ᴮ b) ⟩)
+        (down-body-wk1 ν υ τ σ ρ)
+        (Su.Ap.Ind.VS.law-∀∈-lb zero down-body₄
+          (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv) ν)
+  ge : ⟨ Su.Ap.Ind.VS.val downR (υ ∷ τ ∷ σ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val downRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv) ⟩
+  ge = Su.Ap.Ind.VS.law-∀∈-glb zero down-body₄
+    (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val downR (υ ∷ τ ∷ σ ∷ emptyEnv)) λ ν →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val downR (υ ∷ τ ∷ σ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst ν) (fst υ) ⇒ᴮ b) ⟩)
+        (sym (down-body-wk1 ν υ τ σ ρ))
+        (Su.Ap.Ind.VS.law-∀∈-lb zero down-body₃
+          (υ ∷ τ ∷ σ ∷ emptyEnv) ν)
+
+innerR-shape : succInnerR ≡ (memberRR ∧̇ (upRR ∧̇ downRR))
+innerR-shape = cong (renameFo (liftρ (liftρ CB.wk1))) inner-shape
+
+succInner-wk1 : (υ τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val succInnerR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val succInner (υ ∷ τ ∷ σ ∷ emptyEnv)
+succInner-wk1 υ τ σ ρ =
+  cong (λ φ → Su.Ap.Ind.VS.val φ (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)) innerR-shape
+  ∙ Su.Ap.Ind.VS.law-∧ memberRR (upRR ∧̇ downRR) (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+  ∙ cong₂ _⊓ᴮ_ (member-wk1 υ τ σ ρ)
+      (Su.Ap.Ind.VS.law-∧ upRR downRR (υ ∷ τ ∷ σ ∷ ρ ∷ emptyEnv)
+        ∙ cong₂ _⊓ᴮ_ (up-wk1 υ τ σ ρ) (down-wk1 υ τ σ ρ)
+        ∙ sym (Su.Ap.Ind.VS.law-∧ upR downR (υ ∷ τ ∷ σ ∷ emptyEnv)))
+  ∙ sym (Su.Ap.Ind.VS.law-∧ memberR (upR ∧̇ downR) (υ ∷ τ ∷ σ ∷ emptyEnv))
+  ∙ cong (λ φ → Su.Ap.Ind.VS.val φ (υ ∷ τ ∷ σ ∷ emptyEnv)) (sym inner-shape)
+
+succExistsR : Su.Ap.Ind.VS.Src 3
+succExistsR = renameFo (liftρ CB.wk1) succExists
+
+succExistsR-shape : succExistsR ≡ ∃̇∈ (var (suc zero)) succInnerR
+succExistsR-shape = refl
+
+succExists-wk1 : (τ σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val succExistsR (τ ∷ σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val succExists (τ ∷ σ ∷ emptyEnv)
+succExists-wk1 τ σ ρ =
+  cong (λ φ → Su.Ap.Ind.VS.val φ (τ ∷ σ ∷ ρ ∷ emptyEnv)) succExistsR-shape
+  ∙ ≤ᴮ-antisym le ge
+  where
+  le : ⟨ Su.Ap.Ind.VS.val (∃̇∈ (var (suc zero)) succInnerR)
+           (τ ∷ σ ∷ ρ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val succExists (τ ∷ σ ∷ emptyEnv) ⟩
+  le = Su.Ap.Ind.VS.law-∃∈-lub (suc zero) succInnerR (τ ∷ σ ∷ ρ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val succExists (τ ∷ σ ∷ emptyEnv)) λ υ →
+      subst (λ b → ⟨ (mem (fst υ) (fst σ) ⊓ᴮ b)
+                     ≤ᴮ Su.Ap.Ind.VS.val succExists (τ ∷ σ ∷ emptyEnv) ⟩)
+        (sym (succInner-wk1 υ τ σ ρ))
+        (Su.Ap.Ind.VS.law-∃∈-ub (suc zero) succInner (τ ∷ σ ∷ emptyEnv) υ)
+  ge : ⟨ Su.Ap.Ind.VS.val succExists (τ ∷ σ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val (∃̇∈ (var (suc zero)) succInnerR)
+              (τ ∷ σ ∷ ρ ∷ emptyEnv) ⟩
+  ge = Su.Ap.Ind.VS.law-∃∈-lub (suc zero) succInner (τ ∷ σ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val (∃̇∈ (var (suc zero)) succInnerR)
+      (τ ∷ σ ∷ ρ ∷ emptyEnv)) λ υ →
+      subst (λ b → ⟨ (mem (fst υ) (fst σ) ⊓ᴮ b)
+                     ≤ᴮ Su.Ap.Ind.VS.val (∃̇∈ (var (suc zero)) succInnerR)
+                          (τ ∷ σ ∷ ρ ∷ emptyEnv) ⟩)
+        (succInner-wk1 υ τ σ ρ)
+        (Su.Ap.Ind.VS.law-∃∈-ub (suc zero) succInnerR
+          (τ ∷ σ ∷ ρ ∷ emptyEnv) υ)
+
+succR : Su.Ap.Ind.VS.Src 2
+succR = renameFo CB.wk1 succClause
+
+succR-shape : succR ≡ ∀̇∈ (var zero) succExistsR
+succR-shape = refl
+
+succ-wk1 : (σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val succR (σ ∷ ρ ∷ emptyEnv)
+    ≡ Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv)
+succ-wk1 σ ρ =
+  cong (λ φ → Su.Ap.Ind.VS.val φ (σ ∷ ρ ∷ emptyEnv)) succR-shape
+  ∙ ≤ᴮ-antisym le ge
+  where
+  le : ⟨ Su.Ap.Ind.VS.val (∀̇∈ (var zero) succExistsR) (σ ∷ ρ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv) ⟩
+  le = Su.Ap.Ind.VS.law-∀∈-glb zero succExists (σ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val (∀̇∈ (var zero) succExistsR) (σ ∷ ρ ∷ emptyEnv)) λ τ →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val (∀̇∈ (var zero) succExistsR)
+                       (σ ∷ ρ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst τ) (fst σ) ⇒ᴮ b) ⟩)
+        (succExists-wk1 τ σ ρ)
+        (Su.Ap.Ind.VS.law-∀∈-lb zero succExistsR (σ ∷ ρ ∷ emptyEnv) τ)
+  ge : ⟨ Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv)
+         ≤ᴮ Su.Ap.Ind.VS.val (∀̇∈ (var zero) succExistsR) (σ ∷ ρ ∷ emptyEnv) ⟩
+  ge = Su.Ap.Ind.VS.law-∀∈-glb zero succExistsR (σ ∷ ρ ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv)) λ τ →
+      subst (λ b → ⟨ Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv)
+                     ≤ᴮ (mem (fst τ) (fst σ) ⇒ᴮ b) ⟩)
+        (sym (succExists-wk1 τ σ ρ))
+        (Su.Ap.Ind.VS.law-∀∈-lb zero succExists (σ ∷ emptyEnv) τ)
+
+indR : Su.Ap.Ind.VS.Src 2
+indR = renameFo CB.wk1 indSrc
+
+indR-shape : indR ≡ (emptyR ∧̇ succR)
+indR-shape = refl
+
+opaque
+  wk1-ind : (σ ρ : Su.Ap.Ind.VS.Nameᴮ)
+    → Su.Ap.Ind.VS.val (renameFo CB.wk1 indSrc) (σ ∷ ρ ∷ emptyEnv)
+      ≡ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+  wk1-ind σ ρ =
+    cong (λ φ → Su.Ap.Ind.VS.val φ (σ ∷ ρ ∷ emptyEnv)) indR-shape
+    ∙ Su.Ap.Ind.VS.law-∧ emptyR succR (σ ∷ ρ ∷ emptyEnv)
+    ∙ cong₂ _⊓ᴮ_ (empty-wk1 σ ρ) (succ-wk1 σ ρ)
+    ∙ sym (Su.Ap.Ind.VS.law-∧ emptyClause succClause (σ ∷ emptyEnv))
+
+⇒-antiˡ : (a a' b : Pt Su.Ap.Ind.BAT.B) → ⟨ a' ≤ᴮ a ⟩
+  → ⟨ (a ⇒ᴮ b) ≤ᴮ (a' ⇒ᴮ b) ⟩
+⇒-antiˡ a a' b h = ⇒ᴮ-curry (a ⇒ᴮ b) a' b
+  (⊆ˢ-trans
+    (⊓-glb (a ⇒ᴮ b) a ((a ⇒ᴮ b) ⊓ᴮ a')
+      (⊓-lb₁ (a ⇒ᴮ b) a')
+      (⊆ˢ-trans (⊓-lb₂ (a ⇒ᴮ b) a') h))
+    (⇒ᴮ-mp a b))
+
+weight-≤-mem : (n x : S) → ⟨ x ∈ˢ Su.Ap.Ind.BNG.BSupport.support n ⟩
+  → ⟨ Su.Ap.Ind.BNG.weight n x ≤ᴮ mem x n ⟩
+weight-≤-mem n x hx =
+  subst (λ z → ⟨ z ≤ᴮ mem x n ⟩) (⊓-⊤ (Su.Ap.Ind.BNG.weight n x))
+    (subst (λ z → ⟨ (Su.Ap.Ind.BNG.weight n x ⊓ᴮ z) ≤ᴮ mem x n ⟩)
+      (Su.Ap.Ind.BAT.Laws.≈ᴮ-refl x)
+      (Su.Ap.Ind.BAT.Atomic.∈ᴮ-ub x n x hx))
+
+empty-body-le-eq : (e : S) → ⟨ FV.emptyPred e ⟩
+  → (τ σ : Su.Ap.Ind.VS.Nameᴮ)
+  → ⟨ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)
+      ≤ᴮ eq (fst τ) (Su.Ap.Ind.BNG.Checked.check e) ⟩
+empty-body-le-eq e he τ σ =
+  Su.Ap.Ind.BAT.Atomic.≈ᴮ-glb (fst τ) (Su.Ap.Ind.BNG.Checked.check e)
+    (Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)) left right
+  where
+  left : (x : S) → ⟨ x ∈ˢ Su.Ap.Ind.BNG.BSupport.support (fst τ) ⟩
+    → ⟨ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)
+        ≤ᴮ (Su.Ap.Ind.BNG.weight (fst τ) x
+            ⇒ᴮ mem x (Su.Ap.Ind.BNG.Checked.check e)) ⟩
+  left x hx =
+    subst (λ b → ⟨ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)
+                   ≤ᴮ (Su.Ap.Ind.BNG.weight (fst τ) x ⇒ᴮ b) ⟩)
+      (Su.Ap.Ind.VS.law-⊥ (ν ∷ τ ∷ σ ∷ emptyEnv)
+        ∙ sym (empty-mem-bot e he x))
+      (⊆ˢ-trans
+        (Su.Ap.Ind.VS.law-∀∈-lb zero ⊥̇ (τ ∷ σ ∷ emptyEnv) ν)
+        (⇒-antiˡ (mem x (fst τ)) (Su.Ap.Ind.BNG.weight (fst τ) x)
+          (Su.Ap.Ind.VS.val ⊥̇ (ν ∷ τ ∷ σ ∷ emptyEnv))
+          (weight-≤-mem (fst τ) x hx)))
+    where
+    ν : Su.Ap.Ind.VS.Nameᴮ
+    ν = x , Su.Ap.Ind.BNG.BSupport.K.child-is-name (fst τ) (snd τ) x
+      (Su.Ap.Ind.BNG.BSupport.support-out (fst τ) x hx)
+  right : (y : S)
+    → ⟨ y ∈ˢ Su.Ap.Ind.BNG.BSupport.support (Su.Ap.Ind.BNG.Checked.check e) ⟩
+    → ⟨ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)
+        ≤ᴮ (Su.Ap.Ind.BNG.weight (Su.Ap.Ind.BNG.Checked.check e) y
+            ⇒ᴮ mem y (fst τ)) ⟩
+  right y hy = Empty.rec* (support-empty e he y hy)
+
+opaque
+  contains-check-empty : (e : S) → ⟨ FV.emptyPred e ⟩
+    → (σ : Su.Ap.Ind.VS.Nameᴮ)
+    → ⟨ Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv)
+        ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check e) (fst σ) ⟩
+  contains-check-empty e he σ =
+    Su.Ap.Ind.VS.law-∃∈-lub zero emptyBody (σ ∷ emptyEnv)
+      (mem (Su.Ap.Ind.BNG.Checked.check e) (fst σ)) λ τ →
+        ⊆ˢ-trans
+          (⊓-glb (eq (fst τ) (Su.Ap.Ind.BNG.Checked.check e))
+            (mem (fst τ) (fst σ))
+            (mem (fst τ) (fst σ)
+              ⊓ᴮ Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv))
+            (⊆ˢ-trans (⊓-lb₂ (mem (fst τ) (fst σ))
+              (Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv)))
+              (empty-body-le-eq e he τ σ))
+            (⊓-lb₁ (mem (fst τ) (fst σ))
+              (Su.Ap.Ind.VS.val emptyBody (τ ∷ σ ∷ emptyEnv))))
+          (Su.Ap.Ind.BAT.Laws.∈ᴮ-congˡ (fst τ)
+            (Su.Ap.Ind.BNG.Checked.check e) (fst σ))
+
+ind-val : (σ : Su.Ap.Ind.VS.Nameᴮ)
+  → Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+    ≡ (Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv)
+        ⊓ᴮ Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv))
+ind-val σ = Su.Ap.Ind.VS.law-∧ emptyClause succClause (σ ∷ emptyEnv)
+
+contains-all-acc : (σ : Su.Ap.Ind.VS.Nameᴮ) (n : S) → ⟨ n ∈ˢ w ⟩
+  → Acc _∈ᵗ_ n
+  → ⟨ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+      ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check n) (fst σ) ⟩
+contains-all-acc σ n hn (acc rec) = PT.rec
+  (snd (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+        ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check n) (fst σ)))
+  choose (OI.omega-predecessor w hw n hn)
+  where
+  choose : ⟨ FV.emptyPred n ⟩ Sum.⊎
+           ⟨ ⋁ S (λ m → (m ∈ˢ w) ⊓ CB.isSuccOf n m) ⟩
+    → ⟨ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+        ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check n) (fst σ) ⟩
+  choose (Sum.inl hemp) =
+    ⊆ˢ-trans
+      (subst (λ z → ⟨ z ≤ᴮ Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv) ⟩)
+        (sym (ind-val σ))
+        (⊓-lb₁ (Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv))
+          (Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv))))
+      (contains-check-empty n hemp σ)
+  choose (Sum.inr hex) = PT.rec
+    (snd (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+          ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check n) (fst σ)))
+    from-pred hex
+    where
+    from-pred : Σ[ m ∈ S ] ⟨ (m ∈ˢ w) ⊓ CB.isSuccOf n m ⟩
+      → ⟨ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+          ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check n) (fst σ) ⟩
+    from-pred (m , hm , hsucc) =
+      ⊆ˢ-trans meet (Su.contains-check-succ-clause n m hsucc σ)
+      where
+      ih : ⟨ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+             ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check m) (fst σ) ⟩
+      ih = contains-all-acc σ m hm (rec m (hsucc .fst))
+      meet : ⟨ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+               ≤ᴮ (Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv)
+                    ⊓ᴮ mem (Su.Ap.Ind.BNG.Checked.check m) (fst σ)) ⟩
+      meet = ⊓-glb
+        (Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv))
+        (mem (Su.Ap.Ind.BNG.Checked.check m) (fst σ))
+        (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+        (subst (λ z → ⟨ z ≤ᴮ Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv) ⟩)
+          (sym (ind-val σ))
+          (⊓-lb₂ (Su.Ap.Ind.VS.val emptyClause (σ ∷ emptyEnv))
+            (Su.Ap.Ind.VS.val succClause (σ ∷ emptyEnv))))
+        ih
+
+opaque
+  contains-all : (σ : Su.Ap.Ind.VS.Nameᴮ) (n : S) → ⟨ n ∈ˢ w ⟩
+    → ⟨ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+        ≤ᴮ mem (Su.Ap.Ind.BNG.Checked.check n) (fst σ) ⟩
+  contains-all σ n hn = contains-all-acc σ n hn (accessible n)
+
+members : Su.Ap.Ind.VS.Src 2
+members = ∀̇∈ (var (suc zero)) (var zero ∈̇ var (suc zero))
+
+leastSrc : Su.Ap.Ind.VS.Src 1
+leastSrc = ∀̇ ((renameFo CB.wk1 indSrc) ⇒̇ members)
+
+omegaSrc : Su.Ap.Ind.VS.Src 1
+omegaSrc = indSrc ∧̇ leastSrc
+
+members-from-contains : (σ : Su.Ap.Ind.VS.Nameᴮ)
+  → ⟨ Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+      ≤ᴮ Su.Ap.Ind.VS.val members (σ ∷ checkNm w ∷ emptyEnv) ⟩
+members-from-contains σ =
+  Su.Ap.Ind.VS.law-∀∈-glb (suc zero) (var zero ∈̇ var (suc zero))
+    (σ ∷ checkNm w ∷ emptyEnv)
+    (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)) λ τ →
+      ⇒ᴮ-curry (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+        (mem (fst τ) (Su.Ap.Ind.BNG.Checked.check w))
+        (Su.Ap.Ind.VS.val (var zero ∈̇ var (suc zero))
+          (τ ∷ σ ∷ checkNm w ∷ emptyEnv))
+        (subst (λ b → ⟨ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+                          ⊓ᴮ mem (fst τ) (Su.Ap.Ind.BNG.Checked.check w))
+                        ≤ᴮ b ⟩)
+          (sym (Su.Ap.Ind.VS.law-∈ zero (suc zero)
+            (τ ∷ σ ∷ checkNm w ∷ emptyEnv)))
+          (meet τ))
+  where
+  meet : (τ : Su.Ap.Ind.VS.Nameᴮ)
+    → ⟨ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+          ⊓ᴮ mem (fst τ) (Su.Ap.Ind.BNG.Checked.check w))
+        ≤ᴮ mem (fst τ) (fst σ) ⟩
+  meet τ =
+    ⊆ˢ-trans
+      (⊓-glb
+        (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv) ⇒ᴮ mem (fst τ) (fst σ))
+        (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+        (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+          ⊓ᴮ mem (fst τ) (Su.Ap.Ind.BNG.Checked.check w))
+        (⊆ˢ-trans
+          (⊓-lb₂ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+            (mem (fst τ) (Su.Ap.Ind.BNG.Checked.check w)))
+          (Su.Ap.Ind.CM.check-∈-lub w (fst τ)
+            (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+              ⇒ᴮ mem (fst τ) (fst σ))
+            (λ n hn → from-n n hn)))
+        (⊓-lb₁ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+          (mem (fst τ) (Su.Ap.Ind.BNG.Checked.check w))))
+      (⇒ᴮ-mp (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+        (mem (fst τ) (fst σ)))
+    where
+    from-n : (n : S) → ⟨ n ∈ˢ w ⟩
+      → ⟨ eq (fst τ) (Su.Ap.Ind.BNG.Checked.check n)
+          ≤ᴮ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+               ⇒ᴮ mem (fst τ) (fst σ)) ⟩
+    from-n n hn = ⇒ᴮ-curry
+      (eq (fst τ) (Su.Ap.Ind.BNG.Checked.check n))
+      (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+      (mem (fst τ) (fst σ))
+      (subst (λ z → ⟨ z ≤ᴮ mem (fst τ) (fst σ) ⟩)
+        (cong (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv) ⊓ᴮ_)
+          (Su.Ap.Ind.BAT.Atomic.≈ᴮ-sym
+            (Su.Ap.Ind.BNG.Checked.check n) (fst τ))
+        ∙ ⊓-comm (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+            (eq (fst τ) (Su.Ap.Ind.BNG.Checked.check n)))
+        (⊆ˢ-trans
+          (⊓-glb
+            (eq (Su.Ap.Ind.BNG.Checked.check n) (fst τ))
+            (mem (Su.Ap.Ind.BNG.Checked.check n) (fst σ))
+            (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)
+              ⊓ᴮ eq (Su.Ap.Ind.BNG.Checked.check n) (fst τ))
+            (⊓-lb₂ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+              (eq (Su.Ap.Ind.BNG.Checked.check n) (fst τ)))
+            (⊆ˢ-trans
+              (⊓-lb₁ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+                (eq (Su.Ap.Ind.BNG.Checked.check n) (fst τ)))
+              (contains-all σ n hn)))
+          (Su.Ap.Ind.BAT.Laws.∈ᴮ-congˡ
+            (Su.Ap.Ind.BNG.Checked.check n) (fst τ) (fst σ))))
+
+least-at-check : Su.Ap.Ind.VS.val leastSrc (checkNm w ∷ emptyEnv) ≡ ⊤ᴮ
+least-at-check = ≤ᴮ-antisym
+  (⊤-greatest (Su.Ap.Ind.VS.val leastSrc (checkNm w ∷ emptyEnv)))
+  (Su.Ap.Ind.VS.law-∀-glb
+    ((renameFo CB.wk1 indSrc) ⇒̇ members)
+    (checkNm w ∷ emptyEnv) ⊤ᴮ λ σ →
+      subst (λ z → ⟨ ⊤ᴮ ≤ᴮ z ⟩)
+        (sym (Su.Ap.Ind.VS.law-⇒ (renameFo CB.wk1 indSrc) members
+          (σ ∷ checkNm w ∷ emptyEnv)))
+        (subst (λ z → ⟨ ⊤ᴮ ≤ᴮ (z ⇒ᴮ Su.Ap.Ind.VS.val members
+            (σ ∷ checkNm w ∷ emptyEnv)) ⟩)
+          (sym (wk1-ind σ (checkNm w)))
+          (⇒ᴮ-curry ⊤ᴮ
+            (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv))
+            (Su.Ap.Ind.VS.val members (σ ∷ checkNm w ∷ emptyEnv))
+            (⊆ˢ-trans
+              (⊓-lb₂ ⊤ᴮ (Su.Ap.Ind.VS.val indSrc (σ ∷ emptyEnv)))
+              (members-from-contains σ)))))
+
+opaque
+  omega-at-check : Su.Ap.Ind.VS.val omegaSrc (checkNm w ∷ emptyEnv) ≡ ⊤ᴮ
+  omega-at-check =
+    Su.Ap.Ind.VS.law-∧ indSrc leastSrc (checkNm w ∷ emptyEnv)
+    ∙ cong₂ _⊓ᴮ_ Su.Ap.inductive-at-check least-at-check
+    ∙ ⊓-⊤ ⊤ᴮ
+
+omegaNm : Su.Ap.Ind.VS.Nameᴮ
+omegaNm =
+  Su.Ap.Ind.BNG.translated-check w
+  , Su.Ap.Ind.BNG.Translation.trᴮ-name
+      (Su.Ap.Ind.BNG.NG.Check.chk w)
+      (NG.chk-name w)
+
+check≈omega : eq (Su.Ap.Ind.BNG.Checked.check w)
+                (Su.Ap.Ind.BNG.translated-check w)
+              ≡ ⊤ᴮ
+check≈omega =
+  Su.Ap.Ind.BAT.Atomic.≈ᴮ-sym (Su.Ap.Ind.BNG.Checked.check w)
+    (Su.Ap.Ind.BNG.translated-check w)
+  ∙ Su.Ap.Ind.BNG.translated-check-comparison w
+
+opaque
+  omega-at-omega : Su.Ap.Ind.VS.val omegaSrc (omegaNm ∷ emptyEnv) ≡ ⊤ᴮ
+  omega-at-omega = ≤ᴮ-antisym
+    (⊤-greatest (Su.Ap.Ind.VS.val omegaSrc (omegaNm ∷ emptyEnv)))
+    (subst (λ z → ⟨ z ≤ᴮ Su.Ap.Ind.VS.val omegaSrc (omegaNm ∷ emptyEnv) ⟩)
+      (cong₂ _⊓ᴮ_ check≈omega omega-at-check ∙ ⊓-⊤ ⊤ᴮ)
+      (Su.Ap.Sub.subst₁ omegaSrc (checkNm w) omegaNm))
+
+
+FULL FILE K10/CohenBooleanOmegaEq.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+open import FOL.ZFStructure using ( ZFStructure )
+import NameKernel
+import OrdinaryProfile
+import CardinalBridge
+import K10.CohenBooleanOmegaTop
+import K10.CohenBooleanOmegaSrc
+
+module K10.CohenBooleanOmegaEq
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (families : NameKernel.Families 𝒮)
+  (accessible : NameKernel.Accessibility 𝒮)
+  (images : NameKernel.MemberImage 𝒮)
+  (pow : OrdinaryProfile.PowerSet 𝒮)
+  (κ w : ZFStructure.S 𝒮)
+  (lem : LEM ℓ)
+  (hw : ⟨ CardinalBridge.isOmega 𝒮 w ⟩)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+module OT = K10.CohenBooleanOmegaTop 𝒮 families accessible images pow
+  κ w lem hw paths
+module OS = K10.CohenBooleanOmegaSrc 𝒮
+
+omegaSrc-eq : OT.omegaSrc ≡ OS.omegaSrc
+omegaSrc-eq = refl
+
+FULL FILE K10/CohenBooleanOmegaSrc.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import CardinalBridge
+
+module K10.CohenBooleanOmegaSrc {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.Syntax using ( Formula ; var ; ∃̇∈ ; ∀̇∈ ; _∈̇_ ; _∧̇_ ; _⇒̇_ ; ∀̇_ ; ⊥̇ )
+open import FOL.Manipulation.ConstantOccurrences using ( module ZeroOccurrences )
+open import FOL.Manipulation.Renaming using ( renameFo )
+import CardinalBridge
+
+module CB = CardinalBridge 𝒮
+module ZO = ZeroOccurrences (ZFStructure.S 𝒮)
+
+Src : ℕ → Type ℓ
+Src n = Formula (⊥* {ℓ}) n
+
+succSrc : Src 2
+succSrc = ZO.erase CB.IsSuccOfφ refl
+
+emptyClause : Src 1
+emptyClause = ∃̇∈ (var zero) (∀̇∈ (var zero) ⊥̇)
+
+succInner : Src 3
+succInner = renameFo CB.wk2 succSrc
+
+succExists : Src 2
+succExists = ∃̇∈ (var (suc zero)) succInner
+
+succClause : Src 1
+succClause = ∀̇∈ (var zero) succExists
+
+indSrc : Src 1
+indSrc = emptyClause ∧̇ succClause
+
+members : Src 2
+members = ∀̇∈ (var (suc zero)) (var zero ∈̇ var (suc zero))
+
+leastSrc : Src 1
+leastSrc = ∀̇ ((renameFo CB.wk1 indSrc) ⇒̇ members)
+
+omegaSrc : Src 1
+omegaSrc = indSrc ∧̇ leastSrc
+
+succSrc-erase : succSrc ≡ ZO.erase CB.IsSuccOfφ refl
+succSrc-erase = refl
+
+indSrc-erase : indSrc ≡ ZO.erase CB.IsInductiveφ refl
+indSrc-erase = refl
+
+omegaSrc-erase : omegaSrc ≡ ZO.erase CB.IsOmegaφ refl
+omegaSrc-erase = refl
+
+om-w : Fin 1 → Fin 2
+om-w zero = suc zero
+
+omega-part : Src 2
+omega-part = renameFo om-w omegaSrc
+
+erase-om-w : ZO.erase (renameFo om-w CB.IsOmegaφ) refl ≡ omega-part
+erase-om-w = refl
+
+FULL FILE K10/CohenBooleanCHBot.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+open import FOL.ZFStructure using ( ZFStructure )
+import NameKernel
+import OrdinaryProfile
+import CardinalBridge
+import K10.CohenBooleanNamed
+import K10.CohenBooleanNotCH
+
+module K10.CohenBooleanCHBot
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (families : NameKernel.Families 𝒮)
+  (accessible : NameKernel.Accessibility 𝒮)
+  (images : NameKernel.MemberImage 𝒮)
+  (pow : OrdinaryProfile.PowerSet 𝒮)
+  (find : OrdinaryProfile.FoundationInduction 𝒮)
+  (κ w : ZFStructure.S 𝒮)
+  (lem : LEM ℓ)
+  (hw : ⟨ CardinalBridge.isOmega 𝒮 w ⟩)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open hPropStructure 𝒮
+
+module Named = K10.CohenBooleanNamed 𝒮 families accessible images pow κ w lem
+module CH = K10.CohenBooleanNotCH 𝒮 families accessible images pow find
+  κ w lem hw paths
+
+booleanPowerNm : CH.VS.Nameᴮ
+booleanPowerNm = Named.powerNm
+
+module FromParts
+  (omega-top : CH.VS.val CH.CH-omega-part (CH.at2 booleanPowerNm) ≡ CH.⊤B)
+  (power-top : CH.VS.val CH.CH-power-part (CH.at2 booleanPowerNm) ≡ CH.⊤B)
+  (inner-bot : CH.VS.val CH.CH-cons (CH.at2 booleanPowerNm) ≡ CH.⊥B)
+  where
+
+  not-CH-top : CH.VS.val CH.¬CHsrc CH.emptyEnv ≡ CH.⊤B
+  not-CH-top = CH.not-CH-from-parts booleanPowerNm omega-top power-top inner-bot
+
+FULL FILE K10/CohenBooleanNotCH.agda
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+open import Base.Prelude
+open import Base.Truth
+open import Base.Classical using ( LEM )
+open import FOL.ZFStructure using ( ZFStructure )
+import NameKernel
+import OrdinaryProfile
+import CardinalBridge
+import CHSentence
+import K4.Algebra
+import K4.Implication
+import K9.BooleanAtomic
+import K9.BooleanReals
+import K9.NameGround
+import K10.BooleanGraph
+import K10.CohenValSeam
+import K10.CohenBooleanSubset
+import K10.NegatedSentences
+
+module K10.CohenBooleanNotCH
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (families : NameKernel.Families 𝒮)
+  (accessible : NameKernel.Accessibility 𝒮)
+  (images : NameKernel.MemberImage 𝒮)
+  (pow : OrdinaryProfile.PowerSet 𝒮)
+  (find : OrdinaryProfile.FoundationInduction 𝒮)
+  (κ w : ZFStructure.S 𝒮)
+  (lem : LEM ℓ)
+  (hw : ⟨ CardinalBridge.isOmega 𝒮 w ⟩)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula ; _⇒̇_ ; ⊥̇ ; ¬̇_ ; ∀̇_ ; _∧̇_ ; _∨̇_ )
+open import FOL.Manipulation.ConstantOccurrences using ( countFo ; module ZeroOccurrences )
+open import FOL.Manipulation.ParameterAbstraction using ( absFo )
+open import FOL.Manipulation.Renaming using ( renameFo )
+import CardinalBridge
+import K9.BooleanNameGround
+import Cubical.Data.Empty as Empty
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module NG = K9.NameGround 𝒮 families accessible images pow κ w
+  using ( extensional ; ≈ˢ-paths )
+module BAT = K9.BooleanAtomic 𝒮 families accessible images pow κ w lem
+  using ( B ; module Atomic ; module IC )
+open K4.Algebra 𝒮 using ( Pt ; ⊆ˢ-trans ; _≤ᴮ_ )
+open K4.Algebra.Lattice BAT.IC.codedLattice using ( _⊓ᴮ_ )
+open K4.Implication 𝒮 NG.extensional NG.≈ˢ-paths BAT.B
+  BAT.IC.codedLattice BAT.IC.codedComplement
+  using ( _⇒ᴮ_ ; ≤ᴮ-antisym ; ⊔-⊥ˡ ; ⇒ᴮ-curry ; ≤⊥→≡⊥
+        ; ⊥-least ; ⊤-greatest ; ⊓-lb₂ ; ⊥ᴮ ; ⊤ᴮ ; ¬ᴮ_ ; ¬-⊔
+        ; ⇒ᴮ-⊤ˡ ; ⊓-⊤ )
+module VS = K10.CohenValSeam 𝒮 families accessible images pow κ w lem paths
+module BR = K9.BooleanReals 𝒮 families accessible images pow κ w lem
+module BGr = K10.BooleanGraph 𝒮 families accessible images pow κ w lem
+module CH = CHSentence 𝒮
+module Neg = K10.NegatedSentences 𝒮
+module CB = CardinalBridge 𝒮
+module BNG = K9.BooleanNameGround 𝒮 families accessible images pow κ w lem
+module ZO = ZeroOccurrences S
+
+module Distinct = BR.DenseDistinct find hw
+module GraphDistinct = BGr.Distinct find hw
+module Pow = K10.CohenBooleanSubset 𝒮 families accessible images pow κ w lem
+
+⇒ᴮ-⊥ˡ : (v : Pt BAT.B) → (⊥ᴮ ⇒ᴮ v) ≡ ⊤ᴮ
+⇒ᴮ-⊥ˡ v = ≤ᴮ-antisym (⊤-greatest (⊥ᴮ ⇒ᴮ v))
+  (⇒ᴮ-curry ⊤ᴮ ⊥ᴮ v (⊆ˢ-trans (⊓-lb₂ ⊤ᴮ ⊥ᴮ) (⊥-least v)))
+
+¬-⊥ : (¬ᴮ ⊥ᴮ) ≡ ⊤ᴮ
+¬-⊥ = sym (⊔-⊥ˡ (¬ᴮ ⊥ᴮ)) ∙ ¬-⊔ ⊥ᴮ
+
+CHcount : countFo CH.CHsent ≡ 0
+CHcount = refl
+
+¬CHcount : countFo CH.¬CHsent ≡ 0
+¬CHcount = refl
+
+GCHωcount : countFo CH.GCHωsent ≡ 0
+GCHωcount = refl
+
+¬GCHωcount : countFo Neg.¬GCHωsent ≡ 0
+¬GCHωcount = refl
+
+¬CHsrc : VS.Src 0
+¬CHsrc = ZO.erase CH.¬CHsent ¬CHcount
+
+¬GCHωsrc : VS.Src 0
+¬GCHωsrc = ZO.erase Neg.¬GCHωsent ¬GCHωcount
+
+CHsrc : VS.Src 0
+CHsrc = ZO.erase CH.CHsent CHcount
+
+GCHωsrc : VS.Src 0
+GCHωsrc = ZO.erase CH.GCHωsent GCHωcount
+
+emptyEnv : VS.Envᴮ 0
+emptyEnv = []
+
+not-CH-reals-top : (α β : S) → ⟨ α ∈ˢ κ ⟩ → ⟨ β ∈ˢ κ ⟩
+  → (⟨ α ≈ˢ β ⟩ → ⟨ ⊥ ⟩)
+  → (¬ᴮ (BAT.Atomic._≈ᴮ_ (BR.realB α) (BR.realB β))) ≡ ⊤ᴮ
+not-CH-reals-top = Distinct.distinct-top
+
+indexed-real-check : (α β : S) → ⟨ α ∈ˢ κ ⟩ → ⟨ β ∈ˢ κ ⟩
+  → BAT.Atomic._≈ᴮ_ (BR.realB α) (BR.realB β)
+    ≡ BAT.Atomic._≈ᴮ_ (BGr.BG.translated-check α) (BGr.BG.translated-check β)
+indexed-real-check = GraphDistinct.indexed-equality
+
+not-CH-compiled : Pt BAT.B
+not-CH-compiled = VS.val ¬CHsrc emptyEnv
+
+not-GCHω-compiled : Pt BAT.B
+not-GCHω-compiled = VS.val ¬GCHωsrc emptyEnv
+
+CH-implies-bot : VS.val (CHsrc ⇒̇ ⊥̇) emptyEnv
+  ≡ (VS.val CHsrc emptyEnv ⇒ᴮ VS.val {0} ⊥̇ emptyEnv)
+CH-implies-bot = VS.law-⇒ CHsrc ⊥̇ emptyEnv
+
+GCHω-implies-bot : VS.val (GCHωsrc ⇒̇ ⊥̇) emptyEnv
+  ≡ (VS.val GCHωsrc emptyEnv ⇒ᴮ VS.val {0} ⊥̇ emptyEnv)
+GCHω-implies-bot = VS.law-⇒ GCHωsrc ⊥̇ emptyEnv
+
+¬CH-is-impl : ¬CHsrc ≡ (CHsrc ⇒̇ ⊥̇)
+¬CH-is-impl = refl
+
+¬GCHω-is-impl : ¬GCHωsrc ≡ (GCHωsrc ⇒̇ ⊥̇)
+¬GCHω-is-impl = refl
+
+val-⊥ : VS.val {0} ⊥̇ emptyEnv ≡ ⊥ᴮ
+val-⊥ = VS.law-⊥ emptyEnv
+
+not-CH-from-bot : VS.val CHsrc emptyEnv ≡ ⊥ᴮ
+  → VS.val ¬CHsrc emptyEnv ≡ ⊤ᴮ
+not-CH-from-bot ch-bot =
+  cong (λ φ → VS.val φ emptyEnv) ¬CH-is-impl
+  ∙ CH-implies-bot
+  ∙ cong₂ _⇒ᴮ_ ch-bot val-⊥
+  ∙ ⇒ᴮ-⊥ˡ ⊥ᴮ
+
+not-GCHω-from-bot : VS.val GCHωsrc emptyEnv ≡ ⊥ᴮ
+  → VS.val ¬GCHωsrc emptyEnv ≡ ⊤ᴮ
+not-GCHω-from-bot gch-bot =
+  cong (λ φ → VS.val φ emptyEnv) ¬GCHω-is-impl
+  ∙ GCHω-implies-bot
+  ∙ cong₂ _⇒ᴮ_ gch-bot val-⊥
+  ∙ ⇒ᴮ-⊥ˡ ⊥ᴮ
+
+CH-inner1-ground : Formula S 1
+CH-inner1-ground =
+  ∀̇ (((renameFo CH.om-w CB.IsOmegaφ) ∧̇ CB.IsPowerSetφ)
+    ⇒̇ (∀̇ (((renameFo CH.inj-wx CB.Injectableφ)
+           ∧̇ (renameFo CH.inj-xp CB.Injectableφ))
+         ⇒̇ ((renameFo CH.inj-xw CB.Injectableφ)
+          ∨̇ (renameFo CH.inj-px CB.Injectableφ)))))
+
+CH-inner1 : VS.Src 1
+CH-inner1 = ZO.erase CH-inner1-ground refl
+
+CHsrc-∀ : CHsrc ≡ ∀̇ CH-inner1
+CHsrc-∀ = refl
+
+checkNmᴮ : S → VS.Nameᴮ
+checkNmᴮ a = BNG.Checked.check a , BNG.Checked.check-name a
+
+CH-bot-from-instance : (φ : VS.Src 1) (σ : VS.Nameᴮ)
+  → VS.val (∀̇ φ) emptyEnv ≡ VS.val CHsrc emptyEnv
+  → VS.val φ (σ ∷ emptyEnv) ≡ ⊥ᴮ
+  → VS.val CHsrc emptyEnv ≡ ⊥ᴮ
+CH-bot-from-instance φ σ outer inst-bot =
+  ≤⊥→≡⊥ (VS.val CHsrc emptyEnv)
+    (subst (λ z → ⟨ VS.val CHsrc emptyEnv ≤ᴮ z ⟩) inst-bot
+      (subst (λ u → ⟨ u ≤ᴮ VS.val φ (σ ∷ emptyEnv) ⟩) outer
+        (VS.law-∀-lb φ emptyEnv σ)))
+
+CH-bot-at-omega : VS.val CH-inner1 (checkNmᴮ w ∷ emptyEnv) ≡ ⊥ᴮ
+  → VS.val CHsrc emptyEnv ≡ ⊥ᴮ
+CH-bot-at-omega =
+  CH-bot-from-instance CH-inner1 (checkNmᴮ w)
+    (cong (λ φ → VS.val φ emptyEnv) (sym CHsrc-∀))
+
+omegaNm : VS.Nameᴮ
+omegaNm = Pow.omegaNm
+
+powerNm : VS.Nameᴮ
+powerNm = Pow.powerNm
+
+CH-matrix-ground : Formula S 2
+CH-matrix-ground =
+  ((renameFo CH.om-w CB.IsOmegaφ) ∧̇ CB.IsPowerSetφ)
+  ⇒̇ (∀̇ (((renameFo CH.inj-wx CB.Injectableφ)
+         ∧̇ (renameFo CH.inj-xp CB.Injectableφ))
+       ⇒̇ ((renameFo CH.inj-xw CB.Injectableφ)
+        ∨̇ (renameFo CH.inj-px CB.Injectableφ))))
+
+CH-matrix : VS.Src 2
+CH-matrix = ZO.erase CH-matrix-ground refl
+
+CH-inner1-∀ : CH-inner1 ≡ ∀̇ CH-matrix
+CH-inner1-∀ = refl
+
+CH-bot-at-power : (pω : VS.Nameᴮ)
+  → VS.val CH-matrix (pω ∷ omegaNm ∷ emptyEnv) ≡ ⊥ᴮ
+  → VS.val CHsrc emptyEnv ≡ ⊥ᴮ
+CH-bot-at-power pω mat-bot =
+  CH-bot-from-instance CH-inner1 omegaNm
+    (cong (λ φ → VS.val φ emptyEnv) (sym CHsrc-∀))
+    (≤⊥→≡⊥ (VS.val CH-inner1 (omegaNm ∷ emptyEnv))
+      (subst (λ z → ⟨ VS.val CH-inner1 (omegaNm ∷ emptyEnv) ≤ᴮ z ⟩) mat-bot
+        (subst (λ u → ⟨ u ≤ᴮ VS.val CH-matrix (pω ∷ omegaNm ∷ emptyEnv) ⟩)
+          (cong (λ φ → VS.val φ (omegaNm ∷ emptyEnv)) (sym CH-inner1-∀))
+          (VS.law-∀-lb CH-matrix (omegaNm ∷ emptyEnv) pω))))
+
+CH-omega-ground : Formula S 2
+CH-omega-ground = renameFo CH.om-w CB.IsOmegaφ
+
+CH-power-ground : Formula S 2
+CH-power-ground = CB.IsPowerSetφ
+
+CH-ante-ground : Formula S 2
+CH-ante-ground = CH-omega-ground ∧̇ CH-power-ground
+
+CH-between-ground : Formula S 3
+CH-between-ground =
+  ((renameFo CH.inj-wx CB.Injectableφ)
+   ∧̇ (renameFo CH.inj-xp CB.Injectableφ))
+  ⇒̇ ((renameFo CH.inj-xw CB.Injectableφ)
+   ∨̇ (renameFo CH.inj-px CB.Injectableφ))
+
+CH-cons-ground : Formula S 2
+CH-cons-ground = ∀̇ CH-between-ground
+
+CH-matrix-split : CH-matrix-ground ≡ (CH-ante-ground ⇒̇ CH-cons-ground)
+CH-matrix-split = refl
+
+CH-omega-part : VS.Src 2
+CH-omega-part = ZO.erase CH-omega-ground refl
+
+CH-power-part : VS.Src 2
+CH-power-part = ZO.erase CH-power-ground refl
+
+CH-ante : VS.Src 2
+CH-ante = ZO.erase CH-ante-ground refl
+
+CH-between : VS.Src 3
+CH-between = ZO.erase CH-between-ground refl
+
+CH-cons : VS.Src 2
+CH-cons = ZO.erase CH-cons-ground refl
+
+at2 : VS.Nameᴮ → VS.Envᴮ 2
+at2 pω = pω ∷ omegaNm ∷ emptyEnv
+
+ante-top-from : (pω : VS.Nameᴮ)
+  → VS.val CH-omega-part (at2 pω) ≡ ⊤ᴮ
+  → VS.val CH-power-part (at2 pω) ≡ ⊤ᴮ
+  → VS.val CH-ante (at2 pω) ≡ ⊤ᴮ
+ante-top-from pω ot pt =
+  cong (λ φ → VS.val φ (at2 pω)) ante-shape
+  ∙ VS.law-∧ CH-omega-part CH-power-part (at2 pω)
+  ∙ cong₂ _⊓ᴮ_ ot pt
+  ∙ ⊓-⊤ ⊤ᴮ
+  where
+  ante-shape : CH-ante ≡ (CH-omega-part ∧̇ CH-power-part)
+  ante-shape = refl
+
+cons-bot-from : (pω x : VS.Nameᴮ)
+  → VS.val CH-between (x ∷ at2 pω) ≡ ⊥ᴮ
+  → VS.val CH-cons (at2 pω) ≡ ⊥ᴮ
+cons-bot-from pω x inst-bot =
+  ≤⊥→≡⊥ (VS.val CH-cons (at2 pω))
+    (subst (λ z → ⟨ VS.val CH-cons (at2 pω) ≤ᴮ z ⟩) inst-bot
+      (subst (λ u → ⟨ u ≤ᴮ VS.val CH-between (x ∷ at2 pω) ⟩)
+        (cong (λ φ → VS.val φ (at2 pω)) cons-shape)
+        (VS.law-∀-lb CH-between (at2 pω) x)))
+  where
+  cons-shape : CH-cons ≡ ∀̇ CH-between
+  cons-shape = refl
+
+matrix-bot-from : (pω : VS.Nameᴮ)
+  → VS.val CH-ante (at2 pω) ≡ ⊤ᴮ
+  → VS.val CH-cons (at2 pω) ≡ ⊥ᴮ
+  → VS.val CH-matrix (at2 pω) ≡ ⊥ᴮ
+matrix-bot-from pω ante-top cons-bot =
+  cong (λ φ → VS.val φ (at2 pω)) matrix-shape
+  ∙ VS.law-⇒ CH-ante CH-cons (at2 pω)
+  ∙ cong₂ _⇒ᴮ_ ante-top cons-bot
+  ∙ ⇒ᴮ-⊤ˡ ⊥ᴮ
+  where
+  matrix-shape : CH-matrix ≡ (CH-ante ⇒̇ CH-cons)
+  matrix-shape = refl
+
+not-CH-from-parts : (pω : VS.Nameᴮ)
+  → VS.val CH-omega-part (at2 pω) ≡ ⊤ᴮ
+  → VS.val CH-power-part (at2 pω) ≡ ⊤ᴮ
+  → VS.val CH-cons (at2 pω) ≡ ⊥ᴮ
+  → VS.val ¬CHsrc emptyEnv ≡ ⊤ᴮ
+not-CH-from-parts pω ot pt cb =
+  not-CH-from-bot
+    (CH-bot-at-power pω
+      (matrix-bot-from pω (ante-top-from pω ot pt) cb))
+
+⊤B : Pt BAT.B
+⊤B = ⊤ᴮ
+
+⊥B : Pt BAT.B
+⊥B = ⊥ᴮ
+
+
+
+FIXED GLOSSARY
+# Bedrock translation glossary -- canonical, machine-checked term data.
+#
+# This TOML file is the single source of truth for the trilingual glossary; the prose
+# explanation (what the checks do, how to maintain entries) lives in dev/GLOSSARY.md.
+# scripts/gate/check-glossary.py reads this file via tomllib (Python 3.11+) and enforces it as
+# part of `make check` and the pre-commit hook.
+#
+# Each [[term]] has: category, en, zh, ja; optional avoid (a list of known wrong
+# renderings, each optionally tagged `zh:`/`ja:` to scope it to one language; an untagged
+# entry applies to both); optional presence (true enables the safety-net check); optional
+# notes (human-only; the checker ignores it). CJK values are plain strings -- TOML is not
+# prose-linted, so no backtick wrapping is needed.
+
+# ---- Set theory --------------------------------------------------------------
+
+[[term]]
+category = "Set theory"
+en = "producer"
+zh = "生产者"
+ja = "生成者"
+avoid = ["zh:生成者"]
+notes = "owner-ruled 2026-08-03; the book's name for SZ p. 11's nameless minimal triple (i, u, v); ja tentative pending a literature check"
+
+[[term]]
+category = "Set theory"
+en = "stage-bounded"
+zh = "循阶的"
+ja = "段階有界"
+avoid = ["zh:扎根的", "grounded"]
+notes = "owner-ruled 2026-08-03; the producer-tree argument bound; renamed from grounded to avoid both the geology ground-family and the logic tradition where grounded means well-founded; ja tentative"
+
+[[term]]
+category = "Set theory"
+en = "coherence"
+zh = "相容"
+ja = "整合"
+avoid = ["zh:融贯"]
+notes = "owner-ruled 2026-08-03; the restriction-compatibility of the level orders; ja tentative"
+
+[[term]]
+category = "Set theory"
+en = "key"
+zh = "键"
+ja = "鍵"
+notes = "owner-ruled 2026-08-03; the least-producer key the order pulls back along"
+
+[[term]]
+category = "Set theory"
+en = "rudimentary function"
+zh = "初步函数"
+ja = "初歩的関数"
+avoid = ["zh:初始函数", "zh:rud 函数"]
+presence = true
+notes = "owner-ruled 2026-08-02; zh follows the E-C Math Vocabulary 3rd ed. pattern (rudimentary set = 初步集); ja tentative pending a literature check"
+
+[[term]]
+category = "Set theory"
+en = "forcing"
+zh = "力迫"
+ja = "強制"
+presence = true
+notes = "zh 力迫 vs ja 強制 (deliberate)"
+
+[[term]]
+category = "Set theory"
+en = "forcing extension"
+zh = "力迫扩张"
+ja = "強制拡大"
+
+[[term]]
+category = "Set theory"
+en = "ground"
+zh = "基模型"
+ja = "基礎モデル"
+avoid = ["zh:基底模型"]
+notes = "Owner ruling 2026-08-05: geology's \"ground\" and forcing's \"ground model\" are one concept and take ONE rendering, so a reader never meets two names for the same thing. 地基 is NOT on the avoid list even though it is the tempting geological metaphor: it is the canonical rendering of \"neutral ground\" (中立的地基) and reads naturally as ordinary groundwork, so banning it machine-wide produced five false positives on prose that never meant a ground model. The discipline here is a review matter, not a linter one."
+
+[[term]]
+category = "Set theory"
+en = "ground model"
+zh = "基模型"
+ja = "基礎モデル"
+avoid = ["zh:基底模型"]
+notes = "Same rendering as \"ground\" by the owner ruling of 2026-08-05; \"grounds\" also renders 基模型"
+
+[[term]]
+category = "Set theory"
+en = "ground-model definability"
+zh = "基模型的可定义性"
+ja = "基礎モデルの定義可能性"
+
+[[term]]
+category = "Set theory"
+en = "multiverse"
+zh = "多宇宙"
+ja = "多宇宙"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "universism"
+zh = "单宇宙观"
+ja = "単一宇宙観"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "multiversism"
+zh = "多宇宙观"
+ja = "多宇宙観"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "ultrapower"
+zh = "超幂"
+ja = "超冪"
+
+[[term]]
+category = "Set theory"
+en = "set-theoretic geology"
+zh = "集合论地质学"
+ja = "集合論の地質学"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "mantle"
+zh = "地幔"
+ja = "マントル"
+
+[[term]]
+category = "Set theory"
+en = "generic absoluteness"
+zh = "脱殊绝对性"
+ja = "強制法での絶対性"
+presence = true
+notes = "Reviewed 2026-09-07: Fuchino explicitly pairs 強制法での絶対性 with generic absoluteness in his final lecture, https://researchmap.jp/read0078210/presentations/40151061/attachment_file.pdf . Chinese 脱殊 is directly attested in the set-theory context by https://logic.fudan.edu.cn/doc/_yrz/multi.pdf ; the full Chinese compound here follows that pattern. Japanese transliteration remains an intelligible variant but the canonical wording now follows the author’s explicit label."
+
+[[term]]
+category = "Set theory"
+en = "independence results"
+zh = "独立性结果"
+ja = "独立性の結果"
+
+[[term]]
+category = "Set theory"
+en = "axiom of infinity"
+zh = "无穷公理"
+ja = "無限公理"
+notes = "also \"infinity axiom\""
+
+[[term]]
+category = "Set theory"
+en = "regularity"
+zh = "正则公理"
+ja = "正則性公理"
+notes = "Always 正则公理 when regularity names the set-theoretic axiom; distinguish regularity of an ordinal or cardinal. Also called foundation in some books, a name this book does not use; ZF field name regularity ([L1.4])"
+
+[[term]]
+category = "Set theory"
+en = "standard model"
+zh = "标准模型"
+ja = "標準モデル"
+notes = "of ZF"
+
+[[term]]
+category = "Set theory"
+en = "infinite descent"
+zh = "无穷下降"
+ja = "無限降下"
+
+[[term]]
+category = "Set theory"
+en = "constructible hierarchy"
+zh = "可构造层级"
+ja = "構成可能階層"
+presence = true
+notes = "The whole ordinal-indexed family {L_α | α ∈ On}, not an individual L_α or its ordinal index. Japanese L-階層 is directly attested in a Kobe-hosted set-theory lecture, which defines L_0, L_{α+1}, and L_λ: https://www2.kobe-u.ac.jp/~tk/jp/workshop/slides/wakate2021_yasuda.pdf . Chinese 可构造层级 is a pattern-based compound from the established mathematical use of 层级 for a transfinite hierarchy; no claim of a direct L_α source is made here."
+
+[[term]]
+category = "Set theory"
+en = "constructible universe"
+zh = "可构造宇宙"
+ja = "構成可能宇宙"
+presence = true
+notes = "the class L; 可构造/構成可能 matches the constructible hierarchy entry"
+
+[[term]]
+category = "Set theory"
+en = "cumulative hierarchy"
+zh = "累积层级"
+ja = "累積階層"
+presence = true
+notes = "V; the zh rendering is already in use in dev/reading-catalog.json"
+
+[[term]]
+category = "Set theory"
+en = "condensation"
+zh = "凝聚"
+ja = "凝縮"
+presence = true
+notes = "condensation lemma = 凝聚引理 / 凝縮補題; zh 凝聚 vs ja 凝縮 (deliberate)"
+
+[[term]]
+category = "Set theory"
+en = "absoluteness"
+zh = "绝对性"
+ja = "絶対性"
+notes = "consistent with the generic absoluteness entry; Δ₀-absoluteness keeps the prefix symbol"
+
+[[term]]
+category = "Set theory"
+en = "relative consistency"
+zh = "相对一致性"
+ja = "相対無矛盾性"
+presence = true
+notes = "consistency diverges: zh 一致性 vs ja 無矛盾性 (deliberate); see the consistency entry"
+
+[[term]]
+category = "Set theory"
+en = "well-order"
+zh = "良序"
+ja = "整列順序"
+notes = "the noun; well-ordered = zh 良序的 / ja 整列された"
+
+[[term]]
+category = "Set theory"
+en = "axiom of choice"
+zh = "选择公理"
+ja = "選択公理"
+presence = true
+
+[[term]]
+category = "Set theory"
+en = "inner model"
+zh = "内模型"
+ja = "内部モデル"
+presence = true
+notes = "the zh rendering is already in use in the README trio"
+
+# ---- Type theory -------------------------------------------------------------
+
+[[term]]
+category = "Type theory"
+id = "pi-type"
+audience = "reader"
+en = "Π type"
+zh = "Π 类型"
+ja = "Π 型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["Π types"]
+recap_en = "A dependent function type whose result type may vary with its input."
+recap_zh = "结果类型可以随输入变化的依值函数类型。"
+recap_ja = "結果の型が入力に応じて変わりうる依存関数型。"
+notes = "The dependent function type; explicitly introduced in Base.Prelude."
+
+[[term]]
+category = "Type theory"
+id = "sigma-type"
+audience = "reader"
+en = "Σ type"
+zh = "Σ 类型"
+ja = "Σ 型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["Σ types"]
+recap_en = "A dependent pair type whose second component's type may depend on its first component."
+recap_zh = "第二分量的类型可以依赖第一分量的依值对类型。"
+recap_ja = "第二成分の型が第一成分に依存しうる依存対型。"
+notes = "The dependent pair type; explicitly introduced in Base.Prelude."
+
+[[term]]
+category = "Type theory"
+id = "universe-level"
+audience = "reader"
+en = "universe level"
+zh = "宇宙层级"
+ja = "宇宙レベル"
+presence = true
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["universe levels", "universe-level"]
+recap_en = "The size index ℓ of a type universe Type ℓ; it is distinct from a homotopy level and from a layer of the constructible hierarchy."
+recap_zh = "类型宇宙 Type ℓ 的大小指标 ℓ；它不同于同伦层级，也不同于可构造层级中的一层。"
+recap_ja = "型宇宙 Type ℓ の大きさを表す添字 ℓ。ホモトピーレベルや構成可能階層の一つの層とは異なる。"
+notes = "The size index of Type; owner ruling 2026-09-11. Keep distinct from homotopy level and from a layer L_α of the constructible hierarchy."
+
+[[term]]
+category = "Type theory"
+id = "homotopy-level"
+audience = "reader"
+en = "homotopy level"
+zh = "同伦层级"
+ja = "ホモトピーレベル"
+presence = true
+avoid = ["zh:h-层级", "ja:h-レベル"]
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["homotopy levels", "homotopy-level"]
+recap_en = "A classification of types by how much distinguishable structure remains among their elements and equality proofs."
+recap_zh = "按照元素及其相等证明中还保留多少可区分结构而形成的类型分类。"
+recap_ja = "要素とその等しさの証明に区別できる構造がどれだけ残るかによる型の分類。"
+notes = "The hierarchy measured by isContr, isProp and isSet; owner ruling 2026-09-11. The full name replaces the abbreviation h-level in textbook prose."
+
+[[term]]
+category = "Type theory"
+id = "host-environment"
+audience = "reader"
+en = "host"
+zh = "宿主"
+ja = "ホスト"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The Cubical Agda environment that supports the formalisation of the object theory."
+recap_zh = "承载对象理论形式化的 Cubical Agda 环境。"
+recap_ja = "対象理論の形式化を支える Cubical Agda の環境。"
+notes = "Project-relative term for the metatheoretic environment, introduced explicitly in Base.Prelude and approved by the owner on 2026-09-11. It is broader than Agda alone and is not a synonym for cubical type theory."
+
+[[term]]
+category = "Type theory"
+en = "host language"
+zh = "宿主语言"
+ja = "ホスト言語"
+notes = "the proof assistant's own language"
+
+[[term]]
+category = "Type theory"
+en = "host-language maximalism"
+zh = "宿主语言最大化"
+ja = "ホスト言語最大主義"
+presence = true
+notes = "zh 最大化 vs ja 最大主義 (deliberate)"
+
+[[term]]
+category = "Type theory"
+id = "unique-existence"
+audience = "reader"
+en = "unique existence"
+zh = "唯一存在"
+ja = "一意存在"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "Existence together with uniqueness; here it is represented by a contractible type whose centre supplies the witness."
+recap_zh = "存在性与唯一性合在一起；本书以可缩类型表示，类型的中心给出所需的见证。"
+recap_ja = "存在と一意性を合わせた概念。本書では可縮型で表し、その中心が必要な証人を与える。"
+notes = "The isContr notion; explicitly introduced in Base.Prelude."
+
+[[term]]
+category = "Type theory"
+id = "dependent-function"
+audience = "reader"
+en = "dependent function"
+zh = "依值函数"
+ja = "依存関数"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["dependent functions"]
+recap_en = "An element of a Π type: it assigns to every input an element of the type corresponding to that input."
+recap_zh = "Π 类型的元素：它为每个输入给出相应类型中的一个元素。"
+recap_ja = "Π 型の元。各入力に対し、その入力に対応する型の元を与える。"
+notes = "The element of a Π type, named in Base.Prelude. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "dependent-pair"
+audience = "reader"
+en = "dependent pair"
+zh = "依值对"
+ja = "依存対"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["dependent pairs"]
+recap_en = "An element of a Σ type: a chosen first component together with data belonging to the corresponding type."
+recap_zh = "Σ 类型的元素：选定的第一分量，连同属于相应类型的数据。"
+recap_ja = "Σ 型の元。選ばれた第一成分と、対応する型に属するデータの組。"
+notes = "The element of a Σ type, named in Base.Prelude. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "first-component"
+audience = "reader"
+en = "first component"
+zh = "第一分量"
+ja = "第一成分"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["first components"]
+recap_en = "The element chosen first in a dependent pair, extracted by fst."
+recap_zh = "依值对中先给出的那个元素，用 fst 取出。"
+recap_ja = "依存対で先に選ばれる元であり、fst で取り出す。"
+notes = "Owner ruling 2026-09-12. Paired with second component; both are named together in Base.Prelude."
+
+[[term]]
+category = "Type theory"
+id = "second-component"
+audience = "reader"
+en = "second component"
+zh = "第二分量"
+ja = "第二成分"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["second components"]
+recap_en = "The element of a dependent pair whose type may depend on the first component, extracted by snd."
+recap_zh = "依值对中类型可以依赖第一分量的那个元素，用 snd 取出。"
+recap_ja = "型が第一成分に依存しうる依存対のもう一方の元であり、snd で取り出す。"
+notes = "Owner ruling 2026-09-12. Paired with first component."
+
+[[term]]
+category = "Type theory"
+id = "certificate"
+audience = "reader"
+en = "certificate"
+zh = "证书"
+ja = "証明書"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["certificates"]
+recap_en = "A proof carried together with an object so that later reasoning may use the property it establishes."
+recap_zh = "随对象一同携带的证明，使后续论证可以使用它所确立的性质。"
+recap_ja = "後の議論でその性質を使えるよう、対象とともに携える証明。"
+notes = "Book-local name for the second component of a dependent pair in its proof-carrying role; named in Base.Prelude. It is an ordinary Agda proof, not a cryptographic certificate. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "record-field"
+audience = "reader"
+en = "field"
+zh = "字段"
+ja = "フィールド"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["fields"]
+recap_en = "A named component of a record type, retrieved by the projection of the same name."
+recap_zh = "记录类型中具名的分量，可用同名投影取出。"
+recap_ja = "レコード型の名前付きの成分であり、同名の射影で取り出せる。"
+notes = "The record component, named in Base.Prelude. This development has no algebraic field, so the English word is unambiguous here. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "constructor"
+audience = "reader"
+en = "constructor"
+zh = "构造子"
+ja = "構成子"
+avoid = ["ja:コンストラクタ"]
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["constructors"]
+recap_en = "A primitive operation that builds an element of an inductive type or a record type."
+recap_zh = "直接生成归纳类型或记录类型元素的基本操作。"
+recap_ja = "帰納型やレコード型の元を直接作り出す基本の操作。"
+notes = "Owner ruling 2026-09-12 unified the Japanese rendering on 構成子: the tree carried 構成子 219 times against コンストラクタ 64 times, and the 64 katakana occurrences were converted the same day."
+
+[[term]]
+category = "Type theory"
+id = "projection"
+audience = "reader"
+en = "projection"
+zh = "投影"
+ja = "射影"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["projections"]
+recap_en = "An operation that retrieves one component from a pair or one field from a record."
+recap_zh = "从对中取出某个分量、或从记录中取出某个字段的运算。"
+recap_ja = "対から成分を、レコードからフィールドを取り出す操作。"
+notes = "Named in Base.Prelude with fst, snd and the field names. ja 射影, not 投影. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "path"
+audience = "reader"
+en = "path"
+zh = "路径"
+ja = "パス"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["paths"]
+recap_en = "An equality proof between two elements of a type; it has a source and a target, and can be reversed and composed."
+recap_zh = "类型中两个元素之间的相等证明，它有起点与终点，可以反转，也可以首尾相接。"
+recap_ja = "型の二つの元の間の等しさの証明。始点と終点を持ち、逆向きにも、つなぎ合わせることもできる。"
+notes = "The cubical equality proof; the path type is how this book represents equality. Owner ruling 2026-09-12. Compounds such as 路径类型 and パス等式 keep the term as their head, so automatic matching links the head correctly."
+
+[[term]]
+category = "Type theory"
+id = "contractible"
+audience = "reader"
+en = "contractible"
+zh = "可缩"
+ja = "可縮"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["contractibility"]
+forms_zh = ["可缩性"]
+forms_ja = ["可縮性"]
+recap_en = "A type with a chosen centre to which every element is joined by a path."
+recap_zh = "带有选定中心、且每个元素都有路径与中心相连的类型。"
+recap_ja = "選ばれた中心を持ち、すべての元が中心とパスで結ばれる型。"
+notes = "The isContr notion, read in this book as unique existence. The nominal forms 可缩性 and 可縮性 are audited so that automatic matching links the whole word. Owner ruling 2026-09-12."
+
+[[term]]
+category = "Type theory"
+id = "proposition"
+audience = "reader"
+en = "proposition"
+zh = "命题"
+ja = "命題"
+introduced_in = "Base.Prelude"
+matching = "explicit"
+forms_en = ["propositions"]
+recap_en = "A type any two of whose elements are equal, so that it retains only whether a proof exists."
+recap_zh = "任意两个元素都相等的类型，因此只保留是否存在证明这一信息。"
+recap_ja = "任意の二つの元が等しい型であり、証明が存在するかどうかだけを保つ。"
+notes = "The isProp notion. Explicit matching, measured 2026-09-12: in Chinese 246 of 950 occurrences (26%) and in Japanese 291 of 973 (30%) sit inside a different term, chiefly 命题截断 / 命題的切り詰め, 命题值 / 命題値, 命题性 / 命題性 and 命题换级. English is unaffected because the word boundary excludes propositional, but matching is one decision for all three languages."
+
+[[term]]
+category = "Type theory"
+id = "h-set"
+audience = "reader"
+en = "h-set"
+zh = "h-集合"
+ja = "h-集合"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["h-sets"]
+presence = true
+recap_en = "A type whose equality types are propositions: elements may differ, but any two proofs that they are equal agree."
+recap_zh = "相等类型都是命题的类型：元素之间可以有差别，但同一对元素的任意两个相等证明彼此相等。"
+recap_ja = "等しさの型がすべて命題である型。元は互いに異なりうるが、同じ二元が等しいことの証明は互いに一致する。"
+notes = "A type whose identity types are propositions, also called a set or 0-type. English: https://homotopytypetheory.org/book/ section 3.1; Japanese 集合 (set / h-set): https://elpinal.gitlab.io/notes/bicat-of-adjunctions.pdf definition 1.3. The prefixed CJK forms distinguish this type from an element of V; the prefix is a composed notation, not a separately attested translation. Owner ruling 2026-09-12 unified the Chinese rendering on h-集合: the tree carried h-集 60 times, h-集合 twice and the bare Latin h-set 3 times, and all were converted the same day. Presence is enabled to keep the three editions parallel."
+
+[[term]]
+category = "Type theory"
+id = "empty-type"
+audience = "reader"
+en = "empty type"
+zh = "空类型"
+ja = "空型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The type with no constructors; since it has no element, it eliminates into any type."
+recap_zh = "没有任何构造子的类型；因为它没有元素，可以从它消去到任意类型。"
+recap_ja = "構成子を持たない型。元が存在しないので、任意の型へ消去できる。"
+notes = "The type ⊥*, named in Base.Prelude. Owner ruling 2026-09-12."
+[[term]]
+category = "Type theory"
+en = "definite-description operator"
+zh = "摹状词算子"
+ja = "確定記述の演算子"
+notes = "the ℩ operator"
+
+[[term]]
+category = "Type theory"
+en = "description axiom"
+zh = "描述公理"
+ja = "記述公理"
+
+[[term]]
+category = "Type theory"
+en = "propositional extensionality"
+zh = "命题外延性"
+ja = "命題外延性"
+
+[[term]]
+category = "Type theory"
+en = "path equality"
+zh = "路径等式"
+ja = "道の等式"
+notes = "zh 路径 vs ja 道"
+
+[[term]]
+category = "Type theory"
+en = "transport"
+zh = "传输"
+ja = "輸送"
+notes = "structure transport (SIP)"
+
+[[term]]
+category = "Type theory"
+en = "inductive type"
+zh = "归纳类型"
+ja = "帰納型"
+
+[[term]]
+category = "Type theory"
+en = "inductive predicate"
+zh = "归纳谓词"
+ja = "帰納的述語"
+notes = "how L is defined"
+
+[[term]]
+category = "Type theory"
+en = "structural recursion"
+zh = "结构递归"
+ja = "構造的再帰"
+
+[[term]]
+category = "Type theory"
+en = "deep embedding"
+zh = "深嵌入"
+ja = "深い埋め込み"
+notes = "of Formula"
+
+[[term]]
+category = "Type theory"
+en = "reflection"
+zh = "反射"
+ja = "反射"
+notes = "Proof-engineering reflection, used with reification. This is not set-theoretic reflection; see the separate entry for that mathematical sense."
+
+[[term]]
+category = "Type theory"
+en = "reification"
+zh = "reification"
+ja = "reification"
+notes = "keep the English word in all languages; do not translate"
+
+[[term]]
+category = "Type theory"
+en = "adequacy"
+zh = "充分性"
+ja = "妥当性"
+presence = true
+avoid = ["zh:适足性"]
+notes = "Owner ruling 2026-08-05 on the glossary review. PLFA's Chinese edition titles the chapter 充分性: https://agda-zh.github.io/PLFA-zh/Adequacy/ . This supports the chosen semantic term; it does not establish that other renderings are confined to finance. The sufficiency homonym is accepted. Japanese 妥当性 is directly paired with adequacy in semantic proofs by Sanada: https://www.kurims.kyoto-u.ac.jp/~tsanada/comments-on-papers.html ."
+
+[[term]]
+category = "Type theory"
+en = "representation"
+zh = "表示"
+ja = "表現"
+notes = "the Rep family: a formula paired with its adequacy certificate; paired with reification"
+
+[[term]]
+category = "Type theory"
+en = "Tarski universe"
+zh = "塔斯基宇宙"
+ja = "タルスキ宇宙"
+notes = "the explicit-level universe tower of the host (Base.Prelude)"
+
+[[term]]
+category = "Type theory"
+id = "underlying-type"
+audience = "reader"
+en = "underlying type"
+zh = "底层类型"
+ja = "基礎型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["underlying types"]
+recap_en = "The type obtained by forgetting the additional property or structure packaged with it; for P : hProp ℓ, this is the first component ⟨ P ⟩."
+recap_zh = "忘掉与一个类型一同打包的性质或结构后所得的类型；对于 P : hProp ℓ，它就是第一分量 ⟨ P ⟩。"
+recap_ja = "型とともに収められた性質や構造を忘れて得られる型。P : hProp ℓ については第一成分 ⟨ P ⟩ である。"
+notes = "Cubical Agda defines hProp ℓ as TypeOfHLevel ℓ 1, a dependent pair whose first projection is the type: https://github.com/agda/cubical/blob/master/Cubical/Foundations/HLevels.agda ."
+
+[[term]]
+category = "Type theory"
+en = "truth value"
+zh = "真值"
+ja = "真理値"
+notes = "zh 真值 vs ja 真理値. Kept as an authoring term rather than introduced as reader vocabulary; the textbook explains propositions and hProp directly."
+
+[[term]]
+category = "Type theory"
+id = "type-equivalence"
+audience = "reader"
+en = "type equivalence"
+zh = "类型等价"
+ja = "型同値"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "An equivalence A ≃ B is a map with contractible fibres; an inverse and both round-trip paths follow from this condition."
+recap_zh = "类型等价 A ≃ B 是纤维皆可缩的映射；逆向映射与两条往返路径可由这个条件导出。"
+recap_ja = "型同値 A ≃ B は、各ファイバーが可縮である写像であり、逆写像と二つの往復パスはこの条件から導かれる。"
+notes = "Cubical Agda's _≃_ is Σ of a map and isEquiv, where isEquiv means contractible fibres: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda . Automatic matching covers the full trilingual term; generic English equivalence is omitted because it can refer to other notions."
+
+[[term]]
+category = "Type theory"
+id = "fiber"
+audience = "reader"
+en = "fibre"
+zh = "纤维"
+ja = "ファイバー"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["fiber", "fibres", "fibers"]
+recap_en = "The fibre of f : A → B over b : B is the dependent pair type Σ (a : A) (f a ≡ b), whose elements are preimages together with paths witnessing their images."
+recap_zh = "映射 f : A → B 在 b : B 上的纤维是依值对类型 Σ (a : A) (f a ≡ b)；它的元素由原像及其确实映到 b 的路径组成。"
+recap_ja = "写像 f : A → B の b : B 上のファイバーは依存対型 Σ (a : A) (f a ≡ b) であり、その要素は原像と、それが b へ写ることを示すパスからなる。"
+notes = "Cubical Agda defines the fibre of f at y as Σ[ x ∈ A ] f x ≡ y and defines isEquiv by contractibility of every fibre: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda ."
+
+[[term]]
+category = "Type theory"
+id = "type-isomorphism"
+audience = "reader"
+en = "isomorphism"
+zh = "同构"
+ja = "同型"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "An isomorphism explicitly supplies forward and inverse maps together with the two inverse laws."
+recap_zh = "同构显式给出正向映射、逆向映射以及两条逆律。"
+recap_ja = "同型は順写像、逆写像、および二つの逆法則を明示的に与える。"
+notes = "Cubical Agda's Iso record has fun, inv, rightInv and leftInv fields and converts to an equivalence: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Isomorphism.agda ."
+
+[[term]]
+category = "Logic and philosophy"
+id = "logical-equivalence"
+audience = "reader"
+en = "logical equivalence"
+zh = "逻辑等价"
+ja = "論理的同値"
+introduced_in = "Base.Impredicativity"
+matching = "auto"
+forms_en = ["logically equivalent"]
+recap_en = "Logical equivalence gives implications in both directions; for propositions, isProp promotes these maps to a type equivalence."
+recap_zh = "逻辑等价给出两个方向的蕴含；对于命题，isProp 可将这两个映射提升为类型等价。"
+recap_ja = "論理的同値は両方向の含意を与え、命題については isProp によってそれらの写像を型同値へ高められる。"
+notes = "The HoTT Book distinguishes equivalence of types from mere maps in both directions and proves that logically equivalent mere propositions are equivalent: https://homotopytypetheory.org/book/ ."
+
+[[term]]
+category = "Type theory"
+id = "propositional-resizing"
+audience = "reader"
+en = "propositional resizing"
+zh = "命题换级"
+ja = "命題リサイズ"
+introduced_in = "Base.Impredicativity"
+matching = "auto"
+recap_en = "Propositional resizing replaces each proposition by a type-equivalent representative at a chosen universe level."
+recap_zh = "命题换级为每个命题在指定宇宙层级选取一个类型等价的代表。"
+recap_ja = "命題リサイズは、各命題を指定した宇宙レベルにある型同値な代表で置き換える。"
+avoid = ["zh:命题降级", "zh:命题降层", "zh:命题降成"]
+notes = "Owner ruling 2026-09-16: zh 命题换级 reflects that Resizing permits arbitrary source and target levels; ja retains the established transliteration."
+
+[[term]]
+category = "Type theory"
+id = "proposition-universe-resizing"
+audience = "reader"
+en = "Ω-resizing"
+zh = "命题宇宙换级"
+ja = "命題宇宙リサイズ"
+introduced_in = "Base.Impredicativity"
+matching = "auto"
+forms_en = ["proposition-universe resizing"]
+recap_en = "Ω-resizing presents an entire proposition universe by a type in a chosen universe level."
+recap_zh = "命题宇宙换级用指定宇宙层级中的一个类型呈现整个命题宇宙。"
+recap_ja = "命題宇宙リサイズは、命題宇宙全体を指定した宇宙レベルの型で提示する。"
+avoid = ["zh:命题宇宙降级"]
+notes = "Owner ruling 2026-09-16: this is the reader-facing name of ΩResizing."
+
+# ---- Logic and philosophy ----------------------------------------------------
+
+[[term]]
+category = "Logic and philosophy"
+en = "abstraction"
+zh = "抽象"
+ja = "抽象"
+notes = "of parameters: replacing a formula's constants by fresh variables, so a formula with parameters becomes a parameter-free (无参) formula of higher arity plus a vector of the constants; owner ruling 2026-07-30, first used in FOL.Manipulation.ParameterAbstraction"
+
+[[term]]
+category = "Logic and philosophy"
+en = "occurrence"
+zh = "出现"
+ja = "出現"
+notes = "of a constant in a formula, counted positionally: two occurrences of one constant are two entries, which is what spares the development a decidable equality on the alphabet; owner ruling 2026-07-30"
+
+[[term]]
+category = "Logic and philosophy"
+en = "placement"
+zh = "安置"
+ja = "配置"
+notes = "the map sending each constant occurrence to the variable slot that will carry it; owner ruling 2026-07-30, FOL.Manipulation.ParameterAbstraction"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Lévy hierarchy"
+zh = "Lévy 层级"
+ja = "Lévy 階層"
+avoid = ["en:Levy hierarchy", "zh:列维层级", "zh:分级证书", "zh:Levy 层级"]
+notes = "Δ₀/Σₙ/Πₙ, as inductive witnesses (见证; the word certificate/证书 is reserved for adequacy); surname kept in Latin, matching Diaconescu (owner ruling 2026-07-18); witness/见证 is not a standalone name: always write it anchored, the Δ₀ witness / Δ₀ 见证, Levy witnesses / Lévy 见证"
+
+[[term]]
+category = "Logic and philosophy"
+en = "relativization"
+zh = "相对化"
+ja = "相対化"
+
+[[term]]
+category = "Logic and philosophy"
+en = "satisfaction"
+zh = "满足关系"
+ja = "充足関係"
+notes = "zh 满足 vs ja 充足 (deliberate)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "arithmetization"
+zh = "算术化"
+ja = "算術化"
+notes = "of syntax"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Gödel numbering"
+zh = "哥德尔配数"
+ja = "ゲーデル数化"
+avoid = ["zh:哥德尔数"]
+notes = "Owner ruling 2026-08-05. 哥德尔数 is the number, 哥德尔配数 the scheme, which is what this term means."
+
+[[term]]
+category = "Logic and philosophy"
+en = "first-order definability"
+zh = "一阶可定义性"
+ja = "一階定義可能性"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bi-implication"
+zh = "双向蕴含"
+ja = "双条件"
+notes = "ja 双条件 (biconditional); not the calque 双方向含意"
+
+[[term]]
+category = "Logic and philosophy"
+en = "proof-theoretic reduction"
+zh = "证明论归约"
+ja = "証明論的還元"
+notes = "reduction: zh 归约 vs ja 還元"
+
+[[term]]
+category = "Logic and philosophy"
+en = "classical principles"
+zh = "经典原理"
+ja = "古典原理"
+notes = "LEM, AC"
+
+[[term]]
+category = "Logic and philosophy"
+id = "object-theory"
+audience = "reader"
+en = "object theory"
+zh = "对象理论"
+ja = "対象理論"
+presence = true
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The theory being represented and studied inside the metatheory; in this book, set theory."
+recap_zh = "在元理论中得到表示和研究的理论；在本书中指集合论。"
+recap_ja = "メタ理論の中で表現され研究される理論。本書では集合論を指す。"
+notes = "Paired with metatheory; user-approved distinction for the Prelude, 2026-09-10. Japanese usage explicitly contrasts set theory as 対象理論 with its consistency theory as メタ理論: https://www.jstage.jst.go.jp/article/sbp/21/0/21_1998_005/_pdf/-char/ja"
+
+[[term]]
+category = "Logic and philosophy"
+id = "metatheory"
+audience = "reader"
+en = "metatheory"
+zh = "元理论"
+ja = "メタ理論"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The theory in which the object theory is represented and studied; here, cubical type theory."
+recap_zh = "用来表示和研究对象理论的理论；在本书中指立方类型论。"
+recap_ja = "対象理論を表現し研究するための理論。本書では立方型理論を指す。"
+notes = "meta-level is 元层 / メタレベル"
+
+[[term]]
+category = "Logic and philosophy"
+en = "metaphysics"
+zh = "形而上学"
+ja = "形而上学"
+presence = true
+notes = "of V"
+
+[[term]]
+category = "Logic and philosophy"
+en = "determinate"
+zh = "确定"
+ja = "確定"
+notes = "of V's structure"
+
+[[term]]
+category = "Logic and philosophy"
+en = "canonical"
+zh = "典范"
+ja = "正準"
+
+avoid = ["ja:典範"]
+notes = "2026-09-07 literature review: Japanese mathematical canonical is 正準, with 正準的 in attributive prose. https://www.ms.u-tokyo.ac.jp/~kazushi/course/hms.pdf (p. 23)."
+
+[[term]]
+category = "Logic and philosophy"
+en = "falsifiable"
+zh = "可证伪"
+ja = "反証可能"
+
+[[term]]
+category = "Logic and philosophy"
+en = "rigor"
+zh = "严格性"
+ja = "厳密さ"
+
+[[term]]
+category = "Logic and philosophy"
+en = "finitism"
+zh = "有穷主义"
+ja = "有限主義"
+
+[[term]]
+category = "Logic and philosophy"
+en = "neutral ground"
+zh = "中立的地基"
+ja = "中立的な地盤"
+notes = "zh 地基 vs ja 地盤"
+
+[[term]]
+category = "Logic and philosophy"
+en = "groundwork"
+zh = "奠基"
+ja = "基盤"
+notes = "the Groundwork / 奠基 / 基盤 section"
+
+[[term]]
+category = "Logic and philosophy"
+en = "bedrock"
+zh = "基岩"
+ja = "岩盤"
+notes = "the metaphor; the project name Bedrock stays untranslated"
+
+[[term]]
+category = "Logic and philosophy"
+en = "term"
+zh = "词项"
+ja = "項"
+notes = "of the object language"
+
+[[term]]
+category = "Logic and philosophy"
+en = "formula"
+zh = "公式"
+ja = "論理式"
+notes = "zh 公式 vs ja 論理式 (deliberate)"
+
+[[term]]
+category = "Logic and philosophy"
+en = "sentence"
+zh = "句子"
+ja = "文"
+notes = "a formula with no free variables; zh 句子 per the owner's math-logic convention"
+
+[[term]]
+category = "Logic and philosophy"
+en = "parameter-free"
+zh = "无参"
+ja = "無パラメータ"
+notes = "无参公式, formulas with constant domain ⊥*; like sentences, no named definition (owner ruling 2026-07-19), spelt Formula ⊥* n; ja tentative"
+
+[[term]]
+category = "Logic and philosophy"
+en = "constant domain"
+zh = "常元域"
+ja = "定数域"
+avoid = ["zh:常量域"]
+notes = "The K parameter indexing constant symbols in syntax. Chinese 常元 follows Wang Wei, first-order languages and expansion by parameters: https://logic.fudan.edu.cn/doc/Event/2024/summer/FMOA0727.pdf . Japanese 定数 is attested in https://www.jaist.ac.jp/~y-keita/I211-2020/I211-lecnote.pdf ; the domain compounds are descriptive, not claimed as fixed literature headwords."
+
+[[term]]
+category = "Logic and philosophy"
+en = "bounded quantifier"
+zh = "有界量词"
+ja = "有界量化子"
+
+[[term]]
+category = "Logic and philosophy"
+en = "environment"
+zh = "环境"
+ja = "環境"
+notes = "an assignment of carrier elements to free variables"
+
+[[term]]
+category = "Logic and philosophy"
+en = "structure"
+zh = "结构"
+ja = "構造"
+notes = "model-theoretic structure, ZFStructure"
+
+[[term]]
+category = "Logic and philosophy"
+id = "domain"
+audience = "reader"
+en = "domain"
+zh = "论域"
+ja = "論域"
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["domains"]
+recap_en = "The type over which variables range; calling it a domain adds no relation, operation or other structure."
+recap_zh = "变量在其中取值的类型；称它为论域，并不为它添加关系、运算或其他结构。"
+recap_ja = "変数が動く型。論域と呼ぶだけでは、関係、演算、その他の構造は加わらない。"
+notes = "Model-theoretic use. The Stanford Encyclopedia of Philosophy calls the common range of all quantifiers the domain or universe of a structure: https://plato.stanford.edu/entries/model-theory/ . Automatic matching also covers the same English word in other contexts, such as function domain and code domain."
+
+[[term]]
+category = "Logic and philosophy"
+id = "carrier"
+audience = "reader"
+en = "carrier"
+zh = "载体"
+ja = "台"
+avoid = ["ja:担体", "ja:キャリア"]
+introduced_in = "Base.Prelude"
+matching = "auto"
+forms_en = ["carriers"]
+recap_en = "The underlying type of objects on which the relations and operations of a structure are defined."
+recap_zh = "承载一个结构的对象，并供该结构的关系与运算在其上定义的底层类型。"
+recap_ja = "構造の対象を担い、その関係や演算が定義される基礎の型。"
+notes = "Of a structure; ja 台 as in 台集合. Automatic matching of the single Japanese character 台 can also mark unrelated compounds. Owner ruling 2026-09-12 unified the Japanese rendering on 台: 24 occurrences of 担体 and one of キャリア were converted the same day, and the avoid list keeps them out."
+
+[[term]]
+category = "Logic and philosophy"
+en = "renaming"
+zh = "改名"
+ja = "改名"
+avoid = ["zh:变量变换"]
+notes = "Owner ruling 2026-08-05. Chinese logic renames bound variables with 改名, 换名 or 更名; 变量变换 reads as change of variables, as did the Japanese 変数変換."
+
+[[term]]
+category = "Set theory"
+en = "transitive class"
+zh = "传递类"
+ja = "推移的クラス"
+
+[[term]]
+category = "Logic and philosophy"
+en = "consistency"
+zh = "一致性"
+ja = "無矛盾性"
+notes = "of a theory; zh 一致性 vs ja 無矛盾性 (deliberate); no presence check, the English word is too common"
+
+[[term]]
+category = "Logic and philosophy"
+en = "excluded middle"
+zh = "排中律"
+ja = "排中律"
+presence = true
+notes = "law of excluded middle, LEM"
+
+# ---- Other -------------------------------------------------------------------
+
+[[term]]
+category = "Other"
+en = "charter"
+zh = "纲领"
+ja = "綱領"
+avoid = ["zh:宪章", "ja:憲章"]
+presence = true
+notes = "the project's founding document; file slug stays CHARTER.md"
+
+[[term]]
+category = "Other"
+en = "prose"
+zh = "文稿"
+ja = "文章"
+avoid = ["散文"]
+notes = "written body text, not the literary essay genre"
+
+[[term]]
+category = "Other"
+en = "proof assistant"
+zh = "证明助手"
+ja = "証明支援系"
+presence = true
+avoid = ["zh:证明助理"]
+notes = "Owner ruling 2026-08-05. 助手 is what the Coq, Lean and Isabelle Chinese materials use; 助理 reads as an office assistant."
+
+[[term]]
+category = "Other"
+en = "machine-checked development"
+zh = "机器验证工作"
+ja = "機械検証の開発"
+avoid = ["zh:机器验证开发", "ja:機械検査の開発"]
+presence = true
+notes = "the README tagline; \"machine-checked\" is zh 机器 / ja 機械 and \"development\" is zh 工作 / ja 開発 (deliberate); the certificate/ground phrasings (机器可检的证书 / 经机器检验的地基 etc.) are separate and not covered here"
+
+[[term]]
+category = "Set theory"
+en = "axiom of extensionality"
+zh = "外延公理"
+ja = "外延性公理"
+notes = "the property alone reads zh 外延性 / ja 外延性; ZF field extensional"
+
+[[term]]
+category = "Set theory"
+en = "axiom of separation"
+zh = "分离公理"
+ja = "分出公理"
+notes = "first-order schema; ZF field hasSeparation, operation separate"
+
+[[term]]
+category = "Set theory"
+en = "axiom of replacement"
+zh = "替换公理"
+ja = "置換公理"
+notes = "ZF field hasReplacement"
+
+[[term]]
+category = "Set theory"
+en = "axiom of pairing"
+zh = "配对公理"
+ja = "対の公理"
+notes = "ZF field hasPair"
+
+[[term]]
+category = "Set theory"
+en = "axiom of union"
+zh = "并公理"
+ja = "和集合の公理"
+notes = "ZF field hasUnion; the operation 并/和集合"
+
+[[term]]
+category = "Set theory"
+en = "power set"
+zh = "幂集"
+ja = "冪集合"
+notes = "the axiom reads 幂集公理 / 冪集合公理; ZF field hasPower, operation 𝒫"
+
+[[term]]
+category = "Set theory"
+en = "empty set"
+zh = "空集"
+ja = "空集合"
+
+[[term]]
+category = "Set theory"
+en = "successor"
+zh = "后继"
+ja = "後者"
+notes = "the von Neumann step a ⁺ = a ∪ {a}"
+
+[[term]]
+category = "Set theory"
+en = "numeral"
+zh = "数码"
+ja = "数項"
+notes = "The von Neumann naturals inside a model; ZF field numeral, class isNumeral. Japanese 数項 (numeral) is directly attested for arithmetic syntax in Terui’s notes, https://www.kurims.kyoto-u.ac.jp/~terui/cs2012ch1.pdf . Here the finite ordinal supplies the set-theoretic interpretation of that numeral."
+
+[[term]]
+category = "Set theory"
+en = "choice set"
+zh = "选择集"
+ja = "選択集合"
+notes = "the form of hasChoice: one point in each member of a disjoint family"
+
+[[term]]
+category = "Set theory"
+id = "class"
+audience = "reader"
+en = "class"
+zh = "类"
+ja = "クラス"
+introduced_in = "Base.Prelude"
+matching = "explicit"
+forms_en = ["classes"]
+recap_en = "A predicate on a given domain, represented here as a function from that domain to the universe of propositions."
+recap_zh = "给定论域上的谓词；本书将它表示为从该论域到命题宇宙的函数。"
+recap_ja = "与えられた論域上の述語。本書では、その論域から命題の宇宙への関数として表す。"
+notes = "Propositional predicate on a domain; proper class = 真类 / 真クラス. Explicitly introduced in Base.Prelude."
+
+[[term]]
+category = "Set theory"
+en = "well-founded"
+zh = "良基"
+ja = "整礎"
+notes = "well-foundedness = 良基性 / 整礎性"
+
+[[term]]
+category = "Logic and philosophy"
+en = "compactness"
+zh = "紧致性"
+ja = "コンパクト性"
+notes = "the compactness theorem = 紧致性定理 / コンパクト性定理; told, not proven, in the ZF chapter"
+
+[[term]]
+category = "Other"
+en = "von Neumann"
+zh = "冯·诺伊曼"
+ja = "フォン・ノイマン"
+
+[[term]]
+category = "Type theory"
+en = "smallness"
+zh = "小性"
+ja = "小ささ"
+notes = "Smallness remains appropriate for types known equivalent to types in a genuinely lower or fixed small universe."
+
+[[term]]
+category = "Set theory"
+en = "set-level choice"
+zh = "集合层选择"
+ja = "集合レベルの選択"
+notes = "SetChoice: truncation commutes with products over an h-set of indices"
+
+[[term]]
+category = "Set theory"
+en = "transitive set"
+zh = "传递集"
+ja = "推移的集合"
+notes = "matches the transitive class entry; isTransV"
+
+[[term]]
+category = "Set theory"
+en = "ordinal"
+zh = "序数"
+ja = "順序数"
+notes = "IsOrd: a transitive set whose members are all transitive (von Neumann)"
+
+[[term]]
+category = "Set theory"
+en = "bounding ordinal"
+zh = "上界序数"
+ja = "上界順序数"
+avoid = ["zh:界层序数"]
+notes = "Owner ruling 2026-08-05. 界层 is not a Chinese mathematical word and reads as boundary layer; 上界序数 is attested for the ordinal bound of a family."
+
+[[term]]
+category = "Set theory"
+en = "definable subset"
+zh = "可定义子集"
+ja = "定義可能部分集合"
+notes = "the Def operator's output; V.Definability"
+
+[[term]]
+category = "Set theory"
+en = "birth stage"
+zh = "诞生层"
+ja = "誕生段階"
+notes = "L.Choice.StageOrders: the ordinal over which a constructible set is carved, one below the least stage containing it. This is a stage index rather than the set L_α itself. Chinese 诞生层 follows the owner-approved stage = 层 convention (2026-09-10); it denotes an ordinal index here, not the set L_α. Japanese 段階 is descriptive; 階層 is reserved for the whole hierarchy."
+
+[[term]]
+category = "Set theory"
+en = "end extension"
+zh = "尾节扩张"
+ja = "端拡大"
+avoid = ["zh:末端扩张"]
+notes = "Owner ruling 2026-08-05. 尾节扩张 is the rendering of this project's own school (郝兆宽 et al., 递归论); 末端扩张 has no model-theoretic attestation."
+
+[[term]]
+category = "Set theory"
+en = "layer"
+zh = "层"
+ja = "層"
+notes = "The isLayer predicate. Chinese 层 is also used for stage; this shared rendering does not identify isLayer with the ordinal returned by stage. See dev/literature/stage-level-hierarchy.md."
+
+[[term]]
+category = "Other"
+en = "frontier"
+zh = "前沿"
+ja = "フロンティア"
+notes = "the L.Frontier debt registry; reader-facing name for the root-first device"
+
+[[term]]
+category = "Logic and philosophy"
+en = "Diaconescu's theorem"
+zh = "Diaconescu 定理"
+ja = "ディアコネスクの定理"
+notes = "choice implies excluded middle (Goodman-Myhill form); zh keeps the surname in Latin, matching the book's practice for untransliterated names; choice→lem in Base.Choice"
+
+[[term]]
+category = "Type theory"
+en = "set quotient"
+zh = "集合商"
+ja = "集合商"
+notes = "the SetQuotients HIT; quotient by a relation = 按关系取商"
+
+[[term]]
+category = "Type theory"
+en = "impredicativity"
+zh = "非直谓性"
+ja = "非可述性"
+notes = "Ω-resizing is the main principle; propositional resizing follows from it"
+
+[[term]]
+category = "Logic and philosophy"
+en = "relabelling"
+zh = "常元改名"
+ja = "定数の改名"
+avoid = ["zh:常量改名", "zh:常量变换"]
+notes = "Relabelling changes constant symbols and transports their interpretation. The compound uses the attested 常元 / 定数 stems; the particular operation name is descriptive. Chinese source: https://logic.fudan.edu.cn/doc/Event/2024/summer/FMOA0727.pdf . Keep distinct from variable renaming."
+
+# ---- Added 2026-08-05 by owner ruling on the terminology dossier ----
+# Dossier with sources, candidates and the explicit guessing list:
+# dev/literature/terms-2026-08.md
+
+[[term]]
+category = "Logic"
+en = "face"
+zh = "面孔"
+ja = "顔"
+notes = "Historical explanatory metaphor for one interpretation or use of an object, for example its satisfaction reading. 面孔 / 顔 are ordinary contextual translations, not cubical faces. Prefer a mathematical description of the interpretation in new chapter headings."
+
+[[term]]
+category = "Set theory"
+en = "initial segment"
+zh = "初始段"
+ja = "始切片"
+avoid = ["zh:初段"]
+notes = "Canonical book labels for the segment below an element of an ordered set. Japanese 始切片 is used in Tsuboi’s model-theory notes, https://www.math.tsukuba.ac.jp/~tsuboi/gra/lecturenote%2812%29.pdf . The historical review cites 数学辞海 vol. 1 p. 624 for Chinese; that printed page was not independently inspected in this web review. 初段 remains an excluded house variant, not a word declared mathematically meaningless."
+
+[[term]]
+category = "Type theory"
+en = "presentation"
+zh = "呈现"
+ja = "提示"
+notes = "A set presented by an index type and an indexing map, as in the cumulative-hierarchy HIT. Retain 呈现 / 提示 as editorial contextual renderings distinct from representation. Exact CJK usage for this particular HIT data was not established by the searches; no claim of direct attestation is made."
+
+[[term]]
+category = "Logic"
+en = "crossing"
+zh = "跨越"
+ja = "越境"
+notes = "Moving a statement between an ambient reading and an inner one, as in Delta-0 is a crossing tax. Metaphor, no source; 横断 collides with transversal."
+
+[[term]]
+category = "Logic"
+en = "decode"
+zh = "解码"
+ja = "復号"
+notes = "解码 and 译码 are both attested and the prose does not drift; 解码 is fixed here to keep it that way."
+
+[[term]]
+category = "Set theory"
+en = "order type"
+zh = "序型"
+ja = "順序型"
+avoid = ["zh:序类型"]
+notes = "Established: 数学辞海 vol. 1 p. 624; 点集拓扑学. 序类型 is the encyclopedic long form, not wrong but not ours."
+
+[[term]]
+category = "Set theory"
+en = "canonical well-ordering"
+zh = "典范良序"
+ja = "正準整列順序"
+notes = "Composes the glossary's own 典范 and 良序; attested in 代数学方法 and university set-theory notes."
+
+[[term]]
+category = "Set theory"
+en = "square law"
+zh = "平方律"
+ja = "平方律"
+avoid = ["zh:平方定理"]
+notes = "The cardinal identity that an infinite ordinal is equinumerous with its square. The project proves it in L.Ordinal.SquareLaw. 平方律 is a descriptive short title, not claimed to be a standard Chinese theorem name; distinguish the separate square-pairing function."
+
+[[term]]
+category = "Set theory"
+en = "equinumerous"
+zh = "等势"
+ja = "対等"
+avoid = ["zh:等数"]
+notes = "Sets admitting a bijection. Japanese 対等 is directly used with this definition in https://hosho.ees.hokudai.ac.jp/tsuyu/top/dct/math-j.html . The historical review cites 数学辞海 vol. 4 for 等势; that printed volume was not independently inspected here. Retain 等势 as the house label without claiming that competing terms have no source."
+
+[[term]]
+category = "Set theory"
+en = "initial ordinal"
+zh = "初始序数"
+ja = "始順序数"
+notes = "Established: 数学辞海 vol. 1 p. 626."
+
+[[term]]
+category = "Logic"
+en = "count"
+zh = "计数"
+ja = "数え上げ"
+notes = "Ordinary established mathematical vocabulary (组合计数, 计数原理), used here as the subject of how many formulas there are."
+
+[[term]]
+category = "Logic"
+en = "shape count"
+zh = "形状计数"
+ja = "形状の数え上げ"
+notes = "Counting constant-free formula shapes at a fixed arity. This is a project compound of shape and counting; exact-phrase searches did not establish a named theorem with this title."
+
+[[term]]
+category = "Logic"
+en = "square pairing"
+zh = "平方配对"
+ja = "平方対関数"
+notes = "The pairing function on natural numbers used to count formula shapes. The title is a descriptive compound for this implementation, distinct from the infinite-cardinal square law. It names a function, not the identity itself."
+
+[[term]]
+category = "Logic"
+en = "pair atom"
+zh = "对原子"
+ja = "対原子"
+avoid = ["zh:对子原子"]
+notes = "An object-language formula recognizing singleton, unordered-pair or ordered-pair structure. 对原子 / 対原子 are local compounds based on atomic-formula vocabulary; no claim of a standard theorem name. 对子原子 is excluded for consistency."
+
+[[term]]
+category = "Logic"
+en = "frame"
+zh = "框架"
+ja = "フレーム"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. A reusable formula shape in the internal language. ja per the Nagoya TPP2024 slides, not ja Wikipedia (T153 corrected the citation)."
+
+[[term]]
+category = "Logic"
+en = "disjunction"
+zh = "析取"
+ja = "論理和"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. Every cited source held, including kotobank."
+
+[[term]]
+category = "Set theory"
+en = "slice"
+zh = "切片"
+ja = "スライス"
+avoid = ["zh:像片"]
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. 像片 means photograph and is REJECTED; it had drifted into Images:460 and StepGraph while 切片 held 15 sites."
+
+[[term]]
+category = "Other"
+en = "landing site"
+zh = "落点"
+ja = "着地点"
+notes = "D35 pipeline: T152 dossier, T153 review PASS 2026-08-07. Project vocabulary: where future content will land."
+
+[[term]]
+category = "Logic"
+en = "graph layer"
+zh = "图层"
+ja = "グラフレイヤー"
+avoid = ["ja:グラフ層"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). ja 層 is the sheaf headword and sheaves on graphs are a live object (T153 section 2), so the katakana layer carries the architecture sense. zh keeps 图层 with a modifier at first use per chapter (运算图层 style), because the bare word is lexicalized for image layers."
+
+[[term]]
+category = "Set theory"
+en = "membership formula"
+zh = "隶属公式"
+ja = "帰属論理式"
+avoid = ["ja:所属式"]
+notes = "A formula expressing membership. Japanese is a composed label based on 帰属関係を表す論理式 in https://dspace.jaist.ac.jp/dspace/bitstream/10119/17662/5/paper.pdf . The shortened compound 帰属論理式 is editorial, not claimed verbatim. 所属 is valid ordinary membership prose; 所属式 remains an excluded rival label for this particular formula."
+
+[[term]]
+category = "Logic"
+en = "equality frame"
+zh = "等词框架"
+ja = "等号フレーム"
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). zh 等词 attested by 张清宇 (12 instances, 带等词的语言) and the BUAA syllabus (等词公理), both found by the T153 review after the dossier's sources broke. The division of labour: 等号 names the sign, 等词 the predicate; this frame argues about the predicate."
+
+[[term]]
+category = "Set theory"
+en = "transitive carrier"
+zh = "传递载体"
+ja = "推移的台"
+notes = "A carrier closed under membership. 推移的台 is the compact compound; 推移的な台 is also allowed in a sentence. The grammatical pattern 推移的な集合 is explicitly used in https://www.math.is.tohoku.ac.jp/~obata/student/subject/TaikeiBook/Taikei-Book_14.pdf . The carrier compound remains pattern-derived; terminology checks must not ban a natural adjectival construction."
+
+[[term]]
+category = "Logic"
+en = "read lemma"
+zh = "读引理"
+ja = "読み補題"
+notes = "Project expression for a lemma recovering the mathematical meaning of a coded formula. 读引理 / 読み補題 are editorial compounds. Targeted searches did not identify a primary source naming this local lemma family; that is not a claim that literature is silent."
+
+[[term]]
+category = "Other"
+en = "survivor"
+zh = "存活"
+ja = "存続"
+avoid = ["ja:生存ホーム", "ja:生存モジュール"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). Project vocabulary: what remains after a retirement. ja 生存 rejected: 生存ホーム reads as a care facility (T153 section 9); 存続 carries the institutional-continuation sense. Attributive forms: 存続モジュール, 存続する章."
+
+[[term]]
+category = "Other"
+en = "master"
+zh = "主章"
+ja = "原本"
+avoid = ["ja:主章"]
+notes = "Owner-delegated ruling 2026-08-07 (T152/T153). The canonical trilingual source file of a chapter. ja 主章 rejected: it reads as the principal chapter; マスター rejected as IT register. 原本, the document original, matches one-master-per-module with woven copies."
+
+[[term]]
+category = "Other"
+en = "wing"
+zh = "GCH 侧"
+ja = "GCH 側"
+avoid = ["zh:机翼"]
+notes = "Historical project metaphor for the GCH part of the development. GCH 侧 / GCH 側 are transparent contextual renderings, not technical mathematical terms. Prefer the actual mathematical topic in new learner-facing headings. The English entry does not require renaming internal identifiers."
+
+[[term]]
+category = "Teaching terminology"
+en = "set-theoretic reflection"
+zh = "集合论反射"
+ja = "集合論的反映"
+avoid = ["ja:集合論的反射"]
+notes = "Set-theoretic reflection is 反映 in Japanese; the principle is 反映原理, unlike programming reflection. Fuchino, footnote 4: https://math.cs.kitami-it.ac.jp/~fuchino/shizuoka/lss07_fuchinox0902.pdf ; https://elecello.com/doc/set/set0000.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "Skolem hull"
+zh = "Skolem 壳"
+ja = "Skolem 包"
+avoid = ["zh:Skolem 包", "ja:Skolem 殻"]
+notes = "Direct terminology: Chinese 壳 (personal name may be kept Latin) https://studiesinlogic.sysu.edu.cn/sites/default/files/2023-09/1674-3202%282020%29-04-0012-19.pdf ; Japanese Skolem 包 https://konn-san.com/2024-forcing-seminar-notes/01-basic-mathematical-logic.pdf . Chinese Skolem 闭包 is also attested (Fudan summer notes), but 壳 is the selected house form."
+
+[[term]]
+category = "Teaching terminology"
+en = "Mostowski collapse"
+zh = "Mostowski 塌缩"
+ja = "Mostowski 崩壊"
+avoid = ["zh:Mostowski 坍缩"]
+notes = "Japanese theorem name directly attested: https://math.cs.kitami-it.ac.jp/~fuchino/shizuoka/lss07_fuchinox0902.pdf . Queries Mostowski 塌缩 / Mostowski 坍缩 site:edu.cn did not establish a primary Chinese hit; 塌缩 is retained as a contextual rendering of the standard English construction, not claimed directly attested here."
+
+[[term]]
+category = "Teaching terminology"
+en = "adequate stage"
+zh = "充分层"
+ja = "十分な段階"
+avoid = ["zh:适足阶段", "zh:適足階段", "zh:适足层"]
+notes = "Local predicate collecting the closure conditions in L.GCH.AdequateStages, not an admissible ordinal. Queries constructibility adequate Devlin and superadequate set theory did not establish this predicate as a standard named notion. Translations are descriptive compounds; distinguish semantic adequacy (充分性/妥当性). Concept context: https://onlinelibrary.wiley.com/doi/abs/10.1002/malq.201500072 ."
+
+[[term]]
+category = "Teaching terminology"
+en = "superadequate stage"
+zh = "超充分层"
+ja = "強化された十分な段階"
+avoid = ["zh:超适足阶段", "zh:超适足层", "ja:超十分"]
+notes = "Project-local strengthening of adequate stage. Japanese deliberately describes the strengthening rather than inventing 超十分. Same search and mathematical context as adequate stage; this phrase does not claim a literature theorem."
+
+[[term]]
+category = "Teaching terminology"
+en = "cardinal representative"
+zh = "基数代表"
+ja = "基数代表"
+notes = "Descriptive compound for the initial ordinal representing an ordinal cardinality. Not claimed as a separately named theorem. Pattern from cardinal and ordinal comparison: https://ocw.cds.tohoku.ac.jp/wp-content/uploads/2025/09/5_cardinal.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "coded injection"
+zh = "编码单射"
+ja = "符号化された単射"
+avoid = ["zh:符号化注入", "ja:コード化された単射"]
+notes = "Composed expression for a graph in the model representing an injective function. Searches coded injection set theory and 論理式 符号化 found no fixed three-language expression. Japanese 符号化 pattern: https://www.kurims.kyoto-u.ac.jp/~kenkyubu/kokai-koza/terui.pdf ; injection pattern: https://ocw.cds.tohoku.ac.jp/wp-content/uploads/2025/09/5_cardinal.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "successor cardinal"
+zh = "后继基数"
+ja = "後続基数"
+avoid = ["ja:後者基数"]
+notes = "Direct Japanese cardinal term: https://www.kurims.kyoto-u.ac.jp/~kyodo/kokyuroku/contents/pdf/2151-06.pdf . Distinguish the successor operation 後者, attested https://www.sw.it.aoyama.ac.jp/2019/Math1/lecture2.html ."
+
+[[term]]
+category = "Teaching terminology"
+en = "satisfaction table"
+zh = "满足关系表"
+ja = "充足関係表"
+notes = "Project compound from satisfaction relation plus table, not the propositional truth table. Japanese 充足関係: https://www.jaist.ac.jp/~y-keita/I211-2020/I211-lecnote.pdf ."
+
+[[term]]
+category = "Teaching terminology"
+en = "bounded subset theorem"
+zh = "有界子集定理"
+ja = "有界部分集合定理"
+notes = "Descriptive local theorem name for bounding a constructible subset by an ordinal stage. Pattern rather than a claimed standard title. Standard constructibility argument context: https://elecello.com/doc/set/set0006.pdf ."
+
+
+[[term]]
+category = "Type theory"
+id = "propositional-truncation"
+audience = "reader"
+en = "propositional truncation"
+zh = "命题截断"
+ja = "命題的切り詰め"
+introduced_in = "Base.Prelude"
+matching = "auto"
+recap_en = "The operation sending a type to a proposition with the same inhabitedness, keeping that an element exists and forgetting which one."
+recap_zh = "把一个类型变成命题的运算：它保留该类型是否有元素的信息，却忘去具体是哪一个元素。"
+recap_ja = "型を、要素の有無が同じ命題へ送る操作。要素があることは保ち、それがどれであったかは忘れる。"
+notes = "English: HoTT Book section 3.7, https://homotopytypetheory.org/book/ . Japanese compound follows Uemura’s attested n 切り詰め (n-truncation), section 4.3, https://uemurax.github.io/hott-ja/index.pdf ; searches for the exact compound found reading notes but no primary exact compound, so this is pattern-derived. Chinese compound is a descriptive rendering of proposition + truncation; exact-phrase searches did not yield a primary Chinese text. This is the (-1)-truncation, not the choice of an inhabitant."
+
+[[term]]
+category = "Logic"
+en = "arity"
+zh = "元数"
+ja = "アリティ"
+notes = "Japanese logical usage: Aoto, definition 10.4, https://www.nue.ie.niigata-u.ac.jp/~aoto/lecture/21Logic.done/lecture10.pdf . Chinese 元数 follows n 元 predicate/function terminology; searches for exact bilingual primary sources did not identify a stronger variant. For Formula K n in this project n counts available variable positions, not necessarily the number of variables occurring in a formula."
+
+[[term]]
+category = "Logic and philosophy"
+en = "constant"
+zh = "常元"
+ja = "定数"
+avoid = ["zh:常量符号", "zh:常量出现"]
+notes = "First-order syntax, not an arbitrary fixed quantity. Wang Wei uses 常元符号 throughout languages, interpretation and expansion by parameters: https://logic.fudan.edu.cn/doc/Event/2024/summer/FMOA0727.pdf . Japanese 定数記号: https://www.jaist.ac.jp/~y-keita/I211-2020/I211-lecnote.pdf . 常量符号 also occurs in teaching literature, for example https://basics.sjtu.edu.cn/~yangqizhe/pdf/dm2025w/slides/DMLec5-handout.pdf ; the chosen stem is a consistency decision, not a claim that the alternative is wrong. Do not apply this rendering to constant functions or fixed numerical quantities."
+
+[[term]]
+category = "Set theory"
+en = "stage"
+zh = "层"
+ja = "段階"
+notes = "An individual step L_α in the construction, distinguished from the whole constructible hierarchy and from its ordinal index α. Chinese 层 approved by the owner on 2026-09-10: Yang Ruizhi calls L_α 每一层结构 in 多宇宙观幻觉, PDF p. 2, https://logic.fudan.edu.cn/doc/_yrz/multi.pdf . Use 第 α 层, 后继层, 极限层; keep universe level as 宇宙层级. 阶段 remains appropriate when describing a phase of the construction rather than naming L_α, so it is not globally banned. Japanese 段階 is unchanged; Japanese literature often writes L_α within the directly attested L-階層. See dev/literature/stage-level-hierarchy.md."
+
+[[term]]
+category = "Set theory"
+en = "stage index"
+zh = "层索引"
+ja = "段階の添字"
+notes = "The ordinal α indexing the stage L_α, not the set L_α and not the entire hierarchy. In L.Stage, stage x hx returns this ordinal, while stage-mem places x in Lset (stage x hx). The compound translations are descriptive and pattern-based; Chinese 层索引 follows stage = 层 (owner approval, 2026-09-10). They are not claimed as fixed literature terms. See dev/literature/stage-level-hierarchy.md."
+
+[[term]]
+category = "Logic and philosophy"
+en = "alphabet"
+zh = "字母表"
+ja = "アルファベット"
+notes = "A set/type of symbols. English primary lecture usage: https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/lectures/02/Slides02.pdf ; Japanese primary teaching usage: https://hwb.ecc.u-tokyo.ac.jp/wp/applications-2/textprocessing/regexp/automaton/ ; Chinese publisher excerpt: https://www.tup.tsinghua.edu.cn/upload/books/yz/023232-01.pdf . These attest the terminology, not a finiteness assumption for this project. Alphabet W supplies the available constant symbols from members of W; it need not be finite and is not the ten constructor tags."

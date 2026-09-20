@@ -1,0 +1,175 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 Track G, NEGATIVE CONTROL 2, THE ONE THE ARCHITECTURE NAMES.
+-- EXPECTED EXIT 0, AND IT EXITS 0, BUT NOT AT THE STATEMENT THE BRIEF ASKED
+-- FOR. Rule 14: the measurement is reported as it came out.
+--
+-- WHAT THE BRIEF ASKED FOR. Architecture 4.7 lists this file as "derive
+-- ω₁-identified from Onto (K5/Structures.agda:532-533)", expected exit 0.
+--
+-- WHAT IS TRUE. Onto does NOT reach ω₁-identified at any price this track can
+-- pay, and the reason is exactly the reason the honest proof needs a parameter
+-- with no owner. The conjunct that costs anything is minimality, and closing
+-- its hard case needs to move an INJECTION between the two structures.
+-- Injectableφ is ∃̇ IsInjectionφ (CardinalBridge.agda:379-380) and IsInjectionφ
+-- is not Δ₀ in either direction: IsFunctionφ carries three unbounded ∀̇
+-- (CardinalBridge.agda:176-182) and InjDomφ two unbounded ∃̇ (:257-261), so
+-- K5's groundSat, whose ∃̇ and ∀̇ clauses are absurd patterns on the Δ₀ witness
+-- (K5/Structures.agda:689-690), carries neither direction. Onto reduces every
+-- extension WITNESS to a check name, so with enough work it would give the
+-- downward direction too, but that work is a clause-by-clause descent through
+-- IsFunctionφ, InjDomφ, InjRanφ and InjPairφ and it is not two lines. THE
+-- CHEAP POISONED DERIVATION FOR THIS TRACK IS NOT THIS ONE: it is the reversed
+-- injectability arrow, and it is in K7/breaks/AlephViaDownward.agda-break,
+-- which exits 0 with Track F's entire hypothesis column removed.
+--
+-- WHAT ONTO DOES BUY HERE, AND BOTH HALVES EXIT 0.
+--
+--   1. NotClaimed-NoNewOrdinals, in two lines. This is K6's own claim
+--      (K6/Ordinals.agda:88-95), whose break K6/breaks/OrdViaOnto.agda-break
+--      shipped with an ATTRIBUTED exit code and no log; it is re-derived here
+--      against Track G's own boundary type, and the log is beside this file.
+--   2. The minimality conjunct with the CONDITIONAL hypothesis replaced by an
+--      unconditional one. K7/Aleph.agda buys minimality with ord-compare AT
+--      THE EXTENSION, which costs the extension's Separation, which is O1 plus
+--      the O3b five plus Supply plus LEM plus O7. Under Onto the same conjunct
+--      follows from ordinal comparability IN THE GROUND, which is a profile
+--      fact and costs none of that. So Onto does not remove a hypothesis from
+--      this track; it removes this track's ENTIRE CONDITIONALITY, which is
+--      worse, because a ledger row that reads "unconditional" is the one a
+--      reader stops checking.
+--
+-- Onto says every name is value equal to a copy of a ground set: the extension
+-- IS the ground. It is false at every genuine forcing extension, which is the
+-- entire purpose of forcing.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+open import FOL.Syntax using ( Formula )
+import CardinalBridge
+import K7.Aleph
+import Cubical.HITs.PropositionalTruncation as PT
+
+module K7.breaks.AlephViaOnto {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ)) where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import Cubical.Data.Sum using ( _⊎_ ) renaming ( inl to inl⊎ ; inr to inr⊎ )
+import Cubical.Data.Empty as Empty
+open PT using ( ∥_∥₁ ; ∣_∣₁ )
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module A   = K7.Aleph 𝒮
+module CBᴳ = CardinalBridge 𝒮
+
+module Poison (IsNm : S → Ω) where
+
+  module AN = A.Names IsNm
+  open AN using ( Nm )
+
+  module AtG (_≈[G]_ _∈[G]_ : S → S → Ω) where
+
+    module AL = AN.AtG _≈[G]_ _∈[G]_
+    open AL using ( _≈ᴱ_ ; _∈ᴱ_ ; _⊨_ ; Agree ; ordinal-reading
+                  ; injectable-reading ; module CBᴱ ; module Boundary )
+
+    module At
+      (sat-cong : ∀ {k} (ψ : Formula Nm k) (ν μ : Vec Nm k) → Agree ν μ
+                → (ν ⊨ ψ) ≡ (μ ⊨ ψ))
+      (≈-refl  : (x : S) → ⟨ x ≈[G] x ⟩)
+      (≈-sym   : {x y : S} → ⟨ x ≈[G] y ⟩ → ⟨ y ≈[G] x ⟩)
+      (≈-trans : {x y z : S} → ⟨ x ≈[G] y ⟩ → ⟨ y ≈[G] z ⟩ → ⟨ x ≈[G] z ⟩)
+      (∈-congʳ : {m n n' : S} → ⟨ n ≈[G] n' ⟩ → ⟨ m ∈[G] n ⟩ → ⟨ m ∈[G] n' ⟩)
+      (chk : S → Nm)
+      (positiveᴾ : Ω)
+      (chk-mem : ⟨ positiveᴾ ⟩ → (m n : S) → (chk m ∈ᴱ chk n) ≡ (m ∈ˢ n))
+      (chk-eq  : ⟨ positiveᴾ ⟩ → (m n : S) → (chk m ≈ᴱ chk n) ≡ (m ≈ˢ n))
+      (chk-ordinal : (a : S) → ((chk a ∷ []) ⊨ CBᴱ.IsOrdinalφ)
+                             ≡ A._⊨ᴳ_ (a ∷ []) CBᴳ.IsOrdinalφ)
+      (chk-injectable : (a b : S) → ⟨ CBᴳ.injectable a b ⟩
+                      → ⟨ CBᴱ.injectable (chk a) (chk b) ⟩)
+      -- ORDINAL COMPARABILITY IN THE GROUND, not at the extension. This is the
+      -- whole point: the conditional hypothesis of K7/Aleph.agda is gone.
+      (ord-compareᴳ : (α δ : S) → ⟨ CBᴳ.isOrdinal α ⟩ → ⟨ CBᴳ.isOrdinal δ ⟩
+                    → ⟨ (α ∈ˢ δ) ⊔ ((α ≈ˢ δ) ⊔ (δ ∈ˢ α)) ⟩)
+      (w ω₁ : S)
+      (ω₁-card : ⟨ CBᴳ.isCardinal ω₁ ⟩)
+      (ω₁-members-countable : (b : S) → ⟨ b ∈ˢ ω₁ ⟩ → ⟨ CBᴳ.injectable b w ⟩)
+      (pos : ⟨ positiveᴾ ⟩)
+      where
+
+      module B = Boundary chk
+
+      ------------------------------------------------------------------------
+      -- HALF 1. Two lines, and they are K6's own two lines
+      ------------------------------------------------------------------------
+
+      -- The reflection half, transcribed from K6/Ordinals.agda:198-205.
+
+      reflect-ordinal : (σ : Nm) (a : S) → ⟨ σ ≈ᴱ chk a ⟩
+                      → ⟨ (σ ∷ []) ⊨ CBᴱ.IsOrdinalφ ⟩ → ⟨ CBᴳ.isOrdinal a ⟩
+      reflect-ordinal σ a e h =
+        subst ⟨_⟩ (CBᴳ.IsOrdinal-bridge a)
+          (subst ⟨_⟩ (chk-ordinal a)
+            (subst ⟨_⟩ (sat-cong CBᴱ.IsOrdinalφ (σ ∷ []) (chk a ∷ []) agr) h))
+        where
+          agr : Agree (σ ∷ []) (chk a ∷ [])
+          agr zero = e
+
+      onto→no-new-ordinals : B.NotClaimed-Onto → B.NotClaimed-NoNewOrdinals
+      onto→no-new-ordinals onto σ hσ =
+        PT.map (λ { (a , e) → a , reflect-ordinal σ a e hσ , e }) (onto σ)
+
+      ------------------------------------------------------------------------
+      -- HALF 2. The minimality conjunct, with the conditionality removed
+      ------------------------------------------------------------------------
+
+      injectable-congᴱ : (σ τ ζ : Nm) → ⟨ σ ≈ᴱ τ ⟩
+                       → ⟨ CBᴱ.injectable σ ζ ⟩ → ⟨ CBᴱ.injectable τ ζ ⟩
+      injectable-congᴱ σ τ ζ e h =
+        subst ⟨_⟩ (injectable-reading τ ζ)
+          (subst ⟨_⟩ (sat-cong CBᴱ.Injectableφ (σ ∷ ζ ∷ []) (τ ∷ ζ ∷ []) agr)
+            (subst ⟨_⟩ (sym (injectable-reading σ ζ)) h))
+        where
+          agr : Agree (σ ∷ ζ ∷ []) (τ ∷ ζ ∷ [])
+          agr zero       = e
+          agr (suc zero) = ≈-refl (fst ζ)
+
+      -- Compare with K7/Aleph.agda's ω₁-minimal. The two conclusions are the
+      -- same truth value. The hypothesis columns are not: there ord-compare is
+      -- at the extension and carries the extension's Separation with it; here
+      -- ord-compareᴳ is at the ground and carries nothing, and Onto is what
+      -- pays the difference.
+
+      ω₁-minimal-from-onto : B.NotClaimed-Onto
+                           → (μ : Nm) → ⟨ (CBᴱ.isCardinal μ) ⊓ (chk w ∈ᴱ μ) ⟩
+                           → ⟨ (chk ω₁ ≈ᴱ μ) ⊔ (chk ω₁ ∈ᴱ μ) ⟩
+      ω₁-minimal-from-onto onto μ (hcard , hmem) =
+        PT.rec PT.squash₁ copied (onto μ)
+        where
+          copied : Σ[ y ∈ S ] ⟨ μ ≈ᴱ chk y ⟩
+                 → ⟨ (chk ω₁ ≈ᴱ μ) ⊔ (chk ω₁ ∈ᴱ μ) ⟩
+          copied (y , e) =
+            PT.rec PT.squash₁ decide (ord-compareᴳ ω₁ y (fst ω₁-card) ordy)
+            where
+              ordy : ⟨ CBᴳ.isOrdinal y ⟩
+              ordy = reflect-ordinal μ y e
+                       (subst ⟨_⟩ (sym (ordinal-reading μ)) (fst hcard))
+
+              inner : ⟨ ω₁ ≈ˢ y ⟩ ⊎ ⟨ y ∈ˢ ω₁ ⟩
+                    → ⟨ (chk ω₁ ≈ᴱ μ) ⊔ (chk ω₁ ∈ᴱ μ) ⟩
+              inner (inl⊎ h) =
+                ∣ inl⊎ (≈-trans (subst ⟨_⟩ (sym (chk-eq pos ω₁ y)) h) (≈-sym e)) ∣₁
+              inner (inr⊎ h) =
+                Empty.rec (snd hcard (chk w) hmem
+                  (injectable-congᴱ (chk y) μ (chk w) (≈-sym e)
+                    (chk-injectable y w (ω₁-members-countable y h))))
+
+              decide : ⟨ ω₁ ∈ˢ y ⟩ ⊎ ⟨ (ω₁ ≈ˢ y) ⊔ (y ∈ˢ ω₁) ⟩
+                     → ⟨ (chk ω₁ ≈ᴱ μ) ⊔ (chk ω₁ ∈ᴱ μ) ⟩
+              decide (inl⊎ h) =
+                ∣ inr⊎ (∈-congʳ (≈-sym e)
+                          (subst ⟨_⟩ (sym (chk-mem pos ω₁ y)) h)) ∣₁
+              decide (inr⊎ r) = PT.rec PT.squash₁ inner r

@@ -1,0 +1,64 @@
+{-# OPTIONS --cubical --safe --guardedness #-}
+
+-- K7 TRACK J, CONTROL 2. EXPECTED NON-ZERO EXIT, AND THE GOAL TYPE PRINTED IN
+-- THE ERROR IS THE RESULT.
+--
+-- WHAT THIS CONTROL ESTABLISHES: that the chain condition is not FREE even at
+-- the most degenerate presentation imaginable, and what exactly it costs there.
+--
+-- The carrier has no members, the order graph has no members, every antichain
+-- is empty and every hypothesis of CCC₂ is discharged by emptiness. The
+-- CONCLUSION is not. tt* stands where ⟨ injectable d w ⟩ is wanted and the
+-- compiler prints the goal, which is the truncated join over an injection CODE
+-- (CardinalBridge.agda:382-383). So the whole content of CCC₂ at the empty
+-- presentation is one injection code, exhibited rather than asserted;
+-- K7/Refuted.agda's ccc₂-at-empty-needs and ccc₂-at-empty-gives are the two
+-- halves of that equivalence.
+--
+-- The code is supplied by Track B's injectable-incl (K7/CardinalOrder.agda:
+-- 886-887) at Separation + Collection + Pairing, because the empty set is
+-- vacuously a subset of w, and K7/Refuted.agda's ccc₂-at-empty then proves the
+-- chain condition here outright. So this file's failure is not a gap: it is the
+-- measurement of the price, and the price is three ground axioms.
+--
+-- The contrast that matters is with the ONE-POINT presentation, where the same
+-- route is unavailable because the carrier is not a subset of w, and where
+-- CCC₂ is therefore not provable at all. That is the refutation of Track F's
+-- header sentence, and this control is what makes the difference between the
+-- two instances visible as a type rather than as a claim.
+
+open import Base.Prelude
+open import Base.Truth
+open import FOL.ZFStructure using ( ZFStructure )
+import OrdinaryProfile
+
+module K7.breaks.CCCAtEmptyFree
+  {ℓ} (𝒮 : ZFStructure (hPropAlgebra ℓ))
+  (ext   : OrdinaryProfile.Extensionality 𝒮)
+  (paths : (x y : ZFStructure.S 𝒮)
+         → (ZFStructure._≈ˢ_ 𝒮 x y) ≡ ((x ≡ y) , ZFStructure.isSetS 𝒮 x y))
+  (nul : ZFStructure.S 𝒮)
+  where
+
+open import FOL.ZFStructure using ( module hPropStructure )
+open import Cubical.Data.Unit using ( tt* )
+import Cubical.Data.Empty as Empty
+import K7.ChainConditions
+import K7.Refuted
+
+open TruthAlgebra (hPropAlgebra ℓ)
+open hPropStructure 𝒮
+
+module CC = K7.ChainConditions 𝒮 ext paths
+module RF = K7.Refuted 𝒮 ext paths
+
+module Try (nul-empty : (x : S) → ⟨ x ∈ˢ nul ⟩ → ⟨ ⊥ ⟩) where
+
+  open RF.AtEmptyPresentation nul nul-empty using ( antichain-at-empty )
+
+  -- Every hypothesis of the chain condition is discharged by emptiness. The
+  -- CONCLUSION is not, and tt* stands where ⟨ injectable d w ⟩ is wanted, so
+  -- the error prints the exact datum the package is missing.
+
+  ccc₂-at-empty-free : (o w : S) → ⟨ CC.CCC₂ᴵ nul o w ⟩
+  ccc₂-at-empty-free o w = CC.ccc-intro nul o w (λ d ds ac → tt*)

@@ -1,0 +1,5 @@
+Checking K7.breaks.ClassBound (/private/tmp/bedrock-k7-probes/K7/breaks/ClassBound.agda).
+/private/tmp/bedrock-k7-probes/K7/breaks/ClassBound.agda:103.31-41: error: [UnequalTerms]
+(S → Ω) !=< S
+when checking that the expression classBound has type S
+EXIT=42

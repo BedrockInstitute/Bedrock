@@ -1,0 +1,4 @@
+name: bedrock-k7-probes
+include: . reference-production/src
+depend: cubical
+flags: -WnoUnsupportedIndexedMatch
