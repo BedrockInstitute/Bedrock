@@ -35,7 +35,7 @@ class ExpressionHoverTests(unittest.TestCase):
         return json.loads(completed.stdout)
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
-    def test_mobile_gesture_candidates_follow_touched_name_geometry(self):
+    def test_mobile_gesture_candidates_follow_expression_boundaries(self):
         scenario = r'''
 var options = [
   {kind: "expression", source: "subst ⟨_⟩ (invEq (congEquiv e) q)", start: 80, end: 115},
@@ -53,6 +53,7 @@ console.log(JSON.stringify({
         self.assertEqual(self.run_gesture_scenario(scenario), {
             "right": [
                 "congEquiv e",
+                "invEq (congEquiv e)",
                 "invEq (congEquiv e) q",
                 "subst ⟨_⟩ (invEq (congEquiv e) q)",
                 "subst ⟨_⟩ (invEq (congEquiv e) q) _",
@@ -64,7 +65,7 @@ console.log(JSON.stringify({
         })
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
-    def test_mobile_gesture_candidates_keep_every_reachable_boundary(self):
+    def test_mobile_gesture_candidates_use_each_distinct_boundary_once(self):
         scenario = r'''
 var options = [
   {kind: "expression", source: "root partial", start: 70, end: 118},
@@ -90,9 +91,9 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
             "right": [
                 [100, 110],
                 [100, 112],
+                [90, 113],
                 [90, 115],
                 [80, 116],
-                [80, 118],
                 [70, 118],
                 [70, 120],
             ],
@@ -126,10 +127,9 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
         self.assertIn('else if (!touched && !popup.contains(event.target)', javascript)
         self.assertIn('if (codeBlock && !rangeCapableBlock) {', javascript)
         self.assertIn('function gestureCandidates(items, base, deltaX)', javascript)
-        self.assertIn(
-            'if (deltaX > 0 && item.end > base.end) sameStartByEnd.set(item.end, item);',
-            javascript,
-        )
+        self.assertIn('var chain = [];', javascript)
+        self.assertIn('item.start <= current.start && item.end >= current.end', javascript)
+        self.assertIn('var boundary = movingRight ? item.end : item.start;', javascript)
         self.assertIn('if (levelGesture.released) clearLevelGesture();', javascript)
         self.assertIn('var continuesActiveBlock = block && block === rangeBlock && options.length;',
                       javascript)

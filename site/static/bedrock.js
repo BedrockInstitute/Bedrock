@@ -756,51 +756,34 @@
     }
     function gestureCandidates(items, base, deltaX) {
       if (!base) return [];
-      var sameStartByEnd = new Map();
-      var outerByStart = new Map();
-      items.forEach(function (item) {
-        if (item.kind !== "expression"
-            || item.start > base.start || item.end < base.end) return;
-        if (item.start === base.start) {
-          if (deltaX > 0 && item.end > base.end) sameStartByEnd.set(item.end, item);
-          return;
+      var chain = [];
+      var current = base;
+      items.filter(function (item) {
+        return item.kind === "expression"
+          && item.start <= base.start && item.end >= base.end;
+      }).sort(function (left, right) {
+        var widthDifference = (left.end - left.start) - (right.end - right.start);
+        return widthDifference || right.start - left.start;
+      }).forEach(function (item) {
+        /* Source ranges should nest like matched brackets. Ignore crossing
+           ranges rather than letting them introduce an unreachable boundary. */
+        if (item.start <= current.start && item.end >= current.end) {
+          chain.push(item);
+          current = item;
         }
-        if (!outerByStart.has(item.start)) outerByStart.set(item.start, []);
-        outerByStart.get(item.start).push(item);
       });
-      var sameStart = Array.from(sameStartByEnd.values()).sort(function (left, right) {
-        return left.end - right.end;
+      var byBoundary = new Map();
+      var movingRight = deltaX > 0;
+      chain.forEach(function (item) {
+        var boundary = movingRight ? item.end : item.start;
+        if (movingRight ? boundary <= base.end : boundary >= base.start) return;
+        /* Coincident edges are one visual boundary. Because the chain runs
+           inside-out, the last node at that edge is the one being entered. */
+        byBoundary.set(boundary, item);
       });
-      var outerGroups = Array.from(outerByStart.entries()).sort(function (left, right) {
-        return right[0] - left[0];
+      return Array.from(byBoundary.values()).sort(function (left, right) {
+        return movingRight ? left.end - right.end : right.start - left.start;
       });
-      var outer = [];
-      var rightEdge = sameStart.length
-        ? sameStart[sameStart.length - 1].end : base.end;
-      var enteredOuter = false;
-      outerGroups.forEach(function (entry) {
-        var byEnd = new Map();
-        entry[1].forEach(function (item) {
-          if (item.end >= rightEdge) byEnd.set(item.end, item);
-        });
-        var enclosing = Array.from(byEnd.values()).sort(function (left, right) {
-          return left.end - right.end;
-        });
-        if (!enclosing.length) return;
-        /* The nearest outer application completes the call containing the
-           touched name. Farther out, a rightward gesture follows every new
-           right edge, including intermediate applications such as
-           `subst P path` before `subst P path value`. A leftward gesture keeps
-           selecting the completed spine at each new left edge. */
-        var additions = deltaX > 0 && enteredOuter
-          ? enclosing : [enclosing[enclosing.length - 1]];
-        additions.forEach(function (item) {
-          outer.push(item);
-          rightEdge = item.end;
-        });
-        enteredOuter = true;
-      });
-      return sameStart.concat(outer);
     }
     function applyLevelGesture() {
       if (!levelGesture || !levelGesture.activated || !options.length
