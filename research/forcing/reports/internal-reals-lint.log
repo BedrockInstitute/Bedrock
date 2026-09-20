@@ -1,0 +1,12 @@
+/opt/homebrew/bin/python3.11 scripts/gate/lint-prose.py --check
+/opt/homebrew/bin/python3.11 scripts/gate/lint-agda.py --check
+/opt/homebrew/bin/python3.11 scripts/gate/check-glossary.py --check
+/opt/homebrew/bin/python3.11 scripts/gate/check-fences.py --check
+check-fences: clean (122 masters, run threshold 3)
+/opt/homebrew/bin/python3.11 scripts/gate/check-reading-order.py
+check-reading-order: clean (121 chapters; Landmarks preview)
+/opt/homebrew/bin/python3.11 scripts/site/reading_routes.py --check
+reading-routes: clean (10 routes; 121 chapters)
+/opt/homebrew/bin/python3.11 scripts/gate/check-chapter-framework.py
+chapter-framework: 122 chapters, 713 titles, 0 errors
+/opt/homebrew/bin/python3.11 scripts/site/weave-i18n.py --check

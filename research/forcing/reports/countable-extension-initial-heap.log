@@ -1,0 +1,12 @@
+Checking K11.CountableExtension (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K11/CountableExtension.agda).
+    Checking K9.PairNames (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/PairNames.agda).
+   Checking K10.CheckedInjection (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CheckedInjection.agda).
+   Checking K9.RealValues (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/RealValues.agda).
+     Checking K9.GraphNames (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/GraphNames.agda).
+    Checking K9.GraphInjection (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/GraphInjection.agda).
+   Checking K9.Theorem (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K9/Theorem.agda).
+  Checking K10.GenericContradiction (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/GenericContradiction.agda).
+ Checking K10.CohenTheorem (/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0/research/forcing/active/K10/CohenTheorem.agda).
+agda: Heap exhausted;
+agda: Current maximum heap size is 8589934592 bytes (8192 MB).
+agda: Use `+RTS -M<size>' to increase it.

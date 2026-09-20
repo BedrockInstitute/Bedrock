@@ -3,480 +3,504 @@
     "source": "CheckRecursion.agda",
     "sha256": "6dbc0895c7e288d59f27e9fe0160977a29e8b0169978911ce8a98498213d3cc0",
     "exit": 0,
-    "log": "reports/weighted-check-regression/CheckRecursion.agda.log"
+    "log": "reports/internal-reals-regression/CheckRecursion.agda.log"
   },
   {
     "source": "InternalCheck.agda",
     "sha256": "03ca8a920b6e3d8ae04d7e7fc6af514cbfbbb1b642d0b142d9e7e5f64e8ad82f",
     "exit": 0,
-    "log": "reports/weighted-check-regression/InternalCheck.agda.log"
+    "log": "reports/internal-reals-regression/InternalCheck.agda.log"
   },
   {
     "source": "WeightedCheckRecursion.agda",
     "sha256": "82d655757a6d4564c8399305bc1e4b5fcd6abefabdff3037e694e590ed2e71d0",
     "exit": 0,
-    "log": "reports/weighted-check-regression/WeightedCheckRecursion.agda.log"
+    "log": "reports/internal-reals-regression/WeightedCheckRecursion.agda.log"
   },
   {
     "source": "InternalWeightedCheck.agda",
     "sha256": "3de12180ca7430785200c57635c68bd9a330fbd400f3a728fc9c1b517015e8b4",
     "exit": 0,
-    "log": "reports/weighted-check-regression/InternalWeightedCheck.agda.log"
+    "log": "reports/internal-reals-regression/InternalWeightedCheck.agda.log"
   },
   {
     "source": "K9/NameGround.agda",
     "sha256": "c93df2e4190c844a3237195796e55d9affc3882f3235ad4dea81671bce6fd504",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K9_NameGround.agda.log"
+    "log": "reports/internal-reals-regression/K9_NameGround.agda.log"
+  },
+  {
+    "source": "InternalCohenReals.agda",
+    "sha256": "530ed9461913bcf077a365fdc0df95f52f63b510fdc1c43d86c090177ccab456",
+    "exit": 0,
+    "log": "reports/internal-reals-regression/InternalCohenReals.agda.log"
+  },
+  {
+    "source": "K9/RealNames.agda",
+    "sha256": "c651ef5e6806dc6eafa2bc4706bf90f38388939cd1f3af91f51cfbd2808d65e9",
+    "exit": 0,
+    "log": "reports/internal-reals-regression/K9_RealNames.agda.log"
+  },
+  {
+    "source": "K9/PairNames.agda",
+    "sha256": "44f5048b9d86472a8c4bd27386155972e5c274d8d1b11d1d4ad031da61e744ca",
+    "exit": 0,
+    "log": "reports/internal-reals-regression/K9_PairNames.agda.log"
   },
   {
     "source": "K11/CohenGeneric.agda",
     "sha256": "30af72c4daa44938eb2459c5886314d4ebc8f7c66084863c9c914279947e2b2d",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K11_CohenGeneric.agda.log"
+    "log": "reports/internal-reals-regression/K11_CohenGeneric.agda.log"
   },
   {
     "source": "K9/BooleanSupport.agda",
     "sha256": "bffe3ace8ff374051b23632b55964d95d0b34fd5c2b1e53d14b6e57e895ab38c",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K9_BooleanSupport.agda.log"
+    "log": "reports/internal-reals-regression/K9_BooleanSupport.agda.log"
   },
   {
     "source": "K10/CohenCompile.agda",
     "sha256": "88fb50f6755f320eeed4179ab2af50c474e0f5862dfc1288b2399e4d5d96e6c4",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenCompile.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenCompile.agda.log"
   },
   {
     "source": "K10/CohenValSeam.agda",
     "sha256": "b909ff1ab7f5d2816b562f0ec584b495e18de0a2b7642c0c2e49e3c046dc12e5",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenValSeam.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenValSeam.agda.log"
   },
   {
     "source": "K10/CohenPairUnion.agda",
     "sha256": "3f78319aa7e3611b19bdb606fbedd54180e6a9c2d31613b2d0758f168eb43bec",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenPairUnion.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenPairUnion.agda.log"
   },
   {
     "source": "K10/CohenZFC.agda",
     "sha256": "f8bd867e3eed022b42faf95b1ab7d04841cc4f27070abcbe44a46d8ed63a72a3",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenZFC.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenZFC.agda.log"
   },
   {
     "source": "K10/CohenBooleanCands.agda",
     "sha256": "abb1e8214b2122b499981c86b3206e88df9e08e59f35b7966f8ea170ed0f1300",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanCands.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanCands.agda.log"
   },
   {
     "source": "K10/CohenBooleanSubset.agda",
     "sha256": "b07b0d0277a81bfb9a049bf264de7619bf19b83779ce8377495f6dcaf5df752f",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanSubset.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanSubset.agda.log"
   },
   {
     "source": "K10/CohenNameIntro.agda",
     "sha256": "a71ad22a96aa62b69df5d051d9a03e540e0521b5fa773d66d96f505c7d221be2",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenNameIntro.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenNameIntro.agda.log"
   },
   {
     "source": "K10/CohenBooleanPower.agda",
     "sha256": "d623e5845915efa4441c1b3206b30f098dd5023652c26edbbd56fd13bd1ac296",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanPower.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanPower.agda.log"
   },
   {
     "source": "K10/CohenBooleanPowerMem.agda",
     "sha256": "3459a6c81d749baac553aca0beb2f672f47f0bae97bbb65e12c62f6ff98148f9",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanPowerMem.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanPowerMem.agda.log"
   },
   {
     "source": "K10/CohenBooleanNamed.agda",
     "sha256": "6664ffde6b1825f1cba74e9de1538c768948676953e5b5b64df5beae1054b97b",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanNamed.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanNamed.agda.log"
   },
   {
     "source": "K10/CohenBooleanRename.agda",
     "sha256": "faa2a7a580fea16209170b2d7e2ca07923d73bab0d05c9b1eb4ebf1102a6e068",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanRename.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanRename.agda.log"
   },
   {
     "source": "K10/CohenBooleanCheckMem.agda",
     "sha256": "e4cdd32b8da8dcbc91097c3d0283b61e85b5d135787520c690b2d4b59d7f2bf1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanCheckMem.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanCheckMem.agda.log"
   },
   {
     "source": "K10/CohenBooleanSubst.agda",
     "sha256": "c24ee1ff9c32816d5d42bb93cae23509e2aac36b1080aa748c48275ce16d3be8",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanSubst.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanSubst.agda.log"
   },
   {
     "source": "K10/CohenBooleanDelta0.agda",
     "sha256": "c09ef6eb28c668328909922873adc98b5a7f28593d217cf41b949eec97ec7a22",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanDelta0.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanDelta0.agda.log"
   },
   {
     "source": "K10/CohenBooleanInductive.agda",
     "sha256": "5f116e0eacb58246d151b2b452be5e71c65466e0cb3d6d55d653213be7ab9a96",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInductive.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInductive.agda.log"
   },
   {
     "source": "K10/CohenBooleanSuccApply.agda",
     "sha256": "b82b87c7ed1463ac165f28d7faba4f7156a0bf3e6cc7951d3b3a3edc3d4beb5b",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanSuccApply.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanSuccApply.agda.log"
   },
   {
     "source": "K10/CohenBooleanInductiveOmega.agda",
     "sha256": "3e93c96c0814fa9c97e406be3862cb2b380a8b9ab7097dce2ddd344bc8d8d01c",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInductiveOmega.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInductiveOmega.agda.log"
   },
   {
     "source": "K10/CohenBooleanLeastEmpty.agda",
     "sha256": "be55a186ea5037e2905105191dce35d2dcf449a222e9d2db395b5078151c6335",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanLeastEmpty.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanLeastEmpty.agda.log"
   },
   {
     "source": "K10/CohenBooleanLeastSucc.agda",
     "sha256": "fe596dceecf1901691eb83b2a5121548f5aa505aacc41b1a10848da7c9eda516",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanLeastSucc.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanLeastSucc.agda.log"
   },
   {
     "source": "K10/CohenBooleanLeastAll.agda",
     "sha256": "020ea1134e48d1c8e6c60717dfe94a69f003126bb57b22be0f50ee993f8a2bfb",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanLeastAll.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanLeastAll.agda.log"
   },
   {
     "source": "K10/CohenBooleanOmegaLeast.agda",
     "sha256": "b5f40d4f98789296766156345ff47aafbcba55e17bbe6737fea3cb1b306258f0",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanOmegaLeast.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanOmegaLeast.agda.log"
   },
   {
     "source": "K10/CohenBooleanWk1.agda",
     "sha256": "50bcd8b51f3eddd3e0ff03e7248b8fecb8d3d0f5fcb56e31e2fdcfe8d2b33d14",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanWk1.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanWk1.agda.log"
   },
   {
     "source": "K10/CohenBooleanOmegaTop.agda",
     "sha256": "246605a84384b0488dcbae763c1ba07b27eb05584f1a0997b8f60dcc0403b527",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanOmegaTop.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanOmegaTop.agda.log"
   },
   {
     "source": "K10/CohenBooleanOmegaSrc.agda",
     "sha256": "c38703e1416c0bb655cff0def3453e5ed4031442bc9ffe1b5e643a9bfe283c8b",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanOmegaSrc.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanOmegaSrc.agda.log"
   },
   {
     "source": "K10/CohenBooleanOmegaEq.agda",
     "sha256": "cdd918c45e1098d33e65347b6b5b9c1041589729d443e43932d3daae45854a61",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanOmegaEq.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanOmegaEq.agda.log"
   },
   {
     "source": "K10/CohenBooleanPowerSrc.agda",
     "sha256": "4137aeb9a024492c9a75055cded4b0cd0eda8d72ce7566d949a1f47a02d9a030",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanPowerSrc.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanPowerSrc.agda.log"
   },
   {
     "source": "K10/CohenBooleanPowerUnfold.agda",
     "sha256": "3d2c03277599f71072760cf13ef8edeab6ddc4cbfa9caa1764808a16d374666b",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanPowerUnfold.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanPowerUnfold.agda.log"
   },
   {
     "source": "K10/CohenBooleanPowerWeight.agda",
     "sha256": "5fa09d9017e2733b1771336e53c32fad2fe56fbad3777028497832cf79e81785",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanPowerWeight.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanPowerWeight.agda.log"
   },
   {
     "source": "K10/CohenBooleanSubsetVal.agda",
     "sha256": "8ddc7a2127a2b37590d94896992a20ccfdfd09a2df6e6c45a018d7bc60e6b93c",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanSubsetVal.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanSubsetVal.agda.log"
   },
   {
     "source": "K10/CohenBooleanPowerSub.agda",
     "sha256": "76af509418f33595c3b5fde55ecc4c8fb47cb19bf2e2eb107be6f8bcd57a91f1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanPowerSub.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanPowerSub.agda.log"
   },
   {
     "source": "K10/CohenBooleanMiximal.agda",
     "sha256": "b9b50ec318d2ba41b47725de4f0fe5b898f59fdb48bc942442f6dd42e01f8d3a",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanMiximal.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanMiximal.agda.log"
   },
   {
     "source": "K10/CohenBooleanMiximalMem.agda",
     "sha256": "3da46bdbbc4b0d4cc2724f3099630da7c88d518949a3be92938b0499054f82bd",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanMiximalMem.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanMiximalMem.agda.log"
   },
   {
     "source": "K10/CohenBooleanMiximalCover.agda",
     "sha256": "7f5caf4e821e6e312bcd22ac01fae26e6c05154586df887a41934adadb8ce94c",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanMiximalCover.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanMiximalCover.agda.log"
   },
   {
     "source": "K10/CohenBooleanMiximalApprox.agda",
     "sha256": "41f54edb1cef5c42645065c54b4660464e9d575307c954d2952a392def270301",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanMiximalApprox.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanMiximalApprox.agda.log"
   },
   {
     "source": "K10/CohenBooleanSubsetLe.agda",
     "sha256": "ebf689b7bdd92dda9266287092cfb7468f912668c7a0f19d7a97d28aa9c70fb7",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanSubsetLe.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanSubsetLe.agda.log"
   },
   {
     "source": "K10/CohenBooleanMiximalLeft.agda",
     "sha256": "0d5dd1e278c94114a1dd482582118ab87b3a7f3c008da673bfbf9674ef26beae",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanMiximalLeft.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanMiximalLeft.agda.log"
   },
   {
     "source": "K10/CohenBooleanSubsetMem.agda",
     "sha256": "a0bb37d8d58e2c00585a886be2b8e3a5085720cf4c86c869200b88c23c5293e9",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanSubsetMem.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanSubsetMem.agda.log"
   },
   {
     "source": "K10/CohenBooleanInnerBot.agda",
     "sha256": "2fc51dbabcae3e0690537937fe6353a9bd8e73a8b971b3edab6a03ac1261a3c8",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInnerBot.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInnerBot.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjBot.agda",
     "sha256": "0e613077c46d46230093fd690b948ef0ea5d319c80724d78ad05c2fb92a4f7e7",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjBot.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjBot.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjWx.agda",
     "sha256": "5be3b59e4f3881cf7d2771a21a2ba5adf91de10d122a88f21a75d8a6dcfa7267",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjWx.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjWx.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjSgl.agda",
     "sha256": "23136dc09ec7bbccde05d0d445da0b37cd8b4887a6e4712f07dec98c663e1b8f",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjSgl.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjSgl.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjSglCong.agda",
     "sha256": "de3afe30da9ea1963bb55ebbadd960275d32c99becd6b2474f72d8e88cb9a149",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjSglCong.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjSglCong.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjKPairFwd.agda",
     "sha256": "b514355d13d5d4f0655cbef9e689eedae81a8f13dc52cf1d1778d23a7fc5e4d1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjKPairFwd.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjKPairFwd.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjSglUnique.agda",
     "sha256": "c7f9bc928f99b4d2216ab950dc53ba46d6abc0a63e9e4a5ed5d14001abbb8d50",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjSglUnique.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjSglUnique.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjKPairRev.agda",
     "sha256": "6ca2e6a605097c206fc1d7309a39b452c3df4f9dbd06b69a1b4c14ac95eb13d6",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjKPairRev.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjKPairRev.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjForce.agda",
     "sha256": "5c4fdedfb07c96fda963c85edaeb5d883fd43011f0c74d6fc58f4d29b078dcac",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjForce.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjForce.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjCcc.agda",
     "sha256": "dafdcc9534eb2f19a1fa0500c851cf523fc8bada4a375ccaf011fbc92891a8dd",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjCcc.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjCcc.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjFiber.agda",
     "sha256": "758b9d3ce914346553e18d2875ccb2bd2d2182d28bc962daf86b7dd3ef2a24d9",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjFiber.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjFiber.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjMem.agda",
     "sha256": "e94acd947cd8ca9423b429523e83f8c2810a2353b073eb378f7826e92aa1e979",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjMem.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjMem.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjCover.agda",
     "sha256": "f4a83bc555881a028b8f8c841b35b4503f3b32bbe33824d8f92cb264596d62b4",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjCover.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjCover.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjCheck.agda",
     "sha256": "fba608ed89f96c5906cbc342d3551721aad8732ce75455dea7b03960c49952be",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjCheck.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjCheck.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjMaps.agda",
     "sha256": "bea5ebe9fc7810e55219231e6a186372cefd1ed4d2498157fc5c2f0dbb994ad9",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjMaps.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjMaps.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjRn.agda",
     "sha256": "95e423ef5fd4963c7324ca4437c1aae6d374b60fff52fc09abaf8b56651ef5f1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjRn.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjRn.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjInner.agda",
     "sha256": "9ede1c7290b5d9838cae18f1d55c27e5ec4248b8c8a625f37ea0c4e23c085ce1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjInner.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjInner.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjTriple.agda",
     "sha256": "cbaf413a825042263c12b60e78b46b02553cf8bd78749641b8c5f1273b53b724",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjTriple.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjTriple.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjAtom.agda",
     "sha256": "4175f71d9d8380df8aeb9523c72c17710451268a8bc56700a3e81c323077d494",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjAtom.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjAtom.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjPipe.agda",
     "sha256": "ee8a90f315394254b34986b1e0b22cccc6da32b6e27da6796de7b9fbfa4789f1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjPipe.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjPipe.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjCheckτ.agda",
     "sha256": "1463b0f04f74ef3ddd208c39264c2014b99e48495abd9f8c2af9202f6cfe9360",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjCheckτ.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjCheckτ.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjHit.agda",
     "sha256": "3812900042b9936ae8aa88a2895a1e4fb83f68c150a561af854a42acbb935a39",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjHit.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjHit.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjSelect.agda",
     "sha256": "bf7b95c77fd0dff2205ccda3aa4e6b1348ae529dba869618cf7f8fe3049dd821",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjSelect.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjSelect.agda.log"
   },
   {
     "source": "K10/CohenBooleanInjGlue.agda",
     "sha256": "32caf06b8c52a5a16bb6b263667cdfcbe78e4de689767fa5241d9db813c7c900",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanInjGlue.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanInjGlue.agda.log"
   },
   {
     "source": "K10/CohenBooleanNotCH.agda",
     "sha256": "6879e03af383f430a3c5668cf40acdd0c102531e2060443899008f6c85d2a678",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanNotCH.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanNotCH.agda.log"
   },
   {
     "source": "K10/CohenBooleanOmegaPart.agda",
     "sha256": "d9105408173cd65490f741e7836a182f0a9c8adbdd73b54f7a07801868a90515",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanOmegaPart.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanOmegaPart.agda.log"
   },
   {
     "source": "K10/CohenBooleanPowerTop.agda",
     "sha256": "ba5460f0a2d3827b1a2e135ef1d8bf62d5ac2d0350cc4f0c96aa8dc3ac0e7022",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanPowerTop.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanPowerTop.agda.log"
   },
   {
     "source": "K10/CohenBooleanCHBot.agda",
     "sha256": "80187e01fb7abc5a517605ad63ca503d214601e32e7b433040cda896d46b24e1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenBooleanCHBot.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenBooleanCHBot.agda.log"
   },
   {
     "source": "K10/CohenTheorem.agda",
     "sha256": "70e7a3b7fd48b95b075a93b7e7cb959ffe72dd92f0ed7ef3f42d1946aa84d91b",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenTheorem.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenTheorem.agda.log"
   },
   {
     "source": "K10/CohenCorrespondence.agda",
     "sha256": "8937eeea018e3125d11664689980635aade07b71d74825067a58388f2123b0b1",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K10_CohenCorrespondence.agda.log"
+    "log": "reports/internal-reals-regression/K10_CohenCorrespondence.agda.log"
   },
   {
     "source": "K11/CountableCohen.agda",
     "sha256": "d0663bd994a742d433a1a81ec0209dd5036013268103e8f9d6b709a6549ed21d",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K11_CountableCohen.agda.log"
+    "log": "reports/internal-reals-regression/K11_CountableCohen.agda.log"
   },
   {
     "source": "K11/Corollary.agda",
     "sha256": "421edc0b9a0805adfef36491dbd00f9f46fb5dfe3f8e7fd688c666228e86a956",
     "exit": 0,
-    "log": "reports/weighted-check-regression/K11_Corollary.agda.log"
+    "log": "reports/internal-reals-regression/K11_Corollary.agda.log"
+  },
+  {
+    "source": "K11/CountableExtension.agda",
+    "sha256": "32003dddc9ab141f479396323305fe8c30f34be24a607067bffe2ef6ff5f8bd1",
+    "exit": 0,
+    "log": "reports/internal-reals-regression/K11_CountableExtension.agda.log"
   },
   {
     "source": "Controls/Negative/MissingFunction.agda",
     "sha256": "cdd2d06097a6fdb992d297af37a8f9f8966e90ed8a23e650d02100f4bd795a29",
     "exit": 42,
-    "log": "reports/weighted-check-regression/MissingFunction.log"
+    "log": "reports/internal-reals-regression/MissingFunction.log"
   },
   {
     "source": "Controls/Negative/MissingValueFunction.agda",
     "sha256": "de5e5805c386279cdc61e8154b11586deb2abdafbaf0ac4b5aa12df178e1aa3e",
     "exit": 42,
-    "log": "reports/weighted-check-regression/MissingValueFunction.log"
+    "log": "reports/internal-reals-regression/MissingValueFunction.log"
   },
   {
     "source": "Controls/Negative/MissingCheckReading.agda",
     "sha256": "5c6f16f6392990c8a47b5b2b601a22109f30102007be8268c508929dcb7d9618",
     "exit": 42,
-    "log": "reports/weighted-check-regression/MissingCheckReading.log"
+    "log": "reports/internal-reals-regression/MissingCheckReading.log"
   },
   {
     "source": "Controls/Negative/MissingOnto.agda",
     "sha256": "12767ff72d5f1b70111d297c672ddad3626d5b832699af693a8de3bba0556a2f",
     "exit": 42,
-    "log": "reports/weighted-check-regression/MissingOnto.log"
+    "log": "reports/internal-reals-regression/MissingOnto.log"
   }
 ]

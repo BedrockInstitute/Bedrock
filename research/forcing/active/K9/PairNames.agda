@@ -32,7 +32,6 @@ private
   module Union = Ground.Union
   module C = Ground.C
   module K = Ground.K
-  module Image = Ground.Image
   module Check = Ground.Check
 
 private
@@ -59,7 +58,7 @@ singleNm σ = singleCode (fst σ) , single-name σ
 
 opaque
   pairLayers : S → S → S
-  pairLayers m n = Image.imageOn (GS.pairOf m n) Check.spread
+  pairLayers m n = GS.pairOf (Check.spread m) (Check.spread n)
 
   pairCode : S → S → S
   pairCode m n = Union.bigUnion (pairLayers m n)
@@ -73,31 +72,21 @@ opaque
     forward : ⟨ e ∈ˢ pairCode m n ⟩ → ⟨ target ⟩
     forward he = PT.rec (snd target)
       (λ { (u , hu , eu) → PT.rec (snd target)
-        (λ { (x , hx , ux) → PT.rec (snd target)
-          (λ { (inl xm) → ∣ inl (subst (λ z → ⟨ layer z e ⟩) (GS.≈→≡ xm)
-                (subst ⟨_⟩ (Check.spread-spec x e)
-                  (subst (λ z → ⟨ e ∈ˢ z ⟩) (GS.≈→≡ ux) eu))) ∣₁
-             ; (inr xn) → ∣ inr (subst (λ z → ⟨ layer z e ⟩) (GS.≈→≡ xn)
-                (subst ⟨_⟩ (Check.spread-spec x e)
-                  (subst (λ z → ⟨ e ∈ˢ z ⟩) (GS.≈→≡ ux) eu))) ∣₁ })
-          (GS.pairOf-out m n x hx) })
-        (subst ⟨_⟩ (Image.imageOn-spec (GS.pairOf m n) Check.spread u) hu) })
+        (λ { (inl eq) → ∣ inl (subst ⟨_⟩ (Check.spread-spec m e)
+                (subst (λ j → ⟨ e ∈ˢ j ⟩) (GS.≈→≡ eq) eu)) ∣₁
+           ; (inr eq) → ∣ inr (subst ⟨_⟩ (Check.spread-spec n e)
+                (subst (λ j → ⟨ e ∈ˢ j ⟩) (GS.≈→≡ eq) eu)) ∣₁ })
+        (GS.pairOf-out (Check.spread m) (Check.spread n) u hu) })
       (subst ⟨_⟩ (Union.bigUnion-spec (pairLayers m n) e) he)
 
     backward : ⟨ target ⟩ → ⟨ e ∈ˢ pairCode m n ⟩
     backward = PT.rec (snd (e ∈ˢ pairCode m n)) λ
       { (inl hm) → subst ⟨_⟩ (sym (Union.bigUnion-spec (pairLayers m n) e))
-          ∣ Check.spread m
-          , subst ⟨_⟩ (sym (Image.imageOn-spec (GS.pairOf m n) Check.spread
-              (Check.spread m)))
-              ∣ m , GS.pairOf-inˡ m n , ≈ˢ-refl (Check.spread m) ∣₁
-          , subst ⟨_⟩ (sym (Check.spread-spec m e)) hm ∣₁
+          ∣ Check.spread m , GS.pairOf-inˡ (Check.spread m) (Check.spread n) ,
+            subst ⟨_⟩ (sym (Check.spread-spec m e)) hm ∣₁
       ; (inr hn) → subst ⟨_⟩ (sym (Union.bigUnion-spec (pairLayers m n) e))
-          ∣ Check.spread n
-          , subst ⟨_⟩ (sym (Image.imageOn-spec (GS.pairOf m n) Check.spread
-              (Check.spread n)))
-              ∣ n , GS.pairOf-inʳ m n , ≈ˢ-refl (Check.spread n) ∣₁
-          , subst ⟨_⟩ (sym (Check.spread-spec n e)) hn ∣₁ }
+          ∣ Check.spread n , GS.pairOf-inʳ (Check.spread m) (Check.spread n) ,
+            subst ⟨_⟩ (sym (Check.spread-spec n e)) hn ∣₁ }
 
 pair-name : (σ τ : K.Name) → ⟨ K.IsName (pairCode (fst σ) (fst τ)) ⟩
 pair-name σ τ = Ground.entries-name (pairCode (fst σ) (fst τ)) λ e he →

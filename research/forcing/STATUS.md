@@ -5,7 +5,7 @@ gates, often with explicit capabilities. They do not establish the complete
 ordinary-model constructor. None of K0-K11 has been integrated into the current
 trilingual production tree by this preservation operation.
 
-The final continuation regression passes 76 positive endpoint modules and
+The final continuation regression passes 80 positive endpoint modules and
 four expected-failure controls. This is verified component progress, not
 completion of K10 or the full K11 integration contract.
 
@@ -21,8 +21,8 @@ completion of K10 or the full K11 integration contract.
 | K7 | Possible-value bounds and cardinal-preservation components | Local interface repair checked historically; consumers must supply the required functions/readings |
 | K8 | Internal Cohen finite maps, density and ccc | Historical isolated gate closed, 62 modules reported |
 | K9 | Set-coded family of distinct Cohen reals | Historical isolated gate closed, 19 modules reported; MemberImage and extension PowerSet remain explicit |
-| K10 | Singleton and full-weight internal check recursion, definable generic name, compiler, atomic agreement, reverse translation, Boolean subset/powerset components, conditional theorem | OPEN: final assumptions listed below |
-| K11 | Least-index construction, enumerated generic filter and carrier-enumeration corollaries | Generic construction exists; full K10 application/general API acceptance remains OPEN |
+| K10 | Singleton and full-weight internal check recursion, definable generic and real names, compiler, atomic agreement, reverse translation, Boolean subset/powerset components, conditional theorem | OPEN: final assumptions listed below |
+| K11 | Least-index construction, enumerated generic filter, carrier-enumeration corollaries and conditional K10 specialization | Generic construction and conditional assembly exist; ordinary-model acceptance inherits the OPEN K10 inputs |
 | K12-K15 | Roadmap only in this inventory | No completion claimed |
 
 The detailed historical reports and roadmap are readable in `notes/`; original
@@ -58,6 +58,11 @@ The standalone `K11.CountableCohen` interface removes that routing dependency an
 avoids Families and Accessibility. It uses the actual K8 empty condition and
 the checked enumeration-to-generic constructor. Both the new interface and
 the original `Corollary` consumer pass named Agda checks.
+`K11.CountableExtension` now connects the actual enumerated generic directly to
+`CohenTheorem.AtGeneric`, with no new genericity assumption. Its forwarded
+`WithPreservedCardinals` interface still requires all existing K10 extension
+axiom and cardinal-preservation inputs. This closes conditional assembly,
+not the full ordinary-model constructor.
 
 The current-source regression exposed a reversed equality transport in
 `K10.CohenBooleanInjKPairFwd.kpair-sgl-rev`, producing `4 != 2 of type ℕ`.
@@ -106,8 +111,20 @@ These three operations no longer need MemberImage; the broader module still
 exposes it for the other arbitrary-image consumers. See
 `reports/WEIGHTED-CHECK.md` for the exact assumptions and proof argument.
 
+`InternalCohenReals` now constructs the actual real names by Separation on the
+product of the check image of w and the condition carrier. The constructed
+check table supplies the formula's recursive values; its totality/uniqueness
+proofs discharge the interpretation. `real-graph` defines the entire real-name
+family and supplies its ordinary definable image. `K9.RealNames` uses this
+implementation, and its layer API uses singleton Cartesian products.
+`K9.PairNames` now constructs its pair of spread sets by ordinary Pairing,
+removing the image call from that finite operation. The standalone real-name
+supplier has no MemberImage parameter.
+
 The next image obligations concern recursive name translations and the actual
-indexed/real-name families. Their graphs must be constructed individually.
+indexed vertex family, combining check α with realCode α in an ordered name.
+IndexedNames still permits arbitrary host functions; its actual vertex graph
+must be supplied. See `reports/INTERNAL-COHEN-REALS.md`.
 
 The Boolean side has a separate issue: `K4.ValueSets.ValueSets.attain` covers
 every host function, whereas `ValueGraph` and `graph→valueSet` close one

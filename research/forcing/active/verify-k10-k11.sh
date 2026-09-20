@@ -27,6 +27,9 @@ for source in \
   WeightedCheckRecursion.agda \
   InternalWeightedCheck.agda \
   K9/NameGround.agda \
+  InternalCohenReals.agda \
+  K9/RealNames.agda \
+  K9/PairNames.agda \
   K11/CohenGeneric.agda \
   K9/BooleanSupport.agda \
   K10/CohenCompile.agda \
@@ -97,7 +100,8 @@ for source in \
   K10/CohenTheorem.agda \
   K10/CohenCorrespondence.agda \
   K11/CountableCohen.agda \
-  K11/Corollary.agda
+  K11/Corollary.agda \
+  K11/CountableExtension.agda
 do
   check_slots
   name=$(printf '%s' "$source" | tr '/' '_')

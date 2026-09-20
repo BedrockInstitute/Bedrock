@@ -176,3 +176,33 @@ name. `K11.CohenGeneric` and `K11.Corollary` omit Accessibility and MemberImage.
 Remaining arbitrary-image consumers and all open endpoint hypotheses are
 listed in `STATUS.md` and `WEIGHTED-CHECK.md`; none is claimed discharged by
 this regression.
+
+## Internal Cohen real names and countable extension
+
+* `sh active/verify-k10-k11.sh`: exit 0, 80 positive modules each exit 0;
+  four expected-failure controls each exit 42 with the required diagnostic.
+* Logs: `internal-reals-regression/`. `checks.json` records the 84 source
+  hashes, exits and log paths. This is an incremental regression, not a cold
+  benchmark. The guard retained the maximum of two machine-wide Agda processes;
+  every check used `GHCRTS="-A64m -I0 -M8g"`.
+* `InternalCohenReals`, migrated `K9.RealNames`, and finite `K9.PairNames`
+  passed named development checks and the full regression. The initial real-name
+  draft exposed distinct seed-dependent ordered-pair implementations; using the
+  recursive table's own pair witness fixed the interface without weakening it.
+* `K11.CountableExtension` initially exited 251 (8 GB heap exhausted). The
+  diagnostic is in `countable-extension-initial-heap.log`. Narrow module
+  exports preserved its actual generic supplier and forwarded theorem while
+  avoiding irrelevant module expansion. The retry passed at the same limit:
+  `countable-extension-narrow.log`. The final regression independently returned
+  exit 0 for the adapter.
+* `make lint PY=/opt/homebrew/bin/python3.11`: exit 0, log
+  `internal-reals-lint.log`. New modules retain --safe and no holes, postulates,
+  unsafe termination pragma or trust primitive.
+* A scoped read-only review checked the raw real-name formula, table and
+  coordinate pair distinction, bound, realGraph uniqueness, and finite pair
+  construction against their actual definitions. No mathematical defect found.
+
+No production source changed. The latest K11 specialization supplies its generic
+from the enumeration; it still forwards all K10 extension-axiom and
+cardinal-preservation inputs. Ordinary-model completion remains open as recorded
+in `INTERNAL-COHEN-REALS.md` and `STATUS.md`.
