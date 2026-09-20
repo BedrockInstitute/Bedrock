@@ -1,0 +1,1738 @@
+{
+  "source_worktree": "/Users/alsg/Agentic/Bedrock",
+  "target_branch": "research/forcing",
+  "target_base_commit": "d07a34bb968ae78631d5dbf4a7c297af3c981dfe",
+  "entries": [
+    {
+      "source": "dev/literature/bell-2005-boolean-valued-models.fulltext.md",
+      "sha256": "7485b6cf78378e4e02ff2c68a175b0c89c667f65002b6144f983ca127a382eb3",
+      "size": 434393,
+      "disposition": "existing-tracked-copy",
+      "destination": "dev/literature/bell-2005-boolean-valued-models.fulltext.md"
+    },
+    {
+      "source": "dev/literature/bell-2005-boolean-valued-models.pdf",
+      "sha256": "b90111f380286579104faeaa5c34bb5fd6b4bef071d4eb831f880f17d7f15082",
+      "size": 1190931,
+      "disposition": "existing-tracked-copy",
+      "destination": "dev/literature/bell-2005-boolean-valued-models.pdf"
+    },
+    {
+      "source": "dev/literature/bell-2005-route-reassessment-2026-09.md",
+      "sha256": "09aeefca2d4d3c951caebb837f28e2617c51446e7e742a824a4a1dd604251d08",
+      "size": 15341,
+      "disposition": "preserved-variant",
+      "destination": "research/forcing/reports/main-worktree-import/files/dev/literature/bell-2005-route-reassessment-2026-09.md",
+      "current_document": "dev/literature/bell-2005-route-reassessment-2026-09.md"
+    },
+    {
+      "source": "dev/literature/cohen-flypitch4-design-2026-09.md",
+      "sha256": "255a2e9a1f91bdea3bac7f8387c36c63b6465430aab68feed5165781f1673753",
+      "size": 20232,
+      "disposition": "preserved-variant",
+      "destination": "research/forcing/reports/main-worktree-import/files/dev/literature/cohen-flypitch4-design-2026-09.md",
+      "current_document": "dev/literature/cohen-flypitch4-design-2026-09.md"
+    },
+    {
+      "source": "dev/literature/cohen-implementation-roadmap-2026-09.md",
+      "sha256": "537ea02d507141b77eee49fa8e98db7a6669004ab4f80f1aea51b248098a11e1",
+      "size": 25773,
+      "disposition": "preserved-variant",
+      "destination": "research/forcing/reports/main-worktree-import/files/dev/literature/cohen-implementation-roadmap-2026-09.md",
+      "current_document": "dev/literature/cohen-implementation-roadmap-2026-09.md"
+    },
+    {
+      "source": "dev/literature/cohen-infrastructure-overlap-2026-09.md",
+      "sha256": "ea9868dde8c766f06562441ccc42df85e8460f5a50303d822ecb03364614a41e",
+      "size": 20122,
+      "disposition": "preserved-variant",
+      "destination": "research/forcing/reports/main-worktree-import/files/dev/literature/cohen-infrastructure-overlap-2026-09.md",
+      "current_document": "dev/literature/cohen-infrastructure-overlap-2026-09.md"
+    },
+    {
+      "source": "dev/literature/flypitch4-source-audit-2026-09.md",
+      "sha256": "b56b083a6fdb9df386dfa55920c7062d9d1c2787b99e99d602d24b2805c26e06",
+      "size": 11476,
+      "disposition": "existing-tracked-copy",
+      "destination": "dev/literature/flypitch4-source-audit-2026-09.md"
+    },
+    {
+      "source": "dev/literature/forcing-bedrock-interface-audit-2026-09.md",
+      "sha256": "55ac80b2b0233afb8c58bf3af12a89f6296d328e8289a4aac6fdd98ee43e4d50",
+      "size": 14650,
+      "disposition": "existing-tracked-copy",
+      "destination": "dev/literature/forcing-bedrock-interface-audit-2026-09.md"
+    },
+    {
+      "source": "dev/literature/forcing-formalizations-2026-09.md",
+      "sha256": "ddbafc4a232d16cf69415c710ec02f7859b7b6b806f95f31360a174a6c20aa38",
+      "size": 18201,
+      "disposition": "existing-tracked-copy",
+      "destination": "dev/literature/forcing-formalizations-2026-09.md"
+    },
+    {
+      "source": "dev/literature/forcing-geology-design-2026-09.md",
+      "sha256": "f987b37b6206fd5ef2dd8d33a1df75acd7835ed0e3fa64b6a17e9ea202d9f1b1",
+      "size": 50015,
+      "disposition": "preserved-variant",
+      "destination": "research/forcing/reports/main-worktree-import/files/dev/literature/forcing-geology-design-2026-09.md",
+      "current_document": "dev/literature/forcing-geology-design-2026-09.md"
+    },
+    {
+      "source": "dev/literature/ground-definability-proof-2026-09.md",
+      "sha256": "9424c9b9c9aaf26a7822472cef653018a81fc1d27bab15f2fbe0c4a2cb84ae69",
+      "size": 18791,
+      "disposition": "preserved-variant",
+      "destination": "research/forcing/reports/main-worktree-import/files/dev/literature/ground-definability-proof-2026-09.md",
+      "current_document": "dev/literature/ground-definability-proof-2026-09.md"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/CheckRecursion.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/InternalCheck.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanCHBot.agda.log",
+      "sha256": "4eabd77fde9812941b7b42c9aea8be56be4eb9085763ccaabf724d67335f5be2",
+      "size": 121,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanCHBot.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanCands.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanCheckMem.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanDelta0.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInductive.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInductiveOmega.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjAtom.agda.log",
+      "sha256": "b8480226f2f806db050837d1a9aaa89f3e4e2bfb7149033d57894aac4cc02dea",
+      "size": 125,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjAtom.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjBot.agda.log",
+      "sha256": "c0edae1934b2b4d3f0aa180c92a441b18084f6cf1a5430618c9354866ee6b792",
+      "size": 123,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjBot.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjCcc.agda.log",
+      "sha256": "0ef5bb9f0a20b3ae7f55f02b7b5207005f03e1c0c0d40b9fa979e2872be3c91d",
+      "size": 123,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjCcc.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjCheck.agda.log",
+      "sha256": "4ba6f7e2ab9dbdf6c8a19ad64748283faf422b8f34fe60fae987e5da2647599b",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjCheck.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjCheckτ.agda.log",
+      "sha256": "3c5bdec4f39362d9bf261d51e26f692ae4539bba7a5f6b14cd67dcf484d79c2f",
+      "size": 131,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjCheckτ.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjCover.agda.log",
+      "sha256": "c1dba6cdd6550bf2ca3cce1ef2e5efa26e10054ab560b6a3872f22aa14db6963",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjCover.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjFiber.agda.log",
+      "sha256": "1f6562ac24a04952dc02c340a86cbb1ba275915bc6371cf32e2586868a7bc23f",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjFiber.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjForce.agda.log",
+      "sha256": "8900517da35308e37fb537ed81e9157eb00031900797ec4d4085756c9eb03e3a",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjForce.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjGlue.agda.log",
+      "sha256": "b63fe1d0ada778431a1225cb67961c36087c5b187ba850a443aec029d953293d",
+      "size": 125,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjGlue.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjHit.agda.log",
+      "sha256": "a1137b799cf5b2d13c93fbc1799843477d634f9060fa3f6ae0079462b32edef1",
+      "size": 123,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjHit.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjInner.agda.log",
+      "sha256": "1b2b98e5ee4178d3294efa926ac5e25d5c4bf0960cf3159b933f8785d6717e8d",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjInner.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjKPairFwd.agda.log",
+      "sha256": "935cc500b27c8f0839e8bbc66daa34b9d2377dbbd0f2301dcf12b869d7737215",
+      "size": 133,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjKPairFwd.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjKPairRev.agda.log",
+      "sha256": "b7b0fe09c9ad759e60820ba5ef06b718733dcd32de44fc033ec3258b7009c316",
+      "size": 133,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjKPairRev.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjMaps.agda.log",
+      "sha256": "fe757324526bdca3ca0dce385806961416d5114a499a64715112591915dcf282",
+      "size": 125,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjMaps.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjMem.agda.log",
+      "sha256": "9e7ffe425e152488115ae4cc8af71c63ffc35c97f29de3b202bd3e470579b762",
+      "size": 123,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjMem.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjPipe.agda.log",
+      "sha256": "fc19ca5fcabf20deca5475ac4857ad8da60666c2d8156e0b2d576bc8d3346eb1",
+      "size": 125,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjPipe.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjRn.agda.log",
+      "sha256": "c3cbea0556a2ada4299a3338ba00ae7020024d986d99da44a8376e54be42a866",
+      "size": 121,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjRn.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjSelect.agda.log",
+      "sha256": "db47b8695cf72c3e89cf688a82d92d932291f312eb750fedf08e1ac6b11fc299",
+      "size": 129,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjSelect.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjSgl.agda.log",
+      "sha256": "a853d5a7219e5c6400541e36fa2d1f390a755c7ebda71031a8a481217148b7c7",
+      "size": 123,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjSgl.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjSglCong.agda.log",
+      "sha256": "0a4513561eee486895ff46fa773ee317b50e9e826ad3ab9913f9add057862d64",
+      "size": 131,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjSglCong.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjSglUnique.agda.log",
+      "sha256": "e49a8f863226fa0f3560f7dcf6786992be39229be51796b689d3ade1c48dba62",
+      "size": 135,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjSglUnique.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjTriple.agda.log",
+      "sha256": "8ffaca587deb6932c289b3dbcfedf0cc7e4dbbf6dc1017e018232929496a9e4f",
+      "size": 129,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjTriple.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInjWx.agda.log",
+      "sha256": "13c0d6830395d29ddfe4f24ceb840608865d34d099b630dc6e472f92b5cee165",
+      "size": 121,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInjWx.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanInnerBot.agda.log",
+      "sha256": "3caafcf1c66579a780e81df79cd0350367933d49141876a2bf82585e885eacda",
+      "size": 556,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanInnerBot.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanLeastAll.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanLeastEmpty.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanLeastSucc.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanMiximal.agda.log",
+      "sha256": "ceeb6328baa0ce1a879e020be4690500b0e2b56834bfc99b40b84e932a3cf517",
+      "size": 125,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanMiximal.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanMiximalApprox.agda.log",
+      "sha256": "2102a62315648135f834f8a50427d830bb4972429b0d30d71730190e25b522f8",
+      "size": 137,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanMiximalApprox.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanMiximalCover.agda.log",
+      "sha256": "bca7b4e4d5df93b2c563f3be086856c65a1f5aa0263a541afc0b6fccabd99ab7",
+      "size": 135,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanMiximalCover.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanMiximalLeft.agda.log",
+      "sha256": "64abd686b91e56b75d950d0bdd4c3e5b30fdc14bb363fda068e537ee62049aaf",
+      "size": 133,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanMiximalLeft.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanMiximalMem.agda.log",
+      "sha256": "2804d205ce6822381e91fc4580e6bf9073bbe27d70d4c409ccac7cb5efebb9f6",
+      "size": 131,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanMiximalMem.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanNamed.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanNotCH.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanOmegaEq.agda.log",
+      "sha256": "6e51f2ddc76a2f7918a79a7dccab758d8862b9efa783a60e0f075983285cbe43",
+      "size": 125,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanOmegaEq.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanOmegaLeast.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanOmegaPart.agda.log",
+      "sha256": "60bb36193830cc9dea3092b21f949c080056451a8f0154ab58776beaf424536e",
+      "size": 129,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanOmegaPart.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanOmegaSrc.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanOmegaTop.agda.log",
+      "sha256": "18e22e11c25c3a1f6b6325680eaeb89c9d5ef7a22ce15dda1f961a10873e72d2",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanOmegaTop.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanPower.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanPowerMem.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanPowerSrc.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanPowerSub.agda.log",
+      "sha256": "cc4472bc9781ee3832fc10be7855a3339567265e48f804a4f6bd84c9c0403a0a",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanPowerSub.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanPowerTop.agda.log",
+      "sha256": "c9cbd2511498c5041ec2ecb9484110d8bb0255881047dcc7c6599154d7f71fe0",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanPowerTop.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanPowerUnfold.agda.log",
+      "sha256": "d4af49b27f186078be3f35fa98822f9da95afad3ff0a2497836ffced52e6651c",
+      "size": 133,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanPowerUnfold.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanPowerWeight.agda.log",
+      "sha256": "f0f8ce7f32cc377318a09eaa80a15c8e5e4012b8e83a8b3bea9b4329bc90ca0a",
+      "size": 133,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanPowerWeight.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanRename.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanSubset.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanSubsetLe.agda.log",
+      "sha256": "32ae8b85dbf812fd5f9ceee0aeb7193b46f07c6ac798c39c8a5b653f425201cb",
+      "size": 127,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanSubsetLe.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanSubsetMem.agda.log",
+      "sha256": "74ac6e77da300cac05b55ad06a8db001fbf7145da9057f919dd65672423d7d21",
+      "size": 129,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanSubsetMem.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanSubsetVal.agda.log",
+      "sha256": "9f468e8b4248c0c6ec421dd854fb87eea9a8f71d840c34927566e11bb2fa9c1a",
+      "size": 129,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenBooleanSubsetVal.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanSubst.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanSuccApply.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenBooleanWk1.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenCompile.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenCorrespondence.agda.log",
+      "sha256": "131e1a2bce6964f21d3a0d4eaf5faa4869a504d30c14a3f0645fd5c53f702449",
+      "size": 456,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenCorrespondence.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenNameIntro.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenPairUnion.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenTheorem.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenValSeam.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K10_CohenZFC.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K11_Corollary.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K11_CountableCohen.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/K9_BooleanSupport.agda.log",
+      "sha256": "0e606818852cc6d4e60902e87575d34ac32240a5d6906a692c9213d2c43e035c",
+      "size": 8,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/K10_CohenZFC.agda.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/MissingCheckReading.log",
+      "sha256": "8946d0e9faf5e1b1492193cf5bd36e17ed06a4cc7784d94280db74f7f047f6c9",
+      "size": 487,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/MissingCheckReading.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/MissingFunction.log",
+      "sha256": "4a444362e8704d9bd194dda4374e4829a11373b45bdd28f74c64f0fb8fc9e626",
+      "size": 575,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/MissingFunction.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/MissingOnto.log",
+      "sha256": "c801c2c308acaa00573bbc4b9d3bc3e042269e18847c7d164ce5d27eec6a7312",
+      "size": 356,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/MissingOnto.log"
+    },
+    {
+      "source": "research/forcing/active/k10-k11-logs/MissingValueFunction.log",
+      "sha256": "f2f9f2709305f9090efff0166caf9c1a153bd63a9533da77c8e37ee10d8ef07a",
+      "size": 389,
+      "disposition": "existing-tracked-copy",
+      "destination": "research/forcing/reports/internal-check-regression/MissingValueFunction.log"
+    },
+    {
+      "source": "research/forcing/active/reference-production/bedrock.agda-lib",
+      "sha256": "0768adccd5436c5054fd4ee125677685e805505b4a0b6005f0592b4c5a42f123",
+      "size": 78,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/07/68adccd5436c5054fd4ee125677685e805505b4a0b6005f0592b4c5a42f123.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/bedrock.agda-lib"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/Base/Choice.lagda.md",
+      "sha256": "f6a2cffa570aeadbd1faed91b239f1ae4b0ccbfc71b578884ab3afdde5bcf8f3",
+      "size": 19062,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/f6/a2cffa570aeadbd1faed91b239f1ae4b0ccbfc71b578884ab3afdde5bcf8f3.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/Base/Choice.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/Base/Classical.lagda.md",
+      "sha256": "d2f94e3e81ea5906d6be01c92b77e74dc43e2de77a52dbd6663b6912f92bc061",
+      "size": 21570,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/d2/f94e3e81ea5906d6be01c92b77e74dc43e2de77a52dbd6663b6912f92bc061.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/Base/Classical.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/Base/Impredicativity.lagda.md",
+      "sha256": "80fb098bb8c40905d091c7348e763422a563e438327915cec798c3117d977a33",
+      "size": 7445,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/80/fb098bb8c40905d091c7348e763422a563e438327915cec798c3117d977a33.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/Base/Impredicativity.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/Base/Prelude.lagda.md",
+      "sha256": "577929351b8584f9df905f99bb2f000a7e6bfaaf15d6f60038fa8ca7e60d3ff7",
+      "size": 15252,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/57/7929351b8584f9df905f99bb2f000a7e6bfaaf15d6f60038fa8ca7e60d3ff7.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/Base/Prelude.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/Base/Truth.lagda.md",
+      "sha256": "3b98eb6939fc49bef3e92e628c04f283c3b869fb7ff05802c081057f4940c59d",
+      "size": 11308,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/3b/98eb6939fc49bef3e92e628c04f283c3b869fb7ff05802c081057f4940c59d.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/Base/Truth.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/Everything.lagda.md",
+      "sha256": "5125673bf8158e1dc926e324abb6b7ae5536adb7f1b9188aea43b3e642462a87",
+      "size": 53835,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/51/25673bf8158e1dc926e324abb6b7ae5536adb7f1b9188aea43b3e642462a87.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/Everything.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Absoluteness.lagda.md",
+      "sha256": "138d4b41853cb010545b67b33f2d804646efc2acc8355ed97bbcf75a614ac561",
+      "size": 11954,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/13/8d4b41853cb010545b67b33f2d804646efc2acc8355ed97bbcf75a614ac561.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Absoluteness.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Coding.lagda.md",
+      "sha256": "6514fd7da67842946e2a32adee2d02b14268f3b5c6b16101b3e189fcb13e96b9",
+      "size": 17968,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/65/14fd7da67842946e2a32adee2d02b14268f3b5c6b16101b3e189fcb13e96b9.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Coding.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/LevyHierarchy.lagda.md",
+      "sha256": "5690a7f89f5503166e79f1da08e177004d4c79fe527a082e1ea4119d241d94c5",
+      "size": 10681,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/56/90a7f89f5503166e79f1da08e177004d4c79fe527a082e1ea4119d241d94c5.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/LevyHierarchy.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Manipulation/ConstantBounding.lagda.md",
+      "sha256": "43872e16c567d077eb6a2deeb30f6ddf9d7f8ece51f0f44233f1ffd47961dff7",
+      "size": 12756,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/43/872e16c567d077eb6a2deeb30f6ddf9d7f8ece51f0f44233f1ffd47961dff7.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Manipulation/ConstantBounding.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Manipulation/ConstantMapping.lagda.md",
+      "sha256": "eeb1e039cdf34ca33aa80d8ba97479d2953a64f8d7866b5ed2fb9d356917859f",
+      "size": 7107,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ee/b1e039cdf34ca33aa80d8ba97479d2953a64f8d7866b5ed2fb9d356917859f.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Manipulation/ConstantMapping.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Manipulation/ConstantOccurrences.lagda.md",
+      "sha256": "96c0c606c12515d931d764c16ff36c9ecacb889a7bcb9a0d53d5943e0f006a85",
+      "size": 15784,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/96/c0c606c12515d931d764c16ff36c9ecacb889a7bcb9a0d53d5943e0f006a85.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Manipulation/ConstantOccurrences.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Manipulation/ParameterAbstraction.lagda.md",
+      "sha256": "e1f6e7bcaf220b52ada8722bf1f5a0966212dc681d2b1875e15f39d71ed12e73",
+      "size": 18891,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/e1/f6e7bcaf220b52ada8722bf1f5a0966212dc681d2b1875e15f39d71ed12e73.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Manipulation/ParameterAbstraction.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Manipulation/Relabelling.lagda.md",
+      "sha256": "622a5bcc9408575bf6ad99c828754d39a02912c20e792f7ab3ba1f8ddac8ec0a",
+      "size": 7687,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/62/2a5bcc9408575bf6ad99c828754d39a02912c20e792f7ab3ba1f8ddac8ec0a.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Manipulation/Relabelling.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Manipulation/Relativization.lagda.md",
+      "sha256": "c9d748f21d0274850af99af9f0d3488943f5444261cb0be89ddc8a05c1a69387",
+      "size": 8420,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/c9/d748f21d0274850af99af9f0d3488943f5444261cb0be89ddc8a05c1a69387.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Manipulation/Relativization.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Manipulation/Renaming.lagda.md",
+      "sha256": "972c645462baa7e6f192a342b8176f5f7b2e34b19cc737a09f78b39ae1c59c84",
+      "size": 8551,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/97/2c645462baa7e6f192a342b8176f5f7b2e34b19cc737a09f78b39ae1c59c84.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Manipulation/Renaming.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Semantics.lagda.md",
+      "sha256": "9de004e17984925df4667f1b5274b2dbc4318ec62d7043fb800b7df6ff2ffac7",
+      "size": 8438,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/9d/e004e17984925df4667f1b5274b2dbc4318ec62d7043fb800b7df6ff2ffac7.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Semantics.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/Syntax.lagda.md",
+      "sha256": "996a0d2856a82c2680a9570c92332af0594bb6f8f2eeefe91a08f82e3a4eee9c",
+      "size": 13150,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/99/6a0d2856a82c2680a9570c92332af0594bb6f8f2eeefe91a08f82e3a4eee9c.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/Syntax.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/ZFModel.lagda.md",
+      "sha256": "cb57a4985bfdbf45ae6cfedd0f1cdf0227ed79a2191155180de9c7d318332df9",
+      "size": 30056,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/cb/57a4985bfdbf45ae6cfedd0f1cdf0227ed79a2191155180de9c7d318332df9.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/ZFModel.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/FOL/ZFStructure.lagda.md",
+      "sha256": "4d99b61c2e01f27456a345e5d9d82a5f2491793424e4923a250923fe02b12974",
+      "size": 11374,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/4d/99b61c2e01f27456a345e5d9d82a5f2491793424e4923a250923fe02b12974.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/FOL/ZFStructure.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Absoluteness.lagda.md",
+      "sha256": "50625116b6b026cb6c5e132960eeea2fa5f3470e5adeb81194473ff038a19277",
+      "size": 9258,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/50/625116b6b026cb6c5e132960eeea2fa5f3470e5adeb81194473ff038a19277.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Absoluteness.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Axioms/Basic.lagda.md",
+      "sha256": "4e9773efce7202136cd055a02f41be813331482346dfb62d4cf8120d20f47ec0",
+      "size": 46789,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/4e/9773efce7202136cd055a02f41be813331482346dfb62d4cf8120d20f47ec0.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Axioms/Basic.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Axioms/Full.lagda.md",
+      "sha256": "7f3e63d643a55a8f837bf671279ab32603924b09e0019163adb1f7650bd9e771",
+      "size": 16075,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/7f/3e63d643a55a8f837bf671279ab32603924b09e0019163adb1f7650bd9e771.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Axioms/Full.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Axioms/Infinity.lagda.md",
+      "sha256": "c44d0bca7e055004aa8ec2ab8e9e2e0b85d80aacf87eedd1a635f915030bcb0f",
+      "size": 6658,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/c4/4d0bca7e055004aa8ec2ab8e9e2e0b85d80aacf87eedd1a635f915030bcb0f.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Axioms/Infinity.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Axioms/Numerals.lagda.md",
+      "sha256": "796e79ba8a254955ed1534c34f899f6c74c569a1c63f2f510af40ff5219f3633",
+      "size": 15757,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/79/6e79ba8a254955ed1534c34f899f6c74c569a1c63f2f510af40ff5219f3633.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Axioms/Numerals.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Axioms/Power.lagda.md",
+      "sha256": "4a0c09dacd9e561b31ce08a634ac8204b741d63dd90fc80c54e1c13e73cad60f",
+      "size": 13371,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/4a/0c09dacd9e561b31ce08a634ac8204b741d63dd90fc80c54e1c13e73cad60f.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Axioms/Power.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Axioms/Separation.lagda.md",
+      "sha256": "b959abd17c4afa3bb770ba86bb5b96222dcece449df8e1e58f5a45bd24a5849e",
+      "size": 31962,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/b9/59abd17c4afa3bb770ba86bb5b96222dcece449df8e1e58f5a45bd24a5849e.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Axioms/Separation.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/CantorBernstein.lagda.md",
+      "sha256": "9636ffcc203a62c2b0cb5f9c574e60181b96ba8bba539871f58f3d4bbd9ba0c2",
+      "size": 3194,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/96/36ffcc203a62c2b0cb5f9c574e60181b96ba8bba539871f58f3d4bbd9ba0c2.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/CantorBernstein.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Cardinal.lagda.md",
+      "sha256": "50316efb0df6c25abf6e2feb1f0bc35264770a96591ba232d97e0c00f3dd8de4",
+      "size": 7275,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/50/316efb0df6c25abf6e2feb1f0bc35264770a96591ba232d97e0c00f3dd8de4.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Cardinal.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/CardinalAbove.lagda.md",
+      "sha256": "e550d6460227ac1446668696de992914c33307358a05257a1c89b9760de22fa3",
+      "size": 27552,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/e5/50d6460227ac1446668696de992914c33307358a05257a1c89b9760de22fa3.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/CardinalAbove.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/CanonicalNames.lagda.md",
+      "sha256": "e085ab3765fe0cc9d50953748ebb6f6208547b33442c566330ad7e68ab0a3234",
+      "size": 53644,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/e0/85ab3765fe0cc9d50953748ebb6f6208547b33442c566330ad7e68ab0a3234.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/CanonicalNames.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/EarliestDisagreement.lagda.md",
+      "sha256": "6e1dcb0ca24bd3eb1135215b1c30f22dbadce0b9fdbce8ccc9f9f29e8b4ecdda",
+      "size": 83006,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/6e/1dcb0ca24bd3eb1135215b1c30f22dbadce0b9fdbce8ccc9f9f29e8b4ecdda.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/EarliestDisagreement.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/FiniteStageOrders.lagda.md",
+      "sha256": "d0ce5d15b907e32fc528f856f4cf4a1933127a9336ad04740dd74847ba251b9c",
+      "size": 66420,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/d0/ce5d15b907e32fc528f856f4cf4a1933127a9336ad04740dd74847ba251b9c.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/FiniteStageOrders.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/FirstIntersectionStage.lagda.md",
+      "sha256": "10fade5ccc652c21e5be761f7f260a2b760f6ea6b3ffd25d9a8fe90fdda64b90",
+      "size": 17913,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/10/fade5ccc652c21e5be761f7f260a2b760f6ea6b3ffd25d9a8fe90fdda64b90.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/FirstIntersectionStage.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/InternalWellOrder.lagda.md",
+      "sha256": "21394d5fb8ed84358b2dc08dd4584de025e433ffdd6292a5daea4368d61d3caf",
+      "size": 47440,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/21/394d5fb8ed84358b2dc08dd4584de025e433ffdd6292a5daea4368d61d3caf.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/InternalWellOrder.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/LimitStageOrder.lagda.md",
+      "sha256": "a2d35a830a06c9a90ce328c946e89e5187e9b9d4e22c924af1866538822e8b8d",
+      "size": 52653,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/a2/d35a830a06c9a90ce328c946e89e5187e9b9d4e22c924af1866538822e8b8d.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/LimitStageOrder.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/NameComparison.lagda.md",
+      "sha256": "09613bd5684290251f44221a453756270a946bc94584d617279ebdf5dc2523a2",
+      "size": 79070,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/09/613bd5684290251f44221a453756270a946bc94584d617279ebdf5dc2523a2.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/NameComparison.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/NameComparisonAdequacy.lagda.md",
+      "sha256": "c3e362ebce78c0a96b32424b0da640d98fc52399a19d3395ca81670f8d2776f1",
+      "size": 51912,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/c3/e362ebce78c0a96b32424b0da640d98fc52399a19d3395ca81670f8d2776f1.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/NameComparisonAdequacy.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/OrderTable.lagda.md",
+      "sha256": "ff6f96ae3a069531077123751929e4acaa7d869d645bf5a71723b16bc1025b5b",
+      "size": 58460,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ff/6f96ae3a069531077123751929e4acaa7d869d645bf5a71723b16bc1025b5b.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/OrderTable.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/StageOrderAdequacy.lagda.md",
+      "sha256": "21dac6bf2891a31202b81afba277497af54cb3fd4a1716c350fd6cc56405cb25",
+      "size": 59742,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/21/dac6bf2891a31202b81afba277497af54cb3fd4a1716c350fd6cc56405cb25.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/StageOrderAdequacy.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/StageOrders.lagda.md",
+      "sha256": "f8fce4ef58d6ba3aacd5552c8934ec6983adcbad2e359b7b16cebd30c930ea2d",
+      "size": 52516,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/f8/fce4ef58d6ba3aacd5552c8934ec6983adcbad2e359b7b16cebd30c930ea2d.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/StageOrders.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Choice/Transversal.lagda.md",
+      "sha256": "800480c6028515cbb8f3e3d63a52aa095d476509d0de326cd1f93a83f01ce275",
+      "size": 27939,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/80/0480c6028515cbb8f3e3d63a52aa095d476509d0de326cd1f93a83f01ce275.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Choice/Transversal.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Closure.lagda.md",
+      "sha256": "474d7611e5504fddc4fe671c18b60ee20612a34511546a59df9f41b67b81b8ed",
+      "size": 18599,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/47/4d7611e5504fddc4fe671c18b60ee20612a34511546a59df9f41b67b81b8ed.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Closure.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/CodeAlphabet.lagda.md",
+      "sha256": "cc80ab50301f1a2bfcea7c1061d96507bc929572ea274a6c5031037b94172038",
+      "size": 4280,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/cc/80ab50301f1a2bfcea7c1061d96507bc929572ea274a6c5031037b94172038.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/CodeAlphabet.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/CodeConstructibility.lagda.md",
+      "sha256": "c7ddcf14dca2fd7a914f887a2642bc7d70443b9102e0163090f250f3bc8622a8",
+      "size": 40213,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/c7/ddcf14dca2fd7a914f887a2642bc7d70443b9102e0163090f250f3bc8622a8.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/CodeConstructibility.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/CodeDomain.lagda.md",
+      "sha256": "0e46d7fa69a2ebf8cccb83c7781460ba3c84048b69c220b0c07df190d4b43cde",
+      "size": 11765,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/0e/46d7fa69a2ebf8cccb83c7781460ba3c84048b69c220b0c07df190d4b43cde.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/CodeDomain.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/CodeDomainAdequacy.lagda.md",
+      "sha256": "177446f3e464b09f7d35c4f98c51a7c54ab776de249a453f2151b0a79b29d1b7",
+      "size": 58217,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/17/7446f3e464b09f7d35c4f98c51a7c54ab776de249a453f2151b0a79b29d1b7.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/CodeDomainAdequacy.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/CodeSet.lagda.md",
+      "sha256": "e4fce7e32f3ffcb87cda97aed7af9d650a1f594b09edcf5a9251f5d750f62d98",
+      "size": 27323,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/e4/fce7e32f3ffcb87cda97aed7af9d650a1f594b09edcf5a9251f5d750f62d98.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/CodeSet.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/CodeShape.lagda.md",
+      "sha256": "4c7668308cfe453af5bd87dcd0628529632aa0f21f0305b00662ec9752a8df52",
+      "size": 35857,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/4c/7668308cfe453af5bd87dcd0628529632aa0f21f0305b00662ec9752a8df52.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/CodeShape.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/DefinablePowerSet.lagda.md",
+      "sha256": "72d8de286afb3d8e3ec29c61e59129fee8591bc06381cd2baba999a5fef79678",
+      "size": 46437,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/72/d8de286afb3d8e3ec29c61e59129fee8591bc06381cd2baba999a5fef79678.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/DefinablePowerSet.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Descent.lagda.md",
+      "sha256": "c007a1111f247f25db0e907228f7fb74348506cfbbe5352bb5c29bb0397a68fc",
+      "size": 6970,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/c0/07a1111f247f25db0e907228f7fb74348506cfbbe5352bb5c29bb0397a68fc.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Descent.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Environment.lagda.md",
+      "sha256": "76dfe48d7feb20f6e93fa538e769df19dc3dde2b121cc0d9fb0acf4ed81abf9c",
+      "size": 33341,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/76/dfe48d7feb20f6e93fa538e769df19dc3dde2b121cc0d9fb0acf4ed81abf9c.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Environment.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/EnvironmentAgreement.lagda.md",
+      "sha256": "869c3edcd0c4f0e1634fbfc160f63de43dc5581919f042bbc60c95717aff0d4c",
+      "size": 9115,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/86/9c3edcd0c4f0e1634fbfc160f63de43dc5581919f042bbc60c95717aff0d4c.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/EnvironmentAgreement.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/EnvironmentSet.lagda.md",
+      "sha256": "b4d72e877dd26976bbf8fa7b072a031a9afc492a04db2454ae1e8c89c8642bb7",
+      "size": 24106,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/b4/d72e877dd26976bbf8fa7b072a031a9afc492a04db2454ae1e8c89c8642bb7.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/EnvironmentSet.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/EnvironmentTower.lagda.md",
+      "sha256": "e0e46531c8bcb4d6c8608434021b93aaef1e8bf0d4fc5bc7d8fc6cf2df8b42a2",
+      "size": 31864,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/e0/e46531c8bcb4d6c8608434021b93aaef1e8bf0d4fc5bc7d8fc6cf2df8b42a2.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/EnvironmentTower.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Expressions.lagda.md",
+      "sha256": "7097c5bcf2d1bfa0601a3ce21e425eb8107db9866dc6c6ffc23a5146da4e02bb",
+      "size": 45488,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/70/97c5bcf2d1bfa0601a3ce21e425eb8107db9866dc6c6ffc23a5146da4e02bb.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Expressions.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/FormulaRecovery.lagda.md",
+      "sha256": "42d833714f8fe6feb11c1f92968a84bae1c979fdbc958796f926895e223b362d",
+      "size": 17320,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/42/d833714f8fe6feb11c1f92968a84bae1c979fdbc958796f926895e223b362d.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/FormulaRecovery.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/HierarchySequence.lagda.md",
+      "sha256": "d3539b46767581a06de97bbb8ed1705663e183b69bfab18c683be02ca45a8e78",
+      "size": 34673,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/d3/539b46767581a06de97bbb8ed1705663e183b69bfab18c683be02ca45a8e78.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/HierarchySequence.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Injection.lagda.md",
+      "sha256": "50266e475b79893971462537899f365a635d2266d7ccfc1edfc1bb739bd9b53e",
+      "size": 9806,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/50/266e475b79893971462537899f365a635d2266d7ccfc1edfc1bb739bd9b53e.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Injection.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Model.lagda.md",
+      "sha256": "a88f97009dd76c5cacd8c51296f3834b7fab674f9c2c7b5e729299644a5d47d6",
+      "size": 31822,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/a8/8f97009dd76c5cacd8c51296f3834b7fab674f9c2c7b5e729299644a5d47d6.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Model.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/NumeralBound.lagda.md",
+      "sha256": "1efd704d2e19a8e2d4443c31dc629fce0664f7258cda4d9f1024cfd4af013b3f",
+      "size": 4979,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/1e/fd704d2e19a8e2d4443c31dc629fce0664f7258cda4d9f1024cfd4af013b3f.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/NumeralBound.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/PairFormulas.lagda.md",
+      "sha256": "a0e2147cda66b67c4f12c604d27f7d21f86df3447eac8b88ea91875c68895c07",
+      "size": 15713,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/a0/e2147cda66b67c4f12c604d27f7d21f86df3447eac8b88ea91875c68895c07.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/PairFormulas.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/PinnedRecursion.lagda.md",
+      "sha256": "854d4b787a18d535afb3f1d643de66d0b6e80f2421a637fcf9ad927e177f1bb4",
+      "size": 45462,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/85/4d4b787a18d535afb3f1d643de66d0b6e80f2421a637fcf9ad927e177f1bb4.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/PinnedRecursion.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Quantification.lagda.md",
+      "sha256": "50a879b6c15b12670adf5449b10d472d30b3c1282b107f83f7dd49364dbc9931",
+      "size": 21085,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/50/a879b6c15b12670adf5449b10d472d30b3c1282b107f83f7dd49364dbc9931.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Quantification.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/Satisfaction.lagda.md",
+      "sha256": "706ba39af84c04821c0008cfbbfb85b24a318a10a6ce829eb0d771247a7aeb7a",
+      "size": 16415,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/70/6ba39af84c04821c0008cfbbfb85b24a318a10a6ce829eb0d771247a7aeb7a.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/Satisfaction.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SatisfactionBridge.lagda.md",
+      "sha256": "47e4184689cb28cc534f252d21aa95deaa80c3678b742ddd8251df8e8cab9c6f",
+      "size": 45994,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/47/e4184689cb28cc534f252d21aa95deaa80c3678b742ddd8251df8e8cab9c6f.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SatisfactionBridge.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SatisfactionClauseSemantics.lagda.md",
+      "sha256": "bab85e725087a23f1f46464aa7edc5747f06d221dc04ad35caca4b3c3023e4dd",
+      "size": 45784,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ba/b85e725087a23f1f46464aa7edc5747f06d221dc04ad35caca4b3c3023e4dd.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SatisfactionClauseSemantics.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SatisfactionClauses.lagda.md",
+      "sha256": "7b7ff081c904a2c63eef92473934956a07db97945a07cfdfa27f782c295af145",
+      "size": 9429,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/7b/7ff081c904a2c63eef92473934956a07db97945a07cfdfa27f782c295af145.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SatisfactionClauses.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SatisfactionGraph.lagda.md",
+      "sha256": "6460a6a1a7bd8dd5c2abcda100bff29de6c170f6c6f0f963bc44cb481257342c",
+      "size": 22686,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/64/60a6a1a7bd8dd5c2abcda100bff29de6c170f6c6f0f963bc44cb481257342c.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SatisfactionGraph.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SatisfactionGraphSet.lagda.md",
+      "sha256": "9c861a0901e0859d3539e18de8c237cf4f1f10ca28a0342b71f45f9444b45056",
+      "size": 4499,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/9c/861a0901e0859d3539e18de8c237cf4f1f10ca28a0342b71f45f9444b45056.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SatisfactionGraphSet.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SatisfactionTable.lagda.md",
+      "sha256": "08cfd66a0b5bac70726c76946fb81bc58293128a1abdf5bee4e5025e9c302406",
+      "size": 15739,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/08/cfd66a0b5bac70726c76946fb81bc58293128a1abdf5bee4e5025e9c302406.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SatisfactionTable.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SlotClosure.lagda.md",
+      "sha256": "947c66386ac2dcf1f0c210f6fc032e5cc187b48db7bcd221139b5f32052f4b10",
+      "size": 15160,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/94/7c66386ac2dcf1f0c210f6fc032e5cc187b48db7bcd221139b5f32052f4b10.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SlotClosure.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/SubformulaClosure.lagda.md",
+      "sha256": "43fd63ae7d052d1c09734c0cc024ed9eaeede82379dabe8289d36c41f10b37b0",
+      "size": 13633,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/43/fd63ae7d052d1c09734c0cc024ed9eaeede82379dabe8289d36c41f10b37b0.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/SubformulaClosure.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Coding/UniformSatisfaction.lagda.md",
+      "sha256": "0a52b9a642b29a451daf475ce8d3b0a0b9d9d926f7e59b9e05dc83ae19ec5c4b",
+      "size": 32843,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/0a/52b9a642b29a451daf475ce8d3b0a0b9d9d926f7e59b9e05dc83ae19ec5c4b.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Coding/UniformSatisfaction.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Constructible.lagda.md",
+      "sha256": "6cf0acdd6e1a36048566e6291c756ce8b341d6deec2a0878394eb0097b8a975d",
+      "size": 22217,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/6c/f0acdd6e1a36048566e6291c756ce8b341d6deec2a0878394eb0097b8a975d.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Constructible.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Definability.lagda.md",
+      "sha256": "910a841dc7c495ee21b4a51632222d99707bcfc24dfad8b46469dbac6b499701",
+      "size": 17553,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/91/0a841dc7c495ee21b4a51632222d99707bcfc24dfad8b46469dbac6b499701.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Definability.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/DefinableInjection.lagda.md",
+      "sha256": "6c33dc56ddf50800ee360454b0e798e92cd7b630f7dac76908459c175b362c27",
+      "size": 7675,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/6c/33dc56ddf50800ee360454b0e798e92cd7b630f7dac76908459c175b362c27.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/DefinableInjection.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/ExistentialReflection.lagda.md",
+      "sha256": "dc874096627caba6ade0a08284a05761f4934856e2c0eaa93c2ae8dcb3fc356c",
+      "size": 29428,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/dc/874096627caba6ade0a08284a05761f4934856e2c0eaa93c2ae8dcb3fc356c.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/ExistentialReflection.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/FormulaReflection.lagda.md",
+      "sha256": "eb9656d3a0e1cb9a9bb67986e796e152baf196bf955db981cc522f921cca7c88",
+      "size": 32900,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/eb/9656d3a0e1cb9a9bb67986e796e152baf196bf955db981cc522f921cca7c88.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/FormulaReflection.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH.lagda.md",
+      "sha256": "d3d05d04ed86d9f06ef3b9d7cdf21c3ed0113e813294d51f46003dc6047654da",
+      "size": 2590,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/d3/d05d04ed86d9f06ef3b9d7cdf21c3ed0113e813294d51f46003dc6047654da.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/AdequateStages.lagda.md",
+      "sha256": "65ef1bae30f33fb3a81cf5eba3a59bb004b8755dc5e860fb45fa62c2143d900d",
+      "size": 19900,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/65/ef1bae30f33fb3a81cf5eba3a59bb004b8755dc5e860fb45fa62c2143d900d.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/AdequateStages.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/Assembly.lagda.md",
+      "sha256": "7592695e5c4d4197b8e960a9361b12656fd8384c889c372d6cda2c2c0316c749",
+      "size": 18315,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/75/92695e5c4d4197b8e960a9361b12656fd8384c889c372d6cda2c2c0316c749.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/Assembly.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/BelowSuccessorCardinal.lagda.md",
+      "sha256": "16defdaa2ae198bbf0dbd062df8b9b5e373005cd0839c742d4d8ae74c5edec33",
+      "size": 4774,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/16/defdaa2ae198bbf0dbd062df8b9b5e373005cd0839c742d4d8ae74c5edec33.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/BelowSuccessorCardinal.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/BoundedSubset.lagda.md",
+      "sha256": "f0134d2db959625f12502b5d6695161dfde0b5071397be4fda01aaaee1213f7e",
+      "size": 10852,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/f0/134d2db959625f12502b5d6695161dfde0b5071397be4fda01aaaee1213f7e.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/BoundedSubset.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/CardinalRepresentative.lagda.md",
+      "sha256": "7e59558616fd411318def9fd249a953c2fa0cf18842461d8c428d6f216bab462",
+      "size": 7422,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/7e/59558616fd411318def9fd249a953c2fa0cf18842461d8c428d6f216bab462.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/CardinalRepresentative.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/CardinalSquareLaw.lagda.md",
+      "sha256": "a2fbdb6e963eab32cabc33377049832f3788d6d4094a6ebba249bb33d9bf7dfc",
+      "size": 59152,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/a2/fbdb6e963eab32cabc33377049832f3788d6d4094a6ebba249bb33d9bf7dfc.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/CardinalSquareLaw.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/CondensationTransfer.lagda.md",
+      "sha256": "7e0cf43d7d8eb3ce6f2b635d7200f63cd28a11931593ffab544e2ac612647ad8",
+      "size": 17605,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/7e/0cf43d7d8eb3ce6f2b635d7200f63cd28a11931593ffab544e2ac612647ad8.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/CondensationTransfer.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/ConstructibleHull.lagda.md",
+      "sha256": "4a717b7b34b7e14a188a3e9ce695cdfc1f02cb0f665ef0f3ed0336c82b302327",
+      "size": 74266,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/4a/717b7b34b7e14a188a3e9ce695cdfc1f02cb0f665ef0f3ed0336c82b302327.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/ConstructibleHull.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/DefinablePowerSetDescription.lagda.md",
+      "sha256": "3b2fd4cd7a90fd0802b4c763ec4cb6c1de51c10157284c4b2855190ba28e4603",
+      "size": 23291,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/3b/2fd4cd7a90fd0802b4c763ec4cb6c1de51c10157284c4b2855190ba28e4603.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/DefinablePowerSetDescription.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/FiniteSequenceCoding.lagda.md",
+      "sha256": "30860e552000bfa03806ab5cabae0994c4c517614d5ee9a618ea2744d6f89976",
+      "size": 36748,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/30/860e552000bfa03806ab5cabae0994c4c517614d5ee9a618ea2744d6f89976.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/FiniteSequenceCoding.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/HierarchyDescription.lagda.md",
+      "sha256": "f5ee342207b157059dd7ffa4d24f7db7954346792f819598f1db4de1c8b6a42a",
+      "size": 35615,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/f5/ee342207b157059dd7ffa4d24f7db7954346792f819598f1db4de1c8b6a42a.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/HierarchyDescription.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/HullCounting.lagda.md",
+      "sha256": "e34889834543f7bb023207862fe48bef0a629bb933cb18c20f54bd593a1960a8",
+      "size": 49341,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/e3/4889834543f7bb023207862fe48bef0a629bb933cb18c20f54bd593a1960a8.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/HullCounting.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/LeastWitnessMap.lagda.md",
+      "sha256": "ea2f1da258da63c81d3fdc20c7becd6b5bbb326a8a08f906bc1801fade8ba6c0",
+      "size": 10044,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ea/2f1da258da63c81d3fdc20c7becd6b5bbb326a8a08f906bc1801fade8ba6c0.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/LeastWitnessMap.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/OmegaRecursion.lagda.md",
+      "sha256": "ff4eddbb851c5eaa056a19e11bce154af8529059688ab5d6a05e5da2b26002c9",
+      "size": 22179,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ff/4eddbb851c5eaa056a19e11bce154af8529059688ab5d6a05e5da2b26002c9.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/OmegaRecursion.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/OrderType.lagda.md",
+      "sha256": "30061a28f72287913c443ca4f14ae91c6eae761986e7c30407c62cc31175c3ea",
+      "size": 35205,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/30/061a28f72287913c443ca4f14ae91c6eae761986e7c30407c62cc31175c3ea.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/OrderType.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/SatisfactionDescription.lagda.md",
+      "sha256": "e617ad5564a4d456042c26cf45bcc77e53fd94ea912f060f49e55b6b0a6855a5",
+      "size": 14079,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/e6/17ad5564a4d456042c26cf45bcc77e53fd94ea912f060f49e55b6b0a6855a5.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/SatisfactionDescription.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/SkolemHull.lagda.md",
+      "sha256": "3753e3829906c9527ea486789699abb668c46ae7356e278b527a58db36b0a86a",
+      "size": 57710,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/37/53e3829906c9527ea486789699abb668c46ae7356e278b527a58db36b0a86a.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/SkolemHull.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/StageCountingTools.lagda.md",
+      "sha256": "18c5058e313c7a186b7d447b248d53af6882a0bf322171fad1395483cb67e99b",
+      "size": 41582,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/18/c5058e313c7a186b7d447b248d53af6882a0bf322171fad1395483cb67e99b.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/StageCountingTools.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/StageInjection.lagda.md",
+      "sha256": "85aad393a89b861734fecad978c63e05c5d0885fde6c33673f750df801d2acc3",
+      "size": 15553,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/85/aad393a89b861734fecad978c63e05c5d0885fde6c33673f750df801d2acc3.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/StageInjection.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/SuccessorIntoPowerSet.lagda.md",
+      "sha256": "0a633d12809932959dcd9bcc140dcb5fc1de805accb09f40b37e243544e8b440",
+      "size": 24069,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/0a/633d12809932959dcd9bcc140dcb5fc1de805accb09f40b37e243544e8b440.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/SuccessorIntoPowerSet.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/GCH/Theorem.lagda.md",
+      "sha256": "29b0d31c0ad38b38806e92bdbd13da9db1641c0b2d3d2c44fdaffab061fb5430",
+      "size": 1782,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/29/b0d31c0ad38b38806e92bdbd13da9db1641c0b2d3d2c44fdaffab061fb5430.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/GCH/Theorem.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Hierarchy.lagda.md",
+      "sha256": "11cbab41ae3dedb8714ae72288d069951162a898c2b9825bd3a47d878f4f8437",
+      "size": 42986,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/11/cbab41ae3dedb8714ae72288d069951162a898c2b9825bd3a47d878f4f8437.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Hierarchy.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/InjectionComposition.lagda.md",
+      "sha256": "da3791a5f4c54616d911168a4285541ed8e83545b5e00bffd22c2ddf90e3115c",
+      "size": 24072,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/da/3791a5f4c54616d911168a4285541ed8e83545b5e00bffd22c2ddf90e3115c.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/InjectionComposition.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Model.lagda.md",
+      "sha256": "ec18daa8ec3a20565187cc4e1b803d885892f4339dca210c77498c9b4bbc9b82",
+      "size": 6827,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ec/18daa8ec3a20565187cc4e1b803d885892f4339dca210c77498c9b4bbc9b82.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Model.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Mostowski.lagda.md",
+      "sha256": "6f2704cce48bb3487977fcea10fac621a9e6027cd8cd865a50c57c791a9dd150",
+      "size": 4646,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/6f/2704cce48bb3487977fcea10fac621a9e6027cd8cd865a50c57c791a9dd150.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Mostowski.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Ordinal.lagda.md",
+      "sha256": "b7e84ff54be1b2fe7dd3a38c73c2bc20a9405407a9164accbe27688822efd514",
+      "size": 16375,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/b7/e84ff54be1b2fe7dd3a38c73c2bc20a9405407a9164accbe27688822efd514.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Ordinal.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Ordinal/Linear.lagda.md",
+      "sha256": "ab4159fd26016b3dc74241dd3a39da4bd476e3d2188907e4e29da4a8a005e770",
+      "size": 13106,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ab/4159fd26016b3dc74241dd3a39da4bd476e3d2188907e4e29da4a8a005e770.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Ordinal/Linear.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Ordinal/SquareLaw.lagda.md",
+      "sha256": "09b1788e13757df3096df042b1dea80833e36d947147755cf79fb4e72792c0f9",
+      "size": 18346,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/09/b1788e13757df3096df042b1dea80833e36d947147755cf79fb4e72792c0f9.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Ordinal/SquareLaw.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Ordinal/Stages.lagda.md",
+      "sha256": "3ee841f78c66d82db01551b0f3e972820fa9200ae7f09ac028680f4ba4b5812e",
+      "size": 25259,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/3e/e841f78c66d82db01551b0f3e972820fa9200ae7f09ac028680f4ba4b5812e.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Ordinal/Stages.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Rank.lagda.md",
+      "sha256": "67b295da7f5886f073d2df8b8d45bec6c0fa547eb00bb18421b5101174006b2a",
+      "size": 13810,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/67/b295da7f5886f073d2df8b8d45bec6c0fa547eb00bb18421b5101174006b2a.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Rank.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Recursion.lagda.md",
+      "sha256": "a03001e651a0b3fe4e7c7756e064d707961dc43a71bdf341ede40fe462867d80",
+      "size": 22550,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/a0/3001e651a0b3fe4e7c7756e064d707961dc43a71bdf341ede40fe462867d80.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Recursion.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Recursion/Graph.lagda.md",
+      "sha256": "aee27fb4470a41061f29e8de23c334b10749bb6a3dcd9386310ba211bb819afa",
+      "size": 10262,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ae/e27fb4470a41061f29e8de23c334b10749bb6a3dcd9386310ba211bb819afa.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Recursion/Graph.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/Stage.lagda.md",
+      "sha256": "7a1dd6ca87bb0e8b1cde149c27e81bfa41712eb754eb2a19a1f1ab603cf731e2",
+      "size": 12951,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/7a/1dd6ca87bb0e8b1cde149c27e81bfa41712eb754eb2a19a1f1ab603cf731e2.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/Stage.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/L/WellOrder/Base.lagda.md",
+      "sha256": "48234d256586c680b1423771cf4ededdb6515a31cb8197318b1eb5f3652db655",
+      "size": 13172,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/48/234d256586c680b1423771cf4ededdb6515a31cb8197318b1eb5f3652db655.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/L/WellOrder/Base.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/Landmarks.lagda.md",
+      "sha256": "8ccd6662bac11b2f0e42212d0c2abe4305fabb2f28732c46b95321f1b32adc48",
+      "size": 5350,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/8c/cd6662bac11b2f0e42212d0c2abe4305fabb2f28732c46b95321f1b32adc48.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/Landmarks.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/README.md",
+      "sha256": "adba78ad7a52d33273e3e5e1742593f9b6e80360ce8386ec7bbe421f015bfd87",
+      "size": 6068,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/ad/ba78ad7a52d33273e3e5e1742593f9b6e80360ce8386ec7bbe421f015bfd87.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/README.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/V/CantorBernstein.lagda.md",
+      "sha256": "d04e7fc2088f072cb27dbbc4b7f69b5938082a3db233f6767d6eaed50859d94f",
+      "size": 9118,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/d0/4e7fc2088f072cb27dbbc4b7f69b5938082a3db233f6767d6eaed50859d94f.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/V/CantorBernstein.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/V/Coding.lagda.md",
+      "sha256": "b99f2d862faa8caf7c47ebc1d7403d071da3a3de0bd755eb8dc353b40a48dbbb",
+      "size": 13105,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/b9/9f2d862faa8caf7c47ebc1d7403d071da3a3de0bd755eb8dc353b40a48dbbb.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/V/Coding.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/V/Collapse.lagda.md",
+      "sha256": "1587bcda4baf2fa222caf94ec9edba8b94909b6699e89d8f45e27350b681eec1",
+      "size": 14526,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/15/87bcda4baf2fa222caf94ec9edba8b94909b6699e89d8f45e27350b681eec1.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/V/Collapse.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/V/Hierarchy.lagda.md",
+      "sha256": "3fef1828e682eadecd02ffb884d14def82e61237527bd095fab2ef833d69be57",
+      "size": 11560,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/3f/ef1828e682eadecd02ffb884d14def82e61237527bd095fab2ef833d69be57.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/V/Hierarchy.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/V/Model.lagda.md",
+      "sha256": "1d81bee5f5ac4a5cb7e730ee1f273614babaedc221edc42c299ff710d58c70a9",
+      "size": 32075,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/1d/81bee5f5ac4a5cb7e730ee1f273614babaedc221edc42c299ff710d58c70a9.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/V/Model.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/V/Presentation.lagda.md",
+      "sha256": "21315f2acad93d60f2f4075bb63f5ab63ce978367e5446ade1151eab361c8d0b",
+      "size": 1888,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/21/315f2acad93d60f2f4075bb63f5ab63ce978367e5446ade1151eab361c8d0b.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/V/Presentation.lagda.md"
+    },
+    {
+      "source": "research/forcing/active/reference-production/src/V/Smallness.lagda.md",
+      "sha256": "80e7e988410d299658fb8756630fa1608825ef0f64a565717000bab12cdcef11",
+      "size": 21242,
+      "disposition": "existing-archive-object",
+      "destination": "research/forcing/objects/80/e7e988410d299658fb8756630fa1608825ef0f64a565717000bab12cdcef11.gz",
+      "archive_origin": "archive",
+      "archive_path": "k10-k11-resume-2026-09-18/reference-production/src/V/Smallness.lagda.md"
+    }
+  ]
+}
