@@ -1,7 +1,9 @@
 # Forcing research
 
-The `forcing` branch starts at main commit `4cb54fa4`. The independent research
-worktree starts at `cbd1510efd048c77a7c3e7af972166f44f7b9338`. Its older production
+The working branch is `research/forcing-cohen-k0`, checked out inside the
+repository at `.worktrees/forcing-cohen-k0`. Its original research checkpoint is
+`cbd1510efd048c77a7c3e7af972166f44f7b9338`. The continuation was transferred from
+the temporary `forcing` branch, which has been deleted. Its older production
 foundation is retained under `active/reference-production/src`; the current
 book and its two Milestones remain unchanged.
 
@@ -19,7 +21,9 @@ share objects. Origins:
 Build caches, Agda interfaces, Git internals and macOS resource forks are excluded.
 The original tarball's checksum is in `containers.json`; its research contents
 are preserved individually, rather than storing its large build caches. The
-external originals have not been modified. File contents are preserved; original
+external archive was verified against every retained source object before removal;
+see `reports/external-retirement.json`. The external worktree was moved intact
+into this repository. File contents are preserved; original
 permissions and timestamps are not part of this source archive.
 
 ```

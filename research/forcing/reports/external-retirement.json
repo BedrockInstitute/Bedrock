@@ -1,0 +1,13 @@
+{
+  "external_archive": "/Users/alsg/Agentic/bedrock-proofs-archive",
+  "archive_files_verified": 10717,
+  "archive_cache_files_excluded": 330,
+  "container_sha256_verified": "3fca261c92e43132bd1c3d92ed2d3206710d159ec6c3a3df0c76db073f6d15ce",
+  "container_members": {
+    "excluded_cache_or_metadata": 2318,
+    "verified": 1539
+  },
+  "missing": [],
+  "internal_worktree": "/Users/alsg/Agentic/Bedrock/.worktrees/forcing-cohen-k0",
+  "branch": "research/forcing-cohen-k0"
+}
