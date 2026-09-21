@@ -115,11 +115,6 @@ enters the tower at all.
 <!--/-->
 
 ```agda
-
-import Cubical.Data.Sum as Sum
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 ```
 
 <!--en-->
@@ -133,8 +128,6 @@ existence.
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
 ```
 
@@ -239,7 +232,7 @@ needs, and the equation is what pins `δ` to `σ`.
 ```agda
 
 private
-  cycle₂ : (a b : S) → IsOrd a → ⟨ a ∈ˢ b ⟩ → ⟨ b ∈ˢ a ⟩ → Empty.⊥
+  cycle₂ : (a b : S) → IsOrd a → ⟨ a ∈ˢ b ⟩ → ⟨ b ∈ˢ a ⟩ → ⊥₀
   cycle₂ a b orda a∈b b∈a = ∈-irrefl a (orda .fst a∈b b∈a)
 ```
 
@@ -259,7 +252,7 @@ containing each other.
   mem-branch : (δ δ' : S) → IsOrd δ → ⟨ δ' ∈ˢ sucV δ ⟩ → ⟨ δ ∈ˢ δ' ⟩ → δ ≡ δ'
   mem-branch δ δ' ordδ δ'∈sδ δ∈δ' =
     ∈sucV-elim {A = δ} {x = δ'} (setIsSet δ δ') δ'∈sδ
-      (λ δ'∈δ → Empty.rec (cycle₂ δ δ' ordδ δ∈δ' δ'∈δ))
+      (λ δ'∈δ → ⊥₀-rec (cycle₂ δ δ' ordδ δ∈δ' δ'∈δ))
       (λ δ'≡δ → sym δ'≡δ)
 ```
 
@@ -370,19 +363,19 @@ least stage cannot be far above `δ`, for the property already holds at
     below-case : (σ δ : S) → isLeastOrd P σ → IsOrd δ → ⟨ P (sucV δ) ⟩
                → ⟨ sucV δ ∈ˢ σ ⟩ → sucV δ ≡ σ
     below-case σ δ least ordδ m s∈σ =
-      Empty.rec (least (sucV δ) (suc-ord ordδ) m s∈σ)
+      ⊥₀-rec (least (sucV δ) (suc-ord ordδ) m s∈σ)
 ```
 
 <!--en-->
 The below branch handles the case in which the successor stays strictly below
 the least stage. Minimality is stated refutationally, and the hypotheses of
 this branch are exactly its premises, so `least` yields a contradiction first;
-`Empty.rec` then eliminates that contradiction to the path the branch owes,
+`⊥*-rec` then eliminates that contradiction to the path the branch owes,
 `sucV δ ≡ σ`.
 <!--zh-->
-below 分支处理「后继仍严格低于最小层」的情形。极小性以反驳形式陈述，而本分支的假设恰是它的前提，故 `least` 先给出矛盾；`Empty.rec` 再把该矛盾消去成分支所欠的路径 `sucV δ ≡ σ`。
+below 分支处理「后继仍严格低于最小层」的情形。极小性以反驳形式陈述，而本分支的假设恰是它的前提，故 `least` 先给出矛盾；`⊥*-rec` 再把该矛盾消去成分支所欠的路径 `sucV δ ≡ σ`。
 <!--ja-->
-下の分岐は、後者が最小の段階より厳密に下にとどまる場合を扱います。極小性は反駁として述べられており、この分岐の仮定はその前提そのものなので、`least` がまず矛盾を与えます。`Empty.rec` がその矛盾を、この分岐が負うパス `sucV δ ≡ σ` へ消去します。
+下の分岐は、後者が最小の段階より厳密に下にとどまる場合を扱います。極小性は反駁として述べられており、この分岐の仮定はその前提そのものなので、`least` がまず矛盾を与えます。`⊥*-rec` がその矛盾を、この分岐が負うパス `sucV δ ≡ σ` へ消去します。
 <!--/-->
 
 ```agda
@@ -434,7 +427,7 @@ being ordinals.
 
 ```agda
       suc≡σ : sucV δ ≡ σ
-      suc≡σ = Sum.rec (below-case σ δ least ordδ m) (same-case σ δ)
+      suc≡σ = ⊎-rec (below-case σ δ least ordδ m) (same-case σ δ)
         (suc∈or≡ δ σ ordδ ordσ δ∈σ)
 ```
 
@@ -450,7 +443,7 @@ Given `δ ∈ σ`, `suc∈or≡` leaves exactly two possibilities for its succes
 
   predOf : (σ : S) → IsOrd σ → isLeastOrd P σ → ∥ Carved σ ∥₁
          → Σ[ δ ∈ S ] IsPredOf σ δ
-  predOf σ ordσ least = PT.rec (isPropPredOf σ) (atCarve σ ordσ least)
+  predOf σ ordσ least = rec₁ (isPropPredOf σ) (atCarve σ ordσ least)
 ```
 
 <!--en-->
@@ -485,7 +478,7 @@ successor identity.
 <!--/-->
 
 ```agda
-  carveAt σ z z∈Lσ k = PT.map
+  carveAt σ z z∈Lσ k = map₁
     (λ { (δ , (δ∈σ , z∈𝒟)) → δ , (δ∈σ
       , k δ (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (Lset-suc δ)) z∈𝒟)) })
     (Lset-out σ z z∈Lσ)

@@ -72,11 +72,6 @@ There are exactly ten formula-constructor positions, indexed by `Fin 10`. Conver
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Data.Unit using ( tt )
-
 ```
 
 <!--en-->

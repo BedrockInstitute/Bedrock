@@ -55,24 +55,17 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction )
 open import L.Constructible {ℓ} using ( IsOrd; isPropIsOrd; Lset; isL )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
-
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 ```
 
 <!--en-->
-The assertion that a smaller witness exists is represented by a propositionally truncated existential. It records existence without exposing a chosen β. The eliminator `PT.rec` can use such evidence only when the target is a proposition; the uniqueness proof below supplies exactly this fact for `LeastOrd P`. Products and dependent function spaces preserve propositionhood, which will also show that the evidence attached to a fixed ordinal index is unique.
+The assertion that a smaller witness exists is represented by a propositionally truncated existential. It records existence without exposing a chosen β. The eliminator `rec₁` can use such evidence only when the target is a proposition; the uniqueness proof below supplies exactly this fact for `LeastOrd P`. Products and dependent function spaces preserve propositionhood, which will also show that the evidence attached to a fixed ordinal index is unique.
 <!--zh-->
-「存在更小见证」用命题截断的存在式表示，只记录存在而不暴露选定的 β。消去子 `PT.rec` 只能在目标是命题时使用这份证据；下面的唯一性证明恰好说明 `LeastOrd P` 是命题。积与依赖函数空间保持命题性，这也将说明固定序数索引所附的证据唯一。
+「存在更小见证」用命题截断的存在式表示，只记录存在而不暴露选定的 β。消去子 `rec₁` 只能在目标是命题时使用这份证据；下面的唯一性证明恰好说明 `LeastOrd P` 是命题。积与依赖函数空间保持命题性，这也将说明固定序数索引所附的证据唯一。
 <!--ja-->
-「より小さい証人が存在する」という主張は、命題的に切り捨てられた存在で表します。これは存在だけを記録し、選ばれた β を取り出しません。消去子 `PT.rec` がこの証拠を使えるのは対象が命題の場合だけであり、下の一意性の証明が `LeastOrd P` についてまさにそれを示します。積と依存関数型は命題性を保つので、固定した順序数添字に付随する証拠も一意になります。
+「より小さい証人が存在する」という主張は、命題的に切り捨てられた存在で表します。これは存在だけを記録し、選ばれた β を取り出しません。消去子 `rec₁` がこの証拠を使えるのは対象が命題の場合だけであり、下の一意性の証明が `LeastOrd P` についてまさにそれを示します。積と依存関数型は命題性を保つので、固定した順序数添字に付随する証拠も一意になります。
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
-open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 ```
 
 <!--en-->
@@ -84,7 +77,6 @@ A property P is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its u
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 
 open hPropStructure 𝒮ᵥ
 ```
@@ -121,7 +113,7 @@ Leastness is stated as a refutation: `isLeastOrd α` is the assertion, for every
 module _ (P : S → hProp (ℓ-suc ℓ)) where
 
   isLeastOrd : S → Type (ℓ-suc ℓ)
-  isLeastOrd α = (γ : S) → IsOrd γ → ⟨ P γ ⟩ → ⟨ γ ∈ˢ α ⟩ → Empty.⊥
+  isLeastOrd α = (γ : S) → IsOrd γ → ⟨ P γ ⟩ → ⟨ γ ∈ˢ α ⟩ → ⊥₀
 
   LeastOrd : Type (ℓ-suc ℓ)
   LeastOrd = Σ[ α ∈ S ] (IsOrd α × ⟨ P α ⟩ × isLeastOrd α)
@@ -153,9 +145,9 @@ Each strict case contradicts minimality, but minimality of the *other* candidate
 <!--/-->
 
 ```agda
-    decide (inl α∈α')       = Empty.rec (leastα' α ordα pα α∈α')
+    decide (inl α∈α')       = ⊥₀-rec (leastα' α ordα pα α∈α')
     decide (inr (inl e))    = e
-    decide (inr (inr α'∈α)) = Empty.rec (leastα α' ordα' pα' α'∈α)
+    decide (inr (inr α'∈α)) = ⊥₀-rec (leastα α' ordα' pα' α'∈α)
     α≡α' : α ≡ α'
     α≡α' = decide (ord-tri α ordα α' ordα')
 ```
@@ -172,7 +164,7 @@ It remains to lift the path of indices to a path of packages, and this uses prop
     propRest : (β : S) → isProp (IsOrd β × ⟨ P β ⟩ × isLeastOrd β)
     propRest β = isProp× (isPropIsOrd β)
       (isProp× (snd (P β))
-        (isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → Empty.isProp⊥))
+        (isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → isPropΠ λ _ → isProp⊥))
 ```
 
 <!--en-->
@@ -224,19 +216,19 @@ The question to decide is `Smaller`: merely whether there exists a β with β �
       where
       Smaller : hProp (ℓ-suc ℓ)
       Smaller = ∃[ β ∶ S ] ((β ∈ˢ α) ⊓ ((IsOrd β , isPropIsOrd β) ⊓ P β))
-      decide : (⟨ Smaller ⟩ ⊎ (⟨ Smaller ⟩ → Empty.⊥)) → LeastOrd
+      decide : (⟨ Smaller ⟩ ⊎ (⟨ Smaller ⟩ → ⊥₀)) → LeastOrd
 ```
 
 <!--en-->
-The two branches of the decision build the answer directly. In the positive branch, the truncated witness cannot be taken apart into data, but `PT.rec` may eliminate it into any proposition, and `LeastOrd` is one: so the witness is converted, without being chosen, into the globally least package supplied by the induction hypothesis at β. In the negative branch there is no smaller witness at all, so α itself is least. Recursion happens only through `∈-induction`'s controlled induction hypothesis.
+The two branches of the decision build the answer directly. In the positive branch, the truncated witness cannot be taken apart into data, but `rec₁` may eliminate it into any proposition, and `LeastOrd` is one: so the witness is converted, without being chosen, into the globally least package supplied by the induction hypothesis at β. In the negative branch there is no smaller witness at all, so α itself is least. Recursion happens only through `∈-induction`'s controlled induction hypothesis.
 <!--zh-->
-判定的两个分支都直接构造答案。在肯定分支里，截断的见证不能拆成数据，但 `PT.rec` 可以把它消去到任何命题，而 `LeastOrd` 恰是命题：于是这个见证在被消去而非被选定的意义上，转化为归纳假说在 β 处给出的全局最小包。在否定分支里根本不存在更小的见证，故 α 自身就是最小的。递归只经由 `∈-induction` 受控的归纳假说发生。
+判定的两个分支都直接构造答案。在肯定分支里，截断的见证不能拆成数据，但 `rec₁` 可以把它消去到任何命题，而 `LeastOrd` 恰是命题：于是这个见证在被消去而非被选定的意义上，转化为归纳假说在 β 处给出的全局最小包。在否定分支里根本不存在更小的见证，故 α 自身就是最小的。递归只经由 `∈-induction` 受控的归纳假说发生。
 <!--ja-->
-判定の二つの分岐は、どちらも答えを直接組み立てます。肯定的な分岐では、切り詰められた証人をデータとして分解することはできませんが、`PT.rec` はそれを任意の命題へ消去でき、`LeastOrd` はまさに命題です。そこで証人は、選ばれることなく、β における帰納法の仮定が与える大域的に最小のパッケージへと変換されます。否定的な分岐では、より小さい証人はそもそも存在しないので、α 自身が最小です。再帰は `∈-induction` の管理された帰納法の仮定を通してのみ起こります。。
+判定の二つの分岐は、どちらも答えを直接組み立てます。肯定的な分岐では、切り詰められた証人をデータとして分解することはできませんが、`rec₁` はそれを任意の命題へ消去でき、`LeastOrd` はまさに命題です。そこで証人は、選ばれることなく、β における帰納法の仮定が与える大域的に最小のパッケージへと変換されます。否定的な分岐では、より小さい証人はそもそも存在しないので、α 自身が最小です。再帰は `∈-induction` の管理された帰納法の仮定を通してのみ起こります。。
 <!--/-->
 
 ```agda
-      decide (inl ∃β) = PT.rec isPropLeastOrd
+      decide (inl ∃β) = rec₁ isPropLeastOrd
         (λ { (β , (β∈α , (ordβ , pβ))) → IH β β∈α ordβ pβ }) ∃β
       decide (inr ¬∃β) = α , ordα , pα , leastProof
         where
@@ -255,7 +247,7 @@ The negative branch's minimality clause is where the refutation earns its keep: 
         leastProof γ ordγ pγ γ∈α = ¬∃β ∣ γ , (γ∈α , (ordγ , pγ)) ∣₁
 
   leastOrd : ∥ (Σ[ α ∈ S ] (IsOrd α × ⟨ P α ⟩)) ∥₁ → LeastOrd
-  leastOrd = PT.rec isPropLeastOrd
+  leastOrd = rec₁ isPropLeastOrd
     (λ { (α , (ordα , pα)) → leastOrdBelow α ordα pα })
 ```
 

@@ -194,7 +194,7 @@ trunc→Set≃ : (∥ A ∥₁ → B) ≃ Σ (A → B) 2-Constant
 `∥ A ∥₁` ARE the weakly constant maps `A → B`.** `elim→Set`
 (`Properties.agda:270-274`) does the same for a dependent set-valued motive.
 
-**The practical rule this gives.** When a proof stalls at "`PT.rec` demands a
+**The practical rule this gives.** When a proof stalls at "`rec₁` demands a
 propositional motive" and the motive is a SET, the obligation is not a new
 principle. **It is a `2-Constant` proof.** Discharge it or refute it before
 pricing anything else.
@@ -290,7 +290,7 @@ any ruling here.**
 
 When a proof in this tree stalls on `∥ A ∥₁`, ask in this order.
 
-1. **Is the goal a proposition?** Then `PT.rec` applies and there is nothing to
+1. **Is the goal a proposition?** Then `rec₁` applies and there is nothing to
    discuss.
 2. **Is `A` a proposition?** Then unique choice applies (HoTT Book Corollary
    3.9.2), and the truncation was never needed.

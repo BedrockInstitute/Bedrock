@@ -115,9 +115,6 @@ The proof uses `ω` only in the public statement and uses ordinal successors to 
 
 ```agda
 open InfinitySet {ℓ} using ( ω; sucV )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.HLevels using ( isPropΣ )
 open import Cubical.Data.Bool using ( Bool; true; false; false≢true )
 ```
 
@@ -146,9 +143,6 @@ The empty type refutes impossible cases, and truncated existence is the form in 
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 
 ```
 
@@ -189,7 +183,7 @@ Ambient cardinality says that `κ` admits no injection into the presentation of 
 
 ```agda
 IsCardinal : SV.S → Type (ℓ-suc ℓ)
-IsCardinal κ = (δ : SV.S) → ⟨ δ ∈ˢ κ ⟩ → (⟪ κ ⟫ ↪ ⟪ δ ⟫ → Empty.⊥)
+IsCardinal κ = (δ : SV.S) → ⟨ δ ∈ˢ κ ⟩ → (⟪ κ ⟫ ↪ ⟪ δ ⟫ → ⊥₀)
 
 ```
 
@@ -260,7 +254,7 @@ The public goal takes a constructible `κ`, together with proofs that its underl
 CardAboveLᵀ : Type (ℓ-suc ℓ)
 CardAboveLᵀ =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
-  → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
   → ∥ Σ[ θ ∈ SL.S ]
 ```
 
@@ -316,7 +310,7 @@ Ambient cardinality implies internal cardinality, in one direction only. A coded
 ```agda
 ambient→internal : (κ : SL.S) → IsCardinal (fst κ) → IsCardinalL κ
 ambient→internal κ c δ δ∈κ h =
-  PT.rec Empty.isProp⊥ (λ w → c (fst δ) δ∈κ (readL κ δ w)) h
+  rec₁ isProp⊥ (λ w → c (fst δ) δ∈κ (readL κ δ w)) h
 ```
 
 <!--en-->
@@ -452,7 +446,7 @@ To prove transitivity, take `y ∈ x ∈ θ`. Since `x` is a member of the ordin
 
 ```agda
       θ-in y (oβ .fst y∈x (θ⊆β x x∈θ))
-        (PT.map
+        (map₁
           (comp-inj (ord-emb y x (mem-ord {A = β} oβ x (θ⊆β x x∈θ)) y∈x))
           (θ-inj x x∈θ))
 ```
@@ -481,7 +475,7 @@ Assume now that `θ ∈ β`. If `θ` injected into some `δ ∈ θ`, the separat
 ```agda
   θ-card : ⟨ θ ∈ˢ β ⟩ → IsCardinal θ
   θ-card θ∈β δ δ∈θ f =
-    ∈-irrefl θ (θ-in θ θ∈β (PT.map (comp-inj f) (θ-inj δ δ∈θ)))
+    ∈-irrefl θ (θ-in θ θ∈β (map₁ (comp-inj f) (θ-inj δ δ∈θ)))
 ```
 
 <!--en-->
@@ -493,7 +487,7 @@ It remains to prove `θ ∈ β`, and one ordinal `γ ∈ β` with no injection i
 <!--/-->
 
 ```agda
-  θ∈β : (γ : SV.S) → ⟨ γ ∈ˢ β ⟩ → (⟪ γ ⟫ ↪ ⟪ a ⟫ → Empty.⊥)
+  θ∈β : (γ : SV.S) → ⟨ γ ∈ˢ β ⟩ → (⟪ γ ⟫ ↪ ⟪ a ⟫ → ⊥₀)
       → ⟨ θ ∈ˢ β ⟩
   θ∈β γ γ∈β noinj = go (ord-tri θ θ-ord β oβ)
     where
@@ -511,9 +505,9 @@ Trichotomy leaves only `θ ∈ β`. That case gives the result directly. If `θ 
 ```agda
     go (inl θ∈β')      = θ∈β'
     go (inr (inl e))   =
-      Empty.rec (PT.rec Empty.isProp⊥ noinj
+      ⊥₀-rec (rec₁ isProp⊥ noinj
         (θ-inj γ (subst (λ v → ⟨ γ ∈ˢ v ⟩) (sym e) γ∈β)))
-    go (inr (inr β∈θ)) = Empty.rec (∈-irrefl β (θ⊆β β β∈θ))
+    go (inr (inr β∈θ)) = ⊥₀-rec (∈-irrefl β (θ⊆β β β∈θ))
 ```
 
 <!--en-->
@@ -535,7 +529,7 @@ Hartogs の入力は、最も弱い形で述べられます。すべての順序
 ```agda
 NoInjOrd : Type (ℓ-suc ℓ)
 NoInjOrd = (x : SV.S) → IsOrd x
-         → ∥ Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ x ⟫ → Empty.⊥)) ∥₁
+         → ∥ Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ x ⟫ → ⊥₀)) ∥₁
 ```
 
 <!--en-->
@@ -547,7 +541,7 @@ The positional lemma compares two ordinals and concludes that the first belongs 
 <!--/-->
 
 ```agda
-above : (a γ : SV.S) → IsOrd a → IsOrd γ → (⟪ γ ⟫ ↪ ⟪ a ⟫ → Empty.⊥)
+above : (a γ : SV.S) → IsOrd a → IsOrd γ → (⟪ γ ⟫ ↪ ⟪ a ⟫ → ⊥₀)
       → ⟨ a ∈ˢ γ ⟩
 above a γ oa oγ noinj = go (ord-tri γ oγ a oa)
   where
@@ -565,9 +559,9 @@ The identity injection of the ordinal into itself is named first. If the second 
 ```agda
   idInj = (λ m → m) , (λ m n e → e)
   go : Tri γ a → ⟨ a ∈ˢ γ ⟩
-  go (inl γ∈a)      = Empty.rec (noinj (ord-emb γ a oa γ∈a))
+  go (inl γ∈a)      = ⊥₀-rec (noinj (ord-emb γ a oa γ∈a))
   go (inr (inl e))  =
-    Empty.rec (noinj (subst (λ v → ⟪ γ ⟫ ↪ ⟪ v ⟫) e idInj))
+    ⊥₀-rec (noinj (subst (λ v → ⟪ γ ⟫ ↪ ⟪ v ⟫) e idInj))
 ```
 
 <!--en-->
@@ -592,7 +586,7 @@ Suppose an explicit ordinal `γ` with no injection into `a` has been given. The 
 
 ```agda
 cardAboveAt : (a : SV.S) → IsOrd a
-  → Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ a ⟫ → Empty.⊥))
+  → Σ[ γ ∈ SV.S ] (IsOrd γ × (⟪ γ ⟫ ↪ ⟪ a ⟫ → ⊥₀))
   → Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩)
 cardAboveAt a oa (γ , oγ , noinj) =
   S.θ , S.θ-ord , S.θ-card θ∈sγ , S.a∈θ a∈sγ
@@ -640,7 +634,7 @@ The ambient existence theorem restores the truncation: from the Hartogs input, w
 ```agda
 ambientCardAbove : NoInjOrd → (a : SV.S) → IsOrd a
   → ∥ Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ a ∈ˢ θ ⟩) ∥₁
-ambientCardAbove ni a oa = PT.map (cardAboveAt a oa) (ni a oa)
+ambientCardAbove ni a oa = map₁ (cardAboveAt a oa) (ni a oa)
 ```
 
 <!--en-->
@@ -654,7 +648,7 @@ The ambient existence theorem is now transferred to `L`. Of the three mathematic
 ```agda
 noInjOrd→CardAboveLᵀ : NoInjOrd → CardAboveLᵀ
 noInjOrd→CardAboveLᵀ ni κ oκ cκ κ∉ω =
-  PT.map build (ambientCardAbove ni (fst κ) oκ)
+  map₁ build (ambientCardAbove ni (fst κ) oκ)
   where
   build : Σ[ θ ∈ SV.S ] (IsOrd θ × IsCardinal θ × ⟨ fst κ ∈ˢ θ ⟩)
 ```
@@ -863,7 +857,7 @@ The image is an ordinal. First, a member of the image is merely equal to some co
     ot-ord = tr , mem
       where
       mem : (x : SV.S) → ⟨ x ∈ˢ ot ⟩ → isTransV x
-      mem x x∈ = PT.rec (isPropIsTransV x)
+      mem x x∈ = rec₁ (isPropIsTransV x)
 ```
 
 <!--en-->
@@ -877,7 +871,7 @@ The member's transitivity is transported from the collapse's ordinality along th
 ```agda
         (λ z → subst isTransV (snd z) (col-ord (fst z) .fst)) x∈
       tr : isTransV ot
-      tr {x} {y} y∈x x∈ot = PT.rec (snd (y ∈ˢ ot)) outer x∈ot
+      tr {x} {y} y∈x x∈ot = rec₁ (snd (y ∈ˢ ot)) outer x∈ot
         where
         outer : Σ[ p ∈ ⟪ a ⟫ ] (col p ≡ x) → ⟨ y ∈ˢ ot ⟩
 ```
@@ -892,7 +886,7 @@ The truncated decomposition names an index `r` whose collapse is `y` and proves 
 
 ```agda
         outer (p , e) =
-          PT.rec (snd (y ∈ˢ ot))
+          rec₁ (snd (y ∈ˢ ot))
             (λ z → subst (λ v → ⟨ v ∈ˢ ot ⟩) (snd (snd z)) (ot-in (fst z)))
             (col-out p y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
 ```
@@ -962,7 +956,7 @@ The decider converts a classical case split into a Boolean value, encoding the t
 <!--/-->
 
 ```agda
-  decB : {A : Type ℓ} → (A ⊎ (A → Empty.⊥)) → Bool
+  decB : {A : Type ℓ} → (A ⊎ (A → ⊥₀)) → Bool
   decB (inl _) = true
   decB (inr _) = false
 
@@ -1107,7 +1101,7 @@ If the Boolean relation holds, its value is `true`. Inspecting the excluded-midd
     R→Pre : (x y : ⟪ a ⟫) → Holds R x y → PreT x y
     R→Pre x y e = go (lemℓ (PreT x y , isPropPreT x y)) e
       where
-      go : (d : PreT x y ⊎ (PreT x y → Empty.⊥)) → decB d ≡ true → PreT x y
+      go : (d : PreT x y ⊎ (PreT x y → ⊥₀)) → decB d ≡ true → PreT x y
       go (inl h) _  = h
 ```
 
@@ -1120,7 +1114,7 @@ The refutation branch is impossible: if the predecessor fact does not hold, the 
 <!--/-->
 
 ```agda
-      go (inr _) e' = Empty.rec (false≢true e')
+      go (inr _) e' = ⊥₀-rec (false≢true e')
 
 ```
 
@@ -1136,7 +1130,7 @@ The backward reading constructs the Boolean membership from the pulled-back pred
     Pre→R : (x y : ⟪ a ⟫) → PreT x y → Holds R x y
     Pre→R x y h = go (lemℓ (PreT x y , isPropPreT x y))
       where
-      go : (d : PreT x y ⊎ (PreT x y → Empty.⊥)) → decB d ≡ true
+      go : (d : PreT x y ⊎ (PreT x y → ⊥₀)) → decB d ≡ true
       go (inl _) = refl
 ```
 
@@ -1149,7 +1143,7 @@ The empty branch is impossible: the predecessor fact holds by assumption.
 <!--/-->
 
 ```agda
-      go (inr n) = Empty.rec (n h)
+      go (inr n) = ⊥₀-rec (n h)
 ```
 
 <!--en-->
@@ -1376,7 +1370,7 @@ For the forward inclusion, suppose `b` belongs to `col (F m)`. The elimination l
 
 ```agda
       fwd : (b : SV.S) → ⟨ b ∈ₛ col (F m) ⟩ → ⟨ b ∈ₛ ⟪ μ ⟫↪ m ⟩
-      fwd b b∈ = PT.rec (snd (b ∈ₛ ⟪ μ ⟫↪ m)) go
+      fwd b b∈ = rec₁ (snd (b ∈ₛ ⟪ μ ⟫↪ m)) go
                    (col-out (F m) b (∈∈ₛ {a = b} {b = col (F m)} .snd b∈))
         where
         go : Σ[ r ∈ ⟪ a ⟫ ] ((r ≺ F m) × (col r ≡ b))
@@ -1578,20 +1572,20 @@ By construction of the bound, `ot` is a member of `μ`. Applying the inclusion `
 <!--/-->
 
 ```agda
-    absurd : Empty.⊥
+    absurd : ⊥₀
     absurd = ∈-irrefl ot (μ⊆ot ot (ot∈μ w))
 ```
 
 <!--en-->
-The local contradiction was proved under an arbitrary injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The theorem `noInj` now exposes that conclusion at the boundary of the Hartogs module: every proposed injection supplies the pullback relation above and therefore leads to `Empty.⊥`.
+The local contradiction was proved under an arbitrary injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The theorem `noInj` now exposes that conclusion at the boundary of the Hartogs module: every proposed injection supplies the pullback relation above and therefore leads to `⊥*`.
 <!--zh-->
-上述局部矛盾是在任意单射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫` 的假设下证明的。定理 `noInj` 现在把这一结论带到 Hartogs 模块的接口上：每一条候选单射都会给出上面的拉回关系，因而导出 `Empty.⊥`。
+上述局部矛盾是在任意单射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫` 的假设下证明的。定理 `noInj` 现在把这一结论带到 Hartogs 模块的接口上：每一条候选单射都会给出上面的拉回关系，因而导出 `⊥*`。
 <!--ja-->
-上の局所的な矛盾は、任意の単射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫` を仮定して証明されました。定理 `noInj` はこの結論を Hartogs モジュールの外部へ提示します。どの単射を仮定しても、上で用いた引き戻し関係が得られ、したがって `Empty.⊥` に至ります。
+上の局所的な矛盾は、任意の単射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫` を仮定して証明されました。定理 `noInj` はこの結論を Hartogs モジュールの外部へ提示します。どの単射を仮定しても、上で用いた引き戻し関係が得られ、したがって `⊥*` に至ります。
 <!--/-->
 
 ```agda
-  noInj : (⟪ μ ⟫ ↪ ⟪ a ⟫) → Empty.⊥
+  noInj : (⟪ μ ⟫ ↪ ⟪ a ⟫) → ⊥₀
   noInj f = NoInj.absurd f
 ```
 

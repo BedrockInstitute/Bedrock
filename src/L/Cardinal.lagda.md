@@ -120,9 +120,6 @@ Existence inside this development is often deliberately weakened by propositiona
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 
 ```
 
@@ -366,7 +363,7 @@ elimination of the propositional truncation is legitimate.
 IsCardinalL : S → Type (ℓ-suc ℓ)
 IsCardinalL κ =
   (δ : S) → ⟨ fst δ ∈ fst κ ⟩
-          → (∥ Σ[ F ∈ S ] InjCode F κ δ ∥₁ → Empty.⊥)
+          → (∥ Σ[ F ∈ S ] InjCode F κ δ ∥₁ → ⊥₀)
 
 ```
 

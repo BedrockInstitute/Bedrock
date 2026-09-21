@@ -30,6 +30,8 @@ To encode syntax as sets, two operations on the carrier would suffice on their o
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Nat using ( znots; snotz )
+open import Cubical.Data.FinData using ( inj-toℕ )
 open import FOL.ZFStructure using ( ZFStructure )
 
 module FOL.Coding {ℓ} (𝒮 : ZFStructure ℓ)
@@ -66,7 +68,6 @@ open import FOL.Syntax
   using ( Term; con; var; Formula
         ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -78,8 +79,6 @@ Two small arithmetic facts support the injectivity proofs. First, structurally d
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( znots; snotz )
-open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 ```
 
 <!--en-->
@@ -111,19 +110,19 @@ mkTag k x = pr (encℕ k) x
 mkTag-inj : ∀ {j k x y} → mkTag j x ≡ mkTag k y → (j ≡ k) × (x ≡ y)
 mkTag-inj p = encℕ-inj (pr-inj p .fst) , pr-inj p .snd
 
-clash : ∀ {j k x y} {A : Type ℓ} → (j ≡ k → Empty.⊥) → mkTag j x ≡ mkTag k y → A
+clash : ∀ {j k x y} {A : Type ℓ} → (j ≡ k → ⊥₀) → mkTag j x ≡ mkTag k y → A
 ```
 
 <!--en-->
-The body of `clash` runs this argument in one line. `mkTag-inj p .fst` is the equation `j ≡ k` extracted from the assumed equality of codes; feeding it to the hypothesis `ne` yields an element of the empty type, and `Empty.rec` eliminates that element to return a value of the arbitrary type `A`. Whenever two constructor shapes force numerals `0` and `suc _` to be equal, `clash` converts the arithmetic refutation into the needed conclusion.
+The body of `clash` runs this argument in one line. `mkTag-inj p .fst` is the equation `j ≡ k` extracted from the assumed equality of codes; feeding it to the hypothesis `ne` yields an element of the empty type, and `⊥*-rec` eliminates that element to return a value of the arbitrary type `A`. Whenever two constructor shapes force numerals `0` and `suc _` to be equal, `clash` converts the arithmetic refutation into the needed conclusion.
 <!--zh-->
-`clash` 的主体把这一论证写成一行。`mkTag-inj p .fst` 是从假设的码等式中抽出的等式 `j ≡ k`；把它交给假设 `ne` 得到空类型的一个元素，`Empty.rec` 消去该元素，返回任意类型 `A` 中的值。每当两个构造子形状迫使数字 `0` 与 `suc _` 相等时，`clash` 就把这一算术否证转化为所需的结论。
+`clash` 的主体把这一论证写成一行。`mkTag-inj p .fst` 是从假设的码等式中抽出的等式 `j ≡ k`；把它交给假设 `ne` 得到空类型的一个元素，`⊥*-rec` 消去该元素，返回任意类型 `A` 中的值。每当两个构造子形状迫使数字 `0` 与 `suc _` 相等时，`clash` 就把这一算术否证转化为所需的结论。
 <!--ja-->
-`clash` の本体はこの議論を 1 行にまとめます。`mkTag-inj p .fst` は仮定した符号の等式から取り出した等式 `j ≡ k` であり、それを仮定 `ne` に渡すと空型の元が得られ、`Empty.rec` がその元を消去して任意の型 `A` の値を返します。2 つの構成子の形が数 `0` と `suc _` を等しくさせるたびに、`clash` はこの算術的反駁を必要な結論へ変換します。
+`clash` の本体はこの議論を 1 行にまとめます。`mkTag-inj p .fst` は仮定した符号の等式から取り出した等式 `j ≡ k` であり、それを仮定 `ne` に渡すと空型の元が得られ、`⊥*-rec` がその元を消去して任意の型 `A` の値を返します。2 つの構成子の形が数 `0` と `suc _` を等しくさせるたびに、`clash` はこの算術的反駁を必要な結論へ変換します。
 <!--/-->
 
 ```agda
-clash ne p = Empty.rec (ne (mkTag-inj p .fst))
+clash ne p = ⊥₀-rec (ne (mkTag-inj p .fst))
 ```
 
 <!--en-->
@@ -400,11 +399,11 @@ Match     5 φ = φ ≡ ⊥̇
 ```
 
 <!--en-->
-The quantifier tags carry the arity shift. For tags `6` and `7` the single slot is a formula of arity `suc n`; for tags `8` and `9` a term of arity `n` and a body of arity `suc n` fill the two slots, matching the constructors `∀̇∈` and `∃̇∈`. Any other tag has no formulas to describe, so the family closes with the empty type `Empty.⊥*`; `Match` is thereby defined for every natural-number tag.
+The quantifier tags carry the arity shift. For tags `6` and `7` the single slot is a formula of arity `suc n`; for tags `8` and `9` a term of arity `n` and a body of arity `suc n` fill the two slots, matching the constructors `∀̇∈` and `∃̇∈`. Any other tag has no formulas to describe, so the family closes with the empty type `⊥*`; `Match` is thereby defined for every natural-number tag.
 <!--zh-->
-量词标签带有元数变化。标签 `6` 与 `7` 的唯一槽位是元数 `suc n` 的公式；标签 `8` 与 `9` 的两个槽位分别是元数 `n` 的词项与元数 `suc n` 的主体，对应构造子 `∀̇∈` 与 `∃̇∈`。其余标签没有任何公式可描述，故该族以空类型 `Empty.⊥*` 收尾；由此 `Match` 对每个自然数标签都有定义。
+量词标签带有元数变化。标签 `6` 与 `7` 的唯一槽位是元数 `suc n` 的公式；标签 `8` 与 `9` 的两个槽位分别是元数 `n` 的词项与元数 `suc n` 的主体，对应构造子 `∀̇∈` 与 `∃̇∈`。其余标签没有任何公式可描述，故该族以空类型 `⊥*` 收尾；由此 `Match` 对每个自然数标签都有定义。
 <!--ja-->
-量化子のタグにはアリティの変化が現れます。タグ `6` と `7` の唯一のスロットはアリティ `suc n` の論理式であり、タグ `8` と `9` ではアリティ `n` の項とアリティ `suc n` の本体が 2 つのスロットを埋め、構成子 `∀̇∈` と `∃̇∈` に対応します。その他のタグに対応する論理式はないので、族は空型 `Empty.⊥*` で閉じられます。これにより `Match` はすべての自然数のタグに対して定義されます。
+量化子のタグにはアリティの変化が現れます。タグ `6` と `7` の唯一のスロットはアリティ `suc n` の論理式であり、タグ `8` と `9` ではアリティ `n` の項とアリティ `suc n` の本体が 2 つのスロットを埋め、構成子 `∀̇∈` と `∃̇∈` に対応します。その他のタグに対応する論理式はないので、族は空型 `⊥*` で閉じられます。これにより `Match` はすべての自然数のタグに対して定義されます。
 <!--/-->
 
 ```agda
@@ -412,7 +411,7 @@ Match {n} 6 φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∃̇ a))
 Match {n} 7 φ = Σ[ a ∈ Formula S (suc n) ] (φ ≡ (∀̇ a))
 Match {n} 8 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∀̇∈ t a))
 Match {n} 9 φ = Σ[ t ∈ Term S n ] (Σ[ a ∈ Formula S (suc n) ] (φ ≡ ∃̇∈ t a))
-Match     _  _ = Empty.⊥*
+Match     _  _ = ⊥*
 ```
 
 <!--en-->

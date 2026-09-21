@@ -177,10 +177,8 @@ Natural-number order supplies the second comparison key: for numeral arities, me
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _+_ )
 open import Cubical.Data.Nat.Order
   using ( _<_; zero-≤; suc-≤-suc; pred-≤-pred; ¬-<-zero; <-trans )
-open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
 ```
 
@@ -193,11 +191,6 @@ The proof data follow the lexicographic shape. Dependent pairs carry a position 
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Empty as Empty
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Foundations.Prelude using ( subst2 )
 ```
 
 <!--en-->
@@ -210,8 +203,6 @@ Existential and disjunctive satisfaction is propositionally truncated: it preser
 
 ```agda
 open import Cubical.Foundations.Transport using ( constSubstCommSlice )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
 ```
@@ -361,7 +352,7 @@ relating two empty types.
 
 ```agda
 private
-  noAlpha : ⟪ ∅ {ℓ} ⟫ → Empty.⊥
+  noAlpha : ⟪ ∅ {ℓ} ⟫ → ⊥₀
   noAlpha m = ∅-empty (⟪ ∅ ⟫↪ m) (∈ₛ⟪ ∅ ⟫↪ m)
 
 ```
@@ -403,7 +394,7 @@ codes needed for the empty-alphabet characterization.
 
 ```agda
   ε : ⟪ ∅ {ℓ} ⟫ → ⊥* {ℓ}
-  ε m = Empty.rec (noAlpha m)
+  ε m = ⊥₀-rec (noAlpha m)
 
 ```
 
@@ -426,8 +417,8 @@ to this equality will later give equality of their codes.
 
 ```agda
   sameCode : ∀ {n} (ψ : Fo∅ n) → mapFo ⟪ ∅ ⟫↪ ψ ≡ embed (mapFo ε ψ)
-  sameCode ψ = cong (λ f → mapFo f ψ) (funExt (λ m → Empty.rec (noAlpha m)))
-             ∙ sym (mapFo-comp ε Empty.rec* ψ)
+  sameCode ψ = cong (λ f → mapFo f ψ) (funExt (λ m → ⊥₀-rec (noAlpha m)))
+             ∙ sym (mapFo-comp ε ⊥*-rec ψ)
 
 ```
 
@@ -449,8 +440,8 @@ assigns to the embedded formula to the usual universe-code of `χ`.
 ```agda
   sameCode' : ∀ {n} (χ : Formula (⊥* {ℓ}) n)
             → mapFo ⟪ ∅ {ℓ} ⟫↪ (embed χ) ≡ embed χ
-  sameCode' χ = mapFo-comp Empty.rec* ⟪ ∅ ⟫↪ χ
-              ∙ cong (λ f → mapFo f χ) (funExt (λ b → Empty.rec* b))
+  sameCode' χ = mapFo-comp ⊥*-rec ⟪ ∅ ⟫↪ χ
+              ∙ cong (λ f → mapFo f χ) (funExt (λ b → ⊥*-rec b))
 
 ```
 
@@ -509,19 +500,19 @@ The elimination theorem `AllCodes-out` decodes a member only under
 propositional truncation, and it takes an element of `S`, namely a set together
 with a proof that it is constructible. The underlying set of the desired input
 is already `pr (# k) c`; it remains to supply that constructibility proof. Once
-this is done, `PT.map read` transforms each possible decoded payload into the
+this is done, `map₁ read` transforms each possible decoded payload into the
 desired `k`-ary parameter-free payload without ever removing the truncation.
 <!--zh-->
-反向则设 `pr (# k) c` 属于 `AllCodes ∅ʟ`。消去定理 `AllCodes-out` 只在命题截断下解码一个成员，而且它接收的是 `S` 的元素，也就是一个集合连同其可构造性证明。所需输入的底层集合已经是 `pr (# k) c`，还须补上它的可构造性证明。完成这一步以后，`PT.map read` 会把命题截断中的每一份可能解码载荷变成所需的 `k` 元无参载荷，始终不消去命题截断。
+反向则设 `pr (# k) c` 属于 `AllCodes ∅ʟ`。消去定理 `AllCodes-out` 只在命题截断下解码一个成员，而且它接收的是 `S` 的元素，也就是一个集合连同其可构造性证明。所需输入的底层集合已经是 `pr (# k) c`，还须补上它的可构造性证明。完成这一步以后，`map₁ read` 会把命题截断中的每一份可能解码载荷变成所需的 `k` 元无参载荷，始终不消去命题截断。
 <!--ja-->
-逆向きでは、`pr (# k) c` が `AllCodes ∅ʟ` に属すると仮定します。除去定理`AllCodes-out` は、要素を命題的切り詰めの下でのみ復号し、入力には `S` の要素、すなわち集合とその構成可能性の証明を要求します。必要な入力の台集合はすでに `pr (# k) c` なので、残るのはその構成可能性の証明です。それが得られれば、`PT.map read` は切り詰められた各復号データを、求める `k` 項の無パラメータなデータへ変換します。この操作が命題的切り詰めを取り除くことはありません。
+逆向きでは、`pr (# k) c` が `AllCodes ∅ʟ` に属すると仮定します。除去定理`AllCodes-out` は、要素を命題的切り詰めの下でのみ復号し、入力には `S` の要素、すなわち集合とその構成可能性の証明を要求します。必要な入力の台集合はすでに `pr (# k) c` なので、残るのはその構成可能性の証明です。それが得られれば、`map₁ read` は切り詰められた各復号データを、求める `k` 項の無パラメータなデータへ変換します。この操作が命題的切り詰めを取り除くことはありません。
 <!--/-->
 
 ```agda
 
 freeCode-out : (k : ℕ) (c : V ℓ) → ⟨ pr (# k) c ∈ fst (AllCodes ∅ʟ) ⟩
              → ∥ Σ[ χ ∈ Formula (⊥* {ℓ}) k ] (c ≡ fst (limitCode χ)) ∥₁
-freeCode-out k c h = PT.map read (AllCodes-out ∅ʟ (pr (# k) c , cL) h)
+freeCode-out k c h = map₁ read (AllCodes-out ∅ʟ (pr (# k) c , cL) h)
   where
   cL : ⟨ isL (pr (# k) c) ⟩
 ```
@@ -575,13 +566,13 @@ that `c` is the universe-code obtained from the original `ψ`. By `codeShift`,
 that code agrees with the code of the transported `ψ'`; by `sameCode`, the
 latter agrees with the code of `embed (mapFo ε ψ')`. Composing these equalities
 gives exactly the certificate paired with the witness. Since `read` is applied
-only through `PT.map`, `freeCode-out` concludes merely that such a
+only through `map₁`, `freeCode-out` concludes merely that such a
 parameter-free formula exists under propositional truncation. It does not
 select a formula from the code set.
 <!--zh-->
-键等式的两个分量完成这一构造。第一分量的类型是 `# k ≡ # n`；数码的单射性再配合对称性，给出 `e : n ≡ k`，公式 `ψ` 沿它迁移为 `ψ'`。第二分量说明 `c`等于从原公式 `ψ` 得到的宇宙公式码。由 `codeShift`，该码等于迁移后 `ψ'` 的码；再由 `sameCode`，后者等于 `embed (mapFo ε ψ')` 的码。复合这些等式，恰好得到与见证配对的证明。由于 `read` 只通过 `PT.map` 使用，`freeCode-out` 的结论只是在命题截断下存在这样一条无参公式，并未从码集中选择出一条公式。
+键等式的两个分量完成这一构造。第一分量的类型是 `# k ≡ # n`；数码的单射性再配合对称性，给出 `e : n ≡ k`，公式 `ψ` 沿它迁移为 `ψ'`。第二分量说明 `c`等于从原公式 `ψ` 得到的宇宙公式码。由 `codeShift`，该码等于迁移后 `ψ'` 的码；再由 `sameCode`，后者等于 `embed (mapFo ε ψ')` 的码。复合这些等式，恰好得到与见证配对的证明。由于 `read` 只通过 `map₁` 使用，`freeCode-out` 的结论只是在命题截断下存在这样一条无参公式，并未从码集中选择出一条公式。
 <!--ja-->
-キーの等式の二つの成分が構成を完成させます。第一成分の型は `# k ≡ # n`です。数項の単射性と対称性から `e : n ≡ k` が得られ、`ψ` はそれに沿って`ψ'` へ輸送されます。第二成分は、`c` が元の `ψ` から得られる宇宙上の論理式コードに等しいことを述べます。`codeShift` により、そのコードは輸送後の `ψ'` のコードと一致します。さらに `sameCode` により、後者は`embed (mapFo ε ψ')` のコードと一致します。これらの等式を合成すると、証人と組にすべき証明がちょうど得られます。`read` は `PT.map` を通してのみ使われるため、`freeCode-out` の結論は、そのような無パラメータ論理式が命題的切り詰めの下で存在するということだけです。コード集合から論理式を選び出してはいません。
+キーの等式の二つの成分が構成を完成させます。第一成分の型は `# k ≡ # n`です。数項の単射性と対称性から `e : n ≡ k` が得られ、`ψ` はそれに沿って`ψ'` へ輸送されます。第二成分は、`c` が元の `ψ` から得られる宇宙上の論理式コードに等しいことを述べます。`codeShift` により、そのコードは輸送後の `ψ'` のコードと一致します。さらに `sameCode` により、後者は`embed (mapFo ε ψ')` のコードと一致します。これらの等式を合成すると、証人と組にすべき証明がちょうど得られます。`read` は `map₁` を通してのみ使われるため、`freeCode-out` の結論は、そのような無パラメータ論理式が命題的切り詰めの下で存在するということだけです。コード集合から論理式を選び出してはいません。
 <!--/-->
 
 ```agda
@@ -725,7 +716,7 @@ turn.
 ```agda
   FreeAt-out : ⟨ γ ⊨ FreeAt C₀ s a ⟩
              → ⟨ pr (# (suc k)) (fst (lookup s γ)) ∈ fst (lookup C₀ γ) ⟩
-  FreeAt-out = PT.rec (snd (pr (# (suc k)) (fst (lookup s γ))
+  FreeAt-out = rec₁ (snd (pr (# (suc k)) (fst (lookup s γ))
                             ∈ fst (lookup C₀ γ))) atNum
     where
 ```
@@ -807,7 +798,7 @@ eliminated into `Target`.
                        × ⟨ (z ∷ γ) ⊨ ∃̇ ( prAtL zero (suc zero) (sh2 s)
                                        ∧̇ (var zero ∈̇ var (sh2 C₀)) ) ⟩ )
           → Target
-    atNum (z , (hs , hk)) = PT.rec (snd (pr (# (suc k)) (fst (lookup s γ))
+    atNum (z , (hs , hk)) = rec₁ (snd (pr (# (suc k)) (fst (lookup s γ))
 ```
 
 <!--en-->
@@ -956,7 +947,7 @@ possible index without choosing one.
 private
   memberOf : (k : ℕ) (g : Fin k → V ℓ) (x y : V ℓ) → ⟨ pr x y ∈ env g ⟩
            → ∥ Σ[ i ∈ Fin k ] ((x ≡ # (toℕ i)) × (y ≡ g i)) ∥₁
-  memberOf k g x y = PT.map
+  memberOf k g x y = map₁
     (λ { (li , e) → lower li
 ```
 
@@ -1012,7 +1003,7 @@ index from the graph membership and prove that its numeral belongs to `# k`.
 ```agda
   dom-into : (k : ℕ) (g : Fin k → V ℓ) (x : V ℓ)
            → ⟨ ∃[ y ∶ S ] pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
-  dom-into k g x = PT.rec (snd (x ∈ # k)) atEntry
+  dom-into k g x = rec₁ (snd (x ∈ # k)) atEntry
     where
     atIndex : (u : V ℓ) → Σ[ i ∈ Fin k ] ((x ≡ # (toℕ i)) × (u ≡ g i))
 ```
@@ -1035,18 +1026,18 @@ the remaining truncated index information.
     atIndex u (i , (qx , _)) = subst (λ v → ⟨ v ∈ # k ⟩) (sym qx)
       (#mono (toℕ i) k (toℕ<n i))
     atEntry : Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ env g ⟩ → ⟨ x ∈ # k ⟩
-    atEntry (y , p) = PT.rec (snd (x ∈ # k)) (atIndex (fst y))
+    atEntry (y , p) = rec₁ (snd (x ∈ # k)) (atIndex (fst y))
 ```
 
 <!--en-->
 Applying `memberOf` supplies precisely that index information, still under
-propositional truncation. Because `x ∈ # k` is a proposition, `PT.rec` may feed
+propositional truncation. Because `x ∈ # k` is a proposition, `rec₁` may feed
 each representative to `atIndex`. This closes the forward inclusion without
 extracting an index as ordinary data.
 <!--zh-->
-对图的隶属应用 `memberOf`，恰好得到所需的索引信息，但它仍在命题截断内。由于 `x ∈ # k` 是命题，`PT.rec` 可以把每个代表交给 `atIndex`。正向包含由此完成，整个过程没有把某个索引提取成普通数据。
+对图的隶属应用 `memberOf`，恰好得到所需的索引信息，但它仍在命题截断内。由于 `x ∈ # k` 是命题，`rec₁` 可以把每个代表交给 `atIndex`。正向包含由此完成，整个过程没有把某个索引提取成普通数据。
 <!--ja-->
-グラフへの所属に `memberOf` を適用すると、必要な添字の情報がちょうど得られますが、それはまだ命題的切り詰めのもとにあります。`x ∈ # k` は命題なので、`PT.rec` は各代表を `atIndex` に渡せます。これで添字を通常のデータとして取り出すことなく、順向きの包含が閉じます。
+グラフへの所属に `memberOf` を適用すると、必要な添字の情報がちょうど得られますが、それはまだ命題的切り詰めのもとにあります。`x ∈ # k` は命題なので、`rec₁` は各代表を `atIndex` に渡せます。これで添字を通常のデータとして取り出すことなく、順向きの包含が閉じます。
 <!--/-->
 
 ```agda
@@ -1058,20 +1049,20 @@ extracting an index as ordinary data.
 For the reverse inclusion, suppose `x ∈ # k`. Elimination for von Neumann
 numerals says, under propositional truncation, that `x ≡ # m` for some natural
 number `m < k`. Such an `m` determines an index in `Fin k`. The conclusion is
-itself a propositionally truncated existence of a graph value, so `PT.map` can
+itself a propositionally truncated existence of a graph value, so `map₁` can
 transform each numeral witness without choosing one. The hypothesis `cg` will
 supply the constructibility certificate needed to present that value as an
 element of the model.
 <!--zh-->
-反向包含设 `x ∈ # k`。冯·诺伊曼数码的消去表明，在命题截断内，存在一个自然数 `m < k`，使 `x ≡ # m`。这样的 `m` 决定 `Fin k` 中的一个索引。结论本身也是「图中有取值」的命题截断存在，所以 `PT.map` 可以逐一变换数码见证，而无须选择其中一个。假设 `cg` 随后提供把该取值呈现为模型元素所需的可构造性证明。
+反向包含设 `x ∈ # k`。冯·诺伊曼数码的消去表明，在命题截断内，存在一个自然数 `m < k`，使 `x ≡ # m`。这样的 `m` 决定 `Fin k` 中的一个索引。结论本身也是「图中有取值」的命题截断存在，所以 `map₁` 可以逐一变换数码见证，而无须选择其中一个。假设 `cg` 随后提供把该取值呈现为模型元素所需的可构造性证明。
 <!--ja-->
-逆向きの包含では `x ∈ # k` と仮定します。von Neumann 数項の消去により、ある自然数 `m < k` について `x ≡ # m` であることが、命題的切り詰めのもとで得られます。そのような `m` は `Fin k` の添字を定めます。結論もグラフの値の存在を命題的に切り詰めたものなので、`PT.map` はいずれかを選ぶことなく、各数項の証人を変換できます。仮定 `cg` は、その値をモデルの元として提示するために必要な構成可能性の証明を供給します。
+逆向きの包含では `x ∈ # k` と仮定します。von Neumann 数項の消去により、ある自然数 `m < k` について `x ≡ # m` であることが、命題的切り詰めのもとで得られます。そのような `m` は `Fin k` の添字を定めます。結論もグラフの値の存在を命題的に切り詰めたものなので、`map₁` はいずれかを選ぶことなく、各数項の証人を変換できます。仮定 `cg` は、その値をモデルの元として提示するために必要な構成可能性の証明を供給します。
 <!--/-->
 
 ```agda
   dom-from : (k : ℕ) (g : Fin k → V ℓ) → ((i : Fin k) → ⟨ isL (g i) ⟩)
            → (x : V ℓ) → ⟨ x ∈ # k ⟩ → ⟨ ∃[ y ∶ S ] pr x (fst y) ∈ env g ⟩
-  dom-from k g cg x h = PT.map atNumeral (∈#-elim k x h)
+  dom-from k g cg x h = map₁ atNumeral (∈#-elim k x h)
     where
     atNumeral : Σ[ m ∈ ℕ ] ((m < k) × (x ≡ # m))
 ```
@@ -1177,7 +1168,7 @@ entry.
       (subst (λ u → ⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ u ⟩) qe
         (domAt-in e d γ h x hx))
     bwd : (x : S) → ⟨ fst x ∈ # k ⟩ → ⟨ fst x ∈ fst (lookup d γ) ⟩
-    bwd x hx = PT.rec (snd (fst x ∈ fst (lookup d γ))) put (dom-from k g cg (fst x) hx)
+    bwd x hx = rec₁ (snd (fst x ∈ fst (lookup d γ))) put (dom-from k g cg (fst x) hx)
       where
 ```
 
@@ -1362,7 +1353,7 @@ elimination is into the membership proposition. The other direction uses
 ```agda
     hdom : ∀ {m} (φ : Formula S m) → ⟨ fr φ ⊨ domAt Ti Ci ⟩
     hdom φ = domAt-intro Ti Ci (fr φ)
-      (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot Bs φ)))
+      (λ z → (λ h → rec₁ (snd (fst z ∈ fst (slot Bs φ)))
                  (λ { (w , hw) → inSlot Bs φ (fst z) (fst w) hw }) h)
            , (λ h → total Bs φ (fst z) h))
 ```
@@ -1478,12 +1469,12 @@ For the reverse reading, suppose `satGraphAt B x y` holds and slot `x` is the
 genuine key of `ψ`. `graphAt-out` exposes the fourteen existential components
 only under propositional truncation. The desired conclusion is an equality in
 the cumulative hierarchy `V`, and `setIsSet` says that this equality type is a
-proposition. Hence `PT.rec` may inspect each displayed graph witness locally
+proposition. Hence `rec₁` may inspect each displayed graph witness locally
 without choosing one globally.
 <!--zh-->
-反向读式设 `satGraphAt B x y` 成立，且位置 `x` 是 `ψ` 的真实键。`graphAt-out` 只能在命题截断内给出十四个存在分量。所求结论是累积层级 `V` 中的一条相等，而 `setIsSet` 说明这种相等所成的类型是命题。因此，`PT.rec` 可以在局部逐一考察呈现出的图见证，而不从中作全局选择。
+反向读式设 `satGraphAt B x y` 成立，且位置 `x` 是 `ψ` 的真实键。`graphAt-out` 只能在命题截断内给出十四个存在分量。所求结论是累积层级 `V` 中的一条相等，而 `setIsSet` 说明这种相等所成的类型是命题。因此，`rec₁` 可以在局部逐一考察呈现出的图见证，而不从中作全局选择。
 <!--ja-->
-逆方向では、`satGraphAt B x y` が成り立ち、スロット `x` が `ψ` の実際の鍵であると仮定します。`graphAt-out` が十四個の存在成分を与えるのは、命題的切り詰めのもとだけです。求める結論は累積階層 `V` における等式であり、`setIsSet` によってその等式型は命題です。したがって `PT.rec` は、グラフの証人を大域的に選ぶことなく、提示された各証人を局所的に調べられます。
+逆方向では、`satGraphAt B x y` が成り立ち、スロット `x` が `ψ` の実際の鍵であると仮定します。`graphAt-out` が十四個の存在成分を与えるのは、命題的切り詰めのもとだけです。求める結論は累積階層 `V` における等式であり、`setIsSet` によってその等式型は命題です。したがって `rec₁` は、グラフの証人を大域的に選ぶことなく、提示された各証人を局所的に調べられます。
 <!--/-->
 
 ```agda
@@ -1491,7 +1482,7 @@ without choosing one globally.
                → fst (lookup x γ) ≡ fst (keyS Bs ψ)
                → ⟨ γ ⊨ satGraphAt B x y ⟩
                → fst (lookup y γ) ≡ fst (Sat Bs (mapFo (asConst Bs) ψ))
-  graphAt-only {m} ψ qx h = PT.rec (setIsSet _ _) read (graphAt-out B x y γ h)
+  graphAt-only {m} ψ qx h = rec₁ (setIsSet _ _) read (graphAt-out B x y γ h)
 ```
 
 <!--en-->
@@ -1728,9 +1719,9 @@ choice of witnesses without selecting a tuple globally.
 ```agda
   DenoteBody-out : (z : S) → ⟨ (z ∷ γ) ⊨ DenoteBody B C s e ⟩
                  → ⟨ fst z ∈ fst (lookup B γ) ⟩ × ∥ DenoteOf z ∥₁
-  DenoteBody-out z (hz , hc) = hz , PT.rec squash₁
-    (λ { (c , (hc , hk)) → PT.rec squash₁
-      (λ { (k , (hk , hkey)) → PT.rec squash₁
+  DenoteBody-out z (hz , hc) = hz , rec₁ squash₁
+    (λ { (c , (hc , hk)) → rec₁ squash₁
+      (λ { (k , (hk , hkey)) → rec₁ squash₁
 ```
 
 <!--en-->
@@ -1748,7 +1739,7 @@ propositional truncation.
 <!--/-->
 
 ```agda
-        (λ { (key , (hi , (hp , hv))) → PT.map
+        (λ { (key , (hi , (hp , hv))) → map₁
           (λ { (v , (hg , hm)) → c , (k , (key , (v , (hc , (hk , (hi
             , ( subst ⟨_⟩
                   (prAtL-adequate zero (suc zero) (sh4 s) (key ∷ k ∷ c ∷ z ∷ γ)) hp
@@ -1818,7 +1809,7 @@ whole name formula.
 ```agda
     hf , (ha , (he , extAt-in-both d (DenoteBody B C s e) γ
       (λ z hz → DenoteBody-in B C s e γ z (into z hz .fst) (into z hz .snd))
-      (λ z h → PT.rec (snd (fst z ∈ fst (lookup d γ)))
+      (λ z h → rec₁ (snd (fst z ∈ fst (lookup d γ)))
                  (back z (DenoteBody-out B C s e γ z h .fst))
                  (DenoteBody-out B C s e γ z h .snd))))
 
@@ -2100,21 +2091,21 @@ two graph memberships required by `Agrees`, while preserving the same witness
 ```agda
   private
     pack : (i u v : S) → Inner i u v → Agrees i
-    pack i u v (_ , (_ , (_ , hj))) j hj' = PT.map
+    pack i u v (_ , (_ , (_ , hj))) j hj' = map₁
       (λ { (x , (p₁ , p₂)) → x
          , ( subst ⟨_⟩
 ```
 
 <!--en-->
 This conversion is performed inside the existing propositional truncation.
-`PT.map` sends every possible witness and its two application proofs to the
+`map₁` sends every possible witness and its two application proofs to the
 same witness with two membership proofs. Since the target is again a truncated
 existence, no representative is extracted and no choice principle is used.
 Pointwise mapping is enough to obtain `Agrees i` for every earlier position.
 <!--zh-->
-这次转换在已有的命题截断之内完成。`PT.map` 把每个可能的见证及其两份应用证明，映成同一个见证及其两份隶属证明。由于目标仍是经过命题截断的存在，过程中既不取出任何代表，也不使用选择原理。逐点映射便足以对每个更早位置得到 `Agrees i` 所需的结论。
+这次转换在已有的命题截断之内完成。`map₁` 把每个可能的见证及其两份应用证明，映成同一个见证及其两份隶属证明。由于目标仍是经过命题截断的存在，过程中既不取出任何代表，也不使用选择原理。逐点映射便足以对每个更早位置得到 `Agrees i` 所需的结论。
 <!--ja-->
-この変換は、すでにある命題的切り詰めの内部で行われます。`PT.map` は、可能な各証人と二つの適用の証明を、同じ証人と二つの所属の証明へ写します。目標も切り詰められた存在なので、代表を取り出す必要はなく、選択原理も使いません。各点で写すだけで、すべての先行する位置について `Agrees i` に必要な結論が得られます。
+この変換は、すでにある命題的切り詰めの内部で行われます。`map₁` は、可能な各証人と二つの適用の証明を、同じ証人と二つの所属の証明へ写します。目標も切り詰められた存在なので、代表を取り出す必要はなく、選択原理も使いません。各点で写すだけで、すべての先行する位置について `Agrees i` に必要な結論が得られます。
 <!--/-->
 
 ```agda
@@ -2141,20 +2132,20 @@ in `Body`.
     unpack : (i u v : S) → Agrees i
            → (j : S) → ⟨ fst j ∈ fst i ⟩
            → ⟨ ∃[ x ∶ S ] (x ∷ j ∷ v ∷ u ∷ i ∷ γ) ⊨ Body ⟩
-    unpack i u v hj j hj' = PT.map
+    unpack i u v hj j hj' = map₁
       (λ { (x , (p₁ , p₂)) → x
 ```
 
 <!--en-->
 The same adequacy paths are now used in the reverse direction. Each membership
 proof is transported along the symmetric path of `appAt-adequate`, producing
-the corresponding conjunct of `Body`. Again `PT.map` keeps the construction
+the corresponding conjunct of `Body`. Again `map₁` keeps the construction
 inside the truncated existential, so `unpack` proves the required semantic
 existence without selecting a common value globally.
 <!--zh-->
-这里沿反方向使用同一些充分性路径。每份隶属证明都沿 `appAt-adequate` 的对称路径迁移，从而得到 `Body` 中相应的合取项。`PT.map` 再次使整个构造留在经过命题截断的存在之内，所以 `unpack` 无须在全局选定共同取值，便能证明所需的语义存在。
+这里沿反方向使用同一些充分性路径。每份隶属证明都沿 `appAt-adequate` 的对称路径迁移，从而得到 `Body` 中相应的合取项。`map₁` 再次使整个构造留在经过命题截断的存在之内，所以 `unpack` 无须在全局选定共同取值，便能证明所需的语义存在。
 <!--ja-->
-ここでは同じ妥当性のパスを逆向きに使います。各所属の証明を `appAt-adequate` の対称なパスに沿って輸送すると、`Body` の対応する連言が得られます。ここでも `PT.map` によって構成全体が切り詰められた存在の内部に留まるため、`unpack` は共通の値を大域的に選ぶことなく、必要な意味論上の存在を証明できます。
+ここでは同じ妥当性のパスを逆向きに使います。各所属の証明を `appAt-adequate` の対称なパスに沿って輸送すると、`Body` の対応する連言が得られます。ここでも `map₁` によって構成全体が切り詰められた存在の内部に留まるため、`unpack` は共通の値を大域的に選ぶことなく、必要な意味論上の存在を証明できます。
 <!--/-->
 
 ```agda
@@ -2226,7 +2217,7 @@ chosen outside those local scopes.
 ```agda
 
   LexAt-out : ⟨ γ ⊨ LexAt P a e₁ e₂ ⟩ → ∥ Differs ∥₁
-  LexAt-out = PT.rec squash₁ atIndex
+  LexAt-out = rec₁ squash₁ atIndex
     where
     atValue : (i u v : S) → ⟨ fst i ∈ fst (lookup a γ) ⟩ → Inner i u v → Differs
     atValue i u v hi h@(h₁ , (h₂ , (hp , _))) = i , (u , (v
@@ -2306,7 +2297,7 @@ ever requiring a globally available `v`.
 ```agda
     atFirst : (i : S) → ⟨ fst i ∈ fst (lookup a γ) ⟩
             → Σ[ u ∈ S ] ∥ Σ[ v ∈ S ] Inner i u v ∥₁ → ∥ Differs ∥₁
-    atFirst i hi (u , h) = PT.rec squash₁ (atSecond i u hi) h
+    atFirst i hi (u , h) = rec₁ squash₁ (atSecond i u hi) h
 
 ```
 
@@ -2328,7 +2319,7 @@ index or values.
     atIndex : Σ[ i ∈ S ] ( ⟨ fst i ∈ fst (lookup a γ) ⟩
                          × ∥ Σ[ u ∈ S ] ∥ Σ[ v ∈ S ] Inner i u v ∥₁ ∥₁ )
             → ∥ Differs ∥₁
-    atIndex (i , (hi , h)) = PT.rec squash₁ (atFirst i hi) h
+    atIndex (i , (hi , h)) = rec₁ squash₁ (atFirst i hi) h
 ```
 
 <!--en-->
@@ -2424,19 +2415,19 @@ a branch or extracting any existential witness.
 <!--en-->
 The reverse direction has a necessarily weaker target:
 `≺At-out` returns `∥ Below ∥₁`. Satisfaction of the outer object-language
-disjunction is itself truncated, so `PT.rec` may inspect a branch only while
+disjunction is itself truncated, so `rec₁` may inspect a branch only while
 constructing this proposition. The local function `outer` separates the code
 case from the equal-code case. In the latter it retains the equality
 `s₂ = s₁` and passes the still-unsorted inner disjunction to `inner`.
 <!--zh-->
-反向读式的目标必然较弱：`≺At-out` 返回 `∥ Below ∥₁`。最外层对象语言析取的满足关系本身带有截断，所以 `PT.rec` 只能在构造这个命题时局部查看其分支。局部函数 `outer` 把码分支与码相等分支分开；在后一情形中，它保留等式`s₂ = s₁`，并把尚未归类的内层析取交给 `inner`。
+反向读式的目标必然较弱：`≺At-out` 返回 `∥ Below ∥₁`。最外层对象语言析取的满足关系本身带有截断，所以 `rec₁` 只能在构造这个命题时局部查看其分支。局部函数 `outer` 把码分支与码相等分支分开；在后一情形中，它保留等式`s₂ = s₁`，并把尚未归类的内层析取交给 `inner`。
 <!--ja-->
-逆向きの読みの行き先は、必然的に弱い `∥ Below ∥₁` です。外側の対象言語の選言についての充足関係自体が切り詰められているため、`PT.rec` が枝を調べられるのは、この命題を構成する局所的な範囲に限られます。局所関数 `outer` は符号の場合と符号が等しい場合を分けます。後者では等しさ `s₂ = s₁` を保ち、まだ分類されていない内側の選言を `inner` に渡します。
+逆向きの読みの行き先は、必然的に弱い `∥ Below ∥₁` です。外側の対象言語の選言についての充足関係自体が切り詰められているため、`rec₁` が枝を調べられるのは、この命題を構成する局所的な範囲に限られます。局所関数 `outer` は符号の場合と符号が等しい場合を分けます。後者では等しさ `s₂ = s₁` を保ち、まだ分類されていない内側の選言を `inner` に渡します。
 <!--/-->
 
 ```agda
   ≺At-out : ⟨ γ ⊨ ≺At R P s₁ a₁ e₁ s₂ a₂ e₂ ⟩ → ∥ Below ∥₁
-  ≺At-out = PT.rec squash₁ outer
+  ≺At-out = rec₁ squash₁ outer
     where
     inner : (fst (lookup s₂ γ) ≡ fst (lookup s₁ γ))
           → ⟨ fst (lookup a₁ γ) ∈ fst (lookup a₂ γ) ⟩
@@ -2464,19 +2455,19 @@ these alternatives explicit while fixing the code equality shared by both.
 
 <!--en-->
 In the parameter case, `LexAt-out` supplies only `∥ Differs ∥₁`, exactly as the
-existential semantics requires. `PT.map` sends each locally represented
+existential semantics requires. `map₁` sends each locally represented
 `Differs` record to the third case of `Below`, adjoining the already known code
 and arity equalities. The result remains under one propositional truncation, so
 the conversion carries existence to existence and never asks for a chosen
 first-difference witness.
 <!--zh-->
-在参数分支中，`LexAt-out` 只给出 `∥ Differs ∥₁`，恰好保留存在语义所要求的边界。`PT.map` 把其中每一份局部出现的 `Differs` 记录映到 `Below` 的第三种情形，并附上已经取得的码等式与元数等式。结果仍处于一层命题截断之下，因此这次转换只是把存在带到存在，从不要求选定一份首次相异见证。
+在参数分支中，`LexAt-out` 只给出 `∥ Differs ∥₁`，恰好保留存在语义所要求的边界。`map₁` 把其中每一份局部出现的 `Differs` 记录映到 `Below` 的第三种情形，并附上已经取得的码等式与元数等式。结果仍处于一层命题截断之下，因此这次转换只是把存在带到存在，从不要求选定一份首次相异见证。
 <!--ja-->
-パラメータの場合、`LexAt-out` が与えるのは `∥ Differs ∥₁` だけであり、存在の意味論が要求する境界を正確に保っています。`PT.map` は、その中で局所的に表された各 `Differs` の記録を `Below` の第三の場合へ写し、すでに得られた符号とアリティの等しさを付け加えます。結果は一つの命題的切り詰めの下に留まるので、この変換は存在を存在へ移すだけで、最初の相違の証人を選ぶことはありません。
+パラメータの場合、`LexAt-out` が与えるのは `∥ Differs ∥₁` だけであり、存在の意味論が要求する境界を正確に保っています。`map₁` は、その中で局所的に表された各 `Differs` の記録を `Below` の第三の場合へ写し、すでに得られた符号とアリティの等しさを付け加えます。結果は一つの命題的切り詰めの下に留まるので、この変換は存在を存在へ移すだけで、最初の相違の証人を選ぶことはありません。
 <!--/-->
 
 ```agda
-      PT.map (λ u → inr (q , inr (q' , u))) (LexAt-out P a₁ e₁ e₂ γ h)
+      map₁ (λ u → inr (q , inr (q' , u))) (LexAt-out P a₁ e₁ e₂ γ h)
 
 ```
 
@@ -2519,7 +2510,7 @@ truncation.
 
 ```agda
     outer (inl h) = ∣ inl (subst ⟨_⟩ (appAt-adequate R s₁ s₂ γ) h) ∣₁
-    outer (inr (q , h)) = PT.rec squash₁ (inner q) h
+    outer (inr (q , h)) = rec₁ squash₁ (inner q) h
 
 ```
 
@@ -2614,14 +2605,14 @@ Repeated existential elimination will need to change the property carried by a
 witness without choosing that witness globally. The helper `exists-map`
 captures exactly this operation. If each `B x` gives merely a `C x`, then mere
 existence of a pair `(x , B x)` gives mere existence of `(x , C x)`. The outer
-`PT.rec` eliminates the original propositional truncation into another
-propositionally truncated type, and the inner `PT.map` retains the same `x`
+`rec₁` eliminates the original propositional truncation into another
+propositionally truncated type, and the inner `map₁` retains the same `x`
 while transforming its second component. At no point does the result expose a
 particular witness of `A`.
 <!--zh-->
-反复消去存在量词时，需要改变见证所携带的性质，却不能在全局选出这个见证。辅助函数 `exists-map` 恰好概括这一操作。若每个 `B x` 都仅仅给出一个 `C x`，那么 `(x , B x)` 的仅仅存在便推出 `(x , C x)` 的仅仅存在。外层 `PT.rec` 把原来的命题截断消去到另一个命题截断类型中，内层 `PT.map` 则保留同一个 `x`，同时改造其第二分量。整个结果始终不会暴露 `A` 中的某个特定见证。
+反复消去存在量词时，需要改变见证所携带的性质，却不能在全局选出这个见证。辅助函数 `exists-map` 恰好概括这一操作。若每个 `B x` 都仅仅给出一个 `C x`，那么 `(x , B x)` 的仅仅存在便推出 `(x , C x)` 的仅仅存在。外层 `rec₁` 把原来的命题截断消去到另一个命题截断类型中，内层 `map₁` 则保留同一个 `x`，同时改造其第二分量。整个结果始终不会暴露 `A` 中的某个特定见证。
 <!--ja-->
-存在量化子を繰り返し消去するときには、証人を大域的に選ぶことなく、その証人が携える性質を変換する必要があります。補助関数 `exists-map` は、まさにこの操作を表します。各 `B x` から単に `C x` が得られるなら、対 `(x , B x)` が単に存在することから、対 `(x , C x)` が単に存在することが従います。外側の `PT.rec` は元の命題的切り詰めを別の命題的切り詰められた型へ消去し、内側の `PT.map` は同じ `x` を保ったまま第二成分を変換します。結果が `A` の特定の証人を外へ示すことはありません。
+存在量化子を繰り返し消去するときには、証人を大域的に選ぶことなく、その証人が携える性質を変換する必要があります。補助関数 `exists-map` は、まさにこの操作を表します。各 `B x` から単に `C x` が得られるなら、対 `(x , B x)` が単に存在することから、対 `(x , C x)` が単に存在することが従います。外側の `rec₁` は元の命題的切り詰めを別の命題的切り詰められた型へ消去し、内側の `map₁` は同じ `x` を保ったまま第二成分を変換します。結果が `A` の特定の証人を外へ示すことはありません。
 <!--/-->
 
 ```agda
@@ -2629,7 +2620,7 @@ private
   exists-map : {A : Type (ℓ-suc ℓ)} {B C : A → Type (ℓ-suc ℓ)}
              → ((x : A) → B x → ∥ C x ∥₁)
              → ∥ Σ A B ∥₁ → ∥ Σ A C ∥₁
-  exists-map f = PT.rec squash₁ (λ { (x , h) → PT.map (x ,_) (f x h) })
+  exists-map f = rec₁ squash₁ (λ { (x , h) → map₁ (x ,_) (f x h) })
 ```
 
 <!--en-->
@@ -2702,13 +2693,13 @@ The outward rule begins with satisfaction of the six-fold existential and
 must end in `∥ Six ∥₁`, rather than in an exposed six-tuple. Each use of
 `exists-map` crosses one existential layer while retaining its locally
 available witness inside the common propositional target. The chain handles
-`s₁`, `k₁`, `p₁`, `s₂`, and `k₂` in turn. At the innermost layer, `PT.map`
+`s₁`, `k₁`, `p₁`, `s₂`, and `k₂` in turn. At the innermost layer, `map₁`
 passes the pair consisting of `p₂` and the body's satisfaction proof into the
 same final truncated payload.
 <!--zh-->
-向外读式从六重存在公式的满足关系出发，其终点必须是 `∥ Six ∥₁`，而不能是暴露在截断之外的六元组。每次调用 `exists-map` 都跨过一层存在量词，并把该层局部可用的见证保留在共同的命题目标中。这条链依次处理 `s₁`、`k₁`、`p₁`、`s₂` 与 `k₂`；到最内层时，`PT.map` 把由 `p₂` 与公式体满足关系证明组成的那一对送入同一个最终截断载荷。
+向外读式从六重存在公式的满足关系出发，其终点必须是 `∥ Six ∥₁`，而不能是暴露在截断之外的六元组。每次调用 `exists-map` 都跨过一层存在量词，并把该层局部可用的见证保留在共同的命题目标中。这条链依次处理 `s₁`、`k₁`、`p₁`、`s₂` 与 `k₂`；到最内层时，`map₁` 把由 `p₂` 与公式体满足关系证明组成的那一对送入同一个最终截断载荷。
 <!--ja-->
-外向きの読みは、六重の存在量化についての充足関係から始まり、切り詰めの外に現れた六つ組ではなく `∥ Six ∥₁` を行き先とします。`exists-map` を一度使うたびに存在量化子を一層通過し、その層で局所的に得られた証人を共通の命題的な行き先の内側に保ちます。この連鎖は `s₁`、`k₁`、`p₁`、`s₂`、`k₂` を順に扱います。最も内側では、`PT.map` が `p₂` と本体の充足関係の証明からなる対を、同じ最終的な切り詰められた中身へ送ります。
+外向きの読みは、六重の存在量化についての充足関係から始まり、切り詰めの外に現れた六つ組ではなく `∥ Six ∥₁` を行き先とします。`exists-map` を一度使うたびに存在量化子を一層通過し、その層で局所的に得られた証人を共通の命題的な行き先の内側に保ちます。この連鎖は `s₁`、`k₁`、`p₁`、`s₂`、`k₂` を順に扱います。最も内側では、`map₁` が `p₂` と本体の充足関係の証明からなる対を、同じ最終的な切り詰められた中身へ送ります。
 <!--/-->
 
 ```agda
@@ -2734,7 +2725,7 @@ six truncations.
 <!--/-->
 
 ```agda
-          exists-map (λ k₂ → PT.map (λ p → p))))))
+          exists-map (λ k₂ → map₁ (λ p → p))))))
 
 ```
 
@@ -2961,8 +2952,8 @@ exists, so the agreement condition is vacuous.
 
 ```agda
   vec-lex : ∀ {k} (p q : Vec ⟪ A ⟫ k) → p ≺ᵥ q → Lex p q
-  vec-lex []      []      h = Empty.rec* h
-  vec-lex (x ∷ p) (y ∷ q) (inl h) = zero , (h , λ j hj → Empty.rec (¬-<-zero hj))
+  vec-lex []      []      h = ⊥*-rec h
+  vec-lex (x ∷ p) (y ∷ q) (inl h) = zero , (h , λ j hj → ⊥₀-rec (¬-<-zero hj))
   vec-lex (x ∷ p) (y ∷ q) (inr (e , h)) = suc (vec-lex p q h .fst)
     , ( vec-lex p q h .snd .fst
 ```
@@ -3384,7 +3375,7 @@ outside the proposition required by `Agrees`.
                 , agrees ) ) ) ) ) )
         where
         agrees : Agrees P a₁ e₁ e₂ γ (numAt (toℕ i))
-        agrees j hj = PT.map step (∈#-elim (toℕ i) (fst j) hj)
+        agrees j hj = map₁ step (∈#-elim (toℕ i) (fst j) hj)
           where
 ```
 
@@ -3476,20 +3467,20 @@ first difference. Its recorded index `i` belongs to the arity numeral, but the
 numeral-membership elimination theorem recovers the corresponding smaller
 natural number only under propositional truncation. Accordingly `lex-read` returns the
 propositional truncation of `Lex`: numeral elimination hides the chosen
-number, and `PT.map`
+number, and `map₁`
 performs the otherwise explicit reconstruction without removing that
 truncation.
 <!--zh-->
-反向桥从一份 `Differs` 记录出发，目标是恢复显式的首次相异。记录中的序号 `i` 属于元数数码，但数码隶属的消去定理只能在命题截断内恢复相应的较小自然数。因此，`lex-read` 返回 `Lex` 的命题截断：数码消去隐藏所选的自然数，`PT.map` 则在不解除这层截断的前提下完成其余显式构造。
+反向桥从一份 `Differs` 记录出发，目标是恢复显式的首次相异。记录中的序号 `i` 属于元数数码，但数码隶属的消去定理只能在命题截断内恢复相应的较小自然数。因此，`lex-read` 返回 `Lex` 的命题截断：数码消去隐藏所选的自然数，`map₁` 则在不解除这层截断的前提下完成其余显式构造。
 <!--ja-->
-逆向きの橋は `Differs` の記録から出発し、明示的な最初の相違を復元します。記録された添字 `i` はアリティの数項に属しますが、数項への所属についての消去定理が対応する小さい自然数を復元するのは、命題的切り詰めの中だけです。そのため `lex-read` は `Lex` の命題的切り詰めを返します。数項の消去は選ばれた自然数を隠したままにし、`PT.map` がその切り詰めを外さずに残りの明示的な構成を行います。
+逆向きの橋は `Differs` の記録から出発し、明示的な最初の相違を復元します。記録された添字 `i` はアリティの数項に属しますが、数項への所属についての消去定理が対応する小さい自然数を復元するのは、命題的切り詰めの中だけです。そのため `lex-read` は `Lex` の命題的切り詰めを返します。数項の消去は選ばれた自然数を隠したままにし、`map₁` がその切り詰めを外さずに残りの明示的な構成を行います。
 <!--/-->
 
 ```agda
       lex-read : Differs P a₁ e₁ e₂ γ
                → ∥ Lex (params t₁) (subst (Vec ⟪ A ⟫) qk (params t₂)) ∥₁
       lex-read (i , (u , (v , (hi , (h₁ , (h₂ , (hp , ag))))))) =
-        PT.map atIndex (∈#-elim (arity t₁) (fst i)
+        map₁ atIndex (∈#-elim (arity t₁) (fst i)
           (subst (λ z → ⟨ fst i ∈ z ⟩) qa hi))
 ```
 
@@ -3574,7 +3565,7 @@ eliminated directly into it.
               (subst (λ z → ⟨ pr (fst u) (fst v) ∈ z ⟩) qP hp))
           agrees : (j : Fin (arity t₁)) → toℕ j < toℕ ι → pr₁ j ≡ pr₂ j
           agrees j hj = ix-inj (pr₁ j) (pr₂ j)
-            (PT.rec (setIsSet (ix (pr₁ j)) (ix (pr₂ j))) same
+            (rec₁ (setIsSet (ix (pr₁ j)) (ix (pr₂ j))) same
 ```
 
 <!--en-->
@@ -3878,21 +3869,21 @@ truncation.
 <!--en-->
 The reverse theorem retains the propositional truncation carried by the
 object-language disjunctions and existentials. Accordingly, `≺At-out` exposes
-the three cases only inside a truncation, and `PT.rec` may analyze them because
+the three cases only inside a truncation, and `rec₁` may analyze them because
 the target is itself the proposition `∥ t₁ ≺ₙ t₂ ∥₁`. In the code case, the
 slot equations move the recorded pair membership back to `Rs`; `Rrep` then
 reads it as the strict limit-order comparison of the two genuine codes and
 supplies the first branch of the naming comparison.
 <!--zh-->
-反向定理保留对象语言析取与存在量词所携带的命题截断。因此，`≺At-out` 只能在截断内给出三种情形；目标本身是命题 `∥ t₁ ≺ₙ t₂ ∥₁`，故 `PT.rec` 可以在其中作情形分析。在码支中，各槽位等同把公式记录的有序对隶属搬回 `Rs`，`Rrep` 再将它读成两个真实码在极限序下的严格比较，从而给出名字比较的第一支。
+反向定理保留对象语言析取与存在量词所携带的命题截断。因此，`≺At-out` 只能在截断内给出三种情形；目标本身是命题 `∥ t₁ ≺ₙ t₂ ∥₁`，故 `rec₁` 可以在其中作情形分析。在码支中，各槽位等同把公式记录的有序对隶属搬回 `Rs`，`Rrep` 再将它读成两个真实码在极限序下的严格比较，从而给出名字比较的第一支。
 <!--ja-->
-逆向きの定理は、対象言語の選言と存在量化が伴う命題的切り詰めを保ちます。したがって `≺At-out` が三つの場合を取り出すのは切り詰めの内側だけです。目標自身が命題 `∥ t₁ ≺ₙ t₂ ∥₁` なので、`PT.rec` はその中で場合分けできます。符号の枝では、各スロットの同一視によって論理式に記録された順序対の所属を `Rs` へ戻し、`Rrep` がそれを二つの実際の符号の極限順序による狭義の比較として読みます。これが名前比較の第一の枝を与えます。
+逆向きの定理は、対象言語の選言と存在量化が伴う命題的切り詰めを保ちます。したがって `≺At-out` が三つの場合を取り出すのは切り詰めの内側だけです。目標自身が命題 `∥ t₁ ≺ₙ t₂ ∥₁` なので、`rec₁` はその中で場合分けできます。符号の枝では、各スロットの同一視によって論理式に記録された順序対の所属を `Rs` へ戻し、`Rrep` がそれを二つの実際の符号の極限順序による狭義の比較として読みます。これが名前比較の第一の枝を与えます。
 <!--/-->
 
 ```agda
 
       order-out : ⟨ γ ⊨ ≺At R P s₁ a₁ e₁ s₂ a₂ e₂ ⟩ → ∥ t₁ ≺ₙ t₂ ∥₁
-      order-out h = PT.rec squash₁ read (≺At-out R P s₁ a₁ e₁ s₂ a₂ e₂ γ h)
+      order-out h = rec₁ squash₁ read (≺At-out R P s₁ a₁ e₁ s₂ a₂ e₂ γ h)
         where
         read : Below R P s₁ a₁ e₁ s₂ a₂ e₂ γ → ∥ t₁ ≺ₙ t₂ ∥₁
         read (inl k) = ∣ inl (Rrep (codeOf t₁) (codeOf t₂)
@@ -3937,7 +3928,7 @@ of the formula.
 
 ```agda
             (subst2 (λ y z → ⟨ y ∈ z ⟩) qa₁ qa₂ k))) ∣₁
-        read (inr (q , inr (q' , dif))) = PT.map atLex
+        read (inr (q , inr (q' , dif))) = map₁ atLex
           (lex-read P a₁ e₁ e₂ γ t₁ t₂ qP qa₁ ek qe₁ (shiftEnv ek) dif)
           where
           ek : arity t₂ ≡ arity t₁
@@ -3948,16 +3939,16 @@ Inside that truncation, `atLex` completes the third case. The induction
 `lex-vec` turns the explicit first difference into the recursive vector order
 against the transported second vector, and `vecShift` removes the transport
 from the resulting proposition. Together with `codeSame q` and the recovered
-arity path `ek`, this is the parameter branch of `_≺ₙ_`; `PT.map` keeps the
+arity path `ek`, this is the parameter branch of `_≺ₙ_`; `map₁` keeps the
 whole result truncated. Thus, under the two representation laws and the slot
 identifications, `order-in` constructs satisfaction of `≺At` from a naming
 comparison, while `order-out` recovers only `∥ t₁ ≺ₙ t₂ ∥₁`. This theorem is
 the adequacy of the comparison formula itself; the corresponding readings of
 `NameAt`, `LeastNameAt`, and `StepAt` require additional arguments.
 <!--zh-->
-在该截断内部，`atLex` 完成第三种情形。归纳 `lex-vec` 把显式首次相异化为第一个向量与搬运后第二个向量之间的递归向量序，`vecShift` 再从所得命题中消去这次搬运。把它与 `codeSame q` 及恢复出的元数路径 `ek` 合在一起，就得到 `_≺ₙ_` 的参数支；`PT.map` 则使整个结果仍处于截断内。因此，在两个序的表示律与各项槽位等同之下，`order-in` 从名字比较构造对 `≺At` 的满足，而 `order-out` 只恢复 `∥ t₁ ≺ₙ t₂ ∥₁`。这证明的是比较公式自身的充分性；`NameAt`、`LeastNameAt` 与 `StepAt` 的相应读式还需要另外的论证。
+在该截断内部，`atLex` 完成第三种情形。归纳 `lex-vec` 把显式首次相异化为第一个向量与搬运后第二个向量之间的递归向量序，`vecShift` 再从所得命题中消去这次搬运。把它与 `codeSame q` 及恢复出的元数路径 `ek` 合在一起，就得到 `_≺ₙ_` 的参数支；`map₁` 则使整个结果仍处于截断内。因此，在两个序的表示律与各项槽位等同之下，`order-in` 从名字比较构造对 `≺At` 的满足，而 `order-out` 只恢复 `∥ t₁ ≺ₙ t₂ ∥₁`。这证明的是比较公式自身的充分性；`NameAt`、`LeastNameAt` 与 `StepAt` 的相应读式还需要另外的论证。
 <!--ja-->
-その切り詰めの内側で、`atLex` が第三の場合を完成させます。帰納法 `lex-vec` は明示的な最初の相違を、第一のベクトルと輸送後の第二のベクトルとの再帰的なベクトル順序へ変え、`vecShift` が得られた命題からその輸送を取り除きます。これに `codeSame q` と復元したアリティの経路 `ek` を合わせると `_≺ₙ_` のパラメータの枝となり、`PT.map` は結果全体を切り詰めの内側に保ちます。したがって、二つの順序の表示則と各スロットの同一視のもとで、`order-in` は名前比較から `≺At` の充足を構成し、`order-out` は `∥ t₁ ≺ₙ t₂ ∥₁` だけを復元します。ここで証明されたのは比較論理式そのものの妥当性であり、`NameAt`、`LeastNameAt`、`StepAt` の対応する読みには、さらに別の議論が必要です。
+その切り詰めの内側で、`atLex` が第三の場合を完成させます。帰納法 `lex-vec` は明示的な最初の相違を、第一のベクトルと輸送後の第二のベクトルとの再帰的なベクトル順序へ変え、`vecShift` が得られた命題からその輸送を取り除きます。これに `codeSame q` と復元したアリティの経路 `ek` を合わせると `_≺ₙ_` のパラメータの枝となり、`map₁` は結果全体を切り詰めの内側に保ちます。したがって、二つの順序の表示則と各スロットの同一視のもとで、`order-in` は名前比較から `≺At` の充足を構成し、`order-out` は `∥ t₁ ≺ₙ t₂ ∥₁` だけを復元します。ここで証明されたのは比較論理式そのものの妥当性であり、`NameAt`、`LeastNameAt`、`StepAt` の対応する読みには、さらに別の議論が必要です。
 <!--/-->
 
 ```agda

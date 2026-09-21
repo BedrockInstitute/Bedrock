@@ -55,8 +55,6 @@ An injection code consists of a constructible graph together with three satisfac
 
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 
 open hPropStructure 𝒮ʟ using ( S )
 setPL : (a : S) → isSet (⟪ fst a ⟫)

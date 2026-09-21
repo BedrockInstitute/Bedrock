@@ -49,10 +49,6 @@ The argument moves between two structures. The ambient hierarchy supplies well-f
 ```agda
 open import L.Cardinal {ℓ} lem using ( InjL; SuccCardL; IsCardinalL )
 open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -64,8 +60,6 @@ The exceptional branch produces only a truncated witness. Accordingly, the proof
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 import Cubical.Induction.WellFounded as WF
 
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
@@ -172,7 +166,7 @@ The type `Ex` states the relevant negation of cardinality positively: merely, th
 <!--/-->
 
 ```agda
-    not-card : ⟨ fst κ ∈ˢ a ⟩ → IsCardinalL α' → Empty.⊥
+    not-card : ⟨ fst κ ∈ˢ a ⟩ → IsCardinalL α' → ⊥₀
     not-card κ∈a c = ∈-irrefl a (least α' orda c κ∈a α' a∈δ)
 
     Ex : Type (ℓ-suc ℓ)
@@ -191,7 +185,7 @@ Apply excluded middle to the proposition `Ex`. If it holds, the required mere wi
     some-γ : ⟨ fst κ ∈ˢ a ⟩ → Ex
     some-γ κ∈a = decide (lem (Ex , squash₁))
       where
-      decide : Ex ⊎ (Ex → Empty.⊥) → Ex
+      decide : Ex ⊎ (Ex → ⊥₀) → Ex
 ```
 
 <!--en-->
@@ -205,7 +199,7 @@ The refutation branch is impossible by `not-card`, so both outcomes produce `Ex`
 ```agda
       decide (inl e)  = e
       decide (inr ¬e) =
-        Empty.rec (not-card κ∈a (λ γ γ∈a inj → ¬e ∣ γ , γ∈a , inj ∣₁))
+        ⊥₀-rec (not-card κ∈a (λ γ γ∈a inj → ¬e ∣ γ , γ∈a , inj ∣₁))
 ```
 
 <!--en-->
@@ -263,7 +257,7 @@ In the equality branch, transport along `a ≡ fst κ` turns the same inclusion 
 ```agda
     go (inr (inl e))   =
       inclusion-coded α' κ (λ z z∈a → subst (λ w → ⟨ z ∈ˢ w ⟩) e z∈a)
-    go (inr (inr κ∈a)) = PT.rec squash₁ from-γ (some-γ κ∈a)
+    go (inr (inr κ∈a)) = rec₁ squash₁ from-γ (some-γ κ∈a)
 ```
 
 <!--en-->

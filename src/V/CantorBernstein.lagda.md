@@ -46,11 +46,6 @@ The proof will form several propositions by truncating an existential: the state
 <!--/-->
 
 ```agda
-import Cubical.Data.Sum as Sum
-open Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Empty as Empty
-open import Cubical.Data.Empty.Properties using ( isProp⊥ )
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -62,8 +57,6 @@ Two kinds of propositions dominate the chapter: membership in the image of g, an
 <!--/-->
 
 ```agda
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; isEmb⟪_⟫↪ )
@@ -105,7 +98,7 @@ The base of the badness hierarchy says that x is bad at level zero when it is no
 ```agda
 
   C₀ : A → hProp ℓ
-  C₀ x = ((⟨ imG x ⟩ → Empty.⊥) , isPropΠ (λ _ → isProp⊥))
+  C₀ x = ((⟨ imG x ⟩ → ⊥₀) , isPropΠ (λ _ → isProp⊥))
 
   C₊ : (A → hProp ℓ) → A → hProp ℓ
   C₊ C x = (∥ Σ[ y ∈ B ] Σ[ z ∈ A ] ((g y ≡ x) × ((f z ≡ y) × ⟨ C z ⟩)) ∥₁ , squash₁)
@@ -144,17 +137,17 @@ Before using the hierarchy, one small bookkeeping lemma is recorded: a badness p
 ```
 
 <!--en-->
-The one structural fact promised in the lead is now proved: if x is bad, so is g (f x). Given a chain of length n ending at x, one extends it by a single backward step, since x itself serves as the element z and f x as the element y: the required paths g (f x) ≡ g (f x) and f x ≡ f x are both reflexivity, and the old chain is the tail. The result is a chain of length suc n ending at g (f x). Because the input is truncated, the elimination `PT.rec` targets the propositionhood of the output, which is legitimate since `C (g (f x))` is a proposition.
+The one structural fact promised in the lead is now proved: if x is bad, so is g (f x). Given a chain of length n ending at x, one extends it by a single backward step, since x itself serves as the element z and f x as the element y: the required paths g (f x) ≡ g (f x) and f x ≡ f x are both reflexivity, and the old chain is the tail. The result is a chain of length suc n ending at g (f x). Because the input is truncated, the elimination `rec₁` targets the propositionhood of the output, which is legitimate since `C (g (f x))` is a proposition.
 <!--zh-->
-引言承诺的那条结构事实现在得证：若 x 是坏的，则 g (f x) 也是坏的。给定一条长为 n、终于 x 的链，只需向后延伸一步：x 自身充当元素 z，f x 充当元素 y，所需的路径 g (f x) ≡ g (f x) 与 f x ≡ f x 都是自反性，而旧链是尾部。结果是一条长为 suc n、终于 g (f x) 的链。由于输入是命题截断的，消去 `PT.rec` 以输出的命题性为目标，这在 `C (g (f x))` 是命题时是合法的。
+引言承诺的那条结构事实现在得证：若 x 是坏的，则 g (f x) 也是坏的。给定一条长为 n、终于 x 的链，只需向后延伸一步：x 自身充当元素 z，f x 充当元素 y，所需的路径 g (f x) ≡ g (f x) 与 f x ≡ f x 都是自反性，而旧链是尾部。结果是一条长为 suc n、终于 g (f x) 的链。由于输入是命题截断的，消去 `rec₁` 以输出的命题性为目标，这在 `C (g (f x))` 是命题时是合法的。
 <!--ja-->
-冒頭で約束した構造的事実がここで証明されます。x が悪ければ g (f x) も悪くなります。長さ n で x で終わる鎖が与えられれば、一段後ろへ延ばすだけです。x 自身が元 z として、f x が元 y として働き、必要なパス g (f x) ≡ g (f x) と f x ≡ f x はどちらも反射性であり、古い鎖が尾になります。結果は長さ suc n で g (f x) で終わる鎖です。入力が命題的切り詰めされているため、消去 `PT.rec` は出力の命題性を対象とします。`C (g (f x))` は命題なのでこれは正当です。
+冒頭で約束した構造的事実がここで証明されます。x が悪ければ g (f x) も悪くなります。長さ n で x で終わる鎖が与えられれば、一段後ろへ延ばすだけです。x 自身が元 z として、f x が元 y として働き、必要なパス g (f x) ≡ g (f x) と f x ≡ f x はどちらも反射性であり、古い鎖が尾になります。結果は長さ suc n で g (f x) で終わる鎖です。入力が命題的切り詰めされているため、消去 `rec₁` は出力の命題性を対象とします。`C (g (f x))` は命題なのでこれは正当です。
 <!--/-->
 
 ```agda
 
   gf-closed : {x : A} → ⟨ C x ⟩ → ⟨ C (g (f x)) ⟩
-  gf-closed {x} = PT.rec (snd (C (g (f x)))) go
+  gf-closed {x} = rec₁ (snd (C (g (f x)))) go
     where
     go : Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ → ⟨ C (g (f x)) ⟩
     go (n , cx) = c-in {x = g (f x)} {n = suc n} ∣ f x , x , (refl , (refl , cx)) ∣₁
@@ -172,7 +165,7 @@ g ∘ f による閉性は悪さが前へ伝わることを教えますが、元
 
   C-view : {x : A} → ⟨ C x ⟩
          → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∈ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
-  C-view {x} = PT.rec squash₁ go
+  C-view {x} = rec₁ squash₁ go
     where
 ```
 
@@ -187,7 +180,7 @@ The proof splits on the recorded length. At length zero the chain simply asserts
 ```agda
     go : Σ[ n ∈ ℕ ] ⟨ Cₙ n x ⟩ → ∥ (⟨ C₀ x ⟩ ⊎ (Σ[ z ∈ A ] ((g (f z) ≡ x) × ⟨ C z ⟩))) ∥₁
     go (zero , c0) = ∣ inl c0 ∣₁
-    go (suc n , cs) = PT.map inr (PT.map (λ { (y , z , gy , fz , cz) →
+    go (suc n , cs) = map₁ inr (map₁ (λ { (y , z , gy , fz , cz) →
         z , ((cong g fz ∙ gy) , c-in {x = z} {n = n} cz) }) cs)
 ```
 
@@ -201,9 +194,9 @@ The second use of excluded middle converts goodness into image membership. Suppo
 
 ```agda
 
-  notC→imG : {x : A} → (⟨ C x ⟩ → Empty.⊥) → ⟨ imG x ⟩
-  notC→imG {x} nC = Sum.rec {A = ⟨ imG x ⟩} {B = ⟨ imG x ⟩ → Empty.⊥} {C = ⟨ imG x ⟩}
-    (λ h → h) (λ nC₀ → Empty.rec (nC (c-in {n = zero} nC₀)))
+  notC→imG : {x : A} → (⟨ C x ⟩ → ⊥₀) → ⟨ imG x ⟩
+  notC→imG {x} nC = ⊎-rec {A = ⟨ imG x ⟩} {B = ⟨ imG x ⟩ → ⊥₀} {C = ⟨ imG x ⟩}
+    (λ h → h) (λ nC₀ → ⊥₀-rec (nC (c-in {n = zero} nC₀)))
     (lem (imG x))
 ```
 
@@ -223,17 +216,17 @@ To turn the mere image membership into a chosen preimage, we may eliminate the t
 ```
 
 <!--en-->
-With fiber propositionhood in hand, `fiberG` is the elimination of the truncated image statement into the fiber type: since the target is a proposition, `PT.rec` applies with the identity on fibers as the action. This is the first point in the argument where a chosen preimage exists as data rather than merely, and it was unlocked by excluded middle plus the h-set structure, not by any property of the truncation alone.
+With fiber propositionhood in hand, `fiberG` is the elimination of the truncated image statement into the fiber type: since the target is a proposition, `rec₁` applies with the identity on fibers as the action. This is the first point in the argument where a chosen preimage exists as data rather than merely, and it was unlocked by excluded middle plus the h-set structure, not by any property of the truncation alone.
 <!--zh-->
-有了纤维的命题性，`fiberG` 就是把命题截断的像陈述消去到纤维类型：由于目标是命题，`PT.rec` 以纤维上的恒等映射为作用即可应用。这是论证中第一个选定原像作为数据而非仅仅存在的位置，而打开它的正是排中律加 h-集合结构，不是命题截断自身的任何性质。
+有了纤维的命题性，`fiberG` 就是把命题截断的像陈述消去到纤维类型：由于目标是命题，`rec₁` 以纤维上的恒等映射为作用即可应用。这是论证中第一个选定原像作为数据而非仅仅存在的位置，而打开它的正是排中律加 h-集合结构，不是命题截断自身的任何性质。
 <!--ja-->
-繊維の命題性が手に入れば、`fiberG` は命題的切り詰めされた像の主張を繊維型へ消去するものです。対象が命題なので、`PT.rec` は繊維上の恒等写像を作用として適用できます。これは議論の中で、選ばれた原像が単にではなくデータとして存在する最初の地点です。それを開いたのは排中律と h-集合としての構造であって、命題的切り詰めそのものの性質ではありません。
+繊維の命題性が手に入れば、`fiberG` は命題的切り詰めされた像の主張を繊維型へ消去するものです。対象が命題なので、`rec₁` は繊維上の恒等写像を作用として適用できます。これは議論の中で、選ばれた原像が単にではなくデータとして存在する最初の地点です。それを開いたのは排中律と h-集合としての構造であって、命題的切り詰めそのものの性質ではありません。
 <!--/-->
 
 ```agda
 
   fiberG : (x : A) → ⟨ imG x ⟩ → Σ[ y ∈ B ] (g y ≡ x)
-  fiberG x = PT.rec (fiberG-prop x) (λ w → w)
+  fiberG x = rec₁ (fiberG-prop x) (λ w → w)
 ```
 
 <!--en-->
@@ -246,10 +239,10 @@ For a good element x, the chosen preimage can now be named `ginv x`: it is the f
 
 ```agda
 
-  ginv : {x : A} → (⟨ C x ⟩ → Empty.⊥) → B
+  ginv : {x : A} → (⟨ C x ⟩ → ⊥₀) → B
   ginv {x} nC = fiberG x (notC→imG nC) .fst
 
-  ginv-spec : {x : A} (nC : ⟨ C x ⟩ → Empty.⊥) → g (ginv nC) ≡ x
+  ginv-spec : {x : A} (nC : ⟨ C x ⟩ → ⊥₀) → g (ginv nC) ≡ x
   ginv-spec {x} nC = fiberG x (notC→imG nC) .snd
 ```
 
@@ -263,7 +256,7 @@ The candidate bijection h is now defined on a hypothetical verdict rather than o
 
 ```agda
 
-  h : (x : A) → ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → Empty.⊥) → B
+  h : (x : A) → ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → ⊥₀) → B
   h x (inl _) = f x
   h x (inr nC) = ginv nC
 ```
@@ -278,11 +271,11 @@ h の単射性は判定の対について四つの場合で証明します。両
 
 ```agda
 
-  h-inj : (x x' : A) (dx : ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → Empty.⊥)) (dx' : ⟨ C x' ⟩ ⊎ (⟨ C x' ⟩ → Empty.⊥))
+  h-inj : (x x' : A) (dx : ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → ⊥₀)) (dx' : ⟨ C x' ⟩ ⊎ (⟨ C x' ⟩ → ⊥₀))
         → h x dx ≡ h x' dx' → x ≡ x'
   h-inj x x' (inl cx) (inl cx') e = fi x x' e
   h-inj x x' (inl cx) (inr nCx') e =
-    Empty.rec (nCx' (subst (λ w → ⟨ C w ⟩) (cong g e ∙ ginv-spec nCx') (gf-closed {x = x} cx)))
+    ⊥₀-rec (nCx' (subst (λ w → ⟨ C w ⟩) (cong g e ∙ ginv-spec nCx') (gf-closed {x = x} cx)))
 ```
 
 <!--en-->
@@ -295,7 +288,7 @@ The mirror case, x good and x' bad, is symmetric: the transport runs along the r
 
 ```agda
   h-inj x x' (inr nCx) (inl cx') e =
-    Empty.rec (nCx (subst (λ w → ⟨ C w ⟩) (sym (cong g e) ∙ ginv-spec nCx) (gf-closed {x = x'} cx')))
+    ⊥₀-rec (nCx (subst (λ w → ⟨ C w ⟩) (sym (cong g e) ∙ ginv-spec nCx) (gf-closed {x = x'} cx')))
   h-inj x x' (inr nCx) (inr nCx') e = sym (ginv-spec nCx) ∙ cong g e ∙ ginv-spec nCx'
 ```
 
@@ -309,8 +302,8 @@ Surjectivity relative to a verdict is stated for each y ∈ B, with the verdict 
 
 ```agda
 
-  h-surj : (y : B) (d : ⟨ C (g y) ⟩ ⊎ (⟨ C (g y) ⟩ → Empty.⊥))
-         → ∥ Σ[ x ∈ A ] Σ[ dx ∈ ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → Empty.⊥) ] (h x dx ≡ y) ∥₁
+  h-surj : (y : B) (d : ⟨ C (g y) ⟩ ⊎ (⟨ C (g y) ⟩ → ⊥₀))
+         → ∥ Σ[ x ∈ A ] Σ[ dx ∈ ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → ⊥₀) ] (h x dx ≡ y) ∥₁
   h-surj y (inr nCgy) = ∣ g y , inr nCgy , gi (ginv nCgy) y (ginv-spec nCgy) ∣₁
 ```
 
@@ -323,8 +316,8 @@ g y が悪いの場合は `C-view` が悪さの証明を二つの選択肢に分
 <!--/-->
 
 ```agda
-  h-surj y (inl cgy) = PT.rec squash₁
-    (λ { (inl c0) → Empty.rec (c0 ∣ y , refl ∣₁) ; (inr (z , gfy , cz)) → ∣ z , inl cz , gi (f z) y gfy ∣₁ })
+  h-surj y (inl cgy) = rec₁ squash₁
+    (λ { (inl c0) → ⊥₀-rec (c0 ∣ y , refl ∣₁) ; (inr (z , gfy , cz)) → ∣ z , inl cz , gi (f z) y gfy ∣₁ })
     (C-view {x = g y} cgy)
 ```
 
@@ -338,10 +331,10 @@ The final lemma answers an objection to the whole design: h was defined relative
 
 ```agda
 
-  h-cons : (x : A) (dx dx' : ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → Empty.⊥)) → h x dx ≡ h x dx'
+  h-cons : (x : A) (dx dx' : ⟨ C x ⟩ ⊎ (⟨ C x ⟩ → ⊥₀)) → h x dx ≡ h x dx'
   h-cons x (inl cx) (inl cx') = refl
-  h-cons x (inl cx) (inr nCx') = Empty.rec (nCx' cx)
-  h-cons x (inr nCx) (inl cx) = Empty.rec (nCx cx)
+  h-cons x (inl cx) (inr nCx') = ⊥₀-rec (nCx' cx)
+  h-cons x (inr nCx) (inl cx) = ⊥₀-rec (nCx cx)
   h-cons x (inr nCx) (inr nCx') = cong fst (fiberG-prop x (fiberG x (notC→imG nCx)) (fiberG x (notC→imG nCx')))
 ```
 
@@ -395,7 +388,7 @@ Surjectivity needs one extra step. The relative lemma `h-surj` applied at the ca
 ```agda
 
   ĥ-surj : (y : B) → ∥ Σ[ x ∈ A ] (ĥ x ≡ y) ∥₁
-  ĥ-surj y = PT.map (λ { (x , dx , e) → x , sym (h-cons x dx (lem (C x))) ∙ e })
+  ĥ-surj y = map₁ (λ { (x , dx , e) → x , sym (h-cons x dx (lem (C x))) ∙ e })
     (h-surj y (lem (C (g y))))
 ```
 
@@ -522,7 +515,7 @@ The second entry point weakens the input to mere existence: instead of codes, it
     → ∥ Σ[ h ∈ (P a → P b) ]
         (((x y : P a) → h x ≡ h y → x ≡ y)
       × ((y : P b) → ∥ Σ[ x ∈ P a ] (h x ≡ y) ∥₁)) ∥₁
-  ∃bijection a b fwd bwd = PT.rec squash₁
+  ∃bijection a b fwd bwd = rec₁ squash₁
 ```
 
 <!--en-->
@@ -534,6 +527,6 @@ The proof nests two truncation eliminations. Eliminating fwd yields some code w;
 <!--/-->
 
 ```agda
-    (λ w → PT.rec squash₁ (λ w' → ∣ mutual→bijection a b w w' ∣₁) bwd)
+    (λ w → rec₁ squash₁ (λ w' → ∣ mutual→bijection a b w w' ∣₁) bwd)
     fwd
 ```

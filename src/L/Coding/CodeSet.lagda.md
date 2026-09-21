@@ -46,8 +46,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 open hPropStructure 𝒮ʟ
 
@@ -92,7 +90,7 @@ keyArityAtL c k = ∃̇ (tagAtL (suc c) k zero)
 keyArityAtL-out : ∀ {n} (c : Fin n) (k : ℕ) (γ : S ^ n)
                 → ⟨ γ ⊨ keyArityAtL c k ⟩
                 → ∥ (Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# k) (fst z))) ∥₁
-keyArityAtL-out c k γ = PT.map
+keyArityAtL-out c k γ = map₁
   (λ { (z , hz) →
     z , subst ⟨_⟩ (tagAtL-adequate (suc c) k zero (z ∷ γ)) hz })
 
@@ -149,8 +147,8 @@ arityNumAtL-out : ∀ {n} (c : Fin n) (γ : S ^ n)
                 → ⟨ γ ⊨ arityNumAtL c ⟩
                 → ∥ (Σ[ m ∈ ℕ ] Σ[ z ∈ S ]
                       (fst (lookup c γ) ≡ pr (# m) (fst z))) ∥₁
-arityNumAtL-out c γ = PT.rec squash₁ (λ { (ar , h) →
-  PT.rec squash₁ (λ { (z , (hp , hω)) → PT.map
+arityNumAtL-out c γ = rec₁ squash₁ (λ { (ar , h) →
+  rec₁ squash₁ (λ { (z , (hp , hω)) → map₁
     (λ { (m , qm) → lower m , z
        , ( subst ⟨_⟩
              (prAtL-adequate (suc (suc c)) (suc zero) zero (z ∷ ar ∷ γ)) hp
@@ -323,13 +321,13 @@ metavariable standing for the satisfaction of a formula the elaborator has not
 committed to, and the same two lines that check in two seconds with the type
 written out ran past 140 seconds without it and were killed there. This is the
 law the recursion's totality hypothesis recorded, met again in a different place:
-it is not about the graph, it is about `PT.rec`{.Agda} at a concrete environment.
+it is not about the graph, it is about `rec₁`{.Agda} at a concrete environment.
 <!--zh-->
 引入是其中不涉及额外内容的那一半。那个见证是子公式闭包，它的三个组成部分 `key∈closure`{.Agda}、`closureClosed`{.Agda} 与 `closureShaped`{.Agda} 各有一章专门处理，且都已完成。其中最后一条还多需要一件东西，即每个常元都是载体的成员；在这个字母表上，这正是当初据以定义字母表的那件事，沿那一位的等式搬过去即可。
 
 消去是另一半。它从一个成员出发，这个成员以某个已言明元数处的键的形式给出，这正是 `recover`{.Agda} 所要求的，也是第二个合取项无法直接提供的。载体那一位的等式把「属于那一位所持有的东西」变成「属于 `A`」，解码那条假设因此得以应用：`A` 的诸成员恰是 `⟪ A ⟫` 的像，依据是「一个集合由其自身诸成员所呈现」。读出那个存在量词，就得到一个既封闭又成形的集合。随后运行解码，其答案是载体之上、落在所给定的那个元数处的一条公式。
 
-这两个方向都应用于由外层具名绑定构造的环境，其中载体由等式固定。引入方向为该绑定提供 `A`，并用 `refl`{.Agda} 证明等式；消去方向读出该绑定，再把其中的数据传给一般形式。**读取绑定之处必须显式写出载荷类型。** 若让类型检查器推断，载体处的截断载荷会成为一个元变元，表示尚未确定公式的满足关系。同样两行代码，显式写出类型时两秒完成，不写时超过 140 秒后终止。该现象来自具体环境处的 `PT.rec`{.Agda}，与图本身无关。
+这两个方向都应用于由外层具名绑定构造的环境，其中载体由等式固定。引入方向为该绑定提供 `A`，并用 `refl`{.Agda} 证明等式；消去方向读出该绑定，再把其中的数据传给一般形式。**读取绑定之处必须显式写出载荷类型。** 若让类型检查器推断，载体处的截断载荷会成为一个元变元，表示尚未确定公式的满足关系。同样两行代码，显式写出类型时两秒完成，不写时超过 140 秒后终止。该现象来自具体环境处的 `rec₁`{.Agda}，与图本身无关。
 <!--/-->
 
 ```agda
@@ -349,7 +347,7 @@ it is not about the graph, it is about `PT.rec`{.Agda} at a concrete environment
                 → (k : ℕ) (z : S) → fst (lookup c γ) ≡ pr (# k) (fst z)
                 → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ]
                       (fst (lookup c γ) ≡ fst (keyS ψ))) ∥₁
-  witnessAt-out b c γ qb hw k z qz = PT.rec squash₁ viaSlot hw
+  witnessAt-out b c γ qb hw k z qz = rec₁ squash₁ viaSlot hw
     where
     Target : Type (ℓ-suc ℓ)
     Target = ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ]
@@ -363,7 +361,7 @@ it is not about the graph, it is about `PT.rec`{.Agda} at a concrete environment
     viaSlot : Σ[ C ∈ S ] ⟨ (C ∷ γ) ⊨ ((var (suc c) ∈̇ var zero)
                 ∧̇ (closedAt zero ∧̇ shapedAt zero (suc b))) ⟩
             → Target
-    viaSlot (C , (x∈C , (hcl , hsh))) = PT.map
+    viaSlot (C , (x∈C , (hcl , hsh))) = map₁
       (λ { (ψ , qψ) → ψ , (qz ∙ cong (pr (# k)) (sym qψ)) })
       (Decode.recover ι zero (suc b) (C ∷ γ) onto hcl hsh k z
         (subst (λ w → ⟨ w ∈ fst C ⟩) (qz ∙ sym (keyOf-fst k z)) x∈C))
@@ -377,7 +375,7 @@ it is not about the graph, it is about `PT.rec`{.Agda} at a concrete environment
     witness-out : (x : S) → ⟨ (x ∷ []) ⊨ hasWitness A ⟩
                 → (k : ℕ) (z : S) → fst x ≡ pr (# k) (fst z)
                 → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ k ] (fst x ≡ fst (keyS ψ))) ∥₁
-    witness-out x hw k z qz = PT.rec squash₁ viaCarrier hw
+    witness-out x hw k z qz = rec₁ squash₁ viaCarrier hw
       where
       viaCarrier : Σ[ B ∈ S ] ⟨ (B ∷ x ∷ [])
                      ⊨ ((var zero ≐ con A) ∧̇ hasWitnessAt zero (suc zero)) ⟩
@@ -420,8 +418,8 @@ not contain it.
         , witness-in φ ) )
 
     AllCodes-out : (x : S) → ⟨ x ∈ˢ AllCodes ⟩ → ⟨ IsKeyOverAny x ⟩
-    AllCodes-out x x∈ = PT.rec squash₁
-      (λ { (k , z , qz) → PT.map (λ { (ψ , q) → k , ψ , q })
+    AllCodes-out x x∈ = rec₁ squash₁
+      (λ { (k , z , qz) → map₁ (λ { (ψ , q) → k , ψ , q })
         (witness-out x (sat .snd) k z qz) })
       (arityNumAtL-out zero (x ∷ []) (sat .fst))
       where
@@ -429,7 +427,7 @@ not contain it.
       sat = subst ⟨_⟩ (sepAny .fst .snd x) x∈ .snd
 
   AllCodes-in : (x : S) → ⟨ IsKeyOverAny x ⟩ → ⟨ x ∈ˢ AllCodes ⟩
-  AllCodes-in x = PT.rec (snd (x ∈ˢ AllCodes))
+  AllCodes-in x = rec₁ (snd (x ∈ˢ AllCodes))
     (λ { (n , ψ , q) →
       subst (λ w → ⟨ w ∈ fst AllCodes ⟩) (sym q) (key∈AllCodes ψ) })
 ```

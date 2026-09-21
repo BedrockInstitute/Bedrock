@@ -16,6 +16,7 @@ A recursive definition may first be given in the metatheory, while its values ar
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Base.Classical using ( LEM )
 
 module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -64,10 +65,6 @@ Replacement in `L` applies to an arbitrary formula of the required arity. At thi
 ```agda
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Full {ℓ} lem using ( hasReplacementL )
-
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Foundations.Prelude using ( isPropIsContr )
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -79,7 +76,6 @@ For a predicate on the constructible carrier, `SetOf` is the type of a set toget
 <!--/-->
 
 ```agda
-open PT using ( ∣_∣₁; ∥_∥₁ )
 
 open hPropStructure 𝒮ʟ
 
@@ -300,7 +296,7 @@ Because contractibility is a proposition, the truncation may be eliminated into 
 <!--/-->
 
 ```agda
-mereFunct graph x = PT.rec isPropIsContr
+mereFunct graph x = rec₁ isPropIsContr
   (λ { (y , (hy , uniq)) → (y , hy)
      , (λ { (y' , hy') → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ graph))
                            (sym (uniq y' hy')) }) })

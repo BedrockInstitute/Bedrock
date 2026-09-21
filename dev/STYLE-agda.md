@@ -88,13 +88,32 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   throughout the book (universes, paths, homotopy levels, `hProp` with `⟨_⟩`, pairs, the
   indexing data `ℕ`/`Vec`/`Fin`, `⊥*`), and its statement-level role is not already
   played by one of the book's own abstractions. The direct logical operations on
-  `hProp` are statement-ambient; the underlying propositional-truncation machinery
-  remains chapter-local even where truncated existence appears in statements.
-  Proof-side machinery stays chapter-local however common (`⊎` decisions,
-  `Empty.⊥` refutations, equivalence assembly, `⇔toPath`): every admission enlarges
-  the set of untraceable names, and a local import line is information. When in
-  doubt keep it local; promotion is one cheap change, demotion touches every
-  chapter.
+  `hProp` are statement-ambient. Propositional truncation is likewise public vocabulary:
+  `∥_∥₁`, `∣_∣₁` and `squash₁` retain their library names, while its recurring eliminator
+  and functorial action are exposed as `rec₁` and `map₁`.
+  The curated statement-and-proof vocabulary now also includes the ordinary
+  product and coproduct constructors, the standard `Nat`/`Fin`/`Vec` operations,
+  and the recurring path and proposition combinators admitted by the prelude.
+  For `Cubical.Data.Sigma`, `Cubical.Functions.Logic`, `Cubical.Data.Sum`,
+  `Cubical.Data.Nat`, `Cubical.Data.FinData`, `Cubical.Foundations.Prelude`,
+  `Cubical.Foundations.HLevels`, `Cubical.Data.Vec`, and
+  `Cubical.HITs.PropositionalTruncation`, chapters obtain every
+  name already curated by `Base.Prelude` from the prelude. A chapter may still
+  import a different, proof-local name from one of these modules with an explicit
+  `using` or `renaming` list. Whole-module qualified imports and aliases are
+  forbidden because they silently reintroduce the public vocabulary.
+- **Falsity notation** (owner ruling, 2026-09-20): `⊥` is reserved for the false
+  `hProp`; `⊥₀` denotes the zero-level empty type, while `⊥* {ℓ}` denotes its
+  lift to level `ℓ`. Use `⊥₀-rec` and `⊥*-rec`, respectively, to
+  eliminate the empty type. Do not use the qualified zero-level names `Empty.⊥`,
+  `Empty.rec`, or `Empty.rec*`; the level-polymorphic public vocabulary avoids both
+  qualification and collision with propositional `⊥`. `Base.Prelude` is the only
+  module permitted to `open import` `Cubical.Data.Empty` or one of its submodules;
+  every other module obtains the public empty-type vocabulary from the prelude.
+- **Truth notation** (owner ruling, 2026-09-21): `⊤₀` and `tt` denote the zero-level
+  unit type and its constructor; `⊤* {ℓ}` and `tt*` denote their level-polymorphic
+  counterparts. Every module obtains these names from `Base.Prelude`; only the
+  prelude may open `Cubical.Data.Unit`.
 - `open import` always carries a `using`/`renaming` list (audit-friendly), and every
   imported name must actually be used: imports are **necessary** (the linter checks
   this) as well as sufficient (the typechecker checks that). The designated **hub

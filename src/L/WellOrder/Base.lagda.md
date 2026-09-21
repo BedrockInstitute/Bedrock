@@ -58,10 +58,8 @@ The search must also live with incomplete information. The hypothesis says only 
 ```agda
 
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
-open import Cubical.Data.Nat using ( ℕ )
 open import Cubical.Data.Nat.Order using ( _<_; <-trans; ¬m<m; <-wellfounded; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -73,11 +71,7 @@ This logical situation fixes the order of the proof. Before eliminating either t
 <!--/-->
 
 ```agda
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
 open import Cubical.Relation.Nullary using ( isProp¬ ) renaming ( ¬_ to ¬ᵗ_ )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -89,7 +83,6 @@ A decision, when it exists, returns either a proof or a refutation. The two-way 
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 ```
 
 <!--en-->
@@ -215,19 +208,19 @@ Both components of `IsLeast P a`{.Agda} are propositions: the first by the certi
 ```
 
 <!--en-->
-To compare two least elements `m` and `m'`, `decide` inspects `tri∙ m m'`{.Agda}. If `m <∙ m'`{.Agda}, then `m'` is least and `m` satisfies the predicate, so `m` should not be strictly below `m'`: contradiction, via `Empty.rec`{.Agda}, which discharges any goal from an impossible case. The symmetric case is analogous. In the remaining case the comparison itself hands over the path `e : m ≡ m'`{.Agda}, which is returned directly. Together with `Σ≡Prop`{.Agda}, this proves `isPropLeastOf`{.Agda}: the type of least witnesses for `P` is a proposition, so leastness, once it exists, is unique.
+To compare two least elements `m` and `m'`, `decide` inspects `tri∙ m m'`{.Agda}. If `m <∙ m'`{.Agda}, then `m'` is least and `m` satisfies the predicate, so `m` should not be strictly below `m'`: contradiction, via `⊥*-rec`{.Agda}, which discharges any goal from an impossible case. The symmetric case is analogous. In the remaining case the comparison itself hands over the path `e : m ≡ m'`{.Agda}, which is returned directly. Together with `Σ≡Prop`{.Agda}, this proves `isPropLeastOf`{.Agda}: the type of least witnesses for `P` is a proposition, so leastness, once it exists, is unique.
 <!--zh-->
-为比较两个极小元 `m` 与 `m'`，`decide` 检查 `tri∙ m m'`{.Agda}。若 `m <∙ m'`{.Agda}，则 `m'` 是极小元而 `m` 满足谓词，于是 `m` 不应严格小于 `m'`：矛盾，经由 `Empty.rec`{.Agda}，它从不可能情形导出任何目标。对称情形类似。剩下的情形中比较本身交出路径 `e : m ≡ m'`{.Agda}，直接返回即可。结合 `Σ≡Prop`{.Agda}，这证明了 `isPropLeastOf`{.Agda}：`P` 的极小见证类型是命题，故极小性一旦存在便唯一。
+为比较两个极小元 `m` 与 `m'`，`decide` 检查 `tri∙ m m'`{.Agda}。若 `m <∙ m'`{.Agda}，则 `m'` 是极小元而 `m` 满足谓词，于是 `m` 不应严格小于 `m'`：矛盾，经由 `⊥*-rec`{.Agda}，它从不可能情形导出任何目标。对称情形类似。剩下的情形中比较本身交出路径 `e : m ≡ m'`{.Agda}，直接返回即可。结合 `Σ≡Prop`{.Agda}，这证明了 `isPropLeastOf`{.Agda}：`P` 的极小见证类型是命题，故极小性一旦存在便唯一。
 <!--ja-->
-二つの最小要素 `m` と `m'` を比較するために、`decide` は `tri∙ m m'`{.Agda} を検査します。`m <∙ m'`{.Agda} なら、`m'` は最小であり `m` は述語を満たすので、`m` が真に `m'` より小さいはずがありません。矛盾です。これは不可能な場合から任意の目標を導く `Empty.rec`{.Agda} によります。対称な場合も同様です。残る場合では、比較そのものがパス `e : m ≡ m'`{.Agda} を渡してくるので、それを直接返します。`Σ≡Prop`{.Agda} と合わせて、これが `isPropLeastOf`{.Agda} を証明します。`P` の最小証人の型は命題であり、したがって最小性は存在すれば一意です。
+二つの最小要素 `m` と `m'` を比較するために、`decide` は `tri∙ m m'`{.Agda} を検査します。`m <∙ m'`{.Agda} なら、`m'` は最小であり `m` は述語を満たすので、`m` が真に `m'` より小さいはずがありません。矛盾です。これは不可能な場合から任意の目標を導く `⊥*-rec`{.Agda} によります。対称な場合も同様です。残る場合では、比較そのものがパス `e : m ≡ m'`{.Agda} を渡してくるので、それを直接返します。`Σ≡Prop`{.Agda} と合わせて、これが `isPropLeastOf`{.Agda} を証明します。`P` の最小証人の型は命題であり、したがって最小性は存在すれば一意です。
 <!--/-->
 
 ```agda
     where
     decide : Tri (m <∙ m') (m ≡ m') (m' <∙ m) → m ≡ m'
-    decide (lt m<m') = Empty.rec (minm' m pm m<m')
+    decide (lt m<m') = ⊥₀-rec (minm' m pm m<m')
     decide (eq e)    = e
-    decide (gt m'<m) = Empty.rec (minm m' pm' m'<m)
+    decide (gt m'<m) = ⊥₀-rec (minm m' pm' m'<m)
 ```
 
 <!--en-->
@@ -251,7 +244,7 @@ The elimination of the truncation in the hypothesis is legitimate because the ta
           → (P : A → hProp ℓ'')
           → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ A ] IsLeast P a
   leastOf {ℓ''} lem P =
-    PT.rec (isPropLeastOf P) (λ { (a₀ , pa₀) → go a₀ (wf∙ a₀) pa₀ })
+    rec₁ (isPropLeastOf P) (λ { (a₀ , pa₀) → go a₀ (wf∙ a₀) pa₀ })
 ```
 
 <!--en-->
@@ -280,8 +273,8 @@ Applying `lem` to `Smaller` yields either a proof or a refutation, and `decide` 
 
 ```agda
       Smaller = ∥ Σ[ b ∈ A ] ((b <∙ a) × ⟨ P b ⟩) ∥₁
-      decide : Smaller ⊎ (Smaller → Empty.⊥) → Σ[ m ∈ A ] IsLeast P m
-      decide (inl q) = PT.rec (isPropLeastOf P)
+      decide : Smaller ⊎ (Smaller → ⊥₀) → Σ[ m ∈ A ] IsLeast P m
+      decide (inl q) = rec₁ (isPropLeastOf P)
         (λ { (b , (b<a , pb)) → go b (rs b b<a) pb }) q
       decide (inr ¬q) = a , (pa , λ b pb b<a → ¬q ∣ b , (b<a , pb) ∣₁)
 ```

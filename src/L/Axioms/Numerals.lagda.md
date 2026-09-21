@@ -73,8 +73,6 @@ A projection equation is an equality between sets of the ambient hierarchy, for 
 
 ```agda
 
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⋃_; module InfinitySet )
@@ -169,16 +167,16 @@ The centre of a contractible type is not, on the face of it, the set the hierarc
 <!--/-->
 
 <!--en-->
-The statement fixes the target: the underlying set of the extracted pair must equal the hierarchy's unordered pair of the underlying sets. The elimination `PT.rec` opens the merely existing common-stage data `isL-directed` supplies, and it is legal precisely because the goal is the equality `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`, and `setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` proves that this equality type is a proposition. Inside, the incoming data `σ , oσ , fa∈ , fb∈` is exactly what `PairOf.mkPair` consumes, so `mkPair` builds a realizer from it. The path the certificate provides goes from the centre to that realizer, not the other way.
+The statement fixes the target: the underlying set of the extracted pair must equal the hierarchy's unordered pair of the underlying sets. The elimination `rec₁` opens the merely existing common-stage data `isL-directed` supplies, and it is legal precisely because the goal is the equality `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`, and `setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` proves that this equality type is a proposition. Inside, the incoming data `σ , oσ , fa∈ , fb∈` is exactly what `PairOf.mkPair` consumes, so `mkPair` builds a realizer from it. The path the certificate provides goes from the centre to that realizer, not the other way.
 <!--zh-->
-陈述先固定目标：抽出的对的底层集合必须等于层级对底层集合所作的无序对。消去 `PT.rec` 打开 `isL-directed` 仅仅存在的公共层数据，而这一步合法，恰因目标是等式 `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`，而 `setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` 证明这个等式类型是命题。在内部，送入的数据 `σ , oσ , fa∈ , fb∈` 恰是 `PairOf.mkPair` 所消耗的，于是 `mkPair` 由它构造出一个实现者。证书提供的路径从中心指向那个实现者，方向不可颠倒。
+陈述先固定目标：抽出的对的底层集合必须等于层级对底层集合所作的无序对。消去 `rec₁` 打开 `isL-directed` 仅仅存在的公共层数据，而这一步合法，恰因目标是等式 `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆`，而 `setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` 证明这个等式类型是命题。在内部，送入的数据 `σ , oσ , fa∈ , fb∈` 恰是 `PairOf.mkPair` 所消耗的，于是 `mkPair` 由它构造出一个实现者。证书提供的路径从中心指向那个实现者，方向不可颠倒。
 <!--ja-->
-主張はまず目標を固定します。取り出した対の基底の集合が、階層が基底の集合たちに作る非順序対と等しいこと。消去 `PT.rec` が `isL-directed` の単に存在する共通段階のデータを開きますが、これが正当なのは、目標は等式 `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆` であり、`setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` がこの等式の型を命題だと証明することだからです。内部では、届くデータ `σ , oσ , fa∈ , fb∈` がちょうど `PairOf.mkPair` が消費するものであり、`mkPair` はそこから実現者を構成します。証明書が供給するパスは中心からその実現者へ向かうものであり、逆向きではありません。
+主張はまず目標を固定します。取り出した対の基底の集合が、階層が基底の集合たちに作る非順序対と等しいこと。消去 `rec₁` が `isL-directed` の単に存在する共通段階のデータを開きますが、これが正当なのは、目標は等式 `fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆` であり、`setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆` がこの等式の型を命題だと証明することだからです。内部では、届くデータ `σ , oσ , fa∈ , fb∈` がちょうど `PairOf.mkPair` が消費するものであり、`mkPair` はそこから実現者を構成します。証明書が供給するパスは中心からその実現者へ向かうものであり、逆向きではありません。
 <!--/-->
 
 ```agda
   pairʟ-fst : (a b : S) → fst (pairʟ a b) ≡ ⁅ fst a , fst b ⁆
-  pairʟ-fst a b = PT.rec (setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆)
+  pairʟ-fst a b = rec₁ (setIsSet (fst (pairʟ a b)) ⁅ fst a , fst b ⁆)
     (λ { (σ , (oσ , (fa∈ , fb∈))) →
          cong (λ (e : SetOf (PairOf.Q a b)) → fst (fst e))
            (hasPairL a b .snd (PairOf.mkPair a b σ oσ fa∈ fb∈)) })
@@ -196,7 +194,7 @@ The last step identifies the center with the explicitly built realizer. The cont
     (isL-directed (fst a) (fst b) (a .snd) (b .snd))
 
   unionʟ-fst : (a : S) → fst (unionʟ a) ≡ ⋃ (fst a)
-  unionʟ-fst a = PT.rec (setIsSet (fst (unionʟ a)) (⋃ (fst a)))
+  unionʟ-fst a = rec₁ (setIsSet (fst (unionʟ a)) (⋃ (fst a)))
     (λ { (σ , (oσ , fa∈)) →
          cong (λ (e : SetOf (UnionOf.Q a)) → fst (fst e))
 ```
@@ -346,7 +344,7 @@ The zero equation has the shape of a refutation: a member `z` of the chain's zer
 <!--/-->
 
 ```agda
-numeralL-zero : (z : S) → ⟨ z ∈ˢ numeralL zero ⟩ → Empty.⊥
+numeralL-zero : (z : S) → ⟨ z ∈ˢ numeralL zero ⟩ → ⊥₀
 numeralL-zero z = NumPin.pinZero (λ k → fst (numeralL k)) numeralL-fst (fst z)
 
 numeralL-suc : (n : ℕ) (z : S)

@@ -113,10 +113,6 @@ Finite indices and set-theoretic numerals have different roles here. The map `N`
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Data.Unit using ( tt )
-open import Cubical.Data.Vec using ( lookup )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
 ```
 

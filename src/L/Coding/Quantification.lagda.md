@@ -53,13 +53,6 @@ open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate )
 open import L.Coding.Model {ℓ} using ( container )
 import L.Coding.Expressions {ℓ} as CodingExpressions
 module E = CodingExpressions.PairExpression
-
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Vec using ( _∷_; lookup )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( inl; inr )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; ⁅_⁆s; module InfinitySet )
@@ -210,9 +203,9 @@ module _ {m : ℕ} (γ : S ^ m) where
   bigOr-out : (n : ℕ) (φ : Fin (suc n) → Formula S m) → ⟨ γ ⊨ bigOr n φ ⟩
             → ∥ Σ[ k ∈ Fin (suc n) ] ⟨ γ ⊨ φ k ⟩ ∥₁
   bigOr-out 0 φ h = ∣ zero , h ∣₁
-  bigOr-out (suc n) φ = PT.rec squash₁
+  bigOr-out (suc n) φ = rec₁ squash₁
     (λ { (inl h) → ∣ zero , h ∣₁
-       ; (inr h) → PT.map (λ { (k , hk) → suc k , hk }) (bigOr-out n (λ j → φ (suc j)) h) })
+       ; (inr h) → map₁ (λ { (k , hk) → suc k , hk }) (bigOr-out n (λ j → φ (suc j)) h) })
 
   bigAnd-in : (n : ℕ) (φ : Fin (suc n) → Formula S m)
             → ((k : Fin (suc n)) → ⟨ γ ⊨ φ k ⟩) → ⟨ γ ⊨ bigAnd n φ ⟩
@@ -352,7 +345,7 @@ Out: the witness's second component is pinned by pair injectivity.
 ```agda
   sndEx-out : ⟨ γ ⊨ sndEx x u body ⟩
             → ∥ Σ[ v ∈ S ] Σ[ s ∈ S ] ((X ≡ pr U (fst v)) × ⟨ (v ∷ s ∷ γ) ⊨ body ⟩) ∥₁
-  sndEx-out = PT.rec squash₁ (λ { (s , (s∈ , h)) → PT.map
+  sndEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → map₁
     (λ { (v , (v∈ , (e , hb))) → v , s , (pr-out (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e , hb) })
     h })
 
@@ -377,8 +370,8 @@ module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
   bothEx-out : ⟨ γ ⊨ bothEx x body ⟩
              → ∥ Σ[ u ∈ S ] Σ[ v ∈ S ] Σ[ s ∈ S ]
                  ((X ≡ pr (fst u) (fst v)) × ⟨ (v ∷ u ∷ s ∷ γ) ⊨ body ⟩) ∥₁
-  bothEx-out = PT.rec squash₁ (λ { (s , (s∈ , h)) → PT.rec squash₁
-    (λ { (u , (u∈ , h')) → PT.map
+  bothEx-out = rec₁ squash₁ (λ { (s , (s∈ , h)) → rec₁ squash₁
+    (λ { (u , (u∈ , h')) → map₁
       (λ { (v , (v∈ , (e , hb))) → u , v , s , (pr-out (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e , hb) })
       h' })
     h })

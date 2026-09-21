@@ -101,8 +101,6 @@ A slot member can be inverted only under propositional truncation, so every clau
 
 ```agda
 
-import Cubical.HITs.PropositionalTruncation as PT
-open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
@@ -304,7 +302,7 @@ The two closure directions are the subtree inclusions from the parts lemmas, for
 
 ```agda
     binSame k' op get payOp inL inR = binSameClosed-in Ci k' δ
-      (λ c ar a b c∈ sh → PT.rec
+      (λ c ar a b c∈ sh → rec₁
         (isProp× (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
                  (snd (pr (fst ar) (fst b) ∈ fst (Sl φ))))
         (λ { (m , ψ , (q , incl)) →
@@ -473,7 +471,7 @@ The closure direction and the conclusion are the one-component shape: only the s
 
 ```agda
     unSame k' op get payOp inA = unSameClosed-in Ci k' δ
-      (λ c ar a c∈ sh → PT.rec (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
+      (λ c ar a c∈ sh → rec₁ (snd (pr (fst ar) (fst a) ∈ fst (Sl φ)))
         (λ { (m , ψ , (q , incl)) →
           let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
               g  = get ψ (r .fst)
@@ -551,7 +549,7 @@ The reading and the conclusion use the raised form: the clause reads the pair wh
 
 ```agda
     unSucc k' op get payOp inA = unSuccClosed-in Ci k' δ
-      (λ c ar a c∈ sh → PT.rec (snd (pr (sucV (fst ar)) (fst a) ∈ fst (Sl φ)))
+      (λ c ar a c∈ sh → rec₁ (snd (pr (sucV (fst ar)) (fst a) ∈ fst (Sl φ)))
         (λ { (m , ψ , (q , incl)) →
           let r  = keyʟ-shape ψ k' (fst ar) (fst a) (sym q ∙ sh)
               g  = get ψ (r .fst)
@@ -631,7 +629,7 @@ The conclusion is the second-component shape: the clause reads the pair with the
 
 ```agda
     binSucc k' op get payOp inA = binSuccClosed-in Ci k' δ
-      (λ c ar a b c∈ sh → PT.rec (snd (pr (sucV (fst ar)) (fst b) ∈ fst (Sl φ)))
+      (λ c ar a b c∈ sh → rec₁ (snd (pr (sucV (fst ar)) (fst b) ∈ fst (Sl φ)))
         (λ { (m , ψ , (q , incl)) →
           let r  = keyʟ-shape ψ k' (fst ar) (pr (fst a) (fst b)) (sym q ∙ sh)
               g  = get ψ (r .fst)

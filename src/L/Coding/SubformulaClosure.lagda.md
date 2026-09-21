@@ -44,10 +44,6 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Closure {ℓ} using ( closedAt; binShapeAt; unShapeAt; bothSameAt; oneSameAt; oneSuccAt; succSndAt; binSameClosed-in; unSameClosed-in; unSuccClosed-in; binSuccClosed-in )
 open import L.Coding.CodeConstructibility {ℓ}
   using ( closure; closureL; closure-inv; byTag; Concl; key )
-
-open import Cubical.Foundations.HLevels using ( isProp× )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
@@ -158,7 +154,7 @@ is a proposition.
              → ⟨ fst c ∈ C ⟩ → fst c ≡ pr ar (pr (# k) p)
              → (T : Type (ℓ-suc ℓ)) → isProp T
              → (Concl f h C k ar p → T) → T
-      viaKey k c ar p c∈ sh T pT g = PT.rec pT
+      viaKey k c ar p c∈ sh T pT g = rec₁ pT
         (λ { (m , ψ , q , incl) →
           g (byTag f h C ψ k ar p incl (sym q ∙ sh)) })
         (peel (fst c) c∈)

@@ -149,9 +149,6 @@ Satisfaction is interpreted in the propositional structure of constructible sets
 
 ```agda
 import FOL.Absoluteness
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 ```
 
@@ -732,7 +729,7 @@ The outward argument has now reached the innermost condition. Once the six exist
           → fst c0 ≡ fst (AllCodes ∅ʟ)
           → StepHolds tw pw rl cs ro c0 → Goal
     atAll tw pw rl cs ro c0 hg hdef hu hv happ hcs vals qro qc0 hstep =
-      PT.map atNames (K.holds-out hstep)
+      map₁ atNames (K.holds-out hstep)
       where
 ```
 
@@ -1177,9 +1174,9 @@ For the outward reading, assume every value recorded by the table at `δ` repres
 ```agda
     read : ((r : S) → ⟨ pr δ (fst r) ∈ fst (lookup f γ) ⟩ → IsRel δ r)
          → ⟨ γ ⊨ Stp d f u v ⟩ → Goal
-    read vals = PT.rec PT.squash₁
-      (λ { (tw , (hg , hpw)) → PT.rec PT.squash₁
-        (λ { (pw , (hdef , (hu , (hv , hrl)))) → PT.rec PT.squash₁
+    read vals = rec₁ squash₁
+      (λ { (tw , (hg , hpw)) → rec₁ squash₁
+        (λ { (pw , (hdef , (hu , (hv , hrl)))) → rec₁ squash₁
 ```
 
 <!--en-->
@@ -1191,9 +1188,9 @@ The eliminations follow the binder order: tower, definable-subset set, table val
 <!--/-->
 
 ```agda
-          (λ { (rl , (happ , hcs)) → PT.rec PT.squash₁
-            (λ { (cs , (hcs , hro)) → PT.rec PT.squash₁
-              (λ { (ro , (qro , hc0)) → PT.rec PT.squash₁
+          (λ { (rl , (happ , hcs)) → rec₁ squash₁
+            (λ { (cs , (hcs , hro)) → rec₁ squash₁
+              (λ { (ro , (qro , hc0)) → rec₁ squash₁
                 (λ { (c0 , (qc0 , hstep)) →
                   atAll tw pw rl cs ro c0 hg hdef hu hv happ hcs vals qro qc0 hstep })
 ```

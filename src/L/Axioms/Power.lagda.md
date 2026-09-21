@@ -162,7 +162,6 @@ truth values.
 
 ```agda
 open import Cubical.Foundations.Equiv using ( _≃_; invEq; equivFun )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )

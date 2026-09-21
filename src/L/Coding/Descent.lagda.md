@@ -49,8 +49,6 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Rank {ℓ} using ( rank; rank-mono; rank-ord )
 
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 ```
 
 <!--en-->
@@ -62,7 +60,6 @@ The comparison uses three ingredients from the hierarchy: the unordered pair `�
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; pairing-ax; ⁅_⁆s )

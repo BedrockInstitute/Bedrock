@@ -49,8 +49,6 @@ open import FOL.Syntax using ( Formula )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-induction; ∈-induction-compute )
 open import V.Model {ℓ} using ( union-family-in; union-family-out )
 open import L.Definability {ℓ} using ( module DefOf )
-
-open import Cubical.Foundations.HLevels using ( isProp× )
 ```
 
 <!--en-->
@@ -62,10 +60,6 @@ A set of the hierarchy is presented by a small family, and this chapter reads it
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.Data.Sum as Sum
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 ```
 
@@ -147,7 +141,7 @@ The empty set case is vacuous: from `x ∈ˢ ∅` one extracts a native member o
 <!--/-->
 
 ```agda
-∅-trans {x} y∈x x∈∅ = Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅))
+∅-trans {x} y∈x x∈∅ = ⊥₀-rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅))
 
 𝒟-trans : ∀ {A} → isTransV A → isTransV (𝒟 A)
 𝒟-trans {A} Atr {x} {y} y∈x x∈𝒟A =
@@ -167,7 +161,7 @@ To see a member of the union, one must first see that it is a member at all. The
 ```agda
 ⋃-trans x mem {u} {v} v∈u u∈⋃x =
   ∈∈ₛ {a = v} {b = ⋃ x} .snd (union-ax x v .snd
-    (PT.map
+    (map₁
       (λ { (w , (w∈ₛx , u∈ₛw)) →
         let w∈x = ∈∈ₛ {a = w} {b = x} .snd w∈ₛx
 ```
@@ -200,9 +194,9 @@ The obligation `prem` asks: for each `y` in the pair, is `y` transitive? Pairing
 ```agda
   where
   prem : (y : S) → ⟨ y ∈ˢ ⁅ A , B ⁆ ⟩ → isTransV y
-  prem y y∈ = PT.rec (isPropIsTransV y)
-    (λ { (Sum.inl p) → subst isTransV (sym p) tA
-       ; (Sum.inr p) → subst isTransV (sym p) tB })
+  prem y y∈ = rec₁ (isPropIsTransV y)
+    (λ { (inl p) → subst isTransV (sym p) tA
+       ; (inr p) → subst isTransV (sym p) tB })
 ```
 
 <!--en-->
@@ -219,7 +213,7 @@ The last line of `prem` feeds the truncated membership through `pairing-ax`, the
 setUnion-trans : (X : Type ℓ) (f : X → S) → ((x : X) → isTransV (f x))
                → isTransV (⋃ (sett X f))
 setUnion-trans X f hf = ⋃-trans (sett X f)
-  (λ y → PT.rec (isPropIsTransV y)
+  (λ y → rec₁ (isPropIsTransV y)
 ```
 
 <!--en-->
@@ -562,7 +556,7 @@ The downward direction `Lset-out` cannot avoid truncation, and states it honestl
 <!--/-->
 
 ```agda
-Lset-out α x x∈Lα = PT.map
+Lset-out α x x∈Lα = map₁
   (λ { (m , hx) → ⟪ α ⟫↪ m
     , (∈∈ₛ {a = ⟪ α ⟫↪ m} {b = α} .snd (∈ₛ⟪ α ⟫↪ m) , hx) })
   (union-family-out ⟪ α ⟫ (stageFam α) x
@@ -610,7 +604,7 @@ isL : S → hProp (ℓ-suc ℓ)
 isL x = ∃[ α ∶ S ] ((IsOrd α , isPropIsOrd α) ⊓ (x ∈ˢ Lset α))
 
 isL-trans : Transitive 𝒮ᵥ isL
-isL-trans {x} {y} y∈x x∈L = PT.rec (snd (isL y))
+isL-trans {x} {y} y∈x x∈L = rec₁ (snd (isL y))
   (λ { (α , (ordα , x∈Lα)) →
 ```
 

@@ -201,8 +201,6 @@ truncation.
 
 ```agda
 import FOL.Absoluteness
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.Prelude using ( subst2 )
 open import Cubical.Data.Nat.Order using ( _<_; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
 ```
@@ -224,9 +222,6 @@ order laws of `limitOrder`{.Agda}.
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
 ```
@@ -532,7 +527,7 @@ propositional truncation is involved.
 <!--/-->
 
 ```agda
-    aMin : (m : ℕ) → ⟨ fst a ∈ Lset (# m) ⟩ → m < k → Empty.⊥
+    aMin : (m : ℕ) → ⟨ fst a ∈ Lset (# m) ⟩ → m < k → ⊥₀
     aMin m h hm = levelData a .snd .snd m h
       (lift (subst (λ j → m < j) (sym qk) hm))
 
@@ -659,7 +654,7 @@ the universe level of object-language negation.
 ```agda
       hmin : ⟨ γ ⊨ ∀̇∈ (var b) (∀̇ ( LsetGraphAt zero (suc zero)
                                   ⇒̇ ¬̇ (var (sh2 x) ∈̇ var zero) )) ⟩
-      hmin u u∈ c hg hmem = lift (PT.rec Empty.isProp⊥ step
+      hmin u u∈ c hg hmem = lift (rec₁ isProp⊥ step
         (∈#-elim k (fst u) (subst (λ w → ⟨ fst u ∈ w ⟩) qb u∈)))
         where
 ```
@@ -680,7 +675,7 @@ its existential witness; the hierarchy graph determines the finite stage.
 <!--/-->
 
 ```agda
-        step : Σ[ m ∈ ℕ ] ((m < k) × (fst u ≡ # m)) → Empty.⊥
+        step : Σ[ m ∈ ℕ ] ((m < k) × (fst u ≡ # m)) → ⊥₀
         step (m , (hm , qu)) = aMin m inStage hm
           where
           qc : fst c ≡ Lset (fst u)
@@ -732,7 +727,7 @@ truncated numeral data may be eliminated into it.
     LevelAt-out : ⟨ γ ⊨ LevelAt b x ⟩ → fst (lookup x γ) ≡ fst a
                 → fst (lookup b γ) ≡ # k
     LevelAt-out (hω , (hex , hmin)) qx =
-      PT.rec (setIsSet (fst (lookup b γ)) (# k)) named hω
+      rec₁ (setIsSet (fst (lookup b γ)) (# k)) named hω
       where
 ```
 
@@ -756,7 +751,7 @@ of propositional resizing rather than propositional truncation.
 <!--/-->
 
 ```agda
-      notAbove : (m : ℕ) → fst (lookup b γ) ≡ # m → k < m → Empty.⊥
+      notAbove : (m : ℕ) → fst (lookup b γ) ≡ # m → k < m → ⊥₀
       notAbove m qb hk = lower (hmin (numS k)
         (subst (λ w → ⟨ w ∈ fst (lookup b γ) ⟩) (sym (numS-fst k))
           (subst (λ w → ⟨ # k ∈ w ⟩) (sym qb) (#mono k m hk)))
@@ -800,10 +795,10 @@ type; each explicit witness will force `a` to occur at stage `m`.
 <!--/-->
 
 ```agda
-      notBelow : (m : ℕ) → fst (lookup b γ) ≡ # m → m < k → Empty.⊥
-      notBelow m qb hm = PT.rec Empty.isProp⊥ atTower hex
+      notBelow : (m : ℕ) → fst (lookup b γ) ≡ # m → m < k → ⊥₀
+      notBelow m qb hm = rec₁ isProp⊥ atTower hex
         where
-        atTower : Σ[ c ∈ S ] Body c → Empty.⊥
+        atTower : Σ[ c ∈ S ] Body c → ⊥₀
         atTower (c , (hg , hmem)) = aMin m inStage hm
 ```
 
@@ -892,9 +887,9 @@ reported by that formula for the fixed member `a` must be its true level.
 ```agda
         qb = sym qj
         decide : NatOrder.Trichotomy (lower j) k → lower j ≡ k
-        decide (NatOrder.lt h) = Empty.rec (notBelow (lower j) qb h)
+        decide (NatOrder.lt h) = ⊥₀-rec (notBelow (lower j) qb h)
         decide (NatOrder.eq e) = e
-        decide (NatOrder.gt h) = Empty.rec (notAbove (lower j) qb h)
+        decide (NatOrder.gt h) = ⊥₀-rec (notAbove (lower j) qb h)
 ```
 
 <!--en-->
@@ -1107,7 +1102,7 @@ The witness itself must lie in the carrier and in `yv`, while being absent from 
     Body : S → Type (ℓ-suc ℓ)
     Body z = ⟨ fst z ∈ fst Aʟ ⟩
            × ( ⟨ fst z ∈ yv ⟩
-             × ( (⟨ fst z ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥) × Agreeing z ) )
+             × ( (⟨ fst z ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀) × Agreeing z ) )
 
 ```
 
@@ -1122,7 +1117,7 @@ To read the formula outward, eliminate its propositionally truncated existential
 ```agda
   PrecedesAt-out : ⟨ γ ⊨ PrecedesAt r A x y ⟩
                  → ⟨ precedes R (fst Aʟ) xv yv ⟩
-  PrecedesAt-out = PT.rec squash₁ atZ
+  PrecedesAt-out = rec₁ squash₁ atZ
     where
     atZ : Σ[ z ∈ S ] Body z → ⟨ precedes R (fst Aʟ) xv yv ⟩
 ```
@@ -1199,7 +1194,7 @@ The converse starts with the propositionally truncated witness in `precedes`. Be
 ```agda
   PrecedesAt-in : ⟨ precedes R (fst Aʟ) xv yv ⟩
                 → ⟨ γ ⊨ PrecedesAt r A x y ⟩
-  PrecedesAt-in = PT.rec squash₁ atZ
+  PrecedesAt-in = rec₁ squash₁ atZ
     where
     atZ : Σ[ z ∈ V ℓ ] Witness R (fst Aʟ) xv yv z
 ```
@@ -1247,7 +1242,7 @@ The same projection equation transports membership in `yv` and nonmembership in 
 ```agda
       z∈y' : ⟨ fst zS ∈ yv ⟩
       z∈y' = subst (λ u → ⟨ u ∈ yv ⟩) (sym qz) z∈y
-      z∉x' : ⟨ fst zS ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥
+      z∉x' : ⟨ fst zS ∈ xv ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀
       z∉x' h = lift (z∉x (subst (λ u → ⟨ u ∈ xv ⟩) qz h))
       hag : Agreeing zS
 ```
@@ -1451,9 +1446,9 @@ eliminated only into contradiction.
 <!--/-->
 
 ```agda
-  decide (eq q) = Empty.rec (PT.rec Empty.isProp⊥
+  decide (eq q) = ⊥₀-rec (rec₁ isProp⊥
     (λ k → SWO.irr∙ limitOrder b (subst (λ t → t ≺ˡ b) q k)) h)
-  decide (gt k) = Empty.rec (PT.rec Empty.isProp⊥
+  decide (gt k) = ⊥₀-rec (rec₁ isProp⊥
     (λ j → SWO.irr∙ limitOrder a (SWO.trans∙ limitOrder a b a j k)) h)
 
 ```
@@ -1892,7 +1887,7 @@ Reading `LimitOrdAt` starts from a propositionally truncated choice of its two b
 
 ```agda
       LimitOrdAt-out : ⟨ γ ⊨ LimitOrdAt x y ⟩ → ∥ u ≺ˡ v ∥₁
-      LimitOrdAt-out = PT.rec squash₁ decide
+      LimitOrdAt-out = rec₁ squash₁ decide
         where
         atSplit : (c : S) → Σ[ d ∈ S ] Split c d → ∥ u ≺ˡ v ∥₁
         atSplit c (d , hs) = ∣ inl (lift (split-out c d hs)) ∣₁
@@ -1940,9 +1935,9 @@ Each existential is eliminated only into the propositionally truncated target. T
 ```agda
                            ∧̇ BeforeAt zero (suc x) (suc y) ) ) ⟩
                → ∥ u ≺ˡ v ∥₁
-        decide (inl h) = PT.rec squash₁
-          (λ { (c , hd) → PT.rec squash₁ (atSplit c) hd }) h
-        decide (inr h) = PT.rec squash₁ atSame h
+        decide (inl h) = rec₁ squash₁
+          (λ { (c , hd) → rec₁ squash₁ (atSplit c) hd }) h
+        decide (inr h) = rec₁ squash₁ atSame h
 ```
 
 <!--en-->
@@ -2161,7 +2156,7 @@ The reading law starts from membership of `pr (fst u) (fst v)` in `codeOrder`. S
   codeOrder-rep : (u v : Limit)
                 → ⟨ pr (fst u) (fst v) ∈ fst codeOrder ⟩ → u ≺ˡ v
   codeOrder-rep u v h = strictLimit u v
-    (PT.rec squash₁ atC
+    (rec₁ squash₁ atC
       (cond-out (prS (limitEl u) (limitEl v))
 ```
 
@@ -2251,7 +2246,7 @@ The outer reader processes the nested witnesses in the same order as `Cond₀` b
 
 ```agda
     atC : Outer (prS (limitEl u) (limitEl v)) → ∥ u ≺ˡ v ∥₁
-    atC (c , hd) = PT.rec squash₁ (λ { (d , hi) → atD c d hi }) hd
+    atC (c , hd) = rec₁ squash₁ (λ { (d , hi) → atD c d hi }) hd
 ```
 
 <!--en-->

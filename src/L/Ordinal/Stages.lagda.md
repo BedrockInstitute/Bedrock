@@ -98,9 +98,6 @@ The decision procedure behind everything is `ord-tri`: given two ordinals, each 
 open import L.Ordinal {ℓ} using ( mem-ord; suc-ord )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.Rank {ℓ} using ( rank; rank-upper; rank-ord; rank-fix )
-
-open import Cubical.Data.Sum as Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -112,8 +109,6 @@ The rank construction supplies three properties. For a set x, `rank x` is an ord
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; extensionality; _⊆_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -177,7 +172,7 @@ The remaining case is b ∈ a, which inclusion rules out: b ∈ a and a ⊆ b wo
 
   wit-case : (a b : S) → ((y : S) → ⟨ y ∈ˢ a ⟩ → ⟨ y ∈ˢ b ⟩)
            → ⟨ b ∈ˢ a ⟩ → ⟨ a ∈ˢ sucV b ⟩
-  wit-case a b a⊆b b∈a = Empty.rec (∈-irrefl b (a⊆b b b∈a))
+  wit-case a b a⊆b b∈a = ⊥₀-rec (∈-irrefl b (a⊆b b b∈a))
 
 ⊆→∈suc : (a b : S) → IsOrd a → IsOrd b
        → ((y : S) → ⟨ y ∈ˢ a ⟩ → ⟨ y ∈ˢ b ⟩) → ⟨ a ∈ˢ sucV b ⟩
@@ -192,9 +187,9 @@ This is the first use of the classical comparison. Everything done after the tri
 <!--/-->
 
 ```agda
-⊆→∈suc a b orda ordb a⊆b = Sum.rec
+⊆→∈suc a b orda ordb a⊆b = ⊎-rec
   (∈-case a b)
-  (Sum.rec (≡-case a b) (wit-case a b a⊆b))
+  (⊎-rec (≡-case a b) (wit-case a b a⊆b))
   (ord-tri a orda b ordb)
 ```
 
@@ -220,7 +215,7 @@ private
   Out β α = ⟨ sucV β ∈ˢ α ⟩ ⊎ (sucV β ≡ α)
 
   overshoot : (β α : S) → IsOrd α → ⟨ β ∈ˢ α ⟩ → ⟨ α ∈ˢ sucV β ⟩ → Out β α
-  overshoot β α ordα β∈α α∈sβ = Empty.rec*
+  overshoot β α ordα β∈α α∈sβ = ⊥*-rec
 ```
 
 <!--en-->
@@ -232,7 +227,7 @@ In the first subcase we have the membership chain α ∈ β ∈ α. Transitivity
 <!--/-->
 
 ```agda
-    (∈sucV-elim {A = β} {x = α} {P = Empty.⊥* {ℓ-suc ℓ}} Empty.isProp⊥* α∈sβ
+    (∈sucV-elim {A = β} {x = α} {P = ⊥* {ℓ-suc ℓ}} isProp⊥* α∈sβ
       (λ α∈β → lift (∈-irrefl α (ordα .fst α∈β β∈α)))
       (λ α≡β → lift (∈-irrefl α (subst (λ w → ⟨ w ∈ˢ α ⟩) (sym α≡β) β∈α))))
 
@@ -313,7 +308,7 @@ The equality branch is the degenerate one: when sucV β is not strictly below bu
 Lset-cumul : (β α : S) → IsOrd β → IsOrd α → ⟨ β ∈ˢ α ⟩
            → ⟨ β ∈ˢ Lset (sucV β) ⟩ → ⟨ β ∈ˢ Lset α ⟩
 Lset-cumul β α ordβ ordα β∈α β∈Lsβ =
-  Sum.rec (λ s∈α → cumul-∈ β α s∈α β∈Lsβ)
+  ⊎-rec (λ s∈α → cumul-∈ β α s∈α β∈Lsβ)
 ```
 
 <!--en-->
@@ -336,7 +331,7 @@ If a set belongs to `Lset α`, its rank is bounded by `α`. Applied to an ordina
 
 The harder half. By induction on the stage index: a set in `Lset α` lies in the definable subsets of `Lset β` for some `β` in `α`, so it is a subset of `Lset β`; each of its members therefore has rank in `β` by the inductive hypothesis; so its own rank, which is the union of the successors of those ranks, is included in `β`; comparison puts it inside the successor of `β`, and that is inside `α`.
 
-One notational point about the induction: membership in a truncated existential is itself truncated, and the induction is stated over the truncated form β ∈ᵗ α rather than over explicit members. The goal, a membership statement, is a proposition, so eliminating that truncation with `PT.rec` is legitimate.
+One notational point about the induction: membership in a truncated existential is itself truncated, and the induction is stated over the truncated form β ∈ᵗ α rather than over explicit members. The goal, a membership statement, is a proposition, so eliminating that truncation with `rec₁` is legitimate.
 <!--zh-->
 ## 没有东西早于自身的秩现身
 
@@ -344,7 +339,7 @@ One notational point about the induction: membership in a truncated existential 
 
 这是较难的一半。沿层索引归纳：`Lset α` 中的集合落在某个 `β ∈ α` 的 `Lset β` 的可定义子集里，故它是 `Lset β` 的子集；于是依归纳假设它的每个成员的秩都在 `β` 中；故它自身的秩，即那些秩的后继之并，包含于 `β`；三歧比较给出它属于 `β` 的后继，从而属于 `α`。
 
-关于归纳的一点记法说明：截断存在式中的成员关系本身也是截断的，归纳按截断形式 β ∈ᵗ α 陈述，而非按显式成员。目标是一个隶属陈述，因而是命题，所以用 `PT.rec` 消去该截断是合法的。
+关于归纳的一点记法说明：截断存在式中的成员关系本身也是截断的，归纳按截断形式 β ∈ᵗ α 陈述，而非按显式成员。目标是一个隶属陈述，因而是命题，所以用 `rec₁` 消去该截断是合法的。
 <!--ja-->
 ## 自身の階数より前に現れるものはない
 
@@ -352,7 +347,7 @@ One notational point about the induction: membership in a truncated existential 
 
 こちらが難しい方向です。段階の添字についての帰納法で示します。`Lset α` の集合は、ある β ∈ α に対する `Lset β` の定義可能部分集合の中にあり、したがって `Lset β` の部分集合です。すると帰納仮説によりその各要素の階数は `β` の中にあります。その集合自身の階数、すなわちそれらの階数の後者の合併は `β` に含まれ、比較により `β` の後者の内部、ひいては `α` の内部に置かれます。
 
-帰納についての記法上の一点を述べると、切り詰められた存在の要素であることはそれ自体切り詰められており、帰納は明示的な要素ではなく切り詰められた形 β ∈ᵗ α の上で述べられます。目標は所属の主張、つまり命題なので、`PT.rec` によるこの切り詰めの消去は正当です。
+帰納についての記法上の一点を述べると、切り詰められた存在の要素であることはそれ自体切り詰められており、帰納は明示的な要素ではなく切り詰められた形 β ∈ᵗ α の上で述べられます。目標は所属の主張、つまり命題なので、`rec₁` によるこの切り詰めの消去は正当です。
 <!--/-->
 
 <!--en-->
@@ -372,17 +367,17 @@ rank-Lset = ∈-induction
 ```
 
 <!--en-->
-The key step exposes what x ∈ Lset α means: by `Lset-out`, x merely belongs to a definable-subset layer over some β ∈ α. The layer membership is again truncated, but the conclusion rank x ∈ α is a proposition, so `PT.rec` may eliminate the truncation and work with the fiber β, β∈α, x∈𝒟ₒLβ as if it were given.
+The key step exposes what x ∈ Lset α means: by `Lset-out`, x merely belongs to a definable-subset layer over some β ∈ α. The layer membership is again truncated, but the conclusion rank x ∈ α is a proposition, so `rec₁` may eliminate the truncation and work with the fiber β, β∈α, x∈𝒟ₒLβ as if it were given.
 <!--zh-->
-关键一步揭示 x ∈ Lset α 的含义：由 `Lset-out`，x 仅仅 (merely) 属于某个 β ∈ α 之上的可定义子集层。层中的成员关系同样是截断的，但结论 rank x ∈ α 是命题，故 `PT.rec` 可以消去截断，并把纤维 β、β∈α、x∈𝒟ₒLβ 当作已经给出而加以使用。
+关键一步揭示 x ∈ Lset α 的含义：由 `Lset-out`，x 仅仅 (merely) 属于某个 β ∈ α 之上的可定义子集层。层中的成员关系同样是截断的，但结论 rank x ∈ α 是命题，故 `rec₁` 可以消去截断，并把纤维 β、β∈α、x∈𝒟ₒLβ 当作已经给出而加以使用。
 <!--ja-->
-鍵となる一歩は、x ∈ Lset α が何を意味するかを明かすことです。`Lset-out` により、x はある β ∈ α の上の定義可能部分集合の層に単に (merely) 属するにすぎません。層への所属もまた切り詰められていますが、結論 rank x ∈ α は命題なので、`PT.rec` が切り詰めを消去し、繊維 β、β∈α、x∈𝒟ₒLβ を与えられたものとして扱えます。
+鍵となる一歩は、x ∈ Lset α が何を意味するかを明かすことです。`Lset-out` により、x はある β ∈ α の上の定義可能部分集合の層に単に (merely) 属するにすぎません。層への所属もまた切り詰められていますが、結論 rank x ∈ α は命題なので、`rec₁` が切り詰めを消去し、繊維 β、β∈α、x∈𝒟ₒLβ を与えられたものとして扱えます。
 <!--/-->
 
 ```agda
        → (∀ β → β ∈ᵗ α → IsOrd β → (x : S) → ⟨ x ∈ˢ Lset β ⟩ → ⟨ rank x ∈ˢ β ⟩)
        → IsOrd α → (x : S) → ⟨ x ∈ˢ Lset α ⟩ → ⟨ rank x ∈ˢ α ⟩
-  step α IH ordα x x∈Lα = PT.rec (snd (rank x ∈ˢ α)) fromStage (Lset-out α x x∈Lα)
+  step α IH ordα x x∈Lα = rec₁ (snd (rank x ∈ˢ α)) fromStage (Lset-out α x x∈Lα)
     where
     fromStage : Σ[ β ∈ S ] (⟨ β ∈ˢ α ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset β) ⟩) → ⟨ rank x ∈ˢ α ⟩
 ```

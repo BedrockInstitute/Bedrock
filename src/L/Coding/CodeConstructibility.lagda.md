@@ -59,15 +59,9 @@ open import L.Coding.Expressions {ℓ} using ( numL )
 open import L.Axioms.Numerals {ℓ} using ( pairʟ; pairʟ-fst; unionʟ; unionʟ-fst )
 open import L.Coding.Environment {ℓ} using ( env )
 open import L.Axioms.Basic {ℓ} using ( finSet; module FinOf )
-
-open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_⁆s; ⁅_,_⁆; ⋃_; _∪_; module InfinitySet )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Data.Unit using ( Unit*; tt* )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import V.Model {ℓ} using ( pair-singleton; pair-spec; union-spec )
 open InfinitySet using ( #_; sucV )
 
@@ -234,7 +228,7 @@ Each shape comes twice over. Once on the underlying set, with the two lemmas tha
 
 ```agda
 sgl-out : (a x : V ℓ) → ⟨ x ∈ ⁅ a ⁆s ⟩ → x ≡ a
-sgl-out a x h = PT.rec (setIsSet x a) (λ { (inl e) → e ; (inr e) → e })
+sgl-out a x h = rec₁ (setIsSet x a) (λ { (inl e) → e ; (inr e) → e })
   (subst ⟨_⟩ (pair-spec a a x)
     (subst (λ w → ⟨ x ∈ w ⟩) (sym (pair-singleton a)) h))
 
@@ -243,8 +237,8 @@ sgl-in a x e = subst (λ w → ⟨ x ∈ w ⟩) (pair-singleton a)
   (subst ⟨_⟩ (sym (pair-spec a a x)) ∣ inl e ∣₁)
 
 cup-out : (A B x : V ℓ) → ⟨ x ∈ (A ∪ B) ⟩ → ∥ (⟨ x ∈ A ⟩ ⊎ ⟨ x ∈ B ⟩) ∥₁
-cup-out A B x h = PT.rec squash₁
-  (λ { (v , v∈ , x∈v) → PT.map
+cup-out A B x h = rec₁ squash₁
+  (λ { (v , v∈ , x∈v) → map₁
          (λ { (inl e) → inl (subst (λ w → ⟨ x ∈ w ⟩) e x∈v)
             ; (inr e) → inr (subst (λ w → ⟨ x ∈ w ⟩) e x∈v) })
          (subst ⟨_⟩ (pair-spec A B v) v∈) })
@@ -354,7 +348,7 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
       wider : ∀ {n m} (φ : Formula K n) (χ : Formula K m) {x : V ℓ}
             → ((z : V ℓ) → ⟨ z ∈ fst (tree g χ) ⟩ → ⟨ z ∈ fst (tree g φ) ⟩)
             → Of f g χ x → Of f g φ x
-      wider _ _ s = PT.map
+      wider _ _ s = map₁
         (λ { (m , ψ , e , t) → m , ψ , e , (λ z hz → s z (t z hz)) })
 
       un : ∀ {n m} (φ : Formula K n) (a : Formula K m)
@@ -362,7 +356,7 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
             → ⟨ z ∈ fst (tree g φ) ⟩)
          → ((x : V ℓ) → ⟨ x ∈ fst (tree f a) ⟩ → Of f g a x)
          → (x : V ℓ) → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (tree f a)) ⟩ → Of f g φ x
-      un φ a into ra x h = PT.rec squash₁
+      un φ a into ra x h = rec₁ squash₁
         (λ { (inl e) → one φ x e
            ; (inr e) → wider φ a
                (λ z hz → into z (cupʟ-inr (sglʟ (g φ)) (tree g a) z hz))
@@ -378,9 +372,9 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
           → (x : V ℓ)
           → ⟨ x ∈ fst (cupʟ (sglʟ (f φ)) (cupʟ (tree f a) (tree f b))) ⟩
           → Of f g φ x
-      bin φ a b into ra rb x h = PT.rec squash₁
+      bin φ a b into ra rb x h = rec₁ squash₁
         (λ { (inl e) → one φ x e
-           ; (inr e) → PT.rec squash₁
+           ; (inr e) → rec₁ squash₁
                (λ { (inl ea) → wider φ a (λ z hz → into z
                       (cupʟ-inr (sglʟ (g φ)) (cupʟ (tree g a) (tree g b)) z
                         (cupʟ-inl (tree g a) (tree g b) z hz)))
@@ -623,7 +617,7 @@ the successor, and a constructor with no subformula demands nothing.
     Concl 7 ar p = ⟨ pr (sucV ar) p ∈ C ⟩
     Concl 8 ar p = SecondSucc ar p
     Concl 9 ar p = SecondSucc ar p
-    Concl _  _  _ = Unit*
+    Concl _  _  _ = ⊤*
 
     private
       Below : ∀ {n} → Formula K n → Type (ℓ-suc ℓ)

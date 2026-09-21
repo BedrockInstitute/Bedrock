@@ -63,8 +63,6 @@ open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; domAt; domAt-in;
 open import L.Coding.Expressions {ℓ} using ( extAt; extAt-out; extAt-in; extAt-in-both )
 open import L.Coding.DefinablePowerSet {ℓ} lem using ( DefAt; DefAt-in; DefAt-out )
 
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 
 open hPropStructure 𝒮ʟ
@@ -169,7 +167,7 @@ PowOK b f γ = (c w : S) → Records b f γ c w → ⟨ isL (𝒟ₒ (fst w)) �
 <!--/-->
 
 <!--en-->
-Reading the body is where the three existentials are spent, and each `PT.rec`
+Reading the body is where the three existentials are spent, and each `rec₁`
 below names the type of its payload. That is the law the Powerset chapter was
 written under and it is not a stylistic one: left to inference the payload is a
 metavariable standing for the satisfaction of a formula the elaborator has not
@@ -187,7 +185,7 @@ the step from both directions at once, since a set built by extension has to be
 re-entered member by member from both sides. The reading and the assembly of the
 body are shared between all three, so each projection is one line.
 <!--zh-->
-读体是消去那三个存在量词之处，下面每一次 `PT.rec` 都明确写出自身载荷的类型。这是上一章已经采用的规则，并非文风选择：若交给推断，载荷会成为一个元变元，表示「某条公式的满足关系」，而消解器尚未确定是哪条公式；同样两行代码的检查时间便会从两秒增加到两分钟以上。
+读体是消去那三个存在量词之处，下面每一次 `rec₁` 都明确写出自身载荷的类型。这是上一章已经采用的规则，并非文风选择：若交给推断，载荷会成为一个元变元，表示「某条公式的满足关系」，而消解器尚未确定是哪条公式；同样两行代码的检查时间便会从两秒增加到两分钟以上。
 
 装配体则是把同样三个存在量词填上。可定义幂集由 `PowOK`{.Agda} 所提供的那个模型元素给出，它自己的编码等式在那个元素处是 `refl`{.Agda}，而 `DefAt`{.Agda} 的引入别无所需。这一步的诸读法于是就是 `extAt`{.Agda} 的诸方向：把那两半插进去；而它们有三条而非两条，`StepAt-out`{.Agda} 把这一步的一个成员读作一份载荷，`StepAt-back`{.Agda} 把一份载荷放回去，而 `StepAt-in`{.Agda} 由两个方向一并造出这一步，因为一个以外延造出的集合，必须从两侧逐成员地重新进入。读体与装配体为三者所共用，故每个投影都只有一行。
 <!--/-->
@@ -218,7 +216,7 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
 
     unfold : PowOK b f γ → (z : S)
            → ⟨ (z ∷ γ) ⊨ Φ ⟩ → ∥ StepOf b f γ z ∥₁
-    unfold ok z = PT.rec squash₁ viaArg
+    unfold ok z = rec₁ squash₁ viaArg
       where
       viaPow : (c w : S)
              → Σ[ d ∈ S ] ⟨ (d ∷ w ∷ c ∷ z ∷ γ) ⊨ StepBody b f ⟩
@@ -228,11 +226,11 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
       viaVal : (c : S)
              → Σ[ w ∈ S ] ⟨ (w ∷ c ∷ z ∷ γ) ⊨ ∃̇ (StepBody b f) ⟩
              → ∥ StepOf b f γ z ∥₁
-      viaVal c (w , hw) = PT.rec squash₁ (viaPow c w) hw
+      viaVal c (w , hw) = rec₁ squash₁ (viaPow c w) hw
 
       viaArg : Σ[ c ∈ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (∃̇ (StepBody b f)) ⟩
              → ∥ StepOf b f γ z ∥₁
-      viaArg (c , hc) = PT.rec squash₁ (viaVal c) hc
+      viaArg (c , hc) = rec₁ squash₁ (viaVal c) hc
 
     fill : PowOK b f γ → (z : S) → StepOf b f γ z → ⟨ (z ∷ γ) ⊨ Φ ⟩
     fill ok z (c , (w , (rec , hz))) =
@@ -266,8 +264,8 @@ Perf: `env` spelled out at both ends; via an abbreviation, 15 s per conversion.
             → ((z : S) → StepOf b f γ z → ⟨ fst z ∈ fst (lookup v γ) ⟩)
             → ⟨ γ ⊨ StepAt v b f ⟩
   StepAt-in ok into back = extAt-in-both v Φ γ
-    (λ z z∈ → PT.rec (snd ((z ∷ γ) ⊨ Φ)) (fill ok z) (into z z∈))
-    (λ z h → PT.rec (snd (fst z ∈ fst (lookup v γ))) (back z) (unfold ok z h))
+    (λ z z∈ → rec₁ (snd ((z ∷ γ) ⊨ Φ)) (fill ok z) (into z z∈))
+    (λ z h → rec₁ (snd (fst z ∈ fst (lookup v γ))) (back z) (unfold ok z h))
 ```
 
 <!--en-->
@@ -390,7 +388,7 @@ module RecShape (Step : ∀ {n} → Fin n → Fin n → Fin n → Formula S n) w
         (sym (prAtL-adequate (suc e) (suc c) zero (z ∷ γ))) q , hg) ∣₁
 
     PairGraph-out : ⟨ γ ⊨ φ ⟩ → ∥ PairOf ∥₁
-    PairGraph-out h = PT.map
+    PairGraph-out h = map₁
       (λ { (z , (hq , hg)) →
         z , (subst ⟨_⟩ (prAtL-adequate (suc e) (suc c) zero (z ∷ γ)) hq , hg) })
       (subst (λ ψ → ⟨ γ ⊨ ψ ⟩) qφ h)

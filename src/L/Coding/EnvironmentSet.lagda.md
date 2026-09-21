@@ -34,6 +34,7 @@ Nothing here needs replacement, and nothing here needs recursion.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.FinData using ( inj-toℕ )
 open import Base.Classical using ( LEM )
 
 module L.Coding.EnvironmentSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -56,13 +57,7 @@ open import L.Coding.Environment {ℓ} using ( env )
 open import L.Coding.CodeConstructibility {ℓ} using ( envL )
 open import L.Coding.Model {ℓ} using ( envOverAt; svAt; domAt; valuesInAt; pairsInAt; inDomAt; prʟ; prʟ-fst; svAt-in; svAt-out; inDomAt-adequate; appAt-adequate; domAt-in; valuesInAt-out; envOver-sv; envOver-dom; envOver-values; envOver-pairs; pairsIn-in; pairsIn-out )
 open import L.Coding.Expressions {ℓ} using ( numL )
-
-open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈∈ₛ; ∈-asFiber )
@@ -260,7 +255,7 @@ the indices below `n` are exactly the numerals below `n`.
     private
       out : (s : V ℓ) → ⟨ s ∈ fst (envS g) ⟩
           → ∥ (Σ[ i ∈ Fin n ] (pr (# (toℕ i)) (fst (ix (g i))) ≡ s)) ∥₁
-      out s = PT.map (λ { (li , e) → lower li , e })
+      out s = map₁ (λ { (li , e) → lower li , e })
 
       into : (i : Fin n) → ⟨ pr (# (toℕ i)) (fst (ix (g i))) ∈ fst (envS g) ⟩
       into i = ∣ lift i , refl ∣₁
@@ -279,8 +274,8 @@ the indices below `n` are exactly the numerals below `n`.
       where
       sv : ⟨ δ ⊨ svAt E ⟩
       sv = svAt-in E δ (λ x y y' p q →
-        PT.rec (setIsSet (fst y) (fst y'))
-          (λ { (i , ei) → PT.rec (setIsSet (fst y) (fst y'))
+        rec₁ (setIsSet (fst y) (fst y'))
+          (λ { (i , ei) → rec₁ (setIsSet (fst y) (fst y'))
             (λ { (j , ej) → sym (pr-inj ei .snd)
                ∙ cong (λ k → fst (ix (g k)))
                    (inj-toℕ (#-inj′ (pr-inj ei .fst ∙ sym (pr-inj ej .fst))))
@@ -292,8 +287,8 @@ the indices below `n` are exactly the numerals below `n`.
       dom x = fwd , bwd
         where
         fwd : ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩ → ⟨ fst x ∈ (# n) ⟩
-        fwd hd = PT.rec (snd (fst x ∈ (# n)))
-          (λ { (y , p) → PT.rec (snd (fst x ∈ (# n)))
+        fwd hd = rec₁ (snd (fst x ∈ (# n)))
+          (λ { (y , p) → rec₁ (snd (fst x ∈ (# n)))
             (λ { (i , ei) → subst (λ w → ⟨ w ∈ (# n) ⟩) (pr-inj ei .fst)
                    (#mono (toℕ i) n (toℕ<n i)) })
             (out (pr (fst x) (fst y)) p) })
@@ -301,7 +296,7 @@ the indices below `n` are exactly the numerals below `n`.
 
         bwd : ⟨ fst x ∈ (# n) ⟩ → ⟨ (x ∷ δ) ⊨ inDomAt (suc E) zero ⟩
         bwd hx = subst ⟨_⟩ (sym (inDomAt-adequate (suc E) zero (x ∷ δ)))
-          (PT.map
+          (map₁
             (λ { (m , m<n , e) →
               ix (g (fromℕ' n m m<n))
               , subst (λ w → ⟨ pr w (fst (ix (g (fromℕ' n m m<n))))
@@ -310,7 +305,7 @@ the indices below `n` are exactly the numerals below `n`.
             (∈#-elim n (fst x) hx))
 
       vals : ⟨ δ ⊨ valuesInAt E zero ⟩
-      vals x y hp = PT.rec (snd (fst y ∈ fst B))
+      vals x y hp = rec₁ (snd (fst y ∈ fst B))
         (λ { (i , ei) → subst (λ w → ⟨ w ∈ fst B ⟩) (pr-inj ei .snd) (val∈ i) })
         (out (pr (fst x) (fst y))
           (subst ⟨_⟩ (appAt-adequate (suc (suc E)) (suc zero) zero (y ∷ x ∷ δ))
@@ -318,7 +313,7 @@ the indices below `n` are exactly the numerals below `n`.
 
       pairs : ⟨ δ ⊨ pairsInAt E (suc zero) zero ⟩
       pairs = pairsIn-in E (suc zero) zero δ
-        (λ s s∈ → PT.map
+        (λ s s∈ → map₁
           (λ { (i , ei) → nn (toℕ i)
              , ( ix (g i)
                , ( #mono (toℕ i) n (toℕ<n i) , (val∈ i , sym ei) ) ) })
@@ -388,7 +383,7 @@ unwanted elements could enter.
               (nn (toℕ i)) y y' p p'))
 
       entry : (i : Fin n) → Entry i
-      entry i = PT.rec (isPropEntry i) (λ z → z)
+      entry i = rec₁ (isPropEntry i) (λ z → z)
         (domAt-in Ei di γ (envOver-dom Ei di bi γ h)
           (nn (toℕ i)) (subst (λ z → ⟨ (# (toℕ i)) ∈ z ⟩) (sym qd)
             (#mono (toℕ i) n (toℕ<n i))))
@@ -407,14 +402,14 @@ unwanted elements could enter.
       val≡ i = fib i .snd
 
       fwd : (w : V ℓ) → ⟨ w ∈ fst (envS g) ⟩ → ⟨ w ∈ fst e ⟩
-      fwd w = PT.rec (snd (w ∈ fst e))
+      fwd w = rec₁ (snd (w ∈ fst e))
         (λ { (li , q) → subst (λ z → ⟨ z ∈ fst e ⟩)
                (cong (pr (# (toℕ (lower li)))) (sym (val≡ (lower li))) ∙ q)
                (entry (lower li) .snd) })
 
       bwd : (w : V ℓ) → ⟨ w ∈ fst e ⟩ → ⟨ w ∈ fst (envS g) ⟩
-      bwd w hw = PT.rec squash₁
-        (λ { (u , (v , (u∈ , (v∈ , eq)))) → PT.rec squash₁
+      bwd w hw = rec₁ squash₁
+        (λ { (u , (v , (u∈ , (v∈ , eq)))) → rec₁ squash₁
           (λ { (m , (m<n , um)) →
             let i = fromℕ' n m m<n
                 iu : # (toℕ i) ≡ fst u
@@ -441,8 +436,8 @@ unwanted elements could enter.
 
   envSet-out : (n : ℕ) (x : S) → ⟨ x ∈ˢ envSet n ⟩
              → ∥ (Σ[ g ∈ Ix n ] (fst x ≡ fst (envS g))) ∥₁
-  envSet-out n x hx = PT.rec squash₁
-    (λ { (d , hd) → PT.map
+  envSet-out n x hx = rec₁ squash₁
+    (λ { (d , hd) → map₁
       (λ { (b , (qd , (qb , hov))) →
         Recover.g n (b ∷ d ∷ x ∷ []) (suc (suc zero)) (suc zero) zero qd qb hov
         , Recover.recovers n (b ∷ d ∷ x ∷ []) (suc (suc zero)) (suc zero) zero

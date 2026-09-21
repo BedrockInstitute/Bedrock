@@ -58,9 +58,6 @@ Propositional truncation expresses mere existence: `∣_∣₁`{.Agda} places a 
 open import L.Axioms.Basic {ℓ} using ( uniqueL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
 
 <!--en-->
@@ -145,7 +142,7 @@ isNumeralL x = ∃[ n ∶ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] x ≈ˢ numeralL (
 
 ω-specL : (x : S) → (x ∈ˢ ωʟ) ≡ isNumeralL x
 ω-specL x = ⇔toPath
-  (PT.map (λ { (k , p) → lift (lower k)
+  (map₁ (λ { (k , p) → lift (lower k)
 ```
 
 <!--en-->
@@ -158,7 +155,7 @@ Each direction maps witnesses while they remain inside propositional truncation.
 
 ```agda
              , (sym p ∙ sym (numeralL-fst (lower k))) }))
-  (PT.map (λ { (n , q) → lift (lower n)
+  (map₁ (λ { (n , q) → lift (lower n)
              , (sym (q ∙ numeralL-fst (lower n))) }))
 
 hasInfinityL : isContr (SetOf isNumeralL)

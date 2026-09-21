@@ -30,6 +30,9 @@ Everything in this chapter takes place at one fixed universe level `ℓ`, fixed 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( propTrunc≃ )
+open import Cubical.Data.Sigma using ( Σ-cong-equiv )
+open import Cubical.Data.Sum using ( ⊎-equiv )
 
 module V.Smallness {ℓ : Level} where
 
@@ -66,23 +69,17 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 
 open import Cubical.Foundations.Equiv
   using ( _≃_; equivFun; invEq; invEquiv; equivΠ; propBiimpl→Equiv )
-import Cubical.Functions.Logic as Logic
 ```
 
 <!--en-->
-Closing smallness under the connectives needs proposition operations at the lower level `ℓ`, the target universe of every compression. They remain under the qualified name `Logic`{.Agda}, so `Logic.⊓`{.Agda} and its siblings visibly act on `hProp ℓ`, while the unqualified operations used below act on `hProp (ℓ-suc ℓ)`. The remaining pieces support specific equivalence constructions: `Σ-cong-equiv` builds an equivalence of pair types from componentwise equivalences, `Sum.⊎-equiv` handles coproducts, `tt*` is the unit element, and the propositional truncation module `PT`{.Agda} provides a map operation that transports merely-exists statements along a function without ever choosing a witness.
+Closing smallness under the connectives needs proposition operations at the lower level `ℓ`, the target universe of every compression. They remain under the qualified name `Logic`{.Agda}, so `⊓`{.Agda} and its siblings visibly act on `hProp ℓ`, while the unqualified operations used below act on `hProp (ℓ-suc ℓ)`. The remaining pieces support specific equivalence constructions: `Σ-cong-equiv` builds an equivalence of pair types from componentwise equivalences, `⊎-equiv` handles coproducts, `_` is the unit element, and the propositional truncation module `PT`{.Agda} provides a map operation that transports merely-exists statements along a function without ever choosing a witness.
 <!--zh-->
-要证联结词保小，需要低层 `ℓ`，即每次化归的目标宇宙，上的命题运算。它们保留限定名 `Logic`{.Agda}，因此 `Logic.⊓`{.Agda} 等名字显然作用于 `hProp ℓ`，而下文不加限定的运算作用于 `hProp (ℓ-suc ℓ)`。其余部分服务于具体的等价构造：`Σ-cong-equiv` 由逐分量的等价构造对子类型间的等价；`Sum.⊎-equiv` 处理余积；`tt*` 是单元元素；命题截断模块 `PT`{.Agda} 的 map 运算沿函数搬运「仅仅存在」式陈述，而不选取任何见证。
+要证联结词保小，需要低层 `ℓ`，即每次化归的目标宇宙，上的命题运算。它们保留限定名 `Logic`{.Agda}，因此 `⊓`{.Agda} 等名字显然作用于 `hProp ℓ`，而下文不加限定的运算作用于 `hProp (ℓ-suc ℓ)`。其余部分服务于具体的等价构造：`Σ-cong-equiv` 由逐分量的等价构造对子类型间的等价；`⊎-equiv` 处理余积；`_` 是单元元素；命题截断模块 `PT`{.Agda} 的 map 运算沿函数搬运「仅仅存在」式陈述，而不选取任何见证。
 <!--ja-->
-結合子による保存を示すには、低いレベル `ℓ`、すなわち圧縮の到達点となる宇宙の命題演算が必要です。これらは限定名 `Logic`{.Agda} のもとに置かれるので、`Logic.⊓`{.Agda} などは明らかに `hProp ℓ` 上で働き、以下の無修飾の演算は `hProp (ℓ-suc ℓ)` 上で働きます。残りの部品は個々の同値の構成に役立ちます。`Σ-cong-equiv` は成分ごとの同値から対の型の間の同値を作り、`Sum.⊎-equiv` は直和を扱い、`tt*` は単一元であり、命題的切り詰めのモジュール `PT`{.Agda} は、証人を選ばずに関数に沿って「存在するだけ」の主張を運ぶ map を与えます。
+結合子による保存を示すには、低いレベル `ℓ`、すなわち圧縮の到達点となる宇宙の命題演算が必要です。これらは限定名 `Logic`{.Agda} のもとに置かれるので、`⊓`{.Agda} などは明らかに `hProp ℓ` 上で働き、以下の無修飾の演算は `hProp (ℓ-suc ℓ)` 上で働きます。残りの部品は個々の同値の構成に役立ちます。`Σ-cong-equiv` は成分ごとの同値から対の型の間の同値を作り、`⊎-equiv` は直和を扱い、`_` は単一元であり、命題的切り詰めのモジュール `PT`{.Agda} は、証人を選ばずに関数に沿って「存在するだけ」の主張を運ぶ map を与えます。
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Data.Sigma using ( Σ-cong-equiv )
-import Cubical.Data.Sum as Sum
-open import Cubical.Data.Unit using ( tt* )
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -183,51 +180,51 @@ Each proof takes two smallness witnesses `(P' , eP)` and `(Q' , eQ)`, where `eP 
 <!--/-->
 
 <!--en-->
-Conjunction is the simplest case because the underlying type of `P ⊓ Q` is a pair `⟨ P ⟩ × ⟨ Q ⟩`. Pairing the two compressed propositions with `Logic.⊓`, whose underlying type is likewise a product, the equivalence is obtained by `Σ-cong-equiv` applied to `eP` and `eQ`: map a pair of proofs to the pair of its compressions. Nothing about propositions is needed beyond that each factor compresses.
+Conjunction is the simplest case because the underlying type of `P ⊓ Q` is a pair `⟨ P ⟩ × ⟨ Q ⟩`. Pairing the two compressed propositions with `⊓`, whose underlying type is likewise a product, the equivalence is obtained by `Σ-cong-equiv` applied to `eP` and `eQ`: map a pair of proofs to the pair of its compressions. Nothing about propositions is needed beyond that each factor compresses.
 <!--zh-->
-合取最简单，因为 `P ⊓ Q` 的底层类型是对子 `⟨ P ⟩ × ⟨ Q ⟩`。用 `Logic.⊓` 组合两个压缩命题，其底层类型同样是乘积；等价由 `Σ-cong-equiv` 作用于 `eP`、`eQ` 得到：把一对证明映到其压缩后的一对。除了每个因子可压缩之外，不需要任何关于命题的其他内容。
+合取最简单，因为 `P ⊓ Q` 的底层类型是对子 `⟨ P ⟩ × ⟨ Q ⟩`。用 `⊓` 组合两个压缩命题，其底层类型同样是乘积；等价由 `Σ-cong-equiv` 作用于 `eP`、`eQ` 得到：把一对证明映到其压缩后的一对。除了每个因子可压缩之外，不需要任何关于命题的其他内容。
 <!--ja-->
-連言が最も単純です。`P ⊓ Q` の基礎の型は対 `⟨ P ⟩ × ⟨ Q ⟩` だからです。二つの圧縮された命題を、基礎の型がやはり積である `Logic.⊓` で組み合わせれば、同値は `eP` と `eQ` に `Σ-cong-equiv` を適用して得られます。証明の対を、圧縮された証明の対へ写すだけです。各因子が圧縮できること以外に、命題についての情報は要りません。
+連言が最も単純です。`P ⊓ Q` の基礎の型は対 `⟨ P ⟩ × ⟨ Q ⟩` だからです。二つの圧縮された命題を、基礎の型がやはり積である `⊓` で組み合わせれば、同値は `eP` と `eQ` に `Σ-cong-equiv` を適用して得られます。証明の対を、圧縮された証明の対へ写すだけです。各因子が圧縮できること以外に、命題についての情報は要りません。
 <!--/-->
 
 ```agda
 small⊓ : {P Q : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ Q → hasSize ℓ (P ⊓ Q)
 small⊓ {P} {Q} (P' , eP) (Q' , eQ) =
-  (P' Logic.⊓ Q') , Σ-cong-equiv eP (λ _ → eQ)
+  (P' ⊓ Q') , Σ-cong-equiv eP (λ _ → eQ)
 
 small⊔ : {P Q : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ Q → hasSize ℓ (P ⊔ Q)
 small⊔ {P} {Q} (P' , eP) (Q' , eQ) =
 ```
 
 <!--en-->
-Disjunction and implication need one idea each. For disjunction, `⟨ P ⊔ Q ⟩` is the propositional truncation of the coproduct, so the compressed proposition `P' Logic.⊔ Q'` is again a truncation, and `PT.propTrunc≃` lifts the coproduct equivalence `Sum.⊎-equiv eP eQ` to the truncations. This is where truncation discipline shows: the map merely relabels which side holds, never inspects which side was chosen, because truncation provides no chosen side. For implication, `⟨ P ⇒ Q ⟩` is the function type `⟨ P ⟩ → ⟨ Q ⟩`; the compressed proposition `P' Logic.⇒ Q'` has the same shape at level `ℓ`, and `equivΠ` transports the equivalence through the function space pointwise.
+Disjunction and implication need one idea each. For disjunction, `⟨ P ⊔ Q ⟩` is the propositional truncation of the coproduct, so the compressed proposition `P' ⊔ Q'` is again a truncation, and `propTrunc≃` lifts the coproduct equivalence `⊎-equiv eP eQ` to the truncations. This is where truncation discipline shows: the map merely relabels which side holds, never inspects which side was chosen, because truncation provides no chosen side. For implication, `⟨ P ⇒ Q ⟩` is the function type `⟨ P ⟩ → ⟨ Q ⟩`; the compressed proposition `P' ⇒ Q'` has the same shape at level `ℓ`, and `equivΠ` transports the equivalence through the function space pointwise.
 <!--zh-->
-析取与蕴涵各需一个想法。对析取，`⟨ P ⊔ Q ⟩` 是余积的命题截断，因此压缩命题 `P' Logic.⊔ Q'` 也是截断，`PT.propTrunc≃` 把余积等价 `Sum.⊎-equiv eP eQ` 提升到截断上。截断纪律在此显现：该映射只是改记哪一侧成立，从不检视选定了哪一侧，因为截断根本不提供选定的侧。对蕴涵，`⟨ P ⇒ Q ⟩` 是函数类型 `⟨ P ⟩ → ⟨ Q ⟩`；压缩命题 `P' Logic.⇒ Q'` 在层级 `ℓ` 上形状相同，`equivΠ` 逐点地把等价穿过函数空间。
+析取与蕴涵各需一个想法。对析取，`⟨ P ⊔ Q ⟩` 是余积的命题截断，因此压缩命题 `P' ⊔ Q'` 也是截断，`propTrunc≃` 把余积等价 `⊎-equiv eP eQ` 提升到截断上。截断纪律在此显现：该映射只是改记哪一侧成立，从不检视选定了哪一侧，因为截断根本不提供选定的侧。对蕴涵，`⟨ P ⇒ Q ⟩` 是函数类型 `⟨ P ⟩ → ⟨ Q ⟩`；压缩命题 `P' ⇒ Q'` 在层级 `ℓ` 上形状相同，`equivΠ` 逐点地把等价穿过函数空间。
 <!--ja-->
-選言と含意には、それぞれ一つの考え方が要ります。選言では `⟨ P ⊔ Q ⟩` は直和の命題的切り詰めなので、圧縮された命題 `P' Logic.⊔ Q'` も切り詰めであり、`PT.propTrunc≃` が直和の同値 `Sum.⊎-equiv eP eQ` を切り詰めへ引き上げます。ここで切り詰めの規律が現れます。この写像はどちら側が成り立つかのラベルを付け替えるだけで、選ばれた側を検査しません。切り詰めは選ばれた側をそもそも提供しないからです。含意では `⟨ P ⇒ Q ⟩` は関数型 `⟨ P ⟩ → ⟨ Q ⟩` であり、圧縮された命題 `P' Logic.⇒ Q'` はレベル `ℓ` で同じ形をもち、`equivΠ` が関数空間を通して同値を各点で運びます。
+選言と含意には、それぞれ一つの考え方が要ります。選言では `⟨ P ⊔ Q ⟩` は直和の命題的切り詰めなので、圧縮された命題 `P' ⊔ Q'` も切り詰めであり、`propTrunc≃` が直和の同値 `⊎-equiv eP eQ` を切り詰めへ引き上げます。ここで切り詰めの規律が現れます。この写像はどちら側が成り立つかのラベルを付け替えるだけで、選ばれた側を検査しません。切り詰めは選ばれた側をそもそも提供しないからです。含意では `⟨ P ⇒ Q ⟩` は関数型 `⟨ P ⟩ → ⟨ Q ⟩` であり、圧縮された命題 `P' ⇒ Q'` はレベル `ℓ` で同じ形をもち、`equivΠ` が関数空間を通して同値を各点で運びます。
 <!--/-->
 
 ```agda
-  (P' Logic.⊔ Q') , PT.propTrunc≃ (Sum.⊎-equiv eP eQ)
+  (P' ⊔ Q') , propTrunc≃ (⊎-equiv eP eQ)
 
 small⇒ : {P Q : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ Q → hasSize ℓ (P ⇒ Q)
 small⇒ {P} {Q} (P' , eP) (Q' , eQ) =
-  (P' Logic.⇒ Q') , equivΠ eP (λ _ → eQ)
+  (P' ⇒ Q') , equivΠ eP (λ _ → eQ)
 
 small¬ : {P : hProp (ℓ-suc ℓ)} → hasSize ℓ P → hasSize ℓ (¬ P)
 ```
 
 <!--en-->
-Negation is the one case where the compressed proposition alone does not determine the equivalence, because negation is contravariant: a proof of `¬ P` consumes a proof of `P`. The compressed proposition is `Logic.¬ P'`, whose underlying type sends `⟨ P' ⟩` to the empty type. Both sides are propositions, so `propBiimpl→Equiv` applies, and the two directions use `eP` in opposite orientations: to contradict `np : ¬ P` from a compressed refutation `p'`, apply `np` to the preimage `invEq eP p'`; conversely, feed the image `equivFun eP p` of `p : ⟨ P ⟩` to `np'`. The evaluation and inverse of the equivalence appear with opposite variance exactly as the logic of negation demands.
+Negation is the one case where the compressed proposition alone does not determine the equivalence, because negation is contravariant: a proof of `¬ P` consumes a proof of `P`. The compressed proposition is `¬ P'`, whose underlying type sends `⟨ P' ⟩` to the empty type. Both sides are propositions, so `propBiimpl→Equiv` applies, and the two directions use `eP` in opposite orientations: to contradict `np : ¬ P` from a compressed refutation `p'`, apply `np` to the preimage `invEq eP p'`; conversely, feed the image `equivFun eP p` of `p : ⟨ P ⟩` to `np'`. The evaluation and inverse of the equivalence appear with opposite variance exactly as the logic of negation demands.
 <!--zh-->
-否定是唯一一个压缩命题本身不能确定等价的情形，缘于否定的反变性：`¬ P` 的证明要消费 `P` 的证明。压缩命题取 `Logic.¬ P'`，其底层类型把 `⟨ P' ⟩` 映入空类型。两端都是命题，故 `propBiimpl→Equiv` 适用；两个方向沿相反方向使用 `eP`：要从压缩的反驳 `p'` 得到 `np : ¬ P` 的矛盾，把原像 `invEq eP p'` 喂给 `np`；反向则把 `p : ⟨ P ⟩` 的像 `equivFun eP p` 喂给 `np'`。等价的求值与逆恰好按否定的逻辑以相反的变差出现。
+否定是唯一一个压缩命题本身不能确定等价的情形，缘于否定的反变性：`¬ P` 的证明要消费 `P` 的证明。压缩命题取 `¬ P'`，其底层类型把 `⟨ P' ⟩` 映入空类型。两端都是命题，故 `propBiimpl→Equiv` 适用；两个方向沿相反方向使用 `eP`：要从压缩的反驳 `p'` 得到 `np : ¬ P` 的矛盾，把原像 `invEq eP p'` 喂给 `np`；反向则把 `p : ⟨ P ⟩` 的像 `equivFun eP p` 喂给 `np'`。等价的求值与逆恰好按否定的逻辑以相反的变差出现。
 <!--ja-->
-否定だけは、圧縮された命題だけでは同値が定まりません。否定は反変だからです。`¬ P` の証明は `P` の証明を消費します。圧縮された命題は `Logic.¬ P'` であり、その基礎の型は `⟨ P' ⟩` を空な型へ送ります。両側とも命題なので `propBiimpl→Equiv` が使え、二つの方向は `eP` を逆向きに使います。圧縮された反証 `p'` から `np : ¬ P` の矛盾を作るには、原像 `invEq eP p'` を `np` に適用し、逆に `p : ⟨ P ⟩` の像 `equivFun eP p` を `np'` に渡します。同値の適用と逆が、否定の論理の要求どおり、正反対の変動で現れます。
+否定だけは、圧縮された命題だけでは同値が定まりません。否定は反変だからです。`¬ P` の証明は `P` の証明を消費します。圧縮された命題は `¬ P'` であり、その基礎の型は `⟨ P' ⟩` を空な型へ送ります。両側とも命題なので `propBiimpl→Equiv` が使え、二つの方向は `eP` を逆向きに使います。圧縮された反証 `p'` から `np : ¬ P` の矛盾を作るには、原像 `invEq eP p'` を `np` に適用し、逆に `p : ⟨ P ⟩` の像 `equivFun eP p` を `np'` に渡します。同値の適用と逆が、否定の論理の要求どおり、正反対の変動で現れます。
 <!--/-->
 
 ```agda
-small¬ {P} (P' , eP) = (Logic.¬ P') ,
-  propBiimpl→Equiv (snd (¬ P)) (snd (Logic.¬ P'))
+small¬ {P} (P' , eP) = (¬ P') ,
+  propBiimpl→Equiv (snd (¬ P)) (snd (¬ P'))
     (λ np p' → np (invEq eP p'))
     (λ np' p → np' (equivFun eP p))
 
@@ -235,16 +232,16 @@ small⊤ : hasSize ℓ (⊤ {ℓ = ℓ-suc ℓ})
 ```
 
 <!--en-->
-The two constants close the section. Truth is small because both sides are inhabited propositions: the compressed proposition is `Logic.⊤`, and in each direction the function discards its argument and returns the unit element `tt*`. Falsity begins slightly differently: the truth value `⊥` was defined as the hProp pair `(⊥* , isProp⊥*)`, so its underlying type is the empty type `⊥*` itself, and the compressed proposition is that same empty type packaged as an hProp. Both functions are then defined by absurdity: an argument of an empty type admits no cases.
+The two constants close the section. Truth is small because both sides are inhabited propositions: the compressed proposition is `⊤`, and in each direction the function discards its argument and returns the unit element `_`. Falsity begins slightly differently: the truth value `⊥` was defined as the hProp pair `(⊥* , isProp⊥*)`, so its underlying type is the empty type `⊥*` itself, and the compressed proposition is that same empty type packaged as an hProp. Both functions are then defined by absurdity: an argument of an empty type admits no cases.
 <!--zh-->
-两个常量收尾本节。真有目标层级中的等价代表，因为两端都是有元素的命题：压缩命题取 `Logic.⊤`，两个方向的函数都丢弃参数、返回单元元素 `tt*`。假的起点略有不同：真值 `⊥` 本就定义为 hProp 对 `(⊥* , isProp⊥*)`，故其底层类型恰是空类型 `⊥*`，压缩命题也就是打包成 hProp 的同一个空类型。于是两个函数都用荒谬来定义：空类型的参数没有任何情形可分。
+两个常量收尾本节。真有目标层级中的等价代表，因为两端都是有元素的命题：压缩命题取 `⊤`，两个方向的函数都丢弃参数、返回单元元素 `_`。假的起点略有不同：真值 `⊥` 本就定义为 hProp 对 `(⊥* , isProp⊥*)`，故其底层类型恰是空类型 `⊥*`，压缩命题也就是打包成 hProp 的同一个空类型。于是两个函数都用荒谬来定义：空类型的参数没有任何情形可分。
 <!--ja-->
-最後の二つの定数でこの節を閉じます。真が小さいのは、両側とも要素をもつ命題だからです。圧縮された命題は `Logic.⊤` であり、どちらの方向の関数も引数を捨てて単一元 `tt*` を返します。偽は少し違う始まり方をします。真理値 `⊥` はもともと hProp の対 `(⊥* , isProp⊥*)` として定義されているので、その基礎の型は空な型 `⊥*` そのものであり、圧縮された命題も同じ空な型を hProp にまとめたものです。したがって両方の関数は背理で定義されます。空な型の引数には場合分けが存在しないのです。
+最後の二つの定数でこの節を閉じます。真が小さいのは、両側とも要素をもつ命題だからです。圧縮された命題は `⊤` であり、どちらの方向の関数も引数を捨てて単一元 `_` を返します。偽は少し違う始まり方をします。真理値 `⊥` はもともと hProp の対 `(⊥* , isProp⊥*)` として定義されているので、その基礎の型は空な型 `⊥*` そのものであり、圧縮された命題も同じ空な型を hProp にまとめたものです。したがって両方の関数は背理で定義されます。空な型の引数には場合分けが存在しないのです。
 <!--/-->
 
 ```agda
-small⊤ = Logic.⊤ ,
-  propBiimpl→Equiv (⊤ .snd) (snd (Logic.⊤ {ℓ}))
+small⊤ = ⊤ ,
+  propBiimpl→Equiv (⊤ .snd) (snd (⊤ {ℓ}))
     (λ _ → tt*) (λ _ → tt*)
 
 small⊥ : hasSize ℓ (⊥ {ℓ = ℓ-suc ℓ})
@@ -349,27 +346,27 @@ small-∃∈ a {B} sm = Qsm , propBiimpl→Equiv (snd big) (snd Qsm) fwd bwd
 ```
 
 <!--en-->
-Forward: `PT.map` applies a pointwise construction inside the truncation, which is permitted because the target, the compressed proposition, is again a proposition. The pointwise step unpacks a truncated triple `(x , x∈a , bx)` of a member, its membership evidence, and a proof of `B x`; this unpacking is legitimate only because it happens under the truncation, where the choice of `x` need never be exported. The fiber of `x∈a` then yields an index, and the proof `bx` is transported along the fiber's path, in the direction `sym (mf .snd)`, before the equivalence compresses it. Compare this with the universal forward direction: there a function was in hand outright, here one merely knows that such data exists.
+Forward: `map₁` applies a pointwise construction inside the truncation, which is permitted because the target, the compressed proposition, is again a proposition. The pointwise step unpacks a truncated triple `(x , x∈a , bx)` of a member, its membership evidence, and a proof of `B x`; this unpacking is legitimate only because it happens under the truncation, where the choice of `x` need never be exported. The fiber of `x∈a` then yields an index, and the proof `bx` is transported along the fiber's path, in the direction `sym (mf .snd)`, before the equivalence compresses it. Compare this with the universal forward direction: there a function was in hand outright, here one merely knows that such data exists.
 <!--zh-->
-正向：`PT.map` 在截断内部施加逐点构造，这是允许的，因为目标即压缩命题仍是命题。逐点步骤拆开截断的三元组 `(x , x∈a , bx)`：成员、其隶属证据、以及 `B x` 的证明。这一拆开之所以合法，只因它发生在截断之下，`x` 的选取永远不必导出。随后 `x∈a` 的纤维给出索引，证明 `bx` 沿纤维的路径、按 `sym (mf .snd)` 方向传输，再经等价压缩。可与全称的正向对照：那里函数是直接到手的，这里仅仅知道这样的数据存在。
+正向：`map₁` 在截断内部施加逐点构造，这是允许的，因为目标即压缩命题仍是命题。逐点步骤拆开截断的三元组 `(x , x∈a , bx)`：成员、其隶属证据、以及 `B x` 的证明。这一拆开之所以合法，只因它发生在截断之下，`x` 的选取永远不必导出。随后 `x∈a` 的纤维给出索引，证明 `bx` 沿纤维的路径、按 `sym (mf .snd)` 方向传输，再经等价压缩。可与全称的正向对照：那里函数是直接到手的，这里仅仅知道这样的数据存在。
 <!--ja-->
-順方向では、`PT.map` が切り詰めの内部で各点の構成を適用します。これは、目標である圧縮された命題が再び命題であるために許されます。各点の段階は、切り詰められた三つ組 `(x , x∈a , bx)`、すなわち要素、その所属の証拠、`B x` の証明をほどきます。これが正当なのは、切り詰めの内側で行われるからであり、`x` の選択を外へ取り出す必要は一度もありません。次に `x∈a` のファイバーが添字を与え、証明 `bx` はファイバーのパスに沿って `sym (mf .snd)` の向きに輸送され、それから同値で圧縮されます。全称の順方向と比べてください。あちらでは関数がはじめから手にあり、こちらではそのようなデータが存在するとしか知りません。
+順方向では、`map₁` が切り詰めの内部で各点の構成を適用します。これは、目標である圧縮された命題が再び命題であるために許されます。各点の段階は、切り詰められた三つ組 `(x , x∈a , bx)`、すなわち要素、その所属の証拠、`B x` の証明をほどきます。これが正当なのは、切り詰めの内側で行われるからであり、`x` の選択を外へ取り出す必要は一度もありません。次に `x∈a` のファイバーが添字を与え、証明 `bx` はファイバーのパスに沿って `sym (mf .snd)` の向きに輸送され、それから同値で圧縮されます。全称の順方向と比べてください。あちらでは関数がはじめから手にあり、こちらではそのようなデータが存在するとしか知りません。
 <!--/-->
 
 ```agda
   big = ∃[ x ∶ S ] (x ∈ˢ a) ⊓ B x
   Qsm = ∃[ m ∶ ⟪ a ⟫ ] sm (⟪ a ⟫↪ m) .fst
   fwd : ⟨ big ⟩ → ⟨ Qsm ⟩
-  fwd = PT.map λ where
+  fwd = map₁ λ where
     (x , x∈a , bx) →
 ```
 
 <!--en-->
-Backward: again under `PT.map`, a truncated pair `(m , q)` of an index and a proof of `B' (⟪ a ⟫↪ m)` is turned into a member of `a` with property `B`. The member is `⟪ a ⟫↪ m`, its membership evidence comes from `∈∈ₛ` applied to the canonical witness, and the property proof is the preimage `invEq (sm _ .snd) q`. Here no transport is needed at all: the index is given from the start, so nothing has to be recovered. The asymmetry between the two directions is exactly the asymmetry of data: one side holds an index outright, the other must manufacture one from a member, and only the embedding makes that manufacturing a function.
+Backward: again under `map₁`, a truncated pair `(m , q)` of an index and a proof of `B' (⟪ a ⟫↪ m)` is turned into a member of `a` with property `B`. The member is `⟪ a ⟫↪ m`, its membership evidence comes from `∈∈ₛ` applied to the canonical witness, and the property proof is the preimage `invEq (sm _ .snd) q`. Here no transport is needed at all: the index is given from the start, so nothing has to be recovered. The asymmetry between the two directions is exactly the asymmetry of data: one side holds an index outright, the other must manufacture one from a member, and only the embedding makes that manufacturing a function.
 <!--zh-->
-反向：同样在 `PT.map` 之下，截断的对 `(m , q)`，即索引与 `B' (⟪ a ⟫↪ m)` 的证明，被转换成一个具有性质 `B` 的 `a` 的成员。成员取 `⟪ a ⟫↪ m`，其隶属证据由 `∈∈ₛ` 作用于典范见证得到，性质证明是原像 `invEq (sm _ .snd) q`。这里完全不需要传输：索引一开始就给定，无须从成员恢复。两个方向之间的不对称正是数据的不对称：一侧直接握有索引，另一侧必须从成员制造索引，而只有嵌入使这一制造成为函数。
+反向：同样在 `map₁` 之下，截断的对 `(m , q)`，即索引与 `B' (⟪ a ⟫↪ m)` 的证明，被转换成一个具有性质 `B` 的 `a` 的成员。成员取 `⟪ a ⟫↪ m`，其隶属证据由 `∈∈ₛ` 作用于典范见证得到，性质证明是原像 `invEq (sm _ .snd) q`。这里完全不需要传输：索引一开始就给定，无须从成员恢复。两个方向之间的不对称正是数据的不对称：一侧直接握有索引，另一侧必须从成员制造索引，而只有嵌入使这一制造成为函数。
 <!--ja-->
-逆方向でも、やはり `PT.map` の下で、添字と `B' (⟪ a ⟫↪ m)` の証明の切り詰められた対 `(m , q)` が、性質 `B` をもつ `a` の要素へ変換されます。要素は `⟪ a ⟫↪ m` であり、その所属の証拠は正準な証人への `∈∈ₛ` の適用から、性質の証明は原像 `invEq (sm _ .snd) q` から得られます。ここでは輸送はまったく要りません。添字は最初から与えられており、要素から取り戻す必要がないからです。二つの方向の非対称性はそのままデータの非対称性です。一方は添字をはじめから持ち、他方は要素から添字を作り出さねばならず、埋め込みだけがその作り出しを関数にします。
+逆方向でも、やはり `map₁` の下で、添字と `B' (⟪ a ⟫↪ m)` の証明の切り詰められた対 `(m , q)` が、性質 `B` をもつ `a` の要素へ変換されます。要素は `⟪ a ⟫↪ m` であり、その所属の証拠は正準な証人への `∈∈ₛ` の適用から、性質の証明は原像 `invEq (sm _ .snd) q` から得られます。ここでは輸送はまったく要りません。添字は最初から与えられており、要素から取り戻す必要がないからです。二つの方向の非対称性はそのままデータの非対称性です。一方は添字をはじめから持ち、他方は要素から添字を作り出さねばならず、埋め込みだけがその作り出しを関数にします。
 <!--/-->
 
 ```agda
@@ -389,7 +386,7 @@ With this pair of lemmas the bounded quantifier clauses of the semantics are cov
 <!--/-->
 
 ```agda
-  bwd = PT.map λ where
+  bwd = map₁ λ where
     (m , q) → ⟪ a ⟫↪ m , ∈∈ₛ {a = ⟪ a ⟫↪ m} {b = a} .snd (∈ₛ⟪ a ⟫↪ m)
             , invEq (sm (⟪ a ⟫↪ m) .snd) q
 ```
@@ -609,11 +606,11 @@ small-∀ {X = X} e sm = (∀[ m ∶ X ] sm (equivFun e m) .fst)
 ```
 
 <!--en-->
-The existential version follows the same plan with truncations in place of function types. The compressed proposition is the truncated Σ over `X` of the small witnesses; the equivalence is obtained from the truncated Σ over `A` of the large witnesses by `Σ-cong-equiv`, which changes the base of the pair from `A` to `X` along `e` and each fiber along the inverse pointwise equivalence, and `PT.propTrunc≃` then lifts the pair equivalence to the truncations. Again `invEquiv` supplies the required orientation. Together the two lemmas say: quantification over any essentially small type preserves smallness, and essentially small means, in the next block, equivalent to a type at level `ℓ`.
+The existential version follows the same plan with truncations in place of function types. The compressed proposition is the truncated Σ over `X` of the small witnesses; the equivalence is obtained from the truncated Σ over `A` of the large witnesses by `Σ-cong-equiv`, which changes the base of the pair from `A` to `X` along `e` and each fiber along the inverse pointwise equivalence, and `propTrunc≃` then lifts the pair equivalence to the truncations. Again `invEquiv` supplies the required orientation. Together the two lemmas say: quantification over any essentially small type preserves smallness, and essentially small means, in the next block, equivalent to a type at level `ℓ`.
 <!--zh-->
-存在版本沿用同一方案，只是以截断替换函数类型。压缩命题是对 `X` 的 `hasSize` 见证的截断 Σ；等价从对 `A` 的大见证的截断 Σ 出发：`Σ-cong-equiv` 沿 `e` 把对子的基底从 `A` 换成 `X`，各纤维沿逆的逐点等价变换，`PT.propTrunc≃` 再把对子等价提升到截断上。`invEquiv` 同样提供所需朝向。两条引理合起来说：对任何本质小类型的量化仍有低层等价代表；而「本质小」在下一块代码中将指等价于层级 `ℓ` 的某个类型。
+存在版本沿用同一方案，只是以截断替换函数类型。压缩命题是对 `X` 的 `hasSize` 见证的截断 Σ；等价从对 `A` 的大见证的截断 Σ 出发：`Σ-cong-equiv` 沿 `e` 把对子的基底从 `A` 换成 `X`，各纤维沿逆的逐点等价变换，`propTrunc≃` 再把对子等价提升到截断上。`invEquiv` 同样提供所需朝向。两条引理合起来说：对任何本质小类型的量化仍有低层等价代表；而「本质小」在下一块代码中将指等价于层级 `ℓ` 的某个类型。
 <!--ja-->
-存在の方も同じ計画に従いますが、関数型の代わりに切り詰めが現れます。圧縮された命題は、`X` の上の小さな証人の切り詰められた Σ です。同値は、`A` の上の大きな証人の切り詰められた Σ から、`Σ-cong-equiv` によって得られます。これは対の基底を `e` に沿って `A` から `X` へ変え、各ファイバーを逆向きの各点の同値に沿って変え、`PT.propTrunc≃` がさらにその対の同値を切り詰めへ引き上げます。ここでも `invEquiv` が必要な向きを与えます。二つの補題を合わせると、本質的に小さな型の上での量化は小ささを保存する、ということになります。そして次のコード塊で、本質的に小さいとはレベル `ℓ` の型と同値であることを意味します。
+存在の方も同じ計画に従いますが、関数型の代わりに切り詰めが現れます。圧縮された命題は、`X` の上の小さな証人の切り詰められた Σ です。同値は、`A` の上の大きな証人の切り詰められた Σ から、`Σ-cong-equiv` によって得られます。これは対の基底を `e` に沿って `A` から `X` へ変え、各ファイバーを逆向きの各点の同値に沿って変え、`propTrunc≃` がさらにその対の同値を切り詰めへ引き上げます。ここでも `invEquiv` が必要な向きを与えます。二つの補題を合わせると、本質的に小さな型の上での量化は小ささを保存する、ということになります。そして次のコード塊で、本質的に小さいとはレベル `ℓ` の型と同値であることを意味します。
 <!--/-->
 
 ```agda
@@ -622,7 +619,7 @@ small-∃ : {A : Type (ℓ-suc ℓ)} {X : Type ℓ} (e : X ≃ A) {B : A → hPr
         → (∀ a → hasSize ℓ (B a))
         → hasSize ℓ (∃[ a ∶ A ] B a)
 small-∃ {X = X} e sm = (∃[ m ∶ X ] sm (equivFun e m) .fst)
-  , invEquiv (PT.propTrunc≃ (Σ-cong-equiv e (λ m → invEquiv (sm (equivFun e m) .snd))))
+  , invEquiv (propTrunc≃ (Σ-cong-equiv e (λ m → invEquiv (sm (equivFun e m) .snd))))
 ```
 
 <!--en-->

@@ -210,10 +210,7 @@ empty type handles the branches that these comparisons show to be impossible.
 
 ```agda
 open import Cubical.Data.Vec.Properties using ( FinVec→Vec; FinVec→Vec→FinVec )
-open import Cubical.Data.Vec using ( map )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Foundations.Transport using ( constSubstCommSlice )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -232,8 +229,6 @@ merely existing formula or name into chosen data.
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ; ∈ₛ⟪_⟫↪_; ∈-asFiber )
@@ -869,8 +864,8 @@ not a claim that arbitrary relabeling leaves arbitrary formulas unchanged.
   private
     sameEmbed : ∀ {m} (χ : Formula (⊥* {ℓ}) m)
               → mapFo ⟪ A ⟫↪ (embed χ) ≡ embed χ
-    sameEmbed χ = mapFo-comp Empty.rec* ⟪ A ⟫↪ χ
-                ∙ cong (λ f → mapFo f χ) (funExt (λ b → Empty.rec* b))
+    sameEmbed χ = mapFo-comp ⊥*-rec ⟪ A ⟫↪ χ
+                ∙ cong (λ f → mapFo f χ) (funExt (λ b → ⊥*-rec b))
 ```
 
 <!--en-->
@@ -953,18 +948,18 @@ must know that every member of `denote t` lies in the carrier. Membership in
 this denotation merely presents a carrier index `mm` whose extended environment
 satisfies the formula, together with a path from the represented carrier member
 to the ambient set `y`. The witness is propositionally truncated, but the goal
-`y ∈ A` is itself a proposition, so `PT.rec` may use that witness without
+`y ∈ A` is itself a proposition, so `rec₁` may use that witness without
 selecting or retaining an index.
 <!--zh-->
-在把指称隶属与对象语言条款相比较之前，先要知道 `denote t` 的每个成员都属于载体。属于这个指称，仅仅给出一个载体序号 `mm`，其扩张环境满足公式，并给出所表示的载体成员到外围集合 `y` 的一条路径。这个见证位于命题截断之下，但目标 `y ∈ A` 本身是命题，所以 `PT.rec` 可以使用该见证，而不选出或保留某个序号。这里同样没有命题换级。
+在把指称隶属与对象语言条款相比较之前，先要知道 `denote t` 的每个成员都属于载体。属于这个指称，仅仅给出一个载体序号 `mm`，其扩张环境满足公式，并给出所表示的载体成员到外围集合 `y` 的一条路径。这个见证位于命题截断之下，但目标 `y ∈ A` 本身是命题，所以 `rec₁` 可以使用该见证，而不选出或保留某个序号。这里同样没有命题换级。
 <!--ja-->
-指示対象への所属を対象言語の条件と比較する前に、`denote t` のすべての要素が台に属することを確かめます。この指示対象への所属は、その拡張環境が論理式を充足する台の添字 `mm` と、表された台の要素から周囲の集合 `y` へのパスが単に存在することを与えます。この証人は命題的に切り詰められていますが、目標 `y ∈ A` 自体が命題なので、`PT.rec` は添字を選択して保持することなく、その証人を利用できます。
+指示対象への所属を対象言語の条件と比較する前に、`denote t` のすべての要素が台に属することを確かめます。この指示対象への所属は、その拡張環境が論理式を充足する台の添字 `mm` と、表された台の要素から周囲の集合 `y` へのパスが単に存在することを与えます。この証人は命題的に切り詰められていますが、目標 `y ∈ A` 自体が命題なので、`rec₁` は添字を選択して保持することなく、その証人を利用できます。
 <!--/-->
 
 ```agda
   private
     denoteMem : (t : Name) (y : V ℓ) → ⟨ y ∈ denote t ⟩ → ⟨ y ∈ A ⟩
-    denoteMem t y = PT.rec (snd (y ∈ A)) step
+    denoteMem t y = rec₁ (snd (y ∈ A)) step
       where
       step : Σ[ p ∈ Σ[ mm ∈ ⟪ A ⟫ ] ⟨ NM.satAt t mm ⟩ ] (⟪ A ⟫↪ (p .fst) ≡ y)
 ```
@@ -1800,18 +1795,18 @@ The reverse reading of `NameAt` returns only the propositional truncation of a
 name with its four data equations. The arity conjunct `ha` is membership in
 `ω`; its semantic presentation supplies, under propositional truncation, a
 natural number `k` and an equation identifying the arity slot with `# k`.
-`PT.rec` may inspect that witness because the final result is itself a
+`rec₁` may inspect that witness because the final result is itself a
 propositionally truncated type.
 <!--zh-->
-`NameAt` 的反向读式只返回「一个名字及其四条数据等式」的命题截断。元数合取项 `ha` 是对 `ω` 的隶属；其语义表示在命题截断下给出自然数 `k`，并给出把元数位置认作 `# k` 的等式。由于最终结果本身也是一个命题截断类型，`PT.rec` 可以在构造该结果时使用这个见证。
+`NameAt` 的反向读式只返回「一个名字及其四条数据等式」的命题截断。元数合取项 `ha` 是对 `ω` 的隶属；其语义表示在命题截断下给出自然数 `k`，并给出把元数位置认作 `# k` 的等式。由于最终结果本身也是一个命题截断类型，`rec₁` 可以在构造该结果时使用这个见证。
 <!--ja-->
-`NameAt` の逆方向の読みが返すのは、名前とその四つのデータの等式の命題的切り詰めだけです。アリティの連言 `ha` は `ω` への所属であり、その意味論的な表示は、命題的切り詰めのもとで自然数 `k` と、アリティのスロットを `# k` と同定する等式を与えます。最終結果も命題的に切り詰められた型なので、`PT.rec` はその結果を構成する範囲でこの証人を使えます。
+`NameAt` の逆方向の読みが返すのは、名前とその四つのデータの等式の命題的切り詰めだけです。アリティの連言 `ha` は `ω` への所属であり、その意味論的な表示は、命題的切り詰めのもとで自然数 `k` と、アリティのスロットを `# k` と同定する等式を与えます。最終結果も命題的に切り詰められた型なので、`rec₁` はその結果を構成する範囲でこの証人を使えます。
 <!--/-->
 
 ```agda
     NameAt-read : ⟨ γ ⊨ NameAt B C C₀ s a e d ⟩ → ∥ Σ[ t ∈ Name ] Data t ∥₁
     NameAt-read (hf , (ha , (he , hd))) =
-      PT.rec squash₁ atArity ha
+      rec₁ squash₁ atArity ha
       where
       atCode : (k : ℕ) (qa : fst (lookup a γ) ≡ # k)
 ```
@@ -1893,17 +1888,17 @@ For the forward inclusion, let `y` belong to the denotation slot. Since that
 slot is an element of the model, transitivity of `L` makes `y` constructible,
 so it can be packaged as `z : S`. Reading the extensional conjunct `hd` outward
 gives carrier membership and a propositionally truncated `DenoteOf` witness.
-The target `y ∈ denote t` is a proposition, so `PT.rec` may apply
+The target `y ∈ denote t` is a proposition, so `rec₁` may apply
 `Bt.member-read` to any representative of that witness.
 <!--zh-->
-先证正向包含。设 `y` 属于指称位置。该位置是模型元素，所以由 `L` 的传递性可知 `y` 可构造，从而能把它包装为 `z : S`。向外读取外延合取项 `hd`，得到载体隶属以及经过命题截断的 `DenoteOf` 见证。目标 `y ∈ denote t` 是命题，因此 `PT.rec` 可以对该见证的任一代表应用 `Bt.member-read`。
+先证正向包含。设 `y` 属于指称位置。该位置是模型元素，所以由 `L` 的传递性可知 `y` 可构造，从而能把它包装为 `z : S`。向外读取外延合取项 `hd`，得到载体隶属以及经过命题截断的 `DenoteOf` 见证。目标 `y ∈ denote t` 是命题，因此 `rec₁` 可以对该见证的任一代表应用 `Bt.member-read`。
 <!--ja-->
-まず順方向の包含を示します。`y` が表示のスロットに属するとします。そのスロットはモデルの要素なので、`L` の推移性から `y` は構成可能であり、`z : S` としてまとめられます。外延的な連言 `hd` を外向きに読むと、台への所属と、命題的に切り詰められた `DenoteOf` の証人が得られます。目標 `y ∈ denote t` は命題なので、`PT.rec` によってその証人の各代表へ `Bt.member-read` を適用できます。
+まず順方向の包含を示します。`y` が表示のスロットに属するとします。そのスロットはモデルの要素なので、`L` の推移性から `y` は構成可能であり、`z : S` としてまとめられます。外延的な連言 `hd` を外向きに読むと、台への所属と、命題的に切り詰められた `DenoteOf` の証人が得られます。目標 `y ∈ denote t` は命題なので、`rec₁` によってその証人の各代表へ `Bt.member-read` を適用できます。
 <!--/-->
 
 ```agda
         fwd : (y : V ℓ) → ⟨ y ∈ fst (lookup d γ) ⟩ → ⟨ y ∈ denote t ⟩
-        fwd y hy = PT.rec (snd (y ∈ denote t))
+        fwd y hy = rec₁ (snd (y ∈ denote t))
           (Bt.member-read z (body .fst)) (body .snd)
           where
           z : S
@@ -1991,19 +1986,19 @@ The branch `atArity` combines the two truncations without
 selecting global witnesses. Its input presents the arity as a lifted natural
 number; reversing `qk` gives the equation expected by `atCode`. Then
 `codeFree-out` supplies the formula and code equation under propositional
-truncation, and `PT.map` applies `atCode` within that truncation. The result is
+truncation, and `map₁` applies `atCode` within that truncation. The result is
 merely a name satisfying all four data equations, exactly the codomain of
 `NameAt-read`.
 <!--zh-->
-分支 `atArity` 在不选择全局见证的前提下处理两层截断。它的输入把元数表示为一个提升后的自然数；反转 `qk` 后便得到 `atCode` 所需的等式。随后，`codeFree-out` 在命题截断下给出公式及其码等式，`PT.map` 则在该截断内部应用 `atCode`。所得结论仅仅断言存在一个满足全部四条数据等式的名字，这正是 `NameAt-read` 的余域。
+分支 `atArity` 在不选择全局见证的前提下处理两层截断。它的输入把元数表示为一个提升后的自然数；反转 `qk` 后便得到 `atCode` 所需的等式。随后，`codeFree-out` 在命题截断下给出公式及其码等式，`map₁` 则在该截断内部应用 `atCode`。所得结论仅仅断言存在一个满足全部四条数据等式的名字，这正是 `NameAt-read` 的余域。
 <!--ja-->
-分岐 `atArity` は、大域的な証人を選ぶことなく二つの切り詰めを処理します。その入力はアリティを持ち上げられた自然数として表し、`qk` を逆向きにすると `atCode` が要求する等式になります。続いて `codeFree-out` が命題的切り詰めのもとで論理式と符号の等式を与え、`PT.map` がその切り詰めの内側で `atCode` を適用します。結果は、四つのデータの等式をすべて満たす名前が存在するという命題的に切り詰められた主張であり、ちょうど `NameAt-read` の終域です。
+分岐 `atArity` は、大域的な証人を選ぶことなく二つの切り詰めを処理します。その入力はアリティを持ち上げられた自然数として表し、`qk` を逆向きにすると `atCode` が要求する等式になります。続いて `codeFree-out` が命題的切り詰めのもとで論理式と符号の等式を与え、`map₁` がその切り詰めの内側で `atCode` を適用します。結果は、四つのデータの等式をすべて満たす名前が存在するという命題的に切り詰められた主張であり、ちょうど `NameAt-read` の終域です。
 <!--/-->
 
 ```agda
       atArity : Σ[ lk ∈ Lift {ℓ-zero} {ℓ} ℕ ] (# (lower lk) ≡ fst (lookup a γ))
               → ∥ Σ[ t ∈ Name ] Data t ∥₁
-      atArity (lk , qk) = PT.map (atCode (lower lk) (sym qk))
+      atArity (lk , qk) = map₁ (atCode (lower lk) (sym qk))
         (codeFree-out C₀ s a γ (lower lk) q₀ (sym qk) hf)
 ```
 
@@ -2212,7 +2207,7 @@ full lexicographic order on names.
 ```agda
       IsMin : Name → Type (ℓ-suc ℓ)
       IsMin t = (t' : Name) → fst (lookup d γ) ≡ denote t'
-              → t' ≺ₙ t → Empty.⊥
+              → t' ≺ₙ t → ⊥₀
 
 ```
 
@@ -2261,12 +2256,12 @@ After the three competitor data are added, the environment is
 old slot is shifted by `sh3`. The first premise is satisfaction of `NameAt`
 for the competitor with the shared denotation `sh3 d`. The second is
 satisfaction of `_≺At_` from that competitor to the shifted current triple.
-The result is `Lift Empty.⊥`, the universe-level form of contradiction required
+The result is `⊥*` at level `ℓ-suc ℓ`, the form of contradiction required
 by the formula semantics.
 <!--zh-->
-加入竞争者的三项资料后，环境是 `e' ∷ a' ∷ s' ∷ γ`；因此三项分别位于零、一、二号槽，原有槽位都经 `sh3` 移位。第一个前提是竞争者的 `NameAt` 满足，并共享指称槽 `sh3 d`；第二个前提是从该竞争者到移位后当前三元组的 `_≺At_`满足。结果为 `Lift Empty.⊥`，即公式语义所需宇宙层级中的矛盾。
+加入竞争者的三项资料后，环境是 `e' ∷ a' ∷ s' ∷ γ`；因此三项分别位于零、一、二号槽，原有槽位都经 `sh3` 移位。第一个前提是竞争者的 `NameAt` 满足，并共享指称槽 `sh3 d`；第二个前提是从该竞争者到移位后当前三元组的 `_≺At_`满足。结果为层级 `ℓ-suc ℓ` 上的 `⊥*`，即公式语义所需的矛盾。
 <!--ja-->
-競合名の三つのデータを加えた環境は `e' ∷ a' ∷ s' ∷ γ` です。したがって各データは零、一、二番のスロットに入り、もとの各スロットは `sh3` で移動します。第一の前提は共有する指示対象 `sh3 d` に対する競合名の `NameAt` の充足です。第二の前提は、その競合名から移動後の現在の三つ組への `_≺At_` の充足です。結果の `Lift Empty.⊥` は、論理式の意味論が要求する宇宙レベルに置かれた矛盾です。
+競合名の三つのデータを加えた環境は `e' ∷ a' ∷ s' ∷ γ` です。したがって各データは零、一、二番のスロットに入り、もとの各スロットは `sh3` で移動します。第一の前提は共有する指示対象 `sh3 d` に対する競合名の `NameAt` の充足です。第二の前提は、その競合名から移動後の現在の三つ組への `_≺At_` の充足です。結果はレベル `ℓ-suc ℓ` の `⊥*` であり、論理式の意味論が要求する矛盾です。
 <!--/-->
 
 ```agda
@@ -2274,24 +2269,24 @@ by the formula semantics.
                    (suc (suc zero)) (suc zero) zero (sh3 d) ⟩
              → ⟨ (e' ∷ a' ∷ s' ∷ γ) ⊨ ≺At (sh3 R) (sh3 P)
                    (suc (suc zero)) (suc zero) zero (sh3 s) (sh3 a) (sh3 e) ⟩
-             → Lift {j = ℓ-suc ℓ} Empty.⊥
+             → Lift {j = ℓ-suc ℓ} ⊥₀
 ```
 
 <!--en-->
 The proof first applies `Named.NameAt-read` to the competitor's naming
 satisfaction. This yields, under propositional truncation, a name `t'` and
 the four equations in its `Named.Data` record. Because the required result is
-contradiction, a proposition, `PT.rec` may eliminate that propositional
+contradiction, a proposition, `rec₁` may eliminate that propositional
 truncation. No competitor is selected or retained beyond this proof of
 impossibility.
 <!--zh-->
-证明先把 `Named.NameAt-read` 施于竞争者的命名满足。所得结果是在命题截断之下的一条名字 `t'` 及其 `Named.Data` 记录中的四条等式。由于所需结果是作为命题的矛盾，`PT.rec` 可以消去该命题截断。这里没有选出或保留竞争者，恢复出的名字只在这次不可能性证明中使用。
+证明先把 `Named.NameAt-read` 施于竞争者的命名满足。所得结果是在命题截断之下的一条名字 `t'` 及其 `Named.Data` 记录中的四条等式。由于所需结果是作为命题的矛盾，`rec₁` 可以消去该命题截断。这里没有选出或保留竞争者，恢复出的名字只在这次不可能性证明中使用。
 <!--ja-->
-証明はまず、競合名の命名の充足に `Named.NameAt-read` を適用します。その結果は命題的切り詰めのもとにある名前 `t'` と、その `Named.Data` 記録の四つの等式です。求める結果は命題である矛盾なので、`PT.rec` によってこの命題的切り詰めを除去できます。競合名を選択して保持するわけではなく、回復した名前はこの不可能性の証明の内部だけで使われます。
+証明はまず、競合名の命名の充足に `Named.NameAt-read` を適用します。その結果は命題的切り詰めのもとにある名前 `t'` と、その `Named.Data` 記録の四つの等式です。求める結果は命題である矛盾なので、`rec₁` によってこの命題的切り詰めを除去できます。競合名を選択して保持するわけではなく、回復した名前はこの不可能性の証明の内部だけで使われます。
 <!--/-->
 
 ```agda
-        univ s' a' e' hn hlt = lift (PT.rec Empty.isProp⊥ step
+        univ s' a' e' hn hlt = lift (rec₁ isProp⊥ step
           (Named.NameAt-read (sh3 B) (sh3 C) (sh3 C₀) (suc (suc zero))
              (suc zero) zero (sh3 d) (e' ∷ a' ∷ s' ∷ γ) qB qC q₀ hn))
           where
@@ -2303,19 +2298,19 @@ For a recovered competitor, the four data equations are named `qs'`, `qa'`,
 `qe'`, and `qd'`. The last equation says that the shared denotation slot is
 `denote t'`, so `mt t' qd'` is ready to refute any proof that `t' ≺ₙ t`.
 That comparison is itself obtained under propositional truncation, and the
-second `PT.rec` may eliminate it because its target is again contradiction.
+second `rec₁` may eliminate it because its target is again contradiction.
 <!--zh-->
-对恢复出的竞争者，四条资料等式依次命名为 `qs'`、`qa'`、`qe'` 与 `qd'`。最后一条说明共享的指称槽是 `denote t'`，所以 `mt t' qd'` 已可反驳任何`t' ≺ₙ t` 的证明。该比较本身也在命题截断之下取得；由于目标仍是矛盾，第二次`PT.rec` 可以消去这个命题截断。
+对恢复出的竞争者，四条资料等式依次命名为 `qs'`、`qa'`、`qe'` 与 `qd'`。最后一条说明共享的指称槽是 `denote t'`，所以 `mt t' qd'` 已可反驳任何`t' ≺ₙ t` 的证明。该比较本身也在命题截断之下取得；由于目标仍是矛盾，第二次`rec₁` 可以消去这个命题截断。
 <!--ja-->
-回復した競合名について、四つのデータ等式を `qs'`、`qa'`、`qe'`、`qd'`と名付けます。最後の等式は共有する指示対象スロットが `denote t'` であると述べるので、`mt t' qd'` は `t' ≺ₙ t` の証明を反駁できます。その比較自体も命題的切り詰めのもとで得られますが、目標は再び矛盾なので、二度目の `PT.rec` による除去が許されます。
+回復した競合名について、四つのデータ等式を `qs'`、`qa'`、`qe'`、`qd'`と名付けます。最後の等式は共有する指示対象スロットが `denote t'` であると述べるので、`mt t' qd'` は `t' ≺ₙ t` の証明を反駁できます。その比較自体も命題的切り詰めのもとで得られますが、目標は再び矛盾なので、二度目の `rec₁` による除去が許されます。
 <!--/-->
 
 ```agda
                    (suc (suc zero)) (suc zero) zero (sh3 d)
                    (e' ∷ a' ∷ s' ∷ γ) qB qC q₀ t'
-               → Empty.⊥
+               → ⊥₀
           step (t' , (qs' , (qa' , (qe' , qd')))) =
-            PT.rec Empty.isProp⊥ (mt t' qd')
+            rec₁ isProp⊥ (mt t' qd')
 ```
 
 <!--en-->
@@ -2355,7 +2350,7 @@ truncated existence of a least name.
 ```agda
       LeastAt-read : ⟨ γ ⊨ LeastNameAt R P B C C₀ s a e d ⟩
                    → ∥ Σ[ t ∈ Name ] Least t ∥₁
-      LeastAt-read (hn , hu) = PT.map step (N.NameAt-read hn)
+      LeastAt-read (hn , hu) = map₁ step (N.NameAt-read hn)
         where
         step : Σ[ t ∈ Name ] N.Data t → Σ[ t ∈ Name ] Least t
 ```
@@ -2467,7 +2462,7 @@ in slot `i`; it does not itself contain a satisfaction proof for any formula.
       LeastOf : Fin n → Name → Type (ℓ-suc ℓ)
       LeastOf i t = (fst (lookup i γ) ≡ denote t)
                   × ((t' : Name) → fst (lookup i γ) ≡ denote t'
-                     → t' ≺ₙ t → Empty.⊥)
+                     → t' ≺ₙ t → ⊥₀)
 ```
 
 <!--en-->
@@ -2622,19 +2617,19 @@ The converse theorem states the exact witness boundary. From satisfaction of
 The outer dependent sum ranges `t₁` over all names, and for each such `t₁` the
 inner sum ranges `t₂` over all names. Their payload says precisely that `t₁` is
 least for the value in slot `x`, `t₂` is least for the value in slot `y`, and
-`t₁ ≺ₙ t₂`. The first `PT.rec` opens the truncated six-witness payload supplied
+`t₁ ≺ₙ t₂`. The first `rec₁` opens the truncated six-witness payload supplied
 by `StepAt-out`, with this still-truncated conclusion as its target.
 <!--zh-->
-反向定理精确标明见证的边界。从 `StepAt` 的满足关系出发，它只返回 `∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁`。外层依值和让 `t₁` 遍历全部名字；对每个这样的 `t₁`，内层依值和再让 `t₂` 遍历全部名字。其载荷精确断言：`t₁` 是槽 `x` 中取值的最小名字，`t₂` 是槽 `y` 中取值的最小名字，并且 `t₁ ≺ₙ t₂`。第一个 `PT.rec` 打开 `StepAt-out` 给出的六见证之命题截断，而消去目标仍是这条带有命题截断的结论。
+反向定理精确标明见证的边界。从 `StepAt` 的满足关系出发，它只返回 `∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁`。外层依值和让 `t₁` 遍历全部名字；对每个这样的 `t₁`，内层依值和再让 `t₂` 遍历全部名字。其载荷精确断言：`t₁` 是槽 `x` 中取值的最小名字，`t₂` 是槽 `y` 中取值的最小名字，并且 `t₁ ≺ₙ t₂`。第一个 `rec₁` 打开 `StepAt-out` 给出的六见证之命题截断，而消去目标仍是这条带有命题截断的结论。
 <!--ja-->
-逆向きの定理は、証人を取り出せる境界を正確に示します。`StepAt` の充足から返されるのは、`∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁` だけです。外側の依存和では `t₁` がすべての名前を動き、その各 `t₁` に対して内側の依存和では `t₂` がすべての名前を動きます。中身が正確に述べるのは、`t₁` がスロット `x` の値に対する最小名であり、`t₂` がスロット `y` の値に対する最小名であり、さらに `t₁ ≺ₙ t₂` であることです。最初の `PT.rec` は `StepAt-out` が与える六証人の命題的切り詰めを開きますが、除去先はこの切り詰められた結論のままです。
+逆向きの定理は、証人を取り出せる境界を正確に示します。`StepAt` の充足から返されるのは、`∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ] (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁` だけです。外側の依存和では `t₁` がすべての名前を動き、その各 `t₁` に対して内側の依存和では `t₂` がすべての名前を動きます。中身が正確に述べるのは、`t₁` がスロット `x` の値に対する最小名であり、`t₂` がスロット `y` の値に対する最小名であり、さらに `t₁ ≺ₙ t₂` であることです。最初の `rec₁` は `StepAt-out` が与える六証人の命題的切り詰めを開きますが、除去先はこの切り詰められた結論のままです。
 <!--/-->
 
 ```agda
       StepAt-read : ⟨ γ ⊨ StepAt R P B C C₀ x y ⟩
                   → ∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ]
                       (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁
-      StepAt-read h = PT.rec squash₁ atSix (StepAt-out R P B C C₀ x y γ h)
+      StepAt-read h = rec₁ squash₁ atSix (StepAt-out R P B C C₀ x y γ h)
         where
 ```
 
@@ -2674,7 +2669,7 @@ name for the value in slot `x`.
 ```agda
         atSix : StepOf R P B C C₀ x y γ → Goal
         atSix (s₁ , (k₁ , (p₁ , (s₂ , (k₂ , (p₂ , hb)))))) =
-          PT.rec squash₁ atFirst
+          rec₁ squash₁ atFirst
             (Min.LeastAt-read (sh6 R) (sh6 P) (sh6 B) (sh6 C) (sh6 C₀)
                s6a a6a e6a (sh6 x)
 ```
@@ -2742,20 +2737,20 @@ truncation.
                (p₂ ∷ k₂ ∷ s₂ ∷ p₁ ∷ k₁ ∷ s₁ ∷ γ) qR qP qB qC q₀ t₂
                    → Goal
           atSecond t₁ (d₁ , m₁) (t₂ , (d₂ , m₂)) =
-            PT.map (λ lt → t₁ , (t₂ , ( (d₁ .snd .snd .snd , m₁)
+            map₁ (λ lt → t₁ , (t₂ , ( (d₁ .snd .snd .snd , m₁)
 ```
 
 <!--en-->
 `order-out` now interprets `hc`.  Besides `qR` and `qP`, it receives from `d₁`
 and `d₂` the code, arity-numeral, and parameter-environment equalities for the
 two recovered names.  The denotation equalities are unnecessary for this
-three-key comparison.  The result is only `∥ t₁ ≺ₙ t₂ ∥₁`; `PT.map` transforms
+three-key comparison.  The result is only `∥ t₁ ≺ₙ t₂ ∥₁`; `map₁` transforms
 each comparison inside that propositional truncation into the complete witness
 required by `Goal`.
 <!--zh-->
-此时，`order-out` 解释 `hc`。除 `qR` 与 `qP` 外，它还从 `d₁`、`d₂` 取得两个已恢复名字各自的码等式、元数数码等式与参数环境等式。三键比较不需要指称等式。所得结果只有 `∥ t₁ ≺ₙ t₂ ∥₁`；`PT.map` 把这道命题截断内的每项比较变换成 `Goal` 所需的完整见证。
+此时，`order-out` 解释 `hc`。除 `qR` 与 `qP` 外，它还从 `d₁`、`d₂` 取得两个已恢复名字各自的码等式、元数数码等式与参数环境等式。三键比较不需要指称等式。所得结果只有 `∥ t₁ ≺ₙ t₂ ∥₁`；`map₁` 把这道命题截断内的每项比较变换成 `Goal` 所需的完整见证。
 <!--ja-->
-ここで `order-out` が `hc` を解釈します。`qR` と `qP` に加えて、復元された二つの名前について、符号、アリティの数項、パラメータ環境の等しさを `d₁` と `d₂` から受け取ります。この三鍵比較には、表示の等しさは必要ありません。得られるのは `∥ t₁ ≺ₙ t₂ ∥₁` だけです。`PT.map` は、その命題的切り詰めの内側にある各比較を、`Goal` が要求する完全な証人へ変換します。
+ここで `order-out` が `hc` を解釈します。`qR` と `qP` に加えて、復元された二つの名前について、符号、アリティの数項、パラメータ環境の等しさを `d₁` と `d₂` から受け取ります。この三鍵比較には、表示の等しさは必要ありません。得られるのは `∥ t₁ ≺ₙ t₂ ∥₁` だけです。`map₁` は、その命題的切り詰めの内側にある各比較を、`Goal` が要求する完全な証人へ変換します。
 <!--/-->
 
 ```agda
@@ -2770,13 +2765,13 @@ required by `Goal`.
 `atFirst` is the continuation for the first least-name reading.  Given its
 recovered pair `(t₁,l₁)`, it applies `LeastAt-read` to `h₂` at the second
 triple's slots, obtaining the second pair only under propositional truncation.
-The following `PT.rec` may pass that pair to `atSecond t₁ l₁` because the target
+The following `rec₁` may pass that pair to `atSecond t₁ l₁` because the target
 is the proposition `Goal`.  The second truncation is therefore eliminated only
 while constructing the final truncated existence statement.
 <!--zh-->
-`atFirst` 是读取第一个最小名字时使用的后续函数。取得已恢复的 `(t₁,l₁)` 后，它在第二组三元数据的槽位处对 `h₂` 应用 `LeastAt-read`，而第二个名字及其记录仍只在命题截断下得到。随后，`PT.rec` 可以把这对数据交给 `atSecond t₁ l₁`，因为消去目标是命题 `Goal`。因此，第二道截断只在构造最终的截断存在陈述时被消去。
+`atFirst` 是读取第一个最小名字时使用的后续函数。取得已恢复的 `(t₁,l₁)` 后，它在第二组三元数据的槽位处对 `h₂` 应用 `LeastAt-read`，而第二个名字及其记录仍只在命题截断下得到。随后，`rec₁` 可以把这对数据交给 `atSecond t₁ l₁`，因为消去目标是命题 `Goal`。因此，第二道截断只在构造最终的截断存在陈述时被消去。
 <!--ja-->
-`atFirst` は、第一の最小の名前を読み取るための継続です。復元された対 `(t₁,l₁)` を受け取ると、第二の三つ組のスロットで `h₂` に `LeastAt-read` を適用し、第二の対を命題的切り詰めの下でだけ得ます。消去先が命題 `Goal` なので、続く `PT.rec` はその対を `atSecond t₁ l₁` に渡せます。したがって第二の切り詰めは、最終的な切り詰められた存在命題を構成する間に限って消去されます。
+`atFirst` は、第一の最小の名前を読み取るための継続です。復元された対 `(t₁,l₁)` を受け取ると、第二の三つ組のスロットで `h₂` に `LeastAt-read` を適用し、第二の対を命題的切り詰めの下でだけ得ます。消去先が命題 `Goal` なので、続く `rec₁` はその対を `atSecond t₁ l₁` に渡せます。したがって第二の切り詰めは、最終的な切り詰められた存在命題を構成する間に限って消去されます。
 <!--/-->
 
 ```agda
@@ -2785,7 +2780,7 @@ while constructing the final truncated existence statement.
                       (sh6 C₀) s6a a6a e6a (sh6 x)
                (p₂ ∷ k₂ ∷ s₂ ∷ p₁ ∷ k₁ ∷ s₁ ∷ γ) qR qP qB qC q₀ t₁
                   → Goal
-          atFirst (t₁ , l₁) = PT.rec squash₁ (atSecond t₁ l₁)
+          atFirst (t₁ , l₁) = rec₁ squash₁ (atSecond t₁ l₁)
 ```
 
 <!--en-->

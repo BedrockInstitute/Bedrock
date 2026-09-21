@@ -21,6 +21,7 @@ The construction is classical only through one fixed instance of excluded middle
 
 ```agda
 open import Base.Prelude
+open import Cubical.Data.FinData using ( weakenFin )
 open import Base.Classical using ( LEM )
 
 ```
@@ -156,11 +157,6 @@ An environment is a finite vector of constructible sets. Introducing a bounded w
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Vec using ( _∷_; []; map; lookup )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Unit using ( tt )
-open import Cubical.Data.FinData using ( toℕ; weakenFin )
 ```
 
 <!--en-->
@@ -172,10 +168,6 @@ Existential satisfaction retains only propositional truncation: it records that 
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```
 
@@ -388,8 +380,8 @@ Emptiness is an extensionality argument in both directions: any member of the fi
 <!--/-->
 
 ```agda
-      (λ y∈ → Empty.rec* (h0 (down (lookup (N f0) γ) y y∈) y∈))
-      (λ y∈ → Empty.rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))))
+      (λ y∈ → ⊥*-rec (h0 (down (lookup (N f0) γ) y y∈) y∈))
+      (λ y∈ → ⊥₀-rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))))
 
 ```
 
@@ -496,7 +488,7 @@ For the converse direction, suppose the slots already satisfy `Tags γ N`. A pur
 ```agda
   pins-in : Tags γ N → ⟨ γ ⊨ pins N ⟩
   pins-in tg =
-      (λ x x∈ → Empty.rec (∅-empty (fst x) (∈∈ₛ {a = fst x} {b = ∅} .fst
+      (λ x x∈ → ⊥₀-rec (∅-empty (fst x) (∈∈ₛ {a = fst x} {b = ∅} .fst
                   (subst (λ u → ⟨ fst x ∈ u ⟩) (tg f0) x∈))))
     , ( st f0 f1 refl , ( st f1 f2 refl , ( st f2 f3 refl , ( st f3 f4 refl , ( st f4 f5 refl , ( st f5 f6 refl
 ```
@@ -559,8 +551,8 @@ Reading `defIn` preserves the propositional truncation around four witnesses `T`
   defIn-out : ⟨ δ ⊨ defIn w z N body ⟩
             → ∥ Σ[ T ∈ S ] Σ[ C ∈ S ] Σ[ E ∈ S ] Σ[ d ∈ S ]
                 (⟨ fst d ∈ Zv ⟩ × ((fst d ≡ 𝒟ₒ Wv) × ⟨ δ4 T C E d ⊨ body ⟩)) ∥₁
-  defIn-out = PT.rec squash₁ (λ { (T , (T∈ , h1)) → PT.rec squash₁ (λ { (C , (C∈ , h2)) →
-    PT.rec squash₁ (λ { (E , (E∈ , h3)) → PT.map (λ { (d , (d∈ , (hs , (hd , hb)))) →
+  defIn-out = rec₁ squash₁ (λ { (T , (T∈ , h1)) → rec₁ squash₁ (λ { (C , (C∈ , h2)) →
+    rec₁ squash₁ (λ { (E , (E∈ , h3)) → map₁ (λ { (d , (d∈ , (hs , (hd , hb)))) →
 ```
 
 <!--en-->
@@ -708,7 +700,7 @@ The read lemma for one step assumes separately that every pair row below `Bv` ha
   step-out (hi , ho) vals ents = extensionalV (λ x → ⇔toPath (fwd x) (bwd x))
     where
     fwd : (x : V ℓ) → ⟨ x ∈ Vv ⟩ → ⟨ x ∈ Lset Bv ⟩
-    fwd x x∈ = PT.rec (snd (x ∈ Lset Bv)) (λ { (c , (c∈ , h1)) → PT.rec (snd (x ∈ Lset Bv))
+    fwd x x∈ = rec₁ (snd (x ∈ Lset Bv)) (λ { (c , (c∈ , h1)) → rec₁ (snd (x ∈ Lset Bv))
 ```
 
 <!--en-->
@@ -720,8 +712,8 @@ For the forward inclusion, `intoAt` supplies a stage index `c ∈ Bv`, a pair ro
 <!--/-->
 
 ```agda
-      (λ { (q , (q∈ , h2)) → PT.rec (snd (x ∈ Lset Bv)) (λ { (w , s , (eq , h3)) →
-        PT.rec (snd (x ∈ Lset Bv)) (λ { (T , C , E , d , (d∈ , (qd , hx))) →
+      (λ { (q , (q∈ , h2)) → rec₁ (snd (x ∈ Lset Bv)) (λ { (w , s , (eq , h3)) →
+        rec₁ (snd (x ∈ Lset Bv)) (λ { (T , C , E , d , (d∈ , (qd , hx))) →
           Lset-in Bv (fst c) x c∈
             (subst (λ u → ⟨ x ∈ u ⟩)
               (qd ∙ cong 𝒟ₒ (vals c w c∈ (subst (λ u → ⟨ u ∈ Fv ⟩) eq q∈))) hx) })
@@ -767,10 +759,10 @@ The backward direction of `step-out` sends a member of the genuine stage `Lset B
 
 ```agda
     bwd : (x : V ℓ) → ⟨ x ∈ Lset Bv ⟩ → ⟨ x ∈ Vv ⟩
-    bwd x x∈ = PT.rec (snd (x ∈ Vv)) put (Lset-out Bv x x∈)
+    bwd x x∈ = rec₁ (snd (x ∈ Vv)) put (Lset-out Bv x x∈)
       where
       put : Σ[ δ ∈ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩) → ⟨ x ∈ Vv ⟩
-      put (δ , (δ∈ , xD)) = PT.rec (snd (x ∈ Vv))
+      put (δ , (δ∈ , xD)) = rec₁ (snd (x ∈ Vv))
 ```
 
 <!--en-->
@@ -845,7 +837,7 @@ The `into` conjunct reads outward from a member `x` of the proposed value: the t
 
 ```agda
     into : ⟨ γ ⊨ intoAt v b f z N ⟩
-    into x x∈ = PT.rec squash₁ put (Lset-out Bv (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) vq x∈))
+    into x x∈ = rec₁ squash₁ put (Lset-out Bv (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) vq x∈))
       where
       put : Σ[ δ ∈ V ℓ ] (⟨ δ ∈ Bv ⟩ × ⟨ fst x ∈ 𝒟ₒ (Lset δ) ⟩)
           → ⟨ (x ∷ γ) ⊨ ∃̇∈ (var (sh 1 b)) (∃̇∈ (var (sh 2 f)) (sndEx i0 i1 intoBody)) ⟩
@@ -1020,8 +1012,8 @@ Coverage says that for each `c ∈ Bv` there merely exists a table member that p
 ```agda
 
     entryOf : (c : S) → ⟨ fst c ∈ Bv ⟩ → ∥ Σ[ w ∈ S ] ⟨ pr (fst c) (fst w) ∈ Fv ⟩ ∥₁
-    entryOf c c∈ = PT.rec squash₁
-      (λ { (q , (q∈ , h)) → PT.map (λ { (w , s , (e , _)) → w , subst (λ u → ⟨ u ∈ Fv ⟩) e q∈ })
+    entryOf c c∈ = rec₁ squash₁
+      (λ { (q , (q∈ , h)) → map₁ (λ { (w , s , (e , _)) → w , subst (λ u → ⟨ u ∈ Fv ⟩) e q∈ })
                               (sndEx-out i0 i1 ⊤̇ (q ∷ c ∷ γ) h) })
       (hd c c∈)
 ```
@@ -1085,7 +1077,7 @@ Completeness at smaller arguments is recovered by the same restriction: for each
 
 ```agda
       ents' : Entries (lookup f γ) c
-      ents' y y∈ = PT.rec (snd (pr (fst y) (Lset (fst y)) ∈ Fv))
+      ents' y y∈ = rec₁ (snd (pr (fst y) (Lset (fst y)) ∈ Fv))
         (λ { (w' , rec') → subst (λ u → ⟨ pr (fst y) u ∈ Fv ⟩) (IH (fst y) y∈ (in' y y∈) w' rec') rec' })
         (entryOf y (in' y y∈))
 
@@ -1115,7 +1107,7 @@ Completeness at the bound composes the truncated entry with the correctness just
 
 ```agda
     ents : Entries (lookup f γ) Bv
-    ents c c∈ = PT.rec (snd (pr (fst c) (Lset (fst c)) ∈ Fv))
+    ents c c∈ = rec₁ (snd (pr (fst c) (Lset (fst c)) ∈ Fv))
       (λ { (w , rec) → subst (λ u → ⟨ pr (fst c) u ∈ Fv ⟩) (vals c w c∈ rec) rec })
       (entryOf c c∈)
 
@@ -1384,11 +1376,11 @@ To prove boundedness, the checker may unfold `inner` together with the sealed de
 ```
 
 <!--en-->
-After the scoped unfolding, `checkΔ₀ inner tt` supplies the structural `Δ₀` witness: every quantifier occurring in `inner` is bounded. This is a syntactic verification of this particular formula, not a claim that `checkΔ₀` decides boundedness in both directions. The surrounding module and its exported results remain parameterized by `lem : LEM (ℓ-suc ℓ)`.
+After the scoped unfolding, `checkΔ₀ inner _` supplies the structural `Δ₀` witness: every quantifier occurring in `inner` is bounded. This is a syntactic verification of this particular formula, not a claim that `checkΔ₀` decides boundedness in both directions. The surrounding module and its exported results remain parameterized by `lem : LEM (ℓ-suc ℓ)`.
 <!--zh-->
-经过局部展开，`checkΔ₀ inner tt` 给出结构性的 `Δ₀` 见证：`inner` 中出现的每个量词都有界。这是对这条特定公式的句法核验，并不声称 `checkΔ₀` 在两个方向上判定有界性。外围模块及其导出结果仍以 `lem : LEM (ℓ-suc ℓ)` 为参数。
+经过局部展开，`checkΔ₀ inner _` 给出结构性的 `Δ₀` 见证：`inner` 中出现的每个量词都有界。这是对这条特定公式的句法核验，并不声称 `checkΔ₀` 在两个方向上判定有界性。外围模块及其导出结果仍以 `lem : LEM (ℓ-suc ℓ)` 为参数。
 <!--ja-->
-局所的な展開の後、`checkΔ₀ inner tt` は構造的な `Δ₀` の証人を与えます。`inner` に現れる量化子はすべて有界です。これはこの特定の論理式に対する構文的な検証であり、`checkΔ₀` が有界性を双方向に決定するという主張ではありません。外側のモジュールとそこから公開される結果は、引き続き `lem : LEM (ℓ-suc ℓ)` をパラメータとします。
+局所的な展開の後、`checkΔ₀ inner _` は構造的な `Δ₀` の証人を与えます。`inner` に現れる量化子はすべて有界です。これはこの特定の論理式に対する構文的な検証であり、`checkΔ₀` が有界性を双方向に決定するという主張ではありません。外側のモジュールとそこから公開される結果は、引き続き `lem : LEM (ℓ-suc ℓ)` をパラメータとします。
 <!--/-->
 
 ```agda
@@ -1610,7 +1602,7 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
   unwrap : {n : ℕ} (φ : Formula S (suc (suc n))) (γ : S ^ (suc n)) {P : hProp (ℓ-suc ℓ)}
          → ((x : S) → ⟨ fst x ∈ fst (lookup (lastFin {n}) γ) ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ P ⟩)
          → ⟨ γ ⊨ wrap {n} φ ⟩ → ⟨ P ⟩
-  unwrap φ γ {P} k h = PT.rec (snd P) (λ { (x , xz , hx) → k x xz hx }) h
+  unwrap φ γ {P} k h = rec₁ (snd P) (λ { (x , xz , hx) → k x xz hx }) h
 
 ```
 
@@ -1675,7 +1667,7 @@ The reading lemma composes three paths for any constant-free Δ₀ formula: Δ�
 read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : S ^ n)
      → (δ ⊨ embed φ) ≡ (map fst δ ⊨ₚ φ)
 read {n} {φ} dφ δ =
-    AbsL.abs₀ (mapΔ₀ Empty.rec* dφ) δ
+    AbsL.abs₀ (mapΔ₀ ⊥*-rec dφ) δ
   ∙ embed-⊨ 𝒮ᵥ {K = S} fst φ (map fst δ)
 ```
 
@@ -1689,7 +1681,7 @@ The final equality in this path concerns the interpretation of constants. Becaus
 
 ```agda
   ∙ cong (λ ι → SemVᵃ.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
-         (funExt (λ b → Empty.rec* b))
+         (funExt (λ b → ⊥*-rec b))
 
 ```
 

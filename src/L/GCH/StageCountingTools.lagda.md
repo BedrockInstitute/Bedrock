@@ -27,6 +27,9 @@ The chapter works under excluded middle at the fixed universe level. This hypoth
 
 ```agda
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( rec2 )
+open import Cubical.Foundations.HLevels using ( isPropΠ2; isPropΠ3 )
+open import Cubical.Data.FinData using ( inj-toℕ )
 open import Base.Classical using ( LEM )
 
 ```
@@ -197,7 +200,6 @@ The chosen tally index places each member of a finite stage in a finite ordinal 
 
 ```agda
 open import Cubical.Data.Nat.Order using ( _<_ )
-open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.FinData.FinSet using ( DecΣ )
 open import Cubical.Relation.Nullary using ( decRec; yes; no )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId'; inj-toℕ )
@@ -212,11 +214,6 @@ Several later equalities concern dependent pairs whose second components are pro
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Sum as Sum
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ2; isPropΠ3 )
 ```
 
 <!--en-->
@@ -245,9 +242,6 @@ Existence in membership and graph readings is often retained only under proposit
 
 ```agda
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 ```
 
@@ -685,8 +679,8 @@ To read an entry from the formula, the proof eliminates the two nested existenti
 
     private
       entOut : (y s n b i : S) → ⟨ (i ∷ b ∷ n ∷ y ∷ s ∷ []) ⊨ entFo ⟩ → Ent y s i
-      entOut y s n b i = PT.rec squash₁ (λ { (u , hv) →
-        PT.rec squash₁ (λ { (v , (h1 , (h2 , h3))) →
+      entOut y s n b i = rec₁ squash₁ (λ { (u , hv) →
+        rec₁ squash₁ (λ { (v , (h1 , (h2 , h3))) →
           let γ = v ∷ u ∷ i ∷ b ∷ n ∷ y ∷ s ∷ [] in
 ```
 
@@ -716,7 +710,7 @@ The reverse direction maps a truncated entry into satisfaction of the formula. I
 
 ```agda
       entIn : (y s n i : S) → Ent y s i → ⟨ (i ∷ B ∷ n ∷ y ∷ s ∷ []) ⊨ entFo ⟩
-      entIn y s n i = PT.map (λ { (u , v , (h1 , h2 , h3)) →
+      entIn y s n i = map₁ (λ { (u , v , (h1 , h2 , h3)) →
         let γ = v ∷ u ∷ i ∷ B ∷ n ∷ y ∷ s ∷ [] in
         u , ∣ v , ( subst ⟨_⟩ (sym (appAt-adequate i6 i2 i1 γ)) h1
                   , subst ⟨_⟩ (sym (appAt-adequate i5 i2 i0 γ)) h2
@@ -790,8 +784,8 @@ To read the whole graph formula outward, we first eliminate the truncated witnes
 
 ```agda
     fo-out : (y s : S) → ⟨ (y ∷ s ∷ []) ⊨ fo ⟩ → Wit y s
-    fo-out y s = PT.rec squash₁ (λ { (n , (hd , hb)) →
-      PT.rec squash₁ (λ { (b , (eb , (he , hS))) → bodyOut y s n b hd eb he hS }) hb })
+    fo-out y s = rec₁ squash₁ (λ { (n , (hd , hb)) →
+      rec₁ squash₁ (λ { (b , (eb , (he , hS))) → bodyOut y s n b hd eb he hS }) hb })
 
 ```
 
@@ -805,7 +799,7 @@ Conversely, a host-level witness supplies the outer existential with `n` and the
 
 ```agda
     fo-in : (y s : S) → Wit y s → ⟨ (y ∷ s ∷ []) ⊨ fo ⟩
-    fo-in y s = PT.rec (snd ((y ∷ s ∷ []) ⊨ fo))
+    fo-in y s = rec₁ (snd ((y ∷ s ∷ []) ⊨ fo))
       (λ { (n , (hd , he , hS)) →
         ∣ n , ( hd , ∣ B , ( refl , he , λ i i∈n → entIn y s n i (hS i i∈n) ) ∣₁ ) ∣₁ })
 ```
@@ -906,7 +900,7 @@ The step clause at each position is proved by eliminating the numeral membership
 
 ```agda
       step : (i : S) → ⟨ fst i ∈ # N ⟩ → Ent y₀ s i
-      step i i∈N = PT.map atIndex (∈#-elim N (fst i) i∈N)
+      step i i∈N = map₁ atIndex (∈#-elim N (fst i) i∈N)
         where
         atIndex : Σ[ k ∈ ℕ ] ((k < N) × (fst i ≡ # k))
                 → Σ[ u ∈ S ] Σ[ v ∈ S ]
@@ -969,7 +963,7 @@ Uniqueness starts with an arbitrary candidate `y` satisfying `Wit y s` and aims 
 
 ```agda
     only : (y : S) → Wit y s → fst y ≡ fst y₀
-    only y = PT.rec (setIsSet (fst y) (fst y₀))
+    only y = rec₁ (setIsSet (fst y) (fst y₀))
       (λ { (n , (hd , he , hS)) → Only.final n hd he hS })
       where
       module Only (n : S)
@@ -1032,16 +1026,16 @@ Recovery also proves that the underlying set of `y` is the environment graph gen
 ```
 
 <!--en-->
-At each index `j`, the step clause yields, under propositional truncation, a source value, a candidate target value, and the three graph memberships relating them. The target equality is a proposition, so `PT.rec` may pass these data to `read`. That lemma proves equality of the represented values; injectivity of the presentation of `B` then gives `gR j ≡ fg g j`.
+At each index `j`, the step clause yields, under propositional truncation, a source value, a candidate target value, and the three graph memberships relating them. The target equality is a proposition, so `rec₁` may pass these data to `read`. That lemma proves equality of the represented values; injectivity of the presentation of `B` then gives `gR j ≡ fg g j`.
 <!--zh-->
-在每个索引 `j` 处，步骤子句在命题截断下给出一个源值、一个候选目标值以及联系二者的三条图隶属。目标等式是命题，因此 `PT.rec` 可以把这些数据交给 `read`。该引理证明两个被呈现的值相等，再由 `B` 的呈现单射性得到 `gR j ≡ fg g j`。
+在每个索引 `j` 处，步骤子句在命题截断下给出一个源值、一个候选目标值以及联系二者的三条图隶属。目标等式是命题，因此 `rec₁` 可以把这些数据交给 `read`。该引理证明两个被呈现的值相等，再由 `B` 的呈现单射性得到 `gR j ≡ fg g j`。
 <!--ja-->
-各添字 `j` で、ステップの節は命題的切り詰めのもとに、源の値、候補となる目標値、および両者を結ぶ三つのグラフ所属を与えます。目標の等式は命題なので、`PT.rec` はこれらのデータを `read` に渡せます。この補題が表示された二つの値の等しさを示し、`B` の表示の単射性から `gR j ≡ fg g j` が従います。
+各添字 `j` で、ステップの節は命題的切り詰めのもとに、源の値、候補となる目標値、および両者を結ぶ三つのグラフ所属を与えます。目標の等式は命題なので、`rec₁` はこれらのデータを `read` に渡せます。この補題が表示された二つの値の等しさを示し、`B` の表示の単射性から `gR j ≡ fg g j` が従います。
 <!--/-->
 
 ```agda
         pt : (j : Fin N) → gR j ≡ fg g j
-        pt j = ↪-inj {a = fst B} (PT.rec (setIsSet _ _) read (hS (nn (toℕ j)) j∈n))
+        pt j = ↪-inj {a = fst B} (rec₁ (setIsSet _ _) read (hS (nn (toℕ j)) j∈n))
           where
           j∈n : ⟨ # (toℕ j) ∈ fst n ⟩
           j∈n = subst (λ w → ⟨ # (toℕ j) ∈ w ⟩) (sym qn) (#mono (toℕ j) N (toℕ<n j))
@@ -1171,8 +1165,8 @@ Starting from membership in `seqL A`, `seqL-out` gives a propositionally truncat
 
 ```agda
   rep : (s : S) → Mem s → Rep s
-  rep s m = PT.rec squash₁
-    (λ { (n , hn) → PT.map (λ { (g , e) → n , g , e }) (envSet-out A n s hn) })
+  rep s m = rec₁ squash₁
+    (λ { (n , hn) → map₁ (λ { (g , e) → n , g , e }) (envSet-out A n s hn) })
     (seqL-out A s m)
 
 ```
@@ -1190,15 +1184,15 @@ The recursion package uses `seqL A` as its domain and `fo` as its graph. For eve
   R = record
     { dom   = seqL A
     ; graph = fo
-    ; funct = λ s m → mereFunct fo s (PT.map (λ { (n , g , e) →
+    ; funct = λ s m → mereFunct fo s (map₁ (λ { (n , g , e) →
 ```
 
 <!--en-->
-For a concrete representation `(n , g , e)`, the functionality witness consists of the canonical image `AtSeq.y₀`, its proof of satisfying `fo`, and the proof that every other satisfying carrier element is equal to it. `Σ≡Prop` lifts equality of underlying sets to equality in `S`, since constructibility proofs form proposition-valued fibres. `PT.map` then keeps the whole construction under truncation.
+For a concrete representation `(n , g , e)`, the functionality witness consists of the canonical image `AtSeq.y₀`, its proof of satisfying `fo`, and the proof that every other satisfying carrier element is equal to it. `Σ≡Prop` lifts equality of underlying sets to equality in `S`, since constructibility proofs form proposition-valued fibres. `map₁` then keeps the whole construction under truncation.
 <!--zh-->
-对具体表示 `(n , g , e)`，函数性见证由典范像 `AtSeq.y₀`、它满足 `fo` 的证明，以及任何其他满足公式的载体元素都与它相等的证明组成。由于可构造性证明形成命题值纤维，`Σ≡Prop` 把底层集合的相等提升为 `S` 中的相等；`PT.map` 随后让整个构造继续处于截断之下。
+对具体表示 `(n , g , e)`，函数性见证由典范像 `AtSeq.y₀`、它满足 `fo` 的证明，以及任何其他满足公式的载体元素都与它相等的证明组成。由于可构造性证明形成命题值纤维，`Σ≡Prop` 把底层集合的相等提升为 `S` 中的相等；`map₁` 随后让整个构造继续处于截断之下。
 <!--ja-->
-具体的な表示 `(n , g , e)` に対する関数性の証人は、標準的な像 `AtSeq.y₀`、それが `fo` を満たす証明、およびほかのどの充足する台の要素もそれに等しいという証明からなります。構成可能性の証明は命題値のファイバーをなすので、`Σ≡Prop` は基礎にある集合の等しさを `S` での等しさへ持ち上げます。続いて `PT.map` が構成全体を切り詰めの中に保ちます。
+具体的な表示 `(n , g , e)` に対する関数性の証人は、標準的な像 `AtSeq.y₀`、それが `fo` を満たす証明、およびほかのどの充足する台の要素もそれに等しいという証明からなります。構成可能性の証明は命題値のファイバーをなすので、`Σ≡Prop` は基礎にある集合の等しさを `S` での等しさへ持ち上げます。続いて `map₁` が構成全体を切り詰めの中に保ちます。
 <!--/-->
 
 ```agda
@@ -1262,7 +1256,7 @@ Membership in the target sequence set is proved by transporting along the code e
 
 ```agda
   into : (s : S) (m : Mem s) → ⟨ fst (fn s m) ∈ˢ fst (seqL B) ⟩
-  into s m = PT.rec (snd (fst (fn s m) ∈ˢ fst (seqL B)))
+  into s m = rec₁ (snd (fst (fn s m) ∈ˢ fst (seqL B)))
     (λ { (n , g , e) → subst (λ w → ⟨ fst w ∈ˢ fst (seqL B) ⟩) (sym (fn-code s m n g e))
            (seqL-in B n (envS B (fg g)) (envSet-in B (fg g))) })
     (rep s m)
@@ -1334,17 +1328,17 @@ With a common length, `env-pt` reads equality of the target graphs as equality o
 ```
 
 <!--en-->
-For arbitrary members `s` and `s'`, their representations are available only under propositional truncation. The desired equality `fst s ≡ fst s'` is a proposition because cumulative-hierarchy values form a set, so `PT.rec2` may expose one representation of each input locally and pass them to the canonical comparison.
+For arbitrary members `s` and `s'`, their representations are available only under propositional truncation. The desired equality `fst s ≡ fst s'` is a proposition because cumulative-hierarchy values form a set, so `rec2` may expose one representation of each input locally and pass them to the canonical comparison.
 <!--zh-->
-对任意成员 `s` 与 `s'`，它们的表示只在命题截断下可用。累积层级的值形成集合，因此目标等式 `fst s ≡ fst s'` 是命题；于是 `PT.rec2` 可以在局部展开两个输入各自的一个表示，并把它们交给典范呈现的比较。
+对任意成员 `s` 与 `s'`，它们的表示只在命题截断下可用。累积层级的值形成集合，因此目标等式 `fst s ≡ fst s'` 是命题；于是 `rec2` 可以在局部展开两个输入各自的一个表示，并把它们交给典范呈现的比较。
 <!--ja-->
-任意の要素 `s` と `s'` について、その表示は命題的切り詰めのもとでしか得られません。累積階層の値は集合をなすため、目標の等式 `fst s ≡ fst s'` は命題です。そこで `PT.rec2` により、各入力の表示を局所的に一つずつ取り出し、標準表示どうしの比較に渡せます。
+任意の要素 `s` と `s'` について、その表示は命題的切り詰めのもとでしか得られません。累積階層の値は集合をなすため、目標の等式 `fst s ≡ fst s'` は命題です。そこで `rec2` により、各入力の表示を局所的に一つずつ取り出し、標準表示どうしの比較に渡せます。
 <!--/-->
 
 ```agda
   inj : (s : S) (m : Mem s) (s' : S) (m' : Mem s')
       → fst (fn s m) ≡ fst (fn s' m') → fst s ≡ fst s'
-  inj s m s' m' q = PT.rec2 (setIsSet (fst s) (fst s'))
+  inj s m s' m' q = rec2 (setIsSet (fst s) (fst s'))
     (λ { (n , g , e) (n' , g' , e') →
         e
 ```
@@ -1439,7 +1433,7 @@ For the outward direction, the existential supplies a carrier element `z`, an eq
 ```agda
 pin-out : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : S ^ n)
         → ⟨ γ ⊨ pinAt c φ ⟩ → ⟨ (c ∷ γ) ⊨ φ ⟩
-pin-out c φ γ = PT.rec (snd ((c ∷ γ) ⊨ φ))
+pin-out c φ γ = rec₁ (snd ((c ∷ γ) ⊨ φ))
   (λ { (z , (ez , h)) → subst (λ v → ⟨ (v ∷ γ) ⊨ φ ⟩) (Σ≡Prop (λ v → snd (isL v)) ez) h })
 ```
 
@@ -1542,7 +1536,7 @@ The reading lemma turns satisfaction of the injection formula into the four clau
   read (sv , dm , ij , ran) =
       svAt-in zero (F ∷ A ∷ []) (λ x y y' p q → svAt-out f γ sv x y y' p q)
     , domAt-intro zero (suc zero) (F ∷ A ∷ []) (λ x →
-          (λ h → PT.rec (snd (fst x ∈ fst A))
+          (λ h → rec₁ (snd (fst x ∈ fst A))
 ```
 
 <!--en-->
@@ -1574,7 +1568,7 @@ The filling lemma is the converse construction: from the four data of a coded in
   fill (sv , dm , ij , ran) =
       svAt-in f γ (λ x y y' p q → svAt-out zero (F ∷ A ∷ []) sv x y y' p q)
     , domAt-intro f B γ (λ x →
-          (λ h → PT.rec (snd (fst x ∈ fst A))
+          (λ h → rec₁ (snd (fst x ∈ fst A))
 ```
 
 <!--en-->
@@ -1688,9 +1682,9 @@ The search lemma names a member: for each member `x` of the finite stage it runs
 
 ```agda
     named : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ i ∈ Fin size ] (item i ≡ x)
-    named x hx = decRec (λ q → q) (λ nq → Empty.rec (PT.rec Empty.isProp⊥ nq (onto x hx)))
+    named x hx = decRec (λ q → q) (λ nq → ⊥₀-rec (rec₁ isProp⊥ nq (onto x hx)))
       (DecΣ size (λ i → item i ≡ x)
-        (λ i → Sum.rec yes no (lem ((item i ≡ x) , setIsSet (item i) x))))
+        (λ i → ⊎-rec yes no (lem ((item i ≡ x) , setIsSet (item i) x))))
 
 ```
 
@@ -1704,7 +1698,7 @@ Suppose that `f` injected the presentation of `ω` into a finite stage. Each val
 
 ```agda
     noinj : (f : ⟪ ω ⟫ → ⟪ Lset (# n) ⟫)
-          → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
+          → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
     noinj f finj = finite-excl-ω (# size) (numeral-ord size) (#∈ω size)
       (λ x → q x , q x) (λ x y e → finj x y (qq x y (cong fst e)))
       where
@@ -1766,7 +1760,7 @@ For an arbitrary index `w`, `NoInto w` is the proposition that no host-level inj
 ```agda
   NoInto : V ℓ → Type ℓ
   NoInto w = (f : ⟪ ω ⟫ → ⟪ Lset w ⟫)
-           → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
+           → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
 
 ```
 
@@ -1780,7 +1774,7 @@ The general form follows by transporting the finite case along the membership of
 
 ```agda
   no-inj-fin : (g : V ℓ) → ⟨ g ∈ˢ ω ⟩ → NoInto g
-  no-inj-fin g g∈ω = PT.rec (isPropΠ2 (λ _ _ → Empty.isProp⊥))
+  no-inj-fin g g∈ω = rec₁ (isPropΠ2 (λ _ _ → isProp⊥))
     (λ { (k , e) → subst NoInto e (FinNo.noinj (lower k)) }) g∈ω
 ```
 
@@ -1837,9 +1831,9 @@ The endpoint condition recovers stage membership for both endpoints of every rel
 ```agda
 Rsub : (y x : SL.S) → Holds Rω y x
      → ⟨ fst y ∈ˢ Lset ω ⟩ × ⟨ fst x ∈ˢ Lset ω ⟩
-Rsub y x h = PT.rec isP
-  (λ { (_ , h₁) → PT.rec isP
-    (λ { (a , h₂) → PT.rec isP
+Rsub y x h = rec₁ isP
+  (λ { (_ , h₁) → rec₁ isP
+    (λ { (a , h₂) → rec₁ isP
 ```
 
 <!--en-->
@@ -2263,7 +2257,7 @@ Every membership in a collapse value yields a predecessor segment: the truncated
 
 ```agda
   seg : (p : OT.Dom) (b : V ℓ) → ⟨ b ∈ˢ C.col p ⟩ → Seg p b
-  seg p b h = PT.rec (isPropSeg p b) (λ z → z) (C.col-out p b h)
+  seg p b h = rec₁ (isPropSeg p b) (λ z → z) (C.col-out p b h)
 
 ```
 
@@ -2279,7 +2273,7 @@ It remains to show that each ordinal `C.col p` lies below `ω`. Ordinal trichoto
 col-fin : (p : OT.Dom) → ⟨ C.col p ∈ˢ ω ⟩
 col-fin p = go (ord-tri (C.col p) (C.col-ord p) ω ω-ord)
   where
-  refute : ((z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ C.col p ⟩) → Empty.⊥
+  refute : ((z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ C.col p ⟩) → ⊥₀
   refute sub = no-inj-fin (gOf p) (gOf∈ω p) f f-inj
 ```
 
@@ -2344,7 +2338,7 @@ Ordinal trichotomy compares `C.col p` with `ω`. If the collapse is already a me
   go : ⟨ C.col p ∈ˢ ω ⟩ ⊎ ((C.col p ≡ ω) ⊎ ⟨ ω ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ ω ⟩
   go (inl k) = k
   go (inr (inl e)) =
-    Empty.rec (refute (λ z z∈ω → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω))
+    ⊥₀-rec (refute (λ z z∈ω → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω))
   go (inr (inr ω∈c)) =
 ```
 
@@ -2357,7 +2351,7 @@ In the remaining case `ω ∈ C.col p`. Since `C.col p` is an ordinal and theref
 <!--/-->
 
 ```agda
-    Empty.rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
+    ⊥₀-rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
 
 ```
 
@@ -2371,7 +2365,7 @@ The order-type image is therefore contained in `ω`. Its outward reading supplie
 
 ```agda
 otL⊆ω : (z : V ℓ) → ⟨ z ∈ˢ fst C.otL ⟩ → ⟨ z ∈ˢ ω ⟩
-otL⊆ω z h = PT.rec (snd (z ∈ˢ ω))
+otL⊆ω z h = rec₁ (snd (z ∈ˢ ω))
   (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ ω ⟩) e (col-fin b) })
   (C.otL-out z h)
 ```

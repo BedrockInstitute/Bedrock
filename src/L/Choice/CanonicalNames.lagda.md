@@ -36,6 +36,9 @@ The explicit classical input is `lem : LEM (ℓ-suc ℓ)`. It supplies the finit
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Sigma using ( ΣPathP )
+open import Cubical.Foundations.Prelude using ( toPathP )
+open import Cubical.Data.Nat using ( +-comm )
 open import Base.Classical using ( LEM )
 
 module L.Choice.CanonicalNames {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -116,8 +119,6 @@ The abstract notion of order is a strict well-order packaged as a record: a stri
 
 ```agda
   using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf )
-
-open import Cubical.Foundations.Prelude using ( toPathP )
 open import Cubical.Foundations.Transport using ( constSubstCommSlice )
 open import Cubical.Foundations.Equiv using ( equivFun; invEq )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
@@ -132,11 +133,8 @@ Natural numbers supply the arities, and their order supplies the middle key. Its
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Data.Nat using ( _+_; +-comm )
 open import Cubical.Data.Nat.Order using ( _<_; <-trans; ¬m<m; <-wellfounded; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
-open import Cubical.Data.FinData using ( toℕ )
 ```
 
 <!--en-->
@@ -148,9 +146,6 @@ The lexicographic comparison will be written as a sum type: each key's verdict i
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( ΣPathP )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Data.Vec using ( map )
 open import Cubical.Induction.WellFounded
   using ( Acc; acc; WellFounded; module WFI )
 ```
@@ -164,9 +159,6 @@ Two eliminations have their target types fixed by the mathematics. The empty typ
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
 ```
@@ -261,16 +253,16 @@ pr∈limit : (x y : S) → ⟨ x ∈ˢ Lset ω ⟩ → ⟨ y ∈ˢ Lset ω ⟩
 ```
 
 <!--en-->
-The proof of the pair statement has one wrinkle: `inSome` delivers its stage witnesses inside a propositional truncation, so the stage numbers cannot be picked out as data. The goal, however, is a membership proposition, and truncated witnesses may be eliminated into a proposition-valued target. The outer `PT.rec` unpacks the witness for `x`, and the inner one the witness for `y`, feeding both into the helper `both`, which does the actual work.
+The proof of the pair statement has one wrinkle: `inSome` delivers its stage witnesses inside a propositional truncation, so the stage numbers cannot be picked out as data. The goal, however, is a membership proposition, and truncated witnesses may be eliminated into a proposition-valued target. The outer `rec₁` unpacks the witness for `x`, and the inner one the witness for `y`, feeding both into the helper `both`, which does the actual work.
 <!--zh-->
-配对这条陈述的证明有一处波折：`inSome` 把层见证交在命题截断之内，故那些层编号无法作为数据被选出。但目标本身是一个隶属命题，而截断的见证允许消去到取值为命题的靶子。外层的 `PT.rec` 拆开 `x` 的见证，内层的拆开 `y` 的见证，然后把两者交给真正干活的辅助引理 `both`。
+配对这条陈述的证明有一处波折：`inSome` 把层见证交在命题截断之内，故那些层编号无法作为数据被选出。但目标本身是一个隶属命题，而截断的见证允许消去到取值为命题的靶子。外层的 `rec₁` 拆开 `x` 的见证，内层的拆开 `y` 的见证，然后把两者交给真正干活的辅助引理 `both`。
 <!--ja-->
-対の主張の証明には一つ折り返し点がある。`inSome` が渡す段階の証人は命題的截断の中にあるため、その段階の番号をデータとして取り出すことはできない。しかし帰結は所属の命題であり、截断された証人は命題値の帰結へは消去できる。外側の `PT.rec` が `x` の証人をほどき、内側のものが `y` の証人をほどき、両方を実際の作業をする補題 `both` に渡す。
+対の主張の証明には一つ折り返し点がある。`inSome` が渡す段階の証人は命題的截断の中にあるため、その段階の番号をデータとして取り出すことはできない。しかし帰結は所属の命題であり、截断された証人は命題値の帰結へは消去できる。外側の `rec₁` が `x` の証人をほどき、内側のものが `y` の証人をほどき、両方を実際の作業をする補題 `both` に渡す。
 <!--/-->
 
 ```agda
-pr∈limit x y hx hy = PT.rec (snd (pr x y ∈ˢ Lset ω))
-  (λ atX → PT.rec (snd (pr x y ∈ˢ Lset ω)) (both atX) (inSome y hy))
+pr∈limit x y hx hy = rec₁ (snd (pr x y ∈ˢ Lset ω))
+  (λ atX → rec₁ (snd (pr x y ∈ˢ Lset ω)) (both atX) (inSome y hy))
   (inSome x hx)
   where
   both : AtStage x → AtStage y → ⟨ pr x y ∈ˢ Lset ω ⟩
@@ -311,8 +303,8 @@ Terms are handled first, and their induction is two clauses. A variable has no c
 
 ```agda
 codeTm∈limit : ∀ {n} (t : Term (⊥* {ℓ}) n)
-             → ⟨ VCode.⌜ mapTm Empty.rec* t ⌝ᵗ ∈ˢ Lset ω ⟩
-codeTm∈limit (con c) = Empty.rec* c
+             → ⟨ VCode.⌜ mapTm ⊥*-rec t ⌝ᵗ ∈ˢ Lset ω ⟩
+codeTm∈limit (con c) = ⊥*-rec c
 codeTm∈limit (var i) = tag∈limit 1 (# (toℕ i)) (numeral∈limit (toℕ i))
 
 code∈limit : ∀ {n} (χ : Formula (⊥* {ℓ}) n) → ⟨ VCode.⌜ embed χ ⌝ ∈ˢ Lset ω ⟩
@@ -465,18 +457,18 @@ The remaining five clauses are literally the identity: falsity has no parts, and
 ```
 
 <!--en-->
-The left-inverse property is stated and proved one level at a time. For a term, `eraseTm` after `mapTm Empty.rec*` returns the term itself: the constant case is void because a parameter-free term has no constants, and the variable case is `refl`, since both composites rebuild the same variable. The formula-level statement then claims that erasing the embedding of a parameter-free formula gives back that formula, up to a path.
+The left-inverse property is stated and proved one level at a time. For a term, `eraseTm` after `mapTm ⊥*-rec` returns the term itself: the constant case is void because a parameter-free term has no constants, and the variable case is `refl`, since both composites rebuild the same variable. The formula-level statement then claims that erasing the embedding of a parameter-free formula gives back that formula, up to a path.
 <!--zh-->
-左逆性质逐层陈述、逐层证明。对词项而言，`mapTm Empty.rec*` 之后再作 `eraseTm` 得回原词项：常元情形是空的，因为无参词项本无常元；变量情形是 `refl`，因为两种复合都重建同一个变量。公式层面的陈述随后主张：抹除一条无参公式的嵌入，沿一条路径得回原公式。
+左逆性质逐层陈述、逐层证明。对词项而言，`mapTm ⊥*-rec` 之后再作 `eraseTm` 得回原词项：常元情形是空的，因为无参词项本无常元；变量情形是 `refl`，因为两种复合都重建同一个变量。公式层面的陈述随后主张：抹除一条无参公式的嵌入，沿一条路径得回原公式。
 <!--ja-->
-左逆の性質は、一段ずつ述べられ、一段ずつ証明される。項については、`mapTm Empty.rec*` の後で `eraseTm` を施すと元の項が返る。定数の場合は、パラメータなし項には定数がないので空であり、変数の場合は、どちらの合成も同じ変数を組み立て直すので `refl` である。論理式の水準の主張はその次に、パラメータなし論理式の埋め込みを抹消すれば、パスをひとつ添えて元の論理式が返る、と述べる。
+左逆の性質は、一段ずつ述べられ、一段ずつ証明される。項については、`mapTm ⊥*-rec` の後で `eraseTm` を施すと元の項が返る。定数の場合は、パラメータなし項には定数がないので空であり、変数の場合は、どちらの合成も同じ変数を組み立て直すので `refl` である。論理式の水準の主張はその次に、パラメータなし論理式の埋め込みを抹消すれば、パスをひとつ添えて元の論理式が返る、と述べる。
 <!--/-->
 
 ```agda
 
   eraseTm-embed : ∀ {n} (t : Term (⊥* {ℓ}) (suc n))
-                → eraseTm (mapTm Empty.rec* t) ≡ t
-  eraseTm-embed (con c) = Empty.rec* c
+                → eraseTm (mapTm ⊥*-rec t) ≡ t
+  eraseTm-embed (con c) = ⊥*-rec c
   eraseTm-embed (var i) = refl
 
   eraseFo-embed : ∀ {n} (χ : Formula (⊥* {ℓ}) (suc n)) → eraseFo (embed χ) ≡ χ
@@ -695,7 +687,7 @@ Membership in a `sett` only *merely* supplies its index, so the forward directio
 
 ```agda
     fwd : ⟨ ⟪ A ⟫↪ m ∈ˢ denote a ⟩ → ⟨ environment a m ⊨ᵐ embed (formula a) ⟩
-    fwd = PT.rec (snd (environment a m ⊨ᵐ embed (formula a)))
+    fwd = rec₁ (snd (environment a m ⊨ᵐ embed (formula a)))
       (λ { ((m' , h) , q) →
         invEq (decode .snd) (subst (λ v → ⟨ satAt a v ⟩) (⟪⟫↪-inj q) h) })
     bwd : ⟨ environment a m ⊨ᵐ embed (formula a) ⟩ → ⟨ ⟪ A ⟫↪ m ∈ˢ denote a ⟩
@@ -771,17 +763,17 @@ The abstraction theorem `⊨-abs₁` speaks of satisfaction over the empty const
 ```
 
 <!--en-->
-Two constant interpretations of a parameter-free formula both have type `⊥* → DA.SM`: the one the working semantics uses, sending every constant to `DA.ι (Empty.rec* b)`, and the eliminator `Empty.rec*` itself. Since `⊥*` has no elements, `funExt` plus the eliminator proves the two functions equal as `sameReading`, without inspecting anything. The statement `absSat` then compares the environment reading used by the denotation, through `embed`, with the empty-domain reading used by the abstraction theorem, at the same member `m` and the same abstracted formula.
+Two constant interpretations of a parameter-free formula both have type `⊥* → DA.SM`: the one the working semantics uses, sending every constant to `DA.ι (⊥*-rec b)`, and the eliminator `⊥*-rec` itself. Since `⊥*` has no elements, `funExt` plus the eliminator proves the two functions equal as `sameReading`, without inspecting anything. The statement `absSat` then compares the environment reading used by the denotation, through `embed`, with the empty-domain reading used by the abstraction theorem, at the same member `m` and the same abstracted formula.
 <!--zh-->
-无参公式的两个常元解释都有类型 `⊥* → DA.SM`：工作语义所用的那个，把每个常元送到 `DA.ι (Empty.rec* b)`；以及消去子 `Empty.rec*` 本身。由于 `⊥*` 没有元素，`funExt` 加上消去子便证得这两个函数相等，即 `sameReading`，无须检视任何东西。随后，`absSat` 陈述的是：指称所用的、经 `embed` 的环境读法，与抽象定理所用的空域读法，在同一个成员 `m` 与同一条抽象公式处相符。
+无参公式的两个常元解释都有类型 `⊥* → DA.SM`：工作语义所用的那个，把每个常元送到 `DA.ι (⊥*-rec b)`；以及消去子 `⊥*-rec` 本身。由于 `⊥*` 没有元素，`funExt` 加上消去子便证得这两个函数相等，即 `sameReading`，无须检视任何东西。随后，`absSat` 陈述的是：指称所用的、经 `embed` 的环境读法，与抽象定理所用的空域读法，在同一个成员 `m` 与同一条抽象公式处相符。
 <!--ja-->
-パラメータなし論理式の二つの定数解釈は、どちらも型 `⊥* → DA.SM` をもちます。作業用の意味論が使う方、すべての定数を `DA.ι (Empty.rec* b)` へ送るものと、消去子 `Empty.rec*` 自身です。`⊥*` には要素がないので、`funExt` と消去子だけで二つの関数の相等 `sameReading` が証明され、何も検査する必要がありません。そして `absSat` は、指示対象が `embed` を通して使う環境の読み方と、抽象化の定理が使う空定数域の読み方が、同じ要素 `m` と同じ抽象化された論理式において一致することを述べます。
+パラメータなし論理式の二つの定数解釈は、どちらも型 `⊥* → DA.SM` をもちます。作業用の意味論が使う方、すべての定数を `DA.ι (⊥*-rec b)` へ送るものと、消去子 `⊥*-rec` 自身です。`⊥*` には要素がないので、`funExt` と消去子だけで二つの関数の相等 `sameReading` が証明され、何も検査する必要がありません。そして `absSat` は、指示対象が `embed` を通して使う環境の読み方と、抽象化の定理が使う空定数域の読み方が、同じ要素 `m` と同じ抽象化された論理式において一致することを述べます。
 <!--/-->
 
 ```agda
 
-    sameReading : (λ (b : ⊥* {ℓ}) → DA.ι (Empty.rec* b)) ≡ Empty.rec*
-    sameReading = funExt (λ b → Empty.rec* b)
+    sameReading : (λ (b : ⊥* {ℓ}) → DA.ι (⊥*-rec b)) ≡ ⊥*-rec
+    sameReading = funExt (λ b → ⊥*-rec b)
 
     absSat : (φ : Formula ⟪ A ⟫ 1) (m : ⟪ A ⟫)
            → (environment (nameOf φ) m ⊨ᵐ embed (formula (nameOf φ)))
@@ -789,11 +781,11 @@ Two constant interpretations of a parameter-free formula both have type `⊥* �
 ```
 
 <!--en-->
-The proof is a three-step path. The relabelling lemma `embed-⊨` says that embedding a parameter-free formula into a richer constant domain does not change what it says, which moves the left side to the `Empty.rec*`-marked reading; `sameReading` then substitutes the denotation's own reading for that one; and `⊨-abs₁`, read backwards, is exactly the abstraction theorem's identification of the abstracted formula's satisfaction with the original one at the single parameter. Each step is a theorem from an earlier chapter, connected rather than re-derived.
+The proof is a three-step path. The relabelling lemma `embed-⊨` says that embedding a parameter-free formula into a richer constant domain does not change what it says, which moves the left side to the `⊥*-rec`-marked reading; `sameReading` then substitutes the denotation's own reading for that one; and `⊨-abs₁`, read backwards, is exactly the abstraction theorem's identification of the abstracted formula's satisfaction with the original one at the single parameter. Each step is a theorem from an earlier chapter, connected rather than re-derived.
 <!--zh-->
-证明是一条三步的路径。改名引理 `embed-⊨` 说把无参公式嵌入更丰富的常元域不改变它所说的话，这一步把左边搬到带 `Empty.rec*` 标记的读法；`sameReading` 再把指称自己的读法代入其中；最后反着读 `⊨-abs₁`，恰好就是抽象定理对「抽象后的公式在单个参数处的满足」与「原公式的满足」的认同。每一步都是此前某章的定理，只作连接，不作重证。
+证明是一条三步的路径。改名引理 `embed-⊨` 说把无参公式嵌入更丰富的常元域不改变它所说的话，这一步把左边搬到带 `⊥*-rec` 标记的读法；`sameReading` 再把指称自己的读法代入其中；最后反着读 `⊨-abs₁`，恰好就是抽象定理对「抽象后的公式在单个参数处的满足」与「原公式的满足」的认同。每一步都是此前某章的定理，只作连接，不作重证。
 <!--ja-->
-証明は三段の経路です。改名の補題 `embed-⊨` は、パラメータなし論理式をより豊かな定数域へ埋め込んでもその意味は変わらないと言い、これが左辺を `Empty.rec*` の標識の読み方へ移します。次に `sameReading` が指示対象自身の読み方をそこへ代入します。最後に `⊨-abs₁` を逆向きに読むと、抽象化された論理式の単一パラメータにおける充足と元の論理式の充足とを同一視する抽象化の定理そのものです。各段階は前の章の定理をつなぐだけで、再証明はしません。
+証明は三段の経路です。改名の補題 `embed-⊨` は、パラメータなし論理式をより豊かな定数域へ埋め込んでもその意味は変わらないと言い、これが左辺を `⊥*-rec` の標識の読み方へ移します。次に `sameReading` が指示対象自身の読み方をそこへ代入します。最後に `⊨-abs₁` を逆向きに読むと、抽象化された論理式の単一パラメータにおける充足と元の論理式の充足とを同一視する抽象化の定理そのものです。各段階は前の章の定理をつなぐだけで、再証明はしません。
 <!--/-->
 
 ```agda
@@ -871,15 +863,15 @@ The equality `denote-defSet` is the predicate agreement `satAt-abs` made into an
 
   names-complete : (x : S) → ⟨ x ∈ˢ 𝒟ₒ A ⟩
                  → ∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁
-  names-complete x h = PT.map named (𝒟ₒ-inv A x h)
+  names-complete x h = map₁ named (𝒟ₒ-inv A x h)
 ```
 
 <!--en-->
-Inside the truncation, the step from the inverted data to the desired pair is ordinary: the formula `φ` is named by `nameOf φ`, and the required equality is `denote-defSet φ ∙ q`, the path from the name's denotation to `defSet φ` followed by the given path to `x`. Since the target `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` is a proposition, `PT.map` may work under the truncation, mapping the merely supplied formula to a merely supplied name without ever inspecting which one it is.
+Inside the truncation, the step from the inverted data to the desired pair is ordinary: the formula `φ` is named by `nameOf φ`, and the required equality is `denote-defSet φ ∙ q`, the path from the name's denotation to `defSet φ` followed by the given path to `x`. Since the target `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` is a proposition, `map₁` may work under the truncation, mapping the merely supplied formula to a merely supplied name without ever inspecting which one it is.
 <!--zh-->
-在截断之内，从反演数据到目标对的步骤是平凡的：公式 `φ` 由 `nameOf φ` 命名，所需的等式是 `denote-defSet φ ∙ q`，即从名字的指称到 `defSet φ` 的路径再接上给定的到 `x` 的路径。由于目标 `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` 是命题，`PT.map` 可以在截断之下工作，把仅仅给出的公式映为仅仅给出的名字，而无须检视它究竟是哪一条。
+在截断之内，从反演数据到目标对的步骤是平凡的：公式 `φ` 由 `nameOf φ` 命名，所需的等式是 `denote-defSet φ ∙ q`，即从名字的指称到 `defSet φ` 的路径再接上给定的到 `x` 的路径。由于目标 `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` 是命题，`map₁` 可以在截断之下工作，把仅仅给出的公式映为仅仅给出的名字，而无须检视它究竟是哪一条。
 <!--ja-->
-切断の内側では、反転されたデータから求める対への段階は普通のものです。論理式 `φ` は `nameOf φ` によって名付けられ、必要な等式は `denote-defSet φ ∙ q`、つまり名前の指示対象から `defSet φ` への経路に、与えられた `x` への経路を続けたものです。目標の `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` は命題なので、`PT.map` は切断の下で働き、ただ与えられた論理式をただ与えられた名前へ写します。それがどの論理式かを検査することは一切ありません。
+切断の内側では、反転されたデータから求める対への段階は普通のものです。論理式 `φ` は `nameOf φ` によって名付けられ、必要な等式は `denote-defSet φ ∙ q`、つまり名前の指示対象から `defSet φ` への経路に、与えられた `x` への経路を続けたものです。目標の `∥ Σ[ a ∈ Name ] (denote a ≡ x) ∥₁` は命題なので、`map₁` は切断の下で働き、ただ与えられた論理式をただ与えられた名前へ写します。それがどの論理式かを検査することは一切ありません。
 <!--/-->
 
 ```agda
@@ -966,8 +958,8 @@ Irreflexivity is proved by induction on the vector: a vector can never be below 
 <!--/-->
 
 ```agda
-  ≺ᵥ-irr : ∀ {k} (p : Vec ⟪ A ⟫ k) → p ≺ᵥ p → Empty.⊥
-  ≺ᵥ-irr []      h             = Empty.rec* h
+  ≺ᵥ-irr : ∀ {k} (p : Vec ⟪ A ⟫ k) → p ≺ᵥ p → ⊥₀
+  ≺ᵥ-irr []      h             = ⊥*-rec h
   ≺ᵥ-irr (x ∷ p) (inl h)       = ≺ₚ-irr x h
   ≺ᵥ-irr (x ∷ p) (inr (_ , h)) = ≺ᵥ-irr p h
 
@@ -984,10 +976,10 @@ Transitivity is proved by simultaneous case analysis on the three vectors. If th
 
 ```agda
            → p ≺ᵥ q → q ≺ᵥ r → p ≺ᵥ r
-  ≺ᵥ-trans []      []      r       h k = Empty.rec* h
-  ≺ᵥ-trans []      (y ∷ q) r       h k = Empty.rec* h
-  ≺ᵥ-trans (x ∷ p) []      r       h k = Empty.rec* h
-  ≺ᵥ-trans (x ∷ p) (y ∷ q) []      h k = Empty.rec* k
+  ≺ᵥ-trans []      []      r       h k = ⊥*-rec h
+  ≺ᵥ-trans []      (y ∷ q) r       h k = ⊥*-rec h
+  ≺ᵥ-trans (x ∷ p) []      r       h k = ⊥*-rec h
+  ≺ᵥ-trans (x ∷ p) (y ∷ q) []      h k = ⊥*-rec k
 ```
 
 <!--en-->
@@ -1135,7 +1127,7 @@ The main theorem is induction on the length. The empty vector's accessibility is
 <!--/-->
 
 ```agda
-  ≺ᵥ-wf zero    []      = acc (λ { [] h → Empty.rec* h })
+  ≺ᵥ-wf zero    []      = acc (λ { [] h → ⊥*-rec h })
   ≺ᵥ-wf (suc k) (x ∷ p) = consAcc k (≺ᵥ-wf k) x p (≺ᵥ-wf k p)
 ```
 
@@ -1239,7 +1231,7 @@ A name can never be strictly below itself, and the three clauses say why: whiche
 <!--/-->
 
 ```agda
-  ≺ₙ-irr : (a : Name) → a ≺ₙ a → Empty.⊥
+  ≺ₙ-irr : (a : Name) → a ≺ₙ a → ⊥₀
   ≺ₙ-irr a (inl h)                 = ≺-irr (codeOf a) h
   ≺ₙ-irr a (inr (_ , inl h))       = ¬m<m h
   ≺ₙ-irr a (inr (_ , inr (_ , h))) = ≺ᵥ-irr (params a) h

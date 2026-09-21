@@ -38,6 +38,7 @@ The replacement works occurrence by occurrence, not constant by constant. If the
 module FOL.Manipulation.ParameterAbstraction where
 
 open import Base.Prelude
+open import Cubical.Data.Vec using ( _++_ )
 open import FOL.ZFStructure using ( ZFStructure )
 ```
 
@@ -74,9 +75,6 @@ Since every constant occurrence becomes a variable, the translated formula conta
 ```agda
   ( countTm; countFo; constantsTm; constantsFo; padRight; padLeft
   ; lookup-padRight; lookup-padLeft; lookup-map )
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Vec using ( _++_; map )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -210,19 +208,19 @@ absFo {n = n} φ = placeFo φ (padLeft n)
 
 Adequacy compares the original formula under a constant interpretation with its abstraction under an extended variable environment. When each placed variable contains the interpretation of its recorded constant, term denotation and formula satisfaction agree by structural induction.
 
-The comparison is stated inside a structure `𝒮` with carrier `S`, under one interpretation `ι : K → S` of the original constants. Two semantic readings are set up side by side: `_⊨_` and `⟦_⟧` for formulas and terms over `K` under `ι`, and their renamed copies `_⊨₀_`, `⟦_⟧₀` for the abstraction's constant domain `⊥*`. The parameter-free side needs no genuine interpretation, since `⊥*` is empty, but the semantics module requires the data, and `Empty.rec*` supplies it vacuously.
+The comparison is stated inside a structure `𝒮` with carrier `S`, under one interpretation `ι : K → S` of the original constants. Two semantic readings are set up side by side: `_⊨_` and `⟦_⟧` for formulas and terms over `K` under `ι`, and their renamed copies `_⊨₀_`, `⟦_⟧₀` for the abstraction's constant domain `⊥*`. The parameter-free side needs no genuine interpretation, since `⊥*` is empty, but the semantics module requires the data, and `⊥*-rec` supplies it vacuously.
 <!--zh-->
 ## 充分性
 
 充分性比较常元解释下的原公式与扩展变量环境下的抽象公式。只要安置后的每个变量都带有其所记录常元的解释，词项释义与公式满足关系便依结构归纳相符。
 
-这一比较在载体为 `S` 的结构 `𝒮` 内、在原常元的一个解释 `ι : K → S` 之下陈述。两种语义读法并排建立：`_⊨_` 与 `⟦_⟧` 对应 `K` 上、`ι` 之下的公式与词项；其更名副本 `_⊨₀_`、`⟦_⟧₀` 对应抽象的常元域 `⊥*`。无参一侧不需要真正的解释，因为 `⊥*` 为空，但语义模块要求这份资料，`Empty.rec*` 空虚地供给了它。
+这一比较在载体为 `S` 的结构 `𝒮` 内、在原常元的一个解释 `ι : K → S` 之下陈述。两种语义读法并排建立：`_⊨_` 与 `⟦_⟧` 对应 `K` 上、`ι` 之下的公式与词项；其更名副本 `_⊨₀_`、`⟦_⟧₀` 对应抽象的常元域 `⊥*`。无参一侧不需要真正的解释，因为 `⊥*` 为空，但语义模块要求这份资料，`⊥*-rec` 空虚地供给了它。
 <!--ja-->
 ## 妥当性
 
 妥当性は、定数解釈の下にある元の論理式と、拡張した変数環境の下にある抽象化後の論理式を比較します。配置された各変数が記録済みの定数の解釈を持つなら、項の表示と論理式の充足関係は構造帰納法で一致します。
 
-この比較は、台が `S` である構造 `𝒮` の中で、元の定数の一つの解釈 `ι : K → S` の下に述べられます。二つの意味論の読み方が並べて用意されます。`_⊨_` と `⟦_⟧` は `K` 上、`ι` の下の論理式と項に対応し、その改名されたコピー `_⊨₀_`・`⟦_⟧₀` は抽象化の定数域 `⊥*` に対応します。`⊥*` は空なので無パラメータの側に本物の解釈は要りませんが、意味論のモジュールはこのデータを要求するため、`Empty.rec*` が空虚にそれを供給します。
+この比較は、台が `S` である構造 `𝒮` の中で、元の定数の一つの解釈 `ι : K → S` の下に述べられます。二つの意味論の読み方が並べて用意されます。`_⊨_` と `⟦_⟧` は `K` 上、`ι` の下の論理式と項に対応し、その改名されたコピー `_⊨₀_`・`⟦_⟧₀` は抽象化の定数域 `⊥*` に対応します。`⊥*` は空なので無パラメータの側に本物の解釈は要りませんが、意味論のモジュールはこのデータを要求するため、`⊥*-rec` が空虚にそれを供給します。
 <!--/-->
 
 <!--en-->
@@ -255,7 +253,7 @@ The comparison rests on a single hypothesis connecting the two sides: for every 
   module _ {ℓz ℓc} {K : Type ℓc} (ι : K → S) where
 
     open Sem.At K ι using ( _⊨_; ⟦_⟧ )
-    open Sem.At (⊥* {ℓz}) Empty.rec* using ()
+    open Sem.At (⊥* {ℓz}) ⊥*-rec using ()
       renaming ( _⊨_ to _⊨₀_ ; ⟦_⟧ to ⟦_⟧₀ )
 ```
 

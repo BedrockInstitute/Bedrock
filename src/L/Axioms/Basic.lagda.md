@@ -36,6 +36,8 @@ The setting fixes one universe level `ℓ` and works in the cumulative hierarchy
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( rec2 )
+open import Cubical.Foundations.Prelude using ( isPropIsContr )
 
 module L.Axioms.Basic {ℓ : Level} where
 
@@ -86,9 +88,6 @@ On the constructible side, `Lset` indexes stages by sets, `IsOrd` records which 
         ; layer-trans; 𝒟ₒ; 𝒟ₒ-intro; Lset-in; Lset-out; Lset⊆𝒟ₒ
         ; Lset-mono; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; suc-ord; bound2 )
-
-open import Cubical.Data.FinData using ( zero; suc )
-open import Cubical.Data.Sum using ( inl; inr )
 ```
 
 <!--en-->
@@ -100,11 +99,7 @@ Three ordinal facts control the stages: the empty set is an ordinal, the success
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -116,7 +111,6 @@ Membership in the ambient hierarchy is proposition-valued, but the presentation 
 <!--/-->
 
 ```agda
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∈ₛ_; ∈∈ₛ; ∈-asFiber; extensionality; _⊆_; ⟪_⟫; ⟪_⟫↪ )
@@ -305,7 +299,7 @@ The first inclusion applies the bridge in its forward direction. A structural me
 
   sub₁ : ⟨ Lset (sucV σ) ⊆ 𝒟ₒ (Lset σ) ⟩
   sub₁ x x∈ₛ = ∈∈ₛ {a = x} {b = 𝒟ₒ (Lset σ)} .fst
-    (PT.rec (snd (x ∈ 𝒟ₒ (Lset σ))) (fromEarlier x)
+    (rec₁ (snd (x ∈ 𝒟ₒ (Lset σ))) (fromEarlier x)
       (Lset-out (sucV σ) x (∈∈ₛ {a = x} {b = Lset (sucV σ)} .snd x∈ₛ)))
 
   sub₂ : ⟨ 𝒟ₒ (Lset σ) ⊆ Lset (sucV σ) ⟩
@@ -396,7 +390,7 @@ finSet n h = sett (Lift {ℓ-zero} {ℓ} (Fin n)) (λ i → h (lower i))
 
 finSet-in : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
           → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁ → ⟨ y ∈ finSet n h ⟩
-finSet-in n h y = PT.map (λ { (i , q) → lift i , q })
+finSet-in n h y = map₁ (λ { (i , q) → lift i , q })
 ```
 
 <!--en-->
@@ -411,7 +405,7 @@ The reverse membership lemma `finSet-out` is the same map read backwards, from a
 
 finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
            → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁
-finSet-out n h y = PT.map (λ { (i , q) → lower i , q })
+finSet-out n h y = map₁ (λ { (i , q) → lower i , q })
 
 module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
   module DefC = DefOf (Lset σ)
@@ -461,10 +455,10 @@ From satisfaction to hits proceeds by recursion on the length. At zero the formu
 <!--/-->
 
 ```agda
-    sat→hits zero    g m bot = Empty.rec* bot
-    sat→hits (suc n) g m = PT.rec squash₁
+    sat→hits zero    g m bot = ⊥*-rec bot
+    sat→hits (suc n) g m = rec₁ squash₁
       (λ { (inl e)  → ∣ zero , sym e ∣₁
-         ; (inr sat) → PT.map (λ { (i , q) → suc i , q })
+         ; (inr sat) → map₁ (λ { (i , q) → suc i , q })
                          (sat→hits n (λ i → g (suc i)) m sat) })
 ```
 
@@ -482,7 +476,7 @@ The reverse direction turns a hit into satisfaction, again by recursion on the l
              → Hits n g (⟪ Lset σ ⟫↪ m)
              → ⟨ (DefC.ι m ∷ []) DefC.⊨ᵐ finDisj n g ⟩
     hits→sat zero g m =
-      PT.rec (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj zero g)) (λ { (() , _) })
+      rec₁ (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj zero g)) (λ { (() , _) })
 ```
 
 <!--en-->
@@ -495,7 +489,7 @@ At a successor length, the hit is a truncated pair whose index is either `zero` 
 
 ```agda
     hits→sat (suc n) g m =
-      PT.rec (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj (suc n) g))
+      rec₁ (snd ((DefC.ι m ∷ []) DefC.⊨ᵐ finDisj (suc n) g))
         (λ { (zero  , q) → ∣ inl (sym q) ∣₁
            ; (suc i , q) →
              ∣ inr (hits→sat n (λ j → g (suc j)) m ∣ i , q ∣₁) ∣₁ })
@@ -528,7 +522,7 @@ The first inclusion starts from a structural member `y` of the definable subset.
 
 ```agda
     sub₁ : ⟨ DefC.defSet (finDisj n g) ⊆ F ⟩
-    sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = F} .fst (PT.rec (snd (y ∈ F))
+    sub₁ y y∈ₛ = ∈∈ₛ {a = y} {b = F} .fst (rec₁ (snd (y ∈ F))
       (λ { ((m , h) , q) →
         subst (λ v → ⟨ v ∈ F ⟩) q
           (finSet-in n (λ i → ⟪ Lset σ ⟫↪ (g i)) (⟪ Lset σ ⟫↪ m)
@@ -559,7 +553,7 @@ The reverse inclusion starts from `y ∈ F`. The elimination rule `finSet-out` m
 <!--/-->
 
 ```agda
-    sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefC.defSet (finDisj n g)))
+    sub₂ y y∈ₛ = rec₁ (snd (y ∈ₛ DefC.defSet (finDisj n g)))
       (λ { (i , q) →
         subst (λ v → ⟨ v ∈ₛ DefC.defSet (finDisj n g) ⟩) q
           (∈∈ₛ {a = ⟪ Lset σ ⟫↪ (g i)} {b = DefC.defSet (finDisj n g)} .fst
@@ -647,17 +641,17 @@ The statement takes two constructible sets as truncated certificates: `⟨ isL x
 ```agda
 isL-directed : (x y : V ℓ) → ⟨ isL x ⟩ → ⟨ isL y ⟩
              → ∥ Σ[ σ ∈ V ℓ ] (IsOrd σ × (⟨ x ∈ Lset σ ⟩ × ⟨ y ∈ Lset σ ⟩)) ∥₁
-isL-directed x y px py = PT.rec2 squash₁ go px py
+isL-directed x y px py = rec2 squash₁ go px py
   where
   Bound : Type (ℓ-suc ℓ)
 ```
 
 <!--en-->
-The two truncations are eliminated at once by `PT.rec2`, whose target is the truncation `∥ Bound ∥₁`. Its working part `go` receives the explicit data that the certificates conceal: a stage `α`, ordinal, with `x` in `Lset α`, and a stage `β`, ordinal, with `y` in `Lset β`. Merging them is not a comparison of sizes; `bound2 α β oα oβ` returns a single ordinal bound that contains both `α` and `β`, together with its ordinality and the two memberships.
+The two truncations are eliminated at once by `rec2`, whose target is the truncation `∥ Bound ∥₁`. Its working part `go` receives the explicit data that the certificates conceal: a stage `α`, ordinal, with `x` in `Lset α`, and a stage `β`, ordinal, with `y` in `Lset β`. Merging them is not a comparison of sizes; `bound2 α β oα oβ` returns a single ordinal bound that contains both `α` and `β`, together with its ordinality and the two memberships.
 <!--zh-->
-两条截断由 `PT.rec2` 一次消去，其目标是截断 `∥ Bound ∥₁`。干活的分支 `go` 接收证书所隐藏的显式数据：序数层 `α` 且 `x` 属于 `Lset α`，以及序数层 `β` 且 `y` 属于 `Lset β`。合并它们并不是在比较大小；`bound2 α β oα oβ` 返回一个同时包含 `α` 与 `β` 的序数上界，连同它的序数性和两条隶属。
+两条截断由 `rec2` 一次消去，其目标是截断 `∥ Bound ∥₁`。干活的分支 `go` 接收证书所隐藏的显式数据：序数层 `α` 且 `x` 属于 `Lset α`，以及序数层 `β` 且 `y` 属于 `Lset β`。合并它们并不是在比较大小；`bound2 α β oα oβ` 返回一个同时包含 `α` 与 `β` 的序数上界，连同它的序数性和两条隶属。
 <!--ja-->
-二つの切り詰めは `PT.rec2` によって一度に除去されます。その目標は切り詰め `∥ Bound ∥₁` です。実際に働く部分 `go` が受け取るのは、証明書が隠している明示的なデータ、すなわち順序数である段階 `α` と `x ∈ Lset α`、および順序数である段階 `β` と `y ∈ Lset β` です。両者を併合することは大きさの比較ではありません。`bound2 α β oα oβ` は `α` と `β` の両方を含む単一の順序数上界を、その順序数性と二つの所属とともに返します。
+二つの切り詰めは `rec2` によって一度に除去されます。その目標は切り詰め `∥ Bound ∥₁` です。実際に働く部分 `go` が受け取るのは、証明書が隠している明示的なデータ、すなわち順序数である段階 `α` と `x ∈ Lset α`、および順序数である段階 `β` と `y ∈ Lset β` です。両者を併合することは大きさの比較ではありません。`bound2 α β oα oβ` は `α` と `β` の両方を含む単一の順序数上界を、その順序数性と二つの所属とともに返します。
 <!--/-->
 
 ```agda
@@ -778,11 +772,11 @@ The argument is the extensionality of the carrier applied to realizers. Two sets
 <!--/-->
 
 <!--en-->
-Uniqueness of a realizer is contractibility data: a center, namely any realizing set, together with a path from the center to every realizing set. The path-producing part is `extensionalL`, since two realizing sets carry the same membership specification and hence coincide; the assembly of center and paths is `setOf-unique` applied to `extensionalL`. The second statement passes from mere existence: `PT.rec` may eliminate the truncated hypothesis because its target `isContr (SetOf Q)` is a proposition, and returns the same contractibility data. From here on, each remaining axiom field is proved by exhibiting one witness, supplied truncated.
+Uniqueness of a realizer is contractibility data: a center, namely any realizing set, together with a path from the center to every realizing set. The path-producing part is `extensionalL`, since two realizing sets carry the same membership specification and hence coincide; the assembly of center and paths is `setOf-unique` applied to `extensionalL`. The second statement passes from mere existence: `rec₁` may eliminate the truncated hypothesis because its target `isContr (SetOf Q)` is a proposition, and returns the same contractibility data. From here on, each remaining axiom field is proved by exhibiting one witness, supplied truncated.
 <!--zh-->
-实现者的唯一性是收缩性数据：一个中心，即任一实现该规格的集合，以及从中心到任一实现集合的路径。给出路径的部分是 `extensionalL`，因为两个实现集合携带同一成员规格，因而重合；中心与路径的组装则是对 `extensionalL` 应用 `setOf-unique`。第二条陈述从仅仅存在出发：`PT.rec` 之所以能消去截断的假设，是因为其目标 `isContr (SetOf Q)` 是命题，并返回同样的收缩性数据。从这里起，余下每条公理字段都通过展示一个见证、且以截断形式给出，来完成证明。
+实现者的唯一性是收缩性数据：一个中心，即任一实现该规格的集合，以及从中心到任一实现集合的路径。给出路径的部分是 `extensionalL`，因为两个实现集合携带同一成员规格，因而重合；中心与路径的组装则是对 `extensionalL` 应用 `setOf-unique`。第二条陈述从仅仅存在出发：`rec₁` 之所以能消去截断的假设，是因为其目标 `isContr (SetOf Q)` 是命题，并返回同样的收缩性数据。从这里起，余下每条公理字段都通过展示一个见证、且以截断形式给出，来完成证明。
 <!--ja-->
-実現者の一意性は収縮性のデータです。すなわち中心、これは仕様を実現する任意の集合であり、および中心から任意の実現集合へのパスです。パスを生む部分は `extensionalL` です。実現する二つの集合は同じ所属の仕様を携えるので一致します。中心とパスの組み立ては、`extensionalL` に対する `setOf-unique` の適用です。第二の定理は単なる存在から出発します。仮定の切り詰めを `PT.rec` で除去できるのは、その目標 `isContr (SetOf Q)` が命題だからで、返るのは同じ収縮性のデータです。以後、残りの各公理フィールドは、証人を一つ、切り詰められた形で提示するだけで証明されます。
+実現者の一意性は収縮性のデータです。すなわち中心、これは仕様を実現する任意の集合であり、および中心から任意の実現集合へのパスです。パスを生む部分は `extensionalL` です。実現する二つの集合は同じ所属の仕様を携えるので一致します。中心とパスの組み立ては、`extensionalL` に対する `setOf-unique` の適用です。第二の定理は単なる存在から出発します。仮定の切り詰めを `rec₁` で除去できるのは、その目標 `isContr (SetOf Q)` が命題だからで、返るのは同じ収縮性のデータです。以後、残りの各公理フィールドは、証人を一つ、切り詰められた形で提示するだけで証明されます。
 <!--/-->
 
 ```agda
@@ -790,7 +784,7 @@ uniqueL : (Q : S → hProp (ℓ-suc ℓ)) → SetOf Q → isContr (SetOf Q)
 uniqueL = setOf-unique extensionalL
 
 mere→uniqueL : (Q : S → hProp (ℓ-suc ℓ)) → ∥ SetOf Q ∥₁ → isContr (SetOf Q)
-mere→uniqueL Q = PT.rec isPropIsContr (uniqueL Q)
+mere→uniqueL Q = rec₁ isPropIsContr (uniqueL Q)
 ```
 
 <!--en-->
@@ -830,19 +824,19 @@ The empty set is the first constructed set, and it needs no bounding at all: the
 ```
 
 <!--en-->
-The equation is one extensionality against the ambient empty set, in two inclusions. The first is the substantive direction: a member `y` of the definable subset comes, by the reading lemma for `defSet`, as a truncated pair of an index `m` and a satisfaction proof `h` for `⊥̇`. Satisfaction of falsity is an empty host type, so `Empty.rec* h` refutes any such member. Since inclusion is stated as a proposition-valued statement, eliminating the truncation into it is legitimate.
+The equation is one extensionality against the ambient empty set, in two inclusions. The first is the substantive direction: a member `y` of the definable subset comes, by the reading lemma for `defSet`, as a truncated pair of an index `m` and a satisfaction proof `h` for `⊥̇`. Satisfaction of falsity is an empty host type, so `⊥*-rec h` refutes any such member. Since inclusion is stated as a proposition-valued statement, eliminating the truncation into it is legitimate.
 <!--zh-->
-这条等式是对照周遭空集的一次外延，分两个包含方向。第一向是有实质内容的方向：可定义子集的成员 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与 `⊥̇` 的满足证明 `h` 组成的截断对。假在对象语言中的满足是空的宿主类型，故 `Empty.rec* h` 反驳任何这样的成员。由于包含关系以命题值陈述，向它消去截断是合法的。
+这条等式是对照周遭空集的一次外延，分两个包含方向。第一向是有实质内容的方向：可定义子集的成员 `y`，经 `defSet` 的读法引理，呈现为索引 `m` 与 `⊥̇` 的满足证明 `h` 组成的截断对。假在对象语言中的满足是空的宿主类型，故 `⊥*-rec h` 反驳任何这样的成员。由于包含关系以命题值陈述，向它消去截断是合法的。
 <!--ja-->
-この等式は、周囲の空集合に対する一回の外延性で、二つの包含からなります。最初の向きが実質のある方向です。定義可能部分集合の元 `y` は、`defSet` の読み取り補題により、添字 `m` と `⊥̇` の充足の証明 `h` からなる切り詰められた対として現れます。偽の充足は空のホスト型なので、`Empty.rec* h` がそのような元を一切否定します。包含が命題値の主張として述べられているため、そこへの切り詰めの除去は正当です。
+この等式は、周囲の空集合に対する一回の外延性で、二つの包含からなります。最初の向きが実質のある方向です。定義可能部分集合の元 `y` は、`defSet` の読み取り補題により、添字 `m` と `⊥̇` の充足の証明 `h` からなる切り詰められた対として現れます。偽の充足は空のホスト型なので、`⊥*-rec h` がそのような元を一切否定します。包含が命題値の主張として述べられているため、そこへの切り詰めの除去は正当です。
 <!--/-->
 
 ```agda
   defSet⊥≡∅ = extensionality (DefC.defSet ⊥̇) ∅ (sub₁ , sub₂)
     where
     sub₁ : ⟨ DefC.defSet ⊥̇ ⊆ ∅ ⟩
-    sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ∅))
-      (λ { ((m , h) , q) → Empty.rec* h })
+    sub₁ y y∈ₛ = rec₁ (snd (y ∈ₛ ∅))
+      (λ { ((m , h) , q) → ⊥*-rec h })
 ```
 
 <!--en-->
@@ -856,7 +850,7 @@ The second inclusion is vacuous: `∅-empty` turns any would-be member of the am
 ```agda
       (∈∈ₛ {a = y} {b = DefC.defSet ⊥̇} .snd y∈ₛ)
     sub₂ : ⟨ ∅ ⊆ DefC.defSet ⊥̇ ⟩
-    sub₂ y y∈ₛ = Empty.rec (∅-empty y y∈ₛ)
+    sub₂ y y∈ₛ = ⊥₀-rec (∅-empty y y∈ₛ)
 
 ∅∈L : ⟨ isL ∅ ⟩
 ∅∈L = 𝒟ₒ→isL ∅ ∅-ord ∅ (∅∈𝒟ₒ ∅)
@@ -986,7 +980,7 @@ A member `w` of the definable subset is presented, by the reading lemma, as a tr
 <!--/-->
 
 ```agda
-    sub₁ w w∈ₛ = PT.rec (snd (w ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆))
+    sub₁ w w∈ₛ = rec₁ (snd (w ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆))
       (λ { ((m , h) , q) →
         subst (λ v → ⟨ v ∈ₛ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⟩) q
           (pairing-ax (⟪ Lset σ ⟫↪ mₓ) (⟪ Lset σ ⟫↪ mᵧ) (⟪ Lset σ ⟫↪ m) .snd
@@ -1004,7 +998,7 @@ The reverse inclusion reads the hierarchy's pairing characterization in its othe
 ```agda
       (∈∈ₛ {a = w} {b = DefC.defSet φ} .snd w∈ₛ)
     sub₂ : ⟨ ⁅ ⟪ Lset σ ⟫↪ mₓ , ⟪ Lset σ ⟫↪ mᵧ ⁆ ⊆ DefC.defSet φ ⟩
-    sub₂ w w∈ₛ = PT.rec (snd (w ∈ₛ DefC.defSet φ))
+    sub₂ w w∈ₛ = rec₁ (snd (w ∈ₛ DefC.defSet φ))
       (λ { (inl p) → memOf mₓ ∣ inl refl ∣₁ p
          ; (inr p) → memOf mᵧ ∣ inr refl ∣₁ p })
 ```
@@ -1128,17 +1122,17 @@ The witness is the ambient unordered pair of the underlying sets, packaged with 
 ```
 
 <!--en-->
-The construction is not yet the field: it needs a stage, and only its mere existence is available. `build` eliminates the truncation from `isL-directed` with `PT.rec`, whose target `∥ SetOf Q ∥₁` is itself truncated, so the two certificates of constructibility for `a` and `b` may be opened just far enough to read off the common stage and the two memberships, and `mkPair` runs there. No stage is chosen for the outside world.
+The construction is not yet the field: it needs a stage, and only its mere existence is available. `build` eliminates the truncation from `isL-directed` with `rec₁`, whose target `∥ SetOf Q ∥₁` is itself truncated, so the two certificates of constructibility for `a` and `b` may be opened just far enough to read off the common stage and the two memberships, and `mkPair` runs there. No stage is chosen for the outside world.
 <!--zh-->
-这个构造还不是那条字段：它需要一层，而手头只有其「仅仅存在」。`build` 用 `PT.rec` 消去 `isL-directed` 的截断，其目标 `∥ SetOf Q ∥₁` 本身就是截断的，因此可以把 `a` 与 `b` 的两份可构造性证书打开到恰好读出公共层与两条隶属的程度，然后在该处运行 `mkPair`。全程没有向外部世界选定任何层。
+这个构造还不是那条字段：它需要一层，而手头只有其「仅仅存在」。`build` 用 `rec₁` 消去 `isL-directed` 的截断，其目标 `∥ SetOf Q ∥₁` 本身就是截断的，因此可以把 `a` 与 `b` 的两份可构造性证书打开到恰好读出公共层与两条隶属的程度，然后在该处运行 `mkPair`。全程没有向外部世界选定任何层。
 <!--ja-->
-この構成はまだフィールドではありません。段階が必要ですが、手もとにあるのはその単なる存在だけです。`build` は `PT.rec` で `isL-directed` の切り詰めを除去します。その目標 `∥ SetOf Q ∥₁` 自身が切り詰められているので、`a` と `b` の二つの構成可能性の証明書を、共通段階と二つの所属が読み取れるところまで開けばよく、そこで `mkPair` が対を構成します。外部に向かって段階が選ばれることはありません。
+この構成はまだフィールドではありません。段階が必要ですが、手もとにあるのはその単なる存在だけです。`build` は `rec₁` で `isL-directed` の切り詰めを除去します。その目標 `∥ SetOf Q ∥₁` 自身が切り詰められているので、`a` と `b` の二つの構成可能性の証明書を、共通段階と二つの所属が読み取れるところまで開けばよく、そこで `mkPair` が対を構成します。外部に向かって段階が選ばれることはありません。
 <!--/-->
 
 ```agda
 
   build : ∥ SetOf Q ∥₁
-  build = PT.rec squash₁
+  build = rec₁ squash₁
     (λ { (σ , (oσ , (fa∈ , fb∈))) → ∣ mkPair σ oσ fa∈ fb∈ ∣₁ })
     (isL-directed (fst a) (fst b) (a .snd) (b .snd))
 
@@ -1239,7 +1233,7 @@ The first inclusion says: everything satisfying the formula lies in the ambient 
 ```agda
       where
       sub₁ : ⟨ DefA.defSet φ ⊆ ⋃ (fst a) ⟩
-      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⋃ (fst a)))
+      sub₁ y y∈ₛ = rec₁ (snd (y ∈ₛ ⋃ (fst a)))
         (λ { ((m , h) , q) →
           subst (λ w → ⟨ w ∈ₛ ⋃ (fst a) ⟩) q
 ```
@@ -1253,7 +1247,7 @@ The satisfaction proof for the bounded existential yields, merely, a witness `v`
 <!--/-->
 
 ```agda
-            (PT.rec (snd (⟪ Lset σ ⟫↪ m ∈ₛ ⋃ (fst a)))
+            (rec₁ (snd (⟪ Lset σ ⟫↪ m ∈ₛ ⋃ (fst a)))
               (λ { (v , (fstv∈mₐ , m∈fstv)) →
                 union-ax (fst a) (⟪ Lset σ ⟫↪ m) .snd
                   ∣ fst v
@@ -1285,7 +1279,7 @@ The reverse inclusion reads the same classification in its other direction: memb
 <!--/-->
 
 ```agda
-      sub₂ y y∈ₛ = PT.rec (snd (y ∈ₛ DefA.defSet φ))
+      sub₂ y y∈ₛ = rec₁ (snd (y ∈ₛ DefA.defSet φ))
         (λ { (v , (v∈ₛfa , y∈ₛv)) → member v v∈ₛfa y∈ₛv })
         (union-ax (fst a) y .fst y∈ₛ)
         where
@@ -1385,23 +1379,23 @@ The bridge is a pair of maps between the two truncated disjunctions, joined into
 
 ```agda
       bridge = ⇔toPath
-        (PT.map (λ { (y , py) →
+        (map₁ (λ { (y , py) →
           (y , isL-trans {x = fst a} {y = y} (py .fst) (a .snd)) , py }))
-        (PT.map (λ { (y , py) → fst y , py }))
+        (map₁ (λ { (y , py) → fst y , py }))
 
   build : ∥ SetOf Q ∥₁
 ```
 
 <!--en-->
-The assembly mirrors the pairing field. The argument's own certificate `a .snd` is truncated, and `build` eliminates it with `PT.rec` into the truncated existence of a realizing set: at the stage the certificate names, `mkUnion` runs and produces a witness. The field itself is then one application of the uniqueness principle, `mere→uniqueL`, which turns a merely existing witness into contractibility data, the form every existence field of the model record takes.
+The assembly mirrors the pairing field. The argument's own certificate `a .snd` is truncated, and `build` eliminates it with `rec₁` into the truncated existence of a realizing set: at the stage the certificate names, `mkUnion` runs and produces a witness. The field itself is then one application of the uniqueness principle, `mere→uniqueL`, which turns a merely existing witness into contractibility data, the form every existence field of the model record takes.
 <!--zh-->
-组装方式照应配对字段。实参自身的证书 `a .snd` 是截断的，`build` 用 `PT.rec` 把它消去，得到实现集合的截断存在：在证书所名指的层处运行 `mkUnion`，产出见证。字段本身于是是一次唯一性原理的应用，`mere→uniqueL` 把仅仅存在的见证变成收缩性数据，这正是模型 record 每个存在字段所采取的形式。
+组装方式照应配对字段。实参自身的证书 `a .snd` 是截断的，`build` 用 `rec₁` 把它消去，得到实现集合的截断存在：在证书所名指的层处运行 `mkUnion`，产出见证。字段本身于是是一次唯一性原理的应用，`mere→uniqueL` 把仅仅存在的见证变成收缩性数据，这正是模型 record 每个存在字段所采取的形式。
 <!--ja-->
-組み立ては対のフィールドを写したものです。実引数自身の証明書 `a .snd` は切り詰められており、`build` はそれを `PT.rec` で除去して、実現する集合の単なる存在へします。証明書の名指す段階で `mkUnion` が走り、証人が生まれます。フィールドそのものは、その後の一意性原理の一度の適用、`mere→uniqueL` です。単に存在する証人が収縮性のデータへ変わり、これはモデルの record のすべての存在フィールドが取る形です。
+組み立ては対のフィールドを写したものです。実引数自身の証明書 `a .snd` は切り詰められており、`build` はそれを `rec₁` で除去して、実現する集合の単なる存在へします。証明書の名指す段階で `mkUnion` が走り、証人が生まれます。フィールドそのものは、その後の一意性原理の一度の適用、`mere→uniqueL` です。単に存在する証人が収縮性のデータへ変わり、これはモデルの record のすべての存在フィールドが取る形です。
 <!--/-->
 
 ```agda
-  build = PT.rec squash₁ (λ { (σ , (oσ , fa∈)) → ∣ mkUnion σ oσ fa∈ ∣₁ }) (a .snd)
+  build = rec₁ squash₁ (λ { (σ , (oσ , fa∈)) → ∣ mkUnion σ oσ fa∈ ∣₁ }) (a .snd)
 
 hasUnionL : (a : S) → isContr (SetOf (λ x → ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)))
 hasUnionL a = mere→uniqueL (UnionOf.Q a) (UnionOf.build a)

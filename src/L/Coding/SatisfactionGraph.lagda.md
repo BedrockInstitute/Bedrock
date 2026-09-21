@@ -90,8 +90,6 @@ The remaining descriptions prepare the local recursion equations. `towerAt` supp
 open import L.Coding.EnvironmentTower {ℓ} lem using ( nn; towerAt )
 open import L.Coding.CodeDomain {ℓ} using ( Tags )
 open import L.Coding.SatisfactionClauses {ℓ} using ( tableAt )
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.FinData using ( toℕ )
 ```
 
 <!--en-->
@@ -103,7 +101,6 @@ An interpretation environment for a formula with `n` free positions is a vector 
 <!--/-->
 
 ```agda
-open import Cubical.Data.Vec using ( _∷_; []; lookup )
 
 ```
 
@@ -116,8 +113,6 @@ Object-language existence is interpreted by propositional truncation. Thus a pro
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
 ```
@@ -498,7 +493,7 @@ a map between truncations transports only the fact that witnesses exist.
     graphOn-in : ((ν : Fin 10 → S) (E C T b : S) → fst b ≡ fst W
                    → ⟨ ev ν E C T b γ ⊨ pin ⟩)
                → ∥ GraphWitOn W x y γ ∥₁ → ⟨ γ ⊨ satGraphOn pin x y ⟩
-    graphOn-in rd = PT.map
+    graphOn-in rd = map₁
       (λ { (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12))))))))))) →
 ```
 
@@ -543,11 +538,11 @@ everything else is re-packing.
 ```
 
 <!--en-->
-After the clause-family certificate has been placed in the last conjunct, the only remaining work is to restore the nested truncations. The call to `PT.map`{.Agda} supplies the outermost truncation: its mapping function returns the witness pair for the outermost existential. Inside that pair, the thirteen explicit insertions supply the remaining existential layers down to the carrier. Thus the construction turns the truncated flat record into satisfaction of all fourteen nested existentials without exposing any of its chosen data outside a truncation.
+After the clause-family certificate has been placed in the last conjunct, the only remaining work is to restore the nested truncations. The call to `map₁`{.Agda} supplies the outermost truncation: its mapping function returns the witness pair for the outermost existential. Inside that pair, the thirteen explicit insertions supply the remaining existential layers down to the carrier. Thus the construction turns the truncated flat record into satisfaction of all fourteen nested existentials without exposing any of its chosen data outside a truncation.
 <!--zh-->
-把子句族的证书放入最后一个合取项后，只需恢复各层嵌套的截断。`PT.map`{.Agda} 的调用提供最外层截断，因为它的映射函数返回最外层存在量词所需的见证对；这对之内的十三次显式写入则依次提供余下各层，直到载体。于是，这个构造把被截断的平坦记录变为十四层存在量词的满足，同时没有让任何已选数据逸出命题截断。
+把子句族的证书放入最后一个合取项后，只需恢复各层嵌套的截断。`map₁`{.Agda} 的调用提供最外层截断，因为它的映射函数返回最外层存在量词所需的见证对；这对之内的十三次显式写入则依次提供余下各层，直到载体。于是，这个构造把被截断的平坦记录变为十四层存在量词的满足，同时没有让任何已选数据逸出命题截断。
 <!--ja-->
-節の族の証明書を最後の連言項に置いた後は、入れ子になった切り詰めを戻せば十分です。`PT.map`{.Agda} の呼び出しが最も外側の切り詰めを与えます。その写像が、最も外側の存在量化に必要な証人の対を返すからです。その対の内側にある十三回の明示的な挿入が、台に至るまでの残りの存在量化を順に与えます。したがって、切り詰められた平坦な記録から十四重の存在量化の充足が得られますが、選ばれたデータが命題的切り詰めの外へ出ることはありません。
+節の族の証明書を最後の連言項に置いた後は、入れ子になった切り詰めを戻せば十分です。`map₁`{.Agda} の呼び出しが最も外側の切り詰めを与えます。その写像が、最も外側の存在量化に必要な証人の対を返すからです。その対の内側にある十三回の明示的な挿入が、台に至るまでの残りの存在量化を順に与えます。したがって、切り詰められた平坦な記録から十四重の存在量化の充足が得られますが、選ばれたデータが命題的切り詰めの外へ出ることはありません。
 <!--/-->
 
 ```agda
@@ -575,24 +570,24 @@ produce the record itself, only the fact that one exists.
     graphOn-out : ((ν : Fin 10 → S) (E C T b : S)
                     → ⟨ ev ν E C T b γ ⊨ pin ⟩ → fst b ≡ fst W)
                 → ⟨ γ ⊨ satGraphOn pin x y ⟩ → ∥ GraphWitOn W x y γ ∥₁
-    graphOn-out rd h = PT.rec squash₁ (λ { (n9 , h9) →
-      PT.rec squash₁ (λ { (n8 , h8) →
+    graphOn-out rd h = rec₁ squash₁ (λ { (n9 , h9) →
+      rec₁ squash₁ (λ { (n8 , h8) →
 ```
 
 <!--en-->
-Each application of `PT.rec` removes one truncated tag witness while keeping the same propositional target `∥ GraphWitOn W x y γ ∥₁`. The values recovered for slots nine through three may therefore be passed to the next continuation, but none can escape into untruncated data. Repeating this one legitimate elimination is what makes the nested object-language existentials compatible with one flat truncated record.
+Each application of `rec₁` removes one truncated tag witness while keeping the same propositional target `∥ GraphWitOn W x y γ ∥₁`. The values recovered for slots nine through three may therefore be passed to the next continuation, but none can escape into untruncated data. Repeating this one legitimate elimination is what makes the nested object-language existentials compatible with one flat truncated record.
 <!--zh-->
-每次应用 `PT.rec` 都消去一个被截断的标签见证，同时保持同一个命题目标 `∥ GraphWitOn W x y γ ∥₁`。因此，从九号至三号槽读出的取值可以传给下一层续体，却不能逸出为未截断的数据。正是对这项合法消去的重复使用，使对象语言的嵌套存在量词能够与一份平坦的截断记录对应。
+每次应用 `rec₁` 都消去一个被截断的标签见证，同时保持同一个命题目标 `∥ GraphWitOn W x y γ ∥₁`。因此，从九号至三号槽读出的取值可以传给下一层续体，却不能逸出为未截断的数据。正是对这项合法消去的重复使用，使对象语言的嵌套存在量词能够与一份平坦的截断记录对应。
 <!--ja-->
-`PT.rec` を一回適用するたびに、切り詰められたタグの証人を一つ除去し、命題である同じ目標 `∥ GraphWitOn W x y γ ∥₁` を保ちます。こうしてスロット九から三までの値を次の継続へ渡せますが、切り詰められていないデータとして外へ出すことはできません。この正当な除去を繰り返すことで、対象言語の入れ子の存在量化を一つの平坦な切り詰められた記録に対応させられます。
+`rec₁` を一回適用するたびに、切り詰められたタグの証人を一つ除去し、命題である同じ目標 `∥ GraphWitOn W x y γ ∥₁` を保ちます。こうしてスロット九から三までの値を次の継続へ渡せますが、切り詰められていないデータとして外へ出すことはできません。この正当な除去を繰り返すことで、対象言語の入れ子の存在量化を一つの平坦な切り詰められた記録に対応させられます。
 <!--/-->
 
 ```agda
-      PT.rec squash₁ (λ { (n7 , h7) →
-      PT.rec squash₁ (λ { (n6 , h6) →
-      PT.rec squash₁ (λ { (n5 , h5) →
-      PT.rec squash₁ (λ { (n4 , h4) →
-      PT.rec squash₁ (λ { (n3 , h3) →
+      rec₁ squash₁ (λ { (n7 , h7) →
+      rec₁ squash₁ (λ { (n6 , h6) →
+      rec₁ squash₁ (λ { (n5 , h5) →
+      rec₁ squash₁ (λ { (n4 , h4) →
+      rec₁ squash₁ (λ { (n3 , h3) →
 ```
 
 <!--en-->
@@ -604,11 +599,11 @@ Once all ten tag values have been recovered, the same propositional elimination 
 <!--/-->
 
 ```agda
-      PT.rec squash₁ (λ { (n2 , h2) →
-      PT.rec squash₁ (λ { (n1 , h1) →
-      PT.rec squash₁ (λ { (n0 , h0) →
-      PT.rec squash₁ (λ { (E , hE') →
-      PT.rec squash₁ (λ { (C , hC') →
+      rec₁ squash₁ (λ { (n2 , h2) →
+      rec₁ squash₁ (λ { (n1 , h1) →
+      rec₁ squash₁ (λ { (n0 , h0) →
+      rec₁ squash₁ (λ { (E , hE') →
+      rec₁ squash₁ (λ { (C , hC') →
 ```
 
 <!--en-->
@@ -628,8 +623,8 @@ the corresponding fact on the other side.
 <!--/-->
 
 ```agda
-      PT.rec squash₁ (λ { (T , hT') →
-      PT.map (λ { (b , (hpin , (hnum , (hE , (hc , (hd , (ha , h12))))))) →
+      rec₁ squash₁ (λ { (T , hT') →
+      map₁ (λ { (b , (hpin , (hnum , (hE , (hc , (hd , (ha , h12))))))) →
         let ν : Fin 10 → S
             ν = ν' n0 n1 n2 n3 n4 n5 n6 n7 n8 n9
         in ν , (E , (C , (T , (b , (rd ν E C T b hpin

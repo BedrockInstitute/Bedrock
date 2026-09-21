@@ -101,12 +101,7 @@ Propositional truncation deliberately hides which initial candidate exists. The 
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 ```
 
 <!--en-->
@@ -365,7 +360,7 @@ For the fixed input, the hypothesis is mapped into the type of good stage member
 ```agda
     private
       nonempty : ∥ Σ[ c ∈ Mγ ] ⟨ Good x c ⟩ ∥₁
-      nonempty = PT.map (λ { (w , hw , hp) → (fst w , hw) , toMem x w hw hp }) (have x m)
+      nonempty = map₁ (λ { (w , hw , hp) → (fst w , hw) , toMem x w hw hp }) (have x m)
 ```
 
 <!--en-->
@@ -406,7 +401,7 @@ Its companion clause gives the exact relative leastness needed later: any other 
 <!--/-->
 
 ```agda
-      minimal : (c' : Mγ) → ⟨ Good x c' ⟩ → relOf (orderAt γ oγ) c' c → Empty.⊥
+      minimal : (c' : Mγ) → ⟨ Good x c' ⟩ → relOf (orderAt γ oγ) c' c → ⊥₀
       minimal = snd (snd (leastOf (orderAt γ oγ) lem (Good x) nonempty))
 
 ```
@@ -504,7 +499,7 @@ To state leastness in terms that can also be expressed inside `L`, assume that a
 
 ```agda
   fn-least : (x : S) (m : Mem x) (w' : S) → ⟨ fst w' ∈ Lset γ ⟩ → ⟨ (w' ∷ x ∷ []) ⊨ P ⟩
-           → ⟨ pr (fst w') (fst (fn x m)) ∈ fst Rγ ⟩ → Empty.⊥
+           → ⟨ pr (fst w') (fst (fn x m)) ∈ fst Rγ ⟩ → ⊥₀
   fn-least x m w' hw' hp hr = Sel.minimal x m (fst w' , hw') (toMem x w' hw' hp)
     (relL-rep γ hγ oγ (fst w' , hw') (Sel.c x m) hr)
 ```
@@ -534,7 +529,7 @@ The last component tests any `w'` that lies in `Lset γ` and satisfies `P(w',x)`
 <!--/-->
 
 ```agda
-        → ⟨ pr (fst w') (fst w) ∈ fst Rγ ⟩ → Empty.⊥)
+        → ⟨ pr (fst w') (fst w) ∈ fst Rγ ⟩ → ⊥₀)
 ```
 
 <!--en-->
@@ -565,7 +560,7 @@ If the alternative candidate were strictly below the selected one, leastness wou
     go : Tri∙ (relOf (orderAt γ oγ) c' (Sel.c x m)) (c' ≡ Sel.c x m)
               (relOf (orderAt γ oγ) (Sel.c x m) c')
        → fst w ≡ fst (fn x m)
-    go (lt k) = Empty.rec (Sel.minimal x m c' (toMem x w hw hp) k)
+    go (lt k) = ⊥₀-rec (Sel.minimal x m c' (toMem x w hw hp) k)
     go (eq q) = cong fst q
 ```
 
@@ -578,7 +573,7 @@ If the selected candidate were strictly below the alternative, the alternative's
 <!--/-->
 
 ```agda
-    go (gt k) = Empty.rec (mn (fn x m) (fn-in x m) (fn-holds x m)
+    go (gt k) = ⊥₀-rec (mn (fn x m) (fn-in x m) (fn-holds x m)
       (relL-fill γ hγ oγ (Sel.c x m) c' k))
 
 ```

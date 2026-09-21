@@ -30,6 +30,8 @@ The chapter works at a fixed universe level ℓ, and it takes one classical assu
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Sigma using ( ΣPathP )
+open import Cubical.Data.Nat using ( _·_ )
 open import Base.Classical using ( LEM )
 
 module L.Ordinal.SquareLaw {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -78,11 +80,6 @@ The logical vocabulary matches the shape of the statements to be proved. Refutat
 
 ```agda
 
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Data.Sigma using ( Σ≡Prop; ΣPathP )
 ```
 
 <!--en-->
@@ -94,7 +91,6 @@ The finite counting part needs arithmetic and the standard finite types. Multipl
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _·_ )
 import Cubical.Data.Fin.Base as FB
 open import Cubical.Data.Fin.Properties using ( factorEquiv; pigeonhole )
 open import Cubical.Data.Nat.Order using ( _<_; isProp≤; ≤-refl )
@@ -110,7 +106,6 @@ For each set a, the presentation map ⟪ a ⟫↪ turns an index into the member
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -156,9 +151,9 @@ A strict well-order trichotomizes any two elements: the comparison data Tri retu
 
 ```agda
 connex : {ℓc : Level} {A : Type ℓc} (w : SWO A) (a b : A)
-       → (SWO._<∙_ w a b → Empty.⊥) → (SWO._<∙_ w b a → Empty.⊥) → a ≡ b
+       → (SWO._<∙_ w a b → ⊥₀) → (SWO._<∙_ w b a → ⊥₀) → a ≡ b
 connex w a b ¬ab ¬ba with SWO.tri∙ w a b
-... | lt h = Empty.rec (¬ab h)
+... | lt h = ⊥₀-rec (¬ab h)
 ... | eq p = p
 ```
 
@@ -171,7 +166,7 @@ The product is set up generically. The first factor carries a strict well-order 
 <!--/-->
 
 ```agda
-... | gt h = Empty.rec (¬ba h)
+... | gt h = ⊥₀-rec (¬ba h)
 
 
 module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X)
@@ -193,7 +188,7 @@ The product order _≺×_ has two ways to compare (a , x) below (b , y). Either 
 
   _≺×_ : X × Y → X × Y → Type (ℓ-suc ℓ)
   (a , x) ≺× (b , y) =
-    (a U.<∙ b) ⊎ (((a U.<∙ b) → Empty.⊥) × ((b U.<∙ a) → Empty.⊥) × (x <ᵥ y))
+    (a U.<∙ b) ⊎ (((a U.<∙ b) → ⊥₀) × ((b U.<∙ a) → ⊥₀) × (x <ᵥ y))
 
   private
     accProd : (a : X) → Acc U._<∙_ a → (x : Y) → Acc _<ᵥ_ x → Acc _≺×_ (a , x)
@@ -302,7 +297,7 @@ The equality branch is the only place the presentation is used essentially. Ordi
     go (inr (inl p)) = eq (↪-inj {a = α} p)
     go (inr (inr h)) = gt h
 
-  irr₁ : (m : ⟪ α ⟫) → (m ≺₁ m → Empty.⊥)
+  irr₁ : (m : ⟪ α ⟫) → (m ≺₁ m → ⊥₀)
 ```
 
 <!--en-->
@@ -533,7 +528,7 @@ M-case の三つの場合が分析を閉じます。階級で狭義に、ある�
     M-case (gt h) = gt (inl h)
     M-case (eq e) = X-case e (tri₁ a c)
 
-  irr≺ : (p : Pair) → (p ≺ p → Empty.⊥)
+  irr≺ : (p : Pair) → (p ≺ p → ⊥₀)
 ```
 
 <!--en-->
@@ -670,7 +665,7 @@ wf³ は prodWF の二度目の適用にすぎず、`_≺³_` は追加の作業
   wf³ : WellFounded _≺³_
   wf³ = prodWF ordSWO _≺²_ wf²
 
-  ¬<₁ : (m : ⟪ α ⟫) {n : ⟪ α ⟫} → m ≡ n → (m ≺₁ n → Empty.⊥)
+  ¬<₁ : (m : ⟪ α ⟫) {n : ⟪ α ⟫} → m ≡ n → (m ≺₁ n → ⊥₀)
   ¬<₁ m {n} q h = irr₁ m (subst (λ w → m ≺₁ w) (sym q) h)
 
   subrel : {p q : Pair} → p ≺ q → f p ≺³ f q
@@ -764,7 +759,7 @@ Membership of `β` in `ω` itself only says that β is a numeral in the truncate
 <!--/-->
 
 ```agda
-  ω-mem→numeral β β∈ω = PT.map hit (subst ⟨_⟩ (ω-specV β) β∈ω)
+  ω-mem→numeral β β∈ω = map₁ hit (subst ⟨_⟩ (ω-specV β) β∈ω)
     where
     hit : Σ[ n ∈ Lift {ℓ-zero} {ℓ-suc ℓ} ℕ ] ⟨ β ≈ˢ numeralV (lower n) ⟩
         → Σ[ n ∈ ℕ ] (β ≡ # n)
@@ -886,7 +881,7 @@ The pigeonhole statement is the finite core of the later contradiction: no funct
 ```agda
 
   no-inj-Fin : (n : ℕ) → (f : FB.Fin (suc n) → FB.Fin n)
-             → ((x y : FB.Fin (suc n)) → f x ≡ f y → x ≡ y) → Empty.⊥
+             → ((x y : FB.Fin (suc n)) → f x ≡ f y → x ≡ y) → ⊥₀
   no-inj-Fin n f finj = i#j (finj i j feq)
     where
     i = fst (pigeonhole (≤-refl {m = suc n}) f)
@@ -939,7 +934,7 @@ Inside this setup, the inner module `NoInj` fixes a type `A` that receives an in
                  (into-inj : (m : ℕ) (i₁ i₂ : E m) → into m i₁ ≡ into m i₂ → i₁ ≡ i₂) where
 
       no-inj : (n : ℕ) → (f : A → E n × E n)
-             → ((x y : A) → f x ≡ f y → x ≡ y) → Empty.⊥
+             → ((x y : A) → f x ≡ f y → x ≡ y) → ⊥₀
       no-inj n f finj = no-inj-Fin (n · n) g g-inj
 ```
 

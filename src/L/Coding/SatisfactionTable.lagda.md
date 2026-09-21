@@ -42,6 +42,7 @@ two things at one key would not be a function at all.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Foundations.Prelude using ( J )
 open import Base.Classical using ( LEM )
 
 module L.Coding.SatisfactionTable {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -57,11 +58,6 @@ open import L.Coding.CodeConstructibility {ℓ}
   using ( tree; Of; tree-inv )
   renaming ( module Parts to TreeParts )
 open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
-
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Foundations.Prelude using ( J )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -203,7 +199,7 @@ which is the only arity at which it is true.
 
   total : ∀ {n} (φ : Formula S n) (x : V ℓ) → ⟨ x ∈ fst (slot φ) ⟩
         → ∥ (Σ[ y ∈ S ] ⟨ pr x (fst y) ∈ fst (satTable φ) ⟩) ∥₁
-  total φ x h = PT.map
+  total φ x h = map₁
     (λ { (m , χ , (q , incl)) → Sat B χ
        , subst (λ w → ⟨ pr w (fst (Sat B χ)) ∈ fst (satTable φ) ⟩) (sym q)
            (incl (pr (fst (keyʟ χ)) (fst (Sat B χ)))
@@ -213,7 +209,7 @@ which is the only arity at which it is true.
 
   inSlot : ∀ {n} (φ : Formula S n) (x y : V ℓ)
          → ⟨ pr x y ∈ fst (satTable φ) ⟩ → ⟨ x ∈ fst (slot φ) ⟩
-  inSlot φ x y h = PT.rec (snd (x ∈ fst (slot φ)))
+  inSlot φ x y h = rec₁ (snd (x ∈ fst (slot φ)))
     (λ { (m , χ , (q , incl)) →
       subst (λ w → ⟨ w ∈ fst (slot φ) ⟩)
         (sym (pr-inj (q ∙ prʟ-fst (keyʟ χ) (Sat B χ)) .fst))
@@ -234,7 +230,7 @@ which is the only arity at which it is true.
   entry-out : ∀ {n m} (φ : Formula S n) (ψ : Formula S m) (y : V ℓ)
             → ⟨ pr (fst (keyʟ ψ)) y ∈ fst (satTable φ) ⟩
             → y ≡ fst (Sat B ψ)
-  entry-out φ ψ y h = PT.rec (setIsSet y (fst (Sat B ψ)))
+  entry-out φ ψ y h = rec₁ (setIsSet y (fst (Sat B ψ)))
     (λ { (m , χ , (q , _)) →
       let r = pr-inj (q ∙ prʟ-fst (keyʟ χ) (Sat B χ)) in
       r .snd ∙ cong fst (sym (key-determines ψ χ (r .fst))) })

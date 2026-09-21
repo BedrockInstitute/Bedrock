@@ -27,6 +27,7 @@ The classical assumption is explicit because one later existence proof must deci
 
 ```agda
 open import Base.Prelude
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Base.Classical using ( LEM )
 
 ```
@@ -117,12 +118,6 @@ The later uniqueness argument repeatedly compares constructible sets by their me
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ; isPropΣ; isSetΣSndProp )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
 
 <!--en-->
@@ -151,9 +146,6 @@ Well-foundedness supplies the induction principle that defines and analyzes the 
 
 ```agda
 open import Cubical.Induction.WellFounded using ( WellFounded )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 ```
 
@@ -542,11 +534,11 @@ opaque
 ```
 
 <!--en-->
-To read the formula as host-level completeness, fix a predecessor `y` and a proof that `R` records `(y,x)`. The adequacy path for `appC` converts this premise into the antecedent expected by the satisfaction proof `h`. Applying `h` yields a propositionally truncated candidate value; `PT.map` keeps the truncation and converts its graph atom into `Holds F y u` using the adequacy path for `appAt`.
+To read the formula as host-level completeness, fix a predecessor `y` and a proof that `R` records `(y,x)`. The adequacy path for `appC` converts this premise into the antecedent expected by the satisfaction proof `h`. Applying `h` yields a propositionally truncated candidate value; `map₁` keeps the truncation and converts its graph atom into `Holds F y u` using the adequacy path for `appAt`.
 <!--zh-->
-要把该公式读成宿主层完备性，先固定前驱 `y` 及 `R` 记录 `(y,x)` 的证明。`appC` 的充分性路径把这一前提化为满足证明 `h` 所需的蕴含前件。应用 `h` 后得到命题截断下的候选取值；`PT.map` 保留该截断，并沿 `appAt` 的充分性路径把其中的图原子化为 `Holds F y u`。
+要把该公式读成宿主层完备性，先固定前驱 `y` 及 `R` 记录 `(y,x)` 的证明。`appC` 的充分性路径把这一前提化为满足证明 `h` 所需的蕴含前件。应用 `h` 后得到命题截断下的候选取值；`map₁` 保留该截断，并沿 `appAt` 的充分性路径把其中的图原子化为 `Holds F y u`。
 <!--ja-->
-この論理式をホスト側の完全性として読むには、先行者 `y` と、`R` が `(y,x)` を記録する証明を固定します。`appC` の妥当性を表すパスがこの前提を、充足の証明 `h` が要求する含意の前件へ変えます。`h` を適用すると命題的に切り詰められた候補値が得られます。`PT.map` は切り詰めを保ったまま、`appAt` の妥当性を表すパスによって、そのグラフ原子を `Holds F y u` へ変えます。
+この論理式をホスト側の完全性として読むには、先行者 `y` と、`R` が `(y,x)` を記録する証明を固定します。`appC` の妥当性を表すパスがこの前提を、充足の証明 `h` が要求する含意の前件へ変えます。`h` を適用すると命題的に切り詰められた候補値が得られます。`map₁` は切り詰めを保ったまま、`appAt` の妥当性を表すパスによって、そのグラフ原子を `Holds F y u` へ変えます。
 <!--/-->
 
 ```agda
@@ -554,7 +546,7 @@ To read the formula as host-level completeness, fix a predecessor `y` and a proo
   complete-out : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : S ^ n)
                → ⟨ γ ⊨ completeAt f R x ⟩
                → Complete (lookup f γ) R (lookup x γ)
-  complete-out f R x γ h y p = PT.map
+  complete-out f R x γ h y p = map₁
     (λ { (u , q) → u , subst ⟨_⟩ (appAt-adequate (suc (suc f)) (suc zero) zero (u ∷ y ∷ γ)) q })
 ```
 
@@ -572,18 +564,18 @@ The final application in this direction performs the first of those conversions:
 ```
 
 <!--en-->
-Conversely, assume host-level completeness. For a candidate predecessor satisfying the formula's antecedent, `appC-adequate` first turns that antecedent into `Holds R y x`. Completeness supplies a propositionally truncated value `u`, and `PT.map` transports the accompanying fact `Holds F y u` back into satisfaction of the application atom required by the existential conclusion.
+Conversely, assume host-level completeness. For a candidate predecessor satisfying the formula's antecedent, `appC-adequate` first turns that antecedent into `Holds R y x`. Completeness supplies a propositionally truncated value `u`, and `map₁` transports the accompanying fact `Holds F y u` back into satisfaction of the application atom required by the existential conclusion.
 <!--zh-->
-反过来，假设宿主层完备性。对满足公式前件的候选前驱，先由 `appC-adequate` 把该前件化为 `Holds R y x`。完备性给出命题截断下的取值 `u`，`PT.map` 再把伴随的 `Holds F y u` 搬回存在结论所需的应用原子满足证明。
+反过来，假设宿主层完备性。对满足公式前件的候选前驱，先由 `appC-adequate` 把该前件化为 `Holds R y x`。完备性给出命题截断下的取值 `u`，`map₁` 再把伴随的 `Holds F y u` 搬回存在结论所需的应用原子满足证明。
 <!--ja-->
-逆に、ホスト側の完全性を仮定します。論理式の前件を満たす候補の先行者について、まず `appC-adequate` がその前件を `Holds R y x` に変えます。完全性は命題的に切り詰められた値 `u` を与え、`PT.map` がそれに伴う `Holds F y u` を、存在結論が要求する適用原子の充足へ戻します。
+逆に、ホスト側の完全性を仮定します。論理式の前件を満たす候補の先行者について、まず `appC-adequate` がその前件を `Holds R y x` に変えます。完全性は命題的に切り詰められた値 `u` を与え、`map₁` がそれに伴う `Holds F y u` を、存在結論が要求する適用原子の充足へ戻します。
 <!--/-->
 
 ```agda
   complete-in : ∀ {n} (f : Fin n) (R : S) (x : Fin n) (γ : S ^ n)
               → Complete (lookup f γ) R (lookup x γ)
               → ⟨ γ ⊨ completeAt f R x ⟩
-  complete-in f R x γ h y p = PT.map
+  complete-in f R x γ h y p = map₁
     (λ { (u , q) → u , subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (u ∷ y ∷ γ))) q })
 ```
 
@@ -626,7 +618,7 @@ The semantic existential is already propositionally truncated. The map defining 
   src-out : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : S ^ n)
           → ⟨ γ ⊨ srcAt f R x w ⟩
           → Src (lookup f γ) R (lookup x γ) (lookup w γ)
-  src-out f R x w γ = PT.map (λ { (y , (p , q)) → y
+  src-out f R x w γ = map₁ (λ { (y , (p , q)) → y
     , ( subst ⟨_⟩ (appC-adequate R zero (suc x) (y ∷ γ)) p
 ```
 
@@ -655,7 +647,7 @@ Filling a source is the converse: the predecessor is introduced into the existen
   src-in : ∀ {n} (f : Fin n) (R : S) (x w : Fin n) (γ : S ^ n)
          → Src (lookup f γ) R (lookup x γ) (lookup w γ)
          → ⟨ γ ⊨ srcAt f R x w ⟩
-  src-in f R x w γ = PT.map (λ { (y , (p , q)) → y
+  src-in f R x w γ = map₁ (λ { (y , (p , q)) → y
     , ( subst ⟨_⟩ (sym (appC-adequate R zero (suc x) (y ∷ γ))) p
 ```
 
@@ -886,7 +878,7 @@ Reading `colFo` outward preserves the propositional truncation around its table 
 
     colFo-out : (z p : S) → ⟨ (z ∷ p ∷ []) ⊨ colFo ⟩
               → ∥ Σ[ F ∈ S ] (Correct F R × Holds F p z) ∥₁
-    colFo-out z p = PT.map (λ { (F , (hc , ha)) → F
+    colFo-out z p = map₁ (λ { (F , (hc , ha)) → F
       , ( correct-out zero R (F ∷ z ∷ p ∷ []) hc
         , subst ⟨_⟩ (appAt-adequate zero (suc (suc zero)) (suc zero)
 ```
@@ -1046,8 +1038,8 @@ Well-foundedness rules out a loop `a ≺ a`. In the induction step, such a loop 
 <!--/-->
 
 ```agda
-    ≺-irrefl : (a : Dom) → a ≺ a → Empty.⊥
-    ≺-irrefl = W.induction {P = λ a → a ≺ a → Empty.⊥} (λ a rec h → rec a h h)
+    ≺-irrefl : (a : Dom) → a ≺ a → ⊥₀
+    ≺-irrefl = W.induction {P = λ a → a ≺ a → ⊥₀} (λ a rec h → rec a h h)
 ```
 
 <!--en-->
@@ -1106,7 +1098,7 @@ For the first inclusion, let `w` be a member of the recorded value `v`. Since `v
 
 ```agda
         fwd : (w : V ℓ) → ⟨ w ∈ fst v ⟩ → ⟨ w ∈ col a ⟩
-        fwd w w∈ = PT.rec (snd (w ∈ col a)) read (val wS .fst w∈)
+        fwd w w∈ = rec₁ (snd (w ∈ col a)) read (val wS .fst w∈)
           where
           wS : S
           wS = w , isL-trans {x = fst v} {y = w} w∈ (snd v)
@@ -1167,7 +1159,7 @@ For the reverse inclusion, suppose `w ∈ col a`. The elimination rule for the c
 
 ```agda
         bwd : (w : V ℓ) → ⟨ w ∈ col a ⟩ → ⟨ w ∈ fst v ⟩
-        bwd w w∈ = PT.rec (snd (w ∈ fst v)) read (col-out a w w∈)
+        bwd w w∈ = rec₁ (snd (w ∈ fst v)) read (col-out a w w∈)
           where
           wS : S
           wS = w , isL-trans {x = col a} {y = w} w∈ (col-isL a)
@@ -1183,7 +1175,7 @@ For the predecessor `r` supplied by `col-out`, completeness of the entry at `a` 
 
 ```agda
           read : Σ[ r ∈ Dom ] ((r ≺ a) × (col r ≡ w)) → ⟨ w ∈ fst v ⟩
-          read (r , (ra , e)) = PT.rec (snd (w ∈ fst v)) inner (cmp (up r) (≺-out r a ra))
+          read (r , (ra , e)) = rec₁ (snd (w ∈ fst v)) inner (cmp (up r) (≺-out r a ra))
             where
             inner : Σ[ u ∈ S ] Holds F (up r) u → ⟨ w ∈ fst v ⟩
             inner (u , fu) = val wS .snd
@@ -1212,7 +1204,7 @@ Now suppose `q` is genuinely a member of `D` and `v` satisfies the local collaps
 ```agda
     colFo-val : (q : S) (mq : Mem q) (v : S) → ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩
               → fst v ≡ col (toDom q mq)
-    colFo-val q mq v h = PT.rec (setIsSet (fst v) (col (toDom q mq)))
+    colFo-val q mq v h = rec₁ (setIsSet (fst v) (col (toDom q mq)))
       (λ { (F , (hc , hv)) → correct-val F hc (toDom q mq) v
              (subst (λ t → ⟨ pr t (fst v) ∈ fst F ⟩) (sym (toDom-val q mq)) hv) })
 ```
@@ -1269,7 +1261,7 @@ The body of the local formula has two disjuncts. The left disjunct says that `q`
       Body z q =
           (Holds R q (up a)
              × ∥ Σ[ v ∈ S ] ((fst z ≡ pr (fst q) (fst v)) × ⟨ (v ∷ q ∷ []) ⊨ CF.colFo ⟩) ∥₁)
-        ⊎ ((Holds R q (up a) → Empty.⊥) × (fst z ≡ fst ea))
+        ⊎ ((Holds R q (up a) → ⊥₀) × (fst z ≡ fst ea))
 ```
 
 <!--en-->
@@ -1325,7 +1317,7 @@ Reading `ψ` outward preserves the truncation of its disjunction. In the predece
 
 ```agda
         ψ-out : (z q : S) → ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩ → ∥ Body z q ∥₁
-        ψ-out z q = PT.map
+        ψ-out z q = map₁
           (λ { (inl (h1 , h2)) → inl (PE.member-out image (con R) (z ∷ q ∷ []) h1
                                          , PF.pair-out z q h2)
              ; (inr (h1 , h2)) → inr
@@ -1354,7 +1346,7 @@ The inward reading injects the left branch through the pair-expression introduct
 
 ```agda
         ψ-in : (z q : S) → Body z q → ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩
-        ψ-in z q (inl (h1 , hv)) = PT.rec (snd ((z ∷ q ∷ []) ⊨ ψ))
+        ψ-in z q (inl (h1 , hv)) = rec₁ (snd ((z ∷ q ∷ []) ⊨ ψ))
           (λ { (v , (e , hc)) → ∣ inl (PE.member-in image (con R) (z ∷ q ∷ []) h1
                                      , PF.pair-in z q v e hc) ∣₁ }) hv
         ψ-in z q (inr (h1 , e)) =
@@ -1431,7 +1423,7 @@ In the predecessor branch, the canonical output is `zb = prʟ q (colʟ b)`, whos
 ```agda
           zb : S
           zb = prʟ q (colʟ b)
-          decide : Holds R q (up a) ⊎ (Holds R q (up a) → Empty.⊥)
+          decide : Holds R q (up a) ⊎ (Holds R q (up a) → ⊥₀)
                  → ∥ Σ[ z ∈ S ] (⟨ (z ∷ q ∷ []) ⊨ ψ ⟩
                                 × ((z' : S) → ⟨ (z' ∷ q ∷ []) ⊨ ψ ⟩ → z' ≡ z)) ∥₁
 ```
@@ -1447,8 +1439,8 @@ Assume `q R a`. The canonical output `zb` satisfies the left branch because the 
 ```agda
           decide (inl h) = ∣ zb
             , ( ψ-in zb q (inl (h , ∣ colʟ b , (prʟ-fst q (colʟ b) , IHq q mq (b≺a-of q mq h)) ∣₁))
-              , λ z' hz' → PT.rec (isSetS z' zb)
-                  (λ { (inl (_ , hv)) → PT.rec (isSetS z' zb)
+              , λ z' hz' → rec₁ (isSetS z' zb)
+                  (λ { (inl (_ , hv)) → rec₁ (isSetS z' zb)
                          (λ { (v , (e , hcol)) → Σ≡Prop (λ w → snd (isL w))
 ```
 
@@ -1463,7 +1455,7 @@ For a competing witness in the left branch, `colFo-val` identifies its second co
 ```agda
                                 (e ∙ cong (pr (fst q)) (colFo-val q mq v hcol) ∙ sym (prʟ-fst q (colʟ b))) })
                          hv
-                     ; (inr (nh , _)) → Empty.rec (nh h) })
+                     ; (inr (nh , _)) → ⊥₀-rec (nh h) })
                   (ψ-out z' q hz') ) ∣₁
           decide (inr nh) = ∣ ea
 ```
@@ -1478,8 +1470,8 @@ The refuted-membership case closes the uniqueness argument. The default entry `e
 
 ```agda
             , ( ψ-in ea q (inr (nh , refl))
-              , λ z' hz' → PT.rec (isSetS z' ea)
-                  (λ { (inl (h , _)) → Empty.rec (nh h)
+              , λ z' hz' → rec₁ (isSetS z' ea)
+                  (λ { (inl (h , _)) → ⊥₀-rec (nh h)
                      ; (inr (_ , e)) → Σ≡Prop (λ w → snd (isL w)) e })
                   (ψ-out z' q hz') ) ∣₁
 ```
@@ -1569,9 +1561,9 @@ Conversely, membership in `Fa` merely yields an index `b` with `b ≺ a` or `b �
 ```agda
       Fa-out : (y : S) → ⟨ y ∈ˢ Fa ⟩
              → ∥ Σ[ b ∈ Dom ] (Below b × (fst y ≡ pr (↪ b) (col b))) ∥₁
-      Fa-out y hy = PT.rec squash₁
-        (λ { (q , (mq , hψ)) → PT.rec squash₁
-          (λ { (inl (h , hv)) → PT.map
+      Fa-out y hy = rec₁ squash₁
+        (λ { (q , (mq , hψ)) → rec₁ squash₁
+          (λ { (inl (h , hv)) → map₁
 ```
 
 <!--en-->
@@ -1615,7 +1607,7 @@ Specializing the preceding result to the ordered-pair code of `x` and `v` recove
 ```agda
       Fa-pair : (x v : S) → Holds Fa x v
               → ∥ Σ[ b ∈ Dom ] (Below b × (↪ b ≡ fst x) × (col b ≡ fst v)) ∥₁
-      Fa-pair x v h = PT.map step
+      Fa-pair x v h = map₁ step
         (Fa-out (prʟ x v) (subst (λ w → ⟨ w ∈ fst Fa ⟩) (sym (prʟ-fst x v)) h))
         where
 ```
@@ -1674,7 +1666,7 @@ To prove `Correct Fa R`, fix an actual entry `(x,v)` of `Fa`. The paired reader 
 
 ```agda
       Fa-correct : Correct Fa R
-      Fa-correct x v hxv = PT.rec
+      Fa-correct x v hxv = rec₁
         (isProp× (isPropΠ (λ _ → isPropΠ (λ _ → squash₁)))
                  (isPropΠ (λ w → isProp× (isPropΠ (λ _ → squash₁))
                                           (isPropΠ (λ _ → snd (fst w ∈ fst v))))))
@@ -1779,7 +1771,7 @@ For the forward half of `ValueIs`, rewrite `w ∈ v` as `fst w ∈ col b`. The o
 
 ```agda
           fwd : (w : S) → ⟨ fst w ∈ fst v ⟩ → Src Fa R x w
-          fwd w w∈ = PT.map read (col-out b (fst w) (subst (λ t → ⟨ fst w ∈ t ⟩) (sym ev) w∈))
+          fwd w w∈ = map₁ read (col-out b (fst w) (subst (λ t → ⟨ fst w ∈ t ⟩) (sym ev) w∈))
             where
             read : Σ[ r ∈ Dom ] ((r ≺ b) × (col r ≡ fst w)) → Σ[ y ∈ S ] (Holds R y x × Holds Fa y w)
             read (r , (rb , er)) = up r
@@ -1809,8 +1801,8 @@ For the reverse half, a witness of `Src Fa R x w` merely supplies some `y` with 
 
 ```agda
           bwd : (w : S) → Src Fa R x w → ⟨ fst w ∈ fst v ⟩
-          bwd w = PT.rec (snd (fst w ∈ fst v)) (λ { (y , (hy , fy)) →
-            PT.rec (snd (fst w ∈ fst v)) (read y hy) (Fa-pair y w fy) })
+          bwd w = rec₁ (snd (fst w ∈ fst v)) (λ { (y , (hy , fy)) →
+            rec₁ (snd (fst w ∈ fst v)) (read y hy) (Fa-pair y w fy) })
             where
             read : (y : S) → Holds R y x
 ```
@@ -1968,7 +1960,7 @@ Conversely, every `y ∈ fst otL` merely has an index `b : Dom` with `col b ≡ 
 
 ```agda
     otL-out : (y : V ℓ) → ⟨ y ∈ fst otL ⟩ → ∥ Σ[ b ∈ Dom ] (col b ≡ y) ∥₁
-    otL-out y hy = PT.map (λ { (q , (mq , h)) → toDom q mq , sym (colFo-val q mq yS h) })
+    otL-out y hy = map₁ (λ { (q , (mq , h)) → toDom q mq , sym (colFo-val q mq yS h) })
       (OT.table-out yS hy)
       where
       yS : S
@@ -2040,7 +2032,7 @@ Conversely, `colTable-out` says that any member `y` of the graph is merely equal
 ```agda
     colTable-out : (y : S) → ⟨ y ∈ˢ colTable ⟩
                  → ∥ Σ[ b ∈ Dom ] (fst y ≡ pr (↪ b) (col b)) ∥₁
-    colTable-out y hy = PT.map (λ { (q , mq , e) → toDom q mq
+    colTable-out y hy = map₁ (λ { (q , mq , e) → toDom q mq
       , e ∙ cong (λ t → pr t (col (toDom q mq))) (sym (toDom-val q mq)) }) (CT.F-out (fst y) hy)
 ```
 
@@ -2230,7 +2222,7 @@ To prove that `col` is injective, fix `a` and `b` with `col a ≡ col b` and spl
       col-inj a b e = go (tri a b)
         where
         go : (a ≺ b) ⊎ ((a ≡ b) ⊎ (b ≺ a)) → a ≡ b
-        go (inl k)       = Empty.rec (∈-irrefl (col b)
+        go (inl k)       = ⊥₀-rec (∈-irrefl (col b)
 ```
 
 <!--en-->
@@ -2244,7 +2236,7 @@ In the left case, `a` precedes `b`, so `col a` is a member of `col b`; transport
 ```agda
           (subst (λ t → ⟨ t ∈ col b ⟩) e (col-in b a k)))
         go (inr (inl q)) = q
-        go (inr (inr k)) = Empty.rec (∈-irrefl (col a)
+        go (inr (inr k)) = ⊥₀-rec (∈-irrefl (col a)
           (subst (λ t → ⟨ t ∈ col a ⟩) (sym e) (col-in a b k)))
 
 ```

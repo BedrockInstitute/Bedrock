@@ -70,8 +70,6 @@ The two worlds are now named. The ambient structure is `𝒮ᵥ`, the ZF-like st
 import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
-
-open import Cubical.Data.Vec using ( map )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V )
 ```
 

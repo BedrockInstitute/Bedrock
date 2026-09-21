@@ -39,7 +39,6 @@ One special choice of domain will deserve its own attention: the empty type `⊥
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -189,24 +188,24 @@ mapFo-comp f g (∃̇∈ t φ) = cong₂ ∃̇∈ (mapTm-comp f g t) (mapFo-comp
 ```
 
 <!--en-->
-The most frequently used instance of the map enters a constant domain from **no** constants. The syntax chapter introduced the **parameter-free formulas**, whose constant domain is the empty type; like sentences they have no separate name, and the type `Formula (⊥* {ℓ}) n` expresses the full definition: a formula of this type contains no constant nodes at all, but may still use any of its `n` available free-variable slots. Relabelling into a type `K` requires a function `⊥* → K`, and the empty type is exactly the type for which such a function exists uniquely, with no case to define: there is no constant to send anywhere. This is what the eliminator `Empty.rec*` provides, and relabelling along it maps parameter-free formulas into formulas over any domain.
+The most frequently used instance of the map enters a constant domain from **no** constants. The syntax chapter introduced the **parameter-free formulas**, whose constant domain is the empty type; like sentences they have no separate name, and the type `Formula (⊥* {ℓ}) n` expresses the full definition: a formula of this type contains no constant nodes at all, but may still use any of its `n` available free-variable slots. Relabelling into a type `K` requires a function `⊥* → K`, and the empty type is exactly the type for which such a function exists uniquely, with no case to define: there is no constant to send anywhere. This is what the eliminator `⊥*-rec` provides, and relabelling along it maps parameter-free formulas into formulas over any domain.
 <!--zh-->
-这个映射最常用的实例从**没有**常元的域进入常元域。语法章介绍过**无参公式**，其常元域是空类型；类型 `Formula (⊥* {ℓ}) n` 已把定义说尽：这种类型的公式根本不含常元节点，但仍可使用其 `n` 个自由变量槽位中的任意一些。要改名进入类型 `K`，需要一个函数 `⊥* → K`，而空型正是这种函数唯一存在、且无需定义任何分支的类型：没有任何常元需要送往别处。这正是消去子 `Empty.rec*` 所提供的；沿它改名，就把无参公式映入任意常元域上的公式。
+这个映射最常用的实例从**没有**常元的域进入常元域。语法章介绍过**无参公式**，其常元域是空类型；类型 `Formula (⊥* {ℓ}) n` 已把定义说尽：这种类型的公式根本不含常元节点，但仍可使用其 `n` 个自由变量槽位中的任意一些。要改名进入类型 `K`，需要一个函数 `⊥* → K`，而空型正是这种函数唯一存在、且无需定义任何分支的类型：没有任何常元需要送往别处。这正是消去子 `⊥*-rec` 所提供的；沿它改名，就把无参公式映入任意常元域上的公式。
 <!--ja-->
-この写像のよく使われる例は、定数を**一切持たない**定数域から任意の定数域への移行です。**無パラメータ論理式**の定数域は空型であり、型 `Formula (⊥* {ℓ}) n` がその条件を表します。この型の論理式には定数の節がまったく現れませんが、`n` 個の自由変数のスロットはどれでも使えます。型 `K` への改名には関数 `⊥* → K` が必要ですが、空型はまさにそのような関数が唯一つ、定義すべき場合分けもなく存在する型です。どこにも送るべき定数がないからです。これを提供するのが消去子 `Empty.rec*` であり、これに沿って定数を改名すると、無パラメータ論理式を任意の定数域上の論理式へ写せます。
+この写像のよく使われる例は、定数を**一切持たない**定数域から任意の定数域への移行です。**無パラメータ論理式**の定数域は空型であり、型 `Formula (⊥* {ℓ}) n` がその条件を表します。この型の論理式には定数の節がまったく現れませんが、`n` 個の自由変数のスロットはどれでも使えます。型 `K` への改名には関数 `⊥* → K` が必要ですが、空型はまさにそのような関数が唯一つ、定義すべき場合分けもなく存在する型です。どこにも送るべき定数がないからです。これを提供するのが消去子 `⊥*-rec` であり、これに沿って定数を改名すると、無パラメータ論理式を任意の定数域上の論理式へ写せます。
 <!--/-->
 
 <!--en-->
-`embed` is exactly `mapFo Empty.rec*`: the unique function `⊥* → K` from the empty constant alphabet is used as the relabelling, so every constant position, of which there are none, is sent somewhere. What changes is the constant domain alone: the free-variable context of length `n` and the binders are untouched, so `embed` neither closes the formula nor supplies an environment for its variables.
+`embed` is exactly `mapFo ⊥*-rec`: the unique function `⊥* → K` from the empty constant alphabet is used as the relabelling, so every constant position, of which there are none, is sent somewhere. What changes is the constant domain alone: the free-variable context of length `n` and the binders are untouched, so `embed` neither closes the formula nor supplies an environment for its variables.
 <!--zh-->
-`embed` 正是 `mapFo Empty.rec*`：从空常元字母表出发的函数 `⊥* → K` 是唯一的，直接取它作改名，于是所有常元位置 (其实一个也没有) 都被送往某处。改变的只是常元域：长度为 `n` 的自由变量上下文与约束词都不变，因此 `embed` 既不封闭公式，也不为其中的变量提供环境。
+`embed` 正是 `mapFo ⊥*-rec`：从空常元字母表出发的函数 `⊥* → K` 是唯一的，直接取它作改名，于是所有常元位置 (其实一个也没有) 都被送往某处。改变的只是常元域：长度为 `n` 的自由变量上下文与约束词都不变，因此 `embed` 既不封闭公式，也不为其中的变量提供环境。
 <!--ja-->
-`embed` はまさに `mapFo Empty.rec*` です。空の定数アルファベットからの関数 `⊥* → K` は唯一なので、それをそのまま改名に用います。するとすべての定数の位置 (実際には一つもありません) がどこかに送られます。変わるのは定数域だけです。長さ `n` の自由変数の文脈と束縛子はそのままなので、`embed` は論理式を閉じたり変数への環境を与えたりするものではありません。
+`embed` はまさに `mapFo ⊥*-rec` です。空の定数アルファベットからの関数 `⊥* → K` は唯一なので、それをそのまま改名に用います。するとすべての定数の位置 (実際には一つもありません) がどこかに送られます。変わるのは定数域だけです。長さ `n` の自由変数の文脈と束縛子はそのままなので、`embed` は論理式を閉じたり変数への環境を与えたりするものではありません。
 <!--/-->
 
 ```agda
 embed : ∀ {ℓ ℓ'} {K : Type ℓ'} {n} → Formula (⊥* {ℓ}) n → Formula K n
-embed = mapFo Empty.rec*
+embed = mapFo ⊥*-rec
 ```
 
 <!--en-->

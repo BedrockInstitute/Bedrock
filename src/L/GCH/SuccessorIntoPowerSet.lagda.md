@@ -117,11 +117,6 @@ Several equalities below identify dependent pairs whose second components are pr
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```
 
@@ -136,9 +131,6 @@ Accessibility records express the well-founded recursion used for the pulled-bac
 ```agda
 import Cubical.Induction.WellFounded as WF
 open WF using ( Acc; acc; WellFounded )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 ```
 
 <!--en-->
@@ -368,7 +360,7 @@ The diagonal predicate says, merely, that some member `A` of the power set has i
 ```agda
     Diagonal : SL.S → Type (ℓ-suc ℓ)
     Diagonal ξ = ∥ Σ[ A ∈ SL.S ] ( ⟨ fst A ∈ fst (𝒫 κ) ⟩ × Holds F A ξ
-                                 × (⟨ fst ξ ∈ fst A ⟩ → Empty.⊥) ) ∥₁
+                                 × (⟨ fst ξ ∈ fst A ⟩ → ⊥₀) ) ∥₁
 
 ```
 
@@ -413,7 +405,7 @@ Adequacy of the application coding identifies the formula atom for applying `F` 
 
 ```agda
       φD-out : (ξ : SL.S) → ⟨ (ξ ∷ []) ⊨ φD ⟩ → Diagonal ξ
-      φD-out ξ = PT.map (λ { (A , (mA , (h , n))) →
+      φD-out ξ = map₁ (λ { (A , (mA , (h , n))) →
         A , mA , transport (a1 ξ A) h , (λ k → lower (n k)) })
 
 ```
@@ -428,7 +420,7 @@ Conversely, a chosen `A ∈ 𝒫 κ`, a graph fact `Holds F A ξ`, and a proof t
 
 ```agda
       φD-in : (ξ A : SL.S) → ⟨ fst A ∈ fst (𝒫 κ) ⟩ → Holds F A ξ
-            → (⟨ fst ξ ∈ fst A ⟩ → Empty.⊥) → ⟨ (ξ ∷ []) ⊨ φD ⟩
+            → (⟨ fst ξ ∈ fst A ⟩ → ⊥₀) → ⟨ (ξ ∷ []) ⊨ φD ⟩
       φD-in ξ A mA h n =
         ∣ A , (mA , (transport (sym (a1 ξ A)) h , (λ k → lift (n k)))) ∣₁
 
@@ -485,7 +477,7 @@ To derive the contradiction, suppose the graph assigns the diagonal set `D₀` s
 <!--/-->
 
 ```agda
-    absurd : Σ[ ξ ∈ SL.S ] Holds F D₀ ξ → Empty.⊥
+    absurd : Σ[ ξ ∈ SL.S ] Holds F D₀ ξ → ⊥₀
     absurd (ξ , h₀) = out inside
       where
 ```
@@ -499,8 +491,8 @@ Assume `ξ ∈ D₀`. The diagonal formula then supplies, under truncation, a se
 <!--/-->
 
 ```agda
-      out : ⟨ fst ξ ∈ fst D₀ ⟩ → Empty.⊥
-      out hm = PT.rec Empty.isProp⊥
+      out : ⟨ fst ξ ∈ fst D₀ ⟩ → ⊥₀
+      out hm = rec₁ isProp⊥
         (λ { (A , _ , hA , n) →
           n (subst (λ w → ⟨ fst ξ ∈ w ⟩) (injF ξ D₀ A h₀ hA) hm) })
         (φD-out ξ (snd (subst ⟨_⟩ (D₀-spec ξ) hm)))
@@ -530,11 +522,11 @@ The two halves refute any internal coded injection from the power set into `κ`:
 <!--/-->
 
 ```agda
-  no-inj : InjL (𝒫 κ) κ → Empty.⊥
-  no-inj = PT.rec Empty.isProp⊥ step
+  no-inj : InjL (𝒫 κ) κ → ⊥₀
+  no-inj = rec₁ isProp⊥ step
     where
-    step : Σ[ F ∈ SL.S ] InjCode F (𝒫 κ) κ → Empty.⊥
-    step (F , code) = PT.rec Empty.isProp⊥ D.absurd (D.valF D.D₀ D.D₀∈𝒫κ)
+    step : Σ[ F ∈ SL.S ] InjCode F (𝒫 κ) κ → ⊥₀
+    step (F , code) = rec₁ isProp⊥ D.absurd (D.valF D.D₀ D.D₀∈𝒫κ)
 ```
 
 <!--en-->
@@ -707,7 +699,7 @@ The domain clause initially supplies a value of `G` only under propositional tru
 
 ```agda
   val : (x : SL.S) → ⟨ fst x ∈ fst P ⟩ → Σ[ y ∈ SL.S ] Holds G x y
-  val x m = PT.rec (isPropVal x) (λ z → z) (valG x m)
+  val x m = rec₁ (isPropVal x) (λ z → z) (valG x m)
 ```
 
 <!--en-->
@@ -813,8 +805,8 @@ Reading the formula outward first retains the two image witnesses under proposit
 
 ```agda
       read : (a b p : SL.S) → ⟨ (b ∷ a ∷ p ∷ []) ⊨ φR ⟩ → Read a b
-      read a b p (ma , mb , h) = PT.rec squash₁
-        (λ { (x , hx) → PT.map (λ { (y , ha , hb , hxy) → x , y , ma , mb
+      read a b p (ma , mb , h) = rec₁ squash₁
+        (λ { (x , hx) → map₁ (λ { (y , ha , hb , hxy) → x , y , ma , mb
           , transport (b1 p a b x y) ha , transport (b2 p a b x y) hb , hxy }) hx }) h
 
 ```
@@ -829,7 +821,7 @@ The inward reading transports each host-side fact back through the reversed adeq
 
 ```agda
       fill : (a b p : SL.S) → Read a b → ⟨ (b ∷ a ∷ p ∷ []) ⊨ φR ⟩
-      fill a b p = PT.rec (snd ((b ∷ a ∷ p ∷ []) ⊨ φR))
+      fill a b p = rec₁ (snd ((b ∷ a ∷ p ∷ []) ⊨ φR))
         (λ { (x , y , ma , mb , ha , hb , hxy) → ma , mb , ∣ x , ∣ y
           , transport (sym (b1 p a b x y)) ha
           , transport (sym (b2 p a b x y)) hb , hxy ∣₁ ∣₁ })
@@ -903,7 +895,7 @@ Every entry of the coded relation has endpoints in `P`. The proof reads its trun
 ```agda
   Rsub : (a b : SL.S) → Holds R a b
        → ⟨ fst a ∈ fst P ⟩ × ⟨ fst b ∈ fst P ⟩
-  Rsub a b h = PT.rec
+  Rsub a b h = rec₁
     (isProp× (snd (fst a ∈ fst P)) (snd (fst b ∈ fst P)))
     (λ { (_ , _ , ma , mb , _) → ma , mb })
 ```
@@ -1001,7 +993,7 @@ The forward comparison turns a predecessor step in the pulled-back relation into
 
 ```agda
   ≺-fwd : (a b : OT.Dom) → a OT.≺ b → ⟨ fst (v a) ∈ fst (v b) ⟩
-  ≺-fwd a b k = PT.rec (snd (fst (v a) ∈ fst (v b)))
+  ≺-fwd a b k = rec₁ (snd (fst (v a) ∈ fst (v b)))
     (λ { (x , y , _ , _ , ha , hb , hxy) →
       subst2 (λ s t → ⟨ s ∈ t ⟩)
         (svG (OT.up a) x (v a) ha (v-holds a))
@@ -1186,7 +1178,7 @@ To prove that the collapse image is an ordinal, one must show both that the imag
   ot-ord = tr , mem
     where
     mem : (x : V ℓ) → ⟨ x ∈ˢ fst C.otL ⟩ → isTransV x
-    mem x h = PT.rec (isPropIsTransV x)
+    mem x h = rec₁ (isPropIsTransV x)
 ```
 
 <!--en-->
@@ -1214,7 +1206,7 @@ It remains to show that the image itself is transitive. Given `y∈x` and `x∈o
 ```agda
     tr : isTransV (fst C.otL)
     tr {x} {y} y∈x x∈ot =
-      PT.rec (snd (y ∈ˢ fst C.otL)) outer (C.otL-out x x∈ot)
+      rec₁ (snd (y ∈ˢ fst C.otL)) outer (C.otL-out x x∈ot)
       where
       outer : Σ[ b ∈ OT.Dom ] (C.col b ≡ x) → ⟨ y ∈ˢ fst C.otL ⟩
 ```
@@ -1228,7 +1220,7 @@ After replacing `x` by `col b`, the collapse equation for membership in `col b` 
 <!--/-->
 
 ```agda
-      outer (b , e) = PT.rec (snd (y ∈ˢ fst C.otL)) inner
+      outer (b , e) = rec₁ (snd (y ∈ˢ fst C.otL)) inner
         (C.col-out b y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym e) y∈x))
         where
         inner : Σ[ r ∈ OT.Dom ] ((r OT.≺ b) × (C.col r ≡ y))
@@ -1287,7 +1279,7 @@ Membership `w∈otL` supplies a preimage index only under propositional truncati
 
 ```agda
   fib : (w : V ℓ) → ⟨ w ∈ˢ fst C.otL ⟩ → Fib w
-  fib w h = PT.rec (isPropFib w) (λ z → z) (C.otL-out w h)
+  fib w h = rec₁ (isPropFib w) (λ z → z) (C.otL-out w h)
 
 ```
 
@@ -1346,7 +1338,7 @@ Trichotomy first considers `μ∈δ`. In this branch, `below-succ-injects` appli
 
 ```agda
     go : Tri (fst C.otL) (fst δ) → InjL δ P
-    go (inl ot∈δ)       = Empty.rec (Cantor.no-inj zf κ
+    go (inl ot∈δ)       = ⊥₀-rec (Cantor.no-inj zf κ
       (injl-trans P C.otL κ power-into-ot
         (below-succ-injects κ δ sc C.otL ot-ord ot∈δ)))
     go (inr (inl e))    =
@@ -1385,5 +1377,5 @@ The theorem receives a successor-cardinal witness `sc` and a propositionally tru
 ```agda
 succ-into-power : (zf : ModelL.isZFModel) → SuccIntoPower zf
 succ-into-power zf κ δ κ∉ω sc =
-  PT.rec squash₁ (λ { (G , code) → Build.result zf κ δ sc G code })
+  rec₁ squash₁ (λ { (G , code) → Build.result zf κ δ sc G code })
 ```

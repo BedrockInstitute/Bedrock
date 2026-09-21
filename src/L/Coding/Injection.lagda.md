@@ -59,7 +59,6 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; svAt; svAt-out; domAt; domAt-in )
 open import V.Presentation {ℓ} using ( member; fiber; ↪-inj )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 ```
 
 <!--en-->
@@ -72,8 +71,6 @@ Truth values here are propositions with their proofs of propositionhood, and the
 
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 
 open hPropStructure 𝒮ʟ using ( S )
 ```
@@ -270,7 +267,7 @@ To prove `Fib x` proposition-valued, compare `(y,p)` and `(y′,q)`. Single-valu
       (Σ≡Prop (λ z → snd (isL z)) (svAt-out zero γ sv x y y' p q))
 
   toVal : (x : S) → ∥ Fib x ∥₁ → Fib x
-  toVal x = PT.rec (isPropFib x) (λ z → z)
+  toVal x = rec₁ (isPropFib x) (λ z → z)
 ```
 
 <!--en-->

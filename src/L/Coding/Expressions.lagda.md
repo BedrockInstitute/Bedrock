@@ -85,10 +85,6 @@ The numerals need one compatibility fact. The internal numeral `numeralL k` real
 ```agda
         ; env; cons; shiftPairAt; sgl0At; pair0At; tag0At )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-
-open import Cubical.Data.Vec using ( map )
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
 ```
 
 <!--en-->
@@ -100,8 +96,6 @@ The ambient hierarchy `V ℓ` is an h-set, so the equality of two of its sets is
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_; sucV )
@@ -290,9 +284,9 @@ The hypothesis of the pair case is a truncated bounded existential with three la
 <!--/-->
 
 ```agda
-  out (pair a b) ρ q γ = PT.rec (setIsSet _ _) (λ { (s , s∈ , hs) →
-    PT.rec (setIsSet _ _) (λ { (u , u∈ , hu) →
-      PT.rec (setIsSet _ _) (λ { (v , v∈ , p , ha , hb) →
+  out (pair a b) ρ q γ = rec₁ (setIsSet _ _) (λ { (s , s∈ , hs) →
+    rec₁ (setIsSet _ _) (λ { (u , u∈ , hu) →
+      rec₁ (setIsSet _ _) (λ { (v , v∈ , p , ha , hb) →
         subst ⟨_⟩ (prAtL-adequate (suc (suc (suc q))) (suc zero) zero (v ∷ u ∷ s ∷ γ)) p
         ∙ cong₂ pr (out a (lift3 ρ) (suc zero) (v ∷ u ∷ s ∷ γ) ha)
 ```
@@ -424,18 +418,18 @@ The two directions assemble into the advertised form. `adequate` states that the
 ```
 
 <!--en-->
-The outward reader of `member` eliminates the truncated bounded existential and receives a member `x`, its membership proof `h`, and the proof `p` that `x`'s extended assignment satisfies the expression reader. Applying adequacy outward converts `p` into the equation `fst x ≡ value e ...`; transporting `h` along that equation turns membership of `fst x` into membership of the denoted value. The target is the membership proposition `value e ... ∈ fst (⟦ C ⟧ γ)`, whose second component supplies exactly the propositionhood required by `PT.rec`.
+The outward reader of `member` eliminates the truncated bounded existential and receives a member `x`, its membership proof `h`, and the proof `p` that `x`'s extended assignment satisfies the expression reader. Applying adequacy outward converts `p` into the equation `fst x ≡ value e ...`; transporting `h` along that equation turns membership of `fst x` into membership of the denoted value. The target is the membership proposition `value e ... ∈ fst (⟦ C ⟧ γ)`, whose second component supplies exactly the propositionhood required by `rec₁`.
 <!--zh-->
-`member` 的向外读式消去截断的有界存在，得到成员 `x`、其隶属证明 `h`，以及「`x` 的扩展赋值满足表达式读式」的证明 `p`。把充分性沿向外方向施于 `p`，得到等式 `fst x ≡ value e ...`；再沿这条等式搬运 `h`，便把 `fst x` 的隶属变成所指取值的隶属。目标正是隶属命题 `value e ... ∈ fst (⟦ C ⟧ γ)`，其第二分量给出 `PT.rec` 所需的命题性证明。
+`member` 的向外读式消去截断的有界存在，得到成员 `x`、其隶属证明 `h`，以及「`x` 的扩展赋值满足表达式读式」的证明 `p`。把充分性沿向外方向施于 `p`，得到等式 `fst x ≡ value e ...`；再沿这条等式搬运 `h`，便把 `fst x` 的隶属变成所指取值的隶属。目标正是隶属命题 `value e ... ∈ fst (⟦ C ⟧ γ)`，其第二分量给出 `rec₁` 所需的命题性证明。
 <!--ja-->
-`member` の外向きの読みは、截断された有界存在を消去し、要素 `x`、その所属の証明 `h`、そして `x` で拡張した割り当てが表現の読みを満たす証明 `p` を受け取ります。妥当性を外向きに `p` に適用すると等式 `fst x ≡ value e ...` が得られ、その等式に沿って `h` を輸送すれば、`fst x` の所属が表現の値の所属へ移ります。対象は所属命題 `value e ... ∈ fst (⟦ C ⟧ γ)` であり、その第二成分が `PT.rec` に必要な命題性の証明を与えます。
+`member` の外向きの読みは、截断された有界存在を消去し、要素 `x`、その所属の証明 `h`、そして `x` で拡張した割り当てが表現の読みを満たす証明 `p` を受け取ります。妥当性を外向きに `p` に適用すると等式 `fst x ≡ value e ...` が得られ、その等式に沿って `h` を輸送すれば、`fst x` の所属が表現の値の所属へ移ります。対象は所属命題 `value e ... ∈ fst (⟦ C ⟧ γ)` であり、その第二成分が `rec₁` に必要な命題性の証明を与えます。
 <!--/-->
 
 ```agda
 
   member-out : ∀ {n} (e : Expr n) (C : Term S n) (γ : S ^ n)
               → ⟨ γ ⊨ member e C ⟩ → ⟨ value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ) ⟩
-  member-out e C γ = PT.rec (snd (value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ)))
+  member-out e C γ = rec₁ (snd (value e (λ i → fst (lookup i γ)) ∈ fst (⟦ C ⟧ γ)))
     (λ { (x , h , p) → subst (λ v → ⟨ v ∈ fst (⟦ C ⟧ γ) ⟩) (out e suc zero (x ∷ γ) p) h })
 
   member-in : ∀ {n} (e : Expr n) (C : Term S n) (γ : S ^ n)

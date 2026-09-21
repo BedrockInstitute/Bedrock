@@ -36,6 +36,7 @@ The external target has a specific membership shape: `pr U W = ⁅ ⁅ U ⁆s , 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Sum using () renaming ( map to sumMap )
 
 module L.Coding.PairFormulas {ℓ : Level} where
 
@@ -73,12 +74,6 @@ Singleton and unordered-pair membership are supplied in two equivalent forms: hi
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Unit using ( tt )
-import Cubical.Data.Sum as Sum
-open Sum using ( _⊎_; inl; inr )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁ )
 ```
 
 <!--en-->
@@ -90,7 +85,6 @@ The semantics takes its truth values in `hProp` at level `ℓ-suc ℓ`. A formul
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ )
@@ -235,18 +229,18 @@ pair-char x u v hu hv hall = extensionalV (λ y → ⇔toPath (sub₁ y) (sub₂
 ```
 
 <!--en-->
-The proof of `pair-char` follows the same plan, with one new feature: the every-member hypothesis is truncated, so the forward direction `sub₁` cannot pattern-match on which side `y` is on. Instead it eliminates the truncation `PT.rec` into the membership proposition `⟨ y ∈ ⁅ u , v ⁆ ⟩`, which is indeed proposition-valued, and dispatches on the two sides of the sum: a member equal to `u` enters the pair from the left, one equal to `v` from the right. This is the sanctioned way to use a merely-disjunct fact.
+The proof of `pair-char` follows the same plan, with one new feature: the every-member hypothesis is truncated, so the forward direction `sub₁` cannot pattern-match on which side `y` is on. Instead it eliminates the truncation `rec₁` into the membership proposition `⟨ y ∈ ⁅ u , v ⁆ ⟩`, which is indeed proposition-valued, and dispatches on the two sides of the sum: a member equal to `u` enters the pair from the left, one equal to `v` from the right. This is the sanctioned way to use a merely-disjunct fact.
 <!--zh-->
-`pair-char` 的证明遵循同一计划，但有一个新特点：「每个成员」假设是截断的，故前进方向 `sub₁` 不能对 `y` 在哪一侧做模式匹配。它改为用 `PT.rec` 把截断消去到确为命题值的隶属命题 `⟨ y ∈ ⁅ u , v ⁆ ⟩` 中，再在和类型的两侧上分派：等于 `u` 的成员从左边进入那个对，等于 `v` 的成员从右边进入。这是使用仅仅成立的析取事实的正当方式。
+`pair-char` 的证明遵循同一计划，但有一个新特点：「每个成员」假设是截断的，故前进方向 `sub₁` 不能对 `y` 在哪一侧做模式匹配。它改为用 `rec₁` 把截断消去到确为命题值的隶属命题 `⟨ y ∈ ⁅ u , v ⁆ ⟩` 中，再在和类型的两侧上分派：等于 `u` 的成员从左边进入那个对，等于 `v` 的成员从右边进入。这是使用仅仅成立的析取事实的正当方式。
 <!--ja-->
-`pair-char` の証明は同じ計画に従いますが、新しい特徴が一つあります。「すべての要素」の仮定は丸められているので、順方向の `sub₁` は `y` がどちらの側かでパターンマッチできません。代わりに、`PT.rec` で丸めを、実際に命題値である所属の命題 `⟨ y ∈ ⁅ u , v ⁆ ⟩` へ消去し、直和の二つの側で場合分けします。`u` に等しい要素は対に左から、`v` に等しい要素は右から入ります。これが命題的に切り詰められた選言の事実を用いる正しいやり方です。
+`pair-char` の証明は同じ計画に従いますが、新しい特徴が一つあります。「すべての要素」の仮定は丸められているので、順方向の `sub₁` は `y` がどちらの側かでパターンマッチできません。代わりに、`rec₁` で丸めを、実際に命題値である所属の命題 `⟨ y ∈ ⁅ u , v ⁆ ⟩` へ消去し、直和の二つの側で場合分けします。`u` に等しい要素は対に左から、`v` に等しい要素は右から入ります。これが命題的に切り詰められた選言の事実を用いる正しいやり方です。
 <!--/-->
 
 ```agda
   where
   sub₁ : (y : V ℓ) → ⟨ y ∈ x ⟩ → ⟨ y ∈ ⁅ u , v ⁆ ⟩
-  sub₁ y hy = PT.rec (⟨ y ∈ ⁅ u , v ⁆ ⟩isProp)
-    (Sum.rec (∈pair-introL {u = u} {v = v}) (∈pair-introR {u = u} {v = v})) (hall y hy)
+  sub₁ y hy = rec₁ (⟨ y ∈ ⁅ u , v ⁆ ⟩isProp)
+    (⊎-rec (∈pair-introL {u = u} {v = v}) (∈pair-introR {u = u} {v = v})) (hall y hy)
   sub₂ : (y : V ℓ) → ⟨ y ∈ ⁅ u , v ⁆ ⟩ → ⟨ y ∈ x ⟩
 ```
 
@@ -259,8 +253,8 @@ The backward direction `sub₂` mirrors this: from membership in `⁅ u , v ⁆`
 <!--/-->
 
 ```agda
-  sub₂ y hy = PT.rec (⟨ y ∈ x ⟩isProp)
-    (Sum.rec (λ e → subst (λ z → ⟨ z ∈ x ⟩) (sym e) hu)
+  sub₂ y hy = rec₁ (⟨ y ∈ x ⟩isProp)
+    (⊎-rec (λ e → subst (λ z → ⟨ z ∈ x ⟩) (sym e) hu)
              (λ e → subst (λ z → ⟨ z ∈ x ⟩) (sym e) hv)) (∈pair-elim hy)
 ```
 
@@ -363,7 +357,7 @@ The first two hypotheses each provide, merely, a member of `Q` together with a p
   → ((y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ SglOf U y ⊎ PairOf U W y ∥₁)
   → Q ≡ pr U W
 prChar-fwd Q U W h₁ h₂ h₃ = pair-char Q ⁅ U ⁆s ⁅ U , W ⁆
-  (PT.rec (⟨ ⁅ U ⁆s ∈ Q ⟩isProp)
+  (rec₁ (⟨ ⁅ U ⁆s ∈ Q ⟩isProp)
 ```
 
 <!--en-->
@@ -376,9 +370,9 @@ The universal clause needs no elimination at all: for each member `y` of `Q`, th
 
 ```agda
     (λ { (w , hw , h) → subst (λ z → ⟨ z ∈ Q ⟩) (sglOf→≡ h) hw }) h₁)
-  (PT.rec (⟨ ⁅ U , W ⁆ ∈ Q ⟩isProp)
+  (rec₁ (⟨ ⁅ U , W ⁆ ∈ Q ⟩isProp)
     (λ { (w , hw , h) → subst (λ z → ⟨ z ∈ Q ⟩) (pairOf→≡ h) hw }) h₂)
-  (λ y hy → PT.map (Sum.map sglOf→≡ pairOf→≡) (h₃ y hy))
+  (λ y hy → map₁ (sumMap sglOf→≡ pairOf→≡) (h₃ y hy))
 
 
 prChar-bwd : (Q U W : V ℓ) → Q ≡ pr U W
@@ -427,7 +421,7 @@ The universal clause reduces to the classification of the pair construction. For
 ```agda
   h₂ = ∣ ⁅ U , W ⁆ , (inQ (∈pair-introR refl) , pairOf⁅⁆ U W) ∣₁
   h₃ : (y : V ℓ) → ⟨ y ∈ Q ⟩ → ∥ SglOf U y ⊎ PairOf U W y ∥₁
-  h₃ y y∈Q = PT.map (Sum.rec (λ q → inl (sglOf-subst q)) (λ q → inr (pairOf-subst q)))
+  h₃ y y∈Q = map₁ (⊎-rec (λ q → inl (sglOf-subst q)) (λ q → inr (pairOf-subst q)))
     (∈pair-elim (subst (λ w → ⟨ y ∈ w ⟩) e y∈Q))
 ```
 
@@ -500,11 +494,11 @@ prAt q u v = (∃̇∈ (var q) (sglAt zero (suc u)))
 ```
 
 <!--en-->
-Boundedness is certified syntactically. The checker `checkΔ₀` traverses the assembled formula, and since every node is an atom, a connective, or a quantifier bounded by a variable, it accepts with the trivial certificate `tt`, yielding `Δ₀-prAt`. This places the reader in the bounded class whose satisfaction is absolute between transitive models, a fact the later chapters on absoluteness rely on.
+Boundedness is certified syntactically. The checker `checkΔ₀` traverses the assembled formula, and since every node is an atom, a connective, or a quantifier bounded by a variable, it accepts with the trivial certificate `_`, yielding `Δ₀-prAt`. This places the reader in the bounded class whose satisfaction is absolute between transitive models, a fact the later chapters on absoluteness rely on.
 <!--zh-->
-有界性由语法给出证书。检查器 `checkΔ₀` 遍历组装后的公式，由于每个节点都是原子、联结词或以变元为界的量词，它以平凡的证书 `tt` 接受，得到 `Δ₀-prAt`。这把该读式放入那个有界类，其满足关系在传递模型之间是绝对的，后续关于绝对性的各章正依赖这一点。
+有界性由语法给出证书。检查器 `checkΔ₀` 遍历组装后的公式，由于每个节点都是原子、联结词或以变元为界的量词，它以平凡的证书 `_` 接受，得到 `Δ₀-prAt`。这把该读式放入那个有界类，其满足关系在传递模型之间是绝对的，后续关于绝对性的各章正依赖这一点。
 <!--ja-->
-有界性は構文的に証明書を与えられます。検査器 `checkΔ₀` が組み立てられた論理式をたどり、すべての節点が原子、結合子、あるいは変数で限られた量化子であるため、自明な証明書 `tt` とともに受理され、`Δ₀-prAt` が得られます。これでこの読解式は有界なクラスに属し、その充足は推移的モデルの間で絶対的です。後の絶対性に関する章が依拠するのはこの事実です。
+有界性は構文的に証明書を与えられます。検査器 `checkΔ₀` が組み立てられた論理式をたどり、すべての節点が原子、結合子、あるいは変数で限られた量化子であるため、自明な証明書 `_` とともに受理され、`Δ₀-prAt` が得られます。これでこの読解式は有界なクラスに属し、その充足は推移的モデルの間で絶対的です。後の絶対性に関する章が依拠するのはこの事実です。
 <!--/-->
 
 ```agda

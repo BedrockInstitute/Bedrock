@@ -134,8 +134,6 @@ The proofs repeatedly transport equalities of sets and ordered pairs. They also 
 ```agda
 import FOL.Absoluteness
 import FOL.ZFModel
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Data.Nat.Order using
 ```
 
@@ -151,7 +149,6 @@ This induction uses the well-foundedness of natural-number `<`: the value at `k`
   ( _<_; <-trans; <-asym; pred-≤-pred; <-wellfounded; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
 open import Cubical.Induction.WellFounded using ( module WFI )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; enum; toℕ∘enum )
 ```
 
@@ -164,10 +161,6 @@ Several witnesses below are available only under propositional truncation. Such 
 <!--/-->
 
 ```agda
-open import Cubical.Data.FinData.Base using ( toℕ )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```
 
@@ -496,7 +489,7 @@ Suppose that, on the same carrier `A`, every instance of `R' w z` implies `R w z
 precedes-map : (R R' : V ℓ → V ℓ → hProp (ℓ-suc ℓ)) (A x y : V ℓ)
              → ((w z : V ℓ) → ⟨ w ∈ A ⟩ → ⟨ z ∈ A ⟩ → ⟨ R' w z ⟩ → ⟨ R w z ⟩)
              → ⟨ precedes R A x y ⟩ → ⟨ precedes R' A x y ⟩
-precedes-map R R' A x y f = PT.map step
+precedes-map R R' A x y f = map₁ step
   where
 ```
 
@@ -717,11 +710,11 @@ The base case reflects `before zero`: since `relAt zero` is empty, a supposed me
 <!--/-->
 
 ```agda
-relAt-out zero zv h = Empty.rec
+relAt-out zero zv h = ⊥₀-rec
   (∅-empty zv (∈∈ₛ {a = zv} {b = ∅} .fst
     (subst (λ t → ⟨ zv ∈ fst t ⟩) relAt-zero h)))
-relAt-out (suc n) zv h = PT.rec squash₁
-  (λ { (r , (qr , ha)) → PT.rec squash₁
+relAt-out (suc n) zv h = rec₁ squash₁
+  (λ { (r , (qr , ha)) → rec₁ squash₁
 ```
 
 <!--en-->
@@ -733,8 +726,8 @@ Opening the truncated witnesses reveals a candidate predecessor relation, its fi
 <!--/-->
 
 ```agda
-    (λ { (a , (qa , hx)) → PT.rec squash₁
-      (λ { (x , (x∈ , hy)) → PT.map (atY r a x qr qa x∈) hy }) hx }) ha }) cond
+    (λ { (a , (qa , hx)) → rec₁ squash₁
+      (λ { (x , (x∈ , hy)) → map₁ (atY r a x qr qa x∈) hy }) hx }) ha }) cond
   where
   zS : S
   zS = memS (relAt (suc n)) zv h
@@ -917,7 +910,7 @@ For `k = 0`, a `RelOf` witness already contains an impossible proof of `before z
 
 ```agda
 
-relAt-in zero zv (x , (y , (x∈ , (y∈ , (qq , hb))))) = Empty.rec* hb
+relAt-in zero zv (x , (y , (x∈ , (y∈ , (qq , hb))))) = ⊥*-rec hb
 relAt-in (suc n) zv (x , (y , (x∈ , (y∈ , (qq , hb))))) =
   subst (λ t → ⟨ t ∈ fst (relAt (suc n)) ⟩) (prS-fst x y ∙ sym qq)
     (subst ⟨_⟩ (sym (relAt-mem n (prS x y))) (inBound , cond))
@@ -965,7 +958,7 @@ The hypothesis `before (suc n) x y` unfolds to earliest disagreement using `befo
 ```agda
   held : ⟨ precedes (Rel n) (finiteStage n) (fst x) (fst y) ⟩
   held = precedes-map (before n) (Rel n) (finiteStage n) (fst x) (fst y)
-    (λ w t hw ht hR → PT.rec (snd (before n w t)) (readBack w t)
+    (λ w t hw ht hR → rec₁ (snd (before n w t)) (readBack w t)
       (relAt-out n (pr w t) hR))
     hb
 ```
@@ -1064,7 +1057,7 @@ The useful outward interface starts with a known pair `pr u v`, where both endpo
 relAt-rep : (n : ℕ) (u v : V ℓ)
           → ⟨ u ∈ finiteStage n ⟩ → ⟨ v ∈ finiteStage n ⟩
           → ⟨ pr u v ∈ fst (relAt n) ⟩ → ⟨ before n u v ⟩
-relAt-rep n u v hu hv h = PT.rec (snd (before n u v)) read (relAt-out n (pr u v) h)
+relAt-rep n u v hu hv h = rec₁ (snd (before n u v)) read (relAt-out n (pr u v) h)
   where
 ```
 
@@ -1183,7 +1176,7 @@ StepOf : ∀ {n} → Fin n → Fin n → S ^ n → V ℓ → Type (ℓ-suc ℓ)
 StepOf b f γ zv =
   Σ[ c ∈ S ] Σ[ r ∈ S ] Σ[ x ∈ S ] Σ[ y ∈ S ]
     ( ⟨ fst c ∈ fst (lookup b γ) ⟩
-    × ( ((d : S) → ⟨ fst d ∈ fst (lookup b γ) ⟩ → ⟨ fst c ∈ fst d ⟩ → Empty.⊥)
+    × ( ((d : S) → ⟨ fst d ∈ fst (lookup b γ) ⟩ → ⟨ fst c ∈ fst d ⟩ → ⊥₀)
 ```
 
 <!--en-->
@@ -1260,7 +1253,7 @@ For a fixed first endpoint `x`, `AtY` packages the remaining endpoint `y`, its m
 ```agda
     MaxOf : (c : S) → Type (ℓ-suc ℓ)
     MaxOf c = (d : S) → ⟨ fst d ∈ fst (lookup b γ) ⟩ → ⟨ fst c ∈ fst d ⟩
-            → Empty.⊥
+            → ⊥₀
 
 ```
 
@@ -1374,15 +1367,15 @@ Because the desired conclusion is itself propositionally truncated, the hidden `
 ```
 
 <!--en-->
-The inner conversion assembles one explicit `StepOf` witness from the recovered data, and `PT.map` places it back under propositional truncation. This finishes the outward semantic reading without producing a canonical predecessor or endpoint witness.
+The inner conversion assembles one explicit `StepOf` witness from the recovered data, and `map₁` places it back under propositional truncation. This finishes the outward semantic reading without producing a canonical predecessor or endpoint witness.
 <!--zh-->
-内层转换由恢复出的资料装配一份显式 `StepOf` 见证，`PT.map` 再把它放回命题截断之下。由此完成向外的语义读法，同时不产生规范的前驱或端点见证。
+内层转换由恢复出的资料装配一份显式 `StepOf` 见证，`map₁` 再把它放回命题截断之下。由此完成向外的语义读法，同时不产生规范的前驱或端点见证。
 <!--ja-->
-内側の変換は復元したデータから明示的な `StepOf` の証人を一つ組み立て、`PT.map` がそれを命題的切り詰めの下へ戻します。これで、標準的な直前要素や端点の証人を作ることなく、外向きの意味論的な読みが完了します。
+内側の変換は復元したデータから明示的な `StepOf` の証人を一つ組み立て、`map₁` がそれを命題的切り詰めの下へ戻します。これで、標準的な直前要素や端点の証人を作ることなく、外向きの意味論的な読みが完了します。
 <!--/-->
 
 ```agda
-      PT.map (atY c r A A' x c∈ cmax hf qA qA' x∈) hy
+      map₁ (atY c r A A' x c∈ cmax hf qA qA' x∈) hy
 
 ```
 
@@ -1427,7 +1420,7 @@ The stage graph supplies exactly that identification. Its functionality theorem 
 <!--/-->
 
 ```agda
-      PT.rec squash₁ (atX c r A A' c∈ cmax hf qA qA') hx
+      rec₁ squash₁ (atX c r A A' c∈ cmax hf qA qA') hx
       where
       qA' : fst A' ≡ Lset (fst (lookup b γ))
       qA' = Lset-only zero (sh4 b) (A' ∷ A ∷ r ∷ c ∷ γ) hg ob
@@ -1463,7 +1456,7 @@ Interpreting this layer first requires the equality that tells us which stage `A
         → ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
         → AtA c r → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
     atA c r c∈ cmax hf (A , (hg , hA')) =
-      PT.rec squash₁ (atA' c r A c∈ cmax hf qA) hA'
+      rec₁ squash₁ (atA' c r A c∈ cmax hf qA) hA'
 ```
 
 <!--en-->
@@ -1508,7 +1501,7 @@ The adequacy of `appAt` converts its satisfaction judgment into the ambient memb
 ```agda
     atR : (c : S) → ⟨ fst c ∈ fst (lookup b γ) ⟩ → MaxOf c
         → AtR c → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
-    atR c c∈ cmax (r , (happ , hA)) = PT.rec squash₁ (atA c r c∈ cmax hf) hA
+    atR c c∈ cmax (r , (happ , hA)) = rec₁ squash₁ (atA c r c∈ cmax hf) hA
       where
       hf : ⟨ pr (fst c) (fst r) ∈ fst (lookup f γ) ⟩
 ```
@@ -1553,7 +1546,7 @@ The bounded negation in the formula is interpreted in a lifted universe. Lowerin
 ```agda
 
     atC : AtC → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
-    atC (c , (c∈ , (hmax , hr))) = PT.rec squash₁ (atR c c∈ cmax) hr
+    atC (c , (c∈ , (hmax , hr))) = rec₁ squash₁ (atR c c∈ cmax) hr
       where
       cmax : MaxOf c
       cmax d hd hc = lower (hmax d hd hc)
@@ -1585,7 +1578,7 @@ Starting from satisfaction of `RelBodyAt`, the outer existential yields only the
 ```agda
    RelBody-out : ⟨ γ ⊨ RelBodyAt z b f ⟩
                → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
-   RelBody-out = PT.rec squash₁ atC
+   RelBody-out = rec₁ squash₁ atC
 
 ```
 
@@ -1856,9 +1849,9 @@ For the first inclusion, each truncated step is mapped through `RelBody-in` and 
 
 ```agda
    RelStep-in into back = extAt-in-both v (RelBodyAt zero (suc b) (suc f)) γ
-     (λ w hw → PT.rec (snd ((w ∷ γ) ⊨ RelBodyAt zero (suc b) (suc f)))
+     (λ w hw → rec₁ (snd ((w ∷ γ) ⊨ RelBodyAt zero (suc b) (suc f)))
        (RelBody-in zero (suc b) (suc f) (w ∷ γ) ob) (into w hw))
-     (λ w h → PT.rec (snd (fst w ∈ fst (lookup v γ))) (back w)
+     (λ w h → rec₁ (snd (fst w ∈ fst (lookup v γ))) (back w)
        (RelBody-out zero (suc b) (suc f) (w ∷ γ) ob h))
 ```
 
@@ -1947,7 +1940,7 @@ Any comparison `before k x y` forces `k` to be a successor. At zero the relation
 
 ```agda
 before-suc : (k : ℕ) (x y : V ℓ) → ⟨ before k x y ⟩ → Σ[ m ∈ ℕ ] (k ≡ suc m)
-before-suc zero    x y h = Empty.rec* h
+before-suc zero    x y h = ⊥*-rec h
 before-suc (suc m) x y h = m , refl
 
 ```
@@ -1993,7 +1986,7 @@ Consider an explicit `StepOf` witness for a candidate value `x`. Its maximal ele
     into : (x : V ℓ) → StepOf b f γ x → ⟨ x ∈ fst (relAt k) ⟩
     into x (c , (r , (xx , (yy , (c∈ , (cmax , (hf , (xx∈ , (yy∈
            , (qx , hprec)))))))))) =
-      PT.rec (snd (x ∈ fst (relAt k))) atC
+      rec₁ (snd (x ∈ fst (relAt k))) atC
         (∈#-elim k (fst c) (subst (λ t → ⟨ fst c ∈ t ⟩) qb c∈))
 ```
 
@@ -2026,7 +2019,7 @@ Since `c` is coded by `# m`, its being maximal among the members of `# k` should
         ksuc = decide (suc m ≟ k)
           where
           decide : NatOrder.Trichotomy (suc m) k → k ≡ suc m
-          decide (NatOrder.lt hlt) = Empty.rec
+          decide (NatOrder.lt hlt) = ⊥₀-rec
 ```
 
 <!--en-->
@@ -2057,7 +2050,7 @@ If instead `k < suc m`, removing the successors yields `k ≤ m`, which is incom
                 (subst (λ t → ⟨ t ∈ # (suc m) ⟩) (sym qc)
                   (#mono m (suc m) NatOrder.≤-refl))))
           decide (NatOrder.eq e) = sym e
-          decide (NatOrder.gt hgt) = Empty.rec (<-asym hm (pred-≤-pred hgt))
+          decide (NatOrder.gt hgt) = ⊥₀-rec (<-asym hm (pred-≤-pred hgt))
 
 ```
 
@@ -2220,8 +2213,8 @@ It remains to show that `# m` is maximal among the members of `# k`. Given `d �
 
 ```agda
       cmax : (d : S) → ⟨ fst d ∈ fst (lookup b γ) ⟩
-           → ⟨ fst (numS m) ∈ fst d ⟩ → Empty.⊥
-      cmax d hd hc = PT.rec Empty.isProp⊥ step
+           → ⟨ fst (numS m) ∈ fst d ⟩ → ⊥₀
+      cmax d hd hc = rec₁ isProp⊥ step
         (∈#-elim k (fst d) (subst (λ t → ⟨ fst d ∈ t ⟩) qb hd))
         where
 ```
@@ -2235,7 +2228,7 @@ In a branch where `d ≡ # j`, membership of `d` in `# k = # (suc m)` gives `j �
 <!--/-->
 
 ```agda
-        step : Σ[ j ∈ ℕ ] ((j < k) × (fst d ≡ # j)) → Empty.⊥
+        step : Σ[ j ∈ ℕ ] ((j < k) × (fst d ≡ # j)) → ⊥₀
         step (j , (hj , qd)) = <-asym mj (pred-≤-pred (subst (λ i → j < i) qk hj))
           where
           mj : m < j
@@ -2342,7 +2335,7 @@ The lemma `step-rel` proves that any set satisfying the step formula at index `k
   step-rel h = cong fst (extensionalL {a = lookup v γ} {b = relAt k} pt)
     where
     fwd : (x : S) → ⟨ fst x ∈ fst (lookup v γ) ⟩ → ⟨ fst x ∈ fst (relAt k) ⟩
-    fwd x hx = PT.rec (snd (fst x ∈ fst (relAt k))) (into (fst x))
+    fwd x hx = rec₁ (snd (fst x ∈ fst (relAt k))) (into (fst x))
 ```
 
 <!--en-->
@@ -2368,7 +2361,7 @@ For the reverse membership implication, `relAt-out` gives a propositionally trun
 
 ```agda
     bwd : (x : S) → ⟨ fst x ∈ fst (relAt k) ⟩ → ⟨ fst x ∈ fst (lookup v γ) ⟩
-    bwd x hx = PT.rec (snd (fst x ∈ fst (lookup v γ)))
+    bwd x hx = rec₁ (snd (fst x ∈ fst (lookup v γ)))
       (λ ro → RelStep-back v b f γ ob h x (from (fst x) ro))
       (relAt-out k (fst x) hx)
 
@@ -2401,15 +2394,15 @@ The converse lemma `rel-step` starts from an equality between the proposed value
   rel-step q = RelStep-in v b f γ ob toStep backStep
     where
     toStep : (w : S) → ⟨ fst w ∈ fst (lookup v γ) ⟩ → ∥ StepOf b f γ (fst w) ∥₁
-    toStep w hw = PT.map (from (fst w))
+    toStep w hw = map₁ (from (fst w))
 ```
 
 <!--en-->
-The equality first transports a candidate member into `relAt k`. The outward representation of `relAt k` supplies only a propositionally truncated `RelOf k` record, and `PT.map from` preserves that truncation while converting its possible inhabitants into step witnesses.
+The equality first transports a candidate member into `relAt k`. The outward representation of `relAt k` supplies only a propositionally truncated `RelOf k` record, and `map₁ from` preserves that truncation while converting its possible inhabitants into step witnesses.
 <!--zh-->
-该等式先把候选成员运入 `relAt k`。`relAt k` 的向外表示只给出命题截断的 `RelOf k` 记录，而 `PT.map from` 在把其中可能的元素化为步进见证时保留这层命题截断。
+该等式先把候选成员运入 `relAt k`。`relAt k` 的向外表示只给出命题截断的 `RelOf k` 记录，而 `map₁ from` 在把其中可能的元素化为步进见证时保留这层命题截断。
 <!--ja-->
-この等式により、まず候補の要素を `relAt k` へ移す。`relAt k` の外向きの表現が与えるのは、命題的に切り詰められた `RelOf k` の記録だけであり、`PT.map from` はその切り詰めを保ったまま、あり得る要素をステップの証人へ変換する。
+この等式により、まず候補の要素を `relAt k` へ移す。`relAt k` の外向きの表現が与えるのは、命題的に切り詰められた `RelOf k` の記録だけであり、`map₁ from` はその切り詰めを保ったまま、あり得る要素をステップの証人へ変換する。
 <!--/-->
 
 ```agda
@@ -2465,7 +2458,7 @@ Domain completeness in `ApproxAt` supplies the existence of a value `u` at the n
 ```agda
         → ⟨ pr (# j) (fst (relAt j)) ∈ fst (lookup f γ) ⟩
 entryOf f a γ k qa h j hj vs =
-  PT.rec (snd (pr (# j) (fst (relAt j)) ∈ fst (lookup f γ))) named
+  rec₁ (snd (pr (# j) (fst (relAt j)) ∈ fst (lookup f γ))) named
     (ApproxAt-value f a γ h (numS j)
       (subst (λ t → ⟨ fst (numS j) ∈ t ⟩) (sym qa)
 ```
@@ -2619,7 +2612,7 @@ The graph formula hides, under propositional truncation, an approximation up to 
 module _ {n : ℕ} (v b : Fin n) (γ : S ^ n) (k : ℕ)
          (qb : fst (lookup b γ) ≡ # k) where
   rel-only : ⟨ γ ⊨ RelGraphAt v b ⟩ → fst (lookup v γ) ≡ fst (relAt k)
-  rel-only h = PT.rec (setIsSet (fst (lookup v γ)) (fst (relAt k))) read
+  rel-only h = rec₁ (setIsSet (fst (lookup v γ)) (fst (relAt k))) read
     (RelGraph-out v b γ h)
 ```
 
@@ -2813,7 +2806,7 @@ Conversely, membership in `approxSet k` yields only a propositionally truncated 
 
 approx-mem-out : (k : ℕ) (y : V ℓ) → ⟨ y ∈ fst (approxSet k) ⟩
                → ∥ Σ[ j ∈ ℕ ] ((j < k) × (y ≡ pr (# j) (fst (relAt j)))) ∥₁
-approx-mem-out k y h = PT.map named
+approx-mem-out k y h = map₁ named
   (finSet-out k (λ i → fst (famOf k i)) y
     (subst (λ t → ⟨ y ∈ t ⟩) (approxSet-fst k) h))
 ```
@@ -2843,7 +2836,7 @@ This membership description proves value correctness. If an entry with first com
 <!--/-->
 
 ```agda
-approxVals k m hm u hu = PT.rec (setIsSet (fst u) (fst (relAt m))) named
+approxVals k m hm u hu = rec₁ (setIsSet (fst u) (fst (relAt m))) named
   (approx-mem-out k (pr (# m) (fst u)) hu)
   where
   named : Σ[ j ∈ ℕ ] ((j < k) × (pr (# m) (fst u) ≡ pr (# j) (fst (relAt j))))
@@ -2922,7 +2915,7 @@ For the first direction, assume merely that some second component forms an entry
       where
       fwd : ⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
           → ⟨ fst x ∈ fst (lookup a γ) ⟩
-      fwd = PT.rec (snd (fst x ∈ fst (lookup a γ))) atY
+      fwd = rec₁ (snd (fst x ∈ fst (lookup a γ))) atY
         where
 ```
 
@@ -2937,7 +2930,7 @@ After transporting the entry into `approxSet k`, `approx-mem-out` produces a pro
 ```agda
         atY : Σ[ y ∈ S ] ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
             → ⟨ fst x ∈ fst (lookup a γ) ⟩
-        atY (y , p) = PT.rec (snd (fst x ∈ fst (lookup a γ))) named
+        atY (y , p) = rec₁ (snd (fst x ∈ fst (lookup a γ))) named
           (approx-mem-out k (pr (fst x) (fst y))
             (subst (λ t → ⟨ pr (fst x) (fst y) ∈ t ⟩) qf p))
 ```
@@ -2982,7 +2975,7 @@ For the converse direction, membership in `# k` is decoded as a propositionally 
 ```agda
       bwd : ⟨ fst x ∈ fst (lookup a γ) ⟩
           → ⟨ ∃[ y ∶ S ] pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
-      bwd hx = PT.map named
+      bwd hx = map₁ named
         (∈#-elim k (fst x) (subst (λ t → ⟨ fst x ∈ t ⟩) qa hx))
         where
 ```
@@ -3027,7 +3020,7 @@ It remains to verify the pointwise recursion condition. Every pair occurring in 
 ```agda
     onStep : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
            → ⟨ (y ∷ x ∷ γ) ⊨ RelStepAt zero (suc zero) (sh2 f) ⟩
-    onStep x y p = PT.rec (snd ((y ∷ x ∷ γ) ⊨ RelStepAt zero (suc zero) (sh2 f)))
+    onStep x y p = rec₁ (snd ((y ∷ x ∷ γ) ⊨ RelStepAt zero (suc zero) (sh2 f)))
       named
       (approx-mem-out k (pr (fst x) (fst y))
 ```
@@ -3158,11 +3151,11 @@ For any formula `φ` proved equal to the paired recursion graph, `famBuild` retu
 ```
 
 <!--en-->
-Replacement requires the fiber of satisfying outputs over each `c ∈ ωʟ` to be contractible. Membership in `ωʟ` provides only a propositionally truncated numeral representation; `PT.map` handles each explicit numeral case, and `mereFunct` combines the truncated existence with value uniqueness.
+Replacement requires the fiber of satisfying outputs over each `c ∈ ωʟ` to be contractible. Membership in `ωʟ` provides only a propositionally truncated numeral representation; `map₁` handles each explicit numeral case, and `mereFunct` combines the truncated existence with value uniqueness.
 <!--zh-->
-替换要求每个 `c ∈ ωʟ` 上满足公式的输出纤维都是收缩类型。属于 `ωʟ` 只提供经过命题截断的数码表示；`PT.map` 逐个处理显式数码情形，`mereFunct` 再把截断存在性与取值唯一性合成为收缩性。
+替换要求每个 `c ∈ ωʟ` 上满足公式的输出纤维都是收缩类型。属于 `ωʟ` 只提供经过命题截断的数码表示；`map₁` 逐个处理显式数码情形，`mereFunct` 再把截断存在性与取值唯一性合成为收缩性。
 <!--ja-->
-置換を使うには、各 `c ∈ ωʟ` 上で論理式を満たす出力のファイバーが可縮でなければならない。`ωʟ` への所属から得られる数項表示は命題的切り詰めだけである。`PT.map` が明示的な各数項の場合を処理し、`mereFunct` が切り詰められた存在と値の一意性を可縮性へまとめる。
+置換を使うには、各 `c ∈ ωʟ` 上で論理式を満たす出力のファイバーが可縮でなければならない。`ωʟ` への所属から得られる数項表示は命題的切り詰めだけである。`map₁` が明示的な各数項の場合を処理し、`mereFunct` が切り詰められた存在と値の一意性を可縮性へまとめる。
 <!--/-->
 
 ```agda
@@ -3170,7 +3163,7 @@ Replacement requires the fiber of satisfying outputs over each `c ∈ ωʟ` to b
     where
     fc : (c : S) → ⟨ c ∈ˢ ωʟ ⟩
        → isContr (Σ[ y ∈ S ] ⟨ (y ∷ c ∷ []) ⊨ φ ⟩)
-    fc c c∈ = mereFunct φ c (PT.map atK c∈)
+    fc c c∈ = mereFunct φ c (map₁ atK c∈)
 ```
 
 <!--en-->
@@ -3244,7 +3237,7 @@ For uniqueness, let `y'` be any other output satisfying `φ`. Reading the paired
 
 ```agda
         only : (y' : S) → ⟨ (y' ∷ c ∷ []) ⊨ φ ⟩ → y' ≡ prS c (relAt (lower j))
-        only y' h = PT.rec (isSetS y' (prS c (relAt (lower j)))) read
+        only y' h = rec₁ (isSetS y' (prS c (relAt (lower j)))) read
           (PairRelGraph-out zero (suc zero) (y' ∷ c ∷ []) φ qφ h)
           where
           read : PairOf zero (suc zero) (y' ∷ c ∷ []) φ qφ
@@ -3380,7 +3373,7 @@ For the converse specification, suppose an ordered pair belongs to the replaceme
            → ⟨ pr (fst cS) (fst rS) ∈ fst (r .fst .fst) ⟩
            → fst rS ≡ fst (relAt k)
     outFam cS rS k qc h =
-      PT.rec (setIsSet (fst rS) (fst (relAt k))) atD
+      rec₁ (setIsSet (fst rS) (fst (relAt k))) atD
 ```
 
 <!--en-->
@@ -3408,7 +3401,7 @@ Reading the paired graph yields, again under propositional truncation, a relatio
 <!--/-->
 
 ```agda
-      atD (d , (d∈ , hp)) = PT.rec (setIsSet (fst rS) (fst (relAt k))) read
+      atD (d , (d∈ , hp)) = rec₁ (setIsSet (fst rS) (fst (relAt k))) read
         (PairRelGraph-out zero (suc zero) (prS cS rS ∷ d ∷ []) φ qφ hp)
         where
         read : PairOf zero (suc zero) (prS cS rS ∷ d ∷ []) φ qφ
@@ -3630,7 +3623,7 @@ For the outward direction, satisfaction of the existential gives only a proposit
     BeforeAt-out : ⟨ γ ⊨ BeforeAt b x y ⟩
                  → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
     BeforeAt-out h =
-      PT.rec (snd (before m (fst (lookup x γ)) (fst (lookup y γ)))) atR h
+      rec₁ (snd (before m (fst (lookup x γ)) (fst (lookup y γ)))) atR h
 
 ```
 

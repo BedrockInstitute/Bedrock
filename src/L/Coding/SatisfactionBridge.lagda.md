@@ -38,6 +38,7 @@ whose separation operations are parameterized by `lem`.
 
 ```agda
 open import Base.Prelude
+open import Cubical.Foundations.Prelude using ( funExt⁻ )
 open import Base.Classical using ( LEM )
 
 ```
@@ -184,11 +185,6 @@ target is again a proposition, so no chosen witness is extracted.
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.Prelude using ( subst2; funExt⁻ )
-open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 ```
 
 <!--en-->
@@ -847,20 +843,20 @@ two directions of this logical equivalence explicit.
 
 <!--en-->
 In the forward direction, `cond∈-out`{.Agda} exposes the truncated candidates.
-The target `fst T ∈ fst U` is a proposition, so `PT.rec` may inspect each
+The target `fst T ∈ fst U` is a proposition, so `rec₁` may inspect each
 candidate package. At the environment `w ∷ v ∷ z ∷ []`, two applications of
 `tmIs-out` identify `v` with `T` and `w` with `U`. The two-variable transport
 `subst2` then carries the recorded relation `fst v ∈ fst w` to
 `fst T ∈ fst U`, which is exactly the inner interpretation of the atom.
 <!--zh-->
-在正向中，`cond∈-out`{.Agda} 展开经过截断的候选。目标`fst T ∈ fst U` 是命题，所以 `PT.rec` 可以逐个考察候选包。在环境`w ∷ v ∷ z ∷ []` 上，两次使用 `tmIs-out`，分别把 `v` 与 `T`、`w`与 `U` 认同。二元运输 `subst2` 随后把记录的关系 `fst v ∈ fst w`搬到 `fst T ∈ fst U`，这正是该原子的内层解释。
+在正向中，`cond∈-out`{.Agda} 展开经过截断的候选。目标`fst T ∈ fst U` 是命题，所以 `rec₁` 可以逐个考察候选包。在环境`w ∷ v ∷ z ∷ []` 上，两次使用 `tmIs-out`，分别把 `v` 与 `T`、`w`与 `U` 认同。二元运输 `subst2` 随后把记录的关系 `fst v ∈ fst w`搬到 `fst T ∈ fst U`，这正是该原子的内层解释。
 <!--ja-->
-順方向では、`cond∈-out`{.Agda} が切り詰められた候補を展開します。目標 `fst T ∈ fst U` は命題なので、`PT.rec` によって各候補の包みを調べられます。環境 `w ∷ v ∷ z ∷ []` で `tmIs-out` を二度使うと、`v` は `T` と、`w` は `U` とそれぞれ同一視されます。二変数の輸送`subst2` が、記録された関係 `fst v ∈ fst w` を `fst T ∈ fst U` へ運びます。これがこの原子の内側の解釈そのものです。
+順方向では、`cond∈-out`{.Agda} が切り詰められた候補を展開します。目標 `fst T ∈ fst U` は命題なので、`rec₁` によって各候補の包みを調べられます。環境 `w ∷ v ∷ z ∷ []` で `tmIs-out` を二度使うと、`v` は `T` と、`w` は `U` とそれぞれ同一視されます。二変数の輸送`subst2` が、記録された関係 `fst v ∈ fst w` を `fst T ∈ fst U` へ運びます。これがこの原子の内側の解釈そのものです。
 <!--/-->
 
 ```agda
     fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ∈̇ u)) ⟩ → ⟨ fst T ∈ fst U ⟩
-    fwd h = PT.rec (snd (fst T ∈ fst U))
+    fwd h = rec₁ (snd (fst T ∈ fst U))
       (λ { (v , (w , (ht , (hu , r)))) → subst2 (λ p s → ⟨ p ∈ s ⟩)
         (tmIs-out t δ (w ∷ v ∷ z ∷ []) (suc zero) (suc (suc zero)) q ht)
         (tmIs-out u δ (w ∷ v ∷ z ∷ []) zero (suc (suc zero)) q hu)
@@ -945,7 +941,7 @@ travels forward to the evaluation of `u`.
 
 ```agda
     fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (t ≐ u)) ⟩ → fst T ≡ fst U
-    fwd h = PT.rec (snd (intoL T ≈ˢ intoL U))
+    fwd h = rec₁ (snd (intoL T ≈ˢ intoL U))
       (λ { (v , (w , (ht , (hu , r)))) →
           sym (tmIs-out t δ (w ∷ v ∷ z ∷ []) (suc zero) (suc (suc zero)) q ht)
         ∙ r
@@ -1014,7 +1010,7 @@ representative.
   step∃ a ia δ z q = Sat-cond (mapFo intoL (∃̇ a)) δ z q ∙ ⇔toPath fwd bwd
     where
     fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (∃̇ a)) ⟩ → ⟨ δ ⊨ᴮ (∃̇ a) ⟩
-    fwd h = PT.rec squash₁
+    fwd h = rec₁ squash₁
 ```
 
 <!--en-->
@@ -1055,7 +1051,7 @@ the canonical environment `envFor (x ∷ δ)` for the extended assignment.
 
 ```agda
     bwd : ⟨ δ ⊨ᴮ (∃̇ a) ⟩ → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (∃̇ a)) ⟩
-    bwd h = cond∃-in B (mapFo intoL a) z (PT.map
+    bwd h = cond∃-in B (mapFo intoL a) z (map₁
       (λ { (x , ha) → intoL x , (snd x , (envFor (x ∷ δ)
          , ( consAtL-in δ x (envFor (x ∷ δ) ∷ intoL x ∷ z ∷ [])
                zero (suc zero) (suc (suc zero)) q refl (envFor-graph (x ∷ δ))
@@ -1183,8 +1179,8 @@ one is mapped to the semantic existential witness `(fst x , x∈B)`.
 
 ```agda
     fwd : ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (∃̇∈ t a)) ⟩ → ⟨ δ ⊨ᴮ (∃̇∈ t a) ⟩
-    fwd h = PT.rec squash₁
-      (λ { (w , (hw , hb)) → PT.map
+    fwd h = rec₁ squash₁
+      (λ { (w , (hw , hb)) → map₁
         (λ { (x , ((x∈B , x∈w) , (e , (hc , he)))) → (fst x , x∈B)
            , ( subst (λ s → ⟨ fst x ∈ s ⟩)
 ```
@@ -1225,7 +1221,7 @@ condition's inner existential remains propositionally truncated.
 ```agda
       (cond∃∈-out B (mapTm intoL t) (mapFo intoL a) z h)
     bwd : ⟨ δ ⊨ᴮ (∃̇∈ t a) ⟩ → ⟨ (z ∷ []) ⊨ cond B (mapFo intoL (∃̇∈ t a)) ⟩
-    bwd h = cond∃∈-in B (mapTm intoL t) (mapFo intoL a) z (PT.map
+    bwd h = cond∃∈-in B (mapTm intoL t) (mapFo intoL a) z (map₁
       (λ { (x , (hx , ha)) → intoL T
          , ( tmIs-in t δ (intoL T ∷ z ∷ []) zero (suc zero) q refl
 ```
@@ -1524,7 +1520,7 @@ arbitrary encoded environment.
 ```agda
   envSet-vectors : ∀ {n} (z : S) → ⟨ z ∈ˢ envSet B n ⟩
                  → ∥ Σ[ δ ∈ DB.SM ^ n ] (fst z ≡ graph δ) ∥₁
-  envSet-vectors {n} z h = PT.map
+  envSet-vectors {n} z h = map₁
     (λ { (g , qg) → tab g , qg ∙ sym (tab-graph g) }) (envSet-out B n z h)
 
 ```
@@ -1548,7 +1544,7 @@ representation.
   Sat-out : ∀ {n} (φ : Formula DB.SM n) (z : S)
           → ⟨ z ∈ˢ Sat B (mapFo intoL φ) ⟩
           → ∥ (Σ[ δ ∈ DB.SM ^ n ] ((fst z ≡ graph δ) × ⟨ δ ⊨ᴮ φ ⟩)) ∥₁
-  Sat-out {n} φ z h = PT.map
+  Sat-out {n} φ z h = map₁
     (λ { (g , qg) → tab g , (qg ∙ sym (tab-graph g)
 ```
 
@@ -1557,16 +1553,16 @@ The last two lines complete the outward reading without strengthening the
 recovered data. From the original proof of membership in `Sat`, `Sat-mem`
 supplies only the component asserting that `z` belongs to the environment set;
 `envSet-out` then returns an index family `g` and its graph equation under
-propositional truncation. Inside `PT.map`, `tab g` is the corresponding inner
+propositional truncation. Inside `map₁`, `tab g` is the corresponding inner
 assignment, and `qg ∙ sym (tab-graph g)` identifies the underlying set of `z`
 with its graph. With that equation fixed, `Sat-spec` transports the original
 membership proof `h` directly to inner satisfaction. The assignment and its
 satisfaction proof therefore remain inside the same truncation, with no choice
 or uniqueness claim.
 <!--zh-->
-最后两行完成外向读式，同时没有增强恢复所得资料的逻辑强度。从原来的 `Sat` 成员证明出发，`Sat-mem` 只取出「`z` 属于环境集」这一分量；`envSet-out` 随即在命题截断下返回索引族 `g` 及其图等式。在 `PT.map` 内，`tab g` 是相应的内层赋值，而 `qg ∙ sym (tab-graph g)` 把 `z` 的底层集合认同为该赋值的图。固定这条等式后，`Sat-spec` 直接把原成员证明 `h` 搬运为内层满足。因此，赋值及其满足证明始终留在同一个命题截断中，这里既没有作出选择，也没有声称唯一性。
+最后两行完成外向读式，同时没有增强恢复所得资料的逻辑强度。从原来的 `Sat` 成员证明出发，`Sat-mem` 只取出「`z` 属于环境集」这一分量；`envSet-out` 随即在命题截断下返回索引族 `g` 及其图等式。在 `map₁` 内，`tab g` 是相应的内层赋值，而 `qg ∙ sym (tab-graph g)` 把 `z` 的底层集合认同为该赋值的图。固定这条等式后，`Sat-spec` 直接把原成员证明 `h` 搬运为内层满足。因此，赋值及其满足证明始终留在同一个命题截断中，这里既没有作出选择，也没有声称唯一性。
 <!--ja-->
-最後の二行は、復元されたデータの論理的な強さを増すことなく、外向きの読みを完成させます。もとの `Sat` への所属証明から、`Sat-mem` が取り出すのは `z` が環境集合に属するという成分だけです。続いて `envSet-out` は、命題的切り詰めの中で添字族 `g` とそのグラフ等式を返します。`PT.map` の内部では、`tab g` が対応する内側の割当てであり、`qg ∙ sym (tab-graph g)` が `z` の基礎集合をその割当てのグラフと同一視します。この等式を固定すると、`Sat-spec` はもとの所属証明 `h` を直接、内側の充足へ運びます。したがって割当てとその充足証明は同じ切り詰めの中にとどまり、選択も一意性も主張されません。
+最後の二行は、復元されたデータの論理的な強さを増すことなく、外向きの読みを完成させます。もとの `Sat` への所属証明から、`Sat-mem` が取り出すのは `z` が環境集合に属するという成分だけです。続いて `envSet-out` は、命題的切り詰めの中で添字族 `g` とそのグラフ等式を返します。`map₁` の内部では、`tab g` が対応する内側の割当てであり、`qg ∙ sym (tab-graph g)` が `z` の基礎集合をその割当てのグラフと同一視します。この等式を固定すると、`Sat-spec` はもとの所属証明 `h` を直接、内側の充足へ運びます。したがって割当てとその充足証明は同じ切り詰めの中にとどまり、選択も一意性も主張されません。
 <!--/-->
 
 ```agda

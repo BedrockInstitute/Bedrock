@@ -36,6 +36,8 @@ Everything in this chapter takes place at one fixed universe level `ℓ`: the se
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Sum using () renaming ( map to sumMap )
+open import Cubical.Data.FinData using ( inj-toℕ )
 
 module L.Coding.Environment {ℓ : Level} where
 
@@ -70,9 +72,6 @@ The bounded reader `prAt`, proved adequate in the chapter on pair formulas, says
 open import L.Coding.PairFormulas {ℓ}
   using ( prAt; prAt-adequate; prChar-fwd; prChar-bwd
         ; ∈pair-introL; ∈pair-introR )
-
-open import Cubical.Data.Unit using ( tt )
-import Cubical.Data.Sum as Sum
 ```
 
 <!--en-->
@@ -84,11 +83,6 @@ Membership in a set of the hierarchy is a proposition, so a proof that some entr
 <!--/-->
 
 ```agda
-open Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Empty as E hiding ( elim )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
 
 <!--en-->
@@ -100,7 +94,6 @@ The ambient universe is the cubical cumulative hierarchy. A set is introduced as
 <!--/-->
 
 ```agda
-open import Cubical.Data.FinData using ( toℕ; inj-toℕ )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( V; sett; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
@@ -226,7 +219,7 @@ Injectivity of the pair splits the assumed equality into a path of keys and a pa
 ```agda
     ps = pr-inj e
   fwd : ⟨ pr (# (toℕ i)) v ∈ env g ⟩ → v ≡ g i
-  fwd = PT.rec (setIsSet v (g i)) (λ { (lj , e) → step lj e })
+  fwd = rec₁ (setIsSet v (g i)) (λ { (lj , e) → step lj e })
   bwd : v ≡ g i → ⟨ pr (# (toℕ i)) v ∈ env g ⟩
   bwd e = ∣ lift i , cong (pr (# (toℕ i))) (sym e) ∣₁
 ```
@@ -310,8 +303,8 @@ The equality is produced by extensionality, split into two inclusions. The first
 <!--/-->
 
 ```agda
-    sub₁ z z∈ₛJ = PT.rec (⟨ z ∈ₛ sucV I ⟩isProp)
-      (Sum.rec
+    sub₁ z z∈ₛJ = rec₁ (⟨ z ∈ₛ sucV I ⟩isProp)
+      (⊎-rec
         (λ h → ∈∈ₛ {a = z} {b = sucV I} .fst (∈sucV-inl {A = I} {x = z} h))
         (λ e → subst (λ w → ⟨ w ∈ₛ sucV I ⟩) (sym e)
                  (∈∈ₛ {a = I} {b = sucV I} .fst (self∈sucV I))))
@@ -561,7 +554,7 @@ The assembled index, value and two equations are then truncated into the target.
     ∣₁
 
   fwd : ⟨ γ ⊨ shiftPairAt p' p ⟩ → Tgt
-  fwd = PT.rec squash₁ (λ { (c , _ , h₁) → PT.rec squash₁
+  fwd = rec₁ squash₁ (λ { (c , _ , h₁) → rec₁ squash₁
 ```
 
 <!--en-->
@@ -573,9 +566,9 @@ The innermost elimination reaches the three satisfaction proofs, and with them t
 <!--/-->
 
 ```agda
-    (λ { (i , _ , h₂) → PT.rec squash₁
-      (λ { (v , _ , h₃) → PT.rec squash₁
-        (λ { (c' , _ , h₄) → PT.rec squash₁
+    (λ { (i , _ , h₂) → rec₁ squash₁
+      (λ { (v , _ , h₃) → rec₁ squash₁
+        (λ { (c' , _ , h₄) → rec₁ squash₁
           (λ { (j , _ , sat₁ , sat₂ , sat₃) → conclude c i v c' j sat₁ sat₂ sat₃ })
           h₄ })
 ```
@@ -703,7 +696,7 @@ The backward direction closes the adequacy theorem. Its input is the truncated e
 ```agda
 
   bwd : Tgt → ⟨ γ ⊨ shiftPairAt p' p ⟩
-  bwd = PT.rec (⟨ γ ⊨ shiftPairAt p' p ⟩isProp)
+  bwd = rec₁ (⟨ γ ⊨ shiftPairAt p' p ⟩isProp)
     (λ { (i , v , eP , eP') → build i v eP eP' })
 ```
 
@@ -774,7 +767,7 @@ On the metalevel side, emptiness is expressed by the private predicate `Empty' z
 
 private
   Empty' : V ℓ → Type (ℓ-suc ℓ)
-  Empty' z = (y : V ℓ) → ⟨ y ∈ z ⟩ → E.⊥* {ℓ-suc ℓ}
+  Empty' z = (y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥* {ℓ-suc ℓ}
 
   empty'→∅ : (z : V ℓ) → Empty' z → z ≡ ∅
 ```
@@ -789,8 +782,8 @@ The proof of the bridge is extensionality with both directions vacuous. To show 
 
 ```agda
   empty'→∅ z hz = extensionalV (λ y → ⇔toPath
-    (λ h → E.rec (lower (hz y h)))
-    (λ h → E.rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst h))))
+    (λ h → ⊥*-rec (hz y h))
+    (λ h → ⊥*-rec (lift {j = ℓ} (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst h)))))
 
   ∅→empty' : (z : V ℓ) → z ≡ ∅ → Empty' z
   ∅→empty' z e y y∈z = lift (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst (subst (λ w → ⟨ y ∈ w ⟩) e y∈z)))
@@ -843,7 +836,7 @@ The forward conversion turns the truncated existence of an empty member into the
 ```agda
 
   empty-member : (w : V ℓ) → ∥ Σ[ z ∈ V ℓ ] (⟨ z ∈ w ⟩ × Empty' z) ∥₁ → ⟨ ∅ ∈ w ⟩
-  empty-member w = PT.rec (⟨ ∅ ∈ w ⟩isProp)
+  empty-member w = rec₁ (⟨ ∅ ∈ w ⟩isProp)
     (λ { (z , hz , ez) → subst (λ u → ⟨ u ∈ w ⟩) (empty'→∅ z ez) hz })
 
   EmptySgl→SglOf∅ : (w : V ℓ) → EmptySgl w → SglOf∅ w
@@ -862,7 +855,7 @@ The pair case follows the same plan. `EmptyPair→PairOf∅` reuses the empty-me
 
   EmptyPair→PairOf∅ : (W w : V ℓ) → EmptyPair W w → PairOf∅ W w
   EmptyPair→PairOf∅ W w (h₁ , hW , hall) = empty-member w h₁ , hW
-    , (λ z hz → PT.map (Sum.map (empty'→∅ z) (λ e → e)) (hall z hz))
+    , (λ z hz → map₁ (sumMap (empty'→∅ z) (λ e → e)) (hall z hz))
 
   SglOf∅→EmptySgl : (w : V ℓ) → SglOf∅ w → EmptySgl w
   SglOf∅→EmptySgl w (h∅ , hall) =
@@ -894,7 +887,7 @@ In that pair conversion, the classification runs in the opposite direction: a me
 <!--/-->
 
 ```agda
-    , (hW , λ z z∈w → PT.map (Sum.rec (λ e → inl (∅→empty' z e)) (λ e → inr e))
+    , (hW , λ z z∈w → map₁ (⊎-rec (λ e → inl (∅→empty' z e)) (λ e → inr e))
         (hall z z∈w))
 
   PairWitness : (V ℓ → Type (ℓ-suc ℓ)) → (V ℓ → Type (ℓ-suc ℓ)) → V ℓ → Type (ℓ-suc ℓ)
@@ -928,9 +921,9 @@ The forward theorem `prChar∅-fwd` now takes the three empty-based hypotheses, 
 <!--/-->
 
 ```agda
-      PT.map (λ { (w , hw , h) → w , hw , f w h }) h₁
-    , PT.map (λ { (w , hw , h) → w , hw , g w h }) h₂
-    , (λ y hy → PT.map (Sum.map (f y) (g y)) (h₃ y hy))
+      map₁ (λ { (w , hw , h) → w , hw , f w h }) h₁
+    , map₁ (λ { (w , hw , h) → w , hw , g w h }) h₂
+    , (λ y hy → map₁ (sumMap (f y) (g y)) (h₃ y hy))
 
 prChar∅-fwd : (Q W : V ℓ)
   → ∥ Σ[ w ∈ V ℓ ] (⟨ w ∈ Q ⟩ × EmptySgl w) ∥₁
@@ -1131,8 +1124,8 @@ The truncated disjunction can be eliminated only into a proposition-valued targe
 ```agda
                  ⊎ ⟨ (y ∷ γ) ⊨ ∃̇∈ (var (suc e)) (shiftPairAt (suc zero) zero) ⟩ ∥₁)
            → (y : V ℓ) → ⟨ y ∈ E' ⟩ → ⟨ y ∈ env G' ⟩
-  classify h₃ y y∈E' = PT.rec (⟨ y ∈ env G' ⟩isProp)
-    (Sum.rec
+  classify h₃ y y∈E' = rec₁ (⟨ y ∈ env G' ⟩isProp)
+    (⊎-rec
       (λ tsat →
 ```
 
@@ -1147,9 +1140,9 @@ In the first branch, the member `y` satisfies `tag0At zero (suc m)` in `y ∷ γ
 ```agda
         ∣ lift zero
         , sym (subst ⟨_⟩ (tag0At-adequate zero (suc m) (y ∷ γ)) tsat) ∣₁)
-      (λ ssat → PT.rec (⟨ y ∈ env G' ⟩isProp)
-        (λ { (p , p∈E , sh) → PT.rec (⟨ y ∈ env G' ⟩isProp)
-          (λ { (li , peq) → PT.rec (⟨ y ∈ env G' ⟩isProp)
+      (λ ssat → rec₁ (⟨ y ∈ env G' ⟩isProp)
+        (λ { (p , p∈E , sh) → rec₁ (⟨ y ∈ env G' ⟩isProp)
+          (λ { (li , peq) → rec₁ (⟨ y ∈ env G' ⟩isProp)
 ```
 
 <!--en-->
@@ -1196,7 +1189,7 @@ One step of the shift case remains. The entry `p` was found as a member of `E`, 
 ```agda
               → ⟨ (p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero)) ⟩)
           → (y : V ℓ) → ⟨ y ∈ env G' ⟩ → ⟨ y ∈ E' ⟩
-  covered h₁ h₂ y y∈G' = PT.rec (⟨ y ∈ E' ⟩isProp)
+  covered h₁ h₂ y y∈G' = rec₁ (⟨ y ∈ E' ⟩isProp)
     (λ { (lj , eq) → byKey (lower lj) eq })
     y∈G'
 ```
@@ -1212,7 +1205,7 @@ The reverse inclusion must show that every member of the graph of the extended a
 ```agda
     where
     byKey : (j : Fin (suc k)) → pr (# (toℕ j)) (G' j) ≡ y → ⟨ y ∈ E' ⟩
-    byKey zero eq = PT.rec (⟨ y ∈ E' ⟩isProp)
+    byKey zero eq = rec₁ (⟨ y ∈ E' ⟩isProp)
       (λ { (q , q∈E' , tsat) →
         subst (λ z → ⟨ z ∈ E' ⟩)
 ```
@@ -1229,8 +1222,8 @@ In the zero case the entry equation computes to the statement that the entry wit
           (subst ⟨_⟩ (tag0At-adequate zero (suc m) (q ∷ γ)) tsat ∙ eq)
           q∈E' })
       h₁
-    byKey (suc i₀) eq = PT.rec (⟨ y ∈ E' ⟩isProp)
-      (λ { (p' , p'∈E' , sh) → PT.rec (⟨ y ∈ E' ⟩isProp)
+    byKey (suc i₀) eq = rec₁ (⟨ y ∈ E' ⟩isProp)
+      (λ { (p' , p'∈E' , sh) → rec₁ (⟨ y ∈ E' ⟩isProp)
 ```
 
 <!--en-->
@@ -1295,7 +1288,7 @@ The backward direction starts from a path identifying the new set with the graph
       ∣ pr (# 0) M
       , subst (λ z → ⟨ pr (# 0) M ∈ z ⟩) (sym e'eq) ∣ lift zero , refl ∣₁
       , subst ⟨_⟩ (sym (tag0At-adequate zero (suc m) (pr (# 0) M ∷ γ))) refl ∣₁
-    , (λ p p∈E → PT.rec
+    , (λ p p∈E → rec₁
         ⟨ (p ∷ γ) ⊨ ∃̇∈ (var (suc e')) (shiftPairAt zero (suc zero)) ⟩isProp
 ```
 
@@ -1328,7 +1321,7 @@ The certificate is produced by running the shift adequacy lemma backwards. Its r
                 (pr (# (suc (toℕ (lower li)))) (g (lower li)) ∷ p ∷ γ)))
               ∣ # (toℕ (lower li)) , g (lower li) , sym peq , refl ∣₁ ∣₁ })
         (subst (λ z → ⟨ p ∈ z ⟩) hE p∈E))
-    , (λ p' p'∈E' → PT.rec squash₁
+    , (λ p' p'∈E' → rec₁ squash₁
 ```
 
 <!--en-->

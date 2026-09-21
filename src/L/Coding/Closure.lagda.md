@@ -79,8 +79,6 @@ A relation to state in a frame is a parameter, and the seven concrete clauses ar
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Nat using ( _+_ )
 ```
 
 <!--en-->
@@ -92,8 +90,6 @@ The existentially supplied successor is the one place where mere existence appea
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 ```
 
 <!--en-->
@@ -505,15 +501,15 @@ The third reading, for the unbounded quantifiers, raises the arity. Its hypothes
 ```
 
 <!--en-->
-This is where the existential inside `oneSuccAt` matters. The successor is demanded only merely: the frame elimination hands over a propositionally truncated witness, together with certificates that it is the successor of the arity and that it pairs with `a` into the set. Such a truncation may be eliminated here because the goal is a proposition: membership in a set is an hProp, so `PT.rec` converts the mere existence into the concrete membership claim without choosing a canonical witness.
+This is where the existential inside `oneSuccAt` matters. The successor is demanded only merely: the frame elimination hands over a propositionally truncated witness, together with certificates that it is the successor of the arity and that it pairs with `a` into the set. Such a truncation may be eliminated here because the goal is a proposition: membership in a set is an hProp, so `rec₁` converts the mere existence into the concrete membership claim without choosing a canonical witness.
 <!--zh-->
-这里 `oneSuccAt` 内部的存在量词起了作用。子句对后继只是「仅仅存在」式地要求：框架消去所给出的是被命题截断的见证，连同两个证书，即它是元数的后继，且它与 `a` 配对进入该集合。这一截断在此可以消去，因为目标是命题：集合中的隶属是 hProp，故 `PT.rec` 把「仅仅存在」转换为具体的隶属主张，而无须选定某个典范见证。
+这里 `oneSuccAt` 内部的存在量词起了作用。子句对后继只是「仅仅存在」式地要求：框架消去所给出的是被命题截断的见证，连同两个证书，即它是元数的后继，且它与 `a` 配对进入该集合。这一截断在此可以消去，因为目标是命题：集合中的隶属是 hProp，故 `rec₁` 把「仅仅存在」转换为具体的隶属主张，而无须选定某个典范见证。
 <!--ja-->
-ここで `oneSuccAt` 内部の存在量化が効いてきます。後続は命題的に切り詰められた形でしか要求されません。フレーム除去が渡すのは命題的に切り詰められた証人と、それがアリティの後続であること、また `a` と対になって集合に入ることの 2 つの証明書です。この切り詰めがここで除却できるのは、帰結が命題だからです。集合への所属は hProp なので、`PT.rec` は命題的切り詰められた存在を具体的な所属の主張へ変換でき、標準的な証人を選ぶ必要はありません。
+ここで `oneSuccAt` 内部の存在量化が効いてきます。後続は命題的に切り詰められた形でしか要求されません。フレーム除去が渡すのは命題的に切り詰められた証人と、それがアリティの後続であること、また `a` と対になって集合に入ることの 2 つの証明書です。この切り詰めがここで除却できるのは、帰結が命題だからです。集合への所属は hProp なので、`rec₁` は命題的切り詰められた存在を具体的な所属の主張へ変換でき、標準的な証人を選ぶ必要はありません。
 <!--/-->
 
 ```agda
-    PT.rec (snd target)
+    rec₁ (snd target)
       (λ { (z , (sz , ap)) →
         subst (λ w → ⟨ pr w (fst a) ∈ fst (lookup C γ) ⟩)
           (subst ⟨_⟩ (sucAtL-adequate (suc n3) zero (z ∷ δ)) sz)
@@ -564,7 +560,7 @@ The conclusion asks only about the second component: `sucV (fst ar)` paired with
 ```agda
     → ⟨ pr (sucV (fst ar)) (fst b) ∈ fst (lookup C γ) ⟩
   binSuccClosed-out C k γ h c ar a b c∈ shape =
-    PT.rec (snd target)
+    rec₁ (snd target)
       (λ { (z , (sz , ap)) →
         subst (λ w → ⟨ pr w (fst b) ∈ fst (lookup C γ) ⟩)
 ```

@@ -38,8 +38,6 @@ Two ideas carry the hardest proof of the chapter. The first is propositional tru
 
 ```agda
 
-import Cubical.HITs.PropositionalTruncation as PT
-import Cubical.Data.Empty as Empty
 import Cubical.Induction.WellFounded as WellFoundedInduction
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded; isPropAcc; wf→x≮x )
 open import Cubical.HITs.CumulativeHierarchy.Base
@@ -181,16 +179,16 @@ Regularity, in this development, is the statement that membership is well-founde
 regularityV : WellFounded _∈ᵗ_
 regularityV = elimProp (λ s → isPropAcc s)
   (λ X ix rec → acc (λ y y∈ →
-    PT.rec (isPropAcc y)
+    rec₁ (isPropAcc y)
            (λ { (i , p) → subst (Acc _∈ᵗ_) p (rec i) })
 ```
 
 <!--en-->
-For such a member `y`, the witness `y∈` gives only the propositional truncation of a pair `(i , p)` with `p : ix i ≡ y`. The call `PT.rec (isPropAcc y)` may eliminate this truncated preimage because its actual target, `Acc _∈ᵗ_ y`, is a proposition, as certified by `isPropAcc y`. Inside the branch, `subst (Acc _∈ᵗ_) p (rec i)` transports the induction hypothesis from `ix i` to `y`. The proof thus uses the index without ever choosing one globally.
+For such a member `y`, the witness `y∈` gives only the propositional truncation of a pair `(i , p)` with `p : ix i ≡ y`. The call `rec₁ (isPropAcc y)` may eliminate this truncated preimage because its actual target, `Acc _∈ᵗ_ y`, is a proposition, as certified by `isPropAcc y`. Inside the branch, `subst (Acc _∈ᵗ_) p (rec i)` transports the induction hypothesis from `ix i` to `y`. The proof thus uses the index without ever choosing one globally.
 <!--zh-->
-对这样的成员 `y`，证据 `y∈` 只给出一对 `(i , p)` 的命题截断，其中 `p : ix i ≡ y`。调用 `PT.rec (isPropAcc y)` 可以消去这个截断原像，因为真正的目标 `Acc _∈ᵗ_ y` 是命题，而 `isPropAcc y` 正是它的命题性证书。在分支内部，`subst (Acc _∈ᵗ_) p (rec i)` 把归纳假设从 `ix i` 搬运到 `y`。整个证明由此用到索引，却从未全局选定一个索引。
+对这样的成员 `y`，证据 `y∈` 只给出一对 `(i , p)` 的命题截断，其中 `p : ix i ≡ y`。调用 `rec₁ (isPropAcc y)` 可以消去这个截断原像，因为真正的目标 `Acc _∈ᵗ_ y` 是命题，而 `isPropAcc y` 正是它的命题性证书。在分支内部，`subst (Acc _∈ᵗ_) p (rec i)` 把归纳假设从 `ix i` 搬运到 `y`。整个证明由此用到索引，却从未全局选定一个索引。
 <!--ja-->
-このような要素 `y` に対し、証拠 `y∈` が与えるのは、`p : ix i ≡ y` を持つ対 `(i , p)` の命題的切り詰めだけです。`PT.rec (isPropAcc y)` がこの切り詰められた原像を消去できるのは、実際の目標 `Acc _∈ᵗ_ y` が命題であり、`isPropAcc y` がその命題性を証明するからです。分岐の中では `subst (Acc _∈ᵗ_) p (rec i)` が帰納仮定を `ix i` から `y` へ輸送します。証明全体として、インデックスは使われますが、大域的に一つを選ぶことはありません。
+このような要素 `y` に対し、証拠 `y∈` が与えるのは、`p : ix i ≡ y` を持つ対 `(i , p)` の命題的切り詰めだけです。`rec₁ (isPropAcc y)` がこの切り詰められた原像を消去できるのは、実際の目標 `Acc _∈ᵗ_ y` が命題であり、`isPropAcc y` がその命題性を証明するからです。分岐の中では `subst (Acc _∈ᵗ_) p (rec i)` が帰納仮定を `ix i` から `y` へ輸送します。証明全体として、インデックスは使われますが、大域的に一つを選ぶことはありません。
 <!--/-->
 
 ```agda
@@ -200,19 +198,19 @@ For such a member `y`, the witness `y∈` gives only the propositional truncatio
 <!--en-->
 The first consequence of regularity is irreflexivity: no set belongs to itself. In terms of accessibility this is immediate. An element standing in a well-founded relation to itself would contradict the accessibility data, which requires every step down to land at an accessible element. The derivation uses the `Acc` statement proved above; it is not claimed here to capture every classical formulation of Foundation.
 
-The hypothesis `⟨ A ∈ˢ A ⟩` is an inhabitant of the underlying type of the membership proposition, which is precisely the relation `∈ᵗ` on which `regularityV` was proved. For any well-founded relation, no element can stand in the relation to itself: this is the library's irreflexivity theorem `wf→x≮x`, applied here with `regularityV` as its well-foundedness input. The result is a contradiction, witnessed by the empty type `Empty.⊥`.
+The hypothesis `⟨ A ∈ˢ A ⟩` is an inhabitant of the underlying type of the membership proposition, which is precisely the relation `∈ᵗ` on which `regularityV` was proved. For any well-founded relation, no element can stand in the relation to itself: this is the library's irreflexivity theorem `wf→x≮x`, applied here with `regularityV` as its well-foundedness input. The result is a contradiction, witnessed by the empty type `⊥₀`.
 <!--zh-->
 正则公理的第一个推论是不可反性：没有集合属于自身。用可及性的语言看，这是直接的。与自身处于良基关系中的元素会同可及性数据矛盾，因为可及性要求每一步下降都落在可及的元素上。这里的推导使用的是上文证明的 `Acc` 陈述；本章不宣称它涵盖 Foundation 的每一个经典表述。
 
-假设 `⟨ A ∈ˢ A ⟩` 是成员命题底层类型的一个元素，而这正是 `regularityV` 所针对的关系 `∈ᵗ`。对任何良基关系，元素都不能与自身处于该关系中：这就是库的不可反性定理 `wf→x≮x`，此处以 `regularityV` 作为其良基性输入。结果是矛盾，以空类型 `Empty.⊥` 呈现。
+假设 `⟨ A ∈ˢ A ⟩` 是成员命题底层类型的一个元素，而这正是 `regularityV` 所针对的关系 `∈ᵗ`。对任何良基关系，元素都不能与自身处于该关系中：这就是库的不可反性定理 `wf→x≮x`，此处以 `regularityV` 作为其良基性输入。结果是矛盾，以空类型 `⊥₀` 呈现。
 <!--ja-->
 正則性の最初の帰結は非反射性です。集合は自分自身に属しません。到達可能性の言葉で言えば、これはすぐに分かります。自分自身と整礎な関係に立つ要素は、到達可能性のデータと矛盾します。下降の各一歩が到達可能な要素に着地することを、到達可能性は要求するからです。ここでの導出は、上で証明した `Acc` の主張を使うものであり、Foundation のすべての古典的定式化を捉えると主張するものではありません。
 
-仮定 `⟨ A ∈ˢ A ⟩` は、所属命題の基礎型の要素であり、これは `regularityV` が証明された関係 `∈ᵗ` そのものです。整礎な関係に対しては、どの要素も自分自身とその関係に立つことはできません。これがライブラリの非反射性の定理 `wf→x≮x` であり、ここでは `regularityV` を整礎性の入力として適用します。結果は矛盾であり、空の型 `Empty.⊥` がそれを示します。
+仮定 `⟨ A ∈ˢ A ⟩` は、所属命題の基礎型の要素であり、これは `regularityV` が証明された関係 `∈ᵗ` そのものです。整礎な関係に対しては、どの要素も自分自身とその関係に立つことはできません。これがライブラリの非反射性の定理 `wf→x≮x` であり、ここでは `regularityV` を整礎性の入力として適用します。結果は矛盾であり、空の型 `⊥₀` がそれを示します。
 <!--/-->
 
 ```agda
-∈-irrefl : (A : S) → ⟨ A ∈ˢ A ⟩ → Empty.⊥
+∈-irrefl : (A : S) → ⟨ A ∈ˢ A ⟩ → ⊥₀
 ∈-irrefl A = wf→x≮x regularityV {x = A}
 ```
 

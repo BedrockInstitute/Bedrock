@@ -95,20 +95,14 @@ open import L.GCH.AdequateStages {ℓ} lem using ( Superadequate; Adequate; Lset
 ```
 
 <!--en-->
-Finite vectors record the environments in which formulas are evaluated, while products combine the membership and equality facts used in the proof. Several existences in this chapter are propositionally truncated. The constructor `∣_∣₁` places an explicit local witness under truncation; `PT.rec` and `PT.map` may then use it only to produce another proposition. In particular, the local adequate indices supplied by superadequacy never become a globally chosen family.
+Finite vectors record the environments in which formulas are evaluated, while products combine the membership and equality facts used in the proof. Several existences in this chapter are propositionally truncated. The constructor `∣_∣₁` places an explicit local witness under truncation; `rec₁` and `map₁` may then use it only to produce another proposition. In particular, the local adequate indices supplied by superadequacy never become a globally chosen family.
 <!--zh-->
-有穷向量记录公式求值所用的环境，乘积则组合证明中需要的隶属事实与相等事实。本章有若干存在性处于命题截断之下。构造子 `∣_∣₁` 把一份显式的局部见证放入截断；`PT.rec` 与 `PT.map` 随后只能用它产生另一个命题。特别地，超充分性给出的局部充分索引不会变成一族全局选定的数据。
+有穷向量记录公式求值所用的环境，乘积则组合证明中需要的隶属事实与相等事实。本章有若干存在性处于命题截断之下。构造子 `∣_∣₁` 把一份显式的局部见证放入截断；`rec₁` 与 `map₁` 随后只能用它产生另一个命题。特别地，超充分性给出的局部充分索引不会变成一族全局选定的数据。
 <!--ja-->
-有限ベクトルは論理式を評価する環境を記録し、積は証明で必要となる所属と等しさの事実を組み合わせます。この章に現れるいくつかの存在は、命題的切り詰めのもとにあります。構成子 `∣_∣₁` は明示的な局所証人を切り詰めの中へ入れ、`PT.rec` と `PT.map` はそれを別の命題を得るためにだけ使います。とくに、強化された十分さが与える局所的な十分な添字が、大域的に選ばれた族になることはありません。
+有限ベクトルは論理式を評価する環境を記録し、積は証明で必要となる所属と等しさの事実を組み合わせます。この章に現れるいくつかの存在は、命題的切り詰めのもとにあります。構成子 `∣_∣₁` は明示的な局所証人を切り詰めの中へ入れ、`rec₁` と `map₁` はそれを別の命題を得るためにだけ使います。とくに、強化された十分さが与える局所的な十分な添字が、大域的に選ばれた族になることはありません。
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Vec using ( _∷_; [] )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Foundations.HLevels using ( isProp× )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 ```
 
 <!--en-->
@@ -566,17 +560,17 @@ The construction first places the hull member `d` in the ambient stage:
 of the ordinal `lam`, rather than by arbitrary members of its constructible
 stage. The local fact `d∈λ` established next bridges precisely this gap.
 Once it is available, `sup d d∈λ` merely supplies an adequate stage above `d`;
-the outer `PT.rec` may use that truncated supply because its target
+the outer `rec₁` may use that truncated supply because its target
 `Witness d` is itself a proposition.
 <!--zh-->
-构造首先把 Skolem 壳成员 `d` 放进外围层：`Hull⊆L` 给出 `d ∈ Lset lam`。然而，超充分性接收的是序数 `lam` 的成员，而不是其可构造层的任意成员。下一步建立的局部事实 `d∈λ` 恰好跨过这道差别。得到它以后，`sup d d∈λ` 只在 `d` 之上给出一个充分层；由于目标 `Witness d` 本身是命题，外层 `PT.rec` 可以使用这份被命题截断的供给。
+构造首先把 Skolem 壳成员 `d` 放进外围层：`Hull⊆L` 给出 `d ∈ Lset lam`。然而，超充分性接收的是序数 `lam` 的成员，而不是其可构造层的任意成员。下一步建立的局部事实 `d∈λ` 恰好跨过这道差别。得到它以后，`sup d d∈λ` 只在 `d` 之上给出一个充分层；由于目标 `Witness d` 本身是命题，外层 `rec₁` 可以使用这份被命题截断的供给。
 <!--ja-->
-構成はまず、Skolem 包の要素 `d` を周囲の段階へ入れます。`Hull⊆L` から `d ∈ Lset lam` が得られます。しかし強化された十分さが受け取るのは、構成可能段階の任意の要素ではなく、順序数 `lam` の要素です。次に示す局所的な事実 `d∈λ` が、まさにこの隔たりを埋めます。それが得られると、`sup d d∈λ` は `d` より上の十分な段階を供給するだけです。行き先の `Witness d` 自体が命題なので、外側の `PT.rec` はこの命題的に切り詰められた供給を利用できます。
+構成はまず、Skolem 包の要素 `d` を周囲の段階へ入れます。`Hull⊆L` から `d ∈ Lset lam` が得られます。しかし強化された十分さが受け取るのは、構成可能段階の任意の要素ではなく、順序数 `lam` の要素です。次に示す局所的な事実 `d∈λ` が、まさにこの隔たりを埋めます。それが得られると、`sup d d∈λ` は `d` より上の十分な段階を供給するだけです。行き先の `Witness d` 自体が命題なので、外側の `rec₁` はこの命題的に切り詰められた供給を利用できます。
 <!--/-->
 
 ```agda
   witness : (d : S) → IsOrd d → ⟨ d ∈ˢ M ⟩ → Witness d
-  witness d od d∈M = PT.rec squash₁ step1 (sup d d∈λ)
+  witness d od d∈M = rec₁ squash₁ step1 (sup d d∈λ)
     where
     d∈Lλ : ⟨ d ∈ˢ Lset lam ⟩
     d∈Lλ = Hull⊆L d d∈M
@@ -638,7 +632,7 @@ escapes into the theorem's data.
 ```agda
     step1 : Σ[ γ ∈ S ] (⟨ γ ∈ˢ lam ⟩ × ⟨ d ∈ˢ γ ⟩ × Adequate γ) → Witness d
     step1 (γ , γ∈λ , d∈γ , adγ) =
-      PT.rec squash₁ takeZ hullSat
+      rec₁ squash₁ takeZ hullSat
       where
       Lγ∈Lλ : ⟨ Lset γ ∈ˢ Lset lam ⟩
 ```
@@ -841,7 +835,7 @@ After `z` and `d′` are fixed, the innermost existential asserts only the mere 
             → Σ[ d' ∈ A.SM ]
                 ⟨ (d' ∷ z ∷ []) Mse.⊨ ∃̇ (embed levelFo ∧̇ (var (suc zero) ≐ con dM)) ⟩
             → Witness d
-      takeD z (d' , hd) = PT.map (finishA z d') hd
+      takeD z (d' , hd) = map₁ (finishA z d') hd
 ```
 
 <!--en-->
@@ -857,7 +851,7 @@ With the outer witness `z` already fixed, the next truncation hides the middle c
       takeZ : Σ[ z ∈ A.SM ]
                 ⟨ (z ∷ []) Mse.⊨ ∃̇ (∃̇ (embed levelFo ∧̇ (var (suc zero) ≐ con dM))) ⟩
             → Witness d
-      takeZ (z , hz) = PT.rec squash₁ (takeD z) hz
+      takeZ (z , hz) = rec₁ squash₁ (takeD z) hz
 ```
 
 <!--en-->
@@ -872,7 +866,7 @@ We can now state the local compatibility between the collapse and constructible 
   commute : (d : S) → IsOrd d → (d∈M : ⟨ d ∈ˢ M ⟩)
           → ⟨ Lset d ∈ˢ M ⟩ × (π (Lset d) ≡ Lset (π d))
   commute d od d∈M =
-    PT.rec (isProp× (snd (Lset d ∈ˢ M)) (isSetS (π (Lset d)) (Lset (π d))))
+    rec₁ (isProp× (snd (Lset d ∈ˢ M)) (isSetS (π (Lset d)) (Lset (π d))))
            go (witness d od d∈M)
 ```
 
@@ -958,7 +952,7 @@ The first property required by the abstract condensation argument is closure at 
 ```agda
   levelIn : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ HS.C.πX ⟩ → ⟨ Lset δ ∈ˢ HS.C.πX ⟩
   levelIn δ oδ δ∈πX =
-    PT.rec (snd (Lset δ ∈ˢ HS.C.πX)) go (HS.C.πX-member δ δ∈πX)
+    rec₁ (snd (Lset δ ∈ˢ HS.C.πX)) go (HS.C.πX-member δ δ∈πX)
     where
     go : Σ[ d ∈ S ] (⟨ d ∈ˢ M ⟩ × (π d ≡ δ)) → ⟨ Lset δ ∈ˢ HS.C.πX ⟩
 ```
@@ -1017,7 +1011,7 @@ The second property is covering. For every hull member `y`, it asks merely for a
 ```agda
   cover : (y : S) → ⟨ y ∈ˢ M ⟩
         → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ π y ∈ˢ Lset γ ⟩) ∥₁
-  cover y y∈M = PT.rec squash₁ go (Lset-out lam y (Hull⊆L y y∈M))
+  cover y y∈M = rec₁ squash₁ go (Lset-out lam y (Hull⊆L y y∈M))
     where
     Goal : Type (ℓ-suc ℓ)
 ```
@@ -1045,7 +1039,7 @@ The construction starts by locating `y` in the constructible hierarchy. Since ev
 
 ```agda
     go : Σ[ c ∈ S ] (⟨ c ∈ˢ lam ⟩ × ⟨ y ∈ˢ 𝒟ₒ (Lset c) ⟩) → Goal
-    go (c , c∈λ , y∈D) = PT.rec squash₁ go₂ (sup p p∈λ)
+    go (c , c∈λ , y∈D) = rec₁ squash₁ go₂ (sup p p∈λ)
       where
       p : S
       p = sucV c
@@ -1104,7 +1098,7 @@ Opening the superadequacy witness locally gives an index `γ ∈ lam` with `p �
 
 ```agda
       go₂ : Σ[ γ ∈ S ] (⟨ γ ∈ˢ lam ⟩ × ⟨ p ∈ˢ γ ⟩ × Adequate γ) → Goal
-      go₂ (γ , γ∈λ , p∈γ , adγ) = PT.rec squash₁ takeZ hullSat
+      go₂ (γ , γ∈λ , p∈γ , adγ) = rec₁ squash₁ takeZ hullSat
         where
         yM : A.SM
         yM = y , y∈M
@@ -1273,7 +1267,7 @@ For fixed `z` and `a`, the last existential states merely that a suitable `u` ex
               → Σ[ a ∈ A.SM ]
                   ⟨ (a ∷ z ∷ []) Mse.⊨ ∃̇ (embed levelFo ∧̇ (con yM ∈̇ var zero)) ⟩
               → Goal
-        takeA z (a , ha) = PT.map (finishP z a) ha
+        takeA z (a , ha) = map₁ (finishP z a) ha
 ```
 
 <!--en-->
@@ -1289,7 +1283,7 @@ The two remaining existential layers obey the same restriction. After `z` is fix
         takeZ : Σ[ z ∈ A.SM ]
                   ⟨ (z ∷ []) Mse.⊨ ∃̇ (∃̇ (embed levelFo ∧̇ (con yM ∈̇ var zero))) ⟩
               → Goal
-        takeZ (z , hz) = PT.rec squash₁ (takeA z) hz
+        takeZ (z , hz) = rec₁ squash₁ (takeA z) hz
 ```
 
 <!--en-->

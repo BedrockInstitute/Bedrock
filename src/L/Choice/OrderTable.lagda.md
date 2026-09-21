@@ -115,11 +115,6 @@ Many later equalities compare dependent pairs whose second components are member
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ≡Prop; _×_ )
-open import Cubical.Foundations.HLevels using ( isProp× )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -131,8 +126,6 @@ Propositional truncation will mark every place where existence is needed without
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪; ∈-asFiber )
@@ -243,9 +236,9 @@ In the forward branch, trichotomy already supplies the required untruncated witn
 ```agda
   decide : Tri (relOf W a b) (a ≡ b) (relOf W b a) → relOf W a b
   decide (lt k) = k
-  decide (eq q) = Empty.rec (PT.rec Empty.isProp⊥
+  decide (eq q) = ⊥₀-rec (rec₁ isProp⊥
     (λ k → SWO.irr∙ W a (subst (relOf W a) (sym q) k)) h)
-  decide (gt k) = Empty.rec (PT.rec Empty.isProp⊥
+  decide (gt k) = ⊥₀-rec (rec₁ isProp⊥
 ```
 
 <!--en-->
@@ -368,7 +361,7 @@ The reverse reading has a deliberately narrower shape. Its input object is alrea
 
 ```agda
   related-out : ⟨ Related α (pr (fst a) (fst b)) ⟩ → relOf (orderAt α oα) a b
-  related-out h = strict α oα a b (PT.rec squash₁ atOrd h)
+  related-out h = strict α oα a b (rec₁ squash₁ atOrd h)
     where
     atPair : (o : IsOrd α) (a' b' : Mem (Lset α))
            → (pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
@@ -384,7 +377,7 @@ Suppose the truncated record presents endpoints `a',b'` and an ordinalness proof
 
 ```agda
            → ⟨ Ordering α o a' b' ⟩ → ⟨ Ordering α oα a b ⟩
-    atPair o a' b' q = PT.map
+    atPair o a' b' q = map₁
       (λ k → subst2 (relOf (orderAt α oα)) (sym ea) (sym eb)
         (subst (λ o' → relOf (orderAt α o') a' b') (isPropIsOrd α o oα) k))
       where
@@ -418,8 +411,8 @@ The outer ordinal certificate is explicit, while each endpoint exists only under
     atOrd : Σ[ o ∈ IsOrd α ] ⟨ ∃[ a' ∶ Mem (Lset α) ] (∃[ b' ∶ Mem (Lset α) ] ((pr (fst a) (fst b) ≡ pr (fst a') (fst b'))
                  , setIsSet _ (pr (fst a') (fst b'))) ⊓ Ordering α o a' b') ⟩
           → ⟨ Ordering α oα a b ⟩
-    atOrd (o , h₁) = PT.rec squash₁
-      (λ { (a' , h₂) → PT.rec squash₁
+    atOrd (o , h₁) = rec₁ squash₁
+      (λ { (a' , h₂) → rec₁ squash₁
 ```
 
 <!--en-->
@@ -892,7 +885,7 @@ A graph assertion contains only a propositionally truncated witness for the supp
   module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
     graph-only : ⟨ γ ⊨ GraphAt w b ⟩ → IsOrd (fst (lookup b γ))
                → IsRel (fst (lookup b γ)) (lookup w γ)
-    graph-only h ob = PT.rec (snd (Realizes (fst (lookup b γ)) (lookup w γ)))
+    graph-only h ob = rec₁ (snd (Realizes (fst (lookup b γ)) (lookup w γ)))
       read (Graph-out w b γ h)
 ```
 
@@ -971,7 +964,7 @@ If some value is recorded at `c`, the witness for that value is propositionally 
 ```agda
             × (⟨ fst c ∈ fst (lookup b γ) ⟩
                → ⟨ ∃[ r ∶ S ] pr (fst c) (fst r) ∈ fst h ⟩)
-      onDom c = (λ hr → PT.rec (snd (fst c ∈ fst (lookup b γ)))
+      onDom c = (λ hr → rec₁ (snd (fst c ∈ fst (lookup b γ)))
                           (λ { (r , p) → dom c r p }) hr)
               , ents c
 ```
@@ -1158,7 +1151,7 @@ The decomposition supplied by `Recorded` is propositionally truncated, so its el
 <!--/-->
 
 ```agda
-      read c r p = PT.rec isPropBoth outer (subst ⟨_⟩ (atPair c r) p)
+      read c r p = rec₁ isPropBoth outer (subst ⟨_⟩ (atPair c r) p)
         where
         isPropBoth : isProp (⟨ fst c ∈ B ⟩ × IsRel (fst c) r)
         isPropBoth = isProp× (snd (fst c ∈ B)) (snd (Realizes (fst c) r))
@@ -1210,7 +1203,7 @@ The outer recorded witness first provides an index `d` in `B` and a further trun
                   × ⟨ ∃[ t ∶ S ] ((pr (fst c) (fst r) ≡ pr (fst d) (fst t))
                         , setIsSet _ (pr (fst d) (fst t))) ⊓ Realizes (fst d) t ⟩ )
               → ⟨ fst c ∈ B ⟩ × IsRel (fst c) r
-        outer (d , (d∈ , hs)) = PT.rec isPropBoth
+        outer (d , (d∈ , hs)) = rec₁ isPropBoth
 ```
 
 <!--en-->
@@ -1327,9 +1320,9 @@ Now take an arbitrary object in `Related α`. Its definition gives, through thre
 
 ```agda
     confine : (z : S) → ⟨ Related α (fst z) ⟩ → ⟨ fst z ∈ fst (d .fst) ⟩
-    confine z = PT.rec (snd (fst z ∈ fst (d .fst)))
-      (λ { (_ , h₁) → PT.rec (snd (fst z ∈ fst (d .fst)))
-        (λ { (a , h₂) → PT.rec (snd (fst z ∈ fst (d .fst)))
+    confine z = rec₁ (snd (fst z ∈ fst (d .fst)))
+      (λ { (_ , h₁) → rec₁ (snd (fst z ∈ fst (d .fst)))
+        (λ { (a , h₂) → rec₁ (snd (fst z ∈ fst (d .fst)))
           (λ { (b , (q , _)) →
 ```
 
@@ -1538,7 +1531,7 @@ Functionality also requires uniqueness of the whole paired value. If another `k`
 ```agda
         only : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
              → ⟨ (k ∷ c ∷ []) ⊨ φ ⟩ → k ≡ entry c c∈
-        only c c∈ k h = PT.rec (isSetS k (entry c c∈)) read
+        only c c∈ k h = rec₁ (isSetS k (entry c c∈)) read
           (PairGraph-out zero (suc zero) (k ∷ c ∷ []) φ qφ h)
           where
 ```
@@ -1629,7 +1622,7 @@ The required table specification is an equality between two propositions: member
         spec z = ⇔toPath toRec fromRec
           where
           toRec : ⟨ fst z ∈ fst H ⟩ → ⟨ Recorded α (fst z) ⟩
-          toRec hz = PT.rec squash₁
+          toRec hz = rec₁ squash₁
 ```
 
 <!--en-->
@@ -1658,8 +1651,8 @@ For the reverse implication, a recorded-pair witness may contain any relation se
 
 ```agda
           fromRec : ⟨ Recorded α (fst z) ⟩ → ⟨ fst z ∈ fst H ⟩
-          fromRec hz = subst ⟨_⟩ (sym (rep .fst .snd z)) (PT.map
-            (λ { (c , (c∈ , hr)) → c , (c∈ , PT.rec (snd ((z ∷ c ∷ []) ⊨ φ))
+          fromRec hz = subst ⟨_⟩ (sym (rep .fst .snd z)) (map₁
+            (λ { (c , (c∈ , hr)) → c , (c∈ , rec₁ (snd ((z ∷ c ∷ []) ⊨ φ))
               (λ { (r , (q , hs)) → subst (λ t → ⟨ (t ∷ c ∷ []) ⊨ φ ⟩)
                 (sym (Σ≡Prop (λ x → snd (isL x))
 ```

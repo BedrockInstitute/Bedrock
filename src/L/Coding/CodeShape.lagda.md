@@ -16,6 +16,7 @@ A code is well formed when it has one of the term or formula constructor shapes 
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Sum using () renaming ( map to sumMap )
 
 module L.Coding.CodeShape {ℓ : Level} where
 
@@ -36,15 +37,8 @@ open import L.Coding.CodeConstructibility {ℓ} using ( closure-inv; key; codeL;
 open import L.Coding.SubformulaClosure {ℓ} using ( clo )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
 open import L.Ordinal {ℓ} using ( ∈#-elim )
-
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.FinData.Properties using ( fromℕ'; toFromId'; toℕ<n )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
-import Cubical.Data.Sum as Sum
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 
 open hPropStructure 𝒮ʟ
 
@@ -199,8 +193,8 @@ UnWit k rel γ c = Σ[ N ∈ S ] (Σ[ a ∈ S ]
 
 binForm-out : ∀ {n} (k : ℕ) (rel : Formula S (4 + n)) (γ : S ^ n) (c : S)
             → ⟨ (c ∷ γ) ⊨ binForm k rel ⟩ → ∥ BinWit k rel γ c ∥₁
-binForm-out k rel γ c = PT.rec squash₁ (λ { (N , hN) →
-  PT.rec squash₁ (λ { (a , ha) → PT.map
+binForm-out k rel γ c = rec₁ squash₁ (λ { (N , hN) →
+  rec₁ squash₁ (λ { (a , ha) → map₁
     (λ { (b , (hb , hr)) → N , (a , (b , (subst ⟨_⟩
        (arityTagPairAtL-adequate (suc (suc (suc zero))) (suc (suc zero)) k
           (suc zero) zero (b ∷ a ∷ N ∷ c ∷ γ)) hb , hr))) })
@@ -208,7 +202,7 @@ binForm-out k rel γ c = PT.rec squash₁ (λ { (N , hN) →
 
 unForm-out : ∀ {n} (k : ℕ) (rel : Formula S (3 + n)) (γ : S ^ n) (c : S)
            → ⟨ (c ∷ γ) ⊨ unForm k rel ⟩ → ∥ UnWit k rel γ c ∥₁
-unForm-out k rel γ c = PT.rec squash₁ (λ { (N , hN) → PT.map
+unForm-out k rel γ c = rec₁ squash₁ (λ { (N , hN) → map₁
   (λ { (a , (ha , hr)) → N , (a , (subst ⟨_⟩
      (arityTagAtL-adequate (suc (suc zero)) (suc zero) k zero
         (a ∷ N ∷ c ∷ γ)) ha , hr)) })
@@ -224,12 +218,12 @@ ShapeWit A γ c =
 private
   sum-out : {A B C D : Type (ℓ-suc ℓ)}
           → (A → ∥ C ∥₁) → (B → ∥ D ∥₁) → ∥ A ⊎ B ∥₁ → ∥ C ⊎ D ∥₁
-  sum-out f g = PT.rec squash₁
-    (Sum.rec (λ x → PT.map inl (f x)) (λ y → PT.map inr (g y)))
+  sum-out f g = rec₁ squash₁
+    (⊎-rec (λ x → map₁ inl (f x)) (λ y → map₁ inr (g y)))
 
   sum-in : {A B C D : Type (ℓ-suc ℓ)}
          → (A → C) → (B → D) → A ⊎ B → ∥ C ⊎ D ∥₁
-  sum-in f g x = ∣ Sum.map f g x ∣₁
+  sum-in f g x = ∣ sumMap f g x ∣₁
 
 shaped-out : ∀ {n} (C A : Fin n) (γ : S ^ n) → ⟨ γ ⊨ shapedAt C A ⟩
            → (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁
@@ -308,7 +302,7 @@ which of the ten shapes that member has.
 shaped-in : ∀ {n} (C A : Fin n) (γ : S ^ n)
           → ((c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ ShapeWit A γ c ∥₁)
           → ⟨ γ ⊨ shapedAt C A ⟩
-shaped-in C A γ g c c∈ = PT.rec (snd ((c ∷ γ) ⊨ shapes A)) fill (g c c∈)
+shaped-in C A γ g c c∈ = rec₁ (snd ((c ∷ γ) ⊨ shapes A)) fill (g c c∈)
   where
   fill : ShapeWit A γ c → ⟨ (c ∷ γ) ⊨ shapes A ⟩
   fill =
@@ -380,8 +374,8 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
   tmCon : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ) → Onto A γ
         → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 0 zero ∧̇ (var zero ∈̇ var (suc A))) ⟩
         → ∥ TmWit n (fst (lookup t γ)) ∥₁
-  tmCon t N A γ n onto = PT.rec squash₁
-    (λ { (y , (hy , y∈)) → PT.map
+  tmCon t N A γ n onto = rec₁ squash₁
+    (λ { (y , (hy , y∈)) → map₁
          (λ { (c , qc) → con c
             , ( cong (VCode.mkTag 0) qc ∙ sym
                 (subst ⟨_⟩ (tagAtL-adequate (suc t) 0 zero (y ∷ γ)) hy) ) })
@@ -391,8 +385,8 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
         → fst (lookup N γ) ≡ # n
         → ⟨ γ ⊨ ∃̇ (tagAtL (suc t) 1 zero ∧̇ (var zero ∈̇ var (suc N))) ⟩
         → ∥ TmWit n (fst (lookup t γ)) ∥₁
-  tmVar t N A γ n qN = PT.rec squash₁
-    (λ { (z , (hz , z∈)) → PT.map
+  tmVar t N A γ n qN = rec₁ squash₁
+    (λ { (z , (hz , z∈)) → map₁
          (λ { (j , (j<n , ez)) →
            var (fromℕ' n j j<n)
            , ( cong (VCode.mkTag 1) (cong #_ (toFromId' n j j<n) ∙ sym ez)
@@ -402,7 +396,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
   isTmAt-decode : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
                 → fst (lookup N γ) ≡ # n → Onto A γ
                 → ⟨ γ ⊨ isTmAt t N A ⟩ → ∥ TmWit n (fst (lookup t γ)) ∥₁
-  isTmAt-decode t N A γ n qN onto = PT.rec squash₁
+  isTmAt-decode t N A γ n qN onto = rec₁ squash₁
     (λ { (inl h) → tmCon t N A γ n onto h
        ; (inr h) → tmVar t N A γ n qN h })
 ```
@@ -510,7 +504,7 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
     ⊎ (BinSucc 8 c ⊎ BinSucc 9 c))))))))
 
   peel : (c : S) → ⟨ c ∈ˢ lookup C γ ⟩ → ∥ PeelWit c ∥₁
-  peel c c∈ = PT.map fill (shaped-out C A γ hsh c c∈)
+  peel c c∈ = map₁ fill (shaped-out C A γ hsh c c∈)
     where
     bs : (k : ℕ) → ⟨ γ ⊨ binShapeAt C k (bothSameAt C) ⟩ → BinWit k noneB γ c
        → BinSame k c
@@ -534,15 +528,15 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
 
     fill : ShapeWit A γ c → PeelWit c
     fill =
-      Sum.map id
-      (Sum.map id
-      (Sum.map (bs 2 (hcl .fst))
-      (Sum.map (bs 3 (hcl .snd .fst))
-      (Sum.map (bs 4 (hcl .snd .snd .fst))
-      (Sum.map id
-      (Sum.map (uz 6 (hcl .snd .snd .snd .fst))
-      (Sum.map (uz 7 (hcl .snd .snd .snd .snd .fst))
-      (Sum.map (bz 8 (hcl .snd .snd .snd .snd .snd .fst))
+      sumMap id
+      (sumMap id
+      (sumMap (bs 2 (hcl .fst))
+      (sumMap (bs 3 (hcl .snd .fst))
+      (sumMap (bs 4 (hcl .snd .snd .fst))
+      (sumMap id
+      (sumMap (uz 6 (hcl .snd .snd .snd .fst))
+      (sumMap (uz 7 (hcl .snd .snd .snd .snd .fst))
+      (sumMap (bz 8 (hcl .snd .snd .snd .snd .snd .fst))
       (bz 9 (hcl .snd .snd .snd .snd .snd .snd))))))))))
 
 ```
@@ -612,7 +606,7 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
                 → ((k : K) → ⟨ f k ∈ fst (lookup A γ) ⟩)
                 → ⟨ (clo f h φ ∷ γ) ⊨ shapedAt zero (suc A) ⟩
   closureShaped φ A γ into = shaped-in zero (suc A) (clo f h φ ∷ γ)
-    (λ c c∈ → PT.map (λ { (_ , ψ , q , _) → go ψ c q })
+    (λ c c∈ → map₁ (λ { (_ , ψ , q , _) → go ψ c q })
       (closure-inv f h φ (fst c) c∈))
     where
     tm1 : ∀ {k} (t : Term K k) (b c : S)

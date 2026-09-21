@@ -163,12 +163,6 @@ proposition.
 <!--/-->
 
 ```agda
-
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Unit using ( tt* )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 ```
 
 <!--en-->
@@ -1500,13 +1494,13 @@ anywhere.
   Q≡ = funExt (λ y → ⇔toPath (into y) (λ p → p .snd))
     where
     into : (y : S) → ⟨ ReplImage a φ y ⟩ → ⟨ BoundedImage y ⟩
-    into y = PT.rec (snd (BoundedImage y)) λ { (x , (x∈a , h)) →
+    into y = rec₁ (snd (BoundedImage y)) λ { (x , (x∈a , h)) →
 ```
 
 <!--en-->
 For a candidate `y` in `ReplImage a φ`, the source `x`, its membership proof
 `x∈a`, and the satisfaction proof `h` are available under propositional
-truncation. Since `BoundedImage y` is a proposition, `PT.rec` may use these
+truncation. Since `BoundedImage y` is a proposition, `rec₁` may use these
 data while constructing its two conjuncts. The first component follows from
 `range∈βimg`: functionality implies that every value related to a member of
 `a` lies in `Lset βimg`. For the second component, the same `x`, `x∈a`, and
@@ -1524,11 +1518,11 @@ component, it yields `Q≡`; transport along `sym Q≡` then proves
 principle, although the construction of the common stage used by
 `range∈βimg` depends on `lem`.
 <!--zh-->
-对 `ReplImage a φ` 中的候选者 `y`，源 `x`、成员证明 `x∈a` 与满足证明 `h` 只在命题截断下给出。由于 `BoundedImage y` 是命题，`PT.rec` 可以在构造它的两个合取项时使用这些数据。第一项来自 `range∈βimg`：函数性蕴涵，与 `a` 的成员相关的每个值都属于 `Lset βimg`。对于第二项，把同一个 `x`、`x∈a` 与 `h` 重新放入命题截断。按照 `imageFo = ∃̇∈ (con a) φ` 的语义，这恰是 `y` 满足 `imageFo` 的证明。因此，没有源作为未经截断的数据返回。
+对 `ReplImage a φ` 中的候选者 `y`，源 `x`、成员证明 `x∈a` 与满足证明 `h` 只在命题截断下给出。由于 `BoundedImage y` 是命题，`rec₁` 可以在构造它的两个合取项时使用这些数据。第一项来自 `range∈βimg`：函数性蕴涵，与 `a` 的成员相关的每个值都属于 `Lset βimg`。对于第二项，把同一个 `x`、`x∈a` 与 `h` 重新放入命题截断。按照 `imageFo = ∃̇∈ (con a) φ` 的语义，这恰是 `y` 满足 `imageFo` 的证明。因此，没有源作为未经截断的数据返回。
 
 由此完成从 `ReplImage a φ y` 到 `BoundedImage y` 的蕴涵。再结合舍弃层成员关系分量所得的反向蕴涵，便得到 `Q≡`；沿 `sym Q≡` 运输则证明 `replaceΔ₀`。准确地说，在假设 `lem : LEM (ℓ-suc ℓ)`、`φ` 的 Δ₀ 见证，以及每个 `x ∈ˢ a` 对应的值纤维均可缩这些条件下，结论是 `isContr (SetOf (ReplImage a φ))`。这是所陈述的 Δ₀ 替换定理。本分支没有引入额外的经典原理，但 `range∈βimg` 所使用的公共层之构造依赖 `lem`。
 <!--ja-->
-`ReplImage a φ` に属する候補 `y` について、始域の要素 `x`、所属の証明 `x∈a`、充足の証明 `h` は、命題的切り詰めのもとでのみ与えられます。`BoundedImage y` は命題なので、`PT.rec` は、その二つの連言を構成する間にこれらのデータを使えます。第一の成分は `range∈βimg` から得られます。関数性により、`a` の要素と関係するすべての値は `Lset βimg` に属します。第二の成分では、同じ `x`、`x∈a`、`h` を命題的切り詰めの中へ戻します。`imageFo = ∃̇∈ (con a) φ` の意味論により、これはちょうど `y` が `imageFo` を満たすことの証明です。したがって、始域の要素が切り詰められていないデータとして返されることはありません。
+`ReplImage a φ` に属する候補 `y` について、始域の要素 `x`、所属の証明 `x∈a`、充足の証明 `h` は、命題的切り詰めのもとでのみ与えられます。`BoundedImage y` は命題なので、`rec₁` は、その二つの連言を構成する間にこれらのデータを使えます。第一の成分は `range∈βimg` から得られます。関数性により、`a` の要素と関係するすべての値は `Lset βimg` に属します。第二の成分では、同じ `x`、`x∈a`、`h` を命題的切り詰めの中へ戻します。`imageFo = ∃̇∈ (con a) φ` の意味論により、これはちょうど `y` が `imageFo` を満たすことの証明です。したがって、始域の要素が切り詰められていないデータとして返されることはありません。
 
 これで `ReplImage a φ y` から `BoundedImage y` への含意が完成します。段階への所属の成分を捨てる逆向きの含意と合わせて `Q≡` が得られ、`sym Q≡` に沿う輸送によって `replaceΔ₀` が証明されます。正確には、仮定 `lem : LEM (ℓ-suc ℓ)`、`φ` の Δ₀ 証人、および各 `x ∈ˢ a` における値のファイバーの可縮性のもとで、結論は `isContr (SetOf (ReplImage a φ))` です。これはここで述べた Δ₀ 置換定理です。この枝は新たな古典的原理を導入しませんが、`range∈βimg` が用いる共通の段階の構成は `lem` に依存します。
 <!--/-->

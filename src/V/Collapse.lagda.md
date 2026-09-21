@@ -41,10 +41,6 @@ The three representations interlock. A presentation `sett I f` produces a set wh
 
 ```agda
 open import V.Presentation {ℓ} using ( member; fiber )
-
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 ```
 
@@ -221,17 +217,17 @@ The proof starts from the membership certificate `z∈` and transports it along 
 ```agda
   π-member : (x z : S) → ⟨ z ∈ˢ π x ⟩
            → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
-  π-member x z z∈ = PT.map mk (subst (λ w → ⟨ z ∈ˢ w ⟩) (π-compute x) z∈)
+  π-member x z z∈ = map₁ mk (subst (λ w → ⟨ z ∈ˢ w ⟩) (π-compute x) z∈)
     where
     mk : Σ[ p ∈ Fiber x ] (π (⟪ x ⟫↪ (p .fst)) ≡ z)
 ```
 
 <!--en-->
-The auxiliary function `mk` reshapes this recursion data into the promised form. The witness `⟪ x ⟫↪ (p .fst)` is exactly the member of `x` named by the fiber; the second component `∈∈ₛ ⋯ .snd` converts the fiber's carrier-membership certificate from native to small membership; and the path `q` is reused directly. The result is a truncated pair, built with `PT.map`, so the conclusion remains merely an existence statement even though each ingredient is explicit.
+The auxiliary function `mk` reshapes this recursion data into the promised form. The witness `⟪ x ⟫↪ (p .fst)` is exactly the member of `x` named by the fiber; the second component `∈∈ₛ ⋯ .snd` converts the fiber's carrier-membership certificate from native to small membership; and the path `q` is reused directly. The result is a truncated pair, built with `map₁`, so the conclusion remains merely an existence statement even though each ingredient is explicit.
 <!--zh-->
-辅助函数 `mk` 把这份递归数据重塑为承诺的形式。见证 `⟪ x ⟫↪ (p .fst)` 正是纤维所指名的 `x` 的成员；第二分量 `∈∈ₛ ⋯ .snd` 把纤维的载体隶属证书从原生隶属转换为小隶属；路径 `q` 则直接复用。结果是用 `PT.map` 构造的截断对，因此尽管每个成分都是显式的，结论仍只是存在性陈述。
+辅助函数 `mk` 把这份递归数据重塑为承诺的形式。见证 `⟪ x ⟫↪ (p .fst)` 正是纤维所指名的 `x` 的成员；第二分量 `∈∈ₛ ⋯ .snd` 把纤维的载体隶属证书从原生隶属转换为小隶属；路径 `q` 则直接复用。结果是用 `map₁` 构造的截断对，因此尽管每个成分都是显式的，结论仍只是存在性陈述。
 <!--ja-->
-補助関数 `mk` はこの再帰データを約束された形に作り替えます。証拠 `⟪ x ⟫↪ (p .fst)` はファイバーが名指す `x` の要素そのものです。第二成分 `∈∈ₛ ⋯ .snd` はファイバーの台への所属の証拠を本来の所属から小所属へ変換し、パス `q` はそのまま再利用します。結果は `PT.map` で構成される切り詰められた組であり、各成分が明示的でも、結論はあくまで存在の主張のままです。
+補助関数 `mk` はこの再帰データを約束された形に作り替えます。証拠 `⟪ x ⟫↪ (p .fst)` はファイバーが名指す `x` の要素そのものです。第二成分 `∈∈ₛ ⋯ .snd` はファイバーの台への所属の証拠を本来の所属から小所属へ変換し、パス `q` はそのまま再利用します。結果は `map₁` で構成される切り詰められた組であり、各成分が明示的でも、結論はあくまで存在の主張のままです。
 <!--/-->
 
 ```agda
@@ -269,7 +265,7 @@ The set `πX` is the image of `π` restricted to `X`, built with `sett` over the
 
   πX-member : (z : S) → ⟨ z ∈ˢ πX ⟩
             → ∥ Σ[ y ∈ S ] (⟨ y ∈ˢ X ⟩ × (π y ≡ z)) ∥₁
-  πX-member z z∈ = PT.map mk z∈
+  πX-member z z∈ = map₁ mk z∈
 ```
 
 <!--en-->
@@ -290,18 +286,18 @@ The converse introduction says that `πX` contains all the collapse values it sh
 ```
 
 <!--en-->
-Transitivity of `πX` takes the form demanded by `isTrans`: if `y` is a member of `x` and `x` belongs to the range, then `y` belongs to the range. The proof eliminates the truncated hypothesis `x∈πX` with `PT.rec`, which is legitimate because the goal `⟨ y ∈ˢ πX ⟩` is a proposition. Each witness `z` with `π z ≡ x` and `z ∈ X` reduces the problem to showing `y ∈ π z`.
+Transitivity of `πX` takes the form demanded by `isTrans`: if `y` is a member of `x` and `x` belongs to the range, then `y` belongs to the range. The proof eliminates the truncated hypothesis `x∈πX` with `rec₁`, which is legitimate because the goal `⟨ y ∈ˢ πX ⟩` is a proposition. Each witness `z` with `π z ≡ x` and `z ∈ X` reduces the problem to showing `y ∈ π z`.
 <!--zh-->
-`πX` 的传递性取 `isTrans` 要求的形式：若 `y` 是 `x` 的成员且 `x` 属于像，则 `y` 属于像。证明用 `PT.rec` 消去截断的假设 `x∈πX`，这是合法的，因为目标 `⟨ y ∈ˢ πX ⟩` 是命题。每个满足 `π z ≡ x` 且 `z ∈ X` 的见证都把问题化为 `y ∈ π z`。
+`πX` 的传递性取 `isTrans` 要求的形式：若 `y` 是 `x` 的成员且 `x` 属于像，则 `y` 属于像。证明用 `rec₁` 消去截断的假设 `x∈πX`，这是合法的，因为目标 `⟨ y ∈ˢ πX ⟩` 是命题。每个满足 `π z ≡ x` 且 `z ∈ X` 的见证都把问题化为 `y ∈ π z`。
 <!--ja-->
-`πX` の推移性は `isTrans` が要求する形を取ります。`y` が `x` の要素であり `x` が像に属するなら、`y` も像に属します。証明は切り詰められた仮定 `x∈πX` を `PT.rec` で消去します。目標の `⟨ y ∈ˢ πX ⟩` が命題であるため、これは正当です。`π z ≡ x` かつ `z ∈ X` を満たす各証拠 `z` は、問題を `y ∈ π z` の証明に帰着させます。
+`πX` の推移性は `isTrans` が要求する形を取ります。`y` が `x` の要素であり `x` が像に属するなら、`y` も像に属します。証明は切り詰められた仮定 `x∈πX` を `rec₁` で消去します。目標の `⟨ y ∈ˢ πX ⟩` が命題であるため、これは正当です。`π z ≡ x` かつ `z ∈ X` を満たす各証拠 `z` は、問題を `y ∈ π z` の証明に帰着させます。
 <!--/-->
 
 ```agda
   πX-intro y y∈X = ∣ fiber X y∈X .fst , cong π (fiber X y∈X .snd) ∣₁
 
   πX-trans : isTrans πX
-  πX-trans {x} {y} y∈x x∈πX = PT.rec (snd (y ∈ˢ πX)) go (πX-member x x∈πX)
+  πX-trans {x} {y} y∈x x∈πX = rec₁ (snd (y ∈ˢ πX)) go (πX-member x x∈πX)
     where
     go : Σ[ z ∈ S ] (⟨ z ∈ˢ X ⟩ × (π z ≡ x)) → ⟨ y ∈ˢ πX ⟩
 ```
@@ -315,7 +311,7 @@ The inner step first transports `y∈x` along the path `π z ≡ x` to obtain `y
 <!--/-->
 
 ```agda
-    go (z , z∈X , pzx) = PT.rec (snd (y ∈ˢ πX)) go₂ (π-member z y y∈πz)
+    go (z , z∈X , pzx) = rec₁ (snd (y ∈ˢ πX)) go₂ (π-member z y y∈πz)
       where
       y∈πz : y ∈ᵗ π z
       y∈πz = subst (λ w → y ∈ᵗ w) (sym pzx) y∈x
@@ -403,11 +399,11 @@ With the transitive range in place, the remaining question is whether the carrie
 <!--/-->
 
 <!--en-->
-The recovery lemma takes two inputs. The first is the truncated statement `⟨ π z ∈ˢ π x ⟩`; the second is a comparison principle `same` asserting that any `b` in `x ∩ X` with `π b ≡ π z` must equal `z`. The target `z ∈ᵗ x` is a proposition, so eliminating the truncation with `PT.rec` is legitimate. Transporting the hypothesis along the computation law of `π x` turns it into membership in the set presented by `step x`, whose members are indexed by `Fiber x`.
+The recovery lemma takes two inputs. The first is the truncated statement `⟨ π z ∈ˢ π x ⟩`; the second is a comparison principle `same` asserting that any `b` in `x ∩ X` with `π b ≡ π z` must equal `z`. The target `z ∈ᵗ x` is a proposition, so eliminating the truncation with `rec₁` is legitimate. Transporting the hypothesis along the computation law of `π x` turns it into membership in the set presented by `step x`, whose members are indexed by `Fiber x`.
 <!--zh-->
-恢复引理接受两个输入。其一是截断陈述 `⟨ π z ∈ˢ π x ⟩`；其二是比较原理 `same`，断言任何属于 `x ∩ X` 且满足 `π b ≡ π z` 的 `b` 必等于 `z`。目标 `z ∈ᵗ x` 是命题，因此用 `PT.rec` 消去截断是合法的。沿 `π x` 的计算律搬运假设，便把它化为 `step x` 所呈现集合的成员，其成员由 `Fiber x` 索引。
+恢复引理接受两个输入。其一是截断陈述 `⟨ π z ∈ˢ π x ⟩`；其二是比较原理 `same`，断言任何属于 `x ∩ X` 且满足 `π b ≡ π z` 的 `b` 必等于 `z`。目标 `z ∈ᵗ x` 是命题，因此用 `rec₁` 消去截断是合法的。沿 `π x` 的计算律搬运假设，便把它化为 `step x` 所呈现集合的成员，其成员由 `Fiber x` 索引。
 <!--ja-->
-復元の補題は二つの入力を取ります。第一は切り詰められた主張 `⟨ π z ∈ˢ π x ⟩`、第二は比較の原理 `same` で、`x ∩ X` に属し `π b ≡ π z` を満たす任意の `b` が `z` と等しいと述べます。目標の `z ∈ᵗ x` は命題なので、`PT.rec` による切り詰めの消去は正当です。仮定を `π x` の計算規則に沿って輸送すると、それは `step x` の提示する集合への所属になり、その要素は `Fiber x` で添字づけられます。
+復元の補題は二つの入力を取ります。第一は切り詰められた主張 `⟨ π z ∈ˢ π x ⟩`、第二は比較の原理 `same` で、`x ∩ X` に属し `π b ≡ π z` を満たす任意の `b` が `z` と等しいと述べます。目標の `z ∈ᵗ x` は命題なので、`rec₁` による切り詰めの消去は正当です。仮定を `π x` の計算規則に沿って輸送すると、それは `step x` の提示する集合への所属になり、その要素は `Fiber x` で添字づけられます。
 <!--/-->
 
 ```agda
@@ -415,7 +411,7 @@ The recovery lemma takes two inputs. The first is the truncated statement `⟨ �
     π∈-recover : (x z : S) → ⟨ π z ∈ˢ π x ⟩
                → ((b : S) → b ∈ᵗ x → b ∈ᵗ X → π b ≡ π z → b ≡ z)
                → z ∈ᵗ x
-    π∈-recover x z h same = PT.rec (snd (z ∈ˢ x))
+    π∈-recover x z h same = rec₁ (snd (z ∈ˢ x))
 ```
 
 <!--en-->
@@ -690,7 +686,7 @@ The statement combines the two carrier-side data: the inclusion `⟨ Y ⊆ X ⟩
 <!--en-->
 The step compares the two sets through `extensionalV`, the extensionality principle of the hierarchy itself: two sets are equal once they have the same members, formulated here as a family of paths obtained from biconditionals. The direction `to` shows that members of the collapsed set are already members of `y`, and it starts by eliminating the truncated membership `xπ` after transporting it along the computation law, exposing a fiber of `Fiber y` together with the path `π` of the named member equaling `x`.
 <!--zh-->
-归纳步通过 `extensionalV` 比较两个集合，这是层级自身的外延性原理：只要成员相同两个集合便相等，这里表述为由双向蕴含生成的路径族。方向 `to` 说明塌缩集合的成员已是 `y` 的成员；证明先把截断隶属 `xπ` 沿计算律搬运，再用 `PT.rec` 消去，露出 `Fiber y` 的一个纤维以及指名成员的 `π` 值等于 `x` 的路径。
+归纳步通过 `extensionalV` 比较两个集合，这是层级自身的外延性原理：只要成员相同两个集合便相等，这里表述为由双向蕴含生成的路径族。方向 `to` 说明塌缩集合的成员已是 `y` 的成员；证明先把截断隶属 `xπ` 沿计算律搬运，再用 `rec₁` 消去，露出 `Fiber y` 的一个纤维以及指名成员的 `π` 值等于 `x` 的路径。
 <!--ja-->
 ステップは `extensionalV`、すなわち階層そのものの外延性の原理によって二つの集合を比較します。要素が同じなら集合は等しいというもので、ここでは双条件から作られるパスの族として定式化されています。向き `to` は、崩壊された集合の要素がすでに `y` の要素であることを示し、まず切り詰められた所属 `xπ` を計算規則に沿って輸送してから消去し、`Fiber y` のファイバーと、名指しされた要素の `π` 値が `x` に等しいパスを取り出します。
 <!--/-->
@@ -699,7 +695,7 @@ The step compares the two sets through `extensionalV`, the extensionality princi
     stepF y IH yY = extensionalV (λ x → ⇔toPath (to x) (from x))
       where
       to : (x : S) → ⟨ x ∈ˢ π y ⟩ → x ∈ᵗ y
-      to x xπ = PT.rec (snd (x ∈ˢ y)) go
+      to x xπ = rec₁ (snd (x ∈ˢ y)) go
         (subst (λ w → ⟨ x ∈ˢ w ⟩) (π-compute y) xπ)
 ```
 

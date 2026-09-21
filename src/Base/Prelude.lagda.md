@@ -126,6 +126,30 @@ open import Cubical.Foundations.Prelude public
 ```
 
 <!--en-->
+The identity function `id`{.Agda} gives a simple example of a definition that works uniformly at every universe level. For an arbitrary level `ℓ`{.Agda} and type `A : Type ℓ`{.Agda}, it accepts an element of `A`{.Agda} and returns that same element:
+<!--zh-->
+恒等函数 `id`{.Agda} 是一个在每个宇宙层级上都能统一使用的简单例子。给定任意层级 `ℓ`{.Agda} 以及该层级中的类型 `A : Type ℓ`{.Agda}，它接受 `A`{.Agda} 的一个元素，并原样返回这个元素：
+<!--ja-->
+恒等関数 `id`{.Agda} は、どの宇宙レベルでも一様に使える定義の簡単な例です。任意のレベル `ℓ`{.Agda} と型 `A : Type ℓ`{.Agda} に対して、`A`{.Agda} の要素を受け取り、その要素をそのまま返します。
+<!--/-->
+
+```agda
+id : ∀ {ℓ} {A : Type ℓ} → A → A
+```
+
+<!--en-->
+The level and the type are implicit arguments, so callers normally supply only the element. Since that element already has the result type `A`{.Agda}, the defining equation simply returns it without inspecting how it was constructed.
+<!--zh-->
+层级参数与类型参数都是隐式的，因此调用时通常只需给出元素。这个元素本身已经具有结果类型 `A`{.Agda}，所以定义等式直接返回它，无须分析它是如何构造出来的。
+<!--ja-->
+レベルと型は暗黙引数なので、通常は要素だけを与えて使います。その要素はすでに結果の型 `A`{.Agda} をもつため、定義式は構成のされ方を調べずに、そのまま返します。
+<!--/-->
+
+```agda
+id x = x
+```
+
+<!--en-->
 ## [Π types]{.term-intro #pi-type}
 
 Many constructions later in the book need to provide data depending on each object. A Π type expresses this basic relationship.
@@ -189,15 +213,15 @@ Given a type `A` and a type `B x` for each `x : A`, we form the Σ type:
 
 An element of a Σ type is called a **[dependent pair]{.term-intro #dependent-pair}**. It is built in two steps: choose `a : A`, then choose an element `b` of `B a`; the resulting pair is written `(a , b)`. We call `a` the **[first component]{.term-intro #first-component}** and `b` the **[second component]{.term-intro #second-component}**. Because the type of the second component depends on `a`, only after fixing the first component do we know the type in which the second must lie.
 
+The second component may itself be a proof of a property of the first. This book calls a proof carried together with an object so that later reasoning may use the property a **[certificate]{.term-intro #certificate}**. A certificate remains an ordinary Agda proof; the name emphasizes its role in the dependent pair.
+
 When `B` does not depend on `x`, every second component lies in the same type, and the dependent pair specialises to an ordinary product:
 
-<div class="single-line-code"><code>A × B  :=  `Σ`{.Agda} (_ : A) B</code></div>
+<div class="single-line-code"><code>`A × B  :=  Σ (_ : A) B`{.Agda}</code></div>
 
 An ordinary product places two independent elements together; a Σ type places a particular `a` together with data belonging to the corresponding type `B a`. Dependent pairs are built with `_,_`{.Agda}, `fst`{.Agda} extracts the first component, and `snd`{.Agda} extracts the second.
 
 A Π type handles "for every `x`, give data depending on `x`"; a Σ type handles "choose an `x`, and keep it together with data depending on it".
-
-The second component may itself be a proof of a property of the first. This book calls a proof carried together with an object so that later reasoning may use the property a **[certificate]{.term-intro #certificate}**. A certificate remains an ordinary Agda proof; the name emphasizes its role in the dependent pair.
 
 <!--zh-->
 ## [Σ 类型]{.term-intro #sigma-type}
@@ -210,15 +234,15 @@ The second component may itself be a proof of a property of the first. This book
 
 Σ 类型的元素称为**[依值对]{.term-intro #dependent-pair}**。它先给出一个 `a : A`，再给出一个属于 `B a` 的元素 `b`，所得的对写作 `(a , b)`。我们把 `a` 称为**[第一分量]{.term-intro #first-component}**，把 `b` 称为**[第二分量]{.term-intro #second-component}**。由于第二分量的类型取决于 `a`，只有确定第一分量以后，才能确定第二分量应当属于哪个类型。
 
+第二分量也可以是关于第一分量的性质证明。本书把这种随对象一同携带、使后续论证能够使用相应性质的证明称为**[证书]{.term-intro #certificate}**。证书仍然是普通的 Agda 证明；这个名称强调的是它在依值对中所起的作用。
+
 当 `B` 不依赖 `x` 时，所有第二分量都属于同一个类型，依值对便特化为普通的积：
 
-<div class="single-line-code"><code>A × B  :=  `Σ`{.Agda} (_ : A) B</code></div>
+<div class="single-line-code"><code>`A × B  :=  Σ (_ : A) B`{.Agda}</code></div>
 
 普通的积把两个彼此独立的元素放在一起；Σ 类型则把某个 `a` 与属于相应类型 `B a` 的数据放在一起。依值对用 `_,_`{.Agda} 构造，用 `fst`{.Agda} 取出第一分量，用 `snd`{.Agda} 取出第二分量。
 
 Π 类型处理的是「对每个 `x`，给出依赖于 `x` 的数据」；Σ 类型处理的是「选定某个 `x`，并将依赖于它的数据与它放在一起」。
-
-第二分量也可以是关于第一分量的性质证明。本书把这种随对象一同携带、使后续论证能够使用相应性质的证明称为**[证书]{.term-intro #certificate}**。证书仍然是普通的 Agda 证明；这个名称强调的是它在依值对中所起的作用。
 
 <!--ja-->
 ## [Σ 型]{.term-intro #sigma-type}
@@ -231,21 +255,79 @@ The second component may itself be a proof of a property of the first. This book
 
 Σ 型の元を**[依存対]{.term-intro #dependent-pair}**と呼びます。まず `a : A` を選び、次に `B a` の元 `b` を選びます。得られた対を `(a , b)` と書きます。`a` を**[第一成分]{.term-intro #first-component}**、`b` を**[第二成分]{.term-intro #second-component}**と呼びます。第二成分の型は `a` に依存するため、第一成分を定めて初めて、第二成分がどの型に属すべきかが決まります。
 
+第二成分を、第一成分の性質を示す証明にすることもできます。本書では、後の議論でその性質を使えるよう対象とともに携える証明を**[証明書]{.term-intro #certificate}**と呼びます。証明書は通常の Agda の証明であり、この名前は依存対の中で果たす役割を強調しています。
+
 `B` が `x` に依存しない場合、すべての第二成分は同じ型に属し、依存対は通常の積に特化します。
 
-<div class="single-line-code"><code>A × B  :=  `Σ`{.Agda} (_ : A) B</code></div>
+<div class="single-line-code"><code>`A × B  :=  Σ (_ : A) B`{.Agda}</code></div>
 
 通常の積は互いに独立した二つの元を一緒にしますが、Σ 型は、ある `a` と、対応する型 `B a` に属するデータを一緒にします。依存対は `_,_`{.Agda} で作り、`fst`{.Agda} で第一成分を、`snd`{.Agda} で第二成分を取り出します。
 
 Π 型が扱うのは「すべての `x` に対して、`x` に依存するデータを与えること」です。Σ 型が扱うのは「一つの `x` を選び、それに依存するデータと一緒に収めること」です。
-
-第二成分を、第一成分の性質を示す証明にすることもできます。本書では、後の議論でその性質を使えるよう対象とともに携える証明を**[証明書]{.term-intro #certificate}**と呼びます。証明書は通常の Agda の証明であり、この名前は依存対の中で果たす役割を強調しています。
 
 <!--/-->
 
 ```agda
 open import Cubical.Data.Sigma public
   using ( Σ; Σ-syntax; _×_; _,_; fst; snd )
+```
+
+<!--en-->
+## [Sum types]{.term-intro #sum-type}
+<!--zh-->
+## [和类型]{.term-intro #sum-type}
+<!--ja-->
+## [直和型]{.term-intro #sum-type}
+<!--/-->
+
+<!--en-->
+The sum type `A ⊎ B`{.Agda} is an [inductive type]{.term-intro #inductive-type} whose elements come in two forms. An element `a : A`{.Agda} gives `inl a : A ⊎ B`{.Agda}, while an element `b : B`{.Agda} gives `inr b : A ⊎ B`{.Agda}. These operations are its **[constructors]{.term-intro #constructor}**, with rules
+
+$$\frac{a:A}{\operatorname{inl}\,a:A\mathbin{\uplus}B}\qquad\frac{b:B}{\operatorname{inr}\,b:A\mathbin{\uplus}B}$$
+
+Thus a sum value records both which side was chosen and the element supplied on that side. Pattern matching can recover both pieces of information. The eliminator `⊎-rec`{.Agda} handles the two constructors separately: one branch consumes an `A`, the other consumes a `B`, and both branches must produce the same target type.
+
+$$\mathsf{\uplus\text{-}rec}:(A\to C)\to(B\to C)\to A\mathbin{\uplus}B\to C$$
+
+$$\mathsf{\uplus\text{-}rec}\;f\;g\;x=
+\begin{cases}
+f(a), & x=\operatorname{inl}\,a,\\
+g(b), & x=\operatorname{inr}\,b
+\end{cases}$$
+<!--zh-->
+和类型 `A ⊎ B`{.Agda} 是一种[归纳类型]{.term-intro #inductive-type}，其元素有两种构造方式。给定 `a : A`{.Agda}，可以构造 `inl a : A ⊎ B`{.Agda}；给定 `b : B`{.Agda}，可以构造 `inr b : A ⊎ B`{.Agda}。构造规则为
+
+$$\frac{a:A}{\operatorname{inl}\,a:A\mathbin{\uplus}B}\qquad\frac{b:B}{\operatorname{inr}\,b:A\mathbin{\uplus}B}$$
+
+这里的 `inl` 与 `inr` 称为**[构造子]{.term-intro #constructor}**。因此，和类型的元素同时记录选中了哪一侧，以及该侧所给出的元素；模式匹配可以恢复这两项信息。消去子 `⊎-rec`{.Agda} 分别处理两个构造子：一个分支接收 `A`，另一个分支接收 `B`，两个分支必须产生相同的目标类型。
+
+$$\mathsf{\uplus\text{-}rec}:(A\to C)\to(B\to C)\to A\mathbin{\uplus}B\to C$$
+
+$$\mathsf{\uplus\text{-}rec}\;f\;g\;x=
+\begin{cases}
+f(a), & x=\operatorname{inl}\,a,\\
+g(b), & x=\operatorname{inr}\,b
+\end{cases}$$
+<!--ja-->
+直和 `A ⊎ B`{.Agda} は、二通りの構成法をもつ[帰納型]{.term-intro #inductive-type}です。`a : A`{.Agda} から `inl a : A ⊎ B`{.Agda} を構成でき、`b : B`{.Agda} から `inr b : A ⊎ B`{.Agda} を構成できます。構成規則は次のとおりです。
+
+$$\frac{a:A}{\operatorname{inl}\,a:A\mathbin{\uplus}B}\qquad\frac{b:B}{\operatorname{inr}\,b:A\mathbin{\uplus}B}$$
+
+ここで `inl` と `inr` を**[構成子]{.term-intro #constructor}**と呼びます。したがって直和の元は、どちら側が選ばれたかと、その側で与えられた元の両方を記録します。パターンマッチによって、その二つの情報を取り出せます。除去子 `⊎-rec`{.Agda} は二つの構成子を別々に扱います。一方の枝は `A` を、他方の枝は `B` を受け取り、どちらも同じ目的の型を作らなければなりません。
+
+$$\mathsf{\uplus\text{-}rec}:(A\to C)\to(B\to C)\to A\mathbin{\uplus}B\to C$$
+
+$$\mathsf{\uplus\text{-}rec}\;f\;g\;x=
+\begin{cases}
+f(a), & x=\operatorname{inl}\,a,\\
+g(b), & x=\operatorname{inr}\,b
+\end{cases}$$
+<!--/-->
+
+```agda
+open import Cubical.Data.Sum public
+  using ( _⊎_; inl; inr )
+  renaming ( rec to ⊎-rec )
 ```
 
 <!--en-->
@@ -265,7 +347,7 @@ Its elements have the shape:
 
 <div class="single-line-code"><code>(a , (b , c))</code></div>
 
-In Agda, the keyword `record` begins the declaration of such a type, after which its components are given [field]{.term-intro #record-field} names. Constructing an element of the record requires a value for every field. A record declaration may also use the keyword `constructor` to name this operation; that name is the record type's **[constructor]{.term-intro #constructor}**. The constructor accepts the field values in dependency order and assembles them into one record. If three fields correspond to `a`, `b` and `c`, a constructor named `mkR` can present the construction in the flat form:
+In Agda, the keyword `record` begins the declaration of such a type, after which its components are given [field]{.term-intro #record-field} names. Constructing an element of the record requires a value for every field. A record declaration may also use the keyword `constructor` to name this operation; that name is the record type's **[constructor]{.term-ref #constructor}**. The constructor accepts the field values in dependency order and assembles them into one record. If three fields correspond to `a`, `b` and `c`, a constructor named `mkR` can present the construction in the flat form:
 
 <div class="single-line-code"><code>mkR a b c</code></div>
 
@@ -279,7 +361,7 @@ This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, withou
 
 <div class="single-line-code"><code>(a , (b , c))</code></div>
 
-在 Agda 中，关键字 `record` 开始一个记录类型的声明，随后为其中的各个分量指定[字段]{.term-intro #record-field}名。要构造这个记录类型的元素，就必须为各个字段提供相应的值。记录声明还可以用关键字 `constructor` 为这种构造方式命名；这个名字称为记录类型的**[构造子]{.term-intro #constructor}**。构造子按照字段之间的依赖关系接收各字段的值，再把它们组装成一个记录。例如，若三个字段依次对应 `a`、`b` 和 `c`，构造子 `mkR` 便可以把构造过程展平地写成：
+在 Agda 中，关键字 `record` 开始一个记录类型的声明，随后为其中的各个分量指定[字段]{.term-intro #record-field}名。要构造这个记录类型的元素，就必须为各个字段提供相应的值。记录声明还可以用关键字 `constructor` 为这种构造方式命名；这个名字称为记录类型的**[构造子]{.term-ref #constructor}**。构造子按照字段之间的依赖关系接收各字段的值，再把它们组装成一个记录。例如，若三个字段依次对应 `a`、`b` 和 `c`，构造子 `mkR` 便可以把构造过程展平地写成：
 
 <div class="single-line-code"><code>mkR a b c</code></div>
 
@@ -293,7 +375,7 @@ This carries the same data as the nested Σ value `(a , (b , c))`{.Agda}, withou
 
 <div class="single-line-code"><code>(a , (b , c))</code></div>
 
-Agda では、キーワード `record` がレコード型の宣言を開始し、続いて各成分に[フィールド]{.term-intro #record-field}名を与えます。レコード型の元を構成するには、すべてのフィールドに対応する値を与えなければなりません。レコード宣言では、キーワード `constructor` を使ってこの構成操作に名前を付けることもできます。この名前をレコード型の**[構成子]{.term-intro #constructor}**と呼びます。構成子は依存関係の順にフィールドの値を受け取り、一つのレコードへ組み立てます。三つのフィールドが順に `a`、`b`、`c` に対応するなら、`mkR` という構成子による構成は平らに次のように書けます。
+Agda では、キーワード `record` がレコード型の宣言を開始し、続いて各成分に[フィールド]{.term-intro #record-field}名を与えます。レコード型の元を構成するには、すべてのフィールドに対応する値を与えなければなりません。レコード宣言では、キーワード `constructor` を使ってこの構成操作に名前を付けることもできます。この名前をレコード型の**[構成子]{.term-ref #constructor}**と呼びます。構成子は依存関係の順にフィールドの値を受け取り、一つのレコードへ組み立てます。三つのフィールドが順に `a`、`b`、`c` に対応するなら、`mkR` という構成子による構成は平らに次のように書けます。
 
 <div class="single-line-code"><code>mkR a b c</code></div>
 
@@ -381,7 +463,8 @@ In cubical type theory, such an equality proof is called a **path** from `x` to 
 - `_∙_`{.Agda} composes paths whose endpoints meet; a path from `x` to `y` followed by one from `y` to `z` gives a path from `x` to `z`.
 - `cong`{.Agda} says that functions preserve equality: equal inputs are sent to equal outputs. `cong₂`{.Agda} is the corresponding binary operation.
 - `funExt`{.Agda} turns pointwise equality into equality of functions: if `f x ≡ g x`{.Agda} for every `x`, then `f ≡ g`{.Agda}.
-- `transport`{.Agda} moves an element along a path between types; `subst`{.Agda} moves data depending on `x` along `x ≡ y`{.Agda} to data depending on `y`.
+- `transport`{.Agda} moves an element along a path between types.
+- `subst`{.Agda} moves data depending on `x` along `x ≡ y`{.Agda} to data depending on `y`. Its natural two-argument generalization, `subst2`{.Agda}, accepts a path in each input and moves data depending on both inputs to the new pair in one step.
 
 For example, given a function `f : A → B`{.Agda}, the action of `cong`{.Agda} can be summarized as:
 
@@ -402,7 +485,8 @@ For further details on path types in Cubical Agda, see the [Cubical chapter of t
 - `_∙_`{.Agda} 把首尾相接的路径复合起来；从 `x` 到 `y`，再从 `y` 到 `z`，便得到从 `x` 到 `z` 的路径。
 - `cong`{.Agda} 说明函数保持相等：函数把相等的输入送到相等的输出。`cong₂`{.Agda} 是相应的二元版本。
 - `funExt`{.Agda} 从逐点相等得到函数相等：如果 `f x ≡ g x`{.Agda} 对每个 `x` 都成立，那么 `f ≡ g`{.Agda}。
-- `transport`{.Agda} 沿类型之间的路径搬移元素；`subst`{.Agda} 则沿 `x ≡ y`{.Agda}，把依赖于 `x` 的数据搬移为依赖于 `y` 的数据。
+- `transport`{.Agda} 沿类型之间的路径搬移元素。
+- `subst`{.Agda} 沿 `x ≡ y`{.Agda}，把依赖于 `x` 的数据搬移为依赖于 `y` 的数据。`subst2`{.Agda} 是它向双参数情形的自然推广：分别给出两个输入上的路径，即可一步把依赖于两个旧输入的数据搬移到新的输入对。
 
 例如，给定函数 `f : A → B`{.Agda}，`cong`{.Agda} 的作用可以概括为：
 
@@ -423,7 +507,8 @@ For further details on path types in Cubical Agda, see the [Cubical chapter of t
 - `_∙_`{.Agda} は端点の一致するパスを合成します。`x` から `y` へ進み、続いて `y` から `z` へ進めば、`x` から `z` へのパスが得られます。
 - `cong`{.Agda} は関数が等しさを保つこと、すなわち等しい入力を等しい出力へ送ることを述べます。`cong₂`{.Agda} は対応する二引数版です。
 - `funExt`{.Agda} は各点での等しさから関数の等しさを与えます。すべての `x` について `f x ≡ g x`{.Agda} ならば、`f ≡ g`{.Agda} です。
-- `transport`{.Agda} は型の間のパスに沿って要素を移します。`subst`{.Agda} は `x ≡ y`{.Agda} に沿って、`x` に依存するデータを `y` に依存するデータへ移します。
+- `transport`{.Agda} は型の間のパスに沿って要素を移します。
+- `subst`{.Agda} は `x ≡ y`{.Agda} に沿って、`x` に依存するデータを `y` に依存するデータへ移します。`subst2`{.Agda} はこれを二引数の場合へ自然に一般化したもので、各入力のパスを与えると、二つの古い入力に依存するデータを新しい入力の組へ一度に移します。
 
 例えば関数 `f : A → B`{.Agda} があるとき、`cong`{.Agda} の働きは次のようにまとめられます。
 
@@ -438,7 +523,7 @@ Cubical Agda のパス型について詳しくは、[Agda 2.8.0 マニュアル�
 
 ```agda
 open import Cubical.Foundations.Prelude public
-  using ( _≡_; refl; sym; _∙_; cong; cong₂; transport; subst; funExt )
+  using ( _≡_; refl; sym; _∙_; cong; cong₂; transport; subst; subst2; funExt )
 ```
 
 <!--en-->
@@ -486,6 +571,60 @@ Three related notions will recur throughout the book. Given `f : A → B`{.Agda}
 <!--/-->
 
 <!--en-->
+## Propositionhood
+<!--zh-->
+## 命题性
+<!--ja-->
+## 命題性
+<!--/-->
+
+<!--en-->
+In cubical type theory, a proposition is a type satisfying `isProp`{.Agda}. This condition makes any two elements of the type equal, so the type retains only the logical information of whether a proof exists, without distinguishing different proofs. An element of the type proves the corresponding proposition; without such an element, the proposition has not yet been proved.
+
+Four closure principles recur later in the book:
+
+- `isPropΠ`{.Agda} says that propositions are closed under Π types. If every `B x` is a proposition, then `(x : A) → B x` is also a proposition. Universally quantifying a family of propositions therefore produces another proposition.
+- `isProp→`{.Agda} is the non-dependent specialization of `isPropΠ`{.Agda}. If `B` is a proposition, then the function type `A → B` is a proposition, with no propositionhood requirement on its source type `A`.
+- `isPropΣ`{.Agda} handles dependent pairs. If the base is a proposition and every fiber is a proposition, then their Σ type is also a proposition.
+- `isProp×`{.Agda} is the non-dependent specialization of `isPropΣ`{.Agda}. If `A` and `B` are propositions, then a pair consisting of a proof of each is again a proposition: any two such pairs are equal componentwise.
+<!--zh-->
+在立方类型论中，命题是满足 `isProp`{.Agda} 的类型。这个条件保证该类型的任意两个元素都相等，因此其中只保留「是否存在证明」这一逻辑信息，不再区分不同的证明。类型具有元素时，相应命题成立；无法构造元素时，则尚未得到该命题的证明。
+
+后文会反复使用命题性的四项封闭性质：
+
+- `isPropΠ`{.Agda} 表明命题对 Π 类型封闭。若每个 `B x` 都是命题，那么 `(x : A) → B x` 也是命题。因此，对一族命题作全称量化，所得结果仍然是命题。
+- `isProp→`{.Agda} 是 `isPropΠ`{.Agda} 不带依赖时的特例。只要值域 `B` 是命题，函数类型 `A → B` 就是命题，而无须要求定义域 `A` 也是命题。
+- `isPropΣ`{.Agda} 处理依值对。若基底是命题，且每个纤维也都是命题，那么它们构成的 Σ 类型仍是命题。
+- `isProp×`{.Agda} 是 `isPropΣ`{.Agda} 不带依赖时的特例。若 `A` 与 `B` 都是命题，那么同时包含二者证明的对仍是命题：任意两个这样的对都逐分量相等。
+<!--ja-->
+立方型理論では、命題とは `isProp`{.Agda} を満たす型です。この条件により、その型の任意の二つの元は等しくなります。したがって、証明どうしを区別せず、証明が存在するかどうかという論理的な情報だけが残ります。型の元を構成すれば対応する命題が成り立つことが示され、元をまだ構成できなければ、その命題の証明はまだ得られていません。
+
+後の章では、命題性に関する四つの閉性を繰り返し使います。
+
+- `isPropΠ`{.Agda} は、命題が Π 型に対して閉じていることを示します。すべての `B x` が命題なら、`(x : A) → B x` も命題です。したがって、命題の族を全称量化して得られる結果も命題です。
+- `isProp→`{.Agda} は `isPropΠ`{.Agda} の依存しない特別な場合です。終域 `B` が命題なら、定義域 `A` が命題であることを仮定しなくても、関数型 `A → B` は命題になります。
+- `isPropΣ`{.Agda} は依存対を扱います。基底が命題で、各ファイバーも命題なら、それらから作る Σ 型も命題になります。
+- `isProp×`{.Agda} は `isPropΣ`{.Agda} の依存しない特別な場合です。`A` と `B` が命題なら、それぞれの証明を組にした型も命題です。そのような二つの組は成分ごとに等しくなります。
+<!--/-->
+
+```agda
+open import Cubical.Foundations.HLevels public
+  using ( isPropΠ; isProp→; isPropΣ; isProp× )
+```
+
+<!--en-->
+Propositionhood also controls equality between proof-carrying dependent pairs. If every possible second component is a proposition, `Σ≡Prop`{.Agda} says that two such pairs are equal as soon as their first components are equal. Their certificates contain no further distinguishable choice, so equality of the underlying objects determines equality of the complete packages.
+<!--zh-->
+命题性也控制着携带证明的依值对如何相等。若每个可能的第二分量都是命题，`Σ≡Prop`{.Agda} 表明：两个依值对的第一分量相等，就足以推出它们整体相等。证书不携带可进一步区分的选择，所以底层对象相等便能确定整个资料包相等。
+<!--ja-->
+命題性は、証明を携える依存対の等しさも制御します。可能な第二成分がすべて命題なら、`Σ≡Prop`{.Agda} により、二つの依存対は第一成分が等しいだけで全体として等しくなります。証明書にはそれ以上区別できる選択がないため、基礎となる対象の等しさが梱包全体の等しさを決定します。
+<!--/-->
+
+```agda
+open import Cubical.Data.Sigma public using ( Σ≡Prop )
+```
+
+<!--en-->
 ## The universe of propositions
 <!--zh-->
 ## 命题宇宙
@@ -494,8 +633,6 @@ Three related notions will recur throughout the book. Given `f : A → B`{.Agda}
 <!--/-->
 
 <!--en-->
-In cubical type theory, a proposition is a type satisfying `isProp`{.Agda}. This condition makes any two elements of the type equal, so the type retains only the logical information of whether a proof exists, without distinguishing different proofs. An element of the type proves the corresponding proposition; without such an element, the proposition has not yet been proved.
-
 To keep a proposition together with the fact that it is a proposition, the Cubical library uses `hProp ℓ`{.Agda}. This is the type of all propositions at universe level `ℓ`: in other words, `hProp ℓ`{.Agda} is the **universe of propositions** at that level. A `P : hProp ℓ`{.Agda} has two components:
 
 - The first component is the [underlying type]{.term-intro #underlying-type}: the type expressing the proposition, namely the statement of the proposition itself.
@@ -503,8 +640,6 @@ To keep a proposition together with the fact that it is a proposition, the Cubic
 
 Thus `P : hProp ℓ`{.Agda} represents a proposition, but does not say that the proposition has already been proved. Its certificate says only that the first component is a proposition; it does not say that the first component has an element.
 <!--zh-->
-在立方类型论中，命题是满足 `isProp`{.Agda} 的类型。这个条件保证该类型的任意两个元素都相等，因此其中只保留「是否存在证明」这一逻辑信息，不再区分不同的证明。类型具有元素时，相应命题成立；无法构造元素时，则尚未得到该命题的证明。
-
 为了把一个命题连同它具有命题性这一事实放在一起，Cubical 库使用 `hProp ℓ`{.Agda}。它是宇宙层级 `ℓ` 上所有命题组成的类型；换言之，`hProp ℓ`{.Agda} 就是该层级上的**命题宇宙**。一个 `P : hProp ℓ`{.Agda} 包含两个分量：
 
 - 第一分量是命题的[底层类型]{.term-intro #underlying-type}，也就是表达命题的类型，即命题的表述本身；
@@ -512,8 +647,6 @@ Thus `P : hProp ℓ`{.Agda} represents a proposition, but does not say that the 
 
 因此，`P : hProp ℓ`{.Agda} 表示一个命题，却不表示这个命题已经得到证明。它携带的证书只说明第一分量具有命题性，并不说明第一分量中存在元素。
 <!--ja-->
-立方型理論では、命題とは `isProp`{.Agda} を満たす型です。この条件により、その型の任意の二つの元は等しくなります。したがって、証明どうしを区別せず、証明が存在するかどうかという論理的な情報だけが残ります。型の元を構成すれば対応する命題が成り立つことが示され、元をまだ構成できなければ、その命題の証明はまだ得られていません。
-
 命題を、それが命題であるという事実と一緒に収めるため、Cubical ライブラリでは `hProp ℓ`{.Agda} を使います。これは宇宙レベル `ℓ` にあるすべての命題の型です。言い換えれば、`hProp ℓ`{.Agda} はそのレベルの**命題の宇宙**です。`P : hProp ℓ`{.Agda} は二つの成分を含みます。
 
 - 第一成分は命題の[基礎型]{.term-intro #underlying-type}、すなわち命題を表す型であり、命題の記述そのものです。
@@ -523,25 +656,16 @@ Thus `P : hProp ℓ`{.Agda} represents a proposition, but does not say that the 
 <!--/-->
 
 <!--en-->
-Two basic properties of the proposition universe recur later in the book:
-
-- `isSetHProp`{.Agda} says that `hProp ℓ`{.Agda} is itself an h-set. Propositions may still differ, but equality proofs between propositions contain no distinguishable higher structure.
-- `isPropΠ`{.Agda} says that propositions are closed under Π types. If every `B x` is a proposition, then `(x : A) → B x` is also a proposition. Universally quantifying a family of propositions therefore produces another proposition.
+The proposition universe is itself an h-set. `isSetHProp`{.Agda} allows propositions to differ, while ensuring that equality proofs between propositions contain no distinguishable higher structure.
 <!--zh-->
-关于命题宇宙，后文会反复使用两项基本性质：
-
-- `isSetHProp`{.Agda} 表明 `hProp ℓ`{.Agda} 本身是 h-集合。不同命题仍然可以彼此区分，但命题之间的相等证明不再含有可区分的更高结构。
-- `isPropΠ`{.Agda} 表明命题对 Π 类型封闭。若每个 `B x` 都是命题，那么 `(x : A) → B x` 也是命题。因此，对一族命题作全称量化，所得结果仍然是命题。
+命题宇宙本身是 h-集合。`isSetHProp`{.Agda} 允许不同命题彼此有别，同时保证命题之间的相等证明不再含有可区分的更高结构。
 <!--ja-->
-命題の宇宙について、後の章で繰り返し使う基本性質が二つあります。
-
-- `isSetHProp`{.Agda} は `hProp ℓ`{.Agda} 自身が h-集合であることを示します。異なる命題は区別できますが、命題間の等しさの証明には、区別できる高次の構造が残りません。
-- `isPropΠ`{.Agda} は、命題が Π 型に対して閉じていることを示します。すべての `B x` が命題なら、`(x : A) → B x` も命題です。したがって、命題の族を全称量化して得られる結果も命題です。
+命題の宇宙自身は h-集合です。`isSetHProp`{.Agda} は異なる命題を区別できるままにしつつ、命題間の等しさの証明には区別できる高次の構造が残らないことを保証します。
 <!--/-->
 
 ```agda
 open import Cubical.Foundations.HLevels public
-  using ( hProp; isSetHProp; isPropΠ )
+  using ( hProp; isSetHProp )
 ```
 
 <!--en-->
@@ -569,6 +693,67 @@ open import Cubical.Foundations.Structure public
 ```
 
 <!--en-->
+## [Propositional truncation]{.term-intro #propositional-truncation}
+<!--zh-->
+## [命题截断]{.term-intro #propositional-truncation}
+<!--ja-->
+## [命題的切り詰め]{.term-intro #propositional-truncation}
+<!--/-->
+
+<!--en-->
+A type may contain more information than a proposition should retain. The [propositional truncation]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} records that `A`{.Agda} has an element while deliberately forgetting which element it is. It is a [higher inductive type]{.term-intro #higher-inductive-type}: its generators include not only points but also paths between points. The point constructor `∣_∣₁`{.Agda} sends each `a : A`{.Agda} to `∣ a ∣₁ : ∥ A ∥₁`{.Agda}; the path constructor `squash₁`{.Agda} identifies every two elements of the truncation. Its defining rules are
+
+$$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$$
+
+Consequently `∥ A ∥₁`{.Agda} is always a proposition, even when `A`{.Agda} carries distinguishable data.
+<!--zh-->
+一个类型所携带的信息可能多于命题应当保留的信息。[命题截断]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} 记录 `A`{.Agda} 具有元素，却有意忘去具体是哪一个元素。它是一种[高阶归纳类型]{.term-intro #higher-inductive-type}：生成它的不仅有点，还有点之间的路径。点构造子 `∣_∣₁`{.Agda} 把每个 `a : A`{.Agda} 送到 `∣ a ∣₁ : ∥ A ∥₁`{.Agda}；路径构造子 `squash₁`{.Agda} 把截断中的任意两个元素认同起来。其定义规则为
+
+$$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$$
+
+因此，即使 `A`{.Agda} 携带可区分的资料，`∥ A ∥₁`{.Agda} 仍然总是命题。
+<!--ja-->
+型は、命題が保持すべき情報より多くの情報をもつことがあります。[命題的切り詰め]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} は、`A`{.Agda} に要素があることを記録しつつ、それがどの要素かを意図的に忘れます。これは[高階帰納型]{.term-intro #higher-inductive-type}です。その生成子には点だけでなく、点の間のパスも含まれます。点構成子 `∣_∣₁`{.Agda} は各 `a : A`{.Agda} を `∣ a ∣₁ : ∥ A ∥₁`{.Agda} へ送り、パス構成子 `squash₁`{.Agda} は切り詰めの任意の二要素を同一視します。その定義規則は次のとおりです。
+
+$$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$$
+
+したがって `A`{.Agda} が区別可能なデータをもっていても、`∥ A ∥₁`{.Agda} は常に命題です。
+<!--/-->
+
+<!--en-->
+There are two standard ways to use a truncated value. The recursor `rec₁`{.Agda} may expose a representative only while constructing a target already known to be a proposition; this restriction prevents a hidden choice from escaping as ordinary data.
+
+<div class="single-line-code"><code>rec₁ : isProp P → (A → P) → ∥ A ∥₁ → P</code></div>
+
+The map `map₁`{.Agda} applies a function `A → B`{.Agda} under the truncation and returns another truncated value.
+
+<div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
+<!--zh-->
+使用截断值有两种标准方式。递归子 `rec₁`{.Agda} 只有在目标已经证明为命题时，才允许局部取出一个代表；这项限制防止隐藏的选择逸出为普通资料。
+
+<div class="single-line-code"><code>rec₁ : isProp P → (A → P) → ∥ A ∥₁ → P</code></div>
+
+映射 `map₁`{.Agda} 在截断内部应用函数 `A → B`{.Agda}，再返回一个截断值。
+
+<div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
+<!--ja-->
+切り詰められた値の使い方には、二つの標準的な方法があります。再帰子 `rec₁`{.Agda} が代表を局所的に取り出せるのは、行き先が命題であるとすでに証明されている場合だけです。この制限により、隠された選択が通常のデータとして外へ出ることを防ぎます。
+
+<div class="single-line-code"><code>rec₁ : isProp P → (A → P) → ∥ A ∥₁ → P</code></div>
+
+写像 `map₁`{.Agda} は切り詰めの内側で関数 `A → B`{.Agda} を適用し、再び切り詰められた値を返します。
+
+<div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
+<!--/-->
+
+```agda
+import Cubical.HITs.PropositionalTruncation as PT
+open PT public
+  using ( ∥_∥₁; ∣_∣₁; squash₁ )
+  renaming ( rec to rec₁; map to map₁ )
+```
+
+<!--en-->
 ## Logical operations
 <!--zh-->
 ## 逻辑运算
@@ -577,11 +762,41 @@ open import Cubical.Foundations.Structure public
 <!--/-->
 
 <!--en-->
-The proposition universe is closed under the usual logical operations. The two logical constants are truth and falsity. Truth `⊤` is the proposition that always has an element; the library supplies it polymorphically at every universe level.
+The proposition universe is closed under the usual logical operations. The following subsections construct these operations from the type formers already introduced and explain when propositional truncation is required.
 <!--zh-->
-命题宇宙对通常的逻辑运算封闭。两个逻辑常量分别是真与假。真命题 `⊤` 始终具有元素，库把它定义为可用于任意宇宙层级的命题。
+命题宇宙对通常的逻辑运算封闭。下面从已经引入的类型构造出发逐项说明这些运算，并解释其中哪些需要命题截断。
 <!--ja-->
-命題の宇宙は通常の論理演算について閉じています。二つの論理定数は真と偽です。真 `⊤` は常に要素をもつ命題であり、ライブラリはこれを任意の宇宙レベルで使える命題として与えます。
+命題の宇宙は通常の論理演算について閉じています。以下では、すでに導入した型の構成法から各演算を組み立て、どの場合に命題的切り詰めが必要かを説明します。
+<!--/-->
+
+<!--en-->
+### Truth
+<!--zh-->
+### 真
+<!--ja-->
+### 真
+<!--/-->
+
+<!--en-->
+The unit type represents trivial evidence. Its zero-level form in `Type₀`{.Agda} is written `⊤₀`{.Agda}, and `⊤* {ℓ}`{.Agda} is its lift to an arbitrary universe level `ℓ`{.Agda}. Their unique elements are written `tt`{.Agda} and `tt*`{.Agda}. Since any two elements of a unit type are equal, `isProp⊤*`{.Agda} certifies that `⊤*`{.Agda} is a proposition.
+<!--zh-->
+单元类型表示平凡的证据。它位于 `Type₀`{.Agda} 的零层级形式记作 `⊤₀`{.Agda}，提升到任意宇宙层级 `ℓ`{.Agda} 后记作 `⊤* {ℓ}`{.Agda}；二者的唯一元素分别记作 `tt`{.Agda} 与 `tt*`{.Agda}。单元类型中的任意两个元素都相等，因此 `isProp⊤*`{.Agda} 证明 `⊤*`{.Agda} 是命题。
+<!--ja-->
+単元型は自明な証拠を表します。`Type₀`{.Agda} にあるレベル 0 の形を `⊤₀`{.Agda}、任意の宇宙レベル `ℓ`{.Agda} へ持ち上げた形を `⊤* {ℓ}`{.Agda} と書き、それぞれの唯一の要素を `tt`{.Agda} と `tt*`{.Agda} と書きます。単元型の任意の二要素は等しいため、`isProp⊤*`{.Agda} は `⊤*`{.Agda} が命題であることを証明します。
+<!--/-->
+
+```agda
+open import Cubical.Data.Unit public
+  using ( tt; tt* )
+  renaming ( Unit to ⊤₀; Unit* to ⊤*; isPropUnit* to isProp⊤* )
+```
+
+<!--en-->
+The true proposition `⊤` and the unit type express the same trivial truth at two different levels of structure. The unit type is the underlying type of `⊤`; pairing `⊤*`{.Agda} with its propositionhood certificate `isProp⊤*`{.Agda} packages it as a proposition at any required universe level. Thus truth lies in the proposition universe because its underlying unit type is inhabited and all its elements are equal.
+<!--zh-->
+真命题 `⊤` 与单元类型表达的是同一种平凡成立性，只是所处的结构层次不同。单元类型是 `⊤` 的底层类型；把 `⊤*`{.Agda} 与它的命题性证书 `isProp⊤*`{.Agda} 配成一对，便得到所需宇宙层级上的真命题。因此，真属于命题宇宙，因为它的底层单元类型具有元素，且所有元素都相等。
+<!--ja-->
+真の命題 `⊤` と単元型は、同じ自明な真理を異なる構造のレベルで表します。単元型は `⊤` の基礎型です。`⊤*`{.Agda} とその命題性の証明 `isProp⊤*`{.Agda} を対にすれば、必要な宇宙レベルの真の命題としてまとめられます。したがって真は命題の宇宙に属します。基礎となる単元型には要素があり、そのすべての要素が等しいからです。
 <!--/-->
 
 ```agda
@@ -589,36 +804,53 @@ open import Cubical.Functions.Logic public using ( ⊤ )
 ```
 
 <!--en-->
-Falsity is built from a type representing impossibility. The [empty type]{.term-intro #empty-type} `⊥*`{.Agda} has no elements and no constructors. If a branch of an argument nevertheless yields `x : ⊥*`{.Agda}, that branch's assumptions cannot hold, and `x` may be eliminated into any type:
-
-<div class="single-line-code"><code>⊥* → A</code></div>
-
-This principle does not compute an element of `A` from actual data. It says that there is no constructor case to handle. The certificate `isProp⊥*`{.Agda} is immediate for the same reason: there are no two elements whose equality would have to be proved.
+### Falsity
 <!--zh-->
-假命题由一个表示不可能性的类型构成。[空类型]{.term-intro #empty-type} `⊥*`{.Agda} 没有元素，也没有构造子。如果某个论证分支中仍然得到 `x : ⊥*`{.Agda}，该分支的前提便不可能成立，因而可以把 `x` 消去到任意类型：
-
-<div class="single-line-code"><code>⊥* → A</code></div>
-
-这条原则并非从实际数据中计算出 `A` 的元素，而是说根本没有需要处理的构造分支。`isProp⊥*`{.Agda} 证明空类型是命题，理由相同：其中不存在两个需要证明为相等的元素。
+### 假
 <!--ja-->
-偽命題は、不可能性を表す型から作られます。[空型]{.term-intro #empty-type} `⊥*`{.Agda} には要素も構成子もありません。それでも論証のある分岐で `x : ⊥*`{.Agda} が得られたなら、その分岐の仮定は成立しえず、`x` を任意の型へ消去できます。
+### 偽
+<!--/-->
 
-<div class="single-line-code"><code>⊥* → A</code></div>
+<!--en-->
+The [empty type]{.term-intro #empty-type} represents impossibility. Its zero-level form in `Type₀`{.Agda} is written `⊥₀`{.Agda}, and `⊥* {ℓ}`{.Agda} is its lift to an arbitrary universe level `ℓ`{.Agda}. Neither has elements or constructors. If a branch of an argument nevertheless yields `x : ⊥*`{.Agda}, that branch's assumptions cannot hold, and `x` may be eliminated into any type:
 
-この原理は、実際のデータから `A` の要素を計算するものではありません。処理すべき構成子の場合が一つもないことを述べています。`isProp⊥*`{.Agda} が空型の命題性を示せる理由も同じで、等しさを証明すべき二要素が存在しません。
+<div class="single-line-code"><code>⊥₀-rec : ⊥₀ → A</code></div>
+
+<div class="single-line-code"><code>⊥*-rec : ⊥* → A</code></div>
+
+The eliminators `⊥₀-rec`{.Agda} and `⊥*-rec`{.Agda} do not compute an element of `A` from actual data. They say that there is no constructor case to handle. The certificates `isProp⊥`{.Agda} for `⊥₀`{.Agda} and `isProp⊥*`{.Agda} for `⊥*`{.Agda} are immediate for the same reason: there are no two elements whose equality would have to be proved.
+<!--zh-->
+[空类型]{.term-intro #empty-type}表示不可能性。它位于 `Type₀`{.Agda} 的零层级形式记作 `⊥₀`{.Agda}，提升到任意宇宙层级 `ℓ`{.Agda} 后记作 `⊥* {ℓ}`{.Agda}。二者都没有元素，也没有构造子。如果某个论证分支中仍然得到 `x : ⊥*`{.Agda}，该分支的前提便不可能成立，因而可以把 `x` 消去到任意类型：
+
+<div class="single-line-code"><code>⊥₀-rec : ⊥₀ → A</code></div>
+
+<div class="single-line-code"><code>⊥*-rec : ⊥* → A</code></div>
+
+消去子 `⊥₀-rec`{.Agda} 与 `⊥*-rec`{.Agda} 并非从实际数据中计算出 `A` 的元素，而是说根本没有需要处理的构造分支。`isProp⊥`{.Agda} 证明 `⊥₀`{.Agda} 是命题，`isProp⊥*`{.Agda} 则证明 `⊥*`{.Agda} 是命题；理由相同：其中不存在两个需要证明为相等的元素。
+<!--ja-->
+[空型]{.term-intro #empty-type}は不可能性を表します。`Type₀`{.Agda} にあるレベル 0 の形を `⊥₀`{.Agda}、任意の宇宙レベル `ℓ`{.Agda} へ持ち上げた形を `⊥* {ℓ}`{.Agda} と書きます。どちらにも要素も構成子もありません。それでも論証のある分岐で `x : ⊥*`{.Agda} が得られたなら、その分岐の仮定は成立しえず、`x` を任意の型へ消去できます。
+
+<div class="single-line-code"><code>⊥₀-rec : ⊥₀ → A</code></div>
+
+<div class="single-line-code"><code>⊥*-rec : ⊥* → A</code></div>
+
+消去子 `⊥₀-rec`{.Agda} と `⊥*-rec`{.Agda} は、実際のデータから `A` の要素を計算するものではありません。処理すべき構成子の場合が一つもないことを述べています。`isProp⊥`{.Agda} は `⊥₀`{.Agda} の、`isProp⊥*`{.Agda} は `⊥*`{.Agda} の命題性を示します。理由は同じで、等しさを証明すべき二要素が存在しません。
 <!--/-->
 
 ```agda
 open import Cubical.Data.Empty public
   using ( ⊥*; isProp⊥* )
+  renaming ( ⊥ to ⊥₀; rec to ⊥₀-rec; rec* to ⊥*-rec )
+
+open import Cubical.Data.Empty.Properties public using ( isProp⊥ )
 ```
 
 <!--en-->
-The false proposition `⊥` and the empty type express the same impossibility at two different levels of structure. The empty type is the underlying type of `⊥`; pairing `⊥*`{.Agda} with its propositionhood certificate `isProp⊥*`{.Agda} packages it as a proposition at any required universe level.
+The false proposition `⊥` and the empty type express the same impossibility at two different levels of structure. The empty type is the underlying type of `⊥`; pairing `⊥*`{.Agda} with its propositionhood certificate `isProp⊥*`{.Agda} packages it as a proposition at any required universe level. Thus falsity lies in the proposition universe because its underlying empty type has no elements, so all its elements are vacuously equal.
 <!--zh-->
-空类型与假命题表达的是同一种不可能性，只是所处的结构层次不同。空类型是 `⊥` 的底层类型；把 `⊥*`{.Agda} 与它的命题性证书 `isProp⊥*`{.Agda} 配成一对，便得到所需宇宙层级上的假命题。
+假命题 `⊥` 与空类型表达的是同一种不可能性，只是所处的结构层次不同。空类型是 `⊥` 的底层类型；把 `⊥*`{.Agda} 与它的命题性证书 `isProp⊥*`{.Agda} 配成一对，便得到所需宇宙层级上的假命题。因此，假属于命题宇宙，因为它的底层空类型没有元素，所以其中所有元素空虚地相等。
 <!--ja-->
-空型と偽命題は、同じ不可能性を異なる構造のレベルで表します。空型は `⊥` の基礎型です。`⊥*`{.Agda} とその命題性の証明 `isProp⊥*`{.Agda} を対にすれば、必要な宇宙レベルの偽命題としてまとめられます。
+偽の命題 `⊥` と空型は、同じ不可能性を異なる構造のレベルで表します。空型は `⊥` の基礎型です。`⊥*`{.Agda} とその命題性の証明 `isProp⊥*`{.Agda} を対にすれば、必要な宇宙レベルの偽の命題としてまとめられます。したがって偽は命題の宇宙に属します。基礎となる空型には要素がないため、そのすべての要素が空虚に等しいからです。
 <!--/-->
 
 ```agda
@@ -627,59 +859,19 @@ The false proposition `⊥` and the empty type express the same impossibility at
 ```
 
 <!--en-->
-For propositions `P` and `Q`, `P ⊓ Q` is their conjunction. Its certificates contain a proof of each proposition, and its universe level is the maximum of the two input levels.
+### Universal quantification
 <!--zh-->
-对命题 `P` 与 `Q`，`P ⊓ Q` 表示二者的合取。它的证书同时包含 `P` 与 `Q` 的证明，所在宇宙层级取两个输入层级的最大值。
+### 全称量化
 <!--ja-->
-命題 `P` と `Q` に対して、`P ⊓ Q` はその連言を表します。その証明は `P` と `Q` の証明をともに含み、宇宙レベルは二つの入力レベルの最大値になります。
+### 全称量化
 <!--/-->
 
-```agda
-open import Cubical.Functions.Logic public using ( _⊓_ )
-```
-
 <!--en-->
-`P ⊔ Q` is disjunction. A sum would remember which side supplied the proof, so the library applies **[propositional truncation]{.term-intro #propositional-truncation}** and retains only that at least one side holds.
+For a family of propositions `P : A → hProp ℓ'`, universal quantification is the Π type introduced above: a proof is a dependent function that supplies a proof of `P x` for every `x : A`. The form `∀[ x ] P x` lets Agda infer the type of `x`, while `∀[ x ∶ A ] P x` displays it explicitly. No propositional truncation is needed. Each fiber `P x` is a proposition, so any two dependent functions agree pointwise and are equal by function extensionality; this is the closure property `isPropΠ`{.Agda}.
 <!--zh-->
-`P ⊔ Q` 表示析取。和类型会保留证明来自哪一侧的信息，因此库对它作**[命题截断]{.term-intro #propositional-truncation}**，只保留两侧至少有一侧成立的信息。
+对命题族 `P : A → hProp ℓ'`，全称量化就是前文介绍的 Π 类型：它的证明是一个依值函数，为每个 `x : A` 给出 `P x` 的证明。写作 `∀[ x ] P x` 时由 Agda 推断 `x` 的类型；写作 `∀[ x ∶ A ] P x` 时则把这个类型明确列出。这里不需要命题截断。每个纤维 `P x` 都是命题，所以任意两个依值函数逐点相等，再由函数外延性可知它们相等；这正是 `isPropΠ`{.Agda} 所表达的封闭性。
 <!--ja-->
-`P ⊔ Q` は選言を表します。直和型はどちら側から証明が得られたかを記憶するため、ライブラリはそれを**[命題的切り詰め]{.term-intro #propositional-truncation}**、少なくとも一方が成り立つという情報だけを残します。
-<!--/-->
-
-```agda
-open import Cubical.Functions.Logic public using ( _⊔_ )
-```
-
-<!--en-->
-`P ⇒ Q` is implication. A certificate is a function taking every proof of `P` to a proof of `Q`; because `Q` is a proposition, this function type is a proposition as well.
-<!--zh-->
-`P ⇒ Q` 表示蕴涵。它的证书是一个函数，把 `P` 的任意证明变成 `Q` 的证明；由于 `Q` 是命题，这个函数类型也具有命题性。
-<!--ja-->
-`P ⇒ Q` は含意を表します。その証明は `P` の任意の証明を `Q` の証明へ送る関数です。`Q` が命題なので、この関数型も命題になります。
-<!--/-->
-
-```agda
-open import Cubical.Functions.Logic public using ( _⇒_ )
-```
-
-<!--en-->
-`¬ P` is negation: it says that a proof of `P` would entail the false proposition `⊥`. Its meaning therefore combines implication with falsity. Unlike binary implication, negation remains at the universe level of `P`.
-<!--zh-->
-`¬ P` 表示否定：它断言 `P` 的证明会导出假命题 `⊥`，因此其含义由蕴涵与假共同构成。与一般的二元蕴涵不同，否定仍位于 `P` 所在的宇宙层级。
-<!--ja-->
-`¬ P` は否定を表し、`P` の証明から偽命題 `⊥` が導かれることを述べます。したがって、その意味は含意と偽から成ります。一般の二項含意とは異なり、否定は `P` と同じ宇宙レベルにあります。
-<!--/-->
-
-```agda
-open import Cubical.Functions.Logic public using ( ¬_ )
-```
-
-<!--en-->
-For a family of propositions `P : A → hProp ℓ'`, `∀[ x ∶ A ] P x` is universal quantification: a certificate supplies a proof of `P x` for every `x : A`. Writing the type after `∶` keeps the type over which `x` ranges visible.
-<!--zh-->
-对命题族 `P : A → hProp ℓ'`，`∀[ x ∶ A ] P x` 表示全称量化：它的证书为每个 `x : A` 给出 `P x` 的证明。把类型写在 `∶` 之后，使 `x` 的取值类型直接呈现在表达式中。
-<!--ja-->
-命題族 `P : A → hProp ℓ'` に対して、`∀[ x ∶ A ] P x` は全称量化を表します。その証明は各 `x : A` に `P x` の証明を与えます。型を `∶` の後に書くことで、`x` が動く型を式に明示できます。
+命題族 `P : A → hProp ℓ'` に対する全称量化は、先に導入した Π 型です。その証明は、各 `x : A` に `P x` の証明を与える依存関数です。`∀[ x ] P x` と書けば `x` の型を Agda が推論し、`∀[ x ∶ A ] P x` と書けばその型を明示できます。ここでは命題的切り詰めは不要です。各ファイバー `P x` が命題なので、任意の二つの依存関数は各点で等しく、関数外延性によって関数そのものも等しくなります。これが `isPropΠ`{.Agda} の表す閉性です。
 <!--/-->
 
 ```agda
@@ -687,11 +879,79 @@ open import Cubical.Functions.Logic public using ( ∀[]-syntax; ∀[∶]-syntax
 ```
 
 <!--en-->
-`∃[ x ] P x` is existential quantification. A dependent pair would retain both a witness `x : A` and its proof of `P x`; propositional truncation forgets which witness was chosen and retains only that one exists.
+### Implication
 <!--zh-->
-`∃[ x ] P x` 表示存在量化。依值对会同时保留见证 `x : A` 及其满足 `P x` 的证明；命题截断忘去具体选择了哪个见证，只保留某个见证确实存在的信息。
+### 蕴涵
 <!--ja-->
-`∃[ x ] P x` は存在量化を表します。依存対は証人 `x : A` と `P x` の証明をともに保持しますが、命題的切り詰めによって、どの証人が選ばれたかを忘れ、証人が存在することだけを残します。
+### 含意
+<!--/-->
+
+<!--en-->
+`P ⇒ Q` is implication. Its evidence is a function taking each proof of `P` to a proof of `Q`, so implication is the non-dependent special case of the universal quantification just introduced. No propositional truncation is needed: because `Q` is a proposition, any two such functions agree at every input, and function extensionality makes the functions equal. Thus the function type itself is already a proposition, regardless of how many proofs `P` has.
+<!--zh-->
+`P ⇒ Q` 表示蕴涵。它的证据是一个函数，把 `P` 的每个证明变成 `Q` 的证明，因此蕴涵就是刚刚介绍的全称量化不带依赖时的特例。这里不需要命题截断：由于 `Q` 是命题，任意两个这样的函数在每个输入上都给出相等的结果，再由函数外延性可知两个函数相等。因此，无论 `P` 有多少证明，这个函数类型本身已经是命题。
+<!--ja-->
+`P ⇒ Q` は含意を表します。その証拠は `P` の各証明を `Q` の証明へ送る関数なので、いま導入した全称量化の、依存しない特別な場合です。ここでは命題的切り詰めは不要です。`Q` が命題であるため、任意の二つの関数は各入力で等しい結果を与え、関数外延性によって関数そのものも等しくなります。したがって `P` に証明がいくつあっても、この関数型はすでに命題です。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( _⇒_ )
+```
+
+<!--en-->
+### Negation
+<!--zh-->
+### 否定
+<!--ja-->
+### 否定
+<!--/-->
+
+<!--en-->
+Negation is the special implication `¬ P` from `P` to the empty type underlying falsity: it says that any proof of `P` would yield an impossibility. Unlike general binary implication, negation remains at the universe level of `P`. Its closure under propositionhood can be read directly from two earlier certificates. First, `isProp⊥`{.Agda} says that the zero-level empty target type is a proposition. Then `isProp→`{.Agda} says that a function type is a proposition whenever its target type is, without requiring its source type to be a proposition. Applying it to `isProp⊥` therefore proves that the type underlying `¬ P` is a proposition. No propositional truncation is needed.
+<!--zh-->
+否定是从 `P` 到假命题底层空类型的特殊蕴涵，记作 `¬ P`：它断言 `P` 的任何证明都会导出不可能性。与一般的二元蕴涵不同，否定仍位于 `P` 所在的宇宙层级。它为何对命题封闭，可以直接由前文的两项证书看出。首先，`isProp⊥`{.Agda} 说明零层级空类型是命题；随后，`isProp→`{.Agda} 说明只要值域是命题，函数类型就是命题，而无须要求定义域也是命题。把 `isProp→` 用于 `isProp⊥`，便证明了 `¬ P` 的底层类型具有命题性。这里不需要命题截断。
+<!--ja-->
+否定 `¬ P` は、`P` から偽命題の基礎にある空型への特別な含意であり、`P` のどの証明からも不可能性が導かれることを述べます。一般の二項含意とは異なり、否定は `P` と同じ宇宙レベルにあります。否定が命題について閉じることは、先に導入した二つの証明書から直接分かります。まず `isProp⊥`{.Agda} は、レベル 0 の空な終域が命題であることを示します。次に `isProp→`{.Agda} は、終域が命題なら、定義域の命題性を仮定せずとも関数型が命題になることを示します。したがって `isProp→` を `isProp⊥` に適用すれば、`¬ P` の基礎型が命題であることが証明されます。命題的切り詰めは必要ありません。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( ¬_ )
+```
+
+<!--en-->
+### Propositional extensionality
+<!--zh-->
+### 命题外延性
+<!--ja-->
+### 命題外延性
+<!--/-->
+
+<!--en-->
+Propositional extensionality turns mutual implication into equality inside the proposition universe. Mutual implication packages two instances of the implication introduced above: one function from `P` to `Q` and one from `Q` to `P`. This package uses a product, the non-dependent case of a Σ type. `⇔toPath`{.Agda} turns the two functions into a path `P ≡ Q`{.Agda}. No propositional truncation is involved: since `P` and `Q` are propositions, their individual proofs carry no distinguishable data, so the two implications already express everything needed for their equality. The resulting path type is itself a proposition because `hProp`{.Agda} is a set.
+<!--zh-->
+命题外延性把双向蕴涵变成命题宇宙内部的相等。双向蕴涵把上文引入的蕴涵打包两次：一个函数从 `P` 到 `Q`，另一个函数从 `Q` 到 `P`。这个包是一个积，也就是 Σ 类型不带依赖时的特例。`⇔toPath`{.Agda} 把这两个函数变成路径 `P ≡ Q`{.Agda}。这里不需要命题截断：因为 `P` 与 `Q` 都是命题，各自的证明不携带可区分的资料，所以两向蕴涵已经表达了建立二者相等所需的全部信息。又因为 `hProp`{.Agda} 是集合，所得的路径类型本身也是命题。
+<!--ja-->
+命題外延性は、双方向の含意を命題の宇宙における等しさへ変えます。双方向の含意は、先に導入した含意を二つまとめたものです。一方の関数は `P` から `Q` へ、もう一方は `Q` から `P` へ進みます。この組は積、すなわち Σ 型の依存しない特別な場合です。`⇔toPath`{.Agda} はこの二つの関数からパス `P ≡ Q`{.Agda} を作ります。ここでも命題的切り詰めは不要です。`P` と `Q` は命題なので、その証明に区別できるデータはなく、二方向の含意が両者の等しさに必要な情報をすべて表すからです。さらに `hProp`{.Agda} は集合なので、得られるパス型も命題です。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( ⇔toPath )
+```
+
+<!--en-->
+### Existential quantification
+<!--zh-->
+### 存在量化
+<!--ja-->
+### 存在量化
+<!--/-->
+
+<!--en-->
+Existential quantification begins with the Σ type introduced above. Its dependent pairs contain both a witness `x : A` and a proof of `P x`. Even though every fiber `P x` is a proposition, the witnesses in `A` may be distinguishable, so this Σ type need not be a proposition. The notation therefore applies propositional truncation: `∃[ x ] P x` lets Agda infer the type of the witness, while `∃[ x ∶ A ] P x` states it explicitly, and both forget which witness was chosen while retaining that some witness exists. Existential quantification therefore needs truncation because its untruncated evidence contains an arbitrary element of `A`, whereas the preceding universal quantification and implication do not.
+<!--zh-->
+存在量化从前文介绍的 Σ 类型出发，其依值对同时包含见证 `x : A` 与 `P x` 的证明。即使每个纤维 `P x` 都是命题，`A` 中的见证仍可能彼此不同，所以这个 Σ 类型未必是命题。因此，这套记法还要加上命题截断：`∃[ x ] P x` 让 Agda 推断见证的类型，`∃[ x ∶ A ] P x` 则明确写出这个类型；二者都忘掉具体选中了哪个见证，只保留某个见证存在。因此，存在量化需要截断，因为未经截断的证据含有 `A` 中的任意元素；前面的全称量化与蕴涵则没有这种额外资料。
+<!--ja-->
+存在量化は、先に導入した Σ 型から始まります。その依存対は、証人 `x : A` と `P x` の証明をともに含みます。各ファイバー `P x` が命題でも、`A` の証人どうしは区別できるかもしれないため、この Σ 型は命題とは限りません。そこで、この記法はさらに命題的切り詰めを施します。`∃[ x ] P x` は証人の型を Agda に推論させ、`∃[ x ∶ A ] P x` はその型を明示しますが、どちらも選ばれた証人を忘れ、何らかの証人が存在することだけを残します。したがって、切り詰める前の証拠が `A` の任意の要素を含むため、存在量化には切り詰めが必要です。先に見た全称量化と含意には、このような余分なデータはありません。
 <!--/-->
 
 ```agda
@@ -699,12 +959,44 @@ open import Cubical.Functions.Logic public using ( ∃[]-syntax; ∃[∶]-syntax
 ```
 
 <!--en-->
-The next section considers propositions that vary with an object.
+### Conjunction
 <!--zh-->
-下一节讨论随对象变化的命题。
+### 合取
 <!--ja-->
-次節では、対象に応じて変化する命題を考えます。
+### 連言
 <!--/-->
+
+<!--en-->
+The corresponding non-dependent case of the Σ construction is conjunction. For propositions `P` and `Q`, a proof of `P ⊓ Q` is a pair containing one proof of `P` and one proof of `Q`. Unlike the general existential quantification above, no propositional truncation is needed. Since each component is already a proposition, any two first components are equal and any two second components are equal, so the two pairs are equal; this is exactly the closure property `isProp×`{.Agda}. The conjunction therefore remains a proposition while retaining both of its proofs, and its universe level is the maximum of the two input levels.
+<!--zh-->
+Σ 构造相应的不带依赖的特例是合取。对命题 `P` 与 `Q`，`P ⊓ Q` 的证明就是一对资料，分别包含 `P` 与 `Q` 的证明。与上面的存在量化不同，这里不需要命题截断。因为两个分量本来都是命题，任意两个第一分量彼此相等，任意两个第二分量也彼此相等，所以两对资料必定相等；这正是 `isProp×`{.Agda} 所表达的封闭性。因此，合取可以保留两边的证明而仍为命题，其宇宙层级取两个输入层级的最大值。
+<!--ja-->
+Σ 構成に対応する依存しない特別な場合が連言です。命題 `P` と `Q` に対して、`P ⊓ Q` の証明は、`P` の証明と `Q` の証明を一つずつ収めた対です。上の一般的な存在量化とは異なり、ここでは命題的切り詰めは不要です。各成分がすでに命題なので、二つの第一成分は等しく、二つの第二成分も等しくなり、したがって二つの対も等しくなります。これが `isProp×`{.Agda} の表す閉性です。連言は両方の証明を保持したまま命題であり、その宇宙レベルは二つの入力レベルの最大値になります。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( _⊓_ )
+```
+
+<!--en-->
+### Disjunction
+<!--zh-->
+### 析取
+<!--ja-->
+### 選言
+<!--/-->
+
+<!--en-->
+The other binary operation is disjunction, `P ⊔ Q`. Before truncation, its evidence has the sum type introduced above: `inl p`{.Agda} records a proof `p` of `P`, while `inr q`{.Agda} records a proof `q` of `Q`. Even when `P` and `Q` are propositions, this sum need not be a proposition. If both sides hold, its left and right constructors still record distinguishable choices. Disjunction therefore applies propositional truncation to the sum. It forgets the chosen constructor and the proof carried by it, retaining only that at least one side holds. The truncation is what makes disjunction proposition-valued.
+<!--zh-->
+另一个二元运算是析取 `P ⊔ Q`。在截断之前，它的证据就是前文介绍的和类型：`inl p`{.Agda} 记录 `P` 的证明 `p`，`inr q`{.Agda} 记录 `Q` 的证明 `q`。即使 `P` 与 `Q` 都是命题，这个和类型也未必是命题；当两边都成立时，左右两个构造子仍然记录着可区分的选择。因此，析取要对这个和类型作命题截断，忘掉所选构造子及其中携带的证明，只保留「至少一边成立」。正是这一步截断使析取仍然取值于命题。
+<!--ja-->
+もう一つの二項演算が選言 `P ⊔ Q` です。切り詰める前の証拠は、先に導入した直和型です。`inl p`{.Agda} は `P` の証明 `p` を、`inr q`{.Agda} は `Q` の証明 `q` を記録します。`P` と `Q` がともに命題でも、この直和型は命題とは限りません。両方が成り立つとき、左右の構成子はなお区別できる選択を記録するからです。そこで選言はこの直和型を命題的に切り詰め、選ばれた構成子とその証明を忘れ、少なくとも一方が成り立つことだけを残します。この切り詰めによって、選言は命題値になります。
+<!--/-->
+
+```agda
+open import Cubical.Functions.Logic public using ( _⊔_ )
+```
 
 <!--en-->
 ## [Classes]{.term-intro #class} and membership
@@ -715,6 +1007,8 @@ The next section considers propositions that vary with an object.
 <!--/-->
 
 <!--en-->
+A proposition that depends on an object can select exactly those objects for which it holds. In set theory, a collection determined in this way by a property is called a class.
+
 Here **class** means a class in the sense of set theory, not a type in type theory. Throughout this book, *class* refers to the former and *type* to the latter. The two are closely related in the formalization, but they are not the same notion. A type determines which terms may be its elements; a class selects, by a property, the objects that satisfy it from an already specified type.
 
 This collection of objects under consideration is the class's **[domain]{.term-intro #domain}**. When it is written `A`, the domain is a type `A` whose elements are all the objects currently being classified. Calling `A` a domain says only that a variable `x : A` may range over these objects; it does not equip `A` with membership, operations or any other structure. Later, when we construct a model of set theory, we add a set-theoretic membership relation to `A`. It then also becomes the [carrier]{.term-intro #carrier} of the model, and its elements play the role of sets in that model.
@@ -733,6 +1027,8 @@ Class membership is written `x ∈ᶜ M` and read "x belongs to the class M". It
 
 To prove `x ∈ᶜ M` is therefore to construct a proof of `⟨ M x ⟩`{.Agda}. The superscript `ᶜ` marks this as class membership. It distinguishes this host-level predicate from the membership relation between sets that later chapters interpret in a model of set theory: the former says whether an object satisfies a property, whereas the latter is a relation in the object language.
 <!--zh-->
+一个随对象变化的命题，可以从给定的一批对象中挑出恰好使它成立的对象。集合论把这种由性质划定的对象范围称为类。
+
 这里的「类」是集合论中的 **class**，不是类型论中的 **type**。本书以后约定：**类**专指 class，**类型**专指 type。二者在形式化中关系密切，但不是同一个概念。类型规定哪些项可以作为它的元素；类则在已经给定的一批对象中，用一个性质挑出满足它的对象。
 
 类所考察的这批对象称为它的**[论域]{.term-intro #domain}**。写作 `A` 时，论域就是一个类型 `A`，它的元素是当前接受分类的全部对象。称 `A` 为论域，只说明变量 `x : A` 可以在这些对象中取值，并不表示 `A` 已经具有成员关系、运算或其他结构。后文构造集合论模型时，我们会在 `A` 上加入集合论的成员关系；此时，`A` 也将成为该模型的[载体]{.term-intro #carrier}，它的元素则充当模型中的集合。
@@ -751,6 +1047,8 @@ To prove `x ∈ᶜ M` is therefore to construct a proof of `⟨ M x ⟩`{.Agda}.
 
 因此，证明 `x ∈ᶜ M`，就是构造命题 `⟨ M x ⟩`{.Agda} 的证明。上标 `ᶜ` 表明这里使用的是类的成员关系。它将这个宿主层谓词与后文在集合论模型中解释的集合成员关系区分开来：前者说明一个对象是否满足某项性质，后者则是对象理论语言中的关系。
 <!--ja-->
+対象に依存する命題を使うと、与えられた対象のうち、その命題が成り立つものだけを選び出せます。集合論では、このように性質によって定められる対象の範囲をクラスと呼びます。
+
 ここでいう**クラス**は集合論における class であり、型理論における type ではありません。本書では以後、前者を**クラス**、後者を**型**と呼び分けます。形式化の中で両者は密接に関係しますが、同じ概念ではありません。型はどの項がその要素になれるかを定め、クラスは、すでに与えられた対象の中から、ある性質を満たすものを選び出します。
 
 クラスが考察する対象の範囲を、そのクラスの**[論域]{.term-intro #domain}**と呼びます。`A` と書くとき、論域は型 `A` であり、その要素が現在分類されるすべての対象です。`A` を論域と呼ぶことは、変数 `x : A` がこれらの対象を動くということだけを表し、`A` に所属関係や演算などの構造がすでに備わっていることを意味しません。後に集合論のモデルを構成するとき、`A` に集合論的な所属関係を加えます。そのとき `A` はモデルの[台]{.term-intro #carrier}にもなり、その要素がモデル内の集合の役割を果たします。
@@ -786,34 +1084,64 @@ open import Cubical.Foundations.Powerset public
 <!--en-->
 The natural numbers `ℕ`{.Agda} form an inductive type generated by two constructors. The constructor `zero`{.Agda} is an element of `ℕ`{.Agda}; the constructor `suc`{.Agda} takes any `n : ℕ`{.Agda} to another element `suc n : ℕ`{.Agda}. The rules are
 
-$$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}.$$
+$$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}$$
 
 Every element of `ℕ`{.Agda} is generated from these constructors. Its induction principle accordingly has a case for `zero`{.Agda} and a step that passes from `n` to `suc n`{.Agda}.
 <!--zh-->
 自然数 `ℕ`{.Agda} 是由两个构造子生成的归纳类型。构造子 `zero`{.Agda} 是 `ℕ`{.Agda} 的元素；构造子 `suc`{.Agda} 把任意 `n : ℕ`{.Agda} 变为另一个元素 `suc n : ℕ`{.Agda}。构造规则为
 
-$$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}.$$
+$$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}$$
 
 `ℕ`{.Agda} 的每个元素都由这两个构造子生成。相应的归纳原理包含 `zero`{.Agda} 情形，以及从 `n` 过渡到 `suc n`{.Agda} 的归纳步骤。
 <!--ja-->
 自然数 `ℕ`{.Agda} は、二つの構成子から生成される帰納型です。構成子 `zero`{.Agda} は `ℕ`{.Agda} の要素であり、構成子 `suc`{.Agda} は任意の `n : ℕ`{.Agda} から別の要素 `suc n : ℕ`{.Agda} を作ります。構成規則は次のとおりです。
 
-$$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}.$$
+$$\frac{}{\mathsf{zero}:\mathbb{N}}\qquad\frac{n:\mathbb{N}}{\mathsf{suc}\,n:\mathbb{N}}$$
 
 `ℕ`{.Agda} のすべての要素は、この二つの構成子から生成されます。対応する帰納原理は、`zero`{.Agda} の場合と、`n` から `suc n`{.Agda} へ進む帰納段階からなります。
 <!--/-->
 
 <!--en-->
 To define a function from `ℕ`{.Agda} by recursion, it is therefore enough to give its value at `zero`{.Agda} and to give the value at `suc n`{.Agda} from the value already obtained at `n`.
+
+Addition `_+_`{.Agda} combines two natural-number sizes and is used throughout the syntax chapters to compute the number of available variables after contexts are extended or combined.
+
+$$\mathord{+}:\mathbb N\to\mathbb N\to\mathbb N$$
+
+$$m+n=
+\begin{cases}
+n, & m=0,\\
+\operatorname{suc}(m'+n), & m=\operatorname{suc}(m')
+\end{cases}$$
 <!--zh-->
 因此，要递归定义从 `ℕ`{.Agda} 出发的函数，只需给出函数在 `zero`{.Agda} 处的值，并说明如何由已经得到的 `n` 处之值构造 `suc n`{.Agda} 处之值。
+
+加法 `_+_`{.Agda} 合并两个自然数大小；在后续句法章节中，扩张或拼接语境时可用它计算可用变元的数量。
+
+$$\mathord{+}:\mathbb N\to\mathbb N\to\mathbb N$$
+
+$$m+n=
+\begin{cases}
+n, & m=0,\\
+\operatorname{suc}(m'+n), & m=\operatorname{suc}(m')
+\end{cases}$$
 <!--ja-->
 したがって、`ℕ`{.Agda} からの関数を再帰的に定義するには、`zero`{.Agda} での値と、すでに得られた `n` での値から `suc n`{.Agda} での値を作る方法を与えれば十分です。
+
+加法 `_+_`{.Agda} は二つの自然数の大きさを合わせます。後の構文の章では、文脈を拡張したり連結したりした後に使える変数の個数を計算するために用います。
+
+$$\mathord{+}:\mathbb N\to\mathbb N\to\mathbb N$$
+
+$$m+n=
+\begin{cases}
+n, & m=0,\\
+\operatorname{suc}(m'+n), & m=\operatorname{suc}(m')
+\end{cases}$$
 <!--/-->
 
 ```agda
 open import Cubical.Data.Nat public
-  using ( ℕ; zero; suc )
+  using ( ℕ; zero; suc; _+_ )
 ```
 
 <!--en-->
@@ -827,26 +1155,56 @@ open import Cubical.Data.Nat public
 <!--en-->
 `Fin`{.Agda} is a family of types indexed by natural numbers. The type `Fin zero`{.Agda} has no constructors. At an index `suc n`{.Agda}, the constructor `zero`{.Agda} gives an element directly, while `suc`{.Agda} sends each element of `Fin n`{.Agda} to an element of `Fin (suc n)`{.Agda}. These constructors obey the rules
 
-$$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}.$$
+$$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}$$
 
 Consequently `Fin n`{.Agda} has exactly `n` elements: none when `n` is `zero`{.Agda}, and one new element together with a copy of every element of `Fin n`{.Agda} when the index is `suc n`{.Agda}.
+
+The function `toℕ`{.Agda} forgets the bound and reads a finite index as a natural number. This forgetful map preserves the numerical position while its result no longer carries the bound in its type.
+
+$$\operatorname{to\mathbb N}:\operatorname{Fin}(n)\to\mathbb N$$
+
+$$\operatorname{to\mathbb N}(i)=
+\begin{cases}
+0, & i=\mathsf{zero},\\
+\operatorname{suc}(\operatorname{to\mathbb N}(j)), & i=\mathsf{suc}\,j
+\end{cases}$$
 <!--zh-->
 `Fin`{.Agda} 是以自然数为索引的一族类型。`Fin zero`{.Agda} 没有构造子；当索引为 `suc n`{.Agda} 时，构造子 `zero`{.Agda} 直接给出一个元素，而 `suc`{.Agda} 把 `Fin n`{.Agda} 的每个元素变为 `Fin (suc n)`{.Agda} 的元素。构造规则为
 
-$$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}.$$
+$$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}$$
 
 因此，`Fin n`{.Agda} 恰有 `n` 个元素：索引为 `zero`{.Agda} 时没有元素；索引由 `n` 变为 `suc n`{.Agda} 时，新增一个元素，并保留由 `Fin n`{.Agda} 的每个元素经 `suc`{.Agda} 构造出的元素。
+
+函数 `toℕ`{.Agda} 忘去界限，把有限索引读作自然数。这个遗忘映射保留索引的数值位置，但结果的类型不再记录原来的界限。
+
+$$\operatorname{to\mathbb N}:\operatorname{Fin}(n)\to\mathbb N$$
+
+$$\operatorname{to\mathbb N}(i)=
+\begin{cases}
+0, & i=\mathsf{zero},\\
+\operatorname{suc}(\operatorname{to\mathbb N}(j)), & i=\mathsf{suc}\,j
+\end{cases}$$
 <!--ja-->
 `Fin`{.Agda} は自然数を添字とする型の族です。`Fin zero`{.Agda} には構成子がありません。添字が `suc n`{.Agda} のとき、構成子 `zero`{.Agda} が一つの要素を直接与え、`suc`{.Agda} は `Fin n`{.Agda} の各要素を `Fin (suc n)`{.Agda} の要素へ送ります。構成規則は次のとおりです。
 
 $$\frac{}{\mathsf{zero}:\operatorname{Fin}(\operatorname{suc}\,n)}\qquad\frac{i:\operatorname{Fin}(n)}{\mathsf{suc}\,i:\operatorname{Fin}(\operatorname{suc}\,n)}$$
 
 したがって `Fin n`{.Agda} はちょうど `n` 個の要素をもちます。添字が `zero`{.Agda} のとき要素はなく、`n` から `suc n`{.Agda} へ移ると、一つの新しい要素と、`Fin n`{.Agda} の各要素から `suc`{.Agda} で作られる要素が得られます。
+
+関数 `toℕ`{.Agda} は上界を忘れ、有限添字を自然数として読みます。この忘却写像は数としての位置を保ちますが、結果の型には元の上界が記録されません。
+
+$$\operatorname{to\mathbb N}:\operatorname{Fin}(n)\to\mathbb N$$
+
+$$\operatorname{to\mathbb N}(i)=
+\begin{cases}
+0, & i=\mathsf{zero},\\
+\operatorname{suc}(\operatorname{to\mathbb N}(j)), & i=\mathsf{suc}\,j
+\end{cases}$$
 <!--/-->
 
 ```agda
 open import Cubical.Data.FinData public
-  using ( Fin; zero; suc )
+  using ( Fin; zero; suc; toℕ )
 ```
 
 <!--en-->
@@ -860,67 +1218,87 @@ open import Cubical.Data.FinData public
 <!--en-->
 A vector `Vec A n`{.Agda} is a list of elements of `A` whose length is part of its type. Its two constructors are expressed by the rules
 
-$$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}.$$
+$$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
 
 The constructor `[]`{.Agda} produces an element of `Vec A zero`{.Agda}. Given `a : A`{.Agda} and `v : Vec A n`{.Agda}, the constructor `_∷_`{.Agda} produces `a ∷ v : Vec A (suc n)`{.Agda}. Thus the natural-number index is determined together with the vector. The function `lookup`{.Agda} has type `Fin n → Vec A n → A`{.Agda}; its shared index requires its two arguments to have the same `n`.
+
+These indices make the standard vector operations carry useful guarantees. An out-of-range `lookup`{.Agda} cannot be stated because its index must inhabit `Fin n`{.Agda}.
+
+$$\operatorname{lookup}:\operatorname{Fin}(n)\to\operatorname{Vec}(A,n)\to A$$
+
+$$\operatorname{lookup}(i,a\mathbin{∷}v)=
+\begin{cases}
+a, & i=\mathsf{zero},\\
+\operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
+\end{cases}$$
+
+The function `map`{.Agda} applies one function to every entry without changing the length.
+
+$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+
+$$\operatorname{map}(f,v)=
+\begin{cases}
+[], & v=[],\\
+f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
+\end{cases}$$
 <!--zh-->
 向量 `Vec A n`{.Agda} 是由 `A` 的元素组成、且长度写入类型的列表。它的两个构造规则可以写成
 
-$$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}.$$
+$$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
 
 构造子 `[]`{.Agda} 给出 `Vec A zero`{.Agda} 的元素。给定 `a : A`{.Agda} 和 `v : Vec A n`{.Agda}，构造子 `_∷_`{.Agda} 给出 `a ∷ v : Vec A (suc n)`{.Agda}。自然数索引由此与向量一同确定。函数 `lookup`{.Agda} 的类型是 `Fin n → Vec A n → A`{.Agda}；两个参数共享同一个索引 `n`。
+
+这些索引使常用的向量操作自带有用的保证。`lookup`{.Agda} 的索引必须属于 `Fin n`{.Agda}，所以越界访问根本无法写出。
+
+$$\operatorname{lookup}:\operatorname{Fin}(n)\to\operatorname{Vec}(A,n)\to A$$
+
+$$\operatorname{lookup}(i,a\mathbin{∷}v)=
+\begin{cases}
+a, & i=\mathsf{zero},\\
+\operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
+\end{cases}$$
+
+函数 `map`{.Agda} 对每个分量应用同一个函数而不改变长度。
+
+$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+
+$$\operatorname{map}(f,v)=
+\begin{cases}
+[], & v=[],\\
+f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
+\end{cases}$$
 <!--ja-->
 ベクトル `Vec A n`{.Agda} は `A` の元からなるリストで、その長さが型の一部になっています。その二つの構成子は、次の推論式で表せます。
 
 $$\frac{}{[]:\operatorname{Vec}(A,0)}\qquad\frac{a:A\quad v:\operatorname{Vec}(A,n)}{a∷v:\operatorname{Vec}(A,\operatorname{suc}\,n)}$$
 
 構成子 `[]`{.Agda} は `Vec A zero`{.Agda} の要素を与えます。`a : A`{.Agda} と `v : Vec A n`{.Agda} が与えられると、構成子 `_∷_`{.Agda} は `a ∷ v : Vec A (suc n)`{.Agda} を与えます。このように自然数の添字はベクトルとともに定まります。関数 `lookup`{.Agda} の型は `Fin n → Vec A n → A`{.Agda} であり、二つの引数は同じ添字 `n` を共有します。
+
+これらの添字により、標準的なベクトル操作そのものが有用な保証を伴います。`lookup`{.Agda} の添字は `Fin n`{.Agda} の元でなければならないため、範囲外の参照はそもそも記述できません。
+
+$$\operatorname{lookup}:\operatorname{Fin}(n)\to\operatorname{Vec}(A,n)\to A$$
+
+$$\operatorname{lookup}(i,a\mathbin{∷}v)=
+\begin{cases}
+a, & i=\mathsf{zero},\\
+\operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
+\end{cases}$$
+
+関数 `map`{.Agda} は長さを変えずに各成分へ同じ関数を適用します。
+
+$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+
+$$\operatorname{map}(f,v)=
+\begin{cases}
+[], & v=[],\\
+f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
+\end{cases}$$
 <!--/-->
 
 ```agda
 open import Cubical.Data.Vec public
-  using ( Vec; []; _∷_; lookup )
+  using ( Vec; []; _∷_; lookup; map )
 ```
-
-<!--en-->
-## The identity function
-<!--zh-->
-## 恒等函数
-<!--ja-->
-## 恒等関数
-<!--/-->
-
-<!--en-->
-The identity function `id`{.Agda} accepts an element and returns that same element unchanged. Its type is:
-<!--zh-->
-恒等函数 `id`{.Agda} 接受一个元素，并原样返回这个元素。它的类型为：
-<!--ja-->
-恒等関数 `id`{.Agda} は要素を受け取り、その要素を変更せずにそのまま返します。型は次のとおりです。
-<!--/-->
-
-```agda
-id : ∀ {ℓ} {A : Type ℓ} → A → A
-```
-
-<!--en-->
-Here `ℓ`{.Agda} is an arbitrary universe level and `A`{.Agda} is an arbitrary type at that level. Since the signature imposes no further condition on `A`{.Agda}, `id`{.Agda} applies to an element of any type.
-<!--zh-->
-其中，`ℓ`{.Agda} 是任意宇宙层级，`A`{.Agda} 是该层级中的任意类型。由于类型签名没有对 `A`{.Agda} 增加其他条件，`id`{.Agda} 可以作用于任何类型的元素。
-<!--ja-->
-ここで `ℓ`{.Agda} は任意の宇宙レベル、`A`{.Agda} はそのレベルの任意の型です。型シグネチャは `A`{.Agda} にほかの条件を課していないため、`id`{.Agda} は任意の型の要素に適用できます。
-<!--/-->
-
-```agda
-id x = x
-```
-
-<!--en-->
-The input `x`{.Agda} already has the result type `A`{.Agda}, so it can be returned directly. The definition neither changes `x`{.Agda} nor inspects how it was constructed.
-<!--zh-->
-输入 `x`{.Agda} 本身已经具有结果类型 `A`{.Agda}，所以可以直接作为结果返回。这个定义既不改变 `x`{.Agda}，也不需要分析 `x`{.Agda} 的构造方式。
-<!--ja-->
-入力 `x`{.Agda} はすでに結果の型 `A`{.Agda} をもつので、そのまま結果として返せます。この定義は `x`{.Agda} を変更せず、`x`{.Agda} がどのように構成されたかを調べる必要もありません。
-<!--/-->
 
 <!--en-->
 ## Recap
@@ -928,15 +1306,16 @@ The input `x`{.Agda} already has the result type `A`{.Agda}, so it can be return
 This chapter introduced the host-level vocabulary used throughout the book:
 
 - `Type`{.Agda} and `Level`{.Agda} describe type universes and their levels;
-- Π types represent dependent functions, and Σ types represent dependent pairs;
+- Π types represent dependent functions, Σ types represent dependent pairs, and sum types distinguish values constructed from either of two input types;
 - record types flatten nested Σ types through named fields and constructors;
 - `Lift`{.Agda} moves types between universe levels;
-- path types represent equality, and homotopy levels describe the equality structure retained by a type;
-- `hProp`{.Agda} is the universe of propositions, and `⟨_⟩`{.Agda} extracts the statement of a proposition;
-- truth and falsity, conjunction and disjunction, implication and negation, and universal and existential quantification provide the logical operations on the proposition universe;
+- path types represent equality; `transport`{.Agda}, `subst`{.Agda} and its two-argument generalization `subst2`{.Agda} move data along paths;
+- homotopy levels describe the equality structure retained by a type, while propositionhood is preserved by Π types, Σ types and products; `Σ≡Prop`{.Agda} reduces equality of proof-carrying dependent pairs to equality of their first components;
+- `hProp`{.Agda} is the universe of propositions, `isSetHProp`{.Agda} describes its equality structure, and `⟨_⟩`{.Agda} extracts the statement of a proposition;
+- propositional truncation `∥ A ∥₁`{.Agda} retains whether `A`{.Agda} is inhabited while forgetting its particular witness; `rec₁`{.Agda} eliminates it into propositions and `map₁`{.Agda} maps it to another truncation;
+- truth and falsity, conjunction and disjunction, implication and negation, and universal and existential quantification provide the logical operations on the proposition universe; propositional extensionality turns implications in both directions into equality of propositions;
 - a class is a predicate valued in the universe of propositions, and `_∈ᶜ_`{.Agda} expresses class membership;
-- `ℕ`{.Agda}, `Fin`{.Agda} and `Vec`{.Agda} are respectively an inductive type and two families indexed by natural numbers;
-- `⊥*`{.Agda} is the empty type, and `id`{.Agda} is the identity function.
+- `ℕ`{.Agda} supplies natural numbers and addition, `Fin n`{.Agda} supplies indices below `n`, and `Vec A n`{.Agda} supplies length-indexed sequences with bounded lookup and length-preserving map;
 
 Together these notions form the basic formal language adopted in this book.
 <!--zh-->
@@ -945,15 +1324,16 @@ Together these notions form the basic formal language adopted in this book.
 本章介绍了书中反复使用的宿主层基础词汇：
 
 - `Type`{.Agda} 与 `Level`{.Agda} 描述类型宇宙及其层级；
-- Π 类型表示依值函数，Σ 类型表示依值对；
+- Π 类型表示依值函数，Σ 类型表示依值对，和类型区分由两个输入类型中哪一侧构造出的元素；
 - 记录类型以具名字段和构造子展平多重嵌套的 Σ 类型；
 - `Lift`{.Agda} 在宇宙层级之间搬移类型；
-- 路径类型表示相等，同伦层级描述类型所保留的相等结构；
-- `hProp`{.Agda} 是命题宇宙，`⟨_⟩`{.Agda} 取出命题的表述；
-- 真与假、合取与析取、蕴涵与否定、全称量化与存在量化，构成命题宇宙上的逻辑运算；
+- 路径类型表示相等；`transport`{.Agda}、`subst`{.Agda} 及其双参数推广 `subst2`{.Agda} 沿路径搬移数据；
+- 同伦层级描述类型保留的相等结构；命题性对 Π 类型、Σ 类型和积封闭，`Σ≡Prop`{.Agda} 把携带证明的依值对相等归结为第一分量相等；
+- `hProp`{.Agda} 是命题宇宙，`isSetHProp`{.Agda} 描述其相等结构，`⟨_⟩`{.Agda} 取出命题的表述；
+- 命题截断 `∥ A ∥₁`{.Agda} 保留 `A`{.Agda} 是否有元素，却忘去具体见证；`rec₁`{.Agda} 把它消去到命题，`map₁`{.Agda} 则把它映射到另一个截断；
+- 真与假、合取与析取、蕴涵与否定、全称量化与存在量化，构成命题宇宙上的逻辑运算；命题外延性把两个方向的蕴涵变成命题相等；
 - 类是取值于命题宇宙的谓词，`_∈ᶜ_`{.Agda} 表示类的成员关系；
-- `ℕ`{.Agda}、`Fin`{.Agda} 与 `Vec`{.Agda} 分别是归纳类型和以自然数为索引的类型族；
-- `⊥*`{.Agda} 是空类型，`id`{.Agda} 是恒等函数。
+- `ℕ`{.Agda} 提供自然数及其加法，`Fin n`{.Agda} 提供小于 `n` 的索引，`Vec A n`{.Agda} 提供带长度索引、不会越界查找且映射后长度不变的序列；
 
 这些概念共同组成了本书所采用的基本形式语言。
 <!--ja-->
@@ -962,15 +1342,16 @@ Together these notions form the basic formal language adopted in this book.
 本章では、本書で用いるホストレベルの基礎語彙を導入しました。
 
 - `Type`{.Agda} と `Level`{.Agda} は型宇宙とそのレベルを記述します。
-- Π 型は依存関数を、Σ 型は依存対を表します。
+- Π 型は依存関数を、Σ 型は依存対を表し、直和型は二つの入力型のどちら側から構成された元かを区別します。
 - レコード型は、名前付きフィールドと構成子によって、入れ子になった Σ 型を平坦に表します。
 - `Lift`{.Agda} は型を宇宙レベル間で移します。
-- パス型は等しさを表し、ホモトピーレベルは型に残る等しさの構造を記述します。
-- `hProp`{.Agda} は命題の宇宙であり、`⟨_⟩`{.Agda} は命題の記述を取り出します。
-- 真と偽、連言と選言、含意と否定、全称量化と存在量化が、命題の宇宙における論理演算を与えます。
+- パス型は等しさを表し、`transport`{.Agda}、`subst`{.Agda}、その二引数への一般化 `subst2`{.Agda} はパスに沿ってデータを移します。
+- ホモトピーレベルは型に残る等しさの構造を記述します。命題性は Π 型、Σ 型、積について閉じ、`Σ≡Prop`{.Agda} は証明を携える依存対の等しさを第一成分の等しさへ帰着させます。
+- `hProp`{.Agda} は命題の宇宙であり、`isSetHProp`{.Agda} はその等しさの構造を記述し、`⟨_⟩`{.Agda} は命題の記述を取り出します。
+- 命題的切り詰め `∥ A ∥₁`{.Agda} は `A`{.Agda} に要素があるかを保ちつつ、具体的な証人を忘れます。`rec₁`{.Agda} はそれを命題へ除去し、`map₁`{.Agda} は別の切り詰めへ写します。
+- 真と偽、連言と選言、含意と否定、全称量化と存在量化が、命題の宇宙における論理演算を与えます。命題外延性は二方向の含意を命題の等しさへ変えます。
 - クラスは命題の宇宙に値をとる述語であり、`_∈ᶜ_`{.Agda} はクラスへの所属を表します。
-- `ℕ`{.Agda}、`Fin`{.Agda}、`Vec`{.Agda} は、それぞれ帰納型と、自然数を添字とする二つの型族です。
-- `⊥*`{.Agda} は空型であり、`id`{.Agda} は恒等関数です。
+- `ℕ`{.Agda} は自然数と加法を、`Fin n`{.Agda} は `n` 未満の添字を、`Vec A n`{.Agda} は範囲外参照を許さず写像で長さを保つ長さ付き列を与えます。
 
 これらの概念が、本書で採用する基本的な形式言語を構成します。
 <!--/-->

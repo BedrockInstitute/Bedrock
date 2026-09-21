@@ -60,9 +60,6 @@ The semantics is generic, so the chapter will use it twice over the same syntax,
 <!--/-->
 
 ```agda
-open import Cubical.Data.Vec using ( map )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -279,11 +276,11 @@ The backward direction runs the other way: an outer verifier `g` quantifies over
 ```
 
 <!--en-->
-The existential case `∃̇∈` mirrors the universal one, with one structural difference: satisfaction of an existential is defined as a join over the carrier, the least truth value above all the per-element contributions, and a join of truncated statements lives under propositional truncation, so both directions operate via `PT.map`. The same abbreviations `tm` and `p` are in scope; the mathematics of repacking witnesses through the range is identical.
+The existential case `∃̇∈` mirrors the universal one, with one structural difference: satisfaction of an existential is defined as a join over the carrier, the least truth value above all the per-element contributions, and a join of truncated statements lives under propositional truncation, so both directions operate via `map₁`. The same abbreviations `tm` and `p` are in scope; the mathematics of repacking witnesses through the range is identical.
 <!--zh-->
-存在情形 `∃̇∈` 镜像全称情形，仅有一处结构差异：存在量词的满足定义为载体上的上确界，即盖过所有逐元素贡献的最小真值，而被截断命题的上确界生活在命题截断之下，因此两个方向都经 `PT.map` 运作。缩写 `tm` 与 `p` 同样在作用域内；把见证经范围重新包装的数学与全称情形完全相同。
+存在情形 `∃̇∈` 镜像全称情形，仅有一处结构差异：存在量词的满足定义为载体上的上确界，即盖过所有逐元素贡献的最小真值，而被截断命题的上确界生活在命题截断之下，因此两个方向都经 `map₁` 运作。缩写 `tm` 与 `p` 同样在作用域内；把见证经范围重新包装的数学与全称情形完全相同。
 <!--ja-->
-存在の場合 `∃̇∈` は全称の場合を写し取りますが、構造上の違いが一つあります。存在量化子の充足は台の上の上限、すなわち要素ごとの寄与すべてを覆う最小の真理値として定義され、切断された命題の上限は命題的切り詰めの下に住むため、両方向とも `PT.map` を通して動きます。略記 `tm` と `p` は同じくスコープにあり、範囲を通して証拠を束ね直す数学は全称の場合と同一です。
+存在の場合 `∃̇∈` は全称の場合を写し取りますが、構造上の違いが一つあります。存在量化子の充足は台の上の上限、すなわち要素ごとの寄与すべてを覆う最小の真理値として定義され、切断された命題の上限は命題的切り詰めの下に住むため、両方向とも `map₁` を通して動きます。略記 `tm` と `p` は同じくスコープにあり、範囲を通して証拠を束ね直す数学は全称の場合と同一です。
 <!--/-->
 
 ```agda
@@ -303,7 +300,7 @@ Forward, a truncated inner witness is a triple: an inner element `xm` in the ran
 <!--/-->
 
 ```agda
-    fwd = PT.map λ { (xm , hxm , hφ) →
+    fwd = map₁ λ { (xm , hxm , hφ) →
             fst xm
           , subst (λ s → ⟨ fst xm ∈ˢ s ⟩) p hxm
           , subst ⟨_⟩ (abs₀ d (xm ∷ δ)) hφ }
@@ -311,15 +308,15 @@ Forward, a truncated inner witness is a triple: an inner element `xm` in the ran
 ```
 
 <!--en-->
-Backward, an outer witness is a triple of a bare element `x`, its membership in the outer range, and the body's outer truth. The transport along `sym p` pulls the membership to the inner range, transitivity then certifies `x ∈ᶜ M` so that `xm` is an inner element, and the body's truth is transported inward through `sym (abs₀ d (xm ∷ δ))`. The truncated output is again assembled by `PT.map`, so no choice principle is invoked anywhere: the two bounded-quantifier cases hold with merely-inhabited witnesses on both sides.
+Backward, an outer witness is a triple of a bare element `x`, its membership in the outer range, and the body's outer truth. The transport along `sym p` pulls the membership to the inner range, transitivity then certifies `x ∈ᶜ M` so that `xm` is an inner element, and the body's truth is transported inward through `sym (abs₀ d (xm ∷ δ))`. The truncated output is again assembled by `map₁`, so no choice principle is invoked anywhere: the two bounded-quantifier cases hold with merely-inhabited witnesses on both sides.
 <!--zh-->
-反向，外层见证是三元组：裸元素 `x`、其在外层范围中的成员关系、母式的外层真值。沿 `sym p` 的传输把成员关系拉回内层范围，传递性随后证明 `x ∈ᶜ M`，使 `xm` 成为内层元素，母式真值再经 `sym (abs₀ d (xm ∷ δ))` 运入内层。截断的输出同样由 `PT.map` 组装，因此全程未使用任何选择公理：两个有界量词情形在两侧都只以仅要求存在的见证成立。
+反向，外层见证是三元组：裸元素 `x`、其在外层范围中的成员关系、母式的外层真值。沿 `sym p` 的传输把成员关系拉回内层范围，传递性随后证明 `x ∈ᶜ M`，使 `xm` 成为内层元素，母式真值再经 `sym (abs₀ d (xm ∷ δ))` 运入内层。截断的输出同样由 `map₁` 组装，因此全程未使用任何选择公理：两个有界量词情形在两侧都只以仅要求存在的见证成立。
 <!--ja-->
-逆方向では、外側の証拠は三つ組です。素の要素 `x`、外側の範囲での所属、そして母式の外側の真理値です。`sym p` に沿う輸送が所属を内側の範囲へ引き戻し、推移性が続いて `x ∈ᶜ M` を証明するので `xm` は内側の要素となり、母式の真理値は `sym (abs₀ d (xm ∷ δ))` を通して内側へ運ばれます。切断された出力はやはり `PT.map` で組み立てられるため、どこでも選択公理は使われません。二つの有界量化子の場合は、両側とも単に inhabited な証拠で成立します。
+逆方向では、外側の証拠は三つ組です。素の要素 `x`、外側の範囲での所属、そして母式の外側の真理値です。`sym p` に沿う輸送が所属を内側の範囲へ引き戻し、推移性が続いて `x ∈ᶜ M` を証明するので `xm` は内側の要素となり、母式の真理値は `sym (abs₀ d (xm ∷ δ))` を通して内側へ運ばれます。切断された出力はやはり `map₁` で組み立てられるため、どこでも選択公理は使われません。二つの有界量化子の場合は、両側とも単に inhabited な証拠で成立します。
 <!--/-->
 
 ```agda
-    bwd = PT.map λ { (x , hx , hφ) →
+    bwd = map₁ λ { (x , hx , hφ) →
             let hx' = subst (λ s → ⟨ x ∈ˢ s ⟩) (sym p) hx
                 xm  = x , trans hx' (snd tm)
             in xm , hx' , subst ⟨_⟩ (sym (abs₀ d (xm ∷ δ))) hφ }
@@ -340,18 +337,18 @@ Beyond Δ₀, absoluteness becomes one-directional, and the directions are dual:
 <!--/-->
 
 <!--en-->
-In the Δ₀ base case, `abs₀ d δ` is a path between the inner and outer truth values, so `subst` carries a proof of the inner truth value along that path. No propositional truncation is introduced in this base case. The Σ₁ case `σ-∃` is an unbounded existential over the carrier, and its satisfaction is a truncated join, so `PT.map` acts on a truncated pair: an inner witness `xm` with the body's inner truth `h` is sent to the outer element `fst xm`, and the recursive call `σ₁-up s (xm ∷ δ) h` extends the environment with the full pair, keeping the witness inside until the base case discards the wrapper.
+In the Δ₀ base case, `abs₀ d δ` is a path between the inner and outer truth values, so `subst` carries a proof of the inner truth value along that path. No propositional truncation is introduced in this base case. The Σ₁ case `σ-∃` is an unbounded existential over the carrier, and its satisfaction is a truncated join, so `map₁` acts on a truncated pair: an inner witness `xm` with the body's inner truth `h` is sent to the outer element `fst xm`, and the recursive call `σ₁-up s (xm ∷ δ) h` extends the environment with the full pair, keeping the witness inside until the base case discards the wrapper.
 <!--zh-->
-在 Δ₀ 基础情形中，`abs₀ d δ` 是内外真值之间的路径，`subst` 沿这条路径把内层真值的证明传输到外层。这个基础情形本身不引入命题截断。Σ₁ 情形 `σ-∃` 是载体上的无界存在，其满足是命题截断下的上确界，因此 `PT.map` 作用于截断的对：内层见证 `xm` 配上母式的内层真值 `h`，被送到外层元素 `fst xm`，而递归调用 `σ₁-up s (xm ∷ δ) h` 用完整的对扩展环境，让见证在内层保留到基础情形丢弃包装为止。
+在 Δ₀ 基础情形中，`abs₀ d δ` 是内外真值之间的路径，`subst` 沿这条路径把内层真值的证明传输到外层。这个基础情形本身不引入命题截断。Σ₁ 情形 `σ-∃` 是载体上的无界存在，其满足是命题截断下的上确界，因此 `map₁` 作用于截断的对：内层见证 `xm` 配上母式的内层真值 `h`，被送到外层元素 `fst xm`，而递归调用 `σ₁-up s (xm ∷ δ) h` 用完整的对扩展环境，让见证在内层保留到基础情形丢弃包装为止。
 <!--ja-->
-Δ₀ の基底の場合、`abs₀ d δ` は内側と外側の真理値を結ぶパスであり、`subst` は内側の真理値の証明をそのパスに沿って外側へ輸送します。この基底の場合そのものは命題的切り詰めを導入しません。Σ₁ の場合 `σ-∃` は台の上の無制限の存在量化であり、その充足は命題的切り詰めのもとでの上限なので、`PT.map` が切断された対に作用します。内側の証拠 `xm` と母式の内側の真理値 `h` の対は、外側の要素 `fst xm` に送られ、再帰呼び出し `σ₁-up s (xm ∷ δ) h` は対全体で環境を拡張して、基底の場合が包みを捨てるまで証拠を内側に保ちます。
+Δ₀ の基底の場合、`abs₀ d δ` は内側と外側の真理値を結ぶパスであり、`subst` は内側の真理値の証明をそのパスに沿って外側へ輸送します。この基底の場合そのものは命題的切り詰めを導入しません。Σ₁ の場合 `σ-∃` は台の上の無制限の存在量化であり、その充足は命題的切り詰めのもとでの上限なので、`map₁` が切断された対に作用します。内側の証拠 `xm` と母式の内側の真理値 `h` の対は、外側の要素 `fst xm` に送られ、再帰呼び出し `σ₁-up s (xm ∷ δ) h` は対全体で環境を拡張して、基底の場合が包みを捨てるまで証拠を内側に保ちます。
 <!--/-->
 
 ```agda
   σ₁-up : ∀ {n} {φ : Formula SM n} → Σ₁ φ → (δ : SM ^ n)
         → ⟨ δ ⊨ᵐ φ ⟩ → ⟨ (map fst δ) ⊨ᵛ φ ⟩
   σ₁-up (σ-Δ₀ d) δ = subst ⟨_⟩ (abs₀ d δ)
-  σ₁-up (σ-∃ s)  δ = PT.map λ { (xm , h) → fst xm , σ₁-up s (xm ∷ δ) h }
+  σ₁-up (σ-∃ s)  δ = map₁ λ { (xm , h) → fst xm , σ₁-up s (xm ∷ δ) h }
 
   π₁-down : ∀ {n} {φ : Formula SM n} → Π₁ φ → (δ : SM ^ n)
 ```

@@ -50,19 +50,17 @@ The axioms assert facts directly in `hProp`{.Agda}. Their constant interpretatio
 <!--/-->
 
 <!--en-->
-The working vocabulary for the axioms is assembled here. The syntax chapter supplies `Formula`{.Agda}, the membership symbol `∈̇`{.Agda}, and the constructors `var`{.Agda} and `con`{.Agda}; separation and replacement will take formulas as genuine inputs. The semantics chapter contributes the module `At`, which fixes a constant interpretation and exposes satisfaction for formulas at it. From the host library come `Σ≡Prop`{.Agda}, used to reduce a path of dependent pairs whose second components are propositions, the type `WellFounded`{.Agda} of well-foundedness that regularity will record, the empty type `Empty.⊥`, and propositional truncation `∥_∥₁`{.Agda} for the axiom of choice.
+The working vocabulary for the axioms is assembled here. The syntax chapter supplies `Formula`{.Agda}, the membership symbol `∈̇`{.Agda}, and the constructors `var`{.Agda} and `con`{.Agda}; separation and replacement will take formulas as genuine inputs. The semantics chapter contributes the module `At`, which fixes a constant interpretation and exposes satisfaction for formulas at it. From the host library come `Σ≡Prop`{.Agda}, used to reduce a path of dependent pairs whose second components are propositions, the type `WellFounded`{.Agda} of well-foundedness that regularity will record, the empty type `⊥*`, and propositional truncation `∥_∥₁`{.Agda} for the axiom of choice.
 <!--zh-->
-这里汇集公理所需的工作词汇。语法章提供 `Formula`{.Agda}、成员符号 `∈̇`{.Agda} 与构造子 `var`{.Agda}、`con`{.Agda}；分离与替换将把公式作为真正的输入。语义章贡献模块 `At`，它固定一个常元解释，并给出该解释下公式的满足关系。宿主库则提供 `Σ≡Prop`{.Agda} (用于化归第二分量为命题的依值对的路径)、正则公理将要记录的良基类型 `WellFounded`{.Agda}、空类型 `Empty.⊥`，以及选择公理所用的命题截断 `∥_∥₁`{.Agda}。
+这里汇集公理所需的工作词汇。语法章提供 `Formula`{.Agda}、成员符号 `∈̇`{.Agda} 与构造子 `var`{.Agda}、`con`{.Agda}；分离与替换将把公式作为真正的输入。语义章贡献模块 `At`，它固定一个常元解释，并给出该解释下公式的满足关系。宿主库则提供 `Σ≡Prop`{.Agda} (用于化归第二分量为命题的依值对的路径)、正则公理将要记录的良基类型 `WellFounded`{.Agda}、空类型 `⊥*`，以及选择公理所用的命题截断 `∥_∥₁`{.Agda}。
 <!--ja-->
-ここで公理に必要な作業用の語彙をそろえます。構文の章は `Formula`{.Agda}、所属記号 `∈̇`{.Agda}、構成子 `var`{.Agda} と `con`{.Agda} を供給し、分出と置換は論理式を本物の入力として受け取ることになります。意味論の章はモジュール `At` を提供します。これは定数解釈を一つに固定し、その解釈での論理式の充足を公開します。ホストのライブラリからは、第二成分が命題である依存対のパスを帰着させる `Σ≡Prop`{.Agda}、正則性が記録する整礎性の型 `WellFounded`{.Agda}、空の型 `Empty.⊥`、そして選択公理で使う命題の截断 `∥_∥₁`{.Agda} が来ます。
+ここで公理に必要な作業用の語彙をそろえます。構文の章は `Formula`{.Agda}、所属記号 `∈̇`{.Agda}、構成子 `var`{.Agda} と `con`{.Agda} を供給し、分出と置換は論理式を本物の入力として受け取ることになります。意味論の章はモジュール `At` を提供します。これは定数解釈を一つに固定し、その解釈での論理式の充足を公開します。ホストのライブラリからは、第二成分が命題である依存対のパスを帰着させる `Σ≡Prop`{.Agda}、正則性が記録する整礎性の型 `WellFounded`{.Agda}、空の型 `⊥*`、そして選択公理で使う命題の截断 `∥_∥₁`{.Agda} が来ます。
 <!--/-->
 
 ```agda
 open import FOL.Syntax using ( Formula; var; con; _∈̇_ )
 open import FOL.Semantics 𝒮 using ( module At )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.Induction.WellFounded using ( WellFounded )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -74,8 +72,6 @@ Two openings put the structure and satisfaction names into scope; the direct `hP
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 
 open hPropStructure 𝒮
 
@@ -435,17 +431,17 @@ One axiom remains, the one that forces a genuinely infinite set into existence. 
 <!--/-->
 
 <!--en-->
-The chain is a function `numeral : ℕ → S`, so indexing by the host's natural numbers is explicit data. The zero case is a negative condition: any inhabitant `z` of the Type-valued membership `z ∈ˢ numeral zero` yields a contradiction, witnessed in the empty host type `Empty.⊥`. Note the reading: `∈ˢ` returns a proposition in `hProp ℓ`, `⟨_⟩` takes its underlying type, and from an inhabitant of that type the field derives absurdity. This says the zeroth numeral has no members, without mentioning the derived empty set.
+The chain is a function `numeral : ℕ → S`, so indexing by the host's natural numbers is explicit data. The zero case is a negative condition: any inhabitant `z` of the Type-valued membership `z ∈ˢ numeral zero` yields a contradiction, witnessed in the empty host type `⊥*`. Note the reading: `∈ˢ` returns a proposition in `hProp ℓ`, `⟨_⟩` takes its underlying type, and from an inhabitant of that type the field derives absurdity. This says the zeroth numeral has no members, without mentioning the derived empty set.
 <!--zh-->
-数码链是函数 `numeral : ℕ → S`，用宿主自然数作索引是显式数据。零的情形是否定条件：`z ∈ˢ numeral zero` 这个 Type 值隶属的任何居民都导出矛盾，见证落在空宿主类型 `Empty.⊥` 中。注意读法：`∈ˢ` 返回 `hProp ℓ` 中的命题，`⟨_⟩` 取其底层类型，从该类型的居民出发，字段导出荒谬。这说明第零个数码没有成员，却完全未提及派生的空集。
+数码链是函数 `numeral : ℕ → S`，用宿主自然数作索引是显式数据。零的情形是否定条件：`z ∈ˢ numeral zero` 这个 Type 值隶属的任何居民都导出矛盾，见证落在空宿主类型 `⊥*` 中。注意读法：`∈ˢ` 返回 `hProp ℓ` 中的命题，`⟨_⟩` 取其底层类型，从该类型的居民出发，字段导出荒谬。这说明第零个数码没有成员，却完全未提及派生的空集。
 <!--ja-->
-数項の列は関数 `numeral : ℕ → S` であり、ホストの自然数による添字付けが明示的なデータになっています。零の場合は否定の条件です。Type 値の所属 `z ∈ˢ numeral zero` の任意の inhabitant は矛盾を導き、その証拠は空のホスト型 `Empty.⊥` に落ちます。読み方に注意してください。`∈ˢ` は `hProp ℓ` の命題を返し、`⟨_⟩` がその基礎型を取り、その型の inhabitant からフィールドは荒謬を導きます。これは第零の数項が要素をもたないことを述べるものであり、派生した空集合には一言も触れません。
+数項の列は関数 `numeral : ℕ → S` であり、ホストの自然数による添字付けが明示的なデータになっています。零の場合は否定の条件です。Type 値の所属 `z ∈ˢ numeral zero` の任意の inhabitant は矛盾を導き、その証拠は空のホスト型 `⊥*` に落ちます。読み方に注意してください。`∈ˢ` は `hProp ℓ` の命題を返し、`⟨_⟩` がその基礎型を取り、その型の inhabitant からフィールドは荒謬を導きます。これは第零の数項が要素をもたないことを述べるものであり、派生した空集合には一言も触れません。
 <!--/-->
 
 ```agda
   field
     numeral      : ℕ → S
-    numeral-zero : (z : S) → ⟨ z ∈ˢ numeral zero ⟩ → Empty.⊥
+    numeral-zero : (z : S) → ⟨ z ∈ˢ numeral zero ⟩ → ⊥₀
     numeral-suc  : (n : ℕ) (z : S)
                  → (⟨ z ∈ˢ numeral (suc n) ⟩ → ⟨ (z ∈ˢ numeral n) ⊔ (z ≈ˢ numeral n) ⟩)
 ```

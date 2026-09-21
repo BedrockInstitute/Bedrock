@@ -143,6 +143,118 @@ good = ⟨ P ⟩isProp
 check("hProp snd projection", rules(run(hprop_snd)),
       [(7, "hprop-snd")])
 
+# The zero-level qualified empty type is forbidden in Agda code. Prose,
+# comments, strings and the distinct spelling Empty.⊥* do not trigger it.
+empty_bottom = f"""Empty.⊥ in prose is permitted.
+
+```agda
+{OPTS}
+module Test where
+
+-- Empty.⊥ in a comment is permitted.
+text = "Empty.⊥"
+polymorphic = Empty.⊥*
+bad : Empty.⊥
+bad = ?
+```
+"""
+
+check("qualified empty bottom", rules(run(empty_bottom)),
+      [(10, "forbidden"), (11, "forbidden")])
+
+# Base.Prelude alone owns open imports from the Empty module family. The
+# broader Prelude-ownership rule independently rejects repeated vocabulary
+# imports, including qualified aliases.
+empty_open = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+open import Cubical.Data.Empty public using ( ⊥* )
+open import Cubical.Data.Empty.Properties public using ( isProp⊥* )
+import Cubical.Data.Empty as Empty
+qualified = Empty.rec
+```
+"""
+
+check("Empty open outside Prelude", rules(run(empty_open)),
+      [(7, "empty-open"), (7, "prelude-import"),
+       (8, "empty-open"), (8, "prelude-import"),
+       (9, "prelude-import")])
+
+prelude_empty_open = f"""# T
+
+```agda
+{OPTS}
+module Base.Prelude where
+
+open import Cubical.Data.Empty public using ( ⊥* )
+```
+"""
+
+check("Empty open in Prelude", rules(run(prelude_empty_open)), [])
+
+# Base.Prelude is the sole import boundary for its curated Cubical vocabulary.
+# The rule covers open, qualified, aliased and renamed imports alike.
+prelude_owned = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+open import Cubical.Data.Sigma using ( _×_ )  -- lint-agda: keep
+import Cubical.Data.Sum as Sum  -- lint-agda: keep
+open import Cubical.Functions.Logic renaming ( ⇔toPath to iffPath )  -- lint-agda: keep
+open import Cubical.HITs.PropositionalTruncation
+  renaming ( rec to localRec )  -- lint-agda: keep
+```
+"""
+
+check("Prelude-owned imports", rules(run(prelude_owned)),
+      [(7, "prelude-import"), (8, "prelude-import"),
+       (9, "prelude-import"), (10, "prelude-import")])
+
+prelude_owned_at_owner = f"""# T
+
+```agda
+{OPTS}
+module Base.Prelude where
+
+open import Cubical.Data.Sum public using ( _⊎_; inl; inr )
+```
+"""
+
+check("Prelude-owned import at owner", rules(run(prelude_owned_at_owner)), [])
+
+prelude_module_local_name = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+open import Cubical.Data.Sigma using ( ΣPathP )  -- lint-agda: keep
+open import Cubical.Data.Sum renaming ( map to sumMap )  -- lint-agda: keep
+```
+"""
+
+check("proof-local names from Prelude modules",
+      rules(run(prelude_module_local_name)), [])
+
+unit_values = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+open import Cubical.Data.Unit using ( Unit; tt )  -- lint-agda: keep
+open import Cubical.Data.Unit renaming ( tt* to unitWitness )  -- lint-agda: keep
+```
+"""
+
+check("unit constructor imports", rules(run(unit_values)),
+      [(7, "prelude-import"), (8, "prelude-import")])
+
 # 7. Comments and strings never count as usage.
 ghost = f"""# T
 

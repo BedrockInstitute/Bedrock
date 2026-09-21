@@ -50,7 +50,6 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; ∈-irrefl )
 open import V.Model {ℓ} using ( self∈sucV; ∈sucV-inl )
 
 open import Cubical.Data.Nat.Order using ( _<_; <-split; ¬-<-zero; _≟_; lt; eq; gt )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -62,10 +61,6 @@ Here is the elimination restriction in its precise form. The small membership st
 <!--/-->
 
 ```agda
-import Cubical.Data.Sum as Sum
-open Sum using ( _⊎_; inl; inr )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
 ```
 
@@ -126,8 +121,8 @@ The stepping stone `#⊆suc`{.Agda} says that any member of `# n`{.Agda} is also
 #⊆suc n {x} = ∈sucV-inl {A = # n} {x = x}
 
 #mono : (m n : ℕ) → m < n → ⟨ (# m) ∈ˢ (# n) ⟩
-#mono m zero    m<0    = Empty.rec (¬-<-zero m<0)
-#mono m (suc n) m<sucn = Sum.rec
+#mono m zero    m<0    = ⊥₀-rec (¬-<-zero m<0)
+#mono m (suc n) m<sucn = ⊎-rec
 ```
 
 <!--en-->
@@ -164,7 +159,7 @@ The strictly-smaller case is the instructive one. The membership `# m ∈ # n`{.
 #-inj : (m n : ℕ) → # m ≡ # n → m ≡ n
 #-inj m n #m≡#n with m ≟ n
 ... | eq m≡n = m≡n
-... | lt m<n = Empty.rec (∈-irrefl (# n)
+... | lt m<n = ⊥₀-rec (∈-irrefl (# n)
       (subst (λ z → ⟨ z ∈ˢ (# n) ⟩) #m≡#n (#mono m n m<n)))
 ```
 
@@ -177,7 +172,7 @@ The greater case is identical with the roles of `m` and `n` exchanged: monotonic
 <!--/-->
 
 ```agda
-... | gt n<m = Empty.rec (∈-irrefl (# m)
+... | gt n<m = ⊥₀-rec (∈-irrefl (# m)
       (subst (λ z → ⟨ z ∈ˢ (# m) ⟩) (sym #m≡#n) (#mono n m n<m)))
 
 #-inj′ : ∀ {m n} → # m ≡ # n → m ≡ n
@@ -306,8 +301,8 @@ First component. The singleton part `⁅ a ⁆s`{.Agda} belongs to `pr a b`{.Agd
   H₁ = mem⁅,⁆ (subst (λ s → ⟨ ⁅ a ⁆s ∈ₛ s ⟩) p (inl∈⁅,⁆ {b = ⁅ a , b ⁆} refl))
 
   a≡c : a ≡ c
-  a≡c = PT.rec (setIsSet a c)
-    (Sum.rec singl-inj (λ e → sym (singl≡pair e .fst))) H₁
+  a≡c = rec₁ (setIsSet a c)
+    (⊎-rec singl-inj (λ e → sym (singl≡pair e .fst))) H₁
 ```
 
 <!--en-->
@@ -338,11 +333,11 @@ The helper `d≡b-from-K` handles the degenerate situation under the temporary h
 <!--/-->
 
 ```agda
-  d≡b-from-K a≡b = PT.rec (setIsSet d b)
-    (Sum.rec
+  d≡b-from-K a≡b = rec₁ (setIsSet d b)
+    (⊎-rec
       (λ e → singl≡pair (sym e) .snd ∙ a≡b)
-      (λ e → PT.rec (setIsSet d b)
-        (Sum.rec (λ d≡a → d≡a ∙ a≡b) (λ d≡b → d≡b))
+      (λ e → rec₁ (setIsSet d b)
+        (⊎-rec (λ d≡a → d≡a ∙ a≡b) (λ d≡b → d≡b))
 ```
 
 <!--en-->
@@ -358,8 +353,8 @@ The main argument for `b ≡ d` runs through `H₂`. In its first disjunct, the 
     K
 
   b≡d : b ≡ d
-  b≡d = PT.rec (setIsSet b d)
-    (Sum.rec
+  b≡d = rec₁ (setIsSet b d)
+    (⊎-rec
 ```
 
 <!--en-->
@@ -373,8 +368,8 @@ In the second disjunct of `H₂`, the two inner unordered pairs coincide, `⁅ a
 ```agda
       (λ e → let b≡c = singl≡pair (sym e) .snd
              in sym (d≡b-from-K (a≡c ∙ sym b≡c)))
-      (λ e → PT.rec (setIsSet b d)
-        (Sum.rec
+      (λ e → rec₁ (setIsSet b d)
+        (⊎-rec
           (λ b≡c → sym (d≡b-from-K (a≡c ∙ sym b≡c)))
 ```
 

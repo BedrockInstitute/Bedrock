@@ -130,9 +130,6 @@ Several equalities below are proved by comparing membership in both directions. 
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 ```
@@ -149,8 +146,6 @@ Finite von Neumann numerals provide the tags used in the union coding, while ord
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet; ⁅_⁆s )
 open InfinitySet {ℓ} using ( #_; ω; sucV )
 import Cubical.Induction.WellFounded as WF
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -162,7 +157,6 @@ Whenever an injection is asserted through `InjL`, its graph exists only under pr
 <!--/-->
 
 ```agda
-open PT using ( ∣_∣₁ )
 
 ```
 
@@ -209,7 +203,7 @@ Fix a constructible set `κ` whose underlying set is an ordinal, an internal car
 
 ```agda
 module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
-          (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+          (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
           (y : S) (y⊆κ : (z : V ℓ) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩) where
 
 ```
@@ -493,7 +487,7 @@ To identify `Xʟ` with `X`, compare their members in both directions. In the for
   Xʟ-eq = extensionalV {a = fst Xʟ} {b = X} (λ z → ⇔toPath (fwd z) (bwd z))
     where
     fwd : (z : V ℓ) → ⟨ z ∈ˢ fst Xʟ ⟩ → ⟨ z ∈ˢ X ⟩
-    fwd z h = PT.rec (snd (z ∈ˢ X)) go (U.out zS h)
+    fwd z h = rec₁ (snd (z ∈ˢ X)) go (U.out zS h)
 ```
 
 <!--en-->
@@ -523,7 +517,7 @@ In the singleton case, the coded member is equal to `y`, already known to belong
 ```agda
       go (inr hz) = subst (λ w → ⟨ w ∈ˢ X ⟩) (sym (Pt.Y-out zS hz)) UK.x∈X
     bwd : (z : V ℓ) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ fst Xʟ ⟩
-    bwd z h = PT.rec (snd (z ∈ˢ fst Xʟ)) go (UK.X-mem z h)
+    bwd z h = rec₁ (snd (z ∈ˢ fst Xʟ)) go (UK.X-mem z h)
       where
       go : ⟨ z ∈ˢ Lset (fst κ) ⟩ ⊎ ⟨ z ∈ˢ ⁅ fst y ⁆s ⟩ → ⟨ z ∈ˢ fst Xʟ ⟩
 ```

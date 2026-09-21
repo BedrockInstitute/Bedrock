@@ -113,7 +113,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet {ℓ} using ( ω; sucV )
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 ```
 
 <!--en-->
@@ -125,11 +124,6 @@ Trichotomy will be analyzed through three coproduct branches. Impossible branche
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sum using ( inl; inr )
-open import Cubical.Foundations.HLevels using ( isPropΠ; isProp× )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁ )
 ```
 
 <!--en-->
@@ -200,7 +194,7 @@ The first interface says what it means for a stage to be counted: for every pair
 ```agda
 StageCountedCoded : Type (ℓ-suc ℓ)
 StageCountedCoded =
-    (δ Lδ : SL.S) → IsOrd (fst δ) → (⟨ fst δ ∈ˢ ω ⟩ → Empty.⊥)
+    (δ Lδ : SL.S) → IsOrd (fst δ) → (⟨ fst δ ∈ˢ ω ⟩ → ⊥₀)
   → fst Lδ ≡ Lset (fst δ) → InjL Lδ δ
 ```
 
@@ -215,7 +209,7 @@ The second interface states the bounded-subset theorem. For an ordinal internal 
 ```agda
 InternalBoundedSubset : Type (ℓ-suc ℓ)
 InternalBoundedSubset =
-    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+    (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
   → (y : SL.S) → ((z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩)
   → ∥ Σ[ β ∈ SL.S ]
 ```
@@ -243,7 +237,7 @@ The third interface is a conditional reverse comparison: given that the internal
 ```agda
 SuccIntoPower : ModelL.isZFModel → Type (ℓ-suc ℓ)
 SuccIntoPower zf =
-    (κ δ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥) → SuccCardL δ κ
+    (κ δ : SL.S) → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀) → SuccCardL δ κ
   → InjL (𝒫 κ) δ → InjL δ (𝒫 κ)
   where open ModelL.isZFModel zf using ( 𝒫 )
 ```
@@ -260,7 +254,7 @@ The fourth interface states the mere existence of a successor cardinal: for ever
 SuccCardExists : Type (ℓ-suc ℓ)
 SuccCardExists =
     (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ
-  → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
   → ∥ Σ[ δ ∈ SL.S ] SuccCardL δ κ ∥₁
 ```
 
@@ -356,7 +350,7 @@ Internal cardinality is a proposition. Indeed, `IsCardinalL x` says, for every c
 
   isPropIsCardinalL : (x : SL.S) → isProp (IsCardinalL x)
   isPropIsCardinalL x =
-    isPropΠ (λ _ → isPropΠ (λ _ → isPropΠ (λ _ → Empty.isProp⊥)))
+    isPropΠ (λ _ → isPropΠ (λ _ → isPropΠ (λ _ → isProp⊥)))
 
 ```
 
@@ -498,7 +492,7 @@ Leastness says that no earlier index of the search space is a candidate.
 <!--/-->
 
 ```agda
-  δ-min : (b : A) → ⟨ Good b ⟩ → (SWO._<∙_ w b (fst least) → Empty.⊥)
+  δ-min : (b : A) → ⟨ Good b ⟩ → (SWO._<∙_ w b (fst least) → ⊥₀)
   δ-min = snd (snd least)
 
 ```
@@ -532,7 +526,7 @@ The three trichotomy cases are handled directly: if `δ` lies below `c`, the tra
        → (x : SL.S) → ⟨ fst x ∈ˢ fst δ ⟩ → ⟨ fst x ∈ˢ fst c ⟩
     go (inl δ∈c)       x x∈δ = oc .fst x∈δ δ∈c
     go (inr (inl e))   x x∈δ = subst (λ v → ⟨ fst x ∈ˢ v ⟩) e x∈δ
-    go (inr (inr c∈δ)) x x∈δ = Empty.rec (δ-min b bGood b<δ)
+    go (inr (inr c∈δ)) x x∈δ = ⊥₀-rec (δ-min b bGood b<δ)
 ```
 
 <!--en-->
@@ -594,7 +588,7 @@ The membership of `c` below `δ` is then converted into the strict order of the 
 ```agda
 
 succCardExists : SuccCardExists
-succCardExists κ oκ cκ κ∉ω = PT.map build (CardAboveL κ oκ cκ κ∉ω)
+succCardExists κ oκ cκ κ∉ω = map₁ build (CardAboveL κ oκ cκ κ∉ω)
   where
   build : Σ[ θ ∈ SL.S ]
             (IsOrd (fst θ) × IsCardinalL θ × ⟨ fst κ ∈ˢ fst θ ⟩)
@@ -737,7 +731,7 @@ The landing lemma is stated for the model, the bounded-subset interface, and a f
 ```agda
 stage-landing :
     (zf : ModelL.isZFModel) → InternalBoundedSubset
-  → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
   → (δ : SL.S) → SuccCardL δ κ
   → (y : SL.S) → ⟨ fst y ∈ˢ fst (ModelL.isZFModel.𝒫 zf κ) ⟩
 ```
@@ -753,7 +747,7 @@ For each fixed `y`, the bounded-subset theorem returns a suitable stage index `�
 ```agda
   → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
 stage-landing zf ibs κ ordκ cardκ κ∉ω δ (ordδ , cardδ , κ∈δ , _) y y∈𝒫κ =
-  PT.rec (snd (fst y ∈ˢ Lset (fst δ))) place (ibs κ ordκ cardκ κ∉ω y y⊆κ)
+  rec₁ (snd (fst y ∈ˢ Lset (fst δ))) place (ibs κ ordκ cardκ κ∉ω y y⊆κ)
   where
   y⊆κ : (z : SV.S) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩
 ```
@@ -779,7 +773,7 @@ No injection from `δ` into `κ` can exist, because `δ` is an internal cardinal
 <!--/-->
 
 ```agda
-  no-δ↪κ : InjL δ κ → Empty.⊥
+  no-δ↪κ : InjL δ κ → ⊥₀
   no-δ↪κ = cardδ κ κ∈δ
 
 ```
@@ -811,7 +805,7 @@ If `β` lies below `δ`, monotonicity of the tower directly places the member at
 ```agda
     go : Tri (fst β) (fst δ) → ⟨ fst y ∈ˢ Lset (fst δ) ⟩
     go (inl β∈δ)       = Lset-mono β∈δ y∈Lβ
-    go (inr (inl e))   = Empty.rec (no-δ↪κ (subst (λ b → InjL b κ) β≡δ β↪κ))
+    go (inr (inl e))   = ⊥₀-rec (no-δ↪κ (subst (λ b → InjL b κ) β≡δ β↪κ))
       where
       β≡δ : β ≡ δ
 ```
@@ -826,7 +820,7 @@ In the equality branch, equality of the underlying sets lifts to equality of the
 
 ```agda
       β≡δ = Σ≡Prop (λ x → snd (isL x)) e
-    go (inr (inr δ∈β)) = Empty.rec (no-δ↪κ
+    go (inr (inr δ∈β)) = ⊥₀-rec (no-δ↪κ
       (injl-trans δ β κ (inclusion-coded δ β δ⊆β) β↪κ))
       where
       δ⊆β : (z : SV.S) → ⟨ z ∈ˢ fst δ ⟩ → ⟨ z ∈ˢ fst β ⟩
@@ -863,7 +857,7 @@ The power-set comparison now follows from the chain `𝒫κ ↪ Lset δ ↪ δ`.
 ```agda
 power-into-succ :
     (zf : ModelL.isZFModel) → StageCountedCoded → InternalBoundedSubset
-  → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  → (κ : SL.S) → IsOrd (fst κ) → IsCardinalL κ → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
   → (δ : SL.S) → SuccCardL δ κ
   → InjL (ModelL.isZFModel.𝒫 zf κ) δ
 ```
@@ -907,7 +901,7 @@ The successor cardinal `δ` lies outside `ω`: if it were inside, the membership
 <!--/-->
 
 ```agda
-  δ∉ω : ⟨ fst δ ∈ˢ ω ⟩ → Empty.⊥
+  δ∉ω : ⟨ fst δ ∈ˢ ω ⟩ → ⊥₀
   δ∉ω δ∈ω = κ∉ω (ω-ord .fst {x = fst δ} {y = fst κ} κ∈δ δ∈ω)
 ```
 
@@ -958,7 +952,7 @@ The theorem `succCardExists` gives only the propositionally truncated existence 
 <!--/-->
 
 ```agda
-  PT.map step (succCardExists κ ordκ cardκ κ∉ω)
+  map₁ step (succCardExists κ ordκ cardκ κ∉ω)
   where
   open ModelL.isZFModel zf using ( 𝒫 )
   step : Σ[ δ ∈ SL.S ] SuccCardL δ κ

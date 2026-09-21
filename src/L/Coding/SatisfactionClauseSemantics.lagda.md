@@ -21,6 +21,7 @@ The argument takes excluded middle at level `ℓ-suc ℓ` as an explicit paramet
 
 ```agda
 open import Base.Prelude
+open import Cubical.Data.Nat using ( znots; snotz )
 open import Base.Classical using ( LEM )
 
 ```
@@ -127,11 +128,6 @@ The external environment is a finite vector, but the table stores a set-theoreti
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Data.Vec using ( _∷_; []; lookup )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 ```
 
 <!--en-->
@@ -143,11 +139,6 @@ Most semantic comparisons are paths between propositions, obtained from implicat
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 ```
 
 <!--en-->
@@ -556,7 +547,7 @@ From an inner witness `q`, `pr-out` gives `fst q=pr (fst i) Vv`; transporting th
 
 ```agda
     viaQ : (i s : S) → Tv ≡ pr N1v (fst i) → Inner i s → TmIsV Tv Z Vv
-    viaQ i s e = PT.map
+    viaQ i s e = map₁
       (λ { (q , (q∈ , hp)) → inr (fst i , ( e ∙ cong (λ a → pr a (fst i)) q1
          , subst (λ u → ⟨ u ∈ Z ⟩) (pr-out i0 i1 (sh 3 v) (q ∷ i ∷ s ∷ δ) hp) q∈ )) })
 
@@ -572,7 +563,7 @@ From an inner witness `q`, `pr-out` gives `fst q=pr (fst i) Vv`; transporting th
 
 ```agda
     viaI : Outer → TmIsV Tv Z Vv
-    viaI = PT.rec squash₁ (λ { (i , s , (e , hq)) → viaQ i s e hq })
+    viaI = rec₁ squash₁ (λ { (i , s , (e , hq)) → viaQ i s e hq })
 
 ```
 
@@ -601,7 +592,7 @@ The public elimination `tmIs-out` performs that case analysis under the outer di
 
 ```agda
   tmIs-out : ⟨ δ ⊨ tmIs t z v N0 N1 ⟩ → TmIsV Tv Z Vv
-  tmIs-out h = PT.rec squash₁ cases h
+  tmIs-out h = rec₁ squash₁ cases h
 
 ```
 
@@ -676,7 +667,7 @@ Finally, `tmIs-in` eliminates the propositional truncation in `TmIsV` into the p
 
 ```agda
   tmIs-in : TmIsV Tv Z Vv → ⟨ δ ⊨ tmIs t z v N0 N1 ⟩
-  tmIs-in = PT.rec (snd (δ ⊨ tmIs t z v N0 N1)) build
+  tmIs-in = rec₁ (snd (δ ⊨ tmIs t z v N0 N1)) build
 ```
 
 <!--en-->
@@ -889,8 +880,8 @@ Totality is read outward as truncated existence: for each member of the code dom
 
 ```agda
   total-out : ⟨ γ ⊨ Cl.total ⟩ → (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
-  total-out h c c∈ = PT.rec squash₁
-    (λ { (e , (e∈ , hs)) → PT.map
+  total-out h c c∈ = rec₁ squash₁
+    (λ { (e , (e∈ , hs)) → map₁
       (λ { (yc , s , (ee , _)) → yc , subst (λ u → ⟨ u ∈ Tv ⟩) ee e∈ })
       (sndEx-out i0 i1 ⊤̇ (e ∷ c ∷ γ) hs) })
 ```
@@ -918,7 +909,7 @@ Conversely, assume that every `c` in `C` has, propositionally truncated, a value
 
 ```agda
   total-in : ((c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁) → ⟨ γ ⊨ Cl.total ⟩
-  total-in g c c∈ = PT.map
+  total-in g c c∈ = map₁
     (λ { (yc , m) → down (lookup T γ) (pr (fst c) (fst yc)) m
        , ( m , fillSnd i0 (down (lookup T γ) (pr (fst c) (fst yc)) m ∷ c ∷ γ) c yc refl ⊤̇ (λ b → b) i1 refl ) })
     (g c c∈)
@@ -936,7 +927,7 @@ The on-domain condition starts with an arbitrary element `e` of `T`, rather than
 
   onC-out : ⟨ γ ⊨ Cl.onC ⟩ → (e : S) → ⟨ fst e ∈ Tv ⟩
           → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
-  onC-out h e e∈ = PT.map (λ { (c , yc , s , (ee , c∈)) → c , yc , (ee , c∈) })
+  onC-out h e e∈ = map₁ (λ { (c , yc , s , (ee , c∈)) → c , yc , (ee , c∈) })
     (bothEx-out i0 (var i1 ∈̇ var (sh 4 C)) (e ∷ γ) (h e e∈))
 
 ```
@@ -952,7 +943,7 @@ The converse asks for precisely that truncated decomposition of every member of 
 ```agda
   onC-in : ((e : S) → ⟨ fst e ∈ Tv ⟩ → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁)
          → ⟨ γ ⊨ Cl.onC ⟩
-  onC-in g e e∈ = PT.rec (snd ((e ∷ γ) ⊨ bothEx i0 (var i1 ∈̇ var (sh 4 C))))
+  onC-in g e e∈ = rec₁ (snd ((e ∷ γ) ⊨ bothEx i0 (var i1 ∈̇ var (sh 4 C))))
     (λ { (c , yc , (ee , c∈)) → fillBoth i0 (e ∷ γ) c yc ee (var i1 ∈̇ var (sh 4 C)) c∈ })
     (g e e∈)
 ```
@@ -1351,7 +1342,6 @@ open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm )
 open import L.Coding.Satisfaction {ℓ} lem using ( Sat; Sat-mem; cond )
 open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst )
 import L.Coding.SatisfactionBridge {ℓ} lem as Semantic
-open import Cubical.Data.Nat using ( znots; snotz )
 ```
 
 <!--en-->
@@ -1508,7 +1498,7 @@ For falsity, the target property has no inhabitants for any `z`. If `z` belonged
 ```agda
   botBridge : (n : ℕ) {k : ℕ} (env : S ^ k)
             → ExtFact (fst (SatW (⊥̇ {n = n}))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ ⊥̇ ⟩)
-  botBridge n env = (λ z hz → Sat-out ⊥̇ z hz .fst , Sat-out ⊥̇ z hz .snd) , (λ z hz b → Empty.rec* b)
+  botBridge n env = (λ z hz → Sat-out ⊥̇ z hz .fst , Sat-out ⊥̇ z hz .snd) , (λ z hz b → ⊥*-rec b)
 ```
 
 <!--en-->
@@ -1643,7 +1633,7 @@ For the outward half, `Sat-out` first supplies membership of `z` in the environm
     direct-extension {n} ψ P f b = out , inn
       where
       out : (z : S) → ⟨ fst z ∈ fst (SatW ψ) ⟩ → ⟨ fst z ∈ fst (envSet W n) ⟩ × ⟨ P z ⟩
-      out z hz = Sat-out ψ z hz .fst , PT.rec (snd (P z))
+      out z hz = Sat-out ψ z hz .fst , rec₁ (snd (P z))
         (λ { (δ , q) → f δ z q (subst ⟨_⟩ (Semantic.Sat-small-spec W ψ δ z q) hz) })
 ```
 
@@ -1658,7 +1648,7 @@ For the inward half, membership in the environment set again yields only a trunc
 ```agda
         (Semantic.envSet-vectors W z (Sat-out ψ z hz .fst))
       inn : (z : S) → ⟨ fst z ∈ fst (envSet W n) ⟩ → ⟨ P z ⟩ → ⟨ fst z ∈ fst (SatW ψ) ⟩
-      inn z hz hp = PT.rec (snd (fst z ∈ fst (SatW ψ)))
+      inn z hz hp = rec₁ (snd (fst z ∈ fst (SatW ψ)))
         (λ { (δ , q) → subst ⟨_⟩ (sym (Semantic.Sat-small-spec W ψ δ z q)) (b δ z q hp) })
         (Semantic.envSet-vectors W z hz)
 ```
@@ -1693,7 +1683,7 @@ The proof is a pair of implications joined by `⇔toPath`. The outward direction
       where
       out : ⟨ (Semantic.intoL W x ∷ γ) ⊨ ∃̇∈ (var (suc yai)) (consAtL i0 i1 (sh 2 zi)) ⟩
           → ⟨ Meaning a (x ∷ δ) ⟩
-      out = PT.rec (snd (Meaning a (x ∷ δ))) (λ { (e , he , hc) →
+      out = rec₁ (snd (Meaning a (x ∷ δ))) (λ { (e , he , hc) →
 ```
 
 <!--en-->
@@ -1754,7 +1744,7 @@ The existential bridge is the first quantifier result: membership in the interna
            → fst (lookup wi γ) ≡ Wv → fst (lookup yai γ) ≡ fst (SatW a)
            → ExtFact (fst (SatW (∃̇ a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ γ) ⊨ quEx wi yai ⟩)
   exBridge a γ wi yai qw qa = direct-extension (∃̇ a) (λ z → (z ∷ γ) ⊨ quEx wi yai)
-    (λ δ z qz → PT.map (λ { (x , h) → Semantic.intoL W x
+    (λ δ z qz → map₁ (λ { (x , h) → Semantic.intoL W x
 ```
 
 <!--en-->
@@ -1768,7 +1758,7 @@ For the existential bridge, `direct-extension` leaves only the two translations 
 ```agda
       , subst (λ X → ⟨ fst x ∈ X ⟩) (sym qw) (snd x)
       , subst ⟨_⟩ (sym (child a δ x (z ∷ γ) i0 (suc yai) qz qa)) h }))
-    (λ δ z qz → PT.map (λ { (x , hx , h) → (fst x , subst (λ X → ⟨ fst x ∈ X ⟩) qw hx)
+    (λ δ z qz → map₁ (λ { (x , hx , h) → (fst x , subst (λ X → ⟨ fst x ∈ X ⟩) qw hx)
       , subst ⟨_⟩ (child a δ (fst x , subst (λ X → ⟨ fst x ∈ X ⟩) qw hx)
         (z ∷ γ) i0 (suc yai) qz qa) h }))
 ```
@@ -1861,7 +1851,7 @@ For a constant term, `term-out` eliminates the truncated `TmIsV` evidence into a
     term-out : ∀ {n} (t : Term Ab n) (δ : DB.SM ^ n) (z v : S)
       → fst z ≡ Semantic.graph W δ → TmIsV (ct t) (fst z) (fst v)
       → fst v ≡ fst (value t δ)
-    term-out (con q) δ z v qz = PT.rec (setIsSet _ _)
+    term-out (con q) δ z v qz = rec₁ (setIsSet _ _)
       (λ { (inl e) → sym (pr-inj e .snd)
 ```
 
@@ -1874,9 +1864,9 @@ For a variable term, the constant-shaped branch is ruled out by the same tag dis
 <!--/-->
 
 ```agda
-         ; (inr (i , e , _)) → Empty.rec (znots (#-inj′ {0} {1} (pr-inj e .fst))) })
-    term-out (var i) δ z v qz = PT.rec (setIsSet _ _)
-      (λ { (inl e) → Empty.rec (snotz (#-inj′ {1} {0} (pr-inj e .fst)))
+         ; (inr (i , e , _)) → ⊥₀-rec (znots (#-inj′ {0} {1} (pr-inj e .fst))) })
+    term-out (var i) δ z v qz = rec₁ (setIsSet _ _)
+      (λ { (inl e) → ⊥₀-rec (snotz (#-inj′ {1} {0} (pr-inj e .fst)))
          ; (inr (j , e , hp)) → subst ⟨_⟩ (lookup-spec (Semantic.values W δ) i (fst v))
              (subst2 (λ a E → ⟨ pr a (fst v) ∈ E ⟩) (sym (pr-inj e .snd)) qz hp) })
 ```
@@ -2088,7 +2078,7 @@ The bounded existential bridge states the same extensional fact for `∃̇∈ t 
 ```agda
     exInBridge : ExtFact (fst (SatW (∃̇∈ t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ Γ) ⊨ bqEx wi ti yai N0i N1i ⟩)
     exInBridge = direct-extension (∃̇∈ t a) (λ z → (z ∷ Γ) ⊨ bqEx wi ti yai N0i N1i)
-      (λ δ z qz → PT.map (λ { (x , hx , h) → bound δ
+      (λ δ z qz → map₁ (λ { (x , hx , h) → bound δ
         , bound∈W δ
         , bound-read δ z qz
 ```
@@ -2104,7 +2094,7 @@ From a semantic witness `x` for the bounded existential, the forward map chooses
 ```agda
         , ∣ Semantic.intoL W x , subst (λ X → ⟨ fst x ∈ X ⟩) (sym qw) (snd x) , hx
             , subst ⟨_⟩ (sym (child a δ x (bound δ ∷ z ∷ Γ) i1 (sh 2 yai) qz qa)) h ∣₁ }))
-      (λ δ z qz → PT.rec squash₁ (λ { (v , hv , ht , h) → PT.map
+      (λ δ z qz → rec₁ squash₁ (λ { (v , hv , ht , h) → map₁
         (λ { (x , hx , hxv , hc) → (fst x , subst (λ X → ⟨ fst x ∈ X ⟩) qw hx)
           , subst (λ V → ⟨ fst x ∈ V ⟩) (term-out t δ z v qz (tmOut z v ht)) hxv
 ```
@@ -2294,18 +2284,18 @@ The local names `v` and `x` are the embeddings into `L` of the evaluated terms `
 ```
 
 <!--en-->
-The reverse implication of `atomBridge` starts with a meta-level environment `δ`, a coded environment `z`, and an identification of `z` with the canonical graph of `δ`. Its remaining hypothesis says that `atomEx` holds at `z`. The outer propositionally truncated bounded existential supplies a candidate `v`, a proof `hv` that it lies in `W`, and an inner existential proof `h`. Since `Meaning (op t u) δ` is a proposition, `PT.rec` may eliminate this truncation, and then the inner one, into that target. At this point `v` is only a candidate for the value of `t`; the term-value record extracted from the inner witness will identify it with the actual semantic value.
+The reverse implication of `atomBridge` starts with a meta-level environment `δ`, a coded environment `z`, and an identification of `z` with the canonical graph of `δ`. Its remaining hypothesis says that `atomEx` holds at `z`. The outer propositionally truncated bounded existential supplies a candidate `v`, a proof `hv` that it lies in `W`, and an inner existential proof `h`. Since `Meaning (op t u) δ` is a proposition, `rec₁` may eliminate this truncation, and then the inner one, into that target. At this point `v` is only a candidate for the value of `t`; the term-value record extracted from the inner witness will identify it with the actual semantic value.
 <!--zh-->
-`atomBridge` 的反向蕴含从元层环境 `δ`、编码环境 `z` 以及 `z` 与 `δ` 的典范图之间的同一视出发。余下的假设断言 `atomEx` 在 `z` 处成立。外层命题截断的有界存在式给出候选值 `v`、它属于 `W` 的证明 `hv`，以及内层存在式的证明 `h`。由于 `Meaning (op t u) δ` 是命题，`PT.rec` 可以把这层命题截断消去到该目标中，随后也可如此消去内层命题截断。此时 `v` 还只是 `t` 的候选值；从内层见证取得的词项取值记录才会把它认同为真正的语义值。
+`atomBridge` 的反向蕴含从元层环境 `δ`、编码环境 `z` 以及 `z` 与 `δ` 的典范图之间的同一视出发。余下的假设断言 `atomEx` 在 `z` 处成立。外层命题截断的有界存在式给出候选值 `v`、它属于 `W` 的证明 `hv`，以及内层存在式的证明 `h`。由于 `Meaning (op t u) δ` 是命题，`rec₁` 可以把这层命题截断消去到该目标中，随后也可如此消去内层命题截断。此时 `v` 还只是 `t` 的候选值；从内层见证取得的词项取值记录才会把它认同为真正的语义值。
 <!--ja-->
-`atomBridge` の逆向きの含意は、メタレベルの環境 `δ`、符号化された環境 `z`、および `z` を `δ` の正準なグラフと同一視する等式から始まります。残る仮定は、`atomEx` が `z` で成り立つことです。外側の命題的に切り詰められた有界存在は、候補 `v`、それが `W` に属することの証明 `hv`、および内側の存在の証明 `h` を与えます。`Meaning (op t u) δ` は命題なので、`PT.rec` によってこの切り詰めをその目標へ消去し、続いて内側の切り詰めも同様に消去できます。この時点の `v` はまだ `t` の値の候補にすぎません。内側の証人から得る項の値の記録によって、初めて実際の意味論的な値と同一視されます。
+`atomBridge` の逆向きの含意は、メタレベルの環境 `δ`、符号化された環境 `z`、および `z` を `δ` の正準なグラフと同一視する等式から始まります。残る仮定は、`atomEx` が `z` で成り立つことです。外側の命題的に切り詰められた有界存在は、候補 `v`、それが `W` に属することの証明 `hv`、および内側の存在の証明 `h` を与えます。`Meaning (op t u) δ` は命題なので、`rec₁` によってこの切り詰めをその目標へ消去し、続いて内側の切り詰めも同様に消去できます。この時点の `v` はまだ `t` の値の候補にすぎません。内側の証人から得る項の値の記録によって、初めて実際の意味論的な値と同一視されます。
 <!--/-->
 
 ```agda
       inn : (δ : DB.SM ^ n) (z : S) → fst z ≡ Semantic.graph W δ
           → ⟨ (z ∷ Γ) ⊨ atomEx wi ti ui N0i N1i rel ⟩ → ⟨ Meaning (op t u) δ ⟩
-      inn δ z qz = PT.rec (snd (Meaning (op t u) δ)) (λ { (v , hv , h) →
-        PT.rec (snd (Meaning (op t u) δ)) (λ { (x , hx , ht , hu , hr) →
+      inn δ z qz = rec₁ (snd (Meaning (op t u) δ)) (λ { (v , hv , h) →
+        rec₁ (snd (Meaning (op t u) δ)) (λ { (x , hx , ht , hu , hr) →
           cnd-in δ (subst2 R (term-out t δ z v qz (tOut z v x ht))
 ```
 

@@ -163,10 +163,6 @@ Several identifications in the proof transport relations along equal stage indic
 
 ```agda
 import FOL.Absoluteness
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 ```
 
 <!--en-->
@@ -178,9 +174,6 @@ Existential satisfaction is propositionally truncated throughout. A proof may us
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 ```
@@ -436,7 +429,7 @@ The outer record adds the satisfaction of the stage graph at the raised index, t
 ```agda
     Outer : S → Type (ℓ-suc ℓ)
     Outer c = ⟨ (c ∷ γ) ⊨ LsetGraphAt zero (suc b) ⟩
-            × ( (⟨ fst z ∈ fst c ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥) × ∥ Inner c ∥₁ )
+            × ( (⟨ fst z ∈ fst c ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀) × ∥ Inner c ∥₁ )
 
 ```
 
@@ -450,7 +443,7 @@ The key semantic lemma assumes that `β` is an ordinal and that `x` lies in `�
 
 ```agda
     decideBirth : IsOrd β → ⟨ fst z ∈ 𝒟ₒ (Lset β) ⟩
-                → (⟨ fst z ∈ Lset β ⟩ → Empty.⊥)
+                → (⟨ fst z ∈ Lset β ⟩ → ⊥₀)
                 → β ≡ birth (fst z) (snd z)
     decideBirth ob hin hout = go (ord-tri (sucV β) (suc-ord ob)
                                           (stage (fst z) (snd z))
@@ -481,11 +474,11 @@ Suppose the least stage of `x` belonged to `sucV β`. Membership in a successor 
 <!--/-->
 
 ```agda
-      early : ⟨ stage (fst z) (snd z) ∈ sucV β ⟩ → Empty.⊥
-      early h = Empty.rec* (∈sucV-elim {A = β} {x = stage (fst z) (snd z)}
-        Empty.isProp⊥* h below same)
+      early : ⟨ stage (fst z) (snd z) ∈ sucV β ⟩ → ⊥₀
+      early h = ⊥*-rec (∈sucV-elim {A = β} {x = stage (fst z) (snd z)}
+        isProp⊥* h below same)
         where
-        below : ⟨ stage (fst z) (snd z) ∈ β ⟩ → Empty.⊥*
+        below : ⟨ stage (fst z) (snd z) ∈ β ⟩ → ⊥*
 ```
 
 <!--en-->
@@ -497,11 +490,11 @@ If `stage x ∈ β`, monotonicity carries the known membership of `x` in `Lset (
 <!--/-->
 
 ```agda
-        below k = Empty.rec (hout
+        below k = ⊥₀-rec (hout
           (Lset-mono {α = β} {β = stage (fst z) (snd z)} k
             {x = fst z} (stage-mem (fst z) (snd z))))
-        same : stage (fst z) (snd z) ≡ β → Empty.⊥*
-        same e = Empty.rec (hout (subst (λ u → ⟨ fst z ∈ Lset u ⟩) e
+        same : stage (fst z) (snd z) ≡ β → ⊥*
+        same e = ⊥₀-rec (hout (subst (λ u → ⟨ fst z ∈ Lset u ⟩) e
 ```
 
 <!--en-->
@@ -529,7 +522,7 @@ Ordinal trichotomy now compares `sucV β` with `stage x`. If the successor were 
       go : ⟨ sucV β ∈ stage (fst z) (snd z) ⟩
          ⊎ ((sucV β ≡ stage (fst z) (snd z)) ⊎ ⟨ stage (fst z) (snd z) ∈ sucV β ⟩)
          → β ≡ birth (fst z) (snd z)
-      go (inl h) = Empty.rec
+      go (inl h) = ⊥₀-rec
         (stage-earliest (fst z) (snd z) (sucV β) (suc-ord ob) mem h)
 ```
 
@@ -544,7 +537,7 @@ From `sucV β ≡ stage x`{.Agda} and the identity `stage x ≡ sucV (birth x)`{
 ```agda
       go (inr (inl e)) = ord-suc-inj β (birth (fst z) (snd z)) ob
         (e ∙ sym (birth-suc (fst z) (snd z)))
-      go (inr (inr h)) = Empty.rec (early h)
+      go (inr (inr h)) = ⊥₀-rec (early h)
 
 ```
 
@@ -559,7 +552,7 @@ The reading lemma carries the ordinalness hypothesis of the slot: the formula al
 ```agda
   BirthAt-out : ⟨ γ ⊨ BirthAt b x ⟩ → IsOrd β → β ≡ birth (fst z) (snd z)
   BirthAt-out h ob =
-    PT.rec (setIsSet β (birth (fst z) (snd z))) atCarrier h
+    rec₁ (setIsSet β (birth (fst z) (snd z))) atCarrier h
     where
     atInner : (c : S) → ⟨ (c ∷ γ) ⊨ LsetGraphAt zero (suc b) ⟩
 ```
@@ -573,7 +566,7 @@ At each candidate stage, the inner record supplies a definable power set value c
 <!--/-->
 
 ```agda
-            → (⟨ fst z ∈ fst c ⟩ → Empty.⊥)
+            → (⟨ fst z ∈ fst c ⟩ → ⊥₀)
             → Inner c → β ≡ birth (fst z) (snd z)
     atInner c hg hn (d , (hd , hm)) = decideBirth ob
       (subst (λ u → ⟨ fst z ∈ u ⟩) qd hm)
@@ -608,7 +601,7 @@ The outer record is eliminated into the inner reading, and the inner reading fee
 
     atCarrier : Σ[ c ∈ S ] Outer c → β ≡ birth (fst z) (snd z)
     atCarrier (c , (hg , (hn , hi))) =
-      PT.rec (setIsSet β (birth (fst z) (snd z)))
+      rec₁ (setIsSet β (birth (fst z) (snd z)))
         (atInner c hg (λ k → lower (hn k))) hi
 
 ```
@@ -651,7 +644,7 @@ If `x` belonged to `Lset β`, then after replacing `β` by `birth x`{.Agda}, it 
 <!--/-->
 
 ```agda
-    hn : ⟨ fst z ∈ fst (towerS β ob) ⟩ → Lift {j = ℓ-suc ℓ} Empty.⊥
+    hn : ⟨ fst z ∈ fst (towerS β ob) ⟩ → Lift {j = ℓ-suc ℓ} ⊥₀
     hn k = lift (stage-earliest (fst z) (snd z) β ob
       (subst (λ u → ⟨ fst z ∈ u ⟩) (towerS-fst β ob) k)
       (subst (λ u → ⟨ u ∈ stage (fst z) (snd z) ⟩) (sym e)
@@ -769,11 +762,11 @@ The proof eliminates the arity reading into a pair of a natural number and a cod
 <!--/-->
 
 ```agda
-    PT.rec squash₁ step (arityNumAtL-out c γ hk)
+    rec₁ squash₁ step (arityNumAtL-out c γ hk)
     where
     step : Σ[ m ∈ ℕ ] Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# m) (fst z))
          → ⟨ IsKeyOverAny A (lookup c γ) ⟩
-    step (m , (z , qz)) = PT.map (λ { (ψ , q) → m , (ψ , q) })
+    step (m , (z , qz)) = map₁ (λ { (ψ , q) → m , (ψ , q) })
 ```
 
 <!--en-->
@@ -852,7 +845,7 @@ For the reverse inclusion, membership in `AllCodes A` gives only the proposition
 
 ```agda
       (λ hx → extAt-in c (isCodeAnyAt zero (suc w)) γ h x
-        (PT.rec (snd ((x ∷ γ) ⊨ isCodeAnyAt zero (suc w)))
+        (rec₁ (snd ((x ∷ γ) ⊨ isCodeAnyAt zero (suc w)))
           (λ { (k , (ψ , q)) →
                  codeAnyAt-in A {k = k} zero (suc w) (x ∷ γ) qw ψ q })
           (AllCodes-out A x hx)))
@@ -884,7 +877,7 @@ For the first implication, the equality of sets turns slot membership into membe
 <!--/-->
 
 ```agda
-    into x hx = PT.rec (snd ((x ∷ γ) ⊨ isCodeAnyAt zero (suc w)))
+    into x hx = rec₁ (snd ((x ∷ γ) ⊨ isCodeAnyAt zero (suc w)))
       (λ { (k , (ψ , qk)) →
              codeAnyAt-in A {k = k} zero (suc w) (x ∷ γ) qw ψ qk })
       (AllCodes-out A x (subst (λ u → ⟨ fst x ∈ fst u ⟩) q hx))
@@ -1331,7 +1324,7 @@ For a carrier `d` below `α`, `Entries` supplies only a propositionally truncate
             → ((r : S) → ⟨ pr (fst d) (fst r) ∈ fst (lookup f γ) ⟩
                → IsRel (fst d) r → ⟨ P ⟩)
             → ⟨ P ⟩
-      value d hd P k = PT.rec (snd P)
+      value d hd P k = rec₁ (snd P)
 ```
 
 <!--en-->
@@ -1385,10 +1378,10 @@ The outward reading opens the four nested existential witnesses in order: the co
 
 ```agda
      CondCore-out : ⟨ γ ⊨ CondCore z tb f ⟩ → ⟨ Related α (fst (lookup z γ)) ⟩
-     CondCore-out = PT.rec (snd (Related α (fst (lookup z γ))))
-       (λ { (u , hv) → PT.rec (snd (Related α (fst (lookup z γ))))
-         (λ { (v , (hp , hdu)) → PT.rec (snd (Related α (fst (lookup z γ))))
-           (λ { (du , hdv) → PT.rec (snd (Related α (fst (lookup z γ))))
+     CondCore-out = rec₁ (snd (Related α (fst (lookup z γ))))
+       (λ { (u , hv) → rec₁ (snd (Related α (fst (lookup z γ))))
+         (λ { (v , (hp , hdu)) → rec₁ (snd (Related α (fst (lookup z γ))))
+           (λ { (du , hdv) → rec₁ (snd (Related α (fst (lookup z γ))))
 ```
 
 <!--en-->
@@ -1432,7 +1425,7 @@ Adequacy of the pairing formula identifies the set in slot `z` with `pr (fst u) 
 <!--/-->
 
 ```agda
-           (PT.rec (snd (Related α (pr (fst u) (fst v)))) atCase hcmp)
+           (rec₁ (snd (Related α (pr (fst u) (fst v)))) atCase hcmp)
          where
          qz : fst (lookup z γ) ≡ pr (fst u) (fst v)
          qz = subst ⟨_⟩ (prAtL-adequate (sh2 z) (suc zero) zero (v ∷ u ∷ γ)) hp
@@ -1621,7 +1614,7 @@ In the equal-birth branch, `OrdBody` supplies satisfaction of the abstract formu
 
 ```agda
            (inl (subst2 (λ p q → ⟨ p ∈ q ⟩) (sym qa) (sym qc) h)))
-         atCase (inr (e , hs)) = PT.rec
+         atCase (inr (e , hs)) = rec₁
            (snd (Related α (pr (fst u) (fst v)))) atUnder
            (stp-out (suc zero) (sh4 f) (sh3 zero) (sh2 zero)
              ((dv ∷ du ∷ v ∷ u ∷ γ)) odu (λ r hr → vals du r hmu hr) hs)
@@ -1684,7 +1677,7 @@ The inward reading eliminates the truncated contents of `Related` into satisfact
 
 ```agda
      CondCore-in : ⟨ Related α (fst (lookup z γ)) ⟩ → ⟨ γ ⊨ CondCore z tb f ⟩
-     CondCore-in = PT.rec (snd (γ ⊨ CondCore z tb f)) atOrd
+     CondCore-in = rec₁ (snd (γ ⊨ CondCore z tb f)) atOrd
        where
        atRel : (o : IsOrd α) (a c : Mem (Lset α))
              → fst (lookup z γ) ≡ pr (fst a) (fst c)
@@ -2020,7 +2013,7 @@ The pair-level assembly eliminates the truncated existence of the second member:
 
 ```agda
        atPairs : (o : IsOrd α) → Pairs o → ⟨ γ ⊨ CondCore z tb f ⟩
-       atPairs o (a , h) = PT.rec (snd (γ ⊨ CondCore z tb f))
+       atPairs o (a , h) = rec₁ (snd (γ ⊨ CondCore z tb f))
          (λ { (c , (q , hord)) → atRel o a c q hord }) h
 
 ```
@@ -2035,7 +2028,7 @@ The outer payload of `Related` supplies an ordinalness proof `o` and only the pr
 
 ```agda
        atOrd : Σ[ o ∈ IsOrd α ] ∥ Pairs o ∥₁ → ⟨ γ ⊨ CondCore z tb f ⟩
-       atOrd (o , h) = PT.rec (snd (γ ⊨ CondCore z tb f)) (atPairs o) h
+       atOrd (o , h) = rec₁ (snd (γ ⊨ CondCore z tb f)) (atPairs o) h
 
 ```
 
@@ -2157,7 +2150,7 @@ The outward direction starts from a propositionally truncated existential witnes
 
 ```agda
     cond₀-out : ⟨ (z ∷ []) ⊨ Cond₀ B F ⟩ → ⟨ Related (fst B) (fst z) ⟩
-    cond₀-out = PT.rec (snd (Related (fst B) (fst z))) atHeld
+    cond₀-out = rec₁ (snd (Related (fst B) (fst z))) atHeld
       where
       atHeld : Σ[ c ∈ S ] Held c → ⟨ Related (fst B) (fst z) ⟩
       atHeld (c , (qc , hc)) =
@@ -2175,7 +2168,7 @@ The equality `qc` lets the two table readings cross between the bound representa
         CondCore-out (suc zero) (con B) zero (c ∷ z ∷ []) oB
           (λ x r hx hp → vals x r hx
             (subst (λ w → ⟨ pr (fst x) (fst r) ∈ w ⟩) qc hp))
-          (λ x hx → PT.map (λ { (r , hr) → r
+          (λ x hx → map₁ (λ { (r , hr) → r
               , subst (λ w → ⟨ pr (fst x) (fst r) ∈ w ⟩) (sym qc) hr })
 ```
 

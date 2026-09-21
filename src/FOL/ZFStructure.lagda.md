@@ -38,6 +38,7 @@ Membership appears on three distinct levels, and the notation keeps them apart. 
 module FOL.ZFStructure where
 
 open import Base.Prelude
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 ```
 
 <!--en-->
@@ -49,7 +50,6 @@ The relations of a structure are propositions, so their underlying types may be 
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 ```
 
 <!--en-->
@@ -61,7 +61,6 @@ Restricting a structure to a class therefore rests on a general principle about 
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 ```
 
 <!--en-->

@@ -79,11 +79,6 @@ open import L.Choice.InternalWellOrder {ℓ} lem using ( module Bound )
 open import L.Coding.Model {ℓ} using ( appC; appC-adequate )
 open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( SWO; IsLeast; isPropLeastOf; leastOf )
-
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 
 open hPropStructure 𝒮ʟ
@@ -246,7 +241,7 @@ module Trans (zf : isZFModel) (a : S)
 
   private
     members : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ m ∈ Mem (Lset β) ] ⟨ Cell x m ⟩ ∥₁
-    members x x∈a = PT.map atMember (inh x x∈a)
+    members x x∈a = map₁ atMember (inh x x∈a)
       where
       atMember : Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ → Σ[ m ∈ Mem (Lset β) ] ⟨ Cell x m ⟩
       atMember (y , y∈x) =
@@ -263,7 +258,7 @@ module Trans (zf : isZFModel) (a : S)
     Two x z = ⟨ x ∈ˢ a ⟩
             × (⟨ z ∈ˢ x ⟩
               × (∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
-                 → Lift {j = ℓ-suc ℓ} Empty.⊥))
+                 → Lift {j = ℓ-suc ℓ} ⊥₀))
 
     Out : S → Type (ℓ-suc ℓ)
     Out z = ∥ Σ[ x ∈ S ] (⟨ x ∈ˢ a ⟩ × Least x z) ∥₁
@@ -276,7 +271,7 @@ module Trans (zf : isZFModel) (a : S)
     pick-in x x∈a z (hz , (z∈x , mini)) =
       ∣ x , (x∈a , (z∈x , neg)) ∣₁
       where
-      noPredecessor : Σ[ w ∈ S ] Predecessor x z w → Empty.⊥
+      noPredecessor : Σ[ w ∈ S ] Predecessor x z w → ⊥₀
       noPredecessor (w , (w∈x , hap)) = mini (fst w , hw) w∈x lt
         where
         hw : ⟨ fst w ∈ Lset β ⟩
@@ -287,20 +282,21 @@ module Trans (zf : isZFModel) (a : S)
         lt = B.orderL-rep (fst w , hw) (fst z , hz) hpr
 
       neg : ∥ Σ[ w ∈ S ] Predecessor x z w ∥₁
-          → Lift {j = ℓ-suc ℓ} Empty.⊥
-      neg q = lift (PT.rec Empty.isProp⊥ noPredecessor q)
+          → Lift {j = ℓ-suc ℓ} ⊥₀
+      neg q = lift (rec₁ isProp⊥ noPredecessor q)
 
     pick-out : (z : S) → ⟨ (z ∷ []) ⊨ Pick a rel ⟩ → Out z
-    pick-out z = PT.rec PT.squash₁ atTwo
+    pick-out z = rec₁ squash₁ atTwo
       where
       atTwo : Σ[ x ∈ S ] Two x z → Out z
-      atTwo (x , (x∈a , (z∈x , neg))) = ∣ x , (x∈a , (hz , (z∈x , mini))) ∣₁
+      atTwo (x , (x∈a , (z∈x , neg))) =
+        ∣ x , (x∈a , (hz , (z∈x , mini))) ∣₁
         where
         hz : ⟨ fst z ∈ Lset β ⟩
         hz = bound-below₂ (fst a) (snd a) (fst x) (fst z) z∈x x∈a
 
         mini : (b : Mem (Lset β)) → ⟨ Cell x b ⟩
-             → relOf W b (fst z , hz) → Empty.⊥
+             → relOf W b (fst z , hz) → ⊥₀
         mini b b∈x lt = lower (neg ∣ elt b , (b∈x , hap) ∣₁)
           where
           hpr : ⟨ pr (fst b) (fst z) ∈ fst rel ⟩
@@ -348,7 +344,7 @@ module Trans (zf : isZFModel) (a : S)
         (inC z₀ (snd m) (pick-in x x∈a z₀ (snd m , lm))) (fst lm)
 
       same : (z : S) → ⟨ z ∈ˢ (transversalSet ∩ x) ⟩ → fst z ≡ fst m
-      same z h = PT.rec (setIsSet (fst z) (fst m)) atOut
+      same z h = rec₁ (setIsSet (fst z) (fst m)) atOut
                    (pick-out z (outC z (fst (outMeet z h))))
         where
         z∈x : ⟨ z ∈ˢ x ⟩

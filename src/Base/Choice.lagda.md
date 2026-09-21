@@ -30,25 +30,23 @@ Three questions organize the chapter. What does choice assert here, and at which
 module Base.Choice where
 
 open import Base.Prelude
-open import Base.Classical using ( LEM )
-
 open import Cubical.Foundations.Prelude using ( Path )
+open import Cubical.Foundations.HLevels using ( isOfHLevelLift )
+open import Cubical.Data.Sum using ( isProp⊎ )
+open import Base.Classical using ( LEM )
 ```
 
 <!--en-->
-The proof of Diaconescu's theorem is a finite argument, and it uses three concrete pieces. The booleans `Bool`{.Agda} with `true`{.Agda} and `false`{.Agda} form a two-point type whose equality `_≟_`{.Agda} decides. The unit type `Unit*`{.Agda} holds the single element `tt*`{.Agda}, and `isPropUnit*`{.Agda} records it as a proposition, so the argument has a trivially true statement available wherever one is needed. A comparison of two booleans returns an element of `Dec`{.Agda}: either `yes`{.Agda} with the equality, or `no`{.Agda} with its refutation.
+The proof of Diaconescu's theorem is a finite argument, and it uses three concrete pieces. The booleans `Bool`{.Agda} with `true`{.Agda} and `false`{.Agda} form a two-point type whose equality `_≟_`{.Agda} decides. The unit type `⊤*`{.Agda} holds the single element `tt*`{.Agda}, and `isProp⊤*`{.Agda} records it as a proposition, so the argument has a trivially true statement available wherever one is needed. A comparison of two booleans returns an element of `Dec`{.Agda}: either `yes`{.Agda} with the equality, or `no`{.Agda} with its refutation.
 <!--zh-->
-Diaconescu 定理的证明是一个有限论证，用到三份具体材料。布尔类型 `Bool`{.Agda} 连同 `true`{.Agda} 与 `false`{.Agda} 构成两点类型，其相等由 `_≟_`{.Agda} 判定。单元类型 `Unit*`{.Agda} 有唯一元素 `tt*`{.Agda}，`isPropUnit*`{.Agda} 记录它为命题，论证由此随处可得一条平凡成立的陈述。两个布尔值的比较返回 `Dec`{.Agda} 的元素：要么 `yes`{.Agda} 连同相等，要么 `no`{.Agda} 连同反驳。
+Diaconescu 定理的证明是一个有限论证，用到三份具体材料。布尔类型 `Bool`{.Agda} 连同 `true`{.Agda} 与 `false`{.Agda} 构成两点类型，其相等由 `_≟_`{.Agda} 判定。单元类型 `⊤*`{.Agda} 有唯一元素 `tt*`{.Agda}，`isProp⊤*`{.Agda} 记录它为命题，论证由此随处可得一条平凡成立的陈述。两个布尔值的比较返回 `Dec`{.Agda} 的元素：要么 `yes`{.Agda} 连同相等，要么 `no`{.Agda} 连同反驳。
 <!--ja-->
-ディアコネスクの定理の証明は有限の議論であり、三つの具体的な材料を用います。ブール型 `Bool`{.Agda} と `true`{.Agda}、`false`{.Agda} は二点の型をなし、その等しさは `_≟_`{.Agda} が判定します。単元型 `Unit*`{.Agda} は唯一の元 `tt*`{.Agda} を持ち、`isPropUnit*`{.Agda} がこれを命題として記録するので、議論には自明に成り立つ主張がいつでも用意できます。二つのブール値の比較は `Dec`{.Agda} の元を返します。`yes`{.Agda} に等式が伴うか、`no`{.Agda} に反証が伴うかです。
+ディアコネスクの定理の証明は有限の議論であり、三つの具体的な材料を用います。ブール型 `Bool`{.Agda} と `true`{.Agda}、`false`{.Agda} は二点の型をなし、その等しさは `_≟_`{.Agda} が判定します。単元型 `⊤*`{.Agda} は唯一の元 `tt*`{.Agda} を持ち、`isProp⊤*`{.Agda} がこれを命題として記録するので、議論には自明に成り立つ主張がいつでも用意できます。二つのブール値の比較は `Dec`{.Agda} の元を返します。`yes`{.Agda} に等式が伴うか、`no`{.Agda} に反証が伴うかです。
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.HLevels using ( isOfHLevelLift )
 open import Cubical.Data.Bool using ( Bool; true; false; _≟_ )
-open import Cubical.Data.Unit using ( Unit*; tt*; isPropUnit* )
 open import Cubical.Relation.Nullary using ( Dec; yes; no )
-import Cubical.Data.Sum as Sum
 ```
 
 <!--en-->
@@ -60,9 +58,6 @@ Beyond these, the proof needs two constructions. The first is propositional trun
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 open import Cubical.HITs.SetQuotients
   using ( _/_; [_]; eq/; squash/; []surjective; effective )
 ```
@@ -116,21 +111,21 @@ Given data at level `ℓ`, the proof first moves it one level up, where the hypo
 ```agda
 lowerSetChoice : ∀ {ℓ} → SetChoice (ℓ-suc ℓ) → SetChoice ℓ
 lowerSetChoice sc X setX B inh =
-  PT.map (λ f x → lower (f (lift x)))
+  map₁ (λ f x → lower (f (lift x)))
          (sc (Lift X) (isOfHLevelLift 2 setX)
              (λ x → Lift (B (lower x)))
 ```
 
 <!--en-->
-The remaining inputs are transferred in the same way. Each lifted fiber is merely inhabited, because lowering its index and mapping `lift` over the resulting truncation exhibits the required element; `PT.map`{.Agda} acts inside the truncation, so the hypothesis holds in exactly the form the principle demands. When `sc` returns the mere existence of a lifted choice function `f`, one further `PT.map`{.Agda} produces the mere existence of the lowered function, whose value at `x` is `lower (f (lift x))`. The final step is legitimate because the goal is a statement inside a truncation: about the particular `f`, nothing is ever claimed outside it.
+The remaining inputs are transferred in the same way. Each lifted fiber is merely inhabited, because lowering its index and mapping `lift` over the resulting truncation exhibits the required element; `map₁`{.Agda} acts inside the truncation, so the hypothesis holds in exactly the form the principle demands. When `sc` returns the mere existence of a lifted choice function `f`, one further `map₁`{.Agda} produces the mere existence of the lowered function, whose value at `x` is `lower (f (lift x))`. The final step is legitimate because the goal is a statement inside a truncation: about the particular `f`, nothing is ever claimed outside it.
 <!--zh-->
-其余输入以同样的方式移动。每个抬升纤维都仅仅有元，因为把指标降下、再对所得截断映射 `lift`，就给出所需的元素；`PT.map`{.Agda} 在截断内部作用，所以假设恰以原理所要求的形式成立。当 `sc` 返回抬升选择函数 `f` 的仅仅存在时，再一次 `PT.map`{.Agda} 给出降低后函数的仅仅存在，其在 `x` 处的值为 `lower (f (lift x))`。最后一步之所以合法，是因为目标是截断内部的陈述：至于这个具体的 `f`，截断之外没有任何主张。
+其余输入以同样的方式移动。每个抬升纤维都仅仅有元，因为把指标降下、再对所得截断映射 `lift`，就给出所需的元素；`map₁`{.Agda} 在截断内部作用，所以假设恰以原理所要求的形式成立。当 `sc` 返回抬升选择函数 `f` 的仅仅存在时，再一次 `map₁`{.Agda} 给出降低后函数的仅仅存在，其在 `x` 处的值为 `lower (f (lift x))`。最后一步之所以合法，是因为目标是截断内部的陈述：至于这个具体的 `f`，截断之外没有任何主张。
 <!--ja-->
-残りの入力も同じ方法で移します。持ち上げられた各ファイバーが単に要素を持つのは、添字を降ろし、得られた切り詰めに `lift` を写像すれば必要な元が示されるからです。`PT.map`{.Agda} は切り詰めの内部で働くので、仮定は原理が求める通りの形で満たされます。`sc` が持ち上げられた選択関数 `f` の単なる存在を返したら、もう一度の `PT.map`{.Agda} が降ろした関数の単なる存在を与え、その `x` での値は `lower (f (lift x))` です。最後の一段が正当なのは、目標が切り詰めの内部の主張だからです。この具体的な `f` について、切り詰めの外で主張されることは何もありません。
+残りの入力も同じ方法で移します。持ち上げられた各ファイバーが単に要素を持つのは、添字を降ろし、得られた切り詰めに `lift` を写像すれば必要な元が示されるからです。`map₁`{.Agda} は切り詰めの内部で働くので、仮定は原理が求める通りの形で満たされます。`sc` が持ち上げられた選択関数 `f` の単なる存在を返したら、もう一度の `map₁`{.Agda} が降ろした関数の単なる存在を与え、その `x` での値は `lower (f (lift x))` です。最後の一段が正当なのは、目標が切り詰めの内部の主張だからです。この具体的な `f` について、切り詰めの外で主張されることは何もありません。
 <!--/-->
 
 ```agda
-             (λ x → PT.map lift (inh (lower x))))
+             (λ x → map₁ lift (inh (lower x))))
 ```
 
 <!--en-->
@@ -154,19 +149,19 @@ Concretely, fix a proposition `P : hProp ℓ` and work in a module dedicated to 
 <!--/-->
 
 <!--en-->
-The gluing relation `_~_` is defined by pattern matching on the two booleans, so the four entries of the table are visible at once. When the two inputs agree, the relation holds with the one element `tt*`{.Agda} of the unit type `Unit*`{.Agda}. When they differ, it holds with a proof of `⟨ P ⟩`, the statement underlying `P`. Nothing else is used: reading the mixed squares off the table is already the proof that being related across the two points says exactly `P`.
+The gluing relation `_~_` is defined by pattern matching on the two booleans, so the four entries of the table are visible at once. When the two inputs agree, the relation holds with the one element `tt*`{.Agda} of the unit type `⊤*`{.Agda}. When they differ, it holds with a proof of `⟨ P ⟩`, the statement underlying `P`. Nothing else is used: reading the mixed squares off the table is already the proof that being related across the two points says exactly `P`.
 <!--zh-->
-粘合关系 `_~_` 由对两个布尔值的模式匹配定义，表中四格一目了然。两个输入一致时，关系以单元类型 `Unit*`{.Agda} 的唯一元素 `tt*`{.Agda} 成立。二者相异时，关系以 `⟨ P ⟩` 的一个证明成立，即 `P` 的底层陈述。此外别无他用：从表中读出混色两格，就已经证明了跨两点相关所说的恰是 `P`。
+粘合关系 `_~_` 由对两个布尔值的模式匹配定义，表中四格一目了然。两个输入一致时，关系以单元类型 `⊤*`{.Agda} 的唯一元素 `tt*`{.Agda} 成立。二者相异时，关系以 `⟨ P ⟩` 的一个证明成立，即 `P` 的底层陈述。此外别无他用：从表中读出混色两格，就已经证明了跨两点相关所说的恰是 `P`。
 <!--ja-->
-貼り合わせの関係 `_~_` は二つのブール値へのパターンマッチで定義され、表の四項が一目で分かります。入力が一致するとき、関係は単元型 `Unit*`{.Agda} の唯一の元 `tt*`{.Agda} とともに成り立ちます。異なるときは、`⟨ P ⟩`、すなわち `P` の基礎となる主張の証明とともに成り立ちます。ほかに使うものは何もありません。表の混色の項を読み取ることが、二点をまたぐ関係がまさに `P` を述べていることの証明になっています。
+貼り合わせの関係 `_~_` は二つのブール値へのパターンマッチで定義され、表の四項が一目で分かります。入力が一致するとき、関係は単元型 `⊤*`{.Agda} の唯一の元 `tt*`{.Agda} とともに成り立ちます。異なるときは、`⟨ P ⟩`、すなわち `P` の基礎となる主張の証明とともに成り立ちます。ほかに使うものは何もありません。表の混色の項を読み取ることが、二点をまたぐ関係がまさに `P` を述べていることの証明になっています。
 <!--/-->
 
 ```agda
 module Diaconescu {ℓ} (P : hProp ℓ) where
 
   _~_ : Bool → Bool → Type ℓ
-  true  ~ true  = Unit*
-  false ~ false = Unit*
+  true  ~ true  = ⊤*
+  false ~ false = ⊤*
   _     ~ _     = ⟨ P ⟩
 ```
 
@@ -193,27 +188,27 @@ Everything now rests on one theorem about set quotients, the library's effectivi
 <!--/-->
 
 <!--en-->
-The first condition is proposition-valuedness: for each pair of inputs, the type of proofs of `a ~ b` must be a proposition. On the diagonal that type is `Unit*`{.Agda}, a proposition by `isPropUnit*`{.Agda}; in the mixed squares it is `⟨ P ⟩` itself, and its propositionhood is exactly the certificate `⟨ P ⟩isProp`{.Agda}. Were proofs allowed to differ, a path in the quotient would not determine a well-defined statement to read back.
+The first condition is proposition-valuedness: for each pair of inputs, the type of proofs of `a ~ b` must be a proposition. On the diagonal that type is `⊤*`{.Agda}, a proposition by `isProp⊤*`{.Agda}; in the mixed squares it is `⟨ P ⟩` itself, and its propositionhood is exactly the certificate `⟨ P ⟩isProp`{.Agda}. Were proofs allowed to differ, a path in the quotient would not determine a well-defined statement to read back.
 <!--zh-->
-第一个条件是命题值性：对每对输入，`a ~ b` 的证明类型必须是命题。对角线上该类型是 `Unit*`{.Agda}，由 `isPropUnit*`{.Agda} 知其为命题；混色两格中它就是 `⟨ P ⟩` 自身，其命题性恰是 `P` 的证书 `⟨ P ⟩isProp`{.Agda}。若证明可以彼此不同，商中的路径就无法确定一个良定义的陈述供倒读。
+第一个条件是命题值性：对每对输入，`a ~ b` 的证明类型必须是命题。对角线上该类型是 `⊤*`{.Agda}，由 `isProp⊤*`{.Agda} 知其为命题；混色两格中它就是 `⟨ P ⟩` 自身，其命题性恰是 `P` 的证书 `⟨ P ⟩isProp`{.Agda}。若证明可以彼此不同，商中的路径就无法确定一个良定义的陈述供倒读。
 <!--ja-->
-第一の条件は命題値性です。入力の各組に対して、`a ~ b` の証明の型が命題でなければなりません。対角ではこの型は `Unit*`{.Agda} であり、`isPropUnit*`{.Agda} が命題であることを示します。混色の項では `⟨ P ⟩` そのものであり、その命題性は `P` の証明書 `⟨ P ⟩isProp`{.Agda} にほかなりません。証明が異なり得るなら、商の道は逆読みのための well-defined な主張を定められません。
+第一の条件は命題値性です。入力の各組に対して、`a ~ b` の証明の型が命題でなければなりません。対角ではこの型は `⊤*`{.Agda} であり、`isProp⊤*`{.Agda} が命題であることを示します。混色の項では `⟨ P ⟩` そのものであり、その命題性は `P` の証明書 `⟨ P ⟩isProp`{.Agda} にほかなりません。証明が異なり得るなら、商の道は逆読みのための well-defined な主張を定められません。
 <!--/-->
 
 ```agda
   ~-prop : BinaryRelation.isPropValued _~_
-  ~-prop true  true  = isPropUnit*
-  ~-prop false false = isPropUnit*
+  ~-prop true  true  = isProp⊤*
+  ~-prop false false = isProp⊤*
   ~-prop true  false = ⟨ P ⟩isProp
   ~-prop false true  = ⟨ P ⟩isProp
 ```
 
 <!--en-->
-Reflexivity is immediate: the two diagonal entries hold unconditionally, so every boolean is related to itself, with `tt*`{.Agda} as the proof in each case.
+Reflexivity is immediate: the two diagonal entries hold unconditionally, so every boolean is related to itself, with `_`{.Agda} as the proof in each case.
 <!--zh-->
-自反性是直接的：两条对角格无条件成立，于是每个布尔值都与自身相关，各情形的证明都是 `tt*`{.Agda}。
+自反性是直接的：两条对角格无条件成立，于是每个布尔值都与自身相关，各情形的证明都是 `_`{.Agda}。
 <!--ja-->
-反射性は直ちに得られます。対角の二項は条件なしで成り立つので、すべてのブール値は自分自身と関係を持ち、その場合の証明はいずれも `tt*`{.Agda} です。
+反射性は直ちに得られます。対角の二項は条件なしで成り立つので、すべてのブール値は自分自身と関係を持ち、その場合の証明はいずれも `_`{.Agda} です。
 <!--/-->
 
 ```agda
@@ -227,11 +222,11 @@ Reflexivity is immediate: the two diagonal entries hold unconditionally, so ever
 ```
 
 <!--en-->
-Symmetry holds because the table itself is symmetric: swapping the inputs carries each entry to itself, so a proof of `a ~ b` serves as a proof of `b ~ a`. On the diagonal the proof is `tt*`{.Agda} either way, and in the mixed squares it is a proof of `P`, the same thing in both directions.
+Symmetry holds because the table itself is symmetric: swapping the inputs carries each entry to itself, so a proof of `a ~ b` serves as a proof of `b ~ a`. On the diagonal the proof is `_`{.Agda} either way, and in the mixed squares it is a proof of `P`, the same thing in both directions.
 <!--zh-->
-对称性成立，因为表本身对称：交换输入把每格映到自身，`a ~ b` 的证明即可充当 `b ~ a` 的证明。对角线上两个方向的证明都是 `tt*`{.Agda}；混色两格中它是 `P` 的证明，两个方向说的是同一件事。
+对称性成立，因为表本身对称：交换输入把每格映到自身，`a ~ b` 的证明即可充当 `b ~ a` 的证明。对角线上两个方向的证明都是 `_`{.Agda}；混色两格中它是 `P` 的证明，两个方向说的是同一件事。
 <!--ja-->
-対称性は、表そのものが対称なことから成り立ちます。入力を入れ替えても各項は自分自身に写るので、`a ~ b` の証明は `b ~ a` の証明として働きます。対角ではどちら向きでも証明は `tt*`{.Agda} であり、混色の項では `P` の証明であり、両方向で同じものです。
+対称性は、表そのものが対称なことから成り立ちます。入力を入れ替えても各項は自分自身に写るので、`a ~ b` の証明は `b ~ a` の証明として働きます。対角ではどちら向きでも証明は `_`{.Agda} であり、混色の項では `P` の証明であり、両方向で同じものです。
 <!--/-->
 
 ```agda
@@ -386,11 +381,11 @@ The decidable equality `_≟_` compares `b₀` with `b₁` and returns an elemen
 <!--/-->
 
 ```agda
-    decide : ⟨ P ⟩ Sum.⊎ (⟨ P ⟩ → Empty.⊥)
+    decide : ⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)
     decide = fromDec (b₀ ≟ b₁)
       where
-      fromDec : Dec (b₀ ≡ b₁) → ⟨ P ⟩ Sum.⊎ (⟨ P ⟩ → Empty.⊥)
-      fromDec (yes q) = Sum.inl (agree→P q)
+      fromDec : Dec (b₀ ≡ b₁) → ⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)
+      fromDec (yes q) = inl (agree→P q)
 ```
 
 <!--en-->
@@ -402,7 +397,7 @@ In the `no`{.Agda} case, `ne` proves that the two booleans cannot be equal. Were
 <!--/-->
 
 ```agda
-      fromDec (no ne) = Sum.inr (λ p → ne (P→agree p))
+      fromDec (no ne) = inr (λ p → ne (P→agree p))
 ```
 
 <!--en-->
@@ -414,19 +409,19 @@ One gap remains before the theorem assembles. Choice delivers no picking functio
 <!--/-->
 
 <!--en-->
-That the goal is a proposition is proved explicitly: `Sum.isProp⊎`{.Agda} asks for the propositionhood of each side and for the impossibility of inhabiting both. The first side is `⟨ P ⟩`, propositional by `⟨ P ⟩isProp`. The second is the function type `⟨ P ⟩ → Empty.⊥`, whose propositionhood follows pointwise from `Empty.isProp⊥` by `isPropΠ`. Finally, `λ p np → np p` proves that the two sides cannot be inhabited at once. The theorem `choice→lem`{.Agda} then has type `SetChoice ℓ → LEM ℓ`. Given `sc` and a proposition `P`, it works inside the Diaconescu module at `P`, obtains the mere picker by `merePicker sc`, and eliminates the truncation with `PT.rec`{.Agda} into the now-certified propositional goal, returning `decide`. The order of ideas matters: the case split inside `decide` is genuine data, and the truncation is discharged only because the target cannot distinguish its answers.
+That the goal is a proposition is proved explicitly: `isProp⊎`{.Agda} asks for the propositionhood of each side and for the impossibility of inhabiting both. The first side is `⟨ P ⟩`, propositional by `⟨ P ⟩isProp`. The second is the function type `⟨ P ⟩ → ⊥₀`, whose propositionhood follows pointwise from `isProp⊥` by `isPropΠ`. Finally, `λ p np → np p` proves that the two sides cannot be inhabited at once. The theorem `choice→lem`{.Agda} then has type `SetChoice ℓ → LEM ℓ`. Given `sc` and a proposition `P`, it works inside the Diaconescu module at `P`, obtains the mere picker by `merePicker sc`, and eliminates the truncation with `rec₁`{.Agda} into the now-certified propositional goal, returning `decide`. The order of ideas matters: the case split inside `decide` is genuine data, and the truncation is discharged only because the target cannot distinguish its answers.
 <!--zh-->
-「目标是命题」这一点被显式证明：`Sum.isProp⊎`{.Agda} 要求两侧各自的命题性，以及两侧不能同时有元的证明。第一侧是 `⟨ P ⟩`，由 `⟨ P ⟩isProp` 得其命题性。第二侧是函数类型 `⟨ P ⟩ → Empty.⊥`，`isPropΠ` 利用 `Empty.isProp⊥` 逐点证明它是命题。最后，`λ p np → np p` 证明两侧不能同时有元。定理 `choice→lem`{.Agda} 的类型随之是 `SetChoice ℓ → LEM ℓ`。给定 `sc` 与命题 `P`，它在 `P` 处进入 Diaconescu 模块，用 `merePicker sc` 得到仅仅的选取函数，再以 `PT.rec`{.Agda} 把截断消去到已证为命题的目标中，返回 `decide`。想法的次序重要：`decide` 内部的分情形是真实数据，截断之所以能消去，只因目标无法区分其答案。
+「目标是命题」这一点被显式证明：`isProp⊎`{.Agda} 要求两侧各自的命题性，以及两侧不能同时有元的证明。第一侧是 `⟨ P ⟩`，由 `⟨ P ⟩isProp` 得其命题性。第二侧是函数类型 `⟨ P ⟩ → ⊥₀`，`isPropΠ` 利用 `isProp⊥` 逐点证明它是命题。最后，`λ p np → np p` 证明两侧不能同时有元。定理 `choice→lem`{.Agda} 的类型随之是 `SetChoice ℓ → LEM ℓ`。给定 `sc` 与命题 `P`，它在 `P` 处进入 Diaconescu 模块，用 `merePicker sc` 得到仅仅的选取函数，再以 `rec₁`{.Agda} 把截断消去到已证为命题的目标中，返回 `decide`。想法的次序重要：`decide` 内部的分情形是真实数据，截断之所以能消去，只因目标无法区分其答案。
 <!--ja-->
-目標が命題であることは明示的に証明されます。`Sum.isProp⊎`{.Agda} は両側それぞれの命題性と、両方の元が同時に存在しないことの証明を要求します。第一側は `⟨ P ⟩` で、`⟨ P ⟩isProp` により命題です。第二側は関数型 `⟨ P ⟩ → Empty.⊥` であり、`isPropΠ` が `Empty.isProp⊥` を各点で用いて、その命題性を証明します。最後に `λ p np → np p` が、両側に同時に要素が存在しないことを証明します。定理 `choice→lem`{.Agda} の型はしたがって `SetChoice ℓ → LEM ℓ` です。`sc` と命題 `P` が与えられると、`P` について Diaconescu モジュールの中で働き、`merePicker sc` で単なる選択関数の存在を得て、`PT.rec`{.Agda} によって証明済みの命題である目標へ切り詰めを消去し、`decide` を返します。考えの順序が重要です。`decide` の中の場合分けは本物のデータであり、切り詰めが消去できるのは、目標がその答えたちを区別できないからです。
+目標が命題であることは明示的に証明されます。`isProp⊎`{.Agda} は両側それぞれの命題性と、両方の元が同時に存在しないことの証明を要求します。第一側は `⟨ P ⟩` で、`⟨ P ⟩isProp` により命題です。第二側は関数型 `⟨ P ⟩ → ⊥₀` であり、`isPropΠ` が `isProp⊥` を各点で用いて、その命題性を証明します。最後に `λ p np → np p` が、両側に同時に要素が存在しないことを証明します。定理 `choice→lem`{.Agda} の型はしたがって `SetChoice ℓ → LEM ℓ` です。`sc` と命題 `P` が与えられると、`P` について Diaconescu モジュールの中で働き、`merePicker sc` で単なる選択関数の存在を得て、`rec₁`{.Agda} によって証明済みの命題である目標へ切り詰めを消去し、`decide` を返します。考えの順序が重要です。`decide` の中の場合分けは本物のデータであり、切り詰めが消去できるのは、目標がその答えたちを区別できないからです。
 <!--/-->
 
 ```agda
-  decideIsProp : isProp (⟨ P ⟩ Sum.⊎ (⟨ P ⟩ → Empty.⊥))
-  decideIsProp = Sum.isProp⊎ ⟨ P ⟩isProp (isPropΠ (λ _ → Empty.isProp⊥)) (λ p np → np p)
+  decideIsProp : isProp (⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀))
+  decideIsProp = isProp⊎ ⟨ P ⟩isProp (isPropΠ (λ _ → isProp⊥)) (λ p np → np p)
 
 choice→lem : ∀ {ℓ} → SetChoice ℓ → LEM ℓ
-choice→lem sc P = PT.rec decideIsProp decide (merePicker sc)
+choice→lem sc P = rec₁ decideIsProp decide (merePicker sc)
   where open Diaconescu P
 ```
 

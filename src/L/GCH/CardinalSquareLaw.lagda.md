@@ -27,6 +27,7 @@ The construction is not constructive throughout, and the reason lies in the math
 
 ```agda
 open import Base.Prelude
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Base.Classical using ( LEM )
 
 ```
@@ -149,12 +150,6 @@ A comparison of two coded pairs carries six dependent witnesses: four coordinate
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels
-  using ( isProp×; isSetΣSndProp )
 ```
 
 <!--en-->
@@ -184,9 +179,6 @@ Three logical forms recur. Well-foundedness appears as accessibility data for ev
 ```agda
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 import Cubical.Induction.WellFounded as WF
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 ```
 
 <!--en-->
@@ -338,7 +330,7 @@ Outward, a member of `prodL K` comes, in truncated form, from two members of `K`
 
 ```agda
 prodL-out : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩ → InProd K (fst e)
-prodL-out K e h = PT.map (λ { (a , b , q , ma , mb) → a , b , ma , mb , q }) (Product.out K e h)
+prodL-out K e h = map₁ (λ { (a , b , q , ma , mb) → a , b , ma , mb , q }) (Product.out K e h)
 prodL-fst : (K e : S) → ⟨ fst e ∈ˢ fst (prodL K) ⟩
           → Σ[ a ∈ ⟪ fst K ⟫ ] Σ[ b ∈ ⟪ fst K ⟫ ]
               (fst e ≡ pr (⟪ fst K ⟫↪ a) (⟪ fst K ⟫↪ b))
@@ -353,7 +345,7 @@ The proof converts the truncated witnesses into the fibers of `K`'s indexing, an
 <!--/-->
 
 ```agda
-prodL-fst K e h = PT.rec isPropFib
+prodL-fst K e h = rec₁ isPropFib
   (λ { (a , b , ma , mb , q) →
      fiber (fst K) ma .fst , fiber (fst K) mb .fst
      , q ∙ cong₂ pr (sym (fiber (fst K) ma .snd)) (sym (fiber (fst K) mb .snd)) })
@@ -422,7 +414,7 @@ The definition offers two alternatives: either `a` belongs to `b` and `m` is `b`
 ```agda
 MaxIs m a b =
   ∥ (⟨ fst a ∈ˢ fst b ⟩ × (fst m ≡ fst b))
-  ⊎ ((⟨ fst a ∈ˢ fst b ⟩ → Empty.⊥) × (fst m ≡ fst a)) ∥₁
+  ⊎ ((⟨ fst a ∈ˢ fst b ⟩ → ⊥₀) × (fst m ≡ fst a)) ∥₁
 
 ```
 
@@ -630,9 +622,9 @@ The outward direction consumes the six nested truncations in turn: satisfaction 
 ```agda
   lt-out : ∀ {k} (p q : Fin k) (γ : S ^ k) → ⟨ γ ⊨ ltAt p q ⟩
          → Lt (fst (lookup p γ)) (fst (lookup q γ))
-  lt-out p q γ = PT.rec squash₁ (λ { (a , ha) → PT.rec squash₁ (λ { (b , hb) →
-    PT.rec squash₁ (λ { (c , hc) → PT.rec squash₁ (λ { (d , hd) →
-    PT.rec squash₁ (λ { (m , hm) → PT.rec squash₁ (λ { (n , (hp , (hq , (hM , (hN , hO))))) →
+  lt-out p q γ = rec₁ squash₁ (λ { (a , ha) → rec₁ squash₁ (λ { (b , hb) →
+    rec₁ squash₁ (λ { (c , hc) → rec₁ squash₁ (λ { (d , hd) →
+    rec₁ squash₁ (λ { (m , hm) → rec₁ squash₁ (λ { (n , (hp , (hq , (hM , (hN , hO))))) →
 ```
 
 <!--en-->
@@ -647,7 +639,7 @@ The two pair equations are transported along the adequacy paths, and the first m
       ∣ a , b , c , d , m , n
       , ( transport (atP p γ a b c d m n) hp
         , transport (atQ q γ a b c d m n) hq
-        , PT.map (λ { (inl h) → inl h
+        , map₁ (λ { (inl h) → inl h
                     ; (inr (n , e)) → inr ((λ k → lower (n k)) , e) }) hM
 ```
 
@@ -660,7 +652,7 @@ The second maximum datum is mapped identically, completing the witness of `Lt` a
 <!--/-->
 
 ```agda
-        , PT.map (λ { (inl h) → inl h
+        , map₁ (λ { (inl h) → inl h
                     ; (inr (n , e)) → inr ((λ k → lower (n k)) , e) }) hN
         , hO ) ∣₁ }) hm }) hd }) hc }) hb }) ha })
 
@@ -677,7 +669,7 @@ The inward direction turns `Lt` into the satisfaction statement, which is a prop
 ```agda
   lt-in : ∀ {k} (p q : Fin k) (γ : S ^ k)
         → Lt (fst (lookup p γ)) (fst (lookup q γ)) → ⟨ γ ⊨ ltAt p q ⟩
-  lt-in p q γ = PT.rec (snd (γ ⊨ ltAt p q))
+  lt-in p q γ = rec₁ (snd (γ ⊨ ltAt p q))
     (λ { (a , b , c , d , m , n , (ep , eq' , hM , hN , hO)) →
       ∣ a , ∣ b , ∣ c , ∣ d , ∣ m , ∣ n
 ```
@@ -693,9 +685,9 @@ The six witnesses are re-entered as the nested existential witnesses, with the p
 ```agda
       , ( transport (sym (atP p γ a b c d m n)) ep
         , ( transport (sym (atQ q γ a b c d m n)) eq'
-        , ( PT.map (λ { (inl h) → inl h
+        , ( map₁ (λ { (inl h) → inl h
                       ; (inr (n , e)) → inr ((λ k → lift (n k)) , e) }) hM
-          , ( PT.map (λ { (inl h) → inl h
+          , ( map₁ (λ { (inl h) → inl h
 ```
 
 <!--en-->
@@ -904,7 +896,7 @@ Two small facts prepare the comparison between the two sides. First, every membe
   ord↑ m = mem-ord {A = K} oκ (↑ m) (member K m)
   max-out : (a b m : S) (a' b' : ⟪ K ⟫) → fst a ≡ ↑ a' → fst b ≡ ↑ b'
           → MaxIs m a b → fst m ≡ ↑ (maxOrd a' b')
-  max-out a b m a' b' ea eb = PT.rec (setIsSet _ _) (go (SQ.tri₁ K oκ a' b'))
+  max-out a b m a' b' ea eb = rec₁ (setIsSet _ _) (go (SQ.tri₁ K oκ a' b'))
 ```
 
 <!--en-->
@@ -919,7 +911,7 @@ The case function fixes the shape of that argument: the host trichotomy splits i
     where
     go : (t : TriW (a' ≺₁ b') (a' ≡ b') (b' ≺₁ a'))
        → (⟨ fst a ∈ˢ fst b ⟩ × (fst m ≡ fst b))
-         ⊎ ((⟨ fst a ∈ˢ fst b ⟩ → Empty.⊥) × (fst m ≡ fst a))
+         ⊎ ((⟨ fst a ∈ˢ fst b ⟩ → ⊥₀) × (fst m ≡ fst a))
        → fst m ≡ ↑ (SQ.maxGo K oκ a' b' t)
 ```
 
@@ -934,9 +926,9 @@ In the below case the affirmation composes the equation of `m` with `b` and the 
 ```agda
     go (lt h) (inl (_ , e))   = e ∙ eb
     go (lt h) (inr (na , _))  =
-      Empty.rec (na (subst2 (λ x y → ⟨ x ∈ˢ y ⟩) (sym ea) (sym eb) h))
+      ⊥₀-rec (na (subst2 (λ x y → ⟨ x ∈ˢ y ⟩) (sym ea) (sym eb) h))
     go (eq p) (inl (a∈b , _)) =
-      Empty.rec (∈-irrefl (↑ b')
+      ⊥₀-rec (∈-irrefl (↑ b')
 ```
 
 <!--en-->
@@ -951,7 +943,7 @@ In the equal case an affirmation would place `a` inside `b` while the host decla
         (subst2 (λ x y → ⟨ x ∈ˢ y ⟩) (ea ∙ cong ↑ p) eb a∈b))
     go (eq p) (inr (_ , e))   = e ∙ ea
     go (gt h) (inl (a∈b , _)) =
-      Empty.rec (∈-irrefl (↑ a')
+      ⊥₀-rec (∈-irrefl (↑ a')
         (ord↑ a' .fst {x = ↑ b'} {y = ↑ a'}
 ```
 
@@ -1011,7 +1003,7 @@ The heart of the transfer is the refutation lemma. It assumes a contradiction-sh
 
 ```agda
   private
-    refute : (p q : Pair) → (p ≺ₚ q → Empty.⊥)
+    refute : (p q : Pair) → (p ≺ₚ q → ⊥₀)
            → Σ[ a ∈ S ] Σ[ b ∈ S ] Σ[ c ∈ S ] Σ[ d ∈ S ] Σ[ m ∈ S ] Σ[ n ∈ S ]
                ( (code p ≡ pr (fst a) (fst b)) × (code q ≡ pr (fst c) (fst d))
                × MaxIs m a b × MaxIs n c d × OrdIs m n a b c d )
@@ -1026,9 +1018,9 @@ The conclusion is the empty type: the assumed order data and the refused compari
 <!--/-->
 
 ```agda
-           → Empty.⊥
+           → ⊥₀
     refute (a' , b') (c' , d') nk (a , b , c , d , m , n , (ep , eq' , hM , hN , hO)) =
-      PT.rec Empty.isProp⊥ outer hO
+      rec₁ isProp⊥ outer hO
       where
       ea : fst a ≡ ↑ a'
 ```
@@ -1119,7 +1111,7 @@ If the first maximum belongs to the second, transporting this membership along `
       outer : ⟨ fst m ∈ˢ fst n ⟩
             ⊎ ((fst m ≡ fst n)
                × ∥ ⟨ fst a ∈ˢ fst c ⟩ ⊎ ((fst a ≡ fst c) × ⟨ fst b ∈ˢ fst d ⟩) ∥₁)
-            → Empty.⊥
+            → ⊥₀
       outer (inl h)       = nk (inl (subst2 (λ x y → ⟨ x ∈ˢ y ⟩) em en h))
 ```
 
@@ -1132,7 +1124,7 @@ If the two maxima are equal, the equality of the underlying sets becomes an equa
 <!--/-->
 
 ```agda
-      outer (inr (e , h)) = PT.rec Empty.isProp⊥
+      outer (inr (e , h)) = rec₁ isProp⊥
         (λ w → nk (inr (↪-inj {a = K} (sym em ∙ e ∙ en) , inner w))) h
 
 ```
@@ -1149,8 +1141,8 @@ To prove `lt→≺`, trichotomy leaves three possibilities for the host pairs. T
   lt→≺ : (p q : Pair) → Lt (code p) (code q) → p ≺ₚ q
   lt→≺ p q l = go (SQ.tri≺ K oκ p q)
     where
-    refuted : ((p ≺ₚ q) → Empty.⊥) → p ≺ₚ q
-    refuted nk = Empty.rec (PT.rec Empty.isProp⊥ (refute p q nk) l)
+    refuted : ((p ≺ₚ q) → ⊥₀) → p ≺ₚ q
+    refuted nk = ⊥₀-rec (rec₁ isProp⊥ (refute p q nk) l)
 ```
 
 <!--en-->
@@ -1566,7 +1558,7 @@ A coded injection in `L` can be read externally: its graph conditions determine 
   coded→ambient : (a b : S) → Σ[ F ∈ S ] InjCode F a b → ⟪ fst a ⟫ ↪ ⟪ fst b ⟫
   coded→ambient a b (F , sv , dm , ij , ran) = Sm.small , Sm.small-inj
     where module Sm = Small F a b sv dm ij ran
-ω⊆ : (a : V ℓ) → IsOrd a → (⟨ a ∈ˢ ω ⟩ → Empty.⊥)
+ω⊆ : (a : V ℓ) → IsOrd a → (⟨ a ∈ˢ ω ⟩ → ⊥₀)
    → (z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ a ⟩
 ```
 
@@ -1582,7 +1574,7 @@ Containment of `ω` follows from trichotomy at the ordinal `a`: `a` cannot belon
 ω⊆ a oa a∉ω z z∈ω = go (ord-tri a oa ω ω-ord)
   where
   go : ⟨ a ∈ˢ ω ⟩ ⊎ ((a ≡ ω) ⊎ ⟨ ω ∈ˢ a ⟩) → ⟨ z ∈ˢ a ⟩
-  go (inl h)         = Empty.rec (a∉ω h)
+  go (inl h)         = ⊥₀-rec (a∉ω h)
   go (inr (inl e))   = subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω
 ```
 
@@ -1596,9 +1588,9 @@ Its last case is transitivity applied to `z ∈ ω` and `ω ∈ a`. With contain
 
 ```agda
   go (inr (inr ω∈a)) = oa .fst z∈ω ω∈a
-no-fin : (a b : S) → IsOrd (fst a) → (⟨ fst a ∈ˢ ω ⟩ → Empty.⊥)
-       → IsOrd (fst b) → ⟨ fst b ∈ˢ ω ⟩ → InjL a b → Empty.⊥
-no-fin a b oa a∉ω ob b∈ω = PT.rec Empty.isProp⊥ (λ c →
+no-fin : (a b : S) → IsOrd (fst a) → (⟨ fst a ∈ˢ ω ⟩ → ⊥₀)
+       → IsOrd (fst b) → ⟨ fst b ∈ˢ ω ⟩ → InjL a b → ⊥₀
+no-fin a b oa a∉ω ob b∈ω = rec₁ isProp⊥ (λ c →
   finite-excl-ω (fst b) ob b∈ω (λ x → h c x , h c x)
 ```
 
@@ -1753,7 +1745,7 @@ The reader `comp` turns the truncated membership of the product into an honest d
 
 ```agda
   comp : (p : S) → Mem p → Comp p
-  comp p mp = PT.rec (isPropComp p) (λ z → z) (prodL-out a p mp)
+  comp p mp = rec₁ (isPropComp p) (λ z → z) (prodL-out a p mp)
   opaque
     val : (x : S) → ⟨ fst x ∈ˢ fst a ⟩ → S
     val x mx = E.toFun (x , mx)
@@ -1970,8 +1962,8 @@ The outward direction consumes the four nested existentials in turn and assemble
 ```agda
     mapFo-out : (q p : S) → ⟨ (q ∷ p ∷ []) ⊨ mapFo ⟩
               → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] Σ[ x' ∈ S ] Σ[ y' ∈ S ] Chain q p x y x' y' ∥₁
-    mapFo-out q p = PT.rec squash₁ (λ { (x , hx) → PT.rec squash₁ (λ { (y , hy) →
-      PT.rec squash₁ (λ { (x' , hx') → PT.map (λ { (y' , (h1 , (h2 , (h3 , h4)))) →
+    mapFo-out q p = rec₁ squash₁ (λ { (x , hx) → rec₁ squash₁ (λ { (y , hy) →
+      rec₁ squash₁ (λ { (x' , hx') → map₁ (λ { (y' , (h1 , (h2 , (h3 , h4)))) →
         x , y , x' , y'
 ```
 
@@ -2030,7 +2022,7 @@ Uniqueness says that the graph formula determines the value: any `q` paired with
 
 ```agda
   only : (p : S) (mp : Mem p) (q : S) → ⟨ (q ∷ p ∷ []) ⊨ mapFo ⟩ → q ≡ fn p mp
-  only p mp q h = PT.rec (isSetS q (fn p mp)) step (mapFo-out q p h)
+  only p mp q h = rec₁ (isSetS q (fn p mp)) step (mapFo-out q p h)
     where
     x = comp p mp .fst
     y = comp p mp .snd .fst
@@ -2247,7 +2239,7 @@ Because `InjL` is propositionally truncated, a coded injection `a ↪ b` may be 
 
 ```agda
 prod-inj : (a b : S) → InjL a b → InjL (prodL a) (prodL b)
-prod-inj a b = PT.rec squash₁
+prod-inj a b = rec₁ squash₁
   (λ { (F , sv , dm , ij , ran) → ProdMap.injL a b F sv dm ij ran })
 ```
 
@@ -2268,7 +2260,7 @@ To absorb the extra top element of an infinite ordinal, it remains to inject its
 <!--/-->
 
 ```agda
-module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ → Empty.⊥) where
+module Shift (mL : S) (om : IsOrd (fst mL)) (m∉ω : ⟨ fst mL ∈ˢ ω ⟩ → ⊥₀) where
 
 ```
 
@@ -2341,7 +2333,7 @@ Membership in the shift's domain is stated, and the first decision is defined: a
     Mem : S → Type (ℓ-suc ℓ)
     Mem x = ⟨ fst x ∈ˢ fst D ⟩
     Fin? : S → Type (ℓ-suc ℓ)
-    Fin? x = ⟨ fst x ∈ˢ ω ⟩ ⊎ (⟨ fst x ∈ˢ ω ⟩ → Empty.⊥)
+    Fin? x = ⟨ fst x ∈ˢ ω ⟩ ⊎ (⟨ fst x ∈ˢ ω ⟩ → ⊥₀)
 
 ```
 
@@ -2385,7 +2377,7 @@ The second decision is also an instance of excluded middle, refined by the succe
     top? : (x : S) → Mem x → Top? x
     top? x h = go (lem (fst x ∈ˢ m))
       where
-      go : ⟨ fst x ∈ˢ m ⟩ ⊎ (⟨ fst x ∈ˢ m ⟩ → Empty.⊥) → Top? x
+      go : ⟨ fst x ∈ˢ m ⟩ ⊎ (⟨ fst x ∈ˢ m ⟩ → ⊥₀) → Top? x
       go (inl k)  = inl k
 ```
 
@@ -2399,8 +2391,8 @@ In the refuted case the elimination consumes the truncated membership in the suc
 
 ```agda
       go (inr nk) = inr (∈sucV-elim {A = m} {x = fst x} (setIsSet (fst x) m)
-        (subst (λ w → ⟨ fst x ∈ˢ w ⟩) (sucʟ-fst mL) h) (λ k → Empty.rec (nk k)) (λ q → q))
-    not-both : (x : S) → ⟨ fst x ∈ˢ m ⟩ → fst x ≡ m → Empty.⊥
+        (subst (λ w → ⟨ fst x ∈ˢ w ⟩) (sucʟ-fst mL) h) (λ k → ⊥₀-rec (nk k)) (λ q → q))
+    not-both : (x : S) → ⟨ fst x ∈ˢ m ⟩ → fst x ≡ m → ⊥₀
     not-both x k q = ∈-irrefl m (subst (λ w → ⟨ w ∈ˢ m ⟩) q k)
 
 ```
@@ -2414,7 +2406,7 @@ The finite and top cases cannot overlap. If `x` belongs to `ω` and equals `m`, 
 <!--/-->
 
 ```agda
-    ω-fin : (x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst x ≡ m → Empty.⊥
+    ω-fin : (x : S) → ⟨ fst x ∈ˢ ω ⟩ → fst x ≡ m → ⊥₀
     ω-fin x k q = m∉ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) q k)
 
 ```
@@ -2428,7 +2420,7 @@ A successor can never be empty. Indeed, `a` belongs to `sucV a`; if `sucV a = �
 <!--/-->
 
 ```agda
-    suc≢∅ : (a : V ℓ) → sucV a ≡ ∅ → Empty.⊥
+    suc≢∅ : (a : V ℓ) → sucV a ≡ ∅ → ⊥₀
     suc≢∅ a e = ∅-empty a
       (∈∈ₛ {a = a} {b = ∅} .fst (subst (λ w → ⟨ a ∈ˢ w ⟩) e (self∈sucV a)))
 
@@ -2478,7 +2470,7 @@ The witness type for the graph formula is declared: either `x` is finite and `y`
 
     Wit : (y x : S) → Type (ℓ-suc ℓ)
     Wit y x = ∥ (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
-              ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → Empty.⊥) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
+              ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → ⊥₀) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
                 ⊎ ((fst x ≡ m) × (fst y ≡ ∅)) ) ∥₁
 
 ```
@@ -2537,9 +2529,9 @@ Reading the formula outward eliminates the truncated disjunction into the propos
 
 ```agda
     graph-out : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → Wit y x
-    graph-out y x = PT.rec squash₁
+    graph-out y x = rec₁ squash₁
       (λ { (inl (k , e)) → ∣ inl (k , transport (sa y x) e) ∣₁
-         ; (inr h) → PT.map (λ { (inl (n , (k , e))) →
+         ; (inr h) → map₁ (λ { (inl (n , (k , e))) →
                                   inr (inl ((λ hx → lower (n hx)) , k , e))
 ```
 
@@ -2579,7 +2571,7 @@ For a non-finite member of `m`, the refutation of `x ∈ ω` is lifted into the 
 <!--/-->
 
 ```agda
-    in-mid : (y x : S) → (⟨ fst x ∈ˢ ω ⟩ → Empty.⊥) → ⟨ fst x ∈ˢ m ⟩ → fst y ≡ fst x
+    in-mid : (y x : S) → (⟨ fst x ∈ˢ ω ⟩ → ⊥₀) → ⟨ fst x ∈ˢ m ⟩ → fst y ≡ fst x
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩
     in-mid y x n k e = ∣ inr ∣ inl ((λ hx → lift (n hx)) , (k , e)) ∣₁ ∣₁
 
@@ -2641,7 +2633,7 @@ Uniqueness reads the graph backwards: any `y` paired with `x` in the graph equal
 ```agda
     only' : (x : S) (f : Fin? x) (t : Top? x) (y : S)
           → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ value x f t
-    only' x f t y hy = PT.rec (isSetS y (value x f t)) (go f t) (graph-out y x hy)
+    only' x f t y hy = rec₁ (isSetS y (value x f t)) (go f t) (graph-out y x hy)
       where
       go : (f : Fin? x) (t : Top? x)
 ```
@@ -2656,7 +2648,7 @@ The case function receives the unpacked alternatives together with the chosen de
 
 ```agda
          → (⟨ fst x ∈ˢ ω ⟩ × (fst y ≡ sucV (fst x)))
-           ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → Empty.⊥) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
+           ⊎ ( ((⟨ fst x ∈ˢ ω ⟩ → ⊥₀) × ⟨ fst x ∈ˢ m ⟩ × (fst y ≡ fst x))
              ⊎ ((fst x ≡ m) × (fst y ≡ ∅)) )
          → y ≡ value x f t
       go (inl k) _       (inl (_ , e))             = S≡ (e ∙ sym (sucʟ-fst x))
@@ -2671,11 +2663,11 @@ The next five clauses compare the chosen finite or non-finite member case with a
 <!--/-->
 
 ```agda
-      go (inl k) _       (inr (inl (n , _ , _)))   = Empty.rec (n k)
-      go (inl k) _       (inr (inr (q , _)))       = Empty.rec (ω-fin x k q)
-      go (inr n) (inl k) (inl (k' , _))            = Empty.rec (n k')
+      go (inl k) _       (inr (inl (n , _ , _)))   = ⊥₀-rec (n k)
+      go (inl k) _       (inr (inr (q , _)))       = ⊥₀-rec (ω-fin x k q)
+      go (inr n) (inl k) (inl (k' , _))            = ⊥₀-rec (n k')
       go (inr n) (inl k) (inr (inl (_ , _ , e)))   = S≡ e
-      go (inr n) (inl k) (inr (inr (q , _)))       = Empty.rec (not-both x k q)
+      go (inr n) (inl k) (inr (inr (q , _)))       = ⊥₀-rec (not-both x k q)
 ```
 
 <!--en-->
@@ -2687,8 +2679,8 @@ If the chosen input is the top element, a finite witness contradicts its non-fin
 <!--/-->
 
 ```agda
-      go (inr n) (inr q) (inl (k' , _))            = Empty.rec (n k')
-      go (inr n) (inr q) (inr (inl (_ , k , _)))   = Empty.rec (not-both x k q)
+      go (inr n) (inr q) (inl (k' , _))            = ⊥₀-rec (n k')
+      go (inr n) (inr q) (inr (inl (_ , k , _)))   = ⊥₀-rec (not-both x k q)
       go (inr n) (inr q) (inr (inr (_ , e)))       = S≡ e
 
 ```
@@ -2749,9 +2741,9 @@ A finite input cannot share its shifted value with a non-finite member: that equ
 
 ```agda
     inj' x (inl k) _ x' (inr n') (inl _) e =
-      Empty.rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x) ∙ e) (ω-limit (fst x) k)))
+      ⊥₀-rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x) ∙ e) (ω-limit (fst x) k)))
     inj' x (inl k) _ x' (inr n') (inr _) e =
-      Empty.rec (suc≢∅ (fst x) (sym (sucʟ-fst x) ∙ e))
+      ⊥₀-rec (suc≢∅ (fst x) (sym (sucʟ-fst x) ∙ e))
     inj' x (inr n) (inl _) x' (inl k') _ e =
 ```
 
@@ -2764,10 +2756,10 @@ The reverse finite/non-finite case gives the same contradiction. Two non-finite 
 <!--/-->
 
 ```agda
-      Empty.rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x') ∙ sym e) (ω-limit (fst x') k')))
+      ⊥₀-rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym (sucʟ-fst x') ∙ sym e) (ω-limit (fst x') k')))
     inj' x (inr n) (inl _) x' (inr n') (inl _) e = e
     inj' x (inr n) (inl _) x' (inr n') (inr _) e =
-      Empty.rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym e) (#∈ω zero)))
+      ⊥₀-rec (n (subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym e) (#∈ω zero)))
     inj' x (inr n) (inr _) x' (inl k') _ e =
 ```
 
@@ -2780,9 +2772,9 @@ For a top input, equality with a finite value would again make a successor empty
 <!--/-->
 
 ```agda
-      Empty.rec (suc≢∅ (fst x') (sym (sucʟ-fst x') ∙ sym e))
+      ⊥₀-rec (suc≢∅ (fst x') (sym (sucʟ-fst x') ∙ sym e))
     inj' x (inr n) (inr _) x' (inr n') (inl _) e =
-      Empty.rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) e (#∈ω zero)))
+      ⊥₀-rec (n' (subst (λ w → ⟨ w ∈ˢ ω ⟩) e (#∈ω zero)))
     inj' x (inr n) (inr q) x' (inr n') (inr q') e = q ∙ sym q'
   injL : InjL (sucʟ mL) mL
 ```
@@ -2815,7 +2807,7 @@ For each constructible infinite ordinal `a` that is an internal cardinal, the in
 
 Goal : V ℓ → Type (ℓ-suc ℓ)
 Goal a = (la : ⟨ isL a ⟩) → IsOrd a → IsCardinalL (a , la)
-       → (⟨ a ∈ˢ ω ⟩ → Empty.⊥) → InjL (prodL (a , la)) (a , la)
+       → (⟨ a ∈ˢ ω ⟩ → ⊥₀) → InjL (prodL (a , la)) (a , la)
 
 ```
 
@@ -2830,7 +2822,7 @@ The induction step receives the set `a`, the induction hypothesis for every memb
 ```agda
 module Step (a : V ℓ) (ih : (a' : V ℓ) → ⟨ a' ∈ˢ a ⟩ → Goal a')
             (la : ⟨ isL a ⟩) (oa : IsOrd a) (carda : IsCardinalL (a , la))
-            (a∉ω : ⟨ a ∈ˢ ω ⟩ → Empty.⊥) where
+            (a∉ω : ⟨ a ∈ˢ ω ⟩ → ⊥₀) where
 
 ```
 
@@ -2905,9 +2897,9 @@ Apply trichotomy to `sucV m` and `a`. The first case is exactly the desired memb
 ```agda
     go : ⟨ sucV m ∈ˢ a ⟩ ⊎ ((sucV m ≡ a) ⊎ ⟨ a ∈ˢ sucV m ⟩) → ⟨ sucV m ∈ˢ a ⟩
     go (inl h) = h
-    go (inr (inl e)) = Empty.rec (fin (ord-tri m om ω ω-ord))
+    go (inr (inl e)) = ⊥₀-rec (fin (ord-tri m om ω ω-ord))
       where
-      fin : ⟨ m ∈ˢ ω ⟩ ⊎ ((m ≡ ω) ⊎ ⟨ ω ∈ˢ m ⟩) → Empty.⊥
+      fin : ⟨ m ∈ˢ ω ⟩ ⊎ ((m ≡ ω) ⊎ ⟨ ω ∈ˢ m ⟩) → ⊥₀
 ```
 
 <!--en-->
@@ -2923,7 +2915,7 @@ If `m` were a member of `ω`, its successor would also be a member of `ω`, putt
       fin (inr r) =
         carda mL m∈a (subst (λ w → InjL w mL) sucL≡κ (Shift.injL mL om m∉ω))
         where
-        m∉ω : ⟨ m ∈ˢ ω ⟩ → Empty.⊥
+        m∉ω : ⟨ m ∈ˢ ω ⟩ → ⊥₀
 ```
 
 <!--en-->
@@ -2937,7 +2929,7 @@ The local non-finiteness is read off the same trichotomy: if `m` equalled `ω`, 
 ```agda
         m∉ω h = rr r
           where
-          rr : (m ≡ ω) ⊎ ⟨ ω ∈ˢ m ⟩ → Empty.⊥
+          rr : (m ≡ ω) ⊎ ⟨ ω ∈ˢ m ⟩ → ⊥₀
           rr (inl e') = ∈-irrefl ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) e' h)
           rr (inr ω∈m) = ∈-irrefl ω (ω-ord .fst ω∈m h)
 ```
@@ -2953,8 +2945,8 @@ The equality `sucV m = a` identifies the internal successor `sucʟ mL` with `κ`
 ```agda
         sucL≡κ : sucʟ mL ≡ κ
         sucL≡κ = Σ≡Prop (λ v → snd (isL v)) (sucʟ-fst mL ∙ e)
-    go (inr (inr h)) = Empty.rec*
-      (∈sucV-elim {A = m} {x = a} {P = Empty.⊥* {ℓ-suc ℓ}} Empty.isProp⊥* h
+    go (inr (inr h)) = ⊥*-rec
+      (∈sucV-elim {A = m} {x = a} {P = ⊥* {ℓ-suc ℓ}} isProp⊥* h
         (λ a∈m → lift (∈-irrefl a (oa .fst a∈m m∈a)))
 ```
 
@@ -2969,8 +2961,8 @@ Successor closure now makes the induction hypothesis available at the smaller or
 ```agda
         (λ a≡m → lift (∈-irrefl m (subst (λ w → ⟨ m ∈ˢ w ⟩) a≡m m∈a))))
   prod-into : (γ : S) → IsOrd (fst γ) → ⟨ fst γ ∈ˢ a ⟩
-            → (⟨ fst γ ∈ˢ ω ⟩ → Empty.⊥) → InjL (prodL γ) γ
-  prod-into γ oγ γ∈a γ∉ω = PT.rec squash₁ build (cardOf γ oγ)
+            → (⟨ fst γ ∈ˢ ω ⟩ → ⊥₀) → InjL (prodL γ) γ
+  prod-into γ oγ γ∈a γ∉ω = rec₁ squash₁ build (cardOf γ oγ)
     where
 ```
 
@@ -3031,8 +3023,8 @@ The representative `μ` must also be infinite. If `μ ∈ ω`, the inclusion `ω
 <!--/-->
 
 ```agda
-        go (inr (inr h)) = Empty.rec (∈-irrefl (fst γ) (μ⊆γ (fst γ) h))
-      μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → Empty.⊥
+        go (inr (inr h)) = ⊥₀-rec (∈-irrefl (fst γ) (μ⊆γ (fst γ) h))
+      μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
       μ∉ω h = no-fin γ μ oγ γ∉ω oμ h γ↪μ
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
   Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
@@ -3064,7 +3056,7 @@ Every member of a collapse value determines its segment, by the outward reading 
 
 ```agda
   seg : (p : OT.Dom) (b : V ℓ) → ⟨ b ∈ˢ C.col p ⟩ → Seg p b
-  seg p b h = PT.rec (isPropSeg p b) (λ z → z) (C.col-out p b h)
+  seg p b h = rec₁ (isPropSeg p b) (λ z → z) (C.col-out p b h)
   mx : OT.Dom → ⟪ K ⟫
   mx p = maxOrd (φ p .fst) (φ p .snd)
 
@@ -3238,7 +3230,7 @@ The refutation assumes that `ω` is contained in the collapse value. Then every 
 <!--/-->
 
 ```agda
-    refute : ((z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ C.col p ⟩) → Empty.⊥
+    refute : ((z : V ℓ) → ⟨ z ∈ˢ ω ⟩ → ⟨ z ∈ˢ C.col p ⟩) → ⊥₀
     refute sub = finite-excl-ω g og g∈ω f f-inj
       where
       s : (x : ⟪ ω ⟫) → Seg p (⟪ ω ⟫↪ x)
@@ -3286,8 +3278,8 @@ Trichotomy now proves `C.col p ∈ ω`. Equality `C.col p = ω` would give the f
 ```agda
     go : ⟨ C.col p ∈ˢ ω ⟩ ⊎ ((C.col p ≡ ω) ⊎ ⟨ ω ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ ω ⟩
     go (inl k)         = k
-    go (inr (inl e))   = Empty.rec (refute (λ z z∈ω → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω))
-    go (inr (inr ω∈c)) = Empty.rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
+    go (inr (inl e))   = ⊥₀-rec (refute (λ z z∈ω → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈ω))
+    go (inr (inr ω∈c)) = ⊥₀-rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
   module Inv (p : OT.Dom) (g : S)
 ```
 
@@ -3378,7 +3370,7 @@ If the maximum of the pair is finite, the collapse value is finite by the finite
     go (inl m∈ω) = ω⊆a (C.col p) (col-fin p m∈ω)
     go (inr inf) = go' (ord-tri (C.col p) (C.col-ord p) a oa)
       where
-      m∉ω : ⟨ mV p ∈ˢ ω ⟩ → Empty.⊥
+      m∉ω : ⟨ mV p ∈ˢ ω ⟩ → ⊥₀
 ```
 
 <!--en-->
@@ -3392,7 +3384,7 @@ In the infinite branch, suppose for contradiction that `mV p ∈ ω`. If `mV p =
 ```agda
       m∉ω h = rr inf
         where
-        rr : (mV p ≡ ω) ⊎ ⟨ ω ∈ˢ mV p ⟩ → Empty.⊥
+        rr : (mV p ≡ ω) ⊎ ⟨ ω ∈ˢ mV p ⟩ → ⊥₀
         rr (inl e)   = ∈-irrefl ω (subst (λ w → ⟨ w ∈ˢ ω ⟩) e h)
         rr (inr ω∈m) = ∈-irrefl ω (ω-ord .fst ω∈m h)
 ```
@@ -3426,7 +3418,7 @@ The carrier belongs to `a` by the successor closure proved above, and it is infi
       gL = ordL g og
       g∈a : ⟨ g ∈ˢ a ⟩
       g∈a = suc∈ (mV p) (member K (mx p))
-      g∉ω : ⟨ g ∈ˢ ω ⟩ → Empty.⊥
+      g∉ω : ⟨ g ∈ˢ ω ⟩ → ⊥₀
       g∉ω h = m∉ω (ω-ord .fst (self∈sucV (mV p)) h)
 ```
 
@@ -3455,7 +3447,7 @@ Compose the inverse-collapse injection with `prod-into gL` to obtain `C.colʟ p 
 ```agda
       col↪g : InjL (C.colʟ p) gL
       col↪g = injl-trans (C.colʟ p) (prodL gL) gL IV.injL (prod-into gL og g∈a g∉ω)
-      absurd : ((z : V ℓ) → ⟨ z ∈ˢ a ⟩ → ⟨ z ∈ˢ C.col p ⟩) → Empty.⊥
+      absurd : ((z : V ℓ) → ⟨ z ∈ˢ a ⟩ → ⟨ z ∈ˢ C.col p ⟩) → ⊥₀
       absurd sub = carda gL g∈a
         (injl-trans κ (C.colʟ p) gL (inclusion-coded κ (C.colʟ p) sub) col↪g)
 ```
@@ -3472,8 +3464,8 @@ If the cardinal were contained in the collapse value, composing that inclusion w
 
       go' : ⟨ C.col p ∈ˢ a ⟩ ⊎ ((C.col p ≡ a) ⊎ ⟨ a ∈ˢ C.col p ⟩) → ⟨ C.col p ∈ˢ a ⟩
       go' (inl h)       = h
-      go' (inr (inl e)) = Empty.rec (absurd (λ z z∈a → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈a))
-      go' (inr (inr h)) = Empty.rec (absurd (λ z z∈a → C.col-ord p .fst z∈a h))
+      go' (inr (inl e)) = ⊥₀-rec (absurd (λ z z∈a → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym e) z∈a))
+      go' (inr (inr h)) = ⊥₀-rec (absurd (λ z z∈a → C.col-ord p .fst z∈a h))
   result : InjL (prodL κ) κ
 ```
 
@@ -3489,7 +3481,7 @@ The product first injects into the collapse order type `C.otL`. Every member `z`
   result = injl-trans P C.otL κ injL-ot (inclusion-coded C.otL κ ot⊆a)
     where
     ot⊆a : (z : V ℓ) → ⟨ z ∈ˢ fst C.otL ⟩ → ⟨ z ∈ˢ a ⟩
-    ot⊆a z hz = PT.rec (snd (z ∈ˢ a))
+    ot⊆a z hz = rec₁ (snd (z ∈ˢ a))
       (λ { (b , e) → subst (λ w → ⟨ w ∈ˢ a ⟩) e (colIn b) }) (C.otL-out z hz)
 ```
 

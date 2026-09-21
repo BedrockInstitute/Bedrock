@@ -15,7 +15,13 @@ Report-only checks (prose is lint-prose.py's business; STYLE-agda.md is the law)
                     enforces, so it is not re-checked here.)
   D [forbidden]     no `postulate`, no TERMINATING/NON_TERMINATING/
                     NO_TERMINATION_CHECK/NO_POSITIVITY_CHECK pragma, no
-                    interaction holes (`{!...!}` or a bare `?`)           (STYLE-agda §1)
+                    interaction holes (`{!...!}` or a bare `?`), and no
+                    qualified zero-level empty type `Empty.⊥`             (STYLE-agda §1–2)
+  F [empty-open]    only Base.Prelude may `open import` the
+                    Cubical.Data.Empty module family                      (STYLE-agda §2)
+  G [prelude-import] Cubical modules owned by Base.Prelude may not be
+                    imported again elsewhere, qualified or renamed;
+                    Unit vocabulary already exported by Prelude is not re-imported
   E [hprop-snd]     propositionhood certificates use `⟨ P ⟩isProp`, not
                     the representation-level projection `P .snd`
 
@@ -58,6 +64,32 @@ KEEP_MARK = "lint-agda: keep"
 FORBIDDEN_PRAGMAS = ("TERMINATING", "NON_TERMINATING",
                      "NO_TERMINATION_CHECK", "NO_POSITIVITY_CHECK")
 HPROP_SND_RE = re.compile(r"\b[PQ]\b\s*\.snd\b")
+EMPTY_BOTTOM_RE = re.compile(r"\bEmpty\.⊥(?!\*)")
+PRELUDE_PUBLIC_NAMES = {
+    "Cubical.Data.Empty": {"⊥", "⊥*", "isProp⊥*", "rec", "rec*"},
+    "Cubical.Data.Empty.Properties": {"isProp⊥", "isProp⊥*"},
+    "Cubical.Data.Unit": {"Unit", "Unit*", "tt", "tt*", "isPropUnit*"},
+    "Cubical.Data.Sigma": {"Σ", "Σ-syntax", "_×_", "_,_", "fst", "snd", "Σ≡Prop"},
+    "Cubical.Functions.Logic": {
+        "⇔toPath", "⊤", "_⊓_", "_⊔_", "_⇒_", "¬_",
+        "∀[]-syntax", "∀[∶]-syntax", "∃[]-syntax", "∃[∶]-syntax",
+    },
+    "Cubical.Data.Sum": {"_⊎_", "inl", "inr", "rec"},
+    "Cubical.Data.Nat": {"ℕ", "zero", "suc", "_+_"},
+    "Cubical.Data.FinData": {"Fin", "zero", "suc", "toℕ"},
+    "Cubical.Foundations.Prelude": {
+        "Type", "Level", "ℓ-zero", "ℓ-suc", "ℓ-max", "Lift", "lift", "lower",
+        "_≡_", "refl", "sym", "_∙_", "cong", "cong₂", "transport", "subst",
+        "subst2", "funExt", "isProp", "isSet", "isContr", "isProp→isSet",
+    },
+    "Cubical.Foundations.HLevels": {
+        "hProp", "isSetHProp", "isPropΠ", "isProp→", "isProp×", "isPropΣ",
+    },
+    "Cubical.Data.Vec": {"Vec", "[]", "_∷_", "lookup", "map"},
+    "Cubical.HITs.PropositionalTruncation": {
+        "∥_∥₁", "∣_∣₁", "squash₁", "rec", "map",
+    },
+}
 # Agda token delimiters (note: [ ] , are identifier characters in Agda).
 DELIMS = " \t\r\n(){};@"
 TOKEN_SPLIT = re.compile("[" + re.escape(DELIMS) + "]+")
@@ -163,6 +195,7 @@ class Stmt:
         self.hiding = False
         self.using = []               # [(name, is_module)]
         self.renamed = []             # [name]
+        self.renamed_sources = []     # [source name]
 
 
 def balanced(text, start):
@@ -220,6 +253,8 @@ def parse_clauses(st):
                 else:  # renaming: "a to b" / "module A to B"
                     parts = item.split()
                     if "to" in parts:
+                        source = parts[0] if parts[0] != "module" else parts[1]
+                        st.renamed_sources.append(source)
                         st.renamed.append(parts[parts.index("to") + 1])
     st.args = st.text[:args_end] if args_end is not None else st.text
 
@@ -298,6 +333,10 @@ def lint_file(path):
                    "use a module parameter)")
         if "?" in toks:
             report(idx, "forbidden", "interaction hole `?` is banned (STYLE-agda §1)")
+        if EMPTY_BOTTOM_RE.search(mtext):
+            report(idx, "forbidden",
+                   "`Empty.⊥` is banned; use the level-polymorphic `⊥* {ℓ}` "
+                   "from Base.Prelude (STYLE-agda §2)")
         if HPROP_SND_RE.search(mtext) and "⟨ P ⟩isProp = P .snd" not in mtext:
             report(idx, "hprop-snd",
                    "use `⟨ P ⟩isProp` instead of the representation-level `.snd`")
@@ -310,6 +349,33 @@ def lint_file(path):
         if first >= 2:
             span.append(raw[first - 2])      # marker on the preceding line also counts
         st.keep = any(KEEP_MARK in l for l in span)
+
+    # F. Base.Prelude owns the public empty-type vocabulary. Other modules
+    # may use a qualified import while legacy code is being migrated, but
+    # must not open the Cubical.Data.Empty module family into local scope.
+    is_base_prelude = bool(re.search(
+        r"(?m)^\s*module\s+Base\.Prelude\s+where\b", masked))
+    if not is_base_prelude:
+        for st in stmts:
+            if (st.kind == "open-import"
+                    and (st.module == "Cubical.Data.Empty"
+                         or st.module.startswith("Cubical.Data.Empty."))):
+                report(st.lines[0], "empty-open",
+                       "only Base.Prelude may `open import` the "
+                       "Cubical.Data.Empty module family")
+            if st.module in PRELUDE_PUBLIC_NAMES:
+                public_names = PRELUDE_PUBLIC_NAMES[st.module]
+                imported = {name for name, is_module in st.using if not is_module}
+                imported.update(st.renamed_sources)
+                repeated = sorted(imported & public_names)
+                if st.as_name or (st.kind == "import" and not imported):
+                    report(st.lines[0], "prelude-import",
+                           f"do not import or alias all of {st.module}; import only "
+                           "non-Prelude names with an explicit using/renaming list")
+                elif repeated:
+                    report(st.lines[0], "prelude-import",
+                           f"{', '.join(repeated)} already come from Base.Prelude; "
+                           "do not import or rename them again")
 
     # B. using-list discipline
     for st in stmts:

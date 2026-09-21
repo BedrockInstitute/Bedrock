@@ -73,12 +73,6 @@ open import L.Coding.SatisfactionGraph {ℓ} lem using
 open import L.Coding.CodeSet {ℓ} lem
   using ( keyS; AllCodes; AllCodes-out; key∈AllCodes )
 open import L.Recursion {ℓ} lem using ( Recursion; mereFunct; module Of )
-
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Vec using ( _∷_; [] )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 
@@ -202,7 +196,7 @@ module _ (B : S) where
 
   frDom : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → ⟨ fr φ γ ⊨ domAt Ti Ci ⟩
   frDom φ γ = domAt-intro Ti Ci (fr φ γ)
-    (λ z → (λ h → PT.rec (snd (fst z ∈ fst (slot B φ)))
+    (λ z → (λ h → rec₁ (snd (fst z ∈ fst (slot B φ)))
               (λ { (w , hw) → inSlot B φ (fst z) (fst w) hw }) h)
          , (λ h → total B φ (fst z) h))
 
@@ -279,7 +273,7 @@ line and is the difference between elaborating and not.
     unique : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n) (x : S) → fst x ≡ fst (keyʟ (toB ψ))
            → (y : S) → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩ → y ≡ Sat B (toB ψ)
     unique {n} ψ x k y hy = Σ≡Prop (λ v → snd (isL v))
-      (PT.rec (setIsSet (fst y) (fst (Sat B (toB ψ))))
+      (rec₁ (setIsSet (fst y) (fst (Sat B (toB ψ))))
         (λ { (ν , (E , (C , (T , (b , (eb , (tg , (hE , (hc , (hd , (ha , h12))))))))))) →
           SatSoundC.pinned Ti Bi Ci Ei NN (ev ν E C T b (y ∷ x ∷ [])) B eb tg hE hc h12
             ψ (subst (λ u → ⟨ u ∈ fst C ⟩) (k ∙ sym (keyBridge' B ψ))
@@ -328,7 +322,7 @@ meaning.
   Recursion.dom satRec = AllCodes B
   Recursion.graph satRec = satGraph B
   Recursion.funct satRec x x∈ = mereFunct (satGraph B) x
-    (PT.map
+    (map₁
       (λ { (n , ψ , q) → Sat B (toB ψ)
          , ( exists ψ x (q ∙ keyBridge' B ψ)
            , unique ψ x (q ∙ keyBridge' B ψ) ) })

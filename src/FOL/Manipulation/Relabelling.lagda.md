@@ -56,7 +56,6 @@ On the semantic side, a structure `𝒮` with carrier `S` reads a formula over `
 ```agda
   ; Σₙ; σ-Δ₀; σ-Π; σ-∃; Πₙ; π-Δ₀; π-Σ; π-∀ )
 import FOL.Semantics
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -177,33 +176,33 @@ The commutation lemma already contains the parameter-free case, and the corollar
 <!--/-->
 
 <!--en-->
-The inner module fixes an arbitrary target domain `K` and interpretation `ι : K → S`, then opens the satisfaction relation twice: once normally for formulas over `K`, and once under the name `_⊨∅_` for formulas over the empty constant domain, where the interpretation is the function `λ b → ι (Empty.rec* b)`. That function is legitimate because `Empty.rec*` is the eliminator of the empty type: an element of `⊥*` would let one produce an element of any type, including `S`, so the interpretation never actually needs a value.
+The inner module fixes an arbitrary target domain `K` and interpretation `ι : K → S`, then opens the satisfaction relation twice: once normally for formulas over `K`, and once under the name `_⊨∅_` for formulas over the empty constant domain, where the interpretation is the function `λ b → ι (⊥*-rec b)`. That function is legitimate because `⊥*-rec` is the eliminator of the empty type: an element of `⊥*` would let one produce an element of any type, including `S`, so the interpretation never actually needs a value.
 <!--zh-->
-内层模块固定任意目标域 `K` 与解释 `ι : K → S`，然后打开两次满足关系：一次通常地用于 `K` 上的公式，一次以名字 `_⊨∅_` 用于空常元域上的公式，其解释为函数 `λ b → ι (Empty.rec* b)`。这个函数是合法的，因为 `Empty.rec*` 是空类型的消去子：`⊥*` 的一个元素本可产生任何类型 (包括 `S`) 的元素，所以该解释实际上永远不需要具体的值。
+内层模块固定任意目标域 `K` 与解释 `ι : K → S`，然后打开两次满足关系：一次通常地用于 `K` 上的公式，一次以名字 `_⊨∅_` 用于空常元域上的公式，其解释为函数 `λ b → ι (⊥*-rec b)`。这个函数是合法的，因为 `⊥*-rec` 是空类型的消去子：`⊥*` 的一个元素本可产生任何类型 (包括 `S`) 的元素，所以该解释实际上永远不需要具体的值。
 <!--ja-->
-内側のモジュールは任意の対象域 `K` と解釈 `ι : K → S` を固定し、充足関係を二度開きます。一度は通常どおり `K` 上の論理式に対して、もう一度は名前 `_⊨∅_` で空の定数域上の論理式に対してです。後者の解釈は関数 `λ b → ι (Empty.rec* b)` です。これが正当なのは、`Empty.rec*` が空型の消去子だからです。`⊥*` の元があれば任意の型 (`S` を含む) の元を作れるので、この解釈が実際に値を必要とすることは決してありません。
+内側のモジュールは任意の対象域 `K` と解釈 `ι : K → S` を固定し、充足関係を二度開きます。一度は通常どおり `K` 上の論理式に対して、もう一度は名前 `_⊨∅_` で空の定数域上の論理式に対してです。後者の解釈は関数 `λ b → ι (⊥*-rec b)` です。これが正当なのは、`⊥*-rec` が空型の消去子だからです。`⊥*` の元があれば任意の型 (`S` を含む) の元を作れるので、この解釈が実際に値を必要とすることは決してありません。
 <!--/-->
 
 ```agda
   module _ {ℓe ℓc} {K : Type ℓc} (ι : K → S) where
 
     open At K ι using ( _⊨_ )
-    open At (⊥* {ℓe}) (λ b → ι (Empty.rec* b)) using () renaming ( _⊨_ to _⊨∅_ )
+    open At (⊥* {ℓe}) (λ b → ι (⊥*-rec b)) using () renaming ( _⊨_ to _⊨∅_ )
 
     embed-⊨ : ∀ {n} (φ : Formula (⊥* {ℓe}) n) (γ : S ^ n)
             → (γ ⊨ embed φ) ≡ (γ ⊨∅ φ)
 ```
 
 <!--en-->
-The corollary `embed-⊨` is then a direct instance of `⊨-map`, with `f` taken to be the empty eliminator `Empty.rec*` viewed as a function `⊥* → K`: for every parameter-free formula `φ` and environment `γ`, satisfaction of `embed φ` under `ι` is a path to satisfaction of `φ` in the `∅`-marked reading. In words, embedding a parameter-free formula into a richer constant domain cannot change what it says.
+The corollary `embed-⊨` is then a direct instance of `⊨-map`, with `f` taken to be the empty eliminator `⊥*-rec` viewed as a function `⊥* → K`: for every parameter-free formula `φ` and environment `γ`, satisfaction of `embed φ` under `ι` is a path to satisfaction of `φ` in the `∅`-marked reading. In words, embedding a parameter-free formula into a richer constant domain cannot change what it says.
 <!--zh-->
-于是推论 `embed-⊨` 就是 `⊨-map` 的直接实例，其中 `f` 取为视为函数 `⊥* → K` 的空消去子 `Empty.rec*`：对每个无参公式 `φ` 与环境 `γ`，`embed φ` 在 `ι` 下的满足与 `φ` 在带 `∅` 标记读法下的满足之间有一条路径。换言之，把无参公式嵌入更丰富的常元域不会改变它所说的话。
+于是推论 `embed-⊨` 就是 `⊨-map` 的直接实例，其中 `f` 取为视为函数 `⊥* → K` 的空消去子 `⊥*-rec`：对每个无参公式 `φ` 与环境 `γ`，`embed φ` 在 `ι` 下的满足与 `φ` 在带 `∅` 标记读法下的满足之间有一条路径。换言之，把无参公式嵌入更丰富的常元域不会改变它所说的话。
 <!--ja-->
-系 `embed-⊨` は、`f` を関数 `⊥* → K` と見なした空の消去子 `Empty.rec*` として `⊨-map` の直接の実例です。すべての無パラメータ論理式 `φ` と環境 `γ` に対し、`embed φ` を `ι` の下で充足することと、`∅` 標識の読み方で `φ` を充足することとの間に経路があります。つまり、無パラメータ論理式をより豊かな定数域へ埋め込んでも、その述べる内容は変わりません。
+系 `embed-⊨` は、`f` を関数 `⊥* → K` と見なした空の消去子 `⊥*-rec` として `⊨-map` の直接の実例です。すべての無パラメータ論理式 `φ` と環境 `γ` に対し、`embed φ` を `ι` の下で充足することと、`∅` 標識の読み方で `φ` を充足することとの間に経路があります。つまり、無パラメータ論理式をより豊かな定数域へ埋め込んでも、その述べる内容は変わりません。
 <!--/-->
 
 ```agda
-    embed-⊨ = ⊨-map Empty.rec* ι
+    embed-⊨ = ⊨-map ⊥*-rec ι
 ```
 
 <!--en-->

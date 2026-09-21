@@ -38,7 +38,6 @@ The formulas being classified come from the object language of `FOL.Syntax`: ter
 <!--/-->
 
 ```agda
-open import Cubical.Data.Unit using ( tt )
 open import FOL.Syntax using
   ( Term; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ⊤̇; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
@@ -152,11 +151,11 @@ bounded (∀̇∈ t φ) = bounded φ
 ```
 
 <!--en-->
-A Boolean `true` at a conjunction means two things at once, and the private helper `and-out` takes it apart. Given `a b : Bool` and an inhabitant of `Bool→Type (a and b)`, it returns a pair of inhabitants, one for `Bool→Type a` and one for `Bool→Type b`. When `a` is `false`, the input would have to inhabit `Bool→Type false`, an empty type, so the case is discharged by the absurd pattern `()`. When `a` is `true`, the unit element `tt` proves the first conjunct and the given `h` already is the second.
+A Boolean `true` at a conjunction means two things at once, and the private helper `and-out` takes it apart. Given `a b : Bool` and an inhabitant of `Bool→Type (a and b)`, it returns a pair of inhabitants, one for `Bool→Type a` and one for `Bool→Type b`. When `a` is `false`, the input would have to inhabit `Bool→Type false`, an empty type, so the case is discharged by the absurd pattern `()`. When `a` is `true`, the unit element `_` proves the first conjunct and the given `h` already is the second.
 <!--zh-->
-合取处的布尔值 `true` 意味着两件事，私有辅助函数 `and-out` 把它拆开。给定 `a b : Bool` 与 `Bool→Type (a and b)` 的一个元素，它返回一对元素，分别属于 `Bool→Type a` 与 `Bool→Type b`。当 `a` 为 `false` 时，输入将不得不落入空类型 `Bool→Type false`，所以该情形由荒谬模式 `()` 直接打发。当 `a` 为 `true` 时，单位元 `tt` 证明第一个合取支，而给定的 `h` 本身就是第二个。
+合取处的布尔值 `true` 意味着两件事，私有辅助函数 `and-out` 把它拆开。给定 `a b : Bool` 与 `Bool→Type (a and b)` 的一个元素，它返回一对元素，分别属于 `Bool→Type a` 与 `Bool→Type b`。当 `a` 为 `false` 时，输入将不得不落入空类型 `Bool→Type false`，所以该情形由荒谬模式 `()` 直接打发。当 `a` 为 `true` 时，单位元 `_` 证明第一个合取支，而给定的 `h` 本身就是第二个。
 <!--ja-->
-連言におけるブール値 `true` は一度に二つのことを意味するので、プライベートな補助関数 `and-out` がそれを分解します。`a b : Bool` と `Bool→Type (a and b)` の元が与えられると、`Bool→Type a` と `Bool→Type b` それぞれの元の組を返します。`a` が `false` のとき、入力は空な型 `Bool→Type false` に属さねばならず、この場合は荒謬パターン `()` で片付きます。`a` が `true` のときは、単位元 `tt` が第一の連言肢を証明し、与えられた `h` がそのまま第二の連言肢になります。
+連言におけるブール値 `true` は一度に二つのことを意味するので、プライベートな補助関数 `and-out` がそれを分解します。`a b : Bool` と `Bool→Type (a and b)` の元が与えられると、`Bool→Type a` と `Bool→Type b` それぞれの元の組を返します。`a` が `false` のとき、入力は空な型 `Bool→Type false` に属さねばならず、この場合は荒謬パターン `()` で片付きます。`a` が `true` のときは、単位元 `_` が第一の連言肢を証明し、与えられた `h` がそのまま第二の連言肢になります。
 <!--/-->
 
 ```agda

@@ -16,6 +16,7 @@ This chapter develops two constructions of coded injections inside `L` and prove
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Base.Classical using ( LEM )
 
 module L.InjectionComposition {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -108,11 +109,6 @@ Internal existence is asserted through propositional truncation: a statement hol
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
-open import Cubical.Data.Nat using ( ℕ )
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
 ```
 
 <!--en-->
@@ -124,7 +120,6 @@ Some proofs move both components of a pair at once, and a two-place transport se
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.Prelude using ( subst2 )
 import Cubical.Foundations.Equiv as Equiv
 open Equiv using ( equivFun; invEq; retEq; _≃_ )
 open import Cubical.Foundations.Univalence using ( pathToEquiv )
@@ -157,7 +152,6 @@ Presentations pair index types with embeddings into the hierarchy, and their fib
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
-open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 
 ```
 
@@ -251,7 +245,7 @@ A fact about `ω` itself, at the strength the membership predicate supports: a m
 
 ```agda
 ω-limit : (γ : V ℓ) → ⟨ γ ∈ ω ⟩ → ⟨ sucV γ ∈ ω ⟩
-ω-limit γ γ∈ω = PT.rec (snd (sucV γ ∈ ω)) go (ω-mem→numeral γ γ∈ω)
+ω-limit γ γ∈ω = rec₁ (snd (sucV γ ∈ ω)) go (ω-mem→numeral γ γ∈ω)
   where
   go : Σ[ n ∈ ℕ ] (γ ≡ # n) → ⟨ sucV γ ∈ ω ⟩
   go (n , p) = subst (λ w → ⟨ sucV w ∈ ω ⟩) (sym p) (#∈ω (suc n))
@@ -309,7 +303,7 @@ The chase is a statement of the metatheory about presentation index types; it is
 
 ```agda
 no-inj-finite-ω : (n : ℕ) → (f : ⟪ ω ⟫ → ⟪ # n ⟫ × ⟪ # n ⟫)
-                → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
+                → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
 no-inj-finite-ω n f finj =
 ```
 
@@ -354,9 +348,9 @@ The clause lifts the exclusion to an arbitrary finite ordinal, and it stays at t
 ```agda
 finite-excl-ω : (β : V ℓ) → IsOrd β → ⟨ β ∈ ω ⟩
               → (f : ⟪ ω ⟫ → ⟪ β ⟫ × ⟪ β ⟫)
-              → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → Empty.⊥
+              → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
 finite-excl-ω β oβ β∈ω f finj =
-  PT.rec Empty.isProp⊥ go (ω-mem→numeral β β∈ω)
+  rec₁ isProp⊥ go (ω-mem→numeral β β∈ω)
 ```
 
 <!--en-->
@@ -380,7 +374,7 @@ Membership of `β` in `ω` yields, merely, a numeral with which `β` is identifi
 <!--/-->
 
 ```agda
-  go : Σ[ n ∈ ℕ ] (β ≡ # n) → Empty.⊥
+  go : Σ[ n ∈ ℕ ] (β ≡ # n) → ⊥₀
   go (n , p) = no-inj-finite-ω n f' finj'
     where
 ```
@@ -586,7 +580,7 @@ The backward reading turns membership into truncated data about a pair. A member
 ```agda
     out : (e : S) → ⟨ fst e ∈ fst rel ⟩
         → ∥ Σ[ x ∈ S ] Σ[ y ∈ S ] ((fst e ≡ pr (fst x) (fst y)) × ⟨ P x y ⟩) ∥₁
-    out e h = PT.rec squash₁ (λ { (x , hx) → PT.map
+    out e h = rec₁ squash₁ (λ { (x , hx) → map₁
       (λ { (y , q , hy) → x , y
          , subst ⟨_⟩ (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ e ∷ [])) q
 ```
@@ -648,7 +642,7 @@ For the genuine coded pair of `x` and `y`, the backward reading sharpens to an u
 
 ```agda
   pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst rel ⟩ → ⟨ P x y ⟩
-  pair-out x y h = PT.rec (snd (P x y))
+  pair-out x y h = rec₁ (snd (P x y))
     (λ { (x' , y' , q , h') →
       subst2 (λ a b → ⟨ P a b ⟩)
         (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .fst)))
@@ -776,7 +770,7 @@ Adequacy of the application atoms moves each conjunct to its intended membership
 
 ```agda
       read : (x z p : S) → ⟨ (z ∷ x ∷ p ∷ []) ⊨ body ⟩ → Chain x z
-      read x z p = PT.map (λ { (y , hf , hh) → y
+      read x z p = map₁ (λ { (y , hf , hh) → y
         , subst ⟨_⟩ (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ [])) hf
         , subst ⟨_⟩ (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ [])) hh })
 
@@ -792,7 +786,7 @@ The converse moves a linking witness back into the object language along the sam
 
 ```agda
       fill : (x z p : S) → Chain x z → ⟨ (z ∷ x ∷ p ∷ []) ⊨ body ⟩
-      fill x z p = PT.map (λ { (y , hf , hh) → y
+      fill x z p = map₁ (λ { (y , hf , hh) → y
         , subst ⟨_⟩ (sym (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ []))) hf
         , subst ⟨_⟩ (sym (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ []))) hh })
 
@@ -881,8 +875,8 @@ Suppose the composite pairs `x` with two values `y` and `y'`. Unwrapping both tr
 
 ```agda
   svK = svAt-in zero γK (λ x y y' p q →
-    PT.rec (setIsSet (fst y) (fst y'))
-      (λ { (w , (hf , hh)) → PT.rec (setIsSet (fst y) (fst y'))
+    rec₁ (setIsSet (fst y) (fst y'))
+      (λ { (w , (hf , hh)) → rec₁ (setIsSet (fst y) (fst y'))
         (λ { (w' , (hf' , hh')) →
           svAt-out zero γH svH w y y' hh
 ```
@@ -925,8 +919,8 @@ Suppose `y` receives both `x` and `x'` under the composite. The two truncated li
 
 ```agda
   ijK = injAt-in zero γK (λ y x x' p q →
-    PT.rec (setIsSet (fst x) (fst x'))
-      (λ { (w , (hf , hh)) → PT.rec (setIsSet (fst x) (fst x'))
+    rec₁ (setIsSet (fst x) (fst x'))
+      (λ { (w , (hf , hh)) → rec₁ (setIsSet (fst x) (fst x'))
         (λ { (w' , (hf' , hh')) →
           injAt-out zero γF ijF w x x' hf
 ```
@@ -972,8 +966,8 @@ One direction eliminates the first graph's domain condition directly.
     where
     fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst K) ⟩
         → ⟨ fst x ∈ fst D ⟩
-    fwd x = PT.rec (snd (fst x ∈ fst D))
-      (λ { (y , p) → PT.rec (snd (fst x ∈ fst D))
+    fwd x = rec₁ (snd (fst x ∈ fst D))
+      (λ { (y , p) → rec₁ (snd (fst x ∈ fst D))
 ```
 
 <!--en-->
@@ -1001,8 +995,8 @@ The other direction chains the two introductions. Given `x` in `D`, the first gr
 ```agda
     bwd : (x : S) → ⟨ fst x ∈ fst D ⟩
         → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst K) ⟩
-    bwd x mx = PT.rec squash₁
-      (λ { (w , hf) → PT.rec squash₁
+    bwd x mx = rec₁ squash₁
+      (λ { (w , hf) → rec₁ squash₁
         (λ { (z , hh) → ∣ z , K-in x w z mx (ranH w z hh) hf hh ∣₁ })
 ```
 
@@ -1030,7 +1024,7 @@ The range condition is the second graph's range clause applied at the intermedia
 
 ```agda
   ranK : (x z : S) → ⟨ pr (fst x) (fst z) ∈ fst K ⟩ → ⟨ fst z ∈ fst C ⟩
-  ranK x z h = PT.rec (snd (fst z ∈ fst C))
+  ranK x z h = rec₁ (snd (fst z ∈ fst C))
     (λ { (w , (_ , hh)) → ranH w z hh }) (K-out x z h)
 ```
 
@@ -1196,16 +1190,16 @@ inclusion-coded a b sub = ∣ I.G , I.code ∣₁
 ```
 
 <!--en-->
-Composition lifts in the same way: `PT.rec2` exposes both witnesses locally, builds their composite, and truncates the result again, without making a global choice of representatives.
+Composition lifts in the same way: `rec2` exposes both witnesses locally, builds their composite, and truncates the result again, without making a global choice of representatives.
 <!--zh-->
-复合同样提升：`PT.rec2` 在局部分支中展开两个见证，构造其复合，再次截断结果，而不作代表的全局选择。
+复合同样提升：`rec2` 在局部分支中展开两个见证，构造其复合，再次截断结果，而不作代表的全局选择。
 <!--ja-->
-合成も同様に持ち上がります。`PT.rec2` は二つの証人を局所的に取り出して合成を作り、結果を再び切り詰めるので、代表を大域的に選ぶ必要はありません。
+合成も同様に持ち上がります。`rec2` は二つの証人を局所的に取り出して合成を作り、結果を再び切り詰めるので、代表を大域的に選ぶ必要はありません。
 <!--/-->
 
 ```agda
 injl-trans : (a b c : S) → InjL a b → InjL b c → InjL a c
-injl-trans a b c = PT.rec2 PT.squash₁ step
+injl-trans a b c = rec2 squash₁ step
   where
 ```
 

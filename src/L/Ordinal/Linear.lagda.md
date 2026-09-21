@@ -36,6 +36,7 @@ The chapter runs under a single classical hypothesis, stated once as a module pa
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( isPropPropTrunc )
 open import Base.Classical using ( LEM )
 
 module L.Ordinal.Linear {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -55,8 +56,6 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ} using ( IsOrd )
 open import L.Ordinal {ℓ} using ( mem-ord )
-
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 ```
 
 <!--en-->
@@ -68,10 +67,6 @@ The decision procedure returns which of three cases holds, so the return type is
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
 import Cubical.Induction.WellFounded as WF
 ```
 
@@ -149,8 +144,8 @@ The statement is a conditional: if inclusion `A ⊆ᵇ B` is refutable, then a t
 <!--/-->
 
 ```agda
-¬⊆ᵇ→witness : (A B : S) → (A ⊆ᵇ B → Empty.⊥)
-            → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → Empty.⊥)) ∥₁
+¬⊆ᵇ→witness : (A B : S) → (A ⊆ᵇ B → ⊥₀)
+            → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) ∥₁
 ¬⊆ᵇ→witness A B ¬sub = decide (lem Witness)
   where
   Witness : hProp (ℓ-suc ℓ)
@@ -165,11 +160,11 @@ Suppose `Witness` is refutable. Then the refutation of inclusion can itself be r
 <!--/-->
 
 ```agda
-  Witness = ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → Empty.⊥)) ∥₁
-          , PT.isPropPropTrunc
-  decide : ⟨ Witness ⟩ ⊎ (⟨ Witness ⟩ → Empty.⊥) → ⟨ Witness ⟩
+  Witness = ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) ∥₁
+          , isPropPropTrunc
+  decide : ⟨ Witness ⟩ ⊎ (⟨ Witness ⟩ → ⊥₀) → ⟨ Witness ⟩
   decide (inl wit)  = wit
-  decide (inr ¬wit) = Empty.rec (¬sub sub)
+  decide (inr ¬wit) = ⊥₀-rec (¬sub sub)
 ```
 
 <!--en-->
@@ -185,7 +180,7 @@ The pointwise decision is worth pausing on, because it shows how a truncated con
     sub : A ⊆ᵇ B
     sub x x∈A = at (lem (x ∈ˢ B))
       where
-      at : ⟨ x ∈ˢ B ⟩ ⊎ (⟨ x ∈ˢ B ⟩ → Empty.⊥) → ⟨ x ∈ˢ B ⟩
+      at : ⟨ x ∈ˢ B ⟩ ⊎ (⟨ x ∈ˢ B ⟩ → ⊥₀) → ⟨ x ∈ˢ B ⟩
 ```
 
 <!--en-->
@@ -198,7 +193,7 @@ Assembling the pieces: the outer decision on `Witness` returns the truncated wit
 
 ```agda
       at (inl x∈B)  = x∈B
-      at (inr ¬x∈B) = Empty.rec (¬wit ∣ x , (x∈A , ¬x∈B) ∣₁)
+      at (inr ¬x∈B) = ⊥₀-rec (¬wit ∣ x , (x∈A , ¬x∈B) ∣₁)
 ```
 
 <!--en-->
@@ -274,7 +269,7 @@ The first failure case supposes `B ⊆ᵇ A` fails, so a member `b` of `B` outsi
 <!--/-->
 
 ```agda
-      fromB : Σ[ b ∈ S ] (⟨ b ∈ˢ B ⟩ × (⟨ b ∈ˢ A ⟩ → Empty.⊥)) → ⟨ A ∈ˢ B ⟩
+      fromB : Σ[ b ∈ S ] (⟨ b ∈ˢ B ⟩ × (⟨ b ∈ˢ A ⟩ → ⊥₀)) → ⟨ A ∈ˢ B ⟩
       fromB (b , (b∈B , ¬b∈A)) = at (IHB b b∈B (mem-ord {A = B} ordB b b∈B))
         where
         at : Tri A b → ⟨ A ∈ˢ B ⟩
@@ -291,9 +286,9 @@ The other two outcomes of comparing `A` with `b` are handled in turn. If `A ≡ 
 
 ```agda
         at (inr (inl A≡b)) = subst (λ w → ⟨ w ∈ˢ B ⟩) (sym A≡b) b∈B
-        at (inr (inr b∈A)) = Empty.rec (¬b∈A b∈A)
+        at (inr (inr b∈A)) = ⊥₀-rec (¬b∈A b∈A)
 
-      fromA : Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → Empty.⊥)) → ⟨ B ∈ˢ A ⟩
+      fromA : Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × (⟨ a ∈ˢ B ⟩ → ⊥₀)) → ⟨ B ∈ˢ A ⟩
       fromA (a , (a∈A , ¬a∈B)) =
         at (IHA a a∈A (mem-ord {A = A} ordA a a∈A) B ordB)
 ```
@@ -309,26 +304,26 @@ The mirrored helper `fromA` covers the other failure: `A ⊆ᵇ B` fails, so som
 ```agda
         where
         at : Tri a B → ⟨ B ∈ˢ A ⟩
-        at (inl a∈B)       = Empty.rec (¬a∈B a∈B)
+        at (inl a∈B)       = ⊥₀-rec (¬a∈B a∈B)
         at (inr (inl a≡B)) = subst (λ w → ⟨ w ∈ˢ A ⟩) a≡B a∈A
         at (inr (inr B∈a)) = ordA .fst B∈a a∈A
 ```
 
 <!--en-->
-With the two converters in hand, the four verdict combinations sort into the three answers. If both inclusions hold, mutual inclusion is equality by the previous subsection, and the middle answer is returned. If `A ⊆ᵇ B` holds but `B ⊆ᵇ A` fails, the truncated witness for the failure is eliminated with `PT.rec`, which is legal precisely because the target `⟨ A ∈ˢ B ⟩` is a proposition, its propositionhood supplied by the second component of the membership hProp. The result is the left answer `A ∈ˢ B`: this is the branch where failure of `B ⊆ᵇ A` concludes that `A` belongs to `B`.
+With the two converters in hand, the four verdict combinations sort into the three answers. If both inclusions hold, mutual inclusion is equality by the previous subsection, and the middle answer is returned. If `A ⊆ᵇ B` holds but `B ⊆ᵇ A` fails, the truncated witness for the failure is eliminated with `rec₁`, which is legal precisely because the target `⟨ A ∈ˢ B ⟩` is a proposition, its propositionhood supplied by the second component of the membership hProp. The result is the left answer `A ∈ˢ B`: this is the branch where failure of `B ⊆ᵇ A` concludes that `A` belongs to `B`.
 <!--zh-->
-两个转换器在手后，四种裁决组合归入三种答案。若两个包含都成立，由上一小节可知互相包含就是相等，返回中间答案。若 `A ⊆ᵇ B` 成立而 `B ⊆ᵇ A` 失败，则用 `PT.rec` 消去该失败的截断见证，这之所以合法，恰恰因为目标 `⟨ A ∈ˢ B ⟩` 是命题，其命题性由成员 hProp 的第二个分量提供。结果是左侧答案 `A ∈ˢ B`：这正是 `B ⊆ᵇ A` 失败而结论为 `A` 属于 `B` 的分支。
+两个转换器在手后，四种裁决组合归入三种答案。若两个包含都成立，由上一小节可知互相包含就是相等，返回中间答案。若 `A ⊆ᵇ B` 成立而 `B ⊆ᵇ A` 失败，则用 `rec₁` 消去该失败的截断见证，这之所以合法，恰恰因为目标 `⟨ A ∈ˢ B ⟩` 是命题，其命题性由成员 hProp 的第二个分量提供。结果是左侧答案 `A ∈ˢ B`：这正是 `B ⊆ᵇ A` 失败而结论为 `A` 属于 `B` 的分支。
 <!--ja-->
-二つの変換器が手にあれば、四つの判定の組み合わせは三つの答えに整理されます。両方の包含が成り立てば、相互包含は等号であり、中央の答えが返ります。`A ⊆ᵇ B` が成り立ち `B ⊆ᵇ A` が失敗する場合は、その失敗の切り詰められた証人を `PT.rec` で消去します。これが正当なのは、目標 `⟨ A ∈ˢ B ⟩` が命題であり、その命題性が所属 hProp の第二成分から供給されるからです。結果は左の答え `A ∈ˢ B` です。`B ⊆ᵇ A` の失敗から `A` が `B` に属すると結論するのがこの分岐です。
+二つの変換器が手にあれば、四つの判定の組み合わせは三つの答えに整理されます。両方の包含が成り立てば、相互包含は等号であり、中央の答えが返ります。`A ⊆ᵇ B` が成り立ち `B ⊆ᵇ A` が失敗する場合は、その失敗の切り詰められた証人を `rec₁` で消去します。これが正当なのは、目標 `⟨ A ∈ˢ B ⟩` が命題であり、その命題性が所属 hProp の第二成分から供給されるからです。結果は左の答え `A ∈ˢ B` です。`B ⊆ᵇ A` の失敗から `A` が `B` に属すると結論するのがこの分岐です。
 <!--/-->
 
 ```agda
 
-      decide : (A ⊆ᵇ B) ⊎ ((A ⊆ᵇ B) → Empty.⊥)
-             → (B ⊆ᵇ A) ⊎ ((B ⊆ᵇ A) → Empty.⊥) → Tri A B
+      decide : (A ⊆ᵇ B) ⊎ ((A ⊆ᵇ B) → ⊥₀)
+             → (B ⊆ᵇ A) ⊎ ((B ⊆ᵇ A) → ⊥₀) → Tri A B
       decide (inl A⊆B) (inl B⊆A) = inr (inl (ext-⊆ᵇ A⊆B B⊆A))
       decide (inl A⊆B) (inr ¬B⊆A) =
-        inl (PT.rec (snd (A ∈ˢ B)) fromB (¬⊆ᵇ→witness B A ¬B⊆A))
+        inl (rec₁ (snd (A ∈ˢ B)) fromB (¬⊆ᵇ→witness B A ¬B⊆A))
 ```
 
 <!--en-->
@@ -341,7 +336,7 @@ The last combination covers failure of `A ⊆ᵇ B`, whatever the second verdict
 
 ```agda
       decide (inr ¬A⊆B) _ =
-        inr (inr (PT.rec (snd (B ∈ˢ A)) fromA (¬⊆ᵇ→witness A B ¬A⊆B)))
+        inr (inr (rec₁ (snd (B ∈ˢ A)) fromA (¬⊆ᵇ→witness A B ¬A⊆B)))
 ```
 
 <!--en-->

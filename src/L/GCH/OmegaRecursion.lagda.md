@@ -27,6 +27,7 @@ The base library is opened, and excluded middle is received as an explicit hypot
 
 ```agda
 open import Base.Prelude
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Base.Classical using ( LEM )
 
 ```
@@ -119,8 +120,6 @@ The arithmetic of natural numbers, their bounded indices, and the conversions be
 ```agda
 open import Cubical.Data.Nat.Order
   using ( _≤_; ≤-refl; ≤-trans; <-weaken; pred-≤-pred; suc-≤-suc )
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
 ```
 
@@ -133,10 +132,6 @@ Several identifications below live in dependent pairs: an underlying set is acco
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_ )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```
 
@@ -151,8 +146,6 @@ The successor operation of the hierarchy and the truncation machinery complete t
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( sucV; #_ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 ```
 
@@ -608,7 +601,7 @@ Reading the downward formula preserves the existential as a propositional trunca
 
 ```agda
     down-out : ∀ {n} (f : Fin n) (γ : S ^ n) → ⟨ γ ⊨ downAt f ⟩ → Down (lookup f γ)
-    down-out f γ h x' v' x p m = PT.map
+    down-out f γ h x' v' x p m = map₁
       (λ { (v , q) → v , subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc f)))) (suc zero) zero (v ∷ x ∷ v' ∷ x' ∷ γ)) q })
       (h x' v' x (subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero) (x ∷ v' ∷ x' ∷ γ))) p) m)
 
@@ -624,7 +617,7 @@ Filling runs the transport the other way, from the host-level truncated entry to
 
 ```agda
     down-in : ∀ {n} (f : Fin n) (γ : S ^ n) → Down (lookup f γ) → ⟨ γ ⊨ downAt f ⟩
-    down-in f γ h x' v' x p m = PT.map
+    down-in f γ h x' v' x p m = map₁
       (λ { (v , q) → v , subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc f)))) (suc zero) zero (v ∷ x ∷ v' ∷ x' ∷ γ))) q })
       (h x' v' x (subst ⟨_⟩ (appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero) (x ∷ v' ∷ x' ∷ γ)) p) m)
 
@@ -698,7 +691,7 @@ From a satisfaction of `itFo` one recovers only the propositional truncation of 
 ```agda
     itFo-out : (y q : S) → ⟨ (y ∷ q ∷ []) ⊨ itFo ⟩
              → ∥ Σ[ F ∈ S ] (Correct F × Holds F q y) ∥₁
-    itFo-out y q = PT.map (λ { (F , (hc , ha)) → F
+    itFo-out y q = map₁ (λ { (F , (hc , ha)) → F
       , ( corr-out zero (F ∷ y ∷ q ∷ []) hc
         , subst ⟨_⟩ (appAt-adequate zero (suc (suc zero)) (suc zero) (F ∷ y ∷ q ∷ [])) ha ) })
 ```
@@ -746,7 +739,7 @@ The uniqueness lemma begins by cases on the iterate index: at zero, the zero cla
            → Holds F (nn k) v → fst v ≡ fst (it k)
   corr-val F (z , (s , d)) zero    v h = z v h
   corr-val F (z , (s , d)) (suc k) v h =
-    PT.rec (setIsSet (fst v) (fst (it (suc k)))) read
+    rec₁ (setIsSet (fst v) (fst (it (suc k)))) read
 ```
 
 <!--en-->
@@ -789,7 +782,7 @@ The value at a canonical numeral is unique: any satisfaction of the iteration fo
 
 ```agda
   itFo-val : (k : ℕ) (v : S) → ⟨ (v ∷ nn k ∷ []) ⊨ itFo ⟩ → fst v ≡ fst (it k)
-  itFo-val k v h = PT.rec (setIsSet (fst v) (fst (it k)))
+  itFo-val k v h = rec₁ (setIsSet (fst v) (fst (it k)))
     (λ { (F , (hc , hv)) → corr-val F hc k v hv }) (itFo-out v (nn k) h)
 ```
 
@@ -911,7 +904,7 @@ The outward reading decomposes any member into a bounded index and its iterate v
 
   Fn-out : (n : ℕ) (y : S) → ⟨ y ∈ˢ Fn n ⟩
          → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × (fst y ≡ pr (# k) (fst (it k)))) ∥₁
-  Fn-out n y h = PT.map (λ { (i , q) → toℕ i
+  Fn-out n y h = map₁ (λ { (i , q) → toℕ i
     , (pred-≤-pred (toℕ<n i) , sym q ∙ prʟ-fst (nn (toℕ i)) (it (toℕ i))) })
     (finSet-out (suc n) (λ i → fst (e (toℕ i))) (fst y) h)
 ```
@@ -927,7 +920,7 @@ The pair reading decomposes any entry of the finite table into a bounded index a
 ```agda
   Fn-pair : (n : ℕ) (x v : S) → Holds (Fn n) x v
           → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k)))) ∥₁
-  Fn-pair n x v h = PT.map (λ { (k , (p , q)) → k , (p , pr-inj (sym (prʟ-fst x v) ∙ q)) })
+  Fn-pair n x v h = map₁ (λ { (k , (p , q)) → k , (p , pr-inj (sym (prʟ-fst x v) ∙ q)) })
     (Fn-out n (prʟ x v) (subst (λ w → ⟨ w ∈ fst (Fn n) ⟩) (sym (prʟ-fst x v)) h))
 
 ```
@@ -945,7 +938,7 @@ The finite table is correct: the three clauses are assembled from the pair readi
   Fn-correct n = zeroC , (stepC , downC)
     where
     zeroC : Zero (Fn n)
-    zeroC v h = PT.rec (setIsSet (fst v) (fst a))
+    zeroC v h = rec₁ (setIsSet (fst v) (fst a))
 ```
 
 <!--en-->
@@ -972,7 +965,7 @@ For the step clause, read the two table entries under propositional truncation. 
 
 ```agda
     stepC : Step (Fn n)
-    stepC x v x' v' hxv hx'v' s = PT.rec (snd ((v' ∷ v ∷ []) ⊨ stepFo)) outer (Fn-pair n x v hxv)
+    stepC x v x' v' hxv hx'v' s = rec₁ (snd ((v' ∷ v ∷ []) ⊨ stepFo)) outer (Fn-pair n x v hxv)
       where
       outer : Σ[ k ∈ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k))))
             → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
@@ -987,7 +980,7 @@ After the first reading has exposed `k`, the second exposes an index `k'` for th
 <!--/-->
 
 ```agda
-      outer (k , (_ , (ex , ev))) = PT.rec (snd ((v' ∷ v ∷ []) ⊨ stepFo)) inner (Fn-pair n x' v' hx'v')
+      outer (k , (_ , (ex , ev))) = rec₁ (snd ((v' ∷ v ∷ []) ⊨ stepFo)) inner (Fn-pair n x' v' hx'v')
         where
         inner : Σ[ k' ∈ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
               → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
@@ -1034,7 +1027,7 @@ The downward clause is proved by eliminating the truncated pair reading and find
 
 ```agda
     downC : Down (Fn n)
-    downC x' v' x h m = PT.rec squash₁ outer (Fn-pair n x' v' h)
+    downC x' v' x h m = rec₁ squash₁ outer (Fn-pair n x' v' h)
       where
       outer : Σ[ k' ∈ ℕ ] ((k' ≤ n) × ((fst x' ≡ # k') × (fst v' ≡ fst (it k'))))
             → ∥ Σ[ v ∈ S ] Holds (Fn n) x v ∥₁
@@ -1049,7 +1042,7 @@ The smaller index's entry is produced by the inward reading of the finite table,
 <!--/-->
 
 ```agda
-      outer (k' , (p' , (ex' , _))) = PT.map
+      outer (k' , (p' , (ex' , _))) = map₁
         (λ { (j , (j< , ej)) → it j
            , subst (λ t → ⟨ pr t (fst (it j)) ∈ fst (Fn n) ⟩) (sym ej)
                (Fn-in n j (≤-trans (<-weaken j<) p')) })
@@ -1093,7 +1086,7 @@ Membership in the model's natural-number set `ωʟ` recovers such a numeral repr
 
 ```agda
   ω-num : (q : S) → ⟨ q ∈ˢ ωʟ ⟩ → ∥ Num q ∥₁
-  ω-num q = PT.map (λ { (i , p) → lower i , S≡ p })
+  ω-num q = map₁ (λ { (i , p) → lower i , S≡ p })
 
 ```
 
@@ -1122,7 +1115,7 @@ Functionality is assembled from a merely-existing numeral representation: the de
 <!--/-->
 
 ```agda
-      ; funct = λ q q∈ → mereFunct itFo q (PT.map (wit q) (ω-num q q∈)) }
+      ; funct = λ q q∈ → mereFunct itFo q (map₁ (wit q) (ω-num q q∈)) }
       where
       wit : (q : S) → Num q
           → Σ[ y ∈ S ] (⟨ (y ∷ q ∷ []) ⊨ itFo ⟩
@@ -1195,8 +1188,8 @@ Every member of the value domain is, merely, some iterate value: the outward rea
 
 ```agda
   values-out : (y : S) → ⟨ y ∈ˢ values ⟩ → ∥ Σ[ n ∈ ℕ ] (fst y ≡ fst (it n)) ∥₁
-  values-out y hy = PT.rec squash₁
-    (λ { (q , (q∈ , h)) → PT.map
+  values-out y hy = rec₁ squash₁
+    (λ { (q , (q∈ , h)) → map₁
       (λ { (k , eq) → k , itFo-val k y (itFo-at y (sym eq) h) }) (ω-num q q∈) })
     (VR.table-out y hy)
 ```
@@ -1240,8 +1233,8 @@ Every member of the union merely lies in some finite iterate. The proof eliminat
 
 ```agda
   iterUnion-out : (z : S) → ⟨ z ∈ˢ iterUnion ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ fst z ∈ fst (it n) ⟩ ∥₁
-  iterUnion-out z h = PT.rec squash₁
-    (λ { (B , (hB , hz)) → PT.map
+  iterUnion-out z h = rec₁ squash₁
+    (λ { (B , (hB , hz)) → map₁
       (λ { (n , eB) → n , subst (λ w → ⟨ fst z ∈ w ⟩) eB hz })
       (values-out (B , isL-trans {x = fst values} {y = B} hB (snd values)) hB) })
 ```
@@ -1319,8 +1312,8 @@ Conversely, every graph member is merely equal to a canonical pair `(# n, it n)`
 
 ```agda
   iter-out : (y : S) → ⟨ y ∈ˢ iter ⟩ → ∥ Σ[ n ∈ ℕ ] (fst y ≡ pr (# n) (fst (it n))) ∥₁
-  iter-out y hy = PT.rec squash₁
-    (λ { (q , q∈ , e) → PT.map (λ { (k , eq) → k
+  iter-out y hy = rec₁ squash₁
+    (λ { (q , q∈ , e) → map₁ (λ { (k , eq) → k
       , e ∙ cong₂ pr (cong fst (sym eq))
         (cong fst (VR.val-uniq q q∈ (it k) (itFo-at (it k) eq (it-graph k)))) }) (ω-num q q∈) })
 ```

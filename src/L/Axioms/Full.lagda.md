@@ -140,20 +140,16 @@ Several host constructions make the semantic equalities precise. `⇔toPath`
 turns implications in both directions between proposition-valued truths into a
 path, after which function extensionality can identify predicates pointwise.
 The indexed existential used in `hProp` is propositionally truncated. In the
-replacement proof, `PT.rec` eliminates such an existence only into another
-proposition, while `PT.map` transforms witnesses without taking them outside the
+replacement proof, `rec₁` eliminates such an existence only into another
+proposition, while `map₁` transforms witnesses without taking them outside the
 truncation. Neither operation chooses a source globally.
 <!--zh-->
-若干宿主层构造使语义等同成为精确的路径。`⇔toPath` 把命题值真值之间的双向蕴含变成路径，随后函数外延性便可从逐点路径认同两个谓词。`hProp` 中的索引存在经过命题截断。在替换证明中，`PT.rec` 只把这种存在消去到另一个命题，`PT.map` 则在不把见证带出命题截断的前提下变换见证。这两种操作都不会全局选定一个源。
+若干宿主层构造使语义等同成为精确的路径。`⇔toPath` 把命题值真值之间的双向蕴含变成路径，随后函数外延性便可从逐点路径认同两个谓词。`hProp` 中的索引存在经过命题截断。在替换证明中，`rec₁` 只把这种存在消去到另一个命题，`map₁` 则在不把见证带出命题截断的前提下变换见证。这两种操作都不会全局选定一个源。
 <!--ja-->
-いくつかのホスト側の構成により、意味論上の一致が正確なパスになります。`⇔toPath` は命題値の真理の間の双方向の含意をパスに変え、関数外延性は各点でのパスから述語を同一視します。`hProp` の添字付き存在は命題的切り詰めを受けています。置換公理の証明では、`PT.rec` はそのような存在を別の命題へだけ除去し、`PT.map` は証人を切り詰めの外へ出さずに変換します。どちらの操作も、始域の要素を大域的に選びません。
+いくつかのホスト側の構成により、意味論上の一致が正確なパスになります。`⇔toPath` は命題値の真理の間の双方向の含意をパスに変え、関数外延性は各点でのパスから述語を同一視します。`hProp` の添字付き存在は命題的切り詰めを受けています。置換公理の証明では、`rec₁` はそのような存在を別の命題へだけ除去し、`map₁` は証人を切り詰めの外へ出さずに変換します。どちらの操作も、始域の要素を大域的に選びません。
 <!--/-->
 
 ```agda
-open import Cubical.Data.Unit using ( tt* )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 ```
 
@@ -431,14 +427,14 @@ The parameter now lies in the reflection stage. `stage-mem` gives
 Reflection is available only for environments whose entries lie in
 `Lset β`, so the membership conjunct in separation does essential work. Given
 `x ∈ˢ a`, transitivity combines this fact with `fa∈β` to put `fst x` in
-`Lset β`; `tt*` supplies the vacuous condition for the empty tail of the
+`Lset β`; `_` supplies the vacuous condition for the empty tail of the
 one-entry environment. The reflection component of `R` then gives `bridge`, a
 path from satisfaction of `φ` at `x` to satisfaction of its relativization.
 No comparison is asserted for arbitrary `x : S` outside `a`.
 <!--zh-->
-反射只适用于条目落在 `Lset β` 中的环境，因此分离谓词中的成员合取项不可缺少。给定 `x ∈ˢ a`，传递性把该事实与 `fa∈β` 合起来，得到 `fst x ∈ Lset β`；`tt*` 则给出单元素环境空尾部的平凡条件。于是，`R` 的反射分量给出 `bridge`，即 `φ` 在 `x` 处的满足关系与其相对化的满足关系之间的路径。对于 `a` 外的任意 `x : S`，这里不作比较。
+反射只适用于条目落在 `Lset β` 中的环境，因此分离谓词中的成员合取项不可缺少。给定 `x ∈ˢ a`，传递性把该事实与 `fa∈β` 合起来，得到 `fst x ∈ Lset β`；`_` 则给出单元素环境空尾部的平凡条件。于是，`R` 的反射分量给出 `bridge`，即 `φ` 在 `x` 处的满足关系与其相对化的满足关系之间的路径。对于 `a` 外的任意 `x : S`，这里不作比较。
 <!--ja-->
-反映を適用できるのは、成分が `Lset β` に属する環境だけなので、分出公理の述語にある所属の連言が本質的な役割を果たします。`x ∈ˢ a` が与えられると、推移性によりこの事実と `fa∈β` から `fst x ∈ Lset β` が得られ、`tt*` が一成分環境の空の末尾に対する自明な条件を与えます。そこで `R` の反映成分を使うと、`x` における `φ` の充足関係から、その相対化の充足関係へのパス `bridge` が得られます。`a` の外にある任意の `x : S` については、比較を主張しません。
+反映を適用できるのは、成分が `Lset β` に属する環境だけなので、分出公理の述語にある所属の連言が本質的な役割を果たします。`x ∈ˢ a` が与えられると、推移性によりこの事実と `fa∈β` から `fst x ∈ Lset β` が得られ、`_` が一成分環境の空の末尾に対する自明な条件を与えます。そこで `R` の反映成分を使うと、`x` における `φ` の充足関係から、その相対化の充足関係へのパス `bridge` が得られます。`a` の外にある任意の `x : S` については、比較を主張しません。
 <!--/-->
 
 ```agda
@@ -641,14 +637,14 @@ The equality `Q≡` is obtained pointwise. For each candidate `y`, `into y` and
 `out y` prove the two implications between `Image y` and `BoundedImage y`;
 `⇔toPath` turns them into a path of proposition values, and `funExt` combines
 these paths into equality of predicates. The forward implication begins with a
-propositionally truncated source. `PT.rec` may inspect such a witness here
+propositionally truncated source. `rec₁` may inspect such a witness here
 because its target is the proposition underlying `BoundedImage y`, as certified
 by `snd (BoundedImage y)`. The witness is used only within that propositional
 target and cannot be returned as untruncated data.
 <!--zh-->
-相等 `Q≡` 由逐点论证得到。对每个候选者 `y`，`into y` 与 `out y` 给出 `Image y` 和 `BoundedImage y` 之间的两个方向；`⇔toPath` 把它们化为命题值之间的路径，`funExt` 再把这些逐点路径合成谓词的相等。正向从经过命题截断的源开始。此处 `PT.rec` 可以考察这样的见证，因为它的目标是 `BoundedImage y` 的底层命题，`snd (BoundedImage y)` 正是对此的证明。见证只在这个命题目标内部使用，不能作为未截断的数据返回。
+相等 `Q≡` 由逐点论证得到。对每个候选者 `y`，`into y` 与 `out y` 给出 `Image y` 和 `BoundedImage y` 之间的两个方向；`⇔toPath` 把它们化为命题值之间的路径，`funExt` 再把这些逐点路径合成谓词的相等。正向从经过命题截断的源开始。此处 `rec₁` 可以考察这样的见证，因为它的目标是 `BoundedImage y` 的底层命题，`snd (BoundedImage y)` 正是对此的证明。见证只在这个命题目标内部使用，不能作为未截断的数据返回。
 <!--ja-->
-等式 `Q≡` は各点での議論から得られます。候補 `y` ごとに、`into y` と `out y` が `Image y` と `BoundedImage y` の間の二つの含意を与えます。`⇔toPath` はそれらを命題値の間のパスにし、`funExt` は各点のパスを述語の等式へまとめます。順方向は、命題的切り詰めを受けた始域の要素から始まります。ここで `PT.rec` がその証人を調べられるのは、行き先が `BoundedImage y` の基礎にある命題だからであり、`snd (BoundedImage y)` がまさにそのことを証明します。証人はこの命題の中でだけ使われ、切り詰められていないデータとして返されることはありません。
+等式 `Q≡` は各点での議論から得られます。候補 `y` ごとに、`into y` と `out y` が `Image y` と `BoundedImage y` の間の二つの含意を与えます。`⇔toPath` はそれらを命題値の間のパスにし、`funExt` は各点のパスを述語の等式へまとめます。順方向は、命題的切り詰めを受けた始域の要素から始まります。ここで `rec₁` がその証人を調べられるのは、行き先が `BoundedImage y` の基礎にある命題だからであり、`snd (BoundedImage y)` がまさにそのことを証明します。証人はこの命題の中でだけ使われ、切り詰められていないデータとして返されることはありません。
 <!--/-->
 
 ```agda
@@ -656,7 +652,7 @@ target and cannot be returned as untruncated data.
     Q≡ = funExt (λ y → ⇔toPath (into y) (out y))
       where
       into : (y : S) → ⟨ Image y ⟩ → ⟨ BoundedImage y ⟩
-      into y = PT.rec (snd (BoundedImage y)) λ { (x , (x∈a , h)) →
+      into y = rec₁ (snd (BoundedImage y)) λ { (x , (x∈a , h)) →
 ```
 
 <!--en-->
@@ -684,7 +680,7 @@ the body of `imageFo`. Thus the branch constructs both parts of
 For the reverse implication, the stage-membership component is simply
 discarded. Satisfaction of `imageFo` already contains, under propositional
 truncation, a source `x`, its membership in `a`, and satisfaction of
-`swapFo φ` at `x ∷ y ∷ []`. The map `PT.map` keeps the same source and
+`swapFo φ` at `x ∷ y ∷ []`. The map `map₁` keeps the same source and
 membership proof inside the truncation while transport along `⊨-swap φ x y`
 changes the last component to satisfaction of `φ` at `y ∷ x ∷ []`. The result
 is `Image y`. Together with the forward implication this proves `Q≡`, and the
@@ -692,14 +688,14 @@ transport in the defining equation above converts the set obtained by full
 separation into the unique set required by full replacement. No witness is
 selected during this comparison.
 <!--zh-->
-反向蕴含直接丢弃层成员关系这一分量。`imageFo` 的满足已经在命题截断之下包含一个源 `x`、它属于 `a` 的证明，以及 `swapFo φ` 在 `x ∷ y ∷ []` 中成立的证明。`PT.map` 把同一个源及其成员证明保留在命题截断内部，同时沿 `⊨-swap φ x y` 运输，把最后一项变为 `φ` 在 `y ∷ x ∷ []` 中的满足；所得正是 `Image y`。它与正向蕴含共同证明 `Q≡`，而定义等式开头的运输则把完整分离得到的集合变为完整替换所要求的唯一集合。这次比较没有选出任何见证。
+反向蕴含直接丢弃层成员关系这一分量。`imageFo` 的满足已经在命题截断之下包含一个源 `x`、它属于 `a` 的证明，以及 `swapFo φ` 在 `x ∷ y ∷ []` 中成立的证明。`map₁` 把同一个源及其成员证明保留在命题截断内部，同时沿 `⊨-swap φ x y` 运输，把最后一项变为 `φ` 在 `y ∷ x ∷ []` 中的满足；所得正是 `Image y`。它与正向蕴含共同证明 `Q≡`，而定义等式开头的运输则把完整分离得到的集合变为完整替换所要求的唯一集合。这次比较没有选出任何见证。
 <!--ja-->
-逆向きの含意では、段階への所属の成分をそのまま捨てます。`imageFo` の充足はすでに、命題的切り詰めの下に、始域の要素 `x`、それが `a` に属すことの証明、そして `x ∷ y ∷ []` における `swapFo φ` の充足を含んでいます。`PT.map` は同じ始域の要素と所属の証明を命題的切り詰めの内側に保ったまま、`⊨-swap φ x y` に沿う輸送によって最後の成分を `y ∷ x ∷ []` における `φ` の充足へ変えます。得られるのは `Image y` です。これと順方向の含意から `Q≡` が証明され、上の定義式の冒頭にある輸送が、完全な分出公理で得た集合を、完全な置換公理が要求する一意な集合へ変えます。この比較では証人を一つも選び出していません。
+逆向きの含意では、段階への所属の成分をそのまま捨てます。`imageFo` の充足はすでに、命題的切り詰めの下に、始域の要素 `x`、それが `a` に属すことの証明、そして `x ∷ y ∷ []` における `swapFo φ` の充足を含んでいます。`map₁` は同じ始域の要素と所属の証明を命題的切り詰めの内側に保ったまま、`⊨-swap φ x y` に沿う輸送によって最後の成分を `y ∷ x ∷ []` における `φ` の充足へ変えます。得られるのは `Image y` です。これと順方向の含意から `Q≡` が証明され、上の定義式の冒頭にある輸送が、完全な分出公理で得た集合を、完全な置換公理が要求する一意な集合へ変えます。この比較では証人を一つも選び出していません。
 <!--/-->
 
 ```agda
       out : (y : S) → ⟨ BoundedImage y ⟩ → ⟨ Image y ⟩
-      out y (_ , h) = PT.map (λ { (x , (x∈a , h')) →
+      out y (_ , h) = map₁ (λ { (x , (x∈a , h')) →
         x , (x∈a , subst ⟨_⟩ (⊨-swap φ x y) h') }) h
 ```
 

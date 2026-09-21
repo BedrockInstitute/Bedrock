@@ -90,7 +90,6 @@ open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf; natOrder )
 
 open import Cubical.Data.Bool using ( Bool; true; false; false≢true )
-open import Cubical.Data.Nat using ( _+_ )
 ```
 
 <!--en-->
@@ -104,9 +103,6 @@ Booleans enter as masks: to enumerate the subsets of a tallied set, each entry i
 ```agda
 open import Cubical.Data.Nat.Order using ( _<_; <-trans; ¬m<m; <-wellfounded; _≟_ )
 import Cubical.Data.Nat.Order as NatOrder
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -118,9 +114,6 @@ Well-foundedness here is the accessibility predicate `Acc`: a point is accessibl
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.Induction.WellFounded
   using ( Acc; acc; WellFounded; isPropAcc; module WFI )
 ```
@@ -134,7 +127,6 @@ For a set `x` in the cumulative hierarchy, `⟪ x ⟫` is its small presentation
 <!--/-->
 
 ```agda
-open import Cubical.Relation.Nullary using ( isProp¬ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -548,7 +540,7 @@ Its proof mirrors the recursion from the other end. A position in an empty famil
 <!--/-->
 
 ```agda
-select-in (suc n) f (false ∷ v) zero    e = Empty.rec (false≢true e)
+select-in (suc n) f (false ∷ v) zero    e = ⊥₀-rec (false≢true e)
 select-in (suc n) f (false ∷ v) (suc i) e = select-in n (λ i → f (suc i)) v i e
 select-in (suc n) f (true ∷ v)  zero    e = zero , refl
 select-in (suc n) f (true ∷ v)  (suc i) e = step (select-in n (λ i → f (suc i)) v i e)
@@ -637,11 +629,11 @@ This conversion is one concrete use of excluded middle in the tally construction
 <!--/-->
 
 ```agda
-decideOf : (P : hProp (ℓ-suc ℓ)) → (⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → Bool
+decideOf : (P : hProp (ℓ-suc ℓ)) → (⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)) → Bool
 decideOf P (inl _) = true
 decideOf P (inr _) = false
 
-decide-true : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → ⟨ P ⟩ → decideOf P s ≡ true
+decide-true : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)) → ⟨ P ⟩ → decideOf P s ≡ true
 decide-true P (inl _)  p = refl
 ```
 
@@ -654,11 +646,11 @@ The two round trips connect the bit back to the truth value. `decide-true` says 
 <!--/-->
 
 ```agda
-decide-true P (inr np) p = Empty.rec (np p)
+decide-true P (inr np) p = ⊥₀-rec (np p)
 
-decide-sound : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥)) → decideOf P s ≡ true → ⟨ P ⟩
+decide-sound : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)) → decideOf P s ≡ true → ⟨ P ⟩
 decide-sound P (inl p) _ = p
-decide-sound P (inr _) e = Empty.rec (false≢true e)
+decide-sound P (inr _) e = ⊥₀-rec (false≢true e)
 ```
 
 <!--en-->
@@ -738,7 +730,7 @@ The proof composes two steps. First, `finSet-out` unwraps membership in the span
 <!--/-->
 
 ```agda
-  part-out v y y∈ = PT.map step
+  part-out v y y∈ = map₁ step
     (finSet-out (chosen v .fst) (λ j → ⟪ Lset σ ⟫↪ (chosen v .snd j)) y y∈)
     where
     step : Σ[ j ∈ Fin (chosen v .fst) ] (⟪ Lset σ ⟫↪ (chosen v .snd j) ≡ y)
@@ -824,7 +816,7 @@ Membership in a set of the hierarchy is a proposition, so extensionality `extens
   part-mask x x∈ = extensionalV (λ y → ⇔toPath (fwd y) (bwd y))
     where
     fwd : (y : S) → ⟨ y ∈ˢ part (maskOf x) ⟩ → ⟨ y ∈ˢ x ⟩
-    fwd y y∈ = PT.rec (snd (y ∈ˢ x)) step (part-out (maskOf x) y y∈)
+    fwd y y∈ = rec₁ (snd (y ∈ˢ x)) step (part-out (maskOf x) y y∈)
       where
 ```
 
@@ -855,7 +847,7 @@ The backward direction starts from membership of `y` in `x` and must produce mem
 ```agda
                  (λ z → decideOf (z ∈ˢ x) (lem (z ∈ˢ x))) i) ∙ e))
     bwd : (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ part (maskOf x) ⟩
-    bwd y y∈x = PT.rec (snd (y ∈ˢ part (maskOf x))) step
+    bwd y y∈x = rec₁ (snd (y ∈ˢ part (maskOf x))) step
       (onto y (𝒟ₒ∋⊆ (Lset σ) x x∈ y y∈x))
       where
 ```
@@ -947,7 +939,7 @@ Fix a strict relation `≺` on `A` with trichotomy, irreflexivity and transitivi
 ```agda
 module Search {A : Type (ℓ-suc ℓ)} (_≺_ : A → A → Type (ℓ-suc ℓ))
               (tri : (a b : A) → Tri (a ≺ b) (a ≡ b) (b ≺ a))
-              (irr : (a : A) → a ≺ a → Empty.⊥)
+              (irr : (a : A) → a ≺ a → ⊥₀)
               (trans : (a b c : A) → a ≺ b → b ≺ c → a ≺ c) where
 
   Least : (P : A → hProp (ℓ-suc ℓ)) → A → Type (ℓ-suc ℓ)
@@ -962,12 +954,12 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 <!--/-->
 
 ```agda
-  Least P m = ⟨ P m ⟩ × ((b : A) → ⟨ P b ⟩ → b ≺ m → Empty.⊥)
+  Least P m = ⟨ P m ⟩ × ((b : A) → ⟨ P b ⟩ → b ≺ m → ⊥₀)
 
   Found : (P : A → hProp (ℓ-suc ℓ)) (n : ℕ) (f : Fin n → A) → Type (ℓ-suc ℓ)
   Found P n f =
-    (Σ[ i ∈ Fin n ] (⟨ P (f i) ⟩ × ((j : Fin n) → ⟨ P (f j) ⟩ → f j ≺ f i → Empty.⊥)))
-    ⊎ ((i : Fin n) → ⟨ P (f i) ⟩ → Empty.⊥)
+    (Σ[ i ∈ Fin n ] (⟨ P (f i) ⟩ × ((j : Fin n) → ⟨ P (f j) ⟩ → f j ≺ f i → ⊥₀)))
+    ⊎ ((i : Fin n) → ⟨ P (f i) ⟩ → ⊥₀)
 ```
 
 <!--en-->
@@ -996,7 +988,7 @@ The first clause of `combine` handles the case where the tail already yielded a 
 <!--/-->
 
 ```agda
-            → (⟨ P (f zero) ⟩ ⊎ (⟨ P (f zero) ⟩ → Empty.⊥)) → Found P (suc n) f
+            → (⟨ P (f zero) ⟩ ⊎ (⟨ P (f zero) ⟩ → ⊥₀)) → Found P (suc n) f
     combine (inl (i , pi , mi)) (inl p₀) = decide (tri (f zero) (f (suc i)))
       where
       decide : Tri (f zero ≺ f (suc i)) (f zero ≡ f (suc i)) (f (suc i) ≺ f zero)
@@ -1014,7 +1006,7 @@ If the head is strictly below the tail's champion, the head becomes the new cham
 ```agda
       decide (lt h) = inl (zero , (p₀ , minAt))
         where
-        minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f zero → Empty.⊥
+        minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f zero → ⊥₀
         minAt zero    pj hj = irr (f zero) hj
         minAt (suc j) pj hj = mi j pj (trans (f (suc j)) (f zero) (f (suc i)) hj h)
 ```
@@ -1030,7 +1022,7 @@ If the head equals the tail's current least candidate, that candidate remains le
 ```agda
       decide (eq h) = inl (suc i , (pi , minAt))
         where
-        minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f (suc i) → Empty.⊥
+        minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f (suc i) → ⊥₀
         minAt zero    pj hj = irr (f (suc i)) (subst (λ w → w ≺ f (suc i)) h hj)
         minAt (suc j) pj hj = mi j pj hj
 ```
@@ -1046,7 +1038,7 @@ If the tail's champion is strictly below the head, it survives. A hypothetical e
 ```agda
       decide (gt h) = inl (suc i , (pi , minAt))
         where
-        minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f (suc i) → Empty.⊥
+        minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f (suc i) → ⊥₀
         minAt zero    pj hj = irr (f (suc i)) (trans (f (suc i)) (f zero) (f (suc i)) h hj)
         minAt (suc j) pj hj = mi j pj hj
 ```
@@ -1062,8 +1054,8 @@ The second clause keeps the tail's champion when the head fails the predicate. N
 ```agda
     combine (inl (i , pi , mi)) (inr n₀) = inl (suc i , (pi , minAt))
       where
-      minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f (suc i) → Empty.⊥
-      minAt zero    pj hj = Empty.rec (n₀ pj)
+      minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f (suc i) → ⊥₀
+      minAt zero    pj hj = ⊥₀-rec (n₀ pj)
       minAt (suc j) pj hj = mi j pj hj
 ```
 
@@ -1078,9 +1070,9 @@ Symmetrically, when the tail had no satisfier at all and the head does satisfy t
 ```agda
     combine (inr none) (inl p₀) = inl (zero , (p₀ , minAt))
       where
-      minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f zero → Empty.⊥
+      minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f zero → ⊥₀
       minAt zero    pj hj = irr (f zero) hj
-      minAt (suc j) pj hj = Empty.rec (none j pj)
+      minAt (suc j) pj hj = ⊥₀-rec (none j pj)
 ```
 
 <!--en-->
@@ -1094,7 +1086,7 @@ The last clause is the agreement case: neither the tail nor the head supplies a 
 ```agda
     combine (inr none) (inr n₀) = inr atAll
       where
-      atAll : (i : Fin (suc n)) → ⟨ P (f i) ⟩ → Empty.⊥
+      atAll : (i : Fin (suc n)) → ⟨ P (f i) ⟩ → ⊥₀
       atAll zero    p = n₀ p
       atAll (suc i) p = none i p
 ```
@@ -1126,11 +1118,11 @@ Inside `least`, the auxiliary `nowhere` disposes of the scan's no-satisfier bran
 <!--/-->
 
 ```agda
-      nowhere : ((i : Fin n) → ⟨ P (f i) ⟩ → Empty.⊥) → Empty.⊥
-      nowhere none = PT.rec Empty.isProp⊥ atWitness h
+      nowhere : ((i : Fin n) → ⟨ P (f i) ⟩ → ⊥₀) → ⊥₀
+      nowhere none = rec₁ isProp⊥ atWitness h
         where
-        atWitness : Σ[ a ∈ A ] ⟨ P a ⟩ → Empty.⊥
-        atWitness (a , pa) = PT.rec Empty.isProp⊥
+        atWitness : Σ[ a ∈ A ] ⟨ P a ⟩ → ⊥₀
+        atWitness (a , pa) = rec₁ isProp⊥
 ```
 
 <!--en-->
@@ -1146,7 +1138,7 @@ Concretely, the witness supplies an element `a` with `⟨ P a ⟩`, and the cove
       decide : Found P n f → Σ[ m ∈ A ] Least P m
       decide (inl (i , pi , mi)) = f i , (pi , everywhere)
         where
-        everywhere : (b : A) → ⟨ P b ⟩ → b ≺ f i → Empty.⊥
+        everywhere : (b : A) → ⟨ P b ⟩ → b ≺ f i → ⊥₀
 ```
 
 <!--en-->
@@ -1158,10 +1150,10 @@ The transport announced earlier is carried out here, in both components at once.
 <!--/-->
 
 ```agda
-        everywhere b pb hb = PT.rec Empty.isProp⊥
+        everywhere b pb hb = rec₁ isProp⊥
           (λ { (j , q) → mi j (subst (λ w → ⟨ P w ⟩) (sym q) pb)
                               (subst (λ w → w ≺ f i) (sym q) hb) }) (cov b)
-      decide (inr none) = Empty.rec (nowhere none)
+      decide (inr none) = ⊥₀-rec (nowhere none)
 
     wellFounded : WellFounded _≺_
 ```
@@ -1177,9 +1169,9 @@ To prove well-foundedness, first decide accessibility of an arbitrary `a`. The p
 ```agda
     wellFounded a = fromDec (lem (Acc _≺_ a , isPropAcc a))
       where
-      fromDec : (Acc _≺_ a ⊎ (Acc _≺_ a → Empty.⊥)) → Acc _≺_ a
+      fromDec : (Acc _≺_ a ⊎ (Acc _≺_ a → ⊥₀)) → Acc _≺_ a
       fromDec (inl h) = h
-      fromDec (inr nh) = Empty.rec (found .snd .fst (acc below))
+      fromDec (inr nh) = ⊥₀-rec (found .snd .fst (acc below))
 ```
 
 <!--en-->
@@ -1193,7 +1185,7 @@ The property to be minimized is `NotAcc`, non-accessibility. Its underlying stat
 ```agda
         where
         NotAcc : A → hProp (ℓ-suc ℓ)
-        NotAcc b = (Acc _≺_ b → Empty.⊥) , isProp¬ _
+        NotAcc b = (Acc _≺_ b → ⊥₀) , isProp→ isProp⊥
         found : Σ[ m ∈ A ] Least NotAcc m
         found = least NotAcc ∣ a , nh ∣₁
 ```
@@ -1210,7 +1202,7 @@ Let `m` be the least non-accessible element just found. To show it accessible, o
         below : (b : A) → b ≺ found .fst → Acc _≺_ b
         below b hb = pick (lem (Acc _≺_ b , isPropAcc b))
           where
-          pick : (Acc _≺_ b ⊎ (Acc _≺_ b → Empty.⊥)) → Acc _≺_ b
+          pick : (Acc _≺_ b ⊎ (Acc _≺_ b → ⊥₀)) → Acc _≺_ b
           pick (inl h)  = h
 ```
 
@@ -1223,7 +1215,7 @@ In the negative branch, `b` would be a non-accessible element strictly below the
 <!--/-->
 
 ```agda
-          pick (inr nb) = Empty.rec (found .snd .snd b nb hb)
+          pick (inr nb) = ⊥₀-rec (found .snd .snd b nb hb)
 ```
 
 <!--en-->
@@ -1258,21 +1250,21 @@ Witness R A x y z =
 ```
 
 <!--en-->
-`precedes R A x y` is the proposition that such a witness merely exists, packaged with `PT.squash₁` as a truth value. Because the witness is hidden behind a truncation, its existence is all that is asserted; nothing chooses `z`. Irreflexivity then costs one line: eliminating the truncation into the empty type, a proposition, exposes a witness with `z ∈ x` and `z ∉ x`, and the second clause applied to the first is the contradiction.
+`precedes R A x y` is the proposition that such a witness merely exists, packaged with `squash₁` as a truth value. Because the witness is hidden behind a truncation, its existence is all that is asserted; nothing chooses `z`. Irreflexivity then costs one line: eliminating the truncation into the empty type, a proposition, exposes a witness with `z ∈ x` and `z ∉ x`, and the second clause applied to the first is the contradiction.
 <!--zh-->
-`precedes R A x y` 是「这类见证单纯存在」的命题，随 `PT.squash₁` 打包成一个真值。由于见证藏在截断之后，被断言的只有其存在，任何东西都不选定 `z`。非自反性于是只花一行：把截断消去到空类型 (一个命题) 中，暴露出同时有 `z ∈ x` 与 `z ∉ x` 的见证，把第二条施于第一条即是矛盾。
+`precedes R A x y` 是「这类见证单纯存在」的命题，随 `squash₁` 打包成一个真值。由于见证藏在截断之后，被断言的只有其存在，任何东西都不选定 `z`。非自反性于是只花一行：把截断消去到空类型 (一个命题) 中，暴露出同时有 `z ∈ x` 与 `z ∉ x` 的见证，把第二条施于第一条即是矛盾。
 <!--ja-->
-`precedes R A x y` は、そのような証人が単に存在するという命題であり、`PT.squash₁` とともに真理値としてまとめられています。証人は截断の後ろに隠れているので、主張されるのはその存在だけで、`z` が選ばれることはありません。非反射性はそこで一行で済みます。截断を命題である空の型へと消去すれば、`z ∈ x` と `z ∉ x` を同時に持つ証人が現れ、第二の条項を第一に施せば矛盾です。
+`precedes R A x y` は、そのような証人が単に存在するという命題であり、`squash₁` とともに真理値としてまとめられています。証人は截断の後ろに隠れているので、主張されるのはその存在だけで、`z` が選ばれることはありません。非反射性はそこで一行で済みます。截断を命題である空の型へと消去すれば、`z ∈ x` と `z ∉ x` を同時に持つ証人が現れ、第二の条項を第一に施せば矛盾です。
 <!--/-->
 
 ```agda
-  ⟨ z ∈ˢ A ⟩ × ⟨ z ∈ˢ y ⟩ × (⟨ z ∈ˢ x ⟩ → Empty.⊥) × Agrees R A x y z
+  ⟨ z ∈ˢ A ⟩ × ⟨ z ∈ˢ y ⟩ × (⟨ z ∈ˢ x ⟩ → ⊥₀) × Agrees R A x y z
 
 precedes : (R : S → S → hProp (ℓ-suc ℓ)) (A : S) → S → S → hProp (ℓ-suc ℓ)
-precedes R A x y = ∥ Σ[ z ∈ S ] Witness R A x y z ∥₁ , PT.squash₁
+precedes R A x y = ∥ Σ[ z ∈ S ] Witness R A x y z ∥₁ , squash₁
 
-precedes-irrefl : (R : S → S → hProp (ℓ-suc ℓ)) (A x : S) → ⟨ precedes R A x x ⟩ → Empty.⊥
-precedes-irrefl R A x = PT.rec Empty.isProp⊥ (λ { (z , _ , z∈ , z∉ , _) → z∉ z∈ })
+precedes-irrefl : (R : S → S → hProp (ℓ-suc ℓ)) (A x : S) → ⟨ precedes R A x x ⟩ → ⊥₀
+precedes-irrefl R A x = rec₁ isProp⊥ (λ { (z , _ , z∈ , z∉ , _) → z∉ z∈ })
 ```
 
 <!--en-->
@@ -1314,7 +1306,7 @@ The statement of transitivity takes the two hypotheses exactly as `precedes` pro
 <!--/-->
 
 ```agda
-                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ P b ⟩ → ⟨ R b m ⟩ → Empty.⊥)))
+                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ P b ⟩ → ⟨ R b m ⟩ → ⊥₀)))
   where
 
   precedes-trans : (x y z : S) → ⟨ precedes R A x y ⟩ → ⟨ precedes R A y z ⟩
@@ -1331,7 +1323,7 @@ With both witnesses exposed, `both` receives the full data: a point `p` witnessi
 <!--/-->
 
 ```agda
-    PT.rec PT.squash₁ (λ wp → PT.rec PT.squash₁ (both wp) hyz) hxy
+    rec₁ squash₁ (λ wp → rec₁ squash₁ (both wp) hyz) hxy
     where
     both : Σ[ p ∈ S ] Witness R A x y p → Σ[ q ∈ S ] Witness R A y z q
          → ⟨ precedes R A x z ⟩
@@ -1367,7 +1359,7 @@ Agreement below `p` is composed clause by clause. To show `w ∈ x` implies `w �
         ag w w∈A hw =
             (λ wx → agq w w∈A (baseTrans w p q hw h) .fst (agp w w∈A hw .fst wx))
           , (λ wz → agp w w∈A hw .snd (agq w w∈A (baseTrans w p q hw h) .snd wz))
-      decide (eq h) = Empty.rec (q∉y (subst (λ v → ⟨ v ∈ˢ y ⟩) h p∈y))
+      decide (eq h) = ⊥₀-rec (q∉y (subst (λ v → ⟨ v ∈ˢ y ⟩) h p∈y))
 ```
 
 <!--en-->
@@ -1381,7 +1373,7 @@ If instead `q` is strictly below `p`, the roles swap: `q` witnesses `x` before `
 ```agda
       decide (gt h) = ∣ q , (q∈A , (q∈z , (q∉x , ag))) ∣₁
         where
-        q∉x : ⟨ q ∈ˢ x ⟩ → Empty.⊥
+        q∉x : ⟨ q ∈ˢ x ⟩ → ⊥₀
         q∉x qx = q∉y (agp q q∈A h .fst qx)
         ag : Agrees R A x z q
 ```
@@ -1415,33 +1407,33 @@ The excluded middle is used a second time inside `agree`, to turn "not disagreei
 <!--/-->
 
 <!--en-->
-The statement takes the two subsets `x` and `y` of `A` not as certificates of definability but as ordinary sets, together with the hypothesis that each stays inside `A`. The conclusion is a `Tri`, the three-way disjunction used throughout this chapter: `x` before `y`, equal as sets, or `y` before `x`. The proof begins by asking excluded middle about `Some`, and `Some` will be built as a proposition, namely a truncated existence statement, so `lem` may be fed `PT.squash₁` as its propositionhood certificate.
+The statement takes the two subsets `x` and `y` of `A` not as certificates of definability but as ordinary sets, together with the hypothesis that each stays inside `A`. The conclusion is a `Tri`, the three-way disjunction used throughout this chapter: `x` before `y`, equal as sets, or `y` before `x`. The proof begins by asking excluded middle about `Some`, and `Some` will be built as a proposition, namely a truncated existence statement, so `lem` may be fed `squash₁` as its propositionhood certificate.
 <!--zh-->
-这里的陈述并不把 `A` 的两个子集 `x`、`y` 当作可定义性证书，而是当作普通集合，并附上二者都不超出 `A` 的前提。结论是一个 `Tri`，即本章通用的三分判断：`x` 先于 `y`、作为集合相等，或 `y` 先于 `x`。证明先对 `Some` 使用排中律发问；`Some` 将被构造成一个命题，即一条截断的存在陈述，因此可以把 `PT.squash₁` 作为其命题性证书交给 `lem`。
+这里的陈述并不把 `A` 的两个子集 `x`、`y` 当作可定义性证书，而是当作普通集合，并附上二者都不超出 `A` 的前提。结论是一个 `Tri`，即本章通用的三分判断：`x` 先于 `y`、作为集合相等，或 `y` 先于 `x`。证明先对 `Some` 使用排中律发问；`Some` 将被构造成一个命题，即一条截断的存在陈述，因此可以把 `squash₁` 作为其命题性证书交给 `lem`。
 <!--ja-->
-この定理は `A` の二つの部分集合 `x`、`y` を定義可能性の証明書としてではなく、普通の集合として受け取り、それぞれが `A` の中にとどまるという前提を添える。結論は本章で一貫して使われる三分の判断 `Tri`、すなわち `x` が `y` に先立つか、集合として等しいか、`y` が `x` に先立つかである。証明はまず `Some` について排中律を問うことに始まる。`Some` は命題、つまり截断された存在文として構成されるので、`PT.squash₁` をその命題性の証明として `lem` に渡せる。
+この定理は `A` の二つの部分集合 `x`、`y` を定義可能性の証明書としてではなく、普通の集合として受け取り、それぞれが `A` の中にとどまるという前提を添える。結論は本章で一貫して使われる三分の判断 `Tri`、すなわち `x` が `y` に先立つか、集合として等しいか、`y` が `x` に先立つかである。証明はまず `Some` について排中律を問うことに始まる。`Some` は命題、つまり截断された存在文として構成されるので、`squash₁` をその命題性の証明として `lem` に渡せる。
 <!--/-->
 
 ```agda
   precedes-tri : (x y : S) → ((w : S) → ⟨ w ∈ˢ x ⟩ → ⟨ w ∈ˢ A ⟩)
                            → ((w : S) → ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ A ⟩)
                → Tri ⟨ precedes R A x y ⟩ (x ≡ y) ⟨ precedes R A y x ⟩
-  precedes-tri x y x⊆ y⊆ = decide (lem (Some , PT.squash₁))
+  precedes-tri x y x⊆ y⊆ = decide (lem (Some , squash₁))
     where
 ```
 
 <!--en-->
-Two truncations organise the question. The predicate `Apart w` says, merely, that `w` distinguishes the two subsets, in either direction: it belongs to one and not the other. The truncated type `Some` says, merely, that some member of `A` is apart. Both are wrapped with `PT.squash₁`, so both are propositions rather than data; that is exactly what licenses deciding them by excluded middle, and later, eliminating a refutation of `Some` into contradiction.
+Two truncations organise the question. The predicate `Apart w` says, merely, that `w` distinguishes the two subsets, in either direction: it belongs to one and not the other. The truncated type `Some` says, merely, that some member of `A` is apart. Both are wrapped with `squash₁`, so both are propositions rather than data; that is exactly what licenses deciding them by excluded middle, and later, eliminating a refutation of `Some` into contradiction.
 <!--zh-->
-两条截断组织了这个问题。谓词 `Apart w` 仅仅说 `w` 区分了这两个子集，方向不限：它属于其一而不属于另一。截断类型 `Some` 仅仅说 `A` 的某个成员是分歧点。二者都配以 `PT.squash₁`，因而都是命题而非数据；这正是可以用排中律判定它们、随后又能把 `Some` 的反驳消去成矛盾的依据。
+两条截断组织了这个问题。谓词 `Apart w` 仅仅说 `w` 区分了这两个子集，方向不限：它属于其一而不属于另一。截断类型 `Some` 仅仅说 `A` 的某个成员是分歧点。二者都配以 `squash₁`，因而都是命题而非数据；这正是可以用排中律判定它们、随后又能把 `Some` 的反驳消去成矛盾的依据。
 <!--ja-->
-二つの截断がこの問いを組織する。述語 `Apart w` は、`w` が二つの部分集合を区別すること、向きは問わず、片方には属しもう片方には属さないことを、単に主張する。截断型 `Some` は、`A` のある要素が相違点であることを単に主張する。どちらも `PT.squash₁` を添え、命題であってデータではない。これこそが、排中律による判定、さらに `Some` の反駁を矛盾への除去を正当化する。
+二つの截断がこの問いを組織する。述語 `Apart w` は、`w` が二つの部分集合を区別すること、向きは問わず、片方には属しもう片方には属さないことを、単に主張する。截断型 `Some` は、`A` のある要素が相違点であることを単に主張する。どちらも `squash₁` を添え、命題であってデータではない。これこそが、排中律による判定、さらに `Some` の反駁を矛盾への除去を正当化する。
 <!--/-->
 
 ```agda
     Apart : S → hProp (ℓ-suc ℓ)
-    Apart w = ∥ (⟨ w ∈ˢ x ⟩ × (⟨ w ∈ˢ y ⟩ → Empty.⊥))
-              ⊎ ((⟨ w ∈ˢ x ⟩ → Empty.⊥) × ⟨ w ∈ˢ y ⟩) ∥₁ , PT.squash₁
+    Apart w = ∥ (⟨ w ∈ˢ x ⟩ × (⟨ w ∈ˢ y ⟩ → ⊥₀))
+              ⊎ ((⟨ w ∈ˢ x ⟩ → ⊥₀) × ⟨ w ∈ˢ y ⟩) ∥₁ , squash₁
     Some : Type (ℓ-suc ℓ)
     Some = ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ Apart a ⟩) ∥₁
 ```
@@ -1455,7 +1447,7 @@ The helper `agree` converts absence of disagreement into agreement, one directio
 <!--/-->
 
 ```agda
-    agree : (w : S) → (⟨ Apart w ⟩ → Empty.⊥)
+    agree : (w : S) → (⟨ Apart w ⟩ → ⊥₀)
           → (⟨ w ∈ˢ x ⟩ → ⟨ w ∈ˢ y ⟩) × (⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ x ⟩)
     agree w na = fwd , bwd
       where
@@ -1463,19 +1455,19 @@ The helper `agree` converts absence of disagreement into agreement, one directio
 ```
 
 <!--en-->
-For the forward clause, suppose `w ∈ˢ x` and ask excluded middle about `w ∈ˢ y`. If it holds, we are done. If its refutation `nh` is produced, then `w` is apart after all, witnessed by the left disjunct `wx , nh`; packaging that witness into the truncation and handing it to `na` yields a contradiction, from which `Empty.rec` produces any desired element, here the missing membership proof. The target `Empty.⊥` is a proposition, so eliminating the truncated `Apart w` into it is legitimate.
+For the forward clause, suppose `w ∈ˢ x` and ask excluded middle about `w ∈ˢ y`. If it holds, we are done. If its refutation `nh` is produced, then `w` is apart after all, witnessed by the left disjunct `wx , nh`; packaging that witness into the truncation and handing it to `na` yields a contradiction, from which `⊥*-rec` produces any desired element, here the missing membership proof. The target `⊥*` is a proposition, so eliminating the truncated `Apart w` into it is legitimate.
 <!--zh-->
-前向子句：设 `w ∈ˢ x`，对 `w ∈ˢ y` 用排中律发问。若成立即完成。若得到反驳 `nh`，那么 `w` 其实是分歧点，左析取支 `wx , nh` 就是见证；把该见证装入截断交给 `na` 便得矛盾，`Empty.rec` 再从矛盾产出所需元素，这里就是缺失的成员证明。目标 `Empty.⊥` 是命题，故把截断的 `Apart w` 消去到它是正当的。
+前向子句：设 `w ∈ˢ x`，对 `w ∈ˢ y` 用排中律发问。若成立即完成。若得到反驳 `nh`，那么 `w` 其实是分歧点，左析取支 `wx , nh` 就是见证；把该见证装入截断交给 `na` 便得矛盾，`⊥*-rec` 再从矛盾产出所需元素，这里就是缺失的成员证明。目标 `⊥*` 是命题，故把截断的 `Apart w` 消去到它是正当的。
 <!--ja-->
-前向きの節では、`w ∈ˢ x` を仮定し、`w ∈ˢ y` について排中律を問う。成り立てばそれで足りる。反駁 `nh` が得られたなら、実は `w` は相違点であり、左の選択肢 `wx , nh` がその証人である。この証人を截断に包んで `na` に渡せば矛盾が得られ、`Empty.rec` がそこから所望の要素、ここでは欠けた所属の証明を作る。目標 `Empty.⊥` は命題なので、截断された `Apart w` をそこへ除去するのは正当である。
+前向きの節では、`w ∈ˢ x` を仮定し、`w ∈ˢ y` について排中律を問う。成り立てばそれで足りる。反駁 `nh` が得られたなら、実は `w` は相違点であり、左の選択肢 `wx , nh` がその証人である。この証人を截断に包んで `na` に渡せば矛盾が得られ、`⊥*-rec` がそこから所望の要素、ここでは欠けた所属の証明を作る。目標 `⊥*` は命題なので、截断された `Apart w` をそこへ除去するのは正当である。
 <!--/-->
 
 ```agda
       fwd wx = pick (lem (w ∈ˢ y))
         where
-        pick : (⟨ w ∈ˢ y ⟩ ⊎ (⟨ w ∈ˢ y ⟩ → Empty.⊥)) → ⟨ w ∈ˢ y ⟩
+        pick : (⟨ w ∈ˢ y ⟩ ⊎ (⟨ w ∈ˢ y ⟩ → ⊥₀)) → ⟨ w ∈ˢ y ⟩
         pick (inl h)  = h
-        pick (inr nh) = Empty.rec (na ∣ inl (wx , nh) ∣₁)
+        pick (inr nh) = ⊥₀-rec (na ∣ inl (wx , nh) ∣₁)
 ```
 
 <!--en-->
@@ -1490,7 +1482,7 @@ The backward clause is the mirror image. Assuming `w ∈ˢ y`, excluded middle d
       bwd : ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ x ⟩
       bwd wy = pick (lem (w ∈ˢ x))
         where
-        pick : (⟨ w ∈ˢ x ⟩ ⊎ (⟨ w ∈ˢ x ⟩ → Empty.⊥)) → ⟨ w ∈ˢ x ⟩
+        pick : (⟨ w ∈ˢ x ⟩ ⊎ (⟨ w ∈ˢ x ⟩ → ⊥₀)) → ⟨ w ∈ˢ x ⟩
         pick (inl h)  = h
 ```
 
@@ -1503,11 +1495,11 @@ Now suppose `Some` is refuted, so no member of `A` is apart. The helper `nApart`
 <!--/-->
 
 ```agda
-        pick (inr nh) = Empty.rec (na ∣ inr (nh , wy) ∣₁)
-    same : (Some → Empty.⊥) → x ≡ y
+        pick (inr nh) = ⊥₀-rec (na ∣ inr (nh , wy) ∣₁)
+    same : (Some → ⊥₀) → x ≡ y
     same ns = extensionalV step
       where
-      nApart : (w : S) → ⟨ Apart w ⟩ → Empty.⊥
+      nApart : (w : S) → ⟨ Apart w ⟩ → ⊥₀
 ```
 
 <!--en-->
@@ -1522,7 +1514,7 @@ An apart point always lies in `A`, provided the two subsets do. Indeed, the trun
       nApart w ha = ns ∣ w , (inA , ha) ∣₁
         where
         inA : ⟨ w ∈ˢ A ⟩
-        inA = PT.rec (snd (w ∈ˢ A))
+        inA = rec₁ (snd (w ∈ˢ A))
           (λ { (inl (wx , _)) → x⊆ w wx ; (inr (_ , wy)) → y⊆ w wy }) ha
 ```
 
@@ -1537,7 +1529,7 @@ At each `w`, the two clauses of `agree w (nApart w)` assert membership in `x` if
 ```agda
       step : (w : S) → (w ∈ˢ x) ≡ (w ∈ˢ y)
       step w = ⇔toPath (agree w (nApart w) .fst) (agree w (nApart w) .snd)
-    decide : (Some ⊎ (Some → Empty.⊥))
+    decide : (Some ⊎ (Some → ⊥₀))
            → Tri ⟨ precedes R A x y ⟩ (x ≡ y) ⟨ precedes R A y x ⟩
     decide (inr ns) = eq (same ns)
 ```
@@ -1554,7 +1546,7 @@ In the other branch, `Some` holds: some member of `A` is apart. The smallest-ele
     decide (inl hs) = side (lem (m ∈ˢ x))
       where
       found : Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ Apart m ⟩
-                × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ Apart b ⟩ → ⟨ R b m ⟩ → Empty.⊥))
+                × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ Apart b ⟩ → ⟨ R b m ⟩ → ⊥₀))
       found = baseLeast Apart hs
 ```
 
@@ -1584,25 +1576,25 @@ The leastness field `belowM` refutes any apart point strictly below `m`; its arg
 
 ```agda
       apartM = found .snd .snd .fst
-      belowM : (w : S) → ⟨ w ∈ˢ A ⟩ → ⟨ R w m ⟩ → ⟨ Apart w ⟩ → Empty.⊥
+      belowM : (w : S) → ⟨ w ∈ˢ A ⟩ → ⟨ R w m ⟩ → ⟨ Apart w ⟩ → ⊥₀
       belowM w w∈A hw ha = found .snd .snd .snd w w∈A ha hw
-      side : (⟨ m ∈ˢ x ⟩ ⊎ (⟨ m ∈ˢ x ⟩ → Empty.⊥))
+      side : (⟨ m ∈ˢ x ⟩ ⊎ (⟨ m ∈ˢ x ⟩ → ⊥₀))
            → Tri ⟨ precedes R A x y ⟩ (x ≡ y) ⟨ precedes R A y x ⟩
 ```
 
 <!--en-->
-If `m` does belong to `x`, then `m` witnesses that `y` comes before `x`: it lies in the second set and not the first. The sublemma `m∉y` refutes `m ∈ˢ y` by case analysis on the truncated `apartM`: in the left disjunct the witness itself carries a refutation of `m ∈ˢ y`, and in the right disjunct the refutation of `m ∈ˢ x` clashes with `mx`. Eliminating the truncation is allowed because the target `Empty.⊥` is a proposition.
+If `m` does belong to `x`, then `m` witnesses that `y` comes before `x`: it lies in the second set and not the first. The sublemma `m∉y` refutes `m ∈ˢ y` by case analysis on the truncated `apartM`: in the left disjunct the witness itself carries a refutation of `m ∈ˢ y`, and in the right disjunct the refutation of `m ∈ˢ x` clashes with `mx`. Eliminating the truncation is allowed because the target `⊥*` is a proposition.
 <!--zh-->
-若 `m` 确实属于 `x`，则 `m` 见证 `y` 先于 `x`：它在第二个集合中而不在第一个中。子引理 `m∉y` 通过对截断的 `apartM` 作情形分析来反驳 `m ∈ˢ y`：左支中见证本身就带有对 `m ∈ˢ y` 的反驳；右支中对 `m ∈ˢ x` 的反驳与 `mx` 相抵触。消去截断是允许的，因为目标 `Empty.⊥` 是命题。
+若 `m` 确实属于 `x`，则 `m` 见证 `y` 先于 `x`：它在第二个集合中而不在第一个中。子引理 `m∉y` 通过对截断的 `apartM` 作情形分析来反驳 `m ∈ˢ y`：左支中见证本身就带有对 `m ∈ˢ y` 的反驳；右支中对 `m ∈ˢ x` 的反驳与 `mx` 相抵触。消去截断是允许的，因为目标 `⊥*` 是命题。
 <!--ja-->
-`m` が実際に `x` に属するなら、`m` は `y` が `x` に先立つことの証人である。第二の集合に属し第一には属さないからである。補題 `m∉y` は、截断された `apartM` の場合分けによって `m ∈ˢ y` を反駁する。左の選言肢では証人自身が `m ∈ˢ y` の反駁を帯びており、右では `m ∈ˢ x` の反駁が `mx` と衝突する。目標 `Empty.⊥` が命題であるため、この截断の除去は許される。
+`m` が実際に `x` に属するなら、`m` は `y` が `x` に先立つことの証人である。第二の集合に属し第一には属さないからである。補題 `m∉y` は、截断された `apartM` の場合分けによって `m ∈ˢ y` を反駁する。左の選言肢では証人自身が `m ∈ˢ y` の反駁を帯びており、右では `m ∈ˢ x` の反駁が `mx` と衝突する。目標 `⊥*` が命題であるため、この截断の除去は許される。
 <!--/-->
 
 ```agda
       side (inl mx) = gt ∣ m , (m∈A , (mx , (m∉y , ag))) ∣₁
         where
-        m∉y : ⟨ m ∈ˢ y ⟩ → Empty.⊥
-        m∉y my = PT.rec Empty.isProp⊥
+        m∉y : ⟨ m ∈ˢ y ⟩ → ⊥₀
+        m∉y my = rec₁ isProp⊥
           (λ { (inl (_ , nmy)) → nmy my ; (inr (nmx , _)) → nmx mx }) apartM
 ```
 
@@ -1631,8 +1623,8 @@ The mirrored branch assumes instead that `m` does not belong to `x`, and produce
 <!--/-->
 
 ```agda
-        my = PT.rec (snd (m ∈ˢ y))
-          (λ { (inl (mx , _)) → Empty.rec (nmx mx) ; (inr (_ , h)) → h }) apartM
+        my = rec₁ (snd (m ∈ˢ y))
+          (λ { (inl (mx , _)) → ⊥₀-rec (nmx mx) ; (inr (_ , h)) → h }) apartM
         ag : Agrees R A x y m
         ag w w∈A hw = agree w (belowM w w∈A hw)
 ```
@@ -1698,36 +1690,36 @@ before : ℕ → S → S → hProp (ℓ-suc ℓ)
 ```
 
 <!--en-->
-Irreflexivity of `before` holds at every numeral, and its proof does no induction. At zero the hypothesis is a proof of falsity, which `Empty.rec*` eliminates. At a successor it is exactly `precedes-irrefl`, the hypothesis-free irreflexivity established when the comparison was defined. This is why irreflexivity is not one of the data the recursion has to carry.
+Irreflexivity of `before` holds at every numeral, and its proof does no induction. At zero the hypothesis is a proof of falsity, which `⊥*-rec` eliminates. At a successor it is exactly `precedes-irrefl`, the hypothesis-free irreflexivity established when the comparison was defined. This is why irreflexivity is not one of the data the recursion has to carry.
 <!--zh-->
-`before` 的非自反性在所有数码处成立，且证明不作归纳。零处前提是假命题的证明，由 `Empty.rec*` 消去；后继处恰是 `precedes-irrefl`，即定义该比较时已确立的无前提非自反性。正因如此，非自反性不属于递归必须携带的数据。
+`before` 的非自反性在所有数码处成立，且证明不作归纳。零处前提是假命题的证明，由 `⊥*-rec` 消去；后继处恰是 `precedes-irrefl`，即定义该比较时已确立的无前提非自反性。正因如此，非自反性不属于递归必须携带的数据。
 <!--ja-->
-`before` の非反射性はすべての数項で成立し、その証明は帰納を行わない。零では前提は偽の真理値の住人であり、`Empty.rec*` がそれを除去する。後者ではまさに `precedes-irrefl`、つまりこの比較を定義した際に前提なしで確立された非反射性である。だからこそ、非反射性は再帰が運ぶべきデータには入らない。
+`before` の非反射性はすべての数項で成立し、その証明は帰納を行わない。零では前提は偽の真理値の住人であり、`⊥*-rec` がそれを除去する。後者ではまさに `precedes-irrefl`、つまりこの比較を定義した際に前提なしで確立された非反射性である。だからこそ、非反射性は再帰が運ぶべきデータには入らない。
 <!--/-->
 
 ```agda
 before zero    x y = ⊥
 before (suc n) = precedes (before n) (finiteStage n)
 
-before-irrefl : (n : ℕ) (x : S) → ⟨ before n x x ⟩ → Empty.⊥
-before-irrefl zero    x h = Empty.rec* h
+before-irrefl : (n : ℕ) (x : S) → ⟨ before n x x ⟩ → ⊥₀
+before-irrefl zero    x h = ⊥*-rec h
 before-irrefl (suc n) x h = precedes-irrefl (before n) (finiteStage n) x h
 ```
 
 <!--en-->
-The base case's emptiness is recorded separately as `zero-empty`: no set is a member of the stage zero. Reading a membership certificate out of `Lset (# zero)` produces, merely, some stage `δ` with `δ` a member of the numeral zero and `x` a definable subset of `Lset δ`; the numeral zero has no members, and `∅-empty` turns any alleged member into a contradiction. The elimination of the truncation is legitimate because the target `Empty.⊥` is a proposition.
+The base case's emptiness is recorded separately as `zero-empty`: no set is a member of the stage zero. Reading a membership certificate out of `Lset (# zero)` produces, merely, some stage `δ` with `δ` a member of the numeral zero and `x` a definable subset of `Lset δ`; the numeral zero has no members, and `∅-empty` turns any alleged member into a contradiction. The elimination of the truncation is legitimate because the target `⊥*` is a proposition.
 <!--zh-->
-基例的空性单独记录为 `zero-empty`：没有集合是第零层的成员。从 `Lset (# zero)` 读出成员证书，仅仅给出某一层 `δ`，使 `δ` 属于数码零且 `x` 是 `Lset δ` 的可定义子集；数码零没有成员，`∅-empty` 把任何所谓的成员变成矛盾。由于目标 `Empty.⊥` 是命题，消去该截断是正当的。
+基例的空性单独记录为 `zero-empty`：没有集合是第零层的成员。从 `Lset (# zero)` 读出成员证书，仅仅给出某一层 `δ`，使 `δ` 属于数码零且 `x` 是 `Lset δ` 的可定义子集；数码零没有成员，`∅-empty` 把任何所谓的成员变成矛盾。由于目标 `⊥*` 是命题，消去该截断是正当的。
 <!--ja-->
-基底の場合の空性は `zero-empty` として別に記録される。段階零の要素となる集合はない。`Lset (# zero)` から所属の証明書を読み出すと、単に、`δ` が数項零の要素で `x` が `Lset δ` の定義可能部分集合であるようなある段階 `δ` が得られるだけである。数項零に要素はなく、`∅-empty` がいかなる所属の主張も矛盾へ変える。目標 `Empty.⊥` が命題であるため、この截断の除去は正当である。
+基底の場合の空性は `zero-empty` として別に記録される。段階零の要素となる集合はない。`Lset (# zero)` から所属の証明書を読み出すと、単に、`δ` が数項零の要素で `x` が `Lset δ` の定義可能部分集合であるようなある段階 `δ` が得られるだけである。数項零に要素はなく、`∅-empty` がいかなる所属の主張も矛盾へ変える。目標 `⊥*` が命題であるため、この截断の除去は正当である。
 <!--/-->
 
 ```agda
 
-zero-empty : (x : S) → ⟨ x ∈ˢ finiteStage zero ⟩ → Empty.⊥
-zero-empty x h = PT.rec Empty.isProp⊥ step (Lset-out (# zero) x h)
+zero-empty : (x : S) → ⟨ x ∈ˢ finiteStage zero ⟩ → ⊥₀
+zero-empty x h = rec₁ isProp⊥ step (Lset-out (# zero) x h)
   where
-  step : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → Empty.⊥
+  step : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ∅ ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩) → ⊥₀
   step (δ , δ∈ , _) = ∅-empty δ (∈∈ₛ {a = δ} {b = ∅} .fst δ∈)
 ```
 
@@ -1812,7 +1804,7 @@ The tally is lifted from sets to points by pairing each entry with its own membe
   points i = item i , inside i
 
   covers : (a : Point n) → ∥ Σ[ i ∈ Fin size ] (points i ≡ a) ∥₁
-  covers a = PT.map (λ { (i , q) → i , Σ≡Prop (λ z → snd (z ∈ˢ finiteStage n)) q })
+  covers a = map₁ (λ { (i , q) → i , Σ≡Prop (λ z → snd (z ∈ˢ finiteStage n)) q })
 ```
 
 <!--en-->
@@ -1863,7 +1855,7 @@ The last lemma packages least elements in the shape the next stage needs. `least
   leastMem : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ finiteStage n ⟩ × ⟨ P a ⟩) ∥₁
            → Σ[ m ∈ S ] (⟨ m ∈ˢ finiteStage n ⟩ × ⟨ P m ⟩
                × ((b : S) → ⟨ b ∈ˢ finiteStage n ⟩ → ⟨ P b ⟩
-                          → ⟨ before n b m ⟩ → Empty.⊥))
+                          → ⟨ before n b m ⟩ → ⊥₀))
 ```
 
 <!--en-->
@@ -1894,7 +1886,7 @@ Only the glue remains visible: `Q` reads the set-level predicate at the underlyi
     Q : Point n → hProp (ℓ-suc ℓ)
     Q a = P (a .fst)
     found : Σ[ m ∈ Point n ] Least Q m
-    found = least Q (PT.map (λ { (a , a∈ , pa) → (a , a∈) , pa }) h)
+    found = least Q (map₁ (λ { (a , a∈ , pa) → (a , a∈) , pa }) h)
 ```
 
 <!--en-->
@@ -1933,24 +1925,24 @@ The remaining fields of the zero-stage tally have the same source. Its membershi
     { size   = zero
     ; item   = λ ()
     ; inside = λ ()
-    ; onto   = λ x x∈ → Empty.rec (zero-empty x x∈) }
+    ; onto   = λ x x∈ → ⊥₀-rec (zero-empty x x∈) }
   triZero : (x y : S) → ⟨ x ∈ˢ finiteStage zero ⟩ → ⟨ y ∈ˢ finiteStage zero ⟩
 ```
 
 <!--en-->
-The two order fields are vacuous. Trichotomy at zero receives membership certificates for `x` and `y`, but no such certificates exist, so `zero-empty` extracts a contradiction from the first and discharges the goal. Transitivity at zero receives a hypothesis of type `before zero x y`, which by the computation rule of `before` is the falsity truth value, and `Empty.rec*` eliminates it. Empty premises make empty conclusions; no property of the empty order is used beyond its being empty.
+The two order fields are vacuous. Trichotomy at zero receives membership certificates for `x` and `y`, but no such certificates exist, so `zero-empty` extracts a contradiction from the first and discharges the goal. Transitivity at zero receives a hypothesis of type `before zero x y`, which by the computation rule of `before` is the falsity truth value, and `⊥*-rec` eliminates it. Empty premises make empty conclusions; no property of the empty order is used beyond its being empty.
 <!--zh-->
-两条序字段都是空洞的。零处的三歧收到 `x` 与 `y` 的成员证书，但这样的证书不存在，`zero-empty` 从第一个提取矛盾并了结目标。零处的传递收到类型为 `before zero x y` 的前提，按 `before` 的计算规则它是假真值，由 `Empty.rec*` 消去。空前提给出空结论；除「这个序是空的」之外，没有使用空序的任何性质。
+两条序字段都是空洞的。零处的三歧收到 `x` 与 `y` 的成员证书，但这样的证书不存在，`zero-empty` 从第一个提取矛盾并了结目标。零处的传递收到类型为 `before zero x y` 的前提，按 `before` 的计算规则它是假真值，由 `⊥*-rec` 消去。空前提给出空结论；除「这个序是空的」之外，没有使用空序的任何性质。
 <!--ja-->
-二つの順序の欄は空虚である。零での三分法は `x` と `y` の所属の証明書を受け取るが、そのような証明書は存在しないので、`zero-empty` が一つ目から矛盾を取り出して目標を処理する。零での推移性は型が `before zero x y` である前提を受け取るが、`before` の計算規則によりそれは偽の真理値であり、`Empty.rec*` が除去する。空の前提が空の結論を作る。この順序が空であること以外に、空の順序の性質は使われない。
+二つの順序の欄は空虚である。零での三分法は `x` と `y` の所属の証明書を受け取るが、そのような証明書は存在しないので、`zero-empty` が一つ目から矛盾を取り出して目標を処理する。零での推移性は型が `before zero x y` である前提を受け取るが、`before` の計算規則によりそれは偽の真理値であり、`⊥*-rec` が除去する。空の前提が空の結論を作る。この順序が空であること以外に、空の順序の性質は使われない。
 <!--/-->
 
 ```agda
           → Tri ⟨ before zero x y ⟩ (x ≡ y) ⟨ before zero y x ⟩
-  triZero x y x∈ y∈ = Empty.rec (zero-empty x x∈)
+  triZero x y x∈ y∈ = ⊥₀-rec (zero-empty x x∈)
   transZero : (x y z : S) → ⟨ before zero x y ⟩ → ⟨ before zero y z ⟩
             → ⟨ before zero x z ⟩
-  transZero x y z h k = Empty.rec* h
+  transZero x y z h k = ⊥*-rec h
 ```
 
 <!--en-->
@@ -2071,22 +2063,22 @@ Limit : Type (ℓ-suc ℓ)
 Limit = Σ[ x ∈ S ] ⟨ x ∈ˢ Lset ω ⟩
 
 inSome : (x : S) → ⟨ x ∈ˢ Lset ω ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
-inSome x h = PT.rec PT.squash₁ atStage (Lset-out ω x h)
+inSome x h = rec₁ squash₁ atStage (Lset-out ω x h)
   where
 ```
 
 <!--en-->
-It remains to identify the index `δ` below `ω`. Membership `δ ∈ ω` is the truncated assertion that `δ` equals a numeral `# (lower k)` for some lifted natural number `k`. After opening that truncated numeral witness with `PT.map`, the path rewrites the definable-subset certificate for `𝒟ₒ (Lset δ)` to one over `Lset (# lower k)`; `Lset-suc` then places `x` in `finiteStage (suc (lower k))`. This proves appearance at a finite stage without confusing the index `ω` with the stage `Lset ω`.
+It remains to identify the index `δ` below `ω`. Membership `δ ∈ ω` is the truncated assertion that `δ` equals a numeral `# (lower k)` for some lifted natural number `k`. After opening that truncated numeral witness with `map₁`, the path rewrites the definable-subset certificate for `𝒟ₒ (Lset δ)` to one over `Lset (# lower k)`; `Lset-suc` then places `x` in `finiteStage (suc (lower k))`. This proves appearance at a finite stage without confusing the index `ω` with the stage `Lset ω`.
 <!--zh-->
-还需识别 `ω` 以下的索引 `δ`。隶属 `δ ∈ ω` 是一条截断陈述：存在提升后的自然数 `k`，使 `δ` 等于数码 `# (lower k)`。用 `PT.map` 在截断内取得该数码见证后，路径把关于 `𝒟ₒ (Lset δ)` 的可定义子集证书改写到 `Lset (# lower k)` 上；再由 `Lset-suc` 把 `x` 放入 `finiteStage (suc (lower k))`。这证明了元素出现在有穷层，同时没有混淆索引 `ω` 与层 `Lset ω`。
+还需识别 `ω` 以下的索引 `δ`。隶属 `δ ∈ ω` 是一条截断陈述：存在提升后的自然数 `k`，使 `δ` 等于数码 `# (lower k)`。用 `map₁` 在截断内取得该数码见证后，路径把关于 `𝒟ₒ (Lset δ)` 的可定义子集证书改写到 `Lset (# lower k)` 上；再由 `Lset-suc` 把 `x` 放入 `finiteStage (suc (lower k))`。这证明了元素出现在有穷层，同时没有混淆索引 `ω` 与层 `Lset ω`。
 <!--ja-->
-残るのは `ω` より下の添字 `δ` を同定することである。所属 `δ ∈ ω` は、持ち上げられた自然数 `k` が存在して `δ` が数項 `# (lower k)` に等しいという切断された主張である。`PT.map` により切断の内部でこの数項の証人を用いると、パスが `𝒟ₒ (Lset δ)` に関する定義可能部分集合の証明を `Lset (# lower k)` 上のものへ書き換え、`Lset-suc` が `x` を `finiteStage (suc (lower k))` に置く。これにより、添字 `ω` と段階 `Lset ω` を混同せずに有限段階での出現が示される。
+残るのは `ω` より下の添字 `δ` を同定することである。所属 `δ ∈ ω` は、持ち上げられた自然数 `k` が存在して `δ` が数項 `# (lower k)` に等しいという切断された主張である。`map₁` により切断の内部でこの数項の証人を用いると、パスが `𝒟ₒ (Lset δ)` に関する定義可能部分集合の証明を `Lset (# lower k)` 上のものへ書き換え、`Lset-suc` が `x` を `finiteStage (suc (lower k))` に置く。これにより、添字 `ω` と段階 `Lset ω` を混同せずに有限段階での出現が示される。
 <!--/-->
 
 ```agda
   atStage : Σ[ δ ∈ S ] (⟨ δ ∈ˢ ω ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
           → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩ ∥₁
-  atStage (δ , δ∈ω , x∈) = PT.map named δ∈ω
+  atStage (δ , δ∈ω , x∈) = map₁ named δ∈ω
     where
     named : Σ[ k ∈ Lift ℕ ] (# (lower k) ≡ δ) → Σ[ n ∈ ℕ ] ⟨ x ∈ˢ finiteStage n ⟩
 ```
@@ -2165,7 +2157,7 @@ _≺_ : Limit → Limit → Type (ℓ-suc ℓ)
 a ≺ b = Lift {ℓ-zero} {ℓ-suc ℓ} (level a < level b)
       ⊎ ((level b ≡ level a) × ⟨ before (level a) (a .fst) (b .fst) ⟩)
 
-limit-irrefl : (a : Limit) → a ≺ a → Empty.⊥
+limit-irrefl : (a : Limit) → a ≺ a → ⊥₀
 limit-irrefl a (inl h)       = ¬m<m (lower h)
 ```
 

@@ -125,11 +125,6 @@ An environment is represented by a finite vector of constructible sets. Products
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Unit using ( tt )
-open import Cubical.Data.Vec using ( _∷_; lookup )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Foundations.HLevels using ( isProp× )
 ```
 
 <!--en-->
@@ -141,9 +136,6 @@ The proofs repeatedly turn pointwise equivalences of membership into equalities 
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈-asFiber )
 ```
@@ -366,8 +358,8 @@ For the reverse inclusion, begin with a member of the standard one-entry environ
 ```agda
                                  ∙ cong (λ a → pr a Z) q0) ∣₁
     bwd : (y : V ℓ) → ⟨ y ∈ envOne Z ⟩ → ⟨ y ∈ E ⟩
-    bwd y = PT.rec (snd (y ∈ E))
-      (λ { (lift zero , qy) → PT.rec (snd (y ∈ E))
+    bwd y = rec₁ (snd (y ∈ E))
+      (λ { (lift zero , qy) → rec₁ (snd (y ∈ E))
         (λ { (y' , (y'∈ , hy')) →
 ```
 
@@ -399,7 +391,7 @@ Conversely, assume the coded set equals the standard one-entry environment. Its 
   singleOf-in : E ≡ envOne Z → ⟨ δ ⊨ singleOf e N0 z ⟩
   singleOf-in q =
       (λ y hy → pr-in i0 (sh 1 N0) (sh 1 z) (y ∷ δ)
-         (PT.rec (setIsSet (fst y) (pr (fst (lookup N0 δ)) Z))
+         (rec₁ (setIsSet (fst y) (pr (fst (lookup N0 δ)) Z))
            (λ { (lift zero , qy) → sym qy ∙ cong (λ a → pr a Z) (sym q0) ; (lift (suc ()) , _) })
 ```
 
@@ -485,7 +477,7 @@ Reading the existential of the singleton clause converts it into membership of t
 
 ```agda
     one-out : (z : S) → ⟨ (z ∷ δ) ⊨ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⟩ → ⟨ envOne (fst z) ∈ Y ⟩
-    one-out z = PT.rec (snd (envOne (fst z) ∈ Y))
+    one-out z = rec₁ (snd (envOne (fst z) ∈ Y))
       (λ { (e , (e∈ , he)) → subst (λ u → ⟨ u ∈ Y ⟩) (singleOf-out i0 (sh 2 N0) i1 (e ∷ z ∷ δ) q0 he) e∈ })
 
 ```
@@ -580,8 +572,8 @@ Reading the membership clause yields, for each member of the proposed value, a t
   mem-out : ⟨ γ ⊨ memAt v w T C N ⟩ → (x : S) → ⟨ fst x ∈ Vv ⟩
           → ∥ Σ[ c ∈ S ] Σ[ p ∈ S ] Σ[ y ∈ S ]
               (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁
-  mem-out h x x∈ = PT.rec squash₁
-    (λ { (c , (c∈ , hc)) → PT.rec squash₁
+  mem-out h x x∈ = rec₁ squash₁
+    (λ { (c , (c∈ , hc)) → rec₁ squash₁
 ```
 
 <!--en-->
@@ -593,8 +585,8 @@ To read the membership clause, first expose the key-shaped member `c` of the pro
 <!--/-->
 
 ```agda
-      (λ { (p , s , (ec , he)) → PT.rec squash₁
-        (λ { (e , (e∈ , hy)) → PT.map
+      (λ { (p , s , (ec , he)) → rec₁ squash₁
+        (λ { (e , (e∈ , hy)) → map₁
           (λ { (y , s' , (ee , hd)) →
             c , p , y , ( c∈ , ( ec ∙ cong (λ a → pr a (fst p)) (tg f1)
                         , ( subst (λ u → ⟨ u ∈ Tv ⟩) ee e∈
@@ -630,7 +622,7 @@ Filling the membership clause is the converse construction: it takes the functio
             → ∥ Σ[ c ∈ S ] Σ[ p ∈ S ] Σ[ y ∈ S ]
                 (⟨ fst c ∈ Cv ⟩ × ((fst c ≡ pr (# 1) (fst p)) × (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × Cuts (fst x) Wv (fst y)))) ∥₁)
          → ⟨ γ ⊨ memAt v w T C N ⟩
-  mem-in g x x∈ = PT.map
+  mem-in g x x∈ = map₁
 ```
 
 <!--en-->
@@ -689,9 +681,9 @@ Reading the covering clause takes a code `c` that splits as the pair of the tag 
 ```agda
   all-out : ⟨ γ ⊨ allAt v w T C N ⟩ → (c p : S) → ⟨ fst c ∈ Cv ⟩ → fst c ≡ pr (# 1) (fst p)
           → ∥ Σ[ y ∈ S ] Σ[ x ∈ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁
-  all-out h c p c∈ ec = PT.rec squash₁
-    (λ { (e , (e∈ , hy)) → PT.rec squash₁
-      (λ { (y , s' , (ee , hx)) → PT.map
+  all-out h c p c∈ ec = rec₁ squash₁
+    (λ { (e , (e∈ , hy)) → rec₁ squash₁
+      (λ { (y , s' , (ee , hx)) → map₁
 ```
 
 <!--en-->
@@ -754,7 +746,7 @@ Filling the coverage clause therefore ranges over every member of the proposed c
             → ∥ Σ[ y ∈ S ] Σ[ x ∈ S ] (⟨ pr (fst c) (fst y) ∈ Tv ⟩ × (⟨ fst x ∈ Vv ⟩ × Cuts (fst x) Wv (fst y))) ∥₁)
          → ⟨ γ ⊨ allAt v w T C N ⟩
   all-in g c c∈ = sndAll-in' (λ p s s∈ p∈ ec →
-    PT.map (λ { (y , x , (e∈ , (x∈ , cuts))) →
+    map₁ (λ { (y , x , (e∈ , (x∈ , cuts))) →
 ```
 
 <!--en-->
@@ -881,7 +873,7 @@ The central bridge concerns one formula at a time. If `Cuts` says that `x` consi
     cut≡ ψ x (o , i) = extensionalV (λ z → ⇔toPath (fwd z) (bwd z))
       where
       fwd : (z : V ℓ) → ⟨ z ∈ DA.defSet ψ ⟩ → ⟨ z ∈ fst x ⟩
-      fwd z = PT.rec (snd (z ∈ fst x))
+      fwd z = rec₁ (snd (z ∈ fst x))
 ```
 
 <!--en-->
@@ -944,7 +936,7 @@ Conversely, suppose `DA.defSet ψ` is already known to equal `x`. To reconstruct
     cuts-of ψ x e = o , i
       where
       o : (z : S) → ⟨ fst z ∈ fst x ⟩ → ⟨ fst z ∈ Wv ⟩ × ⟨ envOne (fst z) ∈ fst (Sat W (toS ψ)) ⟩
-      o z hz = PT.rec (isProp× (snd (fst z ∈ Wv)) (snd (envOne (fst z) ∈ fst (Sat W (toS ψ)))))
+      o z hz = rec₁ (isProp× (snd (fst z ∈ Wv)) (snd (envOne (fst z) ∈ fst (Sat W (toS ψ)))))
 ```
 
 <!--en-->
@@ -1019,8 +1011,8 @@ For the forward inclusion, the membership clause supplies, under propositional t
 ```agda
 
     fwd : (x : V ℓ) → ⟨ x ∈ Vv ⟩ → ⟨ x ∈ 𝒟ₒ (fst W) ⟩
-    fwd x hx = PT.rec (snd (x ∈ 𝒟ₒ (fst W)))
-      (λ { (c , p , y , (c∈ , (ec , (e∈ , cuts)))) → PT.rec (snd (x ∈ 𝒟ₒ (fst W)))
+    fwd x hx = rec₁ (snd (x ∈ 𝒟ₒ (fst W)))
+      (λ { (c , p , y , (c∈ , (ec , (e∈ , cuts)))) → rec₁ (snd (x ∈ 𝒟ₒ (fst W)))
         (λ { (ψ , qp) →
           𝒟ₒ-intro (fst W) x ∣ ψ , cut≡ ψ xS
 ```
@@ -1064,8 +1056,8 @@ For the reverse inclusion, membership in `𝒟ₒ (fst W)` yields only a proposi
 
 ```agda
     bwd : (x : V ℓ) → ⟨ x ∈ 𝒟ₒ (fst W) ⟩ → ⟨ x ∈ Vv ⟩
-    bwd x hx = PT.rec (snd (x ∈ Vv))
-      (λ { (ψ , e) → PT.rec (snd (x ∈ Vv))
+    bwd x hx = rec₁ (snd (x ∈ Vv))
+      (λ { (ψ , e) → rec₁ (snd (x ∈ Vv))
         (λ { (y , x' , (e∈ , (x'∈ , cuts))) →
           subst (λ u → ⟨ u ∈ Vv ⟩)
 ```
@@ -1126,18 +1118,18 @@ For the membership conjunct, a member of the value slot is transported into `�
 
 ```agda
     mem : ⟨ γ ⊨ memAt v w T C N ⟩
-    mem = RD.mem-in (λ x x∈ → PT.map
+    mem = RD.mem-in (λ x x∈ → map₁
       (λ { (ψ , e) →
         keyS W ψ , sndS (keyS W ψ) (# 1) (cd ψ) refl , entry ψ .fst
         , ( SR.C-in (keyS W ψ) (key∈AllCodes W ψ)
 ```
 
 <!--en-->
-The chosen table value is the value already determined by the recursive satisfaction table for this formula key. Transporting `cuts-of` along its equality with the explicit satisfaction set supplies the slice evidence. This use of a temporary formula witness stays inside `PT.map`, so the resulting membership witness remains propositionally truncated.
+The chosen table value is the value already determined by the recursive satisfaction table for this formula key. Transporting `cuts-of` along its equality with the explicit satisfaction set supplies the slice evidence. This use of a temporary formula witness stays inside `map₁`, so the resulting membership witness remains propositionally truncated.
 <!--zh-->
-所用表取值是递归满足关系表已为该公式键确定的取值。沿它与显式满足集合的等式运输 `cuts-of`，便得到切出证据。这个临时公式见证始终留在 `PT.map` 内，因此所得隶属见证仍受命题截断。
+所用表取值是递归满足关系表已为该公式键确定的取值。沿它与显式满足集合的等式运输 `cuts-of`，便得到切出证据。这个临时公式见证始终留在 `map₁` 内，因此所得隶属见证仍受命题截断。
 <!--ja-->
-ここで用いる表の値は、再帰的な充足関係表がこの論理式の鍵に対してすでに定めた値です。その値と明示的な充足集合との等式に沿って `cuts-of` を移せば、切り出しの証拠が得られます。この一時的な論理式の証人は終始 `PT.map` の内部にあり、得られる所属の証人も命題的に切り詰められたままです。
+ここで用いる表の値は、再帰的な充足関係表がこの論理式の鍵に対してすでに定めた値です。その値と明示的な充足集合との等式に沿って `cuts-of` を移せば、切り出しの証拠が得られます。この一時的な論理式の証人は終始 `map₁` の内部にあり、得られる所属の証人も命題的に切り詰められたままです。
 <!--/-->
 
 ```agda
@@ -1158,7 +1150,7 @@ The coverage conjunct is proved for every arity-one key in the code domain, with
 
 ```agda
     all : ⟨ γ ⊨ allAt v w T C N ⟩
-    all = RD.all-in (λ c p c∈ ec → PT.map
+    all = RD.all-in (λ c p c∈ ec → map₁
       (λ { (ψ , qp) →
         let qc : fst c ≡ fst (keyS W ψ)
             qc = ec ∙ cong (pr (# 1)) qp

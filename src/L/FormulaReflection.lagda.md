@@ -60,13 +60,6 @@ open import L.Axioms.Separation {ℓ} lem
   using ( Below′; liftFoTo; mkBoundedFo )
 open import L.ExistentialReflection {ℓ} lem
   using ( Below; LsetEnv; pickStage; ClosedFor; module Ladder; module Single )
-
-open import Cubical.Data.Unit using ( Unit*; tt* )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
-import Cubical.Data.Empty as Empty
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 
@@ -149,12 +142,12 @@ lets the merges below raise the pieces to their join.
 ```agda
 Answers : ∀ {n} (φ : Formula S n) (σ : V ℓ) (oσ : IsOrd σ) (τ : V ℓ)
         → Type (ℓ-suc ℓ)
-Answers (t ∈̇ u)  σ oσ τ = Unit*
-Answers (t ≐ u)  σ oσ τ = Unit*
+Answers (t ∈̇ u)  σ oσ τ = ⊤*
+Answers (t ≐ u)  σ oσ τ = ⊤*
 Answers (φ ∧̇ ψ)  σ oσ τ = Answers φ σ oσ τ × Answers ψ σ oσ τ
 Answers (φ ∨̇ ψ)  σ oσ τ = Answers φ σ oσ τ × Answers ψ σ oσ τ
 Answers (φ ⇒̇ ψ)  σ oσ τ = Answers φ σ oσ τ × Answers ψ σ oσ τ
-Answers ⊥̇        σ oσ τ = Unit*
+Answers ⊥̇        σ oσ τ = ⊤*
 Answers (∃̇ φ)    σ oσ τ = ⟨ Single.Fstep φ σ oσ ∈ τ ⟩ × Answers φ σ oσ τ
 Answers (∀̇ φ)    σ oσ τ = ⟨ Single.Fstep (¬̇ φ) σ oσ ∈ τ ⟩ × Answers φ σ oσ τ
 Answers (∀̇∈ t φ) σ oσ τ = Answers φ σ oσ τ
@@ -217,7 +210,7 @@ private
   Raise : (P : V ℓ → Type (ℓ-suc ℓ)) → Type (ℓ-suc ℓ)
   Raise P = {τ τ' : V ℓ} → ⟨ τ ∈ τ' ⟩ → IsOrd τ' → P τ → P τ'
 
-  unitBox : (σ : V ℓ) (oσ : IsOrd σ) → Box σ (λ _ → Unit*)
+  unitBox : (σ : V ℓ) (oσ : IsOrd σ) → Box σ (λ _ → ⊤*)
   unitBox σ oσ = b .fst , (b .snd .fst , (b .snd .snd .fst , tt*))
     where b = bound2 σ σ oσ oσ
 
@@ -426,12 +419,12 @@ it is the only place.
     reflect∃ χ cl an bd γ bγ = ⇔toPath fwd bwd
       where
       fwd : ⟨ γ ⊨ (∃̇ χ) ⟩ → ⟨ γ ⊨ᴬ (∃̇ χ) ⟩
-      fwd ex = PT.map
+      fwd ex = map₁
         (λ { (q , (fq∈ , satq)) →
              q , (fq∈ , subst ⟨_⟩ (reflectFo χ an bd (q ∷ γ) (fq∈ , bγ)) satq) })
         (cl γ bγ ex)
       bwd : ⟨ γ ⊨ᴬ (∃̇ χ) ⟩ → ⟨ γ ⊨ (∃̇ χ) ⟩
-      bwd = PT.map
+      bwd = map₁
         (λ { (x , (x∈A , satx)) →
              x , subst ⟨_⟩ (sym (reflectFo χ an bd (x ∷ γ) (x∈A , bγ))) satx })
 
@@ -447,15 +440,15 @@ it is the only place.
       bwd : ⟨ γ ⊨ᴬ (∀̇ χ) ⟩ → ⟨ γ ⊨ (∀̇ χ) ⟩
       bwd H x = decide (lem ((x ∷ γ) ⊨ χ))
         where
-        decide : (⟨ (x ∷ γ) ⊨ χ ⟩ ⊎ (⟨ (x ∷ γ) ⊨ χ ⟩ → Empty.⊥))
+        decide : (⟨ (x ∷ γ) ⊨ χ ⟩ ⊎ (⟨ (x ∷ γ) ⊨ χ ⟩ → ⊥₀))
                → ⟨ (x ∷ γ) ⊨ χ ⟩
         decide (inl yes) = yes
-        decide (inr no)  = PT.rec (snd ((x ∷ γ) ⊨ χ)) collide
+        decide (inr no)  = rec₁ (snd ((x ∷ γ) ⊨ χ)) collide
           (cl γ bγ ∣ x , (λ yes → lift (no yes)) ∣₁)
           where
           collide : Σ[ q ∈ S ] (⟨ fst q ∈ Lset β ⟩ × ⟨ (q ∷ γ) ⊨ (¬̇ χ) ⟩)
                   → ⟨ (x ∷ γ) ⊨ χ ⟩
-          collide (q , (fq∈ , refute)) = Empty.rec
+          collide (q , (fq∈ , refute)) = ⊥₀-rec
             (lower (refute (subst ⟨_⟩
               (sym (reflectFo χ an bd (q ∷ γ) (fq∈ , bγ))) (H q fq∈))))
 
@@ -490,10 +483,10 @@ it is the only place.
     tInβ : ⟨ fst (⟦ t ⟧ γ) ∈ Lset β ⟩
     tInβ = tmInLayer t γ bγ (bd .fst)
     fwd : ⟨ γ ⊨ (∃̇∈ t χ) ⟩ → ⟨ γ ⊨ᴬ (∃̇∈ t χ) ⟩
-    fwd = PT.map (λ { (x , (x∈t , h)) → x , (x∈t , subst ⟨_⟩
+    fwd = map₁ (λ { (x , (x∈t , h)) → x , (x∈t , subst ⟨_⟩
       (reflectFo χ an (bd .snd) (x ∷ γ) (transβ x∈t tInβ , bγ)) h) })
     bwd : ⟨ γ ⊨ᴬ (∃̇∈ t χ) ⟩ → ⟨ γ ⊨ (∃̇∈ t χ) ⟩
-    bwd = PT.map (λ { (x , (x∈t , h)) → x , (x∈t , subst ⟨_⟩
+    bwd = map₁ (λ { (x , (x∈t , h)) → x , (x∈t , subst ⟨_⟩
       (sym (reflectFo χ an (bd .snd) (x ∷ γ) (transβ x∈t tInβ , bγ))) h) })
 ```
 

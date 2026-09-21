@@ -82,10 +82,6 @@ Existential clauses produce propositionally truncated witnesses. Finite indices 
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.FinData using ( toℕ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 ```
 
@@ -230,7 +226,7 @@ Outward, satisfaction of the reader yields the ambient membership. Here a genera
 <!--/-->
 
 ```agda
-tmIs-var-out i γ v e = PT.rec
+tmIs-var-out i γ v e = rec₁
   (snd (pr (# (toℕ i)) (fst (lookup v γ)) ∈ fst (lookup e γ)))
 ```
 
@@ -520,7 +516,7 @@ For the two atoms, the condition is an existence statement, and its unpacked sha
   cond∈-in : ∀ {n} (t u : Term S n) (z : S)
            → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
            → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
-  cond∈-in t u z = PT.map (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
+  cond∈-in t u z = map₁ (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
 ```
 
 <!--en-->
@@ -536,8 +532,8 @@ The inward mapping for membership repackages the truncated triple as the nested 
   cond∈-out : ∀ {n} (t u : Term S n) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (t ∈̇ u) ⟩
             → ∥ CondAtom t u (λ v w → ⟨ fst v ∈ fst w ⟩) z ∥₁
-  cond∈-out t u z = PT.rec squash₁
-    (λ { (v , hv) → PT.map (λ { (w , r) → v , (w , r) }) hv })
+  cond∈-out t u z = rec₁ squash₁
+    (λ { (v , hv) → map₁ (λ { (w , r) → v , (w , r) }) hv })
 ```
 
 <!--en-->
@@ -553,7 +549,7 @@ The outward mapping flattens the nested witnesses back into the triple, the whol
   cond≐-in : ∀ {n} (t u : Term S n) (z : S)
            → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
            → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
-  cond≐-in t u z = PT.map (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
+  cond≐-in t u z = map₁ (λ { (v , (w , r)) → v , ∣ w , r ∣₁ })
 ```
 
 <!--en-->
@@ -569,8 +565,8 @@ The equality atom carries the relation `fst v ≡ fst w`, equality of underlying
   cond≐-out : ∀ {n} (t u : Term S n) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (t ≐ u) ⟩
             → ∥ CondAtom t u (λ v w → fst v ≡ fst w) z ∥₁
-  cond≐-out t u z = PT.rec squash₁
-    (λ { (v , hv) → PT.map (λ { (w , r) → v , (w , r) }) hv })
+  cond≐-out t u z = rec₁ squash₁
+    (λ { (v , hv) → map₁ (λ { (w , r) → v , (w , r) }) hv })
 ```
 
 <!--en-->
@@ -601,7 +597,7 @@ For the unbounded existential, the unpacked condition is the Σ-type `CondQuant`
 
   cond∃-in : ∀ {n} (a : Formula S (suc n)) (z : S)
            → ∥ CondQuant a z ∥₁ → ⟨ (z ∷ []) ⊨ cond (∃̇ a) ⟩
-  cond∃-in a z = PT.map (λ { (x , (x∈ , (e' , r))) → x , (x∈ , ∣ e' , r ∣₁) })
+  cond∃-in a z = map₁ (λ { (x , (x∈ , (e' , r))) → x , (x∈ , ∣ e' , r ∣₁) })
 ```
 
 <!--en-->
@@ -616,8 +612,8 @@ Inward folds the extension data into the single truncated witness that the exist
 
   cond∃-out : ∀ {n} (a : Formula S (suc n)) (z : S)
             → ⟨ (z ∷ []) ⊨ cond (∃̇ a) ⟩ → ∥ CondQuant a z ∥₁
-  cond∃-out a z = PT.rec squash₁
-    (λ { (x , (x∈ , hv)) → PT.map (λ { (e' , r) → x , (x∈ , (e' , r)) }) hv })
+  cond∃-out a z = rec₁ squash₁
+    (λ { (x , (x∈ , hv)) → map₁ (λ { (e' , r) → x , (x∈ , (e' , r)) }) hv })
 ```
 
 <!--en-->
@@ -720,18 +716,18 @@ The bounded existential stacks its witnesses: the outer truncation is over the v
 <!--/-->
 
 ```agda
-  cond∃∈-in t a z = PT.map
-    (λ { (w , (hw , hx)) → w , (hw , PT.map
+  cond∃∈-in t a z = map₁
+    (λ { (w , (hw , hx)) → w , (hw , map₁
       (λ { (x , ((x∈B , x∈w) , (e' , r))) → x , (x∈B , (x∈w , ∣ e' , r ∣₁)) })
       hx) })
 ```
 
 <!--en-->
-The first `PT.map` eliminates the outer truncation over `w`, and the nested `PT.map` eliminates the inner truncation of `CondBnd`, folding the member and the extension into the existential's own quantifier. Both goals are truncations and hence propositions, so the two eliminations are legitimate for the same reason.
+The first `map₁` eliminates the outer truncation over `w`, and the nested `map₁` eliminates the inner truncation of `CondBnd`, folding the member and the extension into the existential's own quantifier. Both goals are truncations and hence propositions, so the two eliminations are legitimate for the same reason.
 <!--zh-->
-第一个 `PT.map` 消去 `w` 上的外层截断，嵌套的 `PT.map` 消去 `CondBnd` 的内层截断，把成员与扩展折进存在量词自身的量词之中。两个目标都是截断、因而都是命题，两次消去的合法性同出一源。
+第一个 `map₁` 消去 `w` 上的外层截断，嵌套的 `map₁` 消去 `CondBnd` 的内层截断，把成员与扩展折进存在量词自身的量词之中。两个目标都是截断、因而都是命题，两次消去的合法性同出一源。
 <!--ja-->
-最初の `PT.map` が `w` の上の外側の切り詰めを消去し、入れ子の `PT.map` が `CondBnd` の内側の切り詰めを消去して、要素と拡張を存在量化子自身の量化の中へ折りたたみます。どちらの目標も切り詰め、したがって命題なので、二つの消去が正当な理由は同じです。
+最初の `map₁` が `w` の上の外側の切り詰めを消去し、入れ子の `map₁` が `CondBnd` の内側の切り詰めを消去して、要素と拡張を存在量化子自身の量化の中へ折りたたみます。どちらの目標も切り詰め、したがって命題なので、二つの消去が正当な理由は同じです。
 <!--/-->
 
 ```agda
@@ -751,9 +747,9 @@ The outward statement exposes the same two-layer shape: the value of the bound o
 <!--/-->
 
 ```agda
-  cond∃∈-out t a z = PT.map
-    (λ { (w , (hw , hx)) → w , (hw , PT.rec squash₁
-      (λ { (x , (x∈B , (x∈w , hv))) → PT.map
+  cond∃∈-out t a z = map₁
+    (λ { (w , (hw , hx)) → w , (hw , rec₁ squash₁
+      (λ { (x , (x∈B , (x∈w , hv))) → map₁
         (λ { (e' , r) → x , ((x∈B , x∈w) , (e' , r)) }) hv })
       hx) })
 ```

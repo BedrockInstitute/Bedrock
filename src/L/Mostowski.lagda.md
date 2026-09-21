@@ -68,7 +68,6 @@ open import L.Constructible {ℓ} using ( IsOrd; isTransV; isPropIsTransV )
 
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.Induction.WellFounded using ( WellFounded; module WFI )
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -80,7 +79,6 @@ The hierarchy structure has equality and membership valued in `hProp` at level `
 <!--/-->
 
 ```agda
-open PT using ( ∣_∣₁; ∥_∥₁ )
 
 module SV = hPropStructure 𝒮ᵥ
 open SV using ( _∈ˢ_ )
@@ -159,7 +157,7 @@ Membership admits a computation law in each direction, and the two are usefully 
 ```agda
           → ∥ Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ b)) ∥₁
   col-out p b b∈ =
-    PT.map (λ z → fst (fst z) , snd (fst z) , snd z)
+    map₁ (λ z → fst (fst z) , snd (fst z) , snd z)
       (subst (λ v → ⟨ b ∈ˢ v ⟩) (col-eq p) b∈)
 
   col-ord : (p : A) → IsOrd (col p)
@@ -191,7 +189,7 @@ The first clause, that every member of `col p` is transitive, starts from `col-o
 
 ```agda
       mem : (x : SV.S) → ⟨ x ∈ˢ col p ⟩ → isTransV x
-      mem x x∈ = PT.rec (isPropIsTransV x)
+      mem x x∈ = rec₁ (isPropIsTransV x)
         (λ z → subst isTransV (snd (snd z)) (rec (fst z) (fst (snd z)) .fst))
         (col-out p x x∈)
       tr : isTransV (col p)
@@ -206,11 +204,11 @@ The second clause proves `col p` itself transitive: given `y ∈ x` and `x ∈ c
 <!--/-->
 
 ```agda
-      tr {x} {y} y∈x x∈col = PT.rec (snd (y ∈ˢ col p)) outer (col-out p x x∈col)
+      tr {x} {y} y∈x x∈col = rec₁ (snd (y ∈ˢ col p)) outer (col-out p x x∈col)
         where
         outer : Σ[ r ∈ A ] ((r ≺ p) × (col r ≡ x)) → ⟨ y ∈ˢ col p ⟩
         outer (r , rp , e) =
-          PT.rec (snd (y ∈ˢ col p)) inner
+          rec₁ (snd (y ∈ˢ col p)) inner
 ```
 
 <!--en-->

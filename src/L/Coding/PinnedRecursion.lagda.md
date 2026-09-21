@@ -137,7 +137,6 @@ open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
 open import L.Coding.SatisfactionClauses {ℓ} using ( tmIs; tableAt; module Clause; module Rel )
 open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using
   ( extB-out; extB-in; ExtFact; ext-unique; module Frame; module RelRead; module Bridge )
-open import Cubical.Data.Nat using ( _+_ )
 ```
 
 <!--en-->
@@ -149,11 +148,6 @@ Clause environments are finite vectors, and extending a frame shifts every older
 <!--/-->
 
 ```agda
-open import Cubical.Data.Vec using ( _∷_; lookup )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Foundations.Prelude using ( subst2 )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -165,7 +159,6 @@ Propositional truncation preserves that a witness exists while forgetting which 
 <!--/-->
 
 ```agda
-open PT using ( ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
@@ -181,7 +174,6 @@ A constructor tag is stored as an element of `Fin 10`, while syntax codes use an
 <!--/-->
 
 ```agda
-open import Cubical.Data.FinData using ( toℕ )
 
 ```
 
@@ -307,7 +299,7 @@ Tag nine has the analogous payload for `∃[]-syntax`: a term code at the curren
 
 ```agda
   MatchN {n} 9 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇∈ t a) × (r ≡ pr (ct t) (cd a)))
-  MatchN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) ψ r = Empty.⊥*
+  MatchN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) ψ r = ⊥*
 
 ```
 
@@ -383,7 +375,7 @@ Now suppose `c` belongs to the canonical code set and is presented as the pair o
 ```agda
   decodeAll : (c : S) → ⟨ fst c ∈ fst (AllCodes W) ⟩ → (n : ℕ) (z : V ℓ) → fst c ≡ pr (# n) z
             → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
-  decodeAll c c∈ n z e = PT.map
+  decodeAll c c∈ n z e = map₁
     (λ { (n₁ , ψ₁ , e₁) →
       let q = pr-inj (sym e₁ ∙ e)
 ```
@@ -642,8 +634,8 @@ To prove the compound is pinned, the proof eliminates the propositionally trunca
 ```agda
             → Pinned a → Pinned b → Pinned (opA a b)
     binCase {n} op opA k a b code relIs bridge cl2 ia ib c∈ y mem =
-      PT.rec (setIsSet _ _) (λ { (ya , ma) → PT.rec (setIsSet _ _) (λ { (yb , mb) →
-        PT.rec (setIsSet _ _)
+      rec₁ (setIsSet _ _) (λ { (ya , ma) → rec₁ (setIsSet _ _) (λ { (yb , mb) →
+        rec₁ (setIsSet _ _)
           (λ { (s , s₁ , e₁ , s₂ , e₂ , ext) →
 ```
 
@@ -734,8 +726,8 @@ The proof first eliminates the propositionally truncated body value and then the
 
 ```agda
     quCase {n} q qA k a code relIs bridge cl1 ia c∈ y mem =
-      PT.rec (setIsSet _ _) (λ { (ya , ma) →
-        PT.rec (setIsSet _ _)
+      rec₁ (setIsSet _ _) (λ { (ya , ma) →
+        rec₁ (setIsSet _ _)
           (λ { (s , s' , e' , ext) →
             let env = nn (suc n) ∷ s' ∷ ya ∷ keyS W a ∷ s ∷ e' ∷ K.δ12
 ```
@@ -829,8 +821,8 @@ Assume that membership of the compound key yields membership of the body key and
 ```agda
            → Pinned a → Pinned (qA t a)
     bqCase {n} q c qA k t a code relIs body bodyIs bridge cl1 ia c∈ y mem =
-      PT.rec (setIsSet _ _) (λ { (ya , ma) →
-        PT.rec (setIsSet _ _)
+      rec₁ (setIsSet _ _) (λ { (ya , ma) →
+        rec₁ (setIsSet _ _)
           (λ { (s , s₁ , s' , e' , ext) →
 ```
 
@@ -924,7 +916,7 @@ The atomic clause yields merely an auxiliary set together with an extension fact
 <!--/-->
 
 ```agda
-      PT.rec (setIsSet _ _)
+      rec₁ (setIsSet _ _)
         (λ { (s , ext) →
           let env = uS ∷ tS ∷ s ∷ K.δ12
               P : S → Type (ℓ-suc ℓ)
@@ -1490,17 +1482,17 @@ The data type collects the decoded arity, environment set, formula, and tag matc
 ```
 
 <!--en-->
-The evidence in `data'` remains under propositional truncation throughout. First the tower entry merely supplies an arity and its environment set. For each such witness, `decode` merely supplies a formula at that arity, and `PT.map` augments it with the constructor-shape proof obtained by `matchAt`. The outer elimination lands again in a truncated type, so no arity or formula is selected globally.
+The evidence in `data'` remains under propositional truncation throughout. First the tower entry merely supplies an arity and its environment set. For each such witness, `decode` merely supplies a formula at that arity, and `map₁` augments it with the constructor-shape proof obtained by `matchAt`. The outer elimination lands again in a truncated type, so no arity or formula is selected globally.
 <!--zh-->
-`data'` 中的证据始终留在命题截断之下。环境塔条目先只给出某个元数及其环境集；对每个这样的见证，`decode` 又只在命题截断下给出该元数处的某个公式，`PT.map` 再用 `matchAt` 得到的构造子形状证明扩充这份数据。外层消去的目标仍是命题截断后的类型，所以整个过程没有在全局选择任何元数或公式。
+`data'` 中的证据始终留在命题截断之下。环境塔条目先只给出某个元数及其环境集；对每个这样的见证，`decode` 又只在命题截断下给出该元数处的某个公式，`map₁` 再用 `matchAt` 得到的构造子形状证明扩充这份数据。外层消去的目标仍是命题截断后的类型，所以整个过程没有在全局选择任何元数或公式。
 <!--ja-->
-`data'` の証拠は、全体を通して命題的切り詰めの内側に留まります。まず塔の要素が、あるアリティとその環境集合を単に与えます。その各証人に対して、`decode` はそのアリティのある論理式を単に与え、`PT.map` が `matchAt` から得た構成子の形の証明を付け加えます。外側の消去先も再び切り詰められた型なので、アリティや論理式が大域的に選ばれることはありません。
+`data'` の証拠は、全体を通して命題的切り詰めの内側に留まります。まず塔の要素が、あるアリティとその環境集合を単に与えます。その各証人に対して、`decode` はそのアリティのある論理式を単に与え、`map₁` が `matchAt` から得た構成子の形の証明を付け加えます。外側の消去先も再び切り詰められた型なので、アリティや論理式が大域的に選ばれることはありません。
 <!--/-->
 
 ```agda
         data' : ∥ Data ∥₁
-        data' = PT.rec squash₁
-          (λ { (n , (qa , qF)) → PT.map
+        data' = rec₁ squash₁
+          (λ { (n , (qa , qF)) → map₁
             (λ { (ψ , qp) → n , (qa , qF , ψ , (qp , matchAt ψ (toℕ k) (fst r) (sym qp ∙ ep))) })
             (decode c c∈ n (fst p) (ec ∙ cong (λ v → pr v (fst p)) qa)) })
 ```
@@ -1893,7 +1885,7 @@ Formula satisfaction is a proposition, so `Fill.Goal k A` is a valid target for 
 <!--/-->
 
 ```agda
-        in PT.rec (Fill.isPropGoal k A) (fill k A) (Fill.data' k A))
+        in rec₁ (Fill.isPropGoal k A) (fill k A) (Fill.data' k A))
 
 ```
 
@@ -1958,7 +1950,7 @@ If `x` belongs to the slot generated by `ψ`, then, under propositional truncati
   slotAb : ∀ {n} (ψ : Formula Ab n) (x : V ℓ)
          → ⟨ x ∈ fst (slot W (toS ψ)) ⟩
          → ∥ Σ[ m ∈ ℕ ] Σ[ χ ∈ Formula Ab m ] (x ≡ fst (keyS W χ)) ∥₁
-  slotAb ψ x h = PT.map
+  slotAb ψ x h = map₁
     (λ { (m , χ , e , _) → m , χ , (e ∙ sym (keyBridge W χ)) })
 ```
 
@@ -2082,7 +2074,7 @@ Decoding starts with both membership `c ∈ Cv` and a specified arity presentati
 ```agda
       decode : (c : S) → ⟨ fst c ∈ Cv ⟩ → (n : ℕ) (z : V ℓ)
              → fst c ≡ pr (# n) z → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁
-      decode c c∈ n z e = PT.map
+      decode c c∈ n z e = map₁
         (λ { (n₁ , ψ₁ , e₁) →
           let q = pr-inj (sym e₁ ∙ e)
 ```
@@ -2112,7 +2104,7 @@ For each `c ∈ Cv`, transport by `qC` places `c` in the canonical slot, where `
 
 ```agda
       tot : (c : S) → ⟨ fst c ∈ Cv ⟩ → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ ∥₁
-      tot c c∈ = PT.map
+      tot c c∈ = map₁
         (λ { (y , h) → y , subst (λ u → ⟨ pr (fst c) (fst y) ∈ u ⟩) (sym qT) h })
         (slotTotal W (toS ψ0) (fst c) (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈))
 
@@ -2129,7 +2121,7 @@ For a member `e` of `Tv`, the equation `qT` first transports its membership to t
 ```agda
       onc : (e : S) → ⟨ fst e ∈ Tv ⟩
           → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
-      onc e e∈ = PT.map
+      onc e e∈ = map₁
         (λ { (m , χ , (q , _)) →
           let ee = q ∙ prʟ-fst (keyʟ χ) (Sat W χ)
 ```

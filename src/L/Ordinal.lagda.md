@@ -59,19 +59,16 @@ open import L.Constructible {ℓ}
 ```
 
 <!--en-->
-A recurring pattern in the proofs is elimination of a truncated witness. Membership in a union is only *merely* witnessed by some index and member, so a fact about all union members is extracted with `PT.rec` into a proposition-valued target. This is why each closure lemma names its target proposition, such as `isPropIsTransV z`, before consuming the truncation: elimination of `∥ A ∥₁` is permitted exactly into such propositions.
+A recurring pattern in the proofs is elimination of a truncated witness. Membership in a union is only *merely* witnessed by some index and member, so a fact about all union members is extracted with `rec₁` into a proposition-valued target. This is why each closure lemma names its target proposition, such as `isPropIsTransV z`, before consuming the truncation: elimination of `∥ A ∥₁` is permitted exactly into such propositions.
 <!--zh-->
-这些证明中反复出现的模式是截断见证的消去。属于一个并的成员只是**仅仅**由某个指标与某个成员见证，因此关于并之全体成员的事实要用 `PT.rec` 提取到一个命题值的目标中。正因如此，每条闭包引理在消耗截断之前先指明目标命题，例如 `isPropIsTransV z`：`∥ A ∥₁` 的消去恰好允许进入这类命题。
+这些证明中反复出现的模式是截断见证的消去。属于一个并的成员只是**仅仅**由某个指标与某个成员见证，因此关于并之全体成员的事实要用 `rec₁` 提取到一个命题值的目标中。正因如此，每条闭包引理在消耗截断之前先指明目标命题，例如 `isPropIsTransV z`：`∥ A ∥₁` 的消去恰好允许进入这类命题。
 <!--ja-->
-これらの証明で繰り返される型は、截断された証人の消去です。和集合への所属は、ある添字とある要素によって**単に (merely)** 証明されるだけなので、和のすべての要素に関する事実は `PT.rec` を用いて命題値の対象へと取り出します。そのため、各閉性補題は截断を消費する前に、`isPropIsTransV z` のような目標の命題を名指します。`∥ A ∥₁` の消去が許されるのは、まさにこのような命題へのときだけだからです。
+これらの証明で繰り返される型は、截断された証人の消去です。和集合への所属は、ある添字とある要素によって**単に (merely)** 証明されるだけなので、和のすべての要素に関する事実は `rec₁` を用いて命題値の対象へと取り出します。そのため、各閉性補題は截断を消費する前に、`isPropIsTransV z` のような目標の命題を名指します。`∥ A ∥₁` の消去が許されるのは、まさにこのような命題へのときだけだからです。
 <!--/-->
 
 ```agda
 
 open import Cubical.Data.Nat.Order using ( _<_; ≤-suc; isProp≤ )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.Data.Bool using ( Bool; true; false )
 ```
 
@@ -119,17 +116,17 @@ Recall the predicate: an ordinal is a transitive set whose members are all trans
 <!--/-->
 
 <!--en-->
-The certificate `∅-ord` packages the two vacuous halves. Transitivity of `∅` is the already-proved lemma `∅-trans`. For the second half, the function must accept any `x` with a claimed membership `x ∈ˢ ∅`, but the empty-set lemma converts that membership into an element of the empty host type, which `Empty.rec` eliminates to prove anything at all. A member that cannot exist imposes no obligation.
+The certificate `∅-ord` packages the two vacuous halves. Transitivity of `∅` is the already-proved lemma `∅-trans`. For the second half, the function must accept any `x` with a claimed membership `x ∈ˢ ∅`, but the empty-set lemma converts that membership into an element of the empty host type, which `⊥*-rec` eliminates to prove anything at all. A member that cannot exist imposes no obligation.
 <!--zh-->
-证书 `∅-ord` 把两个真空的半边打包起来。`∅` 的传递性用已证的引理 `∅-trans`；对第二半，函数必须接受任何声称有 `x ∈ˢ ∅` 的 `x`，但空集引理把这一隶属转化为空宿主类型中的一个元素，`Empty.rec` 由此证明任何命题。不可能存在的成员不施加任何义务。
+证书 `∅-ord` 把两个真空的半边打包起来。`∅` 的传递性用已证的引理 `∅-trans`；对第二半，函数必须接受任何声称有 `x ∈ˢ ∅` 的 `x`，但空集引理把这一隶属转化为空宿主类型中的一个元素，`⊥*-rec` 由此证明任何命题。不可能存在的成员不施加任何义务。
 <!--ja-->
-証明書 `∅-ord` は空虚に成立する二つの半分をまとめたものです。`∅` の推移性には既証の補題 `∅-trans` を使い、第二の半分については、`x ∈ˢ ∅` を主張する任意の `x` を受け取る関数を与えますが、空集合の補題がその所属を空のホスト型の要素へと変換し、`Empty.rec` がそこから任意の命題を証明します。存在し得ない要素は何の義務も課しません。
+証明書 `∅-ord` は空虚に成立する二つの半分をまとめたものです。`∅` の推移性には既証の補題 `∅-trans` を使い、第二の半分については、`x ∈ˢ ∅` を主張する任意の `x` を受け取る関数を与えますが、空集合の補題がその所属を空のホスト型の要素へと変換し、`⊥*-rec` がそこから任意の命題を証明します。存在し得ない要素は何の義務も課しません。
 <!--/-->
 
 ```agda
 ∅-ord : IsOrd ∅
 ∅-ord = ∅-trans
-      , (λ x x∈∅ → Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅)))
+      , (λ x x∈∅ → ⊥₀-rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈∅)))
 ```
 
 <!--en-->
@@ -215,15 +212,15 @@ setUnion-ord X f hf = setUnion-trans X f (λ x → hf x .fst) , memTr
 ```
 
 <!--en-->
-For the remaining obligation, `union-family-out` states that `z ∈ˢ ⋃ (sett X f)` means merely that `z` lies in some `f x`. Since the goal `isTransV z` is a proposition, `PT.rec` may eliminate that truncation, and in each branch `hf x .snd z hz` supplies exactly the needed certificate: a member of an ordinal family member is transitive.
+For the remaining obligation, `union-family-out` states that `z ∈ˢ ⋃ (sett X f)` means merely that `z` lies in some `f x`. Since the goal `isTransV z` is a proposition, `rec₁` may eliminate that truncation, and in each branch `hf x .snd z hz` supplies exactly the needed certificate: a member of an ordinal family member is transitive.
 <!--zh-->
-剩下的义务是：`union-family-out` 表明 `z ∈ˢ ⋃ (sett X f)` 仅仅意味着 `z` 落在某个 `f x` 中。由于目标 `isTransV z` 是命题，`PT.rec` 可以消去该截断，而在每个分支中 `hf x .snd z hz` 恰好给出所需证书：序数族元的成员是传递的。
+剩下的义务是：`union-family-out` 表明 `z ∈ˢ ⋃ (sett X f)` 仅仅意味着 `z` 落在某个 `f x` 中。由于目标 `isTransV z` 是命题，`rec₁` 可以消去该截断，而在每个分支中 `hf x .snd z hz` 恰好给出所需证书：序数族元的成员是传递的。
 <!--ja-->
-残りの義務については、`union-family-out` は `z ∈ˢ ⋃ (sett X f)` が、`z` がある `f x` に属することを**単に (merely)** 意味することを述べます。目標 `isTransV z` は命題なので `PT.rec` がこの截断を消去でき、各分岐では `hf x .snd z hz` がちょうど必要な証明書を与えます。すなわち、順序数である族の元の要素は推移的です。
+残りの義務については、`union-family-out` は `z ∈ˢ ⋃ (sett X f)` が、`z` がある `f x` に属することを**単に (merely)** 意味することを述べます。目標 `isTransV z` は命題なので `rec₁` がこの截断を消去でき、各分岐では `hf x .snd z hz` がちょうど必要な証明書を与えます。すなわち、順序数である族の元の要素は推移的です。
 <!--/-->
 
 ```agda
-  memTr z z∈⋃ = PT.rec (isPropIsTransV z)
+  memTr z z∈⋃ = rec₁ (isPropIsTransV z)
     (λ { (x , hz) → hf x .snd z hz }) (union-family-out X f z z∈⋃)
 ```
 
@@ -427,7 +424,7 @@ The next statement is downward closure for numerals, phrased directly as members
 
 numeral-mem : (k : ℕ) (y : S) → ⟨ y ∈ˢ (# k) ⟩ → ⟨ y ∈ˢ ω ⟩
 numeral-mem zero y y∈ =
-  Empty.rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
+  ⊥₀-rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))
 numeral-mem (suc k) y y∈ = ∈sucV-elim (snd (y ∈ˢ ω)) y∈
   (λ y∈#k → numeral-mem k y y∈#k)
 ```
@@ -444,7 +441,7 @@ Conversely, every member of `ω` is an ordinal. Membership in `ω` merely presen
   (λ y≡#k → subst (λ w → ⟨ w ∈ˢ ω ⟩) (sym y≡#k) (#∈ω k))
 
 ω-mem-ord : (y : S) → ⟨ y ∈ˢ ω ⟩ → IsOrd y
-ω-mem-ord y y∈ω = PT.rec (isPropIsOrd y)
+ω-mem-ord y y∈ω = rec₁ (isPropIsOrd y)
   (λ { (k , #k≡y) → subst IsOrd #k≡y (numeral-ord (lower k)) })
   y∈ω
 ```
@@ -474,7 +471,7 @@ For each member `x` of `ω`, `ω-mem-ord x x∈ω` proves `IsOrd x`; its first c
 <!--/-->
 
 ```agda
-  trans-ω {x} {y} y∈x x∈ω = PT.rec (snd (y ∈ˢ ω))
+  trans-ω {x} {y} y∈x x∈ω = rec₁ (snd (y ∈ˢ ω))
     (λ { (k , #k≡x) →
       numeral-mem (lower k) y (subst (λ w → ⟨ y ∈ˢ w ⟩) (sym #k≡x) y∈x) })
     x∈ω
@@ -505,7 +502,7 @@ The elimination lemma states that a member `z` of `# n` merely comes from a smal
 ```agda
 ∈#-elim : (n : ℕ) (z : S) → ⟨ z ∈ˢ (# n) ⟩
         → ∥ Σ[ m ∈ ℕ ] ((m < n) × (z ≡ # m)) ∥₁
-∈#-elim zero    z h = Empty.rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst h))
+∈#-elim zero    z h = ⊥₀-rec (∅-empty z (∈∈ₛ {a = z} {b = ∅} .fst h))
 ∈#-elim (suc n) z h = ∈sucV-elim {A = # n} {x = z}
   {P = ∥ Σ[ m ∈ ℕ ] ((m < suc n) × (z ≡ # m)) ∥₁} squash₁ h
 ```
@@ -519,11 +516,11 @@ In the successor case the eliminator for `sucV` splits membership in `# (suc n)`
 <!--/-->
 
 ```agda
-  (λ z∈#n → PT.map (λ { (m , p , e) → m , ≤-suc p , e }) (∈#-elim n z z∈#n))
+  (λ z∈#n → map₁ (λ { (m , p , e) → m , ≤-suc p , e }) (∈#-elim n z z∈#n))
   (λ e → ∣ n , (0 , refl) , e ∣₁)
 
 #∈#-elim : (a b : ℕ) → ⟨ (# a) ∈ˢ (# b) ⟩ → a < b
-#∈#-elim a b h = PT.rec isProp≤
+#∈#-elim a b h = rec₁ isProp≤
   (λ { (m , p , e) → subst (_< b) (sym (#-inj′ e)) p })
 ```
 

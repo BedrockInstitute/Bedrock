@@ -24,12 +24,13 @@ A predicative foundation can accommodate impredicative assumptions just as intui
 module Base.Impredicativity where
 
 open import Base.Prelude
+open import Cubical.Foundations.HLevels using ( isOfHLevelRespectEquiv )
 ```
 
 <!--en-->
 The issue appears in the universe levels. All propositions whose [underlying types]{.term-ref #underlying-type} lie in `Type ℓ`{.Agda} form `hProp ℓ`{.Agda}, but this proposition universe as a whole belongs to `Type (ℓ-suc ℓ)`{.Agda}. A proposition obtained by quantifying over all of `hProp ℓ`{.Agda} need not fit at level `ℓ`.
 
-For example, suppose we define a proposition `R` by saying that every `Q : hProp ℓ`{.Agda} implies itself, and also demand that `R` belong to `hProp ℓ`{.Agda}. Then the quantifier over every `Q` also ranges over `R`: the domain being quantified over already includes the proposition being defined. The claim that `Q` implies itself is elementary; the difficulty is the demand that this quantification produce a proposition at the same level. In Cubical Agda the quantification instead lives one universe higher. User code cannot rewrite Agda's universe-level rules, but an explicit assumption can connect the higher proposition to a lower representative with the same truth content. We must now say how to express that connection.
+For example, suppose we define a proposition `R` by saying that every `Q : hProp ℓ`{.Agda} implies itself, and also demand that `R` belong to `hProp ℓ`{.Agda}. Then the quantifier over every `Q` also ranges over `R`: the totality being quantified over already includes the proposition being defined. The claim that `Q` implies itself is elementary; the difficulty is the demand that this quantification produce a proposition at the same level. In Cubical Agda the quantification instead lives one universe higher. User code cannot rewrite Agda's universe-level rules, but an explicit assumption can connect the higher proposition to a lower representative with the same truth content. We must now say how to express that connection.
 <!--zh-->
 困难来自宇宙层级。[底层类型]{.term-ref #underlying-type}位于 `Type ℓ`{.Agda} 的所有命题组成 `hProp ℓ`{.Agda}，而这个命题宇宙整体属于 `Type (ℓ-suc ℓ)`{.Agda}。因此，对 `hProp ℓ`{.Agda} 中所有命题量化所得的命题，不一定仍能放在层级 `ℓ`。
 
@@ -112,16 +113,15 @@ open import Cubical.Foundations.Equiv using ( _≃_ )
 ```
 
 <!--en-->
-This notion should be distinguished from an [isomorphism]{.term-ref #type-isomorphism}, which explicitly presents a forward map, a chosen inverse map and the two inverse laws. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure. For propositions, `⇔toPath`{.Agda} performs a different conversion, turning two implications into a path between the corresponding `hProp`{.Agda} values.
+This notion should be distinguished from an [isomorphism]{.term-ref #type-isomorphism}, which explicitly presents a forward map, a chosen inverse map and the two inverse laws. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
 <!--zh-->
-这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-ref #type-isomorphism}区分：同构显式给出正向映射、选定的逆向映射和两条逆律。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。对于命题，`⇔toPath`{.Agda} 完成另一种转换，把两个方向的蕴含变成相应 `hProp`{.Agda} 值之间的路径。
+这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-ref #type-isomorphism}区分：同构显式给出正向映射、选定的逆向映射和两条逆律。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。
 <!--ja-->
-この[型同値]{.term-ref #type-equivalence}は[同型]{.term-ref #type-isomorphism}と区別する必要があります。同型は順写像、選ばれた逆写像、二つの逆法則を明示的に与えます。以下で導入する定義は両者の関係を表します。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換します。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用います。命題については、`⇔toPath`{.Agda} が別の変換を行い、両方向の含意を対応する `hProp`{.Agda} の値の間のパスへ変えます。
+この[型同値]{.term-ref #type-equivalence}は[同型]{.term-ref #type-isomorphism}と区別する必要があります。同型は順写像、選ばれた逆写像、二つの逆法則を明示的に与えます。以下で導入する定義は両者の関係を表します。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換します。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用います。
 <!--/-->
 
 ```agda
 open import Cubical.Foundations.Isomorphism using ( Iso; iso; isoToEquiv )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
 
 <!--en-->
@@ -250,7 +250,6 @@ It remains to construct the representative and the isomorphism used in the proof
 ```agda
   codedTruth : hProp ℓ₁ → hProp ℓ₂
   codedTruth P = (equivFun e ⊤ ≡ equivFun e P) , isOfHLevelRespectEquiv 2 e isSetHProp _ _
-    where open import Cubical.Foundations.HLevels using ( isOfHLevelRespectEquiv )
 ```
 
 <!--en-->
@@ -266,11 +265,11 @@ It remains to construct the representative and the isomorphism used in the proof
 ```
 
 <!--en-->
-**Proof** We construct the two maps `to`{.Agda} and `from`{.Agda}, then assemble them with `iso`{.Agda}. The source `⟨ P ⟩`{.Agda} and target `⟨ codedTruth P ⟩`{.Agda} are both propositions, so their propositionhood proves the two inverse laws once the maps have been given. Where a map must return an inhabitant of truth, the expected type lets Agda infer its unique inhabitant at `_`{.Agda}.
+**Proof** We construct the two maps `to`{.Agda} and `from`{.Agda}, then assemble them with `iso`{.Agda}. The source `⟨ P ⟩`{.Agda} and target `⟨ codedTruth P ⟩`{.Agda} are both propositions, so their propositionhood proves the two inverse laws once the maps have been given. Where a map must return an inhabitant of truth, we write its unique inhabitant `tt*`{.Agda} explicitly.
 <!--zh-->
-**证明** 我们构造两个方向的映射 `to`{.Agda} 和 `from`{.Agda}，再用 `iso`{.Agda} 把它们组装起来。源 `⟨ P ⟩`{.Agda} 和目标 `⟨ codedTruth P ⟩`{.Agda} 都是命题，因此给出两个映射之后，两端的命题性便可直接证明两条逆律。映射需要返回真命题的元素时，期望类型使 Agda 能在 `_`{.Agda} 处推断出其唯一元素。
+**证明** 我们构造两个方向的映射 `to`{.Agda} 和 `from`{.Agda}，再用 `iso`{.Agda} 把它们组装起来。源 `⟨ P ⟩`{.Agda} 和目标 `⟨ codedTruth P ⟩`{.Agda} 都是命题，因此给出两个映射之后，两端的命题性便可直接证明两条逆律。映射需要返回真命题的元素时，我们显式写出其唯一元素 `tt*`{.Agda}。
 <!--ja-->
-**証明** 二方向の写像 `to`{.Agda} と `from`{.Agda} を構成し、`iso`{.Agda} でまとめます。始域 `⟨ P ⟩`{.Agda} と終域 `⟨ codedTruth P ⟩`{.Agda} はどちらも命題なので、二つの写像を与えれば、両端の命題性が二つの逆法則を直接証明します。写像が真の命題の要素を返す箇所では、期待される型から Agda が `_`{.Agda} の唯一の要素を推論できます。
+**証明** 二方向の写像 `to`{.Agda} と `from`{.Agda} を構成し、`iso`{.Agda} でまとめます。始域 `⟨ P ⟩`{.Agda} と終域 `⟨ codedTruth P ⟩`{.Agda} はどちらも命題なので、二つの写像を与えれば、両端の命題性が二つの逆法則を直接証明します。写像が真の命題の要素を返す箇所では、その唯一の要素 `tt*`{.Agda} を明示します。
 <!--/-->
 
 ```agda
@@ -294,7 +293,7 @@ It remains only to construct `to`{.Agda} and `from`{.Agda}.
 
 ```agda
     to : ⟨ P ⟩ → ⟨ codedTruth P ⟩
-    to p = cong (equivFun e) (⇔toPath (λ _ → p) (λ _ → _))
+    to p = cong (equivFun e) (⇔toPath (λ _ → p) (λ _ → tt*))
 ```
 
 <!--en-->
@@ -307,7 +306,7 @@ It remains only to construct `to`{.Agda} and `from`{.Agda}.
 
 ```agda
     from : ⟨ codedTruth P ⟩ → ⟨ P ⟩
-    from q = subst ⟨_⟩ (invEq (congEquiv e) q) _
+    from q = subst ⟨_⟩ (invEq (congEquiv e) q) tt*
 ```
 
 </details>

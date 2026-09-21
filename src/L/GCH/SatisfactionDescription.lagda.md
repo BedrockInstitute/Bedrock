@@ -132,11 +132,6 @@ An interpreting environment is a finite vector of constructible sets, and its in
 <!--/-->
 
 ```agda
-open import Cubical.Data.Vec using ( lookup )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Foundations.HLevels using ( isPropΣ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁ )
 ```
 
 <!--en-->
@@ -231,7 +226,7 @@ Suppose an entry of `Ev` is already presented as the encoded pair of `n` and `F`
 ```agda
     module TR = TowerRead E w (N f0) γ W qw (tg f0) hE
     arity : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩ → ∥ Σ[ k ∈ ℕ ] (fst n ≡ # k) ∥₁
-    arity n F q∈ = PT.map (λ { (k , (qk , _)) → k , qk }) (TR.entry-out n F q∈)
+    arity n F q∈ = map₁ (λ { (k , (qk , _)) → k , qk }) (TR.entry-out n F q∈)
     module CS = CodesSound C w E N γ W qw tg arity (hC .fst)
     module CC = CodesComplete C w E N γ W qw tg TR.entry-in (hC .snd)
 ```
@@ -313,7 +308,7 @@ Every member of the candidate code domain belongs to the canonical code set. The
 
 ```agda
   C-out : (c : S) → ⟨ fst c ∈ Cv ⟩ → ⟨ fst c ∈ fst (AllCodes W) ⟩
-  C-out c c∈ = PT.rec (snd (fst c ∈ fst (AllCodes W)))
+  C-out c c∈ = rec₁ (snd (fst c ∈ fst (AllCodes W)))
     (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ fst (AllCodes W) ⟩) (sym e) (key∈AllCodes W ψ) })
     (CS.key-out c c∈)
 
@@ -329,7 +324,7 @@ Conversely, every member of the canonical code set belongs to `Cv`. Canonical me
 
 ```agda
   C-in : (c : S) → ⟨ fst c ∈ fst (AllCodes W) ⟩ → ⟨ fst c ∈ Cv ⟩
-  C-in c c∈ = PT.rec (snd (fst c ∈ Cv))
+  C-in c c∈ = rec₁ (snd (fst c ∈ Cv))
     (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ Cv ⟩) (sym e) (CC.key-in ψ) })
     (AllCodes-out W c c∈)
 
@@ -375,8 +370,8 @@ The table reading is the heart of the soundness direction. It is stated only for
 ```agda
   T-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ Tv ⟩
         → Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst y ≡ fst (Table.val W W x mx))
-  T-out x y h = PT.rec (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
-    (λ { (c , yc , (ee , c∈)) → PT.rec (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
+  T-out x y h = rec₁ (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
+    (λ { (c , yc , (ee , c∈)) → rec₁ (isPropΣ (snd (fst x ∈ fst (AllCodes W))) (λ mx → setIsSet _ _))
       (λ { (k , ψ , e) →
 ```
 
@@ -422,8 +417,8 @@ For the converse table reading, begin with a specified canonical code `x`. Its m
 
 ```agda
   T-in : (x : S) (mx : ⟨ fst x ∈ fst (AllCodes W) ⟩) → ⟨ pr (fst x) (fst (Table.val W W x mx)) ∈ Tv ⟩
-  T-in x mx = PT.rec (snd (pr (fst x) (fst (Table.val W W x mx)) ∈ Tv))
-    (λ { (k , ψ , e) → PT.rec (snd (pr (fst x) (fst (Table.val W W x mx)) ∈ Tv))
+  T-in x mx = rec₁ (snd (pr (fst x) (fst (Table.val W W x mx)) ∈ Tv))
+    (λ { (k , ψ , e) → rec₁ (snd (pr (fst x) (fst (Table.val W W x mx)) ∈ Tv))
       (λ { (y , my) →
         subst (λ u → ⟨ u ∈ Tv ⟩)
 ```
@@ -539,7 +534,7 @@ The real graph also supplies the required shape of arbitrary table members. Unde
 ```agda
     onc : (e : S) → ⟨ fst e ∈ Tv ⟩
         → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ Cv ⟩) ∥₁
-    onc e e∈ = PT.map
+    onc e e∈ = map₁
       (λ { (x , mx , ee) → x , SatGraph.valOf W x mx , (ee , subst (λ u → ⟨ fst x ∈ u ⟩) (sym qC) mx) })
       (SatGraph.pairs-shape W e (subst (λ u → ⟨ fst e ∈ u ⟩) qT e∈))
 ```

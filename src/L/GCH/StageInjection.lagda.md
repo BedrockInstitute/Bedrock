@@ -146,9 +146,6 @@ The inverse collapse will be compared as a map between elements of the construct
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Foundations.HLevels using ( isProp× )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 ```
@@ -165,8 +162,6 @@ Non-finiteness enters the later counting argument in two concrete ways. It provi
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet; ∅ )
 open InfinitySet {ℓ} using ( ω; sucV )
-open import Cubical.Data.Vec using ( _∷_; [] )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -178,8 +173,6 @@ Propositional truncation appears at two decisive points. It lets the proof use t
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( squash₁ )
 
 ```
 
@@ -478,7 +471,7 @@ Membership in `Lset β` gives only the propositionally truncated type of preimag
 
 ```agda
   pre : (v : S) → Mem v → Pre v
-  pre v m = PT.rec (isPropPre v) (λ w → w)
+  pre v m = rec₁ (isPropPre v) (λ w → w)
     (HSC.πX-member (fst v) (subst (λ w → ⟨ fst v ∈ˢ w ⟩) (sym ext) m))
 
 ```
@@ -568,7 +561,7 @@ For a hull member `x` whose collapse is `v`, the actual pair `(v,x)` satisfies `
 ```agda
   π-graph : (x : S) (mx : ⟨ fst x ∈ˢ HS.M ⟩) (v : S) → HSC.π (fst x) ≡ fst v
           → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
-  π-graph x mx v e = PT.rec (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
+  π-graph x mx v e = rec₁ (snd ((v ∷ x ∷ []) ⊨ P.piFo)) read M-isL
     where
     read : Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ HS.M ∈ˢ Lset α ⟩) → ⟨ (v ∷ x ∷ []) ⊨ P.piFo ⟩
 ```
@@ -708,9 +701,9 @@ The counting module `At` fixes a non-finite constructible ordinal `δL`, its ord
 <!--/-->
 
 ```agda
-module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ → Empty.⊥)
+module At (δL : S) (oδ : IsOrd (fst δL)) (δ∉ω : ⟨ fst δL ∈ˢ ω ⟩ → ⊥₀)
           (μ : S) (oμ : IsOrd (fst μ)) (cμ : IsCardinalL μ)
-          (μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → Empty.⊥)
+          (μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀)
           (δ↪μ : InjL δL μ) (μ↪δ : InjL μ δL) where
 
 ```
@@ -1119,7 +1112,7 @@ For a general non-finite constructible ordinal `δ`, `cardOf` provides a cardina
 
 ```agda
 stage-counted : StageCountedCoded
-stage-counted δ Lδ oδ δ∉ω q = PT.rec squash₁ build (cardOf δ oδ)
+stage-counted δ Lδ oδ δ∉ω q = rec₁ squash₁ build (cardOf δ oδ)
   where
   build : Σ[ μ ∈ S ]
             ( IsOrd (fst μ) × IsCardinalL μ
@@ -1152,6 +1145,6 @@ It remains to justify the non-finiteness required by the hull-count theorem. If 
 ```agda
       (At.result δ oδ δ∉ω μ oμ cμ μ∉ω δ↪μ μ↪δ)
     where
-    μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → Empty.⊥
+    μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
     μ∉ω h = no-fin δ μ oδ δ∉ω oμ h δ↪μ
 ```

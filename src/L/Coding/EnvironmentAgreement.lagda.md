@@ -101,7 +101,6 @@ From the previous chapter come the constructed set `envSet`, its two membership 
 
 ```agda
 
-import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet using ( #_ )
@@ -250,7 +249,7 @@ The second direction reads outward: any member of the constructed `envSet B m` i
 <!--/-->
 
 ```agda
-  outof z hz = PT.rec (snd (fst z ∈ fst (lookup Ei γ)))
+  outof z hz = rec₁ (snd (fst z ∈ fst (lookup Ei γ)))
     (λ { (g , eg) →
 ```
 
@@ -356,7 +355,7 @@ The forward implication is the producing direction: every member of the construc
 <!--/-->
 
 ```agda
-    fwd z hz = PT.rec (snd ((z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi)))
+    fwd z hz = rec₁ (snd ((z ∷ γ) ⊨ envOverAt zero (suc di) (suc bi)))
       (λ { (g , eg) → envOverAt-transport (B ∷ nn m ∷ envS B g ∷ []) (z ∷ γ)
 ```
 

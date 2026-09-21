@@ -27,6 +27,7 @@ The construction is classical only through an explicit excluded-middle hypothesi
 
 ```agda
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Base.Classical using ( LEM )
 
 ```
@@ -136,9 +137,7 @@ Lengths live as natural numbers, positions as elements of `Fin n`, and internal 
 
 open import Cubical.Data.Nat.Order
   using ( _<_; ≤-refl; ≤-suc; suc-≤-suc; pred-≤-pred; ¬-<-zero; <-split; zero-≤ )
-open import Cubical.Data.FinData using ( toℕ )
 open import Cubical.Data.FinData.Properties using ( toℕ<n; fromℕ'; toFromId' )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 ```
 
 <!--en-->
@@ -150,8 +149,6 @@ The injectivity proof repeatedly separates two possibilities for an index below 
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
@@ -169,8 +166,6 @@ Von Neumann numerals and their successor operation connect finite lengths with t
   using ( module InfinitySet )
 open InfinitySet {ℓ} using ( ω; sucV; #_ )
 import Cubical.Induction.WellFounded as WF
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -182,7 +177,6 @@ Propositional truncation records that a representation exists while deliberately
 <!--/-->
 
 ```agda
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 ```
 
@@ -357,7 +351,7 @@ Every member of an environment set of length `n` belongs to `seqL A`. The proof 
 ```agda
 seqL-in : (A : S) (n : ℕ) (x : S)
         → ⟨ fst x ∈ˢ fst (envSet A n) ⟩ → ⟨ fst x ∈ˢ fst (seqL A) ⟩
-seqL-in A n x hx = PT.rec (snd (fst x ∈ˢ fst (seqL A))) from (envSet-out A n x hx)
+seqL-in A n x hx = rec₁ (snd (fst x ∈ˢ fst (seqL A))) from (envSet-out A n x hx)
   where
   from : Σ[ g ∈ Ix A n ] (fst x ≡ fst (envS A g)) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
 ```
@@ -402,7 +396,7 @@ Conversely, membership in `seqL A` yields only the propositionally truncated ass
 ```agda
 seqL-out : (A x : S) → ⟨ fst x ∈ˢ fst (seqL A) ⟩
          → ∥ Σ[ n ∈ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
-seqL-out A x hx = PT.rec squash₁ step1 (subst ⟨_⟩ (seqL-spec A x) hx .snd)
+seqL-out A x hx = rec₁ squash₁ step1 (subst ⟨_⟩ (seqL-spec A x) hx .snd)
   where
   step2 : (d : S) (k : ℕ) → # k ≡ fst d
 ```
@@ -451,7 +445,7 @@ The remaining step eliminates the membership of the domain in `ω`: a member of 
             × ∥ Σ[ b ∈ S ] ((fst b ≡ fst A)
                  × ⟨ (b ∷ d ∷ x ∷ []) ⊨ envOverAt (suc (suc zero)) (suc zero) zero ⟩) ∥₁)
         → ∥ Σ[ n ∈ ℕ ] ⟨ fst x ∈ˢ fst (envSet A n) ⟩ ∥₁
-  step1 (d , d∈ω , h) = PT.rec squash₁
+  step1 (d , d∈ω , h) = rec₁ squash₁
 ```
 
 <!--en-->
@@ -463,7 +457,7 @@ The numeral is fed into the conversion step, completing the reading direction. N
 <!--/-->
 
 ```agda
-    (λ { (k , q) → PT.rec squash₁ (step2 d (lower k) q) h }) d∈ω
+    (λ { (k , q) → rec₁ squash₁ (step2 d (lower k) q) h }) d∈ω
 ```
 
 <!--en-->
@@ -483,7 +477,7 @@ The coding module fixes the data of the pairing function. Its parameters are an 
 <!--/-->
 
 ```agda
-module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ → Empty.⊥)
+module Code (α : S) (oα : IsOrd (fst α)) (α∉ω : ⟨ fst α ∈ˢ ω ⟩ → ⊥₀)
             (F : S)
             (sv : ⟨ (F ∷ prodL α ∷ []) ⊨ svAt zero ⟩)
             (dm : ⟨ (F ∷ prodL α ∷ []) ⊨ domAt zero (suc zero) ⟩)
@@ -779,7 +773,7 @@ Suppose two fold chains agree after `k` steps. Then their entries agree at every
   chain-inj : (n : ℕ) (g g' : Fin n → ⟪ fst α ⟫) (k : ℕ)
             → fst (fst (chain n g k)) ≡ fst (fst (chain n g' k))
             → (j : ℕ) → j < k → fst (fst (ext n g j)) ≡ fst (fst (ext n g' j))
-  chain-inj n g g' zero    e j j<0  = Empty.rec (¬-<-zero j<0)
+  chain-inj n g g' zero    e j j<0  = ⊥₀-rec (¬-<-zero j<0)
   chain-inj n g g' (suc k) e j j<sk = go (<-split j<sk)
 ```
 
@@ -1167,9 +1161,9 @@ To read `stepFo` outward, the proof eliminates its propositionally truncated wit
 ```agda
       stepOut : (y s n m C b z i : S)
               → ⟨ (i ∷ e7 y s n m C b z) ⊨ stepFo ⟩ → StepAt s C i
-      stepOut y s n m C b z i = PT.rec squash₁ (λ { (j , (ej , ha)) →
-        PT.rec squash₁ (λ { (a , hu) → PT.rec squash₁ (λ { (u , hw) →
-        PT.rec squash₁ (λ { (w , hp) → PT.rec squash₁ (λ { (p , (h1 , (h2 , (h3 , (h4 , h5))))) →
+      stepOut y s n m C b z i = rec₁ squash₁ (λ { (j , (ej , ha)) →
+        rec₁ squash₁ (λ { (a , hu) → rec₁ squash₁ (λ { (u , hw) →
+        rec₁ squash₁ (λ { (w , hp) → rec₁ squash₁ (λ { (p , (h1 , (h2 , (h3 , (h4 , h5))))) →
 ```
 
 <!--en-->
@@ -1216,8 +1210,8 @@ The outward reading of `finFo` first obtains a terminal trace value `v` and an a
       finOut : (y s n m C b z : S) → ⟨ e7 y s n m C b z ⊨ finFo ⟩
              → ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
                             × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
-      finOut y s n m C b z = PT.rec squash₁ (λ { (v , hq) →
-        PT.rec squash₁ (λ { (q , (h1 , (h2 , h3))) →
+      finOut y s n m C b z = rec₁ squash₁ (λ { (v , hq) →
+        rec₁ squash₁ (λ { (q , (h1 , (h2 , h3))) →
 ```
 
 <!--en-->
@@ -1294,9 +1288,9 @@ The outward reading of the full formula eliminates the five nested existentials 
 
 ```agda
     fo-out : (y s : S) → ⟨ (y ∷ s ∷ []) ⊨ fo ⟩ → Wit y s
-    fo-out y s = PT.rec squash₁ (λ { (n , (n∈ω , hm)) →
-      PT.rec squash₁ (λ { (m , hC) → PT.rec squash₁ (λ { (C , hb) →
-      PT.rec squash₁ (λ { (b , hz) → PT.rec squash₁ (λ { (z , hbody) →
+    fo-out y s = rec₁ squash₁ (λ { (n , (n∈ω , hm)) →
+      rec₁ squash₁ (λ { (m , hC) → rec₁ squash₁ (λ { (C , hb) →
+      rec₁ squash₁ (λ { (b , hz) → rec₁ squash₁ (λ { (z , hbody) →
         bodyOut y s n m C b z n∈ω hbody }) hz }) hb }) hC }) hm })
 ```
 
@@ -1313,7 +1307,7 @@ The converse direction begins with one propositionally truncated `StepAt` witnes
     private
       stepIn : (y s n m C i : S) → StepAt s C i
              → ⟨ (i ∷ e7 y s n m C α (nn zero)) ⊨ stepFo ⟩
-      stepIn y s n m C i = PT.map (λ { (j , a , u , w , (ej , ha , hu , hw , hF)) →
+      stepIn y s n m C i = map₁ (λ { (j , a , u , w , (ej , ha , hu , hw , hF)) →
         let γ = prʟ a u ∷ w ∷ u ∷ a ∷ j ∷ i ∷ e7 y s n m C α (nn zero) in
 ```
 
@@ -1361,7 +1355,7 @@ The inward reading of `finFo` starts from a propositionally truncated terminal v
             → ∥ Σ[ v ∈ S ] ( ⟨ pr (fst n) (fst v) ∈ fst C ⟩
                            × ⟨ pr (pr (fst n) (fst v)) (fst y) ∈ fst F ⟩ ) ∥₁
             → ⟨ e7 y s n m C α (nn zero) ⊨ finFo ⟩
-      finIn y s n m C = PT.map (λ { (v , (hv , hy)) →
+      finIn y s n m C = map₁ (λ { (v , (hv , hy)) →
 ```
 
 <!--en-->
@@ -1436,7 +1430,7 @@ Reversing successor adequacy supplies the conjunct for `m=n+1`. The introduction
 ```agda
         , ( subst ⟨_⟩ (sym (sucAtL-adequate i4 i3 γ)) em
         , ( domAt-intro i6 i4 γ (λ x →
-              PT.rec (snd (fst x ∈ fst n)) (λ { (yy , p) → hd x .snd yy p })
+              rec₁ (snd (fst x ∈ fst n)) (λ { (yy , p) → hd x .snd yy p })
             , hd x .fst)
         , ( envOverAt-transport (α ∷ m ∷ C ∷ []) γ
 ```
@@ -1467,7 +1461,7 @@ The inward reading of the full formula eliminates the truncated witness and inje
 
 ```agda
     fo-in : (y s : S) → Wit y s → ⟨ (y ∷ s ∷ []) ⊨ fo ⟩
-    fo-in y s = PT.rec (snd ((y ∷ s ∷ []) ⊨ fo))
+    fo-in y s = rec₁ (snd ((y ∷ s ∷ []) ⊨ fo))
       (λ { (n , m , C , (n∈ω , em , hd , hE , h0 , hS , hF)) →
         ∣ n , ( n∈ω
               , ∣ m , ∣ C , ∣ α , ∣ nn zero
@@ -1761,7 +1755,7 @@ To prove that `s` has domain `# N`, start with an index in `# N`. The canonical 
       where
       domIs : DomIs s (nn N)
       domIs x =
-          (λ m → PT.map (λ { (yy , p) → yy , subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) (sym e) p })
+          (λ m → map₁ (λ { (yy , p) → yy , subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) (sym e) p })
                    (domAt-in (suc (suc zero)) (suc zero) δ dom0 x m))
 ```
 
@@ -1789,7 +1783,7 @@ For a set-theoretic index `i ∈ # N`, numeral elimination supplies a natural nu
 
 ```agda
       step : (i : S) → ⟨ fst i ∈ # N ⟩ → StepAt s C i
-      step i i∈N = PT.rec squash₁ (λ { (k , p , ei) →
+      step i i∈N = rec₁ squash₁ (λ { (k , p , ei) →
         ∣ nn (suc k) , fst (ext N g k) , fst (chain N g k) , fst (chain N g (suc k))
         , ( cong sucV (sym ei)
           , subst (λ w → ⟨ pr w (fst (fst (ext N g k))) ∈ fst s ⟩) (sym ei)
@@ -1822,7 +1816,7 @@ Existence alone does not yet make `fo` a function graph. The theorem `only` prov
 ```agda
 
     only : (y : S) → Wit y s → fst y ≡ fst (fst (code N g))
-    only y = PT.rec (setIsSet (fst y) (fst (fst (code N g))))
+    only y = rec₁ (setIsSet (fst y) (fst (fst (code N g))))
       (λ { (n , m , C' , (n∈ω , em , hd , hE , h0 , hS , hF)) →
         Only.final n m C' n∈ω em hd hE h0 hS hF })
       where
@@ -1870,7 +1864,7 @@ The witness length `n` must equal the canonical numeral `# N` as a set. Both des
         n≡ = cong fst (extensionalL {a = n} {b = nn N} (λ x → ⇔toPath (fwd x) (bwd x)))
           where
           fwd : (x : S) → ⟨ fst x ∈ fst n ⟩ → ⟨ fst x ∈ # N ⟩
-          fwd x x∈n = PT.rec (snd (fst x ∈ # N))
+          fwd x x∈n = rec₁ (snd (fst x ∈ # N))
 ```
 
 <!--en-->
@@ -1886,7 +1880,7 @@ For the forward implication, an element `x ∈ n` yields, by `hd`, a merely exis
                               (subst (λ w → ⟨ pr (fst x) (fst yy) ∈ w ⟩) e p) })
             (hd x .fst x∈n)
           bwd : (x : S) → ⟨ fst x ∈ # N ⟩ → ⟨ fst x ∈ fst n ⟩
-          bwd x x∈N = PT.rec (snd (fst x ∈ fst n))
+          bwd x x∈N = rec₁ (snd (fst x ∈ fst n))
 ```
 
 <!--en-->
@@ -1930,7 +1924,7 @@ The central induction states that every value recorded by `C'` at an index `k < 
         entry : (k : ℕ) → k < suc N → (v : S)
               → ⟨ pr (# k) (fst v) ∈ fst C' ⟩ → fst v ≡ fst (fst (chain N g k))
         entry zero    p v hv = svC (nn zero) v (nn zero) hv h0
-        entry (suc k) p v hv = PT.rec (setIsSet (fst v) (fst (fst (chain N g (suc k)))))
+        entry (suc k) p v hv = rec₁ (setIsSet (fst v) (fst (fst (chain N g (suc k)))))
           (λ { (j , a , u , w , (ej , ha , hu , hw , hFw)) →
 ```
 
@@ -1991,7 +1985,7 @@ It remains to determine the candidate output `y`. Eliminating the propositionall
 
 ```agda
         final : fst y ≡ fst (fst (code N g))
-        final = PT.rec (setIsSet (fst y) (fst (fst (code N g))))
+        final = rec₁ (setIsSet (fst y) (fst (fst (code N g))))
           (λ { (v , (hv , hy)) →
             let hv' : ⟨ pr (# N) (fst v) ∈ fst C' ⟩
                 hv' = subst (λ z → ⟨ pr z (fst v) ∈ fst C' ⟩) n≡ hv
@@ -2051,8 +2045,8 @@ Membership in `seqL α` first yields, through `seqL-out`, a merely existing fini
 
 ```agda
   rep : (s : S) → Mem s → Rep s
-  rep s m = PT.rec squash₁
-    (λ { (n , hn) → PT.map (λ { (g , e) → n , g , e }) (envSet-out α n s hn) })
+  rep s m = rec₁ squash₁
+    (λ { (n , hn) → map₁ (λ { (g , e) → n , g , e }) (envSet-out α n s hn) })
     (seqL-out α s m)
 
 ```
@@ -2070,7 +2064,7 @@ The graph formula can now be turned into a function on `seqL α`. Each concrete 
   R = record
     { dom   = seqL α
     ; graph = fo
-    ; funct = λ s m → mereFunct fo s (PT.map (λ { (n , g , e) →
+    ; funct = λ s m → mereFunct fo s (map₁ (λ { (n , g , e) →
 ```
 
 <!--en-->
@@ -2141,7 +2135,7 @@ The value of `fn` remains inside `α`. A truncated representation may be elimina
 
 ```agda
   into : (s : S) (m : Mem s) → ⟨ fst (fn s m) ∈ˢ fst α ⟩
-  into s m = PT.rec (snd (fst (fn s m) ∈ˢ fst α))
+  into s m = rec₁ (snd (fst (fn s m) ∈ˢ fst α))
     (λ { (n , g , e) → subst (λ w → ⟨ fst w ∈ˢ fst α ⟩) (sym (fn-code s m n g e)) (snd (code n g)) })
     (rep s m)
 
@@ -2175,7 +2169,7 @@ To prove injectivity, suppose two sequence members have equal `fn` values. Their
 
   inj : (s : S) (m : Mem s) (s' : S) (m' : Mem s')
       → fst (fn s m) ≡ fst (fn s' m') → fst s ≡ fst s'
-  inj s m s' m' e = PT.rec2 (setIsSet (fst s) (fst s'))
+  inj s m s' m' e = rec2 (setIsSet (fst s) (fst s'))
     (λ { (n , g , es) (n' , g' , es') →
         es
 ```
@@ -2227,9 +2221,9 @@ The final theorem removes the temporary assumption that a pairing injection on `
 
 ```agda
 seq-count :
-    (α : SL.S) → IsOrd (fst α) → (⟨ fst α ∈ˢ ω ⟩ → Empty.⊥)
+    (α : SL.S) → IsOrd (fst α) → (⟨ fst α ∈ˢ ω ⟩ → ⊥₀)
   → InjL (seqL α) α
-seq-count α oα α∉ω = PT.rec squash₁
+seq-count α oα α∉ω = rec₁ squash₁
   (λ { (F , sv , dm , ij , ran) → Code.injL α oα α∉ω F sv dm ij ran }) pairing
 ```
 
@@ -2244,7 +2238,7 @@ To build the pairing injection, choose only locally a cardinal representative `�
 ```agda
   where
   pairing : InjL (prodL α) α
-  pairing = PT.rec squash₁ build (cardOf α oα)
+  pairing = rec₁ squash₁ build (cardOf α oα)
     where
     build : Σ[ μ ∈ S ]
 ```
@@ -2290,6 +2284,6 @@ It remains to show that `μ` is infinite in the sense required by the square law
 <!--/-->
 
 ```agda
-      μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → Empty.⊥
+      μ∉ω : ⟨ fst μ ∈ˢ ω ⟩ → ⊥₀
       μ∉ω h = no-fin α μ oα α∉ω oμ h α↪μ
 ```

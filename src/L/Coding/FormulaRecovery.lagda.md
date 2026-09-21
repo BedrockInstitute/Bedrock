@@ -78,10 +78,6 @@ open import L.Coding.Descent {ℓ} using ( payload≺; leftPart; rightPart )
 open import L.Coding.CodeShape {ℓ}
   using ( shapedAt; isTmAt-decode; Onto; BinWit; UnWit; bothTm; zeroPay
         ; module Peel )
-
-import Cubical.Data.Sum as Sum
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
@@ -169,7 +165,7 @@ module Decode {K : Type ℓ} (f : K → V ℓ)
     P r = (j : ℕ) (z : S) → rank (fst z) ≡ r → Wf j z → Coded f j z
 
     go : (r : V ℓ) → ((y : V ℓ) → ⟨ y ∈ r ⟩ → P y) → P r
-    go r IH j z qr wz = PT.rec squash₁ fill (peel (keyOf j z) wz)
+    go r IH j z qr wz = rec₁ squash₁ fill (peel (keyOf j z) wz)
       where
       D = fst (lookup C γ)
 
@@ -210,8 +206,8 @@ constructor definitionally.
                 ≡ VCode.mkTag k (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapTm f u ⌝ᵗ))
            → BinWit k (bothTm A) γ (keyOf j z) → Coded f j z
       atom k op qop (N , (a , (b , (e , (ha , hb))))) =
-        PT.rec squash₁
-          (λ { (t , qt) → PT.map
+        rec₁ squash₁
+          (λ { (t , qt) → map₁
             (λ { (u , qu) → op t u
                , ( qop t u
                  ∙ cong (VCode.mkTag k) (cong₂ pr qt qu)
@@ -231,8 +227,8 @@ constructor definitionally.
                    ≡ VCode.mkTag k (pr VCode.⌜ mapFo f φ ⌝ VCode.⌜ mapFo f ψ ⌝))
               → BinSame k (keyOf j z) → Coded f j z
       binSame k op qop (N , (a , (b , (e , (ha , hb))))) =
-        PT.rec squash₁
-          (λ { (φ , qφ) → PT.map
+        rec₁ squash₁
+          (λ { (φ , qφ) → map₁
             (λ { (ψ , qψ) → op φ ψ
                , ( qop φ ψ
                  ∙ cong (VCode.mkTag k) (cong₂ pr qφ qψ)
@@ -252,7 +248,7 @@ constructor definitionally.
              → (∀ {i} (φ : Formula K i)
                 → VCode.⌜ mapFo f (op φ) ⌝ ≡ VCode.mkTag k VCode.⌜ mapFo f φ ⌝)
              → UnSame k (keyOf j z) → Coded f j z
-      unSame k op qop (N , (a , (e , ha))) = PT.map
+      unSame k op qop (N , (a , (e , ha))) = map₁
         (λ { (φ , qφ) → op φ
            , ( qop φ ∙ cong (VCode.mkTag k) qφ ∙ sym qx ) })
         (rec j a (subst (λ w → ⟨ rank (fst a) ∈ rank w ⟩) (sym qx)
@@ -276,7 +272,7 @@ constructor definitionally.
              → (∀ {i} (φ : Formula K (suc i))
                 → VCode.⌜ mapFo f (op φ) ⌝ ≡ VCode.mkTag k VCode.⌜ mapFo f φ ⌝)
              → UnSucc k (keyOf j z) → Coded f j z
-      unSucc k op qop (N , (a , (e , ha))) = PT.map
+      unSucc k op qop (N , (a , (e , ha))) = map₁
         (λ { (φ , qφ) → op φ
            , ( qop φ ∙ cong (VCode.mkTag k) qφ ∙ sym qx ) })
         (rec (suc j) a
@@ -294,8 +290,8 @@ constructor definitionally.
                ≡ VCode.mkTag k (pr VCode.⌜ mapTm f t ⌝ᵗ VCode.⌜ mapFo f φ ⌝))
           → BinSucc k (keyOf j z) → Coded f j z
       bnd k op qop (N , (a , (b , (e , (ha , hb))))) =
-        PT.rec squash₁
-          (λ { (t , qt) → PT.map
+        rec₁ squash₁
+          (λ { (t , qt) → map₁
             (λ { (φ , qφ) → op t φ
                , ( qop t φ
                  ∙ cong (VCode.mkTag k) (cong₂ pr qt qφ)
@@ -312,15 +308,15 @@ constructor definitionally.
 
       fill : PeelWit (keyOf j z) → Coded f j z
       fill =
-        Sum.rec (atom 0 _∈̇_ (λ _ _ → refl))
-        (Sum.rec (atom 1 _≐_ (λ _ _ → refl))
-        (Sum.rec (binSame 2 _∧̇_ (λ _ _ → refl))
-        (Sum.rec (binSame 3 _∨̇_ (λ _ _ → refl))
-        (Sum.rec (binSame 4 _⇒̇_ (λ _ _ → refl))
-        (Sum.rec (konst 5 ⊥̇ (λ _ → refl))
-        (Sum.rec (unSucc 6 ∃̇_ (λ _ → refl))
-        (Sum.rec (unSucc 7 ∀̇_ (λ _ → refl))
-        (Sum.rec (bnd 8 ∀̇∈ (λ _ _ → refl))
+        ⊎-rec (atom 0 _∈̇_ (λ _ _ → refl))
+        (⊎-rec (atom 1 _≐_ (λ _ _ → refl))
+        (⊎-rec (binSame 2 _∧̇_ (λ _ _ → refl))
+        (⊎-rec (binSame 3 _∨̇_ (λ _ _ → refl))
+        (⊎-rec (binSame 4 _⇒̇_ (λ _ _ → refl))
+        (⊎-rec (konst 5 ⊥̇ (λ _ → refl))
+        (⊎-rec (unSucc 6 ∃̇_ (λ _ → refl))
+        (⊎-rec (unSucc 7 ∀̇_ (λ _ → refl))
+        (⊎-rec (bnd 8 ∀̇∈ (λ _ _ → refl))
         (bnd 9 ∃̇∈ (λ _ _ → refl))))))))))
 
 ```

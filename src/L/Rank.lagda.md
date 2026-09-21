@@ -61,9 +61,6 @@ The indexing is genuinely small. Each set `x` has a small member type `⟪ x ⟫
 <!--/-->
 
 ```agda
-
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
@@ -247,14 +244,14 @@ The statement is a pointwise inclusion, not a strict membership: assuming `IsOrd
 rank-upper : (A β : S) → IsOrd β
            → ((y : S) → ⟨ y ∈ˢ A ⟩ → ⟨ rank y ∈ˢ β ⟩)
            → (x : S) → ⟨ x ∈ˢ rank A ⟩ → ⟨ x ∈ˢ β ⟩
-rank-upper A β oβ bound x hx = PT.rec (snd (x ∈ˢ β))
+rank-upper A β oβ bound x hx = rec₁ (snd (x ∈ˢ β))
   (λ { (m , hm) → ∈sucV-elim (snd (x ∈ˢ β)) hm
 ```
 
 <!--en-->
 The two cases of the successor are where ordinality earns its keep. If `x` is a member of `rank (⟪ A ⟫↪ m)`, then since β is transitive and that rank is already in β, so is `x`: this is the branch `oβ .fst h (below m)`. If instead `x` equals `rank (⟪ A ⟫↪ m)` outright, the second branch transports the bound `below m` across that path. Either way the conclusion lands in `x ∈ˢ β`. What the eliminator receives from the union is `hm : ⟨ x ∈ˢ s m ⟩` merely, so the fiber `(m , hm)` is consumed inside a propositional elimination and no index is ever extracted as data.
 <!--zh-->
-后继的两种情形正是序数性发挥作用之处。若 `x` 属于 `rank (⟪ A ⟫↪ m)`，则因 β 传递且该秩已在 β 中，`x` 也在 β 中：这是分支 `oβ .fst h (below m)`。若 `x` 直接等于 `rank (⟪ A ⟫↪ m)`，第二支沿该路径传输界 `below m`。两种情形的结论都落在 `x ∈ˢ β`。`union-family-out` 给出的索引与证明位于命题截断中；由于目标 `x ∈ˢ β` 是命题，`PT.rec` 可以逐个处理其中的 `(m , hm)`，而不选择一个全局索引。
+后继的两种情形正是序数性发挥作用之处。若 `x` 属于 `rank (⟪ A ⟫↪ m)`，则因 β 传递且该秩已在 β 中，`x` 也在 β 中：这是分支 `oβ .fst h (below m)`。若 `x` 直接等于 `rank (⟪ A ⟫↪ m)`，第二支沿该路径传输界 `below m`。两种情形的结论都落在 `x ∈ˢ β`。`union-family-out` 给出的索引与证明位于命题截断中；由于目标 `x ∈ˢ β` 是命题，`rec₁` 可以逐个处理其中的 `(m , hm)`，而不选择一个全局索引。
 <!--ja-->
 後続の二つの場合こそ、順序数性が働く場所です。`x` が `rank (⟪ A ⟫↪ m)` の要素なら、β が推移的でそのランクがすでに β にあることから、`x` も β に属します。これが分岐 `oβ .fst h (below m)` です。`x` が `rank (⟪ A ⟫↪ m)` そのものに等しい場合は、第二の分岐がそのパスに沿って上界 `below m` を輸送します。どちらの場合も結論は `x ∈ˢ β` に着地します。消去子が和集合から受け取るのは単に (merely)`hm : ⟨ x ∈ˢ s m ⟩` なので、ファイバー `(m , hm)` は命題消去の内部で消費され、添字がデータとして取り出されることはありません。
 <!--/-->

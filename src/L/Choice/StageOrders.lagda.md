@@ -101,9 +101,6 @@ Several changes of representation occur in this construction: from a presented i
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
 ```
@@ -117,9 +114,6 @@ Name completeness gives only propositional truncation of existence: it says that
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
 ```
@@ -277,7 +271,7 @@ private
   decideIn : (γ x : S) → IsOrd γ → (p : ⟨ isL x ⟩) → ⟨ x ∈ˢ Lset γ ⟩
            → ⟨ γ ∈ˢ stage x p ⟩ ⊎ ((γ ≡ stage x p) ⊎ ⟨ stage x p ∈ˢ γ ⟩)
            → ⟨ birth x p ∈ˢ γ ⟩
-  decideIn γ x ordγ p h (inl γ∈) = Empty.rec (stage-earliest x p γ ordγ h γ∈)
+  decideIn γ x ordγ p h (inl γ∈) = ⊥₀-rec (stage-earliest x p γ ordγ h γ∈)
 ```
 
 <!--en-->
@@ -957,7 +951,7 @@ Irreflexivity follows from the two meanings of the lexicographic relation. An ea
 
 ```agda
   private
-    ≺-irr : (a : Member) → a ≺ a → Empty.⊥
+    ≺-irr : (a : Member) → a ≺ a → ⊥₀
     ≺-irr a (inl h) = ∈-irrefl (bornAt a .fst) h
     ≺-irr a (inr (_ , u)) =
       SWO.irr∙ (stepIn (bornAt a)) (a .fst , newIn a)

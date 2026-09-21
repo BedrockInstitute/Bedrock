@@ -52,8 +52,6 @@ open import L.Constructible {ℓ} using ( 𝒮ʟ; isL; isL-trans )
 open import L.Recursion {ℓ} lem using ( Recursion; module Of )
 open import L.Coding.Model {ℓ}
   using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; svAt; svAt-in; domAt; domAt-intro )
-
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 ```
 
 <!--en-->
@@ -65,11 +63,7 @@ Several propositions below are obtained from truncated existence statements. The
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.HLevels using ( isPropΣ )
-open import Cubical.Functions.Logic using ( ∃[∶]-syntax )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 
 ```
 
@@ -185,7 +179,7 @@ Reading `pairFo` outward yields a propositionally truncated value `z`, together 
 
     pair-out : (e p : S) → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
              → ∥ Σ[ z ∈ S ] ((fst e ≡ pr (fst p) (fst z)) × ⟨ (z ∷ p ∷ []) ⊨ φ ⟩) ∥₁
-    pair-out e p = PT.map (λ { (z , (q , h)) →
+    pair-out e p = map₁ (λ { (z , (q , h)) →
 ```
 
 <!--en-->
@@ -275,7 +269,7 @@ The ordered-pair formula is now specialized to the original value relation. Proo
 
 ```agda
     uniq : (x : S) (m : Mem x) (p : S) → ⟨ (p ∷ x ∷ []) ⊨ Fo.fo ⟩ → p ≡ pairOf x m
-    uniq x m p h = PT.rec (isSetS p (pairOf x m))
+    uniq x m p h = rec₁ (isSetS p (pairOf x m))
       (λ { (z , (e , g)) → Σ≡Prop (λ v → snd (isL v))
         (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z g) ∙ sym (prʟ-fst x (fn x m))) })
       (Fo.out p x h)
@@ -351,7 +345,7 @@ Replacement applied to this recursion forms the value range of its ordered-pair 
 ```agda
   F-out : (p : V ℓ) → ⟨ p ∈ fst F ⟩
         → ∥ Σ[ x ∈ S ] Σ[ m ∈ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
-  F-out p h = PT.rec squash₁ step (T.table-out pS h)
+  F-out p h = rec₁ squash₁ step (T.table-out pS h)
     where
     pS : S
 ```
@@ -369,7 +363,7 @@ The inward membership direction is immediate from the replacement specification.
 
     step : Σ[ x ∈ S ] (Mem x × ⟨ (pS ∷ x ∷ []) ⊨ Fo.fo ⟩)
          → ∥ Σ[ x ∈ S ] Σ[ m ∈ Mem x ] (p ≡ pr (fst x) (fst (fn x m))) ∥₁
-    step (x , (m , g)) = PT.map
+    step (x , (m , g)) = map₁
       (λ { (z , (e , gz)) →
 ```
 
@@ -402,7 +396,7 @@ The semantic outward lemma then opens a second truncation and supplies a value `
   isPropFib x y = isPropΣ (isPropMem x) (λ m → setIsSet (fst y) (fst (fn x m)))
 
   pair-out : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → Fib x y
-  pair-out x y h = PT.rec (isPropFib x y) step (F-out (pr (fst x) (fst y)) h)
+  pair-out x y h = rec₁ (isPropFib x y) step (F-out (pr (fst x) (fst y)) h)
     where
     step : Σ[ x' ∈ S ] Σ[ m' ∈ Mem x' ] (pr (fst x) (fst y) ≡ pr (fst x') (fst (fn x' m')))
 ```
@@ -461,7 +455,7 @@ The environment `γ = F ∷ dom ∷ []` assigns the two free variables used by t
   dm = domAt-intro zero (suc zero) γ (λ x → fwd x , bwd x)
     where
     fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩ → Mem x
-    fwd x = PT.rec (isPropMem x) (λ { (y , p) → fst (pair-out x y p) })
+    fwd x = rec₁ (isPropMem x) (λ { (y , p) → fst (pair-out x y p) })
 
 ```
 

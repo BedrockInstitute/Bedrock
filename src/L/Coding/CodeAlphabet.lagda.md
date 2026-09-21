@@ -30,6 +30,7 @@ Everything in this chapter takes place at a single type-theoretic universe level
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Foundations.Prelude using ( J; substRefl )
 
 module L.Coding.CodeAlphabet {ℓ : Level} where
 
@@ -49,8 +50,6 @@ open import FOL.Syntax using ( Formula; Term )
 open import FOL.Manipulation.ConstantMapping using ( mapFo; mapTm )
 open import V.Coding {ℓ} using ( module VCode )
 open import L.Constructible {ℓ} using ( 𝒮ʟ )
-
-open import Cubical.Foundations.Prelude using ( J; substRefl )
 ```
 
 <!--en-->

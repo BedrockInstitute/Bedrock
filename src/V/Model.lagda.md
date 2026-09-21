@@ -24,6 +24,8 @@ The universe accounting is exact and should be read once. The carrier of the mod
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Foundations.HLevels
+  using ( isOfHLevelLift; isOfHLevelRespectEquiv )
 
 module V.Model {ℓ : Level} where
 
@@ -61,23 +63,19 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Smallness {ℓ} using ( separateFromSmall )
 
 open import Cubical.Foundations.Equiv using ( equivFun )
-open import Cubical.Functions.Logic using ( ⇔toPath )
 ```
 
 <!--en-->
-Three general cubical facts shape the proofs to come. An embedding into a type whose equality types are propositions is injective, which matters whenever a recovered index must be shown to be the only possible one. A path between dependent pairs whose second components are propositions is fixed by the paths between first projections. And membership statements about image sets are typically truncated existentials: they are introduced by `∣_∣₁`{.Agda} and eliminated with `PT.rec`{.Agda} into proposition-valued targets, while contradictions are handled by the empty type.
+Three general cubical facts shape the proofs to come. An embedding into a type whose equality types are propositions is injective, which matters whenever a recovered index must be shown to be the only possible one. A path between dependent pairs whose second components are propositions is fixed by the paths between first projections. And membership statements about image sets are typically truncated existentials: they are introduced by `∣_∣₁`{.Agda} and eliminated with `rec₁`{.Agda} into proposition-valued targets, while contradictions are handled by the empty type.
 <!--zh-->
-三条 cubical 一般事实塑造了后面的证明。到相等类型为命题的类型的嵌入是单射，当需要说明回收到的索引是唯一可能时这一点就要用上。第二分量为命题的依值对之间的路径由第一投影之间的路径决定。此外，像集的成员陈述通常是截断的存在式：用 `∣_∣₁`{.Agda} 引入，用 `PT.rec`{.Agda} 消入取命题值的目标；矛盾则交给空类型处理。
+三条 cubical 一般事实塑造了后面的证明。到相等类型为命题的类型的嵌入是单射，当需要说明回收到的索引是唯一可能时这一点就要用上。第二分量为命题的依值对之间的路径由第一投影之间的路径决定。此外，像集的成员陈述通常是截断的存在式：用 `∣_∣₁`{.Agda} 引入，用 `rec₁`{.Agda} 消入取命题值的目标；矛盾则交给空类型处理。
 <!--ja-->
-cubical の三つの一般的な事実が後の証明を形作ります。等号の型が命題である型への埋め込みは単射であり、復元した添字が唯一の可能性であることを示す場面で効きます。第二成分が命題である依存対の間のパスは、第一射影の間のパスで決まります。さらに、像の集合への所属の主張はたいてい切り詰められた存在の形をしており、`∣_∣₁`{.Agda} で導入し、`PT.rec`{.Agda} で命題値の目標へ消去します。矛盾は空の型で扱います。
+cubical の三つの一般的な事実が後の証明を形作ります。等号の型が命題である型への埋め込みは単射であり、復元した添字が唯一の可能性であることを示す場面で効きます。第二成分が命題である依存対の間のパスは、第一射影の間のパスで決まります。さらに、像の集合への所属の主張はたいてい切り詰められた存在の形をしており、`∣_∣₁`{.Agda} で導入し、`rec₁`{.Agda} で命題値の目標へ消去します。矛盾は空の型で扱います。
 <!--/-->
 
 ```agda
 open import Cubical.Functions.Embedding
   using ( Embedding-into-isSet→isSet; isEmbedding→Inj )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-import Cubical.Data.Sum as Sum
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -89,8 +87,6 @@ The central construction is the set former `sett`{.Agda}: from a small index typ
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base
   using ( sett; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
@@ -170,7 +166,7 @@ The empty-set specification asks that, for every carrier element `x`, the truth 
 ```agda
 empty-spec : (x : S) → (x ∈ˢ ∅) ≡ ⊥
 empty-spec x = ⇔toPath
-  (λ x∈ → Empty.rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈)))
+  (λ x∈ → ⊥₀-rec (∅-empty x (∈∈ₛ {a = x} {b = ∅} .fst x∈)))
   (λ ())
 
 pair-spec : (a b x : S) → (x ∈ˢ ⁅ a , b ⁆) ≡ ((x ≈ˢ a) ⊔ (x ≈ˢ b))
@@ -194,27 +190,27 @@ union-spec a x = ⇔toPath
 ```
 
 <!--en-->
-Union is the first specification with an existential shape: membership in `⋃ a` should equal the truncated statement that some `y` lies in `a` with `x` in `y`. Forward, `union-ax` yields such a truncated triple `(v , v in a , x in v)`, but with both memberships in small form. The rewriting happens inside a propositional truncation with a propositional target, so `PT.map` transforms the witness in place: `∈∈ₛ` turns `v ∈ₛ a` into an ordinary member of `a`, and `x ∈ₛ v` into an ordinary member of `v`. The outcome is a witness of the indexed disjunction `∃[ x ] P x, the direct `hProp` mere-existence statement over the carrier, and no member is chosen.
+Union is the first specification with an existential shape: membership in `⋃ a` should equal the truncated statement that some `y` lies in `a` with `x` in `y`. Forward, `union-ax` yields such a truncated triple `(v , v in a , x in v)`, but with both memberships in small form. The rewriting happens inside a propositional truncation with a propositional target, so `map₁` transforms the witness in place: `∈∈ₛ` turns `v ∈ₛ a` into an ordinary member of `a`, and `x ∈ₛ v` into an ordinary member of `v`. The outcome is a witness of the indexed disjunction `∃[ x ] P x, the direct `hProp` mere-existence statement over the carrier, and no member is chosen.
 <!--zh-->
-并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员资格都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `PT.map` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通成员，把 `x ∈ₛ v` 变成 `v` 的普通成员。结果是带索引析取 `∃[ x ] P x 的一个见证，即`hProp` 上对载体的纯粹存在陈述，并且不选出任何成员。
+并是第一个带存在形状的规格：`⋃ a` 中的成员关系应等于「某个 `y` 属于 `a` 且 `x` 属于 `y`」的截断陈述。正向，`union-ax` 给出的正是这样的截断三元组 `(v , v ∈ a , x ∈ v)`，只是两个成员资格都是小形式。改写发生在命题截断内部，而目标仍是命题，所以 `map₁` 就地改写见证：`∈∈ₛ` 把 `v ∈ₛ a` 变成 `a` 的普通成员，把 `x ∈ₛ v` 变成 `v` 的普通成员。结果是带索引析取 `∃[ x ] P x 的一个见证，即`hProp` 上对载体的纯粹存在陈述，并且不选出任何成员。
 <!--ja-->
-和は存在の形をもつ最初の仕様です。`⋃ a` への所属は、「ある `y` が `a` に属し `x` が `y` に属する」という切り詰められた主張に等しいはずです。順方向では、`union-ax` がまさにそのような切り詰められた三つ組 `(v , v ∈ a , x ∈ v)` を与えますが、二つの所属がともに小形式です。書き換えは命題の截断の内部で行われ、目標も命題なので、`PT.map` が証人をその場で変えます。`∈∈ₛ` が `v ∈ₛ a` を `a` の通常の要素へ、`x ∈ₛ v` を `v` の通常の要素へ変えます。結果は添字付き選言 `∃[ x ] P x の証人、すなわち`hProp` 上で台を量化する単なる存在の主張であり、どの元も選ばれません。
+和は存在の形をもつ最初の仕様です。`⋃ a` への所属は、「ある `y` が `a` に属し `x` が `y` に属する」という切り詰められた主張に等しいはずです。順方向では、`union-ax` がまさにそのような切り詰められた三つ組 `(v , v ∈ a , x ∈ v)` を与えますが、二つの所属がともに小形式です。書き換えは命題の截断の内部で行われ、目標も命題なので、`map₁` が証人をその場で変えます。`∈∈ₛ` が `v ∈ₛ a` を `a` の通常の要素へ、`x ∈ₛ v` を `v` の通常の要素へ変えます。結果は添字付き選言 `∃[ x ] P x の証人、すなわち`hProp` 上で台を量化する単なる存在の主張であり、どの元も選ばれません。
 <!--/-->
 
 ```agda
-  (λ x∈ → PT.map
+  (λ x∈ → map₁
     (λ { (v , va , xv) → v , ∈∈ₛ {a = v} {b = a} .snd va
                            , ∈∈ₛ {a = x} {b = v} .snd xv })
     (union-ax a x .fst (∈∈ₛ {a = x} {b = ⋃ a} .fst x∈)))
-  (λ h → ∈∈ₛ {a = x} {b = ⋃ a} .snd (union-ax a x .snd (PT.map
+  (λ h → ∈∈ₛ {a = x} {b = ⋃ a} .snd (union-ax a x .snd (map₁
 ```
 
 <!--en-->
-Backward runs the same exchange in reverse. From a truncated witness of the indexed disjunction, `PT.map` takes each case `(v , v in a , x in v)` and, using the other direction of `∈∈ₛ`, rebuilds the small-form triple that `union-ax` consumes; its second direction then returns small membership in `⋃ a`, which the remaining half of `∈∈ₛ` lifts to ordinary membership. Together the two directions give the path of truth values the specification requires, both derived from the one library classification plus the pointwise exchange of membership notation.
+Backward runs the same exchange in reverse. From a truncated witness of the indexed disjunction, `map₁` takes each case `(v , v in a , x in v)` and, using the other direction of `∈∈ₛ`, rebuilds the small-form triple that `union-ax` consumes; its second direction then returns small membership in `⋃ a`, which the remaining half of `∈∈ₛ` lifts to ordinary membership. Together the two directions give the path of truth values the specification requires, both derived from the one library classification plus the pointwise exchange of membership notation.
 <!--zh-->
-反向把同一交换倒过来做。从带索引析取的截断见证出发，`PT.map` 对每个情形 `(v , v ∈ a , x ∈ v)` 用 `∈∈ₛ` 的另一方向重建 `union-ax` 所消耗的小形式三元组；其第二方向给出 `⋃ a` 中的小隶属，再由 `∈∈ₛ` 的另一半提升为普通成员资格。两个方向合起来给出规格所需的真值路径，都来自同一个库分类加上逐点的隶属记号交换。
+反向把同一交换倒过来做。从带索引析取的截断见证出发，`map₁` 对每个情形 `(v , v ∈ a , x ∈ v)` 用 `∈∈ₛ` 的另一方向重建 `union-ax` 所消耗的小形式三元组；其第二方向给出 `⋃ a` 中的小隶属，再由 `∈∈ₛ` 的另一半提升为普通成员资格。两个方向合起来给出规格所需的真值路径，都来自同一个库分类加上逐点的隶属记号交换。
 <!--ja-->
-逆方向は同じ交換を逆向きに行います。添字付き選言の切り詰められた証人から出発し、`PT.map` が各場合 `(v , v ∈ a , x ∈ v)` に対して `∈∈ₛ` の逆向きで `union-ax` の消費する小形式の三つ組を組み立てます。その第二方向が `⋃ a` への小さな所属を返し、`∈∈ₛ` のもう半分がそれを通常の所属へ引き上げます。二つの方向を合わせると仕様の要求する真理値のパスが得られ、いずれも一つのライブラリの分類と各点の所属記法の交換から来ます。
+逆方向は同じ交換を逆向きに行います。添字付き選言の切り詰められた証人から出発し、`map₁` が各場合 `(v , v ∈ a , x ∈ v)` に対して `∈∈ₛ` の逆向きで `union-ax` の消費する小形式の三つ組を組み立てます。その第二方向が `⋃ a` への小さな所属を返し、`∈∈ₛ` のもう半分がそれを通常の所属へ引き上げます。二つの方向を合わせると仕様の要求する真理値のパスが得られ、いずれも一つのライブラリの分類と各点の所属記法の交換から来ます。
 <!--/-->
 
 ```agda
@@ -249,17 +245,17 @@ union-family-out : (X : Type ℓ) (f : X → S) (x : S)
 ```
 
 <!--en-->
-The outward lemma recovers, from membership in the union, merely some family member containing `x`. Unfolding `union-spec` gives a truncated triple `(v , v in the union , x in v)`; the second component says `v` is presented by an index, so a further `PT.map` inside the truncation extracts a pair `(i , q)` with `f i ≡ v`. The membership of `x` in `v` is then transported along the reverse of `q` to land in `f i`. The target keeps its truncation, so the eliminator is `PT.rec` into `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁` with `squash₁` as the propositionhood evidence. The conclusion stays a mere existence: some family member contains `x`, and no member is chosen.
+The outward lemma recovers, from membership in the union, merely some family member containing `x`. Unfolding `union-spec` gives a truncated triple `(v , v in the union , x in v)`; the second component says `v` is presented by an index, so a further `map₁` inside the truncation extracts a pair `(i , q)` with `f i ≡ v`. The membership of `x` in `v` is then transported along the reverse of `q` to land in `f i`. The target keeps its truncation, so the eliminator is `rec₁` into `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁` with `squash₁` as the propositionhood evidence. The conclusion stays a mere existence: some family member contains `x`, and no member is chosen.
 <!--zh-->
-外向引理从「属于并」恢复出：纯粹地存在某个含 `x` 的族元。展开 `union-spec` 得到截断的三元组 `(v , v 在并中 , x 在 v 中)`；第二分量说 `v` 由某个索引呈现，于是在截断内部再作一次 `PT.map`，抽出 `(i , q)` 使 `f i ≡ v`。然后把 `x` 在 `v` 中的成员资格沿 `q` 的反向搬运，落进 `f i`。目标保持截断，因此消去用 `PT.rec` 进入 `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁`，以 `squash₁` 为命题性证据；结论仍是纯粹存在：某个族元含 `x`，而不选出任何族元。
+外向引理从「属于并」恢复出：纯粹地存在某个含 `x` 的族元。展开 `union-spec` 得到截断的三元组 `(v , v 在并中 , x 在 v 中)`；第二分量说 `v` 由某个索引呈现，于是在截断内部再作一次 `map₁`，抽出 `(i , q)` 使 `f i ≡ v`。然后把 `x` 在 `v` 中的成员资格沿 `q` 的反向搬运，落进 `f i`。目标保持截断，因此消去用 `rec₁` 进入 `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁`，以 `squash₁` 为命题性证据；结论仍是纯粹存在：某个族元含 `x`，而不选出任何族元。
 <!--ja-->
-外向きの補題は、和への所属から「`x` を含む族の元が純粋に存在する」ことを取り出します。`union-spec` を展開すると、切り詰められた三つ組 `(v , v は和に属する , x は v に属する)` が得られます。第二成分は `v` が添字で呈示されると言うので、截断の内部でさらに `PT.map` を行い、`f i ≡ v` なる対 `(i , q)` を取り出します。そして `v` における `x` の所属を `q` の逆向きに沿って運び、`f i` に着地させます。目標は截断を保つので、消去には `squash₁` を命題性の証拠として `PT.rec` で `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁` に入ります。結論は純粋な存在のままです。ある族の元が `x` を含むのであり、どの元も選ばれません。
+外向きの補題は、和への所属から「`x` を含む族の元が純粋に存在する」ことを取り出します。`union-spec` を展開すると、切り詰められた三つ組 `(v , v は和に属する , x は v に属する)` が得られます。第二成分は `v` が添字で呈示されると言うので、截断の内部でさらに `map₁` を行い、`f i ≡ v` なる対 `(i , q)` を取り出します。そして `v` における `x` の所属を `q` の逆向きに沿って運び、`f i` に着地させます。目標は截断を保つので、消去には `squash₁` を命題性の証拠として `rec₁` で `∥ Σ[ i ] ⟨ x ∈ˢ f i ⟩ ∥₁` に入ります。結論は純粋な存在のままです。ある族の元が `x` を含むのであり、どの元も選ばれません。
 <!--/-->
 
 ```agda
                  → ⟨ x ∈ˢ (⋃ (sett X f)) ⟩ → ∥ Σ[ i ∈ X ] ⟨ x ∈ˢ f i ⟩ ∥₁
-union-family-out X f x h = PT.rec PT.squash₁
-  (λ { (v , hv , hx) → PT.map
+union-family-out X f x h = rec₁ squash₁
+  (λ { (v , hv , hx) → map₁
     (λ { (i , q) → i , subst (λ w → ⟨ x ∈ˢ w ⟩) (sym q) hx }) hv })
   (subst ⟨_⟩ (union-spec (sett X f) x) h)
 ```
@@ -324,7 +320,7 @@ The forward direction of the specification starts from a membership in the image
 ```agda
     where
     fwd : ⟨ y ∈ˢ replaceImage ⟩ → ⟨ ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ) ⟩
-    fwd = PT.map λ { (m , q) →
+    fwd = map₁ λ { (m , q) →
         ⟪ a ⟫↪ m , memb a m
       , subst (λ v → ⟨ (v ∷ ⟪ a ⟫↪ m ∷ []) ⊨ φ ⟩) q
 ```
@@ -340,7 +336,7 @@ The backward direction is where a choice principle would seem unavoidable. It re
 ```agda
               (fc (⟪ a ⟫↪ m) (memb a m) .fst .snd) }
     bwd : ⟨ ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ) ⟩ → ⟨ y ∈ˢ replaceImage ⟩
-    bwd = PT.map λ { (x , x∈a , hφ) →
+    bwd = map₁ λ { (x , x∈a , hφ) →
       let mf = ∈-asFiber {a = x} {b = a} x∈a
           hφ' = subst (λ v → ⟨ (y ∷ v ∷ []) ⊨ φ ⟩) (sym (mf .snd)) hφ
 ```
@@ -398,8 +394,8 @@ Both disjuncts ask for the same thing, membership in `⁅ a ⁆s`, so after the 
 
 ```agda
   s1 x x∈ₛ = singl-cls x .snd
-    (PT.rec (setIsSet x a)
-            (λ { (Sum.inl e) → e ; (Sum.inr e) → e })
+    (rec₁ (setIsSet x a)
+            (λ { (inl e) → e ; (inr e) → e })
             (pairing-ax a a x .fst x∈ₛ))
   s2 : ⟨ ⁅ a ⁆s ⊆ ⁅ a , a ⁆ ⟩
 ```
@@ -413,7 +409,7 @@ The reverse inclusion runs in the other direction: the classification's forward 
 <!--/-->
 
 ```agda
-  s2 x x∈ₛ = pairing-ax a a x .snd ∣ Sum.inl (singl-cls x .fst x∈ₛ) ∣₁
+  s2 x x∈ₛ = pairing-ax a a x .snd ∣ inl (singl-cls x .fst x∈ₛ) ∣₁
 
 numeralV : ℕ → S
 numeralV zero    = ∅
@@ -449,9 +445,9 @@ The proof converts the two descriptions of membership into a path with `⇔toPat
 
 ```agda
 ω-specV x = ⇔toPath
-  (PT.map (λ { (i , p) → lift (lower i)
+  (map₁ (λ { (i , p) → lift (lower i)
              , sym p ∙ sym (numeralV≡# (lower i)) }))
-  (PT.map (λ { (n , q) → lift (lower n)
+  (map₁ (λ { (n , q) → lift (lower n)
              , sym (q ∙ numeralV≡# (lower n)) }))
 ```
 
@@ -490,9 +486,9 @@ Mathematically, `sucV A` is the union of the pair `⁅ A , ⁅ A ⁆s ⁆`, so a
 
 ```agda
 ∈sucV-elim {A} {x} pP x∈ kA k≡ =
-  PT.rec pP
-    (λ { (v , (v∈₂ , x∈v)) → PT.rec pP
-      (λ { (Sum.inl v≡A) →
+  rec₁ pP
+    (λ { (v , (v∈₂ , x∈v)) → rec₁ pP
+      (λ { (inl v≡A) →
              kA (∈∈ₛ {a = x} {b = A} .snd (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡A x∈v))
 ```
 
@@ -505,7 +501,7 @@ In the right branch, transporting along `v ≡ ⁅ A ⁆s` yields membership in 
 <!--/-->
 
 ```agda
-         ; (Sum.inr v≡s) →
+         ; (inr v≡s) →
              k≡ (singl≡ A x (subst (λ w → ⟨ x ∈ₛ w ⟩) v≡s x∈v)) })
       (pairing-ax A ⁅ A ⁆s v .fst v∈₂) })
     (union-ax ⁅ A , ⁅ A ⁆s ⁆ x .fst (∈∈ₛ {a = x} {b = sucV A} .fst x∈))
@@ -524,7 +520,7 @@ The proof of `∈sucV-inl` builds rather than analyzes: from the assumed members
 ```agda
 ∈sucV-inl {A} {x} x∈A = ∈∈ₛ {a = x} {b = sucV A} .snd
   (union-ax ⁅ A , ⁅ A ⁆s ⁆ x .snd
-    ∣ A , (pairing-ax A ⁅ A ⁆s A .snd ∣ Sum.inl refl ∣₁
+    ∣ A , (pairing-ax A ⁅ A ⁆s A .snd ∣ inl refl ∣₁
          , ∈∈ₛ {a = x} {b = A} .fst x∈A) ∣₁)
 
 self∈sucV : (a : S) → ⟨ a ∈ˢ sucV a ⟩
@@ -541,7 +537,7 @@ The companion `self∈sucV` proves the second inclusion: every set `a` is a memb
 ```agda
 self∈sucV a = ∈∈ₛ {a = a} {b = sucV a} .snd
   (union-ax ⁅ a , ⁅ a ⁆s ⁆ a .snd
-    ∣ ⁅ a ⁆s , (pairing-ax a ⁅ a ⁆s ⁅ a ⁆s .snd ∣ Sum.inr refl ∣₁
+    ∣ ⁅ a ⁆s , (pairing-ax a ⁅ a ⁆s ⁅ a ⁆s .snd ∣ inr refl ∣₁
               , SetPackage.classification (SingletonPackage a) a .snd refl) ∣₁)
 ```
 
@@ -563,7 +559,7 @@ The zero equation is the easier one. If `z` were a member of the chain's zeroth 
 
 ```agda
 module NumPin (a : ℕ → S) (q : (n : ℕ) → a n ≡ # n) where
-  pinZero : (z : S) → ⟨ z ∈ˢ a zero ⟩ → Empty.⊥
+  pinZero : (z : S) → ⟨ z ∈ˢ a zero ⟩ → ⊥₀
   pinZero z z∈ = ∅-empty z
     (∈∈ₛ {a = z} {b = ∅} .fst (subst (λ w → ⟨ z ∈ˢ w ⟩) (q zero) z∈))
 
@@ -598,8 +594,8 @@ Forward, the membership in the chain is first transported to membership in `# (s
     fwd z∈ = ∈sucV-elim {A = # n} {x = z}
       (snd ((z ∈ˢ a n) ⊔ (z ≈ˢ a n)))
       (subst (λ w → ⟨ z ∈ˢ w ⟩) (q (suc n)) z∈)
-      (λ z∈#n → ∣ Sum.inl (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q n)) z∈#n) ∣₁)
-      (λ z≡#n → ∣ Sum.inr (z≡#n ∙ sym (q n)) ∣₁)
+      (λ z∈#n → ∣ inl (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q n)) z∈#n) ∣₁)
+      (λ z≡#n → ∣ inr (z≡#n ∙ sym (q n)) ∣₁)
 ```
 
 <!--en-->
@@ -612,10 +608,10 @@ Backward has two truncated cases to handle, so the eliminator runs into the memb
 
 ```agda
     bwd : ⟨ (z ∈ˢ a n) ⊔ (z ≈ˢ a n) ⟩ → ⟨ z ∈ˢ a (suc n) ⟩
-    bwd = PT.rec (snd (z ∈ˢ a (suc n)))
-      (λ { (Sum.inl z∈n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
+    bwd = rec₁ (snd (z ∈ˢ a (suc n)))
+      (λ { (inl z∈n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
              (∈sucV-inl {A = # n} (subst (λ w → ⟨ z ∈ˢ w ⟩) (q n) z∈n))
-         ; (Sum.inr z≡n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
+         ; (inr z≡n) → subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (q (suc n)))
 ```
 
 <!--en-->
@@ -669,14 +665,11 @@ The power-set construction now extracts what it needs directly from `ωr`{.Agda}
 module Power (ωr : ΩResizing (ℓ-suc ℓ) ℓ) where
 
   private
-    open import Cubical.Data.Unit using ( tt* )
     open import Cubical.Foundations.Equiv using ( _≃_; equivFun; invEq )
 ```
 
 ```agda
     open import Cubical.Foundations.Equiv.Properties using ( congEquiv )
-    open import Cubical.Foundations.HLevels
-      using ( isOfHLevelLift; isOfHLevelRespectEquiv )
 
     Ω : Type ℓ
     Ω = ωr .fst
@@ -772,7 +765,7 @@ The power set operation is itself a `sett`: the index type is the function type 
 
   private
     fwd : (a x : S) → ⟨ x ∈ˢ 𝒫V a ⟩ → ⟨ x ⊆ a ⟩
-    fwd a x = PT.rec (⟨ x ⊆ a ⟩isProp) λ { (χ , p) y y∈ₛx →
+    fwd a x = rec₁ (⟨ x ⊆ a ⟩isProp) λ { (χ , p) y y∈ₛx →
 ```
 
 <!--en-->
@@ -784,7 +777,7 @@ The proof of `x ⊆ a` proceeds member by member, first eliminating the truncate
 <!--/-->
 
 ```agda
-      PT.rec (⟨ y ∈ₛ a ⟩isProp)
+      rec₁ (⟨ y ∈ₛ a ⟩isProp)
              (λ { ((m , _) , q) → subst (λ v → ⟨ v ∈ₛ a ⟩) q (∈ₛ⟪ a ⟫↪ m) })
              (∈∈ₛ {a = y} {b = F a χ} .snd
                (subst (λ v → ⟨ y ∈ₛ v ⟩) (sym p) y∈ₛx)) }
@@ -823,7 +816,7 @@ The first inclusion shows that the set selected by `χₓ` adds nothing beyond `
 <!--/-->
 
 ```agda
-      s1 y y∈ₛF = PT.rec (⟨ y ∈ₛ x ⟩isProp)
+      s1 y y∈ₛF = rec₁ (⟨ y ∈ₛ x ⟩isProp)
         (λ { ((m , h) , q) →
           subst (λ v → ⟨ v ∈ₛ x ⟩) q
             (subst ⟨_⟩ (decode∘encode (⟪ a ⟫↪ m ∈ₛ x)) h) })
@@ -1073,18 +1066,18 @@ The proof applies the choice instance at the small presentation of the family, n
 
 ```agda
               → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (c ∩ x) ⟩)) ∥₁
-  choice a inh disj = PT.map mk (ac ⟪ a ⟫ isSet⟪ a ⟫ (λ m → ⟪ ⟪ a ⟫↪ m ⟫) pick)
+  choice a inh disj = map₁ mk (ac ⟪ a ⟫ isSet⟪ a ⟫ (λ m → ⟪ ⟪ a ⟫↪ m ⟫) pick)
       where
       pick : (m : ⟪ a ⟫) → ∥ ⟪ ⟪ a ⟫↪ m ⟫ ∥₁
-      pick m = PT.map
+      pick m = map₁
 ```
 
 <!--en-->
-The choice function then returns, for each index `m`, an actual element `g m` of the presented set: choice on the h-set of indices yields untruncated data, an element of the presentation of `⟪ a ⟫↪ m`. The remainder `mk` packages this into the conclusion: a set `c` together with, for each member `x` of `a`, contractibility data for the type of points meeting `c ∩ x`. Because the choice function already produced untruncated data at the index level, `mk` is an ordinary function; the truncation reappears only when the whole package is wrapped by `PT.map`. This is exactly why the choice set itself is merely existential while each intersection carries explicit `isContr` data.
+The choice function then returns, for each index `m`, an actual element `g m` of the presented set: choice on the h-set of indices yields untruncated data, an element of the presentation of `⟪ a ⟫↪ m`. The remainder `mk` packages this into the conclusion: a set `c` together with, for each member `x` of `a`, contractibility data for the type of points meeting `c ∩ x`. Because the choice function already produced untruncated data at the index level, `mk` is an ordinary function; the truncation reappears only when the whole package is wrapped by `map₁`. This is exactly why the choice set itself is merely existential while each intersection carries explicit `isContr` data.
 <!--zh-->
-选择函数随后对每个索引 `m` 返回所呈现集合的一个实际元素 `g m`：对索引之 h-集合的选择给出不加截断的数据，即 `⟪ a ⟫↪ m` 之呈现的一个元素。其余部分 `mk` 把它打包成结论：集合 `c`，加上对 `a` 的每个成员 `x`，与 `c ∩ x` 相交的点类型的紧缩数据。由于选择函数在索引层产生的已是不加截断的数据，`mk` 是普通函数；截断只在整体被 `PT.map` 包装时重新出现。这正是选择集本身只是纯粹存在、而每个交都携带显式 `isContr` 数据的原因。
+选择函数随后对每个索引 `m` 返回所呈现集合的一个实际元素 `g m`：对索引之 h-集合的选择给出不加截断的数据，即 `⟪ a ⟫↪ m` 之呈现的一个元素。其余部分 `mk` 把它打包成结论：集合 `c`，加上对 `a` 的每个成员 `x`，与 `c ∩ x` 相交的点类型的紧缩数据。由于选择函数在索引层产生的已是不加截断的数据，`mk` 是普通函数；截断只在整体被 `map₁` 包装时重新出现。这正是选择集本身只是纯粹存在、而每个交都携带显式 `isContr` 数据的原因。
 <!--ja-->
-選択関数はその後、各添字 `m` に対して提示された集合の実際の要素 `g m` を返します。添字の h-集合上の選択は切り詰められていないデータ、すなわち `⟪ a ⟫↪ m` の提示の要素を与えます。残りの `mk` はこれを結論へ包装します。集合 `c` と、`a` の各元 `x` に対する、交 `c ∩ x` の点の型の緊縮データです。選択関数が添字の水準で既に切り詰められていないデータを生んでいるため、`mk` は普通の関数であり、切り詰めが再び現れるのは全体が `PT.map` で包まれるときだけです。選択集合そのものが単なる存在でありながら、各交わりが明示的な `isContr` のデータを持つのはまさにこのためです。
+選択関数はその後、各添字 `m` に対して提示された集合の実際の要素 `g m` を返します。添字の h-集合上の選択は切り詰められていないデータ、すなわち `⟪ a ⟫↪ m` の提示の要素を与えます。残りの `mk` はこれを結論へ包装します。集合 `c` と、`a` の各元 `x` に対する、交 `c ∩ x` の点の型の緊縮データです。選択関数が添字の水準で既に切り詰められていないデータを生んでいるため、`mk` は普通の関数であり、切り詰めが再び現れるのは全体が `map₁` で包まれるときだけです。選択集合そのものが単なる存在でありながら、各交わりが明示的な `isContr` のデータを持つのはまさにこのためです。
 <!--/-->
 
 ```agda
@@ -1156,7 +1149,7 @@ The centre must lie in the intersection `c ∩ x`. By the model's `∩-spec`, me
                   ( ∣ m₀ , refl ∣₁
                   , subst (λ w → ⟨ z₀ ∈ˢ w ⟩) (mf .snd) (chosen∈ m₀) )
           uniqz : (z : S) → ⟨ z ∈ˢ (c ∩ x) ⟩ → z₀ ≡ z
-          uniqz z pf = PT.rec (setIsSet z₀ z)
+          uniqz z pf = rec₁ (setIsSet z₀ z)
 ```
 
 <!--en-->

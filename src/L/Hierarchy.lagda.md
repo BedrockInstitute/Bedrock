@@ -172,11 +172,6 @@ pointwise equivalence of memberships into a path of sets.
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Foundations.HLevels using ( isProp× )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 ```
 
 
@@ -534,7 +529,7 @@ equivalence `pt` and lets extensionality assemble the path.
 ```agda
     fwd : (x : V ℓ) → ⟨ x ∈ fst (lookup v γ) ⟩
         → ⟨ x ∈ Lset (fst (lookup b γ)) ⟩
-    fwd x hx = PT.rec (snd (x ∈ Lset (fst (lookup b γ)))) (above vals z)
+    fwd x hx = rec₁ (snd (x ∈ Lset (fst (lookup b γ)))) (above vals z)
       (StepAt-out v b f γ h (ok ob vals) z hx)
 ```
 
@@ -568,7 +563,7 @@ follows from that of the recorded value, since `x` is a member of it.
 ```agda
     bwd : (x : V ℓ) → ⟨ x ∈ Lset (fst (lookup b γ)) ⟩
         → ⟨ x ∈ fst (lookup v γ) ⟩
-    bwd x hx = PT.rec (snd (x ∈ fst (lookup v γ))) put
+    bwd x hx = rec₁ (snd (x ∈ fst (lookup v γ))) put
       (Lset-out (fst (lookup b γ)) x hx)
 ```
 
@@ -668,7 +663,7 @@ the side condition once for both.
 
 ```agda
     into : (z : S) → ⟨ fst z ∈ fst (lookup v γ) ⟩ → ∥ StepOf b f γ z ∥₁
-    into z hz = PT.map (below ob ents z)
+    into z hz = map₁ (below ob ents z)
       (Lset-out (fst (lookup b γ)) (fst z)
         (subst (λ u → ⟨ fst z ∈ u ⟩) q hz))
 
@@ -842,7 +837,7 @@ supplies it from membership.
 
 ```agda
       ents : Entries (lookup f γ) u
-      ents c c∈ = PT.rec
+      ents c c∈ = rec₁
         (snd (pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ))) named
         (ApproxAt-value f a γ h c (oa .fst {x = u} {y = fst c} c∈ u∈a))
 ```
@@ -927,7 +922,7 @@ value is the tower. Nothing about the graph is assumed beyond its holding.
 <!--/-->
 
 ```agda
-  Lset-only h ob = PT.rec
+  Lset-only h ob = rec₁
     (setIsSet (fst (lookup w γ)) (Lset (fst (lookup b γ)))) read
     (LsetGraph-out w b γ h)
     where
@@ -979,7 +974,7 @@ argument is the tower there.
 
 ```agda
       ents : Entries f (fst (lookup b γ))
-      ents c c∈ = PT.rec (snd (pr (fst c) (Lset (fst c)) ∈ fst f)) named
+      ents c c∈ = rec₁ (snd (pr (fst c) (Lset (fst c)) ∈ fst f)) named
         (ApproxAt-value zero (suc b) (f ∷ γ) ha c c∈)
 ```
 
@@ -1109,7 +1104,7 @@ since the approximation's domain condition reads them in opposite orders.
 <!--/-->
 
 ```agda
-    onDom c = (λ hy → PT.rec (snd (fst c ∈ fst (lookup b γ))) named hy)
+    onDom c = (λ hy → rec₁ (snd (fst c ∈ fst (lookup b γ))) named hy)
             , (λ c∈ → ∣ LsetS (fst c) (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈)
                      , ents c c∈ ∣₁)
 ```
@@ -1382,7 +1377,7 @@ the specification applied at the member.
 <!--/-->
 
 ```agda
-  hier-out c z p = PT.rec
+  hier-out c z p = rec₁
     (isProp× (snd (fst c ∈ B)) (setIsSet (fst z) (Lset (fst c)))) read
     (subst ⟨_⟩ (sp k) p)
     where
@@ -1642,7 +1637,7 @@ the two entries, and the equation is the composition of these paths.
 ```agda
       only : (c : S) (c∈ : ⟨ fst c ∈ α ⟩) (k : S)
            → ⟨ (k ∷ c ∷ []) ⊨ φ ⟩ → k ≡ entry c c∈
-      only c c∈ k h = PT.rec (isSetS k (entry c c∈)) read
+      only c c∈ k h = rec₁ (isSetS k (entry c c∈)) read
         (PairGraph-out zero (suc zero) (k ∷ c ∷ []) φ qφ h)
 ```
 
@@ -1749,7 +1744,7 @@ and joined into the pointwise equivalence.
 
 ```agda
         toRec : ⟨ fst z ∈ fst (r .fst .fst) ⟩ → ⟨ Recorded α (fst z) ⟩
-        toRec hz = PT.rec squash₁ conv (subst ⟨_⟩ (r .fst .snd z) hz)
+        toRec hz = rec₁ squash₁ conv (subst ⟨_⟩ (r .fst .snd z) hz)
           where
 ```
 
@@ -1783,7 +1778,7 @@ entry, and the canonical entry equals the model's pair of `c` with the tower at
 
 ```agda
         fromRec : ⟨ Recorded α (fst z) ⟩ → ⟨ fst z ∈ fst (r .fst .fst) ⟩
-        fromRec hz = subst ⟨_⟩ (sym (r .fst .snd z)) (PT.map conv hz)
+        fromRec hz = subst ⟨_⟩ (sym (r .fst .snd z)) (map₁ conv hz)
           where
 ```
 

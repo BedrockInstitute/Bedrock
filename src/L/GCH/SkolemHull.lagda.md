@@ -27,6 +27,9 @@ The chapter runs on classical logic, and the hypothesis enters here. The hull co
 
 ```agda
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( map2 )
+open import Cubical.Data.Sum using () renaming ( map to sumMap )
+open import Cubical.Data.Vec using ( _++_ )
 open import Base.Classical using ( LEM )
 
 ```
@@ -149,27 +152,17 @@ The environments of this chapter are vectors of carrier elements, and the operat
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Vec using ( Vec; map; lookup; _∷_; []; _++_ )
-open import Cubical.Data.Sigma using ( Σ≡Prop; _×_; _,_ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-import Cubical.Data.Sum as Sum
 ```
 
 <!--en-->
-The empty type represents contradiction: `Empty.rec` eliminates an inhabitant into any target, while `isProp⊥` allows a truncation to be eliminated when the target is contradiction. Satisfaction of existential formulas and membership in presented sets are expressed by propositional truncation, so they retain existence without choosing a witness.
+The empty type represents contradiction: `⊥*-rec` eliminates an inhabitant into any target, while `isProp⊥` allows a truncation to be eliminated when the target is contradiction. Satisfaction of existential formulas and membership in presented sets are expressed by propositional truncation, so they retain existence without choosing a witness.
 <!--zh-->
-空类型表示矛盾：`Empty.rec` 可把其元素消去到任意目标，而 `isProp⊥` 使目标为矛盾时可以消去命题截断。存在公式的满足以及呈现集合中的隶属用命题截断表达，因而保留存在性而不选定见证。
+空类型表示矛盾：`⊥*-rec` 可把其元素消去到任意目标，而 `isProp⊥` 使目标为矛盾时可以消去命题截断。存在公式的满足以及呈现集合中的隶属用命题截断表达，因而保留存在性而不选定见证。
 <!--ja-->
-空型は矛盾を表します。`Empty.rec` はその要素から任意の目標へ消去し、`isProp⊥` は目標が矛盾であるとき命題的切り詰めの消去を可能にします。存在論理式の充足と提示された集合への所属は命題的切り詰めで表され、証人を選ばずに存在だけを保持します。
+空型は矛盾を表します。`⊥*-rec` はその要素から任意の目標へ消去し、`isProp⊥` は目標が矛盾であるとき命題的切り詰めの消去を可能にします。存在論理式の充足と提示された集合への所属は命題的切り詰めで表され、証人を選ばずに存在だけを保持します。
 <!--/-->
 
 ```agda
-import Cubical.Data.Empty as Empty
-open import Cubical.Data.Empty.Properties using ( isProp⊥ )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 ```
 
 <!--en-->
@@ -240,7 +233,7 @@ With an empty constant domain, `Δ₀-small` shows that the truth value of every
 <!--/-->
 
 ```agda
-module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → Empty.rec* b)
+module D0 = Δ₀Small {ℓc = ℓ-suc ℓ} {K = ⊥* {ℓ-suc ℓ}} (λ b → ⊥*-rec b)
   using ( Δ₀-small )
 module TermAlgebra (𝒮 : ZFStructure (ℓ-suc ℓ))
                    (toSet : ZFStructure.S 𝒮 → V ℓ)
@@ -285,7 +278,7 @@ Satisfaction for the term algebra is stated at the trivially empty constant doma
 ```agda
   private module Sem = FOL.Semantics 𝒮
   open Sem using () renaming ( _^_ to _^𝒮_ )
-  module At0 = Sem.At (⊥* {ℓ}) Empty.rec* using ( _⊨_ )
+  module At0 = Sem.At (⊥* {ℓ}) ⊥*-rec using ( _⊨_ )
   _⊨₀_ : {n : ℕ} → S𝒮 ^𝒮 n → Formula (⊥* {ℓ}) n → hProp (ℓ-suc ℓ)
   _⊨₀_ = At0._⊨_
 ```
@@ -362,7 +355,7 @@ A satisfiable witness code evaluates to the least satisfying element; an unsatis
 ```agda
     val : Code → S𝒮
     val (base m) = emb m
-    val (wit k ψ cs) = Sum.rec (search k ψ (vals cs)) (λ _ → junk)
+    val (wit k ψ cs) = ⊎-rec (search k ψ (vals cs)) (λ _ → junk)
                        (lem (Sat k ψ (vals cs) , squash₁))
 
 ```
@@ -377,10 +370,10 @@ The small lemma records how a classical decision is used once its propositional 
 
 ```agda
   sum-stuck : {X : Type (ℓ-suc ℓ)} (x : X) (px : isProp X)
-            → (f : X → S𝒮) (g : (X → Empty.⊥) → S𝒮) (s : X ⊎ (X → Empty.⊥))
-            → Sum.rec f g s ≡ f x
-  sum-stuck x px f g (Sum.inl x') = sym (cong f (px x x'))
-  sum-stuck x px f g (Sum.inr h)  = Empty.rec (h x)
+            → (f : X → S𝒮) (g : (X → ⊥₀) → S𝒮) (s : X ⊎ (X → ⊥₀))
+            → ⊎-rec f g s ≡ f x
+  sum-stuck x px f g (inl x') = sym (cong f (px x x'))
+  sum-stuck x px f g (inr h)  = ⊥₀-rec (h x)
 ```
 
 <!--en-->
@@ -771,9 +764,9 @@ The classical step is packaged once: for a proposition, double-negation eliminat
 <!--/-->
 
 ```agda
-      dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → Empty.⊥) → Empty.⊥) → ⟨ P ⟩
-      dne P h = Sum.rec (λ p → p)
-        (λ (np : ⟨ P ⟩ → Empty.⊥) → Empty.rec (h np)) (lem P)
+      dne : (P : hProp (ℓ-suc ℓ)) → (((⟨ P ⟩) → ⊥₀) → ⊥₀) → ⟨ P ⟩
+      dne P h = ⊎-rec (λ p → p)
+        (λ (np : ⟨ P ⟩ → ⊥₀) → ⊥₀-rec (h np)) (lem P)
 
 ```
 
@@ -818,10 +811,10 @@ Forward eliminates the truncation of the inner witness and maps the witness; bac
 <!--/-->
 
 ```agda
-      fwd = PT.rec (snd (map g δ ⊨ᴮ mapFo g (∃̇ ψ)))
+      fwd = rec₁ (snd (map g δ ⊨ᴮ mapFo g (∃̇ ψ)))
         (λ { (q , hq) → ∣ g q , subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) hq ∣₁ })
       bwd : ⟨ map g δ ⊨ᴮ mapFo g (∃̇ ψ) ⟩ → ⟨ δ ⊨ᴬ (∃̇ ψ) ⟩
-      bwd h = PT.map (λ { (q , hq) →
+      bwd h = map₁ (λ { (q , hq) →
         q , subst ⟨_⟩ (sym (agree (suc n) ψ (q ∷ δ))) hq }) (wit n ψ δ h)
 ```
 
@@ -850,7 +843,7 @@ If `x` failed, the mapped environment would satisfy the negated matrix at `x`; t
 <!--/-->
 
 ```agda
-        PT.rec isProp⊥ (λ { (q , hq) →
+        rec₁ isProp⊥ (λ { (q , hq) →
           lower (hq (subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ)) (h q))) })
           (wit n (¬̇ ψ) δ ∣ x , (λ yes → lift (nx yes)) ∣₁)
       bwd : ((x : SB) → ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩)
@@ -898,7 +891,7 @@ The witness principle is applied to the auxiliary formula, returning an inner po
 <!--/-->
 
 ```agda
-        PT.rec isProp⊥ (λ { (q , hq) →
+        rec₁ isProp⊥ (λ { (q , hq) →
           lower (hq .snd (subst ⟨_⟩ (agree (suc n) ψ (q ∷ δ))
             (h q (subst ⟨_⟩ (sym (memPath t q δ))
                     (subst ⟨_⟩ (memRen t (g q) δ) (hq .fst)))))) })
@@ -950,7 +943,7 @@ The auxiliary matrix is the side condition conjoined with the matrix, and forwar
       fwd : ∥ Σ[ q ∈ SA ] (⟨ fst q ∈ˢ fst (⟦ t ⟧ᴬ δ) ⟩ × ⟨ (q ∷ δ) ⊨ᴬ ψ ⟩) ∥₁
           → ∥ Σ[ x ∈ SB ] (⟨ fst x ∈ˢ fst (⟦ mapTm g t ⟧ᴮ (map g δ)) ⟩
                         × ⟨ (x ∷ map g δ) ⊨ᴮ mapFo g ψ ⟩) ∥₁
-      fwd = PT.map (λ { (q , hq , hψ) →
+      fwd = map₁ (λ { (q , hq , hψ) →
 ```
 
 <!--en-->
@@ -978,11 +971,11 @@ Backward runs the witness principle on the outer pair read in the auxiliary form
 <!--/-->
 
 ```agda
-      bwd h = PT.map (λ { (q , hq) →
+      bwd h = map₁ (λ { (q , hq) →
         q , ( subst ⟨_⟩ (sym (memPath t q δ))
                 (subst ⟨_⟩ (memRen t (g q) δ) (hq .fst))
             , subst ⟨_⟩ (sym (agree (suc n) ψ (q ∷ δ))) (hq .snd)) })
-        (wit n mat δ (PT.map (λ { (x , hx , hψ) →
+        (wit n mat δ (map₁ (λ { (x , hx , hψ) →
 ```
 
 <!--en-->
@@ -1261,7 +1254,7 @@ The hull lies in the stage: every member is the value of some code, and every co
 
 ```agda
     Hull⊆L : (x : S) → ⟨ x ∈ˢ Hull ⟩ → ⟨ x ∈ˢ Lset α ⟩
-    Hull⊆L x x∈H = PT.rec (snd (x ∈ˢ Lset α)) go x∈H
+    Hull⊆L x x∈H = rec₁ (snd (x ∈ˢ Lset α)) go x∈H
       where
       go : Σ[ c ∈ Code ] (fst (val c) ≡ x) → ⟨ x ∈ˢ Lset α ⟩
       go (c , q) = subst (λ z → ⟨ z ∈ˢ Lset α ⟩) q (snd (val c))
@@ -1487,7 +1480,7 @@ Surjectivity promotes to the paired carriers: every element of the target `PM` i
 
 ```agda
   surj' : (p' : SPM) → ∥ Σ[ q ∈ SM ] (g q ≡ p') ∥₁
-  surj' (z , z∈) = PT.map (λ { (y , y∈ , e) →
+  surj' (z , z∈) = map₁ (λ { (y , y∈ , e) →
     (y , y∈) , Σ≡Prop (λ w → ⟨ w ∈ˢ PM ⟩isProp) e }) (surj z z∈)
 
 ```
@@ -1625,8 +1618,8 @@ The witness principle is produced from surjectivity. An outer witness `p'` in th
 
 ```agda
     wit : Tr.Witness g
-    wit n ψ δ h = PT.rec squash₁
-      (λ { (p' , hp) → PT.map
+    wit n ψ δ h = rec₁ squash₁
+      (λ { (p' , hp) → map₁
         (λ { (q , gq≡p) →
           q , subst (λ z → ⟨ (z ∷ map g δ) ⊨ᵖᵐ mapFo g ψ ⟩) (sym gq≡p) hp })
 ```
@@ -1868,7 +1861,7 @@ The substructure machinery is instantiated at the hull, and its formulas receive
   module A = ASt.AtM M H.Hull⊆L using ( Elementary; SM; module SemM; TV→elem; inL )
   module Mse = A.SemM.At A.SM id using ( _⊨_ )
   codeOf : (q : A.SM) → ∥ Σ[ c ∈ H.T.Code ] (H.T.val c ≡ A.inL q) ∥₁
-  codeOf q = PT.map (λ { (c , e) → c , Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) e })
+  codeOf q = map₁ (λ { (c , e) → c , Σ≡Prop (λ z → ⟨ z ∈ˢ Lset α ⟩isProp) e })
     (H.hull-member (fst q) (snd q))
 ```
 
@@ -1886,7 +1879,7 @@ Codes lift from single elements to finite environments: the empty environment is
           → ∥ Σ[ ds ∈ Vec H.T.Code n ]
                (map H.T.val ds ≡ map A.inL δ) ∥₁
   codeEnv [] = ∣ [] , refl ∣₁
-  codeEnv (q ∷ δ) = PT.map2
+  codeEnv (q ∷ δ) = map2
 ```
 
 <!--en-->
@@ -1931,7 +1924,7 @@ The statement is the Tarski-Vaught condition itself: if the stage satisfies an e
      → ⟨ map A.inL δ ASt.AbsL.⊨ᵐ (mapFo A.inL (∃̇ ψ)) ⟩
      → ∥ Σ[ q ∈ A.SM ]
           ⟨ (A.inL q ∷ map A.inL δ) ASt.AbsL.⊨ᵐ (mapFo A.inL ψ) ⟩ ∥₁
-  tv n ψ δ h = PT.rec squash₁ takeEnvironment (codeEnv params)
+  tv n ψ δ h = rec₁ squash₁ takeEnvironment (codeEnv params)
     where
 ```
 
@@ -1988,7 +1981,7 @@ The search closure runs at the coded environment. Its own evaluation record is t
 <!--/-->
 
 ```agda
-    takeEnvironment (ds , eds) = PT.map finish (H.T.closed _ bodyFo ds witness)
+    takeEnvironment (ds , eds) = map₁ finish (H.T.closed _ bodyFo ds witness)
       where
       vals-env : H.T.vals ds
                ≡ map A.inL δ ++ map A.inL (constantsFo ψ)
@@ -2038,7 +2031,7 @@ The stage's satisfaction of the existential is transported along the body path i
 
 ```agda
       witness : H.T.Sat (n + countFo ψ) bodyFo (H.T.vals ds)
-      witness = PT.map (λ { (b , hb) →
+      witness = map₁ (λ { (b , hb) →
         b , subst ⟨_⟩ (sym (body-path b)) hb }) h
 
 ```
@@ -2135,7 +2128,7 @@ For formulas with empty constant domain, ambient satisfaction can then be compar
 <!--/-->
 
 ```agda
-module AtP = SemV.At (⊥* {ℓ-suc ℓ}) (λ b → Empty.rec* b) using ( _⊨_ )
+module AtP = SemV.At (⊥* {ℓ-suc ℓ}) (λ b → ⊥*-rec b) using ( _⊨_ )
 
 ```
 
@@ -2165,8 +2158,8 @@ The proof composes the mapping law with the fact that the empty domain's embeddi
 
 ```agda
 embed-map f φ =
-    mapFo-comp Empty.rec* f φ
-  ∙ cong (λ h → mapFo h φ) (funExt (λ b → Empty.rec* b))
+    mapFo-comp ⊥*-rec f φ
+  ∙ cong (λ h → mapFo h φ) (funExt (λ b → ⊥*-rec b))
 opaque
   isOrdAt : Formula (⊥* {ℓ-suc ℓ}) 1
 ```
@@ -2562,7 +2555,7 @@ The covering hypothesis lifts from hull members to collapse members. Since a col
     covered : (x : S) → ⟨ x ∈ˢ C.πX ⟩
             → ∥ Σ[ γ ∈ S ]
                  (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩) ∥₁
-    covered x x∈πX = PT.rec squash₁ go (C.πX-member x x∈πX)
+    covered x x∈πX = rec₁ squash₁ go (C.πX-member x x∈πX)
       where
 ```
 
@@ -2578,7 +2571,7 @@ The inversion is the collapse's own member description: a member of the image is
       go : Σ[ y ∈ S ] (⟨ y ∈ˢ M ⟩ × (C.π y ≡ x))
          → ∥ Σ[ γ ∈ S ]
               (IsOrd γ × ⟨ γ ∈ˢ C.πX ⟩ × ⟨ x ∈ˢ Lset γ ⟩) ∥₁
-      go (y , y∈M , e) = PT.map
+      go (y , y∈M , e) = map₁
         (λ { (γ , oγ , γ∈πX , h) →
 ```
 
@@ -2595,7 +2588,7 @@ The cover transports along the equality of the collapse values. The lifted state
         (cover y y∈M)
     β-succ : (δ : S) → ⟨ δ ∈ˢ β ⟩
            → ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ δ ∈ˢ γ ⟩ × ⟨ γ ∈ˢ β ⟩) ∥₁
-    β-succ δ δ∈β = PT.map go (covered δ (β∈πX δ δ∈β))
+    β-succ δ δ∈β = map₁ go (covered δ (β∈πX δ δ∈β))
 ```
 
 <!--en-->
@@ -2626,7 +2619,7 @@ Because both `δ` and `γ` are ordinals, `δ ∈ Lset γ` implies `δ ∈ γ`; a
       go (γ , oγ , γ∈πX , δ∈Lγ) =
         γ , oγ , ord∈Lset→∈ γ oγ δ oδ δ∈Lγ , ord∈β γ γ∈πX oγ
     πX⊆Lβ : (x : S) → ⟨ x ∈ˢ C.πX ⟩ → ⟨ x ∈ˢ Lset β ⟩
-    πX⊆Lβ x x∈πX = PT.rec (snd (x ∈ˢ Lset β)) go (covered x x∈πX)
+    πX⊆Lβ x x∈πX = rec₁ (snd (x ∈ˢ Lset β)) go (covered x x∈πX)
       where
 ```
 
@@ -2655,11 +2648,11 @@ The forward inclusion decomposes a member of the level at beta by the stage cons
 <!--/-->
 
 ```agda
-    Lβ⊆πX x x∈Lβ = PT.rec (snd (x ∈ˢ C.πX)) go (Lset-out β x x∈Lβ)
+    Lβ⊆πX x x∈Lβ = rec₁ (snd (x ∈ˢ C.πX)) go (Lset-out β x x∈Lβ)
       where
       go : Σ[ δ ∈ S ] (⟨ δ ∈ˢ β ⟩ × ⟨ x ∈ˢ 𝒟ₒ (Lset δ) ⟩)
          → ⟨ x ∈ˢ C.πX ⟩
-      go (δ , δ∈β , x∈𝒟ₒδ) = PT.rec (snd (x ∈ˢ C.πX)) liftStage (β-succ δ δ∈β)
+      go (δ , δ∈β , x∈𝒟ₒδ) = rec₁ (snd (x ∈ˢ C.πX)) liftStage (β-succ δ δ∈β)
 ```
 
 <!--en-->
@@ -2736,7 +2729,7 @@ The condensation statement is thus assembled: the collapse image is the level at
     condenses = β , β-isOrd , ext
 module UnionKit (α lam x : S) (ordα : IsOrd α) (ordλ : IsOrd lam)
   (α∈λ : ⟨ α ∈ˢ lam ⟩) (x⊆Lα : (z : S) → ⟨ z ∈ˢ x ⟩ → ⟨ z ∈ˢ Lset α ⟩)
-  (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → Empty.⊥) where
+  (x∈Lλ : ⟨ x ∈ˢ Lset lam ⟩) (α∉ω : ⟨ α ∈ˢ ω ⟩ → ⊥₀) where
 ```
 
 <!--en-->
@@ -2823,7 +2816,7 @@ The generator is contained in the ambient stage: a member on the stage side is t
 
 ```agda
   X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩
-  X⊆Lλ z z∈X = PT.rec (snd (z ∈ˢ Lset lam)) go (X-mem z z∈X)
+  X⊆Lλ z z∈X = rec₁ (snd (z ∈ˢ Lset lam)) go (X-mem z z∈X)
     where
     go : (⟨ z ∈ˢ Lset α ⟩ ⊎ ⟨ z ∈ˢ ⁅ x ⁆s ⟩) → ⟨ z ∈ˢ Lset lam ⟩
     go (inl z∈Lα) = Lset-mono {α = lam} {β = α} α∈λ z∈Lα
@@ -2852,7 +2845,7 @@ The generator is transitive. A member of a member on the stage side is in the st
 
 ```agda
   Xtr : isTransV X
-  Xtr {x = a} {y = b} b∈a a∈X = PT.rec (snd (b ∈ˢ X)) go (X-mem a a∈X)
+  Xtr {x = a} {y = b} b∈a a∈X = rec₁ (snd (b ∈ˢ X)) go (X-mem a a∈X)
     where
     go : (⟨ a ∈ˢ Lset α ⟩ ⊎ ⟨ a ∈ˢ ⁅ x ⁆s ⟩) → ⟨ b ∈ˢ X ⟩
     go (inl a∈Lα) = Lα∈X b (layer-trans (Lset-layer α) b∈a a∈Lα)
@@ -2870,8 +2863,8 @@ On the singleton side, the intermediate set is `x`; the hypothesis `x ⊆ Lset �
     go (inr a∈sgl) = Lα∈X b (x⊆Lα b
       (subst (λ u → ⟨ b ∈ˢ u ⟩) (sgl≡ a a∈sgl) b∈a))
   one∈α : ⟨ sucV ∅ ∈ˢ α ⟩
-  one∈α = Sum.rec
-      (λ α∈ω → Empty.rec (α∉ω α∈ω))
+  one∈α = ⊎-rec
+      (λ α∈ω → ⊥₀-rec (α∉ω α∈ω))
 ```
 
 <!--en-->
@@ -2883,7 +2876,7 @@ Infinity means not belonging to `ω`, and the trichotomy of ordinals decides the
 <!--/-->
 
 ```agda
-      (Sum.rec (λ α≡ω → subst (λ w → ⟨ sucV ∅ ∈ˢ w ⟩) (sym α≡ω) (#∈ω 1))
+      (⊎-rec (λ α≡ω → subst (λ w → ⟨ sucV ∅ ∈ˢ w ⟩) (sym α≡ω) (#∈ω 1))
                (λ ω∈α → ordα .fst (#∈ω 1) ω∈α))
       (ord-tri α ordα ω ω-ord)
 
@@ -2976,8 +2969,8 @@ The hull is named, and the symmetric difference of two sets is stated at the lev
   M : S
   M = H.T.Hull
   Different : S → S → S → Type (ℓ-suc ℓ)
-  Different x y z = (z ∈ᵗ x × (z ∈ᵗ y → Empty.⊥))
-                  ⊎ (z ∈ᵗ y × (z ∈ᵗ x → Empty.⊥))
+  Different x y z = (z ∈ᵗ x × (z ∈ᵗ y → ⊥₀))
+                  ⊎ (z ∈ᵗ y × (z ∈ᵗ x → ⊥₀))
 ```
 
 <!--en-->
@@ -2989,7 +2982,7 @@ Unequal sets have a point in their symmetric difference, classically: the trunca
 <!--/-->
 
 ```agda
-  different : (x y : S) → (x ≡ y → Empty.⊥) → ∥ Σ[ z ∈ S ] Different x y z ∥₁
+  different : (x y : S) → (x ≡ y → ⊥₀) → ∥ Σ[ z ∈ S ] Different x y z ∥₁
   different x y nxy = go (lem P)
     where
     P : hProp (ℓ-suc ℓ)
@@ -3005,9 +2998,9 @@ If no point separated the sets, every membership truth would agree in both direc
 <!--/-->
 
 ```agda
-    go : ⟨ P ⟩ ⊎ (⟨ P ⟩ → Empty.⊥) → ⟨ P ⟩
+    go : ⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀) → ⟨ P ⟩
     go (inl p) = p
-    go (inr np) = Empty.rec (nxy (extensionalV (λ z → ⇔toPath (fwd z) (bwd z))))
+    go (inr np) = ⊥₀-rec (nxy (extensionalV (λ z → ⇔toPath (fwd z) (bwd z))))
       where
       fwd : (z : S) → z ∈ᵗ x → z ∈ᵗ y
 ```
@@ -3021,11 +3014,11 @@ Both directions of the agreement are decided by excluded middle, and each failin
 <!--/-->
 
 ```agda
-      fwd z zx = Sum.rec (λ zy → zy)
-        (λ nzy → Empty.rec (np ∣ z , inl (zx , nzy) ∣₁)) (lem (z ∈ˢ y))
+      fwd z zx = ⊎-rec (λ zy → zy)
+        (λ nzy → ⊥₀-rec (np ∣ z , inl (zx , nzy) ∣₁)) (lem (z ∈ˢ y))
       bwd : (z : S) → z ∈ᵗ y → z ∈ᵗ x
-      bwd z zy = Sum.rec (λ zx → zx)
-        (λ nzx → Empty.rec (np ∣ z , inr (zy , nzx) ∣₁)) (lem (z ∈ˢ x))
+      bwd z zy = ⊎-rec (λ zx → zx)
+        (λ nzx → ⊥₀-rec (np ∣ z , inr (zy , nzx) ∣₁)) (lem (z ∈ˢ x))
 ```
 
 <!--en-->
@@ -3057,7 +3050,7 @@ Existential satisfaction is truncated, so the distinguishing point is returned u
             ⟨ (a ∷ []) ASt.AbsL.⊨ᵐ (mapFo A.inL (φ (u , u∈M) (v , v∈M))) ⟩ ∥₁
   outer u v u∈M v∈M z d = ∣ a , ∣ objectDifferent d ∣₁ ∣₁
     where
-    objectDifferent = Sum.map
+    objectDifferent = sumMap
 ```
 
 <!--en-->
@@ -3072,7 +3065,7 @@ In either branch, ambient membership supplies the positive conjunct, while the n
       (λ (zu , nzv) → zu , λ zv → lift (nzv zv))
       (λ (zv , nzu) → zv , λ zu → lift (nzu zu))
     z∈L : ⟨ z ∈ˢ Lset α ⟩
-    z∈L = Sum.rec
+    z∈L = ⊎-rec
       (λ (zx , _) → layer-trans (Lset-layer α) zx (H.Hull⊆L u u∈M))
 ```
 
@@ -3102,8 +3095,8 @@ Assume conversely that every hull element belonging to `y` also belongs to `x`. 
 
 ```agda
          → (ag2 : (z : S) → z ∈ᵗ M → ⟨ z ∈ˢ y ⟩ → ⟨ z ∈ˢ x ⟩)
-         → (x ≡ y → Empty.⊥) → Empty.⊥
-  refute x y x∈M y∈M ag1 ag2 nxy = PT.rec Empty.isProp⊥ diff (different x y nxy)
+         → (x ≡ y → ⊥₀) → ⊥₀
+  refute x y x∈M y∈M ag1 ag2 nxy = rec₁ isProp⊥ diff (different x y nxy)
     where
     xS : A.SM
 ```
@@ -3132,8 +3125,8 @@ The refutation eliminates the difference point. Elementarity converts the stage'
 <!--/-->
 
 ```agda
-    diff : Σ[ z ∈ S ] Different x y z → Empty.⊥
-    diff (z , d) = PT.rec Empty.isProp⊥ inside h
+    diff : Σ[ z ∈ S ] Different x y z → ⊥₀
+    diff (z , d) = rec₁ isProp⊥ inside h
       where
       h : ⟨ [] Mse.⊨ (∃̇ (φ xS yS)) ⟩
       h = subst ⟨_⟩ (sym (E.elem 0 (∃̇ (φ xS yS)) []))
@@ -3149,10 +3142,10 @@ Elementarity supplies a hull witness satisfying the difference formula. Eliminat
 
 ```agda
         (outer x y x∈M y∈M z d)
-      inside : Σ[ b ∈ A.SM ] ⟨ (b ∷ []) Mse.⊨ φ xS yS ⟩ → Empty.⊥
-      inside (b , q) = PT.rec Empty.isProp⊥ cases q
+      inside : Σ[ b ∈ A.SM ] ⟨ (b ∷ []) Mse.⊨ φ xS yS ⟩ → ⊥₀
+      inside (b , q) = rec₁ isProp⊥ cases q
         where
-        cases : (⟨ fst b ∈ˢ x ⟩ × (⟨ fst b ∈ˢ y ⟩ → Lift Empty.⊥))
+        cases : (⟨ fst b ∈ˢ x ⟩ × (⟨ fst b ∈ˢ y ⟩ → Lift ⊥₀))
 ```
 
 <!--en-->
@@ -3164,8 +3157,8 @@ Either disjunct identifies the witness as a member of one hull member but not th
 <!--/-->
 
 ```agda
-              ⊎ (⟨ fst b ∈ˢ y ⟩ × (⟨ fst b ∈ˢ x ⟩ → Lift Empty.⊥))
-              → Empty.⊥
+              ⊎ (⟨ fst b ∈ˢ y ⟩ × (⟨ fst b ∈ˢ x ⟩ → Lift ⊥₀))
+              → ⊥₀
         cases (inl (bx , nby)) = lower (nby (ag1 (fst b) (snd b) bx))
         cases (inr (by , nbx)) = lower (nbx (ag2 (fst b) (snd b) by))
 
@@ -3182,7 +3175,7 @@ Extensionality of the hull is proved by classical contradiction. Since the unive
 ```agda
   hullExt : isExt M
   hullExt x y x∈M y∈M ag1 ag2 =
-    Sum.rec (λ p → p) (λ np → Empty.rec (bad np))
+    ⊎-rec (λ p → p) (λ np → ⊥₀-rec (bad np))
       (lem ((x ≡ y) , isSetS x y))
     where
 ```
@@ -3196,7 +3189,7 @@ The contradictory branch is eliminated by `bad`, completing extensionality of th
 <!--/-->
 
 ```agda
-    bad : (x ≡ y → Empty.⊥) → Empty.⊥
+    bad : (x ≡ y → ⊥₀) → ⊥₀
     bad = refute x y x∈M y∈M ag1 ag2
 ```
 
@@ -3246,7 +3239,7 @@ For a constant-free Δ₀ formula `φ`, `read` first regards `embed φ` as a for
   read : {n : ℕ} {φ : Formula (⊥* {ℓ-suc ℓ}) n} → Δ₀ φ → (δ : Ab.SM ^ n)
        → (δ Ab.⊨ᵐ embed φ) ≡ (map fst δ ⊨ₚ φ)
   read {n} {φ} dφ δ =
-      Ab.abs₀ (mapΔ₀ Empty.rec* dφ) δ
+      Ab.abs₀ (mapΔ₀ ⊥*-rec dφ) δ
     ∙ embed-⊨ 𝒮ᵥ {K = Ab.SM} fst φ (map fst δ)
 ```
 
@@ -3260,7 +3253,7 @@ The final path uses function extensionality: because the constant domain is empt
 
 ```agda
     ∙ cong (λ ι → SemV.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
-           (funExt (λ b → Empty.rec* b))
+           (funExt (λ b → ⊥*-rec b))
 module Frame (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆Lλ : (z : S) → ⟨ z ∈ˢ X ⟩ → ⟨ z ∈ˢ Lset lam ⟩)

@@ -30,6 +30,7 @@ The question of this chapter: for a set `A`, which subsets of `A` can be singled
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
 
 module L.Definability {ℓ : Level} where
 
@@ -78,10 +79,6 @@ Essential smallness is what lets satisfaction become an index for a set. Since e
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ-cong-equiv-snd )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
 ```
 
@@ -225,7 +222,7 @@ The first specification says each `defSet φ` is contained in `A`. A member of `
 
 ```agda
   defSet⊆A : (φ : Formula ⟪ A ⟫ 1) (y : S) → ⟨ y ∈ˢ defSet φ ⟩ → ⟨ y ∈ˢ A ⟩
-  defSet⊆A φ y = PT.rec (snd (y ∈ˢ A)) λ { ((m , _) , q) →
+  defSet⊆A φ y = rec₁ (snd (y ∈ˢ A)) λ { ((m , _) , q) →
     subst (λ v → ⟨ v ∈ˢ A ⟩) q
           (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m)) }
 
@@ -261,7 +258,7 @@ The forward direction unpacks what membership merely gives: an index `(m' , h)`,
     where
     decode = ⊨ᵐ-small φ (ι m ∷ [])
     fwd : ⟨ ⟪ A ⟫↪ m ∈ˢ defSet φ ⟩ → ⟨ (ι m ∷ []) ⊨ᵐ φ ⟩
-    fwd = PT.rec (snd ((ι m ∷ []) ⊨ᵐ φ)) λ { ((m' , h) , q) →
+    fwd = rec₁ (snd ((ι m ∷ []) ⊨ᵐ φ)) λ { ((m' , h) , q) →
       invEq (decode .snd) (subst (λ k → ⟨ smallSat φ k ⟩) (⟪⟫↪-inj q) h) }
 ```
 
@@ -342,17 +339,17 @@ The converse uses what "true" means: since `⊤̇` holds at every member, `defSe
 ```
 
 <!--en-->
-The dual containment `Def∋⊆A` says every element of `Def A` is a subset of `A`. Its hypothesis is itself a truncation: `x` merely is some `defSet φ`. The target is a proposition, being built from propositions by products, so `PT.rec` may eliminate the truncation; the case then transports `y ∈ˢ x` backwards along the path identifying `x` with `defSet φ` and applies the containment of `defSet φ`. Combined with `defSet⊤≡A`, which yields `A ∈ Def`, the picture is complete: `Def` contains `A` as an element and contains only subsets of `A`.
+The dual containment `Def∋⊆A` says every element of `Def A` is a subset of `A`. Its hypothesis is itself a truncation: `x` merely is some `defSet φ`. The target is a proposition, being built from propositions by products, so `rec₁` may eliminate the truncation; the case then transports `y ∈ˢ x` backwards along the path identifying `x` with `defSet φ` and applies the containment of `defSet φ`. Combined with `defSet⊤≡A`, which yields `A ∈ Def`, the picture is complete: `Def` contains `A` as an element and contains only subsets of `A`.
 <!--zh-->
-对偶的包含 `Def∋⊆A` 说 `Def A` 的每个元素都是 `A` 的子集。它的前提本身就是截断：`x` 仅仅是某个 `defSet φ`。目标是由命题经乘积构成的命题，因此 `PT.rec` 可以消去截断；随后沿把 `x` 等同于 `defSet φ` 的路径反向搬运 `y ∈ˢ x`，并应用 `defSet φ` 的包含。与给出 `A ∈ Def` 的 `defSet⊤≡A` 合观，图景完整：`Def` 把 `A` 作为元素包含在内，且只包含 `A` 的子集。
+对偶的包含 `Def∋⊆A` 说 `Def A` 的每个元素都是 `A` 的子集。它的前提本身就是截断：`x` 仅仅是某个 `defSet φ`。目标是由命题经乘积构成的命题，因此 `rec₁` 可以消去截断；随后沿把 `x` 等同于 `defSet φ` 的路径反向搬运 `y ∈ˢ x`，并应用 `defSet φ` 的包含。与给出 `A ∈ Def` 的 `defSet⊤≡A` 合观，图景完整：`Def` 把 `A` 作为元素包含在内，且只包含 `A` 的子集。
 <!--ja-->
-双対の包含 `Def∋⊆A` は、`Def A` の各要素が `A` の部分集合であると言います。その前提はそれ自体が切断です。`x` はある `defSet φ` である「だけ」です。目標は命題から積を作った命題なので、`PT.rec` が切断を消去できます。そして、`x` を `defSet φ` と同一視する経路に沿って `y ∈ˢ x` を逆方向に輸送し、`defSet φ` の包含を適用します。`A ∈ Def` を与える `defSet⊤≡A` と合わせて状況は完結します。`Def` は `A` を要素として含み、含むのは `A` の部分集合だけです。
+双対の包含 `Def∋⊆A` は、`Def A` の各要素が `A` の部分集合であると言います。その前提はそれ自体が切断です。`x` はある `defSet φ` である「だけ」です。目標は命題から積を作った命題なので、`rec₁` が切断を消去できます。そして、`x` を `defSet φ` と同一視する経路に沿って `y ∈ˢ x` を逆方向に輸送し、`defSet φ` の包含を適用します。`A ∈ Def` を与える `defSet⊤≡A` と合わせて状況は完結します。`Def` は `A` を要素として含み、含むのは `A` の部分集合だけです。
 <!--/-->
 
 ```agda
 
   Def∋⊆A : (x : S) → ⟨ x ∈ˢ Def ⟩ → (y : S) → ⟨ y ∈ˢ x ⟩ → ⟨ y ∈ˢ A ⟩
-  Def∋⊆A x = PT.rec (isPropΠ λ y → isPropΠ λ _ → snd (y ∈ˢ A))
+  Def∋⊆A x = rec₁ (isPropΠ λ y → isPropΠ λ _ → snd (y ∈ˢ A))
     (λ { (φ , q) y y∈x → defSet⊆A φ y (subst (λ s → ⟨ y ∈ˢ s ⟩) (sym q) y∈x) })
 ```
 
@@ -414,7 +411,7 @@ The forward inclusion eliminates the truncated index of `y ∈ˢ defSet (atom m�
 <!--/-->
 
 ```agda
-      sub₁ y y∈ₛ = PT.rec (snd (y ∈ₛ ⟪ A ⟫↪ mₐ))
+      sub₁ y y∈ₛ = rec₁ (snd (y ∈ₛ ⟪ A ⟫↪ mₐ))
         (λ { ((m , h) , q) →
           subst (λ v → ⟨ v ∈ₛ ⟪ A ⟫↪ mₐ ⟩) q
             (∈∈ₛ {a = ⟪ A ⟫↪ m} {b = ⟪ A ⟫↪ mₐ} .fst

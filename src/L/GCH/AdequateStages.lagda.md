@@ -101,11 +101,6 @@ Membership assertions and the witness conditions built from them are proposition
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Foundations.HLevels using ( isProp×; isPropΠ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; sett )
 ```
 
@@ -841,7 +836,7 @@ The outward reading recovers, under truncation, a chain entry containing any giv
 
 ```agda
   outof : (x : V ℓ) → ⟨ x ∈ γ ⟩ → ∥ Σ[ n ∈ ℕ ] ⟨ x ∈ ch n ⟩ ∥₁
-  outof x h = PT.map (λ { (n , hn) → lower n , hn })
+  outof x h = map₁ (λ { (n , hn) → lower n , hn })
     (union-family-out (Lift {ℓ-zero} {ℓ} ℕ) F x h)
 ```
 
@@ -995,7 +990,7 @@ Given `x ∈ γ`, the outward map produces the propositionally truncated existen
 
 ```agda
   succ : (x : V ℓ) → ⟨ x ∈ γ ⟩ → ⟨ sucV x ∈ γ ⟩
-  succ x x∈ = PT.rec (snd (sucV x ∈ γ))
+  succ x x∈ = rec₁ (snd (sucV x ∈ γ))
     (λ { (n , x∈n) → C.into (suc n) (sucV x) (Bound1.suc∈β (ch n .fst) (ch n .snd) x x∈n) })
     (C.outof x x∈)
 
@@ -1011,7 +1006,7 @@ For `c ∈ γ`, the outward map likewise gives the propositionally truncated exi
 
 ```agda
   wit : (c : V ℓ) → ⟨ c ∈ γ ⟩ → Witnesses (Lset γ) c
-  wit c c∈ = PT.rec (isPropWitnesses (Lset γ) c)
+  wit c c∈ = rec₁ (isPropWitnesses (Lset γ) c)
     (λ { (n , c∈n) → λ oc →
       let w = Bound1.wit (ch n .fst) (ch n .snd) c c∈n oc
           mono = Lset-mono {α = γ} {β = ch (suc n) .fst} (ch∈γ (suc n))
@@ -1220,7 +1215,7 @@ Given `x ∈ λ`, the outward map supplies only the propositionally truncated ex
 
 ```agda
   succ : (x : V ℓ) → ⟨ x ∈ lam ⟩ → ⟨ sucV x ∈ lam ⟩
-  succ x x∈ = PT.rec (snd (sucV x ∈ lam))
+  succ x x∈ = rec₁ (snd (sucV x ∈ lam))
     (λ { (n , x∈n) → U.into n (sucV x) (Adequate.succ (ch n .fst) (ch n .snd .snd) x x∈n) })
     (U.outof x x∈)
 
@@ -1250,7 +1245,7 @@ For `c ∈ λ`, the outward map gives the propositionally truncated existence of
 
 ```agda
   wit : (c : V ℓ) → ⟨ c ∈ lam ⟩ → Witnesses (Lset lam) c
-  wit c c∈ = PT.rec (isPropWitnesses (Lset lam) c)
+  wit c c∈ = rec₁ (isPropWitnesses (Lset lam) c)
     (λ { (n , c∈n) → λ oc →
       let w = Adequate.wit (ch n .fst) (ch n .snd .snd) c c∈n oc
       in  Lset-mono {α = lam} {β = ch n .fst} (ch∈λ n) (w .fst)
@@ -1296,7 +1291,7 @@ For `d ∈ λ`, the outward map gives only the propositionally truncated existen
 
 ```agda
   super : Superadequate lam
-  super d d∈ = PT.map
+  super d d∈ = map₁
     (λ { (n , d∈n) → ch n .fst , ( ch∈λ n , ( d∈n , ch n .snd .snd )) })
     (U.outof d d∈)
 

@@ -50,8 +50,6 @@ The domain `AllCodes W` is the constructible set of well-formed formula codes ov
 open import L.Coding.CodeSet {ℓ} lem using ( AllCodes )
 
 open import FOL.Syntax using ( Formula )
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Vec using ( _∷_; [] )
 ```
 
 <!--en-->
@@ -63,8 +61,6 @@ Membership in the cumulative hierarchy is truncated existence, so the final desc
 <!--/-->
 
 ```agda
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
 
 open hPropStructure 𝒮ʟ using ( S )

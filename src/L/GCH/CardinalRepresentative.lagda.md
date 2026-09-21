@@ -79,11 +79,6 @@ The candidate set is the successor `sucV α`. Propositional truncation expresses
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( inl; inr )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 ```
 
@@ -263,7 +258,7 @@ The presentation theorem gives `μ ∈ T`. Since `T` is an ordinal, every member
 
 ```agda
   α↪μ : InjL α μ
-  α↪μ = PT.rec squash₁ from (fst (snd least))
+  α↪μ = rec₁ squash₁ from (fst (snd least))
     where
     from : Σ[ δ ∈ SL.S ] ((fst δ ≡ ⟪ T ⟫↪ m) × InjL α δ) → InjL α μ
 ```
@@ -378,7 +373,7 @@ The third case `α ∈ μ` contradicts minimality. The index naming `α` is good
 
 ```agda
     go (inr (inr α∈μ)) z z∈μ =
-      Empty.rec (snd (snd least) LC.self selfGood
+      ⊥₀-rec (snd (snd least) LC.self selfGood
         (transport (λ i → sym (LC.w-lt LC.self m) i)
           (subst (λ v → ⟨ v ∈ˢ fst μ ⟩) (sym LC.self-eq) α∈μ)))
 ```

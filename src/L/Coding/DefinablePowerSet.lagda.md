@@ -82,11 +82,6 @@ open import L.Coding.SlotClosure {ℓ} lem using ( slotClosed )
 open import L.Coding.Satisfaction {ℓ} lem using ( Sat )
 open import L.Coding.SatisfactionBridge {ℓ} lem using ( asConst; defSet-Sat )
 open import L.Coding.UniformSatisfaction {ℓ} lem using ( keyBridge; fr; frTags; frTow; frDom )
-
-open import Cubical.Foundations.Prelude using ( subst2 )
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ∈-asFiber )
@@ -158,7 +153,7 @@ module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
     v = fst (lookup y γ)
 
     readEntry : (z : S) → ⟨ fst z ∈ envOne v ⟩ → fst z ≡ pr (# 0) v
-    readEntry z = PT.rec (setIsSet (fst z) (pr (# 0) v))
+    readEntry z = rec₁ (setIsSet (fst z) (pr (# 0) v))
       (λ { (lift zero , q) → sym q ; (lift (suc ()) , _) })
 
     entry∈ : (z : S) → fst z ≡ pr (# 0) v → ⟨ fst z ∈ envOne v ⟩
@@ -187,7 +182,7 @@ module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
       wS = w , isL-trans {x = fst E} {y = w} w∈ (snd E)
 
     sub₂ : (w : V ℓ) → ⟨ w ∈ envOne v ⟩ → ⟨ w ∈ fst E ⟩
-    sub₂ w = PT.rec (snd (w ∈ fst E))
+    sub₂ w = rec₁ (snd (w ∈ fst E))
         (λ { (lift zero , q) →
                subst (λ u → ⟨ u ∈ fst E ⟩) (keyOf-fst 0 (lookup y γ) ∙ q) hasKey
            ; (lift (suc ()) , _) })
@@ -258,7 +253,7 @@ module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
 
     readInner : (z : S) → ⟨ (z ∷ γ) ⊨ inner ⟩
               → ⟨ envOne (fst z) ∈ fst (lookup v γ) ⟩
-    readInner z = PT.rec (snd (envOne (fst z) ∈ fst (lookup v γ))) step
+    readInner z = rec₁ (snd (envOne (fst z) ∈ fst (lookup v γ))) step
       where
       step : Σ[ E ∈ S ] ⟨ (E ∷ z ∷ γ)
                ⊨ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc v)))) ⟩
@@ -346,7 +341,7 @@ module _ (A : S) where
              → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ]
                    (fst (lookup c γ) ≡ fst (keyS A ψ))) ∥₁
   codeAt-out c w γ qw (hk , hw) =
-    PT.rec squash₁ step (keyArityAtL-out c 1 γ hk)
+    rec₁ squash₁ step (keyArityAtL-out c 1 γ hk)
     where
     step : Σ[ z ∈ S ] (fst (lookup c γ) ≡ pr (# 1) (fst z))
          → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ]
@@ -429,7 +424,7 @@ module _ (B : S) where
                  → ⟨ γ ⊨ satGraphAt w c v ⟩
                  → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
   graphAt-unique {m} {n} ψ w c v γ qw qc h =
-    PT.rec (setIsSet (fst (lookup v γ)) (fst (Sat B (toB ψ)))) step
+    rec₁ (setIsSet (fst (lookup v γ)) (fst (Sat B (toB ψ)))) step
       (graphAt-out w c v γ h)
     where
     step : GraphWitAt w c v γ → fst (lookup v γ) ≡ fst (Sat B (toB ψ))
@@ -600,7 +595,7 @@ module _ (A : S) where
        → (z c v : S) → ⟨ (v ∷ c ∷ z ∷ γ) ⊨ DefBody w ⟩
        → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
   read {n} w γ qw z c v (hcode , (hgraph , hdef)) =
-    PT.rec squash₁ step (codeAt-out A (suc zero) (sh3 w) δ qw hcode)
+    rec₁ squash₁ step (codeAt-out A (suc zero) (sh3 w) δ qw hcode)
     where
     δ : S ^ (suc (suc (suc n)))
     δ = v ∷ c ∷ z ∷ γ
@@ -664,7 +659,7 @@ altogether.
     describe : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
              → (z : S) → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
              → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
-    describe w γ qw z = PT.rec squash₁ viaCode
+    describe w γ qw z = rec₁ squash₁ viaCode
       where
       Target : Type (ℓ-suc ℓ)
       Target = ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
@@ -674,13 +669,13 @@ altogether.
       viaValue c (v , hv) = read w γ qw z c v hv
 
       viaCode : Σ[ c ∈ S ] ⟨ (c ∷ z ∷ γ) ⊨ ∃̇ (DefBody w) ⟩ → Target
-      viaCode (c , hc) = PT.rec squash₁ (viaValue c) hc
+      viaCode (c , hc) = rec₁ squash₁ (viaValue c) hc
 
     assemble : ∀ {n} (w : Fin n) (γ : S ^ n) → fst (lookup w γ) ≡ fst A
              → (z : S)
              → ∥ (Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)) ∥₁
              → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
-    assemble w γ qw z = PT.rec (snd ((z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)))) step
+    assemble w γ qw z = rec₁ (snd ((z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)))) step
       where
       step : Σ[ ψ ∈ Formula ⟪ fst A ⟫ 1 ] (DA.defSet ψ ≡ fst z)
            → ⟨ (z ∷ γ) ⊨ ∃̇ (∃̇ (DefBody w)) ⟩
@@ -810,12 +805,12 @@ anywhere on this route. And the one difficulty met while writing was not in the
 mathematics at all: the code predicate's elimination at a pinned carrier, with
 the truncation's payload left to inference, ran past 140 seconds and was
 terminated there, while the same two lines with the payload type written out
-check in two seconds. Every `PT.rec`{.Agda} here names its payload, and that is
+check in two seconds. Every `rec₁`{.Agda} here names its payload, and that is
 why this chapter checks in half a minute rather than not at all.
 <!--zh-->
 `DefAt`{.Agda} 是可定义幂集在对象语言中相对于槽位载体的描述，`DefAt-in`{.Agda} 与 `DefAt-out`{.Agda} 是它的两条读式：该算子满足描述；在 `DefOK`{.Agda} 条件下，其他对象都不满足。`DefAt-stage`{.Agda} 把两条读式实例化到一层；在那里旁条件一次得到解除，描述也化为真值之间的等式。
 
 三章在此汇合，没有一章需要重证。码谓词读在一个位置上，满足关系的图也读在一个位置上，而可定义子集经由那座桥读出，桥的内容是「递归的取值就是载体之上的满足关系」。新增的只有接合处：`envOneAt`{.Agda}，一行，因为长度为一的环境只是一个对；以及 `DefinesAt`{.Agda}，它就是 `extAt`{.Agda} 施于一个两部分的条件。
 
-有两处测量值得记录。相邻那处更正在第一行写下之前就已采纳，未付出额外代价，故这条路线上任何地方都不存在弱化引理。写作期间唯一的困难根本不在数学里：码谓词在固定载体处的消去，若把截断的载荷交给推断，要跑 140 秒并在那里被终止；而同样两行，把载荷的类型显式写出，两秒即检查完毕。此处每一次 `PT.rec`{.Agda} 都指明了自己的载荷，这正是本章能在半分钟内、而不是根本无法检查完的原因。
+有两处测量值得记录。相邻那处更正在第一行写下之前就已采纳，未付出额外代价，故这条路线上任何地方都不存在弱化引理。写作期间唯一的困难根本不在数学里：码谓词在固定载体处的消去，若把截断的载荷交给推断，要跑 140 秒并在那里被终止；而同样两行，把载荷的类型显式写出，两秒即检查完毕。此处每一次 `rec₁`{.Agda} 都指明了自己的载荷，这正是本章能在半分钟内、而不是根本无法检查完的原因。
 <!--/-->

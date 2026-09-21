@@ -21,6 +21,9 @@ Excluded middle supplies local decisions such as whether a member of a union lie
 
 ```agda
 open import Base.Prelude
+open import Cubical.HITs.PropositionalTruncation using ( rec2 )
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
+open import Cubical.Data.Nat using ( znots; snotz )
 open import Base.Classical using ( LEM )
 
 ```
@@ -175,7 +178,6 @@ When both arguments of a graph are identified by equalities, two-place transport
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.Prelude using ( subst2 )
 
 ```
 
@@ -188,10 +190,6 @@ The tags `0` and `1` are distinct, making the two branches of a tagged injection
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat.Properties using ( znots; snotz )
-open import Cubical.Data.Sigma using ( _×_; Σ≡Prop )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Foundations.HLevels using ( isProp×; isSetΣSndProp )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```
 
@@ -207,8 +205,6 @@ von Neumann 数項をタグに用い、`ω` がそれらを集め、後続が有
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_; ω; sucV )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -220,7 +216,6 @@ Existence of a coded injection is propositionally truncated because the count de
 <!--/-->
 
 ```agda
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 
 ```
 
@@ -541,7 +536,7 @@ Membership in the left domain is decidable by excluded middle, and the decision 
 
 ```agda
   Case : S → Type (ℓ-suc ℓ)
-  Case z = ⟨ fst z ∈ fst D₁ ⟩ ⊎ (⟨ fst z ∈ fst D₁ ⟩ → Empty.⊥)
+  Case z = ⟨ fst z ∈ fst D₁ ⟩ ⊎ (⟨ fst z ∈ fst D₁ ⟩ → ⊥₀)
 
 ```
 
@@ -568,9 +563,9 @@ A member outside the left domain must lie in the right domain: the union members
 <!--/-->
 
 ```agda
-  off : (z : S) → Mem z → (⟨ fst z ∈ fst D₁ ⟩ → Empty.⊥) → ⟨ fst z ∈ fst D₂ ⟩
-  off z m no = PT.rec (snd (fst z ∈ fst D₂))
-    (λ { (inl h) → Empty.rec (no h) ; (inr h) → h }) (out z m)
+  off : (z : S) → Mem z → (⟨ fst z ∈ fst D₁ ⟩ → ⊥₀) → ⟨ fst z ∈ fst D₂ ⟩
+  off z m no = rec₁ (snd (fst z ∈ fst D₂))
+    (λ { (inl h) → ⊥₀-rec (no h) ; (inr h) → h }) (out z m)
 
 ```
 
@@ -615,7 +610,7 @@ The ambient meaning `Wit y z` has two branches. In the left branch, `z ∈ D₁`
   Wit y z =
       (⟨ fst z ∈ fst D₁ ⟩
         × ∥ Σ[ v ∈ S ] (Holds E₁ z v × (fst y ≡ pr (# 0) (fst v))) ∥₁)
-    ⊎ ((⟨ fst z ∈ fst D₁ ⟩ → Empty.⊥)
+    ⊎ ((⟨ fst z ∈ fst D₁ ⟩ → ⊥₀)
 ```
 
 <!--en-->
@@ -716,10 +711,10 @@ Reading a satisfaction proof of `fo` proceeds by its two disjuncts. The left yie
 
 ```agda
     fo-out : (y z : S) → ⟨ (y ∷ z ∷ []) ⊨ fo ⟩ → ∥ Wit y z ∥₁
-    fo-out y z = PT.map
-      (λ { (inl (h , hv)) → inl (h , PT.map (λ { (v , (ha , ht)) → v , rd E₁ 0 y z v ha ht }) hv)
+    fo-out y z = map₁
+      (λ { (inl (h , hv)) → inl (h , map₁ (λ { (v , (ha , ht)) → v , rd E₁ 0 y z v ha ht }) hv)
          ; (inr (h , hv)) → inr ((λ z∈ → lower (h z∈))
-             , PT.map (λ { (v , (ha , ht)) → v , rd E₂ 1 y z v ha ht }) hv) })
+             , map₁ (λ { (v , (ha , ht)) → v , rd E₂ 1 y z v ha ht }) hv) })
 ```
 
 <!--en-->
@@ -734,7 +729,7 @@ The inward reading of the graph turns the host-side witness into satisfaction, c
 
     fo-in : (y z : S) → Wit y z → ⟨ (y ∷ z ∷ []) ⊨ fo ⟩
     fo-in y z (inl (h , hv)) =
-      ∣ inl (h , PT.map (λ { (v , (ha , ht)) → v , wr E₁ 0 y z v ha ht }) hv) ∣₁
+      ∣ inl (h , map₁ (λ { (v , (ha , ht)) → v , wr E₁ 0 y z v ha ht }) hv) ∣₁
     fo-in y z (inr (h , hv)) =
       ∣ inr ((λ z∈ → lift (h z∈))
 ```
@@ -748,7 +743,7 @@ The tail of the right case completes the second disjunct: the entry of `E₂` is
 <!--/-->
 
 ```agda
-          , PT.map (λ { (v , (ha , ht)) → v , wr E₂ 1 y z v ha ht }) hv) ∣₁
+          , map₁ (λ { (v , (ha , ht)) → v , wr E₂ 1 y z v ha ht }) hv) ∣₁
 
 ```
 
@@ -826,7 +821,7 @@ Uniqueness in the left case composes three equations: the entry's second compone
 ```agda
 
   only : (z : S) (m : Mem z) (c : Case z) (y : S) → Wit y z → fst y ≡ fst (val z m c)
-  only z m (inl h) y (inl (_ , hv)) = PT.rec (setIsSet _ _)
+  only z m (inl h) y (inl (_ , hv)) = rec₁ (setIsSet _ _)
     (λ { (v , (hg , hy)) →
        hy ∙ cong (pr (# 0)) (sv₁ z v (X₁.toFun (z , h)) hg (X₁.toFun-graph (z , h)))
           ∙ sym (prʟ-fst (nn 0) (X₁.toFun (z , h))) }) hv
@@ -841,9 +836,9 @@ The mixed cases are refuted outright: a member inside `D₁` cannot carry a witn
 <!--/-->
 
 ```agda
-  only z m (inl h) y (inr (no , _)) = Empty.rec (no h)
-  only z m (inr no) y (inl (h , _)) = Empty.rec (no h)
-  only z m (inr no) y (inr (_ , hv)) = PT.rec (setIsSet _ _)
+  only z m (inl h) y (inr (no , _)) = ⊥₀-rec (no h)
+  only z m (inr no) y (inl (h , _)) = ⊥₀-rec (no h)
+  only z m (inr no) y (inr (_ , hv)) = rec₁ (setIsSet _ _)
     (λ { (v , (hg , hy)) →
        hy ∙ cong (pr (# 1)) (sv₂ z v (X₂.toFun (z , off z m no)) hg (X₂.toFun-graph (z , off z m no)))
 ```
@@ -916,7 +911,7 @@ The defining clause feeds the witness into the graph introduction, and uniquenes
 
 ```agda
     ; defines = λ z m → fo-in (fn z m) z (wit z m (decide z))
-    ; only = λ z m y h → S≡ (PT.rec (setIsSet _ _) (only z m (decide z) y) (fo-out y z h)) }
+    ; only = λ z m y h → S≡ (rec₁ (setIsSet _ _) (only z m (decide z) y) (fo-out y z h)) }
 
 ```
 
@@ -949,7 +944,7 @@ In the same-tag case, the pair equation is inverted by `pr-inj`: the tags agree,
       where
       p : (# 0 ≡ # 0) × (fst (X₁.toFun (z , h)) ≡ fst (X₁.toFun (z' , h')))
       p = pr-inj (sym (prʟ-fst (nn 0) (X₁.toFun (z , h))) ∙ q ∙ prʟ-fst (nn 0) (X₁.toFun (z' , h')))
-    go (inl h) (inr no') q = Empty.rec (znots (#-inj 0 1 (fst
+    go (inl h) (inr no') q = ⊥₀-rec (znots (#-inj 0 1 (fst
 ```
 
 <!--en-->
@@ -962,7 +957,7 @@ The mixed-tag cases are impossible: equality of the two values would force the n
 
 ```agda
       (pr-inj (sym (prʟ-fst (nn 0) (X₁.toFun (z , h))) ∙ q ∙ prʟ-fst (nn 1) (X₂.toFun (z' , off z' m' no')))))))
-    go (inr no) (inl h') q = Empty.rec (snotz (#-inj 1 0 (fst
+    go (inr no) (inl h') q = ⊥₀-rec (snotz (#-inj 1 0 (fst
       (pr-inj (sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m no))) ∙ q ∙ prʟ-fst (nn 0) (X₁.toFun (z' , h')))))))
     go (inr no) (inr no') q = ij₂ (X₂.toFun (z , off z m no)) z z' (X₂.toFun-graph (z , off z m no))
       (subst (λ w → ⟨ pr (fst z') w ∈ fst E₂ ⟩) (sym (snd p)) (X₂.toFun-graph (z' , off z' m' no')))
@@ -1009,7 +1004,7 @@ The two premises expose their injection graphs only under propositional truncati
 tag-union : (κ : S) → ⟨ # 0 ∈ fst κ ⟩ → ⟨ # 1 ∈ fst κ ⟩
           → (D₁ D₂ : S) → InjL D₁ κ → InjL D₂ κ
           → InjL (unionʟ (pairʟ D₁ D₂)) (prodL κ)
-tag-union κ h0 h1 D₁ D₂ = PT.rec2 squash₁
+tag-union κ h0 h1 D₁ D₂ = rec2 squash₁
   (λ { (E₁ , c₁) (E₂ , c₂) → TagUnion.injL κ h0 h1 D₁ D₂ E₁ E₂ c₁ c₂ })
 ```
 
@@ -1069,7 +1064,7 @@ The existence hypothesis is moved to the common stage without choosing a predece
 ```agda
     have-γ : (z : S) → Mem z
            → ∥ Σ[ p ∈ S ] (⟨ fst p ∈ Lset γ ⟩ × ⟨ (p ∷ z ∷ []) ⊨ graphFo ⟩) ∥₁
-    have-γ z m = PT.map
+    have-γ z m = map₁
       (λ { (p , h) → p , P⊆L p (inP p z h)
                        , subst ⟨_⟩ (sym (appC-adequate G i0 i1 (p ∷ z ∷ []))) h })
 ```
@@ -1388,7 +1383,7 @@ The counting target is an internal cardinal `κ` outside `ω`, together with a c
 ```agda
   (sup : Superadequate lam)
   (X-isL : ⟨ isL X ⟩)
-  (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
   (base : InjL (X , X-isL) κ) where
 ```
 
@@ -1545,7 +1540,7 @@ The introduction rule lifts the refutation of membership into the object level, 
 
 ```agda
     opaque
-      D₂-in : (z : S) → ⟨ fst z ∈ fst ΦZ ⟩ → (⟨ fst z ∈ fst Z ⟩ → Empty.⊥) → ⟨ fst z ∈ fst D₂ ⟩
+      D₂-in : (z : S) → ⟨ fst z ∈ fst ΦZ ⟩ → (⟨ fst z ∈ fst Z ⟩ → ⊥₀) → ⟨ fst z ∈ fst D₂ ⟩
       D₂-in z h no = subst ⟨_⟩ (sym (D₂-spec z)) (h , λ z∈ → lift (no z∈))
 
 ```
@@ -1559,7 +1554,7 @@ The elimination rule unpacks membership in `D₂` through the specification, and
 <!--/-->
 
 ```agda
-      D₂-out : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → ⟨ fst z ∈ fst ΦZ ⟩ × (⟨ fst z ∈ fst Z ⟩ → Empty.⊥)
+      D₂-out : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → ⟨ fst z ∈ fst ΦZ ⟩ × (⟨ fst z ∈ fst Z ⟩ → ⊥₀)
       D₂-out z h = r .fst , λ z∈ → lower (r .snd z∈)
         where
         r : ⟨ fst z ∈ fst ΦZ ⟩
@@ -1678,7 +1673,7 @@ Introduction requires membership in `D₂` and a refutation of equality with the
 
 ```agda
     opaque
-      Dw-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → (fst z ≡ ∅ → Empty.⊥) → ⟨ fst z ∈ fst Dw ⟩
+      Dw-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → (fst z ≡ ∅ → ⊥₀) → ⟨ fst z ∈ fst Dw ⟩
       Dw-in z h ne = subst ⟨_⟩ (sym (Dw-spec z)) (h , λ q → lift (ne q))
 
 ```
@@ -1692,7 +1687,7 @@ Elimination returns membership in `D₂` and the refutation, lowered from the ob
 <!--/-->
 
 ```agda
-      Dw-out : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅ → Empty.⊥)
+      Dw-out : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅ → ⊥₀)
       Dw-out z h = r .fst , λ q → lower (r .snd q)
         where
         r : ⟨ fst z ∈ fst D₂ ⟩
@@ -1739,7 +1734,7 @@ The two cases enter `U₁` through its two union inclusions. A member already in
 <!--/-->
 
 ```agda
-      go : ⟨ z ∈ fst Z ⟩ ⊎ (⟨ z ∈ fst Z ⟩ → Empty.⊥) → ⟨ z ∈ fst U₁.D ⟩
+      go : ⟨ z ∈ fst Z ⟩ ⊎ (⟨ z ∈ fst Z ⟩ → ⊥₀) → ⟨ z ∈ fst U₁.D ⟩
       go (inl hz) = U₁.in₁ zS hz
       go (inr no) = U₁.in₂ zS (D₂-in zS h no)
 
@@ -1770,7 +1765,7 @@ An element equal to the empty set enters through `D∅`; an element distinct fro
 <!--/-->
 
 ```agda
-      go : (z ≡ ∅) ⊎ (z ≡ ∅ → Empty.⊥) → ⟨ z ∈ fst U₃.D ⟩
+      go : (z ≡ ∅) ⊎ (z ≡ ∅ → ⊥₀) → ⟨ z ∈ fst U₃.D ⟩
       go (inl e)  = U₃.in₁ zS (D∅-in zS h e)
       go (inr ne) = U₃.in₂ zS (Dw-in zS h ne)
 ```
@@ -1921,7 +1916,7 @@ Outward, the two existentials are consumed one at a time; the first step strips 
 ```agda
 
       se₃-out : (z p q : S) → ⟨ (z ∷ p ∷ q ∷ []) ⊨ se₃ ⟩ → GW p z
-      se₃-out z p q = PT.rec squash₁ at₁
+      se₃-out z p q = rec₁ squash₁ at₁
         where
         at₂ : (s : S) → Σ[ e ∈ S ] ( ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ prAtL i3 i1 i0 ⟩
                                    × ⟨ (e ∷ s ∷ z ∷ p ∷ q ∷ []) ⊨ pin₅ ⟩ ) → GW p z
@@ -1952,7 +1947,7 @@ Because `GW p z` is a proposition, the remaining outer truncation can be elimina
 <!--/-->
 
 ```agda
-        at₁ (s , h) = PT.rec squash₁ (at₂ s) h
+        at₁ (s , h) = rec₁ squash₁ (at₂ s) h
 ```
 
 <!--en-->
@@ -1968,7 +1963,7 @@ Bounded separation constructs a relation `G` inside `L` whose entries are ordere
       module WitnessGraph = Relation PB Dw ((var i1 ∈̇ con PB) ∧̇ se₃)
         (λ p z → (fst p ∈ fst PB) ⊓ (GW p z , squash₁))
         (λ p z q h → h .fst , se₃-out z p q (h .snd))
-        (λ p z q h → h .fst , PT.rec (snd ((z ∷ p ∷ q ∷ []) ⊨ se₃))
+        (λ p z q h → h .fst , rec₁ (snd ((z ∷ p ∷ q ∷ []) ⊨ se₃))
 ```
 
 <!--en-->
@@ -2038,10 +2033,10 @@ The relation is total on `Dw` only in the truncated sense: every `z ∈ Dw` mere
 
 ```agda
     have : (z : S) → ⟨ fst z ∈ fst Dw ⟩ → ∥ Σ[ p ∈ S ] Holds G p z ∥₁
-    have z hz = PT.rec squash₁ body (B.Φ-out Z z (D₂-out z (Dw-out z hz .fst) .fst))
+    have z hz = rec₁ squash₁ body (B.Φ-out Z z (D₂-out z (Dw-out z hz .fst) .fst))
       where
       body : B.Body Z z → ∥ Σ[ p ∈ S ] Holds G p z ∥₁
-      body (inl h) = Empty.rec (D₂-out z (Dw-out z hz .fst) .snd h)
+      body (inl h) = ⊥₀-rec (D₂-out z (Dw-out z hz .fst) .snd h)
 ```
 
 <!--en-->
@@ -2053,8 +2048,8 @@ Two of them are already excluded by the separators: `z` cannot be an old member 
 <!--/-->
 
 ```agda
-      body (inr (inl e)) = Empty.rec (Dw-out z hz .snd e)
-      body (inr (inr hw)) = PT.rec squash₁ read (B.witFo-leastWitness z Z hw)
+      body (inr (inl e)) = ⊥₀-rec (Dw-out z hz .snd e)
+      body (inr (inr hw)) = rec₁ squash₁ read (B.witFo-leastWitness z Z hw)
         where
         read : Σ[ e ∈ S ] Σ[ s ∈ S ] B.LeastWitness Z e s z
              → ∥ Σ[ p ∈ S ] Holds G p z ∥₁
@@ -2069,7 +2064,7 @@ The witness branch supplies an environment `e`, a key `s`, and a least witness. 
 <!--/-->
 
 ```agda
-        read (e , s , hw') = PT.map at (B.leastWitness-data Z e s z hw')
+        read (e , s , hw') = map₁ at (B.leastWitness-data Z e s z hw')
           where
           at : B.LeastWitnessData Z e s → Σ[ p ∈ S ] Holds G p z
           at (n , g , qe , hs) = prʟ s e
@@ -2110,7 +2105,7 @@ The required functionality has the reverse orientation needed for counting: if o
 
 ```agda
     funct : (p z z' : S) → Holds G p z → Holds G p z' → fst z ≡ fst z'
-    funct p z z' h h' = PT.rec2 (setIsSet (fst z) (fst z')) read (G-out p z h .snd) (G-out p z' h' .snd)
+    funct p z z' h h' = rec2 (setIsSet (fst z) (fst z')) read (G-out p z h .snd) (G-out p z' h' .snd)
       where
       read : Σ[ s ∈ S ] Σ[ e ∈ S ]
                ((fst p ≡ pr (fst s) (fst e)) × B.LeastWitness Z e s z)
@@ -2316,7 +2311,7 @@ Every member of `ΦZ` lies in `Z ∪ D₂`. The given graph `E` counts `Z`, whil
 ```agda
   step-count : (Z : S) → ((z : V ℓ) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
              → InjL Z κ → InjL (B.Φ Z) κ
-  step-count Z Z⊆ = PT.rec squash₁ (λ { (E , cE) → OneStep.result Z Z⊆ E cE })
+  step-count Z Z⊆ = rec₁ squash₁ (λ { (E , cE) → OneStep.result Z Z⊆ E cE })
 ```
 
 <!--en-->
@@ -2372,7 +2367,7 @@ For each `n`, let `ls n` be the least ordinal stage satisfying `HoldsAt n`. The 
 ```agda
   opaque
     ls : (n : ℕ) → LeastOrd (HoldsAt n)
-    ls n = PT.rec (isPropLeastOrd (HoldsAt n)) from (counted n)
+    ls n = rec₁ (isPropLeastOrd (HoldsAt n)) from (counted n)
       where
       from : Σ[ F ∈ S ] InjCode F (hullStep n) κ → LeastOrd (HoldsAt n)
 ```
@@ -2446,7 +2441,7 @@ A code at a smaller stage becomes a code at the common stage: the iterate's codi
 
 ```agda
   code-at-γ : (n : ℕ) → ⟨ HoldsAt n γ ⟩
-  code-at-γ n = PT.map raise (ls n .snd .snd .fst)
+  code-at-γ n = map₁ raise (ls n .snd .snd .fst)
     where
     raise : Σ[ F ∈ S ] (⟨ fst F ∈ Lset (ls n .fst) ⟩ × InjCode F (hullStep n) κ)
           → Σ[ F ∈ S ] (⟨ fst F ∈ Lset γ ⟩ × InjCode F (hullStep n) κ)
@@ -2575,7 +2570,7 @@ Reading the table body back uses the adequacy of the application atom and the re
 ```agda
     tab-read : (F n q : S) → ⟨ (n ∷ F ∷ q ∷ []) ⊨ tabBody ⟩ → TabWit F n
     tab-read F n q (hF , h) = subst (λ w → ⟨ fst F ∈ w ⟩) Lγ-fst hF
-      , PT.map (λ { (Zn , hI , hc) → Zn
+      , map₁ (λ { (Zn , hI , hc) → Zn
           , subst ⟨_⟩ (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ [])) hI
           , InjFo.read κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) hc }) h
 ```
@@ -2592,7 +2587,7 @@ Conversely, a `TabWit F n` witness supplies satisfaction of `tabBody`. Stage mem
 
     tab-fill : (F n q : S) → TabWit F n → ⟨ (n ∷ F ∷ q ∷ []) ⊨ tabBody ⟩
     tab-fill F n q (hF , h) = subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF
-      , PT.map (λ { (Zn , hI , hc) → Zn
+      , map₁ (λ { (Zn , hI , hc) → Zn
           , subst ⟨_⟩ (sym (appC-adequate Iter i1 i0 (Zn ∷ n ∷ F ∷ q ∷ []))) hI
           , InjFo.fill κ i2 i0 (Zn ∷ n ∷ F ∷ q ∷ []) hc }) h
 ```
@@ -2667,10 +2662,10 @@ Every internal numeral in `ω` carries an entry: the iterate it records is some 
 
 ```agda
   have-code : (n : S) → ⟨ fst n ∈ fst ωʟ ⟩ → ∥ Σ[ F ∈ S ] Holds Gt F n ∥₁
-  have-code n hn = PT.rec squash₁ at (It.ω-num n hn)
+  have-code n hn = rec₁ squash₁ at (It.ω-num n hn)
     where
     at : It.Num n → ∥ Σ[ F ∈ S ] Holds Gt F n ∥₁
-    at (k , qk) = PT.map
+    at (k , qk) = map₁
 ```
 
 <!--en-->
@@ -2785,7 +2780,7 @@ For the canonical numeral of a natural number `k`, the truncation is eliminated.
 
 ```agda
   e-code : (k : ℕ) → InjCode (eS (nn k) (#∈ω k)) (hullStep k) κ
-  e-code k = PT.rec (isPropInjCode (eS (nn k) (#∈ω k)) (hullStep k) κ) read (e-wit (nn k) (#∈ω k))
+  e-code k = rec₁ (isPropInjCode (eS (nn k) (#∈ω k)) (hullStep k) κ) read (e-wit (nn k) (#∈ω k))
     where
     F : S
     F = eS (nn k) (#∈ω k)
@@ -2801,7 +2796,7 @@ The recorded iterate is identified first: a member of the iterate set is, merely
 
 ```agda
     read : Σ[ Zn ∈ S ] (Holds Iter (nn k) Zn × InjCode F Zn κ) → InjCode F (hullStep k) κ
-    read (Zn , hI , code) = PT.rec (isPropInjCode F (hullStep k) κ) at
+    read (Zn , hI , code) = rec₁ (isPropInjCode F (hullStep k) κ) at
       (Iter-out (prʟ (nn k) Zn) (subst (λ w → ⟨ w ∈ fst Iter ⟩) (sym (prʟ-fst (nn k) Zn)) hI))
       where
       at : Σ[ k' ∈ ℕ ] (fst (prʟ (nn k) Zn) ≡ pr (# k') (fst (hullStep k'))) → InjCode F (hullStep k) κ
@@ -2927,7 +2922,7 @@ To read `nv₃`, first eliminate the truncated witness for `n`, then the truncat
 ```agda
 
     nv₃-out : (z p q : S) → ⟨ (z ∷ p ∷ q ∷ []) ⊨ nv₃ ⟩ → FinWit p z
-    nv₃-out z p q = PT.rec squash₁ at₁
+    nv₃-out z p q = rec₁ squash₁ at₁
       where
       Inner : (n v : S) → Type (ℓ-suc ℓ)
       Inner n v = ⟨ (v ∷ n ∷ z ∷ p ∷ q ∷ []) ⊨ prAtL i3 i1 i0 ⟩
@@ -2944,7 +2939,7 @@ The innermost truncated existence supplies the table entry `F`, not the value `v
 ```agda
                 × ( ⟨ fst n ∈ fst ωʟ ⟩ × ∥ Σ[ F ∈ S ] ⟨ (F ∷ v ∷ n ∷ z ∷ p ∷ q ∷ []) ⊨ inner₆ ⟩ ∥₁ )
       at₃ : (n v : S) → Inner n v → FinWit p z
-      at₃ n v (qp , (hn , h)) = PT.map
+      at₃ n v (qp , (hn , h)) = map₁
         (λ { (F , hi) → n , v , F
            , ( subst ⟨_⟩ (prAtL-adequate i3 i1 i0 (v ∷ n ∷ z ∷ p ∷ q ∷ [])) qp
 ```
@@ -2962,7 +2957,7 @@ For fixed `n` and `v`, the innermost conversion produces `FinWit p z`; the two o
       at₂ : (n : S) → Σ[ v ∈ S ] Inner n v → FinWit p z
       at₂ n (v , h) = at₃ n v h
       at₁ : Σ[ n ∈ S ] ∥ Σ[ v ∈ S ] Inner n v ∥₁ → FinWit p z
-      at₁ (n , h) = PT.rec squash₁ (at₂ n) h
+      at₁ (n , h) = rec₁ squash₁ (at₂ n) h
 ```
 
 <!--en-->
@@ -2978,7 +2973,7 @@ The final relation is obtained by separation inside the Cartesian product of `pr
   private
     module FinalGraph = Relation (prodL κ) hullL nv₃ (λ p z → FinWit p z , squash₁)
       (λ p z q → nv₃-out z p q)
-      (λ p z q → PT.rec (snd ((z ∷ p ∷ q ∷ []) ⊨ nv₃))
+      (λ p z q → rec₁ (snd ((z ∷ p ∷ q ∷ []) ⊨ nv₃))
         (λ { (n , v , F , qp , hn , ht , hv) → nv₃-in z p q n v F qp hn ht hv }))
 ```
 
@@ -3036,7 +3031,7 @@ Every value recorded by a table entry lies in `κ`. From `Te(n,F)`, the table re
 
 ```agda
   entry-ran : (n F z v : S) → Holds Te n F → Holds F z v → ⟨ fst v ∈ fst κ ⟩
-  entry-ran n F z v ht hv = PT.rec (snd (fst v ∈ fst κ))
+  entry-ran n F z v ht hv = rec₁ (snd (fst v ∈ fst κ))
     (λ { (Zn , _ , code) → snd (snd (snd code)) z v
           (subst (λ w → ⟨ pr (fst z) (fst v) ∈ w ⟩) (Te-out n F ht .snd) hv) })
     (e-wit n (Te-out n F ht .fst))
@@ -3053,7 +3048,7 @@ Every first component related by `Gf` belongs to `prodL κ`. A record for such a
 ```agda
 
   inPκ : (p z : S) → Holds Gf p z → ⟨ fst p ∈ fst (prodL κ) ⟩
-  inPκ p z h = PT.rec (snd (fst p ∈ fst (prodL κ)))
+  inPκ p z h = rec₁ (snd (fst p ∈ fst (prodL κ)))
     (λ { (n , v , F , (qp , hn , ht , hv)) →
        subst (λ w → ⟨ w ∈ fst (prodL κ) ⟩) (sym qp)
          (prodL-in κ n v (ω⊆ (fst κ) oκ κ∉ω (fst n) hn) (entry-ran n F z v ht hv)) })
@@ -3082,10 +3077,10 @@ Every hull member merely has a related code. The characterization of the iterate
 
 ```agda
   have-fin : (z : S) → ⟨ fst z ∈ fst hullL ⟩ → ∥ Σ[ p ∈ S ] Holds Gf p z ∥₁
-  have-fin z hz = PT.rec squash₁ at (It.iterUnion-out z hz)
+  have-fin z hz = rec₁ squash₁ at (It.iterUnion-out z hz)
     where
     at : Σ[ n ∈ ℕ ] ⟨ fst z ∈ fst (hullStep n) ⟩ → ∥ Σ[ p ∈ S ] Holds Gf p z ∥₁
-    at (n , hn) = PT.map val (domAt-in zero (suc zero) (F ∷ hullStep n ∷ []) (fst (snd (e-code n))) z hn)
+    at (n , hn) = map₁ val (domAt-in zero (suc zero) (F ∷ hullStep n ∷ []) (fst (snd (e-code n))) z hn)
 ```
 
 <!--en-->
@@ -3130,7 +3125,7 @@ The functionality needed for least-preimage selection runs from a candidate code
 
 ```agda
   funct-fin : (p z z' : S) → Holds Gf p z → Holds Gf p z' → fst z ≡ fst z'
-  funct-fin p z z' h h' = PT.rec2 (setIsSet (fst z) (fst z')) read (Gf-out p z h) (Gf-out p z' h')
+  funct-fin p z z' h h' = rec2 (setIsSet (fst z) (fst z')) read (Gf-out p z h) (Gf-out p z' h')
     where
     read : Σ[ n ∈ S ] Σ[ v ∈ S ] Σ[ F ∈ S ]
              ((fst p ≡ pr (fst n) (fst v)) × ⟨ fst n ∈ fst ωʟ ⟩ × Holds Te n F × Holds F z v)
@@ -3149,7 +3144,7 @@ Unpacking the two records gives `n,v,F` and `n',v',F'`. Each record contains one
              ((fst p ≡ pr (fst n') (fst v')) × ⟨ fst n' ∈ fst ωʟ ⟩ × Holds Te n' F' × Holds F' z' v')
          → fst z ≡ fst z'
     read (n , v , F , (qp , hn , ht , hv)) (n' , v' , F' , (qp' , hn' , ht' , hv')) =
-      PT.rec (setIsSet (fst z) (fst z'))
+      rec₁ (setIsSet (fst z) (fst z'))
 ```
 
 <!--en-->

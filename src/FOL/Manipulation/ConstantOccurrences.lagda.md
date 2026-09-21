@@ -32,6 +32,8 @@ Parameter abstraction rewrites a formula that mentions constants as a parameter-
 module FOL.Manipulation.ConstantOccurrences where
 
 open import Base.Prelude
+open import Cubical.Data.Nat using ( snotz )
+open import Cubical.Data.Vec using ( _++_ )
 open import FOL.Syntax using
   ( Term; con; var; Formula; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
 ```
@@ -46,9 +48,6 @@ Concretely, a formula's constants are read off as an ordered list of occurrences
 
 ```agda
 open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-open import Cubical.Data.Nat using ( _+_; snotz )
-open import Cubical.Data.Vec using ( _++_; map )
-import Cubical.Data.Empty as Empty
 ```
 
 <!--en-->
@@ -322,11 +321,11 @@ module ZeroOccurrences {ℓ : Level} (K : Type ℓ) where
 ```
 
 <!--en-->
-The section formalises the boundary case. Its input is a formula `φ` together with a proof `p : countFo φ ≡ 0`; from `p` the construction first extracts, for each subterm and subformula, a proof that its own count is zero, and on that basis rebuilds the same syntax over the empty constant alphabet. The map `eraseTm`{.Agda} and `erase`{.Agda} go from `K` to `⊥*`{.Agda}, and the maps `eraseTm-inv`{.Agda} and `erase-inv`{.Agda} show that relabelling along `Empty.rec*`{.Agda}, the eliminator that reads a constant out of the empty type, returns the original term or formula as a path. Together they say that over `K`, the formulas with no constant occurrences are exactly the images of parameter-free formulas, without any decidability assumption on `K`.
+The section formalises the boundary case. Its input is a formula `φ` together with a proof `p : countFo φ ≡ 0`; from `p` the construction first extracts, for each subterm and subformula, a proof that its own count is zero, and on that basis rebuilds the same syntax over the empty constant alphabet. The map `eraseTm`{.Agda} and `erase`{.Agda} go from `K` to `⊥*`{.Agda}, and the maps `eraseTm-inv`{.Agda} and `erase-inv`{.Agda} show that relabelling along `⊥*-rec`{.Agda}, the eliminator that reads a constant out of the empty type, returns the original term or formula as a path. Together they say that over `K`, the formulas with no constant occurrences are exactly the images of parameter-free formulas, without any decidability assumption on `K`.
 <!--zh-->
-本节把边界情形形式化。输入是一条公式 `φ` 连同证明 `p : countFo φ ≡ 0`；构造先从 `p` 为每个子词项、子公式提取其自身计数为零的证明，并在此基础上在空常元字母表上重建同一语法。映射 `eraseTm`{.Agda} 与 `erase`{.Agda} 从 `K` 走向 `⊥*`{.Agda}；映射 `eraseTm-inv`{.Agda} 与 `erase-inv`{.Agda} 则证明，沿 `Empty.rec*`{.Agda}(从空类型读出一个定元的消去子) 改名后，作为路径返回原来的词项或公式。二者合起来说：在 `K` 上，无常元出现的公式恰是无参公式的像，且对 `K` 无任何可判定性假设。
+本节把边界情形形式化。输入是一条公式 `φ` 连同证明 `p : countFo φ ≡ 0`；构造先从 `p` 为每个子词项、子公式提取其自身计数为零的证明，并在此基础上在空常元字母表上重建同一语法。映射 `eraseTm`{.Agda} 与 `erase`{.Agda} 从 `K` 走向 `⊥*`{.Agda}；映射 `eraseTm-inv`{.Agda} 与 `erase-inv`{.Agda} 则证明，沿 `⊥*-rec`{.Agda}(从空类型读出一个定元的消去子) 改名后，作为路径返回原来的词项或公式。二者合起来说：在 `K` 上，无常元出现的公式恰是无参公式的像，且对 `K` 无任何可判定性假设。
 <!--ja-->
-この節は境界場合を形式化します。入力は論理式 `φ` と証明 `p : countFo φ ≡ 0` の対であり、構成はまず `p` から各部分項・部分論理式に対してその個数が零である証明を取り出し、その上で空の定数アルファベットの上に同じ構文を組み立て直します。写像 `eraseTm`{.Agda} と `erase`{.Agda} は `K` から `⊥*`{.Agda} へ進み、写像 `eraseTm-inv`{.Agda} と `erase-inv`{.Agda} は、空型から定数を読み出す消去子 `Empty.rec*`{.Agda} に沿って改名すると、元の項や論理式がパスとして返ることを示します。両者を合わせて、`K` の上では定数が出現しない論理式が無パラメータ論理式の像とちょうど一致し、`K` に対する判定可能性の仮定が一切不要であることが分かります。
+この節は境界場合を形式化します。入力は論理式 `φ` と証明 `p : countFo φ ≡ 0` の対であり、構成はまず `p` から各部分項・部分論理式に対してその個数が零である証明を取り出し、その上で空の定数アルファベットの上に同じ構文を組み立て直します。写像 `eraseTm`{.Agda} と `erase`{.Agda} は `K` から `⊥*`{.Agda} へ進み、写像 `eraseTm-inv`{.Agda} と `erase-inv`{.Agda} は、空型から定数を読み出す消去子 `⊥*-rec`{.Agda} に沿って改名すると、元の項や論理式がパスとして返ることを示します。両者を合わせて、`K` の上では定数が出現しない論理式が無パラメータ論理式の像とちょうど一致し、`K` に対する判定可能性の仮定が一切不要であることが分かります。
 <!--/-->
 
 <!--en-->
@@ -340,7 +339,7 @@ The first ingredient is arithmetical: a sum is zero only when both summands are.
 ```agda
   plus-zero-l : {a b : ℕ} → a + b ≡ 0 → a ≡ 0
   plus-zero-l {zero} {b} p = refl
-  plus-zero-l {suc a} {b} p = Empty.rec (snotz p)
+  plus-zero-l {suc a} {b} p = ⊥₀-rec (snotz p)
 
   plus-zero-r : {a b : ℕ} → a + b ≡ 0 → b ≡ 0
   plus-zero-r {zero} {b} p = p
@@ -355,10 +354,10 @@ Count zero is a theorem about syntax: no constant constructor can occur. For ter
 <!--/-->
 
 ```agda
-  plus-zero-r {suc a} {b} p = Empty.rec (snotz p)
+  plus-zero-r {suc a} {b} p = ⊥₀-rec (snotz p)
 
   eraseTm : {n : ℕ} (t : Term K n) → countTm t ≡ 0 → Term (⊥* {ℓ}) n
-  eraseTm (con a) p = Empty.rec {A = Term (⊥* {ℓ}) _} (snotz p)
+  eraseTm (con a) p = ⊥₀-rec {A = Term (⊥* {ℓ}) _} (snotz p)
   eraseTm (var i) _ = var i
 
   erase : {n : ℕ} (φ : Formula K n) → countFo φ ≡ 0 → Formula (⊥* {ℓ}) n
@@ -397,18 +396,18 @@ One quantifier case shows how binding interacts with the count. For an unbounded
 ```
 
 <!--en-->
-The round trip is what makes the construction more than a translation: mapping back into `K` must return the original formula. The term-level statement `eraseTm-inv` comes first. If `t` has count zero, then relabelling `eraseTm t p` along `Empty.rec*` gives back `t` itself, as a path between terms over `K`. The relabelling function `Empty.rec* : ⊥* → K` is the eliminator of the empty type: asked to produce a constant of `K`, it demands an element of `⊥*`, and since the erased term was built by `eraseTm` it contains no constant node, so the function is never actually applied. The induction then has only a contradictory case and a variable case, the latter closed by the computation rule of `mapTm`, which rebuilds `var i` from `var i`.
+The round trip is what makes the construction more than a translation: mapping back into `K` must return the original formula. The term-level statement `eraseTm-inv` comes first. If `t` has count zero, then relabelling `eraseTm t p` along `⊥*-rec` gives back `t` itself, as a path between terms over `K`. The relabelling function `⊥*-rec : ⊥* → K` is the eliminator of the empty type: asked to produce a constant of `K`, it demands an element of `⊥*`, and since the erased term was built by `eraseTm` it contains no constant node, so the function is never actually applied. The induction then has only a contradictory case and a variable case, the latter closed by the computation rule of `mapTm`, which rebuilds `var i` from `var i`.
 <!--zh-->
-往返才是这一构造超出翻译之处：映回 `K` 必须返回原公式。词项层面的陈述 `eraseTm-inv` 先行。若 `t` 计数为零，则沿 `Empty.rec*` 改名 `eraseTm t p` 便按路径返回 `t` 本身，即 `K` 上词项之间的一条路径。改名函数 `Empty.rec* : ⊥* → K` 是空类型的消去子：要它给出一个 `K` 的常元，它就索要 `⊥*` 的一个元素；而由 `eraseTm` 建出的词项不含常元节点，该函数实际上从未被调用。于是归纳只剩一个矛盾情形和一个变元情形，后者由 `mapTm` 的计算规则关闭，它从 `var i` 重建出 `var i`。
+往返才是这一构造超出翻译之处：映回 `K` 必须返回原公式。词项层面的陈述 `eraseTm-inv` 先行。若 `t` 计数为零，则沿 `⊥*-rec` 改名 `eraseTm t p` 便按路径返回 `t` 本身，即 `K` 上词项之间的一条路径。改名函数 `⊥*-rec : ⊥* → K` 是空类型的消去子：要它给出一个 `K` 的常元，它就索要 `⊥*` 的一个元素；而由 `eraseTm` 建出的词项不含常元节点，该函数实际上从未被调用。于是归纳只剩一个矛盾情形和一个变元情形，后者由 `mapTm` 的计算规则关闭，它从 `var i` 重建出 `var i`。
 <!--ja-->
-この構成を単なる翻訳以上のものにするのは往復です。`K` へ写し戻せば元の論理式が返らなければなりません。まず項レベルの主張 `eraseTm-inv` です。`t` の数が零なら、`Empty.rec*` に沿って `eraseTm t p` の名前を替えると、`K` 上の項の間のパスとして `t` 自身が返ります。名前替えの関数 `Empty.rec* : ⊥* → K` は空の型の消去子であり、`K` の定数を一つ作るよう求められると `⊥*` の元を要求します。しかし `eraseTm` が組み立てた項には定数の節点が含まれないので、この関数が実際に適用されることはありません。したがって帰納には矛盾の場合と変数の場合しか残らず、後者は `mapTm` の計算規則、すなわち `var i` から `var i` を再構成する規則で閉じます。
+この構成を単なる翻訳以上のものにするのは往復です。`K` へ写し戻せば元の論理式が返らなければなりません。まず項レベルの主張 `eraseTm-inv` です。`t` の数が零なら、`⊥*-rec` に沿って `eraseTm t p` の名前を替えると、`K` 上の項の間のパスとして `t` 自身が返ります。名前替えの関数 `⊥*-rec : ⊥* → K` は空の型の消去子であり、`K` の定数を一つ作るよう求められると `⊥*` の元を要求します。しかし `eraseTm` が組み立てた項には定数の節点が含まれないので、この関数が実際に適用されることはありません。したがって帰納には矛盾の場合と変数の場合しか残らず、後者は `mapTm` の計算規則、すなわち `var i` から `var i` を再構成する規則で閉じます。
 <!--/-->
 
 ```agda
 
   eraseTm-inv : {n : ℕ} (t : Term K n) (p : countTm t ≡ 0)
-              → mapTm Empty.rec* (eraseTm t p) ≡ t
-  eraseTm-inv (con a) p = Empty.rec (snotz p)
+              → mapTm ⊥*-rec (eraseTm t p) ≡ t
+  eraseTm-inv (con a) p = ⊥₀-rec (snotz p)
   eraseTm-inv (var i) _ = refl
 
   erase-inv : {n : ℕ} (φ : Formula K n) (p : countFo φ ≡ 0)
@@ -423,7 +422,7 @@ At the formula level the inverse `erase-inv` is proved by structural induction o
 <!--/-->
 
 ```agda
-            → mapFo Empty.rec* (erase φ p) ≡ φ
+            → mapFo ⊥*-rec (erase φ p) ≡ φ
   erase-inv (t ∈̇ u) p =
     cong₂ _∈̇_ (eraseTm-inv t (plus-zero-l p)) (eraseTm-inv u (plus-zero-r p))
   erase-inv (t ≐ u) p =

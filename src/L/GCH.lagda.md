@@ -51,8 +51,6 @@ The quantifier ranges over the carrier of the constructible structure. Such an e
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet {ℓ} using ( ω )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -64,7 +62,6 @@ ZF モデルはそれ自身の冪集合演算を備えます。モデルの証�
 <!--/-->
 
 ```agda
-open PT using ( ∥_∥₁ )
 
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 open hPropStructure 𝒮ʟ using ( S )
@@ -86,7 +83,7 @@ GCHStatement zf =
   (κ : S)
   → IsOrd (fst κ)
   → IsCardinalL κ
-  → (⟨ fst κ ∈ˢ ω ⟩ → Empty.⊥)
+  → (⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
 ```
 
 <!--en-->

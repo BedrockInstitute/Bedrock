@@ -105,12 +105,6 @@ Some existence statements in the chapter are deliberately weak. When a graph mem
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Data.Vec using ( map )
-open import Cubical.Data.FinData using ( toℕ )
-open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
-import Cubical.HITs.PropositionalTruncation as PT
 ```
 
 <!--en-->
@@ -122,7 +116,6 @@ Truth values are propositions at level `ℓ-suc ℓ`: a formula does not evaluat
 <!--/-->
 
 ```agda
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; setIsSet; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ⁅_,_⁆ )
 
@@ -302,7 +295,7 @@ The auxiliary `read` unpacks one existential fiber. Given an element `z` of the 
     read z h = subst ⟨_⟩ (prAtL-adequate zero (suc x) (suc y) (z ∷ γ)) h
 
     fwd : ⟨ γ ⊨ appTerm F x y ⟩ → ⟨ pr a b ∈ fst G ⟩
-    fwd = PT.rec (snd (pr a b ∈ fst G))
+    fwd = rec₁ (snd (pr a b ∈ fst G))
 ```
 
 <!--en-->
@@ -908,7 +901,7 @@ The extraction from the pairs clause keeps the shape of satisfaction: the conclu
                   (⟨ fst u ∈ fst (lookup d γ) ⟩
                    × (⟨ fst v ∈ fst (lookup B γ) ⟩
                       × (fst s ≡ pr (fst u) (fst v)))))) ∥₁
-pairsIn-out e d B γ h s s∈ = PT.rec squash₁
+pairsIn-out e d B γ h s s∈ = rec₁ squash₁
 ```
 
 <!--en-->
@@ -920,7 +913,7 @@ The proof peels the two bounded existentials inside the truncation. Elimination 
 <!--/-->
 
 ```agda
-  (λ { (u , (u∈ , hv)) → PT.map
+  (λ { (u , (u∈ , hv)) → map₁
     (λ { (v , (v∈ , hp)) → u , (v , (u∈ , (v∈ , subst ⟨_⟩
       (prAtL-adequate (suc (suc zero)) (suc zero) zero (v ∷ u ∷ s ∷ γ)) hp))) })
     hv })
@@ -945,17 +938,17 @@ pairsIn-in : ∀ {n} (e d B : Fin n) (γ : S ^ n)
 ```
 
 <!--en-->
-The construction transforms the truncated data of the hypothesis directly into satisfaction of the formula. The witnesses u and v pass through with their memberships, and the pair equation eq is carried to the body's satisfaction by transporting along the symmetry of the adequacy path, since here one travels from the set-level pair equation back to the reader's satisfaction. Truncation enters only through `PT.map`, which rebuilds the truncated sum around the rearranged data; the formula's own meaning supplies whatever truncation its quantifiers carry.
+The construction transforms the truncated data of the hypothesis directly into satisfaction of the formula. The witnesses u and v pass through with their memberships, and the pair equation eq is carried to the body's satisfaction by transporting along the symmetry of the adequacy path, since here one travels from the set-level pair equation back to the reader's satisfaction. Truncation enters only through `map₁`, which rebuilds the truncated sum around the rearranged data; the formula's own meaning supplies whatever truncation its quantifiers carry.
 <!--zh-->
-构造把前提中的被截断数据直接变成公式的满足。见证 u 与 v 连同各自的隶属原样通过，而对等式 eq 则沿充分性路径的对称等式传输，变成主体的满足，因为这里是从集合层面的对等式走回读式的满足。截断只经由 `PT.map` 进入，它在重新整理的数据周围重建被截断的和；公式自身的含义会供给其量词所需的任何截断。
+构造把前提中的被截断数据直接变成公式的满足。见证 u 与 v 连同各自的隶属原样通过，而对等式 eq 则沿充分性路径的对称等式传输，变成主体的满足，因为这里是从集合层面的对等式走回读式的满足。截断只经由 `map₁` 进入，它在重新整理的数据周围重建被截断的和；公式自身的含义会供给其量词所需的任何截断。
 <!--ja-->
-構成は、前提の截断されたデータを公式の充足へ直接変換します。証拠 u と v はそれぞれの所属とともにそのまま通り、対の等式 eq は妥当性の経路の対称な等式に沿って輸送され、本体の充足になります。ここでは集合レベルの対の等式から読み式の充足へ戻るからです。截断は `PT.map` を通してのみ現れ、並べ直したデータの周りに截断された和を組み立て直します。公式自身の意味が、その量化子の担う截断を供給します。
+構成は、前提の截断されたデータを公式の充足へ直接変換します。証拠 u と v はそれぞれの所属とともにそのまま通り、対の等式 eq は妥当性の経路の対称な等式に沿って輸送され、本体の充足になります。ここでは集合レベルの対の等式から読み式の充足へ戻るからです。截断は `map₁` を通してのみ現れ、並べ直したデータの周りに截断された和を組み立て直します。公式自身の意味が、その量化子の担う截断を供給します。
 <!--/-->
 
 ```agda
                         × (fst s ≡ pr (fst u) (fst v)))))) ∥₁)
            → ⟨ γ ⊨ pairsInAt e d B ⟩
-pairsIn-in e d B γ k s s∈ = PT.map
+pairsIn-in e d B γ k s s∈ = map₁
   (λ { (u , (v , (u∈ , (v∈ , eq)))) → u , (u∈ , ∣ v , (v∈ , subst ⟨_⟩
     (sym (prAtL-adequate (suc (suc zero)) (suc zero) zero (v ∷ u ∷ s ∷ γ))) eq) ∣₁) })
 ```
@@ -1083,7 +1076,7 @@ The domain clause transfers through the introduction lemma for `domAt`, supplyin
         (subst ⟨_⟩ (sym (at x y)) p) (subst ⟨_⟩ (sym (at x y')) q))
   , ( domAt-intro e' d' γ'
       (λ x → (λ m → subst (λ w → ⟨ fst x ∈ w ⟩) qd
-                (PT.rec (snd (fst x ∈ fst (lookup d γ)))
+                (rec₁ (snd (fst x ∈ fst (lookup d γ)))
                   (λ { (y , p) → domAt-out e d γ (envOver-dom e d B γ h) x y
 ```
 
@@ -1098,7 +1091,7 @@ The second implication reads in the opposite direction: membership in the domain
 ```agda
                          (subst ⟨_⟩ (sym (at x y)) p) })
                   m))
-            , (λ hx → PT.map (λ { (y , p) → y , subst ⟨_⟩ (at x y) p })
+            , (λ hx → map₁ (λ { (y , p) → y , subst ⟨_⟩ (at x y) p })
                 (domAt-in e d γ (envOver-dom e d B γ h) x
                   (subst (λ w → ⟨ fst x ∈ w ⟩) (sym qd) hx))))
 ```
@@ -1128,7 +1121,7 @@ The pairs clause is the last to move, and the transports stay inside the truncat
 <!--/-->
 
 ```agda
-        (λ s s∈ → PT.map
+        (λ s s∈ → map₁
           (λ { (u , (v , (u∈ , (v∈ , eq)))) →
             u , (v , ( subst (λ w → ⟨ fst u ∈ w ⟩) qd u∈
                      , ( subst (λ w → ⟨ fst v ∈ w ⟩) qb v∈ , eq ) )) })

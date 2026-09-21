@@ -140,11 +140,6 @@ Finite vectors represent the environments in which formulas are interpreted, whi
 <!--/-->
 
 ```agda
-open import Cubical.Data.Nat using ( _+_ )
-open import Cubical.Data.Unit using ( tt )
-open import Cubical.Data.Vec using ( _∷_; []; lookup )
-open import Cubical.Data.Sigma using ( _×_ )
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
 ```
 
 <!--en-->
@@ -156,10 +151,6 @@ Many semantic witnesses in this chapter live under propositional truncation. Suc
 <!--/-->
 
 ```agda
-open import Cubical.Functions.Logic using ( ⇔toPath )
-import Cubical.Data.Empty as Empty
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∥_∥₁; ∣_∣₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 ```
 
@@ -373,7 +364,7 @@ Conversely, membership in the constructed tower can be read out: every member is
 ```agda
   tower-out : (x : S) → ⟨ fst x ∈ fst tower ⟩
             → ∥ Σ[ n ∈ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
-  tower-out x hx = PT.rec squash₁ byB (subst ⟨_⟩ (tower-mem x) hx .snd)
+  tower-out x hx = rec₁ squash₁ byB (subst ⟨_⟩ (tower-mem x) hx .snd)
     where
     Goal : Type (ℓ-suc ℓ)
 ```
@@ -404,7 +395,7 @@ The separating formula binds three witnesses. The first elimination names the ba
                     ∧̇ ( prAtL i3 i1 i0
                     ∧̇ ( (var i1 ∈̇ con ωʟ)
                     ∧̇ envSetAt i0 i1 i2 )))) ⟩ → Goal
-    byB (b , hb) = PT.rec squash₁ byN hb
+    byB (b , hb) = rec₁ squash₁ byN hb
 ```
 
 <!--en-->
@@ -432,7 +423,7 @@ The third elimination names the environment set and exposes the four conjuncts: 
 <!--/-->
 
 ```agda
-      byN (n , hn) = PT.rec squash₁ byE hn
+      byN (n , hn) = rec₁ squash₁ byE hn
         where
         byE : Σ[ F ∈ S ] ⟨ (F ∷ n ∷ b ∷ x ∷ []) ⊨ ( (var i2 ≐ con W)
                     ∧̇ ( prAtL i3 i1 i0
@@ -449,7 +440,7 @@ The ordered-pair reader recovers the equality from the member to the coded pair 
 
 ```agda
                     ∧̇ envSetAt i0 i1 i2 ))) ⟩ → Goal
-        byE (F , (qb , (hp , (hω , hE)))) = PT.rec squash₁ byK (subst ⟨_⟩ (ω-specL n) hω)
+        byE (F , (qb , (hp , (hω , hE)))) = rec₁ squash₁ byK (subst ⟨_⟩ (ω-specL n) hω)
           where
           xq : fst x ≡ pr (fst n) (fst F)
           xq = pr-out i3 i1 i0 (F ∷ n ∷ b ∷ x ∷ []) hp
@@ -671,10 +662,10 @@ A set with no members equals the zero-length environment graph, by extensionalit
 <!--/-->
 
 ```agda
-  noMembers→env0 : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → Empty.⊥) → z ≡ fst (envS W g0)
+  noMembers→env0 : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀) → z ≡ fst (envS W g0)
   noMembers→env0 z k = extensionalV (λ y → ⇔toPath
-    (λ hy → Empty.rec (k y hy))
-    (PT.rec (snd (y ∈ z)) (λ { (lift () , _) })))
+    (λ hy → ⊥₀-rec (k y hy))
+    (rec₁ (snd (y ∈ z)) (λ { (lift () , _) })))
 
 ```
 
@@ -687,8 +678,8 @@ Conversely, every environment graph of length zero has no members: the index has
 <!--/-->
 
 ```agda
-  envAny0-noMembers : (g : Ix W 0) (y : V ℓ) → ⟨ y ∈ fst (envS W g) ⟩ → Empty.⊥
-  envAny0-noMembers g y = PT.rec Empty.isProp⊥ (λ { (lift () , _) })
+  envAny0-noMembers : (g : Ix W 0) (y : V ℓ) → ⟨ y ∈ fst (envS W g) ⟩ → ⊥₀
+  envAny0-noMembers g y = rec₁ isProp⊥ (λ { (lift () , _) })
 
 ```
 
@@ -702,8 +693,8 @@ Reading the zero-length environment set out: every member is a set with no membe
 
 ```agda
   envSet0-out : (z : V ℓ) → ⟨ z ∈ fst (envSet W 0) ⟩
-              → (y : V ℓ) → ⟨ y ∈ z ⟩ → Empty.⊥
-  envSet0-out z hz y hy = PT.rec Empty.isProp⊥
+              → (y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀
+  envSet0-out z hz y hy = rec₁ isProp⊥
     (λ { (g , e) → envAny0-noMembers g y (subst (λ u → ⟨ y ∈ u ⟩) e hy) })
     (envSet-out W 0 (down (envSet W 0) z hz) hz)
 ```
@@ -718,7 +709,7 @@ Filling the zero-length environment set uses the empty set: it is transported in
 
 ```agda
 
-  envSet0-in : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → Empty.⊥) → ⟨ z ∈ fst (envSet W 0) ⟩
+  envSet0-in : (z : V ℓ) → ((y : V ℓ) → ⟨ y ∈ z ⟩ → ⊥₀) → ⟨ z ∈ fst (envSet W 0) ⟩
   envSet0-in z k = subst (λ u → ⟨ u ∈ fst (envSet W 0) ⟩) (sym (noMembers→env0 z k)) (envSet-in W g0)
 ```
 
@@ -811,7 +802,7 @@ The outward reading of a successor environment recovers its head and tail only u
   envSuc-out : {k : ℕ} (e' : S) → ⟨ fst e' ∈ fst (envSet W (suc k)) ⟩
              → ∥ Σ[ q ∈ ⟪ fst W ⟫ ] Σ[ g ∈ Ix W k ]
                   (fst e' ≡ env (cons (ι q) (λ i → ι (g i)))) ∥₁
-  envSuc-out {k} e' h = PT.map
+  envSuc-out {k} e' h = map₁
     (λ { (g' , e) → g' zero , (λ i → g' (suc i)) , (e ∙ env-split g') })
 ```
 
@@ -908,9 +899,9 @@ The clause supplies a carrier element `x` and a coded environment entry `e` and 
 <!--/-->
 
 ```agda
-    fwd z hz = PT.rec (snd (z ∈ fst (envSet W (suc k))))
-      (λ { (x , (x∈ , hx)) → PT.rec (snd (z ∈ fst (envSet W (suc k))))
-        (λ { (e , (e∈ , hc)) → PT.rec (snd (z ∈ fst (envSet W (suc k))))
+    fwd z hz = rec₁ (snd (z ∈ fst (envSet W (suc k))))
+      (λ { (x , (x∈ , hx)) → rec₁ (snd (z ∈ fst (envSet W (suc k))))
+        (λ { (e , (e∈ , hc)) → rec₁ (snd (z ∈ fst (envSet W (suc k))))
           (λ { (g , qe) →
             envSuc-in x zS (subst (λ u → ⟨ fst x ∈ u ⟩) qw x∈) g
 ```
@@ -955,8 +946,8 @@ For the reverse inclusion, take a member `z` of the actual successor environment
 
 ```agda
     bwd : (z : V ℓ) → ⟨ z ∈ fst (envSet W (suc k)) ⟩ → ⟨ z ∈ fst (lookup F' γ) ⟩
-    bwd z hz = PT.rec (snd (z ∈ fst (lookup F' γ)))
-      (λ { (q , g , qz) → PT.rec (snd (z ∈ fst (lookup F' γ)))
+    bwd z hz = rec₁ (snd (z ∈ fst (lookup F' γ)))
+      (λ { (q , g , qz) → rec₁ (snd (z ∈ fst (lookup F' γ)))
         (λ { (e' , (e'∈ , hc)) →
           subst (λ u → ⟨ u ∈ fst (lookup F' γ) ⟩)
 ```
@@ -1037,7 +1028,7 @@ The truncated decomposition of the member is consumed to name the head and the t
 ```agda
     h1 : (e' : S) → ⟨ fst e' ∈ fst (lookup F' γ) ⟩
        → ⟨ (e' ∷ γ) ⊨ ∃̇∈ (var (sh 1 w)) (∃̇∈ (var (sh 2 F)) (consAtL i2 i1 i0)) ⟩
-    h1 e' he' = PT.map
+    h1 e' he' = map₁
       (λ { (q , g , qe') →
         let xS : S
 ```
@@ -1076,7 +1067,7 @@ The outward reading of the base environment set merely supplies the tail index `
 
     h2 : (e : S) → ⟨ fst e ∈ fst (lookup F γ) ⟩ → (x : S) → ⟨ fst x ∈ fst (lookup w γ) ⟩
        → ⟨ (x ∷ e ∷ γ) ⊨ ∃̇∈ (var (sh 2 F')) (consAtL i0 i1 i2) ⟩
-    h2 e he x hx = PT.map
+    h2 e he x hx = map₁
       (λ { (g , qe) →
         let m : ⟨ env (cons (fst x) (λ i → ι (g i))) ∈ fst (envSet W (suc k)) ⟩
 ```
@@ -1163,7 +1154,7 @@ The first named object is the underlying set of the candidate, and the `none` he
   sglEmpty-out (hex , hall) = extensionalV (λ z → ⇔toPath (fwd z) (bwd z))
     where
     Fv = fst (lookup F γ)
-    none : (z : S) → ⟨ (z ∷ γ) ⊨ emptyAll i0 ⟩ → (y : V ℓ) → ⟨ y ∈ fst z ⟩ → Empty.⊥
+    none : (z : S) → ⟨ (z ∷ γ) ⊨ emptyAll i0 ⟩ → (y : V ℓ) → ⟨ y ∈ fst z ⟩ → ⊥₀
 ```
 
 <!--en-->
@@ -1175,7 +1166,7 @@ The `none` helper feeds a carrier presentation of a member into the bounded clau
 <!--/-->
 
 ```agda
-    none z k y hy = Empty.rec* (k (down z y hy) hy)
+    none z k y hy = ⊥*-rec (k (down z y hy) hy)
 
 ```
 
@@ -1203,7 +1194,7 @@ Backward: a member of the zero-stage environment set is presented, and its trunc
 
 ```agda
     bwd : (z : V ℓ) → ⟨ z ∈ fst (envSet W 0) ⟩ → ⟨ z ∈ Fv ⟩
-    bwd z hz = PT.rec (snd (z ∈ Fv))
+    bwd z hz = rec₁ (snd (z ∈ Fv))
       (λ { (e , (e∈ , he)) →
         subst (λ u → ⟨ u ∈ Fv ⟩)
           (noMembers→env0 (fst e) (none e he) ∙ sym (noMembers→env0 z (envSet0-out z hz)))
@@ -1331,7 +1322,7 @@ The step of the membership induction splits on the downward-decomposition clause
 ```agda
 
     step : (nv : V ℓ) → ((y : V ℓ) → ⟨ y ∈ nv ⟩ → P y) → P nv
-    step nv IH n F qn p∈ = PT.rec squash₁ cases
+    step nv IH n F qn p∈ = rec₁ squash₁ cases
       (useBoth i0 (pS ∷ γ) n F refl (towerDown E w N0) (hdown pS p∈))
       where
       pS : S
@@ -1366,7 +1357,7 @@ The case split consumes the downward-decomposition satisfaction. The base case r
             ⊎ ⟨ δ ⊨ ∃̇∈ (var (sh 4 E)) (bothEx i0 (downBody w)) ⟩
             → Entry (fst n) (fst F)
       cases (inl (qn0 , hF)) = ∣ 0 , (qn0 ∙ qN0 , SglEmpty.sglEmpty-out W i0 δ hF) ∣₁
-      cases (inr hs) = PT.rec squash₁
+      cases (inr hs) = rec₁ squash₁
 ```
 
 <!--en-->
@@ -1384,7 +1375,7 @@ The ordinality comparison says the candidate numeral is the von Neumann successo
 <!--/-->
 
 ```agda
-        (λ { (p' , (p'∈ , hb)) → PT.rec squash₁
+        (λ { (p' , (p'∈ , hb)) → rec₁ squash₁
           (λ { (n' , F' , s' , (qp' , (hsuc , hci))) →
             let δ' = F' ∷ n' ∷ s' ∷ p' ∷ δ
                 qsuc : fst n ≡ sucV (fst n')
@@ -1402,7 +1393,7 @@ The predecessor numeral lies in the candidate numeral because every set lies in 
 ```agda
                 n'∈ : ⟨ fst n' ∈ nv ⟩
                 n'∈ = subst (λ u → ⟨ fst n' ∈ u ⟩) (sym qsuc ∙ qn) (self∈sucV (fst n'))
-            in PT.map
+            in map₁
               (λ { (k , (qk , qF')) →
                 suc k , ( qsuc ∙ cong sucV qk
 ```
@@ -1433,8 +1424,8 @@ The inward reading is proved by ordinary induction on the external natural numbe
 
 ```agda
   entry-in : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
-  entry-in zero = PT.rec (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
-    (λ { (p , (p∈ , hs)) → PT.rec (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
+  entry-in zero = rec₁ (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
+    (λ { (p , (p∈ , hs)) → rec₁ (snd (pr (# 0) (fst (envSet W 0)) ∈ Ev))
       (λ { (F , s , (qp , hF)) →
         subst (λ u → ⟨ u ∈ Ev ⟩)
 ```
@@ -1452,7 +1443,7 @@ After the zero case closes, the successor step applies the upward-closure clause
           p∈ })
       (sndEx-out i0 (sh 1 N0) (sglEmpty i0) (p ∷ γ) hs) })
     hbase
-  entry-in (suc k) = PT.rec (snd (pr (# (suc k)) (fst (envSet W (suc k))) ∈ Ev))
+  entry-in (suc k) = rec₁ (snd (pr (# (suc k)) (fst (envSet W (suc k))) ∈ Ev))
 ```
 
 <!--en-->
@@ -1464,7 +1455,7 @@ The successor formula determines the new first component from the old numeral, a
 <!--/-->
 
 ```agda
-    (λ { (p' , (p'∈ , hb)) → PT.rec (snd (pr (# (suc k)) (fst (envSet W (suc k))) ∈ Ev))
+    (λ { (p' , (p'∈ , hb)) → rec₁ (snd (pr (# (suc k)) (fst (envSet W (suc k))) ∈ Ev))
       (λ { (n' , F' , s' , (qp' , (hsuc , hci))) →
         let δ' = F' ∷ n' ∷ s' ∷ p' ∷ δ
         in subst (λ u → ⟨ u ∈ Ev ⟩)
@@ -1620,7 +1611,7 @@ For upward closure, fix an entry `p` of `E` and any coded-pair presentation `p =
 ```agda
     hup : (p : S) → ⟨ fst p ∈ Ev ⟩ → ⟨ (p ∷ γ) ⊨ bothAll i0 (towerUp E w) ⟩
     hup p p∈ = bothAll-in i0 (towerUp E w) (p ∷ γ) (λ n F s s∈ n∈ F∈ e →
-      PT.rec (snd ((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerUp E w))
+      rec₁ (snd ((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerUp E w))
         (λ { (k , qp) →
           let q = pr-inj (sym e ∙ qp)
 ```
@@ -1667,7 +1658,7 @@ Downward decomposition begins in the same way: fix an entry `p`, choose any code
 ```agda
     hdown : (p : S) → ⟨ fst p ∈ Ev ⟩ → ⟨ (p ∷ γ) ⊨ bothAll i0 (towerDown E w N0) ⟩
     hdown p p∈ = bothAll-in i0 (towerDown E w N0) (p ∷ γ) (λ n F s s∈ n∈ F∈ e →
-      PT.rec (snd ((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerDown E w N0))
+      rec₁ (snd ((F ∷ n ∷ s ∷ p ∷ γ) ⊨ towerDown E w N0))
         (λ { (zero , qp) →
           let q = pr-inj (sym e ∙ qp)
 ```

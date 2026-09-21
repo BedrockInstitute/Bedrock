@@ -42,6 +42,7 @@ layers have to be merged into one.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Cubical.Data.Nat using ( +-comm )
 open import Base.Classical using ( LEM )
 
 module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
@@ -56,15 +57,6 @@ open import L.Constructible {ℓ}
         ; Lset→isL )
 open import L.Ordinal {ℓ} using ( ∅-ord; boundingOrd; bound2; setUnion-ord )
 open import L.Stage {ℓ} lem using ( LeastOrd; leastOrd )
-
-open import Cubical.Data.Sum using ( _⊎_; inl; inr )
-open import Cubical.Data.Nat using ( _+_; +-comm )
-open import Cubical.Data.Unit using ( Unit*; tt* )
-import Cubical.Data.Empty as Empty
-open import Cubical.Data.Sigma using ( Σ≡Prop )
-open import Cubical.Functions.Logic using ( ⇔toPath; ∃[∶]-syntax )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁; ∥_∥₁; squash₁ )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; sett; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
@@ -117,7 +109,7 @@ LsetEnv σ oσ []       = []
 LsetEnv σ oσ (m ∷ ms) = LsetElt σ oσ m ∷ LsetEnv σ oσ ms
 
 Below : (σ : V ℓ) {k : ℕ} → S ^ k → Type (ℓ-suc ℓ)
-Below σ []      = Unit*
+Below σ []      = ⊤*
 Below σ (p ∷ ρ) = ⟨ fst p ∈ Lset σ ⟩ × Below σ ρ
 
 Below-mono : {σ τ : V ℓ} → ⟨ σ ∈ τ ⟩ → {k : ℕ} {ρ : S ^ k}
@@ -177,8 +169,8 @@ Wit ψ ρ σ = ∃[ q ∶ S ] ((fst q ∈ Lset σ) ⊓ Sat ψ ρ q)
 
 witnessed : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
           → ∥ (Σ[ α ∈ V ℓ ] (IsOrd α × ⟨ Wit ψ ρ α ⟩)) ∥₁
-witnessed ψ ρ = PT.rec squash₁
-  (λ { (q , satq) → PT.map
+witnessed ψ ρ = rec₁ squash₁
+  (λ { (q , satq) → map₁
       (λ { (α , (oα , q∈Lα)) → α , (oα , ∣ q , (q∈Lα , satq) ∣₁) })
       (q .snd) })
 
@@ -187,7 +179,7 @@ pick : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
 pick ψ ρ sat = leastOrd (Wit ψ ρ) (witnessed ψ ρ sat)
 
 decideStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
-            → ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → Empty.⊥) → V ℓ
+            → ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → ⊥₀) → V ℓ
 decideStage ψ ρ (inl sat) = pick ψ ρ sat .fst
 decideStage ψ ρ (inr _)   = ∅
 
@@ -195,7 +187,7 @@ pickStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ
 pickStage ψ ρ = decideStage ψ ρ (lem (SatEx ψ ρ))
 
 decideStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
-                  (d : ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → Empty.⊥))
+                  (d : ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → ⊥₀))
                 → IsOrd (decideStage ψ ρ d)
 decideStage-ord ψ ρ (inl sat) = pick ψ ρ sat .snd .fst
 decideStage-ord ψ ρ (inr _)   = ∅-ord
@@ -222,11 +214,11 @@ pickWitness : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ �
             → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
 pickWitness ψ ρ sat = go (lem (SatEx ψ ρ)) refl
   where
-  go : (d : ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → Empty.⊥))
+  go : (d : ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → ⊥₀))
      → lem (SatEx ψ ρ) ≡ d → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
   go (inl s) e = subst (λ d → ⟨ Wit ψ ρ (decideStage ψ ρ d) ⟩) (sym e)
                    (pick ψ ρ s .snd .snd .fst)
-  go (inr ¬s) e = Empty.rec (¬s sat)
+  go (inr ¬s) e = ⊥₀-rec (¬s sat)
 ```
 
 <!--en-->
@@ -310,20 +302,20 @@ tuple merges all of them, and monotonicity carries the earlier entries up.
 
 ```agda
   δ∈top→fin : (δ : V ℓ) → ⟨ δ ∈ top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ δ ∈ G N ⟩) ∥₁
-  δ∈top→fin δ δ∈ = PT.map (λ { (i , h) → lower i , h })
+  δ∈top→fin δ δ∈ = map₁ (λ { (i , h) → lower i , h })
     (union-family-out (Lift {ℓ-zero} {ℓ} ℕ) fam δ δ∈)
 
   localize₁ : (e : V ℓ) → ⟨ e ∈ Lset top ⟩ → ∥ (Σ[ N ∈ ℕ ] ⟨ e ∈ Lset (G N) ⟩) ∥₁
-  localize₁ e e∈ = PT.rec squash₁
-    (λ { (δ , (δ∈top , e∈𝒟ₒδ)) → PT.map
+  localize₁ e e∈ = rec₁ squash₁
+    (λ { (δ , (δ∈top , e∈𝒟ₒδ)) → map₁
         (λ { (N , δ∈GN) → N , Lset-in (G N) δ e δ∈GN e∈𝒟ₒδ })
         (δ∈top→fin δ δ∈top) })
     (Lset-out top e e∈)
 
   localize : {j : ℕ} (ρ : S ^ j) → Below top ρ → ∥ (Σ[ N ∈ ℕ ] Below (G N) ρ) ∥₁
   localize []      _        = ∣ zero , tt* ∣₁
-  localize (p ∷ ρ) (h , hs) = PT.rec squash₁
-    (λ { (N , h') → PT.map (merge N h') (localize ρ hs) })
+  localize (p ∷ ρ) (h , hs) = rec₁ squash₁
+    (λ { (N , h') → map₁ (merge N h') (localize ρ hs) })
     (localize₁ (fst p) h)
     where
     merge : (N : ℕ) → ⟨ fst p ∈ Lset (G N) ⟩
@@ -375,10 +367,10 @@ monotonicity, and the equation transported back.
            where
 
     closure : ClosedFor top ψ
-    closure ρ below sat = PT.rec squash₁ atRung (localize ρ below)
+    closure ρ below sat = rec₁ squash₁ atRung (localize ρ below)
       where
       atRung : Σ[ N ∈ ℕ ] Below (G N) ρ → ⟨ Wit ψ ρ top ⟩
-      atRung (N , belowN) = PT.map found (pickWitness ψ ρₘ satₘ)
+      atRung (N , belowN) = map₁ found (pickWitness ψ ρₘ satₘ)
         where
         idx = indexEnv (G N) (G-ord N) ρ belowN
         ρₘ : S ^ k
@@ -414,7 +406,7 @@ syntax and the meta-level requires no further work.
 
 ```agda
     reflect-bwd : (ρ : S ^ k) → ⟨ Wit ψ ρ top ⟩ → ⟨ ρ ⊨ (∃̇ ψ) ⟩
-    reflect-bwd ρ = PT.map (λ { (q , (_ , satq)) → q , satq })
+    reflect-bwd ρ = map₁ (λ { (q , (_ , satq)) → q , satq })
 
     reflect : (ρ : S ^ k) → Below top ρ → (ρ ⊨ (∃̇ ψ)) ≡ Wit ψ ρ top
     reflect ρ below = ⇔toPath (closure ρ below) (reflect-bwd ρ)

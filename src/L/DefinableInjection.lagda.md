@@ -100,10 +100,7 @@ Two type-theoretic facts govern the proof. When the second component of a depend
 <!--/-->
 
 ```agda
-open import Cubical.Data.Sigma using ( Σ≡Prop )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
-import Cubical.HITs.PropositionalTruncation as PT
-open PT using ( ∣_∣₁ )
 
 ```
 
