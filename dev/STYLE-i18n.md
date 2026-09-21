@@ -92,12 +92,13 @@ CJK prose (zh and ja) follows the repository's house style enforced by
 CJK characters. Japanese prose consistently uses plain style (である体). It does not use polite
 です・ます forms. Agda code blocks are English-only. See the gate commands in `Makefile`.
 
-Standalone construction, lemma and theorem labels name the corresponding Agda declaration and
+Standalone construction, lemma, theorem and corollary labels name the corresponding Agda declaration and
 contain no period: `**Lemma** (`name`{.Agda}) Text`, with `引理` or `補題` in the
 parallel routes. Fact labels use the same form with `Fact`, `事实` or `事実`, and
-construction labels use `Construction`, `构造` or `構成`.
+construction labels use `Construction`, `构造` or `構成`. Corollary labels use
+`Corollary`, `推论` or `系`.
 Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`. An outermost
-construction, fact, lemma or theorem developed through prose and code ends with a standalone `∎`
+construction, fact, lemma, theorem or corollary developed through prose and code ends with a standalone `∎`
 after its complete proof. A construction or lemma nested inside that proof, such as one inside
 its disclosure block, has no separate `∎`; the enclosing proof's mark follows the closing block.
 

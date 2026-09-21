@@ -34,6 +34,17 @@ class ExpressionHoverTests(unittest.TestCase):
             check=True, capture_output=True, text=True, timeout=5)
         return json.loads(completed.stdout)
 
+    def run_containing_expression_scenario(self, scenario):
+        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        helper = re.search(
+            r"    function containingExpressionData\(expressionData, start, end\) \{.*?"
+            r"(?=    function expressionOptions)", javascript, re.DOTALL)
+        self.assertIsNotNone(helper)
+        completed = subprocess.run(
+            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            check=True, capture_output=True, text=True, timeout=5)
+        return json.loads(completed.stdout)
+
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_mobile_gesture_candidates_follow_expression_boundaries(self):
         scenario = r'''
@@ -104,11 +115,32 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
             ],
         })
 
+    @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
+    def test_multiline_gesture_recovers_logical_ancestors_from_source_ranges(self):
+        scenario = r'''
+var expressionData = {
+  333: {source: "mapDec ... (lem ...)", start: 10, end: 100},
+  332: {source: "mapDec ...", start: 10, end: 40},
+  341: {source: "lem ...", start: 50, end: 99},
+  344: {source: "Lift P , proof", start: 55, end: 98}
+};
+console.log(JSON.stringify(
+  containingExpressionData(expressionData, 50, 99).map(function (entry) {
+    return [entry.id, entry.data.start, entry.data.end];
+  })
+));
+'''
+        self.assertEqual(self.run_containing_expression_scenario(scenario), [
+            ["333", 10, 100],
+            ["341", 50, 99],
+        ])
+
     def test_mobile_expression_interactions_keep_highlights_exclusive(self):
         javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
         stylesheet = (ROOT / "site" / "static" / "bedrock.css").read_text()
         self.assertIn('option.nameNode.classList.add("name-active")', javascript)
-        self.assertIn('option.node.classList.add("expr-active")', javascript)
+        self.assertIn('node.classList.add("expr-active")', javascript)
+        self.assertIn('node.dataset.exprId === expressionId', javascript)
         self.assertNotIn('var activeOption = option.node ? option', javascript)
         self.assertIn('function choose(index, withHapticFeedback)', javascript)
         self.assertIn('function vibrateSelection()', javascript)
@@ -127,6 +159,8 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
         self.assertIn('else if (!touched && !popup.contains(event.target)', javascript)
         self.assertIn('if (codeBlock && !rangeCapableBlock) {', javascript)
         self.assertIn('function gestureCandidates(items, base, deltaX)', javascript)
+        self.assertIn('function containingExpressionData(expressionData, start, end)', javascript)
+        self.assertIn('var items = expressionOptions(expressionData, directNode);', javascript)
         self.assertIn('var chain = [];', javascript)
         self.assertIn('item.start <= current.start && item.end >= current.end', javascript)
         self.assertIn('var boundary = movingRight ? item.end : item.start;', javascript)
@@ -159,6 +193,24 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
         self.assertIn('<span class="expr-node" data-expr-id="2"', rendered)
         self.assertLess(rendered.index('data-expr-id="1"'), rendered.index('data-expr-id="2"'))
         self.assertIn('<a id="14">x</a></span></span>', rendered)
+
+    def test_multiline_range_reuses_one_node_without_painting_indentation(self):
+        block = ('<pre class="Agda"><a id="10">f</a> <a id="12">x</a>\n'
+                 '    <a id="20">y</a></pre>')
+        nodes = [
+            {"id": 7, "start": 10, "end": 21, "type": "T", "source": "f x y"},
+        ]
+        rendered = renderer.annotate_expression_nodes(block, nodes)
+        opening = ('<span class="expr-node" data-expr-id="7" '
+                   'data-expr-start="10" data-expr-end="21"')
+        self.assertEqual(rendered.count(opening), 2)
+        self.assertIn('</span>\n    <span class="expr-node" data-expr-id="7"', rendered)
+        self.assertNotIn('\n<span class="expr-node" data-expr-id="7">    ', rendered)
+
+    def test_all_visual_fragments_of_selected_expression_are_highlighted(self):
+        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        self.assertIn('var expressionId = option.node.dataset.exprId;', javascript)
+        self.assertIn('if (node.dataset.exprId === expressionId)', javascript)
 
     def test_unmatched_ranges_are_not_rendered(self):
         block = '<pre class="Agda"><a id="10">f</a></pre>'

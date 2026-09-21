@@ -721,6 +721,32 @@
       }
       return result;
     }
+    function containingExpressionData(expressionData, start, end) {
+      return Object.keys(expressionData).map(function (expressionId) {
+        return { id: expressionId, data: expressionData[expressionId] };
+      }).filter(function (entry) {
+        return entry.data && entry.data.start <= start && entry.data.end >= end;
+      });
+    }
+    function expressionOptions(expressionData, directNode) {
+      if (!directNode) return [];
+      var start = Number(directNode.dataset.exprStart);
+      var end = Number(directNode.dataset.exprEnd);
+      var block = directNode.closest("pre.Agda");
+      if (!Number.isFinite(start) || !Number.isFinite(end) || !block) return [];
+      var representatives = new Map();
+      block.querySelectorAll(".expr-node").forEach(function (node) {
+        if (!representatives.has(node.dataset.exprId))
+          representatives.set(node.dataset.exprId, node);
+      });
+      return containingExpressionData(expressionData, start, end).map(function (entry) {
+        var data = entry.data;
+        var node = representatives.get(entry.id);
+        return node && { kind: "expression", node: node, source: data.source,
+                         type: data.type, start: data.start, end: data.end,
+                         astKind: data.kind };
+      }).filter(Boolean);
+    }
     function usesInspector(target) {
       /* Expression spans are emitted only inside Agda blocks, and only for
          applications. Inline/display Agda and a bare block identifier therefore
@@ -771,8 +797,13 @@
       });
       if (option.kind === "name" && option.nameNode)
         option.nameNode.classList.add("name-active");
-      else if (option.node)
-        option.node.classList.add("expr-active");
+      else if (option.node) {
+        var block = option.node.closest("pre.Agda");
+        var expressionId = option.node.dataset.exprId;
+        (block ? block.querySelectorAll(".expr-node") : [option.node]).forEach(function (node) {
+          if (node.dataset.exprId === expressionId) node.classList.add("expr-active");
+        });
+      }
       requestAnimationFrame(position);
     }
     function gestureIndex(deltaX) {
@@ -875,21 +906,18 @@
     function show(target) {
       hideName();
       var serial = ++request;
-      var spans = expressionAncestors(target);
       var name = target.closest && target.closest("a[data-type]");
       var directNode = target.closest && target.closest(".expr-node");
-      var pageRequest = spans.length ? fetchTypes(cfg.chapter || cfg.module) : Promise.resolve({});
+      var pageRequest = directNode ? fetchTypes(cfg.chapter || cfg.module) : Promise.resolve({});
       var nameSpec = name ? name.getAttribute("data-type").split("#") : null;
       var nameRequest = nameSpec ? fetchTypes(nameSpec[0]) : Promise.resolve({});
       Promise.all([pageRequest, nameRequest]).then(function (loaded) {
         if (serial !== request || !target.isConnected) return;
         var expressionData = loaded[0].$expressions || {};
-        var items = spans.map(function (node) {
-          var data = expressionData[node.dataset.exprId];
-          return data && { kind: "expression", node: node, source: data.source,
-                           type: data.type, start: data.start, end: data.end,
-                           astKind: data.kind };
-        }).filter(Boolean);
+        /* A multiline source node is rendered as several visual spans.  DOM
+           ancestry therefore describes only the touched fragment, whereas the
+           source intervals recover the complete logical AST chain. */
+        var items = expressionOptions(expressionData, directNode);
         if (nameSpec && loaded[1][nameSpec[1]]) {
           var canonicalName = name.getAttribute("data-name") ||
             (loaded[1].$names || {})[nameSpec[1]];
@@ -912,7 +940,9 @@
         });
         var preferred = name
           ? items.find(function (item) { return item.kind === "name"; })
-          : items.find(function (item) { return item.node === directNode; });
+          : items.find(function (item) {
+              return item.node.dataset.exprId === directNode.dataset.exprId;
+            });
         if (items.length) render(items, name || directNode || target,
                                  preferred || items[0]);
         else if (levelGesture && levelGesture.request === serial

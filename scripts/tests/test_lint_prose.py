@@ -25,6 +25,9 @@ class TheoremLabelTests(unittest.TestCase):
             "**事実** (`property`{.Agda}) 本文。",
             "**Theorem** (`result`{.Agda}) Text.",
             "**定理** (`result`{.Agda}) 正文。",
+            "**Corollary** (`consequence`{.Agda}) Text.",
+            "**推论** (`consequence`{.Agda}) 正文。",
+            "**系** (`consequence`{.Agda}) 本文。",
             "**Proof** Text.",
             "**证明** 正文。",
             "**証明** 本文。",
@@ -127,6 +130,15 @@ law = proof
         text = """**Fact** (`property`{.Agda}) Text.
 ```agda
 property = proof
+```
+"""
+        violations = lint_prose.qed_violations(text)
+        self.assertEqual(len(violations), 1)
+
+    def test_corollary_requires_qed(self):
+        text = """**Corollary** (`consequence`{.Agda}) Text.
+```agda
+consequence = proof
 ```
 """
         violations = lint_prose.qed_violations(text)

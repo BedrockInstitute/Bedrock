@@ -153,30 +153,39 @@ lowerLEM {ℓ} lem P =
 
 Once every proposition at the source level can be decided, each can be represented by one of two Boolean labels. For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, `ΩResizing ℓ₁ ℓ₂`{.Agda} asks for one type in `Type ℓ₂`{.Agda} equivalent to the entire type `hProp ℓ₁`{.Agda}. This chapter constructs such a classifier from excluded middle at `ℓ₁`{.Agda}. The general theorem `ΩResizing→Resizing`{.Agda} then turns this small presentation of the proposition universe into `Resizing ℓ₁ ℓ₂`{.Agda}: every source-level proposition receives an equivalent representative at the target level.
 
-To construct the classifier, we use `true`{.Agda} and `false`{.Agda} as its two labels. The labels are not themselves propositions. Decoding sends them to separate values of `hProp ℓ₁`{.Agda}, and paths in `hProp` show that those values represent the intended propositions.
-
-The code type must inhabit the chosen target universe. Since `Bool`{.Agda} lies in `Type ℓ-zero`{.Agda}, we lift it to `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in `Type ℓ₂`{.Agda}. This type can be equivalent to `hProp ℓ₁`{.Agda}, even though the latter lies in `Type (ℓ-suc ℓ₁)`{.Agda}; allowing the two sides of an equivalence to occupy different universes is what makes the construction a resizing.
-
-We first define decoding and encoding without using excluded middle. Decoding assigns a representative proposition to each label. Encoding accepts an explicit decision of `P` and selects the corresponding label. After proving that these maps are inverse for every supplied decision, excluded middle will provide the decisions uniformly.
+The classifier uses `Bool`{.Agda}, whose two constructors `true`{.Agda} and `false`{.Agda} serve as its labels. We import precisely these three names here.
 <!--zh-->
 ## 由排中律得到命题宇宙换级
 
 一旦源层的每个命题都可以判定，就能用两个布尔标签之一来代表它。对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，`ΩResizing ℓ₁ ℓ₂`{.Agda} 要求 `Type ℓ₂`{.Agda} 中有一个与整个 `hProp ℓ₁`{.Agda} 类型等价的类型。本章从 `ℓ₁`{.Agda} 层的排中律构造这样的分类器，再应用一般定理 `ΩResizing→Resizing`{.Agda}，把这个对命题宇宙的小表示转化为 `Resizing ℓ₁ ℓ₂`{.Agda}：源层的每个命题在目标层都有一个与之类型等价的代表。
 
-为了构造这个分类器，我们以 `true`{.Agda} 和 `false`{.Agda} 为两个标签。标签本身不是命题。解码会把它们分别送到 `hProp ℓ₁`{.Agda} 中的两个值，再用 `hProp` 中的路径证明这些值确实代表相应的命题。
-
-编码类型必须位于指定的目标宇宙。`Bool`{.Agda} 位于 `Type ℓ-zero`{.Agda}，所以要将它抬升为 `Type ℓ₂`{.Agda} 中的 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}。这个类型可以与位于 `Type (ℓ-suc ℓ₁)`{.Agda} 的 `hProp ℓ₁`{.Agda} 等价。等价的两端可以处于不同宇宙，正因如此，这项构造才能实现换级。
-
-我们先在不使用排中律的情况下定义解码与编码。解码为每个标签指定代表命题；编码接受 `P` 的显式判定，并据此选择标签。两条逆律将对任意给定的判定成立。最后才使用排中律，为所有命题统一提供所需的判定。
+分类器采用 `Bool`{.Agda}，以它的两个构造子 `true`{.Agda} 与 `false`{.Agda} 作为标签。这里恰好引入这三个名称。
 <!--ja-->
 ## 排中律から得られる命題宇宙リサイズ
 
 始域レベルのすべての命題を判定できれば、それぞれを二つのブールラベルの一方で表せる。任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、`ΩResizing ℓ₁ ℓ₂`{.Agda} は型 `hProp ℓ₁`{.Agda} 全体と同値な一つの型を `Type ℓ₂`{.Agda} に要求する。本章は `ℓ₁`{.Agda} での排中律からそのような分類子を構成し、一般定理 `ΩResizing→Resizing`{.Agda} によって、この命題宇宙の小さな表示を `Resizing ℓ₁ ℓ₂`{.Agda} へ移す。すなわち、始域レベルの各命題が終域レベルに同値な代表をもつ。
 
-この分類子を構成するために、`true`{.Agda} と `false`{.Agda} を二つのラベルとして使う。ラベル自体が命題なのではない。復号によってそれぞれを `hProp ℓ₁`{.Agda} の別の値へ送り、`hProp` のパスによって、その値が意図した命題を表すことを示す。
+分類子には `Bool`{.Agda} を用い、その二つの構成子 `true`{.Agda} と `false`{.Agda} をラベルとする。ここでは、ちょうどこの三つの名前を導入する。
+<!--/-->
 
-符号の型は指定した終域宇宙に住まなければならない。`Bool`{.Agda} は `Type ℓ-zero`{.Agda} に住むので、`Type ℓ₂`{.Agda} の `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} へ持ち上げる。この型は、`Type (ℓ-suc ℓ₁)`{.Agda} に住む `hProp ℓ₁`{.Agda} と同値になりえる。同値の両端が異なる宇宙に住めるからこそ、この構成はリサイズになる。
+```agda
 
+open import Cubical.Data.Bool using ( Bool; true; false )
+```
+
+<!--en-->
+The labels are not themselves propositions. They form the code type, which must inhabit the chosen target universe. Since `Bool`{.Agda} lies in `Type ℓ-zero`{.Agda}, we use `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in `Type ℓ₂`{.Agda}. Decoding will send its two labels to values of `hProp ℓ₁`{.Agda}; paths in `hProp` will then show that those values represent the intended propositions. The code type and `hProp ℓ₁`{.Agda} may lie in different universes, which is precisely what allows the resulting equivalence to resize the proposition universe.
+<!--zh-->
+标签本身不是命题，而是编码类型中的两个值；这个编码类型必须位于指定的目标宇宙。`Bool`{.Agda} 位于 `Type ℓ-zero`{.Agda}，所以这里采用 `Type ℓ₂`{.Agda} 中的 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}。解码会把两个标签送到 `hProp ℓ₁`{.Agda} 中的值，再用 `hProp` 中的路径证明这些值确实代表相应的命题。编码类型与 `hProp ℓ₁`{.Agda} 可以位于不同宇宙，所得等价因此能够实现命题宇宙换级。
+<!--ja-->
+ラベル自体は命題ではなく、符号の型に属する二つの値である。この符号の型は、指定した終域宇宙に住まなければならない。`Bool`{.Agda} は `Type ℓ-zero`{.Agda} に住むため、ここでは `Type ℓ₂`{.Agda} の `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} を用いる。復号によって二つのラベルを `hProp ℓ₁`{.Agda} の値へ送り、さらに `hProp` のパスによって、その値が意図した命題を表すことを示す。符号の型と `hProp ℓ₁`{.Agda} は異なる宇宙に住めるため、得られる同値は命題宇宙のリサイズを実現できる。
+<!--/-->
+
+<!--en-->
+We first define decoding and encoding without using excluded middle. Decoding assigns a representative proposition to each label. Encoding accepts an explicit decision of `P` and selects the corresponding label. After proving that these maps are inverse for every supplied decision, excluded middle will provide the decisions uniformly.
+<!--zh-->
+我们先在不使用排中律的情况下定义解码与编码。解码为每个标签指定代表命题；编码接受 `P` 的显式判定，并据此选择标签。两条逆律将对任意给定的判定成立。最后才使用排中律，为所有命题统一提供所需的判定。
+<!--ja-->
 まず、排中律を使わずに復号と符号化を定義する。復号は各ラベルに代表命題を割り当てる。符号化は `P` の判定を明示的に受け取り、それに応じてラベルを選ぶ。二つの逆法則は、どの判定が与えられても成り立つように証明する。最後にだけ排中律を使い、すべての命題に必要な判定を一様に与える。
 <!--/-->
 
@@ -189,27 +198,25 @@ The two representatives are the propositions `⊤`{.Agda} and `⊥`{.Agda} intro
 <!--/-->
 
 <!--en-->
-The promised two labels now enter the construction. `Bool`{.Agda} has exactly the constructors `true`{.Agda} and `false`{.Agda}; after lifting it to the target universe, these labels record whether a proposition was proved or refuted. They carry only the outcome, while `decodeB`{.Agda} below assigns each label its representative proposition.
+We begin with the private decoding map. Its type sends a lifted Boolean label to the proposition in `hProp ℓ₁`{.Agda} represented by that label. The map remains private because the Boolean code is only auxiliary data for proving the public resizing theorem.
 <!--zh-->
-现在引入构造所需的两个标签。`Bool`{.Agda} 恰有 `true`{.Agda} 与 `false`{.Agda} 两个构造子；把它提升到目标宇宙后，这两个标签分别记录命题得到证明还是遭到反驳。标签只记录判定结果，下面的 `decodeB`{.Agda} 再把每个标签指派给相应的代表命题。
+先定义私有的解码映射。它把提升后的布尔标签送到 `hProp ℓ₁`{.Agda} 中由该标签代表的命题。布尔编码只是证明公开换级定理时使用的辅助资料，因此这个映射不对外公开。
 <!--ja-->
-ここで構成に必要な二つのラベルを導入する。`Bool`{.Agda} の構成子は `true`{.Agda} と `false`{.Agda} のちょうど二つである。これを終域の宇宙へ持ち上げると、命題が証明されたか反証されたかを記録するラベルになる。ラベルが記録するのは判定結果だけであり、以下の `decodeB`{.Agda} が各ラベルに対応する代表命題を割り当てる。
+まず、非公開の復号写像を定義する。その型は、持ち上げたブールラベルを、そのラベルが表す `hProp ℓ₁`{.Agda} の命題へ送る。ブール符号は公開されるリサイズ定理を証明するための補助データにすぎないため、この写像は公開しない。
 <!--/-->
 
 ```agda
-
-open import Cubical.Data.Bool using ( Bool; true; false )
 
 private
   decodeB : ∀ {ℓ₁ ℓ₂} → Lift {ℓ-zero} {ℓ₂} Bool → hProp ℓ₁
 ```
 
 <!--en-->
-Decoding reads a Boolean label and returns the proposition it represents: `lift true`{.Agda} yields `⊤`{.Agda} and `lift false`{.Agda} yields `⊥`{.Agda}. Its domain is `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} rather than `Bool`{.Agda} itself: `Bool`{.Agda} lives in `Type ℓ-zero`, while the lift lives in the chosen target universe `Type ℓ₂`{.Agda}. Decoding alone merely assigns representatives; the two inverse laws below show that no proposition or Boolean code is lost.
+The defining equations send `lift true`{.Agda} to `⊤`{.Agda} and `lift false`{.Agda} to `⊥`{.Agda}. By themselves they merely assign representatives; the two inverse laws below will show that no proposition or Boolean code is lost.
 <!--zh-->
-解码读取布尔标签，返回它所代表的命题：`lift true`{.Agda} 给出 `⊤`{.Agda}，`lift false`{.Agda} 给出 `⊥`{.Agda}。定义域是 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 而非 `Bool`{.Agda} 本身：`Bool`{.Agda} 住在 `Type ℓ-zero`，其提升则住在指定的目标宇宙 `Type ℓ₂`{.Agda}。单独的解码只负责指派代表；下面两条逆律将证明命题与布尔编码都不会在往返中丢失。
+两条定义式把 `lift true`{.Agda} 送到 `⊤`{.Agda}，把 `lift false`{.Agda} 送到 `⊥`{.Agda}。这两式本身只负责指派代表；下面两条逆律将证明命题与布尔编码都不会在往返中丢失。
 <!--ja-->
-復号はブールのラベルを読み、それが代表する命題を返す。`lift true`{.Agda} は `⊤`{.Agda} を、`lift false`{.Agda} は `⊥`{.Agda} を返す。定義域は `Bool`{.Agda} 自身ではなく `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} である。`Bool`{.Agda} は `Type ℓ-zero` に住み、その持ち上げは指定した終域宇宙 `Type ℓ₂`{.Agda} に住む。復号だけなら代表を割り当てる関数にすぎない。後に続く二つの逆法則が、命題もブール符号も往復で失われないことを示す。
+二つの定義式は、`lift true`{.Agda} を `⊤`{.Agda} へ、`lift false`{.Agda} を `⊥`{.Agda} へ送る。これらの式だけでは代表を割り当てたにすぎない。後に続く二つの逆法則が、命題もブール符号も往復で失われないことを示す。
 <!--/-->
 
 ```agda
@@ -303,11 +310,23 @@ For `b = lift false`{.Agda}, decoding gives `⊥`{.Agda} with underlying type `�
 ```
 
 <!--en-->
-Now the pieces assemble into the classifier promised by `ΩResizing ℓ₁ ℓ₂`{.Agda}: the code type `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in `Type ℓ₂`{.Agda}, type equivalent to `hProp ℓ₁`{.Agda}. The equivalence comes from an isomorphism whose forward map decides each `P` and encodes it, and whose backward map is `decodeB`{.Agda}. Its two inverse laws are `retrB`{.Agda} and `secB`{.Agda}, instantiated with decisions from `lem`. This final assembly is the only place in the construction where excluded middle is invoked: it uniformly supplies the decisions accepted by the otherwise constructive encoder and inverse laws.
+**Theorem** (`lem→ΩResizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies Ω-resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.
 <!--zh-->
-现在各部分组装成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所承诺的分类器：编码类型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 住在 `Type ℓ₂`{.Agda}，并与 `hProp ℓ₁`{.Agda} 类型等价。这个等价来自一个同构：正向映射判定每个 `P` 后编码，逆向映射是 `decodeB`{.Agda}；两条逆律则是用 `lem` 所给判定实例化的 `retrB`{.Agda} 与 `secB`{.Agda}。整个构造只在最后组装时调用排中律，它一致地供给编码器和逆律所接收的判定，而这些部件本身仍是构造主义的。
+**定理** (`lem→ΩResizing`{.Agda}) 对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，源层 `ℓ₁`{.Agda} 的排中律蕴含从 `ℓ₁`{.Agda} 到 `ℓ₂`{.Agda} 的命题宇宙换级。
 <!--ja-->
-いま部品が `ΩResizing ℓ₁ ℓ₂`{.Agda} の約束する分類子へと組み上がる。符号の型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} は `Type ℓ₂`{.Agda} に住み、`hProp ℓ₁`{.Agda} と型同値である。この同値は、順写像が各 `P` を判定して符号化し、逆写像が `decodeB`{.Agda} である同型から得られる。二つの逆法則は、`lem` が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} である。構成全体で排中律を呼び出すのは、この最後の組み立てだけである。符号化器と逆法則はそれ自体構成的なままで、それらが受け取る判定を排中律が一様に供給する。
+**定理** (`lem→ΩResizing`{.Agda}) 任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、始域レベル `ℓ₁`{.Agda} での排中律は、`ℓ₁`{.Agda} から `ℓ₂`{.Agda} への命題宇宙リサイズを導く。
+<!--/-->
+
+```agda
+lem→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ₂
+```
+
+<!--en-->
+**Proof** The pieces above assemble the classifier promised by `ΩResizing ℓ₁ ℓ₂`{.Agda}: the code type is `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in `Type ℓ₂`{.Agda}, and it is type equivalent to `hProp ℓ₁`{.Agda}. The equivalence comes from an isomorphism whose forward map decides each `P` and encodes it, while its backward map is `decodeB`{.Agda}. The inverse laws are `retrB`{.Agda} and `secB`{.Agda}, instantiated with the decisions supplied by `lem`. This final assembly is the only place where excluded middle is invoked; the encoder and the inverse laws themselves remain constructive.
+<!--zh-->
+**证明** 把以上各部分组装成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所要求的分类器。其编码类型是 `Type ℓ₂`{.Agda} 中的 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}，并且与 `hProp ℓ₁`{.Agda} 类型等价。这个等价来自一个同构：正向映射先判定每个 `P`，再将其编码；逆向映射则是 `decodeB`{.Agda}。两条逆律分别由 `retrB`{.Agda} 与 `secB`{.Agda} 给出，其中所需的判定均由 `lem` 提供。整个构造只在最后组装时调用排中律；编码器和逆律本身仍是构造主义的。
+<!--ja-->
+**証明** 以上の部品を `ΩResizing ℓ₁ ℓ₂`{.Agda} が要求する分類子へ組み立てる。符号の型は `Type ℓ₂`{.Agda} に住む `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} であり、`hProp ℓ₁`{.Agda} と型同値である。この同値は、順写像が各 `P` を判定して符号化し、逆写像が `decodeB`{.Agda} である同型から得られる。二つの逆法則には、`lem` が供給する判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を使う。排中律を呼び出すのはこの最後の組み立てだけであり、符号化器と逆法則そのものは構成的なままである。
 <!--/-->
 
 <!--en-->
@@ -319,25 +338,39 @@ The pair `(Lift Bool , ...)` witnesses `ΩResizing ℓ₁ ℓ₂`{.Agda}: its fi
 <!--/-->
 
 ```agda
-lem→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ₂
 lem→ΩResizing lem = Lift Bool , isoToEquiv (iso
   (λ P → encodeB P (lem P)) decodeB
   (λ b → retrB {ℓ₁ = _} b (lem (decodeB b)))
   (λ P → secB {ℓ₂ = _} P (lem P)))
 ```
 
+∎
+
 <!--en-->
-As an immediate consequence, composing `lem→ΩResizing`{.Agda} with `ΩResizing→Resizing`{.Agda} gives propositional resizing:
+**Corollary** (`lem→resizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies propositional resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.
 <!--zh-->
-作为直接推论，复合 `lem→ΩResizing`{.Agda} 与 `ΩResizing→Resizing`{.Agda}，便得到命题换级：
+**推论** (`lem→resizing`{.Agda}) 对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，源层 `ℓ₁`{.Agda} 的排中律蕴含从 `ℓ₁`{.Agda} 到 `ℓ₂`{.Agda} 的命题换级。
 <!--ja-->
-直接の帰結として、`lem→ΩResizing`{.Agda} と `ΩResizing→Resizing`{.Agda} を合成すれば、命題リサイズが得られる。
+**系** (`lem→resizing`{.Agda}) 任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、始域レベル `ℓ₁`{.Agda} での排中律は、`ℓ₁`{.Agda} から `ℓ₂`{.Agda} への命題リサイズを導く。
 <!--/-->
 
 ```agda
 lem→resizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → Resizing ℓ₁ ℓ₂
+```
+
+<!--en-->
+**Proof** Apply `lem→ΩResizing`{.Agda}, then convert the resulting proposition-universe resizing with the general theorem `ΩResizing→Resizing`{.Agda}.
+<!--zh-->
+**证明** 先应用 `lem→ΩResizing`{.Agda} 得到命题宇宙换级，再用一般定理 `ΩResizing→Resizing`{.Agda} 将其转化为命题换级。
+<!--ja-->
+**証明** まず `lem→ΩResizing`{.Agda} を適用して命題宇宙リサイズを得てから、一般定理 `ΩResizing→Resizing`{.Agda} によって命題リサイズへ変換する。
+<!--/-->
+
+```agda
 lem→resizing lem = ΩResizing→Resizing (lem→ΩResizing lem)
 ```
+
+∎
 
 <!--en-->
 ## Recap

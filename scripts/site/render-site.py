@@ -857,6 +857,42 @@ def names_by_position(module, name2pos):
             for name, position in name2pos.get(module, {}).items()}
 
 
+SPAN_EVENT_RE = re.compile(r'<span\b[^>]*>|</span>|\n[ \t]*')
+
+
+def split_multiline_expression_nodes(block):
+    """Split visual expression spans at newlines without splitting the AST node.
+
+    A single inline span continued across a preformatted newline paints the
+    continuation indentation as part of the expression.  Close and reopen the
+    active span stack around each newline instead.  Reopened expression spans
+    retain their ``data-expr-id``, so the browser can treat all line fragments
+    as one logical source node while leaving indentation unpainted.
+    """
+    output = []
+    stack = []
+    cursor = 0
+    for match in SPAN_EVENT_RE.finditer(block):
+        output.append(block[cursor:match.start()])
+        token = match.group(0)
+        if token.startswith("<span"):
+            stack.append(token)
+            output.append(token)
+        elif token == "</span>":
+            if stack:
+                stack.pop()
+            output.append(token)
+        elif stack and any('class="expr-node"' in opening for opening in stack):
+            output.append("</span>" * len(stack))
+            output.append(token)
+            output.extend(stack)
+        else:
+            output.append(token)
+        cursor = match.end()
+    output.append(block[cursor:])
+    return "".join(output)
+
+
 def annotate_expression_nodes(block, nodes):
     """Wrap source-range application nodes around Agda's highlighted token anchors."""
     boundaries = {node[position] for node in nodes for position in ("start", "end")}
@@ -942,7 +978,7 @@ def annotate_expression_nodes(block, nodes):
         events[position] = closing + opening
     for position in sorted(events, reverse=True):
         block = block[:position] + events[position] + block[position:]
-    return block
+    return split_multiline_expression_nodes(block)
 
 
 def annotate_unlinked_bound_types(block, module, module_types):

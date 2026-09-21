@@ -22,9 +22,9 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
   8. A centered single-line code display must use one complete
      `<div class="single-line-code"><code>...</code></div>` line.                 [report only]
  9. Standalone theorem-style labels use a bold label followed by a space, never a
-     period. Fact, lemma and theorem labels must immediately name an Agda declaration:
+     period. Fact, lemma, theorem and corollary labels must immediately name an Agda declaration:
      `**Fact** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).         [report only]
- 10. An outermost construction, fact, lemma or theorem developed through prose and code
+ 10. An outermost construction, fact, lemma, theorem or corollary developed through prose and code
      ends with a standalone `∎` after its complete proof. Nested statements inside
      a disclosure belong to that proof and need no separate mark.               [report only]
  11. Reader-facing disclosure summaries begin with the localized optional-reading
@@ -304,11 +304,12 @@ def single_line_code_violations(text):
     return out
 
 
-_STATEMENT_LABELS = {"Construction", "Fact", "Lemma", "Theorem",
-                     "构造", "事实", "引理", "定理", "構成", "事実", "補題"}
+_STATEMENT_LABELS = {"Construction", "Fact", "Lemma", "Theorem", "Corollary",
+                     "构造", "事实", "引理", "定理", "推论",
+                     "構成", "事実", "補題", "系"}
 _PROOF_LABELS = {"Proof", "证明", "証明", "Definition", "定义", "定義"}
 _THEOREM_LABEL_RE = re.compile(
-    r"^\s*\*\*(Construction|Fact|Lemma|Theorem|Proof|Definition|构造|事实|引理|定理|证明|定义|構成|事実|補題|証明|定義)(?:[.。])?\*\*")
+    r"^\s*\*\*(Construction|Fact|Lemma|Theorem|Corollary|Proof|Definition|构造|事实|引理|定理|推论|证明|定义|構成|事実|補題|系|証明|定義)(?:[.。])?\*\*")
 
 
 def theorem_label_violations(text):
@@ -344,7 +345,7 @@ def theorem_label_violations(text):
     return out
 
 
-_QED_START_RE = re.compile(r"^\*\*(Construction|Fact|Lemma|Theorem)\*\* ")
+_QED_START_RE = re.compile(r"^\*\*(Construction|Fact|Lemma|Theorem|Corollary)\*\* ")
 _QED_HEADING_RE = re.compile(r"^#{1,2}\s")
 
 
@@ -400,7 +401,7 @@ def qed_violations(text):
             if not re.fullmatch(r"\s*(?:</details>\s*)*∎\s*", tail):
                 out.append(Violation(
                     start,
-                    "outermost construction/lemma/theorem must end with standalone "
+                    "outermost construction/lemma/theorem/corollary must end with standalone "
                     "`∎` after its complete proof",
                     False,
                 ))
