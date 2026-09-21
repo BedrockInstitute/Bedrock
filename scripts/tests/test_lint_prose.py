@@ -144,6 +144,23 @@ consequence = proof
         violations = lint_prose.qed_violations(text)
         self.assertEqual(len(violations), 1)
 
+    def test_explanation_may_follow_completed_proof(self):
+        text = """**Lemma** (`helper`{.Agda}) Text.
+```agda
+helper = proof
+```
+∎
+
+The result has this broader interpretation.
+
+**Theorem** (`result`{.Agda}) Text.
+```agda
+result = helper
+```
+∎
+"""
+        self.assertEqual(lint_prose.qed_violations(text), [])
+
 
 class OptionalSummaryTests(unittest.TestCase):
     def violations(self, text):

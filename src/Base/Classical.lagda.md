@@ -174,49 +174,68 @@ open import Cubical.Data.Bool using ( Bool; true; false )
 ```
 
 <!--en-->
-The labels are not themselves propositions. They form the code type, which must inhabit the chosen target universe. Since `Bool`{.Agda} lies in `Type ℓ-zero`{.Agda}, we use `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in `Type ℓ₂`{.Agda}. Decoding will send its two labels to values of `hProp ℓ₁`{.Agda}; paths in `hProp` will then show that those values represent the intended propositions. The code type and `hProp ℓ₁`{.Agda} may lie in different universes, which is precisely what allows the resulting equivalence to resize the proposition universe.
+The labels are codes, not themselves propositions in `hProp ℓ₁`{.Agda}. Since `Bool`{.Agda} lies in `Type ℓ-zero`{.Agda}, the code type is lifted to `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in the target universe `Type ℓ₂`{.Agda}. Its two labels will represent `⊤`{.Agda} and `⊥`{.Agda}, both available in `hProp ℓ₁`{.Agda} at every level. Constructing an equivalence between this target-level code type and the proposition universe will therefore give the required Ω-resizing.
 <!--zh-->
-标签本身不是命题，而是编码类型中的两个值；这个编码类型必须位于指定的目标宇宙。`Bool`{.Agda} 位于 `Type ℓ-zero`{.Agda}，所以这里采用 `Type ℓ₂`{.Agda} 中的 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}。解码会把两个标签送到 `hProp ℓ₁`{.Agda} 中的值，再用 `hProp` 中的路径证明这些值确实代表相应的命题。编码类型与 `hProp ℓ₁`{.Agda} 可以位于不同宇宙，所得等价因此能够实现命题宇宙换级。
+这些标签只是编码，并非 `hProp ℓ₁`{.Agda} 中的命题。`Bool`{.Agda} 位于 `Type ℓ-zero`{.Agda}，所以要把编码类型提升为目标宇宙 `Type ℓ₂`{.Agda} 中的 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}。它的两个标签将分别代表 `hProp ℓ₁`{.Agda} 中的 `⊤`{.Agda} 与 `⊥`{.Agda}，而这两个命题可用于任意层级。只要构造出这个目标层编码类型与命题宇宙之间的等价，就得到了所需的命题宇宙换级。
 <!--ja-->
-ラベル自体は命題ではなく、符号の型に属する二つの値である。この符号の型は、指定した終域宇宙に住まなければならない。`Bool`{.Agda} は `Type ℓ-zero`{.Agda} に住むため、ここでは `Type ℓ₂`{.Agda} の `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} を用いる。復号によって二つのラベルを `hProp ℓ₁`{.Agda} の値へ送り、さらに `hProp` のパスによって、その値が意図した命題を表すことを示す。符号の型と `hProp ℓ₁`{.Agda} は異なる宇宙に住めるため、得られる同値は命題宇宙のリサイズを実現できる。
+これらのラベルは符号であり、それ自体が `hProp ℓ₁`{.Agda} の命題なのではない。`Bool`{.Agda} は `Type ℓ-zero`{.Agda} に住むため、符号の型を終域宇宙 `Type ℓ₂`{.Agda} の `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} へ持ち上げる。その二つのラベルは、任意のレベルで使える `hProp ℓ₁`{.Agda} の `⊤`{.Agda} と `⊥`{.Agda} をそれぞれ表す。この終域レベルの符号の型と命題宇宙との同値を構成すれば、求める命題宇宙リサイズが得られる。
 <!--/-->
 
 <!--en-->
-We first define decoding and encoding without using excluded middle. Decoding assigns a representative proposition to each label. Encoding accepts an explicit decision of `P` and selects the corresponding label. After proving that these maps are inverse for every supplied decision, excluded middle will provide the decisions uniformly.
+The construction has two stages. First we define encoding from an explicit decision `Dec ⟨ P ⟩`{.Agda}, then decoding, and finally the two inverse laws. These four auxiliary results remain private and use no excluded middle. The public theorem then invokes excluded middle to supply a decision for every `P` and assembles the four results into the equivalence.
 <!--zh-->
-我们先在不使用排中律的情况下定义解码与编码。解码为每个标签指定代表命题；编码接受 `P` 的显式判定，并据此选择标签。两条逆律将对任意给定的判定成立。最后才使用排中律，为所有命题统一提供所需的判定。
+构造分为两步。第一步先根据显式判定 `Dec ⟨ P ⟩`{.Agda} 定义编码，再定义解码，最后证明两条逆律。这四项辅助结果保持私有，并且都不使用排中律。第二步的公开定理才调用排中律，为每个 `P` 统一给出判定，并把这四项结果组装成所需的等价。
 <!--ja-->
-まず、排中律を使わずに復号と符号化を定義する。復号は各ラベルに代表命題を割り当てる。符号化は `P` の判定を明示的に受け取り、それに応じてラベルを選ぶ。二つの逆法則は、どの判定が与えられても成り立つように証明する。最後にだけ排中律を使い、すべての命題に必要な判定を一様に与える。
+構成は二段階に分かれる。第一段階では、まず明示的な判定 `Dec ⟨ P ⟩`{.Agda} から符号化を定義し、次に復号を定義し、最後に二つの逆法則を証明する。この四つの補助結果は非公開のままであり、いずれも排中律を使わない。第二段階の公開定理で初めて排中律を呼び出し、各 `P` に判定を一様に与え、この四つの結果を求める同値へ組み立てる。
 <!--/-->
 
 <!--en-->
-The two representatives are the propositions `⊤`{.Agda} and `⊥`{.Agda} introduced in the Prelude. Their underlying types are respectively the lifted unit type and the lifted empty type `⊥*`{.Agda}. Both propositions are available at every level `ℓ₁`, so they can serve as the two values in `hProp ℓ₁`{.Agda} denoted by the Boolean labels.
+**Lemma** (`encodeB`{.Agda}) There is an encoding operation that takes a proposition `P` together with its decision and returns a code in `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}.
 <!--zh-->
-两个代表是《基础词汇》中引入的命题 `⊤`{.Agda} 与 `⊥`{.Agda}。它们的底层类型分别是抬升后的单位类型与空类型 `⊥*`{.Agda}。这两个命题可用于任意层级 `ℓ₁`，因而能够作为 `hProp ℓ₁`{.Agda} 中由布尔标签指称的两个值。
+**引理** (`encodeB`{.Agda}) 存在一个编码操作，它以命题 `P` 及其判定为输入，返回 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 中的编码。
 <!--ja-->
-二つの代表は、「基礎語彙」で導入した命題 `⊤`{.Agda} と `⊥`{.Agda} である。その基礎型は、それぞれ持ち上げられた単位型と空型 `⊥*`{.Agda} である。どちらの命題も任意のレベル `ℓ₁` で使えるため、ブールラベルが指す `hProp ℓ₁`{.Agda} の二つの値として利用できる。
-<!--/-->
-
-<!--en-->
-We begin with the private decoding map. Its type sends a lifted Boolean label to the proposition in `hProp ℓ₁`{.Agda} represented by that label. The map remains private because the Boolean code is only auxiliary data for proving the public resizing theorem.
-<!--zh-->
-先定义私有的解码映射。它把提升后的布尔标签送到 `hProp ℓ₁`{.Agda} 中由该标签代表的命题。布尔编码只是证明公开换级定理时使用的辅助资料，因此这个映射不对外公开。
-<!--ja-->
-まず、非公開の復号写像を定義する。その型は、持ち上げたブールラベルを、そのラベルが表す `hProp ℓ₁`{.Agda} の命題へ送る。ブール符号は公開されるリサイズ定理を証明するための補助データにすぎないため、この写像は公開しない。
+**補題** (`encodeB`{.Agda}) 命題 `P` とその判定を入力として受け取り、`Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} の符号を返す符号化操作が存在する。
 <!--/-->
 
 ```agda
 
 private
+  encodeB : ∀ {ℓ₁ ℓ₂} (P : hProp ℓ₁) → Dec ⟨ P ⟩ → Lift {ℓ-zero} {ℓ₂} Bool
+```
+
+<!--en-->
+**Proof** Inspect the supplied decision. The `yes`{.Agda} branch returns `lift true`{.Agda}, while the `no`{.Agda} branch returns `lift false`{.Agda}. Both branches discard the particular proof or refutation and retain only which outcome holds. Because the decision is supplied explicitly, encoding uses no excluded middle.
+<!--zh-->
+**证明** 考察给定的判定。`yes`{.Agda} 分支返回 `lift true`{.Agda}，`no`{.Agda} 分支返回 `lift false`{.Agda}。两个分支都舍去具体的证明或反驳，只保留哪一种结果成立。由于判定是显式给出的，编码过程不使用排中律。
+<!--ja-->
+**証明** 与えられた判定を調べる。`yes`{.Agda} の枝は `lift true`{.Agda} を返し、`no`{.Agda} の枝は `lift false`{.Agda} を返す。どちらの枝も具体的な証明や反証を捨て、どちらの結果が成り立つかだけを保持する。判定は明示的に与えられるため、符号化は排中律を使わない。
+<!--/-->
+
+```agda
+  encodeB P (yes _) = lift true
+  encodeB P (no _)  = lift false
+```
+
+∎
+
+<!--en-->
+**Lemma** (`decodeB`{.Agda}) There is a decoding operation that takes a code in `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} and returns a proposition in `hProp ℓ₁`{.Agda}.
+<!--zh-->
+**引理** (`decodeB`{.Agda}) 存在一个解码操作，它以 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 中的编码为输入，返回 `hProp ℓ₁`{.Agda} 中的命题。
+<!--ja-->
+**補題** (`decodeB`{.Agda}) `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} の符号を入力として受け取り、`hProp ℓ₁`{.Agda} の命題を返す復号操作が存在する。
+<!--/-->
+
+```agda
   decodeB : ∀ {ℓ₁ ℓ₂} → Lift {ℓ-zero} {ℓ₂} Bool → hProp ℓ₁
 ```
 
 <!--en-->
-The defining equations send `lift true`{.Agda} to `⊤`{.Agda} and `lift false`{.Agda} to `⊥`{.Agda}. By themselves they merely assign representatives; the two inverse laws below will show that no proposition or Boolean code is lost.
+**Proof** Inspect the supplied code. The `lift true`{.Agda} branch returns `⊤`{.Agda}, while the `lift false`{.Agda} branch returns `⊥`{.Agda}. Both branches discard the label and retain only the proposition it represents. Because the two cases are handled directly, decoding also uses no excluded middle.
 <!--zh-->
-两条定义式把 `lift true`{.Agda} 送到 `⊤`{.Agda}，把 `lift false`{.Agda} 送到 `⊥`{.Agda}。这两式本身只负责指派代表；下面两条逆律将证明命题与布尔编码都不会在往返中丢失。
+**证明** 考察给定的编码。`lift true`{.Agda} 分支返回 `⊤`{.Agda}，`lift false`{.Agda} 分支返回 `⊥`{.Agda}。两个分支都舍去标签，只保留它所代表的命题。由于两种情形都是直接给出的，解码过程同样不使用排中律。
 <!--ja-->
-二つの定義式は、`lift true`{.Agda} を `⊤`{.Agda} へ、`lift false`{.Agda} を `⊥`{.Agda} へ送る。これらの式だけでは代表を割り当てたにすぎない。後に続く二つの逆法則が、命題もブール符号も往復で失われないことを示す。
+**証明** 与えられた符号を調べる。`lift true`{.Agda} の枝は `⊤`{.Agda} を返し、`lift false`{.Agda} の枝は `⊥`{.Agda} を返す。どちらの枝もラベルを捨て、それが表す命題だけを保持する。二つの場合を直接与えるため、復号も排中律を使わない。
 <!--/-->
 
 ```agda
@@ -224,57 +243,42 @@ The defining equations send `lift true`{.Agda} to `⊤`{.Agda} and `lift false`{
   decodeB (lift false) = ⊥
 ```
 
-<!--en-->
-Encoding goes in the opposite direction. Given `P` together with a decision of `P`, it returns `true`{.Agda} for a proof and `false`{.Agda} for a refutation. The decision is an explicit argument rather than something `encodeB`{.Agda} derives, so this definition itself uses no excluded middle.
-<!--zh-->
-编码沿相反方向进行。给定 `P` 及其判定，若得到证明便返回 `true`{.Agda}，若得到反驳便返回 `false`{.Agda}。判定是显式参数，并非由 `encodeB`{.Agda} 自行导出，因此这个定义本身不使用排中律。
-<!--ja-->
-符号化は逆向きに進む。`P` とその判定を受け取り、証明が得られた場合は `true`{.Agda}、反証が得られた場合は `false`{.Agda} を返す。判定は `encodeB`{.Agda} 自身が導くのではなく、明示的な引数として与えられるため、この定義そのものは排中律を使わない。
-<!--/-->
+∎
 
 <!--en-->
-Pattern matching examines the decision, not the proposition `P` itself. `yes`{.Agda} yields `lift true`{.Agda} and `no`{.Agda} yields `lift false`{.Agda}. In either branch the proof or refutation is discarded, because the code records only which alternative holds. The result lies in `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}, exactly the domain expected by `decodeB`{.Agda}.
+**Lemma** (`secB`{.Agda}) For every proposition `P` and decision `d`, encoding with `encodeB`{.Agda} and then decoding with `decodeB`{.Agda} recovers `P` in `hProp`: `decodeB (encodeB P d) ≡ P`{.Agda}.
 <!--zh-->
-模式匹配考察的是判定，而不是命题 `P` 本身。`yes`{.Agda} 分支给出 `lift true`{.Agda}，`no`{.Agda} 分支给出 `lift false`{.Agda}。两个分支都会舍去具体的证明或反驳，因为编码只记录哪一种情形成立。结果属于 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}，恰好可以作为 `decodeB`{.Agda} 的输入。
+**引理** (`secB`{.Agda}) 对任意命题 `P` 及其判定 `d`，先用 `encodeB`{.Agda} 编码，再用 `decodeB`{.Agda} 解码，会在 `hProp` 中恢复 `P`：`decodeB (encodeB P d) ≡ P`{.Agda}。
 <!--ja-->
-パターンマッチが調べるのは命題 `P` 自身ではなく、その判定である。`yes`{.Agda} の枝は `lift true`{.Agda} を、`no`{.Agda} の枝は `lift false`{.Agda} を返す。どちらの枝でも具体的な証明や反証は捨てる。符号が記録するのは、どちらが成り立つかだけだからである。結果は `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} に属し、`decodeB`{.Agda} の入力に正確に一致する。
-<!--/-->
-
-```agda
-  encodeB : ∀ {ℓ₁ ℓ₂} (P : hProp ℓ₁) → Dec ⟨ P ⟩ → Lift {ℓ-zero} {ℓ₂} Bool
-  encodeB P (yes _) = lift true
-  encodeB P (no _)  = lift false
-```
-
-<!--en-->
-The first inverse law says that the representative chosen through a decision has the same truth value as `P`. Concretely, `secB` proves `decodeB (encodeB P d) ≡ P`{.Agda}, a path between `hProp` values. The proof strategy in both cases is the same: give maps in both directions and let propositional extensionality `⇔toPath`{.Agda} assemble the path.
-<!--zh-->
-第一条逆律说，经由判定选出的代表与 `P` 有相同的真值。具体地，`secB` 证明 `decodeB (encodeB P d) ≡ P`{.Agda}，这是 `hProp` 值之间的一条路径。两种情形的证明策略相同：给出双向的映射，再由命题外延性 `⇔toPath`{.Agda} 组装出路径。
-<!--ja-->
-最初の逆法則は、判定を通して選ばれた代表が `P` と同じ真理値を持つことを述べる。具体的には `secB` が `decodeB (encodeB P d) ≡ P`{.Agda}、つまり `hProp` 値の間のパスを証明する。どちらの場合も証明の戦略は同じで、両方向の写像を与え、命題外延性 `⇔toPath`{.Agda} にパスを組み立てさせる。
-<!--/-->
-
-<!--en-->
-If the decision was a proof `p`, the goal is `⊤ ≡ P`{.Agda}. The map from `⊤`{.Agda} to `⟨ P ⟩`{.Agda} is simply `p`, the decided witness; in the reverse direction every input goes to the unique proof of `⊤`{.Agda}. If the decision was a refutation `np`, the goal is `⊥ ≡ P`{.Agda}. Out of `⊥*`{.Agda} there is no constructor to match, which the absurd pattern `λ ()` expresses; in the other direction `np` itself sends each proof of `⟨ P ⟩`{.Agda} to a contradiction. In both branches the chosen representative is path-equal to `P`, so the encoding round trip loses no truth value.
-<!--zh-->
-若判定是证明 `p`，目标是 `⊤ ≡ P`{.Agda}。从 `⊤`{.Agda} 到 `⟨ P ⟩`{.Agda} 的映射就是判定所得的见证 `p`；反方向上，所有输入都映到 `⊤`{.Agda} 的唯一证明。若判定是反驳 `np`，目标是 `⊥ ≡ P`{.Agda}。从 `⊥*`{.Agda} 出发没有构造子可匹配，荒谬模式 `λ ()` 表达的正是这一点；另一个方向直接由 `np` 把 `⟨ P ⟩`{.Agda} 的每个证明送入矛盾。两个分支中，所选代表都与 `P` 路径相等，于是编码的往返不丢失任何真值。
-<!--ja-->
-判定が証明 `p` だった場合、ゴールは `⊤ ≡ P`{.Agda} である。`⊤`{.Agda} から `⟨ P ⟩`{.Agda} への写像は判定で得た証拠 `p` そのものであり、逆方向ではすべての入力を `⊤`{.Agda} の唯一の証明へ送る。判定が反証 `np` だった場合、ゴールは `⊥ ≡ P`{.Agda} である。`⊥*`{.Agda} には照合すべき構成子がないことを荒謬パターン `λ ()` が表し、逆方向では `np` 自身が `⟨ P ⟩`{.Agda} の各証明を矛盾へ送る。どちらの分岐でも選ばれた代表は `P` とパスで等しく、符号化の往復が真理値を失わないことがわかる。
+**補題** (`secB`{.Agda}) 任意の命題 `P` とその判定 `d` に対して、`encodeB`{.Agda} で符号化してから `decodeB`{.Agda} で復号すると、`hProp` で `P` が復元される。すなわち `decodeB (encodeB P d) ≡ P`{.Agda} である。
 <!--/-->
 
 ```agda
   secB : ∀ {ℓ₁ ℓ₂} (P : hProp ℓ₁) (d : Dec ⟨ P ⟩)
        → decodeB {ℓ₁} {ℓ₂} (encodeB {ℓ₁} {ℓ₂} P d) ≡ P
+```
+
+<!--en-->
+**Proof** Split on `d`. If `d = yes p`{.Agda}, encoding selects `lift true`{.Agda} and decoding returns `⊤`{.Agda}, so the goal becomes `⊤ ≡ P`{.Agda}. Propositional extensionality `⇔toPath`{.Agda} constructs this path from the map returning `p` and the map returning `tt*`{.Agda}. If `d = no np`{.Agda}, encoding selects `lift false`{.Agda} and decoding returns `⊥`{.Agda}, so the goal becomes `⊥ ≡ P`{.Agda}. Its two maps are the absurd function `λ ()` and the refutation `np` followed by elimination from `⊥₀`{.Agda}. Thus decoding after encoding recovers a proposition equal to `P` in both cases.
+<!--zh-->
+**证明** 对 `d` 分情形。若 `d = yes p`{.Agda}，编码选出 `lift true`{.Agda}，解码得到 `⊤`{.Agda}，所以目标化为 `⊤ ≡ P`{.Agda}。命题外延性 `⇔toPath`{.Agda} 从两个方向的映射构造这条路径：一个映射返回 `p`，另一个映射返回 `tt*`{.Agda}。若 `d = no np`{.Agda}，编码选出 `lift false`{.Agda}，解码得到 `⊥`{.Agda}，所以目标化为 `⊥ ≡ P`{.Agda}。两个方向的映射分别是荒谬函数 `λ ()`，以及先应用反驳 `np`、再从 `⊥₀`{.Agda} 消去的函数。因此在两种情形下，先编码再解码都会恢复一个与 `P` 相等的命题。
+<!--ja-->
+**証明** `d` について場合分けする。`d = yes p`{.Agda} なら、符号化は `lift true`{.Agda} を選び、復号は `⊤`{.Agda} を返すため、ゴールは `⊤ ≡ P`{.Agda} となる。命題外延性 `⇔toPath`{.Agda} は、`p` を返す写像と `tt*`{.Agda} を返す写像からこのパスを構成する。`d = no np`{.Agda} なら、符号化は `lift false`{.Agda} を選び、復号は `⊥`{.Agda} を返すため、ゴールは `⊥ ≡ P`{.Agda} となる。両方向の写像は、荒謬関数 `λ ()` と、反証 `np` を適用してから `⊥₀`{.Agda} から消去する関数である。したがって、どちらの場合も符号化してから復号すると `P` と等しい命題が復元される。
+<!--/-->
+
+```agda
   secB {ℓ₁} {ℓ₂} P (yes p) = ⇔toPath (λ _ → p) (λ _ → tt*)
   secB {ℓ₁} {ℓ₂} P (no np) = ⇔toPath (λ ()) (λ p → ⊥₀-rec (np p))
 ```
 
+∎
+
 <!--en-->
-The second inverse law states `encodeB (decodeB b) d ≡ b`{.Agda}: decode a label, then encode the resulting proposition, and recover the original label. In the final classifier, excluded middle will supply `d`, but its computational form is not fixed. Consequently `retrB`{.Agda} must work for **every** decision of the decoded proposition. There are four combinations. The two compatible ones reduce to `refl`{.Agda}; the other two are impossible because `⊤`{.Agda} is inhabited and `⊥`{.Agda} is empty.
+**Lemma** (`retrB`{.Agda}) For every code `b` and decision `d` of the proposition it decodes to, decoding with `decodeB`{.Agda} and then encoding with `encodeB`{.Agda} recovers `b`: `encodeB (decodeB b) d ≡ b`{.Agda}.
 <!--zh-->
-第二条逆律是 `encodeB (decodeB b) d ≡ b`{.Agda}：先解码标签，再编码所得命题，应当返回原标签。在最终的分类器中，`d` 由排中律给出，但它具体如何计算并不确定。因此，`retrB`{.Agda} 必须对解码所得命题的**每一种**判定都成立。证明共有四种组合：两个相容的分支归约为 `refl`{.Agda}；另两个分支不可能出现，因为 `⊤`{.Agda} 有元素，而 `⊥`{.Agda} 为空。
+**引理** (`retrB`{.Agda}) 对任意编码 `b` 及其解码所得命题的判定 `d`，先用 `decodeB`{.Agda} 解码，再用 `encodeB`{.Agda} 编码，会恢复 `b`：`encodeB (decodeB b) d ≡ b`{.Agda}。
 <!--ja-->
-第二の逆法則は `encodeB (decodeB b) d ≡ b`{.Agda}、すなわちラベルを復号して得た命題を再び符号化すると、元のラベルに戻ることを述べる。完成した分類子では排中律が `d` を与えるが、その具体的な計算の形は定まらない。したがって `retrB`{.Agda} は、復号された命題の**どの**判定に対しても成り立つ必要がある。組合せは四つあり、両立する二つの枝は `refl`{.Agda} に簡約される。残りの二つは、`⊤`{.Agda} に要素があり `⊥`{.Agda} が空であるため起こりえない。
+**補題** (`retrB`{.Agda}) 任意の符号 `b` と、その復号で得た命題の判定 `d` に対して、`decodeB`{.Agda} で復号してから `encodeB`{.Agda} で符号化すると `b` が復元される。すなわち `encodeB (decodeB b) d ≡ b`{.Agda} である。
 <!--/-->
 
 ```agda
@@ -284,30 +288,37 @@ The second inverse law states `encodeB (decodeB b) d ≡ b`{.Agda}: decode a lab
 ```
 
 <!--en-->
-For `b = lift true`{.Agda}, decoding gives `⊤`{.Agda}. Encoding with a proof returns `lift true`{.Agda}, and the goal is definitionally `refl`{.Agda}. The alleged refutation branch cannot occur: applying it to the unique proof of `⊤`{.Agda} would give an element of the empty type, leaving no case to prove.
+**Proof** Split on `b` and then on `d`, giving four cases. If `b = lift true`{.Agda}, decoding returns `⊤`{.Agda}. A proof selects `lift true`{.Agda} again, so the equality is `refl`{.Agda}; a refutation is impossible because applying it to `tt*`{.Agda} produces an element of `⊥₀`{.Agda}. If `b = lift false`{.Agda}, decoding returns `⊥`{.Agda}. A proof is impossible by the empty pattern `()`; a refutation selects `lift false`{.Agda} again, so the equality is `refl`{.Agda}. Thus encoding after decoding recovers the original code in every possible case.
 <!--zh-->
-当 `b = lift true`{.Agda} 时，解码得 `⊤`{.Agda}。配以证明编码返回 `lift true`{.Agda}，目标按定义就是 `refl`{.Agda}。所谓反驳的分支不可能出现：把它用于 `⊤`{.Agda} 的唯一证明，就会得到空类型的元素，因此没有需要证明的情形。
+**证明** 先对 `b` 分情形，再对 `d` 分情形，共有四种组合。若 `b = lift true`{.Agda}，解码得到 `⊤`{.Agda}。证明会再次选出 `lift true`{.Agda}，所以等式由 `refl`{.Agda} 成立；反驳则不可能存在，因为把它用于 `tt*`{.Agda} 就会得到 `⊥₀`{.Agda} 的元素。若 `b = lift false`{.Agda}，解码得到 `⊥`{.Agda}。证明因空模式 `()` 而不可能；反驳会再次选出 `lift false`{.Agda}，所以等式也由 `refl`{.Agda} 成立。因此在所有可能的情形下，先解码再编码都会恢复原编码。
 <!--ja-->
-`b = lift true`{.Agda} のとき、復号は `⊤`{.Agda} を返す。証明とともに符号化すれば `lift true`{.Agda} が返り、ゴールは定義上 `refl`{.Agda} である。反証の分岐は起こりえない。`⊤`{.Agda} の唯一の証明に適用すれば空型の元が得られるため、証明すべき場合は残らない。
+**証明** まず `b` について場合分けし、次に `d` について場合分けするので、組合せは四つである。`b = lift true`{.Agda} なら、復号は `⊤`{.Agda} を返す。証明は再び `lift true`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。反証は `tt*`{.Agda} に適用すると `⊥₀`{.Agda} の元を生じるため不可能である。`b = lift false`{.Agda} なら、復号は `⊥`{.Agda} を返す。証明は空パターン `()` によって不可能であり、反証は再び `lift false`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。したがって、可能なすべての場合に復号してから符号化すると元の符号が復元される。
 <!--/-->
 
 ```agda
   retrB {ℓ₁} {ℓ₂} (lift true)  (yes _)  = refl
   retrB {ℓ₁} {ℓ₂} (lift true)  (no n⊤) = ⊥₀-rec (n⊤ tt*)
-```
-
-<!--en-->
-For `b = lift false`{.Agda}, decoding gives `⊥`{.Agda} with underlying type `⊥*`{.Agda}. An alleged proof of it would be a term of the empty type, so the absurd pattern `()` ends that branch at once; encoding with a refutation returns `lift false`{.Agda}, again by `refl`{.Agda}. Across all four cases, the label returned always equals the label we started from, whichever decision is supplied.
-<!--zh-->
-当 `b = lift false`{.Agda} 时，解码得 `⊥`{.Agda}，其底层类型为 `⊥*`{.Agda}。它的所谓证明将是空类型的项，荒谬模式 `()` 立即结束该分支；配以反驳编码返回 `lift false`{.Agda}，同样由 `refl`{.Agda} 完成。纵观四种情形，无论供给哪种判定，返回的标签总等于出发时的标签。
-<!--ja-->
-`b = lift false`{.Agda} のとき、復号は `⊥`{.Agda}、すなわち基礎型 `⊥*`{.Agda} を持つ命題を返す。そのいわゆる証明は空型の項になるはずなので、荒謬パターン `()` がこの分岐を直ちに終わらせ、反証とともに符号化すれば `lift false`{.Agda} が返り、これも `refl`{.Agda} で済む。四つの場合を通して、どの判定が供給されようとも、返されるラベルは出発点のラベルと等しくなる。
-<!--/-->
-
-```agda
   retrB {ℓ₁} {ℓ₂} (lift false) (yes ())
   retrB {ℓ₁} {ℓ₂} (lift false) (no _)  = refl
 ```
+
+∎
+
+<!--en-->
+The two inverse laws show that encoding and decoding become mutually inverse once a decision is supplied uniformly for every proposition. The resulting classifier will therefore be a genuine type equivalence, not merely a surjective labelling of propositions by two truth values.
+<!--zh-->
+两条逆律共同表明：只要能为每个命题统一给出判定，编码与解码就互为逆映射。因此，所得分类器将给出真正的类型等价，而不只是用两个真值标签满射地覆盖命题。
+<!--ja-->
+二つの逆法則から、各命題に判定を一様に与えられれば、符号化と復号が互いに逆写像になることがわかる。したがって、得られる分類子は二つの真理値ラベルで命題を全射的に覆うだけではなく、真正な型同値を与える。
+<!--/-->
+
+<!--en-->
+The candidate witness is the pair `(Lift Bool , ...)`{.Agda}. Its first component lies in `Type ℓ₂`{.Agda}, and its second will be an equivalence `hProp ℓ₁ ≃ Lift Bool`{.Agda}. No ordering between `ℓ₁` and `ℓ₂` is required. The downward instance used later takes `ℓ₁ = ℓ-suc ℓ` and `ℓ₂ = ℓ`, but equal or higher target levels are allowed as well. Excluded middle has only one remaining role: it supplies the decisions used by the encoder uniformly; all four private results above are constructive.
+<!--zh-->
+候选见证是序对 `(Lift Bool , ...)`{.Agda}：第一分量位于 `Type ℓ₂`{.Agda}，第二分量将是类型等价 `hProp ℓ₁ ≃ Lift Bool`{.Agda}。这里不要求 `ℓ₁` 与 `ℓ₂` 具有任何大小关系。后文使用的向下实例取 `ℓ₁ = ℓ-suc ℓ`、`ℓ₂ = ℓ`，但目标层级也可以与源层级相同或更高。排中律只剩下一项作用：为编码器统一提供所需的判定；以上四项私有结果都是构造主义的。
+<!--ja-->
+候補となる証拠は対 `(Lift Bool , ...)`{.Agda} である。第一成分は `Type ℓ₂`{.Agda} に住み、第二成分は型同値 `hProp ℓ₁ ≃ Lift Bool`{.Agda} となる。ここでは `ℓ₁` と `ℓ₂` の大小関係を要求しない。後で使う下向きの実例では `ℓ₁ = ℓ-suc ℓ`、`ℓ₂ = ℓ` とするが、終域レベルが始域レベルと同じ場合や高い場合も許される。排中律に残された役割は一つだけであり、符号化器が必要とする判定を一様に供給することである。以上の四つの非公開な結果はいずれも構成的である。
+<!--/-->
 
 <!--en-->
 **Theorem** (`lem→ΩResizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies Ω-resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.
@@ -322,19 +333,11 @@ lem→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ�
 ```
 
 <!--en-->
-**Proof** The pieces above assemble the classifier promised by `ΩResizing ℓ₁ ℓ₂`{.Agda}: the code type is `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in `Type ℓ₂`{.Agda}, and it is type equivalent to `hProp ℓ₁`{.Agda}. The equivalence comes from an isomorphism whose forward map decides each `P` and encodes it, while its backward map is `decodeB`{.Agda}. The inverse laws are `retrB`{.Agda} and `secB`{.Agda}, instantiated with the decisions supplied by `lem`. This final assembly is the only place where excluded middle is invoked; the encoder and the inverse laws themselves remain constructive.
+**Proof** Choose `Lift Bool`{.Agda} as the first component. For the second, use `isoToEquiv`{.Agda} to turn the following isomorphism into an equivalence. Its forward map sends `P` to `encodeB P (lem P)`{.Agda}, and its backward map is `decodeB`{.Agda}. The inverse laws are `retrB`{.Agda} and `secB`{.Agda}, each instantiated with the decision supplied by `lem`. These two components form the required witness of `ΩResizing ℓ₁ ℓ₂`{.Agda}.
 <!--zh-->
-**证明** 把以上各部分组装成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所要求的分类器。其编码类型是 `Type ℓ₂`{.Agda} 中的 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}，并且与 `hProp ℓ₁`{.Agda} 类型等价。这个等价来自一个同构：正向映射先判定每个 `P`，再将其编码；逆向映射则是 `decodeB`{.Agda}。两条逆律分别由 `retrB`{.Agda} 与 `secB`{.Agda} 给出，其中所需的判定均由 `lem` 提供。整个构造只在最后组装时调用排中律；编码器和逆律本身仍是构造主义的。
+**证明** 取 `Lift Bool`{.Agda} 为第一分量。第二分量使用 `isoToEquiv`{.Agda}，把下面的同构转化为类型等价。同构的正向映射把 `P` 送到 `encodeB P (lem P)`{.Agda}，逆向映射是 `decodeB`{.Agda}；两条逆律分别使用 `retrB`{.Agda} 与 `secB`{.Agda}，并以 `lem` 给出的判定将其具体化。这两个分量共同构成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所需的见证。
 <!--ja-->
-**証明** 以上の部品を `ΩResizing ℓ₁ ℓ₂`{.Agda} が要求する分類子へ組み立てる。符号の型は `Type ℓ₂`{.Agda} に住む `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} であり、`hProp ℓ₁`{.Agda} と型同値である。この同値は、順写像が各 `P` を判定して符号化し、逆写像が `decodeB`{.Agda} である同型から得られる。二つの逆法則には、`lem` が供給する判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を使う。排中律を呼び出すのはこの最後の組み立てだけであり、符号化器と逆法則そのものは構成的なままである。
-<!--/-->
-
-<!--en-->
-The pair `(Lift Bool , ...)` witnesses `ΩResizing ℓ₁ ℓ₂`{.Agda}: its first component has type `Type ℓ₂`{.Agda}, and its second is an equivalence `hProp ℓ₁ ≃ Lift Bool`{.Agda}. No ordering between `ℓ₁` and `ℓ₂` is assumed. In the downward instance used later, `ℓ₁ = ℓ-suc ℓ` and `ℓ₂ = ℓ`, so the proposition universe is presented one level down; the theorem itself is more general and also permits equal or higher target levels. The two inverse laws certify both directions of the equivalence, not merely a surjective labelling of propositions by truth values.
-<!--zh-->
-序对 `(Lift Bool , ...)` 是 `ΩResizing ℓ₁ ℓ₂`{.Agda} 的见证：第一分量类型为 `Type ℓ₂`{.Agda}，第二分量是类型等价 `hProp ℓ₁ ≃ Lift Bool`{.Agda}。这里不假设 `ℓ₁` 与 `ℓ₂` 有任何大小关系。在后文使用的向下实例中，`ℓ₁ = ℓ-suc ℓ` 且 `ℓ₂ = ℓ`，命题宇宙因此被呈现在低一层；但定理本身更一般，也允许目标层级相同或更高。两条逆律认证了等价的两个方向，所以所得结果不只是用真值标签满射地覆盖命题。
-<!--ja-->
-対 `(Lift Bool , ...)` が `ΩResizing ℓ₁ ℓ₂`{.Agda} の証拠である。第一成分は `Type ℓ₂`{.Agda} の型で、第二成分は型同値 `hProp ℓ₁ ≃ Lift Bool`{.Agda} である。ここでは `ℓ₁` と `ℓ₂` の大小関係を仮定しない。後で使う下向きの実例では `ℓ₁ = ℓ-suc ℓ`、`ℓ₂ = ℓ` なので、命題宇宙は一つ下のレベルで提示される。しかし定理そのものはより一般的で、終域レベルが同じ場合や高い場合も許す。二つの逆法則は同値の両方向を保証しており、単に真理値のラベルで命題を全射的に覆うだけではない。
+**証明** 第一成分として `Lift Bool`{.Agda} を選ぶ。第二成分には `isoToEquiv`{.Agda} を用い、次の同型を型同値へ変換する。同型の順写像は `P` を `encodeB P (lem P)`{.Agda} へ送り、逆写像は `decodeB`{.Agda} である。二つの逆法則には、`lem` が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を用いる。この二つの成分が `ΩResizing ℓ₁ ℓ₂`{.Agda} に必要な証拠を構成する。
 <!--/-->
 
 ```agda

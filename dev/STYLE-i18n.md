@@ -98,8 +98,9 @@ parallel routes. Fact labels use the same form with `Fact`, `事实` or `事実`
 construction labels use `Construction`, `构造` or `構成`. Corollary labels use
 `Corollary`, `推论` or `系`.
 Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`. An outermost
-construction, fact, lemma, theorem or corollary developed through prose and code ends with a standalone `∎`
-after its complete proof. A construction or lemma nested inside that proof, such as one inside
+construction, fact, lemma, theorem or corollary developed through prose and code ends its proof
+with a standalone `∎` after the final proof code block. Explanatory prose may follow the mark and
+is then outside the proof. A construction or lemma nested inside that proof, such as one inside
 its disclosure block, has no separate `∎`; the enclosing proof's mark follows the closing block.
 
 ## Inline Agda references in prose

@@ -25,8 +25,9 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      period. Fact, lemma, theorem and corollary labels must immediately name an Agda declaration:
      `**Fact** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).         [report only]
  10. An outermost construction, fact, lemma, theorem or corollary developed through prose and code
-     ends with a standalone `∎` after its complete proof. Nested statements inside
-     a disclosure belong to that proof and need no separate mark.               [report only]
+     ends its proof with a standalone `∎` after its final code block. Explanatory prose
+     may follow outside the proof. Nested statements inside a disclosure belong to
+     that proof and need no separate mark.                                       [report only]
  11. Reader-facing disclosure summaries begin with the localized optional-reading
      marker: `Optional:`, `选读：` or `発展：`.                                  [report only]
  12. Japanese prose uses plain style (である体), not polite です・ます forms.      [report only]
@@ -398,7 +399,7 @@ def qed_violations(text):
                 continue
             tail = segment[fences[-1].end():]
             tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
-            if not re.fullmatch(r"\s*(?:</details>\s*)*∎\s*", tail):
+            if not re.match(r"\s*(?:</details>\s*)*∎(?:[ \t]*(?:\n|$))", tail):
                 out.append(Violation(
                     start,
                     "outermost construction/lemma/theorem/corollary must end with standalone "
