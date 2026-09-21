@@ -215,6 +215,20 @@ check("Prelude-owned imports", rules(run(prelude_owned)),
       [(7, "prelude-import"), (8, "prelude-import"),
        (9, "prelude-import"), (10, "prelude-import")])
 
+prelude_nullary = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+open import Cubical.Relation.Nullary using ( Dec; yes; no; isPropDec )  -- lint-agda: keep
+open import Cubical.Relation.Nullary using ( mapDec )  -- lint-agda: keep
+```
+"""
+
+check("Prelude-owned decidability vocabulary", rules(run(prelude_nullary)),
+      [(7, "prelude-import")])
+
 prelude_owned_at_owner = f"""# T
 
 ```agda

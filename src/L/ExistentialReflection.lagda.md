@@ -9,7 +9,7 @@ For one existential formula and parameters from a constructible stage, this chap
 <!--ja-->
 # 存在論理式の構成可能段階への反映
 
-一つの存在論理式と構成可能段階から取ったパラメータに対し、周囲の構成可能宇宙に証人があればそれを含む、より大きな順序数段階を構成します。証人を選ぶ操作を反復して順序数極限を取ると、その論理式への解答について閉じた段階が得られます。
+一つの存在論理式と構成可能段階から取ったパラメータに対し、周囲の構成可能宇宙に証人があればそれを含む、より大きな順序数段階を構成する。証人を選ぶ操作を反復して順序数極限を取ると、その論理式への解答について閉じた段階が得られる。
 <!--/-->
 
 <!--en-->
@@ -84,7 +84,7 @@ vector over one.
 <!--ja-->
 ## 環境を一つの段階から取る
 
-`LsetEnv`{.Agda} は段階の小さな提示からパラメータ環境を作り、`Below σ ρ`{.Agda} は環境の全成分が `Lset σ`{.Agda} に属することを表します。この条件は段階を大きくすると保存されます。
+`LsetEnv`{.Agda} は段階の小さな提示からパラメータ環境を作り、`Below σ ρ`{.Agda} は環境の全成分が `Lset σ`{.Agda} に属することを表す。この条件は段階を大きくすると保存される。
 <!--/-->
 
 <!--en-->
@@ -145,7 +145,7 @@ L, and an element of L lies in some stage by definition.
 <!--ja-->
 ## 解答を含む段階
 
-存在論理式が真なら、その証人は構成可能なので最小の段階を持ちます。選択した証人とその段階を一つの順序数上界へ集めることで、与えられた環境への解答を含む段階を得ます。
+存在論理式が真なら、その証人は構成可能なので最小の段階を持つ。選択した証人とその段階を一つの順序数上界へ集めることで、与えられた環境への解答を含む段階を得る。
 <!--/-->
 
 <!--en-->
@@ -179,18 +179,18 @@ pick : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
 pick ψ ρ sat = leastOrd (Wit ψ ρ) (witnessed ψ ρ sat)
 
 decideStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
-            → ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → ⊥₀) → V ℓ
-decideStage ψ ρ (inl sat) = pick ψ ρ sat .fst
-decideStage ψ ρ (inr _)   = ∅
+            → Dec ⟨ SatEx ψ ρ ⟩ → V ℓ
+decideStage ψ ρ (yes sat) = pick ψ ρ sat .fst
+decideStage ψ ρ (no _)    = ∅
 
 pickStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ
 pickStage ψ ρ = decideStage ψ ρ (lem (SatEx ψ ρ))
 
 decideStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
-                  (d : ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → ⊥₀))
+                  (d : Dec ⟨ SatEx ψ ρ ⟩)
                 → IsOrd (decideStage ψ ρ d)
-decideStage-ord ψ ρ (inl sat) = pick ψ ρ sat .snd .fst
-decideStage-ord ψ ρ (inr _)   = ∅-ord
+decideStage-ord ψ ρ (yes sat) = pick ψ ρ sat .snd .fst
+decideStage-ord ψ ρ (no _)    = ∅-ord
 
 pickStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
               → IsOrd (pickStage ψ ρ)
@@ -214,11 +214,11 @@ pickWitness : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ �
             → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
 pickWitness ψ ρ sat = go (lem (SatEx ψ ρ)) refl
   where
-  go : (d : ⟨ SatEx ψ ρ ⟩ ⊎ (⟨ SatEx ψ ρ ⟩ → ⊥₀))
+  go : (d : Dec ⟨ SatEx ψ ρ ⟩)
      → lem (SatEx ψ ρ) ≡ d → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
-  go (inl s) e = subst (λ d → ⟨ Wit ψ ρ (decideStage ψ ρ d) ⟩) (sym e)
+  go (yes s) e = subst (λ d → ⟨ Wit ψ ρ (decideStage ψ ρ d) ⟩) (sym e)
                    (pick ψ ρ s .snd .snd .fst)
-  go (inr ¬s) e = ⊥₀-rec (¬s sat)
+  go (no ¬s) e = ⊥₀-rec (¬s sat)
 ```
 
 <!--en-->
@@ -237,7 +237,7 @@ later one, by composing one step with the transitivity of the later rung.
 <!--ja-->
 ## 梯子とその極限
 
-解答を含む段階を取る操作を自然数に沿って反復し、その順序数上界を極限とします。各有限段階は次へ含まれるため、極限段階は一回の解答操作で外へ出ません。
+解答を含む段階を取る操作を自然数に沿って反復し、その順序数上界を極限とする。各有限段階は次へ含まれるため、極限段階は一回の解答操作で外へ出ない。
 <!--/-->
 
 <!--en-->
@@ -346,7 +346,7 @@ the next chapter each supply in their own way.
 <!--ja-->
 ## 閉性
 
-`ClosedFor β ψ`{.Agda} は、`β` より前の段階から取ったパラメータに対する `ψ` の証人を `Lset β`{.Agda} が含むことを表します。梯子の極限はこの条件を満たし、より大きな順序数へも移せます。
+`ClosedFor β ψ`{.Agda} は、`β` より前の段階から取ったパラメータに対する `ψ` の証人を `Lset β`{.Agda} が含むことを表す。梯子の極限はこの条件を満たし、より大きな順序数へも移せる。
 <!--/-->
 
 <!--en-->
@@ -428,7 +428,7 @@ environments, which is exactly the answering hypothesis.
 <!--ja-->
 ## 一つの母式に対する段階
 
-一つの存在母式と出発段階に対し、順序数の段階を一つ進め、出発段階を含み、その母式へのすべての必要な解答について閉じた新しい段階を返します。
+一つの存在母式と出発段階に対し、順序数の段階を一つ進め、出発段階を含み、その母式へのすべての必要な解答について閉じた新しい段階を返す。
 <!--/-->
 
 <!--en-->
@@ -486,7 +486,7 @@ matrix, by bounding a stage's answers and merging with the stage.
 <!--ja-->
 ## まとめ
 
-一つの存在論理式について、パラメータを含む段階から始め、証人の段階を反復して順序数極限を取ります。得られた段階は元の段階を含み、その論理式の存在証人について反映します。
+一つの存在論理式について、パラメータを含む段階から始め、証人の段階を反復して順序数極限を取る。得られた段階は元の段階を含み、その論理式の存在証人について反映する。
 <!--/-->
 
 <!--en-->

@@ -110,6 +110,19 @@
       bar.style.setProperty("--section-nav-width", Math.min(rect.width, window.innerWidth - Math.max(0, rect.left)) + "px");
     }
 
+    function revealTocLink(link) {
+      var toc = document.getElementById("toc");
+      if (!toc || !link) return;
+      var tocRect = toc.getBoundingClientRect();
+      var linkRect = link.getBoundingClientRect();
+      var margin = 8;
+      if (linkRect.top < tocRect.top + margin) {
+        toc.scrollTop += linkRect.top - tocRect.top - margin;
+      } else if (linkRect.bottom > tocRect.bottom - margin) {
+        toc.scrollTop += linkRect.bottom - tocRect.bottom + margin;
+      }
+    }
+
     function render(activeIndex) {
       if (activeIndex === lastActive) return;
       lastActive = activeIndex;
@@ -117,10 +130,14 @@
       bar.classList.toggle("visible", activeIndex >= 0);
 
       var active = activeIndex >= 0 ? headings[activeIndex] : null;
+      var activeTocLink = null;
       tocLinks.forEach(function (link) {
-        if (active && link.hash === "#" + active.id) link.setAttribute("aria-current", "location");
-        else link.removeAttribute("aria-current");
+        if (active && link.hash === "#" + active.id) {
+          link.setAttribute("aria-current", "location");
+          activeTocLink = link;
+        } else link.removeAttribute("aria-current");
       });
+      revealTocLink(activeTocLink);
       if (!active) return;
 
       var trail = [];

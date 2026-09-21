@@ -21,12 +21,15 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      when the caller names no file.                                              [report only]
   8. A centered single-line code display must use one complete
      `<div class="single-line-code"><code>...</code></div>` line.                 [report only]
-  9. Standalone theorem-style labels use a bold label followed by a space, never a
-     period. Lemma and theorem labels must immediately name an Agda declaration:
-     `**Lemma** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).        [report only]
- 10. An outermost construction, lemma or theorem developed through prose and code
+ 9. Standalone theorem-style labels use a bold label followed by a space, never a
+     period. Fact, lemma and theorem labels must immediately name an Agda declaration:
+     `**Fact** (`name`{.Agda}) Text` (likewise in Chinese and Japanese).         [report only]
+ 10. An outermost construction, fact, lemma or theorem developed through prose and code
      ends with a standalone `∎` after its complete proof. Nested statements inside
      a disclosure belong to that proof and need no separate mark.               [report only]
+ 11. Reader-facing disclosure summaries begin with the localized optional-reading
+     marker: `Optional:`, `选读：` or `発展：`.                                  [report only]
+ 12. Japanese prose uses plain style (である体), not polite です・ます forms.      [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -301,11 +304,11 @@ def single_line_code_violations(text):
     return out
 
 
-_STATEMENT_LABELS = {"Construction", "Lemma", "Theorem",
-                     "构造", "引理", "定理", "構成", "補題"}
+_STATEMENT_LABELS = {"Construction", "Fact", "Lemma", "Theorem",
+                     "构造", "事实", "引理", "定理", "構成", "事実", "補題"}
 _PROOF_LABELS = {"Proof", "证明", "証明", "Definition", "定义", "定義"}
 _THEOREM_LABEL_RE = re.compile(
-    r"^\s*\*\*(Construction|Lemma|Theorem|Proof|Definition|构造|引理|定理|证明|定义|構成|補題|証明|定義)(?:[.。])?\*\*")
+    r"^\s*\*\*(Construction|Fact|Lemma|Theorem|Proof|Definition|构造|事实|引理|定理|证明|定义|構成|事実|補題|証明|定義)(?:[.。])?\*\*")
 
 
 def theorem_label_violations(text):
@@ -329,7 +332,7 @@ def theorem_label_violations(text):
                 valid = re.match(
                     rf"\*\*{re.escape(label)}\*\* \(`[^`\n]+`\{{\.Agda\}}\) ",
                     rest)
-                message = ("lemma/theorem label must have no period and must use "
+                message = ("named statement label must have no period and must use "
                            f"**{label}** (`name`{{.Agda}}) Text")
             else:
                 valid = rest.startswith(f"**{label}** ")
@@ -341,7 +344,7 @@ def theorem_label_violations(text):
     return out
 
 
-_QED_START_RE = re.compile(r"^\*\*(Construction|Lemma|Theorem)\*\* ")
+_QED_START_RE = re.compile(r"^\*\*(Construction|Fact|Lemma|Theorem)\*\* ")
 _QED_HEADING_RE = re.compile(r"^#{1,2}\s")
 
 
@@ -401,6 +404,97 @@ def qed_violations(text):
                     "`∎` after its complete proof",
                     False,
                 ))
+    return out
+
+
+_OPTIONAL_SUMMARY_PREFIX = {
+    "en": "Optional:",
+    "zh": "选读：",
+    "ja": "発展：",
+}
+
+
+def optional_summary_violations(text):
+    """Require a localized optional-reading marker on every visible summary."""
+    out = []
+    language = None
+    fenced = False
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        stripped = line.strip()
+        if stripped.startswith(("```", "~~~")):
+            fenced = not fenced
+            offset += len(line)
+            continue
+        if not fenced:
+            marker = MARKER_RE.match(line)
+            if marker:
+                code = marker.group(1)
+                language = None if code == "/" else code
+            else:
+                for match in re.finditer(r"<summary>(.*?)</summary>", line):
+                    if language not in _OPTIONAL_SUMMARY_PREFIX:
+                        out.append(Violation(
+                            offset + match.start(),
+                            "disclosure summary must be inside an explicit language group",
+                            False,
+                        ))
+                        continue
+                    prefix = _OPTIONAL_SUMMARY_PREFIX[language]
+                    if not match.group(1).lstrip().startswith(prefix):
+                        out.append(Violation(
+                            offset + match.start(1),
+                            f"disclosure summary must begin with {prefix!r} ({language})",
+                            False,
+                        ))
+        offset += len(line)
+    return out
+
+
+_JA_POLITE_BOUNDARY = (
+    r"(?=$|[\s。！？、；：…」』）\]}]|"
+    r"が(?:$|[\s、。！？])|けれど|けど|から|ので|ね|よ|か|し)"
+)
+_JA_POLITE_RE = re.compile(
+    rf"ませんでした|でした|でしょう|ました|ません|ましょう|ください|"
+    rf"(?:です|ます){_JA_POLITE_BOUNDARY}"
+)
+
+
+def japanese_polite_violations(text, prot=None):
+    """Reject polite-style forms in explicit Japanese prose blocks.
+
+    Protected Markdown regions are ignored. Bare `です` and `ます` require a
+    sentence boundary or a genuine connective, so ordinary sequences such as
+    `包んですぐ`, `段階ですでに`, and the lexical adverb `ますます` are exempt.
+    """
+    if prot is None:
+        prot = build_protected(text)
+    out = []
+    language = None
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        marker = MARKER_RE.match(line)
+        if marker:
+            code = marker.group(1)
+            language = None if code == "/" else code
+        elif language == "ja":
+            for match in _JA_POLITE_RE.finditer(line):
+                start = offset + match.start()
+                end = offset + match.end()
+                if any(prot[start:end]):
+                    continue
+                if match.group(0) == "ます":
+                    left = text[max(0, start - 2):start]
+                    right = text[end:end + 2]
+                    if left == "ます" or right == "ます":
+                        continue
+                out.append(Violation(
+                    start,
+                    f"Japanese prose must use plain style (である体); rewrite {match.group(0)!r}",
+                    False,
+                ))
+        offset += len(line)
     return out
 
 
@@ -548,6 +642,10 @@ def analyze(text):
     manual.extend(theorem_label_violations(text))
     # Rule 10: completed constructions and lemmas visibly close after their code.
     manual.extend(qed_violations(text))
+    # Rule 11: disclosures are visibly marked as optional reading in every language.
+    manual.extend(optional_summary_violations(text))
+    # Rule 12: Japanese prose consistently uses plain style.
+    manual.extend(japanese_polite_violations(text, prot))
 
     char_fixed = "".join(edits.get(i, c) for i, c in enumerate(text)) if edits else text
 

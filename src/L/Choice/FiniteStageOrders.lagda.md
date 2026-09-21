@@ -47,7 +47,7 @@ The setting is the constructible universe built over the ambient cumulative hier
 <!--zh-->
 讨论的舞台是建立在累积层级 $V$ 之上的可构造宇宙。排中律在这里作为显式假设出现：整个模块由一个参数 `lem` 给出，它对层级 `ℓ-suc ℓ` 上的每个命题作出判定。本章需要的正是这一个层级，下文的所有构造都可以使用这一固定判定；对于其他层级上的命题，除已证明的定理所述内容外，不作任何论断。
 <!--ja-->
-舞台となるのは、周囲の累積階層 $V$ の上に構成される構成可能宇宙です。排中律はここで明示的な仮定として現れます。モジュールは、階層 `ℓ-suc ℓ` のすべての命題に対する判定を与えるパラメータ `lem` を受け取ります。本章が必要とするのはこの一つの階層だけで、以下の構成はどれもこの固定された判定を用います。表示されている定理が実際に証明する範囲を超えて、他の階層の命題については何も主張しません。
+舞台となるのは、周囲の累積階層 $V$ の上に構成される構成可能宇宙である。排中律はここで明示的な仮定として現れる。モジュールは、階層 `ℓ-suc ℓ` のすべての命題に対する判定を与えるパラメータ `lem` を受け取る。本章が必要とするのはこの一つの階層だけで、以下の構成はどれもこの固定された判定を用いる。表示されている定理が実際に証明する範囲を超えて、他の階層の命題については何も主張しない。
 <!--/-->
 
 ```agda
@@ -64,7 +64,7 @@ The names used throughout are those of the constructible hierarchy: a stage `Lse
 <!--zh-->
 下文使用的名称都来自可构造层级：塔的层 `Lset α`、产生一层的全部可定义子集的算子 `𝒟ₒ`，以及数码 `# n` 是序数这一事实 `numeral-ord`。于是每个有限层 `Lset (# n)` 都是真正的层，这正是后续各节的递归能沿数码攀爬的原因。这里还引入了 `Lset-suc` 与 `FinOf` 相关工具，它们把一层与其内部的有穷集合联系起来。
 <!--ja-->
-以下で使う名前は構成可能階層のものです。塔の段階 `Lset α`、段階の定義可能部分集合を生み出す演算子 `𝒟ₒ`、そして数項 `# n` が順序数であるという事実 `numeral-ord` です。したがって各有限段階 `Lset (# n)` は正真正銘の段階であり、これが後の節の帰納が数項を登れる理由です。ここではさらに `Lset-suc` と `FinOf` の仕組みも取り込み、段階とその内部の有限集合とを結びつけます。
+以下で使う名前は構成可能階層のものである。塔の段階 `Lset α`、段階の定義可能部分集合を生み出す演算子 `𝒟ₒ`、そして数項 `# n` が順序数であるという事実 `numeral-ord` である。したがって各有限段階 `Lset (# n)` は正真正銘の段階であり、これが後の節の帰納が数項を登れる理由である。ここではさらに `Lset-suc` と `FinOf` の仕組みも取り込み、段階とその内部の有限集合とを結びつける。
 <!--/-->
 
 ```agda
@@ -81,7 +81,7 @@ Comparison needs a base order with trichotomy. The order `natOrder` on natural n
 <!--zh-->
 比较需要一个满足三分律的基底序。自然数上的序 `natOrder` 是一个严格强良基的线序，打包为 `SWO`，其三情形比较 `Tri` 分为 `lt`、`eq`、`gt` 三种。后面各节的搜索程序都针对这一接口编写，因此适用于任何 `SWO`；而自然数的实例正是用来给数码排序的那一个。
 <!--ja-->
-比較には三分律を満たす基底順序が必要です。自然数上の順序 `natOrder` は、厳格で強整礎な線形順序であり、`SWO` としてまとめられ、その三つの場合の比較 `Tri` は `lt`、`eq`、`gt` に分かれます。後の節の探索手続きはこのインターフェースに対して書かれているため、任意の `SWO` に適用でき、自然数の実例が数項を順序づけるものになります。
+比較には三分律を満たす基底順序が必要である。自然数上の順序 `natOrder` は、厳格で強整礎な線形順序であり、`SWO` としてまとめられ、その三つの場合の比較 `Tri` は `lt`、`eq`、`gt` に分かれる。後の節の探索手続きはこのインターフェースに対して書かれているため、任意の `SWO` に適用でき、自然数の実例が数項を順序づけるものになる。
 <!--/-->
 
 ```agda
@@ -97,7 +97,7 @@ Booleans enter as masks: to enumerate the subsets of a tallied set, each entry i
 <!--zh-->
 布尔值在这里作为掩码出现：要枚举带点名册的集合的子集，就把每个条目保留或丢弃，用 `Bool` 上的 `true` 或 `false` 记录，而 `false≢true` 保证二者可区分。在索引一侧，自然数用严格序 `_<_` 比较，它是传递且良基的，由 `¬m<m` 排除自环，并可用 `_≟_` 判定相等。这些恰好是找出见证某性质的最小下标所需的性质，也是扫描中作出逐步判定所需的性质。
 <!--ja-->
-ブール値はマスクとして登場します。数え上げられた集合の部分集合を列挙するには、各項目を保持するか捨てるかを `Bool` の `true` か `false` で記録し、`false≢true` が両者を区別します。添字の側では、自然数を厳格順序 `_<_` で比較します。これは推移的かつ整礎で、`¬m<m` によりループを排除し、`_≟_` で判定可能です。これらは、ある性質を証拠立てる最小の添字を見つけるため、また走査の中で各歩の判定を下すために、まさに必要となる性質です。
+ブール値はマスクとして登場する。数え上げられた集合の部分集合を列挙するには、各項目を保持するか捨てるかを `Bool` の `true` か `false` で記録し、`false≢true` が両者を区別する。添字の側では、自然数を厳格順序 `_<_` で比較する。これは推移的かつ整礎で、`¬m<m` によりループを排除し、`_≟_` で判定可能である。これらは、ある性質を証拠立てる最小の添字を見つけるため、また走査の中で各歩の判定を下すために、まさに必要となる性質である。
 <!--/-->
 
 ```agda
@@ -110,7 +110,7 @@ Well-foundedness here is the accessibility predicate `Acc`: a point is accessibl
 <!--zh-->
 这里的良基性由可达性谓词 `Acc` 表达：一个点是可达的，当且仅当它的每个前驱都可达，由构造子 `acc` 封装。当关系的一切点都可达时，称它具有 `WellFounded` 类型。`Acc` 上的证明义务都是命题，这一事实由 `isPropAcc` 记录，并在从「仅仅存在」的数据消去到可达性陈述时用到。模块 `WFI` 提供消费良基关系的递归原理。
 <!--ja-->
-ここでの整礎性は、到達可能性の述語 `Acc` で表されます。ある点が到達可能であるのはそのすべての先行元が到達可能なときであり、構成子 `acc` でまとめられます。関係のすべての点が到達可能なとき、その関係は型 `WellFounded` を持ちます。`Acc` に関する証明義務は命題であり、この事実は `isPropAcc` として記録され、「単に存在する」データから到達可能性の主張への除去に使われます。モジュール `WFI` は整礎な関係を消費する帰納原理を提供します。
+ここでの整礎性は、到達可能性の述語 `Acc` で表される。ある点が到達可能であるのはそのすべての先行元が到達可能なときであり、構成子 `acc` でまとめられる。関係のすべての点が到達可能なとき、その関係は型 `WellFounded` を持つ。`Acc` に関する証明義務は命題であり、この事実は `isPropAcc` として記録され、「単に存在する」データから到達可能性の主張への除去に使われる。モジュール `WFI` は整礎な関係を消費する帰納原理を提供する。
 <!--/-->
 
 ```agda
@@ -168,7 +168,7 @@ Repetitions and undecidable equality cause no difficulty. A scan may revisit the
 
 `Tally`{.Agda} は集合の全要素を有限添字族で提示し、重複を許し、単射性も決定可能な等しさも要求しない。
 
-有限性は**数え上げ**として導入されます。それは、一つの数、その個数だけの集合からなりすべて `A` に属する族、そして「`A` のすべての要素はそれらのうちのどれかである」という主張です。`onto` は、すべての要素がこの族の中に単に表現されていることを記録します。
+有限性は**数え上げ**として導入される。それは、一つの数、その個数だけの集合からなりすべて `A` に属する族、そして「`A` のすべての要素はそれらのうちのどれかである」という主張である。`onto` は、すべての要素がこの族の中に単に表現されていることを記録する。
 
 重複も等しさの決定不能性も問題にならない。走査は同じ要素を再び訪れてよく、二つの位置が同じ集合を指していても、ビットベクトルは位置ごとに選択を記録できる。したがって、この意図的に弱い有限性の概念は次の段階の構成で保たれる。
 <!--/-->
@@ -178,7 +178,7 @@ A tally of a set `A` has three data fields. The number `size` fixes how many ent
 <!--zh-->
 集合 `A` 的点名册有三个数据字段：数 `size` 决定列出的条目数，`item` 把每个合法位置 (即 `Fin size` 的元素) 映为集合 `item i`，而字段 `inside` 证明每个被列出的条目确实属于 `A`。没有这一条，更长的清单会平凡地覆盖较小的集合。注意同一元素完全可能出现在多个位置上：record 并不禁止这一点，也没有任何字段询问两个位置上的集合是否相同。
 <!--ja-->
-集合 `A` の数え上げは三つのデータ欄を持ちます。数 `size` が列挙する項目数を決め、`item` が各正当な位置、すなわち `Fin size` の要素を集合 `item i` に対応させ、欄 `inside` が列挙された各項目が実際に `A` に属することを証明します。これがなければ、長いリストは小さな集合を自明に被覆してしまいます。同じ要素が複数の位置に現れても構いません。record はそれを禁じず、二つの位置の集合が等しいかを尋ねる欄もありません。
+集合 `A` の数え上げは三つのデータ欄を持つ。数 `size` が列挙する項目数を決め、`item` が各正当な位置、すなわち `Fin size` の要素を集合 `item i` に対応させ、欄 `inside` が列挙された各項目が実際に `A` に属することを証明する。これがなければ、長いリストは小さな集合を自明に被覆してしまう。同じ要素が複数の位置に現れても構わない。record はそれを禁じず、二つの位置の集合が等しいかを尋ねる欄もない。
 <!--/-->
 
 ```agda
@@ -222,9 +222,9 @@ A concrete picture helps. If `a = 2` and `b = 3`, an index below `5` is exactly 
 
 `splitFin`{.Agda} と `joinFin`{.Agda} は和より小さい添字を一方の加数の添字に対応させ、マスクの列挙に必要な算術を与える。
 
-冪集合を数え上げることはビットベクトルを列挙することであり、長さ `n + 1` のベクトルの個数は長さ `n` のもののちょうど二倍です。そこで一つの添字算術が必要になります。`a + b` より小さい添字とは、`a` より小さい添字か `b` より小さい添字のどちらかであり、逆も成り立ちます。往復のうち片方向しか後で使われないため、その方向だけが証明されます。`bumpLeft` は `a` 上の再帰が型検査を通るようにするずらしです。
+冪集合を数え上げることはビットベクトルを列挙することであり、長さ `n + 1` のベクトルの個数は長さ `n` のもののちょうど二倍である。そこで一つの添字算術が必要になる。`a + b` より小さい添字とは、`a` より小さい添字か `b` より小さい添字のどちらかであり、逆も成り立つ。往復のうち片方向しか後で使われないため、その方向だけが証明される。`bumpLeft` は `a` 上の再帰が型検査を通るようにするずらしである。
 
-具体的な図が助けになります。`a = 2`、`b = 3` とすると、`5` より小さい添字とは「`2` より小さい添字か `3` より小さい添字」のいずれかにほかなりません。`joinFin` は左の加数を最初の二つの枠に、右の加数を残り三つの枠に送り、`splitFin` は一つの添字がどちらの領域に落ちたかを尋ねます。ここで重複は無関係です。これらの写像は位置についてのものであり、後にそこへ置かれる項目についてのものではないからです。
+具体的な図が助けになる。`a = 2`、`b = 3` とすると、`5` より小さい添字とは「`2` より小さい添字か `3` より小さい添字」のいずれかにほかならない。`joinFin` は左の加数を最初の二つの枠に、右の加数を残り三つの枠に送り、`splitFin` は一つの添字がどちらの領域に落ちたかを尋ねる。ここで重複は無関係である。これらの写像は位置についてのものであり、後にそこへ置かれる項目についてのものではないからである。
 <!--/-->
 
 <!--en-->
@@ -232,7 +232,7 @@ The first map concerns sums whose left side grows by one. `bumpLeft` takes an in
 <!--zh-->
 第一张图处理左端增加一的和。`bumpLeft` 取一个属于 `a` 或 `b` 的索引，给出一个属于 `suc a` 或 `b` 的索引：左边的索引被外推一格，右边的原样保留。它本身没有内容，存在的原因只是 `splitFin` 的递归步会从左加数剥掉一格，需要一个移位把左索引放回正确的类型。注意 `joinFin` 只给出了从 `Fin a ⊎ Fin b` 到 `Fin (a + b)` 的方向，且 `a` 显式给出，以便递归能对它作模式匹配。
 <!--ja-->
-最初の写像は、左側が一つ伸びる和に関するものです。`bumpLeft` は `a` か `b` のいずれかの添字を受け取り、`suc a` か `b` のいずれかの添字を返します。左の添字は一つ先へずらされ、右の添字はそのままです。それ自体には内容はなく、`splitFin` の再帰の各歩が左の加数から一つを剥がすため、左の添字を正しい型へ戻すずらしが必要だというだけのものです。`joinFin` は `Fin a ⊎ Fin b` から `Fin (a + b)` への方向だけが与えられ、`a` は再帰がパターン照合できるよう明示されている点にも注意してください。
+最初の写像は、左側が一つ伸びる和に関するものである。`bumpLeft` は `a` か `b` のいずれかの添字を受け取り、`suc a` か `b` のいずれかの添字を返す。左の添字は一つ先へずらされ、右の添字はそのままである。それ自体には内容はなく、`splitFin` の再帰の各歩が左の加数から一つを剥がすため、左の添字を正しい型へ戻すずらしが必要だというだけのものである。`joinFin` は `Fin a ⊎ Fin b` から `Fin (a + b)` への方向だけが与えられ、`a` は再帰がパターン照合できるよう明示されている点にも注意してほしい。
 <!--/-->
 
 ```agda
@@ -249,7 +249,7 @@ joinFin zero    (inr j)       = j
 <!--zh-->
 `joinFin` 与 `splitFin` 形状上互为逆映射，不过后文只证明一个方向的往返。`joinFin` 沿 `a` 递归：`a` 为零时，小于 `0 + b` 的索引就是小于 `b` 的索引；`a` 为后继时，第一个位置属于左加数，于是位置为零的左索引映到零号位置，其余一律上移一格。`splitFin` 沿同一递归倒着走：小于 `a + b` 的索引先问它是否小于 `a`，后继情形用 `bumpLeft` 恢复被剥掉的类型。
 <!--ja-->
-`joinFin` と `splitFin` は形の上では互いの逆ですが、証明される往復は一方向だけです。`joinFin` は `a` 上の再帰です。`a` が零のとき、`0 + b` より小さい添字はそのまま `b` より小さい添字であり、後者のときは最初の枠が左の加数に属するので、位置零の左の添字は零番の枠へ写り、残りはすべて一つ上へずれます。`splitFin` は同じ再帰を逆向きにたどります。`a + b` より小さい添字はまず `a` より小さいかを問い、後者の場合は `bumpLeft` で剥がされた型を復元します。
+`joinFin` と `splitFin` は形の上では互いの逆であるが、証明される往復は一方向だけである。`joinFin` は `a` 上の再帰である。`a` が零のとき、`0 + b` より小さい添字はそのまま `b` より小さい添字であり、後者のときは最初の枠が左の加数に属するので、位置零の左の添字は零番の枠へ写り、残りはすべて一つ上へずれる。`splitFin` は同じ再帰を逆向きにたどる。`a + b` より小さい添字はまず `a` より小さいかを問い、後者の場合は `bumpLeft` で剥がされた型を復元する。
 <!--/-->
 
 ```agda
@@ -266,7 +266,7 @@ The round trip `split-join` says that splitting an index that was just joined re
 <!--zh-->
 往返 `split-join` 说的是：对刚刚拼合的索引再作劈分，就回到原来的左或右索引。每条子句要么是 `refl`，要么是对递归路径施用 `cong`：`splitFin (joinFin x)` 的计算已经归约到对递归答案施加 `bumpLeft`，而 `cong bumpLeft` 把归纳假设穿过这一移位。相反的复合从未被断言，这里也没有任何关于「拼合是单射」的主张。
 <!--ja-->
-往復 `split-join` は、つねに合されたばかりの添字を分割すればもとの左か右かの添字に戻る、という主張です。各節は `refl` か再帰呼び出しに対する合同性のどちらかです。`splitFin (joinFin x)` の計算はすでに再帰の答えへの `bumpLeft` の適用に簡約され、`cong bumpLeft` がそのずらしを通して帰納仮定を運びます。逆向きの合成は主張されず、ここでは合が単射であるという主張も一切ありません。
+往復 `split-join` は、つねに合されたばかりの添字を分割すればもとの左か右かの添字に戻る、という主張である。各節は `refl` か再帰呼び出しに対する合同性のどちらかである。`splitFin (joinFin x)` の計算はすでに再帰の答えへの `bumpLeft` の適用に簡約され、`cong bumpLeft` がそのずらしを通して帰納仮定を運ぶ。逆向きの合成は主張されず、ここでは合が単射であるという主張も一切ない。
 <!--/-->
 
 ```agda
@@ -283,7 +283,7 @@ What this buys for the mask section is exact bookkeeping of sizes. When the enum
 <!--zh-->
 这一算术给掩码一节带来的是对规模的精确记账。当长度 `suc n` 的掩码枚举在 `maskCount n` 处把索引一分为二时，`splitFin` 判定首位是 `false` 还是 `true`，并把剩下的索引交给 `n` 处的递归；`mask-onto` 与 `split-join` 合起来证明每个位向量都被触及。
 <!--ja-->
-この算術がマスクの節にもたらすのは、規模の正確な簿記です。長さ `suc n` のマスクの列挙が `maskCount n` で添字を半分に分けるとき、`splitFin` が先頭ビットが `false` か `true` かを決め、残りの添字を `n` での再帰に渡します。そこで `mask-onto` と `split-join` が合わさって、すべてのビットベクトルが届くことを示します。
+この算術がマスクの節にもたらすのは、規模の正確な簿記である。長さ `suc n` のマスクの列挙が `maskCount n` で添字を半分に分けるとき、`splitFin` が先頭ビットが `false` か `true` かを決め、残りの添字を `n` での再帰に渡す。そこで `mask-onto` と `split-join` が合わさって、すべてのビットベクトルが届くことを示す。
 <!--/-->
 
 ```agda
@@ -312,7 +312,7 @@ For `n = 2`, the four indices give the four masks from `false ∷ false ∷ []` 
 
 `maskAt`{.Agda} は固定長のすべてのブール・ベクトルを列挙し、`mask-onto`{.Agda} は各選択パターンが現れることを証明する。
 
-長さ `n` の**マスク**とは `n` ビットのベクトルであり、数え上げられた集合についてどの項目を残すかを指示します。その個数は `maskCount n`、すなわち繰り返し二倍として書かれた 2 の `n` 乗です。`maskAt` は添字をマスクとして読みます。添字を半分に分け、どちらの半分に落ちたかで先頭ビットが決まり、残りが尾を与えます。すべてのマスクがなんらかの添字から読み出されること、これが `mask-onto` であり、この列挙について必要とされる唯一の性質です。逐点的な単射性は要求されません。
+長さ `n` の**マスク**とは `n` ビットのベクトルであり、数え上げられた集合についてどの項目を残すかを指示する。その個数は `maskCount n`、すなわち繰り返し二倍として書かれた 2 の `n` 乗である。`maskAt` は添字をマスクとして読む。添字を半分に分け、どちらの半分に落ちたかで先頭ビットが決まり、残りが尾を与える。すべてのマスクがなんらかの添字から読み出されること、これが `mask-onto` であり、この列挙について必要とされる唯一の性質である。逐点的な単射性は要求されない。
 
 `n = 2` では、四つの添字が `false ∷ false ∷ []` から `true ∷ true ∷ []` までの四つのマスクを与える。この構成は実際には重複なく列挙するが、後の数え上げの議論が用いるのは証明済みの被覆 `mask-onto` だけであり、単射性には依存しない。
 <!--/-->
@@ -322,7 +322,7 @@ The count of masks is defined by the recursion it will be enumerated with: lengt
 <!--zh-->
 掩码的计数按「将来枚举它的那个递归」来定义：长度为零恰有一个掩码；长度为 `suc n` 的掩码是一个首位加上一个长度为 `n` 的掩码，故计数为 `maskCount n + maskCount n`。这就是写成反复加倍形式的二的 `n` 次幂，而两个加数相同，恰好正是 `splitFin` 所期待的形状。
 <!--ja-->
-マスクの個数は、それを列挙する再帰そのものに沿って定義されます。長さ零のマスクはちょうど一つ、長さ `suc n` のマスクは先頭ビットと長さ `n` のマスクの組であり、個数は `maskCount n + maskCount n` となります。これは繰り返し二倍として書かれた 2 の `n` 乗であり、加えられる二つの数が等しいので、`splitFin` が期待する形に正確に一致します。
+マスクの個数は、それを列挙する再帰そのものに沿って定義される。長さ零のマスクはちょうど一つ、長さ `suc n` のマスクは先頭ビットと長さ `n` のマスクの組であり、個数は `maskCount n + maskCount n` となる。これは繰り返し二倍として書かれた 2 の `n` 乗であり、加えられる二つの数が等しいので、`splitFin` が期待する形に正確に一致する。
 <!--/-->
 
 ```agda
@@ -339,7 +339,7 @@ maskCons : (n : ℕ) → (Fin (maskCount n) → Vec Bool n)
 <!--zh-->
 `maskCons` 把一个首位接到从索引相应半支读出的尾部上：左加数取 `false`，右加数取 `true`。于是 `maskAt` 把索引读成掩码：长度为零时唯一的掩码是空向量；长度为 `suc n` 时，小于 `maskCount (suc n) = maskCount n + maskCount n` 的索引被一分为二，所在的半支给出首位，内层索引给出尾部。这个读法是一个定义而非定理：它只是按规则计算。
 <!--ja-->
-`maskCons` は先頭ビットを、添字の対応する半分から読んだ尾に接ぎます。左の加数なら `false`、右なら `true` を選びます。そして `maskAt` が添字をマスクとして読みます。長さ零では唯一のマスクは空ベクトル、長さ `suc n` では `maskCount (suc n) = maskCount n + maskCount n` より小さい添字が半分に分けられ、落ちた半分が先頭ビットを、内側の添字が尾を名指します。この読みは定理ではなく定義であり、ただ計算するだけのものです。
+`maskCons` は先頭ビットを、添字の対応する半分から読んだ尾に接ぐ。左の加数なら `false`、右なら `true` を選ぶ。そして `maskAt` が添字をマスクとして読む。長さ零では唯一のマスクは空ベクトル、長さ `suc n` では `maskCount (suc n) = maskCount n + maskCount n` より小さい添字が半分に分けられ、落ちた半分が先頭ビットを、内側の添字が尾を名指す。この読みは定理ではなく定義であり、ただ計算するだけのものである。
 <!--/-->
 
 ```agda
@@ -356,7 +356,7 @@ Coverage is the content of `mask-onto`, and it is deliberately untruncated: give
 <!--zh-->
 覆盖性是 `mask-onto` 的内容，而它有意不带截断：给定一个向量 `v`，该陈述产生一个真实的索引，连同从该索引读出的掩码到 `v` 的路径。基情形中，空向量来自第零号索引。这是整个枚举中唯一必须交付数据而非仅仅存在性的地方，而它之所以能做到，是因为递归沿着向量本身进行。
 <!--ja-->
-被覆こそが `mask-onto` の内容であり、ここでは意図的に切断を行いません。ベクトル `v` が与えられると、この主張は実際の添字と、そこから読んだマスクから `v` への経路とをともに作り出します。基底の場合、空ベクトルは零番の添字から来ます。列挙の中で単なる存在ではなくデータを渡さねばならないのはここだけですが、再帰がベクトルそのものに沿って進むため、それが可能になります。
+被覆こそが `mask-onto` の内容であり、ここでは意図的に切断を行わない。ベクトル `v` が与えられると、この主張は実際の添字と、そこから読んだマスクから `v` への経路とをともに作り出す。基底の場合、空ベクトルは零番の添字から来る。列挙の中で単なる存在ではなくデータを渡さねばならないのはここだけであるが、再帰がベクトルそのものに沿って進むため、それが可能になる。
 <!--/-->
 
 ```agda
@@ -373,7 +373,7 @@ At a successor the vector decides the branch. For a leading `false` the tail's i
 <!--zh-->
 后继情形由向量决定分支。首位为 `false` 时，尾部的索引经 `joinFin` 拼入左半支；路径分两步拼装：先用 `split-join` 证明对拼合索引的劈分确实还原出左半支，再用 `cong (false ∷_)` 把递归得到的路径带上首位。`true` 的情形逐字相同，只是换成右半支。结合计数，这说明已清点集合的掩码被 `Fin (maskCount size)` 覆盖，恰好是 `Tally` 字段所期待的形状。
 <!--ja-->
-後者の段階ではベクトルが分岐を決めます。先頭が `false` なら、尾の添字は `joinFin` で左半分に合され、経路は二歩で組み立てられます。まず `split-join` によって、合された添字の分割が主張どおり左半分を復元することを示し、次に `cong (false ∷_)` で再帰の経路を先頭ビットの下へ運びます。`true` の場合は右半分に替わるだけで、それ以外はそっくり同じです。個数と合わせて、これは数え上げられた集合のマスクが `Fin (maskCount size)` に被覆されることを意味し、まさに `Tally` の欄が期待する形です。
+後者の段階ではベクトルが分岐を決める。先頭が `false` なら、尾の添字は `joinFin` で左半分に合され、経路は二歩で組み立てられる。まず `split-join` によって、合された添字の分割が主張どおり左半分を復元することを示し、次に `cong (false ∷_)` で再帰の経路を先頭ビットの下へ運ぶ。`true` の場合は右半分に替わるだけで、それ以外はそっくり同じである。個数と合わせて、これは数え上げられた集合のマスクが `Fin (maskCount size)` に被覆されることを意味し、まさに `Tally` の欄が期待する形である。
 <!--/-->
 
 ```agda
@@ -409,11 +409,11 @@ A small example shows the interaction with repetitions. Take a family with a rep
 
 `select`{.Agda} はブール・マスクで有限族を絞り込み、その要素補題は選ばれた項と真に印づけられた位置を対応させる。
 
-`select` はマスクを族に適用します。ビットが `true` の項目を残し、それらを再び族として、その長さとともに返します。長さは**再帰が生み出す**ものであり、これが要点です。何かを数える必要はなく、答えとマスクを結びつける算術も要りません。
+`select` はマスクを族に適用する。ビットが `true` の項目を残し、それらを再び族として、その長さとともに返す。長さは**再帰が生み出す**ものであり、これが要点である。何かを数える必要はなく、答えとマスクを結びつける算術も要らない。
 
-二つの仕様が結果に何が含まれるかを述べ、どちらも切断を含みません。どちらも同じ再帰から直接読み取れるからです。`marks` は逆向きに走り、項目への判定を、それを記録するマスクへ変えます。
+二つの仕様が結果に何が含まれるかを述べ、どちらも切断を含まない。どちらも同じ再帰から直接読み取れるからである。`marks` は逆向きに走り、項目への判定を、それを記録するマスクへ変える。
 
-小さな例が重複との相互作用を示します。同じ項目が二度現れる族と、両方の写しを残すマスクを取ると、選ばれた族はその項目を二度含み、二つの写しはそれぞれ固有のもとの位置とともに補題によって答えられます。何かが失われたり併合されたりすることはありません。一意であることはそもそも要求されていないからです。
+小さな例が重複との相互作用を示す。同じ項目が二度現れる族と、両方の写しを残すマスクを取ると、選ばれた族はその項目を二度含み、二つの写しはそれぞれ固有のもとの位置とともに補題によって答えられる。何かが失われたり併合されたりすることはない。一意であることはそもそも要求されていないからである。
 <!--/-->
 
 <!--en-->
@@ -421,7 +421,7 @@ The helper `selectStep` performs one step of the filter: given an entry `x` and 
 <!--zh-->
 辅助函数 `selectStep` 完成筛选的一步：给定条目 `x` 与已选好的族，它把 `x` 排在最前并报告新长度 `suc k`。其结果类型把族与长度打包成一个依赖对，于是递归可以增长长度而不必对掩码做任何算术。
 <!--ja-->
-補助関数 `selectStep` は絞り込みの一歩を行います。項目 `x` とすでに選ばれた族が与えられると、`x` を先頭に付け、新しい長さ `suc k` を報告します。その結果の型は族と長さを依存対としてまとめるため、再帰はマスクに算術を一切用いずに長さを伸ばせます。
+補助関数 `selectStep` は絞り込みの一歩を行う。項目 `x` とすでに選ばれた族が与えられると、`x` を先頭に付け、新しい長さ `suc k` を報告する。その結果の型は族と長さを依存対としてまとめるため、再帰はマスクに算術を一切用いずに長さを伸ばせる。
 <!--/-->
 
 ```agda
@@ -437,7 +437,7 @@ selectStep {X = X} x (k , g) = suc k , h
 <!--zh-->
 `select` 是沿掩码的递归。空掩码什么也不选，用荒谬模式表达：长度为零的族没有任何位置。首位为 `false` 时丢弃头部并沿右移后的族递归；首位为 `true` 时用 `selectStep` 保留头部。每一步族都右移一格，这正是全篇出现的 `λ i → f (suc i)` 所记录的内容。
 <!--ja-->
-`select` はマスク上の再帰です。空のマスクは何も選ばず、それを荒謬パターンで示します。長さ零の族には位置が存在しないからです。先頭が `false` なら頭を落としてずらした族に再帰し、`true` なら `selectStep` で頭を残します。各歩で族が一つずらされること、これが随所の `λ i → f (suc i)` が記録しているものです。
+`select` はマスク上の再帰である。空のマスクは何も選ばず、それを荒謬パターンで示す。長さ零の族には位置が存在しないからである。先頭が `false` なら頭を落としてずらした族に再帰し、`true` なら `selectStep` で頭を残す。各歩で族が一つずらされること、これが随所の `λ i → f (suc i)` が記録しているものである。
 <!--/-->
 
 ```agda
@@ -454,7 +454,7 @@ The first specification, `select-out`, reads the selection forwards: every posit
 <!--zh-->
 第一条规格 `select-out` 顺向读出选取结果：被选族的每个位置 `j` 都来自某个位为 `true` 的原始位置 `i`，且该处的条目确实是原来的条目 `f i`。这一主张是数据而非仅仅的存在性：实际产生一个见证 `i`，位与等式都显式给出。
 <!--ja-->
-最初の仕様 `select-out` は選択を順方向に読みます。選ばれた族の各位置 `j` は、ビットが `true` であるもとの位置 `i` から来ており、そこにある項目は実際にもとの項目 `f i` です。この主張は単なる存在ではなくデータです。実際の証人が作り出され、ビットも等式も明示的に与えられます。
+最初の仕様 `select-out` は選択を順方向に読む。選ばれた族の各位置 `j` は、ビットが `true` であるもとの位置 `i` から来ており、そこにある項目は実際にもとの項目 `f i` である。この主張は単なる存在ではなくデータである。実際の証人が作り出され、ビットも等式も明示的に与えられる。
 <!--/-->
 
 ```agda
@@ -471,7 +471,7 @@ The proof walks the same recursion as the definition. In the `false` case the he
 <!--zh-->
 证明沿与定义相同的递归走。`false` 情形中头部已被丢弃，于是在尾部回答 `j` 的原始位置要上移成整向量中的 `suc i`；局部的 `step` 恰好完成对见证三元组的这一簿记。
 <!--ja-->
-証明は定義と同じ再帰をたどります。`false` の場合は頭が落ちているため、尾で `j` に答えるもとの位置は、全ベクトルでは `suc i` ずり上げられます。局所的な `step` がこの簿記を、証人三つ組に対してまさに行います。
+証明は定義と同じ再帰をたどる。`false` の場合は頭が落ちているため、尾で `j` に答えるもとの位置は、全ベクトルでは `suc i` ずり上げられる。局所的な `step` がこの簿記を、証人三つ組に対してまさに行う。
 <!--/-->
 
 ```agda
@@ -487,7 +487,7 @@ In the `true` case there are two subcases. If the selected position is the first
 <!--zh-->
 `true` 情形分两个子情形。若被选位置是第一个，答案就是头部本身，两条等式都因 `select` 把头部原封不动作为零号位置返回而由 `refl` 成立；否则递归回答尾部的位置，同样的上移照旧适用。
 <!--ja-->
-`true` の場合は二つの下位の場合に分かれます。選ばれた位置が最初なら、答えは頭そのものであり、`select` が頭をそのまま零番の枠として返すため、二つの等式はともに `refl` で成立します。そうでなければ再帰が尾の位置に答え、同じずらしがそのまま当てはまります。
+`true` の場合は二つの下位の場合に分かれる。選ばれた位置が最初なら、答えは頭そのものであり、`select` が頭をそのまま零番の枠として返すため、二つの等式はともに `refl` で成立する。そうでなければ再帰が尾の位置に答え、同じずらしがそのまま当てはまる。
 <!--/-->
 
 ```agda
@@ -503,7 +503,7 @@ The second subcase repeats the shift bookkeeping, now with the head present: the
 <!--zh-->
 第二个子情形重复同样的上移簿记，只是此时头部仍在：`true ∷ v` 的被选族是头部接上尾部的选取结果，因此头部之后的位置在尾部得到回答并映回 `suc i`。两个分支只在这一重定位上不同，这正是它们各自需要一个 `step` 的原因。
 <!--ja-->
-第二の下位の場合は同じずらしの簿記を、頭がある状態で繰り返します。`true ∷ v` の選ばれた族は頭に尾の選択が続いたものなので、頭より先の位置は尾で答えられ、`suc i` へと写し戻されます。二つの分岐が異なるのはこの配置替えだけであり、だからこそそれぞれに `step` が必要なのです。
+第二の下位の場合は同じずらしの簿記を、頭がある状態で繰り返す。`true ∷ v` の選ばれた族は頭に尾の選択が続いたものなので、頭より先の位置は尾で答えられ、`suc i` へと写し戻される。二つの分岐が異なるのはこの配置替えだけであり、だからこそそれぞれに `step` が必要なのである。
 <!--/-->
 
 ```agda
@@ -519,7 +519,7 @@ The converse specification, `select-in`, says every marked entry is selected: an
 <!--zh-->
 反向规格 `select-in` 说每个被标记的条目都被选中：位为 `true` 的原始位置 `i` 拥有一个被选位置 `j`，其条目为 `f i`。同样，这一主张是显式的数据，即一个真实的 `j` 连同一条路径。两个方向都不带截断，这正是后文关于成员性的论证能在选取两侧传递真实见证的原因。
 <!--ja-->
-逆の仕様 `select-in` は、印づけられた項目はすべて選ばれることを述べます。ビットが `true` であるもとの位置 `i` には、項目が `f i` である選ばれた位置 `j` が対応します。ここでも主張は明示的なデータ、実際の `j` と経路です。どちらの向きも切断を含まないことが、後の所属の議論で選択の両側に実際の証人を渡せる理由です。
+逆の仕様 `select-in` は、印づけられた項目はすべて選ばれることを述べる。ビットが `true` であるもとの位置 `i` には、項目が `f i` である選ばれた位置 `j` が対応する。ここでも主張は明示的なデータ、実際の `j` と経路である。どちらの向きも切断を含まないことが、後の所属の議論で選択の両側に実際の証人を渡せる理由である。
 <!--/-->
 
 ```agda
@@ -536,7 +536,7 @@ Its proof mirrors the recursion from the other end. A position in an empty famil
 <!--zh-->
 其证明从另一端映照同一递归。空族中的位置是荒谬的。`false` 情形中头部不可能被标为真，故假设 `e` 与 `false≢true` 矛盾；右移后的位置照旧递归。`true` 情形中头部以零号位置作答，更深的位置照旧递归。
 <!--ja-->
-その証明は同じ再帰を逆向きに映します。空の族の位置は荒謬であり、`false` の場合は頭が真に印づけられることはないので仮定 `e` は `false≢true` と矛盾し、ずらされた位置は再帰します。`true` の場合は頭が零番の位置で答え、より深い位置は再帰します。
+その証明は同じ再帰を逆向きに映する。空の族の位置は荒謬であり、`false` の場合は頭が真に印づけられることはないので仮定 `e` は `false≢true` と矛盾し、ずらされた位置は再帰する。`true` の場合は頭が零番の位置で答え、より深い位置は再帰する。
 <!--/-->
 
 ```agda
@@ -552,7 +552,7 @@ The final clause performs the prepend bookkeeping: the position found in the tai
 <!--zh-->
 最后一条子句完成前置的簿记：尾部找到的位置变成现在头部在前的新族中的 `suc j`，条目等式原样保留。两条规格合起来说明选取结果既不比掩码标出的多、也不比它少，尽管没有断言这两种位置对应方式互为逆映射。
 <!--ja-->
-最後の節は先頭付けの簿記を行います。尾で見つかった位置は、頭が前に付いた族では `suc j` となり、項目の等式はそのまま保たれます。二つの仕様を合わせると、選択はマスクが印づけたものより大きくも小さくもないことが分かりますが、位置の対応の二つの仕方が互いに逆であるという主張はありません。
+最後の節は先頭付けの簿記を行う。尾で見つかった位置は、頭が前に付いた族では `suc j` となり、項目の等式はそのまま保たれる。二つの仕様を合わせると、選択はマスクが印づけたものより大きくも小さくもないことが分かるが、位置の対応の二つの仕方が互いに逆であるという主張はない。
 <!--/-->
 
 ```agda
@@ -566,9 +566,9 @@ The final clause performs the prepend bookkeeping: the position found in the tai
 <!--en-->
 `marks` runs the filter in reverse: instead of reading a mask and keeping entries, it takes a Boolean verdict `d` on entries and writes down the mask recording it, one bit per position. The base is the empty vector, and the step asks `d` at the head and recurses on the shifted family.
 <!--zh-->
-`marks` 把筛选反过来用：它不读掩码来保留条目，而是取一个关于条目的布尔裁决 `d`，并写下记录该裁决的掩码，每个位置一位。基情形是空向量，递归步在头部询问 `d` 并沿右移后的族继续。
+`marks` 把筛选反过来用：它不读掩码来保留条目，而是取一个关于条目的布尔函数 `d`，并写下记录其输出的掩码，每个位置一位。基情形是空向量，递归步在头部询问 `d` 并沿右移后的族继续。
 <!--ja-->
-`marks` は絞り込みを逆向きに使います。マスクを読んで項目を残す代わりに、項目へのブールの判定 `d` を受け取り、それを記録するマスクを書き出します。一位置につき一ビットです。基底は空ベクトルで、ステップは頭で `d` を尋ね、ずらした族に再帰します。
+`marks` は絞り込みを逆向きに使う。マスクを読んで項目を残す代わりに、項目へのブールの判定 `d` を受け取り、それを記録するマスクを書き出す。一位置につき一ビットである。基底は空ベクトルで、ステップは頭で `d` を尋ね、ずらした族に再帰する。
 <!--/-->
 
 ```agda
@@ -584,9 +584,9 @@ marks-lookup : {ℓ' : Level} {X : Type ℓ'} (n : ℕ) (f : Fin n → X) (d : X
 <!--en-->
 `marks-lookup` certifies that the recorded mask really answers the verdict at each position: looking up position `i` in `marks n f d` gives `d (f i)`. The head case is `refl` by the computation rule of `marks`, and deeper positions recurse. This lemma is what lets `maskOf` later prove that the mask it writes down reproduces a given subset.
 <!--zh-->
-`marks-lookup` 证明记录下的掩码确实在每个位置回答裁决：在 `marks n f d` 的位置 `i` 处查询得到 `d (f i)`。头部情形由 `marks` 的计算规则得 `refl`，更深的位置照旧递归。有了这条引理，后面的 `maskOf` 才能证明它写下的掩码重现给定的子集。
+`marks-lookup` 证明记录下的掩码确实在每个位置重现 `d` 给出的布尔值：在 `marks n f d` 的位置 `i` 处查询得到 `d (f i)`。头部情形由 `marks` 的计算规则得 `refl`，更深的位置照旧递归。有了这条引理，后面的 `maskOf` 才能证明它写下的掩码重现给定的子集。
 <!--ja-->
-`marks-lookup` は、記録されたマスクが各位置で判定に正しく答えることを裏付けます。`marks n f d` の位置 `i` を参照すると `d (f i)` が得られます。頭の場合は `marks` の計算規則により `refl` であり、深い位置は再帰します。この補題があるため、後の `maskOf` が書き出したマスクが与えられた部分集合を再現することを証明できるのです。
+`marks-lookup` は、記録されたマスクが各位置で判定に正しく答えることを裏付ける。`marks n f d` の位置 `i` を参照すると `d (f i)` が得られる。頭の場合は `marks` の計算規則により `refl` であり、深い位置は再帰する。この補題があるため、後の `maskOf` が書き出したマスクが与えられた部分集合を再現することを証明できるのである。
 <!--/-->
 
 ```agda
@@ -599,7 +599,7 @@ marks-lookup (suc n) f d (suc i) = marks-lookup n (λ i → f (suc i)) d i
 
 Excluded middle turns each proposition into the Boolean bit used by a mask, and the two specifications recover truth and falsity from that bit.
 
-The excluded middle hands over a disjunction, while a mask requires a bit, so the two have to be connected. The verdict is taken as an argument rather than looked up inside the definition: that is what lets the two round-trip lemmas be proved by matching on it, with the truth value itself supplied explicitly so that the round-trip statement has the intended proposition as its parameter.
+Excluded middle supplies a decision, while a mask requires a bit, so the two have to be connected. The decision is taken as an argument rather than looked up inside the definition: that is what lets the two round-trip lemmas be proved by matching on it, with the truth value itself supplied explicitly so that the round-trip statement has the intended proposition as its parameter.
 
 This conversion is one concrete use of excluded middle in the tally construction: it decides a membership proposition and records the answer as a bit.
 <!--zh-->
@@ -607,7 +607,7 @@ This conversion is one concrete use of excluded middle in the tally construction
 
 排中律把每个命题化为掩码所用的布尔位，而两条规格从该位分别读回真与假。
 
-排中律给出的是一个析取，而掩码需要的是一位，故须把二者衔接起来。裁决作为实参显式传入，而不是在定义内部求解：正是这一点使两条来回引理能靠对它作模式匹配来证明；真值本身也显式给出，使来回规格以预期命题为参数。
+排中律给出的是一次判定，而掩码需要的是一位，故须把二者衔接起来。判定作为实参显式传入，而不是在定义内部求解：正是这一点使两条来回引理能靠对它作模式匹配来证明；真值本身也显式给出，使来回规格以预期命题为参数。
 
 这一转换是排中律在点名册构造中的一个具体用途：判定一条成员命题，再把答案记录为一位。
 <!--ja-->
@@ -615,42 +615,42 @@ This conversion is one concrete use of excluded middle in the tally construction
 
 排中律は各命題をマスクで使うブール値へ変え、二つの仕様はそのビットから真と偽をそれぞれ読み戻す。
 
-排中律が渡すのは論理和であり、マスクが必要とするのは一ビットです。そこで両者をつなぐ必要があります。判定は定義の内部で求めるのではなく実引数として受け取ります。これにより二つの往復補題は判定に対する照合で証明でき、真理値そのものも明示的に与え、往復の仕様が意図した命題を引数に取るようにします。
+排中律が渡すのは判定であり、マスクが必要とするのは一ビットである。そこで両者をつなぐ必要がある。判定は定義の内部で求めるのではなく実引数として受け取る。これにより二つの往復補題は判定に対する照合で証明でき、真理値そのものも明示的に与え、往復の仕様が意図した命題を引数に取るようにする。
 
 この変換は、数え上げの構成における排中律の具体的な用途の一つである。所属命題を判定し、その答えを一ビットとして記録する。
 <!--/-->
 
 <!--en-->
-`decideOf` turns a verdict into a bit: the left alternative, a proof of `⟨ P ⟩`, is recorded as `true`, and the right, a refutation of `⟨ P ⟩`, as `false`. The proposition `P` itself is irrelevant to the computation; only the verdict is matched, which is why the definition is a pair of equations rather than a proof.
+`decideOf` turns a decision into a bit: `yes` carries a proof of `⟨ P ⟩` and is recorded as `true`, while `no` carries a refutation and is recorded as `false`. The proposition `P` itself is irrelevant to the computation; only the decision is matched, which is why the definition is a pair of equations rather than a proof.
 <!--zh-->
-`decideOf` 把裁决变成一位：左支是 `⟨ P ⟩` 的证明，记为 `true`；右支是 `⟨ P ⟩` 的反驳，记为 `false`。命题 `P` 本身与计算无关，被匹配的只是裁决，因此这个定义是一对方程而非证明。
+`decideOf` 把判定变成一位：`yes` 携带 `⟨ P ⟩` 的证明，记为 `true`；`no` 携带反驳，记为 `false`。命题 `P` 本身与计算无关，被匹配的只是判定，因此这个定义是一对方程而非证明。
 <!--ja-->
-`decideOf` は判定を一ビットへ変えます。左の選択肢、すなわち `⟨ P ⟩` の証明は `true` として記録され、右の選択肢、`⟨ P ⟩` の反証は `false` となります。命題 `P` 自体は計算に関係せず、照合されるのは判定だけです。だからこそこの定義は一組の等式であって証明ではありません。
+`decideOf` は判定を一ビットへ変える。`yes` は `⟨ P ⟩` の証明を運び、`true` として記録される。`no` は反証を運び、`false` として記録される。命題 `P` 自体は計算に関係せず、照合されるのは判定だけである。だからこそこの定義は一組の等式であって証明ではない。
 <!--/-->
 
 ```agda
-decideOf : (P : hProp (ℓ-suc ℓ)) → (⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)) → Bool
-decideOf P (inl _) = true
-decideOf P (inr _) = false
+decideOf : (P : hProp (ℓ-suc ℓ)) → Dec ⟨ P ⟩ → Bool
+decideOf P (yes _) = true
+decideOf P (no _) = false
 
-decide-true : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)) → ⟨ P ⟩ → decideOf P s ≡ true
-decide-true P (inl _)  p = refl
+decide-true : (P : hProp (ℓ-suc ℓ)) (s : Dec ⟨ P ⟩) → ⟨ P ⟩ → decideOf P s ≡ true
+decide-true P (yes _) p = refl
 ```
 
 <!--en-->
 The two round trips connect the bit back to the truth value. `decide-true` says a proof of `⟨ P ⟩` forces the bit to be `true`: in the refutation branch the proof itself would be refuted, which is a contradiction. `decide-sound` reads the other way: a bit of `true` yields a proof of `⟨ P ⟩`, taken directly from the left branch or obtained because the right branch would force `false ≡ true`. Together they say the bit faithfully answers whether `⟨ P ⟩` holds, for the verdict that was passed in.
 <!--zh-->
-两条往返把位接回真值。`decide-true` 说 `⟨ P ⟩` 的证明迫使该位为 `true`：在反驳支中这个证明本身会被反驳，那正是矛盾。`decide-sound` 反向读出：位为 `true` 便给出 `⟨ P ⟩` 的证明，或直接取自左支，或因右支会迫使 `false ≡ true` 而得。合起来，它们说明对于传入的那个裁决，该位忠实地回答 `⟨ P ⟩` 是否成立。
+两条往返把位接回真值。`decide-true` 说 `⟨ P ⟩` 的证明迫使该位为 `true`：在反驳支中这个证明本身会被反驳，那正是矛盾。`decide-sound` 反向读出：位为 `true` 便给出 `⟨ P ⟩` 的证明，或直接取自左支，或因右支会迫使 `false ≡ true` 而得。合起来，它们说明对于传入的那个判定，该位忠实地回答 `⟨ P ⟩` 是否成立。
 <!--ja-->
-二つの往復がビットを真理値へと結び戻します。`decide-true` は、`⟨ P ⟩` の証明がビットを `true` に強いることを述べます。反証の分岐ではその証明自体が反証され、それが矛盾です。`decide-sound` は逆向きに読みます。ビットが `true` なら `⟨ P ⟩` の証明が得られ、左の分岐から直接取られるか、右の分岐が `false ≡ true` を強いることになるために得られます。合わせて、渡された判定に対してビットが `⟨ P ⟩` の成立を忠実に答えることを示します。
+二つの往復がビットを真理値へと結び戻す。`decide-true` は、`⟨ P ⟩` の証明がビットを `true` に強いることを述べる。反証の分岐ではその証明自体が反証され、それが矛盾である。`decide-sound` は逆向きに読む。ビットが `true` なら `⟨ P ⟩` の証明が得られ、左の分岐から直接取られるか、右の分岐が `false ≡ true` を強いることになるために得られる。合わせて、渡された判定に対してビットが `⟨ P ⟩` の成立を忠実に答えることを示す。
 <!--/-->
 
 ```agda
-decide-true P (inr np) p = ⊥₀-rec (np p)
+decide-true P (no np) p = ⊥₀-rec (np p)
 
-decide-sound : (P : hProp (ℓ-suc ℓ)) (s : ⟨ P ⟩ ⊎ (⟨ P ⟩ → ⊥₀)) → decideOf P s ≡ true → ⟨ P ⟩
-decide-sound P (inl p) _ = p
-decide-sound P (inr _) e = ⊥₀-rec (false≢true e)
+decide-sound : (P : hProp (ℓ-suc ℓ)) (s : Dec ⟨ P ⟩) → decideOf P s ≡ true → ⟨ P ⟩
+decide-sound P (yes p) _ = p
+decide-sound P (no _) e = ⊥₀-rec (false≢true e)
 ```
 
 <!--en-->
@@ -664,7 +664,7 @@ Finiteness travels up the tower through this section. Fix an ordinal `σ` and a 
 <!--ja-->
 ## 数え上げられた段階の定義可能部分集合
 
-有限性はこの節を通して塔を一段ずつ上ります。順序数 `σ` と段階 `Lset σ` の数え上げを固定し、目標は `𝒟ₒ (Lset σ)` (この段階の定義可能部分集合全体) の数え上げを得ることです。与えられた数え上げの各項目はその段階の要素ですから、段階の小さな要素型の中に対応する名前を持ちます。マスクはどの名前を残すかを指定し、`part` は残った名前を有限集合に張り合わせます。基本公理の章の `finSet∈𝒟ₒ` により、こうして張られた集合はその段階の定義可能部分集合であり、「これらの項目のいずれかに等しい」という有限論理和で定義されます。逆に、段階の任意の定義可能部分集合 `x` も復元できます。各項目を `x` への決定可能な所属関係に従って印づけると、そのマスクで張った集合はちょうど `x` になります。ここで包含 `𝒟ₒ∋⊆` が、`x` の各要素がそもそも数え上げに列挙されていることを保証します。したがって `maskCount size` 個のマスクがすべての定義可能部分集合を単に覆っており、これこそ `Tally` が要求する性質です。
+有限性はこの節を通して塔を一段ずつ上る。順序数 `σ` と段階 `Lset σ` の数え上げを固定し、目標は `𝒟ₒ (Lset σ)` (この段階の定義可能部分集合全体) の数え上げを得ることである。与えられた数え上げの各項目はその段階の要素であるから、段階の小さな要素型の中に対応する名前を持つ。マスクはどの名前を残すかを指定し、`part` は残った名前を有限集合に張り合わせる。基本公理の章の `finSet∈𝒟ₒ` により、こうして張られた集合はその段階の定義可能部分集合であり、「これらの項目のいずれかに等しい」という有限論理和で定義される。逆に、段階の任意の定義可能部分集合 `x` も復元できる。各項目を `x` への決定可能な所属関係に従って印づけると、そのマスクで張った集合はちょうど `x` になる。ここで包含 `𝒟ₒ∋⊆` が、`x` の各要素がそもそも数え上げに列挙されていることを保証する。したがって `maskCount size` 個のマスクがすべての定義可能部分集合を単に覆っており、これこそ `Tally` が要求する性質である。
 <!--/-->
 
 <!--en-->
@@ -672,7 +672,7 @@ A member of `Lset σ` lives in the stage as a set, but `finSet` needs a name in 
 <!--zh-->
 `Lset σ` 的成员作为集合处在该层中，但 `finSet` 需要小成员类型 `⟪ Lset σ ⟫` 中的名字；嵌入 `⟪ Lset σ ⟫↪` 把这种名字读成集合。成员关系呈现为截断原像，不过这个嵌入的原像取值为命题，所以 `∈-asFiber` 可以消去截断，返回一个显式名字及其等同于 `item i` 的路径。`index i` 与 `index-eq i` 正是该原像元素的两个投影。这并非从任意点名册原像中选取索引，因为允许重复的点名册原像未必是命题。
 <!--ja-->
-`Lset σ` の要素は集合としてその段階にありますが、`finSet` には小さな要素型 `⟪ Lset σ ⟫` の名前が必要です。埋め込み `⟪ Lset σ ⟫↪` はその名前を集合として読みます。所属は切り詰められたファイバーとして提示されますが、この埋め込みのファイバーは命題なので、`∈-asFiber` は切り詰めを消去し、明示的な名前と、それが `item i` に等しいというパスを返せます。`index i` と `index-eq i` は、このファイバー要素の二つの射影です。重複を許す有限な数え上げの任意のファイバーから添字を選ぶこととは異なり、そちらのファイバーは命題とは限りません。
+`Lset σ` の要素は集合としてその段階にあるが、`finSet` には小さな要素型 `⟪ Lset σ ⟫` の名前が必要である。埋め込み `⟪ Lset σ ⟫↪` はその名前を集合として読む。所属は切り詰められたファイバーとして提示されるが、この埋め込みのファイバーは命題なので、`∈-asFiber` は切り詰めを消去し、明示的な名前と、それが `item i` に等しいというパスを返せる。`index i` と `index-eq i` は、このファイバー要素の二つの射影である。重複を許す有限な数え上げの任意のファイバーから添字を選ぶこととは異なり、そちらのファイバーは命題とは限らない。
 <!--/-->
 
 ```agda
@@ -689,7 +689,7 @@ The second component of the same fiber is the path `index-eq i`, recording that 
 <!--zh-->
 同一纤维的第二个分量是路径 `index-eq i`，它记录嵌入元素经一条路径而非定义等式回到 `item i`。此后在集合 `item i` 与元素 `index i` 之间的每一次转换都要沿这条路径用传输完成。元素就位后，掩码 `v` 被转换为一次选取：`chosen v` 给出一个长度，连同恰好列出被选元素的函数，这由此前的 `select` 构造。
 <!--ja-->
-同じファイバーの第二成分が経路 `index-eq i` であり、埋め込まれた名前が定義等式ではなく経路を介して `item i` に戻ることを記録します。以後、集合 `item i` と名前 `index i` の間のすべての移し替えは、この経路に沿った輸送を通して行われます。名前がそろったところで、数え上げ上のマスク `v` は選択に変換されます。`chosen v` は長さと、選ばれた名前をちょうど列挙する関数の組であり、以前の `select` が構成したものです。
+同じファイバーの第二成分が経路 `index-eq i` であり、埋め込まれた名前が定義等式ではなく経路を介して `item i` に戻ることを記録する。以後、集合 `item i` と名前 `index i` の間のすべての移し替えは、この経路に沿った輸送を通して行われる。名前がそろったところで、数え上げ上のマスク `v` は選択に変換される。`chosen v` は長さと、選ばれた名前をちょうど列挙する関数の組であり、以前の `select` が構成したものである。
 <!--/-->
 
 ```agda
@@ -708,7 +708,7 @@ The second component of the same fiber is the path `index-eq i`, recording that 
 <!--zh-->
 `part` 就是张成的集合：它把每个被选元素经嵌入读出，并取所得结果的有穷集，落在集合类型 `S` 中。由于 `Lset σ` 成员的有穷族张成该层的可定义子集，`part-def` 直接由 `finSet∈𝒟ₒ` 得到证书 `⟨ part v ∈ˢ 𝒟ₒ (Lset σ) ⟩`，无须额外工作。第一条规格从反方向读成员关系：若 `y` 属于 `part v`，则仅仅存在某个点名册位置，其位为 `true` 且其条目等于 `y`。
 <!--ja-->
-`part` は張り合わせた集合です。選ばれた各名前を埋め込みを通して読み出し、その結果の有限集合を作り、集合の型 `S` に着地します。`Lset σ` の要素からなる有限族はその段階の定義可能部分集合を張るので、`part-def` は `finSet∈𝒟ₒ` から証明書 `⟨ part v ∈ˢ 𝒟ₒ (Lset σ) ⟩` を追加の仕事なしに得ます。最初の仕様は所属を逆向きに読みます。`y` が `part v` に属するなら、ビットが `true` でありその項目が `y` に等しい数え上げの位置が、単に存在するということです。
+`part` は張り合わせた集合である。選ばれた各名前を埋め込みを通して読み出し、その結果の有限集合を作り、集合の型 `S` に着地する。`Lset σ` の要素からなる有限族はその段階の定義可能部分集合を張るので、`part-def` は `finSet∈𝒟ₒ` から証明書 `⟨ part v ∈ˢ 𝒟ₒ (Lset σ) ⟩` を追加の仕事なしに得る。最初の仕様は所属を逆向きに読む。`y` が `part v` に属するなら、ビットが `true` でありその項目が `y` に等しい数え上げの位置が、単に存在するということである。
 <!--/-->
 
 ```agda
@@ -726,7 +726,7 @@ The proof composes two steps. First, `finSet-out` unwraps membership in the span
 <!--zh-->
 证明分两步复合。第一步，`finSet-out` 解开有穷张成集中的成员关系：它仅仅给出选取中的一个位置 `j`，使嵌入元素等于 `y`。第二步，`select-out` 把该位置追回到完整点名册中的来源，恢复索引 `i`，满足 `lookup i v ≡ true` 以及 `chosen v .snd j ≡ index i`。两步的数据都在截断之内产生，因此没有从单纯存在性命题中提取选定的见证。
 <!--ja-->
-証明は二つの段階を合成します。まず `finSet-out` が張り合わせた有限集合における所属をほどき、選択の中の位置 `j` と、埋め込まれた名前が `y` に等しいことを単に生み出します。次に `select-out` がその位置を完全な数え上げの中での由来までたどり、`lookup i v ≡ true` と `chosen v .snd j ≡ index i` を満たす添字 `i` を回復します。どちらの段階でもデータは截断の中で生み出されるので、単なる存在主張から選ばれた証人が取り出されることはありません。
+証明は二つの段階を合成する。まず `finSet-out` が張り合わせた有限集合における所属をほどき、選択の中の位置 `j` と、埋め込まれた名前が `y` に等しいことを単に生み出す。次に `select-out` がその位置を完全な数え上げの中での由来までたどり、`lookup i v ≡ true` と `chosen v .snd j ≡ index i` を満たす添字 `i` を回復する。どちらの段階でもデータは截断の中で生み出されるので、単なる存在主張から選ばれた証人が取り出されることはない。
 <!--/-->
 
 ```agda
@@ -742,7 +742,7 @@ The final equality has the source direction `item i ≡ y`. First `sym (index-eq
 <!--zh-->
 最后所需等式的方向是 `item i ≡ y`。先沿 `sym (index-eq i)` 从 `item i` 到嵌入后的名字 `index i`。随后 `select-out` 给出 `chosen v .snd j ≡ index i`，取其对称并施加嵌入，便到达选中的嵌入名字。最后，有限集成员关系给出的路径 `q` 到达 `y`。三者的复合正是证明中显示的三段路径。
 <!--ja-->
-最後に必要な等式の向きは `item i ≡ y` です。まず `sym (index-eq i)` で `item i` から埋め込まれた名前 `index i` へ進みます。次に `select-out` が `chosen v .snd j ≡ index i` を与えるので、その対称を埋め込みの下へ写して、選ばれた埋め込み名へ進みます。最後に有限集合への所属が与えるパス `q` で `y` に到達します。この三つの合成が、証明に表示されたパス列そのものです。
+最後に必要な等式の向きは `item i ≡ y` である。まず `sym (index-eq i)` で `item i` から埋め込まれた名前 `index i` へ進む。次に `select-out` が `chosen v .snd j ≡ index i` を与えるので、その対称を埋め込みの下へ写して、選ばれた埋め込み名へ進む。最後に有限集合への所属が与えるパス `q` で `y` に到達する。この三つの合成が、証明に表示されたパス列そのものである。
 <!--/-->
 
 ```agda
@@ -758,7 +758,7 @@ The opposite specification runs forward. If the bit at position `i` is `true`, t
 <!--zh-->
 相反的规格正向运行。若位置 `i` 处的位为 `true`，则条目 `item i` 确实属于 `part v`。原因在于选取中确实含有该元素：`select-in` 对每个被标记的位置，在被选族中找到一个持有同一元素的槽位，随后 `finSet-in` 证明其嵌入形式的成员关系。
 <!--ja-->
-逆向きの仕様は順方向に働きます。位置 `i` のビットが `true` なら、項目 `item i` は実際に `part v` に属します。理由は、選択がその名前を本当に含んでいるからです。`select-in` は印づけられた各位置に対して、選ばれた族の中で同じ名前を保持する枠を見つけ、続いて `finSet-in` がその埋め込み形の所属を証明します。
+逆向きの仕様は順方向に働く。位置 `i` のビットが `true` なら、項目 `item i` は実際に `part v` に属する。理由は、選択がその名前を本当に含んでいるからである。`select-in` は印づけられた各位置に対して、選ばれた族の中で同じ名前を保持する枠を見つけ、続いて `finSet-in` がその埋め込み形の所属を証明する。
 <!--/-->
 
 ```agda
@@ -775,7 +775,7 @@ Since membership in the spanned set is stated for the embedded name while the go
 <!--zh-->
 由于张成集中的成员关系是针对嵌入元素陈述的，而目标针对条目 `item i`，两者要靠下文的路径 `path` 连接，并用 `subst` 沿该路径搬移成员证书。辅助的 `ins` 保存 `select-in` 给出的槽位：被选族中的一个位置，其条目等于 `index i`。
 <!--ja-->
-張り合わせた集合における所属は埋め込まれた名前について述べられているのに対し、目標は項目 `item i` に関するので、両者は下の経路 `path` で結ばれ、`subst` がその経路に沿って所属の証明を移します。補助の `ins` は `select-in` が生み出す枠を保持します。選ばれた族の中で、その項目が `index i` に等しい位置です。
+張り合わせた集合における所属は埋め込まれた名前について述べられているのに対し、目標は項目 `item i` に関するので、両者は下の経路 `path` で結ばれ、`subst` がその経路に沿って所属の証明を移す。補助の `ins` は `select-in` が生み出す枠を保持する。選ばれた族の中で、その項目が `index i` に等しい位置である。
 <!--/-->
 
 ```agda
@@ -787,11 +787,11 @@ Since membership in the spanned set is stated for the embedded name while the go
 ```
 
 <!--en-->
-The remaining path `path` concatenates the slot's equality with `index-eq i`, so the transported membership is exactly membership of `item i`. With both directions in place, the construction can now be run in reverse. `maskOf` assigns to any set `x` the verdict mask obtained by deciding, for each tally entry, whether it belongs to `x`; excluded middle `lem` supplies the disjunction, and `decideOf` turns it into a bit. The goal `part-mask` states that for a definable subset `x` of the stage, the spanned set of this mask is `x` itself.
+The remaining path `path` concatenates the slot's equality with `index-eq i`, so the transported membership is exactly membership of `item i`. With both directions in place, the construction can now be run in reverse. `maskOf` assigns to any set `x` the decision mask obtained by deciding, for each tally entry, whether it belongs to `x`; excluded middle `lem` supplies the decision, and `decideOf` turns it into a bit. The goal `part-mask` states that for a definable subset `x` of the stage, the spanned set of this mask is `x` itself.
 <!--zh-->
-余下的路径 `path` 把槽位的等式与 `index-eq i` 拼接，因此传输后的成员关系正是 `item i` 的成员关系。两个方向就位后，构造可以反向运行。`maskOf` 对任意集合 `x` 给出裁决掩码：对每个点名册条目判定它是否属于 `x`；排中律 `lem` 供给析取，`decideOf` 把它变成一位。目标 `part-mask` 陈述：对该层中的可定义子集 `x`，此掩码张成的集合就是 `x` 本身。
+余下的路径 `path` 把槽位的等式与 `index-eq i` 拼接，因此传输后的成员关系正是 `item i` 的成员关系。两个方向就位后，构造可以反向运行。`maskOf` 对任意集合 `x` 给出判定掩码：对每个点名册条目判定它是否属于 `x`；排中律 `lem` 给出判定，`decideOf` 再把它变成一位。目标 `part-mask` 陈述：对该层中的可定义子集 `x`，此掩码张成的集合就是 `x` 本身。
 <!--ja-->
-残りの経路 `path` は枠の等式と `index-eq i` をつなぎ合わせるので、輸送された所属はまさに `item i` の所属です。両方向がそろったところで、構成を逆向きに走らせます。`maskOf` は任意の集合 `x` に対して、各数え上げの項目が `x` に属するかどうかを判定して得られる判定マスクを割り当てます。排中律 `lem` が論理和を供給し、`decideOf` がそれを一ビットに変えます。目標 `part-mask` は、段階の定義可能部分集合 `x` に対して、このマスクで張った集合が `x` そのものであると述べています。
+残りの経路 `path` は枠の等式と `index-eq i` をつなぎ合わせるので、輸送された所属はまさに `item i` の所属である。両方向がそろったところで、構成を逆向きに走らせる。`maskOf` は任意の集合 `x` に対して、各数え上げの項目が `x` に属するかどうかを判定して得られる判定マスクを割り当てる。排中律 `lem` が判定を与え、`decideOf` がそれを一ビットに変える。目標 `part-mask` は、段階の定義可能部分集合 `x` に対して、このマスクで張った集合が `x` そのものであると述べている。
 <!--/-->
 
 ```agda
@@ -809,7 +809,7 @@ Membership in a set of the hierarchy is a proposition, so extensionality `extens
 <!--zh-->
 层次中集合的成员关系是命题，因此外延性 `extensionalV` 把所断言的等式 `part (maskOf x) ≡ x` 归约为逐点的成员关系等价；`⇔toPath` 把两个方向组装成路径。正向表明张成集的每个成员都属于 `x`。
 <!--ja-->
-階層の集合における所属は命題なので、外延性 `extensionalV` は主張された等式 `part (maskOf x) ≡ x` を、所属の主張の各点ごとの同値へと帰着させます。`⇔toPath` が二つの方向を経路へと組み立てます。順方向は、張り合わせた集合の各要素が `x` に属することを示します。
+階層の集合における所属は命題なので、外延性 `extensionalV` は主張された等式 `part (maskOf x) ≡ x` を、所属の主張の各点ごとの同値へと帰着させる。`⇔toPath` が二つの方向を経路へと組み立てる。順方向は、張り合わせた集合の各要素が `x` に属することを示す。
 <!--/-->
 
 ```agda
@@ -825,7 +825,7 @@ The hypothesis of the forward direction is itself merely an existence: some mark
 <!--zh-->
 正向的前提本身就是单纯的存在性：某个被标记的位置，其条目等于 `y`。由于目标 `⟨ y ∈ˢ x ⟩` 是命题，截断可以消去到其中。记录的见证是位置 `i`，其位为 `true` 且条目为 `y`；由于该位正是通过判定这个条目是否属于 `x` 算出的，用 `decide-sound` 把位读回即得 `item i` 属于 `x`，再用等式 `item i ≡ y` 把它传输给 `y`。
 <!--ja-->
-順方向の仮定はそれ自体が単なる存在主張です。ビットが `true` で項目が `y` に等しい位置が何かあるということです。目標 `⟨ y ∈ˢ x ⟩` は命題なので、截断はその中へと消去できます。記録された証人は位置 `i` であり、そのビットは `true` で項目は `y` です。このビットはまさにその項目の `x` への所属を判定して計算されたものですから、`decide-sound` でビットを読み戻せば `item i` の `x` への所属が得られ、等式 `item i ≡ y` によってそれを `y` へと輸送します。
+順方向の仮定はそれ自体が単なる存在主張である。ビットが `true` で項目が `y` に等しい位置が何かあるということである。目標 `⟨ y ∈ˢ x ⟩` は命題なので、截断はその中へと消去できる。記録された証人は位置 `i` であり、そのビットは `true` で項目は `y` である。このビットはまさにその項目の `x` への所属を判定して計算されたものであるから、`decide-sound` でビットを読み戻せば `item i` の `x` への所属が得られ、等式 `item i ≡ y` によってそれを `y` へと輸送する。
 <!--/-->
 
 ```agda
@@ -841,7 +841,7 @@ The backward direction starts from membership of `y` in `x` and must produce mem
 <!--zh-->
 反向从 `y` 属于 `x` 出发，须产生张成集中的成员关系。由于该目标又是命题，其截断的前提可以消去。这里的前提来自点名册的覆盖：`x` 是该层的可定义子集，而 `𝒟ₒ∋⊆` 说 `Lset σ` 的可定义子集的每个成员都是 `Lset σ` 自身的成员，因此点名册的 `onto` 单纯地把 `y` 列为某个条目 `item i`。
 <!--ja-->
-逆方向は `y` の `x` への所属から出発し、張り合わせた集合への所属を生み出さねばなりません。この目標も再び命題なので、その截断された仮定は消去できます。ここでの仮定は数え上げの被覆から来ます。`x` は段階の定義可能部分集合であり、`𝒟ₒ∋⊆` は `Lset σ` の定義可能部分集合の各要素が `Lset σ` 自身の要素でもあると言うので、数え上げの `onto` が `y` をある項目 `item i` として単に列挙します。
+逆方向は `y` の `x` への所属から出発し、張り合わせた集合への所属を生み出さねばならない。この目標も再び命題なので、その截断された仮定は消去できる。ここでの仮定は数え上げの被覆から来る。`x` は段階の定義可能部分集合であり、`𝒟ₒ∋⊆` は `Lset σ` の定義可能部分集合の各要素が `Lset σ` 自身の要素でもあると言うので、数え上げの `onto` が `y` をある項目 `item i` として単に列挙する。
 <!--/-->
 
 ```agda
@@ -857,7 +857,7 @@ Given the entry `i` equal to `y`, it suffices to show `item i` belongs to the sp
 <!--zh-->
 给定等于 `y` 的条目 `i`，只需证明 `item i` 属于张成集，并沿 `item i ≡ y` 传输。由 `part-mem`，成员关系需要位置 `i` 的位为 `true`。它确实如此：掩码记录了 `item i ∈ˢ x` 的判定，而由于 `y` 属于 `x`，路径 `item i ≡ y` 把该证明传输过来，`decide-true` 便迫使该位为 `true`。
 <!--ja-->
-`y` に等しい項目 `i` が与えられれば、`item i` が張り合わせた集合に属することを示し、`item i ≡ y` に沿って輸送すれば十分です。`part-mem` により、所属には位置 `i` のビットが `true` であることが必要です。そして実際そうです。マスクは `item i ∈ˢ x` の判定を記録しており、`y` が `x` に属するので、経路 `item i ≡ y` がその証明を輸送し、`decide-true` がビットを `true` に強制します。
+`y` に等しい項目 `i` が与えられれば、`item i` が張り合わせた集合に属することを示し、`item i ≡ y` に沿って輸送すれば十分である。`part-mem` により、所属には位置 `i` のビットが `true` であることが必要である。そして実際そうである。マスクは `item i ∈ˢ x` の判定を記録しており、`y` が `x` に属するので、経路 `item i ≡ y` がその証明を輸送し、`decide-true` がビットを `true` に強制する。
 <!--/-->
 
 ```agda
@@ -873,7 +873,7 @@ Both directions of `part-mask` are now assembled, and the section's payoff is at
 <!--zh-->
 `part-mask` 的两个方向就此组装完毕，本节的关键成果随之而来。由于每个掩码都经 `mask-onto` 来自某个索引，掩码 (允许重复、单纯地) 枚举了 `Lset σ` 的全部可定义子集。它们共有 `maskCount size` 个，因此 `powerTally` 记录一个该大小的点名册，其在索引 `j` 处的条目是掩码 `maskAt size j` 张成的集合。其余字段补全记录：每个条目附带其可定义性证书，覆盖条款随后给出。
 <!--ja-->
-`part-mask` の両方向がこれで組み上がり、この節の収穫が目の前にあります。`mask-onto` によりすべてのマスクがある添字から生じるので、マスクは (繰り返しを許して、単に)`Lset σ` のすべての定義可能部分集合を列挙します。その個数は `maskCount size` ですから、`powerTally` はその大きさの数え上げを記録します。添字 `j` における項目は、マスク `maskAt size j` で張った集合です。残りの欄が記録を完成させます。各項目は定義可能性の証明書を伴い、被覆の条項はこの次に与えられます。
+`part-mask` の両方向がこれで組み上がり、この節の収穫が目の前にある。`mask-onto` によりすべてのマスクがある添字から生じるので、マスクは (繰り返しを許して、単に)`Lset σ` のすべての定義可能部分集合を列挙する。その個数は `maskCount size` であるから、`powerTally` はその大きさの数え上げを記録する。添字 `j` における項目は、マスク `maskAt size j` で張った集合である。残りの欄が記録を完成させる。各項目は定義可能性の証明書を伴い、被覆の条項はこの次に与えられる。
 <!--/-->
 
 ```agda
@@ -890,7 +890,7 @@ The record's `inside` field reuses the certificate `part-def` at each enumerated
 <!--zh-->
 记录的 `inside` 字段在每个被枚举的掩码处复用证书 `part-def`，因此 `powerTally` 的每个条目确实是该层的可定义子集。剩下检查 `onto`，即截断的覆盖性。给定 `Lset σ` 的任意可定义子集 `x`，必须单纯地给出一个索引，其被枚举的条目等于 `x`。
 <!--ja-->
-記録の `inside` の欄は、列挙された各マスクで証明書 `part-def` を再利用するので、`powerTally` の各項目は実際に段階の定義可能部分集合です。残るは `onto`、つまり截断された被覆の確認です。`Lset σ` の任意の定義可能部分集合 `x` が与えられたとき、列挙された項目が `x` に等しい添字を単に示せばよいことになります。
+記録の `inside` の欄は、列挙された各マスクで証明書 `part-def` を再利用するので、`powerTally` の各項目は実際に段階の定義可能部分集合である。残るは `onto`、つまり截断された被覆の確認である。`Lset σ` の任意の定義可能部分集合 `x` が与えられたとき、列挙された項目が `x` に等しい添字を単に示せばよいことになる。
 <!--/-->
 
 ```agda
@@ -904,9 +904,9 @@ The record's `inside` field reuses the certificate `part-def` at each enumerated
 <!--en-->
 The witness index is the one that `mask-onto` produces for the verdict mask `maskOf x`. The enumerated entry at that index is `part (maskAt size j)`, which equals `part (maskOf x)` after rewriting the mask along the produced path, and `part-mask` then identifies that with `x`. The whole statement lands in a truncation, which is all a `Tally`'s coverage requires: every definable subset is hit, though not necessarily by a unique mask.
 <!--zh-->
-见证索引是 `mask-onto` 为裁决掩码 `maskOf x` 产生的那个。该索引处被枚举的条目是 `part (maskAt size j)`，沿所得路径改写掩码后它等于 `part (maskOf x)`，随后 `part-mask` 把它与 `x` 等同。整个命题落在截断之中，这正是 `Tally` 的覆盖性所要求的：每个可定义子集都被命中，尽管未必由唯一的掩码命中。
+见证索引是 `mask-onto` 为判定掩码 `maskOf x` 产生的那个。该索引处被枚举的条目是 `part (maskAt size j)`，沿所得路径改写掩码后它等于 `part (maskOf x)`，随后 `part-mask` 把它与 `x` 等同。整个命题落在截断之中，这正是 `Tally` 的覆盖性所要求的：每个可定义子集都被命中，尽管未必由唯一的掩码命中。
 <!--ja-->
-証人となる添字は、判定マスク `maskOf x` に対して `mask-onto` が生み出すものです。その添字で列挙される項目は `part (maskAt size j)` であり、生み出された経路に沿ってマスクを書き換えれば `part (maskOf x)` に等しく、続いて `part-mask` がそれを `x` と同一視します。命題全体が截断の中に着地します。これが `Tally` の被覆が要求するすべてであり、すべての定義可能部分集合が命中するものの、一意なマスクによるとは限りません。
+証人となる添字は、判定マスク `maskOf x` に対して `mask-onto` が生み出すものである。その添字で列挙される項目は `part (maskAt size j)` であり、生み出された経路に沿ってマスクを書き換えれば `part (maskOf x)` に等しく、続いて `part-mask` がそれを `x` と同一視する。命題全体が截断の中に着地する。これが `Tally` の被覆が要求するすべてであり、すべての定義可能部分集合が命中するものの、一意なマスクによるとは限らない。
 <!--/-->
 
 ```agda
@@ -925,7 +925,7 @@ This section spends the tally built earlier rather than making one. Fix a type w
 <!--ja-->
 ## 最小要素と整礎性
 
-この節では、先につくった数え上げを使う側の議論を進めます。型と、その上の三岐・非反射・推移的な関係を固定します。これは整列順序が要求する性質のうち整礎性を除くすべてです。手続き `scan` は有限族をたどり、截断を一切伴わずに、述語を満たし満たすものの中で最小である項目か、満たす項目が存在しないことの反駁を返します。長さについての素朴な再帰です。各段階で排中律が頭部での述語を判定し、三岐性が頭部とそれまでの最良の候補を比較します。四つの組み合わせが四つの節です。どこにも截断がないことが重要です。呼び出し側が求めるのは単なる存在ではなく実際の要素だからです。族が型全体を単に被覆するという仮定の下で、`Search.Over.least` はこれを「型全体上の任意の単に非空な述語の最小要素」へと引き上げます。満たす項目がないという枝は、述語がそのファイバーを命中させねばならない証人によって反駁されます。整礎性はその後、最小の反例の議論によって導かれ、そのコードのところで述べます。
+この節では、先につくった数え上げを使う側の議論を進める。型と、その上の三岐・非反射・推移的な関係を固定する。これは整列順序が要求する性質のうち整礎性を除くすべてである。手続き `scan` は有限族をたどり、截断を一切伴わずに、述語を満たし満たすものの中で最小である項目か、満たす項目が存在しないことの反駁を返す。長さについての素朴な再帰である。各段階で排中律が頭部での述語を判定し、三岐性が頭部とそれまでの最良の候補を比較する。四つの組み合わせが四つの節である。どこにも截断がないことが重要である。呼び出し側が求めるのは単なる存在ではなく実際の要素だからである。族が型全体を単に被覆するという仮定の下で、`Search.Over.least` はこれを「型全体上の任意の単に非空な述語の最小要素」へと引き上げる。満たす項目がないという枝は、述語がそのファイバーを命中させねばならない証人によって反駁される。整礎性はその後、最小の反例の議論によって導かれ、そのコードのところで述べる。
 <!--/-->
 
 <!--en-->
@@ -950,7 +950,7 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 <!--zh-->
 扫描的输出类型 `Found P n f` 是两个显式选项的析取。左支中，某个位置 `i` 持有一个满足 `P` 的条目，且族内没有其他满足 `P` 的条目位于其下。右支中，每个条目都不满足谓词。两个选项携带的都是完整数据而非截断的存在性，这使后续构造能返回真实的元素。
 <!--ja-->
-走査の出力型 `Found P n f` は二つの明示的な選択肢の論理和です。左の選択肢では、ある位置 `i` が `P` を満たす項目を保持し、族の中でそれより下に `P` を満たす他の項目はありません。右の選択肢では、すべての項目が述語を満たしません。どちらの選択肢も截断された存在ではなく完全なデータを運ぶので、後の構成が実際の要素を返せます。
+走査の出力型 `Found P n f` は二つの明示的な選択肢の論理和である。左の選択肢では、ある位置 `i` が `P` を満たす項目を保持し、族の中でそれより下に `P` を満たす他の項目はない。右の選択肢では、すべての項目が述語を満たさない。どちらの選択肢も截断された存在ではなく完全なデータを運ぶので、後の構成が実際の要素を返せる。
 <!--/-->
 
 ```agda
@@ -965,9 +965,9 @@ The scan's output type `Found P n f` is a disjunction of two explicit alternativ
 <!--en-->
 `scan` is defined by recursion on the family's length. The empty family returns the right alternative vacuously. For a family with a head, the recursion first handles the tail, shifting positions by one, and the verdict of excluded middle on `P` at the head is handed to `combine`, which merges the tail's outcome with the head's verdict into an outcome for the whole family.
 <!--zh-->
-`scan` 沿族长度递归定义。空族空虚地返回右支。对有头部的族，递归先处理尾部，把位置整体后移一位；排中律对 `P` 在头部的裁决交给 `combine`，它把尾部的结果与头部的裁决合并成整个族的结果。
+`scan` 沿族长度递归定义。空族空虚地返回右支。对有头部的族，递归先处理尾部，把位置整体后移一位；排中律对 `P` 在头部的判定交给 `combine`，它把尾部的结果与头部的判定合并成整个族的结果。
 <!--ja-->
-`scan` は族の長さについての再帰で定義されます。空の族は空虚に右の選択肢を返します。頭部を持つ族では、再帰がまず尾を (位置を一つずらして) 処理し、頭部での `P` に対する排中律の判定が `combine` に渡されます。`combine` は尾の結果と頭部の判定を族全体の結果へと統合します。
+`scan` は族の長さについての再帰で定義される。空の族は空虚に右の選択肢を返す。頭部を持つ族では、再帰がまず尾を (位置を一つずらして) 処理し、頭部での `P` に対する排中律の判定が `combine` に渡される。`combine` は尾の結果と頭部の判定を族全体の結果へと統合する。
 <!--/-->
 
 ```agda
@@ -984,12 +984,12 @@ The first clause of `combine` handles the case where the tail already yielded a 
 <!--zh-->
 `combine` 的第一支处理尾部已经给出最小满足者 `f (suc i)`、而头部也满足谓词的情形。此时两个候选竞争，三歧判定 `f zero` 与 `f (suc i)` 哪个更小；辅助函数 `decide` 分析该比较的三种结果。
 <!--ja-->
-`combine` の最初の節は、尾がすでに最小の充足者 `f (suc i)` を与え、頭部も述語を満たす場合を扱います。ここでは二つの候補が競い、三岐性が `f zero` と `f (suc i)` のどちらが小さいかを判定します。補助の `decide` がその比較の三通りの結果を分析します。
+`combine` の最初の節は、尾がすでに最小の充足者 `f (suc i)` を与え、頭部も述語を満たす場合を扱う。ここでは二つの候補が競い、三岐性が `f zero` と `f (suc i)` のどちらが小さいかを判定する。補助の `decide` がその比較の三通りの結果を分析する。
 <!--/-->
 
 ```agda
-            → (⟨ P (f zero) ⟩ ⊎ (⟨ P (f zero) ⟩ → ⊥₀)) → Found P (suc n) f
-    combine (inl (i , pi , mi)) (inl p₀) = decide (tri (f zero) (f (suc i)))
+            → Dec ⟨ P (f zero) ⟩ → Found P (suc n) f
+    combine (inl (i , pi , mi)) (yes p₀) = decide (tri (f zero) (f (suc i)))
       where
       decide : Tri (f zero ≺ f (suc i)) (f zero ≡ f (suc i)) (f (suc i) ≺ f zero)
              → Found P (suc n) f
@@ -1000,7 +1000,7 @@ If the head is strictly below the tail's champion, the head becomes the new cham
 <!--zh-->
 若头部严格小于尾部的优胜者，头部便成为新的优胜者。其最小性逐位置核验：在头部自身处，断言 `f zero ≺ f zero` 直接与非自反性矛盾；在尾部各位置，传递性把 `f j ≺ f zero ≺ f (suc i)` 连成链，交给尾部已确立的最小性 `mi`。
 <!--ja-->
-頭部が尾の優位者より狭義に小さければ、頭部が新しい優位者になります。その最小性は位置ごとに確かめられます。頭部自身では `f zero ≺ f zero` の主張は非反射性と直ちに矛盾し、尾の位置では推移性が `f j ≺ f zero ≺ f (suc i)` をつなぎ、その結果を尾で確立済みの最小性 `mi` に渡します。
+頭部が尾の優位者より狭義に小さければ、頭部が新しい優位者になる。その最小性は位置ごとに確かめられる。頭部自身では `f zero ≺ f zero` の主張は非反射性と直ちに矛盾し、尾の位置では推移性が `f j ≺ f zero ≺ f (suc i)` をつなぎ、その結果を尾で確立済みの最小性 `mi` に渡す。
 <!--/-->
 
 ```agda
@@ -1032,7 +1032,7 @@ If the tail's champion is strictly below the head, it survives. A hypothetical e
 <!--zh-->
 若尾部的优胜者严格小于头部，它得以保留。此时优胜者之下的假设性条目有两条出路：经头部 `f (suc i) ≺ f zero ≺ f (suc i)` 的传递性给出一个自比较，由非自反性驳倒；而尾部自身的各位置交给 `mi`。优胜者的证书在每个分支都由旧证书重建。
 <!--ja-->
-尾の優位者が頭部より狭義に小さければ、優位者は生き残ります。優位者の下にあると仮定した要素には二つの落ち方が生じます。頭部を経由する推移性 `f (suc i) ≺ f zero ≺ f (suc i)` が非反射性で反駁される自己比較を生み、尾自身の位置は `mi` に渡されます。優位者の証明書はどの枝でも古い証明書から組み立て直されるのです。
+尾の優位者が頭部より狭義に小さければ、優位者は生き残る。優位者の下にあると仮定した要素には二つの落ち方が生じる。頭部を経由する推移性 `f (suc i) ≺ f zero ≺ f (suc i)` が非反射性で反駁される自己比較を生み、尾自身の位置は `mi` に渡される。優位者の証明書はどの枝でも古い証明書から組み立て直されるのである。
 <!--/-->
 
 ```agda
@@ -1046,13 +1046,13 @@ If the tail's champion is strictly below the head, it survives. A hypothetical e
 <!--en-->
 The second clause keeps the tail's champion when the head fails the predicate. No comparison is needed at all: the head cannot challenge the champion because it does not satisfy `P`, so a supposed counterexample at the head is refuted directly by the verdict `n₀`, and tail positions again go to `mi`.
 <!--zh-->
-第二支在头部不满足谓词时保留尾部的优胜者。这里完全不需要比较：头部既然不满足 `P`，便无从挑战优胜者，因此头部处的假想反例直接由裁决 `n₀` 驳倒，尾部各位置依旧交给 `mi`。
+第二支在头部不满足谓词时保留尾部的优胜者。这里完全不需要比较：头部既然不满足 `P`，便无从挑战优胜者，因此头部处的假想反例直接由判定 `n₀` 驳倒，尾部各位置依旧交给 `mi`。
 <!--ja-->
-二つ目の節は、頭部が述語を満たさない場合に尾の優位者を保ちます。比較はまったく要りません。頭部は `P` を満たさないので優位者に挑戦できず、頭部での仮想の反例は判定 `n₀` によって直接反駁され、尾の位置はやはり `mi` に渡されます。
+二つ目の節は、頭部が述語を満たさない場合に尾の優位者を保つ。比較はまったく要らない。頭部は `P` を満たさないので優位者に挑戦できず、頭部での仮想の反例は判定 `n₀` によって直接反駁され、尾の位置はやはり `mi` に渡される。
 <!--/-->
 
 ```agda
-    combine (inl (i , pi , mi)) (inr n₀) = inl (suc i , (pi , minAt))
+    combine (inl (i , pi , mi)) (no n₀) = inl (suc i , (pi , minAt))
       where
       minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f (suc i) → ⊥₀
       minAt zero    pj hj = ⊥₀-rec (n₀ pj)
@@ -1064,11 +1064,11 @@ Symmetrically, when the tail had no satisfier at all and the head does satisfy t
 <!--zh-->
 对称地，当尾部全无满足者而头部确实满足谓词时，头部就是新的优胜者。其最小性立即可得：头部自身由非自反性处理，任何满足谓词的尾部位置都与尾部的反驳 `none` 矛盾。
 <!--ja-->
-対称的に、尾に充足者がまったくなく頭部が述語を満たす場合は、頭部が新しい優位者です。その最小性は直ちに得られます。頭部自身は非反射性で処理され、述語を満たす尾の位置があれば尾の反駁 `none` と矛盾します。
+対称的に、尾に充足者がまったくなく頭部が述語を満たす場合は、頭部が新しい優位者である。その最小性は直ちに得られる。頭部自身は非反射性で処理され、述語を満たす尾の位置があれば尾の反駁 `none` と矛盾する。
 <!--/-->
 
 ```agda
-    combine (inr none) (inl p₀) = inl (zero , (p₀ , minAt))
+    combine (inr none) (yes p₀) = inl (zero , (p₀ , minAt))
       where
       minAt : (j : Fin (suc n)) → ⟨ P (f j) ⟩ → f j ≺ f zero → ⊥₀
       minAt zero    pj hj = irr (f zero) hj
@@ -1080,11 +1080,11 @@ The last clause is the agreement case: neither the tail nor the head supplies a 
 <!--zh-->
 最后一支是一致情形：尾部与头部都给不出满足者，于是报告整个族中无人满足。反驳逐位置组装：头部交给 `n₀`，每个尾部位置交给 `none`。至此，导言所说的四种组合齐备。
 <!--ja-->
-最後の節は一致の場合です。尾にも頭にも充足者がいないので、族全体が何も満たさないと報告されます。反駁は位置ごとに組み立てられ、頭部は `n₀` に、各尾の位置は `none` に回されます。これで導入部に予告した四つの組み合わせがそろいました。
+最後の節は一致の場合である。尾にも頭にも充足者がいないので、族全体が何も満たさないと報告される。反駁は位置ごとに組み立てられ、頭部は `n₀` に、各尾の位置は `none` に回される。これで導入部に予告した四つの組み合わせがそろった。
 <!--/-->
 
 ```agda
-    combine (inr none) (inr n₀) = inr atAll
+    combine (inr none) (no n₀) = inr atAll
       where
       atAll : (i : Fin (suc n)) → ⟨ P (f i) ⟩ → ⊥₀
       atAll zero    p = n₀ p
@@ -1096,7 +1096,7 @@ The sub-module `Over` adds the one premise that turns a finite family into a tal
 <!--zh-->
 子模块 `Over` 添加了把有穷族变成点名册所需的那条前提：`cov` 说 `A` 的每个元素都被该族单纯命中，这是允许重复的截断覆盖。在此前提下，`least` 把扫描的答案升级为整个类型上的最小元：其输入只是一个「某元素满足 `P`」的截断见证，其输出则是显式数据，即一个元素连同 `Least P m`。
 <!--ja-->
-副モジュール `Over` は、有限族を数え上げへと変えるための唯一の前提を追加します。`cov` は `A` のすべての要素が族によって単に命中されると言うもので、重複を許す截断的被覆です。この前提のもとで `least` は走査の答えを型全体への最小要素へと引き上げます。入力は「ある要素が `P` を満たす」という截断された証人だけですが、出力は明示的なデータ、すなわち要素と `Least P m` の組です。
+副モジュール `Over` は、有限族を数え上げへと変えるための唯一の前提を追加する。`cov` は `A` のすべての要素が族によって単に命中されると言うもので、重複を許す截断的被覆である。この前提のもとで `least` は走査の答えを型全体への最小要素へと引き上げる。入力は「ある要素が `P` を満たす」という截断された証人だけであるが、出力は明示的なデータ、すなわち要素と `Least P m` の組である。
 <!--/-->
 
 ```agda
@@ -1114,7 +1114,7 @@ Inside `least`, the auxiliary `nowhere` disposes of the scan's no-satisfier bran
 <!--zh-->
 在 `least` 内部，辅助函数 `nowhere` 处理扫描的「无满足者」分支：假定没有条目满足 `P`，就必须驳倒给定的截断见证。该消去是合法的，因为目标是空类型这一命题，因此见证的截断可以在不作任何选择的情况下拆开。
 <!--ja-->
-`least` の内部で、補助の `nowhere` は走査の「充足者なし」の枝を処理します。どの項目も `P` を満たさないと仮定したとき、与えられた截断された証人を反駁せねばなりません。この消去が正当なのは、目標が命題である空の型だからで、証人の截断は何も選ばずにほどけます。
+`least` の内部で、補助の `nowhere` は走査の「充足者なし」の枝を処理する。どの項目も `P` を満たさないと仮定したとき、与えられた截断された証人を反駁せねばならない。この消去が正当なのは、目標が命題である空の型だからで、証人の截断は何も選ばずにほどける。
 <!--/-->
 
 ```agda
@@ -1130,7 +1130,7 @@ Concretely, the witness supplies an element `a` with `⟨ P a ⟩`, and the cove
 <!--zh-->
 具体而言，见证给出元素 `a` 及 `⟨ P a ⟩`，覆盖 `cov a` 单纯地指出族中位置 `i` 满足 `f i ≡ a`；由于目标仍是命题，该纤维可以被读出。把 `⟨ P a ⟩` 的证明沿 `f i ≡ a` 反向传输得到 `⟨ P (f i) ⟩`，假定的反驳 `none` 便将其化为矛盾。紧接的代码行执行的正是这次传输。
 <!--ja-->
-具体的には、証人が要素 `a` と `⟨ P a ⟩` を与え、被覆 `cov a` が `f i ≡ a` を満たす族の位置 `i` を単に指し示します。ここでも目標は命題なのでファイバーを読めます。`⟨ P a ⟩` の証明を `f i ≡ a` に沿って逆向きに輸送すれば `⟨ P (f i) ⟩` が得られ、仮定した反駁 `none` がそれを矛盾に変えます。続く行がまさにこの輸送を行います。
+具体的には、証人が要素 `a` と `⟨ P a ⟩` を与え、被覆 `cov a` が `f i ≡ a` を満たす族の位置 `i` を単に指し示す。ここでも目標は命題なのでファイバーを読める。`⟨ P a ⟩` の証明を `f i ≡ a` に沿って逆向きに輸送すれば `⟨ P (f i) ⟩` が得られ、仮定した反駁 `none` がそれを矛盾に変える。続く行がまさにこの輸送を行う。
 <!--/-->
 
 ```agda
@@ -1146,7 +1146,7 @@ The transport announced earlier is carried out here, in both components at once.
 <!--zh-->
 前面预告的传输在这里执行，且两个分量同时进行。给定整个类型中位于优胜者之下的假想条目 `b`，附有 `⟨ P b ⟩` 与 `b ≺ f i`，覆盖单纯地给出满足 `f j ≡ b` 的族位置 `j`；把满足性与比较性都沿该路径反向传输，优胜者的族级证书 `mi` 便把二者一并驳倒。于是扫描仅剩的分支，即反驳 `none`，彻底矛盾，因为见证已被证明必然把一个满足者带进族中。
 <!--ja-->
-先に予告した輸送がここで、両成分にわたって一度に行われます。型全体の中で優位者の下にあると仮定した項目 `b` と `⟨ P b ⟩`、`b ≺ f i` が与えられると、被覆が `f j ≡ b` を満たす族の位置 `j` を単に指し示します。充足と比較の両方をその経路に沿って逆向きに輸送すれば、優位者の族レベルの証明書 `mi` が両者をまとめて反駁します。したがって走査に残る唯一の枝である反駁 `none` は完全に矛盾します。証人が必ず族の中に充足者を引き込むことが示されたからです。
+先に予告した輸送がここで、両成分にわたって一度に行われる。型全体の中で優位者の下にあると仮定した項目 `b` と `⟨ P b ⟩`、`b ≺ f i` が与えられると、被覆が `f j ≡ b` を満たす族の位置 `j` を単に指し示す。充足と比較の両方をその経路に沿って逆向きに輸送すれば、優位者の族レベルの証明書 `mi` が両者をまとめて反駁する。したがって走査に残る唯一の枝である反駁 `none` は完全に矛盾する。証人が必ず族の中に充足者を引き込むことが示されたからである。
 <!--/-->
 
 ```agda
@@ -1169,9 +1169,9 @@ To prove well-foundedness, first decide accessibility of an arbitrary `a`. The p
 ```agda
     wellFounded a = fromDec (lem (Acc _≺_ a , isPropAcc a))
       where
-      fromDec : (Acc _≺_ a ⊎ (Acc _≺_ a → ⊥₀)) → Acc _≺_ a
-      fromDec (inl h) = h
-      fromDec (inr nh) = ⊥₀-rec (found .snd .fst (acc below))
+      fromDec : Dec (Acc _≺_ a) → Acc _≺_ a
+      fromDec (yes h) = h
+      fromDec (no nh) = ⊥₀-rec (found .snd .fst (acc below))
 ```
 
 <!--en-->
@@ -1179,7 +1179,7 @@ The property to be minimized is `NotAcc`, non-accessibility. Its underlying stat
 <!--zh-->
 被取最小的性质是 `NotAcc`，即不可及性。其底层陈述是一个否定，而否定是命题，故 `NotAcc` 是合法的真值 `Ω`，`least` 可以作用于它。输入是 `a` 与假定反驳 `nh` 的截断配对，因此该假设只是说不可及元素之集非空。
 <!--ja-->
-最小化の対象となる性質は `NotAcc`、すなわち到達不可能性です。その下にある主張は否定であり、否定は命題なので、`NotAcc` は正当な真理値 `Ω` であり、`least` を適用できます。入力は `a` と仮定された反駁 `nh` の截断された組であり、仮定は単に到達不能な要素の集まりが空でないと言っているにすぎません。
+最小化の対象となる性質は `NotAcc`、すなわち到達不可能性である。その下にある主張は否定であり、否定は命題なので、`NotAcc` は正当な真理値 `Ω` であり、`least` を適用できる。入力は `a` と仮定された反駁 `nh` の截断された組であり、仮定は単に到達不能な要素の集まりが空でないと言っているにすぎない。
 <!--/-->
 
 ```agda
@@ -1195,15 +1195,15 @@ Let `m` be the least non-accessible element just found. To show it accessible, o
 <!--zh-->
 设 `m` 是刚求得的最小不可及元素。要证它可及，须证每个前驱 `b` 可及，而 `b` 的可及性又是命题，故再次由排中律判定；辅助函数 `pick` 在肯定支中返回证书。
 <!--ja-->
-今求めた最小の到達不能要素を `m` とします。これが到達可能であることを示すには、すべての前駆 `b` が到達可能であることを示さねばならず、`b` の到達可能性もまた命題なので、再び排中律で判定します。補助の `pick` が肯定の枝で証明書を返します。
+今求めた最小の到達不能要素を `m` とする。これが到達可能であることを示すには、すべての前駆 `b` が到達可能であることを示さねばならず、`b` の到達可能性もまた命題なので、再び排中律で判定する。補助の `pick` が肯定の枝で証明書を返す。
 <!--/-->
 
 ```agda
         below : (b : A) → b ≺ found .fst → Acc _≺_ b
         below b hb = pick (lem (Acc _≺_ b , isPropAcc b))
           where
-          pick : (Acc _≺_ b ⊎ (Acc _≺_ b → ⊥₀)) → Acc _≺_ b
-          pick (inl h)  = h
+          pick : Dec (Acc _≺_ b) → Acc _≺_ b
+          pick (yes h) = h
 ```
 
 <!--en-->
@@ -1211,11 +1211,11 @@ In the negative branch, `b` would be a non-accessible element strictly below the
 <!--zh-->
 在否定支中，`b` 将是严格小于最小不可及元素 `m` 的不可及元素，而 `Least NotAcc m` 的最小性条款恰好驳斥这一点。于是每个前驱皆可及，证书 `acc below` 合法，把它交给假定的可及性反驳便封闭了矛盾。注意：全程并未构造或排除任何无穷下降序列，论证完全就是这个矛盾。
 <!--ja-->
-否定の枝では、`b` は最小の到達不能要素 `m` より狭義に小さい到達不能要素となるはずで、`Least NotAcc m` の最小性の条項がまさにそれを反駁します。したがってすべての前駆が到達可能であり、証明書 `acc below` は正当で、仮定された到達可能性の反駁に与えることで矛盾が閉じます。無限下降列が構成されたり排除されたりしたのではなく、議論は完全にこの矛盾によるものです。
+否定の枝では、`b` は最小の到達不能要素 `m` より狭義に小さい到達不能要素となるはずで、`Least NotAcc m` の最小性の条項がまさにそれを反駁する。したがってすべての前駆が到達可能であり、証明書 `acc below` は正当で、仮定された到達可能性の反駁に与えることで矛盾が閉じる。無限下降列が構成されたり排除されたりしたのではなく、議論は完全にこの矛盾によるものである。
 <!--/-->
 
 ```agda
-          pick (inr nb) = ⊥₀-rec (found .snd .snd b nb hb)
+          pick (no nb) = ⊥₀-rec (found .snd .snd b nb hb)
 ```
 
 <!--en-->
@@ -1229,7 +1229,7 @@ This section defines the order that finite stages will carry. Fix a set `A` and 
 <!--ja-->
 ## 最初の相違
 
-この節は、有限段階が担う順序を定義します。集合 `A` と、集合の上の関係 `R` を固定します。`R` は `A` の要素の上の順序と読みます。`A` の二つの部分集合は、どこで食い違うかによって比較されます。「`x` が `y` に先行する」ことの証人は、`A` の要素 `z` であって、`y` に属し `x` には属さず、かつ `x` と `y` が `z` の下で**一致**するものです。つまり `R` が `z` の前に置く `A` の各要素は、一方に属するならばちょうど他方にも属するということです。逆向きに読めば、`z` が最初の相違点であり、それを持つのが `y` です。関係 `precedes R A` はそのような証人の截断された存在であり、非反射性は直ちに成り立ち、まったく仮定を要しません。`x` 自身に対する証人は `x` に属すると同時に属さないことになるからです。続く証明は基底の順序への仮定から三岐性と推移性を確立し、整礎性には有限性を用います。
+この節は、有限段階が担う順序を定義する。集合 `A` と、集合の上の関係 `R` を固定する。`R` は `A` の要素の上の順序と読む。`A` の二つの部分集合は、どこで食い違うかによって比較される。「`x` が `y` に先行する」ことの証人は、`A` の要素 `z` であって、`y` に属し `x` には属さず、かつ `x` と `y` が `z` の下で**一致**するものである。つまり `R` が `z` の前に置く `A` の各要素は、一方に属するならばちょうど他方にも属するということである。逆向きに読めば、`z` が最初の相違点であり、それを持つのが `y` である。関係 `precedes R A` はそのような証人の截断された存在であり、非反射性は直ちに成り立ち、まったく仮定を要しない。`x` 自身に対する証人は `x` に属すると同時に属さないことになるからである。続く証明は基底の順序への仮定から三岐性と推移性を確立し、整礎性には有限性を用いる。
 <!--/-->
 
 <!--en-->
@@ -1237,7 +1237,7 @@ The two ingredients are stated separately. `Agrees R A x y z` says that membersh
 <!--zh-->
 两个成分分别陈述。`Agrees R A x y z` 说：对 `A` 中被 `R` 排在 `z` 之前的每个成员 `w`，属于 `x` 与属于 `y` 双向重合。`Witness R A x y z` 随后组装完整见证：`z` 属于 `A`，属于 `y`，不属于 `x`，且其下方一致成立。正是成员条款的方向决定了比较中哪一方胜出。
 <!--ja-->
-二つの材料は別々に述べられます。`Agrees R A x y z` は、`R` が `z` の前に置く `A` の各要素 `w` について、`x` への所属と `y` への所属が双方向に一致することを言います。`Witness R A x y z` は続いて完全な証人を組み立てます。`z` は `A` に属し、`y` に属し、`x` には属さず、その下で一致が成り立つ、ということです。所属条項の向きこそが、比較でどちらが勝つかを決めます。
+二つの材料は別々に述べられる。`Agrees R A x y z` は、`R` が `z` の前に置く `A` の各要素 `w` について、`x` への所属と `y` への所属が双方向に一致することを言う。`Witness R A x y z` は続いて完全な証人を組み立てる。`z` は `A` に属し、`y` に属し、`x` には属さず、その下で一致が成り立つ、ということである。所属条項の向きこそが、比較でどちらが勝つかを決める。
 <!--/-->
 
 ```agda
@@ -1254,7 +1254,7 @@ Witness R A x y z =
 <!--zh-->
 `precedes R A x y` 是「这类见证单纯存在」的命题，随 `squash₁` 打包成一个真值。由于见证藏在截断之后，被断言的只有其存在，任何东西都不选定 `z`。非自反性于是只花一行：把截断消去到空类型 (一个命题) 中，暴露出同时有 `z ∈ x` 与 `z ∉ x` 的见证，把第二条施于第一条即是矛盾。
 <!--ja-->
-`precedes R A x y` は、そのような証人が単に存在するという命題であり、`squash₁` とともに真理値としてまとめられています。証人は截断の後ろに隠れているので、主張されるのはその存在だけで、`z` が選ばれることはありません。非反射性はそこで一行で済みます。截断を命題である空の型へと消去すれば、`z ∈ x` と `z ∉ x` を同時に持つ証人が現れ、第二の条項を第一に施せば矛盾です。
+`precedes R A x y` は、そのような証人が単に存在するという命題であり、`squash₁` とともに真理値としてまとめられている。証人は截断の後ろに隠れているので、主張されるのはその存在だけで、`z` が選ばれることはない。非反射性はそこで一行で済む。截断を命題である空の型へと消去すれば、`z ∈ x` と `z ∉ x` を同時に持つ証人が現れ、第二の条項を第一に施せば矛盾である。
 <!--/-->
 
 ```agda
@@ -1276,9 +1276,9 @@ Transitivity is a comparison of two witnesses. If `x` comes before `y` at `p` an
 
 传递性是两个见证之间的比较。若 `x` 在 `p` 处先于 `y`，`y` 在 `q` 处先于 `z`，则 `p` 与 `q` 不可能相等，因为 `p` 属于 `y` 而 `q` 不属于；而二者中较小的那个就见证了 `x` 先于 `z`。两支要核对的是同样的两件事：较小的那一点方向正确，以及它之下的一致性可以复合。
 <!--ja-->
-最初の相違による順序の推移性と三岐性は、基底の順序への仮定を indeed 必要とし、しかも両者は異なる仮定を要するので、一つのモジュールにまとめられます。そのパラメータは、`A` の要素の上での `R` の三岐性と推移性、およびそれらの要素の上での `R` の最小要素原理です。塔の中では、これらは下の段階から供給されます。
+最初の相違による順序の推移性と三岐性は、基底の順序への仮定を indeed 必要とし、しかも両者は異なる仮定を要するので、一つのモジュールにまとめられる。そのパラメータは、`A` の要素の上での `R` の三岐性と推移性、およびそれらの要素の上での `R` の最小要素原理である。塔の中では、これらは下の段階から供給される。
 
-推移性は二つの証人の比較です。`x` が `p` で `y` に先行し、`y` が `q` で `z` に先行するなら、`p` は `y` に属し `q` は属さないので `p` と `q` は等しくありえず、両者のうち小さいほうが `x` が `z` に先行することの証人となります。どちらの枝でも確かめることは同じ二つです。小さいほうの点が正しい側にあることと、その下での一致が合成できることです。
+推移性は二つの証人の比較である。`x` が `p` で `y` に先行し、`y` が `q` で `z` に先行するなら、`p` は `y` に属し `q` は属さないので `p` と `q` は等しくありえず、両者のうち小さいほうが `x` が `z` に先行することの証人となる。どちらの枝でも確かめることは同じ二つである。小さいほうの点が正しい側にあることと、その下での一致が合成できることである。
 <!--/-->
 
 <!--en-->
@@ -1286,7 +1286,7 @@ The module collects the three premises the earliest-disagreement order will inhe
 <!--zh-->
 该模块收集最先分歧序将要继承的三条前提。`baseTri` 与 `baseTrans` 说 `R` 限制在 `A` 的成员上时三歧且传递，`baseLeast` 是 `A` 上的最小元原则：从「`A` 成员的某个性质单纯非空」出发，它给出一个满足该性质、且没有更小的 `A` 成员也满足的元素。注意结论的形状：它是显式数据而非截断，因为调用方需要真实的极小元。
 <!--ja-->
-このモジュールは、最初の相違の順序が受け継ぐ三つの前提を集めます。`baseTri` と `baseTrans` は、`A` の要素に制限した `R` が三岐かつ推移的であると言い、`baseLeast` は `A` の上の最小要素原理です。`A` の要素のある性質が単に非空であることから、その性質を満たし、より小さい `A` の要素がどれも満たさない要素を返します。結論の形に注意してください。呼び出し側が実際の最小要素を必要とするので、截断ではなく明示的なデータです。
+このモジュールは、最初の相違の順序が受け継ぐ三つの前提を集める。`baseTri` と `baseTrans` は、`A` の要素に制限した `R` が三岐かつ推移的であると言い、`baseLeast` は `A` の上の最小要素原理である。`A` の要素のある性質が単に非空であることから、その性質を満たし、より小さい `A` の要素がどれも満たさない要素を返す。結論の形に注意してほしい。呼び出し側が実際の最小要素を必要とするので、截断ではなく明示的なデータである。
 <!--/-->
 
 ```agda
@@ -1302,7 +1302,7 @@ The statement of transitivity takes the two hypotheses exactly as `precedes` pro
 <!--zh-->
 传递性的陈述恰好按 `precedes` 的产出形式取两条前提：`x ≺ y` 与 `y ≺ z` 的截断见证，并返回 `x ≺ z` 的截断见证。因此证明先消去第一个截断，再消去第二个，二者的目标都又是截断、因而是命题。
 <!--ja-->
-推移性の主張は、二つの仮定を `precedes` が生み出す通りの形で受け取ります。`x ≺ y` と `y ≺ z` の截断された証人を受け取り、`x ≺ z` の截断された証人を返します。したがって証明は、最初の截断を消去し、次に第二の截断を消去することから始まります。どちらの目標も再び截断であり、したがって命題です。
+推移性の主張は、二つの仮定を `precedes` が生み出す通りの形で受け取る。`x ≺ y` と `y ≺ z` の截断された証人を受け取り、`x ≺ z` の截断された証人を返す。したがって証明は、最初の截断を消去し、次に第二の截断を消去することから始まる。どちらの目標も再び截断であり、したがって命題である。
 <!--/-->
 
 ```agda
@@ -1319,7 +1319,7 @@ With both witnesses exposed, `both` receives the full data: a point `p` witnessi
 <!--zh-->
 两个见证都暴露后，`both` 接收完整数据：见证 `x` 先于 `y` 的点 `p` 及其成员条款 `agp`，以及见证 `y` 先于 `z` 的点 `q` 及其 `agq`。两个基底点的比较交给基底三歧，辅助函数 `decide` 分析其三种结果。
 <!--ja-->
-両方の証人が現れたところで、`both` は完全なデータを受け取ります。`x` が `y` に先行することの証人である点 `p` とその所属条項 `agp`、そして `y` が `z` に先行することの証人である点 `q` とその `agq` です。二つの基底点の比較は基底の三岐性に委ねられ、補助の `decide` がその三通りの結果を分析します。
+両方の証人が現れたところで、`both` は完全なデータを受け取る。`x` が `y` に先行することの証人である点 `p` とその所属条項 `agp`、そして `y` が `z` に先行することの証人である点 `q` とその `agq` である。二つの基底点の比較は基底の三岐性に委ねられ、補助の `decide` がその三通りの結果を分析する。
 <!--/-->
 
 ```agda
@@ -1335,7 +1335,7 @@ If `p` is strictly below `q`, it keeps the role of witness for `x` before `z`. I
 <!--zh-->
 若 `p` 严格小于 `q`，它继续充当 `x` 先于 `z` 的见证。它自身的条款原封不动，因为它们只涉及 `x` 与 `y`；须核实的是 `p` 属于 `z`，以及 `p` 之下 `x` 与 `z` 的一致性。`p` 属于 `z` 由 `agq` 在点 `p` 处给出，它把 `p` 对 `y` 的成员关系沿复合比较传输过去。
 <!--ja-->
-`p` が `q` より狭義に小さければ、`p` が `x` の `z` への先行の証人であり続けます。それ自身の条項は `x` と `y` だけに関わるのでそのまま引き継がれ、確かめるべきなのは `p` が `z` に属することと、`p` の下で `x` と `z` の一致が成り立つことです。`z` への所属は点 `p` での `agq` から来ます。`p` の `y` への所属を合成された比較を通して輸送するのです。
+`p` が `q` より狭義に小さければ、`p` が `x` の `z` への先行の証人であり続ける。それ自身の条項は `x` と `y` だけに関わるのでそのまま引き継がれ、確かめるべきなのは `p` が `z` に属することと、`p` の下で `x` と `z` の一致が成り立つことである。`z` への所属は点 `p` での `agq` から来る。`p` の `y` への所属を合成された比較を通して輸送するのである。
 <!--/-->
 
 ```agda
@@ -1351,7 +1351,7 @@ Agreement below `p` is composed clause by clause. To show `w ∈ x` implies `w �
 <!--zh-->
 `p` 之下的一致性逐条款复合。要证 `w ∈ x` 蕴含 `w ∈ z`：`agp` 把 `w ∈ x` 提升为 `w ∈ y`，再用 `agq` 把对 `y` 的成员提升到 `z`，其中用基底传递性保证 `w` 也位于 `q` 之下。反向条款对称，把 `z` 降到 `y` 再降到 `x`。相等情形不可能出现：`p` 属于 `y` 而 `q` 不属于，沿路径 `p ≡ q` 传输成员关系即得矛盾。
 <!--ja-->
-`p` の下での一致は条項ごとに合成されます。`w ∈ x` が `w ∈ z` を導くことを示すには、`agp` が `w ∈ x` を `w ∈ y` に引き上げ、続いて `agq` が `y` への所属を `z` まで引き上げます。その際、基底の推移性によって `w` が `q` の下にもあることを使います。逆向きの条項は対称で、`z` を `y` へ、さらに `x` へと下ろします。等しい場合は起こりえません。`p` は `y` に属し `q` は属さないので、経路 `p ≡ q` に沿って所属を輸送すれば矛盾が得られます。
+`p` の下での一致は条項ごとに合成される。`w ∈ x` が `w ∈ z` を導くことを示すには、`agp` が `w ∈ x` を `w ∈ y` に引き上げ、続いて `agq` が `y` への所属を `z` まで引き上げる。その際、基底の推移性によって `w` が `q` の下にもあることを使う。逆向きの条項は対称で、`z` を `y` へ、さらに `x` へと下ろす。等しい場合は起こりえない。`p` は `y` に属し `q` は属さないので、経路 `p ≡ q` に沿って所属を輸送すれば矛盾が得られる。
 <!--/-->
 
 ```agda
@@ -1367,7 +1367,7 @@ If instead `q` is strictly below `p`, the roles swap: `q` witnesses `x` before `
 <!--zh-->
 若改为 `q` 严格小于 `p`，角色对调：由 `q` 见证 `x` 先于 `z`。它关于 `y` 与 `z` 的条款照旧，但须确立对 `x` 的成员与一致性。关于成员，在点 `q` 处读 `agp`，把 `q` 对 `x` 的成员传输为对 `y` 的成员，与 `q ∉ y` 矛盾；辅助函数 `q∉x` 把这一反驳打包。
 <!--ja-->
-逆に `q` が `p` より狭義に小さければ、役割が入れ替わり、`q` が `x` の `z` への先行を証明します。`y` と `z` に関する条項はそのまま引き継げますが、`x` への所属と一致を確立せねばなりません。所属については、点 `q` で `agp` を読むと `q` の `x` への所属が `y` への所属へと輸送され、`q ∉ y` と矛盾します。補助の `q∉x` がこの反駁をまとめます。
+逆に `q` が `p` より狭義に小さければ、役割が入れ替わり、`q` が `x` の `z` への先行を証明する。`y` と `z` に関する条項はそのまま引き継げるが、`x` への所属と一致を確立せねばならない。所属については、点 `q` で `agp` を読むと `q` の `x` への所属が `y` への所属へと輸送され、`q ∉ y` と矛盾する。補助の `q∉x` がこの反駁をまとめる。
 <!--/-->
 
 ```agda
@@ -1383,7 +1383,7 @@ Agreement below `q` composes in the mirrored order: membership in `x` is pushed 
 <!--zh-->
 `q` 之下的一致性以镜像顺序复合：先用 `agp` 借助 `q ≺ p` 的基底传递性把 `w` 置于 `p` 之下，从而把对 `x` 的成员下推到 `y`，`agq` 再把它上提到 `z`；反向条款先把 `z` 降到 `y`，再降到 `x`。两个不对称情形都已处理、相等已被驳倒，传递性就此完成。
 <!--ja-->
-`q` の下での一致は鏡像の順で合成されます。まず `agp` が `q ≺ p` と基底の推移性によって `w` を `p` の下に置き、`x` への所属を `y` へと押し下げ、続いて `agq` がそれを `z` まで引き上げます。逆向きの条項はまず `z` を `y` へ、さらに `x` へと下ろします。二つの非対称な場合が処理され、等しい場合は反駁されたので、推移性が完成します。
+`q` の下での一致は鏡像の順で合成される。まず `agp` が `q ≺ p` と基底の推移性によって `w` を `p` の下に置き、`x` への所属を `y` へと押し下げ、続いて `agq` がそれを `z` まで引き上げる。逆向きの条項はまず `z` を `y` へ、さらに `x` へと下ろす。二つの非対称な場合が処理され、等しい場合は反駁されたので、推移性が完成する。
 <!--/-->
 
 ```agda
@@ -1465,9 +1465,9 @@ For the forward clause, suppose `w ∈ˢ x` and ask excluded middle about `w ∈
 ```agda
       fwd wx = pick (lem (w ∈ˢ y))
         where
-        pick : (⟨ w ∈ˢ y ⟩ ⊎ (⟨ w ∈ˢ y ⟩ → ⊥₀)) → ⟨ w ∈ˢ y ⟩
-        pick (inl h)  = h
-        pick (inr nh) = ⊥₀-rec (na ∣ inl (wx , nh) ∣₁)
+        pick : Dec ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ y ⟩
+        pick (yes h) = h
+        pick (no nh) = ⊥₀-rec (na ∣ inl (wx , nh) ∣₁)
 ```
 
 <!--en-->
@@ -1482,8 +1482,8 @@ The backward clause is the mirror image. Assuming `w ∈ˢ y`, excluded middle d
       bwd : ⟨ w ∈ˢ y ⟩ → ⟨ w ∈ˢ x ⟩
       bwd wy = pick (lem (w ∈ˢ x))
         where
-        pick : (⟨ w ∈ˢ x ⟩ ⊎ (⟨ w ∈ˢ x ⟩ → ⊥₀)) → ⟨ w ∈ˢ x ⟩
-        pick (inl h)  = h
+        pick : Dec ⟨ w ∈ˢ x ⟩ → ⟨ w ∈ˢ x ⟩
+        pick (yes h) = h
 ```
 
 <!--en-->
@@ -1495,7 +1495,7 @@ Now suppose `Some` is refuted, so no member of `A` is apart. The helper `nApart`
 <!--/-->
 
 ```agda
-        pick (inr nh) = ⊥₀-rec (na ∣ inr (nh , wy) ∣₁)
+        pick (no nh) = ⊥₀-rec (na ∣ inr (nh , wy) ∣₁)
     same : (Some → ⊥₀) → x ≡ y
     same ns = extensionalV step
       where
@@ -1529,9 +1529,9 @@ At each `w`, the two clauses of `agree w (nApart w)` assert membership in `x` if
 ```agda
       step : (w : S) → (w ∈ˢ x) ≡ (w ∈ˢ y)
       step w = ⇔toPath (agree w (nApart w) .fst) (agree w (nApart w) .snd)
-    decide : (Some ⊎ (Some → ⊥₀))
+    decide : Dec Some
            → Tri ⟨ precedes R A x y ⟩ (x ≡ y) ⟨ precedes R A y x ⟩
-    decide (inr ns) = eq (same ns)
+    decide (no ns) = eq (same ns)
 ```
 
 <!--en-->
@@ -1543,7 +1543,7 @@ In the other branch, `Some` holds: some member of `A` is apart. The smallest-ele
 <!--/-->
 
 ```agda
-    decide (inl hs) = side (lem (m ∈ˢ x))
+    decide (yes hs) = side (lem (m ∈ˢ x))
       where
       found : Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ Apart m ⟩
                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ Apart b ⟩ → ⟨ R b m ⟩ → ⊥₀))
@@ -1578,7 +1578,7 @@ The leastness field `belowM` refutes any apart point strictly below `m`; its arg
       apartM = found .snd .snd .fst
       belowM : (w : S) → ⟨ w ∈ˢ A ⟩ → ⟨ R w m ⟩ → ⟨ Apart w ⟩ → ⊥₀
       belowM w w∈A hw ha = found .snd .snd .snd w w∈A ha hw
-      side : (⟨ m ∈ˢ x ⟩ ⊎ (⟨ m ∈ˢ x ⟩ → ⊥₀))
+      side : Dec ⟨ m ∈ˢ x ⟩
            → Tri ⟨ precedes R A x y ⟩ (x ≡ y) ⟨ precedes R A y x ⟩
 ```
 
@@ -1591,7 +1591,7 @@ If `m` does belong to `x`, then `m` witnesses that `y` comes before `x`: it lies
 <!--/-->
 
 ```agda
-      side (inl mx) = gt ∣ m , (m∈A , (mx , (m∉y , ag))) ∣₁
+      side (yes mx) = gt ∣ m , (m∈A , (mx , (m∉y , ag))) ∣₁
         where
         m∉y : ⟨ m ∈ˢ y ⟩ → ⊥₀
         m∉y my = rec₁ isProp⊥
@@ -1609,7 +1609,7 @@ Agreement below `m` also swaps sides for free. For each `w` below `m`, `belowM` 
 ```agda
         ag : Agrees R A y x m
         ag w w∈A hw = agree w (belowM w w∈A hw) .snd , agree w (belowM w w∈A hw) .fst
-      side (inr nmx) = lt ∣ m , (m∈A , (my , (nmx , ag))) ∣₁
+      side (no nmx) = lt ∣ m , (m∈A , (my , (nmx , ag))) ∣₁
         where
         my : ⟨ m ∈ˢ y ⟩
 ```
@@ -2149,7 +2149,7 @@ The relation `a ≺ b` is a disjoint sum of two ways to come first. The left alt
 <!--zh-->
 关系 `a ≺ b` 是「占先」的两种方式的不相交和。左支说 `a` 的层号严格更小；右支说两层号相等，并且在层 `level a` 内，两个底层集合处于该层自己的 `before` 序中。左支的 `Lift` 把自然数上的比较从 `Type ℓ-zero` 抬升到 `Type (ℓ-suc ℓ)`，即右支本已所在的宇宙，于是两支共用一个类型。这个关系按字典序读：层号分出高下，唯有打平时才去问层。
 <!--ja-->
-関係 `a ≺ b` は、先に来る二つの仕方の非交和です。左の選択肢は `a` のレベルが厳密に小さいと言い、右の選択肢はレベルが一致し、段階 `level a` の中で基底の集合がその段階自身の `before` 順序に入ると言います。左辺の `Lift` は自然数上の比較を `Type ℓ-zero` から、右の選択肢が既に住む宇宙 `Type (ℓ-suc ℓ)` へ引き上げ、両者の枝が一つの型を共有するようにします。この関係は辞書式に読みます：レベルが決め手となり、同点のときにだけ段階に問い合わせます。
+関係 `a ≺ b` は、先に来る二つの仕方の非交和である。左の選択肢は `a` のレベルが厳密に小さいと言い、右の選択肢はレベルが一致し、段階 `level a` の中で基底の集合がその段階自身の `before` 順序に入ると言う。左辺の `Lift` は自然数上の比較を `Type ℓ-zero` から、右の選択肢が既に住む宇宙 `Type (ℓ-suc ℓ)` へ引き上げ、両者の枝が一つの型を共有するようにする。この関係は辞書式に読む：レベルが決め手となり、同点のときにだけ段階に問い合わせる。
 <!--/-->
 
 ```agda
@@ -2166,7 +2166,7 @@ Irreflexivity disposes of each branch with the corresponding fact about the ingr
 <!--zh-->
 非自反性对每一支分别用相应成分的事实处理：严格不等式 `level a < level a` 被 `¬m<m` 拒绝；对 `a` 自身的 `before (level a)` 见证被 `before-irrefl` 拒绝，而后者在每层都成立且无需归纳。传递性则按两个前提各取哪一支来分情形。若两步都在层号上下降，`<-trans` 复合两个不等式；若只有一步在层号上下降，就用另一前提中的层号等式配合 `subst`，把那条严格不等式搬到正确的端点，结果仍在左支。
 <!--ja-->
-非反射性は、各枝について対応する成分の事実で処理されます：厳密な不等式 `level a < level a` は `¬m<m` が拒み、`a` 自身に対する `before (level a)` の証人は `before-irrefl` が拒みます。後者は全段階で帰納なしに成り立っていました。推移性は、二つの前提がそれぞれどちらの枝を使うかで場合分けします。両段階ともレベルで下降するなら `<-trans` が二つの不等式を合成し、片方だけが下降するなら、もう一方の前提にあるレベルの等式を `subst` とともに用いて厳密な不等式を正しい端点へ移し、やはり左の枝を得ます。
+非反射性は、各枝について対応する成分の事実で処理される：厳密な不等式 `level a < level a` は `¬m<m` が拒み、`a` 自身に対する `before (level a)` の証人は `before-irrefl` が拒む。後者は全段階で帰納なしに成り立っていた。推移性は、二つの前提がそれぞれどちらの枝を使うかで場合分けする。両段階ともレベルで下降するなら `<-trans` が二つの不等式を合成し、片方だけが下降するなら、もう一方の前提にあるレベルの等式を `subst` とともに用いて厳密な不等式を正しい端点へ移し、やはり左の枝を得る。
 <!--/-->
 
 ```agda
@@ -2199,7 +2199,7 @@ The transport in `moved` moves `hbc` along the equation `q`, changing only the s
 <!--zh-->
 `moved` 中的传输沿等式 `q` 移动 `hbc`，只改变 `before` 陈述所处的层，从 `level b` 换到 `level a`。此后两个见证便同处一层：`hab` 说在该层中 `a` 的集合先于 `b` 的，`moved` 说 `b` 的先于 `c` 的，于是在层 `level a` 处用 `StageOrder.trans` 把二者接成 `joined`，即 `a` 在自己层内先于 `c` 的见证。传递性至此完成；接着陈述三歧性，其判定方式是直接比较两层号。
 <!--ja-->
-`moved` の輸送は等式 `q` に沿って `hbc` を移し、`before` の主張がなされる段階を `level b` から `level a` へ変えるだけです。こうして二つの証人は同じ段階に住みます。`hab` はそこで `a` の集合が `b` の集合に先行し、`moved` は `b` の集合が `c` の集合に先行すると言うので、段階 `level a` での `StageOrder.trans` が両者を `joined` へとつなぎ、`a` が自レベル内で `c` に先行する証人となります。これで推移性は完成です。続く三分法は、二つのレベルを直接比較して判定します。
+`moved` の輸送は等式 `q` に沿って `hbc` を移し、`before` の主張がなされる段階を `level b` から `level a` へ変えるだけである。こうして二つの証人は同じ段階に住む。`hab` はそこで `a` の集合が `b` の集合に先行し、`moved` は `b` の集合が `c` の集合に先行すると言うので、段階 `level a` での `StageOrder.trans` が両者を `joined` へとつなぎ、`a` が自レベル内で `c` に先行する証人となる。これで推移性は完成である。続く三分法は、二つのレベルを直接比較して判定する。
 <!--/-->
 
 ```agda
@@ -2248,7 +2248,7 @@ Repackaging splits by the stage's verdict. If `a`'s set precedes `b`'s, the resu
 <!--zh-->
 重新包装按该层的判定分三种。若 `a` 的集合先于 `b` 的，结果是 `≺` 的右支，并以 `sym p` 供给等式，方向恰是定义所要求的。若两集合相等，`Σ≡Prop` 把它提升为配对 `a` 与 `b` 之间的路径；这是合法的，因为 `Limit` 的第二个分量是命题，这就是 `eq` 情形。若 `b` 的集合先于 `a` 的，则沿 `p` 把该 `before` 事实传输到它应被陈述的层号处，结果是以相反实参给出的右支。这里的每种情形都没有用到已造好的成分之外的任何东西。
 <!--ja-->
-組み替えは段階の判定によって三通りに分かれます。`a` の集合が `b` の集合に先行するなら、結果は `≺` の右の枝で、等式は定義が要求する向きどおりに `sym p` で供給されます。二つの集合が等しいなら、`Σ≡Prop` がそれを対 `a` と `b` の間の経路に引き上げます。`Limit` の第二成分が命題であるためこれが正当化され、これが `eq` の場合です。`b` の集合が `a` の集合に先行するなら、その `before` の事実を `p` に沿って述べられるべきレベルへ輸送し、結果は引数を入れ替えた右の枝となります。どの場合も、すでに組み上げた材料以外のものは何も要りませんでした。
+組み替えは段階の判定によって三通りに分かれる。`a` の集合が `b` の集合に先行するなら、結果は `≺` の右の枝で、等式は定義が要求する向きどおりに `sym p` で供給される。二つの集合が等しいなら、`Σ≡Prop` がそれを対 `a` と `b` の間の経路に引き上げる。`Limit` の第二成分が命題であるためこれが正当化され、これが `eq` の場合である。`b` の集合が `a` の集合に先行するなら、その `before` の事実を `p` に沿って述べられるべきレベルへ輸送し、結果は引数を入れ替えた右の枝となる。どの場合も、すでに組み上げた材料以外のものは何も要らなかった。
 <!--/-->
 
 ```agda
@@ -2264,7 +2264,7 @@ Well-foundedness is two nested inductions, and they are kept apart on purpose. T
 <!--zh-->
 良基性的证明是两层嵌套的归纳，而把它们分开是有意的。外层是对层号的归纳，采用库中现成的封装，它提供一条覆盖所有更低层的归纳假设。内层沿有穷层已有的可及性作普通的下降，其合法性正来自该层的有穷性。跨层下降的一步使用外层假设，层内的一步使用内层假设；内层函数除自己的可及性实参外不沿任何东西递归，因此二者从不需要同时比较。
 <!--ja-->
-整礎性の証明は二重の入れ子になった帰納であり、意図的に二つを分けています。外側はレベルについての帰納で、ライブラリの既成の形を用い、より低いすべてのレベルを網羅する帰納仮定を手渡します。内側は、有限段階がすでに持つ accessibility に沿う通常の下降であり、その正当性はまさにその段階の有限性に由来します。レベルをまたぐ下降の一歩は外側の仮定に訴え、レベル内の一歩は内側に訴えます。内側の関数は自分自身の accessibility の実引数以外には再帰しないため、二つを比べる必要は一度も生じません。
+整礎性の証明は二重の入れ子になった帰納であり、意図的に二つを分けている。外側はレベルについての帰納で、ライブラリの既成の形を用い、より低いすべてのレベルを網羅する帰納仮定を手渡す。内側は、有限段階がすでに持つ accessibility に沿う通常の下降であり、その正当性はまさにその段階の有限性に由来する。レベルをまたぐ下降の一歩は外側の仮定に訴え、レベル内の一歩は内側に訴える。内側の関数は自分自身の accessibility の実引数以外には再帰しないため、二つを比べる必要は一度も生じない。
 <!--/-->
 
 <!--en-->
@@ -2288,7 +2288,7 @@ Discharging `step` splits by the branch of the hypothesis `c ≺ b`. In the left
 <!--zh-->
 完成 `step` 按前提 `c ≺ b` 所取的支分情形。左支中，`c` 的层号严格小于 `b`，因而小于 `k`；该不等式用 `subst` 在等式 `q` 之下搬动，然后在层号 `level c` 处使用 `ih`，这正是跨层的情形。右支中，`c` 与 `b` 同层号，故二者都在层 `k` 之内，下降便交给内层可及性：`ru` 是 `u` 的可及性的 `acc` 构造子所提供的函数，把它作用于与 `c` 对应的点 `pc` 以及 `pc` 位于 `u` 之下的证明。
 <!--ja-->
-`step` の遂行は、前提 `c ≺ b` が取る枝で場合分けします。左の枝では `c` のレベルは `b` より厳密に小さく、したがって `k` よりも小さい。この不等式を `subst` で等式 `q` の下に動かし、レベル `level c` で `ih` を適用します。これがレベルをまたぐ場合です。右の枝では `c` は `b` とレベルを共有するので、両者は段階 `k` の内側に住み、下降は内側の accessibility に引き渡されます。`ru` は `u` の accessibility の `acc` 構成子が供給する関数で、`c` に対応する点 `pc` と、`pc` が `u` より下であることの証明に適用されます。
+`step` の遂行は、前提 `c ≺ b` が取る枝で場合分けする。左の枝では `c` のレベルは `b` より厳密に小さく、したがって `k` よりも小さい。この不等式を `subst` で等式 `q` の下に動かし、レベル `level c` で `ih` を適用する。これがレベルをまたぐ場合である。右の枝では `c` は `b` とレベルを共有するので、両者は段階 `k` の内側に住み、下降は内側の accessibility に引き渡される。`ru` は `u` の accessibility の `acc` 構成子が供給する関数で、`c` に対応する点 `pc` と、`pc` が `u` より下であることの証明に適用される。
 <!--/-->
 
 ```agda
@@ -2304,7 +2304,7 @@ The right branch needs its bookkeeping made explicit. First `qc` composes the tw
 <!--zh-->
 右支的簿记需要显式写出。首先 `qc` 复合两条层号等式，即 `sym qb` 与 `q`，证明 `level c ≡ k`；正是这一点使 `c` 能被放到层 `k` 中看。然后 `pc` 把 `c` 的底层集合与它在层 `k` 中的隶属打包在一起，该隶属由 `level-in c` 沿 `qc` 传输得到。`Point k` 就是一个集合连同这样的证书，所以这一个构造把论证从极限带回内层序所在的有穷层。
 <!--ja-->
-右の枝の簿記は明示的に書き出す必要があります。まず `qc` は二つのレベルの等式 `sym qb` と `q` を合成し、`level c ≡ k` を証明します。`c` を段階 `k` で見られるようにするのはまさにこの等式です。次に `pc` は `c` の基底集合と、段階 `k` での所属を一つにまとめます。所属は `level-in c` を `qc` に沿って輸送して得ます。`Point k` とは集合にこうした証書を添えたものなので、この一つの構成が議論を極限から、内側の順序の住む有限段階へと引き戻します。
+右の枝の簿記は明示的に書き出す必要がある。まず `qc` は二つのレベルの等式 `sym qb` と `q` を合成し、`level c ≡ k` を証明する。`c` を段階 `k` で見られるようにするのはまさにこの等式である。次に `pc` は `c` の基底集合と、段階 `k` での所属を一つにまとめる。所属は `level-in c` を `qc` に沿って輸送して得る。`Point k` とは集合にこうした証書を添えたものなので、この一つの構成が議論を極限から、内側の順序の住む有限段階へと引き戻す。
 <!--/-->
 
 ```agda
@@ -2353,7 +2353,7 @@ The body of `outer` reduces its goal to the inner lemma. It first forms `here`, 
 <!--zh-->
 `outer` 的主体把目标化归到内层引理。它先造出 `here`，即与 `b` 对应的层 `k` 的点，其造法与上面的 `pc` 完全相同；然后 `Ordered.wellFounded k (stageOrder k) here` 提供该点在层 `k` 序中的可及性，`accInside` 便由此接手，其余两个实参是层号等式 `q` 以及把 `b` 的底层集合与 `here` 的认同起来的自反等式。最后的陈述 `limit-wf` 说极限的每个成员都可及，做法是在层号 `level a` 处以平凡等式 `refl` 实例化层号归纳。
 <!--ja-->
-`outer` の本体は目標を内側の補題へ帰着させます。まず `b` に対応する段階 `k` の点 `here` を作ります。その作り方は上の `pc` とまったく同じです。次に `Ordered.wellFounded k (stageOrder k) here` がその点の段階 `k` の順序における accessibility を供給し、`accInside` がそこから引き受けます。残る二つの実引数はレベルの等式 `q` と、`b` の基底集合を `here` のそれと同一視する自反射的な等式です。最後の主張 `limit-wf` は極限のすべての要素が accessible であることを言い、レベルの帰納を `level a` で自明な等式 `refl` とともに具体化して得られます。
+`outer` の本体は目標を内側の補題へ帰着させる。まず `b` に対応する段階 `k` の点 `here` を作る。その作り方は上の `pc` とまったく同じである。次に `Ordered.wellFounded k (stageOrder k) here` がその点の段階 `k` の順序における accessibility を供給し、`accInside` がそこから引き受ける。残る二つの実引数はレベルの等式 `q` と、`b` の基底集合を `here` のそれと同一視する自反射的な等式である。最後の主張 `limit-wf` は極限のすべての要素が accessible であることを言い、レベルの帰納を `level a` で自明な等式 `refl` とともに具体化して得られる。
 <!--/-->
 
 ```agda
@@ -2417,11 +2417,11 @@ Finite tallies climb through definable powersets, support the well-founded earli
 <!--ja-->
 ## まとめ
 
-有限な数え上げは定義可能冪集合を通じて上昇し、各数項段階で整礎な最初の相違の順序を支え、最後に `Lset ω`{.Agda} 上の `limitOrder`{.Agda} を与えます。
+有限な数え上げは定義可能冪集合を通じて上昇し、各数項段階で整礎な最初の相違の順序を支え、最後に `Lset ω`{.Agda} 上の `limitOrder`{.Agda} を与える。
 
-`Tally`{.Agda} がこの章の持つ有限性のすべてです：すべての要素を命中させる有限族であり、単射性も決定可能な等しさも要求しません。`PowerStep.powerTally`{.Agda} は、数え上げの上のビットベクトルを列挙し、数え上げられた段階のすべての部分集合が定義可能であることを指摘することで、それを定義可能冪集合へ運びます。`stageOrder`{.Agda} はその一歩を数項に沿って進めるので、すべての有限段階が数え上げを持ちます。
+`Tally`{.Agda} がこの章の持つ有限性のすべてである：すべての要素を命中させる有限族であり、単射性も決定可能な等しさも要求しない。`PowerStep.powerTally`{.Agda} は、数え上げの上のビットベクトルを列挙し、数え上げられた段階のすべての部分集合が定義可能であることを指摘することで、それを定義可能冪集合へ運ぶ。`stageOrder`{.Agda} はその一歩を数項に沿って進めるので、すべての有限段階が数え上げを持つ。
 
-`precedes`{.Agda} は二つの部分集合を最初に相違する点で比較します。非反射性は定義から直接従い、推移性は二つの証人の比較から、三分法は排中律と基底の最小要素とから得られます。整礎性はそもそもこの比較の性質ではありません：それは数え上げから `Search`{.Agda} を通じて来るものであり、無限の基底の上では成立しなくなるでしょう。だからこそ有限性を先に確立しておく必要があったのです。
+`precedes`{.Agda} は二つの部分集合を最初に相違する点で比較する。非反射性は定義から直接従い、推移性は二つの証人の比較から、三分法は排中律と基底の最小要素とから得られる。整礎性はそもそもこの比較の性質ではない：それは数え上げから `Search`{.Agda} を通じて来るものであり、無限の基底の上では成立しなくなるであろう。だからこそ有限性を先に確立しておく必要があったのである。
 
-`limitOrder`{.Agda} は `Lset ω`{.Agda} の要素上の狭義の整列順序であり、レベルを第一の鍵とし、レベルの内側では各有限段階自身の順序を用います。これが選択公理が取る interface です：これがあれば、`leastOf`{.Agda} は極限段階の要素上の任意の inhabited な性質から一つの要素を取り出し、毎回同じものを取り出します。
+`limitOrder`{.Agda} は `Lset ω`{.Agda} の要素上の狭義の整列順序であり、レベルを第一の鍵とし、レベルの内側では各有限段階自身の順序を用いる。これが選択公理が取る interface である：これがあれば、`leastOf`{.Agda} は極限段階の要素上の任意の inhabited な性質から一つの要素を取り出し、毎回同じものを取り出す。
 <!--/-->

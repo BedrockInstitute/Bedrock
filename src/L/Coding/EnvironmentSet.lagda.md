@@ -11,7 +11,7 @@ For a constructible set `B` and a natural number `n`, this chapter constructs an
 <!--zh-->
 给定可构造集合 `B` 与自然数 `n`，本章构造 `L` 的元素 `envSet n`，其成员恰为取值于 `B` 的长度 `n` 环境。
 <!--ja-->
-構成可能集合 `B` と自然数 `n` に対し、本章は `L` の要素 `envSet n` を構成し、その要素がちょうど `B` に値を取る長さ `n` の環境であることを示します。
+構成可能集合 `B` と自然数 `n` に対し、本章は `L` の要素 `envSet n` を構成し、その要素がちょうど `B` に値を取る長さ `n` の環境であることを示す。
 <!--/-->
 
 <!--en-->
@@ -86,7 +86,7 @@ open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 <!--zh-->
 `stageFor` 找到一个包含任意可构造集合小族所有成员的序数层，从而提供分离所需的共同外围层。
 <!--ja-->
-`stageFor` は構成可能集合からなる任意の小さい族の全要素を含む一つの順序数段階を見つけ、分出に必要な共通の周囲の段階を与えます。
+`stageFor` は構成可能集合からなる任意の小さい族の全要素を含む一つの順序数段階を見つけ、分出に必要な共通の周囲の段階を与える。
 <!--/-->
 
 <!--en-->
@@ -125,7 +125,7 @@ For each `g : Fin n → ⟪ B ⟫`, `envSL` proves that its finite graph is cons
 <!--zh-->
 对每个 `g : Fin n → ⟪ B ⟫`，`envSL` 证明其有穷图可构造，因此封装后的 `envS g` 可由 `stageFor` 定界。
 <!--ja-->
-各 `g : Fin n → ⟪ B ⟫` について `envSL` はその有限グラフが構成可能であることを示すので、包装された `envS g` を `stageFor` で抑えられます。
+各 `g : Fin n → ⟪ B ⟫` について `envSL` はその有限グラフが構成可能であることを示すので、包装された `envS g` を `stageFor` で抑えられる。
 <!--/-->
 
 <!--en-->
@@ -187,7 +187,7 @@ module _ (B : S) where
 <!--zh-->
 `envFo n` 把 `envOverAt` 特化到固定长度 `n` 与基集合 `B`；在共同层中的分离定义 `envSet n` 及其成员等式。
 <!--ja-->
-`envFo n` は `envOverAt` を固定された長さ `n` と基礎集合 `B` に特殊化し、共通の段階での分出が `envSet n` とその要素条件を定義します。
+`envFo n` は `envOverAt` を固定された長さ `n` と基礎集合 `B` に特殊化し、共通の段階での分出が `envSet n` とその要素条件を定義する。
 <!--/-->
 
 <!--en-->
@@ -237,7 +237,7 @@ For `g : Fin n → ⟪ B ⟫`, the proof checks that its graph is single-valued,
 <!--zh-->
 对 `g : Fin n → ⟪ B ⟫`，证明的核心是核对其图为单值、定义域为 `n`，且恰含所需的值与有序对，因而属于 `envSet n`。
 <!--ja-->
-`g : Fin n → ⟪ B ⟫` について、そのグラフが単値で定義域が `n` であり、必要な値と対をちょうど含むことを確認し、`envSet n` に属することを示します。
+`g : Fin n → ⟪ B ⟫` について、そのグラフが単値で定義域が `n` であり、必要な値と対をちょうど含むことを確認し、`envSet n` に属することを示す。
 <!--/-->
 
 <!--en-->
@@ -336,7 +336,7 @@ Conversely, the four `envOverAt` clauses for a member `x` determine a function `
 <!--zh-->
 反过来，成员 `x` 满足的四条 `envOverAt` 子句确定函数 `g : Fin n → ⟪ B ⟫`，外延性再把 `x` 与 `envS g` 等同起来。
 <!--ja-->
-逆に、要素 `x` が満たす `envOverAt` の四条件から関数 `g : Fin n → ⟪ B ⟫` が定まり、外延性によって `x` と `envS g` が同一視されます。
+逆に、要素 `x` が満たす `envOverAt` の四条件から関数 `g : Fin n → ⟪ B ⟫` が定まり、外延性によって `x` と `envS g` が同一視される。
 <!--/-->
 
 <!--en-->
@@ -460,7 +460,7 @@ The two directions specify `envSet n`: membership is equivalent to being the gra
 <!--zh-->
 两个方向刻画了 `envSet n`：属于该集合等价于它是取值于 `B` 的长度 `n` 赋值图，因此后面的构造能在 `L` 内量化环境。
 <!--ja-->
-二方向は `envSet n` を特徴づけます。その要素であることは `B` に値を取る長さ `n` の割当てのグラフであることと同値なので、後の構成は `L` 内で環境を量化できます。
+二方向は `envSet n` を特徴づける。その要素であることは `B` に値を取る長さ `n` の割当てのグラフであることと同値なので、後の構成は `L` 内で環境を量化できる。
 <!--/-->
 
 <!--en-->

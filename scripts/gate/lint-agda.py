@@ -89,6 +89,7 @@ PRELUDE_PUBLIC_NAMES = {
     "Cubical.HITs.PropositionalTruncation": {
         "∥_∥₁", "∣_∣₁", "squash₁", "rec", "map",
     },
+    "Cubical.Relation.Nullary": {"Dec", "yes", "no", "isPropDec"},
 }
 # Agda token delimiters (note: [ ] , are identifier characters in Agda).
 DELIMS = " \t\r\n(){};@"

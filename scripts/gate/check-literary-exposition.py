@@ -33,7 +33,10 @@ def _shared_prose(lines:list[str])->list[tuple[bool,str]]:
     hits=[]
     for kind,block in _markdown_blocks(lines):
         if kind!='prose': continue
-        text='\n'.join(block)
+        # Disclosure wrappers and the QED mark are language-neutral structure, not
+        # reader-facing prose. Their visible content remains inside explicit groups.
+        structural = re.compile(r'^\s*(?:<details\b[^>]*>|</details>|∎)\s*$')
+        text='\n'.join(line for line in block if not structural.match(line))
         if visible_chars(text): hits.append((_is_english_narrative(block),text))
     return hits
 

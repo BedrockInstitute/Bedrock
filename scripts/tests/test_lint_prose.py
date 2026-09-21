@@ -20,6 +20,9 @@ class TheoremLabelTests(unittest.TestCase):
             "**Lemma** (`helper`{.Agda}) Text.",
             "**引理** (`helper`{.Agda}) 正文。",
             "**補題** (`helper`{.Agda}) 本文。",
+            "**Fact** (`property`{.Agda}) Text.",
+            "**事实** (`property`{.Agda}) 正文。",
+            "**事実** (`property`{.Agda}) 本文。",
             "**Theorem** (`result`{.Agda}) Text.",
             "**定理** (`result`{.Agda}) 正文。",
             "**Proof** Text.",
@@ -119,6 +122,81 @@ law = proof
 """
         violations = lint_prose.qed_violations(text)
         self.assertEqual(len(violations), 1)
+
+    def test_fact_requires_qed(self):
+        text = """**Fact** (`property`{.Agda}) Text.
+```agda
+property = proof
+```
+"""
+        violations = lint_prose.qed_violations(text)
+        self.assertEqual(len(violations), 1)
+
+
+class OptionalSummaryTests(unittest.TestCase):
+    def violations(self, text):
+        return lint_prose.optional_summary_violations(text)
+
+    def test_localized_optional_markers_are_accepted(self):
+        text = """<!--en-->
+<details><summary>Optional: details</summary></details>
+<!--zh-->
+<details><summary>选读：说明</summary></details>
+<!--ja-->
+<details><summary>発展：説明</summary></details>
+<!--/-->
+"""
+        self.assertEqual(self.violations(text), [])
+
+    def test_missing_or_wrong_language_marker_is_rejected(self):
+        text = """<!--en-->
+<summary>Details</summary>
+<!--zh-->
+<summary>Optional: 说明</summary>
+<!--/-->
+"""
+        self.assertEqual(len(self.violations(text)), 2)
+
+    def test_summary_outside_language_group_is_rejected(self):
+        self.assertEqual(len(self.violations("<summary>Optional: details</summary>")), 1)
+
+
+class JapanesePlainStyleTests(unittest.TestCase):
+    def violations(self, text):
+        return lint_prose.japanese_polite_violations(text)
+
+    def test_polite_forms_in_japanese_prose_are_rejected(self):
+        text = """<!--ja-->
+これは命題です。写像を返しますが、まだ終わりません。
+<!--/-->
+"""
+        self.assertEqual(len(self.violations(text)), 3)
+
+    def test_plain_style_and_lexical_masumasu_are_accepted(self):
+        text = """<!--ja-->
+これは命題である。包んですぐ戻る。段階ですでに成立する。これですべてである。これはますます重要である。
+<!--/-->
+"""
+        self.assertEqual(self.violations(text), [])
+
+    def test_polite_forms_before_connectives_are_rejected(self):
+        text = """<!--ja-->
+これは命題ですが、証明は後である。値を返しますので、場合分けできる。
+<!--/-->
+"""
+        self.assertEqual(len(self.violations(text)), 2)
+
+    def test_other_languages_and_protected_regions_are_ignored(self):
+        text = """<!--en-->
+です ます
+<!--ja-->
+`です` [参照](https://example.test/ます) <span title="です">常体である。</span>
+```text
+これは例です。
+```
+<!--/-->
+"""
+        self.assertEqual(self.violations(text), [])
 
 
 if __name__ == "__main__":

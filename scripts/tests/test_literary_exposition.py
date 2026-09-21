@@ -24,6 +24,9 @@ class LiteraryExpositionTests(unittest.TestCase):
   self.assertEqual(rules(meta+group()+'```agda\na\n```\n'),[])
  def test_shared_english_prose_is_rejected(self):
   self.assertIn('shared-prose',rules('An English explanation lives here.\n\n'+group()+'```agda\na\n```\n'))
+ def test_shared_disclosure_wrappers_and_qed_are_structural(self):
+  text='<details class="agda-proof-details">\n'+group()+'```agda\na\n```\n</details>\n∎\n'
+  self.assertNotIn('shared-prose',rules(text))
  def test_commentary_cannot_hide_inside_code(self):
   self.assertIn('prose-in-code',rules(group()+'```agda\na = 0\n-- explanation\n```\n'))
  def test_machine_import_directive_is_preserved(self):

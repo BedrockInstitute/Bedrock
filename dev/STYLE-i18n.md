@@ -87,15 +87,17 @@ not repeated definitions, boilerplate or unsupported claims. The detailed
 exposition gate is `scripts/gate/check-literary-exposition.py --check`.
 
 CJK prose (zh and ja) follows the repository's house style enforced by
-`scripts/gate/lint-prose.py`: full-width sentence punctuation `，；：！？`, corner-bracket quotes
+`scripts/gate/lint-prose.py`: full-width sentence punctuation `，；：！？` and corner-bracket quotes
 `「」`, half-width parentheses with English-style outer spacing, no em dash, no space between
-CJK characters. Agda code blocks are English-only. See the gate commands in `Makefile`.
+CJK characters. Japanese prose consistently uses plain style (である体). It does not use polite
+です・ます forms. Agda code blocks are English-only. See the gate commands in `Makefile`.
 
 Standalone construction, lemma and theorem labels name the corresponding Agda declaration and
 contain no period: `**Lemma** (`name`{.Agda}) Text`, with `引理` or `補題` in the
-parallel routes. Construction labels use the same form with `Construction`, `构造` or `構成`.
+parallel routes. Fact labels use the same form with `Fact`, `事实` or `事実`, and
+construction labels use `Construction`, `构造` or `構成`.
 Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`. An outermost
-construction, lemma or theorem developed through prose and code ends with a standalone `∎`
+construction, fact, lemma or theorem developed through prose and code ends with a standalone `∎`
 after its complete proof. A construction or lemma nested inside that proof, such as one inside
 its disclosure block, has no separate `∎`; the enclosing proof's mark follows the closing block.
 
