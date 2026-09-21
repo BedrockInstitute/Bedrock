@@ -174,6 +174,13 @@ def page_description(module, lang, is_landing, is_external):
 PRE_RE = re.compile(r'<pre class="Agda">.*?</pre>', re.DOTALL)
 # Definition site: <a id="NAME"></a><a id="POS" ... class="ASPECT" ...>token</a>
 DEF_RE = re.compile(r'<a id="([^"]+)"></a><a id="(\d+)"[^>]*class="([^"]*)"')
+# Renamed imports have no named definition anchor, but later occurrences link
+# to the unlinked token following ``to``.  Index that token as the declaration
+# site so the imported type can be attached there and reused by every link.
+RENAMED_RE = re.compile(
+    r'<a id="\d+" class="Symbol">to</a>[ \t]*'
+    r'<a id="(\d+)" class="([^"]+)">([^<]+)</a>'
+)
 # Agda does not expose declarations nested in a `where` block through
 # Cmd_show_module_contents_toplevel. Its checked HTML still identifies the
 # declaration site and renders the declared type on the same line.
@@ -183,6 +190,11 @@ LOCAL_SIGNATURE_RE = re.compile(
     r'class="(?P<aspect>[^"]*)">(?P<name>[^<]+)</a>[ \t]*'
     r'<a id="\d+" class="Symbol">:</a>[ \t]*(?P<type>[^\n]+)'
 )
+LOCAL_DECL_RE = re.compile(
+    r'<a id="(?P<pos>\d+)" href="(?P<module>[^"]+)\.html#(?P=pos)" '
+    r'class="(?P<aspect>[^"]*)">(?P<name>[^<]+)</a>'
+)
+TYPE_COLON_RE = re.compile(r'<a id="\d+" class="Symbol">:</a>[ \t]*')
 # Any cross-reference link inside highlighted code (optional self-id, optional #position).
 LINK_RE = re.compile(r'<a (id="\d+" )?href="([^"#]+)\.html(#\d+)?"([^>]*)>')
 INLINE_AGDA_RE = re.compile(r'`([^`]+)`\{\.Agda\}')
@@ -404,6 +416,14 @@ def index_definitions(code_html, module, name2pos, pos_aspect):
     for name, pos, aspect in DEF_RE.findall(code_html):
         name2pos.setdefault(module, {})[name] = pos
         pos_aspect.setdefault(module, {})[pos] = aspect.split()[-1] if aspect else ""
+    for pos, aspect, name in RENAMED_RE.findall(code_html):
+        if aspect == "Keyword" or aspect == "Module":
+            continue
+        name = htmllib.unescape(name)
+        name2pos.setdefault(module, {}).setdefault(name, pos)
+        pos_aspect.setdefault(module, {}).setdefault(
+            pos, aspect.split()[-1] if aspect else ""
+        )
 
 
 def qualified_name_pattern(internal_q):
@@ -754,7 +774,8 @@ def build_types(modules, name2pos, types_raw, internal_q, pos_aspect):
     for m in modules:
         g[m] = {}
         for name, pos in name2pos.get(m, {}).items():
-            t = types_raw.get(m, {}).get(name.split(".")[-1])
+            t = (types_raw.get(m, {}).get(name)
+                 or types_raw.get(m, {}).get(name.split(".")[-1]))
             if t:
                 g[m][pos] = render_type(t, internal_q, name_pattern,
                                         pos_aspect)
@@ -765,7 +786,8 @@ def local_signature_types(code_html, module):
     """Names and checked signatures at declaration sites without named anchors."""
     result = {}
     declaration_aspects = {
-        "Function", "Record", "Datatype", "Postulate", "Primitive",
+        "Function", "Record", "Datatype", "Postulate", "Primitive", "Field",
+        "InductiveConstructor",
     }
     for match in LOCAL_SIGNATURE_RE.finditer(code_html):
         if match.group("module") != module:
@@ -779,6 +801,34 @@ def local_signature_types(code_html, module):
             "name": htmllib.unescape(match.group("name")),
             "type": type_html,
         }
+    # Agda permits several declarations to share one signature (``A P : V``)
+    # and may place the colon on the following line.  The narrow expression
+    # above intentionally handles the common case; this line-oriented pass
+    # supplies every declaration preceding the shared colon.
+    pending = ""
+    for line in code_html.splitlines():
+        colon = TYPE_COLON_RE.search(line)
+        if colon:
+            prefix = line[:colon.start()]
+            declarations = list(LOCAL_DECL_RE.finditer(prefix))
+            if not declarations and pending:
+                declarations = list(LOCAL_DECL_RE.finditer(pending + prefix))
+            type_html = re.sub(r'\s+id="\d+"', "", line[colon.end():]).strip()
+            for declaration in declarations:
+                aspects = declaration.group("aspect").split()
+                if (declaration.group("module") == module
+                        and declaration_aspects.intersection(aspects)
+                        and type_html):
+                    result.setdefault(declaration.group("pos"), {
+                        "name": htmllib.unescape(declaration.group("name")),
+                        "type": type_html,
+                    })
+            pending = ""
+        elif ("class=\"Symbol\">=</a>" not in line
+              and LOCAL_DECL_RE.search(line)):
+            pending = line
+        else:
+            pending = ""
     return result
 
 

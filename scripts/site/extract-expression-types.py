@@ -23,6 +23,10 @@ BOUND_LINK_RE = re.compile(
     r'<a\s+id="(\d+)"\s+href="([^"#]+)\.html#(\d+)"\s+'
     r'class="[^"]*\bBound\b[^"]*">([^<]*)</a>'
 )
+NAME_LINK_RE = re.compile(
+    r'<a\s+id="(\d+)"\s+href="([^"#]+)\.html#(\d+)"\s+'
+    r'class="[^"]+">([^<]*)</a>'
+)
 UNLINKED_BOUND_RE = re.compile(
     r'<a\s+id="(\d+)"\s+class="[^"]*\bBound\b[^"]*">([^<]*)</a>'
 )
@@ -140,19 +144,27 @@ def highlighted_source(html_dir: Path, module: str) -> str:
 
 
 def bound_metadata(highlighted: str, module: str):
-    targets = {
+    bound_targets = {
         int(position): (target_module, int(target))
         for position, target_module, target, _ in BOUND_LINK_RE.findall(highlighted)
     }
+    targets = {
+        int(position): (target_module, int(target))
+        for position, target_module, target, _ in NAME_LINK_RE.findall(highlighted)
+    }
     labels = {
         int(position): html.unescape(label)
-        for position, _, _, label in BOUND_LINK_RE.findall(highlighted)
+        for position, _, _, label in NAME_LINK_RE.findall(highlighted)
     }
+    labels.update({
+        int(position): html.unescape(label)
+        for position, _, _, label in BOUND_LINK_RE.findall(highlighted)
+    })
     for position, label in UNLINKED_BOUND_RE.findall(highlighted):
         position = int(position)
         targets[position] = (module, position)
         labels[position] = html.unescape(label)
-    return targets, labels
+    return targets, labels, set(bound_targets)
 
 
 def normalize(source_root: Path, html_dir: Path, trace_path: Path,
@@ -177,9 +189,12 @@ def normalize(source_root: Path, html_dir: Path, trace_path: Path,
             continue
         source = path.read_text(encoding="utf-8")
         intervals = code_intervals(source)
-        targets, labels = bound_metadata(highlighted_source(html_dir, module), module)
+        targets, labels, bound_occurrences = bound_metadata(
+            highlighted_source(html_dir, module), module
+        )
         metadata[module] = (source, intervals, targets, labels)
-        for occurrence, target in targets.items():
+        for occurrence in bound_occurrences:
+            target = targets[occurrence]
             label = labels.get(occurrence, "")
             if label != "_" and target[0] in modules:
                 expected_targets.setdefault(target, (module, occurrence, label))
@@ -229,6 +244,12 @@ def normalize(source_root: Path, html_dir: Path, trace_path: Path,
             if record["kind"] == "binding":
                 nodes.append({
                     "start": start, "end": end, "kind": "binding",
+                    "source": fragment, "type": type_,
+                    "targetModule": target[0], "target": target[1],
+                })
+            elif record["kind"] == "name":
+                nodes.append({
+                    "start": start, "end": end, "kind": "definition",
                     "source": fragment, "type": type_,
                     "targetModule": target[0], "target": target[1],
                 })

@@ -175,6 +175,14 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
         self.assertEqual(renderer.names_by_position("Base.Prelude", names),
                          {"39997": "⟨_⟩isProp"})
 
+    def test_renamed_import_is_indexed_as_a_definition(self):
+        block = ('<a id="10" class="Symbol">to</a> '
+                 '<a id="13" class="Function">map₁</a>')
+        names, aspects = {}, {}
+        renderer.index_definitions(block, "Demo", names, aspects)
+        self.assertEqual(names, {"Demo": {"map₁": "13"}})
+        self.assertEqual(aspects, {"Demo": {"13": "Function"}})
+
     def test_mixfix_reference_carries_its_canonical_name(self):
         body = ('<a id="20" href="Cubical.Foundations.Structure.html#1134" '
                 'class="Function Operator">⟨</a>')
@@ -201,6 +209,16 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
         self.assertNotIn('id="', types["40"]["type"])
         self.assertIn('href="Demo.html#10"', types["40"]["type"])
         self.assertIn('A</a> <a class="Symbol">→</a>', types["40"]["type"])
+
+    def test_shared_local_signature_supplies_every_name(self):
+        block = ('<pre class="Agda">  '
+                 '<a id="40" href="Demo.html#40" class="Function">A</a> '
+                 '<a id="42" href="Demo.html#42" class="Function">P</a> '
+                 '<a id="44" class="Symbol">:</a> '
+                 '<a id="46" href="Demo.html#10" class="Datatype">V</a>\n</pre>')
+        types = renderer.local_signature_types(block, "Demo")
+        self.assertEqual(set(types), {"40", "42"})
+        self.assertEqual(types["40"]["type"], types["42"]["type"])
 
     def test_selected_preview_finds_referenced_type_sidecars(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -354,6 +372,28 @@ console.log(JSON.stringify({right: spans(40), left: spans(-40)}));
             data, compact = extractor.normalize(src.resolve(), html_dir.resolve(), trace)
             self.assertEqual(data, {"Demo": []})
             self.assertEqual(compact, [])
+
+    def test_name_trace_supplies_definition_target_type(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            src, html_dir = root / "src", root / "html"
+            src.mkdir(); html_dir.mkdir()
+            source = "module Demo where\n\n```agda\nf = f\n```\n"
+            path = src / "Demo.lagda.md"
+            path.write_text(source)
+            start = source.index("f =") + 1
+            (html_dir / "Demo.md").write_text(
+                f'<a id="{start}" href="Demo.html#{start}" class="Function">f</a>'
+            )
+            trace = root / "trace.jsonl"
+            trace.write_text(json.dumps({
+                "version": 1, "run": "one", "kind": "name",
+                "path": str(path.resolve()), "sourceHash": extractor.source_hash(path),
+                "start": start, "end": start + 1, "type": "A",
+            }) + "\n")
+            data, _ = extractor.normalize(src.resolve(), html_dir.resolve(), trace)
+        self.assertEqual(data["Demo"][0]["kind"], "definition")
+        self.assertEqual(data["Demo"][0]["target"], start)
 
     def test_atomic_json_and_trace_compaction_round_trip_unicode(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -18,11 +18,22 @@ Usage:
 """
 
 import glob
+import html
 import json
 import os
 import re
 import subprocess
 import sys
+
+
+DEF_RE = re.compile(
+    r'<a id="(?P<name>[^"]+)"></a><a id="(?P<pos>\d+)"[^>]*'
+    r'\bclass="(?P<aspect>[^"]+)"'
+)
+RENAMED_RE = re.compile(
+    r'<a id="\d+" class="Symbol">to</a>[ \t]*'
+    r'<a id="\d+" class="(?P<aspect>[^"]+)">(?P<name>[^<]+)</a>'
+)
 
 def reachable_modules(html_dir):
     """Follow generated module links from Milestones, ignoring stale build files."""
@@ -75,6 +86,58 @@ def parse_contents(stdout):
     return out
 
 
+def parse_inferred(stdout):
+    """In-order inferred types delimited by explicit normal-form markers."""
+    out, pending = [], None
+    for line in stdout.splitlines():
+        line = line.strip()
+        if line.startswith("JSON> "):
+            line = line[len("JSON> "):]
+        if not line:
+            continue
+        try:
+            obj = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if obj.get("kind") != "DisplayInfo":
+            continue
+        info = obj.get("info", {})
+        if info.get("kind") == "InferredType":
+            pending = info.get("expr")
+        elif info.get("kind") == "Error":
+            pending = None
+        elif (info.get("kind") == "NormalForm"
+              and str(info.get("expr", "")).startswith('"BEDROCK-TYPE-MARK-')):
+            out.append(pending)
+            pending = None
+    return out
+
+
+def definition_names(html_dir, modules):
+    """Return names which Agda made linkable at declaration sites."""
+    result = {module: [] for module in modules}
+    for module in modules:
+        paths = [
+            os.path.join(html_dir, module + suffix)
+            for suffix in (".md", ".html")
+        ]
+        path = next((candidate for candidate in paths if os.path.exists(candidate)), None)
+        if path is None:
+            continue
+        with open(path, encoding="utf-8") as source_file:
+            source = source_file.read()
+        result[module] = [
+            (html.unescape(match.group("name")), match.group("aspect").split()[-1])
+            for match in DEF_RE.finditer(source)
+        ]
+        result[module].extend(
+            (html.unescape(match.group("name")), match.group("aspect").split()[-1])
+            for match in RENAMED_RE.finditer(source)
+            if match.group("aspect") not in {"Keyword", "Module"}
+        )
+    return result
+
+
 def query(loader_abs, modules, agda):
     cmds = f'IOTCM "{loader_abs}" NonInteractive Direct (Cmd_load "{loader_abs}" [])\n'
     for m in modules:
@@ -86,6 +149,36 @@ def query(loader_abs, modules, agda):
         contents = responses[i] if i < len(responses) else None
         result[m] = contents or {}
     return result, sum(1 for v in result.values() if v)
+
+
+def query_missing(loader_abs, missing, agda):
+    """Infer linkable declarations omitted by the module-contents command.
+
+    Agda 2.8's module listing omits pattern synonyms (including ``tt*``), as
+    well as some declarations nested in records and modules.  A qualified
+    top-level inference recovers every externally queryable omission while
+    harmlessly leaving inaccessible private declarations unanswered.
+    """
+    if not missing:
+        return {}
+    commands = f'IOTCM {json.dumps(loader_abs)} NonInteractive Direct (Cmd_load {json.dumps(loader_abs)} [])\n'
+    expressions = []
+    for index, (module, name) in enumerate(missing):
+        expression = f"{module}.{name}"
+        expressions.append((module, name))
+        commands += (
+            f'IOTCM {json.dumps(loader_abs)} None Direct '
+            f'(Cmd_infer_toplevel Simplified {json.dumps(expression)})\n'
+            f'IOTCM {json.dumps(loader_abs)} None Direct '
+            f'(Cmd_compute_toplevel DefaultCompute '
+            f'{json.dumps(json.dumps(f"BEDROCK-TYPE-MARK-{index}"))})\n'
+        )
+    inferred = parse_inferred(run_agda(commands, agda))
+    result = {}
+    for (module, name), type_ in zip(expressions, inferred):
+        if type_:
+            result.setdefault(module, {})[name] = type_
+    return result
 
 
 def write_loader(typeext_dir, src_abs, modules):
@@ -113,6 +206,23 @@ def extract(html_dir, src, agda="agda"):
     result, hits = query(loader, queryable, agda)
     if not hits:
         sys.stderr.write("warning: reachable-set loader yielded no type responses\n")
+    definitions = definition_names(html_dir, reachable)
+    missing = [
+        (module, name)
+        for module in reachable
+        for name, aspect in definitions[module]
+        if (aspect != "Module"
+            and name not in result[module]
+            and ("." in name or name.split(".")[-1] not in result[module]))
+    ]
+    recovered = query_missing(loader, missing, agda)
+    for module, types in recovered.items():
+        result[module].update(types)
+    if missing:
+        recovered_count = sum(len(types) for types in recovered.values())
+        sys.stderr.write(
+            f"recovered {recovered_count}/{len(missing)} omitted declaration type(s)\n"
+        )
     return result
 
 
