@@ -80,10 +80,12 @@ The first common shell is `fig-pi-sigma` in Prelude.
 | `figure.factorization-math` | A single panel containing a KaTeX commutative diagram | [Prelude](../src/Base/Prelude.lagda.md), `fig-truncation-rec` | Compact equations/functions; never override descendant KaTeX SVG dimensions |
 | `figure.resizing` | `resizing-comparison` / `resizing-case`: title, note, assumption, centered scene, conclusion | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-resizing-comparison` | Scene rows share a vertical center; conclusion formulas align; narrow layouts stack panels |
 | `figure.path-space` | `coded-truth-proof-scene`: two proof spaces and the ambient type, with `diagram-path-space` lens | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-coded-truth` | Align proof points; put endpoint labels next to endpoints; the shaded family is schematic, not a literal subspace of Ω |
-| `figure.roundtrips` | `type-comparison-panels classical-roundtrips`, parallel path stages | [Classical](../src/Base/Classical.lagda.md), `fig-classical-roundtrips` | Two inverse laws displayed in matching geometry, with paths for equality |
-| `figure.compact-map` | `diagram-compact-stage` inside the standard frame or comparison columns | [Prelude](../src/Base/Prelude.lagda.md), `fig-truncation-witnesses` | Vertically aligned source/target spaces, bounded width, shared label size; reused in `fig-fiber-contraction` and `fig-lower-lem` |
+| `figure.roundtrips` | `type-comparison-panels classical-roundtrips`, parallel path stages | [Classical](../src/Base/Classical.lagda.md), `fig-classical-roundtrips` | Two round-trip laws displayed in matching geometry, with paths for equality |
+| `figure.compact-map` | `diagram-compact-stage` inside the standard frame or comparison columns | [Prelude](../src/Base/Prelude.lagda.md), `fig-truncation-witnesses` | Vertically aligned source/target spaces, bounded width, shared label size; reused in `fig-lower-lem` |
+| `figure.fibres` | `fiber-general` with one `fiber-fan-stage` containing independent `fiber-bundle` groups | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-fiber-general` | Function arrows send sampled points of A into B; each tuft of blue hairs joins their images to its own fixed base point inside B. A fibre point comprises a domain point and a path; never portray these hairs as contraction paths inside the fibre |
 | `figure.indexed-slots` | `diagram-indexed`, a three-column `vector-slots` strip, and aligned index/result points | [Prelude](../src/Base/Prelude.lagda.md), `fig-fin-vector-lookup` | The strip represents entries of one vector, not a type space; arrows denote `lookup` with that vector fixed; numerical index labels must be explained in prose |
-| `interaction.path-space` | `coded-truth-trigger`, moving region/path copies and target point classes | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-coded-truth` | Click/Enter/Space unfolds a path family while whole paths shrink to points; gentle fill pulse, no play button; reduced-motion users retain the static explanation |
+| `interaction.fibre-contraction` | `fiber-fan-stage`, `fiber-bundle`, `fiber-hair`, moving domain/image points and maps; fixed `fiber-base-point`, per-group `data-center-path`, sample/centre labels | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-fiber-general` | Click/Enter/Space contracts each fibre independently. All hairs in a group merge into the nonconstant path p_i stored in data-center-path; their image endpoints merge at f(a_i), separately from the fixed b_i. Domain points and function arrows merge in step. Initially show only candidate arrows and labels a_ij, with no extra centre arrow. Show a_i only when contraction finishes; restore a_ij on expansion. Targets are derived from each group’s stored path geometry. Activate again to expand. Requires a contraction witness, not just chosen centres; final coincidence depicts path equality. |
+| `interaction.path-space` | `coded-truth-trigger`, moving region/path copies and target point classes | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-coded-truth` | Click/Enter/Space unfolds a path family while whole paths shrink to points; gentle fill pulse, no play button; activation always plays the animation |
 
 Appearance is centralized in `site/static/bedrock.css`; animation is in
 `site/static/bedrock.js`. Shared SVG roles and allowed geometry are enforced by
@@ -97,6 +99,29 @@ the certificate function from its path-valued application; do not explain this
 distinction by whether a label is inside or outside a box.
 The path-space animation currently targets `#fig-coded-truth`: adapting it to a second
 figure requires generalizing the initializer; copying the ID is not a reusable API.
+
+## Navigation and animation
+
+Website animations are enabled. Do not infer a reduced-motion preference from the
+maintainer or disable website motion through `prefers-reduced-motion` media queries.
+This applies to page scrolling, the path-space animation, navigation transitions and
+the Ask AI trigger. Print output remains static. Keep motion purposeful: use gentle
+attention cues and short interface transitions; mathematical animations run on activation.
+Pulse only the mathematical objects that animate, never an entire containing space
+or background. The shared cues cycle gently every 2.4 seconds while idle, pause
+during playback and return when another activation is available. Fibre hairs and
+point outlines use `diagram-interaction-stroke-pulse` (varying shades of blue,
+white point interiors); the path-space lens uses `diagram-interaction-color-pulse`
+on its fill. A line-width change alone is not an animation affordance. Contracted
+fibres retain the pulse on the merged paths and point outlines to signal expansion.
+
+| Recipe ID | Reusable structure | First use | Reuse guidance |
+| --- | --- | --- | --- |
+| `navigation.page-scroll` | Shared `.page-scroll` with two icon buttons | Every page using `site/template.html` | Fixed bottom right; click scrolls smoothly to the document top or bottom; localized accessible labels; reserve footer space on narrow screens |
+| `navigation.chapter` | `.chapnav-top` below the chapter heading and `.chapnav` at the end | [Prelude](../src/Base/Prelude.lagda.md), then every chapter in reading order | Generate both from the same previous/next links; omit unavailable neighbors; wrap long titles on narrow screens |
+
+Page controls and their motion live in `site/static/bedrock.js` and
+`site/static/bedrock.css`; chapter links are generated by `scripts/site/render-site.py`.
 
 ## Maintenance
 

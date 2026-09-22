@@ -218,6 +218,13 @@ All visual tokens live in `site/static/bedrock.css`: 8px corners, 1px box
 borders, shared padding and gaps, theme-aware surfaces, blue paths, and white
 points. Chapter markup may set only label positions and aspect ratios inline.
 Figures scroll only with the page: never introduce an internal scroll container.
+Every clickable animated figure signals interactivity with a shared blue color
+pulse, not just a change in line width. Pulse only the objects that animate, never
+the overall background or their containing type spaces. Use
+`diagram-interaction-stroke-pulse` for fibre hairs and point outlines, and
+`diagram-interaction-color-pulse` for a moving path-space lens. Stop during playback
+and resume whenever another activation is available, including after contraction.
+Keep ordinary paths blue and their endpoint dots white. Print output is static.
 Use responsive layout for narrow screens; display math inside figures keeps visible overflow.
 SVG geometry uses `viewBox`; its shared role classes are `diagram-path`,
 `diagram-point`, `diagram-map-line`, `diagram-map-tip`, `diagram-guide`,

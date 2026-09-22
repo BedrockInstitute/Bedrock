@@ -233,11 +233,11 @@ The labels are codes, not themselves propositions in `hProp ℓ₁`{.Agda}. Sinc
 <!--/-->
 
 <!--en-->
-The construction has two stages. First we define encoding from an explicit decision `Dec ⟨ P ⟩`{.Agda}, then decoding, and finally the two inverse laws. These four auxiliary results remain private and use no excluded middle. The public theorem then invokes excluded middle to supply a decision for every `P` and assembles the four results into the equivalence.
+The construction has two stages. First we define encoding from an explicit decision `Dec ⟨ P ⟩`{.Agda}, then decoding, and finally the two round-trip laws. These four auxiliary results remain private and use no excluded middle. The public theorem then invokes excluded middle to supply a decision for every `P` and assembles the four results into the equivalence.
 <!--zh-->
-构造分为两步。第一步先根据显式判定 `Dec ⟨ P ⟩`{.Agda} 定义编码，再定义解码，最后证明两条逆律。这四项辅助结果保持私有，并且都不使用排中律。第二步的公开定理才调用排中律，为每个 `P` 统一给出判定，并把这四项结果组装成所需的等价。
+构造分为两步。第一步先根据显式判定 `Dec ⟨ P ⟩`{.Agda} 定义编码，再定义解码，最后证明两条往返律。这四项辅助结果保持私有，并且都不使用排中律。第二步的公开定理才调用排中律，为每个 `P` 统一给出判定，并把这四项结果组装成所需的等价。
 <!--ja-->
-構成は二段階に分かれる。第一段階では、まず明示的な判定 `Dec ⟨ P ⟩`{.Agda} から符号化を定義し、次に復号を定義し、最後に二つの逆法則を証明する。この四つの補助結果は非公開のままであり、いずれも排中律を使わない。第二段階の公開定理で初めて排中律を呼び出し、各 `P` に判定を一様に与え、この四つの結果を求める同値へ組み立てる。
+構成は二段階に分かれる。第一段階では、まず明示的な判定 `Dec ⟨ P ⟩`{.Agda} から符号化を定義し、次に復号を定義し、最後に二つの往復則を証明する。この四つの補助結果は非公開のままであり、いずれも排中律を使わない。第二段階の公開定理で初めて排中律を呼び出し、各 `P` に判定を一様に与え、この四つの結果を求める同値へ組み立てる。
 <!--/-->
 
 <!--en-->
@@ -356,11 +356,11 @@ private
 ∎
 
 <!--en-->
-The two inverse laws show that encoding and decoding become mutually inverse once a decision is supplied uniformly for every proposition. The resulting classifier will therefore be a genuine type equivalence, not merely a surjective labelling of propositions by two truth values.
+The two round-trip laws show that encoding and decoding become mutually inverse once a decision is supplied uniformly for every proposition. The resulting classifier will therefore be a genuine type equivalence, not merely a surjective labelling of propositions by two truth values.
 <!--zh-->
-两条逆律共同表明：只要能为每个命题统一给出判定，编码与解码就互为逆映射。因此，所得分类器将给出真正的类型等价，而不只是用两个真值标签满射地覆盖命题。
+两条往返律共同表明：只要能为每个命题统一给出判定，编码与解码就互为逆映射。因此，所得分类器将给出真正的类型等价，而不只是用两个真值标签满射地覆盖命题。
 <!--ja-->
-二つの逆法則から、各命題に判定を一様に与えられれば、符号化と復号が互いに逆写像になることがわかる。したがって、得られる分類子は二つの真理値ラベルで命題を全射的に覆うだけではなく、真正な型同値を与える。
+二つの往復則から、各命題に判定を一様に与えられれば、符号化と復号が互いに逆写像になることがわかる。したがって、得られる分類子は二つの真理値ラベルで命題を全射的に覆うだけではなく、真正な型同値を与える。
 <!--/-->
 
 <!--en-->
@@ -384,19 +384,19 @@ lem→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ�
 ```
 
 <!--en-->
-**Proof** Choose `Lift Bool`{.Agda} as the first component. For the second, use `isoToEquiv`{.Agda} to turn the following isomorphism into an equivalence. Its forward map sends `P` to `encodeB P (lem P)`{.Agda}, and its backward map is `decodeB`{.Agda}. The inverse laws are `retrB`{.Agda} and `secB`{.Agda}, each instantiated with the decision supplied by `lem`. These two components form the required witness of `ΩResizing ℓ₁ ℓ₂`{.Agda}.
+**Proof** Choose `Lift Bool`{.Agda} as the first component. For the second, use `isoToEquiv`{.Agda} to turn the following isomorphism into an equivalence. Its forward map sends `P` to `encodeB P (lem P)`{.Agda}, and its backward map is `decodeB`{.Agda}. The round-trip laws are `retrB`{.Agda} and `secB`{.Agda}, each instantiated with the decision supplied by `lem`. These two components form the required witness of `ΩResizing ℓ₁ ℓ₂`{.Agda}.
 <!--zh-->
-**证明** 取 `Lift Bool`{.Agda} 为第一分量。第二分量使用 `isoToEquiv`{.Agda}，把下面的同构转化为类型等价。同构的正向映射把 `P` 送到 `encodeB P (lem P)`{.Agda}，逆向映射是 `decodeB`{.Agda}；两条逆律分别使用 `retrB`{.Agda} 与 `secB`{.Agda}，并以 `lem` 给出的判定将其具体化。这两个分量共同构成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所需的见证。
+**证明** 取 `Lift Bool`{.Agda} 为第一分量。第二分量使用 `isoToEquiv`{.Agda}，把下面的同构转化为类型等价。同构的正向映射把 `P` 送到 `encodeB P (lem P)`{.Agda}，逆向映射是 `decodeB`{.Agda}；两条往返律分别使用 `retrB`{.Agda} 与 `secB`{.Agda}，并以 `lem` 给出的判定将其具体化。这两个分量共同构成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所需的见证。
 <!--ja-->
-**証明** 第一成分として `Lift Bool`{.Agda} を選ぶ。第二成分には `isoToEquiv`{.Agda} を用い、次の同型を型同値へ変換する。同型の順写像は `P` を `encodeB P (lem P)`{.Agda} へ送り、逆写像は `decodeB`{.Agda} である。二つの逆法則には、`lem` が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を用いる。この二つの成分が `ΩResizing ℓ₁ ℓ₂`{.Agda} に必要な証拠を構成する。
+**証明** 第一成分として `Lift Bool`{.Agda} を選ぶ。第二成分には `isoToEquiv`{.Agda} を用い、次の同型を型同値へ変換する。同型の順写像は `P` を `encodeB P (lem P)`{.Agda} へ送り、逆写像は `decodeB`{.Agda} である。二つの往復則には、`lem` が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を用いる。この二つの成分が `ΩResizing ℓ₁ ℓ₂`{.Agda} に必要な証拠を構成する。
 <!--/-->
 
 <!--en-->
-The two inverse laws close the two triangles below. Fix `lem : LEM ℓ₁`, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool` by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
+The two round-trip laws close the two triangles below. Fix `lem : LEM ℓ₁`, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool` by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
 <!--zh-->
-下面两个三角形分别由两条逆律闭合。固定 `lem : LEM ℓ₁`，把编码类型 `Lift {ℓ-zero} {ℓ₂} Bool` 简写为 $B$，并记 $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$。每次往返所得的点，都由标出的路径与出发点相连。
+下面两个三角形分别由两条往返律闭合。固定 `lem : LEM ℓ₁`，把编码类型 `Lift {ℓ-zero} {ℓ₂} Bool` 简写为 $B$，并记 $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$。每次往返所得的点，都由标出的路径与出发点相连。
 <!--ja-->
-下の二つの三角形は、それぞれ二つの逆法則によって閉じる。`lem : LEM ℓ₁` を固定し、符号の型 `Lift {ℓ-zero} {ℓ₂} Bool` を $B$ と略記し、$E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$ と書く。各往復で得られる点は、示したパスによって出発点と結ばれる。
+下の二つの三角形は、それぞれ二つの往復則によって閉じる。`lem : LEM ℓ₁` を固定し、符号の型 `Lift {ℓ-zero} {ℓ₂} Bool` を $B$ と略記し、$E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$ と書く。各往復で得られる点は、示したパスによって出発点と結ばれる。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-classical-roundtrips" aria-describedby="fig-classical-roundtrips-caption">
@@ -444,11 +444,11 @@ The two inverse laws close the two triangles below. Fix `lem : LEM ℓ₁`, abbr
 </div>
 <figcaption id="fig-classical-roundtrips-caption">
 <!--en-->
-Encoding and decoding are inverse up to paths. Excluded middle supplies the decisions in $E$; with explicit decisions, encoding, decoding and both inverse laws are constructive.
+Encoding and decoding are inverse up to paths. Excluded middle supplies the decisions in $E$; with explicit decisions, encoding, decoding and both round-trip laws are constructive.
 <!--zh-->
-编码与解码在路径意义下互为逆映射。排中律为 $E$ 提供判定；给定显式判定后，编码、解码与两条逆律都是构造主义的。
+编码与解码在路径意义下互为逆映射。排中律为 $E$ 提供判定；给定显式判定后，编码、解码与两条往返律都是构造主义的。
 <!--ja-->
-符号化と復号はパスの意味で互いに逆となる。排中律は $E$ に判定を供給する。明示的な判定が与えられれば、符号化・復号と二つの逆法則はいずれも構成的である。
+符号化と復号はパスの意味で互いに逆となる。排中律は $E$ に判定を供給する。明示的な判定が与えられれば、符号化・復号と二つの往復則はいずれも構成的である。
 <!--/-->
 </figcaption>
 </figure>

@@ -855,11 +855,11 @@ fromFin の単射性は、`Fin n` が部分型であることを用いる。そ�
 ```
 
 <!--en-->
-Because `factor` is an equivalence and not merely a function, its injectivity needs no new case analysis: if `factor n x` and `factor n y` agree, applying the inverse and using the round-trip law `retEq` on each side returns `x` and `y` themselves. The proof is the concatenation of `sym (retEq ...) x`, the transported equality, and `retEq ... y`. This is the pattern noted earlier: a map shaped like an inverse is not an inverse until the inverse laws are supplied, and here the library's equivalence supplies them.
+Because `factor` is an equivalence and not merely a function, its injectivity needs no new case analysis: if `factor n x` and `factor n y` agree, applying the inverse and using the round-trip law `retEq` on each side returns `x` and `y` themselves. The proof is the concatenation of `sym (retEq ...) x`, the transported equality, and `retEq ... y`. This is the pattern noted earlier: a map shaped like an inverse is not an inverse until the round-trip laws are supplied, and here the library's equivalence supplies them.
 <!--zh-->
-由于 factor 是等价而不只是函数，其单射性无需新的情形分析：若 `factor n x` 与 `factor n y` 相等，对两侧应用逆映射并使用往返定律 retEq，便回到 x 与 y 自身。证明就是 `sym (retEq ...) x`、被搬运的等式与 `retEq ... y` 的拼接。这正是前面指出的模式：形如逆映射的映射在逆定律补齐之前还不是逆映射，而这里由库中的等价提供了逆定律。
+由于 factor 是等价而不只是函数，其单射性无需新的情形分析：若 `factor n x` 与 `factor n y` 相等，对两侧应用逆映射并使用往返定律 retEq，便回到 x 与 y 自身。证明就是 `sym (retEq ...) x`、被搬运的等式与 `retEq ... y` 的拼接。这正是前面指出的模式：形如逆映射的映射在往返律补齐之前还不是逆映射，而这里由库中的等价提供了往返律。
 <!--ja-->
-factor は単なる関数ではなく同値であるため、その単射性に新しい場合分けは不要である。`factor n x` と `factor n y` が一致すれば、両側に逆写像を適用し往復則 retEq を使えば、x と y そのものに戻る。証明は `sym (retEq ...) x`、輸送された等式、`retEq ... y` の連結である。これは先に指摘したパターン、つまり逆の形をした写像は逆法則が供給されるまでは逆ではない、ということの実例で、ここではライブラリの同値が逆法則を供給する。
+factor は単なる関数ではなく同値であるため、その単射性に新しい場合分けは不要である。`factor n x` と `factor n y` が一致すれば、両側に逆写像を適用し往復則 retEq を使えば、x と y そのものに戻る。証明は `sym (retEq ...) x`、輸送された等式、`retEq ... y` の連結である。これは先に指摘したパターン、つまり逆の形をした写像は往復則が供給されるまでは逆ではない、ということの実例で、ここではライブラリの同値が往復則を供給する。
 <!--/-->
 
 ```agda

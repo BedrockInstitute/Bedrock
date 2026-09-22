@@ -1173,7 +1173,13 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             if i + 1 < len(modnav_list):
                 parts.append(f'<a class="chapnav-next" href="{chapter_href(modnav_list[i + 1])}">'
                              f'{UI[lang]["next"]} · {htmllib.escape(chapter_title(modnav_list[i + 1], lang))} &rarr;</a>')
-            body += '<nav class="chapnav">' + "".join(parts) + "</nav>"
+            links = "".join(parts)
+            label = {"en": "Chapter navigation", "zh": "章节导航", "ja": "章のナビゲーション"}[lang]
+            top_nav = f'<nav class="chapnav chapnav-top" aria-label="{label}">{links}</nav>'
+            heading_end = body.find('</h1>')
+            split = heading_end + len('</h1>') if heading_end >= 0 else 0
+            body = body[:split] + top_nav + body[split:]
+            body += f'<nav class="chapnav" aria-label="{label}">{links}</nav>'
 
         banner = ""
         if langs_present and lang not in langs_present:

@@ -215,7 +215,6 @@ details.navsec:last-child { border-bottom: 0; }
 #toc .toc-l3 { padding-left: .65rem; }
 #toc .toc-l4, #toc .toc-l5, #toc .toc-l6 { padding-left: 1.25rem; }
 #toc :is(a, summary):focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
-@media (prefers-reduced-motion: reduce) { #toc summary::before, #toc a { transition: none; } }
 article { min-width: 0; line-height: 1.2; overflow-wrap: anywhere; }   /* 1lab's prose line-height */
 article p, article ul, article ol, article blockquote { margin-block: 0.95em; }
 /* CJK at 1.2 is cramped; relax slightly for Chinese/Japanese prose (1lab is Latin-only). */
@@ -372,6 +371,24 @@ pre.Agda a.name-active { background: var(--occ-bg); border-radius: 3px; }
   font-family: var(--sans); font-size: 0.95rem; }
 .chapnav a { text-decoration: none; color: var(--primary); }
 .chapnav .chapnav-next { margin-left: auto; text-align: right; }
+.chapnav-top { margin: 0 0 1.5rem; padding: 0 0 1rem;
+  border-top: 0; border-bottom: 1px solid var(--ruler); }
+.chapnav a { min-width: 0; max-width: 48%; overflow-wrap: anywhere; }
+.chapnav a:hover { text-decoration: underline; }
+
+/* ---- quick page scrolling ---- */
+.page-scroll { position: fixed; z-index: 25;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; gap: .35rem; }
+.page-scroll button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem;
+  padding: .65rem; border: 1px solid var(--code-border); border-radius: .65rem;
+  background: var(--text-bg); color: var(--fg-alt); cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / .08); }
+.page-scroll button:hover { background: var(--button-hover); color: var(--primary); }
+.page-scroll button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.page-scroll svg { width: 100%; height: 100%; fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---- type-on-hover popup ---- */
 .expr-node { --ast-node-level: var(--expr-level);
@@ -537,6 +554,30 @@ pre.Agda .expr-node.expr-active {
 .path-label { position: absolute; transform: translate(-50%, -50%); white-space: nowrap; font-size: .85em; }
 .diagram-compact-stage { max-width: 26rem; margin: .5rem auto; }
 .diagram-compact-stage .path-label { font-size: .78em; }
+.fiber-fan-stage { max-width: 42.5rem; margin: .5rem auto; }
+.fiber-general .path-label { font-size: clamp(.65rem, 2.1vw, 1rem); }
+.fiber-general .fiber-center-label { opacity: 0; }
+.fiber-interactive .fiber-fan-stage { cursor: pointer; }
+.fiber-interactive .fiber-fan-stage:focus-visible {
+  outline: 2px solid var(--primary); outline-offset: 4px; border-radius: var(--diagram-radius); }
+.fiber-interactive:not(.fiber-animating) .fiber-hair,
+.fiber-interactive:not(.fiber-animating) .fiber-bundle .diagram-point {
+  animation: diagram-interaction-stroke-pulse 2.4s ease-in-out infinite; }
+.coded-truth-interactive:not(.coded-truth-playing) .coded-truth-source-region {
+  animation: diagram-interaction-color-pulse 2.4s ease-in-out infinite; }
+@keyframes diagram-interaction-color-pulse {
+  0%, 100% { fill: color-mix(in srgb, var(--primary) 4%, var(--text-bg)); }
+  50% { fill: color-mix(in srgb, var(--primary) 20%, var(--text-bg)); }
+}
+@keyframes diagram-interaction-stroke-pulse {
+  0%, 100% { stroke: color-mix(in srgb, var(--diagram-path-color) 50%, var(--text-bg)); }
+  50% { stroke: var(--diagram-path-color); }
+}
+@media print {
+  .fiber-interactive .fiber-hair,
+  .fiber-interactive .fiber-bundle .diagram-point,
+  .coded-truth-interactive .coded-truth-source-region { animation: none !important; }
+}
 .diagram-indexed { max-width: 26rem; margin: auto; }
 .diagram-indexed > .math.display { font-size: .8em; }
 .vector-slots {
@@ -655,17 +696,10 @@ pre.Agda .expr-node.expr-active {
 .coded-truth-interactive .coded-truth-trigger { cursor: pointer; }
 .coded-truth-interactive .coded-truth-trigger:focus-visible {
   outline: 2px solid var(--primary); outline-offset: 4px; border-radius: var(--diagram-radius); }
-.coded-truth-interactive .coded-truth-source-region { animation: diagram-path-space-pulse 2.4s ease-in-out infinite; }
-.coded-truth-playing .coded-truth-source-region { animation: none; }
+.coded-truth-interactive .coded-truth-source-region { fill-opacity: 1; }
+.coded-truth-playing .coded-truth-source-region { fill-opacity: .12; }
 .coded-truth-playing .coded-truth-trigger { cursor: progress; }
-@keyframes diagram-path-space-pulse {
-  0%, 100% { fill-opacity: .1; }
-  50% { fill-opacity: .35; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .coded-truth-interactive .coded-truth-source-region { animation: none; fill-opacity: .24; }
-}
-@media print { .coded-truth-interactive .coded-truth-source-region { animation: none; } }
+@media print { .coded-truth-interactive .coded-truth-source-region { fill-opacity: .12; } }
 .hlevel-comparison .katex-display { margin: 0; }
 .hlevel-comparison .math.display { font-size: .9em; }
 .hlevel-panels { display: grid;
@@ -698,6 +732,9 @@ pre.Agda .expr-node.expr-active {
   color: var(--fg-alt); text-align: center; }
 #site-footer a { color: var(--primary); text-decoration: none; }
 #site-footer .footer-copyright { margin-top: 0.35rem; font-size: 0.8rem; opacity: 0.9; }
+@media (max-width: 48rem) {
+  #site-footer { padding-bottom: calc(7.5rem + env(safe-area-inset-bottom)); }
+}
 
 #code-note-toast { position: fixed; z-index: 60; width: min(24rem, calc(100vw - 1.25rem));
   padding: .8rem 2.5rem .8rem .9rem; color: var(--text-fg); background: var(--popup-bg);
@@ -805,10 +842,6 @@ pre.Agda .expr-node.expr-active {
        article's centre line and prevents a horizontal jump when the TOC hides. */
     grid-template-areas: ". content gutter";
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #toc, #nav-backdrop { transition: none; }
 }
 
 /* Keep search and all navigation controls usable on phone-width screens. */

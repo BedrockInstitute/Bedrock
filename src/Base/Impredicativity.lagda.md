@@ -70,13 +70,7 @@ For a fixed `b : B`{.Agda}, the **[fibre]{.term-intro #fiber}** of `f` over `b` 
 
 An element of the fibre has two components. The first is a candidate preimage `a : A`{.Agda}; the second is a path `f a ≡ b`{.Agda} witnessing that this candidate really maps to `b`. An empty fibre means that `b` has no preimage. Elements of a fibre that cannot be identified by a path represent substantively different ways to return from `b` to `A`.
 
-The equivalence certificate gives each fibre a centre and paths from that centre to all its elements. Its centre supplies a preimage for every `b`, and the paths make that recovery unambiguous up to paths. Together with `f`, this certificate constitutes the equivalence. It also yields an inverse map `g : B → A` and two inverse laws. The first supplies a path for every `a : A`:
-
-<div class="single-line-code"><code>g (f a) ≡ a</code></div>
-
-The second supplies a path for every `b : B`:
-
-<div class="single-line-code"><code>f (g b) ≡ b</code></div>
+The animation assumes that every fibre is contractible: there is a centre and a family of paths connecting each dependent pair in the fibre to that centre.
 <!--zh-->
 对固定的 `b : B`{.Agda}，`f` 在 `b` 上的**[纤维]{.term-intro #fiber}**是下面这个依值对类型：
 
@@ -84,13 +78,7 @@ The second supplies a path for every `b : B`:
 
 纤维的一个元素由两部分组成：第一分量是一个候选原像 `a : A`{.Agda}，第二分量是一条路径 `f a ≡ b`{.Agda}，证明这个 `a` 的确映到 `b`。纤维为空，表示 `b` 没有原像；纤维中若有彼此不能通过路径等同的元素，则表示从 `b` 返回 `A` 时存在实质不同的选择。
 
-[类型等价]{.term-ref #type-equivalence}的[证书]{.term-ref #certificate}为每条纤维给出一个中心，并给出从中心到其他元素的路径。中心为每个 `b` 给出一个原像，这些路径使恢复的结果在路径意义下没有歧义。映射 `f` 连同这份证书构成[类型等价]{.term-ref #type-equivalence}。由此还可导出逆向映射 `g : B → A` 和两条往返律。第一条对每个 `a : A` 给出一条[路径]{.term-ref #path}：
-
-<div class="single-line-code"><code>g (f a) ≡ a</code></div>
-
-第二条对每个 `b : B` 给出一条[路径]{.term-ref #path}：
-
-<div class="single-line-code"><code>f (g b) ≡ b</code></div>
+下面的动画假设每束纤维可缩：存在一个中心，以及一族将纤维中每个依值对连接到中心的路径。
 <!--ja-->
 固定した `b : B`{.Agda} 上の `f` の**[ファイバー]{.term-intro #fiber}**は、次の依存対型である。
 
@@ -98,92 +86,146 @@ The second supplies a path for every `b : B`:
 
 ファイバーの要素は二つの成分を持つ。第一成分は原像の候補 `a : A`{.Agda}、第二成分はその候補が実際に `b` へ写ることを示すパス `f a ≡ b`{.Agda} である。ファイバーが空なら `b` に原像はない。ファイバーにパスで同一視できない要素があれば、`b` から `A` へ戻る方法に本質的な違いが残っている。
 
-[型同値]{.term-ref #type-equivalence}の[証明書]{.term-ref #certificate}は各ファイバーの中心と、そこから他のすべての要素へのパスを与える。中心は各 `b` の原像を与え、それらのパスによって復元はパスの意味で曖昧さを残さない。写像 `f` とこの証明書を合わせたものが[型同値]{.term-ref #type-equivalence}である。ここから逆写像 `g : B → A` と二つの逆法則も導ける。第一の法則は各 `a : A` に[パス]{.term-ref #path}を与える。
-
-<div class="single-line-code"><code>g (f a) ≡ a</code></div>
-
-第二の法則は各 `b : B` に[パス]{.term-ref #path}を与える。
-
-<div class="single-line-code"><code>f (g b) ≡ b</code></div>
-
+以下のアニメーションでは各ファイバーの可縮性を仮定する。すなわち、中心と、ファイバーの各依存対をその中心へ結ぶパスの族が存在する。
 <!--/-->
 
-<figure class="book-diagram type-comparison path-figure" id="fig-fiber-contraction" aria-describedby="fig-fiber-contraction-caption">
+<figure class="book-diagram path-figure fiber-general" id="fig-fiber-general" aria-describedby="fig-fiber-general-caption">
 <div class="diagram-framed">
-
 
 $$F_b=\sum_{a:A}\bigl(f(a)\equiv b\bigr)$$
 
-
-<div class="type-comparison-panels">
-<section class="type-comparison-panel">
-
-
-$$f:A\to B,\quad (a,p):F_b$$
-
-<div class="path-stage diagram-compact-stage" style="aspect-ratio:360/300">
-<svg viewBox="0 0 360 300" aria-hidden="true" focusable="false">
-<rect class="diagram-space-shape" x="15" y="10" width="330" height="85"/>
-<rect class="diagram-space-shape" x="15" y="175" width="330" height="115"/>
-<path class="diagram-map-line" d="M100 79 L100 221"/>
-<path class="diagram-map-tip" d="M96 214 L100 221 L104 214"/>
-<path class="diagram-path" d="M100 225 Q185 163 270 225"/>
-<circle class="diagram-point" cx="100" cy="75" r="4"/>
-<circle class="diagram-point" cx="100" cy="225" r="4"/>
-<circle class="diagram-point" cx="270" cy="225" r="4"/>
+<div class="path-stage fiber-fan-stage" style="aspect-ratio:680/460">
+<svg viewBox="0 0 680 460" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="30" y="20" width="620" height="90"/>
+<rect class="diagram-space-shape" x="30" y="185" width="620" height="250"/>
+<g class="fiber-bundle" data-fiber="0" data-center-path="M120 390 C80 352 80 289 120 235">
+<path class="diagram-map-line fiber-moving-map" d="M48 102 L48 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M44 218 L48 225 L52 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M96 102 L96 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M92 218 L96 225 L100 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M144 102 L144 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M140 218 L144 225 L148 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M192 102 L192 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M188 218 L192 225 L196 218"/>
+<path class="diagram-path fiber-hair" d="M120 390 C33 358 33 292 48 235"/>
+<path class="diagram-path fiber-hair" d="M120 390 C63 358 63 292 48 235"/>
+<path class="diagram-path fiber-hair" d="M120 390 C81 358 81 292 96 235"/>
+<path class="diagram-path fiber-hair" d="M120 390 C111 358 111 292 96 235"/>
+<path class="diagram-path fiber-hair" d="M120 390 C129 358 129 292 144 235"/>
+<path class="diagram-path fiber-hair" d="M120 390 C159 358 159 292 144 235"/>
+<path class="diagram-path fiber-hair" d="M120 390 C177 358 177 292 192 235"/>
+<path class="diagram-path fiber-hair" d="M120 390 C207 358 207 292 192 235"/>
+<circle class="diagram-point fiber-domain-point" cx="48" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="48" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="96" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="96" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="144" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="144" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="192" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="192" cy="235" r="4"/>
+<circle class="diagram-point fiber-base-point" cx="120" cy="390" r="5"/>
+</g>
+<g class="fiber-bundle" data-fiber="1" data-center-path="M340 390 C300 352 300 289 340 235">
+<path class="diagram-map-line fiber-moving-map" d="M268 102 L268 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M264 218 L268 225 L272 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M316 102 L316 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M312 218 L316 225 L320 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M364 102 L364 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M360 218 L364 225 L368 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M412 102 L412 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M408 218 L412 225 L416 218"/>
+<path class="diagram-path fiber-hair" d="M340 390 C253 358 253 292 268 235"/>
+<path class="diagram-path fiber-hair" d="M340 390 C283 358 283 292 268 235"/>
+<path class="diagram-path fiber-hair" d="M340 390 C301 358 301 292 316 235"/>
+<path class="diagram-path fiber-hair" d="M340 390 C331 358 331 292 316 235"/>
+<path class="diagram-path fiber-hair" d="M340 390 C349 358 349 292 364 235"/>
+<path class="diagram-path fiber-hair" d="M340 390 C379 358 379 292 364 235"/>
+<path class="diagram-path fiber-hair" d="M340 390 C397 358 397 292 412 235"/>
+<path class="diagram-path fiber-hair" d="M340 390 C427 358 427 292 412 235"/>
+<circle class="diagram-point fiber-domain-point" cx="268" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="268" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="316" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="316" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="364" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="364" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="412" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="412" cy="235" r="4"/>
+<circle class="diagram-point fiber-base-point" cx="340" cy="390" r="5"/>
+</g>
+<g class="fiber-bundle" data-fiber="2" data-center-path="M560 390 C520 352 520 289 560 235">
+<path class="diagram-map-line fiber-moving-map" d="M488 102 L488 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M484 218 L488 225 L492 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M536 102 L536 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M532 218 L536 225 L540 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M584 102 L584 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M580 218 L584 225 L588 218"/>
+<path class="diagram-map-line fiber-moving-map" d="M632 102 L632 225"/>
+<path class="diagram-map-tip fiber-moving-tip" d="M628 218 L632 225 L636 218"/>
+<path class="diagram-path fiber-hair" d="M560 390 C473 358 473 292 488 235"/>
+<path class="diagram-path fiber-hair" d="M560 390 C503 358 503 292 488 235"/>
+<path class="diagram-path fiber-hair" d="M560 390 C521 358 521 292 536 235"/>
+<path class="diagram-path fiber-hair" d="M560 390 C551 358 551 292 536 235"/>
+<path class="diagram-path fiber-hair" d="M560 390 C569 358 569 292 584 235"/>
+<path class="diagram-path fiber-hair" d="M560 390 C599 358 599 292 584 235"/>
+<path class="diagram-path fiber-hair" d="M560 390 C617 358 617 292 632 235"/>
+<path class="diagram-path fiber-hair" d="M560 390 C647 358 647 292 632 235"/>
+<circle class="diagram-point fiber-domain-point" cx="488" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="488" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="536" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="536" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="584" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="584" cy="235" r="4"/>
+<circle class="diagram-point fiber-domain-point" cx="632" cy="98" r="4"/>
+<circle class="diagram-point fiber-image-point" cx="632" cy="235" r="4"/>
+<circle class="diagram-point fiber-base-point" cx="560" cy="390" r="5"/>
+</g>
 </svg>
-<span class="path-label" style="left:50%;top:11%">$A$</span>
-<span class="path-label" style="left:27.7778%;top:19%">$a$</span>
-<span class="path-label" style="left:36.6667%;top:45%">$f$</span>
-<span class="path-label" style="left:12.5%;top:65%">$B$</span>
-<span class="path-label" style="left:27.7778%;top:84.3333%">$f(a)$</span>
-<span class="path-label" style="left:75%;top:84.3333%">$b$</span>
-<span class="path-label" style="left:51.3889%;top:60.3333%">$p$</span>
-</div>
-</section>
-<section class="type-comparison-panel">
-
-
-$$h:\operatorname{isContr}(F_b)$$
-
-<div class="path-stage diagram-compact-stage" style="aspect-ratio:360/300">
-<svg viewBox="0 0 360 300" aria-hidden="true" focusable="false">
-<rect class="diagram-space-shape" x="15" y="10" width="330" height="280"/>
-<path class="diagram-path" d="M90 145 Q180 260 270 145"/>
-<circle class="diagram-centre-ring" cx="90" cy="145" r="8"/>
-<circle class="diagram-point" cx="90" cy="145" r="4"/>
-<circle class="diagram-point" cx="270" cy="145" r="4"/>
-</svg>
-<span class="path-label" style="left:50%;top:12.6667%">$F_b$</span>
-<span class="path-label" style="left:25%;top:38.3333%">$(a_0,p_0)$</span>
-<span class="path-label" style="left:75%;top:38.3333%">$(a,p)$</span>
-<span class="path-label" style="left:50%;top:76%">$h.\mathrm{snd}\,(a,p)$</span>
-<span class="path-label" style="left:50%;top:89%">$h.\mathrm{fst}=(a_0,p_0)$</span>
-</div>
-</section>
+<span class="path-label" style="left:7.5000%;top:8.0435%">$A$</span>
+<span class="path-label" style="left:7.5000%;top:89.5652%">$B$</span>
+<span class="path-label" style="left:53.9706%;top:32.3913%">$f$</span>
+<span class="path-label fiber-sample-label" data-fiber="0" style="left:7.0588%;top:16.3043%">$a_{00}$</span>
+<span class="path-label fiber-sample-label" data-fiber="0" style="left:14.1176%;top:16.3043%">$a_{01}$</span>
+<span class="path-label fiber-sample-label" data-fiber="0" style="left:21.1765%;top:16.3043%">$a_{02}$</span>
+<span class="path-label fiber-sample-label" data-fiber="0" style="left:28.2353%;top:16.3043%">$a_{03}$</span>
+<span class="path-label fiber-center-label" aria-hidden="true" style="left:17.6471%;top:16.3043%">$a_0$</span>
+<span class="path-label" style="left:17.6471%;top:90.2174%">$b_0$</span>
+<span class="path-label fiber-sample-label" data-fiber="1" style="left:39.4118%;top:16.3043%">$a_{10}$</span>
+<span class="path-label fiber-sample-label" data-fiber="1" style="left:46.4706%;top:16.3043%">$a_{11}$</span>
+<span class="path-label fiber-sample-label" data-fiber="1" style="left:53.5294%;top:16.3043%">$a_{12}$</span>
+<span class="path-label fiber-sample-label" data-fiber="1" style="left:60.5882%;top:16.3043%">$a_{13}$</span>
+<span class="path-label fiber-center-label" aria-hidden="true" style="left:50.0000%;top:16.3043%">$a_1$</span>
+<span class="path-label" style="left:50.0000%;top:90.2174%">$b_1$</span>
+<span class="path-label fiber-sample-label" data-fiber="2" style="left:71.7647%;top:16.3043%">$a_{20}$</span>
+<span class="path-label fiber-sample-label" data-fiber="2" style="left:78.8235%;top:16.3043%">$a_{21}$</span>
+<span class="path-label fiber-sample-label" data-fiber="2" style="left:85.8824%;top:16.3043%">$a_{22}$</span>
+<span class="path-label fiber-sample-label" data-fiber="2" style="left:92.9412%;top:16.3043%">$a_{23}$</span>
+<span class="path-label fiber-center-label" aria-hidden="true" style="left:82.3529%;top:16.3043%">$a_2$</span>
+<span class="path-label" style="left:82.3529%;top:90.2174%">$b_2$</span>
 </div>
 </div>
-<figcaption id="fig-fiber-contraction-caption">
+<figcaption id="fig-fiber-general-caption">
 <!--en-->
-The left panel unpacks a point `(a,p)` of the fibre; the right assumes a contraction `h`. Its paths compare entire pairs, including the evidence that the preimages map to `b`.
+Click the pulsing fibres to contract; click again to expand. The paths in each tuft merge into a single path $p_i$ from $f(a_i)$ to $b_i$, while the candidate preimages merge into $a_i$. The coincidence depicts equality by paths. The condition for $f$ to be an equivalence is that every fibre is contractible.
 <!--zh-->
-左图展开纤维中的一个点 `(a,p)`；右图假设已有可缩性证书 `h`。其中的路径连接整个依值对，原像及其映到 `b` 的证明都参与比较。
+点击闪烁的三束纤维收拢，再次点击展开。每束路径合并为连接 $f(a_i)$ 与 $b_i$ 的一条路径 $p_i$，原像候选则合并为 $a_i$。这里的重合表示路径意义下的相等。每束纤维可缩，正是 $f$ 成为等价的条件。
 <!--ja-->
-左図はファイバーの一点 `(a,p)` の成分を示し、右図は可縮性の証明書 `h` を仮定する。そのパスは依存対全体を結び、原像とそれが `b` へ写る証明の両方を比較する。
+点滅するファイバーをクリックすると収縮し、もう一度クリックすると広がる。各毛束のパスは $f(a_i)$ と $b_i$ を結ぶ一本のパス $p_i$ に合流し、原像の候補は $a_i$ に合流する。重なりはパスによる等しさを表す。各ファイバーが可縮であることが、$f$ が同値となる条件である。
 <!--/-->
 </figcaption>
 </figure>
+
+
 
 ```agda
 open import Cubical.Foundations.Equiv using ( _≃_ )
 ```
 
 <!--en-->
-This notion should be distinguished from an [isomorphism]{.term-intro #type-isomorphism}, which explicitly presents a forward map, a chosen inverse map and the two inverse laws. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
+This notion should be distinguished from an [isomorphism]{.term-intro #type-isomorphism}, which explicitly presents maps $f:A→B$ and $g:B→A$ and the two [round-trip laws]{.term-intro #round-trip-law}: paths $g(f(a))≡a$ for every $a:A$ and $f(g(b))≡b$ for every $b:B$. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
 <!--zh-->
-这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-intro #type-isomorphism}区分：同构显式给出正向映射、选定的逆向映射和两条逆律。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。
+这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-intro #type-isomorphism}区分：同构显式给出映射 $f:A→B$、$g:B→A$ 和两条[往返律]{.term-intro #round-trip-law}：对每个 $a:A$ 有路径 $g(f(a))≡a$，对每个 $b:B$ 有路径 $f(g(b))≡b$。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。
 <!--ja-->
-この[型同値]{.term-ref #type-equivalence}は[同型]{.term-intro #type-isomorphism}と区別する必要がある。同型は順写像、選ばれた逆写像、二つの逆法則を明示的に与える。以下で導入する定義は両者の関係を表す。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換する。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用いる。
+この[型同値]{.term-ref #type-equivalence}は[同型]{.term-intro #type-isomorphism}と区別する必要がある。同型は写像 $f:A→B$、$g:B→A$ と二つの[往復則]{.term-intro #round-trip-law}を明示的に与える。すなわち、各 $a:A$ に対するパス $g(f(a))≡a$ と、各 $b:B$ に対するパス $f(g(b))≡b$ である。以下で導入する定義は両者の関係を表す。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換する。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用いる。
 <!--/-->
 
 ```agda
@@ -603,11 +645,11 @@ A point in `⟨ codedTruth P ⟩` is a whole path in `Ω`: `⟨ codedTruth P ⟩
 ```
 
 <!--en-->
-**Proof** We construct the two maps `to`{.Agda} and `from`{.Agda}, then assemble them with `iso`{.Agda}. The source `⟨ P ⟩`{.Agda} and target `⟨ codedTruth P ⟩`{.Agda} are both propositions, so their propositionhood proves the two inverse laws once the maps have been given. Where a map must return an inhabitant of truth, we write its unique inhabitant `tt*`{.Agda} explicitly.
+**Proof** We construct the two maps `to`{.Agda} and `from`{.Agda}, then assemble them with `iso`{.Agda}. The source `⟨ P ⟩`{.Agda} and target `⟨ codedTruth P ⟩`{.Agda} are both propositions, so their propositionhood proves the two round-trip laws once the maps have been given. Where a map must return an inhabitant of truth, we write its unique inhabitant `tt*`{.Agda} explicitly.
 <!--zh-->
-**证明** 我们构造两个方向的映射 `to`{.Agda} 和 `from`{.Agda}，再用 `iso`{.Agda} 把它们组装起来。源 `⟨ P ⟩`{.Agda} 和目标 `⟨ codedTruth P ⟩`{.Agda} 都是命题，因此给出两个映射之后，两端的命题性便可直接证明两条逆律。映射需要返回真命题的元素时，我们显式写出其唯一元素 `tt*`{.Agda}。
+**证明** 我们构造两个方向的映射 `to`{.Agda} 和 `from`{.Agda}，再用 `iso`{.Agda} 把它们组装起来。源 `⟨ P ⟩`{.Agda} 和目标 `⟨ codedTruth P ⟩`{.Agda} 都是命题，因此给出两个映射之后，两端的命题性便可直接证明两条往返律。映射需要返回真命题的元素时，我们显式写出其唯一元素 `tt*`{.Agda}。
 <!--ja-->
-**証明** 二方向の写像 `to`{.Agda} と `from`{.Agda} を構成し、`iso`{.Agda} でまとめる。始域 `⟨ P ⟩`{.Agda} と終域 `⟨ codedTruth P ⟩`{.Agda} はどちらも命題なので、二つの写像を与えれば、両端の命題性が二つの逆法則を直接証明する。写像が真の命題の要素を返す箇所では、その唯一の要素 `tt*`{.Agda} を明示する。
+**証明** 二方向の写像 `to`{.Agda} と `from`{.Agda} を構成し、`iso`{.Agda} でまとめる。始域 `⟨ P ⟩`{.Agda} と終域 `⟨ codedTruth P ⟩`{.Agda} はどちらも命題なので、二つの写像を与えれば、両端の命題性が二つの往復則を直接証明する。写像が真の命題の要素を返す箇所では、その唯一の要素 `tt*`{.Agda} を明示する。
 <!--/-->
 
 ```agda

@@ -133,10 +133,6 @@ html.theme-dark #reading-explorer { --route-good: #2fcb8f; }
   .compact-details { grid-template-columns: 1fr; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #reading-explorer * { scroll-behavior: auto; }
-}
-
 /* A quiet workspace: one primary tab bar, lighter tools within each view. */
 .learning-home #reading-explorer { margin: 0; }
 .learning-home .reading-shell { border: 0; border-radius: 0; background: none; box-shadow: none; padding: 0; }
@@ -162,7 +158,4 @@ html.theme-dark #reading-explorer { --route-good: #2fcb8f; }
   .learning-home .reading-toolbar { gap: .3rem; }
   .learning-home .reading-mode { padding-inline: .6rem; font-size: .76rem; }
   .learning-home .reading-reset { margin-left: auto; padding-inline: .3rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .learning-home .reading-mode, .learning-home .route-view, .learning-home .chapter-done, .learning-home .compact-done { transition: none; }
 }

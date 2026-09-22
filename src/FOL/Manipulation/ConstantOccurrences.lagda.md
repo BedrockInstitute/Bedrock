@@ -416,9 +416,9 @@ The round trip is what makes the construction more than a translation: mapping b
 <!--en-->
 At the formula level the inverse `erase-inv` is proved by structural induction over the syntax tree, combining the term-level inverse with itself recursively. The atoms display the base pattern with two subparts: since `mapFo` distributes the relabelling into the two erased terms, the goal is a path between two applications of the same constructor, and `cong₂` lifts the pair of term-level paths `eraseTm-inv t _` and `eraseTm-inv u _` to that path. The zero-count proofs for the subterms come from `plus-zero-l` and `plus-zero-r` applied to `p`, exactly as in `erase` itself.
 <!--zh-->
-在公式层面，逆定律 `erase-inv` 由对语法树的结构归纳证明，把词项层面的逆与自身递归地结合起来。两条原子关系以两个子部分展示了基例模式：由于 `mapFo` 把改名分配到两个被消去的词项中，目标是同一构造子的两次应用之间的路径，`cong₂` 把词项层面的两条路径 `eraseTm-inv t _` 与 `eraseTm-inv u _` 提升为该路径。子词项的计数为零的证明由 `plus-zero-l` 与 `plus-zero-r` 作用于 `p` 得到，与 `erase` 自身完全一致。
+在公式层面，[往返律]{.term-ref #round-trip-law} `erase-inv` 由对语法树的结构归纳证明，把词项层面的逆与自身递归地结合起来。两条原子关系以两个子部分展示了基例模式：由于 `mapFo` 把改名分配到两个被消去的词项中，目标是同一构造子的两次应用之间的路径，`cong₂` 把词项层面的两条路径 `eraseTm-inv t _` 与 `eraseTm-inv u _` 提升为该路径。子词项的计数为零的证明由 `plus-zero-l` 与 `plus-zero-r` 作用于 `p` 得到，与 `erase` 自身完全一致。
 <!--ja-->
-論理式レベルでは、逆法則 `erase-inv` は構文木についての構造的帰納によって証明され、項レベルの逆を再帰的に組み合わせる。二つの原子関係が、二つの部分を持つ基底の場合を示す。`mapFo` が名前替えを消去された二つの項へ分配するので、ゴールは同じ構成子の二つの応用の間のパスであり、`cong₂` が項レベルの二つのパス `eraseTm-inv t _` と `eraseTm-inv u _` をそのパスへ引き上げる。部分項の数が零である証明は、`erase` 自身とまったく同様に、`p` に `plus-zero-l` と `plus-zero-r` を施して得られる。
+論理式レベルでは、[往復則]{.term-ref #round-trip-law} `erase-inv` は構文木についての構造的帰納によって証明され、項レベルの逆を再帰的に組み合わせる。二つの原子関係が、二つの部分を持つ基底の場合を示す。`mapFo` が名前替えを消去された二つの項へ分配するので、ゴールは同じ構成子の二つの応用の間のパスであり、`cong₂` が項レベルの二つのパス `eraseTm-inv t _` と `eraseTm-inv u _` をそのパスへ引き上げる。部分項の数が零である証明は、`erase` 自身とまったく同様に、`p` に `plus-zero-l` と `plus-zero-r` を施して得られる。
 <!--/-->
 
 ```agda
@@ -430,11 +430,11 @@ At the formula level the inverse `erase-inv` is proved by structural induction o
 ```
 
 <!--en-->
-Because `erase` preserves the shape of the formula at every node, the induction hypothesis available at each node already has exactly the form the inverse needs there. The three binary connectives repeat the two-subpart pattern: for `∧̇`, `∨̇` and `⇒̇` the count of the whole splits between the two subformulas, and `cong₂` lifts the pair of induction hypotheses to a path between the reconstructed connectives. The uniformity is structural rather than coincidental: the inverse law is a property of the syntax tree, checked one node at a time.
+Because `erase` preserves the shape of the formula at every node, the induction hypothesis available at each node already has exactly the form the inverse needs there. The three binary connectives repeat the two-subpart pattern: for `∧̇`, `∨̇` and `⇒̇` the count of the whole splits between the two subformulas, and `cong₂` lifts the pair of induction hypotheses to a path between the reconstructed connectives. The uniformity is structural rather than coincidental: the [round-trip law]{.term-ref #round-trip-law} is a property of the syntax tree, checked one node at a time.
 <!--zh-->
-由于 `erase` 在每个节点都保持公式的形状，每个节点可用的归纳假设已经恰是该处逆定律所需的形式。三条二元连接词重复双部分模式：对 `∧̇`、`∨̇` 与 `⇒̇`，整体的计数在两个子公式之间拆分，`cong₂` 把一对归纳假设提升为重建后的连接词之间的路径。这种一致性是结构性的而非偶然：逆定律是语法树的性质，一次核查一个节点。
+由于 `erase` 在每个节点都保持公式的形状，每个节点可用的归纳假设已经恰是该处[往返律]{.term-ref #round-trip-law}所需的形式。三条二元连接词重复双部分模式：对 `∧̇`、`∨̇` 与 `⇒̇`，整体的计数在两个子公式之间拆分，`cong₂` 把一对归纳假设提升为重建后的连接词之间的路径。这种一致性是结构性的而非偶然：[往返律]{.term-ref #round-trip-law}是语法树的性质，一次核查一个节点。
 <!--ja-->
-`erase` がすべての節点で論理式の形を保つため、各節点で使える帰納の仮定は、そこで逆法則が必要とする形をすでにちょうど持っている。三つの二項結合子は二部分の型を繰り返す。`∧̇`、`∨̇`、`⇒̇` のいずれでも、全体の数は二つの部分論理式の間で分かれ、`cong₂` が一対の帰納の仮定を再構成された結合子の間のパスへ引き上げる。この一様さは偶然ではなく構造的なものである。逆法則は構文木の性質であり、一節点ずつ検査されるからである。
+`erase` がすべての節点で論理式の形を保つため、各節点で使える帰納の仮定は、そこで[往復則]{.term-ref #round-trip-law}が必要とする形をすでにちょうど持っている。三つの二項結合子は二部分の型を繰り返す。`∧̇`、`∨̇`、`⇒̇` のいずれでも、全体の数は二つの部分論理式の間で分かれ、`cong₂` が一対の帰納の仮定を再構成された結合子の間のパスへ引き上げる。この一様さは偶然ではなく構造的なものである。[往復則]{.term-ref #round-trip-law}は構文木の性質であり、一節点ずつ検査されるからである。
 <!--/-->
 
 ```agda

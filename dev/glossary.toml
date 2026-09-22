@@ -726,7 +726,7 @@ ja = "型同値"
 introduced_in = "Base.Impredicativity"
 matching = "auto"
 recap_en = "An equivalence A ≃ B is a map with contractible fibres; an inverse and both round-trip paths follow from this condition."
-recap_zh = "类型等价 A ≃ B 是纤维皆可缩的映射；逆向映射与两条往返路径可由这个条件导出。"
+recap_zh = "类型等价 A ≃ B 是每束纤维可缩的映射；逆向映射与两条往返路径可由这个条件导出。"
 recap_ja = "型同値 A ≃ B は、各ファイバーが可縮である写像であり、逆写像と二つの往復パスはこの条件から導かれる。"
 notes = "Cubical Agda's _≃_ is Σ of a map and isEquiv, where isEquiv means contractible fibres: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda . Automatic matching covers the full trilingual term; generic English equivalence is omitted because it can refer to other notions."
 
@@ -743,7 +743,7 @@ forms_en = ["fiber", "fibres", "fibers"]
 recap_en = "The fibre of f : A → B over b : B is the dependent pair type Σ (a : A) (f a ≡ b), whose elements are preimages together with paths witnessing their images."
 recap_zh = "映射 f : A → B 在 b : B 上的纤维是依值对类型 Σ (a : A) (f a ≡ b)；它的元素由原像及其确实映到 b 的路径组成。"
 recap_ja = "写像 f : A → B の b : B 上のファイバーは依存対型 Σ (a : A) (f a ≡ b) であり、その要素は原像と、それが b へ写ることを示すパスからなる。"
-notes = "Cubical Agda defines the fibre of f at y as Σ[ x ∈ A ] f x ≡ y and defines isEquiv by contractibility of every fibre: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda . Scope decision 2026-09-22: in the introductory chapters, reserve fibre / 纤维 / ファイバー for this explicitly defined fibre of a map over a target point. Refer to a family value directly as B x or P x instead of calling it a fibre. The broader terminology is standard, not an error: HoTT Book section 2.3 views a type family as a fibration, and Lemma 4.8.1 proves fiber(fst, x) ≃ B x for fst : Σ A B → A. This is an equivalence, not the defining expression for the fibre. Evidence: https://homotopytypetheory.org/wp-content/uploads/2013/03/hott-online-611-ga1a258c.pdf (section 2.3 and Lemma 4.8.1). Base.Prelude uses direct family-value wording; the first fibre definition is introduced in Base.Impredicativity. The narrower wording keeps the introductory definition and automatic glossary explanations consistent."
+notes = "Cubical Agda defines the fibre of f at y as Σ[ x ∈ A ] f x ≡ y and defines isEquiv by contractibility of every fibre: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Equiv/Base.agda . Chinese classifier: use 一束纤维 / 每束纤维, not 一条纤维 / 每条纤维; this does not introduce the distinct technical term fibre bundle. Scope decision 2026-09-22: in the introductory chapters, reserve fibre / 纤维 / ファイバー for this explicitly defined fibre of a map over a target point. Refer to a family value directly as B x or P x instead of calling it a fibre. The broader terminology is standard, not an error: HoTT Book section 2.3 views a type family as a fibration, and Lemma 4.8.1 proves fiber(fst, x) ≃ B x for fst : Σ A B → A. This is an equivalence, not the defining expression for the fibre. Evidence: https://homotopytypetheory.org/wp-content/uploads/2013/03/hott-online-611-ga1a258c.pdf (section 2.3 and Lemma 4.8.1). Base.Prelude uses direct family-value wording; the first fibre definition is introduced in Base.Impredicativity. The narrower wording keeps the introductory definition and automatic glossary explanations consistent."
 
 [[term]]
 category = "Type theory"
@@ -754,9 +754,9 @@ zh = "同构"
 ja = "同型"
 introduced_in = "Base.Impredicativity"
 matching = "auto"
-recap_en = "An isomorphism explicitly supplies forward and inverse maps together with the two inverse laws."
-recap_zh = "同构显式给出正向映射、逆向映射以及两条逆律。"
-recap_ja = "同型は順写像、逆写像、および二つの逆法則を明示的に与える。"
+recap_en = "An isomorphism explicitly supplies forward and inverse maps together with the two round-trip laws."
+recap_zh = "同构显式给出正向映射、逆向映射以及两条往返律。"
+recap_ja = "同型は順写像、逆写像、および二つの往復則を明示的に与える。"
 notes = "Cubical Agda's Iso record has fun, inv, rightInv and leftInv fields and converts to an equivalence: https://github.com/agda/cubical/blob/master/Cubical/Foundations/Isomorphism.agda ."
 
 [[term]]
@@ -1665,6 +1665,22 @@ en = "alphabet"
 zh = "字母表"
 ja = "アルファベット"
 notes = "A set/type of symbols. English primary lecture usage: https://web.stanford.edu/class/archive/cs/cs143/cs143.1128/lectures/02/Slides02.pdf ; Japanese primary teaching usage: https://hwb.ecc.u-tokyo.ac.jp/wp/applications-2/textprocessing/regexp/automaton/ ; Chinese publisher excerpt: https://www.tup.tsinghua.edu.cn/upload/books/yz/023232-01.pdf . These attest the terminology, not a finiteness assumption for this project. Alphabet W supplies the available constant symbols from members of W; it need not be finite and is not the ten constructor tags."
+
+[[term]]
+category = "Type theory"
+id = "round-trip-law"
+audience = "reader"
+en = "round-trip law"
+zh = "往返律"
+ja = "往復則"
+introduced_in = "Base.Impredicativity"
+matching = "auto"
+forms_en = ["round-trip laws"]
+avoid = ["en:inverse law", "en:inverse laws", "zh:逆律", "zh:逆定律", "ja:逆法則"]
+recap_en = "A law stating that going there and back recovers the input up to a path. For f : A → B and g : B → A, the two laws are g (f a) ≡ a and f (g b) ≡ b, for every input."
+recap_zh = "表达先去再回后在路径意义下恢复输入的规律。对 f : A → B 与 g : B → A，两条往返律分别为对所有输入成立的 g (f a) ≡ a 与 f (g b) ≡ b。"
+recap_ja = "往復するとパスの意味で入力に戻ることを表す法則。f : A → B と g : B → A の二つの往復則は、すべての入力についての g (f a) ≡ a と f (g b) ≡ b である。"
+notes = "Owner ruling 2026-09-22: standardize Chinese to 往返律, register as an automatic reader term, and retire 逆律 for this sense. English round-trip law and Japanese 往復則 align the existing descriptive terminology. Primary evidence: HoTT Book section 2.15 uses round-trip composite for recovering the original function/pair, https://homotopytypetheory.org/wp-content/uploads/2013/03/hott-online-611-ga1a258c.pdf ; Cubical Iso has section/retract and rightInv/leftInv fields, https://github.com/agda/cubical/blob/master/Cubical/Foundations/Isomorphism.agda . Verified against local Cubical 0.9. Searches: round-trip homotopy type theory inverse; 同伦类型论 逆律; 型理論 往復 同値. No primary-source attestation for the exact Chinese/Japanese labels was found in these searches; they are the owner's descriptive naming and its parallel Japanese expression, not claimed as universally standard terminology."
 
 [[term]]
 category = "Model theory"

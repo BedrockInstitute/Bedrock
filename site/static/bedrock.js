@@ -39,9 +39,37 @@
     initCodeNotes();
     initTermHover();
     initNav();
+    initPageScroll();
     initHeaderOffset();
     initSectionTracking();
   });
+
+  /* Page-edge controls are shared by chapters, the reading guide and library pages. */
+  function initPageScroll() {
+    var labels = ({
+      en: ["Page scrolling", "Scroll to top", "Scroll to bottom"],
+      zh: ["页面滚动", "回到顶部", "直达底部"],
+      ja: ["ページ移動", "ページの先頭へ", "ページの末尾へ"]
+    })[cfg.lang] || ["Page scrolling", "Scroll to top", "Scroll to bottom"];
+    var controls = document.createElement("nav");
+    controls.className = "page-scroll";
+    controls.setAttribute("aria-label", labels[0]);
+    ["top", "bottom"].forEach(function (edge, i) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.title = labels[i + 1];
+      button.setAttribute("aria-label", labels[i + 1]);
+      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' +
+        '<path d="' + (edge === "top" ? "M5 4h14M6 13l6-6 6 6M12 7v13" :
+          "M5 20h14M6 11l6 6 6-6M12 17V4") + '"/></svg>';
+      button.addEventListener("click", function () {
+        window.scrollTo({ top: edge === "top" ? 0 : document.documentElement.scrollHeight,
+          behavior: "smooth" });
+      });
+      controls.appendChild(button);
+    });
+    document.body.appendChild(controls);
+  }
 
   /* Keep fragment targets below the complete sticky header. External Cubical pages add
      a banner above the topbar, and phone layouts may wrap the topbar onto a second row. */
@@ -1346,6 +1374,107 @@
   });
 })();
 
+/* A schematic contraction of entire fibre pairs: domain point and path move together. */
+(function () {
+  "use strict";
+  document.addEventListener("DOMContentLoaded", function () {
+    const figure = document.getElementById("fig-fiber-general");
+    if (!figure) return;
+    const trigger = figure.querySelector(".fiber-fan-stage");
+    const bundles = Array.from(figure.querySelectorAll(".fiber-bundle"));
+    if (!trigger || !bundles.length) return;
+    const numbers = /-?\d+(?:\.\d+)?/g;
+    const coordinates = data => data.match(numbers).map(Number);
+    const position = node => [Number(node.getAttribute("cx")), Number(node.getAttribute("cy"))];
+    const morphs = [], points = [], labels = [];
+    const centreLabels = Array.from(figure.querySelectorAll(".fiber-center-label"));
+    bundles.forEach(bundle => {
+      const target = coordinates(bundle.dataset.centerPath);
+      const [ax, iy] = target.slice(-2);
+      const ay = position(bundle.querySelector(".fiber-domain-point"))[1];
+      // Merge whole paths into p_i; the fixed base and the image remain distinct.
+      const targets = [
+        [".fiber-hair", target],
+        [".fiber-moving-map", [ax, ay + 4, ax, iy - 10]],
+        [".fiber-moving-tip", [ax - 4, iy - 17, ax, iy - 10, ax + 4, iy - 17]]
+      ];
+      targets.forEach(([selector, to]) => {
+        bundle.querySelectorAll(selector).forEach(node => {
+          morphs.push({node, to, from: coordinates(node.getAttribute("d")), template: node.getAttribute("d")});
+        });
+      });
+      [[".fiber-domain-point", [ax, ay]], [".fiber-image-point", [ax, iy]]].forEach(([selector, to]) => {
+        bundle.querySelectorAll(selector).forEach(node => points.push({node, to, from: position(node)}));
+      });
+      const width = bundle.ownerSVGElement.viewBox.baseVal.width;
+      figure.querySelectorAll(`.fiber-sample-label[data-fiber="${bundle.dataset.fiber}"]`).forEach(node => {
+        labels.push({node, from: parseFloat(node.style.left), to: ax / width * 100});
+      });
+    });
+    const text = ({
+      en: ["Contract the three fibres to their centres", "Expand the three fibres again"],
+      zh: ["将三束纤维收向各自的中心", "重新展开三束纤维"],
+      ja: ["三つのファイバーをそれぞれの中心へ収縮する", "三つのファイバーを再び広げる"]
+    })[document.documentElement.lang] || ["Contract the three fibres to their centres", "Expand the three fibres again"];
+    let contracted = false;
+    function paint(t) {
+      morphs.forEach(({node, from, to, template}) => {
+        let i = 0;
+        node.setAttribute("d", template.replace(numbers, () => {
+          const n = i++;
+          return String(from[n] + (to[n] - from[n]) * t);
+        }));
+      });
+      points.forEach(({node, from, to}) => {
+        node.setAttribute("cx", from[0] + (to[0] - from[0]) * t);
+        node.setAttribute("cy", from[1] + (to[1] - from[1]) * t);
+      });
+      labels.forEach(({node, from, to}) => {
+        node.style.left = (from + (to - from) * t) + "%";
+        node.style.opacity = String(Math.max(0, 1 - t / .55));
+        node.setAttribute("aria-hidden", String(t >= .55));
+      });
+      centreLabels.forEach(node => {
+        node.style.opacity = t === 1 ? "1" : "0";
+        node.setAttribute("aria-hidden", String(t !== 1));
+      });
+    }
+    trigger.setAttribute("role", "button");
+    trigger.setAttribute("aria-label", text[0]);
+    trigger.setAttribute("aria-pressed", "false");
+    trigger.tabIndex = 0;
+    figure.classList.add("fiber-interactive");
+    trigger.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        trigger.click();
+      }
+    });
+    trigger.addEventListener("click", () => {
+      if (figure.classList.contains("fiber-animating")) return;
+      figure.classList.add("fiber-animating");
+      trigger.setAttribute("aria-disabled", "true");
+      let start;
+      function frame(now) {
+        if (start === undefined) start = now;
+        const time = Math.min(1, (now - start) / 3600);
+        const eased = time * time * (3 - 2 * time);
+        paint(contracted ? 1 - eased : eased);
+        if (time < 1) requestAnimationFrame(frame);
+        else {
+          contracted = !contracted;
+          figure.classList.toggle("fiber-contracted", contracted);
+          figure.classList.remove("fiber-animating");
+          trigger.removeAttribute("aria-disabled");
+          trigger.setAttribute("aria-pressed", String(contracted));
+          trigger.setAttribute("aria-label", text[contracted ? 1 : 0]);
+        }
+      }
+      requestAnimationFrame(frame);
+    });
+  });
+})();
+
 /* Expand the schematic family of paths into its type; paths become its points. */
 (function () {
   "use strict";
@@ -1389,7 +1518,6 @@
       trigger.setAttribute("aria-disabled", "true");
       figure.classList.add("coded-truth-playing");
       try {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         const matrix = moving.ownerSVGElement.getScreenCTM();
         if (!matrix) return;
         const inverse = matrix.inverse();
