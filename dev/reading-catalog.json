@@ -65,6 +65,7 @@
         "V.Hierarchy",
         "V.Smallness",
         "V.Model",
+        "V.InternalClassicality",
         "V.Coding"
       ]
     },
@@ -669,6 +670,24 @@
         "en": "The cumulative hierarchy models ZF and ZFC",
         "zh": "累积层级是 ZF 与 ZFC 的模型",
         "ja": "累積階層は ZF と ZFC のモデル"
+      }
+    },
+    {
+      "id": "V.InternalClassicality",
+      "title": {
+        "en": "Internal classicality of the cumulative hierarchy",
+        "zh": "累积层级的内部经典性",
+        "ja": "累積階層の内部古典性"
+      },
+      "stage": {
+        "en": "The ambient hierarchy",
+        "zh": "环境层级",
+        "ja": "周囲の累積階層"
+      },
+      "description": {
+        "en": "Internal excluded middle suffices for the cumulative hierarchy to model ZF",
+        "zh": "内部排中律足以使累积层级成为 ZF 的模型",
+        "ja": "内部排中律から累積階層が ZF のモデルであることを導く"
       }
     },
     {

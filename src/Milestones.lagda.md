@@ -19,15 +19,16 @@ module Milestones where
 ```
 
 <!--en-->
-**Theorem 1.** Under the excluded-middle assumption, the host-level `V` is a model of ZF.
+**Theorem 1.** If first-order satisfaction in the deeply embedded language obeys
+excluded middle, the host-level `V` is a model of ZF.
 <!--zh-->
-**定理1** 在排中律假设下，宿主层 `V` 是 ZF 的模型。
+**定理1** 假设深嵌入的一阶逻辑内部满足排中律，宿主层 `V` 是 ZF 的模型。
 <!--ja-->
-**定理1** 排中律の仮定のもとで、ホストレベルの `V` は ZF のモデルである。
+**定理1** 深く埋め込まれた一階論理の充足関係が排中律を満たすならば、ホストレベルの `V` は ZF のモデルである。
 <!--/-->
 
 ```agda
-open import V.Model public using ( V⊨ZF )
+open import V.InternalClassicality public using ( InternalLEMᵥ; V⊨ZF )
 ```
 
 <!--en-->
