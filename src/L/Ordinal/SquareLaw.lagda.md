@@ -83,18 +83,18 @@ The logical vocabulary matches the shape of the statements to be proved. Refutat
 ```
 
 <!--en-->
-The finite counting part needs arithmetic and the standard finite types. Multiplication _·_ on natural numbers sizes the square of a finite type, and the library equivalence factorEquiv identifies `Fin n × Fin n` with `Fin (n · n)`. The pigeonhole theorem supplies the impossibility that anchors the chapter's last argument: no injection from `Fin (suc n)` to `Fin n` exists. Order on the natural numbers comes with the fact that ≤ is a proposition, which makes comparisons into `Fin` respect the proof-irrelevance of their bound.
+The finite counting part needs arithmetic and the standard finite types. Multiplication _·_ on natural numbers sizes the square of a finite type, and the library equivalence factorEquiv identifies `Fin n × Fin n` with `Fin (n · n)`. The functions `equivFun` and `invEq` move between these presentations, and `retEq` identifies an input with its return along the two maps. The pigeonhole theorem supplies the impossibility that anchors the chapter's last argument: no injection from `Fin (suc n)` to `Fin n` exists. Order on the natural numbers comes with the fact that ≤ is a proposition, which makes comparisons into `Fin` respect the proof-irrelevance of their bound.
 <!--zh-->
-有穷计数部分需要算术与标准有穷类型。自然数乘法 _·_ 度量有穷类型的平方，库中的等价 factorEquiv 把 `Fin n × Fin n` 与 `Fin (n · n)` 等同起来。鸽笼定理给出本章末尾论证的锚点：从 `Fin (suc n)` 到 `Fin n` 不存在单射。自然数上的序还附带「≤ 是命题」这一事实，这使得到 `Fin` 的比较与其界的证明无关性相容。
+有穷计数部分需要算术与标准有穷类型。自然数乘法 _·_ 度量有穷类型的平方，库中的等价 factorEquiv 把 `Fin n × Fin n` 与 `Fin (n · n)` 等同起来。`equivFun` 与 `invEq` 在这两种呈现之间搬移元素，`retEq` 则把往返后的元素与输入等同。鸽笼定理给出本章末尾论证的锚点：从 `Fin (suc n)` 到 `Fin n` 不存在单射。自然数上的序还附带「≤ 是命题」这一事实，这使得到 `Fin` 的比较与其界的证明无关性相容。
 <!--ja-->
-有限計数の部分には算術と標準的な有限型が必要である。自然数の乗法 _·_ は有限型の平方の大きさを定め、ライブラリの等価 factorEquiv は `Fin n × Fin n` を `Fin (n · n)` と同一視する。鳩の巣定理は、本章の最後の議論の要となる不可能性を供給する。`Fin (suc n)` から `Fin n` への単射は存在しない、というものである。自然数上の順序には「≤ が命題である」という事実が伴い、これにより `Fin` への比較がその上限の証明非依存性と調和する。
+有限計数の部分には算術と標準的な有限型が必要である。自然数の乗法 _·_ は有限型の平方の大きさを定め、ライブラリの等価 factorEquiv は `Fin n × Fin n` を `Fin (n · n)` と同一視する。`equivFun` と `invEq` がこれらの提示の間で要素を移し、`retEq` が往復後の要素を入力と同一視する。鳩の巣定理は、本章の最後の議論の要となる不可能性を供給する。`Fin (suc n)` から `Fin n` への単射は存在しない、というものである。自然数上の順序には「≤ が命題である」という事実が伴い、これにより `Fin` への比較がその上限の証明非依存性と調和する。
 <!--/-->
 
 ```agda
 import Cubical.Data.Fin.Base as FB
 open import Cubical.Data.Fin.Properties using ( factorEquiv; pigeonhole )
 open import Cubical.Data.Nat.Order using ( _<_; isProp≤; ≤-refl )
-open import Cubical.Foundations.Equiv using ( equivFun; invEq; retEq )
+open import Cubical.Foundations.Equiv using ( retEq )
 ```
 
 <!--en-->

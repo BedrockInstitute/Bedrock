@@ -56,11 +56,11 @@ open import FOL.LevyHierarchy
 ```
 
 <!--en-->
-A formula's meaning is given by the semantics module, instantiated here at the structure `𝒮ᵥ`{.Agda} from V.Hierarchy: the cumulative hierarchy equipped as a structure whose relations take values in `hProp (ℓ-suc ℓ)`. So the truth values this chapter studies are exactly propositions one universe up, the kind `hasSize` speaks about. The proofs all rest on a small toolkit for equivalences: the type `_≃_` with its evaluation `equivFun` and preimages `invEq`, `equivΠ` for lifting equivalences through function types, and `propBiimpl→Equiv`, which turns two proofs of propositionhood and a bi-implication into an equivalence. Since both sides of the equivalences below are propositions, this last constructor carries most of the weight.
+A formula's meaning is given by the semantics module, instantiated here at the structure `𝒮ᵥ`{.Agda} from V.Hierarchy: the cumulative hierarchy equipped as a structure whose relations take values in `hProp (ℓ-suc ℓ)`. So the truth values this chapter studies are exactly propositions one universe up, the kind `hasSize` speaks about. The proofs must build equivalences between these propositions and lower-level representatives. Beyond applying the forward and inverse maps, we use `invEquiv` to reverse an equivalence and `equivΠ` to extend equivalences to function types. For propositions, `propBiimpl→Equiv` builds an equivalence from their propositionhood certificates and implications in both directions. Since both sides of the equivalences below are propositions, this last constructor carries most of the weight.
 <!--zh-->
-公式的意义由语义模块给出，这里在 V.Hierarchy 的结构 `𝒮ᵥ`{.Agda} 上实例化：即装备成结构的累积层级，其关系取值于 `hProp (ℓ-suc ℓ)`。因此本章研究的真值恰是高一层的命题，正是 `hasSize` 所谈的那类。所有证明都建立在一套等价工具之上：等价类型 `_≃_` 及其求值 `equivFun` 与原像 `invEq`，穿越函数类型的 `equivΠ`，以及 `propBiimpl→Equiv`，它把两个命题性证明加一条双向蕴含变成等价。由于下面各等价的两端都是命题，最后这个构造子承担了大部分工作。
+公式的意义由语义模块给出，这里在 V.Hierarchy 的结构 `𝒮ᵥ`{.Agda} 上实例化：即装备成结构的累积层级，其关系取值于 `hProp (ℓ-suc ℓ)`。因此本章研究的真值恰是高一层的命题，正是 `hasSize` 所谈的那类。证明需要在这些命题与低层代表之间建立类型等价。除了应用正向与逆向映射，还用 `invEquiv` 反转等价，用 `equivΠ` 把等价扩展到函数类型。对于命题，`propBiimpl→Equiv` 则根据两边的命题性证书与双向蕴涵构造等价。由于下面各等价的两端都是命题，最后这个构造子承担了大部分工作。
 <!--ja-->
-論理式の意味は意味論のモジュールが与え、ここでは V.Hierarchy の構造 `𝒮ᵥ`{.Agda} で具体化する。つまり、構造としての装備を施した累積階層で、その関係は `hProp (ℓ-suc ℓ)` に値をとる。したがって本章が扱う真理値は一段上の宇宙の命題であり、まさに `hasSize` が語る種類のものである。証明はすべて同値の小さな道具立てに依拠する。同値の型 `_≃_` とその適用 `equivFun`、原像 `invEq`、関数型を通して同値を運ぶ `equivΠ`、そして二つの命題性の証明と双条件から同値を作る `propBiimpl→Equiv`。以下の同値はどちらの側も命題なので、この構成子がほとんどの仕事を担う。
+論理式の意味は意味論のモジュールが与え、ここでは V.Hierarchy の構造 `𝒮ᵥ`{.Agda} で具体化する。つまり、構造としての装備を施した累積階層で、その関係は `hProp (ℓ-suc ℓ)` に値をとる。したがって本章が扱う真理値は一段上の宇宙の命題であり、まさに `hasSize` が語る種類のものである。証明では、これらの命題と低いレベルの代表の間に型同値を構成する。順写像と逆写像の適用に加え、`invEquiv` で同値の向きを反転し、`equivΠ` で関数型へ同値を拡張する。命題については、`propBiimpl→Equiv` が両側の命題性の証明と双方向の含意から同値を構成する。以下の同値はどちらの側も命題なので、この構成子がほとんどの仕事を担う。
 <!--/-->
 
 ```agda
@@ -68,7 +68,7 @@ import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 
 open import Cubical.Foundations.Equiv
-  using ( _≃_; equivFun; invEq; invEquiv; equivΠ; propBiimpl→Equiv )
+  using ( invEquiv; equivΠ; propBiimpl→Equiv )
 ```
 
 <!--en-->

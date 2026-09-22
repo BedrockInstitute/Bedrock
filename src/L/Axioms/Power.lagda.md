@@ -150,18 +150,17 @@ Every hierarchy set has a small presentation: a type `⟪P⟫` of indices and an
 embedding `⟪P⟫↪` that presents its members. Membership in `P` is the
 propositional truncation of a fibre of this embedding. Because the map is an
 embedding, each fibre is already a proposition, so `∈-asFiber` may recover the
-index and its identifying path without invoking Choice. The equivalence maps
-also let the proof move between a resized proposition and its original form.
+index and its identifying path without invoking Choice. The functions `equivFun` and `invEq` move proofs between a resized proposition
+and its original form, using the equivalence supplied by the resizing witness.
 At the end, propositional extensionality turns two implications into a path of
 truth values.
 <!--zh-->
-层级中的每个集合都有小表现：索引类型 `⟪P⟫` 与呈现其成员的嵌入 `⟪P⟫↪`。属于 `P` 被定义为该嵌入某个纤维的命题截断。由于此映射是嵌入，每个纤维本来就是命题，故 `∈-asFiber` 可以恢复索引及识别它的路径，而无须使用选择公理。等价的两个方向还让证明在降级命题与原命题之间往返。最后，命题外延性把两个方向的蕴含变成真值之间的路径。
+层级中的每个集合都有小表现：索引类型 `⟪P⟫` 与呈现其成员的嵌入 `⟪P⟫↪`。属于 `P` 被定义为该嵌入某个纤维的命题截断。由于此映射是嵌入，每个纤维本来就是命题，故 `∈-asFiber` 可以恢复索引及识别它的路径，而无须使用选择公理。换级见证提供类型等价，`equivFun` 与 `invEq` 让证明在降级命题与原命题之间往返。最后，命题外延性把两个方向的蕴含变成真值之间的路径。
 <!--ja-->
-階層の各集合は小さな表現を持つ。添字型 `⟪P⟫` と、その要素を呈示する埋め込み `⟪P⟫↪` である。`P` への所属は、この埋め込みのファイバーの命題的切り詰めとして定義される。写像が埋め込みなので各ファイバーはすでに命題であり、`∈-asFiber` は選択公理を使わずに添字とそれを特定するパスを復元できる。同値の二方向は、リサイズされた命題と元の命題との間の往復にも使われる。最後には命題外延性が、二方向の含意を真理値の間のパスへ変える。
+階層の各集合は小さな表現を持つ。添字型 `⟪P⟫` と、その要素を呈示する埋め込み `⟪P⟫↪` である。`P` への所属は、この埋め込みのファイバーの命題的切り詰めとして定義される。写像が埋め込みなので各ファイバーはすでに命題であり、`∈-asFiber` は選択公理を使わずに添字とそれを特定するパスを復元できる。リサイズの証拠が与える型同値により、`equivFun` と `invEq` はリサイズされた命題と元の命題の間で証明を移す。最後には命題外延性が、二方向の含意を真理値の間のパスへ変える。
 <!--/-->
 
 ```agda
-open import Cubical.Foundations.Equiv using ( _≃_; invEq; equivFun )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈-asFiber; ⟪_⟫; ⟪_⟫↪ )

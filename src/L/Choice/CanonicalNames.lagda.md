@@ -110,17 +110,16 @@ open import L.WellOrder.Base {ℓ-suc ℓ}
 ```
 
 <!--en-->
-The abstract notion of order is a strict well-order packaged as a record: a strict comparison, trichotomy, irreflexivity, transitivity, and well-foundedness, together with a least-element search `leastOf` that consumes such a record. These four laws are exactly what the names will be shown to satisfy. On the type-theoretic side, the imported tools handle the dependent bookkeeping that arises because a name's formula and parameter vector have the arity as an index: a way to build a path into a dependent pair, a commutation of substitution with a constant function along a path, the two directions of an equivalence, and injectivity extracted from an embedding.
+The abstract notion of order is a strict well-order packaged as a record: a strict comparison, trichotomy, irreflexivity, transitivity, and well-foundedness, together with a least-element search `leastOf` that consumes such a record. These four laws are exactly what the names will be shown to satisfy. The equality arguments must also respect dependent types, because a name's formula and parameter vector have the arity as an index. Paths in dependent pairs and substitution along arity paths keep these data aligned; equivalences move between presentations, while the injectivity of an embedding recovers equality of the original indices.
 <!--zh-->
-序的抽象概念被打包成记录的严格良序：一个严格比较、三歧性、非自反性、传递性与良基性，连同使用这种记录的最小元搜索 `leastOf`。名字将被证明恰好满足这四条定律。在类型论一侧，导入的工具处理因名字的公式与参数向量以元数为索引而产生的依值类型中的等式处理：向依值对中造路径的办法、替换沿路径与常值函数的交换、等价的两个方向，以及从嵌入提取的单射性。
+序的抽象概念被打包成记录的严格良序：一个严格比较、三歧性、非自反性、传递性与良基性，连同使用这种记录的最小元搜索 `leastOf`。名字将被证明恰好满足这四条定律。相等论证还必须尊重依赖关系，因为名字的公式与参数向量都以元数为索引。依值对中的路径与沿元数路径的替换使这些数据保持对应；类型等价负责在不同呈现之间搬移，嵌入的单射性则恢复原来索引的相等。
 <!--ja-->
-順序の抽象概念は、レコードとしてまとめられた狭義整列順序である。狭義の比較、三分性、非反射性、推移性、整礎性に加え、そのようなレコードを用いる最小要素探索 `leastOf` をともなう。名前が満たすと示されるのは、まさにこの四つの法則である。型理論の側で読み込まれる道具は、名前の論理式とパラメータ列がアリティを指数にもつことから生じる依存型における等式の処理を扱う。依存対へのパスの構成、パスに沿った置換と定数関数の交換、同値の両方向、そして埋め込みから取り出す単射性である。
+順序の抽象概念は、レコードとしてまとめられた狭義整列順序である。狭義の比較、三分性、非反射性、推移性、整礎性に加え、そのようなレコードを用いる最小要素探索 `leastOf` をともなう。名前が満たすと示されるのは、まさにこの四つの法則である。等式の議論では依存関係にも注意が必要である。名前の論理式とパラメータ列はともにアリティを添字にもつ。依存対のパスとアリティのパスに沿う置換がこれらのデータを対応させ、型同値が異なる提示の間を移し、埋め込みの単射性が元の添字の等しさを復元する。
 <!--/-->
 
 ```agda
   using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf )
 open import Cubical.Foundations.Transport using ( constSubstCommSlice )
-open import Cubical.Foundations.Equiv using ( equivFun; invEq )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 ```
 

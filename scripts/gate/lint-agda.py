@@ -75,6 +75,7 @@ PRELUDE_PUBLIC_NAMES = {
         "∀[]-syntax", "∀[∶]-syntax", "∃[]-syntax", "∃[∶]-syntax",
     },
     "Cubical.Data.Sum": {"_⊎_", "inl", "inr", "rec"},
+    "Cubical.Data.Bool": {"Bool", "true", "false"},
     "Cubical.Data.Nat": {"ℕ", "zero", "suc", "_+_"},
     "Cubical.Data.FinData": {"Fin", "zero", "suc", "toℕ"},
     "Cubical.Foundations.Prelude": {
@@ -84,12 +85,19 @@ PRELUDE_PUBLIC_NAMES = {
     },
     "Cubical.Foundations.HLevels": {
         "hProp", "isSetHProp", "isPropΠ", "isProp→", "isProp×", "isPropΣ",
+        "isOfHLevelLift", "isOfHLevelRespectEquiv",
     },
+    "Cubical.Foundations.Equiv": {"_≃_", "equivFun", "invEq"},
+    "Cubical.Foundations.Equiv.Base": {"_≃_", "equivFun"},
+    "Cubical.Core.Glue": {"_≃_", "equivFun"},
+    "Agda.Builtin.Cubical.Glue": {"_≃_", "equivFun"},
+    "Cubical.Foundations.Equiv.Properties": {"congEquiv"},
+    "Cubical.Foundations.Isomorphism": {"Iso", "iso", "isoToEquiv"},
     "Cubical.Data.Vec": {"Vec", "[]", "_∷_", "lookup", "map"},
     "Cubical.HITs.PropositionalTruncation": {
         "∥_∥₁", "∣_∣₁", "squash₁", "rec", "map",
     },
-    "Cubical.Relation.Nullary": {"Dec", "yes", "no", "isPropDec"},
+    "Cubical.Relation.Nullary": {"Dec", "yes", "no", "isPropDec", "mapDec"},
 }
 # Agda token delimiters (note: [ ] , are identifier characters in Agda).
 DELIMS = " \t\r\n(){};@"
@@ -369,7 +377,9 @@ def lint_file(path):
                 imported = {name for name, is_module in st.using if not is_module}
                 imported.update(st.renamed_sources)
                 repeated = sorted(imported & public_names)
-                if st.as_name or (st.kind == "import" and not imported):
+                unrestricted = (st.kind in {"import", "open-import"}
+                                and not re.search(r"\b(?:using|renaming)\b", st.text))
+                if st.as_name or (st.kind == "import" and not imported) or unrestricted:
                     report(st.lines[0], "prelude-import",
                            f"do not import or alias all of {st.module}; import only "
                            "non-Prelude names with an explicit using/renaming list")

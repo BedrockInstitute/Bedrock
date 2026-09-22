@@ -6,6 +6,25 @@ order. "First use" means the first occurrence in those three chapters, not the d
 style was introduced. Refer to a recipe by its stable ID when requesting a new passage
 or figure. Reuse the existing classes; do not copy their CSS into chapter markup.
 
+## Page navigation
+
+`navigation.section-tree` renders the chapter's h2–h6 hierarchy as nested lists.
+Every heading with children uses `details.toc-branch`, closed by default; its
+summary contains the heading link. The disclosure arrow and keyboard activation
+toggle the child list, while the link navigates to the heading. First use:
+[Prelude](../src/Base/Prelude.lagda.md), the subsections under Logical operations.
+
+On a change of the current reading section, `bedrock.js` opens exactly the
+branches containing its link and closes the others, including when entering by
+a fragment URL or scrolling backward. Manual toggles remain in effect until the
+current heading changes. The existing scroll tracker supplies the active heading,
+so the breadcrumb, highlighted link and expanded branches share one position.
+The outer Contents section and other sidebar groups keep their own disclosure
+state. `toc_html` in `render-site.py` and the shared CSS own the structure and
+spacing; chapters need no navigation markup. Chapter links above and below the
+article use the localized Previous chapter / Next chapter labels without a route
+prefix.
+
 ## Prose and code
 
 | Recipe ID | Use and canonical source form | First use | Implementation / checks |
@@ -21,10 +40,19 @@ or figure. Reuse the existing classes; do not copy their CSS into chapter markup
 | `prose.statement` | `**Definition** (`name`{.Agda}) Text`; also Construction, Fact, Lemma, Theorem, Corollary with localized labels | [Impredicativity](../src/Base/Impredicativity.lagda.md), `hasSize` | `lint-prose.py`; the label and declaration form one sentence, without a period after the label |
 | `prose.proof` | `**Proof** Text`, alternating explanation and code, with standalone `∎` after the complete outer proof | [Impredicativity](../src/Base/Impredicativity.lagda.md), `ΩResizing→Resizing`; further examples in [Classical](../src/Base/Classical.lagda.md), `isPropLEM` and `lowerLEM` | `lint-prose.py`; helpers within an optional block do not each need a QED |
 
+### Prose comparison tables
+
+`prose.comparison-table` uses an ordinary Markdown table when the reader needs to
+compare parallel statements, corresponding data, or cases. Existing `main table`,
+`th` and `td` rules provide the border, spacing and header surface. Keep cells short;
+long arguments belong in the surrounding prose. The initial three chapters did
+not use prose tables. The first catalogued use is [Choice](../src/Base/Choice.lagda.md), for existence statements, lifted data
+and the two decision cases. Tables do not replace mathematical type-space diagrams.
+
 ### Centered code display
 
 ```html
-<div class="single-line-code"><code>expression</code></div>
+<div class="single-line-code"><code>`expression`{.Agda}</code></div>
 ```
 
 ### Default-open optional construction
@@ -67,7 +95,7 @@ The first common shell is `fig-pi-sigma` in Prelude.
 
 | Recipe ID | Reusable structure | First use | Reuse guidance |
 | --- | --- | --- | --- |
-| `figure.frame` | One direct `div.diagram-framed` for the diagram content, followed by a sibling `figcaption` outside the frame | [Prelude](../src/Base/Prelude.lagda.md), `fig-proposition-and-proof` | Groups formulas, spaces and labels; never frame the overall description; the diagram gate enforces this structure |
+| `figure.frame` | One direct `div.diagram-framed` for the diagram content, followed by a sibling `figcaption` outside the frame | [Prelude](../src/Base/Prelude.lagda.md), `fig-fiber-general` | Groups formulas, spaces and labels; never frame the overall description; the diagram gate enforces this structure |
 | `figure.compare` | `type-comparison-panels` with `diagram-panel` | [Prelude](../src/Base/Prelude.lagda.md), `fig-pi-sigma` | Parallel alternatives; align corresponding rows and center their contents |
 | `figure.space` | HTML `diagram-space` or SVG `diagram-space-shape` | [Prelude](../src/Base/Prelude.lagda.md), `fig-type-transport` | A box denotes a mathematical type space; place elements inside and the type label above them |
 | `figure.paths` | `path-stage`, SVG `viewBox`, positioned `path-label` | [Prelude](../src/Base/Prelude.lagda.md), `fig-path-operations` | Ordinary paths: blue, no arrowheads, white endpoints with blue outlines; `refl` is a point |
@@ -82,14 +110,22 @@ The first common shell is `fig-pi-sigma` in Prelude.
 | `figure.path-space` | `coded-truth-proof-scene`: two proof spaces and the ambient type, with `diagram-path-space` lens | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-coded-truth` | Align proof points; put endpoint labels next to endpoints; the shaded family is schematic, not a literal subspace of Ω |
 | `figure.roundtrips` | `type-comparison-panels classical-roundtrips`, parallel path stages | [Classical](../src/Base/Classical.lagda.md), `fig-classical-roundtrips` | Two round-trip laws displayed in matching geometry, with paths for equality |
 | `figure.compact-map` | `diagram-compact-stage` inside the standard frame or comparison columns | [Prelude](../src/Base/Prelude.lagda.md), `fig-truncation-witnesses` | Vertically aligned source/target spaces, bounded width, shared label size; reused in `fig-lower-lem` |
-| `figure.fibres` | `fiber-general` with one `fiber-fan-stage` containing independent `fiber-bundle` groups | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-fiber-general` | Function arrows send sampled points of A into B; each tuft of blue hairs joins their images to its own fixed base point inside B. A fibre point comprises a domain point and a path; never portray these hairs as contraction paths inside the fibre |
+| `figure.fibres` | `fiber-general` with one `fiber-fan-stage` containing independent `fiber-bundle` groups | [Prelude](../src/Base/Prelude.lagda.md), `fig-fiber-general` | Function arrows send sampled points of A into B; each tuft of blue hairs joins their images to its own fixed base point inside B. A fibre point comprises a domain point and a path; never portray these hairs as contraction paths inside the fibre |
 | `figure.indexed-slots` | `diagram-indexed`, a three-column `vector-slots` strip, and aligned index/result points | [Prelude](../src/Base/Prelude.lagda.md), `fig-fin-vector-lookup` | The strip represents entries of one vector, not a type space; arrows denote `lookup` with that vector fixed; numerical index labels must be explained in prose |
-| `interaction.fibre-contraction` | `fiber-fan-stage`, `fiber-bundle`, `fiber-hair`, moving domain/image points and maps; fixed `fiber-base-point`, per-group `data-center-path`, sample/centre labels | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-fiber-general` | Click/Enter/Space contracts each fibre independently. All hairs in a group merge into the nonconstant path p_i stored in data-center-path; their image endpoints merge at f(a_i), separately from the fixed b_i. Domain points and function arrows merge in step. Initially show only candidate arrows and labels a_ij, with no extra centre arrow. Show a_i only when contraction finishes; restore a_ij on expansion. Targets are derived from each group’s stored path geometry. Activate again to expand. Requires a contraction witness, not just chosen centres; final coincidence depicts path equality. |
+| `interaction.fibre-contraction` | `fiber-fan-stage`, `fiber-bundle`, `fiber-hair`, moving domain/image points and maps; fixed `fiber-base-point`, per-group `data-center-path`, sample/centre labels | [Prelude](../src/Base/Prelude.lagda.md), `fig-fiber-general` | Click/Enter/Space contracts each fibre independently. All hairs in a group merge into the nonconstant path p_i stored in data-center-path; their image endpoints merge at f(a_i), separately from the fixed b_i. Domain points and function arrows merge in step. Initially show only candidate arrows and labels a_ij, with no extra centre arrow. Show a_i only when contraction finishes; restore a_ij on expansion. Targets are derived from each group’s stored path geometry. Activate again to expand. Requires a contraction witness, not just chosen centres; final coincidence depicts path equality. |
 | `interaction.path-space` | `coded-truth-trigger`, moving region/path copies and target point classes | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-coded-truth` | Click/Enter/Space unfolds a path family while whole paths shrink to points; gentle fill pulse, no play button; activation always plays the animation |
 
 Appearance is centralized in `site/static/bedrock.css`; animation is in
 `site/static/bedrock.js`. Shared SVG roles and allowed geometry are enforced by
 `scripts/site/diagram_style.py`, called by the renderer and `check-diagrams.py`.
+Diagram spacing follows one responsive scale: the figure shell owns its outer rhythm,
+`diagram-framed` owns the inset inside an overall frame, `diagram-panel` owns each
+parallel panel's inset, `diagram-space` owns the closest inset around mathematical
+objects, and `--diagram-gap` separates siblings. Keep these four levels distinct.
+Do not repair spacing with per-figure margins or padding. On narrow screens the shared
+tokens contract together, comparison grids stack, and wide three-part constructions
+reduce their connector column while preserving readable mathematical content and no
+horizontal scrolling.
 For a comparison grouped by a single outer frame, see Prelude's
 `fig-proposition-and-proof`: it composes `figure.compare`, `figure.space` and
 `figure.paths`, enclosed by `figure.frame`. Each column places the packaged proposition above its underlying

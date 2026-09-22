@@ -89,7 +89,7 @@ Comparison needs a base order with trichotomy. The order `natOrder` on natural n
 open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf; natOrder )
 
-open import Cubical.Data.Bool using ( Bool; true; false; false≢true )
+open import Cubical.Data.Bool using ( false≢true )
 ```
 
 <!--en-->

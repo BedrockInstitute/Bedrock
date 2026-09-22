@@ -223,11 +223,53 @@ module Test where
 
 open import Cubical.Relation.Nullary using ( Dec; yes; no; isPropDec )  -- lint-agda: keep
 open import Cubical.Relation.Nullary using ( mapDec )  -- lint-agda: keep
+open import Cubical.Foundations.HLevels using ( isOfHLevelLift )  -- lint-agda: keep
 ```
 """
 
-check("Prelude-owned decidability vocabulary", rules(run(prelude_nullary)),
-      [(7, "prelude-import")])
+check("Prelude-owned decidability and lifting vocabulary", rules(run(prelude_nullary)),
+      [(7, "prelude-import"), (8, "prelude-import"), (9, "prelude-import")])
+
+prelude_bool = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+open import Cubical.Data.Bool using ( Bool; true; false )  -- lint-agda: keep
+open import Cubical.Data.Bool using ( _≟_ )
+
+compare = _≟_
+```
+"""
+
+check("Prelude-owned Boolean vocabulary with local comparison allowed",
+      rules(run(prelude_bool)), [(7, "prelude-import")])
+
+prelude_equivalence = f"""# T
+
+```agda
+{OPTS}
+module Test where
+
+open import Cubical.Foundations.Equiv using ( _≃_; equivFun; invEq )  -- lint-agda: keep
+open import Cubical.Foundations.Isomorphism using ( Iso; iso; isoToEquiv )  -- lint-agda: keep
+open import Cubical.Foundations.Equiv.Properties using ( congEquiv )  -- lint-agda: keep
+open import Cubical.Foundations.HLevels using ( isOfHLevelRespectEquiv )  -- lint-agda: keep
+import Cubical.Foundations.Equiv as Equiv  -- lint-agda: keep
+open import Cubical.Foundations.Equiv.Properties renaming ( congEquiv to pathEquiv )  -- lint-agda: keep
+import Cubical.Foundations.Isomorphism using ( isoToEquiv )  -- lint-agda: keep
+open import Cubical.Foundations.Equiv.Base using ( _≃_ )  -- lint-agda: keep
+open import Cubical.Core.Glue using ( equivFun )  -- lint-agda: keep
+open import Agda.Builtin.Cubical.Glue using ( _≃_ )  -- lint-agda: keep
+open import Cubical.Foundations.Equiv  -- lint-agda: keep
+open import Cubical.Foundations.Isomorphism hiding ( iso )  -- lint-agda: keep
+```
+"""
+
+check("Prelude-owned equivalence vocabulary and reexports",
+      rules(run(prelude_equivalence)),
+      [(line, "prelude-import") for line in range(7, 19)])
 
 prelude_owned_at_owner = f"""# T
 
@@ -249,6 +291,8 @@ module Test where
 
 open import Cubical.Data.Sigma using ( ΣPathP )  -- lint-agda: keep
 open import Cubical.Data.Sum renaming ( map to sumMap )  -- lint-agda: keep
+open import Cubical.Foundations.HLevels using ( isSetΣSndProp )  -- lint-agda: keep
+open import Cubical.Foundations.Equiv using ( retEq; invEquiv )  -- lint-agda: keep
 ```
 """
 

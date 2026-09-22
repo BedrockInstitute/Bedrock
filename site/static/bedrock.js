@@ -129,6 +129,7 @@
     updateAnchorInset();
 
     var tocLinks = Array.from(document.querySelectorAll('#toc a[href*="#"]'));
+    var tocBranches = Array.from(document.querySelectorAll("#toc .toc-branch"));
     var scheduled = false;
     var lastActive = -2;
 
@@ -151,6 +152,12 @@
       }
     }
 
+    function syncTocBranches(activeLink) {
+      tocBranches.forEach(function (branch) {
+        branch.open = !!activeLink && branch.contains(activeLink);
+      });
+    }
+
     function render(activeIndex) {
       if (activeIndex === lastActive) return;
       lastActive = activeIndex;
@@ -165,6 +172,8 @@
           activeTocLink = link;
         } else link.removeAttribute("aria-current");
       });
+      // Sync only when the reading section changes, so manual toggles remain usable.
+      syncTocBranches(activeTocLink);
       revealTocLink(activeTocLink);
       if (!active) return;
 

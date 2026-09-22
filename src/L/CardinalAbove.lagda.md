@@ -115,7 +115,7 @@ The proof uses `ω` only in the public statement and uses ordinal successors to 
 
 ```agda
 open InfinitySet {ℓ} using ( ω; sucV )
-open import Cubical.Data.Bool using ( Bool; true; false; false≢true )
+open import Cubical.Data.Bool using ( false≢true )
 ```
 
 <!--en-->

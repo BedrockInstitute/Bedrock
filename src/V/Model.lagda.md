@@ -24,8 +24,6 @@ The universe accounting is exact and should be read once. The carrier of the mod
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
-open import Cubical.Foundations.HLevels
-  using ( isOfHLevelLift; isOfHLevelRespectEquiv )
 
 module V.Model {ℓ : Level} where
 
@@ -61,8 +59,6 @@ The hierarchy contributes the structure `𝒮ᵥ`{.Agda}: its equality is the pa
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import V.Smallness {ℓ} using ( separateFromSmall )
-
-open import Cubical.Foundations.Equiv using ( equivFun )
 ```
 
 <!--en-->
@@ -665,15 +661,17 @@ The power-set construction now extracts what it needs directly from `ωr`{.Agda}
 module Power (ωr : ΩResizing (ℓ-suc ℓ) ℓ) where
 
   private
-    open import Cubical.Foundations.Equiv using ( _≃_; equivFun; invEq )
-```
-
-```agda
-    open import Cubical.Foundations.Equiv.Properties using ( congEquiv )
-
     Ω : Type ℓ
     Ω = ωr .fst
 ```
+
+<!--en-->
+The second component of `ωr` is the equivalence `e`. Its forward map `code` sends each higher proposition to its representative in `Ω`; its inverse will let us recover the proposition's information from that representative.
+<!--zh-->
+`ωr` 的第二分量就是等价 `e`。它的正向映射 `code` 把每个高层命题送到 `Ω` 中的代表；逆向映射则让我们能从代表恢复该命题的信息。
+<!--ja-->
+`ωr` の第二成分が同値 `e` である。その順写像 `code` は上位の各命題を `Ω` の代表へ送り、逆写像によってその代表から命題の情報を復元できる。
+<!--/-->
 
 ```agda
     e : hProp (ℓ-suc ℓ) ≃ Ω

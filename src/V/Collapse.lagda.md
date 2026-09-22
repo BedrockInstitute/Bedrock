@@ -23,7 +23,7 @@ Three mathematical representations shape the proof. First, membership is proposi
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
-open import Base.Prelude
+open import Base.Prelude hiding ( iso )
 
 module V.Collapse {ℓ : Level} where
 
@@ -591,11 +591,11 @@ Assembling both directions gives the [isomorphism]{.term-ref #structure-isomorph
 <!--/-->
 
 <!--en-->
-The packaged result is a pair of implications, not an equivalence type: from `⟨ y ∈ˢ x ⟩` to `⟨ π y ∈ˢ π x ⟩` via the forward lemma, and back via `π∈-bwd`. This is the precise sense in which the collapse is an [isomorphism]{.term-ref #structure-isomorphism} on the carrier: it preserves and reflects membership among elements of `X`, and by `π-inj` it is injective there.
+The local lemma `iso` packages the two implications: from `⟨ y ∈ˢ x ⟩` to `⟨ π y ∈ˢ π x ⟩` via the forward lemma, and back via `π∈-bwd`. This is the precise sense in which the collapse is an [isomorphism]{.term-ref #structure-isomorphism} on the carrier: it preserves and reflects membership among elements of `X`, and by `π-inj` it is injective there.
 <!--zh-->
-打包的结果是一对蕴含，而非等价类型：由 `⟨ y ∈ˢ x ⟩` 经前向引理到 `⟨ π y ∈ˢ π x ⟩`，再经 `π∈-bwd` 返回。这就是塌缩在载体上构成[同构]{.term-ref #structure-isomorphism}的精确含义：它保持且反映 `X` 的元素之间的隶属，并由 `π-inj` 在其上单射。
+局部引理 `iso` 把两个方向的蕴涵打包：由 `⟨ y ∈ˢ x ⟩` 经前向引理到 `⟨ π y ∈ˢ π x ⟩`，再经 `π∈-bwd` 返回。这就是塌缩在载体上构成[同构]{.term-ref #structure-isomorphism}的精确含义：它保持且反映 `X` 的元素之间的隶属，并由 `π-inj` 在其上单射。
 <!--ja-->
-まとめられた結果は、同値の型ではなく一対の含意である。`⟨ y ∈ˢ x ⟩` から順方向の補題経由で `⟨ π y ∈ˢ π x ⟩` へ、そして `π∈-bwd` 経由で戻るものである。崩壊が台の上で[同型]{.term-ref #structure-isomorphism}であるということの正確な意味はこれである。`X` の要素の間の所属を保ちかつ反映し、`π-inj` によりその上で単射である。
+局所的な補題 `iso` は二方向の含意をまとめる。`⟨ y ∈ˢ x ⟩` から順方向の補題経由で `⟨ π y ∈ˢ π x ⟩` へ、そして `π∈-bwd` 経由で戻るものである。崩壊が台の上で[同型]{.term-ref #structure-isomorphism}であるということの正確な意味はこれである。`X` の要素の間の所属を保ちかつ反映し、`π-inj` によりその上で単射である。
 <!--/-->
 
 ```agda

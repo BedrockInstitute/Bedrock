@@ -92,12 +92,25 @@ as part of `make check` and the pre-commit hook `[L0.3]`.
   `∥_∥₁`, `∣_∣₁` and `squash₁` retain their library names, while its recurring eliminator
   and functorial action are exposed as `rec₁` and `map₁`.
   The curated statement-and-proof vocabulary now also includes the ordinary
-  product and coproduct constructors, the standard `Nat`/`Fin`/`Vec` operations,
+  product and coproduct constructors, `Bool` with `true` and `false`, the standard
+  `Nat`/`Fin`/`Vec` operations,
   and the recurring path and proposition combinators admitted by the prelude.
+  It also includes `mapDec` for converting decisions and `isOfHLevelLift` for
+  preserving homotopy levels under `Lift`; consumers obtain both from the prelude.
+  Type equivalence is introduced in `Base.Prelude`, including its fibre diagram:
+  `_≃_`, `Iso`, `iso`, `isoToEquiv`, `equivFun`, `invEq`, `congEquiv`, and
+  `isOfHLevelRespectEquiv` are public vocabulary. Do not import these names again,
+  including through their lower-level re-export modules or renamed aliases.
+  A consumer may hide a public name when preserving an existing local definition:
+  `V.Collapse` uses `open import Base.Prelude hiding ( iso )` for its local
+  membership-preservation lemma, leaving the library constructor public elsewhere.
   For `Cubical.Data.Sigma`, `Cubical.Functions.Logic`, `Cubical.Data.Sum`,
+  `Cubical.Data.Bool`,
   `Cubical.Data.Nat`, `Cubical.Data.FinData`, `Cubical.Foundations.Prelude`,
-  `Cubical.Foundations.HLevels`, `Cubical.Data.Vec`, and
-  `Cubical.HITs.PropositionalTruncation`, chapters obtain every
+  `Cubical.Foundations.HLevels`, `Cubical.Foundations.Equiv`,
+  `Cubical.Foundations.Equiv.Properties`, `Cubical.Foundations.Isomorphism`,
+  `Cubical.Data.Vec`,
+  `Cubical.HITs.PropositionalTruncation`, and `Cubical.Relation.Nullary`, chapters obtain every
   name already curated by `Base.Prelude` from the prelude. A chapter may still
   import a different, proof-local name from one of these modules with an explicit
   `using` or `renaming` list. Whole-module qualified imports and aliases are

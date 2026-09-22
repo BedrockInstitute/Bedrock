@@ -112,16 +112,15 @@ Internal existence is asserted through propositional truncation: a statement hol
 ```
 
 <!--en-->
-Some proofs move both components of a pair at once, and a two-place transport serves them. Between the presentation types of two sets, an equivalence carries functions and injections across; a path between sets yields such an equivalence. The ambient hierarchy is the carrier on which every membership statement of the chapter is read.
+A path between sets yields an equivalence between their presentation types, along which functions and injections can be moved. When proving injectivity, `retEq e x` supplies the round-trip path `invEq e (equivFun e x) ≡ x`, so a recovered preimage can be identified with the original input. The ambient hierarchy is the carrier on which every membership statement of the chapter is read.
 <!--zh-->
-有的证明让一对的两个分量同时变动，二元的搬运正为此服务。在两个集合的呈现类型之间，等价把函数与单射搬运过去；集合之间的路径给出这样的等价。外围层级是本章一切成员陈述所读取的载体。
+集合之间的路径给出呈现类型之间的等价，函数与单射可沿这份等价搬运。证明单射性时，`retEq e x` 提供往返路径 `invEq e (equivFun e x) ≡ x`，从而把恢复出的原像与原来的输入等同。外围层级是本章一切成员陈述所读取的载体。
 <!--ja-->
-一つの証明が対の両成分を同時に動かすことがあり、二項の輸送がこれに仕える。二つの集合の提示型の間では、同値が関数と単射を運び、集合の間のパスがそのような同値を与える。周囲の階層は、本章のすべての所属の主張が読まれる台である。
+集合間のパスは提示型間の同値を与え、それに沿って関数と単射を移せる。単射性の証明では、`retEq e x` が往復のパス `invEq e (equivFun e x) ≡ x` を与え、復元した原像を元の入力と同一視できる。周囲の階層は、本章のすべての所属の主張が読まれる台である。
 <!--/-->
 
 ```agda
-import Cubical.Foundations.Equiv as Equiv
-open Equiv using ( equivFun; invEq; retEq; _≃_ )
+open import Cubical.Foundations.Equiv using ( retEq )
 open import Cubical.Foundations.Univalence using ( pathToEquiv )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 ```

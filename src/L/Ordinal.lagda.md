@@ -69,7 +69,6 @@ A recurring pattern in the proofs is elimination of a truncated witness. Members
 ```agda
 
 open import Cubical.Data.Nat.Order using ( _<_; ≤-suc; isProp≤ )
-open import Cubical.Data.Bool using ( Bool; true; false )
 ```
 
 <!--en-->

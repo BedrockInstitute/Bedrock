@@ -17,23 +17,22 @@ This book develops classical set theory inside constructive Cubical type theory.
 
 module Base.Classical where
 
-open import Cubical.Foundations.Isomorphism using ( iso; isoToEquiv )
 ```
 
 <!--en-->
 Besides marking the point at which the development becomes classical, excluded middle resolves the two smallness questions left open in the preceding chapter:
 
-- Propositional resizing: given `P : hProp ℓ₁`{.Agda}, can we find a proposition at a chosen level `ℓ₂` whose underlying type is equivalent to that of `P`?
+- Propositional resizing: given `P : hProp ℓ₁`{.Agda}, can we find a proposition at a chosen level `ℓ₂`{.Agda} whose underlying type is equivalent to that of `P`{.Agda}?
 - Ω-resizing: can the whole type `hProp ℓ₁`{.Agda} be presented by a single type in `Type ℓ₂`{.Agda}?
 <!--zh-->
 排中律不仅标志着本书进入经典推理之处，还能解决上一章留下的两个命题大小问题：
 
-- 命题换级：给定 `P : hProp ℓ₁`{.Agda}，能否在指定层级 `ℓ₂` 找到一个命题，使其底层类型与 `P` 的底层类型等价？
+- 命题换级：给定 `P : hProp ℓ₁`{.Agda}，能否在指定层级 `ℓ₂`{.Agda} 找到一个命题，使其底层类型与 `P`{.Agda} 的底层类型等价？
 - 命题宇宙换级：能否用 `Type ℓ₂`{.Agda} 中的单一类型呈现整个 `hProp ℓ₁`{.Agda}？
 <!--ja-->
 排中律は、本書が古典的推論へ移る箇所を示すだけでなく、前章に残された命題の小ささに関する二つの問題も解決する。
 
-- 命題リサイズ：`P : hProp ℓ₁`{.Agda} が与えられたとき、指定したレベル `ℓ₂` に、基礎型が `P` の基礎型と同値な命題を見つけられるか。
+- 命題リサイズ：`P : hProp ℓ₁`{.Agda} が与えられたとき、指定したレベル `ℓ₂`{.Agda} に、基礎型が `P`{.Agda} の基礎型と同値な命題を見つけられるか。
 - 命題宇宙リサイズ：型 `hProp ℓ₁`{.Agda} 全体を `Type ℓ₂`{.Agda} の一つの型で提示できるか。
 <!--/-->
 
@@ -49,19 +48,19 @@ open import Base.Impredicativity
 
 Excluded middle supplies a decision for every proposition. Since propositions inhabit different universes, this principle must be stated one level at a time.
 
-**Definition** (`LEM`{.Agda}) We write `LEM ℓ`{.Agda} for excluded middle at level `ℓ`{.Agda}, and define it as the dependent function below. For each `P : hProp ℓ`{.Agda}, it returns a decision `Dec ⟨ P ⟩`{.Agda}: `yes`{.Agda} carries a proof of `P`, while `no`{.Agda} carries a refutation. Because the function ranges over the whole proposition universe `hProp ℓ`{.Agda}, `LEM ℓ`{.Agda} inhabits `Type (ℓ-suc ℓ)`{.Agda}. Its level index therefore records exactly which propositions the classical assumption can decide.
+**Definition** (`LEM`{.Agda}) We write `LEM ℓ`{.Agda} for excluded middle at level `ℓ`{.Agda}, and define it as the dependent function below. For each `P : hProp ℓ`{.Agda}, it returns a decision `Dec ⟨ P ⟩`{.Agda}: `yes`{.Agda} carries a proof of `P`{.Agda}, while `no`{.Agda} carries a refutation. Because the function ranges over the whole proposition universe `hProp ℓ`{.Agda}, `LEM ℓ`{.Agda} inhabits `Type (ℓ-suc ℓ)`{.Agda}. Its level index therefore records exactly which propositions the classical assumption can decide.
 <!--zh-->
 ## 排中律
 
 排中律为每个命题给出真假的判定。命题分居不同的宇宙，因此这条原理需要逐层陈述。
 
-**定义** (`LEM`{.Agda}) 我们把「`ℓ`{.Agda} 层的排中律」记作 `LEM ℓ`{.Agda}，并将其定义为以下依值函数：对每个 `P : hProp ℓ`{.Agda}，它返回判定 `Dec ⟨ P ⟩`{.Agda}；`yes`{.Agda} 携带 `P` 的证明，`no`{.Agda} 则携带它的反驳。由于这个函数量化整个命题宇宙 `hProp ℓ`{.Agda}，`LEM ℓ`{.Agda} 位于 `Type (ℓ-suc ℓ)`{.Agda}。它的层级指标因而准确标明了这项经典假设可以判定哪些命题。
+**定义** (`LEM`{.Agda}) 我们把「`ℓ`{.Agda} 层的排中律」记作 `LEM ℓ`{.Agda}，并将其定义为以下依值函数：对每个 `P : hProp ℓ`{.Agda}，它返回判定 `Dec ⟨ P ⟩`{.Agda}；`yes`{.Agda} 携带 `P`{.Agda} 的证明，`no`{.Agda} 则携带它的反驳。由于这个函数量化整个命题宇宙 `hProp ℓ`{.Agda}，`LEM ℓ`{.Agda} 位于 `Type (ℓ-suc ℓ)`{.Agda}。它的层级指标因而准确标明了这项经典假设可以判定哪些命题。
 <!--ja-->
 ## 排中律
 
 排中律は、各命題に真偽の判定を与える。命題は異なる宇宙に住むため、この原理はレベルごとに述べる必要がある。
 
-**定義** (`LEM`{.Agda}) ここでは「レベル `ℓ`{.Agda} での排中律」を `LEM ℓ`{.Agda} と表し、次の依存関数として定義する。各 `P : hProp ℓ`{.Agda} に対して判定 `Dec ⟨ P ⟩`{.Agda} を返し、`yes`{.Agda} は `P` の証明を、`no`{.Agda} はその反証を運ぶ。この関数は命題宇宙 `hProp ℓ`{.Agda} 全体を量化するので、`LEM ℓ`{.Agda} は `Type (ℓ-suc ℓ)`{.Agda} に住む。したがって、そのレベル添字は、この古典的仮定がどの命題を判定できるかを正確に記録する。
+**定義** (`LEM`{.Agda}) ここでは「レベル `ℓ`{.Agda} での排中律」を `LEM ℓ`{.Agda} と表し、次の依存関数として定義する。各 `P : hProp ℓ`{.Agda} に対して判定 `Dec ⟨ P ⟩`{.Agda} を返し、`yes`{.Agda} は `P`{.Agda} の証明を、`no`{.Agda} はその反証を運ぶ。この関数は命題宇宙 `hProp ℓ`{.Agda} 全体を量化するので、`LEM ℓ`{.Agda} は `Type (ℓ-suc ℓ)`{.Agda} に住む。したがって、そのレベル添字は、この古典的仮定がどの命題を判定できるかを正確に記録する。
 <!--/-->
 
 ```agda
@@ -109,17 +108,17 @@ lowerLEM : ∀ {ℓ} → LEM (ℓ-suc ℓ) → LEM ℓ
 ```
 
 <!--en-->
-**Proof** Let `lem : LEM (ℓ-suc ℓ)`{.Agda} be given, and fix `P : hProp ℓ`{.Agda}. The hypothesis cannot decide `P` directly because it expects a proposition at level `ℓ-suc ℓ`{.Agda}. We therefore form the higher-level proposition whose underlying type is `Lift ⟨ P ⟩`{.Agda}; its propositionhood certificate is `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda}. Applying `lem`{.Agda} to this pair decides the lifted copy of `P`.
+**Proof** Let `lem : LEM (ℓ-suc ℓ)`{.Agda} be given, and fix `P : hProp ℓ`{.Agda}. The hypothesis cannot decide `P`{.Agda} directly because it expects a proposition at level `ℓ-suc ℓ`{.Agda}. We therefore form the higher-level proposition whose underlying type is `Lift ⟨ P ⟩`{.Agda}; its propositionhood certificate is `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda}. Applying `lem`{.Agda} to this pair decides the lifted copy of `P`{.Agda}.
 
-The two panels below show how to turn that decision into `Dec ⟨ P ⟩`{.Agda}. The positive branch uses `lower`; the negative branch assumes a proof of `P` and refutes its lifted image. The function `mapDec`{.Agda} assembles these conversions.
+The two panels below show how to turn that decision into `Dec ⟨ P ⟩`{.Agda}. The positive branch uses `lower`{.Agda}; the negative branch assumes a proof of `P`{.Agda} and refutes its lifted image. The function `mapDec`{.Agda} assembles these conversions.
 <!--zh-->
-**证明** 给定 `lem : LEM (ℓ-suc ℓ)`{.Agda}，并固定 `P : hProp ℓ`{.Agda}。`lem` 要求输入 `ℓ-suc ℓ`{.Agda} 层的命题，因而不能直接判定 `P`。为此，构造一个高层命题：其底层类型是 `Lift ⟨ P ⟩`{.Agda}，命题性证书是 `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda}。把这一对交给 `lem`{.Agda}，便得到 `P` 的抬升副本的判定。
+**证明** 给定 `lem : LEM (ℓ-suc ℓ)`{.Agda}，并固定 `P : hProp ℓ`{.Agda}。`lem`{.Agda} 要求输入 `ℓ-suc ℓ`{.Agda} 层的命题，因而不能直接判定 `P`{.Agda}。为此，构造一个高层命题：其底层类型是 `Lift ⟨ P ⟩`{.Agda}，命题性证书是 `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda}。把这一对交给 `lem`{.Agda}，便得到 `P`{.Agda} 的抬升副本的判定。
 
-下图的两个分支说明如何把这一判定转回 `Dec ⟨ P ⟩`{.Agda}：肯定分支使用 `lower`，否定分支则假设 `P` 的证明，并反驳其抬升后的像。函数 `mapDec`{.Agda} 把这两种转换合在一起。
+下图的两个分支说明如何把这一判定转回 `Dec ⟨ P ⟩`{.Agda}：肯定分支使用 `lower`{.Agda}，否定分支则假设 `P`{.Agda} 的证明，并反驳其抬升后的像。函数 `mapDec`{.Agda} 把这两种转换合在一起。
 <!--ja-->
-**証明** `lem : LEM (ℓ-suc ℓ)`{.Agda} が与えられたとし、`P : hProp ℓ`{.Agda} を固定する。`lem` はレベル `ℓ-suc ℓ`{.Agda} の命題を要求するため、`P` を直接判定することはできない。そこで、基礎型を `Lift ⟨ P ⟩`{.Agda}、命題性の証明を `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda} とする上位レベルの命題を作る。この対を `lem`{.Agda} に渡せば、`P` の持ち上げられたコピーを判定できる。
+**証明** `lem : LEM (ℓ-suc ℓ)`{.Agda} が与えられたとし、`P : hProp ℓ`{.Agda} を固定する。`lem`{.Agda} はレベル `ℓ-suc ℓ`{.Agda} の命題を要求するため、`P`{.Agda} を直接判定することはできない。そこで、基礎型を `Lift ⟨ P ⟩`{.Agda}、命題性の証明を `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda} とする上位レベルの命題を作る。この対を `lem`{.Agda} に渡せば、`P`{.Agda} の持ち上げられたコピーを判定できる。
 
-下図の二つの分岐は、この判定を `Dec ⟨ P ⟩`{.Agda} へ戻す方法を示す。肯定の分岐では `lower` を用い、否定の分岐では `P` の証明を仮定してその持ち上げた像を反駁する。関数 `mapDec`{.Agda} が二つの変換をまとめる。
+下図の二つの分岐は、この判定を `Dec ⟨ P ⟩`{.Agda} へ戻す方法を示す。肯定の分岐では `lower`{.Agda} を用い、否定の分岐では `P`{.Agda} の証明を仮定してその持ち上げた像を反駁する。関数 `mapDec`{.Agda} が二つの変換をまとめる。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-lower-lem" aria-describedby="fig-lower-lem-caption">
@@ -179,11 +178,11 @@ $$\mathit{np}\,(\operatorname{lift}\,p):\bot_0$$
 </div>
 <figcaption id="fig-lower-lem-caption">
 <!--en-->
-A positive decision sends its proof downward by `lower`. A negative decision refutes a hypothetical `p : ⟨ P ⟩` by sending it upward with `lift` and applying `np`.
+A positive decision sends its proof downward by `lower`{.Agda}. A negative decision refutes a hypothetical `p : ⟨ P ⟩`{.Agda} by sending it upward with `lift`{.Agda} and applying `np`{.Agda}.
 <!--zh-->
-肯定判定通过 `lower` 把证明向下搬移。否定判定则临时假设 `p : ⟨ P ⟩`，经 `lift` 向上搬移，再由 `np` 得到矛盾。
+肯定判定通过 `lower`{.Agda} 把证明向下搬移。否定判定则临时假设 `p : ⟨ P ⟩`{.Agda}，经 `lift`{.Agda} 向上搬移，再由 `np`{.Agda} 得到矛盾。
 <!--ja-->
-肯定の判定では `lower` で証明を下へ移す。否定の判定では `p : ⟨ P ⟩` を一時的に仮定し、`lift` で上へ移して `np` を適用し、矛盾を得る。
+肯定の判定では `lower`{.Agda} で証明を下へ移す。否定の判定では `p : ⟨ P ⟩`{.Agda} を一時的に仮定し、`lift`{.Agda} で上へ移して `np`{.Agda} を適用し、矛盾を得る。
 <!--/-->
 </figcaption>
 </figure>
@@ -192,9 +191,6 @@ A positive decision sends its proof downward by `lower`. A negative decision ref
 lowerLEM {ℓ} lem P =
   mapDec lower (λ np p → np (lift p))
     (lem (Lift ⟨ P ⟩ , isOfHLevelLift 1 ⟨ P ⟩isProp))
-  where
-  open import Cubical.Foundations.HLevels using ( isOfHLevelLift )
-  open import Cubical.Relation.Nullary using ( mapDec )
 ```
 
 ∎
@@ -204,25 +200,20 @@ lowerLEM {ℓ} lem P =
 
 Once every proposition at the source level can be decided, each can be represented by one of two Boolean labels. For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, `ΩResizing ℓ₁ ℓ₂`{.Agda} asks for one type in `Type ℓ₂`{.Agda} equivalent to the entire type `hProp ℓ₁`{.Agda}. This chapter constructs such a classifier from excluded middle at `ℓ₁`{.Agda}. The general theorem `ΩResizing→Resizing`{.Agda} then turns this small presentation of the proposition universe into `Resizing ℓ₁ ℓ₂`{.Agda}: every source-level proposition receives an equivalent representative at the target level.
 
-The classifier uses `Bool`{.Agda}, whose two constructors `true`{.Agda} and `false`{.Agda} serve as its labels. We import precisely these three names here.
+The classifier uses the previously introduced type `Bool`{.Agda}, whose two constructors `true`{.Agda} and `false`{.Agda} serve as its labels.
 <!--zh-->
 ## 由排中律得到命题宇宙换级
 
 一旦源层的每个命题都可以判定，就能用两个布尔标签之一来代表它。对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，`ΩResizing ℓ₁ ℓ₂`{.Agda} 要求 `Type ℓ₂`{.Agda} 中有一个与整个 `hProp ℓ₁`{.Agda} 类型等价的类型。本章从 `ℓ₁`{.Agda} 层的排中律构造这样的分类器，再应用一般定理 `ΩResizing→Resizing`{.Agda}，把这个对命题宇宙的小表示转化为 `Resizing ℓ₁ ℓ₂`{.Agda}：源层的每个命题在目标层都有一个与之类型等价的代表。
 
-分类器采用 `Bool`{.Agda}，以它的两个构造子 `true`{.Agda} 与 `false`{.Agda} 作为标签。这里恰好引入这三个名称。
+分类器采用前文引入的类型 `Bool`{.Agda}，以它的两个构造子 `true`{.Agda} 与 `false`{.Agda} 作为标签。
 <!--ja-->
 ## 排中律から得られる命題宇宙リサイズ
 
 始域レベルのすべての命題を判定できれば、それぞれを二つのブールラベルの一方で表せる。任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、`ΩResizing ℓ₁ ℓ₂`{.Agda} は型 `hProp ℓ₁`{.Agda} 全体と同値な一つの型を `Type ℓ₂`{.Agda} に要求する。本章は `ℓ₁`{.Agda} での排中律からそのような分類子を構成し、一般定理 `ΩResizing→Resizing`{.Agda} によって、この命題宇宙の小さな表示を `Resizing ℓ₁ ℓ₂`{.Agda} へ移す。すなわち、始域レベルの各命題が終域レベルに同値な代表をもつ。
 
-分類子には `Bool`{.Agda} を用い、その二つの構成子 `true`{.Agda} と `false`{.Agda} をラベルとする。ここでは、ちょうどこの三つの名前を導入する。
+分類子には先に導入した型 `Bool`{.Agda} を用い、その二つの構成子 `true`{.Agda} と `false`{.Agda} をラベルとする。
 <!--/-->
-
-```agda
-
-open import Cubical.Data.Bool using ( Bool; true; false )
-```
 
 <!--en-->
 The labels are codes, not themselves propositions in `hProp ℓ₁`{.Agda}. Since `Bool`{.Agda} lies in `Type ℓ-zero`{.Agda}, the code type is lifted to `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} in the target universe `Type ℓ₂`{.Agda}. Its two labels will represent `⊤`{.Agda} and `⊥`{.Agda}, both available in `hProp ℓ₁`{.Agda} at every level. Constructing an equivalence between this target-level code type and the proposition universe will therefore give the required Ω-resizing.
@@ -233,19 +224,19 @@ The labels are codes, not themselves propositions in `hProp ℓ₁`{.Agda}. Sinc
 <!--/-->
 
 <!--en-->
-The construction has two stages. First we define encoding from an explicit decision `Dec ⟨ P ⟩`{.Agda}, then decoding, and finally the two round-trip laws. These four auxiliary results remain private and use no excluded middle. The public theorem then invokes excluded middle to supply a decision for every `P` and assembles the four results into the equivalence.
+The construction has two stages. First we define encoding from an explicit decision `Dec ⟨ P ⟩`{.Agda}, then decoding, and finally the two round-trip laws. These four auxiliary results remain private and use no excluded middle. The public theorem then invokes excluded middle to supply a decision for every `P`{.Agda} and assembles the four results into the equivalence.
 <!--zh-->
-构造分为两步。第一步先根据显式判定 `Dec ⟨ P ⟩`{.Agda} 定义编码，再定义解码，最后证明两条往返律。这四项辅助结果保持私有，并且都不使用排中律。第二步的公开定理才调用排中律，为每个 `P` 统一给出判定，并把这四项结果组装成所需的等价。
+构造分为两步。第一步先根据显式判定 `Dec ⟨ P ⟩`{.Agda} 定义编码，再定义解码，最后证明两条往返律。这四项辅助结果保持私有，并且都不使用排中律。第二步的公开定理才调用排中律，为每个 `P`{.Agda} 统一给出判定，并把这四项结果组装成所需的等价。
 <!--ja-->
-構成は二段階に分かれる。第一段階では、まず明示的な判定 `Dec ⟨ P ⟩`{.Agda} から符号化を定義し、次に復号を定義し、最後に二つの往復則を証明する。この四つの補助結果は非公開のままであり、いずれも排中律を使わない。第二段階の公開定理で初めて排中律を呼び出し、各 `P` に判定を一様に与え、この四つの結果を求める同値へ組み立てる。
+構成は二段階に分かれる。第一段階では、まず明示的な判定 `Dec ⟨ P ⟩`{.Agda} から符号化を定義し、次に復号を定義し、最後に二つの往復則を証明する。この四つの補助結果は非公開のままであり、いずれも排中律を使わない。第二段階の公開定理で初めて排中律を呼び出し、各 `P`{.Agda} に判定を一様に与え、この四つの結果を求める同値へ組み立てる。
 <!--/-->
 
 <!--en-->
-**Lemma** (`encodeB`{.Agda}) There is an encoding operation that takes a proposition `P` together with its decision and returns a code in `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}.
+**Lemma** (`encodeB`{.Agda}) There is an encoding operation that takes a proposition `P`{.Agda} together with its decision and returns a code in `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda}.
 <!--zh-->
-**引理** (`encodeB`{.Agda}) 存在一个编码操作，它以命题 `P` 及其判定为输入，返回 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 中的编码。
+**引理** (`encodeB`{.Agda}) 存在一个编码操作，它以命题 `P`{.Agda} 及其判定为输入，返回 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 中的编码。
 <!--ja-->
-**補題** (`encodeB`{.Agda}) 命題 `P` とその判定を入力として受け取り、`Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} の符号を返す符号化操作が存在する。
+**補題** (`encodeB`{.Agda}) 命題 `P`{.Agda} とその判定を入力として受け取り、`Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} の符号を返す符号化操作が存在する。
 <!--/-->
 
 ```agda
@@ -297,11 +288,11 @@ private
 ∎
 
 <!--en-->
-**Lemma** (`secB`{.Agda}) For every proposition `P` and decision `d`, encoding with `encodeB`{.Agda} and then decoding with `decodeB`{.Agda} recovers `P` in `hProp`: `decodeB (encodeB P d) ≡ P`{.Agda}.
+**Lemma** (`secB`{.Agda}) For every proposition `P`{.Agda} and decision `d`{.Agda}, encoding with `encodeB`{.Agda} and then decoding with `decodeB`{.Agda} recovers `P`{.Agda} in `hProp`{.Agda}: `decodeB (encodeB P d) ≡ P`{.Agda}.
 <!--zh-->
-**引理** (`secB`{.Agda}) 对任意命题 `P` 及其判定 `d`，先用 `encodeB`{.Agda} 编码，再用 `decodeB`{.Agda} 解码，会在 `hProp` 中恢复 `P`：`decodeB (encodeB P d) ≡ P`{.Agda}。
+**引理** (`secB`{.Agda}) 对任意命题 `P`{.Agda} 及其判定 `d`{.Agda}，先用 `encodeB`{.Agda} 编码，再用 `decodeB`{.Agda} 解码，会在 `hProp`{.Agda} 中恢复 `P`{.Agda}：`decodeB (encodeB P d) ≡ P`{.Agda}。
 <!--ja-->
-**補題** (`secB`{.Agda}) 任意の命題 `P` とその判定 `d` に対して、`encodeB`{.Agda} で符号化してから `decodeB`{.Agda} で復号すると、`hProp` で `P` が復元される。すなわち `decodeB (encodeB P d) ≡ P`{.Agda} である。
+**補題** (`secB`{.Agda}) 任意の命題 `P`{.Agda} とその判定 `d`{.Agda} に対して、`encodeB`{.Agda} で符号化してから `decodeB`{.Agda} で復号すると、`hProp`{.Agda} で `P`{.Agda} が復元される。すなわち `decodeB (encodeB P d) ≡ P`{.Agda} である。
 <!--/-->
 
 ```agda
@@ -310,11 +301,11 @@ private
 ```
 
 <!--en-->
-**Proof** Split on `d`. If `d = yes p`{.Agda}, encoding selects `lift true`{.Agda} and decoding returns `⊤`{.Agda}, so the goal becomes `⊤ ≡ P`{.Agda}. Propositional extensionality `⇔toPath`{.Agda} constructs this path from the map returning `p` and the map returning `tt*`{.Agda}. If `d = no np`{.Agda}, encoding selects `lift false`{.Agda} and decoding returns `⊥`{.Agda}, so the goal becomes `⊥ ≡ P`{.Agda}. Its two maps are the absurd function `λ ()` and the refutation `np` followed by elimination from `⊥₀`{.Agda}. Thus decoding after encoding recovers a proposition equal to `P` in both cases.
+**Proof** Split on `d`{.Agda}. If `d = yes p`{.Agda}, encoding selects `lift true`{.Agda} and decoding returns `⊤`{.Agda}, so the goal becomes `⊤ ≡ P`{.Agda}. Propositional extensionality `⇔toPath`{.Agda} constructs this path from the map returning `p`{.Agda} and the map returning `tt*`{.Agda}. If `d = no np`{.Agda}, encoding selects `lift false`{.Agda} and decoding returns `⊥`{.Agda}, so the goal becomes `⊥ ≡ P`{.Agda}. Its two maps are the absurd function `λ ()`{.Agda} and the refutation `np`{.Agda} followed by elimination from `⊥₀`{.Agda}. Thus decoding after encoding recovers a proposition equal to `P`{.Agda} in both cases.
 <!--zh-->
-**证明** 对 `d` 分情形。若 `d = yes p`{.Agda}，编码选出 `lift true`{.Agda}，解码得到 `⊤`{.Agda}，所以目标化为 `⊤ ≡ P`{.Agda}。命题外延性 `⇔toPath`{.Agda} 从两个方向的映射构造这条路径：一个映射返回 `p`，另一个映射返回 `tt*`{.Agda}。若 `d = no np`{.Agda}，编码选出 `lift false`{.Agda}，解码得到 `⊥`{.Agda}，所以目标化为 `⊥ ≡ P`{.Agda}。两个方向的映射分别是荒谬函数 `λ ()`，以及先应用反驳 `np`、再从 `⊥₀`{.Agda} 消去的函数。因此在两种情形下，先编码再解码都会恢复一个与 `P` 相等的命题。
+**证明** 对 `d`{.Agda} 分情形。若 `d = yes p`{.Agda}，编码选出 `lift true`{.Agda}，解码得到 `⊤`{.Agda}，所以目标化为 `⊤ ≡ P`{.Agda}。命题外延性 `⇔toPath`{.Agda} 从两个方向的映射构造这条路径：一个映射返回 `p`{.Agda}，另一个映射返回 `tt*`{.Agda}。若 `d = no np`{.Agda}，编码选出 `lift false`{.Agda}，解码得到 `⊥`{.Agda}，所以目标化为 `⊥ ≡ P`{.Agda}。两个方向的映射分别是荒谬函数 `λ ()`{.Agda}，以及先应用反驳 `np`{.Agda}、再从 `⊥₀`{.Agda} 消去的函数。因此在两种情形下，先编码再解码都会恢复一个与 `P`{.Agda} 相等的命题。
 <!--ja-->
-**証明** `d` について場合分けする。`d = yes p`{.Agda} なら、符号化は `lift true`{.Agda} を選び、復号は `⊤`{.Agda} を返すため、ゴールは `⊤ ≡ P`{.Agda} となる。命題外延性 `⇔toPath`{.Agda} は、`p` を返す写像と `tt*`{.Agda} を返す写像からこのパスを構成する。`d = no np`{.Agda} なら、符号化は `lift false`{.Agda} を選び、復号は `⊥`{.Agda} を返すため、ゴールは `⊥ ≡ P`{.Agda} となる。両方向の写像は、荒謬関数 `λ ()` と、反証 `np` を適用してから `⊥₀`{.Agda} から消去する関数である。したがって、どちらの場合も符号化してから復号すると `P` と等しい命題が復元される。
+**証明** `d`{.Agda} について場合分けする。`d = yes p`{.Agda} なら、符号化は `lift true`{.Agda} を選び、復号は `⊤`{.Agda} を返すため、ゴールは `⊤ ≡ P`{.Agda} となる。命題外延性 `⇔toPath`{.Agda} は、`p`{.Agda} を返す写像と `tt*`{.Agda} を返す写像からこのパスを構成する。`d = no np`{.Agda} なら、符号化は `lift false`{.Agda} を選び、復号は `⊥`{.Agda} を返すため、ゴールは `⊥ ≡ P`{.Agda} となる。両方向の写像は、荒謬関数 `λ ()`{.Agda} と、反証 `np`{.Agda} を適用してから `⊥₀`{.Agda} から消去する関数である。したがって、どちらの場合も符号化してから復号すると `P`{.Agda} と等しい命題が復元される。
 <!--/-->
 
 ```agda
@@ -325,11 +316,11 @@ private
 ∎
 
 <!--en-->
-**Lemma** (`retrB`{.Agda}) For every code `b` and decision `d` of the proposition it decodes to, decoding with `decodeB`{.Agda} and then encoding with `encodeB`{.Agda} recovers `b`: `encodeB (decodeB b) d ≡ b`{.Agda}.
+**Lemma** (`retrB`{.Agda}) For every code `b`{.Agda} and decision `d`{.Agda} of the proposition it decodes to, decoding with `decodeB`{.Agda} and then encoding with `encodeB`{.Agda} recovers `b`{.Agda}: `encodeB (decodeB b) d ≡ b`{.Agda}.
 <!--zh-->
-**引理** (`retrB`{.Agda}) 对任意编码 `b` 及其解码所得命题的判定 `d`，先用 `decodeB`{.Agda} 解码，再用 `encodeB`{.Agda} 编码，会恢复 `b`：`encodeB (decodeB b) d ≡ b`{.Agda}。
+**引理** (`retrB`{.Agda}) 对任意编码 `b`{.Agda} 及其解码所得命题的判定 `d`{.Agda}，先用 `decodeB`{.Agda} 解码，再用 `encodeB`{.Agda} 编码，会恢复 `b`{.Agda}：`encodeB (decodeB b) d ≡ b`{.Agda}。
 <!--ja-->
-**補題** (`retrB`{.Agda}) 任意の符号 `b` と、その復号で得た命題の判定 `d` に対して、`decodeB`{.Agda} で復号してから `encodeB`{.Agda} で符号化すると `b` が復元される。すなわち `encodeB (decodeB b) d ≡ b`{.Agda} である。
+**補題** (`retrB`{.Agda}) 任意の符号 `b`{.Agda} と、その復号で得た命題の判定 `d`{.Agda} に対して、`decodeB`{.Agda} で復号してから `encodeB`{.Agda} で符号化すると `b`{.Agda} が復元される。すなわち `encodeB (decodeB b) d ≡ b`{.Agda} である。
 <!--/-->
 
 ```agda
@@ -339,11 +330,11 @@ private
 ```
 
 <!--en-->
-**Proof** Split on `b` and then on `d`, giving four cases. If `b = lift true`{.Agda}, decoding returns `⊤`{.Agda}. A proof selects `lift true`{.Agda} again, so the equality is `refl`{.Agda}; a refutation is impossible because applying it to `tt*`{.Agda} produces an element of `⊥₀`{.Agda}. If `b = lift false`{.Agda}, decoding returns `⊥`{.Agda}. A proof is impossible by the empty pattern `()`; a refutation selects `lift false`{.Agda} again, so the equality is `refl`{.Agda}. Thus encoding after decoding recovers the original code in every possible case.
+**Proof** Split on `b`{.Agda} and then on `d`{.Agda}, giving four cases. If `b = lift true`{.Agda}, decoding returns `⊤`{.Agda}. A proof selects `lift true`{.Agda} again, so the equality is `refl`{.Agda}; a refutation is impossible because applying it to `tt*`{.Agda} produces an element of `⊥₀`{.Agda}. If `b = lift false`{.Agda}, decoding returns `⊥`{.Agda}. A proof is impossible by the empty pattern `()`{.Agda}; a refutation selects `lift false`{.Agda} again, so the equality is `refl`{.Agda}. Thus encoding after decoding recovers the original code in every possible case.
 <!--zh-->
-**证明** 先对 `b` 分情形，再对 `d` 分情形，共有四种组合。若 `b = lift true`{.Agda}，解码得到 `⊤`{.Agda}。证明会再次选出 `lift true`{.Agda}，所以等式由 `refl`{.Agda} 成立；反驳则不可能存在，因为把它用于 `tt*`{.Agda} 就会得到 `⊥₀`{.Agda} 的元素。若 `b = lift false`{.Agda}，解码得到 `⊥`{.Agda}。证明因空模式 `()` 而不可能；反驳会再次选出 `lift false`{.Agda}，所以等式也由 `refl`{.Agda} 成立。因此在所有可能的情形下，先解码再编码都会恢复原编码。
+**证明** 先对 `b`{.Agda} 分情形，再对 `d`{.Agda} 分情形，共有四种组合。若 `b = lift true`{.Agda}，解码得到 `⊤`{.Agda}。证明会再次选出 `lift true`{.Agda}，所以等式由 `refl`{.Agda} 成立；反驳则不可能存在，因为把它用于 `tt*`{.Agda} 就会得到 `⊥₀`{.Agda} 的元素。若 `b = lift false`{.Agda}，解码得到 `⊥`{.Agda}。证明因空模式 `()`{.Agda} 而不可能；反驳会再次选出 `lift false`{.Agda}，所以等式也由 `refl`{.Agda} 成立。因此在所有可能的情形下，先解码再编码都会恢复原编码。
 <!--ja-->
-**証明** まず `b` について場合分けし、次に `d` について場合分けするので、組合せは四つである。`b = lift true`{.Agda} なら、復号は `⊤`{.Agda} を返す。証明は再び `lift true`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。反証は `tt*`{.Agda} に適用すると `⊥₀`{.Agda} の元を生じるため不可能である。`b = lift false`{.Agda} なら、復号は `⊥`{.Agda} を返す。証明は空パターン `()` によって不可能であり、反証は再び `lift false`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。したがって、可能なすべての場合に復号してから符号化すると元の符号が復元される。
+**証明** まず `b`{.Agda} について場合分けし、次に `d`{.Agda} について場合分けするので、組合せは四つである。`b = lift true`{.Agda} なら、復号は `⊤`{.Agda} を返す。証明は再び `lift true`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。反証は `tt*`{.Agda} に適用すると `⊥₀`{.Agda} の元を生じるため不可能である。`b = lift false`{.Agda} なら、復号は `⊥`{.Agda} を返す。証明は空パターン `()`{.Agda} によって不可能であり、反証は再び `lift false`{.Agda} を選ぶため、等式は `refl`{.Agda} で成り立つ。したがって、可能なすべての場合に復号してから符号化すると元の符号が復元される。
 <!--/-->
 
 ```agda
@@ -364,11 +355,11 @@ The two round-trip laws show that encoding and decoding become mutually inverse 
 <!--/-->
 
 <!--en-->
-The candidate witness is the pair `(Lift Bool , ...)`{.Agda}. Its first component lies in `Type ℓ₂`{.Agda}, and its second will be an equivalence `hProp ℓ₁ ≃ Lift Bool`{.Agda}. No ordering between `ℓ₁` and `ℓ₂` is required. The downward instance used later takes `ℓ₁ = ℓ-suc ℓ` and `ℓ₂ = ℓ`, but equal or higher target levels are allowed as well. Excluded middle has only one remaining role: it supplies the decisions used by the encoder uniformly; all four private results above are constructive.
+The candidate witness is the pair `(Lift Bool , ...)`{.Agda}. Its first component lies in `Type ℓ₂`{.Agda}, and its second will be an equivalence `hProp ℓ₁ ≃ Lift Bool`{.Agda}. No ordering between `ℓ₁`{.Agda} and `ℓ₂`{.Agda} is required. The downward instance used later takes `ℓ₁ = ℓ-suc ℓ`{.Agda} and `ℓ₂ = ℓ`{.Agda}, but equal or higher target levels are allowed as well. Excluded middle has only one remaining role: it supplies the decisions used by the encoder uniformly; all four private results above are constructive.
 <!--zh-->
-候选见证是序对 `(Lift Bool , ...)`{.Agda}：第一分量位于 `Type ℓ₂`{.Agda}，第二分量将是类型等价 `hProp ℓ₁ ≃ Lift Bool`{.Agda}。这里不要求 `ℓ₁` 与 `ℓ₂` 具有任何大小关系。后文使用的向下实例取 `ℓ₁ = ℓ-suc ℓ`、`ℓ₂ = ℓ`，但目标层级也可以与源层级相同或更高。排中律只剩下一项作用：为编码器统一提供所需的判定；以上四项私有结果都是构造主义的。
+候选见证是序对 `(Lift Bool , ...)`{.Agda}：第一分量位于 `Type ℓ₂`{.Agda}，第二分量将是类型等价 `hProp ℓ₁ ≃ Lift Bool`{.Agda}。这里不要求 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda} 具有任何大小关系。后文使用的向下实例取 `ℓ₁ = ℓ-suc ℓ`{.Agda}、`ℓ₂ = ℓ`{.Agda}，但目标层级也可以与源层级相同或更高。排中律只剩下一项作用：为编码器统一提供所需的判定；以上四项私有结果都是构造主义的。
 <!--ja-->
-候補となる証拠は対 `(Lift Bool , ...)`{.Agda} である。第一成分は `Type ℓ₂`{.Agda} に住み、第二成分は型同値 `hProp ℓ₁ ≃ Lift Bool`{.Agda} となる。ここでは `ℓ₁` と `ℓ₂` の大小関係を要求しない。後で使う下向きの実例では `ℓ₁ = ℓ-suc ℓ`、`ℓ₂ = ℓ` とするが、終域レベルが始域レベルと同じ場合や高い場合も許される。排中律に残された役割は一つだけであり、符号化器が必要とする判定を一様に供給することである。以上の四つの非公開な結果はいずれも構成的である。
+候補となる証拠は対 `(Lift Bool , ...)`{.Agda} である。第一成分は `Type ℓ₂`{.Agda} に住み、第二成分は型同値 `hProp ℓ₁ ≃ Lift Bool`{.Agda} となる。ここでは `ℓ₁`{.Agda} と `ℓ₂`{.Agda} の大小関係を要求しない。後で使う下向きの実例では `ℓ₁ = ℓ-suc ℓ`{.Agda}、`ℓ₂ = ℓ`{.Agda} とするが、終域レベルが始域レベルと同じ場合や高い場合も許される。排中律に残された役割は一つだけであり、符号化器が必要とする判定を一様に供給することである。以上の四つの非公開な結果はいずれも構成的である。
 <!--/-->
 
 <!--en-->
@@ -384,19 +375,19 @@ lem→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ�
 ```
 
 <!--en-->
-**Proof** Choose `Lift Bool`{.Agda} as the first component. For the second, use `isoToEquiv`{.Agda} to turn the following isomorphism into an equivalence. Its forward map sends `P` to `encodeB P (lem P)`{.Agda}, and its backward map is `decodeB`{.Agda}. The round-trip laws are `retrB`{.Agda} and `secB`{.Agda}, each instantiated with the decision supplied by `lem`. These two components form the required witness of `ΩResizing ℓ₁ ℓ₂`{.Agda}.
+**Proof** Choose `Lift Bool`{.Agda} as the first component. For the second, use `isoToEquiv`{.Agda} to turn the following isomorphism into an equivalence. Its forward map sends `P`{.Agda} to `encodeB P (lem P)`{.Agda}, and its backward map is `decodeB`{.Agda}. The round-trip laws are `retrB`{.Agda} and `secB`{.Agda}, each instantiated with the decision supplied by `lem`{.Agda}. These two components form the required witness of `ΩResizing ℓ₁ ℓ₂`{.Agda}.
 <!--zh-->
-**证明** 取 `Lift Bool`{.Agda} 为第一分量。第二分量使用 `isoToEquiv`{.Agda}，把下面的同构转化为类型等价。同构的正向映射把 `P` 送到 `encodeB P (lem P)`{.Agda}，逆向映射是 `decodeB`{.Agda}；两条往返律分别使用 `retrB`{.Agda} 与 `secB`{.Agda}，并以 `lem` 给出的判定将其具体化。这两个分量共同构成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所需的见证。
+**证明** 取 `Lift Bool`{.Agda} 为第一分量。第二分量使用 `isoToEquiv`{.Agda}，把下面的同构转化为类型等价。同构的正向映射把 `P`{.Agda} 送到 `encodeB P (lem P)`{.Agda}，逆向映射是 `decodeB`{.Agda}；两条往返律分别使用 `retrB`{.Agda} 与 `secB`{.Agda}，并以 `lem`{.Agda} 给出的判定将其具体化。这两个分量共同构成 `ΩResizing ℓ₁ ℓ₂`{.Agda} 所需的见证。
 <!--ja-->
-**証明** 第一成分として `Lift Bool`{.Agda} を選ぶ。第二成分には `isoToEquiv`{.Agda} を用い、次の同型を型同値へ変換する。同型の順写像は `P` を `encodeB P (lem P)`{.Agda} へ送り、逆写像は `decodeB`{.Agda} である。二つの往復則には、`lem` が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を用いる。この二つの成分が `ΩResizing ℓ₁ ℓ₂`{.Agda} に必要な証拠を構成する。
+**証明** 第一成分として `Lift Bool`{.Agda} を選ぶ。第二成分には `isoToEquiv`{.Agda} を用い、次の同型を型同値へ変換する。同型の順写像は `P`{.Agda} を `encodeB P (lem P)`{.Agda} へ送り、逆写像は `decodeB`{.Agda} である。二つの往復則には、`lem`{.Agda} が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を用いる。この二つの成分が `ΩResizing ℓ₁ ℓ₂`{.Agda} に必要な証拠を構成する。
 <!--/-->
 
 <!--en-->
-The two round-trip laws close the two triangles below. Fix `lem : LEM ℓ₁`, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool` by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
+The two round-trip laws close the two triangles below. Fix `lem : LEM ℓ₁`{.Agda}, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
 <!--zh-->
-下面两个三角形分别由两条往返律闭合。固定 `lem : LEM ℓ₁`，把编码类型 `Lift {ℓ-zero} {ℓ₂} Bool` 简写为 $B$，并记 $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$。每次往返所得的点，都由标出的路径与出发点相连。
+下面两个三角形分别由两条往返律闭合。固定 `lem : LEM ℓ₁`{.Agda}，把编码类型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} 简写为 $B$，并记 $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$。每次往返所得的点，都由标出的路径与出发点相连。
 <!--ja-->
-下の二つの三角形は、それぞれ二つの往復則によって閉じる。`lem : LEM ℓ₁` を固定し、符号の型 `Lift {ℓ-zero} {ℓ₂} Bool` を $B$ と略記し、$E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$ と書く。各往復で得られる点は、示したパスによって出発点と結ばれる。
+下の二つの三角形は、それぞれ二つの往復則によって閉じる。`lem : LEM ℓ₁`{.Agda} を固定し、符号の型 `Lift {ℓ-zero} {ℓ₂} Bool`{.Agda} を $B$ と略記し、$E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$ と書く。各往復で得られる点は、示したパスによって出発点と結ばれる。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-classical-roundtrips" aria-describedby="fig-classical-roundtrips-caption">

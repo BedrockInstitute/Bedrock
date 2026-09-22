@@ -66,7 +66,7 @@ open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Smallness {ℓ} using ( module InnerSmall )
 
 open import Cubical.Foundations.Equiv
-  using ( _≃_; equivFun; invEq; invEquiv; compEquiv; propBiimpl→Equiv )
+  using ( invEquiv; compEquiv; propBiimpl→Equiv )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
 ```
 

@@ -47,7 +47,7 @@ UI = {
            "depmap": "Dependency map", "routes": "Reading routes",
            "guide": "Reading guide", "catalog": "Chapter catalog",
            "landmark": "Milestones", "terms": "Glossary",
-           "prev": "Example route: previous", "next": "Example route: next",
+           "prev": "Previous chapter", "next": "Next chapter",
            "license": "content licensed CC BY-NC-SA 4.0",
            "markdown": "Markdown", "agents": "llms.txt",
            "mdtitle": "This page as plain Markdown, for AI agents and scripts",
@@ -63,7 +63,7 @@ UI = {
            "depmap": "依赖地图", "routes": "阅读路线",
            "guide": "阅读指南", "catalog": "章节目录",
            "landmark": "里程碑", "terms": "术语表",
-           "prev": "示例路线：上一章", "next": "示例路线：下一章",
+           "prev": "上一章", "next": "下一章",
            "license": "内容以 CC BY-NC-SA 4.0 许可",
            "markdown": "Markdown", "agents": "llms.txt",
            "mdtitle": "本页的纯 Markdown 版本，供 AI 与脚本读取",
@@ -79,7 +79,7 @@ UI = {
            "depmap": "依存マップ", "routes": "学習ルート",
            "guide": "読書案内", "catalog": "章の目次",
            "landmark": "マイルストーン", "terms": "用語集",
-           "prev": "例示ルート：前の章", "next": "例示ルート：次の章",
+           "prev": "前の章", "next": "次の章",
            "license": "コンテンツは CC BY-NC-SA 4.0 ライセンス",
            "markdown": "Markdown", "agents": "llms.txt",
            "mdtitle": "このページの純 Markdown 版。AI とスクリプト向け",
@@ -204,6 +204,8 @@ A_TAG_RE  = re.compile(r'<a\b([^>]*)>([^<]+)</a>')
 TOKEN_RE = re.compile(r'<a\b[^>]*\bid="(\d+)"[^>]*>(.*?)</a>', re.DOTALL)
 HREF_RE   = re.compile(r'\bhref="([^"]+\.html(?:#\d+)?)"')
 CLASS_RE  = re.compile(r'\bclass="([^"]*)"')
+ID_RE = re.compile(r'\bid="(\d+)"')
+PRELUDE_MODULE = "Base.Prelude"
 
 
 def ref_link(href, aspect, label, extra_class=""):
@@ -488,8 +490,24 @@ def toc_html(toc, lang):
     """The 'On this page' sidebar section (empty when the page has no sub-headings)."""
     if not toc:
         return ""
-    items = "".join(f'<li class="toc-l{lvl}"><a href="#{hid}">{htmllib.escape(t)}</a></li>'
-                    for lvl, hid, t in toc)
+    roots, stack = [], []
+    for level, anchor, title in toc:
+        node = {"level": level, "anchor": anchor, "title": title, "children": []}
+        while stack and stack[-1]["level"] >= level:
+            stack.pop()
+        (stack[-1]["children"] if stack else roots).append(node)
+        stack.append(node)
+
+    def item(node):
+        anchor = htmllib.escape(node["anchor"], quote=True)
+        link = f'<a href="#{anchor}">{htmllib.escape(node["title"])}</a>'
+        if node["children"]:
+            children = "".join(item(child) for child in node["children"])
+            link = (f'<details class="toc-branch" data-heading="{anchor}">'
+                    f'<summary>{link}</summary><ul>{children}</ul></details>')
+        return f'<li class="toc-l{node["level"]}">{link}</li>'
+
+    items = "".join(item(node) for node in roots)
     return (f'<details class="navsec" open><summary class="nav-title">'
             f'{UI[lang]["contents"]}</summary>'
             f'<ul class="toc">{items}</ul></details>')
@@ -664,7 +682,38 @@ def footer_html(lang, base, md_href):
             f'<div class="footer-copyright">{copyright_}</div>')
 
 
-def rewrite_links(body, rendered, types_global, canonical_names=None):
+def prelude_reexport_index(content):
+    """Index names explicitly re-exported by ``Base.Prelude``.
+
+    Agda quite correctly links an imported occurrence to the library declaration.
+    The textbook needs one extra hop: later chapters first lead readers to the
+    explanatory import in Base.Prelude, while that import keeps Agda's original
+    library link.  The index is derived from highlighted ``public using`` blocks,
+    so adding a name to the foundational vocabulary automatically adds the hop.
+    """
+    by_href, by_name = {}, {}
+    public_using = re.compile(
+        r'<a id="\d+" class="Keyword">public</a>.*?'
+        r'<a id="\d+" class="Keyword">using</a>(?P<body>[^\n]*)',
+        re.DOTALL,
+    )
+    for block in PRE_RE.findall(content):
+        for match in public_using.finditer(block):
+            for attrs, shown in A_TAG_RE.findall(match.group("body")):
+                href = HREF_RE.search(attrs)
+                pos = ID_RE.search(attrs)
+                if not href or not pos:
+                    continue
+                cls = CLASS_RE.search(attrs)
+                entry = (PRELUDE_MODULE, pos.group(1), cls.group(1) if cls else "",
+                         htmllib.unescape(shown))
+                by_href.setdefault(href.group(1), entry)
+                by_name.setdefault(entry[3], entry)
+    return {"by_href": by_href, "by_name": by_name}
+
+
+def rewrite_links(body, rendered, types_global, canonical_names=None,
+                  current_module="", prelude_reexports=None):
     """Keep links to any rendered module (internal or external), tagging data-type when the
     TARGET has a type (drives hover, including on cubical identifiers). Links to a module we
     did not render lose their dead href (the <a> element stays so the </a> still matches).
@@ -674,6 +723,14 @@ def rewrite_links(body, rendered, types_global, canonical_names=None):
         idpart, mod, anchor, rest = m.group(1) or "", m.group(2), m.group(3) or "", m.group(4)
         if "://" in mod:
             return m.group(0)
+        original_href = f"{mod}.html{anchor}"
+        bridge = ((prelude_reexports or {}).get("by_href", {}).get(original_href)
+                  if current_module != PRELUDE_MODULE else None)
+        if bridge:
+            bridge_module, bridge_pos, _, bridge_name = bridge
+            extra = f' data-name="{htmllib.escape(bridge_name, quote=True)}"'
+            return (f'<a {idpart}href="{chapter_href(bridge_module, "#" + bridge_pos)}"'
+                    f'{rest}{extra}>')
         if mod in rendered:
             pos = anchor[1:] if anchor else ""
             extra = f' data-type="{mod}#{pos}"' if pos and pos in types_global.get(mod, {}) else ""
@@ -1034,7 +1091,7 @@ def fill_template(tpl, **kw):
 
 def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                   name2pos, canonical_names, types_global, expression_types, terms,
-                  tpl, out_dir, base, site):
+                  tpl, out_dir, base, site, prelude_reexports):
     path, literate = source_file(html_dir, module)
     raw = open(path, encoding="utf-8").read()
 
@@ -1076,7 +1133,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         if not literate:
             # a library page is bare highlighted code: wrap it and resolve its links
             code = rewrite_links('<pre class="Agda">' + raw + '</pre>', rendered,
-                                 types_global, canonical_names)
+                                 types_global, canonical_names, module)
             return code, [], None
         woven = weave_for_site(text, lang)
         mirror = woven
@@ -1107,8 +1164,9 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                        lambda m: stash("IMATH", '<span class="math inline">$'
                                        + htmllib.escape(m.group(1)) + '$</span>'),
                        woven)
-        woven = INLINE_AGDA_RE.sub(lambda m: stash("REF", inline_ref(m.group(1),
-                                   internal, name2pos, local_refs)), woven)
+        woven = INLINE_AGDA_RE.sub(lambda m: stash("REF", inline_ref(
+            m.group(1), internal, name2pos, local_refs, module, prelude_reexports
+        )), woven)
         woven = render_summary_inline(woven)
         body, toc = md_to_html(woven)
         body = re.sub(r'<p>\s*(' + NUL + r'CODE\d+' + NUL + r')\s*</p>', r'\1', body)
@@ -1121,7 +1179,8 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
         toc = restore_toc_labels(toc, store)
         for j, blk in enumerate(code_blocks):
             body = body.replace(f"{NUL}CODE{j}{NUL}", blk)
-        body = rewrite_links(body, rendered, types_global, canonical_names)
+        body = rewrite_links(body, rendered, types_global, canonical_names, module,
+                             prelude_reexports if module in internal else None)
         return auto_link_terms(body, lang, module, terms), toc, mirror
 
     for lang in langs:
@@ -1234,8 +1293,24 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
     write_type_sidecar(module, langs, out_dir, types_global, name2pos, expression_types)
 
 
-def inline_ref(name, internal, name2pos, local_refs):
+def inline_ref(name, internal, name2pos, local_refs, current_module="",
+               prelude_reexports=None):
     """Render `name`{.Agda} as a highlighted, hyperlinked span if the identifier is known."""
+    href_aspect = local_refs.get(name)
+    bridge = None
+    if current_module != PRELUDE_MODULE:
+        if href_aspect:
+            bridge = (prelude_reexports or {}).get("by_href", {}).get(href_aspect[0])
+        else:
+            local_name = name.rpartition(".")[2]
+            bridge = (prelude_reexports or {}).get("by_name", {}).get(local_name)
+    label = htmllib.escape(name)
+    if bridge:
+        mod, pos, bridge_aspect, _ = bridge
+        aspect = href_aspect[1] if href_aspect else bridge_aspect
+        return ('<span class="Agda">'
+                + ref_link(f"{mod}.html#{pos}", aspect, label, "inline-ref")
+                + "</span>")
     target = None
     if "." in name:
         mod, _, local = name.rpartition(".")
@@ -1245,8 +1320,6 @@ def inline_ref(name, internal, name2pos, local_refs):
         for mod in internal:
             if name in name2pos.get(mod, {}):
                 target = (mod, name2pos[mod][name]); break
-    label = htmllib.escape(name)
-    href_aspect = local_refs.get(name)
     if target:
         mod, pos = target
         # reuse the aspect of the module's own code tokens, and wrap in a
@@ -1267,7 +1340,19 @@ def inline_ref(name, internal, name2pos, local_refs):
     parts, linked = [], 0
     for tok in re.split(r"([\s(){};]+)", name):
         info = local_refs.get(tok)
-        if tok.strip() and info and "Bound" not in info[1]:
+        token_bridge = None
+        if current_module != PRELUDE_MODULE and tok.strip():
+            if info:
+                token_bridge = (prelude_reexports or {}).get("by_href", {}).get(info[0])
+            else:
+                token_bridge = (prelude_reexports or {}).get("by_name", {}).get(tok)
+        if token_bridge:
+            mod, pos, bridge_aspect, _ = token_bridge
+            parts.append(ref_link(f"{mod}.html#{pos}",
+                                  info[1] if info else bridge_aspect,
+                                  htmllib.escape(tok)))
+            linked += 1
+        elif tok.strip() and info and "Bound" not in info[1]:
             parts.append(ref_link(info[0], info[1], htmllib.escape(tok)))
             linked += 1
         else:
@@ -1783,10 +1868,13 @@ def main(argv):
 
     # first pass: index every definition (names, positions, aspects) across ALL rendered modules
     name2pos, pos_aspect, local_types = {}, {}, {}
+    prelude_reexports = {"by_href": {}, "by_name": {}}
     for m in rendered:
         path, literate = source_file(html_dir, m)
         content = open(path, encoding="utf-8").read()
         if literate:
+            if m == PRELUDE_MODULE:
+                prelude_reexports = prelude_reexport_index(content)
             for blk in PRE_RE.findall(content):
                 index_definitions(blk, m, name2pos, pos_aspect)
                 local_types.setdefault(m, {}).update(local_signature_types(blk, m))
@@ -1833,7 +1921,7 @@ def main(argv):
     for m in modules_to_render:
         render_module(m, html_dir, langs, internal, rendered_set, modnav_list,
                       name2pos, canonical_names, types_by_module, expression_types,
-                      terms, tpl, out_dir, base, site)
+                      terms, tpl, out_dir, base, site, prelude_reexports)
 
     if selected_modules:
         dependencies = set()

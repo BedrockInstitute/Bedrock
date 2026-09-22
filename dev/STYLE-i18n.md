@@ -133,7 +133,10 @@ the addition `_+_`{.Agda} is associative
 ```
 
 The renderer renders `` `_+_`{.Agda} `` highlighted and hyperlinked to the identifier's
-definition, the same way it appears in a code block.
+definition, the same way it appears in a code block. Every inline code span that uses
+Agda notation carries `{.Agda}`; this includes bound variables, complete expressions,
+keywords and module names. Ordinary mathematical notation belongs in inline LaTeX
+instead of an unmarked code span.
 
 ## Reader-facing terminology
 
@@ -151,7 +154,7 @@ stream, use one complete line. Add a localized `data-note` annotation when the
 expression needs an expandable explanation:
 
 ```html
-<div class="single-line-code" data-note="说明这行记号的形式化程度"><code>Type ℓ : Type (ℓ-suc ℓ)</code></div>
+<div class="single-line-code" data-note="说明这行记号的形式化程度"><code>`Type ℓ : Type (ℓ-suc ℓ)`{.Agda}</code></div>
 ```
 
 Without an annotation, use the same element without `data-note`. The `data-note`
@@ -160,7 +163,8 @@ screens it appears outside the right edge of the prose block, aligned with the
 centered expression; on narrow screens the reader can tap or focus the expression to
 open the note as a toast. Keep the note in the language block where it appears. The
 `lint-prose.py` gate enforces this one-line form. Do not replace such displays with
-LaTeX.
+LaTeX. The complete expression inside `<code>` is one `{.Agda}` span, rather than a
+mixture of highlighted and plain fragments.
 
 ## Math
 
