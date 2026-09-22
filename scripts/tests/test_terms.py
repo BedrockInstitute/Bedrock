@@ -83,6 +83,22 @@ class RenderingTests(unittest.TestCase):
 
 
 class IntroductionGateTests(unittest.TestCase):
+    def test_explicit_sense_does_not_trigger_an_overlapping_concept(self):
+        text = '[host]{.term-ref #other-concept}'
+        self.assertEqual(gate.prerequisite_occurrences(text, entry(), 'en', 'Other'), [])
+
+    def test_explicit_cross_chapter_lookup_does_not_require_proof_import(self):
+        text = '[host]{.term-ref #host-environment}'
+        self.assertEqual(gate.prerequisite_occurrences(text, entry(), 'en', 'Other'), [])
+
+    def test_bare_use_still_requires_prerequisite_after_a_lookup(self):
+        text = '[host]{.term-ref #host-environment} and host'
+        self.assertEqual(len(gate.prerequisite_occurrences(text, entry(), 'en', 'Other')), 1)
+
+    def test_lookup_cannot_hide_use_before_same_chapter_introduction(self):
+        text = '[host]{.term-ref #host-environment}'
+        self.assertEqual(len(gate.prerequisite_occurrences(text, entry(), 'en', 'Base.Prelude')), 1)
+
     MASTER = """<!--en-->
 [host]{.term-intro #host-environment}
 <!--zh-->

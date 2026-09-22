@@ -51,6 +51,11 @@ class FooterTests(unittest.TestCase):
 
 
 class ProseAnchorTests(unittest.TestCase):
+    def test_existing_accessible_title_id_is_preserved(self):
+        body = '<p class="optional-reading-title" id="construction-title">Optional</p><p>Next</p>'
+        anchored = renderer.anchor_prose_blocks(body)
+        self.assertEqual(re.findall(r'id="([^"]+)"', anchored), ['construction-title', 'p-2'])
+
     def test_paragraphs_are_numbered_in_document_order(self):
         body, _ = renderer.md_to_html("First one.\n\nSecond one.\n\nThird one.")
         anchored = renderer.anchor_prose_blocks(body)

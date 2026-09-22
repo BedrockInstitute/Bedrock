@@ -144,6 +144,7 @@ lint:
 	$(PY) scripts/gate/check-glossary.py --check
 	$(PY) scripts/gate/check-term-introductions.py
 	$(PY) scripts/gate/check-fences.py --check
+	$(PY) scripts/gate/check-diagrams.py
 	$(PY) scripts/gate/check-reading-order.py
 	$(PY) scripts/site/reading_routes.py --check
 	$(PY) scripts/gate/check-chapter-framework.py

@@ -111,11 +111,11 @@ SetOf : (S → hProp ℓ) → Type (ℓ-suc ℓ)
 ```
 
 <!--en-->
-That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each fiber is: `hProp ℓ` is `hProp ℓ`, and `isSetHProp` says the type of paths between two propositions packed in `hProp` is an h-set, so its identity types are propositions; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
+That realization is propositional, not a heavier piece of data, is checked now. The function type `(x : S) → (x ∈ˢ b) ≡ Q x` is a proposition precisely because each value of the family is: `isSetHProp` says that `hProp ℓ` is an h-set, so the path type between any two of its elements is a proposition; `isPropΠ`{.Agda} lifts the pointwise fact to the whole function type. Hence `SetOf Q`{.Agda}, a dependent pair of a candidate set `b` and evidence `IsSetOf Q b`, still has propositional second components, a fact used repeatedly later.
 <!--zh-->
-实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因每个纤维都是命题：`hProp ℓ` 即 `hProp ℓ`，`isSetHProp` 说明 `hProp` 中两个命题之间的路径类型是 h-集合，其恒等类型因此是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
+实现是命题而不是更重的数据，这一点现在检验。函数类型 `(x : S) → (x ∈ˢ b) ≡ Q x` 是命题，恰因这族类型的每个取值都是命题：`isSetHProp` 说明 `hProp ℓ` 是 h-集合，因此其中任意两个元素之间的路径类型都是命题；`isPropΠ`{.Agda} 把逐点事实提升到整个函数类型。于是 `SetOf Q`{.Agda}，即候选集合 `b` 与证据 `IsSetOf Q b` 组成的依值对，其第二分量仍是命题，这一事实后面会反复使用。
 <!--ja-->
-実現がより重いデータではなく命題であることを、ここで確かめる。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、各繊維が命題だからである。`hProp ℓ` は `hProp ℓ` であり、`isSetHProp` は `hProp` に包まれた二つの命題の間のパス型が h-集合であることを述べるので、その恒等型は命題になる。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げる。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままである。この事実は後で繰り返し使われる。
+実現がより重いデータではなく命題であることを、ここで確かめる。関数型 `(x : S) → (x ∈ˢ b) ≡ Q x` が命題なのは、この型族の各値が命題だからである。`isSetHProp` は `hProp ℓ` が h-集合であることを述べるので、その任意の二要素の間のパス型は命題になる。`isPropΠ`{.Agda} がこの各点の事実を関数型全体へ持ち上げる。したがって `SetOf Q`{.Agda}、つまり候補の集合 `b` と証拠 `IsSetOf Q b` の依存対は、第二成分が命題である対のままである。この事実は後で繰り返し使われる。
 <!--/-->
 
 ```agda

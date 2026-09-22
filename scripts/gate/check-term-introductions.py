@@ -64,6 +64,20 @@ def ancestors(graph, module):
     return found
 
 
+def prerequisite_occurrences(text, entry, language, module):
+    """Bare uses require a prerequisite; explicit cross-chapter links are lookups."""
+    protected = build_protected(text)
+    for reference in TERM_MARK_RE.finditer(text):
+        # Attributes and concept IDs are metadata, not additional uses of the label.
+        protected[reference.end(1):reference.end()] = [True] * (reference.end() - reference.end(1))
+        other_concept = reference.group(3) != entry['id']
+        cross_chapter_lookup = reference.group(2) == 'ref' and module != entry['introduced_in']
+        if other_concept or cross_chapter_lookup:
+            protected[reference.start():reference.end()] = [True] * len(reference[0])
+    return [match for match in term_pattern(entry, language).finditer(text)
+            if not protected[match.start()]]
+
+
 def check(src="src", glossary="dev/glossary.toml"):
     entries = load_entries(glossary)
     errors = schema_errors(entries)
@@ -116,12 +130,10 @@ def check(src="src", glossary="dev/glossary.toml"):
             ready = ancestors(graph, module)
             for language in LANGS:
                 text = weave(raw, language)
-                protected = build_protected(text)
                 for entry in terms:
                     if entry.get("matching", "explicit") != "auto":
                         continue
-                    occurrences = [match for match in term_pattern(entry, language).finditer(text)
-                                   if not protected[match.start()]]
+                    occurrences = prerequisite_occurrences(text, entry, language, module)
                     if not occurrences:
                         continue
                     intro_module = entry["introduced_in"]

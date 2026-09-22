@@ -42,29 +42,29 @@ For example, suppose we define a proposition `R` by saying that every `Q : hProp
 <!--/-->
 
 <!--en-->
-A path cannot directly express this connection, because its endpoints must belong to a common ambient type, while the higher and lower propositions inhabit different universes. [Logical equivalence]{.term-intro #logical-equivalence} can express mutual implication between propositions. Sometimes, however, we must connect an entire higher proposition universe with a type in a lower universe. This is no longer a connection between two propositions. We therefore need a notion that connects arbitrary types: **[type equivalence]{.term-ref #type-equivalence}**.
+A path cannot directly express this connection, because its endpoints must belong to a common ambient type, while the higher and lower propositions inhabit different universes. [Logical equivalence]{.term-intro #logical-equivalence} can express mutual implication between propositions. Sometimes, however, we must connect an entire higher proposition universe with a type in a lower universe. This is no longer a connection between two propositions. We therefore need a notion that connects arbitrary types: **[type equivalence]{.term-intro #type-equivalence}**.
 <!--zh-->
-路径不能直接表达这种联系，因为路径的两端必须属于同一个环境类型，而高层命题与低层命题位于不同的宇宙。[逻辑等价]{.term-intro #logical-equivalence}可以说明两个命题互相蕴含。不过，我们有时还需要把整个高层命题宇宙与低层宇宙中的一个类型联系起来；这已经不是两个命题之间的联系。因此，我们需要一种能联系任意类型的概念，这就是**[类型等价]{.term-ref #type-equivalence}**。
+路径不能直接表达这种联系，因为路径的两端必须属于同一个环境类型，而高层命题与低层命题位于不同的宇宙。[逻辑等价]{.term-intro #logical-equivalence}可以说明两个命题互相蕴含。不过，我们有时还需要把整个高层命题宇宙与低层宇宙中的一个类型联系起来；这已经不是两个命题之间的联系。因此，我们需要一种能联系任意类型的概念，这就是**[类型等价]{.term-intro #type-equivalence}**。
 <!--ja-->
-パスはこの結び付きを直接には表せない。パスの両端は共通の型に属する必要があるが、上位と下位の命題は異なる宇宙に属するからである。[論理的同値]{.term-intro #logical-equivalence}は命題間の両方向の含意を表せる。しかし、命題の上位宇宙全体を下位宇宙の一つの型と結び付ける必要もある。これはもはや二つの命題の間の結び付きではない。そこで、任意の型を結び付けられる概念として**[型同値]{.term-ref #type-equivalence}**を用いる。
+パスはこの結び付きを直接には表せない。パスの両端は共通の型に属する必要があるが、上位と下位の命題は異なる宇宙に属するからである。[論理的同値]{.term-intro #logical-equivalence}は命題間の両方向の含意を表せる。しかし、命題の上位宇宙全体を下位宇宙の一つの型と結び付ける必要もある。これはもはや二つの命題の間の結び付きではない。そこで、任意の型を結び付けられる概念として**[型同値]{.term-intro #type-equivalence}**を用いる。
 <!--/-->
 
 <!--en-->
 ## Type equivalence
 
-For types `A` and `B`, `A ≃ B`{.Agda} is a [dependent pair]{.term-ref #dependent-pair}. Its [first component]{.term-ref #first-component} is a map `f : A → B`{.Agda}; its [second component]{.term-ref #second-component} is a [certificate]{.term-ref #certificate} depending on `f`, asserting that the fibre over every `b : B`{.Agda} is [contractible]{.term-ref #contractible}. To read this certificate, we first need to see what a fibre is.
+For types `A` and `B`, `A ≃ B`{.Agda} is a [dependent pair]{.term-ref #dependent-pair}. Its [first component]{.term-ref #first-component} is a map `f : A → B`{.Agda}; its [second component]{.term-ref #second-component} is a [certificate]{.term-ref #certificate} depending on `f`. To read this certificate, we first need the following definition.
 <!--zh-->
 ## 类型等价
 
-对类型 `A` 与 `B`，`A ≃ B`{.Agda} 是一个[依值对]{.term-ref #dependent-pair}。它的[第一分量]{.term-ref #first-component}是映射 `f : A → B`{.Agda}；[第二分量]{.term-ref #second-component}是依赖于 `f` 的[证书]{.term-ref #certificate}，证明对每个 `b : B`{.Agda}，`f` 在 `b` 上的纤维都[可缩]{.term-ref #contractible}。要读懂这份证书，先看什么是纤维。
+对类型 `A` 与 `B`，`A ≃ B`{.Agda} 是一个[依值对]{.term-ref #dependent-pair}。它的[第一分量]{.term-ref #first-component}是映射 `f : A → B`{.Agda}；[第二分量]{.term-ref #second-component}是依赖于 `f` 的[证书]{.term-ref #certificate}。要读懂这份证书，先看下面的定义。
 <!--ja-->
 ## 型同値
 
-型 `A` と `B` について、`A ≃ B`{.Agda} は[依存対]{.term-ref #dependent-pair}である。その[第一成分]{.term-ref #first-component}は写像 `f : A → B`{.Agda}、[第二成分]{.term-ref #second-component}は `f` に依存する[証明書]{.term-ref #certificate}で、各 `b : B`{.Agda} 上のファイバーが[可縮]{.term-ref #contractible}であることを証明する。この証明書を読むために、まずファイバーを見る。
+型 `A` と `B` について、`A ≃ B`{.Agda} は[依存対]{.term-ref #dependent-pair}である。その[第一成分]{.term-ref #first-component}は写像 `f : A → B`{.Agda}、[第二成分]{.term-ref #second-component}は `f` に依存する[証明書]{.term-ref #certificate}である。この証明書を読むために、まず次の定義を見る。
 <!--/-->
 
 <!--en-->
-For a fixed `b : B`{.Agda}, the **[fibre]{.term-ref #fiber}** of `f` over `b` is the dependent pair type:
+For a fixed `b : B`{.Agda}, the **[fibre]{.term-intro #fiber}** of `f` over `b` is the dependent pair type:
 
 <div class="single-line-code"><code>Σ (a : A) (f a ≡ b)</code></div>
 
@@ -78,7 +78,7 @@ The second supplies a path for every `b : B`:
 
 <div class="single-line-code"><code>f (g b) ≡ b</code></div>
 <!--zh-->
-对固定的 `b : B`{.Agda}，`f` 在 `b` 上的**[纤维]{.term-ref #fiber}**是下面这个依值对类型：
+对固定的 `b : B`{.Agda}，`f` 在 `b` 上的**[纤维]{.term-intro #fiber}**是下面这个依值对类型：
 
 <div class="single-line-code"><code>Σ (a : A) (f a ≡ b)</code></div>
 
@@ -92,7 +92,7 @@ The second supplies a path for every `b : B`:
 
 <div class="single-line-code"><code>f (g b) ≡ b</code></div>
 <!--ja-->
-固定した `b : B`{.Agda} 上の `f` の**[ファイバー]{.term-ref #fiber}**は、次の依存対型である。
+固定した `b : B`{.Agda} 上の `f` の**[ファイバー]{.term-intro #fiber}**は、次の依存対型である。
 
 <div class="single-line-code"><code>Σ (a : A) (f a ≡ b)</code></div>
 
@@ -108,16 +108,82 @@ The second supplies a path for every `b : B`:
 
 <!--/-->
 
+<figure class="book-diagram type-comparison path-figure" id="fig-fiber-contraction" aria-describedby="fig-fiber-contraction-caption">
+<div class="diagram-framed">
+
+
+$$F_b=\sum_{a:A}\bigl(f(a)\equiv b\bigr)$$
+
+
+<div class="type-comparison-panels">
+<section class="type-comparison-panel">
+
+
+$$f:A\to B,\quad (a,p):F_b$$
+
+<div class="path-stage diagram-compact-stage" style="aspect-ratio:360/300">
+<svg viewBox="0 0 360 300" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="15" y="10" width="330" height="85"/>
+<rect class="diagram-space-shape" x="15" y="175" width="330" height="115"/>
+<path class="diagram-map-line" d="M100 79 L100 221"/>
+<path class="diagram-map-tip" d="M96 214 L100 221 L104 214"/>
+<path class="diagram-path" d="M100 225 Q185 163 270 225"/>
+<circle class="diagram-point" cx="100" cy="75" r="4"/>
+<circle class="diagram-point" cx="100" cy="225" r="4"/>
+<circle class="diagram-point" cx="270" cy="225" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:11%">$A$</span>
+<span class="path-label" style="left:27.7778%;top:19%">$a$</span>
+<span class="path-label" style="left:36.6667%;top:45%">$f$</span>
+<span class="path-label" style="left:12.5%;top:65%">$B$</span>
+<span class="path-label" style="left:27.7778%;top:84.3333%">$f(a)$</span>
+<span class="path-label" style="left:75%;top:84.3333%">$b$</span>
+<span class="path-label" style="left:51.3889%;top:60.3333%">$p$</span>
+</div>
+</section>
+<section class="type-comparison-panel">
+
+
+$$h:\operatorname{isContr}(F_b)$$
+
+<div class="path-stage diagram-compact-stage" style="aspect-ratio:360/300">
+<svg viewBox="0 0 360 300" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="15" y="10" width="330" height="280"/>
+<path class="diagram-path" d="M90 145 Q180 260 270 145"/>
+<circle class="diagram-centre-ring" cx="90" cy="145" r="8"/>
+<circle class="diagram-point" cx="90" cy="145" r="4"/>
+<circle class="diagram-point" cx="270" cy="145" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:12.6667%">$F_b$</span>
+<span class="path-label" style="left:25%;top:38.3333%">$(a_0,p_0)$</span>
+<span class="path-label" style="left:75%;top:38.3333%">$(a,p)$</span>
+<span class="path-label" style="left:50%;top:76%">$h.\mathrm{snd}\,(a,p)$</span>
+<span class="path-label" style="left:50%;top:89%">$h.\mathrm{fst}=(a_0,p_0)$</span>
+</div>
+</section>
+</div>
+</div>
+<figcaption id="fig-fiber-contraction-caption">
+<!--en-->
+The left panel unpacks a point `(a,p)` of the fibre; the right assumes a contraction `h`. Its paths compare entire pairs, including the evidence that the preimages map to `b`.
+<!--zh-->
+左图展开纤维中的一个点 `(a,p)`；右图假设已有可缩性证书 `h`。其中的路径连接整个依值对，原像及其映到 `b` 的证明都参与比较。
+<!--ja-->
+左図はファイバーの一点 `(a,p)` の成分を示し、右図は可縮性の証明書 `h` を仮定する。そのパスは依存対全体を結び、原像とそれが `b` へ写る証明の両方を比較する。
+<!--/-->
+</figcaption>
+</figure>
+
 ```agda
 open import Cubical.Foundations.Equiv using ( _≃_ )
 ```
 
 <!--en-->
-This notion should be distinguished from an [isomorphism]{.term-ref #type-isomorphism}, which explicitly presents a forward map, a chosen inverse map and the two inverse laws. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
+This notion should be distinguished from an [isomorphism]{.term-intro #type-isomorphism}, which explicitly presents a forward map, a chosen inverse map and the two inverse laws. The definitions imported below express how the notions are related: `iso`{.Agda} packages those data as `Iso A B`{.Agda}, and `isoToEquiv`{.Agda} converts the result into `A ≃ B`{.Agda}. Explicit maps make isomorphisms convenient for constructing examples, while the cubical library uses equivalences as the common interface for transporting type structure.
 <!--zh-->
-这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-ref #type-isomorphism}区分：同构显式给出正向映射、选定的逆向映射和两条逆律。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。
+这里的[类型等价]{.term-ref #type-equivalence}需要与[同构]{.term-intro #type-isomorphism}区分：同构显式给出正向映射、选定的逆向映射和两条逆律。下面导入的定义说明了二者的联系：`iso`{.Agda} 把这些数据打包成 `Iso A B`{.Agda}，`isoToEquiv`{.Agda} 再把所得同构转换为 `A ≃ B`{.Agda}。显式列出映射使同构便于构造具体例子，立方库则以[类型等价]{.term-ref #type-equivalence}作为搬运类型结构的统一接口。
 <!--ja-->
-この[型同値]{.term-ref #type-equivalence}は[同型]{.term-ref #type-isomorphism}と区別する必要がある。同型は順写像、選ばれた逆写像、二つの逆法則を明示的に与える。以下で導入する定義は両者の関係を表す。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換する。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用いる。
+この[型同値]{.term-ref #type-equivalence}は[同型]{.term-intro #type-isomorphism}と区別する必要がある。同型は順写像、選ばれた逆写像、二つの逆法則を明示的に与える。以下で導入する定義は両者の関係を表す。`iso`{.Agda} はこれらのデータを `Iso A B`{.Agda} にまとめ、`isoToEquiv`{.Agda} は得られた同型を `A ≃ B`{.Agda} へ変換する。写像を明示する同型は具体例の構成に便利であり、Cubical ライブラリは型の構造を運ぶ共通のインターフェースとして型同値を用いる。
 <!--/-->
 
 ```agda
@@ -197,6 +263,167 @@ Resizing ℓ₁ ℓ₂ = (P : hProp ℓ₁) → hasSize ℓ₂ P
 ΩResizing ℓ₁ ℓ₂ = Σ[ Ω ∈ Type ℓ₂ ] (hProp ℓ₁ ≃ Ω)
 ```
 
+<figure class="book-diagram type-comparison resizing-comparison" id="fig-resizing-comparison" aria-describedby="fig-resizing-comparison-caption">
+<section class="diagram-panel resizing-case">
+<!--en-->
+<p class="type-comparison-title"><strong>propositional resizing</strong></p>
+<!--zh-->
+<p class="type-comparison-title"><strong>命题换级</strong></p>
+<!--ja-->
+<p class="type-comparison-title"><strong>命題リサイズ</strong></p>
+<!--/-->
+<!--en-->
+<p class="resizing-note">Propositional resizing replaces each proposition by a type-equivalent representative at a chosen universe level.</p>
+<!--zh-->
+<p class="resizing-note">命题换级为每个命题在指定宇宙层级选取一个类型等价的代表。</p>
+<!--ja-->
+<p class="resizing-note">命題リサイズは、各命題を指定した宇宙レベルにある型同値な代表で置き換える。</p>
+<!--/-->
+
+$$r : \operatorname{Resizing}\,\ell_1\,\ell_2$$
+
+<div class="resizing-scene">
+<div class="resizing-label">
+
+$$P_i : \operatorname{hProp}\,\ell_1$$
+
+</div>
+<div></div>
+<div class="resizing-label">
+
+$$Q_i : \operatorname{hProp}\,\ell_2$$
+
+</div>
+<div class="diagram-space resizing-type">
+
+$$\langle P_1\rangle$$
+
+</div>
+<div class="resizing-bridge">
+
+$$\overset{e_1}{\simeq}$$
+
+</div>
+<div class="diagram-space resizing-type">
+
+$$\langle Q_1\rangle$$
+
+</div>
+<div class="diagram-space resizing-type">
+
+$$\langle P_2\rangle$$
+
+</div>
+<div class="resizing-bridge">
+
+$$\overset{e_2}{\simeq}$$
+
+</div>
+<div class="diagram-space resizing-type">
+
+$$\langle Q_2\rangle$$
+
+</div>
+<div class="resizing-label">
+
+$$\vdots$$
+
+</div>
+<div></div>
+<div class="resizing-label">
+
+$$\vdots$$
+
+</div>
+</div>
+
+$$r(P_i) = (Q_i,e_i)$$
+
+</section>
+<section class="diagram-panel resizing-case">
+<!--en-->
+<p class="type-comparison-title"><strong>Ω-resizing</strong></p>
+<!--zh-->
+<p class="type-comparison-title"><strong>命题宇宙换级</strong></p>
+<!--ja-->
+<p class="type-comparison-title"><strong>命題宇宙リサイズ</strong></p>
+<!--/-->
+<!--en-->
+<p class="resizing-note">Ω-resizing presents an entire proposition universe by a type in a chosen universe level.</p>
+<!--zh-->
+<p class="resizing-note">命题宇宙换级用指定宇宙层级中的一个类型呈现整个命题宇宙。</p>
+<!--ja-->
+<p class="resizing-note">命題宇宙リサイズは、命題宇宙全体を指定した宇宙レベルの型で提示する。</p>
+<!--/-->
+
+$$(\Omega,e) : \Omega\operatorname{Resizing}\,\ell_1\,\ell_2$$
+
+<div class="resizing-scene resizing-whole">
+<div class="diagram-space resizing-universe">
+
+$$\operatorname{hProp}\,\ell_1$$
+
+<div class="resizing-points">
+<div class="resizing-point">
+
+$$P_1$$
+
+</div>
+<div class="resizing-point">
+
+$$P_2$$
+
+</div>
+<div class="resizing-point">
+
+$$\cdots$$
+
+</div>
+</div>
+</div>
+<div class="resizing-bridge">
+
+$$\overset{e}{\simeq}$$
+
+</div>
+<div class="diagram-space resizing-universe">
+
+$$\Omega : \operatorname{Type}_{\ell_2}$$
+
+<div class="resizing-points">
+<div class="resizing-point">
+
+$$c_1$$
+
+</div>
+<div class="resizing-point">
+
+$$c_2$$
+
+</div>
+<div class="resizing-point">
+
+$$\cdots$$
+
+</div>
+</div>
+</div>
+</div>
+
+$$c_i = \operatorname{equivFun}\,e\,P_i : \Omega$$
+
+</section>
+<figcaption id="fig-resizing-comparison-caption">
+<!--en-->
+Resizing each proposition and resizing the whole proposition universe ask for different data.
+<!--zh-->
+逐个命题换级与整个命题宇宙换级，要求的是不同的数据。
+<!--ja-->
+個々の命題のリサイズと命題宇宙全体のリサイズは、異なるデータを要求する。
+<!--/-->
+</figcaption>
+</figure>
+
 <!--en-->
 **Theorem** (`ΩResizing→Resizing`{.Agda}) Ω-resizing implies propositional resizing.
 <!--zh-->
@@ -223,40 +450,145 @@ Resizing ℓ₁ ℓ₂ = (P : hProp ℓ₁) → hasSize ℓ₂ P
   where
 ```
 
-<details class="agda-proof-details">
+<details open class="optional-reading" aria-labelledby="coded-truth-construction-title">
 <!--en-->
-<summary>Optional: construction of `codedTruth`{.Agda} and `codedTruthIso`{.Agda}</summary>
+<summary class="optional-reading-title" id="coded-truth-construction-title">Optional: construction of `codedTruth`{.Agda} and `codedTruthIso`{.Agda}</summary>
 <!--zh-->
-<summary>选读：`codedTruth`{.Agda} 和 `codedTruthIso`{.Agda} 的构造</summary>
+<summary class="optional-reading-title" id="coded-truth-construction-title">选读：`codedTruth`{.Agda} 和 `codedTruthIso`{.Agda} 的构造</summary>
 <!--ja-->
-<summary>発展：`codedTruth`{.Agda} と `codedTruthIso`{.Agda} の構成</summary>
+<summary class="optional-reading-title" id="coded-truth-construction-title">発展：`codedTruth`{.Agda} と `codedTruthIso`{.Agda} の構成</summary>
 <!--/-->
 
 <!--en-->
-It remains to construct the representative and the isomorphism used in the proof. We first import the three operations needed below. Given `e : A ≃ B`{.Agda}, `equivFun e`{.Agda} extracts the forward map `A → B`{.Agda}, while `invEq e`{.Agda} extracts the inverse map `B → A`{.Agda}. For `x y : A`{.Agda}, `congEquiv e`{.Agda} gives a type equivalence between the path `x ≡ y`{.Agda} and the path `equivFun e x ≡ equivFun e y`{.Agda} between their images. A path from `x` to `y` can therefore be sent to a path between their images, and a path between the images can be recovered as a path from `x` to `y`.
+To construct the representative used above, the given equivalence `e : hProp ℓ₁ ≃ Ω`{.Agda} lets us encode propositions as points of `Ω`. We name its forward map `c`{.Agda}; thus `c P`{.Agda} is the code of `P`.
 <!--zh-->
-上面的证明还需要构造所用的代表和[同构]{.term-ref #type-isomorphism}。下面先导入证明所需的三项操作。给定 `e : A ≃ B`{.Agda}，`equivFun e`{.Agda} 从类型等价中取出正向映射 `A → B`{.Agda}，`invEq e`{.Agda} 则取出逆向映射 `B → A`{.Agda}。对 `x y : A`{.Agda}，`congEquiv e`{.Agda} 给出路径 `x ≡ y`{.Agda} 与其像之间的路径 `equivFun e x ≡ equivFun e y`{.Agda} 的[类型等价]{.term-ref #type-equivalence}。因此，`x` 到 `y` 的路径可以送到两者的像之间，而像之间的路径也可以还原为 `x` 到 `y` 的路径。
+为构造上面使用的代表，我们借助给定的类型等价 `e : hProp ℓ₁ ≃ Ω`{.Agda}，把命题编码为 `Ω` 中的点。将其正向映射命名为 `c`{.Agda}，于是 `c P`{.Agda} 就是命题 `P` 的编码。
 <!--ja-->
-上の証明には、そこで使う代表と[同型]{.term-ref #type-isomorphism}の構成が残っている。まず、証明に必要な三つの操作を導入する。`e : A ≃ B`{.Agda} が与えられると、`equivFun e`{.Agda} は型同値から順写像 `A → B`{.Agda} を取り出し、`invEq e`{.Agda} は逆写像 `B → A`{.Agda} を取り出す。`x y : A`{.Agda} に対して、`congEquiv e`{.Agda} はパス `x ≡ y`{.Agda} と、それらの像の間のパス `equivFun e x ≡ equivFun e y`{.Agda} との[型同値]{.term-ref #type-equivalence}を与える。したがって、`x` から `y` へのパスを両者の像の間のパスへ送り、像の間のパスを `x` から `y` へのパスへ戻せる。
+上で用いた代表を構成するために、与えられた型同値 `e : hProp ℓ₁ ≃ Ω`{.Agda} によって、命題を `Ω` の点として符号化できる。その順写像を `c`{.Agda} と名付けると、`c P`{.Agda} が命題 `P` の符号となる。
 <!--/-->
 
 ```agda
   open import Cubical.Foundations.Equiv using ( equivFun; invEq )
   open import Cubical.Foundations.Equiv.Properties using ( congEquiv )
+
+  c : hProp ℓ₁ → Ω
+  c = equivFun e
 ```
 
 <!--en-->
-**Construction** (`codedTruth`{.Agda}) Use the given `Ω : Type ℓ₂`{.Agda} and `e : hProp ℓ₁ ≃ Ω`{.Agda}. For each `P : hProp ℓ₁`{.Agda}, the map `equivFun e : hProp ℓ₁ → Ω`{.Agda} encodes it as `equivFun e P : Ω`{.Agda}. This code is merely an element of `Ω`, not yet a proposition that can represent `P` at level `ℓ₂`. We therefore use the code `equivFun e ⊤`{.Agda} of truth as a reference and define `codedTruth P`{.Agda} to be the proposition that `equivFun e ⊤ ≡ equivFun e P`{.Agda}. This equality has exactly the truth content of `P`, but lies at the same level `ℓ₂` as `Ω`. The type equivalence `e`{.Agda} transfers the h-set structure of `hProp ℓ₁`{.Agda} to `Ω`, ensuring that this equality is a proposition at level `ℓ₂`.
+**Construction** (`codedTruth`{.Agda}) The code `c P`{.Agda} is a point of `Ω`. To obtain a proposition, ask whether it equals the code of truth: `c ⊤ ≡ c P`{.Agda}. This path type lies at level `ℓ₂`. It is a proposition because `e`{.Agda} transfers the h-set structure of `hProp ℓ₁`{.Agda} to `Ω`. We take it as the representative of `P`; the isomorphism below verifies that it has the same truth content.
 <!--zh-->
-**构造** (`codedTruth`{.Agda}) 使用给定的 `Ω : Type ℓ₂`{.Agda} 和 `e : hProp ℓ₁ ≃ Ω`{.Agda}。对每个 `P : hProp ℓ₁`{.Agda}，我们可以用 `equivFun e : hProp ℓ₁ → Ω`{.Agda} 编码命题 `P`，得到 `equivFun e P : Ω`{.Agda}。但这个编码只是 `Ω` 的一个元素，还不是能在 `ℓ₂` 层代表 `P` 的命题。所以，以真命题的编码 `equivFun e ⊤`{.Agda} 为参照，把 `codedTruth P`{.Agda} 定义为命题 `equivFun e ⊤ ≡ equivFun e P`{.Agda}。这个等式恰好具有与 `P` 相同的真值内容，但位于与 `Ω` 相同的 `ℓ₂` 层。[类型等价]{.term-ref #type-equivalence} `e`{.Agda} 把 `hProp ℓ₁`{.Agda} 的 h-集合结构搬运到 `Ω`，保证该等式是 `ℓ₂` 层的命题。
+**构造** (`codedTruth`{.Agda}) 编码 `c P`{.Agda} 是 `Ω` 中的一个点。要得到命题，就问它是否等于真命题的编码：`c ⊤ ≡ c P`{.Agda}。这个路径类型位于 `ℓ₂` 层；`e`{.Agda} 把 `hProp ℓ₁`{.Agda} 的 h-集合结构搬运到 `Ω`，保证它是命题。我们取它作为 `P` 的代表，下面的同构将证明二者具有相同的真值内容。
 <!--ja-->
-**構成** (`codedTruth`{.Agda}) 与えられた `Ω : Type ℓ₂`{.Agda} と `e : hProp ℓ₁ ≃ Ω`{.Agda} を使う。各 `P : hProp ℓ₁`{.Agda} は、`equivFun e : hProp ℓ₁ → Ω`{.Agda} によって `equivFun e P : Ω`{.Agda} と符号化できる。しかし、この符号は `Ω` の一要素にすぎず、まだレベル `ℓ₂` で `P` を代表する命題ではない。そこで、真の命題の符号 `equivFun e ⊤`{.Agda} を基準とし、`codedTruth P`{.Agda} を命題 `equivFun e ⊤ ≡ equivFun e P`{.Agda} と定義する。この等式は `P` とちょうど同じ真理内容をもつが、`Ω` と同じレベル `ℓ₂` に属する。[型同値]{.term-ref #type-equivalence} `e`{.Agda} が `hProp ℓ₁`{.Agda} の h-集合構造を `Ω` へ運ぶので、この等式はレベル `ℓ₂` の命題になる。
+**構成** (`codedTruth`{.Agda}) 符号 `c P`{.Agda} は `Ω` の一点である。命題を得るには、それが真の命題の符号と等しいかを問えばよい：`c ⊤ ≡ c P`{.Agda}。このパス型はレベル `ℓ₂` に属する。`e`{.Agda} が `hProp ℓ₁`{.Agda} の h-集合構造を `Ω` へ運ぶので、これは命題である。これを `P` の代表とし、以下の同型によって真理内容が等しいことを確かめる。
 <!--/-->
 
 ```agda
   codedTruth : hProp ℓ₁ → hProp ℓ₂
-  codedTruth P = (equivFun e ⊤ ≡ equivFun e P) , isOfHLevelRespectEquiv 2 e isSetHProp _ _
+  codedTruth P = (c ⊤ ≡ c P) , isOfHLevelRespectEquiv 2 e isSetHProp _ _
 ```
+
+<!--en-->
+The band in `Ω` depicts paths with endpoints `c(⊤)` and `c(P)`. Click it to unfold the path family into the second type space, with whole paths represented as points. The illustrated `q` and `r` presuppose that `P` has a proof; the equivalence with `⟨ P ⟩` holds without this assumption.
+<!--zh-->
+`Ω` 中的带状区域示意端点为 `c(⊤)`、`c(P)` 的路径族。点击它，路径族展开成第二个类型空间，整条路径改画成其中的点。图中的 `q`、`r` 以 `P` 有证明为前提；与 `⟨ P ⟩` 的类型等价本身不需要这个假设。
+<!--ja-->
+`Ω` の帯状領域は、端点を `c(⊤)`、`c(P)` とするパスの族を表す。クリックすると、この族が第二の型の空間へ広がり、パス全体がその点として描かれる。図の `q`、`r` は `P` の証明を前提とするが、`⟨ P ⟩` との型同値そのものにはこの仮定は不要である。
+<!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-coded-truth" aria-describedby="fig-coded-truth-caption">
+<div class="coded-truth-proof-scene">
+<div class="diagram-space coded-truth-proof">
+
+$$\langle P\rangle$$
+
+<div class="coded-truth-universe">
+
+$$: \operatorname{Type}_{\ell_1}$$
+
+</div>
+<div class="path-stage" style="aspect-ratio:200/140">
+<svg viewBox="0 0 200 140" aria-hidden="true" focusable="false">
+<circle class="diagram-point" cx="100" cy="70" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:75%">$p$</span>
+</div>
+</div>
+<div class="coded-truth-equivalence">$\simeq$</div>
+<div class="diagram-space coded-truth-proof coded-truth-proof-target">
+
+$$\langle\operatorname{codedTruth}\,P\rangle$$
+
+<div class="coded-truth-universe">
+
+$$: \operatorname{Type}_{\ell_2}$$
+
+</div>
+<div class="path-stage" style="aspect-ratio:200/140">
+<svg viewBox="0 0 200 140" aria-hidden="true" focusable="false">
+<circle class="diagram-point coded-truth-target coded-truth-target-q" cx="65" cy="70" r="4"/>
+<circle class="diagram-point coded-truth-target coded-truth-target-r" cx="135" cy="70" r="4"/>
+</svg>
+<span class="path-label coded-truth-target" style="left:32.5%;top:75%">$q$</span>
+<span class="path-label coded-truth-target" style="left:67.5%;top:75%">$r$</span>
+</div>
+</div>
+<div class="coded-truth-detail-link">
+<svg class="coded-truth-detail-horizontal" viewBox="0 0 90 30" aria-hidden="true" focusable="false">
+<path class="diagram-guide" d="M0 15 L90 15"/>
+</svg>
+<svg class="coded-truth-detail-vertical" viewBox="0 0 30 50" aria-hidden="true" focusable="false">
+<path class="diagram-guide" d="M15 0 L15 50"/>
+</svg>
+</div>
+<div class="diagram-space coded-truth-expanded">
+
+$$\Omega$$
+
+<div class="coded-truth-universe">
+
+$$: \operatorname{Type}_{\ell_2}$$
+
+</div>
+<div class="path-stage coded-truth-trigger" style="aspect-ratio:410/200">
+<svg viewBox="0 0 410 200" aria-hidden="true" focusable="false">
+<path class="diagram-path-space coded-truth-source-region" d="M100 95 Q205 0 310 95 Q205 190 100 95 Z"/>
+<path class="diagram-path" d="M100 95 Q205 0 310 95"/>
+<path class="diagram-path" d="M100 95 Q205 190 310 95"/>
+<circle class="diagram-point" cx="100" cy="95" r="4"/>
+<circle class="diagram-point" cx="310" cy="95" r="4"/>
+<g class="coded-truth-moving-space">
+<path class="diagram-path-space coded-truth-region-copy" d="M100 95 Q205 0 310 95 Q205 190 100 95 Z"/>
+<g class="coded-truth-path-copy-q">
+<path class="diagram-path" d="M100 95 Q205 0 310 95"/>
+<circle class="diagram-point" cx="100" cy="95" r="4"/>
+<circle class="diagram-point" cx="310" cy="95" r="4"/>
+</g>
+<g class="coded-truth-path-copy-r">
+<path class="diagram-path" d="M100 95 Q205 190 310 95"/>
+<circle class="diagram-point" cx="100" cy="95" r="4"/>
+<circle class="diagram-point" cx="310" cy="95" r="4"/>
+</g>
+</g>
+</svg>
+<span class="path-label" style="left:50%;top:10%">$q$</span>
+<span class="path-label coded-truth-region-label" style="left:50%;top:47.5%">$\langle\operatorname{codedTruth}\,P\rangle$</span>
+<span class="path-label" style="left:50%;top:81%">$r$</span>
+<span class="path-label" style="left:10.98%;top:47.5%">$c(\top)$</span>
+<span class="path-label" style="left:89.02%;top:47.5%">$c(P)$</span>
+</div>
+</div>
+</div>
+<figcaption id="fig-coded-truth-caption">
+<!--en-->
+A point in `⟨ codedTruth P ⟩` is a whole path in `Ω`: `⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`. The two proof types are equivalent, at levels `ℓ₁` and `ℓ₂` respectively.
+<!--zh-->
+`⟨ codedTruth P ⟩` 中的一个点，就是 `Ω` 中的一整条路径：`⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`。两个证明类型分别位于 `ℓ₁` 和 `ℓ₂` 层，彼此类型等价。
+<!--ja-->
+`⟨ codedTruth P ⟩` の一点は、`Ω` の一本のパスそのものである：`⟨ codedTruth P ⟩ = (c(⊤) ≡ c(P))`。二つの証明の型はそれぞれレベル `ℓ₁` と `ℓ₂` に属し、互いに型同値である。
+<!--/-->
+</figcaption>
+</figure>
 
 <!--en-->
 **Lemma** (`codedTruthIso`{.Agda}) The underlying type of `P` is isomorphic to the underlying type of `codedTruth P`{.Agda}. Thus the representative constructed above really has the same truth content as `P`.
@@ -284,30 +616,30 @@ It remains to construct the representative and the isomorphism used in the proof
 ```
 
 <!--en-->
-It remains only to construct `to`{.Agda} and `from`{.Agda}.
+It remains to construct the two maps.
 
-- For `to`{.Agda}, a proof `p : ⟨ P ⟩`{.Agda} makes truth and `P` logically equivalent: truth implies `P` by constantly returning `p`, while the reverse map returns the inferred inhabitant of truth. Propositional extensionality turns these implications into a path `⊤ ≡ P`{.Agda}. Applying `equivFun e`{.Agda} to this path gives the required equality between the two codes, hence an element of `codedTruth P`{.Agda}.
+- For `to`{.Agda}, a proof `p : ⟨ P ⟩`{.Agda} makes `⊤` and `P` logically equivalent. Propositional extensionality gives `⊤ ≡ P`{.Agda}; applying `cong c`{.Agda} yields `c ⊤ ≡ c P`{.Agda}, a proof of `codedTruth P`{.Agda}.
 <!--zh-->
-现在只需构造 `to`{.Agda} 和 `from`{.Agda}：
+现在构造两个方向的映射。
 
-- 对于 `to`{.Agda}，给定证明 `p : ⟨ P ⟩`{.Agda}，真命题与 `P` 便[逻辑等价]{.term-ref #logical-equivalence}：从真命题到 `P` 的映射恒取 `p`，反向映射则返回由 Agda 推断出的真命题元素。命题外延性把这两个方向的蕴含变成路径 `⊤ ≡ P`{.Agda}。再对这条路径应用 `equivFun e`{.Agda}，便得到两个编码之间的等式，也就是 `codedTruth P`{.Agda} 的元素。
+- 对于 `to`{.Agda}，证明 `p : ⟨ P ⟩`{.Agda} 使 `⊤` 与 `P` 逻辑等价。命题外延性给出路径 `⊤ ≡ P`{.Agda}，再用 `cong c`{.Agda} 得到 `c ⊤ ≡ c P`{.Agda}，即 `codedTruth P`{.Agda} 的证明。
 <!--ja-->
-あとは `to`{.Agda} と `from`{.Agda} を構成するだけである。
+あとは二方向の写像を構成する。
 
-- `to`{.Agda} については、証明 `p : ⟨ P ⟩`{.Agda} が与えられると、真の命題と `P` は[論理的同値]{.term-ref #logical-equivalence}になる。真の命題から `P` への写像は常に `p` を返し、逆向きの写像は Agda が推論した真の命題の要素を返す。命題外延性はこの二方向の含意をパス `⊤ ≡ P`{.Agda} に変える。このパスに `equivFun e`{.Agda} を適用すると二つの符号の等式、すなわち `codedTruth P`{.Agda} の要素が得られる。
+- `to`{.Agda} では、証明 `p : ⟨ P ⟩`{.Agda} によって `⊤` と `P` が論理的同値になる。命題外延性からパス `⊤ ≡ P`{.Agda} を得て、`cong c`{.Agda} によって `c ⊤ ≡ c P`{.Agda}、すなわち `codedTruth P`{.Agda} の証明を得る。
 <!--/-->
 
 ```agda
     to : ⟨ P ⟩ → ⟨ codedTruth P ⟩
-    to p = cong (equivFun e) (⇔toPath (λ _ → p) (λ _ → tt*))
+    to p = cong c (⇔toPath (λ _ → p) (λ _ → tt*))
 ```
 
 <!--en-->
-- For `from`{.Agda}, use the inverse map of the type equivalence given by `congEquiv e`{.Agda} between paths in the proposition universe and paths in the corresponding codes. Given `q : ⟨ codedTruth P ⟩`{.Agda}, this map recovers a path `⊤ ≡ P`{.Agda} from the equality of codes. Transporting the inferred inhabitant of truth along this path produces a proof of `P`.
+- For `from`{.Agda}, start with `q : c ⊤ ≡ c P`{.Agda}. The equivalence `congEquiv e`{.Agda} identifies paths between propositions with paths between their codes. Its inverse `invEq (congEquiv e)`{.Agda} recovers `⊤ ≡ P`{.Agda}; transporting `tt*`{.Agda} along this path with `subst ⟨_⟩`{.Agda} gives a proof of `P`.
 <!--zh-->
-- 对于 `from`{.Agda}，使用 `congEquiv e`{.Agda} 所给出的[类型等价]{.term-ref #type-equivalence}的逆向映射；这个类型等价联系命题宇宙中的路径与相应编码中的路径。给定 `q : ⟨ codedTruth P ⟩`{.Agda}，该映射把这个编码等式还原为路径 `⊤ ≡ P`{.Agda}；沿这条路径搬运由 Agda 推断出的真命题元素，便得到 `P` 的证明。
+- 对于 `from`{.Agda}，从 `q : c ⊤ ≡ c P`{.Agda} 出发。类型等价 `congEquiv e`{.Agda} 联系命题之间的路径与编码之间的路径；其逆映射 `invEq (congEquiv e)`{.Agda} 还原出 `⊤ ≡ P`{.Agda}，再用 `subst ⟨_⟩`{.Agda} 沿该路径搬运 `tt*`{.Agda}，便得到 `P` 的证明。
 <!--ja-->
-- `from`{.Agda} については、命題宇宙のパスと対応する符号におけるパスとを結ぶ、`congEquiv e`{.Agda} が与える[型同値]{.term-ref #type-equivalence}の逆写像を使う。`q : ⟨ codedTruth P ⟩`{.Agda} が与えられると、この写像によって符号の等式をパス `⊤ ≡ P`{.Agda} に戻せる。このパスに沿って Agda が推論した真の命題の要素を輸送すれば、`P` の証明が得られる。
+- `from`{.Agda} では、`q : c ⊤ ≡ c P`{.Agda} から出発する。型同値 `congEquiv e`{.Agda} は命題間のパスと符号間のパスを結ぶ。その逆写像 `invEq (congEquiv e)`{.Agda} によって `⊤ ≡ P`{.Agda} を復元し、`subst ⟨_⟩`{.Agda} でこのパスに沿って `tt*`{.Agda} を輸送すれば、`P` の証明が得られる。
 <!--/-->
 
 ```agda

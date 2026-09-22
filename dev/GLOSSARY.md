@@ -127,3 +127,12 @@ The first introduction is marked in each language with the same stable identifie
 For an explicitly matched later occurrence, replace `term-intro` with `term-ref`. The
 `check-term-introductions.py` gate requires exactly one introduction in every language, checks
 the declared module and rendering, and rejects unknown identifiers.
+
+Bare uses of automatically linked terminology require the introduction chapter in
+the proof prerequisite graph. A deliberate cross-chapter lookup may instead use
+an explicit `term-ref` marker, including for an automatically matched entry. This
+lets a parallel reading route point to a definition without adding an unused Agda
+import. It does not move the formal introduction: the marker's ID and rendering
+are still validated, and references within the introduction chapter itself may
+not precede that introduction. Use direct descriptions for a different concept
+or a type-family value; a link must not disguise an ambiguous or broader use.

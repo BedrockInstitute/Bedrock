@@ -21,6 +21,9 @@ HEADING=re.compile(r'^\s*#{1,6}\s+',re.M)
 
 def visible_chars(text:str)->int:
     text=HTML.sub('',text); text=INLINE.sub('',text)
+    # Shared layout/SVG markup has no narrative text. Preserve text between tags,
+    # so an untranslated caption or paragraph still fails the shared-prose gate.
+    text=re.sub(r'</?[A-Za-z][^>]*>', '', text)
     text=re.sub(r'^\s{0,3}(?:#{1,6}|[-*+]>?|\d+[.)])\s*','',text,flags=re.M)
     text=re.sub(r'[\s*_~\[\]()<>|#]','',text)
     return len(text)
@@ -33,9 +36,9 @@ def _shared_prose(lines:list[str])->list[tuple[bool,str]]:
     hits=[]
     for kind,block in _markdown_blocks(lines):
         if kind!='prose': continue
-        # Disclosure wrappers and the QED mark are language-neutral structure, not
+        # Optional-reading/disclosure wrappers and QED are language-neutral structure, not
         # reader-facing prose. Their visible content remains inside explicit groups.
-        structural = re.compile(r'^\s*(?:<details\b[^>]*>|</details>|∎)\s*$')
+        structural = re.compile(r'^\s*(?:<details\b[^>]*>|<aside\b[^>]*class="optional-reading"[^>]*>|</(?:details|aside)>|∎)\s*$')
         text='\n'.join(line for line in block if not structural.match(line))
         if visible_chars(text): hits.append((_is_english_narrative(block),text))
     return hits

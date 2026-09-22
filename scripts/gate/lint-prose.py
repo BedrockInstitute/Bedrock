@@ -28,7 +28,7 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      ends its proof with a standalone `∎` after its final code block. Explanatory prose
      may follow outside the proof. Nested statements inside a disclosure belong to
      that proof and need no separate mark.                                       [report only]
- 11. Reader-facing disclosure summaries begin with the localized optional-reading
+ 11. Disclosure summaries and optional-reading titles begin with the localized
      marker: `Optional:`, `选读：` or `発展：`.                                  [report only]
  12. Japanese prose uses plain style (である体), not polite です・ます forms.      [report only]
 
@@ -354,7 +354,7 @@ def _qed_structure(text):
     """Return English statement labels and section boundaries with disclosure depth."""
     labels = []
     headings = [0]
-    depth = 0
+    containers = []
     fenced = False
     offset = 0
     for line in text.splitlines(keepends=True):
@@ -366,9 +366,15 @@ def _qed_structure(text):
                 headings.append(offset)
             label = _QED_START_RE.match(line)
             if label:
-                labels.append((offset, depth))
-            depth += len(re.findall(r"<details\b", line))
-            depth -= len(re.findall(r"</details>", line))
+                labels.append((offset, sum(scoped for _, scoped in containers)))
+            for tag in re.finditer(r"<(\/)?(details|aside)\b([^>]*)>", line):
+                closing, name, attrs = tag.groups()
+                if closing:
+                    if containers and containers[-1][0] == name:
+                        containers.pop()
+                else:
+                    containers.append((name, name == "details" or
+                                       bool(re.search(r'\bclass="[^"]*\boptional-reading\b', attrs))))
         offset += len(line)
     headings.append(len(text))
     return labels, sorted(set(headings))
@@ -379,8 +385,8 @@ def qed_violations(text):
 
     English labels identify each trilingual statement once; the parallel Chinese and
     Japanese labels lie in the same i18n block and therefore need no duplicate mark.
-    Within a section, labels at the shallowest disclosure depth are the outer proofs;
-    labels nested in their disclosure are explanatory proof steps.
+    Within a section, labels at the shallowest disclosure/optional-reading depth are
+    the outer proofs; nested labels are explanatory proof steps.
     """
     out = []
     labels, headings = _qed_structure(text)
@@ -399,7 +405,7 @@ def qed_violations(text):
                 continue
             tail = segment[fences[-1].end():]
             tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
-            if not re.match(r"\s*(?:</details>\s*)*∎(?:[ \t]*(?:\n|$))", tail):
+            if not re.match(r"\s*(?:</(?:details|aside)>\s*)*∎(?:[ \t]*(?:\n|$))", tail):
                 out.append(Violation(
                     start,
                     "outermost construction/lemma/theorem/corollary must end with standalone "
@@ -417,7 +423,7 @@ _OPTIONAL_SUMMARY_PREFIX = {
 
 
 def optional_summary_violations(text):
-    """Require a localized optional-reading marker on every visible summary."""
+    """Require localized optional titles and default-open mathematical disclosures."""
     out = []
     language = None
     fenced = False
@@ -429,16 +435,27 @@ def optional_summary_violations(text):
             offset += len(line)
             continue
         if not fenced:
+            for tag in re.finditer(r'<(details|aside)\b([^>]*)>', line):
+                attrs = tag.group(2)
+                classes = re.search(r'\bclass="([^"]*)"', attrs)
+                if classes and 'optional-reading' in classes.group(1).split():
+                    unquoted = re.sub(r'"[^"]*"', '""', attrs)
+                    if tag.group(1) != 'details' or not re.search(r'(?:^|\s)open(?:\s|=|$)', unquoted):
+                        out.append(Violation(offset + tag.start(),
+                            'optional-reading must use <details open> so it is collapsible and expanded by default',
+                            False))
             marker = MARKER_RE.match(line)
             if marker:
                 code = marker.group(1)
                 language = None if code == "/" else code
             else:
-                for match in re.finditer(r"<summary>(.*?)</summary>", line):
+                for match in re.finditer(
+                        r'<(?:summary\b[^>]*|p\b[^>]*\bclass="optional-reading-title"[^>]*)>(.*?)</(?:summary|p)>',
+                        line):
                     if language not in _OPTIONAL_SUMMARY_PREFIX:
                         out.append(Violation(
                             offset + match.start(),
-                            "disclosure summary must be inside an explicit language group",
+                            "optional-reading title/summary must be inside an explicit language group",
                             False,
                         ))
                         continue
@@ -446,7 +463,7 @@ def optional_summary_violations(text):
                     if not match.group(1).lstrip().startswith(prefix):
                         out.append(Violation(
                             offset + match.start(1),
-                            f"disclosure summary must begin with {prefix!r} ({language})",
+                            f"optional-reading title/summary must begin with {prefix!r} ({language})",
                             False,
                         ))
         offset += len(line)

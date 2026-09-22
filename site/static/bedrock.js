@@ -1345,3 +1345,109 @@
     fromHash();
   });
 })();
+
+/* Expand the schematic family of paths into its type; paths become its points. */
+(function () {
+  "use strict";
+  document.addEventListener("DOMContentLoaded", function () {
+    const figure = document.getElementById("fig-coded-truth");
+    if (!figure) return;
+    const trigger = figure.querySelector(".coded-truth-trigger");
+    const moving = figure.querySelector(".coded-truth-moving-space");
+    const region = figure.querySelector(".coded-truth-region-copy");
+    const targetSpace = figure.querySelector(".coded-truth-proof-target");
+    if (!trigger || !moving || !region || !targetSpace) return;
+    const targets = ["q", "r"].map(name => ({
+      point: figure.querySelector(`.coded-truth-target-${name}`),
+      copy: figure.querySelector(`.coded-truth-path-copy-${name}`)
+    }));
+    if (targets.some(target => !target.point || !target.copy)) return;
+    const targetMarks = [...figure.querySelectorAll(".coded-truth-target")];
+    const initialPath = region.getAttribute("d");
+    const clamp = x => Math.max(0, Math.min(1, x));
+    const smooth = x => { x = clamp(x); return x * x * (3 - 2 * x); };
+    const arc = (t, control) => [100 + 210 * t, 95 + 2 * t * (1 - t) * (control - 95)];
+    const source = Array.from({length: 64}, (_, i) =>
+      i <= 32 ? arc(i / 32, 0) : arc((64 - i) / 32, 190));
+    const labels = {
+      en: "Unfold the highlighted path space",
+      zh: "展开高亮的路径空间",
+      ja: "強調されたパス空間を展開する"
+    };
+    trigger.setAttribute("role", "button");
+    trigger.setAttribute("aria-label", labels[document.documentElement.lang] || labels.en);
+    trigger.tabIndex = 0;
+    figure.classList.add("coded-truth-interactive");
+    trigger.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        trigger.click();
+      }
+    });
+    trigger.addEventListener("click", async function () {
+      if (figure.classList.contains("coded-truth-playing")) return;
+      trigger.setAttribute("aria-disabled", "true");
+      figure.classList.add("coded-truth-playing");
+      try {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const matrix = moving.ownerSVGElement.getScreenCTM();
+        if (!matrix) return;
+        const inverse = matrix.inverse();
+        const local = (x, y) => new DOMPoint(x, y).matrixTransform(inverse);
+        const bounds = targetSpace.getBoundingClientRect();
+        const topLeft = local(bounds.left, bounds.top);
+        const bottomRight = local(bounds.right, bounds.bottom);
+        const x = topLeft.x, y = topLeft.y, right = bottomRight.x, bottom = bottomRight.y;
+        const middleY = (y + bottom) / 2;
+        const radius = Math.min(8 / Math.hypot(matrix.a, matrix.b), (right - x) / 4, (bottom - y) / 4);
+        const rectangle = `M${x} ${middleY} L${x} ${y + radius} Q${x} ${y} ${x + radius} ${y} ` +
+          `L${right - radius} ${y} Q${right} ${y} ${right} ${y + radius} ` +
+          `L${right} ${bottom - radius} Q${right} ${bottom} ${right - radius} ${bottom} ` +
+          `L${x + radius} ${bottom} Q${x} ${bottom} ${x} ${bottom - radius} Z`;
+        region.setAttribute("d", rectangle);
+        const perimeter = region.getTotalLength();
+        const destination = source.map((_, i) => region.getPointAtLength(perimeter * i / source.length));
+        region.setAttribute("d", initialPath);
+        const points = targets.map(target => {
+          const box = target.point.getBoundingClientRect();
+          return local(box.x + box.width / 2, box.y + box.height / 2);
+        });
+        await new Promise(resolve => {
+          let started;
+          function frame(now) {
+            if (started === undefined) started = now;
+            const time = clamp((now - started) / 4200);
+            const progress = smooth((time - .1) / .72);
+            const fade = 1 - smooth((time - .84) / .16);
+            moving.style.opacity = String(smooth(time / .1));
+            region.style.opacity = String(fade);
+            region.setAttribute("d", source.map((point, i) =>
+              `${i ? "L" : "M"}${point[0] + (destination[i].x - point[0]) * progress} ` +
+              `${point[1] + (destination[i].y - point[1]) * progress}`).join(" ") + " Z");
+            targets.forEach((target, i) => {
+              const cx = 205 + (points[i].x - 205) * progress;
+              const cy = 95 + (points[i].y - 95) * progress;
+              target.copy.setAttribute("transform", `translate(${cx} ${cy}) scale(${1 - .98 * progress}) translate(-205 -95)`);
+              target.copy.style.opacity = String(fade);
+            });
+            targetMarks.forEach(mark => { mark.style.opacity = String(1 - fade); });
+            if (time < 1) requestAnimationFrame(frame);
+            else resolve();
+          }
+          requestAnimationFrame(frame);
+        });
+      } finally {
+        moving.style.opacity = "";
+        region.style.opacity = "";
+        region.setAttribute("d", initialPath);
+        targets.forEach(target => {
+          target.copy.removeAttribute("transform");
+          target.copy.style.opacity = "";
+        });
+        targetMarks.forEach(mark => { mark.style.opacity = ""; });
+        figure.classList.remove("coded-truth-playing");
+        trigger.removeAttribute("aria-disabled");
+      }
+    });
+  });
+})();

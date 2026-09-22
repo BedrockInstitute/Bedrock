@@ -19,7 +19,8 @@ are complete. The current phase writes the full English, Chinese and Japanese
 literate exposition throughout the book, including later English-only scaffolding.
 Preserve the established chapter and subsection structure and parallel routes.
 
-Use GLM 5.3 Flash through Herdr / pi for drafting. Drafting agents work read-only:
+The coordinating agent drafts prose directly; do not use GLM or require Herdr / pi
+for drafting. Any dispatched drafting agents work read-only:
 they may freely inspect complete modules, relevant imports and real consumers,
 and return prose to the conversation. The coordinator mechanically validates and
 applies their output. Supply the project and technical background, the fixed
@@ -57,6 +58,11 @@ and never allow parallel authors to invent competing translations. Preserve all
 mathematical statements, hypotheses, code, safety and opacity boundaries. The
 finished prose is for learners; replace development scaffolding with accurate
 exposition rather than retaining a developer-facing voice.
+
+For figures, follow `dev/RENDERER-RECIPES.md` and `dev/STYLE-i18n.md`. An overall
+frame encloses only diagram content, never its caption: use a direct
+`div.diagram-framed` followed by an unframed sibling `figcaption`. Run
+`scripts/gate/check-diagrams.py`; do not copy an older figure that violates this rule.
 
 Preserve the established parallel reading architecture in `dev/TEACHING.md`.
 The module and interface refinement is complete; this writing phase does not

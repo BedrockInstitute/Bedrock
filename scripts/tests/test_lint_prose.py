@@ -51,6 +51,35 @@ class TheoremLabelTests(unittest.TestCase):
 
 
 class QedTests(unittest.TestCase):
+    def test_default_open_optional_block_scopes_helpers_and_requires_outer_qed(self):
+        text = '''**Theorem** (`result`{.Agda}) Text.
+```agda
+result = helper
+```
+<details open class="optional-reading" aria-labelledby="helper-title">
+**Lemma** (`helper`{.Agda}) Text.
+```agda
+helper = proof
+```
+</details>
+'''
+        self.assertEqual(lint_prose.qed_violations(text + '∎\n'), [])
+        self.assertEqual(len(lint_prose.qed_violations(text)), 1)
+
+    def test_margin_note_does_not_make_following_statement_nested(self):
+        text = '''**Theorem** (`result`{.Agda}) Text.
+<aside class="prose-annotation-note">Note.</aside>
+```agda
+result = proof
+```
+∎
+**Lemma** (`next`{.Agda}) Text.
+```agda
+next = proof
+```
+'''
+        self.assertEqual(len(lint_prose.qed_violations(text)), 1)
+
     def test_top_level_construction_and_lemma_end_after_final_code_block(self):
         text = """**Construction** (`make`{.Agda}) Text.
 <!--zh-->
@@ -163,6 +192,21 @@ result = helper
 
 
 class OptionalSummaryTests(unittest.TestCase):
+    def test_mathematical_optional_blocks_must_be_collapsible_and_default_open(self):
+        self.assertEqual(self.violations('<details open class="optional-reading">'), [])
+        self.assertEqual(self.violations('<details class="optional-reading" open>'), [])
+        self.assertEqual(len(self.violations('<details class="optional-reading">')), 1)
+        self.assertEqual(len(self.violations('<aside class="optional-reading">')), 1)
+        self.assertEqual(len(self.violations('<details class="optional-reading" title="open">')), 1)
+        self.assertEqual(self.violations('<details class="prose-disclosure">'), [])
+
+    def test_optional_summaries_with_attributes_use_localized_markers(self):
+        for lang, prefix in [('en', 'Optional:'), ('zh', '选读：'), ('ja', '発展：')]:
+            title = '<summary class="optional-reading-title" id="test-title">'
+            self.assertEqual(self.violations(f'<!--{lang}-->\n{title}{prefix} Details</summary>\n<!--/-->'), [])
+            self.assertEqual(len(self.violations(f'<!--{lang}-->\n{title}Details</summary>\n<!--/-->')), 1)
+            self.assertEqual(len(self.violations(f'{title}{prefix} Details</summary>')), 1)
+
     def violations(self, text):
         return lint_prose.optional_summary_violations(text)
 

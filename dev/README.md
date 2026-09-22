@@ -15,6 +15,8 @@ is trilingual and lives in [docs/](../docs/). The rule set is [AGENTS.md](../AGE
   `scripts/site/weave-i18n.py --check`. Prose outside every `<!--lang-->` group is shared
   and is copied to every language verbatim.
 - `GLOSSARY.md`: how a term entry is proposed, reviewed and landed.
+- [RENDERER-RECIPES.md](RENDERER-RECIPES.md): reusable rendering recipes, canonical
+  markup, first uses in the first three chapters, and maintenance rules.
 - `glossary.toml`: the term data itself, one entry per term with its Chinese and Japanese
   rendering and the renderings to avoid. `scripts/gate/check-glossary.py` reads it and
   reports off-glossary renderings, scoped by language. It never auto-fixes: the right

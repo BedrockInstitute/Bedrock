@@ -1,15 +1,15 @@
 <!--en-->
 # The Mostowski collapse
 
-Every set of the ambient cumulative hierarchy comes with a canonical presentation: an index type together with an indexing map that names its elements. This chapter asks the converse question. Suppose we single out a set `X` and look only at the elements of the hierarchy that belong to `X`, with the membership relation inherited from the hierarchy. When is this restricted structure, in effect, just another set? The Mostowski collapse answers: membership recursion defines a collapsing map `π`, the range of `π` on `X` is a transitive set, and if `X` satisfies structure extensionality then `π` is injective on `X`, giving an isomorphism between the carrier and its collapsed range.
+Every set of the ambient cumulative hierarchy comes with a canonical presentation: an index type together with an indexing map that names its elements. This chapter asks the converse question. Suppose we single out a set `X` and look only at the elements of the hierarchy that belong to `X`, with the membership relation inherited from the hierarchy. When is this restricted structure, in effect, just another set? The Mostowski collapse answers: membership recursion defines a collapsing map `π`, the range of `π` on `X` is a transitive set, and if `X` satisfies structure extensionality then `π` is injective on `X`, giving an [isomorphism of structures]{.term-intro #structure-isomorphism} between the carrier and its collapsed range.
 <!--zh-->
 # Mostowski 塌缩
 
-环境累积层级中的每个集合都带有典范呈现：一个索引类型连同指称其元素的索引映射。本章讨论相反的问题。设我们取定一个集合 `X`，只考察层级中属于 `X` 的元素，并沿用层级自身的隶属关系。这个受限结构在什么意义上本身就是一个集合？Mostowski 塌缩给出了回答：沿隶属关系的递归定义塌缩映射 `π`，`π` 在 `X` 上的像是一个传递集；若 `X` 满足结构外延性，则 `π` 在 `X` 上单射，从而给出载体与其塌缩像之间的同构。
+环境累积层级中的每个集合都带有典范呈现：一个索引类型连同指称其元素的索引映射。本章讨论相反的问题。设我们取定一个集合 `X`，只考察层级中属于 `X` 的元素，并沿用层级自身的隶属关系。这个受限结构在什么意义上本身就是一个集合？Mostowski 塌缩给出了回答：沿隶属关系的递归定义塌缩映射 `π`，`π` 在 `X` 上的像是一个传递集；若 `X` 满足结构外延性，则 `π` 在 `X` 上单射，从而给出载体与其塌缩像之间的[结构同构]{.term-intro #structure-isomorphism}。
 <!--ja-->
 # Mostowski 崩壊
 
-周囲の累積階層の各集合は、インデックス型とその要素を指すインデックス写像からなる正準な提示を伴う。本章は逆の問題を扱う。集合 `X` を固定し、階層のうち `X` に属する要素だけを、階層自身の所属関係とともに考える。この制限された構造は、どのような意味でそれ自身ひとつの集合なのであろうか。Mostowski 崩壊が答える。所属関係上の再帰で崩壊写像 `π` を定義すると、`X` 上の `π` の像は推移的集合になり、`X` が構造外延性を満たすなら `π` は `X` 上で単射となり、台とその崩壊像の間の同型が得られる。
+周囲の累積階層の各集合は、インデックス型とその要素を指すインデックス写像からなる正準な提示を伴う。本章は逆の問題を扱う。集合 `X` を固定し、階層のうち `X` に属する要素だけを、階層自身の所属関係とともに考える。この制限された構造は、どのような意味でそれ自身ひとつの集合なのであろうか。Mostowski 崩壊が答える。所属関係上の再帰で崩壊写像 `π` を定義すると、`X` 上の `π` の像は推移的集合になり、`X` が構造外延性を満たすなら `π` は `X` 上で単射となり、台とその崩壊像の間の[構造の同型]{.term-intro #structure-isomorphism}が得られる。
 <!--/-->
 
 <!--en-->
@@ -62,15 +62,15 @@ open hPropStructure 𝒮ᵥ
 <!--en-->
 ## Carrier hypotheses
 
-The collapse takes a set `X : S` as carrier. Two hypotheses on `X` appear in this chapter, and they play different roles. Transitivity says that members of members of `X` are again in `X`; it is what makes the collapsed range behave well. Structure extensionality says that two elements of `X` with the same members of `X` are equal; it is what makes the collapsing map injective, and it alone suffices for the isomorphism half of the chapter.
+The collapse takes a set `X : S` as carrier. Two hypotheses on `X` appear in this chapter, and they play different roles. Transitivity says that members of members of `X` are again in `X`; it is what makes the collapsed range behave well. Structure extensionality says that two elements of `X` with the same members of `X` are equal; it is what makes the collapsing map injective, and it alone suffices for the [isomorphism]{.term-ref #structure-isomorphism} half of the chapter.
 <!--zh-->
 ## 载体假设
 
-塌缩以一个集合 `X : S` 为载体。本章出现两个关于 `X` 的假设，作用不同。传递性说 `X` 的元素的元素仍在 `X` 中；它使塌缩的像表现良好。结构外延性说具有相同的 `X` 中成员的两个 `X` 元素相等；它使塌缩映射单射，并且仅它就足以支撑本章的同构部分。
+塌缩以一个集合 `X : S` 为载体。本章出现两个关于 `X` 的假设，作用不同。传递性说 `X` 的元素的元素仍在 `X` 中；它使塌缩的像表现良好。结构外延性说具有相同的 `X` 中成员的两个 `X` 元素相等；它使塌缩映射单射，并且仅它就足以支撑本章的[同构]{.term-ref #structure-isomorphism}部分。
 <!--ja-->
 ## 台に関する仮定
 
-崩壊は集合 `X : S` を台として取る。本章に現れる `X` についての仮定は二つで、役割が異なる。推移性は、`X` の要素の要素が再び `X` に属することを述べ、崩壊した像の振る舞いを良くする。構造外延性は、`X` 内の同じ要素を持つ `X` の二要素が等しいことを述べ、崩壊写像を単射にする。同型の部分にはこの仮定だけで十分である。
+崩壊は集合 `X : S` を台として取る。本章に現れる `X` についての仮定は二つで、役割が異なる。推移性は、`X` の要素の要素が再び `X` に属することを述べ、崩壊した像の振る舞いを良くする。構造外延性は、`X` 内の同じ要素を持つ `X` の二要素が等しいことを述べ、崩壊写像を単射にする。[同型]{.term-ref #structure-isomorphism}の部分にはこの仮定だけで十分である。
 <!--/-->
 
 <!--en-->
@@ -145,11 +145,11 @@ For each set `x`, the map `π`{.Agda} should send `x` to the set of collapse val
 <!--/-->
 
 <!--en-->
-The index type `Fiber x` selects the filtered members: an index `m` into the presentation of `x` such that the named element `⟪ x ⟫↪ m` is a small member of `X`. Because the filter uses the small membership, itself a proposition at level `ℓ`, the fiber type lives in `Type ℓ` and the resulting set is legitimately small. The recursive step then presents a new set: indices are the fibers, and each index names `rec` applied to the corresponding member `⟪ x ⟫↪ m` of `x`, together with the membership proof `member x m` that the recursion principle requires to justify the recursive call. Note the direction of information flow: `fiber` is not used here; the carrier-membership witness is carried inside the fiber as data.
+The index type `Fiber x` selects the filtered members: an index `m` into the presentation of `x` such that the named element `⟪ x ⟫↪ m` is a small member of `X`. Because the filter uses the small membership, itself a proposition at level `ℓ`, the index type lives in `Type ℓ` and the resulting set is legitimately small. The recursive step then presents a new set: indices are the index pairs, and each index names `rec` applied to the corresponding member `⟪ x ⟫↪ m` of `x`, together with the membership proof `member x m` that the recursion principle requires to justify the recursive call. Note the direction of information flow: `fiber` is not used here; the carrier-membership witness is carried inside the index pair as data.
 <!--zh-->
-索引类型 `Fiber x` 选取被过滤的成员：`x` 的呈现中的一个索引 `m`，使得所指名的元素 `⟪ x ⟫↪ m` 是 `X` 的小成员。由于过滤使用小隶属 (它本身是层级 `ℓ` 的命题)，纤维类型落在 `Type ℓ` 中，所得的集合合法地是小的。递归步随后呈现一个新集合：索引就是这些纤维，每个索引指名 `rec` 作用于 `x` 的相应成员 `⟪ x ⟫↪ m` 的值，并附带递归原理所需的隶属证明 `member x m` 以保证递归调用合法。注意信息的流向：这里没有用 `fiber`；载体隶属的见证作为数据随纤维一起携带。
+索引类型 `Fiber x` 选取被过滤的成员：`x` 的呈现中的一个索引 `m`，使得所指名的元素 `⟪ x ⟫↪ m` 是 `X` 的小成员。由于过滤使用小隶属 (它本身是层级 `ℓ` 的命题)，索引类型落在 `Type ℓ` 中，所得的集合合法地是小的。递归步随后呈现一个新集合：索引就是这些索引对，每个索引指名 `rec` 作用于 `x` 的相应成员 `⟪ x ⟫↪ m` 的值，并附带递归原理所需的隶属证明 `member x m` 以保证递归调用合法。注意信息的流向：这里没有用 `fiber`；载体隶属的见证作为数据随索引对一起携带。
 <!--ja-->
-インデックス型 `Fiber x` はフィルタリングされた要素を選ぶ。`x` の提示におけるインデックス `m` で、名指しされた要素 `⟪ x ⟫↪ m` が `X` の小所属を持つものである。フィルタはそれ自身レベル `ℓ` の命題である小所属を使うので、ファイバー型は `Type ℓ` に属し、得られる集合は正当に小さくなる。再帰のステップは新しい集合を提示する。インデックスがファイバーであり、各インデックスは、`x` の対応する要素 `⟪ x ⟫↪ m` への `rec` の適用を名指す。再帰呼び出しを正当化するため、所属証明 `member x m` も添えられる。情報の流れの向きに注意してほしい。ここでは `fiber` は使われず、台への所属の証拠はデータとしてファイバーの中に担われている。
+インデックス型 `Fiber x` はフィルタリングされた要素を選ぶ。`x` の提示におけるインデックス `m` で、名指しされた要素 `⟪ x ⟫↪ m` が `X` の小所属を持つものである。フィルタはそれ自身レベル `ℓ` の命題である小所属を使うので、インデックス型は `Type ℓ` に属し、得られる集合は正当に小さくなる。再帰のステップは新しい集合を提示する。インデックスがインデックスの組であり、各インデックスは、`x` の対応する要素 `⟪ x ⟫↪ m` への `rec` の適用を名指す。再帰呼び出しを正当化するため、所属証明 `member x m` も添えられる。情報の流れの向きに注意してほしい。ここでは `fiber` は使われず、台への所属の証拠はデータとしてインデックスの組の中に担われている。
 <!--/-->
 
 ```agda
@@ -207,11 +207,11 @@ The first property of `π` describes its members. If `z` belongs to `π x`, then
 <!--/-->
 
 <!--en-->
-The proof starts from the membership certificate `z∈` and transports it along the computation law of `π`. After rewriting `π x` into `sett (Fiber x) ⋯`, the membership type of a presented set lets us read off an index: a fiber `p` together with a path showing that `π` of the named member equals `z`. So the computation law converts an abstract membership into concrete recursion data.
+The proof starts from the membership certificate `z∈` and transports it along the computation law of `π`. After rewriting `π x` into `sett (Fiber x) ⋯`, the membership type of a presented set lets us read off an index: an index pair `p` together with a path showing that `π` of the named member equals `z`. So the computation law converts an abstract membership into concrete recursion data.
 <!--zh-->
-证明从隶属证书 `z∈` 出发，沿 `π` 的计算律进行搬运。把 `π x` 改写为 `sett (Fiber x) ⋯` 之后，呈现集合的隶属类型让我们直接读出索引：一个纤维 `p`，连同指名成员的 `π` 值等于 `z` 的路径。于是计算律把抽象的隶属转化为具体的递归数据。
+证明从隶属证书 `z∈` 出发，沿 `π` 的计算律进行搬运。把 `π x` 改写为 `sett (Fiber x) ⋯` 之后，呈现集合的隶属类型让我们直接读出索引：一个索引对 `p`，连同指名成员的 `π` 值等于 `z` 的路径。于是计算律把抽象的隶属转化为具体的递归数据。
 <!--ja-->
-証明は所属の証拠 `z∈` から出発し、`π` の計算規則に沿って輸送する。`π x` を `sett (Fiber x) ⋯` に書き換えると、提示された集合の所属の型からインデックスを読み取れる。ファイバー `p` と、名指しされた要素の `π` の値が `z` に等しいというパスである。こうして計算規則は抽象的な所属を具体的な再帰のデータへ変える。
+証明は所属の証拠 `z∈` から出発し、`π` の計算規則に沿って輸送する。`π x` を `sett (Fiber x) ⋯` に書き換えると、提示された集合の所属の型からインデックスを読み取れる。インデックスの組 `p` と、名指しされた要素の `π` の値が `z` に等しいというパスである。こうして計算規則は抽象的な所属を具体的な再帰のデータへ変える。
 <!--/-->
 
 ```agda
@@ -223,11 +223,11 @@ The proof starts from the membership certificate `z∈` and transports it along 
 ```
 
 <!--en-->
-The auxiliary function `mk` reshapes this recursion data into the promised form. The witness `⟪ x ⟫↪ (p .fst)` is exactly the member of `x` named by the fiber; the second component `∈∈ₛ ⋯ .snd` converts the fiber's carrier-membership certificate from native to small membership; and the path `q` is reused directly. The result is a truncated pair, built with `map₁`, so the conclusion remains merely an existence statement even though each ingredient is explicit.
+The auxiliary function `mk` reshapes this recursion data into the promised form. The witness `⟪ x ⟫↪ (p .fst)` is exactly the member of `x` named by the index pair; the second component `∈∈ₛ ⋯ .snd` converts the index pair's carrier-membership certificate from native to small membership; and the path `q` is reused directly. The result is a truncated pair, built with `map₁`, so the conclusion remains merely an existence statement even though each ingredient is explicit.
 <!--zh-->
-辅助函数 `mk` 把这份递归数据重塑为承诺的形式。见证 `⟪ x ⟫↪ (p .fst)` 正是纤维所指名的 `x` 的成员；第二分量 `∈∈ₛ ⋯ .snd` 把纤维的载体隶属证书从原生隶属转换为小隶属；路径 `q` 则直接复用。结果是用 `map₁` 构造的截断对，因此尽管每个成分都是显式的，结论仍只是存在性陈述。
+辅助函数 `mk` 把这份递归数据重塑为承诺的形式。见证 `⟪ x ⟫↪ (p .fst)` 正是索引对所指名的 `x` 的成员；第二分量 `∈∈ₛ ⋯ .snd` 把索引对的载体隶属证书从原生隶属转换为小隶属；路径 `q` 则直接复用。结果是用 `map₁` 构造的截断对，因此尽管每个成分都是显式的，结论仍只是存在性陈述。
 <!--ja-->
-補助関数 `mk` はこの再帰データを約束された形に作り替える。証拠 `⟪ x ⟫↪ (p .fst)` はファイバーが名指す `x` の要素そのものである。第二成分 `∈∈ₛ ⋯ .snd` はファイバーの台への所属の証拠を本来の所属から小所属へ変換し、パス `q` はそのまま再利用する。結果は `map₁` で構成される切り詰められた組であり、各成分が明示的でも、結論はあくまで存在の主張のままである。
+補助関数 `mk` はこの再帰データを約束された形に作り替える。証拠 `⟪ x ⟫↪ (p .fst)` はインデックスの組が名指す `x` の要素そのものである。第二成分 `∈∈ₛ ⋯ .snd` はインデックスの組の台への所属の証拠を本来の所属から小所属へ変換し、パス `q` はそのまま再利用する。結果は `map₁` で構成される切り詰められた組であり、各成分が明示的でも、結論はあくまで存在の主張のままである。
 <!--/-->
 
 ```agda
@@ -331,19 +331,19 @@ Finally `go₂` transports the desired membership along the path `π w ≡ y`: s
 ```
 
 <!--en-->
-The forward direction records how the collapse respects membership between carrier elements. If `y` is a member of `x` and both lie in the carrier `X`, then `π y` is a member of `π x` in the small relation. This lemma is the workhorse of the isomorphism: both inclusions in the injectivity proof reduce to it. Unlike the truncated `π-member`, here all data is explicit, because the membership `y ∈ᵗ x` itself names a witness.
+The forward direction records how the collapse respects membership between carrier elements. If `y` is a member of `x` and both lie in the carrier `X`, then `π y` is a member of `π x` in the small relation. This lemma is the workhorse of the [isomorphism]{.term-ref #structure-isomorphism}: both inclusions in the injectivity proof reduce to it. Unlike the truncated `π-member`, here all data is explicit, because the membership `y ∈ᵗ x` itself names a witness.
 <!--zh-->
-前向引理记录塌缩如何保持载体元素之间的隶属关系。若 `y` 是 `x` 的成员且二者都在载体 `X` 中，则 `π y` 在小关系下是 `π x` 的成员。这条引理是同构证明的主力：单射性证明中的两个包含都化归到它。与截断的 `π-member` 不同，这里所有数据都是显式的，因为 `y ∈ᵗ x` 本身就指名了一个见证。
+前向引理记录塌缩如何保持载体元素之间的隶属关系。若 `y` 是 `x` 的成员且二者都在载体 `X` 中，则 `π y` 在小关系下是 `π x` 的成员。这条引理是[同构]{.term-ref #structure-isomorphism}证明的主力：单射性证明中的两个包含都化归到它。与截断的 `π-member` 不同，这里所有数据都是显式的，因为 `y ∈ᵗ x` 本身就指名了一个见证。
 <!--ja-->
-順方向の補題は、台の要素の間の所属が崩壊によってどう保たれるかを記録する。`y` が `x` の要素であり、両者が台 `X` に属するなら、`π y` は小関係において `π x` の要素である。この補題は同型証明の主力であり、単射性の証明に現れる両方の包含がこれに帰着する。切り詰められた `π-member` と違い、所属 `y ∈ᵗ x` そのものが証拠を名指すため、ここではすべてのデータが明示的である。
+順方向の補題は、台の要素の間の所属が崩壊によってどう保たれるかを記録する。`y` が `x` の要素であり、両者が台 `X` に属するなら、`π y` は小関係において `π x` の要素である。この補題は[同型]{.term-ref #structure-isomorphism}証明の主力であり、単射性の証明に現れる両方の包含がこれに帰着する。切り詰められた `π-member` と違い、所属 `y ∈ᵗ x` そのものが証拠を名指すため、ここではすべてのデータが明示的である。
 <!--/-->
 
 <!--en-->
-The first ingredient is the fiber of the membership proof. Applying `fiber x` to `yx : y ∈ᵗ x` returns an actual index `m` into the presentation of `x` together with a path `⟪ x ⟫↪ m ≡ y`. This is the same explicit-construction lemma that gave `πX-intro` its witnesses: because the embedding has proposition-valued fibers, the truncated membership can be eliminated into this pair type.
+The first ingredient is an element of the presentation map’s [fibre]{.term-ref #fiber} over `y`, recovered from the membership proof. Applying `fiber x` to `yx : y ∈ᵗ x` returns an actual index `m` into the presentation of `x` together with a path `⟪ x ⟫↪ m ≡ y`. This is the same explicit-construction lemma that gave `πX-intro` its witnesses: because the embedding has proposition-valued [fibres]{.term-ref #fiber}, the truncated membership can be eliminated into this pair type.
 <!--zh-->
-第一个成分是隶属证明的原像。把 `fiber x` 作用于 `yx : y ∈ᵗ x`，得到 `x` 的呈现中的一个实际索引 `m`，连同路径 `⟪ x ⟫↪ m ≡ y`。这正是为 `πX-intro` 提供见证的那条显式构造引理：由于嵌入的原像都是命题，截断的隶属可以消去到这个对类型中。
+第一个成分是从隶属证明恢复的、呈现映射在 `y` 上的[纤维]{.term-ref #fiber}中的一个元素。把 `fiber x` 作用于 `yx : y ∈ᵗ x`，得到 `x` 的呈现中的一个实际索引 `m`，连同路径 `⟪ x ⟫↪ m ≡ y`。这正是为 `πX-intro` 提供见证的那条显式构造引理：由于嵌入的[纤维]{.term-ref #fiber}都是命题，截断的隶属可以消去到这个对类型中。
 <!--ja-->
-最初の材料は所属の証明のファイバーである。`fiber x` を `yx : y ∈ᵗ x` に適用すると、`x` の提示における実際のインデックス `m` と、パス `⟪ x ⟫↪ m ≡ y` が得られる。これは `πX-intro` に証拠を与えたのと同じ明示的構成の補題である。埋め込みのファイバーが命題値なので、切り詰められた所属をこの組の型へ消去できる。
+最初の材料は、所属の証明から復元した、提示写像の `y` 上の[ファイバー]{.term-ref #fiber}の要素である。`fiber x` を `yx : y ∈ᵗ x` に適用すると、`x` の提示における実際のインデックス `m` と、パス `⟪ x ⟫↪ m ≡ y` が得られる。これは `πX-intro` に証拠を与えたのと同じ明示的構成の補題である。埋め込みの[ファイバー]{.term-ref #fiber}が命題値なので、切り詰められた所属をこの組の型へ消去できる。
 <!--/-->
 
 ```agda
@@ -355,7 +355,7 @@ The first ingredient is the fiber of the membership proof. Applying `fiber x` to
 ```
 
 <!--en-->
-The carrier membership `yu` speaks about `y`, but the fiber pair is built from `⟪ x ⟫↪ m`, so the proof transports `yu` backwards along the path `p` to obtain `⟪ x ⟫↪ m ∈ˢ X`, and then converts that native small-membership certificate into the small relation with the forward half of `∈∈ₛ`. This is the one place where the two memberships meet directly, and `∈∈ₛ` is exactly the bridge.
+The carrier membership `yu` speaks about `y`, but the index pair is built from `⟪ x ⟫↪ m`, so the proof transports `yu` backwards along the path `p` to obtain `⟪ x ⟫↪ m ∈ˢ X`, and then converts that native small-membership certificate into the small relation with the forward half of `∈∈ₛ`. This is the one place where the two memberships meet directly, and `∈∈ₛ` is exactly the bridge.
 <!--zh-->
 载体隶属 `yu` 谈论的是 `y`，而对是从 `⟪ x ⟫↪ m` 构造的，所以证明沿路径 `p` 把 `yu` 反向搬运得到 `⟪ x ⟫↪ m ∈ˢ X`，再用 `∈∈ₛ` 的前向一半把这条原生小隶属证书转换为小关系中的隶属。这是两种隶属直接相遇的唯一场合，`∈∈ₛ` 恰是桥。
 <!--ja-->
@@ -371,11 +371,11 @@ The carrier membership `yu` speaks about `y`, but the fiber pair is built from `
 ```
 
 <!--en-->
-With the pair `(m , sm)` now inhabiting `Fiber x`, the witness `wit` presents `π y` as a member of the set presented by `step x`: the index names the fiber, and the path component is `cong π p`, identifying `π (⟪ x ⟫↪ m)` with `π y`. Transporting along the computation law of `π x` then places this membership under `π x` itself, completing the forward lemma.
+With the pair `(m , sm)` now inhabiting `Fiber x`, the witness `wit` presents `π y` as a member of the set presented by `step x`: its index is this pair, and the path component is `cong π p`, identifying `π (⟪ x ⟫↪ m)` with `π y`. Transporting along the computation law of `π x` then places this membership under `π x` itself, completing the forward lemma.
 <!--zh-->
-此时对 `(m , sm)` 已 inhabit `Fiber x`，见证 `wit` 把 `π y` 展示为 `step x` 所呈现集合的成员：索引指名该纤维，路径分量是 `cong π p`，把 `π (⟪ x ⟫↪ m)` 与 `π y` 等同。再沿 `π x` 的计算律搬运，这个隶属便落在 `π x` 本身之下，前向引理完成。
+此时对 `(m , sm)` 已属于 `Fiber x`，见证 `wit` 把 `π y` 展示为 `step x` 所呈现集合的成员：索引就是这个对，路径分量是 `cong π p`，把 `π (⟪ x ⟫↪ m)` 与 `π y` 等同。再沿 `π x` 的计算律搬运，这个隶属便落在 `π x` 本身之下，前向引理完成。
 <!--ja-->
-組 `(m , sm)` が `Fiber x` を住むようになると、証拠 `wit` は `π y` を `step x` の提示する集合の要素として示す。インデックスがファイバーを名指し、パス成分は `cong π p` で、`π (⟪ x ⟫↪ m)` を `π y` と同一視する。`π x` の計算規則に沿って輸送すれば、この所属は `π x` 自身の下に置かれ、順方向の補題が完成する。
+組 `(m , sm)` が `Fiber x` を住むようになると、証拠 `wit` は `π y` を `step x` の提示する集合の要素として示す。インデックスはこの組そのものであり、パス成分は `cong π p` で、`π (⟪ x ⟫↪ m)` を `π y` と同一視する。`π x` の計算規則に沿って輸送すれば、この所属は `π x` 自身の下に置かれ、順方向の補題が完成する。
 <!--/-->
 
 ```agda
@@ -385,17 +385,17 @@ With the pair `(m , sm)` now inhabiting `Fiber x`, the witness `wit` presents `�
 ```
 
 <!--en-->
-## Extensionality and the collapse isomorphism
+## Extensionality and the collapse [isomorphism]{.term-ref #structure-isomorphism}
 
-With the transitive range in place, the remaining question is whether the carrier survives the collapse without merging. This section assumes the carrier's structure extensionality `isExt X` and proves that `π` is injective on `X`, and consequently that membership between carrier elements agrees in both directions with membership between their collapse values. The key move is a recovery lemma: from `⟨ π z ∈ˢ π x ⟩` and a comparison principle, it reconstructs `z ∈ᵗ x`. Only extensionality enters here; no transitivity of the carrier is needed, since the memberships that a transitivity argument would supply are already carried by the fibers or by the quantification built into `isExt X`.
+With the transitive range in place, the remaining question is whether the carrier survives the collapse without merging. This section assumes the carrier's structure extensionality `isExt X` and proves that `π` is injective on `X`, and consequently that membership between carrier elements agrees in both directions with membership between their collapse values. The key move is a recovery lemma: from `⟨ π z ∈ˢ π x ⟩` and a comparison principle, it reconstructs `z ∈ᵗ x`. Only extensionality enters here; no transitivity of the carrier is needed, since the memberships that a transitivity argument would supply are already carried by the index pairs or by the quantification built into `isExt X`.
 <!--zh-->
-## 外延性与塌缩同构
+## 外延性与塌缩[同构]{.term-ref #structure-isomorphism}
 
-传递的像就位之后，剩下的问题是载体在塌缩下是否不会合并。本节假设载体的结构外延性 `isExt X`，证明 `π` 在 `X` 上单射，从而载体元素之间的隶属与其塌缩值之间的隶属双向一致。关键一步是恢复引理：从 `⟨ π z ∈ˢ π x ⟩` 与一个比较原理出发，它重构 `z ∈ᵗ x`。这里只有外延性登场；不需要载体的传递性，因为传递性论证本可提供的隶属已由纤维或 `isExt X` 内部的量化携带。
+传递的像就位之后，剩下的问题是载体在塌缩下是否不会合并。本节假设载体的结构外延性 `isExt X`，证明 `π` 在 `X` 上单射，从而载体元素之间的隶属与其塌缩值之间的隶属双向一致。关键一步是恢复引理：从 `⟨ π z ∈ˢ π x ⟩` 与一个比较原理出发，它重构 `z ∈ᵗ x`。这里只有外延性登场；不需要载体的传递性，因为传递性论证本可提供的隶属已由索引对或 `isExt X` 内部的量化携带。
 <!--ja-->
-## 外延性と崩壊同型
+## 外延性と崩壊[同型]{.term-ref #structure-isomorphism}
 
-推移的な像が整ったところで、残る問いは、台が崩壊によって融合せずに済むかどうかである。この節では台の構造外延性 `isExt X` を仮定し、`π` が `X` 上で単射であること、したがって台の要素間の所属が崩壊値の間の所属と双方向に一致することを示す。鍵となるのは復元の補題である。`⟨ π z ∈ˢ π x ⟩` と比較の原理から `z ∈ᵗ x` を再構成する。ここで使われるのは外延性だけで、台の推移性は不要である。推移性の議論が供給するはずだった所属は、すでにファイバーあるいは `isExt X` の内部の量化によって担われているからである。
+推移的な像が整ったところで、残る問いは、台が崩壊によって融合せずに済むかどうかである。この節では台の構造外延性 `isExt X` を仮定し、`π` が `X` 上で単射であること、したがって台の要素間の所属が崩壊値の間の所属と双方向に一致することを示す。鍵となるのは復元の補題である。`⟨ π z ∈ˢ π x ⟩` と比較の原理から `z ∈ᵗ x` を再構成する。ここで使われるのは外延性だけで、台の推移性は不要である。推移性の議論が供給するはずだった所属は、すでにインデックスの組あるいは `isExt X` の内部の量化によって担われているからである。
 <!--/-->
 
 <!--en-->
@@ -415,11 +415,11 @@ The recovery lemma takes two inputs. The first is the truncated statement `⟨ �
 ```
 
 <!--en-->
-Given a fiber `p` naming `b = ⟪ x ⟫↪ (p .fst)` as a member of `x`, with the collapse path `π b ≡ π z`, the comparison principle fires. Its hypotheses are discharged directly: `member x (p .fst)` proves `b ∈ᵗ x`, and the second component of `∈∈ₛ` converts the fiber's carrier-membership certificate into `b ∈ᵗ X`. The conclusion `b ≡ z` transports the membership certificate `b ∈ᵗ x` to `z ∈ᵗ x`, which is exactly the goal.
+Given an index pair `p` naming `b = ⟪ x ⟫↪ (p .fst)` as a member of `x`, with the collapse path `π b ≡ π z`, the comparison principle fires. Its hypotheses are discharged directly: `member x (p .fst)` proves `b ∈ᵗ x`, and the second component of `∈∈ₛ` converts the index pair's carrier-membership certificate into `b ∈ᵗ X`. The conclusion `b ≡ z` transports the membership certificate `b ∈ᵗ x` to `z ∈ᵗ x`, which is exactly the goal.
 <!--zh-->
-给定指名 `b = ⟪ x ⟫↪ (p .fst)` 为 `x` 成员的纤维 `p` 以及塌缩路径 `π b ≡ π z`，比较原理即可触发。其假设直接得到满足：`member x (p .fst)` 证明 `b ∈ᵗ x`，而 `∈∈ₛ` 的第二分量把纤维的载体隶属证书转换为 `b ∈ᵗ X`。结论 `b ≡ z` 把隶属证书 `b ∈ᵗ x` 搬运为 `z ∈ᵗ x`，这正是目标。
+给定指名 `b = ⟪ x ⟫↪ (p .fst)` 为 `x` 成员的索引对 `p` 以及塌缩路径 `π b ≡ π z`，比较原理即可触发。其假设直接得到满足：`member x (p .fst)` 证明 `b ∈ᵗ x`，而 `∈∈ₛ` 的第二分量把索引对的载体隶属证书转换为 `b ∈ᵗ X`。结论 `b ≡ z` 把隶属证书 `b ∈ᵗ x` 搬运为 `z ∈ᵗ x`，这正是目标。
 <!--ja-->
-`x` の要素として `b = ⟪ x ⟫↪ (p .fst)` を名指すファイバー `p` と崩壊のパス `π b ≡ π z` が与えられると、比較の原理が発動する。その仮定は直接満たされる。`member x (p .fst)` が `b ∈ᵗ x` を証明し、`∈∈ₛ` の第二成分がファイバーの台への所属の証拠を `b ∈ᵗ X` に変換する。結論の `b ≡ z` は所属の証拠 `b ∈ᵗ x` を `z ∈ᵗ x` へと輸送し、これがまさに目標である。
+`x` の要素として `b = ⟪ x ⟫↪ (p .fst)` を名指すインデックスの組 `p` と崩壊のパス `π b ≡ π z` が与えられると、比較の原理が発動する。その仮定は直接満たされる。`member x (p .fst)` が `b ∈ᵗ x` を証明し、`∈∈ₛ` の第二成分がインデックスの組の台への所属の証拠を `b ∈ᵗ X` に変換する。結論の `b ≡ z` は所属の証拠 `b ∈ᵗ x` を `z ∈ᵗ x` へと輸送し、これがまさに目標である。
 <!--/-->
 
 ```agda
@@ -561,19 +561,19 @@ No new argument is needed: membership induction on the ambient hierarchy produce
 ```
 
 <!--en-->
-With injectivity in hand, the backward direction of the isomorphism follows immediately: a collapsed membership can be traced back to a genuine membership in the carrier.
+With injectivity in hand, the backward direction of the [isomorphism]{.term-ref #structure-isomorphism} follows immediately: a collapsed membership can be traced back to a genuine membership in the carrier.
 <!--zh-->
-有了单射性，同构的反向立即得到：塌缩的隶属可以追溯到载体中真正的隶属。
+有了单射性，[同构]{.term-ref #structure-isomorphism}的反向立即得到：塌缩的隶属可以追溯到载体中真正的隶属。
 <!--ja-->
-単射性が得られたので、同型の逆向きは直ちに従う。崩壊された所属は、台の中の本物の所属へとたどれる。
+単射性が得られたので、[同型]{.term-ref #structure-isomorphism}の逆向きは直ちに従う。崩壊された所属は、台の中の本物の所属へとたどれる。
 <!--/-->
 
 <!--en-->
-Given `⟨ π y ∈ˢ π x ⟩`, the recovery lemma eliminates a merely existing presentation witness: from a fiber naming some `b ∈ᵗ x` with `π b ≡ π y`, it produces `b ≡ y`, because the comparison clause supplied here applies `π-inj` to conclude the equality outright. Injectivity is what identifies the recovered carrier element with `y`. Transporting the membership certificate of `b` along that path then yields `y ∈ᵗ x`. The elimination is licensed because its target `y ∈ᵗ x` is itself a proposition, being the underlying type of the proposition-valued membership; the witness `b` is never chosen as data, and the conclusion is only the propositional membership statement.
+Given `⟨ π y ∈ˢ π x ⟩`, the recovery lemma eliminates a merely existing presentation witness: from an index pair naming some `b ∈ᵗ x` with `π b ≡ π y`, it produces `b ≡ y`, because the comparison clause supplied here applies `π-inj` to conclude the equality outright. Injectivity is what identifies the recovered carrier element with `y`. Transporting the membership certificate of `b` along that path then yields `y ∈ᵗ x`. The elimination is licensed because its target `y ∈ᵗ x` is itself a proposition, being the underlying type of the proposition-valued membership; the witness `b` is never chosen as data, and the conclusion is only the propositional membership statement.
 <!--zh-->
-给定 `⟨ π y ∈ˢ π x ⟩`，恢复引理对仅仅存在的呈现见证进行消去：从指名某个 `b ∈ᵗ x` 且满足 `π b ≡ π y` 的纤维出发，它给出 `b ≡ y`，因为这里供给的比较子句直接应用 `π-inj` 得出该等式。正是单射性把恢复出的载体元素与 `y` 等同起来。再沿这条路径搬运 `b` 的隶属证书，便得到 `y ∈ᵗ x`。这一消去是合法的，因为其目标 `y ∈ᵗ x` 本身是命题，即命题值隶属的底层类型；见证 `b` 从未被选为数据，结论也只是这条命题值的隶属陈述。
+给定 `⟨ π y ∈ˢ π x ⟩`，恢复引理对仅仅存在的呈现见证进行消去：从指名某个 `b ∈ᵗ x` 且满足 `π b ≡ π y` 的索引对出发，它给出 `b ≡ y`，因为这里供给的比较子句直接应用 `π-inj` 得出该等式。正是单射性把恢复出的载体元素与 `y` 等同起来。再沿这条路径搬运 `b` 的隶属证书，便得到 `y ∈ᵗ x`。这一消去是合法的，因为其目标 `y ∈ᵗ x` 本身是命题，即命题值隶属的底层类型；见证 `b` 从未被选为数据，结论也只是这条命题值的隶属陈述。
 <!--ja-->
-`⟨ π y ∈ˢ π x ⟩` が与えられると、復元の補題は単に存在する提示の証拠を消去する。ある `b ∈ᵗ x` が `π b ≡ π y` を満たすことを名指すファイバーから、`b ≡ y` を得る。ここで供する比較の節が `π-inj` を適用して等式そのものを出すからである。復元された台の要素と `y` を同一視するのは、まさにこの単射性である。続いて `b` の所属の証拠をこのパスに沿って輸送すれば `y ∈ᵗ x` が得られる。この消去が正当なのは、目標の `y ∈ᵗ x` が命題値の所属の底にある型としてそれ自身命題だからである。証拠 `b` がデータとして選ばれることはなく、結論も命題値の所属の主張にとどまる。
+`⟨ π y ∈ˢ π x ⟩` が与えられると、復元の補題は単に存在する提示の証拠を消去する。ある `b ∈ᵗ x` が `π b ≡ π y` を満たすことを名指すインデックスの組から、`b ≡ y` を得る。ここで供する比較の節が `π-inj` を適用して等式そのものを出すからである。復元された台の要素と `y` を同一視するのは、まさにこの単射性である。続いて `b` の所属の証拠をこのパスに沿って輸送すれば `y ∈ᵗ x` が得られる。この消去が正当なのは、目標の `y ∈ᵗ x` が命題値の所属の底にある型としてそれ自身命題だからである。証拠 `b` がデータとして選ばれることはなく、結論も命題値の所属の主張にとどまる。
 <!--/-->
 
 ```agda
@@ -583,19 +583,19 @@ Given `⟨ π y ∈ˢ π x ⟩`, the recovery lemma eliminates a merely existing
 ```
 
 <!--en-->
-Assembling both directions gives the isomorphism reading of the collapse: on the carrier, membership and collapsed membership determine each other.
+Assembling both directions gives the [isomorphism]{.term-ref #structure-isomorphism} reading of the collapse: on the carrier, membership and collapsed membership determine each other.
 <!--zh-->
-把两个方向合起来便得到塌缩的同构解读：在载体上，隶属与塌缩后的隶属相互决定。
+把两个方向合起来便得到塌缩的[同构]{.term-ref #structure-isomorphism}解读：在载体上，隶属与塌缩后的隶属相互决定。
 <!--ja-->
-両方向を組み合わせると、崩壊の同型としての読みが得られる。台の上では、所属と崩壊された所属が互いを定める。
+両方向を組み合わせると、崩壊の[同型]{.term-ref #structure-isomorphism}としての読みが得られる。台の上では、所属と崩壊された所属が互いを定める。
 <!--/-->
 
 <!--en-->
-The packaged result is a pair of implications, not an equivalence type: from `⟨ y ∈ˢ x ⟩` to `⟨ π y ∈ˢ π x ⟩` via the forward lemma, and back via `π∈-bwd`. This is the precise sense in which the collapse is an isomorphism on the carrier: it preserves and reflects membership among elements of `X`, and by `π-inj` it is injective there.
+The packaged result is a pair of implications, not an equivalence type: from `⟨ y ∈ˢ x ⟩` to `⟨ π y ∈ˢ π x ⟩` via the forward lemma, and back via `π∈-bwd`. This is the precise sense in which the collapse is an [isomorphism]{.term-ref #structure-isomorphism} on the carrier: it preserves and reflects membership among elements of `X`, and by `π-inj` it is injective there.
 <!--zh-->
-打包的结果是一对蕴含，而非等价类型：由 `⟨ y ∈ˢ x ⟩` 经前向引理到 `⟨ π y ∈ˢ π x ⟩`，再经 `π∈-bwd` 返回。这就是塌缩在载体上构成同构的精确含义：它保持且反映 `X` 的元素之间的隶属，并由 `π-inj` 在其上单射。
+打包的结果是一对蕴含，而非等价类型：由 `⟨ y ∈ˢ x ⟩` 经前向引理到 `⟨ π y ∈ˢ π x ⟩`，再经 `π∈-bwd` 返回。这就是塌缩在载体上构成[同构]{.term-ref #structure-isomorphism}的精确含义：它保持且反映 `X` 的元素之间的隶属，并由 `π-inj` 在其上单射。
 <!--ja-->
-まとめられた結果は、同値の型ではなく一対の含意である。`⟨ y ∈ˢ x ⟩` から順方向の補題経由で `⟨ π y ∈ˢ π x ⟩` へ、そして `π∈-bwd` 経由で戻るものである。崩壊が台の上で同型であるということの正確な意味はこれである。`X` の要素の間の所属を保ちかつ反映し、`π-inj` によりその上で単射である。
+まとめられた結果は、同値の型ではなく一対の含意である。`⟨ y ∈ˢ x ⟩` から順方向の補題経由で `⟨ π y ∈ˢ π x ⟩` へ、そして `π∈-bwd` 経由で戻るものである。崩壊が台の上で[同型]{.term-ref #structure-isomorphism}であるということの正確な意味はこれである。`X` の要素の間の所属を保ちかつ反映し、`π-inj` によりその上で単射である。
 <!--/-->
 
 ```agda
@@ -645,11 +645,11 @@ The induction step chains three paths. Starting from `π-compute x`, the left si
 ```
 
 <!--en-->
-The middle path itself is congruence applied to the presenting function: `sett` is held fixed while the indexing function changes from `λ p → π (⋯)` to `λ p → f (⋯)`, and `funExt` supplies pointwise equality of these two functions. Each point is an instance of the induction hypothesis, applied at the member named by the fiber `p`, with the membership certificate `member x (p .fst)` justifying the recursive call. This is the standard uniqueness argument for definitions by well-founded recursion, adapted to the presented-set constructor.
+The middle path itself is congruence applied to the presenting function: `sett` is held fixed while the indexing function changes from `λ p → π (⋯)` to `λ p → f (⋯)`, and `funExt` supplies pointwise equality of these two functions. Each point is an instance of the induction hypothesis, applied at the member named by the index pair `p`, with the membership certificate `member x (p .fst)` justifying the recursive call. This is the standard uniqueness argument for definitions by well-founded recursion, adapted to the presented-set constructor.
 <!--zh-->
-中间路径本身是对呈现函数应用同余性：保持 `sett` 固定，索引函数从 `λ p → π (⋯)` 变为 `λ p → f (⋯)`，`funExt` 提供这两个函数的逐点相等。每一点都是归纳假设的实例，作用于纤维 `p` 所指名的成员，并由隶属证书 `member x (p .fst)` 保证递归调用合法。这是良基递归定义的标准唯一性论证，适配到呈现集合的构造子上。
+中间路径本身是对呈现函数应用同余性：保持 `sett` 固定，索引函数从 `λ p → π (⋯)` 变为 `λ p → f (⋯)`，`funExt` 提供这两个函数的逐点相等。每一点都是归纳假设的实例，作用于索引对 `p` 所指名的成员，并由隶属证书 `member x (p .fst)` 保证递归调用合法。这是良基递归定义的标准唯一性论证，适配到呈现集合的构造子上。
 <!--ja-->
-途中のパスそのものは、提示する関数への同一性 (congruence) の適用である。`sett` を固定したまま、インデックス関数を `λ p → π (⋯)` から `λ p → f (⋯)` へ替え、`funExt` がこの二つの関数の各点での等しさを供給する。各点は帰納法の仮定の具体例であり、ファイバー `p` が名指す要素に適用され、所属の証拠 `member x (p .fst)` が再帰呼び出しを正当化する。これは整礎再帰による定義の標準的な一意性の議論を、集合を提示する構成子に合わせたものである。
+途中のパスそのものは、提示する関数への同一性 (congruence) の適用である。`sett` を固定したまま、インデックス関数を `λ p → π (⋯)` から `λ p → f (⋯)` へ替え、`funExt` がこの二つの関数の各点での等しさを供給する。各点は帰納法の仮定の具体例であり、インデックスの組 `p` が名指す要素に適用され、所属の証拠 `member x (p .fst)` が再帰呼び出しを正当化する。これは整礎再帰による定義の標準的な一意性の議論を、集合を提示する構成子に合わせたものである。
 <!--/-->
 
 ```agda
@@ -684,11 +684,11 @@ The statement combines the two carrier-side data: the inclusion `⟨ Y ⊆ X ⟩
 ```
 
 <!--en-->
-The step compares the two sets through `extensionalV`, the extensionality principle of the hierarchy itself: two sets are equal once they have the same members, formulated here as a family of paths obtained from biconditionals. The direction `to` shows that members of the collapsed set are already members of `y`, and it starts by eliminating the truncated membership `xπ` after transporting it along the computation law, exposing a fiber of `Fiber y` together with the path `π` of the named member equaling `x`.
+The step compares the two sets through `extensionalV`, the extensionality principle of the hierarchy itself: two sets are equal once they have the same members, formulated here as a family of paths obtained from biconditionals. The direction `to` shows that members of the collapsed set are already members of `y`, and it starts by eliminating the truncated membership `xπ` after transporting it along the computation law, exposing an element of `Fiber y` together with the path `π` of the named member equaling `x`.
 <!--zh-->
-归纳步通过 `extensionalV` 比较两个集合，这是层级自身的外延性原理：只要成员相同两个集合便相等，这里表述为由双向蕴含生成的路径族。方向 `to` 说明塌缩集合的成员已是 `y` 的成员；证明先把截断隶属 `xπ` 沿计算律搬运，再用 `rec₁` 消去，露出 `Fiber y` 的一个纤维以及指名成员的 `π` 值等于 `x` 的路径。
+归纳步通过 `extensionalV` 比较两个集合，这是层级自身的外延性原理：只要成员相同两个集合便相等，这里表述为由双向蕴含生成的路径族。方向 `to` 说明塌缩集合的成员已是 `y` 的成员；证明先把截断隶属 `xπ` 沿计算律搬运，再用 `rec₁` 消去，露出 `Fiber y` 的一个索引对以及指名成员的 `π` 值等于 `x` 的路径。
 <!--ja-->
-ステップは `extensionalV`、すなわち階層そのものの外延性の原理によって二つの集合を比較する。要素が同じなら集合は等しいというもので、ここでは双条件から作られるパスの族として定式化されている。向き `to` は、崩壊された集合の要素がすでに `y` の要素であることを示し、まず切り詰められた所属 `xπ` を計算規則に沿って輸送してから消去し、`Fiber y` のファイバーと、名指しされた要素の `π` 値が `x` に等しいパスを取り出す。
+ステップは `extensionalV`、すなわち階層そのものの外延性の原理によって二つの集合を比較する。要素が同じなら集合は等しいというもので、ここでは双条件から作られるパスの族として定式化されている。向き `to` は、崩壊された集合の要素がすでに `y` の要素であることを示し、まず切り詰められた所属 `xπ` を計算規則に沿って輸送してから消去し、`Fiber y` のインデックスの組と、名指しされた要素の `π` 値が `x` に等しいパスを取り出す。
 <!--/-->
 
 ```agda
@@ -700,11 +700,11 @@ The step compares the two sets through `extensionalV`, the extensionality princi
 ```
 
 <!--en-->
-Given such a fiber, the named member `⟪ y ⟫↪ (p .fst)` is a member of `y` that lies in `Y` by transitivity, so the induction hypothesis applies to it and fixes it: `π` of it equals itself. Composing the symmetry of this fixed-point path with the collapse path `q` produces a path from the named member to `x`, and transporting the membership certificate along it lands at `x ∈ᵗ y`.
+Given such an index pair, the named member `⟪ y ⟫↪ (p .fst)` is a member of `y` that lies in `Y` by transitivity, so the induction hypothesis applies to it and fixes it: `π` of it equals itself. Composing the symmetry of this fixed-point path with the collapse path `q` produces a path from the named member to `x`, and transporting the membership certificate along it lands at `x ∈ᵗ y`.
 <!--zh-->
-给定这样的纤维，所指名的成员 `⟪ y ⟫↪ (p .fst)` 是 `y` 的成员且由传递性属于 `Y`，归纳假设适用于它并将其固定：它的 `π` 值等于它自身。把这个不动点路径的对称与塌缩路径 `q` 复合，得到从指名成员到 `x` 的路径，沿它搬运隶属证书便落在 `x ∈ᵗ y`。
+给定这样的索引对，所指名的成员 `⟪ y ⟫↪ (p .fst)` 是 `y` 的成员且由传递性属于 `Y`，归纳假设适用于它并将其固定：它的 `π` 值等于它自身。把这个不动点路径的对称与塌缩路径 `q` 复合，得到从指名成员到 `x` 的路径，沿它搬运隶属证书便落在 `x ∈ᵗ y`。
 <!--ja-->
-そのようなファイバーが与えられると、名指しされた要素 `⟪ y ⟫↪ (p .fst)` は `y` の要素であり、推移性により `Y` にも属するので、帰納法の仮定が適用されてそれを固定する。つまりその `π` 値はそれ自身と等しい。この不動点のパスの対称と崩壊のパス `q` を合成すれば、名指しされた要素から `x` へのパスが得られ、所属の証拠をそれに沿って輸送すれば `x ∈ᵗ y` に着地する。
+そのようなインデックスの組が与えられると、名指しされた要素 `⟪ y ⟫↪ (p .fst)` は `y` の要素であり、推移性により `Y` にも属するので、帰納法の仮定が適用されてそれを固定する。つまりその `π` 値はそれ自身と等しい。この不動点のパスの対称と崩壊のパス `q` を合成すれば、名指しされた要素から `x` へのパスが得られ、所属の証拠をそれに沿って輸送すれば `x ∈ᵗ y` に着地する。
 <!--/-->
 
 ```agda

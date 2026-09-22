@@ -27,6 +27,16 @@ class LiteraryExpositionTests(unittest.TestCase):
  def test_shared_disclosure_wrappers_and_qed_are_structural(self):
   text='<details class="agda-proof-details">\n'+group()+'```agda\na\n```\n</details>\n∎\n'
   self.assertNotIn('shared-prose',rules(text))
+ def test_default_open_optional_wrapper_is_structural_but_its_prose_is_not(self):
+  opening='<details open class="optional-reading" aria-labelledby="example-title">\n'
+  text=opening+group()+'```agda\na\n```\n</details>\n∎\n'
+  self.assertNotIn('shared-prose',rules(text))
+  self.assertIn('shared-prose',rules(opening+'Untranslated explanation.\n\n'+group()+'```agda\na\n```\n</details>\n'))
+ def test_shared_figure_markup_is_neutral_but_visible_text_is_checked(self):
+  svg='<figure id="example"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="4"/></svg></figure>\n'
+  self.assertNotIn('shared-prose',rules(svg+group()+'```agda\na\n```\n'))
+  caption='<figure><figcaption>Untranslated caption.</figcaption></figure>\n'
+  self.assertIn('shared-prose',rules(caption+group()+'```agda\na\n```\n'))
  def test_commentary_cannot_hide_inside_code(self):
   self.assertIn('prose-in-code',rules(group()+'```agda\na = 0\n-- explanation\n```\n'))
  def test_machine_import_directive_is_preserved(self):

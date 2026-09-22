@@ -3,7 +3,7 @@
 
 A first-order language about sets has two primitive predicates: equality and membership. To interpret it, we must choose what its variables range over and what those two predicates mean there. A `ZFStructure`{.Agda} packages exactly this data: a carrier of "sets", together with proposition-valued interpretations of equality and membership. The record demands that the carrier be an h-set and nothing more; no ZF axiom is built in.
 
-Because both relations take values in `hProp`{.Agda}, each atomic statement has an underlying type whose inhabitants are its proofs. A class over the carrier can therefore be used to cut out a smaller structure: `Transitive`{.Agda} expresses that members of members of a class stay in the class, and the restriction `𝒮 ↾ M` turns the class into the carrier of a new structure of dependent pairs. Since the membership fibers are propositions, that pair carrier is again an h-set, and equality of first projections already determines equality of the pairs.
+Because both relations take values in `hProp`{.Agda}, each atomic statement has an underlying type whose inhabitants are its proofs. A class over the carrier can therefore be used to cut out a smaller structure: `Transitive`{.Agda} expresses that members of members of a class stay in the class, and the restriction `𝒮 ↾ M` turns the class into the carrier of a new structure of dependent pairs. Since the membership proof types are propositions, that pair carrier is again an h-set, and equality of first projections already determines equality of the pairs.
 
 Three membership notations must be kept apart throughout: the host-level class membership `∈ᶜ`{.Agda}, which tests whether a carrier element satisfies a predicate `M`; the proposition-valued structure membership `∈ˢ`{.Agda}; and the object-language membership symbol `∈̇`{.Agda} introduced in "The object language", which is only given meaning once a structure interprets it.
 <!--zh-->
@@ -11,7 +11,7 @@ Three membership notations must be kept apart throughout: the host-level class m
 
 关于集合的一阶语言有两个初始谓词：等词与隶属。要解释它，就必须选定变量的取值范围，以及这两个谓词在那里分别指什么。`ZFStructure`{.Agda} 正是打包这些数据：一个由「集合」组成的载体，加上等词与隶属的命题值解释。这个 record 只要求载体是 h-集合，别无其他；其中不内置任何 ZF 公理。
 
-两个关系都取值于 `hProp`{.Agda}，因此每条原子陈述都有一个底层类型，其元素就是该陈述的证明。载体上的类也因而可以用来裁出较小的结构：`Transitive`{.Agda} 表达类的元素之元素仍留在类中，限制 `𝒮 ↾ M` 则把类变成一个由依值对组成的新结构的载体。由于各隶属纤维都是命题，这个对载体仍是 h-集合，且第一投影的相等已经决定整个对的相等。
+两个关系都取值于 `hProp`{.Agda}，因此每条原子陈述都有一个底层类型，其元素就是该陈述的证明。载体上的类也因而可以用来裁出较小的结构：`Transitive`{.Agda} 表达类的元素之元素仍留在类中，限制 `𝒮 ↾ M` 则把类变成一个由依值对组成的新结构的载体。由于各隶属证明类型都是命题，这个对载体仍是 h-集合，且第一投影的相等已经决定整个对的相等。
 
 全章要区分三种隶属记号：宿主层的类隶属 `∈ᶜ`{.Agda}，检验载体元素是否满足谓词 `M`；取命题值的结构隶属 `∈ˢ`{.Agda}；以及「对象语言」一章语法中的隶属符号 `∈̇`{.Agda}，只有在结构给出解释之后它才有意义。
 <!--ja-->
@@ -19,7 +19,7 @@ Three membership notations must be kept apart throughout: the host-level class m
 
 集合についての一階言語には、等号と所属という二つの原始述語がある。これを解釈するには、変数が何を渡り歩くかを定め、その二つの述語がそこで何を意味するかを指定しなければならない。`ZFStructure`{.Agda} はまさにこのデータをまとめる。すなわち「集合」からなる台と、等号と所属の命題値の解釈である。レコードが要求するのは台が h-集合であることだけで、ZF の公理は組み込まれていない。
 
-二つの関係はどちらも `hProp`{.Agda} に値を取るので、各原子文には証明を要素とする基礎型がある。台の上のクラスは、それによってより小さな構造を切り出すのに使える。`Transitive`{.Agda} はクラスの要素の要素が再びそのクラスに属することを表し、制限 `𝒮 ↾ M` はクラスを依存対からなる新しい構造の台に変える。所属の各ファイバーが命題であるため、この対の台は再び h-集合であり、第一射影の等しさだけで対全体の等しさが定まる。
+二つの関係はどちらも `hProp`{.Agda} に値を取るので、各原子文には証明を要素とする基礎型がある。台の上のクラスは、それによってより小さな構造を切り出すのに使える。`Transitive`{.Agda} はクラスの要素の要素が再びそのクラスに属することを表し、制限 `𝒮 ↾ M` はクラスを依存対からなる新しい構造の台に変える。各所属の証明の型が命題であるため、この対の台は再び h-集合であり、第一射影の等しさだけで対全体の等しさが定まる。
 
 全章を通して三つの所属の記法を区別しなければならない。ホストレベルのクラス所属 `∈ᶜ`{.Agda} は、台の要素が述語 `M` を満たすかを調べる。構造の所属 `∈ˢ`{.Agda} は命題に値を持つフィールドである。そして「対象言語」の章の構文にある対象言語の所属記号 `∈̇`{.Agda} は、構造が解釈を与えて初めて意味を持つ。
 <!--/-->
@@ -42,11 +42,11 @@ open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 ```
 
 <!--en-->
-The relations of a structure are propositions, so their underlying types may be inhabited by proofs. Gathering the carrier elements that satisfy a class forms a dependent pair type. The carrier `S` being an h-set does not automatically make such a pair type an h-set; what saves it is that each fiber, the membership evidence at a fixed element, is a proposition, so no two distinct proofs can separate otherwise equal pairs.
+The relations of a structure are propositions, so their underlying types may be inhabited by proofs. Gathering the carrier elements that satisfy a class forms a dependent pair type. The carrier `S` being an h-set does not automatically make such a pair type an h-set; what saves it is that the membership evidence at each fixed element is a proposition, so no two distinct proofs can separate otherwise equal pairs.
 <!--zh-->
-结构中的关系是命题，因此可以用证明占据其底层类型。把满足一个类的载体元素汇集起来，便得到依值对类型。载体 `S` 是 h-集合并不自动保证这样的对类型也是 h-集合；关键在于每个纤维，也就是固定元素处的隶属证据，都是命题，因此不会有两组不同的证明把本应相等的对拆开。
+结构中的关系是命题，因此可以用证明占据其底层类型。把满足一个类的载体元素汇集起来，便得到依值对类型。载体 `S` 是 h-集合并不自动保证这样的对类型也是 h-集合；关键在于每个固定元素处的隶属证据都是命题，因此不会有两组不同的证明把本应相等的对拆开。
 <!--ja-->
-構造の関係は命題なので、その基礎型を証明によって満たせる。クラスを満たす台の要素を集めると、依存対の型が得られる。台 `S` が h-集合でも、そのような対の型が h-集合になるとは限らない。これを保証するのは、各ファイバー、すなわち固定した要素での所属の証拠が命題であることで、異なる二組の証拠が本来等しいはずの対を引き裂くことはない。
+構造の関係は命題なので、その基礎型を証明によって満たせる。クラスを満たす台の要素を集めると、依存対の型が得られる。台 `S` が h-集合でも、そのような対の型が h-集合になるとは限らない。これを保証するのは、固定した各要素での所属の証拠が命題であることで、異なる二組の証拠が本来等しいはずの対を引き裂くことはない。
 <!--/-->
 
 ```agda
@@ -211,11 +211,11 @@ Given a proposition-valued class `M`, we can now cut a structure down to the par
 <!--/-->
 
 <!--en-->
-The new carrier is the Σ-type `Σ[ x ∈ S ] (x ∈ᶜ M)`: an inhabitant is a pair of an underlying carrier element and membership evidence in `M`, so restricting does not collect `M` into a set, it only changes which pairs count as elements. The record's `isSetS` field still must be filled, and here the fiber-wise fact from the chapter opening does the work: since each `M x` is a proposition by its second component, `isSetΣSndProp`{.Agda} applied to `isSetS` proves that this pair type is again an h-set.
+The new carrier is the Σ-type `Σ[ x ∈ S ] (x ∈ᶜ M)`: an inhabitant is a pair of an underlying carrier element and membership evidence in `M`, so restricting does not collect `M` into a set, it only changes which pairs count as elements. The record's `isSetS` field still must be filled, and here the pointwise fact from the chapter opening does the work: since each `M x` is a proposition by its second component, `isSetΣSndProp`{.Agda} applied to `isSetS` proves that this pair type is again an h-set.
 <!--zh-->
-新载体是 Σ 类型 `Σ[ x ∈ S ] (x ∈ᶜ M)`：其元素是「底层载体元素配上 `M` 的成员证据」的对，因此限制并不把 `M` 收集成一个集合，只是改变哪些对算作元素。record 的 `isSetS` 字段仍须填写，这里正是章首那条逐纤维的事实起作用：由于每个 `M x` 凭第二分量是命题，把 `isSetΣSndProp`{.Agda} 作用于 `isSetS` 便证明这个对类型仍是 h-集合。
+新载体是 Σ 类型 `Σ[ x ∈ S ] (x ∈ᶜ M)`：其元素是「底层载体元素配上 `M` 的成员证据」的对，因此限制并不把 `M` 收集成一个集合，只是改变哪些对算作元素。record 的 `isSetS` 字段仍须填写，这里正是章首那条逐点的事实起作用：由于每个 `M x` 凭第二分量是命题，把 `isSetΣSndProp`{.Agda} 作用于 `isSetS` 便证明这个对类型仍是 h-集合。
 <!--ja-->
-新しい台は Σ 型 `Σ[ x ∈ S ] (x ∈ᶜ M)` である。その要素は「元となる台の要素と `M` への所属の証拠」の対であり、したがって制限は `M` を集合に集めるのではなく、どの対を要素とみなすかを変えるだけである。レコードの `isSetS` フィールドは依然として埋める必要があり、ここで章の冒頭のファイバーごとの事実が働く。各 `M x` は第二成分によって命題なので、`isSetS` に `isSetΣSndProp`{.Agda} を適用すれば、この対の型が再び h-集合であることが示される。
+新しい台は Σ 型 `Σ[ x ∈ S ] (x ∈ᶜ M)` である。その要素は「元となる台の要素と `M` への所属の証拠」の対であり、したがって制限は `M` を集合に集めるのではなく、どの対を要素とみなすかを変えるだけである。レコードの `isSetS` フィールドは依然として埋める必要があり、ここで章の冒頭の各点での事実が働く。各 `M x` は第二成分によって命題なので、`isSetS` に `isSetΣSndProp`{.Agda} を適用すれば、この対の型が再び h-集合であることが示される。
 <!--/-->
 
 ```agda

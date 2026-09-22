@@ -101,7 +101,28 @@ Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`. A
 construction, fact, lemma, theorem or corollary developed through prose and code ends its proof
 with a standalone `∎` after the final proof code block. Explanatory prose may follow the mark and
 is then outside the proof. A construction or lemma nested inside that proof, such as one inside
-its disclosure block, has no separate `∎`; the enclosing proof's mark follows the closing block.
+its disclosure or optional-reading block, has no separate `∎`; the enclosing
+proof's mark follows the closing block.
+
+## Optional reading
+
+Use `<details open class="optional-reading" aria-labelledby="unique-title-id">` for an
+optional mathematical construction that is expanded by default and can be collapsed. Its
+first child in each language is `<summary class="optional-reading-title" id="unique-title-id">`
+with the prefix `Optional:`, `选读：` or `発展：`, respectively. Keep the shared wrapper
+outside the language groups and the title and prose inside them. The renderer gives
+the block a small inset, a muted background and a left rule. Keep the required `open`
+attribute and use the native summary to toggle it with pointer or keyboard. Do not
+add `hidden`, `display:none`, an extra toggle button or persisted collapsed state.
+The first sentence should pick up the object used in the enclosing argument.
+
+Short ancillary interface explanations may still use `details.prose-disclosure`,
+as in the Prelude's compiler options. They use the same localized title prefixes.
+`lint-prose.py` checks those prefixes, requires `details.optional-reading` to have
+`open`, and treats the block as a nested proof
+scope; `check-literary-exposition.py` treats its wrapper as neutral structure while
+continuing to check the prose in it. See [renderer recipes](RENDERER-RECIPES.md)
+for the canonical markup and first uses of all reusable styles.
 
 ## Inline Agda references in prose
 
@@ -143,6 +164,79 @@ LaTeX.
 
 ## Math
 
+In the book's type-theoretic exposition, write `=` for judgmental equality and
+`≡` for path equality. A defining equation uses `=` where other texts often use
+`:=`; judgmental equality also covers equality by computation, so do not identify
+it solely with the act of assigning a definition. A path `p : x ≡ y` is an
+inhabitant of an equality type, whereas judgmental equality is a judgment of the
+type system. Introduce this convention in Base.Prelude, Equality and paths.
+
 Use bare Unicode for single symbols where possible. Reserve LaTeX for real expressions:
 `$...$` inline and `$$...$$` (kept blank-line-separated) for display. Math is rendered at
 build time by KaTeX; both GitHub and the standard Agda toolchain also pass it through.
+Choose inline code or LaTeX by the notation used, not by whether the passage is
+mathematical. Expressions following Agda conventions, such as `x ≡ y`,
+`p : x ≡ y`, `refl`, and references to Agda variables, keep inline code styling.
+The book's Agda-style defining `=` also keeps that styling. Use inline LaTeX for
+ordinary mathematical notation being contrasted with Agda, such as `$x = y$`,
+`$\mathrel{:=}$`, or a lambda expression written with a dot rather than Agda's
+arrow. Do not convert a mixed passage wholesale to either format.
+
+In diagrams, arrowheads are reserved for functions and their action on elements.
+Do not use them merely to connect related objects. Use equivalence notation for
+equivalences, and unarrowed dashed lines for grouping or
+assembling data. This is a reader preference established on 2026-09-22.
+Draw ordinary paths as blue lines without arrowheads, with white endpoint dots. Use a blue
+outline around the dots so they remain visible in a light theme. Equality signs
+remain appropriate inside formulas; a diagram's path connection uses this visual
+style instead. The constant path `refl` is represented by a single endpoint,
+not a nontrivial loop. Higher paths such as `p ≡ q` are exempt from this visual
+rule; a filled region or an equality label may express them instead.
+
+## Shared diagram components
+
+Every textbook figure uses `book-diagram`, a stable `fig-*` id, and a direct
+`figcaption` with explicit English, Chinese and Japanese text. Its
+`aria-describedby` points to `fig-id-caption`. Put the relevant explanation
+and hypotheses before the figure; use the caption for a short, recognizable
+takeaway. Do not introduce the next topic in a caption. Separate successive
+figures with substantive prose, without adding formulaic transition paragraphs.
+
+Keep the `figure` element itself unframed. When an enclosing frame is needed, put
+`diagram-framed` on one direct child `div` containing the diagram's formulas, spaces
+and labels, as in `fig-proposition-and-proof`. Put the overall description in a
+following sibling `figcaption`, always outside the frame. The frame is not a type space.
+`check-diagrams.py` rejects framing the figure/caption or putting the caption inside
+the content wrapper. Do not imitate an older screenshot that violates this rule.
+Use `diagram-panel` for neutral layout panels,
+and `diagram-space` (HTML) or `diagram-space-shape` (SVG) for a mathematical
+type space. Do not nest decorative panels. The homotopy-level comparison has
+three panels and implication connectors, with no enclosing frame. Logical
+implication symbols remain appropriate between conditions; they are not paths.
+
+All visual tokens live in `site/static/bedrock.css`: 8px corners, 1px box
+borders, shared padding and gaps, theme-aware surfaces, blue paths, and white
+points. Chapter markup may set only label positions and aspect ratios inline.
+Figures scroll only with the page: never introduce an internal scroll container.
+Use responsive layout for narrow screens; display math inside figures keeps visible overflow.
+SVG geometry uses `viewBox`; its shared role classes are `diagram-path`,
+`diagram-point`, `diagram-map-line`, `diagram-map-tip`, `diagram-guide`,
+`diagram-centre-ring`, `diagram-higher-path`, `diagram-path-space`, and `diagram-space-shape`.
+Use `diagram-path-space` for a schematic family of fixed-endpoint paths; its
+shaded area denotes the family, not an inclusion into the ambient type.
+Each ordinary path's start and end must coincide with a `diagram-point`.
+`refl` may be a single point; higher paths may use a shaded region.
+
+`scripts/gate/check-diagrams.py` checks every chapter, and runs in `make lint`
+(therefore `make check`) and directly in the site renderer. It rejects missing
+captions, unstyled figures, ad hoc paint, missing path endpoints and nested
+decorative panels. Regression tests exercise rejected examples. This enforces
+the visual grammar, not the mathematical meaning of an arrow or the quality of
+the surrounding argument: those still require source review and desktop/mobile
+preview in all three languages. Extend the shared components when a new layout
+is needed; do not bypass the gate with a figure-local style.
+
+The 2026-09-22 styling pass used
+[UI UX Pro Max](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/.claude/skills/ui-ux-pro-max/SKILL.md),
+particularly its consistency, semantic color tokens, text reflow and readable
+responsive layout guidance. The book's mathematical conventions take precedence.

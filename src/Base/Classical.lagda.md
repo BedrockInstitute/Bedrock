@@ -111,31 +111,82 @@ lowerLEM : ∀ {ℓ} → LEM (ℓ-suc ℓ) → LEM ℓ
 <!--en-->
 **Proof** Let `lem : LEM (ℓ-suc ℓ)`{.Agda} be given, and fix `P : hProp ℓ`{.Agda}. The hypothesis cannot decide `P` directly because it expects a proposition at level `ℓ-suc ℓ`{.Agda}. We therefore form the higher-level proposition whose underlying type is `Lift ⟨ P ⟩`{.Agda}; its propositionhood certificate is `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda}. Applying `lem`{.Agda} to this pair decides the lifted copy of `P`.
 
-That decision is converted back to a decision of `P` in two cases:
-
-- A proof `x : Lift ⟨ P ⟩`{.Agda} yields the proof `lower x : ⟨ P ⟩`{.Agda}.
-- A refutation `np : Lift ⟨ P ⟩ → ⊥₀`{.Agda} yields a refutation of `P`: given `p : ⟨ P ⟩`{.Agda}, lift it and apply `np`{.Agda}, obtaining `np (lift p) : ⊥₀`{.Agda}.
-
-The function `mapDec`{.Agda} performs exactly these two conversions, producing the required `Dec ⟨ P ⟩`{.Agda}.
+The two panels below show how to turn that decision into `Dec ⟨ P ⟩`{.Agda}. The positive branch uses `lower`; the negative branch assumes a proof of `P` and refutes its lifted image. The function `mapDec`{.Agda} assembles these conversions.
 <!--zh-->
 **证明** 给定 `lem : LEM (ℓ-suc ℓ)`{.Agda}，并固定 `P : hProp ℓ`{.Agda}。`lem` 要求输入 `ℓ-suc ℓ`{.Agda} 层的命题，因而不能直接判定 `P`。为此，构造一个高层命题：其底层类型是 `Lift ⟨ P ⟩`{.Agda}，命题性证书是 `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda}。把这一对交给 `lem`{.Agda}，便得到 `P` 的抬升副本的判定。
 
-再分两种情形把该判定转回 `P` 的判定：
-
-- 若得到证明 `x : Lift ⟨ P ⟩`{.Agda}，则 `lower x : ⟨ P ⟩`{.Agda} 证明 `P`。
-- 若得到反驳 `np : Lift ⟨ P ⟩ → ⊥₀`{.Agda}，则它也能反驳 `P`：给定 `p : ⟨ P ⟩`{.Agda}，先将其抬升，再应用 `np`{.Agda}，便得到 `np (lift p) : ⊥₀`{.Agda}。
-
-`mapDec`{.Agda} 恰好完成这两种转换，由此给出所需的 `Dec ⟨ P ⟩`{.Agda}。
+下图的两个分支说明如何把这一判定转回 `Dec ⟨ P ⟩`{.Agda}：肯定分支使用 `lower`，否定分支则假设 `P` 的证明，并反驳其抬升后的像。函数 `mapDec`{.Agda} 把这两种转换合在一起。
 <!--ja-->
 **証明** `lem : LEM (ℓ-suc ℓ)`{.Agda} が与えられたとし、`P : hProp ℓ`{.Agda} を固定する。`lem` はレベル `ℓ-suc ℓ`{.Agda} の命題を要求するため、`P` を直接判定することはできない。そこで、基礎型を `Lift ⟨ P ⟩`{.Agda}、命題性の証明を `isOfHLevelLift 1 ⟨ P ⟩isProp`{.Agda} とする上位レベルの命題を作る。この対を `lem`{.Agda} に渡せば、`P` の持ち上げられたコピーを判定できる。
 
-得られた判定を、次の二つの場合に分けて `P` の判定へ戻す。
-
-- 証明 `x : Lift ⟨ P ⟩`{.Agda} が得られたなら、`lower x : ⟨ P ⟩`{.Agda} が `P` を証明する。
-- 反証 `np : Lift ⟨ P ⟩ → ⊥₀`{.Agda} が得られたなら、それは `P` も反証する。実際、`p : ⟨ P ⟩`{.Agda} を仮定し、持ち上げて `np`{.Agda} に渡せば、`np (lift p) : ⊥₀`{.Agda} を得る。
-
-`mapDec`{.Agda} はまさにこの二つの変換を行い、必要な `Dec ⟨ P ⟩`{.Agda} を与える。
+下図の二つの分岐は、この判定を `Dec ⟨ P ⟩`{.Agda} へ戻す方法を示す。肯定の分岐では `lower` を用い、否定の分岐では `P` の証明を仮定してその持ち上げた像を反駁する。関数 `mapDec`{.Agda} が二つの変換をまとめる。
 <!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-lower-lem" aria-describedby="fig-lower-lem-caption">
+<div class="diagram-framed">
+<div class="type-comparison-panels">
+<section class="type-comparison-panel">
+
+
+$$\operatorname{yes}\,x$$
+
+<div class="path-stage diagram-compact-stage" style="aspect-ratio:360/260">
+<svg viewBox="0 0 360 260" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="15" y="10" width="330" height="85"/>
+<rect class="diagram-space-shape" x="15" y="165" width="330" height="85"/>
+<path class="diagram-map-line" d="M180 74 L180 216"/>
+<path class="diagram-map-tip" d="M176 209 L180 216 L184 209"/>
+<circle class="diagram-point" cx="180" cy="70" r="4"/>
+<circle class="diagram-point" cx="180" cy="220" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:12.6923%">$\operatorname{Lift}\langle P\rangle$</span>
+<span class="path-label" style="left:60.5556%;top:26.9231%">$x$</span>
+<span class="path-label" style="left:65.8333%;top:50%">$\operatorname{lower}$</span>
+<span class="path-label" style="left:16.6667%;top:71.9231%">$\langle P\rangle$</span>
+<span class="path-label" style="left:67.2222%;top:84.6154%">$\operatorname{lower}\,x$</span>
+</div>
+
+$$\operatorname{yes}\,(\operatorname{lower}\,x)$$
+
+
+</section>
+<section class="type-comparison-panel">
+
+
+$$\operatorname{no}\,\mathit{np}$$
+
+<div class="path-stage diagram-compact-stage" style="aspect-ratio:360/260">
+<svg viewBox="0 0 360 260" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="15" y="10" width="330" height="85"/>
+<rect class="diagram-space-shape" x="15" y="165" width="330" height="85"/>
+<path class="diagram-map-line" d="M180 216 L180 74"/>
+<path class="diagram-map-tip" d="M184 81 L180 74 L176 81"/>
+<circle class="diagram-point" cx="180" cy="70" r="4"/>
+<circle class="diagram-point" cx="180" cy="220" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:12.6923%">$\operatorname{Lift}\langle P\rangle$</span>
+<span class="path-label" style="left:66.9444%;top:26.9231%">$\operatorname{lift}\,p$</span>
+<span class="path-label" style="left:64.4444%;top:50%">$\operatorname{lift}$</span>
+<span class="path-label" style="left:16.6667%;top:71.9231%">$\langle P\rangle$</span>
+<span class="path-label" style="left:60.5556%;top:84.6154%">$p$</span>
+</div>
+
+$$\mathit{np}\,(\operatorname{lift}\,p):\bot_0$$
+
+
+</section>
+</div>
+</div>
+<figcaption id="fig-lower-lem-caption">
+<!--en-->
+A positive decision sends its proof downward by `lower`. A negative decision refutes a hypothetical `p : ⟨ P ⟩` by sending it upward with `lift` and applying `np`.
+<!--zh-->
+肯定判定通过 `lower` 把证明向下搬移。否定判定则临时假设 `p : ⟨ P ⟩`，经 `lift` 向上搬移，再由 `np` 得到矛盾。
+<!--ja-->
+肯定の判定では `lower` で証明を下へ移す。否定の判定では `p : ⟨ P ⟩` を一時的に仮定し、`lift` で上へ移して `np` を適用し、矛盾を得る。
+<!--/-->
+</figcaption>
+</figure>
 
 ```agda
 lowerLEM {ℓ} lem P =
@@ -339,6 +390,68 @@ lem→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ�
 <!--ja-->
 **証明** 第一成分として `Lift Bool`{.Agda} を選ぶ。第二成分には `isoToEquiv`{.Agda} を用い、次の同型を型同値へ変換する。同型の順写像は `P` を `encodeB P (lem P)`{.Agda} へ送り、逆写像は `decodeB`{.Agda} である。二つの逆法則には、`lem` が与える判定で具体化した `retrB`{.Agda} と `secB`{.Agda} を用いる。この二つの成分が `ΩResizing ℓ₁ ℓ₂`{.Agda} に必要な証拠を構成する。
 <!--/-->
+
+<!--en-->
+The two inverse laws close the two triangles below. Fix `lem : LEM ℓ₁`, abbreviate the code type `Lift {ℓ-zero} {ℓ₂} Bool` by $B$, and write $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$ and $D := \operatorname{decodeB}$. Each round trip returns a point connected to its starting point by the indicated path.
+<!--zh-->
+下面两个三角形分别由两条逆律闭合。固定 `lem : LEM ℓ₁`，把编码类型 `Lift {ℓ-zero} {ℓ₂} Bool` 简写为 $B$，并记 $E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$。每次往返所得的点，都由标出的路径与出发点相连。
+<!--ja-->
+下の二つの三角形は、それぞれ二つの逆法則によって閉じる。`lem : LEM ℓ₁` を固定し、符号の型 `Lift {ℓ-zero} {ℓ₂} Bool` を $B$ と略記し、$E(P) := \operatorname{encodeB}\,P\,(\operatorname{lem}\,P)$、$D := \operatorname{decodeB}$ と書く。各往復で得られる点は、示したパスによって出発点と結ばれる。
+<!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-classical-roundtrips" aria-describedby="fig-classical-roundtrips-caption">
+<div class="type-comparison-panels classical-roundtrips">
+<div class="path-stage" style="aspect-ratio:360/300">
+<svg viewBox="0 0 360 300" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="105" y="5" width="150" height="95"/>
+<rect class="diagram-space-shape" x="5" y="145" width="350" height="150"/>
+<path class="diagram-map-line" d="M78 200 L174 89 M186 89 L282 200"/>
+<path class="diagram-map-tip" d="M166 92 L174 89 L174 97 M274 197 L282 200 L282 192"/>
+<path class="diagram-path" d="M75 205 Q180 295 285 205"/>
+<circle class="diagram-point" cx="180" cy="80" r="4"/>
+<circle class="diagram-point" cx="75" cy="205" r="4"/>
+<circle class="diagram-point" cx="285" cy="205" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:8.33%">$B$</span>
+<span class="path-label" style="left:50%;top:18.33%">$E(P)$</span>
+<span class="path-label" style="left:50%;top:56.67%">$\operatorname{hProp}\,\ell_1$</span>
+<span class="path-label" style="left:20.83%;top:82%">$P$</span>
+<span class="path-label" style="left:79.17%;top:82%">$D(E(P))$</span>
+<span class="path-label" style="left:25%;top:39%">$E$</span>
+<span class="path-label" style="left:75%;top:39%">$D$</span>
+<span class="path-label" style="left:50%;top:88.67%">$\operatorname{secB}$</span>
+</div>
+<div class="path-stage" style="aspect-ratio:360/300">
+<svg viewBox="0 0 360 300" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="105" y="5" width="150" height="95"/>
+<rect class="diagram-space-shape" x="5" y="145" width="350" height="150"/>
+<path class="diagram-map-line" d="M78 200 L174 89 M186 89 L282 200"/>
+<path class="diagram-map-tip" d="M166 92 L174 89 L174 97 M274 197 L282 200 L282 192"/>
+<path class="diagram-path" d="M75 205 Q180 295 285 205"/>
+<circle class="diagram-point" cx="180" cy="80" r="4"/>
+<circle class="diagram-point" cx="75" cy="205" r="4"/>
+<circle class="diagram-point" cx="285" cy="205" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:8.33%">$\operatorname{hProp}\,\ell_1$</span>
+<span class="path-label" style="left:50%;top:18.33%">$D(b)$</span>
+<span class="path-label" style="left:50%;top:56.67%">$B$</span>
+<span class="path-label" style="left:20.83%;top:82%">$b$</span>
+<span class="path-label" style="left:79.17%;top:82%">$E(D(b))$</span>
+<span class="path-label" style="left:25%;top:39%">$D$</span>
+<span class="path-label" style="left:75%;top:39%">$E$</span>
+<span class="path-label" style="left:50%;top:88.67%">$\operatorname{retrB}$</span>
+</div>
+</div>
+<figcaption id="fig-classical-roundtrips-caption">
+<!--en-->
+Encoding and decoding are inverse up to paths. Excluded middle supplies the decisions in $E$; with explicit decisions, encoding, decoding and both inverse laws are constructive.
+<!--zh-->
+编码与解码在路径意义下互为逆映射。排中律为 $E$ 提供判定；给定显式判定后，编码、解码与两条逆律都是构造主义的。
+<!--ja-->
+符号化と復号はパスの意味で互いに逆となる。排中律は $E$ に判定を供給する。明示的な判定が与えられれば、符号化・復号と二つの逆法則はいずれも構成的である。
+<!--/-->
+</figcaption>
+</figure>
 
 ```agda
 lem→ΩResizing lem = Lift Bool , isoToEquiv (iso

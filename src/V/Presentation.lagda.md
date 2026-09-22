@@ -49,11 +49,11 @@ open hPropStructure 𝒮ᵥ
 ```
 
 <!--en-->
-The first two lemmas convert between indices and membership proofs. The hinge is `∈∈ₛ`, which states that native and small membership agree, packaged as a pair of implications. The lemma `member` takes an index `m : ⟪ a ⟫` and applies the small-to-native implication to the certificate `∈ₛ⟪ a ⟫↪ m`, producing an inhabitant of `⟪ a ⟫↪ m ∈ˢ a`: an explicit proof that `a` contains the element named by `m`. The converse `fiber` starts from a proof of `x ∈ˢ a` and returns an actual index `m : ⟪ a ⟫` together with a path `⟪ a ⟫↪ m ≡ x`. This is not the truncated existence of an index but an explicitly constructed one. The step is legitimate because the embedding has proposition-valued fibers: the truncated membership statement may then be eliminated into the type of such fibers, and there the index can be read off.
+The first two lemmas convert between indices and membership proofs. The hinge is `∈∈ₛ`, which states that native and small membership agree, packaged as a pair of implications. The lemma `member` takes an index `m : ⟪ a ⟫` and applies the small-to-native implication to the certificate `∈ₛ⟪ a ⟫↪ m`, producing an inhabitant of `⟪ a ⟫↪ m ∈ˢ a`: an explicit proof that `a` contains the element named by `m`. The converse `fiber` starts from a proof of `x ∈ˢ a` and returns an actual index `m : ⟪ a ⟫` together with a path `⟪ a ⟫↪ m ≡ x`. This is not the truncated existence of an index but an explicitly constructed one. The step is legitimate because the embedding has proposition-valued [fibers]{.term-ref #fiber}: the truncated membership statement may then be eliminated into the type of such [fibers]{.term-ref #fiber}, and there the index can be read off.
 <!--zh-->
 前两条引理在索引与隶属证明之间转换。枢纽是 `∈∈ₛ`：它说明原生隶属与小隶属一致，并打包成一双向蕴含。引理 `member` 取索引 `m : ⟪ a ⟫`，把「小到原生」方向的蕴含应用于证书 `∈ₛ⟪ a ⟫↪ m`，得到 `⟪ a ⟫↪ m ∈ˢ a` 的一个元素：索引 `m` 所指名的元素确实属于集合 `a` 的显式证明。反向的 `fiber` 从 `x ∈ˢ a` 的证明出发，返回一个实际的索引 `m : ⟪ a ⟫` 连同路径 `⟪ a ⟫↪ m ≡ x`。这不是索引的截断存在性，而是显式构造出的索引。这一步之所以合法，是因为该嵌入的原像都是命题：截断的隶属陈述得以消去到这种原像的类型中，索引便可在其中读出。
 <!--ja-->
-最初の二つの補題は、インデックスと所属証明を相互に変換する。鍵となるのは `∈∈ₛ` で、本来の所属と小所属が一致することを、二つの含意の組として述べる。補題 `member` はインデックス `m : ⟪ a ⟫` を取り、小から本来への含意を証明 `∈ₛ⟪ a ⟫↪ m` に適用し、`⟪ a ⟫↪ m ∈ˢ a` の要素を生み出す。これは、インデックス `m` の指す要素が集合 `a` に属することの明示的な証明である。逆の `fiber` は `x ∈ˢ a` の証明から出発し、実際のインデックス `m : ⟪ a ⟫` とパス `⟪ a ⟫↪ m ≡ x` の組を返す。これはインデックスの切り詰められた存在ではなく、明示的に構成されたインデックスである。この一段階が正当なのは、埋め込みのファイバーが命題値だからである。切り詰められた所属の主張はこのファイバーの型へ消去でき、そこでインデックスを読み取れる。
+最初の二つの補題は、インデックスと所属証明を相互に変換する。鍵となるのは `∈∈ₛ` で、本来の所属と小所属が一致することを、二つの含意の組として述べる。補題 `member` はインデックス `m : ⟪ a ⟫` を取り、小から本来への含意を証明 `∈ₛ⟪ a ⟫↪ m` に適用し、`⟪ a ⟫↪ m ∈ˢ a` の要素を生み出す。これは、インデックス `m` の指す要素が集合 `a` に属することの明示的な証明である。逆の `fiber` は `x ∈ˢ a` の証明から出発し、実際のインデックス `m : ⟪ a ⟫` とパス `⟪ a ⟫↪ m ≡ x` の組を返す。これはインデックスの切り詰められた存在ではなく、明示的に構成されたインデックスである。この一段階が正当なのは、埋め込みの[ファイバー]{.term-ref #fiber}が命題値だからである。切り詰められた所属の主張はこの[ファイバー]{.term-ref #fiber}の型へ消去でき、そこでインデックスを読み取れる。
 <!--/-->
 
 ```agda
@@ -68,11 +68,11 @@ fiber a {x} x∈ = ∈-asFiber {a = x} {b = a} x∈
 ```
 
 <!--en-->
-Two short facts complete the picture. The embedding property is exactly injectivity on indices: an embedding into an h-set has proposition-valued fibers, and the standard lemma `isEmbedding→Inj` turns that into the statement that equal values have equal indices, which `↪-inj` records. Finally `∈ₛ↪` states small membership directly: for every index `m`, the element `⟪ a ⟫↪ m` belongs to `a` in the small relation, with certificate `∈ₛ⟪ a ⟫↪ m`. Together with `member`, this shows that the canonical presentation is faithful in both the native and the small membership, and that its indexing map neither loses nor duplicates elements.
+Two short facts complete the picture. The embedding property is exactly injectivity on indices: an embedding into an h-set has proposition-valued [fibers]{.term-ref #fiber}, and the standard lemma `isEmbedding→Inj` turns that into the statement that equal values have equal indices, which `↪-inj` records. Finally `∈ₛ↪` states small membership directly: for every index `m`, the element `⟪ a ⟫↪ m` belongs to `a` in the small relation, with certificate `∈ₛ⟪ a ⟫↪ m`. Together with `member`, this shows that the canonical presentation is faithful in both the native and the small membership, and that its indexing map neither loses nor duplicates elements.
 <!--zh-->
 两条简短的事实补全全貌。嵌入性质正是索引上的单射性：到 h-集合的嵌入有命题值的原像，标准引理 `isEmbedding→Inj` 由此得出「值相等则索引相等」，`↪-inj` 记录了这一点。最后 `∈ₛ↪` 直接陈述小隶属：对每个索引 `m`，元素 `⟪ a ⟫↪ m` 以证书 `∈ₛ⟪ a ⟫↪ m` 按小关系属于 `a`。与 `member` 合看，这表明典范呈现对原生隶属与小隶属都是忠实的，且其索引映射既不丢失也不重复元素。
 <!--ja-->
-短い二つの事実が全体を完成させる。埋め込みの性質とは、インデックス上の単射性のことである。h-集合への埋め込みは命題値のファイバーを持ち、標準補題 `isEmbedding→Inj` はそこから「値が等しければインデックスも等しい」を導く。これを `↪-inj` が記録する。最後に `∈ₛ↪` は小所属を直接述べる。各インデックス `m` に対し、要素 `⟪ a ⟫↪ m` は証明 `∈ₛ⟪ a ⟫↪ m` とともに小所属の意味で `a` に属する。`member` と併せて、正準的な提示が本来の所属と小所属のどちらに対しても忠実であり、そのインデックス写像が要素を失わず複製しないことが示される。
+短い二つの事実が全体を完成させる。埋め込みの性質とは、インデックス上の単射性のことである。h-集合への埋め込みは命題値の[ファイバー]{.term-ref #fiber}を持ち、標準補題 `isEmbedding→Inj` はそこから「値が等しければインデックスも等しい」を導く。これを `↪-inj` が記録する。最後に `∈ₛ↪` は小所属を直接述べる。各インデックス `m` に対し、要素 `⟪ a ⟫↪ m` は証明 `∈ₛ⟪ a ⟫↪ m` とともに小所属の意味で `a` に属する。`member` と併せて、正準的な提示が本来の所属と小所属のどちらに対しても忠実であり、そのインデックス写像が要素を失わず複製しないことが示される。
 <!--/-->
 
 ```agda

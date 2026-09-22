@@ -33,6 +33,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from i18n_markers import weave_for_site, group_languages  # noqa: E402
+from diagram_style import check_sources as check_diagrams  # noqa: E402
 from reading_routes import GUIDE_PANEL, build_reading_data, own_page, twin_of  # noqa: E402
 from term_registry import TERM_MARK_RE, load_entries, reader_terms, schema_errors, localized_forms  # noqa: E402
 
@@ -1302,9 +1303,11 @@ def anchor_prose_blocks(body):
             continue
         if depth == 0:
             index += 1
-            out.append(body[pos:match.end()])
-            out.append(f' id="p-{index}"')
-            pos = match.end()
+            attributes = body[match.end():body.find('>', match.end())]
+            if not re.search(r'(?:^|\s)id\s*=', attributes):
+                out.append(body[pos:match.end()])
+                out.append(f' id="p-{index}"')
+                pos = match.end()
         depth += 1
     out.append(body[pos:])
     return "".join(out)
@@ -1717,6 +1720,11 @@ def main(argv):
             selected_modules.update(x for x in argv[i].split(",") if x)
         else: sys.stderr.write(f"unknown option: {a}\n"); return 2
         i += 1
+
+    diagram_errors = check_diagrams(sorted(glob.glob(os.path.join(src, "**", "*.lagda.md"), recursive=True)))
+    if diagram_errors:
+        sys.stderr.write("\n".join(diagram_errors) + "\n")
+        return 1
 
     internal = set(
         os.path.relpath(p, src)[:-len(".lagda.md")].replace(os.sep, ".")

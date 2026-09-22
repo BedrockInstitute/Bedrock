@@ -221,8 +221,6 @@ When `B` does not depend on `x`, every second component lies in the same type, a
 
 An ordinary product places two independent elements together; a Σ type places a particular `a` together with data belonging to the corresponding type `B a`. Dependent pairs are built with `_,_`{.Agda}, `fst`{.Agda} extracts the first component, and `snd`{.Agda} extracts the second.
 
-A Π type handles "for every `x`, give data depending on `x`"; a Σ type handles "choose an `x`, and keep it together with data depending on it".
-
 <!--zh-->
 ## [Σ 类型]{.term-intro #sigma-type}
 
@@ -241,8 +239,6 @@ A Π type handles "for every `x`, give data depending on `x`"; a Σ type handles
 <div class="single-line-code"><code>`A × B  :=  Σ (_ : A) B`{.Agda}</code></div>
 
 普通的积把两个彼此独立的元素放在一起；Σ 类型则把某个 `a` 与属于相应类型 `B a` 的数据放在一起。依值对用 `_,_`{.Agda} 构造，用 `fst`{.Agda} 取出第一分量，用 `snd`{.Agda} 取出第二分量。
-
-Π 类型处理的是「对每个 `x`，给出依赖于 `x` 的数据」；Σ 类型处理的是「选定某个 `x`，并将依赖于它的数据与它放在一起」。
 
 <!--ja-->
 ## [Σ 型]{.term-intro #sigma-type}
@@ -263,9 +259,46 @@ A Π type handles "for every `x`, give data depending on `x`"; a Σ type handles
 
 通常の積は互いに独立した二つの元を一緒にするが、Σ 型は、ある `a` と、対応する型 `B a` に属するデータを一緒にする。依存対は `_,_`{.Agda} で作り、`fst`{.Agda} で第一成分を、`snd`{.Agda} で第二成分を取り出す。
 
-Π 型が扱うのは「すべての `x` に対して、`x` に依存するデータを与えること」である。Σ 型が扱うのは「一つの `x` を選び、それに依存するデータと一緒に収めること」である。
-
 <!--/-->
+
+<figure class="book-diagram type-comparison" id="fig-pi-sigma" aria-describedby="fig-pi-sigma-caption">
+<div class="type-comparison-panels">
+<div class="diagram-panel type-comparison-panel">
+
+$$f : \prod_{x:A} B(x)$$
+
+$$\begin{array}{rcl}
+x_1 : A & \longmapsto & f(x_1) : B(x_1) \\[8pt]
+x_2 : A & \longmapsto & f(x_2) : B(x_2) \\[4pt]
+\vdots & & \vdots
+\end{array}$$
+
+</div>
+<div class="diagram-panel type-comparison-panel">
+
+$$(a,b) : \sum_{x:A} B(x)$$
+
+<div class="sigma-pair">
+<svg viewBox="0 0 320 130" aria-hidden="true" focusable="false">
+<path class="diagram-guide" d="M75 35 L154 98 M245 35 L166 98"/>
+</svg>
+<span class="sigma-component sigma-first">$a : A$</span>
+<span class="sigma-component sigma-second">$b : B(a)$</span>
+<span class="sigma-component sigma-result">$(a,b)$</span>
+</div>
+
+</div>
+</div>
+<figcaption id="fig-pi-sigma-caption">
+<!--en-->
+A Π type handles "for every `x`, give data depending on `x`"; a Σ type handles "choose an `x`, and keep it together with data depending on it".
+<!--zh-->
+Π 类型处理的是「对每个 `x`，给出依赖于 `x` 的数据」；Σ 类型处理的是「选定某个 `x`，并将依赖于它的数据与它放在一起」。
+<!--ja-->
+Π 型が扱うのは「すべての `x` に対して、`x` に依存するデータを与えること」である。Σ 型が扱うのは「一つの `x` を選び、それに依存するデータと一緒に収めること」である。
+<!--/-->
+</figcaption>
+</figure>
 
 ```agda
 open import Cubical.Data.Sigma public
@@ -454,68 +487,462 @@ open import Cubical.Foundations.Prelude public
 <!--/-->
 
 <!--en-->
-In ordinary mathematical language, `x = y` is a proposition asserting that two objects are equal. In type theory, propositions are represented by types, so equality is represented by a type as well. For two elements `x` and `y` of `A`, `x ≡ y`{.Agda} is the type corresponding to the proposition that `x` and `y` are equal, and its elements are proofs of that equality.
+In ordinary mathematics, $x = y$ asserts that two objects are equal. Here we write this assertion as `x ≡ y`{.Agda}: for two elements `x` and `y` of `A`, it is a type whose elements are proofs of their equality.
+
+We reserve `=` for **[judgmental equality]{.term-intro #judgmental-equality}**, where the type system identifies two expressions by its definition and computation rules, as in `id x = x`{.Agda}. In a defining equation, this `=` plays the role often written $\mathrel{:=}$; judgmental equality also includes the consequences of computation. It is a judgment made by the type system, not itself a type in which we must supply a proof. By contrast, `x ≡ y`{.Agda} is a type, and `p : x ≡ y`{.Agda} supplies a proof of equality, playing the role of a proved $x = y$ in ordinary mathematics. When `x` and `y` are judgmentally equal, the constant path `refl`{.Agda} introduced below proves `x ≡ y`{.Agda}; a path between them does not in general make them judgmentally equal.
 
 In cubical type theory, such an equality proof is called a **path** from `x` to `y`, and `x ≡ y`{.Agda} is called a path type. A path is therefore not another relation alongside equality: paths are the equality proofs used in this book, and path types are how the book represents equality. A path has a source and a target, so its direction can be reversed and paths can be joined end to end. The basic operations below arise from this structure.
+<!--zh-->
+在通常的数学中，$x = y$ 断言两个对象相等。本书把这个断言写作 `x ≡ y`{.Agda}：对 `A` 中的两个元素 `x` 和 `y`，它是一个类型，其中的元素就是二者相等的证明。
 
-- `refl`{.Agda} is a path from an element to itself and gives reflexivity of equality.
-- `sym`{.Agda} reverses a path; a path from `x` to `y` thereby becomes a path from `y` to `x`.
-- `_∙_`{.Agda} composes paths whose endpoints meet; a path from `x` to `y` followed by one from `y` to `z` gives a path from `x` to `z`.
-- `cong`{.Agda} says that functions preserve equality: equal inputs are sent to equal outputs. `cong₂`{.Agda} is the corresponding binary operation.
-- `funExt`{.Agda} turns pointwise equality into equality of functions: if `f x ≡ g x`{.Agda} for every `x`, then `f ≡ g`{.Agda}.
-- `transport`{.Agda} moves an element along a path between types.
-- `subst`{.Agda} moves data depending on `x` along `x ≡ y`{.Agda} to data depending on `y`. Its natural two-argument generalization, `subst2`{.Agda}, accepts a path in each input and moves data depending on both inputs to the new pair in one step.
+我们把 `=` 留给**[判断相等]{.term-intro #judgmental-equality}** (judgmental equality)，即类型系统依据定义与计算规则把两个表达式认作相同，例如 `id x = x`{.Agda}。在给出定义时，这个 `=` 相当于通常写的 $\mathrel{:=}$；判断相等也包括计算所得到的相等。它是类型系统作出的判断，本身并不是一个需要我们提供证明的类型。相比之下，`x ≡ y`{.Agda} 是一个类型，`p : x ≡ y`{.Agda} 给出其中的相等证明，对应于通常数学中需要证明的 $x = y$。若 `x` 与 `y` 判断相等，下面介绍的常值路径 `refl`{.Agda} 就能证明 `x ≡ y`{.Agda}；反过来，二者之间有路径，一般并不意味着它们判断相等。
 
-For example, given a function `f : A → B`{.Agda}, the action of `cong`{.Agda} can be summarized as:
+在立方类型论中，这种相等证明称为从 `x` 到 `y` 的**路径**，而 `x ≡ y`{.Agda} 称为路径类型。因此，路径并不是相等之外的另一种关系：路径就是本书所使用的相等证明，路径类型就是本书表示相等的方式。路径有起点和终点，因而可以反转方向，也可以首尾相接；下面的基本操作正是从这一结构产生的。
+<!--ja-->
+通常の数学では、$x = y$ は二つの対象が等しいという主張である。本書ではこれを `x ≡ y`{.Agda} と書く。`A` の二つの要素 `x` と `y` に対して、これは両者の等しさの証明を要素とする型である。
+
+`=` は**[判断的等しさ]{.term-intro #judgmental-equality}** (judgmental equality) に用いる。これは型システムが定義と計算の規則に従って二つの式を同じものと認めることであり、`id x = x`{.Agda} がその例である。定義を与える式では、この `=` は通常の $\mathrel{:=}$ に相当するが、判断的等しさには計算から得られる等しさも含まれる。これは型システムが下す判断であって、それ自体が証明を与えるべき型なのではない。一方、`x ≡ y`{.Agda} は型であり、`p : x ≡ y`{.Agda} はその等しさの証明を与え、通常の数学で証明する $x = y$ に対応する。`x` と `y` が判断的に等しければ、以下で紹介する定値パス `refl`{.Agda} によって `x ≡ y`{.Agda} を証明できるが、両者の間にパスがあっても、一般には判断的に等しいとは限らない。
+
+立方型理論では、この等しさの証明を `x` から `y` への**パス**と呼び、`x ≡ y`{.Agda} をパス型と呼ぶ。したがって、パスは等しさとは別に置かれた関係ではない。パスが本書で使う等しさの証明であり、パス型が本書における等しさの表現である。パスには始点と終点があるため、向きを逆にしたり、端と端をつないだりできる。以下の基本操作はこの構造から生まれる。
+<!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-path-operations" aria-describedby="fig-path-operations-caption">
+<div class="path-operations">
+<section class="diagram-panel path-operation">
+<div class="path-stage" style="aspect-ratio:240/190">
+<svg viewBox="0 0 240 190" aria-hidden="true" focusable="false">
+<circle class="diagram-point" cx="120" cy="95" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:31.5789%">$\operatorname{refl}_x$</span>
+<span class="path-label" style="left:50%;top:62.6316%">$x$</span>
+</div>
+<div class="path-signature">
+
+$$\begin{gathered}\operatorname{refl}_x : x\equiv x\end{gathered}$$
+
+</div>
+<!--en-->
+`refl`{.Agda} is a path from an element to itself and gives reflexivity of equality.
+<!--zh-->
+`refl`{.Agda} 是从一个元素到自身的路径，给出相等的自反性。
+<!--ja-->
+`refl`{.Agda} は要素からそれ自身へのパスであり、等しさの反射性を与える。
+<!--/-->
+
+</section>
+<section class="diagram-panel path-operation">
+<div class="path-stage" style="aspect-ratio:240/190">
+<svg viewBox="0 0 240 190" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M35 55 Q120 0 205 55 M35 148 Q120 100 205 148"/><circle class="diagram-point" cx="35" cy="55" r="4"/><circle class="diagram-point" cx="205" cy="55" r="4"/><circle class="diagram-point" cx="35" cy="148" r="4"/><circle class="diagram-point" cx="205" cy="148" r="4"/>
+</svg>
+<span class="path-label" style="left:7.5%;top:28.9474%">$x$</span>
+<span class="path-label" style="left:92.9167%;top:28.9474%">$y$</span>
+<span class="path-label" style="left:50%;top:7.36842%">$p$</span>
+<span class="path-label" style="left:7.5%;top:77.8947%">$y$</span>
+<span class="path-label" style="left:92.9167%;top:77.8947%">$x$</span>
+<span class="path-label" style="left:50%;top:87.3684%">$\operatorname{sym}\,p$</span>
+<span class="path-label" style="left:50%;top:47.8947%">$\Big\downarrow\mathrlap{\;{\scriptstyle\operatorname{sym}}}$</span>
+</div>
+<div class="path-signature">
+
+$$\begin{gathered}p:x\equiv y,\quad\operatorname{sym}\,p:y\equiv x\end{gathered}$$
+
+</div>
+<!--en-->
+`sym`{.Agda} reverses a path; a path from `x` to `y` thereby becomes a path from `y` to `x`.
+<!--zh-->
+`sym`{.Agda} 反转路径的方向；从 `x` 到 `y` 的路径由此变成从 `y` 到 `x` 的路径。
+<!--ja-->
+`sym`{.Agda} はパスの向きを逆にする。`x` から `y` へのパスは、これによって `y` から `x` へのパスになる。
+<!--/-->
+
+</section>
+<section class="diagram-panel path-operation">
+<div class="path-stage" style="aspect-ratio:240/190">
+<svg viewBox="0 0 240 190" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M35 110 L120 45 L205 110 M35 110 Q120 179 205 110"/><circle class="diagram-point" cx="35" cy="110" r="4"/><circle class="diagram-point" cx="120" cy="45" r="4"/><circle class="diagram-point" cx="205" cy="110" r="4"/>
+</svg>
+<span class="path-label" style="left:7.5%;top:57.8947%">$x$</span>
+<span class="path-label" style="left:50%;top:12.6316%">$y$</span>
+<span class="path-label" style="left:92.9167%;top:57.8947%">$z$</span>
+<span class="path-label" style="left:27.9167%;top:34.7368%">$p$</span>
+<span class="path-label" style="left:73.3333%;top:34.7368%">$q$</span>
+<span class="path-label" style="left:50%;top:87.8947%">$p\mathbin{\cdot}q$</span>
+</div>
+<div class="path-signature">
+
+$$\begin{gathered}p:x\equiv y,\quad q:y\equiv z\\[3pt]p\mathbin{\cdot}q:x\equiv z\end{gathered}$$
+
+</div>
+<!--en-->
+`_∙_`{.Agda} composes paths whose endpoints meet; a path from `x` to `y` followed by one from `y` to `z` gives a path from `x` to `z`.
+<!--zh-->
+`_∙_`{.Agda} 把首尾相接的路径复合起来；从 `x` 到 `y`，再从 `y` 到 `z`，便得到从 `x` 到 `z` 的路径。
+<!--ja-->
+`_∙_`{.Agda} は端点の一致するパスを合成する。`x` から `y` へ進み、続いて `y` から `z` へ進めば、`x` から `z` へのパスが得られる。
+<!--/-->
+
+</section>
+</div>
+<figcaption id="fig-path-operations-caption">
+<!--en-->
+Three basic path operations: reflexivity, reversal and composition.
+<!--zh-->
+路径的三种基本操作：自反、反转与复合。
+<!--ja-->
+パスの三つの基本操作：反射、反転、合成。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+`cong`{.Agda} applies a function to a path. Given a function `f : A → B`{.Agda} and a path `p : x ≡ y`{.Agda} between its inputs, it constructs a path `cong f p : f x ≡ f y`{.Agda} between its outputs. Thus, fixing `f` gives a function from paths to paths:
 
 <div class="single-line-code"><code>`cong f : x ≡ y → f x ≡ f y`{.Agda}</code></div>
 
-This says that `f` can act on an equality path, turning equality between inputs into equality between outputs.
+Here both outputs lie in the same type `B`. The diagram shows how `f` sends the endpoints `x` and `y` to `f x` and `f y`, while `cong f` sends the path between them to a path between their images. `cong₂`{.Agda} is the corresponding operation for a function of two inputs.
+<!--zh-->
+`cong`{.Agda} 把函数作用到路径上。给定函数 `f : A → B`{.Agda} 和输入之间的路径 `p : x ≡ y`{.Agda}，它构造输出之间的路径 `cong f p : f x ≡ f y`{.Agda}。因此，固定 `f` 后，得到的是一个把路径送到路径的函数：
 
+<div class="single-line-code"><code>`cong f : x ≡ y → f x ≡ f y`{.Agda}</code></div>
+
+这里的两个输出都属于同一个类型 `B`。图中，`f` 把端点 `x` 和 `y` 送到 `f x` 和 `f y`，而 `cong f` 把端点之间的路径送到像之间的路径。`cong₂`{.Agda} 是函数有两个输入时的相应操作。
+<!--ja-->
+`cong`{.Agda} は関数をパスに作用させる。関数 `f : A → B`{.Agda} と入力の間のパス `p : x ≡ y`{.Agda} が与えられると、出力の間のパス `cong f p : f x ≡ f y`{.Agda} を構成する。したがって、`f` を固定すると、パスをパスへ送る関数が得られる。
+
+<div class="single-line-code"><code>`cong f : x ≡ y → f x ≡ f y`{.Agda}</code></div>
+
+ここでは二つの出力は同じ型 `B` に属する。図では、`f` が端点 `x` と `y` を `f x` と `f y` に送り、`cong f` が端点の間のパスを像の間のパスに送る。`cong₂`{.Agda} は二つの入力を持つ関数に対する同様の操作である。
+<!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-path-cong" aria-describedby="fig-path-cong-caption">
+<div class="diagram-panel path-single">
+
+$$f : A\to B,\qquad p:x\equiv y$$
+
+<div class="path-stage path-cong-stage" style="aspect-ratio:360/240">
+<svg viewBox="0 0 360 240" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M55 60 Q180 5 305 60 M55 185 Q180 130 305 185"/>
+<path class="diagram-map-line" d="M55 72 V165 M305 72 V165"/>
+<path class="diagram-map-tip" d="M51 158 L55 165 L59 158 M301 158 L305 165 L309 158"/><circle class="diagram-point" cx="55" cy="60" r="4"/><circle class="diagram-point" cx="305" cy="60" r="4"/><circle class="diagram-point" cx="55" cy="185" r="4"/><circle class="diagram-point" cx="305" cy="185" r="4"/>
+</svg>
+<span class="path-label" style="left:15.2778%;top:15.4167%">$x:A$</span>
+<span class="path-label" style="left:84.7222%;top:15.4167%">$y:A$</span>
+<span class="path-label" style="left:50%;top:6.25%">$p$</span>
+<span class="path-label" style="left:10.8333%;top:48.75%">$f$</span>
+<span class="path-label" style="left:89.4444%;top:48.75%">$f$</span>
+<span class="path-label" style="left:15.2778%;top:90%">$f(x):B$</span>
+<span class="path-label" style="left:84.7222%;top:90%">$f(y):B$</span>
+<span class="path-label" style="left:50%;top:56.25%">$\operatorname{cong}\,f\,p$</span>
+</div>
+</div>
+<figcaption id="fig-path-cong-caption">
+<!--en-->
+`cong`: a function sends a path to a path between the images of its endpoints.
+<!--zh-->
+`cong`：函数把路径送到端点的像之间的路径。
+<!--ja-->
+`cong`：関数はパスを、その端点の像の間のパスに送る。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+`transport`{.Agda} turns a path between types into a function between their elements. Given types `A` and `B` in the same universe and a path `p : A ≡ B`{.Agda}, it constructs a function `transport p` from `A` to `B`. Thus, fixing `p` gives a function from elements to elements:
+
+<div class="single-line-code"><code>`transport p : A → B`{.Agda}</code></div>
+
+Here the types themselves are the endpoints of the path. The diagram shows how `transport` turns this path into a function, which sends an element `a : A`{.Agda} to `transport p a : B`{.Agda}. The path `p` supplies the equality of types; `transport p` performs the movement of elements.
+<!--zh-->
+`transport`{.Agda} 把类型之间的路径转为元素之间的函数。给定同一宇宙中的类型 `A`、`B` 和路径 `p : A ≡ B`{.Agda}，它构造从 `A` 到 `B` 的函数 `transport p`。因此，固定 `p` 后，得到的是一个把元素送到元素的函数：
+
+<div class="single-line-code"><code>`transport p : A → B`{.Agda}</code></div>
+
+这里的路径以类型本身为端点。图中，`transport` 把这条路径转为函数，再由这个函数把元素 `a : A`{.Agda} 送到 `transport p a : B`{.Agda}。路径 `p` 提供类型的相等，而 `transport p` 执行元素的搬移。
+<!--ja-->
+`transport`{.Agda} は型の間のパスを、それらの要素を移す関数に変える。同じ宇宙に属する型 `A`、`B` とパス `p : A ≡ B`{.Agda} が与えられると、`A` から `B` への関数 `transport p` を構成する。したがって、`p` を固定すると、要素を要素へ送る関数が得られる。
+
+<div class="single-line-code"><code>`transport p : A → B`{.Agda}</code></div>
+
+ここでは型そのものがパスの端点である。図では、`transport` がこのパスを関数に変え、その関数が要素 `a : A`{.Agda} を `transport p a : B`{.Agda} に送る。パス `p` は型の等しさを与え、`transport p` は要素を移す操作を行う。
+<!--/-->
+
+<figure class="book-diagram type-comparison structural-figure" id="fig-type-transport" aria-describedby="fig-type-transport-caption">
+<div class="diagram-panel type-comparison-panel">
+
+$$p : A\equiv B$$
+
+<div class="transport-scene">
+<div class="diagram-space transport-fiber">
+
+$$a : A$$
+
+</div>
+<div class="transport-edge">
+
+$$\xmapsto{\;\operatorname{transport}\,p\;}$$
+
+</div>
+<div class="diagram-space transport-fiber">
+
+$$b : B$$
+
+</div>
+<div class="transport-family" aria-hidden="true"></div>
+<div class="transport-construction">
+
+$$\Big\uparrow\mathrlap{\;{\scriptstyle\operatorname{transport}}}$$
+
+</div>
+<div class="transport-family" aria-hidden="true"></div>
+<div class="diagram-space transport-base">
+
+$$A : \operatorname{Type}_{\ell}$$
+
+</div>
+<div class="path-connection">
+<svg viewBox="0 0 120 54" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M8 35 H112"/>
+<circle class="diagram-point" cx="8" cy="35" r="3.5"/>
+<circle class="diagram-point" cx="112" cy="35" r="3.5"/>
+</svg>
+<span class="path-connection-label">$p$</span>
+</div>
+<div class="diagram-space transport-base">
+
+$$B : \operatorname{Type}_{\ell}$$
+
+</div>
+</div>
+
+$$b := \operatorname{transport}\,p\,a$$
+
+</div>
+<figcaption id="fig-type-transport-caption">
+<!--en-->
+`transport`: a path between types gives a function between their elements.
+<!--zh-->
+`transport`：类型之间的路径给出搬移元素的函数。
+<!--ja-->
+`transport`：型の間のパスから、要素を移す関数を得る。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+`subst`{.Agda} turns a path between inputs of a type family into a function between the corresponding types. Given a type family `B : A → Type ℓ`{.Agda} and a path `p : x ≡ y`{.Agda}, it constructs a function `subst B p` from `B x` to `B y`. Thus, fixing `B` and `p` gives a function from elements to elements:
+
+<div class="single-line-code"><code>`subst B p : B x → B y`{.Agda}</code></div>
+
+Here the path joins the inputs `x` and `y`, while the elements being moved belong to `B x` and `B y`. The diagram shows how `subst B p` sends `u : B x`{.Agda} to `subst B p u : B y`{.Agda}. `subst2`{.Agda} is the corresponding operation for a type family with two inputs: a path in each input moves data to the type at the new pair.
+<!--zh-->
+`subst`{.Agda} 把类型族输入之间的路径转为相应类型之间的函数。给定类型族 `B : A → Type ℓ`{.Agda} 和路径 `p : x ≡ y`{.Agda}，它构造从 `B x` 到 `B y` 的函数 `subst B p`。因此，固定 `B` 和 `p` 后，得到的是一个把元素送到元素的函数：
+
+<div class="single-line-code"><code>`subst B p : B x → B y`{.Agda}</code></div>
+
+这里的路径连接输入 `x` 和 `y`，而被搬移的元素属于 `B x` 和 `B y`。图中，`subst B p` 把 `u : B x`{.Agda} 送到 `subst B p u : B y`{.Agda}。`subst2`{.Agda} 是类型族有两个输入时的相应操作：分别给出两个输入上的路径，即可把数据搬移到新输入对所对应的类型中。
+<!--ja-->
+`subst`{.Agda} は型族の入力の間のパスを、対応する型の間の関数に変える。型族 `B : A → Type ℓ`{.Agda} とパス `p : x ≡ y`{.Agda} が与えられると、`B x` から `B y` への関数 `subst B p` を構成する。したがって、`B` と `p` を固定すると、要素を要素へ送る関数が得られる。
+
+<div class="single-line-code"><code>`subst B p : B x → B y`{.Agda}</code></div>
+
+ここではパスが入力 `x` と `y` を結び、移される要素は `B x` と `B y` に属する。図では、`subst B p` が `u : B x`{.Agda} を `subst B p u : B y`{.Agda} に送る。`subst2`{.Agda} は二つの入力を持つ型族に対する同様の操作である。各入力のパスを与えると、新しい入力の組に対応する型へデータを移す。
+<!--/-->
+
+<figure class="book-diagram type-comparison structural-figure" id="fig-path-transport" aria-describedby="fig-path-transport-caption">
+<div class="diagram-panel type-comparison-panel">
+
+$$B : A \to \operatorname{Type}_{\ell}, \qquad p : x \equiv y$$
+
+<div class="transport-scene">
+<div class="diagram-space transport-fiber">
+
+$$u : B(x)$$
+
+</div>
+<div class="transport-edge">
+
+$$\xmapsto{\;\operatorname{subst}\,B\,p\;}$$
+
+</div>
+<div class="diagram-space transport-fiber">
+
+$$v : B(y)$$
+
+</div>
+<div class="transport-family" aria-hidden="true"></div>
+<div></div>
+<div class="transport-family" aria-hidden="true"></div>
+<div class="diagram-space transport-base">
+
+$$x : A$$
+
+</div>
+<div class="path-connection">
+<svg viewBox="0 0 120 54" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M8 35 H112"/>
+<circle class="diagram-point" cx="8" cy="35" r="3.5"/>
+<circle class="diagram-point" cx="112" cy="35" r="3.5"/>
+</svg>
+<span class="path-connection-label">$p$</span>
+</div>
+<div class="diagram-space transport-base">
+
+$$y : A$$
+
+</div>
+</div>
+
+$$v := \operatorname{subst}\,B\,p\,u$$
+
+</div>
+<figcaption id="fig-path-transport-caption">
+<!--en-->
+`subst`: a path between indices gives a function between the corresponding types.
+<!--zh-->
+`subst`：指标之间的路径给出相应类型之间的函数。
+<!--ja-->
+`subst`：添字の間のパスから、対応する型の間の関数を得る。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+These three operations fit together in the following diagram. Each box represents a type, named at the top; the points inside represent its elements. Arrows between boxes are functions between those types. From `x ≡ y`{.Agda} to `B x → B y`{.Agda}, we can apply `subst B` directly, or first apply `cong B` and then `transport`.
+<!--zh-->
+这三种操作的联系可以画成下图。每个框表示一个类型，框顶标明类型，框内的点表示它的元素。框之间的箭头表示这些类型之间的函数。从 `x ≡ y`{.Agda} 到 `B x → B y`{.Agda}，可以直接应用 `subst B`，也可以先应用 `cong B`，再应用 `transport`。
+<!--ja-->
+これら三つの操作の関係を次の図で表す。各枠は型を表し、その型を枠の上部に記す。枠内の点はその要素を表し、枠の間の矢印は型の間の関数を表す。`x ≡ y`{.Agda} から `B x → B y`{.Agda} へは、直接 `subst B` を適用することも、まず `cong B`、次に `transport` を適用することもできる。
+<!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-subst-factorization" aria-describedby="fig-subst-factorization-caption">
+<div class="diagram-panel path-single">
+
+$$B : A \to \operatorname{Type}_{\ell}, \qquad x,y:A$$
+
+<div class="path-stage subst-factorization" style="aspect-ratio:640/475">
+<svg viewBox="0 0 640 475" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="15" y="15" width="235" height="135"/>
+<rect class="diagram-space-shape" x="390" y="15" width="235" height="135"/>
+<rect class="diagram-space-shape" x="15" y="295" width="610" height="155"/>
+<path class="diagram-map-line" d="M262 87 H378 M152 163 L216 281 M488 163 L424 281"/>
+<path class="diagram-map-tip" d="M371 83 L378 87 L371 91 M209 277 L216 281 L216 273 M424 273 L424 281 L431 277"/>
+<path class="diagram-path" d="M140 390 Q320 350 500 390"/>
+<circle class="diagram-point" cx="132.5" cy="93" r="4"/>
+<circle class="diagram-point" cx="507.5" cy="93" r="4"/>
+<circle class="diagram-point" cx="140" cy="390" r="4"/>
+<circle class="diagram-point" cx="500" cy="390" r="4"/>
+</svg>
+<span class="path-label" style="left:20.7031%;top:9.05263%">$x\equiv y$</span>
+<span class="path-label" style="left:79.2969%;top:9.05263%">$B(x)\equiv B(y)$</span>
+<span class="path-label" style="left:50%;top:68%">$B(x)\to B(y)$</span>
+<span class="path-label" style="left:20.7031%;top:25.0526%">$p$</span>
+<span class="path-label" style="left:79.2969%;top:25.0526%">$\operatorname{cong}\,B\,p$</span>
+<span class="path-label" style="left:50%;top:12.8421%">$\operatorname{cong}\,B$</span>
+<span class="path-label" style="left:20.3125%;top:47.7895%">$\operatorname{subst}\,B$</span>
+<span class="path-label" style="left:79.8438%;top:47.7895%">$\operatorname{transport}$</span>
+<span class="path-label" style="left:21.875%;top:88.6316%">$\operatorname{subst}\,B\,p$</span>
+<span class="path-label" style="left:78.125%;top:88.6316%">$\operatorname{transport}\,(\operatorname{cong}\,B\,p)$</span>
+</div>
+
+</div>
+<figcaption id="fig-subst-factorization-caption">
+
+<!--en-->
+For each input `p`, the two routes give functions of the same type `B x → B y`{.Agda}. The blue line represents a path between these functions. The proof is omitted here.
+<!--zh-->
+对每个输入 `p`，两条路线所得的函数都属于同一类型 `B x → B y`{.Agda}。蓝线表示这两个函数之间存在路径。此处省略证明。
+<!--ja-->
+各入力 `p` に対し、二つの経路から得られる関数は同じ型 `B x → B y`{.Agda} に属する。青い線は、これらの関数の間にパスが存在することを表す。ここでは証明を省略する。
+<!--/-->
+
+</figcaption>
+</figure>
+
+<!--en-->
+`funExt`{.Agda} turns pointwise equality into equality of functions: if `f x ≡ g x`{.Agda} for every `x`, then `f ≡ g`{.Agda}.
+<!--zh-->
+`funExt`{.Agda} 从逐点相等得到函数相等：如果 `f x ≡ g x`{.Agda} 对每个 `x` 都成立，那么 `f ≡ g`{.Agda}。
+<!--ja-->
+`funExt`{.Agda} は各点での等しさから関数の等しさを与える。すべての `x` について `f x ≡ g x`{.Agda} ならば、`f ≡ g`{.Agda} である。
+<!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-path-funext" aria-describedby="fig-path-funext-caption">
+<div class="diagram-panel path-single">
+
+$$f,g : A\to B$$
+
+<div class="funext-scene">
+<div class="diagram-space funext-family">
+
+$$h : \prod_{x:A}\bigl(f(x)\equiv g(x)\bigr)$$
+
+<div class="funext-samples">
+<span class="funext-value">$f(x_1)$</span>
+<div class="path-connection">
+<svg viewBox="0 0 120 54" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M8 35 H112"/>
+<circle class="diagram-point" cx="8" cy="35" r="3.5"/>
+<circle class="diagram-point" cx="112" cy="35" r="3.5"/>
+</svg>
+<span class="path-connection-label">$h(x_1)$</span>
+</div>
+<span class="funext-value">$g(x_1)$</span>
+<span class="funext-value">$f(x_2)$</span>
+<div class="path-connection">
+<svg viewBox="0 0 120 54" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M8 35 H112"/>
+<circle class="diagram-point" cx="8" cy="35" r="3.5"/>
+<circle class="diagram-point" cx="112" cy="35" r="3.5"/>
+</svg>
+<span class="path-connection-label">$h(x_2)$</span>
+</div>
+<span class="funext-value">$g(x_2)$</span>
+<span class="funext-value">$\vdots$</span>
+<div></div>
+<span class="funext-value">$\vdots$</span>
+</div>
+</div>
+<div class="funext-map">
+<span class="funext-right">$\xmapsto{\operatorname{funExt}}$</span>
+<span class="funext-down">$\Big\downarrow\mathrlap{\;{\scriptstyle\operatorname{funExt}}}$</span>
+</div>
+<div class="diagram-space funext-result">
+<div class="path-stage" style="aspect-ratio:240/150">
+<svg viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M35 88 Q120 12 205 88"/><circle class="diagram-point" cx="35" cy="88" r="4"/><circle class="diagram-point" cx="205" cy="88" r="4"/>
+</svg>
+<span class="path-label" style="left:14.5833%;top:74.6667%">$f$</span>
+<span class="path-label" style="left:85.4167%;top:74.6667%">$g$</span>
+<span class="path-label" style="left:50%;top:20%">$\operatorname{funExt}\,h$</span>
+</div>
+
+
+$$\operatorname{funExt}\,h : f\equiv g$$
+
+</div>
+</div>
+</div>
+<figcaption id="fig-path-funext-caption">
+<!--en-->
+`funExt`: paths at every input together give a path between functions.
+<!--zh-->
+`funExt`：每个输入处的路径共同给出函数之间的路径。
+<!--ja-->
+`funExt`：すべての入力におけるパスから、関数の間のパスを得る。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
 Paths are themselves elements of a type, so two paths can in turn be equal. Equality structure can therefore continue to higher levels: we may ask not only whether two elements are equal, but also whether their equality proofs are equal. The next section introduces a hierarchy that measures how many such levels of equality structure a type retains.
 
 For further details on path types in Cubical Agda, see the [Cubical chapter of the Agda 2.8.0 manual](https://agda.readthedocs.io/en/v2.8.0/language/cubical.html). This section uses only the basic properties needed for the constructions that follow.
 <!--zh-->
-在通常的数学语言中，`x = y` 是一个关于两个对象相等的命题。在类型论中，命题由类型表示，因此相等也由类型表示：对 `A` 中的两个元素 `x` 和 `y`，`x ≡ y`{.Agda} 是「`x` 与 `y` 相等」这一命题所对应的类型，它的元素就是相等的证明。
-
-在立方类型论中，这种相等证明称为从 `x` 到 `y` 的**路径**，而 `x ≡ y`{.Agda} 称为路径类型。因此，路径并不是相等之外的另一种关系：路径就是本书所使用的相等证明，路径类型就是本书表示相等的方式。路径有起点和终点，因而可以反转方向，也可以首尾相接；下面的基本操作正是从这一结构产生的。
-
-- `refl`{.Agda} 是从一个元素到自身的路径，给出相等的自反性。
-- `sym`{.Agda} 反转路径的方向；从 `x` 到 `y` 的路径由此变成从 `y` 到 `x` 的路径。
-- `_∙_`{.Agda} 把首尾相接的路径复合起来；从 `x` 到 `y`，再从 `y` 到 `z`，便得到从 `x` 到 `z` 的路径。
-- `cong`{.Agda} 说明函数保持相等：函数把相等的输入送到相等的输出。`cong₂`{.Agda} 是相应的二元版本。
-- `funExt`{.Agda} 从逐点相等得到函数相等：如果 `f x ≡ g x`{.Agda} 对每个 `x` 都成立，那么 `f ≡ g`{.Agda}。
-- `transport`{.Agda} 沿类型之间的路径搬移元素。
-- `subst`{.Agda} 沿 `x ≡ y`{.Agda}，把依赖于 `x` 的数据搬移为依赖于 `y` 的数据。`subst2`{.Agda} 是它向双参数情形的自然推广：分别给出两个输入上的路径，即可一步把依赖于两个旧输入的数据搬移到新的输入对。
-
-例如，给定函数 `f : A → B`{.Agda}，`cong`{.Agda} 的作用可以概括为：
-
-<div class="single-line-code"><code>`cong f : x ≡ y → f x ≡ f y`{.Agda}</code></div>
-
-这表示函数 `f` 可以作用于一条相等路径，把输入之间的相等变成输出之间的相等。
-
 路径本身也是类型中的元素，所以两条路径之间还可以形成新的相等。相等结构由此可以继续向更高层延伸：不仅可以问两个元素是否相等，还可以问它们的相等证明彼此是否相等。下一节将引入一套层次分类，用来衡量一个类型保留了多少层这样的相等结构。
 
 关于 Cubical Agda 中的路径类型，可以参阅 [Agda 2.8.0 手册中的 Cubical 章节](https://agda.readthedocs.io/en/v2.8.0/language/cubical.html)。本节只使用理解后续构造所需的基本性质。
 <!--ja-->
-通常の数学では、`x = y` は二つの対象が等しいという命題である。型理論では命題を型で表すので、等しさも型で表す。`A` の二つの要素 `x` と `y` に対して、`x ≡ y`{.Agda} は「`x` と `y` が等しい」という命題に対応する型であり、その要素が等しさの証明である。
-
-立方型理論では、この等しさの証明を `x` から `y` への**パス**と呼び、`x ≡ y`{.Agda} をパス型と呼ぶ。したがって、パスは等しさとは別に置かれた関係ではない。パスが本書で使う等しさの証明であり、パス型が本書における等しさの表現である。パスには始点と終点があるため、向きを逆にしたり、端と端をつないだりできる。以下の基本操作はこの構造から生まれる。
-
-- `refl`{.Agda} は要素からそれ自身へのパスであり、等しさの反射性を与える。
-- `sym`{.Agda} はパスの向きを逆にする。`x` から `y` へのパスは、これによって `y` から `x` へのパスになる。
-- `_∙_`{.Agda} は端点の一致するパスを合成する。`x` から `y` へ進み、続いて `y` から `z` へ進めば、`x` から `z` へのパスが得られる。
-- `cong`{.Agda} は関数が等しさを保つこと、すなわち等しい入力を等しい出力へ送ることを述べる。`cong₂`{.Agda} は対応する二引数版である。
-- `funExt`{.Agda} は各点での等しさから関数の等しさを与える。すべての `x` について `f x ≡ g x`{.Agda} ならば、`f ≡ g`{.Agda} である。
-- `transport`{.Agda} は型の間のパスに沿って要素を移す。
-- `subst`{.Agda} は `x ≡ y`{.Agda} に沿って、`x` に依存するデータを `y` に依存するデータへ移す。`subst2`{.Agda} はこれを二引数の場合へ自然に一般化したもので、各入力のパスを与えると、二つの古い入力に依存するデータを新しい入力の組へ一度に移す。
-
-例えば関数 `f : A → B`{.Agda} があるとき、`cong`{.Agda} の働きは次のようにまとめられる。
-
-<div class="single-line-code"><code>`cong f : x ≡ y → f x ≡ f y`{.Agda}</code></div>
-
-これは関数 `f` が等しさのパスに作用し、入力の間の等しさを出力の間の等しさへ移すことを表す。
-
 パス自身も型の要素なので、二つのパスがさらに等しいかを考えられる。等しさの構造はこのように高い層へ続く。二つの要素が等しいかだけでなく、その等しさの証明どうしが等しいかも問えるのである。次節では、このような等しさの構造を型が何層まで保つかを測る階層的な分類を導入する。
 
 Cubical Agda のパス型について詳しくは、[Agda 2.8.0 マニュアルの Cubical の章](https://agda.readthedocs.io/en/v2.8.0/language/cubical.html)を参照してほしい。本節では、後の構成を理解するために必要な基本的性質だけを使う。
@@ -540,35 +967,227 @@ Paths are themselves elements of types, so new paths can in turn relate paths. H
 - **`isContr A`{.Agda}: `A` is [contractible]{.term-intro #contractible}.** This requires a chosen centre in `A` and, for every `x : A`{.Agda}, a path from the centre to `x`. Thus `A` must be inhabited, and every element is equal to the chosen centre, so no two elements can be distinguished by equality. This book reads the data carried by `isContr`{.Agda} as **[unique existence]{.term-intro #unique-existence}**: the centre supplies existence, and the paths from the centre to every element supply uniqueness.
 - **`isProp A`{.Agda}: `A` is a [proposition]{.term-intro #proposition}.** This requires any two elements of `A` to be equal. It neither chooses a centre nor requires `A` to be inhabited; it says only that if proofs of `A` exist, no distinction remains between them. A proposition may therefore have no proof or have a proof, but it cannot have two distinguishable proofs.
 - **`isSet A`{.Agda}: `A` is an [h-set]{.term-intro #h-set}.** The prefix marks a notion of the host: an h-set is a type satisfying `isSet`{.Agda}, not a set of the set theory being modelled. The condition does not require every two elements of `A` to be equal. Instead, it requires the path type between any two elements to be a proposition. Elements of `A` may differ, and paths may connect some of them; but once the same source and target are fixed, any two such paths are equal. Distinctions may remain among elements, while no further distinguishable structure remains among their equality proofs.
-- **`isProp→isSet`{.Agda}: every proposition is an h-set.** If `A` satisfies `isProp`{.Agda}, then it also satisfies `isSet`{.Agda}. This is an upward movement in homotopy level: it leaves `A` unchanged and derives the weaker condition that any two equality paths are equal from the stronger condition that any two elements are equal. It resembles the universe-level movement performed by `Lift`{.Agda}, since both let the same mathematical object meet a requirement at a higher level. They act on different axes, however. `Lift`{.Agda} changes the universe in which a type is presented and produces an equivalent record copy; `isProp→isSet`{.Agda} changes neither the type nor its universe, but derives one equality property from another.
 <!--zh-->
 路径本身也是类型中的元素，所以路径之间还可以形成新的路径。同伦层级按照这些相等证明还能保留多少可区分的结构，对类型进行分类。这里衡量的不是类型的大小；类型的大小由宇宙层级处理，同伦层级关心的是元素及其相等证明如何彼此区分。
 
 - **`isContr A`{.Agda}：`A` 是[可缩]{.term-intro #contractible}的。** 这要求在 `A` 中选定一个中心，并为每个 `x : A`{.Agda} 给出一条从中心到 `x` 的路径。因此，`A` 不仅必须有元素，而且所有元素都与选定的中心相等，彼此之间也就无法通过相等加以区分。本书把 `isContr`{.Agda} 携带的这组数据读作**[唯一存在]{.term-intro #unique-existence}**：中心给出存在性，所有元素都等于中心则给出唯一性。
 - **`isProp A`{.Agda}：`A` 是[命题]{.term-intro #proposition}。** 这要求 `A` 中任意两个元素都相等。它不要求预先选定中心，甚至不要求 `A` 一定有元素；它只说明，一旦 `A` 有证明，这些证明之间便没有可区分的差别。因此，一个命题可以没有证明，也可以有证明，但不能有两个彼此不同的证明。
 - **`isSet A`{.Agda}：`A` 是 [h-集合]{.term-intro #h-set}。** 前缀标明这是宿主层的概念：h-集合指满足 `isSet`{.Agda} 的类型，而不是所建模的集合论中的集合。这不要求 `A` 中任意两个元素都相等，而是要求任意两个元素之间的路径类型本身为命题。换言之，`A` 的元素可以彼此不同，也可以存在连接某些元素的路径；但给定相同的起点和终点以后，两条这样的路径必定相等。元素层面仍可保留差别，相等证明之间则不再保留可区分的更高结构。
-- **`isProp→isSet`{.Agda}：命题都是 h-集合。** 如果 `A` 满足 `isProp`{.Agda}，那么它也满足 `isSet`{.Agda}。这可以看成一次同伦层级的向上搬移：我们不改变 `A`，而是从较强的条件「任意两个元素相等」推出较弱的条件「任意两条相等路径彼此相等」。它与 `Lift`{.Agda} 所做的宇宙层级搬移有一点相似：二者都使同一个数学对象满足较高层级的要求。不过，两者作用于不同的层级轴。`Lift`{.Agda} 改变类型所在的宇宙，并产生一个等价于原类型的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质。
 <!--ja-->
 パス自身も型の要素なので、パスどうしの間にさらにパスを作れる。ホモトピーレベルは、このような等しさの証明に区別できる構造がどれだけ残るかによって型を分類する。型の大きさを測るものではない。大きさを扱うのは宇宙レベルであり、ホモトピーレベルが扱うのは要素とその等しさの証明をどこまで区別できるかである。
 
 - **`isContr A`{.Agda}：`A` は[可縮]{.term-intro #contractible}である。** これは `A` の中に中心を一つ選び、すべての `x : A`{.Agda} に対して中心から `x` へのパスを与えることを要求する。したがって `A` には要素が存在し、すべての要素が選ばれた中心と等しいので、等しさによって要素を区別できない。本書では `isContr`{.Agda} が持つこのデータを**[一意存在]{.term-intro #unique-existence}**と読む。中心が存在を与え、すべての要素へのパスが一意性を与える。
 - **`isProp A`{.Agda}：`A` は[命題]{.term-intro #proposition}である。** これは `A` の任意の二要素が等しいことを要求する。中心を選ぶ必要はなく、`A` に要素が存在することさえ要求しない。`A` の証明が存在するなら、それらの間に区別が残らないことだけを述べる。したがって命題には証明がないことも、証明があることもあるが、互いに区別できる二つの証明はあり得ない。
 - **`isSet A`{.Agda}：`A` は [h-集合]{.term-intro #h-set}である。** 接頭辞はホストレベルの概念であることを示す。h-集合とは `isSet`{.Agda} を満たす型であり、モデル化される集合論の集合ではない。これは `A` の任意の二要素が等しいことを要求するのではなく、任意の二要素の間のパス型が命題であることを要求する。`A` の要素は互いに異なっていてよく、その一部を結ぶパスが存在してもかまわない。しかし始点と終点を同じものに固定すれば、その間の任意の二つのパスは等しくなる。要素の間には区別が残り得るが、等しさの証明の間には、それ以上区別できる構造が残らない。
-- **`isProp→isSet`{.Agda}：すべての命題は h-集合である。** `A` が `isProp`{.Agda} を満たせば、`isSet`{.Agda} も満たす。これはホモトピーレベルを上向きに移す操作と見なせる。`A` を変えず、「任意の二要素が等しい」という強い条件から「任意の二つの等しさのパスが等しい」という弱い条件を導く。この点は `Lift`{.Agda} による宇宙レベルの移動と似ている。どちらも同じ数学的対象を、より高いレベルの要件のもとで扱えるようにするからである。ただし、作用する軸は異なる。`Lift`{.Agda} は型を提示する宇宙を変え、元の型と同値なレコードのコピーを作る。`isProp→isSet`{.Agda} は型もその宇宙も変えず、一つの等しさの性質から別の性質を導くだけである。
 <!--/-->
+
+<figure class="book-diagram type-comparison hlevel-comparison" id="fig-hlevel-distinction" aria-describedby="fig-hlevel-distinction-caption">
+<div class="hlevel-panels">
+<section class="diagram-panel hlevel-panel">
+
+$$\operatorname{isContr}(A)$$
+
+<div class="hlevel-assumptions">
+
+$$c,x,y : A$$
+
+</div>
+<div class="hlevel-stage">
+<svg viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M55 75 L180 35 M55 75 L180 115"/>
+<circle class="diagram-centre-ring" cx="55" cy="75" r="11"/>
+<circle class="diagram-point" cx="55" cy="75" r="4"/>
+<circle class="diagram-point" cx="180" cy="35" r="4"/>
+<circle class="diagram-point" cx="180" cy="115" r="4"/>
+</svg>
+<span class="hlevel-label" style="left:22.9167%;top:66.6667%">$c$</span>
+<span class="hlevel-label" style="left:75%;top:10%">$x$</span>
+<span class="hlevel-label" style="left:75%;top:91.3333%">$y$</span>
+<span class="hlevel-label" style="left:47.5%;top:26%">$h(x)$</span>
+<span class="hlevel-label" style="left:47.5%;top:75.3333%">$h(y)$</span>
+</div>
+<div class="hlevel-definition">
+
+$$c : A,\quad h : \prod_{x:A}(c\equiv x)$$
+
+</div>
+<!--en-->
+<p class="hlevel-note">A type with a chosen centre to which every element is joined by a path.</p>
+<!--zh-->
+<p class="hlevel-note">带有选定中心、且每个元素都有路径与中心相连的类型。</p>
+<!--ja-->
+<p class="hlevel-note">選ばれた中心を持ち、すべての元が中心とパスで結ばれる型。</p>
+<!--/-->
+</section>
+<div class="hlevel-link">
+<span class="hlevel-link-right">$\Longrightarrow$</span>
+<span class="hlevel-link-down">$\Downarrow$</span>
+</div>
+<section class="diagram-panel hlevel-panel">
+
+$$\operatorname{isProp}(A)$$
+
+<div class="hlevel-assumptions">
+
+$$x,y : A$$
+
+</div>
+<div class="hlevel-stage">
+<svg viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M40 85 Q120 10 200 85"/>
+<circle class="diagram-point" cx="40" cy="85" r="4"/>
+<circle class="diagram-point" cx="200" cy="85" r="4"/>
+</svg>
+<span class="hlevel-label" style="left:16.6667%;top:73.3333%">$x$</span>
+<span class="hlevel-label" style="left:83.3333%;top:73.3333%">$y$</span>
+<span class="hlevel-label" style="left:50%;top:19.3333%">$h(x,y)$</span>
+</div>
+<div class="hlevel-definition">
+
+$$h : \prod_{x,y:A}(x\equiv y)$$
+
+</div>
+<!--en-->
+<p class="hlevel-note">A proposition may therefore have no proof or have a proof, but it cannot have two distinguishable proofs.</p>
+<!--zh-->
+<p class="hlevel-note">因此，一个命题可以没有证明，也可以有证明，但不能有两个彼此不同的证明。</p>
+<!--ja-->
+<p class="hlevel-note">したがって命題には証明がないことも、証明があることもあるが、互いに区別できる二つの証明はあり得ない。</p>
+<!--/-->
+</section>
+<div class="hlevel-link">
+<span class="hlevel-link-right">$\Longrightarrow$</span>
+<span class="hlevel-link-down">$\Downarrow$</span>
+</div>
+<section class="diagram-panel hlevel-panel">
+
+$$\operatorname{isSet}(A)$$
+
+<div class="hlevel-assumptions">
+
+$$x,y : A,\quad p,q : x\equiv y$$
+
+</div>
+<div class="hlevel-stage">
+<svg viewBox="0 0 240 150" aria-hidden="true" focusable="false">
+<path class="diagram-higher-path" d="M35 75 Q120 0 205 75 Q120 150 35 75 Z"/>
+<path class="diagram-path" d="M35 75 Q120 0 205 75 M35 75 Q120 150 205 75"/>
+<circle class="diagram-point" cx="35" cy="75" r="4"/>
+<circle class="diagram-point" cx="205" cy="75" r="4"/>
+</svg>
+<span class="hlevel-label" style="left:6.66667%;top:50%">$x$</span>
+<span class="hlevel-label" style="left:93.3333%;top:50%">$y$</span>
+<span class="hlevel-label" style="left:50%;top:15.3333%">$p$</span>
+<span class="hlevel-label" style="left:50%;top:85.3333%">$q$</span>
+<span class="hlevel-label" style="left:50%;top:50%">$p\equiv q$</span>
+</div>
+<div class="hlevel-definition">
+
+$$h : \prod_{x,y:A}\operatorname{isProp}(x\equiv y)$$
+
+</div>
+<!--en-->
+<p class="hlevel-note">A type whose equality types are propositions: elements may differ, but any two proofs that they are equal agree.</p>
+<!--zh-->
+<p class="hlevel-note">相等类型都是命题的类型：元素之间可以有差别，但同一对元素的任意两个相等证明彼此相等。</p>
+<!--ja-->
+<p class="hlevel-note">等しさの型がすべて命題である型。元は互いに異なりうるが、同じ二元が等しいことの証明は互いに一致する。</p>
+<!--/-->
+</section>
+</div>
+<figcaption id="fig-hlevel-distinction-caption">
+<!--en-->
+A chosen centre, equality of elements, equality of paths: these conditions become successively weaker.
+<!--zh-->
+选定中心、元素相等、路径相等：这三个条件依次减弱。
+<!--ja-->
+中心の選択、要素の等しさ、パスの等しさ：これらの条件は順に弱くなる。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+**`isProp→isSet`{.Agda}: every proposition is an h-set.** If `A` satisfies `isProp`{.Agda}, then it also satisfies `isSet`{.Agda}. This is an upward movement in homotopy level: it leaves `A` unchanged and derives the weaker condition that any two equality paths are equal from the stronger condition that any two elements are equal. It resembles the universe-level movement performed by `Lift`{.Agda}, since both let the same mathematical object meet a requirement at a higher level. They act on different axes, however.
+<!--zh-->
+**`isProp→isSet`{.Agda}：命题都是 h-集合。** 如果 `A` 满足 `isProp`{.Agda}，那么它也满足 `isSet`{.Agda}。这可以看成一次同伦层级的向上搬移：我们不改变 `A`，而是从较强的条件「任意两个元素相等」推出较弱的条件「任意两条相等路径彼此相等」。它与 `Lift`{.Agda} 所做的宇宙层级搬移有一点相似：二者都使同一个数学对象满足较高层级的要求。不过，两者作用于不同的层级轴。
+<!--ja-->
+**`isProp→isSet`{.Agda}：すべての命題は h-集合である。** `A` が `isProp`{.Agda} を満たせば、`isSet`{.Agda} も満たす。これはホモトピーレベルを上向きに移す操作と見なせる。`A` を変えず、「任意の二要素が等しい」という強い条件から「任意の二つの等しさのパスが等しい」という弱い条件を導く。この点は `Lift`{.Agda} による宇宙レベルの移動と似ている。どちらも同じ数学的対象を、より高いレベルの要件のもとで扱えるようにするからである。ただし、作用する軸は異なる。
+<!--/-->
+
+<figure class="book-diagram type-comparison structural-figure" id="fig-universe-homotopy" aria-describedby="fig-universe-homotopy-caption">
+<div class="diagram-panel type-comparison-panel level-scene">
+<!--en-->
+<p class="type-comparison-title"><strong>Universe levels</strong></p>
+<!--zh-->
+<p class="type-comparison-title"><strong>宇宙层级</strong></p>
+<!--ja-->
+<p class="type-comparison-title"><strong>宇宙レベル</strong></p>
+<!--/-->
+<div class="diagram-space level-copy">
+
+$$\operatorname{Lift}\,\ell_2\,A : \operatorname{Type}_{\ell\text{-max}(\ell_1,\ell_2)}$$
+
+</div>
+<div class="level-lift">
+
+$$\Big\uparrow\mathrlap{\;{\scriptstyle\operatorname{Lift}\,\ell_2}}$$
+
+</div>
+<div class="diagram-space level-fixed">
+
+$$A : \operatorname{Type}_{\ell_1}$$
+
+<!--en-->
+<p class="type-comparison-title"><strong>Homotopy levels</strong></p>
+<!--zh-->
+<p class="type-comparison-title"><strong>同伦层级</strong></p>
+<!--ja-->
+<p class="type-comparison-title"><strong>ホモトピーレベル</strong></p>
+<!--/-->
+<div class="level-properties">
+<div class="level-property">
+
+$$\operatorname{isContr}(A)$$
+
+</div>
+<div class="level-implication">
+
+$$\Longrightarrow$$
+
+</div>
+<div class="level-property">
+
+$$\operatorname{isProp}(A)$$
+
+</div>
+<div class="level-implication">
+
+$$\Longrightarrow$$
+
+</div>
+<div class="level-property">
+
+$$\operatorname{isSet}(A)$$
+
+</div>
+</div>
+</div>
+</div>
+<figcaption id="fig-universe-homotopy-caption">
+<!--en-->
+`Lift`{.Agda} changes the universe in which a type is presented and produces a record copy carrying the same data; `isProp→isSet`{.Agda} changes neither the type nor its universe, but derives one equality property from another.
+<!--zh-->
+`Lift`{.Agda} 改变类型所在的宇宙，并产生一个携带同样数据的记录副本；`isProp→isSet`{.Agda} 不改变类型，也不改变它所在的宇宙，只是从已有的相等性质推出另一个相等性质。
+<!--ja-->
+`Lift`{.Agda} は型を提示する宇宙を変え、同じデータをもつレコードのコピーを作る。`isProp→isSet`{.Agda} は型もその宇宙も変えず、一つの等しさの性質から別の性質を導くだけである。
+<!--/-->
+</figcaption>
+</figure>
 
 ```agda
 open import Cubical.Foundations.Prelude public
   using ( isProp; isSet; isContr; isProp→isSet )
 ```
-
-<!--en-->
-Three related notions will recur throughout the book. Given `f : A → B`{.Agda} and `b : B`{.Agda}, the **[fibre]{.term-intro #fiber}** of `f` over `b` is the dependent pair type `Σ (a : A) (f a ≡ b)`{.Agda}: it contains a preimage together with a path showing where that preimage is sent. A **[type equivalence]{.term-intro #type-equivalence}** `A ≃ B`{.Agda} consists of a map `A → B`{.Agda} whose every fibre is contractible. An **[isomorphism]{.term-intro #type-isomorphism}** instead explicitly supplies forward and inverse maps together with both inverse laws. An isomorphism therefore gives a convenient way to construct a type equivalence, while type equivalence is the standard interface for transporting structure between types.
-<!--zh-->
-全书会反复使用三个相互关联的概念。给定 `f : A → B`{.Agda} 与 `b : B`{.Agda}，`f` 在 `b` 上的**[纤维]{.term-intro #fiber}**是依值对类型 `Σ (a : A) (f a ≡ b)`{.Agda}：其中包含一个原像，以及说明该原像确实映到 `b` 的路径。**[类型等价]{.term-intro #type-equivalence}** `A ≃ B`{.Agda} 由一个映射 `A → B`{.Agda} 及其每条纤维均可缩的证书组成。**[同构]{.term-intro #type-isomorphism}**则显式给出正向映射、逆向映射和两条逆律。因此，同构为构造类型等价提供了便利，而类型等价是类型之间搬运结构的标准接口。
-<!--ja-->
-本書では、相互に関係する三つの概念を繰り返し使う。`f : A → B`{.Agda} と `b : B`{.Agda} が与えられたとき、`b` 上の `f` の**[ファイバー]{.term-intro #fiber}**は依存対型 `Σ (a : A) (f a ≡ b)`{.Agda} である。これは原像と、その原像が確かに `b` へ写ることを示すパスを含む。**[型同値]{.term-intro #type-equivalence}** `A ≃ B`{.Agda} は、写像 `A → B`{.Agda} と、そのすべてのファイバーが可縮であるという証明書からなる。これに対して**[同型]{.term-intro #type-isomorphism}**は、順写像、逆写像、二つの逆法則を明示的に与える。したがって同型は型同値を構成する便利な方法となり、型同値は型の間で構造を運ぶための標準的なインターフェースとなる。
-<!--/-->
 
 <!--en-->
 ## Propositionhood
@@ -585,7 +1204,7 @@ Four closure principles recur later in the book:
 
 - `isPropΠ`{.Agda} says that propositions are closed under Π types. If every `B x` is a proposition, then `(x : A) → B x` is also a proposition. Universally quantifying a family of propositions therefore produces another proposition.
 - `isProp→`{.Agda} is the non-dependent specialization of `isPropΠ`{.Agda}. If `B` is a proposition, then the function type `A → B` is a proposition, with no propositionhood requirement on its source type `A`.
-- `isPropΣ`{.Agda} handles dependent pairs. If the base is a proposition and every fiber is a proposition, then their Σ type is also a proposition.
+- `isPropΣ`{.Agda} handles dependent pairs. If `A` and every `B x` are propositions, then `Σ (x : A) (B x)` is also a proposition.
 - `isProp×`{.Agda} is the non-dependent specialization of `isPropΣ`{.Agda}. If `A` and `B` are propositions, then a pair consisting of a proof of each is again a proposition: any two such pairs are equal componentwise.
 <!--zh-->
 在立方类型论中，命题是满足 `isProp`{.Agda} 的类型。这个条件保证该类型的任意两个元素都相等，因此其中只保留「是否存在证明」这一逻辑信息，不再区分不同的证明。类型具有元素时，相应命题成立；无法构造元素时，则尚未得到该命题的证明。
@@ -594,7 +1213,7 @@ Four closure principles recur later in the book:
 
 - `isPropΠ`{.Agda} 表明命题对 Π 类型封闭。若每个 `B x` 都是命题，那么 `(x : A) → B x` 也是命题。因此，对一族命题作全称量化，所得结果仍然是命题。
 - `isProp→`{.Agda} 是 `isPropΠ`{.Agda} 不带依赖时的特例。只要值域 `B` 是命题，函数类型 `A → B` 就是命题，而无须要求定义域 `A` 也是命题。
-- `isPropΣ`{.Agda} 处理依值对。若基底是命题，且每个纤维也都是命题，那么它们构成的 Σ 类型仍是命题。
+- `isPropΣ`{.Agda} 处理依值对。若 `A` 和每个 `B x` 都是命题，那么 `Σ (x : A) (B x)` 仍是命题。
 - `isProp×`{.Agda} 是 `isPropΣ`{.Agda} 不带依赖时的特例。若 `A` 与 `B` 都是命题，那么同时包含二者证明的对仍是命题：任意两个这样的对都逐分量相等。
 <!--ja-->
 立方型理論では、命題とは `isProp`{.Agda} を満たす型である。この条件により、その型の任意の二つの元は等しくなる。したがって、証明どうしを区別せず、証明が存在するかどうかという論理的な情報だけが残る。型の元を構成すれば対応する命題が成り立つことが示され、元をまだ構成できなければ、その命題の証明はまだ得られていない。
@@ -603,7 +1222,7 @@ Four closure principles recur later in the book:
 
 - `isPropΠ`{.Agda} は、命題が Π 型に対して閉じていることを示す。すべての `B x` が命題なら、`(x : A) → B x` も命題である。したがって、命題の族を全称量化して得られる結果も命題である。
 - `isProp→`{.Agda} は `isPropΠ`{.Agda} の依存しない特別な場合である。終域 `B` が命題なら、定義域 `A` が命題であることを仮定しなくても、関数型 `A → B` は命題になる。
-- `isPropΣ`{.Agda} は依存対を扱う。基底が命題で、各ファイバーも命題なら、それらから作る Σ 型も命題になる。
+- `isPropΣ`{.Agda} は依存対を扱う。`A` と各 `B x` が命題なら、`Σ (x : A) (B x)` も命題になる。
 - `isProp×`{.Agda} は `isPropΣ`{.Agda} の依存しない特別な場合である。`A` と `B` が命題なら、それぞれの証明を組にした型も命題である。そのような二つの組は成分ごとに等しくなる。
 <!--/-->
 
@@ -677,11 +1296,11 @@ The projection `⟨_⟩`{.Agda} extracts the statement of a proposition. For `P 
 <!--/-->
 
 <!--en-->
-An object `P` packages the statement of a proposition together with its propositionhood certificate, so it can be passed as a function argument, returned as a function result or stored in a record field. When we need to state or prove the proposition, we extract the corresponding type through `⟨ P ⟩`{.Agda}.
+An object `P` packages the statement of a proposition together with its propositionhood certificate, so it can be passed as a function argument, returned as a function result or stored in a record field. When we need to state or prove the proposition, we extract the corresponding type through `⟨ P ⟩`{.Agda}. The examples below show an empty underlying type and an inhabited one: both carry a propositionhood certificate.
 <!--zh-->
-`P` 把命题的表述与命题性证书收在同一个对象中，因此可以整体作为函数的参数、返回值或记录的字段使用。需要陈述或证明这个命题时，再通过 `⟨ P ⟩`{.Agda} 取出相应的类型。
+`P` 把命题的表述与命题性证书收在同一个对象中，因此可以整体作为函数的参数、返回值或记录的字段使用。需要陈述或证明这个命题时，再通过 `⟨ P ⟩`{.Agda} 取出相应的类型。下图分别示意底层类型为空与有元素的例子：二者都携带命题性证书。
 <!--ja-->
-`P` は命題の記述とその命題性の証明書を一つの対象にまとめるため、全体を関数の引数や返り値として渡したり、レコードのフィールドに格納したりできる。命題を述べたり証明したりするときは、`⟨ P ⟩`{.Agda} を通して対応する型を取り出す。
+`P` は命題の記述とその命題性の証明書を一つの対象にまとめるため、全体を関数の引数や返り値として渡したり、レコードのフィールドに格納したりできる。命題を述べたり証明したりするときは、`⟨ P ⟩`{.Agda} を通して対応する型を取り出す。下図では、基礎型が空である例と元をもつ例を示す。どちらも命題性の証明書をもつ。
 <!--/-->
 
 ```agda
@@ -691,6 +1310,65 @@ open import Cubical.Foundations.Structure public
 ⟨_⟩isProp : ∀ {ℓ} (P : hProp ℓ) → isProp ⟨ P ⟩
 ⟨ P ⟩isProp = P .snd
 ```
+
+<figure class="book-diagram type-comparison path-figure" id="fig-proposition-and-proof" aria-describedby="fig-proposition-and-proof-caption">
+<div class="diagram-framed type-comparison-panels proposition-proof-panels">
+<section class="type-comparison-panel">
+
+$$P=(\langle P\rangle,h_P):\operatorname{hProp}\,\ell$$
+
+<div class="diagram-space">
+
+$$\langle P\rangle:\operatorname{Type}_{\ell}$$
+
+<div class="path-stage" style="aspect-ratio:280/140">
+<!--en-->
+<span class="path-label" style="left:50%;top:50%">(no elements)</span>
+<!--zh-->
+<span class="path-label" style="left:50%;top:50%">(没有元素)</span>
+<!--ja-->
+<span class="path-label" style="left:50%;top:50%">(元がない)</span>
+<!--/-->
+</div>
+</div>
+
+$$h_P:\operatorname{isProp}\langle P\rangle$$
+
+</section>
+<section class="type-comparison-panel">
+
+$$Q=(\langle Q\rangle,h_Q):\operatorname{hProp}\,\ell$$
+
+<div class="diagram-space">
+
+$$\langle Q\rangle:\operatorname{Type}_{\ell}$$
+
+<div class="path-stage" style="aspect-ratio:280/140">
+<svg viewBox="0 0 280 140" aria-hidden="true" focusable="false">
+<path class="diagram-path" d="M60 90 Q140 10 220 90"/>
+<circle class="diagram-point" cx="60" cy="90" r="4"/>
+<circle class="diagram-point" cx="220" cy="90" r="4"/>
+</svg>
+<span class="path-label" style="left:21.4286%;top:83%">$p$</span>
+<span class="path-label" style="left:78.5714%;top:83%">$q$</span>
+<span class="path-label" style="left:50%;top:24%">$h_Q\,p\,q$</span>
+</div>
+</div>
+
+$$h_Q:\operatorname{isProp}\langle Q\rangle$$
+
+</section>
+</div>
+<figcaption id="fig-proposition-and-proof-caption">
+<!--en-->
+The certificate $h_Q$ assigns a path to any two proofs; the curve shows its value $h_Q\,p\,q$ at $p$ and $q$.
+<!--zh-->
+证书 $h_Q$ 为任意两个证明给出路径；右图的曲线表示它在 $p$、$q$ 上的值 $h_Q\,p\,q$。
+<!--ja-->
+証明書 $h_Q$ は任意の二つの証明にパスを与える。右図の曲線は、その $p$、$q$ における値 $h_Q\,p\,q$ を表す。
+<!--/-->
+</figcaption>
+</figure>
 
 <!--en-->
 ## [Propositional truncation]{.term-intro #propositional-truncation}
@@ -720,27 +1398,91 @@ $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$
 したがって `A`{.Agda} が区別可能なデータをもっていても、`∥ A ∥₁`{.Agda} は常に命題である。
 <!--/-->
 
+<figure class="book-diagram type-comparison path-figure" id="fig-truncation-witnesses" aria-describedby="fig-truncation-witnesses-caption">
+<div class="diagram-framed">
+<div class="path-stage diagram-compact-stage" style="aspect-ratio:420/340">
+<svg viewBox="0 0 420 340" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="15" y="10" width="390" height="100"/>
+<rect class="diagram-space-shape" x="15" y="205" width="390" height="125"/>
+<path class="diagram-map-line" d="M95 83 L95 249"/>
+<path class="diagram-map-tip" d="M91 242 L95 249 L99 242"/>
+<path class="diagram-map-line" d="M325 83 L325 249"/>
+<path class="diagram-map-tip" d="M321 242 L325 249 L329 242"/>
+<path class="diagram-path" d="M95 253 Q210 350 325 253"/>
+<circle class="diagram-point" cx="95" cy="79" r="4"/>
+<circle class="diagram-point" cx="325" cy="79" r="4"/>
+<circle class="diagram-point" cx="95" cy="253" r="4"/>
+<circle class="diagram-point" cx="325" cy="253" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:10.2941%">$A$</span>
+<span class="path-label" style="left:22.619%;top:16.4706%">$a$</span>
+<span class="path-label" style="left:77.381%;top:16.4706%">$b$</span>
+<span class="path-label" style="left:50%;top:45.2941%">$\lvert{-}\rvert_1$</span>
+<span class="path-label" style="left:50%;top:66.7647%">$\|A\|_1$</span>
+<span class="path-label" style="left:13.0952%;top:74.4118%">$\lvert a\rvert_1$</span>
+<span class="path-label" style="left:86.9048%;top:74.4118%">$\lvert b\rvert_1$</span>
+<span class="path-label" style="left:50%;top:91.7647%">$\operatorname{squash}_1\,\lvert a\rvert_1\,\lvert b\rvert_1$</span>
+</div>
+</div>
+<figcaption id="fig-truncation-witnesses-caption">
+<!--en-->
+Given `a b : A`, their images in the truncation are joined by the displayed path. The two images need not be judgmentally equal; `squash₁` supplies their equality proof.
+<!--zh-->
+给定 `a b : A`，它们在截断中的像由图示路径相连。这两个像未必判断相等；`squash₁` 给出它们之间的相等证明。
+<!--ja-->
+`a b : A` が与えられると、切り詰めでの像は図のパスで結ばれる。二つの像が判断的に等しいとは限らず、`squash₁` がその等しさの証明を与える。
+<!--/-->
+</figcaption>
+</figure>
+
 <!--en-->
 There are two standard ways to use a truncated value. The recursor `rec₁`{.Agda} may expose a representative only while constructing a target already known to be a proposition; this restriction prevents a hidden choice from escaping as ordinary data.
 
 <div class="single-line-code"><code>rec₁ : isProp P → (A → P) → ∥ A ∥₁ → P</code></div>
-
-The map `map₁`{.Agda} applies a function `A → B`{.Agda} under the truncation and returns another truncated value.
-
-<div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
 <!--zh-->
 使用截断值有两种标准方式。递归子 `rec₁`{.Agda} 只有在目标已经证明为命题时，才允许局部取出一个代表；这项限制防止隐藏的选择逸出为普通资料。
 
 <div class="single-line-code"><code>rec₁ : isProp P → (A → P) → ∥ A ∥₁ → P</code></div>
-
-映射 `map₁`{.Agda} 在截断内部应用函数 `A → B`{.Agda}，再返回一个截断值。
-
-<div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
 <!--ja-->
 切り詰められた値の使い方には、二つの標準的な方法がある。再帰子 `rec₁`{.Agda} が代表を局所的に取り出せるのは、行き先が命題であるとすでに証明されている場合だけである。この制限により、隠された選択が通常のデータとして外へ出ることを防ぐ。
 
 <div class="single-line-code"><code>rec₁ : isProp P → (A → P) → ∥ A ∥₁ → P</code></div>
+<!--/-->
 
+<figure class="book-diagram type-comparison" id="fig-truncation-rec" aria-describedby="fig-truncation-rec-caption">
+<div class="diagram-panel type-comparison-panel">
+
+$$h : \operatorname{isProp}(P), \qquad f : A \to P$$
+
+$$\begin{array}{ccc}
+A & \xrightarrow{\;|{-}|_1\;} & \|A\|_1 \\[6pt]
+\mathllap{{\scriptstyle f}\,}\Big\downarrow & & \Big\downarrow\mathrlap{\,{\scriptstyle\operatorname{rec}_1\,h\,f}} \\[6pt]
+P & \xrightarrow{\;\operatorname{id}_P\;} & P
+\end{array}$$
+
+$$\operatorname{rec}_1\,h\,f\,(|a|_1) = f(a) \qquad (a : A)$$
+
+</div>
+<figcaption id="fig-truncation-rec-caption">
+<!--en-->
+`rec₁` factors `f : A → P` through the truncation, provided that `P` is a proposition. Both routes give `f a` on a representative `a`.
+<!--zh-->
+当 `P` 是命题时，`rec₁` 使 `f : A → P` 经由截断分解。对代表 `a`，两条路线都得到 `f a`。
+<!--ja-->
+`P` が命題ならば、`rec₁` によって `f : A → P` は切り詰めを経由して分解される。代表 `a` に対し、どちらの経路も `f a` を与える。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+The map `map₁`{.Agda} applies a function `A → B`{.Agda} under the truncation and returns another truncated value.
+
+<div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
+<!--zh-->
+映射 `map₁`{.Agda} 在截断内部应用函数 `A → B`{.Agda}，再返回一个截断值。
+
+<div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
+<!--ja-->
 写像 `map₁`{.Agda} は切り詰めの内側で関数 `A → B`{.Agda} を適用し、再び切り詰められた値を返す。
 
 <div class="single-line-code"><code>map₁ : (A → B) → ∥ A ∥₁ → ∥ B ∥₁</code></div>
@@ -867,11 +1609,11 @@ The false proposition `⊥` and the empty type express the same impossibility at
 <!--/-->
 
 <!--en-->
-For a family of propositions `P : A → hProp ℓ'`, universal quantification is the Π type introduced above: a proof is a dependent function that supplies a proof of `P x` for every `x : A`. The form `∀[ x ] P x` lets Agda infer the type of `x`, while `∀[ x ∶ A ] P x` displays it explicitly. No propositional truncation is needed. Each fiber `P x` is a proposition, so any two dependent functions agree pointwise and are equal by function extensionality; this is the closure property `isPropΠ`{.Agda}.
+For a family of propositions `P : A → hProp ℓ'`, universal quantification is the Π type introduced above: a proof is a dependent function that supplies a proof of `P x` for every `x : A`. The form `∀[ x ] P x` lets Agda infer the type of `x`, while `∀[ x ∶ A ] P x` displays it explicitly. No propositional truncation is needed. Each `P x` is a proposition, so any two dependent functions agree pointwise and are equal by function extensionality; this is the closure property `isPropΠ`{.Agda}.
 <!--zh-->
-对命题族 `P : A → hProp ℓ'`，全称量化就是前文介绍的 Π 类型：它的证明是一个依值函数，为每个 `x : A` 给出 `P x` 的证明。写作 `∀[ x ] P x` 时由 Agda 推断 `x` 的类型；写作 `∀[ x ∶ A ] P x` 时则把这个类型明确列出。这里不需要命题截断。每个纤维 `P x` 都是命题，所以任意两个依值函数逐点相等，再由函数外延性可知它们相等；这正是 `isPropΠ`{.Agda} 所表达的封闭性。
+对命题族 `P : A → hProp ℓ'`，全称量化就是前文介绍的 Π 类型：它的证明是一个依值函数，为每个 `x : A` 给出 `P x` 的证明。写作 `∀[ x ] P x` 时由 Agda 推断 `x` 的类型；写作 `∀[ x ∶ A ] P x` 时则把这个类型明确列出。这里不需要命题截断。每个 `P x` 都是命题，所以任意两个依值函数逐点相等，再由函数外延性可知它们相等；这正是 `isPropΠ`{.Agda} 所表达的封闭性。
 <!--ja-->
-命題族 `P : A → hProp ℓ'` に対する全称量化は、先に導入した Π 型である。その証明は、各 `x : A` に `P x` の証明を与える依存関数である。`∀[ x ] P x` と書けば `x` の型を Agda が推論し、`∀[ x ∶ A ] P x` と書けばその型を明示できる。ここでは命題的切り詰めは不要である。各ファイバー `P x` が命題なので、任意の二つの依存関数は各点で等しく、関数外延性によって関数そのものも等しくなる。これが `isPropΠ`{.Agda} の表す閉性である。
+命題族 `P : A → hProp ℓ'` に対する全称量化は、先に導入した Π 型である。その証明は、各 `x : A` に `P x` の証明を与える依存関数である。`∀[ x ] P x` と書けば `x` の型を Agda が推論し、`∀[ x ∶ A ] P x` と書けばその型を明示できる。ここでは命題的切り詰めは不要である。各 `P x` が命題なので、任意の二つの依存関数は各点で等しく、関数外延性によって関数そのものも等しくなる。これが `isPropΠ`{.Agda} の表す閉性である。
 <!--/-->
 
 ```agda
@@ -947,11 +1689,11 @@ open import Cubical.Functions.Logic public using ( ⇔toPath )
 <!--/-->
 
 <!--en-->
-Existential quantification begins with the Σ type introduced above. Its dependent pairs contain both a witness `x : A` and a proof of `P x`. Even though every fiber `P x` is a proposition, the witnesses in `A` may be distinguishable, so this Σ type need not be a proposition. The notation therefore applies propositional truncation: `∃[ x ] P x` lets Agda infer the type of the witness, while `∃[ x ∶ A ] P x` states it explicitly, and both forget which witness was chosen while retaining that some witness exists. Existential quantification therefore needs truncation because its untruncated evidence contains an arbitrary element of `A`, whereas the preceding universal quantification and implication do not.
+Existential quantification begins with the Σ type introduced above. Its dependent pairs contain both a witness `x : A` and a proof of `P x`. Even though every `P x` is a proposition, the witnesses in `A` may be distinguishable, so this Σ type need not be a proposition. The notation therefore applies propositional truncation: `∃[ x ] P x` lets Agda infer the type of the witness, while `∃[ x ∶ A ] P x` states it explicitly, and both forget which witness was chosen while retaining that some witness exists. Existential quantification therefore needs truncation because its untruncated evidence contains an arbitrary element of `A`, whereas the preceding universal quantification and implication do not.
 <!--zh-->
-存在量化从前文介绍的 Σ 类型出发，其依值对同时包含见证 `x : A` 与 `P x` 的证明。即使每个纤维 `P x` 都是命题，`A` 中的见证仍可能彼此不同，所以这个 Σ 类型未必是命题。因此，这套记法还要加上命题截断：`∃[ x ] P x` 让 Agda 推断见证的类型，`∃[ x ∶ A ] P x` 则明确写出这个类型；二者都忘掉具体选中了哪个见证，只保留某个见证存在。因此，存在量化需要截断，因为未经截断的证据含有 `A` 中的任意元素；前面的全称量化与蕴涵则没有这种额外资料。
+存在量化从前文介绍的 Σ 类型出发，其依值对同时包含见证 `x : A` 与 `P x` 的证明。即使每个 `P x` 都是命题，`A` 中的见证仍可能彼此不同，所以这个 Σ 类型未必是命题。因此，这套记法还要加上命题截断：`∃[ x ] P x` 让 Agda 推断见证的类型，`∃[ x ∶ A ] P x` 则明确写出这个类型；二者都忘掉具体选中了哪个见证，只保留某个见证存在。因此，存在量化需要截断，因为未经截断的证据含有 `A` 中的任意元素；前面的全称量化与蕴涵则没有这种额外资料。
 <!--ja-->
-存在量化は、先に導入した Σ 型から始まる。その依存対は、証人 `x : A` と `P x` の証明をともに含む。各ファイバー `P x` が命題でも、`A` の証人どうしは区別できるかもしれないため、この Σ 型は命題とは限らない。そこで、この記法はさらに命題的切り詰めを施す。`∃[ x ] P x` は証人の型を Agda に推論させ、`∃[ x ∶ A ] P x` はその型を明示するが、どちらも選ばれた証人を忘れ、何らかの証人が存在することだけを残す。したがって、切り詰める前の証拠が `A` の任意の要素を含むため、存在量化には切り詰めが必要である。先に見た全称量化と含意には、このような余分なデータはない。
+存在量化は、先に導入した Σ 型から始まる。その依存対は、証人 `x : A` と `P x` の証明をともに含む。各 `P x` が命題でも、`A` の証人どうしは区別できるかもしれないため、この Σ 型は命題とは限らない。そこで、この記法はさらに命題的切り詰めを施す。`∃[ x ] P x` は証人の型を Agda に推論させ、`∃[ x ∶ A ] P x` はその型を明示するが、どちらも選ばれた証人を忘れ、何らかの証人が存在することだけを残す。したがって、切り詰める前の証拠が `A` の任意の要素を含むため、存在量化には切り詰めが必要である。先に見た全称量化と含意には、このような余分なデータはない。
 <!--/-->
 
 ```agda
@@ -1271,16 +2013,6 @@ $$\operatorname{lookup}(i,a\mathbin{∷}v)=
 a, & i=\mathsf{zero},\\
 \operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
 \end{cases}$$
-
-The function `map`{.Agda} applies one function to every entry without changing the length.
-
-$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
-
-$$\operatorname{map}(f,v)=
-\begin{cases}
-[], & v=[],\\
-f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
-\end{cases}$$
 <!--zh-->
 向量 `Vec A n`{.Agda} 是由 `A` 的元素组成、且长度写入类型的列表。它的两个构造规则可以写成
 
@@ -1296,16 +2028,6 @@ $$\operatorname{lookup}(i,a\mathbin{∷}v)=
 \begin{cases}
 a, & i=\mathsf{zero},\\
 \operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
-\end{cases}$$
-
-函数 `map`{.Agda} 对每个分量应用同一个函数而不改变长度。
-
-$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
-
-$$\operatorname{map}(f,v)=
-\begin{cases}
-[], & v=[],\\
-f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
 \end{cases}$$
 <!--ja-->
 ベクトル `Vec A n`{.Agda} は `A` の元からなるリストで、その長さが型の一部になっている。その二つの構成子は、次の推論式で表せる。
@@ -1323,7 +2045,89 @@ $$\operatorname{lookup}(i,a\mathbin{∷}v)=
 a, & i=\mathsf{zero},\\
 \operatorname{lookup}(j,v), & i=\mathsf{suc}\,j
 \end{cases}$$
+<!--/-->
 
+<!--en-->
+For the length-three vector below, the labels $0,1,2$ abbreviate the `Fin 3` constructors `zero`, `suc zero`, and `suc (suc zero)`.
+<!--zh-->
+下面取一个长度为三的向量；图中的 $0,1,2$ 分别简写 `Fin 3` 的构造子 `zero`、`suc zero`、`suc (suc zero)`。
+<!--ja-->
+下図では長さ三のベクトルを取る。図の $0,1,2$ は `Fin 3` の構成子 `zero`、`suc zero`、`suc (suc zero)` の略記である。
+<!--/-->
+
+<figure class="book-diagram type-comparison path-figure" id="fig-fin-vector-lookup" aria-describedby="fig-fin-vector-lookup-caption">
+<div class="diagram-framed">
+<div class="diagram-indexed">
+
+
+$$v=a\mathbin{∷}b\mathbin{∷}c\mathbin{∷}[]:\operatorname{Vec}(A,3)$$
+
+<div class="vector-slots"><span>$a$</span><span>$b$</span><span>$c$</span></div>
+
+
+$$i\mapsto\operatorname{lookup}\,i\,v$$
+
+
+<div class="path-stage diagram-compact-stage" style="aspect-ratio:420/310">
+<svg viewBox="0 0 420 310" aria-hidden="true" focusable="false">
+<rect class="diagram-space-shape" x="15" y="15" width="390" height="90"/>
+<rect class="diagram-space-shape" x="15" y="205" width="390" height="90"/>
+<path class="diagram-map-line" d="M80 85 L80 251"/>
+<path class="diagram-map-tip" d="M76 244 L80 251 L84 244"/>
+<path class="diagram-map-line" d="M210 85 L210 251"/>
+<path class="diagram-map-tip" d="M206 244 L210 251 L214 244"/>
+<path class="diagram-map-line" d="M340 85 L340 251"/>
+<path class="diagram-map-tip" d="M336 244 L340 251 L344 244"/>
+<circle class="diagram-point" cx="80" cy="81" r="4"/>
+<circle class="diagram-point" cx="210" cy="81" r="4"/>
+<circle class="diagram-point" cx="340" cy="81" r="4"/>
+<circle class="diagram-point" cx="80" cy="255" r="4"/>
+<circle class="diagram-point" cx="210" cy="255" r="4"/>
+<circle class="diagram-point" cx="340" cy="255" r="4"/>
+</svg>
+<span class="path-label" style="left:50%;top:12.5806%">$\operatorname{Fin}(3)$</span>
+<span class="path-label" style="left:19.0476%;top:19.6774%">$0$</span>
+<span class="path-label" style="left:50%;top:19.6774%">$1$</span>
+<span class="path-label" style="left:80.9524%;top:19.6774%">$2$</span>
+<span class="path-label" style="left:9.52381%;top:73.2258%">$A$</span>
+<span class="path-label" style="left:19.0476%;top:89.6774%">$a$</span>
+<span class="path-label" style="left:50%;top:89.6774%">$b$</span>
+<span class="path-label" style="left:80.9524%;top:89.6774%">$c$</span>
+</div>
+</div>
+</div>
+<figcaption id="fig-fin-vector-lookup-caption">
+<!--en-->
+Each column follows one position through the vector, its index, and its lookup result. `Fin 3` provides exactly the three valid indices; the entries `a`, `b`, and `c` may coincide.
+<!--zh-->
+每一列对齐向量中的一个位置、它的索引和查找结果。`Fin 3` 恰好提供三个合法索引；分量 `a`、`b`、`c` 本身可以相同。
+<!--ja-->
+各列はベクトルの一つの位置、その添字、参照結果を揃えている。`Fin 3` が与えるのは三つの有効な添字だけであり、成分 `a`、`b`、`c` 自体は同じでもよい。
+<!--/-->
+</figcaption>
+</figure>
+
+<!--en-->
+The function `map`{.Agda} applies one function to every entry without changing the length.
+
+$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+
+$$\operatorname{map}(f,v)=
+\begin{cases}
+[], & v=[],\\
+f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
+\end{cases}$$
+<!--zh-->
+函数 `map`{.Agda} 对每个分量应用同一个函数而不改变长度。
+
+$$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
+
+$$\operatorname{map}(f,v)=
+\begin{cases}
+[], & v=[],\\
+f(a)\mathbin{∷}\operatorname{map}(f,w), & v=a\mathbin{∷}w
+\end{cases}$$
+<!--ja-->
 関数 `map`{.Agda} は長さを変えずに各成分へ同じ関数を適用する。
 
 $$\operatorname{map}:(A\to B)\to\operatorname{Vec}(A,n)\to\operatorname{Vec}(B,n)$$
