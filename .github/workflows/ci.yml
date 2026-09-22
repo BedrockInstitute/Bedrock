@@ -18,17 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up pinned Haskell toolchain
-        uses: haskell-actions/setup@v2
-        with:
-          ghc-version: '9.4.8'
-          cabal-version: '3.12.1.0'
-          cabal-update: true
-
       # This is the only job that builds and saves the patched Agda toolchain.
       # site-backend starts after the post-job cache save and restores the exact
-      # same key, so a cold workflow compiles Agda only once.
+      # same key, so a cold workflow compiles Agda only once. Restore this first
+      # so a cache hit can skip Haskell setup altogether.
       - name: Cache bedrock-agda
+        id: bedrock_agda
         uses: actions/cache@v4
         with:
           path: |
@@ -42,6 +37,39 @@ jobs:
           path: _build/dependencies
           key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
 
+      - name: Set up pinned Haskell toolchain
+        if: steps.bedrock_agda.outputs.cache-hit != 'true'
+        id: setup_haskell
+        uses: haskell-actions/setup@v2
+        with:
+          ghc-version: '9.4.8'
+          cabal-version: '3.12.1.0'
+          cabal-update: false
+
+      # A toolchain source change invalidates bedrock-agda, but usually leaves
+      # its Haskell dependency graph intact. Reuse Cabal's package index and
+      # compiled store so that rebuilding the patched compiler avoids fetching
+      # and recompiling unchanged dependencies.
+      - name: Cache Cabal dependencies
+        if: steps.bedrock_agda.outputs.cache-hit != 'true'
+        id: cabal
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cabal/packages
+            ${{ steps.setup_haskell.outputs['cabal-store'] }}
+          key: >-
+            bedrock-cabal-v1-${{ runner.os }}-${{ steps.setup_haskell.outputs['ghc-version'] }}-${{ steps.setup_haskell.outputs['cabal-version'] }}-${{ hashFiles('tools/bedrock-agda/manifest.json', 'tools/bedrock-agda/environment.json') }}
+          restore-keys: |
+            bedrock-cabal-v1-${{ runner.os }}-${{ steps.setup_haskell.outputs['ghc-version'] }}-${{ steps.setup_haskell.outputs['cabal-version'] }}-
+
+      - name: Update Cabal package index
+        if: >-
+          steps.bedrock_agda.outputs.cache-hit != 'true' &&
+          steps.cabal.outputs.cache-hit != 'true'
+        shell: bash
+        run: cabal update
+
       - name: Set up Bedrock toolchain
         shell: bash
         run: make toolchain PYTHON=python3
@@ -51,9 +79,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: _build/typecheck/_build/2.8.0/agda/src
-          key: bedrock-ifaces-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'src/**/*.lagda.md', 'bedrock.agda-lib') }}
+          key: bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib') }}-${{ hashFiles('src/**/*.lagda.md') }}
           restore-keys: |
-            bedrock-ifaces-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}-
+            bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib') }}-
 
       - name: Typecheck
         shell: bash
@@ -127,9 +155,9 @@ jobs:
             _build/2.8.0/agda/src
             _build/html
             _build/bedrock-agda-types.jsonl
-          key: bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'src/**/*.lagda.md', 'bedrock.agda-lib') }}
+          key: bedrock-site-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib') }}-${{ hashFiles('src/**/*.lagda.md') }}
           restore-keys: |
-            bedrock-site-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}-
+            bedrock-site-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib') }}-
 
       - name: Build shared site backend
         shell: bash
@@ -222,9 +250,19 @@ jobs:
         shell: bash
         run: python3 scripts/site/link-check.py _build/site
 
+      # wrangler-action installs Wrangler through npm because this repository
+      # has no Node project or lockfile. Cache npm's download store, not a
+      # synthetic node_modules tree.
+      - name: Cache Wrangler npm downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: wrangler-npm-v1-${{ runner.os }}-3.90.0
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '3.90.0'
           command: pages deploy _build/site --project-name=bedrock

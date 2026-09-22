@@ -22,9 +22,18 @@ of the website. `typecheck` performs the pure Agda check, all source and prose g
 unit tests, and `make milestone-lint`. Pure-check interfaces remain isolated from HTML
 and expression-type products.
 
+The `typecheck` job restores the patched-Agda cache before Haskell setup, so a normal
+cache hit skips GHC and Cabal setup entirely. When the compiler must be rebuilt, a
+separate Cabal cache reuses the package index and compiled dependency store. The
+project-interface key separates the stable toolchain fingerprint from the source-tree
+fingerprint, allowing `restore-keys` to supply a useful incremental starting point after
+source edits.
+
 After `typecheck` succeeds, `site-backend` restores the exact patched-Agda and cubical
 caches that job created, including cubical's pinned source archive. It does not install
-GHC, redownload cubical or compile Agda again. A single combined
+GHC, redownload cubical or compile Agda again. Its combined backend cache uses the same
+two-part key, so source changes can reuse compatible interfaces and HTML as an
+incremental starting point. A single combined
 Agda traversal produces project interfaces, highlighted HTML and expression-type data,
 which are uploaded as one short-lived, host-neutral artifact.
 
@@ -33,6 +42,9 @@ parallel. Each renders its own base URL, checks its own links and deploys its ow
 Neither job depends on the other, so a rendering, link-check, deployment or concurrency
 failure in one host does not prevent the other. GitHub Pages is the mirror; Cloudflare
 Pages at [bedrock.institute](https://bedrock.institute) is the canonical deployment.
+The Cloudflare job pins Wrangler and caches npm's content-addressed download store; the
+repository has no Node dependency tree, so it deliberately does not cache
+`node_modules`.
 
 ## Secrets
 
