@@ -37,6 +37,18 @@ jobs:
           path: _build/dependencies
           key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
 
+      - name: Validate restored Bedrock toolchain
+        if: steps.bedrock_agda.outputs.cache-hit == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x _build/bin/bedrock-agda
+          _build/bin/bedrock-agda --bedrock-version
+          # Checkout timestamps are newer than a restored cache. Mark the
+          # verified wrapper current so Make does not rebuild it without the
+          # deliberately skipped Haskell setup.
+          touch _build/bin/bedrock-agda
+
       - name: Set up pinned Haskell toolchain
         if: steps.bedrock_agda.outputs.cache-hit != 'true'
         id: setup_haskell

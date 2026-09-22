@@ -22,9 +22,11 @@ of the website. `typecheck` performs the pure Agda check, all source and prose g
 unit tests, and `make milestone-lint`. Pure-check interfaces remain isolated from HTML
 and expression-type products.
 
-The `typecheck` job restores the patched-Agda cache before Haskell setup, so a normal
-cache hit skips GHC and Cabal setup entirely. When the compiler must be rebuilt, a
-separate Cabal cache reuses the package index and compiled dependency store. The
+The `typecheck` job restores and validates the patched-Agda cache before Haskell setup,
+then refreshes the verified wrapper timestamp so checkout times cannot trigger a false
+rebuild. A normal cache hit therefore skips GHC and Cabal setup entirely. When the
+compiler must be rebuilt, a separate Cabal cache reuses the package index and compiled
+dependency store. The
 project-interface key separates the stable toolchain fingerprint from the source-tree
 fingerprint, allowing `restore-keys` to supply a useful incremental starting point after
 source edits.
