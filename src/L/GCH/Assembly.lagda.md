@@ -48,6 +48,8 @@ Two set-theoretic viewpoints meet here. The ambient cumulative hierarchy supplie
 
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( var; _∈̇_; _∧̇_ )
+import FOL.Semantics
 import FOL.ZFModel
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Presentation {ℓ} using ( member; fiber )
@@ -79,11 +81,12 @@ Internal size comparisons are expressed by `InjL`, the propositional truncation 
 <!--/-->
 
 ```agda
-  using ( SWO; IsLeast; leastOf; module SWO )
+  using ( SWO; IsLeast; leastOfFormula; module SWO )
 open import L.Axioms.Basic {ℓ} using ( isL-Lset )
 open import L.Cardinal {ℓ} lem
   using ( InjL; SuccCardL; IsCardinalL; module LeastCardInjL )
 open import L.CardinalAbove {ℓ} lem using ( CardAboveL )
+open import L.DefinableInjection {ℓ} lem using ( cardinalAt; module CardinalAt )
 ```
 
 <!--en-->
@@ -355,17 +358,24 @@ Internal cardinality is a proposition. Indeed, `IsCardinalL x` says, for every c
 ```
 
 <!--en-->
-The candidate predicate asks two things of an index: the constructible set it presents is an internal cardinal, and `κ` belongs to it. Ordinality need not be stored in the predicate, because every presented set is a member of the ordinal `sucV (fst θ)` and is therefore itself an ordinal.
+The candidate predicate asks two things of an index: the constructible set it presents is an internal cardinal, and `κ` belongs to it. Ordinality need not be stored in the predicate, because every presented set is a member of the ordinal `sucV (fst θ)` and is therefore itself an ordinal. The package `definedGood` presents the conjunction by `cardinalAt zero ∧̇ (var one ∈̇ var zero)`. Its environment places the candidate before `κ`, and the two directions of `CardinalAt` give the checked reading of the non-atomic conjunct.
 <!--zh-->
-候选谓词向索引要求两件事：其呈现的可构造集合是内部基数，并且 `κ` 属于它。谓词无需另存序数性，因为每个被呈现的集合都是序数 `sucV (fst θ)` 的成员，因而自身就是序数。
+候选谓词向索引要求两件事：其呈现的可构造集合是内部基数，并且 `κ` 属于它。谓词无需另存序数性，因为每个被呈现的集合都是序数 `sucV (fst θ)` 的成员，因而自身就是序数。包 `definedGood` 用 `cardinalAt zero ∧̇ (var one ∈̇ var zero)` 呈现这个合取；其环境把候选者放在 `κ` 之前，而 `CardinalAt` 的两个方向为非原子合取支给出经过检查的读取。
 <!--ja-->
-候補述語は、添字に二つの条件を課す。その添字が提示する構成可能な集合が内部基数であることと、`κ` がその集合に属することである。順序数性を述語に別途保存する必要はない。提示される各集合は順序数 `sucV (fst θ)` の要素なので、それ自身も順序数だからである。
+候補述語は、添字に二つの条件を課す。その添字が提示する構成可能な集合が内部基数であることと、`κ` がその集合に属することである。順序数性を述語に別途保存する必要はない。提示される各集合は順序数 `sucV (fst θ)` の要素なので、それ自身も順序数だからである。パッケージ `definedGood` はこの連言を `cardinalAt zero ∧̇ (var one ∈̇ var zero)` で表す。その環境では候補が `κ` より前に置かれ、`CardinalAt` の二方向が非原子的な連言肢の検査済みの読みを与える。
 <!--/-->
 
 ```agda
   Good : A → hProp (ℓ-suc ℓ)
   Good b = (IsCardinalL (up b) × ⟨ fst κ ∈ˢ fst (up b) ⟩)
          , isProp× (isPropIsCardinalL (up b)) (snd (fst κ ∈ˢ fst (up b)))
+
+  definedGood : FOL.Semantics.FormulaPredicate 𝒮ʟ A SL.S id Good
+  definedGood = FOL.Semantics.presented 2
+    (cardinalAt zero ∧̇ (var (suc zero) ∈̇ var zero)) (λ b → up b ∷ κ ∷ [])
+    (λ b → ⇔toPath
+      (λ { (card , mem) → CardinalAt.fill zero (up b ∷ κ ∷ []) card , mem })
+      (λ { (sat , mem) → CardinalAt.read zero (up b ∷ κ ∷ []) sat , mem }))
 
 ```
 
@@ -400,16 +410,16 @@ The candidate class is nonempty: the index presenting `θ` is a candidate, carry
 ```
 
 <!--en-->
-The well order of the search space then produces an actual least candidate, with its leastness proof. The least-witness type is a proposition, so the truncation of nonemptiness can be eliminated here; the search itself uses excluded middle.
+The formula-facing search on the well order now produces an actual least candidate with its leastness proof. The least-witness type is a proposition, so the truncation of nonemptiness can be eliminated here; the classical descent decides satisfaction of `definedGood`, not an unrestricted host callback.
 <!--zh-->
-搜索空间的良序随即产出实际的最小候选及其最小性证明。最小见证的类型是命题，因此非空性的截断可在此消去；搜索本身使用排中律。
+搜索空间上的面向公式搜索随即产出实际的最小候选及其最小性证明。最小见证的类型是命题，因此非空性的截断可在此消去；经典下降判定的是 `definedGood` 的满足关系，而不是不受限制的宿主回调。
 <!--ja-->
-探索空間の整列順序は、実際の最小の候補とその最小性の証明を産み出す。最小の証人の型は命題なので、非空性の切り詰めはここで消去できる。探索そのものは排中律を使う。
+探索空間の整列順序に対する論理式に面する探索は、実際の最小候補とその最小性の証明を産み出す。最小証人の型は命題なので、非空性の切り詰めをここで消去できる。古典的な降下が判定するのは `definedGood` の充足であり、制限のないホスト側のコールバックではない。
 <!--/-->
 
 ```agda
   least : Σ[ b ∈ A ] IsLeast w Good b
-  least = leastOf w lem Good nonempty
+  least = leastOfFormula w definedGood lem nonempty
 
 ```
 

@@ -53,6 +53,7 @@ The proof works directly in the ambient hierarchy V rather than through the obje
 ```agda
 
 open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; regularityV )
 open import L.Constructible {ℓ} using ( IsOrd )
 open import L.Ordinal {ℓ} using ( mem-ord )
@@ -178,7 +179,7 @@ The pointwise decision is worth pausing on, because it shows how a truncated con
 ```agda
     where
     sub : A ⊆ᵇ B
-    sub x x∈A = at (lem (x ∈ˢ B))
+    sub x x∈A = at (FOL.Semantics.decideMembership 𝒮ᵥ lem x B)
       where
       at : Dec ⟨ x ∈ˢ B ⟩ → ⟨ x ∈ˢ B ⟩
 ```

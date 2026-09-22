@@ -578,7 +578,7 @@ The name order is a strict well-order, so a merely inhabited family of denoting 
 ```agda
     leastOfNew : (a : New δ)
                → Σ[ n ∈ NM.Name ] IsLeast NM.nameOrder (denotes a) n
-    leastOfNew a = NM.leastName (denotes a) (hasName a)
+    leastOfNew a = NM.leastName (fst a) (hasName a)
 
 ```
 

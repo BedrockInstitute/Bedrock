@@ -38,7 +38,7 @@ language, the cumulative hierarchy, `L`, and the dual-semantics machinery. And i
 commits from line one to the host-language-maximalist approach described below.
 Getting it right calibrated the infrastructure everything else will stand on.
 
-As of 2026-09-08: **26,587 nonblank Agda code lines · 212.06 s fresh project typecheck (Cubical cache retained) · 1.62 GiB peak RSS.**
+As of 2026-09-22: **25,931 nonblank Agda code lines · 203.17 s fresh project typecheck (Cubical cache retained) · 1.57 GiB peak RSS.**
 
 The 120 chapters form an acyclic dependency graph with 1,487 direct imports, 224 skeleton edges and a longest chain of 30 modules.
 

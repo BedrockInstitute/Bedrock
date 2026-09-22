@@ -55,11 +55,11 @@ open import L.Constructible {ℓ} using ( IsOrd )
 ```
 
 <!--en-->
-A strict well-order combines four properties of one relation: any two points are trichotomically comparable, no point lies strictly below itself, strict comparison is transitive, and every descending chain is well founded. Natural numbers provide the model example. The operation leastOf uses this structure and excluded middle to select a least witness from a merely inhabited proposition-valued family; later, ordinal trichotomy supplies the same three-way comparison for members of an ordinal.
+A strict well-order combines four properties of one relation: any two points are trichotomically comparable, no point lies strictly below itself, strict comparison is transitive, and every descending chain is well founded. Natural numbers provide the model example. The explicitly host-level operation `HostLeast.leastOf` uses this structure and excluded middle to select a least witness from a merely inhabited proposition-valued family; later, ordinal trichotomy supplies the same three-way comparison for members of an ordinal.
 <!--zh-->
-严格良序把同一关系的四项性质结合起来：任意两点可作三歧比较，没有点严格小于自身，严格比较具有传递性，并且每条递降链都是良基的。自然数给出典型例子。leastOf 利用这一结构与排中律，从仅仅有元素的命题值族中选出最小见证；稍后，序数三歧为序数成员提供同样的三向比较。
+严格良序把同一关系的四项性质结合起来：任意两点可作三歧比较，没有点严格小于自身，严格比较具有传递性，并且每条递降链都是良基的。自然数给出典型例子。明确属于宿主层的运算 `HostLeast.leastOf` 利用这一结构与排中律，从仅仅有元素的命题值族中选出最小见证；稍后，序数三歧为序数成员提供同样的三向比较。
 <!--ja-->
-狭義整列順序は、一つの関係について四つの性質をまとめる。任意の二点が三分法で比較でき、どの点も自分自身より真に小さくなく、狭義比較が推移的で、すべての降下が整礎である。自然数がその基本例である。leastOf はこの構造と排中律を使い、単に要素が存在する命題値族から最小の証人を選ぶ。後では、順序数の三分法が順序数の要素に同じ三方向の比較を与える。
+狭義整列順序は、一つの関係について四つの性質をまとめる。任意の二点が三分法で比較でき、どの点も自分自身より真に小さくなく、狭義比較が推移的で、すべての降下が整礎である。自然数がその基本例である。明示的にホスト側の演算である `HostLeast.leastOf` はこの構造と排中律を使い、単に要素が存在する命題値族から最小の証人を選ぶ。後では、順序数の三分法が順序数の要素に同じ三方向の比較を与える。
 <!--/-->
 
 ```agda
@@ -67,7 +67,7 @@ open import L.Ordinal {ℓ} using ( mem-ord; ∈#-elim )
 open import V.Coding {ℓ} using ( #-inj′; #mono )
 open import L.Ordinal.Linear {ℓ} lem using ( ord-tri )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; Tri; lt; eq; gt; leastOf; natOrder; module SWO )
+  using ( SWO; Tri; lt; eq; gt; natOrder; module HostLeast; module SWO )
 ```
 
 <!--en-->
@@ -767,11 +767,11 @@ Membership of `β` in `ω` itself only says that β is a numeral in the truncate
 ```
 
 <!--en-->
-For an index of the finite ordinal `# n` there is a concrete inhabitant to start from: the membership of the represented element in `⟪ # n ⟫` implies, via `∈#-elim`, that some `k < n` satisfies `P`. Feeding this truncated witness to `leastOf natOrder lem` uses excluded middle at the natural-number order to turn mere existence into a chosen least pair `s`. Its first component is the label `k` and the first component of its certificate is the bound `k < n`, which is exactly the data `Fin n` packages.
+For an index of the finite ordinal `# n` there is a concrete inhabitant to start from: the membership of the represented element in `⟪ # n ⟫` implies, via `∈#-elim`, that some `k < n` satisfies `P`. This is an external identification of a small presentation with `Fin n`, so feeding the truncated witness to `HostLeast.leastOf natOrder lem` deliberately uses the host-only search. It turns mere existence into a chosen least pair `s`. Its first component is the label `k` and the first component of its certificate is the bound `k < n`, which is exactly the data `Fin n` packages.
 <!--zh-->
-对有穷序数 `# n` 的指标，存在具体的出发点：所表示元素属于 `⟪ # n ⟫` 这一事实经 `∈#-elim` 蕴含某个 `k < n` 满足 P。把这个截断见证交给 `leastOf natOrder lem`，在自然数序上使用排中律，把仅仅存在转化为被选出的最小序对 s。其第一分量是标号 k，其证书的第一分量是界 `k < n`，而这正是 `Fin n` 打包的数据。
+对有穷序数 `# n` 的指标，存在具体的出发点：所表示元素属于 `⟪ # n ⟫` 这一事实经 `∈#-elim` 蕴含某个 `k < n` 满足 P。这里构造的是小呈现与 `Fin n` 之间的外围同一，因此把截断见证交给 `HostLeast.leastOf natOrder lem` 是有意使用纯宿主搜索。它把仅仅存在转化为被选出的最小序对 s。其第一分量是标号 k，其证书的第一分量是界 `k < n`，而这正是 `Fin n` 打包的数据。
 <!--ja-->
-有限順序数 `# n` の添字には具体的な出発点がある。表された要素が `⟪ # n ⟫` に属するという事実は、`∈#-elim` を通じて、`k < n` なる k が P を満たすことを含意する。この切り捨てられた証人を `leastOf natOrder lem` に渡すと、自然数の順序について排中律を用いて、単なる存在が選ばれた最小の対 s に変わる。その第一成分がラベル k であり、証明書の第一成分が上界 `k < n` で、これこそ `Fin n` がまとめたデータである。
+有限順序数 `# n` の添字には具体的な出発点がある。表された要素が `⟪ # n ⟫` に属するという事実は、`∈#-elim` を通じて、`k < n` なる k が P を満たすことを含意する。ここで作るのは小さな表示と `Fin n` の外的な同一視なので、この切り捨てられた証人を `HostLeast.leastOf natOrder lem` に渡すことは、意図的にホスト専用探索を使うことである。単なる存在は選ばれた最小の対 s に変わる。その第一成分がラベル k であり、証明書の第一成分が上界 `k < n` で、これこそ `Fin n` がまとめたデータである。
 <!--/-->
 
 ```agda
@@ -779,7 +779,8 @@ For an index of the finite ordinal `# n` there is a concrete inhabitant to start
   toFin : (n : ℕ) → ⟪ # n ⟫ → FB.Fin n
   toFin n m = k , k<n
     where
-    s = leastOf natOrder lem (P n m) (∈#-elim n (⟪ # n ⟫↪ m) (member (# n) m))
+    s = HostLeast.leastOf natOrder lem (P n m)
+      (∈#-elim n (⟪ # n ⟫↪ m) (member (# n) m))
     k : ℕ
 ```
 
@@ -810,7 +811,8 @@ toFin の単射性は、ラベルの一致という仮定に沿って二つの�
 
 ```agda
     where
-    s = leastOf natOrder lem (P n m) (∈#-elim n (⟪ # n ⟫↪ m) (member (# n) m))
+    s = HostLeast.leastOf natOrder lem (P n m)
+      (∈#-elim n (⟪ # n ⟫↪ m) (member (# n) m))
 
   toFin-inj : (n : ℕ) (m₁ m₂ : ⟪ # n ⟫) → toFin n m₁ ≡ toFin n m₂ → m₁ ≡ m₂
   toFin-inj n m₁ m₂ e = ↪-inj {a = # n}

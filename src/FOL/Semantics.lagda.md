@@ -16,6 +16,7 @@ The object language consists of symbols and rules for combining them, and so far
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 open import Base.Prelude
+open import Base.Classical using ( LEM )
 open import FOL.ZFStructure using ( ZFStructure )
 
 module FOL.Semantics {ℓ} (𝒮 : ZFStructure ℓ) where
@@ -164,15 +165,84 @@ The bounded forms add one ingredient: membership in the denotation of the bound.
 ```
 
 <!--en-->
+## Predicates presented by formulas
+
+A host predicate on a type of indices is not automatically a predicate that the object language can express. The following package records the missing bridge. It gives one formula, an environment for each index, the host predicate being presented, and a checked equality identifying that predicate with satisfaction. The constant interpretation is fixed outside the package, while the arity is part of the data because it determines the length of every environment.
+<!--zh-->
+## 由公式呈现的谓词
+
+指标类型上的宿主谓词不会自动成为对象语言能够表达的谓词。下面的包记录了缺少的桥梁：它给出一条公式、每个指标对应的环境、所呈现的宿主谓词，以及一条经过检查的等式，把该谓词与满足关系识别起来。常元解释固定在包外，而元数属于数据的一部分，因为它决定每个环境的长度。
+<!--ja-->
+## 論理式によって表示される述語
+
+添字型上のホスト述語が、自動的に対象言語で表現できる述語になるわけではない。次のパッケージは、その間に欠けている橋を記録する。一つの論理式、各添字に対応する環境、表示されるホスト述語、そしてその述語を充足と同一視する検査済みの等式を与える。定数解釈はパッケージの外で固定し、アリティは各環境の長さを決めるのでデータの一部に含める。
+<!--/-->
+
+```agda
+record FormulaPredicate {ℓa ℓc} (A : Type ℓa) (K : Type ℓc)
+                        (ι : K → S) (predicate : A → hProp ℓ)
+    : Type (ℓ-max ℓa (ℓ-max ℓc (ℓ-suc ℓ))) where
+  constructor presented
+  field
+    arity       : ℕ
+    formula     : Formula K arity
+    environment : A → S ^ arity
+    reading     : (a : A) → predicate a ≡ At._⊨_ K ι (environment a) formula
+```
+
+<!--en-->
+When classical logic is available, deciding a satisfaction judgment should retain the syntax that identifies the proposition being decided. `decideSatisfaction` is the small boundary for that purpose: excluded middle is applied internally, while the public arguments still display the interpretation, environment, and formula.
+<!--zh-->
+当经典逻辑可用时，对满足判断作判定仍应保留标识被判定命题的句法。`decideSatisfaction` 正是这道小边界：排中律在其内部应用，而公开实参仍明确展示解释、环境与公式。
+<!--ja-->
+古典論理が利用できるときも、充足判断の判定には、何を判定しているかを特定する構文を残すべきである。`decideSatisfaction` はそのための小さな境界であり、排中律は内部で適用される一方、公開された引数には解釈、環境、論理式が明示される。
+<!--/-->
+
+```agda
+decideSatisfaction : ∀ {ℓc n} {K : Type ℓc} (ι : K → S)
+                   → LEM ℓ → (γ : S ^ n) → (φ : Formula K n)
+                   → Dec ⟨ At._⊨_ K ι γ φ ⟩
+decideSatisfaction ι lem γ φ = lem (At._⊨_ _ ι γ φ)
+```
+
+<!--en-->
+The two atomic specializations make common model-facing decisions equally explicit. Their formulas contain no constants: the two carrier arguments occupy the first and second variable slots, and satisfaction computes directly to the structure's membership or equality proposition.
+<!--zh-->
+两个原子特化使常见的面向模型判定同样明确。它们的公式不含常元：两个载体实参占据第一、第二变元槽，而满足关系直接计算为结构的隶属或等词命题。
+<!--ja-->
+二つの原子的な特殊化により、モデルに面するよく使う判定も同様に明示される。論理式は定数を含まず、二つの台の引数が第一・第二の変数枠を占め、充足は構造の所属または等号の命題へ直接計算される。
+<!--/-->
+
+```agda
+decideMembership : LEM ℓ → (x y : S) → Dec ⟨ x ∈ˢ y ⟩
+decideMembership lem x y =
+  decideSatisfaction {K = ⊥* {ℓ}} (⊥*-rec {A = S}) lem
+    (x ∷ y ∷ []) (var zero ∈̇ var (suc zero))
+
+decideEquality : LEM ℓ → (x y : S) → Dec ⟨ x ≈ˢ y ⟩
+decideEquality lem x y =
+  decideSatisfaction {K = ⊥* {ℓ}} (⊥*-rec {A = S}) lem
+    (x ∷ y ∷ []) (var zero ≐ var (suc zero))
+```
+
+<!--en-->
+The field `reading` is deliberately an equality of proposition-valued meanings, not an informal assertion that the two sides correspond. It can therefore rewrite proofs in either direction. A consumer that performs a classical search may still use excluded middle internally, but its public model-facing input can now require this package and thereby expose the formula and environment whose satisfaction is being decided.
+<!--zh-->
+字段 `reading` 特意取为命题值意义之间的等式，而不是声称两边相应的一句非形式说明。因此它能在两个方向上改写证明。执行经典搜索的使用方内部仍可使用排中律，但其面向模型的公开输入如今可以要求这个包，从而显式交出被判定的满足命题所对应的公式与环境。
+<!--ja-->
+フィールド `reading` は、両辺が対応するという非形式的な主張ではなく、命題値の意味どうしの等式としている。そのため証明をどちらの向きにも書き換えられる。古典的探索を行う利用側は内部で排中律を使ってよいが、モデルに面する公開入力にはこのパッケージを要求でき、判定される充足命題の論理式と環境を明示できる。
+<!--/-->
+
+<!--en-->
 ## Recap
 
-Meaning is compositional. A term denotes a carrier element, determined by the constant interpretation and the environment. A formula of arity `n` determines a function `S ^ n → hProp ℓ`{.Agda}, whether or not it uses every available position. The atoms consult the structure's two relations; the connectives apply the propositional operations of the host; the quantifiers let a fresh front position range over the carrier, and the bounded forms test membership in the denotation of the bound outside the extension while interpreting the body inside it. Every clause is one step of structural recursion. The construction uses the carrier `S` and the two relations `∈ˢ` and `≈ˢ`; it does not use the proof `isSetS` or any set-theoretic axiom.
+Meaning is compositional. A term denotes a carrier element, determined by the constant interpretation and the environment. A formula of arity `n` determines a function `S ^ n → hProp ℓ`{.Agda}, whether or not it uses every available position. The atoms consult the structure's two relations; the connectives apply the propositional operations of the host; the quantifiers let a fresh front position range over the carrier, and the bounded forms test membership in the denotation of the bound outside the extension while interpreting the body inside it. Every clause is one step of structural recursion. `FormulaPredicate` packages a host predicate together with this syntactic and semantic presentation. The construction uses the carrier `S` and the two relations `∈ˢ` and `≈ˢ`; it does not use the proof `isSetS` or any set-theoretic axiom.
 <!--zh-->
 ## 小结
 
-语义按组成方式给出。词项指称一个载体元素，由常元解释与环境共同确定。元数为 `n` 的公式确定一个 `S ^ n → hProp ℓ`{.Agda} 型的函数，无论它是否用尽每个可用位置。原子式查询结构的两个关系；联结词应用宿主的命题运算；量词让一个置于最前的新位置遍及载体，有界形式则在扩展之外检验属于界限指称的成员资格，在扩展之内解释公式体。每条子句都是结构递归的一步。整个构造使用载体 `S` 以及关系 `∈ˢ`、`≈ˢ`，不使用证明 `isSetS`，也不使用任何集合论公理。
+语义按组成方式给出。词项指称一个载体元素，由常元解释与环境共同确定。元数为 `n` 的公式确定一个 `S ^ n → hProp ℓ`{.Agda} 型的函数，无论它是否用尽每个可用位置。原子式查询结构的两个关系；联结词应用宿主的命题运算；量词让一个置于最前的新位置遍及载体，有界形式则在扩展之外检验属于界限指称的成员资格，在扩展之内解释公式体。每条子句都是结构递归的一步。`FormulaPredicate` 把宿主谓词连同这份句法与语义呈现一起打包。整个构造使用载体 `S` 以及关系 `∈ˢ`、`≈ˢ`，不使用证明 `isSetS`，也不使用任何集合论公理。
 <!--ja-->
 ## まとめ
 
-意味は合成的に与えられる。項は台の要素を表示し、それを決めるのは定数解釈と環境である。アリティ `n` の論理式は、利用できる位置を使い切るかどうかにかかわらず、`S ^ n → hProp ℓ`{.Agda} 型の関数を定める。原子式は構造の二つの関係に問い合わせ、結合子はホストの命題演算を適用する。量化子は先頭に置かれた新しい位置を台の上に動かし、有界の形は拡張の外で限界の表示への所属を確かめ、拡張の内で本体を解釈する。どの節も構造的再帰の一段である。構成が使うのは台 `S` と二つの関係 `∈ˢ`、`≈ˢ` であり、証明 `isSetS` も集合論の公理も使わない。
+意味は合成的に与えられる。項は台の要素を表示し、それを決めるのは定数解釈と環境である。アリティ `n` の論理式は、利用できる位置を使い切るかどうかにかかわらず、`S ^ n → hProp ℓ`{.Agda} 型の関数を定める。原子式は構造の二つの関係に問い合わせ、結合子はホストの命題演算を適用する。量化子は先頭に置かれた新しい位置を台の上に動かし、有界の形は拡張の外で限界の表示への所属を確かめ、拡張の内で本体を解釈する。どの節も構造的再帰の一段である。`FormulaPredicate` はホスト述語をこの構文的・意味論的表示とともにパッケージ化する。構成が使うのは台 `S` と二つの関係 `∈ˢ`、`≈ˢ` であり、証明 `isSetS` も集合論の公理も使わない。
 <!--/-->

@@ -56,6 +56,7 @@ The desired graph must be expressed in the first-order language of sets. Besides
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∀̇∈ )
 open import FOL.Manipulation.Renaming using ( renameFo; module Sat )
+import FOL.Semantics
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 ```
@@ -86,7 +87,7 @@ The strict well order supplies both a least-element operation and trichotomy. Th
 
 ```agda
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( SWO; leastOf; lt; eq; gt ) renaming ( Tri to Tri∙ )
+  using ( SWO; leastOfFormula; lt; eq; gt ) renaming ( Tri to Tri∙ )
 open import L.DefinableInjection {ℓ} lem using ( DefinableMap; module Graph )
 open import L.GCH.CardinalSquareLaw {ℓ} lem using ( isL-ord )
 open import L.InjectionComposition {ℓ} lem using ( appC; appC-adequate )
@@ -323,6 +324,19 @@ The predicate `Good x` transfers the original relation to the carrier ordered by
 ```
 
 <!--en-->
+For each fixed input, the formula-facing form of this predicate uses the original binary formula `P`. A stage member supplies the first environment entry through `memS`, while the fixed input supplies the second. The checked reading is reflexive, so the package adds no new mathematical assumption; it exposes the syntax already present in `Good`.
+<!--zh-->
+对每个固定输入，这个谓词面向公式的形式使用原有二元公式 `P`。层成员经 `memS` 供给环境的第一项，固定输入供给第二项。经过检查的读取是自反的，所以这个包不增加任何数学假设，只把 `Good` 中已有的句法显露出来。
+<!--ja-->
+固定した各入力について、この述語の論理式に面する形は、もとの二項論理式 `P` を使う。段階の要素が `memS` を通して環境の第一成分を、固定入力が第二成分を与える。検査済みの読みは反射的なので、このパッケージは新しい数学的仮定を加えず、`Good` にすでにある構文を露出させるだけである。
+<!--/-->
+
+```agda
+    definedGood : (x : S) → FOL.Semantics.FormulaPredicate 𝒮ʟ Mγ S id (Good x)
+    definedGood x = FOL.Semantics.presented 2 P (λ c → memS c ∷ x ∷ []) (λ c → refl)
+```
+
+<!--en-->
 The same underlying set may arrive with two proofs that it is constructible. Since constructibility is a proposition, `S≡` identifies the two packaged elements of `S`; transporting satisfaction along that path shows that the repackaged stage member satisfies the same instance of `P` as the original witness.
 <!--zh-->
 同一个底层集合可能连同两份不同的可构造性证明出现。由于可构造性是命题，`S≡` 认同这两个打包后的 `S` 元素；沿所得路径搬运满足证明，便知重打包的层成员与原见证满足同一个 `P` 实例。
@@ -364,17 +378,17 @@ For the fixed input, the hypothesis is mapped into the type of good stage member
 ```
 
 <!--en-->
-Now `leastOf` descends through `orderAt γ oγ` and returns an actual least good member. This is the exceptional elimination step: excluded middle decides whether descent can continue, and propositional truncation may be eliminated because the total type of a least element together with its leastness proof has already been shown to be a proposition. Neither fact alone would justify extracting an arbitrary witness from `nonempty`.
+Now `leastOfFormula` descends through `orderAt γ oγ` and returns an actual least good member. Its input `definedGood x` carries the object formula, environment, and reading theorem for the predicate being searched. This is the exceptional elimination step: excluded middle decides whether descent can continue, and propositional truncation may be eliminated because the total type of a least element together with its leastness proof has already been shown to be a proposition. Neither fact alone would justify extracting an arbitrary witness from `nonempty`.
 <!--zh-->
-此时 `leastOf` 沿 `orderAt γ oγ` 下降，并返回一个实际的最小合格成员。这是特殊的消去步骤：排中律判定下降能否继续；而命题截断之所以可被消去，是因为「最小元连同其最小性证明的总类型」已经证明为命题。仅凭其中任一事实，都不足以从 `nonempty` 中抽取任意见证。
+此时 `leastOfFormula` 沿 `orderAt γ oγ` 下降，并返回一个实际的最小合格成员。它的输入 `definedGood x` 携带被搜索谓词的对象语言公式、环境与读取定理。这是特殊的消去步骤：排中律判定下降能否继续；而命题截断之所以可被消去，是因为「最小元连同其最小性证明的总类型」已经证明为命题。仅凭其中任一事实，都不足以从 `nonempty` 中抽取任意见证。
 <!--ja-->
-ここで `leastOf` は `orderAt γ oγ` に沿って降下し、条件を満たす実際の最小要素を返す。これは特別な除去の段階である。排中律が降下を続けられるかを判定し、最小要素とその最小性の証明からなる全体型がすでに命題だと示されているため、命題的切り詰めを除去できる。どちらか一方だけでは、`nonempty` から任意の証人を取り出すことは正当化されない。
+ここで `leastOfFormula` は `orderAt γ oγ` に沿って降下し、条件を満たす実際の最小要素を返す。その入力 `definedGood x` は、探索される述語の対象言語の論理式、環境、読み取り定理を運ぶ。これは特別な除去の段階である。排中律が降下を続けられるかを判定し、最小要素とその最小性の証明からなる全体型がすでに命題だと示されているため、命題的切り詰めを除去できる。どちらか一方だけでは、`nonempty` から任意の証人を取り出すことは正当化されない。
 <!--/-->
 
 ```agda
     opaque
       c : Mγ
-      c = fst (leastOf (orderAt γ oγ) lem (Good x) nonempty)
+      c = fst (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)
 
 ```
 
@@ -388,7 +402,7 @@ The result of the search retains the proof that the selected member is good. Thu
 
 ```agda
       c-good : ⟨ Good x c ⟩
-      c-good = fst (snd (leastOf (orderAt γ oγ) lem (Good x) nonempty))
+      c-good = fst (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))
 
 ```
 
@@ -402,7 +416,7 @@ Its companion clause gives the exact relative leastness needed later: any other 
 
 ```agda
       minimal : (c' : Mγ) → ⟨ Good x c' ⟩ → relOf (orderAt γ oγ) c' c → ⊥₀
-      minimal = snd (snd (leastOf (orderAt γ oγ) lem (Good x) nonempty))
+      minimal = snd (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))
 
 ```
 

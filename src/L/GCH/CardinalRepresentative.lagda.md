@@ -32,6 +32,7 @@ Fix excluded middle at level `ℓ-suc ℓ`. It is used by the well-order search 
 
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
+import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Presentation {ℓ} using ( member; fiber )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; isL; isL-trans )
@@ -50,7 +51,8 @@ Two structures are present. The ambient hierarchy supplies membership and the sm
 open import L.Ordinal.Linear {ℓ} lem using ( Tri; ord-tri )
 open import L.Cardinal {ℓ} lem using ( InjL; IsCardinalL; module LeastCardInjL )
 open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
-  using ( IsLeast; leastOf; module SWO )
+  using ( IsLeast; leastOfFormula; module SWO )
+open import L.DefinableInjection {ℓ} lem using ( injLAt; module InjLAt )
 open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 
 ```
@@ -181,20 +183,27 @@ For an index `b` of the presentation of `T`, `upL b` pairs the represented membe
   upL : ⟪ T ⟫ → SL.S
   upL b = ⟪ T ⟫↪ b , isL-trans (member T b) hT
   Good : ⟪ T ⟫ → hProp (ℓ-suc ℓ)
-  Good b = ∥ Σ[ δ ∈ SL.S ] ((fst δ ≡ ⟪ T ⟫↪ b) × InjL α δ) ∥₁ , squash₁
+  Good b = InjL α (upL b) , squash₁
+
+  definedGood : FOL.Semantics.FormulaPredicate 𝒮ʟ ⟪ T ⟫ SL.S id Good
+  definedGood = FOL.Semantics.presented 2 (injLAt zero (suc zero))
+    (λ b → α ∷ upL b ∷ [])
+    (λ b → ⇔toPath
+      (InjLAt.fill zero (suc zero) (α ∷ upL b ∷ []))
+      (InjLAt.read zero (suc zero) (α ∷ upL b ∷ [])))
 ```
 
 <!--en-->
-Call an index `b` good when the member it names is the underlying set of some constructible `δ` and there is an internal injection `α ↪ δ`. The equality in `Good b` connects the indexed presentation with the constructible witness; truncation keeps goodness proposition-valued.
+Call an index `b` good when there is an internal coded injection from `α` to the constructible member `upL b` that it names. The package `definedGood` exposes this property through `injLAt`: its two environment slots contain `α` and `upL b`, while `InjLAt.fill` and `InjLAt.read` prove the two semantic directions. Thus the later least search sees a fixed object-language formula rather than an arbitrary host predicate.
 <!--zh-->
-若索引 `b` 所指的成员是某个可构造集合 `δ` 的底层集合，并且存在内部单射 `α ↪ δ`，就称 `b` 为好索引。`Good b` 中的等式连接索引呈现与可构造见证，截断则使好索引性取值于命题。
+若存在从 `α` 到索引 `b` 所指可构造成员 `upL b` 的内部编码单射，就称 `b` 为好索引。包 `definedGood` 通过 `injLAt` 显露这个性质：两个环境槽分别放入 `α` 与 `upL b`，而 `InjLAt.fill` 和 `InjLAt.read` 证明语义的两个方向。因此，后续最小元搜索看到的是一条固定的对象语言公式，而不是任意宿主谓词。
 <!--ja-->
-インデックス `b` が名指す要素が、ある構成可能集合 `δ` の基礎集合であり、内部単射 `α ↪ δ` があるとき、`b` を良いインデックスと呼ぶ。`Good b` の等式はインデックス表示と構成可能な証人を結び、切り詰めは良さを命題値にする。
+`α` からインデックス `b` が名指す構成可能要素 `upL b` への内部符号化単射があるとき、`b` を良いインデックスと呼ぶ。パッケージ `definedGood` はこの性質を `injLAt` によって公開する。二つの環境位置には `α` と `upL b` が入り、`InjLAt.fill` と `InjLAt.read` が意味論の両方向を証明する。したがって後の最小要素探索が見るのは、任意のホスト述語ではなく固定された対象論理式である。
 <!--/-->
 
 ```agda
   selfGood : ⟨ Good LC.self ⟩
-  selfGood = ∣ α , sym LC.self-eq , inclusion-coded α α (λ z z∈α → z∈α) ∣₁
+  selfGood = inclusion-coded α α (λ z z∈α → z∈α)
 
   nonempty : ∥ Σ[ b ∈ ⟪ T ⟫ ] ⟨ Good b ⟩ ∥₁
   nonempty = ∣ LC.self , selfGood ∣₁
@@ -211,18 +220,18 @@ The index naming `α` is good: its represented member equals `α`, and the ident
 ```agda
 
   least : Σ[ b ∈ ⟪ T ⟫ ] IsLeast LC.w Good b
-  least = leastOf LC.w lem Good nonempty
+  least = leastOfFormula LC.w definedGood lem nonempty
 
   m : ⟪ T ⟫
   m = fst least
 ```
 
 <!--en-->
-Apply least-element search to the well-order `w` and the proposition-valued predicate `Good`. Excluded middle decides goodness, and nonemptiness guarantees a least good index. Denote that index by `m`.
+Apply the formula-facing least-element search to the well-order `w` and `definedGood`. Excluded middle decides satisfaction of the displayed injection formula, and nonemptiness guarantees a least good index. Denote that index by `m`.
 <!--zh-->
-对良序 `w` 与命题值谓词 `Good` 应用最小元搜索。排中律判定好索引性，非空性保证存在最小的好索引；把它记作 `m`。
+对良序 `w` 与 `definedGood` 应用面向公式的最小元搜索。排中律判定所展示单射公式的满足关系，非空性保证存在最小的好索引；把它记作 `m`。
 <!--ja-->
-整列順序 `w` と命題値の述語 `Good` に最小元探索を適用する。排中律が良さを判定し、非空性が最小の良いインデックスを保証する。そのインデックスを `m` と書く。
+整列順序 `w` と `definedGood` に、論理式に面する最小要素探索を適用する。排中律が表示された単射論理式の充足を判定し、非空性が最小の良いインデックスを保証する。そのインデックスを `m` と書く。
 <!--/-->
 
 ```agda
@@ -258,31 +267,15 @@ The presentation theorem gives `μ ∈ T`. Since `T` is an ordinal, every member
 
 ```agda
   α↪μ : InjL α μ
-  α↪μ = rec₁ squash₁ from (fst (snd least))
-    where
-    from : Σ[ δ ∈ SL.S ] ((fst δ ≡ ⟪ T ⟫↪ m) × InjL α δ) → InjL α μ
+  α↪μ = fst (snd least)
 ```
 
 <!--en-->
-Goodness of the least index supplies, under truncation, a constructible `δ`, an equality between its underlying set and the member named by `m`, and an injection `α ↪ δ`. The goal `InjL α μ` is a proposition, so the truncated witness may be eliminated into it.
+Goodness of the least index is now stated directly as the formula-defined proposition `InjL α μ`, because `μ` is the constructible member named by `m`. Thus the selected candidate immediately supplies the forward injection.
 <!--zh-->
-最小索引的好索引性在截断之下给出可构造集合 `δ`、其底层集合与 `m` 所指成员之间的等式，以及单射 `α ↪ δ`。目标 `InjL α μ` 是命题，所以可以把截断见证消去到这个目标中。
+最小索引的合格性如今直接表述为由公式定义的命题 `InjL α μ`，因为 `μ` 正是 `m` 指名的可构造成员。因此，选中的候选立即给出正向单射。
 <!--ja-->
-最小インデックスの良さは、切り詰めの下で、構成可能集合 `δ`、その基礎集合と `m` が名指す要素との等式、単射 `α ↪ δ` を与える。目標 `InjL α μ` は命題なので、切り詰められた証人をそこへ消去できる。
-<!--/-->
-
-```agda
-    from (δ , e , α↪δ) =
-      injl-trans α δ μ α↪δ
-        (inclusion-coded δ μ (λ z z∈δ → subst (λ v → ⟨ z ∈ˢ v ⟩) e z∈δ))
-```
-
-<!--en-->
-Transport along the indexed equality shows that `δ` is included in `μ`; inclusion coding turns this into an internal injection `δ ↪ μ`. Composing it with the supplied `α ↪ δ` proves `α ↪ μ`.
-<!--zh-->
-沿索引等式搬运可知 `δ` 包含于 `μ`；包含关系的编码把它化为内部单射 `δ ↪ μ`。再与已有的 `α ↪ δ` 复合，便得到 `α ↪ μ`。
-<!--ja-->
-インデックスの等式に沿って移送すると `δ` が `μ` に含まれることが分かり、包含の符号化により内部単射 `δ ↪ μ` を得る。これを与えられた `α ↪ δ` と合成して `α ↪ μ` を証明する。
+最小インデックスの良さは、今では論理式で定義された命題 `InjL α μ` として直接述べられる。`μ` は `m` が名指す構成可能な要素だからである。したがって、選ばれた候補から前向きの単射が直ちに得られる。
 <!--/-->
 
 ```agda
@@ -317,8 +310,10 @@ The fibre theorem gives both the index `b` and the equality identifying its repr
 
 ```agda
     bδ = fiber T δ∈T .snd
+    bS : upL b ≡ δ
+    bS = Σ≡Prop (λ x → snd (isL x)) bδ
     bGood : ⟨ Good b ⟩
-    bGood = ∣ δ , sym bδ , injl-trans α μ δ α↪μ μ↪δ ∣₁
+    bGood = subst (InjL α) (sym bS) (injl-trans α μ δ α↪μ μ↪δ)
 ```
 
 <!--en-->

@@ -1,0 +1,675 @@
+{
+  "schema_version": 1,
+  "uses": [
+    {
+      "module": "FOL.Semantics",
+      "definition": "decideSatisfaction",
+      "decided_proposition": "decideSatisfaction ι lem γ φ = lem (At._⊨_ _ ι γ φ)",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/FOL/Semantics.lagda.md:decideSatisfaction ι lem γ φ = lem (At._⊨_ _ ι γ φ):lem:1"
+    },
+    {
+      "module": "FOL.Semantics",
+      "definition": "decideSatisfaction",
+      "decided_proposition": "decideSatisfaction {K = ⊥* {ℓ}} (⊥*-rec {A = S}) lem",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/FOL/Semantics.lagda.md:decideSatisfaction {K = ⊥* {ℓ}} (⊥*-rec {A = S}) lem:lem:1"
+    },
+    {
+      "module": "FOL.Semantics",
+      "definition": "decideSatisfaction",
+      "decided_proposition": "decideSatisfaction {K = ⊥* {ℓ}} (⊥*-rec {A = S}) lem",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/FOL/Semantics.lagda.md:decideSatisfaction {K = ⊥* {ℓ}} (⊥*-rec {A = S}) lem:lem:1"
+    },
+    {
+      "module": "L.Axioms.Power",
+      "definition": "rsz",
+      "decided_proposition": "rsz v = lem→resizing lem (isL v)",
+      "classification": "resizing-bridge",
+      "supplier": "lem→resizing / lem→ΩResizing",
+      "reading_lemma": "resizing equivalence",
+      "migration_status": "migrated",
+      "site": "src/L/Axioms/Power.lagda.md:rsz v = lem→resizing lem (isL v):lem:1"
+    },
+    {
+      "module": "L.CardinalAbove",
+      "definition": "lemℓ",
+      "decided_proposition": "lemℓ = lowerLEM lem",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/CardinalAbove.lagda.md:lemℓ = lowerLEM lem:lem:1"
+    },
+    {
+      "module": "L.CardinalAbove",
+      "definition": "R",
+      "decided_proposition": "R x y = decB (lemℓ (PreT x y , isPropPreT x y))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/CardinalAbove.lagda.md:R x y = decB (lemℓ (PreT x y , isPropPreT x y)):lemℓ:1"
+    },
+    {
+      "module": "L.CardinalAbove",
+      "definition": "R→Pre",
+      "decided_proposition": "R→Pre x y e = go (lemℓ (PreT x y , isPropPreT x y)) e",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/CardinalAbove.lagda.md:R→Pre x y e = go (lemℓ (PreT x y , isPropPreT x y)) e:lemℓ:1"
+    },
+    {
+      "module": "L.CardinalAbove",
+      "definition": "Pre→R",
+      "decided_proposition": "Pre→R x y h = go (lemℓ (PreT x y , isPropPreT x y))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/CardinalAbove.lagda.md:Pre→R x y h = go (lemℓ (PreT x y , isPropPreT x y)):lemℓ:1"
+    },
+    {
+      "module": "L.Choice.CanonicalNames",
+      "definition": "leastName",
+      "decided_proposition": "leastName x = leastOfFormula nameOrder (definedDenotes x) lem",
+      "classification": "atomic-equality",
+      "supplier": "FOL.Semantics.decideEquality or equality formula package",
+      "reading_lemma": "atomic equality computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/CanonicalNames.lagda.md:leastName x = leastOfFormula nameOrder (definedDenotes x) lem:lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "maskOf",
+      "decided_proposition": "(λ y → decideOf (y ∈ˢ x) (SemV.decideMembership lem y x))",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:(λ y → decideOf (y ∈ˢ x) (SemV.decideMembership lem y x)):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "step",
+      "decided_proposition": "(decide-sound (item i ∈ˢ x) (SemV.decideMembership lem (item i) x)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:(decide-sound (item i ∈ˢ x) (SemV.decideMembership lem (item i) x):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "step",
+      "decided_proposition": "(λ z → decideOf (z ∈ˢ x) (SemV.decideMembership lem z x)) i) ∙ e))",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:(λ z → decideOf (z ∈ˢ x) (SemV.decideMembership lem z x)) i) ∙ e)):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "step",
+      "decided_proposition": "(λ z → decideOf (z ∈ˢ x) (SemV.decideMembership lem z x)) i",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:(λ z → decideOf (z ∈ˢ x) (SemV.decideMembership lem z x)) i:lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "step",
+      "decided_proposition": "(SemV.decideMembership lem (item i) x)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:(SemV.decideMembership lem (item i) x):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "wellFounded",
+      "decided_proposition": "wellFounded a = fromDec (lem (Acc _≺_ a , isPropAcc a))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:wellFounded a = fromDec (lem (Acc _≺_ a , isPropAcc a)):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "found",
+      "decided_proposition": "found = least NotAcc (λ b → lem (NotAcc b)) ∣ a , nh ∣₁",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:found = least NotAcc (λ b → lem (NotAcc b)) ∣ a , nh ∣₁:lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "below",
+      "decided_proposition": "below b hb = pick (lem (Acc _≺_ b , isPropAcc b))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:below b hb = pick (lem (Acc _≺_ b , isPropAcc b)):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "precedes-tri",
+      "decided_proposition": "precedes-tri x y x⊆ y⊆ = decide (lem (Some , squash₁))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:precedes-tri x y x⊆ y⊆ = decide (lem (Some , squash₁)):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "fwd",
+      "decided_proposition": "fwd wx = pick (SemV.decideMembership lem w y)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:fwd wx = pick (SemV.decideMembership lem w y):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "bwd",
+      "decided_proposition": "bwd wy = pick (SemV.decideMembership lem w x)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:bwd wy = pick (SemV.decideMembership lem w x):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "decide",
+      "decided_proposition": "decide (yes hs) = side (SemV.decideMembership lem m x)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:decide (yes hs) = side (SemV.decideMembership lem m x):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "found",
+      "decided_proposition": "found = least Q (λ a → lem (Q a))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:found = least Q (λ a → lem (Q a)):lem:1"
+    },
+    {
+      "module": "L.Choice.FiniteStageOrders",
+      "definition": "levelData",
+      "decided_proposition": "levelData a = leastOfFormula natOrder (levelPredicate a) lem",
+      "classification": "formula-satisfaction",
+      "supplier": "FormulaPredicate argument",
+      "reading_lemma": "FormulaPredicate.reading",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/FiniteStageOrders.lagda.md:levelData a = leastOfFormula natOrder (levelPredicate a) lem:lem:1"
+    },
+    {
+      "module": "L.Choice.Transversal",
+      "definition": "least",
+      "decided_proposition": "least x x∈a = leastOfFormula W (definedCell x) lem (members x x∈a)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Choice/Transversal.lagda.md:least x x∈a = leastOfFormula W (definedCell x) lem (members x x∈a):lem:1"
+    },
+    {
+      "module": "L.ExistentialReflection",
+      "definition": "satExDecision",
+      "decided_proposition": "satExDecision ψ ρ = FOL.Semantics.decideSatisfaction 𝒮ʟ id lem ρ (∃̇ ψ)",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/ExistentialReflection.lagda.md:satExDecision ψ ρ = FOL.Semantics.decideSatisfaction 𝒮ʟ id lem ρ (∃̇ ψ):lem:1"
+    },
+    {
+      "module": "L.FormulaReflection",
+      "definition": "bwd",
+      "decided_proposition": "bwd H x = decide (FOL.Semantics.decideSatisfaction 𝒮ʟ id lem (x ∷ γ) χ)",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/FormulaReflection.lagda.md:bwd H x = decide (FOL.Semantics.decideSatisfaction 𝒮ʟ id lem (x ∷ γ) χ):lem:1"
+    },
+    {
+      "module": "L.GCH.Assembly",
+      "definition": "least",
+      "decided_proposition": "least = leastOfFormula w definedGood lem nonempty",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/Assembly.lagda.md:least = leastOfFormula w definedGood lem nonempty:lem:1"
+    },
+    {
+      "module": "L.GCH.BelowSuccessorCardinal",
+      "definition": "exDecision",
+      "decided_proposition": "(FOL.Semantics.decideSatisfaction 𝒮ʟ id lem (α' ∷ []) exFo)",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/BelowSuccessorCardinal.lagda.md:(FOL.Semantics.decideSatisfaction 𝒮ʟ id lem (α' ∷ []) exFo):lem:1"
+    },
+    {
+      "module": "L.GCH.CardinalRepresentative",
+      "definition": "least",
+      "decided_proposition": "least = leastOfFormula LC.w definedGood lem nonempty",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/CardinalRepresentative.lagda.md:least = leastOfFormula LC.w definedGood lem nonempty:lem:1"
+    },
+    {
+      "module": "L.GCH.CardinalSquareLaw",
+      "definition": "fin?",
+      "decided_proposition": "fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) ω",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/CardinalSquareLaw.lagda.md:fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) ω:lem:1"
+    },
+    {
+      "module": "L.GCH.CardinalSquareLaw",
+      "definition": "top?",
+      "decided_proposition": "top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) m)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/CardinalSquareLaw.lagda.md:top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) m):lem:1"
+    },
+    {
+      "module": "L.GCH.ConstructibleHull",
+      "definition": "a",
+      "decided_proposition": "a = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .fst",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/ConstructibleHull.lagda.md:a = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .fst:lem:1"
+    },
+    {
+      "module": "L.GCH.ConstructibleHull",
+      "definition": "a-least",
+      "decided_proposition": "a-least = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .snd",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/ConstructibleHull.lagda.md:a-least = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .snd:lem:1"
+    },
+    {
+      "module": "L.GCH.ConstructibleHull",
+      "definition": "searched",
+      "decided_proposition": "(isPropLeastOf wL P (leastOfFormula wL (searchPredicate n χ vs) lem w₀)",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/ConstructibleHull.lagda.md:(isPropLeastOf wL P (leastOfFormula wL (searchPredicate n χ vs) lem w₀):lem:1"
+    },
+    {
+      "module": "L.GCH.HullCounting",
+      "definition": "decide",
+      "decided_proposition": "decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst z) (fst D₁)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/HullCounting.lagda.md:decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst z) (fst D₁):lem:1"
+    },
+    {
+      "module": "L.GCH.HullCounting",
+      "definition": "ΦZ⊆",
+      "decided_proposition": "ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (fst Z))",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/HullCounting.lagda.md:ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (fst Z)):lem:1"
+    },
+    {
+      "module": "L.GCH.HullCounting",
+      "definition": "D₂⊆",
+      "decided_proposition": "D₂⊆ z h = go (FOL.Semantics.decideEquality 𝒮ᵥ lem z ∅)",
+      "classification": "atomic-equality",
+      "supplier": "FOL.Semantics.decideEquality or equality formula package",
+      "reading_lemma": "atomic equality computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/HullCounting.lagda.md:D₂⊆ z h = go (FOL.Semantics.decideEquality 𝒮ᵥ lem z ∅):lem:1"
+    },
+    {
+      "module": "L.GCH.LeastWitnessMap",
+      "definition": "c",
+      "decided_proposition": "c = fst (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/LeastWitnessMap.lagda.md:c = fst (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty):lem:1"
+    },
+    {
+      "module": "L.GCH.LeastWitnessMap",
+      "definition": "c-good",
+      "decided_proposition": "c-good = fst (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/LeastWitnessMap.lagda.md:c-good = fst (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)):lem:1"
+    },
+    {
+      "module": "L.GCH.LeastWitnessMap",
+      "definition": "minimal",
+      "decided_proposition": "minimal = snd (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/LeastWitnessMap.lagda.md:minimal = snd (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)):lem:1"
+    },
+    {
+      "module": "L.GCH.OrderType",
+      "definition": "fc",
+      "decided_proposition": "(decide (FOL.Semantics.decideMembership 𝒮ᵥ lem",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/OrderType.lagda.md:(decide (FOL.Semantics.decideMembership 𝒮ᵥ lem:lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "satDecision",
+      "decided_proposition": "satDecision k ψ vs = Sem.decideSatisfaction ⊥*-rec lem vs (∃̇ ψ)",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/SkolemHull.lagda.md:satDecision k ψ vs = Sem.decideSatisfaction ⊥*-rec lem vs (∃̇ ψ):lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "search",
+      "decided_proposition": "search k ψ vs w = leastOfFormula wo (searchPredicate k ψ vs) lem w .fst",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/SkolemHull.lagda.md:search k ψ vs w = leastOfFormula wo (searchPredicate k ψ vs) lem w .fst:lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "pa",
+      "decided_proposition": "pa = leastOfFormula wo (searchPredicate k ψ (vals cs)) lem w .snd .fst",
+      "classification": "formula-satisfaction",
+      "supplier": "formula plus environment supplied at call",
+      "reading_lemma": "FormulaPredicate.reading or definitional equality",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/SkolemHull.lagda.md:pa = leastOfFormula wo (searchPredicate k ψ (vals cs)) lem w .snd .fst:lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "dne",
+      "decided_proposition": "(λ (np : ⟨ P ⟩ → ⊥₀) → ⊥₀-rec (h np)) (lem P)",
+      "classification": "host-only",
+      "supplier": "classical host proposition exposed by the local theorem",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/GCH/SkolemHull.lagda.md:(λ (np : ⟨ P ⟩ → ⊥₀) → ⊥₀-rec (h np)) (lem P):lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "different",
+      "decided_proposition": "different x y nxy = go (lem P)",
+      "classification": "host-only",
+      "supplier": "classical host proposition exposed by the local theorem",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/GCH/SkolemHull.lagda.md:different x y nxy = go (lem P):lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "fwd",
+      "decided_proposition": "(FOL.Semantics.decideMembership 𝒮ᵥ lem z y)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/SkolemHull.lagda.md:(FOL.Semantics.decideMembership 𝒮ᵥ lem z y):lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "bwd",
+      "decided_proposition": "(FOL.Semantics.decideMembership 𝒮ᵥ lem z x)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/SkolemHull.lagda.md:(FOL.Semantics.decideMembership 𝒮ᵥ lem z x):lem:1"
+    },
+    {
+      "module": "L.GCH.SkolemHull",
+      "definition": "hullExt",
+      "decided_proposition": "(FOL.Semantics.decideEquality 𝒮ᵥ lem x y)",
+      "classification": "atomic-equality",
+      "supplier": "FOL.Semantics.decideEquality or equality formula package",
+      "reading_lemma": "atomic equality computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/SkolemHull.lagda.md:(FOL.Semantics.decideEquality 𝒮ᵥ lem x y):lem:1"
+    },
+    {
+      "module": "L.GCH.StageCountingTools",
+      "definition": "named",
+      "decided_proposition": "(λ i → FOL.Semantics.decideEquality 𝒮ᵥ lem (item i) x))",
+      "classification": "atomic-equality",
+      "supplier": "FOL.Semantics.decideEquality or equality formula package",
+      "reading_lemma": "atomic equality computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/GCH/StageCountingTools.lagda.md:(λ i → FOL.Semantics.decideEquality 𝒮ᵥ lem (item i) x)):lem:1"
+    },
+    {
+      "module": "L.Ordinal.Linear",
+      "definition": "¬⊆ᵇ→witness",
+      "decided_proposition": "¬⊆ᵇ→witness A B ¬sub = decide (lem Witness)",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Ordinal/Linear.lagda.md:¬⊆ᵇ→witness A B ¬sub = decide (lem Witness):lem:1"
+    },
+    {
+      "module": "L.Ordinal.Linear",
+      "definition": "sub",
+      "decided_proposition": "sub x x∈A = at (FOL.Semantics.decideMembership 𝒮ᵥ lem x B)",
+      "classification": "atomic-membership",
+      "supplier": "FOL.Semantics.decideMembership",
+      "reading_lemma": "atomic membership computes by refl",
+      "migration_status": "migrated",
+      "site": "src/L/Ordinal/Linear.lagda.md:sub x x∈A = at (FOL.Semantics.decideMembership 𝒮ᵥ lem x B):lem:1"
+    },
+    {
+      "module": "L.Ordinal.Linear",
+      "definition": "stepB",
+      "decided_proposition": "stepB B IHB ordB = decide (lem (⊆ᵇ-prop A B)) (lem (⊆ᵇ-prop B A))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Ordinal/Linear.lagda.md:stepB B IHB ordB = decide (lem (⊆ᵇ-prop A B)) (lem (⊆ᵇ-prop B A)):lem:1"
+    },
+    {
+      "module": "L.Ordinal.Linear",
+      "definition": "stepB",
+      "decided_proposition": "stepB B IHB ordB = decide (lem (⊆ᵇ-prop A B)) (lem (⊆ᵇ-prop B A))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Ordinal/Linear.lagda.md:stepB B IHB ordB = decide (lem (⊆ᵇ-prop A B)) (lem (⊆ᵇ-prop B A)):lem:2"
+    },
+    {
+      "module": "L.Ordinal.SquareLaw",
+      "definition": "s",
+      "decided_proposition": "s = HostLeast.leastOf natOrder lem (P n m)",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Ordinal/SquareLaw.lagda.md:s = HostLeast.leastOf natOrder lem (P n m):lem:1"
+    },
+    {
+      "module": "L.Ordinal.SquareLaw",
+      "definition": "s",
+      "decided_proposition": "s = HostLeast.leastOf natOrder lem (P n m)",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Ordinal/SquareLaw.lagda.md:s = HostLeast.leastOf natOrder lem (P n m):lem:1"
+    },
+    {
+      "module": "L.Stage",
+      "definition": "step",
+      "decided_proposition": "step α IH ordα pα = decide (lem Smaller)",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/Stage.lagda.md:step α IH ordα pα = decide (lem Smaller):lem:1"
+    },
+    {
+      "module": "L.WellOrder.Base",
+      "definition": "go",
+      "decided_proposition": "go a (acc rs) pa = decide (lem (Smaller , squash₁))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/L/WellOrder/Base.lagda.md:go a (acc rs) pa = decide (lem (Smaller , squash₁)):lem:1"
+    },
+    {
+      "module": "L.WellOrder.Base",
+      "definition": "leastOfFormula",
+      "decided_proposition": "leastOfFormula {P = P} defined lem = hostLeastOf lem P",
+      "classification": "formula-satisfaction",
+      "supplier": "FormulaPredicate argument",
+      "reading_lemma": "FormulaPredicate.reading",
+      "migration_status": "migrated",
+      "site": "src/L/WellOrder/Base.lagda.md:leastOfFormula {P = P} defined lem = hostLeastOf lem P:lem:1"
+    },
+    {
+      "module": "L.WellOrder.Base",
+      "definition": "leastOfFormula",
+      "decided_proposition": "leastOfFormula {P = P} defined lem = hostLeastOf lem P",
+      "classification": "formula-satisfaction",
+      "supplier": "FormulaPredicate argument",
+      "reading_lemma": "FormulaPredicate.reading",
+      "migration_status": "migrated",
+      "site": "src/L/WellOrder/Base.lagda.md:leastOfFormula {P = P} defined lem = hostLeastOf lem P:lem:2"
+    },
+    {
+      "module": "V.CantorBernstein",
+      "definition": "notC→imG",
+      "decided_proposition": "notC→imG {x} nC with lem (imG x)",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/V/CantorBernstein.lagda.md:notC→imG {x} nC with lem (imG x):lem:1"
+    },
+    {
+      "module": "V.CantorBernstein",
+      "definition": "ĥ",
+      "decided_proposition": "ĥ x = h x (lem (C x))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/V/CantorBernstein.lagda.md:ĥ x = h x (lem (C x)):lem:1"
+    },
+    {
+      "module": "V.CantorBernstein",
+      "definition": "ĥ-inj",
+      "decided_proposition": "ĥ-inj x x' e = h-inj x x' (lem (C x)) (lem (C x')) e",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/V/CantorBernstein.lagda.md:ĥ-inj x x' e = h-inj x x' (lem (C x)) (lem (C x')) e:lem:1"
+    },
+    {
+      "module": "V.CantorBernstein",
+      "definition": "ĥ-inj",
+      "decided_proposition": "ĥ-inj x x' e = h-inj x x' (lem (C x)) (lem (C x')) e",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/V/CantorBernstein.lagda.md:ĥ-inj x x' e = h-inj x x' (lem (C x)) (lem (C x')) e:lem:2"
+    },
+    {
+      "module": "V.CantorBernstein",
+      "definition": "ĥ-surj",
+      "decided_proposition": "ĥ-surj y = map₁ (λ { (x , dx , e) → x , sym (h-cons x dx (lem (C x))) ∙ e })",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/V/CantorBernstein.lagda.md:ĥ-surj y = map₁ (λ { (x , dx , e) → x , sym (h-cons x dx (lem (C x))) ∙ e }):lem:1"
+    },
+    {
+      "module": "V.CantorBernstein",
+      "definition": "ĥ-surj",
+      "decided_proposition": "(h-surj y (lem (C (g y))))",
+      "classification": "host-only",
+      "supplier": "module theorem explicitly assumes host LEM",
+      "reading_lemma": "not applicable",
+      "migration_status": "allowlisted",
+      "site": "src/V/CantorBernstein.lagda.md:(h-surj y (lem (C (g y)))):lem:1"
+    },
+    {
+      "module": "V.Model",
+      "definition": "V⊨ZF-fromLEM",
+      "decided_proposition": "V⊨ZF-fromLEM lem = V⊨ZF (lem→ΩResizing lem)",
+      "classification": "resizing-bridge",
+      "supplier": "lem→resizing / lem→ΩResizing",
+      "reading_lemma": "resizing equivalence",
+      "migration_status": "migrated",
+      "site": "src/V/Model.lagda.md:V⊨ZF-fromLEM lem = V⊨ZF (lem→ΩResizing lem):lem:1"
+    }
+  ]
+}
