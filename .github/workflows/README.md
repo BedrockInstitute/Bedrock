@@ -34,10 +34,12 @@ source edits. Cache, Python, artifact and deployment actions use their Node 24 r
 After `typecheck` succeeds, `site-backend` restores the exact patched-Agda and cubical
 caches that job created, including cubical's pinned source archive. It does not install
 GHC, redownload cubical or compile Agda again. Its combined backend cache uses the same
-two-part key, so source changes can reuse compatible interfaces and HTML as an
-incremental starting point. A single combined
-Agda traversal produces project interfaces, highlighted HTML and expression-type data,
-which are uploaded as one short-lived, host-neutral artifact.
+two-part key, including the backend scripts and Makefile in its stable fingerprint, so
+an exact hit can validate and directly upload the complete HTML/type-data artifact.
+After source changes, a partial hit reuses compatible interfaces, HTML and the trace as
+an incremental starting point. A single combined Agda traversal produces project
+interfaces, highlighted HTML and expression-type data, which are cached together and
+uploaded as one short-lived, host-neutral artifact.
 
 The `pages` and `cloudflare` jobs consume that artifact independently and may run in
 parallel. Each renders its own base URL, checks its own links and deploys its own output.

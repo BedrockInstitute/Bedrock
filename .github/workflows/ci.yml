@@ -161,17 +161,44 @@ jobs:
           python3 tools/bedrock-agda/setup.py
 
       - name: Cache combined site backend
+        id: site_backend
         uses: actions/cache@v6
         with:
           path: |
             _build/2.8.0/agda/src
             _build/html
             _build/bedrock-agda-types.jsonl
-          key: bedrock-site-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib') }}-${{ hashFiles('src/**/*.lagda.md') }}
+            _build/types.json
+            _build/expression-types.json
+          key: bedrock-site-v3-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib', 'Makefile', 'scripts/agda-parallel.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
           restore-keys: |
-            bedrock-site-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib') }}-
+            bedrock-site-v3-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib', 'Makefile', 'scripts/agda-parallel.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py') }}-
+
+      - name: Validate restored site backend
+        if: steps.site_backend.outputs.cache-hit == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f _build/2.8.0/agda/src/Milestones.agdai
+          test -f _build/html/.bedrock-checked
+          test -s _build/bedrock-agda-types.jsonl
+          test -s _build/types.json
+          test -s _build/expression-types.json
+
+      # On a partial restore, the wrapper timestamp was refreshed above only to
+      # keep Make from rebuilding the cached compiler. The restored trace is
+      # compatible because restore-keys include the complete backend/toolchain
+      # fingerprint; refresh it so Agda can reuse the restored interface tree.
+      - name: Prepare incremental site cache
+        if: steps.site_backend.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          if [[ -s _build/bedrock-agda-types.jsonl ]]; then
+            touch _build/bedrock-agda-types.jsonl
+          fi
 
       - name: Build shared site backend
+        if: steps.site_backend.outputs.cache-hit != 'true'
         shell: bash
         run: |
           set -euo pipefail
