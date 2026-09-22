@@ -58,6 +58,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ¬̇_; ∃̇_; ∀̇_ )
 import FOL.Absoluteness
+import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; extensionalV; ∈-irrefl )
 ```
 
@@ -1406,7 +1407,9 @@ Replacement requires the values satisfying `ψ` at each `q ∈ D` to form a cont
 
 ```agda
         fc : (q : S) → ⟨ q ∈ˢ D ⟩ → isContr (Σ[ z ∈ S ] ⟨ (z ∷ q ∷ []) ⊨ ψ ⟩)
-        fc q mq = mereFunct ψ q (decide (lem (pr (fst q) (↪ a) ∈ fst R)))
+        fc q mq = mereFunct ψ q
+          (decide (FOL.Semantics.decideMembership 𝒮ᵥ lem
+            (pr (fst q) (↪ a)) (fst R)))
           where
           b : Dom
           b = toDom q mq

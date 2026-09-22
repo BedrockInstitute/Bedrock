@@ -60,6 +60,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _≐_; _∈̇_; _∧̇_; _⇒̇_; ∃̇_; ∀̇_; ∀̇∈ )
 import FOL.Absoluteness
+import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 ```
 
@@ -1684,7 +1685,7 @@ The search lemma names a member: for each member `x` of the finite stage it runs
     named : (x : V ℓ) → ⟨ x ∈ˢ finiteStage n ⟩ → Σ[ i ∈ Fin size ] (item i ≡ x)
     named x hx = decRec (λ q → q) (λ nq → ⊥₀-rec (rec₁ isProp⊥ nq (onto x hx)))
       (DecΣ size (λ i → item i ≡ x)
-        (λ i → lem ((item i ≡ x) , setIsSet (item i) x)))
+        (λ i → FOL.Semantics.decideEquality 𝒮ᵥ lem (item i) x))
 
 ```
 

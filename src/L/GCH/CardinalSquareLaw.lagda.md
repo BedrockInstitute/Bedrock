@@ -58,6 +58,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 import FOL.Absoluteness
+import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
 ```
 
@@ -2361,7 +2362,7 @@ The first decision is an instance of excluded middle, applied to the membership 
 
 ```agda
     fin? : (x : S) → Fin? x
-    fin? x = lem (fst x ∈ˢ ω)
+    fin? x = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) ω
 
 ```
 
@@ -2375,7 +2376,7 @@ The second decision is also an instance of excluded middle, refined by the succe
 
 ```agda
     top? : (x : S) → Mem x → Top? x
-    top? x h = go (lem (fst x ∈ˢ m))
+    top? x h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem (fst x) m)
       where
       go : Dec ⟨ fst x ∈ˢ m ⟩ → Top? x
       go (yes k) = inl k

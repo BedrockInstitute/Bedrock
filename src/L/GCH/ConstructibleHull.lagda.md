@@ -170,7 +170,7 @@ Least-element search over a strict well-order returns, from an inhabited family,
 
 ```agda
 open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( SWO; IsLeast; leastOf; isPropLeastOf )
+  using ( SWO; IsLeast; leastOfFormula; isPropLeastOf )
   renaming ( Tri to Tri∙; lt to tri-lt; eq to tri-eq; gt to tri-gt )
 open import L.GCH.CardinalSquareLaw {ℓ} lem using ( module Relation; isL-ord )
 open import L.GCH.OrderType {ℓ} lem
@@ -1609,7 +1609,8 @@ A hull code is either a base name for a member of `X`, or `wit k ψ cs`, which s
 <!--/-->
 
 ```agda
-    using ( Code; base; wit; val; vals; search; Sat; Hull; val-wit )
+    using ( Code; base; wit; val; vals; search; searchPredicate; Sat; Hull; val-wit
+          ; satDecision )
   open HullStage.H.T lam ordλ succλ X X⊆L ∅∈λ using ( inHull; _⊨₀_ )
 
 ```
@@ -1870,7 +1871,7 @@ Hull into union, first half: every hull code has its value staged at the iterate
     mutual
       hullStep-in : (c : Code) → ⟨ fst (val c) ∈ˢ fst (hullStep (depth c)) ⟩
       hullStep-in (base m) = member X m
-      hullStep-in (wit k ψ cs) = go (lem (Sat k ψ (vals cs) , squash₁))
+      hullStep-in (wit k ψ cs) = go (satDecision k ψ (vals cs))
         where
 ```
 
@@ -1993,7 +1994,8 @@ The code `wit 0 ⊥̇ []` has no satisfying witness, so its value follows the fa
 ```agda
       junk∈Hull : ⟨ ∅ ∈ˢ Hull ⟩
       junk∈Hull = subst (λ z → ⟨ fst z ∈ˢ Hull ⟩)
-        (stuck-r unsat (search 0 ⊥̇ []) (λ _ → (∅ , HSH.∅∈Lsetα)) (lem (Sat 0 ⊥̇ [] , squash₁)))
+        (stuck-r unsat (search 0 ⊥̇ []) (λ _ → (∅ , HSH.∅∈Lsetα))
+          (satDecision 0 ⊥̇ []))
         (inHull (wit 0 ⊥̇ []))
         where
 ```
@@ -3549,6 +3551,14 @@ The predicate to be minimized says of an element `a` that the extended environme
 ```
 
 <!--en-->
+This predicate has no hidden host-only component. The object-language formula is `χ`, a candidate `a` determines the extended environment `a ∷ vs`, and the reusable package `searchPredicate k χ vs` has semantic reading judgmentally equal to `P`.
+<!--zh-->
+这个谓词不含隐藏的纯宿主成分。对象语言公式就是 `χ`，候选 `a` 决定扩展环境 `a ∷ vs`，而可复用的包 `searchPredicate k χ vs` 之语义读取在定义上就是 `P`。
+<!--ja-->
+この述語には、隠れたホストだけの成分はない。対象言語の論理式は `χ` であり、候補 `a` が拡張環境 `a ∷ vs` を決め、再利用できるパッケージ `searchPredicate k χ vs` の意味論的な読みは定義上 `P` そのものである。
+<!--/-->
+
+<!--en-->
 The least witness `a` is selected by the least-element search along the internal well-order of `L`, applied to this predicate and the nonemptiness record.
 <!--zh-->
 最小见证 `a` 由 `L` 的内部良序上的最小元搜索选取，施用于该谓词与非空记录。
@@ -3558,7 +3568,7 @@ The least witness `a` is selected by the least-element search along the internal
 
 ```agda
       a : SL
-      a = leastOf wL {ℓ'' = ℓ-suc ℓ} lem P w₀ .fst
+      a = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .fst
 
 ```
 
@@ -3572,7 +3582,7 @@ Its leastness data is kept in full: `a` satisfies the predicate, and no smaller 
 
 ```agda
       a-least : IsLeast wL P a
-      a-least = leastOf wL {ℓ'' = ℓ-suc ℓ} lem P w₀ .snd
+      a-least = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .snd
 
 ```
 
@@ -4164,7 +4174,8 @@ The recovered arity `n`, formula `χ`, parameter vector `vs`, and witness `w₀`
 ```agda
             searched : Searched Z (fst w)
             searched = n , χ , vs , w₀ , (from , sym (cong (λ q → fst (fst q))
-              (isPropLeastOf wL P (leastOf wL {ℓ'' = ℓ-suc ℓ} lem P w₀) (wS , (sat , min)))))
+              (isPropLeastOf wL P (leastOfFormula wL (searchPredicate n χ vs) lem w₀)
+                (wS , (sat , min)))))
           table : ∥ Searched Z (fst w) ∥₁
           table = ∣ AtTable.searched
 ```

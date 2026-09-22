@@ -110,15 +110,15 @@ open import L.WellOrder.Base {ℓ-suc ℓ}
 ```
 
 <!--en-->
-The abstract notion of order is a strict well-order packaged as a record: a strict comparison, trichotomy, irreflexivity, transitivity, and well-foundedness, together with a least-element search `leastOf` that consumes such a record. These four laws are exactly what the names will be shown to satisfy. On the type-theoretic side, the imported tools handle the dependent bookkeeping that arises because a name's formula and parameter vector have the arity as an index: a way to build a path into a dependent pair, a commutation of substitution with a constant function along a path, the two directions of an equivalence, and injectivity extracted from an embedding.
+The abstract notion of order is a strict well-order packaged as a record: a strict comparison, trichotomy, irreflexivity, transitivity, and well-foundedness. The formula-facing least-element search `leastOfFormula` consumes such a record together with a formula package. These four laws are exactly what the names will be shown to satisfy. On the type-theoretic side, the imported tools handle the dependent bookkeeping that arises because a name's formula and parameter vector have the arity as an index: a way to build a path into a dependent pair, a commutation of substitution with a constant function along a path, the two directions of an equivalence, and injectivity extracted from an embedding.
 <!--zh-->
-序的抽象概念被打包成记录的严格良序：一个严格比较、三歧性、非自反性、传递性与良基性，连同使用这种记录的最小元搜索 `leastOf`。名字将被证明恰好满足这四条定律。在类型论一侧，导入的工具处理因名字的公式与参数向量以元数为索引而产生的依值类型中的等式处理：向依值对中造路径的办法、替换沿路径与常值函数的交换、等价的两个方向，以及从嵌入提取的单射性。
+序的抽象概念被打包成记录的严格良序：一个严格比较、三歧性、非自反性、传递性与良基性。面向公式的最小元搜索 `leastOfFormula` 同时接收这种记录与一个公式包。名字将被证明恰好满足这四条定律。在类型论一侧，导入的工具处理因名字的公式与参数向量以元数为索引而产生的依值类型中的等式处理：向依值对中造路径的办法、替换沿路径与常值函数的交换、等价的两个方向，以及从嵌入提取的单射性。
 <!--ja-->
-順序の抽象概念は、レコードとしてまとめられた狭義整列順序である。狭義の比較、三分性、非反射性、推移性、整礎性に加え、そのようなレコードを用いる最小要素探索 `leastOf` をともなう。名前が満たすと示されるのは、まさにこの四つの法則である。型理論の側で読み込まれる道具は、名前の論理式とパラメータ列がアリティを指数にもつことから生じる依存型における等式の処理を扱う。依存対へのパスの構成、パスに沿った置換と定数関数の交換、同値の両方向、そして埋め込みから取り出す単射性である。
+順序の抽象概念は、レコードとしてまとめられた狭義整列順序である。狭義の比較、三分性、非反射性、推移性、整礎性を備える。論理式に面する最小要素探索 `leastOfFormula` は、このレコードと論理式のパッケージをともに受け取る。名前が満たすと示されるのは、まさにこの四つの法則である。型理論の側で読み込まれる道具は、名前の論理式とパラメータ列がアリティを指数にもつことから生じる依存型における等式の処理を扱う。依存対へのパスの構成、パスに沿った置換と定数関数の交換、同値の両方向、そして埋め込みから取り出す単射性である。
 <!--/-->
 
 ```agda
-  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOf )
+  using ( Tri; lt; eq; gt; SWO; IsLeast; leastOfFormula )
 open import Cubical.Foundations.Transport using ( constSubstCommSlice )
 open import Cubical.Foundations.Equiv using ( equivFun; invEq )
 open import Cubical.Functions.Embedding using ( isEmbedding→Inj )
@@ -159,7 +159,7 @@ Two eliminations have their target types fixed by the mathematics. The empty typ
 <!--/-->
 
 ```agda
-open import Cubical.HITs.CumulativeHierarchy.Base using ( sett )
+open import Cubical.HITs.CumulativeHierarchy.Base using ( sett; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties
 ```
 
@@ -1596,20 +1596,27 @@ The record `nameOrder` collects the four laws already proved, field by field: th
 ```
 
 <!--en-->
-The least-element search takes the bundle at its word. Its family argument is a function into `hProp`, so the property is stated at each name; the hypothesis is the truncation `∥ Σ ... ∥₁`, mere inhabitedness, carrying no chosen witness; and the conclusion is an explicit pair of a name and its leastness, a chosen witness after all, extracted by `leastOf` with the module's classical hypothesis `lem`. The truncation may be eliminated because the whole type of a least witness, `Σ[ a ∈ Name ] IsLeast nameOrder P a`, is a proposition: any two least witnesses coincide by trichotomy. Thus classical descent converts mere inhabitation into a definite least name.
+The least-element search is applied only to the denotation predicate needed by the naming construction. A name denotes `x` when its semantic value equals `x`; this is presented by the equality formula with the denotation in the variable slot and `x` as a constant. The environment depends on the candidate name, but the formula is fixed. Thus the classical descent decides satisfaction of an exhibited formula rather than an arbitrary host predicate.
 <!--zh-->
-极小元搜索照字面兑现这份记录。它的族实参是映入 `hProp` 的函数，性质陈述在每个名字上；假设是截断 `∥ Σ ... ∥₁`，即仅仅非空，不携带任何被选出的见证；结论则是一对显式的名字与它的最小性，终究是被选出的见证，由 `leastOf` 借助模块的经典假设 `lem` 抽出。截断之所以能消去，是因为极小见证的整个类型 `Σ[ a ∈ Name ] IsLeast nameOrder P a` 是命题：任意两个极小见证由三歧性得到相等。因此经典下降把名字族的仅仅非空转化为一个确定的极小名字。
+极小元搜索只施用于命名构造所需的指称谓词。一个名字指称 `x`，意思是其语义值等于 `x`；这由等词公式呈现，其中名字的指称放在变元槽，`x` 作为常元。环境随候选名字变化，公式本身则固定。因此，经典下降所判定的是一条已明确给出的公式是否满足，而不是任意宿主谓词。
 <!--ja-->
-最小要素探索はこの束をその言葉どおりに使う。族の引数は `hProp` への関数なので、性質は各名前の上で述べられる。仮定は截断 `∥ Σ ... ∥₁`、つまり単に非空であることで、選ばれた証人を運ばない。結論は名前とその最小性の明示的な対であり、結局は選ばれた証人で、`leastOf` がこのモジュールの古典的仮定 `lem` とともにこれを取り出す。切り捨てを除去できるのは、最小証人全体の型 `Σ[ a ∈ Name ] IsLeast nameOrder P a` が命題だからである。任意の二つの最小証人は三分性により一致する。したがって古典的降下が単なる非空性を確定した最小の名前へ変換する。
+最小要素探索は、名前付けの構成に必要な指示述語だけに適用される。名前が `x` を指示するとは、その意味値が `x` に等しいことであり、これは指示対象を変数の枠に、`x` を定数に置く等号の論理式で表示される。環境は候補となる名前に応じて変わるが、論理式は固定されている。したがって古典的降下が判定するのは、明示された論理式の充足であって、任意のホスト述語ではない。
 <!--/-->
 
 ```agda
     ; trans∙ = ≺ₙ-trans
     ; wf∙    = ≺ₙ-wf }
 
-  leastName : (P : Name → hProp (ℓ-suc ℓ))
-            → ∥ Σ[ a ∈ Name ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ Name ] IsLeast nameOrder P a
-  leastName = leastOf nameOrder lem
+  Denotes : S → Name → hProp (ℓ-suc ℓ)
+  Denotes x a = (denote a ≡ x) , setIsSet (denote a) x
+
+  definedDenotes : (x : S) → FOL.Semantics.FormulaPredicate 𝒮ᵥ Name S id (Denotes x)
+  definedDenotes x = FOL.Semantics.presented 1 (var zero ≐ con x)
+    (λ a → denote a ∷ []) (λ a → refl)
+
+  leastName : (x : S) → ∥ Σ[ a ∈ Name ] ⟨ Denotes x a ⟩ ∥₁
+            → Σ[ a ∈ Name ] IsLeast nameOrder (Denotes x) a
+  leastName x = leastOfFormula nameOrder (definedDenotes x) lem
 ```
 
 <!--en-->

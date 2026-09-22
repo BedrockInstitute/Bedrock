@@ -141,6 +141,7 @@ $(AGDA_STAMP): $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES)
 lint:
 	$(PY) scripts/gate/lint-prose.py --check
 	$(PY) scripts/gate/lint-agda.py --check
+	$(PY) scripts/gate/check-host-lem.py
 	$(PY) scripts/gate/check-glossary.py --check
 	$(PY) scripts/gate/check-term-introductions.py
 	$(PY) scripts/gate/check-fences.py --check

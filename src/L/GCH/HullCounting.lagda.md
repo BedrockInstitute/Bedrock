@@ -54,6 +54,7 @@ open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax
   using ( Formula; var; con; _∈̇_; _≐_; _∧̇_; _∨̇_; ¬̇_; ∃̇_ )
 import FOL.Absoluteness
+import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 ```
 
@@ -550,7 +551,7 @@ Excluded middle decides, for every member of the union, whether it came from the
 
 ```agda
   decide : (z : S) → Case z
-  decide z = lem (fst z ∈ fst D₁)
+  decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst z) (fst D₁)
 
 ```
 
@@ -1719,7 +1720,7 @@ The closure step is covered by the first union. Each member `z` of `ΦZ` either 
 
 ```agda
     ΦZ⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst ΦZ ⟩ → ⟨ z ∈ˢ fst U₁.D ⟩
-    ΦZ⊆ z h = go (lem (z ∈ fst Z))
+    ΦZ⊆ z h = go (FOL.Semantics.decideMembership 𝒮ᵥ lem z (fst Z))
       where
       zS : S
       zS = z , isL-trans {x = fst ΦZ} {y = z} h (snd ΦZ)
@@ -1750,7 +1751,7 @@ The new part is covered by the second union, by the same excluded-middle argumen
 
 ```agda
     D₂⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst D₂ ⟩ → ⟨ z ∈ˢ fst U₃.D ⟩
-    D₂⊆ z h = go (lem ((z ≡ ∅) , setIsSet z ∅))
+    D₂⊆ z h = go (FOL.Semantics.decideEquality 𝒮ᵥ lem z ∅)
       where
       zS : S
       zS = z , isL-trans {x = fst D₂} {y = z} h (snd D₂)

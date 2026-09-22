@@ -50,6 +50,7 @@ lint-agda: keep (⊤̇ names the defining formula behind `LsetS`)
 ```agda
 open import FOL.Manipulation.ConstantBounding using ( BoundedTm; BoundedFo )
 open import FOL.Manipulation.Relativization using ( relativize; module Correct )
+import FOL.Semantics
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import L.Constructible {ℓ}
@@ -438,7 +439,7 @@ it is the only place.
       fwd h x x∈A =
         subst ⟨_⟩ (reflectFo χ an bd (x ∷ γ) (x∈A , bγ)) (h x)
       bwd : ⟨ γ ⊨ᴬ (∀̇ χ) ⟩ → ⟨ γ ⊨ (∀̇ χ) ⟩
-      bwd H x = decide (lem ((x ∷ γ) ⊨ χ))
+      bwd H x = decide (FOL.Semantics.decideSatisfaction 𝒮ʟ id lem (x ∷ γ) χ)
         where
         decide : Dec ⟨ (x ∷ γ) ⊨ χ ⟩
                → ⟨ (x ∷ γ) ⊨ χ ⟩

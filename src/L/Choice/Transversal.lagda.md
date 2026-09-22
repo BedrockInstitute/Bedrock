@@ -66,6 +66,7 @@ module L.Choice.Transversal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; var; con; _∈̇_; _∧̇_; ¬̇_; ∃̇_ )
+import FOL.Semantics
 import FOL.ZFModel
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
@@ -78,7 +79,7 @@ open import L.Choice.StageOrders {ℓ} lem using ( Mem; relOf )
 open import L.Choice.InternalWellOrder {ℓ} lem using ( module Bound )
 open import L.Coding.Model {ℓ} using ( appC; appC-adequate )
 open import L.WellOrder.Base {ℓ-suc ℓ}
-  using ( SWO; IsLeast; isPropLeastOf; leastOf )
+  using ( SWO; IsLeast; isPropLeastOf; leastOfFormula )
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 
 open hPropStructure 𝒮ʟ
@@ -236,6 +237,14 @@ module Trans (zf : isZFModel) (a : S)
   Cell : S → Mem (Lset β) → hProp (ℓ-suc ℓ)
   Cell x m = fst m ∈ fst x
 
+  CellFormula : S → Formula S 1
+  CellFormula x = var zero ∈̇ con x
+
+  definedCell : (x : S)
+              → FOL.Semantics.FormulaPredicate 𝒮ʟ (Mem (Lset β)) S id (Cell x)
+  definedCell x = FOL.Semantics.presented 1 (CellFormula x)
+    (λ m → elt m ∷ []) (λ m → refl)
+
   Least : S → S → Type (ℓ-suc ℓ)
   Least x z = Σ[ h ∈ ⟨ fst z ∈ Lset β ⟩ ] IsLeast W (Cell x) (fst z , h)
 
@@ -248,7 +257,7 @@ module Trans (zf : isZFModel) (a : S)
         (fst y , bound-below₂ (fst a) (snd a) (fst x) (fst y) y∈x x∈a) , y∈x
 
     least : (x : S) → ⟨ x ∈ˢ a ⟩ → Σ[ m ∈ Mem (Lset β) ] IsLeast W (Cell x) m
-    least x x∈a = leastOf W lem (Cell x) (members x x∈a)
+    least x x∈a = leastOfFormula W (definedCell x) lem (members x x∈a)
 
     Predecessor : S → S → S → Type (ℓ-suc ℓ)
     Predecessor x z w = ⟨ w ∈ˢ x ⟩

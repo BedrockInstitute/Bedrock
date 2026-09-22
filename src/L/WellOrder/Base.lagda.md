@@ -43,6 +43,8 @@ Two mathematical notions then do the work. Well-foundedness is phrased through t
 
 open import Base.Prelude
 open import Base.Classical using ( LEM )
+open import FOL.ZFStructure using ( ZFStructure )
+import FOL.Semantics as Semantics
 
 module L.WellOrder.Base {ℓₚ : Level} where
 ```
@@ -225,10 +227,10 @@ The elimination of the truncation in the hypothesis is legitimate because the ta
 <!--/-->
 
 ```agda
-  leastOf : {ℓ'' : Level} → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
+  hostLeastOf : {ℓ'' : Level} → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
           → (P : A → hProp ℓ'')
           → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ A ] IsLeast P a
-  leastOf {ℓ''} lem P =
+  hostLeastOf {ℓ''} lem P =
     rec₁ (isPropLeastOf P) (λ { (a₀ , pa₀) → go a₀ (wf∙ a₀) pa₀ })
 ```
 
@@ -265,31 +267,61 @@ Applying `lem` to `Smaller` yields either a proof or a refutation, and `decide` 
 ```
 
 <!--en-->
+The theorem `hostLeastOf` is the unrestricted host-level utility: its predicate may be any function into `hProp`{.Agda}, so the classical question asked during the descent need not come from the language of set theory. It is exported to callers as `HostLeast.leastOf`, making that boundary visible at each call. Model-facing constructions normally need a narrower boundary. If `P` is supplied through `FormulaPredicate`, its formula, environment, and reading theorem travel with it; `leastOfFormula` performs the same descent but makes that definability evidence part of the theorem's input.
+<!--zh-->
+定理 `hostLeastOf` 是不受限制的宿主层工具：其谓词可以是任意取值于 `hProp`{.Agda} 的函数，所以下降过程中提出的经典问题未必来自集合论语言。它以 `HostLeast.leastOf` 的名字向调用方导出，使这条边界在每个调用点都可见。面向模型的构造通常需要更窄的边界。若通过 `FormulaPredicate` 供给 `P`，它的公式、环境与读取定理便会随之同行；`leastOfFormula` 执行同样的下降，但把这份可定义性证据纳入定理的输入。
+<!--ja-->
+定理 `hostLeastOf` は制限のないホスト層の道具である。その述語は `hProp`{.Agda} への任意の関数でよく、降下中に問われる古典的命題が集合論の言語から来る必要はない。呼び出し側には `HostLeast.leastOf` として公開され、この境界が各呼び出しで見える。モデルに面する構成には通常、より狭い境界が要る。`P` を `FormulaPredicate` を通して与えれば、その論理式、環境、読み取り定理も一緒に運ばれる。`leastOfFormula` は同じ降下を行うが、この定義可能性の証拠を定理の入力の一部にする。
+<!--/-->
+
+```agda
+  leastOfFormula : ∀ {ℓs ℓk} {𝒮 : ZFStructure ℓs}
+      {K : Type ℓk} {ι : K → ZFStructure.S 𝒮}
+      {P : A → hProp ℓs} → Semantics.FormulaPredicate 𝒮 A K ι P
+      → LEM (ℓ-max ℓc (ℓ-max ℓₚ ℓs))
+      → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ A ] IsLeast P a
+  leastOfFormula {P = P} defined lem = hostLeastOf lem P
+```
+
+<!--en-->
+The unrestricted operation is exported only through the `HostLeast` namespace. This makes a call site state that it is performing host-level search. Formula-facing code should instead call `leastOfFormula`, whose input contains the object formula and its checked semantic reading.
+<!--zh-->
+不受限制的运算只经 `HostLeast` 命名空间导出。这样，调用处会明确表明它正在执行宿主层搜索。面向模型的代码应改用 `leastOfFormula`，其输入包含对象公式及经过检查的语义读取。
+<!--ja-->
+制限のない演算は `HostLeast` 名前空間を通してのみ公開する。これにより、呼び出し側はホスト層の探索を行っていることを明示する。モデルに面するコードは代わりに、対象論理式と検査済みの意味論的読みを入力に含む `leastOfFormula` を使うべきである。
+<!--/-->
+
+```agda
+module HostLeast {ℓc : Level} {A : Type ℓc} (w : SWO {ℓc} A) where
+  leastOf = hostLeastOf w
+```
+
+<!--en-->
 ## The natural numbers, well-ordered
 
-The usual strict order on the natural numbers satisfies all four laws of the bundle, and its well-foundedness follows by induction on the upper number. This section assembles `natOrder : SWO {ℓ-zero} ℕ`{.Agda}; a concrete consumer, `L.Choice.FiniteStageOrders`{.Agda}, calls `leastOf natOrder`{.Agda} to pick the earliest natural-numbered finite stage witnessing a property. The library already supplies every ingredient about the usual order, so the bundle is assembled rather than proved: the relation, irreflexivity, transitivity and well-foundedness are the library's own, and the trichotomy is the library's three-way decision procedure with its answer renamed into the chapter's constructors.
+The usual strict order on the natural numbers satisfies all four laws of the bundle, and its well-foundedness follows by induction on the upper number. This section assembles `natOrder : SWO {ℓ-zero} ℕ`{.Agda}; a concrete consumer, `L.Choice.FiniteStageOrders`{.Agda}, calls `leastOfFormula natOrder`{.Agda} to pick the earliest natural-numbered finite stage satisfying a represented property. The library already supplies every ingredient about the usual order, so the bundle is assembled rather than proved: the relation, irreflexivity, transitivity and well-foundedness are the library's own, and the trichotomy is the library's three-way decision procedure with its answer renamed into the chapter's constructors.
 
 One genuine step remains. The order on the natural numbers lives at the bottom universe level, while the relation of a bundle is valued at the fixed level `ℓₚ`; each comparison is therefore wrapped in `Lift`{.Agda}, which changes only where the type lives and nothing about its inhabitants.
 <!--zh-->
 ## 自然数，良序化
 
-自然数上的通常严格序满足束的全部四条定律，其良基性对上侧自然数作归纳即得。本节组装 `natOrder : SWO {ℓ-zero} ℕ`{.Agda}；一个具体使用处 `L.Choice.FiniteStageOrders`{.Agda} 调用 `leastOf natOrder`{.Agda}，从以自然数编号的有限层中挑出见证某性质的最早层。关于通常的序，库中已有全部所需材料，因此这个束只需组装而无需另行证明：关系、非自反性、传递性与良基性直接取自库，三歧性则是库的三路判定程序、其答案按本章构造子重新命名。
+自然数上的通常严格序满足束的全部四条定律，其良基性对上侧自然数作归纳即得。本节组装 `natOrder : SWO {ℓ-zero} ℕ`{.Agda}；一个具体使用处 `L.Choice.FiniteStageOrders`{.Agda} 调用 `leastOfFormula natOrder`{.Agda}，从以自然数编号的有限层中挑出满足某个已表示性质的最早层。关于通常的序，库中已有全部所需材料，因此这个束只需组装而无需另行证明：关系、非自反性、传递性与良基性直接取自库，三歧性则是库的三路判定程序、其答案按本章构造子重新命名。
 
 剩下的一步是真正的调整。自然数上的序处在最底宇宙层级，而束的关系取值于固定层级 `ℓₚ`；因此每次比较都要用 `Lift`{.Agda} 包一层，它只改变类型所在的层级，不改变其居民。
 <!--ja-->
 ## 自然数の整列順序
 
-自然数上の通常の狭義順序は束の四つの法則をすべて満たし、その整礎性は上側の自然数についての帰納で従う。この節では `natOrder : SWO {ℓ-zero} ℕ`{.Agda} を組み立てる。具体的な利用箇所である `L.Choice.FiniteStageOrders`{.Agda} は `leastOf natOrder`{.Agda} を呼び、自然数で番号づけられた有限段階のうち、性質を証明する最も早いものを選び出す。通常の順序について必要な材料はすべてライブラリが供給するため、この束は証明するのではなく組み立てるだけである。関係・非反射性・推移性・整礎性はライブラリのものをそのまま使い、三分性はライブラリの三路判定の手続きの答えを本章の構成子に名前を変えたものである。
+自然数上の通常の狭義順序は束の四つの法則をすべて満たし、その整礎性は上側の自然数についての帰納で従う。この節では `natOrder : SWO {ℓ-zero} ℕ`{.Agda} を組み立てる。具体的な利用箇所である `L.Choice.FiniteStageOrders`{.Agda} は `leastOfFormula natOrder`{.Agda} を呼び、自然数で番号づけられた有限段階のうち、表示された性質を満たす最も早いものを選び出す。通常の順序について必要な材料はすべてライブラリが供給するため、この束は証明するのではなく組み立てるだけである。関係・非反射性・推移性・整礎性はライブラリのものをそのまま使い、三分性はライブラリの三路判定の手続きの答えを本章の構成子に名前を変えたものである。
 
 残る真の調整が一つある。自然数の順序は最下層の宇宙レベルに住む一方、束の関係は固定レベル `ℓₚ` で値をとる。そこで各比較を `Lift`{.Agda} で包む。これは型の住むレベルを変えるだけで、住人については何も変えない。
 <!--/-->
 
 <!--en-->
-`liftAcc` transports accessibility data from the plain order to its lifted copy. Given `acc r`{.Agda} at `n`, it returns `acc`{.Agda} of a function that, from `m` below `n` in the lifted order, first unwraps the lifted proof with `lower`{.Agda} and recurses at `m`. This is structural recursion on the accessibility argument, the same pattern that will drive `leastOf`. Note the two universe arguments of `Lift`{.Agda}: the source stays at zero and only the target is `ℓₚ`.
+`liftAcc` transports accessibility data from the plain order to its lifted copy. Given `acc r`{.Agda} at `n`, it returns `acc`{.Agda} of a function that, from `m` below `n` in the lifted order, first unwraps the lifted proof with `lower`{.Agda} and recurses at `m`. This is structural recursion on the accessibility argument, the same pattern that drives the least-witness search. Note the two universe arguments of `Lift`{.Agda}: the source stays at zero and only the target is `ℓₚ`.
 <!--zh-->
-`liftAcc` 把可及性数据从原本的序搬运到其抬升副本。给定 `n` 处的 `acc r`{.Agda}，它返回某个函数的 `acc`{.Agda}：该函数从抬升序中位于 `n` 之下的 `m` 出发，先用 `lower`{.Agda} 拆开抬升的证明，再在 `m` 处递归。这是对可及性参数的结构递归，与稍后驱动 `leastOf` 的模式相同。注意 `Lift`{.Agda} 的两个宇宙参数：源层级保持为零，只有目标层级是 `ℓₚ`。
+`liftAcc` 把可及性数据从原本的序搬运到其抬升副本。给定 `n` 处的 `acc r`{.Agda}，它返回某个函数的 `acc`{.Agda}：该函数从抬升序中位于 `n` 之下的 `m` 出发，先用 `lower`{.Agda} 拆开抬升的证明，再在 `m` 处递归。这是对可及性参数的结构递归，也正是驱动最小见证搜索的模式。注意 `Lift`{.Agda} 的两个宇宙参数：源层级保持为零，只有目标层级是 `ℓₚ`。
 <!--ja-->
-`liftAcc` は到達可能性のデータを元の順序からその持ち上げられたコピーへ運ぶ。`n` における `acc r`{.Agda} が与えられると、持ち上げられた順序で `n` より下の `m` に対し、まず `lower`{.Agda} で持ち上げられた証明をほどいてから `m` で再帰する関数の `acc`{.Agda} を返す。これは到達可能性の引数に対する構造的再帰であり、後に `leastOf` を駆動するのと同じパターンである。`Lift`{.Agda} が二つの宇宙引数をもつことに注意してほしい。ソースはゼロのままで、ターゲットだけが `ℓₚ` である。
+`liftAcc` は到達可能性のデータを元の順序からその持ち上げられたコピーへ運ぶ。`n` における `acc r`{.Agda} が与えられると、持ち上げられた順序で `n` より下の `m` に対し、まず `lower`{.Agda} で持ち上げられた証明をほどいてから `m` で再帰する関数の `acc`{.Agda} を返す。これは到達可能性の引数に対する構造的再帰であり、最小証人の探索を駆動するのと同じパターンである。`Lift`{.Agda} が二つの宇宙引数をもつことに注意してほしい。ソースはゼロのままで、ターゲットだけが `ℓₚ` である。
 <!--/-->
 
 ```agda
@@ -349,13 +381,13 @@ The three clauses of `fromNat` complete the translation. Reading them together s
 <!--en-->
 ## Recap
 
-Strict well-orders can now be passed around as a single structure, compared by trichotomy, and searched for least witnesses. `SWO`{.Agda} gathers the relation with its four laws, and `leastOf`{.Agda} extracts, from any merely inhabited subset, a least witness that is unique up to the path supplied by `isPropLeastOf`{.Agda}. The natural-number instance `natOrder`{.Agda} supports searches over natural-number indices, for instance when a later chapter picks the earliest finite stage of L witnessing a property. Excluded middle enters only as the decision asked at each descent step of the search; the bundle definition, its laws and the natural-number order remain constructive.
+Strict well-orders can now be passed around as a single structure, compared by trichotomy, and searched for least witnesses. `SWO`{.Agda} gathers the relation with its four laws. `HostLeast.leastOf`{.Agda} exposes unrestricted host-predicate search, while `leastOfFormula`{.Agda} requires a formula, environment, and reading theorem before model-facing code can use the same descent. The natural-number instance `natOrder`{.Agda} supports searches over natural-number indices, for instance when a later chapter picks the earliest finite stage of L witnessing a formula-defined property. Excluded middle enters only as the decision asked at each descent step of the search; the bundle definition, its laws and the natural-number order remain constructive.
 <!--zh-->
 ## 小结
 
-现在，严格良序可以作为一个结构整体传递、以三歧作比较，并搜索最小见证。`SWO`{.Agda} 把关系连同四条定律收在一起，`leastOf`{.Agda} 从任何仅仅非空的子集中取出极小见证，且由 `isPropLeastOf`{.Agda} 提供的路径保证唯一。自然数实例 `natOrder`{.Agda} 支持在自然数索引上搜索，例如后续章节从 L 的有限层中挑选见证某性质的最早层。排中律只在搜索每一步下降所问的判定处进入；束的定义、其定律与自然数序本身仍是构造性的。
+现在，严格良序可以作为一个结构整体传递、以三歧作比较，并搜索最小见证。`SWO`{.Agda} 把关系连同四条定律收在一起。`HostLeast.leastOf`{.Agda} 明示不受限制的宿主谓词搜索，而 `leastOfFormula`{.Agda} 要求公式、环境与读取定理齐备，面向模型的代码才能使用同一套下降过程。自然数实例 `natOrder`{.Agda} 支持在自然数索引上搜索，例如后续章节从 L 的有限层中挑选见证某个公式定义性质的最早层。排中律只在搜索每一步下降所问的判定处进入；束的定义、其定律与自然数序本身仍是构造性的。
 <!--ja-->
 ## まとめ
 
-これで狭義整列順序を一つの構造として受け渡し、三分性で比較し、最小の証人を探索できるようになった。`SWO`{.Agda} は関係と四つの法則をまとめ、`leastOf`{.Agda} は単に非空なだけの任意の部分集合から最小の証人を取り出す。その一意性は `isPropLeastOf`{.Agda} の供給するパスによって理解される。自然数の実例 `natOrder`{.Agda} は自然数による添字上の探索を可能にする。例えば後の章では、性質を証明する L の最も早い有限段階を選ぶために使われる。排中律が入るのは探索の各降下段階で問われる判定のところだけである。束の定義、その法則、そして自然数の順序は構成的なままである。
+これで狭義整列順序を一つの構造として受け渡し、三分性で比較し、最小の証人を探索できるようになった。`SWO`{.Agda} は関係と四つの法則をまとめる。`HostLeast.leastOf`{.Agda} は制限のないホスト述語の探索を明示し、`leastOfFormula`{.Agda} は論理式、環境、読み取り定理を要求してから、モデルに面するコードに同じ降下を許す。自然数の実例 `natOrder`{.Agda} は自然数による添字上の探索を可能にする。例えば後の章では、論理式で定義された性質を証明する L の最も早い有限段階を選ぶために使われる。排中律が入るのは探索の各降下段階で問われる判定のところだけである。束の定義、その法則、そして自然数の順序は構成的なままである。
 <!--/-->

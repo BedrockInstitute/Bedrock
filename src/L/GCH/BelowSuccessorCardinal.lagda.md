@@ -23,15 +23,17 @@ module L.GCH.BelowSuccessorCardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) wher
 ```
 
 <!--en-->
-Fix one universe level and an instance of excluded middle at the level of the propositions used by the hierarchy. The classical hypothesis is explicit and precisely leveled. It is used first through ordinal trichotomy and later through a direct decision of `Ex`; the remaining ingredients are structural facts about `V`, `L`, ordinals and internal injections.
+Fix one universe level and an instance of excluded middle at the level of the propositions used by the hierarchy. The classical hypothesis is explicit and precisely leveled. It is used first through ordinal trichotomy and later to decide the formula presenting `Ex`; the remaining ingredients are structural facts about `V`, `L`, ordinals and internal injections.
 <!--zh-->
-固定一个宇宙层级，并假设在层级所用的命题层上成立排中律。这个经典假设是显式的，其层级也有精确规定。证明先通过序数三分法使用它，随后又用它直接判定 `Ex`；其余材料都是关于 `V`、`L`、序数和内部单射的结构性事实。
+固定一个宇宙层级，并假设在层级所用的命题层上成立排中律。这个经典假设是显式的，其层级也有精确规定。证明先通过序数三分法使用它，随后又用它判定呈现 `Ex` 的公式；其余材料都是关于 `V`、`L`、序数和内部单射的结构性事实。
 <!--ja-->
-宇宙レベルを一つ固定し、階層で使われる命題のレベルにおける排中律を仮定する。この古典的仮定は明示され、そのレベルも正確に定められている。証明では、まず順序数の三分法を通して使い、後に `Ex` を直接判定するためにもう一度使う。残りの材料は `V`、`L`、順序数、内部単射についての構造的事実である。
+宇宙レベルを一つ固定し、階層で使われる命題のレベルにおける排中律を仮定する。この古典的仮定は明示され、そのレベルも正確に定められている。証明では、まず順序数の三分法を通して使い、後に `Ex` を表す論理式を判定するためにもう一度使う。残りの材料は `V`、`L`、順序数、内部単射についての構造的事実である。
 <!--/-->
 
 ```agda
 open import FOL.ZFStructure using ( module hPropStructure )
+open import FOL.Syntax using ( Formula; var; _∈̇_; _∧̇_; ∃̇_ )
+import FOL.Semantics
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ; regularityV; ∈-irrefl )
 open import L.Constructible {ℓ} using ( 𝒮ʟ; IsOrd; isL )
 open import L.Ordinal {ℓ} using ( mem-ord )
@@ -48,6 +50,7 @@ The argument moves between two structures. The ambient hierarchy supplies well-f
 
 ```agda
 open import L.Cardinal {ℓ} lem using ( InjL; SuccCardL; IsCardinalL )
+open import L.DefinableInjection {ℓ} lem using ( injLAt; module InjLAt )
 open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
 ```
 
@@ -61,6 +64,7 @@ The exceptional branch produces only a truncated witness. Accordingly, the proof
 
 ```agda
 import Cubical.Induction.WellFounded as WF
+open import Cubical.Relation.Nullary using ( mapDec )
 
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 ```
@@ -87,6 +91,8 @@ Write `SL.S` for the carrier of the constructible universe. Its elements are pai
 
 ```agda
 module SL = hPropStructure 𝒮ʟ using ( S )
+module Sem = FOL.Semantics 𝒮ʟ
+module At = Sem.At SL.S id
 ```
 
 <!--en-->
@@ -171,19 +177,35 @@ The type `Ex` states the relevant negation of cardinality positively: merely, th
 
     Ex : Type (ℓ-suc ℓ)
     Ex = ∥ Σ[ γ ∈ SL.S ] (⟨ fst γ ∈ˢ a ⟩ × InjL α' γ) ∥₁
+
+    exFo : Formula SL.S 1
+    exFo = ∃̇ ((var zero ∈̇ var (suc zero))
+             ∧̇ injLAt (suc zero) zero)
+
+    exFill : Ex → ⟨ At._⊨_ (α' ∷ []) exFo ⟩
+    exFill = map₁ (λ { (γ , γ∈a , inj) → γ , γ∈a
+      , InjLAt.fill (suc zero) zero (γ ∷ α' ∷ []) inj })
+
+    exRead : ⟨ At._⊨_ (α' ∷ []) exFo ⟩ → Ex
+    exRead = map₁ (λ { (γ , γ∈a , sat) → γ , γ∈a
+      , InjLAt.read (suc zero) zero (γ ∷ α' ∷ []) sat })
+
+    exDecision : Dec Ex
+    exDecision = mapDec exRead (λ ns e → ns (exFill e))
+      (FOL.Semantics.decideSatisfaction 𝒮ʟ id lem (α' ∷ []) exFo)
 ```
 
 <!--en-->
-Apply excluded middle to the proposition `Ex`. If it holds, the required mere witness is already present. If it is refuted, then every proposed member `γ` and injection from `α'` to `γ` yields a contradiction; this is precisely the condition saying that the ordinal `α'` is a cardinal.
+The formula `exFo` binds the possible `γ`, conjoins `γ ∈ α'` with the formula `injLAt α' γ`, and therefore presents exactly `Ex`. The maps `exFill` and `exRead` prove the two directions under propositional truncation. Excluded middle is then applied through `decideSatisfaction` to this formula. If satisfaction holds, the required mere witness is present; if it is refuted, every proposed member and injection yields a contradiction, precisely the condition saying that `α'` is a cardinal.
 <!--zh-->
-对命题 `Ex` 应用排中律。若它成立，所需的仅仅见证已经得到；若它被反驳，那么任取成员 `γ` 以及从 `α'` 到 `γ` 的单射都会导出矛盾，这恰好是说序数 `α'` 为基数的条件。
+公式 `exFo` 约束可能的 `γ`，把 `γ ∈ α'` 与公式 `injLAt α' γ` 合取起来，因而恰好呈现 `Ex`。映射 `exFill` 与 `exRead` 在命题截断下证明两个方向。随后经 `decideSatisfaction` 对这条公式应用排中律。若满足成立，所需的仅仅见证已经得到；若满足被反驳，那么任取成员与单射都会导出矛盾，这恰好是说 `α'` 为基数的条件。
 <!--ja-->
-命題 `Ex` に排中律を適用する。成立するなら、必要な単なる証人はすでに得られている。反証されるなら、任意の要素 `γ` と `α'` から `γ` への単射が矛盾を導く。これは順序数 `α'` が基数であるという条件にほかならない。
+論理式 `exFo` は候補 `γ` を束縛し、`γ ∈ α'` と論理式 `injLAt α' γ` を連言して、ちょうど `Ex` を表す。写像 `exFill` と `exRead` が命題的切り詰めのもとで両方向を証明する。その後、`decideSatisfaction` を通してこの論理式に排中律を適用する。充足するなら必要な単なる証人があり、反証されるなら任意の要素と単射が矛盾を導く。これは `α'` が基数であるという条件にほかならない。
 <!--/-->
 
 ```agda
     some-γ : ⟨ fst κ ∈ˢ a ⟩ → Ex
-    some-γ κ∈a = decide (lem (Ex , squash₁))
+    some-γ κ∈a = decide exDecision
       where
       decide : Dec Ex → Ex
 ```

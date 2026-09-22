@@ -322,11 +322,11 @@ ambient→internal κ c δ δ∈κ h =
 <!--/-->
 
 <!--en-->
-Fix a set `a` and an ordinal bound `β`. The construction separates from `β` those members whose presentations inject into the presentation of `a`. In the later application `a` is also an ordinal, but only the ordinality of the bound is needed inside this module.
+Fix a set `a` and an ordinal bound `β`. This is an ambient Hartogs construction in `V ℓ`, not an invocation of the Separation schema of the internal model `L`. It separates from `β` those members whose presentations inject into the presentation of `a`. The result remains in the ambient argument until it has independently been proved to be an ordinal; only then does the theorem that every ordinal is constructible place it in `L`. In the later application `a` is also an ordinal, but only the ordinality of the bound is needed inside this module.
 <!--zh-->
-固定集合 `a` 与序数界 `β`。这个构造从 `β` 中分出呈现可单射到 `a` 的呈现的那些成员。后续应用中的 `a` 也是序数，但在本模块内部只需要界的序数性。
+固定集合 `a` 与序数界 `β`。这是 `V ℓ` 中的外围 Hartogs 构造，并非调用内部模型 `L` 的分离模式。它从 `β` 中分出呈现可单射到 `a` 的呈现的那些成员。所得集合先始终留在外围论证中，待独立证明其为序数后，才由「每个序数都可构造」这一事实放入 `L`。后续应用中的 `a` 也是序数，但在本模块内部只需要界的序数性。
 <!--ja-->
-集合 `a` と順序数の上界 `β` を固定する。この構成は、提示から `a` の提示への単射をもつ要素を `β` から分出する。後の適用では `a` も順序数であるが、このモジュールの内部で必要なのは上界の順序数性だけである。
+集合 `a` と順序数の上界 `β` を固定する。これは `V ℓ` における周囲の Hartogs 構成であり、内部モデル `L` の分出公理図式を使うものではない。提示から `a` の提示への単射をもつ要素を `β` から分出する。得られた集合は、独立に順序数だと示されるまでは周囲の議論にとどまり、その後で初めて、すべての順序数が構成可能であるという定理によって `L` に入る。後の適用では `a` も順序数であるが、このモジュールの内部で必要なのは上界の順序数性だけである。
 <!--/-->
 
 ```agda

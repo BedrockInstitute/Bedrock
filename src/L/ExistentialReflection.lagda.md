@@ -49,6 +49,7 @@ module L.ExistentialReflection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
 
 open import FOL.ZFStructure using ( module hPropStructure )
 open import FOL.Syntax using ( Formula; ∃̇_ )
+import FOL.Semantics
 import FOL.Absoluteness
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Model {ℓ} using ( union-family-in; union-family-out )
@@ -164,6 +165,10 @@ Sat ψ ρ q = (q ∷ ρ) ⊨ ψ
 SatEx : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → hProp (ℓ-suc ℓ)
 SatEx ψ ρ = ∃[ q ∶ S ] Sat ψ ρ q
 
+satExDecision : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
+              → Dec ⟨ SatEx ψ ρ ⟩
+satExDecision ψ ρ = FOL.Semantics.decideSatisfaction 𝒮ʟ id lem ρ (∃̇ ψ)
+
 Wit : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ → hProp (ℓ-suc ℓ)
 Wit ψ ρ σ = ∃[ q ∶ S ] ((fst q ∈ Lset σ) ⊓ Sat ψ ρ q)
 
@@ -184,7 +189,7 @@ decideStage ψ ρ (yes sat) = pick ψ ρ sat .fst
 decideStage ψ ρ (no _)    = ∅
 
 pickStage : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → V ℓ
-pickStage ψ ρ = decideStage ψ ρ (lem (SatEx ψ ρ))
+pickStage ψ ρ = decideStage ψ ρ (satExDecision ψ ρ)
 
 decideStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
                   (d : Dec ⟨ SatEx ψ ρ ⟩)
@@ -194,7 +199,7 @@ decideStage-ord ψ ρ (no _)    = ∅-ord
 
 pickStage-ord : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k)
               → IsOrd (pickStage ψ ρ)
-pickStage-ord ψ ρ = decideStage-ord ψ ρ (lem (SatEx ψ ρ))
+pickStage-ord ψ ρ = decideStage-ord ψ ρ (satExDecision ψ ρ)
 ```
 
 <!--en-->
@@ -212,10 +217,10 @@ refutes itself.
 ```agda
 pickWitness : {k : ℕ} (ψ : Formula S (suc k)) (ρ : S ^ k) → ⟨ SatEx ψ ρ ⟩
             → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
-pickWitness ψ ρ sat = go (lem (SatEx ψ ρ)) refl
+pickWitness ψ ρ sat = go (satExDecision ψ ρ) refl
   where
   go : (d : Dec ⟨ SatEx ψ ρ ⟩)
-     → lem (SatEx ψ ρ) ≡ d → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
+     → satExDecision ψ ρ ≡ d → ⟨ Wit ψ ρ (pickStage ψ ρ) ⟩
   go (yes s) e = subst (λ d → ⟨ Wit ψ ρ (decideStage ψ ρ d) ⟩) (sym e)
                    (pick ψ ρ s .snd .snd .fst)
   go (no ¬s) e = ⊥₀-rec (¬s sat)

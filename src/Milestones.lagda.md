@@ -19,11 +19,11 @@ module Milestones where
 ```
 
 <!--en-->
-**Theorem 1.** Under the excluded-middle assumption, the host-level `V` is a model of ZF.
+**Theorem 1.** Under Ω-resizing from level `ℓ-suc ℓ` to level `ℓ`, the host-level cumulative hierarchy `V ℓ` is a model of ZF.
 <!--zh-->
-**定理1** 在排中律假设下，宿主层 `V` 是 ZF 的模型。
+**定理1** 在从层级 `ℓ-suc ℓ` 到层级 `ℓ` 的命题宇宙换级假设下，宿主层的累积层级 `V ℓ` 是 ZF 的模型。
 <!--ja-->
-**定理1** 排中律の仮定のもとで、ホストレベルの `V` は ZF のモデルである。
+**定理1** レベル `ℓ-suc ℓ` からレベル `ℓ` への命題宇宙リサイズの仮定のもとで、ホストレベルの累積階層 `V ℓ` は ZF のモデルである。
 <!--/-->
 
 ```agda
@@ -31,11 +31,11 @@ open import V.Model public using ( V⊨ZF )
 ```
 
 <!--en-->
-**Theorem 2.** Under the host-level axiom-of-choice assumption, the host-level `V` is a model of ZFC.
+**Theorem 2.** Under the host-level axiom-of-choice assumption, the host-level cumulative hierarchy `V ℓ` is a model of ZFC.
 <!--zh-->
-**定理2** 在宿主层选择公理的假设下，宿主层 `V` 是 ZFC 的模型。
+**定理2** 在宿主层选择公理的假设下，宿主层的累积层级 `V ℓ` 是 ZFC 的模型。
 <!--ja-->
-**定理2** ホストレベルの選択公理の仮定のもとで、ホストレベルの `V` は ZFC のモデルである。
+**定理2** ホストレベルの選択公理の仮定のもとで、ホストレベルの累積階層 `V ℓ` は ZFC のモデルである。
 <!--/-->
 
 ```agda

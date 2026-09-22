@@ -138,7 +138,7 @@ Well orders come with a least-element selector: from the truncated existence of 
 
 ```agda
 open import L.Rank {ℓ} using ( rank-fix )
-open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; leastOf )
+open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO; leastOfFormula )
 open import L.Choice.StageOrders {ℓ} lem using ( orderAt )
 open import L.Coding.CodeConstructibility {ℓ} using ( cup-out; cup-inl; cup-inr; sgl-out )
 
@@ -312,6 +312,25 @@ The codes form a finite tree algebra over the base generators: a base code names
   Sat : (k : ℕ) → Formula (⊥* {ℓ}) (suc k) → Vec S𝒮 k → Type (ℓ-suc ℓ)
   Sat k ψ vs = ∥ Σ[ a ∈ S𝒮 ] ⟨ (a ∷ vs) ⊨₀ ψ ⟩ ∥₁
 
+  satDecision : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
+              → Dec (Sat k ψ vs)
+  satDecision k ψ vs = Sem.decideSatisfaction ⊥*-rec lem vs (∃̇ ψ)
+
+```
+
+<!--en-->
+The search predicate is presented by the formula already stored in the query. Its environment puts the candidate in the newly bound front slot and then appends the fixed parameter vector. The reading proof is reflexivity because the host predicate is defined to be exactly this satisfaction judgment.
+<!--zh-->
+搜索谓词由查询中已经存放的公式呈现。其环境把候选放在最前的新槽位，再接上固定的参数向量。读取证明就是自反性，因为宿主谓词按定义恰是这条满足判断。
+<!--ja-->
+探索述語は、問いにすでに格納された論理式によって表示される。その環境は候補を新しい先頭の枠に置き、その後ろに固定された引数ベクトルを続ける。ホスト述語は定義によりまさにこの充足判断なので、読み取りの証明は反射律である。
+<!--/-->
+
+```agda
+  searchPredicate : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
+                  → Sem.FormulaPredicate S𝒮 (⊥* {ℓ}) ⊥*-rec
+                      (λ a → (a ∷ vs) ⊨₀ ψ)
+  searchPredicate k ψ vs = Sem.presented (suc k) ψ (λ a → a ∷ vs) (λ a → refl)
 ```
 
 <!--en-->
@@ -325,7 +344,7 @@ Given this truncated existence, `search` returns a least satisfying element for 
 ```agda
   search : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (vs : Vec S𝒮 k)
          → Sat k ψ vs → S𝒮
-  search k ψ vs w = leastOf wo {ℓ'' = ℓ-suc ℓ} lem (λ a → (a ∷ vs) ⊨₀ ψ) w .fst
+  search k ψ vs w = leastOfFormula wo (searchPredicate k ψ vs) lem w .fst
 
 ```
 
@@ -357,7 +376,7 @@ A satisfiable witness code evaluates to the least satisfying element; an unsatis
     val : Code → S𝒮
     val (base m) = emb m
     val (wit k ψ cs) = decRec (search k ψ (vals cs)) (λ _ → junk)
-                       (lem (Sat k ψ (vals cs) , squash₁))
+                       (satDecision k ψ (vals cs))
 
 ```
 
@@ -390,7 +409,7 @@ Given a satisfiability witness for the query stored in a witness code, this lemm
   val-wit : (k : ℕ) (ψ : Formula (⊥* {ℓ}) (suc k)) (cs : Vec Code k)
           → (w : Sat k ψ (vals cs)) → val (wit k ψ cs) ≡ search k ψ (vals cs) w
   val-wit k ψ cs w = sum-stuck w squash₁ (search k ψ (vals cs)) (λ _ → junk)
-                       (lem (Sat k ψ (vals cs) , squash₁))
+                       (satDecision k ψ (vals cs))
 
 ```
 
@@ -478,7 +497,7 @@ The selector returns `a` together with both components of `IsLeast`: a proof tha
 
 ```agda
     pa : ⟨ (a ∷ vals cs) ⊨₀ ψ ⟩
-    pa = leastOf wo {ℓ'' = ℓ-suc ℓ} lem (λ a → (a ∷ vals cs) ⊨₀ ψ) w .snd .fst
+    pa = leastOfFormula wo (searchPredicate k ψ (vals cs)) lem w .snd .fst
 
 ```
 
@@ -3016,10 +3035,12 @@ Both directions of the agreement are decided by excluded middle, and each failin
 
 ```agda
       fwd z zx = decRec (λ zy → zy)
-        (λ nzy → ⊥₀-rec (np ∣ z , inl (zx , nzy) ∣₁)) (lem (z ∈ˢ y))
+        (λ nzy → ⊥₀-rec (np ∣ z , inl (zx , nzy) ∣₁))
+        (FOL.Semantics.decideMembership 𝒮ᵥ lem z y)
       bwd : (z : S) → z ∈ᵗ y → z ∈ᵗ x
       bwd z zy = decRec (λ zx → zx)
-        (λ nzx → ⊥₀-rec (np ∣ z , inr (zy , nzx) ∣₁)) (lem (z ∈ˢ x))
+        (λ nzx → ⊥₀-rec (np ∣ z , inr (zy , nzx) ∣₁))
+        (FOL.Semantics.decideMembership 𝒮ᵥ lem z x)
 ```
 
 <!--en-->
@@ -3177,7 +3198,7 @@ Extensionality of the hull is proved by classical contradiction. Since the unive
   hullExt : isExt M
   hullExt x y x∈M y∈M ag1 ag2 =
     decRec (λ p → p) (λ np → ⊥₀-rec (bad np))
-      (lem ((x ≡ y) , isSetS x y))
+      (FOL.Semantics.decideEquality 𝒮ᵥ lem x y)
     where
 ```
 
