@@ -29,7 +29,7 @@ compiler must be rebuilt, a separate Cabal cache reuses the package index and co
 dependency store. The
 project-interface key separates the stable toolchain fingerprint from the source-tree
 fingerprint, allowing `restore-keys` to supply a useful incremental starting point after
-source edits.
+source edits. Cache, Python, artifact and deployment actions use their Node 24 releases.
 
 After `typecheck` succeeds, `site-backend` restores the exact patched-Agda and cubical
 caches that job created, including cubical's pinned source archive. It does not install

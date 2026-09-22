@@ -24,7 +24,7 @@ jobs:
       # so a cache hit can skip Haskell setup altogether.
       - name: Cache bedrock-agda
         id: bedrock_agda
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             _build/bedrock-agda
@@ -32,7 +32,7 @@ jobs:
           key: bedrock-agda-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**') }}
 
       - name: Cache cubical dependency
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: _build/dependencies
           key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
@@ -65,7 +65,7 @@ jobs:
       - name: Cache Cabal dependencies
         if: steps.bedrock_agda.outputs.cache-hit != 'true'
         id: cabal
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             ~/.cabal/packages
@@ -88,7 +88,7 @@ jobs:
 
       # Pure-check interfaces remain isolated from the HTML/type-trace cache.
       - name: Cache tree interfaces
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: _build/typecheck/_build/2.8.0/agda/src
           key: bedrock-ifaces-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib') }}-${{ hashFiles('src/**/*.lagda.md') }}
@@ -102,7 +102,7 @@ jobs:
           make typecheck-ci PYTHON=python3
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -133,7 +133,7 @@ jobs:
       # These exact caches were restored or created by typecheck. Restore-only
       # actions make the handoff explicit and prevent a second toolchain build.
       - name: Restore bedrock-agda
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: |
             _build/bedrock-agda
@@ -142,7 +142,7 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Restore cubical dependency
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: _build/dependencies
           key: cubical-source-v2-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/environment.json') }}
@@ -161,7 +161,7 @@ jobs:
           python3 tools/bedrock-agda/setup.py
 
       - name: Cache combined site backend
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             _build/2.8.0/agda/src
@@ -180,7 +180,7 @@ jobs:
       # This artifact contains only host-neutral highlighted HTML and normalized
       # type data. Each peer job renders, checks and deploys its own URL layout.
       - name: Upload site backend
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site-backend
           path: |
@@ -207,7 +207,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Download site backend
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: site-backend
           path: _build
@@ -223,7 +223,7 @@ jobs:
         run: python3 scripts/site/link-check.py _build/site
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: _build/site
 
@@ -234,7 +234,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   cloudflare:
     needs: site-backend
@@ -247,7 +247,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Download site backend
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: site-backend
           path: _build
@@ -266,13 +266,13 @@ jobs:
       # has no Node project or lockfile. Cache npm's download store, not a
       # synthetic node_modules tree.
       - name: Cache Wrangler npm downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.npm
           key: wrangler-npm-v1-${{ runner.os }}-3.90.0
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
