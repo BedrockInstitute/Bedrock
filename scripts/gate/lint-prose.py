@@ -28,9 +28,14 @@ Rules (apply to Markdown prose, `*.md` / `*.lagda.md`; the verbatim LICENSE is e
      ends its proof with a standalone `∎` after its final code block. Explanatory prose
      may follow outside the proof. Nested statements inside a disclosure belong to
      that proof and need no separate mark.                                       [report only]
- 11. Disclosure summaries and optional-reading titles begin with the localized
-     marker: `Optional:`, `选读：` or `発展：`.                                  [report only]
+ 11. Ancillary disclosure summaries begin with the localized marker; foldable
+     submodules use a single-line Agda declaration as their summary and close
+     after the submodule's last code block.                                      [report only]
  12. Japanese prose uses plain style (である体), not polite です・ます forms.      [report only]
+ 13. An unboxed Agda link names one declaration only. Applications, type
+     annotations and equations use one complete inline-code span.             [report only]
+ 14. In every chapter, standalone symbolic variables in prose use inline Agda
+     markup. Exact pre-existing lines are tracked as a shrinking legacy list. [report only]
 
 "Chinese context" = the punctuation is adjacent to (or, for quotes/parens, wraps) a
 CJK ideograph or CJK punctuation, looking past whitespace, markdown emphasis markers,
@@ -47,6 +52,8 @@ Usage:
 Exit status is non-zero if any violation remains (in --fix, only the report-only ones).
 """
 
+import hashlib
+import json
 import os
 import re
 import subprocess
@@ -58,6 +65,9 @@ from pathlib import Path   # cutover step 7: _masters_for_cjk() needs it
 # line. ROOT is derived from this file's own location and never from the cwd.
 ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "src"
+sys.path.insert(0, str(ROOT / "scripts" / "site"))
+from submodule_structure import submodules
+_BARE_VARIABLE_LEGACY_PATH = ROOT / "dev" / "inline-agda-legacy.json"
 
 # Verbatim third-party text (licenses, etc.) is never linted, whatever its extension.
 EXCLUDE_BASENAMES = {
@@ -373,8 +383,7 @@ def _qed_structure(text):
                     if containers and containers[-1][0] == name:
                         containers.pop()
                 else:
-                    containers.append((name, name == "details" or
-                                       bool(re.search(r'\bclass="[^"]*\boptional-reading\b', attrs))))
+                    containers.append((name, name == "details"))
         offset += len(line)
     headings.append(len(text))
     return labels, sorted(set(headings))
@@ -385,7 +394,7 @@ def qed_violations(text):
 
     English labels identify each trilingual statement once; the parallel Chinese and
     Japanese labels lie in the same i18n block and therefore need no duplicate mark.
-    Within a section, labels at the shallowest disclosure/optional-reading depth are
+    Within a section, labels at the shallowest disclosure depth are
     the outer proofs; nested labels are explanatory proof steps.
     """
     out = []
@@ -405,7 +414,7 @@ def qed_violations(text):
                 continue
             tail = segment[fences[-1].end():]
             tail = re.sub(r"(?m)^\s*<!--(?:en|zh|ja|/)-->\s*$", "", tail)
-            if not re.match(r"\s*(?:</(?:details|aside)>\s*)*∎(?:[ \t]*(?:\n|$))", tail):
+            if not re.match(r"\s*(?:</(?:details|aside|div)>\s*)*∎(?:[ \t]*(?:\n|$))", tail):
                 out.append(Violation(
                     start,
                     "outermost construction/lemma/theorem/corollary must end with standalone "
@@ -415,15 +424,127 @@ def qed_violations(text):
     return out
 
 
-_OPTIONAL_SUMMARY_PREFIX = {
+_DISCLOSURE_SUMMARY_PREFIX = {
     "en": "Optional:",
     "zh": "选读：",
     "ja": "発展：",
 }
 
 
-def optional_summary_violations(text):
-    """Require localized optional titles and default-open mathematical disclosures."""
+_INLINE_AGDA_ATOM = re.compile(
+    r'`[^`\n]+`\{\.Agda\}|\[([^\]\n]+)\]\(([^)\n]+)\)\{\.Agda\}')
+_AGDA_MATH_RIGHT = re.compile(r'^\s*(?:≡|→|∙|×|∈|∘|=|\+)(?=\s|`|\[|[A-Za-zℓ(])')
+_AGDA_MATH_LEFT = re.compile(r'(?:≡|→|∙|×|∈|∘|=|\+)\s*$')
+_TABLE_AGDA_OPERATOR = re.compile(r'≡|→|∙|×|∈|∘|∥|λ|Σ|Π|∀')
+
+
+def inline_agda_violations(text):
+    """Reject unboxed Agda syntax adjacent to a reference or inside a table.
+
+    A link-only rendering is reserved for one declaration name. Code spans may
+    contain full expressions; an operator outside their boundary means the
+    expression has been split. Milestones follows exactly the same rule.
+    """
+    out = []
+    fenced = False
+    offset = 0
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        if stripped.startswith(("```", "~~~")):
+            fenced = not fenced
+            offset += len(line)
+            continue
+        if fenced:
+            offset += len(line)
+            continue
+        atoms = list(_INLINE_AGDA_ATOM.finditer(line))
+        for atom in atoms:
+            label, target = atom.groups()
+            if label is not None:
+                single = (not re.search(r'\s|[(){}:,;]', label)
+                          and (not re.search(r'[≡=→∙×∈∘+]', label)
+                               or label.startswith('_') and label.endswith('_')))
+                declaration = bool(re.fullmatch(r'[\w.]+\.html#[^\s#]+', target))
+                if not single or not declaration:
+                    out.append(Violation(offset + atom.start(),
+                        'unboxed Agda link must name one linked declaration; '
+                        'put the complete expression in `...`{.Agda}', False))
+            before, after = line[:atom.start()], line[atom.end():]
+            if (_AGDA_MATH_LEFT.search(before) or _AGDA_MATH_RIGHT.match(after)
+                    or label is not None and (re.match(r'^\(', after)
+                                              or re.match(r'^\s+[xyzℓ]\b', after))):
+                out.append(Violation(offset + atom.start(),
+                    'Agda expression is split across code/link boundaries; '
+                    'put the complete expression in one `...`{.Agda}', False))
+        if stripped.startswith('|') and not re.fullmatch(r'[| :\-\n\r\t]+', stripped):
+            protected = build_protected(line)
+            for operator in _TABLE_AGDA_OPERATOR.finditer(line):
+                if not protected[operator.start()]:
+                    out.append(Violation(offset + operator.start(),
+                        'Agda notation in a table must be inside one inline-code span', False))
+        offset += len(line)
+    return out
+
+
+_BARE_VARIABLE = re.compile(r'(?<![\w])(?:[A-Z]|[abcdfgmnpqxyz])(?![\w])')
+
+
+def load_bare_variable_legacy():
+    """Exact old prose lines, never chapter-level exclusions."""
+    with _BARE_VARIABLE_LEGACY_PATH.open(encoding="utf-8") as source:
+        entries = json.load(source)
+    if entries.get("version") != 1:
+        raise ValueError("unknown inline Agda legacy inventory version")
+    return {chapter: set(lines) for chapter, lines in entries["lines"].items()}
+
+
+_BARE_VARIABLE_LEGACY = load_bare_variable_legacy()
+
+
+def new_bare_variable_violations(text, chapter, legacy=None):
+    """Apply the same rule to all chapters; forgive only exact recorded lines."""
+    recorded = (legacy if legacy is not None else _BARE_VARIABLE_LEGACY).get(chapter, set())
+    out = []
+    accepted_positions = {}
+    for violation in bare_variable_violations(text):
+        start = text.rfind('\n', 0, violation.index) + 1
+        end = text.find('\n', violation.index)
+        line = text[start:end if end >= 0 else len(text)]
+        fingerprint = hashlib.sha256(line.encode()).hexdigest()
+        if fingerprint in recorded and accepted_positions.setdefault(fingerprint, start) == start:
+            continue
+        out.append(violation)
+    return out
+
+
+def bare_variable_violations(text):
+    """Find symbolic one-letter variables left as plain prose text.
+
+    English articles `a`/`A` and the pronoun `I` are distinguished from
+    variables by checking whether a CJK character surrounds them.
+    """
+    protected = build_protected(text)
+    for link in re.finditer(r'\[[^\]\n]+\]\([^)\n]+\)\{\.Agda\}', text):
+        protected[link.start():link.end()] = [True] * (link.end() - link.start())
+    out = []
+    for atom in _BARE_VARIABLE.finditer(text):
+        if protected[atom.start()]:
+            continue
+        if atom.group() in {"a", "A", "I"} and not cjk_adjacent(
+                text, protected, atom.start()):
+            continue
+        line_start = text.rfind('\n', 0, atom.start()) + 1
+        line_end = text.find('\n', atom.end())
+        line = text[line_start:line_end if line_end >= 0 else len(text)]
+        if line.lstrip().startswith('<'):
+            continue
+        out.append(Violation(atom.start(),
+            f'bare Agda variable {atom.group()!r} in prose; use `...`{{.Agda}}', False))
+    return out
+
+
+def disclosure_summary_violations(text):
+    """Require localized titles for the remaining prose disclosures."""
     out = []
     language = None
     fenced = False
@@ -435,38 +556,155 @@ def optional_summary_violations(text):
             offset += len(line)
             continue
         if not fenced:
-            for tag in re.finditer(r'<(details|aside)\b([^>]*)>', line):
-                attrs = tag.group(2)
-                classes = re.search(r'\bclass="([^"]*)"', attrs)
-                if classes and 'optional-reading' in classes.group(1).split():
-                    unquoted = re.sub(r'"[^"]*"', '""', attrs)
-                    if tag.group(1) != 'details' or not re.search(r'(?:^|\s)open(?:\s|=|$)', unquoted):
-                        out.append(Violation(offset + tag.start(),
-                            'optional-reading must use <details open> so it is collapsible and expanded by default',
-                            False))
             marker = MARKER_RE.match(line)
             if marker:
                 code = marker.group(1)
                 language = None if code == "/" else code
             else:
                 for match in re.finditer(
-                        r'<(?:summary\b[^>]*|p\b[^>]*\bclass="optional-reading-title"[^>]*)>(.*?)</(?:summary|p)>',
+                        r'<summary\b[^>]*>(.*?)</summary>',
                         line):
-                    if language not in _OPTIONAL_SUMMARY_PREFIX:
+                    if language not in _DISCLOSURE_SUMMARY_PREFIX:
                         out.append(Violation(
                             offset + match.start(),
-                            "optional-reading title/summary must be inside an explicit language group",
+                            "prose disclosure summary must be inside an explicit language group",
                             False,
                         ))
                         continue
-                    prefix = _OPTIONAL_SUMMARY_PREFIX[language]
+                    prefix = _DISCLOSURE_SUMMARY_PREFIX[language]
                     if not match.group(1).lstrip().startswith(prefix):
                         out.append(Violation(
                             offset + match.start(1),
-                            f"optional-reading title/summary must begin with {prefix!r} ({language})",
+                            f"prose disclosure summary must begin with {prefix!r} ({language})",
                             False,
                         ))
         offset += len(line)
+    return out
+
+
+_SUBMODULE_FOLD_START_RE = re.compile(
+    r'(?m)^<details\b(?=[^>]*\bclass="[^"]*\bsubmodule-fold\b)[^>]*>')
+_SUBMODULE_FOLD_HEADER_RE = re.compile(
+    r'\s*<summary class="submodule-fold-heading">\s*'
+    r'```agda\n(?P<declaration>.*?)^```[ \t]*\n</summary>\s*'
+    r'<div class="submodule-fold-content">', re.DOTALL | re.MULTILINE,
+)
+_DIV_TAG_RE = re.compile(r'</?div\b[^>]*>', re.IGNORECASE)
+_AGDA_FENCE_RE = re.compile(r'(?ms)^```agda\n(?P<code>.*?)^```[ \t]*$')
+
+
+def submodule_fold_violations(text, check_all=False):
+    """Check complete Agda headings, bodies and the whole-tree fold inventory."""
+    out = []
+    for obsolete in re.finditer(r'optional-reading|prose\.optional', text):
+        out.append(Violation(obsolete.start(),
+            'the obsolete optional-reading style is not allowed; use a submodule fold', False))
+    agda_fences = list(_AGDA_FENCE_RE.finditer(text))
+
+    def in_agda(index):
+        return any(fence.start() <= index < fence.end() for fence in agda_fences)
+
+    folds = []
+    for start in _SUBMODULE_FOLD_START_RE.finditer(text):
+        if text[:start.start()].endswith('```\n'):
+            out.append(Violation(start.start(),
+                'submodule fold needs a blank line after the preceding Agda fence', False))
+        header = _SUBMODULE_FOLD_HEADER_RE.match(text, start.end())
+        if not header:
+            out.append(Violation(start.start(),
+                'submodule fold must contain a declaration-only Agda summary and a body', False))
+            continue
+        if not re.search(r'(?<![\w-])open(?:\s|>)', start.group()):
+            out.append(Violation(start.start(),
+                'submodule fold must be expanded by default', False))
+        declaration = header.group('declaration')
+        first = re.search(r'(?m)^[ \t]*\S.*$', declaration)
+        nonempty = [line for line in declaration.splitlines() if line.strip()]
+        if (first is None or not re.match(r'[ \t]*module\s+\S+', first.group())
+                or not re.search(r'\bwhere\s*$', nonempty[-1])):
+            out.append(Violation(header.start('declaration'),
+                'submodule heading must contain the complete declaration and no body code', False))
+            continue
+        declaration_start = header.start('declaration') + first.start()
+        indent = len(first.group()) - len(first.group().lstrip(' \t'))
+        depth = 1
+        body_end = None
+        for tag in _DIV_TAG_RE.finditer(text, header.end()):
+            if in_agda(tag.start()):
+                continue
+            depth += -1 if tag.group().startswith('</') else 1
+            if depth == 0:
+                body_end = tag.start()
+                close = re.match(r'\s*</details>', text[tag.end():])
+                if close:
+                    folds.append((start.start(), tag.end() + close.end(),
+                                  header.end(), body_end, indent, declaration_start))
+                else:
+                    out.append(Violation(tag.end(),
+                        'submodule body must close directly before </details>', False))
+                break
+        if body_end is None:
+            out.append(Violation(start.start(), 'submodule body has no closing </div>', False))
+
+    for fold_start, fold_end, body_start, body_end, indent, declaration_start in folds:
+        parents = [fold for fold in folds
+                   if fold[0] < fold_start and fold_end <= fold[1]]
+        if len(parents) >= 2:
+            out.append(Violation(fold_start,
+                'submodule folds may nest only one child level (maximum depth 2)', False))
+        children = [fold for fold in folds
+                    if body_start <= fold[0] and fold[1] <= body_end
+                    and fold[0] != fold_start]
+        direct = [fence for fence in agda_fences
+                  if body_start <= fence.start() and fence.end() <= body_end
+                  and not any(child[0] <= fence.start() < child[1]
+                              for child in children)]
+        last_end = max([fence.end() for fence in direct] +
+                       [child[1] for child in children], default=body_start)
+        if last_end == body_start or text[last_end:body_end].strip():
+            out.append(Violation(body_start,
+                'submodule fold must end immediately after its last Agda code block', False))
+        for fence in direct:
+            for line in fence.group('code').splitlines():
+                if line.strip() and len(line) - len(line.lstrip(' \t')) <= indent:
+                    out.append(Violation(fence.start('code'),
+                        'submodule body contains code outside the declaration scope', False))
+                    break
+        following = _AGDA_FENCE_RE.search(text, fold_end)
+        if following:
+            first = next((line for line in following.group('code').splitlines()
+                          if line.strip()), '')
+            if first and len(first) - len(first.lstrip(' \t')) > indent:
+                out.append(Violation(fold_end,
+                    'submodule fold closes before the submodule\'s last code block', False))
+    if check_all:
+        try:
+            modules = submodules(text)
+        except ValueError as error:
+            out.append(Violation(0, f'cannot read Agda module structure: {error}', False))
+            return out
+        folded = {fold[5] for fold in folds}
+        module_by_start = {module.start: module for module in modules}
+        for module in modules:
+            if module.depth <= 2 and module.start not in folded:
+                out.append(Violation(module.start,
+                    'first- and second-level submodules must use a fold', False))
+            elif module.depth > 2 and module.start in folded:
+                out.append(Violation(module.start,
+                    'submodules deeper than level 2 must remain unfolded', False))
+        for start in folded - module_by_start.keys():
+            out.append(Violation(start,
+                'fold heading does not match an Agda submodule declaration', False))
+        for fold in folds:
+            module = module_by_start.get(fold[5])
+            if module is not None:
+                heading = next((fence for fence in agda_fences
+                                if fence.start('code') <= module.start < fence.end('code')),
+                               None)
+                if heading is None or heading.end('code') - 1 != module.header_end:
+                    out.append(Violation(fold[5],
+                        'fold heading must contain only the complete module declaration',
+                        False))
     return out
 
 
@@ -528,7 +766,7 @@ class Violation:
         self.fixable = fixable
 
 
-def analyze(text):
+def analyze(text, path=None):
     """Return (fixed_text, fixable_violations, manual_violations).
 
     fixed_text applies rules 1-3. Each list holds Violation objects (against `text`)."""
@@ -661,10 +899,23 @@ def analyze(text):
     manual.extend(theorem_label_violations(text))
     # Rule 10: completed constructions and lemmas visibly close after their code.
     manual.extend(qed_violations(text))
-    # Rule 11: disclosures are visibly marked as optional reading in every language.
-    manual.extend(optional_summary_violations(text))
+    # Rule 11: prose disclosures have localized titles; foldable submodules
+    # use a one-line Agda declaration as their heading instead.
+    manual.extend(disclosure_summary_violations(text))
     # Rule 12: Japanese prose consistently uses plain style.
     manual.extend(japanese_polite_violations(text, prot))
+    # Rule 13: a standalone declaration may be a bare link; expressions are boxed.
+    chapter = None
+    if path is not None:
+        try:
+            chapter = Path(path).resolve().relative_to(ROOT / "src").as_posix()
+        except ValueError:
+            pass
+    if path is None or chapter is not None:
+        manual.extend(inline_agda_violations(text))
+        manual.extend(submodule_fold_violations(text, check_all=chapter is not None))
+    if chapter is not None:
+        manual.extend(new_bare_variable_violations(text, chapter))
 
     char_fixed = "".join(edits.get(i, c) for i, c in enumerate(text)) if edits else text
 
@@ -747,12 +998,12 @@ def main(argv):
                 text = fh.read()
         except (OSError, UnicodeDecodeError):
             continue
-        fixed, fixable, manual = analyze(text)
+        fixed, fixable, manual = analyze(text, path)
 
         if mode == "fix":
             cur = text
             for _ in range(6):  # converge: char fixes + reflow may interact
-                nxt = analyze(cur)[0]
+                nxt = analyze(cur, path)[0]
                 if nxt == cur:
                     break
                 cur = nxt
@@ -761,7 +1012,7 @@ def main(argv):
                     fh.write(cur)
                 fixed_files.append(path)
             # report manual violations against the fixed text
-            manual = analyze(cur)[2]
+            manual = analyze(cur, path)[2]
             if manual:
                 report(path, cur, manual)
                 total_manual += len(manual)

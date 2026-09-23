@@ -14,7 +14,6 @@ Fix an index set of hierarchy codes that is closed under the immediate formula s
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -28,7 +27,6 @@ The argument is carried out relative to an explicit instance of excluded middle.
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,7 +39,6 @@ The module fixes the universe level and names the classical hypothesis: every th
 
 ```agda
 module L.Coding.PinnedRecursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -147,8 +144,7 @@ Clause environments are finite vectors, and extending a frame shifts every older
 節の環境は有限ベクトルであり、枠を拡張すると以前の座標はすべてずれる。参照と移送によって、それらの座標を対応させ続ける。命題的切り詰めの内側に隠れた証人を消去する先は命題値の目標に限られる。固定の証明では基礎となる階層集合の等式へ、節を埋める証明では固定された対象言語の節の充足へ消去する。これらの消去から、再利用可能な値、復号結果、枠のデータが取り出されることはない。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Propositional truncation preserves that a witness exists while forgetting which witness it was. Its eliminator therefore requires a proposition-valued target. Membership in the hierarchy is proposition-valued, and the hierarchy `V` is an h-set, so an equality between two of its sets is also a proposition and is a legitimate target for the eliminations used below.
@@ -173,9 +169,7 @@ A constructor tag is stored as an element of `Fin 10`, while syntax codes use an
 構成子タグは `Fin 10` の要素として格納されるが、構文符号では通常の自然数の数項を使う。写像 `toℕ` は上界の証明を忘れ、符号化された対に現れる数項の自然数を取り出す。元の上界により、現れうるタグは零から九までに限られる。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 Write `S` for the carrier of the first-order structure on `L`. An element of `S` consists of an underlying hierarchy set together with proof that it is constructible. Most conclusions in this chapter compare only the first projections, because equality of the represented sets is the mathematical content needed by satisfaction.
@@ -187,7 +181,6 @@ Write `S` for the carrier of the first-order structure on `L`. An element of `S`
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -219,8 +212,16 @@ The two routes to a formula key are compared first. The external route embeds th
 まず、論理式のキーへの二つの経路を比較する。外側の経路は、アルファベットの記号を階層へ埋め込み、周囲の数項と対にする。内側の経路は、定数を構成可能な集合として付け替え、論理式を `L` の内部で符号化し、内部の数項と対にする。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
             → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
   keyBridge {n} ψ =
@@ -242,6 +243,9 @@ The proof aligns the syntax-code component first: relabelling the constants and 
         (sym (numeralL-fst n))
     ∙ sym (prʟ-fst (numeralL n) LCode.⌜ mapFo (asConst A) ψ ⌝)
 ```
+</div>
+</details>
+
 
 <!--en-->
 The matching module is stated for one carrier `W`: its alphabet supplies the term and formula syntax whose shapes are matched.
@@ -251,10 +255,17 @@ The matching module is stated for one carrier `W`: its alphabet supplies the ter
 一致のモジュールは、一つの台 `W` に対して述べられる。そのアルファベットが、形を照合する項と論理式の構文を供給する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Match (W : S) where
-  open Alphabet W
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+  open Alphabet W
 ```
 
 <!--en-->
@@ -300,7 +311,6 @@ Tag nine has the analogous payload for `∃[]-syntax`: a term code at the curren
 ```agda
   MatchN {n} 9 ψ r = Σ[ t ∈ Term Ab n ] Σ[ a ∈ Formula Ab (suc n) ] ((ψ ≡ ∃̇∈ t a) × (r ≡ pr (ct t) (cd a)))
   MatchN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) ψ r = ⊥*
-
 ```
 
 <!--en-->
@@ -393,6 +403,9 @@ Injectivity of pairing equates the two arity numerals and the two payloads; nume
       in subst (Formula Ab) nq ψ₁ , (sym (q .snd) ∙ sym (cd-subst nq ψ₁)) })
     (AllCodes-out W c c∈)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Uniqueness on a subcode-closed domain
@@ -410,11 +423,19 @@ The soundness argument is local to an arbitrary code domain `C`. Besides a propo
 健全性の議論は、任意に与えた符号領域 `C` に局所化されている。候補となる表 `T` に加え、格納された台が `W` であること、十個のタグ位置が正しい数項をもつこと、環境の位置が正しい塔であること、`C` が必要な直下の論理式部分符号について閉じていること、そして `T` がまとめられた表の仕様を満たすことを仮定する。これらの仮定は、すべての論理式キーが `C` に属するとは述べない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module SatSoundC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hcl : ⟨ γ ⊨ closedAt C ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
 ```
 
@@ -444,7 +465,6 @@ Let `Wv` denote the underlying hierarchy set of the carrier `W`. Quantifier brid
 
 ```agda
     Wv = fst W
-
 ```
 
 <!--en-->
@@ -460,7 +480,6 @@ The environment tower supplies the row for a formula's arity, while the clause f
     module Fr = Frame T w C E N γ tg
     module Cl = Clause T w C E N
     module R = Rel T w N
-
 ```
 
 <!--en-->
@@ -475,7 +494,6 @@ The packaged hypothesis `hT` contains totality, the assertion that table entries
     hTot = hT .fst
     hOn = hT .snd .fst
     hTen = hT .snd .snd
-
 ```
 
 <!--en-->
@@ -499,10 +517,18 @@ The case module packages the data of one induction step: a formula, its tag, its
 場合のモジュールは、一つの帰納の一歩のデータをまとめる。論理式、そのタグ、そのペイロードの集合、コードとペイロードの等式、コードの定義域の中でのキーの所属、候補の表の項目、そして項目の所属である。塔の読みが、論理式のアリティのための正準な塔の項目を供給する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
     module Case {n : ℕ} (ψ : Formula Ab n) (k : Fin 10) (rS : S)
       (ep : cd ψ ≡ pr (# (toℕ k)) (fst rS)) (c∈ : ⟨ fst (keyS W ψ) ∈ Cv ⟩)
       (y : S) (mem : ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
       q∈ : ⟨ pr (# n) (fst (envSet W n)) ∈ Ev ⟩
       q∈ = TR.entry-in n
 ```
@@ -535,6 +561,9 @@ Applying the selected clause to this concrete frame yields satisfaction of the t
       rel = Fr.clause-out k (cl k) (nn n) (envSet W n) (keyS W ψ) (codeS W ψ) rS y q∈ c∈ refl ep mem
       module RR = RelRead T w N δ12
 ```
+</div>
+</details>
+
 
 <!--en-->
 If a child formula key belongs to `Cv`, table totality gives only the propositional truncation of a pair consisting of a value `ya` and an entry at that key. Thus `sub` proves mere existence, not a selected value. Each recursive case eliminates this witness directly into equality of hierarchy sets, where the h-set structure makes the target a proposition.
@@ -548,7 +577,6 @@ If a child formula key belongs to `Cv`, table totality gives only the propositio
     sub : ∀ {n} (a : Formula Ab n) → ⟨ fst (keyS W a) ∈ Cv ⟩
         → ∥ Σ[ ya ∈ S ] ⟨ pr (fst (keyS W a)) (fst ya) ∈ Tv ⟩ ∥₁
     sub a a∈ = Fr.total-out hTot (keyS W a) a∈
-
 ```
 
 <!--en-->
@@ -563,7 +591,6 @@ The central predicate is conditional. If the key of `ψ` lies in the code domain
   Pinned : ∀ {n} (ψ : Formula Ab n) → Type (ℓ-suc ℓ)
   Pinned ψ = ⟨ fst (keyS W ψ) ∈ Cv ⟩
            → (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
-
 ```
 
 <!--en-->
@@ -681,7 +708,6 @@ The local module `K` records the compound formula itself, its constructor tag, a
 
 ```agda
       module K = Case (opA a b) k (payS (opA a b) (toℕ k) (pr (cd a) (cd b)) code) code c∈ y mem
-
 ```
 
 <!--en-->
@@ -759,7 +785,6 @@ Here `K` is instantiated with the quantified formula `qA a`, not with its body `
 ```agda
       where
       module K = Case (qA a) k (payS (qA a) (toℕ k) (cd a) code) code c∈ y mem
-
 ```
 
 <!--en-->
@@ -968,7 +993,6 @@ For the membership atom, satisfaction at the displayed environment is definition
     memAgree : ∀ {j} (env : S ^ j) (z v x : S)
              → (⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩ → ⟨ fst v ∈ fst x ⟩) × (⟨ fst v ∈ fst x ⟩ → ⟨ (x ∷ v ∷ z ∷ env) ⊨ var i1 ∈̇ var i0 ⟩)
     memAgree env z v x = (λ h → h) , (λ h → h)
-
 ```
 
 <!--en-->
@@ -1146,6 +1170,9 @@ The bounded existential branch invokes the bounded case with the existential `�
     (λ env wi ti yai N0i N1i qw' qt qa q0 q1 → BqBridge.exInBridge t a env wi ti yai N0i N1i qw' qt qa q0 q1)
     (clBq n 9 t a (∃̇∈ t a) (hcl .snd .snd .snd .snd .snd .snd) refl) (pinned a)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Filling all satisfaction clauses
@@ -1163,12 +1190,19 @@ We now prove the converse direction. Rather than extracting recursive values fro
 ここから逆向きの接続を証明する。節から再帰的な値を取り出すのではなく、表に表示された値がすでに再帰的に定めた充足集合と一致すると仮定し、その一致を使って各節を検証する。作業集合 `W` は、この向きで一貫して使うアルファベット、充足の橋、構成子符号の照合を定める。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (W : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
   open Bridge W
   open Match W
-
 ```
 
 <!--en-->
@@ -1179,13 +1213,27 @@ Fix the table, carrier, code-domain, and environment-tower slots in one environm
 一つの環境の中で、表、台、論理式符号の領域、環境の塔の各スロットを固定し、十個の数項タグと塔の仕様を与える。中心となる仮定 `val≡` は条件付きである。既知の論理式の鍵と、その鍵にある与えられた表の要素に対して、その要素の基礎の値を論理式の再帰的な充足集合と同定する。すべての鍵が表されるとは主張せず、表の要素を選ぶこともしない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module SatHoldsC {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
     (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
     (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩)
     (val≡ : ∀ {n} (ψ : Formula Ab n) (c yc : S) → fst c ≡ fst (keyS W ψ)
           → ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩ → fst yc ≡ fst (SatW ψ))
+    (decode : (c : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩ → (n : ℕ) (z : V ℓ)
+            → fst c ≡ pr (# n) z → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁)
+    (tot : (c : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
+         → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩ ∥₁)
+    (onc : (e : S) → ⟨ fst e ∈ fst (lookup T γ) ⟩
+         → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ fst (lookup C γ) ⟩) ∥₁)
+    where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Three further assumptions provide existence only under propositional truncation. A domain member presented as an arity-code pair merely decodes to a formula of that stated arity; totality merely supplies some table value at each domain key; and every table member merely decomposes into a key-value pair whose key belongs to the domain. None of these assumptions defines a reusable decoder or value-selection function.
@@ -1195,13 +1243,7 @@ Three further assumptions provide existence only under propositional truncation.
 さらに三つの仮定は、命題的切り詰めの下でのみ存在を与える。領域の要素がアリティ符号とペイロードの対として提示されると、指定されたそのアリティの論理式へ単に復号できるだけである。全域性は各領域の鍵にある何らかの表の値を単に与え、表の各要素も、鍵が領域に属す鍵と値の対へ単に分解される。これらの仮定はいずれも、再利用できる復号関数や値の選択関数を定めない。
 <!--/-->
 
-```agda
-    (decode : (c : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩ → (n : ℕ) (z : V ℓ)
-            → fst c ≡ pr (# n) z → ∥ Σ[ ψ ∈ Formula Ab n ] (z ≡ cd ψ) ∥₁)
-    (tot : (c : S) → ⟨ fst c ∈ fst (lookup C γ) ⟩
-         → ∥ Σ[ yc ∈ S ] ⟨ pr (fst c) (fst yc) ∈ fst (lookup T γ) ⟩ ∥₁)
-    (onc : (e : S) → ⟨ fst e ∈ fst (lookup T γ) ⟩
-```
+
 
 <!--en-->
 The final assumption finishes the domain condition by requiring every represented table element to be merely a pair `(c,yc)` with `c` in the stated code domain. Thus totality controls entries from keys to values, while this condition controls table members back to domain keys. The abbreviations `Tv` and `Cv` name only the underlying table and domain sets used in these local statements.
@@ -1212,8 +1254,6 @@ The final assumption finishes the domain condition by requiring every represente
 <!--/-->
 
 ```agda
-         → ∥ Σ[ c ∈ S ] Σ[ yc ∈ S ] ((fst e ≡ pr (fst c) (fst yc)) × ⟨ fst c ∈ fst (lookup C γ) ⟩) ∥₁)
-    where
     private
       Tv = fst (lookup T γ)
       Cv = fst (lookup C γ)
@@ -1246,7 +1286,6 @@ We also name the underlying environment-tower set and the carrier. The frame, cl
 ```agda
       Arity : (ar F : S) → Type (ℓ-suc ℓ)
       Arity ar F = ∥ Σ[ n ∈ ℕ ] ((fst ar ≡ # n) × (fst F ≡ fst (envSet W n))) ∥₁
-
 ```
 
 <!--en-->
@@ -1260,7 +1299,6 @@ To obtain such arity evidence, present an element `q` of the environment tower a
 ```agda
       arity : (q ar F : S) → ⟨ fst q ∈ Ev ⟩ → fst q ≡ pr (fst ar) (fst F) → Arity ar F
       module TR = TowerRead E w (N f0) γ W qw (tg f0) hE
-
 ```
 
 <!--en-->
@@ -1273,7 +1311,6 @@ The pair equation transports the membership proof from `q` to the displayed pair
 
 ```agda
       arity q ar F q∈ eq = TR.entry-out ar F (subst (λ u → ⟨ u ∈ Ev ⟩) eq q∈)
-
 ```
 
 <!--en-->
@@ -1287,7 +1324,6 @@ The first top-level table condition is totality on the stated code domain. The h
 ```agda
       total : ⟨ γ ⊨ Cl.total ⟩
       total = Fr.total-in tot
-
 ```
 
 <!--en-->
@@ -1347,7 +1383,6 @@ Fixing a tag and one coherent twelve-object frame isolates a single constructor-
 
       module Fill (k : Fin 10) (A : Args k) where
         open Args A
-
 ```
 
 <!--en-->
@@ -1361,7 +1396,6 @@ The frame prepends the twelve objects in the exact coordinate order expected by 
 ```agda
         frame : S ^ (12 + m)
         frame = yc ∷ s3 ∷ e ∷ r ∷ s2 ∷ p ∷ s1 ∷ c ∷ F ∷ ar ∷ s ∷ q ∷ γ
-
 ```
 
 <!--en-->
@@ -1374,7 +1408,6 @@ At this fixed frame, the relation theorem for a tag can be read or constructed i
 
 ```agda
         module RR = RelRead T w N frame
-
 ```
 
 <!--en-->
@@ -1388,7 +1421,6 @@ The goal of each filling case is the satisfaction of the relation clause for the
 ```agda
         Goal : Type (ℓ-suc ℓ)
         Goal = ⟨ frame ⊨ R.relN (toℕ k) ⟩
-
 ```
 
 <!--en-->
@@ -1478,7 +1510,6 @@ The data type collects the decoded arity, environment set, formula, and tag matc
         Data : Type (ℓ-suc ℓ)
         Data = Σ[ n ∈ ℕ ] ((fst ar ≡ # n) × ((fst F ≡ fst (envSet W n))
                  × (Σ[ ψ ∈ Formula Ab n ] ((fst p ≡ cd ψ) × MatchN (toℕ k) ψ (fst r)))))
-
 ```
 
 <!--en-->
@@ -1535,7 +1566,6 @@ The bridge's extension fact is stated at the formula that applies the binary con
 
 ```agda
                       (λ z → ⟨ (z ∷ env) ⊨ op (var i0 ∈̇ var (suc ya)) (var i0 ∈̇ var (suc yb)) ⟩)) where
-
 ```
 
 <!--en-->
@@ -1595,7 +1625,6 @@ The clause tests a candidate encoded environment `z`. Its outer constructor, lat
 
 ```agda
                       (λ z → ⟨ (z ∷ env) ⊨ q' (var (suc wi)) (∃̇∈ (var (suc (suc yai))) (consAtL i0 i1 i2)) ⟩)) where
-
 ```
 
 <!--en-->
@@ -1670,7 +1699,6 @@ The bridge assumes five equalities locating, in one environment, the carrier, th
 ```agda
                   → fst (lookup N0i env) ≡ # 0 → fst (lookup N1i env) ≡ # 1
                   → ExtFact (fst (SatW (qA t a))) (fst (envSet W n)) (λ z → ⟨ (z ∷ env) ⊨ body wi ti yai N0i N1i ⟩)) where
-
 ```
 
 <!--en-->
@@ -1857,7 +1885,6 @@ The bounded existential uses the parallel three-layer body with `∃[]-syntax`, 
 ```agda
           (λ t a env wi ti yai N0i N1i qw' qt qa' q0 q1 → BqBridge.exInBridge t a env wi ti yai N0i N1i qw' qt qa' q0 q1)
           n t a ψ qa qF qp qψ qr
-
 ```
 
 <!--en-->
@@ -1886,7 +1913,6 @@ Formula satisfaction is a proposition, so `Fill.Goal k A` is a valid target for 
 
 ```agda
         in rec₁ (Fill.isPropGoal k A) (fill k A) (Fill.data' k A))
-
 ```
 
 <!--en-->
@@ -1900,7 +1926,6 @@ The ten constructor clauses are joined into one finite conjunction. This conjunc
 ```agda
       ten : ⟨ γ ⊨ Cl.ten ⟩
       ten = bigAnd-in γ 9 Cl.clause clause
-
 ```
 
 <!--en-->
@@ -1915,6 +1940,12 @@ The three parts now fit the definition of `tableAt`: `total` gives a merely exis
     holds : ⟨ γ ⊨ tableAt T w C E N ⟩
     holds = total , (onC , ten)
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Specializing to one formula's slot
@@ -1932,8 +1963,16 @@ Fixing `W` determines two linked viewpoints. `Alphabet W` supplies formulas whos
 `W` を固定すると、結び付いた二つの見方が定まる。`Alphabet W` は、定数が `W` の要素を名指す論理式とその符号を与え、`Bridge W` はそれらの定数を構成可能な台で解釈し、再帰的な充足と対象言語の節を比較する。以下の特殊化では、一つの論理式が生成するスロットにこの二つの見方を同時に用いる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (W : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
   open Bridge W
 ```
@@ -1967,7 +2006,6 @@ The local equality `mapped ψ` first rewrites the concrete slot as the generic t
     where
     key : ∀ {n} → Formula Ab n → S
     key χ = keyʟ (toS χ)
-
 ```
 
 <!--en-->
@@ -2012,7 +2050,6 @@ The bounded universal and existential cases also contribute only the formula bod
 
 ```agda
     mapped χ@(∃̇∈ t a) = cong (cupʟ (sglʟ (key χ))) (mapped a)
-
 ```
 
 <!--en-->
@@ -2023,6 +2060,9 @@ The bounded universal and existential cases also contribute only the formula bod
 `SlotHolds` は、表、台、符号領域、環境の塔の位置をそれぞれ `T`、`w`、`C`、`E` とし、さらに十個のタグ位置 `N` をもつ環境で働く。台、タグ、塔についての事実を仮定して基礎となる論理式 `ψ0` を固定し、等式 `qT` と `qC` は、`T` と `C` に格納された底集合だけを、`ψ0` が生成する正準な表とスロットに同定する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module SlotHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
     (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
@@ -2030,6 +2070,10 @@ The bounded universal and existential cases also contribute only the formula bod
     (qT : fst (lookup T γ) ≡ fst (satTable W (toS ψ0)))
     (qC : fst (lookup C γ) ≡ fst (slot W (toS ψ0))) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Only two underlying sets are abbreviated: `Tv` is the relation stored at the table position `T`, and `Cv` is the set stored at the code-domain position `C`. The following four constructions establish exactly the value-agreement, decoding, totality, and on-domain assumptions needed for these two sets.
@@ -2044,7 +2088,6 @@ Only two underlying sets are abbreviated: `Tv` is the relation stored at the tab
     private
       Tv = fst (lookup T γ)
       Cv = fst (lookup C γ)
-
 ```
 
 <!--en-->
@@ -2060,7 +2103,6 @@ Suppose `c` has the same underlying set as the key of a formula `ψ`, and `(c,yc
            → ⟨ pr (fst c) (fst yc) ∈ Tv ⟩ → fst yc ≡ fst (SatW ψ)
       val≡ ψ c yc qc h = entry-out W (toS ψ0) (toS ψ) (fst yc)
         (subst2 (λ u v → ⟨ pr u (fst yc) ∈ v ⟩) (qc ∙ keyBridge W ψ) qT h)
-
 ```
 
 <!--en-->
@@ -2091,7 +2133,6 @@ The two equations for `c` give an equality between pairs. Pair injectivity compa
               nq = #-inj′ (q .fst)
           in subst (Formula Ab) nq ψ₁ , (sym (q .snd) ∙ sym (cd-subst nq ψ₁)) })
         (slotAb ψ0 (fst c) (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈))
-
 ```
 
 <!--en-->
@@ -2107,7 +2148,6 @@ For each `c ∈ Cv`, transport by `qC` places `c` in the canonical slot, where `
       tot c c∈ = map₁
         (λ { (y , h) → y , subst (λ u → ⟨ pr (fst c) (fst y) ∈ u ⟩) (sym qT) h })
         (slotTotal W (toS ψ0) (fst c) (subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈))
-
 ```
 
 <!--en-->
@@ -2139,7 +2179,6 @@ Inside that truncated witness, take `c = keyʟ χ` and `yc = Sat W χ`. The equa
                (inSlot W (toS ψ0) (fst (keyʟ χ)) (fst (Sat W χ))
                  (subst2 (λ u v → ⟨ u ∈ v ⟩) ee qT e∈))) })
         (ent-slot W (toS ψ0) (fst e) (subst (λ u → ⟨ fst e ∈ u ⟩) qT e∈))
-
 ```
 
 <!--en-->
@@ -2152,7 +2191,6 @@ The common carrier, tag, and tower hypotheses are now combined with the four fac
 
 ```agda
       module SH = SatHoldsC W T w C E N γ qw tg hE val≡ decode tot onc
-
 ```
 
 <!--en-->
@@ -2167,6 +2205,12 @@ Consequently, the slot and satisfaction table generated by `ψ0`, as identified 
     holds : ⟨ γ ⊨ tableAt T w C E N ⟩
     holds = SH.holds
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

@@ -20,7 +20,6 @@ open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Base.Classical using ( LEM )
 
 module L.InjectionComposition {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -97,7 +96,6 @@ The code of an injection is the graph together with all four conditions: single-
 open import L.Cardinal {ℓ} lem using ( InjCode; InjL )
 open import L.DefinableInjection {ℓ} lem
   using ( DefinableMap ) renaming ( module Inj to DefinableInj )
-
 ```
 
 <!--en-->
@@ -108,8 +106,7 @@ Internal existence is asserted through propositional truncation: a statement hol
 内部の存在は命題的切り詰めによって主張される。主張は証人を選ばずに成り立ち、切り詰められた主張は命題へしか消去できない。空の型と自然数が、後の有限の議論を両側から抑える。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 A path between sets yields an equivalence between their presentation types, along which functions and injections can be moved. When proving injectivity, `retEq e x` supplies the round-trip path `invEq e (equivFun e x) ≡ x`, so a recovered preimage can be identified with the original input. The ambient hierarchy is the carrier on which every membership statement of the chapter is read.
@@ -151,7 +148,6 @@ Presentations pair index types with embeddings into the hierarchy, and their fib
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ⟪_⟫; ⟪_⟫↪ )
-
 ```
 
 <!--en-->
@@ -167,8 +163,6 @@ open hPropStructure 𝒮ʟ using ( S )
 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-
-
 ```
 
 <!--en-->
@@ -198,13 +192,20 @@ Carving a relation by separation needs its candidates to lie in one constructibl
 分出で関係を刻むには、候補となる要素が一つの構成可能集合の中になければならない。共有の装置は任意の小さな添字族 `g : I → S` を受け取り、各 `g i` を含む構成可能集合を返す。後の `PairBound` で初めて、選んだ定義域と終域から生じる順序対に具体化する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module StageBound (I : Type ℓ) (g : I → S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   opaque
     bnd : S
     bnd = smallDom I g .fst
-
 ```
 
 <!--en-->
@@ -219,6 +220,9 @@ The reader states the bound's purpose directly: each member of the family, read 
     below : (i : I) → ⟨ fst (g i) ∈ fst bnd ⟩
     below = smallDom I g .snd
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Excluding finite targets
@@ -261,7 +265,6 @@ The numerals embed into the presentation of `ω`, and the route is direct. An in
 ```agda
 numeral-into-ω : (m : ℕ) → ⟪ # m ⟫ → ⟪ ω ⟫
 numeral-into-ω m i = fiber ω (ω-ord .fst (member (# m) i) (#∈ω m)) .fst
-
 ```
 
 <!--en-->
@@ -421,12 +424,19 @@ A relation between two sets of `L` will be a set of coded ordered pairs. The bou
 `L` の二つの集合の間の関係は、符号化された順序対の集合になる。上界はどの論理式が現れるより先に、対を数え上げる。索引型は、定義域からの提示の索引と終域からの索引の積である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PairBound (D C : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   Ix : Type ℓ
   Ix = ⟪ fst D ⟫ × ⟪ fst C ⟫
-
 ```
 
 <!--en-->
@@ -457,7 +467,6 @@ One L-element per index, on each side.
 ```agda
     toC k = ⟪ fst C ⟫↪ k
           , isL-trans {x = fst C} {y = ⟪ fst C ⟫↪ k} (member (fst C) k) (snd C)
-
 ```
 
 <!--en-->
@@ -486,7 +495,6 @@ The bound is read off the device and used from here on only through membership; 
 ```agda
   bnd : S
   bnd = SB.bnd
-
 ```
 
 <!--en-->
@@ -534,6 +542,9 @@ The two indices form one index of the bound's family, whose value is the coded p
     pa = prʟ-fst (toD (fD .fst)) (toC (fC .fst))
        ∙ cong₂ pr (fD .snd) (fC .snd)
 ```
+</div>
+</details>
+
 
 <!--en-->
 A relation is carved from the bound given three data: a formula in three slots and a host predicate `P` on pairs, with adequacy in both directions. The reading order of the formula is value, index, pair: at the environment `y ∷ x ∷ e`, the formula is read as `P x y`.
@@ -543,12 +554,18 @@ A relation is carved from the bound given three data: a formula in three slots a
 上界から関係を刻むのに三つのデータが要る。三つの枠をもつ論理式と、対の上の述語 `P`、そして両方向の妥当性である。論理式の読みの順は値、添字、対である。環境 `y ∷ x ∷ e` のもとで、論理式は `P x y` として読まれる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Relation (D C : S) (φ : Formula S 3) (P : S → S → hProp (ℓ-suc ℓ))
                 (read : (x y e : S) → ⟨ (y ∷ x ∷ e ∷ []) ⊨ φ ⟩ → ⟨ P x y ⟩)
                 (fill : (x y e : S) → ⟨ P x y ⟩ → ⟨ (y ∷ x ∷ e ∷ []) ⊨ φ ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The carving formula quantifies the two slots existentially, and besides the given formula it asserts, in the object language, that the third slot codes the ordered pair of the first two. Separation at the shared bound, applied to this one-slot formula, returns the relation as an element of `L`.
@@ -565,7 +582,6 @@ The carving formula quantifies the two slots existentially, and besides the give
 
     rel : S
     rel = hasSeparationL (PairBound.bnd D C) fo .fst .fst
-
 ```
 
 <!--en-->
@@ -595,7 +611,6 @@ Everything is truncated, matching the form in which the relation will be consume
 ```agda
          , read x y e hy }) hx })
       (subst ⟨_⟩ (hasSeparationL (PairBound.bnd D C) fo .fst .snd e) h .snd)
-
 ```
 
 <!--en-->
@@ -628,7 +643,6 @@ The coded pair of `x` and `y` lies in the shared bound by the bound's reader; th
           , subst ⟨_⟩ (sym (prAtL-adequate (suc (suc zero)) (suc zero) zero (y ∷ x ∷ prʟ x y ∷ [])))
               (prʟ-fst x y)
           , fill x y (prʟ x y) h ∣₁ ∣₁ ))
-
 ```
 
 <!--en-->
@@ -659,6 +673,9 @@ Its witness presents `e` as the coded pair of some `x'` and `y'`; injectivity of
         (Σ≡Prop (λ v → snd (isL v)) (sym (pr-inj (sym (prʟ-fst x y) ∙ q) .snd))) h' })
     (out (prʟ x y) (subst (λ w → ⟨ w ∈ fst rel ⟩) (sym (prʟ-fst x y)) h))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Composing coded injections
@@ -674,12 +691,26 @@ Two coded injections compose when the codomain of the first is the domain of the
 最初の終域が第二の定義域であるとき、二つの符号化された単射は合成できる。合成物もまたグラフであり、その検証は置換をやり直さない。二つの入力グラフはすでに集合として存在し、合成物は共有の上界の中で分出された一つの関係である。モジュールは二つのグラフと、それぞれ三つの読みの条件を受け取る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Comp (D E C F H : S)
             (svF : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
             (dmF : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩)
             (ijF : ⟨ (F ∷ D ∷ []) ⊨ injAt zero ⟩)
+            (ranF : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+                  → ⟨ fst y ∈ fst E ⟩)
+            (svH : ⟨ (H ∷ E ∷ []) ⊨ svAt zero ⟩)
+            (dmH : ⟨ (H ∷ E ∷ []) ⊨ domAt zero (suc zero) ⟩)
+            (ijH : ⟨ (H ∷ E ∷ []) ⊨ injAt zero ⟩)
+            (ranH : (y z : S) → ⟨ pr (fst y) (fst z) ∈ fst H ⟩
+                  → ⟨ fst z ∈ fst C ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Besides the three reading conditions, each graph carries its range clause as a separate assumption of the module: every coded pair of the first graph has its value in the middle set, and every coded pair of the second has its value in the final codomain.
@@ -689,13 +720,7 @@ Besides the three reading conditions, each graph carries its range clause as a s
 三つの読みの条件に加えて、各グラフは値域の条項をモジュールの独立な仮定として運ぶ。最初のグラフの各符号化された対の値は中間の集合にあり、第二のグラフの各対の値は最終の終域にある。
 <!--/-->
 
-```agda
-            (ranF : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
-                  → ⟨ fst y ∈ fst E ⟩)
-            (svH : ⟨ (H ∷ E ∷ []) ⊨ svAt zero ⟩)
-            (dmH : ⟨ (H ∷ E ∷ []) ⊨ domAt zero (suc zero) ⟩)
-            (ijH : ⟨ (H ∷ E ∷ []) ⊨ injAt zero ⟩)
-```
+
 
 <!--en-->
 These two clauses are stated in the meta-language, not as formulas.
@@ -705,11 +730,7 @@ These two clauses are stated in the meta-language, not as formulas.
 この二つの条項は、論理式としてではなくメタ言語で述べられる。
 <!--/-->
 
-```agda
-            (ranH : (y z : S) → ⟨ pr (fst y) (fst z) ∈ fst H ⟩
-                  → ⟨ fst z ∈ fst C ⟩) where
 
-```
 
 <!--en-->
 Each pair of a code and its domain is just the two-slot environment that the three formula conditions require: slot zero holds the graph, slot one holds the domain. One environment per graph.
@@ -741,7 +762,6 @@ The linking relation says: `x` and `z` are related when the object language can 
     Chain : S → S → Type (ℓ-suc ℓ)
     Chain x z = ∥ Σ[ y ∈ S ] (⟨ pr (fst x) (fst y) ∈ fst F ⟩
                              × ⟨ pr (fst y) (fst z) ∈ fst H ⟩) ∥₁
-
 ```
 
 <!--en-->
@@ -756,7 +776,6 @@ The carving formula has a single existential, over the intermediate value. Insid
     opaque
       body : Formula S 3
       body = ∃̇ (appC F (suc (suc zero)) zero ∧̇ appC H zero (suc zero))
-
 ```
 
 <!--en-->
@@ -772,7 +791,6 @@ Adequacy of the application atoms moves each conjunct to its intended membership
       read x z p = map₁ (λ { (y , hf , hh) → y
         , subst ⟨_⟩ (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ [])) hf
         , subst ⟨_⟩ (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ [])) hh })
-
 ```
 
 <!--en-->
@@ -788,7 +806,6 @@ The converse moves a linking witness back into the object language along the sam
       fill x z p = map₁ (λ { (y , hf , hh) → y
         , subst ⟨_⟩ (sym (appC-adequate F (suc (suc zero)) zero (y ∷ z ∷ x ∷ p ∷ []))) hf
         , subst ⟨_⟩ (sym (appC-adequate H zero (suc zero) (y ∷ z ∷ x ∷ p ∷ []))) hh })
-
 ```
 
 <!--en-->
@@ -801,7 +818,6 @@ The bounded-relation device is instantiated once, with the linking relation as i
 
 ```agda
     module Composite = Relation D C body (λ x z → Chain x z , squash₁) read fill
-
 ```
 
 <!--en-->
@@ -831,7 +847,6 @@ Its backward reading is inherited unchanged: a coded pair in the composite yield
 
 ```agda
   K-out = Composite.pair-out
-
 ```
 
 <!--en-->
@@ -893,7 +908,6 @@ Single-valuedness of the first graph identifies `w` and `w'`; the identification
               (sym (svAt-out zero γF svF x w w' hf hf')) hh') })
         (K-out x y' q) })
       (K-out x y p))
-
 ```
 
 <!--en-->
@@ -937,7 +951,6 @@ Injectivity of the second graph at the common value `y` identifies `w` and `w'`;
               (sym (injAt-out zero γH ijH y w w' hh hh')) hf') })
         (K-out x' y q) })
       (K-out x y p))
-
 ```
 
 <!--en-->
@@ -980,7 +993,6 @@ If `x` has a composite value, the linking witness exhibits an intermediate `w` w
 ```agda
         (λ { (w , (hf , _)) → domAt-out zero (suc zero) γF dmF x w hf })
         (K-out x y p) })
-
 ```
 
 <!--en-->
@@ -1010,7 +1022,6 @@ The second graph's domain introduction, applied at `w`, produces `z` with `(w, z
 ```agda
         (domAt-in zero (suc zero) γH dmH w (ranF x w hf)) })
       (domAt-in zero (suc zero) γF dmF x mx)
-
 ```
 
 <!--en-->
@@ -1039,6 +1050,9 @@ The three reading conditions together with the range clause are exactly what let
   private
     module Sm = Small K D C svK dmK ijK ranK
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Coding inclusions
@@ -1054,11 +1068,17 @@ An inclusion needs no new construction: when `D` is contained in `C`, the identi
 包含には新しい構成は要らない。`D` が `C` に含まれるなら、`D` 上の恒等写像はもともと `C` への写像である。符号化されるのはその写像のグラフであり、対象言語では値の枠と添字の枠の間の等号として書かれる。モジュールは二つの集合と点ごとの包含を受け取る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module InclGraph (D C : S)
                  (sub : (z : V ℓ) → ⟨ z ∈ fst D ⟩ → ⟨ z ∈ fst C ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The definable-map record is filled with the identity on the domain: the function sends each
@@ -1100,7 +1120,6 @@ The graph formula is equality between the two slots, and that it holds of the fu
       ; graph = var zero ≐ var (suc zero)
       ; defines = λ _ _ → refl
       ; only = λ _ _ _ h → Σ≡Prop (λ w → snd (isL w)) h }
-
 ```
 
 <!--en-->
@@ -1118,7 +1137,6 @@ The shared construction turns the map into a graph with its three reading condit
   opaque
     G : S
     G = I.F
-
 ```
 
 <!--en-->
@@ -1148,7 +1166,6 @@ The same graph is read back through the shared reading as a function between the
   private
     module Sm = Small G D C (code .fst) (code .snd .fst)
       (code .snd .snd .fst) (code .snd .snd .snd)
-
 ```
 
 <!--en-->
@@ -1164,6 +1181,9 @@ The induced function is named `incl`, and its route matters. An index of `D`'s p
     incl : ⟪ fst D ⟫ → ⟪ fst C ⟫
     incl = Sm.small
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Inclusion and composition at the internal-existence level
@@ -1185,7 +1205,6 @@ inclusion-coded : (a b : S)
                 → InjL a b
 inclusion-coded a b sub = ∣ I.G , I.code ∣₁
   where module I = InclGraph a b sub
-
 ```
 
 <!--en-->
@@ -1239,12 +1258,23 @@ The principal instance starts from a member `D` of an ordinal `C`. The only assu
 主要な実例は、順序数 `C` の要素 `D` から始まる。仮定は `D` が順序数 `C` に属することだけである。`C` の推移性により、`D` の各要素が `C` の要素であることが従い、これが符号化の必要とする点ごとの包含にほかならない。モジュールはこの対に対して包含の構成を開くので、そのグラフ・符号・導かれた写像が一つの名のもとで使える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module OrdIncl (C : S) (oC : IsOrd (fst C))
                (D : S) (D∈C : ⟨ fst D ∈ fst C ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open InclGraph D C (λ _ z∈D → oC .fst z∈D D∈C) public
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

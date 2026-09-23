@@ -76,6 +76,11 @@
   }[lang];
 
   const storageKey = "bedrock-reading-progress-v1";
+  const currentRouteKey = "bedrock-current-route-v1";
+  const chooseRoute = id => {
+    try { localStorage.setItem(currentRouteKey, id); } catch (_) { /* optional */ }
+    window.dispatchEvent(new Event("bedrock:current-route"));
+  };
   const el = (tag, cls, text) => {
     const node = document.createElement(tag);
     if (cls) node.className = cls;
@@ -263,11 +268,13 @@
           const label = !entryReady ? copy.inspectEntry : progress.done === 0 ? copy.begin : progress.done < progress.total ? copy.resume : copy.revisit;
           const link = el("a", "route-entry", label);
           link.href = chapterHref(entry.id);
+          link.addEventListener("click", () => chooseRoute(route.id));
           link.append(el("span", "route-entry-name", local(entry.title)));
           card.append(link);
         }
         const view = button(copy.viewRoute, "route-view", () => {
-          selected = [route.id]; mode = "compare"; render(`route:${route.id}`);
+          selected = [route.id]; mode = "compare"; chooseRoute(route.id);
+          render(`route:${route.id}`);
         });
         view.dataset.focus = `view:${route.id}`;
         card.append(view);
@@ -285,6 +292,7 @@
           if (selected.includes(route.id)) {
             if (selected.length > 1) selected = selected.filter(id => id !== route.id);
           } else if (selected.length < 3) selected = [...selected, route.id];
+          chooseRoute(selected.includes(route.id) ? route.id : selected[0]);
           render(`route:${route.id}`);
         });
         control.setAttribute("aria-pressed", String(active));

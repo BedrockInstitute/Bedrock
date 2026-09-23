@@ -27,7 +27,6 @@ The base library is opened, and excluded middle is received at the raised level 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM; lowerLEM )
-
 ```
 
 <!--en-->
@@ -40,7 +39,6 @@ The argument is parameterized by excluded middle one universe level above the se
 
 ```agda
 module L.CardinalAbove {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -86,7 +84,6 @@ Two bridges will connect the construction. The reading lemma turns a coded injec
 ```agda
 open import L.CantorBernstein {ℓ} lem using ( readL )
 open import L.Mostowski {ℓ} using ( module Mostowski )
-
 ```
 
 <!--en-->
@@ -142,9 +139,7 @@ The empty type refutes impossible cases, and truncated existence is the form in 
 空の型は不可能な場合を反証し、切り詰められた存在が、この章の主な結果の述べ方である。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 The ambient and constructible structures are opened as modules, since both are used throughout.
@@ -158,7 +153,6 @@ The ambient and constructible structures are opened as modules, since both are u
 
 module SV = hPropStructure 𝒮ᵥ
 module SL = hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -184,7 +178,6 @@ Ambient cardinality says that `κ` admits no injection into the presentation of 
 ```agda
 IsCardinal : SV.S → Type (ℓ-suc ℓ)
 IsCardinal κ = (δ : SV.S) → ⟨ δ ∈ˢ κ ⟩ → (⟪ κ ⟫ ↪ ⟪ δ ⟫ → ⊥₀)
-
 ```
 
 <!--en-->
@@ -199,7 +192,6 @@ Injections between types compose by composing the maps and transporting the inje
 comp-inj : {A B C : Type ℓ} → A ↪ B → B ↪ C → A ↪ C
 comp-inj (f , injf) (g , injg) =
   (λ x → g (f x)) , λ x y e → injf x y (injg (f x) (f y) e)
-
 ```
 
 <!--en-->
@@ -329,10 +321,16 @@ Fix a set `a` and an ordinal bound `β`. This is an ambient Hartogs construction
 集合 `a` と順序数の上界 `β` を固定する。これは `V ℓ` における周囲の Hartogs 構成であり、内部モデル `L` の分出公理図式を使うものではない。提示から `a` の提示への単射をもつ要素を `β` から分出する。得られた集合は、独立に順序数だと示されるまでは周囲の議論にとどまり、その後で初めて、すべての順序数が構成可能であるという定理によって `L` に入る。後の適用では `a` も順序数であるが、このモジュールの内部で必要なのは上界の順序数性だけである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Sep (a : SV.S) (β : SV.S) (oβ : IsOrd β) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The separating predicate asks whether a set embeds into `a`, and is stated as a truncated existence. Since it lives in `hProp ℓ` by construction, it can be handed to separation directly, with no resizing step in between.
@@ -345,7 +343,6 @@ The separating predicate asks whether a set embeds into `a`, and is stated as a 
 ```agda
   ϕ : SV.S → hProp ℓ
   ϕ x = ∥ ⟪ x ⟫ ↪ ⟪ a ⟫ ∥₁ , squash₁
-
 ```
 
 <!--en-->
@@ -358,7 +355,6 @@ The separation construction of the hierarchy is opened at the ordinal bound with
 
 ```agda
   open SeparationSet β ϕ using ( SEPAREE; separation-ax )
-
 ```
 
 <!--en-->
@@ -372,7 +368,6 @@ The separated set is named `θ`: it collects exactly those members of the bound 
 ```agda
   θ : SV.S
   θ = SEPAREE
-
 ```
 
 <!--en-->
@@ -388,7 +383,6 @@ Membership in `θ` is introduced from membership in the bound together with a tr
   θ-in x x∈β h =
     ∈∈ₛ {a = x} {b = θ} .snd
       (separation-ax x .snd (∈∈ₛ {a = x} {b = β} .fst x∈β , h))
-
 ```
 
 <!--en-->
@@ -404,7 +398,6 @@ Conversely, membership in `θ` forgets the separating condition and keeps only m
   θ⊆β x x∈θ =
     ∈∈ₛ {a = x} {b = β} .snd
       (separation-ax x .fst (∈∈ₛ {a = x} {b = θ} .fst x∈θ) .fst)
-
 ```
 
 <!--en-->
@@ -509,6 +502,9 @@ Trichotomy leaves only `θ ∈ β`. That case gives the result directly. If `θ 
         (θ-inj γ (subst (λ v → ⟨ γ ∈ˢ v ⟩) (sym e) γ∈β)))
     go (inr (inr β∈θ)) = ⊥₀-rec (∈-irrefl β (θ⊆β β β∈θ))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Reducing to an ambient bound
@@ -620,7 +616,6 @@ The two needed side conditions now follow. From `a ∈ γ ∈ sucV γ` we obtain
   a∈sγ = suc-ord oγ .fst (above a γ oa oγ noinj) γ∈sγ
   θ∈sγ : ⟨ S.θ ∈ˢ sucV γ ⟩
   θ∈sγ = S.θ∈β γ γ∈sγ noinj
-
 ```
 
 <!--en-->
@@ -684,10 +679,16 @@ Hartogs 构造在任意环境集合 `a` 上组织成一个模块。它不要求 
 Hartogs の構成は、任意の周囲の集合 `a` を引数とするモジュールにまとめられる。`a` 自身が順序数であると仮定せずに、`a` へ単射できない順序数を作る。`a` の順序数性が必要になるのは、後で非単射性を厳密な比較 `a ∈ γ` へ変えるときだけである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Hartogs (a : SV.S) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 A relation on the presentation of `a` is a Boolean-valued function of two arguments.
@@ -700,7 +701,6 @@ A relation on the presentation of `a` is a Boolean-valued function of two argume
 ```agda
   Rel : Type ℓ
   Rel = ⟪ a ⟫ → ⟪ a ⟫ → Bool
-
 ```
 
 <!--en-->
@@ -729,7 +729,6 @@ A well-founded relation on the presentation of `a` is a Boolean relation that is
   WFR = Σ[ R ∈ Rel ]
           ( ({x y z : ⟪ a ⟫} → Holds R x y → Holds R y z → Holds R x z)
           × WellFounded (λ x y → Holds R x y) )
-
 ```
 
 <!--en-->
@@ -740,10 +739,16 @@ Each well-founded Boolean relation is given its own collapse module.
 整礎的なブールの関係のそれぞれに、固有の崩壊のモジュールが用意される。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Col (w : WFR) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Fix one such relation `w`. Its first component is the Boolean relation `R`; the remaining components certify transitivity and well-foundedness. The collapse argument keeps these roles separate because the relation determines membership, while the proofs justify recursion and ordinal transitivity.
@@ -769,7 +774,6 @@ On the collapsed side, the relation is read through a lifted form of the Boolean
 ```agda
     _≺_ : ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ
     x ≺ y = Lift (Holds R x y)
-
 ```
 
 <!--en-->
@@ -783,7 +787,6 @@ The lifted relation inherits transitivity from the original Bool-valued relation
 ```agda
     ≺-trans : {x y z : ⟪ a ⟫} → x ≺ y → y ≺ z → x ≺ z
     ≺-trans p q = lift (fst (snd w) (lower p) (lower q))
-
 ```
 
 <!--en-->
@@ -827,7 +830,6 @@ Collect all collapse values into their image `ot`. Although the name suggests an
 ```agda
     ot : SV.S
     ot = sett ⟪ a ⟫ col
-
 ```
 
 <!--en-->
@@ -841,7 +843,6 @@ Each `col p` belongs to the image. The displayed witness is the index `p` togeth
 ```agda
     ot-in : (p : ⟪ a ⟫) → ⟨ col p ∈ˢ ot ⟩
     ot-in p = ∣ p , refl ∣₁
-
 ```
 
 <!--en-->
@@ -890,6 +891,9 @@ The truncated decomposition names an index `r` whose collapse is `y` and proves 
             (λ z → subst (λ v → ⟨ v ∈ˢ ot ⟩) (snd (snd z)) (ot-in (fst z)))
             (col-out p y (subst (λ v → ⟨ y ∈ˢ v ⟩) (sym e) y∈x))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The Hartogs candidate `μ` is the union of the successors of all collapse images arising from `WFR`. Including each successor, rather than only the image itself, ensures that every `Col.ot w` is a strict member of the common bound. This construction bounds all such images without claiming that any of them is a uniquely determined order type.
@@ -902,7 +906,6 @@ Hartogs の候補 `μ` は、`WFR` から得られるすべての崩壊像の後
 ```agda
   μ : SV.S
   μ = ⋃ (sett WFR (λ w → sucV (Col.ot w)))
-
 ```
 
 <!--en-->
@@ -916,7 +919,6 @@ The bounding ordinal is an ordinal, proved by the bounding lemma from the fact t
 ```agda
   μ-ord : IsOrd μ
   μ-ord = boundingOrd WFR Col.ot Col.ot-ord .snd .fst
-
 ```
 
 <!--en-->
@@ -930,7 +932,6 @@ For every `w : WFR`, its collapse image `Col.ot w` is a member of `μ`. This str
 ```agda
   ot∈μ : (w : WFR) → ⟨ Col.ot w ∈ˢ μ ⟩
   ot∈μ = boundingOrd WFR Col.ot Col.ot-ord .snd .snd
-
 ```
 
 <!--en-->
@@ -944,7 +945,6 @@ For any set `x` in the ambient cumulative hierarchy, its presentation type `⟪ 
 ```agda
   isSet⟪⟫ : (x : SV.S) → isSet ⟪ x ⟫
   isSet⟪⟫ x = Embedding-into-isSet→isSet (⟪ x ⟫↪ , isEmb⟪ x ⟫↪) setIsSet
-
 ```
 
 <!--en-->
@@ -959,7 +959,6 @@ The decider converts a classical case split into a Boolean value, encoding the t
   decB : {A : Type ℓ} → Dec A → Bool
   decB (yes _) = true
   decB (no _)  = false
-
 ```
 
 <!--en-->
@@ -983,10 +982,16 @@ Assume for contradiction an injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The next c
 矛盾を導くため、単射 `f : ⟪ μ ⟫ ↪ ⟪ a ⟫` があると仮定する。以下では、`μ` の提示された要素間の所属をこの単射の像へ移し、すでに族 `WFR` に含まれる関係を作る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module NoInj (f : ⟪ μ ⟫ ↪ ⟪ a ⟫) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The underlying function of the embedding is named once for the subsequent constructions.
@@ -999,7 +1004,6 @@ The underlying function of the embedding is named once for the subsequent constr
 ```agda
     F : ⟪ μ ⟫ → ⟪ a ⟫
     F = fst f
-
 ```
 
 <!--en-->
@@ -1013,7 +1017,6 @@ Because both the source and the target are h-sets, the injective function is an 
 ```agda
     F-emb : isEmbedding F
     F-emb = injEmbedding (isSet⟪⟫ a) (λ {x} {y} e → snd f x y e)
-
 ```
 
 <!--en-->
@@ -1027,7 +1030,6 @@ The fibre over a point consists of an index of a member of `μ` together with an
 ```agda
     Fib : ⟪ a ⟫ → Type ℓ
     Fib x = Σ[ m ∈ ⟪ μ ⟫ ] (F m ≡ x)
-
 ```
 
 <!--en-->
@@ -1041,7 +1043,6 @@ Every fibre of `F` is a proposition. Consequently, whenever two pulled-back rela
 ```agda
     isPropFib : (x : ⟪ a ⟫) → isProp (Fib x)
     isPropFib = isEmbedding→hasPropFibers F-emb
-
 ```
 
 <!--en-->
@@ -1056,7 +1057,6 @@ The relation `PreT x y` first requires actual fibres witnessing that both `x` an
     PreT : ⟪ a ⟫ → ⟪ a ⟫ → Type ℓ
     PreT x y = Σ[ p ∈ Fib x ] Σ[ q ∈ Fib y ]
                  ⟨ ⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst q) ⟩
-
 ```
 
 <!--en-->
@@ -1072,7 +1072,6 @@ The pulled-back predecessor relation is a proposition: it is built from two prop
     isPropPreT x y = isPropΣ (isPropFib x) λ p →
                      isPropΣ (isPropFib y) λ q →
                        snd (⟪ μ ⟫↪ (fst p) ∈ₛ ⟪ μ ⟫↪ (fst q))
-
 ```
 
 <!--en-->
@@ -1086,7 +1085,6 @@ The Bool relation is the decidable encoding of the pulled-back predecessor relat
 ```agda
     R : Rel
     R x y = decB (lemℓ (PreT x y , isPropPreT x y))
-
 ```
 
 <!--en-->
@@ -1115,7 +1113,6 @@ The refutation branch is impossible: if the predecessor fact does not hold, the 
 
 ```agda
       go (no _) e' = ⊥₀-rec (false≢true e')
-
 ```
 
 <!--en-->
@@ -1277,7 +1274,6 @@ The two fibre witnesses over `F m` are equal because that fibre is a proposition
         below : ⟪ μ ⟫↪ (fst p) SV.∈ᵗ v
         below = subst (λ t → ⟨ ⟪ μ ⟫↪ (fst p) ∈ˢ t ⟩) e
                   (∈∈ₛ {a = ⟪ μ ⟫↪ (fst p)} {b = ⟪ μ ⟫↪ m} .snd h)
-
 ```
 
 <!--en-->
@@ -1309,7 +1305,6 @@ For an arbitrary predecessor `r` of `x`, decoding the relation supplies a fibre 
                      (fst p) refl)
         where
         p = fst (R→Pre r x rr)
-
 ```
 
 <!--en-->
@@ -1323,7 +1318,6 @@ The well-founded transitive relation is packaged with its two proofs, completing
 ```agda
     w : WFR
     w = R , R-trans , R-wf
-
 ```
 
 <!--en-->
@@ -1434,7 +1428,6 @@ The induction hypothesis identifies the collapse of the decoded index with the m
 
 ```agda
           cpr = sym ih ∙ cong col (snd p)
-
 ```
 
 <!--en-->
@@ -1513,7 +1506,6 @@ The recursive hypothesis gives `col (F k) ≡ ⟪ μ ⟫↪ k`. Composing this w
                   (∈∈ₛ {a = ⟪ μ ⟫↪ k} {b = ⟪ μ ⟫↪ m} .snd k∈m)
         ihk : col (F k) ≡ ⟪ μ ⟫↪ k
         ihk = key (⟪ μ ⟫↪ k) (rec (⟪ μ ⟫↪ k) below) k refl
-
 ```
 
 <!--en-->
@@ -1575,6 +1567,9 @@ By construction of the bound, `ot` is a member of `μ`. Applying the inclusion `
     absurd : ⊥₀
     absurd = ∈-irrefl ot (μ⊆ot ot (ot∈μ w))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The local contradiction was proved under an arbitrary injection `f : ⟪ μ ⟫ ↪ ⟪ a ⟫`. The theorem `noInj` now exposes that conclusion at the boundary of the Hartogs module: every proposed injection supplies the pullback relation above and therefore leads to `⊥*`.
@@ -1588,6 +1583,9 @@ The local contradiction was proved under an arbitrary injection `f : ⟪ μ ⟫ 
   noInj : (⟪ μ ⟫ ↪ ⟪ a ⟫) → ⊥₀
   noInj f = NoInj.absurd f
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The larger L-cardinal

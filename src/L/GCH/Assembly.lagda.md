@@ -8,7 +8,6 @@ This chapter completes the stated form of GCH inside `L`. For each infinite inte
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -22,7 +21,6 @@ The only classical principle used in the assembly is excluded middle. It will tu
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -35,7 +33,6 @@ We fix this hypothesis at the single universe level required by the proof. Thus 
 
 ```agda
 module L.GCH.Assembly {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -100,7 +97,6 @@ The final GCH statement asks for a successor cardinal together with coded inject
 ```agda
 open import L.GCH {ℓ} lem using ( GCHStatement )
 open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-
 ```
 
 <!--en-->
@@ -126,8 +122,7 @@ Trichotomy will be analyzed through three coproduct branches. Impossible branche
 三岐性は、直和の三つの分岐に分けて調べる。不可能な分岐は空型に帰着し、命題的切り詰めは選ばれた証人を外へ出さずに存在だけを記録する。したがって、以下での消去先は、所属や別の切り詰められた存在命題のような命題に限られる。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Membership written `_∈ˢ_` is ambient membership in the cumulative hierarchy. This is the relation needed for pointwise containments, including the claim that every ambient member of a constructible subset of `κ` also belongs to `κ`.
@@ -277,12 +272,18 @@ The reduction module fixes an ordinal internal cardinal `θ` strictly above `κ`
 約簡のモジュールは、`κ` より真に大きい順序数の内部基数 `θ` を固定し、`θ` の後続が決める小さな探索空間の中で、`κ` より上の最小の基数が存在することを示す。これがこの章の中心である。まず明示的な上界を固定し、その中で最小化するのである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Reduce (κ : SL.S) (oκ : IsOrd (fst κ))
               (θ : SL.S) (oθ : IsOrd (fst θ))
               (cθ : IsCardinalL θ) (κ∈θ : ⟨ fst κ ∈ˢ fst θ ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The earlier cardinal machinery supplies a map `up` from indices in the small presentation of the ordinal `sucV (fst θ)` to constructible sets. It also supplies an index `self` that presents `θ` itself and an equation `self-eq` identifying the underlying set of `up self` with `θ`. Thus the known cardinal `θ` occurs among the candidates of the bounded search.
@@ -294,7 +295,6 @@ The earlier cardinal machinery supplies a map `up` from indices in the small pre
 
 ```agda
   open LeastCardInjL θ oθ using ( up; self; self-eq )
-
 ```
 
 <!--en-->
@@ -322,7 +322,6 @@ Membership on the ordinal `sucV (fst θ)` induces a strict well-order on this pr
   opaque
     w : SWO A
     w = ordSWO (sucV (fst θ)) (suc-ord oθ)
-
 ```
 
 <!--en-->
@@ -354,7 +353,6 @@ Internal cardinality is a proposition. Indeed, `IsCardinalL x` says, for every c
   isPropIsCardinalL : (x : SL.S) → isProp (IsCardinalL x)
   isPropIsCardinalL x =
     isPropΠ (λ _ → isPropΠ (λ _ → isPropΠ (λ _ → isProp⊥)))
-
 ```
 
 <!--en-->
@@ -376,7 +374,6 @@ The candidate predicate asks two things of an index: the constructible set it pr
     (λ b → ⇔toPath
       (λ { (card , mem) → CardinalAt.fill zero (up b ∷ κ ∷ []) card , mem })
       (λ { (sat , mem) → CardinalAt.read zero (up b ∷ κ ∷ []) sat , mem }))
-
 ```
 
 <!--en-->
@@ -390,7 +387,6 @@ The index presenting `θ` itself presents a constructible set whose underlying s
 ```agda
   upSelf : up self ≡ θ
   upSelf = Σ≡Prop (λ x → snd (isL x)) self-eq
-
 ```
 
 <!--en-->
@@ -406,7 +402,6 @@ The candidate class is nonempty: the index presenting `θ` is a candidate, carry
   nonempty = ∣ self
             , subst (λ z → IsCardinalL z × ⟨ fst κ ∈ˢ fst z ⟩)
                 (sym upSelf) (cθ , κ∈θ) ∣₁
-
 ```
 
 <!--en-->
@@ -420,7 +415,6 @@ The formula-facing search on the well order now produces an actual least candida
 ```agda
   least : Σ[ b ∈ A ] IsLeast w Good b
   least = leastOfFormula w definedGood lem nonempty
-
 ```
 
 <!--en-->
@@ -434,7 +428,6 @@ Name the constructible set presented by the least candidate `δ`. The following 
 ```agda
   δ : SL.S
   δ = up (fst least)
-
 ```
 
 <!--en-->
@@ -448,7 +441,6 @@ By the presentation's membership record, the underlying set of `δ` belongs to t
 ```agda
   δ∈sθ : ⟨ fst δ ∈ˢ sucV (fst θ) ⟩
   δ∈sθ = member (sucV (fst θ)) (fst least)
-
 ```
 
 <!--en-->
@@ -462,7 +454,6 @@ The underlying set of `δ` is an ordinal, because it is a member of the ordinal 
 ```agda
   oδ : IsOrd (fst δ)
   oδ = mem-ord {A = sucV (fst θ)} (suc-ord oθ) (fst δ) δ∈sθ
-
 ```
 
 <!--en-->
@@ -476,7 +467,6 @@ The least candidate is an internal cardinal, read off the candidate record.
 ```agda
   cδ : IsCardinalL δ
   cδ = fst (fst (snd least))
-
 ```
 
 <!--en-->
@@ -490,7 +480,6 @@ The given cardinal lies below the least candidate, also read off the candidate r
 ```agda
   κ∈δ : ⟨ fst κ ∈ˢ fst δ ⟩
   κ∈δ = snd (fst (snd least))
-
 ```
 
 <!--en-->
@@ -504,7 +493,6 @@ Leastness says that no earlier index of the search space is a candidate.
 ```agda
   δ-min : (b : A) → ⟨ Good b ⟩ → (SWO._<∙_ w b (fst least) → ⊥₀)
   δ-min = snd (snd least)
-
 ```
 
 <!--en-->
@@ -586,6 +574,9 @@ The membership of `c` below `δ` is then converted into the strict order of the 
       b<δ = transport (λ i → sym (w-lt b (fst least)) i)
               (subst (λ v → ⟨ v ∈ˢ fst δ ⟩) (sym be) c∈δ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 `CardAboveL` supplies only the propositionally truncated existence of some ordinal internal cardinal `θ` with `κ ∈ θ`; it supplies no leastness and does not select `θ`. The proof maps each local witness through `Reduce`, where minimization occurs inside the presentation of `sucV (fst θ)`. The resulting successor cardinal therefore remains under propositional truncation.
@@ -665,7 +656,6 @@ The bridge depends on the chosen ZF model because its premise refers to that mod
 
 ```agda
   where open ModelL.isZFModel zf using ( 𝒫 )
-
 ```
 
 <!--en-->
@@ -785,7 +775,6 @@ No injection from `δ` into `κ` can exist, because `δ` is an internal cardinal
 ```agda
   no-δ↪κ : InjL δ κ → ⊥₀
   no-δ↪κ = cardδ κ κ∈δ
-
 ```
 
 <!--en-->

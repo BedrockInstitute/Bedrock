@@ -11,6 +11,47 @@ lint_prose = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(lint_prose)
 
 
+class InlineAgdaTests(unittest.TestCase):
+    def test_standalone_link_and_complete_expression(self):
+        text = ('[refl](Cubical.Foundations.Prelude.html#123){.Agda} '
+                'and `f x ≡ g x`{.Agda}\n')
+        self.assertEqual(lint_prose.inline_agda_violations(text), [])
+
+    def test_split_expressions_and_unboxed_table_notation(self):
+        text = ('[refl x](Cubical.Foundations.Prelude.html#123){.Agda}\n'
+                '`f x`{.Agda} ≡ `g x`{.Agda}\n'
+                '| ∥ B x ∥₁ | explanation |\n')
+        self.assertGreaterEqual(len(lint_prose.inline_agda_violations(text)), 3)
+
+    def test_milestones_has_no_exemption(self):
+        text = '[LEM x](Base.Classical.html#123){.Agda}\n'
+        self.assertTrue(lint_prose.analyze(text, 'src/Milestones.lagda.md')[2])
+
+    def test_plain_variables_are_caught_in_refined_chapters(self):
+        text = ('If f x ≡ g x, then f ≡ g.\n'
+                '对 A 中的元素。\n'
+                'A type is given.\n'
+                'For `x`{.Agda}, [V](V.Hierarchy.html#𝒮ᵥ){.Agda} is named.\n'
+                '```agda\nf x = x\n```\n')
+        hits = lint_prose.bare_variable_violations(text)
+        self.assertEqual({text[hit.index] for hit in hits}, {'f', 'x', 'g', 'A'})
+
+    def test_later_chapter_new_prose_is_checked_too(self):
+        text = '对 x 中的元素。\n'
+        hits = lint_prose.analyze(text, 'src/L/Ordinal/SquareLaw.lagda.md')[2]
+        self.assertTrue(any('bare Agda variable' in hit.message for hit in hits))
+
+    def test_legacy_inventory_matches_exact_old_line_only(self):
+        chapter = 'V/CantorBernstein.lagda.md'
+        original = (Path(__file__).resolve().parents[2] / 'src' / chapter).read_text()
+        line = next(line for line in original.splitlines()
+                    if 'the statement that x lies in the image of g' in line)
+        self.assertEqual(lint_prose.new_bare_variable_violations(line, chapter), [])
+        self.assertTrue(lint_prose.new_bare_variable_violations(line + '\n' + line, chapter))
+        changed = line.replace('the statement that x', 'the mathematical statement that x')
+        self.assertTrue(lint_prose.new_bare_variable_violations(changed, chapter))
+
+
 class TheoremLabelTests(unittest.TestCase):
     def violations(self, text):
         return lint_prose.theorem_label_violations(text)
@@ -51,16 +92,18 @@ class TheoremLabelTests(unittest.TestCase):
 
 
 class QedTests(unittest.TestCase):
-    def test_default_open_optional_block_scopes_helpers_and_requires_outer_qed(self):
+    def test_submodule_fold_scopes_helpers_and_requires_outer_qed(self):
         text = '''**Theorem** (`result`{.Agda}) Text.
 ```agda
 result = helper
 ```
-<details open class="optional-reading" aria-labelledby="helper-title">
+<details open class="submodule-fold"><summary class="submodule-fold-heading">Helper</summary>
+<div class="submodule-fold-content">
 **Lemma** (`helper`{.Agda}) Text.
 ```agda
 helper = proof
 ```
+</div>
 </details>
 '''
         self.assertEqual(lint_prose.qed_violations(text + '∎\n'), [])
@@ -191,24 +234,16 @@ result = helper
         self.assertEqual(lint_prose.qed_violations(text), [])
 
 
-class OptionalSummaryTests(unittest.TestCase):
-    def test_mathematical_optional_blocks_must_be_collapsible_and_default_open(self):
-        self.assertEqual(self.violations('<details open class="optional-reading">'), [])
-        self.assertEqual(self.violations('<details class="optional-reading" open>'), [])
-        self.assertEqual(len(self.violations('<details class="optional-reading">')), 1)
-        self.assertEqual(len(self.violations('<aside class="optional-reading">')), 1)
-        self.assertEqual(len(self.violations('<details class="optional-reading" title="open">')), 1)
-        self.assertEqual(self.violations('<details class="prose-disclosure">'), [])
-
-    def test_optional_summaries_with_attributes_use_localized_markers(self):
+class DisclosureSummaryTests(unittest.TestCase):
+    def test_prose_disclosure_summaries_with_attributes_use_localized_markers(self):
         for lang, prefix in [('en', 'Optional:'), ('zh', '选读：'), ('ja', '発展：')]:
-            title = '<summary class="optional-reading-title" id="test-title">'
+            title = '<summary class="prose-disclosure-title" id="test-title">'
             self.assertEqual(self.violations(f'<!--{lang}-->\n{title}{prefix} Details</summary>\n<!--/-->'), [])
             self.assertEqual(len(self.violations(f'<!--{lang}-->\n{title}Details</summary>\n<!--/-->')), 1)
             self.assertEqual(len(self.violations(f'{title}{prefix} Details</summary>')), 1)
 
     def violations(self, text):
-        return lint_prose.optional_summary_violations(text)
+        return lint_prose.disclosure_summary_violations(text)
 
     def test_localized_optional_markers_are_accepted(self):
         text = """<!--en-->
@@ -232,6 +267,124 @@ class OptionalSummaryTests(unittest.TestCase):
 
     def test_summary_outside_language_group_is_rejected(self):
         self.assertEqual(len(self.violations("<summary>Optional: details</summary>")), 1)
+
+
+class SubmoduleFoldTests(unittest.TestCase):
+    VALID = '''<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+module Helper where
+```
+</summary>
+<div class="submodule-fold-content">
+<!--en-->
+The helper supplies a value.
+<!--zh-->
+辅助模块给出一个值。
+<!--ja-->
+補助モジュールが値を与える。
+<!--/-->
+```agda
+  value = result
+```
+</div>
+</details>
+```agda
+result = Helper.value
+```
+'''
+
+    def test_valid_fold_and_scope(self):
+        self.assertEqual(lint_prose.submodule_fold_violations(self.VALID), [])
+
+    def test_multiline_declaration_is_allowed_but_body_code_is_not(self):
+        text = self.VALID.replace('module Helper where\n', 'module Helper\n  where\n')
+        self.assertEqual(lint_prose.submodule_fold_violations(text), [])
+        text = self.VALID.replace('module Helper where\n', 'module Helper where\n  value = result\n')
+        self.assertTrue(lint_prose.submodule_fold_violations(text))
+        text = self.VALID.replace('module Helper where\n',
+                                  'module Helper where\n  module Extra where\n')
+        self.assertTrue(lint_prose.submodule_fold_violations(text, check_all=True))
+
+    def test_default_open_and_complete_body_are_required(self):
+        self.assertTrue(lint_prose.submodule_fold_violations(
+            self.VALID.replace('<details open class=', '<details class=')))
+        self.assertTrue(lint_prose.submodule_fold_violations(
+            self.VALID.replace('</div>\n</details>', 'More prose.\n</div>\n</details>')))
+        self.assertTrue(lint_prose.submodule_fold_violations(
+            self.VALID.replace('result = Helper.value', '  more = value')))
+
+    def test_old_optional_style_is_rejected(self):
+        self.assertTrue(lint_prose.submodule_fold_violations(
+            '<details open class="optional-reading">'))
+
+    def test_fold_after_code_needs_a_blank_line_for_markdown(self):
+        text = '```agda\nprior = value\n```\n' + self.VALID
+        self.assertTrue(any('blank line' in hit.message
+                            for hit in lint_prose.submodule_fold_violations(text)))
+
+    def test_one_nested_submodule_with_figure_div_is_valid(self):
+        nested = '''<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+module Outer where
+```
+</summary>
+<div class="submodule-fold-content">
+```agda
+  outer = value
+```
+<figure><div class="diagram-framed"><div>picture</div></div></figure>
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+  module Inner where
+```
+</summary>
+<div class="submodule-fold-content">
+```agda
+    inner = outer
+```
+</div>
+</details>
+```agda
+  after = Inner.inner
+```
+</div>
+</details>
+```agda
+result = Outer.after
+```
+'''
+        self.assertEqual(lint_prose.submodule_fold_violations(nested), [])
+
+    def test_third_submodule_fold_level_is_rejected(self):
+        third = '''<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+    module Deep where
+```
+</summary>
+<div class="submodule-fold-content">
+```agda
+      value = result
+```
+</div>
+</details>
+'''
+        nested = self.VALID.replace('```agda\n  value = result\n```',
+            '''<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+  module Inner where
+```
+</summary>
+<div class="submodule-fold-content">
+''' + third + '''
+</div>
+</details>''')
+        hits = lint_prose.submodule_fold_violations(nested)
+        self.assertTrue(any('maximum depth 2' in hit.message for hit in hits))
 
 
 class JapanesePlainStyleTests(unittest.TestCase):

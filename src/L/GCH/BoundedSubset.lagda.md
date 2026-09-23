@@ -14,7 +14,6 @@ The bounded-subset theorem starts with an internal cardinal `κ` whose underlyin
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -28,7 +27,6 @@ The proof is classical only through the displayed instance of excluded middle. T
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,7 +39,6 @@ Fix a universe level `ℓ` and excluded middle at level `ℓ-suc ℓ`. Every con
 
 ```agda
 module L.GCH.BoundedSubset {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -118,7 +115,6 @@ The size estimate begins with two elementary pieces. The stage `Lset κ` can be 
 
 ```agda
   using ( ord⊆Lset; module Union2; tag-union; module Point; module Count )
-
 ```
 
 <!--en-->
@@ -156,9 +152,7 @@ Whenever an injection is asserted through `InjL`, its graph exists only under pr
 `InjL` によって単射を主張する場合、そのグラフが存在するのは命題的切り詰めの内側だけである。証明は命題の内部でそのような存在を合成できるが、切り詰めの外で計算データとして使える特定の単射を得ることはない。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 The subset premise is deliberately stated with ambient membership. Thus an arbitrary ambient set `z` may be tested for membership in `y` and then in `κ`; `z` is not required to arrive together with its own proof of constructibility.
@@ -170,7 +164,6 @@ The subset premise is deliberately stated with ambient membership. Thus an arbit
 
 ```agda
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
-
 ```
 
 <!--en-->
@@ -201,12 +194,18 @@ Fix a constructible set `κ` whose underlying set is an ordinal, an internal car
 台となる集合が順序数であり、内部の基数であり、`ω` の要素ではない構成可能集合 `κ` を固定する。さらに任意の構成可能集合 `y` を固定し、`y` の周囲の各要素が `κ` に属すると点ごとに仮定する。仮定はこれですべてである。とくに、`y` が論理式や有限個のパラメータで定義されるとは仮定しない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module At (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ)
           (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
           (y : S) (y⊆κ : (z : V ℓ) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ fst κ ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The assumptions that `κ` is an ordinal and `κ ∉ ω` imply `ω ⊆ κ`. Since every finite von Neumann numeral `# k` belongs to `ω`, it follows that `# k ∈ κ` for every `k`. These elements will serve as the finite tags in the union coding.
@@ -219,7 +218,6 @@ The assumptions that `κ` is an ordinal and `κ ∉ ω` imply `ω ⊆ κ`. Since
 ```agda
   num∈κ : (k : ℕ) → ⟨ # k ∈ fst κ ⟩
   num∈κ k = ω⊆ (fst κ) oκ κ∉ω (# k) (#∈ω k)
-
 ```
 
 <!--en-->
@@ -247,7 +245,6 @@ To place `κ` and `y` in one common stage, first form their unordered pair insid
   private
     P₀ : S
     P₀ = pairʟ κ y
-
 ```
 
 <!--en-->
@@ -261,7 +258,6 @@ Choose an ordinal stage index `α₀` at whose stage the pair occurs. This is a 
 ```agda
     α₀ : V ℓ
     α₀ = stage (fst P₀) (snd P₀)
-
 ```
 
 <!--en-->
@@ -275,7 +271,6 @@ The chosen stage index `α₀` is an ordinal. This matters because the next cons
 ```agda
     oα₀ : IsOrd α₀
     oα₀ = stage-ord (fst P₀) (snd P₀)
-
 ```
 
 <!--en-->
@@ -290,7 +285,6 @@ The cardinal `κ` belongs to `Lset α₀`. Indeed, `κ` is a member of the unord
     κ∈Lα₀ : ⟨ fst κ ∈ˢ Lset α₀ ⟩
     κ∈Lα₀ = layer-trans (Lset-layer α₀) {x = fst P₀} {y = fst κ}
       (pairʟ-in κ y κ (inl refl)) (stage-mem (fst P₀) (snd P₀))
-
 ```
 
 <!--en-->
@@ -305,7 +299,6 @@ The same transitivity argument places `y` in `Lset α₀` through the other memb
     y∈Lα₀ : ⟨ fst y ∈ˢ Lset α₀ ⟩
     y∈Lα₀ = layer-trans (Lset-layer α₀) {x = fst P₀} {y = fst y}
       (pairʟ-in κ y y (inr refl)) (stage-mem (fst P₀) (snd P₀))
-
 ```
 
 <!--en-->
@@ -318,7 +311,6 @@ Now choose explicitly a superadequate ordinal `lam` with `α₀ ∈ lam`. This s
 
 ```agda
     sa = superadequate-above α₀ oα₀
-
 ```
 
 <!--en-->
@@ -333,7 +325,6 @@ Write this high ordinal as `lam`, corresponding to `λ` in the exposition. Its p
   opaque
     lam : V ℓ
     lam = sa .fst
-
 ```
 
 <!--en-->
@@ -347,7 +338,6 @@ The first retained fact is that `lam` is an ordinal. Consequently it is transiti
 ```agda
     ordλ : IsOrd lam
     ordλ = sa .snd .fst
-
 ```
 
 <!--en-->
@@ -361,7 +351,6 @@ The second retained fact is closure under ordinal successor: whenever `d ∈ lam
 ```agda
     succλ : (d : V ℓ) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩
     succλ = sa .snd .snd .snd .fst .snd .fst
-
 ```
 
 <!--en-->
@@ -375,7 +364,6 @@ Superadequacy says that for each `d ∈ lam` there merely exists an adequate ord
 ```agda
     sup : Superadequate lam
     sup = sa .snd .snd .snd .snd
-
 ```
 
 <!--en-->
@@ -389,7 +377,6 @@ The cardinal `κ` belongs to the ordinal index `lam`. Because both `κ` and `α�
 ```agda
     κ∈λ : ⟨ fst κ ∈ˢ lam ⟩
     κ∈λ = ordλ .fst (ord∈Lset→∈ α₀ oα₀ (fst κ) oκ κ∈Lα₀) (sa .snd .snd .fst)
-
 ```
 
 <!--en-->
@@ -416,7 +403,6 @@ Every ambient member of `y` lies in `Lset κ`. Indeed, the subset hypothesis sen
 ```agda
   y⊆Lκ : (z : V ℓ) → ⟨ z ∈ˢ fst y ⟩ → ⟨ z ∈ˢ Lset (fst κ) ⟩
   y⊆Lκ z hz = ord⊆Lset (fst κ) oκ z (y⊆κ z hz)
-
 ```
 
 <!--en-->
@@ -430,7 +416,6 @@ Form the starting set `X = Lset κ ∪ {y}` inside `Lset lam`. It contains `y` a
 ```agda
   module UK = UnionKit (fst κ) lam (fst y) oκ ordλ κ∈λ y⊆Lκ y∈Lλ κ∉ω
     using ( X; X⊆Lλ; ∅∈λ; Lα∈X; x∈X; X-mem; sgl≡; Xtr )
-
 ```
 
 <!--en-->
@@ -457,7 +442,6 @@ For counting, construct the singleton `{y}` internally together with its injecti
 ```agda
   module Pt = Point κ (num∈κ 0) y using ( Y; Y-out; Y-in; injL )
   module U = Union2 Lκ Pt.Y using ( D; out; in₁; in₂ )
-
 ```
 
 <!--en-->
@@ -471,7 +455,6 @@ Call this internally constructed union `Xʟ`. It represents the same mathematica
 ```agda
   Xʟ : S
   Xʟ = U.D
-
 ```
 
 <!--en-->
@@ -533,7 +516,6 @@ The reverse cases enter the two summands of `Xʟ`. A member of `Lset κ` enters 
 ```agda
       go (inl hz) = U.in₁ (z , isL-trans {x = Lset (fst κ)} {y = z} hz (snd Lκ)) hz
       go (inr hz) = subst (λ w → ⟨ w ∈ˢ fst Xʟ ⟩) (sym (UK.sgl≡ z hz)) (U.in₂ y Pt.Y-in)
-
 ```
 
 <!--en-->
@@ -547,7 +529,6 @@ The starting set is constructible, since the internal copy is constructible and 
 ```agda
   X-isL : ⟨ isL X ⟩
   X-isL = subst (λ w → ⟨ isL w ⟩) Xʟ-eq (snd Xʟ)
-
 ```
 
 <!--en-->
@@ -574,7 +555,6 @@ The infinite-cardinal square law gives the propositionally truncated existence o
 ```agda
   pairκ : InjL (prodL κ) κ
   pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (fst κ) (snd κ) oκ cκ κ∉ω
-
 ```
 
 <!--en-->
@@ -656,7 +636,6 @@ The set `y` belongs to the Skolem hull `M`: it was placed in the starting set `X
 ```agda
   y∈M : ⟨ fst y ∈ˢ HS.M ⟩
   y∈M = HSH.X⊆M (fst y) UK.x∈X
-
 ```
 
 <!--en-->
@@ -672,7 +651,6 @@ The collapse fixes `y`: because the starting set `X` is transitive and contained
   πy = HSC.fixes X
     (λ a a∈ₛX → ∈∈ₛ {a = a} {b = HS.M} .fst (HSH.X⊆M a (∈∈ₛ {a = a} {b = X} .snd a∈ₛX)))
     UK.Xtr (fst y) UK.x∈X
-
 ```
 
 <!--en-->
@@ -702,7 +680,6 @@ The ordinal `β` injects into `κ` by a chain of three coded injections: the inc
   β↪κ = injl-trans St.βL St.Lβ κ
     (inclusion-coded St.βL St.Lβ (λ z hz → ord⊆Lset St.β St.oβ z hz))
     (injl-trans St.Lβ St.hullL κ St.Lβ↪M hull↪κ)
-
 ```
 
 <!--en-->
@@ -717,6 +694,9 @@ The local witness now packages the constructible ordinal `β`, its ordinality, t
   result : Σ[ b ∈ S ] (IsOrd (fst b) × ⟨ fst y ∈ˢ Lset (fst b) ⟩ × InjL b κ)
   result = St.βL , St.oβ , y∈Lβ , β↪κ
 ```
+</div>
+</details>
+
 
 <!--en-->
 Finally, `∣_∣₁` places the entire local witness under propositional truncation. The final theorem therefore retains only that some constructible ordinal `β` satisfies `y ∈ Lset β` and admits a coded injection `β ↪ κ`. It provides neither a least nor a canonical `β`, and it makes no uniform choice of witnesses as `y` varies.

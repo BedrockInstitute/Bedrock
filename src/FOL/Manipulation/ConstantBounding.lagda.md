@@ -56,7 +56,6 @@ The answer is a definition that follows the shape of the syntax itself. A term i
 open import FOL.LevyHierarchy
   using ( Δ₀; δ-∈; δ-≐; δ-∧; δ-∨; δ-⇒; δ-⊥; δ-∀∈; δ-∃∈ )
 open import FOL.Manipulation.ConstantMapping using ( mapTm; mapFo )
-
 ```
 
 <!--en-->
@@ -143,9 +142,17 @@ Certificates are only useful if they can be moved between predicates. Think of a
 証明書は、述語の間で移せてこそ有用である。述語を許される定数の制限と考えれば、各点的含意 `P⊆Q` に沿って `P` を `Q` へ広げても証明書は無効にならない。`P` が受け入れる出現は `Q` も受け入れるからである。単一の定数に対してはこれは一度の適用にすぎず、`P⊆Q c` が証明 `P c` を `Q c` へ変える。`BoundedTm-mono` はこれを項全体へ再帰で拡張する。定数の場合はその一度の適用を行い、変数の場合は素通りする。`⊤*` は述語にかかわらず要素を持つからである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓk ℓp ℓq} {K : Type ℓk} {P : K → Type ℓp} {Q : K → Type ℓq}
          (P⊆Q : (c : K) → P c → Q c) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   BoundedTm-mono : ∀ {n} (t : Term K n) → BoundedTm P t → BoundedTm Q t
   BoundedTm-mono (con c) p = P⊆Q c p
@@ -196,6 +203,9 @@ The quantifier cases finish the induction. Under `∃̇` or `∀̇` the body is 
   BoundedFo-mono (∀̇∈ t φ) (ht , hφ) = BoundedTm-mono t ht , BoundedFo-mono φ hφ
   BoundedFo-mono (∃̇∈ t φ) (ht , hφ) = BoundedTm-mono t ht , BoundedFo-mono φ hφ
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Relabelling, partially
@@ -225,13 +235,26 @@ Now the certificate meets its consumer. A partial constant map is given by a dom
 いま証明書がその利用者に出会う。部分的な定数写像は、源の定数集合 `K` 上の定義域述語 `P` と、`P` の上でのみ定義された割り当て `down` で与えられる。論理式全体を改名するには、さらに先の定数集合 `K'` と、`K` と `K'` の双方が写し込まれる世界 `W` が必要である。このデータへの数学的な条件は可換な三角形である。`p : P c` を満たす各源の定数 `c` は、`down` を経て先の写像に渡った先が、`c` が源の写像で到達する世界の要素と一致しなければならない。この三角形が与えられれば、そこから誘導される改名は、元の式とともに `W` で読んだとき一致すると検証できる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Relabel
   {ℓk ℓk' ℓv ℓp : Level}
   {K  : Type ℓk}
   {K' : Type ℓk'}
   {W  : Type ℓv}
+  (proj : K → W)
+  (up   : K' → W)
+  (P    : K → Type ℓp)
+  (down : (c : K) → P c → K')
+  (down-correct : (c : K) (p : P c) → up (down c p) ≡ proj c)
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The triangle appears here as the parameter `down-correct`: for every `c` and `p : P c`, the path `up (down c p) ≡ proj c`. This is the only correctness obligation on the data; everything else about the relabelling will follow from it occurrence by occurrence. Note that `down` needs the proof `p` as an argument: the certificate is what makes the partial map applicable, supplying its domain condition exactly where the formula mentions a constant.
@@ -241,13 +264,7 @@ The triangle appears here as the parameter `down-correct`: for every `c` and `p 
 この三角形はここではパラメータ `down-correct` として現れる。すべての `c` と `p : P c` に対するパス `up (down c p) ≡ proj c` である。これがデータへの唯一の正しさの義務であり、改名に関するそれ以外のことはすべて、出現ごとにここから従う。`down` が証明 `p` を引数として要求する点に注意してほしい。部分写像を適用可能にするのは証明書であり、式が定数に触れるその箇所で定義域の条件を供給するのである。
 <!--/-->
 
-```agda
-  (proj : K → W)
-  (up   : K' → W)
-  (P    : K → Type ℓp)
-  (down : (c : K) → P c → K')
-  (down-correct : (c : K) (p : P c) → up (down c p) ≡ proj c)
-```
+
 
 <!--en-->
 Relabelling a term now just threads the certificate through. `liftTm` takes `t` together with `h : BoundedTm P t`; matching `h` at the constant node hands over precisely the proof `p : P c` that `down c` requires, so the node becomes `con (down c p)`. At a variable, `h` is trivial and the node passes through. The partial map has become total, but only on terms that present their domain proofs.
@@ -258,7 +275,6 @@ Relabelling a term now just threads the certificate through. `liftTm` takes `t` 
 <!--/-->
 
 ```agda
-  where
 
   liftTm : ∀ {n} (t : Term K n) → BoundedTm P t → Term K' n
   liftTm (con c) p = con (down c p)
@@ -417,6 +433,9 @@ The bounded quantifier witnesses finish the recursion: each wraps one transferre
   Δ₀-liftFo (ht , hφ) (δ-∀∈ c)  = δ-∀∈ (Δ₀-liftFo hφ c)
   Δ₀-liftFo (ht , hφ) (δ-∃∈ c)  = δ-∃∈ (Δ₀-liftFo hφ c)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

@@ -175,7 +175,6 @@ The last group fixes the concrete interpretation the names will be read in. `#` 
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_; ω )
-
 ```
 
 <!--en-->
@@ -377,7 +376,6 @@ The proof invokes the general fact that a function whose result type does not de
 ```agda
 code-shift e χ = sym (constSubstCommSlice
   (λ k → Formula (⊥* {ℓ}) (suc k)) S (λ _ ψ → VCode.⌜ embed ψ ⌝) e χ)
-
 ```
 
 <!--en-->
@@ -550,8 +548,16 @@ The module takes the stage `A` and, crucially, a strict well-order of its member
 モジュールは、段階 `A` と、決定的に重要なことにその要素の上の狭義整列順序とをパラメータとして取る。第三の鍵がパラメータをその順序で比較するのであり、任意の段階の上に順序を作るのはこの章の仕事ではないからである。型 `Name` は依存的な三つ組である。自然数 `k`、`suc k` 個の自由変数スロットをもつパラメータなし論理式、そして `A` の台の `k` 個の要素の列。列の長さはアリティに強制されるので、名前が公式と誤った個数のパラメータを組にすることはない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Naming (A : S) (w : SWO ⟪ A ⟫) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   module DA = DefOf A
   open DA using ( _⊨ᵐ_ )
 
@@ -1168,7 +1174,6 @@ The right lemma is the mirror image: moving the *other* vector along its own len
                    → (p ≺ᵥ subst (Vec ⟪ A ⟫) e q) ≡ (p ≺ᵥ q)
     ≺ᵥ-subst-right e p q = sym (constSubstCommSlice
       (Vec ⟪ A ⟫) (Type (ℓ-suc ℓ)) (λ _ v → p ≺ᵥ v) e q)
-
 ```
 
 <!--en-->
@@ -1617,6 +1622,9 @@ The least-element search is applied only to the denotation predicate needed by t
             → Σ[ a ∈ Name ] IsLeast nameOrder (Denotes x) a
   leastName x = leastOfFormula nameOrder (definedDenotes x) lem
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

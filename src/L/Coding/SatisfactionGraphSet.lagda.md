@@ -19,7 +19,6 @@ open import Base.Prelude
 open import Base.Classical using ( LEM )
 
 module L.Coding.SatisfactionGraphSet {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -78,7 +77,6 @@ The satisfaction relation used here is the inner semantics of the restricted str
 
 module AbsSF = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsSF using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -93,9 +91,18 @@ For the fixed `W`, both parameters of the uniform construction are instantiated 
 open import L.Coding.UniformSatisfaction {ℓ} lem using ( module Table )
 open import L.Recursion {ℓ} lem using ( Recursion )
 open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to MapGraph )
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module SatGraph (W : S) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 For a code `x` with membership certificate `mx`, write this unique value as `valOf x mx`. The equation `valOf≡` identifies it definitionally with `Table.val W W x mx`. The notation isolates the mathematical function whose graph is to be collected: a domain member is sent to its satisfaction set.
@@ -224,6 +231,9 @@ An arbitrary member of `pairs` need not arrive already displayed as an ordered p
                 → ∥ Σ[ x ∈ S ] Σ[ mx ∈ ⟨ fst x ∈ fst (AllCodes W) ⟩ ] (fst e ≡ pr (fst x) (fst (valOf x mx))) ∥₁
     pairs-shape e h = MapGraph.F-out M (fst e) h
 ```
+</div>
+</details>
+
 
 <!--en-->
 The set `pairs` is therefore the internal graph of uniform satisfaction for formulas whose constants and environments range over `W`. Existence and uniqueness of the uniform value make the relation functional; replacement turns that relation into a set of `L`; and the three membership theorems characterize the set both for displayed pairs and for arbitrary members.

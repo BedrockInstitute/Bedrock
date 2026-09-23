@@ -60,7 +60,6 @@ open import L.Ordinal.Stages {ℓ} lem using ( ord∈Lset-suc )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; module InfinitySet )
 open InfinitySet using ( #_; sucV )
-
 ```
 
 <!--en-->
@@ -97,13 +96,22 @@ The section works over the fixed carrier S with membership `⟨_∈ˢ_⟩`, an a
 本節は、所属 `⟨_∈ˢ_⟩` を備えた固定された台 S、その上の任意の写像 T、および T に関する二つの仮定に対して述べられる。第一の `T-mono` は、段階添字の所属 β ∈ α と x ∈ T β とから x ∈ T α を導く。第二の `T-ord` が錨である。順序数 δ は、その自身の後者を添字とする段階 T (sucV δ) に属する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module BoundOver
   (T : S → S)
   (T-mono : {α β : S} → ⟨ β ∈ˢ α ⟩ → {x : S} → ⟨ x ∈ˢ T β ⟩ → ⟨ x ∈ˢ T α ⟩)
   (T-ord : (δ : S) → IsOrd δ → ⟨ δ ∈ˢ T (sucV δ) ⟩)
   (lam : S) (ordλ : IsOrd lam)
+  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The remaining parameters describe the index λ: it is a set, certified to be an ordinal, containing ∅, and closed under `sucV`. The certification `ordλ` records that λ itself is a legitimate ordinal stage index; the two closure facts are the only ones the induction will consume.
@@ -113,10 +121,7 @@ The remaining parameters describe the index λ: it is a set, certified to be an 
 残りのパラメータは添字 λ を記述する。λ は集合であり、順序数であることの証明を持ち、∅ を含み、`sucV` について閉じている。証明 `ordλ` は λ 自身が正当な順序数段階の添字であることを記録する。帰納法が消費するのは二つの閉包の事実だけである。
 <!--/-->
 
-```agda
-  (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
-  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
-```
+
 
 <!--en-->
 Every ambient numeral lands in λ, and the proof uses only the two closure facts just assumed. This is the purely inductive half of the argument: no excluded middle, no property of T, and not even the ordinal certificate of λ enter it.
@@ -161,6 +166,9 @@ Two steps compose. First, T-ord at δ = # k, together with `numeral-ord k` certi
   #∈Tλ k = T-mono {α = lam} {β = sucV (# k)} (#∈λ (suc k))
     {x = # k} (T-ord (# k) (numeral-ord k))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Numerals in the constructible hierarchy
@@ -184,10 +192,18 @@ Instantiating the abstraction only requires naming the witnesses. The family T b
 抽象の実体化は、証人を指名するだけで済む。段階族 T には `Lset` を与え、`Lset-mono` が順序数添字の所属に沿う単調性を供給し、`ord∈Lset-suc` が「各順序数は `Lset (sucV α)` に属する」という錨を供給する。定理 `ord∈Lset-suc` がこの特殊化に必要な古典的仮定を担う。数項についての帰納そのものは、先に示した初等的な閉包の議論のままである。λ に関する仮定はそのまま渡されるので、`BoundOver` の内部で T λ について証明されたことはすべて `Lset lam` についても使える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Bound (lam : S) (ordλ : IsOrd lam)
              (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
              (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open BoundOver Lset Lset-mono ord∈Lset-suc lam ordλ succλ ∅∈λ public
 ```
@@ -212,3 +228,5 @@ The equation `numeralL-fst k` is a path `fst (numeralL k) ≡ # k` in the host t
   num∈λ : (k : ℕ) → ⟨ fst (numeralL k) ∈ˢ Lset lam ⟩
   num∈λ k = subst (λ w → ⟨ w ∈ˢ Lset lam ⟩) (sym (numeralL-fst k)) (#∈Tλ k)
 ```
+</div>
+</details>

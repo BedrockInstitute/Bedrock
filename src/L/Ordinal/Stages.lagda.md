@@ -546,8 +546,16 @@ Fix the ordinal α with its certificate. The stage A = `Lset α` is a layer, and
 順序数 α とその証明を固定する。段階 A = `Lset α` は層であり、`layer-trans` がそれを集合としての A の伝播性へ引き上げる。Δ₀ 論理式が A の内部の充足と周囲の宇宙の間で絶対的であるための前提は、これが唯一である。L.Definability の章の定義可能性の機構は A に対して開かれているので、以下の `defSet φ` は常に φ が A から定義する部分集合を意味する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module OrdAt (α : S) (ordα : IsOrd α) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     A = Lset α
     Atrans = layer-trans (Lset-layer α)
@@ -747,6 +755,9 @@ The two inclusions close, and `defSet-φ-ord` states the conclusion: the subset 
         sat : ⟨ (⟪ A ⟫↪ m ∷ []) ⊨ᵛ (mapFo DefA.ι φ) ⟩
         sat = ord→⊨ᵛ m (subst IsOrd (sym q) ordy)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## An ordinal appears at its successor

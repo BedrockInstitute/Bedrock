@@ -177,9 +177,17 @@ To compare the two readings, fix a proposition-valued ZF structure `𝒮` with d
 二つの読みを比較するために、台 `S` をもつ命題値の ZF 構造 `𝒮`、各定数記号に台の要素を割り当てる解釈 `ι`、そして注目の定数 `c` を固定する。標準の意味論 `γ ⊨ _` と項の評価 `⟦_⟧` は、与えられた `ι` に対して `FOL.Semantics` から得られる。この節はこれらのデータに伴う関係 `γ ⊨ᴬ _` を加える。これは元の論理式を標準の意味論どおりに解釈するが、非有界量化子だけを一つの台の要素 `A`、すなわち選んだ定数の表示 `ι c` に制限する。原子式、結合子、偽、有界量化子では伴う関係は標準の意味論と一致するはずであり、異なるのは無界量化が `A` の内部での量化に置き換わる箇所だけである。議論は `𝒮` の命題値関係を直接用いる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Correct {ℓ} (𝒮 : ZFStructure ℓ)
                {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) (c : K) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open ZFStructure 𝒮
   open module Sem = FOL.Semantics 𝒮 using ( module At; _^_ )
@@ -302,6 +310,9 @@ All ten cases are handled, and the recursion is on φ, so the proof is complete 
 ```agda
     cong (λ q → (x ∈ˢ ⟦ t ⟧ γ) ⊓ q) (relativize-correct φ (x ∷ γ))))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

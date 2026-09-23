@@ -14,7 +14,6 @@ For each ordinal `γ`, this chapter constructs in the ambient type theory a stri
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -28,7 +27,6 @@ The classical assumption is used at the point where a merely inhabited family of
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,7 +39,6 @@ All constructions are carried out at a fixed universe level under the single hyp
 
 ```agda
 module L.Choice.StageOrders {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -89,7 +86,6 @@ open import L.Choice.FiniteStageOrders {ℓ} lem using ( Tri-map )
 open import L.Choice.CanonicalNames {ℓ} lem using ( module Naming )
 open import L.WellOrder.Base {ℓ-suc ℓ}
   using ( Tri; lt; eq; gt; SWO; IsLeast; isPropLeastOf )
-
 ```
 
 <!--en-->
@@ -131,7 +127,6 @@ A hierarchy set has both a small presentation type and an ambient membership typ
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( sucV )
-
 ```
 
 <!--en-->
@@ -167,7 +162,6 @@ theCarve : (x : S) (p : ⟨ isL x ⟩) → Σ[ δ ∈ S ] IsPredOf (stage x p) �
 theCarve x p = predOf (λ σ → x ∈ˢ Lset σ) (stage x p) (stage-ord x p)
   (stage-earliest x p)
   (carveAt (λ σ → x ∈ˢ Lset σ) (stage x p) x (stage-mem x p) (λ δ hz → hz))
-
 ```
 
 <!--en-->
@@ -182,7 +176,6 @@ The ordinal `birth x p` is this predecessor. Mathematically, it records the stag
 opaque
   birth : (x : S) → ⟨ isL x ⟩ → S
   birth x p = theCarve x p .fst
-
 ```
 
 <!--en-->
@@ -198,7 +191,6 @@ opaque
   unfolding birth
   birth-ord : (x : S) (p : ⟨ isL x ⟩) → IsOrd (birth x p)
   birth-ord x p = theCarve x p .snd .fst
-
 ```
 
 <!--en-->
@@ -226,7 +218,6 @@ Because `x` belongs to its earliest stage and that stage is `sucV (birth x p)`, 
 birth-mem : (x : S) (p : ⟨ isL x ⟩) → ⟨ x ∈ˢ Lset (sucV (birth x p)) ⟩
 birth-mem x p =
   subst (λ w → ⟨ x ∈ˢ Lset w ⟩) (sym (birth-suc x p)) (stage-mem x p)
-
 ```
 
 <!--en-->
@@ -241,7 +232,6 @@ The birth ordinal itself lies in its successor ordinal, and the predecessor equa
 birth-stage : (x : S) (p : ⟨ isL x ⟩) → ⟨ birth x p ∈ˢ stage x p ⟩
 birth-stage x p =
   subst (λ w → ⟨ birth x p ∈ˢ w ⟩) (birth-suc x p) (self∈sucV (birth x p))
-
 ```
 
 <!--en-->
@@ -255,7 +245,6 @@ Although `birth` receives a proof `p` that `x` is constructible, its value conta
 ```agda
 birth-proof : (x : S) (p q : ⟨ isL x ⟩) → birth x p ≡ birth x q
 birth-proof x p q = cong (birth x) (snd (isL x) p q)
-
 ```
 
 <!--en-->
@@ -286,7 +275,6 @@ If `γ` equals the earliest stage, `birth-stage` gives the desired membership di
   decideIn γ x ordγ p h (inr (inl e)) =
     subst (λ w → ⟨ birth x p ∈ˢ w ⟩) (sym e) (birth-stage x p)
   decideIn γ x ordγ p h (inr (inr s∈)) = ordγ .fst (birth-stage x p) s∈
-
 ```
 
 <!--en-->
@@ -323,7 +311,6 @@ For an ambient set `A`, the type `Mem A` consists of a set together with evidenc
 ```agda
 Mem : S → Type (ℓ-suc ℓ)
 Mem A = Σ[ x ∈ S ] ⟨ x ∈ˢ A ⟩
-
 ```
 
 <!--en-->
@@ -334,10 +321,17 @@ Fix a strict well-order `w` on a type `A`. The next construction uses only the r
 型 `A` 上の狭義整列順序 `w` を固定する。次の構成はこの構造に含まれる関係と法則だけを使うので、名前の順序、段階要素の順序、およびそれらの表現の変更に同じように適用できる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓc : Level} {A : Type ℓc} (w : SWO A) where
-  open SWO w using () renaming ( _<∙_ to _<ʷ_ )
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+  open SWO w using () renaming ( _<∙_ to _<ʷ_ )
 ```
 
 <!--en-->
@@ -351,8 +345,10 @@ Writing `relOf w a b` for the strict comparison contained in `w` lets later stat
 ```agda
   relOf : A → A → Type (ℓ-suc ℓ)
   relOf a b = a <ʷ b
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 Let `f : B → C` be injective and suppose `C` is strictly well-ordered. Comparing `u` and `v` in `B` by comparing `f u` and `f v` should then inherit a strict well-order. Injectivity is essential only for reflecting the equality case back from `C` to `B`.
@@ -362,9 +358,17 @@ Let `f : B → C` be injective and suppose `C` is strictly well-ordered. Compari
 `f : B → C` が単射であり、`C` が狭義整列順序づけられているとする。`B` の `u` と `v` を `f u` と `f v` の比較によって比べれば、その関係は狭義整列順序を受け継ぐはずである。単射性が本質的に必要なのは、`C` における等しい場合を `B` へ反映するときである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓb ℓc : Level} (B : Type ℓb) (C : Type ℓc) (w : SWO C)
          (f : B → C) (finj : (u v : B) → f u ≡ f v → u ≡ v) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open SWO w using () renaming
     ( _<∙_ to _<ᶜ_ ; tri∙ to triᶜ ; irr∙ to irrᶜ
     ; trans∙ to transᶜ ; wf∙ to wfᶜ )
@@ -383,7 +387,6 @@ The pulled-back relation declares `u` smaller than `v` exactly when the image `f
   private
     _<ᵇ_ : B → B → Type (ℓ-suc ℓ)
     u <ᵇ v = f u <ᶜ f v
-
 ```
 
 <!--en-->
@@ -397,7 +400,6 @@ Trichotomy in `C` gives three cases for the two images. The two strict cases are
 ```agda
     pullTri : (u v : B) → Tri (u <ᵇ v) (u ≡ v) (v <ᵇ u)
     pullTri u v = Tri-map id (finj u v) id (triᶜ (f u) (f v))
-
 ```
 
 <!--en-->
@@ -411,7 +413,6 @@ Well-foundedness also pulls back. If `f u` is accessible in `C`, its accessibili
 ```agda
     pullAcc : (u : B) → Acc _<ᶜ_ (f u) → Acc _<ᵇ_ u
     pullAcc u (acc r) = acc (λ v h → pullAcc v (r (f v) h))
-
 ```
 
 <!--en-->
@@ -442,6 +443,9 @@ Transitivity follows by composing comparisons of the three images in `C`, and th
     ; trans∙ = λ u v z → transᶜ (f u) (f v) (f z)
     ; wf∙    = λ u → pullAcc u (wfᶜ (f u)) }
 ```
+</div>
+</details>
+
 
 <!--en-->
 Every index in the small presentation `⟪ A ⟫` denotes an actual member of `A`. Pairing its image with this membership evidence gives a map from presentation indices into `Mem A`, the form on which stage orders are constructed.
@@ -454,7 +458,6 @@ Every index in the small presentation `⟪ A ⟫` denotes an actual member of `A
 ```agda
 memOf : (A : S) (m : ⟪ A ⟫) → ⟨ ⟪ A ⟫↪ m ∈ˢ A ⟩
 memOf A m = ∈∈ₛ {a = ⟪ A ⟫↪ m} {b = A} .snd (∈ₛ⟪ A ⟫↪ m)
-
 ```
 
 <!--en-->
@@ -483,7 +486,6 @@ The presentation map is an embedding, so equality of the resulting member pairs 
 
 ```agda
   inj u v q = isEmbedding→Inj isEmb⟪ A ⟫↪ u v (cong fst q)
-
 ```
 
 <!--en-->
@@ -505,7 +507,6 @@ For a stage index `δ`, `New δ` is the type of all members of `Lset (sucV δ)`,
 ```agda
 New : S → Type (ℓ-suc ℓ)
 New δ = Mem (Lset (sucV δ))
-
 ```
 
 <!--en-->
@@ -516,11 +517,18 @@ Fix an index `δ` and a strict well-order on the small members of `Lset δ`. The
 添字 `δ` と `Lset δ` の小さな要素上の狭義整列順序を固定する。これで、この段階上の名前を比較できる。名前のパラメータ部分が、まさに与えられた順序によって比較されるからである。これが、どの添字でも用いられる一様な局所構成を与える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (δ : S) (w : SWO ⟪ Lset δ ⟫) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     module NM = Naming (Lset δ) w
-
 ```
 
 <!--en-->
@@ -534,7 +542,6 @@ A name denotes a set `x` when its semantic value is equal to `x`. Equality of hi
 ```agda
   denotesAt : S → NM.Name → hProp (ℓ-suc ℓ)
   denotesAt x n = (NM.denote n ≡ x) , setIsSet (NM.denote n) x
-
 ```
 
 <!--en-->
@@ -549,7 +556,6 @@ For `a : New δ`, only the underlying set `a.fst` is named. Its membership evide
   private
     denotes : New δ → NM.Name → hProp (ℓ-suc ℓ)
     denotes a = denotesAt (a .fst)
-
 ```
 
 <!--en-->
@@ -564,7 +570,6 @@ Membership in `Lset (sucV δ)` is rewritten by the successor-stage equation as m
     hasName : (a : New δ) → ∥ Σ[ n ∈ NM.Name ] ⟨ denotes a n ⟩ ∥₁
     hasName a = NM.names-complete (a .fst)
       (subst (λ v → ⟨ a .fst ∈ˢ v ⟩) (Lset-suc δ) (a .snd))
-
 ```
 
 <!--en-->
@@ -579,7 +584,6 @@ The name order is a strict well-order, so a merely inhabited family of denoting 
     leastOfNew : (a : New δ)
                → Σ[ n ∈ NM.Name ] IsLeast NM.nameOrder (denotes a) n
     leastOfNew a = NM.leastName (fst a) (hasName a)
-
 ```
 
 <!--en-->
@@ -593,7 +597,6 @@ Define `theName a` to be the name component of this least witness. The construct
 ```agda
     theName : New δ → NM.Name
     theName a = leastOfNew a .fst
-
 ```
 
 <!--en-->
@@ -607,7 +610,6 @@ Leastness includes membership in the family being minimized. Hence the selected 
 ```agda
     theName-denote : (a : New δ) → NM.denote (theName a) ≡ a .fst
     theName-denote a = leastOfNew a .snd .fst
-
 ```
 
 <!--en-->
@@ -622,7 +624,6 @@ If two successor-stage members have the same selected least name, applying denot
     nameInj : (u v : New δ) → theName u ≡ theName v → u ≡ v
     nameInj u v q = Σ≡Prop (λ x → snd (x ∈ˢ Lset (sucV δ)))
       (sym (theName-denote u) ∙ cong NM.denote q ∙ theName-denote v)
-
 ```
 
 <!--en-->
@@ -649,7 +650,6 @@ Pull the strict well-order of names back along this injection. Two members of `L
 ```agda
   IsLeastName : NM.Name → S → Type (ℓ-suc ℓ)
   IsLeastName t x = IsLeast NM.nameOrder (denotesAt x) t
-
 ```
 
 <!--en-->
@@ -663,7 +663,6 @@ For each member `a : New δ`, the construction supplies a name together with `Is
 ```agda
   leastNameOf : (a : New δ) → Σ[ t ∈ NM.Name ] IsLeastName t (fst a)
   leastNameOf a = leastOfNew a
-
 ```
 
 <!--en-->
@@ -679,7 +678,6 @@ Suppose `t` is any name satisfying `IsLeastName t (fst c)`. Both `(theName c, le
     pin : (c : New δ) (t : NM.Name) → IsLeastName t (fst c) → theName c ≡ t
     pin c t h = cong fst
       (isPropLeastOf NM.nameOrder (denotes c) (leastOfNew c) (t , h))
-
 ```
 
 <!--en-->
@@ -695,7 +693,6 @@ The comparison fact pins each candidate's least name: if `t₁` is a least name 
                  → IsLeastName t₁ (fst a) → IsLeastName t₂ (fst b)
                  → relOf byName a b ≡ NM._≺ₙ_ t₁ t₂
     byName-least a b t₁ t₂ h₁ h₂ = cong₂ NM._≺ₙ_ (pin a t₁ h₁) (pin b t₂ h₂)
-
 ```
 
 <!--en-->
@@ -723,7 +720,6 @@ The two bridge lemmas let us reason about `stepAt` through any representatives a
 ```agda
   opaque
     unfolding stepAt
-
 ```
 
 <!--en-->
@@ -758,6 +754,9 @@ The reading lemma says the converse: if the step order holds between two members
     stepAt-read a b t₁ t₂ h₁ h₂ =
       transport (byName-least a b t₁ t₂ h₁ h₂)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The family
@@ -780,7 +779,6 @@ Under : (δ : S) → SWO (New δ) → S → S → Type (ℓ-suc ℓ)
 Under δ v x y = Σ[ hx ∈ ⟨ x ∈ˢ Lset (sucV δ) ⟩ ]
                 Σ[ hy ∈ ⟨ y ∈ˢ Lset (sucV δ) ⟩ ]
                 relOf v (x , hx) (y , hy)
-
 ```
 
 <!--en-->
@@ -819,10 +817,18 @@ Fix an ordinal `γ`. To construct its stage order, assume recursively that every
 順序数 `γ` を固定する。この段階の順序を構成するため、各順序数 `δ ∈ γ` について `Mem (Lset δ)` 上の狭義整列順序がすでに得られていると再帰的に仮定する。モジュール `Family` は、まさにこれらの小さい段階の順序から `Lset γ` の要素上の順序を構成する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Family (γ : S)
               (IH : (δ : S) → ⟨ δ ∈ˢ γ ⟩ → IsOrd δ → SWO (Mem (Lset δ)))
               (ordγ : IsOrd γ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Member : Type (ℓ-suc ℓ)
 ```
@@ -837,7 +843,6 @@ The carrier at this stage is `Member = Mem (Lset γ)`: an element of the hierarc
 
 ```agda
     Member = Mem (Lset γ)
-
 ```
 
 <!--en-->
@@ -851,7 +856,6 @@ Because `γ` is an ordinal, membership in `Lset γ` implies constructibility. Th
 ```agda
     memberL : (a : Member) → ⟨ isL (a .fst) ⟩
     memberL a = Lset→isL γ ordγ (a .fst) (a .snd)
-
 ```
 
 <!--en-->
@@ -865,7 +869,6 @@ Each layer member belongs to the successor of its own birth ordinal, by the memb
 ```agda
     newIn : (a : Member) → ⟨ a .fst ∈ˢ Lset (sucV (birth (a .fst) (memberL a))) ⟩
     newIn a = birth-mem (a .fst) (memberL a)
-
 ```
 
 <!--en-->
@@ -880,7 +883,6 @@ The birth of a member is packaged as a member of the ordinal index `γ`: the bir
   bornAt : Member → Mem γ
   bornAt a = birth (a .fst) (memberL a)
            , birth-in γ ordγ (a .fst) (memberL a) (a .snd)
-
 ```
 
 <!--en-->
@@ -895,7 +897,6 @@ For `d : Mem γ`, the induction hypothesis supplies an order on the certified me
   stepIn : (d : Mem γ) → SWO (New (d .fst))
   stepIn d = stepAt (d .fst) (carry (Lset (d .fst))
     (IH (d .fst) (d .snd) (mem-ord {A = γ} ordγ (d .fst) (d .snd))))
-
 ```
 
 <!--en-->
@@ -909,7 +910,6 @@ For a packaged ordinal `d : Mem γ`, `UnderAt d a b` applies the certificate-ind
 ```agda
   UnderAt : (d : Mem γ) → Member → Member → Type (ℓ-suc ℓ)
   UnderAt d a b = Under (d .fst) (stepIn d) (a .fst) (b .fst)
-
 ```
 
 <!--en-->
@@ -924,7 +924,6 @@ The main relation is lexicographic. If the birth ordinal of `a` belongs to the b
   _≺_ : Member → Member → Type (ℓ-suc ℓ)
   a ≺ b = ⟨ bornAt a .fst ∈ˢ bornAt b .fst ⟩
         ⊎ ((bornAt b .fst ≡ bornAt a .fst) × UnderAt (bornAt a) a b)
-
 ```
 
 <!--en-->
@@ -968,7 +967,6 @@ Only the membership certificates are replaced in this passage. Their proposition
 ```agda
         (under-at (bornAt a .fst) (stepIn (bornAt a)) (a .fst) (a .fst)
           (newIn a) (newIn a) u)
-
 ```
 
 <!--en-->
@@ -1045,7 +1043,6 @@ The composite local comparison, together with the endpoint certificates already 
 
 ```agda
               (moved .fst) (moved .snd .fst) moved))
-
 ```
 
 <!--en-->
@@ -1288,7 +1285,6 @@ Every member is therefore accessible for the main relation. The conclusion uses 
 
     ≺-wf : WellFounded _≺_
     ≺-wf a = accByBirth (bornAt a .fst) (bornAt a .snd) a refl
-
 ```
 
 <!--en-->
@@ -1319,6 +1315,9 @@ Transitivity and the two-level well-foundedness argument complete the order laws
     ; trans∙ = ≺-trans
     ; wf∙    = ≺-wf }
 ```
+</div>
+</details>
+
 
 <!--en-->
 The function `famStep` packages this recursive step: at `γ`, it takes the orders already constructed at every member ordinal `δ ∈ γ` and returns the strict well-order of `Mem (Lset γ)` proved above. The same construction applies uniformly to every ordinal; it has no separate zero, successor, or limit clause.
@@ -1332,7 +1331,6 @@ The function `famStep` packages this recursive step: at `γ`, it takes the order
 famStep : (γ : S) → ((δ : S) → ⟨ δ ∈ˢ γ ⟩ → IsOrd δ → SWO (Mem (Lset δ)))
         → IsOrd γ → SWO (Mem (Lset γ))
 famStep = Family.famOrder
-
 ```
 
 <!--en-->
@@ -1347,7 +1345,6 @@ Membership induction applies `famStep` simultaneously at all ordinal indices. Th
 opaque
   orderAt : (γ : S) → IsOrd γ → SWO (Mem (Lset γ))
   orderAt = ∈-induction famStep
-
 ```
 
 <!--en-->
@@ -1363,7 +1360,6 @@ opaque
   unfolding orderAt
   orderAt-step : (γ : S) → orderAt γ ≡ famStep γ (λ δ _ → orderAt δ)
   orderAt-step = ∈-induction-compute famStep
-
 ```
 
 <!--en-->

@@ -38,7 +38,6 @@ open import Base.Prelude
 open import Base.Classical using ( LEM )
 
 module L.Hierarchy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -155,7 +154,6 @@ open import L.Coding.HierarchySequence {ℓ} lem
         ; ApproxAt; ApproxAt-dom; ApproxAt-value; ApproxAt-step; ApproxAt-in
         ; LsetGraphAt; LsetGraph-in; LsetGraph-out; GraphOf
         ; PairGraphAt; PairOf; PairGraph-in; PairGraph-out )
-
 ```
 
 
@@ -171,8 +169,7 @@ pointwise equivalence of memberships into a path of sets.
 命題の機構はいつものものである。切り詰められた存在、その注入と消去、第二成分が命題である対が第一成分の等しさで等しくなること、そして所属の各点での同値を集合のパスへ変える操作である。
 <!--/-->
 
-```agda
-```
+
 
 
 
@@ -188,7 +185,6 @@ and its h-setness makes equality of two tabulated sets a proposition.
 
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-
 ```
 
 
@@ -209,7 +205,6 @@ open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
-
 ```
 
 
@@ -227,7 +222,6 @@ environments of carrier elements, with constants drawn from `L`.
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 
@@ -275,7 +269,6 @@ requires that nothing outside `B` is recorded at all.
 Values : S → V ℓ → Type (ℓ-suc ℓ)
 Values h B = (c z : S) → ⟨ fst c ∈ B ⟩
            → ⟨ pr (fst c) (fst z) ∈ fst h ⟩ → fst z ≡ Lset (fst c)
-
 ```
 
 <!--en-->
@@ -293,7 +286,6 @@ presents.
 ```agda
 Entries : S → V ℓ → Type (ℓ-suc ℓ)
 Entries h B = (c : S) → ⟨ fst c ∈ B ⟩ → ⟨ pr (fst c) (Lset (fst c)) ∈ fst h ⟩
-
 ```
 
 <!--en-->
@@ -350,8 +342,16 @@ a step witness, and `above` turns a step witness into a member of the tower.
 この節は、前章のステップ条件と塔を結ぶ。入力 `b` でのステップは、`b` の下の入力 `c` とそこで記録された値 `w` にわたって、`w` の定義可能冪集合の要素を集める。塔が `b` で集める要素は同じもので、記録された `w` を `Lset c` に置き換えたものである。三つの private な事実が比較の準備をする。`ok` は横条件 `PowOK`{.Agda} を清算し、`below` は塔の分解をステップの証人に変え、`above` はステップの証人を塔の要素に変える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
 ```
 
@@ -391,7 +391,6 @@ the model, which transitivity of the class supplies.
     ok ob vals c z rec = subst (λ u → ⟨ isL (𝒟ₒ u) ⟩)
       (sym (vals c z (rec .fst) (rec .snd)))
       (isL-𝒟ₒ (fst c) (mem-ord {A = fst (lookup b γ)} ob (fst c) (rec .fst)))
-
 ```
 
 <!--en-->
@@ -446,7 +445,6 @@ definable powerset by the decomposition.
       oδ = mem-ord {A = fst (lookup b γ)} ob δ δ∈
       d : S
       d = δ , isL-trans {x = fst (lookup b γ)} {y = δ} δ∈ (lookup b γ .snd)
-
 ```
 
 <!--en-->
@@ -479,7 +477,6 @@ and a membership of `z` in the definable powerset of `w`.
     above vals z (c , (w , (rec , hz))) =
       Lset-in (fst (lookup b γ)) (fst c) (fst z) (rec .fst)
         (subst (λ u → ⟨ fst z ∈ 𝒟ₒ u ⟩) (vals c w (rec .fst) (rec .snd)) hz)
-
 ```
 
 <!--en-->
@@ -548,7 +545,6 @@ proposition from the witness.
       where
       z : S
       z = x , isL-trans {x = fst (lookup v γ)} {y = x} hx (lookup v γ .snd)
-
 ```
 
 <!--en-->
@@ -599,7 +595,6 @@ ordinality `ob`.
       put : Σ[ δ ∈ V ℓ ] (⟨ δ ∈ fst (lookup b γ) ⟩ × ⟨ x ∈ 𝒟ₒ (Lset δ) ⟩)
           → ⟨ x ∈ fst (lookup v γ) ⟩
       put s = StepAt-back v b f γ h (ok ob vals) z (below ob ents z s)
-
 ```
 
 <!--en-->
@@ -615,7 +610,6 @@ membership in the recorded value.
 ```agda
     pt : (x : V ℓ) → (x ∈ fst (lookup v γ)) ≡ (x ∈ Lset (fst (lookup b γ)))
     pt x = ⇔toPath (fwd x) (bwd x)
-
 ```
 
 <!--en-->
@@ -666,7 +660,6 @@ the side condition once for both.
     into z hz = map₁ (below ob ents z)
       (Lset-out (fst (lookup b γ)) (fst z)
         (subst (λ u → ⟨ fst z ∈ u ⟩) q hz))
-
 ```
 
 <!--en-->
@@ -683,6 +676,9 @@ decomposition into a witness, which only has to exist.
     back : (z : S) → StepOf b f γ z → ⟨ fst z ∈ fst (lookup v γ) ⟩
     back z s = subst (λ u → ⟨ fst z ∈ u ⟩) (sym q) (above vals z s)
 ```
+</div>
+</details>
+
 
 <!--en-->
 Conversely, a witness places `z` into the tower by `above`, and the
@@ -728,13 +724,20 @@ being proved of it is a membership.
 帰納のステップは、記録された値に対する `step-Lset`{.Agda} である。入力の下での正しさは、そのまま逐語的に帰納の仮定である。入力の下での完備さを使うのが、近似の値の条項を費やす場所である。この入力より下の入力は近似の定義域の下にもある。定義域は順序数であり、順序数は推移的だからである。だから近似はそこで値を持ち、帰納の仮定がそれを塔の値と同一視する。その値は「単に」取り出されるだけで十分である。それについて証明するのは一つの所属だからである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Value : V ℓ → Type (ℓ-suc ℓ)
     Value u = ⟨ isL u ⟩ → (z : S)
             → ⟨ pr u (fst z) ∈ fst (lookup f γ) ⟩ → fst z ≡ Lset u
-
 ```
 
 <!--en-->
@@ -859,8 +862,10 @@ elimination targets the proposition that the canonical entry is recorded.
               → ⟨ pr (fst c) (Lset (fst c)) ∈ fst (lookup f γ) ⟩
         named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst (lookup f γ) ⟩)
           (IH (fst c) c∈ (snd c) y q) q
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 The merely-given recorded value is identified with the tower by the induction
@@ -905,8 +910,16 @@ carrying the whole tower description inside it.
 この読みが変数の枠の上に立つのは飾りではない。実例化はそれぞれ異なる具体的な環境に住み、一方で述べた主張を他方へ運ぶには、全体の塔の記述を内側に抱えた充足を通さねばならない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Lset-only : ⟨ γ ⊨ LsetGraphAt w b ⟩ → IsOrd (fst (lookup b γ))
             → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
 ```
@@ -995,6 +1008,9 @@ that the canonical entry is recorded, so the missing witness is never needed.
         named (y , q) = subst (λ t → ⟨ pr (fst c) t ∈ fst f ⟩)
           (approx-val zero (suc b) (f ∷ γ) ha ob c y q) q
 ```
+</div>
+</details>
+
 
 <!--en-->
 The merely-given recorded value is identified with the tower by the induction
@@ -1049,8 +1065,16 @@ value is the tower.
 主張は、表 `h`、入力の順序数性、入力の上での表の三条件、そして記録された値が塔であるという主張を受け取る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   graph-table : (h : S) → IsOrd (fst (lookup b γ))
               → Values h (fst (lookup b γ)) → Entries h (fst (lookup b γ))
               → Domain h (fst (lookup b γ))
@@ -1126,7 +1150,6 @@ puts `c` below the argument.
       named : Σ[ y ∈ S ] ⟨ pr (fst c) (fst y) ∈ fst h ⟩
             → ⟨ fst c ∈ fst (lookup b γ) ⟩
       named (y , p) = dom c y p
-
 ```
 
 <!--en-->
@@ -1181,7 +1204,6 @@ ordinality of the argument.
       vals' e t _ r = vals e t (dom e t r) r
       ents' : Entries h (fst c)
       ents' e e∈ = ents e (ob .fst {x = fst c} {y = fst e} e∈ c∈)
-
 ```
 
 <!--en-->
@@ -1201,6 +1223,9 @@ transitivity in the chapter.
     approx = ApproxAt-in zero (suc b) (h ∷ γ)
       (domAt-intro zero (suc b) (h ∷ γ) onDom) onStep
 ```
+</div>
+</details>
+
 
 <!--en-->
 Assembling the two conjuncts, the table itself is an approximation: its domain
@@ -1299,7 +1324,6 @@ is a construction.
 Recorded : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Recorded B z = ∃[ c ∶ S ] (fst c ∈ B)
   ⊓ ((z ≡ pr (fst c) (Lset (fst c))) , setIsSet z (pr (fst c) (Lset (fst c))))
-
 ```
 
 <!--en-->
@@ -1316,7 +1340,6 @@ itself a proposition, so the join is a join of propositions.
 ```agda
 IsHier : V ℓ → S → Type (ℓ-suc (ℓ-suc ℓ))
 IsHier B h = (z : S) → (fst z ∈ fst h) ≡ Recorded B (fst z)
-
 ```
 
 <!--en-->
@@ -1334,7 +1357,6 @@ membership would leave pairs out.
 ```agda
 HierOf : V ℓ → Type (ℓ-suc (ℓ-suc ℓ))
 HierOf B = Σ[ h ∈ S ] IsHier B h
-
 ```
 
 <!--en-->
@@ -1347,9 +1369,16 @@ questions one asks of a construction: what is it, and why does it qualify.
 `HierOf B` は、実現する集合をその仕様とともに集める。この対こそ、帰納がそれぞれの順序数で作るものであり、その二つの成分は、構成に対して誰もが問う二つの問いに答える。それは何か。なぜそれが資格をもつのか。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (B : V ℓ) (oB : IsOrd B) (h : S) (sp : IsHier B h) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The two readings are stated for a variable realizing set with its
@@ -1456,8 +1485,10 @@ argument, and the entry equals the model's pair by its defining reading.
     oc = mem-ord {A = B} oB (fst c) c∈
     k : S
     k = prʟ c (LsetS (fst c) oc)
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 Ordinality of `c` comes from that of `B`, and with it the tower's value at `c`
@@ -1511,7 +1542,6 @@ specification.
       where
       A : S
       A = α , hα
-
 ```
 
 <!--en-->
@@ -1530,7 +1560,6 @@ form in which replacement consumes a domain.
 
       entry : (c : S) → ⟨ fst c ∈ α ⟩ → S
       entry c c∈ = prʟ c (value c c∈)
-
 ```
 
 <!--en-->
@@ -1587,7 +1616,6 @@ else is recorded. The last argument, `refl`, is the pair graph's own equation.
         oc = mem-ord {A = α} oα (fst c) c∈
         hc : HierOf (fst c)
         hc = IH (fst c) c∈ (snd c) oc
-
 ```
 
 <!--en-->
@@ -1617,7 +1645,6 @@ merely-existence the graph statement asserts.
             → ⟨ (entry c c∈ ∷ c ∷ []) ⊨ φ ⟩
       holds c c∈ = PairGraph-in zero (suc zero) (entry c c∈ ∷ c ∷ []) φ qφ
         (value c c∈) (prʟ-fst c (value c c∈)) (below c c∈ (entry c c∈))
-
 ```
 
 
@@ -1677,7 +1704,6 @@ canonical entry and the argument, with ordinality of `c` from that of `α`.
               (Lset-only zero (suc (suc zero)) (z ∷ k ∷ c ∷ []) hg
                 (mem-ord {A = α} oα (fst c) c∈))
           ∙ sym (prʟ-fst c (value c c∈)) )
-
 ```
 
 <!--en-->
@@ -1705,7 +1731,6 @@ contractible fiber.
       fc : (c : S) → ⟨ c ∈ˢ A ⟩
          → isContr (Σ[ k ∈ S ] ⟨ (k ∷ c ∷ []) ⊨ φ ⟩)
       fc c c∈ = mereFunct φ c ∣ entry c c∈ , (holds c c∈ , only c c∈) ∣₁
-
 ```
 
 
@@ -1763,7 +1788,6 @@ elimination is legitimate because the recorded class is a proposition.
                → ⟨ Recorded α (fst z) ⟩
           conv (c , (c∈ , hp)) = ∣ c , (c∈ , cong fst (only c c∈ z hp)
                                             ∙ prʟ-fst c (value c c∈)) ∣₁
-
 ```
 
 <!--en-->
@@ -1831,7 +1855,6 @@ gives satisfaction of the pair graph at `z` and `c`.
 
 hierL : (α : V ℓ) → ⟨ isL α ⟩ → IsOrd α → S
 hierL α hα oα = hierAt α hα oα .fst
-
 ```
 
 <!--en-->
@@ -1885,8 +1908,16 @@ directions at every constructible ordinal.
 内部の階層は、`graph-table`{.Agda} と `Lset-only`{.Agda} によって作られた。それぞれの順序数で、帰納の仮定が下の表を渡し、二つの補題がそれを成立したグラフと一意な値に変える。最後の主張は、今度は逆に走る。仕様 `hierL-spec`{.Agda} が入力の上での表の条件を渡し、`Lset-defines`{.Agda} がそれを `graph-table`{.Agda} に渡す。塔のグラフは記録された値で成立し、隣にある `Lset-only`{.Agda} は、満たすものがほかにないと言う。こうして内部のグラフとメタレベルの塔は、構成可能な順序数ごとに両方向で一致する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (w b : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Lset-defines : IsOrd (fst (lookup b γ))
                → fst (lookup w γ) ≡ Lset (fst (lookup b γ))
                → ⟨ γ ⊨ LsetGraphAt w b ⟩
@@ -1945,6 +1976,9 @@ inputs are exactly what `graph-table`{.Agda} consumes.
     sp : IsHier (fst (lookup b γ)) H
     sp = hierL-spec (fst (lookup b γ)) (lookup b γ .snd) ob
 ```
+</div>
+</details>
+
 
 <!--en-->
 The internal hierarchy at the argument exists because the argument is a

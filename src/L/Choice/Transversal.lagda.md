@@ -209,12 +209,20 @@ by trichotomy alone. The generic uniqueness theorem
 随后进行分离与计数。`transversalSet`{.Agda} 是模型中的分离，依照该描述施于 `β`{.Agda} 处的塔。`Cut`{.Agda} 固定族中的一个成员：交的收缩中心就是相应极小元；由 `pick-in`{.Agda}，它属于横截集，而极小性本身保证它属于该成员。唯一性在这里使用两两不交：交中的另一点满足描述，因而是族中某个成员的极小元，同时又属于当前成员；两个成员因此相交并相等，所以该点也是当前成员的极小元。极小元由三歧唯一，泛型定理 `isPropLeastOf`{.Agda} 完成最后这步比较。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Trans (zf : isZFModel) (a : S)
              (inh : (x : S) → ⟨ x ∈ˢ a ⟩ → ∥ Σ[ y ∈ S ] ⟨ y ∈ˢ x ⟩ ∥₁)
              (disj : (x y : S) → ⟨ x ∈ˢ a ⟩ → ⟨ y ∈ˢ a ⟩
                    → ∥ Σ[ z ∈ S ] (⟨ z ∈ˢ x ⟩ × ⟨ z ∈ˢ y ⟩) ∥₁ → x ≡ y)
              where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open ModelL.isZFModel zf using ( separate; separate-spec; _∩_; ∩-spec )
   private
     module B = Bound (fst a) (snd a)
@@ -328,8 +336,18 @@ module Trans (zf : isZFModel) (a : S)
 
     outC : (z : S) → ⟨ z ∈ˢ transversalSet ⟩ → ⟨ (z ∷ []) ⊨ Pick a rel ⟩
     outC z h = snd (subst ⟨_⟩ (csp z) h)
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
   module Cut (x : S) (x∈a : ⟨ x ∈ˢ a ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       m : Mem (Lset β)
       m = least x x∈a .fst
@@ -377,11 +395,18 @@ module Trans (zf : isZFModel) (a : S)
       atPoint (z , h) = sym (Σ≡Prop
         (λ w → snd (w ∈ˢ (transversalSet ∩ x)))
         (Σ≡Prop (λ v → snd (isL v)) (same z h)))
+```
+</div>
+</details>
+```agda
 
   transversal : (x : S) → ⟨ x ∈ˢ a ⟩
               → isContr (Σ[ z ∈ S ] ⟨ z ∈ˢ (transversalSet ∩ x) ⟩)
   transversal = Cut.meetsOnce
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The theorem

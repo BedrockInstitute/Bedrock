@@ -447,6 +447,10 @@ the sense, which is the best available guard.
 
 #### set-level choice
 
+Historical terminology review only. On 2026-09-23, `SetChoice` was narrowed to
+choice for set-valued families; the current trilingual names and scope are in
+`dev/glossary.toml` under `set-valued-choice`.
+
 zh 集合层选择 / ja 集合レベルの選択. SetChoice: truncation commutes with
 products over an h-set of indices. No Chinese or Japanese literature for this
 type-theoretic formulation; the compound 集合层选择 is a coinage on the

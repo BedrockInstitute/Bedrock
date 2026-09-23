@@ -264,6 +264,9 @@ symbol / reading / layer / defining chapter / input sequence.
 
 - Type signatures aligned on `:`. Put constructor glosses in the prose before
   the code fence; no comments belong inside an Agda fence.
+- End every Agda code fence immediately after its final code line. Keep the
+  separating blank line outside the fence; blank or whitespace-only lines before
+  the closing fence are rejected by `lint-agda`.
 - Record instances prefer record literals (`record { ... }`) over copatterns unless
   field dependencies force an order.
 - Proofs prefer `where` with **named, type-annotated** sub-terms over nested `let`.

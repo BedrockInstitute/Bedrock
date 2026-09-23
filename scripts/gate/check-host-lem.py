@@ -42,8 +42,8 @@ def code_lines(path: Path):
 
 
 def classify(path: str, source: str) -> tuple[str, str, str, str]:
-    if "lem→resizing" in source or "lem→ΩResizing" in source or "choice→lem" in source:
-        return "resizing-bridge", "lem→resizing / lem→ΩResizing", "resizing equivalence", "migrated"
+    if "LEM→Resizing" in source or "LEM→ΩResizing" in source or "SetChoice→LEM" in source:
+        return "resizing-bridge", "LEM→Resizing / LEM→ΩResizing", "resizing equivalence", "migrated"
     if "decideMembership" in source or "definedCell" in source:
         return "atomic-membership", "FOL.Semantics.decideMembership", "atomic membership computes by refl", "migrated"
     if "decideEquality" in source or "definedDenotes" in source:

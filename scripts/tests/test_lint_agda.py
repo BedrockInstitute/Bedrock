@@ -67,6 +67,27 @@ x = bar (a ∈ˢ b) thing A.D.qux rec
 
 check("clean module", rules(run(clean)), [])
 
+# An Agda fence ends on its final code line. Report one finding at the first
+# trailing blank even when the run contains whitespace on several lines;
+# ordinary blank lines within code and outside non-Agda fences remain valid.
+trailing_blank = (f"""# T
+
+```agda
+{OPTS}
+
+module Test where
+x = x
+""" + "   \n\t\n" + """
+```
+
+```text
+
+```
+""")
+
+check("trailing blank in Agda fence", rules(run(trailing_blank)),
+      [(8, "trailing-blank")])
+
 # 2. Seeded violations, one of each kind.
 bad = """# T
 

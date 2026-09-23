@@ -59,8 +59,7 @@ The semantics is generic, so the chapter will use it twice over the same syntax,
 意味論は汎用的なので、本章では同じ構文の上で世界ごとに二回使うことになる。これからの証明のために三つの記法がある。`map`{.Agda} は環境全体に第一射影を適用し、`⇔toPath`{.Agda} は二つの含意を真理値のパスに合成する。切断の機構が `PT`{.Agda} として現れるのは、無制限の存在量化子の充足が単に inhabited な型だからである。したがって証拠の二世界間の移動は切断の下で行われる。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 ## The setting: one syntax, two semantics
@@ -84,10 +83,18 @@ The section works under three fixed parameters: a structure `𝒮`, a class `M` 
 この節は三つの固定パラメータのもとで進む。構造 `𝒮`、その台上で `hProp ℓ` に値を取るクラス `M`、そして推移性の証明 `trans` である。台 `S` と真理値の関係 `_∈ˢ_`、`_≈ˢ_` は `𝒮` に属し、`hProp` 上の直接の演算 `⊓`、`⊔`、`⇒` が結合子を解釈する。現時点で `M` について使うのはそれがクラスであることだけである。推移性が現れるのは定理の証明であり、それを述べる定義ではない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Single {ℓ} (𝒮 : ZFStructure ℓ)
               (M : ZFStructure.S 𝒮 → hProp ℓ)
               (trans : Transitive 𝒮 M) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open ZFStructure 𝒮
 ```
@@ -366,6 +373,9 @@ The downward law is its mirror. The Δ₀ case transports along `sym (abs₀ d �
   π₁-down (π-Δ₀ d) δ = subst ⟨_⟩ (sym (abs₀ d δ))
   π₁-down (π-∀ s)  δ h xm = π₁-down s (xm ∷ δ) (h (fst xm))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

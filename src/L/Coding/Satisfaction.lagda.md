@@ -296,9 +296,17 @@ The membership specification is the whole content of separation: membership in t
 所属の仕様が分出の内容のすべてである。部分集合への所属は、周囲の集合への所属と条件の充足を合わせたものである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   cond : ∀ {n} → Formula S n → Formula S 1
 ```
 
@@ -814,9 +822,10 @@ The result ranges over the same bound value, base member, and certified one-entr
                      ⊨ consAtL zero (suc zero) (suc (suc (suc zero))) ⟩
                 → ⟨ fst e' ∈ fst (Sat a) ⟩)
   cond∀∈-out t a z h w hw x e' x∈B x∈w hc = h w hw x x∈B x∈w e' hc
-
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 The outward mapping is the same function, read back through the three quantifiers. No truncation appears in either direction, since a universal is verified by supplying its verifier, and here the verifier is supplied layer by layer, for the value, for the member, and for the extension.

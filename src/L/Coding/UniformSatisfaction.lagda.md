@@ -117,8 +117,16 @@ would need unfolding, and no step unfolds it.
 因此，这个名字在构造处被封装为不透明定义。封装后，它是 `L` 的一个元素，类型可以提到它而不必展开；同时得到使用者需要的两项事实：它属于定义域，并且是构造它时所用公式的键。后续结论都先对变元成员陈述，再通过等式应用到这个键，因此不会展开这个不透明的名字。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   opaque
     keyIn : ∀ {n} → Formula ⟪ fst A ⟫ n → S
     keyIn ψ = keyS A ψ
@@ -129,6 +137,9 @@ module _ (A : S) where
     keyIn∈ : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n) → ⟨ keyIn ψ ∈ˢ AllCodes A ⟩
     keyIn∈ ψ = key∈AllCodes A ψ
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Relating external and internal formula keys
@@ -178,13 +189,33 @@ in a slot can use it without supplying a second carrier it does not have.
 这座桥只取字母表，别无其他。供诸环境落在其上的那个集合在它里面从未出现，故它比下面那场递归少一个参数；而后面某一章若需要两套编码在「握在一位上的载体」处相符，便可以直接用它，无须供上一个它并不拥有的第二载体。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   keyBridge : ∀ {n} (ψ : Formula ⟪ fst A ⟫ n)
             → fst (keyS A ψ) ≡ fst (keyʟ (mapFo (asConst A) ψ))
   keyBridge = keyBridge' A
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   fr : ∀ {m n} (φ : Formula S m) (γ : S ^ n) → S ^ (14 + n)
   fr φ γ = ev numν (Tower.tower B) (slot B φ) (satTable B φ) B γ
 
@@ -199,8 +230,20 @@ module _ (B : S) where
     (λ z → (λ h → rec₁ (snd (fst z ∈ fst (slot B φ)))
               (λ { (w , hw) → inSlot B φ (fst z) (fst w) hw }) h)
          , (λ h → total B φ (fst z) h))
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ (A B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
 ```
 
@@ -387,8 +430,10 @@ what the type mentions there does not unfold.
          → Table.val x x∈ ≡ Sat B (toB ψ)
   val-at ψ x x∈ q =
     Table.val-uniq x x∈ (Sat B (toB ψ)) (exists ψ x (q ∙ keyBridge' B ψ))
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 And against satisfaction, which is the reason to have the goal. The bridge
@@ -411,8 +456,16 @@ that same stage.
 两个载体在此处合一，而且必须如此：常元皆为载体成员的公式，内层世界可以解读；点名了 `L` 的任意元素的公式则不然，而桥那一章对此已有说明。故下面两条定理陈述在同一个载体上，而这本来也是使用者所需要的实例化：某层处的诸码，在同一层之上被满足。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   module DA = DefOf (fst A)
   open DA using ( _⊨ᵐ_ )
 
@@ -426,6 +479,9 @@ module _ (A : S) where
     ∙ Sat-spec A (mapFo DA.ι ψ) δ z qz
     ∙ ⊨-map DA.𝒮M DA.ι id ψ δ
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

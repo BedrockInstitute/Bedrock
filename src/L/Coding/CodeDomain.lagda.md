@@ -14,7 +14,6 @@ Agda にはすでに論理式の帰納型と、集合をその符号として外
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -27,7 +26,6 @@ The description will be constructive. It records only bounded membership, pairin
 
 ```agda
 open import Base.Prelude
-
 ```
 
 <!--en-->
@@ -40,7 +38,6 @@ Fix a universe level. The main parameters introduced below are a candidate code 
 
 ```agda
 module L.Coding.CodeDomain {ℓ : Level} where
-
 ```
 
 <!--en-->
@@ -101,7 +98,6 @@ Pair readers expose both components while keeping every witness bounded. A finit
 
 ```agda
   ; sndEx; sndAll; bothEx; bothAll; bigOr )
-
 ```
 
 <!--en-->
@@ -127,7 +123,6 @@ The ten constructor tags are represented by the von Neumann numerals from zero t
 ```agda
   using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_ )
-
 ```
 
 <!--en-->
@@ -140,7 +135,6 @@ Write `S` for the carrier of constructible sets. The candidate domain, its keys,
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -205,7 +199,6 @@ A formula key has the uniform form `(ar, (N, p))`: `ar` is its arity, `N` is its
 ```agda
 keyExpr : ∀ {m} → Fin m → Fin m → E.Expr m → E.Expr m
 keyExpr ar N p = E.pair (E.slot ar) (E.pair (E.slot N) p)
-
 ```
 
 <!--en-->
@@ -221,7 +214,6 @@ atomKeyExpr : ∀ {m} → Fin m → Fin m → Fin m → Fin m → Fin m → Fin 
 atomKeyExpr ar N Nx x Ny y = keyExpr ar N
   (E.pair (E.pair (E.slot Nx) (E.slot x))
     (E.pair (E.slot Ny) (E.slot y)))
-
 ```
 
 <!--en-->
@@ -301,7 +293,6 @@ The tag agreement says that the ten slots carry exactly the numerals zero throug
 ```agda
 Tags : ∀ {m} (γ : S ^ m) (N : Fin 10 → Fin m) → Type (ℓ-suc ℓ)
 Tags γ N = (k : Fin 10) → fst (lookup (N k) γ) ≡ # (toℕ k)
-
 ```
 
 <!--en-->
@@ -325,8 +316,16 @@ We can now ask the inward question for a member of the candidate domain: which e
 ここで、候補領域の要素を内向きに読む問いを立てられる。そのペイロードが許された構成子形の一つであることを、どのような証拠が示すのであろうか。構成子タグは十個あるが、必要なペイロード条件は五種類だけである。二つの原子関係、三つの二項結合子、二つの非有界量化子、二つの有界量化子が、それぞれ同じ構成要素の形を共有するからである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Shape {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     C9 w9 : Fin (9 + m)
     C9 = sh 9 C
@@ -405,7 +404,6 @@ Tag nine is the bounded existential quantifier and uses the same bounded-quantif
 ```agda
   payN 9 = bqPay
   payN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) = ⊥̇
-
 ```
 
 <!--en-->
@@ -432,7 +430,6 @@ For a chosen constructor index `k`, the outer payload is required to split as `(
 ```agda
   at : Fin 10 → Formula S (7 + m)
   at k = sndEx i0 (sh 7 (N k)) (pay k)
-
 ```
 
 <!--en-->
@@ -447,6 +444,9 @@ The ten shape clauses are collected into one finite disjunction. Thus a single f
   ten : Formula S (7 + m)
   ten = bigOr 9 at
 ```
+</div>
+</details>
+
 
 <!--en-->
 The shape half starts from each existing member `c` of the candidate domain. It chooses an entry `(ar, F)` from `E`, decomposes `c` as `(ar, p)`, and requires `p` to match one of the ten tagged payload shapes. Composite shapes already require their immediate formula subkeys to lie in `C`. Semantically, these bounded existential witnesses are propositionally truncated, so this condition supplies no chosen decomposition and asserts no uniqueness of decoding.
@@ -470,8 +470,16 @@ The second half turns to the outward question. Fix an entry of `E` and use its f
 後半では、外向きの問いへ移る。`E` の項目を一つ固定し、その第一成分を共通のアリティとして使う。閉性の各節は、項がそのアリティで正当であり、直下の論理式キーが必要な現在または後続のアリティですでに `C` に属するとき、どの複合キーが `C` に入らなければならないかを述べる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Close {m : ℕ} (C w : Fin m) (N : Fin 10 → Fin m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     C4 w4 : Fin (4 + m)
     C4 = sh 4 C
@@ -490,7 +498,6 @@ An atomic generation clause fixes an outer relation tag and one tag for each ter
   atomClose : (k Nx Ny : Fin 10) (X : Fin (4 + m)) (Y : Fin (5 + m)) → Formula S (4 + m)
   atomClose k Nx Ny X Y =
     ∀̇∈ (var X) (∀̇∈ (var Y) (atomKey (sh 6 C) i3 (sh 6 (N k)) (sh 6 (N Nx)) i1 (sh 6 (N Ny)) i0))
-
 ```
 
 <!--en-->
@@ -505,7 +512,6 @@ Binary closure demands that any two same-arity members of the domain generate th
   binClose : (k : Fin 10) → Formula S (4 + m)
   binClose k =
     ∀̇∈ (var C4) (sndAll i0 i2 (∀̇∈ (var (sh 7 C)) (sndAll i0 i5 (binKey (sh 10 C) i7 (sh 10 (N k)) i3 i0))))
-
 ```
 
 <!--en-->
@@ -532,7 +538,6 @@ For an unbounded quantifier, take any member of `C` that decomposes as a body ke
 ```agda
   quClose : (k : Fin 10) → Formula S (4 + m)
   quClose k = ∀̇∈ (var C4) (bothAll i0 (sucAtL i5 i1 ⇒̇ unKey (sh 8 C) i5 (sh 8 (N k)) i0))
-
 ```
 
 <!--en-->
@@ -580,6 +585,9 @@ The conjunction continues with the last two atomic clauses, completing all four 
     ∧̇ (bqClose f8 f0 (sh 8 w) ∧̇ (bqClose f8 f1 i5
     ∧̇ (bqClose f9 f0 (sh 8 w) ∧̇ bqClose f9 f1 i5))))))))))))))))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The closure half applies all eighteen generation clauses at every entry of the set named by `E`. Once an entry is unpacked, its first component supplies the common arity for the constructors. This formula does not certify that the entries form the canonical environment tower or even that every recorded arity is a numeral; later hypotheses provide those facts. At any valid tower entry, the direction remains from legal constituents to the corresponding compound key, rather than from an arbitrary member of `C` back to its parts.
@@ -593,7 +601,6 @@ The closure half applies all eighteen generation clauses at every entry of the s
 
 closeAt : ∀ {m} → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 closeAt C w E N = ∀̇∈ (var E) (bothAll i0 (Close.all C w N))
-
 ```
 
 <!--en-->
@@ -607,7 +614,6 @@ The full description conjoins the two directions. `shapeAt` reads every existing
 ```agda
 codesAt : ∀ {m} → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 codesAt C w E N = shapeAt C w E N ∧̇ closeAt C w E N
-
 ```
 
 <!--en-->

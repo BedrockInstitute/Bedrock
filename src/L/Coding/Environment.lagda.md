@@ -159,7 +159,6 @@ The gathering is an instance of the set constructor `sett`, which takes an index
 env : ∀ {n} → (Fin n → V ℓ) → V ℓ
 env {n} g = sett (Lift {ℓ-zero} {ℓ} (Fin n))
                  (λ li → pr (# (toℕ (lower li))) (g (lower li)))
-
 ```
 
 <!--en-->

@@ -383,7 +383,6 @@ The trailing blank line closes this block of operations; the next sections build
 
 ```agda
   𝒫 a = ℩ (hasPower a)
-
 ```
 
 <!--en-->
@@ -494,7 +493,6 @@ As with every other unique existence, `ω` is the centre extracted by `℩` from
 
 ```agda
   ω = ℩ hasInfinity
-
 ```
 
 <!--en-->

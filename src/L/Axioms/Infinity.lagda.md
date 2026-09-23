@@ -57,7 +57,6 @@ Propositional truncation expresses mere existence: `∣_∣₁`{.Agda} places a 
 ```agda
 open import L.Axioms.Basic {ℓ} using ( uniqueL )
 open import L.Axioms.Numerals {ℓ} using ( numeralL; numeralL-fst )
-
 ```
 
 <!--en-->

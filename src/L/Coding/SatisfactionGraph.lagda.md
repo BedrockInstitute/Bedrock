@@ -16,7 +16,6 @@ The recursive construction `Sat` assigns a set of satisfying environments to eac
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -30,7 +29,6 @@ Excluded middle is available at the required universe level because the environm
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -43,7 +41,6 @@ Fix a universe level and this one classical parameter. The relation to be define
 
 ```agda
 module L.Coding.SatisfactionGraph {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -100,9 +97,7 @@ An interpretation environment for a formula with `n` free positions is a vector 
 自由な位置を `n` 個もつ論理式の解釈環境は、`n` 個の台の要素からなるベクトルである。`lookup` はある位置に割り当てられた要素を読み、cons は環境の最も内側に新しい要素を加える。この規約により、任意の外側の環境の前に十四個の補助的な証人を置いても、元の問い合わせ位置を保てる。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 Object-language existence is interpreted by propositional truncation. Thus a proof of an existential formula records that a witness exists while forgetting which witness was used. This is essential for the satisfaction graph: the public reading may establish that suitable tags, a tower, a key set, and a table exist, but it does not expose data from which a caller could choose one candidate table globally.
@@ -114,7 +109,6 @@ Object-language existence is interpreted by propositional truncation. Thus a pro
 
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( _∈_ )
-
 ```
 
 <!--en-->
@@ -127,7 +121,6 @@ From now on `S` is the carrier of the constructible structure: an element consis
 
 ```agda
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -210,7 +203,6 @@ The last equation places constructor nine at `i13`, completing the layout
 
 ```agda
 NN (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = i13
-
 ```
 
 <!--en-->
@@ -252,7 +244,6 @@ For the canonical tag assignment, constructor index `k` is sent to the model num
 ```agda
 numν : Fin 10 → S
 numν k = nn (toℕ k)
-
 ```
 
 <!--en-->
@@ -325,7 +316,6 @@ The equations for `i12` and `i13` finish the calibration with numerals eight and
 
 ```agda
   ((var i12 ≐ con (nn 8)) ∧̇ (var i13 ≐ con (nn 9))))))))))
-
 ```
 
 <!--en-->
@@ -371,7 +361,6 @@ The deepest component of the right-associated conjunction is the pair of equatio
 ```agda
 nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc (suc (suc zero)))))))) = h .snd .snd .snd .snd .snd .snd .snd .snd .fst
 nums-out ν E C T b γ h (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = h .snd .snd .snd .snd .snd .snd .snd .snd .snd
-
 ```
 
 <!--en-->
@@ -456,7 +445,6 @@ private
   GraphWitOn : ∀ {n} → S → Fin n → Fin n → S ^ n → Type (ℓ-suc ℓ)
   GraphWitOn W x y γ =
     Σ[ ν ∈ (Fin 10 → S) ] (Σ[ E ∈ S ] (Σ[ C ∈ S ] (Σ[ T ∈ S ] (Σ[ b ∈ S ] ((fst b ≡ fst W) × (Tags (ev ν E C T b γ) NN × (⟨ (ev ν E C T b γ) ⊨ towerAt Ei Bi (NN f0) ⟩ × (⟨ (ev ν E C T b γ) ⊨ closedAt Ci ⟩ × (⟨ (ev ν E C T b γ) ⊨ domAt Ti Ci ⟩ × (⟨ pr (fst (lookup x γ)) (fst (lookup y γ)) ∈ fst T ⟩ × ⟨ (ev ν E C T b γ) ⊨ tableAt Ti Bi Ci Ei NN ⟩))))))))))
-
 ```
 
 <!--en-->
@@ -467,11 +455,17 @@ To compare satisfaction of `satGraphOn` with the flat record, fix the pin, its r
 `satGraphOn` の充足と平坦な記録を比較するため、pin、その参照 `W`、二つの問い合わせ位置、外側の環境を固定する。台の等式を除けば、記録の各欄はすでに枠組みの連言項の中に定まった解釈をもっている。したがって、追加で必要な仮定は pin の読み `rd` だけである。内向きの含意では等式 `fst b ≡ fst W` を `pin` の充足へ移し、外向きの含意では `pin` の充足をその等式として読み戻す。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (pin : Formula S (14 + n)) (W : S)
            (x y : Fin n) (γ : S ^ n) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The inward reading turns a truncated witness record into satisfaction of the
@@ -548,7 +542,6 @@ After the clause-family certificate has been placed in the last conjunct, the on
 ```agda
             , h12 ))))))
           ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ ∣₁ })
-
 ```
 
 <!--en-->
@@ -705,6 +698,9 @@ The case at index nine exhausts `Fin 10` and makes `ν'`{.Agda} a total function
 ```agda
       ν' a0 a1 a2 a3 a4 a5 a6 a7 a8 a9 (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = a9
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The carrier supplied by a variable
@@ -739,7 +735,6 @@ The formula `satGraphAt B x y`{.Agda} implements this reference by using the pin
 opaque
   satGraphAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   satGraphAt B x y = satGraphOn (var Bi ≐ var (sh14 B)) x y
-
 ```
 
 <!--en-->
@@ -753,7 +748,6 @@ The body of `satGraphAt`{.Agda} is unfolded only while its two witness implicati
 ```agda
 opaque
   unfolding satGraphAt
-
 ```
 
 <!--en-->
@@ -769,7 +763,6 @@ For the inward reading, the pin hypothesis is the identity: satisfaction of the 
              → ∥ GraphWitAt B x y γ ∥₁ → ⟨ γ ⊨ satGraphAt B x y ⟩
   graphAt-in B x y γ =
     graphOn-in (var Bi ≐ var (sh14 B)) (lookup B γ) x y γ (λ _ _ _ _ _ e → e)
-
 ```
 
 <!--en-->
@@ -824,7 +817,6 @@ single-valued.
 opaque
   satGraph : S → Formula S 2
   satGraph B = satGraphOn (var Bi ≐ con B) (suc zero) zero
-
 ```
 
 <!--en-->
@@ -846,7 +838,6 @@ this definition does not identify it with the set of all genuine formula keys.
 ```agda
 GraphWit : (B x y : S) → Type (ℓ-suc ℓ)
 GraphWit B x y = GraphWitOn B (suc zero) zero (y ∷ x ∷ [])
-
 ```
 
 <!--en-->
@@ -860,7 +851,6 @@ The constant pin admits the same two witness implications, proved by unfolding `
 ```agda
 opaque
   unfolding satGraph
-
 ```
 
 <!--en-->
@@ -883,7 +873,6 @@ choosing one for later use.
   graph-in : (B x y : S) → ∥ GraphWit B x y ∥₁ → ⟨ (y ∷ x ∷ []) ⊨ satGraph B ⟩
   graph-in B x y =
     graphOn-in (var Bi ≐ con B) B (suc zero) zero (y ∷ x ∷ []) (λ _ _ _ _ _ e → e)
-
 ```
 
 <!--en-->

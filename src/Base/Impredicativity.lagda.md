@@ -275,46 +275,27 @@ Resizing each proposition and resizing the whole proposition universe ask for di
 </figure>
 
 <!--en-->
-**Theorem** (`ΩResizing→Resizing`{.Agda}) Ω-resizing implies propositional resizing.
+To turn the whole-universe equivalence into a representative for each proposition, the module `CodedTruth`{.Agda} fixes `Ω`{.Agda} and `e : hProp ℓ₁ ≃ Ω`{.Agda}.
 <!--zh-->
-**定理** (`ΩResizing→Resizing`{.Agda}) 命题宇宙换级蕴含命题换级。
+要从整个命题宇宙的等价得到逐个命题的代表，先在模块 `CodedTruth`{.Agda} 中固定 `Ω`{.Agda} 和 `e : hProp ℓ₁ ≃ Ω`{.Agda}。
 <!--ja-->
-**定理** (`ΩResizing→Resizing`{.Agda}) 命題宇宙リサイズは命題リサイズを導く。
+命題の宇宙全体の同値から各命題の代表を得るため、まずモジュール `CodedTruth`{.Agda} で `Ω`{.Agda} と `e : hProp ℓ₁ ≃ Ω`{.Agda} を固定する。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
-ΩResizing→Resizing : ∀ {ℓ₁ ℓ₂} → ΩResizing ℓ₁ ℓ₂ → Resizing ℓ₁ ℓ₂
+module CodedTruth {ℓ₁ ℓ₂} (Ω : Type ℓ₂) (e : hProp ℓ₁ ≃ Ω) where
 ```
+</summary>
+<div class="submodule-fold-content">
 
 <!--en-->
-**Proof** For each `P`{.Agda}, choose `codedTruth P`{.Agda} as its representative. The isomorphism `codedTruthIso P`{.Agda}, converted by `isoToEquiv`{.Agda}, supplies the required type equivalence.
+Name the forward map of `e`{.Agda} by `c`{.Agda}. Then `c P`{.Agda} is the code of `P`{.Agda} in `Ω`{.Agda}.
 <!--zh-->
-**证明** 对每个 `P`{.Agda}，取 `codedTruth P`{.Agda} 为代表。把同构 `codedTruthIso P`{.Agda} 经 `isoToEquiv`{.Agda} 转换，便得到所需的类型等价。
+把 `e`{.Agda} 的正向映射命名为 `c`{.Agda}。于是 `c P`{.Agda} 是 `P`{.Agda} 在 `Ω`{.Agda} 中的编码。
 <!--ja-->
-**証明** 各 `P`{.Agda} について `codedTruth P`{.Agda} を代表に取る。同型 `codedTruthIso P`{.Agda} を `isoToEquiv`{.Agda} で変換すれば、必要な型同値が得られる。
-<!--/-->
-
-```agda
-ΩResizing→Resizing {ℓ₁} {ℓ₂} (Ω , e) P =
-  codedTruth P , isoToEquiv (codedTruthIso P)
-  where
-```
-
-<details open class="optional-reading" aria-labelledby="coded-truth-construction-title">
-<!--en-->
-<summary class="optional-reading-title" id="coded-truth-construction-title">Optional: construction of `codedTruth`{.Agda} and `codedTruthIso`{.Agda}</summary>
-<!--zh-->
-<summary class="optional-reading-title" id="coded-truth-construction-title">选读：`codedTruth`{.Agda} 和 `codedTruthIso`{.Agda} 的构造</summary>
-<!--ja-->
-<summary class="optional-reading-title" id="coded-truth-construction-title">発展：`codedTruth`{.Agda} と `codedTruthIso`{.Agda} の構成</summary>
-<!--/-->
-
-<!--en-->
-To construct the representative used above, the given equivalence `e : hProp ℓ₁ ≃ Ω`{.Agda} lets us encode propositions as points of `Ω`{.Agda}. We name its forward map `c`{.Agda}; thus `c P`{.Agda} is the code of `P`{.Agda}.
-<!--zh-->
-为构造上面使用的代表，我们借助给定的类型等价 `e : hProp ℓ₁ ≃ Ω`{.Agda}，把命题编码为 `Ω`{.Agda} 中的点。将其正向映射命名为 `c`{.Agda}，于是 `c P`{.Agda} 就是命题 `P`{.Agda} 的编码。
-<!--ja-->
-上で用いた代表を構成するために、与えられた型同値 `e : hProp ℓ₁ ≃ Ω`{.Agda} によって、命題を `Ω`{.Agda} の点として符号化できる。その順写像を `c`{.Agda} と名付けると、`c P`{.Agda} が命題 `P`{.Agda} の符号となる。
+`e`{.Agda} の順写像を `c`{.Agda} と名付ける。すると `c P`{.Agda} が `Ω`{.Agda} における `P`{.Agda} の符号になる。
 <!--/-->
 
 ```agda
@@ -494,7 +475,28 @@ It remains to construct the two maps.
     from q = subst ⟨_⟩ (invEq (congEquiv e) q) tt*
 ```
 
+</div>
 </details>
+
+<!--en-->
+**Theorem** (`ΩResizing→Resizing`{.Agda}) Ω-resizing implies propositional resizing.
+
+**Proof** Given `(Ω , e)`{.Agda}, the preceding module supplies `codedTruth P`{.Agda} at level `ℓ₂`{.Agda} for each `P`{.Agda}. Convert `codedTruthIso P`{.Agda} to an equivalence with `isoToEquiv`{.Agda}; the pair is precisely `hasSize ℓ₂ P`{.Agda}.
+<!--zh-->
+**定理** (`ΩResizing→Resizing`{.Agda}) 命题宇宙换级蕴含命题换级。
+
+**证明** 给定 `(Ω , e)`{.Agda}，前面的模块为每个 `P`{.Agda} 提供位于 `ℓ₂`{.Agda} 层的 `codedTruth P`{.Agda}。再用 `isoToEquiv`{.Agda} 将 `codedTruthIso P`{.Agda} 转成等价，所得依值对正是 `hasSize ℓ₂ P`{.Agda}。
+<!--ja-->
+**定理** (`ΩResizing→Resizing`{.Agda}) 命題宇宙リサイズは命題リサイズを導く。
+
+**証明** `(Ω , e)`{.Agda} が与えられると、先のモジュールは各 `P`{.Agda} に対してレベル `ℓ₂`{.Agda} の `codedTruth P`{.Agda} を与える。`codedTruthIso P`{.Agda} を `isoToEquiv`{.Agda} で同値に変換すれば、その対が `hasSize ℓ₂ P`{.Agda} となる。
+<!--/-->
+
+```agda
+ΩResizing→Resizing : ∀ {ℓ₁ ℓ₂} → ΩResizing ℓ₁ ℓ₂ → Resizing ℓ₁ ℓ₂
+ΩResizing→Resizing (Ω , e) P = codedTruth P , isoToEquiv (codedTruthIso P)
+  where open CodedTruth Ω e
+```
 
 ∎
 

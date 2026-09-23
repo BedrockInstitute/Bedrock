@@ -406,8 +406,18 @@ The reverse membership lemma `finSet-out` is the same map read backwards, from a
 finSet-out : (n : ℕ) (h : Fin n → V ℓ) (y : V ℓ)
            → ⟨ y ∈ finSet n h ⟩ → ∥ Σ[ i ∈ Fin n ] (h i ≡ y) ∥₁
 finSet-out n h y = map₁ (λ { (i , q) → lower i , q })
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module FinOf (σ : V ℓ) (oσ : IsOrd σ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   module DefC = DefOf (Lset σ)
 ```
 
@@ -609,6 +619,9 @@ The hypothesis `hσ i` states merely that `h i` lies in the stage. Membership in
     qg : (i : Fin n) → ⟪ Lset σ ⟫↪ (g i) ≡ h i
     qg i = ∈-asFiber {a = h i} {b = Lset σ} (hσ i) .snd
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Two sets, one stage
@@ -1096,8 +1109,16 @@ The pairing field is stated over two arguments. Its predicate `Q x` says that an
 対のフィールドは二つの実引数について述べられる。述語 `Q x` は、要素 `x` が `a` または `b` に等しいことを、モデルの真理値で解釈した論理和として表す。集合がこのフィールドを実現するとは、その要素がちょうど `Q` を満たすことである。構成 `mkPair` は、両方の実引数の基底集合を含む共通の順序数段階を仮定し、上界の段階がまさにそれを供給する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PairOf (a b : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Q : S → hProp (ℓ-suc ℓ)
   Q x = (x ≈ˢ a) ⊔ (x ≈ˢ b)
 
@@ -1135,6 +1156,10 @@ The construction is not yet the field: it needs a stage, and only its mere exist
   build = rec₁ squash₁
     (λ { (σ , (oσ , (fa∈ , fb∈))) → ∣ mkPair σ oσ fa∈ fb∈ ∣₁ })
     (isL-directed (fst a) (fst b) (a .snd) (b .snd))
+```
+</div>
+</details>
+```agda
 
 hasPairL : (a b : S) → isContr (SetOf (λ x → (x ≈ˢ a) ⊔ (x ≈ˢ b)))
 ```
@@ -1179,8 +1204,16 @@ The membership condition `Q` is an indexed disjunction inside the model's truth 
 所属の条件 `Q` は、モデルの真理値の内部での添字つき論理和である。`a` の要素であるある `y` について `x` が `y` の要素であるとき、`x` はこの和集合を実現する。構成 `mkUnion` が仮定するのは一つだけ、ある順序数段階 `σ` が `a` の基底の集合を含むことである。収容すべき第二の引数はないので、対の場合と違って上界順序数は不要であり、`a` がすでにもつ段階そのもので足りる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module UnionOf (a : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Q : S → hProp (ℓ-suc ℓ)
   Q x = ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)
 
@@ -1396,6 +1429,10 @@ The assembly mirrors the pairing field. The argument's own certificate `a .snd` 
 
 ```agda
   build = rec₁ squash₁ (λ { (σ , (oσ , fa∈)) → ∣ mkUnion σ oσ fa∈ ∣₁ }) (a .snd)
+```
+</div>
+</details>
+```agda
 
 hasUnionL : (a : S) → isContr (SetOf (λ x → ∃[ y ∶ S ] (y ∈ˢ a) ⊓ (x ∈ˢ y)))
 hasUnionL a = mere→uniqueL (UnionOf.Q a) (UnionOf.build a)

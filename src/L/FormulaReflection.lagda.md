@@ -288,9 +288,17 @@ hypothesis in the form the induction wants.
 有两条读法从该步进白得，因为它们本就被造了进去。那个额外的序数落在第一级里，因而落在极限之下。而在每一级上，整棵隶属树都对下一级成立，这正是归纳所要的、作答假设的那个形式。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Mk {n : ℕ} (φ₀ : Formula S n) (κ : V ℓ) (oκ : IsOrd κ)
           (bdd : BoundedFo (Below′ κ) φ₀) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   private
     jstep : (σ : V ℓ) (oσ : IsOrd σ)
@@ -534,6 +542,10 @@ already states.
   reflectRel γ bγ =
     reflectFo φ₀ answersAt (liftFoTo κ∈β φ₀ bdd) γ bγ
     ∙ sym (relativize-correct φ₀ γ)
+```
+</div>
+</details>
+```agda
 
 opaque
   mkReflect : ∀ {n} (φ : Formula S n) (δ : V ℓ) → IsOrd δ

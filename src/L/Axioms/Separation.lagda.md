@@ -22,7 +22,6 @@ in the whole constructible model.
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -38,7 +37,6 @@ statement that a truth value is decidable belongs to the host theory. We assume 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -162,8 +160,7 @@ proposition.
 ここで使ういくつかの等しさは、役割が異なる。`⇔toPath` は命題外延性を使い、二方向の含意を命題値の真理値の間のパスへ変える。構成可能性の証明が命題をなすため、`Σ≡Prop` は基礎にある集合の等しさをモデル要素の等しさへ持ち上げる。集合外延性は、これとは別に `uniqueL` を通して使われる。最後に、命題的切り詰めは、選ばれた証人を保持せずに証人の存在だけを記録する。その除去子は、行き先が再び命題である場合にだけ使う。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Small presentations connect model membership with the small index types needed
@@ -184,7 +181,6 @@ open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅ )
 open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( ∈∈ₛ; ∈-asFiber; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_ )
-
 ```
 
 <!--en-->
@@ -201,7 +197,6 @@ underlying sets and take values in `hProp`.
 
 ```agda
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -222,7 +217,6 @@ formula or assume that the host theory's subtype already belongs to `L`.
 ```agda
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
-
 ```
 
 <!--en-->
@@ -314,12 +308,18 @@ host-level or object-theoretic choice axiom.
 置換公理で新たに生じる問題は、可能な値をすべて含む一つの段階を見つけることである。`FunctionalImage` は任意のホスト側の関係 `R` を扱い、各 `x ∈ˢ a` についてファイバー `Σ[ y ∈ S ] ⟨ R x y ⟩` が可縮であると仮定する。したがって、このファイバーには指定された中心があり、ほかのすべての関係する対はその中心に等しくなる。この仮定は、各始域の要素について存在と一意性をデータとして与える。中心を射影することは通常の依存関数の適用であり、ホスト側の選択公理も対象理論の選択公理も使わない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module FunctionalImage (a : S) (R : S → S → hProp (ℓ-suc ℓ))
                        (fc : (x : S) → ⟨ x ∈ˢ a ⟩
                            → isContr (Σ[ y ∈ S ] ⟨ R x y ⟩)) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The type `Mem` packages a source element together with evidence that it belongs
@@ -338,7 +338,6 @@ needed for the bound.
 ```agda
   Mem : Type (ℓ-suc ℓ)
   Mem = Σ[ x ∈ S ] ⟨ x ∈ˢ a ⟩
-
 ```
 
 <!--en-->
@@ -357,7 +356,6 @@ function `fc`.
 ```agda
   img : Mem → S
   img p = fc (p .fst) (p .snd) .fst .fst
-
 ```
 
 <!--en-->
@@ -375,7 +373,6 @@ the relation at the given source.
 ```agda
   img-sat : (p : Mem) → ⟨ R (p .fst) (img p) ⟩
   img-sat p = fc (p .fst) (p .snd) .fst .snd
-
 ```
 
 <!--en-->
@@ -395,7 +392,6 @@ it does not say that values arising from different sources are distinct.
 ```agda
   img-uniq : (p : Mem) (y : S) → ⟨ R (p .fst) y ⟩ → img p ≡ y
   img-uniq p y h = cong fst (fc (p .fst) (p .snd) .snd (y , h))
-
 ```
 
 <!--en-->
@@ -436,7 +432,6 @@ it to be packaged as a constructible model element.
 ```agda
       fm∈fa : ⟨ ⟪ fst a ⟫↪ m ∈ fst a ⟩
       fm∈fa = ∈∈ₛ {a = ⟪ fst a ⟫↪ m} {b = fst a} .snd (∈ₛ⟪ fst a ⟫↪ m)
-
 ```
 
 <!--en-->
@@ -458,7 +453,6 @@ is inhabited.
     bImg = boundingOrd ⟪ fst a ⟫
       (λ m → stage (fst (img (memS m))) (img (memS m) .snd))
       (λ m → stage-ord (fst (img (memS m))) (img (memS m) .snd))
-
 ```
 
 <!--en-->
@@ -476,7 +470,6 @@ element is a separate operation and requires an ordinality certificate.
 ```agda
   βimg : V ℓ
   βimg = bImg .fst
-
 ```
 
 <!--en-->
@@ -498,7 +491,6 @@ extracted from the same bounding construction.
 ```agda
   βimg-ord : IsOrd βimg
   βimg-ord = bImg .snd .fst
-
 ```
 
 <!--en-->
@@ -565,6 +557,9 @@ does not assert that different source members have different values.
     image≡y : img (memS m) ≡ y
     image≡y = img-uniq (memS m) y (subst (λ z → ⟨ R z y ⟩) (sym q) h)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## At a fixed stage
@@ -587,10 +582,17 @@ satisfaction in the constructible model.
 固定した段階での議論は、順序数の添字 `σ` とその証明 `oσ` から始まる。構成 `DefC = DefOf (Lset σ)` は、`Lset σ` の要素をその標準的な小さい表示を通して扱う。そして、表示の添字を定数とする論理式と、各一変数論理式が切り出す部分集合 `defSet` を与える。残る課題は、この段階に基づく定義を構成可能モデルでの充足と正確に比較することである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module AtStage (σ : V ℓ) (oσ : IsOrd σ) where
-  module DefC = DefOf (Lset σ)
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+  module DefC = DefOf (Lset σ)
 ```
 
 <!--en-->
@@ -609,7 +611,6 @@ is what keeps witnesses of bounded quantifiers inside the restricted world.
 ```agda
   Atrans : Transitive 𝒮ᵥ DefC.M
   Atrans = layer-trans (Lset-layer σ)
-
 ```
 
 <!--en-->
@@ -629,7 +630,6 @@ bridge below.
 ```agda
   module RefC = DefC.Refine Atrans
   open RefC.Abs using () renaming ( _⊨ᵛ_ to _⊨σ_ )
-
 ```
 
 <!--en-->
@@ -648,7 +648,6 @@ values lie in the stage.
 ```agda
   Below : S → Type (ℓ-suc ℓ)
   Below c = ⟨ fst c ∈ Lset σ ⟩
-
 ```
 
 <!--en-->
@@ -734,7 +733,6 @@ later arguments may transport evidence in either direction.
 ```agda
     ∙ ⊨-map 𝒮ᵥ fst id φ (⟪ Lset σ ⟫↪ m ∷ [])
     ∙ sym (abs₀ dφ ((⟪ Lset σ ⟫↪ m , xL) ∷ []))
-
 ```
 
 <!--en-->
@@ -775,7 +773,6 @@ ambient hierarchy first, and model absoluteness supplies the final link.
 
 ```agda
     RefC.abs-defSet (RL.liftFo φ h) (RL.Δ₀-liftFo h dφ) m ∙ satBridge φ h dφ m xL
-
 ```
 
 <!--en-->
@@ -795,7 +792,6 @@ constructibility facts needed to use that subset.
   opaque
     carve : Formula ⟪ Lset σ ⟫ 1 → V ℓ
     carve ψ = DefC.defSet ψ
-
 ```
 
 <!--en-->
@@ -818,7 +814,6 @@ truncation; it does not eliminate it or recover a formula from it.
     unfolding carve
     carve∈𝒟ₒ : (ψ : Formula ⟪ Lset σ ⟫ 1) → ⟨ carve ψ ∈ 𝒟ₒ (Lset σ) ⟩
     carve∈𝒟ₒ ψ = 𝒟ₒ-intro (Lset σ) (DefC.defSet ψ) ∣ ψ , refl ∣₁
-
 ```
 
 <!--en-->
@@ -838,7 +833,6 @@ stage's presented members.
     carve⊆ : (ψ : Formula ⟪ Lset σ ⟫ 1) (y : V ℓ) → ⟨ y ∈ carve ψ ⟩
            → ⟨ y ∈ Lset σ ⟩
     carve⊆ ψ y mem = DefC.defSet⊆A ψ y mem
-
 ```
 
 <!--en-->
@@ -903,7 +897,6 @@ arbitrary formula. The `Δ₀` parameter remains in the statement although the p
                 → ⟨ (u ∷ []) ⊨ φ ⟩ → ⟨ (v ∷ []) ⊨ φ ⟩
     ⊨-transport φ dφ u v p =
       subst (λ z → ⟨ (z ∷ []) ⊨ φ ⟩) (Σ≡Prop (λ x → snd (isL x)) p)
-
 ```
 
 <!--en-->
@@ -933,7 +926,6 @@ construction where `oσ` is used.
     memberIsL : (m : ⟪ Lset σ ⟫) → ⟨ isL (⟪ Lset σ ⟫↪ m) ⟩
     memberIsL m = Lset→isL σ oσ (⟪ Lset σ ⟫↪ m)
       (∈∈ₛ {a = ⟪ Lset σ ⟫↪ m} {b = Lset σ} .snd (∈ₛ⟪ Lset σ ⟫↪ m))
-
 ```
 
 <!--en-->
@@ -976,7 +968,6 @@ constructible realizer; its exact extension is established separately by `spec`.
     replElt : S
     replElt = carve (RL.liftFo χ hχ)
             , 𝒟ₒ→isL σ oσ (carve (RL.liftFo χ hχ)) (carve∈𝒟ₒ (RL.liftFo χ hχ))
-
 ```
 
 <!--en-->
@@ -1042,7 +1033,6 @@ formula, in the model, at itself.
         xL = memberIsL m
         m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve (RL.liftFo χ hχ) ⟩
         m∈ = subst (λ w → ⟨ w ∈ carve (RL.liftFo χ hχ) ⟩) (sym q) z∈
-
 ```
 
 <!--en-->
@@ -1098,7 +1088,6 @@ belonging to the carved realization, and satisfying the formula in the model.
 ```agda
         m∈ : ⟨ ⟪ Lset σ ⟫↪ m ∈ carve (RL.liftFo χ hχ) ⟩
         m∈ = imageIn χ hχ dχ m xL satz
-
 ```
 
 <!--en-->
@@ -1139,6 +1128,9 @@ under the stage within which the subset is being carved.
 ```agda
       (λ z q → layer-trans (Lset-layer σ) {x = fst a} {y = fst z} (q .fst) fa∈σ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Finding the stage
@@ -1159,7 +1151,6 @@ To compare bounds chosen independently, the stage condition is parameterized by 
 ```agda
 Below′ : V ℓ → S → Type (ℓ-suc ℓ)
 Below′ σ c = ⟨ fst c ∈ Lset σ ⟩
-
 ```
 
 <!--en-->
@@ -1219,7 +1210,6 @@ mkBoundedTm : ∀ {n} (t : Term S n) → Σ[ σ ∈ V ℓ ] (IsOrd σ × Bounded
 mkBoundedTm (con c) = stage (fst c) (c .snd)
                     , (stage-ord (fst c) (c .snd) , stage-mem (fst c) (c .snd))
 mkBoundedTm (var i) = ∅ , (∅-ord , _)
-
 ```
 
 <!--en-->
@@ -1275,7 +1265,6 @@ here, but only earlier, where each constant's earliest stage was named.
 ```agda
     where
     b  = bound2 (r₁ .fst) (r₂ .fst) (r₁ .snd .fst) (r₂ .snd .fst)
-
 ```
 
 <!--en-->
@@ -1434,7 +1423,6 @@ existential case, since the only quantifier added is bounded by the source.
   where
   module I = FunctionalImage a (λ x y → (x ∷ y ∷ []) ⊨ φ) fc
   open I using ( βimg; βimg-ord; range∈βimg )
-
 ```
 
 <!--en-->
@@ -1454,7 +1442,6 @@ object, and distinguishing them makes the next equality precise.
 ```agda
   imageFo : Formula S 1
   imageFo = ∃̇∈ (con a) φ
-
 ```
 
 <!--en-->
@@ -1470,7 +1457,6 @@ formula. The stage-membership conjunct provides a bound for Separation. The othe
 ```agda
   BoundedImage : S → hProp (ℓ-suc ℓ)
   BoundedImage y = (y ∈ˢ LsetS βimg βimg-ord) ⊓ ((y ∷ []) ⊨ imageFo)
-
 ```
 
 <!--en-->

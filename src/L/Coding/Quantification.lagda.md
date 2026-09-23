@@ -192,8 +192,18 @@ bigOr 0 φ = φ zero
 bigOr (suc n) φ = φ zero ∨̇ bigOr n (λ k → φ (suc k))
 bigAnd 0 φ = φ zero
 bigAnd (suc n) φ = φ zero ∧̇ bigAnd n (λ k → φ (suc k))
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ {m : ℕ} (γ : S ^ m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   bigOr-in : (n : ℕ) (φ : Fin (suc n) → Formula S m) (k : Fin (suc n))
            → ⟨ γ ⊨ φ k ⟩ → ⟨ γ ⊨ bigOr n φ ⟩
   bigOr-in 0 φ zero h = h
@@ -218,6 +228,9 @@ module _ {m : ℕ} (γ : S ^ m) where
   bigAnd-out (suc n) φ h zero = h .fst
   bigAnd-out (suc n) φ h (suc k) = bigAnd-out n (λ j → φ (suc j)) (h .snd) k
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Bounded atoms and successor semantics
@@ -314,8 +327,18 @@ bothAll x body =
 
 Δ₀-bothAll : ∀ {m} (x : Fin m) (body : Formula S (3 + m)) → Δ₀ body → Δ₀ (bothAll x body)
 Δ₀-bothAll x body d = δ-∀∈ (δ-∀∈ (δ-∀∈ (δ-⇒ (Δ₀-prAtL (sh 3 x) i1 i0) d)))
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ {m : ℕ} (x u : Fin m) (body : Formula S (2 + m)) (γ : S ^ m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     X = fst (lookup x γ)
     U = fst (lookup u γ)
@@ -362,8 +385,20 @@ Out: the witness's second component is pinned by pair injectivity.
                → ⟨ (v ∷ s ∷ γ) ⊨ body ⟩)
             → ⟨ γ ⊨ sndAll x u body ⟩
   sndAll-in k s s∈ v v∈ e = k v s s∈ v∈ (pr-out (sh 2 x) (sh 2 u) i0 (v ∷ s ∷ γ) e)
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     X = fst (lookup x γ)
 
@@ -391,6 +426,9 @@ module _ {m : ℕ} (x : Fin m) (body : Formula S (3 + m)) (γ : S ^ m) where
              → ⟨ γ ⊨ bothAll x body ⟩
   bothAll-in k s s∈ u u∈ v v∈ e = k u v s s∈ u∈ v∈ (pr-out (sh 3 x) i1 i0 (v ∷ u ∷ s ∷ γ) e)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Supplying the container witnesses
@@ -413,9 +451,17 @@ callers to reason only about its components.
 Supplying the junk: a pair at a slot, with its components as
 elements, fills any of the four.
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
          (e : fst (lookup x γ) ≡ pr (fst u) (fst v)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     c = container (lookup x γ) u v e
 
@@ -439,6 +485,9 @@ module _ {m : ℕ} (x : Fin m) (γ : S ^ m) (u v : S)
   useBoth body h = bothAll-out x body γ h u v (c .fst) (c .snd .fst) (c .snd .snd .fst)
     (c .snd .snd .snd) e
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

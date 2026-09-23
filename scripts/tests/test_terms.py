@@ -2,6 +2,7 @@
 """Tests for reader-facing terminology metadata, markers, and rendering."""
 
 import importlib.util
+import json
 import os
 import tempfile
 import unittest
@@ -47,6 +48,26 @@ class SchemaTests(unittest.TestCase):
         self.assertTrue(any("requires matching" in error
                             for error in terms.schema_errors([value])))
 
+    def test_structured_abbreviation_is_an_audited_form_in_each_language(self):
+        value = entry(abbreviations={"en": "HIT", "zh": "HIT", "ja": "HIT"})
+        self.assertEqual(terms.schema_errors([value]), [])
+        for lang in ("en", "zh", "ja"):
+            self.assertIn("HIT", terms.localized_forms(value, lang))
+
+    def test_abbreviation_schema_rejects_unknown_language_and_full_name(self):
+        self.assertTrue(any("abbreviations must map" in error for error in
+                            terms.schema_errors([entry(abbreviations={"fr": "HIT"})])))
+        self.assertTrue(any("must differ" in error for error in
+                            terms.schema_errors([entry(abbreviations={"en": "host"})])))
+        self.assertTrue(any("only in abbreviations" in error for error in
+                            terms.schema_errors([entry(abbreviations={"en": "HIT"},
+                                                       forms_en=["HIT"])])))
+
+    def test_abbreviation_collision_with_another_full_term_is_rejected(self):
+        other = entry(id="other", en="HIT", zh="別", ja="別", introduced_in="Base.Other")
+        self.assertTrue(any("ambiguous automatic en form" in error for error in
+                            terms.schema_errors([entry(abbreviations={"en": "HIT"}), other])))
+
 
 class RenderingTests(unittest.TestCase):
     def test_auto_links_prose_but_not_code_or_introduction(self):
@@ -66,6 +87,21 @@ class RenderingTests(unittest.TestCase):
                                             [entry(matching="explicit")])
         self.assertEqual(rendered, "<p>host</p>")
 
+    def test_abbreviation_links_and_appears_in_glossary_outputs(self):
+        value = entry(abbreviations={"en": "HIT", "zh": "HIT"})
+        rendered = renderer.auto_link_terms("<p>A HIT is a host.</p>", "en", "M", [value])
+        self.assertEqual(rendered.count('class="term-ref"'), 2)
+        self.assertIn('data-term="host-environment" href="Base.Prelude.html#term-host-environment">HIT</a>',
+                      rendered)
+        self.assertIn('class="term-abbreviation">(HIT)</span>',
+                      renderer.glossary_label_html(value, "en"))
+        with tempfile.TemporaryDirectory() as tmp:
+            os.mkdir(os.path.join(tmp, "en"))
+            renderer.write_terms(tmp, "en", [value])
+            with open(os.path.join(tmp, "en", "terms.json"), encoding="utf-8") as source:
+                payload = json.load(source)
+            self.assertEqual(payload["host-environment"]["abbreviation"], "HIT")
+
     def test_void_element_does_not_protect_following_prose(self):
         rendered = renderer.auto_link_terms("<p><br>host</p>", "en", "M", [entry()])
         self.assertEqual(rendered.count('class="term-ref"'), 1)
@@ -83,6 +119,10 @@ class RenderingTests(unittest.TestCase):
 
 
 class IntroductionGateTests(unittest.TestCase):
+    def test_abbreviation_use_has_the_same_prerequisite_rule_as_full_name(self):
+        value = entry(abbreviations={"en": "HIT"})
+        self.assertEqual(len(gate.prerequisite_occurrences("A HIT appears.", value, "en", "Other")), 1)
+
     def test_explicit_sense_does_not_trigger_an_overlapping_concept(self):
         text = '[host]{.term-ref #other-concept}'
         self.assertEqual(gate.prerequisite_occurrences(text, entry(), 'en', 'Other'), [])

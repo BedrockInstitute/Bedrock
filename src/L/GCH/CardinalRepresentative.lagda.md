@@ -19,7 +19,6 @@ open import Base.Prelude
 open import Base.Classical using ( LEM )
 
 module L.GCH.CardinalRepresentative {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -54,7 +53,6 @@ open import L.WellOrder.Base {ℓₚ = ℓ-suc ℓ}
   using ( IsLeast; leastOfFormula; module SWO )
 open import L.DefinableInjection {ℓ} lem using ( injLAt; module InjLAt )
 open import L.InjectionComposition {ℓ} lem using ( inclusion-coded; injl-trans )
-
 ```
 
 <!--en-->
@@ -81,7 +79,6 @@ The candidate set is the successor `sucV α`. Propositional truncation expresses
 <!--/-->
 
 ```agda
-
 ```
 
 <!--en-->
@@ -138,7 +135,6 @@ The auxiliary search setup for `α` supplies the successor's constructibility, t
 cardOf α oα = ∣ μ , oμ , cardμ , μ⊆α , α↪μ , μ↪α ∣₁
   where
   module LC = LeastCardInjL α oα using ( hSucα; self; self-eq; w; w-lt )
-
 ```
 
 <!--en-->

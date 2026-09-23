@@ -65,8 +65,7 @@ The assertion that a smaller witness exists is represented by a propositionally 
 「より小さい証人が存在する」という主張は、命題的に切り捨てられた存在で表す。これは存在だけを記録し、選ばれた β を取り出さない。消去子 `rec₁` がこの証拠を使えるのは対象が命題の場合だけであり、下の一意性の証明が `LeastOrd P` についてまさにそれを示す。積と依存関数型は命題性を保つので、固定した順序数添字に付随する証拠も一意になる。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 A property P is a map into Ω, the type of hProps. Hence `⟨ P α ⟩` is its underlying proposition at α, and `snd (P α)` proves that any two of its witnesses agree. This propositionhood is needed when equality of ordinal indices is lifted to equality of complete least-witness packages.
@@ -109,8 +108,16 @@ Leastness is stated as a refutation: `isLeastOrd α` is the assertion, for every
 最小性は反駁として述べられる。`isLeastOrd α` とは、任意の集合 γ について、γ が P を満たす順序数でかつ γ ∈ α であるような状況は起こりえない、という主張である。ここで背理的な形の最小性が適切なのは、順序数の厳密な順序が所属を通して読み取られるからである。返すべき「より小さい順序数」の値はなく、導出すべきは不可能な状況だけである。パッケージ全体 `LeastOrd` は、順序数、その順序数性、そこでの P の証明、そしてこの最小性の条項をひとまとめにする。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (P : S → hProp (ℓ-suc ℓ)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   isLeastOrd : S → Type (ℓ-suc ℓ)
   isLeastOrd α = (γ : S) → IsOrd γ → ⟨ P γ ⟩ → ⟨ γ ∈ˢ α ⟩ → ⊥₀
@@ -250,6 +257,9 @@ The negative branch's minimality clause is where the refutation earns its keep: 
   leastOrd = rec₁ isPropLeastOrd
     (λ { (α , (ordα , pα)) → leastOrdBelow α ordα pα })
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The stage-index function

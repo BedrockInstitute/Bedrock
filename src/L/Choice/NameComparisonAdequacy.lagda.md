@@ -21,7 +21,6 @@ reverse direction, the recovered names remain under propositional truncation.
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -39,7 +38,6 @@ table or a name order retain an auditable assumption boundary.
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -58,7 +56,6 @@ existence of suitable names.
 
 ```agda
 module L.Choice.NameComparisonAdequacy {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -192,7 +189,6 @@ obtain particular least names for the filling direction.
         ; graphAt-value; graphAt-only
         ; domAt-numeral; domAt-fill; module Adequacy )
 open import L.WellOrder.Base {ℓ-suc ℓ} using ( SWO )
-
 ```
 
 <!--en-->
@@ -251,7 +247,6 @@ additional relation parameter.
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module InfinitySet )
 open InfinitySet using ( #_; ω )
-
 ```
 
 <!--en-->
@@ -269,7 +264,6 @@ sets through the structure.
 
 ```agda
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -315,7 +309,6 @@ be found.
 private
   sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
   sh2 i = suc (suc i)
-
 ```
 
 <!--en-->
@@ -333,7 +326,6 @@ those references beneath the competitor's three data.
 ```agda
   sh3 : ∀ {n} → Fin n → Fin (suc (suc (suc n)))
   sh3 i = suc (suc (suc i))
-
 ```
 
 <!--en-->
@@ -352,7 +344,6 @@ carrier.
 ```agda
   sh5 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc (suc n)))))
   sh5 i = suc (suc (suc (suc (suc i))))
-
 ```
 
 <!--en-->
@@ -370,7 +361,6 @@ continue to speak about the same carrier, code sets, relation slots, and objects
 ```agda
   sh6 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc (suc (suc n))))))
   sh6 i = suc (suc (suc (suc (suc (suc i)))))
-
 ```
 
 <!--en-->
@@ -411,7 +401,6 @@ name comparison to that consumer; it does not yet assert an internal well-order.
 ```agda
   a6b = suc zero
   e6b = zero
-
 ```
 
 <!--en-->
@@ -476,12 +465,19 @@ model element, not merely on its first projection.
 ここで局所モジュールは、以後のすべての読みに共通する数学的設定を固定する。外側の集合 `A` は `pA` と組み合わされ、構成可能構造の要素 `Aʟ` となる。`w` は、その要素を添字づける小さい型 `⟪ A ⟫` 上の整列順序である。台に関するスロットの等式では、証明を伴う要素 `Aʟ` を使う。後の論理式と輸送が依存するのはモデル要素全体であり、その第一射影だけではないからである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module At (A : V ℓ) (pA : ⟨ isL A ⟩) (w : SWO ⟪ A ⟫) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Aʟ : S
     Aʟ = A , pA
-
 ```
 
 <!--en-->
@@ -503,7 +499,6 @@ minimality conditions.
 
 ```agda
     module NM = Naming A w
-
 ```
 
 <!--en-->
@@ -609,10 +604,18 @@ the task. Opening `Recover` with these data exposes a family indexed by
 逆向きの読みでは、`qa` と `qB` がアリティのスロットと台のスロットを固定し、`h` はスロット `e` の集合が環境条件を充足すると述べる。`e` のグラフ表示はあらかじめ仮定されていない。それを見つけることこそ、ここでの課題である。これらのデータで `Recover` を開くと、`Fin k` で添字づけられた族と、その標準的なグラフがもとの集合に等しいという証明が得られる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (e a B : Fin n) (γ : S ^ n) (k : ℕ)
            (qa : fst (lookup a γ) ≡ # k) (qB : fst (lookup B γ) ≡ A)
            (h : ⟨ γ ⊨ envOverAt e a B ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       module R = Recover Aʟ k γ e a B qa qB h
 ```
@@ -636,7 +639,6 @@ without truncation. Applying `FinVec→Vec` to these elements produces
 
     paramSeq-out : Vec ⟪ A ⟫ k
     paramSeq-out = FinVec→Vec R.g
-
 ```
 
 <!--en-->
@@ -660,6 +662,9 @@ ordered-pair condition.
     paramSeq-graph = R.recovers
                    ∙ cong env (funExt (λ i → cong ix (sym (lookup-tab R.g i))))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Four elements, sealed where they are made
@@ -686,7 +691,6 @@ of constructibility, so `envAt t m` can occupy an object-language slot.
   opaque
     envAt : Name → ⟪ A ⟫ → S
     envAt t m = envFor Aʟ (environment t m)
-
 ```
 
 <!--en-->
@@ -706,7 +710,6 @@ that checks the domain of the extended environment.
     envAt-fst : (t : Name) (m : ⟪ A ⟫)
               → fst (envAt t m) ≡ envGraph Aʟ (environment t m)
     envAt-fst t m = envFor-graph Aʟ (environment t m)
-
 ```
 
 <!--en-->
@@ -724,7 +727,6 @@ in addition to the `arity t` parameters.
 ```agda
     numAt : ℕ → S
     numAt j = # j , numL j
-
 ```
 
 <!--en-->
@@ -741,7 +743,6 @@ seen by `domAt`; no decoding of a numeral is needed in this filling direction.
 ```agda
     numAt-fst : (j : ℕ) → fst (numAt j) ≡ # j
     numAt-fst j = refl
-
 ```
 
 <!--en-->
@@ -759,7 +760,6 @@ constructible model element, giving `keyAt t`.
 ```agda
     keyAt : Name → S
     keyAt t = keyIn Aʟ (embed (formula t))
-
 ```
 
 <!--en-->
@@ -778,7 +778,6 @@ about the concrete ordered-pair code supplied by `keyS`.
     keyAt-fst : (t : Name)
               → fst (keyAt t) ≡ fst (keyS Aʟ (embed (formula t)))
     keyAt-fst t = keyIn≡ Aʟ (embed (formula t))
-
 ```
 
 <!--en-->
@@ -797,7 +796,6 @@ of `t`.
 ```agda
     keyAt-∈ : (t : Name) → ⟨ keyAt t ∈ˢ AllCodes Aʟ ⟩
     keyAt-∈ t = keyIn∈ Aʟ (embed (formula t))
-
 ```
 
 <!--en-->
@@ -816,7 +814,6 @@ needed for that identification.
 ```agda
     valAt : Name → S
     valAt t = Table.val Aʟ Aʟ (keyAt t) (keyAt-∈ t)
-
 ```
 
 <!--en-->
@@ -888,7 +885,6 @@ code.
     keyCode : ∀ {m} (χ : Formula (⊥* {ℓ}) m)
             → fst (keyS Aʟ (embed χ)) ≡ pr (# m) (fst (limitCode χ))
     keyCode χ = cong (λ u → pr (# _) VCode.⌜ u ⌝) (sameEmbed χ)
-
 ```
 
 <!--en-->
@@ -910,7 +906,6 @@ give `valuesOf t`, an equality of the two environment graphs.
              → env (pfam t) ≡ envGraph Aʟ (map NM.DA.ι (params t))
     valuesOf t = cong env (funExt (λ i →
       sym (cong fst (lookup-map NM.DA.ι (params t) i))))
-
 ```
 
 <!--en-->
@@ -982,7 +977,6 @@ nor a new classical step.
            → ⟨ y ∈ A ⟩
       step (p , q) = subst (λ u → ⟨ u ∈ A ⟩) q
         (∈∈ₛ {a = ⟪ A ⟫↪ (p .fst)} {b = A} .snd (∈ₛ⟪ A ⟫↪ (p .fst)))
-
 ```
 
 <!--en-->
@@ -1000,11 +994,19 @@ membership observes only the underlying sets in `C` and `C₀`.
 モジュール `Named` はここで、`NameAt` の四つのデータをメタ言語の名前と比較するためのスロットを固定する。台 `B`、台のコード集合 `C`、空のアルファベットに対するコード集合 `C₀`、骨格 `s`、アリティ `a`、パラメータ・グラフ `e`、指示対象 `d` である。台についての等式 `qB` は構成可能性の証明を含むモデル要素全体の等しさであるが、`qC` と `q₀` は基礎集合だけを同一視する。この違いは用途から生じる。以下の論理式はスロット `B` にあるモデル要素の要素型の上で型づけられるが、`C` と `C₀` へのコード集合の所属が見るのは基礎集合だけである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Named {n : ℕ} (B C C₀ s a e d : Fin n) (γ : S ^ n)
                (qB : lookup B γ ≡ Aʟ)
                (qC : fst (lookup C γ) ≡ fst (AllCodes Aʟ))
                (q₀ : fst (lookup C₀ γ) ≡ fst (AllCodes ∅ʟ)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
 ```
 
@@ -1024,7 +1026,6 @@ fact.
 ```agda
       Fo : S → ℕ → Type ℓ
       Fo X j = Formula ⟪ fst X ⟫ j
-
 ```
 
 <!--en-->
@@ -1045,7 +1046,6 @@ constructions above.
 ```agda
       ψAt : (t : Name) → Fo (lookup B γ) (suc (arity t))
       ψAt t = subst (λ X → Fo X (suc (arity t))) (sym qB) (embed (formula t))
-
 ```
 
 <!--en-->
@@ -1106,7 +1106,6 @@ satisfaction set aligned.
 
 ```agda
         (sym qB) (embed (formula t)))
-
 ```
 
 <!--en-->
@@ -1169,7 +1168,6 @@ environment at which the name's formula will be evaluated.
 
 ```agda
         δp = map NM.DA.ι (params t)
-
 ```
 
 <!--en-->
@@ -1188,7 +1186,6 @@ needed both to build an extended environment and to recognize one later.
 ```agda
         qd' : fst (lookup e γ) ≡ envGraph Aʟ δp
         qd' = qe ∙ valuesOf t
-
 ```
 
 <!--en-->
@@ -1227,7 +1224,6 @@ reconstructed from the payload's key equation.
 
 ```agda
                  (sym (numAt-fst (suc (arity t))))
-
 ```
 
 <!--en-->
@@ -1272,7 +1268,6 @@ slot and the original parameters following it.
         hcons : ⟨ (envAt t m ∷ z ∷ γ) ⊨ consAtL zero (suc zero) (sh2 e) ⟩
         hcons = consAtL-in Aʟ δp (NM.DA.ι m) (envAt t m ∷ z ∷ γ)
                   zero (suc zero) (sh2 e) qd' (sym qm) (envAt-fst t m)
-
 ```
 
 <!--en-->
@@ -1311,7 +1306,6 @@ environment.
 
 ```agda
                  (envAt-fst t m) (numAt-fst (suc (arity t)))
-
 ```
 
 <!--en-->
@@ -1330,7 +1324,6 @@ outside the code domain need not determine such a value.
 ```agda
         hkey : ⟨ fst (keyAt t) ∈ fst (lookup C γ) ⟩
         hkey = subst (λ u → ⟨ fst (keyAt t) ∈ u ⟩) (sym qC) (keyAt-∈ t)
-
 ```
 
 <!--en-->
@@ -1462,7 +1455,6 @@ environment obtained by putting `m` before the parameters of `t`.
         qcg : fst c ≡ envGraph Aʟ (environment t m)
         qcg = consAtL-out Aʟ δp (NM.DA.ι m) (c ∷ z ∷ γ)
                 zero (suc zero) (sh2 e) qd' (sym qm) hc
-
 ```
 
 <!--en-->
@@ -1482,7 +1474,6 @@ constructibility needed by the domain adequacy theorem. Hence
         qk : fst k ≡ # (suc (arity t))
         qk = domAt-numeral (suc zero) zero (k ∷ c ∷ z ∷ γ) (suc (arity t))
                (values Aʟ (environment t m)) (valuesL t m) qcg hk
-
 ```
 
 <!--en-->
@@ -1502,7 +1493,6 @@ this pair as the code-set key of `embed (formula t)`. The resulting equality
         qkey' : fst key ≡ fst (keyS Aʟ (embed (formula t)))
         qkey' = hp ∙ cong (λ u → pr u (fst (lookup s γ))) qk
               ∙ cong (pr (# (suc (arity t)))) qs ∙ sym (keyCode (formula t))
-
 ```
 
 <!--en-->
@@ -1521,7 +1511,6 @@ uniform table and the satisfaction graph have their semantic specification.
 ```agda
         key∈ : ⟨ key ∈ˢ AllCodes Aʟ ⟩
         key∈ = subst (λ u → ⟨ fst key ∈ u ⟩) qC hi
-
 ```
 
 <!--en-->
@@ -1562,7 +1551,6 @@ next semantic reading.
 
         inTable : ⟨ c ∈ˢ Table.val Aʟ Aʟ key key∈ ⟩
         inTable = subst (λ u → ⟨ fst c ∈ u ⟩) qval hm
-
 ```
 
 <!--en-->
@@ -1583,7 +1571,6 @@ membership in `denote t`.
         inner = subst ⟨_⟩
           (val-sat Aʟ (embed (formula t)) key key∈ qkey'
              (environment t m) c qcg) inTable
-
 ```
 
 <!--en-->
@@ -1714,7 +1701,6 @@ this formula and code equation into satisfaction of `FreeAt`.
 
       hf : ⟨ γ ⊨ FreeAt C₀ s a ⟩
       hf = codeFree-in C₀ s a γ (arity t) q₀ qa (formula t) qs
-
 ```
 
 <!--en-->
@@ -1731,7 +1717,6 @@ used in this part of the description.
 ```agda
       ha : ⟨ fst (lookup a γ) ∈ ω ⟩
       ha = subst (λ u → ⟨ u ∈ ω ⟩) (sym qa) (#∈ω (arity t))
-
 ```
 
 <!--en-->
@@ -1750,7 +1735,6 @@ the three slots, yielding satisfaction of `envOverAt`.
       he : ⟨ γ ⊨ envOverAt e a B ⟩
       he = paramSeq-in e a B γ (arity t) (λ i → lookup i (params t)) qe qa
              (cong fst qB)
-
 ```
 
 <!--en-->
@@ -1768,7 +1752,6 @@ membership in the carrier slot and the witness package `DenoteOf`.
       into : (z : S) → ⟨ fst z ∈ fst (lookup d γ) ⟩
            → ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
       into z hz = Bt.member-fill z (subst (λ u → ⟨ fst z ∈ u ⟩) qd hz)
-
 ```
 
 <!--en-->
@@ -1787,7 +1770,6 @@ the two directions required by the single extensional conjunct of `NameAt`.
            → ⟨ fst z ∈ fst (lookup d γ) ⟩
       back z hzB hDen = subst (λ u → ⟨ fst z ∈ u ⟩) (sym qd)
         (Bt.member-read z hzB hDen)
-
 ```
 
 <!--en-->
@@ -1847,7 +1829,6 @@ and formula readings.
 ```agda
         t : Name
         t = k , (χ , paramSeq-out e a B γ k qa (cong fst qB) he)
-
 ```
 
 <!--en-->
@@ -1864,7 +1845,6 @@ This path is the third data equation `qe`.
 ```agda
         qe : fst (lookup e γ) ≡ env (pfam t)
         qe = paramSeq-graph e a B γ k qa (cong fst qB) he
-
 ```
 
 <!--en-->
@@ -1880,7 +1860,6 @@ and `denote t`. It will be proved by comparing their members in both directions.
 
 ```agda
         module Bt = Body t qs qa qe
-
 ```
 
 <!--en-->
@@ -1922,7 +1901,6 @@ inside the proposition-valued membership proof above.
           body : ⟨ fst z ∈ fst (lookup B γ) ⟩ × ∥ DenoteOf B C s e γ z ∥₁
           body = DenoteBody-out B C s e γ z
                    (extAt-out d (DenoteBody B C s e) γ hd z hy)
-
 ```
 
 <!--en-->
@@ -1960,7 +1938,6 @@ eliminate any propositional truncation.
           z = y , isL-trans (denoteMem t y hy) pA
           body : ⟨ fst z ∈ fst (lookup B γ) ⟩ × DenoteOf B C s e γ z
           body = Bt.member-fill z hy
-
 ```
 
 <!--en-->
@@ -1978,7 +1955,6 @@ Extensionality for `V` then turns the pointwise membership equality into
 ```agda
         qd : fst (lookup d γ) ≡ denote t
         qd = extensionalV (λ y → ⇔toPath (fwd y) (bwd y))
-
 ```
 
 <!--en-->
@@ -2001,6 +1977,9 @@ merely a name satisfying all four data equations, exactly the codomain of
       atArity (lk , qk) = map₁ (atCode (lower lk) (sym qk))
         (codeFree-out C₀ s a γ (lower lk) q₀ (sym qk) hf)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Least, described and meant
@@ -2029,7 +2008,6 @@ clause at a particular competitor.
     codeEl : Name → S
     codeEl t = fst (codeOf t)
              , isL-trans (snd (codeOf t)) (snd (LsetS ω ω-ord))
-
 ```
 
 <!--en-->
@@ -2047,7 +2025,6 @@ code.
 ```agda
     codeEl-fst : (t : Name) → fst (codeEl t) ≡ fst (codeOf t)
     codeEl-fst t = refl
-
 ```
 
 <!--en-->
@@ -2065,7 +2042,6 @@ environment slot of `NameAt`.
 ```agda
     envEl : Name → S
     envEl t = envS Aʟ (λ i → lookup i (params t))
-
 ```
 
 <!--en-->
@@ -2109,7 +2085,6 @@ arity comparison.
 ```agda
   open SWO limitOrder using () renaming ( _<∙_ to _≺ˡ_ )
   open SWO w using () renaming ( _<∙_ to _≺ₚ_ )
-
 ```
 
 <!--en-->
@@ -2124,13 +2099,21 @@ limits `u,v`, `Rrep` reads membership of the ordered pair in `Rs` as
 集合 `Rs` と `Ps` は、この二つの順序をモデル内部で表す。極限段階の要素`u,v` に対し、`Rrep` は順序対の `Rs` への所属を `u ≺ˡ v` と読み、`Rfill` はその比較から所属を証明する。`Prep` と `Pfill` は台の要素と`Ps` について同じ二方向を与える。この四つの表現法則が妥当性結果の仮定である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Least (Rs Ps : S)
                (Rrep : (u v : Limit) → ⟨ pr (fst u) (fst v) ∈ fst Rs ⟩ → u ≺ˡ v)
                (Rfill : (u v : Limit) → u ≺ˡ v → ⟨ pr (fst u) (fst v) ∈ fst Rs ⟩)
                (Prep : (u v : ⟪ A ⟫) → ⟨ pr (ix u) (ix v) ∈ fst Ps ⟩ → u ≺ₚ v)
                (Pfill : (u v : ⟪ A ⟫) → u ≺ₚ v → ⟨ pr (ix u) (ix v) ∈ fst Ps ⟩)
+               where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The private module `K` specializes the three-key comparison adequacy to
@@ -2146,10 +2129,8 @@ being compared.
 <!--/-->
 
 ```agda
-               where
     private
       module K = Keys Rs Ps Rrep Rfill Prep Pfill
-
 ```
 
 <!--en-->
@@ -2189,7 +2170,6 @@ claim that the current data form a name from the additional minimality claim.
                (q₀ : fst (lookup C₀ γ) ≡ fst (AllCodes ∅ʟ)) where
       private
         module N = Named B C C₀ s a e d γ qB qC q₀
-
 ```
 
 <!--en-->
@@ -2208,7 +2188,6 @@ full lexicographic order on names.
       IsMin : Name → Type (ℓ-suc ℓ)
       IsMin t = (t' : Name) → fst (lookup d γ) ≡ denote t'
               → t' ≺ₙ t → ⊥₀
-
 ```
 
 <!--en-->
@@ -2226,7 +2205,6 @@ conjuncts of `LeastNameAt`: naming and the universal minimality condition.
 ```agda
       Least : Name → Type (ℓ-suc ℓ)
       Least t = N.Data t × IsMin t
-
 ```
 
 <!--en-->
@@ -2331,7 +2309,6 @@ minimality clause.
                  (sh3 s) (sh3 a) (sh3 e) (e' ∷ a' ∷ s' ∷ γ) t' t
                  qR qP qs' (dt .fst) qa' (dt .snd .fst)
                  qe' (dt .snd .snd .fst) hlt)
-
 ```
 
 <!--en-->
@@ -2569,7 +2546,6 @@ no smaller competing name precedes `t₂`.
                 ( (codeEl-fst t₂ , (numAt-fst (arity t₂)
                                  , (envEl-fst t₂ , l₂ .fst)))
                 , l₂ .snd )
-
 ```
 
 <!--en-->
@@ -2608,7 +2584,6 @@ comparison, so it introduces the six existential witnesses directly.
 
 ```agda
                 (envEl-fst t₁) (envEl-fst t₂) lt
-
 ```
 
 <!--en-->
@@ -2649,7 +2624,6 @@ eliminated while the final pair of names remains hidden by one truncation.
         Goal : Type (ℓ-suc ℓ)
         Goal = ∥ Σ[ t₁ ∈ Name ] Σ[ t₂ ∈ Name ]
                  (LeastOf x t₁ × (LeastOf y t₂ × (t₁ ≺ₙ t₂))) ∥₁
-
 ```
 
 <!--en-->
@@ -2802,6 +2776,12 @@ exported outside that truncation.
                s6b a6b e6b (sh6 y)
                (p₂ ∷ k₂ ∷ s₂ ∷ p₁ ∷ k₁ ∷ s₁ ∷ γ) qR qP qB qC q₀ h₂)
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

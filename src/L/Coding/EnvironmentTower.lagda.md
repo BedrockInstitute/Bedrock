@@ -8,7 +8,6 @@ This chapter builds the environment tower inside `L`. For each natural number `n
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -22,7 +21,6 @@ The construction is carried out in cubical type theory and uses excluded middle 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -35,7 +33,6 @@ Fix a universe level `ℓ` and an instance `lem : LEM (ℓ-suc ℓ)`. Every cons
 
 ```agda
 module L.Coding.EnvironmentTower {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -128,7 +125,6 @@ The internal set `ωʟ` connects an object-language arity with an external natur
 
 ```agda
 open import L.Axioms.Infinity {ℓ} lem using ( ωʟ; ω-specL )
-
 ```
 
 <!--en-->
@@ -139,8 +135,7 @@ Finite vectors represent the environments in which formulas are interpreted, whi
 有限ベクトルは論理式を解釈する環境を表し、依存対と直和は、その意味論が返す証人と場合分けを表す。自然数の加法は、有界な順序対の読み取りによって追加されるスロットを数える。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Many semantic witnesses in this chapter live under propositional truncation. Such a witness may be used when the target is itself a proposition, as happens for membership, satisfaction, and equality between hierarchy sets, but it cannot be projected into a globally chosen arity or environment. Propositional extensionality and the empty type support the corresponding equality and impossibility arguments.
@@ -167,7 +162,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties using
   ( ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈-asFiber; ∈ₛ⟪_⟫↪_ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV )
-
 ```
 
 <!--en-->
@@ -180,7 +174,6 @@ Write `S` for the type of constructible sets. An element of `S` consists of an u
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -220,12 +213,19 @@ The tower module fixes the carrier `W` whose members are the values environments
 塔のモジュールは、環境が値を取る台 `W` を固定する。その第 `n` 項目は、構成可能な数項 `n` と、長さ `n` のすべての環境の集合との、符号化された順序対である。第一成分が長さを記録し、第二成分がちょうどその長さのすべての環境を集める。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module Tower (W : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   entry : ℕ → S
   entry n = prʟ (numeralL n) (envSet W n)
-
 ```
 
 <!--en-->
@@ -271,7 +271,6 @@ The tower is carved by separation out of the container and kept opaque, so later
   opaque
     tower : S
     tower = hasSeparationL (dom .fst) towerFo .fst .fst
-
 ```
 
 <!--en-->
@@ -286,7 +285,6 @@ The membership specification is exported: membership in the tower is membership 
     tower-mem : (x : S)
               → (fst x ∈ fst tower) ≡ ((fst x ∈ fst (dom .fst)) ⊓ ((x ∷ []) ⊨ towerFo))
     tower-mem = hasSeparationL (dom .fst) towerFo .fst .snd
-
 ```
 
 <!--en-->
@@ -302,7 +300,6 @@ The key ingredient is that each environment set satisfies its own external descr
     holdsAt : (n : ℕ) → ⟨ (envSet W n ∷ numeralL n ∷ W ∷ entry n ∷ []) ⊨ envSetAt i0 i1 i2 ⟩
     holdsAt n = AmbientHolds.holds W (envSet W n ∷ numeralL n ∷ W ∷ entry n ∷ [])
                   i0 i1 i2 n refl (numeralL-fst n) refl
-
 ```
 
 <!--en-->
@@ -334,7 +331,6 @@ The witness tree nests the carrier, the constructible numeral, and the environme
                 (prʟ-fst (numeralL n) (envSet W n))
             , ( subst ⟨_⟩ (sym (ω-specL (numeralL n))) ∣ lift n , refl ∣₁
               , holdsAt n ))) ∣₁ ∣₁ ∣₁ )
-
 ```
 
 <!--en-->
@@ -350,7 +346,6 @@ The standard entry is then restated in ambient normal form: the coded pair of th
   tower-in′ n = subst (λ u → ⟨ u ∈ fst tower ⟩)
     (prʟ-fst (numeralL n) (envSet W n) ∙ cong (λ u → pr u (fst (envSet W n))) (numeralL-fst n))
     (tower-in n)
-
 ```
 
 <!--en-->
@@ -379,7 +374,6 @@ The target type makes that boundary explicit: it is the propositional truncation
 
 ```agda
     Goal = ∥ Σ[ n ∈ ℕ ] (fst x ≡ pr (# n) (fst (envSet W n))) ∥₁
-
 ```
 
 <!--en-->
@@ -476,6 +470,9 @@ The agreement module supplies both directions of membership between the describe
             Eq = cong fst (extensionalL {a = F} {b = envSet W (lower k)}
               (λ z → ⇔toPath (Am.into z) (Am.outof z)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## A bounded specification of the tower
@@ -539,7 +536,6 @@ private
   upBody downBody : ∀ {m} → Fin m → Formula S (8 + m)
   upBody w = sucAtL i5 i1 ∧̇ consImage i0 i4 (sh 8 w)
   downBody w = sucAtL i1 i5 ∧̇ consImage i4 i0 (sh 8 w)
-
 ```
 
 <!--en-->
@@ -553,7 +549,6 @@ The upward clause exists over the tower: some entry of the tower satisfies the u
 ```agda
   towerUp : ∀ {m} → Fin m → Fin m → Formula S (4 + m)
   towerUp E w = ∃̇∈ (var (sh 4 E)) (bothEx i0 (upBody w))
-
 ```
 
 <!--en-->
@@ -569,7 +564,6 @@ The downward clause is a disjunction: the entry equals the base entry with an em
   towerDown E w N0 =
       ((var i1 ≐ var (sh 4 N0)) ∧̇ sglEmpty i0)
     ∨̇ ∃̇∈ (var (sh 4 E)) (bothEx i0 (downBody w))
-
 ```
 
 <!--en-->
@@ -617,13 +611,20 @@ The facts module fixes the carrier `W` and collects the concrete recursion facts
 事実のモジュールは台 `W` を固定し、長さゼロと後続の長さの環境についての実際の再帰の事実を集める。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module EnvFacts (W : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     ι : ⟪ fst W ⟫ → V ℓ
     ι = ⟪ fst W ⟫↪
-
 ```
 
 <!--en-->
@@ -637,7 +638,6 @@ Every presented index names a member of `W`: the small membership bridge runs fr
 ```agda
     ι∈ : (q : ⟪ fst W ⟫) → ⟨ ι q ∈ fst W ⟩
     ι∈ q = ∈∈ₛ {a = ι q} {b = fst W} .snd (∈ₛ⟪ fst W ⟫↪ q)
-
 ```
 
 <!--en-->
@@ -666,7 +666,6 @@ A set with no members equals the zero-length environment graph, by extensionalit
   noMembers→env0 z k = extensionalV (λ y → ⇔toPath
     (λ hy → ⊥₀-rec (k y hy))
     (rec₁ (snd (y ∈ z)) (λ { (lift () , _) })))
-
 ```
 
 <!--en-->
@@ -680,7 +679,6 @@ Conversely, every environment graph of length zero has no members: the index has
 ```agda
   envAny0-noMembers : (g : Ix W 0) (y : V ℓ) → ⟨ y ∈ fst (envS W g) ⟩ → ⊥₀
   envAny0-noMembers g y = rec₁ isProp⊥ (λ { (lift () , _) })
-
 ```
 
 <!--en-->
@@ -725,7 +723,6 @@ The environment coding agrees with cons at the function level: prepending a carr
   cons-env : (q : ⟪ fst W ⟫) {k : ℕ} (g : Ix W k)
            → env (cons (ι q) (λ i → ι (g i))) ≡ fst (envS W (cons q g))
   cons-env q g = cong env (funExt (λ { zero → refl ; (suc i) → refl }))
-
 ```
 
 <!--en-->
@@ -757,7 +754,6 @@ The presenting index is recovered from the membership through the fiber of the p
     where
     fib : Σ[ q ∈ ⟪ fst W ⟫ ] (ι q ≡ x)
     fib = ∈-asFiber {a = x} {b = fst W} x∈
-
 ```
 
 <!--en-->
@@ -817,6 +813,9 @@ The membership proof is consumed by the outward reading of the environment set, 
 ```agda
     (envSet-out W (suc k) e' h)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Reading the successor construction
@@ -834,9 +833,17 @@ cons 像读取器以候选后继集 `F'`、候选基集 `F`、字母表槽 `w` �
 cons の像の読み手は、候補の後続の集合 `F'`、候補の基底の集合 `F`、アルファベットの枠 `w`、そして環境をパラメータとし、アルファベットの枠を作業集合と揃える等式を伴う。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module ConsImageRead {m : ℕ} (F' F w : Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open EnvFacts W
   private
     ι : ⟪ fst W ⟫ → V ℓ
@@ -852,7 +859,6 @@ The embedding of the carrier into the hierarchy is named once, so that every car
 
 ```agda
     ι = ⟪ fst W ⟫↪
-
 ```
 
 <!--en-->
@@ -933,7 +939,6 @@ The membership proof for `z` in the candidate successor set supplies a construct
 ```agda
       zS : S
       zS = down (lookup F' γ) z hz
-
 ```
 
 <!--en-->
@@ -994,7 +999,6 @@ For a recovered head `q`, its image `ι q` lies in `W`; transitivity of construc
 
 ```agda
       xS q = ι q , isL-trans {x = fst W} {y = ι q} (ι∈' q) (snd W)
-
 ```
 
 <!--en-->
@@ -1099,6 +1103,9 @@ The base-set outward reading supplies the truncated index `g` whose environment 
 ```agda
       (envSet-out W k e (subst (λ u → ⟨ fst e ∈ u ⟩) qF he))
 ```
+</div>
+</details>
+
 
 <!--en-->
 Numerals are presented as constructible elements: the finite ordinal together with its constructibility certificate.
@@ -1129,10 +1136,17 @@ The single-empty-set module is parameterized by the candidate set slot and the e
 一つの空集合のモジュールは、候補の集合の枠と環境をパラメータとする。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module SglEmpty (W : S) {m : ℕ} (F : Fin m) (γ : S ^ m) where
-  open EnvFacts W
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+  open EnvFacts W
 ```
 
 <!--en-->
@@ -1167,7 +1181,6 @@ The `none` helper feeds a carrier presentation of a member into the bounded clau
 
 ```agda
     none z k y hy = ⊥*-rec (k (down z y hy) hy)
-
 ```
 
 <!--en-->
@@ -1181,7 +1194,6 @@ Forward: a member of the candidate set is presented, the bounded clause refutes 
 ```agda
     fwd : (z : V ℓ) → ⟨ z ∈ Fv ⟩ → ⟨ z ∈ fst (envSet W 0) ⟩
     fwd z hz = envSet0-in z (none (down (lookup F γ) z hz) (hall (down (lookup F γ) z hz) hz))
-
 ```
 
 <!--en-->
@@ -1211,7 +1223,6 @@ The transported membership closes the backward direction, and the existence clau
 ```agda
           e∈ })
       hex
-
 ```
 
 <!--en-->
@@ -1242,8 +1253,10 @@ The empty environment is the coded graph of the function from the empty type, wh
     where
     e0 : S
     e0 = envS W (λ ())
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 The tower reader fixes a candidate tower slot `E`, a parameter-set slot `w`, a zero-numeral slot `N0`, and an interpreting environment. Its hypotheses identify `w` with the working set `W`, identify `N0` with `# 0`, and assert satisfaction of `towerAt E w N0`. The two readings below are relative to exactly these identifications.
@@ -1253,10 +1266,18 @@ The tower reader fixes a candidate tower slot `E`, a parameter-set slot `w`, a z
 環境の塔の読み手は、候補の塔のスロット `E`、パラメータ集合のスロット `w`、ゼロの数項のスロット `N0`、および解釈環境を固定する。その仮定は、`w` を作業集合 `W` と同定し、`N0` を `# 0` と同定し、`towerAt E w N0` の充足を与える。以下の二つの読みは、ちょうどこれらの同一視に相対的である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module TowerRead {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qN0 : fst (lookup N0 γ) ≡ # 0)
   (h : ⟨ γ ⊨ towerAt E w N0 ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Ev = fst (lookup E γ)
 ```
@@ -1273,7 +1294,6 @@ The three conjuncts of the tower formula are named: the base clause, the upward-
     hbase = h .fst
     hup = h .snd .fst
     hdown = h .snd .snd
-
 ```
 
 <!--en-->
@@ -1341,7 +1361,6 @@ The membership proof for the candidate pair supplies a constructible representat
       c = container pS n F refl
       δ : S ^ (4 + m)
       δ = F ∷ n ∷ c .fst ∷ pS ∷ γ
-
 ```
 
 <!--en-->
@@ -1493,6 +1512,9 @@ To invoke upward closure, the standard entry at `k` is first presented as the ca
     δ : S ^ (4 + m)
     δ = envSet W k ∷ nn k ∷ c .fst ∷ pS ∷ γ
 ```
+</div>
+</details>
+
 
 <!--en-->
 The tower-holding module assumes that the candidate tower has been identified with the real tower by an equation of underlying sets, in addition to the carrier and numeral equations. All conclusions are relative to these identifications.
@@ -1502,11 +1524,19 @@ The tower-holding module assumes that the candidate tower has been identified wi
 塔を保持するモジュールは、候補の塔が、基礎の集合の等式によって実際の塔と同一視されていると仮定する。台と数項の等式に加えてである。すべての結論は、これらの同定に相対的である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module TowerHolds {m : ℕ} (E w N0 : Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qE : fst (lookup E γ) ≡ fst (Tower.tower W))
   (qN0 : fst (lookup N0 γ) ≡ # 0) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Ev = fst (lookup E γ)
 ```
@@ -1523,7 +1553,6 @@ Every standard entry belongs to the candidate tower, by transporting the real to
 
     entry∈ : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
     entry∈ k = subst (λ u → ⟨ pr (# k) (fst (envSet W k)) ∈ u ⟩) (sym qE) (Tower.tower-in′ W k)
-
 ```
 
 <!--en-->
@@ -1537,7 +1566,6 @@ Each standard entry is presented as a carrier element by descending along its me
 ```agda
     entryS : (k : ℕ) → S
     entryS k = down (lookup E γ) (pr (# k) (fst (envSet W k))) (entry∈ k)
-
 ```
 
 <!--en-->
@@ -1551,7 +1579,6 @@ Every member of the candidate tower is read as a standard entry, by transporting
 ```agda
     read : (p : S) → ⟨ fst p ∈ Ev ⟩ → ∥ Σ[ k ∈ ℕ ] (fst p ≡ pr (# k) (fst (envSet W k))) ∥₁
     read p p∈ = Tower.tower-out W p (subst (λ u → ⟨ fst p ∈ u ⟩) qE p∈)
-
 ```
 
 <!--en-->
@@ -1597,7 +1624,6 @@ The base clause is now complete. Its witness is the canonical entry `entryS 0`, 
 ```agda
                (cong (λ a → pr a (fst (envSet W 0))) (sym qN0)) .fst ∷ entryS 0 ∷ γ) refl)
           (sh 1 N0) refl ) ∣₁
-
 ```
 
 <!--en-->
@@ -1644,7 +1670,6 @@ The two conjuncts of `upBody` now express the two successor steps. The introduct
                  ( suc-in i5 i1 δ2 (cong sucV (sym (q .fst)))
                  , ConsImageRead.consImage-in i0 i4 (sh 8 w) δ2 W qw k (q .snd) refl ) ) ∣₁ })
         (read p p∈))
-
 ```
 
 <!--en-->
@@ -1706,6 +1731,9 @@ Eliminating the truncated result of `read` into the satisfaction proposition com
 ```agda
         (read p p∈))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

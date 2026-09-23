@@ -7,7 +7,37 @@
 (function () {
   "use strict";
   var cfg = window.bedrock || { baseUrl: "", lang: "en", module: "" };
+  var compactPointer = window.matchMedia("(hover: none), (pointer: coarse)");
+  var isDefinitionModalDocument =
+    new URLSearchParams(location.search).get("bedrock-modal") === "1";
+  if (isDefinitionModalDocument)
+    document.documentElement.classList.add("definition-modal-document");
+  function modalReadingScroller() {
+    return isDefinitionModalDocument ? document.getElementById("main-content") : null;
+  }
 
+  /* A compact-pointer definition follows one shared two-step interaction in
+     source code, hover popups, and modal documents: the definition occurrence
+     opens its hover first, and only the hover's explicit action opens a modal. */
+  function definitionHoverTarget(target) {
+    var candidate = target && target.closest && target.closest(
+      "a[data-type], .type-node[data-expression-type], .expr-node, .Agda a[href]"
+    );
+    return candidate && !candidate.classList.contains("type-definition-link")
+      ? candidate : null;
+  }
+  function isDefinitionPopupAction(link) {
+    return Boolean(link && link.classList.contains("type-definition-link"));
+  }
+  function isUniverseTypeText(text) {
+    var normalized = (text || "").replace(/\s+/g, " ").trim();
+    if (/^Type(?:ω|[₀-₉]+)?$/.test(normalized)) return true;
+    if (normalized.indexOf("Type ") !== 0) return false;
+    /* A universe level may contain names, successors, joins and parentheses,
+       but a function, binder or product whose first token is Type is not itself
+       a universe and must remain inspectable. */
+    return !/[→,:{}\[\]=≃×]/.test(normalized.slice(5));
+  }
   /* ---- theme (light / dark / system) -------------------------------------- */
   var root = document.documentElement;
   function applyTheme(t) {
@@ -35,14 +65,63 @@
     renderMath();
     initSearch();
     initHover();
+    initDefinitionModals();
     initOccur();
     initCodeNotes();
     initTermHover();
+    initSubmoduleFolds();
     initNav();
     initPageScroll();
     initHeaderOffset();
     initSectionTracking();
+    initMobileSearchScroll();
+    initCurrentRoute();
   });
+
+  /* Keep the Agda module declaration visible while its body folds as one unit. */
+  function initSubmoduleFolds() {
+    document.querySelectorAll("details.submodule-fold").forEach(function (details) {
+      var heading = details.querySelector(":scope > summary.submodule-fold-heading");
+      var content = details.querySelector(":scope > .submodule-fold-content");
+      if (!heading || !content) return;
+      var expanded = details.open;
+      var animation = null;
+      heading.addEventListener("click", function (event) {
+        if (event.target.closest("a")) {
+          event.stopPropagation();
+          return;
+        }
+        if (!content.animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          expanded = !details.open;
+          return;
+        }
+        event.preventDefault();
+        var startHeight = details.open ? content.getBoundingClientRect().height : 0;
+        var startOpacity = details.open ? parseFloat(getComputedStyle(content).opacity) : 0;
+        if (animation) animation.cancel();
+        expanded = !expanded;
+        details.open = true;
+        content.style.height = startHeight + "px";
+        content.style.overflow = "hidden";
+        details.classList.toggle("submodule-closing", !expanded);
+        var endHeight = expanded ? content.scrollHeight : 0;
+        var motion = content.animate([
+          { height: startHeight + "px", opacity: startOpacity },
+          { height: endHeight + "px", opacity: expanded ? 1 : 0 }
+        ], { duration: 260, easing: "cubic-bezier(.2,.75,.25,1)", fill: "forwards" });
+        animation = motion;
+        motion.onfinish = function () {
+          if (animation !== motion) return;
+          details.open = expanded;
+          motion.cancel();
+          animation = null;
+          content.style.height = "";
+          content.style.overflow = "";
+          details.classList.remove("submodule-closing");
+        };
+      });
+    });
+  }
 
   /* Page-edge controls are shared by chapters, the reading guide and library pages. */
   function initPageScroll() {
@@ -63,7 +142,10 @@
         '<path d="' + (edge === "top" ? "M5 4h14M6 13l6-6 6 6M12 7v13" :
           "M5 20h14M6 11l6 6 6-6M12 17V4") + '"/></svg>';
       button.addEventListener("click", function () {
-        window.scrollTo({ top: edge === "top" ? 0 : document.documentElement.scrollHeight,
+        var scroller = modalReadingScroller();
+        if (scroller) scroller.scrollTo({ top: edge === "top" ? 0 : scroller.scrollHeight,
+          behavior: "smooth" });
+        else window.scrollTo({ top: edge === "top" ? 0 : document.documentElement.scrollHeight,
           behavior: "smooth" });
       });
       controls.appendChild(button);
@@ -88,7 +170,10 @@
        when the document has not changed. Only correct the anchor on a fresh visit. */
     var navigation = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
     var isReload = navigation && navigation.type === "reload";
-    if (location.hash && !isReload) {
+    /* The parent modal aligns the whole Agda block. Re-running ordinary page
+       fragment navigation here would align the identifier inside that block
+       and overwrite the parent's result one frame later. */
+    if (location.hash && !isReload && !isDefinitionModalDocument) {
       requestAnimationFrame(function () {
         measure();
         var target;
@@ -111,8 +196,93 @@
     return inset;
   }
 
-  /* Show the current heading hierarchy below the site header and keep the
-     chapter contents in sync with the same scroll position. */
+  /* On narrow phones, the search row gives its space back while reading down. */
+  function initMobileSearchScroll() {
+    var form = document.querySelector("#topbar .search-form");
+    if (!form || !window.matchMedia) return;
+    var mobile = window.matchMedia("(max-width: 28rem)");
+    var anchorY = window.scrollY;
+    var settling = false;
+    function setHidden(hidden) {
+      hidden = hidden && mobile.matches && !form.contains(document.activeElement);
+      if (document.body.classList.contains("mobile-search-hidden") === hidden) return;
+      document.body.classList.toggle("mobile-search-hidden", hidden);
+      settling = true;
+      requestAnimationFrame(function () {
+        anchorY = window.scrollY;
+        settling = false;
+      });
+    }
+    window.addEventListener("scroll", function () {
+      var y = window.scrollY;
+      if (settling) { anchorY = y; return; }
+      if (!mobile.matches || y <= 8) setHidden(false);
+      else if (Math.abs(y - anchorY) >= 8) setHidden(y > anchorY);
+      if (Math.abs(y - anchorY) >= 8) anchorY = y;
+    }, { passive: true });
+    form.addEventListener("focusin", function () { setHidden(false); });
+    (mobile.addEventListener ? mobile.addEventListener.bind(mobile, "change")
+                             : mobile.addListener.bind(mobile))(function () {
+      setHidden(false);
+      anchorY = window.scrollY;
+    });
+  }
+
+  /* The sidebar follows the route last chosen in the guide when that route
+     contains the current chapter; otherwise it shows the chapter's first route. */
+  function initCurrentRoute() {
+    var section = document.querySelector("#toc .current-route");
+    if (!section) return;
+    var list = section.querySelector(".route-nav");
+    var name = section.querySelector(".current-route-name");
+    var current = section.dataset.current;
+    var data = null;
+    function showRoute() {
+      if (!data) return;
+      var preferred = "";
+      try { preferred = localStorage.getItem("bedrock-current-route-v1") || ""; } catch (_) {}
+      var route = data.routes.find(function (item) {
+        return item.id === preferred && (!current || item.chapters.includes(current));
+      }) || data.routes.find(function (item) { return item.chapters.includes(current); })
+        || data.routes[0];
+      if (!route) return;
+      var nodes = new Map(data.nodes.map(function (node) { return [node.id, node]; }));
+      name.textContent = route.title[cfg.lang] || route.title.en;
+      list.dataset.route = route.id;
+      list.replaceChildren();
+      route.chapters.forEach(function (id) {
+        var node = nodes.get(id);
+        if (!node) return;
+        var item = document.createElement("li");
+        var link = document.createElement("a");
+        link.href = node.page + node.anchor;
+        link.dataset.chapter = id;
+        link.textContent = node.title[cfg.lang] || node.title.en;
+        if (id === current) link.setAttribute("aria-current", "page");
+        item.appendChild(link);
+        list.appendChild(item);
+      });
+    }
+    window.addEventListener("bedrock:current-route", showRoute);
+    fetch(cfg.baseUrl + "/" + cfg.lang + "/reading-routes.json")
+      .then(function (response) { if (!response.ok) throw new Error(response.status); return response.json(); })
+      .then(function (loaded) { data = loaded; showRoute(); })
+      .catch(function () { /* The server-rendered route remains usable. */ });
+  }
+
+  function sectionOutline(headings) {
+    var roots = [], stack = [];
+    headings.forEach(function (heading) {
+      var level = Number(heading.tagName.slice(1));
+      var node = { heading: heading, level: level, children: [] };
+      while (stack.length && stack[stack.length - 1].level >= level) stack.pop();
+      (stack.length ? stack[stack.length - 1].children : roots).push(node);
+      stack.push(node);
+    });
+    return roots;
+  }
+
+  /* The sticky breadcrumb doubles as a compact, complete chapter directory. */
   function initSectionTracking() {
     if (document.body.classList.contains("learning-home")) return;
     var article = document.querySelector("article");
@@ -121,23 +291,135 @@
     var headings = Array.from(article.querySelectorAll("h2[id], h3[id], h4[id], h5[id], h6[id]"));
     if (!headings.length) return;
 
-    var bar = document.createElement("nav");
+    var labels = ({
+      en: { contents: "Chapter contents", expand: "Expand", collapse: "Collapse" },
+      zh: { contents: "本章目录", expand: "展开", collapse: "折叠" },
+      ja: { contents: "この章の目次", expand: "展開", collapse: "折りたたむ" }
+    })[cfg.lang] || { contents: "Chapter contents", expand: "Expand", collapse: "Collapse" };
+    var bar = document.createElement("div");
     bar.id = "section-sticky";
-    bar.setAttribute("aria-label", ({ en: "Current section", zh: "当前小节", ja: "現在の節" })[cfg.lang] || "Current section");
-    document.body.appendChild(bar);
+    bar.className = "visible";
+    var trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "section-trigger";
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-controls", "section-menu");
+    var trailText = document.createElement("span");
+    trailText.className = "section-trail";
+    var chevron = document.createElement("span");
+    chevron.className = "section-chevron";
+    chevron.setAttribute("aria-hidden", "true");
+    trigger.append(trailText, chevron);
+    var panel = document.createElement("nav");
+    panel.id = "section-menu";
+    panel.setAttribute("aria-label", labels.contents);
+    panel.hidden = true;
+    var menuList = document.createElement("ul");
+    menuList.className = "section-menu-list";
+    panel.appendChild(menuList);
+    bar.append(trigger, panel);
+    article.insertBefore(bar, article.firstChild);
     document.documentElement.style.setProperty("--section-nav-height", "2.75rem");
     updateAnchorInset();
 
     var tocLinks = Array.from(document.querySelectorAll('#toc a[href*="#"]'));
     var tocBranches = Array.from(document.querySelectorAll("#toc .toc-branch"));
+    var menuLinks = [];
+    var menuBranches = [];
+    var activeHeading = null;
     var scheduled = false;
     var lastActive = -2;
 
-    function positionBar() {
-      var rect = article.getBoundingClientRect();
-      bar.style.setProperty("--section-nav-left", Math.max(0, rect.left) + "px");
-      bar.style.setProperty("--section-nav-width", Math.min(rect.width, window.innerWidth - Math.max(0, rect.left)) + "px");
+    function menuLink(heading) {
+      var link = document.createElement("a");
+      link.href = "#" + heading.id;
+      link.textContent = heading.textContent.trim();
+      menuLinks.push(link);
+      return link;
     }
+
+    function addMenuNodes(nodes, parent) {
+      nodes.forEach(function (node) {
+        var item = document.createElement("li");
+        item.className = "section-menu-item";
+        var row = document.createElement("div");
+        row.className = "section-menu-row";
+        row.appendChild(menuLink(node.heading));
+        item.appendChild(row);
+        if (node.children.length) {
+          row.classList.add("has-children");
+          var children = document.createElement("ul");
+          children.id = "section-menu-children-" + node.heading.id;
+          children.hidden = true;
+          var toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "section-branch-toggle";
+          toggle.setAttribute("aria-expanded", "false");
+          toggle.setAttribute("aria-controls", children.id);
+          function setBranchOpen(open) {
+            children.hidden = !open;
+            toggle.setAttribute("aria-expanded", open ? "true" : "false");
+            toggle.setAttribute("aria-label", (open ? labels.collapse : labels.expand)
+                                + " " + node.heading.textContent.trim());
+          }
+          setBranchOpen(false);
+          toggle.addEventListener("click", function () {
+            setBranchOpen(children.hidden);
+          });
+          row.addEventListener("click", function (event) {
+            if (event.target === row) setBranchOpen(children.hidden);
+          });
+          row.appendChild(toggle);
+          addMenuNodes(node.children, children);
+          item.appendChild(children);
+          menuBranches.push({ node: node, setOpen: setBranchOpen });
+        }
+        parent.appendChild(item);
+      });
+    }
+
+    addMenuNodes(sectionOutline(headings), menuList);
+
+    function containsHeading(node, heading) {
+      return node.heading === heading || node.children.some(function (child) {
+        return containsHeading(child, heading);
+      });
+    }
+
+    function setMenuOpen(open, restoreFocus) {
+      if (panel.hidden === !open) return;
+      if (open) {
+        document.dispatchEvent(new Event("bedrock:section-menu-open"));
+        menuBranches.forEach(function (branch) {
+          branch.setOpen(!!activeHeading && containsHeading(branch.node, activeHeading));
+        });
+        panel.scrollTop = 0;
+      }
+      panel.hidden = !open;
+      bar.classList.toggle("menu-open", open);
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      if (!open && restoreFocus) trigger.focus();
+    }
+
+    trigger.addEventListener("click", function () { setMenuOpen(panel.hidden); });
+    panel.addEventListener("click", function (event) {
+      var link = event.target.closest("a[href^='#']");
+      if (!link) return;
+      var sameTarget = link.hash === window.location.hash;
+      setMenuOpen(false);
+      if (sameTarget) requestAnimationFrame(function () {
+        document.getElementById(link.hash.slice(1)).scrollIntoView({ block: "start" });
+      });
+    });
+    document.addEventListener("pointerdown", function (event) {
+      if (!panel.hidden && !bar.contains(event.target)) setMenuOpen(false);
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !panel.hidden) setMenuOpen(false, true);
+    });
+    document.addEventListener("bedrock:sidebar-open", function () {
+      if (!panel.hidden) setMenuOpen(false);
+    });
 
     function revealTocLink(link) {
       var toc = document.getElementById("toc");
@@ -161,10 +443,13 @@
     function render(activeIndex) {
       if (activeIndex === lastActive) return;
       lastActive = activeIndex;
-      bar.replaceChildren();
-      bar.classList.toggle("visible", activeIndex >= 0);
-
       var active = activeIndex >= 0 ? headings[activeIndex] : null;
+      activeHeading = active;
+      var currentId = (active || chapterHeading || {}).id;
+      menuLinks.forEach(function (link) {
+        if (link.hash === "#" + currentId) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      });
       var activeTocLink = null;
       tocLinks.forEach(function (link) {
         if (active && link.hash === "#" + active.id) {
@@ -175,8 +460,6 @@
       // Sync only when the reading section changes, so manual toggles remain usable.
       syncTocBranches(activeTocLink);
       revealTocLink(activeTocLink);
-      if (!active) return;
-
       var trail = [];
       if (chapterHeading) trail.push({ heading: chapterHeading, level: 1 });
       headings.slice(0, activeIndex + 1).forEach(function (heading) {
@@ -184,34 +467,40 @@
         while (trail.length && trail[trail.length - 1].level >= level) trail.pop();
         trail.push({ heading: heading, level: level });
       });
+      trailText.replaceChildren();
       trail.forEach(function (item, index) {
         if (index) {
           var separator = document.createElement("span");
           separator.className = "section-separator";
           separator.setAttribute("aria-hidden", "true");
           separator.textContent = "›";
-          bar.appendChild(separator);
+          trailText.appendChild(separator);
         }
-        var link = document.createElement("a");
-        link.href = "#" + item.heading.id;
-        link.textContent = item.heading.textContent.trim();
-        bar.appendChild(link);
+        var crumb = document.createElement("span");
+        crumb.textContent = item.heading.textContent.trim();
+        trailText.appendChild(crumb);
       });
+      trigger.setAttribute("aria-label", labels.contents + "：" + trail.map(function (item) {
+        return item.heading.textContent.trim();
+      }).join(" › "));
     }
 
     function update() {
       scheduled = false;
-      positionBar();
       /* Fragment navigation and tracking share this resolved pixel inset. The
          extra pixel absorbs fractional layout rounding at an exact anchor. */
-      var trackingLine = updateAnchorInset() + 1;
+      var scroller = modalReadingScroller();
+      var trackingLine = scroller
+        ? scroller.getBoundingClientRect().top + bar.offsetHeight + 1
+        : updateAnchorInset() + 1;
       var activeIndex = -1;
       headings.forEach(function (heading, index) {
         if (heading.getBoundingClientRect().top <= trackingLine) activeIndex = index;
       });
       /* Near the document end, the browser cannot always move the final heading
          as high as the tracking line. The final section is nevertheless active. */
-      if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
+      if (scroller ? scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2
+          : window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) {
         activeIndex = headings.length - 1;
       }
       render(activeIndex);
@@ -223,7 +512,10 @@
     }
 
     update();
-    window.addEventListener("scroll", schedule, { passive: true });
+    (modalReadingScroller() || window).addEventListener("scroll", function () {
+      if (!panel.hidden) setMenuOpen(false);
+      schedule();
+    }, { passive: true });
     window.addEventListener("resize", schedule);
     if (window.ResizeObserver) new ResizeObserver(schedule).observe(article);
   }
@@ -314,6 +606,7 @@
       });
     }
     function setOpen(open, preserveScroll) {
+      if (open) document.dispatchEvent(new Event("bedrock:sidebar-open"));
       if (fullLayout.matches) {
         setCollapsed(!open);
         return;
@@ -335,6 +628,9 @@
     toggle.addEventListener("click", function () {
       setOpen(fullLayout.matches ? body.classList.contains("nav-collapsed")
                                  : !body.classList.contains("nav-open"));
+    });
+    document.addEventListener("bedrock:section-menu-open", function () {
+      if (body.classList.contains("nav-open")) setOpen(false);
     });
     collapse.addEventListener("click", function () { setCollapsed(true); });
     if (backdrop) backdrop.addEventListener("click", function () { setOpen(false); });
@@ -605,7 +901,8 @@
         var name = document.createElement("strong");
         name.className = "term-popup-name";
         name.id = "term-popup-name";
-        name.textContent = term.label;
+        name.textContent = term.abbreviation
+          ? term.label + " (" + term.abbreviation + ")" : term.label;
         var recap = document.createElement("p");
         recap.id = "term-popup-recap";
         recap.textContent = term.recap;
@@ -668,60 +965,252 @@
     return typeCache[mod];
   }
   function initHover() {
-    var compactPointer = window.matchMedia("(hover: none), (pointer: coarse)");
     var definitionCopy = {
-      en: "Go to definition",
-      zh: "跳转到定义",
-      ja: "定義へ移動"
-    }[cfg.lang] || "Go to definition";
+      en: "Open definition in a modal",
+      zh: "在弹窗中打开定义",
+      ja: "モーダルで定義を開く"
+    }[cfg.lang] || "Open definition in a modal";
+    var definitionActionIcon = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+      '<rect x="3" y="4" width="18" height="16" rx="2"/>' +
+      '<path d="M3 8h18"/><rect x="7" y="11" width="10" height="6" rx="1"/>' +
+      '</svg>';
     var swipeHintCopy = {
       en: "Hold a highlighted range and swipe sideways to switch AST nodes",
       zh: "按住色块左右滑动以切换AST节点",
       ja: "色付き範囲を長押しして左右にスワイプするとASTノードを切り替えられます"
     }[cfg.lang] || "Hold a highlighted range and swipe sideways to switch AST nodes";
-    function definitionAction(href) {
+    function definitionAction(href, name) {
       var link = document.createElement("a");
       link.className = "type-definition-link";
       link.href = href;
+      if (name) link.setAttribute("data-name", name);
       link.setAttribute("aria-label", definitionCopy);
       link.title = definitionCopy;
-      link.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-        '<path d="M4 12h13m-5-5 5 5-5 5M20 5v14"/></svg>';
+      link.innerHTML = definitionActionIcon;
       return link;
     }
-    var namePopup = null, nameAnchor = null, nameRequest = 0;
-    function hideName() {
+    function escapedCodeName(name) {
+      var span = document.createElement("span");
+      span.textContent = name;
+      return span.innerHTML;
+    }
+    var hoverCloseDelay = 360;
+    function scheduleHoverClose(callback) {
+      if (compactPointer.matches) return null;
+      return window.setTimeout(function () {
+        /* A viewport can become compact while a desktop timer is pending, for
+           example when a phone rotates or responsive preview mode changes. */
+        if (!compactPointer.matches) callback();
+      }, hoverCloseDelay);
+    }
+    var namePopups = [], nameRequest = 0;
+    var leafActiveName = null;
+    function clearLeafNameHighlight() {
+      if (leafActiveName) leafActiveName.classList.remove("name-active");
+      leafActiveName = null;
+    }
+    function hoverIdentity(name) {
+      return name && name.getAttribute && (
+        name.getAttribute("data-expression-type") || name.getAttribute("data-type")
+      );
+    }
+    function markTerminalHoverStops(value, identity) {
+      if (!value) return;
+      if (identity) {
+        value.querySelectorAll("[data-type], [data-expression-type]").forEach(function (node) {
+          if (hoverIdentity(node) === identity
+              && !node.hasAttribute("data-hover-stop"))
+            node.setAttribute("data-hover-stop", "same-definition");
+        });
+      }
+      value.querySelectorAll(".type-node[data-hover-stop]").forEach(function (node) {
+        node.replaceWith.apply(node, Array.from(node.childNodes));
+      });
+    }
+    function namePopupEntry(target) {
+      var shell = target && target.closest && target.closest(".name-hover-popup");
+      return shell && namePopups.find(function (entry) { return entry.popup === shell; });
+    }
+    function namePopupContains(target) {
+      return Boolean(namePopupEntry(target));
+    }
+    function nodeOwnsOpenHover(node) {
+      return Boolean(node && namePopups.some(function (entry) {
+        return node.contains(entry.anchor);
+      }));
+    }
+    function removeNamePopupsFrom(index) {
+      if (index < 0 || index >= namePopups.length) return;
       nameRequest += 1;
-      if (namePopup) namePopup.remove();
-      namePopup = null; nameAnchor = null;
+      var removedRangeScope = false;
+      namePopups.splice(index).forEach(function (entry) {
+        window.clearTimeout(entry.closeTimer);
+        if (entry.popup === rangeScope) removedRangeScope = true;
+        entry.popup.remove();
+        if (entry.activeName) entry.activeName.classList.remove("name-active");
+        if (entry.activeNode) entry.activeNode.classList.remove("type-active");
+      });
+      if (removedRangeScope) setRangeScope(fallbackRangeScope());
+    }
+    function hideName() {
+      clearLeafNameHighlight();
+      if (namePopups.length) removeNamePopupsFrom(0);
+      else nameRequest += 1;
+    }
+    function cancelNameClose(entry) {
+      while (entry) {
+        window.clearTimeout(entry.closeTimer);
+        entry.closeTimer = null;
+        entry = entry.parent;
+      }
+      cancelHide();
+    }
+    function nameBranchHovered(entry) {
+      var index = namePopups.indexOf(entry);
+      if (index < 0) return false;
+      return namePopups.slice(index).some(function (candidate) {
+        return (candidate.anchor.matches && candidate.anchor.matches(":hover"))
+          || (candidate.popup.matches && candidate.popup.matches(":hover"));
+      });
+    }
+    function laterHideName(entry) {
+      if (!entry) return;
+      window.clearTimeout(entry.closeTimer);
+      entry.closeTimer = scheduleHoverClose(function () {
+        if (nameBranchHovered(entry)) {
+          cancelNameClose(entry);
+          return;
+        }
+        var index = namePopups.indexOf(entry);
+        if (index >= 0) removeNamePopupsFrom(index);
+      });
+    }
+    function positionNameEntry(entry) {
+      if (!entry.popup.isConnected || !entry.anchor.isConnected) return;
+      var rect = entry.anchor.getBoundingClientRect();
+      var width = Math.min(entry.popup.offsetWidth, window.innerWidth - 16);
+      entry.popup.style.left = (window.scrollX + Math.max(8,
+        Math.min(rect.left, window.innerWidth - width - 8))) + "px";
+      /* Every level opens below its source. The document can keep growing and
+         scrolling; a crowded viewport never makes a child jump above its parent. */
+      entry.popup.style.top = (window.scrollY + rect.bottom) + "px";
     }
     function positionName() {
-      if (!namePopup || !nameAnchor) return;
-      var rect = nameAnchor.getBoundingClientRect();
-      var width = Math.min(namePopup.offsetWidth, window.innerWidth - 16);
-      namePopup.style.left = (window.scrollX + Math.max(8,
-        Math.min(rect.left, window.innerWidth - width - 8))) + "px";
-      namePopup.style.top = (window.scrollY + rect.bottom) + "px";
+      namePopups.forEach(positionNameEntry);
     }
     function showName(name) {
+      var identity = hoverIdentity(name);
+      if (name && name.getAttribute && name.getAttribute("data-hover-stop")) {
+        /* Terminal names have no hover and must not select a structural node. */
+        clearLeafNameHighlight();
+        var shell = name.closest && name.closest(".hover-popup");
+        if (shell) shell.querySelectorAll(".type-node.type-active").forEach(function (node) {
+          node.classList.remove("type-active");
+        });
+        return;
+      }
+      if (identity && namePopups.some(function (entry) {
+        return entry.identity === identity;
+      })) {
+        /* A universe popup may still inspect its Type leaf.  Stop only when
+           that same definition recurs inside its own signature, preventing a
+           Type → Type → … cycle without disabling the leaf interaction. */
+        if (compactPointer.matches && name.matches && name.matches("a[data-type]")) {
+          clearLeafNameHighlight();
+          leafActiveName = name;
+          leafActiveName.classList.add("name-active");
+        }
+        return;
+      }
+      clearLeafNameHighlight();
+      var parent = namePopupEntry(name);
+      /* Starting a child lookup is already part of the parent's hover path.
+         Cancel the whole ancestor branch before the asynchronous fetch, so a
+         pending parent timeout cannot tear down the child as it appears. */
+      if (parent) cancelNameClose(parent);
+      var parentIndex = parent ? namePopups.indexOf(parent) : -1;
+      var existing = namePopups[parentIndex + 1];
+      if (existing && existing.anchor === name) {
+        cancelNameClose(existing);
+        return;
+      }
       var serial = ++nameRequest;
-      var spec = name.getAttribute("data-type").split("#");
-      fetchTypes(spec[0]).then(function (types) {
-        var html = types[spec[1]];
-        if (serial !== nameRequest || !html || !name.isConnected) return;
-        hideName();
-        nameAnchor = name;
-        namePopup = document.createElement("div");
-        namePopup.className = "hover-popup name-hover-popup has-definition-link Agda";
+      var expressionType = name.getAttribute("data-expression-type");
+      var rawSpec = expressionType || name.getAttribute("data-type");
+      var spec = rawSpec ? rawSpec.split("#") : null;
+      (spec ? fetchTypes(spec[0]) : Promise.resolve({})).then(function (types) {
+        var expression = expressionType && spec && types.$expressions
+          && types.$expressions[spec[1]];
+        var html = expressionType ? expression && expression.type
+          : spec && types[spec[1]];
+        var hasDefinition = name.hasAttribute("href");
+        if (serial !== nameRequest || !name.isConnected
+            || (parent && namePopups.indexOf(parent) < 0)
+            || (!compactPointer.matches && name.matches && !name.matches(":hover"))
+            || (!html && !(compactPointer.matches && hasDefinition))) return;
+        removeNamePopupsFrom(parentIndex + 1);
+        var namePopup = document.createElement("div");
+        namePopup.className = "hover-popup name-hover-popup Agda";
+        namePopup.setAttribute("role", "dialog");
+        namePopup.dataset.hoverDepth = String(parentIndex + 1);
+        if (hasDefinition) namePopup.classList.add("has-definition-link");
         var nameValue = document.createElement("div");
         nameValue.className = "type-value Agda";
-        nameValue.innerHTML = html;
+        if (html) nameValue.innerHTML = html;
+        else nameValue.textContent = name.textContent.trim();
+        markTerminalHoverStops(nameValue, identity);
+        if (isUniverseTypeText(nameValue.textContent))
+          namePopup.classList.add("hover-terminal");
         namePopup.appendChild(nameValue);
-        namePopup.appendChild(definitionAction(name.href));
+        if (hasDefinition) namePopup.appendChild(definitionAction(name.href,
+          name.getAttribute("data-name") || name.textContent.trim()));
         document.body.appendChild(namePopup);
-        namePopup.addEventListener("mouseleave", hideName);
-        positionName();
+        /* A leaf identifier and a structural type node are different targets.
+           Reuse the source-code name highlight for the former; otherwise the
+           nearest enclosing structural span wrongly lights up as one node. */
+        var activeName = name.matches && name.matches("a[data-type]") ? name : null;
+        var activeNode = name.matches && name.matches(".type-node") ? name : null;
+        if (activeName) activeName.classList.add("name-active");
+        if (activeNode) activeNode.classList.add("type-active");
+        var entry = { popup: namePopup, anchor: name, parent: parent,
+          identity: identity,
+          activeName: activeName, activeNode: activeNode, closeTimer: null };
+        namePopups.push(entry);
+        if (compactPointer.matches && rangeCapableScope(namePopup)) {
+          var gestureScope = levelGesture && levelGesture.activated
+            && levelGesture.kind === "type" && levelGesture.scope;
+          setRangeScope(gestureScope || namePopup);
+        }
+        cancelNameClose(entry);
+        namePopup.addEventListener("mouseenter", function () { cancelNameClose(entry); });
+        namePopup.addEventListener("mouseleave", function () { laterHideName(entry); });
+        namePopup.addEventListener("focusin", function () { cancelNameClose(entry); });
+        namePopup.addEventListener("focusout", function (event) {
+          if (!event.relatedTarget || !namePopup.contains(event.relatedTarget)) laterHideName(entry);
+        });
+        positionNameEntry(entry);
       });
+    }
+
+    function activateTypeNode(target) {
+      var node = target && target.closest && target.closest(".type-value .type-node");
+      var shell = node && node.closest(".hover-popup");
+      if (!shell) return null;
+      shell.querySelectorAll(".type-node.type-active").forEach(function (active) {
+        if (active !== node) active.classList.remove("type-active");
+      });
+      node.classList.add("type-active");
+      return node;
+    }
+    function activateTypeGestureItem(item) {
+      clearHighlight(item.node.closest(".hover-popup"));
+      showName(item.node);
+      if (item.kind === "name") {
+        leafActiveName = item.node;
+        leafActiveName.classList.add("name-active");
+      } else {
+        activateTypeNode(item.node);
+      }
     }
 
     var popup = document.createElement("div");
@@ -741,13 +1230,13 @@
     var definitionLink = popup.querySelector(".type-definition-link");
     definitionLink.setAttribute("aria-label", definitionCopy);
     definitionLink.title = definitionCopy;
-    definitionLink.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-      '<path d="M4 12h13m-5-5 5 5-5 5M20 5v14"/></svg>';
+    definitionLink.innerHTML = definitionActionIcon;
     var options = [], selected = null, anchor = null, renderedRequest = 0;
     var levelGesture = null;
-    var rangeBlock = null;
+    var rangeScope = null;
     var pinned = false;
     var request = 0;
+    var hideTimer = null;
 
     function expressionAncestors(target) {
       var node = target.closest && target.closest(".expr-node");
@@ -790,9 +1279,10 @@
          keep the original name-type popup. */
       return expressionAncestors(target).length > 0;
     }
-    function clearHighlight() {
-      document.querySelectorAll(".expr-active, .name-active").forEach(function (node) {
-        node.classList.remove("expr-active", "name-active");
+    function clearHighlight(scope) {
+      leafActiveName = null;
+      (scope || document).querySelectorAll(".expr-active, .name-active, .type-active, .occ").forEach(function (node) {
+        node.classList.remove("expr-active", "name-active", "type-active", "occ");
       });
     }
     function position() {
@@ -800,13 +1290,9 @@
       var rect = anchor.getBoundingClientRect();
       var width = Math.min(popup.offsetWidth, window.innerWidth - 16);
       var left = Math.max(8, Math.min(rect.left, window.innerWidth - width - 8));
-      var below = rect.bottom;
-      var desiredTop = below + popup.offsetHeight <= window.innerHeight - 8
-        ? below : rect.top - popup.offsetHeight;
-      var top = Math.max(8, Math.min(desiredTop,
-        Math.max(8, window.innerHeight - popup.offsetHeight - 8)));
-      popup.style.left = left + "px";
-      popup.style.top = top + "px";
+      popup.style.left = (window.scrollX + left) + "px";
+      popup.style.top = (window.scrollY + rect.bottom) + "px";
+      popup.style.maxHeight = compactPointer.matches ? "calc(100vh - 1rem)" : "none";
     }
     function vibrateSelection() {
       if (navigator.vibrate) navigator.vibrate(8);
@@ -818,20 +1304,21 @@
       selected = option;
       if (withHapticFeedback && previous !== option) vibrateSelection();
       value.innerHTML = option.type;
+      markTerminalHoverStops(value, hoverIdentity(anchor));
+      popup.classList.toggle("hover-terminal", isUniverseTypeText(value.textContent));
       if (compactPointer.matches && option.href) {
         definitionLink.href = option.href;
+        definitionLink.setAttribute("data-name", option.source);
         definitionLink.hidden = false;
         popup.classList.add("has-definition-link");
       } else {
         definitionLink.removeAttribute("href");
+        definitionLink.removeAttribute("data-name");
         definitionLink.hidden = true;
         popup.classList.remove("has-definition-link");
       }
       setPopupWidth(option);
       clearHighlight();
-      document.querySelectorAll(".occ").forEach(function (node) {
-        node.classList.remove("occ");
-      });
       if (option.kind === "name" && option.nameNode)
         option.nameNode.classList.add("name-active");
       else if (option.node) {
@@ -880,8 +1367,24 @@
       });
     }
     function applyLevelGesture() {
-      if (!levelGesture || !levelGesture.activated || !options.length
-          || levelGesture.request !== request
+      if (!levelGesture || !levelGesture.activated) return;
+      if (levelGesture.kind === "type") {
+        var typeBase = levelGesture.baseOption;
+        var typeStep = gestureIndex(levelGesture.deltaX);
+        var typeCandidates = gestureCandidates(
+          levelGesture.items, typeBase, levelGesture.deltaX
+        );
+        var typeNext = typeStep < 0 || !typeCandidates.length
+          ? typeBase : typeCandidates[Math.min(typeStep, typeCandidates.length - 1)];
+        if (typeNext && typeNext !== levelGesture.lastOption) {
+          levelGesture.lastOption = typeNext;
+          activateTypeGestureItem(typeNext);
+          vibrateSelection();
+        }
+        if (levelGesture && levelGesture.released) clearLevelGesture();
+        return;
+      }
+      if (!options.length || levelGesture.request !== request
           || levelGesture.request !== renderedRequest) return;
       if (!levelGesture.baseOption) {
         levelGesture.baseOption = selected;
@@ -909,43 +1412,101 @@
       measure.appendChild(sample);
       if (compactPointer.matches && item.href) {
         measure.classList.add("has-definition-link");
-        measure.appendChild(definitionAction(item.href));
+        measure.appendChild(definitionAction(item.href, item.source));
       }
       document.body.appendChild(measure);
       popup.style.width = Math.ceil(measure.getBoundingClientRect().width) + "px";
       measure.remove();
     }
-    function setRangeBlock(block) {
-      var next = block && block.querySelector(".expr-node") ? block : null;
-      if (rangeBlock && rangeBlock !== next)
-        rangeBlock.classList.remove("ast-ranges-visible");
-      rangeBlock = next;
-      if (rangeBlock) rangeBlock.classList.add("ast-ranges-visible");
-      swipeHint.hidden = !(compactPointer.matches && rangeBlock);
-      return Boolean(rangeBlock);
+    function rangeCapableScope(scope) {
+      if (scope && scope.classList.contains("hover-terminal")) return null;
+      return scope && scope.querySelector(
+        ".expr-node, .type-node[data-expression-type]"
+      ) ? scope : null;
+    }
+    function setRangeScope(scope) {
+      var next = rangeCapableScope(scope);
+      if (rangeScope && rangeScope !== next)
+        rangeScope.classList.remove("ast-ranges-visible");
+      rangeScope = next;
+      if (rangeScope) rangeScope.classList.add("ast-ranges-visible");
+      swipeHint.hidden = !(compactPointer.matches && rangeScope);
+      return Boolean(rangeScope);
+    }
+    function typeGestureState(target) {
+      var direct = target && target.closest
+        && target.closest(".type-value .type-node[data-expression-type]");
+      var name = target && target.closest
+        && target.closest(".type-value a[data-type]");
+      var valueScope = direct && direct.closest(".type-value");
+      var popupScope = direct && direct.closest(".hover-popup");
+      if (!direct || !valueScope || !popupScope
+          || direct.hasAttribute("data-hover-stop")
+          || popupScope.classList.contains("hover-terminal")) return null;
+      var items = Array.from(
+        valueScope.querySelectorAll(".type-node[data-expression-type]")
+      ).map(function (node) {
+        return { kind: "expression", node: node,
+          start: Number(node.dataset.exprStart), end: Number(node.dataset.exprEnd) };
+      }).filter(function (item) {
+        return Number.isFinite(item.start) && Number.isFinite(item.end);
+      });
+      var base = items.find(function (item) { return item.node === direct; });
+      if (name && valueScope.contains(name) && !name.hasAttribute("data-hover-stop")) {
+        /* The compiler traces structural ranges, while a linked identifier is
+           a separate selectable leaf. Recover its offset in the same visible
+           Unicode text used by the renderer, just as source-code gestures
+           prepend their directly touched name to the expression chain. */
+        var before = document.createRange();
+        before.setStart(valueScope, 0);
+        before.setEndBefore(name);
+        var start = Array.from(before.toString()).length;
+        var leaf = { kind: "name", node: name, start: start,
+          end: start + Array.from(name.textContent).length };
+        items.unshift(leaf);
+        base = leaf;
+      }
+      return base ? { scope: popupScope, items: items, base: base } : null;
+    }
+    function fallbackRangeScope() {
+      for (var index = namePopups.length - 1; index >= 0; index--) {
+        if (rangeCapableScope(namePopups[index].popup))
+          return namePopups[index].popup;
+      }
+      if (!popup.hidden && rangeCapableScope(popup)) return popup;
+      var block = anchor && anchor.closest && anchor.closest("pre.Agda");
+      return rangeCapableScope(block);
     }
     function clearLevelGesture() {
       if (!levelGesture) return;
       window.clearTimeout(levelGesture.timer);
-      if (levelGesture.block) levelGesture.block.classList.remove("ast-level-gesture");
+      if (levelGesture.scope) levelGesture.scope.classList.remove("ast-level-gesture");
       levelGesture = null;
     }
     function render(items, target, preferred) {
+      cancelHide();
       options = items;
       anchor = target;
       var nextRangeBlock = target.closest && target.closest("pre.Agda");
-      setRangeBlock(nextRangeBlock);
+      setRangeScope(nextRangeBlock);
       renderedRequest = request;
       popup.hidden = false;
       choose(Math.max(0, items.indexOf(preferred)));
+      if (compactPointer.matches && rangeCapableScope(popup)) setRangeScope(popup);
       applyLevelGesture();
     }
     function show(target) {
+      cancelHide();
       hideName();
       var serial = ++request;
       var name = target.closest && target.closest("a[data-type]");
+      var linkedName = target.closest && target.closest("a[href]");
       var directNode = target.closest && target.closest(".expr-node");
-      var pageRequest = directNode ? fetchTypes(cfg.chapter || cfg.module) : Promise.resolve({});
+      var codeScope = directNode && directNode.closest
+        && directNode.closest("[data-module]");
+      var pageModule = codeScope && codeScope.dataset.module;
+      var pageRequest = directNode
+        ? fetchTypes(pageModule || cfg.chapter || cfg.module) : Promise.resolve({});
       var nameSpec = name ? name.getAttribute("data-type").split("#") : null;
       var nameRequest = nameSpec ? fetchTypes(nameSpec[0]) : Promise.resolve({});
       Promise.all([pageRequest, nameRequest]).then(function (loaded) {
@@ -955,18 +1516,24 @@
            ancestry therefore describes only the touched fragment, whereas the
            source intervals recover the complete logical AST chain. */
         var items = expressionOptions(expressionData, directNode);
-        if (nameSpec && loaded[1][nameSpec[1]]) {
-          var canonicalName = name.getAttribute("data-name") ||
-            (loaded[1].$names || {})[nameSpec[1]];
+        var nameType = nameSpec && loaded[1][nameSpec[1]];
+        var chosenName = name || (compactPointer.matches ? linkedName : null);
+        if (chosenName && (nameType || (compactPointer.matches
+            && chosenName.hasAttribute("href")))) {
+          var canonicalName = chosenName.getAttribute("data-name") ||
+            (nameSpec && (loaded[1].$names || {})[nameSpec[1]]);
           /* The pointer is directly over this identifier, so its name type is
              preferred. Width follows the displayed type: reserving space for
              every enclosing application leaves short variable types in a large,
              mostly empty popup now that node selection happens in the source. */
-          items.unshift({ kind: "name", node: null, nameNode: name,
-                          source: canonicalName || name.textContent.trim(),
-                          type: loaded[1][nameSpec[1]], href: name.href,
-                          start: Number(name.id),
-                          end: Number(name.id) + Array.from(name.textContent).length });
+          items.unshift({ kind: "name", node: null, nameNode: chosenName,
+                          source: canonicalName || chosenName.textContent.trim(),
+                          type: nameType || escapedCodeName(canonicalName ||
+                            chosenName.textContent.trim()),
+                          href: chosenName.hasAttribute("href") ? chosenName.href : null,
+                          start: Number(chosenName.id || chosenName.dataset.sourcePosition),
+                          end: Number(chosenName.id || chosenName.dataset.sourcePosition)
+                            + Array.from(chosenName.textContent).length });
         }
         items.sort(function (left, right) {
           if (left.kind === "name") return right.kind === "name" ? 0 : -1;
@@ -975,12 +1542,12 @@
           var rightWidth = right.end - right.start;
           return leftWidth - rightWidth || right.start - left.start;
         });
-        var preferred = name
+        var preferred = chosenName
           ? items.find(function (item) { return item.kind === "name"; })
           : items.find(function (item) {
               return item.node.dataset.exprId === directNode.dataset.exprId;
             });
-        if (items.length) render(items, name || directNode || target,
+        if (items.length) render(items, chosenName || directNode || target,
                                  preferred || items[0]);
         else if (levelGesture && levelGesture.request === serial
                  && levelGesture.released) clearLevelGesture();
@@ -988,18 +1555,52 @@
     }
     function hide() {
       if (pinned) return;
+      cancelHide();
       clearLevelGesture();
       request += 1;
       popup.hidden = true; options = []; selected = null; anchor = null; clearHighlight();
-      setRangeBlock(null);
+      setRangeScope(null);
+      hideName();
+    }
+    function cancelHide() {
+      window.clearTimeout(hideTimer);
+      hideTimer = null;
     }
     function laterHide() {
-      if (compactPointer.matches) return;
-      hide();
+      cancelHide();
+      hideTimer = scheduleHoverClose(hide);
+    }
+    function activeSourceRangeContains(target) {
+      if (!target) return false;
+      if (selected && selected.kind === "name" && selected.nameNode)
+        return selected.nameNode === target || selected.nameNode.contains(target);
+      if (selected && selected.kind === "expression") {
+        var expression = target.closest && target.closest(".expr-node");
+        if (expression) {
+          var start = Number(expression.dataset.exprStart);
+          var end = Number(expression.dataset.exprEnd);
+          if (Number.isFinite(start) && Number.isFinite(end)
+              && selected.start <= start && selected.end >= end) return true;
+        }
+        var token = target.closest && target.closest("[id]");
+        var position = token && Number(token.id);
+        if (Number.isFinite(position)
+            && selected.start <= position && position < selected.end) return true;
+      }
+      return namePopups.some(function (entry) {
+        return entry.anchor === target || entry.anchor.contains(target);
+      });
+    }
+    function hoverPopupContains(target) {
+      return popup.contains(target) || namePopupContains(target);
+    }
+    function activeHoverChainContains(target) {
+      return hoverPopupContains(target) || activeSourceRangeContains(target);
     }
 
     document.addEventListener("mouseover", function (event) {
       if (compactPointer.matches) return;
+      activateTypeNode(event.target);
       if (!usesInspector(event.target)) return;
       var target = event.target.closest && event.target.closest(".expr-node, a[data-type]");
       if (!target || popup.contains(target)) return;
@@ -1009,6 +1610,13 @@
     });
     document.addEventListener("mouseout", function (event) {
       if (compactPointer.matches) return;
+      var typeNode = event.target.closest
+        && event.target.closest(".type-value .type-node");
+      if (typeNode) {
+        var nextTypeNode = event.relatedTarget && activateTypeNode(event.relatedTarget);
+        if (nextTypeNode !== typeNode && !nodeOwnsOpenHover(typeNode))
+          typeNode.classList.remove("type-active");
+      }
       if (!usesInspector(event.target)) return;
       var target = event.target.closest && event.target.closest(".expr-node, a[data-type]");
       var currentRoots = expressionAncestors(event.target);
@@ -1024,10 +1632,9 @@
         /* Touch browsers normally activate on pointerdown. Keep click as a
            fallback for keyboard and synthetic activation. */
         var compactBlock = event.target.closest && event.target.closest("pre.Agda");
-        var touched = event.target.closest && event.target.closest("a[data-type], .expr-node");
-        if (compactBlock && setRangeBlock(compactBlock)) pinned = true;
-        else if (!touched && !popup.contains(event.target)
-                 && !(namePopup && namePopup.contains(event.target))) {
+        var touched = definitionHoverTarget(event.target);
+        if (compactBlock && setRangeScope(compactBlock)) pinned = true;
+        else if (!touched && !activeHoverChainContains(event.target)) {
           pinned = false;
           hide(); hideName();
         }
@@ -1043,77 +1650,99 @@
       pinned = true;
       show(event.target);
     });
+    popup.addEventListener("mouseenter", cancelHide);
     popup.addEventListener("mouseleave", laterHide);
     document.addEventListener("pointerdown", function (event) {
       if (!compactPointer.matches) {
         if (!popup.hidden && !popup.contains(event.target)
-            && !(event.target.closest && event.target.closest(".expr-node, a[data-type]"))) {
+            && !(event.target.closest && event.target.closest(
+              ".expr-node, a[data-type], .type-node[data-expression-type]"
+            ))) {
           pinned = false; hide();
         }
         return;
       }
       var codeBlock = event.target.closest && event.target.closest("pre.Agda");
-      var target = event.target.closest && event.target.closest("a[data-type], .expr-node");
-      var rangeCapableBlock = codeBlock && codeBlock.querySelector(".expr-node")
-        ? codeBlock : null;
-      if (codeBlock && !rangeCapableBlock) {
+      var target = definitionHoverTarget(event.target);
+      var rangeCapableBlock = rangeCapableScope(codeBlock);
+      var typeGesture = typeGestureState(event.target);
+      var insideHoverPopup = hoverPopupContains(event.target);
+      var hasActiveHover = !popup.hidden || Boolean(namePopups.length);
+      if (hasActiveHover && !activeHoverChainContains(event.target)) {
+        pinned = false;
+        hide(); hideName();
+      }
+      /* A code block without compiler-backed expression ranges still contains
+         ordinary typed names.  It cannot start a range-swipe gesture, but its
+         names must enter the same hover path as names in richer Agda blocks. */
+      if (codeBlock && !rangeCapableBlock && !target) {
         pinned = false;
         hide(); hideName();
         return;
       }
-      if (rangeCapableBlock && rangeCapableBlock !== rangeBlock) {
-        pinned = false;
-        hide(); hideName();
-      }
-      if (rangeCapableBlock && setRangeBlock(rangeCapableBlock)) pinned = true;
+      if (rangeCapableBlock && setRangeScope(rangeCapableBlock)) pinned = true;
+      if (typeGesture) setRangeScope(typeGesture.scope);
       if (codeBlock && !target) {
         return;
       }
-      if ((popup.contains(event.target) || (namePopup && namePopup.contains(event.target)))
-          && !(target && target.matches("a[data-type]"))) return;
+      if (insideHoverPopup
+          && !(target && target.matches(
+            "a[data-type], .type-node[data-expression-type]"
+          ))) return;
       if (!target) {
         pinned = false; hide(); hideName();
         return;
       }
       if (usesInspector(event.target)) {
         return;
-      } else if (target.matches("a[data-type]")) {
+      } else if (target.matches("a[href], .type-node[data-expression-type]")) {
         clearLevelGesture();
         pinned = false;
-        if (!popup.hidden) hide();
+        /* Keep the popup containing this target visible.  The child hover is
+           positioned from that live anchor, exactly as in the desktop path. */
+        if (!insideHoverPopup && !popup.hidden) hide();
         showName(target);
       }
     });
     document.addEventListener("touchstart", function (event) {
       if (!compactPointer.matches || event.touches.length !== 1) return;
       var block = event.target.closest && event.target.closest("pre.Agda");
-      var continuesActiveBlock = block && block === rangeBlock && options.length;
+      var continuesActiveBlock = block && block === rangeScope && options.length;
       var touchesExpression = usesInspector(event.target);
-      if (!continuesActiveBlock && !touchesExpression) return;
+      var typeGesture = typeGestureState(event.target);
+      if (!continuesActiveBlock && !touchesExpression && !typeGesture) return;
       var touch = event.touches[0];
       var gesture = {
+        kind: typeGesture ? "type" : "source",
         target: event.target,
         block: block,
+        scope: typeGesture ? typeGesture.scope : block,
         startX: touch.clientX,
         startY: touch.clientY,
         deltaX: 0,
         activated: false,
         touchesExpression: touchesExpression,
-        baseOption: null,
-        lastOption: null
+        lastOption: typeGesture && typeGesture.base,
+        items: typeGesture && typeGesture.items,
+        baseOption: typeGesture && typeGesture.base
       };
       clearLevelGesture();
       levelGesture = gesture;
       gesture.timer = window.setTimeout(function () {
         if (levelGesture !== gesture) return;
         gesture.activated = true;
-        if (gesture.block) gesture.block.classList.add("ast-level-gesture");
+        if (gesture.scope) gesture.scope.classList.add("ast-level-gesture");
         vibrateSelection();
+        if (gesture.kind === "type") {
+          setRangeScope(gesture.scope);
+          activateTypeGestureItem(gesture.baseOption);
+          return;
+        }
         hideName(); pinned = true;
         if (gesture.touchesExpression) {
           show(gesture.target);
           gesture.request = request;
-        } else if (gesture.block === rangeBlock && options.length) {
+        } else if (gesture.block === rangeScope && options.length) {
           gesture.request = request;
           applyLevelGesture();
         } else {
@@ -1124,7 +1753,8 @@
     });
     document.addEventListener("selectstart", function (event) {
       if (!compactPointer.matches) return;
-      var expression = event.target.closest && event.target.closest(".expr-node");
+      var expression = event.target.closest
+        && event.target.closest(".expr-node, .type-node[data-expression-type]");
       if (expression) event.preventDefault();
     });
     document.addEventListener("touchmove", function (event) {
@@ -1151,13 +1781,18 @@
       if (!gesture.activated) {
         var target = gesture.target;
         clearLevelGesture();
-        if (event.type === "touchend") {
+        if (event.type === "touchend" && gesture.kind === "source") {
           vibrateSelection();
           hideName(); pinned = true; show(target);
         }
         return;
       }
-      if (gesture.block) gesture.block.classList.remove("ast-level-gesture");
+      if (gesture.scope) gesture.scope.classList.remove("ast-level-gesture");
+      if (gesture.kind === "type") {
+        clearLevelGesture();
+        setRangeScope(fallbackRangeScope());
+        return;
+      }
       if (event.type === "touchcancel"
           || gesture.request === renderedRequest) clearLevelGesture();
       else gesture.released = true;
@@ -1169,11 +1804,13 @@
     });
     document.addEventListener("mouseover", function (event) {
       if (compactPointer.matches) return;
-      var name = event.target.closest && event.target.closest("a[data-type]");
+      var name = event.target.closest && event.target.closest(
+        "a[data-type], .type-node[data-expression-type]"
+      );
       if (!name || usesInspector(event.target)
           || (event.relatedTarget && name.contains(event.relatedTarget))) return;
       /* A type rendered inside the inspector can itself be inspected. */
-      if (!popup.contains(name)) {
+      if (!popup.contains(name) && !namePopupEntry(name)) {
         pinned = false;
         if (!popup.hidden) hide();
       }
@@ -1182,15 +1819,395 @@
     });
     document.addEventListener("mouseout", function (event) {
       if (compactPointer.matches) return;
-      var name = event.target.closest && event.target.closest("a[data-type]");
+      var name = event.target.closest && event.target.closest(
+        "a[data-type], .type-node[data-expression-type]"
+      );
       if (name && !usesInspector(event.target)
           && (!event.relatedTarget || (!name.contains(event.relatedTarget)
-              && !(namePopup && namePopup.contains(event.relatedTarget))))) hideName();
+              && !namePopupContains(event.relatedTarget)))) {
+        var child = namePopups.find(function (entry) { return entry.anchor === name; });
+        laterHideName(child);
+      }
     });
-    window.addEventListener("scroll", function () { position(); positionName(); }, { passive: true });
+    (modalReadingScroller() || window).addEventListener("scroll", function () {
+      position(); positionName();
+    }, { passive: true });
     window.addEventListener("resize", function () {
       if (!popup.hidden && selected) setPopupWidth(selected);
       position(); positionName();
+    });
+    document.addEventListener("bedrock:definition-modal-open", function () {
+      pinned = false;
+      hide();
+      hideName();
+    });
+  }
+
+  function alignModalDefinition(frameDocument, targetBlock) {
+    var scroller = frameDocument.getElementById("main-content");
+    if (!scroller) return false;
+    var scrollerTop = scroller.getBoundingClientRect().top;
+    var bar = frameDocument.getElementById("section-sticky");
+    /* The retained chapter directory is the only chrome inside the scroller.
+       Use its actual edge in the same coordinate system as the target block. */
+    var inset = bar ? Math.max(0, bar.getBoundingClientRect().bottom - scrollerTop) : 0;
+    var delta = targetBlock.getBoundingClientRect().top - scrollerTop - inset;
+    if (Math.abs(delta) <= 0.5) return false;
+    var desiredTop = scroller.scrollTop + delta;
+    var maximumTop = scroller.scrollHeight - scroller.clientHeight;
+    if (desiredTop > maximumTop) {
+      var root = frameDocument.documentElement;
+      var room = parseFloat(root.style.getPropertyValue("--definition-modal-anchor-room")) || 0;
+      root.style.setProperty("--definition-modal-anchor-room",
+        Math.ceil(room + desiredTop - maximumTop + 1) + "px");
+    }
+    /* On iOS Safari the iframe window is not a reliable scrolling element.
+       Both the measurement and the write belong to the explicit reading scroller. */
+    scroller.scrollTop = desiredTop;
+    return true;
+  }
+
+  function sizeModalReadingScroller(frameDocument, modalBody) {
+    var scroller = frameDocument.getElementById("main-content");
+    if (!scroller) return null;
+    /* Use the actual dialog height for the shared desktop/phone reading area. */
+    var height = modalBody.clientHeight;
+    if (height > 0) {
+      frameDocument.documentElement.style.height = height + "px";
+      frameDocument.body.style.height = height + "px";
+      scroller.style.height = height + "px";
+    }
+    return scroller;
+  }
+
+  function definitionPageKey(url) {
+    var page = new URL(url.href);
+    page.hash = "";
+    page.searchParams.delete("bedrock-modal");
+    page.searchParams.delete("bedrock-modal-scroll");
+    page.searchParams.sort();
+    /* Static hosts canonicalize .html to extensionless URLs (and index.html
+       to a directory). Those redirects still identify the same document. */
+    page.pathname = page.pathname.replace(/\/index\.html$/, "/")
+      .replace(/\.html$/, "").replace(/\/$/, "") || "/";
+    return page.href;
+  }
+
+  /* ---- in-page definition previews --------------------------------------- */
+  function initDefinitionModals() {
+    var history = [], historyIndex = -1, view = null, loadRequest = 0;
+    var isModalDocument = isDefinitionModalDocument;
+    var copy = ({
+      en: { title: "Definition", loading: "Loading definition…",
+        missing: "The target definition could not be loaded from this page.", close: "Close",
+        back: "Back", forward: "Forward" },
+      zh: { title: "定义", loading: "正在载入定义…",
+        missing: "无法从该页面载入目标定义。", close: "关闭",
+        back: "后退", forward: "前进" },
+      ja: { title: "定義", loading: "定義を読み込んでいます…",
+        missing: "このページから対象の定義を読み込めませんでした。", close: "閉じる",
+        back: "戻る", forward: "進む" }
+    })[cfg.lang] || {
+      title: "Definition", loading: "Loading definition…",
+      missing: "The target definition could not be loaded from this page.", close: "Close",
+      back: "Back", forward: "Forward"
+    };
+
+    function targetFor(link) {
+      if (!link || link.classList.contains("definition-modal-title")) return null;
+      var raw = link.getAttribute("href");
+      if (!raw) return null;
+      var url;
+      try { url = new URL(raw, document.baseURI); } catch (_) { return null; }
+      if (!url.hash || url.origin !== location.origin) return null;
+      url.searchParams.delete("bedrock-modal");
+      url.searchParams.delete("bedrock-modal-scroll");
+      var spec = link.getAttribute("data-type");
+      var filename = decodeURIComponent(url.pathname.split("/").pop() || "");
+      return { url: url, module: spec ? spec.split("#")[0] : filename.replace(/\.html$/, "") };
+    }
+    function close() {
+      if (!view) return;
+      var focus = view.opener;
+      if (view.frameSizeObserver) view.frameSizeObserver.disconnect();
+      view.backdrop.remove();
+      view = null;
+      history = [];
+      historyIndex = -1;
+      loadRequest++;
+      document.body.classList.remove("definition-modal-open");
+      if (focus && focus.isConnected && focus.focus) focus.focus({ preventScroll: true });
+    }
+    function createView(opener) {
+      var backdrop = document.createElement("div");
+      backdrop.className = "definition-modal-backdrop";
+      var modal = document.createElement("section");
+      modal.className = "definition-modal";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      var titleId = "definition-modal-title-" + Date.now();
+      modal.setAttribute("aria-labelledby", titleId);
+      var header = document.createElement("header");
+      header.className = "definition-modal-header";
+      var title = document.createElement("a");
+      title.className = "definition-modal-title";
+      title.id = titleId;
+      title.textContent = copy.title;
+      var historyActions = document.createElement("div");
+      historyActions.className = "definition-modal-history";
+      var back = document.createElement("button");
+      back.className = "definition-modal-history-button";
+      back.type = "button";
+      back.setAttribute("aria-label", copy.back);
+      back.title = copy.back;
+      back.textContent = "←";
+      var forward = document.createElement("button");
+      forward.className = "definition-modal-history-button";
+      forward.type = "button";
+      forward.setAttribute("aria-label", copy.forward);
+      forward.title = copy.forward;
+      forward.textContent = "→";
+      var closeButton = document.createElement("button");
+      closeButton.className = "definition-modal-close";
+      closeButton.type = "button";
+      closeButton.setAttribute("aria-label", copy.close);
+      closeButton.textContent = "×";
+      var body = document.createElement("div");
+      body.className = "definition-modal-body";
+      body.setAttribute("aria-live", "polite");
+      historyActions.appendChild(back);
+      historyActions.appendChild(forward);
+      header.appendChild(historyActions);
+      header.appendChild(title);
+      header.appendChild(closeButton);
+      modal.appendChild(header);
+      modal.appendChild(body);
+      backdrop.appendChild(modal);
+      document.body.appendChild(backdrop);
+      view = { backdrop: backdrop, modal: modal, opener: opener, title: title,
+        body: body, back: back, forward: forward, frame: null,
+        frameSizeObserver: null };
+      document.body.classList.add("definition-modal-open");
+      closeButton.addEventListener("click", close);
+      backdrop.addEventListener("pointerdown", function (event) {
+        if (event.target === backdrop) close();
+      });
+      back.addEventListener("click", function () {
+        if (historyIndex <= 0) return;
+        historyIndex--;
+        renderHistoryEntry();
+      });
+      forward.addEventListener("click", function () {
+        if (historyIndex >= history.length - 1) return;
+        historyIndex++;
+        renderHistoryEntry();
+      });
+      closeButton.focus({ preventScroll: true });
+    }
+    function renderHistoryEntry() {
+      if (!view || historyIndex < 0) return;
+      if (view.frameSizeObserver) {
+        view.frameSizeObserver.disconnect();
+        view.frameSizeObserver = null;
+      }
+      var entry = history[historyIndex];
+      var request = ++loadRequest;
+      view.title.textContent = entry.label;
+      view.title.href = entry.target.url.href;
+      view.back.disabled = historyIndex === 0;
+      view.forward.disabled = historyIndex === history.length - 1;
+      view.body.textContent = copy.loading;
+      var frame = document.createElement("iframe");
+      frame.className = "definition-modal-frame";
+      frame.title = entry.label;
+      var frameUrl = new URL(entry.target.url.href);
+      frameUrl.searchParams.set("bedrock-modal", "1");
+      /* A frame URL with a fragment starts a second, native anchor scroll which
+         can race the code-block alignment, especially in mobile WebKit. */
+      frameUrl.hash = "";
+      frame.addEventListener("load", function () {
+        if (!view || request !== loadRequest || view.frame !== frame) return;
+        var frameDocument, loadedUrl;
+        try {
+          frameDocument = frame.contentDocument;
+          loadedUrl = new URL(frame.contentWindow.location.href);
+        } catch (_) { return; }
+        if (definitionPageKey(loadedUrl) !== definitionPageKey(entry.target.url)) {
+          view.body.textContent = copy.missing;
+          return;
+        }
+        var id;
+        try { id = decodeURIComponent(entry.target.url.hash.slice(1)); }
+        catch (_) { id = entry.target.url.hash.slice(1); }
+        var target = frameDocument && frameDocument.getElementById(id);
+        if (!target) {
+          view.body.textContent = copy.missing;
+          return;
+        }
+        var targetBlock = target.closest("pre.Agda") || target;
+        var scroller = sizeModalReadingScroller(frameDocument, view.body);
+        if (!scroller) {
+          view.body.textContent = copy.missing;
+          return;
+        }
+        var alignmentRun = 0;
+        function alignTarget() {
+          if (!alignmentActive || !view || request !== loadRequest || view.frame !== frame
+              || !targetBlock.isConnected) return false;
+          return alignModalDefinition(frameDocument, targetBlock);
+        }
+        function requestAlignment() {
+          if (!alignmentActive) return;
+          var run = ++alignmentRun;
+          function settle(remaining) {
+            if (!alignmentActive || run !== alignmentRun) return;
+            var pending = alignTarget();
+            if (pending && remaining > 0)
+              frame.contentWindow.requestAnimationFrame(function () {
+                settle(remaining - 1);
+              });
+          }
+          settle(8);
+        }
+        var alignmentActive = true;
+        var alignmentObserver = null;
+        function stopAlignment() {
+          alignmentActive = false;
+          alignmentRun += 1;
+          if (alignmentObserver) alignmentObserver.disconnect();
+        }
+        ["pointerdown", "touchstart", "wheel", "keydown"].forEach(function (type) {
+          frame.contentWindow.addEventListener(type, stopAlignment,
+            { capture: true, passive: type !== "keydown", once: true });
+        });
+        requestAlignment();
+        if (frameDocument.fonts && frameDocument.fonts.ready) {
+          frameDocument.fonts.ready.then(function () {
+            frame.contentWindow.requestAnimationFrame(requestAlignment);
+          });
+        }
+        if (frame.contentWindow.ResizeObserver) {
+          alignmentObserver = new frame.contentWindow.ResizeObserver(function () {
+            frame.contentWindow.requestAnimationFrame(requestAlignment);
+          });
+          alignmentObserver.observe(targetBlock);
+          if (targetBlock.parentElement) alignmentObserver.observe(targetBlock.parentElement);
+          var article = frameDocument.querySelector("article");
+          if (article) alignmentObserver.observe(article);
+          alignmentObserver.observe(scroller);
+        }
+        if (window.ResizeObserver) {
+          view.frameSizeObserver = new ResizeObserver(function () {
+            if (!view || request !== loadRequest || view.frame !== frame) return;
+            sizeModalReadingScroller(frameDocument, view.body);
+            requestAlignment();
+          });
+          view.frameSizeObserver.observe(view.body);
+        }
+        frame.contentWindow.addEventListener("resize", requestAlignment, { passive: true });
+      });
+      view.frame = frame;
+      frame.src = frameUrl.href;
+      view.body.textContent = "";
+      view.body.appendChild(frame);
+    }
+    function qualifiedLabel(target, name) {
+      return name === target.module || name.indexOf(target.module + ".") === 0
+        ? name : target.module + "." + name;
+    }
+    function push(target, label, opener) {
+      document.dispatchEvent(new CustomEvent("bedrock:definition-modal-open"));
+      if (!view) createView(opener);
+      history.splice(historyIndex + 1);
+      history.push({ target: target, label: label });
+      historyIndex = history.length - 1;
+      renderHistoryEntry();
+    }
+
+    function open(link, target) {
+      var name = link.getAttribute("data-name")
+        || link.textContent.trim() || target.module;
+      push(target, qualifiedLabel(target, name), link);
+    }
+
+    document.addEventListener("click", function (event) {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var clickedLink = event.target.closest && event.target.closest("a[href]");
+      if (!clickedLink) return;
+      var definitionLink = clickedLink.matches(
+        ".Agda a[href], .type-definition-link[href]"
+      ) ? clickedLink : null;
+      var target = targetFor(definitionLink);
+      if (!target) {
+        if (isModalDocument && window.parent !== window) {
+          var pageTarget;
+          try { pageTarget = new URL(clickedLink.href, document.baseURI); }
+          catch (_) { return; }
+          pageTarget.searchParams.delete("bedrock-modal");
+          pageTarget.searchParams.delete("bedrock-modal-scroll");
+          event.preventDefault();
+          event.stopPropagation();
+          window.parent.postMessage({ type: "bedrock-page-navigate",
+            href: pageTarget.href }, location.origin);
+        }
+        return;
+      }
+      if (compactPointer.matches && !isDefinitionPopupAction(definitionLink)) {
+        /* The hover subsystem owns this first tap. Its explicit arrow is the
+           only compact-pointer action that advances from hover to modal. */
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      if (isModalDocument && window.parent !== window) {
+        var embeddedName = definitionLink.getAttribute("data-name")
+          || definitionLink.textContent.trim() || target.module;
+        window.parent.postMessage({ type: "bedrock-definition-open",
+          href: target.url.href, module: target.module,
+          label: qualifiedLabel(target, embeddedName) }, location.origin);
+        return;
+      }
+      open(definitionLink, target);
+    });
+    window.addEventListener("message", function (event) {
+      if (!view || event.origin !== location.origin
+          || !view.frame || event.source !== view.frame.contentWindow
+          || !event.data) return;
+      if (event.data.type === "bedrock-page-navigate") {
+        var pageUrl;
+        try { pageUrl = new URL(event.data.href, document.baseURI); }
+        catch (_) { return; }
+        if (!/^(https?:|mailto:)$/.test(pageUrl.protocol)) return;
+        location.href = pageUrl.href;
+        return;
+      }
+      if (event.data.type !== "bedrock-definition-open") return;
+      var targetUrl;
+      try { targetUrl = new URL(event.data.href, document.baseURI); }
+      catch (_) { return; }
+      targetUrl.searchParams.delete("bedrock-modal");
+      targetUrl.searchParams.delete("bedrock-modal-scroll");
+      var current = history[historyIndex];
+      if (current && definitionPageKey(current.target.url) === definitionPageKey(targetUrl)
+          && current.target.url.hash === targetUrl.hash) {
+        location.href = targetUrl.href;
+        return;
+      }
+      push({ url: targetUrl, module: event.data.module }, event.data.label, view.opener);
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      if (isModalDocument && window.parent !== window) {
+        window.parent.postMessage({ type: "bedrock-definition-close" }, location.origin);
+      } else if (view) {
+        event.preventDefault();
+        close();
+      }
+    });
+    window.addEventListener("message", function (event) {
+      if (view && event.origin === location.origin && view.frame
+          && event.source === view.frame.contentWindow && event.data
+          && event.data.type === "bedrock-definition-close") close();
     });
   }
 
@@ -1206,14 +2223,20 @@
       catch (_) { return link.getAttribute("href"); }
     }
     function occurrenceLink(target) {
-      return target.closest && target.closest("pre.Agda a[href], span.Agda a[href]");
+      var link = target.closest && target.closest(
+        "pre.Agda a[href], span.Agda a[href], .type-value a[href]"
+      );
+      return link && !link.hasAttribute("data-hover-stop") ? link : null;
     }
     function set(key, on) {
-      document.querySelectorAll("pre.Agda a[href], span.Agda a[href]").forEach(function (link) {
-        if (occurrenceKey(link) === key) link.classList.toggle("occ", on);
-      });
+      document.querySelectorAll(
+        "pre.Agda a[href], span.Agda a[href], .type-value a[href]"
+      ).forEach(function (link) {
+          if (occurrenceKey(link) === key) link.classList.toggle("occ", on);
+        });
     }
     document.addEventListener("mouseover", function (event) {
+      if (compactPointer.matches) return;
       var link = occurrenceLink(event.target);
       if (!link || (event.relatedTarget && link.contains(event.relatedTarget))) return;
       set(occurrenceKey(link), true);
@@ -1343,7 +2366,7 @@
       try { id = decodeURIComponent(location.hash.slice(1)); } catch (_) { id = ""; }
       const target = document.getElementById(id);
       const panel = panels.find(p => p === target || (target && p.contains(target)));
-      activate(panel ? panel.id : "reading-explorer", false, false);
+      activate(panel ? panel.id : "milestones", false, false);
       if (target && target !== panel) requestAnimationFrame(() => target.scrollIntoView());
     }
     tabs.forEach((tab, i) => {

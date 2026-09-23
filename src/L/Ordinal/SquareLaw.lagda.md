@@ -78,9 +78,7 @@ The logical vocabulary matches the shape of the statements to be proved. Refutat
 論理の語彙は、証明すべき言明の形に合わせて選ばれている。反証は空型への関数であり、所属の証明は切り詰められた命題の住人であり、三路の比較はその場合の直和で、inl と inr で印づけられる。対やレコードの間のパスは標準補題 Σ≡Prop と ΣPathP で扱う。関係する成分の型が命題であるとき、成分のパスから依存対へのパスを組み立てるものである。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 The finite counting part needs arithmetic and the standard finite types. Multiplication _·_ on natural numbers sizes the square of a finite type, and the library equivalence factorEquiv identifies `Fin n × Fin n` with `Fin (n · n)`. The functions `equivFun` and `invEq` move between these presentations, and `retEq` identifies an input with its return along the two maps. The pigeonhole theorem supplies the impossibility that anchors the chapter's last argument: no injection from `Fin (suc n)` to `Fin n` exists. Order on the natural numbers comes with the fact that ≤ is a proposition, which makes comparisons into `Fin` respect the proof-irrelevance of their bound.
@@ -167,10 +165,20 @@ The product is set up generically. The first factor carries a strict well-order 
 
 ```agda
 ... | gt h = ⊥₀-rec (¬ba h)
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 
 module _ {ℓx ℓy : Level} {X : Type ℓx} {Y : Type ℓy} (u : SWO X)
          (_<ᵥ_ : Y → Y → Type (ℓ-suc ℓ)) (wfv : WellFounded _<ᵥ_) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   private
     module U = SWO u
@@ -225,8 +233,10 @@ The tie case is where connex earns its place: the second summand asserts both st
 
   prodWF : WellFounded _≺×_
   prodWF (a , x) = accProd a (U.wf∙ a) x (wfv x)
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The membership order on an ordinal's index
@@ -256,8 +266,16 @@ The relation ≺₁ on indices is defined by membership of the named elements: m
 添字上の関係 ≺₁ は、指名された要素どうしの所属によって定義される。m ≺₁ n が成り立つのは、構造の所属命題において ⟪ α ⟫↪ m が ⟪ α ⟫↪ n の要素であるとき、そのときに限る。この節の残りはすべてこの定義を読む。最初の支えとなる事実は、指名された各要素もまた順序数であることである。α が推移的で添字 m が α の要素を指すので、所属の証明 member α m に証明書 mem-ord を適用すれば、指名された要素の IsOrd が得られる。この証明書 ord-inord はこの後さらに三回使われる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (α : S) (oα : IsOrd α) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   _≺₁_ : ⟪ α ⟫ → ⟪ α ⟫ → Type (ℓ-suc ℓ)
   m ≺₁ n = ⟪ α ⟫↪ m ∈ᵗ ⟪ α ⟫↪ n
@@ -349,8 +367,6 @@ ordSWO の組み立てこそがこの節の要点である。これは実例で�
     ; irr∙   = irr₁
     ; trans∙ = trans₁
     ; wf∙    = wf₁ }
-
-
 ```
 
 <!--en-->
@@ -715,8 +731,10 @@ go の計算規則は到達可能性のデータを展開する。`acc r` から
 ```agda
     go : {q : Pair} → Acc _≺³_ (f q) → Acc _≺_ q
     go {q} (acc r) = acc (λ q' q'≺q → go (r (f q') (subrel {q'} {q} q'≺q)))
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Moving between finite ordinals and `Fin`
@@ -740,8 +758,16 @@ The search proposition `P` packages, for each index `m` of `# n` and each natura
 探索の命題 P は、`# n` の各添字 m と各自然数 k に対して、`k < n` と「m が数項 `# k` を表す」という主張の連言をまとめたものである。その命題性は二つの事実から組み立てられる。順序 `k < n` が命題であることと、表された要素の等式が集合の中に住んでおり、その等式型も命題であることである。この連言を `hProp` に包むことが、後で排中律を適用できる根拠になる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module FiniteBase where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   P : (n : ℕ) (m : ⟪ # n ⟫) → ℕ → hProp (ℓ-suc ℓ)
   P n m k = ((k < n) × (⟪ # n ⟫↪ m ≡ # k))
@@ -913,6 +939,9 @@ The final block abstracts away from omega. It is parameterized by a family `E : 
 最後のブロックは ω から抽象化する。これは族 `E : ℕ → Type ℓ` でパラメータ化され、単射な符号器 `toFinE : E n → Fin n` と単射な復号器 `fromFinE : Fin n → E n` を伴う。何が仮定され、何が仮定されないかに注意してほしい。各方向はそれぞれ自身の単射性の証明を伴うが、両者が互いに逆であることは要求されず、`E n` と `Fin n` の間の同値も主張されない。議論に入るのはこの二つの単射性だけである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
   module AbstractChase (E : ℕ → Type ℓ)
@@ -921,6 +950,10 @@ The final block abstracts away from omega. It is parameterized by a family `E : 
                        (fromFinE : (n : ℕ) → FB.Fin n → E n)
                        (fromFinE-inj : (n : ℕ) (i₁ i₂ : FB.Fin n) → fromFinE n i₁ ≡ fromFinE n i₂ → i₁ ≡ i₂) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Inside this setup, the inner module `NoInj` fixes a type `A` that receives an injection `into m` from every `E m`, itself injective at each level. Its theorem `no-inj` says that no injection `A → E n × E n` can exist for any `n`: the reduction is immediate, because the displayed proof simply hands the constructed finite function `g` to `no-inj-Fin (n · n)` together with its injectivity. All the work lies in defining `g` and proving `g-inj`.
@@ -1034,3 +1067,8 @@ The two component equalities are reassembled into an equality of pairs by `ΣPat
           pair-eq : f Xx ≡ f Xy
           pair-eq = ΣPathP (fst-eq′ , snd-eq′)
 ```
+</div>
+</details>
+
+</div>
+</details>

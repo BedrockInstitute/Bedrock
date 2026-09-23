@@ -149,10 +149,18 @@ they look at them by handing the hypothesis straight to the term decode.
 <!--/-->
 
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Decode {K : Type ℓ} (f : K → V ℓ)
               {m : ℕ} (C A : Fin m) (γ : S ^ m) (onto : Onto f A γ)
               (hcl : ⟨ γ ⊨ closedAt C ⟩) (hsh : ⟨ γ ⊨ shapedAt C A ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Peel C A γ hcl hsh
 
   Wf : ℕ → S → Type (ℓ-suc ℓ)
@@ -318,5 +326,6 @@ constructor definitionally.
         (⊎-rec (unSucc 7 ∀̇_ (λ _ → refl))
         (⊎-rec (bnd 8 ∀̇∈ (λ _ _ → refl))
         (bnd 9 ∃̇∈ (λ _ _ → refl))))))))))
-
 ```
+</div>
+</details>

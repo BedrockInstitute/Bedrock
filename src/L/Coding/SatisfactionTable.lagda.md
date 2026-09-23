@@ -100,8 +100,18 @@ is why they come from one recursion rather than two.
 ```agda
 keyʟ : ∀ {n} → Formula S n → S
 keyʟ {n} φ = prʟ (numeralL n) LCode.⌜ φ ⌝
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   ent : ∀ {n} → Formula S n → S
   ent φ = prʟ (keyʟ φ) (Sat B φ)
 
@@ -136,9 +146,21 @@ readings below are four instantiations of it and no induction runs here.
 每个成员都是被收集之物之一。那正是闭包那一章所证的求逆，且它在那里是对着两个收集同时陈述的，故下面四条读式是它的四次实例化，此处不跑归纳。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Parts (f : ∀ {m} → Formula S m → S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     open TreeParts f public
+```
+</div>
+</details>
+```agda
 
   satTable-inv : ∀ {n} (φ : Formula S n) (x : V ℓ)
                → ⟨ x ∈ fst (satTable φ) ⟩ → Of ent ent φ x
@@ -241,6 +263,9 @@ which is the only arity at which it is true.
   entry-in φ = subst (λ w → ⟨ w ∈ fst (satTable φ) ⟩)
     (prʟ-fst (keyʟ φ) (Sat B φ)) (Parts.self ent φ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Subkeys determined by a constructor tag

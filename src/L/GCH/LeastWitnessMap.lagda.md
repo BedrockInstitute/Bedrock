@@ -14,7 +14,6 @@ Suppose that, for each input `x ∈ X`, we know only under propositional truncat
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -28,7 +27,6 @@ Classical logic enters through the fixed excluded-middle hypothesis, which alrea
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,7 +39,6 @@ Fix a universe level `ℓ` and excluded middle for propositions at level `ℓ-su
 
 ```agda
 module L.GCH.LeastWitnessMap {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -116,7 +113,6 @@ The carrier `S` packages an ambient set together with a proof that it is constru
 ```agda
 
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -142,7 +138,6 @@ The original formula is evaluated in the two-entry environment `(w,x)`. When lea
 
 ```agda
 module Ren = Sat 𝒮ʟ id using ( Agrees; ⊨-rename )
-
 ```
 
 <!--en-->
@@ -190,11 +185,18 @@ The least-witness module receives four pieces of data. The ordinal index `γ` wi
 最小の証人のモジュールは、四つのデータを受け取る。順序数性をもつ順序数の指数 `γ` が段階を決め、集合 `X` が入力を制約し、二項の論理式 `P` が述語であり、`X` の各入力に対して、段階から来るある候補がそこで述語を充足すると、単に、仮定される。候補は段階 `Lset γ` の全体から取られ、入力は `X` に制約される。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Least (γ : V ℓ) (oγ : IsOrd γ) (X : S) (P : Formula S 2)
   (have : (x : S) → ⟨ fst x ∈ fst X ⟩
         → ∥ Σ[ w ∈ S ] (⟨ fst w ∈ Lset γ ⟩ × ⟨ (w ∷ x ∷ []) ⊨ P ⟩) ∥₁) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The ambient stage `Lset γ` is packaged as an element `Lγ` of the constructible carrier. This package can occur as a constant in the graph formula, so the formula can bound its search to exactly the fixed candidate stage.
@@ -208,7 +210,6 @@ The ambient stage `Lset γ` is packaged as an element `Lγ` of the constructible
   opaque
     Lγ : S
     Lγ = LsetS γ oγ
-
 ```
 
 <!--en-->
@@ -222,7 +223,6 @@ The equation `Lγ-fst` exposes the underlying set of this opaque package as `Lse
 ```agda
     Lγ-fst : fst Lγ ≡ Lset γ
     Lγ-fst = refl
-
 ```
 
 <!--en-->
@@ -236,7 +236,6 @@ The internal relation encoder also needs the ordinal index itself as an element 
 ```agda
     hγ : ⟨ isL γ ⟩
     hγ = isL-ord γ oγ
-
 ```
 
 <!--en-->
@@ -250,7 +249,6 @@ The internal implementation of the stage order is a constructible set of coded p
 ```agda
   Rγ : S
   Rγ = relL γ hγ oγ
-
 ```
 
 <!--en-->
@@ -264,7 +262,6 @@ The predicate `Mem x` records the restriction on inputs: it is evidence that `x 
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem x = ⟨ fst x ∈ fst X ⟩
-
 ```
 
 <!--en-->
@@ -279,7 +276,6 @@ The order `orderAt γ oγ` acts on stage members rather than on arbitrary elemen
   private
     Mγ : Type (ℓ-suc ℓ)
     Mγ = MemOf (Lset γ)
-
 ```
 
 <!--en-->
@@ -293,7 +289,6 @@ An element of `Mγ` contains an underlying set together with its membership in `
 ```agda
     memS : Mγ → S
     memS c = fst c , Lset→isL γ oγ (fst c) (snd c)
-
 ```
 
 <!--en-->
@@ -307,7 +302,6 @@ The predicate at a candidate and an input is the object-language satisfaction of
 ```agda
     At : S → S → hProp (ℓ-suc ℓ)
     At w x = (w ∷ x ∷ []) ⊨ P
-
 ```
 
 <!--en-->
@@ -347,7 +341,6 @@ The same underlying set may arrive with two proofs that it is constructible. Sin
 ```agda
     toMem : (x w : S) (hw : ⟨ fst w ∈ Lset γ ⟩) → ⟨ At w x ⟩ → ⟨ Good x (fst w , hw) ⟩
     toMem x w hw = subst (λ v → ⟨ At v x ⟩) (S≡ refl)
-
 ```
 
 <!--en-->
@@ -358,10 +351,16 @@ Selection is performed after fixing an input `x` and evidence `m : x ∈ X`. The
 選択は、入力 `x` と証拠 `m : x ∈ X` を固定してから各点で行う。この証拠によって各点の存在仮定 `have` を使えるが、候補が `X` に属することも、`X` に順序が入ることも意味しない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Sel (x : S) (m : Mem x) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 For the fixed input, the hypothesis is mapped into the type of good stage members. This changes only the representation of each possible witness: the resulting nonemptiness remains propositionally truncated, so no particular starting member has yet been chosen.
@@ -389,7 +388,6 @@ Now `leastOfFormula` descends through `orderAt γ oγ` and returns an actual lea
     opaque
       c : Mγ
       c = fst (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty)
-
 ```
 
 <!--en-->
@@ -403,7 +401,6 @@ The result of the search retains the proof that the selected member is good. Thu
 ```agda
       c-good : ⟨ Good x c ⟩
       c-good = fst (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))
-
 ```
 
 <!--en-->
@@ -417,7 +414,6 @@ Its companion clause gives the exact relative leastness needed later: any other 
 ```agda
       minimal : (c' : Mγ) → ⟨ Good x c' ⟩ → relOf (orderAt γ oγ) c' c → ⊥₀
       minimal = snd (snd (leastOfFormula (orderAt γ oγ) (definedGood x) lem nonempty))
-
 ```
 
 <!--en-->
@@ -431,7 +427,6 @@ The order compares objects in `Mγ`, whereas satisfaction environments contain o
 ```agda
     e : S
     e = memS c
-
 ```
 
 <!--en-->
@@ -445,7 +440,6 @@ Because goodness was defined through this same repackaging, the selected element
 ```agda
     e-holds : ⟨ (e ∷ x ∷ []) ⊨ P ⟩
     e-holds = c-good
-
 ```
 
 <!--en-->
@@ -460,6 +454,9 @@ The membership component carried by the selected stage member also proves `e ∈
     e∈Lγ : ⟨ fst e ∈ Lset γ ⟩
     e∈Lγ = snd c
 ```
+</div>
+</details>
+
 
 <!--en-->
 For an input `x` equipped with `m : x ∈ X`, the function `fn` returns this selected candidate. Its domain evidence is explicit because the existence hypothesis is available only on `X`.
@@ -472,7 +469,6 @@ For an input `x` equipped with `m : x ∈ X`, the function `fn` returns this sel
 ```agda
   fn : (x : S) → Mem x → S
   fn x m = Sel.e x m
-
 ```
 
 <!--en-->
@@ -486,7 +482,6 @@ At every such domain input, the chosen value satisfies the original formula in t
 ```agda
   fn-holds : (x : S) (m : Mem x) → ⟨ (fn x m ∷ x ∷ []) ⊨ P ⟩
   fn-holds x m = Sel.e-holds x m
-
 ```
 
 <!--en-->
@@ -500,7 +495,6 @@ The same value lies in `Lset γ`. This separate range statement will later place
 ```agda
   fn-in : (x : S) (m : Mem x) → ⟨ fst (fn x m) ∈ Lset γ ⟩
   fn-in x m = Sel.e∈Lγ x m
-
 ```
 
 <!--en-->
@@ -589,7 +583,6 @@ If the selected candidate were strictly below the alternative, the alternative's
 ```agda
     go (gt k) = ⊥₀-rec (mn (fn x m) (fn-in x m) (fn-holds x m)
       (relL-fill γ hγ oγ (Sel.c x m) c' k))
-
 ```
 
 <!--en-->
@@ -605,7 +598,6 @@ Under the bounded quantifier the environment is `(w',w,x)`, whereas `P` expects 
     ρ : Fin 2 → Fin 3
     ρ zero       = zero
     ρ (suc zero) = suc (suc zero)
-
 ```
 
 <!--en-->
@@ -620,7 +612,6 @@ Agreement records exactly those two identifications: reading variable 0 from `(w
     ag : (w' w x : S) → Ren.Agrees ρ (w' ∷ w ∷ x ∷ []) (w' ∷ x ∷ [])
     ag w' w x zero       = refl
     ag w' w x (suc zero) = refl
-
 ```
 
 <!--en-->
@@ -636,7 +627,6 @@ The leastness formula ranges over `w' ∈ Lγ` and denies the conjunction of two
     private
       leastFo : Formula S 2
       leastFo = ∀̇∈ (con Lγ) (¬̇ (appC Rγ i0 i1 ∧̇ renameFo ρ P))
-
 ```
 
 <!--en-->
@@ -651,7 +641,6 @@ Compatibility with renaming now identifies the two readings of `P`: evaluating `
       ren : (w' w x : S)
           → ⟨ (w' ∷ w ∷ x ∷ []) ⊨ renameFo ρ P ⟩ ≡ ⟨ (w' ∷ x ∷ []) ⊨ P ⟩
       ren w' w x = cong ⟨_⟩ (Ren.⊨-rename ρ P (w' ∷ w ∷ x ∷ []) (w' ∷ x ∷ []) (ag w' w x))
-
 ```
 
 <!--en-->
@@ -665,7 +654,6 @@ The full graph formula conjoins the original predicate with stage membership and
 ```agda
     fo : Formula S 2
     fo = P ∧̇ ((var i0 ∈̇ con Lγ) ∧̇ leastFo)
-
 ```
 
 <!--en-->
@@ -695,7 +683,6 @@ To obtain the minimality component of `TWit`, fix a competitor `w'` and assume t
 ```agda
           ( subst ⟨_⟩ (sym (appC-adequate Rγ i0 i1 (w' ∷ w ∷ x ∷ []))) hr
           , transport (sym (ren w' w x)) hp' ))
-
 ```
 
 <!--en-->
@@ -754,7 +741,6 @@ At the selected value, the three facts already proved supply a proof of `fo`: th
 ```agda
     ; defines = λ x m → fo-in (fn x m) x (fn-holds x m , fn-in x m , fn-least x m)
     ; only = λ x m w h → S≡ (fn-unique x m w (fo-out w x h)) }
-
 ```
 
 <!--en-->
@@ -781,7 +767,6 @@ Call this collected set `T`. Its entries are ordered pairs `(x,fn(x))`, with the
 ```agda
   T : S
   T = Gr.F
-
 ```
 
 <!--en-->
@@ -795,7 +780,6 @@ For every `x ∈ X`, the table contains the pair `(x,fn(x))`. Hence later argume
 ```agda
   T-in : (x : S) (m : Mem x) → ⟨ pr (fst x) (fst (fn x m)) ∈ fst T ⟩
   T-in = Gr.F-in
-
 ```
 
 <!--en-->
@@ -811,3 +795,5 @@ Conversely, an entry `(x,w) ∈ T` yields evidence `x ∈ X` and equality of the
         → Σ[ m ∈ Mem x ] (fst w ≡ fst (fn x m))
   T-out = Gr.pair-out
 ```
+</div>
+</details>

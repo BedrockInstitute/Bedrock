@@ -632,10 +632,11 @@ ja = "高階帰納型"
 introduced_in = "Base.Prelude"
 matching = "auto"
 forms_en = ["higher inductive types"]
+abbreviations = { en = "HIT", zh = "HIT", ja = "HIT" }
 recap_en = "An inductive type whose generators may include paths and higher paths as well as points."
 recap_zh = "除点构造子外，还允许以路径乃至更高路径作为构造子的归纳类型。"
 recap_ja = "点の構成子だけでなく、パスやさらに高次のパスも構成子にできる帰納型。"
-notes = "Standard HoTT term. Introduced through propositional truncation in Base.Prelude; terminology follows the existing V.Hierarchy chapter."
+notes = "Standard HoTT term. The structured abbreviations field registers HIT in all three languages. Introduced through propositional truncation in Base.Prelude; terminology follows the existing V.Hierarchy chapter."
 
 [[term]]
 category = "Type theory"
@@ -1249,17 +1250,17 @@ notes = "Smallness remains appropriate for types known equivalent to types in a 
 
 [[term]]
 category = "Set theory"
-id = "set-level-choice"
+id = "set-valued-choice"
 audience = "reader"
-en = "set-level choice"
-zh = "集合层选择"
-ja = "集合レベルの選択"
+en = "choice for set-valued families"
+zh = "集合值族的选择"
+ja = "集合値族に対する選択"
 introduced_in = "Base.Choice"
 matching = "auto"
-recap_en = "For an h-set X and a family B, pointwise mere inhabitation implies the mere existence of a dependent function choosing in every B x. SetChoice requires only X to be an h-set."
-recap_zh = "对 h-集合 X 和族 B，逐点的仅仅有元蕴含一个在每个 B x 中选取元素的依值函数的仅仅存在。SetChoice 只要求 X 是 h-集合。"
-recap_ja = "h-集合 X と族 B に対し、添字ごとの単なる存在から、各 B x で要素を選ぶ依存関数の単なる存在が従う。SetChoice は X だけに h-集合性を要求する。"
-notes = "Existing translations retained; promoted to a reader term in Base.Choice on 2026-09-22. HoTT Book section 3.8 explains the truncated choice formulation: https://homotopytypetheory.org/wp-content/uploads/2013/03/hott-online-611-ga1a258c.pdf . Scope is determined by the actual local SetChoice definition: X is an h-set, B x is any type at the same level, and the conclusion remains truncated. Do not silently add a sethood condition on B or claim this is verbatim the book's set-valued formulation."
+recap_en = "For an h-set X and a family B of h-sets, pointwise mere inhabitation implies the mere existence of a dependent function choosing in every B x. SetChoice requires both X and each B x to be h-sets."
+recap_zh = "对 h-集合 X 和取值于 h-集合的族 B，逐点的仅仅有元蕴含一个在每个 B x 中选取元素的依值函数的仅仅存在。SetChoice 同时要求 X 和每个 B x 是 h-集合。"
+recap_ja = "h-集合 X と h-集合値の族 B に対し、添字ごとの単なる存在から、各 B x で要素を選ぶ依存関数の単なる存在が従う。SetChoice は X と各 B x の両方に h-集合性を要求する。"
+notes = "Revised in 2026-09-23 to the conservative set-valued form requested for the book. HoTT Book section 3.8 requires both X and each B x to be h-sets: https://homotopytypetheory.org/wp-content/uploads/2013/03/hott-online-323-g28e4374.pdf . The agda-unimath axiom-of-choice module distinguishes AC-Set (set-valued families) from AC0 (set-indexed arbitrary families): https://unimath.github.io/agda-unimath/foundation.axiom-of-choice.html . Buchholtz Lecture 9 Theorem 2 proves that arbitrary-fiber choice is equivalent to set-valued choice plus sets cover (every type merely admits a surjection from a set): https://ulrikbuchholtz.dk/hott1920/lecture9.pdf . A formal Agda proof of both implications is in https://agda.monade.li/SetsCover . Christensen Theorem 5.12 proves the stronger choice in the simplicial model: https://jdc.math.uwo.ca/papers/non-accessible.pdf . Caution: Buchholtz and 1Lab call arbitrary-fiber choice AC-infinity, while the HoTT Book uses AC-infinity for the limiting truncation-indexed choice schema, which is a different meaning: https://github.com/HoTT/book/blob/master/logic.tex . The local SetChoice is the diagonal-universe instance of set-valued choice. Its two direct uses involve h-set-valued families; no sets-cover assumption is needed."
 
 [[term]]
 category = "Set theory"
@@ -1324,7 +1325,7 @@ category = "Logic and philosophy"
 en = "Diaconescu's theorem"
 zh = "Diaconescu 定理"
 ja = "ディアコネスクの定理"
-notes = "choice implies excluded middle (Goodman-Myhill form); zh keeps the surname in Latin, matching the book's practice for untransliterated names; choice→lem in Base.Choice"
+notes = "choice implies excluded middle (Goodman-Myhill form); zh keeps the surname in Latin, matching the book's practice for untransliterated names; SetChoice→LEM in Base.Choice"
 
 [[term]]
 category = "Type theory"
@@ -1644,6 +1645,20 @@ recap_en = "The operation sending a type to a proposition with the same inhabite
 recap_zh = "把一个类型变成命题的运算：它保留该类型是否有元素的信息，却忘去具体是哪一个元素。"
 recap_ja = "型を、要素の有無が同じ命題へ送る操作。要素があることは保ち、それがどれであったかは忘れる。"
 notes = "English: HoTT Book section 3.7, https://homotopytypetheory.org/book/ . Japanese compound follows Uemura’s attested n 切り詰め (n-truncation), section 4.3, https://uemurax.github.io/hott-ja/index.pdf ; searches for the exact compound found reading notes but no primary exact compound, so this is pattern-derived. Chinese compound is a descriptive rendering of proposition + truncation; exact-phrase searches did not yield a primary Chinese text. This is the (-1)-truncation, not the choice of an inhabitant."
+
+[[term]]
+category = "Type theory"
+id = "mere-existence"
+audience = "reader"
+en = "mere existence"
+zh = "仅仅存在"
+ja = "単なる存在"
+introduced_in = "Base.Prelude"
+matching = "explicit"
+recap_en = "Existence expressed by propositional truncation: ∥ A ∥₁ says that A has an element without specifying one; for a predicate P, ∥ Σ[ x ∈ A ] P x ∥₁ says that a witness merely exists."
+recap_zh = "用命题截断表达的存在：∥ A ∥₁ 只说 A 有元素而不指定哪一个；对谓词 P，∥ Σ[ x ∈ A ] P x ∥₁ 说满足 P 的见证仅仅存在。"
+recap_ja = "命題的切り詰めで表す存在。∥ A ∥₁ は要素を指定せずに A に要素があることを述べ、∥ Σ[ x ∈ A ] P x ∥₁ は P を満たす証人の単なる存在を述べる。"
+notes = "HoTT Book section 3.10 explicitly defines the adverb merely as a signal of propositional truncation, including mere inhabitation and truncated dependent sums: https://homotopytypetheory.org/book/ . Cubical.Data.Sigma.Base labels ∃ A B = ∥ Σ A B ∥₁ as Mere existence: https://agda.github.io/cubical/Cubical.Data.Sigma.Base.html . The Chinese and Japanese expressions are project reading conventions for that precise sense, not claims of separately attested fixed translations. Explicit matching avoids linking ordinary rhetorical uses such as 仅仅存在两个方向的函数. A truncated witness can be recovered with additional hypotheses, for example when its witness type is a proposition."
 
 [[term]]
 category = "Logic"

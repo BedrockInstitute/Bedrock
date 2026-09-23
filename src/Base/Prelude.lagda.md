@@ -1439,16 +1439,24 @@ open import Cubical.Foundations.Equiv.Properties public using ( congEquiv )
 ```
 
 <!--en-->
-Finally, equivalence preserves homotopy levels, just as `Lift`{.Agda} does. If `h : isProp A`{.Agda}, then `isOfHLevelRespectEquiv 1 e h`{.Agda} proves `isProp B`{.Agda}; if `h : isSet A`{.Agda}, then `isOfHLevelRespectEquiv 2 e h`{.Agda} proves `isSet B`{.Agda}. The index `0`{.Agda} likewise transfers contractibility. Here the certificate follows the equivalence from `A`{.Agda} to `B`{.Agda}, even when their universes differ. We can therefore construct a convenient presentation with `Iso`{.Agda}, convert it with `isoToEquiv`{.Agda}, and use the resulting equivalence to move elements, paths and homotopy-level certificates.
+Finally, equivalence preserves homotopy levels, just as `Lift`{.Agda} does. If `h : isProp A`{.Agda}, then `isOfHLevelRespectEquiv 1 e h`{.Agda} proves `isProp B`{.Agda}; if `h : isSet A`{.Agda}, then `isOfHLevelRespectEquiv 2 e h`{.Agda} proves `isSet B`{.Agda}. The index `0`{.Agda} likewise transfers contractibility. Here the certificate follows the equivalence from `A`{.Agda} to `B`{.Agda}, even when their universes differ.
 <!--zh-->
-最后，类型等价与 `Lift`{.Agda} 一样保留同伦层级。若 `h : isProp A`{.Agda}，则 `isOfHLevelRespectEquiv 1 e h`{.Agda} 证明 `isProp B`{.Agda}；若 `h : isSet A`{.Agda}，则 `isOfHLevelRespectEquiv 2 e h`{.Agda} 证明 `isSet B`{.Agda}。参数 `0`{.Agda} 同样用于传递可缩性。这里，证书沿等价从 `A`{.Agda} 传到 `B`{.Agda}，即使两者的宇宙不同也成立。因此，我们可以用 `Iso`{.Agda} 构造便于操作的呈现，经 `isoToEquiv`{.Agda} 转换，再用所得等价搬移元素、路径和同伦层级证书。
+最后，类型等价与 `Lift`{.Agda} 一样保留同伦层级。若 `h : isProp A`{.Agda}，则 `isOfHLevelRespectEquiv 1 e h`{.Agda} 证明 `isProp B`{.Agda}；若 `h : isSet A`{.Agda}，则 `isOfHLevelRespectEquiv 2 e h`{.Agda} 证明 `isSet B`{.Agda}。参数 `0`{.Agda} 同样用于传递可缩性。这里，证书沿等价从 `A`{.Agda} 传到 `B`{.Agda}，即使两者的宇宙不同也成立。
 <!--ja-->
-最後に、型同値は `Lift`{.Agda} と同様にホモトピーレベルを保つ。`h : isProp A`{.Agda} なら `isOfHLevelRespectEquiv 1 e h`{.Agda} は `isProp B`{.Agda} を証明し、`h : isSet A`{.Agda} なら `isOfHLevelRespectEquiv 2 e h`{.Agda} は `isSet B`{.Agda} を証明する。引数 `0`{.Agda} は同じく可縮性を移す。ここでは証明が同値に沿って `A`{.Agda} から `B`{.Agda} へ移り、両者の宇宙が異なってもよい。したがって `Iso`{.Agda} で扱いやすい提示を構成し、`isoToEquiv`{.Agda} で変換すれば、得られた同値を使って要素、パス、ホモトピーレベルの証明を移せる。
+最後に、型同値は `Lift`{.Agda} と同様にホモトピーレベルを保つ。`h : isProp A`{.Agda} なら `isOfHLevelRespectEquiv 1 e h`{.Agda} は `isProp B`{.Agda} を証明し、`h : isSet A`{.Agda} なら `isOfHLevelRespectEquiv 2 e h`{.Agda} は `isSet B`{.Agda} を証明する。引数 `0`{.Agda} は同じく可縮性を移す。ここでは証明が同値に沿って `A`{.Agda} から `B`{.Agda} へ移り、両者の宇宙が異なってもよい。
 <!--/-->
 
 ```agda
 open import Cubical.Foundations.HLevels public using ( isOfHLevelRespectEquiv )
 ```
+
+<!--en-->
+We can therefore construct a convenient presentation with `Iso`{.Agda}, convert it with `isoToEquiv`{.Agda}, and use the resulting equivalence to move elements, paths and homotopy-level certificates.
+<!--zh-->
+因此，我们可以用 `Iso`{.Agda} 构造便于操作的呈现，经 `isoToEquiv`{.Agda} 转换，再用所得等价搬移元素、路径和同伦层级证书。
+<!--ja-->
+したがって `Iso`{.Agda} で扱いやすい提示を構成し、`isoToEquiv`{.Agda} で変換すれば、得られた同値を使って要素、パス、ホモトピーレベルの証明を移せる。
+<!--/-->
 
 <!--en-->
 ## Propositions
@@ -1654,23 +1662,29 @@ The certificate $h_Q$ assigns a path to any two proofs; the curve shows its valu
 <!--/-->
 
 <!--en-->
-A type may contain more information than a proposition should retain. The [propositional truncation]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} records that `A`{.Agda} has an element while deliberately forgetting which element it is. It is a [higher inductive type]{.term-intro #higher-inductive-type}: its generators include not only points but also paths between points. The point constructor `∣_∣₁`{.Agda} sends each `a : A`{.Agda} to `∣ a ∣₁ : ∥ A ∥₁`{.Agda}; the path constructor `squash₁`{.Agda} identifies every two elements of the truncation. Its defining rules are
+A type may contain more information than a proposition should retain. The [propositional truncation]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} records that `A`{.Agda} has an element while deliberately forgetting which element it is. It is a [higher inductive type]{.term-intro #higher-inductive-type}, abbreviated HIT: its generators include not only points but also paths between points. The point constructor `∣_∣₁`{.Agda} sends each `a : A`{.Agda} to `∣ a ∣₁ : ∥ A ∥₁`{.Agda}; the path constructor `squash₁`{.Agda} identifies every two elements of the truncation. Its defining rules are
 
 $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$$
 
 Consequently `∥ A ∥₁`{.Agda} is always a proposition, even when `A`{.Agda} carries distinguishable data.
+
+By the **[mere existence]{.term-intro #mere-existence}** of an element of `A`{.Agda}, we mean an element of `∥ A ∥₁`{.Agda}, without specifying an element of `A`{.Agda}. Likewise, saying that an `x : A`{.Agda} satisfying `P x`{.Agda} merely exists means that `∥ Σ[ x ∈ A ] P x ∥₁`{.Agda} has an element. When `P x`{.Agda} is a proposition, this truncated type underlies the logical existential quantification `∃[ x ∶ A ] P x`{.Agda} introduced below.
 <!--zh-->
-一个类型所携带的信息可能多于命题应当保留的信息。[命题截断]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} 记录 `A`{.Agda} 具有元素，却有意忘去具体是哪一个元素。它是一种[高阶归纳类型]{.term-intro #higher-inductive-type}：生成它的不仅有点，还有点之间的路径。点构造子 `∣_∣₁`{.Agda} 把每个 `a : A`{.Agda} 送到 `∣ a ∣₁ : ∥ A ∥₁`{.Agda}；路径构造子 `squash₁`{.Agda} 把截断中的任意两个元素认同起来。其定义规则为
+一个类型所携带的信息可能多于命题应当保留的信息。[命题截断]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} 记录 `A`{.Agda} 具有元素，却有意忘去具体是哪一个元素。它是一种[高阶归纳类型]{.term-intro #higher-inductive-type}，简称 HIT：生成它的不仅有点，还有点之间的路径。点构造子 `∣_∣₁`{.Agda} 把每个 `a : A`{.Agda} 送到 `∣ a ∣₁ : ∥ A ∥₁`{.Agda}；路径构造子 `squash₁`{.Agda} 把截断中的任意两个元素认同起来。其定义规则为
 
 $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$$
 
 因此，即使 `A`{.Agda} 携带可区分的资料，`∥ A ∥₁`{.Agda} 仍然总是命题。
+
+本书说 `A`{.Agda} 的元素**[仅仅存在]{.term-intro #mere-existence}**，意指 `∥ A ∥₁`{.Agda} 有元素，而没有指定 `A`{.Agda} 中的某个元素。同样，说满足 `P x`{.Agda} 的 `x : A`{.Agda} 仅仅存在，意指 `∥ Σ[ x ∈ A ] P x ∥₁`{.Agda} 有元素。当 `P x`{.Agda} 是命题时，这个截断类型就是后文引入的逻辑存在量化 `∃[ x ∶ A ] P x`{.Agda} 的底层类型。
 <!--ja-->
-型は、命題が保持すべき情報より多くの情報をもつことがある。[命題的切り詰め]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} は、`A`{.Agda} に要素があることを記録しつつ、それがどの要素かを意図的に忘れる。これは[高階帰納型]{.term-intro #higher-inductive-type}である。その生成子には点だけでなく、点の間のパスも含まれる。点構成子 `∣_∣₁`{.Agda} は各 `a : A`{.Agda} を `∣ a ∣₁ : ∥ A ∥₁`{.Agda} へ送り、パス構成子 `squash₁`{.Agda} は切り詰めの任意の二要素を同一視する。その定義規則は次のとおりである。
+型は、命題が保持すべき情報より多くの情報をもつことがある。[命題的切り詰め]{.term-ref #propositional-truncation} `∥ A ∥₁`{.Agda} は、`A`{.Agda} に要素があることを記録しつつ、それがどの要素かを意図的に忘れる。これは[高階帰納型]{.term-intro #higher-inductive-type}、略して HIT である。その生成子には点だけでなく、点の間のパスも含まれる。点構成子 `∣_∣₁`{.Agda} は各 `a : A`{.Agda} を `∣ a ∣₁ : ∥ A ∥₁`{.Agda} へ送り、パス構成子 `squash₁`{.Agda} は切り詰めの任意の二要素を同一視する。その定義規則は次のとおりである。
 
 $$\frac{a:A}{|a|_1:\|A\|_1}\qquad\frac{x,y:\|A\|_1}{\mathsf{squash}_1(x,y):x=y}$$
 
 したがって `A`{.Agda} が区別可能なデータをもっていても、`∥ A ∥₁`{.Agda} は常に命題である。
+
+本書で `A`{.Agda} の要素の**[単なる存在]{.term-intro #mere-existence}**と言うときは、`A`{.Agda} の特定の要素ではなく、`∥ A ∥₁`{.Agda} の要素が与えられることを意味する。同様に、`P x`{.Agda} を満たす `x : A`{.Agda} が単に存在するとは、`∥ Σ[ x ∈ A ] P x ∥₁`{.Agda} に要素があることを意味する。`P x`{.Agda} が命題であるとき、この切り詰められた型が、後で導入する論理的な存在量化 `∃[ x ∶ A ] P x`{.Agda} の基礎となる型である。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-truncation-witnesses" aria-describedby="fig-truncation-witnesses-caption">
@@ -1725,15 +1739,26 @@ There are two standard ways to use a truncated value. The recursor `rec₁`{.Agd
 <!--/-->
 
 <figure class="book-diagram type-comparison" id="fig-truncation-rec" aria-describedby="fig-truncation-rec-caption">
-<div class="diagram-panel type-comparison-panel">
+<div class="diagram-framed type-comparison-panel">
 
 $$h : \operatorname{isProp}(P), \qquad f : A \to P$$
 
-$$\begin{array}{ccc}
-A & \xrightarrow{\;|{-}|_1\;} & \|A\|_1 \\[6pt]
-\mathllap{{\scriptstyle f}\,}\Big\downarrow & & \Big\downarrow\mathrlap{\,{\scriptstyle\operatorname{rec}_1\,h\,f}} \\[6pt]
-P & \xrightarrow{\;\operatorname{id}_P\;} & P
-\end{array}$$
+<div class="factorization-stage">
+<svg viewBox="0 0 500 230" aria-hidden="true" focusable="false">
+<path class="diagram-map-line" d="M88 50 H315"/>
+<path class="diagram-map-tip" d="M306 45 L315 50 L306 55"/>
+<path class="diagram-map-line" d="M358 76 V160"/>
+<path class="diagram-map-tip" d="M353 151 L358 160 L363 151"/>
+<path class="diagram-map-line" d="M72 74 L315 177"/>
+<path class="diagram-map-tip" d="M303 179 L315 177 L308 167"/>
+</svg>
+<span class="factorization-label factorization-source">$A$</span>
+<span class="factorization-label factorization-truncated">$\|A\|_1$</span>
+<span class="factorization-label factorization-target">$P$</span>
+<span class="factorization-label factorization-top-map">$|{-}|_1$</span>
+<span class="factorization-label factorization-long-map">$f$</span>
+<span class="factorization-label factorization-right-map">$\operatorname{rec}_1\,h\,f$</span>
+</div>
 
 $$\operatorname{rec}_1\,h\,f\,(|a|_1) = f(a) \qquad (a : A)$$
 
@@ -2038,7 +2063,7 @@ For each `x : A`{.Agda}, the proposition `M x`{.Agda} says that `x`{.Agda} has t
 
 This explains why we can discuss classes before introducing sets. A class here is a predicate defined in the metatheory. It requires only a domain and the universe of propositions; it neither presupposes that sets have been defined in the object theory nor asserts that the class itself is a set. Once later chapters equip the domain with a set-theoretic structure, such classes can describe the sets in the model that satisfy a chosen property.
 
-Class membership is written `x ∈ᶜ M`{.Agda} and read "x belongs to the class M". Its meaning is the proposition that `M`{.Agda} assigns to `x`{.Agda}:
+Class membership is written `x ∈ᶜ M`{.Agda} and read "`x`{.Agda} belongs to the class `M`{.Agda}". Its meaning is the proposition that `M`{.Agda} assigns to `x`{.Agda}:
 
 <div class="single-line-code"><code>`x ∈ᶜ M  :=  ⟨ M x ⟩`{.Agda}</code></div>
 

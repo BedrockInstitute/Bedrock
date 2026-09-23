@@ -167,8 +167,16 @@ The definition takes `P` as a family of `hProp`{.Agda}: each fiber is packaged w
 定義では `P` を `hProp`{.Agda} 値の族として取る。各ファイバーは「それが命題である」という証明書とともに梱包されている。`⟨ P a ⟩`{.Agda} が基礎型を射影するので、`IsLeast P a`{.Agda} は、`a` が `P` を満たすことの証人と、他の各証人 `b` をその証明書 `⟨ P b ⟩`{.Agda} とともに `b <∙ a`{.Agda} の反証へ送る関数との対である。最小性の条件が要求されるのは実際に述語を満たす要素についてだけであり、部分集合の外の要素はどこにあってもよいことに注意してほしい。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓc : Level} {A : Type ℓc} (w : SWO {ℓc} A) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open SWO w
 
   IsLeast : {ℓ'' : Level} → (A → hProp ℓ'') → A → Type (ℓ-max ℓc (ℓ-max ℓₚ ℓ''))
@@ -282,6 +290,9 @@ The theorem `hostLeastOf` is the unrestricted host-level utility: its predicate 
       → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ a ∈ A ] IsLeast P a
   leastOfFormula {P = P} defined lem = hostLeastOf lem P
 ```
+</div>
+</details>
+
 
 <!--en-->
 The unrestricted operation is exported only through the `HostLeast` namespace. This makes a call site state that it is performing host-level search. Formula-facing code should instead call `leastOfFormula`, whose input contains the object formula and its checked semantic reading.
@@ -291,10 +302,21 @@ The unrestricted operation is exported only through the `HostLeast` namespace. T
 制限のない演算は `HostLeast` 名前空間を通してのみ公開する。これにより、呼び出し側はホスト層の探索を行っていることを明示する。モデルに面するコードは代わりに、対象論理式と検査済みの意味論的読みを入力に含む `leastOfFormula` を使うべきである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module HostLeast {ℓc : Level} {A : Type ℓc} (w : SWO {ℓc} A) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   leastOf = hostLeastOf w
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The natural numbers, well-ordered

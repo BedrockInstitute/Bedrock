@@ -231,8 +231,16 @@ Adequacy is the statement that the abstraction does not change meaning. It compa
 妥当性とは、抽象化が意味を変えないという主張である。同じ論理式の二つの評価を比較する。一方は `K` 上の元の構文で、定数は写像 `ι : K → S` によって解釈される。他方は空のアルファベット上の翻訳後の構文で、連結された環境 `γ ++ σ` の中で評価される。`γ` は元の自由変数の値を、`σ` は記録された定数の解釈を保持する。ここで `S` は命題値の構造 `𝒮` の台であり、`S ^ n` は長さ `n` の環境の型である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓ} (𝒮 : ZFStructure ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open ZFStructure 𝒮
 
@@ -248,9 +256,17 @@ The comparison rests on a single hypothesis connecting the two sides: for every 
 この比較は、両側をつなぐただ一つの仮定に依存する。各出現について、配置の指名した変数がそこに記録された定数の解釈を保持する、すなわち `lookup (θ j) (γ ++ σ) ≡ ι (lookup j (constantsFo φ))` というものである。この後のすべては、この仮定を保ちながら構文に対する構造的帰納法である。翻訳後の構文は空のアルファベットの上にあるため、その読み方 `_⊨₀_` と `⟦_⟧₀` には本物の定数解釈は要らない。ただし意味論のモジュールはこのデータを要求するため、空の型の消去が空虚にそれを供給する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
   module _ {ℓz ℓc} {K : Type ℓc} (ι : K → S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     open Sem.At K ι using ( _⊨_; ⟦_⟧ )
     open Sem.At (⊥* {ℓz}) ⊥*-rec using ()
@@ -574,6 +590,12 @@ For definable subsets of one variable, the corollary fixes the environment to `x
            → ((x ∷ []) ⊨ φ) ≡ ((x ∷ map ι (constantsFo φ)) ⊨₀ absFo φ)
     ⊨-abs₁ φ x = ⊨-abs φ (x ∷ [])
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

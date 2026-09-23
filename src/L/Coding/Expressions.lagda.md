@@ -152,8 +152,18 @@ Two small preparations open the section. `PairIs a p` packages the statement tha
 private
   PairIs : V ℓ → V ℓ → hProp (ℓ-suc ℓ)
   PairIs a p = (a ≡ p) , setIsSet a p
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module PairExpression where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   data Expr (n : ℕ) : Type (ℓ-suc ℓ) where
 ```
 
@@ -450,6 +460,9 @@ The inward reader must exhibit the member, and the value of `e` itself serves, o
     x : S
     x = value e (λ i → fst (lookup i γ)) , isL-trans h (snd (⟦ C ⟧ γ))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The first specialization turns the generic reader into a tag recognizer. `tagAtL s k x` reads, at slot `s`, the expression pairing the numeral `k` with the slot `x`; it is therefore the bounded formula asserting that the entry at `s` is the ordered pair of `# k` and the entry at `x`. Codes in the recursion carry a numeric tag paired with their payload, and this is exactly that shape.
@@ -550,8 +563,18 @@ The definition binds one fresh variable for the candidates and is the conjunctio
 extAt : ∀ {n} → Fin n → Formula S (suc n) → Formula S n
 extAt y φ = ∀̇ ((var zero ∈̇ var (suc y)) ⇒̇ φ)
          ∧̇ ∀̇ (φ ⇒̇ (var zero ∈̇ var (suc y)))
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ {n : ℕ} (y : Fin n) (φ : Formula S (suc n)) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   extAt-out : ⟨ γ ⊨ extAt y φ ⟩ → (z : S)
 ```
 
@@ -586,9 +609,10 @@ Introduction runs the projections in reverse and is the ordered pair of the two 
                 → ((z : S) → ⟨ (z ∷ γ) ⊨ φ ⟩ → ⟨ fst z ∈ fst (lookup y γ) ⟩)
                 → ⟨ γ ⊨ extAt y φ ⟩
   extAt-in-both f g = f , g
-
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Reading a key in two layers
@@ -748,8 +772,6 @@ The definition applies the extension characterization at slot `E`{.Agda}, with t
 ```agda
 envSetAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 envSetAt E ar B = extAt E (envOverAt zero (suc ar) (suc B))
-
-
 ```
 
 <!--en-->
@@ -813,7 +835,6 @@ The proof composes three paths. The transfer lemma first equates satisfaction of
     transferFo (sucAt i j) _ (Δ₀-sucAt i j) γ
   ∙ sucAt-adequate i j (map fst γ)
   ∙ cong₂ PairIs (lookup-fst j γ) (cong sucV (lookup-fst i γ))
-
 ```
 
 <!--en-->
@@ -951,7 +972,6 @@ The hierarchy-side adequacy theorem `consAt-adequate`{.Agda} then rewrites ambie
       (lookup-fst e γ ∙ hE)
   ∙ cong₂ PairIs (lookup-fst e' γ)
       (cong (λ w → env (cons w g)) (lookup-fst m γ))
-
 ```
 
 <!--en-->

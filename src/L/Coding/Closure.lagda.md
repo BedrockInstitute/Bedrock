@@ -78,8 +78,7 @@ A relation to state in a frame is a parameter, and the seven concrete clauses ar
 フレームの中で述べられる関係はパラメータであり、七つの具体的な節はそのパラメータの具体化として得られる。上の分類は 3 つの具体化で尽くされる。両成分に対する同アリティの要求、一成分に対する同アリティの要求、そしてより高いアリティを存在量化で与える後続アリティの要求である。いずれも、フレーム自身が開く拡張環境の上の素朴な対象言語の論理式である。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 The existentially supplied successor is the one place where mere existence appears. Inside the arity-raising relations, the bound variable is witnessed to be the successor of the frame's arity, and that witness is packaged only truncated: the proposition records existence without retaining a chosen witness as data. Later the readers of these clauses discharge the truncation, which is legitimate because the membership claims they feed are propositions.
@@ -89,8 +88,7 @@ The existentially supplied successor is the one place where mere existence appea
 存在量化で与えられる後続こそ、命題的切り詰められた存在が現れる唯一の場所である。アリティを上げる関係の内部では、束縛変数がフレームのアリティの後続であることが証人され、その証人は切り詰めのかたちでだけ残る。残るのは後続が存在することであり、選ばれた証人をデータとして保持しない。後ほど、これらの節の読み手が切り詰めを解消する。入力となる所属の主張が命題であるため、その解消は正当である。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Everything is stated at the level of sets and membership. A code stored in `L` is read as an element of the cumulative hierarchy; the subcode demand is literally a list of membership statements, a pair `pr` pairing an arity with a payload being a member of the domain set. This is what makes the predicate transportable: satisfaction of an object-language formula about membership, nothing more.
@@ -171,9 +169,16 @@ The closure demand to be formalized is a quantified statement about decoded keys
 形式化すべき閉性の要求は、解読されたキーについての量化された主張である。インデックス `C` を固定し、そこに保存された集合を `Cset` とする。これは次のように読める。`Cset` の各符号 `c` について、`c` が構成子の数 `k` をタグに持つアリティ `ar` として解読され、ペイロード成分を伴うならば、関係 `rel` がこれらのデータについて成り立つ、と。ペイロード成分の個数は構成子の形で決まる。1 項構成子の解読されたキーは符号・アリティ・一つの成分という 3 つの証人を示し、2 項構成子のキーは第 2 成分を加えた 4 つを示す。そこで、3 つの値を量化するフレームと 4 つの値を量化するフレームの 2 つが要る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Both frames live at an ambient free-variable count `n`: they quantify inside an environment of length `n` and extend it by the slots they bind themselves, four for the binary frame and three for the unary one. An ambient variable must survive this extension unchanged, so a shift like `sh4` sends each of the `n` indices past the freshly bound slots. Inside the quantified body it then names the same value it named outside.
@@ -885,6 +890,9 @@ The binary successor case uses the same witness and the same two adequacy facts,
             (subst (λ w → ⟨ pr w (fst b) ∈ fst (lookup C γ) ⟩)
               (sym (sucʟ-fst ar)) (g c ar a b c∈ sh)) ) ∣₁)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

@@ -177,12 +177,19 @@ The length slot is filled by a numeral, and the numeral must itself be an elemen
 長さのスロットは数項で埋められ、その数項自身も `L` の要素でなければならない。補助定義 `nn` がこれを作る。周囲のフォン・ノイマン数項 `# j` に、その構成可能性の証明を対にしたものである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module Ambient (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
   (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
   (hE : ⟨ γ ⊨ envSetAt Ei di bi ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The module gathers the data of one instance of the question. `B` is the base set, `γ` an environment of length `k`, and three of its slots are named: `Ei` holds the candidate set, `di` holds the numeral of the length, `bi` holds the base. The equations `qd` and `qb` say that these two slots really are filled by the numeral of `m` and by `B`, and `hE` says that `γ` satisfies the description with the set slot at `Ei`. Under these data, the set at `Ei` and `envSet B m` are shown to have the same members.
@@ -280,6 +287,9 @@ The recovered environment satisfies the environment clause at its own canonical 
 ```agda
     (envSet-out B m z hz)
 ```
+</div>
+</details>
+
 
 <!--en-->
 The environment handed to the transport comes from the membership characterization of the constructed set, applied at the member `z` with which this direction began.
@@ -311,12 +321,19 @@ The module assumes no satisfaction hypothesis. Its three equations say that the 
 モジュールは充足に関する前提を一切仮定しない。三つの等式が、集合のスロットに構成済みの集合そのものが、長さのスロットに `m` の数項が、基礎のスロットに `B` が収まっていることを述べる。これだけから、`γ` での記述の全体が証明される。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module AmbientHolds (B : S) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k) (m : ℕ)
   (qE : fst (lookup Ei γ) ≡ fst (envSet B m))
   (qd : fst (lookup di γ) ≡ # m) (qb : fst (lookup bi γ) ≡ fst B)
   where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The three equations are the whole hypothesis. Naming the set slot with the constructed set, the length slot with the numeral, and the base slot with the base is exactly what a clause does when it fills the three slots with constructed data, so the module proves the description in precisely the form such a clause consumes.
@@ -412,6 +429,9 @@ The backward implication is the reading direction: whatever satisfies the per-me
         (sym (Recover.recovers B m (z ∷ γ) zero (suc di) (suc bi) qd qb h))
         (envSet-in B (Recover.g B m (z ∷ γ) zero (suc di) (suc bi) qd qb h)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The clause at `z` is the recovery's input: the recovered environment's canonical graph agrees with `z` as a set, and the constructed set contains that graph. The first transport reads the recovered graph as `z`, so the membership lands in `envSet B m`; the second runs backward along `qE` and turns membership in `envSet B m` into membership in the set at `Ei`.

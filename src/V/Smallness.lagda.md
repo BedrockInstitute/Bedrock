@@ -79,8 +79,7 @@ Closing smallness under the connectives needs proposition operations at the lowe
 結合子による保存を示すには、低いレベル `ℓ`、すなわち圧縮の到達点となる宇宙の命題演算が必要である。これらは限定名 `Logic`{.Agda} のもとに置かれるので、`⊓`{.Agda} などは明らかに `hProp ℓ` 上で働き、以下の無修飾の演算は `hProp (ℓ-suc ℓ)` 上で働く。残りの部品は個々の同値の構成に役立つ。`Σ-cong-equiv` は成分ごとの同値から対の型の間の同値を作り、`⊎-equiv` は直和を扱い、`_` は単一元であり、命題的切り詰めのモジュール `PT`{.Agda} は、証人を選ばずに関数に沿って「存在するだけ」の主張を運ぶ map を与える。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 The hierarchy itself supplies the atomic data. Each set `a` comes with a monic presentation: a small index type `⟪ a ⟫` with an embedding `⟪ a ⟫↪` into `V ℓ`. Membership in a set therefore has a small twin `_∈ₛ_`, defined as the type of pairs `(m : ⟪ b ⟫, ⟪ b ⟫↪ m ∼ a)`, which lives in `hProp ℓ`; the conversion `∈∈ₛ` links the two memberships in both directions, and `identityPrinciple`{.Agda} identifies bisimilarity `∼` with actual paths. The operation `∈-asFiber` turns an (untruncated) membership into an actual fiber of the embedding. `SeparationSet`{.Agda} is the library's separation construction, which only accepts predicates already valued in the lower universe. The unqualified connectives `⊓ ⊔ ⇒ ¬ ⊤ ⊥` and quantifiers `∀[ x ] P x` and `∃[ x ] P x` act directly on `hProp (ℓ-suc ℓ)`.
@@ -95,7 +94,6 @@ open import Cubical.HITs.CumulativeHierarchy.Properties
   using ( _∼_; identityPrinciple; _∈ₛ_; ∈∈ₛ; ⟪_⟫; ⟪_⟫↪; ∈ₛ⟪_⟫↪_; ∈-asFiber )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( module SeparationSet )
-
 ```
 
 <!--en-->
@@ -490,8 +488,18 @@ The setup instantiates the semantics once and for all: `SemanticsV` is the satis
 ```agda
 module SemanticsV = FOL.Semantics 𝒮ᵥ
 open SemanticsV using ( _^_ )
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module Δ₀Small {ℓc} {K : Type ℓc} (ι : K → S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open SemanticsV.At K ι
 
@@ -543,6 +551,9 @@ The existential bounded case mirrors the universal one exactly, with `small-∃�
   Δ₀-small (δ-∃∈ {t = t} {φ = φ} c) γ =
     small-∃∈ (⟦ t ⟧ γ) {B = λ x → (x ∷ γ) ⊨ φ} (λ x → Δ₀-small c (x ∷ γ))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Δ₀ separation without resizing
@@ -638,11 +649,19 @@ The module's parameters assemble the small world. `M` is a class on the carrier 
 モジュールの引数が小さな世界を組み立てる。`M` は台 `S` 上のクラスで、真クラスであってもかまわない。大きさの制限は一切ない。仮定は、小さな型 `X : Type ℓ` と、`X` から制限された台 `Σ[ x ∈ S ] (x ∈ᶜ M)` への同値との組であり、これが世界が本質的に小さいということの正確な意味である。負担はこの同値が存在することにあり、`M` が何らかの内部的な意味で有界であることにはない。定数は `ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)` によって制限された台の中で解釈され、したがって各定数は、第二成分が「第一成分が `M` に属する」ことの証拠であるような対を指す。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module InnerSmall (M : S → hProp (ℓ-suc ℓ))
                   (X : Type ℓ) (e : X ≃ (Σ[ x ∈ S ] (x ∈ᶜ M)))
                   {ℓc} {K : Type ℓc}
                   (ι : K → Σ[ x ∈ S ] (x ∈ᶜ M)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   SM : Type (ℓ-suc ℓ)
 ```
@@ -742,6 +761,9 @@ The existential bounded case is the dual composition: the truth value pairs boun
       small⊓ {P = fst xm ∈ˢ fst (⟦ t ⟧ᵐ δ)} {Q = (xm ∷ δ) ⊨ᵐ φ}
         (small-∈ (fst xm) (fst (⟦ t ⟧ᵐ δ))) (⊨ᵐ-small φ (xm ∷ δ)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

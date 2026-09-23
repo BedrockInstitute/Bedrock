@@ -120,8 +120,16 @@ The class `M` assigns to each set `x` the proposition `x ∈ˢ A`, so the restri
 クラス `M` は各集合 `x` に命題 `x ∈ˢ A` を割り当てるので、制限された台 `Σ[ x ∈ S ] (x ∈ᶜ M)` は要素ごとに、`A` の要素と「それが要素である証拠」の対である。同値 `e` はこの台が本質的に小さいことを示す。第一因子は `presentation A` の逆で、索引写像のファイバーに「だけ」落ちている `A` の要素を `⟪ A ⟫` の添字と同一視する。第二因子は各 `v` について、小さい方の所属 `v ∈ₛ A` と大きい方の所属 `v ∈ˢ A` を両方向に変換する。これらは命題なので、点ごとの変換は正当である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module DefOf (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   M : S → hProp (ℓ-suc ℓ)
   M x = x ∈ˢ A
@@ -375,8 +383,16 @@ The submodule takes transitivity of `A` as an explicit hypothesis. The atomic fo
 この議論は `A` の推移性を明示的な仮定として取る。原子論理式 `atom mₐ` は `var zero ∈̇ con mₐ` で、自由変数のスロットが一つと、要素 `mₐ` を名指す単一の定数からなる。`⟪ A ⟫` を定数域として使うという設計判断がここでも効く。`A` のすべての要素が定数として使え、`ι` がそれを制限された台へ復号するからである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Refine (Atrans : Transitive 𝒮ᵥ M) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     atom : ⟪ A ⟫ → Formula ⟪ A ⟫ 1
     atom mₐ = var zero ∈̇ con mₐ
@@ -530,6 +546,12 @@ The proof concatenates three paths. First, `defSet-mem` reads membership in the 
       ∙ sym (⊨-map Abs.𝒮M ι id φ (ι m ∷ []))
       ∙ Abs.abs₀ (mapΔ₀ ι d) (ι m ∷ [])
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

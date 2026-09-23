@@ -98,11 +98,25 @@ recap_ja = "対象理論の形式化を支える Cubical Agda の環境。"
 fields contain the short, language-local review shown on hover or focus. Keep literature and
 editorial evidence in `notes`; it is not reader-facing copy.
 
+Register a formal abbreviation separately from ordinary word forms:
+
+```toml
+abbreviations = { en = "HIT", zh = "HIT", ja = "HIT" }
+```
+
+The keys may cover any subset of `en`, `zh` and `ja`; omit the field when there is no
+abbreviation. The full names remain in `en` / `zh` / `ja`. The registry validates the
+abbreviation, treats it as an audited form for automatic links and introduction-order
+checks, shows it beside the full name in the website glossary, and includes it in
+glossary search and `terms.json`. State the abbreviation alongside the full name at
+its first introduction, so the reader learns the relationship before seeing the short form.
+
 Use `matching = "auto"` only when every occurrence of the canonical rendering has the same
 technical meaning. The renderer links those later occurrences automatically, preferring longer
 forms. Use `matching = "explicit"` for short or ambiguous forms such as Chinese 层. Such an
 occurrence must use an explicit term-reference marker. Optional `forms_en`, `forms_zh` and
-`forms_ja` arrays list audited inflected or alternate surface forms.
+`forms_ja` arrays list audited inflected or alternate surface forms. Use the structured
+`abbreviations` field for a short name instead of repeating it in `forms_*`.
 
 How often a term occurs is not a criterion (owner ruling, 2026-09-12). A page carrying many
 term links is acceptable and useful: the link marks the word as a registered term rather than

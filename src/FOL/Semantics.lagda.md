@@ -104,9 +104,16 @@ Fix a constant domain `K` and an interpretation `ι : K → S`. At this fixed in
 定数域 `K` と解釈 `ι : K → S` を固定する。この解釈のもとで、項の評価は項と環境を `S` の要素へ送り、充足関係は論理式と環境を命題へ送る。充足関係は論理式の構造に沿って再帰的に定まる。原子式は構造の二つの関係を、結合子は「基礎語彙」の命題演算を、偽は空命題を用い、量化子は台の上を動く。有界量化子では、限界の表示が、量化される要素の満たすべき所属条件を定める。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module At {ℓc} (K : Type ℓc) (ι : K → S) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Two definitions carry the section, and their types say what they are. Evaluation `⟦_⟧`{.Agda} maps a term and an environment to a carrier element. Satisfaction `_⊨_`{.Agda} maps an environment and a formula to a proposition in `hProp ℓ`{.Agda}, that is, to a type any two of whose elements are equal; the inhabitants of such a type are its proofs. Satisfaction is therefore not a bare verdict but a proposition, and the definition computes, for each formula and environment, exactly which proposition is meant. The arity `n` appears in both types, so only an environment of matching length can be applied to a formula: the earlier discipline between formula and environment is now enforced by the types themselves.
@@ -163,6 +170,9 @@ The bounded forms add one ingredient: membership in the denotation of the bound.
   γ ⊨ (∀̇∈ t φ) = ∀[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⇒ ((x ∷ γ) ⊨ φ)
   γ ⊨ (∃̇∈ t φ) = ∃[ x ∶ S ] (x ∈ˢ ⟦ t ⟧ γ) ⊓ ((x ∷ γ) ⊨ φ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Predicates presented by formulas

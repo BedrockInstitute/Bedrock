@@ -315,10 +315,16 @@ The boundary question of the occurrence interface is: what does a count of zero 
 出現というインターフェースの境界の問いは、数が零であることは構文に対して何を強制するのか、というものである。この節は、任意の定数型 `K` に対してこの問いに答える。入力は論理式 `φ` と、その出現数が零である証明である。答えが `K` がどの型であるかに依存してはならず、とりわけ `K` 上の判定可能な等号を用いてはならないので、議論は一度だけ展開され、レベル `ℓ` のすべてのそのような `K` に対して一様に成り立つ。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module ZeroOccurrences {ℓ : Level} (K : Type ℓ) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The section formalises the boundary case. Its input is a formula `φ` together with a proof `p : countFo φ ≡ 0`; from `p` the construction first extracts, for each subterm and subformula, a proof that its own count is zero, and on that basis rebuilds the same syntax over the empty constant alphabet. The map `eraseTm`{.Agda} and `erase`{.Agda} go from `K` to `⊥*`{.Agda}, and the maps `eraseTm-inv`{.Agda} and `erase-inv`{.Agda} show that relabelling along `⊥*-rec`{.Agda}, the eliminator that reads a constant out of the empty type, returns the original term or formula as a path. Together they say that over `K`, the formulas with no constant occurrences are exactly the images of parameter-free formulas, without any decidability assumption on `K`.
@@ -474,6 +480,9 @@ The bounded quantifiers close the induction, mixing a term and a formula just as
   erase-inv (∃̇∈ t φ) p =
     cong₂ ∃̇∈ (eraseTm-inv t (plus-zero-l p)) (erase-inv φ (plus-zero-r p))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

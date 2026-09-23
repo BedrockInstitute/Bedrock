@@ -14,7 +14,6 @@ Counting the stage `Lset δ` of an infinite ordinal `δ` inside `L` rests on two
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -31,7 +30,6 @@ open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Cubical.Foundations.HLevels using ( isPropΠ2; isPropΠ3 )
 open import Cubical.Data.FinData using ( inj-toℕ )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -44,7 +42,6 @@ All constructions therefore share the single hypothesis `lem : LEM (ℓ-suc ℓ)
 
 ```agda
 module L.GCH.StageCountingTools {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -188,7 +185,6 @@ A finite stage comes with a finite tally that lists all its members. Repetitions
 open import L.Choice.FiniteStageOrders {ℓ} lem
   using ( Tally; StageOrder; stageOrder; finiteStage )  -- lint-agda: keep (StageOrder used as the projection qualifier)
 open import L.GCH.OrderType {ℓ} lem using ( Holds; module Code )
-
 ```
 
 <!--en-->
@@ -214,8 +210,7 @@ Several later equalities concern dependent pairs whose second components are pro
 後で現れるいくつかの等しさは、第二成分が証明である依存対についてのものである。その成分は命題なので、底の集合の等しさから包装された要素の等しさが決まる。これにより、`L` の要素、その提示、グラフの符号の間を円滑に行き来できる。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Numerals have a second role besides marking environment lengths. Membership in `ω` says merely that an ambient set is equal to some numeral, while the proof keeps no globally chosen natural-number representative. Later eliminations respect this propositional character.
@@ -243,7 +238,6 @@ Existence in membership and graph readings is often retained only under proposit
 
 ```agda
 open import Cubical.Induction.WellFounded using ( Acc; acc; WellFounded )
-
 ```
 
 <!--en-->
@@ -281,7 +275,6 @@ Every entry read from a member of a constructible set is itself constructible, b
 ```agda
 module SL = hPropStructure 𝒮ʟ using ( S )
 open SL using ( S )
-
 ```
 
 <!--en-->
@@ -308,7 +301,6 @@ For a natural number `k`, `nn k` packages the numeral `# k` with its proof of co
 ```agda
 nn : ℕ → S
 nn k = # k , numL k
-
 ```
 
 <!--en-->
@@ -421,7 +413,6 @@ The proof fills the domain of the first presentation with the numeral of `n`, re
 
 ```agda
             (domAt-fill (suc zero) zero (nn n ∷ E ∷ []) n h cg q refl))
-
 ```
 
 <!--en-->
@@ -455,13 +446,21 @@ The lifting module is stated for a constructible graph `E` with four data: singl
 持ち上げのモジュールは、構成可能なグラフ `E` に対して四つのデータとともに述べられる。一価性、`A` の上の全域性、`A` の上の単射性、そして `B` の中の値である。これらはちょうど、`A` から `B` への符号化された単射の四つの条項である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module SeqMap (A B E : S)
               (sv : ⟨ (E ∷ A ∷ []) ⊨ svAt zero ⟩)
               (dm : ⟨ (E ∷ A ∷ []) ⊨ domAt zero (suc zero) ⟩)
               (ij : ⟨ (E ∷ A ∷ []) ⊨ injAt zero ⟩)
               (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst E ⟩
+                   → ⟨ fst y ∈ fst B ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The final range clause says only that every value occurring in `E` belongs to `B`. It does not require every member of `B` to occur, so the data describe an injection rather than a surjection or a bijection.
@@ -471,10 +470,7 @@ The final range clause says only that every value occurring in `E` belongs to `B
 最後の値域条件が述べるのは、`E` に現れるすべての値が `B` に属すことだけである。`B` の各要素が像になることは要求しないので、このデータが表すのは単射であり、全射や全単射ではない。
 <!--/-->
 
-```agda
-                   → ⟨ fst y ∈ fst B ⟩) where
 
-```
 
 <!--en-->
 The extraction machinery reads the internal graph as an actual function between the presentations of `A` and `B`: single-valuedness makes the fiber of each value a proposition, so the value can be recovered without any choice principle.
@@ -500,7 +496,6 @@ The extracted function is kept opaque: later arguments use it through its graph 
   opaque
     f : ⟪ fst A ⟫ → ⟪ fst B ⟫
     f = Sm.small
-
 ```
 
 <!--en-->
@@ -516,7 +511,6 @@ The graph record states that the pair of an index's presented element and the pr
             → ⟨ pr (⟪ fst A ⟫↪ m) (⟪ fst B ⟫↪ (f m)) ∈ fst E ⟩
     f-graph m = subst (λ w → ⟨ pr (⟪ fst A ⟫↪ m) w ∈ fst E ⟩)
       (sym (Sm.fib m .snd)) (Sm.E.toFun-graph (Sm.at m))
-
 ```
 
 <!--en-->
@@ -530,7 +524,6 @@ The extracted function is injective on the presentation of `A`, which is the poi
 ```agda
     f-inj : (m n : ⟪ fst A ⟫) → f m ≡ f n → m ≡ n
     f-inj = Sm.small-inj
-
 ```
 
 <!--en-->
@@ -544,7 +537,6 @@ An environment entry of `A` is read as an ambient set through the embedding of t
 ```agda
   vA : {n : ℕ} → Ix A n → Fin n → V ℓ
   vA g i = ⟪ fst A ⟫↪ (g i)
-
 ```
 
 <!--en-->
@@ -558,7 +550,6 @@ Likewise for the entries of `B`-environments.
 ```agda
   vB : {n : ℕ} → Ix B n → Fin n → V ℓ
   vB h i = ⟪ fst B ⟫↪ (h i)
-
 ```
 
 <!--en-->
@@ -572,7 +563,6 @@ The lifted assignment applies the extracted function entry by entry: the image o
 ```agda
   fg : {n : ℕ} → Ix A n → Ix B n
   fg g i = f (g i)
-
 ```
 
 <!--en-->
@@ -586,7 +576,6 @@ Every entry of an `A`-environment is constructible, by transporting the membersh
 ```agda
   isLA : {n : ℕ} (g : Ix A n) (i : Fin n) → ⟨ isL (vA g i) ⟩
   isLA g i = isL-trans (member (fst A) (g i)) (snd A)
-
 ```
 
 <!--en-->
@@ -649,7 +638,6 @@ The entry formula expresses exactly the three equations hidden in `Ent`: two exi
     private
       entFo : Formula S 5
       entFo = ∃̇ (∃̇ ( appAt i6 i2 i1 ∧̇ appAt i5 i2 i0 ∧̇ appC E i1 i0 ))
-
 ```
 
 <!--en-->
@@ -698,7 +686,6 @@ The adequacy laws for the two environment applications and for application of `E
           , ( subst ⟨_⟩ (appAt-adequate i6 i2 i1 γ) h1
             , subst ⟨_⟩ (appAt-adequate i5 i2 i0 γ) h2
             , subst ⟨_⟩ (appC-adequate E i1 i0 γ) h3 ) ∣₁ }) hv })
-
 ```
 
 <!--en-->
@@ -727,7 +714,6 @@ After both witnesses are repackaged under the nested existential quantifiers, th
 
 ```agda
                   , subst ⟨_⟩ (sym (appC-adequate E i1 i0 γ)) h3 ) ∣₁ })
-
 ```
 
 <!--en-->
@@ -772,7 +758,6 @@ The bounded universal clause is used pointwise: for each `i∈n`, `entOut` turns
 
 ```agda
               , λ i i∈n → entOut y s n b i (hS i i∈n) ) ∣₁
-
 ```
 
 <!--en-->
@@ -787,7 +772,6 @@ To read the whole graph formula outward, we first eliminate the truncated witnes
     fo-out : (y s : S) → ⟨ (y ∷ s ∷ []) ⊨ fo ⟩ → Wit y s
     fo-out y s = rec₁ squash₁ (λ { (n , (hd , hb)) →
       rec₁ squash₁ (λ { (b , (eb , (he , hS))) → bodyOut y s n b hd eb he hS }) hb })
-
 ```
 
 <!--en-->
@@ -813,10 +797,16 @@ Fix a sequence `g` of length `N` over `A`, a carrier element `s`, and an equatio
 `A` 上の長さ `N` の列 `g`、台の要素 `s`、および `s` の底の集合を `g` の環境グラフと同一視する等式を固定する。この具体的な表示から成分ごとの像を構成し、同じグラフ論理式を満たす任意の出力が同じ底の集合をもつことを示せる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module AtSeq (N : ℕ) (g : Ix A N) (s : S) (e : fst s ≡ fst (envS A g)) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The intended output is the environment graph of the coordinatewise image `fg g`. At index `j`, its value is `f (g j)`, so the source and target sequences have the same finite length and corresponding entries are related by the input graph `E`.
@@ -829,7 +819,6 @@ The intended output is the environment graph of the coordinatewise image `fg g`.
 ```agda
     y₀ : S
     y₀ = envS B (fg g)
-
 ```
 
 <!--en-->
@@ -856,7 +845,6 @@ The entry lemma says that the coded graph of a function contains the ordered pai
       at : {k : ℕ} (h : Fin k → V ℓ) (j : Fin k)
          → ⟨ pr (# (toℕ j)) (h j) ∈ env h ⟩
       at h j = subst ⟨_⟩ (sym (lookup-spec h j (h j))) refl
-
 ```
 
 <!--en-->
@@ -888,7 +876,6 @@ The fact `envOver B (fg g)` is initially stated in the shorter environment conta
       he : ⟨ (B ∷ nn N ∷ y₀ ∷ s ∷ []) ⊨ envOverAt i2 i1 i0 ⟩
       he = envOverAt-transport (B ∷ nn N ∷ y₀ ∷ []) (B ∷ nn N ∷ y₀ ∷ s ∷ [])
              i2 i1 i0 i2 i1 i0 refl refl refl (envOver B (fg g))
-
 ```
 
 <!--en-->
@@ -951,7 +938,6 @@ The internal index `j` is constructed from the bounded natural number by the fin
           j = fromℕ' N k p
           qi : fst i ≡ # (toℕ j)
           qi = ei ∙ cong #_ (sym (toFromId' N k p))
-
 ```
 
 <!--en-->
@@ -982,7 +968,6 @@ The inner module collects the three clauses of the witness: the domain condition
                   (hd : ⟨ (n ∷ y ∷ s ∷ []) ⊨ domAt i2 i0 ⟩)
                   (he : ⟨ (B ∷ n ∷ y ∷ s ∷ []) ⊨ envOverAt i2 i1 i0 ⟩)
                   (hS : (i : S) → ⟨ fst i ∈ fst n ⟩ → Ent y s i) where
-
 ```
 
 <!--en-->
@@ -1010,7 +995,6 @@ The environment condition and the recovered length determine an index function `
         opaque
           gR : Ix B N
           gR = Recover.g B N (B ∷ n ∷ y ∷ s ∷ []) i2 i1 i0 qn refl he
-
 ```
 
 <!--en-->
@@ -1101,7 +1085,6 @@ The final equation composes the function-graph fact with the reversed argument e
 
 ```agda
                     (subst (λ w → ⟨ pr w (vB (fg g) j) ∈ fst E ⟩) (sym qu) (f-graph (g j)))
-
 ```
 
 <!--en-->
@@ -1127,6 +1110,9 @@ Function extensionality turns `pt` into equality of the two index functions. App
 ```agda
         final = gR-eq ∙ λ i → fst (envS B (funExt pt i))
 ```
+</div>
+</details>
+
 
 <!--en-->
 Membership in the sequence set is stated as a type so that the argument can carry it alongside each element.
@@ -1139,7 +1125,6 @@ Membership in the sequence set is stated as a type so that the argument can carr
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem s = ⟨ fst s ∈ˢ fst (seqL A) ⟩
-
 ```
 
 <!--en-->
@@ -1153,7 +1138,6 @@ A representation is the truncated record of a length, an index function and the 
 ```agda
   Rep : S → Type (ℓ-suc ℓ)
   Rep s = ∥ Σ[ n ∈ ℕ ] Σ[ g ∈ Ix A n ] (fst s ≡ fst (envS A g)) ∥₁
-
 ```
 
 <!--en-->
@@ -1169,7 +1153,6 @@ Starting from membership in `seqL A`, `seqL-out` gives a propositionally truncat
   rep s m = rec₁ squash₁
     (λ { (n , hn) → map₁ (λ { (g , e) → n , g , e }) (envSet-out A n s hn) })
     (seqL-out A s m)
-
 ```
 
 <!--en-->
@@ -1201,7 +1184,6 @@ For a concrete representation `(n , g , e)`, the functionality witness consists 
         , ( fo-in (AtSeq.y₀ n g s e) s (AtSeq.wit n g s e)
           , λ y' h → Σ≡Prop (λ v → snd (isL v)) (AtSeq.only n g s e y' (fo-out y' s h)) ) })
         (rep s m)) }
-
 ```
 
 <!--en-->
@@ -1214,7 +1196,6 @@ The recursion table machinery is opened, supplying the actual function, its valu
 
 ```agda
   module T = Of R using ( funct; val; val-uniq )
-
 ```
 
 <!--en-->
@@ -1228,7 +1209,6 @@ The resulting value `fn s m` is the unique carrier element satisfying `fo` at `s
 ```agda
   fn : (s : S) → Mem s → S
   fn = T.val
-
 ```
 
 <!--en-->
@@ -1244,7 +1224,6 @@ Whenever `s` is presented by a length `n` and an index function `g`, the compute
           → fn s m ≡ AtSeq.y₀ n g s e
   fn-code s m n g e =
     T.val-uniq s m (AtSeq.y₀ n g s e) (fo-in (AtSeq.y₀ n g s e) s (AtSeq.wit n g s e))
-
 ```
 
 <!--en-->
@@ -1325,7 +1304,6 @@ With a common length, `env-pt` reads equality of the target graphs as equality o
       base : P n
       base h q' = λ i → fst (envS A (funExt (λ j →
         f-inj (g j) (h j) (↪-inj {a = fst B} (env-pt (vB (fg g)) (vB (fg h)) q' j))) i))
-
 ```
 
 <!--en-->
@@ -1357,7 +1335,6 @@ The code equations identify the actual outputs `fn s m` and `fn s' m'` with thei
           (sym (cong fst (fn-code s m n g e)) ∙ q ∙ cong fst (fn-code s' m' n' g' e'))
       ∙ sym e' })
     (rep s m) (rep s' m')
-
 ```
 
 <!--en-->
@@ -1372,6 +1349,9 @@ The injectivity just proved upgrades the definable map to an internal coded inje
   injL : InjL (seqL A) (seqL B)
   injL = Inj.injL D inj
 ```
+</div>
+</details>
+
 
 <!--en-->
 The exported theorem starts from an actual code `E` witnessing an injection from `A` to `B`: it is single-valued, has domain `A`, is injective, and has range contained in `B`. Passing these four components to `SeqMap` yields the propositionally truncated existence of a coded injection from `seqL A` to `seqL B`. The result concerns finite sequences of arbitrary length, not infinite sequences.
@@ -1405,7 +1385,6 @@ The pinning formula binds one existential to fix a free slot to a chosen constan
 ```agda
 pinAt : ∀ {n} → S → Formula S (suc n) → Formula S n
 pinAt c φ = ∃̇ ((var zero ≐ con c) ∧̇ φ)
-
 ```
 
 <!--en-->
@@ -1420,7 +1399,6 @@ The inward reading exhibits the constant as the witness and the body satisfactio
 pin-in : ∀ {n} (c : S) (φ : Formula S (suc n)) (γ : S ^ n)
        → ⟨ (c ∷ γ) ⊨ φ ⟩ → ⟨ γ ⊨ pinAt c φ ⟩
 pin-in c φ γ h = ∣ c , (refl , h) ∣₁
-
 ```
 
 <!--en-->
@@ -1472,7 +1450,6 @@ The remaining range condition quantifies over an argument, a value, and a proof 
 
 ```agda
         (isPropΠ3 (λ _ y _ → snd (fst y ∈ fst b)))))
-
 ```
 
 <!--en-->
@@ -1489,7 +1466,6 @@ injcode-resp : (F F' a a' b : S) → fst F ≡ fst F' → fst a ≡ fst a'
 injcode-resp F F' a a' b qF qa = subst2 {x = F} {y = F'} {z = a} {w = a'}
   (λ E A → InjCode E A b)
   (Σ≡Prop (λ v → snd (isL v)) qF) (Σ≡Prop (λ v → snd (isL v)) qa)
-
 ```
 
 <!--en-->
@@ -1504,7 +1480,6 @@ The formula `injFo b f B` expresses the four conditions of an injection code usi
 injFo : ∀ {n} → S → Fin n → Fin n → Formula S n
 injFo b f B = svAt f ∧̇ domAt f B ∧̇ injAt f
             ∧̇ ∀̇ (∀̇ (appAt (suc (suc f)) i1 i0 ⇒̇ (var i0 ∈̇ con b)))
-
 ```
 
 <!--en-->
@@ -1515,8 +1490,16 @@ To prove the reading laws for `injFo`, fix the target `b`, the two relevant slot
 `injFo` の読み出し則を示すため、目標 `b`、関係する二つの位置 `f` と `B`、および割当て `γ` を固定する。局所名 `F` と `A` は、それぞれの位置にある台の要素を表す。これにより、後の議論では変数参照の処理を数学的な主張から切り離し、結論を直接 `InjCode F A b` と述べられる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module InjFo {n : ℕ} (b : S) (f B : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     F A : S
     F = lookup f γ
@@ -1553,7 +1536,6 @@ Single-valuedness and injectivity are transferred by reading their semantic clau
         , (λ hx → domAt-in f B γ dm x hx))
     , injAt-in zero (F ∷ A ∷ []) (λ y x x' p q → injAt-out f γ ij y x x' p q)
     , λ x y p → ran x y (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) i1 i0 (y ∷ x ∷ γ))) p)
-
 ```
 
 <!--en-->
@@ -1586,6 +1568,9 @@ For totality, a truncated graph witness is eliminated only into the proposition 
     , injAt-in f γ (λ y x x' p q → injAt-out zero (F ∷ A ∷ []) ij y x x' p q)
     , λ x y p → ran x y (subst ⟨_⟩ (appAt-adequate (suc (suc f)) i1 i0 (y ∷ x ∷ γ)) p)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Reducing the infinite-stage count to `L_ω`
@@ -1606,7 +1591,6 @@ The stage at the infinite ordinal `ω` is presented as a constructible set: the 
 ```agda
 Lω : S
 Lω = LsetS ω ω-ord
-
 ```
 
 <!--en-->
@@ -1655,10 +1639,19 @@ The exclusion argument works with finite stages of the form `Lset (# n)`, and be
 
 ```agda
 private
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
   module FinNo (n : ℕ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     t : Tally (finiteStage n)
     t = StageOrder.tally (stageOrder n)
-
 ```
 
 <!--en-->
@@ -1686,7 +1679,6 @@ The search lemma names a member: for each member `x` of the finite stage it runs
     named x hx = decRec (λ q → q) (λ nq → ⊥₀-rec (rec₁ isProp⊥ nq (onto x hx)))
       (DecΣ size (λ i → item i ≡ x)
         (λ i → FOL.Semantics.decideEquality 𝒮ᵥ lem (item i) x))
-
 ```
 
 <!--en-->
@@ -1747,8 +1739,10 @@ The chain of identifications is closed by the named entry of the second point, c
 
 ```agda
           ∙ named (vl y) (mm y) .snd)
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 For an arbitrary index `w`, `NoInto w` is the proposition that no host-level injection exists from the presentation of `ω` into the presentation of `Lset w`. The next lemma will establish this proposition under the additional hypothesis that `w` belongs to `ω`.
@@ -1762,7 +1756,6 @@ For an arbitrary index `w`, `NoInto w` is the proposition that no host-level inj
   NoInto : V ℓ → Type ℓ
   NoInto w = (f : ⟪ ω ⟫ → ⟪ Lset w ⟫)
            → ((x y : ⟪ ω ⟫) → f x ≡ f y → x ≡ y) → ⊥₀
-
 ```
 
 <!--en-->
@@ -1790,7 +1783,6 @@ The infinite ordinal `ω` is constructible: its ordinalness feeds the ordinal st
 ```agda
 hω : ⟨ isL ω ⟩
 hω = isL-ord ω ω-ord
-
 ```
 
 <!--en-->
@@ -1804,7 +1796,6 @@ The stage order of `Lset ω` is implemented as a constructible set `Rω` of code
 ```agda
 Rω : SL.S
 Rω = relL ω hω ω-ord
-
 ```
 
 <!--en-->
@@ -1818,7 +1809,6 @@ The relation specification says that the coded pairs of `Rω` are exactly the or
 ```agda
 specω : IsRel ω Rω
 specω = relL-spec ω hω ω-ord
-
 ```
 
 <!--en-->
@@ -1881,7 +1871,6 @@ The relatedness is transported along the identification of the coded pair with t
   rel = subst (λ w → ⟨ Related ω w ⟩) (prʟ-fst y x)
     (specω (prʟ y x) .fst
       (subst (λ w → ⟨ w ∈ˢ fst Rω ⟩) (sym (prʟ-fst y x)) h))
-
 ```
 
 <!--en-->
@@ -1907,7 +1896,6 @@ The host well order is the stage order carried to the presentation of `Lset ω`,
 ```agda
 Wω : SWO ⟪ Lset ω ⟫
 Wω = carry (Lset ω) (orderAt ω ω-ord)
-
 ```
 
 <!--en-->
@@ -1920,7 +1908,6 @@ Write `a <ω b` for the strict comparison supplied by this well order on the pre
 
 ```agda
 open SWO Wω using () renaming ( _<∙_ to _<ω_ )
-
 ```
 
 <!--en-->
@@ -1934,7 +1921,6 @@ The internal relation and the host stage order agree on the common presentation.
 ```agda
 ≺→< : (a b : OT.Dom) → a OT.≺ b → a <ω b
 ≺→< a b k = ixRel-rep ω ω-ord Rω specω a b (OT.≺-out a b k)
-
 ```
 
 <!--en-->
@@ -1948,7 +1934,6 @@ Conversely, the filling theorem for the coded relation turns a host-order compar
 ```agda
 <→≺ : (a b : OT.Dom) → a <ω b → a OT.≺ b
 <→≺ a b k = OT.≺-in a b (ixRel-fill ω ω-ord Rω specω a b k)
-
 ```
 
 <!--en-->
@@ -1980,7 +1965,6 @@ Transitivity of the internal relation is likewise transported through the host o
 transω : {a b c : OT.Dom} → a OT.≺ b → b OT.≺ c → a OT.≺ c
 transω {a} {b} {c} k k' =
   <→≺ a c (SWO.trans∙ Wω a b c (≺→< a b k) (≺→< b c k'))
-
 ```
 
 <!--en-->
@@ -2011,7 +1995,6 @@ Each host case is converted back into the corresponding internal case: less-than
   go (lt h) = inl (<→≺ a b h)
   go (eq e) = inr (inl e)
   go (gt h) = inr (inr (<→≺ b a h))
-
 ```
 
 <!--en-->
@@ -2038,7 +2021,6 @@ The birth-stage family is instantiated at the internal `ω`: every presented mem
 ```agda
 private
   module F = Family ω (λ δ _ → orderAt δ) ω-ord using ( _≺_; bornAt )
-
 ```
 
 <!--en-->
@@ -2053,7 +2035,6 @@ The unfolded reading of the family relation is proved: at `ω`, the abstractly s
   unfoldω : (a b : MemOf (Lset ω))
           → relOf (orderAt ω ω-ord) a b ≡ F._≺_ a b
   unfoldω a b = cong (λ z → relOf (z ω-ord) a b) (orderAt-step ω)
-
 ```
 
 <!--en-->
@@ -2067,7 +2048,6 @@ The birth stage of a member is read as an ambient set.
 ```agda
   bAt : MemOf (Lset ω) → V ℓ
   bAt a = F.bornAt a .fst
-
 ```
 
 <!--en-->
@@ -2081,7 +2061,6 @@ Every birth stage belongs to the internal `ω`, since the whole family lives bel
 ```agda
   bAt∈ω : (a : MemOf (Lset ω)) → ⟨ bAt a ∈ˢ ω ⟩
   bAt∈ω a = F.bornAt a .snd
-
 ```
 
 <!--en-->
@@ -2095,7 +2074,6 @@ Every birth stage is an ordinal: it is a member of the ordinal `ω`, and members
 ```agda
   bAt-ord : (a : MemOf (Lset ω)) → IsOrd (bAt a)
   bAt-ord a = mem-ord {A = ω} ω-ord (bAt a) (bAt∈ω a)
-
 ```
 
 <!--en-->
@@ -2109,7 +2087,6 @@ Every presented member of `Lset ω` belongs to the stage indexed by its own birt
 ```agda
   self-at : (a : MemOf (Lset ω)) → ⟨ a .fst ∈ˢ Lset (sucV (bAt a)) ⟩
   self-at a = birth-mem (a .fst) (Lset→isL ω ω-ord (a .fst) (a .snd))
-
 ```
 
 <!--en-->
@@ -2157,7 +2134,6 @@ In the equality subcase `sucV (bAt a) ≡ bAt b`, the proof first places this or
       (self-at a)
   step-bound a b (inr (e , u)) =
     subst (λ w → ⟨ a .fst ∈ˢ Lset (sucV w) ⟩) (sym e) (u .fst)
-
 ```
 
 <!--en-->
@@ -2171,7 +2147,6 @@ Every point of the internal collapse domain is read as a presented member of `Ls
 ```agda
   atIx : OT.Dom → MemOf (Lset ω)
   atIx m = ⟪ Lset ω ⟫↪ m , memOf (Lset ω) m
-
 ```
 
 <!--en-->
@@ -2185,7 +2160,6 @@ For a collapse-domain point `p`, the guard index `gOf p` is the successor of the
 ```agda
   gOf : OT.Dom → V ℓ
   gOf p = sucV (bAt (atIx p))
-
 ```
 
 <!--en-->
@@ -2199,7 +2173,6 @@ Every guard belongs to the internal `ω`, since it is the successor of a member 
 ```agda
   gOf∈ω : (p : OT.Dom) → ⟨ gOf p ∈ˢ ω ⟩
   gOf∈ω p = ω-limit (bAt (atIx p)) (bAt∈ω (atIx p))
-
 ```
 
 <!--en-->
@@ -2229,7 +2202,6 @@ A predecessor segment records a predecessor `r` of `p` together with the identif
 private
   Seg : OT.Dom → V ℓ → Type (ℓ-suc ℓ)
   Seg p b = Σ[ r ∈ OT.Dom ] ((r OT.≺ p) × (C.col r ≡ b))
-
 ```
 
 <!--en-->
@@ -2245,7 +2217,6 @@ Predecessor segments are propositions: two records with the same collapse value 
   isPropSeg p b (r , _ , e) (r' , _ , e') =
     Σ≡Prop (λ z → isProp× (OT.isProp≺ z p) (setIsSet _ _))
       (I.col-inj r r' (e ∙ sym e'))
-
 ```
 
 <!--en-->
@@ -2259,7 +2230,6 @@ Every membership in a collapse value yields a predecessor segment: the truncated
 ```agda
   seg : (p : OT.Dom) (b : V ℓ) → ⟨ b ∈ˢ C.col p ⟩ → Seg p b
   seg p b h = rec₁ (isPropSeg p b) (λ z → z) (C.col-out p b h)
-
 ```
 
 <!--en-->
@@ -2353,7 +2323,6 @@ In the remaining case `ω ∈ C.col p`. Since `C.col p` is an ordinal and theref
 
 ```agda
     ⊥₀-rec (refute (λ z z∈ω → C.col-ord p .fst z∈ω ω∈c))
-
 ```
 
 <!--en-->

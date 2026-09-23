@@ -247,8 +247,16 @@ outside, since none of them needs to know what the set was cut out of.
 这个集合在构造处被封印。若不封印，此后每个提到它的类型都会把分离定义的展开带入转换检查，而这里导出的事实已经足够所有使用方使用。封印内部只保留读取分离结果所需的引理；由这些方向复合得到的等式放在封印外部，因为它们不依赖该集合从哪个超集中分离出来。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     ι : ⟪ fst A ⟫ → V ℓ
     ι = ⟪ fst A ⟫↪
@@ -431,6 +439,9 @@ not contain it.
     (λ { (n , ψ , q) →
       subst (λ w → ⟨ w ∈ fst AllCodes ⟩) (sym q) (key∈AllCodes ψ) })
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

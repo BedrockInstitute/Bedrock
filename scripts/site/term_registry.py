@@ -34,6 +34,8 @@ def schema_errors(entries):
         if term_id:
             ids.setdefault(term_id, []).append(entry.get("en", f"term {index}"))
         if audience != "reader":
+            if "abbreviations" in entry:
+                errors.append(f"term {entry.get('en', index)!r}: abbreviations require reader audience")
             continue
         for field in ("id", "en", "zh", "ja", "introduced_in", "matching",
                       "recap_en", "recap_zh", "recap_ja"):
@@ -42,10 +44,27 @@ def schema_errors(entries):
         matching = entry.get("matching")
         if matching not in ("auto", "explicit"):
             errors.append(f"term {entry.get('en', index)!r}: matching must be auto or explicit")
+        if "abbreviations" in entry:
+            abbreviations = entry["abbreviations"]
+            if (not isinstance(abbreviations, dict) or
+                    not abbreviations or
+                    any(lang not in LANGS or not isinstance(value, str) or
+                        not value.strip() or value != value.strip()
+                        for lang, value in abbreviations.items())):
+                errors.append(f"term {entry.get('en', index)!r}: abbreviations must map "
+                              "language codes en/zh/ja to nonempty strings")
+            elif any(abbreviation == entry.get(lang)
+                     for lang, abbreviation in abbreviations.items()):
+                errors.append(f"term {entry.get('en', index)!r}: abbreviation must differ "
+                              "from the full term")
         for lang in LANGS:
             forms = entry.get(f"forms_{lang}", [])
             if not isinstance(forms, list) or any(not isinstance(form, str) or not form for form in forms):
                 errors.append(f"term {entry.get('en', index)!r}: forms_{lang} must be a string list")
+            abbreviation = localized_abbreviation(entry, lang)
+            if abbreviation and isinstance(forms, list) and abbreviation in forms:
+                errors.append(f"term {entry.get('en', index)!r}: {lang} abbreviation belongs "
+                              "only in abbreviations, not forms")
     for term_id, labels in ids.items():
         if len(labels) > 1:
             errors.append(f"duplicate stable term id {term_id!r}: {', '.join(labels)}")
@@ -64,5 +83,14 @@ def schema_errors(entries):
 
 
 def localized_forms(entry, lang):
-    """Canonical rendering followed by explicitly audited grammatical forms."""
-    return list(dict.fromkeys([entry[lang], *entry.get(f"forms_{lang}", [])]))
+    """Full term, structured abbreviation, and audited grammatical forms."""
+    abbreviation = localized_abbreviation(entry, lang)
+    return list(dict.fromkeys([entry[lang], *([abbreviation] if abbreviation else []),
+                               *entry.get(f"forms_{lang}", [])]))
+
+
+def localized_abbreviation(entry, lang):
+    """Return the registered abbreviation for a language, if any."""
+    abbreviations = entry.get("abbreviations", {})
+    abbreviation = abbreviations.get(lang) if isinstance(abbreviations, dict) else None
+    return abbreviation if isinstance(abbreviation, str) and abbreviation.strip() else None

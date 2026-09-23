@@ -126,9 +126,16 @@ Everything from here through the transitivity of the range works for an arbitrar
 ここから像の推移性までは、任意の `X : S` に対して成り立つ。外延性の節に入るまで、台についての仮定は一切不要である。これは重要である。Mostowski 崩壊の古典的な定式化では整礎性と外延性を最初から仮定することが多いのであるが、ここでは整礎性は周囲の階層からただで得られ、外延性は単射性を証明する場面でのみ使われる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Collapse (X : S) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 ## The recursive collapse
@@ -438,9 +445,17 @@ The extensionality-dependent material now lives in a module taking `Xext : isExt
 外延性に依存する材料は、`Xext : isExt X` を引数とするモジュールの中に置かれ、仮定が明示され、他の場所で黙って使えることはない。その内部では、帰納の述語 `P` が台を基準にした単射性の主張そのものである。`X` に属する `x` に対し、同じ崩壊値を持つ `X` の任意の `y` がパスによって `x` と等しい、というものである。これが、所属帰納が `x` のすべての要素に対して同時に確立すべき性質である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
   module InjExt (Xext : isExt X) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     P : S → Type (ℓ-suc ℓ)
     P x = (y : S) → x ∈ᵗ X → y ∈ᵗ X → π x ≡ π y → x ≡ y
@@ -603,6 +618,9 @@ The local lemma `iso` packages the two implications: from `⟨ y ∈ˢ x ⟩` to
         → (⟨ y ∈ˢ x ⟩ → ⟨ π y ∈ˢ π x ⟩) × (⟨ π y ∈ˢ π x ⟩ → ⟨ y ∈ˢ x ⟩)
     iso x y xu yu = (λ yx → π∈-fwd x y yx yu) , π∈-bwd x y xu yu
 ```
+</div>
+</details>
+
 
 <!--en-->
 The recursion equation `π x ≡ step x (λ y _ → π y)` is not merely a property of the particular function constructed by `∈-induction`: it characterizes the collapse up to path. Any function `f` satisfying the same recursion equation, with `f` itself in the recursive calls, agrees with `π` everywhere. This uniqueness is what makes the collapse a well-defined object rather than one among possibly many outputs of a construction.
@@ -759,6 +777,9 @@ With both directions established, the biconditional for each `x` is converted in
 ```agda
           (YX x (∈∈ₛ {a = x} {b = Y} .fst x∈Y))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The fixed-point statement applies in particular when `Y` is the carrier `X` itself: a transitive carrier is fixed pointwise by the collapse, so on such a carrier the collapsing map is the identity.

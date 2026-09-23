@@ -52,7 +52,7 @@ class FooterTests(unittest.TestCase):
 
 class ProseAnchorTests(unittest.TestCase):
     def test_existing_accessible_title_id_is_preserved(self):
-        body = '<p class="optional-reading-title" id="construction-title">Optional</p><p>Next</p>'
+        body = '<p class="prose-disclosure-title" id="construction-title">Details</p><p>Next</p>'
         anchored = renderer.anchor_prose_blocks(body)
         self.assertEqual(re.findall(r'id="([^"]+)"', anchored), ['construction-title', 'p-2'])
 

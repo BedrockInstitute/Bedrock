@@ -17,7 +17,11 @@ The dependency map derives its graph from fenced source imports and its learning
 stages from `dev/reading-catalog.json`. Compact, learning-stage and namespace
 layouts share the same nodes and edges; skeleton mode preserves reachability.
 Milestones appears at the bottom as a dependency endpoint, although readers meet
-its theorem statements first as a preview.
+its theorem statements first as a preview. The root URL leads to the language-specific
+reading guide, which opens on the Milestones tab. The sidebar keeps Reading guide
+folded and Current route open; a route chosen in the guide is remembered across chapters.
+On phone-width screens, the search row recedes while scrolling down and returns
+while scrolling up or using search.
 
 ## Contents
 
@@ -34,6 +38,25 @@ its theorem statements first as a preview.
   - `fonts/`: self-hosted woff2 (EB Garamond, Inria Sans, JuliaMono); no runtime font CDN.
 - `vendor/1lab/`: **vendored upstream 1lab assets** kept under their own license, with the
   upstream font and icon license texts under `vendor/1lab/static/licenses/`.
+
+## Definition previews
+
+Source blocks and hover types share the renderer's `wrap_expression_ranges` nesting
+logic. Hover ranges must resolve to compiler-backed `$expressions` payloads, and both
+range matching and qualified-name linking respect complete Agda token boundaries.
+Touch selection shares `gestureCandidates` and `clearHighlight` across both surfaces;
+CSS `:hover` highlights are restricted to fine, hover-capable pointers.
+
+A definition modal loads the original page on demand in a same-origin iframe with
+`bedrock-modal=1`. Only the reading body is shown, retaining its section navigation
+and page-edge controls. `#main-content` is the explicit scroll container on every
+device. History stores definition targets, not a reader's later scroll position.
+Canonical `.html` redirects must identify the same page before sizing and alignment.
+On touch devices, tapping a name opens its hover; only the hover's modal action opens
+the modal. The title link, or revisiting the current definition, navigates normally.
+
+Run the interaction and renderer regressions with
+`python3.11 -m unittest scripts.tests.test_expression_hover scripts.tests.test_site_navigation`.
 
 ## The agent-readable layer
 

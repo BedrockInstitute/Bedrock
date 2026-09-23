@@ -678,8 +678,16 @@ A member of `Lset σ` lives in the stage as a set, but `finSet` needs a name in 
 `Lset σ` の要素は集合としてその段階にあるが、`finSet` には小さな要素型 `⟪ Lset σ ⟫` の名前が必要である。埋め込み `⟪ Lset σ ⟫↪` はその名前を集合として読む。所属は切り詰められたファイバーとして提示されるが、この埋め込みのファイバーは命題なので、`∈-asFiber` は切り詰めを消去し、明示的な名前と、それが `item i` に等しいというパスを返せる。`index i` と `index-eq i` は、このファイバー要素の二つの射影である。重複を許す有限な数え上げの任意のファイバーから添字を選ぶこととは異なり、そちらのファイバーは命題とは限らない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PowerStep (σ : S) (oσ : IsOrd σ) (t : Tally (Lset σ)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Tally t
   open FinOf σ oσ using ( finSet∈𝒟ₒ )
 
@@ -919,6 +927,9 @@ The witness index is the one that `mask-onto` produces for the verdict mask `mas
     cover x x∈ = ∣ mask-onto size (maskOf x) .fst
                  , (cong part (mask-onto size (maskOf x) .snd) ∙ part-mask x x∈) ∣₁
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Smallest elements, and well-foundedness
@@ -942,11 +953,19 @@ Fix a strict relation `≺` on `A` with trichotomy, irreflexivity and transitivi
 `A` 上の狭義関係 `≺` が三岐性・非反射性・推移性を満たすとする。整礎性は仮定せず、有限な被覆族から導く。述語 `P` に対し、`Least P m` は `m` が `P` を満たすことと、より小さい充足者がすべて矛盾を導くことを記録する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Search {A : Type (ℓ-suc ℓ)} (_≺_ : A → A → Type (ℓ-suc ℓ))
               (tri : (a b : A) → Tri (a ≺ b) (a ≡ b) (b ≺ a))
               (irr : (a : A) → a ≺ a → ⊥₀)
               (trans : (a b c : A) → a ≺ b → b ≺ c → a ≺ c) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   Least : (P : A → hProp (ℓ-suc ℓ)) → A → Type (ℓ-suc ℓ)
 ```
@@ -1107,10 +1126,18 @@ The sub-module `Over` adds the one premise that turns a finite family into a tal
 副モジュール `Over` は、有限族を数え上げへと変えるための唯一の前提を追加する。`cov` は `A` のすべての要素が族によって単に命中されると言うもので、重複を許す截断的被覆である。この前提のもとで `least` は走査の答えを型全体への最小要素へと引き上げる。入力は「ある要素が `P` を満たす」という截断された証人だけであるが、出力は明示的なデータ、すなわち要素と `Least P m` の組である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
   module Over (n : ℕ) (f : Fin n → A)
               (cov : (a : A) → ∥ Σ[ i ∈ Fin n ] (f i ≡ a) ∥₁) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     least : (P : A → hProp (ℓ-suc ℓ)) → ((a : A) → Dec ⟨ P a ⟩)
           → ∥ Σ[ a ∈ A ] ⟨ P a ⟩ ∥₁ → Σ[ m ∈ A ] Least P m
@@ -1226,6 +1253,12 @@ In the negative branch, `b` would be a non-accessible element strictly below the
 ```agda
           pick (no nb) = ⊥₀-rec (found .snd .snd b nb hb)
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## The earliest disagreement
@@ -1298,13 +1331,22 @@ The module collects the three premises the earliest-disagreement order will inhe
 このモジュールは、最初の相違の順序が受け継ぐ三つの前提を集める。`baseTri` と `baseTrans` は、`A` の要素に制限した `R` が三岐かつ推移的であると言い、`baseLeast` は `A` の上の最小要素原理である。`A` の要素のある性質が単に非空であることから、その性質を満たし、より小さい `A` の要素がどれも満たさない要素を返す。結論の形に注意してほしい。呼び出し側が実際の最小要素を必要とするので、截断ではなく明示的なデータである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Difference (R : S → S → hProp (ℓ-suc ℓ)) (A : S)
   (baseTri : (a b : S) → ⟨ a ∈ˢ A ⟩ → ⟨ b ∈ˢ A ⟩ → Tri ⟨ R a b ⟩ (a ≡ b) ⟨ R b a ⟩)
   (baseTrans : (a b c : S) → ⟨ R a b ⟩ → ⟨ R b c ⟩ → ⟨ R a c ⟩)
   (baseLeast : (P : S → hProp (ℓ-suc ℓ)) → ∥ Σ[ a ∈ S ] (⟨ a ∈ˢ A ⟩ × ⟨ P a ⟩) ∥₁
              → Σ[ m ∈ S ] (⟨ m ∈ˢ A ⟩ × ⟨ P m ⟩
+                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ P b ⟩ → ⟨ R b m ⟩ → ⊥₀)))
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The statement of transitivity takes the two hypotheses exactly as `precedes` produces them: truncated witnesses for `x ≺ y` and for `y ≺ z`, and returns a truncated witness for `x ≺ z`. The proof therefore begins by eliminating the first truncation, then the second, both into a target that is again a truncation and hence a proposition.
@@ -1315,8 +1357,6 @@ The statement of transitivity takes the two hypotheses exactly as `precedes` pro
 <!--/-->
 
 ```agda
-                 × ((b : S) → ⟨ b ∈ˢ A ⟩ → ⟨ P b ⟩ → ⟨ R b m ⟩ → ⊥₀)))
-  where
 
   precedes-trans : (x y z : S) → ⟨ precedes R A x y ⟩ → ⟨ precedes R A y z ⟩
                  → ⟨ precedes R A x z ⟩
@@ -1637,6 +1677,9 @@ The mirrored branch assumes instead that `m` does not belong to `x`, and produce
         ag : Agrees R A x y m
         ag w w∈A hw = agree w (belowM w w∈A hw)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The finite stages
@@ -1788,9 +1831,17 @@ Inside `Ordered`, the first task is trichotomy about points. `triPoint` applies 
 `Ordered` の内部での最初の課題は、点についての三分法である。`triPoint` は集合についての三分法 `tri` を `Tri-map` に渡す。中央の選言肢は結論がパスなので変換が要り、`Σ≡Prop` がまさにそれを供給する。第二成分は命題の証明であるから、根底の集合の間のパスは点の間のパスへ延長できる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module Ordered (n : ℕ) (r : StageOrder n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open StageOrder r public
   open Tally tally
 
@@ -1898,6 +1949,9 @@ Only the glue remains visible: `Q` reads the set-level predicate at the underlyi
     found = least Q (λ a → lem (Q a))
       (map₁ (λ { (a , a∈ , pa) → (a , a∈) , pa }) h)
 ```
+</div>
+</details>
+
 
 <!--en-->
 The recursion starts with the empty tally and vacuous order laws at stage zero. At a successor, the previous tally is lifted across the definable power set. Earliest disagreement supplies trichotomy from the two subset hypotheses and supplies transitivity directly from the preceding stage's order; the successor-stage identity is used only where membership must be moved between the stage and that definable power set.

@@ -63,8 +63,16 @@ is the same division the closedness predicate makes, and for the same reason.
 単項構成子と二項構成子では、キーに格納する部分符号の数が異なる。二つの枠はタグ、アリティ、項または論理式の部分符号を所定の位置に配置する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   binForm : ℕ → Formula S (4 + n) → Formula S (suc n)
   binForm k rel = ∃̇ (∃̇ (∃̇ (arityTagPairAtL
     (suc (suc (suc zero))) (suc (suc zero)) k (suc zero) zero ∧̇ rel)))
@@ -72,6 +80,9 @@ module _ {n : ℕ} where
   unForm : ℕ → Formula S (3 + n) → Formula S (suc n)
   unForm k rel = ∃̇ (∃̇ (arityTagAtL (suc (suc zero)) (suc zero) k zero ∧̇ rel))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Term codes
@@ -141,8 +152,16 @@ a term look at the second, and they are the only four that could.
 于是「成形」相对的是两位，而非一位：那个集合，以及它的诸词项从中点名常元的那个载体。只有那四条提到词项的关系去看第二位，而它们也是仅有的四条能去看的。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   bothTm fstTm : Fin n → Formula S (4 + n)
   bothTm A = isTmAt (suc zero) (suc (suc zero)) (suc (suc (suc (suc A))))
           ∧̇ isTmAt zero (suc (suc zero)) (suc (suc (suc (suc A))))
@@ -164,6 +183,9 @@ module _ {n : ℕ} where
   shapedAt : Fin n → Fin n → Formula S n
   shapedAt C A = ∀̇∈ (var C) (shapes A)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## What a member is, read flat
@@ -241,7 +263,6 @@ shaped-out C A γ h c c∈ = read (h c c∈)
     (sum-out (unForm-out 7 noneU γ c)
     (sum-out (binForm-out 8 (fstTm A) γ c)
     (binForm-out 9 (fstTm A) γ c)))))))))
-
 ```
 
 <!--en-->
@@ -316,7 +337,6 @@ shaped-in C A γ g c c∈ = rec₁ (snd ((c ∷ γ) ⊨ shapes A)) fill (g c c�
     (sum-in (unForm-in 7 noneU γ c)
     (sum-in (binForm-in 8 (fstTm A) γ c)
     (binForm-in 9 (fstTm A) γ c)))))))))
-
 ```
 
 <!--en-->
@@ -362,8 +382,16 @@ whole disjunction.
 两个析取支由两条点了名的引理去读，那条读式就是它们的分情形，这里并无选择余地。写成一个函数的两条子句时，每支各带一个截断，而它们所在的析取自己也带一个，本章十分钟内没跑完；把每支的读法各给一个写出来的类型之后，两秒不到就查完。这条规矩是归约器的，不是数学的：类型被写出来的分支对着那个类型求解，类型靠推断的分支对着整个析取求解。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {K : Type ℓ} (f : K → V ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   TmWit : ℕ → V ℓ → Type (ℓ-suc ℓ)
   TmWit n x = Σ[ t ∈ Term K n ] (VCode.⌜ mapTm f t ⌝ᵗ ≡ x)
@@ -400,6 +428,9 @@ module _ {K : Type ℓ} (f : K → V ℓ) where
     (λ { (inl h) → tmCon t N A γ n onto h
        ; (inr h) → tmVar t N A γ n qN h })
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Terms, encoded
@@ -425,8 +456,16 @@ numerals distinct.
 逆に、任意の項の符号は項の形の述語を満たす。項の二つの構成子を調べ、対応するタグとペイロードの証人を直接与える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   isTmAt-in : ∀ {m} (t N A : Fin m) (γ : S ^ m) (n : ℕ)
             → fst (lookup N γ) ≡ # n
@@ -448,6 +487,9 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
     z : S
     z = numeralL (toℕ i)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## One layer off
@@ -474,9 +516,17 @@ were written against the same reading of an arity-tagged pair.
 形状所给出的那条等式，正是封闭性所需要的那一条，二者逐字相同，故中间无需任何东西即可衔接。这不是巧合：两者都是对「带元数标签的对」按同一条读法写下的。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
             (hcl : ⟨ γ ⊨ closedAt C ⟩) (hsh : ⟨ γ ⊨ shapedAt C A ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     D : V ℓ
     D = fst (lookup C γ)
@@ -538,8 +588,10 @@ module Peel {m : ℕ} (C A : Fin m) (γ : S ^ m)
       (sumMap (uz 7 (hcl .snd .snd .snd .snd .fst))
       (sumMap (bz 8 (hcl .snd .snd .snd .snd .snd .fst))
       (bz 9 (hcl .snd .snd .snd .snd .snd .snd))))))))))
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The closure is shaped
@@ -587,8 +639,16 @@ model's own coding it must first establish a correspondence between the two codi
 另一方面，第一半变得更容易了。一个词项所需的见证是「它的码是**某个**词项的码」，而在字母表之上，一个词项的码本来就是这个：编码式就是恒等，旁边配一个 `refl`{.Agda}。若在模型自己的编码上，则它还得先在两套编码之间建立对应。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     cd : ∀ {n} → Formula K n → S
     cd φ = VCode.⌜ mapFo f φ ⌝ , codeL f h φ
@@ -650,3 +710,5 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
       inr (inr (inr (inr (inr (inr (inr (inr (inr
         (nn k , (ct t , (cd a , (q , tm1 t (cd a) c))))))))))))
 ```
+</div>
+</details>

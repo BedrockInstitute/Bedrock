@@ -24,6 +24,8 @@ Report-only checks (prose is lint-prose.py's business; STYLE-agda.md is the law)
                     Unit vocabulary already exported by Prelude is not re-imported
   E [hprop-snd]     propositionhood certificates use `⟨ P ⟩isProp`, not
                     the representation-level projection `P .snd`
+  H [trailing-blank] an Agda code fence ends on its last code line, with no
+                    blank or whitespace-only line before the closing fence
 
 Exemptions:
   - The designated hub modules (BARE_OPEN_HUBS: curated re-export preludes,
@@ -118,6 +120,29 @@ def agda_lines(text):
                 out.append((i, line))
         elif s == "```agda":
             in_agda = True
+    return out
+
+
+def agda_trailing_blanks(text):
+    """[(lineno, count)] for trailing blank runs inside ```agda fences.
+
+    Report the first line of each run so one malformed fence produces one
+    actionable finding even when it contains several trailing blank lines.
+    """
+    out, in_agda, blank_start = [], False, None
+    for i, line in enumerate(text.splitlines(), 1):
+        stripped = line.strip()
+        if in_agda:
+            if stripped == "```":
+                if blank_start is not None:
+                    out.append((blank_start, i - blank_start))
+                in_agda, blank_start = False, None
+            elif stripped:
+                blank_start = None
+            elif blank_start is None:
+                blank_start = i
+        elif stripped == "```agda":
+            in_agda, blank_start = True, None
     return out
 
 
@@ -317,6 +342,13 @@ def lint_file(path):
     def report(idx_or_lineno, rule, msg, by_index=True):
         lineno = mlines[idx_or_lineno][0] if by_index else idx_or_lineno
         findings.append((lineno, rule, msg))
+
+    # H. A code fence closes directly after its final code line. Blank lines
+    # outside the fence still provide the Markdown separation from prose.
+    for lineno, count in agda_trailing_blanks(text):
+        suffix = "s" if count != 1 else ""
+        findings.append((lineno, "trailing-blank",
+                         f"remove {count} trailing blank line{suffix} from the Agda fence"))
 
     # A. OPTIONS header
     opts = [(ln, p) for ln, p in pragmas if p.split()[:1] == ["OPTIONS"]]

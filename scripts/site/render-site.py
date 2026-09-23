@@ -35,7 +35,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from i18n_markers import weave_for_site, group_languages  # noqa: E402
 from diagram_style import check_sources as check_diagrams  # noqa: E402
 from reading_routes import GUIDE_PANEL, build_reading_data, own_page, twin_of  # noqa: E402
-from term_registry import TERM_MARK_RE, load_entries, reader_terms, schema_errors, localized_forms  # noqa: E402
+from term_registry import (TERM_MARK_RE, load_entries, reader_terms, schema_errors,
+                           localized_forms, localized_abbreviation)  # noqa: E402
 
 LANG_LABELS = {"en": "English", "zh": "中文", "ja": "日本語"}
 
@@ -45,6 +46,7 @@ UI = {
            "untranslated": "This page is not yet translated; showing English.",
            "modules": "Modules", "source": "Source", "overview": "Overview",
            "depmap": "Dependency map", "routes": "Reading routes",
+           "current_route": "Current route",
            "guide": "Reading guide", "catalog": "Chapter catalog",
            "landmark": "Milestones", "terms": "Glossary",
            "prev": "Previous chapter", "next": "Next chapter",
@@ -61,6 +63,7 @@ UI = {
            "untranslated": "本页尚未翻译，此处显示英文。",
            "modules": "模块", "source": "源码", "overview": "概览",
            "depmap": "依赖地图", "routes": "阅读路线",
+           "current_route": "当前路线",
            "guide": "阅读指南", "catalog": "章节目录",
            "landmark": "里程碑", "terms": "术语表",
            "prev": "上一章", "next": "下一章",
@@ -77,6 +80,7 @@ UI = {
            "untranslated": "このページは未翻訳です。英語を表示しています。",
            "modules": "モジュール", "source": "ソース", "overview": "概要",
            "depmap": "依存マップ", "routes": "学習ルート",
+           "current_route": "現在のルート",
            "guide": "読書案内", "catalog": "章の目次",
            "landmark": "マイルストーン", "terms": "用語集",
            "prev": "前の章", "next": "次の章",
@@ -173,6 +177,58 @@ def page_description(module, lang, is_landing, is_external):
     return shape.get(lang, shape["en"])
 
 PRE_RE = re.compile(r'<pre class="Agda">.*?</pre>', re.DOTALL)
+SUBMODULE_HTML_TOKEN_RE = re.compile(
+    r'<pre class="Agda">.*?</pre>|</?details\b[^>]*>|</?summary\b[^>]*>',
+    re.DOTALL,
+)
+
+
+def dedent_submodule_code(body):
+    """Hide module-scope indentation in HTML without changing Agda source offsets.
+
+    Agda's highlighter leaves leading spaces as text before each token anchor. Only
+    that whitespace is removed; links, token ids, hover ranges and the Markdown
+    mirror continue to refer to the original source.
+    """
+    details = []
+    heading = None
+    parts = []
+    previous = 0
+    for match in SUBMODULE_HTML_TOKEN_RE.finditer(body):
+        token = match.group(0)
+        replacement = token
+        if token.startswith('<details'):
+            details.append({'fold': bool(re.search(
+                r'\bclass="[^"]*\bsubmodule-fold\b', token)), 'indent': None})
+        elif token.startswith('</details'):
+            if details:
+                details.pop()
+        elif token.startswith('<summary'):
+            heading = details[-1] if (details and details[-1]['fold'] and
+                re.search(r'\bclass="[^"]*\bsubmodule-fold-heading\b', token)) else None
+        elif token.startswith('</summary'):
+            heading = None
+        elif token.startswith('<pre'):
+            if heading is not None:
+                declaration = next((line for line in plain_code(token).splitlines()
+                                    if line.strip()), '')
+                heading['indent'] = len(declaration) - len(declaration.lstrip(' '))
+                strip = heading['indent']
+            else:
+                enclosing = next((item for item in reversed(details)
+                                  if item['fold'] and item['indent'] is not None), None)
+                strip = enclosing['indent'] + 2 if enclosing else 0
+            if strip:
+                opening = '<pre class="Agda">'
+                lines = token[len(opening):-len('</pre>')].splitlines(keepends=True)
+                replacement = opening + ''.join(
+                    line[min(strip, len(line) - len(line.lstrip(' '))):]
+                    for line in lines
+                ) + '</pre>'
+        parts.extend((body[previous:match.start()], replacement))
+        previous = match.end()
+    parts.append(body[previous:])
+    return ''.join(parts)
 # Definition site: <a id="NAME"></a><a id="POS" ... class="ASPECT" ...>token</a>
 DEF_RE = re.compile(r'<a id="([^"]+)"></a><a id="(\d+)"[^>]*class="([^"]*)"')
 # Renamed imports have no named definition anchor, but later occurrences link
@@ -199,6 +255,7 @@ TYPE_COLON_RE = re.compile(r'<a id="\d+" class="Symbol">:</a>[ \t]*')
 # Any cross-reference link inside highlighted code (optional self-id, optional #position).
 LINK_RE = re.compile(r'<a (id="\d+" )?href="([^"#]+)\.html(#\d+)?"([^>]*)>')
 INLINE_AGDA_RE = re.compile(r'`([^`]+)`\{\.Agda\}')
+INLINE_AGDA_LINK_RE = re.compile(r'\[([^\]]+)\]\(([\w.]+)\.html#([^\s)]+)\)\{\.Agda\}')
 SUMMARY_RE = re.compile(r'<summary([^>]*)>(.*?)</summary>', re.DOTALL)
 A_TAG_RE  = re.compile(r'<a\b([^>]*)>([^<]+)</a>')
 TOKEN_RE = re.compile(r'<a\b[^>]*\bid="(\d+)"[^>]*>(.*?)</a>', re.DOTALL)
@@ -383,7 +440,8 @@ def md_to_html(text):
                     + "</tr></thead><tbody>"]
             for r in body:
                 rows.append("<tr>" + "".join(f"<td>{_inline(c)}</td>" for c in r) + "</tr>")
-            out.append("<table>" + "".join(rows) + "</tbody></table>")
+            out.append('<div class="prose-table-scroll"><table>' + "".join(rows)
+                       + "</tbody></table></div>")
             continue
         para = [line]; i += 1
         while i < n and lines[i].strip() and not _is_block_start(lines[i]):
@@ -432,11 +490,275 @@ def index_definitions(code_html, module, name2pos, pos_aspect):
 def qualified_name_pattern(internal_q):
     """Compile one longest-first matcher instead of scanning every known name."""
     alternatives = sorted(internal_q, key=len, reverse=True)
-    return re.compile("|".join(map(re.escape, alternatives))) if alternatives else None
+    # A module prefix or a renamed field such as `s` must not consume part of
+    # an unknown qualified name such as Helpers.isContr or Isomorphism.section.
+    return re.compile(r"(?<![^\s(){};])(?:" + "|".join(map(re.escape, alternatives))
+                      + r")(?![^\s(){};])") if alternatives else None
 
 
-def render_type(term, internal_q, name_pattern=None, pos_aspect=None):
-    """Abbreviate module qualifiers and hyperlink internal identifiers in a type string."""
+def add_prelude_qualified_names(internal_q, prelude_reexports):
+    """Make Prelude's public vocabulary available to type rendering.
+
+    Re-export anchors are not declarations, so Agda's ordinary definition index
+    does not contain qualified names such as ``Base.Prelude.Type``.  They are
+    nevertheless the canonical reader-facing targets used by source blocks.
+    Index them alongside declarations so a name remains the same interactive
+    leaf when it occurs inside a rendered hover type.
+    """
+    for shown, (module, position, _aspect, _label) in (
+            prelude_reexports.get("by_name", {}).items()):
+        internal_q.setdefault(f"{module}.{shown}", (module, position))
+
+
+TYPE_NODE_TAG_RE = re.compile(r'<span class="type-node"[^>]*>|</span>')
+
+
+def wrap_expression_ranges(block, nodes, by_start, by_end, opening_for,
+                           split_multiline=False):
+    """Wrap compiler-backed ranges using one nesting algorithm on every surface."""
+    usable = [node for node in nodes
+              if node["start"] in by_start and node["end"] in by_end]
+    if not usable:
+        return block
+
+    # Count containing ranges in O(n log n). The wrapper is shared by source
+    # blocks and hover types, so their nesting levels and event ordering cannot
+    # drift apart.
+    unique_ranges = sorted(
+        {(node["start"], node["end"]) for node in usable},
+        key=lambda interval: (interval[0], -interval[1]),
+    )
+    ends = sorted({end for _, end in unique_ranges})
+    end_index = {end: index + 1 for index, end in enumerate(ends)}
+    tree = [0] * (len(ends) + 1)
+
+    def add(index):
+        while index < len(tree):
+            tree[index] += 1
+            index += index & -index
+
+    def prefix(index):
+        total = 0
+        while index:
+            total += tree[index]
+            index -= index & -index
+        return total
+
+    depth_by_range = {}
+    inserted = 0
+    for start, end in unique_ranges:
+        before_end = prefix(end_index[end] - 1)
+        depth_by_range[(start, end)] = inserted - before_end
+        add(end_index[end])
+        inserted += 1
+
+    openings, closings = {}, {}
+    for node in usable:
+        start, end = node["start"], node["end"]
+        depth = depth_by_range[(start, end)]
+        opening = opening_for(node, depth)
+        openings.setdefault(by_start[start], []).append((end, opening))
+        closings.setdefault(by_end[end], []).append((start, "</span>"))
+    events = {}
+    for position in set(openings) | set(closings):
+        closing = "".join(text for _, text in sorted(
+            closings.get(position, []), reverse=True
+        ))
+        opening = "".join(text for _, text in sorted(
+            openings.get(position, []), reverse=True
+        ))
+        events[position] = closing + opening
+    for position in sorted(events, reverse=True):
+        block = block[:position] + events[position] + block[position:]
+    return split_multiline_expression_nodes(block) if split_multiline else block
+
+
+def semantic_type_index(nodes):
+    """Index unambiguous compiler nodes by a short source prefix."""
+    candidates = {}
+    ambiguous = set()
+    for node in nodes:
+        source = " ".join(node.get("source", "").split())
+        if node.get("kind") != "application" or not source:
+            continue
+        signature = node.get("type", "")
+        previous = candidates.get(source)
+        if previous and previous.get("type") != signature:
+            ambiguous.add(source)
+        else:
+            candidates[source] = node
+    for source in ambiguous:
+        candidates.pop(source, None)
+    prefixes = {}
+    for source, node in candidates.items():
+        prefix = source[:min(4, len(source))]
+        prefixes.setdefault(prefix, []).append((source, node))
+    for bucket in prefixes.values():
+        bucket.sort(key=lambda item: len(item[0]), reverse=True)
+    return prefixes
+
+
+def is_universe_type_text(text):
+    """Whether reader-facing source text is exactly one universe application."""
+    normalized = " ".join((text or "").split())
+    if re.fullmatch(r"Type(?:ω|[₀-₉]+)?", normalized):
+        return True
+    if not normalized.startswith("Type "):
+        return False
+    return not re.search(r"[→,:{}\[\]=≃×]", normalized[5:])
+
+
+def is_universe_former_signature(text):
+    """Whether a type is the polymorphic universe former's own signature."""
+    normalized = " ".join((text or "").split())
+    normalized = re.sub(r"(?:[A-Za-z][\w']*\.)+", "", normalized)
+    match = re.fullmatch(
+        r"\(\s*([^():{}\[\],→\s]+)\s*:\s*Level\s*\)\s*→\s*"
+        r"(?:Type|Set)\s+([^()\s→,:{}\[\]=≃×]+)",
+        normalized,
+    )
+    return bool(match and match.group(1) == match.group(2))
+
+
+def decorate_type_nodes(type_html, semantic_nodes=None, module=""):
+    """Add only compiler-backed source-expression ranges to a rendered type.
+
+    Agda does not emit an AST trace for the separately rendered type sidecar.
+    We may reuse an application range when its exact source text occurs in the
+    type, but punctuation and balanced delimiters are not evidence of a node.
+    Consequently every emitted type node has a real expression payload and can
+    open another hover. Terminal universe applications keep their linked names
+    but have no structural wrapper to colour or select.
+    """
+    pairs = {"(": ")", "[": "]", "{": "}"}
+
+    semantic_index = (semantic_nodes if isinstance(semantic_nodes, dict)
+                      else semantic_type_index(semantic_nodes or []))
+    if not semantic_index:
+        return type_html
+
+    def split_delimiter_token(match):
+        opening, inner = match.group(1), match.group(2)
+        if "<" in inner:
+            return match.group(0)
+        label = htmllib.unescape(inner)
+        pieces, plain = [], []
+
+        def flush_plain():
+            if plain:
+                pieces.append("".join(plain))
+                plain.clear()
+
+        for character in label:
+            if character in pairs or character in pairs.values():
+                flush_plain()
+                pieces.append(character)
+            else:
+                plain.append(character)
+        flush_plain()
+        if len(pieces) <= 1:
+            return match.group(0)
+        return "".join(opening + htmllib.escape(piece, quote=False) + "</a>"
+                       for piece in pieces)
+
+    # Agda sometimes colours adjacent delimiters as one token, for example
+    # ``((``.  A structural boundary can fall between them.  Split only that
+    # token, preserving every link attribute, just as source-expression
+    # annotation splits punctuation tokens at exact AST boundaries.
+    type_html = re.sub(r'(<a\b[^>]*>)(.*?)</a>', split_delimiter_token,
+                       type_html, flags=re.DOTALL)
+    units = []
+    visible = []
+    for match in re.finditer(r'<[^>]+>|&(?:#\d+|#x[0-9a-fA-F]+|\w+);|.',
+                             type_html, re.DOTALL):
+        token = match.group(0)
+        if token.startswith("<"):
+            continue
+        decoded = htmllib.unescape(token)
+        for character in decoded:
+            visible.append(character)
+            units.append((match.start(), match.end()))
+    visible_text = "".join(visible)
+
+    def token_boundary(position):
+        # Exact text is insufficient inside a longer identifier: neither
+        # Resizing in ΩResizing nor ℓ in ℓ₁ is the traced token.
+        if position == 0 or position == len(visible_text):
+            return True
+        left, right = visible_text[position - 1:position + 1]
+        return (left.isspace() or right.isspace()
+                or left in "(){};" or right in "(){};")
+
+    # The compiler trace already gives real application nodes and their types.
+    # Reuse those nodes when their exact source occurs in a rendered type.  The
+    # resulting data key resolves through the same $expressions sidecar used by
+    # source Agda blocks, so a node in a hover can open another hover indefinitely.
+    visible_ranges = []
+    for start in range(len(visible_text)):
+        if not token_boundary(start):
+            continue
+        for prefix_length in range(min(4, len(visible_text) - start), 0, -1):
+            bucket = semantic_index.get(
+                visible_text[start:start + prefix_length], []
+            )
+            for source, node in bucket:
+                if (visible_text.startswith(source, start)
+                        and token_boundary(start + len(source))):
+                    if not is_universe_type_text(source):
+                        visible_ranges.append((
+                            start, start + len(source), f'{module}#{node["id"]}',
+                        ))
+
+    # After delimiter tokens have been split, semantic spans can expand to
+    # complete anchors without swallowing a neighbouring delimiter.
+    anchors = [(match.start(), match.end())
+               for match in re.finditer(r"<a\b[^>]*>.*?</a>", type_html, re.DOTALL)]
+
+    def outside_start(position):
+        return next((start for start, end in anchors if start < position < end), position)
+
+    def outside_end(position):
+        return next((end for start, end in anchors if start < position < end), position)
+
+    ranges = {(start, end): expression_key
+              for start, end, expression_key in visible_ranges
+              if start < end and end <= len(units)}
+
+    # Matches borrowed from other source occurrences must still form the same
+    # laminar range tree as Agda's own source trace. A crossing pair cannot be
+    # an AST nesting relation, so neither is shown as a node.
+    crossing = set()
+    intervals = sorted(ranges)
+    for index, (left_start, left_end) in enumerate(intervals):
+        for right_start, right_end in intervals[index + 1:]:
+            if right_start >= left_end:
+                break
+            if left_start < right_start < left_end < right_end:
+                crossing.update(((left_start, left_end), (right_start, right_end)))
+    nodes = [{"start": start, "end": end,
+              "expressionKey": ranges[(start, end)]}
+             for start, end in intervals if (start, end) not in crossing]
+    by_start = {node["start"]: outside_start(units[node["start"]][0])
+                for node in nodes}
+    by_end = {node["end"]: outside_end(units[node["end"] - 1][1])
+              for node in nodes}
+
+    def type_opening(node, depth):
+        return (f'<span class="type-node" '
+                f'data-expression-type="{node["expressionKey"]}" '
+                f'data-expr-start="{node["start"]}" '
+                f'data-expr-end="{node["end"]}" '
+                f'style="--expr-level:{depth % 6}">')
+
+    return wrap_expression_ranges(
+        type_html, nodes, by_start, by_end, type_opening
+    )
+
+
+def render_type(term, internal_q, name_pattern=None, pos_aspect=None,
+                current_module="", prelude_reexports=None):
+    """Abbreviate and link an Agda type string."""
+    universe_former = is_universe_former_signature(term)
     s = htmllib.escape(term.replace("\n", " "), quote=False)
     links, level_names = [], []
     def protect_level_name(match):
@@ -453,18 +775,42 @@ def render_type(term, internal_q, name_pattern=None, pos_aspect=None):
             mod, pos = internal_q[q]
             tok = f"{NUL}L{len(links)}{NUL}"
             last = q.split(".")[-1]
-            aspect = (pos_aspect or {}).get(mod, {}).get(pos, "")
+            bridge = ((prelude_reexports or {}).get("by_href", {}).get(
+                f"{mod}.html#{pos}"
+            ) if current_module != PRELUDE_MODULE else None)
+            target_mod, target_pos, target_name = mod, pos, last
+            if bridge:
+                target_mod, target_pos, _, target_name = bridge
+            aspect = (pos_aspect or {}).get(target_mod, {}).get(target_pos, "")
             class_ = f' class="{aspect}"' if aspect else ""
-            links.append(f'<a href="{mod}.html#{pos}"{class_}>{htmllib.escape(last)}</a>')
+            primitive_stop = (aspect == "Primitive"
+                              and target_name in NON_HOVER_PRIMITIVE_SORTS)
+            type_data = ("" if primitive_stop
+                         else f' data-type="{target_mod}#{target_pos}"')
+            if primitive_stop:
+                hover_stop = ' data-hover-stop="primitive-sort"'
+            elif universe_former and target_name in {"Type", "Set"}:
+                hover_stop = ' data-hover-stop="universe-former"'
+            else:
+                hover_stop = ""
+            links.append(
+                f'<a href="{chapter_href(target_mod, "#" + target_pos)}"'
+                f'{type_data}'
+                f'{hover_stop}'
+                f' data-name="{htmllib.escape(target_name, quote=True)}"'
+                f'{class_}>{htmllib.escape(last)}</a>'
+            )
             return tok
         s = name_pattern.sub(protect_link, s)
     s = re.sub(r"(?:[A-Za-z][\w']*\.)+", "", s)        # strip remaining (external) qualifiers
-    s = re.sub(r"\bSet\b", "Type", s)                  # cubical display
+    # A sort without its own hover payload remains ordinary code text. Agda
+    # prints universes as Set, Set₁, Setω, and so on; use the cubical name.
+    s = re.sub(r"\bSet(?=$|[₀-₉ω]|[^\w'])", "Type", s)
     for i, level_name in enumerate(level_names):
         s = s.replace(f"{NUL}V{i}{NUL}", level_name)
     for i, link in enumerate(links):
         s = s.replace(f"{NUL}L{i}{NUL}", link)
-    return s
+    return decorate_type_nodes(s)
 
 
 # ---- per-page rendering ------------------------------------------------------
@@ -513,7 +859,7 @@ def toc_html(toc, lang):
             f'<ul class="toc">{items}</ul></details>')
 
 
-def modules_nav(current, mods, lang):
+def modules_nav(current, mods, lang, reading_data):
     """The 'Modules' sidebar section: the structural catalog. A namespace tree is
     derived from the module list (never hand-maintained): children of every
     level, leaves and subgroups alike, ordered by first appearance in the
@@ -563,15 +909,28 @@ def modules_nav(current, mods, lang):
 
     guide = "".join(
         f'<li><a href="index.html#{target}">{UI[lang][key]}</a></li>'
-        for target, key in (("reading-explorer", "routes"),
+        for target, key in ((GUIDE_PANEL, "landmark"),
+                            ("reading-explorer", "routes"),
                             ("dependency-map", "depmap"),
-                            (GUIDE_PANEL, "landmark"),
                             ("term-glossary", "terms")))
-    return (f'<details class="navsec reading-guide" open><summary class="nav-title">'
+    routes = reading_data["routes"]
+    route = next((item for item in routes if current in item["chapters"]), routes[0])
+    route_title = htmllib.escape(route["title"][lang])
+    def route_link(module):
+        active = ' aria-current="page"' if module == current else ""
+        return (f'<li><a href="{chapter_href(module)}" data-chapter="{module}"{active}>'
+                f'{htmllib.escape(chapter_title(module, lang))}</a></li>')
+    route_links = "".join(route_link(module) for module in route["chapters"])
+    return (f'<details class="navsec reading-guide"><summary class="nav-title">'
             f'{UI[lang]["guide"]}</summary><ul class="guide-nav">{guide}</ul></details>'
             f'<details class="navsec"><summary class="nav-title">'
             f'{UI[lang]["modules"]}</summary>'
-            f'<ul class="modnav">{"".join(render(root, ""))}</ul></details>')
+            f'<ul class="modnav">{"".join(render(root, ""))}</ul></details>'
+            f'<details class="navsec current-route" open data-current="{current}" '
+            f'data-lang="{lang}"><summary class="nav-title">'
+            f'{UI[lang]["current_route"]}<span class="current-route-name">{route_title}</span>'
+            f'</summary><ul class="route-nav" data-route="{route["id"]}">'
+            f'{route_links}</ul></details>')
 
 
 def learning_home(body, mount, lang, terms):
@@ -588,13 +947,13 @@ def learning_home(body, mount, lang, terms):
                          heading, count=1, flags=re.DOTALL)
     milestone_body = re.sub(r"<h1\b[^>]*>.*?</h1>", "", body, count=1, flags=re.DOTALL)
     intro_text = {
-        "en": "Choose a route, inspect the prerequisite structure, or review the book's main theorems and terminology.",
-        "zh": "选择一条阅读路线，查看先修关系，或集中回顾本书的里程碑与术语。",
-        "ja": "学習ルートを選び、前提関係を確認し、マイルストーンと用語を振り返ります。",
+        "en": "Begin with the main theorems, then choose a reading route or inspect their prerequisites.",
+        "zh": "先看本书要证明的主要定理，再选择阅读路线或查看它们的先修关系。",
+        "ja": "まず本書の主要定理を見てから、学習ルートやその前提関係を確かめます。",
     }[lang]
-    ids = ("reading-explorer", "dependency-map", GUIDE_PANEL, "term-glossary")
+    ids = (GUIDE_PANEL, "reading-explorer", "dependency-map", "term-glossary")
     tabs = ''.join(f'<a id="tab-{key}" href="#{key}" data-panel="{key}">{label}</a>'
-                   for key, label in zip(ids, labels[1:]))
+                   for key, label in zip(ids, (labels[3], labels[1], labels[2], labels[4])))
     glossary_rows = []
     glossary_copy = {
         "en": "The terms are ordered by their first appearance in the book. Select a term to revisit its introduction.",
@@ -612,10 +971,11 @@ def learning_home(body, mount, lang, terms):
         "ja": "一致する用語がありません。",
     }[lang]
     for index, entry in enumerate(terms, 1):
-        label = htmllib.escape(entry[lang])
+        label = glossary_label_html(entry, lang)
         recap = htmllib.escape(entry[f"recap_{lang}"])
         href = chapter_href(entry["introduced_in"], f'#term-{entry["id"]}')
-        search_text = htmllib.escape(f'{entry[lang]} {entry[f"recap_{lang}"]}', quote=True)
+        search_text = htmllib.escape(
+            f'{" ".join(localized_forms(entry, lang))} {entry[f"recap_{lang}"]}', quote=True)
         glossary_rows.append(
             f'<div class="term-entry" data-term-entry data-term-search="{search_text}">'
             f'<span class="term-index" aria-hidden="true">{index}</span>'
@@ -624,11 +984,12 @@ def learning_home(body, mount, lang, terms):
     return (f'<header class="book-intro">{heading}</header>'
             f'<p class="book-intro-lead">{intro_text}</p>'
             f'<nav class="book-tabs" aria-label="{labels[0]}">{tabs}</nav>'
-            f'<div class="book-panels">{mount}'
+            f'<div class="book-panels"><section id="{GUIDE_PANEL}" '
+            f'class="book-panel guide-landmark"><h2>{labels[3]}</h2>'
+            f'{milestone_body}</section>'
+            f'{mount}'
             f'<section id="dependency-map" class="book-panel">'
             '<!-- DEPENDENCY_MAP --></section>'
-            f'<section id="{GUIDE_PANEL}" class="book-panel guide-landmark"><h2>{labels[3]}</h2>'
-            f'{milestone_body}</section>'
             f'<section id="term-glossary" class="book-panel term-glossary-panel"><h2>{labels[4]}</h2>'
             f'<div class="term-glossary-head"><p>{glossary_copy}</p>'
             f'<label class="term-glossary-search"><span class="sr-only">{glossary_search}</span>'
@@ -636,6 +997,16 @@ def learning_home(body, mount, lang, terms):
             f'placeholder="{glossary_search}" autocomplete="off"></label></div>'
             f'<dl id="term-glossary-list" class="term-glossary-list">{glossary}</dl>'
             f'<p class="term-glossary-empty" data-term-empty hidden>{glossary_empty}</p></section></div>')
+
+
+def glossary_label_html(entry, lang):
+    """Display the full term and its registered abbreviation together."""
+    label = htmllib.escape(entry[lang])
+    abbreviation = localized_abbreviation(entry, lang)
+    if abbreviation:
+        label += (f' <span class="term-abbreviation">'
+                  f'({htmllib.escape(abbreviation)})</span>')
+    return label
 
 
 def sort_reader_terms(terms, reading_data, src):
@@ -712,6 +1083,20 @@ def prelude_reexport_index(content):
     return {"by_href": by_href, "by_name": by_name}
 
 
+def type_reference_attribute(module, position, types_global):
+    """Source and hover surfaces advertise only an available type payload."""
+    return (f' data-type="{module}#{position}"'
+            if types_global.get(module, {}).get(position) else "")
+
+
+def resolve_type_hover_links(type_html, types_global):
+    # Type rendering precedes completion of the global type map. Resolve its
+    # provisional references only after all local and traced types are present.
+    return re.sub(r' data-type="([^"#]+)#([^"#]+)"',
+                  lambda match: type_reference_attribute(
+                      match.group(1), match.group(2), types_global), type_html)
+
+
 def rewrite_links(body, rendered, types_global, canonical_names=None,
                   current_module="", prelude_reexports=None):
     """Keep links to any rendered module (internal or external), tagging data-type when the
@@ -729,11 +1114,12 @@ def rewrite_links(body, rendered, types_global, canonical_names=None,
         if bridge:
             bridge_module, bridge_pos, _, bridge_name = bridge
             extra = f' data-name="{htmllib.escape(bridge_name, quote=True)}"'
+            extra += type_reference_attribute(bridge_module, bridge_pos, types_global)
             return (f'<a {idpart}href="{chapter_href(bridge_module, "#" + bridge_pos)}"'
                     f'{rest}{extra}>')
         if mod in rendered:
             pos = anchor[1:] if anchor else ""
-            extra = f' data-type="{mod}#{pos}"' if pos and pos in types_global.get(mod, {}) else ""
+            extra = type_reference_attribute(mod, pos, types_global)
             canonical = (canonical_names or {}).get(mod, {}).get(pos, "")
             if canonical:
                 extra += f' data-name="{htmllib.escape(canonical, quote=True)}"'
@@ -825,19 +1211,56 @@ def auto_link_terms(body, lang, module, terms):
     return "".join(parser.parts)
 
 
-def build_types(modules, name2pos, types_raw, internal_q, pos_aspect):
+NON_HOVER_PRIMITIVE_SORTS = {
+    "Prop", "Set", "SSet", "Propω", "Setω", "SSetω", "LevelUniv",
+}
+
+
+def build_types(modules, name2pos, types_raw, internal_q, pos_aspect,
+                prelude_reexports=None):
     """Global {module: {pos: abbreviated/hyperlinked type-html}} for hover + sidecars."""
     g = {}
     name_pattern = qualified_name_pattern(internal_q)
     for m in modules:
         g[m] = {}
         for name, pos in name2pos.get(m, {}).items():
+            if (pos_aspect.get(m, {}).get(pos) == "Primitive"
+                    and name in NON_HOVER_PRIMITIVE_SORTS):
+                continue
             t = (types_raw.get(m, {}).get(name)
                  or types_raw.get(m, {}).get(name.split(".")[-1]))
             if t:
                 g[m][pos] = render_type(t, internal_q, name_pattern,
-                                        pos_aspect)
+                                        pos_aspect, m, prelude_reexports)
     return g
+
+
+def add_prelude_reexport_types(types_by_module, types_raw, reexports,
+                               internal_q, pos_aspect):
+    """Give Prelude's explanatory import anchors the imported names' types."""
+    prelude = types_by_module.setdefault(PRELUDE_MODULE, {})
+    name_pattern = qualified_name_pattern(internal_q)
+    for original_href, (_, position, _, shown) in reexports["by_href"].items():
+        if shown == "Type":
+            # Agda's extractor reports the sort occupied by the imported
+            # primitive itself (Set₁).  The reader-facing Type is the
+            # level-indexed universe former used throughout this book.
+            prelude[position] = render_type(
+                "(ℓ : Base.Prelude.Level) → Base.Prelude.Type ℓ",
+                internal_q, name_pattern, pos_aspect, PRELUDE_MODULE, reexports,
+            )
+            continue
+        if position in prelude:
+            continue
+        raw_type = types_raw.get(PRELUDE_MODULE, {}).get(shown)
+        if raw_type:
+            prelude[position] = render_type(raw_type, internal_q, name_pattern,
+                                            pos_aspect, PRELUDE_MODULE, reexports)
+            continue
+        module, _, original_position = original_href.rpartition(".html#")
+        original_type = types_by_module.get(module, {}).get(original_position)
+        if original_type:
+            prelude[position] = original_type
 
 
 def local_signature_types(code_html, module):
@@ -890,7 +1313,7 @@ def local_signature_types(code_html, module):
     return result
 
 
-def build_expression_types(raw, internal_q, pos_aspect):
+def build_expression_types(raw, internal_q, pos_aspect, prelude_reexports=None):
     """Render application and local-definition types with their source ranges."""
     result = {}
     name_pattern = qualified_name_pattern(internal_q)
@@ -901,10 +1324,13 @@ def build_expression_types(raw, internal_q, pos_aspect):
             if not node.get("type"):
                 continue
             type_ = node["type"]
-            if type_ not in type_cache:
-                type_cache[type_] = render_type(type_, internal_q, name_pattern,
-                                                pos_aspect)
-            rendered.append({**node, "type": type_cache[type_]})
+            cache_key = (module, type_)
+            if cache_key not in type_cache:
+                type_cache[cache_key] = render_type(
+                    type_, internal_q, name_pattern, pos_aspect, module,
+                    prelude_reexports
+                )
+            rendered.append({**node, "type": type_cache[cache_key]})
         result[module] = rendered
     return result
 
@@ -985,58 +1411,16 @@ def annotate_expression_nodes(block, nodes):
         tokens.append((start, start + len(label), match.start(), match.end()))
     by_start = {start: html_start for start, _, html_start, _ in tokens}
     by_end = {end: html_end for _, end, _, html_end in tokens}
-    usable = [node for node in nodes
-              if node["start"] in by_start and node["end"] in by_end]
-    if not usable:
-        return block
 
-    # Count containing ranges in O(n log n).  The former pairwise scan made
-    # large generated proof blocks quadratic in their number of AST nodes.
-    unique_ranges = sorted(
-        {(node["start"], node["end"]) for node in usable},
-        key=lambda interval: (interval[0], -interval[1]),
+    def source_opening(node, depth):
+        return (f'<span class="expr-node" data-expr-id="{node["id"]}" '
+                f'data-expr-start="{node["start"]}" '
+                f'data-expr-end="{node["end"]}" '
+                f'style="--expr-level:{depth % 6}">')
+
+    return wrap_expression_ranges(
+        block, nodes, by_start, by_end, source_opening, split_multiline=True
     )
-    ends = sorted({end for _, end in unique_ranges})
-    end_index = {end: index + 1 for index, end in enumerate(ends)}
-    tree = [0] * (len(ends) + 1)
-
-    def add(index):
-        while index < len(tree):
-            tree[index] += 1
-            index += index & -index
-
-    def prefix(index):
-        total = 0
-        while index:
-            total += tree[index]
-            index -= index & -index
-        return total
-
-    depth_by_range = {}
-    inserted = 0
-    for start, end in unique_ranges:
-        before_end = prefix(end_index[end] - 1)
-        depth_by_range[(start, end)] = inserted - before_end
-        add(end_index[end])
-        inserted += 1
-
-    openings, closings = {}, {}
-    for node in usable:
-        start, end = node["start"], node["end"]
-        depth = depth_by_range[(start, end)]
-        opening = (f'<span class="expr-node" data-expr-id="{node["id"]}" '
-                   f'data-expr-start="{start}" data-expr-end="{end}" '
-                   f'style="--expr-level:{depth % 6}">')
-        openings.setdefault(by_start[start], []).append((end, opening))
-        closings.setdefault(by_end[end], []).append((start, "</span>"))
-    events = {}
-    for position in set(openings) | set(closings):
-        closing = "".join(text for _, text in sorted(closings.get(position, []), reverse=True))
-        opening = "".join(text for _, text in sorted(openings.get(position, []), reverse=True))
-        events[position] = closing + opening
-    for position in sorted(events, reverse=True):
-        block = block[:position] + events[position] + block[position:]
-    return split_multiline_expression_nodes(block)
 
 
 def annotate_unlinked_bound_types(block, module, module_types):
@@ -1082,6 +1466,24 @@ def referenced_type_modules(path, rendered):
     return referenced.intersection(rendered)
 
 
+def referenced_module_closure(selected, html_dir, rendered):
+    """All highlighted pages reachable from a selected preview.
+
+    Definition modals fetch the target HTML page, not only its hover sidecar.
+    Follow links transitively so a fast ``--module`` preview has the same
+    unbounded modal navigation as a complete site build.
+    """
+    closure = set(selected)
+    pending = list(selected)
+    while pending:
+        module = pending.pop()
+        path, _ = source_file(html_dir, module)
+        for dependency in referenced_type_modules(path, rendered) - closure:
+            closure.add(dependency)
+            pending.append(dependency)
+    return closure
+
+
 def fill_template(tpl, **kw):
     out = tpl
     for k, v in kw.items():
@@ -1091,7 +1493,7 @@ def fill_template(tpl, **kw):
 
 def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                   name2pos, canonical_names, types_global, expression_types, terms,
-                  tpl, out_dir, base, site, prelude_reexports):
+                  tpl, out_dir, base, site, prelude_reexports, reading_data):
     path, literate = source_file(html_dir, module)
     raw = open(path, encoding="utf-8").read()
 
@@ -1164,6 +1566,9 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                        lambda m: stash("IMATH", '<span class="math inline">$'
                                        + htmllib.escape(m.group(1)) + '$</span>'),
                        woven)
+        woven = INLINE_AGDA_LINK_RE.sub(lambda m: stash("REF", inline_ref_link(
+            m.group(1), m.group(2), m.group(3), name2pos
+        )), woven)
         woven = INLINE_AGDA_RE.sub(lambda m: stash("REF", inline_ref(
             m.group(1), internal, name2pos, local_refs, module, prelude_reexports
         )), woven)
@@ -1181,6 +1586,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
             body = body.replace(f"{NUL}CODE{j}{NUL}", blk)
         body = rewrite_links(body, rendered, types_global, canonical_names, module,
                              prelude_reexports if module in internal else None)
+        body = dedent_submodule_code(body)
         return auto_link_terms(body, lang, module, terms), toc, mirror
 
     for lang in langs:
@@ -1267,7 +1673,7 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
                 HREFLANG=hreflang_links(page_name, langs, base),
                 LANGNAV=lang_nav(page_name, lang, langs),
                 MODNAV=modules_nav(current if page_name == out_name else module,
-                                   modnav_list, lang),
+                                   modnav_list, lang, reading_data),
                 TOC=page_toc, BANNER=banner, BODY=page_body_html,
                 FOOTER=footer_html(lang, base, md_name),
                 S_SEARCH=UI[lang]["search"], S_THEME=UI[lang]["theme"],
@@ -1293,10 +1699,38 @@ def render_module(module, html_dir, langs, internal, rendered, modnav_list,
     write_type_sidecar(module, langs, out_dir, types_global, name2pos, expression_types)
 
 
+def inline_ref_link(label, module, name, name2pos):
+    """Render an Agda-styled label for a specified internal declaration."""
+    position = name2pos.get(module, {}).get(name)
+    if position is None:
+        raise ValueError(f"unknown Agda reference {module}.{name}")
+    href = f"{module}.html#{position}"
+    return ('<span class="Agda">'
+            + ref_link(href, "", htmllib.escape(label), "inline-ref") + '</span>')
+
+
+_BARE_REFERENCE_ASPECTS = {
+    "Function", "Datatype", "Record", "Primitive", "PrimitiveType", "Field",
+    "Module", "Macro", "Postulate", "InductiveConstructor", "CoinductiveConstructor",
+}
+
+
+def linked_inline_ref(href, aspect, label, defined):
+    """Only a standalone link to a declaration may appear without a code box."""
+    if defined:
+        return ('<span class="Agda">'
+                + ref_link(href, aspect, label, "inline-ref") + '</span>')
+    return ('<span class="Agda inline-ref inline-code">'
+            + ref_link(href, aspect, label) + '</span>')
+
+
 def inline_ref(name, internal, name2pos, local_refs, current_module="",
                prelude_reexports=None):
-    """Render `name`{.Agda} as a highlighted, hyperlinked span if the identifier is known."""
+    """Render Agda prose, linking declarations but not temporary variables."""
     href_aspect = local_refs.get(name)
+    label = htmllib.escape(name)
+    if href_aspect and not _BARE_REFERENCE_ASPECTS.intersection(href_aspect[1].split()):
+        return f'<code class="Agda inline-ref">{label}</code>'
     bridge = None
     if current_module != PRELUDE_MODULE:
         if href_aspect:
@@ -1304,36 +1738,31 @@ def inline_ref(name, internal, name2pos, local_refs, current_module="",
         else:
             local_name = name.rpartition(".")[2]
             bridge = (prelude_reexports or {}).get("by_name", {}).get(local_name)
-    label = htmllib.escape(name)
     if bridge:
         mod, pos, bridge_aspect, _ = bridge
         aspect = href_aspect[1] if href_aspect else bridge_aspect
-        return ('<span class="Agda">'
-                + ref_link(f"{mod}.html#{pos}", aspect, label, "inline-ref")
-                + "</span>")
+        defined = not aspect or bool(_BARE_REFERENCE_ASPECTS.intersection(aspect.split()))
+        return linked_inline_ref(f"{mod}.html#{pos}", aspect, label, defined)
     target = None
     if "." in name:
         mod, _, local = name.rpartition(".")
         if mod in internal and local in name2pos.get(mod, {}):
             target = (mod, name2pos[mod][local])
-    if target is None:
-        for mod in internal:
-            if name in name2pos.get(mod, {}):
-                target = (mod, name2pos[mod][name]); break
+    if target is None and name in name2pos.get(current_module, {}):
+        target = (current_module, name2pos[current_module][name])
     if target:
         mod, pos = target
         # reuse the aspect of the module's own code tokens, and wrap in a
         # span.Agda so the .Agda .<Aspect> colour rules apply to prose refs too
         aspect = href_aspect[1] if href_aspect else ""
-        return ('<span class="Agda">'
-                + ref_link(f"{mod}.html#{pos}", aspect, label, "inline-ref")
-                + "</span>")
+        defined = not aspect or bool(_BARE_REFERENCE_ASPECTS.intersection(aspect.split()))
+        return linked_inline_ref(f"{mod}.html#{pos}", aspect, label, defined)
     if href_aspect:
         # a link agda already resolved in this module's own code; this is how
         # prose references library identifiers (Type, refl, ...) and modules
-        return ('<span class="Agda">'
-                + ref_link(href_aspect[0], href_aspect[1], label, "inline-ref")
-                + "</span>")
+        aspect = href_aspect[1]
+        defined = bool(_BARE_REFERENCE_ASPECTS.intersection(aspect.split()))
+        return linked_inline_ref(href_aspect[0], aspect, label, defined)
     # not a single known identifier: render as an expression, token by token,
     # reusing the module's own links (keywords, brackets, and bound variables
     # stay plain; identifiers get their code aspect and hyperlink)
@@ -1352,13 +1781,13 @@ def inline_ref(name, internal, name2pos, local_refs, current_module="",
                                   info[1] if info else bridge_aspect,
                                   htmllib.escape(tok)))
             linked += 1
-        elif tok.strip() and info and "Bound" not in info[1]:
+        elif tok.strip() and info and _BARE_REFERENCE_ASPECTS.intersection(info[1].split()):
             parts.append(ref_link(info[0], info[1], htmllib.escape(tok)))
             linked += 1
         else:
             parts.append(htmllib.escape(tok))
     if linked:
-        return '<span class="Agda inline-ref">' + "".join(parts) + "</span>"
+        return '<span class="Agda inline-ref inline-code">' + "".join(parts) + "</span>"
     return f'<code class="Agda inline-ref">{label}</code>'
 
 
@@ -1421,6 +1850,8 @@ def markdown_mirror(woven, code_blocks, module, lang, out_name, langs):
     """
     meta = CHAPTER_META.get(module, {})
     text = TERM_MARK_RE.sub(lambda m: m.group(1), woven)
+    text = INLINE_AGDA_LINK_RE.sub(
+        lambda m: f"[{m.group(1)}]({m.group(2)}.html#{m.group(3)})", text)
     text = INLINE_AGDA_RE.sub(lambda m: "`" + m.group(1) + "`", text)
     for index, block in enumerate(code_blocks):
         text = text.replace(f"{NUL}CODE{index}{NUL}",
@@ -1734,6 +2165,9 @@ def write_terms(out_dir, lang, terms):
             "chapter": chapter_title(module, lang),
             "href": chapter_href(module, f'#term-{entry["id"]}'),
         }
+        abbreviation = localized_abbreviation(entry, lang)
+        if abbreviation:
+            payload[entry["id"]]["abbreviation"] = abbreviation
     with open(os.path.join(out_dir, lang, "terms.json"), "w", encoding="utf-8") as target:
         json.dump(payload, target, ensure_ascii=False)
 
@@ -1882,20 +2316,35 @@ def main(argv):
             index_definitions(content, m, name2pos, pos_aspect)   # whole .html is code
             local_types[m] = local_signature_types(content, m)
     internal_q = {f"{m}.{n}": (m, p) for m in name2pos for n, p in name2pos[m].items()}
+    add_prelude_qualified_names(internal_q, prelude_reexports)
     types_by_module = build_types(rendered, name2pos, types_raw, internal_q,
-                                  pos_aspect)
+                                  pos_aspect, prelude_reexports)
+    add_prelude_reexport_types(types_by_module, types_raw, prelude_reexports,
+                               internal_q, pos_aspect)
     name_pattern = qualified_name_pattern(internal_q)
+    canonical_names = {module: names_by_position(module, name2pos)
+                       for module in rendered}
+    highlighted_local_types = []
     for module, declarations in local_types.items():
         for position, declaration in declarations.items():
             full_type = types_raw.get(module, {}).get(declaration["name"])
-            type_html = (render_type(full_type, internal_q, name_pattern,
-                                     pos_aspect)
-                         if full_type else declaration["type"])
+            if full_type:
+                type_html = render_type(full_type, internal_q, name_pattern,
+                                        pos_aspect, module, prelude_reexports)
+            else:
+                type_html = declaration["type"]
+                highlighted_local_types.append((module, position, type_html))
             types_by_module.setdefault(module, {}).setdefault(position, type_html)
-    canonical_names = {module: names_by_position(module, name2pos)
-                       for module in rendered}
-    expression_types = build_expression_types(expression_types_raw, internal_q,
-                                              pos_aspect)
+    # Every local target is now present, so links between two declarations whose
+    # types came only from highlighted HTML can both receive hover payloads.
+    for module, position, type_html in highlighted_local_types:
+        types_by_module[module][position] = decorate_type_nodes(rewrite_links(
+            type_html, rendered_set, types_by_module, canonical_names, module,
+            prelude_reexports
+        ))
+    expression_types = build_expression_types(
+        expression_types_raw, internal_q, pos_aspect, prelude_reexports
+    )
     for module, nodes in expression_types.items():
         for node in nodes:
             if node.get("kind") == "definition":
@@ -1907,12 +2356,39 @@ def main(argv):
                     str(node["target"]), node["type"]
                 )
 
+    # Hovered types are code surfaces too. Rebuild their ranges solely from the
+    # compiler-traced application nodes used by source blocks. Balanced
+    # delimiters are not nodes. Every visible range points into $expressions,
+    # so every coloured node can open another typed hover.
+    for module, nodes in expression_types.items():
+        semantic_nodes = [dict(node) for node in nodes]
+        semantic_index = semantic_type_index(semantic_nodes)
+        module_types = types_by_module.get(module, {})
+        for position, type_html in list(module_types.items()):
+            module_types[position] = decorate_type_nodes(
+                TYPE_NODE_TAG_RE.sub("", type_html), semantic_index, module
+            )
+        for node in nodes:
+            node["type"] = decorate_type_nodes(
+                TYPE_NODE_TAG_RE.sub("", node["type"]), semantic_index, module
+            )
+
+    for module_types in types_by_module.values():
+        for position, type_html in module_types.items():
+            module_types[position] = resolve_type_hover_links(type_html, types_by_module)
+    for nodes in expression_types.values():
+        for node in nodes:
+            node["type"] = resolve_type_hover_links(node["type"], types_by_module)
+
     if selected_modules:
         unknown = selected_modules - rendered_set
         if unknown:
             sys.stderr.write(f"unknown rendered module(s): {', '.join(sorted(unknown))}\n")
             return 2
-        modules_to_render = [m for m in rendered if m in selected_modules]
+        preview_modules = referenced_module_closure(
+            selected_modules, html_dir, rendered_set
+        )
+        modules_to_render = [m for m in rendered if m in preview_modules]
     else:
         modules_to_render = rendered
 
@@ -1921,16 +2397,7 @@ def main(argv):
     for m in modules_to_render:
         render_module(m, html_dir, langs, internal, rendered_set, modnav_list,
                       name2pos, canonical_names, types_by_module, expression_types,
-                      terms, tpl, out_dir, base, site, prelude_reexports)
-
-    if selected_modules:
-        dependencies = set()
-        for module in selected_modules:
-            path, _ = source_file(html_dir, module)
-            dependencies.update(referenced_type_modules(path, rendered_set))
-        for module in sorted(dependencies - selected_modules):
-            write_type_sidecar(module, langs, out_dir, types_by_module,
-                               name2pos, expression_types)
+                      terms, tpl, out_dir, base, site, prelude_reexports, reading_data)
 
     # A selected-module rebuild is also the fast preview path used while the
     # renderer is being refined.  Publish changed CSS/JS before returning so
@@ -1939,7 +2406,9 @@ def main(argv):
         shutil.copytree(static_dir, os.path.join(out_dir, "static"), dirs_exist_ok=True)
 
     if selected_modules:
-        print(f"rendered {len(modules_to_render)} selected module(s) x {len(langs)} "
+        print(f"rendered {len(selected_modules)} selected module(s) and "
+              f"{len(modules_to_render) - len(selected_modules)} reachable page(s) "
+              f"x {len(langs)} "
               f"language(s) -> {out_dir}", file=sys.stderr)
         return 0
 

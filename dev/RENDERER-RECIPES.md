@@ -25,6 +25,19 @@ spacing; chapters need no navigation markup. Chapter links above and below the
 article use the localized Previous chapter / Next chapter labels without a route
 prefix.
 
+The sticky reading-position bar in `bedrock.js` also opens a chapter directory.
+It starts with the first section heading, without repeating the chapter title,
+and initially folds subordinate headings under their
+parent sections, except along the current heading's path. Readers may toggle
+each branch independently. The panel sizes to its visible contents, scrolls
+internally only when necessary, and closes on an outside click or document scroll.
+For a heading with children, only its title text navigates; the remaining row
+toggles its branch. A heading without children remains a full-row link.
+The sidebar starts with Reading guide folded and Current route open below Modules.
+Current route lists its catalog chapters and highlights the present chapter. The
+guide's route selection is remembered, with a containing route used when the
+reader opens a chapter outside that selection.
+
 ## Prose and code
 
 | Recipe ID | Use and canonical source form | First use | Implementation / checks |
@@ -32,13 +45,14 @@ prefix.
 | `prose.parallel` | Three language blocks, followed by shared Agda fences; matching chapter/subsection structure | [Prelude](../src/Base/Prelude.lagda.md), opening and "Traceable vocabulary" | `i18n_markers.py`, chapter-framework and literary-exposition gates |
 | `prose.term` | First introduction `[term]{.term-intro #id}`; explicit later reference `[term]{.term-ref #id}` | [Prelude](../src/Base/Prelude.lagda.md), `object-theory` in the opening | `glossary.toml`, glossary renderer and gate; never duplicate term metadata locally |
 | `code.reference` | Inline `` `name`{.Agda} `` links to a checked Agda name | [Prelude](../src/Base/Prelude.lagda.md), `Type ℓ` under "Universe levels" | `render-site.py` resolves references; formal code remains in Agda fences |
+| `code.reference-alias` | `[label](Module.html#declaration){.Agda}` displays a short label while linking and hovering over the named declaration | [Milestones](../src/Milestones.lagda.md), `V` linked to `𝒮ᵥ` | `render-site.py` resolves the symbolic target to its Agda position and rejects unknown declarations |
 | `code.display` | One centered `<div>` containing one `<code>` for reader-facing notation; see the template below | [Prelude](../src/Base/Prelude.lagda.md), `Type ℓ : Type (ℓ-suc ℓ)` | `bedrock.css`, `bedrock.js`, one-line rule in `lint-prose.py` |
 | `code.display-note` | `code.display` with localized `data-note="..."` explaining the notation | [Prelude](../src/Base/Prelude.lagda.md), the same universe-level expression | Desktop margin note; narrow-screen tap/focus note; keep the annotation in its language block |
 | `prose.margin-note` | `span.prose-annotation-target` followed by `aside.prose-annotation-note` | [Prelude](../src/Base/Prelude.lagda.md), why types cannot generally be moved downward after `Lift` | `bedrock.css` and `bedrock.js`; use for a brief attached qualification |
 | `prose.disclosure` | `details.prose-disclosure` with a localized `summary` | [Prelude](../src/Base/Prelude.lagda.md), compiler-option explanation | Ancillary interface detail only; localized prefix checked by `lint-prose.py` |
-| `prose.optional` | Default-open, collapsible `details.optional-reading` with a localized `summary.optional-reading-title`; see template below | [Impredicativity](../src/Base/Impredicativity.lagda.md), `coded-truth-construction-title` | Small inset, muted background, left rule; title and outer-proof QED checked by `lint-prose.py`; structural wrapper recognized by literary gate |
+| `code.submodule-fold` | Default-open `details.submodule-fold` whose complete Agda module declaration occupies the clickable `summary`; see template below | [Impredicativity](../src/Base/Impredicativity.lagda.md), `CodedTruth` | Animated folding, rendered code without module-scope indentation, and at most one nested child fold; whole-tree coverage, declaration, scope and depth checked by `lint-prose.py` |
 | `prose.statement` | `**Definition** (`name`{.Agda}) Text`; also Construction, Fact, Lemma, Theorem, Corollary with localized labels | [Impredicativity](../src/Base/Impredicativity.lagda.md), `hasSize` | `lint-prose.py`; the label and declaration form one sentence, without a period after the label |
-| `prose.proof` | `**Proof** Text`, alternating explanation and code, with standalone `∎` after the complete outer proof | [Impredicativity](../src/Base/Impredicativity.lagda.md), `ΩResizing→Resizing`; further examples in [Classical](../src/Base/Classical.lagda.md), `isPropLEM` and `lowerLEM` | `lint-prose.py`; helpers within an optional block do not each need a QED |
+| `prose.proof` | `**Proof** Text`, alternating explanation and code, with standalone `∎` after the complete outer proof | [Impredicativity](../src/Base/Impredicativity.lagda.md), `ΩResizing→Resizing`; further examples in [Classical](../src/Base/Classical.lagda.md), `isPropLEM` and `lowerLEM` | `lint-prose.py`; helpers within a foldable submodule do not each need a QED |
 
 ### Prose comparison tables
 
@@ -55,34 +69,38 @@ and the two decision cases. Tables do not replace mathematical type-space diagra
 <div class="single-line-code"><code>`expression`{.Agda}</code></div>
 ```
 
-### Default-open optional construction
+### Default-open submodule fold
 
-```html
-<details open class="optional-reading" aria-labelledby="unique-title-id">
+````html
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+module Example where
+```
+</summary>
+<div class="submodule-fold-content">
+
 <!--en-->
-<summary class="optional-reading-title" id="unique-title-id">Optional: construction of …</summary>
-
-To construct the representative used above, …
+Explain the first construction in Example.
 <!--zh-->
-<summary class="optional-reading-title" id="unique-title-id">选读：……的构造</summary>
-
-为构造上面使用的代表，……
+解释 Example 中的第一个构造。
 <!--ja-->
-<summary class="optional-reading-title" id="unique-title-id">発展：……の構成</summary>
-
-上で用いた代表を構成するために、……
+Example の最初の構成を説明する。
 <!--/-->
 
-<!-- Shared code and figures, interleaved with further language groups. -->
-</details>
+```agda
+  example = value
 ```
 
-The title ID is unique in the rendered page; its three source occurrences are language
-alternatives. The `open` attribute is required: readers see the construction initially
-and can collapse or expand it by activating its summary. Use the native disclosure
-control, without a separate play/toggle button or persisted collapsed state. Keep normal text size and
-line spacing. On small screens reduce the inset rather than compressing the content.
-If this block completes an enclosing proof, put that proof's `∎` after `</details>`.
+</div>
+</details>
+````
+
+The declaration occupies the summary's only code line and remains visible when
+collapsed. The content starts directly below it and ends after the last code fence
+in that submodule; a closing proof mark follows `</details>`. The block has a light
+inset and background, with less padding on mobile. The website animates both
+directions and retains native keyboard semantics.
 
 ## Figures
 
@@ -105,7 +123,7 @@ The first common shell is `fig-pi-sigma` in Prelude.
 | `figure.pointwise` | `funext-scene`: sampled paths and a result space | [Prelude](../src/Base/Prelude.lagda.md), `fig-path-funext` | A family of pointwise paths gives a path of functions |
 | `figure.implications` | `hlevel-panels`, internal assumptions, examples and definitions, with `hlevel-link` connectors | [Prelude](../src/Base/Prelude.lagda.md), `fig-hlevel-distinction` | Align corresponding panel regions; logical implications use implication symbols |
 | `figure.universe-copy` | `level-scene`, two type spaces and a separate properties row | [Prelude](../src/Base/Prelude.lagda.md), `fig-universe-homotopy` | Distinguish movement of universe level from preservation of properties |
-| `figure.factorization-math` | A single panel containing a KaTeX commutative diagram | [Prelude](../src/Base/Prelude.lagda.md), `fig-truncation-rec` | Compact equations/functions; never override descendant KaTeX SVG dimensions |
+| `figure.factorization-math` | A single framed `factorization-stage` containing three type labels and three SVG function arrows | [Prelude](../src/Base/Prelude.lagda.md), `fig-truncation-rec`; reused by [Choice](../src/Base/Choice.lagda.md), `fig-choice-truncation` | Draw the diagonal arrow across the full distance between source and target; show only the three distinct types and maps, without duplicating the codomain to make a square |
 | `figure.resizing` | `resizing-comparison` / `resizing-case`: title, note, assumption, centered scene, conclusion | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-resizing-comparison` | Scene rows share a vertical center; conclusion formulas align; narrow layouts stack panels |
 | `figure.path-space` | `coded-truth-proof-scene`: two proof spaces and the ambient type, with `diagram-path-space` lens | [Impredicativity](../src/Base/Impredicativity.lagda.md), `fig-coded-truth` | Align proof points; put endpoint labels next to endpoints; the shaded family is schematic, not a literal subspace of Ω |
 | `figure.roundtrips` | `type-comparison-panels classical-roundtrips`, parallel path stages | [Classical](../src/Base/Classical.lagda.md), `fig-classical-roundtrips` | Two round-trip laws displayed in matching geometry, with paths for equality |

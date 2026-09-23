@@ -136,8 +136,16 @@ too and the stage lemma above closes it.
 落在 `L` 的某集合之上的环境是由「数码与成员」之对组成的有穷集；而 `L` 之元素的成员仍是 `L` 的元素，故这些对也是，于是前一条层引理恰好适用于此。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     ix : ⟪ fst B ⟫ → S
     ix m = ⟪ fst B ⟫↪ m
@@ -250,8 +258,16 @@ the indices below `n` are exactly the numerals below `n`.
 四个合取项，而每一条都只是把那条描述对着「环境究竟是什么」读一遍。单值性与那两条包含关系直接由成员规格得出，而后者是 `refl`{.Agda}；只有定义域那一条需要算术，因为「定义域是数码 `n`」说的正是「`n` 以下的诸序号恰是 `n` 以下的诸数码」。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (g : Ix n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       out : (s : V ℓ) → ⟨ s ∈ fst (envS g) ⟩
           → ∥ (Σ[ i ∈ Fin n ] (pr (# (toℕ i)) (fst (ix (g i))) ≡ s)) ∥₁
@@ -322,6 +338,9 @@ the indices below `n` are exactly the numerals below `n`.
     envSetIn : ⟨ (envS g ∷ []) ⊨ envFo n ⟩
     envSetIn = ∣ nn n , ∣ B , (refl , (refl , envOver)) ∣₁ ∣₁
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recovering an environment from a member
@@ -363,11 +382,19 @@ unwanted elements could enter.
 外延性补全证明：一个方向来自诸条目，另一个来自「由诸对构成」那一条，而若缺了那一条，不需要的元素就会混进来。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Recover (n : ℕ) {k : ℕ} (γ : S ^ k) (Ei di bi : Fin k)
     (qd : fst (lookup di γ) ≡ # n) (qb : fst (lookup bi γ) ≡ fst B)
     (h : ⟨ γ ⊨ envOverAt Ei di bi ⟩)
     where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       e : S
       e = lookup Ei γ
@@ -429,6 +456,10 @@ unwanted elements could enter.
 
     recovers : fst e ≡ fst (envS g)
     recovers = extensionalV (λ w → ⇔toPath (bwd w) (fwd w))
+```
+</div>
+</details>
+```agda
 
   envSet-in : {n : ℕ} (g : Ix n) → ⟨ envS g ∈ˢ envSet n ⟩
   envSet-in {n} g = subst ⟨_⟩ (sym (envSet-mem n (envS g)))
@@ -444,8 +475,10 @@ unwanted elements could enter.
             qd qb hov })
       hd })
     (subst ⟨_⟩ (envSet-mem n x) hx .snd)
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

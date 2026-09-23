@@ -19,7 +19,6 @@ open import Base.Prelude
 open import Base.Classical using ( LEM )
 
 module L.GCH.BelowSuccessorCardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->

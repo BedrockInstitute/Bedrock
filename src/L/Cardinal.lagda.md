@@ -16,7 +16,6 @@ Cardinality in `L` requires two related kinds of comparison. The host can compar
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -30,7 +29,6 @@ The argument is carried out in the host language described in the prelude. Its o
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -43,7 +41,6 @@ The universe level and this instance of excluded middle are therefore displayed 
 
 ```agda
 module L.Cardinal {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -119,9 +116,7 @@ Existence inside this development is often deliberately weakened by propositiona
 本書では、存在を命題的切り詰めによって意図的に弱めることがよくある。`∥ X ∥₁` の要素は `X` に要素があることを主張するが、具体的な要素は明らかにしない。反証を表す空型のような命題へは消去できるが、任意のデータへは消去できない。この規則により、後で `InjCode` に含まれる具体的なグラフの情報と、`InjL` が述べる単なる存在が厳密に区別される。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 The notation now records which setting a statement belongs to. For the ambient
@@ -141,7 +136,6 @@ through the satisfaction relation introduced below.
 ```agda
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -162,7 +156,6 @@ membership.
 ```agda
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( _⊆ˢ_ )
-
 ```
 
 <!--en-->
@@ -199,9 +192,16 @@ Now fix a constructible set `α` whose underlying set is an ordinal. To look lat
 ここで、底にある集合が順序数である構成可能集合 `α` を固定する。後で必要な大きさの順序数を探すには、`sucV (fst α)` の標準的な提示の中で探索すれば十分である。この集合は `α` のすべての要素と `α` 自身を含むので、探索空間は小さな型であると同時に自然な始点を持つ。ここでの定義が作るのは、この順序付けられた探索空間である。候補の述語を与えて最小元を選ぶのは後の議論である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module LeastCardInjL (α : S) (oα : IsOrd (fst α)) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The first obligation is to show that this set-theoretic successor itself belongs to `L`. From `oα`, two applications of ordinal successor show that `sucV (sucV (fst α))` is an ordinal. The theorem that an ordinal belongs to the next constructible stage places `sucV (fst α)` in that named stage, and membership in a stage yields its constructibility. Thus the proof identifies a specific stage containing the successor; it does not appeal to a general closure of constructibility under `sucV`.
@@ -273,7 +273,6 @@ The search space has a distinguished index naming `fst α`. The proof `self∈su
 
   self : ⟪ sucV (fst α) ⟫
   self = fiber (sucV (fst α)) (self∈sucV (fst α)) .fst
-
 ```
 
 <!--en-->
@@ -287,8 +286,10 @@ The companion equation states exactly what `self` names: its image under the pre
 ```agda
   self-eq : ⟪ sucV (fst α) ⟫↪ self ≡ fst α
   self-eq = fiber (sucV (fst α)) (self∈sucV (fst α)) .snd
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Internal injections and successor cardinals
@@ -324,7 +325,6 @@ The fourth condition is stated directly in the host. For any `x,y : S`, if the o
 
 ```agda
   × ((x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩ → ⟨ fst y ∈ fst b ⟩)
-
 ```
 
 <!--en-->
@@ -338,7 +338,6 @@ The fourth condition is stated directly in the host. For any `x,y : S`, if the o
 ```agda
 InjL : S → S → Type (ℓ-suc ℓ)
 InjL a b = ∥ Σ[ F ∈ S ] InjCode F a b ∥₁
-
 ```
 
 <!--en-->
@@ -364,7 +363,6 @@ IsCardinalL : S → Type (ℓ-suc ℓ)
 IsCardinalL κ =
   (δ : S) → ⟨ fst δ ∈ fst κ ⟩
           → (∥ Σ[ F ∈ S ] InjCode F κ δ ∥₁ → ⊥₀)
-
 ```
 
 <!--en-->

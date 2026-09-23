@@ -268,8 +268,8 @@ The map remeasures labels after its fonts load. The verified output is copied to
 
 ## Reading interface refinement
 
-The landing page presents reading routes, the dependency map and the chapter
-catalog as three tabs. Each has a shareable fragment URL; switching tabs retains
+The landing page opens on Milestones, followed by reading routes, the dependency
+map and the glossary as four tabs. Each has a shareable fragment URL; switching tabs retains
 route selections and graph controls. The old dependency-map URL redirects to its
 tab. Without JavaScript, the chapter catalog remains accessible. Keyboard users
 can switch tabs with arrow keys, Home and End.

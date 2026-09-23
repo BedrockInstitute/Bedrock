@@ -264,9 +264,19 @@ chapter builds its ladder and gets the argument, rather than running it again.
 ```agda
 ClosedFor : (β : V ℓ) {k : ℕ} (ψ : Formula S (suc k)) → Type (ℓ-suc ℓ)
 ClosedFor β {k} ψ = (ρ : S ^ k) → Below β ρ → ⟨ SatEx ψ ρ ⟩ → ⟨ Wit ψ ρ β ⟩
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module Ladder (G : ℕ → V ℓ) (G-ord : (n : ℕ) → IsOrd (G n))
               (G-up : (n : ℕ) → ⟨ G n ∈ G (suc n) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   reach : (n d : ℕ) → ⟨ G n ∈ G (suc (d + n)) ⟩
   reach n zero    = G-up n
@@ -365,11 +375,19 @@ monotonicity, and the equation transported back.
 有了它，极限对该矩阵闭合。把环境定位到某一级：它是那一级之层的某个索引元组的像，至多相差一个等式，而读取引理把它连同元组一并给出。它的作答层落在下一级上，故落在作答层里的东西便落在那一级的层里，因而落在极限之下；再用两次单调性，把那个等式移回去。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {k : ℕ} (ψ : Formula S (suc k))
            (answers : (n : ℕ) (ms : ⟪ Lset (G n) ⟫ ^ k)
                     → ⟨ pickStage ψ (LsetEnv (G n) (G-ord n) ms) ∈ G (suc n) ⟩)
            where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     closure : ClosedFor top ψ
     closure ρ below sat = rec₁ squash₁ atRung (localize ρ below)
@@ -416,6 +434,12 @@ syntax and the meta-level requires no further work.
     reflect : (ρ : S ^ k) → Below top ρ → (ρ ⊨ (∃̇ ψ)) ≡ Wit ψ ρ top
     reflect ρ below = ⇔toPath (closure ρ below) (reflect-bwd ρ)
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## The step for a single matrix
@@ -447,8 +471,16 @@ the step is closed inside the seal and the caller sees only its conclusion.
 步进被封印。展开来，它是由排中律所造的界再造出的界，而闭包论证反复在诸级上匹配；透明的定义会把那整座塔推进每一次转换检查。三条性质各开封一次，其中最后一条是唯一用到传递性之处，故从回答经上界进入步进的这条链封在印内，调用方只见其结论。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Single {k : ℕ} (ψ : Formula S (suc k)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   Fbnd : (σ : V ℓ) (oσ : IsOrd σ)
        → Σ[ β ∈ V ℓ ] (IsOrd β × ((ms : ⟪ Lset σ ⟫ ^ k)
@@ -475,6 +507,9 @@ module Single {k : ℕ} (ψ : Formula S (suc k)) where
         (Fbnd σ oσ .snd .snd ms)
         (bound2 (Fbnd σ oσ .fst) σ (Fbnd σ oσ .snd .fst) oσ .snd .snd .fst)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

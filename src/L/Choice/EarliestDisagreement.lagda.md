@@ -14,7 +14,6 @@ At each finite stage, `before n` compares two sets at their earliest disagreemen
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -28,7 +27,6 @@ The construction uses excluded middle only through the explicit hypothesis that 
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,7 +39,6 @@ Fix a universe level `ℓ` and assume `LEM (ℓ-suc ℓ)`. All sets, formulas, a
 
 ```agda
 module L.Choice.EarliestDisagreement {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -120,7 +117,6 @@ Object-language application and extensionality let a formula say that a set is t
 open import L.Hierarchy {ℓ} lem using ( Lset-only; Lset-defines )
 open import L.Coding.Model {ℓ} using ( prAtL; prAtL-adequate; prʟ; prʟ-fst; appAt; appAt-adequate; appC; appC-adequate; domAt-intro )
 open import L.Coding.Expressions {ℓ} using ( numL; extAt; extAt-out; extAt-in; extAt-in-both )
-
 ```
 
 <!--en-->
@@ -191,7 +187,6 @@ From now on formulas are interpreted in the proposition-valued structure carried
 ```agda
 
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -205,7 +200,6 @@ The carrier `S` consists of a set together with evidence that it belongs to `L`.
 ```agda
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
-
 ```
 
 <!--en-->
@@ -219,7 +213,6 @@ Absoluteness connects satisfaction in this structure with the corresponding asse
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -234,7 +227,6 @@ Binding two new variables shifts every previous de Bruijn position by two. The m
 private
   sh2 : ∀ {n} → Fin n → Fin (suc (suc n))
   sh2 i = suc (suc i)
-
 ```
 
 <!--en-->
@@ -248,7 +240,6 @@ Applying the two-place shift twice gives `sh4`, the adjustment needed under four
 ```agda
   sh4 : ∀ {n} → Fin n → Fin (suc (suc (suc (suc n))))
   sh4 i = sh2 (sh2 i)
-
 ```
 
 <!--en-->
@@ -276,7 +267,6 @@ The object `stageS n` packages the finite stage `Lset (# n)` as an element of th
 opaque
   stageS : ℕ → S
   stageS n = LsetS (# n) (numeral-ord n)
-
 ```
 
 <!--en-->
@@ -290,7 +280,6 @@ The equation `stageS-fst` reveals exactly the mathematical set carried by that p
 ```agda
   stageS-fst : (n : ℕ) → fst (stageS n) ≡ finiteStage n
   stageS-fst n = refl
-
 ```
 
 <!--en-->
@@ -304,7 +293,6 @@ The object `numS k` similarly packages the von Neumann numeral `# k` together wi
 ```agda
   numS : ℕ → S
   numS k = # k , numL k
-
 ```
 
 <!--en-->
@@ -318,7 +306,6 @@ The equation `numS-fst` lets later formulas read the underlying numeral without 
 ```agda
   numS-fst : (k : ℕ) → fst (numS k) ≡ # k
   numS-fst k = refl
-
 ```
 
 <!--en-->
@@ -332,7 +319,6 @@ If `z` belongs to a constructible set `A`, transitivity of `L` shows that `z` is
 ```agda
   memS : (A : S) (z : V ℓ) → ⟨ z ∈ fst A ⟩ → S
   memS A z h = z , isL-trans {x = fst A} {y = z} h (snd A)
-
 ```
 
 <!--en-->
@@ -346,7 +332,6 @@ The first component of `memS A z h` is still the original set `z`; the additiona
 ```agda
   memS-fst : (A : S) (z : V ℓ) (h : ⟨ z ∈ fst A ⟩) → fst (memS A z h) ≡ z
   memS-fst A z h = refl
-
 ```
 
 <!--en-->
@@ -360,7 +345,6 @@ For model elements `a` and `b`, `prS a b` forms their ordered pair inside `L`. R
 ```agda
   prS : S → S → S
   prS a b = prʟ a b
-
 ```
 
 <!--en-->
@@ -374,7 +358,6 @@ Forgetting the constructibility evidence recovers the ordinary ordered pair `pr 
 ```agda
   prS-fst : (a b : S) → fst (prS a b) ≡ pr (fst a) (fst b)
   prS-fst a b = prʟ-fst a b
-
 ```
 
 <!--en-->
@@ -444,7 +427,6 @@ The product of the two presentations indexes every pair of stage members. Applyi
                   → ⟨ prʟ (ixL (fst p)) (ixL (snd p)) ∈ˢ D ⟩)
   d = smallDom (⟪ finiteStage n ⟫ × ⟪ finiteStage n ⟫)
         (λ p → prʟ (ixL (fst p)) (ixL (snd p)))
-
 ```
 
 <!--en-->
@@ -548,7 +530,6 @@ The remaining conjunct identifies the candidate with the ordered pair of the two
 ```agda
               ( prAtL (sh2 (sh2 zero)) (suc zero) zero
               ∧̇ PrecedesAt (sh2 (suc zero)) (sh2 zero) (suc zero) zero ) ) ) )
-
 ```
 
 <!--en-->
@@ -577,7 +558,6 @@ From that bound, `RelCond (relAt n) (stageS n) (stageS (suc n))` selects exactly
 
 ```agda
       (RelCond (relAt n) (stageS n) (stageS (suc n))) .fst .fst
-
 ```
 
 <!--en-->
@@ -591,7 +571,6 @@ The equation `relAt-zero` records the base case explicitly, so a purported membe
 ```agda
   relAt-zero : relAt zero ≡ ∅ʟ
   relAt-zero = refl
-
 ```
 
 <!--en-->
@@ -621,7 +600,6 @@ This equivalence is the exact specification supplied by separation. Later proofs
 ```agda
     hasSeparationL (pairsAt (suc n) .fst)
       (RelCond (relAt n) (stageS n) (stageS (suc n))) .fst .snd
-
 ```
 
 <!--en-->
@@ -635,7 +613,6 @@ The predicate `Rel n a b` abbreviates membership of the ordered pair `pr a b` in
 ```agda
 Rel : ℕ → V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Rel n a b = pr a b ∈ fst (relAt n)
-
 ```
 
 <!--en-->
@@ -667,7 +644,6 @@ The remaining positions `s3` and `s4` locate the previous relation and the coded
   s3 = sh2 (suc zero)
   s4 : Fin 5
   s4 = sh2 (sh2 zero)
-
 ```
 
 <!--en-->
@@ -698,7 +674,6 @@ Membership in `relAt k` determines such components only under propositional trun
 
 relAt-out : (k : ℕ) (zv : V ℓ) → ⟨ zv ∈ fst (relAt k) ⟩ → ∥ RelOf k zv ∥₁
 relAt-in  : (k : ℕ) (zv : V ℓ) → RelOf k zv → ⟨ zv ∈ fst (relAt k) ⟩
-
 ```
 
 <!--en-->
@@ -744,7 +719,6 @@ The underlying set `zv` is packaged as an element of `L` using its membership in
 ```agda
   qz : fst zS ≡ zv
   qz = memS-fst (relAt (suc n)) zv h
-
 ```
 
 <!--en-->
@@ -759,7 +733,6 @@ The defining property of separation turns the assumed membership into satisfacti
   cond : ⟨ (zS ∷ []) ⊨ RelCond (relAt n) (stageS n) (stageS (suc n)) ⟩
   cond = subst ⟨_⟩ (relAt-mem n zS)
     (subst (λ t → ⟨ t ∈ fst (relAt (suc n)) ⟩) (sym qz) h) .snd
-
 ```
 
 <!--en-->
@@ -775,7 +748,6 @@ For proposed components `x,y`, the remaining body says two things: the analyzed 
   Body r a x y =
       ⟨ (y ∷ x ∷ a ∷ r ∷ zS ∷ []) ⊨ prAtL s4 s1 zero ⟩
     × ⟨ (y ∷ x ∷ a ∷ r ∷ zS ∷ []) ⊨ PrecedesAt s3 s2 s1 zero ⟩
-
 ```
 
 <!--en-->
@@ -789,7 +761,6 @@ After `x` has been chosen from the successor stage, `AtY` records the remaining 
 ```agda
   AtY : (r a x : S) → Type (ℓ-suc ℓ)
   AtY r a x = Σ[ y ∈ S ] (⟨ fst y ∈ fst (stageS (suc n)) ⟩ × Body r a x y)
-
 ```
 
 <!--en-->
@@ -837,7 +808,6 @@ The converse transport writes a proof of `Rel n` back into the supplied relation
     Rfill : (s t : S) → ⟨ Rel n (fst s) (fst t) ⟩
           → ⟨ pr (fst s) (fst t) ∈ fst (lookup s3 (y ∷ x ∷ a ∷ r ∷ zS ∷ [])) ⟩
     Rfill s t p = subst (λ w → ⟨ pr (fst s) (fst t) ∈ w ⟩) (sym qr) p
-
 ```
 
 <!--en-->
@@ -851,7 +821,6 @@ With these representation maps fixed, the `Precedes` module supplies the semanti
 ```agda
     module P = Precedes s3 s2 s1 zero (y ∷ x ∷ a ∷ r ∷ zS ∷ [])
                         (Rel n) Rrep Rfill
-
 ```
 
 <!--en-->
@@ -866,7 +835,6 @@ Reading `PrecedesAt` yields a `precedes` comparison over the stage supplied by t
     onStage : ⟨ precedes (Rel n) (finiteStage n) (fst x) (fst y) ⟩
     onStage = subst (λ w → ⟨ precedes (Rel n) w (fst x) (fst y) ⟩)
       (qa ∙ stageS-fst n) (P.PrecedesAt-out hprec)
-
 ```
 
 <!--en-->
@@ -897,7 +865,6 @@ The adequacy of the pair formula identifies the packaged member with `pr (fst x)
 
     qpair : fst zS ≡ pr (fst x) (fst y)
     qpair = subst ⟨_⟩ (prAtL-adequate s4 s1 zero (y ∷ x ∷ a ∷ r ∷ zS ∷ [])) hpr
-
 ```
 
 <!--en-->
@@ -929,7 +896,6 @@ The two stage-membership assumptions place the ordered pair inside `pairsAt (suc
   inBound : ⟨ prS x y ∈ˢ pairsAt (suc n) .fst ⟩
   inBound = subst (λ t → ⟨ t ∈ fst (pairsAt (suc n) .fst) ⟩) (sym (prS-fst x y))
     (pairsAt (suc n) .snd (fst x) (fst y) x∈ y∈)
-
 ```
 
 <!--en-->
@@ -944,7 +910,6 @@ For the reverse construction the environment contains the actual predecessor rel
   module P = Precedes s3 s2 s1 zero
                       (y ∷ x ∷ stageS n ∷ relAt n ∷ prS x y ∷ [])
                       (Rel n) (λ _ _ p → p) (λ _ _ p → p)
-
 ```
 
 <!--en-->
@@ -1010,7 +975,6 @@ The pair-recognition formula is satisfied because the candidate member was built
   hpr = subst ⟨_⟩
     (sym (prAtL-adequate s4 s1 zero
       (y ∷ x ∷ stageS n ∷ relAt n ∷ prS x y ∷ []))) (prS-fst x y)
-
 ```
 
 <!--en-->
@@ -1025,7 +989,6 @@ The presentation equation for `stageS (suc n)` transports each known member of `
   onStage : (w : V ℓ) → ⟨ w ∈ finiteStage (suc n) ⟩
           → ⟨ w ∈ fst (stageS (suc n)) ⟩
   onStage w hw = subst (λ t → ⟨ w ∈ t ⟩) (sym (stageS-fst (suc n))) hw
-
 ```
 
 <!--en-->
@@ -1074,7 +1037,6 @@ If the recovered presentation uses components `p,q`, equality of its ordered pai
   read (p , (q , (p∈ , (q∈ , (qq , hbf))))) =
     subst2 (λ s t → ⟨ before n s t ⟩)
       (sym (pr-inj qq .fst)) (sym (pr-inj qq .snd)) hbf
-
 ```
 
 <!--en-->
@@ -1112,7 +1074,6 @@ The recursive description must accept a relation as data rather than refer direc
 ```agda
 Held : S → V ℓ → V ℓ → hProp (ℓ-suc ℓ)
 Held r a b = pr a b ∈ fst r
-
 ```
 
 <!--en-->
@@ -1160,7 +1121,6 @@ The innermost clauses require the candidate entry to be the ordered pair of thos
                                ∧̇ PrecedesAt (suc (suc (suc (suc zero))))
                                              (suc (suc (suc zero)))
                                              (suc zero) zero ) ) ) ) ) ) )
-
 ```
 
 <!--en-->
@@ -1203,10 +1163,18 @@ The semantic correspondence is now proved for arbitrary variables `z,b,f` and an
 ここから、任意の変数 `z,b,f` と任意の環境について意味論的な対応を示す。`lookup b γ` の台となる集合が順序数であるという仮定は、階層グラフが記述する段階を対応する `Lset` の値と同定するために使われる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module _ {n : ℕ} (z b f : Fin n) (γ : S ^ n)
          (ob : IsOrd (fst (lookup b γ))) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Body : (c r A A' x y : S) → Type (ℓ-suc ℓ)
     Body c r A A' x y =
@@ -1225,7 +1193,6 @@ After the six existential witnesses have extended the environment, the innermost
       × ⟨ (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)
           ⊨ PrecedesAt (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
                        (suc zero) zero ⟩
-
 ```
 
 <!--en-->
@@ -1239,7 +1206,6 @@ For a fixed first endpoint `x`, `AtY` packages the remaining endpoint `y`, its m
 ```agda
     AtY : (c r A A' x : S) → Type (ℓ-suc ℓ)
     AtY c r A A' x = Σ[ y ∈ S ] (⟨ fst y ∈ fst A' ⟩ × Body c r A A' x y)
-
 ```
 
 <!--en-->
@@ -1254,7 +1220,6 @@ For a fixed first endpoint `x`, `AtY` packages the remaining endpoint `y`, its m
     MaxOf : (c : S) → Type (ℓ-suc ℓ)
     MaxOf c = (d : S) → ⟨ fst d ∈ fst (lookup b γ) ⟩ → ⟨ fst c ∈ fst d ⟩
             → ⊥₀
-
 ```
 
 <!--en-->
@@ -1302,7 +1267,6 @@ Here the relation variable is interpreted directly as `Held r`, so the represent
       module P = Precedes (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
                           (suc zero) zero (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)
                           (Held r) (λ _ _ p → p) (λ _ _ p → p)
-
 ```
 
 <!--en-->
@@ -1317,7 +1281,6 @@ Reading `PrecedesAt` gives a comparison over the stage object bound in the formu
       hprec' : ⟨ precedes (Held r) (Lset (fst c)) (fst x) (fst y) ⟩
       hprec' = subst (λ t → ⟨ precedes (Held r) t (fst x) (fst y) ⟩) qA
         (P.PrecedesAt-out hprec)
-
 ```
 
 <!--en-->
@@ -1333,7 +1296,6 @@ Adequacy of `prAtL` identifies the value denoted by `z` with the ordered pair of
       qpair = subst ⟨_⟩
         (prAtL-adequate (sh6 z) (suc zero) zero
           (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)) hpr
-
 ```
 
 <!--en-->
@@ -1347,7 +1309,6 @@ After the first endpoint `x` is exposed, the remaining endpoint is still known o
 ```agda
     AtX : (c r A A' : S) → Type (ℓ-suc ℓ)
     AtX c r A A' = Σ[ x ∈ S ] (⟨ fst x ∈ fst A' ⟩ × ∥ AtY c r A A' x ∥₁)
-
 ```
 
 <!--en-->
@@ -1376,7 +1337,6 @@ The inner conversion assembles one explicit `StepOf` witness from the recovered 
 
 ```agda
       map₁ (atY c r A A' x c∈ cmax hf qA qA' x∈) hy
-
 ```
 
 <!--en-->
@@ -1392,7 +1352,6 @@ After the stage at `c` has been recovered, the remaining inner quantifiers ident
     AtA' c r A = Σ[ A' ∈ S ]
       ( ⟨ (A' ∷ A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (sh4 b) ⟩
       × ∥ AtX c r A A' ∥₁ )
-
 ```
 
 <!--en-->
@@ -1424,7 +1383,6 @@ The stage graph supplies exactly that identification. Its functionality theorem 
       where
       qA' : fst A' ≡ Lset (fst (lookup b γ))
       qA' = Lset-only zero (sh4 b) (A' ∷ A ∷ r ∷ c ∷ γ) hg ob
-
 ```
 
 <!--en-->
@@ -1440,7 +1398,6 @@ One quantifier farther out, `AtA` performs the analogous task for the stage inde
     AtA c r = Σ[ A ∈ S ]
       ( ⟨ (A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
       × ∥ AtA' c r A ∥₁ )
-
 ```
 
 <!--en-->
@@ -1472,7 +1429,6 @@ Because `c` belongs to the ordinal denoted by `b`, `mem-ord` shows that `c` is i
       qA : fst A ≡ Lset (fst c)
       qA = Lset-only zero (suc (suc zero)) (A ∷ r ∷ c ∷ γ) hg
         (mem-ord {A = fst (lookup b γ)} ob (fst c) c∈)
-
 ```
 
 <!--en-->
@@ -1487,7 +1443,6 @@ The next outer witness is the relation stored by the approximation at `c`. `AtR`
     AtR : (c : S) → Type (ℓ-suc ℓ)
     AtR c = Σ[ r ∈ S ]
       ( ⟨ (r ∷ c ∷ γ) ⊨ appAt (sh2 f) (suc zero) zero ⟩ × ∥ AtA c r ∥₁ )
-
 ```
 
 <!--en-->
@@ -1516,7 +1471,6 @@ Concretely, the recovered fact is `pr (fst c) (fst r) ∈ fst (lookup f γ)`. Th
 
 ```agda
       hf = subst ⟨_⟩ (appAt-adequate (sh2 f) (suc zero) zero (r ∷ c ∷ γ)) happ
-
 ```
 
 <!--en-->
@@ -1564,7 +1518,6 @@ These nested interpretations provide the reading direction of the step body. For
 
   opaque
    unfolding RelBodyAt
-
 ```
 
 <!--en-->
@@ -1579,7 +1532,6 @@ Starting from satisfaction of `RelBodyAt`, the outer existential yields only the
    RelBody-out : ⟨ γ ⊨ RelBodyAt z b f ⟩
                → ∥ StepOf b f γ (fst (lookup z γ)) ∥₁
    RelBody-out = rec₁ squash₁ atC
-
 ```
 
 <!--en-->
@@ -1610,7 +1562,6 @@ The first reconstructed fact is that `c` is an ordinal. Every member of an ordin
      where
      oc : IsOrd (fst c)
      oc = mem-ord {A = fst (lookup b γ)} ob (fst c) c∈
-
 ```
 
 <!--en-->
@@ -1624,7 +1575,6 @@ Using this ordinalness, `LsetS` packages `Lset (fst c)` as an element `A` of the
 ```agda
      A : S
      A = LsetS (fst c) oc
-
 ```
 
 <!--en-->
@@ -1638,7 +1588,6 @@ The assumed ordinalness of the current index similarly packages `Lset (fst (look
 ```agda
      A' : S
      A' = LsetS (fst (lookup b γ)) ob
-
 ```
 
 <!--en-->
@@ -1652,7 +1601,6 @@ The semantic maximality function must next be expressed by the bounded universal
 ```agda
      hmax : ⟨ (c ∷ γ) ⊨ ∀̇∈ (var (suc b)) (¬̇ (var (suc zero) ∈̇ var zero)) ⟩
      hmax d hd hc = lift (cmax d hd hc)
-
 ```
 
 <!--en-->
@@ -1667,7 +1615,6 @@ The table entry in `StepOf` has the ambient form `pr (fst c) (fst r) ∈ fst (lo
      happ : ⟨ (r ∷ c ∷ γ) ⊨ appAt (sh2 f) (suc zero) zero ⟩
      happ = subst ⟨_⟩
        (sym (appAt-adequate (sh2 f) (suc zero) zero (r ∷ c ∷ γ))) hf
-
 ```
 
 <!--en-->
@@ -1681,7 +1628,6 @@ The chosen `A` is definitionally the stage at `c`. The presentation theorem for 
 ```agda
      hgA : ⟨ (A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (suc (suc zero)) ⟩
      hgA = Lset-defines zero (suc (suc zero)) (A ∷ r ∷ c ∷ γ) oc refl
-
 ```
 
 <!--en-->
@@ -1695,7 +1641,6 @@ The same presentation theorem proves the graph clause for `A'`, now at the curre
 ```agda
      hgA' : ⟨ (A' ∷ A ∷ r ∷ c ∷ γ) ⊨ LsetGraphAt zero (sh4 b) ⟩
      hgA' = Lset-defines zero (sh4 b) (A' ∷ A ∷ r ∷ c ∷ γ) ob refl
-
 ```
 
 <!--en-->
@@ -1711,7 +1656,6 @@ The equality in `StepOf` identifies the candidate value denoted by `z` with the 
      hpr = subst ⟨_⟩
        (sym (prAtL-adequate (sh6 z) (suc zero) zero
          (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ))) qpair
-
 ```
 
 <!--en-->
@@ -1726,7 +1670,6 @@ It remains to translate the predecessor-stage comparison. The instance of `Prece
      module P = Precedes (suc (suc (suc (suc zero)))) (suc (suc (suc zero)))
                          (suc zero) zero (y ∷ x ∷ A' ∷ A ∷ r ∷ c ∷ γ)
                          (Held r) (λ _ _ p → p) (λ _ _ p → p)
-
 ```
 
 <!--en-->
@@ -1743,6 +1686,9 @@ With that interpretation fixed, `PrecedesAt-in` converts the semantic earliest-d
                            (suc zero) zero ⟩
      hprec' = P.PrecedesAt-in hprec
 ```
+</div>
+</details>
+
 
 <!--en-->
 The body classifies a single candidate ordered pair. A relation value must collect exactly all such candidates, so the next construction takes the extensional closure of this one-step condition over an entire set.
@@ -1772,7 +1718,6 @@ The body classifies a single candidate ordered pair. A relation value must colle
 opaque
   RelStepAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   RelStepAt v b f = extAt v (RelBodyAt zero (suc b) (suc f))
-
 ```
 
 <!--en-->
@@ -1783,12 +1728,19 @@ The reading lemmas for this extensional description are valid whenever `fst (loo
 `fst (lookup b γ)` が順序数であれば、この外延的記述の読みが成り立つ。本体の論理式は、ステップの証人に現れる二つの構成可能段階を同定するためにこの仮定を使う。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n)
          (ob : IsOrd (fst (lookup b γ))) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   opaque
    unfolding RelStepAt
-
 ```
 
 <!--en-->
@@ -1804,7 +1756,6 @@ The forward inclusion takes a member `w` of the set denoted by `v`, reads the bo
                → ⟨ fst w ∈ fst (lookup v γ) ⟩ → ∥ StepOf b f γ (fst w) ∥₁
    RelStep-out h w hw = RelBody-out zero (suc b) (suc f) (w ∷ γ) ob
      (extAt-out v (RelBodyAt zero (suc b) (suc f)) γ h w hw)
-
 ```
 
 <!--en-->
@@ -1820,7 +1771,6 @@ The reverse inclusion starts with an explicit semantic step for `w`. `RelBody-in
                 → ⟨ fst w ∈ fst (lookup v γ) ⟩
    RelStep-back h w s = extAt-in v (RelBodyAt zero (suc b) (suc f)) γ h w
      (RelBody-in zero (suc b) (suc f) (w ∷ γ) ob s)
-
 ```
 
 <!--en-->
@@ -1854,6 +1804,9 @@ For the first inclusion, each truncated step is mapped through `RelBody-in` and 
      (λ w h → rec₁ (snd (fst w ∈ fst (lookup v γ))) (back w)
        (RelBody-out zero (suc b) (suc f) (w ∷ γ) ob h))
 ```
+</div>
+</details>
+
 
 <!--en-->
 This extensional step now instantiates the general recursion-shape construction. The resulting `ApproxAt` describes an initial-segment table whose domain and step clauses agree with `RelStepAt`, while `RelGraphAt` describes a value at the current index supported by such an approximation below it. The table becomes finite when that index is later identified with a numeral.
@@ -1913,7 +1866,6 @@ The formulas so far describe the shape of a recursion without yet identifying it
 Values : S → ℕ → Type (ℓ-suc ℓ)
 Values g k = (m : ℕ) → m < k → (w : S)
            → ⟨ pr (# m) (fst w) ∈ fst g ⟩ → fst w ≡ fst (relAt m)
-
 ```
 
 <!--en-->
@@ -1927,7 +1879,6 @@ Values g k = (m : ℕ) → m < k → (w : S)
 ```agda
 Entries : S → ℕ → Type (ℓ-suc ℓ)
 Entries g k = (m : ℕ) → m < k → ⟨ pr (# m) (fst (relAt m)) ∈ fst g ⟩
-
 ```
 
 <!--en-->
@@ -1942,7 +1893,6 @@ Any comparison `before k x y` forces `k` to be a successor. At zero the relation
 before-suc : (k : ℕ) (x y : V ℓ) → ⟨ before k x y ⟩ → Σ[ m ∈ ℕ ] (k ≡ suc m)
 before-suc zero    x y h = ⊥*-rec h
 before-suc (suc m) x y h = m , refl
-
 ```
 
 <!--en-->
@@ -1953,10 +1903,18 @@ Fix a candidate relation denoted by `v`, an index denoted by `b`, and a table de
 `v` が指す候補関係、`b` が指す添字、`f` が指す表を固定する。等式 `qb` は添字を数項 `# k` と同定し、`vals` と `ents` は表が `k` より下で正しく完全であることを主張する。これらの仮定のもとで、添字における意味論的ステップを `relAt k` への所属と正確に比較できる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (v b f : Fin n) (γ : S ^ n) (k : ℕ)
          (qb : fst (lookup b γ) ≡ # k)
          (vals : Values (lookup f γ) k) (ents : Entries (lookup f γ) k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     ob : IsOrd (fst (lookup b γ))
 ```
@@ -1971,7 +1929,6 @@ The numeral `# k` is an ordinal. Transporting this fact against `qb : fst (looku
 
 ```agda
     ob = subst IsOrd (sym qb) (numeral-ord k)
-
 ```
 
 <!--en-->
@@ -2051,7 +2008,6 @@ If instead `k < suc m`, removing the successors yields `k ≤ m`, which is incom
                   (#mono m (suc m) NatOrder.≤-refl))))
           decide (NatOrder.eq e) = sym e
           decide (NatOrder.gt hgt) = ⊥₀-rec (<-asym hm (pred-≤-pred hgt))
-
 ```
 
 <!--en-->
@@ -2065,7 +2021,6 @@ The step witness already places `xx` in `Lset (fst (lookup b γ))`. Transport al
 ```agda
         xxk : ⟨ fst xx ∈ finiteStage k ⟩
         xxk = subst (λ t → ⟨ fst xx ∈ Lset t ⟩) qb xx∈
-
 ```
 
 <!--en-->
@@ -2079,7 +2034,6 @@ Both endpoints of the pair must lie in the stage indexed by `k`. For the second 
 ```agda
         yyk : ⟨ fst yy ∈ finiteStage k ⟩
         yyk = subst (λ t → ⟨ fst yy ∈ Lset t ⟩) qb yy∈
-
 ```
 
 <!--en-->
@@ -2094,7 +2048,6 @@ The table entry indexed by the predecessor numeral records a relation `r`. After
         rval : fst r ≡ fst (relAt m)
         rval = vals m hm r
           (subst (λ t → ⟨ pr t (fst r) ∈ fst (lookup f γ) ⟩) qc hf)
-
 ```
 
 <!--en-->
@@ -2127,7 +2080,6 @@ To obtain the recursive comparison, `precedes-map` replaces the base relation `R
         below = subst (λ j → ⟨ before j (fst xx) (fst yy) ⟩) (sym ksuc)
           (precedes-map (Rel m) (before m) (finiteStage m) (fst xx) (fst yy)
             (λ w t hw ht hbf → relAt-fill m w t hw ht hbf) atM)
-
 ```
 
 <!--en-->
@@ -2157,7 +2109,6 @@ A proof of `before k` cannot exist when `k` is zero. The lemma `before-suc` ther
 ```agda
       m : ℕ
       m = before-suc k (fst xx) (fst yy) hbf .fst
-
 ```
 
 <!--en-->
@@ -2171,7 +2122,6 @@ The same successor analysis supplies the equation `k ≡ suc m`. This equation i
 ```agda
       qk : k ≡ suc m
       qk = before-suc k (fst xx) (fst yy) hbf .snd
-
 ```
 
 <!--en-->
@@ -2185,7 +2135,6 @@ Since `k` is `suc m`, the predecessor satisfies `m < k`. This bound permits the 
 ```agda
       hm : m < k
       hm = subst (λ j → m < j) (sym qk) NatOrder.≤-refl
-
 ```
 
 <!--en-->
@@ -2200,7 +2149,6 @@ The numeral representing the predecessor must be a member of the bound stored in
       c∈ : ⟨ fst (numS m) ∈ fst (lookup b γ) ⟩
       c∈ = subst (λ t → ⟨ fst (numS m) ∈ t ⟩) (sym qb)
         (subst (λ t → ⟨ t ∈ # k ⟩) (sym (numS-fst m)) (#mono m k hm))
-
 ```
 
 <!--en-->
@@ -2246,7 +2194,6 @@ The derivation of `m < j` uses the exact correspondence between membership of vo
 ```agda
             (subst (λ t → ⟨ t ∈ # j ⟩) (numS-fst m)
               (subst (λ t → ⟨ fst (numS m) ∈ t ⟩) qd hc))
-
 ```
 
 <!--en-->
@@ -2261,7 +2208,6 @@ Completeness `ents` supplies the standard table entry `(# m , relAt m)` because 
       hf : ⟨ pr (fst (numS m)) (fst (relAt m)) ∈ fst (lookup f γ) ⟩
       hf = subst (λ t → ⟨ pr t (fst (relAt m)) ∈ fst (lookup f γ) ⟩)
         (sym (numS-fst m)) (ents m hm)
-
 ```
 
 <!--en-->
@@ -2275,7 +2221,6 @@ The `RelOf k` record places the first endpoint in `finiteStage k`, which is `Lse
 ```agda
       xxb : ⟨ fst xx ∈ Lset (fst (lookup b γ)) ⟩
       xxb = subst (λ t → ⟨ fst xx ∈ Lset t ⟩) (sym qb) xx∈
-
 ```
 
 <!--en-->
@@ -2289,7 +2234,6 @@ The same transport places the second endpoint in the stage determined by the bou
 ```agda
       yyb : ⟨ fst yy ∈ Lset (fst (lookup b γ)) ⟩
       yyb = subst (λ t → ⟨ fst yy ∈ Lset t ⟩) (sym qb) yy∈
-
 ```
 
 <!--en-->
@@ -2319,7 +2263,6 @@ Here `precedes-map` uses `relAt-rep`, whose direction is from membership in `rel
 ```agda
           (λ w t hw ht hR → relAt-rep m w t hw ht hR)
           (subst (λ j → ⟨ before j (fst xx) (fst yy) ⟩) qk hbf))
-
 ```
 
 <!--en-->
@@ -2348,7 +2291,6 @@ The truncation may be eliminated here because membership in `relAt k` is a propo
 
 ```agda
       (RelStep-out v b f γ ob h x hx)
-
 ```
 
 <!--en-->
@@ -2364,7 +2306,6 @@ For the reverse membership implication, `relAt-out` gives a propositionally trun
     bwd x hx = rec₁ (snd (fst x ∈ fst (lookup v γ)))
       (λ ro → RelStep-back v b f γ ob h x (from (fst x) ro))
       (relAt-out k (fst x) hx)
-
 ```
 
 <!--en-->
@@ -2378,7 +2319,6 @@ For each constructible element, the two implications give an equivalence between
 ```agda
     pt : (x : S) → (fst x ∈ fst (lookup v γ)) ≡ (fst x ∈ fst (relAt k))
     pt x = ⇔toPath (fwd x) (bwd x)
-
 ```
 
 <!--en-->
@@ -2407,7 +2347,6 @@ The equality first transports a candidate member into `relAt k`. The outward rep
 
 ```agda
       (relAt-out k (fst w) (subst (λ t → ⟨ fst w ∈ t ⟩) q hw))
-
 ```
 
 <!--en-->
@@ -2422,6 +2361,9 @@ The second membership direction starts with an explicit `StepOf` witness. The ma
     backStep : (w : S) → StepOf b f γ (fst w) → ⟨ fst w ∈ fst (lookup v γ) ⟩
     backStep w st = subst (λ t → ⟨ fst w ∈ t ⟩) (sym q) (into (fst w) st)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Every value an approximation records
@@ -2492,7 +2434,6 @@ Within such a value branch, the numeral equation first normalizes the recorded p
     where
     p' : ⟨ pr (# j) (fst u) ∈ fst (lookup f γ) ⟩
     p' = subst (λ t → ⟨ pr t (fst u) ∈ fst (lookup f γ) ⟩) (numS-fst j) p
-
 ```
 
 <!--en-->
@@ -2503,9 +2444,17 @@ Fix an approximation whose bound is `# k`. The induction motive `Val m` says tha
 上界が `# k` である近似を固定する。帰納の動機 `Val m` は、`m < k` なら、キー `# m` に記録されたすべての構成可能な値 `w` の台集合が `relAt m` に等しいと述べる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (f a : Fin n) (γ : S ^ n) (k : ℕ)
          (qa : fst (lookup a γ) ≡ # k) (h : ⟨ γ ⊨ ApproxAt f a ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Val : ℕ → Type (ℓ-suc ℓ)
     Val m = (m < k) → (w : S) → ⟨ pr (# m) (fst w) ∈ fst (lookup f γ) ⟩
@@ -2521,7 +2470,6 @@ The motive quantifies over every possible recorded value rather than choosing on
 
 ```agda
           → fst w ≡ fst (relAt m)
-
 ```
 
 <!--en-->
@@ -2567,7 +2515,6 @@ For `j < m`, correctness is precisely the induction hypothesis at `j`. Its own b
 ```agda
       vals : Values (lookup (sh2 f) (w ∷ numS m ∷ γ)) m
       vals j hj u hu = IH j hj (<-trans hj hm) u hu
-
 ```
 
 <!--en-->
@@ -2582,7 +2529,6 @@ Completeness below `m` follows from `entryOf`. For each `j < m`, transitivity ag
       ents : Entries (lookup (sh2 f) (w ∷ numS m ∷ γ)) m
       ents j hj = entryOf f a γ k qa h j (<-trans hj hm)
         (λ u p → IH j hj (<-trans hj hm) u p)
-
 ```
 
 <!--en-->
@@ -2597,8 +2543,10 @@ Once correctness has been proved at every bounded index, `entryOf` immediately y
   approx-ent : (m : ℕ) → m < k
              → ⟨ pr (# m) (fst (relAt m)) ∈ fst (lookup f γ) ⟩
   approx-ent m hm = entryOf f a γ k qa h m hm (approx-val m hm)
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 The graph formula hides, under propositional truncation, an approximation up to `k` together with a final step. The lemma `rel-only` eliminates that truncation into an equality of sets, which is a proposition, and asserts that the value stored in `v` must be `relAt k`.
@@ -2608,9 +2556,17 @@ The graph formula hides, under propositional truncation, an approximation up to 
 グラフ論理式は、`k` までの近似と最後のステップを命題的切り詰めのもとに隠している。補題 `rel-only` は、その切り詰めを命題である集合の等式へ除去し、`v` に保存された値が `relAt k` でなければならないことを述べる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (v b : Fin n) (γ : S ^ n) (k : ℕ)
          (qb : fst (lookup b γ) ≡ # k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   rel-only : ⟨ γ ⊨ RelGraphAt v b ⟩ → fst (lookup v γ) ≡ fst (relAt k)
   rel-only h = rec₁ (setIsSet (fst (lookup v γ)) (fst (relAt k))) read
     (RelGraph-out v b γ h)
@@ -2644,6 +2600,9 @@ The other input to `step-rel` is completeness of that same approximation below `
         (λ m hm → approx-ent zero (suc b) (g ∷ γ) k qb ha m hm)
         hs
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The approximation, exhibited
@@ -2682,7 +2641,6 @@ Each `g x` already belongs to the constructible stage at which it is born. The b
   mem : (x : X) → ⟨ fst (g x) ∈ Lset (bd .fst) ⟩
   mem x = Lset-mono {α = bd .fst} {β = stage (fst (g x)) (g x .snd)}
     (bd .snd .snd x) (stage-mem (fst (g x)) (g x .snd))
-
 ```
 
 <!--en-->
@@ -2697,7 +2655,6 @@ For a fixed bound `k`, the finite index type `Fin k` enumerates exactly the smal
 private
   famOf : (k : ℕ) → Fin k → S
   famOf k i = prS (numS (toℕ i)) (relAt (toℕ i))
-
 ```
 
 <!--en-->
@@ -2712,7 +2669,6 @@ The lifted copy of `Fin k` places this finite index type in the universe expecte
   famBnd : (k : ℕ) → Σ[ σ ∈ V ℓ ] (IsOrd σ
          × ((i : Lift {ℓ-zero} {ℓ} (Fin k)) → ⟨ fst (famOf k (lower i)) ∈ Lset σ ⟩))
   famBnd k = smallStage (Lift {ℓ-zero} {ℓ} (Fin k)) (λ i → famOf k (lower i))
-
 ```
 
 <!--en-->
@@ -2728,7 +2684,6 @@ The underlying set of `famOf k i` is the whole ordered pair, not merely its firs
         → fst (famOf k i) ≡ pr (# (toℕ i)) (fst (relAt (toℕ i)))
   famEq k i = prS-fst (numS (toℕ i)) (relAt (toℕ i))
             ∙ cong (λ t → pr t (fst (relAt (toℕ i)))) (numS-fst (toℕ i))
-
 ```
 
 <!--en-->
@@ -2759,7 +2714,6 @@ The projection equation exposes the underlying set of `approxSet k` as exactly t
 
   approxSet-fst : (k : ℕ) → fst (approxSet k) ≡ finSet k (λ i → fst (famOf k i))
   approxSet-fst k = refl
-
 ```
 
 <!--en-->
@@ -2854,7 +2808,6 @@ Injectivity of ordered pairing separates the equality into its two components. I
 ```agda
   named (j , (hj , q)) = pr-inj q .snd
     ∙ cong (λ i → fst (relAt i)) (sym (#-inj′ (pr-inj q .fst)))
-
 ```
 
 <!--en-->
@@ -2868,7 +2821,6 @@ The complementary property is entry completeness: for every `m < k`, the standar
 ```agda
 approxEnts : (k : ℕ) → Entries (approxSet k) k
 approxEnts k m hm = approx-mem-in k m hm
-
 ```
 
 <!--en-->
@@ -2879,10 +2831,18 @@ Fix an environment in which `f` denotes `approxSet k` and `a` denotes the numera
 `f` が `approxSet k` を、`a` が数項 `# k` を表す環境を固定する。残る課題は、この具体的な有限表が抽象的な近似の論理式を満たすことの確認である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (k : ℕ) {n : ℕ} (f a : Fin n) (γ : S ^ n)
          (qf : fst (lookup f γ) ≡ fst (approxSet k))
          (qa : fst (lookup a γ) ≡ # k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     onDom : (x : S)
 ```
@@ -2961,7 +2921,6 @@ Numeral monotonicity turns `j < k` into `# j ∈ # k`. Transport along the first
 
 ```agda
             (subst (λ t → ⟨ t ∈ # k ⟩) (sym (pr-inj q .fst)) (#mono j k hj))
-
 ```
 
 <!--en-->
@@ -3006,7 +2965,6 @@ The final transport replaces the decoded numeral `# j` by the original first com
 
 ```agda
                 (sym q) (approx-mem-in k j hj))
-
 ```
 
 <!--en-->
@@ -3068,7 +3026,6 @@ The first component of the pair equality identifies the argument with `# j`, whi
 ```agda
             (approxEnts k i (<-trans hi hj)))
           (pr-inj q .snd)
-
 ```
 
 <!--en-->
@@ -3082,8 +3039,10 @@ The concrete finite table now satisfies `ApproxAt`: `onDom` proves that its doma
 ```agda
   approxSet-approx : ⟨ γ ⊨ ApproxAt f a ⟩
   approxSet-approx = ApproxAt-in f a γ (domAt-intro f a γ onDom) onStep
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 Consequently, `relAt k` satisfies the recursion graph at the numeral `# k`, provided the environment components denoting the index and candidate value are identified with `# k` and `relAt k`. The finite witness for the existential approximation is `approxSet k`.
@@ -3194,7 +3153,6 @@ The numeral decoder gives its equality in the opposite orientation. Reversing it
         where
         qc : fst c ≡ # (lower j)
         qc = sym qj
-
 ```
 
 <!--en-->
@@ -3224,7 +3182,6 @@ The graph assertion is instantiated at index `j`: the component representing the
 ```agda
             (relAt (lower j) ∷ prS c (relAt (lower j)) ∷ c ∷ [])
             (lower j) qc refl)
-
 ```
 
 <!--en-->
@@ -3269,7 +3226,6 @@ The final equality compares the underlying ordered pair with the packaged constr
 
 ```agda
             ∙ sym (prS-fst c (relAt (lower j))) )
-
 ```
 
 <!--en-->
@@ -3283,7 +3239,6 @@ Replacement over `ωʟ` now yields a contractible type of constructible sets who
 ```agda
     r : isContr (SetOf (λ y → ∃[ c ∶ S ] (c ∈ˢ ωʟ) ⊓ ((y ∷ c ∷ []) ⊨ φ)))
     r = hasReplacementL ωʟ φ fc
-
 ```
 
 <!--en-->
@@ -3314,7 +3269,6 @@ The required transport equation unfolds only the packaging: the underlying set o
       qe : fst (prS (numS k) (relAt k)) ≡ pr (# k) (fst (relAt k))
       qe = prS-fst (numS k) (relAt k)
          ∙ cong (λ t → pr t (fst (relAt k))) (numS-fst k)
-
 ```
 
 <!--en-->
@@ -3328,7 +3282,6 @@ The witness `numS k` lies in the internal natural numbers because its underlying
 ```agda
       inω : ⟨ numS k ∈ˢ ωʟ ⟩
       inω = subst (λ t → ⟨ t ∈ ω ⟩) (sym (numS-fst k)) (#∈ω k)
-
 ```
 
 <!--en-->
@@ -3357,7 +3310,6 @@ The graph theorem is instantiated directly at `k`. The equation `numS-fst k` ide
 
 ```agda
           (relAt k ∷ prS (numS k) (relAt k) ∷ numS k ∷ []) k (numS-fst k) refl)
-
 ```
 
 <!--en-->
@@ -3435,7 +3387,6 @@ The needed index equation follows from the first component of the same pair equa
 ```agda
           qd : fst d ≡ # k
           qd = sym (pr-inj q' .fst) ∙ qc
-
 ```
 
 <!--en-->
@@ -3450,7 +3401,6 @@ The constructible set selected by `famBuild` for the actual paired recursion gra
 opaque
   beforeFam : S
   beforeFam = famBuild (PairRelGraphAt zero (suc zero)) refl .fst
-
 ```
 
 <!--en-->
@@ -3464,7 +3414,6 @@ For each natural number `k`, the internal graph `beforeFam` contains the ordered
 ```agda
   beforeFam-in : (k : ℕ) → ⟨ pr (# k) (fst (relAt k)) ∈ fst beforeFam ⟩
   beforeFam-in = famBuild (PairRelGraphAt zero (suc zero)) refl .snd .fst
-
 ```
 
 <!--en-->
@@ -3503,7 +3452,6 @@ opaque
   BeforeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
   BeforeAt b x y =
     ∃̇ ( appC beforeFam (suc b) zero ∧̇ appAt zero (suc x) (suc y) )
-
 ```
 
 <!--en-->
@@ -3514,11 +3462,19 @@ Fix an environment and a natural number `m`. The equation for `b` says that its 
 環境と自然数 `m` を固定する。`b` についての等式は、その値が数項 `# m` であることを述べ、二つの所属の仮定は `x` と `y` が指す値を `finiteStage m` に置く。これらの仮定によって三つの変数が一つの有限段階での比較に結びつき、妥当性定理はこの制限された文脈でのみ述べられる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {n : ℕ} (b x y : Fin n) (γ : S ^ n) (m : ℕ)
          (qb : fst (lookup b γ) ≡ # m)
          (hx : ⟨ fst (lookup x γ) ∈ finiteStage m ⟩)
          (hy : ⟨ fst (lookup y γ) ∈ finiteStage m ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
 ```
 
@@ -3533,7 +3489,6 @@ The semantic target is the meta-level proposition that the value denoted by `x` 
 ```agda
     Goal : Type (ℓ-suc ℓ)
     Goal = ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
-
 ```
 
 <!--en-->
@@ -3549,7 +3504,6 @@ To read a satisfying assignment, temporarily expose the data hidden by the exist
     AtR = Σ[ r ∈ S ]
       ( ⟨ (r ∷ γ) ⊨ appC beforeFam (suc b) zero ⟩
       × ⟨ (r ∷ γ) ⊨ appAt zero (suc x) (suc y) ⟩ )
-
 ```
 
 <!--en-->
@@ -3580,7 +3534,6 @@ The first application fact says internally that `beforeFam` takes the value `r` 
       where
       hf : ⟨ pr (fst (lookup b γ)) (fst r) ∈ fst beforeFam ⟩
       hf = subst ⟨_⟩ (appC-adequate beforeFam (suc b) zero (r ∷ γ)) happ
-
 ```
 
 <!--en-->
@@ -3594,7 +3547,6 @@ Because the entry at `b` is known to equal `# m`, the backward family law now id
 ```agda
       qr : fst r ≡ fst (relAt m)
       qr = beforeFam-out (lookup b γ) r m qb hf
-
 ```
 
 <!--en-->
@@ -3608,7 +3560,6 @@ We can now prove the two directions of the exact semantic correspondence. Unfold
 ```agda
   opaque
     unfolding BeforeAt
-
 ```
 
 <!--en-->
@@ -3624,7 +3575,6 @@ For the outward direction, satisfaction of the existential gives only a proposit
                  → ⟨ before m (fst (lookup x γ)) (fst (lookup y γ)) ⟩
     BeforeAt-out h =
       rec₁ (snd (before m (fst (lookup x γ)) (fst (lookup y γ)))) atR h
-
 ```
 
 <!--en-->
@@ -3656,7 +3606,6 @@ The family application follows from the known entry `(# m, relAt m)` in `beforeF
         (sym (appC-adequate beforeFam (suc b) zero (relAt m ∷ γ)))
         (subst (λ t → ⟨ pr t (fst (relAt m)) ∈ fst beforeFam ⟩) (sym qb)
           (beforeFam-in m))
-
 ```
 
 <!--en-->
@@ -3673,6 +3622,9 @@ The second application fact comes from `relAt-fill`: the two stage-membership hy
         (sym (appAt-adequate zero (suc x) (suc y) (relAt m ∷ γ)))
         (relAt-fill m (fst (lookup x γ)) (fst (lookup y γ)) hx hy h)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The frame, discharged
@@ -3693,7 +3645,6 @@ The two adequacy directions make `BeforeAt` an admissible input to the earlier `
 ```agda
 private
   module CodeOrder = Described BeforeAt BeforeAt-in BeforeAt-out
-
 ```
 
 <!--en-->

@@ -8,7 +8,6 @@ The later condensation argument must transport the assertion that a set is the c
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -23,7 +22,6 @@ The construction is classical only through one fixed instance of excluded middle
 open import Base.Prelude
 open import Cubical.Data.FinData using ( weakenFin )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -36,7 +34,6 @@ Fix a universe level `ℓ` and excluded middle for propositions at level `ℓ-su
 
 ```agda
 module L.GCH.HierarchyDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -145,7 +142,6 @@ Completeness needs one common stage containing every auxiliary witness. If `γ` 
 
 ```agda
 open import L.GCH.AdequateStages {ℓ} lem using ( Adequate; module Adequate; module At; Lset∈suc )
-
 ```
 
 <!--en-->
@@ -156,8 +152,7 @@ An environment is a finite vector of constructible sets. Introducing a bounded w
 環境は構成可能集合からなる有限ベクトルである。有界な証人を導入すると、それは先頭に置かれ、以前の各スロットは一つずつ後ろへずれる。有限添字がこのずれを明示する。この管理によって、同じ段階、表、上界の名前を、入れ子になった複数の量化子の中でも保つことができる。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Existential satisfaction retains only propositional truncation: it records that suitable data exist and forgets which data were used. Every later elimination therefore targets a proposition. In particular, membership is proposition-valued and equality of cumulative-hierarchy sets is a proposition, so the two conclusions needed in the proof are legitimate targets.
@@ -183,7 +178,6 @@ The ten finite tags are represented by the von Neumann numerals inside the hiera
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( ∅; ∅-empty; module InfinitySet )
 open InfinitySet {ℓ} using ( #_; sucV; ω )
-
 ```
 
 <!--en-->
@@ -196,7 +190,6 @@ Write `S` for the carrier of the constructible model. Its elements present ambie
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -226,7 +219,6 @@ defIn : ∀ {k} → Fin k → Fin k → (Fin 10 → Fin k) → Formula S (4 + k)
 defIn w z N body =
   ∃̇∈ (var z) (∃̇∈ (var (sh 1 z)) (∃̇∈ (var (sh 2 z)) (∃̇∈ (var (sh 3 z))
     (satAt i3 (sh 4 w) i2 i1 (shN 4 N) ∧̇ (defAt i0 (sh 4 w) i3 i2 (shN 4 N) ∧̇ body)))))
-
 ```
 
 <!--en-->
@@ -257,7 +249,6 @@ overAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) 
 overAt v b f z N =
   ∀̇∈ (var b) (∀̇∈ (var (sh 1 f))
     (sndAll i0 i1 (defIn i0 (sh 4 z) (shN 4 N) (∀̇∈ (var i0) (var i0 ∈̇ var (sh 9 v))))))
-
 ```
 
 <!--en-->
@@ -271,7 +262,6 @@ The conjunction `stepAt` combines the two inclusions. Relative to the pair rows 
 ```agda
 stepAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 stepAt v b f z N = intoAt v b f z N ∧̇ overAt v b f z N
-
 ```
 
 <!--en-->
@@ -287,7 +277,6 @@ approxAt : ∀ {m} → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Form
 approxAt f b z N =
     ∀̇∈ (var b) (∃̇∈ (var (sh 1 f)) (sndEx i0 i1 ⊤̇))
   ∧̇ ∀̇∈ (var f) (bothAll i0 (stepAt i0 i1 (sh 4 f) (sh 4 z) (shN 4 N)))
-
 ```
 
 <!--en-->
@@ -302,7 +291,6 @@ The clause `hierAt a p f z N` joins an approximation below `p` to one final step
 
 hierAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 hierAt a p f z N = approxAt f p z N ∧̇ stepAt a p f z N
-
 ```
 
 <!--en-->
@@ -331,7 +319,6 @@ The remaining nine slots are linked by nine successor assertions, so the ten slo
 
 ```agda
   ∧̇ ( sucAtL (N f6) (N f7) ∧̇ ( sucAtL (N f7) (N f8) ∧̇ sucAtL (N f8) (N f9) ))))))))
-
 ```
 
 <!--en-->
@@ -350,10 +337,16 @@ To use the ten tags in later descriptions, their object-language pinning must ag
 後の記述で十個のタグを使うには、対象言語での固定条件が意味論的な記録 `Tags γ N` と一致しなければならない。次の二つの補題が両方向を示す。一方は `pins` から数項の等式を読み、もう一方はその等式から `pins` を再構成する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PinsRead {m : ℕ} (N : Fin 10 → Fin m) (γ : S ^ m) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Reading the tag clause first shows that the first slot is empty: it has no members.
@@ -382,7 +375,6 @@ Emptiness is an extensionality argument in both directions: any member of the fi
 ```agda
       (λ y∈ → ⊥*-rec (h0 (down (lookup (N f0) γ) y y∈) y∈))
       (λ y∈ → ⊥₀-rec (∅-empty y (∈∈ₛ {a = y} {b = ∅} .fst y∈))))
-
 ```
 
 <!--en-->
@@ -397,7 +389,6 @@ The auxiliary lemma `up` advances one link of the numeral chain. If slot `i` den
     up : (i j : Fin m) (k : ℕ) → ⟨ γ ⊨ sucAtL i j ⟩ → fst (lookup i γ) ≡ # k
        → fst (lookup j γ) ≡ # (suc k)
     up i j k h q = suc-out i j γ h ∙ cong sucV q
-
 ```
 
 <!--en-->
@@ -429,7 +420,6 @@ The remaining four successor clauses continue the same chain, producing `q6` thr
     q7 = up (N f6) (N f7) 6 (hs .snd .snd .snd .snd .snd .snd .fst) q6
     q8 = up (N f7) (N f8) 7 (hs .snd .snd .snd .snd .snd .snd .snd .fst) q7
     q9 = up (N f8) (N f9) 8 (hs .snd .snd .snd .snd .snd .snd .snd .snd) q8
-
 ```
 
 <!--en-->
@@ -474,7 +464,6 @@ The sole remaining case of `Fin 10` is the ninth successor of zero, and it retur
 
 ```agda
     go (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = q9
-
 ```
 
 <!--en-->
@@ -507,6 +496,9 @@ Each successor clause is reconstructed by applying the inward successor reader a
     st : (j k : Fin 10) → # (toℕ k) ≡ sucV (# (toℕ j)) → ⟨ γ ⊨ sucAtL (N j) (N k) ⟩
     st j k e = suc-in (N j) (N k) γ (tg k ∙ e ∙ cong sucV (sym (tg j)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 Fix an environment `δ` whose ten named slots have the required numeral values. Let `Wv` be the underlying set at `w` and `Zv` the underlying set at `z`. The first is the stage over which definability is interpreted, and the second is the common bound in which the four witnesses must lie.
@@ -516,9 +508,17 @@ Fix an environment `δ` whose ten named slots have the required numeral values. 
 十個の名前付きスロットが必要な数項の値をもつ環境 `δ` を固定する。`w` にある底集合を `Wv`、`z` にある底集合を `Zv` とする。前者は定義可能性を解釈する段階であり、後者は四つの証人を含まなければならない共通の上界である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module DefInRead {k : ℕ} (w z : Fin k) (N : Fin 10 → Fin k) (body : Formula S (4 + k))
   (δ : S ^ k) (tg : Tags δ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Wv = fst (lookup w δ)
     Zv = fst (lookup z δ)
@@ -536,7 +536,6 @@ The four witnesses are bound successively as `T`, `C`, `E`, and `d`. Since each 
 
   δ4 : (T C E d : S) → S ^ (4 + k)
   δ4 T C E d = d ∷ E ∷ C ∷ T ∷ δ
-
 ```
 
 <!--en-->
@@ -567,7 +566,6 @@ After the four nested truncations have exposed the witnesses, `def-sound` combin
       T , C , E , d , ( d∈ , ( def-sound i0 (sh 4 w) i3 i2 i1 (shN 4 N) (δ4 T C E d) (lookup w δ) refl tg hs hd
                              , hb )) })
       h3 }) h2 }) h1 })
-
 ```
 
 <!--en-->
@@ -601,6 +599,9 @@ For the inward reading, `sat-complete` first proves that the genuine satisfactio
     hs : ⟨ δ4 T C E d ⊨ satAt i3 (sh 4 w) i2 i1 (shN 4 N) ⟩
     hs = sat-complete i3 (sh 4 w) i2 i1 (shN 4 N) (δ4 T C E d) W qw qT qC qE tg
 ```
+</div>
+</details>
+
 
 <!--en-->
 The predicate `Supply` says that, for an ordinal `c`, all four witnesses needed by `defIn` already lie inside the common bound: the satisfaction graph, code set, and environment tower of the stage `Lset c`, together with the next stage `Lset (sucV c)`.
@@ -638,8 +639,16 @@ Now fix one proposed hierarchy step in an environment `γ`. Write `Vv` for the p
 環境 `γ` における一つの候補となる階層の段階を固定する。候補の結果を `Vv`、それ以前の添字の集合を `Bv`、候補表の底集合を `Fv` と書く。問うのは、`Fv` の関係する行が正しく、かつ存在すると分かったとき、二つの有界な包含から `Vv = Lset Bv` が強制されるかどうかである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module StepRead {m : ℕ} (v b f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Vv = fst (lookup v γ)
     Bv = fst (lookup b γ)
@@ -656,7 +665,6 @@ Let `Zv` denote the underlying common bound. It controls where the auxiliary sat
 
 ```agda
     Zv = fst (lookup z γ)
-
 ```
 
 <!--en-->
@@ -670,7 +678,6 @@ In the inward body, `d` is the definable power set recognized by `defIn`, and `x
 ```agda
     intoBody : Formula S (5 + m)
     intoBody = defIn i0 (sh 5 z) (shN 5 N) (var i8 ∈̇ var i0)
-
 ```
 
 <!--en-->
@@ -684,7 +691,6 @@ The `over` body is a definable-power-set description whose inner formula says th
 ```agda
     overBody : Formula S (4 + m)
     overBody = defIn i0 (sh 4 z) (shN 4 N) (∀̇∈ (var i0) (var i0 ∈̇ var (sh 9 v)))
-
 ```
 
 <!--en-->
@@ -746,7 +752,6 @@ The proof begins with an ambient member `x ∈ Vv`, but the formula is interpret
 ```agda
       xS : S
       xS = down (lookup v γ) x x∈
-
 ```
 
 <!--en-->
@@ -808,7 +813,6 @@ The value `w` of the row is read from the pair presentation, and is the componen
 ```agda
         w : S
         w = sndS q δ (Lset δ) refl
-
 ```
 
 <!--en-->
@@ -903,7 +907,6 @@ The four bounded objects are the genuine satisfaction table, code set, environme
                (SatGraph.pairs w) (AllCodes w) (Tower.tower w) (LsetS (sucV δ) (suc-ord oδ))
                (s .fst) (s .snd .fst) (s .snd .snd .fst) (s .snd .snd .snd) refl refl refl (Lset-suc δ)
                (subst (λ u → ⟨ fst x ∈ u ⟩) (sym (Lset-suc δ)) xD)
-
 ```
 
 <!--en-->
@@ -953,6 +956,9 @@ The supply at `c` bounds the genuine satisfaction table, code set, environment t
            (λ y y∈d → subst (λ u → ⟨ fst y ∈ u ⟩) (sym vq)
              (Lset-in Bv (fst c) (fst y) c∈ (subst (λ u → ⟨ fst y ∈ u ⟩) (Lset-suc (fst c)) y∈d))))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The approximation reader is parameterized by the table, the bound, the witness bound, the tag map and the environment. The three underlying sets are named once.
@@ -962,8 +968,16 @@ The approximation reader is parameterized by the table, the bound, the witness b
 近似の読み手は、表・界・証人の界・タグの対応・環境をパラメータとする。三つの基礎の集合が一度だけ名づけられる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module ApproxRead {m : ℕ} (f b z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Fv = fst (lookup f γ)
     Bv = fst (lookup b γ)
@@ -982,7 +996,6 @@ The step body is the step clause at the four shifted slots.
 
     stepBody : Formula S (4 + m)
     stepBody = stepAt i0 i1 (sh 4 f) (sh 4 z) (shN 4 N)
-
 ```
 
 <!--en-->
@@ -1080,7 +1093,6 @@ Completeness at smaller arguments is recovered by the same restriction: for each
       ents' y y∈ = rec₁ (snd (pr (fst y) (Lset (fst y)) ∈ Fv))
         (λ { (w' , rec') → subst (λ u → ⟨ pr (fst y) u ∈ Fv ⟩) (IH (fst y) y∈ (in' y y∈) w' rec') rec' })
         (entryOf y (in' y y∈))
-
 ```
 
 <!--en-->
@@ -1094,7 +1106,6 @@ Correctness below `Bv` is obtained by ambient membership induction on the underl
 ```agda
     vals : Values (lookup f γ) Bv
     vals c w c∈ rec = ∈-induction {P = P} step (fst c) c∈ w rec
-
 ```
 
 <!--en-->
@@ -1110,7 +1121,6 @@ Completeness at the bound composes the truncated entry with the correctness just
     ents c c∈ = rec₁ (snd (pr (fst c) (Lset (fst c)) ∈ Fv))
       (λ { (w , rec) → subst (λ u → ⟨ pr (fst c) u ∈ Fv ⟩) (vals c w c∈ rec) rec })
       (entryOf c c∈)
-
 ```
 
 <!--en-->
@@ -1140,7 +1150,6 @@ The outward reading of the hierarchy specification says that every recorded pair
 ```agda
     hout : (c w : S) → ⟨ pr (fst c) (fst w) ∈ Fv ⟩ → ⟨ fst c ∈ Bv ⟩ × (fst w ≡ Lset (fst c))
     hout = hier-out Bv ob (lookup f γ) sp
-
 ```
 
 <!--en-->
@@ -1154,7 +1163,6 @@ The inward reading says that every canonical pair below the bound is recorded.
 ```agda
     hin : (c : S) → ⟨ fst c ∈ Bv ⟩ → ⟨ pr (fst c) (Lset (fst c)) ∈ Fv ⟩
     hin = hier-in Bv ob (lookup f γ) sp
-
 ```
 
 <!--en-->
@@ -1184,7 +1192,6 @@ The canonical pair is presented by descending along its membership proof into th
 ```agda
       q : S
       q = down (lookup f γ) (pr (fst c) (Lset (fst c))) (hin c c∈)
-
 ```
 
 <!--en-->
@@ -1231,6 +1238,9 @@ Below the current argument `c`, completeness comes from `hier-in`: transitivity 
            (λ d d∈ → hin d (ob .fst {x = fst c} {y = fst d} d∈ c∈))
            (λ d od d∈ → sup d od (ob .fst {x = fst c} {y = d} d∈ c∈)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The hierarchy reading has four distinguished slots: the proposed stage `a`, its stage index `p`, the approximation table `f`, and the common witness bound `z`. The tag map interprets the ten numeral positions used by the coding formulas, and the environment supplies carrier elements for all these slots.
@@ -1240,8 +1250,16 @@ The hierarchy reading has four distinguished slots: the proposed stage `a`, its 
 階層の読みには四つの特別な枠がある。候補の段階 `a`、その段階の添字 `p`、近似表 `f`、そして共通の証人の界 `z` である。タグの写像は符号化の論理式が使う十個の数項の位置を解釈し、環境はこれらすべての枠に台の要素を与える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module HierRead {m : ℕ} (a p f z : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Av = fst (lookup a γ)
     Pv = fst (lookup p γ)
@@ -1262,7 +1280,6 @@ The soundness theorem for the hierarchy formula says: if the formula holds and t
   hier-sound (ha , hs) op = StepRead.step-out a p f z N γ tg hs (ve .fst) (ve .snd)
     where
     ve = ApproxRead.approx-out f p z N γ tg ha op
-
 ```
 
 <!--en-->
@@ -1294,6 +1311,9 @@ The proof composes the inward approximation from the hierarchy specification wit
         (λ c w c∈ rec → hier-out Pv op (lookup f γ) sp c w rec .snd)
         (hier-in Pv op (lookup f γ) sp) sup
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Reading approximations and the completed hierarchy
@@ -1311,10 +1331,16 @@ The inner module seals the formula that will ultimately express the constructibl
 内部のモジュールは、対象言語の中で構成可能階層を最終的に表す論理式を封印する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Inner where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The fourteen-slot environment begins with the ten numeral tags. Repeated `weakenFin` embeds each of their indices into `Fin 14` without changing its numerical position, so `N14` occupies slots zero through nine. This agrees with the concrete environment used later, whose first ten entries are the von Neumann numerals.
@@ -1327,7 +1353,6 @@ The fourteen-slot environment begins with the ten numeral tags. Repeated `weaken
 ```agda
   N14 : Fin 10 → Fin 14
   N14 k = weakenFin (weakenFin (weakenFin (weakenFin k)))
-
 ```
 
 <!--en-->
@@ -1358,7 +1383,6 @@ The inner formula conjoins two mathematical requirements. `pins N14` fixes the f
   opaque
     inner : Formula S 14
     inner = pins N14 ∧̇ hierAt aa pp ff zz N14
-
 ```
 
 <!--en-->
@@ -1372,7 +1396,6 @@ To prove boundedness, the checker may unfold `inner` together with the sealed de
 ```agda
   opaque
     unfolding inner satAt defAt
-
 ```
 
 <!--en-->
@@ -1386,7 +1409,6 @@ After the scoped unfolding, `checkΔ₀ inner _` supplies the structural `Δ₀`
 ```agda
     Δ₀-inner : Δ₀ inner
     Δ₀-inner = checkΔ₀ inner tt
-
 ```
 
 <!--en-->
@@ -1400,7 +1422,6 @@ The readings of the sealed formula are exposed through the same unfolding bounda
 ```agda
   opaque
     unfolding inner
-
 ```
 
 <!--en-->
@@ -1414,7 +1435,6 @@ The outward reading of the conjunction is the pair of its two conjuncts, since c
 ```agda
     inner-out : (γ : S ^ 14) → ⟨ γ ⊨ inner ⟩ → ⟨ γ ⊨ pins N14 ⟩ × ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩
     inner-out γ h = h
-
 ```
 
 <!--en-->
@@ -1428,7 +1448,6 @@ Conversely, proofs of the pin clauses and of the hierarchy clause form the two c
 ```agda
     inner-in : (γ : S ^ 14) → ⟨ γ ⊨ pins N14 ⟩ → ⟨ γ ⊨ hierAt aa pp ff zz N14 ⟩ → ⟨ γ ⊨ inner ⟩
     inner-in γ h1 h2 = h1 , h2
-
 ```
 
 <!--en-->
@@ -1456,7 +1475,6 @@ The operation `wrap` existentially binds the front witness position of its body 
 ```agda
   wrap : {n : ℕ} → Formula S (suc (suc n)) → Formula S (suc n)
   wrap {n} φ = ∃̇∈ (var (lastFin {n})) φ
-
 ```
 
 <!--en-->
@@ -1470,7 +1488,6 @@ The Δ₀ witness is preserved under wrapping, because bounded existential quant
 ```agda
   δ-wrap : {n : ℕ} {φ : Formula S (suc (suc n))} → Δ₀ φ → Δ₀ (wrap {n} φ)
   δ-wrap d = δ-∃∈ d
-
 ```
 
 <!--en-->
@@ -1516,7 +1533,6 @@ The eleventh wrap existentially binds the remaining auxiliary slot, the hierarch
 ```agda
   three : Formula S 3
   three = wrap {2} s4
-
 ```
 
 <!--en-->
@@ -1532,7 +1548,6 @@ The witness formula is wrapped eleven times, once per bounded existential introd
   Δ₀-three =
     δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap (δ-wrap
       (δ-wrap (δ-wrap (δ-wrap (δ-wrap Δ₀-inner))))))))))
-
 ```
 
 <!--en-->
@@ -1546,7 +1561,6 @@ To verify that the wrapped formula contains no constants, the calculation may lo
 ```agda
   opaque
     unfolding inner satAt defAt
-
 ```
 
 <!--en-->
@@ -1560,7 +1574,6 @@ The constant-occurrence count of `three` is zero. Its three remaining positions 
 ```agda
     count-three : countFo three ≡ 0
     count-three = refl
-
 ```
 
 <!--en-->
@@ -1574,7 +1587,6 @@ Since `three` contains no constants, erasure changes its constant domain from th
 ```agda
   erased : Formula (⊥* {ℓ-suc ℓ}) 3
   erased = Cnt.erase three count-three
-
 ```
 
 <!--en-->
@@ -1603,7 +1615,6 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
          → ((x : S) → ⟨ fst x ∈ fst (lookup (lastFin {n}) γ) ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ P ⟩)
          → ⟨ γ ⊨ wrap {n} φ ⟩ → ⟨ P ⟩
   unwrap φ γ {P} k h = rec₁ (snd P) (λ { (x , xz , hx) → k x xz hx }) h
-
 ```
 
 <!--en-->
@@ -1619,6 +1630,9 @@ Semantically, one wrapped layer is a propositionally truncated bounded witness. 
           → ⟨ fst x ∈ fst (lookup (lastFin {n}) γ) ⟩ → ⟨ (x ∷ γ) ⊨ φ ⟩ → ⟨ γ ⊨ wrap {n} φ ⟩
   wrap-in φ γ x m h = ∣ x , (m , h) ∣₁
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## A parameter-free formula for constructible levels
@@ -1639,7 +1653,6 @@ The visible formula `levelFo` has three free positions `(a,p,z)`. It conjoins th
 ```agda
 levelFo : Formula (⊥* {ℓ-suc ℓ}) 3
 levelFo = isOrd-at-p ∧̇ Inner.erased
-
 ```
 
 <!--en-->
@@ -1682,7 +1695,6 @@ The final equality in this path concerns the interpretation of constants. Becaus
 ```agda
   ∙ cong (λ ι → SemVᵃ.At._⊨_ (⊥* {ℓ-suc ℓ}) ι (map fst δ) φ)
          (funExt (λ b → ⊥*-rec b))
-
 ```
 
 <!--en-->
@@ -1711,7 +1723,6 @@ For the second ordinality clause, take `x ∈ p`, `y ∈ x`, and `u ∈ y`. Lowe
 
 ```agda
           (down (down (down p x x∈p) y y∈x) u u∈y) u∈y )
-
 ```
 
 <!--en-->
@@ -1739,9 +1750,18 @@ The soundness argument now works inside the fourteen-slot reading of the hidden 
 
 ```agda
 private
-  module Sound where
-    open Inner
+```
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+  module Sound where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
+    open Inner
 ```
 
 <!--en-->
@@ -1798,7 +1818,6 @@ The ordinality conjunct produces the ordinality certificate of `p` through the o
 
 ```agda
       ordp = ord-out a p z ho
-
 ```
 
 <!--en-->
@@ -1812,7 +1831,6 @@ The equality to be retained is made into the proposition `G`. Sets in the cumula
 ```agda
       G : hProp (ℓ-suc ℓ)
       G = (fst a ≡ Lset (fst p)) , setIsSet (fst a) (Lset (fst p))
-
 ```
 
 <!--en-->
@@ -1861,8 +1879,10 @@ The innermost witness completes the unwrapping: the fourteen-slot environment is
         unwrap inner (x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) {G}
           λ x0 m0 hm →
             finish (x0 ∷ x1 ∷ x2 ∷ x3 ∷ x4 ∷ x5 ∷ x6 ∷ x7 ∷ x8 ∷ x9 ∷ F ∷ a ∷ p ∷ z ∷ []) hm ordp
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 For ambient sets `a`, `p`, and `z` known to be constructible, their constructibility proofs present them as elements of the constructible carrier. Reading Δ₀ absoluteness backwards transfers ambient satisfaction of `levelFo` to satisfaction by those presentations, where the internal soundness argument applies. Projecting back gives `a = Lset p`. Thus constructibility of all three inputs is an explicit hypothesis, not a consequence of the formula.
@@ -1890,10 +1910,19 @@ For completeness, fix `lam` with adequacy data and an ordinal `p ∈ lam`. The o
 
 ```agda
 private
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
   module Complete (lam : V ℓ) (ad : Adequate lam) (p : V ℓ) (op : IsOrd p) (p∈λ : ⟨ p ∈ lam ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     open Inner
     open Adequate lam ad using ( ord; succ; ω∈; wit )
-
 ```
 
 <!--en-->
@@ -1908,7 +1937,6 @@ Transitivity of the adequate stage `lam` is extracted from its ordinality: two n
     private
       tr : (x y : V ℓ) → ⟨ x ∈ lam ⟩ → ⟨ y ∈ x ⟩ → ⟨ y ∈ lam ⟩
       tr x y x∈ y∈ = ord .fst {x = x} {y = y} y∈ x∈
-
 ```
 
 <!--en-->
@@ -1922,7 +1950,6 @@ The empty set belongs to the adequate stage, by transitivity applied to the chai
 ```agda
       ∅∈λ : ⟨ ∅ ∈ lam ⟩
       ∅∈λ = tr ω ∅ ω∈ (#∈ω zero)
-
 ```
 
 <!--en-->
@@ -1935,7 +1962,6 @@ The numeral-bound argument specializes to the constructible hierarchy at `lam`. 
 
 ```agda
       module B = Bound lam ord succ ∅∈λ using ( num∈λ )
-
 ```
 
 <!--en-->
@@ -1949,7 +1975,6 @@ Set `K = Lset lam`. This is the common bounding set represented by the third fre
 ```agda
       K : V ℓ
       K = Lset lam
-
 ```
 
 <!--en-->
@@ -1963,7 +1988,6 @@ If `c ∈ lam`, successor closure gives `sucV c ∈ lam`. The standard successor
 ```agda
       Lset∈K : (c : V ℓ) → ⟨ c ∈ lam ⟩ → ⟨ Lset c ∈ K ⟩
       Lset∈K c c∈ = Lset-mono {α = lam} {β = sucV c} (succ c c∈) (Lset∈suc c)
-
 ```
 
 <!--en-->
@@ -1977,7 +2001,6 @@ The numeral-bound theorem first places the underlying set of the model numeral i
 ```agda
       num∈K : (k : ℕ) → ⟨ # k ∈ K ⟩
       num∈K k = subst (λ u → ⟨ u ∈ K ⟩) (numeralL-fst k) (B.num∈λ k)
-
 ```
 
 <!--en-->
@@ -2009,7 +2032,6 @@ The environment `E` now records the complete fourteen-slot assignment. From fron
     E : S ^ 14
     E = nn 0 ∷ nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9
       ∷ F ∷ aS ∷ pS ∷ zS ∷ []
-
 ```
 
 <!--en-->
@@ -2054,7 +2076,6 @@ The final case verifies the tenth tag slot, at index nine, as the numeral `9`. A
 
 ```agda
     tg (suc (suc (suc (suc (suc (suc (suc (suc (suc zero))))))))) = refl
-
 ```
 
 <!--en-->
@@ -2083,7 +2104,6 @@ The witness for each `c` is read from the adequacy data, closing the supply for 
 
 ```agda
       w = wit c c∈λ oc
-
 ```
 
 <!--en-->
@@ -2098,7 +2118,6 @@ The inner formula now holds at `E`. The pins writer supplies its numeral conjunc
     hm : ⟨ E ⊨ inner ⟩
     hm = inner-in E (PinsRead.pins-in N14 E tg)
            (HierRead.hier-complete aa pp ff zz N14 E tg op refl (hierL-spec p (At.cL p op) op) sup)
-
 ```
 
 <!--en-->
@@ -2159,7 +2178,6 @@ Finally the numerals `2`, `1`, and `0` are inserted. After the last introduction
       wrap-in s13 (nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 1) (num∈K 1) (
       wrap-in inner (nn 1 ∷ nn 2 ∷ nn 3 ∷ nn 4 ∷ nn 5 ∷ nn 6 ∷ nn 7 ∷ nn 8 ∷ nn 9 ∷ F ∷ aS ∷ pS ∷ zS ∷ []) (nn 0) (num∈K 0)
         hm))))))))))
-
 ```
 
 <!--en-->
@@ -2173,7 +2191,6 @@ The erasure inverse says that embedding `erased` into the constructible constant
 ```agda
     hφ : ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ embed erased ⟩
     hφ = subst (λ ψ → ⟨ (aS ∷ pS ∷ zS ∷ []) ⊨ ψ ⟩) (sym (Cnt.erase-inv three count-three)) h3
-
 ```
 
 <!--en-->
@@ -2188,6 +2205,9 @@ Completeness is assembled from the two conjuncts: the ordinality atom holds by `
     complete : ⟨ (Lset p ∷ p ∷ Lset lam ∷ []) ⊨ₚ levelFo ⟩
     complete = subst ⟨_⟩ (read Δ₀-levelFo (aS ∷ pS ∷ zS ∷ [])) (ord-in aS pS zS op , hφ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 The completeness theorem states the precise existence direction available here. If `γ` is adequate and contains the ordinal `p`, then the triple `(Lset p,p,Lset γ)` satisfies `levelFo`. Later, `CondensationTransfer` places unbounded existential quantifiers around this Δ₀ core, carries all three coordinates through elementarity, and uses soundness to recognize the transported first coordinate as the corresponding constructible stage. The theorem makes no claim that an arbitrary third coordinate works or is uniquely determined.

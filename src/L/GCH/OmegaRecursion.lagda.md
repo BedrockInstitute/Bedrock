@@ -14,7 +14,6 @@ A definable step on constructible sets and a starting point determine, by recurs
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -29,7 +28,6 @@ The base library is opened, and excluded middle is received as an explicit hypot
 open import Base.Prelude
 open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -42,7 +40,6 @@ The module fixes the universe level and names the classical hypothesis: every th
 
 ```agda
 module L.GCH.OmegaRecursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -106,7 +103,6 @@ open import L.Recursion {ℓ} lem using ( Recursion; module Of; mereFunct )
 open import L.Recursion.Graph {ℓ} lem using () renaming ( module Graph to RecursionGraph )
 open import L.Coding.Model {ℓ} using ( appAt; appAt-adequate; prʟ; prʟ-fst )
 open import L.Coding.Expressions {ℓ} using ( sucAtL; sucAtL-adequate; numL )
-
 ```
 
 <!--en-->
@@ -146,7 +142,6 @@ The successor operation of the hierarchy and the truncation machinery complete t
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( sucV; #_ )
-
 ```
 
 <!--en-->
@@ -159,7 +154,6 @@ The constructible carrier is opened with its membership, since every iterate is 
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
-
 ```
 
 <!--en-->
@@ -185,7 +179,6 @@ The renaming semantics is instantiated under the identity of constant alphabets,
 
 ```agda
 module Ren = Sat 𝒮ʟ id
-
 ```
 
 <!--en-->
@@ -199,7 +192,6 @@ The carrier is an h-set, since the hierarchy is an h-set and constructibility is
 ```agda
 isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
-
 ```
 
 <!--en-->
@@ -253,7 +245,6 @@ An element enters the internal unordered pair `pairʟ a b` once its underlying s
 pairʟ-in : (a b y : S) → (fst y ≡ fst a) ⊎ (fst y ≡ fst b) → ⟨ y ∈ˢ pairʟ a b ⟩
 pairʟ-in a b y k = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (pairʟ-fst a b))
   (subst ⟨_⟩ (sym (pair-spec (fst a) (fst b) (fst y))) ∣ k ∣₁)
-
 ```
 
 <!--en-->
@@ -268,7 +259,6 @@ To place `y` in the internal union of `A`, it suffices to exhibit a particular c
 unionʟ-in : (A y B : S) → ⟨ fst B ∈ fst A ⟩ → ⟨ fst y ∈ fst B ⟩ → ⟨ y ∈ˢ unionʟ A ⟩
 unionʟ-in A y B hB hy = subst (λ w → ⟨ fst y ∈ w ⟩) (sym (unionʟ-fst A))
   (subst ⟨_⟩ (sym (union-spec (fst A) (fst y))) ∣ fst B , (hB , hy) ∣₁)
-
 ```
 
 <!--en-->
@@ -302,12 +292,18 @@ The iteration module receives the five ingredients of the whole chapter: a start
 反復のモジュールは、この章の五つの材料を受け取る。始点、出力が先で入力が後という順のステップの論理式、実際のステップ関数、その論理式がすべての点で関数を定義することの証明、そしてその値だけが充足することの証明である。台全体での全域性がデータの一部である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Iterate (a : S) (stepFo : Formula S 2) (step : S → S)
                (defines : (x : S) → ⟨ (step x ∷ x ∷ []) ⊨ stepFo ⟩)
                (only : (x y : S) → ⟨ (y ∷ x ∷ []) ⊨ stepFo ⟩ → y ≡ step x) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The iteration sequence is a host-level recursion on the natural numbers: it starts at `a` and applies the step function to the previous value. At this stage it is only an Agda sequence; its internal representation is the work of the chapter.
@@ -334,7 +330,6 @@ The zero clause says that every value recorded at the zeroth numeral has the sam
 ```agda
   Zero : S → Type (ℓ-suc ℓ)
   Zero F = (v : S) → Holds F (nn 0) v → fst v ≡ fst a
-
 ```
 
 <!--en-->
@@ -349,7 +344,6 @@ The successor clause says that whenever the table records both `(x, v)` and `(x'
   Step : S → Type (ℓ-suc ℓ)
   Step F = (x v x' v' : S) → Holds F x v → Holds F x' v'
          → fst x' ≡ sucV (fst x) → ⟨ (v' ∷ v ∷ []) ⊨ stepFo ⟩
-
 ```
 
 <!--en-->
@@ -364,7 +358,6 @@ The downward clause says that below every recorded entry, a recorded value exist
   Down : S → Type (ℓ-suc ℓ)
   Down F = (x' v' x : S) → Holds F x' v' → ⟨ fst x ∈ fst x' ⟩
          → ∥ Σ[ v ∈ S ] Holds F x v ∥₁
-
 ```
 
 <!--en-->
@@ -393,7 +386,6 @@ The zero clause is written in the object language. It says that for every `z` eq
     zeroAt : ∀ {n} → Fin n → Formula S n
     zeroAt f = ∀̇ ( (var zero ≐ con (nn 0))
                  ⇒̇ ∀̇ ( appAt (suc (suc f)) (suc zero) zero ⇒̇ (var zero ≐ con a) ) )
-
 ```
 
 <!--en-->
@@ -408,7 +400,6 @@ Reading the zero clause applies it at the numeral zero and transports the applic
     zero-out : ∀ {n} (f : Fin n) (γ : S ^ n) → ⟨ γ ⊨ zeroAt f ⟩ → Zero (lookup f γ)
     zero-out f γ h v hv = h (nn 0) refl v
       (subst ⟨_⟩ (sym (appAt-adequate (suc (suc f)) (suc zero) zero (v ∷ nn 0 ∷ γ))) hv)
-
 ```
 
 <!--en-->
@@ -439,7 +430,6 @@ The renaming of the step formula uses two slots: the first variable stays at pos
     ρ : ∀ {n} → Fin 2 → Fin (suc (suc (suc (suc n))))
     ρ zero       = zero
     ρ (suc zero) = suc (suc zero)
-
 ```
 
 <!--en-->
@@ -455,7 +445,6 @@ The renaming agreement checks that the two environments agree on the renamed slo
        → Ren.Agrees ρ (v' ∷ x' ∷ v ∷ x ∷ γ) (v' ∷ v ∷ [])
     ag γ x v x' v' zero       = refl
     ag γ x v x' v' (suc zero) = refl
-
 ```
 
 <!--en-->
@@ -485,7 +474,6 @@ Under these three premises, the conclusion is the renamed step formula relating 
 ```agda
       ⇒̇ ( sucAtL (suc (suc (suc zero))) (suc zero)
       ⇒̇ renameFo ρ stepFo ) ) ))))
-
 ```
 
 <!--en-->
@@ -531,7 +519,6 @@ The last premise recognizes `x'` as the set-theoretic successor of `x`. Together
 
 ```agda
         (subst ⟨_⟩ (sym (sucAtL-adequate (suc (suc (suc zero))) (suc zero) (v' ∷ x' ∷ v ∷ x ∷ γ))) s))
-
 ```
 
 <!--en-->
@@ -588,7 +575,6 @@ The existential conclusion is exactly a truncated existence of a recorded value.
 
 ```agda
       ⇒̇ ∃̇ (appAt (suc (suc (suc (suc f)))) (suc zero) zero) ) )))
-
 ```
 
 <!--en-->
@@ -604,7 +590,6 @@ Reading the downward formula preserves the existential as a propositional trunca
     down-out f γ h x' v' x p m = map₁
       (λ { (v , q) → v , subst ⟨_⟩ (appAt-adequate (suc (suc (suc (suc f)))) (suc zero) zero (v ∷ x ∷ v' ∷ x' ∷ γ)) q })
       (h x' v' x (subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero) (x ∷ v' ∷ x' ∷ γ))) p) m)
-
 ```
 
 <!--en-->
@@ -620,7 +605,6 @@ Filling runs the transport the other way, from the host-level truncated entry to
     down-in f γ h x' v' x p m = map₁
       (λ { (v , q) → v , subst ⟨_⟩ (sym (appAt-adequate (suc (suc (suc (suc f)))) (suc zero) zero (v ∷ x ∷ v' ∷ x' ∷ γ))) q })
       (h x' v' x (subst ⟨_⟩ (appAt-adequate (suc (suc (suc f))) (suc (suc zero)) (suc zero) (x ∷ v' ∷ x' ∷ γ)) p) m)
-
 ```
 
 <!--en-->
@@ -635,7 +619,6 @@ Correctness in the object language is the conjunction of the three clauses.
   opaque
     corrAt : ∀ {n} → Fin n → Formula S n
     corrAt f = zeroAt f ∧̇ (stepAt f ∧̇ downAt f)
-
 ```
 
 <!--en-->
@@ -649,7 +632,6 @@ The three conjuncts recover exactly the semantic conditions already isolated as 
 ```agda
     corr-out : ∀ {n} (f : Fin n) (γ : S ^ n) → ⟨ γ ⊨ corrAt f ⟩ → Correct (lookup f γ)
     corr-out f γ (z , (s , d)) = zero-out f γ z , (step-out f γ s , down-out f γ d)
-
 ```
 
 <!--en-->
@@ -677,7 +659,6 @@ The formula `itFo` says that some correct approximation records value `y` at ind
   opaque
     itFo : Formula S 2
     itFo = ∃̇ ( corrAt zero ∧̇ appAt zero (suc (suc zero)) (suc zero) )
-
 ```
 
 <!--en-->
@@ -769,7 +750,6 @@ The induction hypothesis gives equality of the underlying sets of `u` and `it k`
 ```agda
         (S≡ (corr-val F (z , (s , d)) k u hu))
         (s (nn k) u (nn (suc k)) v hu h refl)))
-
 ```
 
 <!--en-->
@@ -798,7 +778,6 @@ Each iterate is presented as a model element: the ordered pair of its numeral wi
   private
     e : ℕ → S
     e k = prʟ (nn k) (it k)
-
 ```
 
 <!--en-->
@@ -814,7 +793,6 @@ The bounding ordinal for all entry stages is assembled by the bounding lemma app
     entryStages = boundingOrd (Lift {ℓ-zero} {ℓ} ℕ)
       (λ k → stage (fst (e (lower k))) (e (lower k) .snd))
       (λ k → stage-ord (fst (e (lower k))) (e (lower k) .snd))
-
 ```
 
 <!--en-->
@@ -828,7 +806,6 @@ Write `entryBound` for this common ordinal bound. The point of naming it is that
 ```agda
     entryBound : V ℓ
     entryBound = entryStages .fst
-
 ```
 
 <!--en-->
@@ -842,7 +819,6 @@ The bound is itself an ordinal, as required for it to index a constructible leve
 ```agda
     entryBound-ord : IsOrd entryBound
     entryBound-ord = entryStages .snd .fst
-
 ```
 
 <!--en-->
@@ -857,7 +833,6 @@ Each entry belongs to the constructible level indexed by the common bound. Indee
     entry-in-bound : (k : ℕ) → ⟨ fst (e k) ∈ Lset entryBound ⟩
     entry-in-bound k = Lset-mono (entryStages .snd .snd (lift k))
       (stage-mem (fst (e k)) (e k .snd))
-
 ```
 
 <!--en-->
@@ -873,7 +848,6 @@ For a fixed `n`, the table `Fn n` is the finite set of entry pairs with indices 
   Fn n = finSet (suc n) (λ i → fst (e (toℕ i))) ,
     FinOf.finSetL entryBound entryBound-ord
       (suc n) (λ i → fst (e (toℕ i))) (λ i → entry-in-bound (toℕ i))
-
 ```
 
 <!--en-->
@@ -922,7 +896,6 @@ The pair reading decomposes any entry of the finite table into a bounded index a
           → ∥ Σ[ k ∈ ℕ ] ((k ≤ n) × ((fst x ≡ # k) × (fst v ≡ fst (it k)))) ∥₁
   Fn-pair n x v h = map₁ (λ { (k , (p , q)) → k , (p , pr-inj (sym (prʟ-fst x v) ∙ q)) })
     (Fn-out n (prʟ x v) (subst (λ w → ⟨ w ∈ fst (Fn n) ⟩) (sym (prʟ-fst x v)) h))
-
 ```
 
 <!--en-->
@@ -952,7 +925,6 @@ For the zero clause, reading an entry at `nn 0` yields some index `k` whose nume
 ```agda
       (λ { (k , (_ , (ex , ev))) → ev ∙ cong (λ j → fst (it j)) (sym (#-inj 0 k ex)) })
       (Fn-pair n (nn 0) v h)
-
 ```
 
 <!--en-->
@@ -1014,7 +986,6 @@ To obtain `k' = suc k`, compare the equation saying that the second position is 
 ```agda
           k'≡ : k' ≡ suc k
           k'≡ = #-inj k' (suc k) (sym ex' ∙ s ∙ cong sucV ex)
-
 ```
 
 <!--en-->
@@ -1073,7 +1044,6 @@ A numeral representation is an explicit pair of a natural number with the equati
 ```agda
   Num : S → Type (ℓ-suc ℓ)
   Num q = Σ[ k ∈ ℕ ] (nn k ≡ q)
-
 ```
 
 <!--en-->
@@ -1087,7 +1057,6 @@ Membership in the model's natural-number set `ωʟ` recovers such a numeral repr
 ```agda
   ω-num : (q : S) → ⟨ q ∈ˢ ωʟ ⟩ → ∥ Num q ∥₁
   ω-num q = map₁ (λ { (i , p) → lower i , S≡ p })
-
 ```
 
 <!--en-->
@@ -1134,7 +1103,6 @@ For a displayed representation `nn k ≡ q`, take `it k` as the centre of the fi
       wit q (k , eq) = it k
         , ( itFo-at (it k) eq (it-graph k)
           , λ y' h → S≡ (itFo-val k y' (itFo-at y' (sym eq) h)) )
-
 ```
 
 <!--en-->
@@ -1147,7 +1115,6 @@ The general Replacement construction associated with `valR` now provides a set c
 
 ```agda
     module VR = Of valR
-
 ```
 
 <!--en-->
@@ -1161,7 +1128,6 @@ The set `values` is the Replacement image of `ωʟ` under the relation `itFo`: i
 ```agda
   values : S
   values = VR.table
-
 ```
 
 <!--en-->
@@ -1175,7 +1141,6 @@ Every host-defined iterate belongs to this value set. At the internal numeral `n
 ```agda
   values-in : (n : ℕ) → ⟨ fst (it n) ∈ fst values ⟩
   values-in n = VR.table-in (nn n) (it n) (#∈ω n) (it-graph n)
-
 ```
 
 <!--en-->
@@ -1206,7 +1171,6 @@ The union of the value domain is a set of `L`, formed by the model's union opera
 
   iterUnion : S
   iterUnion = unionʟ values
-
 ```
 
 <!--en-->
@@ -1220,7 +1184,6 @@ Every member of a finite iterate belongs to `iterUnion`: first `values-in` place
 ```agda
   iterUnion-in : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ z ∈ˢ iterUnion ⟩
   iterUnion-in n z hz = unionʟ-in values z (it n) (values-in n) hz
-
 ```
 
 <!--en-->
@@ -1270,7 +1233,6 @@ Besides the value set and its union, the same recursion record determines an int
 ```agda
   private
     module TR = RecursionGraph valR using ( F; F-in; F-out )
-
 ```
 
 <!--en-->
@@ -1284,7 +1246,6 @@ The function graph collects the ordered pairs of numerals and iterate values.
 ```agda
   iter : S
   iter = TR.F
-
 ```
 
 <!--en-->
@@ -1299,7 +1260,6 @@ Every canonical pair is a member of the graph, transported along the uniqueness 
   iter-in : (n : ℕ) → ⟨ pr (# n) (fst (it n)) ∈ fst iter ⟩
   iter-in n = subst (λ v → ⟨ pr (# n) (fst v) ∈ fst iter ⟩)
     (VR.val-uniq (nn n) (#∈ω n) (it n) (it-graph n)) (TR.F-in (nn n) (#∈ω n))
-
 ```
 
 <!--en-->
@@ -1338,10 +1298,16 @@ The growth module is parameterized by the hypothesis that each set is contained 
 成長のモジュールは、「すべての集合が自分自身のステップの中に含まれる」という仮定によってパラメータづけられる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Closure (grows : (x z : S) → ⟨ fst z ∈ fst x ⟩ → ⟨ fst z ∈ fst (step x) ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The growth hypothesis gives one-way containment between adjacent iterates: every member of `it n` also belongs to `it (suc n)`. No reverse containment, fixed-point property, or closure of `iterUnion` under `step` follows from this statement.
@@ -1354,7 +1320,6 @@ The growth hypothesis gives one-way containment between adjacent iterates: every
 ```agda
     it-mono : (n : ℕ) (z : S) → ⟨ fst z ∈ fst (it n) ⟩ → ⟨ fst z ∈ fst (it (suc n)) ⟩
     it-mono n z = grows (it n) z
-
 ```
 
 <!--en-->
@@ -1370,3 +1335,8 @@ Iterating the adjacent containment `k` times proves `it n ⊆ it (k + n)`. The i
     it-up n zero    z h = h
     it-up n (suc k) z h = it-mono (k + n) z (it-up n k z h)
 ```
+</div>
+</details>
+
+</div>
+</details>

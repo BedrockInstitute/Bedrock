@@ -90,8 +90,16 @@ An element `W : S` packages a set of the hierarchy with structure data; `fst W` 
 要素 `W : S` は、階層のある集合を構造のデータとともに束ねたものである。`fst W` がその台集合になる。したがって `Ab` は `⟪ fst W ⟫`、つまりその集合の要素へのインデックスの型であり、`ι` は埋め込み `⟪ fst W ⟫↪` で、各インデックスを `V ℓ` 内の指された要素へ送る。つまり `Ab` の要素こそが利用可能な定数記号であり、`ι` は集合としてのその指示対象を計算する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Alphabet (W : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   Ab : Type ℓ
   Ab = ⟪ fst W ⟫
 
@@ -133,6 +141,9 @@ A formula of type `Formula Ab n` carries an arity `n`, and in dependent type the
   cd-subst {n} e ψ = J (λ n' e' → cd (subst (Formula Ab) e' ψ) ≡ cd ψ)
     (cong cd (substRefl {B = Formula Ab} ψ)) e
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

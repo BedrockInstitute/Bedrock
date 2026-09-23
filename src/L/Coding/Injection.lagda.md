@@ -129,9 +129,17 @@ For the readback, fix a variable index `f` and an environment `γ` of model elem
 読み戻しでは変数の添字 `f` と模型要素からなる割り当て `γ` を固定する。`Holds₀ x y` は射影された事実で、`x` と `y` の底の集合の順序対が底のグラフ、すなわち変数 `f` が `γ` から選ぶ項目に属すということである。以下の両方向は、適用の条項の充足の判断をこの `Holds₀` と比べるもので、妥当性のパスが議論の要になる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Holds₀ : S → S → Type (ℓ-suc ℓ)
     Holds₀ x y = ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
@@ -202,6 +210,9 @@ The inward direction `injAt-in` runs the same transports forward: given the proj
   injAt-in h y x x' p q = h y x x'
     (subst ⟨_⟩ (at₁ y x x') p) (subst ⟨_⟩ (at₂ y x x') q)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Extracting an injection into the model
@@ -225,10 +236,18 @@ The section takes the graph `F` and the domain `D` as model elements, together w
 この節は、グラフ `F` と定義域 `D` を模型の要素として、二つの充足の仮定とともに取る。変数ゼロでのグラフの一価性と、`D` のすべての要素が `F` の下で値を持つと言うちょうどの定義域の条項である。環境 `γ` はそれらを、充足の判断が期待する固定の順序でまとめる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Extract (F D : S)
                (sv : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
                (dm : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   γ : S ^ 2
   γ = F ∷ D ∷ []
@@ -302,8 +321,18 @@ The function `toFun` sends a domain entry to the output `y : S` in its unique fi
 
   toFun-graph : (u : Dom) → Holds (fst u) (toFun u)
   toFun-graph u = snd (fib u)
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
   module _ (ij : ⟨ γ ⊨ injAt zero ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     toFun-inj : (u v : Dom) → fst (toFun u) ≡ fst (toFun v)
 ```
@@ -322,6 +351,12 @@ With injectivity of the graph also assumed, `toFun-inj` turns equality of output
       (subst (λ w → ⟨ pr (fst (fst u)) w ∈ fst F ⟩) e (toFun-graph u))
       (toFun-graph v)
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Restricting to the small carriers
@@ -345,13 +380,21 @@ The parameters name the three constructible sets at play: the graph `F`, the dom
 パラメータは、ここで働く三つの構成可能集合、グラフ `F`、定義域 `D`、値域 `C` を名指す。最初の三つの仮定は、Extract と toFun-inj が使った充足の主張そのものである。最後の `ran` が新しいもので、入力 `x` と、対 `(x, y)` がグラフに属すような値 `y` に対して、`y` の底の集合が `C` の底の集合に属すことを証明書として与える。これは値域の制限を呼び出し側の仮定として述べたもので、この節自身はグラフが特定の値域を持って作られたと仮定しない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Small (F D C : S)
              (sv : ⟨ (F ∷ D ∷ []) ⊨ svAt zero ⟩)
              (dm : ⟨ (F ∷ D ∷ []) ⊨ domAt zero (suc zero) ⟩)
              (ij : ⟨ (F ∷ D ∷ []) ⊨ injAt zero ⟩)
              (ran : (x y : S) → ⟨ pr (fst x) (fst y) ∈ fst F ⟩
+                  → ⟨ fst y ∈ fst C ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the unique graph value for each domain member. To compare this construction with the small presentation, `toS` turns an index `m` of the canonical presentation of `D` into a model element. The first component is the presented set itself; the second is its constructibility certificate, obtained by `isL-trans` from the explicit membership `member (fst D) m` and the certificate that `D` itself is constructible. Transitivity is exactly the principle needed: a member of a constructible set is constructible.
@@ -362,7 +405,6 @@ Under the single-valuedness and exact-domain hypotheses, `Extract` supplies the 
 <!--/-->
 
 ```agda
-                  → ⟨ fst y ∈ fst C ⟩) where
 
   module E = Extract F D sv dm
 
@@ -419,6 +461,9 @@ Injectivity of `small` is proved by routing an equality of indices back through 
     (E.toFun-inj ij (at m) (at n)
       (sym (snd (fib m)) ∙ cong ⟪ fst C ⟫↪ e ∙ snd (fib n)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

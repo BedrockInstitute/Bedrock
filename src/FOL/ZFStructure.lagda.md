@@ -146,8 +146,16 @@ Every structural membership proposition has an underlying type. The notation `x 
 `x ∈ᵗ y` は基礎型 `⟨ x ∈ˢ y ⟩`{.Agda} と定義され、`Type ℓ` に属する。これは新しい関係ではなく、既存の所属命題を Type として読むものである。引数の向きはこれまでの記法と一致し、`x ∈ᵗ y` は「x は y の要素である」と読む。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module hPropStructure {ℓ} (𝒮 : ZFStructure ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open ZFStructure 𝒮 public
 
   _∈ᵗ_ : S → S → Type ℓ
@@ -166,6 +174,9 @@ So `y ∈ᵗ x` states that y is a member of x, as a proposition of the proposit
 
   infix 20 _∈ᵗ_
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Transitive classes

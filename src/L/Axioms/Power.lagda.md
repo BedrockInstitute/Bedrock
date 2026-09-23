@@ -33,7 +33,6 @@ is produced inside the constructible model.
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -53,8 +52,7 @@ that supplies the indices.
 
 ```agda
 open import Base.Prelude
-open import Base.Classical using ( LEM; lem→resizing; lem→ΩResizing )
-
+open import Base.Classical using ( LEM; LEM→Resizing; LEM→ΩResizing )
 ```
 
 <!--en-->
@@ -75,7 +73,6 @@ introduced.
 
 ```agda
 module L.Axioms.Power {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -142,7 +139,6 @@ same `lem`, even in this bounded instance.
 ```agda
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.Axioms.Full {ℓ} lem using ( hasSeparationL )
-
 ```
 
 <!--en-->
@@ -182,7 +178,6 @@ Thus the smallness argument concerns the index type, not the model carrier.
 ```agda
 
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -203,7 +198,6 @@ bridge from internal inclusion to ambient inclusion used below.
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf; _⊆ˢ_ )
 module ModelV = FOL.ZFModel 𝒮ᵥ
-
 ```
 
 <!--en-->
@@ -223,25 +217,24 @@ direct inner meaning of the bounded inclusion formula.
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
 The ambient power-set construction is instantiated with Ω-resizing
-obtained from `lem→ΩResizing lem`. This construction uses only the
+obtained from `LEM→ΩResizing lem`. This construction uses only the
 classifier derived from `ΩResizing`: it represents a characteristic function by a
 function into a small type of truth-value codes and forms the corresponding
 hierarchy set. Propositional resizing of `isL` is a separate operation and does
 not enter this instantiation. Keeping these roles distinct will make the later
 index construction transparent.
 <!--zh-->
-外围幂集构造以 `lem→ΩResizing lem` 给出的命题宇宙换级实例化。这里仅使用由 `ΩResizing` 导出的分类器：特征函数被表示为一个取值于小真值码类型的函数，再由此形成层级中的集合。对 `isL` 作命题换级是另一项独立操作，并不进入这次实例化。区分这两种作用，才能看清稍后的小索引是怎样形成的。
+外围幂集构造以 `LEM→ΩResizing lem` 给出的命题宇宙换级实例化。这里仅使用由 `ΩResizing` 导出的分类器：特征函数被表示为一个取值于小真值码类型的函数，再由此形成层级中的集合。对 `isL` 作命题换级是另一项独立操作，并不进入这次实例化。区分这两种作用，才能看清稍后的小索引是怎样形成的。
 <!--ja-->
-周囲の冪集合の構成には、`lem→ΩResizing lem` から得られる小さな分類子を与える。ここで使うのは `ΩResizing` から導かれる分類子だけである。特性関数を小さな真理値コードの型への関数として表し、それに対応する階層の集合を作る。`isL` の命題リサイズは別の操作であり、この具体化には入らない。二つの役割を分けることで、後の小さな添字の構成が明確になる。
+周囲の冪集合の構成には、`LEM→ΩResizing lem` から得られる小さな分類子を与える。ここで使うのは `ΩResizing` から導かれる分類子だけである。特性関数を小さな真理値コードの型への関数として表し、それに対応する階層の集合を作る。`isL` の命題リサイズは別の操作であり、この具体化には入らない。二つの役割を分けることで、後の小さな添字の構成が明確になる。
 <!--/-->
 
 ```agda
-module Pow = Power (lem→ΩResizing lem)
+module Pow = Power (LEM→ΩResizing lem)
 ```
 
 <!--en-->
@@ -282,7 +275,6 @@ proof later passes it to the general Separation interface.
 ```agda
 subFo : S → Formula S 1
 subFo a = ∀̇∈ (var zero) (var zero ∈̇ con a)
-
 ```
 
 <!--en-->
@@ -309,8 +301,16 @@ the model.
 `a : S` を固定する。その第一射影 `A` は、構成可能性の証拠を忘れて、同じ集合を周囲の階層で見たものである。集合 `P = Pow.𝒫V A` は、周囲での完全な冪集合の仕様を満たす。`P` への所属に必要なのは周囲の意味で `A` に含まれることだけであり、構成可能性の仮定はない。したがって、構成可能でない周囲の部分集合があれば、それも `P` に属する。また、この構成から `P` 自身の構成可能性は得られない。証明が使うのは小さな表示 `⟪P⟫` だけであり、後でその添字を構成可能性によって選び出す。`P` はモデルで最終的に返される冪集合ではない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Bound (a : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     A P : V ℓ
     A = fst a
@@ -334,8 +334,7 @@ removes the propositional truncation nor selects an ordinal stage.
 ```agda
 
     rsz : (v : V ℓ) → Σ[ Q ∈ hProp ℓ ] (⟨ isL v ⟩ ≃ ⟨ Q ⟩)
-    rsz v = lem→resizing lem (isL v)
-
+    rsz v = LEM→Resizing lem (isL v)
 ```
 
 <!--en-->
@@ -355,7 +354,6 @@ formula, and it will not become the final power set.
 ```agda
   Ix : Type ℓ
   Ix = Σ[ m ∈ ⟪ P ⟫ ] ⟨ rsz (⟪ P ⟫↪ m) .fst ⟩
-
 ```
 
 <!--en-->
@@ -376,7 +374,6 @@ additional work needed to obtain a definite stage index.
   private
     unres : (i : Ix) → ⟨ isL (⟪ P ⟫↪ (i .fst)) ⟩
     unres i = invEq (rsz (⟪ P ⟫↪ (i .fst)) .snd) (i .snd)
-
 ```
 
 <!--en-->
@@ -398,7 +395,6 @@ general rule for extracting arbitrary truncated witnesses. Only `stage-ord` and
 ```agda
     stg : Ix → V ℓ
     stg i = stage (⟪ P ⟫↪ (i .fst)) (unres i)
-
 ```
 
 <!--en-->
@@ -417,7 +413,6 @@ bound is exactly the form later required by `Lset-mono`.
 
 ```agda
     b = boundingOrd Ix stg (λ i → stage-ord (⟪ P ⟫↪ (i .fst)) (unres i))
-
 ```
 
 <!--en-->
@@ -437,7 +432,6 @@ bound suffices for the power-set axiom, so no condensation estimate is needed.
 ```agda
   β : V ℓ
   β = b .fst
-
 ```
 
 <!--en-->
@@ -456,7 +450,6 @@ bounding property are the two facts about `β` needed in the remainder.
 ```agda
   oβ : IsOrd β
   oβ = b .snd .fst
-
 ```
 
 <!--en-->
@@ -528,6 +521,9 @@ is one of the stages bounded by `β`. Combining `stage-mem`, `b.snd.snd i`, and
       , equivFun (rsz (⟪ P ⟫↪ (fib .fst)) .snd)
           (subst (λ w → ⟨ isL w ⟩) (sym pa) (x .snd))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The field

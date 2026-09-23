@@ -16,7 +16,6 @@ This book develops classical set theory inside constructive Cubical type theory.
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 module Base.Classical where
-
 ```
 
 <!--en-->
@@ -363,15 +362,15 @@ The candidate witness is the pair `(Lift Bool , ...)`{.Agda}. Its first componen
 <!--/-->
 
 <!--en-->
-**Theorem** (`lem→ΩResizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies Ω-resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.
+**Theorem** (`LEM→ΩResizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies Ω-resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.
 <!--zh-->
-**定理** (`lem→ΩResizing`{.Agda}) 对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，源层 `ℓ₁`{.Agda} 的排中律蕴含从 `ℓ₁`{.Agda} 到 `ℓ₂`{.Agda} 的命题宇宙换级。
+**定理** (`LEM→ΩResizing`{.Agda}) 对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，源层 `ℓ₁`{.Agda} 的排中律蕴含从 `ℓ₁`{.Agda} 到 `ℓ₂`{.Agda} 的命题宇宙换级。
 <!--ja-->
-**定理** (`lem→ΩResizing`{.Agda}) 任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、始域レベル `ℓ₁`{.Agda} での排中律は、`ℓ₁`{.Agda} から `ℓ₂`{.Agda} への命題宇宙リサイズを導く。
+**定理** (`LEM→ΩResizing`{.Agda}) 任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、始域レベル `ℓ₁`{.Agda} での排中律は、`ℓ₁`{.Agda} から `ℓ₂`{.Agda} への命題宇宙リサイズを導く。
 <!--/-->
 
 ```agda
-lem→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ₂
+LEM→ΩResizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → ΩResizing ℓ₁ ℓ₂
 ```
 
 <!--en-->
@@ -445,7 +444,7 @@ Encoding and decoding are inverse up to paths. Excluded middle supplies the deci
 </figure>
 
 ```agda
-lem→ΩResizing lem = Lift Bool , isoToEquiv (iso
+LEM→ΩResizing lem = Lift Bool , isoToEquiv (iso
   (λ P → encodeB P (lem P)) decodeB
   (λ b → retrB {ℓ₁ = _} b (lem (decodeB b)))
   (λ P → secB {ℓ₂ = _} P (lem P)))
@@ -454,27 +453,27 @@ lem→ΩResizing lem = Lift Bool , isoToEquiv (iso
 ∎
 
 <!--en-->
-**Corollary** (`lem→resizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies propositional resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.
+**Corollary** (`LEM→Resizing`{.Agda}) For arbitrary levels `ℓ₁`{.Agda} and `ℓ₂`{.Agda}, excluded middle at the source level `ℓ₁`{.Agda} implies propositional resizing from `ℓ₁`{.Agda} to `ℓ₂`{.Agda}.
 <!--zh-->
-**推论** (`lem→resizing`{.Agda}) 对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，源层 `ℓ₁`{.Agda} 的排中律蕴含从 `ℓ₁`{.Agda} 到 `ℓ₂`{.Agda} 的命题换级。
+**推论** (`LEM→Resizing`{.Agda}) 对任意层级 `ℓ₁`{.Agda} 与 `ℓ₂`{.Agda}，源层 `ℓ₁`{.Agda} 的排中律蕴含从 `ℓ₁`{.Agda} 到 `ℓ₂`{.Agda} 的命题换级。
 <!--ja-->
-**系** (`lem→resizing`{.Agda}) 任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、始域レベル `ℓ₁`{.Agda} での排中律は、`ℓ₁`{.Agda} から `ℓ₂`{.Agda} への命題リサイズを導く。
+**系** (`LEM→Resizing`{.Agda}) 任意のレベル `ℓ₁`{.Agda} と `ℓ₂`{.Agda} に対して、始域レベル `ℓ₁`{.Agda} での排中律は、`ℓ₁`{.Agda} から `ℓ₂`{.Agda} への命題リサイズを導く。
 <!--/-->
 
 ```agda
-lem→resizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → Resizing ℓ₁ ℓ₂
+LEM→Resizing : ∀ {ℓ₁ ℓ₂} → LEM ℓ₁ → Resizing ℓ₁ ℓ₂
 ```
 
 <!--en-->
-**Proof** Apply `lem→ΩResizing`{.Agda}, then convert the resulting proposition-universe resizing with the general theorem `ΩResizing→Resizing`{.Agda}.
+**Proof** Apply `LEM→ΩResizing`{.Agda}, then convert the resulting proposition-universe resizing with the general theorem `ΩResizing→Resizing`{.Agda}.
 <!--zh-->
-**证明** 先应用 `lem→ΩResizing`{.Agda} 得到命题宇宙换级，再用一般定理 `ΩResizing→Resizing`{.Agda} 将其转化为命题换级。
+**证明** 先应用 `LEM→ΩResizing`{.Agda} 得到命题宇宙换级，再用一般定理 `ΩResizing→Resizing`{.Agda} 将其转化为命题换级。
 <!--ja-->
-**証明** まず `lem→ΩResizing`{.Agda} を適用して命題宇宙リサイズを得てから、一般定理 `ΩResizing→Resizing`{.Agda} によって命題リサイズへ変換する。
+**証明** まず `LEM→ΩResizing`{.Agda} を適用して命題宇宙リサイズを得てから、一般定理 `ΩResizing→Resizing`{.Agda} によって命題リサイズへ変換する。
 <!--/-->
 
 ```agda
-lem→resizing lem = ΩResizing→Resizing (lem→ΩResizing lem)
+LEM→Resizing lem = ΩResizing→Resizing (LEM→ΩResizing lem)
 ```
 
 ∎
@@ -482,13 +481,13 @@ lem→resizing lem = ΩResizing→Resizing (lem→ΩResizing lem)
 <!--en-->
 ## Recap
 
-This chapter stated excluded middle level by level as `LEM ℓ`{.Agda}, proved that it is itself a proposition, and used `lowerLEM`{.Agda} to obtain the instance immediately below a successor level. From `LEM ℓ₁`{.Agda}, `lem→ΩResizing`{.Agda} constructs `ΩResizing ℓ₁ ℓ₂`{.Agda} at any target level `ℓ₂`{.Agda}; composing this result with `ΩResizing→Resizing`{.Agda} gives `Resizing ℓ₁ ℓ₂`{.Agda}. Thus one source-level assumption of excluded middle resolves both size questions posed at the beginning of the chapter.
+This chapter stated excluded middle level by level as `LEM ℓ`{.Agda}, proved that it is itself a proposition, and used `lowerLEM`{.Agda} to obtain the instance immediately below a successor level. From `LEM ℓ₁`{.Agda}, `LEM→ΩResizing`{.Agda} constructs `ΩResizing ℓ₁ ℓ₂`{.Agda} at any target level `ℓ₂`{.Agda}; composing this result with `ΩResizing→Resizing`{.Agda} gives `Resizing ℓ₁ ℓ₂`{.Agda}. Thus one source-level assumption of excluded middle resolves both size questions posed at the beginning of the chapter.
 <!--zh-->
 ## 小结
 
-本章把排中律逐层写成 `LEM ℓ`{.Agda}，证明它本身是命题，并用 `lowerLEM`{.Agda} 从后继层级的排中律得到紧邻低一层的实例。给定 `LEM ℓ₁`{.Agda}，`lem→ΩResizing`{.Agda} 对任意目标层级 `ℓ₂`{.Agda} 构造 `ΩResizing ℓ₁ ℓ₂`{.Agda}；再与 `ΩResizing→Resizing`{.Agda} 复合，便得到 `Resizing ℓ₁ ℓ₂`{.Agda}。因此，源层级上的同一个排中律假设解决了本章开头提出的两个大小问题。
+本章把排中律逐层写成 `LEM ℓ`{.Agda}，证明它本身是命题，并用 `lowerLEM`{.Agda} 从后继层级的排中律得到紧邻低一层的实例。给定 `LEM ℓ₁`{.Agda}，`LEM→ΩResizing`{.Agda} 对任意目标层级 `ℓ₂`{.Agda} 构造 `ΩResizing ℓ₁ ℓ₂`{.Agda}；再与 `ΩResizing→Resizing`{.Agda} 复合，便得到 `Resizing ℓ₁ ℓ₂`{.Agda}。因此，源层级上的同一个排中律假设解决了本章开头提出的两个大小问题。
 <!--ja-->
 ## まとめ
 
-本章では排中律をレベルごとに `LEM ℓ`{.Agda} と定め、それ自身が命題であることを示し、`lowerLEM`{.Agda} によって後続レベルの排中律から直下の実例を得た。`LEM ℓ₁`{.Agda} が与えられると、`lem→ΩResizing`{.Agda} は任意の目標レベル `ℓ₂`{.Agda} に対して `ΩResizing ℓ₁ ℓ₂`{.Agda} を構成する。さらに `ΩResizing→Resizing`{.Agda} と合成すれば、`Resizing ℓ₁ ℓ₂`{.Agda} が得られる。したがって、始域レベルでの一つの排中律の仮定が、本章の冒頭で挙げた二つの大きさの問題をともに解決する。
+本章では排中律をレベルごとに `LEM ℓ`{.Agda} と定め、それ自身が命題であることを示し、`lowerLEM`{.Agda} によって後続レベルの排中律から直下の実例を得た。`LEM ℓ₁`{.Agda} が与えられると、`LEM→ΩResizing`{.Agda} は任意の目標レベル `ℓ₂`{.Agda} に対して `ΩResizing ℓ₁ ℓ₂`{.Agda} を構成する。さらに `ΩResizing→Resizing`{.Agda} と合成すれば、`Resizing ℓ₁ ℓ₂`{.Agda} が得られる。したがって、始域レベルでの一つの排中律の仮定が、本章の冒頭で挙げた二つの大きさの問題をともに解決する。
 <!--/-->

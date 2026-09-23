@@ -8,7 +8,6 @@ The problem of this chapter is to recognize, by a bounded formula, the collectio
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -22,7 +21,6 @@ The construction uses excluded middle as the book's single explicit classical hy
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -35,7 +33,6 @@ Fix a universe level `ℓ` and an instance `lem : LEM (ℓ-suc ℓ)`. Every resu
 
 ```agda
 module L.GCH.DefinablePowerSetDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -113,7 +110,6 @@ The ten distinguished slots are interpreted as the numerals zero through nine by
 ```agda
 open import L.Coding.CodeAlphabet {ℓ} using ( module Alphabet )
 open import L.GCH.SatisfactionDescription {ℓ} lem using ( satAt; module SatRead; module Match )
-
 ```
 
 <!--en-->
@@ -124,8 +120,7 @@ An environment is represented by a finite vector of constructible sets. Products
 環境は構成可能集合からなる有限ベクトルで表す。積は切り出し関係を定める二つの所属条件を組み合わせる。それらが命題であるため、選択を導入することなく、切り詰められた証人をその条件へ消去できる。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 The proofs repeatedly turn pointwise equivalences of membership into equalities of sets. Membership is proposition-valued, so a merely existing code, formula, or presentation can be eliminated while proving either membership direction; `∈-asFiber` then recovers a presentation index when an ambient member must be read as an element of a carrier.
@@ -151,7 +146,6 @@ The von Neumann numerals used as tags live in the cumulative hierarchy. In parti
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_ )
-
 ```
 
 <!--en-->
@@ -164,7 +158,6 @@ Write `S` for the carrier of constructible sets. An element of `S` consists of a
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -191,7 +184,6 @@ A singleton environment is described by two bounded clauses over one slot: every
 ```agda
 singleOf : ∀ {j} → Fin j → Fin j → Fin j → Formula S j
 singleOf e N0 z = ∀̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z)) ∧̇ ∃̇∈ (var e) (prAtL i0 (sh 1 N0) (sh 1 z))
-
 ```
 
 <!--en-->
@@ -207,7 +199,6 @@ definesB : ∀ {j} → Fin j → Fin j → Fin j → Fin j → Formula S j
 definesB x w y N0 =
     ∀̇∈ (var x) ((var i0 ∈̇ var (sh 1 w)) ∧̇ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1))
   ∧̇ ∀̇∈ (var w) (∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⇒̇ (var i0 ∈̇ var (sh 1 x)))
-
 ```
 
 <!--en-->
@@ -238,7 +229,6 @@ allAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) �
 allAt v w T C N =
   ∀̇∈ (var C) (sndAll i0 (sh 1 (N f1))
     (∃̇∈ (var (sh 3 T)) (sndEx i0 i3 (∃̇∈ (var (sh 6 v)) (definesB i0 (sh 7 w) i1 (sh 7 (N f0)))))))
-
 ```
 
 <!--en-->
@@ -255,7 +245,6 @@ The formula `defAt` conjoins the membership and covering clauses. By itself it o
 opaque
   defAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
   defAt v w T C N = memAt v w T C N ∧̇ allAt v w T C N
-
 ```
 
 <!--en-->
@@ -269,7 +258,6 @@ The definition remains opaque in ordinary reasoning so that later arguments use 
 ```agda
 opaque
   unfolding defAt
-
 ```
 
 <!--en-->
@@ -283,7 +271,6 @@ The Δ₀ certificate is produced by the structural checker: the formula uses on
 ```agda
   Δ₀-defAt : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) → Δ₀ (defAt v w T C N)
   Δ₀-defAt v w T C N = checkΔ₀ (defAt v w T C N) tt
-
 ```
 
 <!--en-->
@@ -298,7 +285,6 @@ Reading the description splits it into its two conjuncts.
   defAt-out : ∀ {m} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m)
             → ⟨ γ ⊨ defAt v w T C N ⟩ → ⟨ γ ⊨ memAt v w T C N ⟩ × ⟨ γ ⊨ allAt v w T C N ⟩
   defAt-out v w T C N γ h = h
-
 ```
 
 <!--en-->
@@ -323,12 +309,19 @@ The first semantic calculation concerns `singleOf`. Fix the coded set `E` and va
 最初の意味論的な計算では `singleOf` を扱う。符号化された集合 `E` と値 `Z` を固定し、指定されたタグが実際に 0 を表すと仮定する。この仮定の下で、二つの有界な節が集合の等式 `E = envOne Z` と同値であることを示す。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {j : ℕ} (e N0 z : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 0) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     E = fst (lookup e δ)
     Z = fst (lookup z δ)
-
 ```
 
 <!--en-->
@@ -376,7 +369,6 @@ A member of `envOne Z` is the ordered pair `pr (# 0) Z`. Rewriting the tag slot 
             (pr-out i0 (sh 1 N0) (sh 1 z) (y' ∷ δ) hy' ∙ cong (λ a → pr a Z) q0 ∙ qy) y'∈ })
         hex
          ; (lift (suc ()) , _) })
-
 ```
 
 <!--en-->
@@ -422,6 +414,9 @@ The named member is the presentation, inside the coded set, of the pair of the z
 ```agda
     yS = down (lookup e δ) (pr (# 0) Z) (subst (λ u → ⟨ pr (# 0) Z ∈ u ⟩) (sym q) ∣ lift zero , refl ∣₁)
 ```
+</div>
+</details>
+
 
 <!--en-->
 The cut relation between a set `X`, a carrier `Wv`, and a value `Y` is a pair of pointwise directions: every member of `X` lies in `Wv` with its singleton environment in `Y`, and every member of `Wv` whose singleton environment lies in `Y` belongs to `X`. The quantification is over constructible sets, so the relation is stated on the constructible carrier.
@@ -435,7 +430,6 @@ The cut relation between a set `X`, a carrier `Wv`, and a value `Y` is a pair of
 Cuts : (X Wv Y : V ℓ) → Type (ℓ-suc ℓ)
 Cuts X Wv Y = ((z : S) → ⟨ fst z ∈ X ⟩ → ⟨ fst z ∈ Wv ⟩ × ⟨ envOne (fst z) ∈ Y ⟩)
             × ((z : S) → ⟨ fst z ∈ Wv ⟩ → ⟨ envOne (fst z) ∈ Y ⟩ → ⟨ fst z ∈ X ⟩)
-
 ```
 
 <!--en-->
@@ -446,8 +440,16 @@ To compare the object-language clause with the mathematical cut relation, fix th
 対象言語の節を数学的な切り出し関係と比較するため、`x`、`w`、`y`、タグ 0 の枠を固定する。それぞれの解釈を `X`、`Wv`、`Y` と名付ける。タグの等式があるからこそ、`singleOf` は正準な一項環境を表せる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {j : ℕ} (x w y N0 : Fin j) (δ : S ^ j) (q0 : fst (lookup N0 δ) ≡ # 0) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     X = fst (lookup x δ)
     Wv = fst (lookup w δ)
@@ -464,7 +466,6 @@ Because `Y` is a constructible set, any proof that a one-entry environment belon
 
 ```agda
     YS = lookup y δ
-
 ```
 
 <!--en-->
@@ -479,7 +480,6 @@ Reading the existential of the singleton clause converts it into membership of t
     one-out : (z : S) → ⟨ (z ∷ δ) ⊨ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⟩ → ⟨ envOne (fst z) ∈ Y ⟩
     one-out z = rec₁ (snd (envOne (fst z) ∈ Y))
       (λ { (e , (e∈ , he)) → subst (λ u → ⟨ u ∈ Y ⟩) (singleOf-out i0 (sh 2 N0) i1 (e ∷ z ∷ δ) q0 he) e∈ })
-
 ```
 
 <!--en-->
@@ -493,7 +493,6 @@ Filling the existential is the converse: the standard singleton environment is p
 ```agda
     one-in : (z : S) → ⟨ envOne (fst z) ∈ Y ⟩ → ⟨ (z ∷ δ) ⊨ ∃̇∈ (var (sh 1 y)) (singleOf i0 (sh 2 N0) i1) ⟩
     one-in z h = ∣ down YS (envOne (fst z)) h , (h , singleOf-in i0 (sh 2 N0) i1 (down YS (envOne (fst z)) h ∷ z ∷ δ) q0 refl) ∣₁
-
 ```
 
 <!--en-->
@@ -507,7 +506,6 @@ Reading the definable-subset clause produces the two directions of the cut relat
 ```agda
   definesB-out : ⟨ δ ⊨ definesB x w y N0 ⟩ → Cuts X Wv Y
   definesB-out (h1 , h2) = (λ z hz → h1 z hz .fst , one-out z (h1 z hz .snd)) , (λ z hw he → h2 z hw (one-in z he))
-
 ```
 
 <!--en-->
@@ -522,6 +520,9 @@ Conversely, the two pointwise directions in `Cuts X Wv Y` fill the two conjuncts
   definesB-in : Cuts X Wv Y → ⟨ δ ⊨ definesB x w y N0 ⟩
   definesB-in (o , i) = (λ z hz → o z hz .fst , one-in z (o z hz .snd)) , (λ z hw he → i z hw (one-out z he))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Reading the bounded subset clauses
@@ -539,8 +540,16 @@ The full reading module names the four sets: the proposed value, the carrier, th
 完全な読みのモジュールは、四つの集合、すなわち提案された値・台・表・コードの定義域に名前を与える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Read {m : ℕ} (v w T C : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Vv = fst (lookup v γ)
     Wv = fst (lookup w γ)
@@ -730,7 +739,6 @@ The equation using the formal tag is converted to the required arity-one equatio
     ec' = ec ∙ cong (λ a → pr a (fst p)) (sym (tg f1))
     δ3 : S ^ (3 + m)
     δ3 = p ∷ container c (lookup (N f1) γ) p ec' .fst ∷ c ∷ γ
-
 ```
 
 <!--en-->
@@ -778,6 +786,9 @@ The coverage clause contains the same two nested existential choices: a value of
     sndAll-in' = sndAll-in i0 (sh 1 (N f1))
       (∃̇∈ (var (sh 3 T)) (sndEx i0 i3 (∃̇∈ (var (sh 6 v)) (definesB i0 (sh 7 w) i1 (sh 7 (N f0)))))) (c ∷ γ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Correctness of the bounded description
@@ -795,9 +806,17 @@ We can now compare the bounded description with the actual definability operatio
 ここから、有界な記述を実際の定義可能性の演算と比較する。この比較には `defAt` の充足だけでは足りない。数を表すタグが意図した値をもち、作業集合の枠が `W` を表し、さらに `satAt` が符号集合と充足関係表に本来の充足意味論を保証していなければならない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module DefRead {m : ℕ} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (hs : ⟨ γ ⊨ satAt T w C E N ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
   open Match W
   private
@@ -830,7 +849,6 @@ Write `Tv` and `Cv` for the underlying sets occupying the table and code slots. 
 ```agda
     Tv = fst (lookup T γ)
     Cv = fst (lookup C γ)
-
 ```
 
 <!--en-->
@@ -920,7 +938,6 @@ Transport the environment membership along that presentation path and apply `def
         in subst (λ u → ⟨ u ∈ DA.defSet ψ ⟩) (fib .snd)
              (subst ⟨_⟩ (sym (defSet-Sat W ψ (fib .fst)))
                (subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) (sym (fib .snd)) (o zS hz .snd)))
-
 ```
 
 <!--en-->
@@ -981,7 +998,6 @@ The final transports only reconcile the chosen presentation of the member with i
 
 ```agda
                  (subst (λ u → ⟨ envOne u ∈ fst (Sat W (toS ψ)) ⟩) (sym (fib .snd)) he)))
-
 ```
 
 <!--en-->
@@ -1043,7 +1059,6 @@ The value slot is presented as a carrier element for reading the outward directi
 
 ```agda
       xS = down (lookup v γ) x hx
-
 ```
 
 <!--en-->
@@ -1075,7 +1090,6 @@ The slice equality is transported along the table-value identification to recove
             x'∈ })
         (RD.all-out ha (keyS W ψ) (sndS (keyS W ψ) (# 1) (cd ψ) refl) (SR.C-in (keyS W ψ) (key∈AllCodes W ψ)) refl) })
       (𝒟ₒ-inv (fst W) x hx)
-
 ```
 
 <!--en-->
@@ -1105,7 +1119,6 @@ Each formula's table entry is selected from the already-defined recursion table,
     entry ψ = Table.val W W (keyS W ψ) (key∈AllCodes W ψ)
             , ( SR.T-in (keyS W ψ) (key∈AllCodes W ψ)
               , cong fst (val-at W W ψ (keyS W ψ) (key∈AllCodes W ψ) refl) )
-
 ```
 
 <!--en-->
@@ -1137,7 +1150,6 @@ The chosen table value is the value already determined by the recursive satisfac
             , ( entry ψ .snd .fst
               , subst (λ u → Cuts (fst x) Wv u) (sym (entry ψ .snd .snd)) (cuts-of ψ x e) ) ) ) })
       (𝒟ₒ-inv (fst W) (fst x) (subst (λ u → ⟨ fst x ∈ u ⟩) qv x∈)))
-
 ```
 
 <!--en-->
@@ -1185,6 +1197,9 @@ The satisfaction table supplies the value attached to the decoded formula key, w
              , subst (λ u → Cuts (DA.defSet ψ) Wv u) (sym (entry ψ .snd .snd)) (cuts-of ψ xS refl) ) ) })
       (decodeAll c (SR.C-out c c∈) 1 (fst p) ec))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The exported soundness direction exposes the exact interface used later: once the working-set slot denotes `W`, `Tags` fixes the numeral slots, and `satAt` validates the code and satisfaction data, `defAt` implies equality with `𝒟ₒ (fst W)`. Thus the bounded formula receives its intended meaning only in this calibrated background.
@@ -1199,7 +1214,6 @@ def-sound : ∀ {m} (v w T C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W :
           → fst (lookup w γ) ≡ fst W → Tags γ N → ⟨ γ ⊨ satAt T w C E N ⟩
           → ⟨ γ ⊨ defAt v w T C N ⟩ → fst (lookup v γ) ≡ 𝒟ₒ (fst W)
 def-sound v w T C E N γ W qw tg hs = DefRead.def-sound v w T C E N γ W qw tg hs
-
 ```
 
 <!--en-->

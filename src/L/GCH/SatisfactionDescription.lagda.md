@@ -14,7 +14,6 @@ The external semantic recursion has already produced the uniform satisfaction ta
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -28,7 +27,6 @@ The construction remains relative to excluded middle at level `ℓ-suc ℓ`. Thi
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -41,7 +39,6 @@ Fix a universe level `ℓ` and this single classical hypothesis. Every object us
 
 ```agda
 module L.GCH.SatisfactionDescription {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -120,7 +117,6 @@ The remaining object is the graph of the uniform table. Its entries are encoded 
 open import L.Coding.SatisfactionClauses {ℓ} using ( tableAt; Δ₀-tableAt )
 open import L.Coding.SatisfactionClauseSemantics {ℓ} lem using ( module Frame; module Bridge )
 open import L.Coding.SatisfactionGraphSet {ℓ} lem using ( module SatGraph )
-
 ```
 
 <!--en-->
@@ -131,8 +127,7 @@ An interpreting environment is a finite vector of constructible sets, and its in
 解釈環境は構成可能集合の有限ベクトルであり、その添字が表、作業集合、コード領域、塔、数項タグを指定する。依存対は各読みが返す証人を表す。その証人が命題的切り詰めのもとにある場合、別の命題を証明するためにだけ使うことができ、大域的に選ばれたデータにはできない。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Natural-number arities are represented inside the cumulative hierarchy by the numerals `# k`. Thus an environment-tower entry is encoded as the pair of `# k` with `envSet W k`. Equality is always asserted between the underlying hierarchy sets, which is the level at which the coding theorems operate.
@@ -146,7 +141,6 @@ Natural-number arities are represented inside the cumulative hierarchy by the nu
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Constructions using ( module InfinitySet )
 open InfinitySet {ℓ} using ( #_ )
-
 ```
 
 <!--en-->
@@ -159,7 +153,6 @@ Write `S` for the carrier of the constructible structure. An element of `S` cons
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S )
-
 ```
 
 <!--en-->
@@ -191,11 +184,19 @@ For soundness, fix candidate sets `T`, `C`, and `E`, a working set `W`, ten nume
 健全性のために、候補集合 `T`、`C`、`E`、作業集合 `W`、十個の数項タグ、そしてそれらを読む環境を固定する。塔、コード領域、表の記述が成り立つことを個別に仮定し、作業集合のスロットだけを `W` と整合させる。三つの記述の仮定のどれも、残りの二つからは従わない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module SatSound {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N)
   (hE : ⟨ γ ⊨ towerAt E w (N f0) ⟩) (hC : ⟨ γ ⊨ codesAt C w E N ⟩)
   (hT : ⟨ γ ⊨ tableAt T w C E N ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
 ```
 
@@ -242,7 +243,6 @@ The hypothesis `hT` consists of totality, the on-domain condition, and the ten c
 ```agda
     module Fr = Frame T w C E N γ tg
     module SC = SatSoundC T w C E N γ W qw tg hE CS.closed hT
-
 ```
 
 <!--en-->
@@ -282,7 +282,6 @@ The pinning predicate says: whenever a value `y` is paired with the key of `ψ` 
 ```agda
   Pinned : ∀ {n} (ψ : Formula Ab n) → Type (ℓ-suc ℓ)
   Pinned ψ = (y : S) → ⟨ pr (fst (keyS W ψ)) (fst y) ∈ Tv ⟩ → fst y ≡ fst (SatW ψ)
-
 ```
 
 <!--en-->
@@ -311,7 +310,6 @@ Every member of the candidate code domain belongs to the canonical code set. The
   C-out c c∈ = rec₁ (snd (fst c ∈ fst (AllCodes W)))
     (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ fst (AllCodes W) ⟩) (sym e) (key∈AllCodes W ψ) })
     (CS.key-out c c∈)
-
 ```
 
 <!--en-->
@@ -327,7 +325,6 @@ Conversely, every member of the canonical code set belongs to `Cv`. Canonical me
   C-in c c∈ = rec₁ (snd (fst c ∈ Cv))
     (λ { (k , ψ , e) → subst (λ u → ⟨ u ∈ Cv ⟩) (sym e) (CC.key-in ψ) })
     (AllCodes-out W c c∈)
-
 ```
 
 <!--en-->
@@ -342,7 +339,6 @@ The outward tower reading concerns an entry already presented as `pr n F`. Under
   E-out : (n F : S) → ⟨ pr (fst n) (fst F) ∈ Ev ⟩
         → ∥ Σ[ k ∈ ℕ ] ((fst n ≡ # k) × (fst F ≡ fst (envSet W k))) ∥₁
   E-out = TR.entry-out
-
 ```
 
 <!--en-->
@@ -356,7 +352,6 @@ The inward tower reading supplies the complementary fact without propositional t
 ```agda
   E-in : (k : ℕ) → ⟨ pr (# k) (fst (envSet W k)) ∈ Ev ⟩
   E-in = TR.entry-in
-
 ```
 
 <!--en-->
@@ -404,7 +399,6 @@ Pinning identifies the recorded value with the recursive satisfaction set, and `
                 ∙ sym (cong fst (val-at W W ψ x mx qx)) ) })
       (CS.key-out c c∈) })
     (Fr.onC-out hOn (down (lookup T γ) (pr (fst x) (fst y)) h) h)
-
 ```
 
 <!--en-->
@@ -437,6 +431,9 @@ The candidate value is pinned to the recursive satisfaction set, and the value l
       (sub ψ) })
     (AllCodes-out W x mx)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Completeness and the two readings
@@ -454,11 +451,19 @@ Completeness starts from concrete semantic objects rather than an arbitrary cand
 完全性は任意の候補ではなく、具体的な意味論的対象から始める。環境の四つのスロットは、それぞれ `W`、実際のグラフ `SatGraph.pairs W`、正準なコード集合 `AllCodes W`、実際の塔 `Tower.tower W` と整合し、十個のタグも固定される。これらの整合は仮定であり、有界な節から得られる結論ではない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module SatHolds {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (qT : fst (lookup T γ) ≡ fst (SatGraph.pairs W))
   (qC : fst (lookup C γ) ≡ fst (AllCodes W)) (qE : fst (lookup E γ) ≡ fst (Tower.tower W))
   (tg : Tags γ N) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Alphabet W
 ```
 
@@ -520,7 +525,6 @@ For a candidate code `c`, alignment with the canonical code set makes `c` a vali
     tot c c∈ =
       let mx = subst (λ u → ⟨ fst c ∈ u ⟩) qC c∈
       in ∣ SatGraph.valOf W c mx , subst (λ u → ⟨ pr (fst c) (fst (SatGraph.valOf W c mx)) ∈ u ⟩) (sym qT) (SatGraph.pairs-in W c mx) ∣₁
-
 ```
 
 <!--en-->
@@ -552,6 +556,9 @@ The inputs to `SatHoldsC.holds` have distinct jobs. The real tower supplies the 
   holds = SatHoldsC.holds W T w C E N γ qw tg
     (TowerHolds.holds E w (N f0) γ W qw qE (tg f0)) val≡ decode tot onc
 ```
+</div>
+</details>
+
 
 <!--en-->
 The sealed formula `satAt` packages three independent descriptions: `towerAt`, `codesAt`, and `tableAt`. The tower component is passed the tag slot `N f0`, which `Tags` identifies with the numeral zero; the code-domain and table components receive the whole ten-slot family `N`. This conjunction by itself adds no equality with the canonical tower, code set, or satisfaction graph.
@@ -565,7 +572,6 @@ The sealed formula `satAt` packages three independent descriptions: `towerAt`, `
 opaque
   satAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
   satAt T w C E N = towerAt E w (N f0) ∧̇ (codesAt C w E N ∧̇ tableAt T w C E N)
-
 ```
 
 <!--en-->
@@ -579,7 +585,6 @@ Later arguments may treat `satAt` as one bounded predicate rather than repeatedl
 ```agda
 opaque
   unfolding satAt
-
 ```
 
 <!--en-->
@@ -593,7 +598,6 @@ The certificate `Δ₀-satAt` uses closure of the bounded fragment under conjunc
 ```agda
   Δ₀-satAt : ∀ {m} (T w C E : Fin m) (N : Fin 10 → Fin m) → Δ₀ (satAt T w C E N)
   Δ₀-satAt T w C E N = δ-∧ (Δ₀-towerAt E w (N f0)) (δ-∧ (Δ₀-codesAt C w E N) (Δ₀-tableAt T w C E N))
-
 ```
 
 <!--en-->
@@ -609,7 +613,6 @@ From a proof of `satAt`, one recovers the three precise hypotheses needed for so
             → ⟨ γ ⊨ satAt T w C E N ⟩
             → ⟨ γ ⊨ towerAt E w (N f0) ⟩ × (⟨ γ ⊨ codesAt C w E N ⟩ × ⟨ γ ⊨ tableAt T w C E N ⟩)
   satAt-out T w C E N γ h = h
-
 ```
 
 <!--en-->
@@ -635,9 +638,17 @@ Conversely, proofs of those three descriptions combine to establish `satAt`. The
 `SatRead` は、`satAt` を満たす候補に対する健全性側の接続口である。作業集合のスロットが `W` と同定され、`Tags` が数項のスロットを整合させた後にのみ適用でき、上で証明した六つの正確な外向きと内向きの規則を公開する。それぞれの結論の形はそのまま保たれる。この接続口は、それらを候補集合と正準集合との一括した等しさに置き換えず、選ばれた復号結果や証人も取り出さない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module SatRead {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) (γ : S ^ m) (W : S)
   (qw : fst (lookup w γ) ≡ fst W) (tg : Tags γ N) (h : ⟨ γ ⊨ satAt T w C E N ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     module SS = SatSound T w C E N γ W qw tg
       (satAt-out T w C E N γ h .fst) (satAt-out T w C E N γ h .snd .fst) (satAt-out T w C E N γ h .snd .snd)
@@ -653,8 +664,10 @@ For codes, the two directions compare membership with `AllCodes W`. For tower en
 
 ```agda
   open SS public using ( C-out; C-in; E-out; E-in; T-out; T-in )
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 The converse theorem assumes that the four slots already present the intended objects: `W`, its satisfaction graph, its complete code set, and its environment tower. It also assumes the ten correct numeral tags. These alignments are input data for completeness and are not recovered from `satAt`.

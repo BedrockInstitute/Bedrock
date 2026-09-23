@@ -104,8 +104,7 @@ Some existence statements in the chapter are deliberately weak. When a graph mem
 本章の存在主張の一部は、意図的に弱く作られている。グラフに項目が存在すると言うとき、主張するのはある項目が単に存在することであって、どれかを選び出すことではない。このような主張は命題的截断の中に住み、命題値の対象へしか消去できない。截断された存在と明示的な証人を区別しておくことは、すべての妥当性の証明の両方向で重要である。存在の公式の充足は常に截断された形を持つからである。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Truth values are propositions at level `ℓ-suc ℓ`: a formula does not evaluate to a boolean but to an `hProp`, packaging an underlying type with the proof that it is a proposition. The carrier `S` of the inner structure is thereby fixed as well: its elements are exactly the pairs of an ambient set and a constructibility certificate. Throughout what follows, `γ ⊨ φ` means satisfaction in the constructible model, and `⟦ t ⟧ γ` is an element of `S`, a set with its certificate.
@@ -428,9 +427,17 @@ The two directions are stated for a fixed graph slot `f` and a fixed environment
 二つの方向は、固定されたグラフのスロット `f` と固定された環境 `γ` に対して述べられるので、局所的な述語が外部の意味を一度記録する。`Holds x y` は、`x` と `y` の射影された対がグラフの底にある集合に属することを言い、これは `appAt-adequate` を一度適用して得られる形そのものである。続く二つの妥当性の実例は、どちらの含意を読んでいるのかを固定する。`at` は値 `y` を持つ対のためのもので、`at'` は `y'` を持つ対のためのものである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module _ {n : ℕ} (f : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Holds : S → S → Type (ℓ-suc ℓ)
     Holds x y = ⟨ pr (fst x) (fst y) ∈ fst (lookup f γ) ⟩
@@ -501,6 +508,9 @@ The introduction direction `svAt-in` mirrors the extraction, with the transports
   svAt-in h x y y' p q = h x y y'
     (subst ⟨_⟩ (at x y y') p) (subst ⟨_⟩ (at' x y y') q)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The domain
@@ -564,9 +574,17 @@ The direction lemmas are stated for a fixed graph slot `f`, a fixed candidate `d
 方向の補題は、固定されたグラフのスロット `f`、候補 `d`、環境 `γ` に対して述べられる。補助の `step` は、量化された本体の妥当性のパスを一度固定する。模型の要素 `x` において、「値を持つ」公式の充足は、射影された `x` と `y` の対がグラフに属するような `y` の切り詰められた存在へのパスである。以下の輸送はすべてこの一本のパスを通る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module _ {n : ℕ} (f d : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     step : (x : S)
          → ((x ∷ γ) ⊨ inDomAt (suc f) zero)
@@ -635,6 +653,9 @@ The assembly is exactly the shape of the conjunction of implications under the u
 ```agda
                   , (λ m → subst ⟨_⟩ (sym (step x)) (g x .snd m))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The pair, inside the model
@@ -814,7 +835,6 @@ codeBridge (∀̇∈ t a) = tagBridge 8 _ ∙ cong (VCode.mkTag 8)
   (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridge a))
 codeBridge (∃̇∈ t a) = tagBridge 9 _ ∙ cong (VCode.mkTag 9)
   (prʟ-fst _ _ ∙ cong₂ pr (codeBridgeTm t) (codeBridge a))
-
 ```
 
 <!--en-->
@@ -967,9 +987,18 @@ Assembling the four clauses gives the definition of being an environment over d 
 envOverAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 envOverAt e d B =
   svAt e ∧̇ (domAt e d ∧̇ (valuesInAt e B ∧̇ pairsInAt e d B))
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ {n : ℕ} (e d B : Fin n) (γ : S ^ n) (h : ⟨ γ ⊨ envOverAt e d B ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Each projection is just the corresponding component of the nested pair that the satisfaction of a fourfold conjunction is. The first is single-valuedness of e, the second the domain clause relating e and d, the third the value restriction toward B, and the fourth the pairs clause itself. With these in hand, an argument that needs only one aspect of environment-hood can take it without rebuilding the conjunction, and an argument that constructs an environment can be checked conjunct by conjunct.
@@ -1000,6 +1029,9 @@ The four projections also expose why the definition is modular: uniqueness, doma
   envOver-pairs  : ⟨ γ ⊨ pairsInAt e d B ⟩
   envOver-pairs  = h .snd .snd .snd
 ```
+</div>
+</details>
+
 
 <!--en-->
 Every reader built so far inspects only the underlying sets that the assignment places at its indices: a satisfaction claim about a graph, a domain, or a value set is always stated after projecting the looked-up entries by `fst`. It follows that the description of an environment depends extensionally on just three sets, the projected graph, the projected domain, and the projected value set, and on nothing else about the assignment. So if two assignments, possibly of different arities, place the same three sets at the indices the description consults, the description holds at one exactly when it holds at the other.
@@ -1189,7 +1221,6 @@ The witness is the unordered pair of the two underlying sets. As one member of t
     s∈ = subst (λ w → ⟨ ⁅ fst u , fst v ⁆ ∈ w ⟩) (sym e) (∈pair-introR refl)
     s : S
     s = ⁅ fst u , fst v ⁆ , isL-trans s∈ (snd x)
-
 ```
 
 <!--en-->

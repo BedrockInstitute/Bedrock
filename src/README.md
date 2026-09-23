@@ -27,8 +27,9 @@ checks exact coverage and prerequisite order. Milestones is the explicitly label
 ## Current modules
 
 `Milestones.lagda.md` is the trophy case and reads first in the catalog: the
-storefront, before the foundations stage. It states `V⊨ZF`, `V⊨ZF-impredicative`, `V⊨ZFC`, `L⊨ZFC` and
-`L⊨GCH`, each a self-contained signature naming its proving chapter. **Both `L` trophies are
+storefront, before the foundations stage. It displays the implications `SetChoice→LEM` and
+`LEM→ΩResizing`, followed by `V⊨ZF`, `V⊨ZFC`, `L⊨ZFC` and
+`L⊨GCH`, each imported from its proving chapter. **Both `L` trophies are
 proved.** `L⊨GCH` was proved on 2026-09-05; its statement type is `GCHStatement` in
 `L/GCH.lagda.md` and its proof term is `L⊨GCH` in `L/GCH/Theorem.lagda.md`. The only
 hypothesis either takes is `LEM (ℓ-suc ℓ)`.

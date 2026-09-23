@@ -36,9 +36,9 @@ def _shared_prose(lines:list[str])->list[tuple[bool,str]]:
     hits=[]
     for kind,block in _markdown_blocks(lines):
         if kind!='prose': continue
-        # Optional-reading/disclosure wrappers and QED are language-neutral structure, not
+        # Disclosure/submodule wrappers and QED are language-neutral structure, not
         # reader-facing prose. Their visible content remains inside explicit groups.
-        structural = re.compile(r'^\s*(?:<details\b[^>]*>|<aside\b[^>]*class="optional-reading"[^>]*>|</(?:details|aside)>|∎)\s*$')
+        structural = re.compile(r'^\s*(?:<details\b[^>]*>|<div\b[^>]*class="submodule-fold-content"[^>]*>|</(?:details|div)>|∎)\s*$')
         text='\n'.join(line for line in block if not structural.match(line))
         if visible_chars(text): hits.append((_is_english_narrative(block),text))
     return hits
@@ -48,7 +48,7 @@ def analyze_text(text:str,name:str='<memory>')->dict:
     clean=strip_metadata(text)
     errors=[]; fences=[]; groups=[]; shared=[]
     cur_group=None; group_start=None; cur_lang=None; shared_buf=[]; in_fence=False; fence_lines=[]; fence_start=0
-    last_narrative=None; in_block_comment=False
+    last_narrative=None; in_block_comment=False; in_fold_heading=False
     def flush_shared():
         nonlocal shared_buf
         if shared_buf: shared.extend(_shared_prose(shared_buf)); shared_buf=[]
@@ -68,10 +68,18 @@ def analyze_text(text:str,name:str='<memory>')->dict:
         if in_fence:
             if FENCE_CLOSE.match(line):
                 nonempty=sum(bool(x.strip()) for x in fence_lines)
-                if not 1<=nonempty<=5: errors.append({'line':fence_start,'rule':'fence-size','message':f'Agda fence has {nonempty} nonempty lines; expected 1..5'})
+                if not in_fold_heading and not 1<=nonempty<=5:
+                    errors.append({'line':fence_start,'rule':'fence-size','message':f'Agda fence has {nonempty} nonempty lines; expected 1..5'})
                 if last_narrative is None: errors.append({'line':fence_start,'rule':'preceding-exposition','message':'Agda fence has no preceding complete en/zh/ja narrative group'})
                 fences.append({'line':fence_start,'total_lines':len(fence_lines),'nonempty_lines':nonempty,'preceding_exposition_chars':last_narrative})
-                in_fence=False; fence_lines=[]; in_block_comment=False; last_narrative=None
+                # A fold heading is only a scope declaration. The exposition
+                # introducing it also introduces the first code block inside.
+                nonblank = [line for line in fence_lines if line.strip()]
+                keep_exposition = (in_fold_heading and bool(nonblank) and
+                    re.match(r'\s*module\s+\S+', nonblank[0]) and
+                    re.search(r'\bwhere\s*$', nonblank[-1]))
+                in_fence=False; fence_lines=[]; in_block_comment=False
+                if not keep_exposition: last_narrative=None
             else:
                 fence_lines.append(line)
                 # STYLE-agda explicitly permits this machine-readable import
@@ -84,6 +92,10 @@ def analyze_text(text:str,name:str='<memory>')->dict:
             continue
         if FENCE_OPEN.match(line):
             flush_shared(); in_fence=True; fence_start=n; fence_lines=[]; continue
+        if re.match(r'^\s*<summary class="submodule-fold-heading">\s*$', line):
+            in_fold_heading=True
+        elif re.match(r'^\s*</summary>\s*$', line):
+            in_fold_heading=False
         code=marker(line)
         if code:
             flush_shared()

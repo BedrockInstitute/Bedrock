@@ -159,8 +159,16 @@ The key tree is governed by the parts lemmas. `Parts.self`{.Agda} says that a fo
 鍵の木は部品の補題に支配される。`Parts.self`{.Agda} は、論理式自身の鍵が自分のスロットにあることを言い、`Parts.left`{.Agda}、`Parts.right`{.Agda}、`Parts.only`{.Agda} は、複合論理式のスロットが直接の部分のスロットの鍵を含むことを言う。これは構成子の木に沿った部分木の包含であり、部品の補題と逆にたどる操作によって与えられ、上界の順序や下方の閉じ方から来るものではない。上界 `B` は、これらの補題のインターフェースの引数として渡されるだけである。したがって閉包の場合に必要なのは、読まれた対を部分の鍵として認めることである。以下の二つの補題がちょうどそれを行う。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     Sl : ∀ {n} → Formula S n → S
     Sl = slot B
@@ -238,8 +246,16 @@ The clauses are organized by the shape of the closure each constructor demands. 
 場合の構成は、構成子ごとに要求される閉包の形に従う。証明される本体は四つで、形ごとに一つである。アリティを保つ二項の構成子、アリティを保つ一項の構成子、アリティを上げる一項の構成子、そして項とアリティが一段上がった論理式の対を取る二項の構成子である。同じ本体の中で二つの場合が違うのは、構成子の標識と、どの部分を手渡すかだけであり、どちらも引数である。それぞれの場合は四つの動きで進む。スロットの要素を論理式へ逆にたどり、標識でその構成子を読み、部分の鍵をその論理式自身のスロットへ戻し、全体のスロットへ持ち上げる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {n : ℕ} (φ : Formula S n) {k : ℕ} (γ : S ^ k) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     private
       δ : S ^ (suc (suc (suc k)))
       δ = B ∷ satTable B φ ∷ Sl φ ∷ γ
@@ -755,3 +771,8 @@ The seven clauses assemble into the closure statement `closedAt`: the slot of `�
     slotClosed = andC , (orC , (impC
                , (exC , (allC , (allInC , exInC)))))
 ```
+</div>
+</details>
+
+</div>
+</details>

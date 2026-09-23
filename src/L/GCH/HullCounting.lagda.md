@@ -8,7 +8,6 @@ Closing a small set under definable least witnesses should preserve an infinite 
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -25,7 +24,6 @@ open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Cubical.Data.Nat using ( znots; snotz )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -38,7 +36,6 @@ Fix a universe level `ℓ` and excluded middle for propositions at level `ℓ-su
 
 ```agda
 module L.GCH.HullCounting {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -178,9 +175,7 @@ When both arguments of a graph are identified by equalities, two-place transport
 グラフの二つの引数がそれぞれ等しさで同一視されるとき、二項の移送によってグラフへの所属証明を両方の同一視に沿って一度に移せる。したがって等しさによる置換は符号化された関係と両立する。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 The tags `0` and `1` are distinct, making the two branches of a tagged injection disjoint. Equality of dependent pairs with proposition-valued fibers reduces to equality of their first components, so constructibility proofs do not affect the count.
@@ -216,9 +211,7 @@ Existence of a coded injection is propositionally truncated because the count de
 符号化された単射の存在は命題的に切り詰められる。数え上げに必要なのは証人となるグラフの存在だけだからである。したがって除去は命題に対してのみ行い、結果がグラフの選び方に依存しないようにする。
 <!--/-->
 
-```agda
 
-```
 
 <!--en-->
 For ambient sets, `x ∈ˢ y` is the proposition that `x` belongs to `y`. The domain and range clauses of coded functions ultimately reduce to this relation on underlying sets.
@@ -230,7 +223,6 @@ For ambient sets, `x ∈ˢ y` is the proposition that `x` belongs to `y`. The do
 
 ```agda
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
-
 ```
 
 <!--en-->
@@ -244,7 +236,6 @@ Write `S` for the carrier of the constructible model. Its elements are ambient s
 ```agda
 module SL = hPropStructure 𝒮ʟ using ( S )
 open SL using ( S )
-
 ```
 
 <!--en-->
@@ -284,7 +275,6 @@ The element `nn k : S` is the ambient von Neumann numeral `# k` together with it
 ```agda
 nn : ℕ → S
 nn k = # k , numL k
-
 ```
 
 <!--en-->
@@ -298,7 +288,6 @@ If two elements of `S` have equal underlying sets, then the elements themselves 
 ```agda
 S≡ : {x y : S} → fst x ≡ fst y → x ≡ y
 S≡ = Σ≡Prop (λ v → snd (isL v))
-
 ```
 
 <!--en-->
@@ -312,7 +301,6 @@ The carrier `S` is an h-set. Its first component lies in the cumulative hierarch
 ```agda
 isSetS : isSet S
 isSetS = isSetΣSndProp setIsSet (λ v → snd (isL v))
-
 ```
 
 <!--en-->
@@ -412,10 +400,16 @@ Fix constructible sets `D₁` and `D₂`. Their internal binary union is the com
 構成可能集合 `D₁` と `D₂` を固定する。それらの内部の二項和集合は二つの単射をまとめる共通の定義域であり、その所属原理から二つの包含と切り詰められた場合分けが得られる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Union2 (D₁ D₂ : S) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The union is the internal union of the two sets.
@@ -428,7 +422,6 @@ The union is the internal union of the two sets.
 ```agda
   D : S
   D = cupʟ D₁ D₂
-
 ```
 
 <!--en-->
@@ -442,7 +435,6 @@ Left members are included by the left rule of the union.
 ```agda
   in₁ : (z : S) → ⟨ fst z ∈ fst D₁ ⟩ → ⟨ fst z ∈ fst D ⟩
   in₁ z = cupʟ-inl D₁ D₂ (fst z)
-
 ```
 
 <!--en-->
@@ -456,7 +448,6 @@ Right members are included symmetrically.
 ```agda
   in₂ : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → ⟨ fst z ∈ fst D ⟩
   in₂ z = cupʟ-inr D₁ D₂ (fst z)
-
 ```
 
 <!--en-->
@@ -471,6 +462,9 @@ If `z ∈ D₁ ∪ D₂`, then it merely belongs to the left side or the right s
   out : (z : S) → ⟨ fst z ∈ fst D ⟩ → ∥ ⟨ fst z ∈ fst D₁ ⟩ ⊎ ⟨ fst z ∈ fst D₂ ⟩ ∥₁
   out z = cupʟ-out D₁ D₂ (fst z)
 ```
+</div>
+</details>
+
 
 <!--en-->
 Let `κ` be a constructible set containing the tags `0` and `1`, and let `E₁` and `E₂` code injections from `D₁` and `D₂` into `κ`. Tagging their values combines them into an injection from `D₁ ∪ D₂` into `κ × κ`. This construction requires no ordinal hypothesis on `κ`.
@@ -480,11 +474,17 @@ Let `κ` be a constructible set containing the tags `0` and `1`, and let `E₁` 
 `κ` をタグ `0` と `1` を含む構成可能集合とし、`E₁` と `E₂` がそれぞれ `D₁` と `D₂` から `κ` への単射を符号化するとする。値にタグを付けると、`D₁ ∪ D₂` から `κ × κ` への一つの単射にまとめられる。この構成では `κ` が順序数である必要はない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module TagUnion (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (1∈κ : ⟨ # 1 ∈ fst κ ⟩)
                 (D₁ D₂ E₁ E₂ : S) (c₁ : InjCode E₁ D₁ κ) (c₂ : InjCode E₂ D₂ κ) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Write `D = D₁ ∪ D₂`. A member of either summand belongs to `D`, and every member of `D` yields a truncated proof that it comes from one of the two summands.
@@ -496,7 +496,6 @@ Write `D = D₁ ∪ D₂`. A member of either summand belongs to `D`, and every 
 
 ```agda
   open Union2 D₁ D₂ public using ( D; in₁; in₂; out )
-
 ```
 
 <!--en-->
@@ -510,7 +509,6 @@ Each coded injection extracts its underlying function together with the proof th
 ```agda
   module X₁ = Extract E₁ D₁ (fst c₁) (fst (snd c₁)) using ( toFun; toFun-graph )
   module X₂ = Extract E₂ D₂ (fst c₂) (fst (snd c₂)) using ( toFun; toFun-graph )
-
 ```
 
 <!--en-->
@@ -524,7 +522,6 @@ Each coded injection extracts its underlying function together with the proof th
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem z = ⟨ fst z ∈ fst D ⟩
-
 ```
 
 <!--en-->
@@ -538,7 +535,6 @@ Membership in the left domain is decidable by excluded middle, and the decision 
 ```agda
   Case : S → Type (ℓ-suc ℓ)
   Case z = Dec ⟨ fst z ∈ fst D₁ ⟩
-
 ```
 
 <!--en-->
@@ -552,7 +548,6 @@ Excluded middle decides, for every member of the union, whether it came from the
 ```agda
   decide : (z : S) → Case z
   decide z = FOL.Semantics.decideMembership 𝒮ᵥ lem (fst z) (fst D₁)
-
 ```
 
 <!--en-->
@@ -567,7 +562,6 @@ A member outside the left domain must lie in the right domain: the union members
   off : (z : S) → Mem z → (⟨ fst z ∈ fst D₁ ⟩ → ⊥₀) → ⟨ fst z ∈ fst D₂ ⟩
   off z m nmem = rec₁ (snd (fst z ∈ fst D₂))
     (λ { (inl h) → ⊥₀-rec (nmem h) ; (inr h) → h }) (out z m)
-
 ```
 
 <!--en-->
@@ -582,7 +576,6 @@ The value on each side is the tagged image: the numeral tag zero or one paired w
   val : (z : S) → Mem z → Case z → S
   val z m (yes h) = prʟ (nn 0) (X₁.toFun (z , h))
   val z m (no nmem) = prʟ (nn 1) (X₂.toFun (z , off z m nmem))
-
 ```
 
 <!--en-->
@@ -624,7 +617,6 @@ In the right branch, `z ∉ D₁`, and there merely exists `v` with `(z,v) ∈ E
 
 ```agda
         × ∥ Σ[ v ∈ S ] (Holds E₂ z v × (fst y ≡ pr (# 1) (fst v))) ∥₁)
-
 ```
 
 <!--en-->
@@ -640,7 +632,6 @@ The graph is written as a two-slot formula: membership in `D₁` conjoined with 
     fo : Formula S 2
     fo = ((var i1 ∈̇ con D₁) ∧̇ ∃̇ (appC E₁ i2 i0 ∧̇ tagAtL i1 0 i0))
        ∨̇ ((¬̇ (var i1 ∈̇ con D₁)) ∧̇ ∃̇ (appC E₂ i2 i0 ∧̇ tagAtL i1 1 i0))
-
 ```
 
 <!--en-->
@@ -670,7 +661,6 @@ After transport along the two adequacy equivalences, the satisfaction witnesses 
 ```agda
           subst ⟨_⟩ (appC-adequate E i2 i0 (v ∷ y ∷ z ∷ [])) ha
         , subst ⟨_⟩ (tagAtL-adequate i1 k i0 (v ∷ y ∷ z ∷ [])) ht
-
 ```
 
 <!--en-->
@@ -699,7 +689,6 @@ The same backward transport turns the tagged-pair equality into satisfaction of 
 
 ```agda
         , subst ⟨_⟩ (sym (tagAtL-adequate i1 k i0 (v ∷ y ∷ z ∷ []))) ht
-
 ```
 
 <!--en-->
@@ -745,7 +734,6 @@ The tail of the right case completes the second disjunct: the entry of `E₂` is
 
 ```agda
           , map₁ (λ { (v , (ha , ht)) → v , wr E₂ 1 y z v ha ht }) hv) ∣₁
-
 ```
 
 <!--en-->
@@ -792,7 +780,6 @@ The second range clause completes the data extracted from the two injection code
     ran₁ = snd (snd (snd c₁))
     ran₂ : (x y : S) → Holds E₂ x y → ⟨ fst y ∈ fst κ ⟩
     ran₂ = snd (snd (snd c₂))
-
 ```
 
 <!--en-->
@@ -854,7 +841,6 @@ The final equation composes the tag identification with the pair's first-project
 
 ```agda
           ∙ sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m nmem))) }) hv
-
 ```
 
 <!--en-->
@@ -883,7 +869,6 @@ The right case supplies the range fact from `E₂` and the numeral `1`, completi
 
 ```agda
       (ran₂ z (X₂.toFun (z , off z m nmem)) (X₂.toFun-graph (z , off z m nmem))))
-
 ```
 
 <!--en-->
@@ -913,7 +898,6 @@ The defining clause feeds the witness into the graph introduction, and uniquenes
 ```agda
     ; defines = λ z m → fo-in (fn z m) z (wit z m (decide z))
     ; only = λ z m y h → S≡ (rec₁ (setIsSet _ _) (only z m (decide z) y) (fo-out y z h)) }
-
 ```
 
 <!--en-->
@@ -977,7 +961,6 @@ The pair equation for the right-right case splits into the agreement of the tags
       p : (# 1 ≡ # 1) × (fst (X₂.toFun (z , off z m nmem)) ≡ fst (X₂.toFun (z' , off z' m' nmem')))
       p = pr-inj (sym (prʟ-fst (nn 1) (X₂.toFun (z , off z m nmem))) ∙ q
                   ∙ prʟ-fst (nn 1) (X₂.toFun (z' , off z' m' nmem')))
-
 ```
 
 <!--en-->
@@ -992,6 +975,9 @@ The resulting graph is a coded injection from the ordinary union `D₁ ∪ D₂`
   injL : InjL D (prodL κ)
   injL = Inj.injL Dmap inj
 ```
+</div>
+</details>
+
 
 <!--en-->
 The two premises expose their injection graphs only under propositional truncation. Eliminating both truncations into the proposition `InjL (D₁ ∪ D₂) (prodL κ)` lets the tagged construction be applied to any witnessing pair of graphs, yielding the required mere coded injection.
@@ -1017,13 +1003,19 @@ The least-predecessor construction is stated generically. It takes an ordinal `�
 最小の前者の構成は、一般的な形で述べられる。順序数 `γ`、関係 `G`、定義域 `D`、そして段階 `γ` で抑えられた前者の集合 `P` を受け取り、`D` のすべての要素が `P` の中に `G` の前者を「単に」もつとする。課題は、その一つを正準に選ぶことである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module LeastPre (γ : V ℓ) (oγ : IsOrd γ) (G D P : S)
   (inP : (p z : S) → Holds G p z → ⟨ fst p ∈ fst P ⟩)
   (P⊆L : (p : S) → ⟨ fst p ∈ fst P ⟩ → ⟨ fst p ∈ Lset γ ⟩)
   (have : (z : S) → ⟨ fst z ∈ fst D ⟩ → ∥ Σ[ p ∈ S ] Holds G p z ∥₁) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Membership in the domain is recorded as a type, so that the argument can carry it alongside the elements.
@@ -1036,7 +1028,6 @@ Membership in the domain is recorded as a type, so that the argument can carry i
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem z = ⟨ fst z ∈ fst D ⟩
-
 ```
 
 <!--en-->
@@ -1051,7 +1042,6 @@ The graph formula is the application clause of the constant `G`: holding at a pa
   private
     graphFo : Formula S 2
     graphFo = appC G i0 i1
-
 ```
 
 <!--en-->
@@ -1080,7 +1070,6 @@ The original truncated existence supplies the witness that the transport consume
 
 ```agda
       (have z m)
-
 ```
 
 <!--en-->
@@ -1093,7 +1082,6 @@ The stage-order construction now selects, for every member of the domain, the le
 
 ```agda
     module Ls = Least γ oγ D graphFo have-γ using ( fn; fn-holds; Dmap; T; T-in; T-out )
-
 ```
 
 <!--en-->
@@ -1107,7 +1095,6 @@ The selected least predecessor is the value function of the construction.
 ```agda
   fn : (z : S) → Mem z → S
   fn = Ls.fn
-
 ```
 
 <!--en-->
@@ -1121,7 +1108,6 @@ The value satisfies the relation at its input: the internal satisfaction is tran
 ```agda
   fn-holds : (z : S) (m : Mem z) → Holds G (fn z m) z
   fn-holds z m = subst ⟨_⟩ (appC-adequate G i0 i1 (fn z m ∷ z ∷ [])) (Ls.fn-holds z m)
-
 ```
 
 <!--en-->
@@ -1148,7 +1134,6 @@ The graph of the least-predecessor function is an element of `L`, as the stage m
 ```agda
   T : S
   T = Ls.T
-
 ```
 
 <!--en-->
@@ -1162,7 +1147,6 @@ The inward reading exhibits the pair of an input with its selected value as an e
 ```agda
   T-in : (z : S) (m : Mem z) → ⟨ pr (fst z) (fst (fn z m)) ∈ fst T ⟩
   T-in = Ls.T-in
-
 ```
 
 <!--en-->
@@ -1187,11 +1171,17 @@ Under the additional hypothesis that the relation is functional, the least-prede
 関係が関数的であるという追加の仮定のもとで、最小の前者の関数は単射になる。モジュールが携えるのは、この一つの仮定だけである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Functional
     (funct : (p z z' : S) → Holds G p z → Holds G p z' → fst z ≡ fst z') where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 If two inputs share a value, the value satisfies the relation at both inputs; the second satisfaction is transported along the equation of the values, and functionality then identifies the two inputs.
@@ -1206,7 +1196,6 @@ If two inputs share a value, the value satisfies the relation at both inputs; th
         → fst (fn z m) ≡ fst (fn z' m') → fst z ≡ fst z'
     inj z m z' m' q = funct (fn z m) z z' (fn-holds z m)
       (subst (λ w → ⟨ pr w (fst z') ∈ fst G ⟩) (sym q) (fn-holds z' m'))
-
 ```
 
 <!--en-->
@@ -1221,6 +1210,12 @@ The injectivity is packaged into a coded injection from the domain into the pred
     injL : InjL D P
     injL = Inj.injL Dmap inj
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 The point construction handles an at-most-singleton domain. Given only `0 ∈ κ`, it sends every member of the singleton generated by `a` to the zeroth numeral and obtains a coded injection into `κ`.
@@ -1230,10 +1225,16 @@ The point construction handles an at-most-singleton domain. Given only `0 ∈ κ
 点の構成は、高々一要素の定義域を扱う。`0 ∈ κ` だけを仮定し、`a` から作った単集合の各要素を零番の数項へ送り、`κ` への符号化された単射を得る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Point (κ : S) (0∈κ : ⟨ # 0 ∈ fst κ ⟩) (a : S) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Let `Y` be the constructible singleton generated by `a`. The argument will use only its membership introduction and elimination laws.
@@ -1246,7 +1247,6 @@ Let `Y` be the constructible singleton generated by `a`. The argument will use o
 ```agda
   Y : S
   Y = sglʟ a
-
 ```
 
 <!--en-->
@@ -1260,7 +1260,6 @@ The member `a` belongs to its own singleton, by the introduction reading of the 
 ```agda
   Y-in : ⟨ fst a ∈ fst Y ⟩
   Y-in = sglʟ-in a (fst a) refl
-
 ```
 
 <!--en-->
@@ -1274,7 +1273,6 @@ The elimination reading says the singleton contains nothing else: any member has
 ```agda
   Y-out : (z : S) → ⟨ fst z ∈ fst Y ⟩ → fst z ≡ fst a
   Y-out z = sglʟ-out a (fst z)
-
 ```
 
 <!--en-->
@@ -1288,7 +1286,6 @@ The graph is described by the atomic formula with two free slots that equates th
 ```agda
   fo : Formula S 2
   fo = var i0 ≐ con ∅ʟ
-
 ```
 
 <!--en-->
@@ -1318,7 +1315,6 @@ The graph holds definitionally, since the atomic sentence equates the numeral wi
 ```agda
     ; defines = λ z m → refl
     ; only = λ z m y h → S≡ h }
-
 ```
 
 <!--en-->
@@ -1333,7 +1329,6 @@ Injectivity composes the two outward readings: both inputs present the same unde
   inj : (z : S) (m : ⟨ fst z ∈ fst Y ⟩) (z' : S) (m' : ⟨ fst z' ∈ fst Y ⟩)
       → fst (nn 0) ≡ fst (nn 0) → fst z ≡ fst z'
   inj z m z' m' _ = Y-out z m ∙ sym (Y-out z' m')
-
 ```
 
 <!--en-->
@@ -1348,6 +1343,9 @@ The singleton-to-cardinal injection is packaged in the same form as every other 
   injL : InjL Y κ
   injL = Inj.injL Dmap inj
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Counting every finite closure step
@@ -1365,13 +1363,24 @@ The counting theorem fixes an ordinal `lam` closed under successor, a start set 
 計数定理では、後者に閉じた順序数 `lam`、`Lset lam` に含まれる始点集合 `X`、そして `X` が構成可能であることを固定する。初等性と超妥当性の仮定は、`X` から生成される Skolem 包に必要な閉包と最小証人の性質を与える。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Count (lam : V ℓ) (ordλ : IsOrd lam)
   (succλ : (d : V ℓ) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : V ℓ) (X⊆L : (x : V ℓ) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
   (elem : Frame.A.Elementary lam ordλ succλ X X⊆L ∅∈λ)
+  (sup : Superadequate lam)
+  (X-isL : ⟨ isL X ⟩)
+  (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
+  (base : InjL (X , X-isL) κ) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The counting target is an internal cardinal `κ` outside `ω`, together with a coded injection of the start into it. The task is to count the whole hull by the same cardinal.
@@ -1381,12 +1390,7 @@ The counting target is an internal cardinal `κ` outside `ω`, together with a c
 計数の目標は、`ω` の外にある内部の基数 `κ` と、始点からそれへの符号化された単射である。課題は、同じ基数で包全体を数えることである。
 <!--/-->
 
-```agda
-  (sup : Superadequate lam)
-  (X-isL : ⟨ isL X ⟩)
-  (κ : S) (oκ : IsOrd (fst κ)) (cκ : IsCardinalL κ) (κ∉ω : ⟨ fst κ ∈ˢ ω ⟩ → ⊥₀)
-  (base : InjL (X , X-isL) κ) where
-```
+
 
 <!--en-->
 The hull is presented as the union of its finite iterates `hullStep n`. One closure step is governed by `Φ`, whose nontrivial branch records a least witness for a formula key and a finite parameter environment over the current iterate.
@@ -1457,7 +1461,6 @@ The infinite-cardinal square argument gives the coded injection `pairκ : InjL (
 ```agda
   pairκ : InjL (prodL κ) κ
   pairκ = WF.WFI.induction regularityV {P = Goal} Step.result (fst κ) (snd κ) oκ cκ κ∉ω
-
 ```
 
 <!--en-->
@@ -1482,11 +1485,17 @@ For one closure step, fix a constructible `Z` contained in `Lset lam` and an act
 一回の閉包を数えるため、`Lset lam` に含まれる構成可能な集合 `Z` と、`InjCode E Z κ` を満たす実際のグラフ `E` を固定する。目標は、この選ばれた段階の単射から、符号化単射の単なる存在 `InjL (Φ Z) κ` を構成することである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module OneStep (Z : S) (Z⊆ : (z : V ℓ) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
                  (E : S) (cE : InjCode E Z κ) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 `ΦZ = Φ Z` is one closure step. Its membership description has three branches: an old member of `Z`, the empty-set fallback, or a least witness determined by a formula key and a finite parameter environment over `Z`.
@@ -1513,7 +1522,6 @@ The new part is separated first: `D₂` collects the members of `ΦZ` that are n
     opaque
       D₂ : S
       D₂ = hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .fst
-
 ```
 
 <!--en-->
@@ -1528,7 +1536,6 @@ Its membership specification says exactly what separation computed: belonging to
       D₂-spec : (z : S) → (fst z ∈ fst D₂)
               ≡ ((fst z ∈ fst ΦZ) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ∈̇ con Z)))
       D₂-spec z = hasSeparationL ΦZ (¬̇ (var i0 ∈̇ con Z)) .fst .snd z
-
 ```
 
 <!--en-->
@@ -1543,7 +1550,6 @@ The introduction rule lifts the refutation of membership into the object level, 
     opaque
       D₂-in : (z : S) → ⟨ fst z ∈ fst ΦZ ⟩ → (⟨ fst z ∈ fst Z ⟩ → ⊥₀) → ⟨ fst z ∈ fst D₂ ⟩
       D₂-in z h nmem = subst ⟨_⟩ (sym (D₂-spec z)) (h , λ z∈ → lift (nmem z∈))
-
 ```
 
 <!--en-->
@@ -1572,7 +1578,6 @@ The unpacked statement is a pair: membership in `ΦZ` and satisfaction of the ne
 
 ```agda
         r = subst ⟨_⟩ (D₂-spec z) h
-
 ```
 
 <!--en-->
@@ -1587,7 +1592,6 @@ Inside the new part, the elements equal to the empty set are separated out as `D
     opaque
       D∅ : S
       D∅ = hasSeparationL D₂ (var i0 ≐ con ∅ʟ) .fst .fst
-
 ```
 
 <!--en-->
@@ -1602,7 +1606,6 @@ Its specification is the same two-fold pattern: membership in `D₂` together wi
       D∅-spec : (z : S) → (fst z ∈ fst D∅)
               ≡ ((fst z ∈ fst D₂) ⊓ ((z ∷ []) ⊨ var i0 ≐ con ∅ʟ))
       D∅-spec z = hasSeparationL D₂ (var i0 ≐ con ∅ʟ) .fst .snd z
-
 ```
 
 <!--en-->
@@ -1617,7 +1620,6 @@ An element of `D₂` that equals the empty set enters `D∅` with both data.
     opaque
       D∅-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → fst z ≡ ∅ → ⟨ fst z ∈ fst D∅ ⟩
       D∅-in z h e = subst ⟨_⟩ (sym (D∅-spec z)) (h , e)
-
 ```
 
 <!--en-->
@@ -1631,7 +1633,6 @@ Its elimination is the specification read directly: membership in `D₂` and the
 ```agda
       D∅-out : (z : S) → ⟨ fst z ∈ fst D∅ ⟩ → ⟨ fst z ∈ fst D₂ ⟩ × (fst z ≡ ∅)
       D∅-out z h = subst ⟨_⟩ (D∅-spec z) h
-
 ```
 
 <!--en-->
@@ -1646,7 +1647,6 @@ The remainder `Dw` collects the elements of `D₂` that differ from the empty se
     opaque
       Dw : S
       Dw = hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .fst
-
 ```
 
 <!--en-->
@@ -1661,7 +1661,6 @@ Its specification mirrors the previous one, with the negated equation in place o
       Dw-spec : (z : S) → (fst z ∈ fst Dw)
               ≡ ((fst z ∈ fst D₂) ⊓ ((z ∷ []) ⊨ ¬̇ (var i0 ≐ con ∅ʟ)))
       Dw-spec z = hasSeparationL D₂ (¬̇ (var i0 ≐ con ∅ʟ)) .fst .snd z
-
 ```
 
 <!--en-->
@@ -1676,7 +1675,6 @@ Introduction requires membership in `D₂` and a refutation of equality with the
     opaque
       Dw-in : (z : S) → ⟨ fst z ∈ fst D₂ ⟩ → (fst z ≡ ∅ → ⊥₀) → ⟨ fst z ∈ fst Dw ⟩
       Dw-in z h ne = subst ⟨_⟩ (sym (Dw-spec z)) (h , λ q → lift (ne q))
-
 ```
 
 <!--en-->
@@ -1707,7 +1705,6 @@ Two unions provide the bounds needed later. `U₁` contains `Z` and the genuinel
         r = subst ⟨_⟩ (Dw-spec z) h
     module U₁ = Union2 Z D₂ using ( D; in₁; in₂ )
     module U₃ = Union2 D∅ Dw using ( D; in₁; in₂ )
-
 ```
 
 <!--en-->
@@ -1738,7 +1735,6 @@ The two cases enter `U₁` through its two union inclusions. A member already in
       go : Dec ⟨ z ∈ fst Z ⟩ → ⟨ z ∈ fst U₁.D ⟩
       go (yes hz) = U₁.in₁ zS hz
       go (no nz) = U₁.in₂ zS (D₂-in zS h nz)
-
 ```
 
 <!--en-->
@@ -1796,7 +1792,6 @@ A second union prepares the coding of witnesses: `U₂` joins the elements born 
 
 ```agda
     module U₂ = Union2 Lω (seqL Z) using ( D; in₁; in₂ )
-
 ```
 
 <!--en-->
@@ -1810,7 +1805,6 @@ Let `PB` be the square of `U₂ = Lω ∪ seqL Z`. Every actual witness code `(s
 ```agda
     PB : S
     PB = prodL U₂.D
-
 ```
 
 <!--en-->
@@ -1825,7 +1819,6 @@ The least-witness formula is pinned at the fixed base `Z`. The resulting five-va
     opaque
       pin₅ : Formula S 5
       pin₅ = pinAt Z B.leastWitnessFo
-
 ```
 
 <!--en-->
@@ -1887,7 +1880,6 @@ The same relation is written as a formula: two existentials bind the key and the
     opaque
       se₃ : Formula S 3
       se₃ = ∃̇ (∃̇ (prAtL i3 i1 i0 ∧̇ pin₅))
-
 ```
 
 <!--en-->
@@ -1977,7 +1969,6 @@ The outward reading of the describing condition is the formula's own outward rea
 
 ```agda
           (λ { (s , e , qp , hw) → se₃-in z p q s e qp hw }) (h .snd))
-
 ```
 
 <!--en-->
@@ -1991,7 +1982,6 @@ The outward reading of the describing condition is the formula's own outward rea
 ```agda
     G : S
     G = WitnessGraph.rel
-
 ```
 
 <!--en-->
@@ -2167,7 +2157,6 @@ The code pool has a birth stage: `γG` is the stage at which `PB` appears in the
 ```agda
     γG : V ℓ
     γG = stage (fst PB) (snd PB)
-
 ```
 
 <!--en-->
@@ -2181,7 +2170,6 @@ That stage is indexed by an ordinal, which is what the counting lemma requires o
 ```agda
     oγG : IsOrd γG
     oγG = stage-ord (fst PB) (snd PB)
-
 ```
 
 <!--en-->
@@ -2195,7 +2183,6 @@ The pool is contained in its birth stage, by the transitivity of the stages: a m
 ```agda
     PB⊆Lγ : (p : S) → ⟨ fst p ∈ fst PB ⟩ → ⟨ fst p ∈ Lset γG ⟩
     PB⊆Lγ p hp = layer-trans (Lset-layer γG) {x = fst PB} {y = fst p} hp (stage-mem (fst PB) (snd PB))
-
 ```
 
 <!--en-->
@@ -2209,7 +2196,6 @@ The hypotheses now instantiate `LeastPre`: every `z ∈ Dw` merely has a related
 ```agda
     module LP = LeastPre γG oγG G Dw PB (λ p z h → G-out p z h .fst) PB⊆Lγ have
       using ( module Functional )
-
 ```
 
 <!--en-->
@@ -2223,7 +2209,6 @@ The least-preimage construction injects the genuinely new witnesses into `PB`. E
 ```agda
     Dw↪PB : InjL Dw PB
     Dw↪PB = LP.Functional.injL funct
-
 ```
 
 <!--en-->
@@ -2237,7 +2222,6 @@ The injection `Z ↪ κ` acts coordinatewise on finite sequences, giving `seqL Z
 ```agda
     seq↪κ : InjL (seqL Z) κ
     seq↪κ = injl-trans (seqL Z) (seqL κ) κ (seq-map Z κ E cE) (seq-count κ oκ κ∉ω)
-
 ```
 
 <!--en-->
@@ -2268,7 +2252,6 @@ Composing the two injections gives the count of the genuinely new witnesses: eve
 
     Dw↪κ : InjL Dw κ
     Dw↪κ = injl-trans Dw PB κ Dw↪PB PB↪κ
-
 ```
 
 <!--en-->
@@ -2283,7 +2266,6 @@ The new part `D₂` is included in `D∅ ∪ Dw`. Here `D∅` contains precisely
     D₂↪κ : InjL D₂ κ
     D₂↪κ = injl-trans D₂ U₃.D κ (inclusion-coded D₂ U₃.D D₂⊆)
       (injl-trans U₃.D (prodL κ) κ (tag-union κ (num∈κ 0) (num∈κ 1) D∅ Dw D∅↪κ Dw↪κ) pairκ)
-
 ```
 
 <!--en-->
@@ -2298,8 +2280,10 @@ Every member of `ΦZ` lies in `Z ∪ D₂`. The given graph `E` counts `Z`, whil
     result : InjL ΦZ κ
     result = injl-trans ΦZ U₁.D κ (inclusion-coded ΦZ U₁.D ΦZ⊆)
       (injl-trans U₁.D (prodL κ) κ (tag-union κ (num∈κ 0) (num∈κ 1) Z D₂ ∣ E , cE ∣₁ D₂↪κ) pairκ)
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 `step-count` eliminates the truncated witness of `Z ↪ κ` into the proposition `ΦZ ↪ κ`. It therefore proves a cardinal bound by `κ`, rather than countability, and it does not select a graph witnessing the output injection.
@@ -2326,7 +2310,6 @@ Every member of every finite closure iterate lies in the ambient stage `Lset lam
 ```agda
   iter⊆L : (n : ℕ) (z : V ℓ) → ⟨ z ∈ˢ fst (hullStep n) ⟩ → ⟨ z ∈ˢ Lset lam ⟩
   iter⊆L n z hz = HSH.Hull⊆L z (Cn.hullStep⊆Hull n z hz)
-
 ```
 
 <!--en-->
@@ -2354,7 +2337,6 @@ Natural-number induction gives a separate internal injection for every finite it
 ```agda
   HoldsAt : ℕ → V ℓ → hProp (ℓ-suc ℓ)
   HoldsAt n σ = ∥ Σ[ F ∈ S ] (⟨ fst F ∈ Lset σ ⟩ × InjCode F (hullStep n) κ) ∥₁ , squash₁
-
 ```
 
 <!--en-->
@@ -2385,7 +2367,6 @@ Given a graph `F` coding `hullStep n ↪ κ`, the canonical stage containing `F`
       from (F , code) = leastOrd (HoldsAt n)
         ∣ stage (fst F) (snd F) , stage-ord (fst F) (snd F)
         , ∣ F , stage-mem (fst F) (snd F) , code ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -2400,7 +2381,6 @@ The family of least stages `n ↦ ls n`, indexed by the meta-level natural numbe
   opaque
     γ : V ℓ
     γ = boundingOrd (Lift {ℓ-zero} {ℓ} ℕ) (λ n → ls (lower n) .fst) (λ n → ls (lower n) .snd .fst) .fst
-
 ```
 
 <!--en-->
@@ -2414,7 +2394,6 @@ The bound `γ` is itself an ordinal. Hence `Lset γ` is a legitimate constructib
 ```agda
     oγ : IsOrd γ
     oγ = boundingOrd (Lift {ℓ-zero} {ℓ} ℕ) (λ n → ls (lower n) .fst) (λ n → ls (lower n) .snd .fst) .snd .fst
-
 ```
 
 <!--en-->
@@ -2429,7 +2408,6 @@ For every natural number `n`, the least stage `ls n` belongs to the common upper
     bnd-in : (n : ℕ) → ⟨ ls n .fst ∈ γ ⟩
     bnd-in n = boundingOrd (Lift {ℓ-zero} {ℓ} ℕ) (λ n → ls (lower n) .fst) (λ n → ls (lower n) .snd .fst)
                  .snd .snd (lift n)
-
 ```
 
 <!--en-->
@@ -2472,7 +2450,6 @@ Let `Lγ` be the constructible set whose underlying set is the common stage `Lse
   opaque
     Lγ : S
     Lγ = LsetS γ oγ
-
 ```
 
 <!--en-->
@@ -2486,7 +2463,6 @@ Its underlying set is the stage `Lset γ`, definitionally.
 ```agda
     Lγ-fst : fst Lγ ≡ Lset γ
     Lγ-fst = refl
-
 ```
 
 <!--en-->
@@ -2500,7 +2476,6 @@ The iterates themselves are collected into one constructible set: `Iter` pairs e
 ```agda
     Iter : S
     Iter = It.iter
-
 ```
 
 <!--en-->
@@ -2514,7 +2489,6 @@ Each pair of a numeral and its iterate is a member, by the iterated-set introduc
 ```agda
     Iter-in : (n : ℕ) → ⟨ pr (# n) (fst (hullStep n)) ∈ fst Iter ⟩
     Iter-in = It.iter-in
-
 ```
 
 <!--en-->
@@ -2528,7 +2502,6 @@ Conversely, every member is, merely, such a pair, so membership in `Iter` identi
 ```agda
     Iter-out : (y : S) → ⟨ fst y ∈ fst Iter ⟩ → ∥ Σ[ n ∈ ℕ ] (fst y ≡ pr (# n) (fst (hullStep n))) ∥₁
     Iter-out = It.iter-out
-
 ```
 
 <!--en-->
@@ -2542,7 +2515,6 @@ A table witness for a constructible code `F` at an internal numeral `n` consists
 ```agda
   TabWit : (F n : S) → Type (ℓ-suc ℓ)
   TabWit F n = ⟨ fst F ∈ Lset γ ⟩ × ∥ Σ[ Zn ∈ S ] (Holds Iter n Zn × InjCode F Zn κ) ∥₁
-
 ```
 
 <!--en-->
@@ -2557,7 +2529,6 @@ A table witness for a constructible code `F` at an internal numeral `n` consists
   opaque
     tabBody : Formula S 3
     tabBody = (var i1 ∈̇ con Lγ) ∧̇ ∃̇ (appC Iter i1 i0 ∧̇ injFo κ i2 i0)
-
 ```
 
 <!--en-->
@@ -2606,7 +2577,6 @@ The relation defined by `tabBody` is collected as a constructible subset of `Lγ
   private
     module TableGraph = Relation Lγ ωʟ tabBody
       (λ F n → TabWit F n , isProp× (snd (fst F ∈ Lset γ)) squash₁) tab-read tab-fill
-
 ```
 
 <!--en-->
@@ -2620,7 +2590,6 @@ Write `Gt` for this constructible relation. A pair `(F,n)` belongs to it exactly
 ```agda
   Gt : S
   Gt = TableGraph.rel
-
 ```
 
 <!--en-->
@@ -2636,7 +2605,6 @@ If `F ∈ Lset γ`, `n ∈ ω`, `Iter(n,Zn)`, and `F` codes `Zn ↪ κ`, then th
         → Holds Iter n Zn → InjCode F Zn κ → Holds Gt F n
   Gt-in F n Zn hF hn hI code = TableGraph.into F n
     (subst (λ w → ⟨ fst F ∈ w ⟩) (sym Lγ-fst) hF) hn (hF , ∣ Zn , hI , code ∣₁)
-
 ```
 
 <!--en-->
@@ -2650,7 +2618,6 @@ Elimination reads a table entry back into the two-component witness.
 ```agda
   Gt-out : (F n : S) → Holds Gt F n → TabWit F n
   Gt-out = TableGraph.pair-out
-
 ```
 
 <!--en-->
@@ -2682,7 +2649,6 @@ The code is then introduced into the table: the iterate identification is transp
          , Gt-in F n (hullStep k) hF hn
              (subst (λ w → ⟨ pr w (fst (hullStep k)) ∈ fst Iter ⟩) (cong fst qk) (Iter-in k)) code })
       (code-at-γ k)
-
 ```
 
 <!--en-->
@@ -2712,7 +2678,6 @@ Apply least-preimage selection to `Gt` with domain `ω` and code bound `Lγ`. Fo
 ```agda
   Te : S
   Te = Tb.T
-
 ```
 
 <!--en-->
@@ -2726,7 +2691,6 @@ The least-entry function assigns to each internal numeral in `ω` the least tabl
 ```agda
   eS : (n : S) → ⟨ fst n ∈ fst ωʟ ⟩ → S
   eS = Tb.fn
-
 ```
 
 <!--en-->
@@ -2740,7 +2704,6 @@ For every `n ∈ ω`, the ordered pair `(n,eS(n))` belongs to `Te`. Thus `Te` re
 ```agda
   Te-in : (n : S) (m : ⟨ fst n ∈ fst ωʟ ⟩) → ⟨ pr (fst n) (fst (eS n m)) ∈ fst Te ⟩
   Te-in = Tb.T-in
-
 ```
 
 <!--en-->
@@ -2845,7 +2808,6 @@ The numeral equation forces `k'` to be `k`, and the code is transported along th
   opaque
     inner₆ : Formula S 6
     inner₆ = appC Te i2 i0 ∧̇ appAt i0 i3 i1
-
 ```
 
 <!--en-->
@@ -2893,7 +2855,6 @@ Reading the two atoms uses the same adequacy lemmas in the forward direction, re
   opaque
     nv₃ : Formula S 3
     nv₃ = ∃̇ (∃̇ (prAtL i3 i1 i0 ∧̇ ((var i1 ∈̇ con ωʟ) ∧̇ ∃̇ inner₆)))
-
 ```
 
 <!--en-->
@@ -2990,7 +2951,6 @@ The separated set is named `Gf` and is the constructible carrier of the final gr
 
   Gf : S
   Gf = FinalGraph.rel
-
 ```
 
 <!--en-->
@@ -3006,7 +2966,6 @@ To introduce membership in `Gf`, take `p ∈ prodL κ`, `z ∈ hullL`, an intern
         → fst p ≡ pr (fst n) (fst v) → ⟨ fst n ∈ fst ωʟ ⟩ → Holds Te n F → Holds F z v
         → Holds Gf p z
   Gf-in p z n v F hp hz qp hn ht hv = FinalGraph.into p z hp hz ∣ n , v , F , qp , hn , ht , hv ∣₁
-
 ```
 
 <!--en-->
@@ -3065,7 +3024,6 @@ Applying this argument to the truncated record returned by `Gf-out` proves `inP�
 
 ```agda
     (Gf-out p z h)
-
 ```
 
 <!--en-->
@@ -3113,7 +3071,6 @@ The introduction assembles the whole record: the pair lies in the product by the
             (subst (λ w → ⟨ w ∈ fst (prodL κ) ⟩) (sym (prʟ-fst (nn n) v))
               (prodL-in κ (nn n) v (num∈κ n) (snd (snd (snd (e-code n))) z v hv)))
             hz (prʟ-fst (nn n) v) (#∈ω n) (Te-in (nn n) (#∈ω n)) hv
-
 ```
 
 <!--en-->
@@ -3191,7 +3148,6 @@ The two pairs, numeral together with ω-membership, are equal because ω-members
 ```agda
       pth : _≡_ {A = Σ[ c ∈ S ] ⟨ fst c ∈ fst ωʟ ⟩} (n' , Te-out n' F' ht' .fst) (n , m)
       pth = Σ≡Prop (λ c → snd (fst c ∈ fst ωʟ)) (S≡ {x = n'} {y = n} (sym (fst ee)))
-
 ```
 
 <!--en-->
@@ -3205,7 +3161,6 @@ Transporting the table reading for `F'` along the equality of the two internal-n
 ```agda
       qF : fst F' ≡ fst (eS n m)
       qF = Te-out n' F' ht' .snd ∙ (λ i → fst (eS (fst (pth i)) (snd (pth i))))
-
 ```
 
 <!--en-->
@@ -3219,7 +3174,6 @@ Let `γf` be the ordinal stage assigned to the constructible set `prodL κ`. It 
 ```agda
   γf : V ℓ
   γf = stage (fst (prodL κ)) (snd (prodL κ))
-
 ```
 
 <!--en-->
@@ -3233,7 +3187,6 @@ That stage is an ordinal, as every stage is.
 ```agda
   oγf : IsOrd γf
   oγf = stage-ord (fst (prodL κ)) (snd (prodL κ))
-
 ```
 
 <!--en-->
@@ -3248,7 +3201,6 @@ The set `prodL κ` belongs to `Lset γf` by the defining property of its stage. 
   prodκ⊆Lγ : (p : S) → ⟨ fst p ∈ fst (prodL κ) ⟩ → ⟨ fst p ∈ Lset γf ⟩
   prodκ⊆Lγ p hp =
     layer-trans (Lset-layer γf) {x = fst (prodL κ)} {y = fst p} hp (stage-mem (fst (prodL κ)) (snd (prodL κ)))
-
 ```
 
 <!--en-->
@@ -3275,3 +3227,5 @@ The least-preimage construction gives a coded injection from the hull into `prod
   hull↪κ : InjL hullL κ
   hull↪κ = injl-trans hullL (prodL κ) κ (LF.Functional.injL funct-fin) pairκ
 ```
+</div>
+</details>

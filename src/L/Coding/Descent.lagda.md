@@ -48,7 +48,6 @@ The concrete problem can be seen from the shape of the code. A component of `pr 
 open import V.Hierarchy {ℓ} using ( 𝒮ᵥ )
 open import V.Coding {ℓ} using ( pr )
 open import L.Rank {ℓ} using ( rank; rank-mono; rank-ord )
-
 ```
 
 <!--en-->
@@ -63,7 +62,6 @@ The comparison uses three ingredients from the hierarchy: the unordered pair `�
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ∈∈ₛ )
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ⁅_,_⁆; pairing-ax; ⁅_⁆s )
-
 ```
 
 <!--en-->
@@ -106,7 +104,6 @@ pair∈ u v w h = ∈∈ₛ {a = w} {b = ⁅ u , v ⁆} .snd (pairing-ax u v w .
 
 trans≺ : (x y z : S) → ⟨ x ∈ˢ y ⟩ → ⟨ rank y ∈ˢ rank z ⟩ → ⟨ rank x ∈ˢ rank z ⟩
 trans≺ x y z x∈y ry∈rz = rank-ord z .fst (rank-mono x y x∈y) ry∈rz
-
 ```
 
 <!--en-->

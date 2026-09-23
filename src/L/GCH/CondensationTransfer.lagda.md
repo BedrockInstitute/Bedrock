@@ -16,7 +16,6 @@ This chapter asks what becomes of an elementary Skolem hull after its Mostowski 
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -30,7 +29,6 @@ The theorem is parameterized by excluded middle at `ℓ-suc ℓ`. That single cl
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -43,7 +41,6 @@ Fix the universe level and this classical parameter. All sets below belong to th
 
 ```agda
 module L.GCH.CondensationTransfer {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -102,8 +99,7 @@ Finite vectors record the environments in which formulas are evaluated, while pr
 有限ベクトルは論理式を評価する環境を記録し、積は証明で必要となる所属と等しさの事実を組み合わせる。この章に現れるいくつかの存在は、命題的切り詰めのもとにある。構成子 `∣_∣₁` は明示的な局所証人を切り詰めの中へ入れ、`rec₁` と `map₁` はそれを別の命題を得るためにだけ使う。とくに、強化された十分さが与える局所的な十分な添字が、大域的に選ばれた族になることはない。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 The set-theoretic successor `sucV d` is the next ordinal index when `d` is ordinal, and it is also the index used by the successor-stage equation `Lset (sucV d) ≡ 𝒟ₒ (Lset d)`. These are related facts, but the successor index and the stage at that index remain different sets. The empty set appears separately because the hull construction requires a fallback member already present in the ambient index.
@@ -117,7 +113,6 @@ The set-theoretic successor `sucV d` is the next ordinal index when `d` is ordin
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( ∅; module InfinitySet )
 open InfinitySet {ℓ} using ( sucV )
-
 ```
 
 <!--en-->
@@ -130,7 +125,6 @@ Opening the proposition-valued hierarchy structure fixes the carrier `S` and the
 
 ```agda
 open hPropStructure 𝒮ᵥ
-
 ```
 
 <!--en-->
@@ -185,13 +179,24 @@ Fix an ordinal `lam` and the ambient constructible stage `Lset lam` that contain
 順序数 `lam` と、Skolem 包を含む周囲の構成可能段階 `Lset lam` を固定する。この添字は集合論的後続について閉じ、生成集合 `X` の各要素はこの段階に属する。また `∅ ∈ lam` は、Skolem 包の構成に必要な既定の要素を与える。この最初の仮定群の最後は完全な初等性である。パラメータが包から取られるなら、非有界量化子を含む論理式も含め、すべての論理式は包と周囲の段階で同じ真理値をもつ。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Condense (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
   (elem : Frame.A.Elementary lam ordλ succλ X X⊆L ∅∈λ)
+  (sup : Superadequate lam)
+  (pixL : (x : S) → ⟨ x ∈ˢ HullStage.C.πX lam ordλ succλ X X⊆L ∅∈λ ⟩
+        → ⟨ isL x ⟩)
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Two further hypotheses provide local stages and constructible collapse values. `Superadequate lam` says that every `d ∈ lam` is merely contained in some adequate ordinal index `γ` with `γ ∈ lam`; propositional truncation retains neither a selected `γ` nor a least one. The hypothesis `pixL` is pointwise: each member of the collapse image is constructible. It does not yet say that the collapse image itself is a constructible set, much less identify that image with a particular stage.
@@ -201,13 +206,7 @@ Two further hypotheses provide local stages and constructible collapse values. `
 さらに二つの仮定が、局所的な段階と構成可能な崩壊値を与える。`Superadequate lam` は、各 `d ∈ lam` が、`γ ∈ lam` を満たすある十分な順序数添字 `γ` に単に含まれることを述べる。命題的切り詰めは、特定の `γ` も最小のものも保持しない。仮定 `pixL` は各点についての主張である。崩壊像の各要素が構成可能であると言うだけで、崩壊像そのものが構成可能な集合であることも、それを特定の段階と同一視することも、まだ述べていない。
 <!--/-->
 
-```agda
-  (sup : Superadequate lam)
-  (pixL : (x : S) → ⟨ x ∈ˢ HullStage.C.πX lam ordλ succλ X X⊆L ∅∈λ ⟩
-        → ⟨ isL x ⟩)
-  where
 
-```
 
 <!--en-->
 Three structures are now used together: the ambient structure on `Lset lam`, the structure whose carrier consists of hull members, and the transitive collapse image. A hull element carries both an underlying set and its proof of membership in `M`. Bounded formulas can be read between the first two structures and can be transported in either direction through the collapse; individual membership facts can also be pushed through the collapse. These Δ₀ interfaces will be used only after the unbounded existential queries have been handled by full elementarity.
@@ -236,7 +235,6 @@ The inclusion `Hull⊆L` is the basic bridge from a hull member to the ambient s
 ```agda
 
   open HS.H using ( Hull⊆L )
-
 ```
 
 <!--en-->
@@ -250,7 +248,6 @@ Let `M` denote the Skolem hull determined by the preceding data. Its members lie
 ```agda
   M : S
   M = HS.M
-
 ```
 
 <!--en-->
@@ -264,7 +261,6 @@ Mostowski 崩壊写像を `π`、その推移的な像を `πX` と書く。Skol
 ```agda
   π : S → S
   π = HS.C.π
-
 ```
 
 <!--en-->
@@ -278,7 +274,6 @@ Because `lam` is ordinal, membership in `Lset lam` supplies constructibility. Th
 ```agda
   isLλ : (x : S) → ⟨ x ∈ˢ Lset lam ⟩ → ⟨ isL x ⟩
   isLλ = Lset→isL lam ordλ
-
 ```
 
 <!--en-->
@@ -292,7 +287,6 @@ Two elementary membership lemmas now prepare witnesses for the ambient stage. Fi
 ```agda
   Lset∈Lλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ Lset d ∈ˢ Lset lam ⟩
   Lset∈Lλ d d∈λ = Lset-mono {α = lam} {β = sucV d} (succλ d d∈λ) (Lset∈suc d)
-
 ```
 
 <!--en-->
@@ -322,7 +316,6 @@ Skolem 包の要素 `d` について、順序数性を崩壊の向こうへ送�
   ord-push d d∈M od =
     Amb.isOrdAt-out (π d)
       (Cy.push Δ₀-isOrdAt ((d , d∈M) ∷ []) (Amb.isOrdAt-in d od))
-
 ```
 
 <!--en-->
@@ -351,7 +344,6 @@ The first existential query is designed to recover the particular stage `Lset d`
 ```agda
   findA : A.SM → Formula A.SM 0
   findA dM = ∃̇ (∃̇ (∃̇ (embed levelFo ∧̇ (var (suc zero) ≐ con dM))))
-
 ```
 
 <!--en-->
@@ -383,7 +375,6 @@ The external witnesses are the adequate bound `Lset γ`, the prescribed index `d
     where
     δ : HS.ASt.SL ^ 3
     δ = (Lset d , Ld∈) ∷ (d , d∈) ∷ (Lset γ , Lγ∈) ∷ []
-
 ```
 
 <!--en-->
@@ -397,7 +388,6 @@ Completeness of the level description supplies the mathematical core. Since `γ`
 ```agda
     amb : ⟨ (Lset d ∷ d ∷ Lset γ ∷ []) ⊨ₚ levelFo ⟩
     amb = level-complete γ adγ d od d∈γ
-
 ```
 
 <!--en-->
@@ -432,7 +422,6 @@ The second query also asks for a triple `(u,a,z)` satisfying the level descripti
 ```agda
   findP : A.SM → Formula A.SM 0
   findP yM = ∃̇ (∃̇ (∃̇ (embed levelFo ∧̇ (con yM ∈̇ var zero))))
-
 ```
 
 <!--en-->
@@ -471,7 +460,6 @@ The same external triple `(Lset p,p,Lset γ)` witnesses the level description, b
     where
     δ : HS.ASt.SL ^ 3
     δ = (Lset p , Lp∈) ∷ (p , p∈) ∷ (Lset γ , Lγ∈) ∷ []
-
 ```
 
 <!--en-->
@@ -490,7 +478,6 @@ unique.
 ```agda
     amb : ⟨ (Lset p ∷ p ∷ Lset γ ∷ []) ⊨ₚ levelFo ⟩
     amb = level-complete γ adγ p op p∈γ
-
 ```
 
 <!--en-->
@@ -511,7 +498,6 @@ the surrounding hull query. The result is the first conjunct required by
     sat : ⟨ δ HS.ASt.AbsL.⊨ᵐ mapFo A.inL (embed levelFo) ⟩
     sat = subst (λ ψ → ⟨ δ HS.ASt.AbsL.⊨ᵐ ψ ⟩) (sym (embed-map A.inL levelFo))
             (subst ⟨_⟩ (sym (Cy.atL Δ₀-levelFo δ)) amb)
-
 ```
 
 <!--en-->
@@ -551,7 +537,6 @@ prevents the proof from treating the adequate bound as chosen data.
   Witness : S → Type (ℓ-suc ℓ)
   Witness d = ∥ Σ[ z ∈ S ] ( ⟨ z ∈ˢ M ⟩ × ⟨ Lset d ∈ˢ M ⟩
                            × ⟨ (Lset d ∷ d ∷ z ∷ []) ⊨ₚ levelFo ⟩ ) ∥₁
-
 ```
 
 <!--en-->
@@ -593,7 +578,6 @@ rank principle for arbitrary sets.
 
     d∈λ : ⟨ d ∈ˢ lam ⟩
     d∈λ = ord∈Lset→∈ lam ordλ d od d∈Lλ
-
 ```
 
 <!--en-->
@@ -612,7 +596,6 @@ derived separately after superadequacy supplies `γ`.
 ```agda
     Ld∈Lλ : ⟨ Lset d ∈ˢ Lset lam ⟩
     Ld∈Lλ = Lset∈Lλ d d∈λ
-
 ```
 
 <!--en-->
@@ -651,7 +634,6 @@ This use of `γ` needs no claim that it is least or uniquely determined.
 
 ```agda
       Lγ∈Lλ = Lset∈Lλ γ γ∈λ
-
 ```
 
 <!--en-->
@@ -670,7 +652,6 @@ existing hull member in the language in which elementarity is stated.
 ```agda
       dM : A.SM
       dM = d , d∈M
-
 ```
 
 <!--en-->
@@ -691,7 +672,6 @@ from `Cy.atL`, which was used only on the Δ₀ core `levelFo`. The result
       hullSat : ⟨ [] Mse.⊨ findA dM ⟩
       hullSat = subst ⟨_⟩ (sym (elem 0 (findA dM) []))
         (stageA d γ od adγ d∈γ dM refl d∈Lλ Ld∈Lλ Lγ∈Lλ)
-
 ```
 
 <!--en-->
@@ -778,7 +758,6 @@ index.
 
 ```agda
              ∙ cong Lset ed
-
 ```
 
 <!--en-->
@@ -798,7 +777,6 @@ part of the argument.
 ```agda
         Ld∈M : ⟨ Lset d ∈ˢ M ⟩
         Ld∈M = subst (λ w → ⟨ w ∈ˢ M ⟩) ea (snd a)
-
 ```
 
 <!--en-->
@@ -819,7 +797,6 @@ that will be placed back under propositional truncation.
         amb' : ⟨ (Lset d ∷ d ∷ fst z ∷ []) ⊨ₚ levelFo ⟩
         amb' = subst (λ v → ⟨ (v ∷ d ∷ fst z ∷ []) ⊨ₚ levelFo ⟩) ea
           (subst (λ p → ⟨ (fst a ∷ p ∷ fst z ∷ []) ⊨ₚ levelFo ⟩) ed amb)
-
 ```
 
 <!--en-->
@@ -898,7 +875,6 @@ The equality proof first transports the bounded description through the collapse
       where
       pushed : ⟨ (π (Lset d) ∷ π d ∷ π z ∷ []) ⊨ₚ levelFo ⟩
       pushed = Cy.push Δ₀-levelFo ((Lset d , Ld∈M) ∷ (d , d∈M) ∷ (z , z∈M) ∷ []) amb
-
 ```
 
 <!--en-->
@@ -983,7 +959,6 @@ Ordinality is recovered before the compatibility lemma is used. Transporting the
 
 ```agda
       od = ord-pull d d∈M (subst IsOrd (sym e) oδ)
-
 ```
 
 <!--en-->
@@ -997,7 +972,6 @@ The hypotheses for `commute` are now complete. Its first component places `Lset 
 ```agda
       cm : ⟨ Lset d ∈ˢ M ⟩ × (π (Lset d) ≡ Lset (π d))
       cm = commute d od d∈M
-
 ```
 
 <!--en-->
@@ -1026,7 +1000,6 @@ The target `Goal` is itself a propositional truncation. This matters twice: the 
 
 ```agda
     Goal = ∥ Σ[ γ ∈ S ] (IsOrd γ × ⟨ γ ∈ˢ HS.C.πX ⟩ × ⟨ π y ∈ˢ Lset γ ⟩) ∥₁
-
 ```
 
 <!--en-->
@@ -1057,7 +1030,6 @@ The first auxiliary fact applies the assumed successor closure of `lam` to `c �
 
       p∈λ : ⟨ p ∈ˢ lam ⟩
       p∈λ = succλ c c∈λ
-
 ```
 
 <!--en-->
@@ -1071,7 +1043,6 @@ The prepared index must also be ordinal. Because `lam` is ordinal and `c ∈ lam
 ```agda
       op : IsOrd p
       op = suc-ord (mem-ord {A = lam} ordλ c c∈λ)
-
 ```
 
 <!--en-->
@@ -1085,7 +1056,6 @@ The birth-stage information says `y ∈ 𝒟ₒ (Lset c)`. The successor-stage e
 ```agda
       y∈Lp : ⟨ y ∈ˢ Lset p ⟩
       y∈Lp = subst (λ w → ⟨ y ∈ˢ w ⟩) (sym (Lset-suc c)) y∈D
-
 ```
 
 <!--en-->
@@ -1118,7 +1088,6 @@ Completeness at the adequate `γ` constructs an ambient answer to `findP` using 
         hullSat = subst ⟨_⟩ (sym (elem 0 (findP yM) []))
           (stageP y p γ op adγ p∈γ yM refl y∈Lp
             (ord∈Lλ p op p∈λ) (Lset∈Lλ p p∈λ) (Lset∈Lλ γ γ∈λ))
-
 ```
 
 <!--en-->
@@ -1163,7 +1132,6 @@ The internal satisfaction proof concerns `embed levelFo` in the hull structure. 
 
 ```agda
           amb = subst ⟨_⟩ (Cy.atM Δ₀-levelFo (u ∷ a ∷ z ∷ [])) sat
-
 ```
 
 <!--en-->
@@ -1177,7 +1145,6 @@ Skolem 包の内部で返された中央の座標を `p′ = fst a` とする。
 ```agda
           p′ : S
           p′ = fst a
-
 ```
 
 <!--en-->
@@ -1191,7 +1158,6 @@ The returned index is nevertheless known to be ordinal. The ambient satisfaction
 ```agda
           op′ : IsOrd p′
           op′ = isOrd-at-p-out (fst u) p′ (fst z) (amb .fst)
-
 ```
 
 <!--en-->
@@ -1222,7 +1188,6 @@ The returned level value `fst u` is identified with `Lset p′` by `u≡`. Trans
 
           y∈Lp′ : ⟨ y ∈ˢ Lset p′ ⟩
           y∈Lp′ = subst (λ v → ⟨ y ∈ˢ v ⟩) u≡ y∈u
-
 ```
 
 <!--en-->
@@ -1236,7 +1201,6 @@ The returned middle coordinate supplies exactly the data needed by the local com
 ```agda
           cm : ⟨ Lset p′ ∈ˢ M ⟩ × (π (Lset p′) ≡ Lset (π p′))
           cm = commute p′ op′ (snd a)
-
 ```
 
 <!--en-->
@@ -1251,7 +1215,6 @@ Both endpoints of `y∈Lp′` are hull members: `y∈M` gives the first, while `
           πy∈ : ⟨ π y ∈ˢ Lset (π p′) ⟩
           πy∈ = subst (λ w → ⟨ π y ∈ˢ w ⟩) (cm .snd)
                   (Cy.member-push (Lset p′) y (cm .fst) y∈M y∈Lp′)
-
 ```
 
 <!--en-->
@@ -1296,7 +1259,6 @@ The two established properties now determine the collapse image. Let `β` be the
 
 ```agda
   module Cn = HS.Condense levelIn cover using (condenses)
-
 ```
 
 <!--en-->
@@ -1311,3 +1273,5 @@ Thus there is an explicit set `β` with `IsOrd β` and `HS.C.πX ≡ Lset β`. T
   condenses : Σ[ β ∈ S ] (IsOrd β × (HS.C.πX ≡ Lset β))
   condenses = Cn.condenses
 ```
+</div>
+</details>

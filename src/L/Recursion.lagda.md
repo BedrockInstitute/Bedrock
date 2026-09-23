@@ -20,7 +20,6 @@ open import Cubical.Foundations.Prelude using ( isPropIsContr )
 open import Base.Classical using ( LEM )
 
 module L.Recursion {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -81,7 +80,6 @@ open hPropStructure 𝒮ʟ
 
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
-
 ```
 
 <!--en-->
@@ -189,14 +187,21 @@ For a recursion `R`, let `Image y` mean that some index `x` belongs to the domai
 再帰 `R` に対して、`Image y` を、定義域に属する添字 `x` が存在してグラフが `x` と `y` を関係づけること、とする。この存在は命題的に切り詰められるので、`y` が値として現れることだけを記録する。置換はこの述語を集合として実現し、添字と値の対の集合を作るわけではない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Of (R : Recursion) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Recursion R public
 
   private
     Image : S → hProp (ℓ-suc ℓ)
     Image y = ∃[ x ∶ S ] (x ∈ˢ dom) ⊓ ((y ∷ x ∷ []) ⊨ graph)
-
 ```
 
 <!--en-->
@@ -210,7 +215,6 @@ Applying replacement to the domain, graph, and functionality proof yields a set 
 ```agda
     r : SetOf Image
     r = hasReplacementL dom graph funct .fst
-
 ```
 
 <!--en-->
@@ -227,7 +231,6 @@ The value range is the first component of this result. Its membership specificat
 
   table-mem : (y : S) → (y ∈ˢ table) ≡ Image y
   table-mem = r .snd
-
 ```
 
 <!--en-->
@@ -245,7 +248,6 @@ The two directions of the specification are useful separately. A concrete graph 
 
   table-out : (y : S) → ⟨ y ∈ˢ table ⟩ → ⟨ Image y ⟩
   table-out y h = subst ⟨_⟩ (table-mem y) h
-
 ```
 
 <!--en-->
@@ -263,8 +265,10 @@ Functionality also determines a metatheoretic value at every member of the domai
   val-uniq : (x : S) (x∈ : ⟨ x ∈ˢ dom ⟩) (y : S)
            → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → val x x∈ ≡ y
   val-uniq x x∈ y h = cong fst (funct x x∈ .snd (y , h))
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## From unique existence to functionality
@@ -336,7 +340,6 @@ Saying that the formula defines the function is two implications. One says the f
     defines : (x : S) → ⟨ x ∈ˢ dom ⟩ → ⟨ (fn x ∷ x ∷ []) ⊨ graph ⟩
     only    : (x : S) → ⟨ x ∈ˢ dom ⟩ → (y : S)
             → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x
-
 ```
 
 <!--en-->
@@ -383,12 +386,19 @@ Applying the preceding conversion to a `Definition` produces its value range as 
 先の変換を `Definition` に適用すると、その値域が `L` の集合として得られる。関数はメタ理論上の記述のままであるが、グラフの論理式と置換により、指定した定義域上のすべての値が内部集合をなすことが証明される。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Image (D : Definition) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open Definition D public
   private
     module R = Of (asRecursion D)
-
 ```
 
 <!--en-->
@@ -402,8 +412,10 @@ The module exposes this range under the name `table`. No separate membership lem
 ```agda
   table : S
   table = R.table
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Scope of the construction

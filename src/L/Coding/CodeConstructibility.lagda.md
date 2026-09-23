@@ -134,8 +134,16 @@ Then the formulas: ten clauses with no real content. Each constructor's code is 
 然后是诸公式：十条子句，没有实质内容。每个构造子的码都是「子码之对」「单个子码」或「数码」三者之一的标签，而前面三个基础结果覆盖这三种形状。归纳沿无参公式而非它的嵌入进行，这一步不增加任何论证，因为嵌入是一次常元改名，按定义与每个构造子交换。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   codeTmL : ∀ {n} (t : Term K n) → ⟨ isL VCode.⌜ mapTm f t ⌝ᵗ ⟩
   codeTmL (con c) = tagL 0 (h c)
@@ -153,6 +161,9 @@ module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) wh
   codeL (∀̇∈ t φ) = tagL 8 (prL (codeTmL t) (codeL φ))
   codeL (∃̇∈ t φ) = tagL 9 (prL (codeTmL t) (codeL φ))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Constructibility of environment graphs
@@ -317,8 +328,16 @@ direction needs, one for each shape a clause of the recursion produces.
 `Of`{.Agda} 说出这种集合的成员是什么：它是被收集之物之一，收集于某条子公式处，而那条子公式自己的集合包含于它所出自的那个集合之内。`tree-inv`{.Agda} 证明这一点，而 `Parts`{.Agda} 给出另一方向所需的诸隶属关系，递归的每条子句所产生的每种形状各一条。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓ' : Level} {K : Type ℓ'} where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   tree : (∀ {m} → Formula K m → S) → ∀ {n} → Formula K n → S
   tree f φ@(t ∈̇ u)  = sglʟ (f φ)
@@ -340,7 +359,17 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
                        → ⟨ z ∈ fst (tree g φ) ⟩))) ∥₁
 
   private
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
     module _ (f g : ∀ {m} → Formula K m → S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
       one : ∀ {n} (φ : Formula K n) (x : V ℓ)
           → ⟨ x ∈ fst (sglʟ (f φ)) ⟩ → Of f g φ x
       one {n} φ x h = ∣ n , φ , sglʟ-out (f φ) x h , (λ _ hz → hz) ∣₁
@@ -385,8 +414,20 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
                       (rb x eb) })
                (cupʟ-out (tree f a) (tree f b) x e) })
         (cupʟ-out (sglʟ (f φ)) (cupʟ (tree f a) (tree f b)) x h)
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
   module Parts (f : ∀ {m} → Formula K m → S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     self : ∀ {n} (φ : Formula K n) → ⟨ fst (f φ) ∈ fst (tree f φ) ⟩
     self φ@(t ∈̇ u)  = sglʟ-in (f φ) _ refl
     self φ@(t ≐ u)  = sglʟ-in (f φ) _ refl
@@ -415,6 +456,10 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
          → ⟨ z ∈ fst (tree f a) ⟩
          → ⟨ z ∈ fst (cupʟ (sglʟ (f χ)) (tree f a)) ⟩
     only χ a z h = cupʟ-inr (sglʟ (f χ)) (tree f a) z h
+```
+</div>
+</details>
+```agda
 
   tree-inv : (f g : ∀ {m} → Formula K m → S)
            → ∀ {n} (φ : Formula K n) (x : V ℓ)
@@ -433,6 +478,9 @@ module _ {ℓ' : Level} {K : Type ℓ'} where
   tree-inv f g φ@(∀̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
   tree-inv f g φ@(∃̇∈ t a) = un f g φ a (λ _ hz → hz) (tree-inv f g a)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The subformula closure
@@ -464,8 +512,16 @@ Constructibility is not a second proof. The recursion above runs on the model's 
 可构造性无须另证：上面的递归在模型自身的集合上进行，证书随之一并给出。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {K : Type ℓ} (f : K → V ℓ) (h : (k : K) → ⟨ isL (f k) ⟩) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   key : ∀ {n} → Formula K n → V ℓ
   key {n} φ = pr (# n) VCode.⌜ mapFo f φ ⌝
@@ -600,8 +656,16 @@ the successor, and a constructor with no subformula demands nothing.
 在标签之下，一个键是元数与码之对，这两层都由配对的单射性确定。由此得出：保持元数的构造子在所读出的元数处要求其诸分量，抬升元数的在后继处要求分量，而没有子公式的构造子则不要求任何分量。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ (C : V ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
     BothSame : V ℓ → V ℓ → Type (ℓ-suc ℓ)
     BothSame ar p = (u v : V ℓ) → p ≡ pr u v
                   → ⟨ pr ar u ∈ C ⟩ × ⟨ pr ar v ∈ C ⟩
@@ -718,3 +782,8 @@ the successor, and a constructor with no subformula demands nothing.
       subst (λ j → Concl j ar p) (r .fst)
         (sndUpOf φ t a below (only φ a) ar p (r .snd .fst) (r .snd .snd))
 ```
+</div>
+</details>
+
+</div>
+</details>

@@ -14,7 +14,6 @@ A well-founded relation coded in `L` can be collapsed after its members are pres
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -29,7 +28,6 @@ The classical assumption is explicit because one later existence proof must deci
 open import Base.Prelude
 open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -42,7 +40,6 @@ Fix a universe level `ℓ` and an instance of excluded middle at the level neede
 
 ```agda
 module L.GCH.OrderType {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -118,8 +115,7 @@ The later uniqueness argument repeatedly compares constructible sets by their me
 後の一意性証明では、構成可能な集合をその要素によって繰り返し比較する。外延性は所属の点ごとの同値を基礎集合の等しさに変え、命題値の証拠によって、対として作られた構成可能な対象の等しさは証明の取り方に依存しない。そのため、切り詰められた場合分けから恒久的な選択を取り出さずに、等しさを結論できる。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 The cumulative hierarchy supplies both the ambient sets and a small presentation of each set's members. Thus an element of `D` can be viewed either as an ambient set or as a small index, and membership transports the necessary constructibility evidence between the two views. The successor operation on hierarchy sets will later locate an ordinal collapse value at the stage following that ordinal.
@@ -147,7 +143,6 @@ Well-foundedness supplies the induction principle that defines and analyzes the 
 
 ```agda
 open import Cubical.Induction.WellFounded using ( WellFounded )
-
 ```
 
 <!--en-->
@@ -160,7 +155,6 @@ Write `S` for the carrier of the constructible structure. Its structure membersh
 
 ```agda
 open hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
-
 ```
 
 <!--en-->
@@ -210,12 +204,18 @@ Fix a constructible set `D` and a constructible code `R` for ordered pairs. The 
 構成可能集合 `D` と、順序対を符号化する構成可能集合 `R` を固定する。仮定 `Rsub` が述べるのは、`R` に実際に現れる各順序対の二つの端点が `D` に属することだけである。崩壊を作る段階で整礎性と推移性を加え、さらに後で単射性を証明するときに三分法を加える。この章では関係の外延性を仮定しない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Collapse (D R : S)
                 (Rsub : (y x : S) → Holds R y x
                       → ⟨ fst y ∈ fst D ⟩ × ⟨ fst x ∈ fst D ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Membership in `D` is stated as a one-place predicate on the carrier.
@@ -228,7 +228,6 @@ Membership in `D` is stated as a one-place predicate on the carrier.
 ```agda
   Mem : S → Type (ℓ-suc ℓ)
   Mem x = ⟨ fst x ∈ fst D ⟩
-
 ```
 
 <!--en-->
@@ -255,7 +254,6 @@ The members of `D` are presented by a small type, the index type of the presenta
 ```agda
   Dom : Type ℓ
   Dom = ⟪ fst D ⟫
-
 ```
 
 <!--en-->
@@ -269,7 +267,6 @@ The presentation embeds its indices into the ambient hierarchy.
 ```agda
   ↪ : Dom → V ℓ
   ↪ = ⟪ fst D ⟫↪
-
 ```
 
 <!--en-->
@@ -283,7 +280,6 @@ An index is turned back into a constructible set: the embedded member is paired 
 ```agda
   up : Dom → S
   up m = ↪ m , isL-trans {x = fst D} {y = ↪ m} (member (fst D) m) (snd D)
-
 ```
 
 <!--en-->
@@ -297,7 +293,6 @@ The rebuilt constructible set is a member of `D`, by the presentation's own memb
 ```agda
   up-mem : (m : Dom) → Mem (up m)
   up-mem m = member (fst D) m
-
 ```
 
 <!--en-->
@@ -311,7 +306,6 @@ The presentation has no duplicate indices: equality of two embedded members forc
 ```agda
   Dom≡ : {a b : Dom} → ↪ a ≡ ↪ b → a ≡ b
   Dom≡ {a} {b} e = ↪-inj {a = fst D} {m = a} {n = b} e
-
 ```
 
 <!--en-->
@@ -325,7 +319,6 @@ Conversely, a member of `D` together with its membership proof recovers a presen
 ```agda
   toDom : (x : S) → Mem x → Dom
   toDom x mx = fst (fiber (fst D) mx)
-
 ```
 
 <!--en-->
@@ -353,7 +346,6 @@ The code `R` induces a relation on the small presentation: `a ≺ b` means that 
   opaque
     _≺_ : Dom → Dom → Type ℓ
     a ≺ b = ⟨ pr (↪ a) (↪ b) ∈ₛ fst R ⟩
-
 ```
 
 <!--en-->
@@ -367,7 +359,6 @@ For fixed indices `a` and `b`, the relation type `a ≺ b` is a proposition beca
 ```agda
     isProp≺ : (a b : Dom) → isProp (a ≺ b)
     isProp≺ a b = snd (pr (↪ a) (↪ b) ∈ₛ fst R)
-
 ```
 
 <!--en-->
@@ -381,7 +372,6 @@ Membership in the coded relation yields the small relation: the ordered pair rec
 ```agda
     ≺-in : (a b : Dom) → Holds R (up a) (up b) → a ≺ b
     ≺-in a b = ∈∈ₛ {a = pr (↪ a) (↪ b)} {b = fst R} .fst
-
 ```
 
 <!--en-->
@@ -395,7 +385,6 @@ Conversely, the small relation records a genuine pair of `R`, so the two reading
 ```agda
     ≺-out : (a b : Dom) → a ≺ b → Holds R (up a) (up b)
     ≺-out a b = ∈∈ₛ {a = pr (↪ a) (↪ b)} {b = fst R} .snd
-
 ```
 
 <!--en-->
@@ -406,10 +395,17 @@ Well-foundedness of `_≺_` supplies the recursion and induction by which `col` 
 関係 `_≺_` の整礎性は、`col` を定義する再帰と帰納を与える。推移性の役割は別である。先行者の列が上端の点より下にとどまることを保証し、各崩壊値が推移的で順序数になることを証明するために使われる。この二つの仮定だけでは、崩壊の単射性も、関係が整列順序であることも得られない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Col (wf : WellFounded _≺_)
              (≺-trans : {a b c : Dom} → a ≺ b → b ≺ c → a ≺ c) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The Mostowski construction now defines `col p` as the set of values `col r` for predecessors `r ≺ p`. Its computation rule `col-eq` identifies the recursive value with this explicit predecessor image. The membership lemmas give `col r ∈ col p` from a specified predecessor and, conversely, only a propositionally truncated predecessor from an arbitrary member; `col-ord` proves each individual `col p` is an ordinal.
@@ -437,7 +433,6 @@ Every collapse value is constructible. The lemma `col-ord` first shows that `col
       col-isL : (p : Dom) → ⟨ isL (col p) ⟩
       col-isL p = Lset→isL (sucV (col p)) (suc-ord (col-ord p)) (col p)
                     (ord∈Lset-suc (col p) (col-ord p))
-
 ```
 
 <!--en-->
@@ -451,8 +446,13 @@ Each collapse value is packaged with its constructibility proof into a construct
 ```agda
     colʟ : Dom → S
     colʟ p = col p , col-isL p
-
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## The formulas
@@ -473,7 +473,6 @@ A table `F` is complete at `x` when every `R`-predecessor `y` of `x` has some re
 ```agda
 Complete : S → S → S → Type (ℓ-suc ℓ)
 Complete F R x = (y : S) → Holds R y x → ∥ Σ[ u ∈ S ] Holds F y u ∥₁
-
 ```
 
 <!--en-->
@@ -487,7 +486,6 @@ The predicate `Src F R x w` says that `w` occurs as a value recorded by `F` at s
 ```agda
 Src : S → S → S → S → Type (ℓ-suc ℓ)
 Src F R x w = ∥ Σ[ y ∈ S ] (Holds R y x × Holds F y w) ∥₁
-
 ```
 
 <!--en-->
@@ -502,7 +500,6 @@ A value `v` is correct for `x` when its members are exactly the source values: m
 ValueIs : S → S → S → S → Type (ℓ-suc ℓ)
 ValueIs F R x v = (w : S) → (⟨ fst w ∈ fst v ⟩ → Src F R x w)
                           × (Src F R x w → ⟨ fst w ∈ fst v ⟩)
-
 ```
 
 <!--en-->
@@ -561,7 +558,6 @@ The final application in this direction performs the first of those conversions:
 
 ```agda
     (h y (subst ⟨_⟩ (sym (appC-adequate R zero (suc x) (y ∷ γ))) p))
-
 ```
 
 <!--en-->
@@ -604,7 +600,6 @@ The formula `srcAt f R x w` uses an unbounded existential quantifier to say that
 opaque
   srcAt : ∀ {n} → Fin n → S → Fin n → Fin n → Formula S n
   srcAt f R x w = ∃̇ ( appC R zero (suc x) ∧̇ appAt (suc f) zero (suc w) )
-
 ```
 
 <!--en-->
@@ -633,7 +628,6 @@ The graph membership of the predecessor closes the reading.
 
 ```agda
       , subst ⟨_⟩ (appAt-adequate (suc f) zero (suc w) (y ∷ γ)) q ) })
-
 ```
 
 <!--en-->
@@ -662,7 +656,6 @@ The graph atom is written last, completing the fill.
 
 ```agda
       , subst ⟨_⟩ (sym (appAt-adequate (suc f) zero (suc w) (y ∷ γ))) q ) })
-
 ```
 
 <!--en-->
@@ -691,7 +684,6 @@ The biconditional is the conjunction of its two directions, with the source form
 
 ```agda
       ∧̇ (srcAt (suc f) R (suc x) zero ⇒̇ (var zero ∈̇ var (suc v))) )
-
 ```
 
 <!--en-->
@@ -720,7 +712,6 @@ The backward direction is read symmetrically, through the source filling. Thus t
 
 ```agda
     , (λ s → h w .snd (src-in (suc f) R (suc x) zero (w ∷ γ) s))
-
 ```
 
 <!--en-->
@@ -778,7 +769,6 @@ Those two conditions separate existence from the value equation. Completeness sa
 ```agda
           ⇒̇ ( completeAt (suc (suc f)) R (suc zero)
             ∧̇ valueAt (suc (suc f)) R (suc zero) zero ) ))
-
 ```
 
 <!--en-->
@@ -807,7 +797,6 @@ The second component is read by `value-out`, giving the equivalence between memb
 
 ```agda
      , value-out (suc (suc f)) R (suc zero) zero (v ∷ x ∷ γ) w
-
 ```
 
 <!--en-->
@@ -846,10 +835,16 @@ The next formula fixes the relation `R` but leaves the witnessing table existent
 次の論理式では関係 `R` を固定するが、証人となる表は存在量化されたままである。この区別により、定義域全体を覆う一つの表を構成する前でも、ある正しい表を使って値を局所的に認識できる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module ColFo (R : S) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 At an environment `(z ∷ p ∷ [])`, the formula says that there merely exists a set `F` which is correct for `R` and contains the entry `(p,z)`. The table is bound existentially, so this is a local characterization of the value at `p`; it does not yet assert that one fixed table works simultaneously over the whole domain.
@@ -894,7 +889,6 @@ Adequacy of `appAt` converts the remaining application atom into `Holds F p z`. 
 
 ```agda
             (F ∷ z ∷ p ∷ [])) ha ) })
-
 ```
 
 <!--en-->
@@ -924,6 +918,9 @@ Adequacy of `appAt`, used in the reverse direction, turns `Holds F p z` into sat
 ```agda
             (F ∷ z ∷ p ∷ []))) hp ) ∣₁
 ```
+</div>
+</details>
+
 
 <!--en-->
 A pointwise value formula such as `colFo` must later be used to define a set of ordered pairs. The generic `PairFo` construction makes that passage: it recognizes a pair `(p,z)` precisely when `z` satisfies the chosen formula at `p`. This lets the local collapse formula serve as the value relation for the recursion constructed below.
@@ -953,12 +950,18 @@ The internal construction starts with a coded domain `D` and a coded relation `R
 内部の構成は、符号化された定義域 `D` と関係 `R` から始まる。最初の付帯条件は、`R` に属する各順序対の両成分が `D` に属することだけである。整礎性と推移性はこのモジュールの境界では仮定されず、崩壊の議論を始めるときに別々に与えられる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Internal (D R : S)
                 (Rsub : (y x : S) → Holds R y x
                       → ⟨ fst y ∈ fst D ⟩ × ⟨ fst x ∈ fst D ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The domain representation and its coded relation now provide the common setting for two formula constructions. `CF` is the local collapse-value formula for `R`, and `PF` recognizes the ordered pair formed from an argument and a value satisfying that formula. Neither construction at this point asserts existence or uniqueness of collapse values.
@@ -972,7 +975,6 @@ The domain representation and its coded relation now provide the common setting 
   open Collapse D R Rsub public
   module CF = ColFo R using ( colFo; colFo-in; colFo-out )
   module PF = PairFo CF.colFo using ( pair-in; pair-out; pairFo )
-
 ```
 
 <!--en-->
@@ -1000,7 +1002,6 @@ The collapse formula depends on its argument through the second environment slot
   colFo-at : (v : S) {x y : S} → x ≡ y
            → ⟨ (v ∷ x ∷ []) ⊨ CF.colFo ⟩ → ⟨ (v ∷ y ∷ []) ⊨ CF.colFo ⟩
   colFo-at v e = subst (λ t → ⟨ (v ∷ t ∷ []) ⊨ CF.colFo ⟩) e
-
 ```
 
 <!--en-->
@@ -1011,11 +1012,17 @@ The module now assumes that the small relation is well-founded and transitive. W
 ここで小さな関係が整礎かつ推移的であると仮定する。整礎性は `col` の再帰的定義と一意性証明の帰納を支え、推移性は得られる崩壊値が順序数であることを示すために使われる。二つの仮定の役割は異なり、先の `R` の端点条件からはどちらも従わない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Graph (wf : WellFounded _≺_)
                (≺-trans : {a b c : Dom} → a ≺ b → b ≺ c → a ≺ c) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 With these two hypotheses, the Mostowski recursion assigns to each `a` the set `col a` of collapse values of its predecessors. Its introduction and elimination lemmas characterize membership in that set, and `col-ord` proves that each individual `col a` is an ordinal. This statement concerns the pointwise collapse values, not yet the set `otL` collected later.
@@ -1027,7 +1034,6 @@ With these two hypotheses, the Mostowski recursion assigns to each `a` the set `
 
 ```agda
     open Col wf ≺-trans public
-
 ```
 
 <!--en-->
@@ -1086,7 +1092,6 @@ The correctness of the entry at `a` has two complementary consequences. The prec
 ```agda
         val : ValueIs F R (up a) v
         val = hc (up a) v hv .snd
-
 ```
 
 <!--en-->
@@ -1147,7 +1152,6 @@ The equation is exactly the induction hypothesis applied to the decoded predeces
 
 ```agda
             e = IH b b≺a wS (subst (λ t → ⟨ pr t w ∈ fst F ⟩) (sym (toDom-val y my)) fy)
-
 ```
 
 <!--en-->
@@ -1246,7 +1250,6 @@ The default entry `ea` is the ordered pair of the carried argument with its own 
 ```agda
       ea : S
       ea = prʟ (up a) (colʟ a)
-
 ```
 
 <!--en-->
@@ -1275,7 +1278,6 @@ To distinguish the predecessor and default cases inside the object language, the
 
 ```agda
       module PE = PairExpression
-
 ```
 
 <!--en-->
@@ -1289,7 +1291,6 @@ The expression `image` denotes the pair `(q,up a)`: its first coordinate comes f
 ```agda
       image : PE.Expr 2
       image = PE.pair (PE.slot (suc zero)) (PE.literal (up a))
-
 ```
 
 <!--en-->
@@ -1305,7 +1306,6 @@ The formula `ψ` mirrors the two cases of `Body`. If `q R a`, the first branch r
         ψ : Formula S 2
         ψ = (PE.member image (con R) ∧̇ PF.pairFo)
           ∨̇ ((¬̇ PE.member image (con R)) ∧̇ (var zero ≐ con ea))
-
 ```
 
 <!--en-->
@@ -1334,7 +1334,6 @@ To obtain that host-level refutation, assume `q R a`. The inward reading of the 
 
 ```agda
                  ((λ k → lower (h1 (PE.member-in image (con R) (z ∷ q ∷ []) k))) , h2) })
-
 ```
 
 <!--en-->
@@ -1363,7 +1362,6 @@ The right branch lifts the host-side refutation into the object language and car
 
 ```agda
           ∣ inr ((λ k → lift (h1 (PE.member-out image (con R) (z ∷ q ∷ []) k))) , e) ∣₁
-
 ```
 
 <!--en-->
@@ -1379,7 +1377,6 @@ The helper `b≺a-of` decodes the host-side relation membership into the interna
         b≺a-of : (q : S) (mq : Mem q) → Holds R q (up a) → toDom q mq ≺ a
         b≺a-of q mq h = ≺-in (toDom q mq) a
           (subst (λ t → ⟨ pr t (↪ a) ∈ fst R ⟩) (sym (toDom-val q mq)) h)
-
 ```
 
 <!--en-->
@@ -1394,7 +1391,6 @@ The induction hypothesis is stated at the canonical representative `up (toDom q 
         IHq : (q : S) (mq : Mem q) → toDom q mq ≺ a
             → ⟨ (colʟ (toDom q mq) ∷ q ∷ []) ⊨ CF.colFo ⟩
         IHq q mq k = colFo-at (colʟ (toDom q mq)) (up-toDom q mq) (IH (toDom q mq) k)
-
 ```
 
 <!--en-->
@@ -1490,7 +1486,6 @@ The local recursion ranges over every `q ∈ D`. If `q R up a`, its unique value
 ```agda
 
         module T = Of (record { dom = D ; graph = ψ ; funct = fc }) using ( table; table-in; table-out )
-
 ```
 
 <!--en-->
@@ -1504,7 +1499,6 @@ The local recursion ranges over every `q ∈ D`. If `q R up a`, its unique value
 ```agda
       Fa : S
       Fa = T.table
-
 ```
 
 <!--en-->
@@ -1518,7 +1512,6 @@ The local recursion ranges over every `q ∈ D`. If `q R up a`, its unique value
 ```agda
       Below : Dom → Type ℓ
       Below b = (b ≺ a) ⊎ (b ≡ a)
-
 ```
 
 <!--en-->
@@ -1550,7 +1543,6 @@ In the strict case, the body contains the relation witness `b ≺ a` and the ind
         bodyOf (inr e) = inr
           ( (λ h → ≺-irrefl a (≺-in a a (subst (λ t → Holds R (up t) (up a)) e h)))
           , prʟ-fst (up b) (colʟ b) ∙ cong (λ t → pr (↪ t) (col t)) e ∙ sym (prʟ-fst (up a) (colʟ a)) )
-
 ```
 
 <!--en-->
@@ -1596,7 +1588,6 @@ Both the replacement reader and `ψ-out` return truncated witnesses. Since the d
 ```agda
           (ψ-out y q hψ) })
         (T.table-out y hy)
-
 ```
 
 <!--en-->
@@ -1641,7 +1632,6 @@ Applying `pr-inj` to the composite pair equality yields `fst x ≡ ↪ b` and `f
 
 ```agda
           q = pr-inj (sym (prʟ-fst x v) ∙ e)
-
 ```
 
 <!--en-->
@@ -1656,7 +1646,6 @@ If `c ≺ b` and `b ≺ a`, transitivity gives `c ≺ a`. If instead `b ≡ a`, 
       below-trans : {c b : Dom} → c ≺ b → Below b → c ≺ a
       below-trans cb (inl k) = ≺-trans cb k
       below-trans {c} cb (inr e) = subst (c ≺_) e cb
-
 ```
 
 <!--en-->
@@ -1731,7 +1720,6 @@ The proof `my` is precisely the first endpoint membership supplied by `Rsub`; it
             my = Rsub y x hy .fst
             c : Dom
             c = toDom y my
-
 ```
 
 <!--en-->
@@ -1761,7 +1749,6 @@ The two projections of `pred y hy` are now named `cb` and `ec`: `cb` is the stri
 ```agda
             cb = pred y hy .snd .fst
             ec = pred y hy .snd .snd
-
 ```
 
 <!--en-->
@@ -1791,7 +1778,6 @@ The two memberships are transported along the equation of the index and the stri
 ```agda
               , ( subst (λ t → ⟨ pr (↪ r) t ∈ fst R ⟩) ex (≺-out r b rb)
                 , subst (λ t → ⟨ pr (↪ r) t ∈ fst Fa ⟩) er (Fa-in r (inl (below-trans rb k))) )
-
 ```
 
 <!--en-->
@@ -1837,7 +1823,6 @@ The strict comparison between `c` and `b` is filled from the two naming equation
 ```agda
               cb : c ≺ b
               cb = ≺-in c b (subst2 (λ s t → ⟨ pr s t ∈ fst R ⟩) (sym ey) (sym ex) hy)
-
 ```
 
 <!--en-->
@@ -1865,7 +1850,6 @@ Well-founded induction now proves the collapse formula at every `a : Dom`. The i
     approx : (a : Dom) → ⟨ (colʟ a ∷ up a ∷ []) ⊨ CF.colFo ⟩
     approx = W.induction {P = λ a → ⟨ (colʟ a ∷ up a ∷ []) ⊨ CF.colFo ⟩}
       (λ a IH → Approx.approx-step a IH)
-
 ```
 
 <!--en-->
@@ -1909,7 +1893,6 @@ The `funct` field must make the fiber of values satisfying `CF.colFo` at each `q
         ; funct = λ q mq → (colʟ (toDom q mq) , approx-at q mq)
             , λ { (v , hv) → Σ≡Prop (λ w → snd ((w ∷ q ∷ []) ⊨ CF.colFo))
                 (sym (Σ≡Prop (λ w → snd (isL w)) (colFo-val q mq v hv))) } }
-
 ```
 
 <!--en-->
@@ -1922,7 +1905,6 @@ The generic replacement construction `Of` now turns this functional recursion in
 
 ```agda
       module OT = Of otR using ( table; table-in; table-out )
-
 ```
 
 <!--en-->
@@ -1936,7 +1918,6 @@ The generic replacement construction `Of` now turns this functional recursion in
 ```agda
     otL : S
     otL = OT.table
-
 ```
 
 <!--en-->
@@ -1950,7 +1931,6 @@ For each `b : Dom`, the approximation proves that `colʟ b` is a value of `otR` 
 ```agda
     otL-in : (b : Dom) → ⟨ col b ∈ fst otL ⟩
     otL-in b = OT.table-in (up b) (colʟ b) (up-mem b) (approx b)
-
 ```
 
 <!--en-->
@@ -1979,7 +1959,6 @@ To apply the replacement reader, the ambient set `y` must be regarded as an elem
 
 ```agda
       yS = y , isL-trans {x = fst otL} {y = y} hy (snd otL)
-
 ```
 
 <!--en-->
@@ -1992,7 +1971,6 @@ Applying the recursion-graph construction to `otR` collects ordered pairs rather
 
 ```agda
     module CT = RecursionGraph otR using ( F; F-in; F-out; pair-out; sv; dm )
-
 ```
 
 <!--en-->
@@ -2006,7 +1984,6 @@ Applying the recursion-graph construction to `otR` collects ordered pairs rather
 ```agda
     colTable : S
     colTable = CT.F
-
 ```
 
 <!--en-->
@@ -2021,7 +1998,6 @@ At the canonical representative `up b`, the recursion graph initially records th
     colTable-in : (b : Dom) → ⟨ pr (↪ b) (col b) ∈ fst colTable ⟩
     colTable-in b = subst (λ t → ⟨ pr (↪ b) t ∈ fst colTable ⟩)
       (cong col (Dom≡ (toDom-val (up b) (up-mem b)))) (CT.F-in (up b) (up-mem b))
-
 ```
 
 <!--en-->
@@ -2050,7 +2026,6 @@ The fiber predicate says that a member `v` paired with `x` is the collapse value
 ```agda
     Fib : S → S → Type (ℓ-suc ℓ)
     Fib x v = Σ[ mx ∈ Mem x ] (fst v ≡ col (toDom x mx))
-
 ```
 
 <!--en-->
@@ -2064,7 +2039,6 @@ For fixed `x` and `v`, `Fib x v` is a proposition. Membership `mx : Mem x` is pr
 ```agda
     isPropFib : (x v : S) → isProp (Fib x v)
     isPropFib x v = isPropΣ (isPropMem x) (λ mx → setIsSet (fst v) (col (toDom x mx)))
-
 ```
 
 <!--en-->
@@ -2079,6 +2053,12 @@ Membership of the encoded pair of `x` and `v` in `colTable` therefore yields unt
     colTable-pair : (x v : S) → Holds colTable x v → Fib x v
     colTable-pair = CT.pair-out
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## The graph as a coded injection
@@ -2096,12 +2076,18 @@ To study when the collapse graph codes an injection, fix `D`, `R`, and the endpo
 崩壊グラフがいつ単射を符号化するかを調べるため、`D`、`R`、および端点条件 `Rsub` を固定する。この条件が述べるのは、`R` に記録された各辺の両端点が `D` に属することだけである。整礎性、推移性、三分法は別々の仮定として残る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Code (D R : S)
             (Rsub : (y x : S) → Holds R y x
                   → ⟨ fst y ∈ fst D ⟩ × ⟨ fst x ∈ fst D ⟩) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The small presentation `Dom`, its coded relation `_≺_`, and the conversions between members of `D` and their indices are the same ones used above. The coding argument will build on that collapse construction rather than introduce a second relation.
@@ -2113,7 +2099,6 @@ The small presentation `Dom`, its coded relation `_≺_`, and the conversions be
 
 ```agda
   open Internal D R Rsub public
-
 ```
 
 <!--en-->
@@ -2124,11 +2109,17 @@ The hypotheses play different roles. Well-foundedness defines `col` by recursion
 仮定の役割はそれぞれ異なる。整礎性は再帰によって `col` を定義し、推移性は各崩壊値が順序数であり、したがって構成可能であることを示す。局所表の組み立てでは、この章の古典的な引数 `lem` も使う。これらを合わせて正確な値域 `otL` とグラフ `colTable` を構成し、一価性、正確な定義域、すべてのグラフ値が `otL` に属することを得る。三分法は次のモジュールで初めて加えられ、単射性の証明に使われる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Conjuncts (wf : WellFounded _≺_)
                    (≺-trans : {a b c : Dom} → a ≺ b → b ≺ c → a ≺ c) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 With these two hypotheses fixed, the preceding graph construction supplies `col`, `otL`, and `colTable` together with their membership characterizations. At this stage equal inputs have equal recorded values, but equality of recorded values has not yet been shown to recover equal inputs.
@@ -2140,7 +2131,6 @@ With these two hypotheses fixed, the preceding graph construction supplies `col`
 
 ```agda
     open Graph wf ≺-trans public
-
 ```
 
 <!--en-->
@@ -2154,7 +2144,6 @@ In the two-slot environment `γ`, slot zero contains `colTable` and slot one con
 ```agda
     γ : S ^ 2
     γ = colTable ∷ D ∷ []
-
 ```
 
 <!--en-->
@@ -2168,7 +2157,6 @@ The first condition is single-valuedness: if `colTable` contains pairs with the 
 ```agda
     sv : ⟨ γ ⊨ svAt zero ⟩
     sv = CT.sv
-
 ```
 
 <!--en-->
@@ -2182,7 +2170,6 @@ The domain condition is an equivalence: an input has some value in `colTable` ex
 ```agda
     dm : ⟨ γ ⊨ domAt zero (suc zero) ⟩
     dm = CT.dm
-
 ```
 
 <!--en-->
@@ -2209,7 +2196,6 @@ The collapse table is already total and single-valued on `D`, and its values alr
 
 ```agda
     module Inj (tri : (a b : Dom) → (a ≺ b) ⊎ ((a ≡ b) ⊎ (b ≺ a))) where
-
 ```
 
 <!--en-->
@@ -2241,7 +2227,6 @@ In the left case, `a` precedes `b`, so `col a` is a member of `col b`; transport
         go (inr (inl q)) = q
         go (inr (inr k)) = ⊥₀-rec (∈-irrefl (col a)
           (subst (λ t → ⟨ t ∈ col a ⟩) (sym e) (col-in a b k)))
-
 ```
 
 <!--en-->
@@ -2271,7 +2256,6 @@ The recovered indices are equal by `col-inj`, and the round-trip lemma transport
 ```agda
          ∙ cong ↪ (col-inj (toDom x m) (toDom x' m') (sym e ∙ e'))
          ∙ toDom-val x' m')
-
 ```
 
 <!--en-->
@@ -2299,7 +2283,6 @@ The converse construction is intentionally local to chosen source and target set
       module Inverse (X Y : S)
         (pre : (x : S) → ⟨ fst x ∈ fst X ⟩ → Σ[ b ∈ Dom ] (col b ≡ fst x))
         (bound : (x : S) (mx : ⟨ fst x ∈ fst X ⟩) → ⟨ ↪ (pre x mx .fst) ∈ fst Y ⟩) where
-
 ```
 
 <!--en-->
@@ -2313,7 +2296,6 @@ Membership in the source set is recorded as a type, so that the argument can car
 ```agda
         SourceMem : S → Type (ℓ-suc ℓ)
         SourceMem x = ⟨ fst x ∈ fst X ⟩
-
 ```
 
 <!--en-->
@@ -2327,7 +2309,6 @@ For `x ∈ X`, let `b` be the collapse preimage selected by `pre`. The inverse f
 ```agda
         fn : (x : S) → SourceMem x → S
         fn x mx = up (pre x mx .fst)
-
 ```
 
 <!--en-->
@@ -2342,7 +2323,6 @@ The defining formula reads the existing table in the converse direction. In the 
         opaque
           graph : Formula S 2
           graph = appC colTable zero (suc zero)
-
 ```
 
 <!--en-->
@@ -2356,7 +2336,6 @@ The adequacy equation identifies the satisfaction of the swapped graph formula w
 ```agda
           at : (y x : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ ≡ Holds colTable y x
           at y x = cong ⟨_⟩ (appC-adequate colTable zero (suc zero) (y ∷ x ∷ []))
-
 ```
 
 <!--en-->
@@ -2385,7 +2364,6 @@ The first projection of `f` is the membership proof `my : Mem y`. It is the evid
 
 ```agda
           my = f .fst
-
 ```
 
 <!--en-->
@@ -2416,7 +2394,6 @@ The `defines` field starts from the canonical entry `colTable-in b` and transpor
                 (pre x mx .snd)
                 (colTable-in (pre x mx .fst)))
           ; only = only }
-
 ```
 
 <!--en-->
@@ -2431,7 +2408,6 @@ The inverse function is injective for a direct reason. If `fn x mx` and `fn x' m
         inj : (x : S) (mx : SourceMem x) (x' : S) (mx' : SourceMem x')
             → fst (fn x mx) ≡ fst (fn x' mx') → fst x ≡ fst x'
         inj x mx x' mx' e = sym (pre x mx .snd) ∙ cong col (Dom≡ e) ∙ pre x' mx' .snd
-
 ```
 
 <!--en-->
@@ -2446,3 +2422,8 @@ Applying the general definable-injection construction to `M` and `inj` packages 
         injL : InjL X Y
         injL = DefinableInj.injL M inj
 ```
+</div>
+</details>
+
+</div>
+</details>

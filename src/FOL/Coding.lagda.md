@@ -67,7 +67,6 @@ open ZFStructure 𝒮 using ( S )
 open import FOL.Syntax
   using ( Term; con; var; Formula
         ; _∈̇_; _≐_; _∧̇_; _∨̇_; _⇒̇_; ⊥̇; ∃̇_; ∀̇_; ∀̇∈; ∃̇∈ )
-
 ```
 
 <!--en-->

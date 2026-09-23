@@ -160,9 +160,17 @@ Syntax alone cannot say whether a renaming preserves meaning; we need to compare
 構文だけでは改名が意味を保つかを言えず、環境を比較する必要がある。環境は構造の台の要素からなるベクトルで、長さは文脈と一致する。大きい文脈には `γ : S ^ m`、小さい文脈には `δ : S ^ n` である。問いはこう変わる。`ρ` の視点から、`γ` と `δ` はいつ同じ割り当てとみなせるのか。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Sat {ℓ} (𝒮 : ZFStructure ℓ)
            {ℓc} {K : Type ℓc} (ι : K → ZFStructure.S 𝒮) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open ZFStructure 𝒮
 
@@ -299,6 +307,9 @@ The bounded existential `∃̇∈ t φ` closes the induction in the mirror image
     cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-rename ρ t γ δ ag))
               (⊨-rename (liftρ ρ) φ (x ∷ γ) (x ∷ δ) (agrees∷ x ag))))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

@@ -104,7 +104,6 @@ Within this semantics, the constant interpretation is fixed to be the identity o
 open import Cubical.HITs.CumulativeHierarchy.Constructions
   using ( SetPackage )  -- lint-agda: keep (used qualified: SetPackage.classification)
 open InfinitySet using ( #_ )
-
 ```
 
 <!--en-->
@@ -465,7 +464,6 @@ The unordered-pair reader `pairAt k i j` adds the second component and weakens t
 pairAt : ∀ {n} → Fin n → Fin n → Fin n → Formula (V ℓ) n
 pairAt k i j = (var i ∈̇ var k) ∧̇ ((var j ∈̇ var k)
             ∧̇ (∀̇∈ (var k) ((var zero ≐ var (suc i)) ∨̇ (var zero ≐ var (suc j)))))
-
 ```
 
 <!--en-->
@@ -503,7 +501,6 @@ Boundedness is certified syntactically. The checker `checkΔ₀` traverses the a
 
 ```agda
 Δ₀-prAt q u v = checkΔ₀ (prAt q u v) tt
-
 ```
 
 <!--en-->
@@ -546,7 +543,6 @@ The forward direction receives the satisfaction of `prAt q u v`, which by the se
 
 ```agda
   (λ e → prChar-bwd _ _ _ e)
-
 ```
 
 <!--en-->

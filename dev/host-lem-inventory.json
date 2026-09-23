@@ -34,12 +34,12 @@
     {
       "module": "L.Axioms.Power",
       "definition": "rsz",
-      "decided_proposition": "rsz v = lem→resizing lem (isL v)",
+      "decided_proposition": "rsz v = LEM→Resizing lem (isL v)",
       "classification": "resizing-bridge",
-      "supplier": "lem→resizing / lem→ΩResizing",
+      "supplier": "LEM→Resizing / LEM→ΩResizing",
       "reading_lemma": "resizing equivalence",
       "migration_status": "migrated",
-      "site": "src/L/Axioms/Power.lagda.md:rsz v = lem→resizing lem (isL v):lem:1"
+      "site": "src/L/Axioms/Power.lagda.md:rsz v = LEM→Resizing lem (isL v):lem:1"
     },
     {
       "module": "L.CardinalAbove",
@@ -664,12 +664,12 @@
     {
       "module": "V.Model",
       "definition": "V⊨ZF-fromLEM",
-      "decided_proposition": "V⊨ZF-fromLEM lem = V⊨ZF (lem→ΩResizing lem)",
+      "decided_proposition": "V⊨ZF-fromLEM lem = V⊨ZF (LEM→ΩResizing lem)",
       "classification": "resizing-bridge",
-      "supplier": "lem→resizing / lem→ΩResizing",
+      "supplier": "LEM→Resizing / LEM→ΩResizing",
       "reading_lemma": "resizing equivalence",
       "migration_status": "migrated",
-      "site": "src/V/Model.lagda.md:V⊨ZF-fromLEM lem = V⊨ZF (lem→ΩResizing lem):lem:1"
+      "site": "src/V/Model.lagda.md:V⊨ZF-fromLEM lem = V⊨ZF (LEM→ΩResizing lem):lem:1"
     }
   ]
 }

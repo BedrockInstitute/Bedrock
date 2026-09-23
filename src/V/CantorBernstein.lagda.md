@@ -45,8 +45,7 @@ The proof will form several propositions by truncating an existential: the state
 証明は、存在を命題的切り詰めした命題をいくつも作る。x が g の像に属するという主張は ∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁ であり、選ばれた原像を持たず、存在することだけが保留されている。このような命題的切り詰めされた主張は `squash₁` によって命題になり、その証明は命題値の対象へは消去できるが、任意のデータへはできない。この制限こそが古典的仮定を必要とする理由である。議論が選ばれた原像を要する場面で、単なる存在性を選ばれた原像へ変えるのに排中律を使う。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 Two kinds of propositions dominate the chapter: membership in the image of g, and reachability by a finite alternating chain. Both are stored as elements of `hProp ℓ`, which packages an underlying type with a proof that it is a proposition; `⟨ P ⟩`{.Agda} projects the underlying type, while the propositionhood proof stays in the second component. The remaining imports supply the machinery around them: disjoint sums for the bad/good case split, `isProp⊥` for the refutation side, `Σ≡Prop` for identifying pairs whose second components are proposition-valued, and the cumulative hierarchy together with the fact that a member type `⟪ a ⟫`{.Agda} of a set embeds into an h-set, which will later certify that the member types are h-sets.
@@ -78,10 +77,18 @@ The construction is packaged in a module `Bernstein`{.Agda} taking exactly the c
 構成はモジュール `Bernstein`{.Agda} にまとめられ、受け取るのはまさに古典的なデータである。二つの型、$A$ の h-集合としての構造、そして二つの単射で、各々は関数とその単射性の証明の組として与えられる。最初の材料は像の述語 `imG x` で、ある $y ∈ B$ が $g y ≡ x$ を満たすことを単に (単に) 主張する。ここで原像は選ばれない。命題的切り詰め ∥ ⋯ ∥₁ が証人を消して命題だけを残し、`squash₁` がその命題性の証明書になる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Bernstein {A B : Type ℓ} (setA : isSet A)
                  (f : A → B) (fi : (x y : A) → f x ≡ f y → x ≡ y)
                  (g : B → A) (gi : (x y : B) → g x ≡ g y → x ≡ y) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   imG : A → hProp ℓ
   imG x = (∥ Σ[ y ∈ B ] (g y ≡ x) ∥₁ , squash₁)
@@ -391,6 +398,9 @@ Surjectivity needs one extra step. The relative lemma `h-surj` applied at the ca
   ĥ-surj y = map₁ (λ { (x , dx , e) → x , sym (h-cons x dx (lem (C x))) ∙ e })
     (h-surj y (lem (C (g y))))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The abstract construction now applies to the cumulative hierarchy itself. Each element a of V comes with a member type ⟪ a ⟫, the type of its members. The Bernstein construction asks for an h-set structure on its first type, so the first step is to certify that ⟪ a ⟫ is one. The embedding ⟪ a ⟫↪ sends each member index to the member it indexes inside V; since V is an h-set and the embedding is an embedding, its domain inherits the h-set condition. With that single fact, two mutual injections between ⟪ a ⟫ and ⟪ b ⟫ produce a bijection packaged as a dependent triple.
@@ -461,6 +471,9 @@ The parameters spell out the exact strength required. The carrier C lives at its
 パラメータは必要な強さを正確に列挙する。台 C はそれ自身のレベル ℓ₁ に、関係 R は ℓ₂ に住むので、符号やその関係は小さくなくて構わない。小さくなければならないのは各 P a で、排中律が使える固定レベル ℓ に住む。各 a について P a は h-集合だと仮定され、Bernstein モジュールの h-集合性の仮定に対応する。関係 R 自身は型としてまったく任意である。読み戻し以外には何も仮定しない。読み戻しは R a b の元から、第 1 成分が関数 P a → P b、第 2 成分がその関数の単射性の証明である対を返す。特に、取り出された単射は正味のデータであり、命題的切り詰めされた存在ではない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module MutualInj {ℓ₁ ℓ₂ : Level} (C : Type ℓ₁) (P : C → Type ℓ)
     (R : (a b : C) → Type ℓ₂)
@@ -468,6 +481,10 @@ module MutualInj {ℓ₁ ℓ₂ : Level} (C : Type ℓ₁) (P : C → Type ℓ)
     (read : (a b : C) → R a b
           → Σ[ f ∈ (P a → P b) ] ((x y : P a) → f x ≡ f y → x ≡ y)) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The first entry point states the transfer with the two coded injections as explicit arguments: from a forward code in R a b and a backward code in R b a, it returns the bijection between P a and P b as a triple, in exactly the shape of the previous section. The statement quantifies over inhabitants of the relation, not over their truncation, so the codes are available as data throughout.
@@ -530,3 +547,5 @@ The proof nests two truncation eliminations. Eliminating fwd yields some code w;
     (λ w → rec₁ squash₁ (λ w' → ∣ mutual→bijection a b w w' ∣₁) bwd)
     fwd
 ```
+</div>
+</details>

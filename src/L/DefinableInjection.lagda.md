@@ -16,7 +16,6 @@ A rule described outside `L` is not yet an object over which `L` can quantify. T
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -30,7 +29,6 @@ The sole classical parameter is excluded middle at level `ℓ-suc ℓ`. The elem
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -43,7 +41,6 @@ Fix a universe level `ℓ` and this instance of excluded middle. The mathematica
 
 ```agda
 module L.DefinableInjection {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -98,7 +95,6 @@ open hPropStructure 𝒮ʟ using ( S )
 open hPropStructure 𝒮ᵥ using ( _∈ˢ_ )
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -119,8 +115,18 @@ The four clauses of `InjCode` can be presented by one object-language formula wi
 injCodeAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 injCodeAt f A B = svAt f ∧̇ domAt f A ∧̇ injAt f
                   ∧̇ valuesInAt f B
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     F D C : S
     F = lookup f γ
@@ -147,6 +153,9 @@ module InjCodeAt {n : ℕ} (f A B : Fin n) (γ : S ^ n) where
     , injAt-in f γ (λ y x x' p q → injAt-out zero (F ∷ D ∷ []) ij y x x' p q)
     , valuesInAt-in f B γ ran
 ```
+</div>
+</details>
+
 
 <!--en-->
 Existentially binding the graph slot yields the formula for `InjL`: the remaining two slots name the domain and codomain. Its semantic existential is already propositionally truncated, exactly as `InjL` is. Mapping the preceding `read` and `fill` functions under that truncation gives both directions without choosing a graph.
@@ -159,8 +168,18 @@ Existentially binding the graph slot yields the formula for `InjL`: the remainin
 ```agda
 injLAt : ∀ {n} → Fin n → Fin n → Formula S n
 injLAt A B = ∃̇ (injCodeAt zero (suc A) (suc B))
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module InjLAt {n : ℕ} (A B : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     D C : S
     D = lookup A γ
@@ -172,6 +191,9 @@ module InjLAt {n : ℕ} (A B : Fin n) (γ : S ^ n) where
   fill : InjL D C → ⟨ γ ⊨ injLAt A B ⟩
   fill = map₁ (λ { (F , code) → F , InjCodeAt.fill zero (suc A) (suc B) (F ∷ γ) code })
 ```
+</div>
+</details>
+
 
 <!--en-->
 Internal cardinality is the assertion that no member of a candidate receives an injection from the candidate. The formula below says exactly this: after binding a possible smaller member, membership in the candidate implies the negation of the `injLAt` formula. Its reading converts only the formula for the injection; the outer universal quantifier, implication, and negation compute to the function type already used by `IsCardinalL`.
@@ -185,8 +207,18 @@ Internal cardinality is the assertion that no member of a candidate receives an 
 cardinalAt : ∀ {n} → Fin n → Formula S n
 cardinalAt K = ∀̇ ((var zero ∈̇ var (suc K))
                   ⇒̇ ¬̇ injLAt (suc K) zero)
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module CardinalAt {n : ℕ} (K : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     κ : S
     κ = lookup K γ
@@ -199,6 +231,9 @@ module CardinalAt {n : ℕ} (K : Fin n) (γ : S ^ n) where
   fill c δ δ∈κ sat = lift
     (c δ δ∈κ (InjLAt.read (suc K) zero (δ ∷ γ) sat))
 ```
+</div>
+</details>
+
 
 <!--en-->
 Two type-theoretic facts govern the proof. When the second component of a dependent pair is proposition-valued, `Σ≡Prop` lifts a path between first components to a path between the pairs. A propositional truncation retains only inhabitedness. The graph reader `pair-out` may eliminate a truncated origin because its target fiber is a proposition, while the final step uses `∣_∣₁` to hide the particular graph and code. Neither operation selects a global family of witnesses.
@@ -296,8 +331,16 @@ The first construction assumes only definability and functionality. From `M` it 
 最初の構成が仮定するのは、定義可能性と関数性だけである。`M` から `L` の要素である完全な関数グラフを作り、その順序対の項目を正確に入れ、読み取る方法を得る。単射性は次の段階まで保留する。同じグラフ構成は、最小証人の表のように、目的上単射である必要のない定義可能な写像にも適用できるからである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Graph (M : DefinableMap) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open DefinableMap M public
 ```
 
@@ -327,7 +370,6 @@ It remains to contract every candidate `(y,h)` to that center. The field `only` 
 
 ```agda
           , λ { (y , h) → Σ≡Prop (λ w → snd ((w ∷ x ∷ []) ⊨ graph)) (sym (only x m y h)) } }
-
 ```
 
 <!--en-->
@@ -341,7 +383,6 @@ Replacement now collects the ordered-pair values into a constructible set `F`. T
 ```agda
   open RecursionGraph R public
     using ( Mem; isPropMem; F; F-in; F-out; Fib; isPropFib; pair-out; γ; sv; dm )
-
 ```
 
 <!--en-->
@@ -359,6 +400,9 @@ The fourth condition for the eventual code is containment in the codomain. Given
     m = fst (pair-out x y h)
     e = snd (pair-out x y h)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## From external injectivity to a coded injection
@@ -376,6 +420,9 @@ To turn this graph into an injection code, add the genuinely new hypothesis of i
 このグラフを単射の符号にするには、実質的に新しい仮定として単射性を加える必要がある。`dom` への所属の証明を伴う二つの入力について、選ばれた値の基礎集合が等しければ、入力の基礎集合も等しいと仮定する。`fn` の型は所属の証明に依存しているので、その引数は明示されたままである。証明無関係性は異なる所属の証明の間の整合性を保証するが、仮定自体は二つの入力で実際に与えられた証拠について述べられる。その結論は `injAt` の等号の条項が要求する強さと正確に一致する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Inj (M : DefinableMap)
            (inj : (x : S) (m : ⟨ fst x ∈ˢ fst (DefinableMap.dom M) ⟩)
@@ -383,6 +430,10 @@ module Inj (M : DefinableMap)
                 → fst (DefinableMap.fn M x m) ≡ fst (DefinableMap.fn M x' m')
                 → fst x ≡ fst x') where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Opening `Graph M` makes the already constructed `F` and its proved properties available in the injective case. This keeps two mathematically useful conclusions at hand. One may retain the particular graph `F` together with its code when a later construction must name or combine graphs. One may instead use `injL`, which remembers only that some coded injection exists. The distinction is between concrete data and its propositional existence.
@@ -395,7 +446,6 @@ Opening `Graph M` makes the already constructed `F` and its proved properties av
 ```agda
 
   open Graph M public
-
 ```
 
 <!--en-->
@@ -426,7 +476,6 @@ The tuple `sv , dm , ij , ran` fills the four fields of `InjCode F dom cod` in o
 
   code : InjCode F dom cod
   code = sv , dm , ij , ran
-
 ```
 
 <!--en-->
@@ -441,3 +490,5 @@ Finally, the concrete pair `(F,code)` is inserted into a propositional truncatio
   injL : InjL dom cod
   injL = ∣ F , code ∣₁
 ```
+</div>
+</details>

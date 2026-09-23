@@ -1,62 +1,24 @@
 <!--en-->
 # Choice
 
-Knowing that each type in a family has an element is different from having one function that chooses an element of every type. Propositional truncation makes the distinction precise: `∥ B x ∥₁`{.Agda} asserts existence at an individual index, while `∥ ((x : X) → B x) ∥₁`{.Agda} asserts the existence of a whole choice function. This chapter studies the principle that passes from the first kind of existence to the second, over an h-set of indices.
+Knowing that each type in a family has an element is different from having one function that chooses an element of every type. Propositional truncation makes the distinction precise: `∥ B x ∥₁`{.Agda} asserts existence at an individual index, while `∥ ((x : X) → B x) ∥₁`{.Agda} asserts the existence of a whole choice function. We formulate this principle for a family of h-sets indexed by an h-set, lower its universe level, and prove that it implies excluded middle. In the last step, equality of two quotient classes encodes a proposition, and choice supplies Boolean representatives to compare. Every additional principle remains an explicit hypothesis.
 <!--zh-->
 # 选择原理
 
-知道一族类型中的每个类型都有元素，与拥有一个同时为它们选取元素的函数，是不同的两件事。命题截断把区别表达得很准确：`∥ B x ∥₁`{.Agda} 断言某个指标处有元素，`∥ ((x : X) → B x) ∥₁`{.Agda} 则断言整个选择函数存在。本章讨论从前一种存在过渡到后一种存在的原理，其中指标类型要求是 h-集合。
+知道一族类型中的每个类型都有元素，与拥有一个同时为它们选取元素的函数，是不同的两件事。命题截断把区别表达得很准确：`∥ B x ∥₁`{.Agda} 断言某个指标处有元素，`∥ ((x : X) → B x) ∥₁`{.Agda} 则断言整个选择函数存在。本章先陈述以 h-集合为指标、取值也为 h-集合的选择原理，再将它降低一个宇宙层级，最后证明它蕴含排中律。最后一步把命题编码为两个商类的相等，由选择给出可供比较的布尔代表元。所用的额外原理始终是显式假设。
 <!--ja-->
 # 選択原理
 
-型の族の各型に要素があることと、すべての型から要素を選ぶ一つの関数をもつことは異なる。命題的切り詰めはこの違いを正確に表す。`∥ B x ∥₁`{.Agda} は個々の添字における存在を述べ、`∥ ((x : X) → B x) ∥₁`{.Agda} は選択関数全体の存在を述べる。本章では、添字型を h-集合としたとき、前者から後者へ移る原理を扱う。
+型の族の各型に要素があることと、すべての型から要素を選ぶ一つの関数をもつことは異なる。命題的切り詰めはこの違いを正確に表す。`∥ B x ∥₁`{.Agda} は個々の添字における存在を述べ、`∥ ((x : X) → B x) ∥₁`{.Agda} は選択関数全体の存在を述べる。本章では、h-集合で添字付けられた h-集合値の族について選択原理を定式化し、宇宙レベルを一段下げた後、それが排中律を含意することを証明する。最後の証明では命題を二つの商類の等しさに符号化し、選択によって比較できるブール代表元を得る。追加の原理はすべて明示的な仮定とする。
 <!--/-->
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
 
 module Base.Choice where
-```
-
-<!--en-->
-We first state the principle and lower it by one universe level. We then prove that it implies excluded middle. The key is to encode a proposition in the equality of two quotient classes, and use choice to turn that equality into a comparison of booleans. As in the preceding chapter, every use of an additional principle remains an explicit hypothesis.
-<!--zh-->
-我们先陈述这条原理，再把它降低一个宇宙层级，最后证明它蕴含排中律。证明的关键是把命题编码为两个商类的相等，再借助选择，把这种相等转化为布尔值的比较。与上一章一样，所用的额外原理始终作为显式假设出现。
-<!--ja-->
-まず原理を定式化し、宇宙レベルを一段下げる。次に、この原理が排中律を含意することを証明する。鍵となるのは、命題を二つの商類の等しさに符号化し、選択によってそれをブール値の比較へ移すことである。前章と同じく、追加の原理は常に明示的な仮定として用いる。
-<!--/-->
-
-```agda
 
 open import Base.Prelude
-open import Cubical.Foundations.Prelude using ( Path )
 open import Base.Classical using ( LEM )
-```
-
-<!--en-->
-The final step compares the two Boolean representatives with decidable equality `_≟_`{.Agda}.
-<!--zh-->
-证明的最后一步用可判定相等 `_≟_`{.Agda} 比较两个布尔代表元。
-<!--ja-->
-証明の最後の段階では、判定可能な等式 `_≟_`{.Agda} によって二つのブール代表を比較する。
-<!--/-->
-
-```agda
-open import Cubical.Data.Bool using ( _≟_ )
-```
-
-<!--en-->
-To build the intermediate space, we use a [set quotient]{.term-intro #set-quotient}. Given a type `A`{.Agda} and a relation `R`{.Agda}, the type `A / R`{.Agda} has points `[ a ]`{.Agda}; a proof of `R a b`{.Agda} gives a path `[ a ] ≡ [ b ]`{.Agda}, and `squash/`{.Agda} ensures that the result is an h-set. For a proposition-valued equivalence relation, the library characterizes this path type by an isomorphism with `R a b`{.Agda}. We will use the resulting type equivalence to pass between paths and proofs of the relation.
-<!--zh-->
-中间的空间由[集合商]{.term-intro #set-quotient}构造。给定类型 `A`{.Agda} 与关系 `R`{.Agda}，类型 `A / R`{.Agda} 中有点 `[ a ]`{.Agda}；`R a b`{.Agda} 的证明给出路径 `[ a ] ≡ [ b ]`{.Agda}，`squash/`{.Agda} 则保证结果是 h-集合。对于取值于命题的等价关系，库用这个路径类型与 `R a b`{.Agda} 的同构来刻画商。我们将使用所得的类型等价，在路径与关系成立的证明之间转换。
-<!--ja-->
-中間の空間には[集合商]{.term-intro #set-quotient}を用いる。型 `A`{.Agda} と関係 `R`{.Agda} に対して、型 `A / R`{.Agda} は点 `[ a ]`{.Agda} をもち、`R a b`{.Agda} の証明からパス `[ a ] ≡ [ b ]`{.Agda} が得られる。さらに `squash/`{.Agda} が結果を h-集合にする。命題値の同値関係について、ライブラリはこのパス型と `R a b`{.Agda} の同型によって商を特徴付ける。得られる型同値を使い、パスと関係の証明の間を移る。
-<!--/-->
-
-```agda
-open import Cubical.HITs.SetQuotients
-  using ( _/_; [_]; squash/; []surjective; isEquivRel→effectiveIso )
-open import Cubical.Relation.Binary.Base using ( module BinaryRelation )
 ```
 
 <!--en-->
@@ -70,7 +32,7 @@ For a family `B : X → Type ℓ`{.Agda}, there are three kinds of data worth di
 | `(x : X) → ∥ B x ∥₁`{.Agda} | Existence separately at each index. |
 | `∥ ((x : X) → B x) ∥₁`{.Agda} | Existence of one function on all indices. |
 
-**Definition** (`SetChoice`{.Agda}) [Set-level choice]{.term-intro #set-level-choice} at level `ℓ`{.Agda} asserts that the second row implies the third for every h-set `X : Type ℓ`{.Agda} and every family `B : X → Type ℓ`{.Agda}.
+**Definition** (`SetChoice`{.Agda}) [Choice for set-valued families]{.term-intro #set-valued-choice} at level `ℓ`{.Agda} asserts that the second row of the table above implies the third for every h-set `X : Type ℓ`{.Agda} and every <span class="prose-annotation-target">family `B : X → Type ℓ`{.Agda} whose values `B x`{.Agda} are h-sets</span><aside class="prose-annotation-note">This is the set-valued form of choice in the HoTT Book. Allowing arbitrary values is a stronger principle: it also entails that every type merely admits a surjection from an h-set. Neither use in this book needs that extra strength.</aside>.
 <!--zh-->
 ## 原理
 
@@ -82,7 +44,7 @@ For a family `B : X → Type ℓ`{.Agda}, there are three kinds of data worth di
 | `(x : X) → ∥ B x ∥₁`{.Agda} | 逐个指标处的存在 |
 | `∥ ((x : X) → B x) ∥₁`{.Agda} | 一个同时处理全部指标的函数的存在 |
 
-**定义** (`SetChoice`{.Agda}) 层级 `ℓ`{.Agda} 上的[集合层选择]{.term-intro #set-level-choice}断言：对每个 h-集合 `X : Type ℓ`{.Agda} 及每个族 `B : X → Type ℓ`{.Agda}，第二行蕴含第三行。
+**定义** (`SetChoice`{.Agda}) 层级 `ℓ`{.Agda} 上的[集合值族的选择]{.term-intro #set-valued-choice}断言：对每个 h-集合 `X : Type ℓ`{.Agda} 及每个<span class="prose-annotation-target">取值 `B x`{.Agda} 都是 h-集合的族 `B : X → Type ℓ`{.Agda}</span><aside class="prose-annotation-note">这是 HoTT 教材采用的集合值族版本。允许任意取值的版本更强：它还蕴含每个类型都仅仅存在一个来自 h-集合的满射。本书的两处取用都不需要这项额外强度。</aside>，上表的第二行蕴含第三行。
 <!--ja-->
 ## 原理
 
@@ -94,19 +56,18 @@ For a family `B : X → Type ℓ`{.Agda}, there are three kinds of data worth di
 | `(x : X) → ∥ B x ∥₁`{.Agda} | 添字ごとの存在 |
 | `∥ ((x : X) → B x) ∥₁`{.Agda} | すべての添字を扱う一つの関数の存在 |
 
-**定義** (`SetChoice`{.Agda}) レベル `ℓ`{.Agda} の[集合レベルの選択]{.term-intro #set-level-choice}は、任意の h-集合 `X : Type ℓ`{.Agda} と族 `B : X → Type ℓ`{.Agda} に対し、第二行から第三行が従うと主張する。
+**定義** (`SetChoice`{.Agda}) レベル `ℓ`{.Agda} の[集合値族に対する選択]{.term-intro #set-valued-choice}は、任意の h-集合 `X : Type ℓ`{.Agda} と、<span class="prose-annotation-target">各値 `B x`{.Agda} が h-集合である族 `B : X → Type ℓ`{.Agda}</span><aside class="prose-annotation-note">これは HoTT の教科書にある集合値族の形である。任意の値を許す形はより強く、すべての型が h-集合からの全射を単にもつことも含意する。本書の二つの適用には、この追加の強さは要らない。</aside>に対し、上の表の第二行から第三行が従うと主張する。
 <!--/-->
 
 ```agda
 SetChoice : ∀ ℓ → Type (ℓ-suc ℓ)
 SetChoice ℓ = (X : Type ℓ) → isSet X → (B : X → Type ℓ)
+            → ((x : X) → isSet (B x))
             → ((x : X) → ∥ B x ∥₁) → ∥ ((x : X) → B x) ∥₁
 ```
 
 <!--en-->
-The truncation moves outside the dependent function type; it does not disappear. A hypothesis `sc : SetChoice ℓ`{.Agda} therefore gives the mere existence of a choice function. To use that existence with `rec₁`{.Agda}, we must have a proposition as our goal. Quantification over `Type ℓ`{.Agda} puts the whole principle in `Type (ℓ-suc ℓ)`{.Agda}.
-
-The definition requires <span class="prose-annotation-target">only the index type to be an h-set</span><aside class="prose-annotation-note">No `isSet (B x)`{.Agda} hypothesis is imposed. We follow the displayed definition of `SetChoice`{.Agda} throughout; the set condition here concerns the indices.</aside>.
+The truncation moves outside the dependent function type; it does not disappear. A hypothesis `sc : SetChoice ℓ`{.Agda} therefore gives the [mere existence]{.term-ref #mere-existence} of a choice function. To use that existence with `rec₁`{.Agda}, we must have a proposition as our goal. Quantification over `Type ℓ`{.Agda} puts the whole principle in `Type (ℓ-suc ℓ)`{.Agda}.
 
 **Lemma** (`lowerSetChoice`{.Agda}) Choice one universe level higher implies choice at the level below.
 
@@ -116,13 +77,12 @@ The definition requires <span class="prose-annotation-target">only the index typ
 | --- | --- |
 | `X`{.Agda} | `Lift X`{.Agda} |
 | `B x`{.Agda} | `Lift (B (lower x̂))`{.Agda}, for `x̂ : Lift X`{.Agda} |
+| `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
 
-The proof `isOfHLevelLift 2 setX`{.Agda} preserves the required h-set condition. The lifted choice function can then be lowered pointwise.
+The proof `isOfHLevelLift 2 setX`{.Agda} preserves the h-set condition on indices; the row for `setB`{.Agda} preserves it on each value. The lifted choice function can then be lowered pointwise.
 <!--zh-->
-截断移到了依值函数类型之外，但并没有消失。因此，假设 `sc : SetChoice ℓ`{.Agda} 给出的是选择函数的仅仅存在。若要用 `rec₁`{.Agda} 利用这一存在，目标就必须是命题。由于量化了 `Type ℓ`{.Agda}，整条原理位于 `Type (ℓ-suc ℓ)`{.Agda}。
-
-定义<span class="prose-annotation-target">只要求指标类型是 h-集合</span><aside class="prose-annotation-note">这里没有 `isSet (B x)`{.Agda} 这一假设。本章始终采用所展示的 `SetChoice`{.Agda} 定义，其中「集合」限定的是指标。</aside>。
+截断移到了依值函数类型之外，但并没有消失。因此，假设 `sc : SetChoice ℓ`{.Agda} 给出的是选择函数的[仅仅存在]{.term-ref #mere-existence}。若要用 `rec₁`{.Agda} 利用这一存在，目标就必须是命题。由于量化了 `Type ℓ`{.Agda}，整条原理位于 `Type (ℓ-suc ℓ)`{.Agda}。
 
 **引理** (`lowerSetChoice`{.Agda}) 高一个宇宙层级的选择蕴含原层级的选择。
 
@@ -132,13 +92,12 @@ The proof `isOfHLevelLift 2 setX`{.Agda} preserves the required h-set condition.
 | --- | --- |
 | `X`{.Agda} | `Lift X`{.Agda} |
 | `B x`{.Agda} | `Lift (B (lower x̂))`{.Agda}，其中 `x̂ : Lift X`{.Agda} |
+| `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
 
-证明 `isOfHLevelLift 2 setX`{.Agda} 保留所需的 h-集合性。得到抬升后的选择函数，再逐点降回即可。
+证明 `isOfHLevelLift 2 setX`{.Agda} 保留指标的 h-集合性；`setB`{.Agda} 一行则保留每个取值的 h-集合性。得到抬升后的选择函数，再逐点降回即可。
 <!--ja-->
-切り詰めは依存関数型の外へ移るが、消えるわけではない。したがって仮定 `sc : SetChoice ℓ`{.Agda} が与えるのは、選択関数の単なる存在である。この存在を `rec₁`{.Agda} で使うには、目標が命題でなければならない。`Type ℓ`{.Agda} 全体を量化するので、原理自体は `Type (ℓ-suc ℓ)`{.Agda} に住む。
-
-定義では<span class="prose-annotation-target">添字型だけに h-集合であることを要求する</span><aside class="prose-annotation-note">`isSet (B x)`{.Agda} は仮定していない。本章では表示した `SetChoice`{.Agda} の定義を用い、「集合」は添字についての条件を表す。</aside>。
+切り詰めは依存関数型の外へ移るが、消えるわけではない。したがって仮定 `sc : SetChoice ℓ`{.Agda} が与えるのは、選択関数の[単なる存在]{.term-ref #mere-existence}である。この存在を `rec₁`{.Agda} で使うには、目標が命題でなければならない。`Type ℓ`{.Agda} 全体を量化するので、原理自体は `Type (ℓ-suc ℓ)`{.Agda} に住む。
 
 **補題** (`lowerSetChoice`{.Agda}) 一つ上の宇宙レベルの選択は、一つ下のレベルの選択を含意する。
 
@@ -148,9 +107,10 @@ The proof `isOfHLevelLift 2 setX`{.Agda} preserves the required h-set condition.
 | --- | --- |
 | `X`{.Agda} | `Lift X`{.Agda} |
 | `B x`{.Agda} | `Lift (B (lower x̂))`{.Agda}、ただし `x̂ : Lift X`{.Agda} |
+| `setB x`{.Agda} | `isOfHLevelLift 2 (setB (lower x̂))`{.Agda} |
 | `inh x`{.Agda} | `map₁ lift (inh (lower x̂))`{.Agda} |
 
-`isOfHLevelLift 2 setX`{.Agda} が必要な h-集合性を保つ。得られた選択関数を各点で降ろせばよい。
+`isOfHLevelLift 2 setX`{.Agda} が添字の h-集合性を保ち、`setB`{.Agda} の行が各値の h-集合性を保つ。得られた選択関数を各点で降ろせばよい。
 <!--/-->
 
 ```agda
@@ -172,10 +132,10 @@ The function used in the outer `map₁`{.Agda} has the following value at `x`{.A
 <!--/-->
 
 ```agda
-lowerSetChoice sc X setX B inh =
-  map₁ (λ f x → lower (f (lift x)))
+lowerSetChoice sc X setX B setB inh = map₁ (λ f x → lower (f (lift x)))
          (sc (Lift X) (isOfHLevelLift 2 setX)
              (λ x → Lift (B (lower x)))
+             (λ x → isOfHLevelLift 2 (setB (lower x)))
              (λ x → map₁ lift (inh (lower x))))
 ```
 
@@ -186,64 +146,73 @@ lowerSetChoice sc X setX B inh =
 
 How can choosing representatives decide an arbitrary proposition? The preceding chapter encoded a proposition by a boolean after obtaining a decision. Here the order is reversed: we construct a quotient from the proposition without deciding it, and choice will supply the booleans whose comparison gives the decision.
 
-**Theorem** (`choice→lem`{.Agda}) Set-level choice implies excluded middle at the same universe level.
-
-**Proof** Fix `P : hProp ℓ`{.Agda}. On `Bool`{.Agda}, define a relation whose diagonal entries are always inhabited and whose off-diagonal entries are `⟨ P ⟩`{.Agda}. Thus `P`{.Agda} controls whether the two different booleans are related.
 <!--zh-->
 ## Diaconescu 定理
 
 选取代表元为什么能判定任意命题？上一章在取得判定之后，用布尔值编码命题。这里反过来：先由命题构造商，无须判定它，再由选择提供布尔值，最后比较这些值而得到判定。
 
-**定理** (`choice→lem`{.Agda}) 集合层选择蕴含同一宇宙层级上的排中律。
-
-**证明** 固定 `P : hProp ℓ`{.Agda}。在 `Bool`{.Agda} 上定义关系，对角格始终有元素，非对角格则是 `⟨ P ⟩`{.Agda}。这样，两个不同的布尔值是否相关就由 `P`{.Agda} 控制。
 <!--ja-->
 ## ディアコネスクの定理
 
 代表元を選ぶことから、任意の命題をどう判定できるのだろうか。前章では判定を得てから命題をブール値で符号化した。ここでは順序が逆になる。命題を判定せずに商を構成し、選択によってブール値を得て、その比較から判定を導く。
 
-**定理** (`choice→lem`{.Agda}) 集合レベルの選択は、同じ宇宙レベルの排中律を含意する。
+<!--/-->
 
-**証明** `P : hProp ℓ`{.Agda} を固定する。`Bool`{.Agda} 上の関係を、対角成分は常に要素をもち、非対角成分は `⟨ P ⟩`{.Agda} となるように定める。異なる二つのブール値が関係をもつかどうかを `P`{.Agda} が決める。
+<!--en-->
+To build the intermediate space, we use a [set quotient]{.term-intro #set-quotient}. Given a type `A`{.Agda} and a relation `R`{.Agda}, the type `A / R`{.Agda} has points `[ a ]`{.Agda}; a proof of `R a b`{.Agda} gives a path `[ a ] ≡ [ b ]`{.Agda}, and `squash/`{.Agda} ensures that the result is an h-set.
+<!--zh-->
+中间的空间由[集合商]{.term-intro #set-quotient}构造。给定类型 `A`{.Agda} 与关系 `R`{.Agda}，类型 `A / R`{.Agda} 中有点 `[ a ]`{.Agda}；`R a b`{.Agda} 的证明给出路径 `[ a ] ≡ [ b ]`{.Agda}，`squash/`{.Agda} 则保证结果是 h-集合。
+<!--ja-->
+中間の空間には[集合商]{.term-intro #set-quotient}を用いる。型 `A`{.Agda} と関係 `R`{.Agda} に対して、型 `A / R`{.Agda} は点 `[ a ]`{.Agda} をもち、`R a b`{.Agda} の証明からパス `[ a ] ≡ [ b ]`{.Agda} が得られる。さらに `squash/`{.Agda} が結果を h-集合にする。
+<!--/-->
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+module Diaconescu {ℓ} (P : hProp ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+<!--en-->
+**Construction** (`_~_`{.Agda}) Fix `P : hProp ℓ`{.Agda}. On `Bool`{.Agda}, define a relation whose diagonal entries are always inhabited and whose off-diagonal entries are `⟨ P ⟩`{.Agda}. Thus `P`{.Agda} controls whether the two different booleans are related.
+<!--zh-->
+**构造** (`_~_`{.Agda}) 固定 `P : hProp ℓ`{.Agda}。在 `Bool`{.Agda} 上定义关系，对角格始终有元素，非对角格则是 `⟨ P ⟩`{.Agda}。这样，两个不同的布尔值是否相关就由 `P`{.Agda} 控制。
+<!--ja-->
+**構成** (`_~_`{.Agda}) `P : hProp ℓ`{.Agda} を固定する。`Bool`{.Agda} 上の関係を、対角成分は常に要素をもち、非対角成分は `⟨ P ⟩`{.Agda} となるように定める。異なる二つのブール値が関係をもつかどうかを `P`{.Agda} が決める。
 <!--/-->
 
 ```agda
-module Diaconescu {ℓ} (P : hProp ℓ) where
-
   _~_ : Bool → Bool → Type ℓ
   true  ~ true  = ⊤*
   false ~ false = ⊤*
   _     ~ _     = ⟨ P ⟩
 ```
 
+∎
+
 <!--en-->
-Take the quotient by this relation. We want to characterize paths between its distinguished points `[ true ]`{.Agda} and `[ false ]`{.Agda} by proofs of `P`{.Agda}. The library's isomorphism theorem applies once we verify that `_~_`{.Agda} is a proposition-valued equivalence relation.
+**Construction** (`Glued`{.Agda}) Take the quotient by this relation. We want to characterize paths between its distinguished points `[ true ]`{.Agda} and `[ false ]`{.Agda} by proofs of `P`{.Agda}. The library's isomorphism theorem applies once we verify that `_~_`{.Agda} is a proposition-valued equivalence relation.
 <!--zh-->
-按这个关系取商。我们希望用 `P`{.Agda} 的证明来刻画两个特殊点 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径。只要验证 `_~_`{.Agda} 是取值于命题的等价关系，就能应用库中的同构定理。
+**构造** (`Glued`{.Agda}) 按这个关系取商。我们希望用 `P`{.Agda} 的证明来刻画两个特殊点 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径。只要验证 `_~_`{.Agda} 是取值于命题的等价关系，就能应用库中的同构定理。
 <!--ja-->
-この関係による商を取る。二つの点 `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパスを、`P`{.Agda} の証明によって特徴付けたい。`_~_`{.Agda} が命題値の同値関係であることを確かめれば、ライブラリの同型定理を適用できる。
+**構成** (`Glued`{.Agda}) この関係による商を取る。二つの点 `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパスを、`P`{.Agda} の証明によって特徴付けたい。`_~_`{.Agda} が命題値の同値関係であることを確かめれば、ライブラリの同型定理を適用できる。
 <!--/-->
 
 ```agda
-
+  open import Cubical.HITs.SetQuotients
+    using ( _/_; [_]; squash/; []surjective; isEquivRel→effectiveIso )
+  open import Cubical.Relation.Binary.Base using ( module BinaryRelation )
   Glued : Type ℓ
   Glued = Bool / _~_
 ```
 
-<details open class="optional-reading" aria-labelledby="choice-relation-laws-title">
-
 <!--en-->
-<summary class="optional-reading-title" id="choice-relation-laws-title">Optional: the quotient relation satisfies the required laws</summary>
-
-For the quotient just constructed, `isEquivRel→effectiveIso`{.Agda} requires a proposition-valued equivalence relation. The checks use only the definition of `_~_`{.Agda}. Each diagonal entry is the proposition `⊤*`{.Agda}; each off-diagonal entry is the proposition packaged in `P`{.Agda}.
+**Lemma** (`~-prop`{.Agda}) For the quotient just constructed, `isEquivRel→effectiveIso`{.Agda} requires a proposition-valued equivalence relation. The checks use only the definition of `_~_`{.Agda}. Each diagonal entry is the proposition `⊤*`{.Agda}; each off-diagonal entry is the proposition packaged in `P`{.Agda}.
 <!--zh-->
-<summary class="optional-reading-title" id="choice-relation-laws-title">选读：验证商关系所需的性质</summary>
-
-对于刚构造的商，`isEquivRel→effectiveIso`{.Agda} 要求关系取值于命题并满足等价律。验证只需查看 `_~_`{.Agda} 的定义：对角格是命题 `⊤*`{.Agda}，非对角格是 `P`{.Agda} 所打包的命题。
+**引理** (`~-prop`{.Agda}) 对于刚构造的商，`isEquivRel→effectiveIso`{.Agda} 要求关系取值于命题并满足等价律。验证只需查看 `_~_`{.Agda} 的定义：对角格是命题 `⊤*`{.Agda}，非对角格是 `P`{.Agda} 所打包的命题。
 <!--ja-->
-<summary class="optional-reading-title" id="choice-relation-laws-title">発展：商の関係に必要な性質の検証</summary>
-
-いま構成した商に `isEquivRel→effectiveIso`{.Agda} を使うには、関係が命題値で同値律を満たす必要がある。検証には `_~_`{.Agda} の定義だけを使う。対角成分は命題 `⊤*`{.Agda} であり、非対角成分は `P`{.Agda} に含まれる命題である。
+**補題** (`~-prop`{.Agda}) いま構成した商に `isEquivRel→effectiveIso`{.Agda} を使うには、関係が命題値で同値律を満たす必要がある。検証には `_~_`{.Agda} の定義だけを使う。対角成分は命題 `⊤*`{.Agda} であり、非対角成分は `P`{.Agda} に含まれる命題である。
 <!--/-->
 
 ```agda
@@ -255,11 +224,11 @@ For the quotient just constructed, `isEquivRel→effectiveIso`{.Agda} requires a
 ```
 
 <!--en-->
-The diagonal entries have the inhabitant `tt*`{.Agda}, which proves reflexivity.
+**Lemma** (`~-refl`{.Agda}) The diagonal entries have the inhabitant `tt*`{.Agda}, which proves reflexivity.
 <!--zh-->
-对角格有元素 `tt*`{.Agda}，这就证明了自反性。
+**引理** (`~-refl`{.Agda}) 对角格有元素 `tt*`{.Agda}，这就证明了自反性。
 <!--ja-->
-対角成分の要素 `tt*`{.Agda} が反射性を証明する。
+**補題** (`~-refl`{.Agda}) 対角成分の要素 `tt*`{.Agda} が反射性を証明する。
 <!--/-->
 
 ```agda
@@ -267,15 +236,14 @@ The diagonal entries have the inhabitant `tt*`{.Agda}, which proves reflexivity.
   ~-refl : (a : Bool) → a ~ a
   ~-refl true  = tt*
   ~-refl false = tt*
-
 ```
 
 <!--en-->
-Swapping the inputs leaves the entry type unchanged. On the diagonal we return `tt*`{.Agda}; off the diagonal we reuse the given proof of `P`{.Agda}.
+**Lemma** (`~-sym`{.Agda}) Swapping the inputs leaves the entry type unchanged. On the diagonal we return `tt*`{.Agda}; off the diagonal we reuse the given proof of `P`{.Agda}.
 <!--zh-->
-交换输入不改变格中的类型。对角格返回 `tt*`{.Agda}，非对角格复用所给的 `P`{.Agda} 的证明。
+**引理** (`~-sym`{.Agda}) 交换输入不改变格中的类型。对角格返回 `tt*`{.Agda}，非对角格复用所给的 `P`{.Agda} 的证明。
 <!--ja-->
-入力を交換しても成分の型は変わらない。対角では `tt*`{.Agda} を返し、非対角では与えられた `P`{.Agda} の証明を再利用する。
+**補題** (`~-sym`{.Agda}) 入力を交換しても成分の型は変わらない。対角では `tt*`{.Agda} を返し、非対角では与えられた `P`{.Agda} の証明を再利用する。
 <!--/-->
 
 ```agda
@@ -284,15 +252,14 @@ Swapping the inputs leaves the entry type unchanged. On the diagonal we return `
   ~-sym false false _ = tt*
   ~-sym true  false p = p
   ~-sym false true  p = p
-
 ```
 
 <!--en-->
-For transitivity, first compare the endpoints `a`{.Agda} and `c`{.Agda}. If they agree, `tt*`{.Agda} proves `a ~ c`{.Agda}.
+**Lemma** (`~-trans`{.Agda}) For transitivity, first compare the endpoints `a`{.Agda} and `c`{.Agda}. If they agree, `tt*`{.Agda} proves `a ~ c`{.Agda}.
 <!--zh-->
-传递性先看两端 `a`{.Agda} 与 `c`{.Agda}。两端相同时，`tt*`{.Agda} 证明 `a ~ c`{.Agda}。
+**引理** (`~-trans`{.Agda}) 传递性先看两端 `a`{.Agda} 与 `c`{.Agda}。两端相同时，`tt*`{.Agda} 证明 `a ~ c`{.Agda}。
 <!--ja-->
-推移性では両端 `a`{.Agda} と `c`{.Agda} を見る。一致するなら `tt*`{.Agda} が `a ~ c`{.Agda} を証明する。
+**補題** (`~-trans`{.Agda}) 推移性では両端 `a`{.Agda} と `c`{.Agda} を見る。一致するなら `tt*`{.Agda} が `a ~ c`{.Agda} を証明する。
 <!--/-->
 
 ```agda
@@ -317,11 +284,11 @@ If the endpoints differ, the middle boolean equals one of them, so one of the tw
 ```
 
 <!--en-->
-The three laws form the equivalence-relation record required by `isEquivRel→effectiveIso`{.Agda}.
+**Lemma** (`~-equivRel`{.Agda}) The three laws form the equivalence-relation record required by `isEquivRel→effectiveIso`{.Agda}.
 <!--zh-->
-三条定律组成 `isEquivRel→effectiveIso`{.Agda} 所需的等价关系记录。
+**引理** (`~-equivRel`{.Agda}) 三条定律组成 `isEquivRel→effectiveIso`{.Agda} 所需的等价关系记录。
 <!--ja-->
-三つの法則を、`isEquivRel→effectiveIso`{.Agda} が要求する同値関係のレコードにまとめる。
+**補題** (`~-equivRel`{.Agda}) 三つの法則を、`isEquivRel→effectiveIso`{.Agda} が要求する同値関係のレコードにまとめる。
 <!--/-->
 
 ```agda
@@ -330,21 +297,23 @@ The three laws form the equivalence-relation record required by `isEquivRel→ef
   ~-equivRel = BinaryRelation.equivRel ~-refl ~-sym ~-trans
 ```
 
-</details>
+∎
 
 <!--en-->
-The verified laws let us apply `isEquivRel→effectiveIso`{.Agda}. It identifies the path type between `[ true ]`{.Agda} and `[ false ]`{.Agda} with `true ~ false`{.Agda}, which is defined to be `⟨ P ⟩`{.Agda}. The library also supplies the two round-trip laws; `isoToEquiv`{.Agda} gives the following type equivalence. Here `Path Glued [ true ] [ false ]`{.Agda} is another notation for `[ true ] ≡ [ false ]`{.Agda} in `Glued`{.Agda}.
+**Lemma** (`quotientPath≃P`{.Agda}) The verified laws let us apply `isEquivRel→effectiveIso`{.Agda}. It identifies the path type between `[ true ]`{.Agda} and `[ false ]`{.Agda} with `true ~ false`{.Agda}, which is defined to be `⟨ P ⟩`{.Agda}. The library also supplies the two round-trip laws; `isoToEquiv`{.Agda} gives the following type equivalence.
 <!--zh-->
-验证这些定律后，就能应用 `isEquivRel→effectiveIso`{.Agda}。它给出 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径类型与 `true ~ false`{.Agda} 的同构，而后者按定义就是 `⟨ P ⟩`{.Agda}。库也提供了两条往返律，再经 `isoToEquiv`{.Agda} 得到下面的类型等价。这里 `Path Glued [ true ] [ false ]`{.Agda} 是 `Glued`{.Agda} 中的 `[ true ] ≡ [ false ]`{.Agda} 的另一种写法。
+**引理** (`quotientPath≃P`{.Agda}) 验证这些定律后，就能应用 `isEquivRel→effectiveIso`{.Agda}。它给出 `[ true ]`{.Agda} 与 `[ false ]`{.Agda} 之间的路径类型与 `true ~ false`{.Agda} 的同构，而后者按定义就是 `⟨ P ⟩`{.Agda}。库也提供了两条往返律，再经 `isoToEquiv`{.Agda} 得到下面的类型等价。
 <!--ja-->
-これらの法則を確認すると、`isEquivRel→effectiveIso`{.Agda} を適用できる。これは `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパス型と `true ~ false`{.Agda} の同型を与える。後者は定義上 `⟨ P ⟩`{.Agda} である。二つの往復則もライブラリが与えるので、`isoToEquiv`{.Agda} により次の型同値を得る。`Path Glued [ true ] [ false ]`{.Agda} は、`Glued`{.Agda} における `[ true ] ≡ [ false ]`{.Agda} の別表記である。
+**補題** (`quotientPath≃P`{.Agda}) これらの法則を確認すると、`isEquivRel→effectiveIso`{.Agda} を適用できる。これは `[ true ]`{.Agda} と `[ false ]`{.Agda} の間のパス型と `true ~ false`{.Agda} の同型を与える。後者は定義上 `⟨ P ⟩`{.Agda} である。二つの往復則もライブラリが与えるので、`isoToEquiv`{.Agda} により次の型同値を得る。
 <!--/-->
 
 ```agda
-  quotientPath≃P : Path Glued [ true ] [ false ] ≃ ⟨ P ⟩
+  quotientPath≃P : ([ true ] ≡ [ false ]) ≃ ⟨ P ⟩
   quotientPath≃P = isoToEquiv
     (isEquivRel→effectiveIso ~-prop ~-equivRel true false)
 ```
+
+∎
 
 <!--en-->
 In the diagrams, write $e$ for `quotientPath≃P`{.Agda}: its forward map sends a path to a proof of `P`{.Agda}, and its inverse sends a proof to a path. The following panels show the consequences of a proof or a refutation of `P`{.Agda}, without presuming that either has already been obtained.
@@ -406,56 +375,98 @@ On the left, the inverse of $e$ supplies a path. On the right, $e$ would turn an
 </figure>
 
 <!--en-->
-It remains to make equality in `Glued`{.Agda} decidable. A representative of `x : Glued`{.Agda} consists of a boolean `b`{.Agda} and a path `[ b ] ≡ x`{.Agda}. Their dependent pair type `Pick x`{.Agda} is precisely the fibre of the quotient map `[_] : Bool → Glued`{.Agda} over `x`{.Agda}. Its second component certifies that the boolean represents this particular class.
-
-Every quotient point merely has a representative: this is `[]surjective`{.Agda}. Thus the family `Pick`{.Agda} has exactly the pointwise inhabitation needed for choice.
+**Construction** (`Pick`{.Agda}) It remains to make equality in `Glued`{.Agda} decidable. A representative of `x : Glued`{.Agda} consists of a boolean `b`{.Agda} and a path `[ b ] ≡ x`{.Agda}. Their dependent pair type `Pick x`{.Agda} is precisely the fibre of the quotient map `[_] : Bool → Glued`{.Agda} over `x`{.Agda}. Its second component certifies that the boolean represents this particular class.
 <!--zh-->
-接下来要使 `Glued`{.Agda} 中的相等变得可判定。点 `x : Glued`{.Agda} 的代表元由布尔值 `b`{.Agda} 与路径 `[ b ] ≡ x`{.Agda} 组成。它们的依值对类型 `Pick x`{.Agda} 恰是商映射 `[_] : Bool → Glued`{.Agda} 在 `x`{.Agda} 上的一束纤维。第二分量证明这个布尔值代表的是指定的商类。
-
-每个商点都有代表元，其存在性以命题截断表达，这由 `[]surjective`{.Agda} 保证。因此，族 `Pick`{.Agda} 恰有选择所需的逐点有元性。
+**构造** (`Pick`{.Agda}) 接下来要使 `Glued`{.Agda} 中的相等变得可判定。点 `x : Glued`{.Agda} 的代表元由布尔值 `b`{.Agda} 与路径 `[ b ] ≡ x`{.Agda} 组成。它们的依值对类型 `Pick x`{.Agda} 恰是商映射 `[_] : Bool → Glued`{.Agda} 在 `x`{.Agda} 上的一束纤维。第二分量证明这个布尔值代表的是指定的商类。
 <!--ja-->
-次に `Glued`{.Agda} の等しさを判定できるようにする。点 `x : Glued`{.Agda} の代表元は、ブール値 `b`{.Agda} とパス `[ b ] ≡ x`{.Agda} の組である。その依存対型 `Pick x`{.Agda} は、商写像 `[_] : Bool → Glued`{.Agda} の `x`{.Agda} 上のファイバーにほかならない。第二成分は、そのブール値が指定した商類を代表することを保証する。
-
-商の各点には代表元が単に存在する。これが `[]surjective`{.Agda} である。したがって族 `Pick`{.Agda} は、選択に必要な添字ごとの存在を満たす。
+**構成** (`Pick`{.Agda}) 次に `Glued`{.Agda} の等しさを判定できるようにする。点 `x : Glued`{.Agda} の代表元は、ブール値 `b`{.Agda} とパス `[ b ] ≡ x`{.Agda} の組である。その依存対型 `Pick x`{.Agda} は、商写像 `[_] : Bool → Glued`{.Agda} の `x`{.Agda} 上のファイバーにほかならない。第二成分は、そのブール値が指定した商類を代表することを保証する。
 <!--/-->
 
 ```agda
   Pick : Glued → Type ℓ
   Pick x = Σ[ b ∈ Bool ] ([ b ] ≡ x)
+```
 
+<!--en-->
+**Lemma** (`pickIsSet`{.Agda}) The family `Pick`{.Agda} is set-valued. Its first component is `Bool`{.Agda}, an h-set; for each boolean, its second component is a path in the h-set `Glued`{.Agda}, hence a proposition. An h-set paired with a proposition-valued family is again an h-set.
+<!--zh-->
+**引理** (`pickIsSet`{.Agda}) 族 `Pick`{.Agda} 取值于 h-集合：第一分量 `Bool`{.Agda} 是 h-集合；固定布尔值后的第二分量是 h-集合 `Glued`{.Agda} 中的路径，因而是命题。h-集合与命题值族组成的依值对仍是 h-集合。
+<!--ja-->
+**補題** (`pickIsSet`{.Agda}) 族 `Pick`{.Agda} は h-集合値である。第一成分の `Bool`{.Agda} は h-集合であり、ブール値を固定した第二成分は h-集合 `Glued`{.Agda} のパスだから命題である。h-集合と命題値族の依存対は再び h-集合になる。
+<!--/-->
+
+```agda
+  open import Cubical.Foundations.HLevels using ( isSetΣSndProp )
+  open import Cubical.Data.Bool.Properties using ( isSetBool )
+  pickIsSet : (x : Glued) → isSet (Pick x)
+  pickIsSet x = isSetΣSndProp isSetBool (λ b → squash/ [ b ] x)
+```
+
+<!--en-->
+**Lemma** (`pickable`{.Agda}) Every quotient point merely has a representative, as `[]surjective`{.Agda} states.
+<!--zh-->
+**引理** (`pickable`{.Agda}) `[]surjective`{.Agda} 保证每个商点都有代表元，其存在性以命题截断表达。
+<!--ja-->
+**補題** (`pickable`{.Agda}) `[]surjective`{.Agda} によって、商の各点には代表元が単に存在する。
+<!--/-->
+
+```agda
   pickable : (x : Glued) → ∥ Pick x ∥₁
   pickable = []surjective
 ```
 
+∎
+
 <!--en-->
-Apply `sc`{.Agda} with index type `Glued`{.Agda}, its h-set certificate `squash/`{.Agda}, and the family `Pick`{.Agda}. This is the only application of choice within the argument for `P`{.Agda}. It yields the mere existence of a function that chooses a representative at every quotient point.
+**Lemma** (`merePicker`{.Agda}) Apply `sc`{.Agda} with index type `Glued`{.Agda}, its h-set certificate `squash/`{.Agda}, the family `Pick`{.Agda}, and its pointwise h-set certificate `pickIsSet`{.Agda}. This is the only application of choice within the argument for `P`{.Agda}. It yields the mere existence of a function that chooses a representative at every quotient point.
 <!--zh-->
-以 `Glued`{.Agda} 为指标类型，`squash/`{.Agda} 为其 h-集合性证书，`Pick`{.Agda} 为所选的族，应用 `sc`{.Agda}。这是针对 `P`{.Agda} 的论证中唯一一次使用选择；得到的是为每个商点选取代表元的函数的仅仅存在。
+**引理** (`merePicker`{.Agda}) 以 `Glued`{.Agda} 为指标类型，`squash/`{.Agda} 为其 h-集合性证书，`Pick`{.Agda} 为所选的族，`pickIsSet`{.Agda} 为逐点的 h-集合性证书，应用 `sc`{.Agda}。这是针对 `P`{.Agda} 的论证中唯一一次使用选择；得到的是为每个商点选取代表元的函数的仅仅存在。
 <!--ja-->
-添字型を `Glued`{.Agda}、その h-集合性の証明を `squash/`{.Agda}、族を `Pick`{.Agda} として `sc`{.Agda} を適用する。`P`{.Agda} についての議論で選択を使うのはここだけである。各商点で代表元を選ぶ関数の単なる存在が得られる。
+**補題** (`merePicker`{.Agda}) 添字型を `Glued`{.Agda}、その h-集合性の証明を `squash/`{.Agda}、族を `Pick`{.Agda}、各値の h-集合性の証明を `pickIsSet`{.Agda} として `sc`{.Agda} を適用する。`P`{.Agda} についての議論で選択を使うのはここだけである。各商点で代表元を選ぶ関数の単なる存在が得られる。
 <!--/-->
 
 ```agda
   merePicker : SetChoice ℓ → ∥ ((x : Glued) → Pick x) ∥₁
-  merePicker sc = sc Glued squash/ Pick pickable
+  merePicker sc = sc Glued squash/ Pick pickIsSet pickable
 ```
+
+∎
 
 <!--en-->
 Why not simply choose `true`{.Agda} at `[ true ]`{.Agda} and `false`{.Agda} at `[ false ]`{.Agda}? These classes may be equal, and a function on the quotient must respect that equality. Choosing on the two named representatives separately does not establish a function on `Glued`{.Agda}.
 
-Temporarily suppose such a function `g`{.Agda} is given. We will construct a decision of `P`{.Agda} from it, then justify eliminating the truncation into that decision. The booleans `b₀`{.Agda} and `b₁`{.Agda} are the first components of its values at the two distinguished classes.
+Temporarily suppose such a function `g`{.Agda} is given. We will construct a decision of `P`{.Agda} from it, then justify eliminating the truncation into that decision.
+
+**Construction** (`b₀`{.Agda}) Take the boolean selected by `g`{.Agda} at `[ true ]`{.Agda}.
+
+**Construction** (`b₁`{.Agda}) Take the boolean selected by `g`{.Agda} at `[ false ]`{.Agda}.
 <!--zh-->
 为什么不直接在 `[ true ]`{.Agda} 处选 `true`{.Agda}，在 `[ false ]`{.Agda} 处选 `false`{.Agda}？这两个商类可能相等，而商上的函数必须尊重这种相等。分别在两个具名代表元处作出选取，还不能构成 `Glued`{.Agda} 上的函数。
 
-暂设这样的函数 `g`{.Agda} 已经给出。我们先由它构造 `P`{.Agda} 的判定，随后说明为什么可以把截断消去到这一判定中。布尔值 `b₀`{.Agda} 与 `b₁`{.Agda} 是 `g`{.Agda} 在两个特殊商类处的值的第一分量。
+暂设这样的函数 `g`{.Agda} 已经给出。我们先由它构造 `P`{.Agda} 的判定，随后说明为什么可以把截断消去到这一判定中。
+
+**构造** (`b₀`{.Agda}) 取 `g`{.Agda} 在 `[ true ]`{.Agda} 处选出的布尔值。
+
+**构造** (`b₁`{.Agda}) 取 `g`{.Agda} 在 `[ false ]`{.Agda} 处选出的布尔值。
 <!--ja-->
 `[ true ]`{.Agda} で `true`{.Agda} を、`[ false ]`{.Agda} で `false`{.Agda} を選ぶだけではなぜ足りないのか。この二つの商類は等しいかもしれず、商上の関数はその等しさを保たなければならない。二つの代表元で別々に選んでも、`Glued`{.Agda} 上の関数を定めたことにはならない。
 
-いったん、そのような関数 `g`{.Agda} が与えられたとする。そこから `P`{.Agda} の判定を構成し、後でその判定へ切り詰めを消去できることを示す。`b₀`{.Agda} と `b₁`{.Agda} は、二つの商類での `g`{.Agda} の値の第一成分である。
+いったん、そのような関数 `g`{.Agda} が与えられたとする。そこから `P`{.Agda} の判定を構成し、後でその判定へ切り詰めを消去できることを示す。
+
+**構成** (`b₀`{.Agda}) `[ true ]`{.Agda} で `g`{.Agda} が選ぶブール値を取る。
+
+**構成** (`b₁`{.Agda}) `[ false ]`{.Agda} で `g`{.Agda} が選ぶブール値を取る。
 <!--/-->
 
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ (g : (x : Glued) → Pick x) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     b₀ : Bool
     b₀ = g [ true ] .fst
@@ -464,18 +475,20 @@ Temporarily suppose such a function `g`{.Agda} is given. We will construct a dec
     b₁ = g [ false ] .fst
 ```
 
+∎
+
 <!--en-->
-If `q : b₀ ≡ b₁`{.Agda}, the certificates stored in `g`{.Agda} connect this agreement back to the quotient. Write $s_0$ and $s_1$ in the diagram for `g [ true ] .snd`{.Agda} and `g [ false ] .snd`{.Agda}. The first certificate points from `[ b₀ ]`{.Agda} to `[ true ]`{.Agda}, so the composite must use `sym`{.Agda} there.
+**Lemma** (`agree→P`{.Agda}) If `q : b₀ ≡ b₁`{.Agda}, the certificates stored in `g`{.Agda} connect this agreement back to the quotient. Write $s_0$ and $s_1$ in the diagram for `g [ true ] .snd`{.Agda} and `g [ false ] .snd`{.Agda}. The first certificate points from `[ b₀ ]`{.Agda} to `[ true ]`{.Agda}, so the composite must use `sym`{.Agda} there.
 
-Conversely, a proof `p : ⟨ P ⟩`{.Agda} gives the path `invEq quotientPath≃P p`{.Agda}, written $e^{-1}(p)$ in the diagram. The ordinary function `λ x → g x .fst`{.Agda} sends that path to `b₀ ≡ b₁`{.Agda}. Taking the first component makes the codomain the fixed type `Bool`{.Agda}, so `cong`{.Agda} suffices.
+**Lemma** (`P→agree`{.Agda}) Conversely, a proof `p : ⟨ P ⟩`{.Agda} gives the path `invEq quotientPath≃P p`{.Agda}, written $e^{-1}(p)$ in the diagram. The ordinary function `λ x → g x .fst`{.Agda} sends that path to `b₀ ≡ b₁`{.Agda}. Taking the first component makes the codomain the fixed type `Bool`{.Agda}, so `cong`{.Agda} suffices.
 <!--zh-->
-若有 `q : b₀ ≡ b₁`{.Agda}，`g`{.Agda} 中保存的证书就把这条相等接回商中。图中以 $s_0$、$s_1$ 分别简记 `g [ true ] .snd`{.Agda} 与 `g [ false ] .snd`{.Agda}。第一份证书从 `[ b₀ ]`{.Agda} 到 `[ true ]`{.Agda}，因此复合时要先用 `sym`{.Agda} 反向。
+**引理** (`agree→P`{.Agda}) 若有 `q : b₀ ≡ b₁`{.Agda}，`g`{.Agda} 中保存的证书就把这条相等接回商中。图中以 $s_0$、$s_1$ 分别简记 `g [ true ] .snd`{.Agda} 与 `g [ false ] .snd`{.Agda}。第一份证书从 `[ b₀ ]`{.Agda} 到 `[ true ]`{.Agda}，因此复合时要先用 `sym`{.Agda} 反向。
 
-反过来，证明 `p : ⟨ P ⟩`{.Agda} 经逆映射给出路径 `invEq quotientPath≃P p`{.Agda}，图中写作 $e^{-1}(p)$。普通函数 `λ x → g x .fst`{.Agda} 把它送到 `b₀ ≡ b₁`{.Agda}。取第一分量后，值域是固定的 `Bool`{.Agda}，因此只需使用 `cong`{.Agda}。
+**引理** (`P→agree`{.Agda}) 反过来，证明 `p : ⟨ P ⟩`{.Agda} 经逆映射给出路径 `invEq quotientPath≃P p`{.Agda}，图中写作 $e^{-1}(p)$。普通函数 `λ x → g x .fst`{.Agda} 把它送到 `b₀ ≡ b₁`{.Agda}。取第一分量后，值域是固定的 `Bool`{.Agda}，因此只需使用 `cong`{.Agda}。
 <!--ja-->
-`q : b₀ ≡ b₁`{.Agda} があれば、`g`{.Agda} に含まれる証明によって、この一致を商のパスへ結び付けられる。図では `g [ true ] .snd`{.Agda} と `g [ false ] .snd`{.Agda} をそれぞれ $s_0$、$s_1$ と略記する。最初の証明は `[ b₀ ]`{.Agda} から `[ true ]`{.Agda} へ向かうため、合成には `sym`{.Agda} で逆にしたものを使う。
+**補題** (`agree→P`{.Agda}) `q : b₀ ≡ b₁`{.Agda} があれば、`g`{.Agda} に含まれる証明によって、この一致を商のパスへ結び付けられる。図では `g [ true ] .snd`{.Agda} と `g [ false ] .snd`{.Agda} をそれぞれ $s_0$、$s_1$ と略記する。最初の証明は `[ b₀ ]`{.Agda} から `[ true ]`{.Agda} へ向かうため、合成には `sym`{.Agda} で逆にしたものを使う。
 
-逆に `p : ⟨ P ⟩`{.Agda} からは、逆写像によってパス `invEq quotientPath≃P p`{.Agda} が得られる。図ではこれを $e^{-1}(p)$ と書く。通常の関数 `λ x → g x .fst`{.Agda} はこのパスを `b₀ ≡ b₁`{.Agda} へ送る。第一成分を取れば終域は固定された型 `Bool`{.Agda} なので、`cong`{.Agda} で十分である。
+**補題** (`P→agree`{.Agda}) 逆に `p : ⟨ P ⟩`{.Agda} からは、逆写像によってパス `invEq quotientPath≃P p`{.Agda} が得られる。図ではこれを $e^{-1}(p)$ と書く。通常の関数 `λ x → g x .fst`{.Agda} はこのパスを `b₀ ≡ b₁`{.Agda} へ送る。第一成分を取れば終域は固定された型 `Bool`{.Agda} なので、`cong`{.Agda} で十分である。
 <!--/-->
 
 <figure class="book-diagram type-comparison path-figure" id="fig-choice-agreement" aria-describedby="fig-choice-agreement-caption">
@@ -556,8 +569,10 @@ On the left, $e$ sends the composite path to a proof of `P`{.Agda}. On the right
     P→agree p = cong (λ x → g x .fst) (invEq quotientPath≃P p)
 ```
 
+∎
+
 <!--en-->
-We now decide equality of the booleans, using `_≟_`{.Agda}. The two directions just proved convert its outcomes as follows:
+**Construction** (`decide`{.Agda}) We now decide equality of the booleans, using `_≟_`{.Agda}. The two directions just proved convert its outcomes as follows:
 
 | Boolean comparison | Decision of `P`{.Agda} |
 | --- | --- |
@@ -566,7 +581,7 @@ We now decide equality of the booleans, using `_≟_`{.Agda}. The two directions
 
 In the second row, a proof of `P`{.Agda} would force the very equality that `ne`{.Agda} refutes. This is the negative map supplied to `mapDec`{.Agda}.
 <!--zh-->
-现在用 `_≟_`{.Agda} 判定两个布尔值是否相等。刚证明的两个方向把比较结果转换如下：
+**构造** (`decide`{.Agda}) 现在用 `_≟_`{.Agda} 判定两个布尔值是否相等。刚证明的两个方向把比较结果转换如下：
 
 | 布尔值的比较 | 对 `P`{.Agda} 的判定 |
 | --- | --- |
@@ -575,7 +590,7 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
 
 第二行中，`P`{.Agda} 的证明会迫使两个布尔值相等，而这正是 `ne`{.Agda} 所反驳的。因此得到传给 `mapDec`{.Agda} 的否定方向。
 <!--ja-->
-ここで `_≟_`{.Agda} を使って二つのブール値の等しさを判定する。証明した二方向によって、結果を次のように変換できる。
+**構成** (`decide`{.Agda}) ここで `_≟_`{.Agda} を使って二つのブール値の等しさを判定する。証明した二方向によって、結果を次のように変換できる。
 
 | ブール値の比較 | `P`{.Agda} の判定 |
 | --- | --- |
@@ -588,21 +603,32 @@ In the second row, a proof of `P`{.Agda} would force the very equality that `ne`
 ```agda
     decide : Dec ⟨ P ⟩
     decide = mapDec agree→P (λ ne p → ne (P→agree p)) (b₀ ≟ b₁)
+      where
+        open import Cubical.Data.Bool using ( _≟_ )
 ```
 
+</div>
+</details>
+
+∎
+
 <!--en-->
-Finally, we must use only the mere existence of `g`{.Agda}. This is possible because `Dec ⟨ P ⟩`{.Agda} is a proposition. Two positive answers agree by the propositionhood of `P`{.Agda}; two negative answers agree because negation is a proposition; a positive and a negative answer contradict each other. This is exactly `isPropDec`{.Agda}.
+**Lemma** (`decideIsProp`{.Agda}) Finally, we must use only the mere existence of `g`{.Agda}. This is possible because `Dec ⟨ P ⟩`{.Agda} is a proposition. Two positive answers agree by the propositionhood of `P`{.Agda}; two negative answers agree because negation is a proposition; a positive and a negative answer contradict each other. This is exactly `isPropDec`{.Agda}.
 <!--zh-->
-最后，必须把对具体 `g`{.Agda} 的使用还原为只依赖它的仅仅存在。这是可行的，因为 `Dec ⟨ P ⟩`{.Agda} 是命题：两个肯定回答由 `P`{.Agda} 的命题性而相等，两个否定回答由否定的命题性而相等，肯定与否定回答则不能同时存在。这正是 `isPropDec`{.Agda} 的内容。
+**引理** (`decideIsProp`{.Agda}) 最后，必须把对具体 `g`{.Agda} 的使用还原为只依赖它的仅仅存在。这是可行的，因为 `Dec ⟨ P ⟩`{.Agda} 是命题：两个肯定回答由 `P`{.Agda} 的命题性而相等，两个否定回答由否定的命题性而相等，肯定与否定回答则不能同时存在。这正是 `isPropDec`{.Agda} 的内容。
 <!--ja-->
-最後に、具体的な `g`{.Agda} の使用を、その単なる存在だけに依存する形へ戻す。これは `Dec ⟨ P ⟩`{.Agda} が命題なので可能である。二つの肯定は `P`{.Agda} の命題性により等しく、二つの否定は否定の命題性により等しい。肯定と否定は同時には存在しない。これが `isPropDec`{.Agda} の内容である。
+**補題** (`decideIsProp`{.Agda}) 最後に、具体的な `g`{.Agda} の使用を、その単なる存在だけに依存する形へ戻す。これは `Dec ⟨ P ⟩`{.Agda} が命題なので可能である。二つの肯定は `P`{.Agda} の命題性により等しく、二つの否定は否定の命題性により等しい。肯定と否定は同時には存在しない。これが `isPropDec`{.Agda} の内容である。
 <!--/-->
 
 ```agda
   decideIsProp : isProp (Dec ⟨ P ⟩)
   decideIsProp = isPropDec ⟨ P ⟩isProp
-
 ```
+
+</div>
+</details>
+
+∎
 
 <!--en-->
 The same factorization through truncation that appeared in the Prelude now closes the proof. In the diagram, $G$ abbreviates the type `(x : Glued) → Pick x`{.Agda}. The map `decide`{.Agda} is defined on actual functions, while `rec₁ decideIsProp decide`{.Agda} accepts their mere existence.
@@ -613,13 +639,24 @@ The same factorization through truncation that appeared in the Prelude now close
 <!--/-->
 
 <figure class="book-diagram type-comparison" id="fig-choice-truncation" aria-describedby="fig-choice-truncation-caption">
-<div class="diagram-panel type-comparison-panel">
+<div class="diagram-framed type-comparison-panel">
 
-$$\begin{array}{ccc}
-G & \xrightarrow{\;|{-}|_1\;} & \|G\|_1 \\[8pt]
-\mathllap{{\scriptstyle\mathsf{decide}}\,}\Big\downarrow & & \Big\downarrow\mathrlap{\,{\scriptstyle\mathsf{rec}_1\,\cdots}} \\[8pt]
-\mathsf{Dec}\,\langle P\rangle & \xrightarrow{\;\mathsf{id}\;} & \mathsf{Dec}\,\langle P\rangle
-\end{array}$$
+<div class="factorization-stage">
+<svg viewBox="0 0 500 230" aria-hidden="true" focusable="false">
+<path class="diagram-map-line" d="M88 50 H315"/>
+<path class="diagram-map-tip" d="M306 45 L315 50 L306 55"/>
+<path class="diagram-map-line" d="M358 76 V160"/>
+<path class="diagram-map-tip" d="M353 151 L358 160 L363 151"/>
+<path class="diagram-map-line" d="M72 74 L315 177"/>
+<path class="diagram-map-tip" d="M303 179 L315 177 L308 167"/>
+</svg>
+<span class="factorization-label factorization-source">$G$</span>
+<span class="factorization-label factorization-truncated">$\|G\|_1$</span>
+<span class="factorization-label factorization-target">$\mathsf{Dec}\,\langle P\rangle$</span>
+<span class="factorization-label factorization-top-map">$|{-}|_1$</span>
+<span class="factorization-label factorization-long-map">$\mathsf{decide}$</span>
+<span class="factorization-label factorization-right-map">$\mathsf{rec}_1\,\cdots$</span>
+</div>
 
 </div>
 <figcaption id="fig-choice-truncation-caption">
@@ -636,16 +673,22 @@ Choice supplies an element of $\|G\|_1$; the right-hand function returns a decis
 </figure>
 
 <!--en-->
-Apply this function to `merePicker sc`{.Agda}. Since `P`{.Agda} was arbitrary, the result is `LEM ℓ`{.Agda}.
+**Theorem** (`SetChoice→LEM`{.Agda}) Choice for set-valued families implies excluded middle at the same universe level.
+
+**Proof** Apply `rec₁ decideIsProp decide`{.Agda} to `merePicker sc`{.Agda}. Since `P`{.Agda} was arbitrary, the result is `LEM ℓ`{.Agda}.
 <!--zh-->
-把这个函数应用于 `merePicker sc`{.Agda}。由于 `P`{.Agda} 任意，得到的正是 `LEM ℓ`{.Agda}。
+**定理** (`SetChoice→LEM`{.Agda}) 集合值族的选择蕴含同一宇宙层级上的排中律。
+
+**证明** 把 `rec₁ decideIsProp decide`{.Agda} 应用于 `merePicker sc`{.Agda}。由于 `P`{.Agda} 任意，得到的正是 `LEM ℓ`{.Agda}。
 <!--ja-->
-この関数を `merePicker sc`{.Agda} に適用する。`P`{.Agda} は任意だったので、結果は `LEM ℓ`{.Agda} である。
+**定理** (`SetChoice→LEM`{.Agda}) 集合値族に対する選択は、同じ宇宙レベルの排中律を含意する。
+
+**証明** `rec₁ decideIsProp decide`{.Agda} を `merePicker sc`{.Agda} に適用する。`P`{.Agda} は任意だったので、結果は `LEM ℓ`{.Agda} である。
 <!--/-->
 
 ```agda
-choice→lem : ∀ {ℓ} → SetChoice ℓ → LEM ℓ
-choice→lem sc P = rec₁ decideIsProp decide (merePicker sc)
+SetChoice→LEM : ∀ {ℓ} → SetChoice ℓ → LEM ℓ
+SetChoice→LEM sc P = rec₁ decideIsProp decide (merePicker sc)
   where open Diaconescu P
 ```
 
@@ -654,19 +697,13 @@ choice→lem sc P = rec₁ decideIsProp decide (merePicker sc)
 <!--en-->
 ## Recap
 
-The content of `SetChoice`{.Agda} is the passage from pointwise mere existence to the mere existence of a whole function. `Lift`{.Agda} carries this principle down one universe level. In the proof of `choice→lem`{.Agda}, choice provides representatives uniformly on a quotient; their Boolean equality decides `P`{.Agda}, and the propositionhood of that decision lets us eliminate the truncation.
-
-The chapter's two results have distinct uses in [the cumulative-hierarchy model](V.Model.html). From one hypothesis `SetChoice (ℓ-suc ℓ)`{.Agda}, `choice→lem`{.Agda} supplies excluded middle for the ZF construction, and `lowerSetChoice`{.Agda} supplies the lower-level choice used for the choice-set axiom. This concerns the ambient hierarchy `V`{.Agda}; the later construction of `L`{.Agda} proves its internal choice from excluded middle alone.
+This chapter formulated `SetChoice ℓ`{.Agda} for h-set indices and h-set-valued families: pointwise mere existence of elements implies the mere existence of one choice function. `lowerSetChoice`{.Agda} transfers the principle from `ℓ-suc ℓ`{.Agda} to `ℓ`{.Agda}. To prove `SetChoice→LEM`{.Agda}, we encoded a proposition `P`{.Agda} in the equality of two quotient points. Choice provided Boolean representatives whose comparison decides `P`{.Agda}; because `Dec ⟨ P ⟩`{.Agda} is a proposition, `rec₁`{.Agda} eliminates the truncation. Thus `SetChoice ℓ`{.Agda} implies `LEM ℓ`{.Agda}.
 <!--zh-->
 ## 小结
 
-`SetChoice`{.Agda} 的内容，是从逐点的仅仅存在过渡到整个函数的仅仅存在。`Lift`{.Agda} 使这条原理可以降低一个宇宙层级。`choice→lem`{.Agda} 的证明则在商上统一选取代表元，用它们的布尔相等判定 `P`{.Agda}，再借助这一判定的命题性消去截断。
-
-本章的两个结果在[累积层级的模型](V.Model.html)中有不同用途。从一个假设 `SetChoice (ℓ-suc ℓ)`{.Agda} 出发，`choice→lem`{.Agda} 为 ZF 的构造提供排中律，`lowerSetChoice`{.Agda} 为选择集公理提供较低层级的选择。这说的是外部层级 `V`{.Agda}；后面的 `L`{.Agda} 的构造则只以排中律为前提，证明其内部选择成立。
+本章针对 h-集合指标与 h-集合值族陈述了 `SetChoice ℓ`{.Agda}：从逐点的仅仅存在，得到整个选择函数的仅仅存在。`lowerSetChoice`{.Agda} 把这条原理从 `ℓ-suc ℓ`{.Agda} 降至 `ℓ`{.Agda}。为证明 `SetChoice→LEM`{.Agda}，我们把命题 `P`{.Agda} 编码为两个商点的相等；选择给出布尔代表元，比较它们便可判定 `P`{.Agda}。由于 `Dec ⟨ P ⟩`{.Agda} 是命题，`rec₁`{.Agda} 允许消去截断。因此，`SetChoice ℓ`{.Agda} 蕴含 `LEM ℓ`{.Agda}。
 <!--ja-->
 ## まとめ
 
-`SetChoice`{.Agda} の内容は、添字ごとの単なる存在から、関数全体の単なる存在へ移ることである。`Lift`{.Agda} によって、この原理を一つ下の宇宙レベルへ移せる。`choice→lem`{.Agda} の証明では、選択によって商の上で一様に代表元を取り、そのブール値の等しさで `P`{.Agda} を判定する。最後に判定の命題性を使い、切り詰めを消去する。
-
-二つの結果は、[累積階層のモデル](V.Model.html)で異なる役割をもつ。一つの仮定 `SetChoice (ℓ-suc ℓ)`{.Agda} から、`choice→lem`{.Agda} は ZF の構成に必要な排中律を与え、`lowerSetChoice`{.Agda} は選択集合公理に必要な低いレベルの選択を与える。これは外側の階層 `V`{.Agda} についての話である。後の `L`{.Agda} の構成では、排中律だけを仮定して内部の選択を証明する。
+本章では、h-集合を添字とする h-集合値の族について `SetChoice ℓ`{.Agda} を定式化した。各添字で要素が単に存在することから、一つの選択関数が単に存在することが従う。`lowerSetChoice`{.Agda} は、この原理を `ℓ-suc ℓ`{.Agda} から `ℓ`{.Agda} へ下ろす。`SetChoice→LEM`{.Agda} の証明では、命題 `P`{.Agda} を二つの商点の等しさに符号化し、選択で得たブール代表元を比較して `P`{.Agda} を判定する。`Dec ⟨ P ⟩`{.Agda} は命題なので、`rec₁`{.Agda} により切り詰めを消去できる。したがって `SetChoice ℓ`{.Agda} から `LEM ℓ`{.Agda} が従う。
 <!--/-->

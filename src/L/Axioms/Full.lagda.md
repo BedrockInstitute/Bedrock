@@ -23,7 +23,6 @@ the complete ZF and ZFC records are assembled later.
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -42,7 +41,6 @@ the set-theoretic model.
 ```agda
 open import Base.Prelude
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -62,7 +60,6 @@ of the unbounded universal case.
 
 ```agda
 module L.Axioms.Full {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -132,7 +129,6 @@ open import L.Axioms.Separation {ℓ} lem
   using ( module FunctionalImage; separateΔ₀ )
 open import L.Axioms.Basic {ℓ} using ( LsetS )
 open import L.FormulaReflection {ℓ} lem using ( mkReflect )
-
 ```
 
 <!--en-->
@@ -169,7 +165,6 @@ certificates needed to remain inside the model.
 ```agda
 
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -189,7 +184,6 @@ ordinary data extraction and uses no description principle.
 ```agda
 module ModelL = FOL.ZFModel 𝒮ʟ
 open ModelL using ( SetOf )
-
 ```
 
 <!--en-->
@@ -208,7 +202,6 @@ arbitrary host predicate into the syntax.
 ```agda
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
-
 ```
 
 <!--en-->
@@ -254,7 +247,6 @@ reflection.
 private
   transIn : (β : V ℓ) {x y : V ℓ} → ⟨ x ∈ y ⟩ → ⟨ y ∈ Lset β ⟩ → ⟨ x ∈ Lset β ⟩
   transIn β = layer-trans (Lset-layer β)
-
 ```
 
 <!--en-->
@@ -274,7 +266,6 @@ not reverse the mathematical relation.
   swap : Fin 2 → Fin 2
   swap zero    = suc zero
   swap (suc _) = zero
-
 ```
 
 <!--en-->
@@ -291,7 +282,6 @@ its semantic justification is supplied separately by renaming correctness.
 ```agda
   swapFo : Formula S 2 → Formula S 2
   swapFo = renameFo swap
-
 ```
 
 <!--en-->
@@ -310,7 +300,6 @@ two-entry environment.
   swapAgrees : (x z : S) → Ren.Agrees swap (x ∷ z ∷ []) (z ∷ x ∷ [])
   swapAgrees x z zero       = refl
   swapAgrees x z (suc zero) = refl
-
 ```
 
 <!--en-->
@@ -401,7 +390,6 @@ rather than used only as an ambient set.
 
 ```agda
   c   = LsetS β oβ
-
 ```
 
 <!--en-->
@@ -420,7 +408,6 @@ The parameter now lies in the reflection stage. `stage-mem` gives
   fa∈β : ⟨ fst a ∈ Lset β ⟩
   fa∈β = Lset-mono {α = β} {β = sa} (R .snd .snd .fst)
            (stage-mem (fst a) (a .snd))
-
 ```
 
 <!--en-->
@@ -441,7 +428,6 @@ No comparison is asserted for arbitrary `x : S` outside `a`.
   bridge : (x : S) → ⟨ x ∈ˢ a ⟩
          → ((x ∷ []) ⊨ φ) ≡ ((x ∷ []) ⊨ relativize c φ)
   bridge x x∈a = R .snd .snd .snd (x ∷ []) (transIn β x∈a fa∈β , tt*)
-
 ```
 
 <!--en-->
@@ -493,12 +479,23 @@ still depends on `lem`, although no choice axiom is used.
 各 `x ∈ˢ a` に対し、仮定は関係する値の依存和 `Σ y , (y ∷ x ∷ []) ⊨ φ` を可縮にする。その中心が一つの値を与え、収縮が関係するすべての値を中心と同一視するので、この段階ではホスト側の選択公理を使わない。`FunctionalImage` は小さな表示 `⟪ fst a ⟫` にわたる。各小さな添字が表す要素について中心の最小段階を取り、`boundingOrd` がそれらすべてを一つの順序数 `βimg` で上から抑える。任意の `x ∈ˢ a` が与えられると、`∈-asFiber` は小さな添字と、その表示値が `x` の基礎にある集合に等しいというパスを返す。そのパスに沿って関係を添字が表す始域の要素へ移し、可縮性によって選ばれた中心を関係する各 `y` と同一視し、その等しさに沿って共通の段階上界を移す。この構成の最小段階を求める操作は依然として `lem` に依存するが、選択公理は使わない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Images (a : S) (φ : Formula S 2)
               (fc : (x : S) → ⟨ x ∈ˢ a ⟩
                   → isContr (Σ[ y ∈ S ] ⟨ (y ∷ x ∷ []) ⊨ φ ⟩)) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   open FunctionalImage a (λ x y → (y ∷ x ∷ []) ⊨ φ) fc public
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Replacement
@@ -587,7 +584,6 @@ that the image itself has only one member.
 
     Image : S → hProp (ℓ-suc ℓ)
     Image y = ∃[ x ∶ S ] (x ∈ˢ a) ⊓ ((y ∷ x ∷ []) ⊨ φ)
-
 ```
 
 <!--en-->
@@ -608,7 +604,6 @@ is bounded by `a`. The formula `φ` may still contain unbounded quantifiers, so
 ```agda
     imageFo : Formula S 1
     imageFo = ∃̇∈ (con a) (swapFo φ)
-
 ```
 
 <!--en-->
@@ -629,7 +624,6 @@ extension of the image predicate.
 ```agda
     BoundedImage : S → hProp (ℓ-suc ℓ)
     BoundedImage y = (y ∈ˢ LsetS βimg βimg-ord) ⊓ ((y ∷ []) ⊨ imageFo)
-
 ```
 
 <!--en-->
@@ -673,7 +667,6 @@ the body of `imageFo`. Thus the branch constructs both parts of
 ```agda
         range∈βimg x x∈a y h
         , ∣ x , (x∈a , subst ⟨_⟩ (sym (⊨-swap φ x y)) h) ∣₁ }
-
 ```
 
 <!--en-->

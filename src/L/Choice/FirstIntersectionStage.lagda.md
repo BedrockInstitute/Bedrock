@@ -114,8 +114,7 @@ enters the tower at all.
 議論を支えるのは、比較と段階である。段階の下の順序数を段階そのものと比べることが、その段階がある後者を行き過ぎていないかの判定である。順序数の要素も後者もまた順序数である。各構成可能集合はその最初の順序数を携え、順序数性と所属とともに渡され、極小性は反駁として述べられる。二つの順序数には共通の上界がある。そして後者の恒等式は、次の段階がちょうど前の段階の定義可能な部分集合であると言う。何ものかが塔に入るのは、まさにこの一歩によってである。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 The argument is written in three propositional moves: a split into cases, a
@@ -326,10 +325,17 @@ proposition-valued target is always legitimate.
 したがって、同じ順序数のどの二つの直前の段階も等しくなる。第一成分は単射性により一致し、残りのデータは命題なので、直前の段階の型全体が命題になる。これこそ、単に存在するだけの直前の段階を確定したものとして使える理由である。切り詰めを命題値の対象へほどくのは、つねに正当である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 
 module _ (P : S → hProp (ℓ-suc ℓ)) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The least-stage argument is now run once for every property of ordinals at
@@ -483,6 +489,9 @@ successor identity.
       , k δ (subst (λ w → ⟨ z ∈ˢ w ⟩) (sym (Lset-suc δ)) z∈𝒟)) })
     (Lset-out σ z z∈Lσ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 The tower decomposes the membership of `z` truncatedly: some stage `δ` below

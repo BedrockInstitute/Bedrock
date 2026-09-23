@@ -14,7 +14,6 @@ The condensation argument needs more than an external hull: the hull itself and 
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -32,7 +31,6 @@ open import Cubical.HITs.PropositionalTruncation using ( rec2 )
 open import Cubical.Foundations.Prelude using ( J )
 open import Cubical.Foundations.HLevels using ( isPropΠ2 )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -45,7 +43,6 @@ The module is parameterized by that hypothesis, so every statement below is rela
 
 ```agda
 module L.GCH.ConstructibleHull {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -258,7 +255,6 @@ Existence statements are kept propositionally truncated until their witnesses ar
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
 open import Cubical.HITs.CumulativeHierarchy.Properties using ( ⟪_⟫; ⟪_⟫↪; ∈∈ₛ )
-
 ```
 
 <!--en-->
@@ -272,7 +268,6 @@ Two levels of membership must be distinguished. Ambient membership belongs to th
 ```agda
 open hPropStructure 𝒮ᵥ
 module CS = hPropStructure 𝒮ʟ using ( S; _∈ˢ_ )
-
 ```
 
 <!--en-->
@@ -287,7 +282,6 @@ For formulas whose constants are elements of `L`, `⊨` denotes satisfaction in 
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans using ( _^_; _⊨ᵐ_ )
 open AbsL using ( _^_ ) renaming ( _⊨ᵐ_ to _⊨_ )
 module Ren = Sat 𝒮ʟ id using ( Agrees; ⊨-rename )
-
 ```
 
 <!--en-->
@@ -350,7 +344,6 @@ An element of the carrier is determined by its underlying set, because construct
 
   S≡ : {x y : CS.S} → fst x ≡ fst y → x ≡ y
   S≡ = Σ≡Prop (λ v → snd (isL v))
-
 ```
 
 <!--en-->
@@ -365,7 +358,6 @@ The renaming `ρs` swaps the two slots: a formula about a pair in the swapped or
   ρs : Fin 2 → Fin 2
   ρs zero = suc zero
   ρs (suc zero) = zero
-
 ```
 
 <!--en-->
@@ -380,7 +372,6 @@ The renaming `ρf` keeps `w` in slot zero and sends `Z` from slot one to slot tw
   ρf : Fin 2 → Fin 3
   ρf zero = zero
   ρf (suc zero) = suc (suc zero)
-
 ```
 
 <!--en-->
@@ -395,7 +386,6 @@ An agreement for `ρs` says that the swapped environment carries the same elemen
   ags : (Z'' w : CS.S) → Ren.Agrees ρs (Z'' ∷ w ∷ []) (w ∷ Z'' ∷ [])
   ags Z'' w zero = refl
   ags Z'' w (suc zero) = refl
-
 ```
 
 <!--en-->
@@ -428,10 +418,16 @@ The collapse argument uses only the constructibility of `M` and the predecessors
 崩壊の議論が使うのは `M` の構成可能性と、その内部に残る先行者だけであり、推移性は仮定しない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module PiIn (Mʟ : CS.S) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Let `M` be the underlying set of the chosen constructible carrier. Its accompanying certificate ensures that every member later lifted from `M` is constructible.
@@ -444,7 +440,6 @@ Let `M` be the underlying set of the chosen constructible carrier. Its accompany
 ```agda
   M : S
   M = fst Mʟ
-
 ```
 
 <!--en-->
@@ -457,7 +452,6 @@ The collapse `π x` is formed from the collapse values of those members of `x` t
 
 ```agda
   module C = Collapse M using ( Fiber; π; π-compute; πX; πX-member; π∈-fwd )
-
 ```
 
 <!--en-->
@@ -471,7 +465,6 @@ Since constructibility is inherited by members, every `y ∈ M` is constructible
 ```agda
   memL : (y : S) → ⟨ y ∈ˢ M ⟩ → ⟨ isL y ⟩
   memL y y∈M = isL-trans {x = M} {y = y} y∈M (snd Mʟ)
-
 ```
 
 <!--en-->
@@ -533,7 +526,6 @@ The host-side reading of the relation is exactly the three memberships, conjoine
 ```agda
       (λ y x → (fst y ∈ˢ M) ⊓ ((fst x ∈ˢ M) ⊓ (fst y ∈ˢ fst x)))
       (λ y x z h → h) (λ y x z h → h)
-
 ```
 
 <!--en-->
@@ -547,7 +539,6 @@ The relation becomes an element of the model: a set of pairs of carrier elements
 ```agda
   R : CS.S
   R = Membership.rel
-
 ```
 
 <!--en-->
@@ -562,7 +553,6 @@ The introduction reading exhibits both endpoint memberships and the membership b
   R-in : (y x : CS.S) → ⟨ fst y ∈ˢ M ⟩ → ⟨ fst x ∈ˢ M ⟩ → ⟨ fst y ∈ˢ fst x ⟩
        → Holds R y x
   R-in y x my mx yx = Membership.into y x my mx (my , mx , yx)
-
 ```
 
 <!--en-->
@@ -577,7 +567,6 @@ The elimination reading returns the same three memberships; the two directions t
   R-out : (y x : CS.S) → Holds R y x
         → ⟨ fst y ∈ˢ M ⟩ × ⟨ fst x ∈ˢ M ⟩ × ⟨ fst y ∈ˢ fst x ⟩
   R-out = Membership.pair-out
-
 ```
 
 <!--en-->
@@ -593,7 +582,6 @@ The collapse formula is local, not global. At slots for a value and an argument 
     piFo : Formula CS.S 2
     piFo = ∃̇ ( correctAt i0 R
              ∧̇ ( completeAt i0 R i2 ∧̇ valueAt i0 R i2 i1 ) )
-
 ```
 
 <!--en-->
@@ -622,7 +610,6 @@ The innermost projection finishes the unpacking: the value clause arrives as an 
 
 ```agda
           , value-out i0 R i2 i1 (F ∷ v ∷ p ∷ []) hv ) ) })
-
 ```
 
 <!--en-->
@@ -687,7 +674,6 @@ The step compares members: the recorded value and the collapse have the same mem
       where
       xS : CS.S
       xS = x , xL
-
 ```
 
 <!--en-->
@@ -797,7 +783,6 @@ The equation `eu` is the induction hypothesis at the component: the table's valu
 
 ```agda
             eu = IH y y∈x (snd yS) y∈M u (hc yS u fu .fst) (hc yS u fu .snd)
-
 ```
 
 <!--en-->
@@ -828,9 +813,17 @@ The proof eliminates the truncated existence into the equality of two h-sets, wh
   piFo-val q mq v h = rec₁ (setIsSet (fst v) (C.π (fst q)))
     (λ { (F , (hc , (hm , hv))) → value-val F hc q mq v hm hv })
     (piFo-out v q h)
-  module Cut (K : CS.S) where
-
 ```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+  module Cut (K : CS.S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The cutting formula is the single atomic formula: the free slot is a member of the constant `K`. Everything the slice contains is what satisfies it.
@@ -843,7 +836,6 @@ The cutting formula is the single atomic formula: the free slot is a member of t
 ```agda
     cutFo : Formula CS.S 1
     cutFo = var i0 ∈̇ con K
-
 ```
 
 <!--en-->
@@ -858,7 +850,6 @@ Separation applied at `Mʟ` yields the slice as an element of `L`, so the slice 
     opaque
       cut : CS.S
       cut = hasSeparationL Mʟ cutFo .fst .fst
-
 ```
 
 <!--en-->
@@ -872,7 +863,6 @@ The membership specification identifies membership in the slice with membership 
 ```agda
       cut-mem : (y : CS.S) → (y CS.∈ˢ cut) ≡ ((y CS.∈ˢ Mʟ) ⊓ ((y ∷ []) ⊨ cutFo))
       cut-mem = hasSeparationL Mʟ cutFo .fst .snd
-
 ```
 
 <!--en-->
@@ -886,7 +876,6 @@ The inward direction combines membership in `M` with membership in the underlyin
 ```agda
       cut-in : (y : CS.S) → ⟨ fst y ∈ˢ M ⟩ → ⟨ fst y ∈ˢ fst K ⟩ → ⟨ y CS.∈ˢ cut ⟩
       cut-in y my yK = subst ⟨_⟩ (sym (cut-mem y)) (my , yK)
-
 ```
 
 <!--en-->
@@ -900,6 +889,10 @@ The outward direction reads the same specification back into its two components.
 ```agda
       cut-out : (y : CS.S) → ⟨ y CS.∈ˢ cut ⟩ → ⟨ fst y ∈ˢ M ⟩ × ⟨ fst y ∈ˢ fst K ⟩
       cut-out y h = subst ⟨_⟩ (cut-mem y) h
+```
+</div>
+</details>
+```agda
   Good : S → S → Type (ℓ-suc ℓ)
   Good δ q = ⟨ q ∈ˢ M ⟩ → ⟨ q ∈ˢ Lset δ ⟩
            → Σ[ qL ∈ ⟨ isL (C.π q) ⟩ ] ((mq : ⟨ q ∈ˢ M ⟩)
@@ -915,7 +908,6 @@ The second component of goodness packages the collapse as an element of `𝒮ʟ`
 
 ```agda
                 → ⟨ ((C.π q , qL) ∷ up q mq ∷ []) ⊨ piFo ⟩)
-
 ```
 
 <!--en-->
@@ -930,7 +922,6 @@ Goodness is a proposition: membership in the carrier, in the stage, constructibi
   isPropGood : (δ q : S) → isProp (Good δ q)
   isPropGood δ q = isPropΠ2 λ _ _ → isPropΣ (snd (isL (C.π q)))
     λ qL → isPropΠ λ mq → snd (((C.π q , qL) ∷ up q mq ∷ []) ⊨ piFo)
-
 ```
 
 <!--en-->
@@ -941,11 +932,17 @@ Fix an ordinal stage `δ'` and assume goodness for every `q` that lies both in `
 順序数段階 `δ'` を固定し、`M` と `Lset δ'` の両方に属する各 `q` が「良い」と仮定する。これら先行する崩壊値を組み合わせて、次の入力での値を作る。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module Step (δ' : S) (oδ' : IsOrd δ')
               (IH : (q : S) → Good δ' q) where
-
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The slice is cut at the stage `Lset δ'`: the members of the carrier that the stage already contains. Because the stage is a set of `L`, the slice is an element of `L` by separation, and it is exactly the domain the induction hypothesis speaks about.
@@ -957,7 +954,6 @@ The slice is cut at the stage `Lset δ'`: the members of the carrier that the st
 
 ```agda
     module Sl = Cut (LsetS δ' oδ') using ( cut; cut-in; cut-out )
-
 ```
 
 <!--en-->
@@ -973,7 +969,6 @@ Stages are transitive, so a member of a member of the stage is still inside the 
     Lδ'-trans {x} {y} = layer-trans (Lset-layer δ') {x = x} {y = y}
     πʟ : (y : CS.S) → ⟨ y CS.∈ˢ Sl.cut ⟩ → CS.S
     πʟ y hy = C.π (fst y) , IH (fst y) (Sl.cut-out y hy .fst) (Sl.cut-out y hy .snd) .fst
-
 ```
 
 <!--en-->
@@ -1004,7 +999,6 @@ The identification uses the membership of the member in the carrier, read out of
       where
       my : ⟨ fst y ∈ˢ M ⟩
       my = Sl.cut-out y hy .fst
-
 ```
 
 <!--en-->
@@ -1034,7 +1028,6 @@ Functionality holds because the collapse formula determines its value at every m
 ```agda
             , λ { (v , h) → Σ≡Prop (λ w → snd ((w ∷ y ∷ []) ⊨ piFo))
                 (sym (S≡ (piFo-val y (Sl.cut-out y hy .fst) v h))) } }
-
 ```
 
 <!--en-->
@@ -1047,7 +1040,6 @@ The graph recursion of `L` collects the table: a set of pairs of carrier element
 
 ```agda
       module T = RecursionGraph Rπ using ( F; F-in; pair-out )
-
 ```
 
 <!--en-->
@@ -1061,7 +1053,6 @@ The collected set is the table at the stage: an element of `L` that pairs each s
 ```agda
     Tab : CS.S
     Tab = T.F
-
 ```
 
 <!--en-->
@@ -1075,7 +1066,6 @@ The inward reading of the table exhibits its entries: at every slice member, the
 ```agda
     Tab-in : (y : CS.S) (hy : ⟨ y CS.∈ˢ Sl.cut ⟩) → Holds Tab y (πʟ y hy)
     Tab-in = T.F-in
-
 ```
 
 <!--en-->
@@ -1090,7 +1080,6 @@ The outward reading decomposes an entry into a slice member and a value equal to
     Tab-pair : (x v : CS.S) → Holds Tab x v
              → ⟨ x CS.∈ˢ Sl.cut ⟩ × (fst v ≡ C.π (fst x))
     Tab-pair = T.pair-out
-
 ```
 
 <!--en-->
@@ -1105,7 +1094,6 @@ An argument `x` is closed when every member of `x` that also belongs to `M` lies
     Closed : CS.S → Type (ℓ-suc ℓ)
     Closed x = (y : S) (y∈x : ⟨ y ∈ˢ fst x ⟩) (y∈M : ⟨ y ∈ˢ M ⟩)
              → ⟨ up y y∈M CS.∈ˢ Sl.cut ⟩
-
 ```
 
 <!--en-->
@@ -1120,7 +1108,6 @@ A slice member is closed by transitivity of the stage: any member of it that lie
     slice-closed : (x : CS.S) → ⟨ x CS.∈ˢ Sl.cut ⟩ → Closed x
     slice-closed x hx y y∈x y∈M =
       Sl.cut-in (up y y∈M) y∈M (Lδ'-trans {x = fst x} {y = y} y∈x (Sl.cut-out x hx .snd))
-
 ```
 
 <!--en-->
@@ -1151,7 +1138,6 @@ The member is carried as a carrier element, and closedness places the carried el
       y' = up (fst y) (ro .fst)
       hy' : ⟨ y' CS.∈ˢ Sl.cut ⟩
       hy' = cl (fst y) (ro .snd .snd) (ro .fst)
-
 ```
 
 <!--en-->
@@ -1197,7 +1183,6 @@ The component is lifted to the carrier. Its membership in the argument yields th
 ```agda
           , ( R-in (up y y∈M) x y∈M mx y∈x
             , subst (λ t → ⟨ pr y t ∈ˢ fst Tab ⟩) e (Tab-in (up y y∈M) (cl y y∈x y∈M)) )
-
 ```
 
 <!--en-->
@@ -1213,7 +1198,6 @@ Backward: a source entry for `w` names a related member whose table value is `w`
       bwd = rec₁ (snd (fst w ∈ˢ fst v)) (λ { (y , (ry , ty)) →
         subst2 (λ s t → ⟨ s ∈ˢ t ⟩) (sym (Tab-pair y w ty .snd)) (sym ev)
           (C.π∈-fwd (fst x) (fst y) (R-out y x ry .snd .snd) (R-out y x ry .fst)) })
-
 ```
 
 <!--en-->
@@ -1260,7 +1244,6 @@ The argument is carried as a carrier element, so that it can serve as an environ
 
       qS : CS.S
       qS = up q mq
-
 ```
 
 <!--en-->
@@ -1275,7 +1258,6 @@ Closedness of the carried argument holds by the hypothesis: each member inside t
       cl : Closed qS
       cl y y∈q y∈M = Sl.cut-in (up y y∈M) y∈M (q⊆ y y∈q)
       module Mq = Cut qS using ( cut; cut-in; cut-out )
-
 ```
 
 <!--en-->
@@ -1338,7 +1320,6 @@ The membership of `y` in the carrier comes from the slice of `q`. The hypothesis
             my = Mq.cut-out y hy .fst
             hy' : ⟨ y CS.∈ˢ Sl.cut ⟩
             hy' = Sl.cut-in y my (q⊆ (fst y) (Mq.cut-out y hy .snd))
-
 ```
 
 <!--en-->
@@ -1351,7 +1332,6 @@ Replacement now collects the values of this recursion into an element of `L`: it
 
 ```agda
         module Vq = Of valR using ( table; table-in; table-out )
-
 ```
 
 <!--en-->
@@ -1398,7 +1378,6 @@ Since `w` belongs to the constructible value set `Vq.table`, transitivity of `L`
           where
           wS : CS.S
           wS = w , isL-trans {x = fst Vq.table} {y = w} hw (snd Vq.table)
-
 ```
 
 <!--en-->
@@ -1446,7 +1425,6 @@ The carried component lies in the slice of `q` by its carrier membership, and in
             hy = Mq.cut-in yS y∈M y∈q
             hy' : ⟨ yS CS.∈ˢ Sl.cut ⟩
             hy' = Sl.cut-in yS y∈M (q⊆ y y∈q)
-
 ```
 
 <!--en-->
@@ -1460,7 +1438,6 @@ The collapse of `q` is constructible: it equals the underlying set of the table,
 ```agda
       πq-isL : ⟨ isL (C.π q) ⟩
       πq-isL = subst (λ t → ⟨ isL t ⟩) val≡π (snd Vq.table)
-
 ```
 
 <!--en-->
@@ -1482,6 +1459,10 @@ The induction runs along membership in the hierarchy, consuming at each step the
       good mq' = subst (λ q' → ⟨ ((C.π q , πq-isL) ∷ q' ∷ []) ⊨ piFo ⟩) (S≡ refl)
         (piFo-in (C.π q , πq-isL) qS Tab Tab-correct (complete-of qS cl)
           (valueIs-of qS mq cl (C.π q , πq-isL) refl))
+```
+</div>
+</details>
+```agda
   good-at : (δ : S) → IsOrd δ → (q : S) → Good δ q
 ```
 
@@ -1561,6 +1542,9 @@ The statement of `πX-isL` is about members: each member of the collapse image i
     (λ { (y , (y∈M , e)) → subst (λ w → ⟨ isL w ⟩) e (π-isL y y∈M) })
     (C.πX-member x x∈πX)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The Skolem hull as an ω-iteration
@@ -1578,11 +1562,19 @@ This says exactly that the collapse image is contained in `L`; it is a statement
 崩壊像の各要素は台のどこかの要素の崩壊であり、だから構成可能である。これは、崩壊像が `L` に含まれると言っているだけである。像そのものが `L` の要素であるとは主張していない。前半が終わり、後半は新しいパラメータで始まる。要素の後者で閉じた段階 `lam` と、その要素がすべて段階の中にある始点 `X` である。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Telescope (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The empty set lies in the stage as well, and the hull machinery is opened on these data: the hull carrier `M`, the fact that the hull is contained in the stage, and that every member of the start is a member of the hull.
@@ -1593,7 +1585,6 @@ The empty set lies in the stage as well, and the hull machinery is opened on the
 <!--/-->
 
 ```agda
-  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩) where
   module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ using ( M )
   module HSH = HullStage.H lam ordλ succλ X X⊆L ∅∈λ
     using ( ∅∈Lsetα; hull-member; X⊆M; Hull⊆L )
@@ -1612,7 +1603,6 @@ A hull code is either a base name for a member of `X`, or `wit k ψ cs`, which s
     using ( Code; base; wit; val; vals; search; searchPredicate; Sat; Hull; val-wit
           ; satDecision )
   open HullStage.H.T lam ordλ succλ X X⊆L ∅∈λ using ( inHull; _⊨₀_ )
-
 ```
 
 <!--en-->
@@ -1644,7 +1634,6 @@ A search uses a constant-free formula of arity `k+1`. The vector from `Z` assign
                  Σ[ w ∈ Sat k ψ vs ] (From Z vs × (z ≡ fst (search k ψ vs w)))
   Reads : CS.S → S → Type (ℓ-suc ℓ)
   Reads Z z = ⟨ z ∈ˢ fst Z ⟩ ⊎ ((z ≡ ∅) ⊎ Searched Z z)
-
 ```
 
 <!--en-->
@@ -1690,7 +1679,6 @@ The outward field reads a member of the step host-side, provided the current set
 ```agda
       out     : (Z : CS.S) → ((z : S) → ⟨ z ∈ˢ fst Z ⟩ → ⟨ z ∈ˢ Lset lam ⟩)
               → (z : S) → ⟨ z ∈ˢ fst (Φ Z) ⟩ → ∥ Reads Z z ∥₁
-
 ```
 
 <!--en-->
@@ -1701,10 +1689,17 @@ The iteration module takes the constructibility of the start together with the p
 反復のモジュールは、始点の構成可能性と、まとめられたステップを受け取る。どちらも必要である。内部の再帰は `L` の要素からはじまり、ステップが論理式とその条項を供給するからである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module HullIter (X-isL : ⟨ isL X ⟩) (P : StepPack) where
-    open StepPack P
+```
+</summary>
+<div class="submodule-fold-content">
 
+```agda
+    open StepPack P
 ```
 
 <!--en-->
@@ -1718,7 +1713,6 @@ The start is presented as a carrier element, pairing the set with its constructi
 ```agda
     Xʟ : CS.S
     Xʟ = X , X-isL
-
 ```
 
 <!--en-->
@@ -1733,7 +1727,6 @@ The internal ω-recursion produces the iterates, and its closure machinery carri
     module It = Iterate Xʟ ΦFo Φ defines only
       using ( it; module Closure; iterUnion; iterUnion-in; iterUnion-out; iter; iter-in; iter-out; ω-num; Num )
     module Cl = It.Closure (λ Z z → grows Z (fst z)) using ( it-up )
-
 ```
 
 <!--en-->
@@ -1747,7 +1740,6 @@ The stages of the iteration are named `hullStep n`, the `n`-th application of th
 ```agda
     hullStep : ℕ → CS.S
     hullStep = It.it
-
 ```
 
 <!--en-->
@@ -1761,7 +1753,6 @@ The iteration is governed by its defining equation: applying the step `n+1` time
 ```agda
     hullStep-suc : (n : ℕ) → hullStep (suc n) ≡ Φ (hullStep n)
     hullStep-suc n = refl
-
 ```
 
 <!--en-->
@@ -1812,7 +1803,6 @@ The witness constructor adds one to the depth of its vector of subcodes.
 
 ```agda
       depth (wit k ψ cs) = suc (depths cs)
-
 ```
 
 <!--en-->
@@ -1827,7 +1817,6 @@ The depth of a code vector is the maximum of the depths of its entries: a vector
       depths : {m : ℕ} → Vec Code m → ℕ
       depths [] = 0
       depths (c ∷ cs) = max (depth c) (depths cs)
-
 ```
 
 <!--en-->
@@ -1856,7 +1845,6 @@ The refutation branch is proved by the function extensionality of the impossible
 
 ```agda
       stuck-r na f g (no h) = cong g (funExt (λ a → ⊥₀-rec (na a)))
-
 ```
 
 <!--en-->
@@ -1902,7 +1890,6 @@ If the search is satisfied, the least-witness clause of the step adjoins the sea
 ```agda
         go (yes w) = least (hullStep n) k ψ (vals cs) (vals-in cs) w
         go (no h) = junk (hullStep n)
-
 ```
 
 <!--en-->
@@ -1980,7 +1967,6 @@ The path induction transports the statement along the identification of the para
 ```agda
           (λ w' → subst (λ z → ⟨ fst z ∈ˢ Hull ⟩) (val-wit k ψ cs w') (inHull (wit k ψ cs)))
           e w
-
 ```
 
 <!--en-->
@@ -2011,7 +1997,6 @@ No environment satisfies falsity: unpacking such a satisfaction proof would prod
 ```agda
         unsat : Sat 0 ⊥̇ [] → ⊥₀
         unsat = rec₁ isProp⊥ (λ { (a , h) → ⊥*-rec h })
-
 ```
 
 <!--en-->
@@ -2090,7 +2075,6 @@ The iterate index is consumed by the outward reading of the union, and the const
 ```agda
         (λ { (n , hn) → hullStep⊆Hull n z hn })
         (It.iterUnion-out (z , isL-trans {x = fst hullL} {y = z} h (snd hullL)) h)
-
 ```
 
 <!--en-->
@@ -2121,7 +2105,6 @@ The named member is carried into the carrier: its constructibility follows from 
         where
         zS : CS.S
         zS = z , Lset→isL lam ordλ z (HSH.Hull⊆L z h)
-
 ```
 
 <!--en-->
@@ -2141,9 +2124,19 @@ The step is built inside the stage, and its constants name objects of the stage:
 ```agda
     M-isL : ⟨ isL HS.M ⟩
     M-isL = subst (λ t → ⟨ isL t ⟩) hullL-spec (snd hullL)
-  module Build where
-
 ```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+  module Build where
+```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 An ordinal of the hierarchy is constructible, which anchors the stage inside `L`.
@@ -2156,7 +2149,6 @@ An ordinal of the hierarchy is constructible, which anchors the stage inside `L`
 ```agda
     λ-isL : ⟨ isL lam ⟩
     λ-isL = isL-ord lam ordλ
-
 ```
 
 <!--en-->
@@ -2170,7 +2162,6 @@ An ordinal of the hierarchy is constructible, which anchors the stage inside `L`
 ```agda
     A : CS.S
     A = LsetS lam ordλ
-
 ```
 
 <!--en-->
@@ -2184,7 +2175,6 @@ The satisfaction graph over the stage supplies the satisfaction sets of all code
 ```agda
     module SM = SatGraph A using ( pairs; pairs-in; pairs-out; valOf; valOf≡ )
     module DA = DefOf (Lset lam) using ( ι; _⊨ᵐ_; 𝒮M )
-
 ```
 
 <!--en-->
@@ -2198,7 +2188,6 @@ The code set at the empty alphabet collects the codes of the parameter-free form
 ```agda
     C₀ : CS.S
     C₀ = AllCodes ∅ʟ
-
 ```
 
 <!--en-->
@@ -2212,7 +2201,6 @@ The stage's internal well-order is presented as an element of the model, the rel
 ```agda
     Rel : CS.S
     Rel = relL lam λ-isL ordλ
-
 ```
 
 <!--en-->
@@ -2244,7 +2232,6 @@ The proof peels the ordered pair twice through singletons: membership in a pair 
       isL-trans {x = ⁅ a , b ⁆} {y = b} (subst ⟨_⟩ (sym (pair-spec a b b)) ∣ inr refl ∣₁)
         (isL-trans {x = pr a b} {y = ⁅ a , b ⁆}
           (subst ⟨_⟩ (sym (pair-spec ⁅ a ⁆s ⁅ a , b ⁆ ⁅ a , b ⁆)) ∣ inr refl ∣₁) h)
-
 ```
 
 <!--en-->
@@ -2258,7 +2245,6 @@ Numerals are presented as carrier elements: the finite ordinal together with its
 ```agda
     nn : ℕ → CS.S
     nn k = # k , numL k
-
 ```
 
 <!--en-->
@@ -2303,7 +2289,6 @@ The key of a parameter-free formula at the stage is the key of its relabeled for
 
 ```agda
       keyOf k χ = keyS A (mapFo ε′ χ)
-
 ```
 
 <!--en-->
@@ -2317,7 +2302,6 @@ The key belongs to the code set at the stage: a code of the relabeled formula is
 ```agda
       keyOf∈ : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) → ⟨ keyOf k χ CS.∈ˢ AllCodes A ⟩
       keyOf∈ k χ = key∈AllCodes A (mapFo ε′ χ)
-
 ```
 
 <!--en-->
@@ -2331,7 +2315,6 @@ Although `keyOf` is opaque, the lemma `keyOf≡` exposes the exact equation with
 ```agda
       keyOf≡ : (k : ℕ) (χ : Formula (⊥* {ℓ}) k) → keyOf k χ ≡ keyS A (mapFo ε′ χ)
       keyOf≡ k χ = refl
-
 ```
 
 <!--en-->
@@ -2361,7 +2344,6 @@ For each parameter-free formula, `Tof` is the satisfaction set selected by the s
 ```agda
     Tof : (k : ℕ) → Formula (⊥* {ℓ}) k → CS.S
     Tof k χ = SM.valOf (keyOf k χ) (keyOf∈ k χ)
-
 ```
 
 <!--en-->
@@ -2440,7 +2422,6 @@ The readings are stated at a variable environment, for a fixed arity `k` whose n
 
     module KeyIn {n : ℕ} (s a : Fin n) (γ : CS.S ^ n) (k : ℕ)
                  (qa : fst (lookup a γ) ≡ # k) where
-
 ```
 
 <!--en-->
@@ -2454,7 +2435,6 @@ The formula is opened for computation at its own slots, since the readings must 
 ```agda
       opaque
         unfolding keyIn
-
 ```
 
 <!--en-->
@@ -2566,7 +2546,6 @@ The seven-slot environment is now assembled: the satisfaction table, the extende
             qz = subst ⟨_⟩ (sucAtL-adequate (suc a) zero (z ∷ γ)) hs
     Env : CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S → CS.S ^ 7
     Env T e' e s k w Z = T ∷ e' ∷ e ∷ s ∷ k ∷ w ∷ Z ∷ []
-
 ```
 
 <!--en-->
@@ -2582,7 +2561,6 @@ The minimality subformula quantifies over the stage's alphabet. It says: if some
       minFo : Formula CS.S 7
       minFo = ∀̇∈ (con A)
         ( (∃̇ ( consAtL i0 i1 i4 ∧̇ (var i0 ∈̇ var i2) )) ⇒̇ ¬̇ (appC Rel i0 i6) )
-
 ```
 
 <!--en-->
@@ -2614,7 +2592,6 @@ The remaining conjuncts say: the pair of the key and the table lies in the satis
             ∧̇ ( (var i1 ∈̇ var i0)
             ∧̇ ( (var i5 ∈̇ con A)
             ∧̇ minFo ))))))
-
 ```
 
 <!--en-->
@@ -2627,7 +2604,6 @@ Fix the seven objects `T,e',e,s,k,w,Z`. At their joint environment, the body is 
 
 ```agda
     module BodyRd (T e' e s k w Z : CS.S) where
-
 ```
 
 <!--en-->
@@ -2656,7 +2632,6 @@ The clause ends in the empty type: minimality is refutation, and the data of a c
 
 ```agda
             → ⟨ pr (fst w') (fst w) ∈ˢ fst Rel ⟩ → ⊥₀
-
 ```
 
 <!--en-->
@@ -2670,7 +2645,6 @@ Because the body is a nested conjunction, each of its eight conditions can be re
 ```agda
       opaque
         unfolding bodyFo
-
 ```
 
 <!--en-->
@@ -2684,7 +2658,6 @@ The first reading projects the numeral clause. Membership in the internal `ωʟ`
 ```agda
         b-num : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ fst k ∈ˢ fst ωʟ ⟩
         b-num h = h .fst
-
 ```
 
 <!--en-->
@@ -2698,7 +2671,6 @@ The second projection is the key clause: at slots `s` and `k`, the formula asser
 ```agda
         b-key : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ γ₇ ⊨ keyIn i3 i4 ⟩
         b-key h = h .snd .fst
-
 ```
 
 <!--en-->
@@ -2712,7 +2684,6 @@ The third reading projects the environment clause: the parameter environment cod
 ```agda
         b-env : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ γ₇ ⊨ envOverAt i2 i4 i6 ⟩
         b-env h = h .snd .snd .fst
-
 ```
 
 <!--en-->
@@ -2728,7 +2699,6 @@ The fourth reading states the extension equation, transported along the adequacy
                → ⟨ γ₇ ⊨ bodyFo ⟩ → fst e' ≡ env (cons (fst w) g)
         b-cons g hE h =
           subst ⟨_⟩ (consAtL-adequate i1 i5 i2 γ₇ g hE) (h .snd .snd .snd .fst)
-
 ```
 
 <!--en-->
@@ -2742,7 +2712,6 @@ The fifth reading states the graph membership of the pair of the key and the tab
 ```agda
         b-tab : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ pr (fst s) (fst T) ∈ˢ fst SM.pairs ⟩
         b-tab h = subst ⟨_⟩ (appC-adequate SM.pairs i3 i0 γ₇) (h .snd .snd .snd .snd .fst)
-
 ```
 
 <!--en-->
@@ -2756,7 +2725,6 @@ The sixth reading is the membership of the extended environment in the satisfact
 ```agda
         b-mem : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ fst e' ∈ˢ fst T ⟩
         b-mem h = h .snd .snd .snd .snd .snd .fst
-
 ```
 
 <!--en-->
@@ -2770,7 +2738,6 @@ The seventh projection states that the witness belongs to the stage `A`, so the 
 ```agda
         b-stage : ⟨ γ₇ ⊨ bodyFo ⟩ → ⟨ fst w ∈ˢ fst A ⟩
         b-stage h = h .snd .snd .snd .snd .snd .snd .fst
-
 ```
 
 <!--en-->
@@ -2800,7 +2767,6 @@ The cons clause of the candidate extension is transported from its host equation
 ```agda
           hc : ⟨ (e'' ∷ w' ∷ γ₇) ⊨ consAtL i0 i1 i4 ⟩
           hc = subst ⟨_⟩ (sym (consAtL-adequate i0 i1 i4 (e'' ∷ w' ∷ γ₇) g hE)) qe
-
 ```
 
 <!--en-->
@@ -2863,7 +2829,6 @@ The witness formula wraps the body in five nested existentials, one per object: 
     opaque
       witFo : Formula CS.S 2
       witFo = ∃̇ (∃̇ (∃̇ (∃̇ (∃̇ bodyFo))))
-
 ```
 
 <!--en-->
@@ -2878,7 +2843,6 @@ The inward reading injects the five objects and the body satisfaction through th
       witFo-in : (w Z T e' e s k : CS.S) → ⟨ Env T e' e s k w Z ⊨ bodyFo ⟩
                → ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
       witFo-in w Z T e' e s k h = ∣ k , ∣ s , ∣ e , ∣ e' , ∣ T , h ∣₁ ∣₁ ∣₁ ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -2962,7 +2926,6 @@ The remaining four cases place the key `s`, the numeral `k`, the candidate `z`, 
       ρ₉ (suc (suc (suc (suc zero)))) = i2
       ρ₉ (suc (suc (suc (suc (suc zero))))) = i6
       ρ₉ (suc (suc (suc (suc (suc (suc zero)))))) = i3
-
 ```
 
 <!--en-->
@@ -2976,7 +2939,6 @@ The remaining four cases place the key `s`, the numeral `k`, the candidate `z`, 
 ```agda
       Γ₉ : (T e' k Z e s z p q : CS.S) → CS.S ^ 9
       Γ₉ T e' k Z e s z p q = T ∷ e' ∷ k ∷ Z ∷ e ∷ s ∷ z ∷ p ∷ q ∷ []
-
 ```
 
 <!--en-->
@@ -3008,7 +2970,6 @@ The remaining four agreements are again reflexivity, one per slot; every agreeme
       ag₉ T e' k Z e s z p q (suc (suc (suc (suc zero)))) = refl
       ag₉ T e' k Z e s z p q (suc (suc (suc (suc (suc zero))))) = refl
       ag₉ T e' k Z e s z p q (suc (suc (suc (suc (suc (suc zero)))))) = refl
-
 ```
 
 <!--en-->
@@ -3022,7 +2983,6 @@ The renamed body is the body formula pushed through the slot map, living over ni
 ```agda
       body₉ : Formula CS.S 9
       body₉ = renameFo ρ₉ bodyFo
-
 ```
 
 <!--en-->
@@ -3051,7 +3011,6 @@ The proof is the renaming theorem applied with the slot agreement, transported u
 
 ```agda
                     (Env T e' e s k z Z) (ag₉ T e' k Z e s z p q))
-
 ```
 
 <!--en-->
@@ -3066,7 +3025,6 @@ The least-witness formula wraps the renamed body in three more existentials: the
     opaque
       leastWitnessFo : Formula CS.S 6
       leastWitnessFo = ∃̇ (∃̇ (∃̇ body₉))
-
 ```
 
 <!--en-->
@@ -3148,7 +3106,6 @@ The numeral slot carries a member of the internal `ω`, and `decode-num` decodes
       decode-num : (q : CS.S) → ⟨ fst q ∈ˢ fst ωʟ ⟩ → ∥ Σ[ n ∈ ℕ ] (fst q ≡ # n) ∥₁
       decode-num q h = map₁ (λ { (n , e) → lower n , (e ∙ numeralL-fst (lower n)) })
         (subst ⟨_⟩ (ω-specL q) h)
-
 ```
 
 <!--en-->
@@ -3164,7 +3121,6 @@ The numeral slot carries a member of the internal `ω`, and `decode-num` decodes
     LeastWitnessData Z e s =
       Σ[ n ∈ ℕ ] Σ[ g ∈ (Fin n → ⟪ fst Z ⟫) ]
         ((fst e ≡ env (λ i → ⟪ fst Z ⟫↪ (g i))) × (⟨ fst s ∈ Lset ω ⟩))
-
 ```
 
 <!--en-->
@@ -3259,7 +3215,6 @@ Both components of the key therefore live in `Lset ω`: the successor numeral be
                        (pr∈limit (# (suc n)) c (numeral∈limit (suc n))
                          (subst (λ w → ⟨ w ∈ˢ Lset ω ⟩) (sym qc) (snd (limitCode χ)))) })
                 (freeCode-out (suc n) c (subst (λ u → ⟨ u ∈ fst C₀ ⟩) qs (kr .fst)))
-
 ```
 
 <!--en-->
@@ -3324,7 +3279,6 @@ The recovered indices name their ambient values through the presentation of `Z`,
           g′ i = ⟪ fst Z ⟫↪ (R.g i)
           hE : fst e ≡ env g′
           hE = R.recovers
-
 ```
 
 <!--en-->
@@ -3451,7 +3405,6 @@ If the two packaged witnesses are equal, their underlying sets are equal. The re
           go (tri-eq q) = cong fst q
           go (tri-gt h) = ⊥₀-rec (not-below z z' A₁.h7 A₂.h7 T e' k hb e'₂ e'₂≡
                         (subst (λ t → ⟨ fst e'₂ ∈ t ⟩) (sym T≡) A₂.h6) h)
-
 ```
 
 <!--en-->
@@ -3547,7 +3500,6 @@ The predicate to be minimized says of an element `a` that the extended environme
 
       P : SL → hProp (ℓ-suc ℓ)
       P a = (a ∷ vs) ⊨₀ χ
-
 ```
 
 <!--en-->
@@ -3569,7 +3521,6 @@ The least witness `a` is selected by the least-element search along the internal
 ```agda
       a : SL
       a = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .fst
-
 ```
 
 <!--en-->
@@ -3583,7 +3534,6 @@ Its leastness data is kept in full: `a` satisfies the predicate, and no smaller 
 ```agda
       a-least : IsLeast wL P a
       a-least = leastOfFormula wL (searchPredicate k χ vs) lem w₀ .snd
-
 ```
 
 <!--en-->
@@ -3599,7 +3549,6 @@ Because the chosen witness `a` belongs to `Lset lam`, it is constructible and ca
       aS = fst a , Lset→isL lam ordλ (fst a) (snd a)
       g : Ix Z k
       g i = fiber (fst Z) (from i) .fst
-
 ```
 
 <!--en-->
@@ -3613,7 +3562,6 @@ The naming equation says that each parameter's index presents exactly that param
 ```agda
       g-val : (i : Fin k) → ⟪ fst Z ⟫↪ (g i) ≡ fst (lookup i vs)
       g-val i = fiber (fst Z) (from i) .snd
-
 ```
 
 <!--en-->
@@ -3627,7 +3575,6 @@ The ambient values of the parameters are collected in `g′`, one per slot, so t
 ```agda
       g′ : Fin k → V ℓ
       g′ i = ⟪ fst Z ⟫↪ (g i)
-
 ```
 
 <!--en-->
@@ -3643,7 +3590,6 @@ The parameter environment `e` is the internal graph of these values over `Z`, an
       e = envS Z g
       ext : SL → CS.S
       ext b = envFor A (b ∷ vs)
-
 ```
 
 <!--en-->
@@ -3658,7 +3604,6 @@ The extension's graph equation says that its underlying set is the graph of the 
       ext-graph : (b : SL) → fst (ext b) ≡ env (cons (fst b) g′)
       ext-graph b = envFor-graph A (b ∷ vs)
         ∙ cong env (funExt (λ { zero → refl ; (suc i) → sym (g-val i) }))
-
 ```
 
 <!--en-->
@@ -3672,7 +3617,6 @@ The extension belongs to the satisfaction table of `χ` at arity `suc k` exactly
 ```agda
       ext-sat : (b : SL) → (ext b CS.∈ˢ Tof (suc k) χ) ≡ ((b ∷ vs) ⊨₀ χ)
       ext-sat b = sat-at (suc k) χ (b ∷ vs) (ext b) (envFor-graph A (b ∷ vs))
-
 ```
 
 <!--en-->
@@ -3686,7 +3630,6 @@ The key `sS` names the formula and its arity: it is the pair by which the table 
 ```agda
       sS : CS.S
       sS = keyOf (suc k) χ
-
 ```
 
 <!--en-->
@@ -3700,7 +3643,6 @@ The table `T` is the satisfaction table of `χ` at arity `suc k`, the set in whi
 ```agda
       T : CS.S
       T = Tof (suc k) χ
-
 ```
 
 <!--en-->
@@ -3714,7 +3656,6 @@ The seven-entry environment `γ₇` assembles the whole picture: the table, the 
 ```agda
       γ₇ : CS.S ^ 7
       γ₇ = Env T (ext a) e sS (nn k) aS Z
-
 ```
 
 <!--en-->
@@ -3728,7 +3669,6 @@ The first clause records that the numeral of the arity belongs to the internal `
 ```agda
       c1 : ⟨ γ₇ ⊨ (var i4 ∈̇ con ωʟ) ⟩
       c1 = #∈ω k
-
 ```
 
 <!--en-->
@@ -3744,7 +3684,6 @@ The key clause says that the key belongs to the code set and pairs the successor
       c2 = KeyIn.keyIn-in i3 i4 γ₇ k refl
         (subst (λ u → ⟨ u ∈ˢ fst C₀ ⟩) (sym (keyOf-fst (suc k) χ)) (freeCode-in (suc k) χ))
         (fst (limitCode χ)) (keyOf-fst (suc k) χ)
-
 ```
 
 <!--en-->
@@ -3759,7 +3698,6 @@ The environment clause says that the parameter environment is an environment of 
       c3 : ⟨ γ₇ ⊨ envOverAt i2 i4 i6 ⟩
       c3 = envOverAt-transport (Z ∷ nn k ∷ e ∷ []) γ₇ i2 i1 i0 i2 i4 i6 refl refl refl
              (envOver Z g)
-
 ```
 
 <!--en-->
@@ -3773,7 +3711,6 @@ The extension equation repeats that the extension by the least witness is the gr
 ```agda
       c4 : fst (ext a) ≡ env (cons (fst a) g′)
       c4 = ext-graph a
-
 ```
 
 <!--en-->
@@ -3787,7 +3724,6 @@ The pair of the key and the table belongs to the pairs of the table family, whic
 ```agda
       c5 : ⟨ pr (fst sS) (fst T) ∈ˢ fst SM.pairs ⟩
       c5 = Tof-pair (suc k) χ
-
 ```
 
 <!--en-->
@@ -3801,7 +3737,6 @@ The extension by the least witness belongs to the table: the table's membership 
 ```agda
       c6 : ⟨ fst (ext a) ∈ˢ fst T ⟩
       c6 = transport (sym (cong ⟨_⟩ (ext-sat a))) (a-least .fst)
-
 ```
 
 <!--en-->
@@ -3815,7 +3750,6 @@ The least witness belongs to the stage `Lset lam`; in the internal presentation 
 ```agda
       c7 : ⟨ fst aS ∈ˢ fst A ⟩
       c7 = snd a
-
 ```
 
 <!--en-->
@@ -3879,7 +3813,6 @@ A body witness provides eight facts: the arity numeral, key shape, recovered par
 
       module Rd = BodyRd T e' e s k w Z
         using ( b-num; b-key; b-env; b-cons; b-tab; b-mem; b-stage; b-min )
-
 ```
 
 <!--en-->
@@ -3893,7 +3826,6 @@ The stage clause proves that the witnessed set `w` belongs to `Lset lam`. Pairin
 ```agda
       wS : SL
       wS = fst w , Rd.b-stage h
-
 ```
 
 <!--en-->
@@ -3906,7 +3838,6 @@ The arity component of a decoded key belongs to the internal `ω`. Thus, up to p
 
 ```agda
       module AtNum (n : ℕ) (qk : fst k ≡ # n) where
-
 ```
 
 <!--en-->
@@ -3920,7 +3851,6 @@ Inside this case, the first fact says that the slot component `s` of the key is 
 ```agda
         s∈ : ⟨ fst s ∈ˢ fst C₀ ⟩
         s∈ = KeyIn.keyIn-out i3 i4 (Env T e' e s k w Z) n qk (Rd.b-key h) .fst
-
 ```
 
 <!--en-->
@@ -3933,7 +3863,6 @@ With the arity identified as `n`, the environment clause recovers a function `g 
 
 ```agda
         module R = Recover Z n (Env T e' e s k w Z) i2 i4 i6 qk refl (Rd.b-env h) using ( g; recovers )
-
 ```
 
 <!--en-->
@@ -3947,7 +3876,6 @@ The recovered environment lists indices into the starting set. Each index is pre
 ```agda
         g′ : Fin n → V ℓ
         g′ i = ⟪ fst Z ⟫↪ (R.g i)
-
 ```
 
 <!--en-->
@@ -3961,7 +3889,6 @@ The vector `vs` collects the same elements as entries of the constructible carri
 ```agda
         vs : Vec SL n
         vs = vecOf (λ i → g′ i , Z⊆ (g′ i) (member (fst Z) (R.g i)))
-
 ```
 
 <!--en-->
@@ -3975,7 +3902,6 @@ For every position `i`, the first component of `lookup i vs` is `g′ i`. Thus `
 ```agda
         vs-val : (i : Fin n) → fst (lookup i vs) ≡ g′ i
         vs-val i = cong fst (lookup-vecOf (λ i → g′ i , Z⊆ (g′ i) (member (fst Z) (R.g i))) i)
-
 ```
 
 <!--en-->
@@ -3989,7 +3915,6 @@ The recovered environment genuinely comes from the starting set: each entry of `
 ```agda
         from : From Z vs
         from i = subst (λ u → ⟨ u ∈ˢ fst Z ⟩) (sym (vs-val i)) (member (fst Z) (R.g i))
-
 ```
 
 <!--en-->
@@ -4003,7 +3928,6 @@ The recovery equation identifies the original environment component `e` with `en
 ```agda
         hE : fst e ≡ env g′
         hE = R.recovers
-
 ```
 
 <!--en-->
@@ -4017,7 +3941,6 @@ The witness slot is compared with other candidates by extending the recovered en
 ```agda
         ext : SL → CS.S
         ext b = envFor A (b ∷ vs)
-
 ```
 
 <!--en-->
@@ -4032,7 +3955,6 @@ The underlying environment of this extension computes to the cons of the underly
         ext-graph : (b : SL) → fst (ext b) ≡ env (cons (fst b) g′)
         ext-graph b = envFor-graph A (b ∷ vs)
           ∙ cong env (funExt (λ { zero → refl ; (suc i) → vs-val i }))
-
 ```
 
 <!--en-->
@@ -4046,7 +3968,6 @@ The key's own environment component is identified with `ext wS`: extending the r
 ```agda
         e'≡ : fst e' ≡ fst (ext wS)
         e'≡ = Rd.b-cons g′ hE h ∙ sym (ext-graph wS)
-
 ```
 
 <!--en-->
@@ -4059,7 +3980,6 @@ Now choose the formula `χ` decoded from the code component and identify `s` wit
 
 ```agda
         module AtCode (χ : Formula (⊥* {ℓ}) (suc n)) (qs : fst s ≡ fst (keyOf (suc n) χ)) where
-
 ```
 
 <!--en-->
@@ -4073,7 +3993,6 @@ The predicate `P b` says that `b`, prepended to the recovered environment, satis
 ```agda
           P : SL → hProp (ℓ-suc ℓ)
           P b = (b ∷ vs) ⊨₀ χ
-
 ```
 
 <!--en-->
@@ -4087,7 +4006,6 @@ Membership in the satisfaction table of `χ` agrees with `P b`, because the envi
 ```agda
           ext-sat : (b : SL) → ⟨ ext b CS.∈ˢ Tof (suc n) χ ⟩ ≡ ⟨ P b ⟩
           ext-sat b = cong ⟨_⟩ (sat-at (suc n) χ (b ∷ vs) (ext b) (envFor-graph A (b ∷ vs)))
-
 ```
 
 <!--en-->
@@ -4100,7 +4018,6 @@ The table component of the key is next identified with the satisfaction table of
 
 ```agda
           module AtTable (qT : fst T ≡ fst (Tof (suc n) χ)) where
-
 ```
 
 <!--en-->
@@ -4115,7 +4032,6 @@ The witness slot satisfies the recovered formula: the membership recorded in the
             sat : ⟨ P wS ⟩
             sat = transport (ext-sat wS)
               (subst2 (λ u t → ⟨ u ∈ˢ t ⟩) e'≡ qT (Rd.b-mem h))
-
 ```
 
 <!--en-->
@@ -4146,7 +4062,6 @@ The smaller candidate is packaged as a constructible element `bS`, and its exten
               bS = fst b , Lset→isL lam ordλ (fst b) (snd b)
               hm : ⟨ fst (ext b) ∈ˢ fst T ⟩
               hm = subst (λ t → ⟨ fst (ext b) ∈ˢ t ⟩) (sym qT) (transport (sym (ext-sat b)) pb)
-
 ```
 
 <!--en-->
@@ -4160,7 +4075,6 @@ The two facts combine into a satisfiability witness for `χ` at the recovered en
 ```agda
             w₀ : Sat n χ vs
             w₀ = ∣ wS , sat ∣₁
-
 ```
 
 <!--en-->
@@ -4193,7 +4107,6 @@ The table clause presents the underlying set of `T` as the value associated with
             where
             p : Σ[ m ∈ ⟨ s CS.∈ˢ AllCodes A ⟩ ] (fst T ≡ fst (SM.valOf s m))
             p = SM.pairs-out s T (Rd.b-tab h)
-
 ```
 
 <!--en-->
@@ -4223,7 +4136,6 @@ The key equation supplies the final link between the coded slot and the decoded 
 ```agda
             (freeCode-out (suc n) c (subst (λ u → ⟨ u ∈ˢ fst C₀ ⟩) qc s∈)) })
           (KeyIn.keyIn-out i3 i4 (Env T e' e s k w Z) n qk (Rd.b-key h) .snd)
-
 ```
 
 <!--en-->
@@ -4239,7 +4151,6 @@ Since the arity recorded in every body witness belongs to the internal `ω`, num
       searched = rec₁ squash₁ (λ { (n , qk) → AtNum.code n qk }) (ω-num k (Rd.b-num h))
     Bnd : CS.S → CS.S
     Bnd Z = cupʟ Z A
-
 ```
 
 <!--en-->
@@ -4253,7 +4164,6 @@ Members of `Z` lie in the bound by the left inclusion of the union.
 ```agda
     bnd-Z : (Z z : CS.S) → ⟨ fst z ∈ˢ fst Z ⟩ → ⟨ z CS.∈ˢ Bnd Z ⟩
     bnd-Z Z z = cupʟ-inl Z A (fst z)
-
 ```
 
 <!--en-->
@@ -4269,7 +4179,6 @@ Every member of `Lset lam` lies in `Bnd Z` through the right inclusion. The one-
     bnd-L Z z = cupʟ-inr Z A (fst z)
     Body : CS.S → CS.S → Type (ℓ-suc ℓ)
     Body Z w = ⟨ fst w ∈ˢ fst Z ⟩ ⊎ ((fst w ≡ ∅) ⊎ ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩)
-
 ```
 
 <!--en-->
@@ -4301,7 +4210,6 @@ The separation formula expresses these three cases inside the constructible stru
       sepFo Z = (var i0 ∈̇ con Z)
               ∨̇ ( (var i0 ≐ con ∅ʟ)
                 ∨̇ ∃̇ ( (var i0 ≐ con Z) ∧̇ renameFo ρs witFo ) )
-
 ```
 
 <!--en-->
@@ -4317,7 +4225,6 @@ The renaming merely exchanges the two environment entries. Hence evaluating the 
         rs : (Z'' w : CS.S)
            → ⟨ (Z'' ∷ w ∷ []) ⊨ renameFo ρs witFo ⟩ ≡ ⟨ (w ∷ Z'' ∷ []) ⊨ witFo ⟩
         rs Z'' w = cong ⟨_⟩ (Ren.⊨-rename ρs witFo (Z'' ∷ w ∷ []) (w ∷ Z'' ∷ []) (ags Z'' w))
-
 ```
 
 <!--en-->
@@ -4348,7 +4255,6 @@ In the existential case, its witness `Z''` is equal to the fixed parameter `Z`. 
           ; (inr hw) → map₁ (λ { (Z'' , (eZ , hr)) → inr (inr
               (subst (λ u → ⟨ (w ∷ u ∷ []) ⊨ witFo ⟩) (S≡ {x = Z''} {y = Z} eZ)
                 (transport (rs Z'' w) hr))) }) hw }) h' })
-
 ```
 
 <!--en-->
@@ -4364,7 +4270,6 @@ Conversely, each of the three cases of the body produces the corresponding satis
       sep-in Z w (inl hz) = ∣ inl hz ∣₁
       sep-in Z w (inr (inl e)) = ∣ inr ∣ inl e ∣₁ ∣₁
       sep-in Z w (inr (inr hw)) = ∣ inr ∣ inr ∣ Z , (refl , transport (sym (rs Z w)) hw) ∣₁ ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -4379,7 +4284,6 @@ Separation inside `L` selects from `Bnd Z` exactly the sets satisfying `sepFo Z`
     opaque
       Φ : CS.S → CS.S
       Φ Z = hasSeparationL (Bnd Z) (sepFo Z) .fst .fst
-
 ```
 
 <!--en-->
@@ -4393,7 +4297,6 @@ The membership specification reads: `w` belongs to `Φ Z` exactly when `w` belon
 ```agda
       Φ-mem : (Z w : CS.S) → (w CS.∈ˢ Φ Z) ≡ ((w CS.∈ˢ Bnd Z) ⊓ ((w ∷ []) ⊨ sepFo Z))
       Φ-mem Z = hasSeparationL (Bnd Z) (sepFo Z) .fst .snd
-
 ```
 
 <!--en-->
@@ -4423,7 +4326,6 @@ The empty-set case lies in the bound because `∅ ∈ Lset lam`. The witness cas
 ```agda
       bnd (inr (inl e)) = bnd-L Z w (subst (λ u → ⟨ u ∈ˢ Lset lam ⟩) (sym e) HSH.∅∈Lsetα)
       bnd (inr (inr hw)) = bnd-L Z w (wit-L Z w hw)
-
 ```
 
 <!--en-->
@@ -4454,7 +4356,6 @@ The graph formula `ΦFo` quantifies over a fresh set `w` and states both implica
 
       ΦFo : Formula CS.S 2
       ΦFo = ∀̇ ( ((var i0 ∈̇ var i1) ⇒̇ bodyF) ∧̇ (bodyF ⇒̇ (var i0 ∈̇ var i1)) )
-
 ```
 
 <!--en-->
@@ -4470,7 +4371,6 @@ The renaming equivalence for the graph is proved like the earlier one: the renam
         rf : (w Z' Z : CS.S)
            → ⟨ (w ∷ Z' ∷ Z ∷ []) ⊨ renameFo ρf witFo ⟩ ≡ ⟨ (w ∷ Z ∷ []) ⊨ witFo ⟩
         rf w Z' Z = cong ⟨_⟩ (Ren.⊨-rename ρf witFo (w ∷ Z' ∷ Z ∷ []) (w ∷ Z ∷ []) (agf w Z' Z))
-
 ```
 
 <!--en-->
@@ -4499,7 +4399,6 @@ In the witness case, the renaming path converts satisfaction of the three-slot f
 
 ```agda
             ; (inr hw) → inr (inr (transport (rf w Z' Z) hw)) }) h' })
-
 ```
 
 <!--en-->
@@ -4515,7 +4414,6 @@ The converse assembles the three cases into the three-slot reading, transporting
         bodyF-in w Z' Z (inl hz) = ∣ inl hz ∣₁
         bodyF-in w Z' Z (inr (inl e)) = ∣ inr ∣ inl e ∣₁ ∣₁
         bodyF-in w Z' Z (inr (inr hw)) = ∣ inr ∣ inr (transport (sym (rf w Z' Z)) hw) ∣₁ ∣₁
-
 ```
 
 <!--en-->
@@ -4531,7 +4429,6 @@ The definability clause is then proved: the pair `(Φ Z, Z)` satisfies the graph
       Φ-defines Z w =
           (λ h → rec₁ (snd ((w ∷ Φ Z ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in w (Φ Z) Z) (Φ-out Z w h))
         , (λ h → rec₁ (snd (fst w ∈ˢ fst (Φ Z))) (Φ-in Z w) (bodyF-out w (Φ Z) Z h))
-
 ```
 
 <!--en-->
@@ -4562,7 +4459,6 @@ The backward direction of the extensionality argument reads each member of `Φ Z
         bwd : (v : CS.S) → ⟨ fst v ∈ˢ fst (Φ Z) ⟩ → ⟨ fst v ∈ˢ fst Z' ⟩
         bwd v hv = h v .snd
           (rec₁ (snd ((v ∷ Z' ∷ Z ∷ []) ⊨ bodyF)) (bodyF-in v Z' Z) (Φ-out Z v hv))
-
 ```
 
 <!--en-->
@@ -4640,6 +4536,12 @@ Since `Φ Z` is constructible and constructibility is transitive, every member `
 ```agda
       zS Z z hz = z , isL-trans {x = fst (Φ Z)} {y = z} hz (snd (Φ Z))
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Supplying the constructibility premise for condensation
@@ -4657,12 +4559,20 @@ This supplies the carrier element needed in the preceding decoding and completes
 これにより先の解読に必要な台の要素が得られ、定義可能な一段階の閉包の構成が完成する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Discharge (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
   (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (M-isL : ⟨ isL (HullStage.M lam ordλ succλ X X⊆L ∅∈λ) ⟩) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 Assume that the hull `M` is itself constructible. This turns `M` into a constructible carrier, so the preceding collapse argument applies without requiring the hull to be transitive.
@@ -4672,10 +4582,7 @@ Assume that the hull `M` is itself constructible. This turns `M` into a construc
 包 `M` 自身が構成可能であると仮定する。これにより `M` を構成可能な台として扱えるので、包が推移的であると仮定せずに、先の崩壊の議論を適用できる。
 <!--/-->
 
-```agda
-  (M-isL : ⟨ isL (HullStage.M lam ordλ succλ X X⊆L ∅∈λ) ⟩) where
 
-```
 
 <!--en-->
 Regarded as a constructible carrier, `M` has a collapse image `πX`. Every member of this image is the collapse value of some member of `M`, and the constructible-carrier theorem proves that such values belong to `L`.
@@ -4689,7 +4596,6 @@ Regarded as a constructible carrier, `M` has a collapse image `πX`. Every membe
   module HS = HullStage lam ordλ succλ X X⊆L ∅∈λ using ( M )
   module HSC = HullStage.C lam ordλ succλ X X⊆L ∅∈λ using ( πX )
   module P = PiIn (HS.M , M-isL) using ( πX-isL )
-
 ```
 
 <!--en-->
@@ -4703,10 +4609,26 @@ Consequently, every `x ∈ πX` is constructible. We now return to the hull gene
 ```agda
   pixL : (x : S) → ⟨ x ∈ˢ HSC.πX ⟩ → ⟨ isL x ⟩
   pixL = P.πX-isL
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module Condense′ (lam : S) (ordλ : IsOrd lam)
   (succλ : (d : S) → ⟨ d ∈ˢ lam ⟩ → ⟨ sucV d ∈ˢ lam ⟩)
   (X : S) (X⊆L : (x : S) → ⟨ x ∈ˢ X ⟩ → ⟨ x ∈ˢ Lset lam ⟩)
+  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
+  (elem : Frame.A.Elementary lam ordλ succλ X X⊆L ∅∈λ)
+  (sup : Superadequate lam)
+  (X-isL : ⟨ isL X ⟩)
+  where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 We also assume that `∅ ∈ λ`, that the hull frame generated by `X` is elementary, that `λ` is superadequate, and that `X` itself is constructible. The last assumption supplies the base of the internal finite iteration; elementarity and superadequacy supply the hypotheses needed for condensation.
@@ -4716,13 +4638,7 @@ We also assume that `∅ ∈ λ`, that the hull frame generated by `X` is elemen
 さらに、`∅ ∈ λ`、`X` から生成される包の枠組みの初等性、`λ` が強化された十分な段階であること、および `X` 自身の構成可能性を仮定する。最後の仮定は内部の有限反復の始点を与え、初等性と強化された十分性は凝縮の議論に必要な仮定を与える。
 <!--/-->
 
-```agda
-  (∅∈λ : ⟨ ∅ ∈ˢ lam ⟩)
-  (elem : Frame.A.Elementary lam ordλ succλ X X⊆L ∅∈λ)
-  (sup : Superadequate lam)
-  (X-isL : ⟨ isL X ⟩)
-  where
-```
+
 
 <!--en-->
 The construction has three connected parts. Codes name the initial elements and the values selected by later searches, using the empty set when a search has no witness; one definable operation `Φ` performs a closure step; and finite iteration of `Φ`, followed by union, builds a constructible set that will be identified with the Skolem hull.
@@ -4769,7 +4685,6 @@ The underlying set of `hullL` is exactly `M`. Hence the external characterizatio
 
   hullL-spec : fst hullL ≡ HS.M
   hullL-spec = HI.hullL-spec
-
 ```
 
 <!--en-->
@@ -4783,7 +4698,6 @@ The closure stages of the hull are indexed by natural numbers: `hullStep n` is t
 ```agda
   hullStep : ℕ → CS.S
   hullStep = HI.hullStep
-
 ```
 
 <!--en-->
@@ -4797,7 +4711,6 @@ At a successor index, the next stage is `Φ` applied to the current one. This op
 ```agda
   hullStep-suc : (n : ℕ) → hullStep (suc n) ≡ TB.Φ (hullStep n)
   hullStep-suc = HI.hullStep-suc
-
 ```
 
 <!--en-->
@@ -4811,7 +4724,6 @@ Each code has a finite depth, and the value it denotes belongs to the closure st
 ```agda
   hullStep-in : (c : T.Code) → ⟨ fst (T.val c) ∈ˢ fst (hullStep (HI.depth c)) ⟩
   hullStep-in = HI.hullStep-in
-
 ```
 
 <!--en-->
@@ -4825,7 +4737,6 @@ Conversely, every member of every finite closure stage belongs to `M`. Together 
 ```agda
   hullStep⊆Hull : (n : ℕ) (z : S) → ⟨ z ∈ˢ fst (hullStep n) ⟩ → ⟨ z ∈ˢ HS.M ⟩
   hullStep⊆Hull = HI.hullStep⊆Hull
-
 ```
 
 <!--en-->
@@ -4839,7 +4750,6 @@ The union of the stages is constructible: the hull stage `M` is an element of `L
 ```agda
   M-isL : ⟨ isL HS.M ⟩
   M-isL = HI.M-isL
-
 ```
 
 <!--en-->
@@ -4853,7 +4763,6 @@ The second follows through the discharge: every value of the collapse `πX` of t
 ```agda
   pixL : (x : S) → ⟨ x ∈ˢ HSC.πX ⟩ → ⟨ isL x ⟩
   pixL = D.pixL
-
 ```
 
 <!--en-->
@@ -4868,3 +4777,5 @@ Condensation now yields an ordinal `β` for which the collapse image is exactly 
   condenses′ : Σ[ β ∈ S ] (IsOrd β × (HSC.πX ≡ Lset β))
   condenses′ = Condense.condenses lam ordλ succλ X X⊆L ∅∈λ elem sup D.pixL
 ```
+</div>
+</details>

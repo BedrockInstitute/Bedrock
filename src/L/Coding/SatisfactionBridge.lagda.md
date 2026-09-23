@@ -22,7 +22,6 @@ of its bounding term.
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -40,7 +39,6 @@ whose separation operations are parameterized by `lem`.
 open import Base.Prelude
 open import Cubical.Foundations.Prelude using ( funExt⁻ )
 open import Base.Classical using ( LEM )
-
 ```
 
 <!--en-->
@@ -58,7 +56,6 @@ descriptions interpret them in that restricted structure.
 
 ```agda
 module L.Coding.SatisfactionBridge {ℓ : Level} (lem : LEM (ℓ-suc ℓ)) where
-
 ```
 
 <!--en-->
@@ -167,7 +164,6 @@ restricted structure and the bound occurring in its inner semantics.
 
 ```agda
         ; cond∃∈-in; cond∃∈-out; cond∀∈-in; cond∀∈-out )
-
 ```
 
 <!--en-->
@@ -184,8 +180,7 @@ target is again a proposition, so no chosen witness is extracted.
 証明は命題値の主張をパスによって比較する。`⇔toPath` は命題の間の二方向の含意をそのようなパスへ変え、その後は合同性によって比較を論理構成子の内部へ運べる。所属の原子の場合には、二つの候補となる項の値をそれぞれ意味論的な値と同定した後、`subst2` が二つの等式に沿って所属関係を輸送する。存在の節と環境の回復には命題的切り詰めを用いる。切り詰めは目標が再び命題である場合にだけ除去されるので、選ばれた証人が取り出されることはない。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 A hierarchy set comes with a small presentation of its members. For a proof
@@ -222,7 +217,6 @@ set-theoretic key used by the coded environment.
 
 ```agda
 open InfinitySet using ( #_ )
-
 ```
 
 <!--en-->
@@ -240,7 +234,6 @@ equalities of hierarchy sets nor untruncated equivalences carrying extra data.
 
 ```agda
 open hPropStructure 𝒮ʟ
-
 ```
 
 <!--en-->
@@ -287,12 +280,19 @@ structure.
 ここで `B : S` を固定する。その基礎となる階層の集合に `DefOf` を適用すると、制限された論域 `DB.SM` が得られる。その要素は、集合と、それが `B` に属することの証明との対である。構造 `DB.𝒮M` は、この論域の上で所属と等号を解釈する。そこで定数の恒等解釈を用いて通常の一階意味論を開くと、`_⊨ᴮ_` と `⟦_⟧ᴮ` が得られる。これらは `DB.defSet` の定義に使われる内側の充足と項の評価そのものなので、橋の意味論的な終点と定義可能部分集合は同じ制限構造を共有する。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   module DB = DefOf (fst B)
   module SemB = FOL.Semantics DB.𝒮M
   open SemB.At DB.SM id using () renaming ( _⊨_ to _⊨ᴮ_ ; ⟦_⟧ to ⟦_⟧ᴮ )
-
 ```
 
 <!--en-->
@@ -310,7 +310,6 @@ an element of the host carrier `S`. No closure of `B` under membership is used.
 ```agda
   intoL : DB.SM → S
   intoL x = fst x , isL-trans {x = fst B} {y = fst x} (snd x) (snd B)
-
 ```
 
 <!--en-->
@@ -355,7 +354,6 @@ will be compared with its finite graph.
 ```agda
   values : ∀ {n} → DB.SM ^ n → Fin n → V ℓ
   values δ i = fst (lookup i δ)
-
 ```
 
 <!--en-->
@@ -373,7 +371,6 @@ needed to pass between them.
 ```agda
   graph : ∀ {n} → DB.SM ^ n → V ℓ
   graph δ = env (values δ)
-
 ```
 
 <!--en-->
@@ -394,7 +391,6 @@ quantifier cases.
     cons-values : ∀ {n} (x : DB.SM) (δ : DB.SM ^ n)
                 → cons (fst x) (values δ) ≡ values (x ∷ δ)
     cons-values x δ = funExt (λ { zero → refl ; (suc i) → refl })
-
 ```
 
 <!--en-->
@@ -413,7 +409,6 @@ of a representative recovered from a coded graph.
 ```agda
     index : ∀ {n} (δ : DB.SM ^ n) → Ix B n
     index δ i = ∈-asFiber {a = values δ i} {b = fst B} (snd (lookup i δ)) .fst
-
 ```
 
 <!--en-->
@@ -432,7 +427,6 @@ needed to compare their finite graphs.
     index-eq : ∀ {n} (δ : DB.SM ^ n) (i : Fin n)
              → ⟪ fst B ⟫↪ (index δ i) ≡ values δ i
     index-eq δ i = ∈-asFiber {a = values δ i} {b = fst B} (snd (lookup i δ)) .snd
-
 ```
 
 <!--en-->
@@ -450,7 +444,6 @@ set; no arbitrary environment representative has been selected.
 ```agda
   envFor : ∀ {n} → DB.SM ^ n → S
   envFor δ = envS B (index δ)
-
 ```
 
 <!--en-->
@@ -470,7 +463,6 @@ truncation.
 ```agda
   envFor-graph : ∀ {n} (δ : DB.SM ^ n) → fst (envFor δ) ≡ graph δ
   envFor-graph δ = cong env (funExt (index-eq δ))
-
 ```
 
 <!--en-->
@@ -495,7 +487,6 @@ formula induction.
                → fst z ≡ graph δ → ⟨ z ∈ˢ envSet B n ⟩
   graph-envSet {n} δ z q = subst (λ w → ⟨ w ∈ fst (envSet B n) ⟩)
     (envFor-graph δ ∙ sym q) (envSet-in B (index δ))
-
 ```
 
 <!--en-->
@@ -573,7 +564,6 @@ variable case of term evaluation.
     subst ⟨_⟩ (lookup-spec (values δ) i (fst (lookup vi γ)))
       (subst (λ w → ⟨ pr (# (toℕ i)) (fst (lookup vi γ)) ∈ w ⟩) qe
         (tmIs-var-out i γ vi ei h))
-
 ```
 
 <!--en-->
@@ -617,7 +607,6 @@ from any truncation.
   tmIs-in (var i) δ γ vi ei qe q = tmIs-var-in i γ vi ei
     (subst (λ w → ⟨ pr (# (toℕ i)) (fst (lookup vi γ)) ∈ w ⟩) (sym qe)
       (subst ⟨_⟩ (sym (lookup-spec (values δ) i (fst (lookup vi γ)))) q))
-
 ```
 
 <!--en-->
@@ -660,7 +649,6 @@ extended graph; no graph-membership statement occurs here.
   consAtL-out δ x γ ei mi di qd qm h =
       subst ⟨_⟩ (consAtL-adequate ei mi di γ (values δ) qd) h
     ∙ cong env (cong (λ w → cons w (values δ)) qm ∙ cons-values x δ)
-
 ```
 
 <!--en-->
@@ -733,7 +721,6 @@ constants to ambient constructible constants.
   Adequate : ∀ {n} → Formula DB.SM n → Type (ℓ-suc (ℓ-suc ℓ))
   Adequate {n} φ = (δ : DB.SM ^ n) (z : S) → fst z ≡ graph δ
                  → (z ∈ˢ Sat B (mapFo intoL φ)) ≡ (δ ⊨ᴮ φ)
-
 ```
 
 <!--en-->
@@ -752,7 +739,6 @@ impose the identical impossible condition.
 
   step⊥ : ∀ {n} → Adequate {n} ⊥̇
   step⊥ δ z q = Sat-cond ⊥̇ δ z q
-
 ```
 
 <!--en-->
@@ -774,7 +760,6 @@ the inner semantics use the same propositional connective.
         → Adequate a → Adequate b → Adequate (a ∧̇ b)
   step∧ a b ia ib δ z q = Sat-cond (mapFo intoL (a ∧̇ b)) δ z q
     ∙ cong₂ _⊓_ (ia δ z q) (ib δ z q)
-
 ```
 
 <!--en-->
@@ -795,7 +780,6 @@ sets.
         → Adequate a → Adequate b → Adequate (a ∨̇ b)
   step∨ a b ia ib δ z q = Sat-cond (mapFo intoL (a ∨̇ b)) δ z q
     ∙ cong₂ _⊔_ (ia δ z q) (ib δ z q)
-
 ```
 
 <!--en-->
@@ -816,7 +800,6 @@ have the same logical form as the inner semantics.
         → Adequate a → Adequate b → Adequate (a ⇒̇ b)
   step⇒ a b ia ib δ z q = Sat-cond (mapFo intoL (a ⇒̇ b)) δ z q
     ∙ cong₂ _⇒_ (ia δ z q) (ib δ z q)
-
 ```
 
 <!--en-->
@@ -900,7 +883,6 @@ the membership atom.
       , ( tmIs-in t δ (intoL U ∷ intoL T ∷ z ∷ []) (suc zero) (suc (suc zero)) q refl
         , ( tmIs-in u δ (intoL U ∷ intoL T ∷ z ∷ []) zero (suc (suc zero)) q refl
           , r ))) ∣₁
-
 ```
 
 <!--en-->
@@ -1075,7 +1057,6 @@ a semantic witness escapes the truncation.
            , subst ⟨_⟩ (sym (ia (x ∷ δ) (envFor (x ∷ δ))
                (envFor-graph (x ∷ δ)))) ha ))) })
       h)
-
 ```
 
 <!--en-->
@@ -1264,7 +1245,6 @@ classical assumption.
 ```agda
                    (envFor-graph (x ∷ δ)))) ha ))) ∣₁ ) })
       h)
-
 ```
 
 <!--en-->
@@ -1440,7 +1420,6 @@ defines `inB m : DB.SM`.
   private
     inB : (m : ⟪ fst B ⟫) → ⟨ ⟪ fst B ⟫↪ m ∈ fst B ⟩
     inB m = ∈∈ₛ {a = ⟪ fst B ⟫↪ m} {b = fst B} .snd (∈ₛ⟪ fst B ⟫↪ m)
-
 ```
 
 <!--en-->
@@ -1459,7 +1438,6 @@ recursion on `n`: the head is the set presented by `g zero`, equipped with
     tab : ∀ {n} → Ix B n → DB.SM ^ n
     tab {zero} g = []
     tab {suc n} g = (⟪ fst B ⟫↪ (g zero) , inB (g zero)) ∷ tab (λ i → g (suc i))
-
 ```
 
 <!--en-->
@@ -1499,7 +1477,6 @@ auxiliary data.
 
     tab-graph : ∀ {n} (g : Ix B n) → graph (tab g) ≡ fst (envS B g)
     tab-graph g = cong env (tab-values g)
-
 ```
 
 <!--en-->
@@ -1522,7 +1499,6 @@ arbitrary encoded environment.
                  → ∥ Σ[ δ ∈ DB.SM ^ n ] (fst z ≡ graph δ) ∥₁
   envSet-vectors {n} z h = map₁
     (λ { (g , qg) → tab g , qg ∙ sym (tab-graph g) }) (envSet-out B n z h)
-
 ```
 
 <!--en-->
@@ -1599,7 +1575,6 @@ bridge use the constant form expected by the recursion.
     mapFo-fuse : ∀ {n} (ψ : Formula ⟪ fst B ⟫ n)
                → mapFo intoL (mapFo DB.ι ψ) ≡ mapFo asConst ψ
     mapFo-fuse = mapFo-comp DB.ι intoL
-
 ```
 
 <!--en-->
@@ -1621,7 +1596,6 @@ the graph hypothesis needed by `Sat-spec`.
     graph-single : (m : ⟪ fst B ⟫)
                  → fst (envS B (λ _ → m)) ≡ graph (DB.ι m ∷ [])
     graph-single m = cong env (funExt (λ { zero → refl ; (suc ()) }))
-
 ```
 
 <!--en-->
@@ -1697,6 +1671,9 @@ constructions read the recursive satisfaction value.
              (graph-single m))
     ∙ cong (λ χ → envS B (λ _ → m) ∈ˢ Sat B χ) (mapFo-fuse ψ)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recap

@@ -101,28 +101,37 @@ Proof labels use `**Proof** Text`, `**证明** 正文` or `**証明** 本文`. A
 construction, fact, lemma, theorem or corollary developed through prose and code ends its proof
 with a standalone `∎` after the final proof code block. Explanatory prose may follow the mark and
 is then outside the proof. A construction or lemma nested inside that proof, such as one inside
-its disclosure or optional-reading block, has no separate `∎`; the enclosing
+its disclosure or foldable submodule, has no separate `∎`; the enclosing
 proof's mark follows the closing block.
 
-## Optional reading
+## Foldable submodules
 
-Use `<details open class="optional-reading" aria-labelledby="unique-title-id">` for an
-optional mathematical construction that is expanded by default and can be collapsed. Its
-first child in each language is `<summary class="optional-reading-title" id="unique-title-id">`
-with the prefix `Optional:`, `选读：` or `発展：`, respectively. Keep the shared wrapper
-outside the language groups and the title and prose inside them. The renderer gives
-the block a small inset, a muted background and a left rule. Keep the required `open`
-attribute and use the native summary to toggle it with pointer or keyboard. Do not
-add `hidden`, `display:none`, an extra toggle button or persisted collapsed state.
-The first sentence should pick up the object used in the enclosing argument.
+Every first- or second-level submodule uses `details.submodule-fold`, expanded by
+default. Its `summary.submodule-fold-heading` contains exactly one Agda fence
+holding the complete `module … where` declaration, alone but on as many lines as
+its arguments require. The declaration itself remains visible when the
+reader folds the module. Put all subsequent prose, figures and Agda code in
+`div.submodule-fold-content`, and close that container immediately after the
+submodule's last Agda code block. Put any closing `∎` outside the fold.
+Leave a blank line before the opening `<details>` when it follows an Agda fence;
+otherwise Markdown treats it as inline text rather than a fold.
+An inner submodule uses the same fold inside its parent's content, but folds
+stop at two levels: an outer submodule and one inner submodule. Deeper Agda
+modules remain unfolded and are still checked by the lint inventory. In the rendered
+HTML, code in each fold loses only the indentation contributed by its enclosing
+module declarations; the Agda source and Markdown mirror retain the original
+indentation. The inner declaration is likewise shown without its source indent.
+The header is shared code, so it needs no trilingual summary label; the surrounding
+exposition remains parallel. The site animates opening and closing, including
+keyboard activation. Do not add another toggle, hidden state or persisted state.
+`lint-prose.py` checks the complete declaration, default-open state, code scope,
+whole-tree coverage and two-level nesting limit. A long signature is indivisible,
+so the literary fence-size check exempts a fold heading.
 
 Short ancillary interface explanations may still use `details.prose-disclosure`,
-as in the Prelude's compiler options. They use the same localized title prefixes.
-`lint-prose.py` checks those prefixes, requires `details.optional-reading` to have
-`open`, and treats the block as a nested proof
-scope; `check-literary-exposition.py` treats its wrapper as neutral structure while
-continuing to check the prose in it. See [renderer recipes](RENDERER-RECIPES.md)
-for the canonical markup and first uses of all reusable styles.
+as in the Prelude's compiler options. Their localized titles begin with
+`Optional:`, `选读：` or `発展：`. See [renderer recipes](RENDERER-RECIPES.md)
+for the canonical markup and first uses of reusable styles.
 
 ## Inline Agda references in prose
 
@@ -132,11 +141,26 @@ Inside prose you may reference an Agda identifier with a Pandoc attribute span:
 the addition `_+_`{.Agda} is associative
 ```
 
-The renderer renders `` `_+_`{.Agda} `` highlighted and hyperlinked to the identifier's
-definition, the same way it appears in a code block. Every inline code span that uses
+The renderer renders `` `_+_`{.Agda} `` highlighted and hyperlinked to its
+definition. A temporary variable such as `` `x`{.Agda} `` has the same code styling
+but no link. Every inline code span that uses
 Agda notation carries `{.Agda}`; this includes bound variables, complete expressions,
 keywords and module names. Ordinary mathematical notation belongs in inline LaTeX
 instead of an unmarked code span.
+
+When the reader-facing label differs from the declaration name, use
+`[V](V.Hierarchy.html#𝒮ᵥ){.Agda}`. The link and type hover resolve to `𝒮ᵥ`, while
+the prose displays `V`. The target must be an internal Agda declaration.
+
+In every chapter, including `Milestones`, an unboxed Agda link may label only
+one defined name. Put an application, type annotation, path or equation in one
+complete `` `...`{.Agda} `` span, including its operators and arguments. Write
+bound variables such as `` `x`{.Agda} `` as inline code too; the renderer does
+not link temporary variables to unrelated same-named code tokens. The lint gate checks this
+structurally in every chapter. Existing bare-variable lines outside the refined
+opening chapters are recorded by exact line hash in `dev/inline-agda-legacy.json`:
+new lines and edited lines must pass, and the inventory should shrink as those
+chapters are revised.
 
 ## Reader-facing terminology
 
@@ -190,6 +214,9 @@ In diagrams, arrowheads are reserved for functions and their action on elements.
 Do not use them merely to connect related objects. Use equivalence notation for
 equivalences, and unarrowed dashed lines for grouping or
 assembling data. This is a reader preference established on 2026-09-22.
+Let the distinct objects and maps determine a commutative diagram's shape. For a
+map factoring through a third type, draw a triangle; do not repeat the codomain
+and add an identity map merely to fill out a square.
 Draw ordinary paths as blue lines without arrowheads, with white endpoint dots. Use a blue
 outline around the dots so they remain visible in a light theme. Equality signs
 remain appropriate inside formulas; a diagram's path connection uses this visual

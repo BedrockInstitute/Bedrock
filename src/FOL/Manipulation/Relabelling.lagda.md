@@ -80,14 +80,31 @@ Fix a proposition-valued ZF structure `𝒮` with domain `S`, a relabelling `f :
 台 `S` をもつ命題値の ZF 構造 `𝒮`、改名 `f : K → K'`、そして対象域の解釈 `ι : K' → S` を固定する。合成 `ι ∘ f` は源の域の正当な解釈でもあるので、同じ論理式に二つの読み方が得られる。改名後の論理式を `ι` の下で読むか、元の論理式を `ι ∘ f` の下で読むかである。可換の問題とは、この二つの読み方が等しい命題を与えるかを問うことである。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ {ℓ} (𝒮 : ZFStructure ℓ) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   open ZFStructure 𝒮
   open FOL.Semantics 𝒮 using ( module At; _^_ )
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
   module _ {ℓc ℓd} {K : Type ℓc} {K' : Type ℓd} (f : K → K') (ι : K' → S) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 The atomic case already shows why the two readings must agree. Consider the formula `t ∈̇ u`: the first reading evaluates it as `⟦ mapTm f t ⟧ γ ∈ˢ ⟦ mapTm f u ⟧ γ`, the second as `⟦ t ⟧∘ γ ∈ˢ ⟦ u ⟧∘ γ`. The term lemma `⟦⟧-map` gives `⟦ mapTm f t ⟧ γ ≡ ⟦ t ⟧∘ γ` for every term, and both of its cases hold by `refl`: a relabelled constant `con (f k)` evaluates to `ι (f k)`, which is exactly what the composite reading computes, and a variable ignores constants altogether.
@@ -166,6 +183,9 @@ A bounded quantifier has one further component: `⟦⟧-map` identifies the inte
     ⊨-map (∃̇∈ t φ) γ = cong (λ P → ∃[ x ∶ S ] P x) (funExt (λ x →
       cong₂ _⊓_ (cong (x ∈ˢ_) (⟦⟧-map t γ)) (⊨-map φ (x ∷ γ))))
 ```
+</div>
+</details>
+
 
 <!--en-->
 The commutation lemma already contains the parameter-free case, and the corollary below merely reads it off. A parameter-free formula is one whose constant domain is the empty type `⊥*`; there are no constant symbols to interpret, so it can be embedded into formulas over any domain `K` by `embed`, and the two readings of its meaning must agree whatever `K` and `ι` are.
@@ -183,8 +203,16 @@ The inner module fixes an arbitrary target domain `K` and interpretation `ι : K
 内側のモジュールは任意の対象域 `K` と解釈 `ι : K → S` を固定し、充足関係を二度開く。一度は通常どおり `K` 上の論理式に対して、もう一度は名前 `_⊨∅_` で空の定数域上の論理式に対してである。後者の解釈は関数 `λ b → ι (⊥*-rec b)` である。これが正当なのは、`⊥*-rec` が空型の消去子だからである。`⊥*` の元があれば任意の型 (`S` を含む) の元を作れるので、この解釈が実際に値を必要とすることは決してない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
   module _ {ℓe ℓc} {K : Type ℓc} (ι : K → S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
     open At K ι using ( _⊨_ )
     open At (⊥* {ℓe}) (λ b → ι (⊥*-rec b)) using () renaming ( _⊨_ to _⊨∅_ )
@@ -204,6 +232,12 @@ The corollary `embed-⊨` is then a direct instance of `⊨-map`, with `f` taken
 ```agda
     embed-⊨ = ⊨-map ⊥*-rec ι
 ```
+</div>
+</details>
+
+</div>
+</details>
+
 
 <!--en-->
 ## Levy witness level

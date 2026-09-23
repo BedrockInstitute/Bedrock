@@ -14,7 +14,6 @@ The object language cannot invoke the host language's recursion on formulas. It 
 
 ```agda
 {-# OPTIONS --cubical --safe --guardedness #-}
-
 ```
 
 <!--en-->
@@ -28,7 +27,6 @@ There are two levels in this description. Agda supplies the metatheory in which 
 ```agda
 open import Base.Prelude
 module L.Coding.SatisfactionClauses {ℓ : Level} where
-
 ```
 
 <!--en-->
@@ -71,8 +69,7 @@ There are exactly ten formula-constructor positions, indexed by `Fin 10`. Conver
 論理式の構成子にはちょうど十個の位置があり、`Fin 10` で添字付けられる。その添字を自然数へ移すことで、一つの族から対応する節を選べる。ただし、ここでタグの枠に入る値はまだ任意のパラメータである。各枠を意図された標準数項と同定するのは、後の `Tags` 仮定である。
 <!--/-->
 
-```agda
-```
+
 
 <!--en-->
 All object-language variables range over `S`, the carrier of the constructible structure. A slot such as `T`, `C`, or `w` names a position in an assignment; only after evaluation does that position denote a constructible set. Keeping this distinction prevents a syntactic clause from being mistaken for a metatheoretic construction of a table or a code set.
@@ -170,8 +167,16 @@ The five constructor relations below share three parameters: the candidate relat
 以下の五つの構成子関係は、候補関係 `T`、台を与える境界 `w`、十個のタグ枠からなる族 `N` という三つのパラメータを共有する。局所名 `N0` と `N1` は、最初の二つのタグ枠を、新たに束縛された変数の先まで移すだけである。この添字の調整は参照先を保つが、枠を標準数項と同定する等式は加えない。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Rel {m : ℕ} (T w : Fin m) (N : Fin 10 → Fin m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     N0 N1 : ∀ {j} → Fin (j + m)
     N0 {j} = sh j (N f0)
@@ -233,7 +238,6 @@ Atomic formulas do not recurse through formula children. Their payload consists 
   atomBody rel =
     ∃̇∈ (var (sh 16 w)) (∃̇∈ (var (sh 17 w))
       (tmIs i4 i2 i1 N0 N1 ∧̇ (tmIs i3 i2 i0 N0 N1 ∧̇ rel)))
-
 ```
 
 <!--en-->
@@ -247,7 +251,6 @@ Falsity gives the simplest extension equation. Its property is impossible, so th
 ```agda
   botRel : Formula S (12 + m)
   botRel = extB i0 i8 ⊥̇
-
 ```
 
 <!--en-->
@@ -262,7 +265,6 @@ For a binary connective, the payload is decomposed into two formula codes `a` an
   binRel : (∀ {j} → Formula S j → Formula S j → Formula S j) → Formula S (12 + m)
   binRel op =
     bothAll i3 (subAt (sh 15 T) i12 i1 (subAt (sh 19 T) i16 i4 (extB i11 i19 (binBody op))))
-
 ```
 
 <!--en-->
@@ -276,7 +278,6 @@ The payload of an unbounded quantified formula is its body code. The relation re
 ```agda
   quRel : (∀ {j} → Term S j → Formula S (suc j) → Formula S j) → Formula S (12 + m)
   quRel q = subSucAt (sh 12 T) i9 i3 (extB i6 i14 (quBody q))
-
 ```
 
 <!--en-->
@@ -291,7 +292,6 @@ The payload of a bounded quantifier is a pair `(t,a)` of a bound-term code and a
   bqRel : (∀ {j} → Term S j → Formula S (suc j) → Formula S j)
         → (∀ {j} → Formula S j → Formula S j → Formula S j) → Formula S (12 + m)
   bqRel q c = bothAll i3 (subSucAt (sh 15 T) i12 i0 (extB i9 i17 (bqBody q c)))
-
 ```
 
 <!--en-->
@@ -305,7 +305,6 @@ For an atomic payload, the pair reader exposes the two term codes and `extB` app
 ```agda
   atomRel : Formula S (18 + m) → Formula S (12 + m)
   atomRel rel = bothAll i3 (extB i3 i11 (atomBody rel))
-
 ```
 
 <!--en-->
@@ -352,6 +351,9 @@ Tag 9 has the existential polarity. Using `∃[]-syntax` with conjunction, it me
   relN 9 = bqRel ∃̇∈ _∧̇_
   relN (suc (suc (suc (suc (suc (suc (suc (suc (suc (suc _)))))))))) = ⊤̇
 ```
+</div>
+</details>
+
 
 <!--en-->
 We can now place a constructor relation into the common frame. The data to be connected are an environment-tower pair, a formula code of the same arity with a tagged payload, and a candidate entry of `T` at that code. The local relation module is reused so that every tag is judged with the same meanings of `T`, `w`, and the two term-code tags.
@@ -361,11 +363,18 @@ We can now place a constructor relation into the common frame. The data to be co
 これで構成子関係を共通の枠へ置ける。結び付けるデータは、環境の塔の対、同じアリティとタグ付きペイロードをもつ論理式符号、そしてその符号における `T` の候補要素である。同じ局所関係モジュールを再利用することで、どのタグも同じ `T`、`w`、二つの項符号タグの解釈の下で判定される。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Clause {m : ℕ} (T w C E : Fin m) (N : Fin 10 → Fin m) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     module R = Rel T w N
-
 ```
 
 <!--en-->
@@ -395,7 +404,6 @@ The two domain conditions supply the existence that the universal local clauses 
   total onC : Formula S m
   total = ∀̇∈ (var C) (∃̇∈ (var (sh 1 T)) (sndEx i0 i1 ⊤̇))
   onC = ∀̇∈ (var T) (bothEx i0 (var i1 ∈̇ var (sh 4 C)))
-
 ```
 
 <!--en-->
@@ -409,8 +417,10 @@ The ten local clauses are gathered by one finite conjunction. The argument `9` m
 ```agda
   ten : Formula S m
   ten = bigAnd 9 clause
-
 ```
+</div>
+</details>
+
 
 <!--en-->
 The formula `tableAt` now conjoins three demands: truncated totality over `C`, the restriction of every table member to a key in `C`, and all ten constructor clauses. This is a local bounded specification for a candidate relation. It does not prove that `C` is closed under child codes, that `E` is the intended environment tower, that the tags are standard, that values are unique, or that the candidate is a canonical satisfaction table. Later chapters separately supply the tower and code descriptions, tag calibration, semantic bridges, and pinning arguments needed to relate suitable candidates to canonical data.
@@ -423,7 +433,6 @@ The formula `tableAt` now conjoins three demands: truncated totality over `C`, t
 ```agda
 tableAt : ∀ {m} → Fin m → Fin m → Fin m → Fin m → (Fin 10 → Fin m) → Formula S m
 tableAt T w C E N = Clause.total T w C E N ∧̇ (Clause.onC T w C E N ∧̇ Clause.ten T w C E N)
-
 ```
 
 <!--en-->

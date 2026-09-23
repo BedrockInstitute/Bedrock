@@ -241,7 +241,6 @@ The nesting is visible in the two constructors of `Σ₁`. The base `σ-Δ₀` e
 data Σ₁ {ℓc} {K : Type ℓc} : ∀ {n} → Formula K n → Type ℓc where
   σ-Δ₀ : ∀ {n} {φ : Formula K n} → Δ₀ φ → Σ₁ φ
   σ-∃  : ∀ {n} {φ : Formula K (suc n)} → Σ₁ φ → Σ₁ (∃̇ φ)
-
 ```
 
 <!--en-->

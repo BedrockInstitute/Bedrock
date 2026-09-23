@@ -64,7 +64,6 @@ Several propositions below are obtained from truncated existence statements. The
 
 ```agda
 open import Cubical.HITs.CumulativeHierarchy.Base using ( V; _∈_; setIsSet )
-
 ```
 
 <!--en-->
@@ -81,9 +80,17 @@ open hPropStructure 𝒮ʟ
 module AbsL = FOL.Absoluteness.Single 𝒮ᵥ isL isL-trans
 open AbsL renaming ( _⊨ᵐ_ to _⊨_ )
 module Ren = Sat 𝒮ʟ id using ( Agrees; ⊨-rename )
-module PairFo (φ : Formula S 2) where
-
 ```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
+module PairFo (φ : Formula S 2) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 ## A formula for ordered pairs
@@ -103,7 +110,6 @@ Fix a two-variable formula `φ`, read as a relation between a value and an index
   ρ : Fin 2 → Fin 3
   ρ zero       = zero
   ρ (suc zero) = suc (suc zero)
-
 ```
 
 <!--en-->
@@ -129,7 +135,6 @@ The formula conjoins two assertions under the existential quantifier. The first 
 
 ```agda
     pairFo = ∃̇ (prAtL (suc zero) (suc (suc zero)) zero ∧̇ renameFo ρ φ)
-
 ```
 
 <!--en-->
@@ -145,7 +150,6 @@ The agreement proof verifies that renaming preserves the intended environment. I
       ag : (z e p : S) → Ren.Agrees ρ (z ∷ e ∷ p ∷ []) (z ∷ p ∷ [])
       ag z e p zero       = refl
       ag z e p (suc zero) = refl
-
 ```
 
 <!--en-->
@@ -196,8 +200,19 @@ The inward lemma completes the semantic equivalence and the construction now tur
     pair-in : (e p z : S) → fst e ≡ pr (fst p) (fst z) → ⟨ (z ∷ p ∷ []) ⊨ φ ⟩
             → ⟨ (e ∷ p ∷ []) ⊨ pairFo ⟩
     pair-in e p z q h = ∣ z , (transport (sym (at z e p)) q , transport (sym (gr z e p)) h) ∣₁
+```
+</div>
+</details>
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 module Graph (R₀ : Recursion) where
 ```
+</summary>
+<div class="submodule-fold-content">
+
+
 
 <!--en-->
 ## Domain and values
@@ -220,7 +235,6 @@ The recursion supplies a domain, its original graph formula, and contractibility
 
   isPropMem : (x : S) → isProp (Mem x)
   isPropMem x = snd (fst x ∈ fst dom)
-
 ```
 
 <!--en-->
@@ -238,7 +252,6 @@ Membership in a set is proposition-valued, so `Mem x` is a proposition. Conseque
 
     only : (x : S) (m : Mem x) (y : S) → ⟨ (y ∷ x ∷ []) ⊨ graph ⟩ → y ≡ fn x m
     only x m y h = sym (cong fst (funct x m .snd (y , h)))
-
 ```
 
 <!--en-->
@@ -256,7 +269,6 @@ Contractibility provides two facts about the original value relation. The select
     fn-irr x m m' = cong (fn x) (isPropMem x m m')
     pairOf : (x : S) → Mem x → S
     pairOf x m = prʟ x (fn x m)
-
 ```
 
 <!--en-->
@@ -273,7 +285,6 @@ The ordered-pair formula is now specialized to the original value relation. Proo
       (λ { (z , (e , g)) → Σ≡Prop (λ v → snd (isL v))
         (e ∙ cong (λ w → pr (fst x) (fst w)) (only x m z g) ∙ sym (prʟ-fst x (fn x m))) })
       (Fo.out p x h)
-
 ```
 
 <!--en-->
@@ -331,7 +342,6 @@ The dependent-pair contraction compares a candidate value together with its sati
   F-in x m = subst (λ w → ⟨ w ∈ fst F ⟩) (prʟ-fst x (fn x m))
     (T.table-in x (pairOf x m) m
       (Fo.into (pairOf x m) x (fn x m) (prʟ-fst x (fn x m)) (defines x m)))
-
 ```
 
 <!--en-->
@@ -422,7 +432,6 @@ For fixed `x` and `y`, the fiber `Fib x y` consists of a domain proof `m : Mem x
 
   γ : S ^ 2
   γ = F ∷ dom ∷ []
-
 ```
 
 <!--en-->
@@ -439,7 +448,6 @@ If the ordered-pair code `pr(fst x,fst y)` belongs to `F`, the outward descripti
     let (m , e)   = pair-out x y p
         (m' , e') = pair-out x y' q
     in e ∙ cong fst (fn-irr x m m') ∙ sym e')
-
 ```
 
 <!--en-->
@@ -456,7 +464,6 @@ The environment `γ = F ∷ dom ∷ []` assigns the two free variables used by t
     where
     fwd : (x : S) → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩ → Mem x
     fwd x = rec₁ (isPropMem x) (λ { (y , p) → fst (pair-out x y p) })
-
 ```
 
 <!--en-->
@@ -470,5 +477,6 @@ Finally, the domain formula is proved in both directions. If `x` occurs as the f
 ```agda
     bwd : (x : S) → Mem x → ⟨ ∃[ y ∶ S ] (pr (fst x) (fst y) ∈ fst F) ⟩
     bwd x m = ∣ fn x m , F-in x m ∣₁
-
 ```
+</div>
+</details>

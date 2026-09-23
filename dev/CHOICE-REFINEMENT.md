@@ -49,8 +49,8 @@ Checked primary definitions: installed Cubical 0.9 SetQuotients Base/Properties
 `isPropDec`), HLevels (`isOfHLevelLift`), PropositionalTruncation Properties (`rec`,
 `map`); actual consumers `V.Model.V⊨ZFC` and `L.Model.L⊨ZFC`.
 
-Existing translations for set-level choice and set quotient are promoted to
-reader terms, with evidence and exact scope centralized in `glossary.toml`.
+The current term is choice for set-valued families; set quotient is also a
+reader term. Their evidence and exact scope are centralized in `glossary.toml`.
 The [HoTT Book](https://homotopytypetheory.org/book/), section 3.8, motivates the
 truncated formulation; the source of truth for this chapter's precise hypothesis
 remains the local Agda signature.
@@ -59,11 +59,11 @@ remains the local Agda signature.
 
 | Recipe | Use in Choice |
 | --- | --- |
-| `prose.parallel`, `prose.term`, `code.reference` | All routes; formal introductions of set quotient and set-level choice |
-| `prose.statement`, `prose.proof` | `SetChoice`, `lowerSetChoice`, `choice→lem` |
+| `prose.parallel`, `prose.term`, `code.reference` | All routes; formal introductions of set quotient and choice for set-valued families |
+| `prose.statement`, `prose.proof` | `SetChoice`, `lowerSetChoice`, `SetChoice→LEM` |
 | `code.display-note` | `lower (f (lift x)) : B x` with an attached evaluation explanation |
-| `prose.margin-note` | The h-set restriction concerns the index type |
-| `prose.optional` | Default-open verification of the quotient relation |
+| `prose.margin-note` | The h-set restriction concerns both the index type and every family value |
+| `code.submodule-fold` | Default-open Diaconescu submodule, headed by its Agda declaration |
 | `prose.comparison-table` | Three existence statements, lifted data, decision cases |
 | `figure.frame`, `figure.compare`, `figure.space`, `figure.paths` | `fig-choice-gluing`: conditional quotient geometries |
 | `figure.compact-map`, `figure.path-map`, `figure.paths` | `fig-choice-agreement`: compose certificates versus map a path |
@@ -95,8 +95,10 @@ No chapter-local CSS, JavaScript, scroll containers or decorative nesting is add
 The owner accepted the evaluated replacement of `glue` and `unglue` by
 `quotientPath≃P`. Its definition uses the library's `isEquivRel→effectiveIso`
 and `isoToEquiv`; `agree→P` uses `equivFun`, and `P→agree` uses `invEq` followed
-by `cong`. The assumptions and conclusions of `SetChoice`, `lowerSetChoice`
-and `choice→lem` remain unchanged.
+by `cong`. At the time of that equivalence-interface change, the assumptions
+and conclusions of `SetChoice`, `lowerSetChoice` and `SetChoice→LEM` remained unchanged.
+The later choice-principle refinement requires each family value to be an h-set.
+The two applications now provide those certificates explicitly.
 
 The EN/ZH/JA exposition now introduces the path characterization as one type
 equivalence. The first figure follows that definition, displays the equivalence,

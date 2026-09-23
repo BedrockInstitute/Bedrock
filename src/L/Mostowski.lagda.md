@@ -100,10 +100,18 @@ Well-foundedness is what licenses the recursion. The induction principle obtaine
 再帰を可能にするのは整礎性である。`wf` から得られる帰納原理によれば、`A` 上の族 `P` を定義するには、各 `p` で全ての前者 `r ≺ p` における `P` の値から `P p` を構成すれば十分である。推移性の証拠 `≺-trans` は `col` の定義には使われず、得られた集合の推移性を後で証明するときに使われる。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module Mostowski (A : Type ℓ) (_≺_ : A → A → Type ℓ)
                  (wf : WellFounded _≺_)
                  (≺-trans : {x y z : A} → x ≺ y → y ≺ z → x ≺ z) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
 
   module W = WFI wf using ( induction; induction-compute )
 
@@ -226,3 +234,5 @@ Now the chain closes. From `y ∈ col r`, `col-out` applied at `r` yields merely
           inner (s , sr , e2) =
             subst (λ v → ⟨ v ∈ˢ col p ⟩) e2 (col-in p s (≺-trans sr rp))
 ```
+</div>
+</details>

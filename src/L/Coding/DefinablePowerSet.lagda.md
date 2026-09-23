@@ -143,8 +143,18 @@ envOne y = env {1} (λ _ → y)
 
 envOneAt : ∀ {n} → Fin n → Fin n → Formula S n
 envOneAt e y = extAt e (tagAtL zero 0 (suc y))
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     E : S
     E = lookup e γ
@@ -193,6 +203,9 @@ module _ {n : ℕ} (e y : Fin n) (γ : S ^ n) where
           (sym (tagAtL-adequate zero 0 (suc y) (keyOf 0 (lookup y γ) ∷ γ)))
           (keyOf-fst 0 (lookup y γ)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recognizing the subset defined by a code
@@ -238,8 +251,18 @@ DefinesAt : ∀ {n} → Fin n → Fin n → Fin n → Formula S n
 DefinesAt x w v = extAt x ( (var zero ∈̇ var (suc w))
                           ∧̇ ∃̇ ( envOneAt zero (suc zero)
                                ∧̇ (var zero ∈̇ var (suc (suc v))) ) )
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     inner : Formula S (suc n)
     inner = ∃̇ (envOneAt zero (suc zero) ∧̇ (var zero ∈̇ var (suc (suc v))))
@@ -290,6 +313,9 @@ module _ {n : ℕ} (x w v : Fin n) (γ : S ^ n) where
     (λ z z∈ → f z z∈ .fst , fillInner z (f z z∈ .snd))
     (λ z h → g z (h .fst , readInner z (h .snd)))
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Recognizing codes over a variable carrier
@@ -326,8 +352,18 @@ from a predicate a bound variable can carry.
 ```agda
 isCodeAt : ∀ {n} → Fin n → Fin n → Formula S n
 isCodeAt c w = keyArityAtL c 1 ∧̇ hasWitnessAt w c
+```
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
+```agda
 
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   codeAt-in : ∀ {n} (c w : Fin n) (γ : S ^ n)
             → fst (lookup w γ) ≡ fst A
             → (ψ : Formula ⟪ fst A ⟫ 1) → fst (lookup c γ) ≡ fst (keyS A ψ)
@@ -348,6 +384,9 @@ module _ (A : S) where
                (fst (lookup c γ) ≡ fst (keyS A ψ))) ∥₁
     step (z , qz) = witnessAt-out A w c γ qw hw 1 z qz
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Satisfaction over a variable carrier
@@ -384,8 +423,16 @@ instead of seconds.
 两者都以等式给出码与取值，而不是点名键；这正是诸取值定理写作时遵循的规则：一旦点名一个键，它的构造就会被并入一个满足关系，同一条陈述的验证时间于是从几秒变成几分钟。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (B : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     toB : ∀ {n} → Formula ⟪ fst B ⟫ n → Formula S n
     toB = mapFo (asConst B)
@@ -436,6 +483,9 @@ module _ (B : S) where
           (subst (λ u → ⟨ pr u (fst (lookup v γ)) ∈ fst T ⟩)
              (qc ∙ sym (keyBridge B ψ)) ha)
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## The definable-power-set description
@@ -533,8 +583,16 @@ anywhere below.
 此处的一切都陈述在**变元**载体上，只经过一条等式，而正是这一点把层挡在证明之外。在某一层处的实例化只是调用方提供的一条等式，而 `Lset`{.Agda} 与序数在下文任何地方都不出现。
 <!--/-->
 
+
+<details open class="submodule-fold">
+<summary class="submodule-fold-heading">
 ```agda
 module _ (A : S) where
+```
+</summary>
+<div class="submodule-fold-content">
+
+```agda
   private
     module DA = DefOf (fst A)
 
@@ -622,7 +680,6 @@ module _ (A : S) where
         where
         h = DefinesAt-out (suc (suc zero)) (sh3 w) zero δ hdef
           (y , isL-trans hy (snd z)) hy
-
 ```
 
 <!--en-->
@@ -720,6 +777,9 @@ altogether.
       yS : S
       yS = y , ok y y∈
 ```
+</div>
+</details>
+
 
 <!--en-->
 ## Definable power sets at constructible stages
@@ -765,7 +825,6 @@ DefAt-stage : (β : V ℓ) (oβ : IsOrd β) → ∀ {n} (u w : Fin n) (γ : S ^ 
 DefAt-stage β oβ u w γ qw = ⇔toPath
   (DefAt-out (LsetS β oβ) u w γ (𝒟ₒ→isL β oβ) qw)
   (DefAt-in (LsetS β oβ) u w γ qw)
-
 ```
 
 <!--en-->
