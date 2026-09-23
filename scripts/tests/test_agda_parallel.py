@@ -106,6 +106,46 @@ class ParallelAgdaTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "A -> B -> A"):
             agda_parallel.closure({"A": {"B"}, "B": {"A"}}, "A")
 
+    def test_incremental_schedule_includes_only_stale_modules_and_dependants(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "src"
+            interfaces = root / "interfaces"
+            source.mkdir()
+            interfaces.mkdir()
+            graph = {"A": set(), "B": {"A"}, "C": {"A"},
+                     "Root": {"B", "C"}}
+            paths = {}
+            for name in graph:
+                paths[name] = source / f"{name}.lagda.md"
+                paths[name].write_text(module(*graph[name]))
+                interface = interfaces / f"{name}.agdai"
+                interface.touch()
+                os.utime(paths[name], ns=(1_000_000_000, 1_000_000_000))
+                os.utime(interface, ns=(2_000_000_000, 2_000_000_000))
+            modules = set(graph)
+            self.assertEqual(agda_parallel.stale_modules(paths, graph, modules, interfaces), set())
+            os.utime(paths["B"], ns=(3_000_000_000, 3_000_000_000))
+            self.assertEqual(agda_parallel.stale_modules(paths, graph, modules, interfaces),
+                             {"B", "Root"})
+            os.utime(interfaces / "B.agdai", ns=(4_000_000_000, 4_000_000_000))
+            self.assertEqual(agda_parallel.stale_modules(paths, graph, modules, interfaces),
+                             {"Root"})
+
+    def test_incremental_trace_preserves_old_records_and_appends_html_last(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            parts = root / "parts"
+            parts.mkdir()
+            output = root / "types.jsonl"
+            output.write_text("old\n")
+            (parts / "B.jsonl").write_text("module\n")
+            html = parts / "html.jsonl"
+            html.write_text("html\n")
+            agda_parallel.merge_traces(parts, output, preserve_existing=True,
+                                       final_trace=html)
+            self.assertEqual(output.read_text(), "old\nmodule\nhtml\n")
+
 
 if __name__ == "__main__":
     unittest.main()

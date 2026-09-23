@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Build an Agda project in parallel along its module-import DAG.
 
-Agda 2.8 has no module-level jobs option.  This driver starts one Agda process
-per project module, but only after every project-local import has completed.
+Agda 2.8 has no module-level jobs option. This driver starts one Agda process
+per scheduled project module, but only after every project-local import has completed.
 Before starting workers, one serial Agda invocation builds the transitive
-closure of every external import.  Each worker therefore owns one project
+closure of the required external imports. Each worker therefore owns one project
 interface output while sharing read-only dependency interfaces.  Optional
 Bedrock traces are written per process and merged only after all writers exit.
+Incremental mode schedules only stale interfaces and preserves the latest trace
+records needed by the HTML renderer.
 """
 
 from __future__ import annotations
@@ -116,6 +118,40 @@ def closure(graph: dict[str, set[str]], root: str) -> set[str]:
     return found
 
 
+def stale_modules(
+    paths: dict[str, Path], graph: dict[str, set[str]], modules: set[str],
+    interface_root: Path,
+) -> set[str]:
+    """Recheck changed modules and their dependants; leave warm interfaces alone."""
+    stale: set[str] = set()
+    visited: set[str] = set()
+
+    def interface_for(module: str) -> Path:
+        return interface_root / (module.replace(".", "/") + ".agdai")
+
+    def visit(module: str) -> None:
+        if module in visited:
+            return
+        for dependency in graph[module] & modules:
+            visit(dependency)
+        interface = interface_for(module)
+        if not interface.exists():
+            stale.add(module)
+        else:
+            built_at = interface.stat().st_mtime_ns
+            dependencies = graph[module] & modules
+            if (paths[module].stat().st_mtime_ns > built_at
+                    or any(dependency in stale or
+                           interface_for(dependency).stat().st_mtime_ns > built_at
+                           for dependency in dependencies)):
+                stale.add(module)
+        visited.add(module)
+
+    for module in modules:
+        visit(module)
+    return stale
+
+
 def run_module(
     module: str,
     path: Path,
@@ -153,9 +189,15 @@ def parallel_check(
     agda: Path,
     jobs: int,
     trace_dir: Path | None = None,
+    interface_root: Path | None = None,
 ) -> list[str]:
     paths, complete_graph = local_graph(source_root)
     modules = closure(complete_graph, root)
+    if interface_root is not None:
+        modules = stale_modules(paths, complete_graph, modules, interface_root)
+    if not modules:
+        print("parallel Agda: all project interfaces are current", file=sys.stderr)
+        return []
     precompile_external_dependencies(
         project_root=project_root,
         agda=agda,
@@ -217,19 +259,37 @@ def parallel_check(
     return completed
 
 
-def merge_traces(trace_dir: Path, trace_out: Path) -> None:
+def merge_traces(
+    trace_dir: Path, trace_out: Path, *, preserve_existing: bool = False,
+    final_trace: Path | None = None,
+) -> None:
     temporary = trace_out.with_suffix(trace_out.suffix + ".tmp")
     trace_out.parent.mkdir(parents=True, exist_ok=True)
     with temporary.open("wb") as destination:
+        if preserve_existing and trace_out.exists():
+            with trace_out.open("rb") as previous:
+                shutil.copyfileobj(previous, destination)
         for path in sorted(trace_dir.rglob("*.jsonl")):
-            destination.write(path.read_bytes())
+            if path == final_trace:
+                continue
+            with path.open("rb") as part:
+                shutil.copyfileobj(part, destination)
+        if final_trace is not None and final_trace.exists():
+            with final_trace.open("rb") as final:
+                shutil.copyfileobj(final, destination)
     temporary.replace(trace_out)
 
 
-def run_html(agda: Path, project_root: Path, root_path: Path, html_dir: Path) -> None:
+def run_html(
+    agda: Path, project_root: Path, root_path: Path, html_dir: Path,
+    trace_path: Path | None = None,
+) -> None:
     environment = os.environ.copy()
     environment.pop("BEDROCK_AGDA_TYPES", None)
     environment.pop("BEDROCK_AGDA_RUN", None)
+    if trace_path is not None:
+        environment["BEDROCK_AGDA_TYPES"] = str(trace_path)
+        environment["BEDROCK_AGDA_RUN"] = f"html-{time.time_ns()}-{os.getpid()}"
     subprocess.run(
         [str(agda), "--html", "--html-highlight=code", f"--html-dir={html_dir}",
          str(root_path.relative_to(project_root))],
@@ -248,15 +308,20 @@ def main() -> int:
     parser.add_argument("--jobs", type=int, default=2)
     parser.add_argument("--trace-out", type=Path)
     parser.add_argument("--html-dir", type=Path)
+    parser.add_argument("--incremental", action="store_true")
+    parser.add_argument("--interface-root", type=Path)
     args = parser.parse_args()
     if args.jobs < 1:
         parser.error("--jobs must be at least 1")
+    if args.incremental and args.interface_root is None:
+        parser.error("--incremental requires --interface-root")
 
     project_root = args.project_root.resolve()
     source_root = (project_root / args.src).resolve()
     agda = args.agda.resolve()
     trace_out = args.trace_out.resolve() if args.trace_out else None
     trace_dir = trace_out.parent / (trace_out.name + ".parts") if trace_out else None
+    interface_root = args.interface_root.resolve() if args.interface_root else None
     if trace_dir:
         shutil.rmtree(trace_dir, ignore_errors=True)
         trace_dir.mkdir(parents=True)
@@ -270,13 +335,24 @@ def main() -> int:
             agda=agda,
             jobs=args.jobs,
             trace_dir=trace_dir,
+            interface_root=interface_root if args.incremental else None,
         )
-        if trace_dir and trace_out:
+        if trace_dir and trace_out and not args.incremental:
             merge_traces(trace_dir, trace_out)
+        final_trace = trace_dir / "html.jsonl" if trace_dir and args.incremental and args.html_dir else None
         if args.html_dir:
             html_dir = args.html_dir.resolve()
             html_dir.mkdir(parents=True, exist_ok=True)
-            run_html(agda, project_root, paths[args.root], html_dir)
+            run_html(agda, project_root, paths[args.root], html_dir, final_trace)
+        elif args.incremental:
+            environment = os.environ.copy()
+            environment.pop("BEDROCK_AGDA_TYPES", None)
+            environment.pop("BEDROCK_AGDA_RUN", None)
+            subprocess.run([str(agda), str(paths[args.root].relative_to(project_root))],
+                           cwd=project_root, env=environment, check=True)
+        if trace_dir and trace_out and args.incremental:
+            merge_traces(trace_dir, trace_out, preserve_existing=True,
+                         final_trace=final_trace)
     except (OSError, RuntimeError, ValueError, subprocess.CalledProcessError) as error:
         print(f"agda-parallel: {error}", file=sys.stderr)
         return 1
