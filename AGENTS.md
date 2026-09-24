@@ -63,6 +63,9 @@ are not a requirement to restart those processes.
   remaining failures. An old successful run is not evidence for a newer change.
 - Commit, push, deploy, remove branches or clean worktrees only within the current
   authorization. Do not bypass hooks or weaken gates to obtain a green result.
+  For changes spanning Outcrop and Bedrock, commit Outcrop first, then record its
+  submodule pointer in Bedrock. A commit-only request leaves both commits local;
+  it does not authorize either repository's push or a deployment.
 
 ## Toolchain, resources and checks
 
@@ -220,6 +223,11 @@ add `sys.path` hacks to import framework modules. Use the installed package.
 `bedrock`. Its explicit `policies.level_name_convention` enables the book's `ℓ`
 naming convention; the generic default is false.
 
+The reader footer credit is exactly "Powered by Outcrop", linked to
+`https://github.com/BedrockInstitute/Outcrop`. Keep the separate copyright notice;
+do not repeat Bedrock in the credit or restore a 1lab footer credit. Upstream
+attribution belongs in Outcrop's licensing and acknowledgments.
+
 Browser entry points compose features; state belongs to small cohesive owners.
 Share semantic targets, hover lifecycle, positioning, definition history,
 preferences and route loading. Do not reimplement behavior for each code surface
@@ -267,16 +275,27 @@ interaction rather than applying a new design indiscriminately.
 - Preserve automatic syntax help, glossary links, boilerplate source popups,
   universe notation and selective dotted-operator fonts without changing copied
   code. Share palettes across every code surface. Code spans the full containing
-  column without an outdent or external QED gutter. The exact `∎` is translucent
-  inside the final frame; source syntax and statement lint are unchanged. Keep
-  submodules independently indented, declaration headers compact, and scroll
-  padding intact without clipping code or inline fragments.
+  column without an outdent or external QED gutter. The exact rectangular `∎`
+  is an absolute, noninteractive overlay inside the final frame at fixed opacity
+  `.25`, even over code. Reserve no row, height or extra padding for it; do not
+  restore overlap detection or dynamic opacity. Source syntax and statement lint
+  are unchanged. Agda frames grow vertically to their full content and scroll
+  only horizontally; the page, modal or fullscreen reading plane may scroll
+  vertically. Keep submodules independently indented, declaration headers
+  compact, and right-end scroll padding intact without clipping code or inline
+  fragments.
 - Mobile landscape code reading moves the existing DOM and preserves IDs/AST
   identity. Share transformed coordinates with hover and touch selection, restore
   the original surface before opening a modal, and test focus/scroll restoration.
+  Keep `text-size-adjust: 100%` and its WebKit equivalent scoped to code frames
+  and fullscreen reading; do not disable user zoom. Verify actual rendered glyph
+  size as well as computed font size when checking mobile text autosizing.
 - Search all supported editions regardless of the current language, including
   prose, headings, glossary and internal/external Agda. Preserve worker errors,
-  retry, IME and keyboard behavior.
+  retry, IME and keyboard behavior. Results are native navigation links, not
+  definition-modal targets. Dismiss on outside click or outside `focusin`, not
+  input `focusout` with a null `relatedTarget`: Safari can emit that blur before
+  a result's click, and hiding results then prevents navigation.
 - Preserve interactive contents, routes/completion, graph layouts and filters,
   gesture/keyboard pan and zoom, full-screen/focus restoration, sidebar title
   versus disclosure hit regions, appearance persistence and Ask AI copying.
@@ -296,3 +315,6 @@ real iPhone Safari evidence. State unavailable coverage honestly. For renderer
 refactors also compare generated body/code text, Markdown mirrors, type data,
 routes and search indices with a known baseline. Do not delete assertions merely
 because implementation ownership or names changed.
+Attribute user-reported real-device acceptance to the user and the revision they
+tested; it does not automatically cover subsequent changes. Keep dated release
+and acceptance snapshots in working notes, not as permanent proof of success.
