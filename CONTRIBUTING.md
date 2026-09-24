@@ -5,7 +5,7 @@ conventions, the build gate) live in [AGENTS.md](AGENTS.md), the one rule set, w
 coding agents.
 
 You do not need to read them all. Open the repository in an AI coding agent (Claude Code,
-Codex, Cursor, and the like). It loads `CLAUDE.md`, which names the rule set, and will:
+Codex, Cursor, and the like). Have it read `AGENTS.md` directly. The agent will:
 
 - **explain** any convention when you ask why,
 - **apply** the rules as it edits, and

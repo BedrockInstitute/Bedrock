@@ -1,3 +1,4 @@
+from reader_test_support import source
 """Source layout and presentation use the same actual chapter setup."""
 from pathlib import Path
 import re
@@ -67,17 +68,17 @@ class OpeningTests(unittest.TestCase):
         modules = {str(p.relative_to(root))[:-9].replace('/', '.') for p in paths}
         for path in paths:
             with self.subTest(path=path):
-                self.assertEqual(opening_errors(path.read_text(), str(path.relative_to(root))[:-9].replace('/', '.'), modules), [])
+                self.assertEqual(opening_errors(path.read_text(), str(path.relative_to(root))[:-9].replace('/', '.'), modules, visible_import_chapters={'Origin'}), [])
 
     def test_milestone_reexports_are_body_code_not_hidden_setup(self):
         text = opening('module Origin where', 'open import Base.Prelude public using ( Result )')
         text = text.replace('```agda\nopen import', 'A theorem.\n\n```agda\nopen import')
         modules = {'Origin', 'Base.Prelude'}
-        self.assertEqual(opening_errors(text, 'Origin', modules), [])
-        self.assertTrue(opening_errors(text.replace('public ', ''), 'Origin', modules))
-        self.assertTrue(opening_errors(text + '\n```agda\nf = x\n```', 'Origin', modules))
+        self.assertEqual(opening_errors(text, 'Origin', modules, visible_import_chapters={'Origin'}), [])
+        self.assertTrue(opening_errors(text.replace('public ', ''), 'Origin', modules, visible_import_chapters={'Origin'}))
+        self.assertTrue(opening_errors(text + '\n```agda\nf = x\n```', 'Origin', modules, visible_import_chapters={'Origin'}))
         self.assertFalse(any(start <= text.index('open import') < end
-                             for start, end in boilerplate_ranges(text, 'Origin', modules)))
+                             for start, end in boilerplate_ranges(text, 'Origin', modules, visible_import_chapters={'Origin'})))
 
 
 class BoilerplateTests(unittest.TestCase):
@@ -86,7 +87,7 @@ class BoilerplateTests(unittest.TestCase):
         body = (f'<pre class="Agda">{OPTIONS}\nmodule Origin where</pre><h1>Title</h1>'
                 '<p><strong>Theorem 0</strong> Result.</p><div class="statement-ending">'
                 + code + '<span class="statement-qed">∎</span></div>')
-        output = mirror_boilerplate(body, 'Origin', {'Origin', 'Base.Prelude'})
+        output = mirror_boilerplate(body, 'Origin', {'Origin', 'Base.Prelude'}, visible_import_chapters={'Origin'})
         self.assertIn(code, output)
         self.assertIn('boilerplate-header-Origin', output)
         self.assertIn('boilerplate-import-Origin-Base.Prelude', output)
@@ -95,7 +96,7 @@ class BoilerplateTests(unittest.TestCase):
 
     def test_boilerplate_shell_is_scoped_to_source_templates(self):
         root = Path(__file__).resolve().parents[2]
-        javascript = (root / 'site/static/bedrock.js').read_text()
+        javascript = source('hover', 'code-targets', 'type-store', 'hover-branch', 'definition-modal')
         self.assertIn('if ((template && template.hasAttribute("data-boilerplate-module")) || name.classList.contains("universe-notation"))\n'
                       '            namePopup.classList.add("boilerplate-hover-popup");', javascript)
         css = (root / 'site/static/bedrock.css').read_text()
@@ -170,13 +171,13 @@ class SyntaxHelpTests(unittest.TestCase):
         self.assertEqual(annotate_keywords(output, 'zh'), output)
 
     def test_help_links_are_not_mobile_definition_targets(self):
-        javascript = (Path(__file__).resolve().parents[2] / 'site/static/bedrock.js').read_text()
+        javascript = source('hover', 'code-targets', 'type-store', 'hover-branch', 'definition-modal')
         self.assertIn('candidate.matches(".type-definition-link, .syntax-doc-link")', javascript)
-        self.assertIn('var html = infoHTML ||', javascript)
-        self.assertIn('if (compactPointer.matches) return null;', javascript)
+        self.assertIn('html: infoHTML ||', javascript)
+        self.assertIn('if (this.persistent()) return null;', javascript)
 
     def test_modal_title_is_localized_code_and_never_a_link(self):
-        javascript = (Path(__file__).resolve().parents[2] / 'site/static/bedrock.js').read_text()
+        javascript = source('hover', 'code-targets', 'type-store', 'hover-branch', 'definition-modal')
         self.assertIn('var title = document.createElement("div");', javascript)
         self.assertIn('titleName.className = "Agda";', javascript)
         self.assertIn('document.createTextNode(chapterText + " ")', javascript)
@@ -184,7 +185,7 @@ class SyntaxHelpTests(unittest.TestCase):
 
     def test_modal_loading_preserves_layout_and_supports_reduced_motion(self):
         root = Path(__file__).resolve().parents[2]
-        javascript = (root / 'site/static/bedrock.js').read_text()
+        javascript = source('hover', 'code-targets', 'type-store', 'hover-branch', 'definition-modal')
         css = (root / 'site/static/bedrock.css').read_text()
         self.assertIn('view.body.replaceChildren(loading, frame);', javascript)
         self.assertIn('if (revealed || failed || !isCurrentFrame()) return;', javascript)
@@ -199,7 +200,7 @@ class SyntaxHelpTests(unittest.TestCase):
         self.assertIn('.definition-modal-frame { transition: none; }', css)
 
     def test_module_code_links_keep_the_two_step_modal_path_without_an_anchor(self):
-        javascript = (Path(__file__).resolve().parents[2] / 'site/static/bedrock.js').read_text()
+        javascript = source('hover', 'code-targets', 'type-store', 'hover-branch', 'definition-modal')
         self.assertIn('if (!url.hash && !link.matches(".Module, [data-module-target]")) return null;', javascript)
         self.assertIn('if (isModule) link.setAttribute("data-module-target", "true");', javascript)
         self.assertIn('frameDocument.querySelector("article h1, h1, pre.Agda")', javascript)

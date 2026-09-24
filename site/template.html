@@ -20,11 +20,10 @@
     window.bedrock = %%CONFIG%%;
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-  <script src="%%BASEURL%%/static/appearance.js?v=%%APPEARANCEJSVER%%"></script>
-  <script defer src="%%BASEURL%%/static/universe-levels.js?v=%%LEVELJSVER%%"></script>
-  <script defer src="%%BASEURL%%/static/bedrock.js?v=%%JSVER%%"></script>
-  <script defer src="%%BASEURL%%/static/reading-routes.js?v=%%ROUTEJSVER%%"></script>
-  <script defer src="%%BASEURL%%/static/ask-ai.js?v=%%ASKJSVER%%"></script>
+  <script src="%%BASEURL%%/static/%%RUNTIME%%/appearance.js"></script>
+  <script defer src="%%BASEURL%%/static/%%RUNTIME%%/universe-levels.js"></script>
+  <script type="module" src="%%BASEURL%%/static/%%RUNTIME%%/bedrock.js"></script>
+  <script defer src="%%BASEURL%%/static/%%RUNTIME%%/ask-ai.js"></script>
 </head>
 
 <body class="%%BODYCLASS%%">
@@ -34,7 +33,7 @@
     <button id="nav-toggle" type="button" title="%%S_MENU%%" aria-label="%%S_MENU%%"
             aria-controls="toc" aria-expanded="false">☰</button>
     <a id="brand" href="%%BASEURL%%/%%LANG%%/index.html"><img class="brand-logo"
-       src="%%BASEURL%%/static/assets/favicon.svg" alt="" />%%SITE%%</a>
+       src="%%BASEURL%%/static/assets/logo.svg" alt="" />%%SITE%%</a>
     <div class="topbar-spacer"></div>
     <div class="search-form" role="search">
       <input id="search-box" type="text" placeholder="%%S_SEARCH%%" autocomplete="off" aria-label="%%S_SEARCH%%" />

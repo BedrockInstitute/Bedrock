@@ -1,0 +1,63 @@
+{
+  "Sample.Seed": [
+    {
+      "start": 1211,
+      "end": 1216,
+      "kind": "binding",
+      "source": "value",
+      "type": "Marker",
+      "targetModule": "Sample.Seed",
+      "target": 1211,
+      "id": 1
+    },
+    {
+      "start": 1219,
+      "end": 1224,
+      "kind": "variable",
+      "source": "value",
+      "type": "Marker",
+      "targetModule": "Sample.Seed",
+      "target": 1211,
+      "id": 2
+    }
+  ],
+  "Sample.Use": [
+    {
+      "start": 841,
+      "end": 846,
+      "kind": "binding",
+      "source": "value",
+      "type": "Marker",
+      "targetModule": "Sample.Use",
+      "target": 841,
+      "id": 3
+    },
+    {
+      "start": 849,
+      "end": 866,
+      "kind": "application",
+      "source": "keep (keep value)",
+      "type": "Marker",
+      "id": 4
+    },
+    {
+      "start": 855,
+      "end": 865,
+      "kind": "application",
+      "source": "keep value",
+      "type": "Marker",
+      "id": 5
+    },
+    {
+      "start": 860,
+      "end": 865,
+      "kind": "variable",
+      "source": "value",
+      "type": "Marker",
+      "targetModule": "Sample.Use",
+      "target": 841,
+      "id": 6
+    }
+  ],
+  "Welcome": []
+}

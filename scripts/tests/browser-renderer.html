@@ -1,0 +1,54 @@
+<!doctype html><meta charset="utf-8"><title>Independent textbook instances</title>
+<style>body{font:14px system-ui}iframe{width:390px;height:780px;max-width:100%;border:1px solid #aaa}pre{white-space:pre-wrap}</style>
+<h1 id="test-status">RUNNING independent site regression</h1>
+<iframe id="frame"></iframe><pre id="report"></pre>
+<script>
+(async()=>{
+  const frame=document.querySelector('#frame'),checks=[],report=document.querySelector('#report');
+  const keys=['theme','code-palettes','reading-progress-v1','current-route','lang']
+    .flatMap(key=>['lantern-notes','prism-reader'].map(prefix=>prefix+'-'+key));
+  const saved=Object.fromEntries(keys.map(key=>[key,localStorage.getItem(key)]));
+  const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  function check(name,ok){checks.push({name,ok:!!ok});report.textContent=JSON.stringify(checks,null,2);if(!ok)throw Error(name);}
+  async function until(fn){const start=Date.now();while(!fn()){if(Date.now()-start>30000)throw Error('Timed out');await pause(60);}}
+  async function load(path){frame.src=path;await new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=reject;});await until(()=>frame.contentWindow.bedrockAppearance&&frame.contentDocument.querySelector('.compact-done'));return [frame.contentDocument,frame.contentWindow];}
+  try{
+    keys.forEach(key=>localStorage.removeItem(key));
+    let [doc,win]=await load('/academy/en/Sample.Use.html');
+    check('alternate brand and icon',doc.querySelector('#brand').textContent==='Lantern Notes'&&doc.querySelector('.brand-logo').src.includes('/academy/static/assets/logo.svg'));
+    check('no instance branding leaks',!doc.body.innerText.includes('Bedrock')&&!doc.documentElement.innerHTML.includes('bedrock.institute'));
+    check('subpath canonical',doc.querySelector('[rel=canonical]').href==='https://lantern.example/academy/en/Sample.Use.html');
+    check('compiler definitions preserved',doc.querySelectorAll('a[data-type]').length>5);
+    check('real expression metadata rendered',doc.querySelectorAll('.expr-node').length>=2);
+    check('review status and QED retained',doc.querySelector('.chapter-review')&&doc.querySelector('.statement-qed').textContent==='∎');
+    check('no horizontal overflow at 390',doc.documentElement.scrollWidth<=390);
+    win.bedrockAppearance.setMode('light');win.bedrockAppearance.setPalette('light','github');
+    doc.querySelector('.compact-done').click();
+    check('first completion persists',JSON.parse(localStorage.getItem('lantern-notes-reading-progress-v1')).includes('Sample.Use'));
+    check('first namespace theme written',localStorage.getItem('lantern-notes-theme')==='light');
+    [doc,win]=await load('/prism/en/Sample.Use.html');
+    check('second brand and prefix',doc.querySelector('#brand').textContent==='Prism Reader'&&doc.querySelector('#brand').getAttribute('href')==='/prism/en/index.html');
+    check('second completion starts independent',doc.querySelector('.compact-done').getAttribute('aria-pressed')==='false');
+    check('second palette starts independent',doc.documentElement.dataset.codePalette==='default');
+    win.bedrockAppearance.setMode('dark');win.bedrockAppearance.setPalette('dark','solarized');
+    check('second namespace does not alter first',localStorage.getItem('lantern-notes-theme')==='light'&&localStorage.getItem('prism-reader-theme')==='dark');
+    [doc,win]=await load('/academy/en/Sample.Use.html');
+    check('return restores first theme and palette',doc.documentElement.classList.contains('theme-light')&&doc.documentElement.dataset.codePalette==='github');
+    check('return restores first completion',doc.querySelector('.compact-done').getAttribute('aria-pressed')==='true');
+    const mirror=await fetch('/academy/en/Sample.Use.md').then(r=>r.text());
+    check('ordinary Markdown mirror has no intermediate markers',mirror.includes('```agda\ntwice')&&!mirror.includes('\u0000'));
+    check('source path is configured md',mirror.includes('https://code.example/lantern/text/chapters/Sample/Use.md')&&!mirror.includes('src/'));
+    check('mirror guide preserves deployment prefix',mirror.includes('agent_guide: /academy/llms.txt\n'));
+    const guide=await fetch('/academy/llms.txt').then(r=>r.text());
+    check('agent layer is independently branded',guide.includes('Lantern Notes')&&!guide.includes('bedrock.institute')&&!guide.includes('Base.Prelude'));
+    const types=await fetch('/academy/en/types/Sample.Use.json').then(r=>r.json());
+    check('real compiler sidecar applications',Object.keys(types.$expressions||{}).length>=2);
+    const content=await fetch('/academy/search-content.json').then(r=>r.json());
+    check('index has three languages and code', ['en','zh','ja','*'].every(lang=>content.some(x=>x.lang===lang)));
+    const plain=await fetch('/plain.html').then(r=>r.text());
+    check('raw core renders unknown code without fake semantic links',plain.includes('unknown value')&&!plain.includes('data-type=')&&!plain.includes('expr-node'));
+    document.querySelector('#test-status').textContent='PASS '+checks.length+'/'+checks.length;
+  }catch(error){document.querySelector('#test-status').textContent='FAIL '+error.message;}
+  finally{for(const[key,value]of Object.entries(saved))value===null?localStorage.removeItem(key):localStorage.setItem(key,value);}
+})();
+</script>

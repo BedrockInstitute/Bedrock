@@ -47,12 +47,21 @@ while scrolling up or using search.
 
 ## Contents
 
+The shared core and complete-site APIs, project configuration and Markdown
+contract are documented in [SITE-ARCHITECTURE](../dev/SITE-ARCHITECTURE.md),
+[SITE-CONFIG](../dev/SITE-CONFIG.md) and
+[RENDERER-MARKDOWN](../dev/RENDERER-MARKDOWN.md). `site/project.json` is the Bedrock
+instance. `examples/renderer` builds the same full skeleton under another brand.
+
 - `template.html`: the page shell. The renderer fills `%%...%%` slots (content, navigation, the
   external-library banner, cache-busting `?v=` asset versions, the canonical link, the
   JSON-LD graph, the `window.bedrock` page config, and so on).
 - `static/`: assets copied verbatim to the site root.
   - `bedrock.css`: styles (the palette and Agda token colours are **adapted from the 1lab**).
-  - `bedrock.js`: theme toggle, KaTeX, type-on-hover, search control, language switch.
+  - `bedrock.js`: composition entry for `reader/` feature modules. State belongs to
+    the responsible service or feature, not to the entry script. `appearance.js`
+    remains synchronous before paint. All JavaScript and worker dependencies are
+    published together under one immutable `runtime/<digest>/` directory.
   - `ask-ai.js` / `ask-ai.css`: select a passage, get a handover text for an assistant.
   - `assets/`: the brand marks (`favicon.svg`, `brand.svg`, `banner.png`). `brand.svg` is a
     bottom-padded variant of the favicon mark, for inline use beside heading text in the READMEs;

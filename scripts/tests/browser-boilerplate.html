@@ -4,7 +4,8 @@
 <link rel="stylesheet" href="/static/bedrock.css?regression=details-v1">
 <link rel="stylesheet" href="/static/reading-routes.css?regression=details-v1">
 <script>
-window.bedrock = {baseUrl:'', lang:'zh', module:'Base.Choice'};
+window.bedrock = {baseUrl:'', lang:'zh', module:'Base.Choice',storageNamespace:'bedrock'};
+const savedTheme=localStorage.getItem('bedrock-theme');
 const nativeMedia = window.matchMedia.bind(window);
 const testPointer = {matches:true, addEventListener(){}};
 let forceReducedMotion = false;
@@ -12,7 +13,8 @@ window.matchMedia = q => q === '(hover: none), (pointer: coarse)'
   ? testPointer : q === '(prefers-reduced-motion: reduce)' && forceReducedMotion
     ? {matches:true} : nativeMedia(q);
 </script>
-<script src="/static/bedrock.js?regression=details-v1" defer></script>
+<script src="/static/appearance.js"></script>
+<script src="/static/bedrock.js?regression=details-v1" type="module"></script>
 <body><h2 id="test-status">RUNNING boilerplate / modal / simulated touch regression</h2>
 <pre id="report"></pre><main id="fixture"></main>
 <script>
@@ -86,7 +88,7 @@ try {
   const route=document.createElement('div');
   route.id='reading-explorer'; route.dataset.lang='zh'; route.dataset.current='Base.Choice';
   route.dataset.source='/zh/reading-routes.json'; fixture.append(route);
-  const routes=document.createElement('script');routes.src='/static/reading-routes.js?regression=details-v1';document.body.append(routes);
+  const routes=document.createElement('script');routes.type='module';routes.src='/static/reading-routes.js?regression=details-v1';document.body.append(routes);
   await until(()=>route.querySelector('.compact-done'));
   let compact=route.querySelector('.reading-compact');
   const completedBefore=route.querySelector('.compact-done').getAttribute('aria-pressed');
@@ -200,7 +202,7 @@ try {
   check(!document.querySelector('.definition-modal'),'module name tap opens a child hover, not modal');
   const moduleAction=modulePopup.querySelector('.type-definition-link');
   check(moduleAction,'untyped module link has explicit modal action');
-  document.documentElement.className='theme-dark';
+  window.bedrockAppearance.setMode('dark');
   moduleAction.click();
   checkLoading('dark');
   await until(()=>document.querySelector('.definition-modal-title')?.textContent.includes('基础词汇'));
@@ -221,7 +223,7 @@ try {
   check(current,'definition anchor located');
   const open=document.createElement('a');open.className='type-definition-link';
   open.href='/zh/Base.Choice.html#'+current.id;open.dataset.name='SetChoice→LEM';fixture.append(open);
-  document.documentElement.className='theme-light';open.click();checkLoading('light');
+  window.bedrockAppearance.setMode('light');open.click();checkLoading('light');
   const frame=await until(()=>document.querySelector('.definition-modal-frame'));
   await until(()=>frame.contentDocument?.getElementById(current.id));
   const frameDoc=frame.contentDocument;
@@ -386,6 +388,9 @@ try {
 } catch(error) {
   document.querySelector('#test-status').textContent='FAIL '+error.message;
   fetch('/results',{method:'POST',body:'ERROR '+error.stack});
+} finally {
+  if (savedTheme === null) localStorage.removeItem('bedrock-theme');
+  else localStorage.setItem('bedrock-theme', savedTheme);
 }
 });
 </script></body></html>

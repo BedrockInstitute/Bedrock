@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "name": "Lantern Notes",
+  "publisher": "Lantern Workshop",
+  "storage_namespace": "lantern-notes",
+  "languages": ["en", "zh", "ja"],
+  "canonical": "https://lantern.example/academy",
+  "base_url": "/academy",
+  "repository": "https://code.example/lantern",
+  "source_tree": "https://code.example/lantern/text/chapters",
+  "sources": "chapters",
+  "source_extension": ".md",
+  "catalog": "catalog.json",
+  "glossary": "glossary.toml",
+  "highlighted": "semantic/html",
+  "types": "semantic/types.json",
+  "expression_types": "semantic/expressions.json",
+  "favicon": "lantern.svg",
+  "logo": "lantern.svg",
+  "landing_module": "Welcome",
+  "prelude_module": "",
+  "hubs": [],
+  "visible_import_chapters": ["Welcome"],
+  "descriptions": {
+    "en": "A tiny independent textbook reader demonstration.",
+    "zh": "一个独立教材阅读器的小型示例。",
+    "ja": "独立した教科書閲覧機能の小さな例。"
+  },
+  "topics": ["Checked programming examples"],
+  "license": {"name": "CC0-1.0", "url": "https://creativecommons.org/publicdomain/zero/1.0/"},
+  "policies": {"formal_setup": true, "trilingual": true}
+}

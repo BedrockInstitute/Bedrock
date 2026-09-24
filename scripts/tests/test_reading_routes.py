@@ -24,7 +24,7 @@ def metadata(chapters=("A", "B")):
 
 class ValidationTests(unittest.TestCase):
     def test_human_review_is_explicit_for_every_chapter(self):
-        data, catalog = routes._load_catalog()
+        data, catalog = routes._load_catalog(routes.CATALOG_PATH)
         self.assertTrue(all(type(item['human_reviewed']) is bool for item in catalog.values()))
         for invalid in (None, 'true', 1):
             with self.subTest(invalid=invalid), tempfile.TemporaryDirectory() as directory:
@@ -68,7 +68,7 @@ class ValidationTests(unittest.TestCase):
         value = metadata(); value["routes"].append({"id": "second",
             "title": {"en": "Second", "zh": "第二", "ja": "第二"},
             "description": {"en": "Shared", "zh": "共享", "ja": "共有"}, "chapters": ["B"]})
-        routes.validate_metadata(value, {"Origin", "A", "B"})
+        routes.validate_metadata(value, {"Origin", "A", "B"}, previews={'Origin'})
         value["routes"][1]["chapters"] = ["B", "B"]
         with self.assertRaisesRegex(ValueError, "repeats chapter: B"):
             routes.validate_metadata(value, {"Origin", "A", "B"})
@@ -146,7 +146,8 @@ class BuildTests(unittest.TestCase):
                 "<!--en-->\n# First chapter\n<!--zh-->\n# 第一章\n<!--ja-->\n# 最初の章\n<!--/-->\n"
                 "import Ghost\n```agda\nmodule A where\n```")
             (root / "B.lagda.md").write_text("```agda\nopen import A using ()\n```")
-            data = routes.build_reading_data(root, root / "reading-catalog.json")
+            data = routes.build_reading_data(root, root / "reading-catalog.json",
+                                             extension='.lagda.md', previews={'Origin'})
         nodes = {node["id"]: node for node in data["nodes"]}
         self.assertEqual(nodes["A"]["title"]["en"], "First chapter")
         self.assertTrue(nodes["A"]["human_reviewed"])

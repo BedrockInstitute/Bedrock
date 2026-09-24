@@ -3,12 +3,12 @@
 <base href="/zh/Base.Choice.html">
 <link rel="stylesheet" href="/static/bedrock.css"><link rel="stylesheet" href="/static/appearance.css">
 <script>
-window.bedrock={baseUrl:'',lang:'zh',module:'Base.Choice'};
+window.bedrock={baseUrl:'',lang:'zh',module:'Base.Choice',storageNamespace:'bedrock'};
 const nativeMedia=window.matchMedia.bind(window);
 window.matchMedia=q=>q==='(hover: none), (pointer: coarse)'?{matches:true,addEventListener(){}}:nativeMedia(q);
 const savedAppearance=Object.fromEntries(['bedrock-theme','bedrock-code-palettes'].map(key=>[key,localStorage.getItem(key)]));
 </script>
-<script src="/static/appearance.js"></script><script defer src="/static/universe-levels.js"></script><script defer src="/static/bedrock.js"></script>
+<script src="/static/appearance.js"></script><script defer src="/static/universe-levels.js"></script><script type="module" src="/static/bedrock.js"></script>
 </head><body><div id="site-header"><button id="theme-toggle">Theme</button></div>
 <h1 id="test-status">RUNNING universe levels</h1><main id="main-content"><article id="fixture"></article></main><pre id="report"></pre>
 <script>

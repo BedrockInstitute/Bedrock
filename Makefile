@@ -61,7 +61,7 @@ AGDA_SOURCES := $(shell find src -type f -name '*.lagda.md' | sort)
 TYPECHECK_SOURCES := $(patsubst src/%,$(TYPECHECK_ROOT)/src/%,$(AGDA_SOURCES))
 LINT_GATES := lint-prose-gate lint-agda-gate host-lem-gate glossary-gate \
 	term-gate fences-gate diagrams-gate reading-order-gate routes-gate \
-	chapters-gate i18n-gate
+	chapters-gate i18n-gate site-lint-gate
 
 .PHONY: bootstrap toolchain check bedrock-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types types-refresh types-local-identifiers types-local-expressions site-render site site-cold site-ci site-backend-ci serve deploy clean distclean $(LINT_GATES)
 
@@ -198,6 +198,9 @@ chapters-gate:
 i18n-gate:
 	$(PY) scripts/site/weave-i18n.py --check
 
+site-lint-gate:
+	$(PY) scripts/site/site_lint.py --config site/project.json --project-root .
+
 ifeq ($(LOCAL_PARALLEL),1)
 lint:
 	$(MAKE) -j$(LOCAL_JOBS) $(LINT_GATES)
@@ -291,7 +294,6 @@ endif
 site-render:
 	$(PY) scripts/site/render-site.py --html-dir $(HTML_DIR) --out $(SITE_OUT) \
 		--langs $(LANGS) --base-url "$(BASE_URL)"
-	$(PY) scripts/site/gen-depmap.py --src src --out $(SITE_OUT) --langs $(LANGS)
 
 site: types
 	$(MAKE) site-render PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)" \

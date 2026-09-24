@@ -37,7 +37,7 @@ class ExtractTypesTests(unittest.TestCase):
                 extract_types.main(["--agda", "/tmp/bedrock-agda"]),
                 0,
             )
-        extract.assert_called_once_with("_build/html", "src", "/tmp/bedrock-agda")
+        extract.assert_called_once_with("_build/html", "src", "/tmp/bedrock-agda", entry="Origin", libraries=["cubical"])
 
     def test_definition_names_include_pattern_synonyms(self):
         with tempfile.TemporaryDirectory() as directory:

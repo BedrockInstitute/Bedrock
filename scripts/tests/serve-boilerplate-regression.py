@@ -8,10 +8,19 @@ under the same canonical redirects used by the static host.
 import argparse
 import http.server
 import time
+import re
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
+FIXTURES = {
+    '/regression': 'browser-boilerplate.html',
+    '/padding-regression': 'browser-code-padding.html',
+    '/directory-regression': 'browser-directory.html',
+    '/appearance-regression': 'browser-appearance.html',
+    '/universe-regression': 'browser-universe-levels.html',
+    '/fonts-regression': 'browser-fonts.html',
+}
 
 
 def main():
@@ -38,6 +47,23 @@ def main():
 
         def do_GET(self):
             url = urlsplit(self.path)
+            if url.path in FIXTURES:
+                # Exercise the exact production generation, not mutable source
+                # copies. Popup iframe pages already reference this same hash.
+                page = (args.site / 'en/index.html').read_text(encoding='utf-8')
+                runtime = re.search(r'/static/(runtime/[0-9a-f]+)/bedrock.js', page)
+                fixture = (ROOT / 'scripts/tests' / FIXTURES[url.path]).read_text(encoding='utf-8')
+                fixture = fixture.replace('/site/static/', '/static/')
+                if runtime:
+                    fixture = re.sub(r'/static/([a-z-]+\.js)',
+                        lambda match: '/static/' + runtime[1] + '/' + match[1], fixture)
+                payload = fixture.encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.send_header('Content-Length', str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload)
+                return
             if url.path.endswith('.html'):
                 self.send_response(307)
                 self.send_header('Location', url.path[:-5] + ('?' + url.query if url.query else ''))

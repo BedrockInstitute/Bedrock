@@ -14,33 +14,18 @@ PREVIEWS = frozenset({"Origin"})
 CATALOG = Path(__file__).resolve().parents[2] / "dev" / "reading-catalog.json"
 
 
-def imports(text):
-    return [name for block in FENCE.findall(text) for name in IMPORT.findall(block)]
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'site'))
+from source_syntax import imports
+from reading_order import reading_order_errors
 
 
 def defects(sources, catalog_path=CATALOG):
     try:
-        catalog = json.loads(Path(catalog_path).read_text(encoding="utf-8"))
-        order = [entry["id"] for entry in catalog["chapters"]]
+        catalog = json.loads(Path(catalog_path).read_text(encoding='utf-8'))
+        return reading_order_errors(sources, catalog, previews=PREVIEWS)
     except (OSError, KeyError, TypeError, json.JSONDecodeError):
-        return ["missing or invalid reading catalog"]
-    expected = set(sources)
-    actual = set(order)
-    errors = [f"missing chapter: {name}" for name in sorted(expected - actual)]
-    errors += [f"unknown catalog chapter: {name}" for name in sorted(actual - expected)]
-    errors += [f"duplicate chapter: {name}" for name, n in Counter(order).items() if n > 1]
-    position = {name: i for i, name in enumerate(order)}
-    for name in order:
-        if name in PREVIEWS or name not in expected:
-            continue
-        for dependency in dict.fromkeys(imports(sources[name])):
-            if dependency not in expected:
-                continue
-            if dependency in PREVIEWS:
-                errors.append(f"{name} depends on preview {dependency}, not its proving chapter")
-            elif dependency in position and position[dependency] >= position[name]:
-                errors.append(f"{name} precedes prerequisite {dependency}")
-    return errors
+        return ['missing or invalid reading catalog']
 
 
 def main():

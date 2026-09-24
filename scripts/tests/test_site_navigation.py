@@ -178,7 +178,7 @@ class SiteNavigationTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_sticky_directory_nests_all_chapter_headings(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        javascript = (ROOT / "site/static/reader/navigation.js").read_text()
         helper = re.search(r"  function sectionOutline\(headings\) \{.*?\n  \}\n",
                            javascript, re.DOTALL)
         self.assertIsNotNone(helper)
@@ -214,7 +214,7 @@ console.log(JSON.stringify(shape(sectionOutline(headings))));
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_reading_position_opens_ancestors_and_closes_departed_sections(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        javascript = (ROOT / "site/static/reader/navigation.js").read_text()
         helper = re.search(r"    function syncTocBranches\(activeLink\) \{.*?\n    \}\n",
                            javascript, re.DOTALL)
         self.assertIsNotNone(helper)
@@ -241,7 +241,7 @@ console.log(JSON.stringify(states));
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_active_section_link_stays_inside_sidebar_viewport(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        javascript = (ROOT / "site/static/reader/navigation.js").read_text()
         helper = re.search(
             r"    function revealTocLink\(link\) \{.*?\n    \}\n",
             javascript,

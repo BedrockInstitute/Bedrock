@@ -2,12 +2,12 @@
  *
  * Select prose or Agda anywhere in a chapter and a trigger appears beside the selection.
  * It opens a dialog holding one plain-text handover document: what was selected, where
- * exactly it sits, what Bedrock is, and which of this site's machine-readable resources
+ * exactly it sits, what the textbook covers, and which of this site's machine-readable resources
  * an assistant should fetch before answering. The reader copies that text into whatever
  * assistant they already use. Nothing is sent anywhere from this page: there is no API
  * key, no network call, and no third party in the loop.
  *
- * Vanilla JS, no build step. AGPL-3.0-only, like the rest of Bedrock's front end.
+ * Vanilla JS, no build step. AGPL-3.0-only, like the rest of this front end.
  */
 (function () {
   "use strict";
@@ -29,12 +29,11 @@
       copy: "Copy", close: "Close", regionLabel: "Handover text, click to copy",
       idle: "Not copied yet.", copied: "Copied to the clipboard.",
       failed: "The browser refused clipboard access. Select the text and copy it by hand.",
-      docTitle: "Explain a passage of the Bedrock textbook",
-      intro: "I am reading the Bedrock online textbook and I want you to explain the passage"
-           + " I selected. Read the sources listed below before you answer.",
+
+
       hSelection: "The passage I selected",
       hWhere: "Where the passage is",
-      hProject: "What Bedrock is",
+
       hFetch: "How to get the rest of the context",
       hWant: "What I want from you",
       fPage: "Page", fMarkdown: "The same page as Markdown, smaller and easier to read",
@@ -50,38 +49,9 @@
       fLinks: "Identifiers and terms linked inside my selection",
       fSource: "The Agda master this chapter is generated from",
       fPrereq: "Chapters this one depends on",
-      fLibrary: "This page is a module of the Cubical standard library, rendered inside"
-              + " Bedrock for reference. It is not a chapter of the book.",
+
       fReadingOrder: "Position in the reading order",
       position: function (order, total) { return "chapter " + order + " of " + total; },
-      project: [
-        "Bedrock is a machine-checked development of set theory in Cubical Agda. Two results"
-        + " are proved: the constructible universe L is a model of ZFC, and GCH holds in it."
-        + " They are the definitions `L⊨ZFC` and `L⊨GCH` in the chapter Origin, each"
-        + " resting on one hypothesis, excluded middle at `LEM (ℓ-suc ℓ)`, and on nothing"
-        + " else. Every file typechecks under Agda 2.8.0 with the cubical 0.9 library and the"
-        + " `--safe` flag, so nothing in the development is postulated. The long-term aim is"
-        + " forcing, set-theoretic geology, and the definability of ground models.",
-        "The project is host-language maximalist: every set-theoretic notion is rebuilt in"
-        + " type-theory-native idiom rather than transcribed from the textbook ZF axioms, and"
-        + " the deeply embedded first-order `Formula` is used only where syntax is itself the"
-        + " object of study. This matters when you read a definition here, because it will"
-        + " often not look like the one in a set theory textbook.",
-        "The site is that development published as a trilingual textbook, in English, Chinese"
-        + " and Japanese. One chapter is one Agda module. The displayed Agda is the formal"
-        + " content and the prose around it is the exposition; the reading order is a"
-        + " dependency order, so a chapter's prerequisites are the modules it imports."
-      ],
-      want: [
-        "Explain the passage I selected: what it says, why it is put this way, what it rests"
-        + " on, and what it is used for later. Define any notation I would have to know. If"
-        + " it is Agda code, walk through the term and name the type of each part.",
-        "Follow the links above instead of guessing. If the passage cannot be understood"
-        + " without a prerequisite chapter, say which one and what I need from it. If the"
-        + " sources contradict what you expected, trust the sources: this is a machine-checked"
-        + " development and the Agda is the authority.",
-        "Answer in English."
-      ],
       fetch: function (origin, mdNote) {
         return [
           "`" + origin + "/llms.txt`: the guide this site publishes for AI agents. It lists"
@@ -113,11 +83,11 @@
       copy: "复制", close: "关闭", regionLabel: "交接文，点击复制",
       idle: "尚未复制。", copied: "已复制到剪贴板。",
       failed: "浏览器拒绝了剪贴板访问。请手动选中文字复制。",
-      docTitle: "请解释 Bedrock 教科书中的一段内容",
-      intro: "我正在阅读 Bedrock 在线教科书，想请你解释我选中的这段内容。回答之前请先读下面列出的资料。",
+
+
       hSelection: "我选中的内容",
       hWhere: "这段内容的位置",
-      hProject: "关于 Bedrock 这个项目",
+
       hFetch: "如何获取其余上下文",
       hWant: "我希望你做什么",
       fPage: "页面", fMarkdown: "同一页面的 Markdown 版本，体积更小也更易读",
@@ -133,29 +103,9 @@
       fLinks: "选区内带链接的标识符与术语",
       fSource: "生成本章的 Agda 母本",
       fPrereq: "本章依赖的章节",
-      fLibrary: "本页是 Cubical 标准库的一个模块，在 Bedrock 中渲染以供查阅，并不是本书的章节。",
+
       fReadingOrder: "在阅读顺序中的位置",
       position: function (order, total) { return "第 " + order + " 章，全书共 " + total + " 章"; },
-      project: [
-        "Bedrock 是用 Cubical Agda 完成的机器验证集合论。目前已经证明两项结果：可构造宇宙 L 是 ZFC 的模型，"
-        + "并且 GCH 在其中成立。它们就是 Origin 一章里的定义 `L⊨ZFC` 与 `L⊨GCH`，"
-        + "各自只依赖一条假设，即 `LEM (ℓ-suc ℓ)` 这一层的排中律，除此之外别无假设。"
-        + "全部文件都在 Agda 2.8.0 与 cubical 0.9 库下带 `--safe` 通过类型检查，因此开发中没有任何公设。"
-        + "长期目标是力迫法、集合论地质学，以及基模型的可定义性。",
-        "本项目采取宿主语言最大化的路线：每个集合论概念都以类型论原生的方式重建，而不是照抄教科书的 ZF 公理；"
-        + "深嵌入的一阶 `Formula` 只在语法本身成为研究对象时才使用。读这里的定义时这一点很关键，"
-        + "因为它往往与集合论教科书里的写法并不相同。",
-        "本站是该开发成果出版成的三语教科书，语言为英文、中文与日文。一章即一个 Agda 模块。"
-        + "展示的 Agda 是形式内容，围绕它的散文是讲解；阅读顺序就是依赖顺序，一章的先修就是它导入的模块。"
-      ],
-      want: [
-        "请解释我选中的这段内容：它说的是什么，为什么这样表述，它依赖什么，后面又被用在哪里。"
-        + "我需要知道的记号请一并定义。如果选中的是 Agda 代码，请逐步讲解这个项，并说明各部分的类型。",
-        "请顺着上面的链接去读，不要猜测。如果这段内容离开某个先修章节就无法理解，请指出是哪一章，"
-        + "以及我需要从那一章掌握什么。如果资料与你的预期不符，请以资料为准：这是机器验证的开发，"
-        + "Agda 才是权威。",
-        "请用中文回答。"
-      ],
       fetch: function (origin, mdNote) {
         return [
           "`" + origin + "/llms.txt`：本站为 AI 发布的说明，列出了全部章节与全部机器可读端点。请先读它。",
@@ -183,12 +133,11 @@
       copy: "コピー", close: "閉じる", regionLabel: "引き継ぎ文、クリックでコピー",
       idle: "まだコピーしていません。", copied: "クリップボードにコピーしました。",
       failed: "ブラウザがクリップボードへのアクセスを拒否しました。手動で選択してコピーしてください。",
-      docTitle: "Bedrock 教科書の一節を説明してください",
-      intro: "Bedrock のオンライン教科書を読んでいます。選択した一節を説明してください。"
-           + "答える前に、下に挙げた資料を読んでください。",
+
+
       hSelection: "選択した一節",
       hWhere: "その位置",
-      hProject: "Bedrock とは",
+
       hFetch: "残りの文脈を得る方法",
       hWant: "お願いしたいこと",
       fPage: "ページ", fMarkdown: "同じページの Markdown 版。小さくて読みやすい",
@@ -204,35 +153,9 @@
       fLinks: "選択範囲内でリンクされている識別子と用語",
       fSource: "この章を生成している Agda の原本",
       fPrereq: "この章が依存する章",
-      fLibrary: "このページは Cubical 標準ライブラリのモジュールで、参照用に Bedrock 内へ描画したものです。"
-              + "本書の章ではありません。",
+
       fReadingOrder: "読書順での位置",
       position: function (order, total) { return "第 " + order + " 章（全 " + total + " 章）"; },
-      project: [
-        "Bedrock は Cubical Agda による機械検証された集合論です。二つの結果が証明されています。"
-        + "構成可能宇宙 L が ZFC のモデルであること、そしてその中で GCH が成り立つことです。"
-        + "それが Origin の章にある定義 `L⊨ZFC` と `L⊨GCH` で、いずれも "
-        + "`LEM (ℓ-suc ℓ)` の排中律という一つの仮定のみに依拠し、他には何も仮定しません。"
-        + "すべてのファイルは Agda 2.8.0 と cubical 0.9 ライブラリのもとで `--safe` 付きに型検査を通るので、"
-        + "この開発には postulate がありません。長期的な目標は強制法、集合論的地質学、"
-        + "そして基礎モデルの定義可能性です。",
-        "この企画はホスト言語最大主義を採ります。集合論の概念はすべて型理論に固有の語法で作り直され、"
-        + "教科書の ZF 公理を書き写したものではありません。深く埋め込まれた一階の `Formula` は、"
-        + "構文そのものが研究対象になる場面でのみ使われます。ここでの定義を読むときこの点が重要です。"
-        + "集合論の教科書に載っている形とは違って見えることが多いからです。",
-        "本サイトはその開発成果を英語、中国語、日本語の三言語の教科書として公開したものです。"
-        + "一つの章が一つの Agda モジュールです。表示された Agda が形式的な内容で、"
-        + "その周りの文章が解説です。読書順は依存順であり、章の前提はその章が import するモジュールです。"
-      ],
-      want: [
-        "選択した一節を説明してください。何を述べているのか、なぜこの書き方なのか、何に依拠し、"
-        + "後で何に使われるのか。知っておくべき記法も定義してください。Agda のコードなら、"
-        + "項を順に追い、各部分の型を示してください。",
-        "推測せず、上のリンクをたどってください。前提となる章なしでは理解できない場合は、"
-        + "どの章で、そこから何が必要かを述べてください。資料が予想と食い違う場合は資料に従ってください。"
-        + "これは機械検証された開発であり、権威は Agda にあります。",
-        "日本語で答えてください。"
-      ],
       fetch: function (origin, mdNote) {
         return [
           "`" + origin + "/llms.txt`：本サイトが AI エージェント向けに公開している案内です。"
@@ -256,7 +179,12 @@
       mdRule: "本サイトのどの章の URL にも `.md` を付ければ、その章の純 Markdown 版が得られます。"
     }
   };
-  var S = STRINGS[lang] || STRINGS.en;
+  var generic = {
+    en: {docTitle: `Explain a passage of ${cfg.site || 'this textbook'}`, intro: 'Explain the selected passage using the linked sources.', hProject: 'About this textbook', fLibrary: 'This is a referenced library module, not a chapter.', project: [cfg.description || ''], want: ['Explain the selection and its prerequisites. Follow the cited sources instead of guessing. Answer in English.']},
+    zh: {docTitle: `请解释 ${cfg.site || '教科书'} 中的一段内容`, intro: '请根据所链接的资料解释选中的段落。', hProject: '关于本教科书', fLibrary: '这是供查阅的库模块，并非本书章节。', project: [cfg.description || ''], want: ['解释选段及其先修知识，请查阅资料而非猜测。请用中文回答。']},
+    ja: {docTitle: `${cfg.site || '教科書'} の一節を説明してください`, intro: 'リンク先の資料を使って選択した一節を説明してください。', hProject: 'この教科書について', fLibrary: '参照用のライブラリモジュールであり、本書の章ではありません。', project: [cfg.description || ''], want: ['選択した一節と前提知識を説明してください。推測せず資料を参照し、日本語で答えてください。']}
+  };
+  var S = Object.assign({}, STRINGS[lang] || STRINGS.en, generic[lang] || generic.en, cfg.agentCopy || {});
 
   /* ---- where the reader is, as an address an agent can fetch --------------- */
 

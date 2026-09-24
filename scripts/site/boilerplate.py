@@ -75,9 +75,9 @@ def popup_code(code, module):
     return ''.join(adapter.parts)
 
 
-def mirror_boilerplate(body, module, internal):
+def mirror_boilerplate(body, module, internal, *, visible_import_chapters=(), options=OPTIONS):
     blocks = list(PRE.finditer(body))
-    if not blocks or not plain(blocks[0][1]).startswith(OPTIONS):
+    if not blocks or not plain(blocks[0][1]).startswith(options):
         return body
     header = chunks(blocks[0][1])
     declarations = [block for block in blocks if any(plain(part).startswith('module ' + module + ' ')
@@ -94,7 +94,7 @@ def mirror_boilerplate(body, module, internal):
     for block in blocks[1:]:
         parts = chunks(block[1])
         if parts and all((m := IMPORT.match(plain(part))) and m[1] in internal for part in parts):
-            if module not in VISIBLE_IMPORT_CHAPTERS:
+            if module not in visible_import_chapters:
                 removed.append(block)
             for part in parts:
                 imports.setdefault(IMPORT.match(plain(part))[1], []).append(part)

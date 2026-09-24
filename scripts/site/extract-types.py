@@ -35,13 +35,13 @@ RENAMED_RE = re.compile(
     r'<a id="\d+" class="(?P<aspect>[^"]+)">(?P<name>[^<]+)</a>'
 )
 
-def reachable_modules(html_dir):
-    """Follow generated module links from Origin, ignoring stale build files."""
+def reachable_modules(html_dir, entry=None):
+    """Follow an explicit entry, or use all supplied compiler documents."""
     files = glob.glob(os.path.join(html_dir, "*.md")) + glob.glob(os.path.join(html_dir, "*.html"))
     available = {os.path.basename(path).rsplit(".", 1)[0]: path for path in files}
-    if "Origin" not in available:
+    if not entry or entry not in available:
         return sorted(available)
-    seen, pending = set(), ["Origin"]
+    seen, pending = set(), [entry]
     link = re.compile(r'href="([^"#]+)\.html(?:#[^"]*)?"')
     while pending:
         module = pending.pop()
@@ -181,10 +181,10 @@ def query_missing(loader_abs, missing, agda):
     return result
 
 
-def write_loader(typeext_dir, src_abs, modules):
+def write_loader(typeext_dir, src_abs, modules, *, libraries=()):
     os.makedirs(typeext_dir, exist_ok=True)
     with open(os.path.join(typeext_dir, "typeext.agda-lib"), "w", encoding="utf-8") as fh:
-        fh.write(f"name: bedrock-typeext\ninclude: . {src_abs}\ndepend: cubical\n"
+        fh.write(f"name: textbook-typeext\ninclude: . {src_abs}\ndepend: {' '.join(libraries)}\n"
                  f"flags: -WnoUnsupportedIndexedMatch\n")
     body = "{-# OPTIONS --cubical --safe --guardedness #-}\nmodule types-loader where\n"
     body += "".join(f"import {m}\n" for m in modules)
@@ -194,15 +194,15 @@ def write_loader(typeext_dir, src_abs, modules):
     return os.path.abspath(path)
 
 
-def extract(html_dir, src, agda="agda"):
-    reachable = reachable_modules(html_dir)
+def extract(html_dir, src, agda="agda", *, entry=None, libraries=()):
+    reachable = reachable_modules(html_dir, entry)
     queryable = reachable
     if not queryable:
         return {}
 
     # Preferred path: a loader importing every reachable module, so all are in scope.
     typeext = os.path.join(os.path.dirname(html_dir) or ".", "typeext")
-    loader = write_loader(typeext, os.path.abspath(src), reachable)
+    loader = write_loader(typeext, os.path.abspath(src), reachable, libraries=libraries)
     result, hits = query(loader, queryable, agda)
     if not hits:
         sys.stderr.write("warning: reachable-set loader yielded no type responses\n")
@@ -228,6 +228,7 @@ def extract(html_dir, src, agda="agda"):
 
 def main(argv):
     agda, html_dir, src, out = "agda", "_build/html", "src", None
+    entry, libraries = 'Origin', ['cubical']
     i = 0
     while i < len(argv):
         a = argv[i]
@@ -235,10 +236,12 @@ def main(argv):
         elif a == "--html-dir": i += 1; html_dir = argv[i]
         elif a == "--src": i += 1; src = argv[i]
         elif a == "--out": i += 1; out = argv[i]
+        elif a == "--entry": i += 1; entry = argv[i]
+        elif a == "--libraries": i += 1; libraries = [x for x in argv[i].split(',') if x]
         else: sys.stderr.write(f"unknown option: {a}\n"); return 2
         i += 1
 
-    data = extract(html_dir, src, agda)
+    data = extract(html_dir, src, agda, entry=entry, libraries=libraries)
     text = json.dumps(data, ensure_ascii=False, indent=2)
     if out:
         os.makedirs(os.path.dirname(out) or ".", exist_ok=True)

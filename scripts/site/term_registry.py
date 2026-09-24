@@ -11,7 +11,7 @@ TERM_MARK_RE = re.compile(
 TERM_ID_RE = re.compile(r"[a-z][a-z0-9-]*")
 
 
-def load_entries(path="dev/glossary.toml"):
+def load_entries(path):
     with open(path, "rb") as source:
         return tomllib.load(source).get("term", [])
 

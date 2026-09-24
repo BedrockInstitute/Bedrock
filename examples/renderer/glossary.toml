@@ -1,0 +1,11 @@
+[[term]]
+id = "marker"
+audience = "reader"
+en = "marker"
+zh = "标记"
+ja = "印"
+introduced_in = "Sample.Seed"
+matching = "auto"
+recap_en = "A value of the example's one-constructor type."
+recap_zh = "本例中只有一个构造子的类型的值。"
+recap_ja = "この例の一つの構成子を持つ型の値。"

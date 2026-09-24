@@ -35,7 +35,8 @@ class DependencyMapTests(unittest.TestCase):
         depth = {'A': 0, 'B': 1, 'C': 1, 'Origin': 2}
         stages = [{'key': '0', 'label': 'Preview'}, {'key': '1', 'label': 'Proof'}]
         membership = {'Origin': '0', 'A': '1', 'B': '1', 'C': '1'}
-        diagrams = depmap.layouts(nodes, edges, order, depth, list(sorted(nodes)), stages, membership)
+        diagrams = depmap.layouts(nodes, edges, order, depth, list(sorted(nodes)), stages,
+                                  membership, preview='Origin')
         for name, diagram in diagrams.items():
             positions = diagram['positions']
             self.assertEqual(set(positions), nodes, name)

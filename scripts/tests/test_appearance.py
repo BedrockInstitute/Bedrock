@@ -52,11 +52,16 @@ class AppearanceTests(unittest.TestCase):
 
     def test_prepaint_script_and_cache_busting(self):
         template = (ROOT / 'site/template.html').read_text()
-        self.assertRegex(template, r'<script src="[^"\n]+/appearance.js\?v=%%APPEARANCEJSVER%%"></script>')
+        self.assertRegex(template, r'<script src="[^"\n]+/%%RUNTIME%%/appearance.js"></script>')
         self.assertLess(template.index('/appearance.js'), template.index('<body'))
-        renderer = (ROOT / 'scripts/site/render-site.py').read_text()
-        for extension in ('js', 'css'):
-            self.assertIn('_ver("appearance.' + extension + '")', renderer)
+        import sys
+        sys.path.insert(0, str(ROOT / 'scripts/site'))
+        from assets import AssetBundle
+        bundle = AssetBundle(ROOT / 'site/static')
+        versioned = bundle.template(template)
+        self.assertIn('/' + bundle.runtime + '/appearance.js', versioned)
+        self.assertRegex(versioned, r'/appearance.css\?v=[0-9a-f]+')
+        self.assertNotIn('%%RUNTIME%%', versioned)
 
 
 if __name__ == '__main__':

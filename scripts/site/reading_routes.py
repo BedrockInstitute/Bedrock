@@ -19,6 +19,7 @@ import argparse
 import json
 from pathlib import Path
 import re
+from source_syntax import imports
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -50,14 +51,10 @@ def strip_metadata(text):
     return MARKER.sub(lambda match: re.sub(r"[^\n]", " ", match.group(0)), text)
 
 
-def imports(text):
-    return [name for fence in FENCE.findall(text) for name in IMPORT.findall(fence)]
-
-
-def _sources(src):
+def _sources(src, extension='.lagda.md'):
     root = Path(src)
-    return {str(p.relative_to(root))[:-len(".lagda.md")].replace("/", "."): p.read_text()
-            for p in sorted(root.rglob("*.lagda.md"))}
+    return {str(p.relative_to(root))[:-len(extension)].replace("/", "."): p.read_text()
+            for p in sorted(root.rglob('*' + extension))}
 
 
 def _metadata(text):
@@ -102,7 +99,7 @@ def _catalog(text):
     return catalog
 
 
-def _load_catalog(path=CATALOG_PATH):
+def _load_catalog(path):
     with open(path, encoding="utf-8") as source:
         data = json.load(source)
     if not isinstance(data, dict) or data.get("version") != 1:
@@ -150,7 +147,7 @@ def _cycle(graph):
     return None
 
 
-def validate_metadata(metadata, chapter_ids, graph=None):
+def validate_metadata(metadata, chapter_ids, graph=None, previews=()):
     """Raise ``ValueError`` for invalid schema, coverage, or dependency data."""
     errors, chapters = [], set(chapter_ids)
     if not isinstance(metadata, dict):
@@ -195,7 +192,7 @@ def validate_metadata(metadata, chapter_ids, graph=None):
                       for name in sorted(set(members) - chapters))
         covered.update(set(members) & chapters)
     errors.extend(f"chapter is not covered by a route: {name}"
-                  for name in sorted(chapters - PREVIEWS - covered))
+                  for name in sorted(chapters - set(previews) - covered))
     if graph is not None:
         errors.extend(f"unknown graph node: {node}" for node in graph if node not in chapters)
         errors.extend(f"unknown prerequisite: {node} -> {dependency}"
@@ -208,9 +205,10 @@ def validate_metadata(metadata, chapter_ids, graph=None):
         raise ValueError("\n".join(errors))
 
 
-def build_reading_data(src="src", catalog_path=CATALOG_PATH):
+def build_reading_data(src, catalog_path, *,
+                       extension='.md', previews=(), prerequisites=None):
     """Return ``version``, route metadata, and dependency-backed catalog nodes."""
-    sources = _sources(src)
+    sources = _sources(src, extension)
     metadata, catalog = _load_catalog(catalog_path)
     chapters = set(sources)
     order = [entry["id"] for entry in metadata["chapters"]]
@@ -218,14 +216,16 @@ def build_reading_data(src="src", catalog_path=CATALOG_PATH):
         raise ValueError("reading catalog must cover every chapter exactly once")
     graph = {module: list(dict.fromkeys(d for d in imports(sources[module]) if d in chapters))
              for module in chapters}
-    validate_metadata(metadata, chapters, graph)
+    if prerequisites is not None:
+        graph.update(prerequisites)
+    validate_metadata(metadata, chapters, graph, previews)
     memberships = {module: [] for module in chapters}
     for route in metadata["routes"]:
         for module in route["chapters"]:
             memberships[module].append(route["id"])
     nodes = []
     for position, module in enumerate(order, 1):
-        preview = module in PREVIEWS
+        preview = module in previews
         titles = dict(catalog[module]["title"])
         for lang in LANGS:
             heading = re.search(r"^# (.+)$", weave(sources[module], lang), re.M)
@@ -247,7 +247,7 @@ def main(argv=None):
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args(argv)
     try:
-        data = build_reading_data(args.src)
+        data = build_reading_data(args.src, CATALOG_PATH, extension='.lagda.md', previews=PREVIEWS)
     except ValueError as error:
         print("reading-routes: ERROR: " + str(error).replace("\n", "; "))
         return 1

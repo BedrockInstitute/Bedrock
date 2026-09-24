@@ -1,3 +1,7 @@
+import { cfg } from './reader/document.js';
+import { storageKey as preferenceKey } from './reader/preferences.js';
+import { routes as loadRoutes, chooseRoute } from './reader/route-store.js';
+import { enhanceDisclosure } from "./reader/disclosure.js";
 (() => {
   "use strict";
 
@@ -8,7 +12,7 @@
   const current = host.dataset.current || "";
   const copy = {
     en: {
-      title: "Choose a way through Bedrock",
+      title: `Choose a way through ${cfg.site || "the textbook"}`,
       intro: "Routes share foundations and meet again at later chapters. Progress is saved only in this browser.",
       routeMode: "Topic routes", compareMode: "Compare", nextMode: "What next",
       progress: "complete", begin: "Start here", resume: "Continue", revisit: "Review route",
@@ -30,7 +34,7 @@
       allComplete: "All non-preview chapters are marked complete.", saved: "chapters complete"
     },
     ja: {
-      title: "Bedrock の読書ルートを選ぶ",
+      title: `${cfg.site || "教科書"} の読書ルートを選ぶ`,
       intro: "各ルートは基礎を共有し，後の章で合流します。進捗はこのブラウザだけに保存されます。",
       routeMode: "主題別ルート", compareMode: "並べて比較", nextMode: "次に読む章",
       progress: "完了", begin: "ここから読む", resume: "続きを読む", revisit: "ルートを復習",
@@ -52,7 +56,7 @@
       allComplete: "展望を除く全章を完了しました。", saved: "章を完了"
     },
     zh: {
-      title: "探索 Bedrock 的阅读路线",
+      title: `探索 ${cfg.site || "教科书"} 的阅读路线`,
       intro: "各路线共享基础，并在后续章节汇合。进度仅保存在当前浏览器中。",
       routeMode: "主题路线", compareMode: "并排比较", nextMode: "下一步",
       progress: "已完成", begin: "从这里开始", resume: "继续", revisit: "回顾路线",
@@ -75,12 +79,7 @@
     }
   }[lang];
 
-  const storageKey = "bedrock-reading-progress-v1";
-  const currentRouteKey = "bedrock-current-route-v1";
-  const chooseRoute = id => {
-    try { localStorage.setItem(currentRouteKey, id); } catch (_) { /* optional */ }
-    window.dispatchEvent(new Event("bedrock:current-route"));
-  };
+  const storageKey = preferenceKey("reading-progress-v1");
   const el = (tag, cls, text) => {
     const node = document.createElement(tag);
     if (cls) node.className = cls;
@@ -111,17 +110,8 @@
     try { localStorage.setItem(storageKey, JSON.stringify([...completed])); } catch (_) { /* optional */ }
   };
 
-  fetch(host.dataset.source || "reading-routes.json", { credentials: "same-origin" })
-    .then(response => {
-      if (!response.ok) throw new Error(String(response.status));
-      return response.json();
-    })
-    .then(data => {
-      if (!data || data.version !== 1 || !Array.isArray(data.routes) || !Array.isArray(data.nodes)) {
-        throw new Error("unsupported route data");
-      }
-      initialise(data);
-    })
+  loadRoutes(host.dataset.source || undefined)
+    .then(initialise)
     .catch(() => {
       const note = el("p", "reading-load-error", copy.loadError);
       note.setAttribute("role", "status");
@@ -159,7 +149,7 @@
 
     let mode = "routes";
     let selected = data.routes.slice(0, Math.min(2, data.routes.length)).map(route => route.id);
-    const viewKey = "bedrock-reading-view-v1";
+    const viewKey = preferenceKey("reading-view-v1");
     try {
       const savedView = JSON.parse(localStorage.getItem(viewKey) || "null");
       if (savedView && ["routes", "compare", "next"].includes(savedView.mode)) mode = savedView.mode;
@@ -414,7 +404,7 @@
     content.append(details, all, el("p", "compact-storage", copy.intro));
     wrap.append(summary, content);
     host.replaceChildren(wrap);
-    window.bedrockEnhanceDisclosure?.(wrap, summary, content, 160);
+    enhanceDisclosure(wrap, summary, content, 160);
   }
 
   function compactList(label, items, stateFor, importingModule) {

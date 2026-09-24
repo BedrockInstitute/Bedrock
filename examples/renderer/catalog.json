@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "routes": [
+    {
+      "id": "first-steps",
+      "title": {"en": "First steps", "zh": "第一步", "ja": "最初の一歩"},
+      "description": {"en": "Read the input and use it.", "zh": "先读输入，再使用它。", "ja": "入力を読み，利用する。"},
+      "chapters": ["Sample.Seed", "Sample.Use"]
+    },
+    {
+      "id": "reference",
+      "title": {"en": "Reference", "zh": "查阅", "ja": "参照"},
+      "description": {"en": "Return to the input definition.", "zh": "返回输入的定义。", "ja": "入力の定義に戻る。"},
+      "chapters": ["Sample.Seed"]
+    }
+  ],
+  "chapters": [
+    {
+      "id": "Welcome", "human_reviewed": false,
+      "title": {"en": "Lantern laboratory", "zh": "灯笼实验室", "ja": "灯りの実験室"},
+      "stage": {"en": "Welcome", "zh": "欢迎", "ja": "ようこそ"},
+      "description": {"en": "Explore this small reader example.", "zh": "探索这个小型阅读器示例。", "ja": "小さな閲覧例を探索する。"}
+    },
+    {
+      "id": "Sample.Seed", "human_reviewed": true,
+      "title": {"en": "A small input", "zh": "一个小输入", "ja": "小さな入力"},
+      "stage": {"en": "Examples", "zh": "示例", "ja": "例"},
+      "description": {"en": "Define a small input and return it.", "zh": "定义一个小输入并返回它。", "ja": "小さな入力を定義して返す。"}
+    },
+    {
+      "id": "Sample.Use", "human_reviewed": false,
+      "title": {"en": "Using the input", "zh": "使用输入", "ja": "入力の利用"},
+      "stage": {"en": "Examples", "zh": "示例", "ja": "例"},
+      "description": {"en": "Apply the earlier function twice.", "zh": "使用前面的函数两次。", "ja": "前の関数を二回適用する。"}
+    }
+  ]
+}

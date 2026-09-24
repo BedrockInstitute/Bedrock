@@ -1,0 +1,26 @@
+{
+  "Agda.Primitive": {
+    "_⊔_": "Agda.Primitive.Level → Agda.Primitive.Level → Agda.Primitive.Level",
+    "Level": "Agda.Primitive.LevelUniv",
+    "LevelUniv": "Set₁",
+    "Prop": "Set₁",
+    "Propω": "Agda.Primitive.Setω₁",
+    "SSet": "SSet₁",
+    "SSetω": "Agda.Primitive.SSetω₁",
+    "Set": "Set₁",
+    "Setω": "Agda.Primitive.Setω₁",
+    "lsuc": "Agda.Primitive.Level → Agda.Primitive.Level",
+    "lzero": "Agda.Primitive.Level"
+  },
+  "Sample.Seed": {
+    "Marker": "Set",
+    "keep": "Sample.Seed.Marker → Sample.Seed.Marker",
+    "mark": "Sample.Seed.Marker"
+  },
+  "Sample.Use": {
+    "twice": "Sample.Seed.Marker → Sample.Seed.Marker"
+  },
+  "Welcome": {
+    "twice": "Sample.Seed.Marker → Sample.Seed.Marker"
+  }
+}

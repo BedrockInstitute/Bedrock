@@ -4,6 +4,8 @@
 (function () {
   "use strict";
   var root = document.documentElement;
+  var namespace = (window.bedrock || {}).storageNamespace || "textbook";
+  var themeKey = namespace + "-theme", paletteKey = namespace + "-code-palettes";
   var fields = ["bg", "fg", "border", "comment", "keyword", "symbol", "string",
     "number", "module", "field", "macro", "constructor", "identifier"];
   var palettes = {
@@ -34,10 +36,10 @@
   function validMode(value) { return value === "light" || value === "dark" ? value : "system"; }
   function readPalettes() {
     var value;
-    try { value = JSON.parse(read("bedrock-code-palettes")); } catch (_) {}
+    try { value = JSON.parse(read(paletteKey)); } catch (_) {}
     return {light: validPalette(value && value.light), dark: validPalette(value && value.dark)};
   }
-  var preferences = readPalettes(), mode = validMode(read("bedrock-theme"));
+  var preferences = readPalettes(), mode = validMode(read(themeKey));
   var inheritedMode = null;
   var system = window.matchMedia("(prefers-color-scheme: dark)");
   var panel, trigger;
@@ -80,12 +82,12 @@
   }
   function setMode(value) {
     mode = validMode(value); inheritedMode = null;
-    write("bedrock-theme", mode); apply();
+    write(themeKey, mode); apply();
   }
   function setPalette(scheme, value) {
     if (scheme !== "light" && scheme !== "dark") return;
     preferences[scheme] = validPalette(value);
-    write("bedrock-code-palettes", JSON.stringify(preferences)); apply();
+    write(paletteKey, JSON.stringify(preferences)); apply();
   }
   window.bedrockAppearance = {
     apply: apply, setMode: setMode, setPalette: setPalette, syncFrame: syncFrame,
@@ -99,8 +101,8 @@
   apply(); // Synchronous head script: palette is applied before the first paint.
   system.addEventListener("change", apply);
   window.addEventListener("storage", function (event) {
-    if (event.key === null || event.key === "bedrock-code-palettes" || event.key === "bedrock-theme") {
-      preferences = readPalettes(); mode = validMode(read("bedrock-theme"));
+    if (event.key === null || event.key === paletteKey || event.key === themeKey) {
+      preferences = readPalettes(); mode = validMode(read(themeKey));
       if (window.parent !== window) {
         try { inheritedMode = window.parent.bedrockAppearance.effectiveMode(); } catch (_) {}
       }

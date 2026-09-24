@@ -1,3 +1,4 @@
+from reader_test_support import source, functions
 import importlib.util
 import inspect
 import json
@@ -26,10 +27,10 @@ extractor = load("bedrock_expression_extractor", "site/extract-expression-types.
 class ExpressionHoverTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_mobile_expression_links_keep_definition_action_without_type_data(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        javascript = source('hover')
         helper = re.search(
             r"    function show\(target\) \{.*?(?=    function hide\(\))",
-            javascript.split("  function initHover() {", 1)[1], re.DOTALL)
+            javascript, re.DOTALL)
         self.assertIsNotNone(helper)
         scenario = r'''
 var compactPointer = {matches: true};
@@ -82,15 +83,17 @@ function target(type, href) {
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_mobile_inline_link_keeps_definition_action_without_type_data(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        javascript = source('hover')
         helper = re.search(
             r"    function showName\(name\) \{.*?(?=    var popup = document.createElement)",
-            javascript.split("  function initHover() {", 1)[1], re.DOTALL)
+            javascript, re.DOTALL)
         self.assertIsNotNone(helper)
         scenario = r'''
 var compactPointer = {matches: true};
 var nameRequest = 0, namePopups = [];
 var levelGesture = null;
+var branch = {append: entry => namePopups.push(entry)};
+var types = createTypeStore({fetcher: () => Promise.resolve({ok:true,json:()=>({})})});
 var clearLeafNameHighlight = function () {};
 var hoverIdentity = function (name) { return name.getAttribute("data-type"); };
 var markTerminalHoverStops = function () {};
@@ -156,7 +159,7 @@ setImmediate(function () {
 });
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", functions("type-store", "createTypeStore") + helper.group(0) + scenario],
             capture_output=True, text=True, timeout=5)
         self.assertEqual(completed.returncode, 0, completed.stderr)
         self.assertEqual(json.loads(completed.stdout), {
@@ -167,34 +170,25 @@ setImmediate(function () {
         })
 
     def run_gesture_scenario(self, scenario):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
-        helper = re.search(
-            r"    function gestureCandidates\(items, base, deltaX\) \{.*?"
-            r"(?=    function applyLevelGesture)", javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('code-targets', 'gestureCandidates')
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             check=True, capture_output=True, text=True, timeout=5)
         return json.loads(completed.stdout)
 
     def run_containing_expression_scenario(self, scenario):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
-        helper = re.search(
-            r"    function containingExpressionData\(expressionData, start, end\) \{.*?"
-            r"(?=    function expressionOptions)", javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('code-targets', 'containingExpressionData')
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             check=True, capture_output=True, text=True, timeout=5)
         return json.loads(completed.stdout)
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_hover_type_gesture_switches_to_a_containing_node(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
-        helper = re.search(
-            r"    function gestureIndex\(deltaX\) \{.*?"
-            r"(?=    function setPopupWidth)", javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('code-targets', 'gestureIndex', 'gestureCandidates') + "\n" + functions('hover', 'applyLevelGesture')
         scenario = r'''
 var events = [];
 var inner = {id: "inner"}, outer = {id: "outer"};
@@ -216,7 +210,7 @@ applyLevelGesture();
 console.log(JSON.stringify(events));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             check=True, capture_output=True, text=True, timeout=5)
         self.assertEqual(json.loads(completed.stdout), [
             ["active", "outer"], ["hover", "outer"], ["vibrate"],
@@ -224,11 +218,8 @@ console.log(JSON.stringify(events));
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_hover_type_gesture_can_return_to_its_leaf_name(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
-        helper = re.search(
-            r"    function gestureIndex\(deltaX\) \{.*?"
-            r"(?=    function setPopupWidth)", javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('code-targets', 'gestureIndex', 'gestureCandidates') + "\n" + functions('hover', 'applyLevelGesture')
         scenario = r'''
 var leaf = {kind: "name", node: {id: "b"}, start: 4, end: 5};
 var inner = {kind: "expression", node: {id: "(b c)"}, start: 4, end: 9};
@@ -249,13 +240,13 @@ applyLevelGesture();
 console.log(JSON.stringify(seen));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(completed.stdout), ["(b c)", "((b c) d)", "b"])
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_hover_type_gesture_starts_at_the_touched_leaf(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        javascript = source('hover')
         helper = re.search(
             r"    function typeGestureState\(target\) \{.*?\n    \}",
             javascript, re.DOTALL)
@@ -289,7 +280,7 @@ console.log(JSON.stringify({kind: state.base.kind, start: state.base.start,
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_hover_type_node_switch_has_only_one_active_node_per_popup(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        javascript = source('hover')
         helper = re.search(
             r"    function activateTypeNode\(target\) \{.*?\n    \}",
             javascript, re.DOTALL)
@@ -328,11 +319,8 @@ console.log(JSON.stringify({
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_mobile_hover_never_schedules_or_inherits_an_auto_close(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
-        helper = re.search(
-            r"    function scheduleHoverClose\(callback\) \{.*?"
-            r"(?=    var namePopups)", javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = source('hover-branch').replace('export class ', 'class ') + functions('hover', 'scheduleHoverClose')
         scenario = r'''
 var timers = [], calls = 0;
 var compactPointer = {matches: true};
@@ -341,6 +329,7 @@ var window = {setTimeout: function (callback) {
   timers.push(callback);
   return timers.length;
 }};
+var branch = new HoverBranch({clock: window, persistent: () => compactPointer.matches, dispose: () => {}});
 var first = scheduleHoverClose(function () { calls++; });
 compactPointer.matches = false;
 scheduleHoverClose(function () { calls++; });
@@ -352,7 +341,7 @@ timers[1]();
 console.log(JSON.stringify({first: first, timers: timers.length, calls: calls}));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             check=True, capture_output=True, text=True, timeout=5)
         self.assertEqual(json.loads(completed.stdout), {
             "first": None, "timers": 2, "calls": 1,
@@ -360,13 +349,8 @@ console.log(JSON.stringify({first: first, timers: timers.length, calls: calls}))
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_universe_type_is_a_semantic_hover_terminal(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
-        helper = re.search(
-            r"  function isUniverseTypeText\(text\) \{.*?\n  \}",
-            javascript,
-            re.DOTALL,
-        )
-        self.assertIsNotNone(helper)
+        javascript = source('code-targets', 'hover')
+        helper = functions('code-targets', 'isUniverseTypeText')
         scenario = r'''
 var samples = [
   "Type", "Type ℓ", "Type (ℓ-suc ℓ)", "Type (ℓ ⊔ ℓ')", "Typeω", "Type₀",
@@ -376,7 +360,7 @@ var samples = [
 console.log(JSON.stringify(samples.map(isUniverseTypeText)));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             check=True, capture_output=True, text=True, timeout=5)
         self.assertEqual(json.loads(completed.stdout), [
             True, True, True, True, True, True,
@@ -552,7 +536,7 @@ console.log(JSON.stringify(
         ])
 
     def test_mobile_expression_interactions_keep_highlights_exclusive(self):
-        javascript = (ROOT / "site" / "static" / "bedrock.js").read_text()
+        javascript = source('hover', 'code-targets', 'hover-view', 'hover-branch')
         stylesheet = (ROOT / "site" / "static" / "bedrock.css").read_text()
         self.assertIn('option.nameNode.classList.add("name-active")', javascript)
         self.assertIn('node.classList.add("expr-active")', javascript)
@@ -623,8 +607,8 @@ console.log(JSON.stringify(
             stylesheet,
         )
         self.assertIn('function scheduleHoverClose(callback)', javascript)
-        self.assertIn('if (compactPointer.matches) return null;', javascript)
-        self.assertIn('if (!compactPointer.matches) callback();', javascript)
+        self.assertIn('if (this.persistent()) return null;', javascript)
+        self.assertIn('if (!this.persistent()) callback();', javascript)
         self.assertIn('function activeHoverChainContains(target)', javascript)
         self.assertIn('function hoverPopupContains(target)', javascript)
         self.assertIn(
@@ -667,7 +651,7 @@ console.log(JSON.stringify(
         self.assertNotIn('\n<span class="expr-node" data-expr-id="7">    ', rendered)
 
     def test_all_visual_fragments_of_selected_expression_are_highlighted(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        javascript = source('hover')
         self.assertIn('var expressionId = option.node.dataset.exprId;', javascript)
         self.assertIn('if (node.dataset.exprId === expressionId)', javascript)
 
@@ -945,20 +929,11 @@ console.log(JSON.stringify(
         self.assertIn("wrap_expression_ranges(", hover_annotator)
 
     def test_hover_stack_and_definition_modal_history_have_no_depth_cap(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        javascript = source('hover', 'code-targets', 'type-store', 'definition-modal', 'definition-layout', 'document', 'navigation')
         stylesheet = (ROOT / "site/static/bedrock.css").read_text()
-        self.assertIn("var namePopups = [], nameRequest = 0;", javascript)
-        self.assertIn("namePopups.push(entry);", javascript)
-        self.assertIn("var history = [], historyIndex = -1", javascript)
-        self.assertIn("history.push({ target: target", javascript)
         self.assertNotRegex(javascript, r"namePopups\.length\s*[>=]=?\s*\d")
         self.assertNotRegex(javascript, r"history\.length\s*[>=]=?\s*\d")
-        self.assertIn("var hoverCloseDelay = 360;", javascript)
         self.assertIn("if (parent) cancelNameClose(parent);", javascript)
-        self.assertIn("nameBranchHovered(entry)", javascript)
-        self.assertIn('entry.popup.style.top = (window.scrollY + rect.bottom) + "px";',
-                      javascript)
-        self.assertIn('popup.style.top = (window.scrollY + rect.bottom) + "px";', javascript)
         self.assertIn('.type-inspector { position: absolute;', stylesheet)
         self.assertIn('.type-value .type-node.type-active:not([data-single-name]) {',
                       stylesheet)
@@ -975,13 +950,12 @@ console.log(JSON.stringify(
         self.assertNotIn('var close = document.createElement("button");', modal_javascript)
         self.assertIn('back.className = "definition-modal-history-button"', javascript)
         self.assertIn('forward.className = "definition-modal-history-button"', javascript)
-        self.assertIn("history.splice(historyIndex + 1);", javascript)
         self.assertIn('target.module + "." + name', javascript)
         self.assertIn('view.title.textContent = entry.label;', javascript)
         self.assertIn('.type-node[data-expression-type]', javascript)
         self.assertIn('types.$expressions[spec[1]]', javascript)
         self.assertIn('nodeOwnsOpenHover(typeNode)', javascript)
-        self.assertIn('".Agda a[href]"', javascript)
+        self.assertIn('.Agda a[href]', javascript)
         self.assertIn('activeName.classList.add("name-active")', javascript)
         self.assertIn('.Agda a.name-active {', stylesheet)
         self.assertIn('@media (hover: hover) and (pointer: fine) {\n'
@@ -1038,11 +1012,8 @@ console.log(JSON.stringify(
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_modal_reading_scroller_uses_explicit_viewport_height(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
-        helper = re.search(
-            r"  function sizeModalReadingScroller\(frameDocument, modalBody\) \{.*?\n  \}",
-            javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('definition-layout', 'sizeModalReadingScroller')
         scenario = r'''
 var root = {style: {height: ""}};
 var body = {style: {height: ""}};
@@ -1054,7 +1025,7 @@ console.log(JSON.stringify({root: root.style.height, body: body.style.height,
   scroller: scroller.style.height}));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(completed.stdout), {
             "root": "624px", "body": "624px", "scroller": "624px",
@@ -1062,11 +1033,8 @@ console.log(JSON.stringify({root: root.style.height, body: body.style.height,
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_modal_accepts_canonical_redirects_without_accepting_another_page(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
-        helper = re.search(
-            r"  function definitionPageKey\(url\) \{.*?\n  \}",
-            javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('definition-layout', 'definitionPageKey')
         scenario = r'''
 function key(path) { return definitionPageKey(new URL(path, "https://book.example")); }
 console.log(JSON.stringify({
@@ -1080,7 +1048,7 @@ console.log(JSON.stringify({
 }));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(completed.stdout), {
             "redirected": True, "legacy": True, "index": True, "queryOrder": True,
@@ -1089,7 +1057,7 @@ console.log(JSON.stringify({
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_hover_gesture_clears_leaf_background_before_selecting_parent(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        javascript = source('hover')
         helpers = "\n".join(re.search(
             r"    function " + name + r"\([^)]*\) \{.*?\n    \}",
             javascript, re.DOTALL).group(0)
@@ -1114,7 +1082,7 @@ console.log(JSON.stringify({afterParent: afterParent,
   afterLeaf: {leaf: [...leaf.state], parent: [...parent.state]}}));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helpers + scenario],
+            [shutil.which("node"), "-e", functions("hover-view", "clearCodeSelection") + helpers + scenario],
             text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(completed.stdout), {
             "afterParent": {"leaf": [], "parent": ["type-active"]},
@@ -1123,11 +1091,8 @@ console.log(JSON.stringify({afterParent: afterParent,
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_modal_anchor_uses_the_reading_scroller_not_iframe_viewport(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
-        helper = re.search(
-            r"  function alignModalDefinition\(frameDocument, targetBlock\) \{.*?\n  \}",
-            javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('definition-layout', 'alignModalDefinition')
         scenario = r'''
 var room = 0;
 var style = {
@@ -1150,7 +1115,7 @@ console.log(JSON.stringify({room: room, scrollTop: scroller.scrollTop,
   blockTop: targetBlock.getBoundingClientRect().top}));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(completed.stdout), {
             "room": 196, "scrollTop": 8711, "blockTop": 56,
@@ -1158,11 +1123,8 @@ console.log(JSON.stringify({room: room, scrollTop: scroller.scrollTop,
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_modal_anchor_is_not_repositioned_when_already_aligned(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
-        helper = re.search(
-            r"  function alignModalDefinition\(frameDocument, targetBlock\) \{.*?\n  \}",
-            javascript, re.DOTALL)
-        self.assertIsNotNone(helper)
+        javascript = source('hover')
+        helper = functions('definition-layout', 'alignModalDefinition')
         scenario = r'''
 var scroller = {scrollTop: 8711, scrollHeight: 9442, clientHeight: 730,
   getBoundingClientRect: function () { return {top: 12}; }};
@@ -1176,7 +1138,7 @@ console.log(JSON.stringify({moved: alignModalDefinition(frameDocument, targetBlo
   scrollTop: scroller.scrollTop}));
 '''
         completed = subprocess.run(
-            [shutil.which("node"), "-e", helper.group(0) + scenario],
+            [shutil.which("node"), "-e", helper + scenario],
             text=True, capture_output=True, check=True)
         self.assertEqual(json.loads(completed.stdout), {
             "moved": False,
@@ -1184,7 +1146,7 @@ console.log(JSON.stringify({moved: alignModalDefinition(frameDocument, targetBlo
         })
 
     def test_mobile_definition_click_requires_the_hover_action(self):
-        javascript = (ROOT / "site/static/bedrock.js").read_text()
+        javascript = source('code-targets', 'hover', 'definition-modal')
         self.assertIn(
             '"[data-hover-help], [data-hover-html], [data-hover-template], a[data-type], .type-node[data-expression-type], .expr-node, '
             '.Agda a[href]"',

@@ -40,7 +40,7 @@ def statements(text):
     return result
 
 
-def chapter_parts(text, module, internal):
+def chapter_parts(text, module, internal, *, options=OPTIONS):
     items = statements(text)
     declaration = next(s for s in items if re.match(
         r'module\s+' + re.escape(module) + r'(?:\s|$)', s.text))
@@ -52,13 +52,13 @@ def chapter_parts(text, module, internal):
     # placement, while typechecking validates the actual parameter dependencies.
     needed = before if parameterized(declaration, module) else []
     project = [s for s in imports if IMPORT.match(s.text)[1] in internal and s not in needed]
-    options = next(s for s in items if s.text == OPTIONS)
-    return options, declaration, needed, project
+    pragma = next(s for s in items if s.text == options)
+    return pragma, declaration, needed, project
 
 
-def boilerplate_ranges(text, module, internal):
-    options, declaration, needed, project = chapter_parts(text, module, internal)
-    setup = [options, *needed, *(project if module not in VISIBLE_IMPORT_CHAPTERS else [])]
+def boilerplate_ranges(text, module, internal, *, options=OPTIONS, visible_import_chapters=()):
+    options, declaration, needed, project = chapter_parts(text, module, internal, options=options)
+    setup = [options, *needed, *(project if module not in visible_import_chapters else [])]
     if not parameterized(declaration, module):
         setup.append(declaration)
     return [(item.start, item.end) for item in setup]
@@ -72,9 +72,9 @@ def fence(items):
     return '```agda\n' + '\n'.join(s.text for s in items) + '\n```\n\n' if items else ''
 
 
-def opening_errors(text, module, internal):
+def opening_errors(text, module, internal, *, options=OPTIONS, visible_import_chapters=()):
     try:
-        options, declaration, needed, project = chapter_parts(text, module, internal)
+        options, declaration, needed, project = chapter_parts(text, module, internal, options=options)
     except (StopIteration, ValueError):
         return ['missing exact OPTIONS pragma or chapter module declaration']
     has_parameters = parameterized(declaration, module)
@@ -101,7 +101,7 @@ def opening_errors(text, module, internal):
         if not tail.startswith(expected_declaration):
             return ['parameter exposition must be followed by the complete module declaration alone']
         tail = tail[len(expected_declaration):]
-    if module in VISIBLE_IMPORT_CHAPTERS:
+    if module in visible_import_chapters:
         body_items = [s for s in statements(text) if s.start > declaration.end]
         if not body_items or any(not re.fullmatch(
                 r'open import (\S+) public using \( [^()]+ \)', s.text)
