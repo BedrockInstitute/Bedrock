@@ -97,7 +97,7 @@ convention does not authorize guessed AST nodes or change the original code.
 
 Statements retain the same Markdown and lint rules. Visually, the exact `∎` is a
 semi-transparent overlay inside the final code frame, reserving no extra line or
-bottom padding and fading further where code lies beneath it; code occupies the full width
+bottom padding and keeping a fixed opacity of 0.25, even over code; code occupies the full width
 of its containing column without an external QED gutter or left outdent.
 Code frames grow vertically and scroll only horizontally. Folded
 submodules retain their own indented columns and compact declaration headers.
