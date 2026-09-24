@@ -21,7 +21,7 @@ import glob
 import os
 import sys
 
-from i18n_markers import LANGS, lint_markers, weave
+from outcrop.core.i18n_markers import LANGS, lint_markers, weave
 
 
 def discover_masters():

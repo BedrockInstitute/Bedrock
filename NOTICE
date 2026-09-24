@@ -8,10 +8,16 @@ Copyright (C) 2026 Bedrock Institute
 Bedrock is multi-licensed; per-file terms are declared in REUSE.toml (verified by `reuse lint`),
 with the full texts in LICENSES/ and a human summary in COPYRIGHT:
   - CC BY-NC-SA 4.0  the mathematical development and user prose (src/, docs/), the README,
-                     and the brand assets under site/static/assets/;
+                     developer/agent prose under dev/ and agents/, and the brand
+                     assets under site/static/assets/;
   - AGPL-3.0-only    every other first-party file (tooling, the site front-end, build and
-                     config, and the prose developer docs), the catch-all default;
-  - OFL-1.1          the self-hosted third-party web fonts under site/static/fonts/.
+                     config and other default-covered files), the catch-all default;
+  - OFL-1.1          the third-party web fonts in the Outcrop submodule.
+
+Outcrop Core and Outcrop Site now live in the outcrop/ Git submodule:
+https://github.com/BedrockInstitute/Outcrop
+Its own REUSE.toml and NOTICE retain the original per-file and upstream terms.
+The submodule commit records the exact framework revision used by Bedrock.
 
 This repository also aggregates third-party material under different terms. These are
 separate works combined by mere aggregation; each retains its own license.
@@ -23,8 +29,8 @@ Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only).
 
   Bedrock's site renderer vendors and adapts the 1lab's front-end assets (CSS palette
   and Agda syntax-token colours, the type-on-hover idea). The vendored files live under
-  site/vendor/1lab/ with the upstream LICENSE; derived files (site/static/bedrock.css,
-  and the hover mechanism in site/static/bedrock.js) are likewise AGPL-3.0 and are
+  outcrop/src/outcrop/site/resources/vendor/1lab/ with the upstream LICENSE;
+  derived outcrop.css and reader/ modules are likewise AGPL-3.0 and are
   marked as such. Per AGPL-3.0 section 13, the corresponding source of the deployed site
   is this public repository: https://github.com/BedrockInstitute/Bedrock
 
@@ -34,13 +40,13 @@ Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0-only).
     - Noto Emoji                       Apache-2.0
     - fast-fuzzy                       ISC
     - JuliaMono, Inria Sans, EB Garamond   SIL Open Font License 1.1
-  See site/vendor/1lab/static/licenses/ for the upstream texts.
+  See outcrop/src/outcrop/site/resources/vendor/1lab/static/licenses/ for the upstream texts.
 
 ================================================================================
 KaTeX  --  https://katex.org  --  MIT
   The deployed site loads KaTeX (CSS + JS) from a CDN at view time to render math.
 ================================================================================
-Self-hosted web fonts (site/static/fonts/, all under the SIL Open Font License 1.1):
+Self-hosted web fonts (outcrop/src/outcrop/site/resources/static/fonts/, all OFL-1.1):
   - EB Garamond  (body serif)  https://github.com/octaviopardo/EBGaramond12
   - Inria Sans   (UI sans)     https://github.com/BlackFoundryCom/InriaFonts
   - JuliaMono    (code)        https://github.com/cormullion/juliamono
@@ -48,7 +54,7 @@ Self-hosted web fonts (site/static/fonts/, all under the SIL Open Font License 1
     Subset and renamed Bedrock Universe Levels; Unicode script digits are derived
     from the font's own digits using its MATH metrics. Copyright 2022 The Noto
     Project Authors; modifications 2026 Bedrock Institute. The complete OFL is
-    at site/static/fonts/LICENSE-NotoSansMath.txt.
-  The JuliaMono license text is at site/static/fonts/LICENSE-JuliaMono.txt. No runtime
+    beside the font in LICENSE-NotoSansMath.txt.
+  The JuliaMono license text is beside the font in LICENSE-JuliaMono.txt. No runtime
   font CDN is used; CJK text uses the reader's system font (e.g. PingFang on macOS).
 ================================================================================

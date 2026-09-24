@@ -22,6 +22,13 @@ of the website. `typecheck` performs the pure Agda check, all source and prose g
 unit tests, and `make milestone-lint`. Pure-check interfaces remain isolated from HTML
 and expression-type products.
 
+Every job checks out submodules recursively and installs the pinned local Outcrop
+package with `python3 -m pip install ./outcrop`. Outcrop Core and Outcrop Site are
+the shared renderer, complete website and lint implementation; Bedrock supplies
+content, configuration and mathematical gates. Tests are split between
+`outcrop/tests/` and Bedrock's `scripts/tests/`; `make test` runs both.
+Do not fetch an unpinned framework branch during deployment.
+
 The `typecheck` job restores and validates the patched-Agda cache before Haskell setup,
 then refreshes the verified wrapper timestamp so checkout times cannot trigger a false
 rebuild. A normal cache hit therefore skips GHC and Cabal setup entirely. When the
@@ -49,6 +56,14 @@ Pages at [bedrock.institute](https://bedrock.institute) is the canonical deploym
 The Cloudflare job pins Wrangler and caches npm's content-addressed download store; the
 repository has no Node dependency tree, so it deliberately does not cache
 `node_modules`.
+
+The host-specific render uses Bedrock's thin `scripts/site/render-site.py` adapter
+and the installed Outcrop resources, not a copied `site/` shell. Link validation
+is `python3 -m outcrop check-links <output>`. Shared templates, JavaScript, worker,
+fonts and vendor assets are packaged under `outcrop/src/outcrop/site/resources/`; runtime
+modules publish together under one content digest. The backend cache fingerprint
+includes Outcrop's compiler-data adapters. These workflow steps do not replace
+actual browser acceptance of a changed interface.
 
 ## Secrets
 

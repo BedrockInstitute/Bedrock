@@ -3,16 +3,19 @@
 import importlib.util
 import contextlib
 import io
+import json
 from pathlib import Path
 import tempfile
 import unittest
 
 spec = importlib.util.spec_from_file_location(
-    "reading_routes", Path(__file__).resolve().parents[1] / "site/reading_routes.py")
-routes = importlib.util.module_from_spec(spec); spec.loader.exec_module(routes)
+    "bedrock_reading_routes", Path(__file__).resolve().parents[1] / "site/reading_routes.py")
+route_cli = importlib.util.module_from_spec(spec); spec.loader.exec_module(route_cli)
+from outcrop.site import reading_routes as routes
 lint_spec = importlib.util.spec_from_file_location(
     "lint_prose", Path(__file__).resolve().parents[1] / "gate/lint-prose.py")
 lint_prose = importlib.util.module_from_spec(lint_spec); lint_spec.loader.exec_module(lint_prose)
+from outcrop.core.source_syntax import strip_route_metadata
 
 
 def metadata(chapters=("A", "B")):
@@ -24,14 +27,14 @@ def metadata(chapters=("A", "B")):
 
 class ValidationTests(unittest.TestCase):
     def test_human_review_is_explicit_for_every_chapter(self):
-        data, catalog = routes._load_catalog(routes.CATALOG_PATH)
+        data, catalog = routes._load_catalog(Path(__file__).resolve().parents[2] / 'dev/reading-catalog.json')
         self.assertTrue(all(type(item['human_reviewed']) is bool for item in catalog.values()))
         for invalid in (None, 'true', 1):
             with self.subTest(invalid=invalid), tempfile.TemporaryDirectory() as directory:
-                changed = routes.json.loads(routes.json.dumps(data))
+                changed = json.loads(json.dumps(data))
                 changed['chapters'][0]['human_reviewed'] = invalid
                 path = Path(directory) / 'catalog.json'
-                path.write_text(routes.json.dumps(changed))
+                path.write_text(json.dumps(changed))
                 with self.assertRaisesRegex(ValueError, 'boolean human_reviewed'):
                     routes._load_catalog(path)
 
@@ -95,17 +98,26 @@ class BuildTests(unittest.TestCase):
         self.assertEqual(routes.plain_title("[Codes](Codes.html) and **sets**"), "Codes and sets")
 
     def test_japanese_catalog_is_not_appended_to_chinese_description(self):
-        text = ("<!--en-->\n## Logic\n- `A`{.Agda}: First.\n<!--zh-->\n"
-                "## 逻辑\n- `A`{.Agda}：第一。\n<!--ja-->\n"
-                "## 論理\n- `A`{.Agda}：最初。\n<!--/-->")
-        catalog = routes._catalog(text)
-        self.assertEqual(catalog["A"]["title"],
+        catalog = metadata(('A',))
+        catalog['chapters'] = [{'id': 'A', 'human_reviewed': False,
+            'title': {'en': 'First.', 'zh': '第一。', 'ja': '最初。'},
+            'stage': {'en': 'Logic', 'zh': '逻辑', 'ja': '論理'},
+            'description': {'en': 'First.', 'zh': '第一。', 'ja': '最初。'}}]
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'catalog.json').write_text(json.dumps(catalog), encoding='utf-8')
+            (root / 'A.md').write_text('<!--en-->\nFirst.\n<!--zh-->\n第一。\n'
+                                       '<!--ja-->\n最初。\n<!--/-->\n', encoding='utf-8')
+            node = routes.build_reading_data(root, root / 'catalog.json')['nodes'][0]
+        self.assertEqual(node["title"],
                          {"en": "First.", "zh": "第一。", "ja": "最初。"})
-        self.assertEqual(catalog["A"]["stage"]["ja"], "論理")
+        self.assertEqual(node["stage"]["ja"], "論理")
+        self.assertEqual(node['description']['zh'], '第一。')
+        self.assertEqual(node['description']['ja'], '最初。')
 
     def test_strip_metadata_preserves_offsets_and_newlines(self):
-        text = 'before\n<!-- bedrock-routes {"title":"中文"} -->\nafter'
-        stripped = routes.strip_metadata(text)
+        text = 'before\n<!-- outcrop-routes {"title":"中文"} -->\nafter'
+        stripped = strip_route_metadata(text)
         self.assertEqual(len(stripped), len(text))
         self.assertEqual(stripped.count("\n"), text.count("\n"))
         self.assertNotIn("中文", stripped)
@@ -120,7 +132,7 @@ class BuildTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = io.StringIO()
             with contextlib.redirect_stdout(output):
-                result = routes.main(["--src", directory, "--check"])
+                result = route_cli.main(["--src", directory, "--check"])
         self.assertEqual(result, 1)
         self.assertIn("reading catalog must cover every chapter exactly once", output.getvalue())
 
@@ -140,7 +152,7 @@ class BuildTests(unittest.TestCase):
             entry['human_reviewed'] = entry['id'] == 'A'
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            (root / "reading-catalog.json").write_text(routes.json.dumps(catalog), encoding="utf-8")
+            (root / "reading-catalog.json").write_text(json.dumps(catalog), encoding="utf-8")
             (root / "Origin.lagda.md").write_text("```agda\nimport B\n```")
             (root / "A.lagda.md").write_text(
                 "<!--en-->\n# First chapter\n<!--zh-->\n# 第一章\n<!--ja-->\n# 最初の章\n<!--/-->\n"

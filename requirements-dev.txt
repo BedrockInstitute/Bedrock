@@ -6,3 +6,4 @@
 # The [charset-normalizer] extra supplies an encoding detector (no system libmagic
 # needed on macOS).
 reuse[charset-normalizer]==6.2.0
+-e ./outcrop

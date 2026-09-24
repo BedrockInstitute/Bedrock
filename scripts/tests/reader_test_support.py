@@ -4,9 +4,11 @@ New state-machine tests import the public ES modules directly. These adapters
 retain old minimal-DOM behavioral tests without depending on bundle ordering.
 """
 from pathlib import Path
+from outcrop import site as site_package
+RESOURCES = Path(site_package.__file__).resolve().parent / "resources"
 import re
 
-READER = Path(__file__).resolve().parents[2] / 'site/static/reader'
+READER = RESOURCES / 'static/reader'
 
 
 def source(*modules):

@@ -10,6 +10,17 @@ import unittest
 SCRIPTS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 
+import sys
+from pathlib import Path
+
+from outcrop.core.markdown_core import auto_link_terms, md_to_html, restore_toc_labels
+from outcrop.core.term_registry import TERM_MARK_RE
+from outcrop.core.term_lint import prerequisite_occurrences
+from outcrop.site.site_config import SiteConfig, BookCatalog
+from outcrop.site.page_renderer import PageRenderer
+from outcrop.site.publication import Publication
+
+
 def load(name, relative):
     spec = importlib.util.spec_from_file_location(name, os.path.join(SCRIPTS, relative))
     module = importlib.util.module_from_spec(spec)
@@ -17,8 +28,7 @@ def load(name, relative):
     return module
 
 
-terms = load("term_registry", "site/term_registry.py")
-renderer = load("render_site_terms", "site/render-site.py")
+from outcrop.core import term_registry as terms
 gate = load("check_term_introductions", "gate/check-term-introductions.py")
 
 
@@ -33,7 +43,17 @@ def entry(**changes):
     return value
 
 
-class SchemaTests(unittest.TestCase):
+
+class PublicationCase(unittest.TestCase):
+    def setUp(self):
+        self.config = SiteConfig.load(Path(__file__).resolve().parents[2] / 'site/project.json',
+                                      root=Path(__file__).resolve().parents[2])
+        self.book = BookCatalog()
+        self.publication = Publication(self.config, self.book)
+        self.pages = PageRenderer(self.config, self.book, self.publication)
+
+
+class SchemaTests(PublicationCase):
     def test_reader_entry_is_complete(self):
         self.assertEqual(terms.schema_errors([entry()]), [])
 
@@ -69,80 +89,80 @@ class SchemaTests(unittest.TestCase):
                             terms.schema_errors([entry(abbreviations={"en": "HIT"}), other])))
 
 
-class RenderingTests(unittest.TestCase):
+class RenderingTests(PublicationCase):
     def test_auto_links_prose_but_not_code_or_introduction(self):
         body = ('<p>The <dfn id="term-host-environment" data-term="host-environment">host</dfn> '
                 'contains another host.</p><pre><code>host</code></pre>')
-        rendered = renderer.auto_link_terms(body, "en", "Base.Prelude", [entry()])
+        rendered = auto_link_terms(body, "en", "Base.Prelude", [entry()])
         self.assertEqual(rendered.count('class="term-ref"'), 1)
         self.assertIn('<code>host</code>', rendered)
         self.assertIn('<dfn id="term-host-environment"', rendered)
 
     def test_english_matching_uses_word_boundaries(self):
-        rendered = renderer.auto_link_terms("<p>host hosting host-level</p>", "en", "M", [entry()])
+        rendered = auto_link_terms("<p>host hosting host-level</p>", "en", "M", [entry()])
         self.assertEqual(rendered.count('class="term-ref"'), 2)
 
     def test_explicit_term_is_not_automatically_linked(self):
-        rendered = renderer.auto_link_terms("<p>host</p>", "en", "M",
+        rendered = auto_link_terms("<p>host</p>", "en", "M",
                                             [entry(matching="explicit")])
         self.assertEqual(rendered, "<p>host</p>")
 
     def test_abbreviation_links_and_appears_in_glossary_outputs(self):
         value = entry(abbreviations={"en": "HIT", "zh": "HIT"})
-        rendered = renderer.auto_link_terms("<p>A HIT is a host.</p>", "en", "M", [value])
+        rendered = auto_link_terms("<p>A HIT is a host.</p>", "en", "M", [value])
         self.assertEqual(rendered.count('class="term-ref"'), 2)
         self.assertIn('data-term="host-environment" href="Base.Prelude.html#term-host-environment">HIT</a>',
                       rendered)
         self.assertIn('class="term-abbreviation">(HIT)</span>',
-                      renderer.glossary_label_html(value, "en"))
+                      self.pages.glossary_label_html(value, "en"))
         with tempfile.TemporaryDirectory() as tmp:
             os.mkdir(os.path.join(tmp, "en"))
-            renderer.write_terms(tmp, "en", [value])
+            self.publication.write_terms(tmp, "en", [value])
             with open(os.path.join(tmp, "en", "terms.json"), encoding="utf-8") as source:
                 payload = json.load(source)
             self.assertEqual(payload["host-environment"]["abbreviation"], "HIT")
 
     def test_void_element_does_not_protect_following_prose(self):
-        rendered = renderer.auto_link_terms("<p><br>host</p>", "en", "M", [entry()])
+        rendered = auto_link_terms("<p><br>host</p>", "en", "M", [entry()])
         self.assertEqual(rendered.count('class="term-ref"'), 1)
 
     def test_heading_marker_keeps_plain_toc_label(self):
-        marked = renderer.TERM_MARK_RE.sub(
+        marked = TERM_MARK_RE.sub(
             lambda match: "\x00TERM0\x00", "## [host]{.term-intro #host-environment}")
-        body, toc = renderer.md_to_html(marked)
+        body, toc = md_to_html(marked)
         store = {"\x00TERM0\x00": '<dfn id="term-host-environment">host</dfn>'}
         for key, value in store.items():
             body = body.replace(key, value)
-        clean = renderer.restore_toc_labels(toc, store)
+        clean = restore_toc_labels(toc, store)
         self.assertIn('<dfn id="term-host-environment">host</dfn>', body)
         self.assertEqual(clean, [(2, "sec-0", "host")])
 
 
-class IntroductionGateTests(unittest.TestCase):
+class IntroductionGateTests(PublicationCase):
     def test_abbreviation_use_has_the_same_prerequisite_rule_as_full_name(self):
         value = entry(abbreviations={"en": "HIT"})
-        self.assertEqual(len(gate.prerequisite_occurrences("A HIT appears.", value, "en", "Other")), 1)
+        self.assertEqual(len(prerequisite_occurrences("A HIT appears.", value, "en", "Other")), 1)
 
     def test_explicit_sense_does_not_trigger_an_overlapping_concept(self):
         text = '[host]{.term-ref #other-concept}'
-        self.assertEqual(gate.prerequisite_occurrences(text, entry(), 'en', 'Other'), [])
+        self.assertEqual(prerequisite_occurrences(text, entry(), 'en', 'Other'), [])
 
     def test_explicit_cross_chapter_lookup_does_not_require_proof_import(self):
         text = '[host]{.term-ref #host-environment}'
-        self.assertEqual(gate.prerequisite_occurrences(text, entry(), 'en', 'Other'), [])
+        self.assertEqual(prerequisite_occurrences(text, entry(), 'en', 'Other'), [])
 
     def test_bare_use_still_requires_prerequisite_after_a_lookup(self):
         text = '[host]{.term-ref #host-environment} and host'
-        self.assertEqual(len(gate.prerequisite_occurrences(text, entry(), 'en', 'Other')), 1)
+        self.assertEqual(len(prerequisite_occurrences(text, entry(), 'en', 'Other')), 1)
 
     def test_explicit_lookup_can_point_forward_within_same_chapter(self):
         for language, label in (('en', 'host'), ('zh', '宿主'), ('ja', 'ホスト')):
             text = '[' + label + ']{.term-ref #host-environment}'
-            self.assertEqual(gate.prerequisite_occurrences(text, entry(), language, 'Base.Prelude'), [])
+            self.assertEqual(prerequisite_occurrences(text, entry(), language, 'Base.Prelude'), [])
 
     def test_forward_lookup_does_not_exempt_bare_same_chapter_uses(self):
         text = '[host]{.term-ref #host-environment} and host'
-        self.assertEqual(len(gate.prerequisite_occurrences(text, entry(), 'en', 'Base.Prelude')), 1)
+        self.assertEqual(len(prerequisite_occurrences(text, entry(), 'en', 'Base.Prelude')), 1)
 
     MASTER = """<!--en-->
 [host]{.term-intro #host-environment}

@@ -2,22 +2,17 @@
 """Check the external reading catalog against literate Agda sources."""
 
 import argparse
-from collections import Counter
 import json
 from pathlib import Path
-import re
 
 
-FENCE = re.compile(r"^```agda\s*\n(.*?)^```\s*$", re.M | re.S)
-IMPORT = re.compile(r"^\s*(?:open\s+)?import\s+([\w.]+)", re.M)
 PREVIEWS = frozenset({"Origin"})
 CATALOG = Path(__file__).resolve().parents[2] / "dev" / "reading-catalog.json"
 
 
-import sys
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'site'))
-from source_syntax import imports
-from reading_order import reading_order_errors
+
+from outcrop.core.reading_order import reading_order_errors
+from outcrop.site.site_inputs import source_paths
 
 
 def defects(sources, catalog_path=CATALOG):
@@ -33,8 +28,8 @@ def main():
     parser.add_argument("--src", type=Path,
                         default=Path(__file__).resolve().parents[2] / "src")
     args = parser.parse_args()
-    sources = {str(p.relative_to(args.src))[:-len(".lagda.md")].replace("/", "."):
-               p.read_text() for p in sorted(args.src.rglob("*.lagda.md"))}
+    sources = {module: path.read_text(encoding='utf-8')
+               for module, path in source_paths(args.src, '.lagda.md').items()}
     errors = defects(sources)
     for error in errors:
         print(f"check-reading-order: {error}")

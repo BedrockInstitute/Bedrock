@@ -25,27 +25,25 @@ Usage:
 Exit status: 0 clean, 1 violations, 2 usage error.
 """
 
-import importlib.util
-import json
 import os
-import re
 import subprocess
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "site"))
-from i18n_markers import parse
 
 if sys.version_info < (3, 11):
     sys.exit("check-glossary.py needs Python 3.11+ (tomllib); run `make venv` and use .venv/bin/python")
-import tomllib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GLOSSARY = "dev/glossary.toml"      # canonical term data (this checker's input)
 GLOSSARY_DOC = "dev/GLOSSARY.md"    # human prose explaining the glossary (excluded from scans)
 
 
-from glossary_lint import *
+from outcrop.core.glossary_lint import (
+    CJK_LANGS, _read, build_checks, build_presence, check_text,
+    load_glossary, master_presence_violations, presence_violations, route_metadata_violations,
+)
+from outcrop.core.prose_lint import EXCLUDE_BASENAMES
 def scope_of(path):
     """'zh' / 'ja' for a docs/<lang>/ file, 'master' for a src .lagda.md, else 'en'."""
     parts = os.path.normpath(path).split(os.sep)

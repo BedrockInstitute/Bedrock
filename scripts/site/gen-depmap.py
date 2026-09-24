@@ -2,9 +2,10 @@
 """Compatibility CLI for the shared dependency-graph publisher."""
 import argparse
 from pathlib import Path
-from dependency_graph import *
-from site_config import SiteConfig
-from reading_routes import build_reading_data
+from outcrop.site.dependency_graph import render_graph
+from outcrop.site.site_inputs import source_paths
+from outcrop.site.site_config import SiteConfig
+from outcrop.site.reading_routes import build_reading_data
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -18,7 +19,9 @@ def main(argv=None):
     src = args.src or config.path(config.sources)
     reading = build_reading_data(src, config.path(config.catalog), extension=config.source_extension,
         previews={config.landing_module}, prerequisites=config.values.get('prerequisites'))
-    return render_graph(config, reading, masters(src, config.source_extension), args.out,
+    sources = {module: path.read_text(encoding='utf-8')
+               for module, path in source_paths(src, config.source_extension).items()}
+    return render_graph(config, reading, sources, args.out,
                         args.langs.split(',') if args.langs else config.languages)
 
 if __name__ == '__main__':

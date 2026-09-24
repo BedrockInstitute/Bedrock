@@ -9,6 +9,7 @@ spec = importlib.util.spec_from_file_location(
     "check_fences", Path(__file__).resolve().parents[1] / "gate/check-fences.py")
 check_fences = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(check_fences)
+from outcrop.core.source_syntax import strip_route_metadata
 
 
 class CheckFencesTests(unittest.TestCase):
@@ -19,7 +20,7 @@ class CheckFencesTests(unittest.TestCase):
             return check_fences.suspects(path, 3)
 
     def test_valid_route_metadata_is_ignored_and_lines_are_preserved(self):
-        text = """<!-- bedrock-routes
+        text = """<!-- outcrop-routes
 {
   "version": 1,
   "routes": []
@@ -29,12 +30,12 @@ class CheckFencesTests(unittest.TestCase):
 Prose.
 """
         self.assertEqual(self.suspects(text), [])
-        stripped = check_fences.strip_metadata(text)
+        stripped = strip_route_metadata(text)
         self.assertEqual(stripped.count("\n"), text.count("\n"))
         self.assertEqual(len(stripped), len(text))
 
     def test_unfenced_agda_after_metadata_is_reported_at_original_lines(self):
-        text = """<!-- bedrock-routes {"version": 1, "routes": []} -->
+        text = """<!-- outcrop-routes {"version": 1, "routes": []} -->
 f : A
 f x = x
 g : B

@@ -10,8 +10,7 @@ import re
 import sys
 import json
 import subprocess
-sys.path.insert(0, str(Path(__file__).resolve().parent / 'site'))
-from chapter_structure import FENCE, chapter_parts, opening_errors, parameterized, fence
+from outcrop.core.chapter_structure import FENCE, chapter_parts, opening_errors, parameterized, fence
 
 root = Path('src')
 paths = sorted(root.rglob('*.lagda.md'))

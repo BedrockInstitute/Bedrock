@@ -40,7 +40,7 @@ Getting it right calibrated the infrastructure everything else will stand on.
 
 As of 2026-09-22: **25,931 nonblank Agda code lines · 203.17 s fresh project typecheck (Cubical cache retained) · 1.57 GiB peak RSS.**
 
-The 120 chapters form an acyclic dependency graph with 1,487 direct imports, 224 skeleton edges and a longest chain of 30 modules.
+As of 2026-09-24, the source dependency graph has 120 chapters, 1,511 unique direct imports, 227 transitively reduced edges and a longest chain of 31 modules, before website hub/preview filtering.
 
 ## Direction
 
@@ -111,6 +111,7 @@ The development typechecks against the following pinned toolchain:
 For a fresh clone, install GHC/Cabal, `make`, `patch`, and Python 3.11+, then run:
 
 ```sh
+git submodule update --init --recursive
 make bootstrap
 make check
 ```
@@ -128,10 +129,26 @@ expression-type data together; `make site-cold` uses parallel module checking
 before the HTML backend and renderer. The proof and site modes use separate
 project-interface caches.
 
-`make check` (typecheck, the four linters, reading-order validation and gate tests) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
+`make check` (typechecking, source/textbook lint and both test suites) and the site build run on Python 3.11+; developer tooling (the `reuse` linter) is
 pinned in [requirements-dev.txt](requirements-dev.txt) and installed into a local virtual
 environment by `make venv` (run once per clone). Every push is typechecked against these versions
 by [GitHub Actions](.github/workflows/ci.yml).
+
+## Website framework
+
+The website uses [Outcrop](https://github.com/BedrockInstitute/Outcrop), pinned in
+the `outcrop/` submodule. **Outcrop Core** renders Markdown and optional compiler
+semantics; **Outcrop Site** supplies the complete interactive textbook, including
+routes, dependency graph, multilingual search, hover/modal, appearance, Ask AI
+and reusable lint. Bedrock supplies its content, catalog, terminology, brand and
+mathematical policies through [site/project.json](site/project.json).
+
+Initialize submodules before installing dependencies. `make venv` installs the
+local package; an existing environment can use
+`.venv/bin/python -m pip install -e ./outcrop`. Then `make site` builds the textbook
+and `make serve` previews it. See [the instance guide](site/README.md) and
+[Outcrop's architecture](outcrop/docs/ARCHITECTURE.md). Another textbook can use
+the same framework without copying Bedrock's mathematics or website code.
 
 ## Contributing
 
@@ -145,9 +162,10 @@ verified by `reuse lint`. In short:
 
 - **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**: the maths, prose, and brand assets (`src/`, `docs/`, `README`, `site/static/assets/`).
 - **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**: all other first-party code and config, including the vendored [1lab](https://1lab.dev) front-end.
-- **[OFL-1.1](https://openfontlicense.org)**: the self-hosted web fonts (`site/static/fonts/`).
+- **[OFL-1.1](https://openfontlicense.org)**: the self-hosted web fonts supplied by Outcrop (`outcrop/src/outcrop/site/resources/static/fonts/`).
 
 Full texts are in [`LICENSES/`](LICENSES/); [NOTICE](NOTICE) has the third-party attributions
 and the AGPL section 13 corresponding-source statement.
+Outcrop maintains its own per-file licensing and inherited vendor/font attribution.
 
 © 2026 Bedrock Institute.

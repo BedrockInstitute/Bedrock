@@ -199,7 +199,7 @@ i18n-gate:
 	$(PY) scripts/site/weave-i18n.py --check
 
 site-lint-gate:
-	$(PY) scripts/site/site_lint.py --config site/project.json --project-root .
+	$(PY) -m outcrop lint --config site/project.json --project-root .
 
 ifeq ($(LOCAL_PARALLEL),1)
 lint:
@@ -214,6 +214,7 @@ milestone-lint:
 
 test:
 	$(PY) -m unittest discover -s scripts/tests -p "test_*.py" -t scripts/tests -v
+	$(PY) -m unittest discover -s outcrop/tests -p "test_*.py" -v
 
 hooks:
 	install -m 755 scripts/git-hooks/pre-commit .git/hooks/pre-commit

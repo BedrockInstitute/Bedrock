@@ -1,91 +1,81 @@
-# Static reader architecture
+# Bedrock website architecture and acceptance record
 
-This refactor preserves the textbook, generated URLs, compiler evidence and visual
-contracts. It also introduces a renderer boundary usable with ordinary Markdown.
-The implementation and acceptance record below are maintained together.
+Bedrock is an instance of [Outcrop](../outcrop/docs/ARCHITECTURE.md), pinned in
+the `outcrop/` submodule. Outcrop Core and Outcrop Site own reusable implementation;
+this document records Bedrock's adapter/gate mapping and dated acceptance evidence.
+The [instance guide](../site/README.md) describes local installation and operation.
 
-## Baseline and diagnosis
-
-The starting revision is `22e5e983`. The coordinator reports a clean baseline with
-368 unit tests, 282 rendered modules in three languages, 360 Markdown mirrors,
-1,116,324 checked links and 44,808 search entries. These are baseline reports, not
-verification of the refactored result.
-
-The former `bedrock.js` (2,844 lines) owns unrelated navigation, notes, code
-inspection, modal loading, search and mathematical animations in one closure.
-Source-expression and name-popup state share hidden variables and independent
-timer paths. The renderer (2,709 lines) mixes Markdown, compiler HTML, mutable
-chapter metadata, page composition and publishing. Small existing modules for
-language markers, boilerplate, statements, terms and reading routes already have
-useful responsibilities; they should be retained rather than replaced wholesale.
-
-## Implemented dependency direction
-
-Browser entry points compose independent features. Features depend on small
-services for document configuration, code targets, payload lookup, disclosure,
-hover branches and definition history. Services do not import features. Modal
-documents run the same reader entry point. Appearance remains synchronous before
-paint and owns its preferences; other features ask it to synchronize frames.
-
-The Python renderer accepts text and explicit metadata. Markdown structure and
-compiler semantics are separate inputs; missing semantic data never creates AST
-nodes or type help. A Bedrock adapter supplies its catalog, glossary, compiler
-output and pedagogical policies. Publishing consumes rendered pages and a site
-configuration, not repository source conventions. Asset versions cover their
-complete runtime dependency graph.
-
-### Two reusable layers and one instance
+## Current ownership
 
 | Boundary | Owner | Inputs and lifetime |
 | --- | --- | --- |
-| Document core | `document_renderer.MarkdownDocument`, `markdown_core`, `agda_semantics` | Text, optional `CodeContext`, explicit terms and formal-setup policy; no file discovery |
-| Compiler adapter | `SourceCorpus`, `compiler_index.build_code_context` | Explicit sources, compiler HTML/types/ranges; one semantic join per build |
-| Book identity | `SiteConfig`, `BookCatalog` | Validated, instance-owned metadata and URL policy |
-| Full site | `website.build_site`, `PageRenderer`, `Publication`, `dependency_graph` | The same whole-book shell, navigation, graph and machine layer for every project |
-| Asset publication | `AssetBundle` | A captured byte snapshot; one hash covers entry modules, imports and worker |
-| Bedrock instance | `site/project.json`, Makefile and `scripts/gate` adapters | Existing source/catalog/glossary/Agda workflow and mathematical policies |
-| Legacy API | lazy `render-site.py` facade | Compatibility only; explicit-config CLI never initializes the Bedrock instance |
+| Outcrop Core | `outcrop.core.MarkdownDocument`, `CodeContext`; pure structure, semantic and lint modules | Explicit text and optional compiler evidence; no project discovery or Site dependency |
+| Semantic package integration | `outcrop.site.site_inputs.SourceCorpus`, `compiler_index.build_code_context` | Explicit source/highlighted documents, signatures and Unicode ranges; one join per build |
+| Outcrop Site | `outcrop.site.SiteConfig`, `build_site`, catalog/page/publication/route/graph owners | Validated instance state; identical complete website features for each project |
+| Packaged browser resources | `outcrop/src/outcrop/site/resources/` | Templates, `outcrop.js`, `outcrop.css`, feature modules, fonts and vendor files |
+| Asset publication | `outcrop.site.assets.AssetBundle` | Captured byte snapshot; one immutable runtime generation |
+| Bedrock instance | `site/project.json`, `site/static/assets/`, `src/`, catalog/glossary, Makefile and gate adapters | Brand, content, mathematical policies, compiler/cache workflow and deployment |
 
-`PageRenderer.render_module` takes the shared `CodeContext`, not a long positional
-chain of split name/type/AST dictionaries. The document core returns a
-`RenderedDocument` with body, outline, mirror and source blocks. The publisher
-does not reinterpret Markdown. `BookCatalog` owns chapter address decisions;
-the graph, terms, search and machine layer consume those addresses.
+Core returns usable HTML, outline and Markdown. PageRenderer consumes one explicit
+CodeContext; Publication adds metadata rather than reinterpreting source Markdown.
+The browser features share semantic targets, hover branches, definition history,
+coordinate transforms and preferences. See Outcrop's architecture for the full
+owner and interaction contracts instead of maintaining a second framework guide here.
 
-### Browser ownership
+The old private `render-site.py` Python facade is removed. The remaining Bedrock
+command is a small configuration adapter; genuine callers import the installed
+package. Independent tests/examples are under `outcrop/tests/` and
+`outcrop/examples/renderer/`; Bedrock-content tests remain under `scripts/tests/`.
 
-`bedrock.js` is composition, not a shared mutable context. Each feature owns its
-listeners and local DOM state. `code-targets` owns semantic target identity and
-range selection; `type-store` owns fetch coalescing/retry and payload resolution;
-`HoverBranch` owns ancestor timers and disposal; `hover-view` owns shared downward
-geometry and selection cleanup. Source-expression and name views retain their
-different presentations, but no longer implement separate timer or positioning
-algorithms. `DefinitionSession` owns target history, forward truncation, generation
-cancellation and asynchronous resource cleanup. `definition-layout` owns the
-explicit iframe reading viewport and canonical redirect identity. The modal view
-does not own a second history or restore arbitrary user scroll positions.
+## Extraction and cleanup, 2026-09-24
 
-`route-store` shares route fetches and selected-route preferences between the
-sidebar and learning explorer. `preferences` owns namespace-aware safe storage;
-appearance remains a synchronous prepaint service. Search owns its worker, notes
-own annotations, navigation owns drawer/section tracking, and diagrams own their
-mathematical animation controls. A mirrored page runs the same composition entry,
-not a reduced duplicate implementation. UI UX Pro Max was used for interaction,
-keyboard, touch-target and contrast review, without changing the visual design or
-disabling mathematical animations.
+The cleanup began at `956682cb`, after the previous refactor below. Production
+Python across the former site/gate scope measured 9,881 lines. Removing test-only
+compatibility and duplicated implementation reduced it to 9,663; adding the real
+package API/CLI and explicit instance adapters brought the equivalent scope to
+9,700. This count excludes tests and the new browser-fixture builder. It is a cost
+record, not evidence of correctness or a target for mathematical code reduction.
 
-### Duplication removed
+Removed consumers and shared replacements:
 
-- One Unicode/name/type semantic implementation serves formal, inline, popup and
-  mirrored code. No new front-end AST parser was introduced.
-- Popup branches share timer ownership and source/name views share placement.
-- Modal history and loading-generation cleanup are independently executable.
-- Route metadata requests and current-route preference changes are shared.
-- Markdown processing no longer exists inside page publication.
-- Source fenced-import parsing is shared by routes, graph and reading-order lint.
-- Pure lint engines are shared by generic lint and existing project gate adapters.
-- Asset hashing and publication use one snapshot path; the former duplicate
-  `publish_assets`/`version_template` implementation was removed.
+- Tests now call MarkdownDocument, AgdaSemantics, Publication and PageRenderer,
+  not a lazy renderer facade. The unused Publication Markdown-mirror bridge is gone.
+- SourceCorpus owns the production document closure; the old standalone closure
+  and related test-only lookup helpers are removed.
+- Source discovery and exact filename suffix handling are shared by rendering,
+  routes, graph and site lint. Prerequisite-order checks use one rule engine.
+- Route-annotation stripping and Unicode import parsing are shared by applicable
+  render/lint consumers; the graph no longer uses a separate ASCII-only import rule.
+- Unused aliases, star imports and framework `sys.path` shims are removed. Build
+  CLI and API options share one parser. Core has no dependency on Site or its CSS.
+
+At the Python handoff, 129 Outcrop tests passed (123 migrated, six new contracts),
+strict independent-example lint and `make lint` exited 0. The wheel contained 152
+files with templates, modules, worker, fonts and vendor resources. Of 256 Bedrock
+tests, 253 passed and three old hover scenarios required adaptation to the concurrent
+UI changes; that handoff is not an all-tests-passed claim. Evidence logs are
+`/private/tmp/outcrop-package-final.log`, `/private/tmp/outcrop-python-lint-final.log`,
+`/private/tmp/outcrop-wheel.log` and `/private/tmp/bedrock-package-tests.log`.
+
+The completed extraction pins Outcrop `923c4fb6df29c58ac58885c4e7851b6ef2ae7ec1`.
+Its [acceptance record](../outcrop/docs/ACCEPTANCE.md) supersedes that intermediate
+handoff: all 256 Bedrock and 130 Outcrop tests pass, as do `make check`, the Origin
+closure gate, both REUSE audits and the independently installed package build.
+The full three-language build renders 282 modules, with zero broken relative
+links or search targets. Chrome browser acceptance includes the original six
+suites, the independent two-brand fixture, and 25 new mobile-simulation checks.
+Runtime generation: `f0e5481f2e1a2907`. Native iPhone Safari remains explicitly
+unverified; the available Safari automation window could not be acquired.
+Outcrop's first public CI run also passed:
+[run 35991153159](https://github.com/BedrockInstitute/Outcrop/actions/runs/35991153159).
+
+During migration, after adapting those hover scenarios, the coordinator reported both suites
+passing: 129 Outcrop tests and 256 Bedrock tests. This is unit-test evidence only;
+the earlier handoff failure is retained above rather than silently relabeled.
+
+The frame-internal QED, full-width code, compact portrait landscape reader,
+search visibility and hover-loading changes are covered by the separate extraction
+acceptance linked above. None of the older historical results below certifies them.
 
 ## Complete gate mapping
 
@@ -106,9 +96,9 @@ No original gate was removed. `make check` additionally exercises the reusable
 | `routes-gate` | `reading_routes` | Explicit catalog, source extension, overview and prerequisite overrides |
 | `chapters-gate` | `outline_lint`, `chapter_structure` | Formal setup policy and explicit visible-import exceptions |
 | `i18n-gate` | `i18n_markers.lint_markers` | Instance source discovery only |
-| `test` | Python and Node contract tests | Existing behavior retained; compatibility tests listed below |
+| `test` | Python and Node contract tests | Existing behavior retained; behavioral contracts listed below |
 | `milestone-lint` (push/CI) | Source reachability algorithm | Bedrock's entry-closure requirement remains `check-milestone-consumption.py --root Origin` |
-| Literary exposition audit (supplemental) | `literary_lint.analyze_text`; generic `site_lint.py --literary` | Exact source setup and configured module set; not silently promoted to a whole-tree gate while the prose project is incomplete |
+| Literary exposition audit (supplemental) | `literary_lint.analyze_text`; generic `python -m outcrop lint --literary` | Exact source setup and configured module set; not silently promoted to a whole-tree gate while the prose project is incomplete |
 
 Generic `lint_site(config, project_checks=...)` also accepts explicit callable
 project checks returning diagnostics. Configuration cannot execute arbitrary
@@ -117,9 +107,9 @@ another project supplies its own domain checks without editing the shared rules.
 The optional literary audit preserves per-language counts and 1..5-line structural
 checks; counts are not evidence of mathematical correctness.
 
-The generated `examples/renderer/semantic/` package is compiler output, not
-authored Markdown. Repository prose discovery excludes that exact artifact root;
-the corresponding `examples/renderer/chapters/` masters remain checked by the
+The generated `outcrop/examples/renderer/semantic/` package is compiler output, not
+authored Markdown. Bedrock prose discovery does not traverse the independent submodule;
+the corresponding `outcrop/examples/renderer/chapters/` masters remain checked by the
 strict reusable lint and independent build tests.
 
 ### Test migration traceability
@@ -152,12 +142,16 @@ strict reusable lint and independent build tests.
 | Publication | static host, base path, immutable dependent assets, redirects and licenses | asset tests, full build, link check |
 | Mathematical source | unchanged Agda and literate source | diff scope; make check; milestone-lint |
 
-Actual browser checks will name browser, viewport or fixture width, language and
+New browser acceptance must name browser, viewport or fixture width, language and
 actions. Simulated touch and narrow embedded frames are not iPhone Safari evidence.
 
-## Verification results
+## Historical verification: the pre-Outcrop extraction refactor
 
-The staged results below are retained for traceability. Final acceptance follows.
+Everything in this section belongs to the earlier refactor, starting at
+`22e5e983` and delivered before the Outcrop extraction at `956682cb`. Its staged
+and final results are retained verbatim in substance for traceability. They are
+not results for the current package or UI generation. Temporary evidence paths
+describe that local run and are not durable distributed artifacts.
 
 | Stage | Result / evidence |
 | --- | --- |
@@ -175,7 +169,7 @@ Pre-freeze actual Chrome session (own tab, sequential active fixtures at
 `/padding-regression` 28/28, `/appearance-regression` 136/136,
 `/universe-regression` 65/65. The first fixture used the current unversioned test
 entry while iframe documents retained the earlier coherent production hash;
-these results must be repeated after the final full build. The new dedicated
+these staged results were superseded by the final historical run below. The new dedicated
 server at port 18769 reads the built page's runtime hash and serves every fixture
 entry from that same production generation. Simulated touch/Safari gesture events
 and embedded narrow frames do not establish real iPhone Safari behavior.
@@ -183,12 +177,12 @@ and embedded narrow frames do not establish real iPhone Safari behavior.
 The explicit Chrome viewport API was verified with `innerWidth=1100` and
 `innerHeight=850`. Independent Lantern manual actions already verified routes,
 comparison, marking the input chapter complete, and the resulting next-ready
-chapter. Final width/theme/language and production-entry evidence remains to be
-recorded below.
+chapter. The completed historical width/theme/language and production-entry evidence
+is recorded below.
 
-### Final acceptance, 2026-09-24
+### Historical final acceptance, 2026-09-24, before Outcrop extraction
 
-The production JavaScript generation is `24535ca6aa993b17`. The dedicated
+That run used production JavaScript generation `24535ca6aa993b17`. The dedicated
 regression server reads this generation from the built page, so fixture entry
 scripts, imported reader modules, workers and modal iframe pages use the same
 snapshot. There were no runtime changes during the final browser sweep.

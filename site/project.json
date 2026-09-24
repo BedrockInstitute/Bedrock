@@ -99,7 +99,8 @@
   },
   "policies": {
     "formal_setup": true,
-    "trilingual": true
+    "trilingual": true,
+    "level_name_convention": true
   },
   "visible_import_chapters": [
     "Origin"

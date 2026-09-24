@@ -6,16 +6,12 @@ The gate is intentionally structural: ratios are reported, never required.  With
 read-only inventory report and exits successfully.
 """
 from __future__ import annotations
-import argparse, json, pathlib, re, sys
+import argparse, json, pathlib
 HERE=pathlib.Path(__file__).resolve(); ROOT=HERE.parents[2]
-sys.path.insert(0,str(ROOT/'scripts/site'))
-from i18n_markers import LANGS, _is_english_narrative, _markdown_blocks, marker
-from reading_routes import strip_metadata
-from chapter_structure import boilerplate_ranges, chapter_parts, parameterized
-from submodule_structure import module_header_line
 
-from literary_lint import *
-from literary_lint import analyze_text as analyze_document
+from outcrop.core.i18n_markers import LANGS
+
+from outcrop.core.literary_lint import analyze_text as analyze_document
 
 def analyze_text(text, name='<memory>'):
     module = ''

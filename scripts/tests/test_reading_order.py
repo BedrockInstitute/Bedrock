@@ -53,7 +53,8 @@ class ReadingOrderTests(unittest.TestCase):
 
     def test_prose_and_other_fences_are_not_imports(self):
         text = "import Ghost\n```text\nimport Ghost\n```\n" + chapter("A")
-        self.assertEqual(checker.imports(text), ["A"])
+        from outcrop.core.source_syntax import imports
+        self.assertEqual(imports(text), ["A"])
 
 
 if __name__ == "__main__":

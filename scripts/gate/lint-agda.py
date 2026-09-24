@@ -53,23 +53,18 @@ over the staged files. DD22 bans an in-file SPDX header.
 """
 
 import glob
-import re
 import subprocess
 import sys
-from pathlib import Path   # cutover step 7: check_spdx() needs it
+from pathlib import Path
 
 # The repository root. `check_spdx()` reads it and NOTHING defined it until
 # 2026-08-18, so the moved check raised NameError on its first call.
 ROOT = Path(__file__).resolve().parent.parent.parent
 
-sys.path.insert(0, str(ROOT / 'scripts/site'))
-from agda_lint import *
-from site_config import SiteConfig
+from outcrop.core.agda_lint import AgdaPolicy, lint_text
+from outcrop.site.site_config import SiteConfig
 _project = SiteConfig.load(ROOT / 'site/project.json', root=ROOT)
 _policy = AgdaPolicy(**_project.values['agda_policy'])
-OPTIONS_EXPECTED = list(_policy.options)
-BARE_OPEN_HUBS = set(_policy.bare_open_hubs)
-PRELUDE_PUBLIC_NAMES = {key: set(value) for key, value in _policy.prelude_public_names.items()}
 
 def lint_file(path):
     return lint_text(Path(path).read_text(encoding='utf-8'), _policy)

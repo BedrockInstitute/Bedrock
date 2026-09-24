@@ -1,14 +1,15 @@
 from reader_test_support import source
 """Source layout and presentation use the same actual chapter setup."""
 from pathlib import Path
+from outcrop import site as site_package
+RESOURCES = Path(site_package.__file__).resolve().parent / "resources"
 import re
 import sys
 import unittest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'site'))
-from chapter_structure import OPTIONS, chapter_parts, opening_errors, boilerplate_ranges
-from boilerplate import mirror_boilerplate, popup_code
-from agda_help import HELP, annotate_keywords, help_html
+from outcrop.core.chapter_structure import OPTIONS, chapter_parts, opening_errors, boilerplate_ranges
+from outcrop.core.boilerplate import mirror_boilerplate, popup_code
+from outcrop.core.agda_help import HELP, annotate_keywords, help_html
 
 TITLE = '<!--en-->\n# Title\n<!--zh-->\n# 标题\n<!--ja-->\n# 題名\n<!--/-->\n'
 
@@ -99,7 +100,7 @@ class BoilerplateTests(unittest.TestCase):
         javascript = source('hover', 'code-targets', 'type-store', 'hover-branch', 'definition-modal')
         self.assertIn('if ((template && template.hasAttribute("data-boilerplate-module")) || name.classList.contains("universe-notation"))\n'
                       '            namePopup.classList.add("boilerplate-hover-popup");', javascript)
-        css = (root / 'site/static/bedrock.css').read_text()
+        css = (RESOURCES / 'static/outcrop.css').read_text()
         shell = re.search(r'\.boilerplate-hover-popup\s*\{([^}]+)\}', css)[1]
         self.assertIn('background: var(--code-bg)', shell)
         self.assertIn('border: 1px solid var(--code-border)', shell)
@@ -186,7 +187,7 @@ class SyntaxHelpTests(unittest.TestCase):
     def test_modal_loading_preserves_layout_and_supports_reduced_motion(self):
         root = Path(__file__).resolve().parents[2]
         javascript = source('hover', 'code-targets', 'type-store', 'hover-branch', 'definition-modal')
-        css = (root / 'site/static/bedrock.css').read_text()
+        css = (RESOURCES / 'static/outcrop.css').read_text()
         self.assertIn('view.body.replaceChildren(loading, frame);', javascript)
         self.assertIn('if (revealed || failed || !isCurrentFrame()) return;', javascript)
         self.assertIn('else revealFrame();', javascript)

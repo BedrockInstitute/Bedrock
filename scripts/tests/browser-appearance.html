@@ -8,11 +8,11 @@
   const saved = Object.fromEntries(['bedrock-theme','bedrock-code-palettes'].map(key => [key,localStorage.getItem(key)]));
   function check(name, ok) { checks.push({name,ok:!!ok}); document.querySelector('#report').textContent=JSON.stringify(checks,null,2); if(!ok)throw Error(name); }
   async function until(test) { const start=Date.now();while(!test()){if(Date.now()-start>30000)throw Error('Timed out');await delay(80);} }
-  async function load() { frame.src='/zh/Base.Choice?appearance-test='+Date.now();await until(()=>frame.contentWindow?.bedrockAppearance&&frame.contentDocument?.querySelector('#appearance-panel')); }
+  async function load() { frame.src='/zh/Base.Choice?appearance-test='+Date.now();await until(()=>frame.contentWindow?.outcropAppearance&&frame.contentDocument?.querySelector('#appearance-panel')); }
   try {
     localStorage.setItem('bedrock-theme','light');localStorage.setItem('bedrock-code-palettes','not JSON');
     await load();
-    let doc=frame.contentDocument, win=frame.contentWindow, api=win.bedrockAppearance;
+    let doc=frame.contentDocument, win=frame.contentWindow, api=win.outcropAppearance;
     const css=e=>win.getComputedStyle(e);
     check('invalid preferences fall back to default',doc.documentElement.dataset.codePalette==='default');
     const trigger=doc.querySelector('#theme-toggle'),panel=doc.querySelector('#appearance-panel');
@@ -73,8 +73,8 @@
     }
     api.setMode('system');check('system mode follows media query',api.effectiveMode()===(win.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
     // Reset the frame first so the load wait cannot accidentally accept its old document.
-    frame.src='about:blank';await until(()=>!frame.contentWindow.bedrockAppearance);await load();
-    doc=frame.contentDocument;win=frame.contentWindow;api=win.bedrockAppearance;
+    frame.src='about:blank';await until(()=>!frame.contentWindow.outcropAppearance);await load();
+    doc=frame.contentDocument;win=frame.contentWindow;api=win.outcropAppearance;
     check('mode persisted after navigation',doc.querySelector('[data-appearance-mode="system"]').getAttribute('aria-pressed')==='true');
     check('both palettes persisted after navigation',doc.querySelector('#code-palette-light').value==='solarized'&&doc.querySelector('#code-palette-dark').value==='gruvbox');
     localStorage.setItem('bedrock-code-palettes',JSON.stringify({light:'github',dark:'github'}));

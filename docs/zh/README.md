@@ -28,7 +28,7 @@
 
 截至 2026-09-22：**25,931 行非空 Agda 代码 · 清空项目缓存后的类型检查 203.17 秒 (保留 Cubical 缓存) · 峰值内存 1.57 GiB。**
 
-121 个章节构成有向无环依赖图，共 1,605 条直接导入边、230 条骨架边，最长链含 31 个模块。
+截至 2026-09-24，源码依赖图包含 120 个章节、1,511 条不重复的直接导入边和 227 条传递约简边，最长链含 31 个模块；这些计数未应用网站的枢纽与预览过滤。
 
 ## 方向
 
@@ -70,7 +70,21 @@ Cubical 类型论是当代类型论的前沿，是当下正被书写的数学基
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (类型检查、四个检查器、阅读顺序检查及门禁单元测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境，每个克隆运行一次即可。每次推送都会经 [GitHub Actions](../../.github/workflows/ci.yml) 针对上述版本进行类型检查。
+`make check` (类型检查、源码与教材检查，以及两套测试) 与站点构建需要 Python 3.11+。开发工具 (`reuse` 检查器) 的版本固定在 [requirements-dev.txt](../../requirements-dev.txt) 中，由 `make venv` 安装到本地虚拟环境。每次推送都会经 [GitHub Actions](../../.github/workflows/ci.yml) 针对上述版本进行类型检查。
+
+首次克隆后，先初始化固定版本的子模块，再安装工具链：
+
+```sh
+git submodule update --init --recursive
+make bootstrap
+make check
+```
+
+## 网站框架
+
+网站采用 [Outcrop](https://github.com/BedrockInstitute/Outcrop)，由 `outcrop/` 子模块固定版本。**Outcrop Core** 渲染 Markdown 与可选的编译器语义数据；**Outcrop Site** 提供完整交互式教材，包括学习路线、依赖图、多语搜索、类型提示与定义弹窗、外观设置、Ask AI 和可复用检查规则。Bedrock 通过 [site/project.json](../../site/project.json) 提供正文、目录、术语、品牌和数学政策。
+
+初始化子模块后，`make venv` 会安装本地框架包；已有虚拟环境也可运行 `.venv/bin/python -m pip install -e ./outcrop`。随后用 `make site` 构建、`make serve` 预览。详见 [实例说明](../../site/README.md) 与 [Outcrop 架构](../../outcrop/docs/ARCHITECTURE.md)。其他教材可以复用同一框架，无须复制 Bedrock 的数学内容或网站实现。
 
 ## 贡献
 
@@ -82,8 +96,10 @@ Bedrock 采用多重许可；逐文件的条款在 [`REUSE.toml`](../../REUSE.to
 
 - **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学、文稿与品牌标识 (`src/`、`docs/`、`README`、`site/static/assets/`)。
 - **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：其余所有第一方代码与配置，含内嵌的 [1lab](https://1lab.dev) 前端。
-- **[OFL-1.1](https://openfontlicense.org)**：自托管网页字体 (`site/static/fonts/`)。
+- **[OFL-1.1](https://openfontlicense.org)**：Outcrop 提供的自托管网页字体 (`outcrop/src/outcrop/site/resources/static/fonts/`)。
 
 完整许可文本见 [`LICENSES/`](../../LICENSES/)；第三方署名与 AGPL 第 13 条对应源代码声明见 [NOTICE](../../NOTICE)。
+
+Outcrop 独立维护逐文件许可及继承的第三方资源和字体署名。
 
 © 2026 Bedrock Institute。

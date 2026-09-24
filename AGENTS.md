@@ -13,9 +13,10 @@ of set theory in Cubical Agda. The constructible universe satisfies ZFC and GCH:
 their universe parameter. Both are re-exported by `src/Origin.lagda.md`.
 Preserve their statements, assumptions, safety and opacity boundaries.
 
-The project also contains a reusable document renderer and the complete
-interactive textbook website. Bedrock's content and branding are one instance,
-not implicit defaults for those libraries.
+The interactive website uses Outcrop, pinned in the `outcrop/` Git submodule.
+Outcrop Core is the reusable document engine; Outcrop Site is the complete
+interactive textbook framework. Bedrock's content and branding are one instance,
+not implicit defaults for either layer.
 
 Read the relevant specifications before changing an area:
 
@@ -26,9 +27,9 @@ Read the relevant specifications before changing an area:
 | Trilingual literary exposition | `dev/STYLE-i18n.md` |
 | Terminology and reader introductions | `dev/glossary.toml`, `dev/GLOSSARY.md` |
 | Chapter order, routes, titles and review status | `dev/reading-catalog.json` |
-| Markdown contract and reusable markup | `dev/RENDERER-MARKDOWN.md`, `dev/RENDERER-RECIPES.md` |
-| Website architecture and regression evidence | `dev/SITE-ARCHITECTURE.md`, `site/README.md` |
-| Site instance configuration | `site/project.json`, `dev/SITE-CONFIG.md` |
+| Markdown contract and reusable markup | `outcrop/docs/RENDERER-MARKDOWN.md`, `outcrop/docs/RENDERER-RECIPES.md` |
+| Website architecture and regression evidence | `outcrop/docs/ARCHITECTURE.md`, `dev/SITE-ARCHITECTURE.md`, `site/README.md` |
+| Site instance configuration | `site/project.json`, `outcrop/docs/SITE-CONFIG.md` |
 | Compiler instrumentation and environment | `tools/bedrock-agda/README.md`, `manifest.json` and `environment.json` in that directory |
 | Checks, caches and deployment | `Makefile`, `.github/workflows/ci.yml`, `.github/workflows/README.md` |
 | Licensing | `REUSE.toml`, `NOTICE`, `LICENSES/` |
@@ -74,6 +75,7 @@ Prefer Make targets, which set the compiler, local `AGDA_DIR` and cache mode.
 Common commands, from the repository root:
 
 ```sh
+git submodule update --init --recursive
 make bootstrap
 make check
 make milestone-lint
@@ -91,7 +93,7 @@ make serve
   backend data; it is insufficient after a change that invalidates that data.
 - `make serve SITE_OUT=... PORT=...` previews that output. The default output is
   `_build/site`; use the actual directory for every subsequent check.
-- Run `.venv/bin/python scripts/site/link-check.py <output>` after a full site
+- Run `.venv/bin/python -m outcrop check-links <output>` after a full site
   build. Also validate search targets and run the relevant browser regressions.
 - `make hooks` installs the repository hooks. Respect per-file licenses and run
   the REUSE checks when changing assets, dependencies or licensed file coverage.
@@ -101,7 +103,14 @@ separate. Never mix them to make a build appear warm: a pure interface can skip
 the elaboration events needed for semantic hover data. Generated sites, compiler
 binaries, dependencies, interfaces, logs and screenshots belong under ignored
 `_build/` or task-specific temporary paths, not in a commit. The small, intentional
-`examples/renderer/semantic/` test package is a documented fixture exception.
+`outcrop/examples/renderer/semantic/` test package is a documented fixture exception.
+
+Initialize the pinned submodule before `make venv` or `make bootstrap`.
+`make venv` installs Outcrop through `requirements-dev.txt`; an existing virtual
+environment can run `.venv/bin/python -m pip install -e ./outcrop` explicitly.
+Shared changes belong in the Outcrop repository, which has its own instructions,
+tests and licenses. Updating the parent submodule pointer requires the same Git
+authorization as any other repository change.
 
 For comparable performance use `make typecheck-cold`: one process, pure Agda,
 Cubical interfaces retained. `typecheck-cold-parallel` is an operational measure,
@@ -178,11 +187,11 @@ Inspect its findings; do not convert that exit status into a completeness claim.
 
 Maintain two layers, with Bedrock as their configured instance:
 
-1. **Document core**: `MarkdownDocument`, explicit `CodeContext`, Markdown
+1. **Outcrop Core**: `from outcrop.core import MarkdownDocument, CodeContext`, Markdown
    structure, multilingual prose, terms and optional compiler semantics.
    Accept ordinary `.md`, not only `.lagda.md`. Return usable HTML, outline and
    Markdown; do not implicitly discover a project, glossary, catalog or compiler.
-2. **Complete website**: `website.build_site`, `SiteConfig`, catalog, page shell,
+2. **Outcrop Site**: `from outcrop.site import SiteConfig, build_site`, catalog, page shell,
    publication, routes, dependency graph, search, appearance, interaction and
    reusable lint. Another project gets the same features, not a reduced demo.
 
@@ -190,6 +199,15 @@ Keep brand, icons, URLs, storage namespace, chapter exceptions, vocabulary and
 mathematical policies explicit in configuration. Domain-specific proof gates
 remain instance checks. Shared lint and the legacy Bedrock adapters must use the
 same rule engines, with explicit, narrow policy exceptions.
+
+Implementation lives in `outcrop/src/outcrop/{core,site,adapters}`. Browser
+resources live in `outcrop/src/outcrop/site/resources/`, with `static/outcrop.js`
+and `static/outcrop.css` as the reader entries. `scripts/site/` holds only real
+Bedrock command adapters. Do not restore a legacy private-function facade or
+add `sys.path` hacks to import framework modules. Use the installed package.
+`window.outcrop` is the browser transport; Bedrock's `storage_namespace` remains
+`bedrock`. Its explicit `policies.level_name_convention` enables the book's `ℓ`
+naming convention; the generic default is false.
 
 Browser entry points compose features; state belongs to small cohesive owners.
 Share semantic targets, hover lifecycle, positioning, definition history,
@@ -201,8 +219,8 @@ the tested page and its modal documents must use that same generation.
 Keep the independent fixture runnable without Bedrock content or an Agda toolchain:
 
 ```sh
-.venv/bin/python scripts/site/website.py --config examples/renderer/project.json --project-root examples/renderer --out _build/renderer-fixture/academy
-.venv/bin/python scripts/site/site_lint.py --config examples/renderer/project.json --project-root examples/renderer
+.venv/bin/python -m outcrop build --config outcrop/examples/renderer/project.json --project-root outcrop/examples/renderer --out _build/renderer-fixture/academy
+.venv/bin/python -m outcrop lint --config outcrop/examples/renderer/project.json --project-root outcrop/examples/renderer
 ```
 
 Retain tests for isolated distribution, ordinary Markdown, optional semantic
@@ -237,8 +255,14 @@ interaction rather than applying a new design indiscriminately.
   navigates. Preserve dark/light loading and cancellation, including Safari layout.
 - Preserve automatic syntax help, glossary links, boilerplate source popups,
   universe notation and selective dotted-operator fonts without changing copied
-  code. Share palettes across every code surface. Do not clip code padding,
-  inline fragments, nested submodules or the QED gutter.
+  code. Share palettes across every code surface. Code spans the full containing
+  column without an outdent or external QED gutter. The exact `∎` is translucent
+  inside the final frame; source syntax and statement lint are unchanged. Keep
+  submodules independently indented, declaration headers compact, and scroll
+  padding intact without clipping code or inline fragments.
+- Mobile landscape code reading moves the existing DOM and preserves IDs/AST
+  identity. Share transformed coordinates with hover and touch selection, restore
+  the original surface before opening a modal, and test focus/scroll restoration.
 - Search all supported editions regardless of the current language, including
   prose, headings, glossary and internal/external Agda. Preserve worker errors,
   retry, IME and keyboard behavior.
@@ -252,6 +276,9 @@ switches, loading/error paths and keyboard use as relevant. Sequentially run the
 browser fixtures served by `scripts/tests/serve-boilerplate-regression.py` against
 the freshly built production runtime, not stale or unversioned test scripts.
 Record URLs, build/runtime identity, actions and results.
+Independent framework tests live in `outcrop/tests`; Bedrock-content integration
+tests remain in `scripts/tests`. Historical results in the architecture record
+do not establish acceptance of a newly extracted package or changed interaction.
 
 A narrow Chrome viewport, dispatched touch events and desktop Safari are not
 real iPhone Safari evidence. State unavailable coverage honestly. For renderer

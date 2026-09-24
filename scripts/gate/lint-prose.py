@@ -52,28 +52,25 @@ Usage:
 Exit status is non-zero if any violation remains (in --fix, only the report-only ones).
 """
 
-import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
-from pathlib import Path   # cutover step 7: _masters_for_cjk() needs it
+from pathlib import Path
 
 # CUTOVER STEP 7 gave this per-file linter its first whole-tree check, so it needs
 # a root. It had none: every other check here reads the files named on the command
 # line. ROOT is derived from this file's own location and never from the cwd.
 ROOT = Path(__file__).resolve().parent.parent.parent
 SRC = ROOT / "src"
-sys.path.insert(0, str(ROOT / "scripts" / "site"))
-from submodule_structure import submodules, module_header_line
-from statement_structure import (STATEMENT_LABELS, PROOF_LABELS, LABEL_RE,
-                                 NAMES_RE, statement_issues, named_group_issues)
+
 _BARE_VARIABLE_LEGACY_PATH = ROOT / "dev" / "inline-agda-legacy.json"
 
-from prose_lint import *
-from prose_lint import analyze as analyze_prose, theorem_label_violations as label_violations
-from prose_lint import new_bare_variable_violations as bare_variable_policy_violations
+from outcrop.core.prose_lint import EXCLUDE_BASENAMES, ProsePolicy
+from outcrop.core.prose_lint import analyze as analyze_prose, theorem_label_violations as label_violations
+from outcrop.core.prose_lint import new_bare_variable_violations as bare_variable_policy_violations
+from outcrop.core.source_syntax import strip_route_metadata
 def load_bare_variable_legacy():
     """Exact old prose lines, never chapter-level exclusions."""
     with _BARE_VARIABLE_LEGACY_PATH.open(encoding="utf-8") as source:
@@ -142,7 +139,7 @@ def target_files(explicit, staged):
             and not f.startswith("archive/")    # outside every gate (archived D20, live DD13)
             # Compiler HTML is an input fixture, not an authored Markdown master.
             # Its corresponding examples/renderer/chapters sources are linted.
-            and not f.startswith("examples/renderer/semantic/")
+            and not f.startswith("outcrop/")  # independent project, linted by its own configured gate
             # A brief and a report are FROZEN RECORDS. A brief says what an agent was told
             # on a date; a report says what it found. Neither is live guidance, and neither
             # is ever rewritten, so a style gate over them can only force an edit to a

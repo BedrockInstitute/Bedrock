@@ -17,6 +17,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
 
       # This is the only job that builds and saves the patched Agda toolchain.
       # site-backend starts after the post-job cache save and restores the exact
@@ -129,6 +134,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
 
       # These exact caches were restored or created by typecheck. Restore-only
       # actions make the handoff explicit and prevent a second toolchain build.
@@ -170,9 +180,9 @@ jobs:
             _build/bedrock-agda-types.jsonl
             _build/types.json
             _build/expression-types.json
-          key: bedrock-site-v3-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib', 'Makefile', 'scripts/agda-parallel.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
+          key: bedrock-site-v3-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib', 'Makefile', 'scripts/agda-parallel.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-${{ hashFiles('src/**/*.lagda.md') }}
           restore-keys: |
-            bedrock-site-v3-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib', 'Makefile', 'scripts/agda-parallel.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py') }}-
+            bedrock-site-v3-${{ runner.os }}-${{ hashFiles('tools/bedrock-agda/**', 'bedrock.agda-lib', 'Makefile', 'scripts/agda-parallel.py', 'scripts/site/extract-types.py', 'scripts/site/extract-expression-types.py', 'outcrop/src/outcrop/adapters/*.py') }}-
 
       - name: Validate restored site backend
         if: steps.site_backend.outputs.cache-hit == 'true'
@@ -232,6 +242,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
 
       - name: Download site backend
         uses: actions/download-artifact@v7
@@ -247,7 +262,7 @@ jobs:
 
       - name: Link check
         shell: bash
-        run: python3 scripts/site/link-check.py _build/site
+        run: python3 -m outcrop check-links _build/site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
@@ -272,6 +287,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Install Outcrop
+        run: python3 -m pip install ./outcrop
 
       - name: Download site backend
         uses: actions/download-artifact@v7
@@ -287,7 +307,7 @@ jobs:
 
       - name: Link check
         shell: bash
-        run: python3 scripts/site/link-check.py _build/site
+        run: python3 -m outcrop check-links _build/site
 
       # wrangler-action installs Wrangler through npm because this repository
       # has no Node project or lockfile. Cache npm's download store, not a

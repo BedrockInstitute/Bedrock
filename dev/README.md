@@ -15,7 +15,7 @@ is trilingual and lives in [docs/](../docs/). The rule set is [AGENTS.md](../AGE
   `scripts/site/weave-i18n.py --check`. Prose outside every `<!--lang-->` group is shared
   and is copied to every language verbatim.
 - `GLOSSARY.md`: how a term entry is proposed, reviewed and landed.
-- [RENDERER-RECIPES.md](RENDERER-RECIPES.md): reusable rendering recipes, canonical
+- [Outcrop renderer recipes](../outcrop/docs/RENDERER-RECIPES.md): reusable rendering recipes, canonical
   markup, first uses in the first three chapters, and maintenance rules.
 - [CHOICE-REFINEMENT.md](CHOICE-REFINEMENT.md): commit-based refinement preferences
   and their application to the Choice chapter.

@@ -8,20 +8,27 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from outcrop import site as site_package
+RESOURCES = Path(site_package.__file__).resolve().parent / "resources"
 
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def load(name, path):
-    spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+import sys
+
+from outcrop.core.agda_semantics import (
+    add_prelude_qualified_names, annotate_expression_nodes, annotate_unlinked_bound_types,
+    decorate_type_nodes, index_definitions, is_universe_former_signature,
+    local_signature_types, names_by_position, qualified_name_pattern, resolve_type_hover_links,
+)
+from outcrop.core.agda_semantics import AgdaSemantics
+from outcrop.site.site_config import SiteConfig
+from outcrop.site.site_inputs import SourceCorpus
+semantics = AgdaSemantics(prelude_module='Base.Prelude')
 
 
-renderer = load("bedrock_expression_renderer", "site/render-site.py")
-extractor = load("bedrock_expression_extractor", "site/extract-expression-types.py")
+from outcrop.adapters import extract_expression_types as extractor
 
 
 class ExpressionHoverTests(unittest.TestCase):
@@ -91,6 +98,8 @@ function target(type, href) {
         scenario = r'''
 var compactPointer = {matches: true};
 var nameRequest = 0, namePopups = [];
+var cfg = {lang: 'en'};
+var codeSurface = function () { return null; };
 var levelGesture = null;
 var branch = {append: entry => namePopups.push(entry)};
 var types = createTypeStore({fetcher: () => Promise.resolve({ok:true,json:()=>({})})});
@@ -113,6 +122,8 @@ var document = {
     return {children: [], dataset: {}, isConnected: true,
       classList: {add: function () {}},
       setAttribute: function () {},
+      removeAttribute: function () {},
+      replaceChildren: function () { this.children = []; },
       appendChild: function (child) { this.children.push(child); },
       addEventListener: function () {}};
   },
@@ -121,6 +132,7 @@ var document = {
 var link = {
   href: "Base.Prelude.html#43", textContent: "mapDec", isConnected: true,
   classList: {contains: function () { return false; }},
+  matches: function () { return false; },
   getAttribute: function () { return null; },
   hasAttribute: function (key) { return key === "href"; }
 };
@@ -135,6 +147,7 @@ setImmediate(function () {
   var primitive = {
     href: "Agda.Primitive.html#388", textContent: "Type", isConnected: true,
     classList: {contains: function (name) { return name === "Primitive"; }},
+    matches: function () { return false; },
     getAttribute: function (key) { return key === "data-name" ? "Set" : null; },
     hasAttribute: function (key) { return key === "href"; }
   };
@@ -145,6 +158,7 @@ setImmediate(function () {
     var levelUniv = {
       href: "Agda.Primitive.html#595", textContent: "LevelUniv", isConnected: true,
       classList: primitive.classList,
+      matches: function () { return false; },
       getAttribute: function () { return null; },
       hasAttribute: primitive.hasAttribute
     };
@@ -380,7 +394,7 @@ console.log(JSON.stringify(samples.map(isUniverseTypeText)));
             javascript,
         )
         self.assertIn('leafActiveName.classList.add("name-active")', javascript)
-        self.assertIn('return entry.identity === identity;', javascript)
+        self.assertIn('while (ancestor && ancestor.identity !== identity) ancestor = ancestor.parent;', javascript)
         self.assertIn('markTerminalHoverStops(nameValue, identity);', javascript)
         self.assertNotIn(
             'if (html && isUniverseFormerSignature(nameValue.textContent))',
@@ -400,7 +414,7 @@ console.log(JSON.stringify(samples.map(isUniverseTypeText)));
         )
         self.assertIn('node.replaceWith.apply(node, Array.from(node.childNodes));', javascript)
         self.assertNotIn('activateTypeNode(name);', javascript)
-        stylesheet = (ROOT / "site" / "static" / "bedrock.css").read_text()
+        stylesheet = (RESOURCES / "static" / "outcrop.css").read_text()
         self.assertNotIn(
             '.hover-popup.hover-terminal .type-value :is(a[href], .type-node)',
             stylesheet,
@@ -410,9 +424,9 @@ console.log(JSON.stringify(samples.map(isUniverseTypeText)));
         internal = {
             "Agda.Primitive.LevelUniv": ("Agda.Primitive", "595"),
         }
-        rendered = renderer.render_type(
+        rendered = semantics.render_type(
             "Agda.Primitive.LevelUniv", internal,
-            renderer.qualified_name_pattern(internal),
+            qualified_name_pattern(internal),
             {"Agda.Primitive": {"595": "Primitive"}}, "Demo",
         )
         self.assertIn('data-hover-stop="primitive-sort"', rendered)
@@ -423,9 +437,9 @@ console.log(JSON.stringify(samples.map(isUniverseTypeText)));
             "Base.Prelude.Level": ("Base.Prelude", "10104"),
             "Base.Prelude.Type": ("Base.Prelude", "10098"),
         }
-        rendered = renderer.render_type(
+        rendered = semantics.render_type(
             "(ℓ : Base.Prelude.Level) → Base.Prelude.Type ℓ", internal,
-            renderer.qualified_name_pattern(internal),
+            qualified_name_pattern(internal),
             {"Base.Prelude": {"10104": "Primitive", "10098": "Primitive"}},
             "Base.Prelude",
         )
@@ -438,10 +452,10 @@ console.log(JSON.stringify(samples.map(isUniverseTypeText)));
             rendered,
             r'data-name="Level"[^>]*data-hover-stop=',
         )
-        self.assertTrue(renderer.is_universe_former_signature(
+        self.assertTrue(is_universe_former_signature(
             "(x : Level) → Type x"
         ))
-        self.assertFalse(renderer.is_universe_former_signature(
+        self.assertFalse(is_universe_former_signature(
             "(x : Level) → Type (ℓ-suc x)"
         ))
 
@@ -537,7 +551,7 @@ console.log(JSON.stringify(
 
     def test_mobile_expression_interactions_keep_highlights_exclusive(self):
         javascript = source('hover', 'code-targets', 'hover-view', 'hover-branch')
-        stylesheet = (ROOT / "site" / "static" / "bedrock.css").read_text()
+        stylesheet = (RESOURCES / "static" / "outcrop.css").read_text()
         self.assertIn('option.nameNode.classList.add("name-active")', javascript)
         self.assertIn('node.classList.add("expr-active")', javascript)
         self.assertIn('node.dataset.exprId === expressionId', javascript)
@@ -631,7 +645,7 @@ console.log(JSON.stringify(
             {"id": 1, "start": 10, "end": 15, "type": "T", "source": "f g x"},
             {"id": 2, "start": 12, "end": 15, "type": "U", "source": "g x"},
         ]
-        rendered = renderer.annotate_expression_nodes(block, nodes)
+        rendered = annotate_expression_nodes(block, nodes)
         self.assertIn('<span class="expr-node" data-expr-id="1"', rendered)
         self.assertIn('<span class="expr-node" data-expr-id="2"', rendered)
         self.assertLess(rendered.index('data-expr-id="1"'), rendered.index('data-expr-id="2"'))
@@ -643,7 +657,7 @@ console.log(JSON.stringify(
         nodes = [
             {"id": 7, "start": 10, "end": 21, "type": "T", "source": "f x y"},
         ]
-        rendered = renderer.annotate_expression_nodes(block, nodes)
+        rendered = annotate_expression_nodes(block, nodes)
         opening = ('<span class="expr-node" data-expr-id="7" '
                    'data-expr-start="10" data-expr-end="21"')
         self.assertEqual(rendered.count(opening), 2)
@@ -658,30 +672,30 @@ console.log(JSON.stringify(
     def test_unmatched_ranges_are_not_rendered(self):
         block = '<pre class="Agda"><a id="10">f</a></pre>'
         node = {"id": 1, "start": 10, "end": 99, "type": "T", "source": "f"}
-        self.assertEqual(renderer.annotate_expression_nodes(block, [node]), block)
+        self.assertEqual(annotate_expression_nodes(block, [node]), block)
 
     def test_unlinked_bound_token_gets_its_occurrence_type(self):
         block = '<pre class="Agda"><a id="10" class="Bound">x</a></pre>'
-        rendered = renderer.annotate_unlinked_bound_types(block, "Demo", {"10": "A"})
+        rendered = annotate_unlinked_bound_types(block, "Demo", {"10": "A"})
         self.assertIn('data-type="Demo#10"', rendered)
 
     def test_mixfix_hover_uses_canonical_definition_name(self):
         names = {"Base.Prelude": {"⟨_⟩isProp": "39997"}}
-        self.assertEqual(renderer.names_by_position("Base.Prelude", names),
+        self.assertEqual(names_by_position("Base.Prelude", names),
                          {"39997": "⟨_⟩isProp"})
 
     def test_renamed_import_is_indexed_as_a_definition(self):
         block = ('<a id="10" class="Symbol">to</a> '
                  '<a id="13" class="Function">map₁</a>')
         names, aspects = {}, {}
-        renderer.index_definitions(block, "Demo", names, aspects)
+        index_definitions(block, "Demo", names, aspects)
         self.assertEqual(names, {"Demo": {"map₁": "13"}})
         self.assertEqual(aspects, {"Demo": {"13": "Function"}})
 
     def test_mixfix_reference_carries_its_canonical_name(self):
         body = ('<a id="20" href="Cubical.Foundations.Structure.html#1134" '
                 'class="Function Operator">⟨</a>')
-        rendered = renderer.rewrite_links(
+        rendered = semantics.rewrite_links(
             body,
             {"Cubical.Foundations.Structure"},
             {"Cubical.Foundations.Structure": {"1134": "Type"}},
@@ -698,7 +712,7 @@ console.log(JSON.stringify(
                  '<a id="52" href="Demo.html#20" class="Function">B</a>\n'
                  '  <a id="60" href="Demo.html#60" class="Bound">x</a> '
                  '<a id="62" class="Symbol">:</a> ignored\n</pre>')
-        types = renderer.local_signature_types(block, "Demo")
+        types = local_signature_types(block, "Demo")
         self.assertEqual(set(types), {"40"})
         self.assertEqual(types["40"]["name"], "local")
         self.assertNotIn('id="', types["40"]["type"])
@@ -711,7 +725,7 @@ console.log(JSON.stringify(
                  '<a id="42" href="Demo.html#42" class="Function">P</a> '
                  '<a id="44" class="Symbol">:</a> '
                  '<a id="46" href="Demo.html#10" class="Datatype">V</a>\n</pre>')
-        types = renderer.local_signature_types(block, "Demo")
+        types = local_signature_types(block, "Demo")
         self.assertEqual(set(types), {"40", "42"})
         self.assertEqual(types["40"]["type"], types["42"]["type"])
 
@@ -720,9 +734,10 @@ console.log(JSON.stringify(
             path = Path(directory) / "Demo.md"
             path.write_text('<a href="Library.One.html#10">x</a>'
                             '<a href="Missing.html#20">y</a>')
-            referenced = renderer.referenced_type_modules(
-                path, {"Demo", "Library.One"}
-            )
+            (Path(directory) / 'Library.One.html').write_text('done')
+            config = SiteConfig.load(ROOT / 'outcrop/examples/renderer/project.json', root=ROOT / 'outcrop/examples/renderer')
+            corpus = SourceCorpus(config, source_dir=directory, highlighted_dir=directory)
+            referenced = corpus.closure({'Demo'}) - {'Demo'}
         self.assertEqual(referenced, {"Library.One"})
 
     def test_selected_preview_renders_transitive_definition_pages(self):
@@ -736,13 +751,13 @@ console.log(JSON.stringify(
                 '<a href="Book.html#1">cycle</a>'
             )
             (root / "Library.Two.html").write_text("done")
-            closure = renderer.referenced_module_closure(
-                {"Book"}, directory, {"Book", "Library.One", "Library.Two"}
-            )
+            config = SiteConfig.load(ROOT / 'outcrop/examples/renderer/project.json', root=ROOT / 'outcrop/examples/renderer')
+            corpus = SourceCorpus(config, source_dir=directory, highlighted_dir=directory)
+            closure = corpus.closure({'Book'})
         self.assertEqual(closure, {"Book", "Library.One", "Library.Two"})
 
     def test_type_rendering_preserves_disambiguated_level_binders(self):
-        rendered = renderer.render_type(
+        rendered = semantics.render_type(
             "{A.ℓ : Agda.Primitive.Level} {B.ℓ : Agda.Primitive.Level} → Set A.ℓ",
             {},
         )
@@ -751,17 +766,17 @@ console.log(JSON.stringify(
         self.assertNotIn('class="type-node"', rendered)
 
     def test_type_rendering_uses_cubical_names_for_indexed_universes(self):
-        self.assertEqual(renderer.render_type("Set₁", {}), "Type₁")
-        self.assertEqual(renderer.render_type("Setω", {}), "Typeω")
-        self.assertEqual(renderer.render_type("Set (ℓ-suc ℓ)", {}),
+        self.assertEqual(semantics.render_type("Set₁", {}), "Type₁")
+        self.assertEqual(semantics.render_type("Setω", {}), "Typeω")
+        self.assertEqual(semantics.render_type("Set (ℓ-suc ℓ)", {}),
                          "Type (ℓ-suc ℓ)")
-        self.assertEqual(re.sub(r'<[^>]+>', '', renderer.render_type("LevelUniv → Prop → SSet₁", {})),
+        self.assertEqual(re.sub(r'<[^>]+>', '', semantics.render_type("LevelUniv → Prop → SSet₁", {})),
                          "LevelUniv → Prop → SSet₁")
-        self.assertEqual(re.sub(r'<[^>]+>', '', renderer.render_type("TypeWithStr → isProp", {})),
+        self.assertEqual(re.sub(r'<[^>]+>', '', semantics.render_type("TypeWithStr → isProp", {})),
                          "TypeWithStr → isProp")
 
     def test_primitive_sorts_do_not_receive_hover_payloads(self):
-        rendered = renderer.build_types(
+        rendered = semantics.build_types(
             ["Agda.Primitive"],
             {"Agda.Primitive": {"LevelUniv": "595", "lzero": "915"}},
             {"Agda.Primitive": {"LevelUniv": "Set₁", "lzero": "Level"}},
@@ -770,10 +785,10 @@ console.log(JSON.stringify(
         )
         self.assertNotIn("595", rendered["Agda.Primitive"])
         self.assertIn("915", rendered["Agda.Primitive"])
-        linked = renderer.render_type(
+        linked = semantics.render_type(
             "Agda.Primitive.LevelUniv",
             {"Agda.Primitive.LevelUniv": ("Agda.Primitive", "595")},
-            renderer.qualified_name_pattern({
+            qualified_name_pattern({
                 "Agda.Primitive.LevelUniv": ("Agda.Primitive", "595")
             }),
             {"Agda.Primitive": {"595": "Primitive"}},
@@ -792,8 +807,8 @@ console.log(JSON.stringify(
             "Level": ("Base.Prelude", "10104", "Postulate", "Level"),
             "Type": ("Base.Prelude", "10098", "Primitive", "Type"),
         }}
-        renderer.add_prelude_qualified_names(internal, reexports)
-        renderer.add_prelude_reexport_types(
+        add_prelude_qualified_names(internal, reexports)
+        semantics.add_prelude_reexport_types(
             types, {}, reexports, internal,
             {"Base.Prelude": {"10098": "Primitive", "10104": "Postulate"}},
         )
@@ -805,10 +820,10 @@ console.log(JSON.stringify(
                       types["Base.Prelude"]["10098"])
 
     def test_type_links_reuse_agda_syntax_aspects(self):
-        rendered = renderer.render_type(
+        rendered = semantics.render_type(
             "Demo.f",
             {"Demo.f": ("Demo", "10")},
-            renderer.qualified_name_pattern({"Demo.f": ("Demo", "10")}),
+            qualified_name_pattern({"Demo.f": ("Demo", "10")}),
             {"Demo": {"10": "Function"}},
         )
         self.assertIn(
@@ -822,14 +837,14 @@ console.log(JSON.stringify(
         reexports = {"by_href": {
             "Cubical.Demo.html#10": ("Base.Prelude", "43", "Function", "f")
         }}
-        later = renderer.render_type(
-            "Cubical.Demo.f", internal, renderer.qualified_name_pattern(internal),
+        later = semantics.render_type(
+            "Cubical.Demo.f", internal, qualified_name_pattern(internal),
             {"Base.Prelude": {"43": "Function"}}, "Demo", reexports,
         )
         self.assertIn('href="Base.Prelude.html#43"', later)
         self.assertIn('data-type="Base.Prelude#43"', later)
-        prelude = renderer.render_type(
-            "Cubical.Demo.f", internal, renderer.qualified_name_pattern(internal),
+        prelude = semantics.render_type(
+            "Cubical.Demo.f", internal, qualified_name_pattern(internal),
             {"Cubical.Demo": {"10": "Function"}}, "Base.Prelude", reexports,
         )
         self.assertIn('href="Cubical.Demo.html#10"', prelude)
@@ -838,7 +853,7 @@ console.log(JSON.stringify(
         highlighted = ('<a class="Symbol">(</a>'
                        '<a href="Demo.html#10" class="Function">f</a>'
                        '<a class="Symbol">)</a>')
-        rendered = renderer.decorate_type_nodes(highlighted)
+        rendered = decorate_type_nodes(highlighted)
         self.assertEqual(rendered, highlighted)
         self.assertNotIn('class="type-node"', rendered)
 
@@ -846,12 +861,12 @@ console.log(JSON.stringify(
         highlighted = ('<a class="Symbol">((</a>x : Glued'
                        '<a class="Symbol">)</a> → Pick x'
                        '<a class="Symbol">)</a>')
-        rendered = renderer.decorate_type_nodes(highlighted)
+        rendered = decorate_type_nodes(highlighted)
         self.assertEqual(rendered, highlighted)
         self.assertNotIn('class="type-node"', rendered)
 
     def test_untraced_single_name_uses_name_highlight_not_a_fake_node(self):
-        rendered = renderer.decorate_type_nodes(
+        rendered = decorate_type_nodes(
             '<a href="Demo.html#10" class="Function">f</a>'
         )
         self.assertNotIn('class="type-node"', rendered)
@@ -860,7 +875,7 @@ console.log(JSON.stringify(
     def test_compiler_traced_type_node_can_open_another_hover(self):
         highlighted = ('<a href="Demo.html#10" class="Function">Pick</a> x'
                        ' → Result')
-        rendered = renderer.decorate_type_nodes(highlighted, [{
+        rendered = decorate_type_nodes(highlighted, [{
             "id": 7, "kind": "application", "source": "Pick x",
             "type": "Type ℓ",
         }], "Demo")
@@ -871,7 +886,7 @@ console.log(JSON.stringify(
         self.assertNotRegex(rendered, r'class="type-node"[^>]*>[^<]*→')
 
     def test_universe_type_has_no_structural_hover_node(self):
-        rendered = renderer.decorate_type_nodes(
+        rendered = decorate_type_nodes(
             '<a href="Prelude.html#1" data-type="Prelude#1">Type</a> ℓ', [{
             "id": 7, "kind": "application", "source": "Type ℓ",
             "type": "Type (ℓ-suc ℓ)",
@@ -880,7 +895,7 @@ console.log(JSON.stringify(
         self.assertNotIn('data-expression-type=', rendered)
         self.assertIn('data-type="Prelude#1"', rendered)
 
-        ordinary = renderer.decorate_type_nodes("Maybe A", [{
+        ordinary = decorate_type_nodes("Maybe A", [{
             "id": 8, "kind": "application", "source": "Maybe A",
             "type": "Type ℓ",
         }], "Demo")
@@ -896,41 +911,41 @@ console.log(JSON.stringify(
                     f'<a href="Demo.html#1">{word}</a>' for word in text.split())):
                 with self.subTest(text=text, highlighted=highlighted):
                     self.assertNotIn('class="type-node"',
-                                     renderer.decorate_type_nodes(highlighted, nodes, "Demo"))
+                                     decorate_type_nodes(highlighted, nodes, "Demo"))
             with self.subTest(source=source):
                 self.assertIn('data-expression-type="Demo#1"',
-                              renderer.decorate_type_nodes(f"({source})", nodes, "Demo"))
+                              decorate_type_nodes(f"({source})", nodes, "Demo"))
 
     def test_qualified_type_links_do_not_match_identifier_or_module_prefixes(self):
         internal = {"Demo.s": ("Demo", "1"), "Demo.Helpers": ("Demo", "2")}
-        pattern = renderer.qualified_name_pattern(internal)
+        pattern = qualified_name_pattern(internal)
         for term in ("Demo.section f g", "Demo.Helpers.isContr A", "Demo.s₁"):
             with self.subTest(term=term):
-                self.assertNotIn('<a ', renderer.render_type(term, internal, pattern))
-        self.assertEqual(renderer.render_type("Demo.s (Demo.s)", internal, pattern)
+                self.assertNotIn('<a ', semantics.render_type(term, internal, pattern))
+        self.assertEqual(semantics.render_type("Demo.s (Demo.s)", internal, pattern)
                          .count('data-type="Demo#1"'), 2)
 
     def test_missing_type_payloads_keep_links_without_advertising_a_hover(self):
         types = {"Demo": {"1": "Type"}}
         html = ('<a href="Demo.html#1" data-type="Demo#1">known</a> '
                 '<a href="Demo.html#2" data-type="Demo#2">private</a>')
-        rendered = renderer.resolve_type_hover_links(html, types)
+        rendered = resolve_type_hover_links(html, types)
         self.assertIn('data-type="Demo#1"', rendered)
         self.assertNotIn('data-type="Demo#2"', rendered)
         self.assertIn('href="Demo.html#2">private</a>', rendered)
-        source = renderer.rewrite_links(
+        source = semantics.rewrite_links(
             '<a href="Demo.html#2">private</a>', {"Demo"}, types)
         self.assertEqual(source, '<a href="Demo.html#2">private</a>')
 
     def test_source_and_hover_nodes_share_the_range_wrapper(self):
-        source_annotator = inspect.getsource(renderer.annotate_expression_nodes)
-        hover_annotator = inspect.getsource(renderer.decorate_type_nodes)
+        source_annotator = inspect.getsource(annotate_expression_nodes)
+        hover_annotator = inspect.getsource(decorate_type_nodes)
         self.assertIn("wrap_expression_ranges(", source_annotator)
         self.assertIn("wrap_expression_ranges(", hover_annotator)
 
     def test_hover_stack_and_definition_modal_history_have_no_depth_cap(self):
         javascript = source('hover', 'code-targets', 'type-store', 'definition-modal', 'definition-layout', 'document', 'navigation')
-        stylesheet = (ROOT / "site/static/bedrock.css").read_text()
+        stylesheet = (RESOURCES / "static/outcrop.css").read_text()
         self.assertNotRegex(javascript, r"namePopups\.length\s*[>=]=?\s*\d")
         self.assertNotRegex(javascript, r"history\.length\s*[>=]=?\s*\d")
         self.assertIn("if (parent) cancelNameClose(parent);", javascript)
@@ -956,7 +971,7 @@ console.log(JSON.stringify(
         self.assertIn('types.$expressions[spec[1]]', javascript)
         self.assertIn('nodeOwnsOpenHover(typeNode)', javascript)
         self.assertIn('.Agda a[href]', javascript)
-        self.assertIn('activeName.classList.add("name-active")', javascript)
+        self.assertIn("activeName.classList.add('name-active')", javascript)
         self.assertIn('.Agda a.name-active {', stylesheet)
         self.assertIn('@media (hover: hover) and (pointer: fine) {\n'
                       '  .type-value a[href]:not([data-hover-stop]):hover,', stylesheet)
@@ -966,7 +981,7 @@ console.log(JSON.stringify(
         self.assertIn('header.appendChild(historyActions);\n'
                       '      header.appendChild(title);', javascript)
         self.assertIn('frame.className = "definition-modal-frame";', javascript)
-        self.assertIn('frameUrl.searchParams.set("bedrock-modal", "1");', javascript)
+        self.assertIn('frameUrl.searchParams.set("outcrop-modal", "1");', javascript)
         self.assertIn('classList.add("definition-modal-document")', javascript)
         self.assertIn('#site-header, #nav-backdrop, .skip-link, #toc, #sidenote-container,',
                       stylesheet)
@@ -1000,15 +1015,15 @@ console.log(JSON.stringify(
             'if (location.hash && !isReload && !isDefinitionModalDocument)',
             javascript,
         )
-        self.assertIn('type: "bedrock-definition-open"', javascript)
-        self.assertIn('type: "bedrock-page-navigate"', javascript)
+        self.assertIn('type: "outcrop-definition-open"', javascript)
+        self.assertIn('type: "outcrop-page-navigate"', javascript)
         self.assertIn('location.href = pageUrl.href;', javascript)
         self.assertIn('location.href = targetUrl.href;', javascript)
         self.assertIn('definitionPageKey(loadedUrl) !== definitionPageKey(entry.target.url)', javascript)
         self.assertIn('height: 82dvh;', stylesheet)
         self.assertIn('.definition-modal-frame {', stylesheet)
         self.assertNotIn('raw.charAt(0) === "#"', modal_javascript)
-        self.assertIn('url.searchParams.delete("bedrock-modal");', modal_javascript)
+        self.assertIn('url.searchParams.delete("outcrop-modal");', modal_javascript)
 
     @unittest.skipUnless(shutil.which("node"), "Node.js is needed for the JavaScript behavior test")
     def test_modal_reading_scroller_uses_explicit_viewport_height(self):
@@ -1038,10 +1053,10 @@ console.log(JSON.stringify({root: root.style.height, body: body.style.height,
         scenario = r'''
 function key(path) { return definitionPageKey(new URL(path, "https://book.example")); }
 console.log(JSON.stringify({
-  redirected: key("/zh/Base.Choice.html#123") === key("/zh/Base.Choice?bedrock-modal=1"),
-  legacy: key("/zh/Base.Choice.html") === key("/zh/Base.Choice?bedrock-modal=1&bedrock-modal-scroll=outer"),
+  redirected: key("/zh/Base.Choice.html#123") === key("/zh/Base.Choice?outcrop-modal=1"),
+  legacy: key("/zh/Base.Choice.html") === key("/zh/Base.Choice?outcrop-modal=1&outcrop-modal-scroll=outer"),
   index: key("/zh/index.html") === key("/zh/"),
-  queryOrder: key("/zh/Base.Choice.html?b=2&a=1") === key("/zh/Base.Choice?a=1&b=2&bedrock-modal=1"),
+  queryOrder: key("/zh/Base.Choice.html?b=2&a=1") === key("/zh/Base.Choice?a=1&b=2&outcrop-modal=1"),
   wrongModule: key("/zh/Base.Choice.html") !== key("/zh/Base.Classical"),
   wrongOrigin: key("/zh/Base.Choice.html") !== key("https://other.example/zh/Base.Choice"),
   wrongQuery: key("/zh/Base.Choice.html?a=1") !== key("/zh/Base.Choice?a=2")
@@ -1172,7 +1187,7 @@ console.log(JSON.stringify({moved: alignModalDefinition(frameDocument, targetBlo
                  '<a id="12" class="Symbol">_))</a></pre>')
         nodes = [{"id": 1, "start": 10, "end": 14,
                   "type": "T", "source": "f _)"}]
-        rendered = renderer.annotate_expression_nodes(block, nodes)
+        rendered = annotate_expression_nodes(block, nodes)
         self.assertIn('<a id="12" class="Symbol">_)</a></span>', rendered)
         self.assertIn('<a id="14" class="Symbol">)</a>', rendered)
 

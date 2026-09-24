@@ -34,7 +34,8 @@ English prose.
   remains available in closed, locally labelled disclosures; code and shared
   mathematical notation stay visible. The plain-text weaver retains its original
   fallback behavior.
-- Adding a language = adding a marker. The mechanism is N-language by construction.
+- The implementation supports exactly `en`, `zh` and `ja`; another language needs
+  coordinated parser, configuration, interface and test support, not just a marker.
   The current writing phase completes all chapter prose in all three languages;
   fallback remains available while unfinished passages are being migrated.
 
@@ -125,9 +126,13 @@ second = value₂
 ∎
 ````
 
-The renderer places the mark outside the final code block at its lower right,
-with a small leftward inset for the block and extra space below the ending.
-The mark has its own width on mobile, outside the code's horizontal scroll area.
+Outcrop places the exact rectangular mark semi-transparently inside the final
+code frame at its lower right, with bottom padding that keeps source text clear.
+This visual change does not change the standalone source mark or any statement
+lint rule. Ordinary code and statement-ending code both span their containing
+column without a left outdent or external QED gutter. Each folded submodule keeps
+its own indented width and compact declaration header; it is not aligned forcibly
+with code outside its fold. Horizontal scrolling preserves both frame gutters.
 `Origin` retains numbered Theorem 0–4 labels (定理0–4 in Chinese and Japanese)
 as the sole result-registry exception to named labels. Each statement is followed
 by its visible public re-export code and its own `∎`; these imports expose the
@@ -170,10 +175,10 @@ for their actual import statements. This includes necessary pre-module imports.
 For a parameterized module, the title's popup contains only OPTIONS; the full
 module telescope and its preceding trilingual introduction remain ordinary body
 content beneath the chapter title. Syntax help is
-translated in `scripts/site/agda_help.py` and links to the versioned Agda manual.
+translated in `outcrop.core.agda_help` and links to the versioned Agda manual.
 On touch devices, a tap opens a persistent hover; definition navigation still
 requires the hover's explicit modal action. All nested popups share the existing
-code-hover implementation. See [renderer recipes](RENDERER-RECIPES.md).
+code-hover implementation. See [renderer recipes](../outcrop/docs/RENDERER-RECIPES.md).
 
 ## Inline Agda references in prose
 
@@ -255,7 +260,7 @@ type system. Introduce this convention in Base.Prelude, Equality and paths.
 
 Use bare Unicode for single symbols where possible. Reserve LaTeX for real expressions:
 `$...$` inline and `$$...$$` (kept blank-line-separated) for display. Math is rendered at
-build time by KaTeX; both GitHub and the standard Agda toolchain also pass it through.
+reading time by KaTeX; both GitHub and the standard Agda toolchain also pass it through.
 Choose inline code or LaTeX by the notation used, not by whether the passage is
 mathematical. Expressions following Agda conventions, such as `x ≡ y`,
 `p : x ≡ y`, `refl`, and references to Agda variables, keep inline code styling.
@@ -305,7 +310,7 @@ type space. Do not nest decorative panels. The homotopy-level comparison has
 three panels and implication connectors, with no enclosing frame. Logical
 implication symbols remain appropriate between conditions; they are not paths.
 
-All visual tokens live in `site/static/bedrock.css`: 8px corners, 1px box
+All visual tokens live in `outcrop/src/outcrop/site/resources/static/outcrop.css`: 8px corners, 1px box
 borders, shared padding and gaps, theme-aware surfaces, blue paths, and white
 points. Chapter markup may set only label positions and aspect ratios inline.
 Figures scroll only with the page: never introduce an internal scroll container.

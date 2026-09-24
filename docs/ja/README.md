@@ -28,7 +28,7 @@
 
 2026-09-22 現在：**空行を除く Agda コード 25,931 行 · プロジェクトキャッシュ削除後の型検査 203.17 秒 (Cubical キャッシュ保持) · 最大 RSS 1.57 GiB。**
 
-121 章の依存関係は有向非巡回グラフをなし、直接 import は 1,605 辺、骨格は 230 辺、最長の鎖は 31 モジュール。
+2026-09-24 現在、ソースの依存グラフは 120 章、重複を除く直接 import 1,511 辺、推移簡約 227 辺からなり、最長の鎖は 31 モジュールである。これらはサイトのハブとプレビューのフィルターを適用する前の値である。
 
 ## 方向
 
@@ -70,7 +70,21 @@ Cubical 型理論は現代型理論の最前線であり、いままさに書か
 | [cubical](https://github.com/agda/cubical) | 0.9 |
 | [Python](https://www.python.org) | 3.11+ |
 
-`make check` (型検査、四つのリンター、読書順序の検査およびゲートの単体テスト) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される (クローンごとに一度実行すればよい)。プッシュのたびに、[GitHub Actions](../../.github/workflows/ci.yml) によって上記のバージョンに対して型検査される。
+`make check` (型検査、ソースと教材の検査、および両方のテスト群) とサイトのビルドは Python 3.11+ を必要とする。開発用ツール (`reuse` リンター) は [requirements-dev.txt](../../requirements-dev.txt) に固定され、`make venv` でローカルの仮想環境に導入される。プッシュのたびに、[GitHub Actions](../../.github/workflows/ci.yml) によって上記のバージョンに対して型検査される。
+
+初回のクローン後は、固定されたサブモジュールを初期化してからツールチェインを導入する：
+
+```sh
+git submodule update --init --recursive
+make bootstrap
+make check
+```
+
+## ウェブサイトの基盤
+
+サイトは [Outcrop](https://github.com/BedrockInstitute/Outcrop) を使用し、`outcrop/` サブモジュールでその版を固定する。**Outcrop Core** は Markdown と任意のコンパイラー意味情報を描画する。**Outcrop Site** は学習ルート、依存グラフ、多言語検索、型情報と定義モーダル、外観設定、Ask AI、再利用可能な検査規則を含む教材サイト全体を提供する。Bedrock は [site/project.json](../../site/project.json) を通じて本文、目次、用語、ブランド、数学上の方針を与える。
+
+サブモジュールの初期化後、`make venv` がローカルのパッケージを導入する。既存の仮想環境では `.venv/bin/python -m pip install -e ./outcrop` も利用できる。`make site` で構築し、`make serve` でプレビューする。[インスタンスの説明](../../site/README.md) と [Outcrop の構成](../../outcrop/docs/ARCHITECTURE.md) を参照。他の教材も、Bedrock の数学やサイト実装を複製せずに同じ基盤を利用できる。
 
 ## 貢献
 
@@ -82,8 +96,10 @@ Bedrock は複数ライセンスを採用しており、ファイルごとの条
 
 - **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**：数学・文章・ブランドマーク (`src/`、`docs/`、`README`、`site/static/assets/`)。
 - **[AGPL-3.0-only](https://www.gnu.org/licenses/agpl-3.0.html)**：その他すべてのプロジェクト自身のコードと構成 (取り込んだ [1lab](https://1lab.dev) フロントエンドを含む)。
-- **[OFL-1.1](https://openfontlicense.org)**：自己ホストのウェブフォント (`site/static/fonts/`)。
+- **[OFL-1.1](https://openfontlicense.org)**：Outcrop が提供する自己ホストのウェブフォント (`outcrop/src/outcrop/site/resources/static/fonts/`)。
 
 完全なライセンス本文は [`LICENSES/`](../../LICENSES/) にある。第三者のクレジットと AGPL 第 13 条の対応ソース表明は [NOTICE](../../NOTICE) を参照。
+
+Outcrop はファイルごとのライセンスと、継承した第三者資産およびフォントの帰属を別途管理する。
 
 © 2026 Bedrock Institute。

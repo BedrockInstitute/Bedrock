@@ -6,7 +6,6 @@ Run: python3 scripts/tests/test_glossary.py   (or: make test)
 
 import importlib.util
 import os
-import sys
 import tempfile
 import unittest
 
@@ -22,12 +21,13 @@ def _load(modname, filename):
 
 cg = _load("check_glossary", "gate/check-glossary.py")  # noqa: E402
 
+from outcrop.core import glossary_lint as glossary_rules
 # Golden glossary rows (term, zh, ja, avoid-list, presence), exercising tagged and untagged avoids.
 ROWS = [
     ("charter", "纲领", "綱領", ["zh:宪章", "ja:憲章"], True),
     ("prose", "文稿", "文章", ["散文"], False),
 ]
-CHECKS = cg.build_checks(ROWS)
+CHECKS = glossary_rules.build_checks(ROWS)
 
 
 def write(tmp, rel, content):
@@ -73,7 +73,7 @@ class GlossaryTableTests(unittest.TestCase):
 
     def test_build_presence_selects_opted_in_rows(self):
         rows = [("charter", "纲领", "綱領", [], True), ("prose", "文稿", "文章", ["散文"], False)]
-        self.assertEqual(cg.build_presence(rows), [("charter", "纲领", "綱領")])
+        self.assertEqual(glossary_rules.build_presence(rows), [("charter", "纲领", "綱領")])
 
 
 class FileCheckTests(unittest.TestCase):
@@ -134,8 +134,8 @@ class FileCheckTests(unittest.TestCase):
 
 class MasterScopeTests(unittest.TestCase):
     def test_route_metadata_checks_only_language_values(self):
-        text = '<!-- bedrock-routes {"id":"宪章", "title":{"zh":"宪章", "en":"宪章"}} -->'
-        hits = cg.route_metadata_violations(text, CHECKS)
+        text = '<!-- outcrop-routes {"id":"宪章", "title":{"zh":"宪章", "en":"宪章"}} -->'
+        hits = glossary_rules.route_metadata_violations(text, CHECKS)
         self.assertEqual(len(hits), 1)
         self.assertIn("纲领", hits[0])
 
@@ -152,7 +152,7 @@ class MasterScopeTests(unittest.TestCase):
             self.assertIn("use 綱領 (ja)", joined)
 
     def test_english_aliases_are_word_bounded_and_language_scoped(self):
-        checks = cg.build_checks([("constant mapping", "常量映射", "定数写像",
+        checks = glossary_rules.build_checks([("constant mapping", "常量映射", "定数写像",
                                    ["en:constant remap"], False)])
         with tempfile.TemporaryDirectory() as tmp:
             p = write(tmp, "src/M.lagda.md", "<!--en-->\nA constant remap.\n"
@@ -161,10 +161,10 @@ class MasterScopeTests(unittest.TestCase):
 
     def test_master_presence_checks_only_present_translations(self):
         text = "<!--en-->\nA charter.\n<!--zh-->\n纲领。\n<!--/-->"
-        self.assertEqual(cg.master_presence_violations("M.lagda.md", text,
+        self.assertEqual(glossary_rules.master_presence_violations("M.lagda.md", text,
                          [("charter", "纲领", "綱領")]), [])
         text += "\n<!--en-->\nThe charter.\n<!--ja-->\n別の言葉。\n<!--/-->"
-        hits = cg.master_presence_violations("M.lagda.md", text,
+        hits = glossary_rules.master_presence_violations("M.lagda.md", text,
                                            [("charter", "纲领", "綱領")])
         self.assertEqual(len(hits), 1)
         self.assertIn("綱領", hits[0][1])
@@ -177,30 +177,30 @@ class PresenceTests(unittest.TestCase):
     EN = "# Bedrock Charter\n\nThe full treatment is in the Charter.\n"
 
     def test_warns_when_canonical_rendering_absent(self):
-        v = cg.presence_violations("docs/zh/CHARTER.md", "zh", self.EN, "# 文档\n标题。\n", PRESENCE)
+        v = glossary_rules.presence_violations("docs/zh/CHARTER.md", "zh", self.EN, "# 文档\n标题。\n", PRESENCE)
         self.assertEqual(len(v), 1)
         self.assertIn("纲领", v[0][1])
 
     def test_clean_when_canonical_present(self):
-        v = cg.presence_violations("docs/zh/CHARTER.md", "zh", self.EN, "# Bedrock 纲领\n", PRESENCE)
+        v = glossary_rules.presence_violations("docs/zh/CHARTER.md", "zh", self.EN, "# Bedrock 纲领\n", PRESENCE)
         self.assertEqual(v, [])
 
     def test_no_warning_when_term_absent_in_english(self):
-        v = cg.presence_violations("docs/zh/X.md", "zh", "# Intro\nNothing here.\n", "标题。\n", PRESENCE)
+        v = glossary_rules.presence_violations("docs/zh/X.md", "zh", "# Intro\nNothing here.\n", "标题。\n", PRESENCE)
         self.assertEqual(v, [])
 
     def test_english_term_only_in_protected_region_does_not_count(self):
         en = "See `charter` and [x](charter.md)\n"  # inline code + link dest, both protected
-        v = cg.presence_violations("docs/zh/X.md", "zh", en, "标题。\n", PRESENCE)
+        v = glossary_rules.presence_violations("docs/zh/X.md", "zh", en, "标题。\n", PRESENCE)
         self.assertEqual(v, [])
 
     def test_japanese_uses_ja_rendering(self):
-        v = cg.presence_violations("docs/ja/CHARTER.md", "ja", self.EN, "# Bedrock タイトル\n", PRESENCE)
+        v = glossary_rules.presence_violations("docs/ja/CHARTER.md", "ja", self.EN, "# Bedrock タイトル\n", PRESENCE)
         self.assertIn("綱領", v[0][1])
 
     def test_scoped_ignore_in_target_suppresses(self):
         tgt = "# 文档\n<!-- glossary-ignore: charter -->\n"
-        v = cg.presence_violations("docs/zh/X.md", "zh", self.EN, tgt, PRESENCE)
+        v = glossary_rules.presence_violations("docs/zh/X.md", "zh", self.EN, tgt, PRESENCE)
         self.assertEqual(v, [])
 
 

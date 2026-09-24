@@ -13,17 +13,18 @@ Three buckets
      - docs/**           the trilingual user documentation
      - README.md         the (trilingual) project readme
      - site/static/assets/  the brand marks (favicon, inline README mark, social banner)
+     - dev/**, agents/**  developer and agent prose
 
 2. OFL-1.1  (LICENSES/OFL-1.1.txt, mirrored at LICENSE-OFL)
-   The self-hosted third-party web fonts under site/static/fonts/ (EB Garamond, Inria Sans,
+   The self-hosted third-party web fonts under outcrop/src/outcrop/site/resources/static/fonts/ (EB Garamond, Inria Sans,
    JuliaMono). Not Bedrock's to relicense; each font's own license text is co-located there.
 
 3. AGPL-3.0-only  (LICENSES/AGPL-3.0-only.txt, mirrored at LICENSE-AGPL)  -- the default
    Everything else: all first-party code and configuration (scripts, .github/**, Makefile,
-   bedrock.agda-lib), the site front-end (site/static/bedrock.css, site/static/bedrock.js,
-   scripts/render-site.py, site/template.html), the prose developer docs (dev/**, AGENTS.md,
-   CONTRIBUTING.md, NOTICE, this file), and the vendored 1lab front-end under site/vendor/1lab/
-   (Copyright (C) 2021 Amelia Liao and contributors; the catch-all default folds it in).
+   bedrock.agda-lib), and default-covered documentation (AGENTS.md,
+   CONTRIBUTING.md, NOTICE, this file). Outcrop's independent submodule preserves
+   its own per-file terms for the renderer, website resources and 1lab vendor tree
+   (Copyright (C) 2021 Amelia Liao and contributors). See outcrop/REUSE.toml and NOTICE.
 
 The three LICENSE-* files in the repository root duplicate the LICENSES/ texts so GitHub's
 license detection (which does not read the REUSE LICENSES/ directory) lists all three. See

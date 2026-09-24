@@ -2,14 +2,11 @@
 """Check the trilingual chapter outline without requiring full prose translation."""
 import argparse
 from pathlib import Path
-import re
 import sys
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'site'))
-from i18n_markers import LANGS, parse
-from chapter_structure import opening_errors
+from outcrop.core.chapter_structure import opening_errors
 
-from outline_lint import outline_errors
+from outcrop.core.outline_lint import outline_errors
 
 
 def main():

@@ -41,7 +41,6 @@ from __future__ import annotations
 
 import argparse
 import pathlib
-import re
 import sys
 
 # LJ-1.291: the root is found by walking up to the repository marker, never by
@@ -57,15 +56,17 @@ if _SCRIPTS is None:
     raise FileNotFoundError(
         f"no repo_root.py above {_HERE}: refusing to guess the scripts root (C-43)")
 sys.path.insert(0, str(_SCRIPTS))
-from repo_root import find_root  # noqa: E402
-sys.path.insert(0, str(_SCRIPTS / "site"))
-from reading_routes import strip_metadata  # noqa: E402
+from repo_root import find_root
+
 
 ROOT = find_root(__file__)
 SRC = ROOT / "src"
 
-from fence_lint import *
-from fence_lint import fenced_comments as text_comments, tight_language_boundaries as text_boundaries, suspects as text_suspects
+from outcrop.core.fence_lint import DEFAULT_RUN, REMEDY
+from outcrop.core.fence_lint import (
+    fenced_comments as text_comments, tight_language_boundaries as text_boundaries,
+    suspects as text_suspects,
+)
 
 def fenced_comments(path):
     return text_comments(path.read_text())

@@ -13,8 +13,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / 'scripts/site'))
-from submodule_structure import code_lines, FENCE_RE
+from outcrop.core.submodule_structure import code_lines, FENCE_RE
 
 
 def indent(text):

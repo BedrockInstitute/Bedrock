@@ -20,6 +20,7 @@ FIXTURES = {
     '/appearance-regression': 'browser-appearance.html',
     '/universe-regression': 'browser-universe-levels.html',
     '/fonts-regression': 'browser-fonts.html',
+    '/mobile-reader': 'browser-mobile-reader.html',
 }
 
 
@@ -51,7 +52,7 @@ def main():
                 # Exercise the exact production generation, not mutable source
                 # copies. Popup iframe pages already reference this same hash.
                 page = (args.site / 'en/index.html').read_text(encoding='utf-8')
-                runtime = re.search(r'/static/(runtime/[0-9a-f]+)/bedrock.js', page)
+                runtime = re.search(r'/static/(runtime/[0-9a-f]+)/outcrop.js', page)
                 fixture = (ROOT / 'scripts/tests' / FIXTURES[url.path]).read_text(encoding='utf-8')
                 fixture = fixture.replace('/site/static/', '/static/')
                 if runtime:
@@ -69,21 +70,24 @@ def main():
                 self.send_header('Location', url.path[:-5] + ('?' + url.query if url.query else ''))
                 self.end_headers()
                 return
-            if parse_qs(url.query).get('bedrock-modal') == ['1']:
+            if parse_qs(url.query).get('outcrop-modal') == ['1']:
                 time.sleep(args.modal_delay)
+            if parse_qs(url.query).get('reader-test') == ['touch']:
+                source = Path(self.translate_path(self.path)).read_text(encoding='utf-8')
+                probe = (ROOT / 'scripts/tests/browser-mobile-probe.js').read_text(encoding='utf-8')
+                payload = source.replace('<head>', '<head><script>' + probe + '</script>').encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.send_header('Content-Length', str(len(payload)))
+                self.end_headers()
+                self.wfile.write(payload)
+                return
             super().do_GET()
 
         def translate_path(self, path):
-            if urlsplit(path).path == '/regression':
-                return str(ROOT / 'scripts/tests/browser-boilerplate.html')
-            if urlsplit(path).path == '/padding-regression':
-                return str(ROOT / 'scripts/tests/browser-code-padding.html')
-            if urlsplit(path).path == '/directory-regression':
-                return str(ROOT / 'scripts/tests/browser-directory.html')
-            if urlsplit(path).path == '/appearance-regression':
-                return str(ROOT / 'scripts/tests/browser-appearance.html')
-            if urlsplit(path).path == '/universe-regression':
-                return str(ROOT / 'scripts/tests/browser-universe-levels.html')
+            fixture = FIXTURES.get(urlsplit(path).path)
+            if fixture:
+                return str(ROOT / 'scripts/tests' / fixture)
             result = Path(super().translate_path(path))
             candidate = result.with_suffix(result.suffix + '.html')
             return str(candidate if not result.exists() and candidate.is_file() else result)

@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="zh"><meta charset="utf-8">
 <base href="/zh/Base.Choice.html">
-<link rel="stylesheet" href="/static/bedrock.css?regression=details-v1">
+<link rel="stylesheet" href="/static/outcrop.css?regression=details-v1">
 <link rel="stylesheet" href="/static/reading-routes.css?regression=details-v1">
 <script>
-window.bedrock = {baseUrl:'', lang:'zh', module:'Base.Choice',storageNamespace:'bedrock'};
+window.outcrop = {baseUrl:'', lang:'zh', module:'Base.Choice',preludeModule:'Base.Prelude',levelNameConvention:true,storageNamespace:'bedrock'};
 const savedTheme=localStorage.getItem('bedrock-theme');
 const nativeMedia = window.matchMedia.bind(window);
 const testPointer = {matches:true, addEventListener(){}};
@@ -14,7 +14,7 @@ window.matchMedia = q => q === '(hover: none), (pointer: coarse)'
     ? {matches:true} : nativeMedia(q);
 </script>
 <script src="/static/appearance.js"></script>
-<script src="/static/bedrock.js?regression=details-v1" type="module"></script>
+<script src="/static/outcrop.js?regression=details-v1" type="module"></script>
 <body><h2 id="test-status">RUNNING boilerplate / modal / simulated touch regression</h2>
 <pre id="report"></pre><main id="fixture"></main>
 <script>
@@ -34,7 +34,7 @@ const tap = node => {
   node.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'touch'}));
   node.click();
 };
-const popups = () => [...document.querySelectorAll('.name-hover-popup')];
+const popups = () => [...document.querySelectorAll('.name-hover-popup:not([aria-busy="true"])')];
 function checkLoading(theme) {
   const body=document.querySelector('.definition-modal-body');
   const loader=body.querySelector('.definition-modal-loading');
@@ -202,7 +202,7 @@ try {
   check(!document.querySelector('.definition-modal'),'module name tap opens a child hover, not modal');
   const moduleAction=modulePopup.querySelector('.type-definition-link');
   check(moduleAction,'untyped module link has explicit modal action');
-  window.bedrockAppearance.setMode('dark');
+  window.outcropAppearance.setMode('dark');
   moduleAction.click();
   checkLoading('dark');
   await until(()=>document.querySelector('.definition-modal-title')?.textContent.includes('基础词汇'));
@@ -223,7 +223,7 @@ try {
   check(current,'definition anchor located');
   const open=document.createElement('a');open.className='type-definition-link';
   open.href='/zh/Base.Choice.html#'+current.id;open.dataset.name='SetChoice→LEM';fixture.append(open);
-  window.bedrockAppearance.setMode('light');open.click();checkLoading('light');
+  window.outcropAppearance.setMode('light');open.click();checkLoading('light');
   const frame=await until(()=>document.querySelector('.definition-modal-frame'));
   await until(()=>frame.contentDocument?.getElementById(current.id));
   const frameDoc=frame.contentDocument;
@@ -237,7 +237,7 @@ try {
   check(modalTitle.querySelector('code.Agda').textContent==='SetChoice→LEM','definition name retains code styling');
   const jump=document.querySelector('.definition-modal-jump');
   check(jump.nextElementSibling?.classList.contains('definition-modal-close') && jump.getAttribute('aria-label')==='跳转进入','enter-page action sits immediately left of Close');
-  check(new URL(jump.href).hash==='#'+current.id && !jump.href.includes('bedrock-modal'),'enter-page action preserves the original definition anchor');
+  check(new URL(jump.href).hash==='#'+current.id && !jump.href.includes('outcrop-modal'),'enter-page action preserves the original definition anchor');
   await delay(900);
   const block=frameDoc.getElementById(current.id).closest('pre.Agda');
   const bar=frameDoc.getElementById('section-sticky');
@@ -275,7 +275,7 @@ try {
   document.querySelector('.definition-modal-frame').contentDocument.getElementById('main-content').scrollTop=0;
   jump.click();
   await until(()=>jumpSink.contentDocument?.getElementById(nextDefinition.id));
-  check(jumpSink.contentWindow.location.hash==='#'+nextDefinition.id && !jumpSink.contentWindow.location.search.includes('bedrock-modal'),'enter-page action really navigates to the target despite manual modal scrolling');
+  check(jumpSink.contentWindow.location.hash==='#'+nextDefinition.id && !jumpSink.contentWindow.location.search.includes('outcrop-modal'),'enter-page action really navigates to the target despite manual modal scrolling');
   jumpSink.remove();
   document.querySelector('.definition-modal-close').click();
   check(!document.querySelector('.definition-modal'),'modal closes');
@@ -331,8 +331,9 @@ try {
   const ending=mobileDoc.querySelector('.statement-ending');
   const codeRect=ending.querySelector('pre').getBoundingClientRect();
   const qedRect=ending.querySelector('.statement-qed').getBoundingClientRect();
-  check(qedRect.left>=codeRect.right && qedRect.right<=narrow.contentWindow.innerWidth,'390px QED sits outside code without overflowing');
-  check(Math.abs(qedRect.bottom-codeRect.bottom)<1,'QED aligns with the final code block bottom edge');
+  check(qedRect.left>codeRect.left && qedRect.right<codeRect.right && qedRect.bottom<codeRect.bottom,'390px QED floats inside its code frame');
+  const qedStyle=narrow.contentWindow.getComputedStyle(ending.querySelector('.statement-qed'));
+  check(parseFloat(qedStyle.opacity)>0 && parseFloat(qedStyle.opacity)<.6 && qedStyle.pointerEvents==='none','QED is translucent non-interactive frame decoration');
   const ordinary=[...mobileDoc.querySelectorAll('article > pre.Agda')][0].getBoundingClientRect();
   check(Math.abs(ordinary.left-codeRect.left)<1 && Math.abs(ordinary.right-codeRect.right)<1,'ordinary and QED code blocks share both horizontal edges');
   const folds=[...mobileDoc.querySelectorAll('.submodule-fold')];

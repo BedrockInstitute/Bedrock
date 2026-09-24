@@ -34,5 +34,5 @@ class FrameworkTests(unittest.TestCase):
         self.assertTrue(framework.outline_errors(text)[0])
 
     def test_shared_code_and_route_metadata_are_not_headings(self):
-        text = '<!-- bedrock-routes {"title":"# metadata"} -->\n```agda\n# symbol\n```'
+        text = '<!-- outcrop-routes {"title":"# metadata"} -->\n```agda\n# symbol\n```'
         self.assertEqual(framework.outline_errors(text), ([], 0))

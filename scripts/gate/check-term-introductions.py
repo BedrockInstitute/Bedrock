@@ -2,18 +2,14 @@
 """Validate reader-facing glossary introductions and explicit references."""
 
 import os
-import importlib.util
-import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "site"))
-from term_registry import LANGS, TERM_MARK_RE, load_entries, localized_forms, reader_terms, schema_errors
-from i18n_markers import weave
-from reading_routes import build_reading_data
+from outcrop.core.term_registry import load_entries, reader_terms
+from outcrop.site.reading_routes import build_reading_data
 
-from term_lint import ancestors, term_pattern, prerequisite_occurrences, check_terms
-from term_lint import markers as text_markers
+from outcrop.core.term_lint import check_terms
+from outcrop.core.term_lint import markers as text_markers
 
 def module_name(path, src="src"):
     return os.path.relpath(path, src)[:-len(".lagda.md")].replace(os.sep, ".")
