@@ -5,4 +5,5 @@ from outcrop.adapters.extract_types import main
 
 if __name__ == '__main__':
     raise SystemExit(main(['--src', 'src', '--html-dir', '_build/html',
-                          '--entry', 'Origin', '--libraries', 'cubical', *sys.argv[1:]]))
+                          '--entry', 'Origin', '--libraries', 'cubical',
+                          '--options=--cubical --safe --guardedness', *sys.argv[1:]]))

@@ -82,6 +82,8 @@ make check
 
 ## ウェブサイトの基盤
 
+任意の `outcrop-agda` コンパイラー計装、ビルド、型情報の出力、並列スケジューラーも Outcrop が提供する。Bedrock は [ライブラリの固定](../../dev/agda-libraries.json)、入口モジュール、数学上の検査、リソースとデプロイの設定を保持する。[ツールチェインの説明](../../tools/README.md)を参照。通常の Markdown 描画に Agda の導入は不要である。
+
 サイトは [Outcrop](https://github.com/BedrockInstitute/Outcrop) を使用し、`outcrop/` サブモジュールでその版を固定する。**Outcrop Core** は Markdown と任意のコンパイラー意味情報を描画する。**Outcrop Site** は学習ルート、依存グラフ、多言語検索、型情報と定義モーダル、外観設定、Ask AI、再利用可能な検査規則を含む教材サイト全体を提供する。Bedrock は [site/project.json](../../site/project.json) を通じて本文、目次、用語、ブランド、数学上の方針を与える。
 
 サブモジュールの初期化後、`make venv` がローカルのパッケージを導入する。既存の仮想環境では `.venv/bin/python -m pip install -e ./outcrop` も利用できる。`make site` で構築し、`make serve` でプレビューする。[インスタンスの説明](../../site/README.md) と [Outcrop の構成](../../outcrop/docs/ARCHITECTURE.md) を参照。他の教材も、Bedrock の数学やサイト実装を複製せずに同じ基盤を利用できる。

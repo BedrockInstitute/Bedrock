@@ -54,7 +54,6 @@ Exit status is non-zero if any violation remains (in --fix, only the report-only
 
 import json
 import os
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -70,7 +69,7 @@ _BARE_VARIABLE_LEGACY_PATH = ROOT / "dev" / "inline-agda-legacy.json"
 from outcrop.core.prose_lint import EXCLUDE_BASENAMES, ProsePolicy
 from outcrop.core.prose_lint import analyze as analyze_prose, theorem_label_violations as label_violations
 from outcrop.core.prose_lint import new_bare_variable_violations as bare_variable_policy_violations
-from outcrop.core.source_syntax import strip_route_metadata
+from outcrop.core.i18n_markers import shared_cjk_errors
 def load_bare_variable_legacy():
     """Exact old prose lines, never chapter-level exclusions."""
     with _BARE_VARIABLE_LEGACY_PATH.open(encoding="utf-8") as source:
@@ -249,9 +248,6 @@ def main(argv):
 # keeps the check alive**: archiving check-tree.py without this move would have
 # retired a live check in silence, which is the failure clause W4 exists for.
 # ---------------------------------------------------------------------------
-CJK_SHARED = re.compile(r"[　-〿㐀-䶿一-鿿！-～]")
-MARKER_SHARED = re.compile(r"<!--\s*(en|zh|ja|/)\s*-->")
-
 def _masters_for_cjk() -> list[Path]:
     """The working tree, not the index: a new untracked master must not escape the audit."""
     return sorted(p for p in SRC.rglob("*.lagda.md"))
@@ -260,23 +256,8 @@ def check_shared_cjk() -> list[str]:
     """Prose outside every language marker is shared and reaches the English book verbatim."""
     bad = []
     for p in _masters_for_cjk():
-        text = strip_route_metadata(p.read_text(encoding="utf-8"))
-        in_fence = False
-        lang = None
-        for n, line in enumerate(text.split("\n"), 1):
-            if line.startswith("```"):
-                in_fence = not in_fence
-                continue
-            if in_fence:
-                continue
-            if (m := MARKER_SHARED.search(line)):
-                lang = None if m.group(1) == "/" else m.group(1)
-                continue
-            if lang is None and CJK_SHARED.search(line):
-                bad.append(f"{p.relative_to(ROOT)}:{n}: CJK_SHARED in SHARED prose (outside any "
-                           f"<!--en|zh|ja--> block). Shared prose is copied verbatim into "
-                           f"every language, so this would appear untranslated in the "
-                           f"English book. Wrap it in a language block")
+        for n, message in shared_cjk_errors(p.read_text(encoding='utf-8')):
+            bad.append(f'{p.relative_to(ROOT)}:{n}: CJK_SHARED: {message}; wrap it in a language block')
     return bad
 
 

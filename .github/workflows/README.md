@@ -22,12 +22,18 @@ of the website. `typecheck` performs the pure Agda check, all source and prose g
 unit tests, and `make milestone-lint`. Pure-check interfaces remain isolated from HTML
 and expression-type products.
 
-Every job checks out submodules recursively and installs the pinned local Outcrop
+Every job checks out submodules recursively, selects Python 3.11 first, and then installs the pinned local Outcrop
 package with `python3 -m pip install ./outcrop`. Outcrop Core and Outcrop Site are
 the shared renderer, complete website and lint implementation; Bedrock supplies
 content, configuration and mathematical gates. Tests are split between
 `outcrop/tests/` and Bedrock's `scripts/tests/`; `make test` runs both.
 Do not fetch an unpinned framework branch during deployment.
+
+The optional compiler producer also comes from Outcrop; it is not a Bedrock-owned
+fork. Its source/build resources participate in cache keys, while the Cubical
+version is explicitly selected by `dev/agda-libraries.json`. Do not switch Python
+interpreters after installing Outcrop: that leaves later gates unable to import
+the package. A repository integration test pins this ordering in all four jobs.
 
 The `typecheck` job restores and validates the patched-Agda cache before Haskell setup,
 then refreshes the verified wrapper timestamp so checkout times cannot trigger a false

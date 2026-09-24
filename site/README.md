@@ -11,7 +11,7 @@ Git submodule. Follow [AGENTS.md](../AGENTS.md) and the current write scope.
 | --- | --- |
 | `site/project.json`, `site/static/assets/` | Outcrop Core: Markdown, multilingual structure, optional compiler semantics and pure lint engines |
 | `src/`, `dev/reading-catalog.json`, `dev/glossary.toml` | Outcrop Site: complete page shell, routes, graph, search, appearance, hover/modal, notes, diagrams, Ask AI and publication |
-| Compiler installation, trace/cache workflow, mathematical gates and deployment | Installed templates, browser resources, compiler-data adapters and generic site lint |
+| Library lock, entry/options, resource/cache policy, mathematical gates and deployment | Optional Agda toolchain/trace producer, weaving, metrics, templates, browser resources and generic site lint |
 
 The public API is `from outcrop.core import MarkdownDocument, CodeContext` and
 `from outcrop.site import SiteConfig, build_site`. Shared source lives under
@@ -55,7 +55,7 @@ The common tools are package commands:
 ```sh
 .venv/bin/python -m outcrop lint --config site/project.json --project-root .
 .venv/bin/python -m outcrop check-links _build/site
-.venv/bin/python scripts/tests/check-search-index.py _build/site
+.venv/bin/python -m outcrop check-search _build/site
 ```
 
 ## Instance policy

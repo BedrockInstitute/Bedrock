@@ -30,7 +30,7 @@ Read the relevant specifications before changing an area:
 | Markdown contract and reusable markup | `outcrop/docs/RENDERER-MARKDOWN.md`, `outcrop/docs/RENDERER-RECIPES.md` |
 | Website architecture and regression evidence | `outcrop/docs/ARCHITECTURE.md`, `dev/SITE-ARCHITECTURE.md`, `site/README.md` |
 | Site instance configuration | `site/project.json`, `outcrop/docs/SITE-CONFIG.md` |
-| Compiler instrumentation and environment | `tools/bedrock-agda/README.md`, `manifest.json` and `environment.json` in that directory |
+| Compiler instrumentation and environment | `outcrop/docs/AGDA.md`, `tools/README.md`, `dev/agda-libraries.json` |
 | Checks, caches and deployment | `Makefile`, `.github/workflows/ci.yml`, `.github/workflows/README.md` |
 | Licensing | `REUSE.toml`, `NOTICE`, `LICENSES/` |
 
@@ -62,7 +62,7 @@ are not a requirement to restart those processes.
 ## Toolchain, resources and checks
 
 The pinned environment currently uses Agda 2.8.0, cubical 0.9 and Python 3.11+.
-Use the repository compiler `_build/bin/bedrock-agda`, not an unrelated global
+Use the repository compiler `_build/outcrop-agda/bin/outcrop-agda`, not an unrelated global
 Agda binary. `make bootstrap` installs the local toolchain and library registry;
 it must not modify the user's global Agda configuration.
 
@@ -111,6 +111,12 @@ environment can run `.venv/bin/python -m pip install -e ./outcrop` explicitly.
 Shared changes belong in the Outcrop repository, which has its own instructions,
 tests and licenses. Updating the parent submodule pointer requires the same Git
 authorization as any other repository change.
+
+Outcrop also owns optional Agda instrumentation, compiler/library installation,
+parallel scheduling, semantic extraction, weaving and source metrics. These are
+Core integration tools, not a third product layer or mandatory render dependency.
+Bedrock supplies its library lock, entry, flags, resource/cache choices and proof
+gates; do not bring generic mechanism copies back into `tools/` or `scripts/`.
 
 For comparable performance use `make typecheck-cold`: one process, pure Agda,
 Cubical interfaces retained. `typecheck-cold-parallel` is an operational measure,

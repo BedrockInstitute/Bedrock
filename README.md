@@ -116,9 +116,9 @@ make bootstrap
 make check
 ```
 
-`make bootstrap` builds the repository's patched Agda and installs the pinned
+`make bootstrap` builds Outcrop's optional Agda toolchain and installs the pinned
 cubical library under `_build`; it does not modify the user's global Agda
-configuration. See [tools/bedrock-agda/README.md](tools/bedrock-agda/README.md)
+configuration. See [tools/README.md](tools/README.md)
 for versioning, deployment, verification, and upgrade instructions.
 
 The build keeps formal-check and website measurements distinct. Use

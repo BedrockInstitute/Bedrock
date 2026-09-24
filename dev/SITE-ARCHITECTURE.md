@@ -11,6 +11,7 @@ The [instance guide](../site/README.md) describes local installation and operati
 | --- | --- | --- |
 | Outcrop Core | `outcrop.core.MarkdownDocument`, `CodeContext`; pure structure, semantic and lint modules | Explicit text and optional compiler evidence; no project discovery or Site dependency |
 | Semantic package integration | `outcrop.site.site_inputs.SourceCorpus`, `compiler_index.build_code_context` | Explicit source/highlighted documents, signatures and Unicode ranges; one join per build |
+| Optional Agda producer | `outcrop.adapters.agda` | Compiler overlay/version lock/build, explicit library installer and parallel trace scheduler; never invoked by ordinary render/lint |
 | Outcrop Site | `outcrop.site.SiteConfig`, `build_site`, catalog/page/publication/route/graph owners | Validated instance state; identical complete website features for each project |
 | Packaged browser resources | `outcrop/src/outcrop/site/resources/` | Templates, `outcrop.js`, `outcrop.css`, feature modules, fonts and vendor files |
 | Asset publication | `outcrop.site.assets.AssetBundle` | Captured byte snapshot; one immutable runtime generation |
@@ -77,6 +78,42 @@ The frame-internal QED, full-width code, compact portrait landscape reader,
 search visibility and hover-loading changes are covered by the separate extraction
 acceptance linked above. None of the older historical results below certifies them.
 
+## Producer boundary correction, 2026-09-24
+
+The initial extraction left the semantic producer and several synthetic tests
+with the consumer. The follow-up moves the Agda overlay, version patch, compiler
+builder, library installer, DAG scheduler, weaving, search-target audit and source
+metrics into Outcrop. Generic tests move with their owners; Bedrock keeps its
+actual corpus, glossary/catalog policy, proof gates, library lock, resource/cache
+choices and deployment workflow. No mathematical source changes are involved.
+
+The producer is optional Core integration, not a third product layer. Ordinary
+Markdown builds still need no Agda toolchain. `tools/README.md` documents the
+consumer commands; `outcrop/docs/AGDA.md` documents reusable installation and
+evidence contracts. Compiler identities are installation-path independent.
+Library locks and shared import syntax now invalidate the appropriate backend
+caches. Warm checks preserve valid trace evidence; failed HTML generation does
+not replace it. Plain `.agda` and literate sources share extraction without
+silently discarding the former's records.
+
+The previous Bedrock push's [CI run 35991401805](https://github.com/BedrockInstitute/Bedrock/actions/runs/35991401805)
+failed because Outcrop was installed before switching to the job's final Python
+interpreter. All jobs now select Python before package installation. This is a
+local correction, not evidence that a new remote CI run has passed.
+
+The published footer uses the configured site name followed by `powered by
+Outcrop`, linking to the framework repository. 1lab attribution remains in
+Outcrop's README, NOTICE and license records, not the reader footer. Duplicate
+parent OFL license files were removed after confirming the complete copies remain
+in Outcrop; both repositories pass REUSE independently.
+
+Final local acceptance: `make check`, the Origin closure gate, a fresh complete
+120-module compiler traversal and the 282-module trilingual site build all exit
+0. Relative-link and search-target audits report no broken targets. The 44,808
+search records match the previous release exactly. The installed-package and
+browser evidence, including physical-device limitations, is recorded in
+[Outcrop acceptance](../outcrop/docs/ACCEPTANCE.md#producer-boundary-audit-2026-09-24).
+
 ## Complete gate mapping
 
 No original gate was removed. `make check` additionally exercises the reusable
@@ -113,6 +150,23 @@ the corresponding `outcrop/examples/renderer/chapters/` masters remain checked b
 strict reusable lint and independent build tests.
 
 ### Test migration traceability
+
+The subsequent boundary audit moved synthetic rule and reader tests into
+`outcrop/tests/`: expression hover and its support module, chapter boilerplate and
+outlines, navigation, publication/agent mirrors, terms, reading order/routes,
+fences, prose/Agda rules, glossary rules and source metrics. Bedrock retains only
+the actual catalog/whole-corpus checks, precise legacy prose exceptions, scoped
+documentation discovery, mathematical gates and its one-time source migration.
+Historical module names used as explicit test data do not imply loading this
+repository. Shared tests no longer import a Bedrock gate to reach a Core function.
+
+`test_site_lint_contract` covers the previously consumer-only diagram stylesheet
+gate, shared marker-aware CJK diagnostics and a non-Cubical `--safe` project's
+lint and real site output. Batch weaving now lives in `outcrop.adapters.weave`;
+the root adapter supplies configured sources, archive exclusion and the existing
+`bedrock.agda-lib` metadata. Source metrics similarly use Core with a root-only
+source-discovery adapter. These checks are Python/API evidence, not a new browser
+acceptance claim.
 
 | Former monolith test | Current evidence |
 | --- | --- |

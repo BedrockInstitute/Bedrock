@@ -21,8 +21,8 @@
 # Local builds use parallel checks by default; LOCAL_PARALLEL=0 restores the
 # serial path, LOCAL_JOBS caps independent gates, and AGDA_JOBS defaults to 2.
 
-BEDROCK_AGDA := _build/bin/bedrock-agda
-AGDA         := $(BEDROCK_AGDA)
+OUTCROP_AGDA := _build/outcrop-agda/bin/outcrop-agda
+AGDA         := $(OUTCROP_AGDA)
 VENV      := .venv
 PYTHON    ?= python3.11
 PY        ?= $(VENV)/bin/python
@@ -44,14 +44,20 @@ TYPECHECK_ROOT := _build/typecheck
 TYPECHECK_LIB := $(TYPECHECK_ROOT)/bedrock.agda-lib
 TYPECHECK_STAMP := $(TYPECHECK_ROOT)/_build/2.8.0/agda/src/Origin.agdai
 HTML_DIR   := _build/html
-AGDA_TRACE := _build/bedrock-agda-types.jsonl
+AGDA_TRACE := _build/outcrop-agda-types.jsonl
 AGDA_STAMP := $(HTML_DIR)/.bedrock-checked
 BENCHMARK_DIR := _build/benchmarks
 TYPECHECK_TIME := $(BENCHMARK_DIR)/typecheck-cold.time
 TYPECHECK_PARALLEL_TIME := $(BENCHMARK_DIR)/typecheck-cold-parallel.time
 HTML_TIME := $(BENCHMARK_DIR)/html-cold.time
 HTML_PARALLEL_TIME := $(BENCHMARK_DIR)/html-cold-parallel.time
-AGDA_PARALLEL := scripts/agda-parallel.py
+AGDA_PARALLEL := -m outcrop agda-check --options="--cubical --safe --guardedness"
+AGDA_DRIVER := outcrop/src/outcrop/adapters/agda/parallel.py
+AGDA_BACKEND_INPUTS := $(AGDA_DRIVER) outcrop/src/outcrop/core/source_syntax.py
+AGDA_ENV_STAMP := $(AGDA_DIR)/.bedrock-library-lock.json
+AGDA_ENV_INPUTS := dev/agda-libraries.json \
+	outcrop/src/outcrop/adapters/agda/libraries.py \
+	outcrop/src/outcrop/adapters/agda/archive.py
 SITE_OUT   := _build/site
 LANGS      := en,zh,ja
 BASE_URL   :=
@@ -63,13 +69,17 @@ LINT_GATES := lint-prose-gate lint-agda-gate host-lem-gate glossary-gate \
 	term-gate fences-gate diagrams-gate reading-order-gate routes-gate \
 	chapters-gate i18n-gate site-lint-gate
 
-.PHONY: bootstrap toolchain check bedrock-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types types-refresh types-local-identifiers types-local-expressions site-render site site-cold site-ci site-backend-ci serve deploy clean distclean $(LINT_GATES)
+.PHONY: bootstrap toolchain check outcrop-agda typecheck-stage typecheck typecheck-cold typecheck-cold-parallel typecheck-ci lint milestone-lint test hooks venv gen html html-cold html-cold-parallel types types-refresh types-local-identifiers types-local-expressions site-render site site-cold site-ci site-backend-ci serve deploy clean distclean $(LINT_GATES)
 
 # One command for a fresh clone after GHC/Cabal, patch, make and Python exist.
 bootstrap: venv toolchain
 
-toolchain: $(BEDROCK_AGDA)
-	$(PYTHON) tools/bedrock-agda/setup.py
+toolchain: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)
+
+$(AGDA_ENV_STAMP): $(AGDA_ENV_INPUTS)
+	$(PY) -m outcrop agda-libraries --lock dev/agda-libraries.json \
+		--build-dir _build/dependencies --agda-dir $(AGDA_DIR)
+	@cp dev/agda-libraries.json $(AGDA_ENV_STAMP)
 
 # The gate every document names. Local checks run independent gates alongside
 # the Agda check; CI keeps its existing ordering.
@@ -80,14 +90,15 @@ else
 check: typecheck lint test
 endif
 
-bedrock-agda: $(BEDROCK_AGDA)
+outcrop-agda: $(OUTCROP_AGDA)
 
-BEDROCK_AGDA_INPUTS := tools/bedrock-agda/build.py tools/bedrock-agda/manifest.json \
-	$(wildcard tools/bedrock-agda/adapters/*.patch) \
-	$(shell find tools/bedrock-agda/src -type f -name '*.hs' 2>/dev/null)
+OUTCROP_AGDA_INPUTS := outcrop/src/outcrop/adapters/agda/build.py \
+	outcrop/src/outcrop/adapters/agda/archive.py \
+	$(shell find outcrop/src/outcrop/adapters/agda/resources -type f \
+	\( -name '*.py' -o -name '*.json' -o -name '*.patch' -o -name '*.hs' \))
 
-$(BEDROCK_AGDA): $(BEDROCK_AGDA_INPUTS)
-	$(PYTHON) tools/bedrock-agda/build.py
+$(OUTCROP_AGDA): $(OUTCROP_AGDA_INPUTS)
+	$(PY) -m outcrop agda-build --build-dir _build/outcrop-agda
 
 # Keep pure-check interfaces in an isolated project root. A pure check therefore
 # cannot make a later HTML traversal skip the elaboration events needed by the
@@ -104,7 +115,7 @@ typecheck-stage: $(TYPECHECK_LIB) $(TYPECHECK_SOURCES)
 
 # The ordinary proof gate uses only Agda's type checker. Its private interface
 # tree makes repeat runs incremental without enabling HTML or type tracing.
-typecheck: $(BEDROCK_AGDA) typecheck-stage
+typecheck: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) typecheck-stage
 ifeq ($(LOCAL_PARALLEL),1)
 	$(PY) $(AGDA_PARALLEL) --project-root $(TYPECHECK_ROOT) \
 		--agda $(abspath $(AGDA)) --root Origin --jobs $(AGDA_JOBS) \
@@ -115,7 +126,7 @@ endif
 
 # A reproducible pure-Agda benchmark. Keep cubical's installed interfaces but
 # discard every Bedrock interface, then run without HTML or tracing enabled.
-typecheck-cold: $(BEDROCK_AGDA) typecheck-stage
+typecheck-cold: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) typecheck-stage
 	rm -rf $(TYPECHECK_ROOT)/_build
 	@mkdir -p $(BENCHMARK_DIR)
 	@echo "Cold pure Agda typecheck (cubical interfaces retained)"
@@ -125,18 +136,18 @@ typecheck-cold: $(BEDROCK_AGDA) typecheck-stage
 
 # Operational cold check: schedule project modules along their import DAG. The
 # single-process target above remains the stable benchmark baseline.
-typecheck-cold-parallel: $(BEDROCK_AGDA) typecheck-stage $(AGDA_PARALLEL)
+typecheck-cold-parallel: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) typecheck-stage $(AGDA_BACKEND_INPUTS)
 	rm -rf $(TYPECHECK_ROOT)/_build
 	@mkdir -p $(BENCHMARK_DIR)
 	@echo "Cold parallel Agda typecheck ($(AGDA_JOBS) workers; cubical interfaces retained)"
 	/usr/bin/time -p -o $(abspath $(TYPECHECK_PARALLEL_TIME)) \
-		$(PYTHON) $(AGDA_PARALLEL) --project-root $(TYPECHECK_ROOT) \
+		$(PY) $(AGDA_PARALLEL) --project-root $(TYPECHECK_ROOT) \
 		--agda $(abspath $(AGDA)) --root Origin --jobs $(AGDA_JOBS)
 	@cat $(TYPECHECK_PARALLEL_TIME)
 
 # CI restores this target's isolated interface tree. Preserve the cheap normal
 # incremental path on a hit and use the DAG scheduler only on a cold runner.
-typecheck-ci: $(BEDROCK_AGDA) typecheck-stage $(AGDA_PARALLEL)
+typecheck-ci: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) typecheck-stage $(AGDA_BACKEND_INPUTS)
 	@if [ -f $(TYPECHECK_STAMP) ]; then \
 		$(MAKE) typecheck; \
 	else \
@@ -145,9 +156,13 @@ typecheck-ci: $(BEDROCK_AGDA) typecheck-stage $(AGDA_PARALLEL)
 
 # A separate official Agda traversal writes fresh .agdai interfaces, emits HTML,
 # and records expression types for the renderer. It is the cached site-build path.
-$(AGDA_STAMP): $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES)
+$(AGDA_STAMP): $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) $(AGDA_BACKEND_INPUTS) bedrock.agda-lib $(AGDA_SOURCES)
 	@mkdir -p $(HTML_DIR)
-	@if [ ! -s $(AGDA_TRACE) ] || [ $(BEDROCK_AGDA) -nt $(AGDA_TRACE) ]; then \
+	@if [ ! -s $(AGDA_TRACE) ] || [ $(OUTCROP_AGDA) -nt $(AGDA_TRACE) ] \
+		|| [ $(AGDA_ENV_STAMP) -nt $(AGDA_TRACE) ] \
+		|| [ bedrock.agda-lib -nt $(AGDA_TRACE) ] \
+		|| [ $(AGDA_DRIVER) -nt $(AGDA_TRACE) ] \
+		|| [ outcrop/src/outcrop/core/source_syntax.py -nt $(AGDA_TRACE) ]; then \
 		rm -f $(AGDA_TRACE); \
 		rm -rf $(SITE_IFACES); \
 	fi
@@ -156,8 +171,8 @@ ifeq ($(LOCAL_PARALLEL),1)
 		--root Origin --jobs $(AGDA_JOBS) --incremental \
 		--interface-root $(SITE_IFACES) --trace-out $(AGDA_TRACE) --html-dir $(HTML_DIR)
 else
-	BEDROCK_AGDA_TYPES="$(abspath $(AGDA_TRACE))" \
-	BEDROCK_AGDA_RUN="$$(date +%s)-$$$$" \
+	OUTCROP_AGDA_TYPES="$(abspath $(AGDA_TRACE))" \
+	OUTCROP_AGDA_RUN="$$(date +%s)-$$$$" \
 	$(AGDA) --html --html-highlight=code --html-dir=$(HTML_DIR) $(AGDA_ROOT)
 endif
 	@touch $(AGDA_STAMP)
@@ -233,13 +248,13 @@ html: $(AGDA_STAMP)
 # Measure the combined compiler/backend path independently of typecheck-cold.
 # Clearing both sets of outputs guarantees that this invocation itself creates
 # the project interfaces, HTML, and complete expression trace.
-html-cold: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES)
+html-cold: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) bedrock.agda-lib $(AGDA_SOURCES)
 	rm -rf $(SITE_IFACES) $(HTML_DIR)
 	rm -f $(AGDA_TRACE)
 	@mkdir -p $(HTML_DIR) $(BENCHMARK_DIR)
 	@echo "Cold combined Agda interface + HTML + type-trace build"
-	BEDROCK_AGDA_TYPES="$(abspath $(AGDA_TRACE))" \
-	BEDROCK_AGDA_RUN="$$(date +%s)-$$$$" \
+	OUTCROP_AGDA_TYPES="$(abspath $(AGDA_TRACE))" \
+	OUTCROP_AGDA_RUN="$$(date +%s)-$$$$" \
 	/usr/bin/time -p -o $(abspath $(HTML_TIME)) \
 		$(AGDA) --html --html-highlight=code \
 		--html-dir=$(HTML_DIR) $(AGDA_ROOT)
@@ -250,13 +265,13 @@ html-cold: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES)
 # independent project modules concurrently, and record one trace part per
 # process. Then merge the trace and let the official HTML backend read the
 # completed interfaces. No project module is checked twice.
-html-cold-parallel: $(BEDROCK_AGDA) bedrock.agda-lib $(AGDA_SOURCES) $(AGDA_PARALLEL)
+html-cold-parallel: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP) bedrock.agda-lib $(AGDA_SOURCES) $(AGDA_BACKEND_INPUTS)
 	rm -rf $(SITE_IFACES) $(HTML_DIR)
 	rm -f $(AGDA_TRACE)
 	@mkdir -p $(HTML_DIR) $(BENCHMARK_DIR)
 	@echo "Cold parallel Agda + HTML + type-trace build ($(AGDA_JOBS) workers)"
 	/usr/bin/time -p -o $(abspath $(HTML_PARALLEL_TIME)) \
-		$(PYTHON) $(AGDA_PARALLEL) --project-root . \
+		$(PY) $(AGDA_PARALLEL) --project-root . \
 		--agda $(abspath $(AGDA)) --root Origin --jobs $(AGDA_JOBS) \
 		--trace-out $(AGDA_TRACE) --html-dir $(HTML_DIR)
 	@cat $(HTML_PARALLEL_TIME)
@@ -303,7 +318,7 @@ site: types
 site-cold: html-cold-parallel
 	$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"
 
-site-ci: $(BEDROCK_AGDA)
+site-ci: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)
 	@if [ -f $(AGDA_STAMP) ]; then \
 		$(MAKE) site PY="$(PY)" LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"; \
 	else \
@@ -311,7 +326,7 @@ site-ci: $(BEDROCK_AGDA)
 			LANGS="$(LANGS)" BASE_URL="$(BASE_URL)"; \
 	fi
 
-site-backend-ci: $(BEDROCK_AGDA)
+site-backend-ci: $(OUTCROP_AGDA) $(AGDA_ENV_STAMP)
 	@if [ -f $(AGDA_STAMP) ]; then \
 		$(MAKE) types PY="$(PY)"; \
 	else \
@@ -332,6 +347,6 @@ clean:
 		_build/expression-probe
 
 distclean: clean
-	rm -rf _build/bedrock-agda _build/bin/bedrock-agda \
+	rm -rf _build/outcrop-agda _build/outcrop-agda/bin/outcrop-agda \
 		_build/dependencies _build/agda-home $(TYPECHECK_ROOT) _build/2.8.0 \
 		$(BENCHMARK_DIR)

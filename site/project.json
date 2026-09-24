@@ -1,5 +1,11 @@
 {
   "version": 1,
+  "copyright_year": 2026,
+  "programming_language": {"name": "Cubical Agda", "url": "https://github.com/agda/cubical"},
+  "external_libraries": [
+    {"prefix": "Cubical", "name": "Cubical", "url": "https://github.com/agda/cubical"},
+    {"prefix": "Agda", "name": "Agda", "url": "https://agda.readthedocs.io/"}
+  ],
   "name": "Bedrock",
   "publisher": "Bedrock Institute",
   "storage_namespace": "bedrock",

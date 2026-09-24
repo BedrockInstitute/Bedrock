@@ -3,9 +3,9 @@ version = 1
 # Bedrock per-file licensing, machine-readable and enforced by `reuse lint` (see AGENTS.md).
 # A single AGPL-3.0-only default covers the open-ended set of first-party code/config/dev-docs
 # (so a newly added file inherits it automatically); a small, finite set of carve-outs overrides
-# it for the mathematical development + user prose (CC), the third-party fonts (OFL), and the
-# vendored 1lab tree (AGPL, upstream copyright). The three buckets are non-overlapping path
-# prefixes. Full license texts: LICENSES/. Human summary: COPYRIGHT and NOTICE.
+# it for the mathematical development + user prose (CC). Outcrop owns its fonts,
+# vendor code and their corresponding licenses. Full local license texts:
+# LICENSES/. Human summary: COPYRIGHT and NOTICE.
 
 # ---- Default: everything is AGPL-3.0-only, first-party copyright -------------------
 [[annotations]]
@@ -43,9 +43,3 @@ path = "LICENSE-CC-BY-NC-SA"
 precedence = "override"
 SPDX-FileCopyrightText = "Creative Commons"
 SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
-
-[[annotations]]
-path = "LICENSE-OFL"
-precedence = "override"
-SPDX-FileCopyrightText = "SIL International"
-SPDX-License-Identifier = "OFL-1.1"
